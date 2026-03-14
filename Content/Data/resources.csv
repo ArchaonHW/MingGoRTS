@@ -1,0 +1,5 @@
+ID,Name,StartingAmount
+res_money,Money,1000
+res_manpower,Manpower,500
+res_political_power,Political Power,50
+res_steel,Steel,0

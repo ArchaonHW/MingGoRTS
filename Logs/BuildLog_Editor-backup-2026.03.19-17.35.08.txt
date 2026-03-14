@@ -1,0 +1,67 @@
+Log started at 03/20/2026 04:56:20 (2026-03-19T20:56:20Z)
+Resolved project argument C:\HW\MingGoRTS\MingWarRTS.uproject to C:\HW\MingGoRTS\MingWarRTS.uproject
+No config file at C:\ProgramData\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\potat\AppData\Local\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\potat\OneDrive\文件\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Configuration will be read from:
+  C:\Users\potat\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\HW\MingGoRTS\Intermediate\Build\XmlConfigCache.bin): C:\Users\potat\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\HW\MingGoRTS\Intermediate\Build\XmlConfigCache.bin): C:\HW\MingGoRTS\Saved\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\HW\MingGoRTS\Intermediate\Build\XmlConfigCache.bin): C:\Users\potat\AppData\Local\UnrealEngine\Intermediate\Build\UnrealBuildTool.Env.BuildConfiguration.xml
+Log file: C:\HW\MingGoRTS\Logs\BuildLog_Editor.txt
+
+Setting temp directory to 'C:\Users\potat\AppData\Local\Temp\UnrealBuildTool\9de8e132'
+    Registering build platform: UnrealBuildTool.AndroidPlatformFactory
+    Registering build platform: UnrealBuildTool.IOSPlatformFactory
+    Registering build platform: UnrealBuildTool.LinuxPlatformFactory
+    Registering build platform: UnrealBuildTool.MacPlatformFactory
+    Registering build platform: UnrealBuildTool.TVOSPlatformFactory
+    Registering build platform: UnrealBuildTool.WindowsPlatformFactory
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (1)
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (2)
+Found Windows 10 SDK version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Found Universal CRT version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Win64 Installed SDK(s): MinVersion_Sdk=10.0.19041.0, MaxVersion_Sdk=10.9.99999.0, CurrentVersion_Sdk=10.0.26100.0, Version_AutoSdk=10.0.22621.0, CurrentVersion_AutoSdk=
+        Registering build platform: Win64 - buildable: True
+    Registering build platform: UnrealBuildTool.VisionOSPlatformFactory
+Command line: "C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" MingWarRTSEditor Win64 Development -Project=C:\HW\MingGoRTS\MingWarRTS.uproject -Progress -log=C:\HW\MingGoRTS\Logs\BuildLog_Editor.txt
+Using 'git status' to determine working set for adaptive non-unity build (C:\HW\MingGoRTS).
+Invalidating makefile for MingWarRTSEditor (source file modified)
+Skipping C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\BuildRules\UE5Rules.dll: File is installed
+Skipping C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\BuildRules\UE5ProgramRules.dll: File is installed
+Found VisualStudio2026 installation: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools (Product=Microsoft.VisualStudio.Product.BuildTools, Version=18.4.11612.150)
+Found Visual Studio toolchain: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717 (Family=14.50.35717, FamilyRank=1, Version=14.50.35727, HostArchitecture=x64, ReleaseChannel=Latest, Architecture=x64, Error=False, Redist=C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Redist\MSVC\14.50.35710)
+Available x64 toolchains (1):
+ * C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717
+    (Family=14.50.35717, FamilyRank=1, Version=14.50.35727, HostArchitecture=x64, ReleaseChannel=Latest, Architecture=x64)
+Visual Studio 2026 compiler version 14.50.35727 is not a preferred version. Please use the latest preferred version 14.44.35207
+Building UnrealEditor - MingWarRTSEditor - Win64 - Development
+WARNING: Unable to find Visual Studio SDK. Editor integration will be disabled
+Compiler: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\cl.exe
+Linker: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\link.exe
+Library Manager: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\link.exe
+Resource Compiler: C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\rc.exe
+Using EngineIncludeOrderVersion.Unreal5_7 for target MingWarRTSEditor.Target.cs
+UHT compiled-in object format Default
+@progress push 5%
+@progress 'Generating code...' 0%
+UnrealHeaderTool needs to run because SavedTimestamp is older than the rules file (C:\HW\MingGoRTS\Source\MingWarRTS\MingWarRTS.Build.cs) for module MingWarRTS
+@progress 'Generating code...' 33%
+Parsing headers for MingWarRTSEditor
+  Running Internal UnrealHeaderTool C:\HW\MingGoRTS\MingWarRTS.uproject C:\HW\MingGoRTS\Intermediate\Build\Win64\MingWarRTSEditor\Development\MingWarRTSEditor.uhtmanifest -WarningsAsErrors -installed
+Reading engine version from file: C:\Program Files\Epic Games\UE_5.7\Engine\Source\Runtime\Launch\Resources\Version.h
+Got engine version 5.7.4
+C:\HW\MingGoRTS\Source\MingWarRTS\Public\RTSPlayerController.h(36): Error: Unable to find 'class', 'delegate', 'enum', or 'struct' with name 'UNewEventManager'
+C:\HW\MingGoRTS\Source\MingWarRTS\Public\TriggerManager.h(27): Error: Unable to find 'class', 'delegate', 'enum', or 'struct' with name 'UNewEventManager'
+CompilationResultException: OtherCompilationError
+   at UnrealBuildTool.ExternalExecution.ExecuteHeaderToolIfNecessaryInternalAsync(BuildConfiguration BuildConfiguration, FileReference ProjectFile, TargetMakefile Makefile, String TargetName, ILogger Logger)
+   at UnrealBuildTool.ExternalExecution.ExecuteHeaderToolIfNecessaryAsync(BuildConfiguration BuildConfiguration, FileReference ProjectFile, TargetMakefile Makefile, String TargetName, ILogger Logger)
+   at UnrealBuildTool.UEBuildTarget.BuildAsync(BuildConfiguration BuildConfiguration, ISourceFileWorkingSet WorkingSet, TargetDescriptor TargetDescriptor, ILogger Logger, Boolean bInitOnly)
+   at UnrealBuildTool.BuildMode.CreateMakefileAsync(BuildConfiguration BuildConfiguration, TargetDescriptor TargetDescriptor, ISourceFileWorkingSet WorkingSet, ILogger Logger)
+   at UnrealBuildTool.BuildMode.BuildAsync(List`1 TargetDescriptors, BuildConfiguration BuildConfiguration, ISourceFileWorkingSet WorkingSet, BuildOptions Options, FileReference WriteOutdatedActionsFile, ILogger Logger, Boolean bSkipPreBuildTargets, String ActionTypeFilter)
+   at UnrealBuildTool.BuildMode.ExecuteAsync(CommandLineArguments Arguments, ILogger Logger)
+   at UnrealBuildTool.UnrealBuildTool.Main(String[] ArgumentsArray)
+WriteFileIfChanged() wrote 0 changed files of 1 requested writes.
+
+Result: Failed (OtherCompilationError)
+Total execution time: 4.91 seconds

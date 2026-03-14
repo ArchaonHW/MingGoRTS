@@ -1,0 +1,411 @@
+Log started at 03/20/2026 04:59:37 (2026-03-19T20:59:37Z)
+Resolved project argument C:\HW\MingGoRTS\MingWarRTS.uproject to C:\HW\MingGoRTS\MingWarRTS.uproject
+No config file at C:\ProgramData\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\potat\AppData\Local\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\potat\OneDrive\文件\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Configuration will be read from:
+  C:\Users\potat\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\HW\MingGoRTS\Intermediate\Build\XmlConfigCache.bin): C:\Users\potat\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\HW\MingGoRTS\Intermediate\Build\XmlConfigCache.bin): C:\HW\MingGoRTS\Saved\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\HW\MingGoRTS\Intermediate\Build\XmlConfigCache.bin): C:\Users\potat\AppData\Local\UnrealEngine\Intermediate\Build\UnrealBuildTool.Env.BuildConfiguration.xml
+Log file: C:\HW\MingGoRTS\Logs\BuildLog_Editor.txt
+
+Setting temp directory to 'C:\Users\potat\AppData\Local\Temp\UnrealBuildTool\9de8e132'
+    Registering build platform: UnrealBuildTool.AndroidPlatformFactory
+    Registering build platform: UnrealBuildTool.IOSPlatformFactory
+    Registering build platform: UnrealBuildTool.LinuxPlatformFactory
+    Registering build platform: UnrealBuildTool.MacPlatformFactory
+    Registering build platform: UnrealBuildTool.TVOSPlatformFactory
+    Registering build platform: UnrealBuildTool.WindowsPlatformFactory
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (1)
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (2)
+Found Windows 10 SDK version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Found Universal CRT version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Win64 Installed SDK(s): MinVersion_Sdk=10.0.19041.0, MaxVersion_Sdk=10.9.99999.0, CurrentVersion_Sdk=10.0.26100.0, Version_AutoSdk=10.0.22621.0, CurrentVersion_AutoSdk=
+        Registering build platform: Win64 - buildable: True
+    Registering build platform: UnrealBuildTool.VisionOSPlatformFactory
+Command line: "C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" MingWarRTSEditor Win64 Development -Project=C:\HW\MingGoRTS\MingWarRTS.uproject -Progress -log=C:\HW\MingGoRTS\Logs\BuildLog_Editor.txt
+Using 'git status' to determine working set for adaptive non-unity build (C:\HW\MingGoRTS).
+Invalidating makefile for MingWarRTSEditor (UHT files changed)
+Skipping C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\BuildRules\UE5Rules.dll: File is installed
+Skipping C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\BuildRules\UE5ProgramRules.dll: File is installed
+Found VisualStudio2026 installation: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools (Product=Microsoft.VisualStudio.Product.BuildTools, Version=18.4.11612.150)
+Found Visual Studio toolchain: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717 (Family=14.50.35717, FamilyRank=1, Version=14.50.35727, HostArchitecture=x64, ReleaseChannel=Latest, Architecture=x64, Error=False, Redist=C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Redist\MSVC\14.50.35710)
+Available x64 toolchains (1):
+ * C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717
+    (Family=14.50.35717, FamilyRank=1, Version=14.50.35727, HostArchitecture=x64, ReleaseChannel=Latest, Architecture=x64)
+Visual Studio 2026 compiler version 14.50.35727 is not a preferred version. Please use the latest preferred version 14.44.35207
+Building UnrealEditor - MingWarRTSEditor - Win64 - Development
+WARNING: Unable to find Visual Studio SDK. Editor integration will be disabled
+Compiler: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\cl.exe
+Linker: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\link.exe
+Library Manager: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\link.exe
+Resource Compiler: C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\rc.exe
+Using EngineIncludeOrderVersion.Unreal5_7 for target MingWarRTSEditor.Target.cs
+UHT compiled-in object format Default
+@progress push 5%
+@progress 'Generating code...' 0%
+UnrealHeaderTool needs to run because there are a different number of UObject source files in module MingWarRTS
+@progress 'Generating code...' 33%
+Parsing headers for MingWarRTSEditor
+  Running Internal UnrealHeaderTool C:\HW\MingGoRTS\MingWarRTS.uproject C:\HW\MingGoRTS\Intermediate\Build\Win64\MingWarRTSEditor\Development\MingWarRTSEditor.uhtmanifest -WarningsAsErrors -installed
+Reading engine version from file: C:\Program Files\Epic Games\UE_5.7\Engine\Source\Runtime\Launch\Resources\Version.h
+Got engine version 5.7.4
+Step - Exports
+       Exporter Stats skipped
+       Exporter Json skipped
+       Running exporter CodeGen
+UHT processed MingWarRTSEditor in 4.4219728 seconds (3 files written)
+@progress 'Generating code...' 67%
+@progress 'Generating code...' 100%
+@progress pop
+Found 5 shared PCH headers (listed in order of preference):
+	UnrealEd
+	Engine
+	Slate
+	CoreUObject
+	Core
+VerseVMBytecodeGenerator.Generate, generating CPP headers in: 'C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\CoreUObject\VerseVMBytecode'
+	Writing out generated header file. Changed:False Path:'C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\CoreUObject\VerseVMBytecode\VVMBytecodeOps.gen.h'
+	Writing out generated header file. Changed:False Path:'C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\CoreUObject\VerseVMBytecode\VVMBytecodesAndCaptures.gen.h'
+	Writing out generated header file. Changed:False Path:'C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\CoreUObject\VerseVMBytecode\VVMMakeCapturesFuncs.gen.h'
+	Writing out generated header file. Changed:False Path:'C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\CoreUObject\VerseVMBytecode\VVMCaptureSwitch.gen.h'
+Updating C:\HW\MingGoRTS\Intermediate\Build\Win64\x64\UnrealEditor\Development\MingWarRTS\LiveCodingInfo.json: contents have changed. Saving previous version to C:\HW\MingGoRTS\Intermediate\Build\Win64\x64\UnrealEditor\Development\MingWarRTS\LiveCodingInfo.json.old.
+Updating C:\HW\MingGoRTS\Intermediate\Build\Win64\x64\UnrealEditor\Development\MingWarRTS\Module.MingWarRTS.cpp: contents have changed. Saving previous version to C:\HW\MingGoRTS\Intermediate\Build\Win64\x64\UnrealEditor\Development\MingWarRTS\Module.MingWarRTS.cpp.old.
+Updating C:\HW\MingGoRTS\Intermediate\Build\Win64\x64\UnrealEditor\Development\MingWarRTS\Module.MingWarRTS.cpp.obj.rsp: contents have changed. Saving previous version to C:\HW\MingGoRTS\Intermediate\Build\Win64\x64\UnrealEditor\Development\MingWarRTS\Module.MingWarRTS.cpp.obj.rsp.old.
+Updating C:\HW\MingGoRTS\Intermediate\Build\Win64\x64\UnrealEditor\Development\MingWarRTS\UnrealEditor-MingWarRTS.lib.rsp: contents have changed. Saving previous version to C:\HW\MingGoRTS\Intermediate\Build\Win64\x64\UnrealEditor\Development\MingWarRTS\UnrealEditor-MingWarRTS.lib.rsp.old.
+Updating C:\HW\MingGoRTS\Intermediate\Build\Win64\x64\UnrealEditor\Development\MingWarRTS\UnrealEditor-MingWarRTS.dll.rsp: contents have changed. Saving previous version to C:\HW\MingGoRTS\Intermediate\Build\Win64\x64\UnrealEditor\Development\MingWarRTS\UnrealEditor-MingWarRTS.dll.rsp.old.
+Checking for live coding mutex: Global\LiveCoding_C++Program Files+Epic Games+UE_5.7+Engine+Binaries+Win64+UnrealEditor.exe
+Building MingWarRTSEditor...
+Using Visual Studio 2026 14.50.35727 toolchain (C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717) and Windows 10.0.26100.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+Warning: Visual Studio 2026 compiler is not a preferred version
+[Adaptive Build] Excluded from MingWarRTS unity file: BuildingManager.cpp, CombatManager.cpp, IdeaManager.cpp, MingWarRTS.cpp, ModifierManager.cpp, NewEventManager.cpp, ResourceManager.cpp, RTSBuilding.cpp, RTSCameraPawn.cpp, RTSPlayerController.cpp, RTSUnit.cpp, SupplyManager.cpp, TriggerManager.cpp, MainMenuPlayerController.cpp, MainMenuWidget.cpp
+Determining max actions to execute in parallel (10 physical cores, 16 logical cores)
+  Executing up to 10 processes, one per physical core
+  Requested 1.5 GB memory per action, 964.61 MB available: limiting max parallel actions to 1
+Using Unreal Build Accelerator local executor to run 20 action(s)
+  Storage capacity 40Gb
+  RootDir C:\ProgramData\Epic\UnrealBuildAccelerator
+---- Starting trace: 260320_045953 ----
+UbaServer - Listening on 0.0.0.0:1345
+@progress 'Compiling C++ source code...' 0%
+Cache bucket 66389517 used. Action: Compile [x64] PCH.MingWarRTS.cpp ()
+Cache bucket 416513229 used. Action: Link [x64] UnrealEditor-MingWarRTS.dll ()
+All processes queued
+@progress 'Compiling C++ source code...' 5%
+@progress 'Compiling C++ source code...' 10%
+[1/20] Compile [x64] PCH.MingWarRTS.cpp
+[2/20] Compile [x64] BuildingManager.cpp
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\BuildingManager.cpp(40,61): warning C4996: 'FJsonObject::GetStringField': Passing an ANSI string to GetStringField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+            NewBuilding.BuildingID = FName(*BuildingObject->GetStringField("BuildingID"));
+                                                            ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\BuildingManager.cpp(41,48): warning C4996: 'FJsonObject::GetStringField': Passing an ANSI string to GetStringField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+            NewBuilding.Name = BuildingObject->GetStringField("Name");
+                                               ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\BuildingManager.cpp(42,55): warning C4996: 'FJsonObject::GetStringField': Passing an ANSI string to GetStringField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+            NewBuilding.Description = BuildingObject->GetStringField("Description");
+                                                      ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\BuildingManager.cpp(43,60): warning C4996: 'FJsonObject::GetNumberField': Passing an ANSI string to GetNumberField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+            NewBuilding.BuildTimeSeconds = BuildingObject->GetNumberField("BuildTimeSeconds");
+                                                           ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\BuildingManager.cpp(47,33): warning C4996: 'FJsonObject::TryGetObjectField': Passing an ANSI string to TryGetObjectField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+            if (BuildingObject->TryGetObjectField("ConstructionCost", CostObject))
+                                ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\BuildingManager.cpp(57,33): warning C4996: 'FJsonObject::TryGetObjectField': Passing an ANSI string to TryGetObjectField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+            if (BuildingObject->TryGetObjectField("ResourceProductionRate", ProductionObject))
+                                ^
+@progress 'Compiling C++ source code...' 15%
+@progress 'Compiling C++ source code...' 20%
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\BuildingManager.cpp(67,33): warning C4996: 'FJsonObject::TryGetArrayField': Passing an ANSI string to TryGetArrayField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+            if (BuildingObject->TryGetArrayField("UnlocksUnits", UnlocksArray))
+                                ^
+[3/20] Compile [x64] CombatManager.cpp
+[4/20] Compile [x64] IdeaManager.cpp
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\IdeaManager.cpp(81,53): warning C4996: 'FJsonObject::GetStringField': Passing an ANSI string to GetStringField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+            IdeaGroup.GroupID = FName(*GroupObject->GetStringField("GroupID"));
+                                                    ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\IdeaManager.cpp(82,48): warning C4996: 'FJsonObject::GetStringField': Passing an ANSI string to GetStringField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+            IdeaGroup.GroupName = GroupObject->GetStringField("GroupName");
+                                               ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\IdeaManager.cpp(83,50): warning C4996: 'FJsonObject::GetStringField': Passing an ANSI string to GetStringField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+            IdeaGroup.Description = GroupObject->GetStringField("Description");
+                                                 ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\IdeaManager.cpp(86,30): warning C4996: 'FJsonObject::TryGetArrayField': Passing an ANSI string to TryGetArrayField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+            if (GroupObject->TryGetArrayField("Ideas", IdeasArray))
+                             ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\IdeaManager.cpp(94,58): warning C4996: 'FJsonObject::GetStringField': Passing an ANSI string to GetStringField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+                        Idea.IdeaID = FName(*IdeaObject->GetStringField("IdeaID"));
+                                                         ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\IdeaManager.cpp(95,49): warning C4996: 'FJsonObject::GetStringField': Passing an ANSI string to GetStringField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+                        Idea.Name = IdeaObject->GetStringField("Name");
+                                                ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\IdeaManager.cpp(96,49): warning C4996: 'FJsonObject::GetIntegerField': Passing an ANSI string to GetIntegerField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+                        Idea.Cost = IdeaObject->GetIntegerField("Cost");
+                                                ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\IdeaManager.cpp(97,56): warning C4996: 'FJsonObject::GetStringField': Passing an ANSI string to GetStringField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+                        Idea.Description = IdeaObject->GetStringField("Description");
+                                                       ^
+@progress 'Compiling C++ source code...' 25%
+@progress 'Compiling C++ source code...' 30%
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\IdeaManager.cpp(100,41): warning C4996: 'FJsonObject::TryGetObjectField': Passing an ANSI string to TryGetObjectField has been deprecated outside of UTF-8 mode. Please use the overload that takes a TCHAR string. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+                        if (IdeaObject->TryGetObjectField("Modifiers", ModifiersObject))
+                                        ^
+[5/20] Compile [x64] MainMenuPlayerController.cpp
+@progress 'Compiling C++ source code...' 35%
+[6/20] Compile [x64] MainMenuWidget.cpp
+@progress 'Compiling C++ source code...' 40%
+[7/20] Compile [x64] MingWarRTS.cpp
+@progress 'Compiling C++ source code...' 45%
+[8/20] Compile [x64] ModifierManager.cpp
+@progress 'Compiling C++ source code...' 50%
+[9/20] Compile [x64] Module.MingWarRTS.cpp
+@progress 'Compiling C++ source code...' 55%
+[10/20] Compile [x64] NewEventManager.cpp
+@progress 'Compiling C++ source code...' 60%
+[11/20] Compile [x64] RTSBuilding.cpp
+[12/20] Compile [x64] RTSCameraPawn.cpp
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSCameraPawn.cpp(60,2): error C2027: 使用未定義類型 'UInputComponent'
+	PlayerInputComponent->BindAxis("MoveForward", this, &ARTSCameraPawn::MoveForward);
+	^
+C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\Engine\UHT\Actor.generated.h(27,7): note: 請參閱 'UInputComponent' 的宣告
+class UInputComponent;
+      ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSCameraPawn.cpp(61,2): error C2027: 使用未定義類型 'UInputComponent'
+	PlayerInputComponent->BindAxis("MoveRight", this, &ARTSCameraPawn::MoveRight);
+	^
+C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\Engine\UHT\Actor.generated.h(27,7): note: 請參閱 'UInputComponent' 的宣告
+class UInputComponent;
+      ^
+ Compile [x64] RTSCameraPawn.cpp: Exited with error code 2 . The build will fail.
+ Compile [x64] RTSCameraPawn.cpp: WorkingDirectory C:\Program Files\Epic Games\UE_5.7\Engine\Source
+ Compile [x64] RTSCameraPawn.cpp: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\cl.exe @"C:/HW/MingGoRTS/Intermediate/Build/Win64/x64/UnrealEditor/Development/MingWarRTS/RTSCameraPawn.cpp.obj.rsp" 
+@progress 'Compiling C++ source code...' 65%
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSCameraPawn.cpp(62,2): error C2027: 使用未定義類型 'UInputComponent'
+	PlayerInputComponent->BindAxis("Zoom", this, &ARTSCameraPawn::ZoomCamera);
+	^
+C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\Engine\UHT\Actor.generated.h(27,7): note: 請參閱 'UInputComponent' 的宣告
+class UInputComponent;
+      ^
+[13/20] Compile [x64] RTSPlayerController.cpp
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(13,5): error C2065: 'bIsSelecting': 未宣告的識別項
+    bIsSelecting = false;
+    ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(39,32): error C2039: 'LoadAllGameEvents': 並非 'UNewEventManager' 的成員
+        EventManagerComponent->LoadAllGameEvents();
+                               ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Public\NewEventManager.h(8,22): note: 請參閱 'UNewEventManager' 的宣告
+class MINGWARRTS_API UNewEventManager : public UActorComponent
+                     ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(45,34): error C2660: 'UTriggerManager::InitializeTriggers': 函式不使用 1 引數
+        TriggerManagerComponent->InitializeTriggers(this);
+                                 ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Public\TriggerManager.h(19,7): note: 請參閱 'UTriggerManager::InitializeTriggers' 的宣告
+ void InitializeTriggers(UIdeaManager* InIdeaManager, UNewEventManager* InEventManager);
+      ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(45,34): note: 當嘗試符合引數清單 '(ARTSPlayerController *)' 時
+        TriggerManagerComponent->InitializeTriggers(this);
+                                 ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(49,28): error C2509: 'Tick': 成員函式在 'ARTSPlayerController' 中未宣告
+void ARTSPlayerController::Tick(float DeltaTime)
+                           ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Public\RTSPlayerController.h(12,22): note: 請參閱 'ARTSPlayerController' 的宣告
+class MINGWARRTS_API ARTSPlayerController : public APlayerController
+                     ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(69,5): error C2027: 使用未定義類型 'UInputComponent'
+    InputComponent->BindAction("Select", IE_Pressed, this, &ARTSPlayerController::OnSelectPressed);
+    ^
+C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\Engine\UHT\Actor.generated.h(27,7): note: 請參閱 'UInputComponent' 的宣告
+class UInputComponent;
+      ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(69,21): error C2039: 'BindAction': 並非 'TObjectPtr<UInputComponent>' 的成員
+    InputComponent->BindAction("Select", IE_Pressed, this, &ARTSPlayerController::OnSelectPressed);
+                    ^
+C:\Program Files\Epic Games\UE_5.7\Engine\Source\Runtime\CoreUObject\Public\UObject\ObjectPtr.h(487,8): note: 請參閱 'TObjectPtr<UInputComponent>' 的宣告
+struct TObjectPtr
+       ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(70,5): error C2027: 使用未定義類型 'UInputComponent'
+    InputComponent->BindAction("Select", IE_Released, this, &ARTSPlayerController::OnSelectReleased);
+    ^
+C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\Engine\UHT\Actor.generated.h(27,7): note: 請參閱 'UInputComponent' 的宣告
+class UInputComponent;
+      ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(70,21): error C2039: 'BindAction': 並非 'TObjectPtr<UInputComponent>' 的成員
+    InputComponent->BindAction("Select", IE_Released, this, &ARTSPlayerController::OnSelectReleased);
+                    ^
+C:\Program Files\Epic Games\UE_5.7\Engine\Source\Runtime\CoreUObject\Public\UObject\ObjectPtr.h(487,8): note: 請參閱 'TObjectPtr<UInputComponent>' 的宣告
+struct TObjectPtr
+       ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(73,5): error C2027: 使用未定義類型 'UInputComponent'
+    InputComponent->BindAction("Command", IE_Pressed, this, &ARTSPlayerController::OnCommandPressed);
+    ^
+C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\Engine\UHT\Actor.generated.h(27,7): note: 請參閱 'UInputComponent' 的宣告
+class UInputComponent;
+      ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(73,21): error C2039: 'BindAction': 並非 'TObjectPtr<UInputComponent>' 的成員
+    InputComponent->BindAction("Command", IE_Pressed, this, &ARTSPlayerController::OnCommandPressed);
+                    ^
+C:\Program Files\Epic Games\UE_5.7\Engine\Source\Runtime\CoreUObject\Public\UObject\ObjectPtr.h(487,8): note: 請參閱 'TObjectPtr<UInputComponent>' 的宣告
+struct TObjectPtr
+       ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(73,84): error C2039: 'OnCommandPressed': 並非 'ARTSPlayerController' 的成員
+    InputComponent->BindAction("Command", IE_Pressed, this, &ARTSPlayerController::OnCommandPressed);
+                                                                                   ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Public\RTSPlayerController.h(12,22): note: 請參閱 'ARTSPlayerController' 的宣告
+class MINGWARRTS_API ARTSPlayerController : public APlayerController
+                     ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(73,84): error C2065: 'OnCommandPressed': 未宣告的識別項
+    InputComponent->BindAction("Command", IE_Pressed, this, &ARTSPlayerController::OnCommandPressed);
+                                                                                   ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(76,5): error C2027: 使用未定義類型 'UInputComponent'
+    InputComponent->BindAction("Possess", IE_Pressed, this, &ARTSPlayerController::PossessSelectedUnit);
+    ^
+C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\Engine\UHT\Actor.generated.h(27,7): note: 請參閱 'UInputComponent' 的宣告
+class UInputComponent;
+      ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(76,21): error C2039: 'BindAction': 並非 'TObjectPtr<UInputComponent>' 的成員
+    InputComponent->BindAction("Possess", IE_Pressed, this, &ARTSPlayerController::PossessSelectedUnit);
+                    ^
+C:\Program Files\Epic Games\UE_5.7\Engine\Source\Runtime\CoreUObject\Public\UObject\ObjectPtr.h(487,8): note: 請參閱 'TObjectPtr<UInputComponent>' 的宣告
+struct TObjectPtr
+       ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(81,6): error C2065: 'GEngine': 未宣告的識別項
+	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("C++: Left Mouse PRESSED!"));
+	    ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(81,15): error C2065: 'GEngine': 未宣告的識別項
+	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("C++: Left Mouse PRESSED!"));
+	             ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(84,5): error C3861: 'StartMarqueeSelection': 找不到識別項
+    StartMarqueeSelection();
+    ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(91,5): error C3861: 'ClearSelection': 找不到識別項
+    ClearSelection();
+    ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(106,6): error C2065: 'GEngine': 未宣告的識別項
+	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Cyan, TEXT("C++: Left Mouse RELEASED!"));
+	    ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(106,15): error C2065: 'GEngine': 未宣告的識別項
+	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Cyan, TEXT("C++: Left Mouse RELEASED!"));
+	             ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(109,5): error C3861: 'EndMarqueeSelection': 找不到識別項
+    EndMarqueeSelection();
+    ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(112,28): error C2039: 'StartMarqueeSelection': 並非 'ARTSPlayerController' 的成員
+void ARTSPlayerController::StartMarqueeSelection()
+                           ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Public\RTSPlayerController.h(12,22): note: 請參閱 'ARTSPlayerController' 的宣告
+class MINGWARRTS_API ARTSPlayerController : public APlayerController
+                     ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(115,9): error C3861: 'GetMousePosition': 找不到識別項
+    if (GetMousePosition(MouseX, MouseY))
+        ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(117,9): error C2065: 'SelectionStartPos': 未宣告的識別項
+        SelectionStartPos = FVector2D(MouseX, MouseY);
+        ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(118,9): error C2065: 'SelectionEndPos': 未宣告的識別項
+        SelectionEndPos = SelectionStartPos;
+        ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(118,27): error C2065: 'SelectionStartPos': 未宣告的識別項
+        SelectionEndPos = SelectionStartPos;
+                          ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(119,9): error C2065: 'bIsSelecting': 未宣告的識別項
+        bIsSelecting = true;
+        ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(123,28): error C2039: 'UpdateMarqueeSelection': 並非 'ARTSPlayerController' 的成員
+void ARTSPlayerController::UpdateMarqueeSelection()
+                           ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Public\RTSPlayerController.h(12,22): note: 請參閱 'ARTSPlayerController' 的宣告
+class MINGWARRTS_API ARTSPlayerController : public APlayerController
+                     ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(126,9): error C3861: 'GetMousePosition': 找不到識別項
+    if (GetMousePosition(MouseX, MouseY))
+        ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(128,9): error C2065: 'SelectionEndPos': 未宣告的識別項
+        SelectionEndPos = FVector2D(MouseX, MouseY);
+        ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(132,28): error C2039: 'EndMarqueeSelection': 並非 'ARTSPlayerController' 的成員
+void ARTSPlayerController::EndMarqueeSelection()
+                           ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Public\RTSPlayerController.h(12,22): note: 請參閱 'ARTSPlayerController' 的宣告
+class MINGWARRTS_API ARTSPlayerController : public APlayerController
+                     ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(134,5): error C2065: 'bIsSelecting': 未宣告的識別項
+    bIsSelecting = false;
+    ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(139,28): error C2039: 'OnCommandPressed': 並非 'ARTSPlayerController' 的成員
+void ARTSPlayerController::OnCommandPressed()
+                           ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Public\RTSPlayerController.h(12,22): note: 請參閱 'ARTSPlayerController' 的宣告
+class MINGWARRTS_API ARTSPlayerController : public APlayerController
+                     ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(145,28): error C2039: 'ClearSelection': 並非 'ARTSPlayerController' 的成員
+void ARTSPlayerController::ClearSelection()
+                           ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Public\RTSPlayerController.h(12,22): note: 請參閱 'ARTSPlayerController' 的宣告
+class MINGWARRTS_API ARTSPlayerController : public APlayerController
+                     ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(147,27): error C2065: 'SelectedUnits': 未宣告的識別項
+    for (ARTSUnit* Unit : SelectedUnits)
+                          ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(147,25): error C2143: 語法錯誤: 遺漏 ';' (在 ':' 之前)
+    for (ARTSUnit* Unit : SelectedUnits)
+                        ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(147,40): error C2143: 語法錯誤: 遺漏 ';' (在 ')' 之前)
+    for (ARTSUnit* Unit : SelectedUnits)
+                                       ^
+ Compile [x64] RTSPlayerController.cpp: Exited with error code 2 . The build will fail.
+ Compile [x64] RTSPlayerController.cpp: WorkingDirectory C:\Program Files\Epic Games\UE_5.7\Engine\Source
+ Compile [x64] RTSPlayerController.cpp: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\cl.exe @"C:/HW/MingGoRTS/Intermediate/Build/Win64/x64/UnrealEditor/Development/MingWarRTS/RTSPlayerController.cpp.obj.rsp" 
+@progress 'Compiling C++ source code...' 70%
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSPlayerController.cpp(154,5): error C2065: 'SelectedUnits': 未宣告的識別項
+    SelectedUnits.Empty();
+    ^
+[14/20] Compile [x64] RTSUnit.cpp
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSUnit.cpp(55,5): error C2027: 使用未定義類型 'UInputComponent'
+    PlayerInputComponent->BindAxis("MoveForward", this, &ARTSUnit::MoveForward);
+    ^
+C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\Engine\UHT\Actor.generated.h(27,7): note: 請參閱 'UInputComponent' 的宣告
+class UInputComponent;
+      ^
+ Compile [x64] RTSUnit.cpp: Exited with error code 2 . The build will fail.
+ Compile [x64] RTSUnit.cpp: WorkingDirectory C:\Program Files\Epic Games\UE_5.7\Engine\Source
+ Compile [x64] RTSUnit.cpp: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\cl.exe @"C:/HW/MingGoRTS/Intermediate/Build/Win64/x64/UnrealEditor/Development/MingWarRTS/RTSUnit.cpp.obj.rsp" 
+@progress 'Compiling C++ source code...' 75%
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\RTSUnit.cpp(56,5): error C2027: 使用未定義類型 'UInputComponent'
+    PlayerInputComponent->BindAxis("MoveRight", this, &ARTSUnit::MoveRight);
+    ^
+C:\Program Files\Epic Games\UE_5.7\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\Engine\UHT\Actor.generated.h(27,7): note: 請參閱 'UInputComponent' 的宣告
+class UInputComponent;
+      ^
+ Compile [x64] ResourceManager.cpp: Exited with error code 2 . The build will fail.
+ Compile [x64] ResourceManager.cpp: WorkingDirectory C:\Program Files\Epic Games\UE_5.7\Engine\Source
+ Compile [x64] ResourceManager.cpp: C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\cl.exe @"C:/HW/MingGoRTS/Intermediate/Build/Win64/x64/UnrealEditor/Development/MingWarRTS/ResourceManager.cpp.obj.rsp" 
+@progress 'Compiling C++ source code...' 80%
+@progress 'Compiling C++ source code...' 85%
+[15/20] Compile [x64] ResourceManager.cpp
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\ResourceManager.cpp(18,51): error C2664: 'APlayerController *UGameplayStatics::GetPlayerController(const UObject *,int32)': 無法將引數 1 從 'UWorld *' 轉換為 'const UObject *'
+    if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+                                                  ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\ResourceManager.cpp(18,79): note: 指向的型別沒有相關; 轉換必須有 reinterpret_cast、C-Style 轉換或小括號內的函式樣式轉換
+    if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+                                                                              ^
+C:\Program Files\Epic Games\UE_5.7\Engine\Source\Runtime\Engine\Classes\Kismet\GameplayStatics.h(192,45): note: 請參閱 'UGameplayStatics::GetPlayerController' 的宣告
+	static ENGINE_API class APlayerController* GetPlayerController(const UObject* WorldContextObject, int32 PlayerIndex);
+	                                           ^
+C:\HW\MingGoRTS\Source\MingWarRTS\Private\ResourceManager.cpp(18,51): note: 當嘗試符合引數清單 '(UWorld *, int)' 時
+    if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+                                                  ^
+[16/20] Compile [x64] SupplyManager.cpp
+[17/20] Compile [x64] TriggerManager.cpp
+
+Trace written to file C:/HW/MingGoRTS/Logs/BuildLog_Editor.uba with size 20.6kb
+Total time in Unreal Build Accelerator local executor: 50.57 seconds
+CompilationResultException: OtherCompilationError
+   at UnrealBuildTool.ActionGraph.ExecuteActionsAsync(BuildConfiguration BuildConfiguration, List`1 ActionsToExecute, List`1 TargetDescriptors, ILogger Logger, IActionArtifactCache actionArtifactCache)
+   at UnrealBuildTool.BuildMode.BuildAsync(TargetMakefile[] Makefiles, List`1 TargetDescriptors, BuildConfiguration BuildConfiguration, BuildOptions Options, FileReference WriteOutdatedActionsFile, ILogger Logger, String ActionTypeFilter)
+   at UnrealBuildTool.BuildMode.BuildAsync(List`1 TargetDescriptors, BuildConfiguration BuildConfiguration, ISourceFileWorkingSet WorkingSet, BuildOptions Options, FileReference WriteOutdatedActionsFile, ILogger Logger, Boolean bSkipPreBuildTargets, String ActionTypeFilter)
+   at UnrealBuildTool.BuildMode.ExecuteAsync(CommandLineArguments Arguments, ILogger Logger)
+   at UnrealBuildTool.UnrealBuildTool.Main(String[] ArgumentsArray)
+WriteFileIfChanged() wrote 5 changed files of 60 requested writes.
+
+Result: Failed (OtherCompilationError)
+Total execution time: 66.70 seconds

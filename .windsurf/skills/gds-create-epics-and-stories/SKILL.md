@@ -1,0 +1,10 @@
+---
+name: gds-create-epics-and-stories
+description: Break game design requirements into epics and user stories. Use when the user says "create the epics and stories list"
+---
+
+# create-epics-and-stories
+
+Read the entire workflow file at {project-root}/_bmad/gds/workflows/3-technical/create-epics-and-stories/workflow.md
+
+Follow all instructions in the workflow file exactly as written.
