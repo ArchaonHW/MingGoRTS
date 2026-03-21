@@ -1,0 +1,26 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "MingTactical",
+  "Description": "Tactical layer plugin for RTS combat with 1000+ units",
+  "Category": "Gameplay",
+  "CreatedBy": "Potato",
+  "CanContainContent": true,
+  "IsBetaVersion": false,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "Modules": [
+    {
+      "Name": "MingTactical",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "MingCore",
+      "Enabled": true
+    }
+  ]
+}
