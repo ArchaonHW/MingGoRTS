@@ -171,8 +171,8 @@ struct MINGPERSONAL_API FMingItemData
     FMingItemData()
     {
         ItemID = -1;
-        ItemName = TEXT("");
-        ItemDescription = TEXT("");
+        ItemName = TEXT(""};
+        ItemDescription = TEXT(""};
         ItemType = EMingItemType::Weapon;
         ItemRarity = EMingItemRarity::Common;
         ItemLevel = 1;
@@ -180,23 +180,23 @@ struct MINGPERSONAL_API FMingItemData
         ItemWeight = 0.0f;
         StackSize = 1;
         CurrentStack = 1;
-        ItemAttributes.Empty();
+        ItemAttributes.Empty(};
         EquipSlot = EMingEquipSlot::MainHand;
         bIsEquipped = false;
         CurrentDurability = 100.0f;
         MaxDurability = 100.0f;
         EnhancementType = EMingEnhancementType::None;
         EnhancementLevel = 0;
-        ItemIconPath = TEXT("");
-        ItemModelPath = TEXT("");
-        ItemMaterialPath = TEXT("");
-        ItemEffectPath = TEXT("");
-        ItemSoundPath = TEXT("");
+        ItemIconPath = TEXT(""};
+        ItemModelPath = TEXT(""};
+        ItemMaterialPath = TEXT(""};
+        ItemEffectPath = TEXT(""};
+        ItemSoundPath = TEXT(""};
         bIsUnique = false;
         bIsSoulbound = false;
-        ItemTags.Empty();
-        AcquiredTime = FDateTime::Now();
-        ItemSource = TEXT("");
+        ItemTags.Empty(};
+        AcquiredTime = FDateTime::Now(};
+        ItemSource = TEXT(""};
     }
 };
 
@@ -288,26 +288,26 @@ struct MINGPERSONAL_API FMingEquipmentData
     FMingEquipmentData()
     {
         EquipmentID = -1;
-        EquipmentName = TEXT("");
-        EquipmentDescription = TEXT("");
+        EquipmentName = TEXT(""};
+        EquipmentDescription = TEXT(""};
         EquipmentType = EMingItemType::Weapon;
         EquipmentRarity = EMingItemRarity::Common;
         EquipmentLevel = 1;
-        EquipmentAttributes.Empty();
+        EquipmentAttributes.Empty(};
         EquipSlot = EMingEquipSlot::MainHand;
         bIsEquipped = false;
         CurrentDurability = 100.0f;
         MaxDurability = 100.0f;
         EnhancementType = EMingEnhancementType::None;
         EnhancementLevel = 0;
-        EquipmentIconPath = TEXT("");
-        EquipmentModelPath = TEXT("");
-        EquipmentMaterialPath = TEXT("");
-        EquipmentEffectPath = TEXT("");
-        EquipmentSoundPath = TEXT("");
-        EquipmentRequirements.Empty();
-        AcquiredTime = FDateTime::Now();
-        EquipmentSource = TEXT("");
+        EquipmentIconPath = TEXT(""};
+        EquipmentModelPath = TEXT(""};
+        EquipmentMaterialPath = TEXT(""};
+        EquipmentEffectPath = TEXT(""};
+        EquipmentSoundPath = TEXT(""};
+        EquipmentRequirements.Empty(};
+        AcquiredTime = FDateTime::Now(};
+        EquipmentSource = TEXT(""};
     }
 };
 
@@ -362,27 +362,27 @@ struct MINGPERSONAL_API FMingCraftingRecipe
     FMingCraftingRecipe()
     {
         RecipeID = -1;
-        RecipeName = TEXT("");
-        RecipeDescription = TEXT("");
-        RequiredMaterials.Empty();
-        ResultItems.Empty();
+        RecipeName = TEXT(""};
+        RecipeDescription = TEXT(""};
+        RequiredMaterials.Empty(};
+        ResultItems.Empty(};
         CraftingTime = 0.0f;
         SuccessRate = 1.0f;
         RecipeRarity = EMingItemRarity::Common;
-        RequiredSkills.Empty();
+        RequiredSkills.Empty(};
         RequiredLevel = 1;
-        RecipeIconPath = TEXT("");
+        RecipeIconPath = TEXT(""};
     }
 };
 
 // ?©Â?ÁÆ°Á?‰∫ã‰ª∂ÂßîË?
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemAcquired, const FMingItemData&, Item, int32, Quantity);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemLost, const FMingItemData&, Item, int32, Quantity);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEquipped, const FMingEquipmentData&, Equipment, const FString&, Slot);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemUnequipped, const FMingEquipmentData&, Equipment, const FString&, Slot);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEnhanced, const FMingEquipmentData&, Equipment, EMingEnhancementType, EnhancementType);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemCrafted, const FMingCraftingRecipe&, Recipe, const TArray<FMingItemData>&, Results);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemRepaired, const FMingEquipmentData&, Equipment, float, RepairAmount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemAcquired, const FMingItemData&, Item, int32, Quantity};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemLost, const FMingItemData&, Item, int32, Quantity};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEquipped, const FMingEquipmentData&, Equipment, const FString&, Slot};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemUnequipped, const FMingEquipmentData&, Equipment, const FString&, Slot};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEnhanced, const FMingEquipmentData&, Equipment, EMingEnhancementType, EnhancementType};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemCrafted, const FMingCraftingRecipe&, Recipe, const TArray<FMingItemData>&, Results};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemRepaired, const FMingEquipmentData&, Equipment, float, RepairAmount};
 
 /**
  * ?©Â?ÁÆ°Á??? * Ë≤†Ë≤¨ÁÆ°Á??ã‰∫∫Ë£ùÂ??åÁâ©?ÅÁ≥ªÁµ? */
@@ -392,24 +392,24 @@ class MINGPERSONAL_API UMingItemManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingItemManager();
+    UMingItemManager(};
 
     // ?ùÂ??ñÁâ©?ÅÁ≥ªÁµ?    UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool InitializeItemSystem();
+    bool InitializeItemSystem(};
 
     // Ê∑ªÂ??©Â??∞Ë???    UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool AddItemToInventory(const FMingItemData& Item, int32 Quantity = 1);
+    bool AddItemToInventory(const FMingItemData& Item, int32 Quantity = 1};
 
     // ÂæûË??ÖÁßª?§Áâ©??    UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool RemoveItemFromInventory(int32 ItemID, int32 Quantity = 1);
+    bool RemoveItemFromInventory(int32 ItemID, int32 Quantity = 1};
 
     // Ë£ùÂ??©Â?
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool EquipItem(int32 ItemID, const FString& EquipSlot);
+    bool EquipItem(int32 ItemID, const FString& EquipSlot};
 
     // ?∏‰??©Â?
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool UnequipItem(const FString& EquipSlot);
+    bool UnequipItem(const FString& EquipSlot};
 
     // ?≤Â??åÂ??©Â?
     UFUNCTION(BlueprintPure, Category = "Item Manager")
@@ -428,19 +428,19 @@ public:
 
     // Âº∑Â??©Â?
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool EnhanceItem(int32 ItemID, EMingEnhancementType EnhancementType);
+    bool EnhanceItem(int32 ItemID, EMingEnhancementType EnhancementType};
 
     // ‰øÆÁ??©Â?
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool RepairItem(int32 ItemID, float RepairAmount = 100.0f);
+    bool RepairItem(int32 ItemID, float RepairAmount = 100.0f};
 
     // ?àÊ??©Â?
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool CraftItem(int32 RecipeID);
+    bool CraftItem(int32 RecipeID};
 
     // ?ÜËß£?©Â?
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool DisassembleItem(int32 ItemID);
+    bool DisassembleItem(int32 ItemID};
 
     // ?≤Â??©Â??∏È?
     UFUNCTION(BlueprintPure, Category = "Item Manager")
@@ -474,18 +474,18 @@ public:
 
     // ?íÂ??åÂ??©Â?
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    void SortInventory(EMingItemType SortBy, bool bAscending = true);
+    void SortInventory(EMingItemType SortBy, bool bAscending = true};
 
     // ‰øùÂ??©Â??∏Ê?
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool SaveItemData();
+    bool SaveItemData(};
 
     // ËºâÂÖ•?©Â??∏Ê?
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool LoadItemData();
+    bool LoadItemData(};
 
     // Ê∏ÖÈô§?Ä?âÁâ©?ÅÊï∏??    UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    void ClearAllItemData();
+    void ClearAllItemData(};
 
     // ‰∫ã‰ª∂ÂßîË?
     UPROPERTY(BlueprintAssignable)
@@ -539,10 +539,10 @@ protected:
 
 private:
     // ËºâÂÖ•?êË®≠?©Â?
-    void LoadDefaultItems();
+    void LoadDefaultItems(};
 
     // ËºâÂÖ•?êË®≠?çÊñπ
-    void LoadDefaultRecipes();
+    void LoadDefaultRecipes(};
 
     // È©óË??©Â??∏Ê?
     bool ValidateItemData(const FMingItemData& Item) const;
@@ -556,13 +556,13 @@ private:
     TMap<FString, float> CalculateEquipmentBonuses() const;
 
     // ?âÁî®Ë£ùÂ??àÊ?
-    void ApplyEquipmentEffects(const FMingEquipmentData& Equipment);
+    void ApplyEquipmentEffects(const FMingEquipmentData& Equipment};
 
     // ÁßªÈô§Ë£ùÂ??àÊ?
-    void RemoveEquipmentEffects(const FMingEquipmentData& Equipment);
+    void RemoveEquipmentEffects(const FMingEquipmentData& Equipment};
 
     // ?¥Êñ∞?åÂ?ÂÆπÈ?‰ΩøÁî®
-    void UpdateInventoryUsage();
+    void UpdateInventoryUsage(};
 
     // Ê™¢Êü•?åÂ?Á©∫È?
     bool HasInventorySpace(const FMingItemData& Item, int32 Quantity) const;
@@ -578,29 +578,29 @@ private:
     // ?≤Â??©Â?È°ûÂ??ñÊ?
     FString GetItemTypeIcon(EMingItemType ItemType) const;
 
-    // ?¥Êñ∞?©Â??ê‰?Â∫?    void UpdateItemDurability(int32 ItemID, float Delta);
+    // ?¥Êñ∞?©Â??ê‰?Â∫?    void UpdateItemDurability(int32 ItemID, float Delta};
 
     // Ê™¢Êü•?©Â??ØÂê¶?çÂ?
     bool IsItemDamaged(int32 ItemID) const;
 
     // ‰øÆÂæ©?çÂ??©Â?
-    void RepairDamagedItems();
+    void RepairDamagedItems(};
 
     // ?™Â??¥Á??åÂ?
-    void AutoOrganizeInventory();
+    void AutoOrganizeInventory(};
 
     // ?à‰Ωµ?∏Â??©Â?
-    void MergeStackableItems();
+    void MergeStackableItems(};
 
     // ?ÜÈõ¢?©Â??ÜÁ?
-    void SplitItemStack(int32 ItemID, int32 SplitQuantity);
+    void SplitItemStack(int32 ItemID, int32 SplitQuantity};
 
     // Ë®àÁ??àÊ??êÂ???    float CalculateCraftingSuccessRate(int32 RecipeID) const;
 
-    // Ê∂àËÄóÂ??êÊ???    bool ConsumeCraftingMaterials(int32 RecipeID);
+    // Ê∂àËÄóÂ??êÊ???    bool ConsumeCraftingMaterials(int32 RecipeID};
 
     // Ê∑ªÂ??àÊ?ÁµêÊ?
-    bool AddCraftingResults(int32 RecipeID);
+    bool AddCraftingResults(int32 RecipeID};
 
     // ?≤Â??©Â?Áµ±Ë?
     TMap<EMingItemType, int32> GetItemStatistics() const;
@@ -609,8 +609,9 @@ private:
     TMap<EMingItemRarity, int32> GetRarityStatistics() const;
 
     // ‰øùÂ??©Â?Âø´ÁÖß
-    void SaveItemSnapshot();
+    void SaveItemSnapshot(};
 
     // ËºâÂÖ•?©Â?Âø´ÁÖß
-    void LoadItemSnapshot();
+    void LoadItemSnapshot(};
 };
+

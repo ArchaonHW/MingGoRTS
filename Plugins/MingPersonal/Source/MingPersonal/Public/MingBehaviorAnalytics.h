@@ -28,8 +28,8 @@ struct FBehaviorEvent
 
     FBehaviorEvent()
     {
-        EventType = TEXT("");
-        Context = TEXT("");
+        EventType = TEXT(""};
+        Context = TEXT(""};
         Timestamp = 0.0f;
         Value = 0.0f;
     }
@@ -37,7 +37,7 @@ struct FBehaviorEvent
     FBehaviorEvent(const FString& InEventType, const FString& InContext, float InValue = 1.0f)
         : EventType(InEventType), Context(InContext), Value(InValue)
     {
-        Timestamp = FDateTime::Now().ToUnixTimestamp();
+        Timestamp = FDateTime::Now().ToUnixTimestamp(};
     }
 };
 
@@ -63,7 +63,7 @@ struct FBehaviorPattern
 
     FBehaviorPattern()
     {
-        PatternName = TEXT("");
+        PatternName = TEXT(""};
         Frequency = 0.0f;
         Confidence = 0.0f;
         AverageInterval = 0.0f;
@@ -98,7 +98,7 @@ struct FUserSession
 
     FUserSession()
     {
-        SessionID = TEXT("");
+        SessionID = TEXT(""};
         StartTime = 0.0f;
         EndTime = 0.0f;
         Duration = 0.0f;
@@ -106,9 +106,9 @@ struct FUserSession
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBehaviorPatternDetected, const FBehaviorPattern&, Pattern);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionCompleted, const FUserSession&, Session);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnomalyDetected, const FString&, AnomalyType, float, Severity);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBehaviorPatternDetected, const FBehaviorPattern&, Pattern};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionCompleted, const FUserSession&, Session};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnomalyDetected, const FString&, AnomalyType, float, Severity};
 
 /**
  * Ë°åÁÇ∫?ÜÊ?Á≥ªÁµ±
@@ -119,34 +119,34 @@ class MINGPERSONAL_API UMingBehaviorAnalytics : public UObject
     GENERATED_BODY()
 
 public:
-    UMingBehaviorAnalytics();
+    UMingBehaviorAnalytics(};
 
     // ?ùÂ??ñÂ??êÁ≥ªÁµ?    UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void InitializeAnalytics();
+    void InitializeAnalytics(};
 
     // ‰∫ã‰ª∂Ë®òÈ?
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void RecordEvent(const FString& EventType, const FString& Context, float Value = 1.0f);
+    void RecordEvent(const FString& EventType, const FString& Context, float Value = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     void RecordEventWithMetadata(const FString& EventType, const FString& Context, 
-                                const TMap<FString, FString>& Metadata, float Value = 1.0f);
+                                const TMap<FString, FString>& Metadata, float Value = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void StartSession(const FString& SessionID);
+    void StartSession(const FString& SessionID};
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void EndSession();
+    void EndSession(};
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void RecordUIInteraction(const FString& WidgetType, const FString& Action, const FString& Target);
+    void RecordUIInteraction(const FString& WidgetType, const FString& Action, const FString& Target};
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void RecordGameAction(const FString& ActionType, const FString& Target, float SuccessRate);
+    void RecordGameAction(const FString& ActionType, const FString& Target, float SuccessRate};
 
     // Ê®°Â?Ê™¢Ê∏¨
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void DetectPatterns();
+    void DetectPatterns(};
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TArray<FBehaviorPattern> GetDetectedPatterns() const;
@@ -169,7 +169,7 @@ public:
 
     // ?∞Â∏∏Ê™¢Ê∏¨
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void DetectAnomalies();
+    void DetectAnomalies(};
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TArray<FString> GetAnomalies() const;
@@ -179,7 +179,7 @@ public:
 
     // ?êÊ∏¨?ÜÊ?
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    FString PredictNextAction();
+    FString PredictNextAction(};
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     float PredictSessionDuration() const;
@@ -220,7 +220,7 @@ public:
     bool IsRecording() const { return bIsRecording; }
 
     UFUNCTION(BlueprintPure, Category = "Behavior Analytics")
-    int32 GetTotalEventCount() const { return AllEvents.Num(); }
+    int32 GetTotalEventCount() const { return AllEvents.Num(}; }
 
     UFUNCTION(BlueprintPure, Category = "Behavior Analytics")
     FUserSession GetCurrentSession() const { return CurrentSession; }
@@ -230,16 +230,16 @@ public:
 
     // Ë®≠ÁΩÆ
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void SetRecordingEnabled(bool bEnabled);
+    void SetRecordingEnabled(bool bEnabled};
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void SetPatternDetectionThreshold(float Threshold);
+    void SetPatternDetectionThreshold(float Threshold};
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void SetAnomalyDetectionSensitivity(float Sensitivity);
+    void SetAnomalyDetectionSensitivity(float Sensitivity};
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void ClearAllData();
+    void ClearAllData(};
 
     // ‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "Analytics Events")
@@ -292,26 +292,27 @@ protected:
     int32 MaxSessionsInHistory = 100;
 
     // ?ßÈÉ®?ΩÊï∏
-    void ProcessEvent(const FBehaviorEvent& Event);
-    void UpdateEventFrequencies();
-    void UpdateEventTrends();
-    void DetectSequentialPatterns();
-    void DetectTemporalPatterns();
-    void DetectBehavioralAnomalies();
+    void ProcessEvent(const FBehaviorEvent& Event};
+    void UpdateEventFrequencies(};
+    void UpdateEventTrends(};
+    void DetectSequentialPatterns(};
+    void DetectTemporalPatterns(};
+    void DetectBehavioralAnomalies(};
     float CalculatePatternConfidence(const TArray<FString>& Sequence) const;
     float CalculateAnomalyScore(const FString& EventType, float Value) const;
-    void GenerateUserSegments();
+    void GenerateUserSegments(};
     FString ClassifyUserBehavior() const;
 
     // Ê©üÂô®Â≠∏Á?ËºîÂä©
     TArray<float> ExtractFeatures(const TArray<FBehaviorEvent>& Events) const;
     float CalculateSimilarity(const TArray<float>& Features1, const TArray<float>& Features2) const;
-    void UpdatePredictionModels();
+    void UpdatePredictionModels(};
 
 private:
     // ËºîÂä©?ΩÊï∏
-    void CleanupOldData();
-    void SaveAnalyticsData();
-    void LoadAnalyticsData();
+    void CleanupOldData(};
+    void SaveAnalyticsData(};
+    void LoadAnalyticsData(};
     FString GenerateSessionID() const;
 };
+

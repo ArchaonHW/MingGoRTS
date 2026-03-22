@@ -170,9 +170,9 @@ struct FRelationshipSyncStats
 };
 
 // Delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRelationshipSyncCompleted);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRelationshipSyncFailed, FString, ErrorMessage);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConflictDetected, int32, RelationshipID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRelationshipSyncCompleted};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRelationshipSyncFailed, FString, ErrorMessage};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConflictDetected, int32, RelationshipID};
 
 /**
  * ?œä??¸æ?ç¶²çµ¡è¤‡è£½ç³»çµ±
@@ -183,80 +183,80 @@ class MINGPERSONAL_API UMingRelationshipReplication : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRelationshipReplication();
+    UMingRelationshipReplication(};
 
     // Initialize/Shutdown
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void Initialize(UMingNetworkManager* InNetworkManager);
+    void Initialize(UMingNetworkManager* InNetworkManager};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void Shutdown();
+    void Shutdown(};
 
     // Server-side functions
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ServerInitializePlayerRelationships(int32 PlayerID);
+    void ServerInitializePlayerRelationships(int32 PlayerID};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ServerUpdateRelationship(int32 RelationshipID, int32 SourcePlayerID, int32 TargetPlayerID, float NewValue);
+    void ServerUpdateRelationship(int32 RelationshipID, int32 SourcePlayerID, int32 TargetPlayerID, float NewValue};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ServerUpdateReputation(int32 PlayerID, const FString& RegionID, float NewValue);
+    void ServerUpdateReputation(int32 PlayerID, const FString& RegionID, float NewValue};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    FRelationshipReplicationBatch ServerCreateReplicationBatch(int32 TargetPlayerID, bool bFullSync = false);
+    FRelationshipReplicationBatch ServerCreateReplicationBatch(int32 TargetPlayerID, bool bFullSync = false};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ServerBroadcastToAllPlayers(const FRelationshipReplicationBatch& Batch);
+    void ServerBroadcastToAllPlayers(const FRelationshipReplicationBatch& Batch};
 
     // Client-side functions
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ClientRequestFullSync();
+    void ClientRequestFullSync(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ClientProcessReplicationBatch(const FRelationshipReplicationBatch& Batch);
+    void ClientProcessReplicationBatch(const FRelationshipReplicationBatch& Batch};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ClientSendRelationshipUpdate(int32 RelationshipID, float DeltaValue);
+    void ClientSendRelationshipUpdate(int32 RelationshipID, float DeltaValue};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ClientSendReputationUpdate(const FString& RegionID, float DeltaValue);
+    void ClientSendReputationUpdate(const FString& RegionID, float DeltaValue};
 
     // Conflict resolution
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ResolveConflict_ServerAuthoritative(int32 RelationshipID);
+    void ResolveConflict_ServerAuthoritative(int32 RelationshipID};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ResolveConflict_ClientWins(int32 RelationshipID);
+    void ResolveConflict_ClientWins(int32 RelationshipID};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ResolveConflict_MergeValues(int32 RelationshipID, float MergeWeight);
+    void ResolveConflict_MergeValues(int32 RelationshipID, float MergeWeight};
 
     // Sync management
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void StartPeriodicSync(float SyncInterval = 5.0f);
+    void StartPeriodicSync(float SyncInterval = 5.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void StopPeriodicSync();
+    void StopPeriodicSync(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ForceImmediateSync();
+    void ForceImmediateSync(};
 
     // Settings
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void SetReplicationMode(ERelationshipReplicationMode NewMode);
+    void SetReplicationMode(ERelationshipReplicationMode NewMode};
 
     UFUNCTION(BlueprintPure, Category = "Relationship Replication")
     ERelationshipReplicationMode GetReplicationMode() const;
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void SetSyncPriority(int32 RelationshipID, ERelationshipSyncPriority Priority);
+    void SetSyncPriority(int32 RelationshipID, ERelationshipSyncPriority Priority};
 
     // Statistics
     UFUNCTION(BlueprintPure, Category = "Relationship Replication")
     FRelationshipSyncStats GetSyncStats() const;
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ResetSyncStats();
+    void ResetSyncStats(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
     void GetDetailedSyncReport(FString& OutReport) const;
@@ -270,10 +270,10 @@ public:
 
     // Utility
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void CompressReplicationBatch(FRelationshipReplicationBatch& Batch);
+    void CompressReplicationBatch(FRelationshipReplicationBatch& Batch};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void DecompressReplicationBatch(FRelationshipReplicationBatch& Batch);
+    void DecompressReplicationBatch(FRelationshipReplicationBatch& Batch};
 
     // Delegates
     UPROPERTY(BlueprintAssignable, Category = "Replication Events")
@@ -314,13 +314,14 @@ private:
     float LastFullSyncTime;
 
     // Internal functions
-    void PerformPeriodicSync();
-    void SendBatchToPlayer(int32 PlayerID, const FRelationshipReplicationBatch& Batch);
-    void ApplyRelationshipUpdate(const FNetworkRelationshipData& Update);
-    void ApplyReputationUpdate(const FNetworkReputationData& Update);
-    bool CheckForConflicts(const FNetworkRelationshipData& Incoming, const FNetworkRelationshipData& Existing);
-    int32 GenerateBatchID();
-    void RecordSyncSuccess(float SyncTime);
-    void RecordSyncFailure(const FString& Reason);
-    void UpdateCache(const FRelationshipReplicationBatch& Batch);
+    void PerformPeriodicSync(};
+    void SendBatchToPlayer(int32 PlayerID, const FRelationshipReplicationBatch& Batch};
+    void ApplyRelationshipUpdate(const FNetworkRelationshipData& Update};
+    void ApplyReputationUpdate(const FNetworkReputationData& Update};
+    bool CheckForConflicts(const FNetworkRelationshipData& Incoming, const FNetworkRelationshipData& Existing};
+    int32 GenerateBatchID(};
+    void RecordSyncSuccess(float SyncTime};
+    void RecordSyncFailure(const FString& Reason};
+    void UpdateCache(const FRelationshipReplicationBatch& Batch};
 };
+

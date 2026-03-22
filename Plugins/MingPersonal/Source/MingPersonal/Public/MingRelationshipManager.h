@@ -49,7 +49,7 @@ struct FRelationshipData
 
     FRelationshipData()
     {
-        CharacterID = TEXT("");
+        CharacterID = TEXT(""};
         RelationshipType = ERelationshipType::Neutral;
         RelationshipValue = 0.0f;
         LastInteractionDay = 0;
@@ -75,7 +75,7 @@ struct FReputationData
 
     FReputationData()
     {
-        RegionID = TEXT("");
+        RegionID = TEXT(""};
         ReputationLevel = EReputationLevel::Unknown;
         ReputationScore = 0.0f;
     }
@@ -103,11 +103,11 @@ struct FInteractionEffect
 
     FInteractionEffect()
     {
-        CharacterID = TEXT("");
+        CharacterID = TEXT(""};
         RelationshipChange = 0.0f;
         ReputationChange = 0.0f;
-        RegionID = TEXT("");
-        Reason = TEXT("");
+        RegionID = TEXT(""};
+        Reason = TEXT(""};
     }
 };
 
@@ -119,10 +119,10 @@ class MINGPERSONAL_API UMingRelationshipManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRelationshipManager();
+    UMingRelationshipManager(};
 
     // ?ùÂ??ñÁ≥ªÁµ?    UFUNCTION(BlueprintCallable, Category = "Relationship System")
-    void InitializeRelationshipSystem();
+    void InitializeRelationshipSystem(};
 
     // ?≤Â??áÁâπÂÆöË??≤Á??ú‰?
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
@@ -130,7 +130,7 @@ public:
 
     // ?¥Êñ∞ËßíËâ≤?ú‰?
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
-    void UpdateRelationship(const FString& CharacterID, float ChangeAmount, const FString& Reason);
+    void UpdateRelationship(const FString& CharacterID, float ChangeAmount, const FString& Reason};
 
     // ?≤Â??∞Â??≤Ê?
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
@@ -138,11 +138,11 @@ public:
 
     // ?¥Êñ∞?∞Â??≤Ê?
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
-    void UpdateReputation(const FString& RegionID, float ChangeAmount, const FString& Reason);
+    void UpdateReputation(const FString& RegionID, float ChangeAmount, const FString& Reason};
 
     // ?ïÁ?‰∫íÂ??àÊ?
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
-    void ProcessInteraction(const FInteractionEffect& InteractionEffect);
+    void ProcessInteraction(const FInteractionEffect& InteractionEffect};
 
     // Ê™¢Êü•?ØÂê¶?Ø‰ª•?•Â??πÂ?‰ªªÂ?ÔºàÂü∫?ºËÅ≤?õÔ?
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
@@ -166,7 +166,7 @@ public:
 
     // Ê∑ªÂ??±Â?Ë®òÊÜ∂
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
-    void AddSharedMemory(const FString& CharacterID, const FString& Memory);
+    void AddSharedMemory(const FString& CharacterID, const FString& Memory};
 
     // ?≤Â??Ä?âÈ?‰øÇÊï∏??    UFUNCTION(BlueprintCallable, Category = "Relationship System")
     const TMap<FString, FRelationshipData>& GetAllRelationships() const { return Relationships; }
@@ -188,11 +188,11 @@ protected:
 
     // ?ú‰?ËÆäÂ??ûË™ø
     UFUNCTION(BlueprintImplementableEvent, Category = "Relationship System")
-    void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason);
+    void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
 
     // ?≤Ê?ËÆäÂ??ûË™ø
     UFUNCTION(BlueprintImplementableEvent, Category = "Reputation System")
-    void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason);
+    void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason};
 
 private:
     // Ë®àÁ??ú‰?È°ûÂ?
@@ -202,11 +202,12 @@ private:
     EReputationLevel CalculateReputationLevel(float ReputationScore) const;
 
     // ?âÁî®?ú‰?Ë°∞Ê?ÔºàÈï∑?ÇÈ??°‰??ïÔ?
-    void ApplyRelationshipDecay();
+    void ApplyRelationshipDecay(};
 
     // ‰øùÂ?Á≥ªÁµ±?∏Ê?
-    void SaveRelationshipData();
+    void SaveRelationshipData(};
 
     // ?†Ë?Á≥ªÁµ±?∏Ê?
-    void LoadRelationshipData();
+    void LoadRelationshipData(};
 };
+

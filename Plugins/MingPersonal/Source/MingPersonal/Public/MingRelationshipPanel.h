@@ -34,17 +34,17 @@ struct FRelationshipDisplayData
 
     FRelationshipDisplayData()
     {
-        CharacterID = TEXT("");
-        CharacterName = TEXT("");
+        CharacterID = TEXT(""};
+        CharacterName = TEXT(""};
         RelationshipType = ERelationshipType::Neutral;
         RelationshipValue = 0.0f;
-        RelationshipDescription = TEXT("");
+        RelationshipDescription = TEXT(""};
         RelationshipColor = FLinearColor::White;
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRelationshipSelected, const FString&, CharacterID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRelationshipFilterChanged, ERelationshipType, FilterType, bool, bActive);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRelationshipSelected, const FString&, CharacterID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRelationshipFilterChanged, ERelationshipType, FilterType, bool, bActive};
 
 /**
  * ?ú‰??¢ÊùøWidget
@@ -55,39 +55,39 @@ class MINGPERSONAL_API UMingRelationshipPanel : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingRelationshipPanel(const FObjectInitializer& ObjectInitializer);
+    UMingRelationshipPanel(const FObjectInitializer& ObjectInitializer};
 
     // ?ùÂ???    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void InitializeRelationshipPanel(UMingRelationshipManager* InRelationshipManager);
+    void InitializeRelationshipPanel(UMingRelationshipManager* InRelationshipManager};
 
     // ?∏Ê??¥Êñ∞
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void UpdateRelationshipData();
+    void UpdateRelationshipData(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void RefreshRelationshipList();
+    void RefreshRelationshipList(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void UpdateSelectedRelationship(const FString& CharacterID);
+    void UpdateSelectedRelationship(const FString& CharacterID};
 
     // ?éÊøæ?åÊ?Â∫?    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void FilterByRelationshipType(ERelationshipType RelationshipType, bool bActive);
+    void FilterByRelationshipType(ERelationshipType RelationshipType, bool bActive};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void SortByValue(bool bAscending = true);
+    void SortByValue(bool bAscending = true};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void SortByName(bool bAscending = true);
+    void SortByName(bool bAscending = true};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void ClearFilters();
+    void ClearFilters(};
 
     // ?úÁ¥¢
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void SearchRelationships(const FString& SearchText);
+    void SearchRelationships(const FString& SearchText};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void ClearSearch();
+    void ClearSearch(};
 
     // Áµ±Ë?‰ø°ÊÅØ
     UFUNCTION(BlueprintPure, Category = "Relationship Panel")
@@ -107,32 +107,32 @@ public:
 
     // Ë©≥Á¥∞‰ø°ÊÅØ
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void ShowRelationshipDetails(const FString& CharacterID);
+    void ShowRelationshipDetails(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void HideRelationshipDetails();
+    void HideRelationshipDetails(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void AddSharedMemory(const FString& CharacterID, const FString& Memory);
+    void AddSharedMemory(const FString& CharacterID, const FString& Memory};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void RemoveSharedMemory(const FString& CharacterID, const FString& Memory);
+    void RemoveSharedMemory(const FString& CharacterID, const FString& Memory};
 
     // ‰∫íÂ??ç‰?
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void OnRelationshipClicked(const FString& CharacterID);
+    void OnRelationshipClicked(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void OnRelationshipDoubleClicked(const FString& CharacterID);
+    void OnRelationshipDoubleClicked(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void OnRelationshipRightClicked(const FString& CharacterID);
+    void OnRelationshipRightClicked(const FString& CharacterID};
 
     // Â∞éÂá∫?åÂ???    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void ExportRelationshipData();
+    void ExportRelationshipData(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
-    void ImportRelationshipData();
+    void ImportRelationshipData(};
 
     // ‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "Relationship Events")
@@ -198,22 +198,23 @@ protected:
     virtual void NativeDestruct() override;
 
     // ?ßÈÉ®?ΩÊï∏
-    void ProcessRelationshipData();
-    void ApplyFilters();
-    void ApplySorting();
-    void UpdateStatistics();
-    void UpdateUI();
-    FRelationshipDisplayData CreateDisplayData(const FString& CharacterID, const FRelationshipData& RelationshipData);
+    void ProcessRelationshipData(};
+    void ApplyFilters(};
+    void ApplySorting(};
+    void UpdateStatistics(};
+    void UpdateUI(};
+    FRelationshipDisplayData CreateDisplayData(const FString& CharacterID, const FRelationshipData& RelationshipData};
     FLinearColor GetRelationshipColor(ERelationshipType RelationshipType, float Value) const;
     FString GetRelationshipDescription(ERelationshipType RelationshipType, float Value) const;
 
     // ‰∫ã‰ª∂Á∂ÅÂ?
-    void SetupEventBindings();
-    void OnRelationshipDataChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason);
+    void SetupEventBindings(};
+    void OnRelationshipDataChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
 
 private:
     // ËºîÂä©?ΩÊï∏
     bool PassesFilter(const FRelationshipDisplayData& RelationshipData) const;
     bool PassesSearch(const FRelationshipDisplayData& RelationshipData) const;
-    void RefreshDisplayList();
+    void RefreshDisplayList(};
 };
+

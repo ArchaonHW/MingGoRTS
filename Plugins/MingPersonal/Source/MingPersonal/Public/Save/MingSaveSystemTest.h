@@ -19,10 +19,10 @@ class MINGPERSONAL_API UMingSaveSystemTest : public UObject
     GENERATED_BODY()
 
 public:
-    UMingSaveSystemTest();
+    UMingSaveSystemTest(};
 
     // ?ãË??Ä?âÊ∏¨Ë©?    UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool RunAllTests();
+    bool RunAllTests(};
 
     // Ê∏¨Ë©¶ÁµêÊ?
     UFUNCTION(BlueprintPure, Category = "Save System Test")
@@ -39,43 +39,43 @@ public:
 
     // ?ãÂà•Ê∏¨Ë©¶
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestSaveGameCreation();
+    bool TestSaveGameCreation(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestSaveAndLoad();
+    bool TestSaveAndLoad(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestMultipleSaveSlots();
+    bool TestMultipleSaveSlots(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestQuickSave();
+    bool TestQuickSave(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestDeleteSave();
+    bool TestDeleteSave(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestSaveSlotInfo();
+    bool TestSaveSlotInfo(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestAutoSaveSettings();
+    bool TestAutoSaveSettings(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestRelationshipDataPersistence();
+    bool TestRelationshipDataPersistence(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestReputationDataPersistence();
+    bool TestReputationDataPersistence(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestExportImport();
+    bool TestExportImport(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestSaveValidation();
+    bool TestSaveValidation(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestVersionCompatibility();
+    bool TestVersionCompatibility(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
-    bool TestCompressionEncryption();
+    bool TestCompressionEncryption(};
 
 private:
     // Ê∏¨Ë©¶ÁµêÊ??•Ë?
@@ -92,13 +92,14 @@ private:
     TArray<FString> ErrorMessages;
 
     // Ê∏¨Ë©¶Âπ´Âä©?ΩÊï∏
-    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
-    void ResetTestCounts();
+    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
+    void ResetTestCounts(};
 
     // Ê∏ÖÁ?Ê∏¨Ë©¶Â≠òÊ?
-    void CleanupTestSaves();
+    void CleanupTestSaves(};
 
-    // ?µÂª∫Ê∏¨Ë©¶?®Á??ã‰∫∫ÁÆ°Á???    UMingPersonalManager* CreateTestPersonalManager();
+    // ?µÂª∫Ê∏¨Ë©¶?®Á??ã‰∫∫ÁÆ°Á???    UMingPersonalManager* CreateTestPersonalManager(};
 
-    // ?µÂª∫Ê∏¨Ë©¶?®Á?‰øùÂ?ÁÆ°Á???    UMingSaveGameManager* CreateTestSaveManager();
+    // ?µÂª∫Ê∏¨Ë©¶?®Á?‰øùÂ?ÁÆ°Á???    UMingSaveGameManager* CreateTestSaveManager(};
 };
+

@@ -58,10 +58,10 @@ class MINGPERSONAL_API UMingNetworkSystemTest : public UObject
     GENERATED_BODY()
 
 public:
-    UMingNetworkSystemTest();
+    UMingNetworkSystemTest(};
 
     // ?ãË??Ä?âÊ∏¨Ë©?    UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool RunAllTests();
+    bool RunAllTests(};
 
     // Ê∏¨Ë©¶ÁµêÊ?
     UFUNCTION(BlueprintPure, Category = "Network Test")
@@ -81,52 +81,52 @@ public:
 
     // ?ãÂà•Ê∏¨Ë©¶
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestNetworkManagerCreation();
+    bool TestNetworkManagerCreation(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestServerCreation();
+    bool TestServerCreation(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestClientConnection();
+    bool TestClientConnection(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestDisconnection();
+    bool TestDisconnection(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestReconnection();
+    bool TestReconnection(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestPlayerManagement();
+    bool TestPlayerManagement(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestLobbyCreation();
+    bool TestLobbyCreation(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestLobbyJoinLeave();
+    bool TestLobbyJoinLeave(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestReadySystem();
+    bool TestReadySystem(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestGameStart();
+    bool TestGameStart(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestRelationshipReplication();
+    bool TestRelationshipReplication(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestReputationReplication();
+    bool TestReputationReplication(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestChatSystem();
+    bool TestChatSystem(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestHostMigration();
+    bool TestHostMigration(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestNetworkStats();
+    bool TestNetworkStats(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestErrorHandling();
+    bool TestErrorHandling(};
 
 private:
     // Ê∏¨Ë©¶ÁµêÊ??•Ë?
@@ -146,11 +146,12 @@ private:
     TArray<FNetworkTestCase> TestCases;
 
     // Ê∏¨Ë©¶Âπ´Âä©?ΩÊï∏
-    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
-    void ResetTestCounts();
-    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
+    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
+    void ResetTestCounts(};
+    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT("")};
 
-    // ?µÂª∫Ê∏¨Ë©¶?®Á?ÁÆ°Á???    UMingPersonalManager* CreateTestPersonalManager();
-    UMingNetworkManager* CreateTestNetworkManager();
-    UMingLobbySystem* CreateTestLobbySystem();
+    // ?µÂª∫Ê∏¨Ë©¶?®Á?ÁÆ°Á???    UMingPersonalManager* CreateTestPersonalManager(};
+    UMingNetworkManager* CreateTestNetworkManager(};
+    UMingLobbySystem* CreateTestLobbySystem(};
 };
+

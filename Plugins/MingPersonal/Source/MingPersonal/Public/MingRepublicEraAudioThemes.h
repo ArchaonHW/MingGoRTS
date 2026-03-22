@@ -7,29 +7,29 @@
 UENUM(BlueprintType)
 enum class ERepublicEraTheme : uint8
 {
-    BattleTheme,        // ??­ä¸»?
+    BattleTheme,        // ??ä¸»?
     PeacefulTheme,      // ?å¹³ä¸»?
-    TensionTheme,       // ç·Šå¼µä¸?
-    VictoryTheme,       // ??©ä¸»?
-    DefeatTheme,        // å¤?ä¸?
-    DiplomaticTheme,    // å¤–äº¤ä¸?
-    EconomicTheme,      // ç¶?ä¸?
-    CulturalTheme,      // ??ä¸?
-    RevolutionaryTheme, // ??½ä¸»?
-    NostalgicTheme      // ??ä¸?
+    TensionTheme,       // ç·Šå¼µ?
+    VictoryTheme,       // ??ä¸»?
+    DefeatTheme,        // ??
+    DiplomaticTheme,    // å¤–äº¤?
+    EconomicTheme,      // ??
+    CulturalTheme,      // ???
+    RevolutionaryTheme, // ??ä¸»?
+    NostalgicTheme      // ???
 };
 
 UENUM(BlueprintType)
 enum class EPersonalRepublicEraRegion : uint8
 {
-    Beijing,            // ?äº?
+    Beijing,            // ??
     Shanghai,           // ä¸Šæµ·
-    Nanjing,            // ?äº?
+    Nanjing,            // ??
     Guangzhou,          // ??
     Tianjin,            // å¤©æ´¥
     Wuhan,              // æ­¦æ¼¢
     Chongqing,          // ???
-    Xian,               // è¥?
+    Xian,               // ?
     Chengdu,            // ???
     Harbin              // ???};
 
@@ -62,8 +62,8 @@ struct FRepublicEraAudioTheme
     FRepublicEraAudioTheme()
     {
         ThemeType = ERepublicEraTheme::PeacefulTheme;
-        ThemeName = TEXT("");
-        AudioAssetPath = TEXT("");
+        ThemeName = TEXT(""};
+        AudioAssetPath = TEXT(""};
         BaseIntensity = 1.0f;
         Duration = 60.0f;
         bIsLooping = true;
@@ -96,15 +96,15 @@ struct FRepublicEraRegionalAudio
     FRepublicEraRegionalAudio()
     {
         Region = EPersonalRepublicEraRegion::Beijing;
-        RegionName = TEXT("");
-        AmbientAudioPath = TEXT("");
-        CulturalAudioPath = TEXT("");
+        RegionName = TEXT(""};
+        AmbientAudioPath = TEXT(""};
+        CulturalAudioPath = TEXT(""};
         CulturalIntensity = 1.0f;
     }
 };
 
 /**
- * æ°?????»ä¸»?ç®??? * ç®?æ°??????ä¸»é??????
+ * ?????ä¸»???? * ???????ä¸»??????
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingRepublicEraAudioThemes : public UObject
@@ -112,40 +112,40 @@ class MINGPERSONAL_API UMingRepublicEraAudioThemes : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRepublicEraAudioThemes();
+    UMingRepublicEraAudioThemes(};
 
-    // ?????????ä¸?    UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void InitializeRepublicEraThemes();
+    // ??????????    UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
+    void InitializeRepublicEraThemes(};
 
-    // ??¾ä¸»???
+    // ??ä¸»???
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void PlayTheme(ERepublicEraTheme ThemeType, float Intensity = 1.0f);
-
-    UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void PlayThemeByName(const FString& ThemeName, float Intensity = 1.0f);
+    void PlayTheme(ERepublicEraTheme ThemeType, float Intensity = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void StopTheme();
+    void PlayThemeByName(const FString& ThemeName, float Intensity = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void FadeTheme(float TargetVolume, float FadeDuration);
+    void StopTheme(};
+
+    UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
+    void FadeTheme(float TargetVolume, float FadeDuration};
 
     // ????
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void PlayRegionalAmbient(EPersonalRepublicEraRegion Region, float Intensity = 1.0f);
+    void PlayRegionalAmbient(EPersonalRepublicEraRegion Region, float Intensity = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void PlayCulturalAudio(EPersonalRepublicEraRegion Region, float Intensity = 1.0f);
+    void PlayCulturalAudio(EPersonalRepublicEraRegion Region, float Intensity = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void SetRegionalAudio(EPersonalRepublicEraRegion Region);
+    void SetRegionalAudio(EPersonalRepublicEraRegion Region};
 
-    // ä¸?ç®?
+    // ??
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void AddTheme(const FRepublicEraAudioTheme& Theme);
+    void AddTheme(const FRepublicEraAudioTheme& Theme};
 
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void RemoveTheme(ERepublicEraTheme ThemeType);
+    void RemoveTheme(ERepublicEraTheme ThemeType};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Republic Era Audio")
     FRepublicEraAudioTheme GetTheme(ERepublicEraTheme ThemeType) const;
@@ -153,22 +153,22 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Republic Era Audio")
     TArray<FRepublicEraAudioTheme> GetAllThemes() const;
 
-    // ??ç®?
+    // ???
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void AddRegionalAudio(const FRepublicEraRegionalAudio& RegionalAudio);
+    void AddRegionalAudio(const FRepublicEraRegionalAudio& RegionalAudio};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Republic Era Audio")
     FRepublicEraRegionalAudio GetRegionalAudio(EPersonalRepublicEraRegion Region) const;
 
-    // ??»è¨­ç½?
+    // ??è¨­?
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void SetMasterVolume(float Volume);
+    void SetMasterVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void SetThemeVolume(float Volume);
+    void SetThemeVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
-    void SetRegionalVolume(float Volume);
+    void SetRegionalVolume(float Volume};
 
     // ????    UFUNCTION(BlueprintPure, Category = "Republic Era Audio")
     bool IsThemePlaying() const;
@@ -180,7 +180,7 @@ public:
     float GetMasterVolume() const { return MasterVolume; }
 
 protected:
-    // ä¸???
+    // ???
     UPROPERTY()
     TMap<ERepublicEraTheme, FRepublicEraAudioTheme> ThemeMap;
 
@@ -191,7 +191,7 @@ protected:
     UPROPERTY()
     TMap<EPersonalRepublicEraRegion, FRepublicEraRegionalAudio> RegionalAudioMap;
 
-    // ??»è¨­ç½?
+    // ??è¨­?
     UPROPERTY()
     float MasterVolume = 1.0f;
 
@@ -208,16 +208,17 @@ protected:
     bool bIsThemePlaying = false;
 
     // ?????
-    void InitializeDefaultThemes();
-    void InitializeRegionalAudio();
+    void InitializeDefaultThemes(};
+    void InitializeRegionalAudio(};
     FString GetThemeAssetPath(ERepublicEraTheme ThemeType) const;
     FString GetRegionalAssetPath(EPersonalRepublicEraRegion Region, bool bCultural = false) const;
 
 private:
-    // æ°?????²æ???
+    // ????????
     TArray<FString> TraditionalInstruments;
     TArray<FString> MilitaryInstruments;
     TArray<FString> UrbanInstruments;
 
-    // ???????    void InitializeInstrumentLists();
+    // ???????    void InitializeInstrumentLists(};
 };
+

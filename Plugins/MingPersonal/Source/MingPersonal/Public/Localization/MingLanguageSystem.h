@@ -107,10 +107,10 @@ class MINGPERSONAL_API UMingLanguageSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingLanguageSystem();
+    UMingLanguageSystem(};
 
-    // ?å???    void Initialize();
-    void Shutdown();
+    // ?å???    void Initialize(};
+    void Shutdown(};
 
     UFUNCTION(BlueprintPure, Category = "Language System")
     bool IsInitialized() const { return bIsInitialized; }
@@ -212,14 +212,15 @@ private:
     TMap<FString, TArray<FString>> LanguagePatterns;
 
     // ? è?èªè?æ¨¡å?
-    void LoadLanguagePatterns();
+    void LoadLanguagePatterns(};
 
     // ?å??–è?è¨€?¸æ?
-    void InitializeLanguageData();
+    void InitializeLanguageData(};
 
     // æ¼¢å?ç°¡ç?å°ç…§è¡?(ç°¡å?å¯¦ç¾)
     TMap<TCHAR, TCHAR> SimplifiedToTraditionalMap;
     TMap<TCHAR, TCHAR> TraditionalToSimplifiedMap;
 
-    // ? è?ç°¡ç?å°ç…§è¡?    void LoadChineseConversionTables();
+    // ? è?ç°¡ç?å°ç…§è¡?    void LoadChineseConversionTables(};
 };
+

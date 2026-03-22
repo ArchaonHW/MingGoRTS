@@ -17,31 +17,32 @@ public:
      * ?‹è??€?‰é?ä¿‚å??²æ?ç³»çµ±æ¸¬è©¦
      * ?¨é??¼å?èª¿è©¦?‚ä½¿??     */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static void RunRelationshipTests();
+    static void RunRelationshipTests(};
 
     /**
      * ?‹è??¹å?æ¸¬è©¦
      * @param TestIndex æ¸¬è©¦ç·¨è? (1-8)
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static void RunSpecificTest(int32 TestIndex);
+    static void RunSpecificTest(int32 TestIndex};
 
     /**
      * é©—è??œä?ç³»çµ±?ºæœ¬?Ÿèƒ½
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static bool VerifyRelationshipSystem();
+    static bool VerifyRelationshipSystem(};
 
     /**
      * é©—è??²æ?ç³»çµ±?ºæœ¬?Ÿèƒ½
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static bool VerifyReputationSystem();
+    static bool VerifyReputationSystem(};
 
     /**
      * ?µå»ºæ¸¬è©¦?¸æ?
      * ?¨æ–¼å¡«å?æ¸¬è©¦?°å??„é?ä¿‚å??²æ??¸æ?
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static void CreateTestData();
+    static void CreateTestData(};
 };
+

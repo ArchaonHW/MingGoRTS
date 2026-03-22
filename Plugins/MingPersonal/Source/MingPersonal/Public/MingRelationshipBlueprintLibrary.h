@@ -15,132 +15,133 @@ class MINGPERSONAL_API UMingRelationshipBlueprintLibrary : public UBlueprintFunc
 
 public:
     // ?≤Â??ú‰?ÁÆ°Á??®ÂØ¶‰æ?    UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static UMingRelationshipManager* GetRelationshipManager();
+    static UMingRelationshipManager* GetRelationshipManager(};
 
     // ?ú‰?ÁÆ°Á??ΩÊï∏
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
-    static void UpdateCharacterRelationship(const FString& CharacterID, float ChangeAmount, const FString& Reason);
+    static void UpdateCharacterRelationship(const FString& CharacterID, float ChangeAmount, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static FRelationshipData GetCharacterRelationship(const FString& CharacterID);
+    static FRelationshipData GetCharacterRelationship(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static ERelationshipType GetRelationshipType(const FString& CharacterID);
+    static ERelationshipType GetRelationshipType(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static float GetRelationshipValue(const FString& CharacterID);
+    static float GetRelationshipValue(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
-    static void AddSharedMemory(const FString& CharacterID, const FString& Memory);
+    static void AddSharedMemory(const FString& CharacterID, const FString& Memory};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static TArray<FString> GetSharedMemories(const FString& CharacterID);
+    static TArray<FString> GetSharedMemories(const FString& CharacterID};
 
     // ?≤Ê?ÁÆ°Á??ΩÊï∏
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
-    static void UpdateRegionReputation(const FString& RegionID, float ChangeAmount, const FString& Reason);
+    static void UpdateRegionReputation(const FString& RegionID, float ChangeAmount, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static FReputationData GetRegionReputation(const FString& RegionID);
+    static FReputationData GetRegionReputation(const FString& RegionID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static EReputationLevel GetReputationLevel(const FString& RegionID);
+    static EReputationLevel GetReputationLevel(const FString& RegionID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static float GetReputationScore(const FString& RegionID);
+    static float GetReputationScore(const FString& RegionID};
 
     // ?äÊà≤ÂΩ±Èüø?ΩÊï∏
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static TArray<FString> GetDialogueOptions(const FString& CharacterID);
+    static TArray<FString> GetDialogueOptions(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static float GetPriceModifier(const FString& CharacterID);
+    static float GetPriceModifier(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static bool CanAcceptQuest(const FString& QuestID, const FString& RegionID);
+    static bool CanAcceptQuest(const FString& QuestID, const FString& RegionID};
 
     // ?πÈ??ç‰??ΩÊï∏
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
     static void ProcessInteractionEffect(const FString& CharacterID, const FString& RegionID, 
-                                       float RelationshipChange, float ReputationChange, const FString& Reason);
+                                       float RelationshipChange, float ReputationChange, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
-    static void ProcessBatchInteractions(const TArray<FInteractionEffect>& Interactions);
+    static void ProcessBatchInteractions(const TArray<FInteractionEffect>& Interactions};
 
     // ‰æøÂà©?ΩÊï∏
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static bool IsFriend(const FString& CharacterID);
+    static bool IsFriend(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static bool IsEnemy(const FString& CharacterID);
+    static bool IsEnemy(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static bool IsNeutral(const FString& CharacterID);
+    static bool IsNeutral(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static bool HasGoodReputation(const FString& RegionID);
+    static bool HasGoodReputation(const FString& RegionID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static bool HasBadReputation(const FString& RegionID);
+    static bool HasBadReputation(const FString& RegionID};
 
     // Â≠óÁ¨¶‰∏≤Ë??õÂáΩ??    UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static FString GetRelationshipTypeString(ERelationshipType RelationshipType);
+    static FString GetRelationshipTypeString(ERelationshipType RelationshipType};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static FString GetReputationLevelString(EReputationLevel ReputationLevel);
+    static FString GetReputationLevelString(EReputationLevel ReputationLevel};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static FString GetRelationshipDescription(const FString& CharacterID);
+    static FString GetRelationshipDescription(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static FString GetReputationDescription(const FString& RegionID);
+    static FString GetReputationDescription(const FString& RegionID};
 
     // Áµ±Ë??ΩÊï∏
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static int32 GetTotalRelationshipCount();
+    static int32 GetTotalRelationshipCount(};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static int32 GetFriendCount();
+    static int32 GetFriendCount(};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static int32 GetEnemyCount();
+    static int32 GetEnemyCount(};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static int32 GetKnownRegionCount();
+    static int32 GetKnownRegionCount(};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static TArray<FString> GetAllKnownRegions();
+    static TArray<FString> GetAllKnownRegions(};
 
     // È´òÁ??•Ë©¢?ΩÊï∏
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static TArray<FString> GetCharactersByRelationshipType(ERelationshipType RelationshipType);
+    static TArray<FString> GetCharactersByRelationshipType(ERelationshipType RelationshipType};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static TArray<FString> GetCharactersByRelationshipRange(float MinValue, float MaxValue);
+    static TArray<FString> GetCharactersByRelationshipRange(float MinValue, float MaxValue};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static TArray<FString> GetRegionsByReputationLevel(EReputationLevel ReputationLevel);
+    static TArray<FString> GetRegionsByReputationLevel(EReputationLevel ReputationLevel};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static TArray<FString> GetRegionsByReputationRange(float MinScore, float MaxScore);
+    static TArray<FString> GetRegionsByReputationRange(float MinScore, float MaxScore};
 
     // È©óË??ΩÊï∏
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static bool IsValidCharacterID(const FString& CharacterID);
+    static bool IsValidCharacterID(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static bool IsValidRegionID(const FString& RegionID);
+    static bool IsValidRegionID(const FString& RegionID};
 
     // Ë™øË©¶?ΩÊï∏
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
-    static void LogAllRelationships();
+    static void LogAllRelationships(};
 
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
-    static void LogAllReputations();
+    static void LogAllReputations(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
-    static void LogRelationshipStatus(const FString& CharacterID);
+    static void LogRelationshipStatus(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
-    static void LogReputationStatus(const FString& RegionID);
+    static void LogReputationStatus(const FString& RegionID};
 };
+

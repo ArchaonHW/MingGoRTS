@@ -57,10 +57,10 @@ class MINGPERSONAL_API UMingLocalizationSystemTest : public UObject
     GENERATED_BODY()
 
 public:
-    UMingLocalizationSystemTest();
+    UMingLocalizationSystemTest(};
 
     // ?ãË??Ä?âÊ∏¨Ë©?    UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool RunAllTests();
+    bool RunAllTests(};
 
     // Ê∏¨Ë©¶ÁµêÊ?
     UFUNCTION(BlueprintPure, Category = "Localization Test")
@@ -80,61 +80,61 @@ public:
 
     // ?ãÂà•Ê∏¨Ë©¶
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestLocalizationManagerCreation();
+    bool TestLocalizationManagerCreation(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestLanguageSwitching();
+    bool TestLanguageSwitching(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestTextLocalization();
+    bool TestTextLocalization(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestParameterizedText();
+    bool TestParameterizedText(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestLanguagePackInfo();
+    bool TestLanguagePackInfo(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestRegionSetting();
+    bool TestRegionSetting(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestNumberFormatting();
+    bool TestNumberFormatting(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestDateFormatting();
+    bool TestDateFormatting(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestCurrencyFormatting();
+    bool TestCurrencyFormatting(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestLanguageDetection();
+    bool TestLanguageDetection(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestChineseConversion();
+    bool TestChineseConversion(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestCulturalAdaptation();
+    bool TestCulturalAdaptation(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestColorMeanings();
+    bool TestColorMeanings(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestNumberMeanings();
+    bool TestNumberMeanings(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestRegionalContentAvailability();
+    bool TestRegionalContentAvailability(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestContentAdaptation();
+    bool TestContentAdaptation(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestRightToLeftDetection();
+    bool TestRightToLeftDetection(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestTranslationQuality();
+    bool TestTranslationQuality(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestExportImport();
+    bool TestExportImport(};
 
 private:
     // Ê∏¨Ë©¶ÁµêÊ??•Ë?
@@ -154,9 +154,10 @@ private:
     TArray<FLocalizationTestCase> TestCases;
 
     // Ê∏¨Ë©¶Âπ´Âä©?ΩÊï∏
-    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
-    void ResetTestCounts();
-    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
+    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
+    void ResetTestCounts(};
+    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT("")};
 
-    // ?µÂª∫Ê∏¨Ë©¶?®Á?ÁÆ°Á???    UMingLocalizationManager* CreateTestLocalizationManager();
+    // ?µÂª∫Ê∏¨Ë©¶?®Á?ÁÆ°Á???    UMingLocalizationManager* CreateTestLocalizationManager(};
 };
+

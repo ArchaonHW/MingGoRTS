@@ -62,7 +62,7 @@ class MINGPERSONAL_API UMingSaveGame : public USaveGame
     GENERATED_BODY()
 
 public:
-    UMingSaveGame();
+    UMingSaveGame(};
 
     // Header Information
     UPROPERTY(VisibleAnywhere, Category = "Save Info")
@@ -101,61 +101,61 @@ public:
     bool IsCompatibleVersion() const;
 
     UFUNCTION()
-    void UpgradeToCurrentVersion();
+    void UpgradeToCurrentVersion(};
 
     // Serialization helpers
     UFUNCTION()
-    void SetRelationshipData(const TArray<uint8>& Data);
+    void SetRelationshipData(const TArray<uint8>& Data};
 
     UFUNCTION()
     TArray<uint8> GetRelationshipData() const;
 
     UFUNCTION()
-    void SetReputationData(const TArray<uint8>& Data);
+    void SetReputationData(const TArray<uint8>& Data};
 
     UFUNCTION()
     TArray<uint8> GetReputationData() const;
 
     UFUNCTION()
-    void SetQuestData(const TArray<uint8>& Data);
+    void SetQuestData(const TArray<uint8>& Data};
 
     UFUNCTION()
     TArray<uint8> GetQuestData() const;
 
     UFUNCTION()
-    void SetAudioSetting(const FString& SettingName, float Value);
+    void SetAudioSetting(const FString& SettingName, float Value};
 
     UFUNCTION()
     float GetAudioSetting(const FString& SettingName, float DefaultValue = 1.0f) const;
 
     UFUNCTION()
-    void SetUISetting(const FString& SettingName, const FString& Value);
+    void SetUISetting(const FString& SettingName, const FString& Value};
 
     UFUNCTION()
     FString GetUISetting(const FString& SettingName, const FString& DefaultValue = TEXT("")) const;
 
     UFUNCTION()
-    void SetGameStateData(const FString& Key, const FString& Value);
+    void SetGameStateData(const FString& Key, const FString& Value};
 
     UFUNCTION()
     FString GetGameStateData(const FString& Key, const FString& DefaultValue = TEXT("")) const;
 
     UFUNCTION()
-    void SetPlayerPreference(const FString& Key, const FString& Value);
+    void SetPlayerPreference(const FString& Key, const FString& Value};
 
     UFUNCTION()
     FString GetPlayerPreference(const FString& Key, const FString& DefaultValue = TEXT("")) const;
 
     // Metadata helpers
     UFUNCTION()
-    void SetMetadata(const FString& Key, const FString& Value);
+    void SetMetadata(const FString& Key, const FString& Value};
 
     UFUNCTION()
     FString GetMetadata(const FString& Key, const FString& DefaultValue = TEXT("")) const;
 
     // Play time tracking
     UFUNCTION()
-    void UpdatePlayTime(int32 AdditionalSeconds);
+    void UpdatePlayTime(int32 AdditionalSeconds};
 
     UFUNCTION()
     FString GetFormattedPlayTime() const;
@@ -169,32 +169,33 @@ public:
 
     // Compression
     UFUNCTION()
-    void CompressData();
+    void CompressData(};
 
     UFUNCTION()
-    void DecompressData();
+    void DecompressData(};
 
     // Encryption (optional)
     UFUNCTION()
-    void EncryptData(const FString& EncryptionKey);
+    void EncryptData(const FString& EncryptionKey};
 
     UFUNCTION()
-    void DecryptData(const FString& EncryptionKey);
+    void DecryptData(const FString& EncryptionKey};
 
     // Static factory
     UFUNCTION(BlueprintCallable, Category = "Save Game", meta = (WorldContext = "WorldContextObject"))
-    static UMingSaveGame* CreateSaveGame(UObject* WorldContextObject, const FString& SaveName, int32 SlotIndex);
+    static UMingSaveGame* CreateSaveGame(UObject* WorldContextObject, const FString& SaveName, int32 SlotIndex};
 
     UFUNCTION(BlueprintPure, Category = "Save Game")
-    static FString GetSaveSlotName(int32 SlotIndex);
+    static FString GetSaveSlotName(int32 SlotIndex};
 
     UFUNCTION(BlueprintPure, Category = "Save Game")
-    static int32 GetMaxSaveSlots();
+    static int32 GetMaxSaveSlots(};
 
     // Migration helpers
     UFUNCTION()
-    static bool MigrateFromVersion1(const UMingSaveGame* OldSave, UMingSaveGame* NewSave);
+    static bool MigrateFromVersion1(const UMingSaveGame* OldSave, UMingSaveGame* NewSave};
 
     UFUNCTION()
-    static bool MigrateFromVersion2(const UMingSaveGame* OldSave, UMingSaveGame* NewSave);
+    static bool MigrateFromVersion2(const UMingSaveGame* OldSave, UMingSaveGame* NewSave};
 };
+

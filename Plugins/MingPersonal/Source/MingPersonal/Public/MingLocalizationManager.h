@@ -132,15 +132,15 @@ class MINGPERSONAL_API UMingLocalizationManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingLocalizationManager();
+    UMingLocalizationManager(};
 
     // Initialize localization system
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    void InitializeLocalizationManager();
+    void InitializeLocalizationManager(};
 
     // Set current language
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    void SetLanguage(EMingLanguage NewLanguage);
+    void SetLanguage(EMingLanguage NewLanguage};
 
     // Get current language
     UFUNCTION(BlueprintPure, Category = "Localization")
@@ -148,7 +148,7 @@ public:
 
     // Set current region
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    void SetRegion(EMingRegion NewRegion);
+    void SetRegion(EMingRegion NewRegion};
 
     // Get current region
     UFUNCTION(BlueprintPure, Category = "Localization")
@@ -164,15 +164,15 @@ public:
 
     // Add localized text
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    void AddLocalizedText(const FString& Key, const FString& Text, EMingLanguage Language);
+    void AddLocalizedText(const FString& Key, const FString& Text, EMingLanguage Language};
 
     // Load language pack
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    bool LoadLanguagePack(const FLanguagePackInfo& PackInfo);
+    bool LoadLanguagePack(const FLanguagePackInfo& PackInfo};
 
     // Unload language pack
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    void UnloadLanguagePack(const FString& PackID);
+    void UnloadLanguagePack(const FString& PackID};
 
     // Get loaded language packs
     UFUNCTION(BlueprintCallable, Category = "Localization")
@@ -192,11 +192,11 @@ public:
 
     // Get language display name
     UFUNCTION(BlueprintPure, Category = "Localization")
-    static FString GetLanguageDisplayName(EMingLanguage Language);
+    static FString GetLanguageDisplayName(EMingLanguage Language};
 
     // Get region display name
     UFUNCTION(BlueprintPure, Category = "Localization")
-    static FString GetRegionDisplayName(EMingRegion Region);
+    static FString GetRegionDisplayName(EMingRegion Region};
 
     // Detect system language
     UFUNCTION(BlueprintCallable, Category = "Localization")
@@ -208,11 +208,11 @@ public:
 
     // Save localization settings
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    void SaveLocalizationSettings();
+    void SaveLocalizationSettings(};
 
     // Load localization settings
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    void LoadLocalizationSettings();
+    void LoadLocalizationSettings(};
 
     // Events
     UPROPERTY(BlueprintAssignable, Category = "Localization Events")
@@ -237,12 +237,13 @@ private:
     UPROPERTY()
     TMap<EMingLanguage, bool> AvailableLanguages;
 
-    void LoadDefaultLanguagePack();
-    void ClearLocalizedTextCache();
-    void NotifyLanguageChanged();
-    void NotifyRegionChanged();
+    void LoadDefaultLanguagePack(};
+    void ClearLocalizedTextCache(};
+    void NotifyLanguageChanged(};
+    void NotifyRegionChanged(};
 };
 
 // Event delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLocalizationLanguageChanged, EMingLanguage, NewLanguage);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLocalizationRegionChanged, EMingRegion, NewRegion);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLocalizationLanguageChanged, EMingLanguage, NewLanguage};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLocalizationRegionChanged, EMingRegion, NewRegion};
+

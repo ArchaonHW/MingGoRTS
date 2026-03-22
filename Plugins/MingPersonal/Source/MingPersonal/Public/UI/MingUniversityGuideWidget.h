@@ -20,35 +20,35 @@ public:
     /**
      * Ë®≠ÁΩÆÂºïÂ?ÁÆ°Á???     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
-    void SetGuideManager(UMingUniversityGuideManager* Manager);
+    void SetGuideManager(UMingUniversityGuideManager* Manager};
 
     /**
      * È°ØÁ§∫ÂºïÂ??ßÂÆπ
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
-    void DisplayContent(const FUniversityGuideContent& Content);
+    void DisplayContent(const FUniversityGuideContent& Content};
 
     /**
      * ?¥Êñ∞?≤Â∫¶Ê¢?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
-    void UpdateProgressBar(float Progress);
+    void UpdateProgressBar(float Progress};
 
     /**
      * È°ØÁ§∫/?±Ë?Â∞éËà™?âÈ?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
-    void SetNavigationButtonsEnabled(bool bPreviousEnabled, bool bNextEnabled);
+    void SetNavigationButtonsEnabled(bool bPreviousEnabled, bool bNextEnabled};
 
     /**
      * ?≠Êîæ?ßÂÆπ?ïÁï´
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
-    void PlayContentAnimation();
+    void PlayContentAnimation(};
 
     /**
      * È°ØÁ§∫ÂÆåÊ?Â∞çË©±Ê°?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
-    void ShowCompletionDialog();
+    void ShowCompletionDialog(};
 
     // UI?ÉÁ?Á∂ÅÂ?ÔºàÂú®?çÂ?‰∏≠ÂØ¶?æÔ?
     UPROPERTY(meta = (BindWidget))
@@ -74,30 +74,31 @@ public:
 
     // ?âÈ?‰∫ã‰ª∂?ïÁ?
     UFUNCTION()
-    void OnPreviousButtonClicked();
+    void OnPreviousButtonClicked(};
 
     UFUNCTION()
-    void OnNextButtonClicked();
+    void OnNextButtonClicked(};
 
     UFUNCTION()
-    void OnCloseButtonClicked();
+    void OnCloseButtonClicked(};
 
 protected:
     UPROPERTY()
     TObjectPtr<UMingUniversityGuideManager> GuideManager;
 
     UFUNCTION()
-    void HandleContentChanged(const FUniversityGuideContent& Content);
+    void HandleContentChanged(const FUniversityGuideContent& Content};
 
     UFUNCTION()
-    void HandleProgressUpdated(const FString& ContentID, float Progress);
+    void HandleProgressUpdated(const FString& ContentID, float Progress};
 
     UFUNCTION()
-    void HandleGuideStarted(const FString& GuideID);
+    void HandleGuideStarted(const FString& GuideID};
 
     UFUNCTION()
-    void HandleGuideCompleted(const FString& GuideID);
+    void HandleGuideCompleted(const FString& GuideID};
 
-    void SetupEventBindings();
-    void CleanupEventBindings();
+    void SetupEventBindings(};
+    void CleanupEventBindings(};
 };
+

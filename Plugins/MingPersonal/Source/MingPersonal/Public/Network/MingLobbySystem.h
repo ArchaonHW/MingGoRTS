@@ -139,10 +139,10 @@ struct FMingLobbySettings
         , bEnableCheats(false)
         , GameSpeed(1.0f)
     {
-        AvailableFactions.Add(TEXT("Ming"));
-        AvailableFactions.Add(TEXT("Qing"));
-        AvailableFactions.Add(TEXT("Japanese"));
-        AvailableFactions.Add(TEXT("Mongol"));
+        AvailableFactions.Add(TEXT("Ming")};
+        AvailableFactions.Add(TEXT("Qing")};
+        AvailableFactions.Add(TEXT("Japanese")};
+        AvailableFactions.Add(TEXT("Mongol")};
     }
 };
 
@@ -206,15 +206,15 @@ struct FMingLobbyTeam
 };
 
 // Delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyPlayerJoined, FMingLobbyPlayer, Player);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyPlayerLeft, int32, PlayerID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyPlayerStateChanged, int32, PlayerID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyPlayerTeamChanged, int32, PlayerID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbySettingsChanged, FMingLobbySettings, NewSettings);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyChatMessageReceived, FMingLobbyChatMessage, Message);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLobbyGameStarting);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLobbyGameStarted);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyCountdownChanged, int32, SecondsRemaining);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyPlayerJoined, FMingLobbyPlayer, Player};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyPlayerLeft, int32, PlayerID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyPlayerStateChanged, int32, PlayerID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyPlayerTeamChanged, int32, PlayerID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbySettingsChanged, FMingLobbySettings, NewSettings};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyChatMessageReceived, FMingLobbyChatMessage, Message};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLobbyGameStarting};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLobbyGameStarted};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyCountdownChanged, int32, SecondsRemaining};
 
 /**
  * 大廳系統
@@ -226,28 +226,28 @@ class MINGPERSONAL_API UMingLobbySystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingLobbySystem();
+    UMingLobbySystem(};
 
     // Initialize/Shutdown
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void Initialize(UMingNetworkManager* InNetworkManager);
+    void Initialize(UMingNetworkManager* InNetworkManager};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void Shutdown();
+    void Shutdown(};
 
     // Lobby creation
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    bool CreateLobby(const FMingLobbySettings& Settings);
+    bool CreateLobby(const FMingLobbySettings& Settings};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void CloseLobby();
+    void CloseLobby(};
 
     // Lobby joining
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    bool JoinLobby(const FString& LobbyID, const FString& Password = TEXT(""));
+    bool JoinLobby(const FString& LobbyID, const FString& Password = TEXT("")};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void LeaveLobby();
+    void LeaveLobby(};
 
     UFUNCTION(BlueprintPure, Category = "Lobby")
     bool IsInLobby() const;
@@ -260,45 +260,45 @@ public:
     FMingLobbyPlayer GetLocalPlayer() const;
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void SetPlayerReady(bool bReady);
+    void SetPlayerReady(bool bReady};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void SetPlayerTeam(int32 TeamID);
+    void SetPlayerTeam(int32 TeamID};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void SetPlayerFaction(const FString& FactionName);
+    void SetPlayerFaction(const FString& FactionName};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void SetPlayerColor(const FString& ColorName);
+    void SetPlayerColor(const FString& ColorName};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void SetPlayerSpectator(bool bSpectator);
+    void SetPlayerSpectator(bool bSpectator};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void KickPlayerFromLobby(int32 PlayerID, const FString& Reason);
+    void KickPlayerFromLobby(int32 PlayerID, const FString& Reason};
 
     // Settings management
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void UpdateLobbySettings(const FMingLobbySettings& NewSettings);
+    void UpdateLobbySettings(const FMingLobbySettings& NewSettings};
 
     UFUNCTION(BlueprintPure, Category = "Lobby")
     FMingLobbySettings GetLobbySettings() const;
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void SetGameMode(EMingLobbyGameMode NewMode);
+    void SetGameMode(EMingLobbyGameMode NewMode};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void SetMap(const FString& MapName);
+    void SetMap(const FString& MapName};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void SetMaxPlayers(int32 MaxPlayers);
+    void SetMaxPlayers(int32 MaxPlayers};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void SetNumTeams(int32 NumTeams);
+    void SetNumTeams(int32 NumTeams};
 
     // Team management
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void AutoBalanceTeams();
+    void AutoBalanceTeams(};
 
     UFUNCTION(BlueprintPure, Category = "Lobby")
     TArray<FMingLobbyTeam> GetTeams() const;
@@ -308,10 +308,10 @@ public:
 
     // Game start
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void StartGameCountdown(int32 CountdownSeconds = 10);
+    void StartGameCountdown(int32 CountdownSeconds = 10};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void CancelGameCountdown();
+    void CancelGameCountdown(};
 
     UFUNCTION(BlueprintPure, Category = "Lobby")
     bool IsCountdownActive() const;
@@ -320,14 +320,14 @@ public:
     int32 GetCountdownRemaining() const;
 
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void StartGame();
+    void StartGame(};
 
     UFUNCTION(BlueprintPure, Category = "Lobby")
     bool CanStartGame() const;
 
     // Chat system
     UFUNCTION(BlueprintCallable, Category = "Lobby")
-    void SendLobbyChatMessage(const FString& Message);
+    void SendLobbyChatMessage(const FString& Message};
 
     UFUNCTION(BlueprintPure, Category = "Lobby")
     TArray<FMingLobbyChatMessage> GetChatHistory() const;
@@ -421,17 +421,18 @@ private:
     FTimerHandle CountdownTimerHandle;
 
     // Internal functions
-    void GenerateLobbyID();
-    void UpdateTeams();
-    void BroadcastSettingsChanged();
-    void BroadcastChatMessage(const FMingLobbyChatMessage& Message);
-    void UpdateCountdown();
-    void OnCountdownFinished();
-    FMingLobbyPlayer* GetPlayerByID(int32 PlayerID);
+    void GenerateLobbyID(};
+    void UpdateTeams(};
+    void BroadcastSettingsChanged(};
+    void BroadcastChatMessage(const FMingLobbyChatMessage& Message};
+    void UpdateCountdown(};
+    void OnCountdownFinished(};
+    FMingLobbyPlayer* GetPlayerByID(int32 PlayerID};
     const FMingLobbyPlayer* GetPlayerByID(int32 PlayerID) const;
-    void AddPlayerToTeam(int32 PlayerID, int32 TeamID);
-    void RemovePlayerFromTeam(int32 PlayerID);
-    void UpdatePlayerState(int32 PlayerID, EMingLobbyPlayerState NewState);
+    void AddPlayerToTeam(int32 PlayerID, int32 TeamID};
+    void RemovePlayerFromTeam(int32 PlayerID};
+    void UpdatePlayerState(int32 PlayerID, EMingLobbyPlayerState NewState};
     bool ValidateSettings(const FMingLobbySettings& Settings) const;
-    void SendSystemMessage(const FString& Message);
+    void SendSystemMessage(const FString& Message};
 };
+

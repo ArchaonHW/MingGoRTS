@@ -55,10 +55,10 @@ class MINGPERSONAL_API UMingSaveGameSystemTest : public UObject
     GENERATED_BODY()
 
 public:
-    UMingSaveGameSystemTest();
+    UMingSaveGameSystemTest(};
 
     // ?ãË??Ä?âÊ∏¨Ë©?    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool RunAllTests();
+    bool RunAllTests(};
 
     // Ê∏¨Ë©¶ÁµêÊ?
     UFUNCTION(BlueprintPure, Category = "Save Game Test")
@@ -78,52 +78,52 @@ public:
 
     // ?ãÂà•Ê∏¨Ë©¶
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestSaveGameManagerCreation();
+    bool TestSaveGameManagerCreation(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestCreateSaveGame();
+    bool TestCreateSaveGame(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestSaveToSlot();
+    bool TestSaveToSlot(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestLoadFromSlot();
+    bool TestLoadFromSlot(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestQuickSave();
+    bool TestQuickSave(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestQuickLoad();
+    bool TestQuickLoad(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestDeleteSave();
+    bool TestDeleteSave(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestGetAllSlots();
+    bool TestGetAllSlots(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestSaveExists();
+    bool TestSaveExists(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestMostRecentSave();
+    bool TestMostRecentSave(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestAutosave();
+    bool TestAutosave(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestExportSave();
+    bool TestExportSave(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestImportSave();
+    bool TestImportSave(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestBackupRestore();
+    bool TestBackupRestore(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestCompression();
+    bool TestCompression(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestVersionCompatibility();
+    bool TestVersionCompatibility(};
 
 private:
     // Ê∏¨Ë©¶ÁµêÊ??•Ë?
@@ -143,14 +143,15 @@ private:
     TArray<FSaveGameTestCase> TestCases;
 
     // Ê∏¨Ë©¶Âπ´Âä©?ΩÊï∏
-    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
-    void ResetTestCounts();
-    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
+    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
+    void ResetTestCounts(};
+    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT("")};
 
-    // ?µÂª∫Ê∏¨Ë©¶?®Á?ÁÆ°Á???    UMingSaveGameManager* CreateTestSaveGameManager();
+    // ?µÂª∫Ê∏¨Ë©¶?®Á?ÁÆ°Á???    UMingSaveGameManager* CreateTestSaveGameManager(};
 
     // Ê∏ÖÁ?Ê∏¨Ë©¶?∏Ê?
-    void CleanupTestData();
+    void CleanupTestData(};
 
     // ?≤Â?Ê∏¨Ë©¶?®Á?Â≠òÊ?Êß?    int32 GetTestSaveSlot() const { return 99; }
 };
+

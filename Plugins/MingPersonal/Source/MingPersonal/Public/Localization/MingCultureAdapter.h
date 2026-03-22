@@ -161,10 +161,10 @@ class MINGPERSONAL_API UMingCultureAdapter : public UObject
     GENERATED_BODY()
 
 public:
-    UMingCultureAdapter();
+    UMingCultureAdapter(};
 
-    // ?å???    void Initialize();
-    void Shutdown();
+    // ?å???    void Initialize(};
+    void Shutdown(};
 
     UFUNCTION(BlueprintPure, Category = "Culture Adapter")
     bool IsInitialized() const { return bIsInitialized; }
@@ -190,11 +190,11 @@ public:
 
     // ?‰ç”¨?‡å??©æ?è¦å?
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Adaptation")
-    bool ApplyAdaptationRule(const FContentAdaptationRule& Rule);
+    bool ApplyAdaptationRule(const FContentAdaptationRule& Rule};
 
     // ç§»é™¤?©æ?è¦å?
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Adaptation")
-    bool RemoveAdaptationRule(const FString& RuleID);
+    bool RemoveAdaptationRule(const FString& RuleID};
 
     // ?²å??€?‰é©?‰è???    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Adaptation")
     TArray<FContentAdaptationRule> GetAllAdaptationRules() const;
@@ -207,7 +207,7 @@ public:
 
     // è¨­ç½®?°å??‡å??å¥½
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Preferences")
-    void SetCulturalPreferences(const FString& RegionCode, const FCulturalPreferences& Preferences);
+    void SetCulturalPreferences(const FString& RegionCode, const FCulturalPreferences& Preferences};
 
     // æª¢æŸ¥?¹å??§å®¹é¡å??¯å¦?æ?
     UFUNCTION(BlueprintPure, Category = "Culture Adapter|Preferences")
@@ -274,7 +274,7 @@ public:
 
     // ? è??‡å??©æ??¸æ?
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Data")
-    bool LoadCulturalData(const FString& FilePath);
+    bool LoadCulturalData(const FString& FilePath};
 
     // ä¿å??‡å??©æ??¸æ?
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Data")
@@ -282,7 +282,7 @@ public:
 
     // è¨»å??‡å??§å®¹ä¿¡æ¯
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Data")
-    void RegisterCulturalContent(const FCulturalContentInfo& ContentInfo);
+    void RegisterCulturalContent(const FCulturalContentInfo& ContentInfo};
 
 private:
     bool bIsInitialized;
@@ -299,11 +299,12 @@ private:
     UPROPERTY()
     TArray<FContentAdaptationRule> AdaptationRules;
 
-    // ?å??–é?èªæ??–æ•¸??    void InitializeDefaultCulturalData();
+    // ?å??–é?èªæ??–æ•¸??    void InitializeDefaultCulturalData(};
 
     // ? è??è¨­?‡å?è¦å?
-    void LoadPresetRules();
+    void LoadPresetRules(};
 
     // ?²å??©æ?è¦å?
     const FContentAdaptationRule* FindAdaptationRule(const FString& ContentID, const FString& RegionCode) const;
 };
+

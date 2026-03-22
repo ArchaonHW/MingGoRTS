@@ -117,28 +117,28 @@ class MINGPERSONAL_API UMingUniversityGuideManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingUniversityGuideManager();
+    UMingUniversityGuideManager(};
 
-    virtual void Initialize();
-    virtual void Shutdown();
+    virtual void Initialize(};
+    virtual void Shutdown(};
 
     /**
      * ?üÂ?È´òÊ†°ÂºïÂ?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void StartUniversityGuide();
+    void StartUniversityGuide(};
 
     /**
      * ?úÊ≠¢È´òÊ†°ÂºïÂ?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void StopUniversityGuide();
+    void StopUniversityGuide(};
 
     /**
      * Ë®≠ÁΩÆÂºïÂ??çÁΩÆ
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void SetGuideConfig(const FUniversityGuideConfig& Config);
+    void SetGuideConfig(const FUniversityGuideConfig& Config};
 
     /**
      * ?≤Â??∂Â??çÁΩÆ
@@ -150,28 +150,28 @@ public:
      * ?üÊ?ÂºïÂ??ßÂÆπ
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    FString GenerateGuideContent(const FUniversityGuideConfig& Config);
+    FString GenerateGuideContent(const FUniversityGuideConfig& Config};
 
     /**
      * È°ØÁ§∫‰∏ã‰??ãÂ?Â∞éÂÖßÂÆ?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void ShowNextContent();
+    void ShowNextContent(};
 
     /**
      * È°ØÁ§∫‰∏ä‰??ãÂ?Â∞éÂÖßÂÆ?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void ShowPreviousContent();
+    void ShowPreviousContent(};
 
     /**
      * Ë∑≥Ë??∞Ê?ÂÆöÂÖßÂÆ?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void JumpToContent(const FString& ContentID);
+    void JumpToContent(const FString& ContentID};
 
     /**
      * Ê®ôË??ßÂÆπ?∫Â∑≤ÂÆåÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void MarkContentAsCompleted(const FString& ContentID);
+    void MarkContentAsCompleted(const FString& ContentID};
 
     /**
      * ?≤Â??Ä?âÂÖßÂÆ?     */
@@ -194,25 +194,25 @@ public:
      * ?≠ÊîæÂºïÂ??≥È†ª
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void PlayGuideAudio(const FString& AudioClipID);
+    void PlayGuideAudio(const FString& AudioClipID};
 
     /**
      * ?úÊ≠¢ÂºïÂ??≥È†ª
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void StopGuideAudio();
+    void StopGuideAudio(};
 
     /**
      * Ë®≠ÁΩÆÂºïÂ??≥È?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void SetGuideVolume(float Volume);
+    void SetGuideVolume(float Volume};
 
     /**
      * ?üÁî®/Á¶ÅÁî®‰∫íÂ?Ê®°Â?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void SetInteractiveMode(bool bEnabled);
+    void SetInteractiveMode(bool bEnabled};
 
     /**
      * Ê™¢Êü•?ØÂê¶Ê≠?ú®?ãË?
@@ -224,19 +224,19 @@ public:
      * ‰øùÂ?ÂºïÂ??≤Â∫¶
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void SaveGuideProgress();
+    void SaveGuideProgress(};
 
     /**
      * ËºâÂÖ•ÂºïÂ??≤Â∫¶
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void LoadGuideProgress();
+    void LoadGuideProgress(};
 
     // ‰∫ã‰ª∂?≤Ê?
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGuideStarted, FString, GuideID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGuideCompleted, FString, GuideID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnContentChanged, FUniversityGuideContent, Content);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProgressUpdated, FString, ContentID, float, Progress);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGuideStarted, FString, GuideID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGuideCompleted, FString, GuideID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnContentChanged, FUniversityGuideContent, Content};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProgressUpdated, FString, ContentID, float, Progress};
 
     UPROPERTY(BlueprintAssignable, Category = "University Guide|Events")
     FOnGuideStarted OnGuideStarted;
@@ -269,7 +269,8 @@ private:
     UPROPERTY()
     bool bInteractiveMode;
 
-    void GenerateDefaultContents();
-    void UpdateProgress();
-    FString GenerateContentID();
+    void GenerateDefaultContents(};
+    void UpdateProgress(};
+    FString GenerateContentID(};
 };
+

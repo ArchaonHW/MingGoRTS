@@ -57,10 +57,10 @@ struct FMingSaveGameSlotInfo
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSaveGameComplete, EMingSaveGameResult, Result, int32, SlotIndex);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLoadGameComplete, EMingSaveGameResult, Result, int32, SlotIndex);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeleteGameComplete, bool, bSuccess);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAutosaveTriggered, int32, SlotIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSaveGameComplete, EMingSaveGameResult, Result, int32, SlotIndex};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLoadGameComplete, EMingSaveGameResult, Result, int32, SlotIndex};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeleteGameComplete, bool, bSuccess};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAutosaveTriggered, int32, SlotIndex};
 
 /**
  * Save Game Manager
@@ -72,44 +72,44 @@ class MINGPERSONAL_API UMingSaveGameManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingSaveGameManager();
+    UMingSaveGameManager(};
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    void Initialize();
+    void Initialize(};
 
     UFUNCTION(BlueprintPure, Category = "Save Game")
     bool IsInitialized() const { return bIsInitialized; }
 
     // Save Operations
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    EMingSaveGameResult SaveGame(int32 SlotIndex, const FString& SaveName, bool bIsAutosave = false);
+    EMingSaveGameResult SaveGame(int32 SlotIndex, const FString& SaveName, bool bIsAutosave = false};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    EMingSaveGameResult SaveGameWithMetadata(int32 SlotIndex, const FString& SaveName, const TMap<FString, FString>& Metadata);
+    EMingSaveGameResult SaveGameWithMetadata(int32 SlotIndex, const FString& SaveName, const TMap<FString, FString>& Metadata};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    EMingSaveGameResult QuickSave();
+    EMingSaveGameResult QuickSave(};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    void SaveGameAsync(int32 SlotIndex, const FString& SaveName);
+    void SaveGameAsync(int32 SlotIndex, const FString& SaveName};
 
     // Load Operations
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    EMingSaveGameResult LoadGame(int32 SlotIndex);
+    EMingSaveGameResult LoadGame(int32 SlotIndex};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    void LoadGameAsync(int32 SlotIndex);
+    void LoadGameAsync(int32 SlotIndex};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    bool LoadMostRecentSave();
+    bool LoadMostRecentSave(};
 
     // Delete Operations
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    bool DeleteSaveGame(int32 SlotIndex);
+    bool DeleteSaveGame(int32 SlotIndex};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    bool DeleteAllSaves();
+    bool DeleteAllSaves(};
 
     // Slot Management
     UFUNCTION(BlueprintCallable, Category = "Save Game")
@@ -135,7 +135,7 @@ public:
 
     // Current Save
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    void SetCurrentSaveSlot(int32 SlotIndex);
+    void SetCurrentSaveSlot(int32 SlotIndex};
 
     UFUNCTION(BlueprintPure, Category = "Save Game")
     int32 GetCurrentSaveSlot() const { return CurrentSaveSlot; }
@@ -145,74 +145,74 @@ public:
 
     // Autosave
     UFUNCTION(BlueprintCallable, Category = "Autosave")
-    void SetAutosaveEnabled(bool bEnabled);
+    void SetAutosaveEnabled(bool bEnabled};
 
     UFUNCTION(BlueprintPure, Category = "Autosave")
     bool IsAutosaveEnabled() const { return bAutosaveEnabled; }
 
     UFUNCTION(BlueprintCallable, Category = "Autosave")
-    void SetAutosaveInterval(float IntervalMinutes);
+    void SetAutosaveInterval(float IntervalMinutes};
 
     UFUNCTION(BlueprintPure, Category = "Autosave")
     float GetAutosaveInterval() const { return AutosaveIntervalMinutes; }
 
     UFUNCTION(BlueprintCallable, Category = "Autosave")
-    void TriggerAutosave();
+    void TriggerAutosave(};
 
     UFUNCTION(BlueprintCallable, Category = "Autosave")
-    void CheckAutosaveTimer(float DeltaTime);
+    void CheckAutosaveTimer(float DeltaTime};
 
     // Data Collection
     UFUNCTION()
-    void CollectRelationshipData(UMingSaveGame* SaveGame);
+    void CollectRelationshipData(UMingSaveGame* SaveGame};
 
     UFUNCTION()
-    void CollectReputationData(UMingSaveGame* SaveGame);
+    void CollectReputationData(UMingSaveGame* SaveGame};
 
     UFUNCTION()
-    void CollectQuestData(UMingSaveGame* SaveGame);
+    void CollectQuestData(UMingSaveGame* SaveGame};
 
     UFUNCTION()
-    void CollectAudioSettings(UMingSaveGame* SaveGame);
+    void CollectAudioSettings(UMingSaveGame* SaveGame};
 
     UFUNCTION()
-    void CollectUISettings(UMingSaveGame* SaveGame);
+    void CollectUISettings(UMingSaveGame* SaveGame};
 
     UFUNCTION()
-    void CollectGameState(UMingSaveGame* SaveGame);
+    void CollectGameState(UMingSaveGame* SaveGame};
 
     // Data Restoration
     UFUNCTION()
-    void RestoreRelationshipData(UMingSaveGame* SaveGame);
+    void RestoreRelationshipData(UMingSaveGame* SaveGame};
 
     UFUNCTION()
-    void RestoreReputationData(UMingSaveGame* SaveGame);
+    void RestoreReputationData(UMingSaveGame* SaveGame};
 
     UFUNCTION()
-    void RestoreQuestData(UMingSaveGame* SaveGame);
+    void RestoreQuestData(UMingSaveGame* SaveGame};
 
     UFUNCTION()
-    void RestoreAudioSettings(UMingSaveGame* SaveGame);
+    void RestoreAudioSettings(UMingSaveGame* SaveGame};
 
     UFUNCTION()
-    void RestoreUISettings(UMingSaveGame* SaveGame);
+    void RestoreUISettings(UMingSaveGame* SaveGame};
 
     UFUNCTION()
-    void RestoreGameState(UMingSaveGame* SaveGame);
+    void RestoreGameState(UMingSaveGame* SaveGame};
 
     // Thumbnails
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    void CaptureSaveThumbnail(int32 SlotIndex);
+    void CaptureSaveThumbnail(int32 SlotIndex};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game")
     UTexture2D* LoadSaveThumbnail(int32 SlotIndex) const;
 
     // Import/Export
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    bool ExportSaveToFile(int32 SlotIndex, const FString& FilePath);
+    bool ExportSaveToFile(int32 SlotIndex, const FString& FilePath};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    bool ImportSaveFromFile(const FString& FilePath, int32 TargetSlotIndex);
+    bool ImportSaveFromFile(const FString& FilePath, int32 TargetSlotIndex};
 
     // Validation
     UFUNCTION(BlueprintPure, Category = "Save Game")
@@ -223,23 +223,23 @@ public:
 
     // Compression & Encryption
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    void SetCompressionEnabled(bool bEnabled);
+    void SetCompressionEnabled(bool bEnabled};
 
     UFUNCTION(BlueprintPure, Category = "Save Game")
     bool IsCompressionEnabled() const { return bCompressionEnabled; }
 
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    void SetEncryptionEnabled(bool bEnabled, const FString& Key);
+    void SetEncryptionEnabled(bool bEnabled, const FString& Key};
 
     UFUNCTION(BlueprintPure, Category = "Save Game")
     bool IsEncryptionEnabled() const { return bEncryptionEnabled; }
 
     // Backup
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    bool CreateBackup(int32 SlotIndex);
+    bool CreateBackup(int32 SlotIndex};
 
     UFUNCTION(BlueprintCallable, Category = "Save Game")
-    bool RestoreFromBackup(int32 SlotIndex);
+    bool RestoreFromBackup(int32 SlotIndex};
 
     // Event Delegates
     UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -256,7 +256,7 @@ public:
 
     // Debug
     UFUNCTION(BlueprintCallable, Category = "Debug")
-    void EnableDebugLogging(bool bEnable);
+    void EnableDebugLogging(bool bEnable};
 
     UFUNCTION(BlueprintPure, Category = "Debug")
     FString GetDebugInfo() const;
@@ -306,29 +306,30 @@ protected:
     FString GetThumbnailPath(int32 SlotIndex) const;
     FString GetBackupPath(int32 SlotIndex) const;
     
-    void SerializeSaveGame(UMingSaveGame* SaveGame, TArray<uint8>& OutData);
-    bool DeserializeSaveGame(const TArray<uint8>& Data, UMingSaveGame* OutSaveGame);
+    void SerializeSaveGame(UMingSaveGame* SaveGame, TArray<uint8>& OutData};
+    bool DeserializeSaveGame(const TArray<uint8>& Data, UMingSaveGame* OutSaveGame};
     
-    EMingSaveGameResult WriteSaveToDisk(int32 SlotIndex, const TArray<uint8>& Data);
-    EMingSaveGameResult ReadSaveFromDisk(int32 SlotIndex, TArray<uint8>& OutData);
+    EMingSaveGameResult WriteSaveToDisk(int32 SlotIndex, const TArray<uint8>& Data};
+    EMingSaveGameResult ReadSaveFromDisk(int32 SlotIndex, TArray<uint8>& OutData};
     
-    void UpdateAutosaveTimer(float DeltaTime);
-    void OnAsyncSaveComplete(bool bSuccess);
-    void OnAsyncLoadComplete(bool bSuccess);
+    void UpdateAutosaveTimer(float DeltaTime};
+    void OnAsyncSaveComplete(bool bSuccess};
+    void OnAsyncLoadComplete(bool bSuccess};
     
-    void LogSaveEvent(const FString& Event, int32 SlotIndex);
+    void LogSaveEvent(const FString& Event, int32 SlotIndex};
 
 public:
     // Static access
     UFUNCTION(BlueprintPure, Category = "Save Game", meta = (WorldContext = "WorldContextObject"))
-    static UMingSaveGameManager* GetSaveGameManager(UObject* WorldContextObject);
+    static UMingSaveGameManager* GetSaveGameManager(UObject* WorldContextObject};
 
     UFUNCTION(BlueprintPure, Category = "Save Game")
-    static FString GetSaveDirectoryPath();
+    static FString GetSaveDirectoryPath(};
 
     UFUNCTION(BlueprintPure, Category = "Save Game")
-    static int64 GetAvailableDiskSpace();
+    static int64 GetAvailableDiskSpace(};
 
     UFUNCTION(BlueprintPure, Category = "Save Game")
-    static int64 GetSaveGameTotalSize();
+    static int64 GetSaveGameTotalSize(};
 };
+

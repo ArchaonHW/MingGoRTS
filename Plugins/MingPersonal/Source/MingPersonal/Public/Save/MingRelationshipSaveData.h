@@ -89,20 +89,20 @@ class MINGPERSONAL_API UMingRelationshipSaveDataHandler : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRelationshipSaveDataHandler();
+    UMingRelationshipSaveDataHandler(};
 
     // Serialization
     UFUNCTION(BlueprintCallable, Category = "Relationship Save")
-    TArray<uint8> SerializeRelationshipData(class UMingRelationshipManager* RelationshipManager);
+    TArray<uint8> SerializeRelationshipData(class UMingRelationshipManager* RelationshipManager};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Save")
-    bool DeserializeRelationshipData(const TArray<uint8>& Data, class UMingRelationshipManager* RelationshipManager);
+    bool DeserializeRelationshipData(const TArray<uint8>& Data, class UMingRelationshipManager* RelationshipManager};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Save")
-    FMingRelationshipSaveData ExportRelationshipData(UMingRelationshipManager* RelationshipManager);
+    FMingRelationshipSaveData ExportRelationshipData(UMingRelationshipManager* RelationshipManager};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Save")
-    bool ImportRelationshipData(const FMingRelationshipSaveData& SaveData, UMingRelationshipManager* RelationshipManager);
+    bool ImportRelationshipData(const FMingRelationshipSaveData& SaveData, UMingRelationshipManager* RelationshipManager};
 
     // Validation
     UFUNCTION(BlueprintPure, Category = "Relationship Save")
@@ -154,36 +154,37 @@ public:
 
     // Export/Import
     UFUNCTION(BlueprintCallable, Category = "Relationship Save")
-    bool ExportToJson(const FMingRelationshipSaveData& SaveData, FString& OutJson);
+    bool ExportToJson(const FMingRelationshipSaveData& SaveData, FString& OutJson};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Save")
-    bool ImportFromJson(const FString& Json, FMingRelationshipSaveData& OutSaveData);
+    bool ImportFromJson(const FString& Json, FMingRelationshipSaveData& OutSaveData};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Save")
-    bool ExportToFile(const FMingRelationshipSaveData& SaveData, const FString& FilePath);
+    bool ExportToFile(const FMingRelationshipSaveData& SaveData, const FString& FilePath};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Save")
-    bool ImportFromFile(const FString& FilePath, FMingRelationshipSaveData& OutSaveData);
+    bool ImportFromFile(const FString& FilePath, FMingRelationshipSaveData& OutSaveData};
 
 protected:
     UPROPERTY()
     TArray<FString> ValidationErrors;
 
     UFUNCTION()
-    void BuildRelationshipEntry(class UMingRelationshipManager* Manager, FName CharacterID, FMingRelationshipEntry& OutEntry);
+    void BuildRelationshipEntry(class UMingRelationshipManager* Manager, FName CharacterID, FMingRelationshipEntry& OutEntry};
 
     UFUNCTION()
-    void ApplyRelationshipEntry(UMingRelationshipManager* Manager, const FMingRelationshipEntry& Entry);
+    void ApplyRelationshipEntry(UMingRelationshipManager* Manager, const FMingRelationshipEntry& Entry};
 
     UFUNCTION()
-    void SerializeToBinary(const FMingRelationshipSaveData& SaveData, TArray<uint8>& OutData);
+    void SerializeToBinary(const FMingRelationshipSaveData& SaveData, TArray<uint8>& OutData};
 
     UFUNCTION()
-    bool DeserializeFromBinary(const TArray<uint8>& Data, FMingRelationshipSaveData& OutSaveData);
+    bool DeserializeFromBinary(const TArray<uint8>& Data, FMingRelationshipSaveData& OutSaveData};
 
     UFUNCTION()
-    void ClearValidationErrors();
+    void ClearValidationErrors(};
 
     UFUNCTION()
-    void AddValidationError(const FString& Error);
+    void AddValidationError(const FString& Error};
 };
+

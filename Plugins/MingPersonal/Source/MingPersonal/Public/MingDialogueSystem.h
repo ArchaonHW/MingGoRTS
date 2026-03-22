@@ -174,20 +174,20 @@ class MINGPERSONAL_API UMingDialogueSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingDialogueSystem();
+    UMingDialogueSystem(};
 
     // Conversation Management
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void StartConversation(const FString& ConversationID);
+    void StartConversation(const FString& ConversationID};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void EndConversation();
+    void EndConversation(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void PauseConversation();
+    void PauseConversation(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void ResumeConversation();
+    void ResumeConversation(};
 
     UFUNCTION(BlueprintPure, Category = "Dialogue")
     bool IsConversationActive() const;
@@ -197,16 +197,16 @@ public:
 
     // Dialogue Navigation
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void SelectDialogueOption(int32 OptionIndex);
+    void SelectDialogueOption(int32 OptionIndex};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void NextDialogue();
+    void NextDialogue(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void SkipDialogue();
+    void SkipDialogue(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void GoToDialogue(const FString& DialogueID);
+    void GoToDialogue(const FString& DialogueID};
 
     UFUNCTION(BlueprintPure, Category = "Dialogue")
     FMingDialogueLine GetCurrentDialogueLine() const;
@@ -219,13 +219,13 @@ public:
 
     // Conversation Loading
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void LoadConversation(const FMingDialogueConversation& Conversation);
+    void LoadConversation(const FMingDialogueConversation& Conversation};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void LoadDialogueFromFile(const FString& FilePath);
+    void LoadDialogueFromFile(const FString& FilePath};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void AddDialogueLine(const FString& ConversationID, const FMingDialogueLine& DialogueLine);
+    void AddDialogueLine(const FString& ConversationID, const FMingDialogueLine& DialogueLine};
 
     UFUNCTION(BlueprintPure, Category = "Dialogue")
     TArray<FMingDialogueConversation> GetAllConversations() const;
@@ -235,20 +235,20 @@ public:
 
     // Historical Context
     UFUNCTION(BlueprintCallable, Category = "Historical")
-    void ShowHistoricalContext(const FString& EventID);
+    void ShowHistoricalContext(const FString& EventID};
 
     UFUNCTION(BlueprintCallable, Category = "Historical")
-    void AddHistoricalNote(const FString& DialogueID, const FString& Note);
+    void AddHistoricalNote(const FString& DialogueID, const FString& Note};
 
     UFUNCTION(BlueprintPure, Category = "Historical")
     TArray<FString> GetHistoricalNotes(const FString& DialogueID) const;
 
     // Choices and Consequences
     UFUNCTION(BlueprintCallable, Category = "Choices")
-    void ProcessChoice(const FString& ChoiceID);
+    void ProcessChoice(const FString& ChoiceID};
 
     UFUNCTION(BlueprintCallable, Category = "Choices")
-    void RecordPlayerChoice(const FString& DialogueID, int32 OptionIndex);
+    void RecordPlayerChoice(const FString& DialogueID, int32 OptionIndex};
 
     UFUNCTION(BlueprintPure, Category = "Choices")
     TMap<FString, int32> GetPlayerChoices() const;
@@ -258,19 +258,19 @@ public:
 
     // Conditions and Triggers
     UFUNCTION(BlueprintCallable, Category = "Conditions")
-    void SetDialogueCondition(const FString& ConditionName, bool bValue);
+    void SetDialogueCondition(const FString& ConditionName, bool bValue};
 
     UFUNCTION(BlueprintPure, Category = "Conditions")
     bool GetDialogueCondition(const FString& ConditionName) const;
 
     UFUNCTION(BlueprintCallable, Category = "Conditions")
-    void TriggerDialogueEvent(const FString& EventName);
+    void TriggerDialogueEvent(const FString& EventName};
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueStarted, const FMingDialogueLine&, DialogueLine, const FString&, ConversationID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueEnded, const FString&, ConversationID, bool, bWasCompleted);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueOptionSelected, int32, OptionIndex, const FString&, DialogueID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHistoricalContextShown, const FString&, EventID);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueStarted, const FMingDialogueLine&, DialogueLine, const FString&, ConversationID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueEnded, const FString&, ConversationID, bool, bWasCompleted};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueOptionSelected, int32, OptionIndex, const FString&, DialogueID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHistoricalContextShown, const FString&, EventID};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnDialogueStarted OnDialogueStarted;
@@ -286,16 +286,16 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetSpeakerTypeName(EMingDialogueSpeaker SpeakerType);
+    static FString GetSpeakerTypeName(EMingDialogueSpeaker SpeakerType};
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetDialogueTypeName(EMingDialogueType DialogueType);
+    static FString GetDialogueTypeName(EMingDialogueType DialogueType};
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveDialogueData() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadDialogueData(const FString& JsonString);
+    void LoadDialogueData(const FString& JsonString};
 
 protected:
     UPROPERTY()
@@ -325,17 +325,18 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal functions
-    void InitializeDefaultDialogues();
-    void SetupHistoricalDialogues();
-    void SetupTutorialDialogues();
-    void ProcessDialogueTriggers(const FMingDialogueLine& DialogueLine);
-    void ProcessChoiceConsequences(const FMingDialogueOption& Option);
+    void InitializeDefaultDialogues(};
+    void SetupHistoricalDialogues(};
+    void SetupTutorialDialogues(};
+    void ProcessDialogueTriggers(const FMingDialogueLine& DialogueLine};
+    void ProcessChoiceConsequences(const FMingDialogueOption& Option};
     bool CheckDialogueConditions(const TArray<FString>& Conditions) const;
-    void UpdateDialogueOptions();
-    void AutoAdvanceDialogue();
+    void UpdateDialogueOptions(};
+    void AutoAdvanceDialogue(};
 
     // Helpers
-    FMingDialogueLine* FindDialogueLine(const FString& DialogueID);
-    FMingDialogueConversation* FindConversation(const FString& ConversationID);
-    void MarkDialogueAsVisited(const FString& DialogueID);
+    FMingDialogueLine* FindDialogueLine(const FString& DialogueID};
+    FMingDialogueConversation* FindConversation(const FString& ConversationID};
+    void MarkDialogueAsVisited(const FString& DialogueID};
 };
+

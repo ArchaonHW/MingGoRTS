@@ -181,20 +181,20 @@ class MINGPERSONAL_API UMingCharacterSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingCharacterSystem();
+    UMingCharacterSystem(};
 
     // Character Management
     UFUNCTION(BlueprintCallable, Category = "Character")
-    void InitializeCharacters();
+    void InitializeCharacters(};
 
     UFUNCTION(BlueprintCallable, Category = "Character")
-    void RecruitCharacter(const FString& CharacterID);
+    void RecruitCharacter(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Character")
-    void DismissCharacter(const FString& CharacterID);
+    void DismissCharacter(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Character")
-    void AssignCharacterRole(const FString& CharacterID, EMingCharacterRole Role);
+    void AssignCharacterRole(const FString& CharacterID, EMingCharacterRole Role};
 
     UFUNCTION(BlueprintPure, Category = "Character")
     TArray<FMingHistoricalCharacter> GetAllCharacters() const;
@@ -210,13 +210,13 @@ public:
 
     // Skill System
     UFUNCTION(BlueprintCallable, Category = "Skills")
-    void AddSkillExperience(const FString& CharacterID, EMingSkillType SkillType, int32 Experience);
+    void AddSkillExperience(const FString& CharacterID, EMingSkillType SkillType, int32 Experience};
 
     UFUNCTION(BlueprintCallable, Category = "Skills")
-    void LevelUpSkill(const FString& CharacterID, EMingSkillType SkillType);
+    void LevelUpSkill(const FString& CharacterID, EMingSkillType SkillType};
 
     UFUNCTION(BlueprintCallable, Category = "Skills")
-    void LearnNewSkill(const FString& CharacterID, const FString& SkillID);
+    void LearnNewSkill(const FString& CharacterID, const FString& SkillID};
 
     UFUNCTION(BlueprintPure, Category = "Skills")
     TArray<FMingCharacterSkill> GetCharacterSkills(const FString& CharacterID) const;
@@ -232,13 +232,13 @@ public:
 
     // Character Development
     UFUNCTION(BlueprintCallable, Category = "Development")
-    void TrainCharacter(const FString& CharacterID, EMingSkillType SkillType, float Duration);
+    void TrainCharacter(const FString& CharacterID, EMingSkillType SkillType, float Duration};
 
     UFUNCTION(BlueprintCallable, Category = "Development")
-    void PromoteCharacter(const FString& CharacterID);
+    void PromoteCharacter(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Development")
-    void DevelopTrait(const FString& CharacterID, const FString& TraitID);
+    void DevelopTrait(const FString& CharacterID, const FString& TraitID};
 
     UFUNCTION(BlueprintPure, Category = "Development")
     float GetCharacterExperience(const FString& CharacterID) const;
@@ -248,10 +248,10 @@ public:
 
     // Character Relationships
     UFUNCTION(BlueprintCallable, Category = "Relationships")
-    void SetCharacterLoyalty(const FString& CharacterID, float Loyalty);
+    void SetCharacterLoyalty(const FString& CharacterID, float Loyalty};
 
     UFUNCTION(BlueprintCallable, Category = "Relationships")
-    void ModifyRelationship(const FString& CharacterID1, const FString& CharacterID2, float Modifier);
+    void ModifyRelationship(const FString& CharacterID1, const FString& CharacterID2, float Modifier};
 
     UFUNCTION(BlueprintPure, Category = "Relationships")
     float GetCharacterLoyalty(const FString& CharacterID) const;
@@ -264,26 +264,26 @@ public:
     TArray<FString> GetActiveEffects(const FString& CharacterID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Effects")
-    void ApplyCharacterEffect(const FString& CharacterID, const FString& EffectID);
+    void ApplyCharacterEffect(const FString& CharacterID, const FString& EffectID};
 
     UFUNCTION(BlueprintCallable, Category = "Effects")
-    void RemoveCharacterEffect(const FString& CharacterID, const FString& EffectID);
+    void RemoveCharacterEffect(const FString& CharacterID, const FString& EffectID};
 
     // Historical Context
     UFUNCTION(BlueprintCallable, Category = "Historical")
-    void ShowCharacterBiography(const FString& CharacterID);
+    void ShowCharacterBiography(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Historical")
-    void AddHistoricalEvent(const FString& CharacterID, const FString& Event);
+    void AddHistoricalEvent(const FString& CharacterID, const FString& Event};
 
     UFUNCTION(BlueprintPure, Category = "Historical")
     TArray<FString> GetCharacterEvents(const FString& CharacterID) const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterRecruited, const FMingHistoricalCharacter&, Character, const FString&, Role);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelUp, const FString&, CharacterID, const FMingCharacterSkill&, Skill);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterPromoted, const FString&, CharacterID, int32, NewLevel);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTraitDeveloped, const FString&, CharacterID, const FString&, TraitID);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterRecruited, const FMingHistoricalCharacter&, Character, const FString&, Role};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelUp, const FString&, CharacterID, const FMingCharacterSkill&, Skill};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterPromoted, const FString&, CharacterID, int32, NewLevel};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTraitDeveloped, const FString&, CharacterID, const FString&, TraitID};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnCharacterRecruited OnCharacterRecruited;
@@ -299,47 +299,48 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetRoleName(EMingCharacterRole Role);
+    static FString GetRoleName(EMingCharacterRole Role};
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetSkillTypeName(EMingSkillType SkillType);
+    static FString GetSkillTypeName(EMingSkillType SkillType};
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveCharacterData() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadCharacterData(const FString& JsonString);
+    void LoadCharacterData(const FString& JsonString};
 
 protected:
     UPROPERTY()
     TMap<FString, FMingHistoricalCharacter> Characters;
 
-    // 注?：TMap 不能?接作為 TMap ??UPROPERTY ????    // TMap<FString, TMap<FString, float>> CharacterRelationships;
+    // �?：TMap 不能??��???TMap ??UPROPERTY ????    // TMap<FString, TMap<FString, float>> CharacterRelationships;
 
-    // 注?：TArray 不能?接作為 TMap ??UPROPERTY ????    // TMap<FString, TArray<FString>> CharacterEffects;
+    // �?：TArray 不能??��???TMap ??UPROPERTY ????    // TMap<FString, TArray<FString>> CharacterEffects;
 
-    // 注?：TArray 不能?接作為 TMap ??UPROPERTY ????    // TMap<FString, TArray<FString>> HistoricalEvents;
+    // �?：TArray 不能??��???TMap ??UPROPERTY ????    // TMap<FString, TArray<FString>> HistoricalEvents;
 
     UPROPERTY()
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Character Setup
-    void SetupRevolutionaryCharacters();
-    void SetupMilitaryCharacters();
-    void SetupPoliticalCharacters();
-    void SetupCulturalCharacters();
+    void SetupRevolutionaryCharacters(};
+    void SetupMilitaryCharacters(};
+    void SetupPoliticalCharacters(};
+    void SetupCulturalCharacters(};
 
     // Skill Management
-    void ProcessSkillExperience(FMingCharacterSkill& Skill, int32 Experience);
+    void ProcessSkillExperience(FMingCharacterSkill& Skill, int32 Experience};
     bool CanLevelUpSkill(const FMingCharacterSkill& Skill) const;
-    void ApplySkillEffects(const FString& CharacterID, const FMingCharacterSkill& Skill);
+    void ApplySkillEffects(const FString& CharacterID, const FMingCharacterSkill& Skill};
 
     // Internal Functions
-    void UpdateCharacterStats(const FString& CharacterID);
-    void CheckSkillPrerequisites(const FString& CharacterID, const FString& SkillID);
-    void ProcessTraitEffects(const FString& CharacterID, const FMingCharacterTrait& Trait);
+    void UpdateCharacterStats(const FString& CharacterID};
+    void CheckSkillPrerequisites(const FString& CharacterID, const FString& SkillID};
+    void ProcessTraitEffects(const FString& CharacterID, const FMingCharacterTrait& Trait};
 
     // Helpers
-    FMingHistoricalCharacter* FindCharacter(const FString& CharacterID);
-    FMingCharacterSkill* FindCharacterSkill(const FString& CharacterID, EMingSkillType SkillType);
+    FMingHistoricalCharacter* FindCharacter(const FString& CharacterID};
+    FMingCharacterSkill* FindCharacterSkill(const FString& CharacterID, EMingSkillType SkillType};
 };
+

@@ -35,10 +35,10 @@ struct FDialoguePanelOption
 
     FDialoguePanelOption()
     {
-        OptionText = TEXT("");
+        OptionText = TEXT(""};
         OptionID = 0;
         bIsAvailable = true;
-        RequirementText = TEXT("");
+        RequirementText = TEXT(""};
         OptionColor = FLinearColor::White;
     }
 };
@@ -77,9 +77,9 @@ struct FDialogueData
 
     FDialogueData()
     {
-        CharacterID = TEXT("");
-        CharacterName = TEXT("");
-        DialogueText = TEXT("");
+        CharacterID = TEXT(""};
+        CharacterName = TEXT(""};
+        DialogueText = TEXT(""};
         DialogueType = EDialogueAudioType::Neutral;
         RelationshipType = ERelationshipType::Neutral;
         DialogueColor = FLinearColor::White;
@@ -88,10 +88,10 @@ struct FDialogueData
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueStarted, const FString&, CharacterID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueFinished, const FString&, CharacterID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueOptionSelected, int32, OptionID, const FString&, OptionText);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueStateChanged, EDialogueState, NewState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueStarted, const FString&, CharacterID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueFinished, const FString&, CharacterID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueOptionSelected, int32, OptionID, const FString&, OptionText};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueStateChanged, EDialogueState, NewState};
 
 /**
  * Â∞çË©±?¢ÊùøWidget
@@ -103,52 +103,52 @@ class MINGPERSONAL_API UMingDialoguePanel : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingDialoguePanel(const FObjectInitializer& ObjectInitializer);
+    UMingDialoguePanel(const FObjectInitializer& ObjectInitializer};
 
     // ?ùÂ???    UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void InitializeDialoguePanel(UMingRelationshipManager* InRelationshipManager);
+    void InitializeDialoguePanel(UMingRelationshipManager* InRelationshipManager};
 
     // Â∞çË©±?ßÂà∂
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void StartDialogue(const FString& CharacterID, const FString& DialogueText, EDialogueType DialogueType);
+    void StartDialogue(const FString& CharacterID, const FString& DialogueText, EDialogueType DialogueType};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void EndDialogue();
+    void EndDialogue(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void ContinueDialogue();
+    void ContinueDialogue(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void PauseDialogue();
+    void PauseDialogue(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void ResumeDialogue();
+    void ResumeDialogue(};
 
     // ?∏È??ïÁ?
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void ShowDialogueOptions(const TArray<FDialoguePanelOption>& Options);
+    void ShowDialogueOptions(const TArray<FDialoguePanelOption>& Options};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void HideDialogueOptions();
+    void HideDialogueOptions(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void SelectDialogueOption(int32 OptionID);
+    void SelectDialogueOption(int32 OptionID};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void OnOptionClicked(int32 OptionID);
+    void OnOptionClicked(int32 OptionID};
 
     // Â∞çË©±?ßÂÆπ
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void SetDialogueText(const FString& Text);
+    void SetDialogueText(const FString& Text};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void AddDialogueText(const FString& Text);
+    void AddDialogueText(const FString& Text};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void ClearDialogueText();
+    void ClearDialogueText(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void SetCharacterName(const FString& Name);
+    void SetCharacterName(const FString& Name};
 
     // ?Ä?ãÊü•Ë©?    UFUNCTION(BlueprintPure, Category = "Dialogue Panel")
     bool IsDialogueActive() const;
@@ -164,52 +164,52 @@ public:
 
     // Ë¶ñË¶∫?àÊ?
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void PlayTypewriterEffect(const FString& Text, float TypingSpeed = 0.05f);
+    void PlayTypewriterEffect(const FString& Text, float TypingSpeed = 0.05f};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void StopTypewriterEffect();
+    void StopTypewriterEffect(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void ShowCharacterPortrait(const FString& CharacterID);
+    void ShowCharacterPortrait(const FString& CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void HideCharacterPortrait();
+    void HideCharacterPortrait(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void SetDialogueEmotion(EDialogueType DialogueType);
+    void SetDialogueEmotion(EDialogueType DialogueType};
 
     // ?≥È†ª?ÜÊ?
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void PlayDialogueAudio(EDialogueType DialogueType);
+    void PlayDialogueAudio(EDialogueType DialogueType};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void StopDialogueAudio();
+    void StopDialogueAudio(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void SetAudioVolume(float Volume);
+    void SetAudioVolume(float Volume};
 
     // Ê≠∑Âè≤Ë®òÈ?
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void AddToHistory(const FString& CharacterID, const FString& Text);
+    void AddToHistory(const FString& CharacterID, const FString& Text};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void ShowDialogueHistory();
+    void ShowDialogueHistory(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void HideDialogueHistory();
+    void HideDialogueHistory(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void ClearDialogueHistory();
+    void ClearDialogueHistory(};
 
     // Âø´Êç∑?ç‰?
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void QuickResponse(const FString& ResponseText);
+    void QuickResponse(const FString& ResponseText};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void SkipDialogue();
+    void SkipDialogue(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
-    void AutoAdvance(bool bEnabled);
+    void AutoAdvance(bool bEnabled};
 
     // ‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "Dialogue Events")
@@ -294,26 +294,26 @@ protected:
     virtual void NativeDestruct() override;
 
     // ?ßÈÉ®?ΩÊï∏
-    void UpdateDialogueUI();
-    void UpdateCharacterUI();
-    void UpdateOptionsUI();
-    void SetDialogueState(EDialogueState NewState);
+    void UpdateDialogueUI(};
+    void UpdateCharacterUI(};
+    void UpdateOptionsUI(};
+    void SetDialogueState(EDialogueState NewState};
     FLinearColor GetDialogueColor(EDialogueType DialogueType, ERelationshipType RelationshipType) const;
     FString GetCharacterDisplayName(const FString& CharacterID) const;
-    void ProcessTypewriterEffect();
-    void OnAutoAdvanceTimer();
+    void ProcessTypewriterEffect(};
+    void OnAutoAdvanceTimer(};
 
     // ‰∫ã‰ª∂Á∂ÅÂ?
-    void SetupEventBindings();
-    void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason);
+    void SetupEventBindings(};
+    void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
 
 private:
     // ËºîÂä©?ΩÊï∏
-    void CreateOptionWidgets();
-    void ClearOptionWidgets();
+    void CreateOptionWidgets(};
+    void ClearOptionWidgets(};
     bool IsOptionAvailable(const FDialoguePanelOption& Option) const;
-    void PlayTypewriterSound();
-    void StopTypewriterSound();
+    void PlayTypewriterSound(};
+    void StopTypewriterSound(};
 
     // ÂÆöÊ???    FTimerHandle TypewriterTimer;
     FTimerHandle AutoAdvanceTimer;
@@ -322,3 +322,4 @@ private:
     FString CurrentText;
     int32 TypewriterIndex;
 };
+

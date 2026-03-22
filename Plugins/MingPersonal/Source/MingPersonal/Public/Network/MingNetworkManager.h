@@ -228,15 +228,15 @@ enum class EMingNetworkError : uint8
 };
 
 // Delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkConnectionStateChanged, EMingNetworkConnectionState, NewState);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerJoined, FMingPlayerNetworkInfo, PlayerInfo);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerLeft, int32, PlayerID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerReadyChanged, int32, PlayerID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChatMessageReceived, FMingChatMessage, Message);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkError, EMingNetworkError, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHostMigrated, int32, NewHostPlayerID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStarted);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameEnded);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkConnectionStateChanged, EMingNetworkConnectionState, NewState};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerJoined, FMingPlayerNetworkInfo, PlayerInfo};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerLeft, int32, PlayerID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerReadyChanged, int32, PlayerID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChatMessageReceived, FMingChatMessage, Message};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkError, EMingNetworkError, Error};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHostMigrated, int32, NewHostPlayerID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStarted};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameEnded};
 
 /**
  * Á∂≤Áµ°ÁÆ°Á??? * ?ïÁ?Â§ö‰∫∫?äÊà≤?ÑÁ∂≤Áµ°ÈÄ?é•?ÅÁé©ÂÆ∂ÁÆ°?ÜÂ??∏Ê??åÊ≠•
@@ -247,28 +247,28 @@ class MINGPERSONAL_API UMingNetworkManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingNetworkManager();
+    UMingNetworkManager(};
 
     // Initialize/Shutdown
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void Initialize();
+    void Initialize(};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void Shutdown();
+    void Shutdown(};
 
     // Server creation
     UFUNCTION(BlueprintCallable, Category = "Network")
-    bool CreateServer(const FMingNetworkConfig& Config);
+    bool CreateServer(const FMingNetworkConfig& Config};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void CloseServer();
+    void CloseServer(};
 
     // Client connection
     UFUNCTION(BlueprintCallable, Category = "Network")
-    bool ConnectToServer(const FString& ServerAddress, int32 Port, const FString& Password = TEXT(""));
+    bool ConnectToServer(const FString& ServerAddress, int32 Port, const FString& Password = TEXT("")};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void Disconnect();
+    void Disconnect(};
 
     // Connection state
     UFUNCTION(BlueprintPure, Category = "Network")
@@ -288,7 +288,7 @@ public:
 
     // Player management
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void SetPlayerReady(bool bReady);
+    void SetPlayerReady(bool bReady};
 
     UFUNCTION(BlueprintPure, Category = "Network")
     bool IsPlayerReady(int32 PlayerID) const;
@@ -306,25 +306,25 @@ public:
     int32 GetLocalPlayerID() const;
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void KickPlayer(int32 PlayerID, const FString& Reason);
+    void KickPlayer(int32 PlayerID, const FString& Reason};
 
     // Game control
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void StartGame();
+    void StartGame(};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void EndGame();
+    void EndGame(};
 
     UFUNCTION(BlueprintPure, Category = "Network")
     bool IsGameInProgress() const;
 
     // Chat system
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void SendChatMessage(const FString& Message, bool bIsPrivate = false, int32 TargetPlayerID = -1);
+    void SendChatMessage(const FString& Message, bool bIsPrivate = false, int32 TargetPlayerID = -1};
 
     // Host migration
     UFUNCTION(BlueprintCallable, Category = "Network")
-    bool PerformHostMigration();
+    bool PerformHostMigration(};
 
     // Network stats
     UFUNCTION(BlueprintPure, Category = "Network")
@@ -342,7 +342,7 @@ public:
 
     // Configuration
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void SetNetworkConfig(const FMingNetworkConfig& NewConfig);
+    void SetNetworkConfig(const FMingNetworkConfig& NewConfig};
 
     UFUNCTION(BlueprintPure, Category = "Network")
     FMingNetworkConfig GetNetworkConfig() const;
@@ -405,16 +405,17 @@ private:
     FMingNetworkStats NetworkStats;
 
     // Internal functions
-    void UpdateConnectionState(EMingNetworkConnectionState NewState);
-    void HandleConnectionSuccess();
-    void HandleConnectionFailure(EMingNetworkError Error, const FString& Message);
-    void UpdateNetworkStats();
-    void BroadcastChatMessageToAll(const FMingChatMessage& Message);
-    void BroadcastChatMessageToPlayer(const FMingChatMessage& Message, int32 TargetPlayerID);
-    void AddPlayer(const FMingPlayerNetworkInfo& PlayerInfo);
-    void RemovePlayer(int32 PlayerID);
-    void UpdatePlayerReadyState(int32 PlayerID, bool bReady);
-    int32 GeneratePlayerID();
+    void UpdateConnectionState(EMingNetworkConnectionState NewState};
+    void HandleConnectionSuccess(};
+    void HandleConnectionFailure(EMingNetworkError Error, const FString& Message};
+    void UpdateNetworkStats(};
+    void BroadcastChatMessageToAll(const FMingChatMessage& Message};
+    void BroadcastChatMessageToPlayer(const FMingChatMessage& Message, int32 TargetPlayerID};
+    void AddPlayer(const FMingPlayerNetworkInfo& PlayerInfo};
+    void RemovePlayer(int32 PlayerID};
+    void UpdatePlayerReadyState(int32 PlayerID, bool bReady};
+    int32 GeneratePlayerID(};
     bool ValidatePassword(const FString& Password) const;
-    void OnRep_ConnectionState();
+    void OnRep_ConnectionState(};
 };
+

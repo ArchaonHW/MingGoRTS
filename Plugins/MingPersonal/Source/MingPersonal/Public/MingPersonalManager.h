@@ -23,30 +23,30 @@ class MINGPERSONAL_API UMingPersonalManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingPersonalManager();
+    UMingPersonalManager(};
 
-    virtual void Initialize();
-    virtual void Shutdown();
+    virtual void Initialize(};
+    virtual void Shutdown(};
 
-    void SetupEventSubscriptions();
-    void CleanupEventSubscriptions();
+    void SetupEventSubscriptions(};
+    void CleanupEventSubscriptions(};
 
     // ËßíËâ≤?êÈï∑?•Âè£
     UFUNCTION(BlueprintCallable, Category = "Character")
-    void AddExperience(int32 Amount);
+    void AddExperience(int32 Amount};
 
     UFUNCTION(BlueprintCallable, Category = "Character")
-    void LevelUp();
+    void LevelUp(};
 
     // ?ò‰?‰∫ã‰ª∂
     UFUNCTION(BlueprintCallable, Category = "Narrative")
-    void TriggerDialogue(const FString& DialogueId);
+    void TriggerDialogue(const FString& DialogueId};
 
     // ?ú‰??åËÅ≤?õÁ≥ªÁµ±Êé•??    UFUNCTION(BlueprintCallable, Category = "Relationship")
-    void UpdateCharacterRelationship(const FString& CharacterID, float ChangeAmount, const FString& Reason);
+    void UpdateCharacterRelationship(const FString& CharacterID, float ChangeAmount, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship")
-    void UpdateRegionReputation(const FString& RegionID, float ChangeAmount, const FString& Reason);
+    void UpdateRegionReputation(const FString& RegionID, float ChangeAmount, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship")
     FRelationshipData GetCharacterRelationship(const FString& CharacterID) const;
@@ -65,66 +65,66 @@ public:
 
     // ‰∫ã‰ª∂?ïÁ?
     UFUNCTION(BlueprintCallable, Category = "Relationship")
-    void OnQuestCompleted(const FString& QuestID, const FString& RegionID, const FString& QuestGiverID);
+    void OnQuestCompleted(const FString& QuestID, const FString& RegionID, const FString& QuestGiverID};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship")
-    void OnNPCInteraction(const FString& CharacterID, const FString& InteractionType);
+    void OnNPCInteraction(const FString& CharacterID, const FString& InteractionType};
 
     // ?≥È†ªÁ≥ªÁµ±?•Âè£
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void InitializeAudioSystem(UObject* MetaSoundsSystem);
+    void InitializeAudioSystem(UObject* MetaSoundsSystem};
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void PlayRelationshipAudio(const FString& CharacterID, const FString& AudioType);
+    void PlayRelationshipAudio(const FString& CharacterID, const FString& AudioType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void PlayReputationAudio(const FString& RegionID, const FString& AudioType);
+    void PlayReputationAudio(const FString& RegionID, const FString& AudioType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void PlayDialogueAudio(const FString& CharacterID, const FString& DialogueType);
+    void PlayDialogueAudio(const FString& CharacterID, const FString& DialogueType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void PlayRepublicEraTheme(const FString& ThemeName, float Intensity = 1.0f);
+    void PlayRepublicEraTheme(const FString& ThemeName, float Intensity = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void SetAudioVolume(float RelationshipVolume, float ReputationVolume, float DialogueVolume);
+    void SetAudioVolume(float RelationshipVolume, float ReputationVolume, float DialogueVolume};
 
     // AI UIÁ≥ªÁµ±?•Âè£
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void InitializeAIUISystem();
+    void InitializeAIUISystem(};
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void TrackUserBehavior(const FString& BehaviorType, const FString& Context, float Value = 1.0f);
+    void TrackUserBehavior(const FString& BehaviorType, const FString& Context, float Value = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void OptimizeUIForUser();
+    void OptimizeUIForUser(};
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void ShowContextualHelp(const FString& Context);
+    void ShowContextualHelp(const FString& Context};
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    TArray<FString> GetAIRecommendations();
+    TArray<FString> GetAIRecommendations(};
 
     // ‰øùÂ??åË??•Á≥ªÁµ±Êé•??    UFUNCTION(BlueprintCallable, Category = "Save System")
-    void InitializeSaveSystem();
+    void InitializeSaveSystem(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System")
-    EMingSaveGameResult SaveGame(int32 SlotIndex, const FString& SaveName);
+    EMingSaveGameResult SaveGame(int32 SlotIndex, const FString& SaveName};
 
     UFUNCTION(BlueprintCallable, Category = "Save System")
-    EMingSaveGameResult QuickSave();
+    EMingSaveGameResult QuickSave(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System")
-    EMingSaveGameResult LoadGame(int32 SlotIndex);
+    EMingSaveGameResult LoadGame(int32 SlotIndex};
 
     UFUNCTION(BlueprintCallable, Category = "Save System")
-    EMingSaveGameResult QuickLoad();
+    EMingSaveGameResult QuickLoad(};
 
     UFUNCTION(BlueprintCallable, Category = "Save System")
-    bool DeleteSaveGame(int32 SlotIndex);
+    bool DeleteSaveGame(int32 SlotIndex};
 
     UFUNCTION(BlueprintCallable, Category = "Save System")
-    void SetAutoSaveEnabled(bool bEnabled);
+    void SetAutoSaveEnabled(bool bEnabled};
 
     UFUNCTION(BlueprintPure, Category = "Save System")
     bool IsAutoSaveEnabled() const;
@@ -134,16 +134,16 @@ public:
 
     // Â§ö‰∫∫?äÊà≤Á≥ªÁµ±?•Âè£
     UFUNCTION(BlueprintCallable, Category = "Multiplayer")
-    void InitializeMultiplayerSystem();
+    void InitializeMultiplayerSystem(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer")
-    bool CreateMultiplayerServer(const FMingNetworkConfig& Config);
+    bool CreateMultiplayerServer(const FMingNetworkConfig& Config};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer")
-    bool ConnectToMultiplayerServer(const FString& ServerAddress, int32 Port);
+    bool ConnectToMultiplayerServer(const FString& ServerAddress, int32 Port};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer")
-    void DisconnectFromMultiplayerServer();
+    void DisconnectFromMultiplayerServer(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer")
     bool IsMultiplayerConnected() const;
@@ -155,13 +155,13 @@ public:
     int32 GetLocalPlayerID() const;
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer")
-    void SetPlayerReady(bool bReady);
+    void SetPlayerReady(bool bReady};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer")
-    void StartMultiplayerGame();
+    void StartMultiplayerGame(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer")
-    void SendMultiplayerChatMessage(const FString& Message);
+    void SendMultiplayerChatMessage(const FString& Message};
 
     UFUNCTION(BlueprintPure, Category = "Multiplayer")
     UMingNetworkManager* GetNetworkManager() const;
@@ -170,13 +170,13 @@ public:
     UMingLobbySystem* GetLobbySystem() const;
 
     // ?¨Âú∞?ñÁ≥ªÁµ±Êé•??    UFUNCTION(BlueprintCallable, Category = "Localization")
-    void InitializeLocalizationSystem();
+    void InitializeLocalizationSystem(};
 
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    bool SetGameLanguage(EMingLanguage NewLanguage);
+    bool SetGameLanguage(EMingLanguage NewLanguage};
 
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    void SetGameRegion(EMingRegion NewRegion);
+    void SetGameRegion(EMingRegion NewRegion};
 
     UFUNCTION(BlueprintPure, Category = "Localization")
     EMingLanguage GetCurrentGameLanguage() const;
@@ -188,7 +188,7 @@ public:
     FString GetLocalizedString(const FString& Key, const FString& Namespace = TEXT("Default")) const;
 
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    bool DownloadLanguagePack(EMingLanguage Language);
+    bool DownloadLanguagePack(EMingLanguage Language};
 
     UFUNCTION(BlueprintPure, Category = "Localization")
     TArray<FLanguagePackInfo> GetAvailableLanguagePacks() const;
@@ -198,34 +198,34 @@ public:
 
     // ?ßËÉΩ?™Â?Á≥ªÁµ±?•Âè£
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void InitializePerformanceSystem();
+    void InitializePerformanceSystem(};
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetPerformanceLevel(EMingPerformanceLevel NewLevel);
+    void SetPerformanceLevel(EMingPerformanceLevel NewLevel};
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     EMingPerformanceLevel GetCurrentPerformanceLevel() const;
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void OptimizePerformance();
+    void OptimizePerformance(};
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetTargetFrameRate(float TargetFPS);
+    void SetTargetFrameRate(float TargetFPS};
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     FMingPerformanceMetrics GetPerformanceMetrics() const;
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void StartPerformanceMonitoring();
+    void StartPerformanceMonitoring(};
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void StopPerformanceMonitoring();
+    void StopPerformanceMonitoring(};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void OptimizeMemory();
+    void OptimizeMemory(};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void SetMemoryBudget(int32 MaxMemoryMB);
+    void SetMemoryBudget(int32 MaxMemoryMB};
 
     UFUNCTION(BlueprintPure, Category = "Memory")
     float GetMemoryUsagePercent() const;
@@ -237,17 +237,17 @@ public:
     UMingMemoryOptimizer* GetMemoryOptimizer() const;
 
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void StartUniversityGuide();
+    void StartUniversityGuide(};
 
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void StopUniversityGuide();
+    void StopUniversityGuide(};
 
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     UMingUniversityGuideManager* GetUniversityGuideManager() const;
 
 protected:
-    void OnExperienceGained(int32 Amount);
-    void OnLevelUp();
+    void OnExperienceGained(int32 Amount};
+    void OnLevelUp(};
 
 private:
     bool bIsInitialized;
@@ -284,3 +284,4 @@ private:
     // È´òÊ†°ÂºïÂ?ÁÆ°Á???    UPROPERTY()
     TObjectPtr<UMingUniversityGuideManager> UniversityGuideManager;
 };
+

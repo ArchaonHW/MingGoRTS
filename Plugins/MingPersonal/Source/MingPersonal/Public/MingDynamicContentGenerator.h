@@ -28,8 +28,8 @@ struct FDynamicContentConfig
 
     FDynamicContentConfig()
     {
-        ContentType = TEXT("");
-        Template = TEXT("");
+        ContentType = TEXT(""};
+        Template = TEXT(""};
         bIsContextual = true;
         RelevanceScore = 0.0f;
     }
@@ -66,10 +66,10 @@ struct FGeneratedContent
 
     FGeneratedContent()
     {
-        ContentID = TEXT("");
-        ContentType = TEXT("");
-        Title = TEXT("");
-        Body = TEXT("");
+        ContentID = TEXT(""};
+        ContentType = TEXT(""};
+        Title = TEXT(""};
+        Body = TEXT(""};
         RelevanceScore = 0.0f;
     }
 };
@@ -102,16 +102,16 @@ struct FContextualData
 
     FContextualData()
     {
-        CurrentLocation = TEXT("");
-        ActiveQuest = TEXT("");
-        CurrentRelationship = TEXT("");
+        CurrentLocation = TEXT(""};
+        ActiveQuest = TEXT(""};
+        CurrentRelationship = TEXT(""};
         PlayerLevel = 1.0f;
         UserProfile = EAIUserProfile::NewPlayer;
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnContentGenerated, const FGeneratedContent&, Content);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnContentRequested, const FString&, ContentType, const FContextualData&, Context);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnContentGenerated, const FGeneratedContent&, Content};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnContentRequested, const FString&, ContentType, const FContextualData&, Context};
 
 /**
  * ?ïÊ??ßÂÆπ?üÊ??? * ?∫ÊñºAI?å‰?‰∏ãÊ??üÊ??ïÊ?UI?ßÂÆπ
@@ -122,40 +122,40 @@ class MINGPERSONAL_API UMingDynamicContentGenerator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingDynamicContentGenerator();
+    UMingDynamicContentGenerator(};
 
     // ?ùÂ??ñÂÖßÂÆπÁ??êÂô®
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void InitializeContentGenerator(UMingAIUIManager* InAIManager);
+    void InitializeContentGenerator(UMingAIUIManager* InAIManager};
 
     // ?ßÂÆπ?üÊ?
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    FGeneratedContent GenerateContent(const FString& ContentType, const FContextualData& Context);
+    FGeneratedContent GenerateContent(const FString& ContentType, const FContextualData& Context};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    FGeneratedContent GenerateNotification(const FString& Trigger, const FContextualData& Context);
+    FGeneratedContent GenerateNotification(const FString& Trigger, const FContextualData& Context};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    FGeneratedContent GenerateTooltip(const FString& Target, const FContextualData& Context);
+    FGeneratedContent GenerateTooltip(const FString& Target, const FContextualData& Context};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    FGeneratedContent GenerateHelpText(const FString& Topic, const FContextualData& Context);
+    FGeneratedContent GenerateHelpText(const FString& Topic, const FContextualData& Context};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    FGeneratedContent GenerateQuestHint(const FString& QuestID, const FContextualData& Context);
+    FGeneratedContent GenerateQuestHint(const FString& QuestID, const FContextualData& Context};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    FGeneratedContent GenerateRelationshipAdvice(const FString& CharacterID, const FContextualData& Context);
+    FGeneratedContent GenerateRelationshipAdvice(const FString& CharacterID, const FContextualData& Context};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    FGeneratedContent GenerateStrategicAdvice(const FContextualData& Context);
+    FGeneratedContent GenerateStrategicAdvice(const FContextualData& Context};
 
     // Ê®°ÊùøÁÆ°Á?
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void AddContentTemplate(const FDynamicContentConfig& Config);
+    void AddContentTemplate(const FDynamicContentConfig& Config};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void RemoveContentTemplate(const FString& ContentType);
+    void RemoveContentTemplate(const FString& ContentType};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     FDynamicContentConfig GetContentTemplate(const FString& ContentType) const;
@@ -164,46 +164,46 @@ public:
     TArray<FDynamicContentConfig> GetAllTemplates() const;
 
     // ‰∏ä‰??áÂ???    UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    FContextualData AnalyzeCurrentContext();
+    FContextualData AnalyzeCurrentContext(};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void UpdateContextualData(const FContextualData& NewContext);
+    void UpdateContextualData(const FContextualData& NewContext};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     float CalculateContentRelevance(const FString& ContentType, const FContextualData& Context) const;
 
     // ?ßÂÆπ?™Â?
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void OptimizeContentForUser();
+    void OptimizeContentForUser(};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void PersonalizeContent(FGeneratedContent& Content, const FContextualData& Context);
+    void PersonalizeContent(FGeneratedContent& Content, const FContextualData& Context};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void AdjustContentTone(FGeneratedContent& Content, EAIUserProfile UserProfile);
+    void AdjustContentTone(FGeneratedContent& Content, EAIUserProfile UserProfile};
 
     // ?πÈ??üÊ?
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    TArray<FGeneratedContent> GenerateContentBatch(const TArray<FString>& ContentTypes, const FContextualData& Context);
+    TArray<FGeneratedContent> GenerateContentBatch(const TArray<FString>& ContentTypes, const FContextualData& Context};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void ScheduleContentGeneration(const FString& ContentType, float Delay);
+    void ScheduleContentGeneration(const FString& ContentType, float Delay};
 
     // ?ßÂÆπÁ∑©Â?
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void CacheContent(const FGeneratedContent& Content);
+    void CacheContent(const FGeneratedContent& Content};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     FGeneratedContent GetCachedContent(const FString& ContentID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void ClearContentCache();
+    void ClearContentCache(};
 
     // ?¨Âú∞?ñÊîØ??    UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    FGeneratedContent LocalizeContent(const FGeneratedContent& Content, const FString& LanguageCode);
+    FGeneratedContent LocalizeContent(const FGeneratedContent& Content, const FString& LanguageCode};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void AddLocalizationTemplate(const FString& ContentType, const FString& LanguageCode, const FString& Template);
+    void AddLocalizationTemplate(const FString& ContentType, const FString& LanguageCode, const FString& Template};
 
     // ?ßÂÆπË©ï‰º∞
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
@@ -213,32 +213,32 @@ public:
     bool IsContentAppropriate(const FGeneratedContent& Content, const FContextualData& Context) const;
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void RateContent(const FString& ContentID, float Rating);
+    void RateContent(const FString& ContentID, float Rating};
 
     // ?Ä?ãÊü•Ë©?    UFUNCTION(BlueprintPure, Category = "Dynamic Content")
     bool IsGeneratorReady() const { return bIsInitialized; }
 
     UFUNCTION(BlueprintPure, Category = "Dynamic Content")
-    int32 GetTemplateCount() const { return ContentTemplates.Num(); }
+    int32 GetTemplateCount() const { return ContentTemplates.Num(}; }
 
     UFUNCTION(BlueprintPure, Category = "Dynamic Content")
-    int32 GetCachedContentCount() const { return ContentCache.Num(); }
+    int32 GetCachedContentCount() const { return ContentCache.Num(}; }
 
     UFUNCTION(BlueprintPure, Category = "Dynamic Content")
     FContextualData GetCurrentContext() const { return CurrentContext; }
 
     // Ë®≠ÁΩÆ
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void SetGenerationEnabled(bool bEnabled);
+    void SetGenerationEnabled(bool bEnabled};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void SetCacheEnabled(bool bEnabled);
+    void SetCacheEnabled(bool bEnabled};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void SetMaxCacheSize(int32 MaxSize);
+    void SetMaxCacheSize(int32 MaxSize};
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
-    void SetRelevanceThreshold(float Threshold);
+    void SetRelevanceThreshold(float Threshold};
 
     // ‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "Content Events")
@@ -285,11 +285,11 @@ protected:
     TMap<FString, float> ContentRatings;
 
     // ?ßÈÉ®?ΩÊï∏
-    void InitializeDefaultTemplates();
+    void InitializeDefaultTemplates(};
     FString ProcessTemplate(const FString& Template, const TMap<FString, FString>& Variables) const;
     TMap<FString, FString> ExtractContextVariables(const FContextualData& Context) const;
     FString GenerateContentID(const FString& ContentType) const;
-    void UpdateContentStatistics(const FGeneratedContent& Content);
+    void UpdateContentStatistics(const FGeneratedContent& Content};
     bool ShouldGenerateContent(const FString& ContentType, const FContextualData& Context) const;
 
     // AI?üÊ?ËºîÂä©
@@ -300,8 +300,9 @@ protected:
 
 private:
     // ËºîÂä©?ΩÊï∏
-    void SaveContentData();
-    void LoadContentData();
-    void CleanupOldCache();
+    void SaveContentData(};
+    void LoadContentData(};
+    void CleanupOldCache(};
     FString GetCurrentLanguageCode() const;
 };
+

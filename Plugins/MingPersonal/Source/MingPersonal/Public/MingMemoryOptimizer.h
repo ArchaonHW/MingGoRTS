@@ -128,8 +128,8 @@ struct FMingCachedObjectInfo
 };
 
 // Delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMemoryOptimizationCompleted, FMingMemoryOptimizationResult, Result);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMemoryWarning, float, UsedPercent, float, Threshold);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMemoryOptimizationCompleted, FMingMemoryOptimizationResult, Result};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMemoryWarning, float, UsedPercent, float, Threshold};
 
 /**
  * ?§å??ªå??? * å°ˆé?è² è²¬?§å?ç®¡ç??Œå„ª?? */
@@ -139,34 +139,34 @@ class MINGPERSONAL_API UMingMemoryOptimizer : public UObject
     GENERATED_BODY()
 
 public:
-    UMingMemoryOptimizer();
+    UMingMemoryOptimizer(};
 
     // Initialize/Shutdown
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void Initialize();
+    void Initialize(};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void Shutdown();
+    void Shutdown(};
 
     // Memory optimization
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    FMingMemoryOptimizationResult OptimizeMemory(EMingMemoryStrategy Strategy);
+    FMingMemoryOptimizationResult OptimizeMemory(EMingMemoryStrategy Strategy};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    FMingMemoryOptimizationResult QuickOptimize();
+    FMingMemoryOptimizationResult QuickOptimize(};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    FMingMemoryOptimizationResult DeepOptimize();
+    FMingMemoryOptimizationResult DeepOptimize(};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    FMingMemoryOptimizationResult EmergencyCleanup();
+    FMingMemoryOptimizationResult EmergencyCleanup(};
 
     // Pool management
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void FlushPool(EMingMemoryPoolType PoolType);
+    void FlushPool(EMingMemoryPoolType PoolType};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void FlushAllPools();
+    void FlushAllPools(};
 
     UFUNCTION(BlueprintPure, Category = "Memory")
     FMingMemoryPoolStats GetPoolStats(EMingMemoryPoolType PoolType) const;
@@ -176,53 +176,53 @@ public:
 
     // Cache management
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void ClearCache();
+    void ClearCache(};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void SetCacheSizeLimit(float MaxSizeMB);
+    void SetCacheSizeLimit(float MaxSizeMB};
 
     UFUNCTION(BlueprintPure, Category = "Memory")
     float GetCacheSize() const;
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void UnloadUnusedAssets(float UnusedTimeThreshold = 60.0f);
+    void UnloadUnusedAssets(float UnusedTimeThreshold = 60.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void CompactMemory();
+    void CompactMemory(};
 
     // Object lifecycle
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void RegisterObjectForAutoCleanup(UObject* Object, float LifetimeSeconds);
+    void RegisterObjectForAutoCleanup(UObject* Object, float LifetimeSeconds};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void CancelAutoCleanup(UObject* Object);
+    void CancelAutoCleanup(UObject* Object};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void ForceDestroyObject(UObject* Object);
+    void ForceDestroyObject(UObject* Object};
 
     // Texture management
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void SetTextureStreamingPoolSize(float SizeMB);
+    void SetTextureStreamingPoolSize(float SizeMB};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void FlushTextureStreaming();
+    void FlushTextureStreaming(};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void ReduceTextureResolutions(int32 MaxTextureSize);
+    void ReduceTextureResolutions(int32 MaxTextureSize};
 
     // Mesh management
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void FlushStaticMeshCache();
+    void FlushStaticMeshCache(};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void FlushSkeletalMeshCache();
+    void FlushSkeletalMeshCache(};
 
     // Monitoring
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void StartMemoryMonitoring(float IntervalSeconds = 5.0f);
+    void StartMemoryMonitoring(float IntervalSeconds = 5.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void StopMemoryMonitoring();
+    void StopMemoryMonitoring(};
 
     UFUNCTION(BlueprintPure, Category = "Memory")
     bool IsMemoryMonitoring() const;
@@ -238,7 +238,7 @@ public:
 
     // Warnings
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void SetMemoryWarningThreshold(float Percent);
+    void SetMemoryWarningThreshold(float Percent};
 
     UFUNCTION(BlueprintPure, Category = "Memory")
     float GetMemoryWarningThreshold() const;
@@ -248,7 +248,7 @@ public:
     FString GetMemoryReport() const;
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    void LogMemoryStats();
+    void LogMemoryStats(};
 
     // Delegates
     UPROPERTY(BlueprintAssignable, Category = "Memory Events")
@@ -280,16 +280,17 @@ private:
     TMap<UObject*, FTimerHandle> AutoCleanupTimers;
 
     // Internal functions
-    void UpdateMemoryStats();
-    void CheckMemoryWarnings();
+    void UpdateMemoryStats(};
+    void CheckMemoryWarnings(};
     float CalculateCacheSize() const;
-    void EvictLeastUsedCacheItems(float TargetSizeMB);
-    void FlushRenderResourceCache();
-    void FlushAnimationCache();
-    void FlushAudioCache();
-    void FlushAICache();
-    void FlushNetworkCache();
-    void FlushUICache();
-    void PerformGarbageCollection(bool bFullPurge);
-    void CompactAllocator();
+    void EvictLeastUsedCacheItems(float TargetSizeMB};
+    void FlushRenderResourceCache(};
+    void FlushAnimationCache(};
+    void FlushAudioCache(};
+    void FlushAICache(};
+    void FlushNetworkCache(};
+    void FlushUICache(};
+    void PerformGarbageCollection(bool bFullPurge};
+    void CompactAllocator(};
 };
+

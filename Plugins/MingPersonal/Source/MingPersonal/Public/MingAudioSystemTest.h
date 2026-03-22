@@ -16,89 +16,89 @@ public:
     /**
      * ?ãË??Ä?âÈü≥?ªÁ≥ªÁµ±Ê∏¨Ë©?     */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static void RunAllAudioTests();
+    static void RunAllAudioTests(};
 
     /**
      * Ê∏¨Ë©¶?≥È†ª?ú‰?ÁÆ°Á??®Â?ÂßãÂ?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestAudioRelationshipManagerInitialization();
+    static bool TestAudioRelationshipManagerInitialization(};
 
     /**
      * Ê∏¨Ë©¶?ú‰?ËÆäÂ??≥È†ª?çÈ?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestRelationshipAudioFeedback();
+    static bool TestRelationshipAudioFeedback(};
 
     /**
      * Ê∏¨Ë©¶?≤Ê?ËÆäÂ??≥È†ª?çÈ?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestReputationAudioFeedback();
+    static bool TestReputationAudioFeedback(};
 
     /**
      * Ê∏¨Ë©¶Â∞çË©±?≥È†ªÁ≥ªÁµ±
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestDialogueAudioSystem();
+    static bool TestDialogueAudioSystem(};
 
     /**
      * Ê∏¨Ë©¶Ê∞ëÂ??ÇÊ??≥È†ª‰∏ªÈ?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestRepublicEraThemes();
+    static bool TestRepublicEraThemes(};
 
     /**
      * Ê∏¨Ë©¶?∞Â??≥È†ªÁ≥ªÁµ±
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestRegionalAudioSystem();
+    static bool TestRegionalAudioSystem(};
 
     /**
      * Ê∏¨Ë©¶?≥È†ª?≥È??ßÂà∂
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestAudioVolumeControl();
+    static bool TestAudioVolumeControl(};
 
     /**
      * Ê∏¨Ë©¶?≥È†ª‰∫ã‰ª∂?ûË™ø
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestAudioEventCallbacks();
+    static bool TestAudioEventCallbacks(};
 
     /**
      * Â£ìÂ?Ê∏¨Ë©¶ - Â§ßÈ??≥È†ª‰∫ã‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestAudioSystemStress();
+    static bool TestAudioSystemStress(};
 
     /**
      * ?ÜÊ?Ê∏¨Ë©¶ - ÂÆåÊï¥?ÑÈü≥?ªÈ?‰øÇÊ?Á®?     */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestAudioRelationshipIntegration();
+    static bool TestAudioRelationshipIntegration(};
 
     /**
      * ?µÂª∫Ê∏¨Ë©¶?≥È†ª?∏Ê?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static void CreateTestAudioData();
+    static void CreateTestAudioData(};
 
     /**
      * Ê∏ÖÁ?Ê∏¨Ë©¶?≥È†ª?∏Ê?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static void CleanupTestAudioData();
+    static void CleanupTestAudioData(};
 
     /**
      * È©óË??≥È†ªÁ≥ªÁµ±?Ä??     */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Audio Test")
-    static bool VerifyAudioSystemHealth();
+    static bool VerifyAudioSystemHealth(};
 
     /**
      * ?≤Â?Ê∏¨Ë©¶ÁµêÊ??±Â?
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Audio Test")
-    static FString GetAudioTestReport();
+    static FString GetAudioTestReport(};
 
 private:
     static bool bTestPassed;
@@ -106,6 +106,7 @@ private:
     static int32 TestsRun;
     static int32 TestsPassed;
 
-    static void AddTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT(""));
-    static void ResetTestResults();
+    static void AddTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
+    static void ResetTestResults(};
 };
+

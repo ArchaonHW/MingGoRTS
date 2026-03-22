@@ -59,7 +59,7 @@ struct FAudioControlData
     FAudioControlData()
     {
         ControlType = EAudioControlType::Master;
-        ControlName = TEXT("");
+        ControlName = TEXT(""};
         Volume = 1.0f;
         bIsMuted = false;
         bIsEnabled = true;
@@ -96,8 +96,8 @@ struct FAudioThemeData
     FAudioThemeData()
     {
         ThemeType = EAudioThemeType::Peaceful;
-        ThemeName = TEXT("");
-        Description = TEXT("");
+        ThemeName = TEXT(""};
+        Description = TEXT(""};
         bIsPlaying = false;
         bIsAvailable = true;
         Intensity = 1.0f;
@@ -105,9 +105,9 @@ struct FAudioThemeData
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVolumeChanged, EAudioControlType, ControlType, float, NewVolume);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnThemeChanged, EAudioThemeType, ThemeType, bool, bIsPlaying);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAudioSettingsChanged, const FString&, SettingName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVolumeChanged, EAudioControlType, ControlType, float, NewVolume};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnThemeChanged, EAudioThemeType, ThemeType, bool, bIsPlaying};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAudioSettingsChanged, const FString&, SettingName};
 
 /**
  * ?≥È†ª?¢ÊùøWidget
@@ -119,103 +119,103 @@ class MINGPERSONAL_API UMingAudioPanel : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingAudioPanel(const FObjectInitializer& ObjectInitializer);
+    UMingAudioPanel(const FObjectInitializer& ObjectInitializer};
 
     // ?ùÂ???    UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void InitializeAudioPanel(UMingAudioRelationshipManager* InAudioManager, UMingRepublicEraAudioThemes* InThemeManager);
+    void InitializeAudioPanel(UMingAudioRelationshipManager* InAudioManager, UMingRepublicEraAudioThemes* InThemeManager};
 
     // ?≥È??ßÂà∂
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void SetVolume(EAudioControlType ControlType, float Volume);
+    void SetVolume(EAudioControlType ControlType, float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void SetMasterVolume(float Volume);
+    void SetMasterVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void SetRelationshipVolume(float Volume);
+    void SetRelationshipVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void SetReputationVolume(float Volume);
+    void SetReputationVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void SetDialogueVolume(float Volume);
+    void SetDialogueVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void SetAmbientVolume(float Volume);
+    void SetAmbientVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void SetMusicVolume(float Volume);
+    void SetMusicVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void SetSFXVolume(float Volume);
+    void SetSFXVolume(float Volume};
 
     // ?úÈü≥?ßÂà∂
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void MuteControl(EAudioControlType ControlType, bool bMuted);
+    void MuteControl(EAudioControlType ControlType, bool bMuted};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void MuteAll(bool bMuted);
+    void MuteAll(bool bMuted};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void ToggleMute(EAudioControlType ControlType);
+    void ToggleMute(EAudioControlType ControlType};
 
     // ‰∏ªÈ??ßÂà∂
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void PlayTheme(EAudioThemeType ThemeType, float Intensity = 1.0f);
+    void PlayTheme(EAudioThemeType ThemeType, float Intensity = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void StopTheme(EAudioThemeType ThemeType);
+    void StopTheme(EAudioThemeType ThemeType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void PauseTheme(EAudioThemeType ThemeType);
+    void PauseTheme(EAudioThemeType ThemeType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void ResumeTheme(EAudioThemeType ThemeType);
+    void ResumeTheme(EAudioThemeType ThemeType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void SetThemeIntensity(EAudioThemeType ThemeType, float Intensity);
+    void SetThemeIntensity(EAudioThemeType ThemeType, float Intensity};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void FadeTheme(EAudioThemeType ThemeType, float TargetVolume, float FadeDuration);
+    void FadeTheme(EAudioThemeType ThemeType, float TargetVolume, float FadeDuration};
 
     // ?∞Â??≥È†ª
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void SetRegionalAudio(ERepublicEraRegion Region);
+    void SetRegionalAudio(ERepublicEraRegion Region};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void PlayRegionalAmbient(ERepublicEraRegion Region, float Intensity = 1.0f);
+    void PlayRegionalAmbient(ERepublicEraRegion Region, float Intensity = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void PlayCulturalAudio(ERepublicEraRegion Region, float Intensity = 1.0f);
+    void PlayCulturalAudio(ERepublicEraRegion Region, float Intensity = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void StopRegionalAudio();
+    void StopRegionalAudio(};
 
     // ?≥È†ªÊ∏¨Ë©¶
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void TestRelationshipAudio(ERelationshipAudioType AudioType);
+    void TestRelationshipAudio(ERelationshipAudioType AudioType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void TestReputationAudio(EReputationAudioType AudioType);
+    void TestReputationAudio(EReputationAudioType AudioType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void TestDialogueAudio(EDialogueAudioType DialogueType);
+    void TestDialogueAudio(EDialogueAudioType DialogueType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void TestAllAudio();
+    void TestAllAudio(};
 
     // Ë®≠ÁΩÆÁÆ°Á?
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void LoadAudioSettings();
+    void LoadAudioSettings(};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void SaveAudioSettings();
+    void SaveAudioSettings(};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void ResetToDefaults();
+    void ResetToDefaults(};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void ApplyAudioProfile(const FString& ProfileName);
+    void ApplyAudioProfile(const FString& ProfileName};
 
     // ?Ä?ãÊü•Ë©?    UFUNCTION(BlueprintPure, Category = "Audio Panel")
     float GetVolume(EAudioControlType ControlType) const;
@@ -244,16 +244,16 @@ public:
 
     // ‰∫íÂ??ç‰?
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void OnVolumeSliderChanged(EAudioControlType ControlType, float NewValue);
+    void OnVolumeSliderChanged(EAudioControlType ControlType, float NewValue};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void OnMuteButtonClicked(EAudioControlType ControlType);
+    void OnMuteButtonClicked(EAudioControlType ControlType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void OnThemeButtonClicked(EAudioThemeType ThemeType);
+    void OnThemeButtonClicked(EAudioThemeType ThemeType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
-    void OnRegionButtonClicked(ERepublicEraRegion Region);
+    void OnRegionButtonClicked(ERepublicEraRegion Region};
 
     // ‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "Audio Events")
@@ -332,14 +332,14 @@ protected:
     virtual void NativeDestruct() override;
 
     // ?ßÈÉ®?ΩÊï∏
-    void InitializeAudioControls();
-    void InitializeAudioThemes();
-    void UpdateAudioUI();
-    void UpdateVolumeUI();
-    void UpdateThemeUI();
-    void UpdateRegionUI();
-    FAudioControlData CreateAudioControlData(EAudioControlType ControlType);
-    FAudioThemeData CreateAudioThemeData(EAudioThemeType ThemeType);
+    void InitializeAudioControls(};
+    void InitializeAudioThemes(};
+    void UpdateAudioUI(};
+    void UpdateVolumeUI(};
+    void UpdateThemeUI(};
+    void UpdateRegionUI(};
+    FAudioControlData CreateAudioControlData(EAudioControlType ControlType};
+    FAudioThemeData CreateAudioThemeData(EAudioThemeType ThemeType};
     FLinearColor GetAudioControlColor(EAudioControlType ControlType) const;
     FLinearColor GetAudioThemeColor(EAudioThemeType ThemeType) const;
     FString GetAudioControlName(EAudioControlType ControlType) const;
@@ -347,18 +347,19 @@ protected:
     FString GetRegionDisplayName(ERepublicEraRegion Region) const;
 
     // ‰∫ã‰ª∂Á∂ÅÂ?
-    void SetupEventBindings();
-    void OnAudioRelationshipPlayed(ERelationshipAudioType AudioType, USoundBase* Sound);
-    void OnAudioReputationPlayed(EReputationAudioType AudioType, USoundBase* Sound);
-    void OnAudioDialoguePlayed(EDialogueAudioType AudioType, USoundBase* Sound);
+    void SetupEventBindings(};
+    void OnAudioRelationshipPlayed(ERelationshipAudioType AudioType, USoundBase* Sound};
+    void OnAudioReputationPlayed(EReputationAudioType AudioType, USoundBase* Sound};
+    void OnAudioDialoguePlayed(EDialogueAudioType AudioType, USoundBase* Sound};
 
 private:
     // ËºîÂä©?ΩÊï∏
-    void ApplyVolumeChange(EAudioControlType ControlType, float NewVolume);
-    void ApplyMuteChange(EAudioControlType ControlType, bool bMuted);
-    void ApplyThemeChange(EAudioThemeType ThemeType, bool bIsPlaying);
-    void CreateVolumeSliders();
-    void CreateThemeButtons();
-    void CreateRegionButtons();
-    void UpdateControlStates();
+    void ApplyVolumeChange(EAudioControlType ControlType, float NewVolume};
+    void ApplyMuteChange(EAudioControlType ControlType, bool bMuted};
+    void ApplyThemeChange(EAudioThemeType ThemeType, bool bIsPlaying};
+    void CreateVolumeSliders(};
+    void CreateThemeButtons(};
+    void CreateRegionButtons(};
+    void UpdateControlStates(};
 };
+
