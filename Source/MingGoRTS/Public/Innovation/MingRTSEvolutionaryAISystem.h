@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,19 +7,19 @@
 UENUM(BlueprintType)
 enum class EEvolutionPhase : uint8
 {
-    Adaptation,     // ?©æ??æ®µ
-    Learning,       // å­¸ç??æ®µ
-    Evolution,      // ?²å??æ®µ
-    Specialization  // ?¹å??æ®µ
+    Adaptation,     // ?ï¿½ï¿½Xï¿½æ®µ
+    Learning,       // å­¸ï¿½Xï¿½æ®µ
+    Evolution,      // ?ï¿½ï¿½Xï¿½æ®µ
+    Specialization  // ?ï¿½ï¿½Xï¿½æ®µ
 };
 
 UENUM(BlueprintType)
 enum class EAIFitnessLevel : uint8
 {
-    VeryLow,        // å¾ˆä?
-    Low,            // ä½?    Medium,         // ä¸­ç?
-    High,           // é«?    VeryHigh,       // å¾ˆé?
-    Exceptional     // ?“è?
+    VeryLow,        // å¾ˆï¿½?
+    Low,            // ï¿½?    Medium,         // ä¸­ï¿½?
+    High,           // ï¿½?    VeryHigh,       // å¾ˆï¿½?
+    Exceptional     // ?ï¿½ï¿½?
 };
 
 USTRUCT(BlueprintType)
@@ -119,8 +119,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFitnessUpdate, const FString&, A
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEvolutionPhase, const FString&, AIID, TEnumAsByte<EEvolutionPhase>, NewPhase};
 
 /**
- * ?ªé€²å?AIç³»çµ± - ?ºæ–¼?ºå‚³ç®—æ??Œæ·±åº¦å¼·?–å­¸ç¿’ç?AI?²å?ç³»çµ±
- * ?ä?AI?ºèƒ½é«”ç??ç??²å??é©?‰å??¹å??½å?
+ * ?ï¿½é€²ï¿½?AIç³»çµ± - ?ï¿½æ–¼?ï¿½å‚³ç®—ï¿½Xï¿½æ·±åº¦å¼·?ï¿½å­¸ç¿’ï¿½?AI?ï¿½ï¿½?ç³»çµ±
+ * ?ï¿½ï¿½?AI?ï¿½èƒ½é«”ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½é©?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSEvolutionaryAISystem : public UObject
@@ -130,57 +130,57 @@ class MINGGORTS_API UMingRTSEvolutionaryAISystem : public UObject
 public:
     UMingRTSEvolutionaryAISystem(};
 
-    // ç³»çµ±?å???    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
+    // ç³»çµ±?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     void InitializeEvolutionarySystem(};
 
-    // ?µå»ºAI?ºå?çµ?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
+    // ?ï¿½å»ºAI?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     FAIGenome CreateAIGenome(const FString& AIID, const TArray<FEvolutionaryTrait>& InitialTraits};
 
-    // AI?²å??•ç?
+    // AI?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     void ProcessEvolution(const FString& AIID, const TArray<FString>& EnvironmentalFactors};
 
-    // ?ºå?çµ„äº¤?‰ç?æ®?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
+    // ?ï¿½ï¿½?çµ„äº¤?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     FAIGenome CrossoverGenomes(const FAIGenome& Parent1, const FAIGenome& Parent2};
 
-    // ?ºå?çµ„è???    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
+    // ?ï¿½ï¿½?çµ„ï¿½X    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     FAIGenome MutateGenome(const FAIGenome& Genome, float MutationIntensity};
 
-    // ?©æ?åº¦è?ä¼?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
+    // ?ï¿½ï¿½?åº¦ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     float EvaluateFitness(const FString& AIID, const FAIGenome& Genome};
 
-    // ?¸æ??€ä½³åŸº? ç?
+    // ?ï¿½ï¿½Xï¿½ä½³åŸº?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     TArray<FAIGenome> SelectBestGenomes(const TArray<FAIGenome>& Population, int32 SelectionCount};
 
-    // ?²å??æ®µç®¡ç?
+    // ?ï¿½ï¿½Xï¿½æ®µç®¡ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     void SetEvolutionPhase(const FString& AIID, EEvolutionPhase NewPhase};
 
-    // ?²å?AI?ºå?çµ?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
+    // ?ï¿½ï¿½?AI?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     FAIGenome GetAIGenome(const FString& AIID) const;
 
-    // ?²å??²å?æ­·å²
+    // ?ï¿½ï¿½Xï¿½ï¿½?æ­·å²
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     TArray<FEvolutionRecord> GetEvolutionHistory(const FString& AIID) const;
 
-    // è¨­ç½®?²å??ƒæ•¸
+    // è¨­ç½®?ï¿½ï¿½Xï¿½æ•¸
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     void SetEvolutionParameters(float CrossoverRate, float MutationRate, float SelectionPressure};
 
-    // ?¹é??²å??•ç?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     void ProcessBatchEvolution(const TArray<FString>& AIIDs};
 
-    // ?²å?çµ±è??†æ?
+    // ?ï¿½ï¿½?çµ±ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     TMap<FString, float> GetEvolutionStatistics() const;
 
-    // ?ç½®AI?²å?
+    // ?ï¿½ç½®AI?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     void ResetAIEvolution(const FString& AIID};
 
-    // äº‹ä»¶å§”æ?
+    // äº‹ä»¶å§”ï¿½?
     UPROPERTY(BlueprintAssignable)
     FOnAIEvolution OnAIEvolution;
 
@@ -191,7 +191,7 @@ public:
     FOnEvolutionPhase OnEvolutionPhase;
 
 protected:
-    // ?²å??ƒæ•¸
+    // ?ï¿½ï¿½Xï¿½æ•¸
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Evolution Parameters")
     float CrossoverRate;
 
@@ -207,35 +207,35 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Evolution Parameters")
     float FitnessThreshold;
 
-    // AI?ºå?çµ„å???    UPROPERTY(BlueprintReadOnly, Category = "Evolution Data")
+    // AI?ï¿½ï¿½?çµ„ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Evolution Data")
     TMap<FString, FAIGenome> AIGenomes;
 
-    // ?²å?æ­·å²è¨˜é?
+    // ?ï¿½ï¿½?æ­·å²è¨˜ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Evolution Data")
     TMap<FString, TArray<FEvolutionRecord>> EvolutionHistories;
 
-    // ?°å?? ç?æ¬Šé?
+    // ?ï¿½ï¿½Xï¿½ï¿½?æ¬Šï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Evolution Parameters")
     TMap<FString, float> EnvironmentalWeights;
 
-    // ?²å??æ®µç®¡ç?
+    // ?ï¿½ï¿½Xï¿½æ®µç®¡ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Evolution Data")
     TMap<FString, EEvolutionPhase> AIEvolutionPhases;
 
 private:
-    // ?§éƒ¨?²å??è¼¯
+    // ?ï¿½éƒ¨?ï¿½ï¿½Xï¿½è¼¯
     void PerformCrossover(FAIGenome& Offspring, const FAIGenome& Parent1, const FAIGenome& Parent2};
     void PerformMutation(FAIGenome& Genome};
     float CalculateTraitFitness(const FEvolutionaryTrait& Trait, const TArray<FString>& EnvironmentalFactors};
     void UpdateEvolutionPhase(const FString& AIID};
     void RecordEvolution(const FString& AIID, const FAIGenome& OldGenome, const FAIGenome& NewGenome, const FString& Trigger};
     
-    // ?©æ?åº¦å‡½??    float CalculateAdaptationFitness(const FAIGenome& Genome};
+    // ?ï¿½ï¿½?åº¦å‡½X    float CalculateAdaptationFitness(const FAIGenome& Genome};
     float CalculateLearningFitness(const FAIGenome& Genome};
     float CalculateEvolutionFitness(const FAIGenome& Genome};
     float CalculateSpecializationFitness(const FAIGenome& Genome};
     
-    // è¼”åŠ©?½æ•¸
+    // è¼”åŠ©?ï¿½æ•¸
     FEvolutionaryTrait BlendTraits(const FEvolutionaryTrait& Trait1, const FEvolutionaryTrait& Trait2};
     bool ShouldEvolve(const FString& AIID};
     TArray<FString> GetActiveEnvironmentalFactors() const;

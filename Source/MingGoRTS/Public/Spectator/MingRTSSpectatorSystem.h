@@ -1,24 +1,24 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSSpectatorSystem.generated.h"
 
 /**
- * è§€?°æ¨¡å¼? */
+ * è§€?ï¿½æ¨¡ï¿½? */
 UENUM(BlueprintType)
 enum class ESpectatorMode : uint8
 {
-    FreeCamera        UMETA(DisplayName = "?ªç”±è¦–è?"),
-    FollowPlayer      UMETA(DisplayName = "è·Ÿéš¨?©å®¶"),
-    FollowUnit        UMETA(DisplayName = "è·Ÿéš¨?®ä?"),
-    TacticalView      UMETA(DisplayName = "?°è?è¦–è?"),
-    PictureInPicture  UMETA(DisplayName = "?«ä¸­??),
-    BroadcastDirector UMETA(DisplayName = "å°æ’­æ¨¡å?")
+    FreeCamera        UMETA(DisplayName = "?ï¿½ç”±è¦–ï¿½?"),
+    FollowPlayer      UMETA(DisplayName = "è·Ÿéš¨?ï¿½å®¶"),
+    FollowUnit        UMETA(DisplayName = "è·Ÿéš¨?ï¿½ï¿½?"),
+    TacticalView      UMETA(DisplayName = "?ï¿½ï¿½?è¦–ï¿½?"),
+    PictureInPicture  UMETA(DisplayName = "?ï¿½ä¸­X),
+    BroadcastDirector UMETA(DisplayName = "å°æ’­æ¨¡ï¿½?")
 };
 
 /**
- * è§€?°è€…ä¿¡?? */
+ * è§€?ï¿½è€…ä¿¡X */
 USTRUCT(BlueprintType)
 struct FSpectatorInfo
 {
@@ -63,7 +63,7 @@ struct FSpectatorInfo
 };
 
 /**
- * è§€?°æˆ¿?? */
+ * è§€?ï¿½æˆ¿X */
 USTRUCT(BlueprintType)
 struct FSpectatorRoom
 {
@@ -109,7 +109,7 @@ struct FSpectatorRoom
 };
 
 /**
- * è§€?°ç³»çµ?- ç®¡ç??Šæˆ²è§€?°å??? */
+ * è§€?ï¿½ç³»ï¿½?- ç®¡ï¿½Xï¿½æˆ²è§€?ï¿½ï¿½X */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSSpectatorSystem : public UObject
 {
@@ -118,39 +118,39 @@ class MINGGORTS_API UMingRTSSpectatorSystem : public UObject
 public:
     UMingRTSSpectatorSystem(};
     
-    // ?å???    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void InitializeSpectatorSystem(};
     
-    // ?µå»ºè§€?°æˆ¿??    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½å»ºè§€?ï¿½æˆ¿X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     FString CreateSpectatorRoom(const FString& MatchID, const FString& RoomName, int32 MaxSpectators, bool bPasswordProtected, const FString& Password};
     
-    // ?œé?è§€?°æˆ¿??    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½ï¿½?è§€?ï¿½æˆ¿X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void CloseSpectatorRoom(const FString& RoomID};
     
-    // ? å…¥è§€??    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½å…¥è§€X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     bool JoinSpectatorRoom(const FString& RoomID, const FSpectatorInfo& Spectator, const FString& Password};
     
-    // ?¢é?è§€??    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½ï¿½?è§€X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void LeaveSpectatorRoom(const FString& RoomID, const FString& SpectatorID};
     
-    // ?²å?è§€?°æˆ¿?“å?è¡?    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½ï¿½?è§€?ï¿½æˆ¿?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Spectator")
     TArray<FSpectatorRoom> GetAvailableRooms() const;
     
-    // ?²å?è§€?°æˆ¿?“ä¿¡??    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½ï¿½?è§€?ï¿½æˆ¿?ï¿½ä¿¡X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     bool GetRoomInfo(const FString& RoomID, FSpectatorRoom& OutRoom) const;
     
-    // è¨­ç½®è§€?°æ¨¡å¼?    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // è¨­ç½®è§€?ï¿½æ¨¡ï¿½?    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void SetSpectatorMode(const FString& SpectatorID, ESpectatorMode Mode};
     
-    // è·Ÿéš¨?©å®¶
+    // è·Ÿéš¨?ï¿½å®¶
     UFUNCTION(BlueprintCallable, Category = "Spectator")
     void FollowPlayer(const FString& SpectatorID, const FString& TargetPlayerID};
     
-    // è·Ÿéš¨?®ä?
+    // è·Ÿéš¨?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Spectator")
     void FollowUnit(const FString& SpectatorID, int32 TargetUnitID};
     
-    // è¨­ç½®?å?æ©Ÿä?ç½®å??‹è?
+    // è¨­ç½®?ï¿½ï¿½?æ©Ÿï¿½?ç½®ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Spectator")
     void SetCameraTransform(const FString& SpectatorID, const FVector& Location, const FRotator& Rotation};
     
@@ -158,35 +158,35 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Spectator")
     void SetZoomLevel(const FString& SpectatorID, float ZoomLevel};
     
-    // ?‡æ??«ä¸­??    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½ï¿½Xï¿½ä¸­X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void TogglePictureInPicture(const FString& SpectatorID, bool bEnable};
     
-    // ?¼é€è??°è?å¤©æ???    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½é€ï¿½Xï¿½ï¿½?å¤©ï¿½X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void SendSpectatorChat(const FString& RoomID, const FString& SpectatorID, const FString& Message};
     
-    // ?²å?è§€?°è€…å?è¡?    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½ï¿½?è§€?ï¿½è€…ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Spectator")
     TArray<FSpectatorInfo> GetSpectatorsInRoom(const FString& RoomID) const;
     
-    // ?²å?è§€?°è€…æ•¸??    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½ï¿½?è§€?ï¿½è€…æ•¸X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     int32 GetSpectatorCount(const FString& RoomID) const;
     
-    // ?¯å¦?è¨±è§€??    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½å¦?ï¿½è¨±è§€X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     bool IsSpectatingEnabled(const FString& MatchID) const;
     
-    // ?Ÿç”¨/ç¦ç”¨è§€??    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?ï¿½ç”¨/ç¦ç”¨è§€X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void SetSpectatingEnabled(const FString& MatchID, bool bEnabled};
     
-    // è¨­ç½®?¿é?å¯†ç¢¼
+    // è¨­ç½®?ï¿½ï¿½?å¯†ç¢¼
     UFUNCTION(BlueprintCallable, Category = "Spectator")
     void SetRoomPassword(const FString& RoomID, const FString& NewPassword};
     
-    // è¸¢å‡ºè§€?°è€?    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // è¸¢å‡ºè§€?ï¿½ï¿½?    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void KickSpectator(const FString& RoomID, const FString& SpectatorID, const FString& Reason};
     
-    // ç¦è?è§€?°è€?    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ç¦ï¿½?è§€?ï¿½ï¿½?    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void MuteSpectator(const FString& RoomID, const FString& SpectatorID, int32 DurationMinutes};
     
-    // äº‹ä»¶å§”è?
+    // äº‹ä»¶å§”ï¿½?
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpectatorJoined, const FString&, RoomID, const FSpectatorInfo&, Spectator};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpectatorLeft, const FString&, RoomID, const FString&, SpectatorID};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSpectatorChat, const FString&, RoomID, const FString&, SpectatorID, const FString&, Message};

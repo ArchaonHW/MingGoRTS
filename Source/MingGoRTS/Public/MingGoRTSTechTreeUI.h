@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,7 +7,7 @@
 #include "MingGoRTSTechTreeUI.generated.h"
 
 /**
- * ç§‘æ?æ¨¹ç?é»UIçµ„ä»¶
+ * ç§‘ï¿½?æ¨¹ï¿½?é»UIçµ„ä»¶
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSTechNodeWidget : public UUserWidget
@@ -17,27 +17,27 @@ class MINGGORTS_API UMingGoRTSTechNodeWidget : public UUserWidget
 public:
     UMingGoRTSTechNodeWidget(};
 
-    // è¨­ç½®ç§‘æ?ç¯€é»æ•¸??    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
+    // è¨­ç½®ç§‘ï¿½?ç¯€é»æ•¸X    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void SetTechNode(const FTechNode& TechNode};
 
-    // ?´æ–°ç¯€é»ç???    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
+    // ?ï¿½æ–°ç¯€é»ï¿½X    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void UpdateNodeStatus(ETechStatus NewStatus};
 
-    // ?´æ–°?”ç™¼?²åº¦
+    // ?ï¿½æ–°?ï¿½ç™¼?ï¿½åº¦
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void UpdateResearchProgress(float Progress};
 
-    // è¨­ç½®?¯å¦è¢«é¸ä¸?    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
+    // è¨­ç½®?ï¿½å¦è¢«é¸ï¿½?    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void SetIsSelected(bool bSelected};
 
-    // è¨­ç½®ç¯€é»ä?ç½?    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
+    // è¨­ç½®ç¯€é»ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void SetNodePosition(const FVector2D& Position};
 
-    // ?²å?ç§‘æ?ç¯€é»ID
+    // ?ï¿½ï¿½?ç§‘ï¿½?ç¯€é»ID
     UFUNCTION(BlueprintPure, Category = "Tech Node UI")
     FString GetTechID() const;
 
-    // ?²å??¯å¦è¢«é¸ä¸?    UFUNCTION(BlueprintPure, Category = "Tech Node UI")
+    // ?ï¿½ï¿½Xï¿½å¦è¢«é¸ï¿½?    UFUNCTION(BlueprintPure, Category = "Tech Node UI")
     bool IsSelected() const;
 
 protected:
@@ -63,52 +63,52 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UOverlay* StatusOverlay;
 
-    // ?¶å?ç§‘æ?ç¯€é»æ•¸??    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
+    // ?ï¿½ï¿½?ç§‘ï¿½?ç¯€é»æ•¸X    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     FTechNode CurrentTechNode;
 
-    // ?¶å??€??    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
+    // ?ï¿½ï¿½Xï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     ETechStatus CurrentStatus;
 
-    // ?¯å¦è¢«é¸ä¸?    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
+    // ?ï¿½å¦è¢«é¸ï¿½?    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     bool bIsSelected;
 
-    // ç¯€é»ä?ç½?    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
+    // ç¯€é»ï¿½?ï¿½?    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     FVector2D NodePosition;
 
-    // ?å??–UI
+    // ?ï¿½ï¿½Xï¿½UI
     virtual void NativeConstruct() override;
 
-    // ?´æ–°UIé¡¯ç¤º
+    // ?ï¿½æ–°UIé¡¯ç¤º
     UFUNCTION(BlueprintImplementableEvent, Category = "Tech Node UI")
     void OnUpdateUI(};
 
-    // ?•ç?é»æ?äº‹ä»¶
+    // ?ï¿½ï¿½?é»ï¿½?äº‹ä»¶
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void OnNodeClicked(};
 
-    // ?•ç??¸å?äº‹ä»¶
+    // ?ï¿½ï¿½Xï¿½ï¿½?äº‹ä»¶
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void OnNodeHovered(};
 
-    // ?•ç??–æ??¸å?äº‹ä»¶
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?äº‹ä»¶
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void OnNodeUnhovered(};
 
-    // ?²å??€?‹é???    FLinearColor GetStatusColor(ETechStatus Status) const;
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½X    FLinearColor GetStatusColor(ETechStatus Status) const;
 
-    // ?²å?é¡åˆ¥é¡è‰²
+    // ?ï¿½ï¿½?é¡åˆ¥é¡è‰²
     FLinearColor GetCategoryColor(ETechCategory Category) const;
 
 private:
-    // ç¶å?äº‹ä»¶
+    // ç¶ï¿½?äº‹ä»¶
     void BindEvents(};
 
-    // è§??äº‹ä»¶
+    // ï¿½Xäº‹ä»¶
     void UnbindEvents(};
 };
 
 /**
- * ç§‘æ?æ¨¹é€?¥ç·šUIçµ„ä»¶
+ * ç§‘ï¿½?æ¨¹ï¿½?ï¿½ï¿½ç·šUIçµ„ä»¶
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSTechConnectionWidget : public UUserWidget
@@ -118,16 +118,16 @@ class MINGGORTS_API UMingGoRTSTechConnectionWidget : public UUserWidget
 public:
     UMingGoRTSTechConnectionWidget(};
 
-    // è¨­ç½®??¥?„å…©?‹ç?é»?    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
+    // è¨­ç½®Xï¿½ï¿½?ï¿½å…©?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
     void SetConnection(const FString& FromTechID, const FString& ToTechID};
 
-    // è¨­ç½®??¥?€??    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
+    // è¨­ç½®Xï¿½ï¿½?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
     void SetConnectionStatus(bool bIsActive};
 
-    // è¨­ç½®??¥ç·šé???    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
+    // è¨­ç½®Xï¿½ï¿½ç·šï¿½X    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
     void SetConnectionColor(const FLinearColor& Color};
 
-    // ?´æ–°??¥ç·šä?ç½?    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
+    // ?ï¿½æ–°Xï¿½ï¿½ç·šï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
     void UpdateConnectionPosition(const FVector2D& FromPosition, const FVector2D& ToPosition};
 
 protected:
@@ -135,26 +135,26 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UImage* ConnectionLine;
 
-    // æºç??€ID
+    // æºï¿½Xï¿½ID
     UPROPERTY(BlueprintReadOnly, Category = "Tech Connection UI")
     FString FromTechID;
 
-    // ?®æ?ç§‘æ?ID
+    // ?ï¿½ï¿½?ç§‘ï¿½?ID
     UPROPERTY(BlueprintReadOnly, Category = "Tech Connection UI")
     FString ToTechID;
 
-    // ??¥?¯å¦æ¿€æ´?    UPROPERTY(BlueprintReadOnly, Category = "Tech Connection UI")
+    // Xï¿½ï¿½?ï¿½å¦æ¿€ï¿½?    UPROPERTY(BlueprintReadOnly, Category = "Tech Connection UI")
     bool bIsActive;
 
-    // ?å??–UI
+    // ?ï¿½ï¿½Xï¿½UI
     virtual void NativeConstruct() override;
 
 private:
-    // è¨ˆç???¥ç·šè·¯å¾?    void CalculateConnectionPath(};
+    // è¨ˆï¿½Xï¿½ï¿½ç·šè·¯ï¿½?    void CalculateConnectionPath(};
 };
 
 /**
- * ç§‘æ?æ¨¹ä¸»UIçµ„ä»¶
+ * ç§‘ï¿½?æ¨¹ä¸»UIçµ„ä»¶
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSTechTreeWidget : public UUserWidget
@@ -164,39 +164,39 @@ class MINGGORTS_API UMingGoRTSTechTreeWidget : public UUserWidget
 public:
     UMingGoRTSTechTreeWidget(};
 
-    // è¨­ç½®ç§‘æ?æ¨¹ç³»çµ±å???    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // è¨­ç½®ç§‘ï¿½?æ¨¹ç³»çµ±ï¿½X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem};
 
-    // é¡¯ç¤º?‡å?é¡åˆ¥?„ç??€æ¨?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // é¡¯ç¤º?ï¿½ï¿½?é¡åˆ¥?ï¿½ï¿½Xï¿½ï¿½?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ShowTechCategory(ETechCategory Category};
 
-    // é¡¯ç¤º?€?‰ç??€æ¨?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // é¡¯ç¤º?ï¿½?ï¿½ï¿½Xï¿½ï¿½?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ShowAllCategories(};
 
-    // ?¸ä¸­ç§‘æ?ç¯€é»?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // ?ï¿½ä¸­ç§‘ï¿½?ç¯€ï¿½?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void SelectTechNode(const FString& TechID};
 
-    // æ¸…é™¤?¸ä¸­?€??    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // æ¸…é™¤?ï¿½ä¸­?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ClearSelection(};
 
-    // ?‹å??”ç™¼?¸ä¸­?„ç??€
+    // ?ï¿½ï¿½Xï¿½ç™¼?ï¿½ä¸­?ï¿½ï¿½Xï¿½
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     bool StartResearchSelectedTech(};
 
-    // ?´æ–°ç§‘æ?æ¨¹é¡¯ç¤?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // ?ï¿½æ–°ç§‘ï¿½?æ¨¹é¡¯ï¿½?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void UpdateTechTreeDisplay(};
 
-    // è¨­ç½®?æ¿¾??    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // è¨­ç½®?ï¿½æ¿¾X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void SetFilter(ETechCategory CategoryFilter, ETechTier TierFilter};
 
-    // æ¸…é™¤?æ¿¾??    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // æ¸…é™¤?ï¿½æ¿¾X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ClearFilter(};
 
-    // ?²å??¶å??¸ä¸­?„ç??€
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ä¸­?ï¿½ï¿½Xï¿½
     UFUNCTION(BlueprintPure, Category = "Tech Tree UI")
     FString GetSelectedTechID() const;
 
-    // ?²å??¶å?é¡¯ç¤º?„é???    UFUNCTION(BlueprintPure, Category = "Tech Tree UI")
+    // ?ï¿½ï¿½Xï¿½ï¿½?é¡¯ç¤º?ï¿½ï¿½X    UFUNCTION(BlueprintPure, Category = "Tech Tree UI")
     ETechCategory GetCurrentCategory() const;
 
 protected:
@@ -228,88 +228,88 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UProgressBar* ResearchProgress;
 
-    // ç§‘æ?æ¨¹ç³»çµ±å???    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
+    // ç§‘ï¿½?æ¨¹ç³»çµ±ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     UMingGoRTSTechTree* TechTreeSystem;
 
-    // ?¶å??¸ä¸­?„ç??€ID
+    // ?ï¿½ï¿½Xï¿½ä¸­?ï¿½ï¿½Xï¿½ID
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     FString SelectedTechID;
 
-    // ?¶å?é¡¯ç¤º?„é???    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
+    // ?ï¿½ï¿½?é¡¯ç¤º?ï¿½ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     ETechCategory CurrentCategory;
 
-    // ?¶å??æ¿¾??    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
+    // ?ï¿½ï¿½Xï¿½æ¿¾X    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     ETechCategory CategoryFilter;
 
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     ETechTier TierFilter;
 
-    // ç§‘æ?ç¯€é»Widget? å?
+    // ç§‘ï¿½?ç¯€é»Widget?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     TMap<FString, UMingGoRTSTechNodeWidget*> TechNodeWidgets;
 
-    // ç§‘æ???¥Widget?¸ç?
+    // ç§‘ï¿½Xï¿½ï¿½Widget?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     TArray<UMingGoRTSTechConnectionWidget*> ConnectionWidgets;
 
-    // ?å??–UI
+    // ?ï¿½ï¿½Xï¿½UI
     virtual void NativeConstruct() override;
 
-    // ?µå»ºç§‘æ?ç¯€é»Widget
+    // ?ï¿½å»ºç§‘ï¿½?ç¯€é»Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Tech Tree UI")
     UMingGoRTSTechNodeWidget* CreateTechNodeWidget(const FTechNode& TechNode};
 
-    // ?µå»º??¥Widget
+    // ?ï¿½å»ºXï¿½ï¿½Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Tech Tree UI")
     UMingGoRTSTechConnectionWidget* CreateConnectionWidget(const FString& FromTechID, const FString& ToTechID};
 
-    // ?•ç?ç§‘æ?ç¯€é»é???    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // ?ï¿½ï¿½?ç§‘ï¿½?ç¯€é»ï¿½X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void OnTechNodeClicked(const FString& TechID};
 
-    // ?•ç?ç§‘æ??”ç™¼?‹å?
+    // ?ï¿½ï¿½?ç§‘ï¿½Xï¿½ç™¼?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void OnTechResearchStarted(const FString& TechID, const FString& BuildingID};
 
-    // ?•ç?ç§‘æ??”ç™¼å®Œæ?
+    // ?ï¿½ï¿½?ç§‘ï¿½Xï¿½ç™¼å®Œï¿½?
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void OnTechResearchCompleted(const FString& TechID, const TArray<FTechEffect>& Effects};
 
-    // ?•ç?ç§‘æ?è§??
+    // ?ï¿½ï¿½?ç§‘ï¿½?ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void OnTechUnlocked(const FString& TechID, ETechCategory Category};
 
-    // ?´æ–°?¸ä¸­ç§‘æ?ä¿¡æ¯
+    // ?ï¿½æ–°?ï¿½ä¸­ç§‘ï¿½?ä¿¡æ¯
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void UpdateSelectedTechInfo(};
 
-    // ä½ˆå?ç§‘æ?ç¯€é»?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // ä½ˆï¿½?ç§‘ï¿½?ç¯€ï¿½?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void LayoutTechNodes(};
 
-    // ?µå»ºç§‘æ???¥ç·?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // ?ï¿½å»ºç§‘ï¿½Xï¿½ï¿½ï¿½?    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void CreateTechConnections(};
 
-    // ?‰ç”¨?æ¿¾??    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // ?ï¿½ç”¨?ï¿½æ¿¾X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ApplyFilters(};
 
-    // ?²å?ç¯€é»ä?å±€ä½ç½®
+    // ?ï¿½ï¿½?ç¯€é»ï¿½?å±€ä½ç½®
     FVector2D GetNodeLayoutPosition(const FString& TechID, int32 Row, int32 Column) const;
 
 private:
-    // ç¶å?ç§‘æ?æ¨¹ä?ä»?    void BindTechTreeEvents(};
+    // ç¶ï¿½?ç§‘ï¿½?æ¨¹ï¿½?ï¿½?    void BindTechTreeEvents(};
 
-    // è§??ç§‘æ?æ¨¹ä?ä»?    void UnbindTechTreeEvents(};
+    // ï¿½Xç§‘ï¿½?æ¨¹ï¿½?ï¿½?    void UnbindTechTreeEvents(};
 
-    // æ¸…ç??¾æ?Widget
+    // æ¸…ï¿½Xï¿½ï¿½?Widget
     void ClearExistingWidgets(};
 
-    // ?µå»ºé¡åˆ¥æ¨™ç±¤
+    // ?ï¿½å»ºé¡åˆ¥æ¨™ç±¤
     void CreateCategoryTabs(};
 
-    // ?µå»ºç­‰ç??æ¿¾??    void CreateTierFilters(};
+    // ?ï¿½å»ºç­‰ï¿½Xï¿½æ¿¾X    void CreateTierFilters(};
 };
 
 /**
- * ç§‘æ??”ç™¼?¢æ¿UIçµ„ä»¶
+ * ç§‘ï¿½Xï¿½ç™¼?ï¿½æ¿UIçµ„ä»¶
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSResearchPanelWidget : public UUserWidget
@@ -319,30 +319,30 @@ class MINGGORTS_API UMingGoRTSResearchPanelWidget : public UUserWidget
 public:
     UMingGoRTSResearchPanelWidget(};
 
-    // è¨­ç½®ç§‘æ?æ¨¹ç³»çµ±å???    UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
+    // è¨­ç½®ç§‘ï¿½?æ¨¹ç³»çµ±ï¿½X    UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem};
 
-    // é¡¯ç¤º?”ç™¼?¢æ¿
+    // é¡¯ç¤º?ï¿½ç™¼?ï¿½æ¿
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void ShowResearchPanel(};
 
-    // ?±è??”ç™¼?¢æ¿
+    // ?ï¿½ï¿½Xï¿½ç™¼?ï¿½æ¿
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void HideResearchPanel(};
 
-    // ?´æ–°æ´»å??”ç™¼?—è¡¨
+    // ?ï¿½æ–°æ´»ï¿½Xï¿½ç™¼?ï¿½è¡¨
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void UpdateActiveResearchList(};
 
-    // ?«å??”ç™¼
+    // ?ï¿½ï¿½Xï¿½ç™¼
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void PauseResearch(const FString& TechID};
 
-    // ?–æ??”ç™¼
+    // ?ï¿½ï¿½Xï¿½ç™¼
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void CancelResearch(const FString& TechID};
 
-    // è¨­ç½®?”ç™¼å»ºç?
+    // è¨­ç½®?ï¿½ç™¼å»ºï¿½?
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void SetResearchBuilding(const FString& BuildingID};
 
@@ -360,40 +360,40 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UComboBoxString* ResearchBuildingSelector;
 
-    // ç§‘æ?æ¨¹ç³»çµ±å???    UPROPERTY(BlueprintReadOnly, Category = "Research Panel UI")
+    // ç§‘ï¿½?æ¨¹ç³»çµ±ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Research Panel UI")
     UMingGoRTSTechTree* TechTreeSystem;
 
-    // ?¶å??¸ä¸­?„ç??¼å»ºç¯?    UPROPERTY(BlueprintReadOnly, Category = "Research Panel UI")
+    // ?ï¿½ï¿½Xï¿½ä¸­?ï¿½ï¿½Xï¿½å»ºï¿½?    UPROPERTY(BlueprintReadOnly, Category = "Research Panel UI")
     FString SelectedBuildingID;
 
-    // ?å??–UI
+    // ?ï¿½ï¿½Xï¿½UI
     virtual void NativeConstruct() override;
 
-    // ?µå»º?”ç™¼?…ç›®Widget
+    // ?ï¿½å»º?ï¿½ç™¼?ï¿½ç›®Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Research Panel UI")
     UUserWidget* CreateResearchItemWidget(const FTechResearchProgress& ResearchProgress};
 
-    // ?•ç??”ç™¼?²åº¦?´æ–°
+    // ?ï¿½ï¿½Xï¿½ç™¼?ï¿½åº¦?ï¿½æ–°
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void OnResearchProgressUpdated(const FString& TechID, float Progress, float TimeRemaining};
 
-    // ?´æ–°çµ±è?ä¿¡æ¯
+    // ?ï¿½æ–°çµ±ï¿½?ä¿¡æ¯
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void UpdateStatistics(};
 
 private:
-    // ç¶å?äº‹ä»¶
+    // ç¶ï¿½?äº‹ä»¶
     void BindEvents(};
 
-    // è§??äº‹ä»¶
+    // ï¿½Xäº‹ä»¶
     void UnbindEvents(};
 
-    // ?´æ–°?”ç™¼å»ºç??—è¡¨
+    // ?ï¿½æ–°?ï¿½ç™¼å»ºï¿½Xï¿½è¡¨
     void UpdateResearchBuildingList(};
 };
 
 /**
- * ç§‘æ?è©³æ??¢æ¿UIçµ„ä»¶
+ * ç§‘ï¿½?è©³ï¿½Xï¿½æ¿UIçµ„ä»¶
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSTechDetailsWidget : public UUserWidget
@@ -403,15 +403,15 @@ class MINGGORTS_API UMingGoRTSTechDetailsWidget : public UUserWidget
 public:
     UMingGoRTSTechDetailsWidget(};
 
-    // é¡¯ç¤ºç§‘æ?è©³æ?
+    // é¡¯ç¤ºç§‘ï¿½?è©³ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void ShowTechDetails(const FTechNode& TechNode};
 
-    // ?±è?ç§‘æ?è©³æ?
+    // ?ï¿½ï¿½?ç§‘ï¿½?è©³ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void HideTechDetails(};
 
-    // è¨­ç½®ç§‘æ?æ¨¹ç³»çµ±å???    UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
+    // è¨­ç½®ç§‘ï¿½?æ¨¹ç³»çµ±ï¿½X    UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem};
 
 protected:
@@ -443,33 +443,33 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UButton* CloseButton;
 
-    // ?¶å?é¡¯ç¤º?„ç??€
+    // ?ï¿½ï¿½?é¡¯ç¤º?ï¿½ï¿½Xï¿½
     UPROPERTY(BlueprintReadOnly, Category = "Tech Details UI")
     FTechNode CurrentTechNode;
 
-    // ç§‘æ?æ¨¹ç³»çµ±å???    UPROPERTY(BlueprintReadOnly, Category = "Tech Details UI")
+    // ç§‘ï¿½?æ¨¹ç³»çµ±ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Tech Details UI")
     UMingGoRTSTechTree* TechTreeSystem;
 
-    // ?å??–UI
+    // ?ï¿½ï¿½Xï¿½UI
     virtual void NativeConstruct() override;
 
-    // ?´æ–°UIé¡¯ç¤º
+    // ?ï¿½æ–°UIé¡¯ç¤º
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void UpdateDisplay(};
 
-    // ?•ç??‹å??”ç™¼
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ç™¼
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void OnStartResearchClicked(};
 
-    // ?•ç??œé?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void OnCloseClicked(};
 
 private:
-    // ?µå»º?ˆæ??—è¡¨??    UUserWidget* CreateEffectItem(const FTechEffect& Effect};
+    // ?ï¿½å»º?ï¿½ï¿½Xï¿½è¡¨X    UUserWidget* CreateEffectItem(const FTechEffect& Effect};
 
-    // ?µå»º?ç½®æ¢ä»¶?—è¡¨??    UUserWidget* CreatePrerequisiteItem(const FString& TechID};
+    // ?ï¿½å»º?ï¿½ç½®æ¢ä»¶?ï¿½è¡¨X    UUserWidget* CreatePrerequisiteItem(const FString& TechID};
 
-    // ?µå»º?æœ¬?—è¡¨??    UUserWidget* CreateCostItem(EResourceType ResourceType, float Cost};
+    // ?ï¿½å»º?ï¿½æœ¬?ï¿½è¡¨X    UUserWidget* CreateCostItem(EResourceType ResourceType, float Cost};
 };
 

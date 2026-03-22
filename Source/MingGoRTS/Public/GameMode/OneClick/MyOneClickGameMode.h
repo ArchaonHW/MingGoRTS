@@ -1,10 +1,10 @@
-#pragma once\n\n#include "CoreMinimal.h"
+ï»¿#pragma once\n\n#include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Launcher/MingRTSOneClickLauncher.h"
 #include "MyOneClickGameMode.generated.h"
 
 /**
- * MingGoRTS ä¸€?µå??•é??²æ¨¡å¼? * ?†æ?ä¸€?µå??•å??½ç?å®Œæ•´?Šæˆ²æ¨¡å?ç¤ºä?
+ * MingGoRTS ä¸€?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ¨¡ï¿½? * ?ï¿½ï¿½?ä¸€?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?å®Œæ•´?ï¿½æˆ²æ¨¡ï¿½?ç¤ºï¿½?
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = "MingGoRTS")
 class MINGGORTS_API AMyOneClickGameMode : public AGameModeBase
@@ -18,52 +18,52 @@ protected:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
 
-    // ?? ä¸€?µå??•å„ª?–ç³»çµ?    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?? ä¸€?µå??•å„ª??))
+    // X ä¸€?ï¿½ï¿½Xï¿½å„ª?ï¿½ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "X ä¸€?ï¿½ï¿½Xï¿½å„ªX))
     void LaunchOptimizationSystem(};
 
-    // ?¯ ?ºèƒ½?Ÿå?ï¼ˆæ ¹?šç³»çµ±è‡ª?•é?ç½®ï?
-    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?¯ ?ºèƒ½?Ÿå?"))
+    // ?ï¿½ï¿½ ?ï¿½èƒ½?ï¿½ï¿½?ï¼ˆæ ¹?ï¿½ç³»çµ±è‡ª?ï¿½ï¿½?ç½®ï¿½?
+    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?ï¿½ï¿½ ?ï¿½èƒ½?ï¿½ï¿½?"))
     void SmartLaunchSystem(};
 
-    // ?”¥ æ¥µè‡´?Ÿå?ï¼ˆæ?é«˜æ€§èƒ½ï¼?    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?”¥ æ¥µè‡´?Ÿå?"))
+    // ?ï¿½ï¿½ æ¥µè‡´?ï¿½ï¿½?ï¼ˆï¿½?é«˜æ€§èƒ½ï¿½?    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?ï¿½ï¿½ æ¥µè‡´?ï¿½ï¿½?"))
     void ExtremeLaunchSystem(};
 
-    // ?? ?²å?ç³»çµ±?€??    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?? ?²å?ç³»çµ±?€??))
+    // X ?ï¿½ï¿½?ç³»çµ±?ï¿½X    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "X ?ï¿½ï¿½?ç³»çµ±?ï¿½X))
     FString GetSystemStatus(};
 
-    // ?® ?²å??§èƒ½?±å?
-    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?® ?²å??§èƒ½?±å?"))
+    // ?ï¿½ï¿½ ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
+    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?ï¿½ï¿½ ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?"))
     FString GetPerformanceReport(};
 
-    // ?? ?æ–°?Ÿå?ç³»çµ±
-    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?? ?æ–°?Ÿå?"))
+    // X ?ï¿½æ–°?ï¿½ï¿½?ç³»çµ±
+    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "X ?ï¿½æ–°?ï¿½ï¿½?"))
     void RestartOptimizationSystem(};
 
-    // ?¯ ä¸€?µæ€§èƒ½æª¢æŸ¥
-    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?¯ ä¸€?µæ€§èƒ½æª¢æŸ¥"))
+    // ?ï¿½ï¿½ ä¸€?ï¿½æ€§èƒ½æª¢æŸ¥
+    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?ï¿½ï¿½ ä¸€?ï¿½æ€§èƒ½æª¢æŸ¥"))
     void OneClickPerformanceCheck(};
 
-    // ?¹ï? ?œæ­¢?ªå?ç³»çµ±
-    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?¹ï? ?œæ­¢?ªå?"))
+    // ?ï¿½ï¿½? ?ï¿½æ­¢?ï¿½ï¿½?ç³»çµ±
+    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?ï¿½ï¿½? ?ï¿½æ­¢?ï¿½ï¿½?"))
     void StopOptimizationSystem(};
 
-    // ?? ?²å?ç³»çµ±?¥åº·åº?    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?? ?²å??¥åº·åº?))
+    // X ?ï¿½ï¿½?ç³»çµ±?ï¿½åº·ï¿½?    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "X ?ï¿½ï¿½Xï¿½åº·ï¿½?))
     float GetSystemHealth(};
 
-    // ?¨ é¡¯ç¤º?§èƒ½ä¿¡æ¯
-    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?¨ é¡¯ç¤º?§èƒ½ä¿¡æ¯"))
+    // ?ï¿½ï¿½ é¡¯ç¤º?ï¿½èƒ½ä¿¡æ¯
+    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?ï¿½ï¿½ é¡¯ç¤º?ï¿½èƒ½ä¿¡æ¯"))
     void TogglePerformanceDisplay(};
 
-    // ?“± ?¼é€æ€§èƒ½?šçŸ¥
-    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?“± ?¼é€é€šçŸ¥"))
+    // ?ï¿½ï¿½ ?ï¿½é€æ€§èƒ½?ï¿½çŸ¥
+    UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayName = "?ï¿½ï¿½ ?ï¿½é€é€šçŸ¥"))
     void SendPerformanceNotification(};
 
 protected:
-    // ä¸€?µå??•å™¨
+    // ä¸€?ï¿½ï¿½Xï¿½å™¨
     UPROPERTY(BlueprintReadOnly, Category = "One Click Game Mode")
     TObjectPtr<UMingRTSOneClickLauncher> OneClickLauncher;
 
-    // ç³»çµ±?ç½®
+    // ç³»çµ±?ï¿½ç½®
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "One Click Game Mode")
     bool bAutoLaunchOnBeginPlay;
 
@@ -80,20 +80,20 @@ protected:
     bool bEnableNotifications;
 
 private:
-    // ?§éƒ¨?è¼¯
+    // ?ï¿½éƒ¨?ï¿½è¼¯
     void InitializeOneClickSystem(};
     void SetupAutoPerformanceCheck(};
     void HandlePerformanceWarnings(};
     void UpdatePerformanceDisplay(};
     
-    // è¨ˆæ???    float LastPerformanceCheck;
+    // è¨ˆï¿½X    float LastPerformanceCheck;
     float LastDisplayUpdate;
     
-    // ?€?‹è?è¸?    bool bPerformanceDisplayActive;
+    // ?ï¿½?ï¿½ï¿½?ï¿½?    bool bPerformanceDisplayActive;
     bool bSystemInitialized;
 
 public:
-    // ?²å??Ÿå??¨å¯¦ä¾‹ï??¨æ–¼?¶ä?é¡è¨ª?ï?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½å¯¦ä¾‹ï¿½Xï¿½æ–¼?ï¿½ï¿½?é¡è¨ª?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "One Click Game Mode")
     UMingRTSOneClickLauncher* GetOneClickLauncher() const { return OneClickLauncher; }
 };

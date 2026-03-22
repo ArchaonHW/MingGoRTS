@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,10 +9,10 @@
 UENUM(BlueprintType)
 enum class ESkillActionType : uint8
 {
-    Unlock, UMETA(DisplayName = "è§???€??),
-    Upgrade, UMETA(DisplayName = "?‡ç??€??),
-    Use, UMETA(DisplayName = "ä½¿ç”¨?€??),
-    Reset, UMETA(DisplayName = "?ç½®?€??)
+    Unlock, UMETA(DisplayName = "ï¿½Xï¿½X),
+    Upgrade, UMETA(DisplayName = "?ï¿½ï¿½Xï¿½X),
+    Use, UMETA(DisplayName = "ä½¿ç”¨?ï¿½X),
+    Reset, UMETA(DisplayName = "?ï¿½ç½®?ï¿½X)
 };
 
 USTRUCT(BlueprintType)
@@ -52,93 +52,93 @@ class MINGGORTS_API UMingGoRTSSkillManager : public UObject
 public:
     UMingGoRTSSkillManager(};
 
-    // ?€?½ç®¡?†å™¨äº‹ä»¶
+    // ?ï¿½?ï¿½ç®¡?ï¿½å™¨äº‹ä»¶
     UPROPERTY(BlueprintAssignable, Category = "Skill Manager")
     FOnSkillExperienceGained OnSkillExperienceGained;
 
     UPROPERTY(BlueprintAssignable, Category = "Skill Manager")
     FOnSkillPointsChanged OnSkillPointsChanged;
 
-    // ?å??–æ??½ç®¡?†å™¨
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ç®¡?ï¿½å™¨
     UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     void InitializeSkillManager(UMingGoRTSSkillSystem* SkillSystem, AMingGoRTSCharacter* Character};
 
-    // ?²å??€?½ç?é©?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     void GrantSkillExperience(const FName& SkillID, int32 Amount, const FString& Reason = TEXT("")};
 
-    // ?²å??€?½é?
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     void GrantSkillPoints(int32 Points, const FString& Reason = TEXT("")};
 
-    // ?•ç??°é¬¥çµæ?ï¼Œå??ç?é©?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
+    // ?ï¿½ï¿½Xï¿½é¬¥çµï¿½?ï¼Œï¿½Xï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     void ProcessCombatEnd(bool bVictory, int32 EnemyCount, float CombatDuration};
 
-    // ?•ç?ä»»å?å®Œæ?ï¼Œå??ç?é©?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
+    // ?ï¿½ï¿½?ä»»ï¿½?å®Œï¿½?ï¼Œï¿½Xï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     void ProcessQuestCompletion(const FString& QuestID, int32 QuestDifficulty};
 
-    // ?•ç?æ­·å²äº‹ä»¶ï¼Œå??ç›¸?œæ??½ç?é©?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
+    // ?ï¿½ï¿½?æ­·å²äº‹ä»¶ï¼Œï¿½Xï¿½ç›¸?ï¿½ï¿½Xï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     void ProcessHistoricalEvent(const FString& EventID, const TArray<FName>& RelatedSkills};
 
-    // ?ªå??†é??€?½ç?é©?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     void AutoDistributeExperience(int32 TotalExperience, ESkillCategory PrimaryCategory};
 
-    // è¨ˆç?è§’è‰²ç­‰ç??å‹µ
+    // è¨ˆï¿½?è§’è‰²ç­‰ï¿½Xï¿½å‹µ
     UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     void ProcessCharacterLevelUp(int32 NewLevel};
 
-    // é©—è??€?½æ?ä½?    UFUNCTION(BlueprintPure, Category = "Skill Manager")
+    // é©—ï¿½Xï¿½?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintPure, Category = "Skill Manager")
     bool ValidateSkillAction(const FName& SkillID, ESkillActionType ActionType};
 
-    // ?·è??€?½æ?ä½?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     bool ExecuteSkillAction(const FName& SkillID, ESkillActionType ActionType};
 
-    // ?²å??€?½ç?é©—æ­·??    UFUNCTION(BlueprintPure, Category = "Skill Manager")
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?é©—æ­·X    UFUNCTION(BlueprintPure, Category = "Skill Manager")
     TArray<FSkillExperienceGain> GetSkillExperienceHistory(const FName& SkillID) const;
 
-    // ?²å??¨è–¦?€??    UFUNCTION(BlueprintPure, Category = "Skill Manager")
+    // ?ï¿½ï¿½Xï¿½è–¦?ï¿½X    UFUNCTION(BlueprintPure, Category = "Skill Manager")
     TArray<FName> GetRecommendedSkills() const;
 
-    // è¨ˆç??€?½ç™¼å±•å»ºè­?    UFUNCTION(BlueprintPure, Category = "Skill Manager")
+    // è¨ˆï¿½Xï¿½?ï¿½ç™¼å±•å»ºï¿½?    UFUNCTION(BlueprintPure, Category = "Skill Manager")
     FString GetSkillDevelopmentAdvice() const;
 
-    // ?ç½®?€?½ç³»çµ?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
+    // ?ï¿½ç½®?ï¿½?ï¿½ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     bool ResetSkillSystem(};
 
-    // ä¿å??€?½ç®¡?†å™¨?¸æ?
+    // ä¿ï¿½Xï¿½?ï¿½ç®¡?ï¿½å™¨?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     bool SaveSkillManagerData(const FString& SaveSlotName};
 
-    // è¼‰å…¥?€?½ç®¡?†å™¨?¸æ?
+    // è¼‰å…¥?ï¿½?ï¿½ç®¡?ï¿½å™¨?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Skill Manager")
     bool LoadSkillManagerData(const FString& SaveSlotName};
 
 protected:
-    // ?€?½ç³»çµ±å???    UPROPERTY()
+    // ?ï¿½?ï¿½ç³»çµ±ï¿½X    UPROPERTY()
     TObjectPtr<UMingGoRTSSkillSystem> SkillSystem;
 
     // è§’è‰²å¼•ç”¨
     UPROPERTY()
     TObjectPtr<AMingGoRTSCharacter> Character;
 
-    // ?€?½ç?é©—æ­·??    UPROPERTY()
+    // ?ï¿½?ï¿½ï¿½?é©—æ­·X    UPROPERTY()
     TArray<FSkillExperienceGain> SkillExperienceHistory;
 
-    // ?¯ç”¨?€?½é?
+    // ?ï¿½ç”¨?ï¿½?ï¿½ï¿½?
     UPROPERTY()
     int32 AvailableSkillPoints;
 
-    // ç¶“é??²å??ç?
+    // ç¶“ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY()
     float ExperienceGainMultiplier;
 
-    // ?€?½é??²å??ç?
+    // ?ï¿½?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY()
     float SkillPointGainMultiplier;
 
-    // ?¯å¦å·²å?å§‹å?
+    // ?ï¿½å¦å·²ï¿½?å§‹ï¿½?
     bool bIsInitialized;
 
-    // ?§éƒ¨?¹æ?
+    // ?ï¿½éƒ¨?ï¿½ï¿½?
     void AddExperienceToHistory(const FName& SkillID, int32 Amount, const FString& Reason};
     void CalculateCombatExperience(bool bVictory, int32 EnemyCount, float CombatDuration};
     void CalculateQuestExperience(const FString& QuestID, int32 QuestDifficulty};
@@ -148,12 +148,12 @@ protected:
     void ApplySkillEffectsToCharacter(};
     void CheckSkillMilestones(};
 
-    // ç¶“é?è¨ˆç?è¼”åŠ©?¹æ?
+    // ç¶“ï¿½?è¨ˆï¿½?è¼”åŠ©?ï¿½ï¿½?
     int32 CalculateBaseExperience(int32 Difficulty, float DurationMultiplier = 1.0f) const;
     float GetCategoryExperienceMultiplier(ESkillCategory Category) const;
     int32 CalculateSkillPointReward(int32 ExperienceGained) const;
 
-    // ?€?½ç™¼å±•å???    TArray<ESkillCategory> GetCharacterSkillFocus() const;
+    // ?ï¿½?ï¿½ç™¼å±•ï¿½X    TArray<ESkillCategory> GetCharacterSkillFocus() const;
     TArray<FName> GetUnderdevelopedSkills() const;
     TArray<FName> GetUpgradeableSkills() const;
 };

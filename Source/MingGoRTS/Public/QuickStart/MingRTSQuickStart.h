@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,7 +6,7 @@
 #include "MingRTSQuickStart.generated.h"
 
 /**
- * MingGoRTS ?��?編譯系統快速�??? * 立即?��?使用?��?編譯系統?�示�? */
+ * MingGoRTS ?��?編譯系統快速�X * 立即?��?使用?��?編譯系統?�示�? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSQuickStart : public UObject
 {
@@ -15,38 +15,38 @@ class MINGGORTS_API UMingRTSQuickStart : public UObject
 public:
     UMingRTSQuickStart(};
 
-    // 立即?��?使用 - 一?��??�優?�系�?    UFUNCTION(BlueprintCallable, Category = "Quick Start")
+    // 立即?��?使用 - 一?��X�優?�系�?    UFUNCTION(BlueprintCallable, Category = "Quick Start")
     void StartOptimizationNow(};
 
-    // ?��?系統?�??    UFUNCTION(BlueprintCallable, Category = "Quick Start")
+    // ?��?系統?�X    UFUNCTION(BlueprintCallable, Category = "Quick Start")
     FString GetSystemStatus(};
 
     // 快速性能檢查
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
     void QuickPerformanceCheck(};
 
-    // 立即?��??��??�目
+    // 立即?��X��X�目
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
     void OptimizeCurrentProject(};
 
-    // ?��??��?結�?
+    // ?��X��?結�?
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
     FString GetOptimizationResults(};
 
 protected:
-    // ?��?系統管�???    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
+    // ?��?系統管�X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
-    // 系統?�??    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
+    // 系統?�X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
     bool bSystemStarted;
 
     UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
     bool bOptimizationRunning;
 
 private:
-    // ?��??�快?��???    void InitializeQuickStart(};
+    // ?��X�快?��X    void InitializeQuickStart(};
     
-    // 顯示結�?
+    // 顯示結�?
     void DisplayResults(const FString& Results};
 };
 

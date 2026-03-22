@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,7 +7,7 @@
 class UMingRTSReplaySystem;
 
 /**
- * ?�放?�放?�制??- ?�制?�放?�放?�UI?�交�? */
+ * ?�放?�放?�制X- ?�制?�放?�放?�UI?�交�? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSReplayPlayerController : public UObject
 {
@@ -16,10 +16,10 @@ class MINGGORTS_API UMingRTSReplayPlayerController : public UObject
 public:
     UMingRTSReplayPlayerController(};
     
-    // ?��???    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
+    // ?��X    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void InitializePlayerController(UMingRTSReplaySystem* ReplaySystem};
     
-    // ?�放?�制
+    // ?�放?�制
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void Play(};
     
@@ -35,14 +35,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void StepBackward(};
     
-    // ?�度?�制
+    // ?�度?�制
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void SetPlaybackSpeed(float Speed};
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     float GetPlaybackSpeed() const;
     
-    // ?��?軸控??    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
+    // ?��?軸控X    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void JumpToTime(float TimeInSeconds};
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
@@ -57,7 +57,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     float GetCurrentPercentage() const;
     
-    // ?�籤系統
+    // ?�籤系統
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Bookmarks")
     void AddBookmark(float Time, const FText& Label};
     
@@ -70,7 +70,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Bookmarks")
     void JumpToBookmark(int32 BookmarkIndex};
     
-    // 事件標�?
+    // 事件標�?
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Events")
     TArray<FString> GetEventMarkers() const;
     
@@ -80,7 +80,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Events")
     void JumpToPreviousEvent(};
     
-    // 視�??�制
+    // 視�X�制
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Camera")
     void SetFreeCameraMode(bool bFreeCamera};
     
@@ -106,14 +106,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Display")
     void ShowAPMGraph(bool bVisible};
     
-    // 導出?�能
+    // 導出?�能
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Export")
     void ExportCurrentFrameAsImage(const FString& FilePath};
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Export")
     void ExportTimeRangeAsVideo(float StartTime, float EndTime, const FString& FilePath};
     
-    // 事件委�?
+    // 事件委�?
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackStarted};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackPaused};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackStopped};

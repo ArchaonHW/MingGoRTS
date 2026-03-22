@@ -5,25 +5,25 @@
 #include "MingRTSCodexSystem.generated.h"
 
 /**
- * ?¾ç?æ¢ç›®é¡å?
+ * ????±ø¥ØÃş??
  */
 UENUM(BlueprintType)
 enum class ECodexEntryType : uint8
 {
-    GameBasics           UMETA(DisplayName = "?Šæˆ²?ºç?"),
-    FactionInfo          UMETA(DisplayName = "?¢å?ä»‹ç´¹"),
-    UnitInfo             UMETA(DisplayName = "?®ä??–é?"),
-    BuildingInfo         UMETA(DisplayName = "å»ºç?èªªæ?"),
-    Technology           UMETA(DisplayName = "ç§‘æ?æ¨?),
-    Historical           UMETA(DisplayName = "æ­·å²?Œæ™¯"),
-    Tutorial             UMETA(DisplayName = "?²é??™å­¸"),
-    Strategy             UMETA(DisplayName = "?°è?ç­–ç•¥"),
-    Achievement          UMETA(DisplayName = "?å°±èªªæ?"),
-    Lore                 UMETA(DisplayName = "ä¸–ç?è§€")
+    GameBasics           UMETA(DisplayName = "??À¸????"),
+    FactionInfo          UMETA(DisplayName = "????¤¶²Ğ"),
+    UnitInfo             UMETA(DisplayName = "???X???"),
+    BuildingInfo         UMETA(DisplayName = "«Ø??»¡??"),
+    Technology           UMETA(DisplayName = "¬ì????),
+    Historical           UMETA(DisplayName = "¾ú¥v??´º"),
+    Tutorial             UMETA(DisplayName = "???X?¾Ç"),
+    Strategy             UMETA(DisplayName = "????µ¦²¤"),
+    Achievement          UMETA(DisplayName = "??´N»¡??"),
+    Lore                 UMETA(DisplayName = "¥@??Æ[")
 };
 
 /**
- * ?¾ç?æ¢ç›®?¸æ?
+ * ????±ø¥Ø????
  */
 USTRUCT(BlueprintType)
 struct FCodexEntry
@@ -77,7 +77,7 @@ struct FCodexEntry
 };
 
 /**
- * ?¾ç?ç« ç?
+ * ????³¹??
  */
 USTRUCT(BlueprintType)
 struct FCodexSection
@@ -109,7 +109,7 @@ struct FCodexSection
 };
 
 /**
- * ?¾ç??¨æ›¸ç³»çµ± - ?Šæˆ²?§çŸ¥è­˜åº«
+ * ???X?®Ñ¨t²Î - ??À¸??ª¾ÃÑ®w
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSCodexSystem : public UObject
@@ -119,58 +119,58 @@ class MINGGORTS_API UMingRTSCodexSystem : public UObject
 public:
     UMingRTSCodexSystem(};
     
-    // ?å???    UFUNCTION(BlueprintCallable, Category = "Codex")
+    // ???X    UFUNCTION(BlueprintCallable, Category = "Codex")
     void InitializeCodexSystem(};
     
-    // ?²å??€?‰ç?ç¯€
+    // ???X?????¸`
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexSection> GetAllSections() const;
     
-    // ?²å??¹å?é¡å?æ¢ç›®
+    // ???X???Ãş??±ø¥Ø
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetEntriesByType(ECodexEntryType Type) const;
     
-    // ?²å??®å€‹æ???    UFUNCTION(BlueprintCallable, Category = "Codex")
+    // ???X?­Ó?X    UFUNCTION(BlueprintCallable, Category = "Codex")
     bool GetEntry(FName EntryID, FCodexEntry& OutEntry) const;
     
-    // ?œç´¢æ¢ç›®
+    // ??¯Á±ø¥Ø
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> SearchEntries(const FString& SearchQuery) const;
     
-    // ?¥ç?æ¢ç›®
+    // ????±ø¥Ø
     UFUNCTION(BlueprintCallable, Category = "Codex")
     void ViewEntry(FName EntryID};
     
-    // æª¢æŸ¥æ¢ç›®?¯å¦å·²è§£??    UFUNCTION(BlueprintCallable, Category = "Codex")
+    // ÀË¬d±ø¥Ø??§_¤w¸ÑX    UFUNCTION(BlueprintCallable, Category = "Codex")
     bool IsEntryUnlocked(FName EntryID) const;
     
-    // è§??æ¢ç›®
+    // ?X±ø¥Ø
     UFUNCTION(BlueprintCallable, Category = "Codex")
     void UnlockEntry(FName EntryID};
     
-    // ?²å??¨è–¦æ¢ç›®
+    // ???X?ÂË±ø¥Ø
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetRecommendedEntries() const;
     
-    // ?²å??€è¿‘æŸ¥??    UFUNCTION(BlueprintCallable, Category = "Codex")
+    // ???X?ªñ¬dX    UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetRecentlyViewed(int32 Count = 10) const;
     
-    // ?²å??±é?æ¢ç›®
+    // ???X???±ø¥Ø
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetPopularEntries(int32 Count = 10) const;
     
-    // ?‰æ?ç±¤é?æ¿?    UFUNCTION(BlueprintCallable, Category = "Codex")
+    // ????ÅÒ????    UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetEntriesByTag(const FString& Tag) const;
     
-    // ?²å??¸é?æ¢ç›®
+    // ???X???±ø¥Ø
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetRelatedEntries(FName EntryID) const;
     
-    // ä¿å?/è¼‰å…¥?±è?æ­·å²
+    // «O??/¸ü¤J????¾ú¥v
     void SaveViewHistory(};
     void LoadViewHistory(};
     
-    // äº‹ä»¶å§”è?
+    // ¨Æ¥ó©e??
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEntryViewed, FName, EntryID};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEntryUnlocked, FName, EntryID};
     

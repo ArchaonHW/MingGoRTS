@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -22,30 +22,30 @@ UENUM(BlueprintType)
 enum class EArtStyle : uint8
 {
     Realistic,         // 寫實風格
-    Anime,            // ?�漫風格
+    Anime,            // ?�漫風格
     OilPainting,      // 油畫風格
     Watercolor,       // 水彩風格
-    Sketch,           // 素�?風格
-    TraditionalChinese, // 中�??�統?�風
-    Military,         // 軍�?風格
+    Sketch,           // 素�?風格
+    TraditionalChinese, // 中�X�統?�風
+    Military,         // 軍�?風格
     Historical,       // 歷史風格
-    ConceptArt,      // 概念?��?
-    PixelArt         // ?��??��?
+    ConceptArt,      // 概念?��?
+    PixelArt         // ?��X��?
 };
 
 UENUM(BlueprintType)
 enum class EArtCategory : uint8
 {
-    Character,         // 角色設�?
-    Environment,       // ?�場設�?
-    Prop,             // ?�具設�?
-    Weapon,           // 武器設�?
-    Vehicle,          // 載具設�?
-    Architecture,     // 建�?設�?
-    UI,               // UI設�?
-    Icon,             // ?��?設�?
-    Texture,          // 紋�?設�?
-    Concept           // 概念設�?
+    Character,         // 角色設�?
+    Environment,       // ?�場設�?
+    Prop,             // ?�具設�?
+    Weapon,           // 武器設�?
+    Vehicle,          // 載具設�?
+    Architecture,     // 建�?設�?
+    UI,               // UI設�?
+    Icon,             // ?��?設�?
+    Texture,          // 紋�?設�?
+    Concept           // 概念設�?
 };
 
 USTRUCT(BlueprintType)
@@ -147,7 +147,7 @@ class MINGGORTS_API UMingGoRTSAIArtGenerator : public UObject
 public:
     UMingGoRTSAIArtGenerator(};
 
-    // 主�?繪�??��??�能
+    // 主�?繪�X��X�能
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void GenerateArt(const FArtGenerationParameters& Parameters};
 
@@ -160,28 +160,28 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     EArtGenerationStatus GetGenerationStatus() const { return CurrentStatus; }
 
-    // Stable Diffusion ?��?
+    // Stable Diffusion ?��?
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void SetStableDiffusionAPI(const FString& APIEndpoint, const FString& APIKey};
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     bool TestAPIConnection(};
 
-    // ControlNet ?�能
+    // ControlNet ?�能
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void SetControlNetImage(UTexture2D* ControlImage, const FString& Model};
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void ClearControlNetImage(};
 
-    // ?��??��?
+    // ?��X��?
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void GenerateArtBatch(const TArray<FArtGenerationParameters>& BatchParameters};
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void GenerateVariations(UTexture2D* SourceImage, int32 VariationCount = 4};
 
-    // ?��?後�???    UFUNCTION(BlueprintCallable, Category = "AI Art")
+    // ?��?後�X    UFUNCTION(BlueprintCallable, Category = "AI Art")
     UTexture2D* PostProcessImage(UTexture2D* SourceImage, const FArtPostProcessSettings& Settings};
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
@@ -196,7 +196,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     UTexture2D* FlipImage(UTexture2D* SourceImage, bool bHorizontal, bool bVertical};
 
-    // ?��?資產管�?
+    // ?��?資產管�?
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void AddToArtLibrary(UTexture2D* Art, const FString& ArtName};
 
@@ -209,14 +209,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void ClearArtLibrary(};
 
-    // ?�質?��?
+    // ?�質?��?
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     UMaterialInterface* GenerateMaterial(UTexture2D* BaseTexture, const FString& MaterialName};
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void GenerateTextureSet(const FArtGenerationParameters& Parameters, TArray<UTexture2D*>& OutTextures};
 
-    // ?�設風格
+    // ?�設風格
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     FArtGenerationParameters GetRepublicanEraCharacterStyle(};
 
@@ -229,14 +229,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     FArtGenerationParameters GetTraditionalChineseStyle(};
 
-    // ?��?導出
+    // ?��?導出
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void ExportArt(UTexture2D* Art, const FString& FilePath};
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void ExportArtBatch(const TArray<UTexture2D*>& Arts, const FString& DirectoryPath};
 
-    // 委�?事件
+    // 委�?事件
     UPROPERTY(BlueprintAssignable, Category = "AI Art")
     FOnArtGenerated OnArtGenerated;
 

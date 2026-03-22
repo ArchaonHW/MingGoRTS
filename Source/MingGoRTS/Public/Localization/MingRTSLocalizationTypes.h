@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,19 +9,19 @@ UENUM(BlueprintType)
 enum class EMingRTSLanguage : uint8
 {
     English, UMETA(DisplayName = "English"),
-    SimplifiedChinese, UMETA(DisplayName = "简体中??),
+    SimplifiedChinese, UMETA(DisplayName = "简体中X),
     TraditionalChinese, UMETA(DisplayName = "繁?中?"),
     Japanese, UMETA(DisplayName = "?本?),
-    Korean, UMETA(DisplayName = "?국??),
+    Korean, UMETA(DisplayName = "?국X),
     French, UMETA(DisplayName = "Français"),
     German, UMETA(DisplayName = "Deutsch"),
     Spanish, UMETA(DisplayName = "Español"),
     Italian, UMETA(DisplayName = "Italiano"),
-    Russian, UMETA(DisplayName = "????кий"),
+    Russian, UMETA(DisplayName = "Xкий"),
     Arabic, UMETA(DisplayName = "ا?عرب?ة"),
     Portuguese, UMETA(DisplayName = "Português"),
     Hindi, UMETA(DisplayName = "हिन?द?"),
-    Thai, UMETA(DisplayName = "ไ??),
+    Thai, UMETA(DisplayName = "ไX),
     Vietnamese, UMETA(DisplayName = "Tiếng Việt"),
     Indonesian, UMETA(DisplayName = "Bahasa Indonesia"),
     Turkish, UMETA(DisplayName = "Türkçe"),
@@ -92,12 +92,12 @@ UENUM(BlueprintType)
 enum class EMingCurrencySymbol : uint8
 {
     USD, UMETA(DisplayName = "$"),
-    EUR, UMETA(DisplayName = "??),
+    EUR, UMETA(DisplayName = "X),
     GBP, UMETA(DisplayName = "£"),
     JPY, UMETA(DisplayName = "¥"),
     CNY, UMETA(DisplayName = "¥"),
-    KRW, UMETA(DisplayName = "??),
-    INR, UMETA(DisplayName = "??),
+    KRW, UMETA(DisplayName = "X),
+    INR, UMETA(DisplayName = "X),
     Custom, UMETA(DisplayName = "Custom"),
     Max, UMETA(Hidden)
 };

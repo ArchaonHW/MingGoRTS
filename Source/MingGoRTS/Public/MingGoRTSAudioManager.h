@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -92,7 +92,7 @@ class MINGGORTS_API UMingGoRTSAudioManager : public UObject
 public:
     UMingGoRTSAudioManager(};
 
-    // ?≥Ë?ÁÆ°Á?
+    // ?ÔøΩÔøΩ?ÁÆ°ÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void AddAudioTrack(const FAudioTrack& Track};
 
@@ -108,7 +108,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     bool GetAudioTrack(const FString& TrackName, FAudioTrack& OutTrack};
 
-    // ?≥Ë??ßÂà∂
+    // ?ÔøΩÔøΩXÔøΩÂà∂
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void SetTrackVolume(const FString& TrackName, float Volume};
 
@@ -121,7 +121,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void SetTrackLoop(const FString& TrackName, bool bLoop};
 
-    // Ê∑∑Èü≥?üËÉΩ
+    // Ê∑∑Èü≥?ÔøΩËÉΩ
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void StartAudioMixing(};
 
@@ -137,7 +137,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     FAudioMixSettings GetMixSettings() const { return MixSettings; }
 
-    // ÂØ¶Ê?Ê∑∑Èü≥
+    // ÂØ¶ÔøΩ?Ê∑∑Èü≥
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void PlayMixedAudio(};
 
@@ -150,7 +150,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     bool IsMixedAudioPlaying() const;
 
-    // ?≥Ê??ÜÈ?
+    // ?ÔøΩÔøΩXÔøΩÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void PlayMusicTrack(USoundWave* Music, float Volume = 1.0f};
 
@@ -160,21 +160,21 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void PlayVoiceTrack(USoundWave* Voice, float Volume = 1.0f};
 
-    // ?≥È†ªÂ∞éÂá∫
+    // ?ÔøΩÈ†ªÂ∞éÂá∫
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void ExportMixedAudio(const FString& FilePath};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     USoundWave* GetMixedAudioResult() const { return MixedAudioResult; }
 
-    // ?≥È†ª?ÜÊ?
+    // ?ÔøΩÈ†ª?ÔøΩÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     float GetAudioDuration(USoundWave* SoundWave) const;
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void AnalyzeAudio(USoundWave* SoundWave, float& OutRMS, float& OutPeak};
 
-    // ÂßîÊ?‰∫ã‰ª∂
+    // ÂßîÔøΩ?‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "Audio Manager")
     FOnAudioMixCompleted OnAudioMixCompleted;
 
@@ -203,7 +203,7 @@ protected:
     UPROPERTY()
     float MixingProgress;
 
-    // Ê≥®Ê?ÔºöÈ?UObjectÈ°ûÂ?‰∏çËÉΩ?®UPROPERTY
+    // Ê≥®ÔøΩ?ÔºöÔøΩ?UObjectÈ°ûÔøΩ?‰∏çËÉΩ?ÔøΩUPROPERTY
     FTickerDelegate MixingTicker;
     FDelegateHandle MixingTickerHandle;
 

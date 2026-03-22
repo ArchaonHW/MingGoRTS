@@ -1,49 +1,49 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSReplaySystem.generated.h"
 
 /**
- * ?æ”¾äº‹ä»¶é¡å?
+ * ?ï¿½æ”¾äº‹ä»¶é¡ï¿½?
  */
 UENUM(BlueprintType)
 enum class EReplayEventType : uint8
 {
-    None                    UMETA(DisplayName = "??),
-    UnitSpawn               UMETA(DisplayName = "?®ä??Ÿæ?"),
-    UnitMove                UMETA(DisplayName = "?®ä?ç§»å?"),
-    UnitAttack              UMETA(DisplayName = "?®ä??»æ?"),
-    UnitDeath               UMETA(DisplayName = "?®ä?æ­»äº¡"),
-    BuildingConstruct       UMETA(DisplayName = "å»ºç?å»ºé€?),
-    BuildingDestroy         UMETA(DisplayName = "å»ºç??§æ?"),
-    ResourceGather          UMETA(DisplayName = "è³‡æ??¶é?"),
-    TechnologyResearch      UMETA(DisplayName = "ç§‘æ??”ç©¶"),
-    CommandIssued           UMETA(DisplayName = "?½ä»¤ä¸‹é?"),
-    CameraMove              UMETA(DisplayName = "è¦–è?ç§»å?"),
-    GamePause               UMETA(DisplayName = "?Šæˆ²?«å?"),
-    GameResume              UMETA(DisplayName = "?Šæˆ²?¢å¾©"),
-    ChatMessage             UMETA(DisplayName = "?Šå¤©æ¶ˆæ¯"),
-    Victory                 UMETA(DisplayName = "?åˆ©"),
-    Defeat                  UMETA(DisplayName = "å¤±æ?"),
-    Custom                  UMETA(DisplayName = "?ªå?ç¾?)
+    None                    UMETA(DisplayName = "X),
+    UnitSpawn               UMETA(DisplayName = "?ï¿½ï¿½Xï¿½ï¿½?"),
+    UnitMove                UMETA(DisplayName = "?ï¿½ï¿½?ç§»ï¿½?"),
+    UnitAttack              UMETA(DisplayName = "?ï¿½ï¿½Xï¿½ï¿½?"),
+    UnitDeath               UMETA(DisplayName = "?ï¿½ï¿½?æ­»äº¡"),
+    BuildingConstruct       UMETA(DisplayName = "å»ºï¿½?å»ºï¿½?),
+    BuildingDestroy         UMETA(DisplayName = "å»ºï¿½Xï¿½ï¿½?"),
+    ResourceGather          UMETA(DisplayName = "è³‡ï¿½Xï¿½ï¿½?"),
+    TechnologyResearch      UMETA(DisplayName = "ç§‘ï¿½Xï¿½ç©¶"),
+    CommandIssued           UMETA(DisplayName = "?ï¿½ä»¤ä¸‹ï¿½?"),
+    CameraMove              UMETA(DisplayName = "è¦–ï¿½?ç§»ï¿½?"),
+    GamePause               UMETA(DisplayName = "?ï¿½æˆ²?ï¿½ï¿½?"),
+    GameResume              UMETA(DisplayName = "?ï¿½æˆ²?ï¿½å¾©"),
+    ChatMessage             UMETA(DisplayName = "?ï¿½å¤©æ¶ˆæ¯"),
+    Victory                 UMETA(DisplayName = "?ï¿½åˆ©"),
+    Defeat                  UMETA(DisplayName = "å¤±ï¿½?"),
+    Custom                  UMETA(DisplayName = "?ï¿½ï¿½?ï¿½?)
 };
 
 /**
- * ?æ”¾?€?? */
+ * ?ï¿½æ”¾?ï¿½X */
 UENUM(BlueprintType)
 enum class EReplayState : uint8
 {
-    Idle                    UMETA(DisplayName = "?’ç½®"),
-    Recording               UMETA(DisplayName = "?„è£½ä¸?),
-    Playing                 UMETA(DisplayName = "?­æ”¾ä¸?),
-    Paused                  UMETA(DisplayName = "?«å?"),
-    Finished                UMETA(DisplayName = "å®Œæ?"),
-    Error                   UMETA(DisplayName = "?¯èª¤")
+    Idle                    UMETA(DisplayName = "?ï¿½ç½®"),
+    Recording               UMETA(DisplayName = "?ï¿½è£½ï¿½?),
+    Playing                 UMETA(DisplayName = "?ï¿½æ”¾ï¿½?),
+    Paused                  UMETA(DisplayName = "?ï¿½ï¿½?"),
+    Finished                UMETA(DisplayName = "å®Œï¿½?"),
+    Error                   UMETA(DisplayName = "?ï¿½èª¤")
 };
 
 /**
- * ?æ”¾å¹€?¸æ?
+ * ?ï¿½æ”¾å¹€?ï¿½ï¿½?
  */
 USTRUCT(BlueprintType)
 struct FReplayFrame
@@ -69,7 +69,7 @@ struct FReplayFrame
 };
 
 /**
- * ?æ”¾äº‹ä»¶
+ * ?ï¿½æ”¾äº‹ä»¶
  */
 USTRUCT(BlueprintType)
 struct FReplayEvent
@@ -108,7 +108,7 @@ struct FReplayEvent
 };
 
 /**
- * ?æ”¾?ƒæ•¸?? */
+ * ?ï¿½æ”¾?ï¿½æ•¸X */
 USTRUCT(BlueprintType)
 struct FReplayMetadata
 {
@@ -159,7 +159,7 @@ struct FReplayMetadata
 };
 
 /**
- * ?æ”¾ç³»çµ± - è¨˜é??Œå??¾é??²å?å±€
+ * ?ï¿½æ”¾ç³»çµ± - è¨˜ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?å±€
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSReplaySystem : public UObject
@@ -169,83 +169,83 @@ class MINGGORTS_API UMingRTSReplaySystem : public UObject
 public:
     UMingRTSReplaySystem(};
     
-    // ?å???    UFUNCTION(BlueprintCallable, Category = "Replay")
+    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Replay")
     void InitializeReplaySystem(};
     
-    // ?‹å??„è£½
+    // ?ï¿½ï¿½Xï¿½è£½
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void StartRecording(const FString& MatchID, const FString& MapName};
     
-    // ?œæ­¢?„è£½
+    // ?ï¿½æ­¢?ï¿½è£½
     UFUNCTION(BlueprintCallable, Category = "Replay")
     FReplayMetadata StopRecording(};
     
-    // ?‹å??æ”¾
+    // ?ï¿½ï¿½Xï¿½æ”¾
     UFUNCTION(BlueprintCallable, Category = "Replay")
     bool StartPlayback(const FString& ReplayID};
     
-    // ?œæ­¢?æ”¾
+    // ?ï¿½æ­¢?ï¿½æ”¾
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void StopPlayback(};
     
-    // ?«å?/?¢å¾©?æ”¾
+    // ?ï¿½ï¿½?/?ï¿½å¾©?ï¿½æ”¾
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void PausePlayback(};
     
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void ResumePlayback(};
     
-    // è¨­ç½®?æ”¾?Ÿåº¦
+    // è¨­ç½®?ï¿½æ”¾?ï¿½åº¦
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void SetPlaybackSpeed(float Speed};
     
-    // è·³è??°æ?å®šæ???    UFUNCTION(BlueprintCallable, Category = "Replay")
+    // è·³ï¿½Xï¿½ï¿½?å®šï¿½X    UFUNCTION(BlueprintCallable, Category = "Replay")
     void SeekToTime(float TimeInSeconds};
     
-    // è·³è??°æ?å®šå?
+    // è·³ï¿½Xï¿½ï¿½?å®šï¿½?
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void SeekToFrame(int32 FrameNumber};
     
-    // è¨˜é?äº‹ä»¶
+    // è¨˜ï¿½?äº‹ä»¶
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void RecordEvent(EReplayEventType Type, const FString& PlayerID, const FVector& Location, 
                      const TArray<uint8>& Data, const FString& Description};
     
-    // è¨˜é?å¹€?¸æ?
+    // è¨˜ï¿½?å¹€?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void RecordFrame(const TArray<uint8>& GameStateData};
     
-    // ?²å??æ”¾?—è¡¨
+    // ?ï¿½ï¿½Xï¿½æ”¾?ï¿½è¡¨
     UFUNCTION(BlueprintCallable, Category = "Replay")
     TArray<FReplayMetadata> GetReplayList() const;
     
-    // ?ªé™¤?æ”¾
+    // ?ï¿½é™¤?ï¿½æ”¾
     UFUNCTION(BlueprintCallable, Category = "Replay")
     bool DeleteReplay(const FString& ReplayID};
     
-    // å°å‡º?æ”¾
+    // å°å‡º?ï¿½æ”¾
     UFUNCTION(BlueprintCallable, Category = "Replay")
     bool ExportReplay(const FString& ReplayID, const FString& FilePath};
     
-    // å°å…¥?æ”¾
+    // å°å…¥?ï¿½æ”¾
     UFUNCTION(BlueprintCallable, Category = "Replay")
     FReplayMetadata ImportReplay(const FString& FilePath};
     
-    // ?²å??¶å??æ”¾?€??    UFUNCTION(BlueprintCallable, Category = "Replay")
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ”¾?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Replay")
     EReplayState GetReplayState() const;
     
-    // ?²å??¶å??æ”¾?‚é?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ”¾?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Replay")
     float GetCurrentPlaybackTime() const;
     
-    // ?²å??¶å??æ”¾å¹€
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ”¾å¹€
     UFUNCTION(BlueprintCallable, Category = "Replay")
     int32 GetCurrentPlaybackFrame() const;
     
-    // ?²å??æ”¾ç¸½æ???    UFUNCTION(BlueprintCallable, Category = "Replay")
+    // ?ï¿½ï¿½Xï¿½æ”¾ç¸½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Replay")
     float GetTotalDuration() const;
     
-    // äº‹ä»¶å§”è?
+    // äº‹ä»¶å§”ï¿½?
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReplayStarted};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReplayStopped};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReplayPaused};

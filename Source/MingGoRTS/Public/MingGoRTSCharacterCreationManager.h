@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -47,46 +47,46 @@ class MINGGORTS_API UMingGoRTSCharacterCreationManager : public UObject
 public:
     UMingGoRTSCharacterCreationManager(};
 
-    // è§’è‰²?µå»ºäº‹ä»¶
+    // è§’è‰²?ï¿½å»ºäº‹ä»¶
     UPROPERTY(BlueprintAssignable, Category = "Character Creation")
     FOnCharacterCreated OnCharacterCreated;
 
-    // ?µå»ºè§’è‰²
+    // ?ï¿½å»ºè§’è‰²
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     bool CreateCharacter(const FMingCharacterData& CharacterData};
 
-    // é©—è?è§’è‰²?¸æ?
+    // é©—ï¿½?è§’è‰²?ï¿½ï¿½?
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     bool ValidateCharacterData(const FMingCharacterData& CharacterData};
 
-    // ?²å??Œæ™¯?è¿°
+    // ?ï¿½ï¿½Xï¿½æ™¯?ï¿½è¿°
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     FString GetBackgroundDescription(ECharacterBackground Background};
 
-    // ?²å??¨è–¦?„å?å§‹æ???    UFUNCTION(BlueprintPure, Category = "Character Creation")
+    // ?ï¿½ï¿½Xï¿½è–¦?ï¿½ï¿½?å§‹ï¿½X    UFUNCTION(BlueprintPure, Category = "Character Creation")
     TArray<FCharacterSkill> GetRecommendedSkills(ECharacterBackground Background};
 
-    // ä¿å?è§’è‰²?°å?æª?    UFUNCTION(BlueprintCallable, Category = "Character Creation")
+    // ä¿ï¿½?è§’è‰²?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Character Creation")
     bool SaveCharacterToSlot(const FMingCharacterData& CharacterData, const FString& SlotName};
 
-    // å¾å?æª”è??¥è???    UFUNCTION(BlueprintCallable, Category = "Character Creation")
+    // å¾ï¿½?æª”ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Character Creation")
     bool LoadCharacterFromSlot(const FString& SlotName, FMingCharacterData& OutCharacterData};
 
-    // æª¢æŸ¥è§’è‰²?ç¨±?¯å¦?¯ç”¨
+    // æª¢æŸ¥è§’è‰²?ï¿½ç¨±?ï¿½å¦?ï¿½ç”¨
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     bool IsCharacterNameAvailable(const FString& CharacterName};
 
-    // ?Ÿæ??¨æ?è§’è‰²?ç¨±
+    // ?ï¿½ï¿½Xï¿½ï¿½?è§’è‰²?ï¿½ç¨±
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     FString GenerateRandomCharacterName(};
 
 protected:
-    // ?§éƒ¨é©—è??½æ•¸
+    // ?ï¿½éƒ¨é©—ï¿½Xï¿½æ•¸
     bool ValidateName(const FString& Name};
     bool ValidateAttributes(const FCharacterAttributes& Attributes};
     bool ValidateAge(int32 InAge};
 
-    // ?å?ç¾©ç?è§’è‰²?ç¨±æ±?    UPROPERTY()
+    // ?ï¿½ï¿½?ç¾©ï¿½?è§’è‰²?ï¿½ç¨±ï¿½?    UPROPERTY()
     TArray<FString> MaleNames;
 
     UPROPERTY()
@@ -95,13 +95,13 @@ protected:
     UPROPERTY()
     TArray<FString> Surnames;
 
-    // ?å??–å?ç¨±æ?
+    // ?ï¿½ï¿½Xï¿½ï¿½?ç¨±ï¿½?
     void InitializeNamePools(};
 
-    // ?²å??¨æ?å§“æ?
+    // ?ï¿½ï¿½Xï¿½ï¿½?å§“ï¿½?
     FString GetRandomSurname(};
 
-    // ?²å??¨æ??å?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     FString GetRandomGivenName(bool bIsMale};
 };
 

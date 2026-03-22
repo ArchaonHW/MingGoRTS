@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,27 +7,27 @@
 UENUM(BlueprintType)
 enum class EEmotionType : uint8
 {
-    Joy,            // ?œæ?
-    Sadness,        // ?²å‚·
-    Anger,          // ?¤æ€?    Fear,           // ?æ‡¼
-    Surprise,       // é©šè?
-    Disgust,        // ?­æƒ¡
+    Joy,            // ?ï¿½ï¿½?
+    Sadness,        // ?ï¿½å‚·
+    Anger,          // ?ï¿½ï¿½?    Fear,           // ?ï¿½æ‡¼
+    Surprise,       // é©šï¿½?
+    Disgust,        // ?ï¿½æƒ¡
     Trust,          // ä¿¡ä»»
-    Anticipation,   // ?Ÿå?
-    Love,           // ??    Optimism,       // æ¨‚è?
-    Pessimism,      // ?²è?
-    Anxiety,        // ?¦æ…®
-    Calm,           // å¹³é?
-    Excitement,     // ?ˆå¥®
+    Anticipation,   // ?ï¿½ï¿½?
+    Love,           // X    Optimism,       // æ¨‚ï¿½?
+    Pessimism,      // ?ï¿½ï¿½?
+    Anxiety,        // ?ï¿½æ…®
+    Calm,           // å¹³ï¿½?
+    Excitement,     // ?ï¿½å¥®
     Contentment     // æ»¿è¶³
 };
 
 UENUM(BlueprintType)
 enum class EEmotionIntensity : uint8
 {
-    VeryLow,        // å¾ˆä?
-    Low,            // ä½?    Medium,         // ä¸­ç?
-    High,           // é«?    VeryHigh,       // å¾ˆé?
+    VeryLow,        // å¾ˆï¿½?
+    Low,            // ï¿½?    Medium,         // ä¸­ï¿½?
+    High,           // ï¿½?    VeryHigh,       // å¾ˆï¿½?
     Extreme         // æ¥µç«¯
 };
 
@@ -58,7 +58,7 @@ struct FEmotionalState
         EmotionalStability = 0.5f;
         LastUpdated = FDateTime::Now(};
         
-        // ?å??–æ??‰æ??Ÿç‚ºä¸­æ€§å€?        for (int32 i = 0; i < 15; i++)
+        // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ç‚ºä¸­æ€§ï¿½?        for (int32 i = 0; i < 15; i++)
         {
             Emotions.Add((EEmotionType)i, 0.5f};
         }
@@ -172,7 +172,7 @@ struct FEmotionalProfile
         EmotionalSensitivity = 0.5f;
         EmotionalVolatility = 0.3f;
         
-        // ?å??–åŸºç¤æ???        for (int32 i = 0; i < 15; i++)
+        // ?ï¿½ï¿½Xï¿½åŸºç¤ï¿½X        for (int32 i = 0; i < 15; i++)
         {
             BaseEmotions.Add((EEmotionType)i, 0.5f};
         }
@@ -184,7 +184,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnEmotionalTrigger, const FStrin
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEmotionalResponse, const FString&, EntityID, const FEmotionalResponse&, Response};
 
 /**
- * ?…æ?AIå¼•æ? - ?…æ?è­˜åˆ¥?Œå??‰ç³»çµ? * ?ä??ºæ–¼?…æ??„AIè¡Œç‚ºèª¿æ•´?Œç©å®¶æ??Ÿå??? */
+ * ?ï¿½ï¿½?AIå¼•ï¿½? - ?ï¿½ï¿½?è­˜åˆ¥?ï¿½ï¿½Xï¿½ç³»ï¿½? * ?ï¿½ï¿½Xï¿½æ–¼?ï¿½ï¿½Xï¿½AIè¡Œç‚ºèª¿æ•´?ï¿½ç©å®¶ï¿½Xï¿½ï¿½X */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSEmotionalAIEngine : public UObject
 {
@@ -193,34 +193,34 @@ class MINGGORTS_API UMingRTSEmotionalAIEngine : public UObject
 public:
     UMingRTSEmotionalAIEngine(};
 
-    // ç³»çµ±?å???    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
+    // ç³»çµ±?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     void InitializeEmotionalEngine(};
 
-    // ?µå»º?…æ?æª”æ?
+    // ?ï¿½å»º?ï¿½ï¿½?æª”ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     FEmotionalProfile CreateEmotionalProfile(const FString& ProfileID, const FString& ProfileName};
 
-    // ?†æ??©å®¶?…æ?
+    // ?ï¿½ï¿½Xï¿½å®¶?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     FEmotionalState AnalyzePlayerEmotion(const FString& PlayerID, const TArray<FString>& InputData};
 
-    // ?´æ–°?…æ??€??    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
+    // ?ï¿½æ–°?ï¿½ï¿½Xï¿½X    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     void UpdateEmotionalState(const FString& EntityID, const FEmotionalTrigger& Trigger};
 
-    // ?Ÿæ??…æ??æ?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     FEmotionalResponse GenerateEmotionalResponse(const FString& EntityID, const FEmotionalState& CurrentState};
 
-    // è¨­ç½®?…æ?è§¸ç™¼??    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
+    // è¨­ç½®?ï¿½ï¿½?è§¸ç™¼X    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     void SetEmotionalTrigger(const FString& EntityID, const FEmotionalTrigger& Trigger};
 
-    // ?²å??…æ??€??    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½X    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     FEmotionalState GetEmotionalState(const FString& EntityID) const;
 
-    // è¨ˆç??…æ??¸ä¼¼åº?    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
+    // è¨ˆï¿½Xï¿½ï¿½Xï¿½ä¼¼ï¿½?    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     float CalculateEmotionalSimilarity(const FEmotionalState& State1, const FEmotionalState& State2) const;
 
-    // ?æ¸¬?…æ?è®Šå?
+    // ?ï¿½æ¸¬?ï¿½ï¿½?è®Šï¿½?
     UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     FEmotionalState PredictEmotionalChange(const FString& EntityID, const TArray<FEmotionalTrigger>& PotentialTriggers) const;
 
@@ -228,18 +228,18 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     void AdjustAIBehavior(const FString& AIID, const FEmotionalState& EmotionalState};
 
-    // ?…æ?å­¸ç?
+    // ?ï¿½ï¿½?å­¸ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     void LearnEmotionalPatterns(const FString& PlayerID, const TArray<FEmotionalState>& HistoricalStates};
 
-    // ?²å??…æ?çµ±è?
+    // ?ï¿½ï¿½Xï¿½ï¿½?çµ±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     TMap<FString, float> GetEmotionalStatistics(const FString& EntityID) const;
 
-    // ?ç½®?…æ??€??    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
+    // ?ï¿½ç½®?ï¿½ï¿½Xï¿½X    UFUNCTION(BlueprintCallable, Category = "Emotional AI")
     void ResetEmotionalState(const FString& EntityID};
 
-    // äº‹ä»¶å§”æ?
+    // äº‹ä»¶å§”ï¿½?
     UPROPERTY(BlueprintAssignable)
     FOnEmotionChanged OnEmotionChanged;
 
@@ -250,7 +250,7 @@ public:
     FOnEmotionalResponse OnEmotionalResponse;
 
 protected:
-    // ?…æ??ƒæ•¸
+    // ?ï¿½ï¿½Xï¿½æ•¸
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Emotion Parameters")
     float EmotionalDecayRate;
 
@@ -263,48 +263,48 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Emotion Parameters")
     int32 MaxEmotionalHistory;
 
-    // ?…æ??€?‹å???    UPROPERTY(BlueprintReadOnly, Category = "Emotion Data")
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Emotion Data")
     TMap<FString, FEmotionalState> EmotionalStates;
 
-    // ?…æ?æª”æ?å­˜å„²
+    // ?ï¿½ï¿½?æª”ï¿½?å­˜å„²
     UPROPERTY(BlueprintReadOnly, Category = "Emotion Data")
     TMap<FString, FEmotionalProfile> EmotionalProfiles;
 
-    // ?…æ?è§¸ç™¼?¨å???    UPROPERTY(BlueprintReadOnly, Category = "Emotion Data")
+    // ?ï¿½ï¿½?è§¸ç™¼?ï¿½ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Emotion Data")
     TMap<FString, TArray<FEmotionalTrigger>> EmotionalTriggers;
 
-    // ?…æ??æ?æ¨¡æ¿
+    // ?ï¿½ï¿½Xï¿½ï¿½?æ¨¡æ¿
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Emotion Templates")
     TArray<FEmotionalResponse> ResponseTemplates;
 
-    // ?…æ?æ­·å²è¨˜é?
+    // ?ï¿½ï¿½?æ­·å²è¨˜ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Emotion Data")
     TMap<FString, TArray<FEmotionalState>> EmotionalHistory;
 
 private:
-    // ?§éƒ¨?…æ??•ç??è¼¯
+    // ?ï¿½éƒ¨?ï¿½ï¿½Xï¿½ï¿½Xï¿½è¼¯
     void ProcessEmotionalTrigger(const FString& EntityID, const FEmotionalTrigger& Trigger};
     void ApplyEmotionalDecay(const FString& EntityID, float DeltaTime};
     void UpdateDominantEmotion(FEmotionalState& State};
     void CalculateOverallIntensity(FEmotionalState& State};
     
-    // ?…æ??†æ?ç®—æ?
+    // ?ï¿½ï¿½Xï¿½ï¿½?ç®—ï¿½?
     float AnalyzeTextEmotion(const FString& Text, EEmotionType TargetEmotion) const;
     float AnalyzeBehaviorEmotion(const TArray<FString>& Behaviors, EEmotionType TargetEmotion) const;
     float AnalyzeContextEmotion(const FString& Context, EEmotionType TargetEmotion) const;
     
-    // ?…æ??æ??Ÿæ?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     FEmotionalResponse GenerateTextResponse(const FEmotionalState& State) const;
     FEmotionalResponse GenerateAudioResponse(const FEmotionalState& State) const;
     FEmotionalResponse GenerateVisualResponse(const FEmotionalState& State) const;
     
-    // è¼”åŠ©?½æ•¸
+    // è¼”åŠ©?ï¿½æ•¸
     FString GetEmotionName(EEmotionType Emotion) const;
     float GetEmotionWeight(EEmotionType Emotion) const;
     bool IsEmotionCompatible(EEmotionType Emotion1, EEmotionType Emotion2) const;
     void RecordEmotionalState(const FString& EntityID, const FEmotionalState& State};
     
-    // ?…æ??³æ’­
+    // ?ï¿½ï¿½Xï¿½æ’­
     void ProcessEmotionalContagion(const FString& EntityID};
     TArray<FString> GetNearbyEntities(const FString& EntityID) const;
     void TransferEmotion(const FString& FromEntity, const FString& ToEntity, float TransferAmount};

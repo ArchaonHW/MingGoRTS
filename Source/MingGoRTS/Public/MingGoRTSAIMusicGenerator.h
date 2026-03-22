@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -21,23 +21,23 @@ enum class EMusicGenerationStatus : uint8
 UENUM(BlueprintType)
 enum class EMusicStyle : uint8
 {
-    Orchestral,        // ç®¡å¼¦æ¨?    TraditionalChinese, // ä¸­å??³çµ±?³æ?
-    Military,          // è»ä??³æ?
-    Ambient,           // ?°å??³æ?
-    Battle,            // ?°é¬¥?³æ?
-    Cinematic,         // ?»å½±?æ?
-    Victory,           // ?åˆ©?³æ?
-    Suspense           // ?¸ç??³æ?
+    Orchestral,        // ç®¡å¼¦ï¿½?    TraditionalChinese, // ä¸­ï¿½Xï¿½çµ±?ï¿½ï¿½?
+    Military,          // è»ï¿½Xï¿½ï¿½?
+    Ambient,           // ?ï¿½ï¿½Xï¿½ï¿½?
+    Battle,            // ?ï¿½é¬¥?ï¿½ï¿½?
+    Cinematic,         // ?ï¿½å½±?ï¿½ï¿½?
+    Victory,           // ?ï¿½åˆ©?ï¿½ï¿½?
+    Suspense           // ?ï¿½ï¿½Xï¿½ï¿½?
 };
 
 UENUM(BlueprintType)
 enum class ESoundEffectType : uint8
 {
-    Explosion,         // ?†ç‚¸
+    Explosion,         // ?ï¿½ç‚¸
     Gunshot,           // æ§è²
-    SwordClash,        // ?æ?
-    Footsteps,         // ?³æ­¥??    Vehicle,           // è¼‰å…·??    Nature,            // ?ªç„¶?³æ?
-    Interface,         // ?Œé¢?³æ?
+    SwordClash,        // ?ï¿½ï¿½?
+    Footsteps,         // ?ï¿½æ­¥X    Vehicle,           // è¼‰å…·X    Nature,            // ?ï¿½ç„¶?ï¿½ï¿½?
+    Interface,         // ?ï¿½é¢?ï¿½ï¿½?
     Voice              // èªéŸ³
 };
 
@@ -113,7 +113,7 @@ class MINGGORTS_API UMingGoRTSAIMusicGenerator : public UObject
 public:
     UMingGoRTSAIMusicGenerator(};
 
-    // ä¸»è??³æ??Ÿæ??Ÿèƒ½
+    // ä¸»ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½èƒ½
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void GenerateMusic(const FMusicGenerationParameters& Parameters};
 
@@ -129,14 +129,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     EMusicGenerationStatus GetGenerationStatus() const { return CurrentStatus; }
 
-    // AIVA API ?´å?
+    // AIVA API ?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void SetAIVAAPI(const FString& APIEndpoint, const FString& APIKey};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     bool TestAIVAConnection(};
 
-    // ?³æ?åº«ç®¡??    UFUNCTION(BlueprintCallable, Category = "AI Music")
+    // ?ï¿½ï¿½?åº«ç®¡X    UFUNCTION(BlueprintCallable, Category = "AI Music")
     void AddToMusicLibrary(USoundWave* Music, const FString& MusicName};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
@@ -148,7 +148,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void ClearMusicLibrary(};
 
-    // ?³æ??­æ”¾?§åˆ¶
+    // ?ï¿½ï¿½Xï¿½æ”¾?ï¿½åˆ¶
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void PlayGeneratedMusic(};
 
@@ -164,21 +164,21 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     bool IsMusicPlaying() const;
 
-    // ?³æ??­æ”¾
+    // ?ï¿½ï¿½Xï¿½æ”¾
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void PlaySoundEffect(USoundWave* SoundEffect, const FVector& Location = FVector::ZeroVector};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void PlaySoundEffect2D(USoundWave* SoundEffect};
 
-    // ?¹é??Ÿæ?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void GenerateMusicPack(const TArray<FMusicGenerationParameters>& MusicParameters};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void GenerateSoundEffectPack(const TArray<FSoundEffectParameters>& SFXParameters};
 
-    // ?è¨­é¢¨æ ¼
+    // ?ï¿½è¨­é¢¨æ ¼
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     FMusicGenerationParameters GetRepublicanEraStyle(};
 
@@ -188,7 +188,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     FMusicGenerationParameters GetAmbientStyle(};
 
-    // å§”æ?äº‹ä»¶
+    // å§”ï¿½?äº‹ä»¶
     UPROPERTY(BlueprintAssignable, Category = "AI Music")
     FOnMusicGenerated OnMusicGenerated;
 

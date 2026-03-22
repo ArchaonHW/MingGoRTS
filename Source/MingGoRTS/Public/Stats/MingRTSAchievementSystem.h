@@ -1,40 +1,40 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSAchievementSystem.generated.h"
 
 /**
- * ?å°±ç¨€?‰åº¦
+ * ?ï¿½å°±ç¨€?ï¿½åº¦
  */
 UENUM(BlueprintType)
 enum class EAchievementRarity : uint8
 {
-    Common          UMETA(DisplayName = "?®é€?),
-    Uncommon        UMETA(DisplayName = "ç¨€??),
-    Rare            UMETA(DisplayName = "?²è©©"),
-    Epic            UMETA(DisplayName = "?³èªª"),
+    Common          UMETA(DisplayName = "?ï¿½ï¿½?),
+    Uncommon        UMETA(DisplayName = "ç¨€X),
+    Rare            UMETA(DisplayName = "?ï¿½è©©"),
+    Epic            UMETA(DisplayName = "?ï¿½èªª"),
     Legendary       UMETA(DisplayName = "ç¥è©±")
 };
 
 /**
- * ?å°±é¡å?
+ * ?ï¿½å°±é¡ï¿½?
  */
 UENUM(BlueprintType)
 enum class EAchievementType : uint8
 {
-    Campaign        UMETA(DisplayName = "?°å½¹?å°±"),
-    Combat          UMETA(DisplayName = "?°é¬¥?å°±"),
-    Economic        UMETA(DisplayName = "ç¶“æ??å°±"),
-    Strategic       UMETA(DisplayName = "ç­–ç•¥?å°±"),
-    Collection      UMETA(DisplayName = "?¶é??å°±"),
-    Social          UMETA(DisplayName = "ç¤¾äº¤?å°±"),
-    Challenge       UMETA(DisplayName = "?‘æˆ°?å°±"),
-    Hidden          UMETA(DisplayName = "?±è??å°±")
+    Campaign        UMETA(DisplayName = "?ï¿½å½¹?ï¿½å°±"),
+    Combat          UMETA(DisplayName = "?ï¿½é¬¥?ï¿½å°±"),
+    Economic        UMETA(DisplayName = "ç¶“ï¿½Xï¿½å°±"),
+    Strategic       UMETA(DisplayName = "ç­–ç•¥?ï¿½å°±"),
+    Collection      UMETA(DisplayName = "?ï¿½ï¿½Xï¿½å°±"),
+    Social          UMETA(DisplayName = "ç¤¾äº¤?ï¿½å°±"),
+    Challenge       UMETA(DisplayName = "?ï¿½æˆ°?ï¿½å°±"),
+    Hidden          UMETA(DisplayName = "?ï¿½ï¿½Xï¿½å°±")
 };
 
 /**
- * ?å°±?¸æ?
+ * ?ï¿½å°±?ï¿½ï¿½?
  */
 USTRUCT(BlueprintType)
 struct FAchievementData
@@ -84,7 +84,7 @@ struct FAchievementData
 };
 
 /**
- * ?©å®¶?å°±?²åº¦
+ * ?ï¿½å®¶?ï¿½å°±?ï¿½åº¦
  */
 USTRUCT(BlueprintType)
 struct FPlayerAchievementProgress
@@ -114,7 +114,7 @@ struct FPlayerAchievementProgress
 };
 
 /**
- * ?å°±çµ±è?
+ * ?ï¿½å°±çµ±ï¿½?
  */
 USTRUCT(BlueprintType)
 struct FAchievementStats
@@ -146,7 +146,7 @@ struct FAchievementStats
 };
 
 /**
- * ?å°±ç³»çµ± - ç®¡ç??Šæˆ²?å°±
+ * ?ï¿½å°±ç³»çµ± - ç®¡ï¿½Xï¿½æˆ²?ï¿½å°±
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSAchievementSystem : public UObject
@@ -156,74 +156,74 @@ class MINGGORTS_API UMingRTSAchievementSystem : public UObject
 public:
     UMingRTSAchievementSystem(};
     
-    // ?å???    UFUNCTION(BlueprintCallable, Category = "Achievement")
+    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Achievement")
     void InitializeAchievementSystem(};
     
-    // è¼‰å…¥?å°±å®šç¾©
+    // è¼‰å…¥?ï¿½å°±å®šç¾©
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     void LoadAchievementDefinitions(};
     
-    // ?²å??€?‰æ?å°?    UFUNCTION(BlueprintCallable, Category = "Achievement")
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Achievement")
     TArray<FAchievementData> GetAllAchievements() const;
     
-    // ?²å??¹å?é¡å??å°±
+    // ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½å°±
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     TArray<FAchievementData> GetAchievementsByType(EAchievementType Type) const;
     
-    // ?²å??¹å?ç¨€?‰åº¦?å°±
+    // ?ï¿½ï¿½Xï¿½ï¿½?ç¨€?ï¿½åº¦?ï¿½å°±
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     TArray<FAchievementData> GetAchievementsByRarity(EAchievementRarity Rarity) const;
     
-    // ?²å??å°±è©³æ?
+    // ?ï¿½ï¿½Xï¿½å°±è©³ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     bool GetAchievementData(FName AchievementID, FAchievementData& OutData) const;
     
-    // ?²å??©å®¶?å°±?²åº¦
+    // ?ï¿½ï¿½Xï¿½å®¶?ï¿½å°±?ï¿½åº¦
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     FPlayerAchievementProgress GetPlayerProgress(const FString& PlayerID, FName AchievementID) const;
     
-    // ?´æ–°?å°±?²åº¦
+    // ?ï¿½æ–°?ï¿½å°±?ï¿½åº¦
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     void UpdateAchievementProgress(const FString& PlayerID, FName AchievementID, int32 Progress};
     
-    // å¢å??å°±?²åº¦
+    // å¢ï¿½Xï¿½å°±?ï¿½åº¦
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     void IncrementAchievementProgress(const FString& PlayerID, FName AchievementID, int32 Amount = 1};
     
-    // è§???å°±
+    // ï¿½Xï¿½å°±
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     void UnlockAchievement(const FString& PlayerID, FName AchievementID};
     
-    // æª¢æŸ¥?å°±?¯å¦å·²è§£??    UFUNCTION(BlueprintCallable, Category = "Achievement")
+    // æª¢æŸ¥?ï¿½å°±?ï¿½å¦å·²è§£X    UFUNCTION(BlueprintCallable, Category = "Achievement")
     bool IsAchievementUnlocked(const FString& PlayerID, FName AchievementID) const;
     
-    // ?²å?å·²è§£?–æ?å°?    UFUNCTION(BlueprintCallable, Category = "Achievement")
+    // ?ï¿½ï¿½?å·²è§£?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Achievement")
     TArray<FPlayerAchievementProgress> GetUnlockedAchievements(const FString& PlayerID) const;
     
-    // ?²å??²è?ä¸­æ?å°?    UFUNCTION(BlueprintCallable, Category = "Achievement")
+    // ?ï¿½ï¿½Xï¿½ï¿½?ä¸­ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Achievement")
     TArray<FPlayerAchievementProgress> GetInProgressAchievements(const FString& PlayerID) const;
     
-    // ?²å??å°±çµ±è?
+    // ?ï¿½ï¿½Xï¿½å°±çµ±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     FAchievementStats GetAchievementStats(const FString& PlayerID) const;
     
-    // ?²å??€è¿‘è§£?–ç??å°±
+    // ?ï¿½ï¿½Xï¿½è¿‘è§£?ï¿½ï¿½Xï¿½å°±
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     TArray<FPlayerAchievementProgress> GetRecentlyUnlockedAchievements(const FString& PlayerID, int32 Count = 5) const;
     
-    // ?ç½®?©å®¶?å°±
+    // ?ï¿½ç½®?ï¿½å®¶?ï¿½å°±
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     void ResetPlayerAchievements(const FString& PlayerID};
     
-    // ä¿å??å°±?¸æ?
+    // ä¿ï¿½Xï¿½å°±?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     void SaveAchievementData(const FString& PlayerID};
     
-    // è¼‰å…¥?å°±?¸æ?
+    // è¼‰å…¥?ï¿½å°±?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     void LoadAchievementData(const FString& PlayerID};
     
-    // äº‹ä»¶å§”è?
+    // äº‹ä»¶å§”ï¿½?
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAchievementUnlocked, const FString&, PlayerID, FName, AchievementID};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAchievementProgressUpdated, const FString&, PlayerID, FName, AchievementID, int32, NewProgress};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAchievementCompleted, const FString&, PlayerID, const FAchievementData&, AchievementData};

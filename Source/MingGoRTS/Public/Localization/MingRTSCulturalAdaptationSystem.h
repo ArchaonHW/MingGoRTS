@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.2: Cultural Adaptation System
 
 #pragma once
@@ -268,7 +268,7 @@ private:
     UPROPERTY()
     FRTSCulturalPreferences Preferences;
     
-    // �?：TMap<TArray> 不支??UPROPERTY
+    // �?：TMap<TArray> 不支XUPROPERTY
     TMap<FString, TArray<FCulturalVariant>> ContentVariants;
     
     /** Regional gameplay parameters cache */

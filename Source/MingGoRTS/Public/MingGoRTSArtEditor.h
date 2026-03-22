@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -10,24 +10,24 @@
 UENUM(BlueprintType)
 enum class EEditingTool : uint8
 {
-    Brush,            // ??
-    Eraser,           // 橡皮??    Clone,            // ??工具
+    Brush,            // X
+    Eraser,           // 橡皮X    Clone,            // X工具
     Heal,             // 修復工具
     Blur,             // 模?工具
-    Sharpen,          // ??工具
+    Sharpen,          // X工具
     Smudge,           // 涂抹工具
     Dodge,            // 減淡工具
     Burn,             // ?深工具
-    ColorPicker       // 顏色????};
+    ColorPicker       // 顏色X};
 
 UENUM(BlueprintType)
 enum class EBrushMode : uint8
 {
     Normal,           // ?
-    Multiply,         // ????
+    Multiply,         // X
     Screen,           // 濾色
-    Overlay,          // ??
-    SoftLight,        // ??
+    Overlay,          // X
+    SoftLight,        // X
     HardLight,        // 強?
     ColorDodge,       // 顏色減淡
     ColorBurn,        // 顏色?深
@@ -104,7 +104,7 @@ class MINGGORTS_API UMingGoRTSArtEditor : public UObject
 public:
     UMingGoRTSArtEditor(};
 
-    // ??編輯?本?能
+    // X編輯?本?能
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void LoadImage(UTexture2D* Image};
 
@@ -186,7 +186,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     FLayerInfo GetActiveLayer() const;
 
-    // ??調整
+    // X調整
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void AdjustBrightness(float Brightness};
 
@@ -208,7 +208,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void Desaturate(};
 
-    // 濾鏡??
+    // 濾鏡X
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void ApplyBlurFilter(float Radius};
 
@@ -227,7 +227,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void ApplyNoiseFilter(float Strength};
 
-    // ??工具
+    // X工具
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void SelectRectangular(const FVector2D& TopLeft, const FVector2D& BottomRight};
 

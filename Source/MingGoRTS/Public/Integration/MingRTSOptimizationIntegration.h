@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,7 +6,7 @@
 #include "MingRTSOptimizationIntegration.generated.h"
 
 /**
- * ?ªå?ç·¨è­¯ç³»çµ±?†æ?é¡? * å°‡å„ª?–ç·¨è­¯ç³»çµ±é??åˆ°MingGoRTSä¸»é??²ä¸­
+ * ?ï¿½ï¿½?ç·¨è­¯ç³»çµ±?ï¿½ï¿½?ï¿½? * å°‡å„ª?ï¿½ç·¨è­¯ç³»çµ±ï¿½Xï¿½åˆ°MingGoRTSä¸»ï¿½Xï¿½ä¸­
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSOptimizationIntegration : public UObject
@@ -16,60 +16,60 @@ class MINGGORTS_API UMingRTSOptimizationIntegration : public UObject
 public:
     UMingRTSOptimizationIntegration(};
 
-    // ?Šæˆ²?å??–æ??†æ??ªå?ç³»çµ±
+    // ?ï¿½æˆ²?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?ç³»çµ±
     UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     void IntegrateOptimizationSystem(};
 
-    // ?Šæˆ²?‹å??‚å??•å„ª??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    // ?ï¿½æˆ²?ï¿½ï¿½Xï¿½ï¿½Xï¿½å„ªX    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     void StartGameOptimization(};
 
-    // ?Šæˆ²?‹è??‚æ?çºŒå„ª??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    // ?ï¿½æˆ²?ï¿½ï¿½Xï¿½ï¿½?çºŒå„ªX    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     void RuntimeOptimization(};
 
-    // ?œå¡?‡æ??‚å„ª??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    // ?ï¿½å¡?ï¿½ï¿½Xï¿½å„ªX    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     void LevelTransitionOptimization(};
 
-    // ä¿å??‚å„ª??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    // ä¿ï¿½Xï¿½å„ªX    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     void SaveGameOptimization(};
 
-    // ? è??‚å„ª??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    // ?ï¿½ï¿½Xï¿½å„ªX    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     void LoadGameOptimization(};
 
-    // ?²å?ç³»çµ±?€??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    // ?ï¿½ï¿½?ç³»çµ±?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     bool IsOptimizationSystemActive() const;
 
-    // ?²å??§èƒ½çµ±è?
+    // ?ï¿½ï¿½Xï¿½èƒ½çµ±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     FString GetGamePerformanceStats(};
 
 protected:
-    // ?ªå?ç³»çµ±ç®¡ç???    UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
+    // ?ï¿½ï¿½?ç³»çµ±ç®¡ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
-    // ç³»çµ±?€??    UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
+    // ç³»çµ±?ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
     bool bSystemIntegrated;
 
     UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
     bool bOptimizationActive;
 
 private:
-    // ?†æ??è¼¯
+    // ?ï¿½ï¿½Xï¿½è¼¯
     void SetupGameSpecificOptimizations(};
     void ConfigureGameOptimizationParameters(};
     void IntegrateWithGameSystems(};
     
-    // ?Šæˆ²?¹å??ªå?
+    // ?ï¿½æˆ²?ï¿½ï¿½Xï¿½ï¿½?
     void OptimizeGameLoop(};
     void OptimizeRendering(};
     void OptimizeAI(};
     void OptimizeAudio(};
     void OptimizePhysics(};
     
-    // ?§èƒ½??§
+    // ?ï¿½èƒ½Xï¿½ï¿½
     void MonitorGamePerformance(};
     void HandlePerformanceWarnings(const FString& Component, const FString& Warning, float Severity};
     
-    // ?ªå??ªå?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     void AutoOptimizeBasedOnPerformance(};
     void AdjustQualitySettings(};
 };

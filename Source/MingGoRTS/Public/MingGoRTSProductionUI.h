@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,7 +7,7 @@
 #include "MingGoRTSProductionUI.generated.h"
 
 /**
- * ?Ÿç”¢ç·šUIçµ„ä»¶
+ * ?ï¿½ç”¢ç·šUIçµ„ä»¶
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSProductionLineWidget : public UUserWidget
@@ -17,28 +17,28 @@ class MINGGORTS_API UMingGoRTSProductionLineWidget : public UUserWidget
 public:
     UMingGoRTSProductionLineWidget(};
 
-    // è¨­ç½®?Ÿç”¢ç·šæ•¸??    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
+    // è¨­ç½®?ï¿½ç”¢ç·šæ•¸X    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void SetProductionLine(const FProductionLine& ProductionLine};
 
-    // ?´æ–°?Ÿç”¢?€??    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
+    // ?ï¿½æ–°?ï¿½ç”¢?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void UpdateProductionStatus(EProductionStatus NewStatus};
 
-    // ?´æ–°?Ÿç”¢?²åº¦
+    // ?ï¿½æ–°?ï¿½ç”¢?ï¿½åº¦
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void UpdateProductionProgress(float Progress, float TimeRemaining};
 
-    // è¨­ç½®?Ÿç”¢?æ–¹
+    // è¨­ç½®?ï¿½ç”¢?ï¿½æ–¹
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void SetCurrentRecipe(const FProductionRecipe& Recipe};
 
-    // è¨­ç½®?¯å¦è¢«é¸ä¸?    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
+    // è¨­ç½®?ï¿½å¦è¢«é¸ï¿½?    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void SetIsSelected(bool bSelected};
 
-    // ?²å??Ÿç”¢ç·šID
+    // ?ï¿½ï¿½Xï¿½ç”¢ç·šID
     UFUNCTION(BlueprintPure, Category = "Production Line UI")
     FString GetProductionLineID() const;
 
-    // ?²å??¯å¦è¢«é¸ä¸?    UFUNCTION(BlueprintPure, Category = "Production Line UI")
+    // ?ï¿½ï¿½Xï¿½å¦è¢«é¸ï¿½?    UFUNCTION(BlueprintPure, Category = "Production Line UI")
     bool IsSelected() const;
 
 protected:
@@ -82,58 +82,58 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UBorder* LineBorder;
 
-    // ?¶å??Ÿç”¢ç·šæ•¸??    UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
+    // ?ï¿½ï¿½Xï¿½ç”¢ç·šæ•¸X    UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
     FProductionLine CurrentProductionLine;
 
-    // ?¶å??æ–¹
+    // ?ï¿½ï¿½Xï¿½æ–¹
     UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
     FProductionRecipe CurrentRecipe;
 
-    // ?¯å¦è¢«é¸ä¸?    UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
+    // ?ï¿½å¦è¢«é¸ï¿½?    UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
     bool bIsSelected;
 
-    // ?å??–UI
+    // ?ï¿½ï¿½Xï¿½UI
     virtual void NativeConstruct() override;
 
-    // ?´æ–°UIé¡¯ç¤º
+    // ?ï¿½æ–°UIé¡¯ç¤º
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Line UI")
     void OnUpdateUI(};
 
-    // ?•ç??‹å??‰é?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnStartClicked(};
 
-    // ?•ç??«å??‰é?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnPauseClicked(};
 
-    // ?•ç??–æ??‰é?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnCancelClicked(};
 
-    // ?•ç??‡ç??‰é?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnUpgradeClicked(};
 
-    // ?•ç??ªå??–æ???    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnAutomateClicked(};
 
-    // ?²å??€?‹é???    FLinearColor GetStatusColor(EProductionStatus Status) const;
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½X    FLinearColor GetStatusColor(EProductionStatus Status) const;
 
-    // ?²å??ªå?ç´šé???    FLinearColor GetPriorityColor(EProductionPriority Priority) const;
+    // ?ï¿½ï¿½Xï¿½ï¿½?ç´šï¿½X    FLinearColor GetPriorityColor(EProductionPriority Priority) const;
 
-    // ?¼å??–æ??“é¡¯ç¤?    FString FormatTime(float TimeSeconds) const;
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½é¡¯ï¿½?    FString FormatTime(float TimeSeconds) const;
 
 private:
-    // ç¶å?äº‹ä»¶
+    // ç¶ï¿½?äº‹ä»¶
     void BindEvents(};
 
-    // è§??äº‹ä»¶
+    // ï¿½Xäº‹ä»¶
     void UnbindEvents(};
 };
 
 /**
- * ?Ÿç”¢?æ–¹UIçµ„ä»¶
+ * ?ï¿½ç”¢?ï¿½æ–¹UIçµ„ä»¶
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSRecipeWidget : public UUserWidget
@@ -143,17 +143,17 @@ class MINGGORTS_API UMingGoRTSRecipeWidget : public UUserWidget
 public:
     UMingGoRTSRecipeWidget(};
 
-    // è¨­ç½®?æ–¹?¸æ?
+    // è¨­ç½®?ï¿½æ–¹?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void SetRecipe(const FProductionRecipe& Recipe};
 
-    // è¨­ç½®?¯å¦?¯ç???    UFUNCTION(BlueprintCallable, Category = "Recipe UI")
+    // è¨­ç½®?ï¿½å¦?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void SetCanProduce(bool bCanProduce};
 
-    // è¨­ç½®?¯å¦è¢«é¸ä¸?    UFUNCTION(BlueprintCallable, Category = "Recipe UI")
+    // è¨­ç½®?ï¿½å¦è¢«é¸ï¿½?    UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void SetIsSelected(bool bSelected};
 
-    // ?²å??æ–¹ID
+    // ?ï¿½ï¿½Xï¿½æ–¹ID
     UFUNCTION(BlueprintPure, Category = "Recipe UI")
     FString GetRecipeID() const;
 
@@ -189,45 +189,45 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UBorder* RecipeBorder;
 
-    // ?¶å??æ–¹
+    // ?ï¿½ï¿½Xï¿½æ–¹
     UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
     FProductionRecipe CurrentRecipe;
 
-    // ?¯å¦?¯ç???    UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
+    // ?ï¿½å¦?ï¿½ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
     bool bCanProduce;
 
-    // ?¯å¦è¢«é¸ä¸?    UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
+    // ?ï¿½å¦è¢«é¸ï¿½?    UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
     bool bIsSelected;
 
-    // ?å??–UI
+    // ?ï¿½ï¿½Xï¿½UI
     virtual void NativeConstruct() override;
 
-    // ?´æ–°UIé¡¯ç¤º
+    // ?ï¿½æ–°UIé¡¯ç¤º
     UFUNCTION(BlueprintImplementableEvent, Category = "Recipe UI")
     void OnUpdateUI(};
 
-    // ?•ç??Ÿç”¢?‰é?
+    // ?ï¿½ï¿½Xï¿½ç”¢?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void OnProduceClicked(};
 
-    // ?•ç?? å…¥?Šå??‰é?
+    // ?ï¿½ï¿½Xï¿½å…¥?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void OnQueueClicked(};
 
-    // ?µå»ºè³‡æ??—è¡¨??    UUserWidget* CreateResourceItem(EResourceType ResourceType, float Amount, bool bIsInput};
+    // ?ï¿½å»ºè³‡ï¿½Xï¿½è¡¨X    UUserWidget* CreateResourceItem(EResourceType ResourceType, float Amount, bool bIsInput};
 
-    // ?¼å??–è?æºé¡¯ç¤?    FString FormatResourceDisplay(EResourceType ResourceType, float Amount) const;
+    // ?ï¿½ï¿½Xï¿½ï¿½?æºé¡¯ï¿½?    FString FormatResourceDisplay(EResourceType ResourceType, float Amount) const;
 
 private:
-    // ç¶å?äº‹ä»¶
+    // ç¶ï¿½?äº‹ä»¶
     void BindEvents(};
 
-    // è§??äº‹ä»¶
+    // ï¿½Xäº‹ä»¶
     void UnbindEvents(};
 };
 
 /**
- * ?Ÿç”¢?Šå?UIçµ„ä»¶
+ * ?ï¿½ç”¢?ï¿½ï¿½?UIçµ„ä»¶
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSProductionQueueWidget : public UUserWidget
@@ -237,27 +237,27 @@ class MINGGORTS_API UMingGoRTSProductionQueueWidget : public UUserWidget
 public:
     UMingGoRTSProductionQueueWidget(};
 
-    // è¨­ç½®?Ÿç”¢?Šå??¸æ?
+    // è¨­ç½®?ï¿½ç”¢?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void SetProductionQueue(const FProductionQueue& Queue};
 
-    // ?´æ–°?Šå??…ç›®
+    // ?ï¿½æ–°?ï¿½ï¿½Xï¿½ç›®
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void UpdateQueueItem(int32 Index, const FString& RecipeID};
 
-    // ç§»é™¤?Šå??…ç›®
+    // ç§»é™¤?ï¿½ï¿½Xï¿½ç›®
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void RemoveQueueItem(int32 Index};
 
-    // æ¸…ç©º?Šå?
+    // æ¸…ç©º?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void ClearQueue(};
 
-    // è¨­ç½®å¾ªç’°æ¨¡å?
+    // è¨­ç½®å¾ªç’°æ¨¡ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void SetLooping(bool bIsLooping};
 
-    // è¨­ç½®?ªå??‹å?
+    // è¨­ç½®?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void SetAutoStart(bool bAutoStart};
 
@@ -281,46 +281,46 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* QueueCount;
 
-    // ?¶å??Šå?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Production Queue UI")
     FProductionQueue CurrentQueue;
 
-    // ?Šå??…ç›®Widget?¸ç?
+    // ?ï¿½ï¿½Xï¿½ç›®Widget?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Production Queue UI")
     TArray<class UMingGoRTSRecipeWidget*> QueueItemWidgets;
 
-    // ?å??–UI
+    // ?ï¿½ï¿½Xï¿½UI
     virtual void NativeConstruct() override;
 
-    // ?µå»º?Šå??…ç›®Widget
+    // ?ï¿½å»º?ï¿½ï¿½Xï¿½ç›®Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Queue UI")
     UMingGoRTSRecipeWidget* CreateQueueItemWidget(const FString& RecipeID};
 
-    // ?•ç?æ¸…ç©º?Šå?
+    // ?ï¿½ï¿½?æ¸…ç©º?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void OnClearQueueClicked(};
 
-    // ?•ç?å¾ªç’°æ¨¡å?è®Šæ›´
+    // ?ï¿½ï¿½?å¾ªç’°æ¨¡ï¿½?è®Šæ›´
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void OnLoopingChanged(bool bIsLooping};
 
-    // ?•ç??ªå??‹å?è®Šæ›´
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?è®Šæ›´
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void OnAutoStartChanged(bool bAutoStart};
 
-    // ?´æ–°?Šå?è¨ˆæ•¸
+    // ?ï¿½æ–°?ï¿½ï¿½?è¨ˆæ•¸
     void UpdateQueueCount(};
 
 private:
-    // ç¶å?äº‹ä»¶
+    // ç¶ï¿½?äº‹ä»¶
     void BindEvents(};
 
-    // è§??äº‹ä»¶
+    // ï¿½Xäº‹ä»¶
     void UnbindEvents(};
 };
 
 /**
- * ?Ÿç”¢ç®¡ç?ä¸»UIçµ„ä»¶
+ * ?ï¿½ç”¢ç®¡ï¿½?ä¸»UIçµ„ä»¶
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSProductionManagerWidget : public UUserWidget
@@ -330,41 +330,41 @@ class MINGGORTS_API UMingGoRTSProductionManagerWidget : public UUserWidget
 public:
     UMingGoRTSProductionManagerWidget(};
 
-    // è¨­ç½®?Ÿç”¢ç³»çµ±å¼•ç”¨
+    // è¨­ç½®?ï¿½ç”¢ç³»çµ±å¼•ç”¨
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void SetProductionSystem(UMingGoRTSProductionSystem* ProductionSystem};
 
-    // é¡¯ç¤º?‡å?é¡åˆ¥?„é???    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // é¡¯ç¤º?ï¿½ï¿½?é¡åˆ¥?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ShowRecipeCategory(EProductionCategory Category};
 
-    // é¡¯ç¤º?€?‰é???    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // é¡¯ç¤º?ï¿½?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ShowAllCategories(};
 
-    // ?¸ä¸­?Ÿç”¢ç·?    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // ?ï¿½ä¸­?ï¿½ç”¢ï¿½?    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void SelectProductionLine(const FString& ProductionLineID};
 
-    // æ¸…é™¤?¸ä¸­?€??    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // æ¸…é™¤?ï¿½ä¸­?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ClearSelection(};
 
-    // ?µå»º?°ç??¢ç?
+    // ?ï¿½å»º?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void CreateNewProductionLine(};
 
-    // é¡¯ç¤º?Ÿç”¢çµ±è?
+    // é¡¯ç¤º?ï¿½ç”¢çµ±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ShowProductionStatistics(};
 
-    // è¨­ç½®?æ¿¾??    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // è¨­ç½®?ï¿½æ¿¾X    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void SetFilter(EProductionCategory CategoryFilter, EProductionPriority PriorityFilter};
 
-    // æ¸…é™¤?æ¿¾??    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // æ¸…é™¤?ï¿½æ¿¾X    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ClearFilter(};
 
-    // ?²å??¶å??¸ä¸­?„ç??¢ç?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ä¸­?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintPure, Category = "Production Manager UI")
     FString GetSelectedProductionLineID() const;
 
-    // ?²å??¶å?é¡¯ç¤º?„é???    UFUNCTION(BlueprintPure, Category = "Production Manager UI")
+    // ?ï¿½ï¿½Xï¿½ï¿½?é¡¯ç¤º?ï¿½ï¿½X    UFUNCTION(BlueprintPure, Category = "Production Manager UI")
     EProductionCategory GetCurrentCategory() const;
 
 protected:
@@ -396,99 +396,99 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* ActiveProductionCount;
 
-    // ?Ÿç”¢ç³»çµ±å¼•ç”¨
+    // ?ï¿½ç”¢ç³»çµ±å¼•ç”¨
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     UMingGoRTSProductionSystem* ProductionSystem;
 
-    // ?¶å??¸ä¸­?„ç??¢ç?ID
+    // ?ï¿½ï¿½Xï¿½ä¸­?ï¿½ï¿½Xï¿½ï¿½?ID
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     FString SelectedProductionLineID;
 
-    // ?¶å?é¡¯ç¤º?„é???    UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
+    // ?ï¿½ï¿½?é¡¯ç¤º?ï¿½ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     EProductionCategory CurrentCategory;
 
-    // ?¶å??æ¿¾??    UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
+    // ?ï¿½ï¿½Xï¿½æ¿¾X    UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     EProductionCategory CategoryFilter;
 
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     EProductionPriority PriorityFilter;
 
-    // ?Ÿç”¢ç·šWidget? å?
+    // ?ï¿½ç”¢ç·šWidget?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     TMap<FString, UMingGoRTSProductionLineWidget*> ProductionLineWidgets;
 
-    // ?æ–¹Widget?¸ç?
+    // ?ï¿½æ–¹Widget?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     TArray<UMingGoRTSRecipeWidget*> RecipeWidgets;
 
-    // ?å??–UI
+    // ?ï¿½ï¿½Xï¿½UI
     virtual void NativeConstruct() override;
 
-    // ?µå»º?Ÿç”¢ç·šWidget
+    // ?ï¿½å»º?ï¿½ç”¢ç·šWidget
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Manager UI")
     UMingGoRTSProductionLineWidget* CreateProductionLineWidget(const FProductionLine& ProductionLine};
 
-    // ?µå»º?æ–¹Widget
+    // ?ï¿½å»º?ï¿½æ–¹Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Manager UI")
     UMingGoRTSRecipeWidget* CreateRecipeWidget(const FProductionRecipe& Recipe};
 
-    // ?•ç??Ÿç”¢ç·šé???    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // ?ï¿½ï¿½Xï¿½ç”¢ç·šï¿½X    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionLineClicked(const FString& ProductionLineID};
 
-    // ?•ç??æ–¹é»æ?
+    // ?ï¿½ï¿½Xï¿½æ–¹é»ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnRecipeClicked(const FString& RecipeID};
 
-    // ?•ç??Ÿç”¢?‹å?
+    // ?ï¿½ï¿½Xï¿½ç”¢?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionStarted(const FString& ProductionLineID, const FString& RecipeID};
 
-    // ?•ç??Ÿç”¢?²åº¦
+    // ?ï¿½ï¿½Xï¿½ç”¢?ï¿½åº¦
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionProgress(const FString& ProductionLineID, float Progress, float TimeRemaining};
 
-    // ?•ç??Ÿç”¢å®Œæ?
+    // ?ï¿½ï¿½Xï¿½ç”¢å®Œï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionCompleted(const FString& ProductionLineID, const TMap<EResourceType, float>& OutputResources};
 
-    // ?•ç??Ÿç”¢å¤±æ?
+    // ?ï¿½ï¿½Xï¿½ç”¢å¤±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionFailed(const FString& ProductionLineID, const FString& ErrorMessage};
 
-    // ?´æ–°?Ÿç”¢ç·šå?è¡?    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // ?ï¿½æ–°?ï¿½ç”¢ç·šï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void UpdateProductionLines(};
 
-    // ?´æ–°?æ–¹?—è¡¨
+    // ?ï¿½æ–°?ï¿½æ–¹?ï¿½è¡¨
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void UpdateRecipeList(};
 
-    // ?µå»ºé¡åˆ¥æ¨™ç±¤
+    // ?ï¿½å»ºé¡åˆ¥æ¨™ç±¤
     void CreateCategoryTabs(};
 
-    // ?µå»º?ªå?ç´šé?æ¿¾å™¨
+    // ?ï¿½å»º?ï¿½ï¿½?ç´šï¿½?æ¿¾å™¨
     void CreatePriorityFilters(};
 
-    // ?‰ç”¨?æ¿¾??    void ApplyFilters(};
+    // ?ï¿½ç”¨?ï¿½æ¿¾X    void ApplyFilters(};
 
-    // ?´æ–°çµ±è?ä¿¡æ¯
+    // ?ï¿½æ–°çµ±ï¿½?ä¿¡æ¯
     void UpdateStatistics(};
 
 private:
-    // ç¶å??Ÿç”¢ç³»çµ±äº‹ä»¶
+    // ç¶ï¿½Xï¿½ç”¢ç³»çµ±äº‹ä»¶
     void BindProductionSystemEvents(};
 
-    // è§???Ÿç”¢ç³»çµ±äº‹ä»¶
+    // ï¿½Xï¿½ç”¢ç³»çµ±äº‹ä»¶
     void UnbindProductionSystemEvents(};
 
-    // æ¸…ç??¾æ?Widget
+    // æ¸…ï¿½Xï¿½ï¿½?Widget
     void ClearExistingWidgets(};
 
-    // ?²å?é¡åˆ¥é¡è‰²
+    // ?ï¿½ï¿½?é¡åˆ¥é¡è‰²
     FLinearColor GetCategoryColor(EProductionCategory Category) const;
 };
 
 /**
- * ?Ÿç”¢çµ±è?UIçµ„ä»¶
+ * ?ï¿½ç”¢çµ±ï¿½?UIçµ„ä»¶
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSProductionStatsWidget : public UUserWidget
@@ -498,15 +498,15 @@ class MINGGORTS_API UMingGoRTSProductionStatsWidget : public UUserWidget
 public:
     UMingGoRTSProductionStatsWidget(};
 
-    // è¨­ç½®?Ÿç”¢çµ±è??¸æ?
+    // è¨­ç½®?ï¿½ç”¢çµ±ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void SetProductionStatistics(const FProductionStatistics& Stats};
 
-    // é¡¯ç¤ºè©³ç´°çµ±è?
+    // é¡¯ç¤ºè©³ç´°çµ±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void ShowDetailedStats(};
 
-    // å°å‡ºçµ±è??±å?
+    // å°å‡ºçµ±ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void ExportStatsReport(};
 
@@ -542,42 +542,42 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UButton* CloseButton;
 
-    // ?¶å?çµ±è?
+    // ?ï¿½ï¿½?çµ±ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Production Stats UI")
     FProductionStatistics CurrentStats;
 
-    // ?å??–UI
+    // ?ï¿½ï¿½Xï¿½UI
     virtual void NativeConstruct() override;
 
-    // ?µå»ºçµ±è??…ç›®
+    // ?ï¿½å»ºçµ±ï¿½Xï¿½ç›®
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Stats UI")
     UUserWidget* CreateStatItem(const FString& Label, const FString& Value};
 
-    // ?µå»ºè³‡æ??Ÿç”¢?…ç›®
+    // ?ï¿½å»ºè³‡ï¿½Xï¿½ç”¢?ï¿½ç›®
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Stats UI")
     UUserWidget* CreateResourceStatItem(EResourceType ResourceType, float Amount};
 
-    // ?µå»ºé¡åˆ¥?Ÿç”¢?…ç›®
+    // ?ï¿½å»ºé¡åˆ¥?ï¿½ç”¢?ï¿½ç›®
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Stats UI")
     UUserWidget* CreateCategoryStatItem(EProductionCategory Category, float Amount};
 
-    // ?¼å??–çµ±è¨ˆæ•¸??    FString FormatStatValue(float Value) const;
+    // ?ï¿½ï¿½Xï¿½çµ±è¨ˆæ•¸X    FString FormatStatValue(float Value) const;
 
-    // è¨ˆç??å???    float CalculateSuccessRate() const;
+    // è¨ˆï¿½Xï¿½ï¿½X    float CalculateSuccessRate() const;
 
-    // ?•ç?å°å‡º?‰é?
+    // ?ï¿½ï¿½?å°å‡º?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void OnExportClicked(};
 
-    // ?•ç??œé??‰é?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void OnCloseClicked(};
 
 private:
-    // ç¶å?äº‹ä»¶
+    // ç¶ï¿½?äº‹ä»¶
     void BindEvents(};
 
-    // è§??äº‹ä»¶
+    // ï¿½Xäº‹ä»¶
     void UnbindEvents(};
 };
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -14,10 +14,10 @@ UENUM(BlueprintType)
 enum class ESecurityAlertLevel : uint8
 {
     Info        UMETA(DisplayName = "ä¿¡æ¯"),
-    Low         UMETA(DisplayName = "ä½?),
-    Medium      UMETA(DisplayName = "ä¸?),
-    High        UMETA(DisplayName = "é«?),
-    Critical    UMETA(DisplayName = "?´é?")
+    Low         UMETA(DisplayName = "ï¿½?),
+    Medium      UMETA(DisplayName = "ï¿½?),
+    High        UMETA(DisplayName = "ï¿½?),
+    Critical    UMETA(DisplayName = "?ï¿½ï¿½?")
 };
 
 /**
@@ -53,7 +53,7 @@ struct FSecurityAlert
 };
 
 /**
- * å®‰å…¨ç®¡ç???- çµ±ç??€?‰å??¨ç³»çµ? */
+ * å®‰å…¨ç®¡ï¿½X- çµ±ï¿½Xï¿½?ï¿½ï¿½Xï¿½ç³»ï¿½? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSSecurityManager : public UObject
 {
@@ -62,32 +62,32 @@ class MINGGORTS_API UMingRTSSecurityManager : public UObject
 public:
     UMingRTSSecurityManager(};
     
-    // ?å???    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Security")
     void InitializeSecurityManager(};
     
-    // ?²å??ä?å¼Šç³»çµ?    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?ï¿½ï¿½Xï¿½ï¿½?å¼Šç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Security")
     UMingRTSAntiCheat* GetAntiCheatSystem() const;
     
-    // ?²å??å??¨é?è­‰ç³»çµ?    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?è­‰ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Security")
     UMingRTSServerValidation* GetServerValidation() const;
     
-    // ?Ÿå??€?‰å??¨ç³»çµ?    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½Xï¿½ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Security")
     void StartAllSecuritySystems(};
     
-    // ?œæ­¢?€?‰å??¨ç³»çµ?    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?ï¿½æ­¢?ï¿½?ï¿½ï¿½Xï¿½ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Security")
     void StopAllSecuritySystems(};
     
-    // ?±å?å®‰å…¨è­¦å ±
+    // ?ï¿½ï¿½?å®‰å…¨è­¦å ±
     UFUNCTION(BlueprintCallable, Category = "Security")
     void ReportSecurityAlert(ESecurityAlertLevel Level, const FText& Title, const FText& Message};
     
-    // ?²å??€?‰è­¦??    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?ï¿½ï¿½Xï¿½?ï¿½è­¦X    UFUNCTION(BlueprintCallable, Category = "Security")
     TArray<FSecurityAlert> GetAllAlerts() const;
     
-    // ?²å??ªç¢ºèªè­¦??    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?ï¿½ï¿½Xï¿½ç¢ºèªè­¦X    UFUNCTION(BlueprintCallable, Category = "Security")
     TArray<FSecurityAlert> GetUnacknowledgedAlerts() const;
     
-    // ç¢ºè?è­¦å ±
+    // ç¢ºï¿½?è­¦å ±
     UFUNCTION(BlueprintCallable, Category = "Security")
     void AcknowledgeAlert(FName AlertID};
     
@@ -95,18 +95,18 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Security")
     void ClearAlert(FName AlertID};
     
-    // æª¢æŸ¥?©å®¶å®‰å…¨?€??    UFUNCTION(BlueprintCallable, Category = "Security")
+    // æª¢æŸ¥?ï¿½å®¶å®‰å…¨?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Security")
     bool IsPlayerSecure(const FString& PlayerID) const;
     
-    // ?²å??©å®¶å®‰å…¨è©•å?
+    // ?ï¿½ï¿½Xï¿½å®¶å®‰å…¨è©•ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Security")
     float GetPlayerSecurityScore(const FString& PlayerID) const;
     
-    // ?Ÿæ?å®‰å…¨?±å?
+    // ?ï¿½ï¿½?å®‰å…¨?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Security")
     FString GenerateSecurityReport() const;
     
-    // äº‹ä»¶å§”è?
+    // äº‹ä»¶å§”ï¿½?
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSecurityAlert, const FSecurityAlert&, Alert};
     
     UPROPERTY(BlueprintAssignable, Category = "Security|Events")

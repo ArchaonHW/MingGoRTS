@@ -1,5 +1,5 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// Epic X: Universe Savior System - ?¯æ?å®‡å??Ÿèƒ½å»¶ä¼¸
+ï»¿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Epic X: Universe Savior System - ?ï¿½ï¿½?å®‡ï¿½Xï¿½èƒ½å»¶ä¼¸
 
 #pragma once
 
@@ -8,58 +8,58 @@
 #include "MingGoRTSAIWorldSavior.h"
 #include "MingGoRTSAIUniverseSavior.generated.h"
 
-// å®‡å?å¨è?ç´šåˆ¥ - è¶…è?ä¸–ç?ç´šåˆ¥?„å???UENUM(BlueprintType)
+// å®‡ï¿½?å¨ï¿½?ç´šåˆ¥ - è¶…ï¿½?ä¸–ï¿½?ç´šåˆ¥?ï¿½ï¿½XUENUM(BlueprintType)
 enum class EUniverseThreatLevel : uint8
 {
-    None            UMETA(DisplayName = "?¡å???),
-    Stellar         UMETA(DisplayName = "?†æ?ç´?),          // ?®ä??†æ?ç³»çµ±?—å½±??    Galactic        UMETA(DisplayName = "?€æ²³ç?"),          // ?´å€‹é?æ²³ç³»?—å½±??    Intergalactic   UMETA(DisplayName = "?Ÿç³»?›ç?"),       // å¤šå€‹æ?ç³»å?å½±éŸ¿
-    Cosmic          UMETA(DisplayName = "å®‡å?ç´?),          // å®‡å?çµæ??—å???    Multiverse      UMETA(DisplayName = "å¤šå?å®‡å?ç´?),      // å¤šå?å®‡å?ç´šåˆ¥
-    Omniversal      UMETA(DisplayName = "?¨èƒ½å®‡å?ç´?),      // çµ‚æ¥µå¨è?
+    None            UMETA(DisplayName = "?ï¿½ï¿½X),
+    Stellar         UMETA(DisplayName = "?ï¿½ï¿½?ï¿½?),          // ?ï¿½ï¿½Xï¿½ï¿½?ç³»çµ±?ï¿½å½±X    Galactic        UMETA(DisplayName = "?ï¿½æ²³ï¿½?"),          // ?ï¿½å€‹ï¿½?æ²³ç³»?ï¿½å½±X    Intergalactic   UMETA(DisplayName = "?ï¿½ç³»?ï¿½ï¿½?"),       // å¤šå€‹ï¿½?ç³»ï¿½?å½±éŸ¿
+    Cosmic          UMETA(DisplayName = "å®‡ï¿½?ï¿½?),          // å®‡ï¿½?çµï¿½Xï¿½ï¿½X    Multiverse      UMETA(DisplayName = "å¤šï¿½?å®‡ï¿½?ï¿½?),      // å¤šï¿½?å®‡ï¿½?ç´šåˆ¥
+    Omniversal      UMETA(DisplayName = "?ï¿½èƒ½å®‡ï¿½?ï¿½?),      // çµ‚æ¥µå¨ï¿½?
     MAX             UMETA(Hidden)
 };
 
-// å®‡å?å¨è?é¡å?
+// å®‡ï¿½?å¨ï¿½?é¡ï¿½?
 UENUM(BlueprintType)
 enum class EUniverseThreatType : uint8
 {
-    Supernova           UMETA(DisplayName = "è¶…æ–°?Ÿç???),
-    BlackHole           UMETA(DisplayName = "é»‘æ??´å¼µ"),
-    GammaRayBurst       UMETA(DisplayName = "ä¼½é¦¬å°„ç???),
-    DarkMatterAnomaly   UMETA(DisplayName = "?—ç‰©è³ªç•°å¸?),
-    VoidExpansion       UMETA(DisplayName = "?›ç©º?´å¼µ"),
-    RealityDistortion   UMETA(DisplayName = "?¾å¯¦?­æ›²"),
-    TimeParadox         UMETA(DisplayName = "?‚é??–è?"),
-    DimensionalCollapse UMETA(DisplayName = "ç¶­åº¦å´©å?"),
-    AlienInvasion       UMETA(DisplayName = "å¤–æ??¥ä¾µ"),
-    AIApocalypse        UMETA(DisplayName = "AI?«æ—¥"),
-    CosmicPlague        UMETA(DisplayName = "å®‡å??Ÿç–«"),
-    EnergyDepletion     UMETA(DisplayName = "?½é??¯ç«­"),
-    EntropyReversal     UMETA(DisplayName = "?µé€†è?"),
-    QuantumInstability  UMETA(DisplayName = "?å?ä¸ç©©å®?),
-    Singularity         UMETA(DisplayName = "å¥‡é?äº‹ä»¶"),
+    Supernova           UMETA(DisplayName = "è¶…æ–°?ï¿½ï¿½X),
+    BlackHole           UMETA(DisplayName = "é»‘ï¿½Xï¿½å¼µ"),
+    GammaRayBurst       UMETA(DisplayName = "ä¼½é¦¬å°„ï¿½X),
+    DarkMatterAnomaly   UMETA(DisplayName = "?ï¿½ç‰©è³ªç•°ï¿½?),
+    VoidExpansion       UMETA(DisplayName = "?ï¿½ç©º?ï¿½å¼µ"),
+    RealityDistortion   UMETA(DisplayName = "?ï¿½å¯¦?ï¿½æ›²"),
+    TimeParadox         UMETA(DisplayName = "?ï¿½ï¿½Xï¿½ï¿½?"),
+    DimensionalCollapse UMETA(DisplayName = "ç¶­åº¦å´©ï¿½?"),
+    AlienInvasion       UMETA(DisplayName = "å¤–ï¿½Xï¿½ä¾µ"),
+    AIApocalypse        UMETA(DisplayName = "AI?ï¿½æ—¥"),
+    CosmicPlague        UMETA(DisplayName = "å®‡ï¿½Xï¿½ç–«"),
+    EnergyDepletion     UMETA(DisplayName = "?ï¿½ï¿½Xï¿½ç«­"),
+    EntropyReversal     UMETA(DisplayName = "?ï¿½é€†ï¿½?"),
+    QuantumInstability  UMETA(DisplayName = "?ï¿½ï¿½?ä¸ç©©ï¿½?),
+    Singularity         UMETA(DisplayName = "å¥‡ï¿½?äº‹ä»¶"),
     MAX                 UMETA(Hidden)
 };
 
-// å®‡å??¯æ?ç­–ç•¥
+// å®‡ï¿½Xï¿½ï¿½?ç­–ç•¥
 UENUM(BlueprintType)
 enum class EUniverseSaviorStrategy : uint8
 {
-    StellarEngineering      UMETA(DisplayName = "?†æ?å·¥ç?"),
-    WormholeManipulation    UMETA(DisplayName = "?²æ??æ§"),
+    StellarEngineering      UMETA(DisplayName = "?ï¿½ï¿½?å·¥ï¿½?"),
+    WormholeManipulation    UMETA(DisplayName = "?ï¿½ï¿½Xï¿½æ§"),
     DimensionalShielding    UMETA(DisplayName = "ç¶­åº¦è­·ç›¾"),
-    TimeManipulation        UMETA(DisplayName = "?‚é??æ§"),
-    RealityAnchoring        UMETA(DisplayName = "?¾å¯¦?¨å?"),
-    QuantumStabilization    UMETA(DisplayName = "?å?ç©©å?"),
-    CosmicDiplomacy         UMETA(DisplayName = "å®‡å?å¤–äº¤"),
-    MultiversalCooperation  UMETA(DisplayName = "å¤šå?å®‡å??ˆä?"),
-    EnergyRedistribution    UMETA(DisplayName = "?½é??å???),
-    EntropyControl          UMETA(DisplayName = "?µæ§??),
-    GenesisProtocol         UMETA(DisplayName = "?µä??”è­°"),
-    Emergency               UMETA(DisplayName = "ç·Šæ€¥å?è­?),
+    TimeManipulation        UMETA(DisplayName = "?ï¿½ï¿½Xï¿½æ§"),
+    RealityAnchoring        UMETA(DisplayName = "?ï¿½å¯¦?ï¿½ï¿½?"),
+    QuantumStabilization    UMETA(DisplayName = "?ï¿½ï¿½?ç©©ï¿½?"),
+    CosmicDiplomacy         UMETA(DisplayName = "å®‡ï¿½?å¤–äº¤"),
+    MultiversalCooperation  UMETA(DisplayName = "å¤šï¿½?å®‡ï¿½Xï¿½ï¿½?"),
+    EnergyRedistribution    UMETA(DisplayName = "?ï¿½ï¿½Xï¿½ï¿½X),
+    EntropyControl          UMETA(DisplayName = "?ï¿½æ§X),
+    GenesisProtocol         UMETA(DisplayName = "?ï¿½ï¿½Xï¿½è­°"),
+    Emergency               UMETA(DisplayName = "ç·Šæ€¥ï¿½?ï¿½?),
     MAX                     UMETA(Hidden)
 };
 
-// å®‡å??€??USTRUCT(BlueprintType)
+// å®‡ï¿½Xï¿½XUSTRUCT(BlueprintType)
 struct FUniverseRegion
 {
     GENERATED_BODY()
@@ -86,7 +86,7 @@ struct FUniverseRegion
     {}
 };
 
-// å®‡å?å¨è??¸æ?
+// å®‡ï¿½?å¨ï¿½Xï¿½ï¿½?
 USTRUCT(BlueprintType)
 struct FUniverseThreatData
 {
@@ -108,10 +108,10 @@ struct FUniverseThreatData
     FVector3d ThreatLocation;
 
     UPROPERTY(BlueprintReadOnly)
-    float ThreatRadius; // ?‰å¹´
+    float ThreatRadius; // ?ï¿½å¹´
 
     UPROPERTY(BlueprintReadOnly)
-    float TimeToImpact; // å¹?
+    float TimeToImpact; // ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float Confidence;
 
@@ -122,7 +122,7 @@ struct FUniverseThreatData
     TArray<FUniverseRegion> AffectedRegions;
 
     UPROPERTY(BlueprintReadOnly)
-    float EnergyRequired; // å®‡å??½é??®ä?
+    float EnergyRequired; // å®‡ï¿½Xï¿½ï¿½Xï¿½ï¿½?
 
     UPROPERTY(BlueprintReadOnly)
     int32 CivilizationsAtRisk;
@@ -138,7 +138,7 @@ struct FUniverseThreatData
     {}
 };
 
-// å®‡å?è¡Œå?è¨ˆå?
+// å®‡ï¿½?è¡Œï¿½?è¨ˆï¿½?
 USTRUCT(BlueprintType)
 struct FUniverseActionPlan
 {
@@ -154,7 +154,7 @@ struct FUniverseActionPlan
     float EstimatedSuccessRate;
 
     UPROPERTY(BlueprintReadOnly)
-    float ExecutionTime; // å¹?
+    float ExecutionTime; // ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float EnergyCost;
 
@@ -181,7 +181,7 @@ struct FUniverseActionPlan
     {}
 };
 
-// å®‡å?è³‡æ??ªå?
+// å®‡ï¿½?è³‡ï¿½Xï¿½ï¿½?
 USTRUCT(BlueprintType)
 struct FUniverseResourceOptimization
 {
@@ -216,7 +216,7 @@ struct FUniverseResourceOptimization
     {}
 };
 
-// ?‡æ??ˆä??¸æ?
+// ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
 USTRUCT(BlueprintType)
 struct FCivilizationCooperation
 {
@@ -244,7 +244,7 @@ struct FCivilizationCooperation
     {}
 };
 
-// å®‡å??¯æ?ä»»å?çµæ?
+// å®‡ï¿½Xï¿½ï¿½?ä»»ï¿½?çµï¿½?
 USTRUCT(BlueprintType)
 struct FUniverseMissionResult
 {
@@ -280,20 +280,20 @@ struct FUniverseMissionResult
     {}
 };
 
-// å®‡å??¯æ?ç³»çµ±
+// å®‡ï¿½Xï¿½ï¿½?ç³»çµ±
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class MINGGORTS_API UMingGoRTSAIUniverseSavior : public UActorComponent
 {
     GENERATED_BODY()
 
 public:
-    // æ§‹é€ å‡½??    UMingGoRTSAIUniverseSavior(};
+    // æ§‹é€ å‡½X    UMingGoRTSAIUniverseSavior(};
 
-    // çµ„ä»¶?Ÿå‘½?¨æ?
+    // çµ„ä»¶?ï¿½å‘½?ï¿½ï¿½?
     virtual void BeginPlay() override;
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-    // ========== å®‡å???§ç³»çµ± ==========
+    // ========== å®‡ï¿½Xï¿½ï¿½ç³»çµ± ==========
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void StartUniverseMonitoring(};
 
@@ -309,7 +309,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void AnalyzeMultiversalAnomalies(};
 
-    // ========== å¨è?ç®¡ç? ==========
+    // ========== å¨ï¿½?ç®¡ï¿½? ==========
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void DetectUniverseThreats(};
 
@@ -322,7 +322,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void AssessThreatEvolution(const FUniverseThreatData& Threat};
 
-    // ========== ?¯æ?ç­–ç•¥ ==========
+    // ========== ?ï¿½ï¿½?ç­–ç•¥ ==========
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void GenerateCosmicStrategy(const FUniverseThreatData& Threat};
 
@@ -335,7 +335,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void CoordinateMultiversalResponse(};
 
-    // ========== è³‡æ?ç®¡ç? ==========
+    // ========== è³‡ï¿½?ç®¡ï¿½? ==========
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void OptimizeCosmicResources(};
 
@@ -348,7 +348,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void HarvestStarEnergy(const TArray<FUniverseRegion>& TargetStars};
 
-    // ========== ?‡æ??ˆä? ==========
+    // ========== ?ï¿½ï¿½Xï¿½ï¿½? ==========
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void EstablishCivilizationContact(const FString& CivilizationName};
 
@@ -361,7 +361,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void ShareTechnologyWithAllies(EUniverseSaviorStrategy TechType};
 
-    // ========== ç·Šæ€¥å?è­?==========
+    // ========== ç·Šæ€¥ï¿½?ï¿½?==========
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void ActivateCosmicEmergencyProtocol(};
 
@@ -374,7 +374,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void ExecuteRealityAnchorSequence(};
 
-    // ========== å¤šç¶­åº¦æ?ä½?==========
+    // ========== å¤šç¶­åº¦ï¿½?ï¿½?==========
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void OpenWormholeToThreat(const FVector3d& TargetLocation};
 
@@ -387,7 +387,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void ManipulateTimeField(float TimeDilationFactor};
 
-    // ========== ç³»çµ±?§åˆ¶ ==========
+    // ========== ç³»çµ±?ï¿½åˆ¶ ==========
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void ActivateUniverseSaviorMode(};
 
@@ -400,7 +400,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
     void UpgradeToOmniversalMode(};
 
-    // ========== ?€?‹æŸ¥è©?==========
+    // ========== ?ï¿½?ï¿½æŸ¥ï¿½?==========
     UFUNCTION(BlueprintPure, Category = "Universe Savior")
     float CalculateUniversalStability() const;
 
@@ -413,7 +413,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Universe Savior")
     EUniverseThreatLevel GetCurrentUniversalThreatLevel() const { return CurrentUniverseThreatLevel; }
 
-    // ========== äº‹ä»¶å§”è? ==========
+    // ========== äº‹ä»¶å§”ï¿½? ==========
     UPROPERTY(BlueprintAssignable, Category = "Universe Savior Events")
     FOnUniverseThreatDetected OnUniverseThreatDetected;
 
@@ -433,7 +433,7 @@ public:
     FOnCivilizationContacted OnCivilizationContacted;
 
 private:
-    // ç³»çµ±?€??    UPROPERTY()
+    // ç³»çµ±?ï¿½X    UPROPERTY()
     bool bUniverseSaviorActive;
 
     UPROPERTY()
@@ -460,7 +460,7 @@ private:
     UPROPERTY()
     float CosmicEnergyReserves;
 
-    // ?¸æ?å­˜å„²
+    // ?ï¿½ï¿½?å­˜å„²
     UPROPERTY()
     TArray<FUniverseThreatData> DetectedCosmicThreats;
 
@@ -482,10 +482,10 @@ private:
     UPROPERTY()
     TArray<FString> UniversalStrategicGoals;
 
-    // ??§è¨ˆæ???    FTickerDelegate UniverseMonitoringTicker;
+    // Xï¿½ï¿½è¨ˆï¿½X    FTickerDelegate UniverseMonitoringTicker;
     FDelegateHandle UniverseMonitoringTickerHandle;
 
-    // ?§éƒ¨?¹æ?
+    // ?ï¿½éƒ¨?ï¿½ï¿½?
     void ProcessCosmicThreats(};
     void UpdateUniverseStatus(};
     void OptimizeCosmicResourceAllocation(};
@@ -501,7 +501,7 @@ private:
     void NotifyCosmicMissionCompleted(const FUniverseMissionResult& Result};
     void NotifyCivilizationContacted(const FCivilizationCooperation& Civilization};
 
-    // è¼”åŠ©?½æ•¸
+    // è¼”åŠ©?ï¿½æ•¸
     FString GenerateCosmicThreatName(};
     FString GenerateCosmicThreatDescription(};
     EUniverseSaviorStrategy GenerateRecommendedCosmicStrategy(EUniverseThreatLevel ThreatLevel};
@@ -522,7 +522,7 @@ private:
     bool OnUniverseMonitoringTick(float DeltaTime};
 };
 
-// äº‹ä»¶å§”è?é¡å?
+// äº‹ä»¶å§”ï¿½?é¡ï¿½?
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUniverseThreatDetected, const FUniverseThreatData&, Threat};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCosmicPlanGenerated, const FUniverseActionPlan&, Plan};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGalacticResourceOptimized, const FUniverseResourceOptimization&, Resource};

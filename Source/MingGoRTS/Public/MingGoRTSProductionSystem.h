@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -12,12 +12,12 @@ enum class EProductionCategory : uint8
     Civilian, UMETA(DisplayName = "?X?"),
     Industrial, UMETA(DisplayName = "u~X?"),
     Agricultural, UMETA(DisplayName = "A~X?"),
-    Medical, UMETA(DisplayName = "X??X?"),
+    Medical, UMETA(DisplayName = "XXX?"),
     Educational, UMETA(DisplayName = "X?|X?"),
-    Infrastructure, UMETA(DisplayName = "X??X]IX?"),
-    Luxury, UMETA(DisplayName = "?X??X),
+    Infrastructure, UMETA(DisplayName = "XXX]IX?"),
+    Luxury, UMETA(DisplayName = "?XXX),
     Research, UMETA(DisplayName = "?X?"),
-    Special, UMETA(DisplayName = "X??X?")
+    Special, UMETA(DisplayName = "XXX?")
 };
 
 UENUM(BlueprintType)
@@ -25,46 +25,46 @@ enum class EProductionStatus : uint8
 {
     Idle, UMETA(DisplayName = "?X"),
     Preparing, UMETA(DisplayName = "?X?X),
-    Producing, UMETA(DisplayName = "X??X),
+    Producing, UMETA(DisplayName = "XXX),
     Paused, UMETA(DisplayName = "wX),
     Completed, UMETA(DisplayName = "w?X),
     Failed, UMETA(DisplayName = "?X"),
-    Upgrading, UMETA(DisplayName = "X??X?X),
+    Upgrading, UMETA(DisplayName = "XXX?X),
     Maintenance, UMETA(DisplayName = "@?X)
 };
 
 UENUM(BlueprintType)
 enum class EProductionPriority : uint8
 {
-    Low, UMETA(DisplayName = "CuX??X"),
-    Normal, UMETA(DisplayName = "X?quX??X"),
-    High, UMETA(DisplayName = "uX??X"),
-    Critical, UMETA(DisplayName = "uX??X"),
-    Emergency, UMETA(DisplayName = "X?uX??X")
+    Low, UMETA(DisplayName = "CuXXX"),
+    Normal, UMETA(DisplayName = "X?quXXX"),
+    High, UMETA(DisplayName = "uXXX"),
+    Critical, UMETA(DisplayName = "uXXX"),
+    Emergency, UMETA(DisplayName = "X?uXXX")
 };
 
 UENUM(BlueprintType)
 enum class EProductionQuality : uint8
 {
-    Poor, UMETA(DisplayName = "X??"),
-    Normal, UMETA(DisplayName = "X??X),
+    Poor, UMETA(DisplayName = "XX"),
+    Normal, UMETA(DisplayName = "XXX),
     Good, UMETA(DisplayName = "X?n"),
-    Excellent, UMETA(DisplayName = "X??X"),
+    Excellent, UMETA(DisplayName = "XXX"),
     Masterpiece, UMETA(DisplayName = "?X")
 };
 
 UENUM(BlueprintType)
 enum class EProductionEfficiencyFactor : uint8
 {
-    BaseEfficiency, UMETA(DisplayName = "X??X??X"),
-    SkillBonus, UMETA(DisplayName = "X?X??X),
-    TechnologyBonus, UMETA(DisplayName = "?X??X"),
-    BuildingBonus, UMETA(DisplayName = "?X??X"),
+    BaseEfficiency, UMETA(DisplayName = "XXXXX"),
+    SkillBonus, UMETA(DisplayName = "X?XXX),
+    TechnologyBonus, UMETA(DisplayName = "?XXX"),
+    BuildingBonus, UMETA(DisplayName = "?XXX"),
     ResourceQuality, UMETA(DisplayName = "?X?"),
     WorkerMorale, UMETA(DisplayName = "uHh"),
-    Environmental, UMETA(DisplayName = "X??X??X"),
+    Environmental, UMETA(DisplayName = "XXXXX"),
     Maintenance, UMETA(DisplayName = "@X?X),
-    Overclock, UMETA(DisplayName = "WWX??X")
+    Overclock, UMETA(DisplayName = "WWXXX")
 };
 
 /**
@@ -202,7 +202,7 @@ struct FPRODUCTION_API FProductionLine
 };
 
 /**
- * X?X??X?X
+ * X?XXX?X
  */
 USTRUCT(BlueprintType)
 struct FPRODUCTION_API FProductionQueue
@@ -238,7 +238,7 @@ struct FPRODUCTION_API FProductionQueue
 };
 
 /**
- * X??X?X
+ * XXX?X
  */
 USTRUCT(BlueprintType)
 struct FPRODUCTION_API FProductionStatistics
@@ -364,67 +364,67 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Production System")
     FOnProductionQueueChanged OnProductionQueueChanged;
 
-    // X??X??X?t?X    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // XXXXX?t?X    UFUNCTION(BlueprintCallable, Category = "Production System")
     void InitializeProductionSystem(};
 
-    // X??X?X??X??X    UFUNCTION(BlueprintPure, Category = "Production System")
+    // XXX?XXXXX    UFUNCTION(BlueprintPure, Category = "Production System")
     TArray<EProductionCategory> GetAllProductionCategories() const;
 
-    // X??X??XOX??X    UFUNCTION(BlueprintPure, Category = "Production System")
+    // XXXXXOXXX    UFUNCTION(BlueprintPure, Category = "Production System")
     TArray<FProductionRecipe> GetRecipesByCategory(EProductionCategory Category) const;
 
-    // X??X?X?
+    // XXX?X?
     UFUNCTION(BlueprintPure, Category = "Production System")
     FProductionRecipe GetProductionRecipe(const FString& RecipeID) const;
 
-    // X?X??X    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // X?XXX    UFUNCTION(BlueprintCallable, Category = "Production System")
     FString CreateProductionLine(const FString& ProductionLineName, const FString& BuildingID};
 
-    // X??X?
+    // XXX?
     UFUNCTION(BlueprintCallable, Category = "Production System")
     bool StartProduction(const FString& ProductionLineID, const FString& RecipeID, EProductionPriority Priority = EProductionPriority::Normal};
 
-    // X??X?
+    // XXX?
     UFUNCTION(BlueprintCallable, Category = "Production System")
-    bool PauseProduction(const FString& ProductionLineID, const FString& Reason = TEXT("X??X??X")};
+    bool PauseProduction(const FString& ProductionLineID, const FString& Reason = TEXT("XXXXX")};
 
     // X?_X?
     UFUNCTION(BlueprintCallable, Category = "Production System")
-    bool ResumeProduction(const FString& ProductionLineID, const FString& Reason = TEXT("X??X?_")};
+    bool ResumeProduction(const FString& ProductionLineID, const FString& Reason = TEXT("XXX?_")};
 
-    // X??X?
+    // XXX?
     UFUNCTION(BlueprintCallable, Category = "Production System")
     bool CancelProduction(const FString& ProductionLineID};
 
-    // ]mX?X??X?X    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // ]mX?XXX?X    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool SetProductionPriority(const FString& ProductionLineID, EProductionPriority Priority};
 
-    // K?X??X??X    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // K?XXXXX    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool AddToProductionQueue(const FString& ProductionLineID, const FString& RecipeID};
 
-    // q?X??X    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // q?XXX    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool RemoveFromProductionQueue(const FString& ProductionLineID, int32 QueueIndex};
 
-    // MX?X??X
+    // MX?XXX
     UFUNCTION(BlueprintCallable, Category = "Production System")
     bool ClearProductionQueue(const FString& ProductionLineID};
 
-    // X??X?u?X    UFUNCTION(BlueprintPure, Category = "Production System")
+    // XXX?u?X    UFUNCTION(BlueprintPure, Category = "Production System")
     FProductionLine GetProductionLine(const FString& ProductionLineID) const;
 
-    // X??X?X??X
+    // XXX?XXX
     UFUNCTION(BlueprintPure, Category = "Production System")
     FProductionQueue GetProductionQueue(const FString& ProductionLineID) const;
 
-    // X??X?X??X??X
+    // XXX?XXXXX
     UFUNCTION(BlueprintPure, Category = "Production System")
     TArray<FProductionLine> GetAllProductionLines() const;
 
-    // p?X?X??X
+    // p?X?XXX
     UFUNCTION(BlueprintPure, Category = "Production System")
     float CalculateProductionEfficiency(const FString& ProductionLineID) const;
 
-    // p?X?X??X
+    // p?X?XXX
     UFUNCTION(BlueprintPure, Category = "Production System")
     float CalculateProductionTime(const FString& ProductionLineID, const FString& RecipeID) const;
 
@@ -432,7 +432,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Production System")
     bool CanProduceRecipe(const FString& ProductionLineID, const FString& RecipeID) const;
 
-    // X??X??X
+    // XXXXX
     UFUNCTION(BlueprintPure, Category = "Production System")
     FProductionStatistics GetProductionStatistics() const;
 
@@ -440,16 +440,16 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Production System")
     void UpdateProductionProgress(float DeltaTime};
 
-    // X??X??X    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // XXXXX    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool UpgradeProductionLine(const FString& ProductionLineID};
 
-    // @X??X    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // @XXX    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool MaintainProductionLine(const FString& ProductionLineID};
 
-    // ]mX??X    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // ]mXXX    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool SetAutomation(const FString& ProductionLineID, bool bIsAutomated};
 
-    // X??XtX?m
+    // XXXtX?m
     UFUNCTION(BlueprintPure, Category = "Production System")
     FProductionSystemConfig GetProductionConfig() const;
 
@@ -457,11 +457,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Production System")
     void UpdateProductionConfig(const FProductionSystemConfig& NewConfig};
 
-    // O?X?X??X
+    // O?X?XXX
     UFUNCTION(BlueprintCallable, Category = "Production System")
     bool SaveProductionData(const FString& SaveSlotName};
 
-    // JX?X??X
+    // JX?XXX
     UFUNCTION(BlueprintCallable, Category = "Production System")
     bool LoadProductionData(const FString& SaveSlotName};
 
@@ -469,15 +469,15 @@ protected:
     // X?u?X?X    UPROPERTY()
     TMap<FString, FProductionLine> ProductionLines;
 
-    // X?X?X??X
+    // X?X?XXX
     UPROPERTY()
     TMap<FString, FProductionRecipe> ProductionRecipes;
 
-    // X?X??X??X
+    // X?XXXXX
     UPROPERTY()
     TMap<FString, FProductionQueue> ProductionQueues;
 
-    // X??X
+    // XXX
     UPROPERTY()
     FProductionStatistics Statistics;
 
@@ -488,7 +488,7 @@ protected:
     // X?_w?Xl?X
     bool bIsInitialized;
 
-    // X??X??X??X??X??X    void InitializeRepublicanEraRecipes(};
+    // XXXXXXXXXXX    void InitializeRepublicanEraRecipes(};
 
     // X?حx?X?X?
     void CreateMilitaryProductionRecipes(};
@@ -502,45 +502,45 @@ protected:
     // X?عA~X?X?
     void CreateAgriculturalProductionRecipes(};
 
-    // X?X??X?X?
+    // X?XXX?X?
     void CreateMedicalProductionRecipes(};
 
     // X?X?|X?X?
     void CreateEducationalProductionRecipes(};
 
-    // X?X??X]IX?X?
+    // X?XXX]IX?X?
     void CreateInfrastructureProductionRecipes(};
 
-    // X?ذ?X??X??X    void CreateLuxuryProductionRecipes(};
+    // X?ذ?XXXXX    void CreateLuxuryProductionRecipes(};
 
-    // X??X??X
+    // XXXXX
     void HandleProductionCompleted(const FString& ProductionLineID};
 
-    // X??X??X
+    // XXXXX
     void HandleProductionFailed(const FString& ProductionLineID, const FString& ErrorMessage};
 
     // X?sX?u?X    void UpdateProductionLineStatus(const FString& ProductionLineID};
 
-    // X??X?X??X
+    // XXX?XXX
     void ProcessProductionQueue(const FString& ProductionLineID};
 
-    // X?X??X??X
+    // X?XXXXX
     void ApplyEfficiencyFactors(const FString& ProductionLineID};
 
-    // p?X??X    float CalculateFinalEfficiency(const FProductionLine& ProductionLine) const;
+    // p?XXX    float CalculateFinalEfficiency(const FProductionLine& ProductionLine) const;
 
-    // X??X?OX?
+    // XXX?OX?
     FString GetProductionCategoryName(EProductionCategory Category) const;
 
-    // X??X?X?X??X?X    FString GetProductionStatusName(EProductionStatus Status) const;
+    // XXX?X?XXX?X    FString GetProductionStatusName(EProductionStatus Status) const;
 
-    // ?X?X??X
+    // ?X?XXX
     bool ValidateRecipeData(const FProductionRecipe& Recipe) const;
 
-    // X??X?uID
+    // XXX?uID
     FString GenerateProductionLineID(const FString& BaseName) const;
 
-    // X??X?ID
+    // XXX?ID
     FString GenerateRecipeID(const FString& BaseName, EProductionCategory Category) const;
 
     // O?X?v

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,21 +7,21 @@
 struct FReplayMetadata;
 
 /**
- * ?æ”¾?’å??¹å?
+ * ?ï¿½æ”¾?ï¿½ï¿½Xï¿½ï¿½?
  */
 UENUM(BlueprintType)
 enum class EReplaySortMethod : uint8
 {
-    DateNewest          UMETA(DisplayName = "?¥æ?(?€??"),
-    DateOldest          UMETA(DisplayName = "?¥æ?(?€??"),
-    NameAscending       UMETA(DisplayName = "?ç¨±(?‡å?)"),
-    NameDescending      UMETA(DisplayName = "?ç¨±(?å?)"),
-    DurationLongest     UMETA(DisplayName = "?‚é•·(?€??"),
-    DurationShortest    UMETA(DisplayName = "?‚é•·(?€??")
+    DateNewest          UMETA(DisplayName = "?ï¿½ï¿½?(?ï¿½X"),
+    DateOldest          UMETA(DisplayName = "?ï¿½ï¿½?(?ï¿½X"),
+    NameAscending       UMETA(DisplayName = "?ï¿½ç¨±(?ï¿½ï¿½?)"),
+    NameDescending      UMETA(DisplayName = "?ï¿½ç¨±(?ï¿½ï¿½?)"),
+    DurationLongest     UMETA(DisplayName = "?ï¿½é•·(?ï¿½X"),
+    DurationShortest    UMETA(DisplayName = "?ï¿½é•·(?ï¿½X")
 };
 
 /**
- * ?æ”¾?æ¿¾æ¢ä»¶
+ * ?ï¿½æ”¾?ï¿½æ¿¾æ¢ä»¶
  */
 USTRUCT(BlueprintType)
 struct FReplayFilter
@@ -56,7 +56,7 @@ struct FReplayFilter
 };
 
 /**
- * ?æ”¾ç®¡ç???- ç®¡ç??æ”¾?‡ä»¶?„å??²å?æª¢ç´¢
+ * ?ï¿½æ”¾ç®¡ï¿½X- ç®¡ï¿½Xï¿½æ”¾?ï¿½ä»¶?ï¿½ï¿½Xï¿½ï¿½?æª¢ç´¢
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSReplayManager : public UObject
@@ -66,82 +66,82 @@ class MINGGORTS_API UMingRTSReplayManager : public UObject
 public:
     UMingRTSReplayManager(};
     
-    // ?å???    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
+    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     void InitializeReplayManager(};
     
-    // ?²å??€?‰å???    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     TArray<FReplayMetadata> GetAllReplays() const;
     
-    // ?æ¿¾?æ”¾
+    // ?ï¿½æ¿¾?ï¿½æ”¾
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     TArray<FReplayMetadata> FilterReplays(const FReplayFilter& Filter) const;
     
-    // ?’å??æ”¾
+    // ?ï¿½ï¿½Xï¿½æ”¾
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     TArray<FReplayMetadata> SortReplays(const TArray<FReplayMetadata>& Replays, EReplaySortMethod SortMethod) const;
     
-    // ?œç´¢?æ”¾
+    // ?ï¿½ç´¢?ï¿½æ”¾
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     TArray<FReplayMetadata> SearchReplays(const FString& SearchQuery) const;
     
-    // ?²å??æ”¾è©³æ?
+    // ?ï¿½ï¿½Xï¿½æ”¾è©³ï¿½?
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     FReplayMetadata GetReplayMetadata(const FString& ReplayID) const;
     
-    // ?å‘½?å???    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
+    // ?ï¿½å‘½?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     bool RenameReplay(const FString& ReplayID, const FString& NewName};
     
-    // ?ªé™¤?æ”¾
+    // ?ï¿½é™¤?ï¿½æ”¾
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     bool DeleteReplay(const FString& ReplayID};
     
-    // ?¹é??ªé™¤
+    // ?ï¿½ï¿½Xï¿½é™¤
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     int32 DeleteReplaysBatch(const TArray<FString>& ReplayIDs};
     
-    // å°å‡º?æ”¾?°æ?å®šè·¯å¾?    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
+    // å°å‡º?ï¿½æ”¾?ï¿½ï¿½?å®šè·¯ï¿½?    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     bool ExportReplay(const FString& ReplayID, const FString& ExportPath};
     
-    // å¾æ?ä»¶å??¥å???    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
+    // å¾ï¿½?ä»¶ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     FReplayMetadata ImportReplay(const FString& FilePath};
     
-    // ?²å?å­˜å„²ä½¿ç”¨?…æ? (MB)
+    // ?ï¿½ï¿½?å­˜å„²ä½¿ç”¨?ï¿½ï¿½? (MB)
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     float GetStorageUsage() const;
     
-    // ?²å?å­˜å„²?é? (MB)
+    // ?ï¿½ï¿½?å­˜å„²?ï¿½ï¿½? (MB)
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     float GetStorageQuota() const;
     
-    // è¨­ç½®å­˜å„²?é?
+    // è¨­ç½®å­˜å„²?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     void SetStorageQuota(float QuotaMB};
     
-    // æ¸…ç??Šå???    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
+    // æ¸…ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     int32 CleanupOldReplays(int32 DaysOld};
     
-    // ?µå»º?æ”¾?‡ä»¶å¤?    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
+    // ?ï¿½å»º?ï¿½æ”¾?ï¿½ä»¶ï¿½?    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     bool CreateReplayFolder(const FString& FolderName};
     
-    // ?²å??‡ä»¶å¤¾å?è¡?    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
+    // ?ï¿½ï¿½Xï¿½ä»¶å¤¾ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     TArray<FString> GetReplayFolders() const;
     
-    // ç§»å??æ”¾?°æ?ä»¶å¤¾
+    // ç§»ï¿½Xï¿½æ”¾?ï¿½ï¿½?ä»¶å¤¾
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     bool MoveReplayToFolder(const FString& ReplayID, const FString& FolderName};
     
-    // ?µå»º?æ”¾?¶è?
+    // ?ï¿½å»º?ï¿½æ”¾?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     void AddReplayToFavorites(const FString& ReplayID};
     
-    // ç§»é™¤?¶è?
+    // ç§»é™¤?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     void RemoveReplayFromFavorites(const FString& ReplayID};
     
-    // ?²å??¶è??„å???    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     TArray<FReplayMetadata> GetFavoriteReplays() const;
     
-    // äº‹ä»¶å§”è?
+    // äº‹ä»¶å§”ï¿½?
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReplayAdded, const FReplayMetadata&, Replay};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReplayDeleted, const FString&, ReplayID};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReplayRenamed, const FString&, ReplayID};

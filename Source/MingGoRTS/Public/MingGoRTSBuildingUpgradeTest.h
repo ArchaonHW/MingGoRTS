@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -13,142 +13,142 @@ class MINGGORTS_API UMingGoRTSBuildingUpgradeTest : public UObject
 public:
     UMingGoRTSBuildingUpgradeTest(};
 
-    // å»ºç??‡ç?ç³»çµ±å¯¦ä?
+    // å»ºï¿½Xï¿½ï¿½?ç³»çµ±å¯¦ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Building Upgrade Test")
     UMingGoRTSBuildingUpgradeSystem* UpgradeSystem;
 
-    // ?å??–æ¸¬è©?    UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
+    // ?ï¿½ï¿½Xï¿½æ¸¬ï¿½?    UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     void InitializeTest(};
 
-    // æ¸¬è©¦å»ºç??‡ç?ç³»çµ±?å???    UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
+    // æ¸¬è©¦å»ºï¿½Xï¿½ï¿½?ç³»çµ±?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestBuildingUpgradeSystemInitialization(};
 
-    // æ¸¬è©¦?‡ç?è·¯å??µå»º
+    // æ¸¬è©¦?ï¿½ï¿½?è·¯ï¿½Xï¿½å»º
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradePathCreation(};
 
-    // æ¸¬è©¦å»ºç??‡ç?æµç?
+    // æ¸¬è©¦å»ºï¿½Xï¿½ï¿½?æµï¿½?
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestBuildingUpgradeFlow(};
 
-    // æ¸¬è©¦?‡ç??«å??¢å¾©
+    // æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½Xï¿½å¾©
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradePauseResume(};
 
-    // æ¸¬è©¦?‡ç??–æ?
+    // æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeCancellation(};
 
-    // æ¸¬è©¦ç«‹å³?‡ç?
+    // æ¸¬è©¦ç«‹å³?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestInstantUpgrade(};
 
-    // æ¸¬è©¦?‡ç??ªå?ç´?    UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
+    // æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradePriority(};
 
-    // æ¸¬è©¦?‡ç?è·¯å?è§??
+    // æ¸¬è©¦?ï¿½ï¿½?è·¯ï¿½?ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradePathUnlocking(};
 
-    // æ¸¬è©¦?‡ç??ˆæ??‰ç”¨
+    // æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½Xï¿½ç”¨
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeEffectsApplication(};
 
-    // æ¸¬è©¦?‡ç?æ¢ä»¶æª¢æŸ¥
+    // æ¸¬è©¦?ï¿½ï¿½?æ¢ä»¶æª¢æŸ¥
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeRequirementsCheck(};
 
-    // æ¸¬è©¦?‡ç??æœ¬è¨ˆç?
+    // æ¸¬è©¦?ï¿½ï¿½Xï¿½æœ¬è¨ˆï¿½?
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeCostCalculation(};
 
-    // æ¸¬è©¦?‡ç??‚é?è¨ˆç?
+    // æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½?è¨ˆï¿½?
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeTimeCalculation(};
 
-    // æ¸¬è©¦æ°‘å??‚æ??¹è‰²?‡ç?è·¯å?
+    // æ¸¬è©¦æ°‘ï¿½Xï¿½ï¿½Xï¿½è‰²?ï¿½ï¿½?è·¯ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestRepublicanEraUpgradePaths(};
 
-    // æ¸¬è©¦?‡ç?çµ±è?
+    // æ¸¬è©¦?ï¿½ï¿½?çµ±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeStatistics(};
 
-    // æ¸¬è©¦?‡ç??ç½®
+    // æ¸¬è©¦?ï¿½ï¿½Xï¿½ç½®
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeConfiguration(};
 
-    // æ¸¬è©¦?‡ç?ä¿å?è¼‰å…¥
+    // æ¸¬è©¦?ï¿½ï¿½?ä¿ï¿½?è¼‰å…¥
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestSaveAndLoad(};
 
-    // æ¸¬è©¦ä¸¦è??‡ç??åˆ¶
+    // æ¸¬è©¦ä¸¦ï¿½Xï¿½ï¿½Xï¿½åˆ¶
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestConcurrentUpgradeLimit(};
 
-    // æ¸¬è©¦?‡ç??è¦½?Ÿèƒ½
+    // æ¸¬è©¦?ï¿½ï¿½Xï¿½è¦½?ï¿½èƒ½
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradePreview(};
 
-    // ?‹è??€?‰æ¸¬è©?    UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
+    // ?ï¿½ï¿½Xï¿½?ï¿½æ¸¬ï¿½?    UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool RunAllTests(};
 
-    // ?²å?æ¸¬è©¦çµæ?
+    // ?ï¿½ï¿½?æ¸¬è©¦çµï¿½?
     UFUNCTION(BlueprintPure, Category = "Building Upgrade Test")
     FString GetTestResults() const;
 
-    // æ¸…ç?æ¸¬è©¦
+    // æ¸…ï¿½?æ¸¬è©¦
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     void CleanupTest(};
 
 private:
-    // æ¸¬è©¦çµæ?
+    // æ¸¬è©¦çµï¿½?
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // æ¸¬è©¦?šé??¸é?
+    // æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½?
     int32 PassedTests;
 
-    // æ¸¬è©¦å¤±æ??¸é?
+    // æ¸¬è©¦å¤±ï¿½Xï¿½ï¿½?
     int32 FailedTests;
 
-    // æ·»å?æ¸¬è©¦çµæ?
+    // æ·»ï¿½?æ¸¬è©¦çµï¿½?
     void AddTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
 
-    // ?µå»ºæ¸¬è©¦å»ºç?
+    // ?ï¿½å»ºæ¸¬è©¦å»ºï¿½?
     FString CreateTestBuilding(const FString& BuildingName, EBuildingType BuildingType};
 
-    // ?µå»ºæ¸¬è©¦?‡ç?è·¯å?
+    // ?ï¿½å»ºæ¸¬è©¦?ï¿½ï¿½?è·¯ï¿½?
     FBuildingUpgradePath CreateTestUpgradePath(const FString& PathName, EBuildingType BuildingType};
 
-    // é©—è??‡ç?è·¯å??¸æ?
+    // é©—ï¿½Xï¿½ï¿½?è·¯ï¿½Xï¿½ï¿½?
     bool VerifyUpgradePathData(const FBuildingUpgradePath& UpgradePath, const FString& ExpectedName, EBuildingType ExpectedType};
 
-    // é©—è??‡ç??²åº¦
+    // é©—ï¿½Xï¿½ï¿½Xï¿½åº¦
     bool VerifyUpgradeProgress(const FString& BuildingID, EBuildingUpgradeStatus ExpectedStatus};
 
-    // ?²å??¨æ??‡ç?è·¯å?ID
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?è·¯ï¿½?ID
     FString GetRandomUpgradePathID(EBuildingType BuildingType) const;
 
-    // ?ç½®æ¸¬è©¦è¨ˆæ•¸??    void ResetTestCounters(};
+    // ?ï¿½ç½®æ¸¬è©¦è¨ˆæ•¸X    void ResetTestCounters(};
 
-    // ?µå»ºæ¸¬è©¦?ç½®
+    // ?ï¿½å»ºæ¸¬è©¦?ï¿½ç½®
     FBuildingUpgradeSystemConfig CreateTestConfig(};
 
-    // é©—è??ç½®?‰ç”¨
+    // é©—ï¿½Xï¿½ç½®?ï¿½ç”¨
     bool VerifyConfigApplication(const FBuildingUpgradeSystemConfig& ExpectedConfig};
 
-    // ç­‰å??‡ç?å®Œæ?
+    // ç­‰ï¿½Xï¿½ï¿½?å®Œï¿½?
     bool WaitForUpgradeCompletion(const FString& BuildingID, float TimeoutSeconds = 10.0f};
 
-    // æ¨¡æ“¬?‚é?æµé€?    void SimulateTimeProgress(float DeltaTime};
+    // æ¨¡æ“¬?ï¿½ï¿½?æµï¿½?    void SimulateTimeProgress(float DeltaTime};
 
-    // é©—è??‡ç??ˆæ?
+    // é©—ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     bool VerifyUpgradeEffects(const FString& BuildingID, const TArray<FBuildingUpgradeEffect>& ExpectedEffects};
 
-    // ?µå»ºæ¸¬è©¦?‡ç??ˆæ?
+    // ?ï¿½å»ºæ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½?
     TArray<FBuildingUpgradeEffect> CreateTestEffects(};
 
-    // ?µå»ºæ¸¬è©¦?‡ç??€æ±?    TArray<FBuildingUpgradeRequirement> CreateTestRequirements(};
+    // ?ï¿½å»ºæ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½?    TArray<FBuildingUpgradeRequirement> CreateTestRequirements(};
 };
 

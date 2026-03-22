@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,8 @@
 #include "MingRTSOptimizationExample.generated.h"
 
 /**
- * ?ªå?ç·¨è­¯ç³»çµ±ä½¿ç”¨ç¤ºä?
- * æ¼”ç¤ºå¦‚ä?ä½¿ç”¨MingGoRTS?„å„ª?–ç·¨è­¯ç³»çµ? */
+ * ?ï¿½ï¿½?ç·¨è­¯ç³»çµ±ä½¿ç”¨ç¤ºï¿½?
+ * æ¼”ç¤ºå¦‚ï¿½?ä½¿ç”¨MingGoRTS?ï¿½å„ª?ï¿½ç·¨è­¯ç³»ï¿½? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSOptimizationExample : public UObject
 {
@@ -16,52 +16,52 @@ class MINGGORTS_API UMingRTSOptimizationExample : public UObject
 public:
     UMingRTSOptimizationExample(};
 
-    // ?ºç?ä½¿ç”¨ç¤ºä?
+    // ?ï¿½ï¿½?ä½¿ç”¨ç¤ºï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void BasicUsageExample(};
 
-    // å¿«é€Ÿå„ª?–ç¤ºä¾?    UFUNCTION(BlueprintCallable, Category = "Optimization Example")
+    // å¿«é€Ÿå„ª?ï¿½ç¤ºï¿½?    UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void QuickOptimizationExample(};
 
-    // æ·±åº¦?ªå?ç¤ºä?
+    // æ·±åº¦?ï¿½ï¿½?ç¤ºï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void DeepOptimizationExample(};
 
-    // ?ªå?ç¾©é?ç½®ç¤ºä¾?    UFUNCTION(BlueprintCallable, Category = "Optimization Example")
+    // ?ï¿½ï¿½?ç¾©ï¿½?ç½®ç¤ºï¿½?    UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void CustomConfigurationExample(};
 
-    // å¯¦æ???§ç¤ºä?
+    // å¯¦ï¿½Xï¿½ï¿½ç¤ºï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void RealTimeMonitoringExample(};
 
-    // ?§èƒ½?†æ?ç¤ºä?
+    // ?ï¿½èƒ½?ï¿½ï¿½?ç¤ºï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void PerformanceAnalysisExample(};
 
-    // ç®—æ??ªå?ç¤ºä?
+    // ç®—ï¿½Xï¿½ï¿½?ç¤ºï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void AlgorithmOptimizationExample(};
 
-    // ?¹é??•ç?ç¤ºä?
+    // ?ï¿½ï¿½Xï¿½ï¿½?ç¤ºï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void BatchProcessingExample(};
 
-    // ?†æ?å·¥ä?æµç?ç¤ºä?
+    // ?ï¿½ï¿½?å·¥ï¿½?æµï¿½?ç¤ºï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void IntegratedWorkflowExample(};
 
-    // ?²å?ä½¿ç”¨?‡å?
+    // ?ï¿½ï¿½?ä½¿ç”¨?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     FString GetUsageGuide(};
 
 protected:
-    // ?ªå?ç³»çµ±ç®¡ç???    UPROPERTY(BlueprintReadOnly, Category = "Optimization Example")
+    // ?ï¿½ï¿½?ç³»çµ±ç®¡ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Optimization Example")
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
 private:
-    // ?å??–ç¤ºä¾?    void InitializeExample(};
+    // ?ï¿½ï¿½Xï¿½ç¤ºï¿½?    void InitializeExample(};
     
-    // æ¼”ç¤ºè¼”åŠ©?¹æ?
+    // æ¼”ç¤ºè¼”åŠ©?ï¿½ï¿½?
     void LogExampleResult(const FString& ExampleName, const FString& Result};
     void ShowConfigurationDetails(const FOptimizationConfiguration& Config};
     void DisplayPerformanceReport(const FString& Report};

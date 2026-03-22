@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -51,7 +51,7 @@ class MINGGORTS_API UMingGoRTSAIFilmGenerator : public UObject
 public:
     UMingGoRTSAIFilmGenerator(};
 
-    // ä¸»è?å½±ç??Ÿæ??Ÿèƒ½
+    // ä¸»ï¿½?å½±ï¿½Xï¿½ï¿½Xï¿½èƒ½
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void GenerateFilmSequence(const TArray<FFilmSequenceData>& FilmData};
 
@@ -64,18 +64,18 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     EFilmGenerationStatus GetGenerationStatus() const { return CurrentStatus; }
 
-    // ?®å??Ÿæ?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void GenerateSingleFrame(const FString& Prompt, const FString& Style, int32 FrameIndex};
 
-    // Stable Diffusion ?´å?
+    // Stable Diffusion ?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void SetStableDiffusionAPI(const FString& APIEndpoint, const FString& APIKey};
 
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     bool TestAPIConnection(};
 
-    // å½±ç?åºå?ç®¡ç?
+    // å½±ï¿½?åºï¿½?ç®¡ï¿½?
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void AddFilmSequence(const FFilmSequenceData& SequenceData};
 
@@ -85,14 +85,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     TArray<FFilmSequenceData> GetFilmSequences() const { return FilmSequences; }
 
-    // ?è¦½?Ÿèƒ½
+    // ?ï¿½è¦½?ï¿½èƒ½
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void PreviewFrame(int32 FrameIndex};
 
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void PlayGeneratedFilm(};
 
-    // å§”æ?äº‹ä»¶
+    // å§”ï¿½?äº‹ä»¶
     UPROPERTY(BlueprintAssignable, Category = "AI Film")
     FOnFilmFrameGenerated OnFilmFrameGenerated;
 
@@ -116,7 +116,7 @@ protected:
 
     bool bIsGenerating;
 
-    // æ³¨æ?ï¼šé?UObjecté¡å?ä¸èƒ½?¨UPROPERTY
+    // æ³¨ï¿½?ï¼šï¿½?UObjecté¡ï¿½?ä¸èƒ½?ï¿½UPROPERTY
     FTickerDelegate GenerationTicker;
     FDelegateHandle GenerationTickerHandle;
 

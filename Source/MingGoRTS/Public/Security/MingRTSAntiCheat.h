@@ -1,54 +1,54 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSAntiCheat.generated.h"
 
 /**
- * 作�?檢測類�?
+ * 作�?檢測類�?
  */
 UENUM(BlueprintType)
 enum class ECheatType : uint8
 {
-    None                    UMETA(DisplayName = "??),
-    MemoryModification      UMETA(DisplayName = "記憶體修??),
-    SpeedHack               UMETA(DisplayName = "?�度修改"),
-    AimBot                  UMETA(DisplayName = "?��??��?"),
-    MacroScript             UMETA(DisplayName = "?�本/�?),
-    MapHack                 UMETA(DisplayName = "?��?外�?"),
-    ResourceHack            UMETA(DisplayName = "資�?修改"),
-    Injection               UMETA(DisplayName = "注入作�?"),
-    Bypass                  UMETA(DisplayName = "繞�?檢測"),
-    Collusion               UMETA(DisplayName = "?��?作�?")
+    None                    UMETA(DisplayName = "X),
+    MemoryModification      UMETA(DisplayName = "記憶體修X),
+    SpeedHack               UMETA(DisplayName = "?�度修改"),
+    AimBot                  UMETA(DisplayName = "?��X��?"),
+    MacroScript             UMETA(DisplayName = "?�本/�?),
+    MapHack                 UMETA(DisplayName = "?��?外�?"),
+    ResourceHack            UMETA(DisplayName = "資�?修改"),
+    Injection               UMETA(DisplayName = "注入作�?"),
+    Bypass                  UMETA(DisplayName = "繞�?檢測"),
+    Collusion               UMETA(DisplayName = "?��?作�?")
 };
 
 /**
- * ?�罰等�?
+ * ?�罰等�?
  */
 UENUM(BlueprintType)
 enum class EPenaltyLevel : uint8
 {
-    Warning         UMETA(DisplayName = "警�?"),
-    Restriction     UMETA(DisplayName = "?�制"),
-    Suspension      UMETA(DisplayName = "?��?封�?"),
-    PermanentBan    UMETA(DisplayName = "永�?封�?"),
-    LegalAction     UMETA(DisplayName = "法�?追訴")
+    Warning         UMETA(DisplayName = "警�?"),
+    Restriction     UMETA(DisplayName = "?�制"),
+    Suspension      UMETA(DisplayName = "?��?封�?"),
+    PermanentBan    UMETA(DisplayName = "永�?封�?"),
+    LegalAction     UMETA(DisplayName = "法�?追訴")
 };
 
 /**
- * 檢測置信�? */
+ * 檢測置信�? */
 UENUM(BlueprintType)
 enum class EDetectionConfidence : uint8
 {
-    VeryLow     UMETA(DisplayName = "很�?"),
-    Low         UMETA(DisplayName = "�?),
-    Medium      UMETA(DisplayName = "中�?"),
-    High        UMETA(DisplayName = "�?),
-    VeryHigh    UMETA(DisplayName = "很�?")
+    VeryLow     UMETA(DisplayName = "很�?"),
+    Low         UMETA(DisplayName = "�?),
+    Medium      UMETA(DisplayName = "中�?"),
+    High        UMETA(DisplayName = "�?),
+    VeryHigh    UMETA(DisplayName = "很�?")
 };
 
 /**
- * 檢測結�?
+ * 檢測結�?
  */
 USTRUCT(BlueprintType)
 struct FCheatDetectionResult
@@ -87,7 +87,7 @@ struct FCheatDetectionResult
 };
 
 /**
- * ?�家行為記�?
+ * ?�家行為記�?
  */
 USTRUCT(BlueprintType)
 struct FPlayerBehaviorRecord
@@ -128,7 +128,7 @@ struct FPlayerBehaviorRecord
 };
 
 /**
- * ?��?弊核心系�? */
+ * ?��?弊核心系�? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSAntiCheat : public UObject
 {
@@ -137,60 +137,60 @@ class MINGGORTS_API UMingRTSAntiCheat : public UObject
 public:
     UMingRTSAntiCheat(};
     
-    // ?��???    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
+    // ?��X    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void InitializeAntiCheat(};
     
-    // ?��?檢測
+    // ?��?檢測
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void StartMonitoring(};
     
-    // ?�止檢測
+    // ?�止檢測
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void StopMonitoring(};
     
-    // ?��??��?行為
+    // ?��X��?行為
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void ReportSuspiciousBehavior(const FString& PlayerID, ECheatType Type, const FString& Details};
     
-    // 檢測記憶體修??    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
+    // 檢測記憶體修X    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     bool DetectMemoryModification(const FString& PlayerID};
     
-    // 檢測?�度作�?
+    // 檢測?�度作�?
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     bool DetectSpeedHack(const FString& PlayerID, float CurrentSpeed};
     
-    // 檢測?��??�本
+    // 檢測?��X�本
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     bool DetectMacroUsage(const FString& PlayerID, const TArray<float>& ActionTimings};
     
-    // ?��??�家行為模�?
+    // ?��X�家行為模�?
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void AnalyzePlayerBehavior(const FString& PlayerID};
     
-    // ?��?檢測結�?
+    // ?��?檢測結�?
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void ProcessDetection(const FCheatDetectionResult& Result};
     
-    // ?�用?�罰
+    // ?�用?�罰
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void ApplyPenalty(const FString& PlayerID, EPenaltyLevel Penalty, const FString& Reason};
     
-    // ?��??�家?��?歷史
+    // ?��X�家?��?歷史
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     TArray<FCheatDetectionResult> GetPlayerViolationHistory(const FString& PlayerID) const;
     
-    // 檢查?�家?�否被�?�?    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
+    // 檢查?�家?�否被�?�?    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     bool IsPlayerBanned(const FString& PlayerID) const;
     
-    // �?��封�? (管�??��???
+    // �?��封�? (管�X��X
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void UnbanPlayer(const FString& PlayerID, const FString& AdminID, const FString& Reason};
     
-    // 上傳檢測?��??��??�器
+    // 上傳檢測?��X��X�器
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void UploadDetectionReport(const FCheatDetectionResult& Result};
     
-    // 事件委�?
+    // 事件委�?
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCheatDetected, const FCheatDetectionResult&, Detection};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPlayerPenalized, const FString&, PlayerID, EPenaltyLevel, Penalty, const FText&, Reason};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerBanned, const FString&, PlayerID};

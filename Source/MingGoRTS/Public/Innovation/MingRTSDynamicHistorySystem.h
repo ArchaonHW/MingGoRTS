@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,34 +7,34 @@
 UENUM(BlueprintType)
 enum class EHistoricalEventType : uint8
 {
-    Political,       // ?�治事件
-    Military,        // 軍�?事件
-    Economic,        // 經�?事件
-    Cultural,        // ?��?事件
-    Social,          // 社�?事件
-    Technological,   // ?�術�?�?    Natural,         // ?�然事件
-    Personal         // ?�人事件
+    Political,       // ?�治事件
+    Military,        // 軍�?事件
+    Economic,        // 經�?事件
+    Cultural,        // ?��?事件
+    Social,          // 社�?事件
+    Technological,   // ?�術�?�?    Natural,         // ?�然事件
+    Personal         // ?�人事件
 };
 
 UENUM(BlueprintType)
 enum class EHistoricalImpact : uint8
 {
-    Local,           // ?�地影響
-    Regional,        // ?��?影響
-    National,        // ?��?影響
-    International,   // ?��?影響
-    Global           // ?��?影響
+    Local,           // ?�地影響
+    Regional,        // ?��?影響
+    National,        // ?��?影響
+    International,   // ?��?影響
+    Global           // ?��?影響
 };
 
 UENUM(BlueprintType)
 enum class EHistoricalSignificance : uint8
 {
-    Trivial,         // ?��?
-    Minor,           // 次�?
-    Moderate,        // 中�?
-    Major,           // 主�?
-    Critical,        // ?�鍵
-    Legendary        // ?��?
+    Trivial,         // ?��?
+    Minor,           // 次�?
+    Moderate,        // 中�?
+    Major,           // 主�?
+    Critical,        // ?�鍵
+    Legendary        // ?��?
 };
 
 USTRUCT(BlueprintType)
@@ -170,7 +170,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimelineBranch, const FString&, B
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEraChange, const FString&, NewEra};
 
 /**
- * ?��?歷史演進系�?- ?��??��?歷史事件?��??�系�? * ?��??�於?�家行為?��??�歷?��??��?多�??��?線支?? */
+ * ?��?歷史演進系�?- ?��X��?歷史事件?��X�系�? * ?��X�於?�家行為?��X�歷?��X��?多�X��?線支X */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSDynamicHistorySystem : public UObject
 {
@@ -179,63 +179,63 @@ class MINGGORTS_API UMingRTSDynamicHistorySystem : public UObject
 public:
     UMingRTSDynamicHistorySystem(};
 
-    // 系統?��???    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
+    // 系統?��X    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     void InitializeDynamicHistorySystem(};
 
-    // ?�建歷史?��?�?    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
+    // ?�建歷史?��?�?    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     FHistoricalTimeline CreateTimeline(const FString& TimelineID, const FString& TimelineName, int32 StartYear};
 
-    // ?��?歷史事件
+    // ?��?歷史事件
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     FHistoricalEvent GenerateHistoricalEvent(const FString& TimelineID, EHistoricalEventType EventType, const FString& Context};
 
-    // ?��??�家行為影響
+    // ?��X�家行為影響
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     void ProcessPlayerAction(const FString& PlayerID, const FString& Action, const FString& Context};
 
-    // ?�建歷史?�支
+    // ?�建歷史?�支
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     FHistoricalBranch CreateHistoricalBranch(const FString& TimelineID, const FString& DivergenceEvent};
 
-    // 演進�??��?
+    // 演進�X��?
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     void AdvanceTimeline(const FString& TimelineID, int32 Years};
 
-    // ?��??��??��?�?    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
+    // ?��X��X��?�?    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     FHistoricalTimeline GetCurrentTimeline(const FString& TimelineID) const;
 
-    // ?��?歷史事件
+    // ?��?歷史事件
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     TArray<FHistoricalEvent> GetHistoricalEvents(const FString& TimelineID, EHistoricalEventType EventType) const;
 
-    // ?��?潛在事件
+    // ?��?潛在事件
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     TArray<FHistoricalEvent> GetPotentialEvents(const FString& TimelineID, const FString& Context) const;
 
-    // 計�?歷史影響
+    // 計�?歷史影響
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     float CalculateHistoricalImpact(const FHistoricalEvent& Event) const;
 
-    // ?��??��??�容
+    // ?��X��X�容
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     FString GenerateNarrativeContent(const FHistoricalEvent& Event) const;
 
-    // ?�測?��?事件
+    // ?�測?��?事件
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     TArray<FHistoricalEvent> PredictFutureEvents(const FString& TimelineID, int32 YearsAhead) const;
 
-    // 設置歷史?�數
+    // 設置歷史?�數
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     void SetHistoricalParameters(float EventGenerationRate, float PlayerInfluenceWeight, float BranchProbability};
 
-    // ?��?歷史統�?
+    // ?��?歷史統�?
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     TMap<FString, float> GetHistoricalStatistics(const FString& TimelineID) const;
 
-    // ?�置?��?�?    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
+    // ?�置?��?�?    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     void ResetTimeline(const FString& TimelineID};
 
-    // 事件委�?
+    // 事件委�?
     UPROPERTY(BlueprintAssignable)
     FOnHistoricalEvent OnHistoricalEvent;
 
@@ -246,7 +246,7 @@ public:
     FOnEraChange OnEraChange;
 
 protected:
-    // 歷史?�數
+    // 歷史?�數
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "History Parameters")
     float EventGenerationRate;
 
@@ -259,10 +259,10 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "History Parameters")
     int32 MaxEventsPerYear;
 
-    // ?��?線�???    UPROPERTY(BlueprintReadOnly, Category = "History Data")
+    // ?��?線�X    UPROPERTY(BlueprintReadOnly, Category = "History Data")
     TMap<FString, FHistoricalTimeline> Timelines;
 
-    // 歷史?�支存儲
+    // 歷史?�支存儲
     UPROPERTY(BlueprintReadOnly, Category = "History Data")
     TMap<FString, TArray<FHistoricalBranch>> TimelineBranches;
 
@@ -270,15 +270,15 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "History Templates")
     TArray<FHistoricalEvent> EventTemplates;
 
-    // ?�代定義
+    // ?�代定義
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "History Data")
     TMap<int32, FString> EraDefinitions;
 
-    // 世�??�??    UPROPERTY(BlueprintReadOnly, Category = "History Data")
+    // 世�X�X    UPROPERTY(BlueprintReadOnly, Category = "History Data")
     TMap<FString, TMap<FString, float>> WorldStates;
 
 private:
-    // ?�部事件?��??�輯
+    // ?�部事件?��X�輯
     FHistoricalEvent GeneratePoliticalEvent(const FString& Context};
     FHistoricalEvent GenerateMilitaryEvent(const FString& Context};
     FHistoricalEvent GenerateEconomicEvent(const FString& Context};
@@ -288,18 +288,18 @@ private:
     FHistoricalEvent GenerateNaturalEvent(const FString& Context};
     FHistoricalEvent GeneratePersonalEvent(const FString& Context};
     
-    // 歷史演進�?�?    void UpdateWorldState(const FString& TimelineID, const FHistoricalEvent& Event};
+    // 歷史演進�?�?    void UpdateWorldState(const FString& TimelineID, const FHistoricalEvent& Event};
     void CheckEraProgression(const FString& TimelineID};
     void EvaluateBranchConditions(const FString& TimelineID};
     
-    // 輔助?�數
+    // 輔助?�數
     FString GenerateEventID() const;
     float CalculateEventProbability(const FHistoricalEvent& Event, const FString& TimelineID) const;
     FString GetCurrentEra(int32 Year) const;
     TArray<FString> GetActiveFactions(const FString& TimelineID) const;
     void RecordHistoricalEvent(const FString& TimelineID, const FHistoricalEvent& Event};
     
-    // ?��??��?
+    // ?��X��?
     FString GenerateEventNarrative(const FHistoricalEvent& Event) const;
     FString GenerateConsequenceNarrative(const TArray<FString>& Consequences) const;
     FString GenerateCharacterNarrative(const TArray<FString>& KeyFigures) const;

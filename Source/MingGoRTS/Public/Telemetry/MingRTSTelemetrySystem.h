@@ -1,29 +1,29 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSTelemetrySystem.generated.h"
 
 /**
- * ?™æ¸¬äº‹ä»¶é¡å?
+ * ?ï¿½æ¸¬äº‹ä»¶é¡ï¿½?
  */
 UENUM(BlueprintType)
 enum class ETelemetryEventType : uint8
 {
-    SessionStart          UMETA(DisplayName = "?ƒè©±?‹å?"),
-    SessionEnd            UMETA(DisplayName = "?ƒè©±çµæ?"),
-    MatchStart            UMETA(DisplayName = "å°å??‹å?"),
-    MatchEnd              UMETA(DisplayName = "å°å?çµæ?"),
-    PlayerAction          UMETA(DisplayName = "?©å®¶?ä?"),
-    UIInteraction         UMETA(DisplayName = "UIäº¤ä?"),
-    Error                 UMETA(DisplayName = "?¯èª¤"),
-    Performance           UMETA(DisplayName = "?§èƒ½?¸æ?"),
-    FeatureUsage          UMETA(DisplayName = "?Ÿèƒ½ä½¿ç”¨"),
+    SessionStart          UMETA(DisplayName = "?ï¿½è©±?ï¿½ï¿½?"),
+    SessionEnd            UMETA(DisplayName = "?ï¿½è©±çµï¿½?"),
+    MatchStart            UMETA(DisplayName = "å°ï¿½Xï¿½ï¿½?"),
+    MatchEnd              UMETA(DisplayName = "å°ï¿½?çµï¿½?"),
+    PlayerAction          UMETA(DisplayName = "?ï¿½å®¶?ï¿½ï¿½?"),
+    UIInteraction         UMETA(DisplayName = "UIäº¤ï¿½?"),
+    Error                 UMETA(DisplayName = "?ï¿½èª¤"),
+    Performance           UMETA(DisplayName = "?ï¿½èƒ½?ï¿½ï¿½?"),
+    FeatureUsage          UMETA(DisplayName = "?ï¿½èƒ½ä½¿ç”¨"),
     Crash                 UMETA(DisplayName = "å´©æ½°")
 };
 
 /**
- * ?™æ¸¬äº‹ä»¶
+ * ?ï¿½æ¸¬äº‹ä»¶
  */
 USTRUCT(BlueprintType)
 struct FTelemetryEvent
@@ -61,7 +61,7 @@ struct FTelemetryEvent
 };
 
 /**
- * ?§èƒ½?‡æ?
+ * ?ï¿½èƒ½?ï¿½ï¿½?
  */
 USTRUCT(BlueprintType)
 struct FPerformanceMetrics
@@ -101,7 +101,7 @@ struct FPerformanceMetrics
 };
 
 /**
- * ?™æ¸¬?ƒè©±
+ * ?ï¿½æ¸¬?ï¿½è©±
  */
 USTRUCT(BlueprintType)
 struct FTelemetrySession
@@ -138,7 +138,7 @@ struct FTelemetrySession
 };
 
 /**
- * ?™æ¸¬ç³»çµ± - ?¶é??Œå??é??²é?æ¸¬æ•¸?? */
+ * ?ï¿½æ¸¬ç³»çµ± - ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?æ¸¬æ•¸X */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSTelemetrySystem : public UObject
 {
@@ -147,76 +147,76 @@ class MINGGORTS_API UMingRTSTelemetrySystem : public UObject
 public:
     UMingRTSTelemetrySystem(};
     
-    // ?å???    UFUNCTION(BlueprintCallable, Category = "Telemetry")
+    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void InitializeTelemetrySystem(};
     
-    // ?Ÿç”¨/ç¦ç”¨?™æ¸¬
+    // ?ï¿½ç”¨/ç¦ç”¨?ï¿½æ¸¬
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void SetTelemetryEnabled(bool bEnabled};
     
-    // ?‹å??ƒè©±
+    // ?ï¿½ï¿½Xï¿½è©±
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void StartSession(const FString& PlayerID};
     
-    // çµæ??ƒè©±
+    // çµï¿½Xï¿½è©±
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void EndSession(};
     
-    // è¨˜é?äº‹ä»¶
+    // è¨˜ï¿½?äº‹ä»¶
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordEvent(ETelemetryEventType Type, const FString& EventName, const TMap<FString, FString>& Parameters, float Value = 0.0f};
     
-    // è¨˜é??©å®¶?ä?
+    // è¨˜ï¿½Xï¿½å®¶?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordPlayerAction(const FString& ActionName, const FString& Target, float Duration};
     
-    // è¨˜é?UIäº¤ä?
+    // è¨˜ï¿½?UIäº¤ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordUIInteraction(const FString& ElementName, const FString& InteractionType};
     
-    // è¨˜é??§èƒ½?¸æ?
+    // è¨˜ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordPerformanceMetrics(const FPerformanceMetrics& Metrics};
     
-    // è¨˜é??¯èª¤
+    // è¨˜ï¿½Xï¿½èª¤
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordError(const FString& ErrorType, const FString& ErrorMessage, const FString& StackTrace};
     
-    // è¨˜é?å´©æ½°
+    // è¨˜ï¿½?å´©æ½°
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordCrash(const FString& CrashType, const FString& CrashLog};
     
-    // è¨˜é??Ÿèƒ½ä½¿ç”¨
+    // è¨˜ï¿½Xï¿½èƒ½ä½¿ç”¨
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordFeatureUsage(const FString& FeatureName, int32 UsageCount};
     
-    // ?¹é??¼é€ä?ä»?    UFUNCTION(BlueprintCallable, Category = "Telemetry")
+    // ?ï¿½ï¿½Xï¿½é€ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void FlushEvents(};
     
-    // ?²å??¶å??ƒè©±ID
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½è©±ID
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     FString GetCurrentSessionID() const;
     
-    // ?²å?ç·©å?äº‹ä»¶?¸é?
+    // ?ï¿½ï¿½?ç·©ï¿½?äº‹ä»¶?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     int32 GetCachedEventCount() const;
     
-    // è¨­ç½®?¹æ¬¡å¤§å?
+    // è¨­ç½®?ï¿½æ¬¡å¤§ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void SetBatchSize(int32 Size};
     
-    // è¨­ç½®?¼é€é???    UFUNCTION(BlueprintCallable, Category = "Telemetry")
+    // è¨­ç½®?ï¿½é€ï¿½X    UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void SetFlushInterval(float Seconds};
     
-    // å°å‡º?Ÿå??¸æ?
+    // å°å‡º?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     bool ExportRawData(const FString& FilePath) const;
     
-    // æ¸…é™¤ç·©å?
+    // æ¸…é™¤ç·©ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void ClearCache(};
     
-    // äº‹ä»¶å§”è?
+    // äº‹ä»¶å§”ï¿½?
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTelemetryEnabledChanged, bool, bEnabled};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEventsFlushed, int32, EventCount};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnErrorRecorded, const FString&, ErrorType};

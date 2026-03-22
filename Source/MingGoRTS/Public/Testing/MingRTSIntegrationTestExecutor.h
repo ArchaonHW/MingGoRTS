@@ -1,5 +1,5 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 系統?��?測試?��???- 實�?測試驗�?實現
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// 系統?��?測試?��X- 實�?測試驗�?實現
 
 #pragma once
 
@@ -9,7 +9,7 @@
 #include "MingRTSIntegrationTestExecutor.generated.h"
 
 /**
- * 系統?��?測試?��??? * 負責?��?實�??�系統�??�測試�?�? */
+ * 系統?��?測試?��X * 負責?��?實�X�系統�X�測試�?�? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSIntegrationTestExecutor : public UObject
 {
@@ -18,54 +18,54 @@ class MINGGORTS_API UMingRTSIntegrationTestExecutor : public UObject
 public:
     UMingRTSIntegrationTestExecutor(};
 
-    /** ?��?完整?�系統�??�測�?*/
+    /** ?��?完整?�系統�X�測�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
     void ExecuteFullIntegrationTest(};
 
-    /** ?��??��??��?測試驗�? */
+    /** ?��X��X��?測試驗�? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
     bool ExecuteBasicIntegrationValidation(};
 
-    /** ?��??��?流測試�?�?*/
+    /** ?��X��?流測試�?�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
     bool ExecuteDataFlowValidation(};
 
-    /** ?��??�能?��?測試驗�? */
+    /** ?��X�能?��?測試驗�? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
     bool ExecutePerformanceIntegrationValidation(};
 
-    /** ?��??�戶體�?測試驗�? */
+    /** ?��X�戶體�?測試驗�? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
     bool ExecuteUserExperienceValidation(};
 
-    /** ?��??�容?�測試�?�?*/
+    /** ?��X�容?�測試�?�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
     bool ExecuteCompatibilityValidation(};
 
-    /** ?��??�終�?證測�?*/
+    /** ?��X�終�?證測�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
     bool ExecuteFinalValidation(};
 
-    /** ?��?測試?��?結�? */
+    /** ?��?測試?��?結�? */
     UFUNCTION(BlueprintPure, Category = "Integration Test Executor")
     TArray<FString> GetTestExecutionResults() const { return TestResults; }
 
-    /** ?��?測試?��??�??*/
+    /** ?��?測試?��X�X*/
     UFUNCTION(BlueprintPure, Category = "Integration Test Executor")
     bool IsTestExecutionCompleted() const { return bTestExecutionCompleted; }
 
-    /** ?�置測試?��??�??*/
+    /** ?�置測試?��X�X*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
     void ResetTestExecutionState(};
 
 public:
-    /** 測試?��??��?事件 */
+    /** 測試?��X��?事件 */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTestExecutionStarted};
 
-    /** 測試?��?完�?事件 */
+    /** 測試?��?完�?事件 */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestExecutionCompleted, bool, bAllTestsPassed};
 
-    /** 測試?�段完�?事件 */
+    /** 測試?�段完�?事件 */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestPhaseExecutionCompleted, FString, PhaseName, bool, bPassed};
 
     UPROPERTY(BlueprintAssignable, Category = "Integration Test Executor|Events")
@@ -78,70 +78,70 @@ public:
     FOnTestPhaseExecutionCompleted OnTestPhaseExecutionCompleted;
 
 protected:
-    /** 記�?測試結�? */
+    /** 記�?測試結�? */
     void RecordTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
 
-    /** 驗�?系統??�� */
+    /** 驗�?系統X�� */
     bool ValidateSystemConnections(};
 
-    /** 驗�??��?�?*/
+    /** 驗�X��?�?*/
     bool ValidateDataFlow(};
 
-    /** 驗�??�能?��? */
+    /** 驗�X�能?��? */
     bool ValidatePerformanceMetrics(};
 
-    /** 驗�??�戶體�? */
+    /** 驗�X�戶體�? */
     bool ValidateUserExperience(};
 
-    /** 驗�??�容??*/
+    /** 驗�X�容X*/
     bool ValidateCompatibility(};
 
-    /** 驗�?系統完整??*/
+    /** 驗�?系統完整X*/
     bool ValidateSystemIntegrity(};
 
-    /** 檢查RTS?�鬥系統 */
+    /** 檢查RTS?�鬥系統 */
     bool CheckRTSCombatSystem(};
 
-    /** 檢查經�?系統 */
+    /** 檢查經�?系統 */
     bool CheckEconomicSystem(};
 
-    /** 檢查UI?�頻系統 */
+    /** 檢查UI?�頻系統 */
     bool CheckUIAudioSystem(};
 
-    /** 檢查?�地?�系�?*/
+    /** 檢查?�地?�系�?*/
     bool CheckLocalizationSystem(};
 
-    /** 檢查?�能系統 */
+    /** 檢查?�能系統 */
     bool CheckPerformanceSystem(};
 
-    /** 檢查?��?系統 */
+    /** 檢查?��?系統 */
     bool CheckRelationshipSystem(};
 
-    /** 檢查AI?�容?��?系統 */
+    /** 檢查AI?�容?��?系統 */
     bool CheckAIContentSystem(};
 
 private:
-    /** 測試結�??�表 */
+    /** 測試結�X�表 */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     TArray<FString> TestResults;
 
-    /** 測試?��??�否完�? */
+    /** 測試?��X�否完�? */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     bool bTestExecutionCompleted;
 
-    /** ?��?測試?�段 */
+    /** ?��?測試?�段 */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     FString CurrentTestPhase;
 
-    /** ?��??�測試數??*/
+    /** ?��X�測試數X*/
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     int32 PassedTestCount;
 
-    /** 失�??�測試數??*/
+    /** 失�X�測試數X*/
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     int32 FailedTestCount;
 
-    /** 測試?��??��??��? */
+    /** 測試?��X��X��? */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     double TestExecutionStartTime;
 };

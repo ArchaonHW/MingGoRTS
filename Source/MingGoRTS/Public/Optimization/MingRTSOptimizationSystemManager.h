@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -10,9 +10,9 @@
 UENUM(BlueprintType)
 enum class EOptimizationMode : uint8
 {
-    Development,    // ?‹ç™¼æ¨¡å? - å¿«é€Ÿç·¨è­¯ï??ºç??ªå?
-    Testing,        // æ¸¬è©¦æ¨¡å? - å¹³è¡¡?§èƒ½?Œç·¨è­¯é€Ÿåº¦
-    Release,        // ?¼å?æ¨¡å? - ?€å¤§å„ª??    Performance     // ?§èƒ½æ¨¡å? - æ¥µè‡´?§èƒ½?ªå?
+    Development,    // ?ï¿½ç™¼æ¨¡ï¿½? - å¿«é€Ÿç·¨è­¯ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    Testing,        // æ¸¬è©¦æ¨¡ï¿½? - å¹³è¡¡?ï¿½èƒ½?ï¿½ç·¨è­¯é€Ÿåº¦
+    Release,        // ?ï¿½ï¿½?æ¨¡ï¿½? - ?ï¿½å¤§å„ªX    Performance     // ?ï¿½èƒ½æ¨¡ï¿½? - æ¥µè‡´?ï¿½èƒ½?ï¿½ï¿½?
 };
 
 USTRUCT(BlueprintType)
@@ -56,7 +56,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnOptimizationCompleted, const FSt
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPerformanceWarning, const FString&, Component, const FString&, Warning, float, Severity};
 
 /**
- * ?ªå?ç³»çµ±ç®¡ç???- çµ±ä?ç®¡ç??€?‰å„ª?–ç·¨è­¯ç³»çµ? * ?ä?ç°¡å??„API?Œè‡ª?•å?å·¥ä?æµç?
+ * ?ï¿½ï¿½?ç³»çµ±ç®¡ï¿½X- çµ±ï¿½?ç®¡ï¿½Xï¿½?ï¿½å„ª?ï¿½ç·¨è­¯ç³»ï¿½? * ?ï¿½ï¿½?ç°¡ï¿½Xï¿½API?ï¿½è‡ª?ï¿½ï¿½?å·¥ï¿½?æµï¿½?
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSOptimizationSystemManager : public UObject
@@ -66,59 +66,59 @@ class MINGGORTS_API UMingRTSOptimizationSystemManager : public UObject
 public:
     UMingRTSOptimizationSystemManager(};
 
-    // ç³»çµ±?å???    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
+    // ç³»çµ±?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     void InitializeOptimizationSystem(};
 
-    // è¨­ç½®?ªå??ç½®
+    // è¨­ç½®?ï¿½ï¿½Xï¿½ç½®
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     void SetOptimizationConfiguration(const FOptimizationConfiguration& Config};
 
-    // ?ªå??´å€‹é???    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
+    // ?ï¿½ï¿½Xï¿½å€‹ï¿½X    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     void OptimizeProject(const FString& ProjectPath};
 
-    // ?¹é?ç·¨è­¯?…ç›®
+    // ?ï¿½ï¿½?ç·¨è­¯?ï¿½ç›®
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     void CompileProject(const FString& ProjectPath};
 
-    // ?§èƒ½?†æ??…ç›®
+    // ?ï¿½èƒ½?ï¿½ï¿½Xï¿½ç›®
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     void AnalyzeProjectPerformance(const FString& ProjectPath};
 
-    // ç®—æ??ªå??…ç›®
+    // ç®—ï¿½Xï¿½ï¿½Xï¿½ç›®
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     void OptimizeProjectAlgorithms(const FString& ProjectPath};
 
-    // ?²å??ªå??±å?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     FString GetOptimizationReport(};
 
-    // ?²å??§èƒ½æ¦‚è¦½
+    // ?ï¿½ï¿½Xï¿½èƒ½æ¦‚è¦½
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     TMap<EProfilingType, EPerformanceLevel> GetPerformanceOverview(};
 
-    // ?‹å?å¯¦æ???§
+    // ?ï¿½ï¿½?å¯¦ï¿½Xï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     void StartRealTimeMonitoring(};
 
-    // ?œæ­¢å¯¦æ???§
+    // ?ï¿½æ­¢å¯¦ï¿½Xï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     void StopRealTimeMonitoring(};
 
-    // å¿«é€Ÿå„ª??    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
+    // å¿«é€Ÿå„ªX    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     void QuickOptimize(};
 
-    // æ·±åº¦?ªå?
+    // æ·±åº¦?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     void DeepOptimize(};
 
-    // ?²å?ç³»çµ±?€??    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
+    // ?ï¿½ï¿½?ç³»çµ±?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     bool IsSystemReady() const;
 
-    // ?²å??¶å??ç½®
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ç½®
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     FOptimizationConfiguration GetCurrentConfiguration() const;
 
-    // äº‹ä»¶å§”æ?
+    // äº‹ä»¶å§”ï¿½?
     UPROPERTY(BlueprintAssignable)
     FOnOptimizationCompleted OnOptimizationCompleted;
 
@@ -126,7 +126,7 @@ public:
     FOnPerformanceWarning OnPerformanceWarning;
 
 protected:
-    // ?ªå?çµ„ä»¶
+    // ?ï¿½ï¿½?çµ„ä»¶
     UPROPERTY(BlueprintReadOnly, Category = "Optimization Components")
     TObjectPtr<UMingRTSOptimizationCompiler> OptimizationCompiler;
 
@@ -136,7 +136,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Optimization Components")
     TObjectPtr<UMingRTSAlgorithmOptimizer> AlgorithmOptimizer;
 
-    // ç³»çµ±?ç½®
+    // ç³»çµ±?ï¿½ç½®
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "System Configuration")
     FOptimizationConfiguration CurrentConfiguration;
 
@@ -147,26 +147,26 @@ protected:
     bool bRealTimeMonitoringActive;
 
 private:
-    // ?§éƒ¨å·¥ä?æµç?
+    // ?ï¿½éƒ¨å·¥ï¿½?æµï¿½?
     void InitializeComponents(};
     void SetupEventHandlers(};
     void ApplyConfigurationToComponents(};
     
-    // ?…ç›®?†æ?
+    // ?ï¿½ç›®?ï¿½ï¿½?
     TArray<FString> AnalyzeProjectStructure(const FString& ProjectPath};
     TArray<FCompilationTask> CreateCompilationTasks(const TArray<FString>& SourceFiles};
     TArray<FString> ExtractAlgorithmsFromProject(const FString& ProjectPath};
     
-    // ?ªå?å·¥ä?æµç?
+    // ?ï¿½ï¿½?å·¥ï¿½?æµï¿½?
     void ExecuteCompilationOptimization(const TArray<FCompilationTask>& Tasks};
     void ExecutePerformanceAnalysis(const FString& ProjectPath};
     void ExecuteAlgorithmOptimization(const TArray<FString>& Algorithms};
     
-    // ?±å??Ÿæ?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     FString GenerateComprehensiveReport(};
     void UpdateOptimizationStatistics(};
     
-    // è¼”åŠ©?½æ•¸
+    // è¼”åŠ©?ï¿½æ•¸
     EOptimizationLevel GetOptimizationLevelFromMode(EOptimizationMode Mode};
     TArray<EOptimizationTechnique> GetOptimizationTechniquesFromMode(EOptimizationMode Mode};
     void LogOptimizationProgress(const FString& Message};

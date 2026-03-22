@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,16 +9,16 @@
 UENUM(BlueprintType)
 enum class EMingGameRelationshipType : uint8
 {
-    Family,         UMETA(DisplayName = "è¦ªå±¬?œä?"),
-    Friend,         UMETA(DisplayName = "?‹å??œä?"),
-    Mentor,         UMETA(DisplayName = "å¸«å??œä?"),
-    Rival,          UMETA(DisplayName = "å°æ??œä?"),
-    Ally,           UMETA(DisplayName = "?Ÿå??œä?"),
-    Enemy,          UMETA(DisplayName = "?µäºº?œä?"),
-    Colleague,      UMETA(DisplayName = "?Œä??œä?"),
-    Subordinate,    UMETA(DisplayName = "ä¸‹å±¬?œä?"),
-    Superior,       UMETA(DisplayName = "ä¸Šå¸?œä?"),
-    Neutral,        UMETA(DisplayName = "ä¸­ç??œä?")
+    Family,         UMETA(DisplayName = "è¦ªå±¬?ï¿½ï¿½?"),
+    Friend,         UMETA(DisplayName = "?ï¿½ï¿½Xï¿½ï¿½?"),
+    Mentor,         UMETA(DisplayName = "å¸«ï¿½Xï¿½ï¿½?"),
+    Rival,          UMETA(DisplayName = "å°ï¿½Xï¿½ï¿½?"),
+    Ally,           UMETA(DisplayName = "?ï¿½ï¿½Xï¿½ï¿½?"),
+    Enemy,          UMETA(DisplayName = "?ï¿½äºº?ï¿½ï¿½?"),
+    Colleague,      UMETA(DisplayName = "?ï¿½ï¿½Xï¿½ï¿½?"),
+    Subordinate,    UMETA(DisplayName = "ä¸‹å±¬?ï¿½ï¿½?"),
+    Superior,       UMETA(DisplayName = "ä¸Šå¸?ï¿½ï¿½?"),
+    Neutral,        UMETA(DisplayName = "ä¸­ï¿½Xï¿½ï¿½?")
 };
 
 USTRUCT(BlueprintType)

@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Multi-Language Support System
 
 #pragma once
@@ -13,15 +13,15 @@
 UENUM(BlueprintType)
 enum class ELanguageCode : uint8
 {
-    zh_CN     UMETA(DisplayName = "简体中??(Simplified Chinese)"),
-    zh_TW     UMETA(DisplayName = "繁�?中�? (Traditional Chinese)"),
+    zh_CN     UMETA(DisplayName = "简体中X(Simplified Chinese)"),
+    zh_TW     UMETA(DisplayName = "繁�?中�? (Traditional Chinese)"),
     en_US     UMETA(DisplayName = "English (US)"),
-    ja_JP     UMETA(DisplayName = "?�本�?(Japanese)"),
-    ko_KR     UMETA(DisplayName = "?�국??(Korean)"),
+    ja_JP     UMETA(DisplayName = "?�本�?(Japanese)"),
+    ko_KR     UMETA(DisplayName = "?�국X(Korean)"),
     fr_FR     UMETA(DisplayName = "Français (French)"),
     de_DE     UMETA(DisplayName = "Deutsch (German)"),
     es_ES     UMETA(DisplayName = "Español (Spanish)"),
-    ru_RU     UMETA(DisplayName = "????кий (Russian)"),
+    ru_RU     UMETA(DisplayName = "Xкий (Russian)"),
     ar_SA     UMETA(DisplayName = "ا?عرب?ة (Arabic)")
 };
 

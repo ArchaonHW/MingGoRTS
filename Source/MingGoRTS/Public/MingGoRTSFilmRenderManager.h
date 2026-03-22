@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -49,7 +49,7 @@ class MINGGORTS_API UMingGoRTSFilmRenderManager : public UActorComponent
 public:
     UMingGoRTSFilmRenderManager(};
 
-    // 影�??�放?�制
+    // 影�X�放?�制
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void PlayFilm(};
 
@@ -65,7 +65,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void SeekToTime(float TimeInSeconds};
 
-    // 影�??��?管�?
+    // 影�X��?管�?
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void SetFilmFrames(const TArray<UTexture2D*>& Frames};
 
@@ -78,7 +78,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     TArray<UTexture2D*> GetFilmFrames() const { return FilmFrames; }
 
-    // ?�放?�?�查�?    UFUNCTION(BlueprintCallable, Category = "Film Render")
+    // ?�放?�?�查�?    UFUNCTION(BlueprintCallable, Category = "Film Render")
     EFilmPlaybackState GetPlaybackState() const { return CurrentPlaybackState; }
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
@@ -106,14 +106,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void SetFrameRate(float NewFrameRate};
 
-    // 渲�?輸出
+    // 渲�?輸出
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     UTexture2D* GetCurrentFrameTexture() const;
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void RenderToRenderTarget(class UTextureRenderTarget2D* RenderTarget};
 
-    // 委�?事件
+    // 委�?事件
     UPROPERTY(BlueprintAssignable, Category = "Film Render")
     FOnFilmFrameChanged OnFilmFrameChanged;
 
@@ -146,7 +146,7 @@ private:
     UPROPERTY()
     FFilmPlaybackSettings PlaybackSettings;
 
-    // 注�?：�?UObject類�?不能?�UPROPERTY
+    // 注�?：�?UObject類�?不能?�UPROPERTY
     FTickerDelegate PlaybackTicker;
     FDelegateHandle PlaybackTickerHandle;
 

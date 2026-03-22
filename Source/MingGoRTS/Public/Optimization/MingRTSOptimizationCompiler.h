@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,27 +7,27 @@
 UENUM(BlueprintType)
 enum class EOptimizationLevel : uint8
 {
-    Debug,          // ?¤éŒ¯ç´šåˆ¥
-    Development,    // ?‹ç™¼ç´šåˆ¥
-    Release,        // ?¼å?ç´šåˆ¥
-    Performance     // ?§èƒ½ç´šåˆ¥
+    Debug,          // ?ï¿½éŒ¯ç´šåˆ¥
+    Development,    // ?ï¿½ç™¼ç´šåˆ¥
+    Release,        // ?ï¿½ï¿½?ç´šåˆ¥
+    Performance     // ?ï¿½èƒ½ç´šåˆ¥
 };
 
 UENUM(BlueprintType)
 enum class ECompilationPhase : uint8
 {
-    PreProcessing,   // ?è???    Compilation,     // ç·¨è­¯
-    Optimization,    // ?ªå?
-    Linking,         // ??¥
-    PostProcessing   // å¾Œè???};
+    PreProcessing,   // ?ï¿½ï¿½X    Compilation,     // ç·¨è­¯
+    Optimization,    // ?ï¿½ï¿½?
+    Linking,         // Xï¿½ï¿½
+    PostProcessing   // å¾Œï¿½X};
 
 UENUM(BlueprintType)
 enum class EOptimizationType : uint8
 {
-    Speed,           // ?Ÿåº¦?ªå?
-    Memory,          // ?§å??ªå?
-    Size,            // å¤§å??ªå?
-    Power,           // ?Ÿè€—å„ª??    Balanced         // å¹³è¡¡?ªå?
+    Speed,           // ?ï¿½åº¦?ï¿½ï¿½?
+    Memory,          // ?ï¿½ï¿½Xï¿½ï¿½?
+    Size,            // å¤§ï¿½Xï¿½ï¿½?
+    Power,           // ?ï¿½è€—å„ªX    Balanced         // å¹³è¡¡?ï¿½ï¿½?
 };
 
 USTRUCT(BlueprintType)
@@ -151,8 +151,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCompilationCompleted, const FStr
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnOptimizationApplied, const FString&, TaskID, const FString&, OptimizationType, float, PerformanceGain};
 
 /**
- * ?ªå?ç·¨è­¯?¨ç³»çµ?- ?¹é?ç·¨è­¯?é™¤?¯ã€å„ª?–å??ˆç??å?ç³»çµ±
- * ?ä??ºèƒ½ç·¨è­¯?ªå??ä¸¦è¡Œè??†å??§èƒ½?†æ??Ÿèƒ½
+ * ?ï¿½ï¿½?ç·¨è­¯?ï¿½ç³»ï¿½?- ?ï¿½ï¿½?ç·¨è­¯?ï¿½é™¤?ï¿½ã€å„ª?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?ç³»çµ±
+ * ?ï¿½ï¿½Xï¿½èƒ½ç·¨è­¯?ï¿½ï¿½Xï¿½ä¸¦è¡Œï¿½Xï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½Xï¿½èƒ½
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSOptimizationCompiler : public UObject
@@ -162,66 +162,66 @@ class MINGGORTS_API UMingRTSOptimizationCompiler : public UObject
 public:
     UMingRTSOptimizationCompiler(};
 
-    // ç³»çµ±?å???    UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
+    // ç³»çµ±?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     void InitializeOptimizationCompiler(};
 
-    // ?¹é?ç·¨è­¯ä»»å?
+    // ?ï¿½ï¿½?ç·¨è­¯ä»»ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     TArray<FOptimizationResult> BatchCompile(const TArray<FCompilationTask>& Tasks};
 
-    // ä¸¦è?ç·¨è­¯
+    // ä¸¦ï¿½?ç·¨è­¯
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     void ParallelCompile(const TArray<FCompilationTask>& Tasks};
 
-    // ?ºèƒ½?ªå?
+    // ?ï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     FOptimizationResult OptimizeCode(const FString& SourceCode, EOptimizationType OptimizationType};
 
-    // ?¤éŒ¯?†æ?
+    // ?ï¿½éŒ¯?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     TArray<FString> DebugAnalyze(const FString& SourceCode, EOptimizationLevel DebugLevel};
 
-    // ?§èƒ½?†æ?
+    // ?ï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     FOptimizationMetrics AnalyzePerformance(const FString& SourceCode};
 
-    // ä»?¢¼?æ?
+    // ï¿½?ï¿½ï¿½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     FString RefactorCode(const FString& SourceCode, const TArray<FString>& RefactoringRules};
 
-    // ?§å??ªå?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     FString OptimizeMemory(const FString& SourceCode};
 
-    // ?Ÿåº¦?ªå?
+    // ?ï¿½åº¦?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     FString OptimizeSpeed(const FString& SourceCode};
 
-    // ç®—æ??ªå?
+    // ç®—ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     FString OptimizeAlgorithms(const FString& SourceCode};
 
-    // ä¾è³´?†æ?
+    // ä¾è³´?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     TArray<FString> AnalyzeDependencies(const TArray<FCompilationTask>& Tasks};
 
-    // ç·¨è­¯?ªå?å»ºè­°
+    // ç·¨è­¯?ï¿½ï¿½?å»ºè­°
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     TArray<FString> GetOptimizationSuggestions(const FString& SourceCode};
 
-    // è¨­ç½®?ªå??ƒæ•¸
+    // è¨­ç½®?ï¿½ï¿½Xï¿½æ•¸
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     void SetOptimizationParameters(int32 MaxThreads, float MemoryLimit, EOptimizationLevel DefaultLevel};
 
-    // ?²å?ç·¨è­¯çµ±è?
+    // ?ï¿½ï¿½?ç·¨è­¯çµ±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     TMap<FString, FOptimizationMetrics> GetCompilationStatistics() const;
 
-    // æ¸…ç?ç·¨è­¯ç·©å?
+    // æ¸…ï¿½?ç·¨è­¯ç·©ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
     void ClearCompilationCache(};
 
-    // äº‹ä»¶å§”æ?
+    // äº‹ä»¶å§”ï¿½?
     UPROPERTY(BlueprintAssignable)
     FOnCompilationStarted OnCompilationStarted;
 
@@ -232,7 +232,7 @@ public:
     FOnOptimizationApplied OnOptimizationApplied;
 
 protected:
-    // ç·¨è­¯?ƒæ•¸
+    // ç·¨è­¯?ï¿½æ•¸
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Compilation Parameters")
     int32 MaxThreads;
 
@@ -248,49 +248,49 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Compilation Parameters")
     bool bEnableAdvancedOptimizations;
 
-    // ç·¨è­¯ä»»å??Šå?
+    // ç·¨è­¯ä»»ï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Compilation Data")
     TArray<FCompilationTask> CompilationQueue;
 
-    // ç·¨è­¯çµæ?å­˜å„²
+    // ç·¨è­¯çµï¿½?å­˜å„²
     UPROPERTY(BlueprintReadOnly, Category = "Compilation Data")
     TMap<FString, FOptimizationResult> CompilationResults;
 
-    // ç·¨è­¯çµ±è?
+    // ç·¨è­¯çµ±ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Compilation Data")
     TMap<FString, FOptimizationMetrics> CompilationStatistics;
 
-    // ?ªå?è¦å?åº?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Optimization Rules")
+    // ?ï¿½ï¿½?è¦ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Optimization Rules")
     TArray<FString> OptimizationRules;
 
 private:
-    // ?§éƒ¨ç·¨è­¯?è¼¯
+    // ?ï¿½éƒ¨ç·¨è­¯?ï¿½è¼¯
     FOptimizationResult CompileTask(const FCompilationTask& Task};
     void ProcessCompilationQueue(};
     void ApplyOptimizations(FString& SourceCode, EOptimizationType OptimizationType};
     
-    // ?ªå?ç®—æ?
+    // ?ï¿½ï¿½?ç®—ï¿½?
     FString ApplyLoopOptimizations(const FString& SourceCode};
     FString ApplyMemoryOptimizations(const FString& SourceCode};
     FString ApplyAlgorithmOptimizations(const FString& SourceCode};
     FString ApplyParallelOptimizations(const FString& SourceCode};
     
-    // ?¤éŒ¯ç®—æ?
+    // ?ï¿½éŒ¯ç®—ï¿½?
     TArray<FString> PerformStaticAnalysis(const FString& SourceCode};
     TArray<FString> PerformDynamicAnalysis(const FString& SourceCode};
     TArray<FString> PerformMemoryLeakDetection(const FString& SourceCode};
     
-    // ?§èƒ½?†æ?
+    // ?ï¿½èƒ½?ï¿½ï¿½?
     float CalculateComplexity(const FString& SourceCode};
     float EstimateMemoryUsage(const FString& SourceCode};
     float EstimateExecutionTime(const FString& SourceCode};
     
-    // è¼”åŠ©?½æ•¸
+    // è¼”åŠ©?ï¿½æ•¸
     void UpdateCompilationStatistics(const FString& TaskID, const FOptimizationMetrics& Metrics};
     FString GenerateOptimizedCode(const FString& SourceCode, const TArray<FString>& Optimizations};
     bool IsOptimizationApplicable(const FString& SourceCode, const FString& Optimization};
     
-    // ä¸¦è??•ç?
+    // ä¸¦ï¿½Xï¿½ï¿½?
     void DistributeTasks(const TArray<FCompilationTask>& Tasks};
     TArray<FCompilationTask> GetParallelizableTasks(const TArray<FCompilationTask>& Tasks};
     void MergeCompilationResults(const TArray<FOptimizationResult>& Results};

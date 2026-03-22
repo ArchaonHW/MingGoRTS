@@ -1,5 +1,5 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// ç³»çµ±?†æ?æ¸¬è©¦?æ®µ?Ÿå? - ?ºç??†æ?æ¸¬è©¦
+ï»¿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// ç³»çµ±?ï¿½ï¿½?æ¸¬è©¦?ï¿½æ®µ?ï¿½ï¿½? - ?ï¿½ï¿½Xï¿½ï¿½?æ¸¬è©¦
 
 #pragma once
 
@@ -9,7 +9,7 @@
 #include "Templates/Function.h"
 #include "MingRTSIntegrationTestSuite.generated.h"
 
-/** æ¸¬è©¦?æ®µ?šè? */
+/** æ¸¬è©¦?ï¿½æ®µ?ï¿½ï¿½? */
 UENUM(BlueprintType)
 enum class ETestPhase : uint8
 {
@@ -23,7 +23,7 @@ enum class ETestPhase : uint8
     Completed
 };
 
-/** æ¸¬è©¦çµæ??šè? */
+/** æ¸¬è©¦çµï¿½Xï¿½ï¿½? */
 UENUM(BlueprintType)
 enum class EIntegrationTestResult : uint8
 {
@@ -34,7 +34,7 @@ enum class EIntegrationTestResult : uint8
     Error
 };
 
-/** æ¸¬è©¦?¨ä?çµæ? */
+/** æ¸¬è©¦?ï¿½ï¿½?çµï¿½? */
 USTRUCT(BlueprintType)
 struct FTestCase
 {
@@ -65,7 +65,7 @@ struct FTestCase
     }
 };
 
-/** æ¸¬è©¦?æ®µçµæ? */
+/** æ¸¬è©¦?ï¿½æ®µçµï¿½? */
 USTRUCT(BlueprintType)
 struct FPhaseResult
 {
@@ -104,7 +104,7 @@ struct FPhaseResult
 };
 
 /**
- * ç³»çµ±?†æ?æ¸¬è©¦?æ®µç®¡ç??? * è² è²¬?”èª¿?ŒåŸ·è¡Œæ??‰ç³»çµ±ç??†æ?æ¸¬è©¦
+ * ç³»çµ±?ï¿½ï¿½?æ¸¬è©¦?ï¿½æ®µç®¡ï¿½X * è² è²¬?ï¿½èª¿?ï¿½åŸ·è¡Œï¿½Xï¿½ç³»çµ±ï¿½Xï¿½ï¿½?æ¸¬è©¦
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSIntegrationTestSuite : public UObject
@@ -114,76 +114,76 @@ class MINGGORTS_API UMingRTSIntegrationTestSuite : public UObject
 public:
     UMingRTSIntegrationTestSuite(};
 
-    /** ?å??–é??æ¸¬è©¦å?ä»?*/
+    /** ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ¸¬è©¦ï¿½?ï¿½?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void InitializeIntegrationTestSuite(};
 
-    /** ?‹å?å®Œæ•´?†æ?æ¸¬è©¦ */
+    /** ?ï¿½ï¿½?å®Œæ•´?ï¿½ï¿½?æ¸¬è©¦ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartFullIntegrationTest(};
 
-    /** ?‹å??ºç??†æ?æ¸¬è©¦ */
+    /** ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?æ¸¬è©¦ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartBasicIntegrationTest(};
 
-    /** ?‹å??¸æ?æµæ¸¬è©?*/
+    /** ?ï¿½ï¿½Xï¿½ï¿½?æµæ¸¬ï¿½?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartDataFlowTest(};
 
-    /** ?‹å??§èƒ½?†æ?æ¸¬è©¦ */
+    /** ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?æ¸¬è©¦ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartPerformanceIntegrationTest(};
 
-    /** ?‹å??¨æˆ¶é«”é?æ¸¬è©¦ */
+    /** ?ï¿½ï¿½Xï¿½æˆ¶é«”ï¿½?æ¸¬è©¦ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartUserExperienceTest(};
 
-    /** ?‹å??¼å®¹?§æ¸¬è©?*/
+    /** ?ï¿½ï¿½Xï¿½å®¹?ï¿½æ¸¬ï¿½?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartCompatibilityTest(};
 
-    /** ?‹å??€çµ‚é?è­‰æ¸¬è©?*/
+    /** ?ï¿½ï¿½Xï¿½çµ‚ï¿½?è­‰æ¸¬ï¿½?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartFinalValidationTest(};
 
-    /** ?²å??¶å?æ¸¬è©¦?æ®µ */
+    /** ?ï¿½ï¿½Xï¿½ï¿½?æ¸¬è©¦?ï¿½æ®µ */
     UFUNCTION(BlueprintPure, Category = "Integration Test")
     ETestPhase GetCurrentTestPhase() const { return CurrentPhase; }
 
-    /** ?²å?æ¸¬è©¦?²åº¦ */
+    /** ?ï¿½ï¿½?æ¸¬è©¦?ï¿½åº¦ */
     UFUNCTION(BlueprintPure, Category = "Integration Test")
     float GetTestProgress() const;
 
-    /** ?²å?æ¸¬è©¦çµæ??±å? */
+    /** ?ï¿½ï¿½?æ¸¬è©¦çµï¿½Xï¿½ï¿½? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     FString GenerateTestReport(};
 
-    /** ?²å??æ®µçµæ? */
+    /** ?ï¿½ï¿½Xï¿½æ®µçµï¿½? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     TArray<FPhaseResult> GetAllPhaseResults() const { return PhaseResults; }
 
-    /** æª¢æŸ¥æ¸¬è©¦?¯å¦å®Œæ? */
+    /** æª¢æŸ¥æ¸¬è©¦?ï¿½å¦å®Œï¿½? */
     UFUNCTION(BlueprintPure, Category = "Integration Test")
     bool IsTestCompleted() const { return CurrentPhase == ETestPhase::Completed; }
 
-    /** ?ç½®æ¸¬è©¦?€??*/
+    /** ?ï¿½ç½®æ¸¬è©¦?ï¿½X*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void ResetTestState(};
 
 public:
-    /** æ¸¬è©¦?æ®µ?‹å?äº‹ä»¶ */
+    /** æ¸¬è©¦?ï¿½æ®µ?ï¿½ï¿½?äº‹ä»¶ */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestPhaseStarted, ETestPhase, Phase};
 
-    /** æ¸¬è©¦?æ®µå®Œæ?äº‹ä»¶ */
+    /** æ¸¬è©¦?ï¿½æ®µå®Œï¿½?äº‹ä»¶ */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestPhaseCompleted, ETestPhase, Phase, ETestResult, Result};
 
-    /** æ¸¬è©¦?¨ä?å®Œæ?äº‹ä»¶ */
+    /** æ¸¬è©¦?ï¿½ï¿½?å®Œï¿½?äº‹ä»¶ */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnTestCaseCompleted, FString, TestCaseName, ETestResult, Result, float, ExecutionTime};
 
-    /** å®Œæ•´æ¸¬è©¦å®Œæ?äº‹ä»¶ */
+    /** å®Œæ•´æ¸¬è©¦å®Œï¿½?äº‹ä»¶ */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFullTestCompleted, bool, bAllPassed};
 
-    /** æ¸¬è©¦?²åº¦?´æ–°äº‹ä»¶ */
+    /** æ¸¬è©¦?ï¿½åº¦?ï¿½æ–°äº‹ä»¶ */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestProgressUpdated, float, Progress};
 
     UPROPERTY(BlueprintAssignable, Category = "Integration Test|Events")
@@ -202,31 +202,31 @@ public:
     FOnTestProgressUpdated OnTestProgressUpdated;
 
 protected:
-    /** ?·è?æ¸¬è©¦?¨ä? */
+    /** ?ï¿½ï¿½?æ¸¬è©¦?ï¿½ï¿½? */
     void ExecuteTestCase(const FString& TestCaseName, TFunction<void()> TestFunction};
 
-    /** ?´æ–°æ¸¬è©¦?²åº¦ */
+    /** ?ï¿½æ–°æ¸¬è©¦?ï¿½åº¦ */
     void UpdateTestProgress(};
 
-    /** è¨˜é?æ¸¬è©¦çµæ? */
+    /** è¨˜ï¿½?æ¸¬è©¦çµï¿½? */
     void RecordTestResult(const FString& TestCaseName, ETestResult Result, const FString& ErrorMessage = TEXT("")};
 
-    /** å®Œæ??¶å??æ®µ */
+    /** å®Œï¿½Xï¿½ï¿½Xï¿½æ®µ */
     void CompleteCurrentPhase(ETestResult Result};
 
-    /** ç§»å??°ä?ä¸€?æ®µ */
+    /** ç§»ï¿½Xï¿½ï¿½?ä¸€?ï¿½æ®µ */
     void MoveToNextPhase(};
 
 private:
-    /** ?¶å?æ¸¬è©¦?æ®µ */
+    /** ?ï¿½ï¿½?æ¸¬è©¦?ï¿½æ®µ */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     ETestPhase CurrentPhase;
 
-    /** ?€?‰é?æ®µç???*/
+    /** ?ï¿½?ï¿½ï¿½?æ®µï¿½X*/
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     TArray<FPhaseResult> PhaseResults;
 
-    /** ?¶å??æ®µ?„æ¸¬è©¦ç”¨ä¾?*/
+    /** ?ï¿½ï¿½Xï¿½æ®µ?ï¿½æ¸¬è©¦ç”¨ï¿½?*/
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     TArray<FTestCase> CurrentPhaseTestCases;
 
@@ -234,56 +234,56 @@ private:
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     int32 TotalTestCases;
 
-    /** å·²å??æ¸¬è©¦ç”¨ä¾‹æ•¸ */
+    /** å·²ï¿½Xï¿½æ¸¬è©¦ç”¨ä¾‹æ•¸ */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     int32 CompletedTestCases;
 
-    /** æ¸¬è©¦?‹å??‚é? */
+    /** æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½? */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     double TestStartTime;
 
-    /** ?¶å?æ¸¬è©¦?¨ä??‹å??‚é? */
+    /** ?ï¿½ï¿½?æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½? */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     double CurrentTestCaseStartTime;
 
-    /** ?¯å¦æ­?œ¨?‹è?æ¸¬è©¦ */
+    /** ?ï¿½å¦ï¿½?ï¿½ï¿½?ï¿½ï¿½?æ¸¬è©¦ */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     bool bIsTestRunning;
 
-    /** ?å??–åŸºç¤é??æ¸¬è©¦ç”¨ä¾?*/
+    /** ?ï¿½ï¿½Xï¿½åŸºç¤ï¿½Xï¿½æ¸¬è©¦ç”¨ï¿½?*/
     void InitializeBasicIntegrationTests(};
 
-    /** ?å??–æ•¸?šæ?æ¸¬è©¦?¨ä? */
+    /** ?ï¿½ï¿½Xï¿½æ•¸?ï¿½ï¿½?æ¸¬è©¦?ï¿½ï¿½? */
     void InitializeDataFlowTests(};
 
-    /** ?å??–æ€§èƒ½?†æ?æ¸¬è©¦?¨ä? */
+    /** ?ï¿½ï¿½Xï¿½æ€§èƒ½?ï¿½ï¿½?æ¸¬è©¦?ï¿½ï¿½? */
     void InitializePerformanceIntegrationTests(};
 
-    /** ?å??–ç”¨?¶é?é©—æ¸¬è©¦ç”¨ä¾?*/
+    /** ?ï¿½ï¿½Xï¿½ç”¨?ï¿½ï¿½?é©—æ¸¬è©¦ç”¨ï¿½?*/
     void InitializeUserExperienceTests(};
 
-    /** ?å??–å…¼å®¹æ€§æ¸¬è©¦ç”¨ä¾?*/
+    /** ?ï¿½ï¿½Xï¿½å…¼å®¹æ€§æ¸¬è©¦ç”¨ï¿½?*/
     void InitializeCompatibilityTests(};
 
-    /** ?å??–æ?çµ‚é?è­‰æ¸¬è©¦ç”¨ä¾?*/
+    /** ?ï¿½ï¿½Xï¿½ï¿½?çµ‚ï¿½?è­‰æ¸¬è©¦ç”¨ï¿½?*/
     void InitializeFinalValidationTests(};
 
-    /** ?ºç??†æ?æ¸¬è©¦?·é?å¯¦ç¾ */
+    /** ?ï¿½ï¿½Xï¿½ï¿½?æ¸¬è©¦?ï¿½ï¿½?å¯¦ç¾ */
     void RunBasicIntegrationTests(};
 
-    /** ?¸æ?æµæ¸¬è©¦å…·é«”å¯¦??*/
+    /** ?ï¿½ï¿½?æµæ¸¬è©¦å…·é«”å¯¦X*/
     void RunDataFlowTests(};
 
-    /** ?§èƒ½?†æ?æ¸¬è©¦?·é?å¯¦ç¾ */
+    /** ?ï¿½èƒ½?ï¿½ï¿½?æ¸¬è©¦?ï¿½ï¿½?å¯¦ç¾ */
     void RunPerformanceIntegrationTests(};
 
-    /** ?¨æˆ¶é«”é?æ¸¬è©¦?·é?å¯¦ç¾ */
+    /** ?ï¿½æˆ¶é«”ï¿½?æ¸¬è©¦?ï¿½ï¿½?å¯¦ç¾ */
     void RunUserExperienceTests(};
 
-    /** ?¼å®¹?§æ¸¬è©¦å…·é«”å¯¦??*/
+    /** ?ï¿½å®¹?ï¿½æ¸¬è©¦å…·é«”å¯¦X*/
     void RunCompatibilityTests(};
 
-    /** ?€çµ‚é?è­‰æ¸¬è©¦å…·é«”å¯¦??*/
+    /** ?ï¿½çµ‚ï¿½?è­‰æ¸¬è©¦å…·é«”å¯¦X*/
     void RunFinalValidationTests(};
 };
 

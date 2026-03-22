@@ -1,5 +1,5 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// ?®Êà∂?çÈ?Á≥ªÁµ± - ?çÈ??∂È??åÁÆ°??
+// ??§·????®t≤Œ - ???X??X?∫ﬁX
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,7 +8,7 @@
 #include "UserFeedbackSystem.generated.h"
 
 /**
- * ?çÈ?È°ûÂ??öË?
+ * ????√˛?X???
  */
 UENUM(BlueprintType)
 enum class EFeedbackType : uint8
@@ -24,7 +24,7 @@ enum class EFeedbackType : uint8
 };
 
 /**
- * ?çÈ??™Â?Á¥öÊ??? */
+ * ???X???Ø≈?X */
 UENUM(BlueprintType)
 enum class EFeedbackPriority : uint8
 {
@@ -35,7 +35,7 @@ enum class EFeedbackPriority : uint8
 };
 
 /**
- * ?çÈ??Ä?ãÊ??? */
+ * ???X????X */
 UENUM(BlueprintType)
 enum class EFeedbackStatus : uint8
 {
@@ -48,86 +48,86 @@ enum class EFeedbackStatus : uint8
 };
 
 /**
- * ?çÈ??∏Ê?ÁµêÊ?
+ * ???X???µ≤??
  */
 USTRUCT(BlueprintType)
 struct FFeedbackData
 {
     GENERATED_BODY()
 
-    /** ?çÈ?ID */
+    /** ????ID */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString FeedbackID;
 
-    /** ?çÈ?È°ûÂ? */
+    /** ????√˛?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     EFeedbackType FeedbackType;
 
-    /** ?çÈ??™Â?Á¥?*/
+    /** ???X?????*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     EFeedbackPriority Priority;
 
-    /** ?çÈ??Ä??*/
+    /** ???X?X*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     EFeedbackStatus Status;
 
-    /** Ê®ôÈ? */
+    /** º–?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString Title;
 
-    /** ?èËø∞ */
+    /** ??≠z */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString Description;
 
-    /** ?çÁèæÊ≠•È? */
+    /** ??≤{®B?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString ReproductionSteps;
 
-    /** ?üÊ?ÁµêÊ? */
+    /** ????µ≤?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString ExpectedResult;
 
-    /** ÂØ¶È?ÁµêÊ? */
+    /** πÍ??µ≤?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString ActualResult;
 
-    /** ?®Êà∂‰ø°ÊÅØ */
+    /** ??§·´HÆß */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString UserInfo;
 
-    /** Á≥ªÁµ±‰ø°ÊÅØ */
+    /** ®t≤Œ´HÆß */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString SystemInfo;
 
-    /** ?äÊà≤?àÊú¨ */
+    /** ??¿∏??•ª */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString GameVersion;
 
-    /** ?ê‰∫§?ÇÈ? */
+    /** ??•Ê???? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FDateTime SubmitTime;
 
-    /** ?¥Êñ∞?ÇÈ? */
+    /** ??∑s???? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FDateTime LastUpdateTime;
 
-    /** ?ïÁ?‰∫∫Âì° */
+    /** ????§H≠˚ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString AssignedTo;
 
-    /** Ê®ôÁ±§ */
+    /** º–≈“ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     TArray<FString> Tags;
 
-    /** ?Ñ‰ª∂ */
+    /** ??•Û */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     TArray<FString> Attachments;
 
-    /** Ë©ïÂ? */
+    /** µ˚?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     float Rating;
 
-    /** ?ØÂê¶Â∑≤Ë? */
+    /** ??ß_§w?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     bool bIsRead;
 
@@ -154,38 +154,38 @@ struct FFeedbackData
 };
 
 /**
- * ?çÈ?Áµ±Ë??∏Ê?
+ * ????≤Œ?X???
  */
 USTRUCT(BlueprintType)
 struct FFeedbackStatistics
 {
     GENERATED_BODY()
 
-    /** Á∏ΩÂ?È•ãÊï∏ */
+    /** ¡`??ıXº∆ */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     int32 TotalFeedback;
 
-    /** ?âÈ??ãÁµ±Ë®?*/
+    /** ???X?≤Œ??*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     TMap<EFeedbackType, int32> FeedbackByType;
 
-    /** ?âÂÑ™?àÁ?Áµ±Ë? */
+    /** ??¿u????≤Œ?? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     TMap<EFeedbackPriority, int32> FeedbackByPriority;
 
-    /** ?âÁ??ãÁµ±Ë®?*/
+    /** ???X?≤Œ??*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     TMap<EFeedbackStatus, int32> FeedbackByStatus;
 
-    /** Âπ≥Â??øÊ??ÇÈ? */
+    /** •≠?X??X??? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     float AverageResponseTime;
 
-    /** Ëß?±∫??*/
+    /** ????X*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     float ResolutionRate;
 
-    /** ?®Êà∂ÊªøÊ?Â∫?*/
+    /** ??§·∫°????*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     float UserSatisfaction;
 
@@ -199,7 +199,7 @@ struct FFeedbackStatistics
 };
 
 /**
- * ?®Êà∂?çÈ?Á≥ªÁµ±
+ * ??§·????®t≤Œ
  */
 UCLASS(BlueprintType, Blueprintable)
 class USERFEEDBACKSYSTEM_API UUserFeedbackSystem : public UObject
@@ -209,69 +209,69 @@ class USERFEEDBACKSYSTEM_API UUserFeedbackSystem : public UObject
 public:
     UUserFeedbackSystem(};
 
-    /** ?ùÂ??ñÂ?È•ãÁ≥ªÁµ?*/
+    /** ???X???ıX®t??*/
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     void InitializeFeedbackSystem(};
 
-    /** ?ê‰∫§?çÈ? */
+    /** ??•Ê???? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     FString SubmitFeedback(const FFeedbackData& FeedbackData};
 
-    /** ?≤Â??çÈ??óË°® */
+    /** ???X??X?™Ì */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     TArray<FFeedbackData> GetFeedbackList(EFeedbackType FilterType = EFeedbackType::Other, EFeedbackStatus FilterStatus = EFeedbackStatus::New};
 
-    /** ?≤Â??çÈ?Ë©≥Ê? */
+    /** ???X???∏‘?? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     FFeedbackData GetFeedbackDetails(const FString& FeedbackID};
 
-    /** ?¥Êñ∞?çÈ??Ä??*/
+    /** ??∑s???X?X*/
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     bool UpdateFeedbackStatus(const FString& FeedbackID, EFeedbackStatus NewStatus};
 
-    /** ?ÜÈ??çÈ? */
+    /** ???X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     bool AssignFeedback(const FString& FeedbackID, const FString& AssignedTo};
 
-    /** Ê∑ªÂ?Ë©ïË? */
+    /** ≤K??µ˚?? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     bool AddComment(const FString& FeedbackID, const FString& Comment};
 
-    /** ?≤Â?Áµ±Ë??∏Ê? */
+    /** ????≤Œ?X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     FFeedbackStatistics GetStatistics(};
 
-    /** Â∞éÂá∫?çÈ??∏Ê? */
+    /** æ…•X???X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     FString ExportFeedbackData(};
 
-    /** ?™Â??ÜÈ??çÈ? */
+    /** ???X??X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     void AutoCategorizeFeedback(};
 
-    /** ?ºÈÄÅÈÄöÁü• */
+    /** ??∞e≥q™æ */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     void SendNotification(const FString& FeedbackID, const FString& Message};
 
-    /** Ê™¢Êü•?çË??çÈ? */
+    /** ¿À¨d???X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     TArray<FString> CheckDuplicateFeedback(const FFeedbackData& FeedbackData};
 
-    /** ?üÊ??çÈ??±Â? */
+    /** ???X??X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     FString GenerateFeedbackReport(};
 
 public:
-    /** ?çÈ??ê‰∫§‰∫ã‰ª∂ */
+    /** ???X?•Ê®∆•Û */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFeedbackSubmitted, const FString&, FeedbackID};
 
-    /** ?çÈ??Ä?ãÊõ¥?∞‰?‰ª?*/
+    /** ???X???ßÛ??????*/
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackStatusUpdated, const FString&, FeedbackID, EFeedbackStatus, NewStatus};
 
-    /** ?çÈ??ÜÈ?‰∫ã‰ª∂ */
+    /** ???X???®∆•Û */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackAssigned, const FString&, FeedbackID, const FString&, AssignedTo};
 
-    /** ?∞Â?È•ãÈÄöÁü•‰∫ã‰ª∂ */
+    /** ????ıX≥q™æ®∆•Û */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewFeedback, const FFeedbackData&, FeedbackData};
 
     UPROPERTY(BlueprintAssignable, Category = "Feedback System|Events")
@@ -287,48 +287,48 @@ public:
     FOnNewFeedback OnNewFeedback;
 
 protected:
-    /** ?üÊ??çÈ?ID */
+    /** ???X???ID */
     FString GenerateFeedbackID(};
 
-    /** È©óË??çÈ??∏Ê? */
+    /** ≈Á?X??X??? */
     bool ValidateFeedbackData(const FFeedbackData& FeedbackData};
 
-    /** ‰øùÂ??çÈ??∏Ê? */
+    /** ´O?X??X??? */
     bool SaveFeedbackData(const FFeedbackData& FeedbackData};
 
-    /** ?†Ë??çÈ??∏Ê? */
+    /** ???X??X??? */
     void LoadFeedbackData(};
 
-    /** ?¥Êñ∞Áµ±Ë??∏Ê? */
+    /** ??∑s≤Œ?X??? */
     void UpdateStatistics(};
 
-    /** ?ºÈÄÅÈÉµ‰ª∂ÈÄöÁü• */
+    /** ??∞e∂l•Û≥q™æ */
     void SendEmailNotification(const FString& To, const FString& Subject, const FString& Body};
 
-    /** ?ÜÊ??çÈ??ßÂÆπ */
+    /** ???X??X?Æe */
     void AnalyzeFeedbackContent(FFeedbackData& FeedbackData};
 
-    /** ?™Â?Ê®ôË? */
+    /** ????º–?? */
     void AutoTagFeedback(FFeedbackData& FeedbackData};
 
 private:
-    /** ?Ä?âÂ?È•ãÊï∏??*/
+    /** ??????ıXº∆X*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback System", meta = (AllowPrivateAccess = "true"))
     TArray<FFeedbackData> AllFeedback;
 
-    /** Áµ±Ë??∏Ê? */
+    /** ≤Œ?X??? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback System", meta = (AllowPrivateAccess = "true"))
     FFeedbackStatistics Statistics;
 
-    /** Á≥ªÁµ±?ØÂê¶Â∑≤Â?ÂßãÂ? */
+    /** ®t≤Œ??ß_§w??©l?? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback System", meta = (AllowPrivateAccess = "true"))
     bool bInitialized;
 
-    /** ?çÈ??∏Ê??á‰ª∂Ë∑ØÂ? */
+    /** ???X??X?•Û∏Ù?? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback System", meta = (AllowPrivateAccess = "true"))
     FString FeedbackDataFilePath;
 
-    /** ?çÁΩÆË®≠ÁΩÆ */
+    /** ??∏m≥]∏m */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback System", meta = (AllowPrivateAccess = "true"))
     bool bEnableEmailNotifications;
 
@@ -340,7 +340,7 @@ private:
 };
 
 /**
- * ?çÈ?UIÁÆ°Á??? */
+ * ????UI∫ﬁ?X */
 UCLASS(BlueprintType, Blueprintable)
 class USERFEEDBACKSYSTEM_API UFeedbackUIManager : public UObject
 {
@@ -349,66 +349,65 @@ class USERFEEDBACKSYSTEM_API UFeedbackUIManager : public UObject
 public:
     UFeedbackUIManager(};
 
-    /** È°ØÁ§∫?çÈ??ê‰∫§?åÈù¢ */
+    /** ≈„•‹???X?•Ê??≠± */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
     void ShowFeedbackSubmitUI(};
 
-    /** È°ØÁ§∫?çÈ??óË°®?åÈù¢ */
+    /** ≈„•‹???X?™Ì??≠± */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
     void ShowFeedbackListUI(};
 
-    /** È°ØÁ§∫?çÈ?Ë©≥Ê??åÈù¢ */
+    /** ≈„•‹????∏‘?X?≠± */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
     void ShowFeedbackDetailsUI(const FString& FeedbackID};
 
-    /** È°ØÁ§∫Áµ±Ë??åÈù¢ */
+    /** ≈„•‹≤Œ?X?≠± */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
     void ShowStatisticsUI(};
 
-    /** ?úÈ??çÈ??åÈù¢ */
+    /** ???X??X?≠± */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
     void CloseFeedbackUI(};
 
-    /** Ë®≠ÁΩÆ?çÈ?Á≥ªÁµ± */
+    /** ≥]∏m????®t≤Œ */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
     void SetFeedbackSystem(UUserFeedbackSystem* InFeedbackSystem};
 
 protected:
-    /** ?µÂª∫?çÈ??ê‰∫§?åÈù¢ */
+    /** ??´ÿ???X?•Ê??≠± */
     void CreateFeedbackSubmitUI(};
 
-    /** ?µÂª∫?çÈ??óË°®?åÈù¢ */
+    /** ??´ÿ???X?™Ì??≠± */
     void CreateFeedbackListUI(};
 
-    /** ?µÂª∫?çÈ?Ë©≥Ê??åÈù¢ */
+    /** ??´ÿ????∏‘?X?≠± */
     void CreateFeedbackDetailsUI(};
 
-    /** ?µÂª∫Áµ±Ë??åÈù¢ */
+    /** ??´ÿ≤Œ?X?≠± */
     void CreateStatisticsUI(};
 
 private:
-    /** ?çÈ?Á≥ªÁµ±ÂºïÁî® */
+    /** ????®t≤Œ§ﬁ•Œ */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UUserFeedbackSystem> FeedbackSystem;
 
-    /** ?∂Â?È°ØÁ§∫?ÑÁ???*/
+    /** ????≈„•‹???X*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     class UUserWidget* CurrentUI;
 
-    /** ?çÈ??ê‰∫§?åÈù¢ */
+    /** ???X?•Ê??≠± */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     TSubclassOf<class UUserWidget> FeedbackSubmitUIClass;
 
-    /** ?çÈ??óË°®?åÈù¢ */
+    /** ???X?™Ì??≠± */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     TSubclassOf<class UUserWidget> FeedbackListUIClass;
 
-    /** ?çÈ?Ë©≥Ê??åÈù¢ */
+    /** ????∏‘?X?≠± */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     TSubclassOf<class UUserWidget> FeedbackDetailsUIClass;
 
-    /** Áµ±Ë??åÈù¢ */
+    /** ≤Œ?X?≠± */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     TSubclassOf<class UUserWidget> StatisticsUIClass;
 };
-
