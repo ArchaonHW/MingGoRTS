@@ -47,7 +47,7 @@ development_status:
   epic-1: in-progress
   1-1-historical-decision-system: done
   1-2-dynamic-event-trigger: done
-  1-3-decision-consequence-calculation: ready-for-dev
+  1-3-decision-consequence-calculation: done
   1-4-win-loss-condition: done
   1-5-historical-character-interaction: done
   epic-1-retrospective: optional
@@ -55,7 +55,7 @@ development_status:
   # Epic 2: 大規模戰術戰鬥系統
   epic-2: in-progress
   2-1-large-scale-combat-engine: done
-  2-2-unit-control-system: ready-for-dev
+  2-2-unit-control-system: done
   2-3-multi-unit-coordination: backlog
   2-4-combat-ai-system: backlog
   2-5-difficulty-progression: backlog
