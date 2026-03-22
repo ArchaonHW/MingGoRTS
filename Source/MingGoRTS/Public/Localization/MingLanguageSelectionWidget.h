@@ -19,23 +19,23 @@ class MINGGORTS_API UMingLanguageSelectionWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingLanguageSelectionWidget(};
+    UMingLanguageSelectionWidget();
 
     /** Initialize the language selection widget */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void InitializeLanguageSelection(};
+    void InitializeLanguageSelection();
 
     /** Refresh available languages list */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void RefreshLanguageList(};
+    void RefreshLanguageList();
 
     /** Refresh available regions list */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void RefreshRegionList(};
+    void RefreshRegionList();
 
     /** Set current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetCurrentLanguage(ELanguageCode LanguageCode};
+    void SetCurrentLanguage(ERTSLanguageCode LanguageCode};
 
     /** Set current region */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
@@ -51,7 +51,7 @@ public:
 
     /** Check if language is available */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
-    bool IsLanguageAvailable(ELanguageCode LanguageCode) const;
+    bool IsLanguageAvailable(ERTSLanguageCode LanguageCode) const;
 
     /** Check if region is available */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
@@ -59,7 +59,7 @@ public:
 
     /** Get language flag texture path */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
-    FString GetLanguageFlagPath(ELanguageCode LanguageCode) const;
+    FString GetLanguageFlagPath(ERTSLanguageCode LanguageCode) const;
 
     /** Get region icon texture path */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
@@ -67,15 +67,15 @@ public:
 
     /** Apply settings and close */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void ApplySettings(};
+    void ApplySettings();
 
     /** Reset to default settings */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void ResetToDefaults(};
+    void ResetToDefaults();
 
     /** Cancel changes */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void CancelChanges(};
+    void CancelChanges();
 
 protected:
     /** Called when widget is constructed */
@@ -85,29 +85,29 @@ protected:
     virtual void NativeDestruct() override;
 
     /** Bind to localization system events */
-    void BindToLocalizationEvents(};
+    void BindToLocalizationEvents();
 
     /** Unbind from localization system events */
-    void UnbindFromLocalizationEvents(};
+    void UnbindFromLocalizationEvents();
 
     /** Update UI elements */
-    void UpdateUIElements(};
+    void UpdateUIElements();
 
     /** Update language preview */
-    void UpdateLanguagePreview(};
+    void UpdateLanguagePreview();
 
     /** Update region preview */
-    void UpdateRegionPreview(};
+    void UpdateRegionPreview();
 
     /** Save current settings */
-    void SaveSettings(};
+    void SaveSettings();
 
     /** Load saved settings */
-    void LoadSettings(};
+    void LoadSettings();
 
     /** Handle language change event */
     UFUNCTION()
-    void OnLanguageChanged(ELanguageCode NewLanguage};
+    void OnLanguageChanged(ERTSLanguageCode NewLanguage};
 
     /** Handle region change event */
     UFUNCTION()
@@ -117,10 +117,10 @@ protected:
     bool ValidateSettings() const;
 
     /** Show confirmation dialog */
-    void ShowConfirmationDialog(};
+    void ShowConfirmationDialog();
 
     /** Show restart required dialog */
-    void ShowRestartRequiredDialog(};
+    void ShowRestartRequiredDialog();
 
 private:
     /** Localization system reference */
@@ -133,21 +133,21 @@ private:
 
     /** Current selected language */
     UPROPERTY(BlueprintReadOnly, Category = "MingRTS|Localization|UI", meta = (AllowPrivateAccess = "true"))
-    ELanguageCode SelectedLanguage;
+    ERTSLanguageCode SelectedLanguage;
 
     /** Current selected region */
     UPROPERTY(BlueprintReadOnly, Category = "MingRTS|Localization|UI", meta = (AllowPrivateAccess = "true"))
     ECulturalRegion SelectedRegion;
 
     /** Original language before changes */
-    ELanguageCode OriginalLanguage;
+    ERTSLanguageCode OriginalLanguage;
 
     /** Original region before changes */
     ECulturalRegion OriginalRegion;
 
     /** Available languages list */
     UPROPERTY(BlueprintReadOnly, Category = "MingRTS|Localization|UI", meta = (AllowPrivateAccess = "true"))
-    TArray<ELanguageCode> AvailableLanguages;
+    TArray<ERTSLanguageCode> AvailableLanguages;
 
     /** Available regions list */
     UPROPERTY(BlueprintReadOnly, Category = "MingRTS|Localization|UI", meta = (AllowPrivateAccess = "true"))
@@ -203,7 +203,7 @@ private:
 
     /** Flag texture paths for languages */
     UPROPERTY(EditDefaultsOnly, Category = "MingRTS|Localization|UI")
-    TMap<ELanguageCode, FString> LanguageFlagPaths;
+    TMap<ERTSLanguageCode, FString> LanguageFlagPaths;
 
     /** Region icon paths */
     UPROPERTY(EditDefaultsOnly, Category = "MingRTS|Localization|UI")
@@ -216,7 +216,7 @@ private:
 public:
     /** Get available languages */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
-    TArray<ELanguageCode> GetAvailableLanguages() const { return AvailableLanguages; }
+    TArray<ERTSLanguageCode> GetAvailableLanguages() const { return AvailableLanguages; }
 
     /** Get available regions */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")

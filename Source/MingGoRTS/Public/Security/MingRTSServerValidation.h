@@ -1,11 +1,11 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSServerValidation.generated.h"
 
 /**
- * é©—ï¿½?çµï¿½?
+ * Åç??µ²??
  */
 USTRUCT(BlueprintType)
 struct FValidationResult
@@ -34,7 +34,7 @@ struct FValidationResult
 };
 
 /**
- * ?ï¿½æˆ²?ï¿½?ï¿½å¿«X */
+ * ??À¸????§ÖX */
 USTRUCT(BlueprintType)
 struct FGameStateSnapshot
 {
@@ -74,7 +74,7 @@ struct FGameStateSnapshot
 };
 
 /**
- * å®¢æˆ¶ç«¯å‘½ä»¤ï¿½?ï¿½? */
+ * «È¤áºİ©R¥O???? */
 USTRUCT(BlueprintType)
 struct FClientCommandValidation
 {
@@ -109,58 +109,58 @@ struct FClientCommandValidation
 };
 
 /**
- * ?ï¿½ï¿½Xï¿½ï¿½?è­‰ç³»ï¿½?- æ¬Šï¿½Xï¿½ï¿½Xï¿½ï¿½?ï¿½? */
+ * ???X???ÃÒ¨t??- Åv?X??X????? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSServerValidation : public UObject
 {
     GENERATED_BODY()
     
 public:
-    UMingRTSServerValidation(};
+    UMingRTSServerValidation();
     
-    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
-    void InitializeServerValidation(};
+    // ???X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    void InitializeServerValidation();
     
-    // é©—ï¿½?å®¢æˆ¶ç«¯å‘½ï¿½?    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    // Åç??«È¤áºİ©R??    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     FClientCommandValidation ValidateClientCommand(const FString& PlayerID, const FString& CommandType, 
         const TArray<uint8>& CommandData};
     
-    // é©—ï¿½Xï¿½æˆ²?ï¿½X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    // Åç?X?À¸??X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     FValidationResult ValidateGameState(const FGameStateSnapshot& ClientSnapshot};
     
-    // æ¯”ï¿½Xï¿½?ï¿½æ ¡é©—ï¿½?
+    // ¤ñ?X???®ÕÅç??
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     bool VerifyStateChecksum(int32 ClientChecksum, int32 ServerChecksum};
     
-    // è¨˜ï¿½?å®¢æˆ¶ç«¯å‘½ï¿½?    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    // °O??«È¤áºİ©R??    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     void RecordClientCommand(const FString& PlayerID, const FString& CommandID, const FString& CommandType};
     
-    // æª¢æŸ¥?ï¿½ä»¤åºï¿½?
+    // ÀË¬d??¥O§Ç??
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     bool VerifyCommandSequence(const FString& PlayerID, int32 ExpectedSequence};
     
-    // æª¢æ¸¬?ï¿½å¸¸?ï¿½X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    // ÀË´ú??±`??X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     TArray<FString> DetectAnomalousState(const FGameStateSnapshot& Snapshot};
     
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?å¨ï¿½X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    // ???X??X???«Â?X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     FGameStateSnapshot GetAuthoritativeState(const FString& MatchID, const FString& PlayerID};
     
-    // ?ï¿½ç”¨?ï¿½ï¿½Xï¿½æ ¡ï¿½?    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    // ??¥Î???X?®Õ??    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     void ApplyServerCorrection(const FString& PlayerID, const FGameStateSnapshot& CorrectedState};
     
-    // ?ï¿½ï¿½Xï¿½è©±é©—ï¿½?
+    // ???X?¸ÜÅç??
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     void StartSessionValidation(const FString& MatchID};
     
-    // çµï¿½Xï¿½è©±é©—ï¿½?
+    // µ²?X?¸ÜÅç??
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     void EndSessionValidation(const FString& MatchID};
     
-    // è¨­ç½®é©—ï¿½Xï¿½æ ¼æ¨¡ï¿½?
+    // ³]¸mÅç?X?®æ¼Ò??
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     void SetStrictValidation(bool bStrict};
     
-    // äº‹ä»¶å§”ï¿½?
+    // ¨Æ¥ó©e??
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnValidationFailed, const FString&, PlayerID, const FValidationResult&, Result};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStateMismatch, const FString&, MatchID, const FValidationResult&, MismatchInfo};
     

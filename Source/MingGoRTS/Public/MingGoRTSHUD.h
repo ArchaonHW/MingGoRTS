@@ -10,7 +10,7 @@ class MINGGORTS_API AMingGoRTSHUD : public AHUD
     GENERATED_BODY()
 
 public:
-    AMingGoRTSHUD(};
+    AMingGoRTSHUD();
 
 protected:
     virtual void BeginPlay() override;
@@ -21,7 +21,7 @@ public:
     void DrawSelectionBox(FVector2D Start, FVector2D End};
 
     UFUNCTION(BlueprintCallable, Category = "HUD")
-    void ClearSelectionBox(};
+    void ClearSelectionBox();
 
     UFUNCTION(BlueprintCallable, Category = "HUD")
     bool IsSelecting() const { return bIsSelecting; }

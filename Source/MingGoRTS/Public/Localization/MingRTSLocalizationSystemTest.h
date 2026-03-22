@@ -45,51 +45,51 @@ class MINGGORTS_API UMingRTSLocalizationSystemTest : public UObject
     GENERATED_BODY()
     
 public:
-    UMingRTSLocalizationSystemTest(};
+    UMingRTSLocalizationSystemTest();
     
     /** Run all localization tests */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    TArray<FLocalizationTestResult> RunAllTests(};
+    TArray<FLocalizationTestResult> RunAllTests();
     
     /** Test basic localization functionality */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    FLocalizationTestResult TestBasicLocalization(};
+    FLocalizationTestResult TestBasicLocalization();
     
     /** Test language switching */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    FLocalizationTestResult TestLanguageSwitching(};
+    FLocalizationTestResult TestLanguageSwitching();
     
     /** Test text direction support */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    FLocalizationTestResult TestTextDirection(};
+    FLocalizationTestResult TestTextDirection();
     
     /** Test cultural adaptation system */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    FLocalizationTestResult TestCulturalAdaptation(};
+    FLocalizationTestResult TestCulturalAdaptation();
     
     /** Test content variants */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    FLocalizationTestResult TestContentVariants(};
+    FLocalizationTestResult TestContentVariants();
     
     /** Test regional parameters */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    FLocalizationTestResult TestRegionalParameters(};
+    FLocalizationTestResult TestRegionalParameters();
     
     /** Test performance with large datasets */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    FLocalizationTestResult TestPerformance(};
+    FLocalizationTestResult TestPerformance();
     
     /** Test memory management */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    FLocalizationTestResult TestMemoryManagement(};
+    FLocalizationTestResult TestMemoryManagement();
     
     /** Test fallback mechanisms */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    FLocalizationTestResult TestFallbackMechanisms(};
+    FLocalizationTestResult TestFallbackMechanisms();
     
     /** Test concurrent access */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    FLocalizationTestResult TestConcurrentAccess(};
+    FLocalizationTestResult TestConcurrentAccess();
     
     /** Generate test report */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
@@ -97,11 +97,11 @@ public:
     
     /** Initialize test systems */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    void InitializeTestSystems(};
+    void InitializeTestSystems();
     
     /** Cleanup test systems */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    void CleanupTestSystems(};
+    void CleanupTestSystems();
 
 private:
     /** Localization system instance */
@@ -124,9 +124,9 @@ private:
     bool ValidateTextContent(const FString& Key, const FString& ExpectedLanguage};
     
     /** Test data generation */
-    void GenerateTestData(};
+    void GenerateTestData();
     
     /** Cleanup test data */
-    void CleanupTestData(};
+    void CleanupTestData();
 };
 

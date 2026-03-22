@@ -13,25 +13,25 @@ class MINGGORTS_API UMingRTSQuickStart : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSQuickStart(};
+    UMingRTSQuickStart();
 
     // 立即????使用 - 一???X?優??系??    UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    void StartOptimizationNow(};
+    void StartOptimizationNow();
 
     // ????系統??X    UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    FString GetSystemStatus(};
+    FString GetSystemStatus();
 
     // 快速性能檢查
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    void QuickPerformanceCheck(};
+    void QuickPerformanceCheck();
 
     // 立即???X??X?目
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    void OptimizeCurrentProject(};
+    void OptimizeCurrentProject();
 
     // ???X???結??
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    FString GetOptimizationResults(};
+    FString GetOptimizationResults();
 
 protected:
     // ????系統管?X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
@@ -44,7 +44,7 @@ protected:
     bool bOptimizationRunning;
 
 private:
-    // ???X?快???X    void InitializeQuickStart(};
+    // ???X?快???X    void InitializeQuickStart();
     
     // 顯示結??
     void DisplayResults(const FString& Results};

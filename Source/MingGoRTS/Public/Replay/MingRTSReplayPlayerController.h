@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,42 +7,42 @@
 class UMingRTSReplaySystem;
 
 /**
- * ?ï¿½æ”¾?ï¿½æ”¾?ï¿½åˆ¶X- ?ï¿½åˆ¶?ï¿½æ”¾?ï¿½æ”¾?ï¿½UI?ï¿½äº¤ï¿½? */
+ * ??©ñ??©ñ??¨îX- ??¨î??©ñ??©ñ??UI??¥æ?? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSReplayPlayerController : public UObject
 {
     GENERATED_BODY()
     
 public:
-    UMingRTSReplayPlayerController(};
+    UMingRTSReplayPlayerController();
     
-    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
+    // ???X    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void InitializePlayerController(UMingRTSReplaySystem* ReplaySystem};
     
-    // ?ï¿½æ”¾?ï¿½åˆ¶
+    // ??©ñ??¨î
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
-    void Play(};
+    void Play();
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
-    void Pause(};
+    void Pause();
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
-    void Stop(};
+    void Stop();
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
-    void StepForward(};
+    void StepForward();
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
-    void StepBackward(};
+    void StepBackward();
     
-    // ?ï¿½åº¦?ï¿½åˆ¶
+    // ??«×??¨î
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void SetPlaybackSpeed(float Speed};
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     float GetPlaybackSpeed() const;
     
-    // ?ï¿½ï¿½?è»¸æŽ§X    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
+    // ????¶b±±X    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void JumpToTime(float TimeInSeconds};
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
@@ -57,7 +57,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     float GetCurrentPercentage() const;
     
-    // ?ï¿½ç±¤ç³»çµ±
+    // ??ÅÒ¨t²Î
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Bookmarks")
     void AddBookmark(float Time, const FText& Label};
     
@@ -70,17 +70,17 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Bookmarks")
     void JumpToBookmark(int32 BookmarkIndex};
     
-    // äº‹ä»¶æ¨™ï¿½?
+    // ¨Æ¥ó¼Ð??
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Events")
     TArray<FString> GetEventMarkers() const;
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Events")
-    void JumpToNextEvent(};
+    void JumpToNextEvent();
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Events")
-    void JumpToPreviousEvent(};
+    void JumpToPreviousEvent();
     
-    // è¦–ï¿½Xï¿½åˆ¶
+    // µø?X?¨î
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Camera")
     void SetFreeCameraMode(bool bFreeCamera};
     
@@ -93,7 +93,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Camera")
     void FollowUnit(int32 UnitID};
     
-    // é¡¯ç¤ºè¨­ç½®
+    // Åã¥Ü³]¸m
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Display")
     void ShowUI(bool bVisible};
     
@@ -106,14 +106,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Display")
     void ShowAPMGraph(bool bVisible};
     
-    // å°Žå‡º?ï¿½èƒ½
+    // ¾É¥X??¯à
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Export")
     void ExportCurrentFrameAsImage(const FString& FilePath};
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Export")
     void ExportTimeRangeAsVideo(float StartTime, float EndTime, const FString& FilePath};
     
-    // äº‹ä»¶å§”ï¿½?
+    // ¨Æ¥ó©e??
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackStarted};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackPaused};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackStopped};
@@ -157,9 +157,9 @@ private:
     UPROPERTY()
     float CurrentPlaybackSpeed;
     
-    void BindToReplaySystem(};
-    void UnbindFromReplaySystem(};
+    void BindToReplaySystem();
+    void UnbindFromReplaySystem();
     void OnReplayTimeChanged(float NewTime};
-    void OnReplayFinished(};
+    void OnReplayFinished();
 };
 

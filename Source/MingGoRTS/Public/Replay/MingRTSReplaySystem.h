@@ -167,10 +167,10 @@ class MINGGORTS_API UMingRTSReplaySystem : public UObject
     GENERATED_BODY()
     
 public:
-    UMingRTSReplaySystem(};
+    UMingRTSReplaySystem();
     
     // ???X    UFUNCTION(BlueprintCallable, Category = "Replay")
-    void InitializeReplaySystem(};
+    void InitializeReplaySystem();
     
     // ???X?製
     UFUNCTION(BlueprintCallable, Category = "Replay")
@@ -178,7 +178,7 @@ public:
     
     // ??止??製
     UFUNCTION(BlueprintCallable, Category = "Replay")
-    FReplayMetadata StopRecording(};
+    FReplayMetadata StopRecording();
     
     // ???X?放
     UFUNCTION(BlueprintCallable, Category = "Replay")
@@ -186,14 +186,14 @@ public:
     
     // ??止??放
     UFUNCTION(BlueprintCallable, Category = "Replay")
-    void StopPlayback(};
+    void StopPlayback();
     
     // ????/??復??放
     UFUNCTION(BlueprintCallable, Category = "Replay")
-    void PausePlayback(};
+    void PausePlayback();
     
     UFUNCTION(BlueprintCallable, Category = "Replay")
-    void ResumePlayback(};
+    void ResumePlayback();
     
     // 設置??放??度
     UFUNCTION(BlueprintCallable, Category = "Replay")
@@ -299,12 +299,12 @@ private:
     FTimerHandle PlaybackTimerHandle;
     FTimerHandle RecordingTimerHandle;
     
-    void StartPlaybackLoop(};
-    void StopPlaybackLoop(};
-    void PlaybackTick(};
-    void RecordingTick(};
+    void StartPlaybackLoop();
+    void StopPlaybackLoop();
+    void PlaybackTick();
+    void RecordingTick();
     
-    FString GenerateReplayID(};
+    FString GenerateReplayID();
     FString GetReplayDirectory() const;
     bool SaveReplayToFile(const FString& ReplayID};
     bool LoadReplayFromFile(const FString& ReplayID};

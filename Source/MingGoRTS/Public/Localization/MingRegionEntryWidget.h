@@ -18,7 +18,7 @@ class MINGGORTS_API UMingRegionEntryWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingRegionEntryWidget(};
+    UMingRegionEntryWidget();
 
     /** Set the region code for this entry */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
@@ -50,27 +50,27 @@ public:
 
     /** Handle entry click */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void OnEntryClicked(};
+    void OnEntryClicked();
 
     /** Update entry appearance */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void UpdateAppearance(};
+    void UpdateAppearance();
 
 protected:
     /** Called when widget is constructed */
     virtual void NativeConstruct() override;
 
     /** Update visual state */
-    void UpdateVisualState(};
+    void UpdateVisualState();
 
     /** Update text display */
-    void UpdateTextDisplay(};
+    void UpdateTextDisplay();
 
     /** Update icon display */
-    void UpdateIconDisplay(};
+    void UpdateIconDisplay();
 
     /** Update selection indicator */
-    void UpdateSelectionIndicator(};
+    void UpdateSelectionIndicator();
 
 private:
     /** Region code for this entry */

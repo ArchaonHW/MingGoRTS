@@ -65,11 +65,11 @@ class MINGGORTS_API UMingRTSTextManager : public UObject
     GENERATED_BODY()
     
 public:
-    UMingRTSTextManager(};
+    UMingRTSTextManager();
     
     /** Initialize text manager */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Text")
-    void InitializeTextManager(};
+    void InitializeTextManager();
     
     /** Get text from specific namespace and key */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Text")
@@ -180,7 +180,7 @@ private:
     mutable TMap<FString, FString> FormatCache;
     
     /** Clear format cache */
-    void ClearFormatCache(};
+    void ClearFormatCache();
     
     /** Get current locale for string operations */
     FString GetCurrentLocale() const;

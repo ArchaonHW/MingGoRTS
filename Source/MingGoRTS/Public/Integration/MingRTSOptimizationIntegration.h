@@ -1,4 +1,4 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,7 +6,7 @@
 #include "MingRTSOptimizationIntegration.generated.h"
 
 /**
- * ?ÔøΩÔøΩ?Á∑®Ë≠ØÁ≥ªÁµ±?ÔøΩÔøΩ?ÔøΩ? * Â∞áÂÑ™?ÔøΩÁ∑®Ë≠ØÁ≥ªÁµ±ÔøΩXÔøΩÂà∞MingGoRTS‰∏ªÔøΩXÔøΩ‰∏≠
+ * ????Ωsƒ∂®t≤Œ?????? * ±N¿u??Ωsƒ∂®t≤Œ?X?®ÏMingGoRTS•D?X?§§
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSOptimizationIntegration : public UObject
@@ -14,63 +14,63 @@ class MINGGORTS_API UMingRTSOptimizationIntegration : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationIntegration(};
+    UMingRTSOptimizationIntegration();
 
-    // ?ÔøΩÊà≤?ÔøΩÔøΩXÔøΩÔøΩXÔøΩÔøΩXÔøΩÔøΩ?Á≥ªÁµ±
+    // ??¿∏???X??X??X???®t≤Œ
     UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void IntegrateOptimizationSystem(};
+    void IntegrateOptimizationSystem();
 
-    // ?ÔøΩÊà≤?ÔøΩÔøΩXÔøΩÔøΩXÔøΩÂÑ™X    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void StartGameOptimization(};
+    // ??¿∏???X??X?¿uX    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    void StartGameOptimization();
 
-    // ?ÔøΩÊà≤?ÔøΩÔøΩXÔøΩÔøΩ?Á∫åÂÑ™X    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void RuntimeOptimization(};
+    // ??¿∏???X???ƒÚ¿uX    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    void RuntimeOptimization();
 
-    // ?ÔøΩÂç°?ÔøΩÔøΩXÔøΩÂÑ™X    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void LevelTransitionOptimization(};
+    // ??•d???X?¿uX    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    void LevelTransitionOptimization();
 
-    // ‰øùÔøΩXÔøΩÂÑ™X    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void SaveGameOptimization(};
+    // ´O?X?¿uX    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    void SaveGameOptimization();
 
-    // ?ÔøΩÔøΩXÔøΩÂÑ™X    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void LoadGameOptimization(};
+    // ???X?¿uX    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    void LoadGameOptimization();
 
-    // ?ÔøΩÔøΩ?Á≥ªÁµ±?ÔøΩX    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
+    // ????®t≤Œ??X    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     bool IsOptimizationSystemActive() const;
 
-    // ?ÔøΩÔøΩXÔøΩËÉΩÁµ±ÔøΩ?
+    // ???X?Ø‡≤Œ??
     UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    FString GetGamePerformanceStats(};
+    FString GetGamePerformanceStats();
 
 protected:
-    // ?ÔøΩÔøΩ?Á≥ªÁµ±ÁÆ°ÔøΩX    UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
+    // ????®t≤Œ∫ﬁ?X    UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
-    // Á≥ªÁµ±?ÔøΩX    UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
+    // ®t≤Œ??X    UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
     bool bSystemIntegrated;
 
     UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
     bool bOptimizationActive;
 
 private:
-    // ?ÔøΩÔøΩXÔøΩËºØ
-    void SetupGameSpecificOptimizations(};
-    void ConfigureGameOptimizationParameters(};
-    void IntegrateWithGameSystems(};
+    // ???X?øË
+    void SetupGameSpecificOptimizations();
+    void ConfigureGameOptimizationParameters();
+    void IntegrateWithGameSystems();
     
-    // ?ÔøΩÊà≤?ÔøΩÔøΩXÔøΩÔøΩ?
-    void OptimizeGameLoop(};
-    void OptimizeRendering(};
-    void OptimizeAI(};
-    void OptimizeAudio(};
-    void OptimizePhysics(};
+    // ??¿∏???X???
+    void OptimizeGameLoop();
+    void OptimizeRendering();
+    void OptimizeAI();
+    void OptimizeAudio();
+    void OptimizePhysics();
     
-    // ?ÔøΩËÉΩXÔøΩÔøΩ
-    void MonitorGamePerformance(};
+    // ??Ø‡X??
+    void MonitorGamePerformance();
     void HandlePerformanceWarnings(const FString& Component, const FString& Warning, float Severity};
     
-    // ?ÔøΩÔøΩXÔøΩÔøΩ?
-    void AutoOptimizeBasedOnPerformance(};
-    void AdjustQualitySettings(};
+    // ???X???
+    void AutoOptimizeBasedOnPerformance();
+    void AdjustQualitySettings();
 };
 

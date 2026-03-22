@@ -285,11 +285,11 @@ class FFACTIONMECHANICS_API URepublicEraFactionSystem : public UObject
     GENERATED_BODY()
 
 public:
-    URepublicEraFactionSystem(};
+    URepublicEraFactionSystem();
 
     /** ?��X�勢?�系�?*/
     UFUNCTION(BlueprintCallable, Category = "Faction System")
-    void InitializeFactionSystem(};
+    void InitializeFactionSystem();
 
     /** ?��X�?�勢?�數X*/
     UFUNCTION(BlueprintCallable, Category = "Faction System")
@@ -321,11 +321,11 @@ public:
 
     /** ?�建?��?實�? */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
-    FFactionData CreateFactionInstance(int32 FactionID};
+    FFactionData CreateFactionInstance(int32 FactionID);
 
     /** ?�用?��?修正 */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
-    void ApplyFactionModifiers(FFactionData& FactionData};
+    void ApplyFactionModifiers(FFactionData& FactionData);
 
     /** 驗�X��X��? */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
@@ -333,13 +333,13 @@ public:
 
 protected:
     /** ?��X��X��? */
-    void LoadFactionData(};
+    void LoadFactionData();
 
     /** ?��X��?認勢X*/
-    void InitializeDefaultFactions(};
+    void InitializeDefaultFactions();
 
     /** 註�X��? */
-    void RegisterFaction(const FFactionData& FactionData};
+    void RegisterFaction(const FFactionData& FactionData);
 
 private:
     /** ?�?�勢?�數X*/

@@ -10,7 +10,7 @@ class MINGGORTS_API AMingGoRTSPlayerController : public APlayerController
     GENERATED_BODY()
 
 public:
-    AMingGoRTSPlayerController(};
+    AMingGoRTSPlayerController();
 
 protected:
     virtual void BeginPlay() override;
@@ -18,20 +18,20 @@ protected:
     virtual void PlayerTick(float DeltaTime) override;
 
     // è¼¸å…¥?•ç?
-    void OnLeftMouseButtonPressed(};
-    void OnLeftMouseButtonReleased(};
-    void OnRightMouseButtonPressed(};
-    void OnMouseScrollUp(};
-    void OnMouseScrollDown(};
+    void OnLeftMouseButtonPressed();
+    void OnLeftMouseButtonReleased();
+    void OnRightMouseButtonPressed();
+    void OnMouseScrollUp();
+    void OnMouseScrollDown();
     void OnMoveCameraForward(float Value};
     void OnMoveCameraRight(float Value};
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void StartSelection(};
+    void StartSelection();
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void EndSelection(};
+    void EndSelection();
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
     void SelectUnitsInRect(FVector2D Start, FVector2D End};
@@ -59,3 +59,6 @@ private:
     class AMingGoRTSCamera* RTSCamera;
 };
 
+
+
+#endif // MINGGORTSPLAYERCONTROLLER_H

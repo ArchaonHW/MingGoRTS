@@ -18,7 +18,7 @@ class UMingRTSCulturalAdaptationSystem;
  * Provides centralized access to localization services
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSubsystemLanguageChanged, 
-    TEnumAsByte<ELanguageCode>, NewLanguage};
+    TEnumAsByte<ERTSLanguageCode>, NewLanguage};
 
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
 class MINGGORTS_API UMingRTSLocalizationSubsystem : public UGameInstanceSubsystem
@@ -37,7 +37,7 @@ public:
     
     /** Initialize localization on game start */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    void InitializeLocalization(};
+    void InitializeLocalization();
     
     /** Get the localization system */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
@@ -69,27 +69,27 @@ public:
     
     /** Quick access: Set language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    void SetLanguage(ELanguageCode LanguageCode};
+    void SetLanguage(ERTSLanguageCode LanguageCode};
     
     /** Quick access: Get current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    ELanguageCode GetCurrentLanguage() const;
+    ERTSLanguageCode GetCurrentLanguage() const;
     
     /** Get user's preferred language from system settings */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    ELanguageCode GetSystemPreferredLanguage() const;
+    ERTSLanguageCode GetSystemPreferredLanguage() const;
     
     /** Load user language preference from saved settings */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    ELanguageCode LoadUserLanguagePreference() const;
+    ERTSLanguageCode LoadUserLanguagePreference() const;
     
     /** Save user language preference */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    void SaveUserLanguagePreference(ELanguageCode LanguageCode};
+    void SaveUserLanguagePreference(ERTSLanguageCode LanguageCode};
     
     /** Check if language is available */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    bool IsLanguageAvailable(ELanguageCode LanguageCode) const;
+    bool IsLanguageAvailable(ERTSLanguageCode LanguageCode) const;
     
     /** Get available language options (for UI) */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
@@ -116,11 +116,11 @@ private:
     static const FString LanguageSettingsSlot;
     
     /** Initialize from saved settings or system defaults */
-    void InitializeFromSettings(};
+    void InitializeFromSettings();
     
     /** Handle language changed event from localization system */
     UFUNCTION()
-    void HandleLanguageChanged(ELanguageCode NewLanguage};
+    void HandleLanguageChanged(ERTSLanguageCode NewLanguage};
 };
 
 /**
@@ -132,7 +132,7 @@ struct FLanguageOption
     GENERATED_BODY()
     
     UPROPERTY(BlueprintReadOnly)
-    ELanguageCode LanguageCode;
+    ERTSLanguageCode LanguageCode;
     
     UPROPERTY(BlueprintReadOnly)
     FString DisplayName;
@@ -147,7 +147,7 @@ struct FLanguageOption
     bool bIsSelected;
     
     FLanguageOption()
-        : LanguageCode(ELanguageCode::zh_CN)
+        : LanguageCode(ERTSLanguageCode::zh_CN)
         , bIsAvailable(false)
         , bIsSelected(false)
     {}

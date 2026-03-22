@@ -7,29 +7,29 @@
 UENUM(BlueprintType)
 enum class EAlgorithmType : uint8
 {
-    Sorting, UMETA(DisplayName = "Sorting Algorithm"),
-    Searching, UMETA(DisplayName = "Searching Algorithm"),
-    Pathfinding, UMETA(DisplayName = "Pathfinding Algorithm"),
-    MachineLearning, UMETA(DisplayName = "Machine Learning"),
-    DataCompression, UMETA(DisplayName = "Data Compression"),
-    Cryptography, UMETA(DisplayName = "Cryptography"),
-    Graph, UMETA(DisplayName = "Graph Algorithm"),
-    DynamicProgramming, UMETA(DisplayName = "Dynamic Programming"),
-    Greedy, UMETA(DisplayName = "Greedy Algorithm"),
-    DivideAndConquer, UMETA(DisplayName = "Divide and Conquer")
+    Sorting UMETA(DisplayName = "Sorting Algorithm"),
+    Searching UMETA(DisplayName = "Searching Algorithm"),
+    Pathfinding UMETA(DisplayName = "Pathfinding Algorithm"),
+    MachineLearning UMETA(DisplayName = "Machine Learning"),
+    DataCompression UMETA(DisplayName = "Data Compression"),
+    Cryptography UMETA(DisplayName = "Cryptography"),
+    Graph UMETA(DisplayName = "Graph Algorithm"),
+    DynamicProgramming UMETA(DisplayName = "Dynamic Programming"),
+    Greedy UMETA(DisplayName = "Greedy Algorithm"),
+    DivideAndConquer UMETA(DisplayName = "Divide and Conquer")
 };
 
 UENUM(BlueprintType)
 enum class EOptimizationTechnique : uint8
 {
-    TimeComplexity, UMETA(DisplayName = "Time Complexity"),
-    SpaceComplexity, UMETA(DisplayName = "Space Complexity"),
-    CacheOptimization, UMETA(DisplayName = "Cache Optimization"),
-    Parallelization, UMETA(DisplayName = "Parallelization"),
-    Memoization, UMETA(DisplayName = "Memoization"),
-    Approximation, UMETA(DisplayName = "Approximation"),
-    Heuristic, UMETA(DisplayName = "Heuristic"),
-    Hybrid, UMETA(DisplayName = "Hybrid Algorithm")
+    TimeComplexity UMETA(DisplayName = "Time Complexity"),
+    SpaceComplexity UMETA(DisplayName = "Space Complexity"),
+    CacheOptimization UMETA(DisplayName = "Cache Optimization"),
+    Parallelization UMETA(DisplayName = "Parallelization"),
+    Memoization UMETA(DisplayName = "Memoization"),
+    Approximation UMETA(DisplayName = "Approximation"),
+    Heuristic UMETA(DisplayName = "Heuristic"),
+    Hybrid UMETA(DisplayName = "Hybrid Algorithm")
 };
 
 USTRUCT(BlueprintType)

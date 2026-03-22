@@ -222,15 +222,15 @@ class MINGGORTS_API UMingRTSSelfLearningSystem : public UObject
 
 public:
     // Constructor and initialization
-    UMingRTSSelfLearningSystem(};
+    UMingRTSSelfLearningSystem();
     virtual void BeginDestroy() override;
 
     // System initialization and lifecycle
     UFUNCTION(BlueprintCallable, Category = "Self-Learning")
-    void InitializeSelfLearningSystem(};
+    void InitializeSelfLearningSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning")
-    void ShutdownSelfLearningSystem(};
+    void ShutdownSelfLearningSystem();
 
     // Data collection interface
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Data")
@@ -280,7 +280,7 @@ public:
 
     // Learning analytics and monitoring
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Analytics")
-    TMap<FString, FLearningResult> GetAllLearningResults(};
+    TMap<FString, FLearningResult> GetAllLearningResults();
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Analytics")
     float GetLearningAccuracy(const FString& ModelName};
@@ -345,9 +345,9 @@ protected:
     void AdaptContentSystem(const FAdaptiveParameters& Parameters};
 
     // Background processing
-    void StartBackgroundLearning(};
-    void StopBackgroundLearning(};
-    void ProcessLearningQueue(};
+    void StartBackgroundLearning();
+    void StopBackgroundLearning();
+    void ProcessLearningQueue();
 
 private:
     // Core data storage

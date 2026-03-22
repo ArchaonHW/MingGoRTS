@@ -5,7 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MingRTSIntegrationTestSuite.h"
+#include "Test/MingRTSIntegrationTestSuite.h"
 #include "MingRTSIntegrationTestExecutor.generated.h"
 
 /**

@@ -11,7 +11,7 @@ class MINGGORTS_API AMingGoRTSUnit : public ACharacter
     GENERATED_BODY()
 
 public:
-    AMingGoRTSUnit(};
+    AMingGoRTSUnit();
 
 protected:
     virtual void BeginPlay() override;

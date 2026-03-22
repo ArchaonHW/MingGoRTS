@@ -123,7 +123,7 @@ class MINGGORTS_API UMingRTSAILearningIntegration : public UObject
 
 public:
     // Constructor and initialization
-    UMingRTSAILearningIntegration(};
+    UMingRTSAILearningIntegration();
     virtual void BeginDestroy() override;
 
     // System initialization
@@ -131,7 +131,7 @@ public:
     void InitializeAILearning(UMingRTSSelfLearningSystem* SelfLearningSystem};
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning")
-    void ShutdownAILearning(};
+    void ShutdownAILearning();
 
     // Player behavior analysis
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Analysis")
@@ -158,7 +158,7 @@ public:
     bool CreatePlayerStrategyModel(const FString& ModelName};
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Models")
-    bool TrainStrategyModel(};
+    bool TrainStrategyModel();
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Models")
     EPlayerStrategyPattern PredictPlayerStrategy(const FString& PlayerID, const TMap<FString, FString>& CurrentState};

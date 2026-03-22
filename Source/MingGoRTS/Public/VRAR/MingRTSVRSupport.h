@@ -151,7 +151,7 @@ public:
 
     // Tracking and Space
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    void SetTrackingSpace(EVRTrackingSpace Space};
+    void SetTrackingSpace(EVRTrackingSpace Space);
 
     UFUNCTION(BlueprintCallable, Category = "VR Support")
     EVRTrackingSpace GetTrackingSpace() const { return CurrentTrackingSpace; };
@@ -161,14 +161,14 @@ public:
 
     // Comfort Settings
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    void SetComfortSettings(const FVRComfortSettings& Settings};
+    void SetComfortSettings(const FVRComfortSettings& Settings);
 
     UFUNCTION(BlueprintCallable, Category = "VR Support")
     FVRComfortSettings GetComfortSettings() const { return ComfortSettings; }
 
     // Performance Optimization
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    void SetVROptimizationLevel(int32 Level}; // 0-3 (Low to Ultra)
+    void SetVROptimizationLevel(int32 Level); // 0-3 (Low to Ultra)
 
     UFUNCTION(BlueprintCallable, Category = "VR Support")
     int32 GetCurrentVROptimizationLevel() const;
@@ -213,14 +213,14 @@ private:
     UPROPERTY()
     int32 VROptimizationLevel = 2; // Default to High
 
-    void OnVRDeviceConnectionChanged(bool bConnected};
-    void UpdateVRStatus(EVRSystemStatus NewStatus};
+    void OnVRDeviceConnectionChanged(bool bConnected);
+    void UpdateVRStatus(EVRSystemStatus NewStatus);
     void ApplyVROptimizationSettings();
     void SetupVRInputMappings();
 };
 
 // Event delegate declarations
-declare dynamic multicast delegate FOnVRDeviceConnected(EVRHeadsetType HeadsetType};
-declare dynamic multicast delegate FOnVRDeviceDisconnected();
-declare dynamic multicast delegate FOnVRStatusChanged(EVRSystemStatus OldStatus, EVRSystemStatus NewStatus};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVRDeviceConnected, EVRHeadsetType, HeadsetType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnVRDeviceDisconnected);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVRStatusChanged, EVRSystemStatus, OldStatus, EVRSystemStatus, NewStatus);
 

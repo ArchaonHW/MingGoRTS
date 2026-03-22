@@ -10,14 +10,14 @@
 UENUM(BlueprintType)
 enum class ECodexEntryType : uint8
 {
-    GameBasics, UMETA(DisplayName = "Game Basics"),
-    FactionInfo, UMETA(DisplayName = "Faction Info"),
-    UnitInfo, UMETA(DisplayName = "Unit Info"),
-    BuildingInfo, UMETA(DisplayName = "Building Info"),
-    Technology, UMETA(DisplayName = "Technology"),
-    Historical, UMETA(DisplayName = "Historical"),
-    Tutorial, UMETA(DisplayName = "Tutorial"),
-    Strategy, UMETA(DisplayName = "Strategy"),
+    GameBasics UMETA(DisplayName = "Game Basics"),
+    FactionInfo UMETA(DisplayName = "Faction Info"),
+    UnitInfo UMETA(DisplayName = "Unit Info"),
+    BuildingInfo UMETA(DisplayName = "Building Info"),
+    Technology UMETA(DisplayName = "Technology"),
+    Historical UMETA(DisplayName = "Historical"),
+    Tutorial UMETA(DisplayName = "Tutorial"),
+    Strategy UMETA(DisplayName = "Strategy"),
     Tips, UMETA(DisplayName = "Tips")
 };
 

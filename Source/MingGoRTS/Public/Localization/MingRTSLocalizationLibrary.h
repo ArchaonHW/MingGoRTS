@@ -31,12 +31,12 @@ public:
     /** Set current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static void SetGameLanguage(ELanguageCode LanguageCode};
+    static void SetGameLanguage(ERTSLanguageCode LanguageCode};
     
     /** Get current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static ELanguageCode GetCurrentGameLanguage(};
+    static ERTSLanguageCode GetCurrentGameLanguage();
     
     /** Format text with arguments */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
@@ -51,24 +51,24 @@ public:
     /** Get text direction for current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static ETextDirection GetTextDirection(};
+    static ETextDirection GetTextDirection();
     
     /** Is current language RTL? */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static bool IsRightToLeft(};
+    static bool IsRightToLeft();
     
     /** Get language display name */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization")
-    static FString GetLanguageDisplayName(ELanguageCode LanguageCode};
+    static FString GetLanguageDisplayName(ERTSLanguageCode LanguageCode};
     
     /** Get language native name */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization")
-    static FString GetLanguageNativeName(ELanguageCode LanguageCode};
+    static FString GetLanguageNativeName(ERTSLanguageCode LanguageCode};
     
     /** Get all supported languages */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization")
-    static TArray<TEnumAsByte<ELanguageCode>> GetSupportedLanguages(};
+    static TArray<TEnumAsByte<ERTSLanguageCode>> GetSupportedLanguages();
     
     /** Truncate text to max length */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
@@ -93,7 +93,7 @@ public:
     /** Reload current language (development only) */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Development",
              meta = (WorldContext = "WorldContextObject", DevelopmentOnly))
-    static void ReloadLanguage(};
+    static void ReloadLanguage();
     
     /** Format currency value for current locale */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
@@ -110,6 +110,6 @@ public:
     /** Get localized game title */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static FString GetGameTitle(};
+    static FString GetGameTitle();
 };
 

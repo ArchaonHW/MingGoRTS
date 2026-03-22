@@ -1,4 +1,4 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -10,32 +10,32 @@
 UENUM(BlueprintType)
 enum class ERoleplayType : uint8
 {
-    PoliticalDecision, UMETA(DisplayName = "?Ê≤ªÊ±∫?"),
-    MilitaryStrategy, UMETA(DisplayName = "Ëªç?Á≠ñÁï•"),
-    DiplomaticNegotiation, UMETA(DisplayName = "Â§ñ‰∫§Ë´áÂà§"),
-    EconomicPolicy, UMETA(DisplayName = "Á∂ìX"),
-    SocialReform, UMETA(DisplayName = "Á§æXÈù©"),
-    PersonalChoice, UMETA(DisplayName = "?‰∫∫X")
+    PoliticalDecision, UMETA(DisplayName = "?™v®M?"),
+    MilitaryStrategy, UMETA(DisplayName = "≠x?µ¶≤§"),
+    DiplomaticNegotiation, UMETA(DisplayName = "•~•ÊΩÕßP"),
+    EconomicPolicy, UMETA(DisplayName = "∏gX"),
+    SocialReform, UMETA(DisplayName = "™¿X≠≤"),
+    PersonalChoice, UMETA(DisplayName = "?§HX")
 };
 
 UENUM(BlueprintType)
 enum class EDecisionAlignment : uint8
 {
-    Historical, UMETA(DisplayName = "Ê≠∑Âè≤‰∏ÄX),
-    Alternative, UMETA(DisplayName = "?‰ª£X"),
+    Historical, UMETA(DisplayName = "æ˙•v§@X),
+    Alternative, UMETA(DisplayName = "?•NX"),
     CounterFactual, UMETA(DisplayName = "X),
-    PlayerChoice, UMETA(DisplayName = "?ÂÆ∂X")
+    PlayerChoice, UMETA(DisplayName = "?ÆaX")
 };
 
 UENUM(BlueprintType)
 enum class EDecisionImpact : uint8
 {
-    Minimal, UMETA(DisplayName = "?Â∞èÂΩ±X),
-    Local, UMETA(DisplayName = "?Âú∞ÂΩ±Èüø"),
-    Regional, UMETA(DisplayName = "XÂΩ±X),
-    National, UMETA(DisplayName = "?ÂÆ∂ÂΩ±Èüø"),
-    International, UMETA(DisplayName = "XÂΩ±Èüø"),
-    Historical, UMETA(DisplayName = "Ê≠∑Âè≤ÂΩ±Èüø")
+    Minimal, UMETA(DisplayName = "?§pºvX),
+    Local, UMETA(DisplayName = "?¶aºv≈T"),
+    Regional, UMETA(DisplayName = "XºvX),
+    National, UMETA(DisplayName = "?Æaºv≈T"),
+    International, UMETA(DisplayName = "Xºv≈T"),
+    Historical, UMETA(DisplayName = "æ˙•vºv≈T")
 };
 
 USTRUCT(BlueprintType)
@@ -251,9 +251,9 @@ class MINGGORTS_API UMingGoRTSHistoricalRoleplay : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSHistoricalRoleplay(};
+    UMingGoRTSHistoricalRoleplay();
 
-    // ËßíËâ≤X‰∫ã‰ª∂
+    // ®§¶‚X®∆•Û
     UPROPERTY(BlueprintAssignable, Category = "Roleplay System")
     FOnRoleplaySessionStarted OnRoleplaySessionStarted;
 
@@ -263,22 +263,22 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Roleplay System")
     FOnRoleplaySessionEnded OnRoleplaySessionEnded;
 
-    // XÊâÆÊºîÁ≥ª?    UFUNCTION(BlueprintCallable, Category = "Roleplay System")
-    void InitializeRoleplaySystem(};
+    // XßÍ∫t®t?    UFUNCTION(BlueprintCallable, Category = "Roleplay System")
+    void InitializeRoleplaySystem();
 
-    // XËßíËâ≤XË©±
+    // X®§¶‚X∏‹
     UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     FString StartRoleplaySession(const FString& CharacterID, const FMingCharacterData& PlayerCharacter};
 
-    // Áµê?ËßíËâ≤XË©±
+    // µ≤?®§¶‚X∏‹
     UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     bool EndRoleplaySession(const FString& SessionID};
 
-    // XË©±
+    // X∏‹
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     FRoleplaySession GetCurrentSession() const;
 
-    // XÁî®X
+    // X•ŒX
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     TArray<FHistoricalSituation> GetAvailableSituations(const FString& CharacterID) const;
 
@@ -290,124 +290,124 @@ public:
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     FHistoricalSituation GetCurrentSituation(const FString& SessionID) const;
 
-    // ?Âá∫Ê±∫?
+    // ?•X®M?
     UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     bool MakeDecision(const FString& SessionID, int32 DecisionIndex};
 
-    // XÊ±∫X
+    // X®MX
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     TArray<FDecisionOption> GetAvailableDecisionOptions(const FString& SessionID) const;
 
-    // Ë®à?Ê±∫?Áµê?
+    // ≠p?®M?µ≤?
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     TArray<FDecisionOutcome> CalculateDecisionOutcomes(const FString& SessionID, int32 DecisionIndex) const;
 
-    // Ë©ï‰º∞Ê±∫?
+    // µ˚¶Ù®M?
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     float EvaluateDecision(const FString& SessionID, int32 DecisionIndex) const;
 
-    // XÊ≠∑Âè≤Ê∫ñÁ¢∫X    UFUNCTION(BlueprintPure, Category = "Roleplay System")
+    // Xæ˙•v∑«ΩTX    UFUNCTION(BlueprintPure, Category = "Roleplay System")
     float GetHistoricalAccuracyScore(const FString& SessionID) const;
 
-    // XÊ±∫?Ë≥™?Ë©ï?
+    // X®M?ΩË?µ˚?
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     float GetDecisionQualityScore(const FString& SessionID) const;
 
-    // XÊ≤âÊµ∏X    UFUNCTION(BlueprintPure, Category = "Roleplay System")
+    // X®IÆ˚X    UFUNCTION(BlueprintPure, Category = "Roleplay System")
     float GetImmersionScore(const FString& SessionID) const;
 
-    // XË©±Ê≠∑Âè≤
+    // X∏‹æ˙•v
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     TArray<FString> GetSessionHistory(const FString& SessionID) const;
 
-    // XËßíËâ≤XÁµ±?
+    // X®§¶‚X≤Œ?
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     TMap<FString, float> GetRoleplayStatistics(const FString& SessionID) const;
 
-    // ‰øù?ËßíËâ≤X
+    // ´O?®§¶‚X
     UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     bool SaveRoleplayData(const FString& SaveSlotName};
 
-    // ËºâÂÖ•ËßíËâ≤X
+    // ∏¸§J®§¶‚X
     UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     bool LoadRoleplayData(const FString& SaveSlotName};
 
 protected:
-    // XÊ≠∑X    UPROPERTY()
+    // Xæ˙X    UPROPERTY()
     TArray<FHistoricalSituation> AllSituations;
 
-    // XIDXÂ¢ÉX
+    // XIDXπ“X
     UPROPERTY()
     TMap<FString, FHistoricalSituation> SituationMap;
 
-    // ËßíËâ≤IDXÂ¢É?Ë°®X - Ê≥®?ÔºöTMap<TArray> ‰∏çÊîØXUPROPERTY
+    // ®§¶‚IDXπ“?™ÌX - ™`?°GTMap<TArray> §£§‰XUPROPERTY
     TMap<FString, TArray<FString>> CharacterSituationMap;
 
-    // Ê¥ªXË©±
+    // ¨°X∏‹
     UPROPERTY()
     TMap<FString, FRoleplaySession> ActiveSessions;
 
-    // XÂÆ∂ËßíËâ≤
+    // XÆa®§¶‚
     UPROPERTY()
     FMingCharacterData CurrentPlayerCharacter;
 
-    // ?Âê¶Â∑≤?Âßã?
+    // ?ß_§w?©l?
     bool bIsInitialized;
 
-    // XÂ¢ÉÂ∫´
-    void InitializeSituationLibrary(};
+    // Xπ“Æw
+    void InitializeSituationLibrary();
 
-    // ?Âª∫?Ê≤ªÊ±∫X
-    void CreatePoliticalDecisionSituations(};
+    // ?´ÿ?™v®MX
+    void CreatePoliticalDecisionSituations();
 
-    // ?Âª∫Ëªç?Á≠ñÁï•X
-    void CreateMilitaryStrategySituations(};
+    // ?´ÿ≠x?µ¶≤§X
+    void CreateMilitaryStrategySituations();
 
-    // ?Âª∫Â§ñ‰∫§Ë´áÂà§X
-    void CreateDiplomaticNegotiationSituations(};
+    // ?´ÿ•~•ÊΩÕßPX
+    void CreateDiplomaticNegotiationSituations();
 
-    // ?Âª∫Á∂ìX
-    void CreateEconomicPolicySituations(};
+    // ?´ÿ∏gX
+    void CreateEconomicPolicySituations();
 
-    // ?Âª∫Á§æXÈù©X
-    void CreateSocialReformSituations(};
+    // ?´ÿ™¿X≠≤X
+    void CreateSocialReformSituations();
 
-    // ?Âª∫?‰∫∫X
-    void CreatePersonalChoiceSituations(};
+    // ?´ÿ?§HX
+    void CreatePersonalChoiceSituations();
 
-    // È©ó?Ê±∫X
+    // ≈Á?®MX
     bool ValidateDecisionOption(const FDecisionOption& Option, const FString& CharacterID) const;
 
-    // ?Áî®Ê±∫?Áµê?
+    // ?•Œ®M?µ≤?
     void ApplyDecisionOutcomes(const FString& SessionID, const TArray<FDecisionOutcome>& Outcomes};
 
-    // ?Êñ∞?Ë©±Ë©ï?
+    // ?∑s?∏‹µ˚?
     void UpdateSessionScores(const FString& SessionID, int32 DecisionIndex};
 
-    // Ë®à?Ê≠∑Âè≤Ê∫ñÁ¢∫X    float CalculateHistoricalAccuracy(const FDecisionOption& Decision) const;
+    // ≠p?æ˙•v∑«ΩTX    float CalculateHistoricalAccuracy(const FDecisionOption& Decision) const;
 
-    // Ë®à?Ê±∫?Ë≥™?
+    // ≠p?®M?ΩË?
     float CalculateDecisionQuality(const FDecisionOption& Decision, const FString& CharacterID) const;
 
-    // Ë®à?Ê≤âÊµ∏X    float CalculateImmersionScore(const FString& SessionID) const;
+    // ≠p?®IÆ˚X    float CalculateImmersionScore(const FString& SessionID) const;
 
-    // XË©±ID
+    // X∏‹ID
     FString GenerateSessionID(const FString& CharacterID) const;
 
-    // Ê™¢Êü•XÁî®X    bool IsSituationAvailable(const FString& SituationID, const FString& CharacterID) const;
+    // ¿À¨dX•ŒX    bool IsSituationAvailable(const FString& SituationID, const FString& CharacterID) const;
 
-    // XËßíËâ≤X    TArray<FString> GetCharacterSkills(const FString& CharacterID) const;
+    // X®§¶‚X    TArray<FString> GetCharacterSkills(const FString& CharacterID) const;
 
-    // Ê™¢Êü•Ê±∫XÁΩÆÊ¢ù‰ª∂
+    // ¿À¨d®MX∏m±¯•Û
     bool CheckDecisionPrerequisites(const FDecisionOption& Option, const FString& CharacterID) const;
 
-    // Ë®ò?Ê±∫?Ê≠∑Âè≤
+    // ∞O?®M?æ˙•v
     void RecordDecisionHistory(const FString& SessionID, const FString& DecisionText};
 
-    // ?Êñ∞ËßíËâ≤X
+    // ?∑s®§¶‚X
     void UpdateCharacterRelationships(const FString& SessionID, const TArray<FDecisionOutcome>& Outcomes};
 
-    // Ëß∏ÁôºÂæå?‰∫ã‰ª∂
+    // ƒ≤µo´·?®∆•Û
     void TriggerFollowUpEvents(const FString& SessionID, const TArray<FDecisionOutcome>& Outcomes};
 
     // XID

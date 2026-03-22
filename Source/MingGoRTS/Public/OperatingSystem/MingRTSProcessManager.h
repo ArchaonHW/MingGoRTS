@@ -212,10 +212,10 @@ public:
     bool CreateSharedMemory(const FString& Name, size_t Size);
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    void* MapSharedMemory(const FString& Name);
+    int32 MapSharedMemory(const FString& Name);
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    bool UnmapSharedMemory(const FString& Name, void* Memory);
+    bool UnmapSharedMemory(const FString& Name, int32 MemoryHandle);
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
     bool DestroySharedMemory(const FString& Name);

@@ -154,14 +154,14 @@ class MINGGORTS_API UMingRTSAchievementSystem : public UObject
     GENERATED_BODY()
     
 public:
-    UMingRTSAchievementSystem(};
+    UMingRTSAchievementSystem();
     
     // ?��X    UFUNCTION(BlueprintCallable, Category = "Achievement")
-    void InitializeAchievementSystem(};
+    void InitializeAchievementSystem();
     
     // 載入?�就定義
     UFUNCTION(BlueprintCallable, Category = "Achievement")
-    void LoadAchievementDefinitions(};
+    void LoadAchievementDefinitions();
     
     // ?��X�?��?�?    UFUNCTION(BlueprintCallable, Category = "Achievement")
     TArray<FAchievementData> GetAllAchievements() const;
@@ -244,7 +244,7 @@ private:
     UPROPERTY()
     TMap<FString, TMap<FName, FPlayerAchievementProgress>> PlayerAchievements;
     
-    void InitializeDefaultAchievements(};
+    void InitializeDefaultAchievements();
     void CheckPrerequisites(const FString& PlayerID, FName AchievementID};
     void CheckRelatedAchievements(const FString& PlayerID, FName AchievementID};
     void BroadcastAchievementUnlock(const FString& PlayerID, FName AchievementID};

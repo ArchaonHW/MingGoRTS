@@ -10,23 +10,23 @@ class MINGGORTS_API AMingGoRTSIntroGameMode : public AGameModeBase
     GENERATED_BODY()
 
 public:
-    AMingGoRTSIntroGameMode(};
+    AMingGoRTSIntroGameMode();
 
 protected:
     virtual void BeginPlay() override;
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Intro")
-    void StartIntroSequence(};
+    void StartIntroSequence();
 
     UFUNCTION(BlueprintCallable, Category = "Intro")
-    void SkipIntro(};
+    void SkipIntro();
 
     UFUNCTION(BlueprintCallable, Category = "Intro")
-    void LoadMainMenu(};
+    void LoadMainMenu();
 
     UFUNCTION(BlueprintCallable, Category = "Intro")
-    void LoadFirstLevel(};
+    void LoadFirstLevel();
 
 private:
     UPROPERTY()
@@ -38,8 +38,8 @@ private:
     UPROPERTY()
     bool bIntroCompleted;
 
-    void SetupIntroManager(};
-    void SetupIntroWidget(};
-    void HandleIntroCompleted(};
+    void SetupIntroManager();
+    void SetupIntroWidget();
+    void HandleIntroCompleted();
 };
 

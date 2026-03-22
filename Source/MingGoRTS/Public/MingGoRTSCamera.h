@@ -12,7 +12,7 @@ class MINGGORTS_API AMingGoRTSCamera : public APawn
     GENERATED_BODY()
 
 public:
-    AMingGoRTSCamera(};
+    AMingGoRTSCamera();
 
 protected:
     virtual void BeginPlay() override;

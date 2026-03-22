@@ -15,7 +15,7 @@ class MINGGORTS_API UMingGoRTSProductionLineWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingGoRTSProductionLineWidget(};
+    UMingGoRTSProductionLineWidget();
 
     // 設置??產線數X    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void SetProductionLine(const FProductionLine& ProductionLine};
@@ -97,26 +97,26 @@ protected:
 
     // ??新UI顯示
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Line UI")
-    void OnUpdateUI(};
+    void OnUpdateUI();
 
     // ???X??X???
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
-    void OnStartClicked(};
+    void OnStartClicked();
 
     // ???X??X???
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
-    void OnPauseClicked(};
+    void OnPauseClicked();
 
     // ???X??X???
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
-    void OnCancelClicked(};
+    void OnCancelClicked();
 
     // ???X??X???
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
-    void OnUpgradeClicked(};
+    void OnUpgradeClicked();
 
     // ???X??X??X    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
-    void OnAutomateClicked(};
+    void OnAutomateClicked();
 
     // ???X????X    FLinearColor GetStatusColor(EProductionStatus Status) const;
 
@@ -126,10 +126,10 @@ protected:
 
 private:
     // 綁??事件
-    void BindEvents(};
+    void BindEvents();
 
     // ?X事件
-    void UnbindEvents(};
+    void UnbindEvents();
 };
 
 /**
@@ -141,7 +141,7 @@ class MINGGORTS_API UMingGoRTSRecipeWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingGoRTSRecipeWidget(};
+    UMingGoRTSRecipeWidget();
 
     // 設置??方????
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
@@ -204,15 +204,15 @@ protected:
 
     // ??新UI顯示
     UFUNCTION(BlueprintImplementableEvent, Category = "Recipe UI")
-    void OnUpdateUI(};
+    void OnUpdateUI();
 
     // ???X?產????
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
-    void OnProduceClicked(};
+    void OnProduceClicked();
 
     // ???X?入???X???
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
-    void OnQueueClicked(};
+    void OnQueueClicked();
 
     // ??建資?X?表X    UUserWidget* CreateResourceItem(EResourceType ResourceType, float Amount, bool bIsInput};
 
@@ -220,10 +220,10 @@ protected:
 
 private:
     // 綁??事件
-    void BindEvents(};
+    void BindEvents();
 
     // ?X事件
-    void UnbindEvents(};
+    void UnbindEvents();
 };
 
 /**
@@ -235,7 +235,7 @@ class MINGGORTS_API UMingGoRTSProductionQueueWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingGoRTSProductionQueueWidget(};
+    UMingGoRTSProductionQueueWidget();
 
     // 設置??產???X???
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
@@ -251,7 +251,7 @@ public:
 
     // 清空????
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
-    void ClearQueue(};
+    void ClearQueue();
 
     // 設置循環模??
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
@@ -298,7 +298,7 @@ protected:
 
     // ????清空????
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
-    void OnClearQueueClicked(};
+    void OnClearQueueClicked();
 
     // ????循環模??變更
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
@@ -309,14 +309,14 @@ protected:
     void OnAutoStartChanged(bool bAutoStart};
 
     // ??新????計數
-    void UpdateQueueCount(};
+    void UpdateQueueCount();
 
 private:
     // 綁??事件
-    void BindEvents(};
+    void BindEvents();
 
     // ?X事件
-    void UnbindEvents(};
+    void UnbindEvents();
 };
 
 /**
@@ -328,7 +328,7 @@ class MINGGORTS_API UMingGoRTSProductionManagerWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingGoRTSProductionManagerWidget(};
+    UMingGoRTSProductionManagerWidget();
 
     // 設置??產系統引用
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
@@ -338,27 +338,27 @@ public:
     void ShowRecipeCategory(EProductionCategory Category};
 
     // 顯示?????X    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
-    void ShowAllCategories(};
+    void ShowAllCategories();
 
     // ??中??產??    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void SelectProductionLine(const FString& ProductionLineID};
 
     // 清除??中??X    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
-    void ClearSelection(};
+    void ClearSelection();
 
     // ??建???X???
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
-    void CreateNewProductionLine(};
+    void CreateNewProductionLine();
 
     // 顯示??產統??
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
-    void ShowProductionStatistics(};
+    void ShowProductionStatistics();
 
     // 設置??濾X    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void SetFilter(EProductionCategory CategoryFilter, EProductionPriority PriorityFilter};
 
     // 清除??濾X    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
-    void ClearFilter(};
+    void ClearFilter();
 
     // ???X??X?中???X???
     UFUNCTION(BlueprintPure, Category = "Production Manager UI")
@@ -456,32 +456,32 @@ protected:
     void OnProductionFailed(const FString& ProductionLineID, const FString& ErrorMessage};
 
     // ??新??產線????    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
-    void UpdateProductionLines(};
+    void UpdateProductionLines();
 
     // ??新??方??表
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
-    void UpdateRecipeList(};
+    void UpdateRecipeList();
 
     // ??建類別標籤
-    void CreateCategoryTabs(};
+    void CreateCategoryTabs();
 
     // ??建????級??濾器
-    void CreatePriorityFilters(};
+    void CreatePriorityFilters();
 
-    // ??用??濾X    void ApplyFilters(};
+    // ??用??濾X    void ApplyFilters();
 
     // ??新統??信息
-    void UpdateStatistics(};
+    void UpdateStatistics();
 
 private:
     // 綁?X?產系統事件
-    void BindProductionSystemEvents(};
+    void BindProductionSystemEvents();
 
     // ?X?產系統事件
-    void UnbindProductionSystemEvents(};
+    void UnbindProductionSystemEvents();
 
     // 清?X???Widget
-    void ClearExistingWidgets(};
+    void ClearExistingWidgets();
 
     // ????類別顏色
     FLinearColor GetCategoryColor(EProductionCategory Category) const;
@@ -496,7 +496,7 @@ class MINGGORTS_API UMingGoRTSProductionStatsWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingGoRTSProductionStatsWidget(};
+    UMingGoRTSProductionStatsWidget();
 
     // 設置??產統?X???
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
@@ -504,11 +504,11 @@ public:
 
     // 顯示詳細統??
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
-    void ShowDetailedStats(};
+    void ShowDetailedStats();
 
     // 導出統?X???
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
-    void ExportStatsReport(};
+    void ExportStatsReport();
 
 protected:
     // UI組件引用
@@ -567,16 +567,16 @@ protected:
 
     // ????導出????
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
-    void OnExportClicked(};
+    void OnExportClicked();
 
     // ???X??X???
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
-    void OnCloseClicked(};
+    void OnCloseClicked();
 
 private:
     // 綁??事件
-    void BindEvents(};
+    void BindEvents();
 
     // ?X事件
-    void UnbindEvents(};
+    void UnbindEvents();
 };

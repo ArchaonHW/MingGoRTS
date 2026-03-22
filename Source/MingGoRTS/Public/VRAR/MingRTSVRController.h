@@ -113,7 +113,7 @@ public:
 
     // Controller Management
     UFUNCTION(BlueprintCallable, Category = "VR Controller")
-    void InitializeController(EVRControllerType Type};
+    void InitializeController(EVRControllerType Type);
 
     UFUNCTION(BlueprintCallable, Category = "VR Controller")
     void ShutdownController();
@@ -136,7 +136,7 @@ public:
 
     // Interaction
     UFUNCTION(BlueprintCallable, Category = "VR Controller")
-    void SetInteractionMode(EVRInteractionMode Mode};
+    void SetInteractionMode(EVRInteractionMode Mode);
 
     UFUNCTION(BlueprintCallable, Category = "VR Controller")
     EVRInteractionMode GetCurrentInteractionMode() const { return CurrentInteractionMode; }
@@ -146,7 +146,7 @@ public:
 
     // Haptic Feedback
     UFUNCTION(BlueprintCallable, Category = "VR Controller")
-    void PlayHapticEffect(float Intensity, float Duration, bool bIsHand = true};
+    void PlayHapticEffect(float Intensity, float Duration, bool bIsHand = true);
 
     UFUNCTION(BlueprintCallable, Category = "VR Controller")
     void StopHapticEffect();
@@ -166,10 +166,10 @@ public:
 
     // Input Handling
     UFUNCTION(BlueprintCallable, Category = "VR Controller|Input")
-    void RegisterInputAction(const FVRInputAction& Action};
+    void RegisterInputAction(const FVRInputAction& Action);
 
     UFUNCTION(BlueprintCallable, Category = "VR Controller|Input")
-    void UnregisterInputAction(FName ActionName};
+    void UnregisterInputAction(FName ActionName);
 
     // Events
     UPROPERTY(BlueprintAssignable, Category = "VR Controller|Events")
@@ -218,11 +218,11 @@ private:
     UPROPERTY()
     float HapticTimer = 0.0f;
 
-    void UpdateControllerState(float DeltaTime};
+    void UpdateControllerState(float DeltaTime);
     void ProcessInput();
     void UpdatePointerVisuals();
     void HandleRTSInput();
-    void PerformLineTraceForSelection(FHitResult& OutHit};
+    void PerformLineTraceForSelection(FHitResult& OutHit);
     
     // Cached motion controller component reference
     UPROPERTY()
@@ -230,11 +230,11 @@ private:
 };
 
 // Event delegate declarations
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnControllerTrackingStateChanged, bool, bIsTracking};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerButtonPressed, EVRControllerType, Controller, FName, ButtonName};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerButtonReleased, EVRControllerType, Controller, FName, ButtonName};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerPressed, EVRControllerType, Controller};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerReleased, EVRControllerType, Controller};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitSelected, AActor*, SelectedUnit};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitsMoved, const FVector&, MoveLocation, const TArray<AActor*>&, Units};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnControllerTrackingStateChanged, bool, bIsTracking);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerButtonPressed, EVRControllerType, Controller, FName, ButtonName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerButtonReleased, EVRControllerType, Controller, FName, ButtonName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerPressed, EVRControllerType, Controller);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerReleased, EVRControllerType, Controller);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitSelected, AActor*, SelectedUnit);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitsMoved, const FVector&, MoveLocation, const TArray<AActor*>&, Units);
 

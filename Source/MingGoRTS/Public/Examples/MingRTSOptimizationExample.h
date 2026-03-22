@@ -14,52 +14,52 @@ class MINGGORTS_API UMingRTSOptimizationExample : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationExample(};
+    UMingRTSOptimizationExample();
 
     // ????使用示??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void BasicUsageExample(};
+    void BasicUsageExample();
 
     // 快速優??示??    UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void QuickOptimizationExample(};
+    void QuickOptimizationExample();
 
     // 深度????示??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void DeepOptimizationExample(};
+    void DeepOptimizationExample();
 
     // ????義??置示??    UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void CustomConfigurationExample(};
+    void CustomConfigurationExample();
 
     // 實?X??示??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void RealTimeMonitoringExample(};
+    void RealTimeMonitoringExample();
 
     // ??能????示??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void PerformanceAnalysisExample(};
+    void PerformanceAnalysisExample();
 
     // 算?X???示??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void AlgorithmOptimizationExample(};
+    void AlgorithmOptimizationExample();
 
     // ???X???示??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void BatchProcessingExample(};
+    void BatchProcessingExample();
 
     // ????工??流??示??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void IntegratedWorkflowExample(};
+    void IntegratedWorkflowExample();
 
     // ????使用????
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    FString GetUsageGuide(};
+    FString GetUsageGuide();
 
 protected:
     // ????系統管?X    UPROPERTY(BlueprintReadOnly, Category = "Optimization Example")
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
 private:
-    // ???X?示??    void InitializeExample(};
+    // ???X?示??    void InitializeExample();
     
     // 演示輔助????
     void LogExampleResult(const FString& ExampleName, const FString& Result};

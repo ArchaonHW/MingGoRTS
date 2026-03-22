@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -11,193 +11,193 @@ class MINGGORTS_API UMingGoRTSResourceBlueprintLibrary : public UBlueprintFuncti
     GENERATED_BODY()
 
 public:
-    // ?ï¿½ï¿½?è³‡ï¿½?é¡ï¿½?é¡¯ç¤º?ï¿½ç¨±
+    // ????¸ê??Ãş??Åã¥Ü??ºÙ
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static FString GetResourceTypeDisplayName(EResourceType ResourceType};
 
-    // ?ï¿½ï¿½?è³‡ï¿½?ç¨€?ï¿½åº¦é¡¯ç¤º?ï¿½ç¨±
+    // ????¸ê??µ}??«×Åã¥Ü??ºÙ
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static FString GetResourceRarityDisplayName(EResourceRarity Rarity};
 
-    // ?ï¿½ï¿½?è³‡ï¿½?è³ªï¿½?é¡¯ç¤º?ï¿½ç¨±
+    // ????¸ê??½è??Åã¥Ü??ºÙ
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static FString GetResourceQualityDisplayName(EResourceQuality Quality};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?é¡¯ç¤º?ï¿½ç¨±
+    // ???X??X???Åã¥Ü??ºÙ
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static FString GetCollectionMethodDisplayName(ECollectionMethod Method};
 
-    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?æºï¿½X    UFUNCTION(BlueprintPure, Category = "Resource System")
-    static TArray<EResourceType> GetAllResourceTypes(};
+    // ???X?????·½?X    UFUNCTION(BlueprintPure, Category = "Resource System")
+    static TArray<EResourceType> GetAllResourceTypes();
 
-    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?æºï¿½Xï¿½åº¦
+    // ???X?????·½?X?«×
     UFUNCTION(BlueprintPure, Category = "Resource System")
-    static TArray<EResourceRarity> GetAllResourceRarities(};
+    static TArray<EResourceRarity> GetAllResourceRarities();
 
-    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?æºè³ªX    UFUNCTION(BlueprintPure, Category = "Resource System")
-    static TArray<EResourceQuality> GetAllResourceQualities(};
+    // ???X?????·½½èX    UFUNCTION(BlueprintPure, Category = "Resource System")
+    static TArray<EResourceQuality> GetAllResourceQualities();
 
-    // ?ï¿½ï¿½Xï¿½?ï¿½æ”¶?ï¿½æ–¹ï¿½?    UFUNCTION(BlueprintPure, Category = "Resource System")
-    static TArray<ECollectionMethod> GetAllCollectionMethods(};
+    // ???X???¦¬??¤è??    UFUNCTION(BlueprintPure, Category = "Resource System")
+    static TArray<ECollectionMethod> GetAllCollectionMethods();
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?æºæ•¸?ï¿½é¡¯ï¿½?    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // ???X???·½¼Æ??Åã??    UFUNCTION(BlueprintPure, Category = "Resource System")
     static FString FormatResourceQuantity(float Quantity, EResourceType ResourceType};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?æºåƒ¹?ï¿½é¡¯ï¿½?    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // ???X???·½»ù??Åã??    UFUNCTION(BlueprintPure, Category = "Resource System")
     static FString FormatResourceValue(float Value};
 
-    // æª¢æŸ¥è³‡ï¿½Xï¿½å¦?ï¿½ï¿½Xï¿½ï¿½?
+    // ÀË¬d¸ê?X?§_???X???
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static bool IsResourcePerishable(EResourceType ResourceType};
 
-    // æª¢æŸ¥è³‡ï¿½Xï¿½å¦?ï¿½ï¿½X    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // ÀË¬d¸ê?X?§_???X    UFUNCTION(BlueprintPure, Category = "Resource System")
     static bool IsResourceStackable(EResourceType ResourceType};
 
-    // ?ï¿½ï¿½?è³‡ï¿½Xï¿½ï¿½?è·¯ï¿½?
+    // ????¸ê?X???¸ô??
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static FString GetResourceIconPath(EResourceType ResourceType};
 
-    // ?ï¿½ï¿½?è³‡ï¿½Xï¿½è¿°
+    // ????¸ê?X?­z
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static FString GetResourceDescription(EResourceType ResourceType};
 
-    // è¨ˆï¿½?è³‡ï¿½?ç¸½åƒ¹X    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // ­p??¸ê??Á`»ùX    UFUNCTION(BlueprintPure, Category = "Resource System")
     static float CalculateResourceTotalValue(EResourceType ResourceType, float Quantity, EResourceQuality Quality};
 
-    // æª¢æŸ¥è³‡ï¿½Xï¿½å®¹X    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // ÀË¬d¸ê?X?®eX    UFUNCTION(BlueprintPure, Category = "Resource System")
     static bool AreResourcesCompatible(EResourceType ResourceType1, EResourceType ResourceType2};
 
-    // ?ï¿½ï¿½Xï¿½è–¦?ï¿½æ”¶?ï¿½æ–¹ï¿½?    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // ???X?ÂË??¦¬??¤è??    UFUNCTION(BlueprintPure, Category = "Resource System")
     static ECollectionMethod GetRecommendedCollectionMethod(EResourceType ResourceType};
 
-    // ?ï¿½ï¿½?è³‡ï¿½Xï¿½ï¿½Xï¿½ï¿½?å»ºè­°
+    // ????¸ê?X??X???«ØÄ³
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static TArray<FString> GetResourceCollectionLocations(EResourceType ResourceType};
 
-    // ?ï¿½ï¿½?è³‡ï¿½?å­˜å„²å»ºè­°
+    // ????¸ê??¦sÀx«ØÄ³
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static TArray<FString> GetResourceStorageRecommendations(EResourceType ResourceType};
 
-    // ?ï¿½å»ºè³‡ï¿½Xï¿½ï¿½?ä»»ï¿½?
+    // ??«Ø¸ê?X???¥ô??
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static FString CreateResourceCollectionTask(UMingGoRTSResourceSystem* ResourceSystem, EResourceType ResourceType, ECollectionMethod Method, const FString& LocationID};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static bool StartAutoCollection(UMingGoRTSResourceSystem* ResourceSystem, const FString& CollectionID, const FString& CollectorID};
 
-    // ?ï¿½æ­¢?ï¿½ï¿½Xï¿½ï¿½?
+    // ??¤î???X???
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static bool StopAutoCollection(UMingGoRTSResourceSystem* ResourceSystem, const FString& CollectionID};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½åº¦
+    // ???X??X?«×
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static float GetCollectionProgress(UMingGoRTSResourceSystem* ResourceSystem, const FString& CollectionID};
 
-    // æª¢æŸ¥?ï¿½ï¿½Xï¿½å¦å®Œï¿½?
+    // ÀË¬d???X?§_§¹??
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static bool IsCollectionComplete(UMingGoRTSResourceSystem* ResourceSystem, const FString& CollectionID};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static float GetCollectionEfficiency(UMingGoRTSResourceSystem* ResourceSystem, const FString& CollectionID};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static bool ImproveCollectionEfficiency(UMingGoRTSResourceSystem* ResourceSystem, const FString& CollectionID, float ImprovementAmount};
 
-    // ?ï¿½å»ºè³‡ï¿½?è½‰ï¿½Xï¿½æ–¹
+    // ??«Ø¸ê??Âà?X?¤è
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static FString CreateConversionRecipe(UMingGoRTSResourceSystem* ResourceSystem, const FString& RecipeName, const TMap<EResourceType, float>& InputResources, const TMap<EResourceType, float>& OutputResources};
 
-    // æª¢æŸ¥è½‰ï¿½Xï¿½å¦?ï¿½ç”¨
+    // ÀË¬dÂà?X?§_??¥Î
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static bool IsConversionAvailable(UMingGoRTSResourceSystem* ResourceSystem, const FString& ConversionID};
 
-    // ?ï¿½ï¿½?è½‰ï¿½Xï¿½æœ¬
+    // ????Âà?X?¥»
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static float GetConversionCost(UMingGoRTSResourceSystem* ResourceSystem, const FString& ConversionID};
 
-    // ?ï¿½ï¿½?è½‰ï¿½Xï¿½ï¿½?
+    // ????Âà?X???
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static float GetConversionTime(UMingGoRTSResourceSystem* ResourceSystem, const FString& ConversionID};
 
-    // ?ï¿½ï¿½?å­˜å„²è³‡ï¿½?
+    // ????¦sÀx¸ê??
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static bool BatchStoreResources(UMingGoRTSResourceSystem* ResourceSystem, const FString& StorageID, const TMap<EResourceType, float>& Resources};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?è³‡ï¿½?
+    // ???X???¸ê??
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static TMap<EResourceType, float> BatchRetrieveResources(UMingGoRTSResourceSystem* ResourceSystem, const FString& StorageID, const TMap<EResourceType, float>& Resources};
 
-    // ?ï¿½ï¿½?å­˜å„²å®¹ï¿½?è³‡ï¿½?
+    // ????¦sÀx®e??¸ê??
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static void GetStorageCapacityInfo(UMingGoRTSResourceSystem* ResourceSystem, const FString& StorageID, float& MaxCapacity, float& UsedCapacity, float& AvailableCapacity};
 
-    // æª¢æŸ¥å­˜å„²?ï¿½å¦å·²æ»¿
+    // ÀË¬d¦sÀx??§_¤wº¡
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static bool IsStorageFull(UMingGoRTSResourceSystem* ResourceSystem, const FString& StorageID};
 
-    // æª¢æŸ¥å­˜å„²?ï¿½å¦?ï¿½ç©º
+    // ÀË¬d¦sÀx??§_??ªÅ
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static bool IsStorageEmpty(UMingGoRTSResourceSystem* ResourceSystem, const FString& StorageID};
 
-    // ?ï¿½ï¿½?å­˜å„²ä¸­ï¿½Xï¿½?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // ????¦sÀx¤¤?X???????    UFUNCTION(BlueprintPure, Category = "Resource System")
     static TMap<EResourceType, FResourceData> GetAllStoredResources(UMingGoRTSResourceSystem* ResourceSystem, const FString& StorageID};
 
-    // è¨ˆï¿½?å­˜å„²ç¸½åƒ¹X    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // ­p??¦sÀxÁ`»ùX    UFUNCTION(BlueprintPure, Category = "Resource System")
     static float CalculateStorageTotalValue(UMingGoRTSResourceSystem* ResourceSystem, const FString& StorageID};
 
-    // ?ï¿½ï¿½?å­˜å„²ç©ºï¿½?
+    // ????¦sÀxªÅ??
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static bool OptimizeStorageSpace(UMingGoRTSResourceSystem* ResourceSystem, const FString& StorageID};
 
-    // ?ï¿½å»ºè³‡ï¿½Xï¿½ï¿½?è¨ˆï¿½?
+    // ??«Ø¸ê?X???­p??
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static bool CreateResourceAllocationPlan(UMingGoRTSResourceSystem* ResourceSystem, const FString& PlanName, const TMap<EResourceType, float>& AllocationTargets};
 
-    // ?ï¿½ï¿½?è³‡ï¿½Xï¿½ï¿½?
+    // ????¸ê?X???
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static bool ExecuteResourceAllocation(UMingGoRTSResourceSystem* ResourceSystem, const FString& PlanName};
 
-    // ?ï¿½ï¿½?è³‡ï¿½Xï¿½ï¿½Xï¿½X    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // ????¸ê?X??X?X    UFUNCTION(BlueprintPure, Category = "Resource System")
     static FString GetResourceAllocationStatus(UMingGoRTSResourceSystem* ResourceSystem, const FString& PlanName};
 
-    // ?ï¿½ï¿½?è³‡ï¿½Xï¿½ï¿½?
+    // ????¸ê?X???
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static FString GenerateResourceReport(UMingGoRTSResourceSystem* ResourceSystem};
 
-    // ?ï¿½ï¿½?è³‡ï¿½?çµ±ï¿½?è³‡ï¿½?
+    // ????¸ê??²Î??¸ê??
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static TMap<EResourceType, float> GetResourceStatistics(UMingGoRTSResourceSystem* ResourceSystem};
 
-    // ?ï¿½ï¿½?è³‡ï¿½?è¶¨å‹¢
+    // ????¸ê??ÁÍ¶Õ
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static TArray<FString> AnalyzeResourceTrends(UMingGoRTSResourceSystem* ResourceSystem};
 
-    // ?ï¿½æ¸¬è³‡ï¿½Xï¿½ï¿½?    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // ??´ú¸ê?X???    UFUNCTION(BlueprintPure, Category = "Resource System")
     static TArray<EResourceType> PredictResourceNeeds(UMingGoRTSResourceSystem* ResourceSystem};
 
-    // ?ï¿½ï¿½?è³‡ï¿½?å»ºè­°
+    // ????¸ê??«ØÄ³
     UFUNCTION(BlueprintPure, Category = "Resource System")
     static TArray<FString> GetResourceRecommendations(UMingGoRTSResourceSystem* ResourceSystem};
 
-    // é©—ï¿½?è³‡ï¿½?ç³»çµ±å®Œæ•´X    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // Åç??¸ê??¨t²Î§¹¾ãX    UFUNCTION(BlueprintPure, Category = "Resource System")
     static bool ValidateResourceSystemIntegrity(UMingGoRTSResourceSystem* ResourceSystem};
 
-    // ä¿®å¾©è³‡ï¿½?ç³»çµ±
+    // ­×´_¸ê??¨t²Î
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static bool RepairResourceSystem(UMingGoRTSResourceSystem* ResourceSystem};
 
-    // ?ï¿½ç½®è³‡ï¿½?ç³»çµ±
+    // ??¸m¸ê??¨t²Î
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static bool ResetResourceSystem(UMingGoRTSResourceSystem* ResourceSystem};
 
-    // ?ï¿½ä»½è³‡ï¿½Xï¿½ï¿½?
+    // ??¥÷¸ê?X???
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static bool BackupResourceData(UMingGoRTSResourceSystem* ResourceSystem, const FString& BackupPath};
 
-    // ?ï¿½å¾©è³‡ï¿½Xï¿½ï¿½?
+    // ??´_¸ê?X???
     UFUNCTION(BlueprintCallable, Category = "Resource System")
     static bool RestoreResourceData(UMingGoRTSResourceSystem* ResourceSystem, const FString& BackupPath};
 };

@@ -1,5 +1,5 @@
-ï»¿// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// ç³»çµ±?ï¿½ï¿½?æ¸¬è©¦?ï¿½ï¿½?ç¤ºï¿½? - GameMode?ï¿½ï¿½?
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// ¨t²Î????´ú¸Õ????¥Ü?? - GameMode????
 
 #pragma once
 
@@ -9,8 +9,8 @@
 #include "MingRTSIntegrationTestGameMode.generated.h"
 
 /**
- * ç³»çµ±?ï¿½ï¿½?æ¸¬è©¦GameMode
- * ?ï¿½æ–¼?ï¿½ï¿½?ç³»çµ±?ï¿½ï¿½?æ¸¬è©¦?ï¿½ï¿½Xï¿½GameMode
+ * ¨t²Î????´ú¸ÕGameMode
+ * ??©ó????¨t²Î????´ú¸Õ???X?GameMode
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API AMingRTSIntegrationTestGameMode : public AGameModeBase
@@ -18,44 +18,43 @@ class MINGGORTS_API AMingRTSIntegrationTestGameMode : public AGameModeBase
     GENERATED_BODY()
 
 public:
-    AMingRTSIntegrationTestGameMode(};
+    AMingRTSIntegrationTestGameMode();
 
-    /** GameMode?ï¿½ï¿½Xï¿½åŸ·ï¿½?*/
+    /** GameMode???X?°õ??*/
     virtual void BeginPlay() override;
 
-    /** ?ï¿½ï¿½?ç³»çµ±?ï¿½ï¿½?æ¸¬è©¦ */
+    /** ????¨t²Î????´ú¸Õ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void StartIntegrationTest(};
+    void StartIntegrationTest();
 
-    /** ?ï¿½ï¿½?æ¸¬è©¦?ï¿½ï¿½X*/
+    /** ????´ú¸Õ???X*/
     UFUNCTION(BlueprintPure, Category = "Integration Test")
     UMingRTSIntegrationTestExecutor* GetTestExecutor() const { return TestExecutor; }
 
 protected:
-    /** æ¸¬è©¦?ï¿½ï¿½X*/
+    /** ´ú¸Õ???X*/
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
     TObjectPtr<UMingRTSIntegrationTestExecutor> TestExecutor;
 
-    /** æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½? */
+    /** ´ú¸Õ°õ¦æ¶}©l¨Æ¥ó */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void OnTestExecutionStarted(};
+    void OnTestExecutionStarted();
 
-    /** æ¸¬è©¦?ï¿½ï¿½?å®Œï¿½Xï¿½ï¿½? */
+    /** ´ú¸Õ°õ¦æ§¹¦¨¨Æ¥ó */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void OnTestExecutionCompleted(bool bAllTestsPassed};
+    void OnTestExecutionCompleted(bool bAllTestsPassed);
 
-    /** æ¸¬è©¦?ï¿½æ®µå®Œï¿½Xï¿½ï¿½? */
+    /** ´ú¸Õ??¬q§¹?X??? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void OnTestPhaseCompleted(const FString& PhaseName, bool bPassed};
+    void OnTestPhaseCompleted(const FString& PhaseName, bool bPassed);
 
 private:
-    /** ?ï¿½ï¿½Xï¿½æ¸¬è©¦åŸ·è¡Œå™¨ */
-    void InitializeTestExecutor(};
+    /** ???X?´ú¸Õ°õ¦æ¾¹ */
+    void InitializeTestExecutor();
 
-    /** è¨­ç½®æ¸¬è©¦?ï¿½ï¿½? */
-    void SetupTestEnvironment(};
+    /** ³]¸m´ú¸ÕÀô¹Ò°Ñ¼Æ */
+    void SetupTestEnvironment();
 
-    /** æ¸…ï¿½?æ¸¬è©¦?ï¿½ï¿½? */
-    void CleanupTestEnvironment(};
+    /** ²M²z´ú¸ÕÀô¹Ò°Ñ¼Æ */
+    void CleanupTestEnvironment();
 };
-

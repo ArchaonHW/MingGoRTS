@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -68,7 +68,7 @@ enum class EProductionEfficiencyFactor : uint8
 };
 
 /**
- * X?X?赲?X
+ * X?X?в?X
  */
 USTRUCT(BlueprintType)
 struct FPRODUCTION_API FProductionRecipe
@@ -322,7 +322,7 @@ struct FPRODUCTION_API FProductionSystemConfig
     }
 };
 
-// ?Xƥe?X
+// ?X?e?X
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProductionStarted, const FString&, ProductionLineID, const FString&, RecipeID};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnProductionProgress, const FString&, ProductionLineID, float, Progress, float, TimeRemaining};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProductionCompleted, const FString&, ProductionLineID, const TMap<EResourceType, float>&, OutputResources};
@@ -332,7 +332,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProductionResumed, const FString
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProductionQueueChanged, const FString&, QueueID, const TArray<FString>&, RecipeQueue};
 
 /**
- * X?sytΥDO
+ * X?syt�WDO
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSProductionSystem : public UObject
@@ -340,9 +340,9 @@ class MINGGORTS_API UMingGoRTSProductionSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSProductionSystem(};
+    UMingGoRTSProductionSystem();
 
-    // X?tΨƥ
+    // X?t�Z?
     UPROPERTY(BlueprintAssignable, Category = "Production System")
     FOnProductionStarted OnProductionStarted;
 
@@ -365,7 +365,7 @@ public:
     FOnProductionQueueChanged OnProductionQueueChanged;
 
     // XXXXX?t?X    UFUNCTION(BlueprintCallable, Category = "Production System")
-    void InitializeProductionSystem(};
+    void InitializeProductionSystem();
 
     // XXX?XXXXX    UFUNCTION(BlueprintPure, Category = "Production System")
     TArray<EProductionCategory> GetAllProductionCategories() const;
@@ -428,7 +428,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Production System")
     float CalculateProductionTime(const FString& ProductionLineID, const FString& RecipeID) const;
 
-    // ˬdX?
+    // ?dX?
     UFUNCTION(BlueprintPure, Category = "Production System")
     bool CanProduceRecipe(const FString& ProductionLineID, const FString& RecipeID) const;
 
@@ -488,30 +488,30 @@ protected:
     // X?_w?Xl?X
     bool bIsInitialized;
 
-    // XXXXXXXXXXX    void InitializeRepublicanEraRecipes(};
+    // XXXXXXXXXXX    void InitializeRepublicanEraRecipes();
 
-    // X?حx?X?X?
-    void CreateMilitaryProductionRecipes(};
+    // X??x?X?X?
+    void CreateMilitaryProductionRecipes();
 
-    // X?إ?X?X?
-    void CreateCivilianProductionRecipes(};
+    // X???X?X?
+    void CreateCivilianProductionRecipes();
 
-    // X?ؤu~X?X?
-    void CreateIndustrialProductionRecipes(};
+    // X??u~X?X?
+    void CreateIndustrialProductionRecipes();
 
-    // X?عA~X?X?
-    void CreateAgriculturalProductionRecipes(};
+    // X??A~X?X?
+    void CreateAgriculturalProductionRecipes();
 
     // X?XXX?X?
-    void CreateMedicalProductionRecipes(};
+    void CreateMedicalProductionRecipes();
 
     // X?X?|X?X?
-    void CreateEducationalProductionRecipes(};
+    void CreateEducationalProductionRecipes();
 
     // X?XXX]IX?X?
-    void CreateInfrastructureProductionRecipes(};
+    void CreateInfrastructureProductionRecipes();
 
-    // X?ذ?XXXXX    void CreateLuxuryProductionRecipes(};
+    // X???XXXXX    void CreateLuxuryProductionRecipes();
 
     // XXXXX
     void HandleProductionCompleted(const FString& ProductionLineID};
@@ -550,7 +550,7 @@ protected:
     UPROPERTY()
     TArray<FString> ProductionHistory;
 
-    // ?XtΤޥ
+    // ?Xt�V?
     UPROPERTY()
     class UMingGoRTSResourceSystem* ResourceSystem;
 };

@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -113,7 +113,7 @@ enum class EMingUpgradeResourceType : uint8
 };
 
 /**
- * å»ºï¿½Xï¿½ï¿½?ç³»çµ±
+ * «Ø?X???¨t²Î
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSBuildingUpgradeSystem : public UObject
@@ -121,77 +121,77 @@ class MINGGORTS_API UMingGoRTSBuildingUpgradeSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSBuildingUpgradeSystem(};
+    UMingGoRTSBuildingUpgradeSystem();
 
-    // ?ï¿½ï¿½Xï¿½ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
-    void InitializeUpgradeSystem(};
+    // ???X?¨t??    UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
+    void InitializeUpgradeSystem();
 
-    // è¨»ï¿½?å»ºï¿½Xï¿½ï¿½?è·¯ï¿½?
+    // µù??«Ø?X???¸ô??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     void RegisterUpgradePath(const FBuildingUpgradePath& UpgradePath};
 
-    // ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½?
+    // ????«Ø?X???
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool StartBuildingUpgrade(const FString& BuildingID, const FString& PathID, int32 TargetLevel};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?
+    // ???X???
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool PauseUpgrade(const FString& BuildingID};
 
-    // ?ï¿½å¾©?ï¿½ï¿½?
+    // ??´_????
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool ResumeUpgrade(const FString& BuildingID};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?
+    // ???X???
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool CancelUpgrade(const FString& BuildingID};
 
-    // ç«‹å³å®Œï¿½Xï¿½ï¿½?
+    // ¥ß§Y§¹?X???
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool InstantCompleteUpgrade(const FString& BuildingID};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½åº¦
+    // ???X??X?«×
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     FBuildingUpgradeProgress GetUpgradeProgress(const FString& BuildingID) const;
 
-    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?ç´šè·¯ï¿½?    UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
+    // ???X?????¯Å¸ô??    UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     TArray<FBuildingUpgradePath> GetAllUpgradePaths() const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?é¡åˆ¥?ï¿½ï¿½?ç´šè·¯ï¿½?    UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
+    // ???X???Ãş§O????¯Å¸ô??    UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     TArray<FBuildingUpgradePath> GetUpgradePathsByType(EMingBuildingType BuildingType) const;
 
-    // ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½?ç­‰ï¿½?
+    // ????«Ø?X???µ¥??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     int32 GetBuildingCurrentLevel(const FString& BuildingID) const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?çµ±ï¿½?
+    // ???X???²Î??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     FBuildingUpgradeStatistics GetUpgradeStatistics() const;
 
-    // æª¢æŸ¥?ï¿½ï¿½Xï¿½å¦?ï¿½ç”¨
+    // ÀË¬d???X?§_??¥Î
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool CanUpgrade(const FString& BuildingID, const FString& PathID, int32 TargetLevel) const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æœ¬
+    // ???X??X?¥»
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     TMap<EMingUpgradeResourceType, float> GetUpgradeCost(const FString& BuildingID, const FString& PathID, int32 TargetLevel) const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     float GetUpgradeTime(const FString& BuildingID, const FString& PathID, int32 TargetLevel) const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     TArray<FBuildingUpgradeEffect> GetUpgradeEffects(const FString& PathID, int32 Level) const;
 
-    // ï¿½Xï¿½ï¿½?è·¯ï¿½?
+    // ?X???¸ô??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     void UnlockUpgradePath(const FString& PathID, EMingBuildingType BuildingType};
 
-    // æª¢æŸ¥?ï¿½ï¿½?è·¯ï¿½Xï¿½å¦å·²è§£X    UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
+    // ÀË¬d????¸ô?X?§_¤w¸ÑX    UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool IsUpgradePathUnlocked(const FString& PathID) const;
 
-    // äº‹ä»¶å§”æ´¾
+    // ¨Æ¥ó©e¬£
     UPROPERTY(BlueprintAssignable, Category = "Building Upgrade")
     FOnUpgradeStarted OnUpgradeStarted;
 
@@ -214,49 +214,43 @@ public:
     FOnUpgradePathUnlocked OnUpgradePathUnlocked;
 
 protected:
-    // ?ï¿½ï¿½?è·¯ï¿½Xï¿½ï¿½?
+    // ????¸ô?X???
     UPROPERTY(BlueprintReadOnly, Category = "Building Upgrade")
     TMap<FString, FBuildingUpgradePath> UpgradePaths;
 
-    // æ´»ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ¬¡?X??X???
     UPROPERTY(BlueprintReadOnly, Category = "Building Upgrade")
     TMap<FString, FBuildingUpgradeProgress> ActiveUpgrades;
 
-    // å»ºï¿½?ç­‰ï¿½Xï¿½ï¿½?
+    // «Ø??µ¥?X???
     UPROPERTY(BlueprintReadOnly, Category = "Building Upgrade")
     TMap<FString, int32> BuildingLevels;
 
-    // å·²è§£?ï¿½è·¯å¾‘ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Building Upgrade")
+    // ¤w¸Ñ??¸ô®|?X    UPROPERTY(BlueprintReadOnly, Category = "Building Upgrade")
     TSet<FString> UnlockedPaths;
 
-    // ?ï¿½æ–°?ï¿½ï¿½Xï¿½åº¦
+    // ??·s???X?«×
     UFUNCTION()
     void UpdateUpgradeProgress(float DeltaTime};
 
-    // å®Œï¿½Xï¿½ï¿½?
+    // §¹?X???
     void CompleteUpgrade(const FString& BuildingID};
 
-    // ?ï¿½ç”¨?ï¿½ï¿½Xï¿½ï¿½?
+    // ??¥Î???X???
     void ApplyUpgradeEffects(const FString& BuildingID, const TArray<FBuildingUpgradeEffect>& Effects};
 
-    // è¨ˆï¿½?å¯¦ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ­p??¹ê?X??X???
     float CalculateActualUpgradeTime(const FString& BuildingID, const FString& PathID, int32 TargetLevel) const;
 
-    // æª¢æŸ¥è³‡ï¿½Xï¿½å¦è¶³ï¿½?
+    // ÀË¬d¸ê?X?§_¨¬??
     bool HasEnoughResources(const TMap<EMingUpgradeResourceType, float>& Cost) const;
 
-    // æ¶ˆè€—ï¿½?ï¿½?    bool ConsumeResources(const TMap<EMingUpgradeResourceType, float>& Cost};
+    // ®ø¯Ó????    bool ConsumeResources(const TMap<EMingUpgradeResourceType, float>& Cost};
 
 private:
-    // ?ï¿½ï¿½Xï¿½ï¿½?ï¿½?    bool bInitialized;
+    // ???X?????    bool bInitialized;
 };
 
-// äº‹ä»¶å§”æ´¾é¡ï¿½Xï¿½ï¿½?
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpgradeStarted, const FString&, BuildingID, const FString&, PathID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnUpgradeProgress, const FString&, BuildingID, float, Progress, float, TimeRemaining};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpgradeCompleted, const FString&, BuildingID, const TArray<FBuildingUpgradeEffect>&, Effects};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpgradeFailed, const FString&, BuildingID, const FString&, ErrorMessage};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpgradePaused, const FString&, BuildingID, const FString&, Reason};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpgradeResumed, const FString&, BuildingID, const FString&, Reason};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpgradePathUnlocked, const FString&, PathID, EMingBuildingType, BuildingType};
+// ¨Æ¥ó©e¬£Ãş?X???
 
+#endif // MINGGORTSBUILDINGUPGRADESYSTEM_H

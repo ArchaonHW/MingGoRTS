@@ -11,18 +11,18 @@
  * Supported language codes for MingGoRTS
  */
 UENUM(BlueprintType)
-enum class ELanguageCode : uint8
+enum class ERTSLanguageCode : uint8
 {
-    zh_CN     UMETA(DisplayName = "简体中文 (Simplified Chinese)"),
-    zh_TW     UMETA(DisplayName = "繁體中文 (Traditional Chinese)"),
+    zh_CN     UMETA(DisplayName = "简体中??(Simplified Chinese)"),
+    zh_TW     UMETA(DisplayName = "繁�?中�? (Traditional Chinese)"),
     en_US     UMETA(DisplayName = "English (US)"),
-    ja_JP     UMETA(DisplayName = "日本語 (Japanese)"),
-    ko_KR     UMETA(DisplayName = "한국어 (Korean)"),
+    ja_JP     UMETA(DisplayName = "?�本�?(Japanese)"),
+    ko_KR     UMETA(DisplayName = "?�국??(Korean)"),
     fr_FR     UMETA(DisplayName = "Français (French)"),
     de_DE     UMETA(DisplayName = "Deutsch (German)"),
     es_ES     UMETA(DisplayName = "Español (Spanish)"),
-    ru_RU     UMETA(DisplayName = "Русский (Russian)"),
-    ar_SA     UMETA(DisplayName = "العربية (Arabic)")
+    ru_RU     UMETA(DisplayName = "????кий (Russian)"),
+    ar_SA     UMETA(DisplayName = "ا?عرب?ة (Arabic)")
 };
 
 /**
@@ -53,10 +53,10 @@ public:
     void InitializeLocalization();
 
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    void SetLanguage(ELanguageCode Language);
+    void SetLanguage(ERTSLanguageCode Language);
 
     UFUNCTION(BlueprintPure, Category = "Localization")
-    ELanguageCode GetCurrentLanguage() const;
+    ERTSLanguageCode GetCurrentLanguage() const;
 
     UFUNCTION(BlueprintPure, Category = "Localization")
     FString GetLocalizedText(const FString& Key);
@@ -68,16 +68,16 @@ public:
     ETextDirection GetTextDirection() const;
 
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    bool LoadLanguagePack(ELanguageCode Language);
+    bool LoadLanguagePack(ERTSLanguageCode Language);
 
 protected:
     UPROPERTY()
-    ELanguageCode CurrentLanguage;
+    ERTSLanguageCode CurrentLanguage;
 
     UPROPERTY()
     TMap<FString, FString> LocalizedStrings;
 
     void InitializeLanguagePack();
-    FString LoadLanguageFile(ELanguageCode Language);
-    ETextDirection GetTextDirectionForLanguage(ELanguageCode Language);
+    FString LoadLanguageFile(ERTSLanguageCode Language);
+    ETextDirection GetTextDirectionForLanguage(ERTSLanguageCode Language);
 };

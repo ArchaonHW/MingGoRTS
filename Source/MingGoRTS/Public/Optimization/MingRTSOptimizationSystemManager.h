@@ -57,13 +57,13 @@ public:
     void InitializeOptimizationManager();
 
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
-    void SetOptimizationMode(EOptimizationMode Mode);
+    void SetOptimizationMode(EOptimizationMode Mode};
 
     UFUNCTION(BlueprintPure, Category = "Optimization Manager")
     EOptimizationMode GetCurrentOptimizationMode() const;
 
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
-    void ApplyOptimizationConfiguration(const FOptimizationConfiguration& Config);
+    void ApplyOptimizationConfiguration(const FOptimizationConfiguration& Config};
 
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
     void OptimizeSystemPerformance();
@@ -89,5 +89,5 @@ protected:
     void ApplyTestingMode();
     void ApplyReleaseMode();
     void ApplyPerformanceMode();
-    bool ValidateConfiguration(const FOptimizationConfiguration& Config);
+    bool ValidateConfiguration(const FOptimizationConfiguration& Config};
 };

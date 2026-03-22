@@ -18,15 +18,15 @@ class MINGGORTS_API UMingLanguageEntryWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingLanguageEntryWidget(};
+    UMingLanguageEntryWidget();
 
     /** Set the language code for this entry */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetLanguageCode(ELanguageCode LanguageCode};
+    void SetLanguageCode(ERTSLanguageCode LanguageCode};
 
     /** Get the language code */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
-    ELanguageCode GetLanguageCode() const { return LanguageCode; }
+    ERTSLanguageCode GetLanguageCode() const { return LanguageCode; }
 
     /** Set whether this entry is selected */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
@@ -58,32 +58,32 @@ public:
 
     /** Handle entry click */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void OnEntryClicked(};
+    void OnEntryClicked();
 
     /** Update entry appearance */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void UpdateAppearance(};
+    void UpdateAppearance();
 
 protected:
     /** Called when widget is constructed */
     virtual void NativeConstruct() override;
 
     /** Update visual state */
-    void UpdateVisualState(};
+    void UpdateVisualState();
 
     /** Update text display */
-    void UpdateTextDisplay(};
+    void UpdateTextDisplay();
 
     /** Update flag display */
-    void UpdateFlagDisplay(};
+    void UpdateFlagDisplay();
 
     /** Update selection indicator */
-    void UpdateSelectionIndicator(};
+    void UpdateSelectionIndicator();
 
 private:
     /** Language code for this entry */
     UPROPERTY(BlueprintReadOnly, Category = "MingRTS|Localization|UI", meta = (AllowPrivateAccess = "true"))
-    ELanguageCode LanguageCode;
+    ERTSLanguageCode LanguageCode;
 
     /** Selection state */
     UPROPERTY(BlueprintReadOnly, Category = "MingRTS|Localization|UI", meta = (AllowPrivateAccess = "true"))
@@ -139,7 +139,7 @@ private:
 
 public:
     /** Delegate for entry selection */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLanguageEntrySelected, ELanguageCode, LanguageCode, class UMingLanguageEntryWidget*, EntryWidget};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLanguageEntrySelected, ERTSLanguageCode, LanguageCode, class UMingLanguageEntryWidget*, EntryWidget};
 
     /** Event fired when this entry is selected */
     UPROPERTY(BlueprintAssignable, Category = "MingRTS|Localization|UI|Events")

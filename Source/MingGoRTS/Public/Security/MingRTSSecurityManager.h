@@ -13,11 +13,11 @@ class UMingRTSServerValidation;
 UENUM(BlueprintType)
 enum class ESecurityAlertLevel : uint8
 {
-    Info        UMETA(DisplayName = "信息"),
-    Low         UMETA(DisplayName = "�?),
-    Medium      UMETA(DisplayName = "�?),
-    High        UMETA(DisplayName = "�?),
-    Critical    UMETA(DisplayName = "?��?")
+    Info        UMETA(DisplayName = "Info"),
+    Low         UMETA(DisplayName = "Low"),
+    Medium      UMETA(DisplayName = "Medium"),
+    High        UMETA(DisplayName = "High"),
+    Critical    UMETA(DisplayName = "Critical")
 };
 
 /**
@@ -60,10 +60,10 @@ class MINGGORTS_API UMingRTSSecurityManager : public UObject
     GENERATED_BODY()
     
 public:
-    UMingRTSSecurityManager(};
+    UMingRTSSecurityManager();
     
     // ?��X    UFUNCTION(BlueprintCallable, Category = "Security")
-    void InitializeSecurityManager(};
+    void InitializeSecurityManager();
     
     // ?��X��?弊系�?    UFUNCTION(BlueprintCallable, Category = "Security")
     UMingRTSAntiCheat* GetAntiCheatSystem() const;
@@ -72,14 +72,14 @@ public:
     UMingRTSServerValidation* GetServerValidation() const;
     
     // ?��X�?��X�系�?    UFUNCTION(BlueprintCallable, Category = "Security")
-    void StartAllSecuritySystems(};
+    void StartAllSecuritySystems();
     
     // ?�止?�?��X�系�?    UFUNCTION(BlueprintCallable, Category = "Security")
-    void StopAllSecuritySystems(};
+    void StopAllSecuritySystems();
     
     // ?��?安全警報
     UFUNCTION(BlueprintCallable, Category = "Security")
-    void ReportSecurityAlert(ESecurityAlertLevel Level, const FText& Title, const FText& Message};
+    void ReportSecurityAlert(ESecurityAlertLevel Level, const FText& Title, const FText& Message);
     
     // ?��X�?�警X    UFUNCTION(BlueprintCallable, Category = "Security")
     TArray<FSecurityAlert> GetAllAlerts() const;
@@ -89,11 +89,11 @@ public:
     
     // 確�?警報
     UFUNCTION(BlueprintCallable, Category = "Security")
-    void AcknowledgeAlert(FName AlertID};
+    void AcknowledgeAlert(FName AlertID);
     
     // 清除警報
     UFUNCTION(BlueprintCallable, Category = "Security")
-    void ClearAlert(FName AlertID};
+    void ClearAlert(FName AlertID);
     
     // 檢查?�家安全?�X    UFUNCTION(BlueprintCallable, Category = "Security")
     bool IsPlayerSecure(const FString& PlayerID) const;
@@ -107,7 +107,7 @@ public:
     FString GenerateSecurityReport() const;
     
     // 事件委�?
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSecurityAlert, const FSecurityAlert&, Alert};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSecurityAlert, const FSecurityAlert&, Alert);
     
     UPROPERTY(BlueprintAssignable, Category = "Security|Events")
     FOnSecurityAlert OnSecurityAlert;
@@ -125,8 +125,8 @@ private:
     UPROPERTY()
     TMap<FString, float> PlayerSecurityScores;
     
-    void InitializeSubSystems(};
-    void OnCheatDetectedHandler(const struct FCheatDetectionResult& Detection};
-    void OnValidationFailedHandler(const FString& PlayerID, const struct FValidationResult& Result};
+    void InitializeSubSystems();
+    void OnCheatDetectedHandler(const struct FCheatDetectionResult& Detection);
+    void OnValidationFailedHandler(const FString& PlayerID, const struct FValidationResult& Result);
 };
 

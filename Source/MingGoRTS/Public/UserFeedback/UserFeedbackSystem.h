@@ -185,7 +185,7 @@ struct FFeedbackStatistics
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     float ResolutionRate;
 
-    /** ??แบ????*/
+    /** ??????*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     float UserSatisfaction;
 
@@ -215,27 +215,27 @@ public:
 
     /** ?????? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    FString SubmitFeedback(const FFeedbackData& FeedbackData};
+    FString SubmitFeedback(const FFeedbackData& FeedbackData);
 
     /** ???X??X? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    TArray<FFeedbackData> GetFeedbackList(EFeedbackType FilterType = EFeedbackType::Other, EFeedbackStatus FilterStatus = EFeedbackStatus::New};
+    TArray<FFeedbackData> GetFeedbackList(EFeedbackType FilterType = EFeedbackType::Other, EFeedbackStatus FilterStatus = EFeedbackStatus::New);
 
     /** ???X????? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    FFeedbackData GetFeedbackDetails(const FString& FeedbackID};
+    FFeedbackData GetFeedbackDetails(const FString& FeedbackID);
 
     /** ??s???X?X*/
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    bool UpdateFeedbackStatus(const FString& FeedbackID, EFeedbackStatus NewStatus};
+    bool UpdateFeedbackStatus(const FString& FeedbackID, EFeedbackStatus NewStatus);
 
     /** ???X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    bool AssignFeedback(const FString& FeedbackID, const FString& AssignedTo};
+    bool AssignFeedback(const FString& FeedbackID, const FString& AssignedTo);
 
     /** K???? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    bool AddComment(const FString& FeedbackID, const FString& Comment};
+    bool AddComment(const FString& FeedbackID, const FString& Comment);
 
     /** ?????X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")

@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -11,120 +11,120 @@ class MINGGORTS_API UMingGoRTSProductionTest : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSProductionTest(};
+    UMingGoRTSProductionTest();
 
-    // ?ï¿½ç”¢ç³»çµ±å¯¦ï¿½?
+    // ??²£¨t²Î¹ê??
     UPROPERTY(BlueprintReadOnly, Category = "Production Test")
     UMingGoRTSProductionSystem* ProductionSystem;
 
-    // ?ï¿½ï¿½Xï¿½æ¸¬ï¿½?    UFUNCTION(BlueprintCallable, Category = "Production Test")
-    void InitializeTest(};
+    // ???X?´ú??    UFUNCTION(BlueprintCallable, Category = "Production Test")
+    void InitializeTest();
 
-    // æ¸¬è©¦?ï¿½ç”¢ç³»çµ±?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestProductionSystemInitialization(};
+    // ´ú¸Õ??²£¨t²Î???X    UFUNCTION(BlueprintCallable, Category = "Production Test")
+    bool TestProductionSystemInitialization();
 
-    // æ¸¬è©¦?ï¿½ç”¢ç·šå‰µï¿½?    UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestProductionLineCreation(};
+    // ´ú¸Õ??²£½u³Ğ??    UFUNCTION(BlueprintCallable, Category = "Production Test")
+    bool TestProductionLineCreation();
 
-    // æ¸¬è©¦?ï¿½ç”¢?ï¿½æ–¹?ï¿½å»º
+    // ´ú¸Õ??²£??¤è??«Ø
     UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestProductionRecipeCreation(};
+    bool TestProductionRecipeCreation();
 
-    // æ¸¬è©¦?ï¿½ç”¢æµï¿½?
+    // ´ú¸Õ??²£¬y??
     UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestProductionFlow(};
+    bool TestProductionFlow();
 
-    // æ¸¬è©¦?ï¿½ç”¢?ï¿½ï¿½?ç®¡ï¿½?
+    // ´ú¸Õ??²£????ºŞ??
     UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestProductionQueueManagement(};
+    bool TestProductionQueueManagement();
 
-    // æ¸¬è©¦?ï¿½ç”¢?ï¿½ï¿½?è¨ˆï¿½?
+    // ´ú¸Õ??²£????­p??
     UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestProductionEfficiencyCalculation(};
+    bool TestProductionEfficiencyCalculation();
 
-    // æ¸¬è©¦?ï¿½ç”¢?ï¿½ï¿½Xï¿½å¾©
+    // ´ú¸Õ??²£???X?´_
     UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestProductionPauseResume(};
+    bool TestProductionPauseResume();
 
-    // æ¸¬è©¦?ï¿½ç”¢?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestProductionPriority(};
+    // ´ú¸Õ??²£??????    UFUNCTION(BlueprintCallable, Category = "Production Test")
+    bool TestProductionPriority();
 
-    // æ¸¬è©¦?ï¿½ç”¢ç·šï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestProductionLineUpgrade(};
+    // ´ú¸Õ??²£½u????    UFUNCTION(BlueprintCallable, Category = "Production Test")
+    bool TestProductionLineUpgrade();
 
-    // æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestAutomationFeatures(};
+    // ´ú¸Õ???X??X    UFUNCTION(BlueprintCallable, Category = "Production Test")
+    bool TestAutomationFeatures();
 
-    // æ¸¬è©¦æ°‘ï¿½Xï¿½ï¿½Xï¿½è‰²?ï¿½æ–¹
+    // ´ú¸Õ¥Á?X??X?¦â??¤è
     UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestRepublicanEraRecipes(};
+    bool TestRepublicanEraRecipes();
 
-    // æ¸¬è©¦?ï¿½ç”¢çµ±ï¿½?
+    // ´ú¸Õ??²£²Î??
     UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestProductionStatistics(};
+    bool TestProductionStatistics();
 
-    // æ¸¬è©¦?ï¿½ç”¢?ï¿½ç½®
+    // ´ú¸Õ??²£??¸m
     UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestProductionConfiguration(};
+    bool TestProductionConfiguration();
 
-    // æ¸¬è©¦?ï¿½ç”¢ä¿ï¿½?è¼‰å…¥
+    // ´ú¸Õ??²£«O??¸ü¤J
     UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool TestSaveAndLoad(};
+    bool TestSaveAndLoad();
 
-    // ?ï¿½ï¿½Xï¿½?ï¿½æ¸¬ï¿½?    UFUNCTION(BlueprintCallable, Category = "Production Test")
-    bool RunAllTests(};
+    // ???X???´ú??    UFUNCTION(BlueprintCallable, Category = "Production Test")
+    bool RunAllTests();
 
-    // ?ï¿½ï¿½?æ¸¬è©¦çµï¿½?
+    // ????´ú¸Õµ²??
     UFUNCTION(BlueprintPure, Category = "Production Test")
     FString GetTestResults() const;
 
-    // æ¸…ï¿½?æ¸¬è©¦
+    // ²M??´ú¸Õ
     UFUNCTION(BlueprintCallable, Category = "Production Test")
-    void CleanupTest(};
+    void CleanupTest();
 
 private:
-    // æ¸¬è©¦çµï¿½?
+    // ´ú¸Õµ²??
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½?
+    // ´ú¸Õ???X???
     int32 PassedTests;
 
-    // æ¸¬è©¦å¤±ï¿½Xï¿½ï¿½?
+    // ´ú¸Õ¥¢?X???
     int32 FailedTests;
 
-    // æ·»ï¿½?æ¸¬è©¦çµï¿½?
+    // ²K??´ú¸Õµ²??
     void AddTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
 
-    // ?ï¿½å»ºæ¸¬è©¦?ï¿½ç”¢ï¿½?    FProductionLine CreateTestProductionLine(const FString& LineName, const FString& BuildingID};
+    // ??«Ø´ú¸Õ??²£??    FProductionLine CreateTestProductionLine(const FString& LineName, const FString& BuildingID};
 
-    // ?ï¿½å»ºæ¸¬è©¦?ï¿½æ–¹
+    // ??«Ø´ú¸Õ??¤è
     FProductionRecipe CreateTestRecipe(const FString& RecipeName, EProductionCategory Category};
 
-    // é©—ï¿½Xï¿½ç”¢ç·šæ•¸X    bool VerifyProductionLineData(const FProductionLine& ProductionLine, const FString& ExpectedName};
+    // Åç?X?²£½u¼ÆX    bool VerifyProductionLineData(const FProductionLine& ProductionLine, const FString& ExpectedName};
 
-    // é©—ï¿½Xï¿½æ–¹?ï¿½ï¿½?
+    // Åç?X?¤è????
     bool VerifyRecipeData(const FProductionRecipe& Recipe, const FString& ExpectedName, EProductionCategory ExpectedCategory};
 
-    // é©—ï¿½Xï¿½ç”¢?ï¿½X    bool VerifyProductionStatus(const FString& ProductionLineID, EProductionStatus ExpectedStatus};
+    // Åç?X?²£??X    bool VerifyProductionStatus(const FString& ProductionLineID, EProductionStatus ExpectedStatus};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ–¹ID
+    // ???X??X?¤èID
     FString GetRandomRecipeID(EProductionCategory Category) const;
 
-    // ?ï¿½ç½®æ¸¬è©¦è¨ˆæ•¸X    void ResetTestCounters(};
+    // ??¸m´ú¸Õ­p¼ÆX    void ResetTestCounters();
 
-    // ?ï¿½å»ºæ¸¬è©¦?ï¿½ç½®
-    FProductionSystemConfig CreateTestConfig(};
+    // ??«Ø´ú¸Õ??¸m
+    FProductionSystemConfig CreateTestConfig();
 
-    // é©—ï¿½Xï¿½ç½®?ï¿½ç”¨
+    // Åç?X?¸m??¥Î
     bool VerifyConfigApplication(const FProductionSystemConfig& ExpectedConfig};
 
-    // ç­‰ï¿½Xï¿½ç”¢å®Œï¿½?
+    // µ¥?X?²£§¹??
     bool WaitForProductionCompletion(const FString& ProductionLineID, float TimeoutSeconds = 10.0f};
 
-    // æ¨¡æ“¬?ï¿½ï¿½?æµï¿½?    void SimulateTimeProgress(float DeltaTime};
+    // ¼ÒÀÀ????¬y??    void SimulateTimeProgress(float DeltaTime};
 
-    // é©—ï¿½?è³‡ï¿½?è®Šï¿½?
+    // Åç??¸ê??ÅÜ??
     bool VerifyResourceChanges(const TMap<EResourceType, float>& ExpectedChanges};
 };
 

@@ -1,29 +1,29 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSTelemetrySystem.generated.h"
 
 /**
- * ?ÔøΩÊ∏¨‰∫ã‰ª∂È°ûÔøΩ?
+ * ??¥˙®∆•Û√˛??
  */
 UENUM(BlueprintType)
 enum class ETelemetryEventType : uint8
 {
-    SessionStart          UMETA(DisplayName = "?ÔøΩË©±?ÔøΩÔøΩ?"),
-    SessionEnd            UMETA(DisplayName = "?ÔøΩË©±ÁµêÔøΩ?"),
-    MatchStart            UMETA(DisplayName = "Â∞çÔøΩXÔøΩÔøΩ?"),
-    MatchEnd              UMETA(DisplayName = "Â∞çÔøΩ?ÁµêÔøΩ?"),
-    PlayerAction          UMETA(DisplayName = "?ÔøΩÂÆ∂?ÔøΩÔøΩ?"),
-    UIInteraction         UMETA(DisplayName = "UI‰∫§ÔøΩ?"),
-    Error                 UMETA(DisplayName = "?ÔøΩË™§"),
-    Performance           UMETA(DisplayName = "?ÔøΩËÉΩ?ÔøΩÔøΩ?"),
-    FeatureUsage          UMETA(DisplayName = "?ÔøΩËÉΩ‰ΩøÁî®"),
-    Crash                 UMETA(DisplayName = "Â¥©ÊΩ∞")
+    SessionStart          UMETA(DisplayName = "??∏‹????"),
+    SessionEnd            UMETA(DisplayName = "??∏‹µ≤??"),
+    MatchStart            UMETA(DisplayName = "πÔ?X???"),
+    MatchEnd              UMETA(DisplayName = "πÔ??µ≤??"),
+    PlayerAction          UMETA(DisplayName = "??Æa????"),
+    UIInteraction         UMETA(DisplayName = "UI•Ê??"),
+    Error                 UMETA(DisplayName = "??ª~"),
+    Performance           UMETA(DisplayName = "??Ø‡????"),
+    FeatureUsage          UMETA(DisplayName = "??Ø‡®œ•Œ"),
+    Crash                 UMETA(DisplayName = "±YºÏ")
 };
 
 /**
- * ?ÔøΩÊ∏¨‰∫ã‰ª∂
+ * ??¥˙®∆•Û
  */
 USTRUCT(BlueprintType)
 struct FTelemetryEvent
@@ -61,7 +61,7 @@ struct FTelemetryEvent
 };
 
 /**
- * ?ÔøΩËÉΩ?ÔøΩÔøΩ?
+ * ??Ø‡????
  */
 USTRUCT(BlueprintType)
 struct FPerformanceMetrics
@@ -101,7 +101,7 @@ struct FPerformanceMetrics
 };
 
 /**
- * ?ÔøΩÊ∏¨?ÔøΩË©±
+ * ??¥˙??∏‹
  */
 USTRUCT(BlueprintType)
 struct FTelemetrySession
@@ -138,85 +138,85 @@ struct FTelemetrySession
 };
 
 /**
- * ?ÔøΩÊ∏¨Á≥ªÁµ± - ?ÔøΩÔøΩXÔøΩÔøΩXÔøΩÔøΩXÔøΩÔøΩ?Ê∏¨Êï∏X */
+ * ??¥˙®t≤Œ - ???X??X??X???¥˙º∆X */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSTelemetrySystem : public UObject
 {
     GENERATED_BODY()
     
 public:
-    UMingRTSTelemetrySystem(};
+    UMingRTSTelemetrySystem();
     
-    // ?ÔøΩÔøΩX    UFUNCTION(BlueprintCallable, Category = "Telemetry")
-    void InitializeTelemetrySystem(};
+    // ???X    UFUNCTION(BlueprintCallable, Category = "Telemetry")
+    void InitializeTelemetrySystem();
     
-    // ?ÔøΩÁî®/Á¶ÅÁî®?ÔøΩÊ∏¨
+    // ??•Œ/∏T•Œ??¥˙
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void SetTelemetryEnabled(bool bEnabled};
     
-    // ?ÔøΩÔøΩXÔøΩË©±
+    // ???X?∏‹
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void StartSession(const FString& PlayerID};
     
-    // ÁµêÔøΩXÔøΩË©±
+    // µ≤?X?∏‹
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
-    void EndSession(};
+    void EndSession();
     
-    // Ë®òÔøΩ?‰∫ã‰ª∂
+    // ∞O??®∆•Û
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordEvent(ETelemetryEventType Type, const FString& EventName, const TMap<FString, FString>& Parameters, float Value = 0.0f};
     
-    // Ë®òÔøΩXÔøΩÂÆ∂?ÔøΩÔøΩ?
+    // ∞O?X?Æa????
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordPlayerAction(const FString& ActionName, const FString& Target, float Duration};
     
-    // Ë®òÔøΩ?UI‰∫§ÔøΩ?
+    // ∞O??UI•Ê??
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordUIInteraction(const FString& ElementName, const FString& InteractionType};
     
-    // Ë®òÔøΩXÔøΩËÉΩ?ÔøΩÔøΩ?
+    // ∞O?X?Ø‡????
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordPerformanceMetrics(const FPerformanceMetrics& Metrics};
     
-    // Ë®òÔøΩXÔøΩË™§
+    // ∞O?X?ª~
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordError(const FString& ErrorType, const FString& ErrorMessage, const FString& StackTrace};
     
-    // Ë®òÔøΩ?Â¥©ÊΩ∞
+    // ∞O??±YºÏ
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordCrash(const FString& CrashType, const FString& CrashLog};
     
-    // Ë®òÔøΩXÔøΩËÉΩ‰ΩøÁî®
+    // ∞O?X?Ø‡®œ•Œ
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordFeatureUsage(const FString& FeatureName, int32 UsageCount};
     
-    // ?ÔøΩÔøΩXÔøΩÈÄÅÔøΩ?ÔøΩ?    UFUNCTION(BlueprintCallable, Category = "Telemetry")
-    void FlushEvents(};
+    // ???X?∞e????    UFUNCTION(BlueprintCallable, Category = "Telemetry")
+    void FlushEvents();
     
-    // ?ÔøΩÔøΩXÔøΩÔøΩXÔøΩË©±ID
+    // ???X??X?∏‹ID
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     FString GetCurrentSessionID() const;
     
-    // ?ÔøΩÔøΩ?Á∑©ÔøΩ?‰∫ã‰ª∂?ÔøΩÔøΩ?
+    // ????Ωw??®∆•Û????
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     int32 GetCachedEventCount() const;
     
-    // Ë®≠ÁΩÆ?ÔøΩÊ¨°Â§ßÔøΩ?
+    // ≥]∏m??¶∏§j??
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void SetBatchSize(int32 Size};
     
-    // Ë®≠ÁΩÆ?ÔøΩÈÄÅÔøΩX    UFUNCTION(BlueprintCallable, Category = "Telemetry")
+    // ≥]∏m??∞e?X    UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void SetFlushInterval(float Seconds};
     
-    // Â∞éÂá∫?ÔøΩÔøΩXÔøΩÔøΩ?
+    // æ…•X???X???
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     bool ExportRawData(const FString& FilePath) const;
     
-    // Ê∏ÖÈô§Á∑©ÔøΩ?
+    // ≤M∞£Ωw??
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
-    void ClearCache(};
+    void ClearCache();
     
-    // ‰∫ã‰ª∂ÂßîÔøΩ?
+    // ®∆•Û©e??
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTelemetryEnabledChanged, bool, bEnabled};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEventsFlushed, int32, EventCount};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnErrorRecorded, const FString&, ErrorType};
@@ -251,12 +251,12 @@ private:
     
     FTimerHandle FlushTimerHandle;
     
-    void InitializeFlushTimer(};
-    void OnFlushTimerTick(};
-    void SendEventsToServer(const TArray<FTelemetryEvent>& Events};
-    void SaveEventsToLocal(const TArray<FTelemetryEvent>& Events};
-    FString GenerateEventID(};
-    FString GenerateSessionID(};
-    FString GetCurrentTimestamp(};
+    void InitializeFlushTimer();
+    void OnFlushTimerTick();
+    void SendEventsToServer(const TArray<FTelemetryEvent>& Events);
+    void SaveEventsToLocal(const TArray<FTelemetryEvent>& Events);
+    FString GenerateEventID();
+    FString GenerateSessionID();
+    FString GetCurrentTimestamp();
 };
 

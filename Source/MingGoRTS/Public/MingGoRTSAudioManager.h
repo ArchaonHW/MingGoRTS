@@ -1,4 +1,4 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -90,9 +90,9 @@ class MINGGORTS_API UMingGoRTSAudioManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSAudioManager(};
+    UMingGoRTSAudioManager();
 
-    // ?ÔøΩÔøΩ?ÁÆ°ÔøΩ?
+    // ????∫ﬁ??
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void AddAudioTrack(const FAudioTrack& Track};
 
@@ -100,7 +100,7 @@ public:
     void RemoveAudioTrack(const FString& TrackName};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
-    void ClearAllTracks(};
+    void ClearAllTracks();
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     TArray<FAudioTrack> GetAudioTracks() const { return AudioTracks; }
@@ -108,7 +108,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     bool GetAudioTrack(const FString& TrackName, FAudioTrack& OutTrack};
 
-    // ?ÔøΩÔøΩXÔøΩÂà∂
+    // ???X?®Ó
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void SetTrackVolume(const FString& TrackName, float Volume};
 
@@ -121,12 +121,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void SetTrackLoop(const FString& TrackName, bool bLoop};
 
-    // Ê∑∑Èü≥?ÔøΩËÉΩ
+    // ≤V≠µ??Ø‡
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
-    void StartAudioMixing(};
+    void StartAudioMixing();
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
-    void StopAudioMixing(};
+    void StopAudioMixing();
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     EAudioMixingState GetMixingState() const { return CurrentMixingState; }
@@ -137,20 +137,20 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     FAudioMixSettings GetMixSettings() const { return MixSettings; }
 
-    // ÂØ¶ÔøΩ?Ê∑∑Èü≥
+    // πÍ??≤V≠µ
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
-    void PlayMixedAudio(};
+    void PlayMixedAudio();
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
-    void StopMixedAudio(};
+    void StopMixedAudio();
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
-    void PauseMixedAudio(};
+    void PauseMixedAudio();
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     bool IsMixedAudioPlaying() const;
 
-    // ?ÔøΩÔøΩXÔøΩÔøΩ?
+    // ???X???
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void PlayMusicTrack(USoundWave* Music, float Volume = 1.0f};
 
@@ -160,21 +160,21 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void PlayVoiceTrack(USoundWave* Voice, float Volume = 1.0f};
 
-    // ?ÔøΩÈ†ªÂ∞éÂá∫
+    // ??¿Wæ…•X
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void ExportMixedAudio(const FString& FilePath};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     USoundWave* GetMixedAudioResult() const { return MixedAudioResult; }
 
-    // ?ÔøΩÈ†ª?ÔøΩÔøΩ?
+    // ??¿W????
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     float GetAudioDuration(USoundWave* SoundWave) const;
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void AnalyzeAudio(USoundWave* SoundWave, float& OutRMS, float& OutPeak};
 
-    // ÂßîÔøΩ?‰∫ã‰ª∂
+    // ©e??®∆•Û
     UPROPERTY(BlueprintAssignable, Category = "Audio Manager")
     FOnAudioMixCompleted OnAudioMixCompleted;
 
@@ -203,19 +203,19 @@ protected:
     UPROPERTY()
     float MixingProgress;
 
-    // Ê≥®ÔøΩ?ÔºöÔøΩ?UObjectÈ°ûÔøΩ?‰∏çËÉΩ?ÔøΩUPROPERTY
+    // ™`??°G??UObject√˛??§£Ø‡??UPROPERTY
     FTickerDelegate MixingTicker;
     FDelegateHandle MixingTickerHandle;
 
 private:
-    void ProcessAudioMixing(};
+    void ProcessAudioMixing();
     bool OnMixingTick(float DeltaTime};
-    void ApplyMixSettings(};
-    void RenderMixedAudio(};
-    USoundWave* CreateMixedSoundWave(};
+    void ApplyMixSettings();
+    void RenderMixedAudio();
+    USoundWave* CreateMixedSoundWave();
     void NotifyMixProgress(float Progress, const FString& Operation};
     void NotifyMixCompleted(USoundWave* Result};
-    void InitializeMixedAudioComponent(};
-    void UpdateTrackVolumes(};
+    void InitializeMixedAudioComponent();
+    void UpdateTrackVolumes();
 };
 

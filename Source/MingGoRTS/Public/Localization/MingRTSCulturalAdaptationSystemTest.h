@@ -23,47 +23,47 @@ class MINGGORTS_API UMingRTSCulturalAdaptationSystemTest : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSCulturalAdaptationSystemTest(};
+    UMingRTSCulturalAdaptationSystemTest();
 
     /** Run all cultural adaptation tests */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural|Test")
-    bool RunAllTests(};
+    bool RunAllTests();
 
     /** Test system initialization */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural|Test")
-    bool TestSystemInitialization(};
+    bool TestSystemInitialization();
 
     /** Test region detection from system settings */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural|Test")
-    bool TestRegionDetection(};
+    bool TestRegionDetection();
 
     /** Test region switching and events */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural|Test")
-    bool TestRegionSwitching(};
+    bool TestRegionSwitching();
 
     /** Test content adaptation and caching */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural|Test")
-    bool TestContentAdaptation(};
+    bool TestContentAdaptation();
 
     /** Test cultural preferences management */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural|Test")
-    bool TestCulturalPreferences(};
+    bool TestCulturalPreferences();
 
     /** Test regional gameplay parameters */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural|Test")
-    bool TestRegionalGameplayParams(};
+    bool TestRegionalGameplayParams();
 
     /** Test content rating and filtering */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural|Test")
-    bool TestContentRating(};
+    bool TestContentRating();
 
     /** Test cache performance and management */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural|Test")
-    bool TestCachePerformance(};
+    bool TestCachePerformance();
 
     /** Test regional holidays and events */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural|Test")
-    bool TestRegionalHolidays(};
+    bool TestRegionalHolidays();
 
     /** Get comprehensive test results */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Cultural|Test")
@@ -95,10 +95,10 @@ private:
 
     /** Helper methods */
     void LogTest(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
-    void InitializeTestResults(};
-    void FinalizeTestResults(};
+    void InitializeTestResults();
+    void FinalizeTestResults();
     bool ValidateRegionContent(ECulturalRegion Region};
-    bool TestCacheEfficiency(};
-    void SimulateCacheLoad(};
+    bool TestCacheEfficiency();
+    void SimulateCacheLoad();
 };
 
