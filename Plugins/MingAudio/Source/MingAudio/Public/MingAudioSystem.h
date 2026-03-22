@@ -141,42 +141,42 @@ class MINGAUDIO_API UMingAudioSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAudioSystem();
+    UMingAudioSystem(};
 
     // Audio Management
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void InitializeAudio();
+    void InitializeAudio(};
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void ShutdownAudio();
+    void ShutdownAudio(};
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void UpdateAudioSettings(const FMingAudioSettings& NewSettings);
+    void UpdateAudioSettings(const FMingAudioSettings& NewSettings};
 
     UFUNCTION(BlueprintPure, Category = "Audio")
     FMingAudioSettings GetCurrentSettings() const;
 
     // Music Control
     UFUNCTION(BlueprintCallable, Category = "Music")
-    void PlayMusic(EMingMusicTheme Theme);
+    void PlayMusic(EMingMusicTheme Theme};
 
     UFUNCTION(BlueprintCallable, Category = "Music")
-    void PlayMusicTrack(const FString& TrackID);
+    void PlayMusicTrack(const FString& TrackID};
 
     UFUNCTION(BlueprintCallable, Category = "Music")
-    void StopMusic();
+    void StopMusic(};
 
     UFUNCTION(BlueprintCallable, Category = "Music")
-    void PauseMusic();
+    void PauseMusic(};
 
     UFUNCTION(BlueprintCallable, Category = "Music")
-    void ResumeMusic();
+    void ResumeMusic(};
 
     UFUNCTION(BlueprintCallable, Category = "Music")
-    void FadeMusic(float TargetVolume, float Duration);
+    void FadeMusic(float TargetVolume, float Duration};
 
     UFUNCTION(BlueprintCallable, Category = "Music")
-    void CrossFadeMusic(EMingMusicTheme NewTheme, float Duration);
+    void CrossFadeMusic(EMingMusicTheme NewTheme, float Duration};
 
     UFUNCTION(BlueprintPure, Category = "Music")
     bool IsMusicPlaying() const;
@@ -186,65 +186,65 @@ public:
 
     // Sound Effects
     UFUNCTION(BlueprintCallable, Category = "SFX")
-    void PlaySFX(const FString& SFXID);
+    void PlaySFX(const FString& SFXID};
 
     UFUNCTION(BlueprintCallable, Category = "SFX")
-    void PlaySFXAtLocation(const FString& SFXID, FVector Location);
+    void PlaySFXAtLocation(const FString& SFXID, FVector Location};
 
     UFUNCTION(BlueprintCallable, Category = "SFX")
-    void PlaySFX2D(const FString& SFXID);
+    void PlaySFX2D(const FString& SFXID};
 
     UFUNCTION(BlueprintCallable, Category = "SFX")
-    void StopSFX(const FString& SFXID);
+    void StopSFX(const FString& SFXID};
 
     UFUNCTION(BlueprintCallable, Category = "SFX")
-    void StopAllSFX();
+    void StopAllSFX(};
 
     // Voice Audio
     UFUNCTION(BlueprintCallable, Category = "Voice")
-    void PlayVoice(const FString& VoiceID);
+    void PlayVoice(const FString& VoiceID};
 
     UFUNCTION(BlueprintCallable, Category = "Voice")
-    void PlayVoiceLine(const FString& CharacterID, const FString& LineID);
+    void PlayVoiceLine(const FString& CharacterID, const FString& LineID};
 
     UFUNCTION(BlueprintCallable, Category = "Voice")
-    void StopVoice();
+    void StopVoice(};
 
     UFUNCTION(BlueprintCallable, Category = "Voice")
-    void SetVoiceVolume(float Volume);
+    void SetVoiceVolume(float Volume};
 
     // Ambient Audio
     UFUNCTION(BlueprintCallable, Category = "Ambient")
-    void PlayAmbient(const FString& AmbientID);
+    void PlayAmbient(const FString& AmbientID};
 
     UFUNCTION(BlueprintCallable, Category = "Ambient")
-    void StopAmbient();
+    void StopAmbient(};
 
     UFUNCTION(BlueprintCallable, Category = "Ambient")
-    void SetAmbientVolume(float Volume);
+    void SetAmbientVolume(float Volume};
 
     // UI Audio
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void PlayUISelect();
+    void PlayUISelect(};
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void PlayUIClick();
+    void PlayUIClick(};
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void PlayUIHover();
+    void PlayUIHover(};
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void PlayUIError();
+    void PlayUIError(};
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void PlayUISuccess();
+    void PlayUISuccess(};
 
     // Audio Track Management
     UFUNCTION(BlueprintCallable, Category = "Tracks")
-    void RegisterAudioTrack(const FMingAudioTrack& Track);
+    void RegisterAudioTrack(const FMingAudioTrack& Track};
 
     UFUNCTION(BlueprintCallable, Category = "Tracks")
-    void UnregisterAudioTrack(const FString& TrackID);
+    void UnregisterAudioTrack(const FString& TrackID};
 
     UFUNCTION(BlueprintPure, Category = "Tracks")
     FMingAudioTrack GetAudioTrack(const FString& TrackID) const;
@@ -257,22 +257,22 @@ public:
 
     // Volume Control
     UFUNCTION(BlueprintCallable, Category = "Volume")
-    void SetMasterVolume(float Volume);
+    void SetMasterVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Volume")
-    void SetMusicVolume(float Volume);
+    void SetMusicVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Volume")
-    void SetSFXVolume(float Volume);
+    void SetSFXVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Volume")
-    void SetVoiceVolume(float Volume);
+    void SetVoiceVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Volume")
-    void SetAmbientVolume(float Volume);
+    void SetAmbientVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "Volume")
-    void SetUIVolume(float Volume);
+    void SetUIVolume(float Volume};
 
     UFUNCTION(BlueprintPure, Category = "Volume")
     float GetMasterVolume() const;
@@ -294,22 +294,22 @@ public:
 
     // Audio States
     UFUNCTION(BlueprintCallable, Category = "States")
-    void SetAudioState(EMingAudioType AudioType, bool bEnabled);
+    void SetAudioState(EMingAudioType AudioType, bool bEnabled};
 
     UFUNCTION(BlueprintPure, Category = "States")
     bool IsAudioTypeEnabled(EMingAudioType AudioType) const;
 
     UFUNCTION(BlueprintCallable, Category = "States")
-    void MuteAllAudio();
+    void MuteAllAudio(};
 
     UFUNCTION(BlueprintCallable, Category = "States")
-    void UnmuteAllAudio();
+    void UnmuteAllAudio(};
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMusicStarted, EMingMusicTheme, Theme, const FString&, TrackID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMusicStopped, const FString&, TrackID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSFXPlayed, const FString&, SFXID, const FVector&, Location);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVoicePlayed, const FString&, CharacterID, const FString&, LineID);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMusicStarted, EMingMusicTheme, Theme, const FString&, TrackID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMusicStopped, const FString&, TrackID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSFXPlayed, const FString&, SFXID, const FVector&, Location};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVoicePlayed, const FString&, CharacterID, const FString&, LineID};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnMusicStarted OnMusicStarted;
@@ -325,16 +325,16 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetAudioTypeName(EMingAudioType AudioType);
+    static FString GetAudioTypeName(EMingAudioType AudioType};
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetMusicThemeName(EMingMusicTheme Theme);
+    static FString GetMusicThemeName(EMingMusicTheme Theme};
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveAudioSettings() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadAudioSettings(const FString& JsonString);
+    void LoadAudioSettings(const FString& JsonString};
 
 protected:
     UPROPERTY()
@@ -353,21 +353,22 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeDefaultTracks();
-    void SetupMusicTracks();
-    void SetupSFXTracks();
-    void SetupVoiceTracks();
-    void SetupAmbientTracks();
-    void SetupUITracks();
+    void InitializeDefaultTracks(};
+    void SetupMusicTracks(};
+    void SetupSFXTracks(};
+    void SetupVoiceTracks(};
+    void SetupAmbientTracks(};
+    void SetupUITracks(};
 
     // Audio Playback
-    void PlayAudioTrackInternal(const FString& TrackID, FVector Location = FVector::ZeroVector);
-    void StopAudioTrackInternal(const FString& TrackID);
-    void ApplyVolumeSettings();
+    void PlayAudioTrackInternal(const FString& TrackID, FVector Location = FVector::ZeroVector};
+    void StopAudioTrackInternal(const FString& TrackID};
+    void ApplyVolumeSettings(};
 
     // Helpers
-    FMingAudioTrack* FindAudioTrack(const FString& TrackID);
-    TArray<FMingAudioTrack*> GetTracksByTypeInternal(EMingAudioType AudioType);
-    TArray<FMingAudioTrack*> GetTracksByThemeInternal(EMingMusicTheme Theme);
+    FMingAudioTrack* FindAudioTrack(const FString& TrackID};
+    TArray<FMingAudioTrack*> GetTracksByTypeInternal(EMingAudioType AudioType};
+    TArray<FMingAudioTrack*> GetTracksByThemeInternal(EMingMusicTheme Theme};
     float GetEffectiveVolume(EMingAudioType AudioType) const;
 };
+

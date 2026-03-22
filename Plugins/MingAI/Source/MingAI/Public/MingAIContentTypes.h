@@ -184,3 +184,4 @@ struct FMingAIProviderConfig
         , bEnabled(false)
     {}
 };
+

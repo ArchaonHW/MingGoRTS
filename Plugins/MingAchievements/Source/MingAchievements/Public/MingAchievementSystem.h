@@ -177,23 +177,23 @@ class MINGACHIEVEMENTS_API UMingAchievementSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAchievementSystem();
+    UMingAchievementSystem(};
 
     // Achievement Management
     UFUNCTION(BlueprintCallable, Category = "Achievements")
-    void InitializeAchievements();
+    void InitializeAchievements(};
 
     UFUNCTION(BlueprintCallable, Category = "Achievements")
-    void UnlockAchievement(const FString& AchievementID);
+    void UnlockAchievement(const FString& AchievementID};
 
     UFUNCTION(BlueprintCallable, Category = "Achievements")
-    void UpdateProgress(const FString& AchievementID, float Progress);
+    void UpdateProgress(const FString& AchievementID, float Progress};
 
     UFUNCTION(BlueprintCallable, Category = "Achievements")
-    void ResetProgress(const FString& AchievementID);
+    void ResetProgress(const FString& AchievementID};
 
     UFUNCTION(BlueprintCallable, Category = "Achievements")
-    void CompleteAchievement(const FString& AchievementID);
+    void CompleteAchievement(const FString& AchievementID};
 
     UFUNCTION(BlueprintPure, Category = "Achievements")
     TArray<FMingAchievement> GetAllAchievements() const;
@@ -212,13 +212,13 @@ public:
 
     // Progress Tracking
     UFUNCTION(BlueprintCallable, Category = "Progress")
-    void RegisterProgressEvent(const FString& EventName, float Value = 1.0f);
+    void RegisterProgressEvent(const FString& EventName, float Value = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Progress")
-    void TrackStatistic(const FString& StatName, float Value);
+    void TrackStatistic(const FString& StatName, float Value};
 
     UFUNCTION(BlueprintCallable, Category = "Progress")
-    void UpdateGameStatistics();
+    void UpdateGameStatistics(};
 
     UFUNCTION(BlueprintPure, Category = "Progress")
     float GetAchievementProgress(const FString& AchievementID) const;
@@ -231,7 +231,7 @@ public:
 
     // Achievement Chains
     UFUNCTION(BlueprintCallable, Category = "Chains")
-    void CreateAchievementChain(const FMingAchievementChain& Chain);
+    void CreateAchievementChain(const FMingAchievementChain& Chain};
 
     UFUNCTION(BlueprintPure, Category = "Chains")
     TArray<FMingAchievementChain> GetAllChains() const;
@@ -244,25 +244,25 @@ public:
 
     // Statistics
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void IncrementKillCount(const FString& UnitType);
+    void IncrementKillCount(const FString& UnitType};
 
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void AddToPlayTime(float Time);
+    void AddToPlayTime(float Time};
 
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void RecordVictory(const FString& MissionID);
+    void RecordVictory(const FString& MissionID};
 
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void RecordDefeat(const FString& MissionID);
+    void RecordDefeat(const FString& MissionID};
 
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void RecordResourceCollection(EMingResourceType ResourceType, float Amount);
+    void RecordResourceCollection(EMingResourceType ResourceType, float Amount};
 
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void RecordBuildingConstructed(const FString& BuildingType);
+    void RecordBuildingConstructed(const FString& BuildingType};
 
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void RecordUnitTrained(const FString& UnitType);
+    void RecordUnitTrained(const FString& UnitType};
 
     UFUNCTION(BlueprintPure, Category = "Statistics")
     int32 GetTotalAchievements() const;
@@ -278,35 +278,35 @@ public:
 
     // Rewards
     UFUNCTION(BlueprintCallable, Category = "Rewards")
-    void GrantReward(const FString& AchievementID);
+    void GrantReward(const FString& AchievementID};
 
     UFUNCTION(BlueprintCallable, Category = "Rewards")
-    void GrantAllRewards();
+    void GrantAllRewards(};
 
     UFUNCTION(BlueprintPure, Category = "Rewards")
     TArray<FString> GetPendingRewards() const;
 
     UFUNCTION(BlueprintCallable, Category = "Rewards")
-    void ClaimReward(const FString& RewardID);
+    void ClaimReward(const FString& RewardID};
 
     // Notifications
     UFUNCTION(BlueprintCallable, Category = "Notifications")
-    void ShowAchievementUnlocked(const FString& AchievementID);
+    void ShowAchievementUnlocked(const FString& AchievementID};
 
     UFUNCTION(BlueprintCallable, Category = "Notifications")
-    void ShowProgressUpdate(const FString& AchievementID);
+    void ShowProgressUpdate(const FString& AchievementID};
 
     UFUNCTION(BlueprintCallable, Category = "Notifications")
-    void ShowChainCompleted(const FString& ChainID);
+    void ShowChainCompleted(const FString& ChainID};
 
     UFUNCTION(BlueprintCallable, Category = "Notifications")
-    void ShowMilestoneReached(float Milestone);
+    void ShowMilestoneReached(float Milestone};
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAchievementUnlocked, const FMingAchievement&, Achievement, float, Points);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProgressUpdated, const FString&, AchievementID, float, Progress);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnChainCompleted, const FString&, ChainID, const FString&, FinalReward);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAllAchievementsCompleted, int32, TotalPoints);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAchievementUnlocked, const FMingAchievement&, Achievement, float, Points};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProgressUpdated, const FString&, AchievementID, float, Progress};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnChainCompleted, const FString&, ChainID, const FString&, FinalReward};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAllAchievementsCompleted, int32, TotalPoints};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnAchievementUnlocked OnAchievementUnlocked;
@@ -322,19 +322,19 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetCategoryName(EMingAchievementCategory Category);
+    static FString GetCategoryName(EMingAchievementCategory Category};
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetDifficultyName(EMingAchievementDifficulty Difficulty);
+    static FString GetDifficultyName(EMingAchievementDifficulty Difficulty};
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetTypeName(EMingAchievementType Type);
+    static FString GetTypeName(EMingAchievementType Type};
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveAchievementData() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadAchievementData(const FString& JsonString);
+    void LoadAchievementData(const FString& JsonString};
 
 protected:
     UPROPERTY()
@@ -356,34 +356,35 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeCombatAchievements();
-    void InitializeCampaignAchievements();
-    void InitializeExplorationAchievements();
-    void InitializeMercenaryAchievements();
-    void InitializeHistoricalAchievements();
-    void InitializeEconomicAchievements();
-    void InitializeSpecialAchievements();
-    void InitializeSecretAchievements();
+    void InitializeCombatAchievements(};
+    void InitializeCampaignAchievements(};
+    void InitializeExplorationAchievements(};
+    void InitializeMercenaryAchievements(};
+    void InitializeHistoricalAchievements(};
+    void InitializeEconomicAchievements(};
+    void InitializeSpecialAchievements(};
+    void InitializeSecretAchievements(};
 
     // Achievement Processing
-    void ProcessProgressEvent(const FString& EventName, float Value);
-    void CheckAchievementConditions(const FString& AchievementID);
-    void UpdateAchievementChains(const FString& AchievementID);
-    void GrantAchievementRewards(const FMingAchievement& Achievement);
+    void ProcessProgressEvent(const FString& EventName, float Value};
+    void CheckAchievementConditions(const FString& AchievementID};
+    void UpdateAchievementChains(const FString& AchievementID};
+    void GrantAchievementRewards(const FMingAchievement& Achievement};
 
     // Progress Helpers
-    void UpdateProgressAchievement(const FString& AchievementID, float Progress);
-    void UpdateCumulativeAchievement(const FString& AchievementID, float Progress);
-    void UpdateOneTimeAchievement(const FString& AchievementID);
-    void UpdateTimedAchievement(const FString& AchievementID);
+    void UpdateProgressAchievement(const FString& AchievementID, float Progress};
+    void UpdateCumulativeAchievement(const FString& AchievementID, float Progress};
+    void UpdateOneTimeAchievement(const FString& AchievementID};
+    void UpdateTimedAchievement(const FString& AchievementID};
 
     // Validation
     bool ValidateAchievementRequirements(const FString& AchievementID) const;
     bool ArePrerequisitesMet(const FString& AchievementID) const;
 
     // Helpers
-    FMingAchievement* FindAchievement(const FString& AchievementID);
-    FMingAchievementChain* FindChain(const FString& ChainID);
+    FMingAchievement* FindAchievement(const FString& AchievementID};
+    FMingAchievementChain* FindChain(const FString& ChainID};
     float CalculateProgressPercentage(const FString& AchievementID) const;
-    void UnlockHiddenAchievements();
+    void UnlockHiddenAchievements(};
 };
+

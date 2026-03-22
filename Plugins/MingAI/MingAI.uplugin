@@ -1,30 +1,30 @@
 {
-  "FileVersion": 3,
-  "Version": 1,
-  "VersionName": "1.0",
-  "FriendlyName": "MingAI",
-  "Description": "MingGoRTS AI Systems",
-  "Category": "AI",
-  "CreatedBy": "MingGoRTS",
-  "CreatedByURL": "",
-  "DocsURL": "",
-  "MarketplaceURL": "",
-  "SupportURL": "",
-  "CanContainContent": false,
-  "IsBetaVersion": false,
-  "IsExperimentalVersion": false,
-  "Installed": false,
-  "Modules": [
-    {
-      "Name": "MingAI",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    }
-  ],
-  "Plugins": [
-    {
-      "Name": "MingCore",
-      "Enabled": true
-    }
-  ]
+    "FileVersion":  3,
+    "Version":  1,
+    "VersionName":  "1.0",
+    "FriendlyName":  "MingAI",
+    "Description":  "MingGoRTS AI Systems",
+    "Category":  "AI",
+    "CreatedBy":  "MingGoRTS",
+    "CreatedByURL":  "",
+    "DocsURL":  "",
+    "MarketplaceURL":  "",
+    "SupportURL":  "",
+    "CanContainContent":  false,
+    "IsBetaVersion":  false,
+    "IsExperimentalVersion":  false,
+    "Installed": true,
+    "Modules":  [
+                    {
+                        "Name":  "MingAI",
+                        "Type":  "Runtime",
+                        "LoadingPhase":  "Default"
+                    }
+                ],
+    "Plugins":  [
+                    {
+                        "Name":  "MingCore",
+                        "Enabled":  true
+                    }
+                ]
 }

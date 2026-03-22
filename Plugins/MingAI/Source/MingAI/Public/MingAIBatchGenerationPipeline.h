@@ -129,10 +129,10 @@ struct FMingBatchStatistics
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBatchItemCompleted, const FGuid&, BatchID, const FGuid&, ItemID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBatchItemFailed, const FGuid&, BatchID, const FGuid&, ItemID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnBatchProgress, const FGuid&, BatchID, float, Progress, int32, CompletedCount);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBatchCompleted, const FGuid&, BatchID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBatchItemCompleted, const FGuid&, BatchID, const FGuid&, ItemID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBatchItemFailed, const FGuid&, BatchID, const FGuid&, ItemID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnBatchProgress, const FGuid&, BatchID, float, Progress, int32, CompletedCount};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBatchCompleted, const FGuid&, BatchID};
 
 /**
  * AI Batch Generation Pipeline
@@ -144,41 +144,41 @@ class MINGAI_API UMingAIBatchGenerationPipeline : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAIBatchGenerationPipeline();
+    UMingAIBatchGenerationPipeline(};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    void InitializePipeline();
+    void InitializePipeline(};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    void ShutdownPipeline();
+    void ShutdownPipeline(};
 
     // Batch Management
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    FGuid CreateBatch(const FString& BatchName, const FMingBatchConfiguration& Config);
+    FGuid CreateBatch(const FString& BatchName, const FMingBatchConfiguration& Config};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    bool AddItemToBatch(const FGuid& BatchID, const FMingAIContentRequest& Request);
+    bool AddItemToBatch(const FGuid& BatchID, const FMingAIContentRequest& Request};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    bool AddItemsToBatch(const FGuid& BatchID, const TArray<FMingAIContentRequest>& Requests);
+    bool AddItemsToBatch(const FGuid& BatchID, const TArray<FMingAIContentRequest>& Requests};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    bool RemoveItemFromBatch(const FGuid& BatchID, const FGuid& ItemID);
+    bool RemoveItemFromBatch(const FGuid& BatchID, const FGuid& ItemID};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    bool StartBatch(const FGuid& BatchID);
+    bool StartBatch(const FGuid& BatchID};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    bool PauseBatch(const FGuid& BatchID);
+    bool PauseBatch(const FGuid& BatchID};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    bool ResumeBatch(const FGuid& BatchID);
+    bool ResumeBatch(const FGuid& BatchID};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    bool CancelBatch(const FGuid& BatchID);
+    bool CancelBatch(const FGuid& BatchID};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    bool RetryFailedItems(const FGuid& BatchID);
+    bool RetryFailedItems(const FGuid& BatchID};
 
     // Batch Information
     UFUNCTION(BlueprintPure, Category = "Batch Generation")
@@ -198,19 +198,19 @@ public:
 
     // Preset Batches
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    FGuid CreateCharacterBatch(const TArray<FString>& CharacterDescriptions, EMingAIQualityLevel Quality);
+    FGuid CreateCharacterBatch(const TArray<FString>& CharacterDescriptions, EMingAIQualityLevel Quality};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    FGuid CreateEnvironmentBatch(const TArray<FString>& EnvironmentDescriptions, EMingAIQualityLevel Quality);
+    FGuid CreateEnvironmentBatch(const TArray<FString>& EnvironmentDescriptions, EMingAIQualityLevel Quality};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    FGuid CreateSFXBatch(const TArray<FString>& SoundDescriptions, EMingAIQualityLevel Quality);
+    FGuid CreateSFXBatch(const TArray<FString>& SoundDescriptions, EMingAIQualityLevel Quality};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    FGuid CreateMusicBatch(const TArray<FString>& MusicDescriptions, EMingAIQualityLevel Quality);
+    FGuid CreateMusicBatch(const TArray<FString>& MusicDescriptions, EMingAIQualityLevel Quality};
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    FGuid CreateCompleteProjectBatch(const FString& ProjectName, const TArray<FMingAIContentRequest>& AllRequirements);
+    FGuid CreateCompleteProjectBatch(const FString& ProjectName, const TArray<FMingAIContentRequest>& AllRequirements};
 
     // Events
     UPROPERTY(BlueprintAssignable, Category = "Batch Events")
@@ -248,13 +248,14 @@ protected:
     bool bInitialized;
 
     // Internal processing
-    void ProcessBatch(FGuid BatchID);
-    void ProcessNextItem(FGuid BatchID);
-    void UpdateBatchProgress(FGuid BatchID);
-    void OnItemGenerationCompleted(FGuid BatchID, FGuid ItemID, bool bSuccess, const FString& ResultPath);
-    void CompleteBatch(FGuid BatchID);
+    void ProcessBatch(FGuid BatchID};
+    void ProcessNextItem(FGuid BatchID};
+    void UpdateBatchProgress(FGuid BatchID};
+    void OnItemGenerationCompleted(FGuid BatchID, FGuid ItemID, bool bSuccess, const FString& ResultPath};
+    void CompleteBatch(FGuid BatchID};
     
     bool CanProcessMoreItems(FGuid BatchID) const;
     int32 GetActiveItemCount(FGuid BatchID) const;
     FMingBatchStatistics CalculateStatistics(FGuid BatchID) const;
 };
+

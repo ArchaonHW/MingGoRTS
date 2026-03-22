@@ -2,137 +2,105 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MingAIContentTypes.h"
-#include "MingAIGeneratedContentSystem.generated.h"
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIContentGenerationCompleted, const FGuid&, RequestID, const FMingAIContentResult&, Result);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIContentGenerationFailed, const FGuid&, RequestID, const FString&, ErrorMessage);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAIContentGenerationProgress, const FGuid&, RequestID, float, Progress, const FString&, Status);
+#include "MingAICoreGeneratedContentSystem.generated.h"
 
 /**
- * AI Content Generation System
- * Core system for generating game content using AI services
+ * AI Core Generated Content System
+ * Manages AI-generated content for the MingGoRTS game
  */
-UCLASS(ClassGroup = (AI, Content), Blueprintable)
-class MINGAI_API UMingAIGeneratedContentSystem : public UObject
+UCLASS(BlueprintType, Blueprintable)
+class MINGAI_API UMingAICoreGeneratedContentSystem : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingAIGeneratedContentSystem();
+    UMingAICoreGeneratedContentSystem();
 
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    void InitializeSystem();
+    /**
+     * Initialize the AI content generation system
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Content")
+    void InitializeAIContentSystem();
 
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    void ShutdownSystem();
+    /**
+     * Generate terrain content
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Content")
+    bool GenerateTerrainContent(const FString& TerrainType, const FVector& Location);
 
-    // Configuration
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    void SetProviderConfig(EMingAIProvider Provider, const FMingAIProviderConfig& Config);
+    /**
+     * Generate unit content
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Content")
+    bool GenerateUnitContent(const FString& UnitType, const FVector& SpawnLocation);
 
-    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
-    FMingAIProviderConfig GetProviderConfig(EMingAIProvider Provider) const;
+    /**
+     * Generate building content
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Content")
+    bool GenerateBuildingContent(const FString& BuildingType, const FVector& BuildLocation);
 
-    // Content Generation
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FGuid GenerateContent(const FMingAIContentRequest& Request);
+    /**
+     * Generate audio content
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Content")
+    bool GenerateAudioContent(const FString& AudioType, const FString& Context);
 
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    bool CancelGeneration(const FGuid& RequestID);
+    /**
+     * Generate visual content
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Content")
+    bool GenerateVisualContent(const FString& VisualType, const FString& Style);
 
-    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
-    EMingAIGenerationStatus GetGenerationStatus(const FGuid& RequestID) const;
+    /**
+     * Get generated content status
+     */
+    UFUNCTION(BlueprintPure, Category = "AI Content")
+    bool IsContentGenerationComplete() const;
 
-    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
-    TArray<FGuid> GetActiveGenerations() const;
-
-    // Convenience Methods
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FGuid GenerateImage(const FString& Prompt, EMingAIQualityLevel Quality, int32 Width, int32 Height);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FGuid GenerateMusic(const FString& Prompt, float Duration, EMingAIQualityLevel Quality);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FGuid GenerateSoundEffect(const FString& Prompt, float Duration, EMingAIQualityLevel Quality);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FGuid GenerateVoice(const FString& Text, const FString& VoiceID, EMingAIQualityLevel Quality);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FGuid GenerateTexture(const FString& Prompt, EMingAIQualityLevel Quality, int32 Width, int32 Height);
-
-    // Results
-    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
-    FMingAIContentResult GetGenerationResult(const FGuid& RequestID) const;
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    void ClearCompletedGenerations();
-
-    // Statistics
-    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
-    int32 GetTotalGenerationsCount() const { return TotalGenerationsCount; }
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
-    int32 GetSuccessfulGenerationsCount() const { return SuccessfulGenerationsCount; }
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
-    int32 GetFailedGenerationsCount() const { return FailedGenerationsCount; }
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
-    float GetAverageGenerationTime() const;
-
-    // Events
-    UPROPERTY(BlueprintAssignable, Category = "AI Content Events")
-    FOnAIContentGenerationCompleted OnGenerationCompleted;
-
-    UPROPERTY(BlueprintAssignable, Category = "AI Content Events")
-    FOnAIContentGenerationFailed OnGenerationFailed;
-
-    UPROPERTY(BlueprintAssignable, Category = "AI Content Events")
-    FOnAIContentGenerationProgress OnGenerationProgress;
+    /**
+     * Cancel content generation
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Content")
+    void CancelContentGeneration();
 
 protected:
+    // Is content generation in progress
     UPROPERTY()
-    TMap<EMingAIProvider, FMingAIProviderConfig> ProviderConfigs;
+    bool bIsGeneratingContent;
 
+    // Current generation task
     UPROPERTY()
-    TMap<FGuid, FMingAIContentRequest> PendingRequests;
+    FString CurrentGenerationTask;
 
+    // Generation progress
     UPROPERTY()
-    TMap<FGuid, FMingAIContentResult> CompletedResults;
+    float GenerationProgress;
 
-    UPROPERTY()
-    TSet<FGuid> ActiveRequests;
+    // Process terrain generation
+    bool ProcessTerrainGeneration(const FString& TerrainType, const FVector& Location);
 
-    UPROPERTY()
-    int32 TotalGenerationsCount;
+    // Process unit generation
+    bool ProcessUnitGeneration(const FString& UnitType, const FVector& SpawnLocation);
 
-    UPROPERTY()
-    int32 SuccessfulGenerationsCount;
+    // Process building generation
+    bool ProcessBuildingGeneration(const FString& BuildingType, const FVector& BuildLocation);
 
-    UPROPERTY()
-    int32 FailedGenerationsCount;
+    // Process audio generation
+    bool ProcessAudioGeneration(const FString& AudioType, const FString& Context);
 
-    UPROPERTY()
-    TArray<float> GenerationTimes;
+    // Process visual generation
+    bool ProcessVisualGeneration(const FString& VisualType, const FString& Style);
 
-    UPROPERTY()
-    bool bInitialized;
+    // Validate generation parameters
+    bool ValidateGenerationParameters(const FString& ContentType, const FString& Parameters);
 
-    // Internal methods
-    void ProcessNextInQueue();
-    void OnGenerationRequestCompleted(FGuid RequestID, bool bSuccess, const FString& FilePath, const FString& Error);
-    void UpdateGenerationProgress(FGuid RequestID, float Progress, const FString& Status);
-    void ProcessGenerationResult(FGuid RequestID, bool bSuccess, const FString& FilePath, const FString& Error);
-    
-    FString GetProviderEndpoint(EMingAIProvider Provider) const;
-    FString BuildRequestPayload(const FMingAIContentRequest& Request) const;
-    bool ValidateRequest(const FMingAIContentRequest& Request) const;
-    FString GetOutputDirectory(EMingAIContentType ContentType) const;
-    FString GenerateUniqueFileName(EMingAIContentType ContentType) const;
-    
-    void SendHttpRequest(const FGuid& RequestID, const FMingAIContentRequest& Request);
-    void HandleHttpResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful, FGuid RequestID);
+    // Log generation progress
+    void LogGenerationProgress(const FString& Task, float Progress);
+
+    // Handle generation completion
+    void OnGenerationComplete(const FString& Task, bool bSuccess);
+
+    // Handle generation error
+    void OnGenerationError(const FString& Task, const FString& ErrorMessage);
 };

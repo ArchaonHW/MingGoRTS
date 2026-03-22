@@ -2,263 +2,99 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MingAIContentTypes.h"
-#include "MingAIContentManager.generated.h"
-
-UENUM(BlueprintType)
-enum class EMingContentItemStatus : uint8
-{
-    Active UMETA(DisplayName = "Active"),
-    Archived UMETA(DisplayName = "Archived"),
-    Deleted UMETA(DisplayName = "Deleted"),
-    Draft UMETA(DisplayName = "Draft"),
-    Max UMETA(Hidden)
-};
-
-USTRUCT(BlueprintType)
-struct FMingContentItemMetadata
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    FGuid ItemID;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    FString ItemName;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    FString Description;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    EMingAIContentType ContentType;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    EMingAIQualityLevel QualityLevel;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    FString FilePath;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    FString ThumbnailPath;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    FString Tags;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    FString Category;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    FDateTime CreationDate;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    FDateTime LastModified;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    int64 FileSize;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    EMingContentItemStatus Status;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    int32 UsageCount;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    float Rating;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Metadata")
-    TMap<FString, FString> CustomProperties;
-
-    FMingContentItemMetadata()
-        : ContentType(EMingAIContentType::None)
-        , QualityLevel(EMingAIQualityLevel::Standard)
-        , FileSize(0)
-        , Status(EMingContentItemStatus::Active)
-        , UsageCount(0)
-        , Rating(0.0f)
-    {}
-};
-
-USTRUCT(BlueprintType)
-struct FMingContentProject
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Project")
-    FGuid ProjectID;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Project")
-    FString ProjectName;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Project")
-    FString Description;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Project")
-    TArray<EMingAIContentType> RequiredContentTypes;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Project")
-    TMap<EMingAIContentType, FString> ContentPrompts;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Project")
-    EMingAIQualityLevel TargetQuality;
-
-    UPROPERTY(BlueprintReadWrite, Category = "Content Project")
-    FString OutputDirectory;
-
-    FMingContentProject()
-        : TargetQuality(EMingAIQualityLevel::High)
-    {}
-};
+#include "MingAICoreContentManager.generated.h"
 
 /**
- * AI Content Manager
- * Central manager for organizing and managing AI-generated content
+ * AI Core Content Manager
+ * Manages AI-generated content assets and resources
  */
-UCLASS(ClassGroup = (AI, Content), Blueprintable)
-class MINGAI_API UMingAIContentManager : public UObject
+UCLASS(BlueprintType, Blueprintable)
+class MINGAI_API UMingAICoreContentManager : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingAIContentManager();
+    UMingAICoreContentManager();
 
+    /**
+     * Initialize content manager
+     */
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void InitializeManager();
+    void InitializeContentManager();
 
+    /**
+     * Load content assets
+     */
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void ShutdownManager();
+    bool LoadContentAssets(const TArray<FString>& AssetPaths);
 
-    // Content Registration
+    /**
+     * Unload content assets
+     */
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    FGuid RegisterContent(const FMingContentItemMetadata& Metadata);
+    bool UnloadContentAssets(const TArray<FString>& AssetPaths);
 
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    bool UpdateContentMetadata(const FGuid& ItemID, const FMingContentItemMetadata& Metadata);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    bool DeleteContent(const FGuid& ItemID);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    bool ArchiveContent(const FGuid& ItemID);
-
-    // Content Retrieval
+    /**
+     * Get content asset
+     */
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
-    FMingContentItemMetadata GetContentMetadata(const FGuid& ItemID) const;
+    UObject* GetContentAsset(const FString& AssetPath);
 
+    /**
+     * Cache content asset
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    bool CacheContentAsset(const FString& AssetPath, UObject* Asset);
+
+    /**
+     * Clear content cache
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    void ClearContentCache();
+
+    /**
+     * Get cache size
+     */
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
-    TArray<FGuid> GetAllContentIDs() const;
+    int32 GetCacheSize() const;
 
-    UFUNCTION(BlueprintPure, Category = "AI Content Manager")
-    TArray<FGuid> GetContentByType(EMingAIContentType ContentType) const;
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Manager")
-    TArray<FGuid> GetContentByCategory(const FString& Category) const;
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Manager")
-    TArray<FGuid> GetContentByTag(const FString& Tag) const;
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Manager")
-    TArray<FGuid> SearchContent(const FString& SearchQuery) const;
-
-    // Content Organization
+    /**
+     * Optimize cache
+     */
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    bool MoveContentToCategory(const FGuid& ItemID, const FString& NewCategory);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    bool AddTagToContent(const FGuid& ItemID, const FString& Tag);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    bool RemoveTagFromContent(const FGuid& ItemID, const FString& Tag);
-
-    // Content Operations
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    bool ImportContent(const FString& FilePath, const FMingContentItemMetadata& Metadata);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    bool ExportContent(const FGuid& ItemID, const FString& DestinationPath);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    bool DuplicateContent(const FGuid& ItemID, const FString& NewName);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    bool PreviewContent(const FGuid& ItemID);
-
-    // Project Management
-    UFUNCTION(BlueprintCallable, Category = "AI Content Projects")
-    FGuid CreateProject(const FMingContentProject& Project);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Projects")
-    bool UpdateProject(const FGuid& ProjectID, const FMingContentProject& Project);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Projects")
-    bool DeleteProject(const FGuid& ProjectID);
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Projects")
-    FMingContentProject GetProject(const FGuid& ProjectID) const;
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Projects")
-    TArray<FGuid> GetAllProjects() const;
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Projects")
-    bool AddContentToProject(const FGuid& ProjectID, const FGuid& ContentID);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Projects")
-    bool RemoveContentFromProject(const FGuid& ProjectID, const FGuid& ContentID);
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Projects")
-    TArray<FGuid> GetProjectContents(const FGuid& ProjectID) const;
-
-    // Statistics and Reporting
-    UFUNCTION(BlueprintPure, Category = "AI Content Statistics")
-    int32 GetTotalContentCount() const;
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Statistics")
-    int32 GetContentCountByType(EMingAIContentType ContentType) const;
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Statistics")
-    int64 GetTotalStorageUsed() const;
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Statistics")
-    TArray<FString> GetAllCategories() const;
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Statistics")
-    TArray<FString> GetAllTags() const;
-
-    // Cache Management
-    UFUNCTION(BlueprintCallable, Category = "AI Content Cache")
-    void ClearCache();
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Cache")
-    void CleanUnusedContent(int32 DaysUnused);
-
-    UFUNCTION(BlueprintPure, Category = "AI Content Cache")
-    int64 GetCacheSize() const;
+    void OptimizeCache();
 
 protected:
+    // Content asset cache
     UPROPERTY()
-    TMap<FGuid, FMingContentItemMetadata> ContentRegistry;
+    TMap<FString, UObject*> ContentCache;
 
+    // Maximum cache size
     UPROPERTY()
-    TMap<FGuid, FMingContentProject> Projects;
+    int32 MaxCacheSize;
 
+    // Cache access order
     UPROPERTY()
-    TMap<FGuid, TArray<FGuid>> ProjectContents;
+    TArray<FString> CacheAccessOrder;
 
-    UPROPERTY()
-    FString ContentDirectory;
+    // Load asset from disk
+    UObject* LoadAssetFromDisk(const FString& AssetPath);
 
-    UPROPERTY()
-    FString CacheDirectory;
+    // Unload asset from memory
+    bool UnloadAssetFromMemory(const FString& AssetPath);
 
-    UPROPERTY()
-    bool bInitialized;
+    // Update cache access order
+    void UpdateCacheAccessOrder(const FString& AssetPath);
 
-    // Internal methods
-    bool ValidateMetadata(const FMingContentItemMetadata& Metadata) const;
-    FString GenerateUniqueFileName(EMingAIContentType ContentType) const;
-    bool CreateThumbnail(const FString& SourcePath, const FString& ThumbnailPath);
-    void UpdateContentUsage(const FGuid& ItemID);
-    void SaveRegistry();
-    void LoadRegistry();
-    FString GetContentTypeString(EMingAIContentType ContentType) const;
-    FString GetFileExtension(EMingAIContentType ContentType) const;
+    // Remove least recently used assets
+    void RemoveLeastRecentlyUsedAssets(int32 Count);
+
+    // Validate asset path
+    bool ValidateAssetPath(const FString& AssetPath) const;
+
+    // Get asset memory usage
+    int32 GetAssetMemoryUsage(UObject* Asset) const;
+
+    // Log cache statistics
+    void LogCacheStatistics();
 };
