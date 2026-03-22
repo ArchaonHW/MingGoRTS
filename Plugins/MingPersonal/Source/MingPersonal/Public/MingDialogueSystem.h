@@ -14,7 +14,7 @@ enum class EMingDialogueSpeaker : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingDialogueType : uint8
+enum class EMingPersonalDialogueType : uint8
 {
     Conversation UMETA(DisplayName = "Conversation"),
     Briefing UMETA(DisplayName = "Briefing"),
@@ -25,7 +25,7 @@ enum class EMingDialogueType : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FMingDialogueOption
+struct FMingPersonalDialogueOption
 {
     GENERATED_BODY()
 
@@ -103,8 +103,8 @@ struct FMingDialogueLine
 };
 
 // 注意：遞迴結構不能用 BlueprintType
-USTRUCT()
-struct FMingDialogueNode
+USTRUCT(BlueprintType)
+struct FMingPersonalDialogueNode
 {
     GENERATED_BODY()
 

@@ -18,7 +18,7 @@ enum class EMingCharacterRole : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingSkillType : uint8
+enum class EMingPersonalSkillType : uint8
 {
     Leadership UMETA(DisplayName = "Leadership"),
     Military UMETA(DisplayName = "Military"),
