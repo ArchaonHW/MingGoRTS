@@ -3,8 +3,13 @@ stepsCompleted: [1, 2, 3, 4]
 workflowType: 'epics'
 lastStep: 4
 status: 'complete'
-completedAt: '2026-03-21T22:45:00Z'
-inputDocuments: ["c:\\HW\\MingGoRTS\\_bmad-output\\gdd.md", "c:\\HW\\MingGoRTS\\_bmad-output\\planning-artifacts\\architecture.md"]
+completedAt: '2026-03-22'
+inputDocuments: [
+  "c:\\HW\\MingGoRTS\\_bmad-output\\gdd.md",
+  "c:\\HW\\MingGoRTS\\_bmad-output\\planning-artifacts\\architecture.md",
+  "c:\\HW\\MingGoRTS\\_bmad-output\\planning-artifacts\\ux-design-specification.md"
+]
+uxDesignRequirementsAdded: '2026-03-22'
 ---
 
 # MingGoRTS - Epic Breakdown
@@ -61,6 +66,23 @@ UX-DR3: 觸控和鼠標雙重輸入支持
 UX-DR4: 歷史信息展示和教育內容整合
 UX-DR5: 大規模戰鬥的可視化清晰度
 UX-DR6: 決策後果的視覺反饋系統
+
+**來自最新 UX 設計規範（2026-03-22）：**
+
+UX-DR7: 跨平台響應式設計系統
+- 桌面/平板/手機三平台適配
+- 斷點策略：320px-1920px+
+- 平台特定優化（手機 AI 輔助選擇、長按確認）
+
+UX-DR8: 無障礙設計系統
+- WCAG Level AA 合規
+- 色盲支援：形狀編碼（圓形/三角形/菱形）+ 紋理
+- 認知無障礙：情境感知資訊顯示（和平/戰鬥/危機三種模式）
+
+UX-DR9: DLC 主題擴展系統
+- 可擴展主題架構
+- 民國/唐朝/奇幻主題切換
+- 跨主題一致性保證
 
 ### FR Coverage Map
 

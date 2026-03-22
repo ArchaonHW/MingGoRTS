@@ -102,7 +102,8 @@ struct FMingDialogueLine
     {}
 };
 
-USTRUCT(BlueprintType)
+// 注意：遞迴結構不能用 BlueprintType
+USTRUCT()
 struct FMingDialogueNode
 {
     GENERATED_BODY()
