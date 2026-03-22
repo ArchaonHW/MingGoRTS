@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Events/MingEventTrigger.h"
 #include "MingEventTriggerCondition.generated.h"
 
 /**
- * æ¢ä»¶?ä?ç¬? */
+ * æ¢ä»¶?ï¿½ï¿½?ï¿½? */
 UENUM(BlueprintType)
 enum class EConditionOperator : uint8
 {
@@ -18,7 +18,7 @@ enum class EConditionOperator : uint8
 };
 
 /**
- * ?è¼¯?ä?ç¬? */
+ * ?ï¿½è¼¯?ï¿½ï¿½?ï¿½? */
 UENUM(BlueprintType)
 enum class ELogicOperator : uint8
 {
@@ -27,31 +27,31 @@ enum class ELogicOperator : uint8
 };
 
 /**
- * ?®å€‹æ?ä»¶å?ç¾? */
+ * ?ï¿½å€‹ï¿½?ä»¶ï¿½?ï¿½? */
 USTRUCT(BlueprintType)
 struct FSingleCondition
 {
     GENERATED_BODY()
     
-    // æ¢ä»¶?ç¨± (?¨æ–¼èª¿è©¦)
+    // æ¢ä»¶?ï¿½ç¨± (?ï¿½æ–¼èª¿è©¦)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionName;
     
-    // ?®æ?å°è±¡ (è³‡æ?é¡å??è??²ID?é??²ç??‹ç?)
+    // ?ï¿½ï¿½?å°è±¡ (è³‡ï¿½?é¡ï¿½Xï¿½ï¿½Xï¿½ID?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString TargetKey;
     
-    // ?ä?ç¬?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?ï¿½ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EConditionOperator Operator;
     
-    // ?®æ??¸å€?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?ï¿½ï¿½Xï¿½ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TargetValue;
     
-    // ?¯å¦?ºå?ç¬¦ä¸²æ¯”è?
+    // ?ï¿½å¦?ï¿½ï¿½?ç¬¦ä¸²æ¯”ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bStringComparison;
     
-    // å­—ç¬¦ä¸²ç›®æ¨™å€?(å¦‚æ??¨æ–¼å­—ç¬¦ä¸²æ?è¼?
+    // å­—ç¬¦ä¸²ç›®æ¨™ï¿½?(å¦‚ï¿½Xï¿½æ–¼å­—ç¬¦ä¸²ï¿½?ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString StringTargetValue;
     
@@ -63,18 +63,18 @@ struct FSingleCondition
 };
 
 /**
- * æ¢ä»¶çµ?(?¯æ?è¤‡å?æ¢ä»¶)
+ * æ¢ä»¶ï¿½?(?ï¿½ï¿½?è¤‡ï¿½?æ¢ä»¶)
  */
 USTRUCT(BlueprintType)
 struct FConditionGroup
 {
     GENERATED_BODY()
     
-    // çµ„å…§æ¢ä»¶?—è¡¨
+    // çµ„å…§æ¢ä»¶?ï¿½è¡¨
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FSingleCondition> Conditions;
     
-    // çµ„å…§?è¼¯?ä?ç¬?(AND/OR)
+    // çµ„å…§?ï¿½è¼¯?ï¿½ï¿½?ï¿½?(AND/OR)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     ELogicOperator GroupOperator;
     
@@ -84,7 +84,7 @@ struct FConditionGroup
 };
 
 /**
- * æ¢ä»¶è§¸ç™¼?? * ?ºæ–¼?Šæˆ²?€?‹æ?ä»¶è§¸?¼ä?ä»? */
+ * æ¢ä»¶è§¸ç™¼X * ?ï¿½æ–¼?ï¿½æˆ²?ï¿½?ï¿½ï¿½?ä»¶è§¸?ï¿½ï¿½?ï¿½? */
 UCLASS()
 class MINGSTRATEGIC_API UMingStrategicEventCondition : public UMingEventTrigger
 {
@@ -93,55 +93,55 @@ class MINGSTRATEGIC_API UMingStrategicEventCondition : public UMingEventTrigger
 public:
     UMingStrategicEventCondition(};
 
-    // æ·»å??®å€‹æ?ä»?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
+    // æ·»ï¿½Xï¿½å€‹ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void AddCondition(const FSingleCondition& Condition};
 
-    // æ·»å?æ¢ä»¶çµ?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
+    // æ·»ï¿½?æ¢ä»¶ï¿½?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void AddConditionGroup(const FConditionGroup& Group};
 
-    // è¨­ç½®?¨å??è¼¯?ä?ç¬?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
+    // è¨­ç½®?ï¿½ï¿½Xï¿½è¼¯?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void SetGlobalLogicOperator(ELogicOperator Operator};
 
-    // ?´æ–°æ¢ä»¶??(?±é??²ç³»çµ±èª¿??
+    // ?ï¿½æ–°æ¢ä»¶X(?ï¿½ï¿½Xï¿½ç³»çµ±èª¿X
     UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void UpdateConditionValue(const FString& Key, float Value};
 
     UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void UpdateConditionStringValue(const FString& Key, const FString& Value};
 
-    // æ¸…é™¤?€?‰æ?ä»¶å€?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
+    // æ¸…é™¤?ï¿½?ï¿½ï¿½?ä»¶ï¿½?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void ClearConditionValues(};
 
-    // ?²å?æ¢ä»¶è©•ä¼°çµæ? (?¨æ–¼èª¿è©¦)
+    // ?ï¿½ï¿½?æ¢ä»¶è©•ä¼°çµï¿½? (?ï¿½æ–¼èª¿è©¦)
     UFUNCTION(BlueprintPure, Category = "Condition Trigger")
     bool EvaluateCondition(const FSingleCondition& Condition) const;
 
 protected:
-    // æ¢ä»¶çµ„å?è¡?    UPROPERTY()
+    // æ¢ä»¶çµ„ï¿½?ï¿½?    UPROPERTY()
     TArray<FConditionGroup> ConditionGroups;
 
-    // ?¨å??è¼¯?ä?ç¬?(çµ„è?çµ„ä???
+    // ?ï¿½ï¿½Xï¿½è¼¯?ï¿½ï¿½?ï¿½?(çµ„ï¿½?çµ„ï¿½X
     UPROPERTY()
     ELogicOperator GlobalOperator;
 
-    // ?¶å?æ¢ä»¶??(?¸å€?
+    // ?ï¿½ï¿½?æ¢ä»¶X(?ï¿½ï¿½?
     UPROPERTY()
     TMap<FString, float> NumericValues;
 
-    // ?¶å?æ¢ä»¶??(å­—ç¬¦ä¸?
+    // ?ï¿½ï¿½?æ¢ä»¶X(å­—ç¬¦ï¿½?
     UPROPERTY()
     TMap<FString, FString> StringValues;
 
-    // ?å¯«?ºé??¹æ?
+    // ?ï¿½å¯«?ï¿½ï¿½Xï¿½ï¿½?
     virtual bool PerformTrigger() override;
     virtual bool CheckTriggerCondition() const override;
 
-    // è©•ä¼°æ¢ä»¶çµ?    bool EvaluateConditionGroup(const FConditionGroup& Group) const;
+    // è©•ä¼°æ¢ä»¶ï¿½?    bool EvaluateConditionGroup(const FConditionGroup& Group) const;
 
-    // è©•ä¼°?®å€‹æ?ä»?    bool EvaluateSingleCondition(const FSingleCondition& Condition) const;
+    // è©•ä¼°?ï¿½å€‹ï¿½?ï¿½?    bool EvaluateSingleCondition(const FSingleCondition& Condition) const;
 
-    // ?¸å€¼æ?è¼?    bool CompareValues(float Value1, float Value2, EConditionOperator Op) const;
+    // ?ï¿½å€¼ï¿½?ï¿½?    bool CompareValues(float Value1, float Value2, EConditionOperator Op) const;
 
-    // å­—ç¬¦ä¸²æ?è¼?    bool CompareStrings(const FString& Value1, const FString& Value2, EConditionOperator Op) const;
+    // å­—ç¬¦ä¸²ï¿½?ï¿½?    bool CompareStrings(const FString& Value1, const FString& Value2, EConditionOperator Op) const;
 };
 

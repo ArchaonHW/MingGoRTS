@@ -1,49 +1,49 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "MingDecisionEffect.h"
 #include "MingStrategicDecisionOption.generated.h"
 
 /**
- * æ±ºç??¸é?çµæ?
- * å®šç¾©æ±ºç??„ä??‹é¸?…å??¶å??? */
+ * æ±ºï¿½Xï¿½ï¿½?çµï¿½?
+ * å®šç¾©æ±ºï¿½Xï¿½ï¿½Xï¿½é¸?ï¿½ï¿½Xï¿½ï¿½X */
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStrategicDecisionOption
 {
     GENERATED_BODY()
     
-    // ?¸é?ID
+    // ?ï¿½ï¿½?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FString OptionId;
     
-    // ?¸é?æ¨™é?
+    // ?ï¿½ï¿½?æ¨™ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FText OptionTitle;
     
-    // ?¸é??è¿° (è©³ç´°èªªæ?)
+    // ?ï¿½ï¿½Xï¿½è¿° (è©³ç´°èªªï¿½?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FText OptionDescription;
     
-    // ?¸é??è¦½ (ç°¡çŸ­èªªæ?é¡¯ç¤º?¨æ??•ä?)
+    // ?ï¿½ï¿½Xï¿½è¦½ (ç°¡çŸ­èªªï¿½?é¡¯ç¤º?ï¿½ï¿½Xï¿½ï¿½?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FText OptionPreview;
     
-    // ?¸é??–æ?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     UTexture2D* OptionIcon;
     
-    // ?¸é??ˆæ??—è¡¨
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½è¡¨
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     TArray<FMingDecisionEffect> Effects;
     
-    // å¾Œç?æ±ºç?ID (?¸æ?æ­¤é¸?…å?è§¸ç™¼?„ä?ä¸€?‹æ±ºç­?
+    // å¾Œï¿½?æ±ºï¿½?ID (?ï¿½ï¿½?æ­¤é¸?ï¿½ï¿½?è§¸ç™¼?ï¿½ï¿½?ä¸€?ï¿½æ±ºï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FString NextDecisionId;
     
-    // ?¯å¦çµæ??¶å?æ±ºç???    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
+    // ?ï¿½å¦çµï¿½Xï¿½ï¿½?æ±ºï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     bool bEndDecisionChain;
     
-    // ?¸é??¯ç”¨?§æ?ä»?(?¯ç?ç©ºè¡¨ç¤ºå?çµ‚å¯??
+    // ?ï¿½ï¿½Xï¿½ç”¨?ï¿½ï¿½?ï¿½?(?ï¿½ï¿½?ç©ºè¡¨ç¤ºï¿½?çµ‚å¯X
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FString AvailabilityCondition;
     
@@ -52,7 +52,7 @@ struct MINGSTRATEGIC_API FMingStrategicDecisionOption
         , bEndDecisionChain(false)
     {}
     
-    // æª¢æŸ¥?¸é??¯å¦?¯ç”¨
+    // æª¢æŸ¥?ï¿½ï¿½Xï¿½å¦?ï¿½ç”¨
     bool IsAvailable() const;
 };
 

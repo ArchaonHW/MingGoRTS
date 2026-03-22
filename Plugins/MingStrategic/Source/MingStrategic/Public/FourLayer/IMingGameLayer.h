@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "LayerIntegration/MingFourLayerTypes.h"
 #include "IMingGameLayer.generated.h"
 
-// ?Šæˆ²å±¤ç?ä»‹é¢
+// ?ï¿½æˆ²å±¤ï¿½?ä»‹é¢
 UINTERFACE(MinimalAPI, BlueprintType)
 class UMingGameLayer : public UInterface
 {
@@ -13,67 +13,67 @@ class UMingGameLayer : public UInterface
 };
 
 /**
- * ?Šæˆ²å±¤ç?ä»‹é¢
- * ?€?‰å?å±¤ç³»çµ±ç??ºç?ä»‹é¢
+ * ?ï¿½æˆ²å±¤ï¿½?ä»‹é¢
+ * ?ï¿½?ï¿½ï¿½?å±¤ç³»çµ±ï¿½Xï¿½ï¿½?ä»‹é¢
  */
 class MINGSTRATEGIC_API IMingGameLayer
 {
     GENERATED_BODY()
 
 public:
-    // ?å??–å±¤ç´?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void InitializeLayer(};
+    // ?ï¿½ï¿½Xï¿½å±¤ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
+    void InitializeLayer();
 
-    // ?´æ–°å±¤ç?
+    // ?ï¿½æ–°å±¤ï¿½?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     void UpdateLayer(float DeltaTime};
 
-    // ?²å?å±¤ç?é¡å?
+    // ?ï¿½ï¿½?å±¤ï¿½?é¡ï¿½?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     EMingGameLayer GetLayerType() const;
 
-    // ?²å?å±¤ç??ç¨±
+    // ?ï¿½ï¿½?å±¤ï¿½Xï¿½ç¨±
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     FString GetLayerName() const;
 
-    // ?²å?å±¤ç??ªå?ç´?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
+    // ?ï¿½ï¿½?å±¤ï¿½Xï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     float GetLayerPriority() const;
 
-    // ?•ç?å±¤ç?äº‹ä»¶
+    // ?ï¿½ï¿½?å±¤ï¿½?äº‹ä»¶
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     void HandleLayerEvent(const FMingGameEvent& Event};
 
-    // ?•ç?å±¤ç?æ±ºç?
+    // ?ï¿½ï¿½?å±¤ï¿½?æ±ºï¿½?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     void HandleLayerDecision(const FMingGameDecision& Decision};
 
-    // ?²å?å±¤ç?è³‡æ??€æ±?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
+    // ?ï¿½ï¿½?å±¤ï¿½?è³‡ï¿½Xï¿½ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     TMap<EMingResourceType, float> GetResourceRequirements() const;
 
-    // ?²å?å±¤ç?è³‡æ??ä?
+    // ?ï¿½ï¿½?å±¤ï¿½?è³‡ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     TMap<EMingResourceType, float> GetResourceContributions() const;
 
-    // ?²å?å±¤ç??€??    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
+    // ?ï¿½ï¿½?å±¤ï¿½Xï¿½X    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     FString GetLayerStatus() const;
 
-    // æª¢æŸ¥å±¤ç?è¡ç?
+    // æª¢æŸ¥å±¤ï¿½?è¡ï¿½?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     TArray<FMingLayerConflict> CheckLayerConflicts() const;
 
-    // è§?±ºå±¤ç?è¡ç?
+    // ï¿½?ï¿½ï¿½å±¤ï¿½?è¡ï¿½?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     void ResolveLayerConflicts(const TArray<FMingLayerConflict>& Conflicts};
 
-    // ?”èª¿?‡å…¶ä»–å±¤ç´?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
+    // ?ï¿½èª¿?ï¿½å…¶ä»–å±¤ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     void CoordinateWithOtherLayers(const TArray<EMingGameLayer>& OtherLayers};
 
-    // ?²å?å±¤ç??§èƒ½çµ±è?
+    // ?ï¿½ï¿½?å±¤ï¿½Xï¿½èƒ½çµ±ï¿½?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     float GetLayerPerformance() const;
 
-    // ?ç½®å±¤ç?
+    // ?ï¿½ç½®å±¤ï¿½?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void ResetLayer(};
+    void ResetLayer();
 };
 

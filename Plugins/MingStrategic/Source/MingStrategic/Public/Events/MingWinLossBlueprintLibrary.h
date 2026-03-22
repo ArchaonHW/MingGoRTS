@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -6,7 +6,7 @@
 #include "MingWinLossBlueprintLibrary.generated.h"
 
 /**
- * ?è?æ¢ä»¶?å??½æ•¸åº? * ?ä??å??¯èª¿?¨ç??è?æ¢ä»¶ç³»çµ±?Ÿèƒ½
+ * ?ï¿½ï¿½?æ¢ä»¶?ï¿½ï¿½Xï¿½æ•¸ï¿½? * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½Xï¿½ï¿½?æ¢ä»¶ç³»çµ±?ï¿½èƒ½
  */
 UCLASS()
 class MINGSTRATEGIC_API UMingWinLossBlueprintLibrary : public UBlueprintFunctionLibrary
@@ -15,152 +15,152 @@ class MINGSTRATEGIC_API UMingWinLossBlueprintLibrary : public UBlueprintFunction
 
 public:
     /**
-     * ?²å??è?æ¢ä»¶ç³»çµ±
+     * ?ï¿½ï¿½Xï¿½ï¿½?æ¢ä»¶ç³»çµ±
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static UMingWinLossCondition* GetWinLossConditionSystem(};
+    static UMingWinLossCondition* GetWinLossConditionSystem();
 
     /**
-     * ?å??–å?è² æ?ä»¶ç³»çµ?     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?è² ï¿½?ä»¶ç³»ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static void InitializeWinLossConditionSystem(};
+    static void InitializeWinLossConditionSystem();
 
     /**
-     * è¨»å??è?æ¢ä»¶
+     * è¨»ï¿½Xï¿½ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static bool RegisterWinLossCondition(const FWinLossCondition& Condition};
 
     /**
-     * ?–æ?è¨»å??è?æ¢ä»¶
+     * ?ï¿½ï¿½?è¨»ï¿½Xï¿½ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static bool UnregisterWinLossCondition(const FString& ConditionID};
 
     /**
-     * è©•ä¼°?è??€æ³?     */
+     * è©•ä¼°?ï¿½ï¿½Xï¿½ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static FWinLossEvaluationResult EvaluateWinLoss(};
+    static FWinLossEvaluationResult EvaluateWinLoss();
 
     /**
-     * æª¢æŸ¥?®å€‹æ?ä»?     */
+     * æª¢æŸ¥?ï¿½å€‹ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static bool CheckCondition(const FString& ConditionID};
 
     /**
-     * ?²å??è?æ¢ä»¶
+     * ?ï¿½ï¿½Xï¿½ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FWinLossCondition GetWinLossCondition(const FString& ConditionID};
 
     /**
-     * ?²å??€?‰å?è² æ?ä»?     */
+     * ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?è² ï¿½?ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static TArray<FWinLossCondition> GetAllWinLossConditions(};
+    static TArray<FWinLossCondition> GetAllWinLossConditions();
 
     /**
-     * ?²å??‡å?é¡å??„æ?ä»?     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static TArray<FWinLossCondition> GetConditionsByType(EWinLossConditionType ConditionType};
 
     /**
-     * ?²å??œéµæ¢ä»¶
+     * ?ï¿½ï¿½Xï¿½éµæ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static TArray<FWinLossCondition> GetCriticalConditions(};
+    static TArray<FWinLossCondition> GetCriticalConditions();
 
     /**
-     * ?²å?å·²æ»¿è¶³ç?æ¢ä»¶
+     * ?ï¿½ï¿½?å·²æ»¿è¶³ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static TArray<FWinLossCondition> GetSatisfiedConditions(};
+    static TArray<FWinLossCondition> GetSatisfiedConditions();
 
     /**
-     * ?²å??ªæ»¿è¶³ç?æ¢ä»¶
+     * ?ï¿½ï¿½Xï¿½æ»¿è¶³ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static TArray<FWinLossCondition> GetUnsatisfiedConditions(};
+    static TArray<FWinLossCondition> GetUnsatisfiedConditions();
 
     /**
-     * è¨­ç½®?Šæˆ²?€??     */
+     * è¨­ç½®?ï¿½æˆ²?ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static void SetGameState(const TMap<FString, FString>& GameState};
 
     /**
-     * ?²å??Šæˆ²?€??     */
+     * ?ï¿½ï¿½Xï¿½æˆ²?ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static TMap<FString, FString> GetGameState(};
+    static TMap<FString, FString> GetGameState();
 
     /**
-     * ?´æ–°?Šæˆ²?€?‹å€?     */
+     * ?ï¿½æ–°?ï¿½æˆ²?ï¿½?ï¿½ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static void UpdateGameStateValue(const FString& Key, const FString& Value};
 
     /**
-     * ?²å??è?çµ±è?
+     * ?ï¿½ï¿½Xï¿½ï¿½?çµ±ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static FWinLossStatistics GetWinLossStatistics(};
+    static FWinLossStatistics GetWinLossStatistics();
 
     /**
-     * ?ç½®çµ±è??¸æ?
+     * ?ï¿½ç½®çµ±ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static void ResetStatistics(};
+    static void ResetStatistics();
 
     /**
-     * å¼·åˆ¶è©•ä¼° (?¨æ–¼æ¸¬è©¦)
+     * å¼·åˆ¶è©•ä¼° (?ï¿½æ–¼æ¸¬è©¦)
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static FWinLossEvaluationResult ForceEvaluation(};
+    static FWinLossEvaluationResult ForceEvaluation();
 
     /**
-     * ?²å??¶å??è?çµæ?
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?çµï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static EWinLossResult GetCurrentResult(};
+    static EWinLossResult GetCurrentResult();
 
     /**
-     * ?²å??è??†æ•¸
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ•¸
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static float GetWinLossScore(};
+    static float GetWinLossScore();
 
     /**
-     * æª¢æŸ¥?¯å¦å·²ç???     */
+     * æª¢æŸ¥?ï¿½å¦å·²ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static bool IsGameOver(};
+    static bool IsGameOver();
 
     /**
-     * ?²å?çµæ??Ÿå?
+     * ?ï¿½ï¿½?çµï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static FString GetGameOverReason(};
+    static FString GetGameOverReason();
 
     /**
-     * ?²å?çµæ??ç¨±
+     * ?ï¿½ï¿½?çµï¿½Xï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FString GetResultName(EWinLossResult Result};
 
     /**
-     * ?²å?æ¢ä»¶é¡å??ç¨±
+     * ?ï¿½ï¿½?æ¢ä»¶é¡ï¿½Xï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FString GetConditionTypeName(EWinLossConditionType ConditionType};
 
     /**
-     * ?²å??ªå?ç´šå?ç¨?     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?ç´šï¿½?ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FString GetPriorityName(EWinLossPriority Priority};
 
     /**
-     * ?²å??€?‹å?ç¨?     */
+     * ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FString GetStateName(EWinLossConditionState State};
 
     /**
-     * ?µå»º?è?æ¢ä»¶
+     * ?ï¿½å»º?ï¿½ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Creation")
     static FWinLossCondition CreateWinLossCondition(
@@ -174,7 +174,7 @@ public:
     };
 
     /**
-     * æ·»å?æ¢ä»¶?ƒæ•¸
+     * æ·»ï¿½?æ¢ä»¶?ï¿½æ•¸
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Creation")
     static FWinLossCondition AddConditionParameter(
@@ -187,7 +187,7 @@ public:
     };
 
     /**
-     * è¨­ç½®æª¢æŸ¥?“é?
+     * è¨­ç½®æª¢æŸ¥?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Creation")
     static FWinLossCondition SetCheckInterval(
@@ -196,7 +196,7 @@ public:
     };
 
     /**
-     * æ·»å?æ¢ä»¶æ¨™ç±¤
+     * æ·»ï¿½?æ¢ä»¶æ¨™ç±¤
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Creation")
     static FWinLossCondition AddConditionTag(
@@ -205,7 +205,7 @@ public:
     };
 
     /**
-     * æ·»å??¸é?äº‹ä»¶
+     * æ·»ï¿½Xï¿½ï¿½?äº‹ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Creation")
     static FWinLossCondition AddRelatedEvent(
@@ -214,174 +214,174 @@ public:
     };
 
     /**
-     * ?¹é?æª¢æŸ¥æ¢ä»¶
+     * ?ï¿½ï¿½?æª¢æŸ¥æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Batch")
     static TArray<bool> BatchCheckConditions(const TArray<FString>& ConditionIDs};
 
     /**
-     * ?¹é?è¨»å?æ¢ä»¶
+     * ?ï¿½ï¿½?è¨»ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Batch")
     static TArray<bool> BatchRegisterConditions(const TArray<FWinLossCondition>& Conditions};
 
     /**
-     * ?²å?ç³»çµ±?€??     */
+     * ?ï¿½ï¿½?ç³»çµ±?ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
-    static bool IsWinLossSystemInitialized(};
+    static bool IsWinLossSystemInitialized();
 
     /**
-     * ?²å?ç³»çµ±?ˆæœ¬
+     * ?ï¿½ï¿½?ç³»çµ±?ï¿½æœ¬
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
-    static FString GetWinLossSystemVersion(};
+    static FString GetWinLossSystemVersion();
 
     /**
-     * ?²å?è¨»å?æ¢ä»¶?¸é?
+     * ?ï¿½ï¿½?è¨»ï¿½?æ¢ä»¶?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
-    static int32 GetRegisteredConditionCount(};
+    static int32 GetRegisteredConditionCount();
 
     /**
-     * ?²å?æ»¿è¶³æ¢ä»¶?¸é?
+     * ?ï¿½ï¿½?æ»¿è¶³æ¢ä»¶?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
-    static int32 GetSatisfiedConditionCount(};
+    static int32 GetSatisfiedConditionCount();
 
     /**
-     * ?²å??œéµæ¢ä»¶?¸é?
+     * ?ï¿½ï¿½Xï¿½éµæ¢ä»¶?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
-    static int32 GetCriticalConditionCount(};
+    static int32 GetCriticalConditionCount();
 
     /**
-     * ?²å?æ¢ä»¶æ»¿è¶³??     */
+     * ?ï¿½ï¿½?æ¢ä»¶æ»¿è¶³X     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
-    static float GetConditionSatisfactionRate(};
+    static float GetConditionSatisfactionRate();
 
     /**
-     * ?²å??è??²åº¦
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½åº¦
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|Progress")
-    static float GetVictoryProgress(};
+    static float GetVictoryProgress();
 
     /**
-     * ?²å?å¤±æ??²åº¦
+     * ?ï¿½ï¿½?å¤±ï¿½Xï¿½åº¦
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|Progress")
-    static float GetDefeatProgress(};
+    static float GetDefeatProgress();
 
     /**
-     * ?²å?å¹³å??²åº¦
+     * ?ï¿½ï¿½?å¹³ï¿½Xï¿½åº¦
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|Progress")
-    static float GetDrawProgress(};
+    static float GetDrawProgress();
 
     /**
-     * ?²å?è·é›¢?åˆ©?‚é?
+     * ?ï¿½ï¿½?è·é›¢?ï¿½åˆ©?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Prediction")
-    static float GetTimeToVictory(};
+    static float GetTimeToVictory();
 
     /**
-     * ?²å?è·é›¢å¤±æ??‚é?
+     * ?ï¿½ï¿½?è·é›¢å¤±ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Prediction")
-    static float GetTimeToDefeat(};
+    static float GetTimeToDefeat();
 
     /**
-     * ?²å??åˆ©æ¦‚ç?
+     * ?ï¿½ï¿½Xï¿½åˆ©æ¦‚ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Prediction")
-    static float GetVictoryProbability(};
+    static float GetVictoryProbability();
 
     /**
-     * ?²å?å¤±æ?æ¦‚ç?
+     * ?ï¿½ï¿½?å¤±ï¿½?æ¦‚ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Prediction")
-    static float GetDefeatProbability(};
+    static float GetDefeatProbability();
 
     /**
-     * ?²å?å¹³å?æ¦‚ç?
+     * ?ï¿½ï¿½?å¹³ï¿½?æ¦‚ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Prediction")
-    static float GetDrawProbability(};
+    static float GetDrawProbability();
 
     /**
-     * ?²å??è?å»ºè­°
+     * ?ï¿½ï¿½Xï¿½ï¿½?å»ºè­°
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|AI")
-    static TArray<FString> GetWinLossRecommendations(};
+    static TArray<FString> GetWinLossRecommendations();
 
     /**
-     * ?²å??€è¦é?æ³¨ç?æ¢ä»¶
+     * ?ï¿½ï¿½Xï¿½è¦ï¿½?æ³¨ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Analysis")
-    static TArray<FString> GetCriticalConditionsToWatch(};
+    static TArray<FString> GetCriticalConditionsToWatch();
 
     /**
-     * ?²å?æ¢ä»¶å½±éŸ¿?†æ?
+     * ?ï¿½ï¿½?æ¢ä»¶å½±éŸ¿?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Analysis")
-    static TMap<FString, float> GetConditionImpactAnalysis(};
+    static TMap<FString, float> GetConditionImpactAnalysis();
 
     /**
-     * ?²å??Šæˆ²?€?‹å½±??     */
+     * ?ï¿½ï¿½Xï¿½æˆ²?ï¿½?ï¿½å½±X     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Analysis")
-    static TMap<FString, float> GetGameStateImpact(};
+    static TMap<FString, float> GetGameStateImpact();
 
     /**
-     * ?²å??è?è¶¨å‹¢
+     * ?ï¿½ï¿½Xï¿½ï¿½?è¶¨å‹¢
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Trend")
     static TArray<EWinLossResult> GetWinLossTrend(int32 HistoryCount};
 
     /**
-     * ?²å?è¶¨å‹¢?†æ?
+     * ?ï¿½ï¿½?è¶¨å‹¢?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Trend")
-    static FString GetTrendAnalysis(};
+    static FString GetTrendAnalysis();
 
     /**
-     * æ¨¡æ“¬?è?çµæ?
+     * æ¨¡æ“¬?ï¿½ï¿½?çµï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Simulation")
     static TArray<EWinLossResult> SimulateWinLoss(int32 SimulationCount};
 
     /**
-     * æ¨¡æ“¬æ¢ä»¶è®Šå?
+     * æ¨¡æ“¬æ¢ä»¶è®Šï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Simulation")
     static TArray<FString> SimulateConditionChanges(const FString& ConditionID, const FString& NewValue};
 
     /**
-     * å°å‡º?è??¸æ?
+     * å°å‡º?ï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Export")
     static bool ExportWinLossData(const FString& FilePath};
 
     /**
-     * å°å…¥?è??¸æ?
+     * å°å…¥?ï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Import")
     static bool ImportWinLossData(const FString& FilePath};
 
     /**
-     * ?²å??è??±å?
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Report")
-    static FString GenerateWinLossReport(};
+    static FString GenerateWinLossReport();
 
     /**
-     * ?²å?æ¢ä»¶è©³ç´°?±å?
+     * ?ï¿½ï¿½?æ¢ä»¶è©³ç´°?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Report")
     static FString GenerateConditionReport(const FString& ConditionID};
 
     /**
-     * ?²å?çµ±è??±å?
+     * ?ï¿½ï¿½?çµ±ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Report")
-    static FString GenerateStatisticsReport(};
+    static FString GenerateStatisticsReport();
 };
 

@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "LayerIntegration/MingFourLayerTypes.h"
 #include "MingStrategicFourLayerTypes.generated.h"
 
-// ?戲層???
+// ?戲層X
 UENUM(BlueprintType)
 enum class EMingLayer : uint8
 {
@@ -16,7 +16,7 @@ enum class EMingLayer : uint8
     Empire, UMETA(DisplayName = "Empire")
 };
 
-// 資?類???
+// 資?類X
 UENUM(BlueprintType)
 enum class EMingStrategicResourceType : uint8
 {
@@ -57,7 +57,7 @@ struct MINGSTRATEGIC_API FMingStrategicFourLayerEvent
     {}
 };
 
-// ?略層???USTRUCT(BlueprintType)
+// ?略層XUSTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStrategicState
 {
     GENERATED_BODY()
@@ -84,7 +84,7 @@ struct MINGSTRATEGIC_API FMingStrategicState
     {}
 };
 
-// ?人層???USTRUCT(BlueprintType)
+// ?人層XUSTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingPersonalState
 {
     GENERATED_BODY()
@@ -111,7 +111,7 @@ struct MINGSTRATEGIC_API FMingPersonalState
     {}
 };
 
-// 建?層???USTRUCT(BlueprintType)
+// 建?層XUSTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingBuildingState
 {
     GENERATED_BODY()
@@ -142,7 +142,7 @@ struct MINGSTRATEGIC_API FMingBuildingState
     {}
 };
 
-// ??層???USTRUCT(BlueprintType)
+// X層XUSTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingTacticalState
 {
     GENERATED_BODY()
@@ -169,7 +169,7 @@ struct MINGSTRATEGIC_API FMingTacticalState
     {}
 };
 
-// ?????????UENUM(BlueprintType)
+// XUENUM(BlueprintType)
 enum class EMingTacticalUnitState : uint8
 {
     Idle, UMETA(DisplayName = "Idle"),
@@ -182,7 +182,7 @@ enum class EMingTacticalUnitState : uint8
     Disabled, UMETA(DisplayName = "Disabled")
 };
 
-// ????結?
+// X結?
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStratTacticalUnit
 {
@@ -210,7 +210,7 @@ struct MINGSTRATEGIC_API FMingStratTacticalUnit
     {}
 };
 
-// ???令結?
+// X令結?
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStratTacticalOrder
 {

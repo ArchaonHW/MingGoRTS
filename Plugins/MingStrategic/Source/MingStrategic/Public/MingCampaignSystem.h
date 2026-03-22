@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -287,7 +287,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     void LoadCampaignData(const FString& JsonString};
 
-    // ?°å½¹æ¨¡å??§å®¹?´å?
+    // ?ï¿½å½¹æ¨¡ï¿½Xï¿½å®¹?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
     void ExpandCampaignContent(};
 
@@ -316,7 +316,7 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<UWorld> WorldContext;
 
-    // ?§å®¹?´å??ƒæ•¸
+    // ?ï¿½å®¹?ï¿½ï¿½Xï¿½æ•¸
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Campaign Enhancement")
     bool bEnableDynamicContent = true;
 
@@ -329,7 +329,7 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Campaign Enhancement")
     float ContentExpansionRate = 1.5f;
 
-    // ?§éƒ¨?½æ•¸
+    // ?ï¿½éƒ¨?ï¿½æ•¸
     void InitializeDefaultCampaigns(};
     void SetupHistoricalCampaigns(};
     void SetupWhatIfCampaigns(};
@@ -338,7 +338,7 @@ protected:
     void UnlockDependentMissions(const FString& CompletedMissionID};
     void ValidateMissionProgression(};
 
-    // ?§å®¹?´å??§éƒ¨?½æ•¸
+    // ?ï¿½å®¹?ï¿½ï¿½Xï¿½éƒ¨?ï¿½æ•¸
     void GenerateNewMissions(};
     void AdjustMissionDifficulty(};
     void CreateProceduralMaps(};

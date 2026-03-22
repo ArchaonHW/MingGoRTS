@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingWinLossCondition.generated.h"
 
 /**
- * ?è?çµæ?é¡å?
+ * ?ï¿½ï¿½?çµï¿½?é¡ï¿½?
  */
 UENUM(BlueprintType)
 enum class EWinLossResult : uint8
@@ -19,7 +19,7 @@ enum class EWinLossResult : uint8
 };
 
 /**
- * ?è?æ¢ä»¶é¡å?
+ * ?ï¿½ï¿½?æ¢ä»¶é¡ï¿½?
  */
 UENUM(BlueprintType)
 enum class EWinLossConditionType : uint8
@@ -34,7 +34,7 @@ enum class EWinLossConditionType : uint8
 };
 
 /**
- * ?è??ªå?ç´? */
+ * ?ï¿½ï¿½Xï¿½ï¿½?ï¿½? */
 UENUM(BlueprintType)
 enum class EWinLossPriority : uint8
 {
@@ -46,7 +46,7 @@ enum class EWinLossPriority : uint8
 };
 
 /**
- * ?è?æ¢ä»¶?€?? */
+ * ?ï¿½ï¿½?æ¢ä»¶?ï¿½X */
 UENUM(BlueprintType)
 enum class EWinLossConditionState : uint8
 {
@@ -58,32 +58,32 @@ enum class EWinLossConditionState : uint8
 };
 
 /**
- * ?è?æ¢ä»¶?ƒæ•¸
+ * ?ï¿½ï¿½?æ¢ä»¶?ï¿½æ•¸
  */
 USTRUCT(BlueprintType)
 struct FWinLossConditionParameter
 {
     GENERATED_BODY()
 
-    // ?ƒæ•¸?ç¨±
+    // ?ï¿½æ•¸?ï¿½ç¨±
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
     FString ParameterName;
 
-    // ?ƒæ•¸??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
+    // ?ï¿½æ•¸X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
     FString ParameterValue;
 
-    // ?ƒæ•¸é¡å?
+    // ?ï¿½æ•¸é¡ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
     FString ParameterType; // "int", "float", "bool", "string"
 
-    // æ¯”è??ä?ç¬?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
+    // æ¯”ï¿½Xï¿½ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
     FString ComparisonOperator; // ">", "<", "==", ">=", "<=", "contains"
 
-    // ?¯å¦å¿…é?
+    // ?ï¿½å¦å¿…ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
     bool bIsRequired;
 
-    // æ¬Šé?
+    // æ¬Šï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
     float Weight;
 
@@ -98,7 +98,7 @@ struct FWinLossConditionParameter
 };
 
 /**
- * ?è?æ¢ä»¶å®šç¾©
+ * ?ï¿½ï¿½?æ¢ä»¶å®šç¾©
  */
 USTRUCT(BlueprintType)
 struct FWinLossCondition
@@ -109,44 +109,44 @@ struct FWinLossCondition
     UPROPERTY(BlueprintReadOnly)
     FString ConditionID;
 
-    // æ¢ä»¶?ç¨±
+    // æ¢ä»¶?ï¿½ç¨±
     UPROPERTY(BlueprintReadOnly)
     FString ConditionName;
 
-    // æ¢ä»¶?è¿°
+    // æ¢ä»¶?ï¿½è¿°
     UPROPERTY(BlueprintReadOnly)
     FString ConditionDescription;
 
-    // æ¢ä»¶é¡å?
+    // æ¢ä»¶é¡ï¿½?
     UPROPERTY(BlueprintReadOnly)
     EWinLossConditionType ConditionType;
 
-    // ?è?çµæ?é¡å?
+    // ?ï¿½ï¿½?çµï¿½?é¡ï¿½?
     UPROPERTY(BlueprintReadOnly)
     EWinLossResult ResultType;
 
-    // ?ªå?ç´?    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½ï¿½?ï¿½?    UPROPERTY(BlueprintReadOnly)
     EWinLossPriority Priority;
 
-    // æ¢ä»¶?ƒæ•¸
+    // æ¢ä»¶?ï¿½æ•¸
     UPROPERTY(BlueprintReadOnly)
     TArray<FWinLossConditionParameter> Parameters;
 
-    // æ¢ä»¶?€??    UPROPERTY(BlueprintReadOnly)
+    // æ¢ä»¶?ï¿½X    UPROPERTY(BlueprintReadOnly)
     EWinLossConditionState State;
 
-    // ?¯å¦?ºé??µæ?ä»?    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½å¦?ï¿½ï¿½Xï¿½ï¿½?ï¿½?    UPROPERTY(BlueprintReadOnly)
     bool bIsCriticalCondition;
 
-    // æª¢æŸ¥?“é? (ç§?
+    // æª¢æŸ¥?ï¿½ï¿½? (ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float CheckInterval;
 
-    // ä¸Šæ¬¡æª¢æŸ¥?‚é?
+    // ä¸Šæ¬¡æª¢æŸ¥?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float LastCheckTime;
 
-    // æ»¿è¶³åº¦å???(0-1)
+    // æ»¿è¶³åº¦ï¿½X(0-1)
     UPROPERTY(BlueprintReadOnly)
     float SatisfactionScore;
 
@@ -154,7 +154,7 @@ struct FWinLossCondition
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> ConditionTags;
 
-    // ?¸é?äº‹ä»¶ID
+    // ?ï¿½ï¿½?äº‹ä»¶ID
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> RelatedEvents;
 
@@ -174,48 +174,48 @@ struct FWinLossCondition
 };
 
 /**
- * ?è?è©•ä¼°çµæ?
+ * ?ï¿½ï¿½?è©•ä¼°çµï¿½?
  */
 USTRUCT(BlueprintType)
 struct FWinLossEvaluationResult
 {
     GENERATED_BODY()
 
-    // è©•ä¼°çµæ?
+    // è©•ä¼°çµï¿½?
     UPROPERTY(BlueprintReadOnly)
     EWinLossResult Result;
 
-    // ç¸½å?
+    // ç¸½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float TotalScore;
 
-    // ?åˆ©?†æ•¸
+    // ?ï¿½åˆ©?ï¿½æ•¸
     UPROPERTY(BlueprintReadOnly)
     float VictoryScore;
 
-    // å¤±æ??†æ•¸
+    // å¤±ï¿½Xï¿½æ•¸
     UPROPERTY(BlueprintReadOnly)
     float DefeatScore;
 
-    // å¹³å??†æ•¸
+    // å¹³ï¿½Xï¿½æ•¸
     UPROPERTY(BlueprintReadOnly)
     float DrawScore;
 
-    // æ»¿è¶³?„æ?ä»?    UPROPERTY(BlueprintReadOnly)
+    // æ»¿è¶³?ï¿½ï¿½?ï¿½?    UPROPERTY(BlueprintReadOnly)
     TArray<FString> SatisfiedConditions;
 
-    // ?ªæ»¿è¶³ç?æ¢ä»¶
+    // ?ï¿½æ»¿è¶³ï¿½?æ¢ä»¶
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> UnsatisfiedConditions;
 
-    // ?œéµæ¢ä»¶?€??    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½éµæ¢ä»¶?ï¿½X    UPROPERTY(BlueprintReadOnly)
     TMap<FString, EWinLossConditionState> CriticalConditionStates;
 
-    // è©•ä¼°?‚é?
+    // è©•ä¼°?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float EvaluationTime;
 
-    // è©³ä¼°è©³æ?
+    // è©³ä¼°è©³ï¿½?
     UPROPERTY(BlueprintReadOnly)
     FString EvaluationDetails;
 
@@ -231,40 +231,40 @@ struct FWinLossEvaluationResult
 };
 
 /**
- * ?è?çµ±è??¸æ?
+ * ?ï¿½ï¿½?çµ±ï¿½Xï¿½ï¿½?
  */
 USTRUCT(BlueprintType)
 struct FWinLossStatistics
 {
     GENERATED_BODY()
 
-    // ç¸½è?ä¼°æ¬¡??    UPROPERTY(BlueprintReadOnly)
+    // ç¸½ï¿½?ä¼°æ¬¡X    UPROPERTY(BlueprintReadOnly)
     int32 TotalEvaluations;
 
-    // ?åˆ©æ¬¡æ•¸
+    // ?ï¿½åˆ©æ¬¡æ•¸
     UPROPERTY(BlueprintReadOnly)
     int32 VictoryCount;
 
-    // å¤±æ?æ¬¡æ•¸
+    // å¤±ï¿½?æ¬¡æ•¸
     UPROPERTY(BlueprintReadOnly)
     int32 DefeatCount;
 
-    // å¹³å?æ¬¡æ•¸
+    // å¹³ï¿½?æ¬¡æ•¸
     UPROPERTY(BlueprintReadOnly)
     int32 DrawCount;
 
-    // ?ç?
+    // ?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float WinRate;
 
-    // å¹³å?è©•ä¼°?‚é?
+    // å¹³ï¿½?è©•ä¼°?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float AverageEvaluationTime;
 
-    // æ¢ä»¶æ»¿è¶³??    UPROPERTY(BlueprintReadOnly)
+    // æ¢ä»¶æ»¿è¶³X    UPROPERTY(BlueprintReadOnly)
     float ConditionSatisfactionRate;
 
-    // ?œéµæ¢ä»¶è§¸ç™¼æ¬¡æ•¸
+    // ?ï¿½éµæ¢ä»¶è§¸ç™¼æ¬¡æ•¸
     UPROPERTY(BlueprintReadOnly)
     int32 CriticalConditionTriggers;
 
@@ -281,8 +281,8 @@ struct FWinLossStatistics
 };
 
 /**
- * æ°‘å??‚æ??è?æ¢ä»¶ç³»çµ±
- * ç®¡ç??€?‰å?è² æ?ä»¶ç?æª¢æ¸¬?è?ä¼°å??šçŸ¥
+ * æ°‘ï¿½Xï¿½ï¿½Xï¿½ï¿½?æ¢ä»¶ç³»çµ±
+ * ç®¡ï¿½Xï¿½?ï¿½ï¿½?è² ï¿½?ä»¶ï¿½?æª¢æ¸¬?ï¿½ï¿½?ä¼°ï¿½Xï¿½çŸ¥
  */
 UCLASS(BlueprintType)
 class MINGSTRATEGIC_API UMingWinLossCondition : public UObject
@@ -290,231 +290,231 @@ class MINGSTRATEGIC_API UMingWinLossCondition : public UObject
     GENERATED_BODY()
 
 public:
-    UMingWinLossCondition(};
+    UMingWinLossCondition();
 
     /**
-     * ?å??–å?è² æ?ä»¶ç³»çµ?     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?è² ï¿½?ä»¶ç³»ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    void Initialize(};
+    void Initialize();
 
     /**
-     * ?œé??è?æ¢ä»¶ç³»çµ±
+     * ?ï¿½ï¿½Xï¿½ï¿½?æ¢ä»¶ç³»çµ±
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    void Shutdown(};
+    void Shutdown();
 
     /**
-     * è¨»å??è?æ¢ä»¶
+     * è¨»ï¿½Xï¿½ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     bool RegisterWinLossCondition(const FWinLossCondition& Condition};
 
     /**
-     * ?–æ?è¨»å??è?æ¢ä»¶
+     * ?ï¿½ï¿½?è¨»ï¿½Xï¿½ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     bool UnregisterWinLossCondition(const FString& ConditionID};
 
     /**
-     * è©•ä¼°?è??€æ³?     */
+     * è©•ä¼°?ï¿½ï¿½Xï¿½ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    FWinLossEvaluationResult EvaluateWinLoss(};
+    FWinLossEvaluationResult EvaluateWinLoss();
 
     /**
-     * æª¢æŸ¥?®å€‹æ?ä»?     */
+     * æª¢æŸ¥?ï¿½å€‹ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     bool CheckCondition(const FString& ConditionID};
 
     /**
-     * ?²å??è?æ¢ä»¶
+     * ?ï¿½ï¿½Xï¿½ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     FWinLossCondition GetWinLossCondition(const FString& ConditionID) const;
 
     /**
-     * ?²å??€?‰å?è² æ?ä»?     */
+     * ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?è² ï¿½?ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     TArray<FWinLossCondition> GetAllWinLossConditions() const;
 
     /**
-     * ?²å??‡å?é¡å??„æ?ä»?     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     TArray<FWinLossCondition> GetConditionsByType(EWinLossConditionType ConditionType) const;
 
     /**
-     * ?²å??œéµæ¢ä»¶
+     * ?ï¿½ï¿½Xï¿½éµæ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     TArray<FWinLossCondition> GetCriticalConditions() const;
 
     /**
-     * ?²å?å·²æ»¿è¶³ç?æ¢ä»¶
+     * ?ï¿½ï¿½?å·²æ»¿è¶³ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     TArray<FWinLossCondition> GetSatisfiedConditions() const;
 
     /**
-     * ?²å??ªæ»¿è¶³ç?æ¢ä»¶
+     * ?ï¿½ï¿½Xï¿½æ»¿è¶³ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     TArray<FWinLossCondition> GetUnsatisfiedConditions() const;
 
     /**
-     * è¨­ç½®?Šæˆ²?€??     */
+     * è¨­ç½®?ï¿½æˆ²?ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     void SetGameState(const TMap<FString, FString>& GameState};
 
     /**
-     * ?²å??Šæˆ²?€??     */
+     * ?ï¿½ï¿½Xï¿½æˆ²?ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     TMap<FString, FString> GetGameState() const;
 
     /**
-     * ?´æ–°?Šæˆ²?€?‹å€?     */
+     * ?ï¿½æ–°?ï¿½æˆ²?ï¿½?ï¿½ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     void UpdateGameStateValue(const FString& Key, const FString& Value};
 
     /**
-     * ?²å??è?çµ±è?
+     * ?ï¿½ï¿½Xï¿½ï¿½?çµ±ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     FWinLossStatistics GetWinLossStatistics() const;
 
     /**
-     * ?ç½®çµ±è??¸æ?
+     * ?ï¿½ç½®çµ±ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    void ResetStatistics(};
+    void ResetStatistics();
 
     /**
-     * å¼·åˆ¶è©•ä¼° (?¨æ–¼æ¸¬è©¦)
+     * å¼·åˆ¶è©•ä¼° (?ï¿½æ–¼æ¸¬è©¦)
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    FWinLossEvaluationResult ForceEvaluation(};
+    FWinLossEvaluationResult ForceEvaluation();
 
     /**
-     * ?²å??¶å??è?çµæ?
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?çµï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     EWinLossResult GetCurrentResult() const;
 
     /**
-     * ?²å??è??†æ•¸
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ•¸
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     float GetWinLossScore() const;
 
     /**
-     * æª¢æŸ¥?¯å¦å·²ç???     */
+     * æª¢æŸ¥?ï¿½å¦å·²ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     bool IsGameOver() const;
 
     /**
-     * ?²å?çµæ??Ÿå?
+     * ?ï¿½ï¿½?çµï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     FString GetGameOverReason() const;
 
 protected:
-    // å·²è¨»?Šç??è?æ¢ä»¶
+    // å·²è¨»?ï¿½ï¿½Xï¿½ï¿½?æ¢ä»¶
     UPROPERTY()
     TArray<FWinLossCondition> RegisteredConditions;
 
-    // æ¢ä»¶ID?°æ?ä»¶ç?? å?
+    // æ¢ä»¶ID?ï¿½ï¿½?ä»¶ï¿½Xï¿½ï¿½?
     UPROPERTY()
     TMap<FString, FWinLossCondition> ConditionMap;
 
-    // ?Šæˆ²?€??    UPROPERTY()
+    // ?ï¿½æˆ²?ï¿½X    UPROPERTY()
     TMap<FString, FString> GameState;
 
-    // ?è?çµ±è?
+    // ?ï¿½ï¿½?çµ±ï¿½?
     UPROPERTY()
     FWinLossStatistics Statistics;
 
-    // ?¶å?è©•ä¼°çµæ?
+    // ?ï¿½ï¿½?è©•ä¼°çµï¿½?
     UPROPERTY()
     FWinLossEvaluationResult CurrentEvaluation;
 
-    // ?¯å¦å·²å?å§‹å?
+    // ?ï¿½å¦å·²ï¿½?å§‹ï¿½?
     bool bIsInitialized;
 
-    // ?å??–æ??‹æ­·?²å?è² æ?ä»?    void InitializeHistoricalWinLossConditions(};
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ­·?ï¿½ï¿½?è² ï¿½?ï¿½?    void InitializeHistoricalWinLossConditions();
 
-    // ?µå»ºè»ä??è?æ¢ä»¶
-    void CreateMilitaryConditions(};
+    // ?ï¿½å»ºè»ï¿½Xï¿½ï¿½?æ¢ä»¶
+    void CreateMilitaryConditions();
 
-    // ?µå»º?¿æ²»?è?æ¢ä»¶
-    void CreatePoliticalConditions(};
+    // ?ï¿½å»º?ï¿½æ²»?ï¿½ï¿½?æ¢ä»¶
+    void CreatePoliticalConditions();
 
-    // ?µå»ºç¶“æ??è?æ¢ä»¶
-    void CreateEconomicConditions(};
+    // ?ï¿½å»ºç¶“ï¿½Xï¿½ï¿½?æ¢ä»¶
+    void CreateEconomicConditions();
 
-    // ?µå»º?˜å??è?æ¢ä»¶
-    void CreateTerritorialConditions(};
+    // ?ï¿½å»º?ï¿½ï¿½Xï¿½ï¿½?æ¢ä»¶
+    void CreateTerritorialConditions();
 
-    // ?µå»º?‚é??è?æ¢ä»¶
-    void CreateTimeBasedConditions(};
+    // ?ï¿½å»º?ï¿½ï¿½Xï¿½ï¿½?æ¢ä»¶
+    void CreateTimeBasedConditions();
 
-    // ?µå»º?†æ•¸?è?æ¢ä»¶
-    void CreateScoreBasedConditions(};
+    // ?ï¿½å»º?ï¿½æ•¸?ï¿½ï¿½?æ¢ä»¶
+    void CreateScoreBasedConditions();
 
-    // æª¢æŸ¥è»ä?æ¢ä»¶
+    // æª¢æŸ¥è»ï¿½?æ¢ä»¶
     bool CheckMilitaryCondition(const FWinLossCondition& Condition};
 
-    // æª¢æŸ¥?¿æ²»æ¢ä»¶
+    // æª¢æŸ¥?ï¿½æ²»æ¢ä»¶
     bool CheckPoliticalCondition(const FWinLossCondition& Condition};
 
-    // æª¢æŸ¥ç¶“æ?æ¢ä»¶
+    // æª¢æŸ¥ç¶“ï¿½?æ¢ä»¶
     bool CheckEconomicCondition(const FWinLossCondition& Condition};
 
-    // æª¢æŸ¥?˜å?æ¢ä»¶
+    // æª¢æŸ¥?ï¿½ï¿½?æ¢ä»¶
     bool CheckTerritorialCondition(const FWinLossCondition& Condition};
 
-    // æª¢æŸ¥?‚é?æ¢ä»¶
+    // æª¢æŸ¥?ï¿½ï¿½?æ¢ä»¶
     bool CheckTimeBasedCondition(const FWinLossCondition& Condition};
 
-    // æª¢æŸ¥?†æ•¸æ¢ä»¶
+    // æª¢æŸ¥?ï¿½æ•¸æ¢ä»¶
     bool CheckScoreBasedCondition(const FWinLossCondition& Condition};
 
-    // æª¢æŸ¥?ªå?ç¾©æ?ä»?    bool CheckCustomCondition(const FWinLossCondition& Condition};
+    // æª¢æŸ¥?ï¿½ï¿½?ç¾©ï¿½?ï¿½?    bool CheckCustomCondition(const FWinLossCondition& Condition};
 
-    // è©•ä¼°æ¢ä»¶æ»¿è¶³åº?    float EvaluateConditionSatisfaction(const FWinLossCondition& Condition};
+    // è©•ä¼°æ¢ä»¶æ»¿è¶³ï¿½?    float EvaluateConditionSatisfaction(const FWinLossCondition& Condition};
 
-    // è¨ˆç??è??†æ•¸
+    // è¨ˆï¿½Xï¿½ï¿½Xï¿½æ•¸
     void CalculateWinLossScores(FWinLossEvaluationResult& Result};
 
-    // ç¢ºå??€çµ‚ç???    EWinLossResult DetermineFinalResult(const FWinLossEvaluationResult& Result};
+    // ç¢ºï¿½Xï¿½çµ‚ï¿½X    EWinLossResult DetermineFinalResult(const FWinLossEvaluationResult& Result};
 
-    // ?´æ–°çµ±è??¸æ?
+    // ?ï¿½æ–°çµ±ï¿½Xï¿½ï¿½?
     void UpdateStatistics(const FWinLossEvaluationResult& Result};
 
-    // ?šçŸ¥?è?è®Šå?
+    // ?ï¿½çŸ¥?ï¿½ï¿½?è®Šï¿½?
     void NotifyWinLossChange(EWinLossResult OldResult, EWinLossResult NewResult};
 
-    // ?²å??Šæˆ²?€?‹å€?    FString GetGameStateValue(const FString& Key) const;
+    // ?ï¿½ï¿½Xï¿½æˆ²?ï¿½?ï¿½ï¿½?    FString GetGameStateValue(const FString& Key) const;
 
-    // æ¯”è??¸å€?    bool CompareValues(const FString& Value1, const FString& Operator, const FString& Value2) const;
+    // æ¯”ï¿½Xï¿½ï¿½?    bool CompareValues(const FString& Value1, const FString& Operator, const FString& Value2) const;
 
-    // é©—è?æ¢ä»¶?ç½®
+    // é©—ï¿½?æ¢ä»¶?ï¿½ç½®
     bool ValidateConditionConfig(const FWinLossCondition& Condition) const;
 
-    // è¨˜é??è??¥è?
+    // è¨˜ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     void LogWinLossEvent(const FString& Message};
 
-    // ?Ÿæ??è??±å?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     FString GenerateWinLossReport(const FWinLossEvaluationResult& Result) const;
 
-    // è§??æ¢ä»¶?ƒæ•¸
+    // ï¿½Xæ¢ä»¶?ï¿½æ•¸
     TArray<FString> ParseConditionParameters(const FString& ParameterString) const;
 
-    // è¨­ç½®æ¢ä»¶?€??    void SetConditionState(const FString& ConditionID, EWinLossConditionState NewState};
+    // è¨­ç½®æ¢ä»¶?ï¿½X    void SetConditionState(const FString& ConditionID, EWinLossConditionState NewState};
 
-    // ?²å?æ¢ä»¶æ»¿è¶³åº?    float GetConditionSatisfaction(const FString& ConditionID) const;
+    // ?ï¿½ï¿½?æ¢ä»¶æ»¿è¶³ï¿½?    float GetConditionSatisfaction(const FString& ConditionID) const;
 
-    // æª¢æŸ¥?œéµæ¢ä»¶
-    bool CheckCriticalConditions(};
+    // æª¢æŸ¥?ï¿½éµæ¢ä»¶
+    bool CheckCriticalConditions();
 
-    // ?•ç??è?çµæ?
+    // ?ï¿½ï¿½Xï¿½ï¿½?çµï¿½?
     void HandleGameOver(EWinLossResult Result, const FString& Reason};
 };
 

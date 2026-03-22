@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -6,7 +6,7 @@
 #include "MingDecisionBlueprintLibrary.generated.h"
 
 /**
- * æ±ºç??å??½æ•¸åº? * ?ä??å??¯èª¿?¨ç?æ±ºç?ç³»çµ±?Ÿèƒ½
+ * æ±ºï¿½Xï¿½ï¿½Xï¿½æ•¸ï¿½? * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½?æ±ºï¿½?ç³»çµ±?ï¿½èƒ½
  */
 UCLASS()
 class MINGSTRATEGIC_API UMingDecisionBlueprintLibrary : public UBlueprintFunctionLibrary
@@ -15,154 +15,154 @@ class MINGSTRATEGIC_API UMingDecisionBlueprintLibrary : public UBlueprintFunctio
 
 public:
     /**
-     * ?²å?æ±ºç?å¾Œæ?è¨ˆç???     */
+     * ?ï¿½ï¿½?æ±ºï¿½?å¾Œï¿½?è¨ˆï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     static UMingDecisionConsequenceCalculator* GetDecisionConsequenceCalculator(};
 
     /**
-     * ?å??–æ±ºç­–å??œè?ç®—å™¨
+     * ?ï¿½ï¿½Xï¿½æ±ºç­–ï¿½Xï¿½ï¿½?ç®—å™¨
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static void InitializeDecisionConsequenceCalculator(};
 
     /**
-     * è¨»å?æ±ºç?å¾Œæ?
+     * è¨»ï¿½?æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static bool RegisterDecisionConsequence(const FDecisionConsequence& Consequence};
 
     /**
-     * ?–æ?è¨»å?æ±ºç?å¾Œæ?
+     * ?ï¿½ï¿½?è¨»ï¿½?æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static bool UnregisterDecisionConsequence(const FString& ConsequenceID};
 
     /**
-     * è¨ˆç?æ±ºç?å¾Œæ?
+     * è¨ˆï¿½?æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static FConsequenceCalculationResult CalculateDecisionConsequences(const FDecisionContext& Context};
 
     /**
-     * ?²å?æ±ºç?å¾Œæ?
+     * ?ï¿½ï¿½?æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     static FDecisionConsequence GetDecisionConsequence(const FString& ConsequenceID};
 
     /**
-     * ?²å??€?‰æ±ºç­–å???     */
+     * ?ï¿½ï¿½Xï¿½?ï¿½æ±ºç­–ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     static TArray<FDecisionConsequence> GetAllDecisionConsequences(};
 
     /**
-     * ?²å??‡å?é¡å??„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static TArray<FDecisionConsequence> GetConsequencesByType(EDecisionConsequenceType ConsequenceType};
 
     /**
-     * ?²å??‡å?å½±éŸ¿ç¯„å??„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?å½±éŸ¿ç¯„ï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static TArray<FDecisionConsequence> GetConsequencesByScope(EConsequenceImpactScope ImpactScope};
 
     /**
-     * ?²å??‡å??´é?ç¨‹åº¦?„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?ç¨‹åº¦?ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static TArray<FDecisionConsequence> GetConsequencesBySeverity(EConsequenceSeverity Severity};
 
     /**
-     * ?²å??‡å?å½±éŸ¿é¡å??„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?å½±éŸ¿é¡ï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static TArray<FDecisionConsequence> GetConsequencesByImpactType(EConsequenceImpactType ImpactType};
 
     /**
-     * ?²å??¸é?æ±ºç??„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?æ±ºï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static TArray<FDecisionConsequence> GetConsequencesForDecision(const FString& DecisionID};
 
     /**
-     * ?²å??¸é?äººç‰©?„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?äººç‰©?ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static TArray<FDecisionConsequence> GetConsequencesForCharacter(const FString& CharacterID};
 
     /**
-     * ?²å??¸é?äº‹ä»¶?„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?äº‹ä»¶?ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static TArray<FDecisionConsequence> GetConsequencesForEvent(const FString& EventID};
 
     /**
-     * è§¸ç™¼å¾Œæ?
+     * è§¸ç™¼å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static bool TriggerConsequence(const FString& ConsequenceID, const FDecisionContext& Context};
 
     /**
-     * ?‰ç”¨å¾Œæ??ˆæ?
+     * ?ï¿½ç”¨å¾Œï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static bool ApplyConsequenceEffects(const FString& ConsequenceID, const FDecisionContext& Context};
 
     /**
-     * ?†è?å¾Œæ?
+     * ?ï¿½ï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static bool ReverseConsequence(const FString& ConsequenceID, const FDecisionContext& Context};
 
     /**
-     * ?²å?å¾Œæ?çµ±è?
+     * ?ï¿½ï¿½?å¾Œï¿½?çµ±ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     static TMap<FString, int32> GetConsequenceStatistics(};
 
     /**
-     * ?²å?å¾Œæ?å½±éŸ¿?†æ?
+     * ?ï¿½ï¿½?å¾Œï¿½?å½±éŸ¿?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static TMap<FString, float> GetConsequenceImpactAnalysis(const FString& DecisionID};
 
     /**
-     * ?æ¸¬æ±ºç?å¾Œæ?
+     * ?ï¿½æ¸¬æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static TArray<FDecisionConsequence> PredictDecisionConsequences(const FDecisionContext& Context, int32 PredictionCount};
 
     /**
-     * æ¨¡æ“¬æ±ºç?å¾Œæ?
+     * æ¨¡æ“¬æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     static TArray<FConsequenceCalculationResult> SimulateDecisionConsequences(const FDecisionContext& Context, int32 SimulationCount};
 
     /**
-     * ?²å?å¾Œæ?é¡å??ç¨±
+     * ?ï¿½ï¿½?å¾Œï¿½?é¡ï¿½Xï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     static FString GetConsequenceTypeName(EDecisionConsequenceType ConsequenceType};
 
     /**
-     * ?²å?å½±éŸ¿ç¯„å??ç¨±
+     * ?ï¿½ï¿½?å½±éŸ¿ç¯„ï¿½Xï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     static FString GetImpactScopeName(EConsequenceImpactScope ImpactScope};
 
     /**
-     * ?²å??´é?ç¨‹åº¦?ç¨±
+     * ?ï¿½ï¿½Xï¿½ï¿½?ç¨‹åº¦?ï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     static FString GetSeverityName(EConsequenceSeverity Severity};
 
     /**
-     * ?²å??ç??‚é??ç¨±
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     static FString GetDurationName(EConsequenceDuration Duration};
 
     /**
-     * ?²å?å½±éŸ¿é¡å??ç¨±
+     * ?ï¿½ï¿½?å½±éŸ¿é¡ï¿½Xï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     static FString GetImpactTypeName(EConsequenceImpactType ImpactType};
 
     /**
-     * ?µå»ºæ±ºç?ä¸Šä???     */
+     * ?ï¿½å»ºæ±ºï¿½?ä¸Šï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionContext CreateDecisionContext(
         const FString& DecisionID,
@@ -176,37 +176,37 @@ public:
     };
 
     /**
-     * è¨­ç½®?Šæˆ²?€??     */
+     * è¨­ç½®?ï¿½æˆ²?ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionContext SetGameState(const FDecisionContext& Context, const TMap<FString, FString>& GameState};
 
     /**
-     * è¨­ç½®äººç‰©?€??     */
+     * è¨­ç½®äººç‰©?ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionContext SetCharacterStates(const FDecisionContext& Context, const TMap<FString, FString>& CharacterStates};
 
     /**
-     * è¨­ç½®äº‹ä»¶?€??     */
+     * è¨­ç½®äº‹ä»¶?ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionContext SetEventStates(const FDecisionContext& Context, const TMap<FString, FString>& EventStates};
 
     /**
-     * è¨­ç½®è³‡æ??€??     */
+     * è¨­ç½®è³‡ï¿½Xï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionContext SetResourceStates(const FDecisionContext& Context, const TMap<FString, int32>& ResourceStates};
 
     /**
-     * è¨­ç½®å»ºç??€??     */
+     * è¨­ç½®å»ºï¿½Xï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionContext SetBuildingStates(const FDecisionContext& Context, const TMap<FString, FString>& BuildingStates};
 
     /**
-     * è¨­ç½®?®ä??€??     */
+     * è¨­ç½®?ï¿½ï¿½Xï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionContext SetUnitStates(const FDecisionContext& Context, const TMap<FString, FString>& UnitStates};
 
     /**
-     * ?µå»ºæ±ºç?å¾Œæ?
+     * ?ï¿½å»ºæ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionConsequence CreateDecisionConsequence(
@@ -225,13 +225,13 @@ public:
     };
 
     /**
-     * æ·»å?å¾Œæ??ˆæ?
+     * æ·»ï¿½?å¾Œï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionConsequence AddConsequenceEffect(const FDecisionConsequence& Consequence, const FString& Effect};
 
     /**
-     * æ·»å?å¾Œæ??ƒæ•¸
+     * æ·»ï¿½?å¾Œï¿½Xï¿½æ•¸
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionConsequence AddConsequenceParameter(
@@ -245,245 +245,245 @@ public:
     };
 
     /**
-     * æ·»å?è§¸ç™¼æ¢ä»¶
+     * æ·»ï¿½?è§¸ç™¼æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionConsequence AddTriggerCondition(const FDecisionConsequence& Consequence, const FString& Condition};
 
     /**
-     * æ·»å??¸é?äººç‰©
+     * æ·»ï¿½Xï¿½ï¿½?äººç‰©
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionConsequence AddRelatedCharacter(const FDecisionConsequence& Consequence, const FString& CharacterID};
 
     /**
-     * æ·»å??¸é?äº‹ä»¶
+     * æ·»ï¿½Xï¿½ï¿½?äº‹ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionConsequence AddRelatedEvent(const FDecisionConsequence& Consequence, const FString& EventID};
 
     /**
-     * æ·»å??†è?æ¢ä»¶
+     * æ·»ï¿½Xï¿½ï¿½?æ¢ä»¶
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionConsequence AddReversalCondition(const FDecisionConsequence& Consequence, const FString& Condition};
 
     /**
-     * æ·»å?å¾Œæ?æ¨™ç±¤
+     * æ·»ï¿½?å¾Œï¿½?æ¨™ç±¤
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Creation")
     static FDecisionConsequence AddConsequenceTag(const FDecisionConsequence& Consequence, const FString& Tag};
 
     /**
-     * ?¹é?è¨ˆç?æ±ºç?å¾Œæ?
+     * ?ï¿½ï¿½?è¨ˆï¿½?æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Batch")
     static TArray<FConsequenceCalculationResult> BatchCalculateConsequences(const TArray<FDecisionContext>& Contexts};
 
     /**
-     * ?¹é?è§¸ç™¼å¾Œæ?
+     * ?ï¿½ï¿½?è§¸ç™¼å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Batch")
     static TArray<bool> BatchTriggerConsequences(const TArray<FString>& ConsequenceIDs, const FDecisionContext& Context};
 
     /**
-     * ?²å?ç³»çµ±?€??     */
+     * ?ï¿½ï¿½?ç³»çµ±?ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence|System")
     static bool IsDecisionConsequenceCalculatorInitialized(};
 
     /**
-     * ?²å?ç³»çµ±?ˆæœ¬
+     * ?ï¿½ï¿½?ç³»çµ±?ï¿½æœ¬
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence|System")
     static FString GetDecisionConsequenceCalculatorVersion(};
 
     /**
-     * ?²å?è¨»å?å¾Œæ??¸é?
+     * ?ï¿½ï¿½?è¨»ï¿½?å¾Œï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence|System")
     static int32 GetRegisteredConsequenceCount(};
 
     /**
-     * ?²å?å·²è§¸?¼å??œæ•¸??     */
+     * ?ï¿½ï¿½?å·²è§¸?ï¿½ï¿½Xï¿½æ•¸X     */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence|System")
     static int32 GetTriggeredConsequenceCount(};
 
     /**
-     * ?²å?å¾Œæ??è¿°
+     * ?ï¿½ï¿½?å¾Œï¿½Xï¿½è¿°
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence|Info")
     static FString GetConsequenceDescription(const FString& ConsequenceID};
 
     /**
-     * æª¢æŸ¥å¾Œæ??¯å¦å·²è§¸??     */
+     * æª¢æŸ¥å¾Œï¿½Xï¿½å¦å·²è§¸X     */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence|Info")
     static bool IsConsequenceTriggered(const FString& ConsequenceID};
 
     /**
-     * æª¢æŸ¥å¾Œæ??¯å¦?¯é€†è?
+     * æª¢æŸ¥å¾Œï¿½Xï¿½å¦?ï¿½é€†ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence|Info")
     static bool IsConsequenceReversible(const FString& ConsequenceID};
 
     /**
-     * ?²å?å¾Œæ?æ¦‚ç?
+     * ?ï¿½ï¿½?å¾Œï¿½?æ¦‚ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence|Info")
     static float GetConsequenceProbability(const FString& ConsequenceID};
 
     /**
-     * ?²å?å¾Œæ?å»¶è?
+     * ?ï¿½ï¿½?å¾Œï¿½?å»¶ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence|Info")
     static float GetConsequenceDelay(const FString& ConsequenceID};
 
     /**
-     * ?²å?å¾Œæ?å½±éŸ¿?†æ•¸
+     * ?ï¿½ï¿½?å¾Œï¿½?å½±éŸ¿?ï¿½æ•¸
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Analysis")
     static float GetConsequenceImpactScore(const FString& ConsequenceID, const FDecisionContext& Context};
 
     /**
-     * ?²å?æ±ºç?ç¸½é?å½±éŸ¿
+     * ?ï¿½ï¿½?æ±ºï¿½?ç¸½ï¿½?å½±éŸ¿
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Analysis")
     static float GetDecisionOverallImpact(const FString& DecisionID};
 
     /**
-     * ?²å?æ±ºç?æ­?¢å½±éŸ¿
+     * ?ï¿½ï¿½?æ±ºï¿½?ï¿½?ï¿½ï¿½å½±éŸ¿
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Analysis")
     static float GetDecisionPositiveImpact(const FString& DecisionID};
 
     /**
-     * ?²å?æ±ºç?è² é¢å½±éŸ¿
+     * ?ï¿½ï¿½?æ±ºï¿½?è² é¢å½±éŸ¿
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Analysis")
     static float GetDecisionNegativeImpact(const FString& DecisionID};
 
     /**
-     * ?²å?æ±ºç?é¢¨éšªè©•ä¼°
+     * ?ï¿½ï¿½?æ±ºï¿½?é¢¨éšªè©•ä¼°
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Analysis")
     static float GetDecisionRiskAssessment(const FString& DecisionID};
 
     /**
-     * ?²å?æ±ºç?å»ºè­°
+     * ?ï¿½ï¿½?æ±ºï¿½?å»ºè­°
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|AI")
     static TArray<FString> GetDecisionRecommendations(const FString& DecisionID};
 
     /**
-     * ?²å?æ±ºç?è­¦å?
+     * ?ï¿½ï¿½?æ±ºï¿½?è­¦ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|AI")
     static TArray<FString> GetDecisionWarnings(const FString& DecisionID};
 
     /**
-     * ?²å?æ±ºç?æ©Ÿæ?
+     * ?ï¿½ï¿½?æ±ºï¿½?æ©Ÿï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|AI")
     static TArray<FString> GetDecisionOpportunities(const FString& DecisionID};
 
     /**
-     * ?²å?æ±ºç??¿ä»£?¹æ?
+     * ?ï¿½ï¿½?æ±ºï¿½Xï¿½ä»£?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|AI")
     static TArray<FString> GetDecisionAlternatives(const FString& DecisionID};
 
     /**
-     * ?²å?æ±ºç?æ­·å²
+     * ?ï¿½ï¿½?æ±ºï¿½?æ­·å²
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|History")
     static TArray<FConsequenceCalculationResult> GetDecisionHistory(const FString& DecisionID};
 
     /**
-     * ?²å?æ±ºç??‚é?ç·?     */
+     * ?ï¿½ï¿½?æ±ºï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|History")
     static TArray<float> GetDecisionTimeline(const FString& DecisionID};
 
-    // ?²å?æ±ºç?å½±éŸ¿ç¶²çµ¡ - æ³¨æ?ï¼šTMap<TArray> ä¸æ”¯??Blueprint
+    // ?ï¿½ï¿½?æ±ºï¿½?å½±éŸ¿ç¶²çµ¡ - æ³¨ï¿½?ï¼šTMap<TArray> ä¸æ”¯XBlueprint
     static TMap<FString, TArray<FString>> GetDecisionImpactNetwork(const FString& DecisionID};
 
     /**
-     * ?²å?æ±ºç?ä¾è³´?œä?
+     * ?ï¿½ï¿½?æ±ºï¿½?ä¾è³´?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Network")
     static TArray<FString> GetDecisionDependencies(const FString& DecisionID};
 
     /**
-     * ?²å?æ±ºç?å¾Œæ???     */
+     * ?ï¿½ï¿½?æ±ºï¿½?å¾Œï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Chain")
     static TArray<FDecisionConsequence> GetConsequenceChain(const FString& ConsequenceID};
 
     /**
-     * ?²å?æ±ºç?å¾Œæ??†æ”¯
+     * ?ï¿½ï¿½?æ±ºï¿½?å¾Œï¿½Xï¿½æ”¯
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Chain")
     static TArray<FDecisionConsequence> GetConsequenceBranches(const FString& ConsequenceID};
 
     /**
-     * å°å‡ºæ±ºç??¸æ?
+     * å°å‡ºæ±ºï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Export")
     static bool ExportDecisionData(const FString& FilePath};
 
     /**
-     * å°å…¥æ±ºç??¸æ?
+     * å°å…¥æ±ºï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Import")
     static bool ImportDecisionData(const FString& FilePath};
 
     /**
-     * ?²å?æ±ºç??±å?
+     * ?ï¿½ï¿½?æ±ºï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Report")
     static FString GenerateDecisionReport(const FString& DecisionID};
 
     /**
-     * ?²å?å¾Œæ??±å?
+     * ?ï¿½ï¿½?å¾Œï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Report")
     static FString GenerateConsequenceReport(const FString& ConsequenceID};
 
     /**
-     * ?²å?çµ±è??±å?
+     * ?ï¿½ï¿½?çµ±ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Report")
     static FString GenerateStatisticsReport(};
 
     /**
-     * ?²å?å½±éŸ¿?†æ??±å?
+     * ?ï¿½ï¿½?å½±éŸ¿?ï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Report")
     static FString GenerateImpactAnalysisReport(const FString& DecisionID};
 
     /**
-     * ?²å?é¢¨éšªè©•ä¼°?±å?
+     * ?ï¿½ï¿½?é¢¨éšªè©•ä¼°?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Report")
     static FString GenerateRiskAssessmentReport(const FString& DecisionID};
 
     /**
-     * ?ç½®æ±ºç?ç³»çµ±
+     * ?ï¿½ç½®æ±ºï¿½?ç³»çµ±
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|System")
     static void ResetDecisionSystem(};
 
     /**
-     * æ¸…é™¤æ±ºç?æ­·å²
+     * æ¸…é™¤æ±ºï¿½?æ­·å²
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|System")
     static void ClearDecisionHistory(};
 
     /**
-     * ?™ä»½æ±ºç??¸æ?
+     * ?ï¿½ä»½æ±ºï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|System")
     static bool BackupDecisionData(const FString& BackupPath};
 
     /**
-     * ?¢å¾©æ±ºç??¸æ?
+     * ?ï¿½å¾©æ±ºï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|System")
     static bool RestoreDecisionData(const FString& BackupPath};

@@ -181,27 +181,27 @@ class MINGSTRATEGIC_API UMingStrategicLayerController : public UObject
     GENERATED_BODY()
 
 public:
-    UMingStrategicLayerController(};
+    UMingStrategicLayerController();
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Strategic Layer")
-    void InitializeStrategicLayer(};
+    void InitializeStrategicLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Strategic Layer")
-    void ShutdownStrategicLayer(};
+    void ShutdownStrategicLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Strategic Layer")
-    void ActivateStrategicLayer(};
+    void ActivateStrategicLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Strategic Layer")
-    void DeactivateStrategicLayer(};
+    void DeactivateStrategicLayer();
 
     // Map Management
     UFUNCTION(BlueprintCallable, Category = "Map Management")
     void LoadStrategicMap(const FString& MapID};
 
     UFUNCTION(BlueprintCallable, Category = "Map Management")
-    void ClearStrategicMap(};
+    void ClearStrategicMap();
 
     UFUNCTION(BlueprintCallable, Category = "Map Management")
     void AddRegion(const FMingMapRegion& Region};
@@ -324,7 +324,7 @@ public:
     void SelectFaction(const FString& FactionID};
 
     UFUNCTION(BlueprintCallable, Category = "UI Interface")
-    void ClearSelection(};
+    void ClearSelection();
 
     UFUNCTION(BlueprintPure, Category = "UI Interface")
     FString GetSelectedRegionID() const { return SelectedRegionID; }
@@ -371,13 +371,13 @@ protected:
     FString CurrentMapID;
 
     // Internal functions
-    void InitializeDefaultFactions(};
-    void InitializeDefaultRegions(};
-    void SetupDiplomaticDefaults(};
+    void InitializeDefaultFactions();
+    void InitializeDefaultRegions();
+    void SetupDiplomaticDefaults();
     
     void UpdateRegionControl(const FString& RegionID, const FString& NewFactionID};
-    void CheckVictoryConditions(};
-    void ProcessEconomicTick(};
+    void CheckVictoryConditions();
+    void ProcessEconomicTick();
     
     FString GenerateRelationKey(const FString& FactionA, const FString& FactionB) const;
     void NotifyRegionChanged(const FString& RegionID};

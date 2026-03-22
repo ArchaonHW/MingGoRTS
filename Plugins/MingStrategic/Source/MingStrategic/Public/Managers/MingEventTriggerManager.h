@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,8 @@
 #include "MingEventTriggerManager.generated.h"
 
 /**
- * è§¸ç™¼?¨ç®¡?†å™¨
- * ç®¡ç??€?‰ä?ä»¶è§¸?¼å™¨?„è¨»?Šã€æ›´?°å?è§¸ç™¼
+ * è§¸ç™¼?ï¿½ç®¡?ï¿½å™¨
+ * ç®¡ï¿½Xï¿½?ï¿½ï¿½?ä»¶è§¸?ï¿½å™¨?ï¿½è¨»?ï¿½ã€æ›´?ï¿½ï¿½?è§¸ç™¼
  */
 UCLASS()
 class MINGSTRATEGIC_API UMingEventTriggerManager : public UObject
@@ -15,85 +15,85 @@ class MINGSTRATEGIC_API UMingEventTriggerManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingEventTriggerManager(};
+    UMingEventTriggerManager();
 
-    // ?å???    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
-    void Initialize(};
+    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
+    void Initialize();
 
-    // ?œé?
+    // ?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
-    void Shutdown(};
+    void Shutdown();
 
-    // æ¯å??´æ–°
+    // æ¯ï¿½Xï¿½æ–°
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void Tick(float DeltaTime};
 
-    // è¨»å?è§¸ç™¼??    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
+    // è¨»ï¿½?è§¸ç™¼X    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void RegisterTrigger(UMingEventTrigger* Trigger};
 
-    // è¨»éŠ·è§¸ç™¼??    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
+    // è¨»éŠ·è§¸ç™¼X    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void UnregisterTrigger(const FString& TriggerId};
 
-    // ?‹å?è§¸ç™¼
+    // ?ï¿½ï¿½?è§¸ç™¼
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     bool ManualTrigger(const FString& TriggerId};
 
-    // ?²å?è§¸ç™¼??    UFUNCTION(BlueprintPure, Category = "Trigger Manager")
+    // ?ï¿½ï¿½?è§¸ç™¼X    UFUNCTION(BlueprintPure, Category = "Trigger Manager")
     UMingEventTrigger* GetTrigger(const FString& TriggerId) const;
 
-    // ?²å??€?‰è§¸?¼å™¨
+    // ?ï¿½ï¿½Xï¿½?ï¿½è§¸?ï¿½å™¨
     UFUNCTION(BlueprintPure, Category = "Trigger Manager")
     TArray<UMingEventTrigger*> GetAllTriggers() const;
 
-    // ?²å??¹å?é¡å??„è§¸?¼å™¨
+    // ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½è§¸?ï¿½å™¨
     UFUNCTION(BlueprintPure, Category = "Trigger Manager")
     TArray<UMingEventTrigger*> GetTriggersByType(EEventTriggerType Type) const;
 
-    // ?Ÿç”¨/ç¦ç”¨è§¸ç™¼??    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
+    // ?ï¿½ç”¨/ç¦ç”¨è§¸ç™¼X    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void SetTriggerEnabled(const FString& TriggerId, bool bEnabled};
 
-    // ?ç½®è§¸ç™¼??    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
+    // ?ï¿½ç½®è§¸ç™¼X    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void ResetTrigger(const FString& TriggerId};
 
-    // ?ç½®?€?‰è§¸?¼å™¨
+    // ?ï¿½ç½®?ï¿½?ï¿½è§¸?ï¿½å™¨
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
-    void ResetAllTriggers(};
+    void ResetAllTriggers();
 
-    // ?«å?/?¢å¾©?€?‰è§¸?¼å™¨
+    // ?ï¿½ï¿½?/?ï¿½å¾©?ï¿½?ï¿½è§¸?ï¿½å™¨
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void SetAllTriggersPaused(bool bPaused};
 
-    // ?µå»ºè§¸ç™¼??(å·¥å??¹æ?)
+    // ?ï¿½å»ºè§¸ç™¼X(å·¥ï¿½Xï¿½ï¿½?)
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager", meta = (DeterminesOutputType = "TriggerClass"))
     UMingEventTrigger* CreateTrigger(TSubclassOf<UMingEventTrigger> TriggerClass, const FString& TriggerId, const FString& EventId};
 
-    // ?¨å?äº‹ä»¶å§”è?
+    // ?ï¿½ï¿½?äº‹ä»¶å§”ï¿½?
     UPROPERTY(BlueprintAssignable, Category = "Trigger Manager|Events")
     FOnEventTriggered OnAnyTriggerFired;
 
-    // ?œæ??²å?å¯¦ä?
-    static UMingEventTriggerManager* Get(};
+    // ?ï¿½ï¿½Xï¿½ï¿½?å¯¦ï¿½?
+    static UMingEventTriggerManager* Get();
 
 private:
-    // è¨»å??„è§¸?¼å™¨?—è¡¨
+    // è¨»ï¿½Xï¿½è§¸?ï¿½å™¨?ï¿½è¡¨
     UPROPERTY()
     TArray<TObjectPtr<UMingEventTrigger>> Triggers;
 
-    // è§¸ç™¼?¨ID?°ç´¢å¼•ç?? å?
+    // è§¸ç™¼?ï¿½ID?ï¿½ç´¢å¼•ï¿½Xï¿½ï¿½?
     TMap<FString, int32> TriggerIdMap;
 
-    // ?¯å¦å·²å?å§‹å?
+    // ?ï¿½å¦å·²ï¿½?å§‹ï¿½?
     bool bInitialized;
 
-    // ?¯å¦?«å?
+    // ?ï¿½å¦?ï¿½ï¿½?
     bool bPaused;
 
-    // ?®ä?å¯¦ä?
+    // ?ï¿½ï¿½?å¯¦ï¿½?
     static UMingEventTriggerManager* Instance;
 
-    // ?§éƒ¨?¹æ?
+    // ?ï¿½éƒ¨?ï¿½ï¿½?
     void ProcessTriggerTick(float DeltaTime};
     void OnTriggerFired(const FString& EventId};
-    void CleanupInvalidTriggers(};
+    void CleanupInvalidTriggers();
 };
 

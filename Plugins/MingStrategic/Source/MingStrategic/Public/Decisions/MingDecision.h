@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "MingDecisionOption.h"
 #include "MingDecision.generated.h"
 
 /**
- * æ±ºç?è§¸ç™¼é¡å?
+ * æ±ºï¿½?è§¸ç™¼é¡ï¿½?
  */
 UENUM(BlueprintType)
 enum class EDecisionTriggerType : uint8
@@ -18,7 +18,7 @@ enum class EDecisionTriggerType : uint8
 };
 
 /**
- * æ±ºç??ªå?ç´? */
+ * æ±ºï¿½Xï¿½ï¿½?ï¿½? */
 UENUM(BlueprintType)
 enum class EDecisionPriority : uint8
 {
@@ -29,66 +29,66 @@ enum class EDecisionPriority : uint8
 };
 
 /**
- * æ±ºç??¸æ?çµæ?
- * å®šç¾©ä¸€?‹å??´ç?æ­·å²æ±ºç?
+ * æ±ºï¿½Xï¿½ï¿½?çµï¿½?
+ * å®šç¾©ä¸€?ï¿½ï¿½Xï¿½ï¿½?æ­·å²æ±ºï¿½?
  */
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingDecision
 {
     GENERATED_BODY()
     
-    // æ±ºç?ID (?¯ä?æ¨™è?)
+    // æ±ºï¿½?ID (?ï¿½ï¿½?æ¨™ï¿½?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     FString DecisionId;
     
-    // æ±ºç?æ¨™é?
+    // æ±ºï¿½?æ¨™ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     FText DecisionTitle;
     
-    // æ±ºç??Œæ™¯?è¿°
+    // æ±ºï¿½Xï¿½æ™¯?ï¿½è¿°
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     FText BackgroundDescription;
     
-    // æ±ºç??´æ™¯?–ç?
+    // æ±ºï¿½Xï¿½æ™¯?ï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     UTexture2D* BackgroundImage;
     
-    // æ±ºç??¸é??—è¡¨
+    // æ±ºï¿½Xï¿½ï¿½Xï¿½è¡¨
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     TArray<FMingDecisionOption> Options;
     
-    // è§¸ç™¼é¡å?
+    // è§¸ç™¼é¡ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     EDecisionTriggerType TriggerType;
     
-    // ?ªå?ç´?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
+    // ?ï¿½ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     EDecisionPriority Priority;
     
-    // è§¸ç™¼æ¢ä»¶ (JSON?¼å??–è‡ªå®šç¾©å­—ç¬¦ä¸?
+    // è§¸ç™¼æ¢ä»¶ (JSON?ï¿½ï¿½Xï¿½è‡ªå®šç¾©å­—ç¬¦ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     FString TriggerCondition;
     
-    // ?æ??‚é? (?Šæˆ²?§æ??“ï?-1è¡¨ç¤ºä¸é???
+    // ?ï¿½ï¿½Xï¿½ï¿½? (?ï¿½æˆ²?ï¿½ï¿½Xï¿½ï¿½?-1è¡¨ç¤ºä¸ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     float ExpirationTime;
     
-    // ?¯å¦?¯ä»¥å»¶å??•ç?
+    // ?ï¿½å¦?ï¿½ä»¥å»¶ï¿½Xï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     bool bCanPostpone;
     
-    // æ±ºç?é¡åˆ¥ (?¨æ–¼?†é?é¡¯ç¤º)
+    // æ±ºï¿½?é¡åˆ¥ (?ï¿½æ–¼?ï¿½ï¿½?é¡¯ç¤º)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     FString DecisionCategory;
     
-    // æ­·å²?‚æ? (å¦‚ï?1924-1927 ?—ä??‚æ?)
+    // æ­·å²?ï¿½ï¿½? (å¦‚ï¿½?1924-1927 ?ï¿½ï¿½Xï¿½ï¿½?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     FString HistoricalPeriod;
     
-    // ?¸é?è§’è‰²ID?—è¡¨
+    // ?ï¿½ï¿½?è§’è‰²ID?ï¿½è¡¨
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     TArray<FString> RelatedCharacters;
     
-    // ?¸é??°é?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     FString RelatedLocation;
     
@@ -100,10 +100,10 @@ struct MINGSTRATEGIC_API FMingDecision
         , bCanPostpone(true)
     {}
     
-    // æª¢æŸ¥æ±ºç??¯å¦?æ?
+    // æª¢æŸ¥æ±ºï¿½Xï¿½å¦?ï¿½ï¿½?
     bool IsExpired(float CurrentGameTime) const;
     
-    // ?²å??¯ç”¨?¸é??—è¡¨
+    // ?ï¿½ï¿½Xï¿½ç”¨?ï¿½ï¿½Xï¿½è¡¨
     TArray<FMingDecisionOption> GetAvailableOptions() const;
 };
 

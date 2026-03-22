@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -12,12 +12,12 @@ class UVerticalBox;
 class UScrollBox;
 
 /**
- * æ±ºç??¸é??‰éˆª?‹å?è¨? */
+ * æ±ºï¿½Xï¿½ï¿½Xï¿½éˆª?ï¿½ï¿½?ï¿½? */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDecisionOptionSelected, const FString&, DecisionId, const FString&, OptionId};
 
 /**
- * æ±ºç??Œé¢Widget
- * é¡¯ç¤ºæ±ºç?å°è©±æ¡†å??¸é?
+ * æ±ºï¿½Xï¿½é¢Widget
+ * é¡¯ç¤ºæ±ºï¿½?å°è©±æ¡†ï¿½Xï¿½ï¿½?
  */
 UCLASS()
 class MINGSTRATEGIC_API UMingDecisionWidget : public UUserWidget
@@ -27,18 +27,18 @@ class MINGSTRATEGIC_API UMingDecisionWidget : public UUserWidget
 public:
     UMingDecisionWidget(const FObjectInitializer& ObjectInitializer};
 
-    // ?å??–æ±ºç­–é¡¯ç¤?    UFUNCTION(BlueprintCallable, Category = "Decision UI")
+    // ?ï¿½ï¿½Xï¿½æ±ºç­–é¡¯ï¿½?    UFUNCTION(BlueprintCallable, Category = "Decision UI")
     void SetupDecision(const FMingDecision& Decision};
 
-    // é¡¯ç¤ºæ±ºç??Œé¢
+    // é¡¯ç¤ºæ±ºï¿½Xï¿½é¢
     UFUNCTION(BlueprintCallable, Category = "Decision UI")
-    void ShowDecision(};
+    void ShowDecision();
 
-    // ?±è?æ±ºç??Œé¢
+    // ?ï¿½ï¿½?æ±ºï¿½Xï¿½é¢
     UFUNCTION(BlueprintCallable, Category = "Decision UI")
-    void HideDecision(};
+    void HideDecision();
 
-    // ?¸é??¸æ?äº‹ä»¶
+    // ?ï¿½ï¿½Xï¿½ï¿½?äº‹ä»¶
     UPROPERTY(BlueprintAssignable, Category = "Decision UI|Events")
     FOnDecisionOptionSelected OnOptionSelected;
 
@@ -59,32 +59,32 @@ protected:
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UButton> PostponeButton;
 
-    // ?¶å?é¡¯ç¤º?„æ±ºç­–ID
+    // ?ï¿½ï¿½?é¡¯ç¤º?ï¿½æ±ºç­–ID
     UPROPERTY()
     FString CurrentDecisionId;
 
-    // ?¸é??‰éˆª?‹å?è¡?    UPROPERTY()
+    // ?ï¿½ï¿½Xï¿½éˆª?ï¿½ï¿½?ï¿½?    UPROPERTY()
     TArray<TObjectPtr<UButton>> OptionButtons;
 
-    // ?å???    virtual void NativeConstruct() override;
+    // ?ï¿½ï¿½X    virtual void NativeConstruct() override;
 
-    // ?µå»º?¸é??‰éˆª??    UFUNCTION()
+    // ?ï¿½å»º?ï¿½ï¿½Xï¿½éˆªX    UFUNCTION()
     void CreateOptionButtons(const TArray<FMingDecisionOption>& Options};
 
-    // ?¸é??‰éˆª?‹é??Šè???    UFUNCTION()
+    // ?ï¿½ï¿½Xï¿½éˆª?ï¿½ï¿½Xï¿½ï¿½X    UFUNCTION()
     void OnOptionButtonClicked(const FString& OptionId};
 
-    // å»¶å??‰éˆª?‹é??Šè???    UFUNCTION()
-    void OnPostponeClicked(};
+    // å»¶ï¿½Xï¿½éˆª?ï¿½ï¿½Xï¿½ï¿½X    UFUNCTION()
+    void OnPostponeClicked();
 
-    // ?•ç•«?­æ”¾
+    // ?ï¿½ç•«?ï¿½æ”¾
     UFUNCTION(BlueprintImplementableEvent, Category = "Decision UI|Animation")
-    void PlayShowAnimation(};
+    void PlayShowAnimation();
 
     UFUNCTION(BlueprintImplementableEvent, Category = "Decision UI|Animation")
-    void PlayHideAnimation(};
+    void PlayHideAnimation();
 
-    // å¹³å°?©é?è¨­ç½®
-    void SetupForPlatform(};
+    // å¹³å°?ï¿½ï¿½?è¨­ç½®
+    void SetupForPlatform();
 };
 

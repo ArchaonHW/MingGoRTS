@@ -1,30 +1,30 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Events/MingEventTrigger.h"
 #include "MingEventTriggerRandom.generated.h"
 
 /**
- * ?¨æ?è§¸ç™¼?¸é?
+ * ?ï¿½ï¿½?è§¸ç™¼?ï¿½ï¿½?
  */
 USTRUCT(BlueprintType)
 struct FRandomTriggerOption
 {
     GENERATED_BODY()
     
-    // ?¸é?ID (å°æ?ä¸å??„ä?ä»?
+    // ?ï¿½ï¿½?ID (å°ï¿½?ä¸ï¿½Xï¿½ï¿½?ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString OptionEventId;
     
-    // æ¬Šé? (?¨æ–¼? æ??¨æ?)
+    // æ¬Šï¿½? (?ï¿½æ–¼?ï¿½ï¿½Xï¿½ï¿½?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Weight;
     
-    // ?€å°è§¸?¼é???(?·å»)
+    // ?ï¿½å°è§¸?ï¿½ï¿½X(?ï¿½å»)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MinInterval;
     
-    // ä¸Šæ¬¡è§¸ç™¼?‚é?
+    // ä¸Šæ¬¡è§¸ç™¼?ï¿½ï¿½?
     UPROPERTY()
     float LastTriggerTime;
     
@@ -36,7 +36,7 @@ struct FRandomTriggerOption
 };
 
 /**
- * ?¨æ?è§¸ç™¼?? * ?ºæ–¼æ¦‚ç?è§¸ç™¼äº‹ä»¶
+ * ?ï¿½ï¿½?è§¸ç™¼X * ?ï¿½æ–¼æ¦‚ï¿½?è§¸ç™¼äº‹ä»¶
  */
 UCLASS()
 class MINGSTRATEGIC_API UMingEventTriggerRandom : public UMingEventTrigger
@@ -46,94 +46,94 @@ class MINGSTRATEGIC_API UMingEventTriggerRandom : public UMingEventTrigger
 public:
     UMingEventTriggerRandom(};
 
-    // è¨­ç½®?ºç?è§¸ç™¼æ¦‚ç? (0-1)
+    // è¨­ç½®?ï¿½ï¿½?è§¸ç™¼æ¦‚ï¿½? (0-1)
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void SetBaseProbability(float Probability};
 
-    // è¨­ç½®æ¦‚ç?è¡°æ? (æ¯æ¬¡è§¸ç™¼å¾Œæ??‡é?ä½?
+    // è¨­ç½®æ¦‚ï¿½?è¡°ï¿½? (æ¯æ¬¡è§¸ç™¼å¾Œï¿½Xï¿½ï¿½?ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void SetProbabilityDecay(float DecayFactor};
 
-    // è¨­ç½®?€å°??€å¤§è§¸?¼é???    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
+    // è¨­ç½®?ï¿½ï¿½Xï¿½å¤§è§¸?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void SetIntervalRange(float MinInterval, float MaxInterval};
 
-    // æ·»å?? æ??¨æ??¸é?
+    // æ·»ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void AddWeightedOption(const FRandomTriggerOption& Option};
 
-    // æ¸…é™¤?€?‰é¸??    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
+    // æ¸…é™¤?ï¿½?ï¿½é¸X    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void ClearOptions(};
 
-    // ?²å??¶å?æ¦‚ç?
+    // ?ï¿½ï¿½Xï¿½ï¿½?æ¦‚ï¿½?
     UFUNCTION(BlueprintPure, Category = "Random Trigger")
     float GetCurrentProbability() const { return CurrentProbability; }
 
-    // ?²å?è·é›¢ä¸‹æ¬¡?¯èƒ½è§¸ç™¼?„æ???    UFUNCTION(BlueprintPure, Category = "Random Trigger")
+    // ?ï¿½ï¿½?è·é›¢ä¸‹æ¬¡?ï¿½èƒ½è§¸ç™¼?ï¿½ï¿½X    UFUNCTION(BlueprintPure, Category = "Random Trigger")
     float GetTimeToNextPossibleTrigger() const;
 
-    // ?‹å?è§¸ç™¼?¨æ??¸æ? (è¿”å??¸ä¸­?„ä?ä»¶ID)
+    // ?ï¿½ï¿½?è§¸ç™¼?ï¿½ï¿½Xï¿½ï¿½? (è¿”ï¿½Xï¿½ä¸­?ï¿½ï¿½?ä»¶ID)
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     FString TriggerRandomSelection(};
 
-    // ?æ–°è¨ˆç?æ¦‚ç?
+    // ?ï¿½æ–°è¨ˆï¿½?æ¦‚ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void RecalculateProbability(float DeltaTime};
 
 protected:
-    // ?ºç?æ¦‚ç?
+    // ?ï¿½ï¿½?æ¦‚ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Random Trigger")
     float BaseProbability;
 
-    // ?¶å?æ¦‚ç?
+    // ?ï¿½ï¿½?æ¦‚ï¿½?
     UPROPERTY()
     float CurrentProbability;
 
-    // æ¦‚ç?è¡°æ?? å? (0-1, 1è¡¨ç¤ºä¸è¡°æ¸?
+    // æ¦‚ï¿½?è¡°ï¿½Xï¿½ï¿½? (0-1, 1è¡¨ç¤ºä¸è¡°ï¿½?
     UPROPERTY()
     float ProbabilityDecay;
 
-    // æ¦‚ç?å¢é•·? å? (?¨æ??“å?? æ???
+    // æ¦‚ï¿½?å¢é•·?ï¿½ï¿½? (?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½X
     UPROPERTY()
     float ProbabilityGrowth;
 
-    // ?€å°è§¸?¼é???    UPROPERTY()
+    // ?ï¿½å°è§¸?ï¿½ï¿½X    UPROPERTY()
     float MinTriggerInterval;
 
-    // ?€å¤§è§¸?¼é???    UPROPERTY()
+    // ?ï¿½å¤§è§¸?ï¿½ï¿½X    UPROPERTY()
     float MaxTriggerInterval;
 
-    // è·é›¢ä¸Šæ¬¡è§¸ç™¼?„æ???    UPROPERTY()
+    // è·é›¢ä¸Šæ¬¡è§¸ç™¼?ï¿½ï¿½X    UPROPERTY()
     float TimeSinceLastTrigger;
 
-    // ?¶å??‚é?çª—å£?§æ˜¯?¦å¯è§¸ç™¼
+    // ?ï¿½ï¿½Xï¿½ï¿½?çª—å£?ï¿½æ˜¯?ï¿½å¯è§¸ç™¼
     UPROPERTY()
     bool bCanTriggerInCurrentWindow;
 
-    // ? æ??¨æ??¸é??—è¡¨
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½è¡¨
     UPROPERTY()
     TArray<FRandomTriggerOption> WeightedOptions;
 
-    // ?¯å¦ä½¿ç”¨? æ??¨æ?
+    // ?ï¿½å¦ä½¿ç”¨?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY()
     bool bUseWeightedOptions;
 
-    // ?å¯«?ºé??¹æ?
+    // ?ï¿½å¯«?ï¿½ï¿½Xï¿½ï¿½?
     virtual void Initialize() override;
     virtual void Tick(float DeltaTime) override;
     virtual bool PerformTrigger() override;
     virtual bool CheckTriggerCondition() const override;
 
-    // ?·è??¨æ?æª¢æŸ¥
+    // ?ï¿½ï¿½Xï¿½ï¿½?æª¢æŸ¥
     bool RollProbability() const;
 
-    // ?¸æ?? æ??¨æ??¸é?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     FString SelectWeightedOption(};
 
-    // ?´æ–°?‚é?çª—å£
+    // ?ï¿½æ–°?ï¿½ï¿½?çª—å£
     void UpdateTriggerWindow(float DeltaTime};
 
-    // æª¢æŸ¥?¯å¦?šé??€å°é???    bool HasPassedMinInterval() const;
+    // æª¢æŸ¥?ï¿½å¦?ï¿½ï¿½Xï¿½å°ï¿½X    bool HasPassedMinInterval() const;
 
-    // ?ç½®è§¸ç™¼?€??    virtual void Reset() override;
+    // ?ï¿½ç½®è§¸ç™¼?ï¿½X    virtual void Reset() override;
 };
 

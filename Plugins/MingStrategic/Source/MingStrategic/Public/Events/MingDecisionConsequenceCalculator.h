@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingDecisionConsequenceCalculator.generated.h"
 
 /**
- * æ±ºç?å¾Œæ?é¡å?
+ * æ±ºï¿½?å¾Œï¿½?é¡ï¿½?
  */
 UENUM(BlueprintType)
 enum class EDecisionConsequenceType : uint8
@@ -21,7 +21,7 @@ enum class EDecisionConsequenceType : uint8
 };
 
 /**
- * å¾Œæ?å½±éŸ¿ç¯„å?
+ * å¾Œï¿½?å½±éŸ¿ç¯„ï¿½?
  */
 UENUM(BlueprintType)
 enum class EConsequenceImpactScope : uint8
@@ -35,7 +35,7 @@ enum class EConsequenceImpactScope : uint8
 };
 
 /**
- * å¾Œæ??´é?ç¨‹åº¦
+ * å¾Œï¿½Xï¿½ï¿½?ç¨‹åº¦
  */
 UENUM(BlueprintType)
 enum class EConsequenceSeverity : uint8
@@ -49,7 +49,7 @@ enum class EConsequenceSeverity : uint8
 };
 
 /**
- * å¾Œæ??ç??‚é?
+ * å¾Œï¿½Xï¿½ï¿½Xï¿½ï¿½?
  */
 UENUM(BlueprintType)
 enum class EConsequenceDuration : uint8
@@ -63,7 +63,7 @@ enum class EConsequenceDuration : uint8
 };
 
 /**
- * å¾Œæ?å½±éŸ¿é¡å?
+ * å¾Œï¿½?å½±éŸ¿é¡ï¿½?
  */
 UENUM(BlueprintType)
 enum class EConsequenceImpactType : uint8
@@ -76,32 +76,32 @@ enum class EConsequenceImpactType : uint8
 };
 
 /**
- * å¾Œæ??ƒæ•¸
+ * å¾Œï¿½Xï¿½æ•¸
  */
 USTRUCT(BlueprintType)
 struct FConsequenceParameter
 {
     GENERATED_BODY()
 
-    // ?ƒæ•¸?ç¨±
+    // ?ï¿½æ•¸?ï¿½ç¨±
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString ParameterName;
 
-    // ?ƒæ•¸??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
+    // ?ï¿½æ•¸X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString ParameterValue;
 
-    // ?ƒæ•¸é¡å?
+    // ?ï¿½æ•¸é¡ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString ParameterType; // "int", "float", "bool", "string", "array"
 
-    // ?¯å¦å¿…é?
+    // ?ï¿½å¦å¿…ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     bool bIsRequired;
 
-    // é»˜è???    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
+    // é»˜ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString DefaultValue;
 
-    // ?è¿°
+    // ?ï¿½è¿°
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString Description;
 
@@ -116,46 +116,46 @@ struct FConsequenceParameter
 };
 
 /**
- * æ±ºç?å¾Œæ?å®šç¾©
+ * æ±ºï¿½?å¾Œï¿½?å®šç¾©
  */
 USTRUCT(BlueprintType)
 struct FDecisionConsequence
 {
     GENERATED_BODY()
 
-    // å¾Œæ?ID
+    // å¾Œï¿½?ID
     UPROPERTY(BlueprintReadOnly)
     FString ConsequenceID;
 
-    // å¾Œæ??ç¨±
+    // å¾Œï¿½Xï¿½ç¨±
     UPROPERTY(BlueprintReadOnly)
     FString ConsequenceName;
 
-    // å¾Œæ??è¿°
+    // å¾Œï¿½Xï¿½è¿°
     UPROPERTY(BlueprintReadOnly)
     FString ConsequenceDescription;
 
-    // å¾Œæ?é¡å?
+    // å¾Œï¿½?é¡ï¿½?
     UPROPERTY(BlueprintReadOnly)
     EDecisionConsequenceType ConsequenceType;
 
-    // å½±éŸ¿ç¯„å?
+    // å½±éŸ¿ç¯„ï¿½?
     UPROPERTY(BlueprintReadOnly)
     EConsequenceImpactScope ImpactScope;
 
-    // ?´é?ç¨‹åº¦
+    // ?ï¿½ï¿½?ç¨‹åº¦
     UPROPERTY(BlueprintReadOnly)
     EConsequenceSeverity Severity;
 
-    // ?ç??‚é?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     EConsequenceDuration Duration;
 
-    // å½±éŸ¿é¡å?
+    // å½±éŸ¿é¡ï¿½?
     UPROPERTY(BlueprintReadOnly)
     EConsequenceImpactType ImpactType;
 
-    // å¾Œæ??ƒæ•¸
+    // å¾Œï¿½Xï¿½æ•¸
     UPROPERTY(BlueprintReadOnly)
     TArray<FConsequenceParameter> Parameters;
 
@@ -163,50 +163,50 @@ struct FDecisionConsequence
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> TriggerConditions;
 
-    // å¾Œæ??ˆæ?
+    // å¾Œï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> Effects;
 
-    // å¾Œæ?æ¨™ç±¤
+    // å¾Œï¿½?æ¨™ç±¤
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> ConsequenceTags;
 
-    // ?¸é?æ±ºç?ID
+    // ?ï¿½ï¿½?æ±ºï¿½?ID
     UPROPERTY(BlueprintReadOnly)
     FString RelatedDecisionID;
 
-    // ?¸é?äººç‰©ID
+    // ?ï¿½ï¿½?äººç‰©ID
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> RelatedCharacterIDs;
 
-    // ?¸é?äº‹ä»¶ID
+    // ?ï¿½ï¿½?äº‹ä»¶ID
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> RelatedEventIDs;
 
-    // ?¼ç?æ¦‚ç? (0-1)
+    // ?ï¿½ï¿½?æ¦‚ï¿½? (0-1)
     UPROPERTY(BlueprintReadOnly)
     float Probability;
 
-    // å»¶è??‚é? (ç§?
+    // å»¶ï¿½Xï¿½ï¿½? (ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float DelayTime;
 
-    // ?·å»?‚é? (ç§?
+    // ?ï¿½å»?ï¿½ï¿½? (ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float CooldownTime;
 
-    // ?¯å¦å·²è§¸??    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½å¦å·²è§¸X    UPROPERTY(BlueprintReadOnly)
     bool bIsTriggered;
 
-    // è§¸ç™¼?‚é?
+    // è§¸ç™¼?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float TriggerTime;
 
-    // ?¯å¦?¯é€†è?
+    // ?ï¿½å¦?ï¿½é€†ï¿½?
     UPROPERTY(BlueprintReadOnly)
     bool bIsReversible;
 
-    // ?¯é€†è?æ¢ä»¶
+    // ?ï¿½é€†ï¿½?æ¢ä»¶
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> ReversalConditions;
 
@@ -230,64 +230,64 @@ struct FDecisionConsequence
 };
 
 /**
- * å¾Œæ?è¨ˆç?çµæ?
+ * å¾Œï¿½?è¨ˆï¿½?çµï¿½?
  */
 USTRUCT(BlueprintType)
 struct FConsequenceCalculationResult
 {
     GENERATED_BODY()
 
-    // ?¯å¦?å?è¨ˆç?
+    // ?ï¿½å¦?ï¿½ï¿½?è¨ˆï¿½?
     UPROPERTY(BlueprintReadOnly)
     bool bSuccess;
 
-    // å¾Œæ?ID
+    // å¾Œï¿½?ID
     UPROPERTY(BlueprintReadOnly)
     FString ConsequenceID;
 
-    // è¨ˆç??‚é?
+    // è¨ˆï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float CalculationTime;
 
-    // è¨ˆç??ºç?å¾Œæ?
+    // è¨ˆï¿½Xï¿½ï¿½?å¾Œï¿½?
     UPROPERTY(BlueprintReadOnly)
     TArray<FDecisionConsequence> CalculatedConsequences;
 
-    // å½±éŸ¿?„é??²ç???    UPROPERTY(BlueprintReadOnly)
+    // å½±éŸ¿?ï¿½ï¿½Xï¿½ï¿½X    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> AffectedGameState;
 
-    // å½±éŸ¿?„äºº??    UPROPERTY(BlueprintReadOnly)
+    // å½±éŸ¿?ï¿½äººX    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedCharacters;
 
-    // å½±éŸ¿?„ä?ä»?    UPROPERTY(BlueprintReadOnly)
+    // å½±éŸ¿?ï¿½ï¿½?ï¿½?    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedEvents;
 
-    // å½±éŸ¿?„è?æº?    UPROPERTY(BlueprintReadOnly)
+    // å½±éŸ¿?ï¿½ï¿½?ï¿½?    UPROPERTY(BlueprintReadOnly)
     TMap<FString, int32> AffectedResources;
 
-    // å½±éŸ¿?„å»ºç¯?    UPROPERTY(BlueprintReadOnly)
+    // å½±éŸ¿?ï¿½å»ºï¿½?    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedBuildings;
 
-    // å½±éŸ¿?„å–®ä½?    UPROPERTY(BlueprintReadOnly)
+    // å½±éŸ¿?ï¿½å–®ï¿½?    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedUnits;
 
-    // ç¸½é?å½±éŸ¿?†æ•¸
+    // ç¸½ï¿½?å½±éŸ¿?ï¿½æ•¸
     UPROPERTY(BlueprintReadOnly)
     float OverallImpactScore;
 
-    // æ­?¢å½±éŸ¿?†æ•¸
+    // ï¿½?ï¿½ï¿½å½±éŸ¿?ï¿½æ•¸
     UPROPERTY(BlueprintReadOnly)
     float PositiveImpactScore;
 
-    // è² é¢å½±éŸ¿?†æ•¸
+    // è² é¢å½±éŸ¿?ï¿½æ•¸
     UPROPERTY(BlueprintReadOnly)
     float NegativeImpactScore;
 
-    // è¨ˆç?è©³æ?
+    // è¨ˆï¿½?è©³ï¿½?
     UPROPERTY(BlueprintReadOnly)
     FString CalculationDetails;
 
-    // ?¯èª¤ä¿¡æ¯
+    // ?ï¿½èª¤ä¿¡æ¯
     UPROPERTY(BlueprintReadOnly)
     FString ErrorMessage;
 
@@ -304,67 +304,67 @@ struct FConsequenceCalculationResult
 };
 
 /**
- * æ±ºç?ä¸Šä??? */
+ * æ±ºï¿½?ä¸Šï¿½X */
 USTRUCT(BlueprintType)
 struct FDecisionContext
 {
     GENERATED_BODY()
 
-    // æ±ºç?ID
+    // æ±ºï¿½?ID
     UPROPERTY(BlueprintReadOnly)
     FString DecisionID;
 
-    // æ±ºç??‚é?
+    // æ±ºï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float DecisionTime;
 
-    // æ±ºç??°é?
+    // æ±ºï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     FString DecisionLocation;
 
-    // æ±ºç??…ID
+    // æ±ºï¿½Xï¿½ID
     UPROPERTY(BlueprintReadOnly)
     FString DecisionMakerID;
 
-    // æ±ºç?é¡å?
+    // æ±ºï¿½?é¡ï¿½?
     UPROPERTY(BlueprintReadOnly)
     FString DecisionType;
 
-    // æ±ºç??¸é?
+    // æ±ºï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     FString DecisionOption;
 
-    // ?¶å??Šæˆ²?€??    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½ï¿½Xï¿½æˆ²?ï¿½X    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> CurrentGameState;
 
-    // ?¸é?äººç‰©?€??    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½ï¿½?äººç‰©?ï¿½X    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> CharacterStates;
 
-    // ?¸é?äº‹ä»¶?€??    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½ï¿½?äº‹ä»¶?ï¿½X    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> EventStates;
 
-    // è³‡æ??€??    UPROPERTY(BlueprintReadOnly)
+    // è³‡ï¿½Xï¿½X    UPROPERTY(BlueprintReadOnly)
     TMap<FString, int32> ResourceStates;
 
-    // å»ºç??€??    UPROPERTY(BlueprintReadOnly)
+    // å»ºï¿½Xï¿½X    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> BuildingStates;
 
-    // ?®ä??€??    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½ï¿½Xï¿½X    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> UnitStates;
 
-    // æ°‘å??‚æ?
+    // æ°‘ï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     FString RepublicEra;
 
-    // ?¶å?å¹´ä»½
+    // ?ï¿½ï¿½?å¹´ä»½
     UPROPERTY(BlueprintReadOnly)
     int32 CurrentYear;
 
-    // ?©å®¶???
+    // ?ï¿½å®¶X
     UPROPERTY(BlueprintReadOnly)
     FString PlayerFaction;
 
-    // ??º¦ç­‰ç?
+    // Xï¿½ï¿½ç­‰ï¿½?
     UPROPERTY(BlueprintReadOnly)
     int32 DifficultyLevel;
 
@@ -383,7 +383,7 @@ struct FDecisionContext
 };
 
 /**
- * æ±ºç?å¾Œæ?è¨ˆç??? * è¨ˆç?æ±ºç??„å?ç¨®å??œå?å½±éŸ¿
+ * æ±ºï¿½?å¾Œï¿½?è¨ˆï¿½X * è¨ˆï¿½?æ±ºï¿½Xï¿½ï¿½?ç¨®ï¿½Xï¿½ï¿½?å½±éŸ¿
  */
 UCLASS(BlueprintType)
 class MINGSTRATEGIC_API UMingDecisionConsequenceCalculator : public UObject
@@ -394,237 +394,237 @@ public:
     UMingDecisionConsequenceCalculator(};
 
     /**
-     * ?å??–å??œè?ç®—å™¨
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?ç®—å™¨
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     void Initialize(};
 
     /**
-     * ?œé?å¾Œæ?è¨ˆç???     */
+     * ?ï¿½ï¿½?å¾Œï¿½?è¨ˆï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     void Shutdown(};
 
     /**
-     * è¨»å?æ±ºç?å¾Œæ?
+     * è¨»ï¿½?æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     bool RegisterDecisionConsequence(const FDecisionConsequence& Consequence};
 
     /**
-     * ?–æ?è¨»å?æ±ºç?å¾Œæ?
+     * ?ï¿½ï¿½?è¨»ï¿½?æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     bool UnregisterDecisionConsequence(const FString& ConsequenceID};
 
     /**
-     * è¨ˆç?æ±ºç?å¾Œæ?
+     * è¨ˆï¿½?æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     FConsequenceCalculationResult CalculateDecisionConsequences(const FDecisionContext& Context};
 
     /**
-     * ?²å?æ±ºç?å¾Œæ?
+     * ?ï¿½ï¿½?æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     FDecisionConsequence GetDecisionConsequence(const FString& ConsequenceID) const;
 
     /**
-     * ?²å??€?‰æ±ºç­–å???     */
+     * ?ï¿½ï¿½Xï¿½?ï¿½æ±ºç­–ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetAllDecisionConsequences() const;
 
     /**
-     * ?²å??‡å?é¡å??„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesByType(EDecisionConsequenceType ConsequenceType) const;
 
     /**
-     * ?²å??‡å?å½±éŸ¿ç¯„å??„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?å½±éŸ¿ç¯„ï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesByScope(EConsequenceImpactScope ImpactScope) const;
 
     /**
-     * ?²å??‡å??´é?ç¨‹åº¦?„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?ç¨‹åº¦?ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesBySeverity(EConsequenceSeverity Severity) const;
 
     /**
-     * ?²å??‡å?å½±éŸ¿é¡å??„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?å½±éŸ¿é¡ï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesByImpactType(EConsequenceImpactType ImpactType) const;
 
     /**
-     * ?²å??¸é?æ±ºç??„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?æ±ºï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesForDecision(const FString& DecisionID) const;
 
     /**
-     * ?²å??¸é?äººç‰©?„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?äººç‰©?ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesForCharacter(const FString& CharacterID) const;
 
     /**
-     * ?²å??¸é?äº‹ä»¶?„å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?äº‹ä»¶?ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesForEvent(const FString& EventID) const;
 
     /**
-     * è§¸ç™¼å¾Œæ?
+     * è§¸ç™¼å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     bool TriggerConsequence(const FString& ConsequenceID, const FDecisionContext& Context};
 
     /**
-     * ?‰ç”¨å¾Œæ??ˆæ?
+     * ?ï¿½ç”¨å¾Œï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     bool ApplyConsequenceEffects(const FString& ConsequenceID, const FDecisionContext& Context};
 
     /**
-     * ?†è?å¾Œæ?
+     * ?ï¿½ï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     bool ReverseConsequence(const FString& ConsequenceID, const FDecisionContext& Context};
 
     /**
-     * ?²å?å¾Œæ?çµ±è?
+     * ?ï¿½ï¿½?å¾Œï¿½?çµ±ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     TMap<FString, int32> GetConsequenceStatistics() const;
 
     /**
-     * ?²å?å¾Œæ?å½±éŸ¿?†æ?
+     * ?ï¿½ï¿½?å¾Œï¿½?å½±éŸ¿?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TMap<FString, float> GetConsequenceImpactAnalysis(const FString& DecisionID) const;
 
     /**
-     * ?æ¸¬æ±ºç?å¾Œæ?
+     * ?ï¿½æ¸¬æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> PredictDecisionConsequences(const FDecisionContext& Context, int32 PredictionCount};
 
     /**
-     * æ¨¡æ“¬æ±ºç?å¾Œæ?
+     * æ¨¡æ“¬æ±ºï¿½?å¾Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FConsequenceCalculationResult> SimulateDecisionConsequences(const FDecisionContext& Context, int32 SimulationCount};
 
 protected:
-    // å·²è¨»?Šç?æ±ºç?å¾Œæ?
+    // å·²è¨»?ï¿½ï¿½?æ±ºï¿½?å¾Œï¿½?
     UPROPERTY()
     TArray<FDecisionConsequence> RegisteredConsequences;
 
-    // å¾Œæ?ID?°å??œç?? å?
+    // å¾Œï¿½?ID?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY()
     TMap<FString, FDecisionConsequence> ConsequenceMap;
 
-    // å¾Œæ?çµ±è?
+    // å¾Œï¿½?çµ±ï¿½?
     UPROPERTY()
     TMap<FString, int32> ConsequenceStatistics;
 
-    // ?¯å¦å·²å?å§‹å?
+    // ?ï¿½å¦å·²ï¿½?å§‹ï¿½?
     bool bIsInitialized;
 
-    // ?å??–æ??‹æ­·?²æ±ºç­–å??œåº«
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ­·?ï¿½æ±ºç­–ï¿½Xï¿½åº«
     void InitializeHistoricalDecisionConsequences(};
 
-    // ?µå»º?¿æ²»æ±ºç?å¾Œæ?
+    // ?ï¿½å»º?ï¿½æ²»æ±ºï¿½?å¾Œï¿½?
     void CreatePoliticalDecisionConsequences(};
 
-    // ?µå»ºè»ä?æ±ºç?å¾Œæ?
+    // ?ï¿½å»ºè»ï¿½?æ±ºï¿½?å¾Œï¿½?
     void CreateMilitaryDecisionConsequences(};
 
-    // ?µå»ºç¶“æ?æ±ºç?å¾Œæ?
+    // ?ï¿½å»ºç¶“ï¿½?æ±ºï¿½?å¾Œï¿½?
     void CreateEconomicDecisionConsequences(};
 
-    // ?µå»ºç¤¾æ?æ±ºç?å¾Œæ?
+    // ?ï¿½å»ºç¤¾ï¿½?æ±ºï¿½?å¾Œï¿½?
     void CreateSocialDecisionConsequences(};
 
-    // ?µå»º?‡å?æ±ºç?å¾Œæ?
+    // ?ï¿½å»º?ï¿½ï¿½?æ±ºï¿½?å¾Œï¿½?
     void CreateCulturalDecisionConsequences(};
 
-    // ?µå»ºå¤–äº¤æ±ºç?å¾Œæ?
+    // ?ï¿½å»ºå¤–äº¤æ±ºï¿½?å¾Œï¿½?
     void CreateDiplomaticDecisionConsequences(};
 
-    // è¨ˆç??³æ?å¾Œæ?
+    // è¨ˆï¿½Xï¿½ï¿½?å¾Œï¿½?
     void CalculateImmediateConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
-    // è¨ˆç?å»¶è?å¾Œæ?
+    // è¨ˆï¿½?å»¶ï¿½?å¾Œï¿½?
     void CalculateDelayedConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
-    // è¨ˆç?ç´¯ç?å¾Œæ?
+    // è¨ˆï¿½?ç´¯ï¿½?å¾Œï¿½?
     void CalculateCumulativeConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
-    // è¨ˆç?æ¢ä»¶å¾Œæ?
+    // è¨ˆï¿½?æ¢ä»¶å¾Œï¿½?
     void CalculateConditionalConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
-    // è¨ˆç??¨æ?å¾Œæ?
+    // è¨ˆï¿½Xï¿½ï¿½?å¾Œï¿½?
     void CalculateRandomConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
-    // è¨ˆç??±è?å¾Œæ?
+    // è¨ˆï¿½Xï¿½ï¿½?å¾Œï¿½?
     void CalculateHiddenConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
-    // è¨ˆç?æ°¸ä?å¾Œæ?
+    // è¨ˆï¿½?æ°¸ï¿½?å¾Œï¿½?
     void CalculatePermanentConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
-    // è¨ˆç??¨æ?å¾Œæ?
+    // è¨ˆï¿½Xï¿½ï¿½?å¾Œï¿½?
     void CalculateTemporaryConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
-    // è¨ˆç?å¾Œæ?å½±éŸ¿?†æ•¸
+    // è¨ˆï¿½?å¾Œï¿½?å½±éŸ¿?ï¿½æ•¸
     float CalculateConsequenceImpact(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // è¨ˆç?ç¸½é?å½±éŸ¿?†æ•¸
+    // è¨ˆï¿½?ç¸½ï¿½?å½±éŸ¿?ï¿½æ•¸
     void CalculateOverallImpact(FConsequenceCalculationResult& Result) const;
 
-    // æª¢æŸ¥å¾Œæ?æ¢ä»¶
+    // æª¢æŸ¥å¾Œï¿½?æ¢ä»¶
     bool CheckConsequenceConditions(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // ?‰ç”¨å¾Œæ??°é??²ç???    void ApplyConsequenceToGameState(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, FString>& AffectedStates) const;
+    // ?ï¿½ç”¨å¾Œï¿½Xï¿½ï¿½Xï¿½ï¿½X    void ApplyConsequenceToGameState(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, FString>& AffectedStates) const;
 
-    // ?‰ç”¨å¾Œæ??°äºº??    void ApplyConsequenceToCharacters(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedCharacters) const;
+    // ?ï¿½ç”¨å¾Œï¿½Xï¿½äººX    void ApplyConsequenceToCharacters(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedCharacters) const;
 
-    // ?‰ç”¨å¾Œæ??°ä?ä»?    void ApplyConsequenceToEvents(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedEvents) const;
+    // ?ï¿½ç”¨å¾Œï¿½Xï¿½ï¿½?ï¿½?    void ApplyConsequenceToEvents(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedEvents) const;
 
-    // ?‰ç”¨å¾Œæ??°è?æº?    void ApplyConsequenceToResources(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, int32>& AffectedResources) const;
+    // ?ï¿½ç”¨å¾Œï¿½Xï¿½ï¿½?ï¿½?    void ApplyConsequenceToResources(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, int32>& AffectedResources) const;
 
-    // ?‰ç”¨å¾Œæ??°å»ºç¯?    void ApplyConsequenceToBuildings(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedBuildings) const;
+    // ?ï¿½ç”¨å¾Œï¿½Xï¿½å»ºï¿½?    void ApplyConsequenceToBuildings(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedBuildings) const;
 
-    // ?‰ç”¨å¾Œæ??°å–®ä½?    void ApplyConsequenceToUnits(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedUnits) const;
+    // ?ï¿½ç”¨å¾Œï¿½Xï¿½å–®ï¿½?    void ApplyConsequenceToUnits(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedUnits) const;
 
-    // ?´æ–°å¾Œæ?çµ±è?
+    // ?ï¿½æ–°å¾Œï¿½?çµ±ï¿½?
     void UpdateConsequenceStatistics(const FString& ConsequenceID};
 
-    // ?²å?å¾Œæ??è¿°
+    // ?ï¿½ï¿½?å¾Œï¿½Xï¿½è¿°
     FString GetConsequenceDescription(const FString& ConsequenceID) const;
 
-    // é©—è?å¾Œæ??ç½®
+    // é©—ï¿½?å¾Œï¿½Xï¿½ç½®
     bool ValidateConsequenceConfig(const FDecisionConsequence& Consequence) const;
 
-    // è¨˜é?å¾Œæ??¥è?
+    // è¨˜ï¿½?å¾Œï¿½Xï¿½ï¿½?
     void LogConsequenceEvent(const FString& ConsequenceID, const FString& Message};
 
-    // ?Ÿæ?å¾Œæ??±å?
+    // ?ï¿½ï¿½?å¾Œï¿½Xï¿½ï¿½?
     FString GenerateConsequenceReport(const FString& ConsequenceID, const FConsequenceCalculationResult& Result) const;
 
-    // è§??å¾Œæ??ƒæ•¸
+    // ï¿½Xå¾Œï¿½Xï¿½æ•¸
     TArray<FString> ParseConsequenceParameters(const FString& ParameterString) const;
 
-    // è¨ˆç?å¾Œæ?æ¦‚ç?
+    // è¨ˆï¿½?å¾Œï¿½?æ¦‚ï¿½?
     float CalculateConsequenceProbability(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // è¨ˆç?å¾Œæ?å»¶è?
+    // è¨ˆï¿½?å¾Œï¿½?å»¶ï¿½?
     float CalculateConsequenceDelay(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // è¨ˆç?å¾Œæ??ç??‚é?
+    // è¨ˆï¿½?å¾Œï¿½Xï¿½ï¿½Xï¿½ï¿½?
     float CalculateConsequenceDuration(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // æª¢æŸ¥å¾Œæ??¯å¦?¯é€†è?
+    // æª¢æŸ¥å¾Œï¿½Xï¿½å¦?ï¿½é€†ï¿½?
     bool IsConsequenceReversible(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // ?²å?å¾Œæ??ªå?ç´?    int32 GetConsequencePriority(const FDecisionConsequence& Consequence) const;
+    // ?ï¿½ï¿½?å¾Œï¿½Xï¿½ï¿½?ï¿½?    int32 GetConsequencePriority(const FDecisionConsequence& Consequence) const;
 
-    // ?’å?å¾Œæ?
+    // ?ï¿½ï¿½?å¾Œï¿½?
     void SortConsequencesByPriority(TArray<FDecisionConsequence>& Consequences) const;
 };
 

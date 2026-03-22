@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "MingDecisionEffect.generated.h"
 
 /**
- * æ±ºç??ˆæ?é¡å?
+ * æ±ºï¿½Xï¿½ï¿½?é¡ï¿½?
  */
 UENUM(BlueprintType)
 enum class EDecisionEffectType : uint8
@@ -18,38 +18,38 @@ enum class EDecisionEffectType : uint8
 };
 
 /**
- * æ±ºç??ˆæ?çµæ?
- * å®šç¾©?¸æ??å€‹æ±ºç­–é¸?…å??„æ??? */
+ * æ±ºï¿½Xï¿½ï¿½?çµï¿½?
+ * å®šç¾©?ï¿½ï¿½Xï¿½å€‹æ±ºç­–é¸?ï¿½ï¿½Xï¿½ï¿½X */
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingDecisionEffect
 {
     GENERATED_BODY()
     
-    // ?ˆæ?ID
+    // ?ï¿½ï¿½?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
     FString EffectId;
     
-    // ?ˆæ?é¡å?
+    // ?ï¿½ï¿½?é¡ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
     EDecisionEffectType EffectType;
     
-    // ?®æ?å°è±¡ (è³‡æ?é¡å??è??²IDç­?
+    // ?ï¿½ï¿½?å°è±¡ (è³‡ï¿½?é¡ï¿½Xï¿½ï¿½Xï¿½IDï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
     FString TargetKey;
     
-    // ?ˆæ??¸å€?(æ­?€¼ç‚ºå¢å?ï¼Œè??¼ç‚ºæ¸›å?)
+    // ?ï¿½ï¿½Xï¿½ï¿½?(ï¿½?ï¿½ï¿½ç‚ºå¢ï¿½?ï¼Œï¿½Xï¿½ç‚ºæ¸›ï¿½?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
     float EffectValue;
     
-    // ?ç??‚é? (0?ºæ°¸ä¹?
+    // ?ï¿½ï¿½Xï¿½ï¿½? (0?ï¿½æ°¸ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
     float Duration;
     
-    // ?ˆæ??è¿°
+    // ?ï¿½ï¿½Xï¿½è¿°
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
     FText EffectDescription;
     
-    // ?¯å¦ç«‹å³?·è?
+    // ?ï¿½å¦ç«‹å³?ï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
     bool bImmediate;
     
