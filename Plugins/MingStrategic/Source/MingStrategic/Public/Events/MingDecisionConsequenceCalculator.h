@@ -391,18 +391,18 @@ class MINGSTRATEGIC_API UMingDecisionConsequenceCalculator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingDecisionConsequenceCalculator(};
+    UMingDecisionConsequenceCalculator();
 
     /**
      * ?��X��X��?算器
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    void Initialize(};
+    void Initialize();
 
     /**
      * ?��?後�?計�X     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    void Shutdown(};
+    void Shutdown();
 
     /**
      * 註�?決�?後�?
@@ -527,25 +527,25 @@ protected:
     bool bIsInitialized;
 
     // ?��X��X�歷?�決策�X�庫
-    void InitializeHistoricalDecisionConsequences(};
+    void InitializeHistoricalDecisionConsequences();
 
     // ?�建?�治決�?後�?
-    void CreatePoliticalDecisionConsequences(};
+    void CreatePoliticalDecisionConsequences();
 
     // ?�建軍�?決�?後�?
-    void CreateMilitaryDecisionConsequences(};
+    void CreateMilitaryDecisionConsequences();
 
     // ?�建經�?決�?後�?
-    void CreateEconomicDecisionConsequences(};
+    void CreateEconomicDecisionConsequences();
 
     // ?�建社�?決�?後�?
-    void CreateSocialDecisionConsequences(};
+    void CreateSocialDecisionConsequences();
 
     // ?�建?��?決�?後�?
-    void CreateCulturalDecisionConsequences(};
+    void CreateCulturalDecisionConsequences();
 
     // ?�建外交決�?後�?
-    void CreateDiplomaticDecisionConsequences(};
+    void CreateDiplomaticDecisionConsequences();
 
     // 計�X��?後�?
     void CalculateImmediateConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};

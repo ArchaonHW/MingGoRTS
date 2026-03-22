@@ -59,14 +59,14 @@ class MINGSTRATEGIC_API UMingEventTrigger : public UObject
     GENERATED_BODY()
 
 public:
-    UMingEventTrigger(};
+    UMingEventTrigger();
 
     // ?��X�觸?�器
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    virtual void Initialize(};
+    virtual void Initialize();
 
     // ?��?觸發X    UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    virtual void Shutdown(};
+    virtual void Shutdown();
 
     // 每�X�新
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
@@ -78,10 +78,10 @@ public:
 
     // ?��?觸發
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    virtual bool Trigger(};
+    virtual bool Trigger();
 
     // ?�置觸發X    UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    virtual void Reset(};
+    virtual void Reset();
 
     // ?�用/禁用
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
@@ -147,7 +147,7 @@ protected:
     // 設置?�X    void SetState(EEventTriggerState NewState};
 
     // ?�部觸發?�輯 (子�?實現)
-    virtual bool PerformTrigger(};
+    virtual bool PerformTrigger();
 
     // 檢查觸發條件 (子�?實現)
     virtual bool CheckTriggerCondition() const;

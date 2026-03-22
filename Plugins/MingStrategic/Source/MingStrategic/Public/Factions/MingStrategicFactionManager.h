@@ -4,10 +4,10 @@
 #include "Factions/MingRTSFactionData.h"
 #include "MingRTSFactionManager.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFactionRelationChanged, EFactionType, FactionA, EFactionType, FactionB);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFactionDefeated, EFactionType, DefeatedFaction);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFactionVictoryPointsChanged, EFactionType, Faction, int32, NewVictoryPoints);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerFactionSelected, EFactionType, PlayerFaction);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFactionRelationChanged, EFactionType, FactionA, EFactionType, FactionB};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFactionDefeated, EFactionType, DefeatedFaction};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFactionVictoryPointsChanged, EFactionType, Faction, int32, NewVictoryPoints};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerFactionSelected, EFactionType, PlayerFaction};
 
 /**
  * 勢力管理器 - 管理12個可玩勢力
@@ -33,10 +33,10 @@ public:
 
     // 勢力數據管理
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Data")
-    void RegisterFaction(const FFactionData& FactionData);
+    void RegisterFaction(const FFactionData& FactionData};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Data")
-    void UnregisterFaction(EFactionType FactionType);
+    void UnregisterFaction(EFactionType FactionType};
 
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|Data")
     bool IsFactionRegistered(EFactionType FactionType) const;
@@ -45,7 +45,7 @@ public:
     FFactionData GetFactionData(EFactionType FactionType) const;
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Data")
-    void UpdateFactionData(EFactionType FactionType, const FFactionData& NewData);
+    void UpdateFactionData(EFactionType FactionType, const FFactionData& NewData};
 
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|Data")
     TArray<EFactionType> GetAllRegisteredFactions() const;
@@ -58,7 +58,7 @@ public:
 
     // 勢力關係管理
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Relations")
-    void SetFactionRelation(EFactionType FactionA, EFactionType FactionB, EFactionRelationType RelationType);
+    void SetFactionRelation(EFactionType FactionA, EFactionType FactionB, EFactionRelationType RelationType};
 
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|Relations")
     EFactionRelationType GetFactionRelation(EFactionType FactionA, EFactionType FactionB) const;
@@ -67,22 +67,22 @@ public:
     float GetFactionRelationValue(EFactionType FactionA, EFactionType FactionB) const;
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Relations")
-    void ModifyFactionRelationValue(EFactionType FactionA, EFactionType FactionB, float Delta);
+    void ModifyFactionRelationValue(EFactionType FactionA, EFactionType FactionB, float Delta};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Relations")
-    void DeclareWar(EFactionType Aggressor, EFactionType Target);
+    void DeclareWar(EFactionType Aggressor, EFactionType Target};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Relations")
-    void MakePeace(EFactionType FactionA, EFactionType FactionB);
+    void MakePeace(EFactionType FactionA, EFactionType FactionB};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Relations")
-    void FormAlliance(EFactionType FactionA, EFactionType FactionB);
+    void FormAlliance(EFactionType FactionA, EFactionType FactionB};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Relations")
-    void BreakAlliance(EFactionType FactionA, EFactionType FactionB);
+    void BreakAlliance(EFactionType FactionA, EFactionType FactionB};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Relations")
-    void SignNonAggressionPact(EFactionType FactionA, EFactionType FactionB, int32 DurationTurns);
+    void SignNonAggressionPact(EFactionType FactionA, EFactionType FactionB, int32 DurationTurns};
 
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|Relations")
     TArray<EFactionType> GetAllies(EFactionType Faction) const;
@@ -95,7 +95,7 @@ public:
 
     // 玩家勢力管理
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Player")
-    void SetPlayerFaction(EFactionType FactionType);
+    void SetPlayerFaction(EFactionType FactionType};
 
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|Player")
     EFactionType GetPlayerFaction() const;
@@ -105,26 +105,26 @@ public:
 
     // 勢力狀態管理
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|State")
-    void SetFactionState(EFactionType FactionType, EFactionState NewState);
+    void SetFactionState(EFactionType FactionType, EFactionState NewState};
 
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|State")
     EFactionState GetFactionState(EFactionType FactionType) const;
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|State")
-    void DefeatFaction(EFactionType FactionType);
+    void DefeatFaction(EFactionType FactionType};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|State")
-    void ReviveFaction(EFactionType FactionType);
+    void ReviveFaction(EFactionType FactionType};
 
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|State")
     bool IsFactionAlive(EFactionType FactionType) const;
 
     // 勝利點數管理
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Victory")
-    void AddVictoryPoints(EFactionType FactionType, int32 Points);
+    void AddVictoryPoints(EFactionType FactionType, int32 Points};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Victory")
-    void SetVictoryPoints(EFactionType FactionType, int32 Points);
+    void SetVictoryPoints(EFactionType FactionType, int32 Points};
 
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|Victory")
     int32 GetVictoryPoints(EFactionType FactionType) const;
@@ -137,20 +137,20 @@ public:
 
     // 領土管理
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Territory")
-    void AddTerritory(EFactionType FactionType, int32 Count = 1);
+    void AddTerritory(EFactionType FactionType, int32 Count = 1};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Territory")
-    void RemoveTerritory(EFactionType FactionType, int32 Count = 1);
+    void RemoveTerritory(EFactionType FactionType, int32 Count = 1};
 
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|Territory")
     int32 GetTerritoryCount(EFactionType FactionType) const;
 
     // 軍事/經濟力量
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Power")
-    void UpdateMilitaryStrength(EFactionType FactionType, int32 NewStrength);
+    void UpdateMilitaryStrength(EFactionType FactionType, int32 NewStrength};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Power")
-    void UpdateEconomicOutput(EFactionType FactionType, int32 NewOutput);
+    void UpdateEconomicOutput(EFactionType FactionType, int32 NewOutput};
 
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|Power")
     int32 GetMilitaryStrength(EFactionType FactionType) const;
@@ -160,24 +160,24 @@ public:
 
     // 勢力AI配置
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|AI")
-    void SetFactionAIStrategy(EFactionType FactionType, EFactionAIStrategy Strategy);
+    void SetFactionAIStrategy(EFactionType FactionType, EFactionAIStrategy Strategy};
 
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|AI")
     EFactionAIStrategy GetFactionAIStrategy(EFactionType FactionType) const;
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|AI")
-    void SetFactionAIAdaptive(EFactionType FactionType, bool bAdaptive);
+    void SetFactionAIAdaptive(EFactionType FactionType, bool bAdaptive};
 
     // 回合更新
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Turn")
-    void OnTurnStart(int32 TurnNumber);
+    void OnTurnStart(int32 TurnNumber};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Turn")
-    void OnTurnEnd(int32 TurnNumber);
+    void OnTurnEnd(int32 TurnNumber};
 
     // 獲取勢力配置數據
     UFUNCTION(BlueprintPure, Category = "MingRTS|Faction|Config")
-    static FFactionData GetDefaultFactionData(EFactionType FactionType);
+    static FFactionData GetDefaultFactionData(EFactionType FactionType};
 
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Faction|Config")
     void InitializeAllDefaultFactions();
@@ -230,8 +230,8 @@ private:
     bool AreFactionsValid(EFactionType FactionA, EFactionType FactionB) const;
 
     // 輔助函數
-    FFactionRelationData* GetRelationData(EFactionType FactionA, EFactionType FactionB);
+    FFactionRelationData* GetRelationData(EFactionType FactionA, EFactionType FactionB};
     const FFactionRelationData* GetRelationData(EFactionType FactionA, EFactionType FactionB) const;
-    void UpdateRelationForBoth(EFactionType FactionA, EFactionType FactionB, const FFactionRelationData& Data);
+    void UpdateRelationForBoth(EFactionType FactionA, EFactionType FactionB, const FFactionRelationData& Data};
     EFactionRelationType DetermineRelationTypeFromValue(float Value) const;
 };

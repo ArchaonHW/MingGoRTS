@@ -44,7 +44,7 @@ class MINGSTRATEGIC_API UMingEventTriggerRandom : public UMingEventTrigger
     GENERATED_BODY()
 
 public:
-    UMingEventTriggerRandom(};
+    UMingEventTriggerRandom();
 
     // 設置?��?觸發概�? (0-1)
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
@@ -62,7 +62,7 @@ public:
     void AddWeightedOption(const FRandomTriggerOption& Option};
 
     // 清除?�?�選X    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void ClearOptions(};
+    void ClearOptions();
 
     // ?��X��?概�?
     UFUNCTION(BlueprintPure, Category = "Random Trigger")
@@ -73,7 +73,7 @@ public:
 
     // ?��?觸發?��X��? (返�X�中?��?件ID)
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    FString TriggerRandomSelection(};
+    FString TriggerRandomSelection();
 
     // ?�新計�?概�?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
@@ -127,7 +127,7 @@ protected:
     bool RollProbability() const;
 
     // ?��X��X��X��?
-    FString SelectWeightedOption(};
+    FString SelectWeightedOption();
 
     // ?�新?��?窗口
     void UpdateTriggerWindow(float DeltaTime};

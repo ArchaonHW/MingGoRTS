@@ -13,7 +13,7 @@ class UScrollBox;
 
 /**
  * 決�X��X�鈪?��?�? */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDecisionOptionSelected, const FString&, DecisionId, const FString&, OptionId};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDecisionOptionSelected, const FString&, DecisionId, const FString&, OptionId);
 
 /**
  * 決�X�面Widget
