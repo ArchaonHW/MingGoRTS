@@ -5,11 +5,12 @@
 #include "MingNetworkManager.generated.h"
 
 // Forward declarations
+class UMingPersonalManager;
+class UMingLobbySystem;
 class UMingRelationshipReplication;
 class UMingReputationReplication;
-class UMingPersonalManager;
 
-// Network connection states
+// Network connection state
 UENUM(BlueprintType)
 enum class EMingNetworkConnectionState : uint8
 {
@@ -17,76 +18,18 @@ enum class EMingNetworkConnectionState : uint8
     Connecting        UMETA(DisplayName = "Connecting"),
     Connected         UMETA(DisplayName = "Connected"),
     Disconnecting     UMETA(DisplayName = "Disconnecting"),
-    ConnectionFailed  UMETA(DisplayName = "Connection Failed"),
-    Reconnecting      UMETA(DisplayName = "Reconnecting")
+    Reconnecting      UMETA(DisplayName = "Reconnecting"),
+    Error             UMETA(DisplayName = "Error")
 };
 
-// Network game modes
+// Network role
 UENUM(BlueprintType)
-enum class EMingNetworkGameMode : uint8
+enum class EMingNetworkRole : uint8
 {
-    SinglePlayer      UMETA(DisplayName = "Single Player"),
-    Cooperative       UMETA(DisplayName = "Cooperative"),
-    Competitive       UMETA(DisplayName = "Competitive"),
-    Campaign          UMETA(DisplayName = "Campaign"),
-    Sandbox           UMETA(DisplayName = "Sandbox")
-};
-
-// Player roles in multiplayer
-UENUM(BlueprintType)
-enum class EMingPlayerRole : uint8
-{
+    None              UMETA(DisplayName = "None"),
     Host              UMETA(DisplayName = "Host"),
     Client            UMETA(DisplayName = "Client"),
-    Observer          UMETA(DisplayName = "Observer"),
-    Spectator         UMETA(DisplayName = "Spectator")
-};
-
-// Network sync priorities
-UENUM(BlueprintType)
-enum class EMingSyncPriority : uint8
-{
-    Critical          UMETA(DisplayName = "Critical"),
-    High              UMETA(DisplayName = "High"),
-    Normal            UMETA(DisplayName = "Normal"),
-    Low               UMETA(DisplayName = "Low"),
-    Background        UMETA(DisplayName = "Background")
-};
-
-// Multiplayer player data
-USTRUCT(BlueprintType)
-struct FMingMultiplayerPlayerData
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadOnly)
-    int32 PlayerID;
-
-    UPROPERTY(BlueprintReadOnly)
-    FString PlayerName;
-
-    UPROPERTY(BlueprintReadOnly)
-    EMingPlayerRole PlayerRole;
-
-    UPROPERTY(BlueprintReadOnly)
-    int32 Ping;
-
-    UPROPERTY(BlueprintReadOnly)
-    bool bIsReady;
-
-    UPROPERTY(BlueprintReadOnly)
-    bool bIsHost;
-
-    UPROPERTY(BlueprintReadOnly)
-    FDateTime JoinTime;
-
-    FMingMultiplayerPlayerData()
-        : PlayerID(0)
-        , PlayerRole(EMingPlayerRole::Client)
-        , Ping(0)
-        , bIsReady(false)
-        , bIsHost(false)
-    {}
+    ListenServer      UMETA(DisplayName = "Listen Server")
 };
 
 // Network configuration
@@ -95,39 +38,97 @@ struct FMingNetworkConfig
 {
     GENERATED_BODY()
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString ServerAddress;
+    UPROPERTY(BlueprintReadWrite, Category = "Network")
+    FString ServerName;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 ServerPort;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Network")
     int32 MaxPlayers;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float SyncInterval;
+    UPROPERTY(BlueprintReadWrite, Category = "Network")
+    int32 Port;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float ReconnectTimeout;
+    UPROPERTY(BlueprintReadWrite, Category = "Network")
+    FString MapName;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 MaxReconnectAttempts;
+    UPROPERTY(BlueprintReadWrite, Category = "Network")
+    bool bUseLAN;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bUseCompression;
+    UPROPERTY(BlueprintReadWrite, Category = "Network")
+    bool bIsPrivate;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bUseEncryption;
+    UPROPERTY(BlueprintReadWrite, Category = "Network")
+    FString Password;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Network")
+    FString GameMode;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Network")
+    int32 TickRate;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Network")
+    bool bEnableVoiceChat;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Network")
+    bool bAllowJoinInProgress;
 
     FMingNetworkConfig()
-        : ServerAddress(TEXT("127.0.0.1"))
-        , ServerPort(7777)
-        , MaxPlayers(8)
-        , SyncInterval(0.1f)
-        , ReconnectTimeout(30.0f)
-        , MaxReconnectAttempts(3)
-        , bUseCompression(true)
-        , bUseEncryption(false)
+        : ServerName(TEXT("MingGoRTS Server"))
+        , MaxPlayers(4)
+        , Port(7777)
+        , MapName(TEXT("MainMap"))
+        , bUseLAN(false)
+        , bIsPrivate(false)
+        , Password(TEXT(""))
+        , GameMode(TEXT("MingRTSGameMode"))
+        , TickRate(30)
+        , bEnableVoiceChat(true)
+        , bAllowJoinInProgress(true)
+    {}
+};
+
+// Player network info
+USTRUCT(BlueprintType)
+struct FMingPlayerNetworkInfo
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    int32 PlayerID;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    FString PlayerName;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    bool bIsHost;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    bool bIsReady;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    float Ping;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    FString IPAddress;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    int32 TeamID;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    bool bIsSpectator;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    int32 PlayerScore;
+
+    FMingPlayerNetworkInfo()
+        : PlayerID(-1)
+        , PlayerName(TEXT(""))
+        , bIsHost(false)
+        , bIsReady(false)
+        , Ping(0.0f)
+        , IPAddress(TEXT(""))
+        , TeamID(0)
+        , bIsSpectator(false)
+        , PlayerScore(0)
     {}
 };
 
@@ -137,56 +138,111 @@ struct FMingNetworkStats
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
-    int32 BytesSent;
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    float AveragePing;
 
-    UPROPERTY(BlueprintReadOnly)
-    int32 BytesReceived;
-
-    UPROPERTY(BlueprintReadOnly)
-    int32 PacketsSent;
-
-    UPROPERTY(BlueprintReadOnly)
-    int32 PacketsReceived;
-
-    UPROPERTY(BlueprintReadOnly)
-    int32 PacketsLost;
-
-    UPROPERTY(BlueprintReadOnly)
-    float Latency;
-
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
     float PacketLossRate;
 
-    UPROPERTY(BlueprintReadOnly)
-    int32 ActiveConnections;
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    int32 BytesSentPerSecond;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    int32 BytesReceivedPerSecond;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    int32 ConnectedPlayers;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    float ServerFrameTime;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    int32 ReplicatedActors;
 
     FMingNetworkStats()
-        : BytesSent(0)
-        , BytesReceived(0)
-        , PacketsSent(0)
-        , PacketsReceived(0)
-        , PacketsLost(0)
-        , Latency(0.0f)
+        : AveragePing(0.0f)
         , PacketLossRate(0.0f)
-        , ActiveConnections(0)
+        , BytesSentPerSecond(0)
+        , BytesReceivedPerSecond(0)
+        , ConnectedPlayers(0)
+        , ServerFrameTime(0.0f)
+        , ReplicatedActors(0)
     {}
 };
 
-// Delegate declarations
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNetworkConnected);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkDisconnected, const FString&, Reason);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkConnectionFailed, const FString&, ErrorMessage);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerJoined, int32, PlayerID, const FString&, PlayerName);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerLeft, int32, PlayerID, const FString&, Reason);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkStateChanged, EMingNetworkConnectionState, NewState);
+// Chat message
+USTRUCT(BlueprintType)
+struct FMingChatMessage
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    int32 SenderPlayerID;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    FString SenderName;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    FString Message;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    float Timestamp;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    bool bIsSystemMessage;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    bool bIsPrivate;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Network")
+    int32 TargetPlayerID;
+
+    FMingChatMessage()
+        : SenderPlayerID(-1)
+        , SenderName(TEXT(""))
+        , Message(TEXT(""))
+        , Timestamp(0.0f)
+        , bIsSystemMessage(false)
+        , bIsPrivate(false)
+        , TargetPlayerID(-1)
+    {}
+};
+
+// Network error types
+UENUM(BlueprintType)
+enum class EMingNetworkError : uint8
+{
+    None                      UMETA(DisplayName = "None"),
+    ConnectionFailed          UMETA(DisplayName = "Connection Failed"),
+    ConnectionLost            UMETA(DisplayName = "Connection Lost"),
+    ServerFull                UMETA(DisplayName = "Server Full"),
+    InvalidPassword           UMETA(DisplayName = "Invalid Password"),
+    VersionMismatch           UMETA(DisplayName = "Version Mismatch"),
+    Timeout                   UMETA(DisplayName = "Timeout"),
+    HostMigrationFailed       UMETA(DisplayName = "Host Migration Failed"),
+    NatPunchthroughFailed     UMETA(DisplayName = "NAT Punchthrough Failed"),
+    ServerShutdown            UMETA(DisplayName = "Server Shutdown"),
+    Kicked                    UMETA(DisplayName = "Kicked"),
+    Banned                    UMETA(DisplayName = "Banned"),
+    GenericError              UMETA(DisplayName = "Generic Error")
+};
+
+// Delegates
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkConnectionStateChanged, EMingNetworkConnectionState, NewState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerJoined, FMingPlayerNetworkInfo, PlayerInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerLeft, int32, PlayerID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerReadyChanged, int32, PlayerID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChatMessageReceived, FMingChatMessage, Message);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkError, EMingNetworkError, Error);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHostMigrated, int32, NewHostPlayerID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStarted);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameEnded);
 
 /**
- * 多人遊戲網絡管理器
- * 處理所有網絡連接、同步和多人遊戲邏輯
+ * 網絡管理器
+ * 處理多人遊戲的網絡連接、玩家管理和數據同步
  */
-UCLASS(ClassGroup = (Network), Blueprintable)
+UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingNetworkManager : public UObject
 {
     GENERATED_BODY()
@@ -194,226 +250,172 @@ class MINGPERSONAL_API UMingNetworkManager : public UObject
 public:
     UMingNetworkManager();
 
-    // 初始化系統
+    // Initialize/Shutdown
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void InitializeNetworkManager(UMingPersonalManager* InPersonalManager);
+    void Initialize();
 
-    // 關閉系統
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void ShutdownNetworkManager();
+    void Shutdown();
 
-    UFUNCTION(BlueprintPure, Category = "Network")
-    bool IsNetworkInitialized() const { return bIsInitialized; }
-
-    // === 連接管理 ===
-
-    // 創建服務器（作為主機）
-    UFUNCTION(BlueprintCallable, Category = "Network|Connection")
+    // Server creation
+    UFUNCTION(BlueprintCallable, Category = "Network")
     bool CreateServer(const FMingNetworkConfig& Config);
 
-    // 連接到服務器
-    UFUNCTION(BlueprintCallable, Category = "Network|Connection")
-    bool ConnectToServer(const FString& ServerAddress, int32 Port);
+    UFUNCTION(BlueprintCallable, Category = "Network")
+    void CloseServer();
 
-    // 斷開連接
-    UFUNCTION(BlueprintCallable, Category = "Network|Connection")
-    void DisconnectFromServer();
+    // Client connection
+    UFUNCTION(BlueprintCallable, Category = "Network")
+    bool ConnectToServer(const FString& ServerAddress, int32 Port, const FString& Password = TEXT(""));
 
-    // 重新連接
-    UFUNCTION(BlueprintCallable, Category = "Network|Connection")
-    bool ReconnectToServer();
+    UFUNCTION(BlueprintCallable, Category = "Network")
+    void Disconnect();
 
-    // === 狀態查詢 ===
+    // Connection state
+    UFUNCTION(BlueprintPure, Category = "Network")
+    EMingNetworkConnectionState GetConnectionState() const;
 
-    UFUNCTION(BlueprintPure, Category = "Network|State")
-    EMingNetworkConnectionState GetConnectionState() const { return ConnectionState; }
+    UFUNCTION(BlueprintPure, Category = "Network")
+    bool IsConnected() const;
 
-    UFUNCTION(BlueprintPure, Category = "Network|State")
-    bool IsConnected() const { return ConnectionState == EMingNetworkConnectionState::Connected; }
-
-    UFUNCTION(BlueprintPure, Category = "Network|State")
+    UFUNCTION(BlueprintPure, Category = "Network")
     bool IsHost() const;
 
-    UFUNCTION(BlueprintPure, Category = "Network|State")
-    int32 GetLocalPlayerID() const { return LocalPlayerID; }
+    UFUNCTION(BlueprintPure, Category = "Network")
+    bool IsClient() const;
 
-    // === 玩家管理 ===
+    UFUNCTION(BlueprintPure, Category = "Network")
+    EMingNetworkRole GetNetworkRole() const;
 
-    UFUNCTION(BlueprintCallable, Category = "Network|Players")
+    // Player management
+    UFUNCTION(BlueprintCallable, Category = "Network")
     void SetPlayerReady(bool bReady);
 
-    UFUNCTION(BlueprintPure, Category = "Network|Players")
-    TArray<FMingMultiplayerPlayerData> GetAllPlayers() const;
+    UFUNCTION(BlueprintPure, Category = "Network")
+    bool IsPlayerReady(int32 PlayerID) const;
 
-    UFUNCTION(BlueprintPure, Category = "Network|Players")
-    FMingMultiplayerPlayerData GetPlayerData(int32 PlayerID) const;
+    UFUNCTION(BlueprintPure, Category = "Network")
+    TArray<FMingPlayerNetworkInfo> GetAllPlayers() const;
 
-    UFUNCTION(BlueprintPure, Category = "Network|Players")
-    int32 GetPlayerCount() const;
+    UFUNCTION(BlueprintPure, Category = "Network")
+    FMingPlayerNetworkInfo GetPlayerInfo(int32 PlayerID) const;
 
-    // === 遊戲模式 ===
+    UFUNCTION(BlueprintPure, Category = "Network")
+    FMingPlayerNetworkInfo GetLocalPlayerInfo() const;
 
-    UFUNCTION(BlueprintCallable, Category = "Network|Game Mode")
-    void SetGameMode(EMingNetworkGameMode GameMode);
+    UFUNCTION(BlueprintPure, Category = "Network")
+    int32 GetLocalPlayerID() const;
 
-    UFUNCTION(BlueprintPure, Category = "Network|Game Mode")
-    EMingNetworkGameMode GetGameMode() const { return CurrentGameMode; }
+    UFUNCTION(BlueprintCallable, Category = "Network")
+    void KickPlayer(int32 PlayerID, const FString& Reason);
 
-    // === 數據同步 ===
+    // Game control
+    UFUNCTION(BlueprintCallable, Category = "Network")
+    void StartGame();
 
-    // 請求完整同步
-    UFUNCTION(BlueprintCallable, Category = "Network|Sync")
-    void RequestFullSync();
+    UFUNCTION(BlueprintCallable, Category = "Network")
+    void EndGame();
 
-    // 啟用/禁用自動同步
-    UFUNCTION(BlueprintCallable, Category = "Network|Sync")
-    void SetAutoSyncEnabled(bool bEnabled);
+    UFUNCTION(BlueprintPure, Category = "Network")
+    bool IsGameInProgress() const;
 
-    UFUNCTION(BlueprintPure, Category = "Network|Sync")
-    bool IsAutoSyncEnabled() const { return bAutoSyncEnabled; }
+    // Chat system
+    UFUNCTION(BlueprintCallable, Category = "Network")
+    void SendChatMessage(const FString& Message, bool bIsPrivate = false, int32 TargetPlayerID = -1);
 
-    // 手動觸發同步
-    UFUNCTION(BlueprintCallable, Category = "Network|Sync")
-    void ForceSync();
+    // Host migration
+    UFUNCTION(BlueprintCallable, Category = "Network")
+    bool PerformHostMigration();
 
-    // === 網絡統計 ===
+    // Network stats
+    UFUNCTION(BlueprintPure, Category = "Network")
+    FMingNetworkStats GetNetworkStats() const;
 
-    UFUNCTION(BlueprintPure, Category = "Network|Stats")
-    FMingNetworkStats GetNetworkStats() const { return NetworkStats; }
+    UFUNCTION(BlueprintCallable, Category = "Network")
+    void GetDetailedNetworkStats(FString& OutStats) const;
 
-    UFUNCTION(BlueprintCallable, Category = "Network|Stats")
-    void ResetNetworkStats();
+    // Error handling
+    UFUNCTION(BlueprintPure, Category = "Network")
+    EMingNetworkError GetLastError() const;
 
-    // === 事件 ===
+    UFUNCTION(BlueprintPure, Category = "Network")
+    FString GetLastErrorMessage() const;
 
-    UPROPERTY(BlueprintAssignable, Category = "Network|Events")
-    FOnNetworkConnected OnNetworkConnected;
+    // Configuration
+    UFUNCTION(BlueprintCallable, Category = "Network")
+    void SetNetworkConfig(const FMingNetworkConfig& NewConfig);
 
-    UPROPERTY(BlueprintAssignable, Category = "Network|Events")
-    FOnNetworkDisconnected OnNetworkDisconnected;
+    UFUNCTION(BlueprintPure, Category = "Network")
+    FMingNetworkConfig GetNetworkConfig() const;
 
-    UPROPERTY(BlueprintAssignable, Category = "Network|Events")
-    FOnNetworkConnectionFailed OnNetworkConnectionFailed;
+    // Delegates
+    UPROPERTY(BlueprintAssignable, Category = "Network Events")
+    FOnNetworkConnectionStateChanged OnConnectionStateChanged;
 
-    UPROPERTY(BlueprintAssignable, Category = "Network|Events")
+    UPROPERTY(BlueprintAssignable, Category = "Network Events")
     FOnPlayerJoined OnPlayerJoined;
 
-    UPROPERTY(BlueprintAssignable, Category = "Network|Events")
+    UPROPERTY(BlueprintAssignable, Category = "Network Events")
     FOnPlayerLeft OnPlayerLeft;
 
-    UPROPERTY(BlueprintAssignable, Category = "Network|Events")
-    FOnNetworkStateChanged OnNetworkStateChanged;
+    UPROPERTY(BlueprintAssignable, Category = "Network Events")
+    FOnPlayerReadyChanged OnPlayerReadyChanged;
 
-    UPROPERTY(BlueprintAssignable, Category = "Network|Events")
+    UPROPERTY(BlueprintAssignable, Category = "Network Events")
+    FOnChatMessageReceived OnChatMessageReceived;
+
+    UPROPERTY(BlueprintAssignable, Category = "Network Events")
+    FOnNetworkError OnNetworkError;
+
+    UPROPERTY(BlueprintAssignable, Category = "Network Events")
     FOnHostMigrated OnHostMigrated;
 
-    // === 內部方法（Blueprint不可見） ===
+    UPROPERTY(BlueprintAssignable, Category = "Network Events")
+    FOnGameStarted OnGameStarted;
 
-    // 處理連接成功
-    void HandleConnectionSuccess();
-
-    // 處理連接失敗
-    void HandleConnectionFailed(const FString& ErrorMessage);
-
-    // 處理斷開連接
-    void HandleDisconnection(const FString& Reason);
-
-    // 處理玩家加入
-    void HandlePlayerJoined(int32 PlayerID, const FString& PlayerName);
-
-    // 處理玩家離開
-    void HandlePlayerLeft(int32 PlayerID, const FString& Reason);
-
-    // 處理主機遷移
-    void HandleHostMigration(int32 NewHostPlayerID);
-
-    // 更新網絡統計
-    void UpdateNetworkStats();
-
-    // 獲取關係複製組件
-    UFUNCTION(BlueprintPure, Category = "Network|Replication")
-    UMingRelationshipReplication* GetRelationshipReplication() const;
-
-    // 獲取聲望複製組件
-    UFUNCTION(BlueprintPure, Category = "Network|Replication")
-    UMingReputationReplication* GetReputationReplication() const;
-
-protected:
-    // 設置連接狀態
-    void SetConnectionState(EMingNetworkConnectionState NewState);
-
-    // 開始重連
-    void StartReconnect();
-
-    // 停止重連
-    void StopReconnect();
-
-    // 重連計時器回調
-    void OnReconnectTimer();
-
-    // 同步計時器回調
-    void OnSyncTimer();
-
-    // 初始化複製組件
-    void InitializeReplicationComponents();
-
-    // 關閉複製組件
-    void ShutdownReplicationComponents();
+    UPROPERTY(BlueprintAssignable, Category = "Network Events")
+    FOnGameEnded OnGameEnded;
 
 private:
-    // 初始化狀態
-    UPROPERTY()
-    bool bIsInitialized;
-
-    // 連接狀態
+    // Network state
     UPROPERTY()
     EMingNetworkConnectionState ConnectionState;
 
-    // 當前遊戲模式
     UPROPERTY()
-    EMingNetworkGameMode CurrentGameMode;
+    EMingNetworkRole NetworkRole;
 
-    // 本地玩家ID
+    UPROPERTY()
+    FMingNetworkConfig CurrentConfig;
+
+    UPROPERTY()
+    TArray<FMingPlayerNetworkInfo> ConnectedPlayers;
+
     UPROPERTY()
     int32 LocalPlayerID;
 
-    // 網絡配置
     UPROPERTY()
-    FMingNetworkConfig NetworkConfig;
+    bool bGameInProgress;
 
-    // 網絡統計
+    UPROPERTY()
+    EMingNetworkError LastError;
+
+    UPROPERTY()
+    FString LastErrorMessage;
+
     UPROPERTY()
     FMingNetworkStats NetworkStats;
 
-    // 玩家數據
-    UPROPERTY()
-    TArray<FMingMultiplayerPlayerData> PlayerList;
-
-    // 自動同步設置
-    UPROPERTY()
-    bool bAutoSyncEnabled;
-
-    // 重連相關
-    UPROPERTY()
-    int32 CurrentReconnectAttempt;
-
-    UPROPERTY()
-    float ReconnectTimer;
-
-    // PersonalManager 引用
-    UPROPERTY()
-    TObjectPtr<UMingPersonalManager> PersonalManager;
-
-    // 關係複製組件
-    UPROPERTY()
-    TObjectPtr<UMingRelationshipReplication> RelationshipReplication;
-
-    // 聲望複製組件
-    UPROPERTY()
-    TObjectPtr<UMingReputationReplication> ReputationReplication;
-
-    // 靜態實例訪問
-public:
-    UFUNCTION(BlueprintPure, Category = "Network", meta = (WorldContext = "WorldContextObject"))
-    static UMingNetworkManager* GetNetworkManager(UObject* WorldContextObject);
+    // Internal functions
+    void UpdateConnectionState(EMingNetworkConnectionState NewState);
+    void HandleConnectionSuccess();
+    void HandleConnectionFailure(EMingNetworkError Error, const FString& Message);
+    void UpdateNetworkStats();
+    void BroadcastChatMessageToAll(const FMingChatMessage& Message);
+    void BroadcastChatMessageToPlayer(const FMingChatMessage& Message, int32 TargetPlayerID);
+    void AddPlayer(const FMingPlayerNetworkInfo& PlayerInfo);
+    void RemovePlayer(int32 PlayerID);
+    void UpdatePlayerReadyState(int32 PlayerID, bool bReady);
+    int32 GeneratePlayerID();
+    bool ValidatePassword(const FString& Password) const;
+    void OnRep_ConnectionState();
 };
