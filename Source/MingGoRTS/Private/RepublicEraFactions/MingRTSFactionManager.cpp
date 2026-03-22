@@ -47,7 +47,7 @@ void UMingRTSFactionManager::RegisterAllFactions()
 
 void UMingRTSFactionManager::RegisterBeiyangGovernment()
 {
-    UBeiyangGovernment* Faction = NewObject<UBeiyangGovernment>(this);
+    UMingRTSBeiyangGovernment* Faction = NewObject<UMingRTSBeiyangGovernment>(this);
     if (Faction)
     {
         Faction->InitializeFaction();
@@ -58,7 +58,7 @@ void UMingRTSFactionManager::RegisterBeiyangGovernment()
 
 void UMingRTSFactionManager::RegisterNationalistGovernment()
 {
-    UNationalistGovernment* Faction = NewObject<UNationalistGovernment>(this);
+    UMingRTSNationalistGovernment* Faction = NewObject<UMingRTSNationalistGovernment>(this);
     if (Faction)
     {
         Faction->InitializeFaction();
@@ -69,7 +69,7 @@ void UMingRTSFactionManager::RegisterNationalistGovernment()
 
 void UMingRTSFactionManager::RegisterCommunistParty()
 {
-    UCommunistParty* Faction = NewObject<UCommunistParty>(this);
+    UMingRTSCommunistParty* Faction = NewObject<UMingRTSCommunistParty>(this);
     if (Faction)
     {
         Faction->InitializeFaction();
@@ -80,101 +80,56 @@ void UMingRTSFactionManager::RegisterCommunistParty()
 
 void UMingRTSFactionManager::RegisterFengtianClique()
 {
-    UFengtianClique* Faction = NewObject<UFengtianClique>(this);
-    if (Faction)
-    {
-        Faction->InitializeFaction();
-        RegisteredFactions.Add(FName("FengtianClique"), Faction);
-        UE_LOG(LogMingRTSFactionManager, Log, TEXT("Registered: Fengtian Clique"));
-    }
+    // TODO: Implement Fengtian Clique
+    UE_LOG(LogMingRTSFactionManager, Log, TEXT("Fengtian Clique not yet implemented"));
 }
 
 void UMingRTSFactionManager::RegisterZhiliClique()
 {
-    UZhiliClique* Faction = NewObject<UZhiliClique>(this);
-    if (Faction)
-    {
-        Faction->InitializeFaction();
-        RegisteredFactions.Add(FName("ZhiliClique"), Faction);
-        UE_LOG(LogMingRTSFactionManager, Log, TEXT("Registered: Zhili Clique"));
-    }
+    // TODO: Implement Zhili Clique
+    UE_LOG(LogMingRTSFactionManager, Log, TEXT("Zhili Clique not yet implemented"));
 }
 
 void UMingRTSFactionManager::RegisterAnhuiClique()
 {
-    UAnhuiClique* Faction = NewObject<UAnhuiClique>(this);
-    if (Faction)
-    {
-        Faction->InitializeFaction();
-        RegisteredFactions.Add(FName("AnhuiClique"), Faction);
-        UE_LOG(LogMingRTSFactionManager, Log, TEXT("Registered: Anhui Clique"));
-    }
+    // TODO: Implement Anhui Clique
+    UE_LOG(LogMingRTSFactionManager, Log, TEXT("Anhui Clique not yet implemented"));
 }
 
 void UMingRTSFactionManager::RegisterShanxiClique()
 {
-    UShanxiClique* Faction = NewObject<UShanxiClique>(this);
-    if (Faction)
-    {
-        Faction->InitializeFaction();
-        RegisteredFactions.Add(FName("ShanxiClique"), Faction);
-        UE_LOG(LogMingRTSFactionManager, Log, TEXT("Registered: Shanxi Clique"));
-    }
+    // TODO: Implement Shanxi Clique
+    UE_LOG(LogMingRTSFactionManager, Log, TEXT("Shanxi Clique not yet implemented"));
 }
 
 void UMingRTSFactionManager::RegisterGuangxiClique()
 {
-    UGuangxiClique* Faction = NewObject<UGuangxiClique>(this);
-    if (Faction)
-    {
-        Faction->InitializeFaction();
-        RegisteredFactions.Add(FName("GuangxiClique"), Faction);
-        UE_LOG(LogMingRTSFactionManager, Log, TEXT("Registered: Guangxi Clique"));
-    }
+    // TODO: Implement Guangxi Clique
+    UE_LOG(LogMingRTSFactionManager, Log, TEXT("Guangxi Clique not yet implemented"));
 }
 
 void UMingRTSFactionManager::RegisterYunnanClique()
 {
-    UYunnanClique* Faction = NewObject<UYunnanClique>(this);
-    if (Faction)
-    {
-        Faction->InitializeFaction();
-        RegisteredFactions.Add(FName("YunnanClique"), Faction);
-        UE_LOG(LogMingRTSFactionManager, Log, TEXT("Registered: Yunnan Clique"));
-    }
+    // TODO: Implement Yunnan Clique
+    UE_LOG(LogMingRTSFactionManager, Log, TEXT("Yunnan Clique not yet implemented"));
 }
 
 void UMingRTSFactionManager::RegisterSichuanClique()
 {
-    USichuanClique* Faction = NewObject<USichuanClique>(this);
-    if (Faction)
-    {
-        Faction->InitializeFaction();
-        RegisteredFactions.Add(FName("SichuanClique"), Faction);
-        UE_LOG(LogMingRTSFactionManager, Log, TEXT("Registered: Sichuan Clique"));
-    }
+    // TODO: Implement Sichuan Clique
+    UE_LOG(LogMingRTSFactionManager, Log, TEXT("Sichuan Clique not yet implemented"));
 }
 
 void UMingRTSFactionManager::RegisterMaFamilyForces()
 {
-    UMaFamilyForces* Faction = NewObject<UMaFamilyForces>(this);
-    if (Faction)
-    {
-        Faction->InitializeFaction();
-        RegisteredFactions.Add(FName("MaFamilyForces"), Faction);
-        UE_LOG(LogMingRTSFactionManager, Log, TEXT("Registered: Ma Family Forces"));
-    }
+    // TODO: Implement Ma Family Forces
+    UE_LOG(LogMingRTSFactionManager, Log, TEXT("Ma Family Forces not yet implemented"));
 }
 
 void UMingRTSFactionManager::RegisterXinjiangForces()
 {
-    UXinjiangForces* Faction = NewObject<UXinjiangForces>(this);
-    if (Faction)
-    {
-        Faction->InitializeFaction();
-        RegisteredFactions.Add(FName("XinjiangForces"), Faction);
-        UE_LOG(LogMingRTSFactionManager, Log, TEXT("Registered: Xinjiang Forces"));
-    }
+    // TODO: Implement Xinjiang Forces
+    UE_LOG(LogMingRTSFactionManager, Log, TEXT("Xinjiang Forces not yet implemented"));
 }
 
 UMingRTSFactionBase* UMingRTSFactionManager::GetFactionByID(const FName& FactionID) const
