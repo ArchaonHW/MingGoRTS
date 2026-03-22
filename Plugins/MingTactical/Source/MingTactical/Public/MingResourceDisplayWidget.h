@@ -5,6 +5,30 @@
 #include "MingResourceSystem.h"
 #include "MingResourceDisplayWidget.generated.h"
 
+// 資源項目結構
+USTRUCT(BlueprintType)
+struct FResourceDisplayItem
+{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    TObjectPtr<class UBorder> ItemBorder;
+
+    UPROPERTY()
+    TObjectPtr<class UTextBlock> ResourceNameText;
+
+    UPROPERTY()
+    TObjectPtr<class UTextBlock> ResourceAmountText;
+
+    UPROPERTY()
+    TObjectPtr<class UProgressBar> ResourceProgressBar;
+
+    UPROPERTY()
+    TObjectPtr<class UImage> ResourceIcon;
+
+    EMingResourceType ResourceType;
+};
+
 /**
  * 資源顯示 Widget
  * 顯示6種資源的數量和進度條
@@ -21,30 +45,6 @@ public:
     // 資源顯示容器
     UPROPERTY(meta = (BindWidgetOptional))
     TObjectPtr<class UHorizontalBox> ResourceContainer;
-
-    // 資源項目結構
-    USTRUCT(BlueprintType)
-    struct FResourceDisplayItem
-    {
-        GENERATED_BODY()
-
-        UPROPERTY()
-        TObjectPtr<class UBorder> ItemBorder;
-
-        UPROPERTY()
-        TObjectPtr<class UTextBlock> ResourceNameText;
-
-        UPROPERTY()
-        TObjectPtr<class UTextBlock> ResourceAmountText;
-
-        UPROPERTY()
-        TObjectPtr<class UProgressBar> ResourceProgressBar;
-
-        UPROPERTY()
-        TObjectPtr<class UImage> ResourceIcon;
-
-        EMingResourceType ResourceType;
-    };
 
     // 6種資源的顯示項目
     UPROPERTY(BlueprintReadOnly, Category = "Resources")

@@ -29,6 +29,15 @@ enum class EMingDamageIndicatorType : uint8
 };
 
 USTRUCT(BlueprintType)
+struct FMingEffectPoolEntry
+{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    TArray<TWeakObjectPtr<class UFXSystemComponent>> Effects;
+};
+
+USTRUCT(BlueprintType)
 struct FMingCombatEffect
 {
     GENERATED_BODY()
@@ -206,7 +215,7 @@ protected:
 
     // Effect pools
     UPROPERTY()
-    TMap<EMingCombatEffectType, TArray<TWeakObjectPtr<class UFXSystemComponent>>> EffectPools;
+    TMap<EMingCombatEffectType, FMingEffectPoolEntry> EffectPools;
 
     // Internal functions
     void ProcessPendingEffects();

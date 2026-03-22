@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MingIntegrationValidator.generated.h"
 
 /**
  * Integration Test Executor for MingGoRTS
@@ -100,3 +99,5 @@ protected:
     void LogTestEvent(const FString& Event, const FString& Details);
     void BroadcastTestProgress(const FString& TestName, float Progress);
 };
+
+#include "MingIntegrationTestExecutor.generated.h"

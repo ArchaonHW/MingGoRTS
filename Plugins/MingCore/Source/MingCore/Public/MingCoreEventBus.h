@@ -4,6 +4,16 @@
 #include "UObject/Interface.h"
 #include "MingCoreEventBus.generated.h"
 
+// 事件優先級枚舉 (獨立定義以支援 UHT)
+UENUM(BlueprintType)
+enum class EEventPriority : uint8
+{
+    Critical = 0,  // 單位選擇、攻擊指令
+    High = 1,      // 戰術移動、狀態變更
+    Normal = 2,    // 資源更新、UI刷新
+    Low = 3        // 統計數據、日誌記錄
+};
+
 class MINGCORE_API IMingCoreEventBus
 {
 public:
@@ -23,15 +33,6 @@ public:
     
     // 批處理事件發布（性能優化）
     static void PublishBatchEvents(const TArray<struct FMingCoreEvent>& Events);
-    
-    // 事件優先級處理
-    enum class EventPriority : uint8
-    {
-        Critical = 0,  // 單位選擇、攻擊指令
-        High = 1,      // 戰術移動、狀態變更
-        Normal = 2,    // 資源更新、UI刷新
-        Low = 3        // 統計數據、日誌記錄
-    };
 };
 
 // 基礎事件結構
@@ -44,7 +45,7 @@ struct MINGCORE_API FMingCoreEvent
     FString EventId;
     
     UPROPERTY(BlueprintReadOnly)
-    TEnumAsByte<IMingCoreEventBus::EventPriority> Priority;
+    EEventPriority Priority;
     
     UPROPERTY(BlueprintReadOnly)
     FDateTime Timestamp;
@@ -53,7 +54,7 @@ struct MINGCORE_API FMingCoreEvent
     UObject* Source;
     
     FMingCoreEvent()
-        : Priority(IMingCoreEventBus::EventPriority::Normal)
+        : Priority(EEventPriority::Normal)
         , Timestamp(FDateTime::Now())
         , Source(nullptr)
     {
@@ -76,7 +77,7 @@ struct MINGCORE_API FUnitSelectedEvent : public FMingCoreEvent
     FUnitSelectedEvent(int32 InUnitId, FVector2D InPosition)
         : UnitId(InUnitId), SelectionPosition(InPosition)
     {
-        Priority = EventPriority::Critical;
+        Priority = EEventPriority::Critical;
     }
 };
 
@@ -98,7 +99,7 @@ struct MINGCORE_API FUnitMovedEvent : public FMingCoreEvent
     FUnitMovedEvent(int32 InUnitId, FVector InTargetPos, bool bInAttackMove = false)
         : UnitId(InUnitId), TargetPosition(InTargetPos), bIsAttackMove(bInAttackMove)
     {
-        Priority = EventPriority::High;
+        Priority = EEventPriority::High;
     }
 };
 
@@ -120,6 +121,6 @@ struct MINGCORE_API FResourceUpdateEvent : public FMingCoreEvent
     FResourceUpdateEvent(const FString& InType, int32 InAmount, int32 InNewTotal)
         : ResourceType(InType), Amount(InAmount), NewTotal(InNewTotal)
     {
-        Priority = EventPriority::Normal;
+        Priority = EEventPriority::Normal;
     }
 };

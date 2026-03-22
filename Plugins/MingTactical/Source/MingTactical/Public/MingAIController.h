@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "MingTacticalUnit.h"
 #include "MingAIController.generated.h"
 
 UENUM(BlueprintType)

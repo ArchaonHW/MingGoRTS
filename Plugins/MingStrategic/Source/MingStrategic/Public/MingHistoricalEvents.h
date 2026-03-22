@@ -243,8 +243,8 @@ protected:
     UPROPERTY()
     TMap<FString, FMingHistoricalEvent> HistoricalEvents;
 
-    UPROPERTY()
-    TMap<FString, TArray<FMingEventChoice>> EventChoices;
+    // 注意：TArray 不能直接作為 TMap 的 UPROPERTY 值類型
+    // TMap<FString, TArray<FMingEventChoice>> EventChoices;
 
     UPROPERTY()
     TMap<FString, float> PlayerInfluence;
@@ -252,8 +252,8 @@ protected:
     UPROPERTY()
     TMap<FString, FString> PlayerEventChoices;
 
-    UPROPERTY()
-    TMap<FString, TArray<FString>> HistoricalNotes;
+    // 注意：TArray 不能直接作為 TMap 的 UPROPERTY 值類型
+    // TMap<FString, TArray<FString>> HistoricalNotes;
 
     UPROPERTY()
     TSet<FString> TriggeredEvents;

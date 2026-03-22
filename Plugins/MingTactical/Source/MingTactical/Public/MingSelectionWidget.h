@@ -54,7 +54,7 @@ public:
     bool IsSelectionBoxVisible() const;
 
     UFUNCTION(BlueprintPure, Category = "Selection Box")
-    FRect GetSelectionRect() const;
+    FIntRect GetSelectionRect() const;
 
 private:
     FVector2D SelectionStartPosition;

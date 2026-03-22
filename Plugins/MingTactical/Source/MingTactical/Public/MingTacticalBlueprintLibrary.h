@@ -19,31 +19,31 @@ public:
     /**
      * 創建大規模戰鬥性能測試實例
      */
-    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor = true)
+    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
     static UMingLargeScaleCombatTest* CreatePerformanceTest();
 
     /**
      * 初始化性能測試
      */
-    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor = true)
+    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
     static void InitializePerformanceTest(UMingLargeScaleCombatTest* TestInstance);
 
     /**
      * 創建測試單位
      */
-    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor = true)
+    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
     static void CreateTestUnits(UMingLargeScaleCombatTest* TestInstance, int32 UnitCount = 1000);
 
     /**
      * 開始性能測試
      */
-    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor = true)
+    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
     static void StartPerformanceTest(UMingLargeScaleCombatTest* TestInstance);
 
     /**
      * 停止性能測試
      */
-    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor = true)
+    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
     static void StopPerformanceTest(UMingLargeScaleCombatTest* TestInstance);
 
     /**
@@ -79,7 +79,7 @@ public:
     /**
      * 清理性能測試
      */
-    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor = true)
+    UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
     static void CleanupPerformanceTest(UMingLargeScaleCombatTest* TestInstance);
 
     /**

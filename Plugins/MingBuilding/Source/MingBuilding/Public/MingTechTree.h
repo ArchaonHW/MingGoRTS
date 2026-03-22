@@ -42,6 +42,16 @@ struct FMingTechUnlock
     {}
 };
 
+// Wrapper struct to allow TArray in TMap (UHT limitation)
+USTRUCT(BlueprintType)
+struct FMingBuildingUpgradeList
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    TArray<FMingBuildingUpgrade> Upgrades;
+};
+
 USTRUCT(BlueprintType)
 struct FMingTechNode
 {
@@ -294,7 +304,7 @@ protected:
     TMap<FString, FMingTechNode> TechNodes;
 
     UPROPERTY()
-    TMap<EMingBuildingType, TArray<FMingBuildingUpgrade>> BuildingUpgrades;
+    TMap<EMingBuildingType, FMingBuildingUpgradeList> BuildingUpgrades;
 
     UPROPERTY()
     TSet<EMingBuildingType> UnlockedBuildings;

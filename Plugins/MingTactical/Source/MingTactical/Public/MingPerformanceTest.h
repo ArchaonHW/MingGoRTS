@@ -5,7 +5,7 @@
 #include "MingPerformanceTest.generated.h"
 
 USTRUCT(BlueprintType)
-struct FMingPerformanceMetrics
+struct FMingPerformanceTestMetrics
 {
     GENERATED_BODY()
 
