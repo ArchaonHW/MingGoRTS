@@ -262,7 +262,7 @@ private:
     UPROPERTY()
     FRTSCulturalPreferences Preferences;
     
-    /** Content variants database - optimized with inline storage */
+    // 注意：TMap<TArray> 不支持 UPROPERTY
     TMap<FString, TArray<FCulturalVariant>> ContentVariants;
     
     /** Regional gameplay parameters cache */
@@ -281,8 +281,29 @@ private:
     mutable FCriticalSection ContentCacheLock;
     mutable TMap<FString, FString> ContentCache;
     
+    /** LRU (Least Recently Used) tracking - stores access order */
+    mutable TArray<FString> LRUCacheOrder;
+    
+    /** Cache access counter for periodic trimming */
+    mutable int32 CacheAccessCounter;
+    
+    /** Cache statistics for performance optimization */
+    struct FCacheStatistics
+    {
+        int64 TotalRequests = 0;
+        int64 CacheHits = 0;
+        int64 CacheMisses = 0;
+        double HitRate = 0.0;
+        int32 CurrentSize = 0;
+        int32 MaxSize = 0;
+    };
+    mutable FCacheStatistics CacheStats;
+    
     /** Maximum cache size to prevent memory leaks (1000 entries) */
     static constexpr int32 MAX_CONTENT_CACHE_SIZE = 1000;
+    
+    /** Check cache every N accesses (100) */
+    static constexpr int32 CACHE_TRIM_INTERVAL = 100;
     
     /** Initialize default content */
     void InitializeDefaultContent();

@@ -199,55 +199,51 @@ public:
     void InitializeCombatSystem(UMingRTSUnitManager* InUnitManager);
 
     // 戰鬥統計
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     void SetUnitCombatStats(AMingGoRTSUnit* Unit, const FRTSCombatStats& CombatStats);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     FRTSCombatStats GetUnitCombatStats(AMingGoRTSUnit* Unit) const;
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     void UpdateCombatStats(AMingGoRTSUnit* Unit, float DamageMultiplier = 1.0f, float DefenseMultiplier = 1.0f);
 
     // 戰鬥執行
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     FRTSCombatResult ExecuteCombat(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     bool CanAttack(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
-    void StartCombat(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
+    void StartCombat(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, ERTSCombatType CombatType);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void StopCombat(AMingGoRTSUnit* Unit);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     bool IsInCombat(AMingGoRTSUnit* Unit) const;
 
     // 傷害計算
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     float CalculateDamage(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     float ApplyDamageReduction(float BaseDamage, ERTSDamageType DamageType, float DefenseRating);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     bool CheckHit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     bool CheckCritical(AMingGoRTSUnit* Attacker);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     bool CheckDodge(AMingGoRTSUnit* Target);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     bool CheckBlock(AMingGoRTSUnit* Target);
 
     // 戰鬥姿態
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     void SetCombatStance(AMingGoRTSUnit* Unit, ERTSCombatStance Stance);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     ERTSCombatStance GetCombatStance(AMingGoRTSUnit* Unit) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
@@ -257,13 +253,13 @@ public:
     float GetStanceDefenseMultiplier(ERTSCombatStance Stance) const;
 
     // 範圍攻擊
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     TArray<AMingGoRTSUnit*> GetUnitsInArea(const FVector& Center, float Radius, AMingGoRTSUnit* ExcludedUnit = nullptr);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     void ExecuteAreaAttack(AMingGoRTSUnit* Attacker, const FVector& Center, float Radius);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     void ExecuteLineAttack(AMingGoRTSUnit* Attacker, const FVector& Start, const FVector& End, float Width);
 
     // 技能系統
@@ -350,10 +346,10 @@ protected:
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
     // 戰鬥數據
-    UPROPERTY()
+    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
     TMap<AMingGoRTSUnit*, FRTSCombatStats> UnitCombatStats;
 
-    UPROPERTY()
+    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
     TMap<AMingGoRTSUnit*, ERTSCombatStance> UnitCombatStances;
 
     // 注意：TMap<TArray> 不支持 UPROPERTY
@@ -362,7 +358,7 @@ protected:
     // 注意：TMap<TMap> 不支持 UPROPERTY
     TMap<AMingGoRTSUnit*, TMap<FString, float>> StatusEffects;
 
-    UPROPERTY()
+    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
     TMap<AMingGoRTSUnit*, AMingGoRTSUnit*> CombatPairs;
 
     // 戰鬥設置

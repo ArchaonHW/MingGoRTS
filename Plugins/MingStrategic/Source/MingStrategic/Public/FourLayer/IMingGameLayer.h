@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "MingFourLayerIntegrationManager.h"
+#include "LayerIntegration/MingFourLayerTypes.h"
 #include "IMingGameLayer.generated.h"
 
 // 遊戲層級介面
@@ -31,7 +31,7 @@ public:
 
     // 獲取層級類型
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    EMingLayer GetLayerType() const;
+    EMingGameLayer GetLayerType() const;
 
     // 獲取層級名稱
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
@@ -71,7 +71,7 @@ public:
 
     // 協調與其他層級
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void CoordinateWithOtherLayers(const TArray<EMingLayer>& OtherLayers);
+    void CoordinateWithOtherLayers(const TArray<EMingGameLayer>& OtherLayers);
 
     // 獲取層級性能統計
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")

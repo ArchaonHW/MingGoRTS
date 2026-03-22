@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "MingBuildingResourceSystem.h"
 #include "MingResourceSystem.generated.h"
 
 UENUM(BlueprintType)

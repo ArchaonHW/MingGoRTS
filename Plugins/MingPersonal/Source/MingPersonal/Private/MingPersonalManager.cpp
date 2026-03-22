@@ -801,3 +801,114 @@ UMingUniversityGuideManager* UMingPersonalManager::GetUniversityGuideManager() c
 {
     return UniversityGuideManager;
 }
+
+// 性能優化系統接口
+void UMingPersonalManager::InitializePerformanceSystem()
+{
+    if (!PerformanceManager)
+    {
+        PerformanceManager = NewObject<UMingPerformanceManager>(this);
+        PerformanceManager->Initialize();
+    }
+
+    if (!MemoryOptimizer)
+    {
+        MemoryOptimizer = NewObject<UMingMemoryOptimizer>(this);
+        MemoryOptimizer->Initialize();
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("Performance system initialized"));
+}
+
+void UMingPersonalManager::SetPerformanceLevel(EMingPerformanceLevel NewLevel)
+{
+    if (PerformanceManager)
+    {
+        PerformanceManager->SetPerformanceLevel(NewLevel);
+    }
+}
+
+EMingPerformanceLevel UMingPersonalManager::GetCurrentPerformanceLevel() const
+{
+    if (PerformanceManager)
+    {
+        return PerformanceManager->GetCurrentPerformanceLevel();
+    }
+    return EMingPerformanceLevel::Medium;
+}
+
+void UMingPersonalManager::OptimizePerformance()
+{
+    if (PerformanceManager)
+    {
+        PerformanceManager->RunAutoOptimization();
+    }
+}
+
+void UMingPersonalManager::SetTargetFrameRate(float TargetFPS)
+{
+    if (PerformanceManager)
+    {
+        PerformanceManager->SetTargetFrameRate(TargetFPS);
+    }
+}
+
+FMingPerformanceMetrics UMingPersonalManager::GetPerformanceMetrics() const
+{
+    if (PerformanceManager)
+    {
+        return PerformanceManager->GetCurrentMetrics();
+    }
+    return FMingPerformanceMetrics();
+}
+
+void UMingPersonalManager::StartPerformanceMonitoring()
+{
+    if (PerformanceManager)
+    {
+        PerformanceManager->StartPerformanceMonitoring();
+    }
+}
+
+void UMingPersonalManager::StopPerformanceMonitoring()
+{
+    if (PerformanceManager)
+    {
+        PerformanceManager->StopPerformanceMonitoring();
+    }
+}
+
+void UMingPersonalManager::OptimizeMemory()
+{
+    if (MemoryOptimizer)
+    {
+        MemoryOptimizer->QuickOptimize();
+    }
+}
+
+void UMingPersonalManager::SetMemoryBudget(int32 MaxMemoryMB)
+{
+    if (MemoryOptimizer)
+    {
+        MemoryOptimizer->SetMemoryBudget(MaxMemoryMB);
+    }
+}
+
+float UMingPersonalManager::GetMemoryUsagePercent() const
+{
+    if (MemoryOptimizer)
+    {
+        return MemoryOptimizer->GetMemoryUsagePercent();
+    }
+    return 0.0f;
+}
+
+UMingPerformanceManager* UMingPersonalManager::GetPerformanceManager() const
+{
+    return PerformanceManager;
+}
+
+UMingMemoryOptimizer* UMingPersonalManager::GetMemoryOptimizer() const
+{
+    return MemoryOptimizer;
+}

@@ -51,7 +51,7 @@ public:
     /** Get text direction for current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static TEnumAsByte<enum class ETextDirection> GetTextDirection();
+    static ETextDirection GetTextDirection();
     
     /** Is current language RTL? */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
@@ -60,11 +60,11 @@ public:
     
     /** Get language display name */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization")
-    static FString GetLanguageDisplayName(TEnumAsByte<enum class ELanguageCode> LanguageCode);
+    static FString GetLanguageDisplayName(ELanguageCode LanguageCode);
     
     /** Get language native name */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization")
-    static FString GetLanguageNativeName(TEnumAsByte<enum class ELanguageCode> LanguageCode);
+    static FString GetLanguageNativeName(ELanguageCode LanguageCode);
     
     /** Get all supported languages */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization")

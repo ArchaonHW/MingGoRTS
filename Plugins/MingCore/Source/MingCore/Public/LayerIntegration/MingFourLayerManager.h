@@ -229,10 +229,8 @@ protected:
     int32 MaxStateHistory = 10;
 
     // Layer transition handling
-    UPROPERTY()
     FTickerDelegate TransitionTicker;
 
-    UPROPERTY()
     FDelegateHandle TransitionTickerHandle;
 
     UPROPERTY()

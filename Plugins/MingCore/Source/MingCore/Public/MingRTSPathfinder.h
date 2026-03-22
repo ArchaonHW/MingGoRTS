@@ -102,7 +102,7 @@ struct FRTSPathRequest
     UPROPERTY(BlueprintReadOnly, Category = "Path Request")
     FVector TargetLocation;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Path Request")
+    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
     TObjectPtr<AMingGoRTSUnit> RequestingUnit;
 
     UPROPERTY(BlueprintReadOnly, Category = "Path Request")
@@ -222,10 +222,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void CreateNavigationGrid(FVector Center, float GridSize, int32 GridResolution);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
+    // 注意：FRTSPathNode 指標不適合 UFUNCTION BlueprintCallable
     FRTSPathNode* GetNodeAtLocation(FVector Location) const;
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
+    // 注意：FRTSPathNode 指標不適合 UFUNCTION BlueprintCallable
     TArray<FRTSPathNode*> GetNeighborNodes(FRTSPathNode* Node) const;
 
     // 性能監控

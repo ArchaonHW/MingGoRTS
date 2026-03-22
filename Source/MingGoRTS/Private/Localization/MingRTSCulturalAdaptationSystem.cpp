@@ -6,6 +6,22 @@
 #include "Internationalization/Internationalization.h"
 #include "Internationalization/Culture.h"
 
+// Constants for better maintainability
+namespace CulturalAdaptationConstants
+{
+    constexpr int32 CacheTrimInterval = 100;
+    constexpr int32 MaxContentCacheSize = 1000;
+    constexpr float DefaultDifficultyMultiplier = 1.0f;
+    constexpr float DefaultResourceMultiplier = 1.0f;
+    constexpr float DefaultAIAggressiveness = 1.0f;
+    constexpr float DefaultTutorialPacing = 1.0f;
+    constexpr int32 MinAgeForContent = 0;
+    constexpr int32 ChildAgeLimit = 7;
+    constexpr int32 TeenAgeLimit = 13;
+    constexpr int32 AdultAgeLimit = 18;
+    constexpr float CacheTrimRatio = 0.25f;
+}
+
 DEFINE_LOG_CATEGORY_STATIC(LogMingRTSCultural, Log, All);
 
 UMingRTSCulturalAdaptationSystem::UMingRTSCulturalAdaptationSystem()
@@ -68,24 +84,60 @@ void UMingRTSCulturalAdaptationSystem::SetPlayerRegion(ECulturalRegion Region)
 FString UMingRTSCulturalAdaptationSystem::GetAdaptedContent(const FString& ContentKey, 
     ECulturalRegion Region) const
 {
+    // Update statistics and access counter
+    FScopeLock StatsLock(&ContentCacheLock);
+    CacheStats.TotalRequests++;
+    CacheAccessCounter++;
+    
+    // Periodic cache trimming check (every 100 accesses)
+    if (CacheAccessCounter >= CulturalAdaptationConstants::CacheTrimInterval)
+    {
+        StatsLock.Unlock();
+        CheckAndTrimCache();
+        StatsLock.Lock();
+        CacheAccessCounter = 0;
+    }
+    StatsLock.Unlock();
+    
     // Check cache first for performance - thread safe read
-    FString CacheKey = FString::Printf(TEXT("%s_%d"), *ContentKey, (int32)Region);
+    const FString CacheKey = FString::Printf(TEXT("%s_%d"), *ContentKey, static_cast<int32>(Region));
     {
         FScopeLock Lock(&ContentCacheLock);
         const FString* CachedContent = ContentCache.Find(CacheKey);
         if (CachedContent)
         {
+            // Cache hit - update statistics and LRU order
+            CacheStats.CacheHits++;
+            UpdateLRUOrder(CacheKey);
+            
+            // Recalculate hit rate
+            if (CacheStats.TotalRequests > 0)
+            {
+                CacheStats.HitRate = (static_cast<double>(CacheStats.CacheHits) / static_cast<double>(CacheStats.TotalRequests)) * 100.0;
+            }
+            
             return *CachedContent;
         }
+        // Cache miss
+        CacheStats.CacheMisses++;
     }
     
     // Find best variant
     const FCulturalVariant* Variant = FindBestVariant(ContentKey, Region);
     if (Variant && !Variant->AdaptedText.IsEmpty())
     {
-        // Cache the result - thread safe write
+        // Cache the result - thread safe write with LRU update
         FScopeLock Lock(&ContentCacheLock);
         ContentCache.Add(CacheKey, Variant->AdaptedText);
+        UpdateLRUOrder(CacheKey);
+        
+        // Update current size statistic
+        CacheStats.CurrentSize = ContentCache.Num();
+        if (CacheStats.CurrentSize > CacheStats.MaxSize)
+        {
+            CacheStats.MaxSize = CacheStats.CurrentSize;
+        }
+        
         return Variant->AdaptedText;
     }
     
@@ -93,15 +145,31 @@ FString UMingRTSCulturalAdaptationSystem::GetAdaptedContent(const FString& Conte
     const FString* Default = DefaultContent.Find(ContentKey);
     if (Default)
     {
-        // Cache the result - thread safe write
+        // Cache the result - thread safe write with LRU update
         FScopeLock Lock(&ContentCacheLock);
         ContentCache.Add(CacheKey, *Default);
+        UpdateLRUOrder(CacheKey);
+        
+        CacheStats.CurrentSize = ContentCache.Num();
+        if (CacheStats.CurrentSize > CacheStats.MaxSize)
+        {
+            CacheStats.MaxSize = CacheStats.CurrentSize;
+        }
+        
         return *Default;
     }
     
-    // Last resort: return key and cache it - thread safe write
+    // Last resort: return key and cache it - thread safe write with LRU update
     FScopeLock Lock(&ContentCacheLock);
     ContentCache.Add(CacheKey, ContentKey);
+    UpdateLRUOrder(CacheKey);
+    
+    CacheStats.CurrentSize = ContentCache.Num();
+    if (CacheStats.CurrentSize > CacheStats.MaxSize)
+    {
+        CacheStats.MaxSize = CacheStats.CurrentSize;
+    }
+    
     return ContentKey;
 }
 
@@ -330,7 +398,7 @@ void UMingRTSCulturalAdaptationSystem::LoadCulturalPreferences()
         {
             int64 Value = EnumPtr->GetValueByNameString(RegionString);
             // Validate enum value is within valid range to prevent undefined behavior
-            if (Value != INDEX_NONE && Value >= 0 && Value < (int64)ECulturalRegion::Global)
+            if (Value != INDEX_NONE && Value >= 0 && Value <= static_cast<int64>(ECulturalRegion::Global))
             {
                 Preferences.PrimaryRegion = static_cast<ECulturalRegion>(Value);
                 CurrentRegion = Preferences.PrimaryRegion;
@@ -460,8 +528,8 @@ void UMingRTSCulturalAdaptationSystem::LoadContentVariants()
 void UMingRTSCulturalAdaptationSystem::InitializeRegionalParams()
 {
     // Initialize default regional parameters
-    auto AddParams = [this](ECulturalRegion Region, float Difficulty, float Resources, 
-                           float AI, float Tutorial)
+    const auto AddParams = [this](ECulturalRegion Region, float Difficulty, float Resources, 
+                                  float AI, float Tutorial)
     {
         FRegionalGameplayParams Params;
         Params.DifficultyMultiplier = Difficulty;
@@ -471,11 +539,23 @@ void UMingRTSCulturalAdaptationSystem::InitializeRegionalParams()
         RegionalParams.Add(Region, Params);
     };
     
-    AddParams(ECulturalRegion::EastAsia, 1.0f, 1.0f, 0.9f, 0.9f);
-    AddParams(ECulturalRegion::WesternEurope, 1.0f, 1.0f, 1.0f, 1.0f);
-    AddParams(ECulturalRegion::NorthAmerica, 0.9f, 1.1f, 1.0f, 1.1f);
+    AddParams(ECulturalRegion::EastAsia, 
+              CulturalAdaptationConstants::DefaultDifficultyMultiplier, 
+              CulturalAdaptationConstants::DefaultResourceMultiplier, 
+              0.9f, 0.9f);
+    AddParams(ECulturalRegion::WesternEurope, 
+              CulturalAdaptationConstants::DefaultDifficultyMultiplier, 
+              CulturalAdaptationConstants::DefaultResourceMultiplier, 
+              CulturalAdaptationConstants::DefaultAIAggressiveness, 
+              CulturalAdaptationConstants::DefaultTutorialPacing);
+    AddParams(ECulturalRegion::NorthAmerica, 0.9f, 1.1f, 
+              CulturalAdaptationConstants::DefaultAIAggressiveness, 1.1f);
     AddParams(ECulturalRegion::LatinAmerica, 1.1f, 0.9f, 1.1f, 0.9f);
-    AddParams(ECulturalRegion::SoutheastAsia, 1.0f, 1.0f, 1.0f, 1.0f);
+    AddParams(ECulturalRegion::SoutheastAsia, 
+              CulturalAdaptationConstants::DefaultDifficultyMultiplier, 
+              CulturalAdaptationConstants::DefaultResourceMultiplier, 
+              CulturalAdaptationConstants::DefaultAIAggressiveness, 
+              CulturalAdptationConstants::DefaultTutorialPacing);
     AddParams(ECulturalRegion::MiddleEast, 1.1f, 0.9f, 1.2f, 0.8f);
 }
 
@@ -520,14 +600,14 @@ bool UMingRTSCulturalAdaptationSystem::CheckContentRating(const FCulturalVariant
     
     switch (Variant.SensitivityLevel)
     {
-    case 0:
+    case CulturalAdaptationConstants::MinAgeForContent:
         return true;
     case 1:
-        return UserAge >= 7;
+        return UserAge >= CulturalAdaptationConstants::ChildAgeLimit;
     case 2:
-        return UserAge >= 13;
+        return UserAge >= CulturalAdaptationConstants::TeenAgeLimit;
     case 3:
-        return UserAge >= 18;
+        return UserAge >= CulturalAdaptationConstants::AdultAgeLimit;
     default:
         return true;
     }
@@ -547,26 +627,59 @@ void UMingRTSCulturalAdaptationSystem::ClearContentCache()
     FScopeLock Lock(&ContentCacheLock);
     int32 PreviousSize = ContentCache.Num();
     ContentCache.Empty();
+    LRUCacheOrder.Empty();
+    
+    // Reset statistics
+    CacheStats.CurrentSize = 0;
+    CacheStats.HitRate = 0.0;
+    
     UE_LOG(LogMingRTSCultural, Log, TEXT("Content cache cleared. Previous size: %d, Current size: %d"), 
         PreviousSize, ContentCache.Num());
+}
+
+void UMingRTSCulturalAdaptationSystem::UpdateLRUOrder(const FString& CacheKey) const
+{
+    // Move the accessed key to the end (most recently used)
+    LRUCacheOrder.Remove(CacheKey);
+    LRUCacheOrder.Add(CacheKey);
 }
 
 void UMingRTSCulturalAdaptationSystem::CheckAndTrimCache()
 {
     FScopeLock Lock(&ContentCacheLock);
-    if (ContentCache.Num() > MAX_CONTENT_CACHE_SIZE)
+    if (ContentCache.Num() <= CulturalAdaptationConstants::MaxContentCacheSize)
     {
-        // Remove oldest 25% of entries when cache exceeds limit
-        int32 EntriesToRemove = ContentCache.Num() / 4;
-        TArray<FString> Keys;
-        ContentCache.GetKeys(Keys);
-        
-        for (int32 i = 0; i < EntriesToRemove && i < Keys.Num(); ++i)
-        {
-            ContentCache.Remove(Keys[i]);
-        }
-        
-        UE_LOG(LogMingRTSCultural, Log, TEXT("Cache trimmed: removed %d entries, new size: %d"),
-            EntriesToRemove, ContentCache.Num());
+        return;
     }
+    
+    // Calculate how many entries to remove (remove oldest 25%)
+    const int32 EntriesToRemove = FMath::Max(1, static_cast<int32>(ContentCache.Num() * CulturalAdaptationConstants::CacheTrimRatio));
+    
+    // Remove oldest entries based on LRU order (from the beginning of array)
+    int32 RemovedCount = 0;
+    for (int32 i = 0; i < LRUCacheOrder.Num() && RemovedCount < EntriesToRemove; ++i)
+    {
+        const FString& Key = LRUCacheOrder[i];
+        if (ContentCache.Remove(Key) > 0)
+        {
+            RemovedCount++;
+        }
+    }
+    
+    // Rebuild LRU order to remove deleted keys
+    TArray<FString> NewLRUOrder;
+    for (const FString& Key : LRUCacheOrder)
+    {
+        if (ContentCache.Contains(Key))
+        {
+            NewLRUOrder.Add(Key);
+        }
+    }
+    LRUCacheOrder = MoveTemp(NewLRUOrder);
+    
+    // Update statistics
+    CacheStats.CurrentSize = ContentCache.Num();
+    
+    UE_LOG(LogMingRTSCultural, Log, TEXT("Cache trimmed using LRU: removed %d oldest entries, new size: %d, max size was: %d"),
+        RemovedCount, ContentCache.Num(), CacheStats.MaxSize);
 }

@@ -17,6 +17,9 @@ class UMingRTSCulturalAdaptationSystem;
  * Game subsystem for managing localization across the game session
  * Provides centralized access to localization services
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSubsystemLanguageChanged, 
+    TEnumAsByte<ELanguageCode>, NewLanguage);
+
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
 class MINGGORTS_API UMingRTSLocalizationSubsystem : public UGameInstanceSubsystem
 {
@@ -95,9 +98,6 @@ public:
     /** Event: Language changed */
     UPROPERTY(BlueprintAssignable, Category = "MingRTS|Localization|Subsystem|Events")
     FOnSubsystemLanguageChanged OnLanguageChanged;
-    
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSubsystemLanguageChanged, 
-        TEnumAsByte<enum class ELanguageCode>, NewLanguage);
 
 private:
     /** Localization system instance */
@@ -132,7 +132,7 @@ struct FLanguageOption
     GENERATED_BODY()
     
     UPROPERTY(BlueprintReadOnly)
-    TEnumAsByte<enum class ELanguageCode> LanguageCode;
+    ELanguageCode LanguageCode;
     
     UPROPERTY(BlueprintReadOnly)
     FString DisplayName;
