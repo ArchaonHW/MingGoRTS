@@ -83,19 +83,19 @@ class MINGGORTS_API UMingRTSLocalizationSystem : public UObject
     GENERATED_BODY()
     
 public:
-    UMingRTSLocalizationSystem();
+    UMingRTSLocalizationSystem(};
     
     /** Initialize the localization system */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
-    void InitializeLocalizationSystem();
+    void InitializeLocalizationSystem(};
     
     /** Shutdown and cleanup */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
-    void ShutdownLocalizationSystem();
+    void ShutdownLocalizationSystem(};
     
     /** Set current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
-    void SetLanguage(ELanguageCode LanguageCode);
+    void SetLanguage(ELanguageCode LanguageCode};
     
     /** Get current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
@@ -119,11 +119,11 @@ public:
     
     /** Load language pack */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
-    bool LoadLanguagePack(ELanguageCode LanguageCode);
+    bool LoadLanguagePack(ELanguageCode LanguageCode};
     
     /** Unload language pack to free memory */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
-    void UnloadLanguagePack(ELanguageCode LanguageCode);
+    void UnloadLanguagePack(ELanguageCode LanguageCode};
     
     /** Get all supported languages */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
@@ -135,7 +135,7 @@ public:
     
     /** Reload current language (for hot-reload during development) */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
-    void ReloadCurrentLanguage();
+    void ReloadCurrentLanguage(};
     
     /** Check if key exists */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
@@ -150,7 +150,7 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "MingRTS|Localization|Events")
     FOnLanguageChanged OnLanguageChanged;
     
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLanguageChanged, ELanguageCode, NewLanguage);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLanguageChanged, ELanguageCode, NewLanguage};
 
 private:
     /** Current active language */
@@ -168,10 +168,10 @@ private:
     FString LocalizationConfigPath;
     
     /** Load language pack from file */
-    bool LoadLanguagePackFromFile(ELanguageCode LanguageCode, const FString& FilePath);
+    bool LoadLanguagePackFromFile(ELanguageCode LanguageCode, const FString& FilePath};
     
     /** Parse locres file format */
-    bool ParseLocresFile(const FString& FilePath, FLanguagePack& OutPack);
+    bool ParseLocresFile(const FString& FilePath, FLanguagePack& OutPack};
     
     /** Get default language file path */
     FString GetLanguageFilePath(ELanguageCode LanguageCode) const;
@@ -180,11 +180,12 @@ private:
     ETextDirection DetectTextDirection(ELanguageCode LanguageCode) const;
     
     /** Clear text cache */
-    void ClearCache();
+    void ClearCache(};
     
     /** Preload common texts to cache */
-    void PreloadCommonTexts();
+    void PreloadCommonTexts(};
     
     /** Get fallback key if translation missing */
     FString GetFallbackText(const FString& Key) const;
 };
+

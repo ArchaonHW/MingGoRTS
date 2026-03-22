@@ -19,27 +19,27 @@ class MINGGORTS_API UMingLanguageSelectionWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingLanguageSelectionWidget();
+    UMingLanguageSelectionWidget(};
 
     /** Initialize the language selection widget */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void InitializeLanguageSelection();
+    void InitializeLanguageSelection(};
 
     /** Refresh available languages list */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void RefreshLanguageList();
+    void RefreshLanguageList(};
 
     /** Refresh available regions list */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void RefreshRegionList();
+    void RefreshRegionList(};
 
     /** Set current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetCurrentLanguage(ELanguageCode LanguageCode);
+    void SetCurrentLanguage(ELanguageCode LanguageCode};
 
     /** Set current region */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetCurrentRegion(ECulturalRegion Region);
+    void SetCurrentRegion(ECulturalRegion Region};
 
     /** Get current language display name */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
@@ -67,15 +67,15 @@ public:
 
     /** Apply settings and close */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void ApplySettings();
+    void ApplySettings(};
 
     /** Reset to default settings */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void ResetToDefaults();
+    void ResetToDefaults(};
 
     /** Cancel changes */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void CancelChanges();
+    void CancelChanges(};
 
 protected:
     /** Called when widget is constructed */
@@ -85,42 +85,42 @@ protected:
     virtual void NativeDestruct() override;
 
     /** Bind to localization system events */
-    void BindToLocalizationEvents();
+    void BindToLocalizationEvents(};
 
     /** Unbind from localization system events */
-    void UnbindFromLocalizationEvents();
+    void UnbindFromLocalizationEvents(};
 
     /** Update UI elements */
-    void UpdateUIElements();
+    void UpdateUIElements(};
 
     /** Update language preview */
-    void UpdateLanguagePreview();
+    void UpdateLanguagePreview(};
 
     /** Update region preview */
-    void UpdateRegionPreview();
+    void UpdateRegionPreview(};
 
     /** Save current settings */
-    void SaveSettings();
+    void SaveSettings(};
 
     /** Load saved settings */
-    void LoadSettings();
+    void LoadSettings(};
 
     /** Handle language change event */
     UFUNCTION()
-    void OnLanguageChanged(ELanguageCode NewLanguage);
+    void OnLanguageChanged(ELanguageCode NewLanguage};
 
     /** Handle region change event */
     UFUNCTION()
-    void OnRegionChanged(ECulturalRegion NewRegion);
+    void OnRegionChanged(ECulturalRegion NewRegion};
 
     /** Validate settings */
     bool ValidateSettings() const;
 
     /** Show confirmation dialog */
-    void ShowConfirmationDialog();
+    void ShowConfirmationDialog(};
 
     /** Show restart required dialog */
-    void ShowRestartRequiredDialog();
+    void ShowRestartRequiredDialog(};
 
 private:
     /** Localization system reference */
@@ -230,3 +230,4 @@ public:
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
     bool IsSettingsModified() const { return bSettingsModified; }
 };
+

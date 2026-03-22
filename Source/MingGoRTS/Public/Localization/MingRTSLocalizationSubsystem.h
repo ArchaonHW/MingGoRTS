@@ -18,7 +18,7 @@ class UMingRTSCulturalAdaptationSystem;
  * Provides centralized access to localization services
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSubsystemLanguageChanged, 
-    TEnumAsByte<ELanguageCode>, NewLanguage);
+    TEnumAsByte<ELanguageCode>, NewLanguage};
 
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
 class MINGGORTS_API UMingRTSLocalizationSubsystem : public UGameInstanceSubsystem
@@ -37,7 +37,7 @@ public:
     
     /** Initialize localization on game start */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    void InitializeLocalization();
+    void InitializeLocalization(};
     
     /** Get the localization system */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
@@ -53,7 +53,7 @@ public:
     
     /** Set cultural region */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    void SetCulturalRegion(ECulturalRegion Region);
+    void SetCulturalRegion(ECulturalRegion Region};
     
     /** Get current cultural region */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
@@ -69,7 +69,7 @@ public:
     
     /** Quick access: Set language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    void SetLanguage(ELanguageCode LanguageCode);
+    void SetLanguage(ELanguageCode LanguageCode};
     
     /** Quick access: Get current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
@@ -85,7 +85,7 @@ public:
     
     /** Save user language preference */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    void SaveUserLanguagePreference(ELanguageCode LanguageCode);
+    void SaveUserLanguagePreference(ELanguageCode LanguageCode};
     
     /** Check if language is available */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
@@ -116,11 +116,11 @@ private:
     static const FString LanguageSettingsSlot;
     
     /** Initialize from saved settings or system defaults */
-    void InitializeFromSettings();
+    void InitializeFromSettings(};
     
     /** Handle language changed event from localization system */
     UFUNCTION()
-    void HandleLanguageChanged(ELanguageCode NewLanguage);
+    void HandleLanguageChanged(ELanguageCode NewLanguage};
 };
 
 /**
@@ -152,3 +152,4 @@ struct FLanguageOption
         , bIsSelected(false)
     {}
 };
+

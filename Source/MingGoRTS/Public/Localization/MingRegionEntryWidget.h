@@ -18,11 +18,11 @@ class MINGGORTS_API UMingRegionEntryWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingRegionEntryWidget();
+    UMingRegionEntryWidget(};
 
     /** Set the region code for this entry */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetRegionCode(ECulturalRegion RegionCode);
+    void SetRegionCode(ECulturalRegion RegionCode};
 
     /** Get the region code */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
@@ -30,7 +30,7 @@ public:
 
     /** Set whether this entry is selected */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetIsSelected(bool bSelected);
+    void SetIsSelected(bool bSelected};
 
     /** Get whether this entry is selected */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
@@ -50,27 +50,27 @@ public:
 
     /** Handle entry click */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void OnEntryClicked();
+    void OnEntryClicked(};
 
     /** Update entry appearance */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void UpdateAppearance();
+    void UpdateAppearance(};
 
 protected:
     /** Called when widget is constructed */
     virtual void NativeConstruct() override;
 
     /** Update visual state */
-    void UpdateVisualState();
+    void UpdateVisualState(};
 
     /** Update text display */
-    void UpdateTextDisplay();
+    void UpdateTextDisplay(};
 
     /** Update icon display */
-    void UpdateIconDisplay();
+    void UpdateIconDisplay(};
 
     /** Update selection indicator */
-    void UpdateSelectionIndicator();
+    void UpdateSelectionIndicator(};
 
 private:
     /** Region code for this entry */
@@ -119,9 +119,10 @@ private:
 
 public:
     /** Delegate for entry selection */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRegionEntrySelected, ECulturalRegion, RegionCode, class UMingRegionEntryWidget*, EntryWidget);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRegionEntrySelected, ECulturalRegion, RegionCode, class UMingRegionEntryWidget*, EntryWidget};
 
     /** Event fired when this entry is selected */
     UPROPERTY(BlueprintAssignable, Category = "MingRTS|Localization|UI|Events")
     FOnRegionEntrySelected OnRegionSelected;
 };
+

@@ -14,7 +14,7 @@
  * Cultural region identifier
  */
 UENUM(BlueprintType)
-enum class ECulturalRegion : uint8
+enum class ERTSCulturalRegion : uint8
 {
     EastAsia            UMETA(DisplayName = "East Asia"),
     SoutheastAsia       UMETA(DisplayName = "Southeast Asia"),
@@ -38,7 +38,7 @@ struct FCulturalVariant
     GENERATED_BODY()
     
     UPROPERTY(BlueprintReadOnly)
-    ECulturalRegion Region;
+    ERTSCulturalRegion Region;
     
     UPROPERTY(BlueprintReadOnly)
     FString ContentKey;
@@ -62,7 +62,7 @@ struct FCulturalVariant
     bool bEnabled;
     
     FCulturalVariant()
-        : Region(ECulturalRegion::Global)
+        : Region(ERTSCulturalRegion::Global)
         , bRequiresApproval(false)
         , SensitivityLevel(0)
         , bEnabled(true)
@@ -116,10 +116,10 @@ struct FRTSCulturalPreferences
     GENERATED_BODY()
     
     UPROPERTY(BlueprintReadWrite)
-    ECulturalRegion PrimaryRegion;
+    ERTSCulturalRegion PrimaryRegion;
     
     UPROPERTY(BlueprintReadWrite)
-    TArray<ECulturalRegion> SecondaryRegions;
+    TArray<ERTSCulturalRegion> SecondaryRegions;
     
     UPROPERTY(BlueprintReadWrite)
     int32 UserAge;
@@ -137,7 +137,7 @@ struct FRTSCulturalPreferences
     bool bEnableRegionalArtVariants;
     
     FRTSCulturalPreferences()
-        : PrimaryRegion(ECulturalRegion::EastAsia)
+        : PrimaryRegion(ERTSCulturalRegion::EastAsia)
         , UserAge(18)
         , ContentSensitivityLevel(0)
         , bEnableCulturalEvents(true)
@@ -155,23 +155,23 @@ class MINGGORTS_API UMingRTSCulturalAdaptationSystem : public UObject
     GENERATED_BODY()
     
 public:
-    UMingRTSCulturalAdaptationSystem();
+    UMingRTSCulturalAdaptationSystem(};
     
     /** Initialize cultural adaptation system */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    void InitializeCulturalSystem();
+    void InitializeCulturalSystem(};
     
     /** Set player's primary cultural region */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    void SetPlayerRegion(ECulturalRegion Region);
+    void SetPlayerRegion(ERTSCulturalRegion Region};
     
     /** Get current region */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    ECulturalRegion GetCurrentRegion() const { return CurrentRegion; }
+    ERTSCulturalRegion GetCurrentRegion() const { return CurrentRegion; }
     
     /** Get adapted content for a key and region */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    FString GetAdaptedContent(const FString& ContentKey, ECulturalRegion Region) const;
+    FString GetAdaptedContent(const FString& ContentKey, ERTSCulturalRegion Region) const;
     
     /** Get adapted content for current region */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
@@ -179,7 +179,7 @@ public:
     
     /** Check if content is allowed for user */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    bool IsContentAllowed(const FString& ContentKey, int32 UserAge, ECulturalRegion Region) const;
+    bool IsContentAllowed(const FString& ContentKey, int32 UserAge, ERTSCulturalRegion Region) const;
     
     /** Get all available variants for a content key */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
@@ -187,27 +187,27 @@ public:
     
     /** Load regional content pack */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    bool LoadRegionalContentPack(ECulturalRegion Region);
+    bool LoadRegionalContentPack(ERTSCulturalRegion Region};
     
     /** Unload regional content pack */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    void UnloadRegionalContentPack(ECulturalRegion Region);
+    void UnloadRegionalContentPack(ERTSCulturalRegion Region};
     
     /** Get regional gameplay parameters */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    FRegionalGameplayParams GetRegionalGameplayParams(ECulturalRegion Region) const;
+    FRegionalGameplayParams GetRegionalGameplayParams(ERTSCulturalRegion Region) const;
     
     /** Detect region from system settings */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    ECulturalRegion DetectRegionFromSystem() const;
+    ERTSCulturalRegion DetectRegionFromSystem() const;
     
     /** Detect region from IP (async) */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    void DetectRegionFromIP();
+    void DetectRegionFromIP(};
     
     /** Set cultural preferences */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    void SetCulturalPreferences(const FRTSCulturalPreferences& NewPreferences);
+    void SetCulturalPreferences(const FRTSCulturalPreferences& NewPreferences};
     
     /** Get cultural preferences */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
@@ -215,69 +215,69 @@ public:
     
     /** Save preferences to settings */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    void SaveCulturalPreferences();
+    void SaveCulturalPreferences(};
     
     /** Load preferences from settings */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    void LoadCulturalPreferences();
+    void LoadCulturalPreferences(};
     
     /** Get regional holiday events */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    TArray<FString> GetRegionalHolidays(ECulturalRegion Region, int32 Year) const;
+    TArray<FString> GetRegionalHolidays(ERTSCulturalRegion Region, int32 Year) const;
     
     /** Check if today is a regional holiday */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    bool IsRegionalHoliday(ECulturalRegion Region) const;
+    bool IsRegionalHoliday(ERTSCulturalRegion Region) const;
     
     /** Get region display name */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Cultural")
-    static FString GetRegionDisplayName(ECulturalRegion Region);
+    static FString GetRegionDisplayName(ERTSCulturalRegion Region};
     
     /** Get all available regions */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Cultural")
-    static TArray<ECulturalRegion> GetAllRegions();
+    static TArray<ERTSCulturalRegion> GetAllRegions(};
     
     /** Clear content cache for memory management */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    void ClearContentCache();
+    void ClearContentCache(};
     
     /** Get cache statistics */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Cultural")
-    int32 GetCacheSize() const { return ContentCache.Num(); }
+    int32 GetCacheSize() const { return ContentCache.Num(}; }
     
     /** Event: Region changed */
     UPROPERTY(BlueprintAssignable, Category = "MingRTS|Cultural|Events")
     FOnCulturalRegionChanged OnRegionChanged;
     
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCulturalRegionChanged, 
-        ECulturalRegion, NewRegion);
+        ERTSCulturalRegion, NewRegion};
     
     /** Event: Region detection completed */
     UPROPERTY(BlueprintAssignable, Category = "MingRTS|Cultural|Events")
     FOnRegionDetectionCompleted OnRegionDetectionCompleted;
     
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRegionDetectionCompleted,
-        ECulturalRegion, DetectedRegion);
+        ERTSCulturalRegion, DetectedRegion};
 
 private:
     /** Current active region */
     UPROPERTY()
-    ECulturalRegion CurrentRegion;
+    ERTSCulturalRegion CurrentRegion;
     
     /** Player preferences */
     UPROPERTY()
     FRTSCulturalPreferences Preferences;
     
-    // 注�?：TMap<TArray> 不支??UPROPERTY
+    // �?：TMap<TArray> 不支??UPROPERTY
     TMap<FString, TArray<FCulturalVariant>> ContentVariants;
     
     /** Regional gameplay parameters cache */
     UPROPERTY()
-    TMap<ECulturalRegion, FRegionalGameplayParams> RegionalParams;
+    TMap<ERTSCulturalRegion, FRegionalGameplayParams> RegionalParams;
     
     /** Regional content packs */
     UPROPERTY()
-    TMap<ECulturalRegion, bool> LoadedContentPacks;
+    TMap<ERTSCulturalRegion, bool> LoadedContentPacks;
     
     /** Default fallback content */
     UPROPERTY()
@@ -312,27 +312,28 @@ private:
     static constexpr int32 CACHE_TRIM_INTERVAL = 100;
     
     /** Initialize default content */
-    void InitializeDefaultContent();
+    void InitializeDefaultContent(};
     
     /** Load content variants from config */
-    void LoadContentVariants();
+    void LoadContentVariants(};
     
     /** Initialize regional parameters */
-    void InitializeRegionalParams();
+    void InitializeRegionalParams(};
     
     /** Check and trim cache if it exceeds size limit */
-    void CheckAndTrimCache();
+    void CheckAndTrimCache(};
     
     /** Update LRU order for accessed cache key */
     void UpdateLRUOrder(const FString& CacheKey) const;
     
     /** Get appropriate variant for region */
     const FCulturalVariant* FindBestVariant(const FString& ContentKey, 
-        ECulturalRegion Region) const;
+        ERTSCulturalRegion Region) const;
     
     /** Check content rating compliance */
     bool CheckContentRating(const FCulturalVariant& Variant, int32 UserAge) const;
     
     /** Handle IP detection callback */
-    void OnIPRegionDetected(const FString& CountryCode);
+    void OnIPRegionDetected(const FString& CountryCode};
 };
+

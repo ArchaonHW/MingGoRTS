@@ -8,98 +8,98 @@
 UENUM(BlueprintType)
 enum class EMingRTSLanguage : uint8
 {
-    English UMETA(DisplayName = "English"),
-    SimplifiedChinese UMETA(DisplayName = "简体中??),
-    TraditionalChinese UMETA(DisplayName = "繁�?中�?"),
-    Japanese UMETA(DisplayName = "?�本�?),
-    Korean UMETA(DisplayName = "?�국??),
-    French UMETA(DisplayName = "Français"),
-    German UMETA(DisplayName = "Deutsch"),
-    Spanish UMETA(DisplayName = "Español"),
-    Italian UMETA(DisplayName = "Italiano"),
-    Russian UMETA(DisplayName = "????кий"),
-    Arabic UMETA(DisplayName = "ا?عرب?ة"),
-    Portuguese UMETA(DisplayName = "Português"),
-    Hindi UMETA(DisplayName = "हिन�?द�?"),
-    Thai UMETA(DisplayName = "ไ�?�?),
-    Vietnamese UMETA(DisplayName = "Tiếng Việt"),
-    Indonesian UMETA(DisplayName = "Bahasa Indonesia"),
-    Turkish UMETA(DisplayName = "Türkçe"),
-    Polish UMETA(DisplayName = "Polski"),
-    Dutch UMETA(DisplayName = "Nederlands"),
-    Custom UMETA(DisplayName = "Custom"),
-    Max UMETA(Hidden)
+    English, UMETA(DisplayName = "English"),
+    SimplifiedChinese, UMETA(DisplayName = "简体中??),
+    TraditionalChinese, UMETA(DisplayName = "繁�?中�?"),
+    Japanese, UMETA(DisplayName = "?�本�?),
+    Korean, UMETA(DisplayName = "?�국??),
+    French, UMETA(DisplayName = "Français"),
+    German, UMETA(DisplayName = "Deutsch"),
+    Spanish, UMETA(DisplayName = "Español"),
+    Italian, UMETA(DisplayName = "Italiano"),
+    Russian, UMETA(DisplayName = "????кий"),
+    Arabic, UMETA(DisplayName = "ا?عرب?ة"),
+    Portuguese, UMETA(DisplayName = "Português"),
+    Hindi, UMETA(DisplayName = "हिन�?द�?"),
+    Thai, UMETA(DisplayName = "ไ�?�?),
+    Vietnamese, UMETA(DisplayName = "Tiếng Việt"),
+    Indonesian, UMETA(DisplayName = "Bahasa Indonesia"),
+    Turkish, UMETA(DisplayName = "Türkçe"),
+    Polish, UMETA(DisplayName = "Polski"),
+    Dutch, UMETA(DisplayName = "Nederlands"),
+    Custom, UMETA(DisplayName = "Custom"),
+    Max, UMETA(Hidden)
 };
 
 UENUM(BlueprintType)
 enum class EMingRTSRegion : uint8
 {
-    Global UMETA(DisplayName = "Global"),
-    Asia UMETA(DisplayName = "Asia"),
-    Europe UMETA(DisplayName = "Europe"),
-    Americas UMETA(DisplayName = "Americas"),
-    Africa UMETA(DisplayName = "Africa"),
-    Oceania UMETA(DisplayName = "Oceania"),
-    MiddleEast UMETA(DisplayName = "Middle East"),
-    China UMETA(DisplayName = "China"),
-    Japan UMETA(DisplayName = "Japan"),
-    Korea UMETA(DisplayName = "Korea"),
-    SoutheastAsia UMETA(DisplayName = "Southeast Asia"),
-    India UMETA(DisplayName = "India"),
-    WesternEurope UMETA(DisplayName = "Western Europe"),
-    EasternEurope UMETA(DisplayName = "Eastern Europe"),
-    NorthAmerica UMETA(DisplayName = "North America"),
-    SouthAmerica UMETA(DisplayName = "South America"),
-    Custom UMETA(DisplayName = "Custom"),
-    Max UMETA(Hidden)
+    Global, UMETA(DisplayName = "Global"),
+    Asia, UMETA(DisplayName = "Asia"),
+    Europe, UMETA(DisplayName = "Europe"),
+    Americas, UMETA(DisplayName = "Americas"),
+    Africa, UMETA(DisplayName = "Africa"),
+    Oceania, UMETA(DisplayName = "Oceania"),
+    MiddleEast, UMETA(DisplayName = "Middle East"),
+    China, UMETA(DisplayName = "China"),
+    Japan, UMETA(DisplayName = "Japan"),
+    Korea, UMETA(DisplayName = "Korea"),
+    SoutheastAsia, UMETA(DisplayName = "Southeast Asia"),
+    India, UMETA(DisplayName = "India"),
+    WesternEurope, UMETA(DisplayName = "Western Europe"),
+    EasternEurope, UMETA(DisplayName = "Eastern Europe"),
+    NorthAmerica, UMETA(DisplayName = "North America"),
+    SouthAmerica, UMETA(DisplayName = "South America"),
+    Custom, UMETA(DisplayName = "Custom"),
+    Max, UMETA(Hidden)
 };
 
 UENUM(BlueprintType)
 enum class EMingTextDirection : uint8
 {
-    LeftToRight UMETA(DisplayName = "Left to Right"),
-    RightToLeft UMETA(DisplayName = "Right to Left"),
-    TopToBottom UMETA(DisplayName = "Top to Bottom"),
-    AutoDetect UMETA(DisplayName = "Auto Detect"),
-    Custom UMETA(DisplayName = "Custom"),
-    Max UMETA(Hidden)
+    LeftToRight, UMETA(DisplayName = "Left to Right"),
+    RightToLeft, UMETA(DisplayName = "Right to Left"),
+    TopToBottom, UMETA(DisplayName = "Top to Bottom"),
+    AutoDetect, UMETA(DisplayName = "Auto Detect"),
+    Custom, UMETA(DisplayName = "Custom"),
+    Max, UMETA(Hidden)
 };
 
 UENUM(BlueprintType)
 enum class EMingDateFormat : uint8
 {
-    MDY UMETA(DisplayName = "MM/DD/YYYY"),
-    DMY UMETA(DisplayName = "DD/MM/YYYY"),
-    YMD UMETA(DisplayName = "YYYY/MM/DD"),
-    ISO UMETA(DisplayName = "ISO 8601"),
-    Custom UMETA(DisplayName = "Custom"),
-    Max UMETA(Hidden)
+    MDY, UMETA(DisplayName = "MM/DD/YYYY"),
+    DMY, UMETA(DisplayName = "DD/MM/YYYY"),
+    YMD, UMETA(DisplayName = "YYYY/MM/DD"),
+    ISO, UMETA(DisplayName = "ISO 8601"),
+    Custom, UMETA(DisplayName = "Custom"),
+    Max, UMETA(Hidden)
 };
 
 UENUM(BlueprintType)
 enum class EMingNumberFormat : uint8
 {
-    DotDecimal UMETA(DisplayName = "1,234.56"),
-    CommaDecimal UMETA(DisplayName = "1.234,56"),
-    SpaceDecimal UMETA(DisplayName = "1 234,56"),
-    ArabicNumerals UMETA(DisplayName = "Arabic Numerals"),
-    HindiNumerals UMETA(DisplayName = "Hindi Numerals"),
-    Custom UMETA(DisplayName = "Custom"),
-    Max UMETA(Hidden)
+    DotDecimal, UMETA(DisplayName = "1,234.56"),
+    CommaDecimal, UMETA(DisplayName = "1.234,56"),
+    SpaceDecimal, UMETA(DisplayName = "1 234,56"),
+    ArabicNumerals, UMETA(DisplayName = "Arabic Numerals"),
+    HindiNumerals, UMETA(DisplayName = "Hindi Numerals"),
+    Custom, UMETA(DisplayName = "Custom"),
+    Max, UMETA(Hidden)
 };
 
 UENUM(BlueprintType)
 enum class EMingCurrencySymbol : uint8
 {
-    USD UMETA(DisplayName = "$"),
-    EUR UMETA(DisplayName = "??),
-    GBP UMETA(DisplayName = "£"),
-    JPY UMETA(DisplayName = "¥"),
-    CNY UMETA(DisplayName = "¥"),
-    KRW UMETA(DisplayName = "??),
-    INR UMETA(DisplayName = "??),
-    Custom UMETA(DisplayName = "Custom"),
-    Max UMETA(Hidden)
+    USD, UMETA(DisplayName = "$"),
+    EUR, UMETA(DisplayName = "??),
+    GBP, UMETA(DisplayName = "£"),
+    JPY, UMETA(DisplayName = "¥"),
+    CNY, UMETA(DisplayName = "¥"),
+    KRW, UMETA(DisplayName = "??),
+    INR, UMETA(DisplayName = "??),
+    Custom, UMETA(DisplayName = "Custom"),
+    Max, UMETA(Hidden)
 };
 
 USTRUCT(BlueprintType)
@@ -196,3 +196,5 @@ struct FMingLocalizedText
         , bIsTranslated(false)
     {}
 };
+
+
