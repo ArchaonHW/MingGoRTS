@@ -353,22 +353,22 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeDefaultTracks(};
-    void SetupMusicTracks(};
-    void SetupSFXTracks(};
-    void SetupVoiceTracks(};
-    void SetupAmbientTracks(};
-    void SetupUITracks(};
+    void InitializeDefaultTracks();
+    void SetupMusicTracks();
+    void SetupSFXTracks();
+    void SetupVoiceTracks();
+    void SetupAmbientTracks();
+    void SetupUITracks();
 
     // Audio Playback
-    void PlayAudioTrackInternal(const FString& TrackID, FVector Location = FVector::ZeroVector};
-    void StopAudioTrackInternal(const FString& TrackID};
-    void ApplyVolumeSettings(};
+    void PlayAudioTrackInternal(const FString& TrackID, FVector Location = FVector::ZeroVector);
+    void StopAudioTrackInternal(const FString& TrackID);
+    void ApplyVolumeSettings();
 
     // Helpers
-    FMingAudioTrack* FindAudioTrack(const FString& TrackID};
-    TArray<FMingAudioTrack*> GetTracksByTypeInternal(EMingAudioType AudioType};
-    TArray<FMingAudioTrack*> GetTracksByThemeInternal(EMingMusicTheme Theme};
+    FMingAudioTrack* FindAudioTrack(const FString& TrackID);
+    TArray<FMingAudioTrack*> GetTracksByTypeInternal(EMingAudioType AudioType);
+    TArray<FMingAudioTrack*> GetTracksByThemeInternal(EMingMusicTheme Theme);
     float GetEffectiveVolume(EMingAudioType AudioType) const;
 };
 

@@ -131,7 +131,7 @@ struct FMingMaterialSet
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTextureGenerated, EMingTextureType, TextureType, UTexture2D*, GeneratedTexture};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTextureGenerated, EMingTextureType, TextureType, UTexture2D*, GeneratedTexture);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaterialSetCompleted, const FMingMaterialSet&, MaterialSet};
 
 /**
@@ -144,14 +144,14 @@ class MINGAUDIO_API UMingProceduralTextureSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingProceduralTextureSystem(};
+    UMingProceduralTextureSystem();
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Procedural Texture")
-    void InitializeTextureSystem(};
+    void InitializeTextureSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Procedural Texture")
-    void ShutdownTextureSystem(};
+    void ShutdownTextureSystem();
 
     // Single Texture Generation
     UFUNCTION(BlueprintCallable, Category = "Procedural Texture|Single")
@@ -236,7 +236,7 @@ public:
     void RemoveTextureFromLibrary(const FString& Name};
 
     UFUNCTION(BlueprintCallable, Category = "Procedural Texture|Library")
-    void ClearTextureLibrary(};
+    void ClearTextureLibrary();
 
     UFUNCTION(BlueprintPure, Category = "Procedural Texture|Library")
     TArray<FString> GetTextureLibraryNames() const;

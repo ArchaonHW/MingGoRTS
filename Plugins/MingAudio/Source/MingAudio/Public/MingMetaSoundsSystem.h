@@ -118,8 +118,8 @@ struct FMingExplosionParams
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProceduralSFXGenerated, EMingProceduralSFXType, SFXType, USoundBase*, GeneratedSound};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMetaSoundPatchCreated, const FString&, PatchName};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProceduralSFXGenerated, EMingProceduralSFXType, SFXType, USoundBase*, GeneratedSound);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMetaSoundPatchCreated, const FString&, PatchName);
 
 /**
  * MetaSounds-based Procedural Audio System
@@ -131,110 +131,110 @@ class MINGAUDIO_API UMingMetaSoundsSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingMetaSoundsSystem(};
+    UMingMetaSoundsSystem();
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "MetaSounds")
-    void InitializeMetaSounds(};
+    void InitializeMetaSounds();
 
     UFUNCTION(BlueprintCallable, Category = "MetaSounds")
-    void ShutdownMetaSounds(};
+    void ShutdownMetaSounds();
 
     // Gunshot Generation
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Gunshot")
-    USoundBase* GenerateGunshot(const FMingGunshotParams& Params};
+    USoundBase* GenerateGunshot(const FMingGunshotParams& Params);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Gunshot")
-    void PlayGunshot(const FMingGunshotParams& Params, FVector Location = FVector::ZeroVector};
+    void PlayGunshot(const FMingGunshotParams& Params, FVector Location = FVector::ZeroVector);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Gunshot")
-    USoundBase* GenerateRifleShot(float Caliber = 7.62f, float Distance = 0.0f};
+    USoundBase* GenerateRifleShot(float Caliber = 7.62f, float Distance = 0.0f);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Gunshot")
-    USoundBase* GeneratePistolShot(float Caliber = 9.0f, float Distance = 0.0f};
+    USoundBase* GeneratePistolShot(float Caliber = 9.0f, float Distance = 0.0f);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Gunshot")
-    USoundBase* GenerateMachineGunBurst(int32 ShotCount = 3, float Caliber = 7.62f};
+    USoundBase* GenerateMachineGunBurst(int32 ShotCount = 3, float Caliber = 7.62f);
 
     // Footstep Generation
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Footstep")
-    USoundBase* GenerateFootstep(const FMingFootstepParams& Params};
+    USoundBase* GenerateFootstep(const FMingFootstepParams& Params);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Footstep")
-    void PlayFootstep(const FMingFootstepParams& Params, FVector Location = FVector::ZeroVector};
+    void PlayFootstep(const FMingFootstepParams& Params, FVector Location = FVector::ZeroVector);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Footstep")
-    USoundBase* GenerateFootstepOnSurface(EMingSurfaceType Surface, float Weight = 75.0f, bool bRunning = false};
+    USoundBase* GenerateFootstepOnSurface(EMingSurfaceType Surface, float Weight = 75.0f, bool bRunning = false);
 
     // Explosion Generation
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Explosion")
-    USoundBase* GenerateExplosion(const FMingExplosionParams& Params};
+    USoundBase* GenerateExplosion(const FMingExplosionParams& Params);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Explosion")
-    void PlayExplosion(const FMingExplosionParams& Params, FVector Location = FVector::ZeroVector};
+    void PlayExplosion(const FMingExplosionParams& Params, FVector Location = FVector::ZeroVector);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Explosion")
-    USoundBase* GenerateGrenadeExplosion(float Distance = 50.0f};
+    USoundBase* GenerateGrenadeExplosion(float Distance = 50.0f);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Explosion")
-    USoundBase* GenerateArtilleryExplosion(float ExplosiveAmount = 10.0f};
+    USoundBase* GenerateArtilleryExplosion(float ExplosiveAmount = 10.0f);
 
     // Impact Sounds
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Impact")
-    USoundBase* GenerateImpactSound(EMingSurfaceType Surface, float ImpactForce = 1.0f};
+    USoundBase* GenerateImpactSound(EMingSurfaceType Surface, float ImpactForce = 1.0f);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Impact")
-    void PlayBulletImpact(EMingSurfaceType Surface, FVector Location, float BulletCaliber = 7.62f};
+    void PlayBulletImpact(EMingSurfaceType Surface, FVector Location, float BulletCaliber = 7.62f);
 
     // Ambient Sounds
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Ambient")
-    USoundBase* GenerateWindAmbient(float Intensity = 0.5f, bool bGusty = false};
+    USoundBase* GenerateWindAmbient(float Intensity = 0.5f, bool bGusty = false);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Ambient")
-    USoundBase* GenerateRainAmbient(float Intensity = 0.5f};
+    USoundBase* GenerateRainAmbient(float Intensity = 0.5f);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Ambient")
-    USoundBase* GenerateBattleAmbient(int32 UnitCount = 100, float Distance = 500.0f};
+    USoundBase* GenerateBattleAmbient(int32 UnitCount = 100, float Distance = 500.0f);
 
     // UI Sounds
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|UI")
-    USoundBase* GenerateUIClick(bool bConfirm = true};
+    USoundBase* GenerateUIClick(bool bConfirm = true);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|UI")
-    USoundBase* GenerateUIHover(};
+    USoundBase* GenerateUIHover();
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|UI")
-    USoundBase* GenerateUIError(};
+    USoundBase* GenerateUIError();
 
     // Vehicle Sounds
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Vehicle")
-    USoundBase* GenerateEngineSound(float RPM, float Load = 0.5f, int32 Cylinders = 4};
+    USoundBase* GenerateEngineSound(float RPM, float Load = 0.5f, int32 Cylinders = 4);
 
     UFUNCTION(BlueprintCallable, Category = "Procedural SFX|Vehicle")
-    USoundBase* GenerateTankTrackSound(float Speed, EMingSurfaceType Surface};
+    USoundBase* GenerateTankTrackSound(float Speed, EMingSurfaceType Surface);
 
     // Utility Functions
     UFUNCTION(BlueprintCallable, Category = "MetaSounds|Utility")
     bool IsMetaSoundsEnabled() const;
 
     UFUNCTION(BlueprintCallable, Category = "MetaSounds|Utility")
-    void SetMasterPitch(float Pitch};
+    void SetMasterPitch(float Pitch);
 
     UFUNCTION(BlueprintCallable, Category = "MetaSounds|Utility")
-    void SetMasterVolume(float Volume};
+    void SetMasterVolume(float Volume);
 
     UFUNCTION(BlueprintPure, Category = "MetaSounds|Utility")
     float GetRandomVariation(float BaseValue, float VariationRange = 0.1f) const;
 
     // Patch Management
     UFUNCTION(BlueprintCallable, Category = "MetaSounds|Patches")
-    void LoadMetaSoundPatch(const FString& PatchName, const FString& PatchPath};
+    void LoadMetaSoundPatch(const FString& PatchName, const FString& PatchPath);
 
     UFUNCTION(BlueprintCallable, Category = "MetaSounds|Patches")
-    void UnloadMetaSoundPatch(const FString& PatchName};
+    void UnloadMetaSoundPatch(const FString& PatchName);
 
     UFUNCTION(BlueprintCallable, Category = "MetaSounds|Patches")
-    void CreateRuntimePatch(const FString& PatchName, EMingProceduralSFXType Type};
+    void CreateRuntimePatch(const FString& PatchName, EMingProceduralSFXType Type);
 
     // Events
     UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -257,28 +257,28 @@ protected:
     TMap<EMingProceduralSFXType, FString> DefaultPatchPaths;
 
     // Internal generation functions
-    USoundBase* CreateGunshotWave(const FMingGunshotParams& Params};
-    USoundBase* CreateFootstepWave(const FMingFootstepParams& Params};
-    USoundBase* CreateExplosionWave(const FMingExplosionParams& Params};
-    USoundBase* CreateImpactWave(EMingSurfaceType Surface, float Force};
-    USoundBase* CreateAmbientWave(float Intensity, const FString& Type};
-    USoundBase* CreateUIWave(bool bConfirm};
-    USoundBase* CreateEngineWave(float RPM, float Load, int32 Cylinders};
+    USoundBase* CreateGunshotWave(const FMingGunshotParams& Params);
+    USoundBase* CreateFootstepWave(const FMingFootstepParams& Params);
+    USoundBase* CreateExplosionWave(const FMingExplosionParams& Params);
+    USoundBase* CreateImpactWave(EMingSurfaceType Surface, float Force);
+    USoundBase* CreateAmbientWave(float Intensity, const FString& Type);
+    USoundBase* CreateUIWave(bool bConfirm);
+    USoundBase* CreateEngineWave(float RPM, float Load, int32 Cylinders);
 
     // Helper functions
     FString GetSurfaceMaterialName(EMingSurfaceType Surface) const;
     float CalculateDecayTime(float Distance, float EnvironmentScale) const;
     float CalculateDopplerEffect(float Velocity, float SoundSpeed = 343.0f) const;
-    void ApplyRandomization(USoundBase* Sound, float PitchRange = 0.05f, float VolumeRange = 0.1f};
+    void ApplyRandomization(USoundBase* Sound, float PitchRange = 0.05f, float VolumeRange = 0.1f);
 
     // Initialization
-    void InitializeDefaultPatches(};
-    void SetupGunshotPatch(};
-    void SetupFootstepPatch(};
-    void SetupExplosionPatch(};
-    void SetupImpactPatch(};
-    void SetupAmbientPatch(};
-    void SetupUIPatch(};
-    void SetupVehiclePatch(};
+    void InitializeDefaultPatches();
+    void SetupGunshotPatch();
+    void SetupFootstepPatch();
+    void SetupExplosionPatch();
+    void SetupImpactPatch();
+    void SetupAmbientPatch();
+    void SetupUIPatch();
+    void SetupVehiclePatch();
 };
 

@@ -177,8 +177,8 @@ struct FMingWeatherParams
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNiagaraEffectSpawned, EMingNiagaraEffectType, EffectType, UNiagaraComponent*, NiagaraComponent};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNiagaraSystemCreated, const FString&, SystemName};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNiagaraEffectSpawned, EMingNiagaraEffectType, EffectType, UNiagaraComponent*, NiagaraComponent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNiagaraSystemCreated, const FString&, SystemName);
 
 /**
  * Niagara-based Procedural Visual Effects System
