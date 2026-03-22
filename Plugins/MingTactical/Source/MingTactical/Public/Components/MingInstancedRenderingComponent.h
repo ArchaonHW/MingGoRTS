@@ -55,7 +55,7 @@ class MINGTACTICAL_API UMingInstancedRenderingComponent : public UActorComponent
     GENERATED_BODY()
 
 public:
-    UMingInstancedRenderingComponent(};
+    UMingInstancedRenderingComponent();
 
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -65,24 +65,24 @@ public:
      * 註�X��X�實例�?渲�?系統
      */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    void RegisterUnit(AMingTacticalUnit* Unit};
+    void RegisterUnit(AMingTacticalUnit* Unit);
 
     /**
      * 從實例�?渲�?系統移除?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    void UnregisterUnit(AMingTacticalUnit* Unit};
+    void UnregisterUnit(AMingTacticalUnit* Unit);
 
     /**
      * ?�新?��?變�X�陣
      */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    void UpdateUnitTransform(AMingTacticalUnit* Unit, const FTransform& NewTransform};
+    void UpdateUnitTransform(AMingTacticalUnit* Unit, const FTransform& NewTransform);
 
     /**
      * ?�新?��X��X     */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    void SetUnitVisibility(AMingTacticalUnit* Unit, bool bVisible};
+    void SetUnitVisibility(AMingTacticalUnit* Unit, bool bVisible);
 
     /**
      * 計�?LOD級別
@@ -93,13 +93,13 @@ public:
     /**
      * 設置LOD距離?��?     */
     UFUNCTION(BlueprintCallable, Category = "LOD")
-    void SetLODDistanceThresholds(const TArray<float>& Thresholds};
+    void SetLODDistanceThresholds(const TArray<float>& Thresholds);
 
     /**
      * ?��X�能統�?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
-    int32 GetRegisteredUnitCount() const { return RegisteredUnits.Num(}; }
+    int32 GetRegisteredUnitCount() const { return RegisteredUnits.Num(); }
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     int32 GetVisibleInstanceCount() const { return VisibleInstanceCount; }
@@ -110,13 +110,13 @@ public:
     /**
      * 強制?�新?�?�實�?     */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    void ForceUpdateAllInstances(};
+    void ForceUpdateAllInstances();
 
     /**
      * 設置?�新?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetUpdateFrequency(float Frequency};
+    void SetUpdateFrequency(float Frequency);
 
 protected:
     // 註�X�單�?    UPROPERTY()
@@ -146,26 +146,26 @@ protected:
     // ?��?位置 (?�於LOD計�?)
     FVector CameraLocation;
 
-    // ?��X�LOD?��?    void InitializeLODThresholds(};
+    // ?��X�LOD?��?    void InitializeLODThresholds();
 
-    // ?�建?�獲?�批�?    int32 GetOrCreateBatchForUnit(AMingTacticalUnit* Unit};
+    // ?�建?�獲?�批�?    int32 GetOrCreateBatchForUnit(AMingTacticalUnit* Unit);
 
     // ?�新?�次實�X��?
-    void UpdateBatchInstanceData(int32 BatchIndex};
+    void UpdateBatchInstanceData(int32 BatchIndex);
 
     // ?��?LOD計�?
-    void PerformLODUpdate(};
+    void PerformLODUpdate();
 
-    // ?�新實�X��X    void UpdateInstanceVisibility(};
+    // ?�新實�X��X    void UpdateInstanceVisibility();
 
     // ?��X��?位置
-    void UpdateCameraLocation(};
+    void UpdateCameraLocation();
 
     // ?�次?�併 (?��?小批�?
-    void MergeSmallBatches(};
+    void MergeSmallBatches();
 
     // ?�次?�割 (?��?大批�?
-    void SplitLargeBatches(};
+    void SplitLargeBatches();
 
     // ?�大批次大�?    UPROPERTY(EditAnywhere, Category = "Performance")
     int32 MaxBatchSize;
