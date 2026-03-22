@@ -122,10 +122,8 @@ struct FMingGameTrigger
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString TriggerName;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingTriggerCondition> Conditions;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingTriggerAction> Actions;
 
     UPROPERTY(BlueprintReadOnly)

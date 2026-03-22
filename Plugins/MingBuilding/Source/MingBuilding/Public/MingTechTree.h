@@ -43,12 +43,13 @@ struct FMingTechUnlock
 };
 
 // Wrapper struct to allow TArray in TMap (UHT limitation)
+// 注意：TArray 成員的 UPROPERTY 需要類型已完整定義
 USTRUCT(BlueprintType)
 struct FMingBuildingUpgradeList
 {
     GENERATED_BODY()
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    // 非 UPROPERTY，因為 FMingBuildingUpgrade 在此後定義
     TArray<FMingBuildingUpgrade> Upgrades;
 };
 

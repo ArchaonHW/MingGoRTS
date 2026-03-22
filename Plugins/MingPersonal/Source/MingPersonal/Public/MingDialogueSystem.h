@@ -113,7 +113,7 @@ struct FMingDialogueNode
     UPROPERTY(BlueprintReadOnly)
     FMingDialogueLine DialogueLine;
 
-    UPROPERTY(BlueprintReadOnly)
+    // 注意：遞迴結構不能用 UPROPERTY
     TArray<FMingDialogueNode> ChildNodes;
 
     UPROPERTY(BlueprintReadOnly)
