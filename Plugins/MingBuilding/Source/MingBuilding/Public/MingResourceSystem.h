@@ -5,7 +5,7 @@
 #include "MingResourceSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingResourceType : uint8
+enum class EMingResourceSystemType : uint8
 {
     Food UMETA(DisplayName = "Food"),
     Money UMETA(DisplayName = "Money"),

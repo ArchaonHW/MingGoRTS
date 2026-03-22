@@ -104,39 +104,52 @@ struct FMingTechNode
     {}
 };
 
+/**
+ * 建築升級數據結構 | Building Upgrade Data Structure
+ * 定義建築升級的屬性和成本 | Define building upgrade properties and costs
+ */
 USTRUCT(BlueprintType)
 struct FMingBuildingUpgrade
 {
     GENERATED_BODY()
 
+    /** 升級ID | Upgrade ID */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString UpgradeID;
 
+    /** 升級名稱 | Upgrade Name */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString UpgradeName;
 
+    /** 升級描述 | Upgrade Description */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString Description;
 
+    /** 升級成本 | Upgrade Cost */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     TArray<FMingResourceCost> UpgradeCost;
 
+    /** 升級時間(秒) | Upgrade Time (seconds) */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float UpgradeTime;
 
+    /** 最大升級等級 | Max Upgrade Level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     int32 MaxUpgradeLevel;
 
+    /** 當前等級 | Current Level */
     UPROPERTY(BlueprintReadOnly)
     int32 CurrentLevel;
 
-    // Stat modifiers per level
+    /** 每級生命值倍率 | Health Multiplier per level (1.2 = +20%) */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
-    float HealthMultiplier; // 1.2 = +20% per level
+    float HealthMultiplier;
 
+    /** 每級生產效率倍率 | Production Multiplier per level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float ProductionMultiplier;
 
+    /** 每級防禦倍率 | Defense Multiplier per level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float DefenseMultiplier;
 
@@ -245,8 +258,12 @@ public:
     UFUNCTION(BlueprintPure, Category = "Upgrades")
     TArray<FMingBuildingUpgrade> GetAvailableUpgradesForBuilding(EMingBuildingType BuildingType) const;
 
-    UFUNCTION(BlueprintPure, Category = "Upgrades")
+    UFUNCTION(BlueprintCallable, Category = "Upgrades")
     int32 GetUpgradeLevel(const FString& UpgradeID) const;
+
+    /** 設置默認建築升級配置 | Setup Default Building Upgrades */
+    UFUNCTION(BlueprintCallable, Category = "Upgrades")
+    void SetupDefaultBuildingUpgrades();
 
     // Prerequisites
     UFUNCTION(BlueprintPure, Category = "Prerequisites")

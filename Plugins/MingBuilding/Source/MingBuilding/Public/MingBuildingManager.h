@@ -208,7 +208,7 @@ public:
 
     // === 建築升級和維護 ===
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool UpgradeBuilding(const FString& BuildingID);
+    bool UpgradeBuilding_Impl(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building")
     bool DestroyBuilding(const FString& BuildingID);
@@ -228,7 +228,7 @@ public:
     void ConstructBuilding(const FString& BuildingType, const FVector& Position);
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    void UpgradeBuilding(int32 BuildingId);
+    void UpgradeBuilding_Impl(int32 BuildingId);
 
     // === 資源管理 ===
     UFUNCTION(BlueprintCallable, Category = "Resource")

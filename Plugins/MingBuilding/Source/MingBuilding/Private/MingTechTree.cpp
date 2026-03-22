@@ -697,3 +697,142 @@ int32 UMingTechTree::GetUpgradeLevel(const FString& UpgradeID) const
     }
     return 0;
 }
+
+void UMingTechTree::SetupDefaultBuildingUpgrades()
+{
+    // 指揮中心升級 | Command Center Upgrades
+    {
+        FMingBuildingUpgrade CommandCenterHealth;
+        CommandCenterHealth.UpgradeID = TEXT("CommandCenter_Health");
+        CommandCenterHealth.UpgradeName = TEXT("強化結構 | Reinforced Structure");
+        CommandCenterHealth.Description = TEXT("增加指揮中心生命值 | Increase Command Center health");
+        CommandCenterHealth.MaxUpgradeLevel = 3;
+        CommandCenterHealth.CurrentLevel = 0;
+        CommandCenterHealth.HealthMultiplier = 1.25f;
+        CommandCenterHealth.ProductionMultiplier = 1.0f;
+        CommandCenterHealth.DefenseMultiplier = 1.1f;
+        CommandCenterHealth.UpgradeTime = 30.0f;
+        
+        FMingResourceCost Cost1;
+        Cost1.ResourceType = EMingResourceType::Materials;
+        Cost1.Amount = 500;
+        CommandCenterHealth.UpgradeCost.Add(Cost1);
+        
+        RegisterBuildingUpgrade(EMingBuildingType::CommandCenter, CommandCenterHealth);
+    }
+    
+    // 兵營升級 | Barracks Upgrades
+    {
+        FMingBuildingUpgrade BarracksTraining;
+        BarracksTraining.UpgradeID = TEXT("Barracks_Training");
+        BarracksTraining.UpgradeName = TEXT("高效訓練 | Efficient Training");
+        BarracksTraining.Description = TEXT("加快部隊訓練速度 | Faster unit training");
+        BarracksTraining.MaxUpgradeLevel = 3;
+        BarracksTraining.CurrentLevel = 0;
+        BarracksTraining.HealthMultiplier = 1.0f;
+        BarracksTraining.ProductionMultiplier = 1.3f;
+        BarracksTraining.DefenseMultiplier = 1.0f;
+        BarracksTraining.UpgradeTime = 25.0f;
+        
+        FMingResourceCost Cost2;
+        Cost2.ResourceType = EMingResourceType::Materials;
+        Cost2.Amount = 300;
+        BarracksTraining.UpgradeCost.Add(Cost2);
+        
+        FMingResourceCost Cost2b;
+        Cost2b.ResourceType = EMingResourceType::Money;
+        Cost2b.Amount = 200;
+        BarracksTraining.UpgradeCost.Add(Cost2b);
+        
+        RegisterBuildingUpgrade(EMingBuildingType::Barracks, BarracksTraining);
+    }
+    
+    {
+        FMingBuildingUpgrade BarracksDefense;
+        BarracksDefense.UpgradeID = TEXT("Barracks_Defense");
+        BarracksDefense.UpgradeName = TEXT("防禦工事 | Defensive Works");
+        BarracksDefense.Description = TEXT("增加兵營防禦力 | Increase barracks defense");
+        BarracksDefense.MaxUpgradeLevel = 2;
+        BarracksDefense.CurrentLevel = 0;
+        BarracksDefense.HealthMultiplier = 1.15f;
+        BarracksDefense.ProductionMultiplier = 1.0f;
+        BarracksDefense.DefenseMultiplier = 1.25f;
+        BarracksDefense.UpgradeTime = 20.0f;
+        
+        FMingResourceCost Cost3;
+        Cost3.ResourceType = EMingResourceType::Materials;
+        Cost3.Amount = 400;
+        BarracksDefense.UpgradeCost.Add(Cost3);
+        
+        RegisterBuildingUpgrade(EMingBuildingType::Barracks, BarracksDefense);
+    }
+    
+    // 資源建築升級 | Resource Building Upgrades
+    {
+        FMingBuildingUpgrade FarmProduction;
+        FarmProduction.UpgradeID = TEXT("Farm_Production");
+        FarmProduction.UpgradeName = TEXT"現代農業 | Modern Agriculture");
+        FarmProduction.Description = TEXT("提高糧食產量 | Increase food production");
+        FarmProduction.MaxUpgradeLevel = 3;
+        FarmProduction.CurrentLevel = 0;
+        FarmProduction.HealthMultiplier = 1.0f;
+        FarmProduction.ProductionMultiplier = 1.4f;
+        FarmProduction.DefenseMultiplier = 1.0f;
+        FarmProduction.UpgradeTime = 20.0f;
+        
+        FMingResourceCost Cost4;
+        Cost4.ResourceType = EMingResourceType::Money;
+        Cost4.Amount = 150;
+        FarmProduction.UpgradeCost.Add(Cost4);
+        
+        RegisterBuildingUpgrade(EMingBuildingType::Farm, FarmProduction);
+    }
+    
+    {
+        FMingBuildingUpgrade MineProduction;
+        MineProduction.UpgradeID = TEXT("Mine_Production");
+        MineProduction.UpgradeName = TEXT("深層開採 | Deep Mining");
+        MineProduction.Description = TEXT("提高礦產產量 | Increase mining output");
+        MineProduction.MaxUpgradeLevel = 3;
+        MineProduction.CurrentLevel = 0;
+        MineProduction.HealthMultiplier = 1.0f;
+        MineProduction.ProductionMultiplier = 1.35f;
+        MineProduction.DefenseMultiplier = 1.0f;
+        MineProduction.UpgradeTime = 25.0f;
+        
+        FMingResourceCost Cost5;
+        Cost5.ResourceType = EMingResourceType::Materials;
+        Cost5.Amount = 250;
+        MineProduction.UpgradeCost.Add(Cost5);
+        
+        RegisterBuildingUpgrade(EMingBuildingType::Mine, MineProduction);
+    }
+    
+    // 防禦建築升級 | Defense Building Upgrades
+    {
+        FMingBuildingUpgrade WallDefense;
+        WallDefense.UpgradeID = TEXT("Wall_Defense");
+        WallDefense.UpgradeName = TEXT("加固城牆 | Fortified Walls");
+        WallDefense.Description = TEXT("大幅提升城牆防禦 | Greatly increase wall defense");
+        WallDefense.MaxUpgradeLevel = 2;
+        WallDefense.CurrentLevel = 0;
+        WallDefense.HealthMultiplier = 1.3f;
+        WallDefense.ProductionMultiplier = 1.0f;
+        WallDefense.DefenseMultiplier = 1.4f;
+        WallDefense.UpgradeTime = 40.0f;
+        
+        FMingResourceCost Cost6;
+        Cost6.ResourceType = EMingResourceType::Materials;
+        Cost6.Amount = 600;
+        WallDefense.UpgradeCost.Add(Cost6);
+        
+        FMingResourceCost Cost6b;
+        Cost6b.ResourceType = EMingResourceType::Money;
+        Cost6b.Amount = 300;
+        WallDefense.UpgradeCost.Add(Cost6b);
+        
+        RegisterBuildingUpgrade(EMingBuildingType::Wall, WallDefense);
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Default building upgrades configured successfully"));
+}

@@ -188,6 +188,45 @@ public:
     UFUNCTION(BlueprintPure, Category = "Costs")
     static bool CanAffordBuilding(EMingBuildingType Type, const TMap<EMingResourceType, int32>& AvailableResources);
 
+    // 建築升級相關方法 | Building Upgrade Methods
+    UFUNCTION(BlueprintCallable, Category = "Upgrade")
+    void StartUpgrade(const FString& UpgradeID);
+
+    UFUNCTION(BlueprintCallable, Category = "Upgrade")
+    void CancelUpgrade();
+
+    UFUNCTION(BlueprintPure, Category = "Upgrade")
+    bool IsUpgrading() const { return bIsBeingUpgraded; }
+
+    UFUNCTION(BlueprintPure, Category = "Upgrade")
+    float GetUpgradeProgress() const { return UpgradeProgress; }
+
+    UFUNCTION(BlueprintCallable, Category = "Upgrade")
+    void ApplyUpgrade(const FMingBuildingUpgrade& UpgradeData);
+
+    UFUNCTION(BlueprintPure, Category = "Upgrade")
+    int32 GetCurrentUpgradeLevel() const { return CurrentUpgradeLevel; }
+
+    UFUNCTION(BlueprintCallable, Category = "Upgrade")
+    void SetUpgradeLevel(int32 NewLevel);
+
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingUpgradeStarted, const FString&, UpgradeID);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingUpgradeProgress, float, Progress);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildingUpgradeCompleted);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildingUpgradeCancelled);
+
+    UPROPERTY(BlueprintAssignable, Category = "Events")
+    FOnBuildingUpgradeStarted OnBuildingUpgradeStarted;
+
+    UPROPERTY(BlueprintAssignable, Category = "Events")
+    FOnBuildingUpgradeProgress OnBuildingUpgradeProgress;
+
+    UPROPERTY(BlueprintAssignable, Category = "Events")
+    FOnBuildingUpgradeCompleted OnBuildingUpgradeCompleted;
+
+    UPROPERTY(BlueprintAssignable, Category = "Events")
+    FOnBuildingUpgradeCancelled OnBuildingUpgradeCancelled;
+
 protected:
     UPROPERTY()
     TWeakObjectPtr<class UMingResourceSystem> ResourceSystem;
@@ -197,4 +236,24 @@ protected:
     void OnDestroyed_Internal();
 
     TMap<EMingResourceType, int32> AccumulatedResources;
+
+    // 升級相關屬性 | Upgrade Properties
+    UPROPERTY(BlueprintReadOnly, Category = "Upgrade")
+    bool bIsBeingUpgraded;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Upgrade")
+    float UpgradeProgress;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Upgrade")
+    int32 CurrentUpgradeLevel;
+
+    UPROPERTY()
+    FString CurrentUpgradeID;
+
+    UPROPERTY()
+    float UpgradeTimeRemaining;
+
+    void UpdateUpgrade(float DeltaTime);
+    void CompleteUpgrade();
+    void OnUpgradeComplete_Internal();
 };
