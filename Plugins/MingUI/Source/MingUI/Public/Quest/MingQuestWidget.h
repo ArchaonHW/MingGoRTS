@@ -111,7 +111,7 @@ class MINGUI_API UMingQuestWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingQuestWidget(const FObjectInitializer& ObjectInitializer);
+    UMingQuestWidget(const FObjectInitializer& ObjectInitializer};
 
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
@@ -119,43 +119,43 @@ public:
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void InitializeWidget(class UMingPersonalManager* InPersonalManager);
+    void InitializeWidget(class UMingPersonalManager* InPersonalManager};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void RefreshQuestList();
+    void RefreshQuestList(};
 
     // View Modes
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void SetViewMode(EMingQuestViewMode NewMode);
+    void SetViewMode(EMingQuestViewMode NewMode};
 
     UFUNCTION(BlueprintPure, Category = "Quest UI")
     EMingQuestViewMode GetCurrentViewMode() const { return CurrentViewMode; }
 
     // Quest Selection
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void SelectQuest(FName QuestID);
+    void SelectQuest(FName QuestID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ClearQuestSelection();
+    void ClearQuestSelection(};
 
     UFUNCTION(BlueprintPure, Category = "Quest UI")
     FName GetSelectedQuest() const { return SelectedQuestID; }
 
     // Quest Actions
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void AcceptQuest(FName QuestID);
+    void AcceptQuest(FName QuestID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void AbandonQuest(FName QuestID);
+    void AbandonQuest(FName QuestID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void TrackQuest(FName QuestID);
+    void TrackQuest(FName QuestID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void UntrackQuest(FName QuestID);
+    void UntrackQuest(FName QuestID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void CompleteQuestObjective(FName QuestID, int32 ObjectiveIndex);
+    void CompleteQuestObjective(FName QuestID, int32 ObjectiveIndex};
 
     // Display Data
     UFUNCTION(BlueprintPure, Category = "Quest UI")
@@ -169,22 +169,22 @@ public:
 
     // Filters and Sorting
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void SortQuests(EMingQuestSortType SortType, bool bAscending = true);
+    void SortQuests(EMingQuestSortType SortType, bool bAscending = true};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void FilterByRegion(FName RegionID);
+    void FilterByRegion(FName RegionID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void FilterByGiver(FName CharacterID);
+    void FilterByGiver(FName CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ShowOnlyAvailable();
+    void ShowOnlyAvailable(};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ShowOnlyPriority();
+    void ShowOnlyPriority(};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ClearFilters();
+    void ClearFilters(};
 
     // Requirements Check
     UFUNCTION(BlueprintPure, Category = "Quest UI")
@@ -201,38 +201,38 @@ public:
 
     // Visual Feedback
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void HighlightQuestUpdate(FName QuestID);
+    void HighlightQuestUpdate(FName QuestID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void PlayQuestAcceptedAnimation(FName QuestID);
+    void PlayQuestAcceptedAnimation(FName QuestID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void PlayQuestCompletedAnimation(FName QuestID);
+    void PlayQuestCompletedAnimation(FName QuestID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ShowProgressUpdate(FName QuestID, float OldProgress, float NewProgress);
+    void ShowProgressUpdate(FName QuestID, float OldProgress, float NewProgress};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void FlashObjective(int32 ObjectiveIndex);
+    void FlashObjective(int32 ObjectiveIndex};
 
     // Audio Integration
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void PlayQuestSound(FName QuestID, int32 EventType);
+    void PlayQuestSound(FName QuestID, int32 EventType};
 
     // Tracking HUD
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void UpdateTrackingHUD();
+    void UpdateTrackingHUD(};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ShowTrackingHUD(bool bShow);
+    void ShowTrackingHUD(bool bShow};
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestSelected, FName, QuestID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestAccepted, FName, QuestID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestAbandoned, FName, QuestID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestCompleted, FName, QuestID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnObjectiveCompleted, FName, QuestID, int32, ObjectiveIndex);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnViewModeChanged);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestSelected, FName, QuestID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestAccepted, FName, QuestID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestAbandoned, FName, QuestID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestCompleted, FName, QuestID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnObjectiveCompleted, FName, QuestID, int32, ObjectiveIndex};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnViewModeChanged};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnQuestSelected OnQuestSelected;
@@ -338,53 +338,54 @@ protected:
 
     // Button Handlers
     UFUNCTION()
-    void OnActiveTabClicked();
+    void OnActiveTabClicked(};
 
     UFUNCTION()
-    void OnAvailableTabClicked();
+    void OnAvailableTabClicked(};
 
     UFUNCTION()
-    void OnCompletedTabClicked();
+    void OnCompletedTabClicked(};
 
     UFUNCTION()
-    void OnQuestButtonClicked(FName QuestID);
+    void OnQuestButtonClicked(FName QuestID};
 
     UFUNCTION()
-    void OnAcceptButtonClicked();
+    void OnAcceptButtonClicked(};
 
     UFUNCTION()
-    void OnAbandonButtonClicked();
+    void OnAbandonButtonClicked(};
 
     UFUNCTION()
-    void OnTrackButtonClicked();
+    void OnTrackButtonClicked(};
 
     UFUNCTION()
-    void OnCloseButtonClicked();
+    void OnCloseButtonClicked(};
 
     // Internal Functions
-    void PopulateQuestList();
-    void UpdateQuestDetails();
-    void CreateQuestEntry(const FMingQuestDisplayData& Data);
-    void CreateObjectiveEntry(const FText& ObjectiveText, bool bIsCompleted, int32 Index);
-    void CreateRewardEntry(const FText& RewardText);
-    void ClearQuestList();
-    void ClearObjectivesList();
-    void ClearRewardsList();
-    void FilterAndSortData();
-    void UpdateButtonStates();
+    void PopulateQuestList(};
+    void UpdateQuestDetails(};
+    void CreateQuestEntry(const FMingQuestDisplayData& Data};
+    void CreateObjectiveEntry(const FText& ObjectiveText, bool bIsCompleted, int32 Index};
+    void CreateRewardEntry(const FText& RewardText};
+    void ClearQuestList(};
+    void ClearObjectivesList(};
+    void ClearRewardsList(};
+    void FilterAndSortData(};
+    void UpdateButtonStates(};
     FLinearColor GetQuestColor(int32 Status) const;
     FString FormatTimeRemaining(float Seconds) const;
 
     // Animation
-    void AnimateProgressBar(float TargetValue);
-    void AnimateQuestEntry(UWidget* EntryWidget);
-    void PlayCompletionEffects();
+    void AnimateProgressBar(float TargetValue};
+    void AnimateQuestEntry(UWidget* EntryWidget};
+    void PlayCompletionEffects(};
 
 public:
     // Static utilities
     UFUNCTION(BlueprintPure, Category = "Quest UI", meta = (StaticFunction))
-    static FLinearColor GetStatusColor(int32 Status);
+    static FLinearColor GetStatusColor(int32 Status};
 
     UFUNCTION(BlueprintPure, Category = "Quest UI", meta = (StaticFunction))
-    static FString GetStatusText(int32 Status);
+    static FString GetStatusText(int32 Status};
 };
+

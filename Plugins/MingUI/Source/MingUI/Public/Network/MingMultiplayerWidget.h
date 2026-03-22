@@ -23,141 +23,141 @@ class MINGUI_API UMingMultiplayerWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingMultiplayerWidget(const FObjectInitializer& ObjectInitializer);
+    UMingMultiplayerWidget(const FObjectInitializer& ObjectInitializer};
 
     // ?ùÂ???    UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget")
-    void InitializeMultiplayerWidget(UMingNetworkManager* InNetworkManager, UMingLobbySystem* InLobbySystem);
+    void InitializeMultiplayerWidget(UMingNetworkManager* InNetworkManager, UMingLobbySystem* InLobbySystem};
 
     // È°ØÁ§∫/?±Ë??åÈù¢
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget")
-    void ShowMainMenu();
+    void ShowMainMenu(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget")
-    void ShowLobbyInterface();
+    void ShowLobbyInterface(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget")
-    void ShowConnectionDialog();
+    void ShowConnectionDialog(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget")
-    void HideWidget();
+    void HideWidget(};
 
     // === ‰∏ªË??ÆÂ???===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Main Menu")
-    void OnCreateServerClicked();
+    void OnCreateServerClicked(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Main Menu")
-    void OnJoinServerClicked();
+    void OnJoinServerClicked(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Main Menu")
-    void OnQuickMatchClicked();
+    void OnQuickMatchClicked(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Main Menu")
-    void OnSettingsClicked();
+    void OnSettingsClicked(};
 
     // === ??é•?üËÉΩ ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Connection")
-    void OnConnectClicked();
+    void OnConnectClicked(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Connection")
-    void OnDisconnectClicked();
+    void OnDisconnectClicked(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Connection")
-    void OnCancelConnectionClicked();
+    void OnCancelConnectionClicked(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Connection")
-    void UpdateConnectionStatus(const FString& Status);
+    void UpdateConnectionStatus(const FString& Status};
 
     // === Â§ßÂª≥?üËÉΩ ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Lobby")
-    void OnLeaveLobbyClicked();
+    void OnLeaveLobbyClicked(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Lobby")
-    void OnReadyClicked();
+    void OnReadyClicked(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Lobby")
-    void OnStartGameClicked();
+    void OnStartGameClicked(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Lobby")
-    void OnCancelStartClicked();
+    void OnCancelStartClicked(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Lobby")
-    void OnChangeTeamClicked(int32 TeamID);
+    void OnChangeTeamClicked(int32 TeamID};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Lobby")
-    void OnKickPlayerClicked(int32 PlayerID);
+    void OnKickPlayerClicked(int32 PlayerID};
 
     // === ?äÂ§©?üËÉΩ ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Chat")
-    void OnSendMessageClicked();
+    void OnSendMessageClicked(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Chat")
-    void AddChatMessage(const FString& PlayerName, const FString& Message, bool bIsSystemMessage = false);
+    void AddChatMessage(const FString& PlayerName, const FString& Message, bool bIsSystemMessage = false};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Chat")
-    void ClearChat();
+    void ClearChat(};
 
     // === ?©ÂÆ∂?óË°® ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Player List")
-    void UpdatePlayerList();
+    void UpdatePlayerList(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Player List")
-    void AddPlayerToList(int32 PlayerID, const FString& PlayerName, bool bIsReady, bool bIsHost, int32 TeamID);
+    void AddPlayerToList(int32 PlayerID, const FString& PlayerName, bool bIsReady, bool bIsHost, int32 TeamID};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Player List")
-    void RemovePlayerFromList(int32 PlayerID);
+    void RemovePlayerFromList(int32 PlayerID};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Player List")
-    void UpdatePlayerStatus(int32 PlayerID, bool bIsReady);
+    void UpdatePlayerStatus(int32 PlayerID, bool bIsReady};
 
     // === ?¥Êñ∞?åÈù¢ ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Updates")
-    void UpdateNetworkStatusDisplay();
+    void UpdateNetworkStatusDisplay(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Updates")
-    void UpdateLobbyInfoDisplay();
+    void UpdateLobbyInfoDisplay(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Updates")
-    void ShowCountdown(int32 Seconds);
+    void ShowCountdown(int32 Seconds};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Updates")
-    void HideCountdown();
+    void HideCountdown(};
 
     // === ‰∫ã‰ª∂?ïÁ? ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Events")
-    void OnNetworkConnected();
+    void OnNetworkConnected(};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Events")
-    void OnNetworkDisconnected(const FString& Reason);
+    void OnNetworkDisconnected(const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Events")
-    void OnPlayerJoined(int32 PlayerID, const FString& PlayerName);
+    void OnPlayerJoined(int32 PlayerID, const FString& PlayerName};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Events")
-    void OnPlayerLeft(int32 PlayerID, const FString& Reason);
+    void OnPlayerLeft(int32 PlayerID, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Events")
-    void OnPlayerReadyChanged(int32 PlayerID, bool bReady);
+    void OnPlayerReadyChanged(int32 PlayerID, bool bReady};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Events")
-    void OnGameStarting(int32 CountdownSeconds);
+    void OnGameStarting(int32 CountdownSeconds};
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Events")
-    void OnChatMessageReceived(const FString& PlayerName, const FString& Message, bool bIsSystemMessage);
+    void OnChatMessageReceived(const FString& PlayerName, const FString& Message, bool bIsSystemMessage};
 
 protected:
     // Á∂ÅÂ?UI?ÉÁ?ÔºàÂú®?çÂ?‰∏≠ÂØ¶?æÔ?
     UFUNCTION(BlueprintImplementableEvent, Category = "Multiplayer Widget|Binding")
-    void BindUIElements();
+    void BindUIElements(};
 
     UFUNCTION(BlueprintImplementableEvent, Category = "Multiplayer Widget|Binding")
-    void SetupEventBindings();
+    void SetupEventBindings(};
 
     // Native construct
     virtual void NativeConstruct() override;
@@ -167,7 +167,7 @@ protected:
 
     // ?∑Êñ∞È°ØÁ§∫
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget")
-    void RefreshDisplay();
+    void RefreshDisplay(};
 
 protected:
     // Á∂≤Áµ°ÁÆ°Á??®Â???    UPROPERTY(BlueprintReadOnly, Category = "Multiplayer Widget")
@@ -232,3 +232,4 @@ protected:
     UPROPERTY(meta = (BindWidget), Category = "Multiplayer Widget|UI Elements")
     TObjectPtr<UButton> SendMessageButton;
 };
+

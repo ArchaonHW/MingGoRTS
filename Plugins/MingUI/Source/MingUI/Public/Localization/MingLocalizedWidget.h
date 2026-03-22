@@ -45,7 +45,7 @@ class MINGPERSONAL_API UMingLocalizedWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingLocalizedWidget(const FObjectInitializer& ObjectInitializer);
+    UMingLocalizedWidget(const FObjectInitializer& ObjectInitializer};
 
     // ?ùÂ???    virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
@@ -54,7 +54,7 @@ public:
 
     // Ë®≠ÁΩÆ?¨Âú∞?ñÈçµ
     UFUNCTION(BlueprintCallable, Category = "Localized Widget")
-    void SetLocalizationKey(const FString& Key, const FString& Namespace = TEXT("Default"));
+    void SetLocalizationKey(const FString& Key, const FString& Namespace = TEXT("Default")};
 
     UFUNCTION(BlueprintPure, Category = "Localized Widget")
     FString GetLocalizationKey() const { return LocalizationKey; }
@@ -66,35 +66,35 @@ public:
 
     // Ë®≠ÁΩÆ?ÉÊï∏
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Parameters")
-    void SetParameter(const FString& ParamName, const FString& Value);
+    void SetParameter(const FString& ParamName, const FString& Value};
 
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Parameters")
-    void SetParameters(const TMap<FString, FString>& Params);
+    void SetParameters(const TMap<FString, FString>& Params};
 
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Parameters")
-    void ClearParameters();
+    void ClearParameters(};
 
     // === ?áÊú¨?¥Êñ∞ ===
 
     // ?ãÂ??¥Êñ∞?áÊú¨
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Update")
-    void UpdateText();
+    void UpdateText(};
 
     // Âº∑Âà∂?∑Êñ∞
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Update")
-    void ForceRefresh();
+    void ForceRefresh(};
 
     // === ?áÊú¨?ïÁ? ===
 
     // Ë®≠ÁΩÆ?áÊú¨Â§ßÂ?ÂØ?    UFUNCTION(BlueprintCallable, Category = "Localized Widget|Formatting")
-    void SetTextCase(ELocalizedTextCase NewCase);
+    void SetTextCase(ELocalizedTextCase NewCase};
 
     UFUNCTION(BlueprintPure, Category = "Localized Widget|Formatting")
     ELocalizedTextCase GetTextCase() const { return TextCase; }
 
     // Ë®≠ÁΩÆ?™Êñ∑?∏È?
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Formatting")
-    void SetTruncation(ETextTruncation TruncationType, int32 MaxLength = 100);
+    void SetTruncation(ETextTruncation TruncationType, int32 MaxLength = 100};
 
     // === Â±¨ÊÄ?===
 
@@ -135,7 +135,7 @@ public:
 
     // Ë™ûË??πË??ÇÁ??ûË™ø
     UFUNCTION()
-    void OnLanguageChanged(EMingLanguage NewLanguage);
+    void OnLanguageChanged(EMingLanguage NewLanguage};
 
     // ?≤Â??∂Â?È°ØÁ§∫?ÑÊ???    UFUNCTION(BlueprintPure, Category = "Localized Widget")
     FText GetCurrentText() const;
@@ -153,10 +153,10 @@ protected:
     FText CurrentText;
 
     // Á∂ÅÂ??∞Êú¨?∞Â?Á≥ªÁµ±
-    void BindToLocalizationSystem();
+    void BindToLocalizationSystem(};
 
     // Ëß?ô§Á∂ÅÂ?
-    void UnbindFromLocalizationSystem();
+    void UnbindFromLocalizationSystem(};
 
     // ?âÁî®?áÊú¨?ïÁ? (Â§ßÂ?ÂØ´„ÄÅÊà™?∑Á?)
     FText ProcessText(const FText& RawText) const;
@@ -172,3 +172,4 @@ protected:
     // ?≤Â??¨Âú∞?ñÁÆ°?ÜÂô®
     UMingLocalizationManager* GetLocalizationManager() const;
 };
+

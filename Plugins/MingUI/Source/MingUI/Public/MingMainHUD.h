@@ -37,7 +37,7 @@ class MINGUI_API AMingMainHUD : public AHUD
     GENERATED_BODY()
 
 public:
-    AMingMainHUD(const FObjectInitializer& ObjectInitializer);
+    AMingMainHUD(const FObjectInitializer& ObjectInitializer};
 
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
@@ -45,197 +45,197 @@ public:
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Ming HUD")
-    void InitializeHUD(class APlayerController* PC);
+    void InitializeHUD(class APlayerController* PC};
 
     UFUNCTION(BlueprintPure, Category = "Ming HUD")
     bool IsInitialized() const { return bIsInitialized; }
 
     // HUD Mode Management
     UFUNCTION(BlueprintCallable, Category = "Ming HUD")
-    void SetHUDMode(EMingHUDMode NewMode);
+    void SetHUDMode(EMingHUDMode NewMode};
 
     UFUNCTION(BlueprintPure, Category = "Ming HUD")
     EMingHUDMode GetCurrentMode() const { return CurrentMode; }
 
     UFUNCTION(BlueprintCallable, Category = "Ming HUD")
-    void SetPreviousMode();
+    void SetPreviousMode(};
 
     // Widget Visibility
     UFUNCTION(BlueprintCallable, Category = "Ming HUD")
-    void ShowWidget(TSubclassOf<UUserWidget> WidgetClass, EMingHUDLayer Layer);
+    void ShowWidget(TSubclassOf<UUserWidget> WidgetClass, EMingHUDLayer Layer};
 
     UFUNCTION(BlueprintCallable, Category = "Ming HUD")
-    void HideWidget(TSubclassOf<UUserWidget> WidgetClass);
+    void HideWidget(TSubclassOf<UUserWidget> WidgetClass};
 
     UFUNCTION(BlueprintCallable, Category = "Ming HUD")
-    void HideAllWidgets();
+    void HideAllWidgets(};
 
     UFUNCTION(BlueprintPure, Category = "Ming HUD")
     bool IsWidgetVisible(TSubclassOf<UUserWidget> WidgetClass) const;
 
     // Relationship Panel
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
-    void ShowRelationshipPanel();
+    void ShowRelationshipPanel(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
-    void HideRelationshipPanel();
+    void HideRelationshipPanel(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
-    void ToggleRelationshipPanel();
+    void ToggleRelationshipPanel(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
-    void OpenCharacterRelationship(FName CharacterID);
+    void OpenCharacterRelationship(FName CharacterID};
 
     UFUNCTION(BlueprintPure, Category = "Relationship UI")
     bool IsRelationshipPanelVisible() const;
 
     // Reputation Panel
     UFUNCTION(BlueprintCallable, Category = "Reputation UI")
-    void ShowReputationPanel();
+    void ShowReputationPanel(};
 
     UFUNCTION(BlueprintCallable, Category = "Reputation UI")
-    void HideReputationPanel();
+    void HideReputationPanel(};
 
     UFUNCTION(BlueprintCallable, Category = "Reputation UI")
-    void ToggleReputationPanel();
+    void ToggleReputationPanel(};
 
     UFUNCTION(BlueprintCallable, Category = "Reputation UI")
-    void OpenRegionReputation(FName RegionID);
+    void OpenRegionReputation(FName RegionID};
 
     UFUNCTION(BlueprintPure, Category = "Reputation UI")
     bool IsReputationPanelVisible() const;
 
     // Dialogue System
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void StartDialogue(FName CharacterID);
+    void StartDialogue(FName CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void EndDialogue();
+    void EndDialogue(};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void ShowDialogueOptions(const TArray<struct FMingDialogueOption>& Options);
+    void ShowDialogueOptions(const TArray<struct FMingDialogueOption>& Options};
 
     UFUNCTION(BlueprintPure, Category = "Dialogue UI")
     bool IsDialogueActive() const;
 
     // Quest Panel
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ShowQuestPanel();
+    void ShowQuestPanel(};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void HideQuestPanel();
+    void HideQuestPanel(};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ToggleQuestPanel();
+    void ToggleQuestPanel(};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ShowQuestDetails(FName QuestID);
+    void ShowQuestDetails(FName QuestID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ShowQuestNotification(FName QuestID, const FString& Message);
+    void ShowQuestNotification(FName QuestID, const FString& Message};
 
     UFUNCTION(BlueprintPure, Category = "Quest UI")
     bool IsQuestPanelVisible() const;
 
     // Audio Panel
     UFUNCTION(BlueprintCallable, Category = "Audio UI")
-    void ShowAudioPanel();
+    void ShowAudioPanel(};
 
     UFUNCTION(BlueprintCallable, Category = "Audio UI")
-    void HideAudioPanel();
+    void HideAudioPanel(};
 
     UFUNCTION(BlueprintCallable, Category = "Audio UI")
-    void ToggleAudioPanel();
+    void ToggleAudioPanel(};
 
     // Quick Access
     UFUNCTION(BlueprintCallable, Category = "Quick Access")
-    void ShowQuickRelationshipBar();
+    void ShowQuickRelationshipBar(};
 
     UFUNCTION(BlueprintCallable, Category = "Quick Access")
-    void HideQuickRelationshipBar();
+    void HideQuickRelationshipBar(};
 
     UFUNCTION(BlueprintCallable, Category = "Quick Access")
-    void ShowQuickReputationBar();
+    void ShowQuickReputationBar(};
 
     UFUNCTION(BlueprintCallable, Category = "Quick Access")
-    void HideQuickReputationBar();
+    void HideQuickReputationBar(};
 
     UFUNCTION(BlueprintCallable, Category = "Quick Access")
-    void UpdateQuickAccessDisplays();
+    void UpdateQuickAccessDisplays(};
 
     // Notifications
     UFUNCTION(BlueprintCallable, Category = "Notifications")
-    void ShowNotification(const FString& Title, const FString& Message, float Duration = 5.0f);
+    void ShowNotification(const FString& Title, const FString& Message, float Duration = 5.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Notifications")
-    void ShowRelationshipNotification(FName CharacterID, float OldValue, float NewValue);
+    void ShowRelationshipNotification(FName CharacterID, float OldValue, float NewValue};
 
     UFUNCTION(BlueprintCallable, Category = "Notifications")
-    void ShowReputationNotification(FName RegionID, float OldValue, float NewValue);
+    void ShowReputationNotification(FName RegionID, float OldValue, float NewValue};
 
     UFUNCTION(BlueprintCallable, Category = "Notifications")
-    void ShowQuestUpdateNotification(FName QuestID, const FString& UpdateMessage);
+    void ShowQuestUpdateNotification(FName QuestID, const FString& UpdateMessage};
 
     // Input Handling
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void HandleToggleRelationshipInput();
+    void HandleToggleRelationshipInput(};
 
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void HandleToggleReputationInput();
+    void HandleToggleReputationInput(};
 
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void HandleToggleQuestInput();
+    void HandleToggleQuestInput(};
 
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void HandleToggleAudioInput();
+    void HandleToggleAudioInput(};
 
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void HandlePauseInput();
+    void HandlePauseInput(};
 
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void HandleBackInput();
+    void HandleBackInput(};
 
     // Event Response
     UFUNCTION()
-    void OnRelationshipChanged(FName CharacterID, float NewValue);
+    void OnRelationshipChanged(FName CharacterID, float NewValue};
 
     UFUNCTION()
-    void OnReputationChanged(FName RegionID, float NewValue);
+    void OnReputationChanged(FName RegionID, float NewValue};
 
     UFUNCTION()
-    void OnQuestStatusChanged(FName QuestID, int32 NewStatus);
+    void OnQuestStatusChanged(FName QuestID, int32 NewStatus};
 
     UFUNCTION()
-    void OnDialogueOptionSelected(int32 OptionID);
+    void OnDialogueOptionSelected(int32 OptionID};
 
     // Audio Integration
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void PlayUISound(int32 SoundType);
+    void PlayUISound(int32 SoundType};
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void PlayPanelOpenSound();
+    void PlayPanelOpenSound(};
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void PlayPanelCloseSound();
+    void PlayPanelCloseSound(};
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void PlayNotificationSound(int32 NotificationType);
+    void PlayNotificationSound(int32 NotificationType};
 
     // Debug
     UFUNCTION(BlueprintCallable, Category = "Debug")
-    void ShowDebugInfo(bool bShow);
+    void ShowDebugInfo(bool bShow};
 
     UFUNCTION(BlueprintCallable, Category = "Debug")
-    void ToggleDebugInfo();
+    void ToggleDebugInfo(};
 
     UFUNCTION(BlueprintPure, Category = "Debug")
     FString GetDebugInfo() const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHUDModeChanged, EMingHUDMode, NewMode);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPanelOpened);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPanelClosed);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNotificationShown, FString, Title, FString, Message);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHUDModeChanged, EMingHUDMode, NewMode};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPanelOpened};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPanelClosed};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNotificationShown, FString, Title, FString, Message};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnHUDModeChanged OnHUDModeChanged;
@@ -315,26 +315,26 @@ protected:
     TMap<EMingHUDLayer, TArray<UUserWidget*>> LayerWidgets;
 
     // Internal Functions
-    void InitializeWidgets();
-    void SetupInputBindings();
-    void BindToPersonalManager();
-    void UnbindFromPersonalManager();
+    void InitializeWidgets(};
+    void SetupInputBindings(};
+    void BindToPersonalManager(};
+    void UnbindFromPersonalManager(};
     
-    UUserWidget* CreateWidgetOnLayer(TSubclassOf<UUserWidget> WidgetClass, EMingHUDLayer Layer);
-    void AddWidgetToLayer(UUserWidget* Widget, EMingHUDLayer Layer);
-    void RemoveWidgetFromLayer(UUserWidget* Widget);
-    void ClearLayer(EMingHUDLayer Layer);
+    UUserWidget* CreateWidgetOnLayer(TSubclassOf<UUserWidget> WidgetClass, EMingHUDLayer Layer};
+    void AddWidgetToLayer(UUserWidget* Widget, EMingHUDLayer Layer};
+    void RemoveWidgetFromLayer(UUserWidget* Widget};
+    void ClearLayer(EMingHUDLayer Layer};
     
-    void CloseAllPanels();
-    void UpdateHUDForMode();
-    void ShowLayerWidgets(EMingHUDLayer Layer);
-    void HideLayerWidgets(EMingHUDLayer Layer);
+    void CloseAllPanels(};
+    void UpdateHUDForMode(};
+    void ShowLayerWidgets(EMingHUDLayer Layer};
+    void HideLayerWidgets(EMingHUDLayer Layer};
     
     bool CanOpenPanel() const;
-    void ReturnToGameplayMode();
+    void ReturnToGameplayMode(};
     
     // Sound Functions
-    void PlaySound(int32 SoundType);
+    void PlaySound(int32 SoundType};
     FString GetSoundCuePath(int32 SoundType) const;
 
 public:
@@ -357,3 +357,4 @@ public:
     UFUNCTION(BlueprintPure, Category = "Widgets")
     UUserWidget* GetQuickReputationWidget() const { return QuickReputationWidget; }
 };
+
