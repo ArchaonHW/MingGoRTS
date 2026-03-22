@@ -187,7 +187,7 @@ public:
     TArray<FLayerInfo> GetLayers() const { return Layers; }
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    FLayerInfo* GetActiveLayer();
+    FLayerInfo GetActiveLayer() const;
 
     // 圖像調整
     UFUNCTION(BlueprintCallable, Category = "Art Editor")

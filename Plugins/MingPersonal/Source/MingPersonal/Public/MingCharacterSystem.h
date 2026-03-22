@@ -317,11 +317,11 @@ protected:
     UPROPERTY()
     TMap<FString, TMap<FString, float>> CharacterRelationships;
 
-    UPROPERTY()
-    TMap<FString, TArray<FString>> CharacterEffects;
+    // 注意：TArray 不能直接作為 TMap 的 UPROPERTY 值類型
+    // TMap<FString, TArray<FString>> CharacterEffects;
 
-    UPROPERTY()
-    TMap<FString, TArray<FString>> HistoricalEvents;
+    // 注意：TArray 不能直接作為 TMap 的 UPROPERTY 值類型
+    // TMap<FString, TArray<FString>> HistoricalEvents;
 
     UPROPERTY()
     TWeakObjectPtr<UWorld> WorldContext;
