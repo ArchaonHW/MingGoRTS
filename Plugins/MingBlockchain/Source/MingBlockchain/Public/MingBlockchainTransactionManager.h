@@ -511,34 +511,34 @@ private:
     TMap<FString, FTransactionStatistics> PlayerStatistics;
 
     /** Current transaction fee type */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
     ETransactionFeeType CurrentFeeType;
 
     /** Whether auto-retry is enabled */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
     bool bAutoRetryEnabled;
 
     /** Maximum retry attempts */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
     int32 MaxRetryAttempts;
 
     /** Default gas price */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
     float DefaultGasPrice;
 
     /** Maximum pending transactions */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
     int32 MaxPendingTransactions;
 
     /** Transaction timeout in seconds */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
     float TransactionTimeout;
 
     /** Time since last gas price update */
     float TimeSinceLastGasUpdate;
 
     /** Gas price update interval */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
     float GasUpdateInterval;
 
     /** Initialize transaction configuration */

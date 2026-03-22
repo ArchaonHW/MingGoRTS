@@ -104,3 +104,6 @@ private:
     // 創建測試存檔管理器
     UMingSaveGameManager* CreateTestSaveManager() {};
 };
+
+
+#endif // MINGSAVESYSTEMTEST_H

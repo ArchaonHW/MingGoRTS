@@ -305,16 +305,16 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetTechCategoryName(EMingTechCategory Category};
+    static FString GetTechCategoryName(EMingTechCategory Category);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FLinearColor GetTechCategoryColor(EMingTechCategory Category};
+    static FLinearColor GetTechCategoryColor(EMingTechCategory Category);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SerializeTechTree() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void DeserializeTechTree(const FString& JsonString};
+    void DeserializeTechTree(const FString& JsonString);
 
 protected:
     UPROPERTY()

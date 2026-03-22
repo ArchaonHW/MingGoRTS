@@ -7,35 +7,35 @@
 UENUM(BlueprintType)
 enum class EHistoricalEventType : uint8
 {
-    Political, UMETA(DisplayName = "Political"),
-    Military, UMETA(DisplayName = "Military"),
-    Economic, UMETA(DisplayName = "Economic"),
-    Cultural, UMETA(DisplayName = "Cultural"),
-    Social, UMETA(DisplayName = "Social"),
-    Technological, UMETA(DisplayName = "Technological"),
-    Natural, UMETA(DisplayName = "Natural"),
-    Personal, UMETA(DisplayName = "Personal")
+    Political UMETA(DisplayName = "Political"),
+    Military UMETA(DisplayName = "Military"),
+    Economic UMETA(DisplayName = "Economic"),
+    Cultural UMETA(DisplayName = "Cultural"),
+    Social UMETA(DisplayName = "Social"),
+    Technological UMETA(DisplayName = "Technological"),
+    Natural UMETA(DisplayName = "Natural"),
+    Personal UMETA(DisplayName = "Personal")
 };
 
 UENUM(BlueprintType)
 enum class EHistoricalImpact : uint8
 {
-    Local, UMETA(DisplayName = "Local"),
-    Regional, UMETA(DisplayName = "Regional"),
-    National, UMETA(DisplayName = "National"),
-    International, UMETA(DisplayName = "International"),
-    Global, UMETA(DisplayName = "Global")
+    Local UMETA(DisplayName = "Local"),
+    Regional UMETA(DisplayName = "Regional"),
+    National UMETA(DisplayName = "National"),
+    International UMETA(DisplayName = "International"),
+    Global UMETA(DisplayName = "Global")
 };
 
 UENUM(BlueprintType)
 enum class EHistoricalSignificance : uint8
 {
-    Trivial, UMETA(DisplayName = "Trivial"),
-    Minor, UMETA(DisplayName = "Minor"),
-    Moderate, UMETA(DisplayName = "Moderate"),
-    Major, UMETA(DisplayName = "Major"),
-    Critical, UMETA(DisplayName = "Critical"),
-    Legendary, UMETA(DisplayName = "Legendary")
+    Trivial UMETA(DisplayName = "Trivial"),
+    Minor UMETA(DisplayName = "Minor"),
+    Moderate UMETA(DisplayName = "Moderate"),
+    Major UMETA(DisplayName = "Major"),
+    Critical UMETA(DisplayName = "Critical"),
+    Legendary UMETA(DisplayName = "Legendary")
 };
 
 USTRUCT(BlueprintType)

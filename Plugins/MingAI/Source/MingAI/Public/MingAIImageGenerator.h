@@ -155,3 +155,5 @@ protected:
     FString BuildEnvironmentPrompt(const FString& Description, EMingImageStyle Style) const;
 };
 
+#endif // MINGAIIMAGEGENERATOR_H
+

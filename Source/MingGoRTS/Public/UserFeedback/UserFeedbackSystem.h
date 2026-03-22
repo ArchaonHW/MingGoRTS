@@ -251,11 +251,11 @@ public:
 
     /** ??eq */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    void SendNotification(const FString& FeedbackID, const FString& Message};
+    void SendNotification(const FString& FeedbackID, const FString& Message);
 
     /** ˬd???X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    TArray<FString> CheckDuplicateFeedback(const FFeedbackData& FeedbackData};
+    TArray<FString> CheckDuplicateFeedback(const FFeedbackData& FeedbackData);
 
     /** ???X??X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
@@ -263,16 +263,16 @@ public:
 
 public:
     /** ???X?ƥ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFeedbackSubmitted, const FString&, FeedbackID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFeedbackSubmitted, const FString&, FeedbackID);
 
     /** ???X?????????*/
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackStatusUpdated, const FString&, FeedbackID, EFeedbackStatus, NewStatus};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackStatusUpdated, const FString&, FeedbackID, EFeedbackStatus, NewStatus);
 
     /** ???X???ƥ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackAssigned, const FString&, FeedbackID, const FString&, AssignedTo};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackAssigned, const FString&, FeedbackID, const FString&, AssignedTo);
 
     /** ????Xqƥ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewFeedback, const FFeedbackData&, FeedbackData};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewFeedback, const FFeedbackData&, FeedbackData);
 
     UPROPERTY(BlueprintAssignable, Category = "Feedback System|Events")
     FOnFeedbackSubmitted OnFeedbackSubmitted;
@@ -291,10 +291,10 @@ protected:
     FString GenerateFeedbackID();
 
     /** ?X??X??? */
-    bool ValidateFeedbackData(const FFeedbackData& FeedbackData};
+    bool ValidateFeedbackData(const FFeedbackData& FeedbackData);
 
     /** O?X??X??? */
-    bool SaveFeedbackData(const FFeedbackData& FeedbackData};
+    bool SaveFeedbackData(const FFeedbackData& FeedbackData);
 
     /** ???X??X??? */
     void LoadFeedbackData();
@@ -303,13 +303,13 @@ protected:
     void UpdateStatistics();
 
     /** ??elq */
-    void SendEmailNotification(const FString& To, const FString& Subject, const FString& Body};
+    void SendEmailNotification(const FString& To, const FString& Subject, const FString& Body);
 
     /** ???X??X?e */
-    void AnalyzeFeedbackContent(FFeedbackData& FeedbackData};
+    void AnalyzeFeedbackContent(FFeedbackData& FeedbackData);
 
     /** ?????? */
-    void AutoTagFeedback(FFeedbackData& FeedbackData};
+    void AutoTagFeedback(FFeedbackData& FeedbackData);
 
 private:
     /** ??????XX*/

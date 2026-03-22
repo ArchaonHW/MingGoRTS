@@ -30,10 +30,10 @@ struct MINGTACTICAL_API FSpatialGridCell
     explicit FMingSpatialGridCell(const FIntVector& InCoord) : GridCoord(InCoord) {}
 
     void AddUnit(AMingTacticalUnit* Unit};
-    void RemoveUnit(AMingTacticalUnit* Unit};
+    void RemoveUnit(AMingTacticalUnit* Unit);
     bool Contains(AMingTacticalUnit* Unit) const;
-    void Clear(};
-    int32 GetUnitCount() const { return Units.Num(}; }
+    void Clear();
+    int32 GetUnitCount() const { return Units.Num(); }
 };
 
 /**

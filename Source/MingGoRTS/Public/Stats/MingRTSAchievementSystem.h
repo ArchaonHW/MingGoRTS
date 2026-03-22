@@ -10,10 +10,10 @@
 UENUM(BlueprintType)
 enum class EAchievementRarity : uint8
 {
-    Common          UMETA(DisplayName = "?��?),
-    Uncommon        UMETA(DisplayName = "稀X),
-    Rare            UMETA(DisplayName = "?�詩"),
-    Epic            UMETA(DisplayName = "?�說"),
+    Common          UMETA(DisplayName = "普通"),
+    Uncommon        UMETA(DisplayName = "稀有"),
+    Rare            UMETA(DisplayName = "史詩"),
+    Epic            UMETA(DisplayName = "傳說"),
     Legendary       UMETA(DisplayName = "神話")
 };
 
@@ -184,15 +184,15 @@ public:
     
     // ?�新?�就?�度
     UFUNCTION(BlueprintCallable, Category = "Achievement")
-    void UpdateAchievementProgress(const FString& PlayerID, FName AchievementID, int32 Progress};
+    void UpdateAchievementProgress(const FString& PlayerID, FName AchievementID, int32 Progress);
     
     // 增�X�就?�度
     UFUNCTION(BlueprintCallable, Category = "Achievement")
-    void IncrementAchievementProgress(const FString& PlayerID, FName AchievementID, int32 Amount = 1};
+    void IncrementAchievementProgress(const FString& PlayerID, FName AchievementID, int32 Amount = 1);
     
     // �X�就
     UFUNCTION(BlueprintCallable, Category = "Achievement")
-    void UnlockAchievement(const FString& PlayerID, FName AchievementID};
+    void UnlockAchievement(const FString& PlayerID, FName AchievementID);
     
     // 檢查?�就?�否已解X    UFUNCTION(BlueprintCallable, Category = "Achievement")
     bool IsAchievementUnlocked(const FString& PlayerID, FName AchievementID) const;
@@ -213,20 +213,20 @@ public:
     
     // ?�置?�家?�就
     UFUNCTION(BlueprintCallable, Category = "Achievement")
-    void ResetPlayerAchievements(const FString& PlayerID};
+    void ResetPlayerAchievements(const FString& PlayerID);
     
     // 保�X�就?��?
     UFUNCTION(BlueprintCallable, Category = "Achievement")
-    void SaveAchievementData(const FString& PlayerID};
+    void SaveAchievementData(const FString& PlayerID);
     
     // 載入?�就?��?
     UFUNCTION(BlueprintCallable, Category = "Achievement")
-    void LoadAchievementData(const FString& PlayerID};
+    void LoadAchievementData(const FString& PlayerID);
     
     // 事件委�?
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAchievementUnlocked, const FString&, PlayerID, FName, AchievementID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAchievementProgressUpdated, const FString&, PlayerID, FName, AchievementID, int32, NewProgress};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAchievementCompleted, const FString&, PlayerID, const FAchievementData&, AchievementData};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAchievementUnlocked, const FString&, PlayerID, FName, AchievementID);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAchievementProgressUpdated, const FString&, PlayerID, FName, AchievementID, int32, NewProgress);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAchievementCompleted, const FString&, PlayerID, const FAchievementData&, AchievementData);
     
     UPROPERTY(BlueprintAssignable, Category = "Achievement|Events")
     FOnAchievementUnlocked OnAchievementUnlocked;

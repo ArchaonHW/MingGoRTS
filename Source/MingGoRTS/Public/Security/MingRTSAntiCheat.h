@@ -5,50 +5,50 @@
 #include "MingRTSAntiCheat.generated.h"
 
 /**
- * §@??ÀË´úÃş??
+ * ä½œ??æª¢æ¸¬é¡??
  */
 UENUM(BlueprintType)
 enum class ECheatType : uint8
 {
-    None                    UMETA(DisplayName = "X),
-    MemoryModification      UMETA(DisplayName = "°O¾ĞÅé­×X),
-    SpeedHack               UMETA(DisplayName = "??«×­×§ï"),
+    None                    UMETA(DisplayName = "ç„¡"),
+    MemoryModification      UMETA(DisplayName = "è¨˜æ†¶é«”ä¿®æ”¹"),
+    SpeedHack               UMETA(DisplayName = "??åº¦ä¿®æ”¹"),
     AimBot                  UMETA(DisplayName = "???X???"),
-    MacroScript             UMETA(DisplayName = "??¥»/??),
-    MapHack                 UMETA(DisplayName = "????¥~??"),
-    ResourceHack            UMETA(DisplayName = "¸ê??­×§ï"),
-    Injection               UMETA(DisplayName = "ª`¤J§@??"),
-    Bypass                  UMETA(DisplayName = "Â¶??ÀË´ú"),
-    Collusion               UMETA(DisplayName = "????§@??")
+    MacroScript             UMETA(DisplayName = "è…³æœ¬/å®"),
+    MapHack                 UMETA(DisplayName = "????å¤–??"),
+    ResourceHack            UMETA(DisplayName = "è³‡??ä¿®æ”¹"),
+    Injection               UMETA(DisplayName = "æ³¨å…¥ä½œ??"),
+    Bypass                  UMETA(DisplayName = "ç¹??æª¢æ¸¬"),
+    Collusion               UMETA(DisplayName = "????ä½œ??")
 };
 
 /**
- * ??»@µ¥??
+ * ??ç½°ç­‰??
  */
 UENUM(BlueprintType)
 enum class EPenaltyLevel : uint8
 {
-    Warning         UMETA(DisplayName = "Äµ??"),
-    Restriction     UMETA(DisplayName = "??¨î"),
-    Suspension      UMETA(DisplayName = "????«Ê??"),
-    PermanentBan    UMETA(DisplayName = "¥Ã??«Ê??"),
-    LegalAction     UMETA(DisplayName = "ªk??°l¶D")
+    Warning         UMETA(DisplayName = "è­¦??"),
+    Restriction     UMETA(DisplayName = "??åˆ¶"),
+    Suspension      UMETA(DisplayName = "????å°??"),
+    PermanentBan    UMETA(DisplayName = "æ°¸??å°??"),
+    LegalAction     UMETA(DisplayName = "æ³•??è¿½è¨´")
 };
 
 /**
- * ÀË´ú¸m«H?? */
+ * æª¢æ¸¬ç½®ä¿¡?? */
 UENUM(BlueprintType)
 enum class EDetectionConfidence : uint8
 {
-    VeryLow     UMETA(DisplayName = "«Ü??"),
+    VeryLow     UMETA(DisplayName = "å¾ˆ??"),
     Low         UMETA(DisplayName = "??),
-    Medium      UMETA(DisplayName = "¤¤??"),
+    Medium      UMETA(DisplayName = "ä¸­??"),
     High        UMETA(DisplayName = "??),
-    VeryHigh    UMETA(DisplayName = "«Ü??")
+    VeryHigh    UMETA(DisplayName = "å¾ˆ??")
 };
 
 /**
- * ÀË´úµ²??
+ * æª¢æ¸¬çµ??
  */
 USTRUCT(BlueprintType)
 struct FCheatDetectionResult
@@ -87,7 +87,7 @@ struct FCheatDetectionResult
 };
 
 /**
- * ??®a¦æ¬°°O??
+ * ??å®¶è¡Œç‚ºè¨˜??
  */
 USTRUCT(BlueprintType)
 struct FPlayerBehaviorRecord
@@ -128,7 +128,7 @@ struct FPlayerBehaviorRecord
 };
 
 /**
- * ????¹ú®Ö¤ß¨t?? */
+ * ????å¼Šæ ¸å¿ƒç³»?? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSAntiCheat : public UObject
 {
@@ -140,57 +140,57 @@ public:
     // ???X    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void InitializeAntiCheat();
     
-    // ????ÀË´ú
+    // ????æª¢æ¸¬
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void StartMonitoring();
     
-    // ??¤îÀË´ú
+    // ??æ­¢æª¢æ¸¬
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void StopMonitoring();
     
-    // ???X???¦æ¬°
+    // ???X???è¡Œç‚º
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void ReportSuspiciousBehavior(const FString& PlayerID, ECheatType Type, const FString& Details};
     
-    // ÀË´ú°O¾ĞÅé­×X    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
+    // æª¢æ¸¬è¨˜æ†¶é«”ä¿®X    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     bool DetectMemoryModification(const FString& PlayerID};
     
-    // ÀË´ú??«×§@??
+    // æª¢æ¸¬??åº¦ä½œ??
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     bool DetectSpeedHack(const FString& PlayerID, float CurrentSpeed};
     
-    // ÀË´ú???X?¥»
+    // æª¢æ¸¬???X?æœ¬
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     bool DetectMacroUsage(const FString& PlayerID, const TArray<float>& ActionTimings};
     
-    // ???X?®a¦æ¬°¼Ò??
+    // ???X?å®¶è¡Œç‚ºæ¨¡??
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void AnalyzePlayerBehavior(const FString& PlayerID};
     
-    // ????ÀË´úµ²??
+    // ????æª¢æ¸¬çµ??
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void ProcessDetection(const FCheatDetectionResult& Result};
     
-    // ??¥Î??»@
+    // ??ç”¨??ç½°
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void ApplyPenalty(const FString& PlayerID, EPenaltyLevel Penalty, const FString& Reason};
     
-    // ???X?®a????¾ú¥v
+    // ???X?å®¶????æ­·å²
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     TArray<FCheatDetectionResult> GetPlayerViolationHistory(const FString& PlayerID) const;
     
-    // ÀË¬d??®a??§_³Q????    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
+    // æª¢æŸ¥??å®¶??å¦è¢«????    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     bool IsPlayerBanned(const FString& PlayerID) const;
     
-    // ????«Ê?? (ºŞ?X??X
+    // ????å°?? (ç®¡?X??X
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void UnbanPlayer(const FString& PlayerID, const FString& AdminID, const FString& Reason};
     
-    // ¤W¶ÇÀË´ú???X??X?¾¹
+    // ä¸Šå‚³æª¢æ¸¬???X??X?å™¨
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void UploadDetectionReport(const FCheatDetectionResult& Result};
     
-    // ¨Æ¥ó©e??
+    // äº‹ä»¶å§”??
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCheatDetected, const FCheatDetectionResult&, Detection};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPlayerPenalized, const FString&, PlayerID, EPenaltyLevel, Penalty, const FText&, Reason};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerBanned, const FString&, PlayerID};

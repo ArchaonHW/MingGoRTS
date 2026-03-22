@@ -163,5 +163,5 @@ protected:
 };
 
 // Event delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCulturalContentChanged, const FString&, const FCulturalContentInfo&);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnCulturalRuleViolated, const FString&, const FString&, const FCulturalAdaptationRule&);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCulturalContentChanged, const FString&, ContentID, const FString&, ContentType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnCulturalRuleViolated, const FString&, ContentID, const FString&, RegionCode, const FString&, RuleName);

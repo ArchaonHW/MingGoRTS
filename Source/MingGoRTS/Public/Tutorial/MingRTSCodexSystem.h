@@ -18,7 +18,7 @@ enum class ECodexEntryType : uint8
     Historical UMETA(DisplayName = "Historical"),
     Tutorial UMETA(DisplayName = "Tutorial"),
     Strategy UMETA(DisplayName = "Strategy"),
-    Tips, UMETA(DisplayName = "Tips")
+    Tips UMETA(DisplayName = "Tips")
 };
 
 /**

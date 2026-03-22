@@ -456,5 +456,3 @@ protected:
     void CheckEncounterTriggers();
 };
 
-#endif // MINGPERSONALLAYERCONTROLLER_H
-

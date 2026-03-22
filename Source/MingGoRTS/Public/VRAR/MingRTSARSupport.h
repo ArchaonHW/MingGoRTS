@@ -192,7 +192,7 @@ public:
 
     // Session Control
     UFUNCTION(BlueprintCallable, Category = "AR Support")
-    bool StartARSession(const FARSessionConfig& Config};
+    bool StartARSession(const FARSessionConfig& Config);
 
     UFUNCTION(BlueprintCallable, Category = "AR Support")
     void StopARSession();

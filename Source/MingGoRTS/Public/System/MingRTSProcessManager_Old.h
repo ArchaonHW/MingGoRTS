@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Engine/Engine.h"
-#include "MingRTSProcessManager.generated.h"
+#include "MingRTSProcessManager_Old.generated.h"
 
 UENUM(BlueprintType)
 enum class EProcessState : uint8
@@ -243,34 +243,34 @@ protected:
 
 private:
     // 活躍進程列表
-    UPROPERTY(BlueprintReadOnly, Category = "Process Manager")
+    UPROPERTY()
     TMap<FString, FProcessInfo> ActiveProcesses;
 
     // 已終止進程列表（用於清理）
-    UPROPERTY(BlueprintReadOnly, Category = "Process Manager")
+    UPROPERTY()
     TArray<FString> TerminatedProcesses;
 
     // 最大進程數量
-    UPROPERTY(BlueprintReadOnly, Category = "Process Manager")
+    UPROPERTY()
     int32 MaxProcessCount;
 
     // 進程調度間隔（秒）
-    UPROPERTY(BlueprintReadOnly, Category = "Process Manager")
+    UPROPERTY()
     float SchedulingInterval;
 
     // 最後調度時間
-    UPROPERTY(BlueprintReadOnly, Category = "Process Manager")
+    UPROPERTY()
     FDateTime LastSchedulingTime;
 
     // 進程ID計數器
-    UPROPERTY(BlueprintReadOnly, Category = "Process Manager")
+    UPROPERTY()
     static int32 ProcessIDCounter;
 
     // 系統資源使用情況
-    UPROPERTY(BlueprintReadOnly, Category = "Process Manager")
+    UPROPERTY()
     TMap<FString, float> SystemResourceUsage;
 
     // 是否啟用自動調度
-    UPROPERTY(BlueprintReadOnly, Category = "Process Manager")
+    UPROPERTY()
     bool bAutoSchedulingEnabled;
 };

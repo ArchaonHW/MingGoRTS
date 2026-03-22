@@ -102,3 +102,6 @@ protected:
 
 #include "MingIntegrationTestExecutor.generated.h"
 };
+
+
+#endif // MINGINTEGRATIONTESTEXECUTOR_H

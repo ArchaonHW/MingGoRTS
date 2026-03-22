@@ -306,7 +306,6 @@ protected:
     // 驗證風險項目
     bool ValidateRiskItem(const FRiskItem& RiskItem) const;
 
-private:
     // 風險項目列表
     UPROPERTY(BlueprintReadOnly, Category = "Risk Monitoring Dashboard")
     TArray<FRiskItem> RiskItems;
@@ -338,4 +337,6 @@ private:
     // 是否啟用自動評估
     UPROPERTY(BlueprintReadOnly, Category = "Risk Monitoring Dashboard")
     bool bAutoAssessmentEnabled;
+
+private:
 };

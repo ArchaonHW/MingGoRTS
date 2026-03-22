@@ -10,34 +10,34 @@
 UENUM(BlueprintType)
 enum class ERenderQuality : uint8
 {
-    Low, UMETA(DisplayName = "Low"),
-    Medium, UMETA(DisplayName = "Medium"),
-    High, UMETA(DisplayName = "High"),
-    Ultra, UMETA(DisplayName = "Ultra"),
-    Cinematic, UMETA(DisplayName = "Cinematic")
+    Low UMETA(DisplayName = "Low"),
+    Medium UMETA(DisplayName = "Medium"),
+    High UMETA(DisplayName = "High"),
+    Ultra UMETA(DisplayName = "Ultra"),
+    Cinematic UMETA(DisplayName = "Cinematic")
 };
 
 UENUM(BlueprintType)
 enum class ETimeOfDay : uint8
 {
-    Dawn, UMETA(DisplayName = "Dawn"),
-    Morning, UMETA(DisplayName = "Morning"),
-    Noon, UMETA(DisplayName = "Noon"),
-    Afternoon, UMETA(DisplayName = "Afternoon"),
-    Dusk, UMETA(DisplayName = "Dusk"),
-    Evening, UMETA(DisplayName = "Evening"),
-    Night, UMETA(DisplayName = "Night")
+    Dawn UMETA(DisplayName = "Dawn"),
+    Morning UMETA(DisplayName = "Morning"),
+    Noon UMETA(DisplayName = "Noon"),
+    Afternoon UMETA(DisplayName = "Afternoon"),
+    Dusk UMETA(DisplayName = "Dusk"),
+    Evening UMETA(DisplayName = "Evening"),
+    Night UMETA(DisplayName = "Night")
 };
 
 UENUM(BlueprintType)
 enum class EWeatherType : uint8
 {
-    Clear, UMETA(DisplayName = "Clear"),
-    Cloudy, UMETA(DisplayName = "Cloudy"),
-    Rainy, UMETA(DisplayName = "Rainy"),
-    Stormy, UMETA(DisplayName = "Stormy"),
-    Foggy, UMETA(DisplayName = "Foggy"),
-    Snowy, UMETA(DisplayName = "Snowy")
+    Clear UMETA(DisplayName = "Clear"),
+    Cloudy UMETA(DisplayName = "Cloudy"),
+    Rainy UMETA(DisplayName = "Rainy"),
+    Stormy UMETA(DisplayName = "Stormy"),
+    Foggy UMETA(DisplayName = "Foggy"),
+    Snowy UMETA(DisplayName = "Snowy")
 };
 
 USTRUCT(BlueprintType)

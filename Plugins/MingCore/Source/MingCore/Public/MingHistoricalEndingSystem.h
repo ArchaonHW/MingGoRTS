@@ -443,3 +443,6 @@ private:
     EMingEndingRating GetEndingRating(float Score) const;
 };
 
+
+
+#endif // MINGHISTORICALENDINGSYSTEM_H

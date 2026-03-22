@@ -379,18 +379,18 @@ protected:
     TMap<FString, FString> NiagaraSystemPaths;
 
     // Internal functions
-    UNiagaraComponent* SpawnNiagaraEffectAtLocation(EMingNiagaraEffectType Type, const FVector& Location, const FQuat& Rotation = FQuat::Identity};
-    UNiagaraComponent* SpawnNiagaraEffectAttached(EMingNiagaraEffectType Type, USceneComponent* AttachComponent, FName SocketName};
+    UNiagaraComponent* SpawnNiagaraEffectAtLocation(EMingNiagaraEffectType Type, const FVector& Location, const FQuat& Rotation = FQuat::Identity);
+    UNiagaraComponent* SpawnNiagaraEffectAttached(EMingNiagaraEffectType Type, USceneComponent* AttachComponent, FName SocketName);
     
-    void InitializeEffectTemplates(};
-    void LoadEffectTemplate(EMingNiagaraEffectType Type, const FString& AssetPath};
+    void InitializeEffectTemplates();
+    void LoadEffectTemplate(EMingNiagaraEffectType Type, const FString& AssetPath);
     
-    UNiagaraSystem* GetEffectTemplate(EMingNiagaraEffectType Type};
+    UNiagaraSystem* GetEffectTemplate(EMingNiagaraEffectType Type);
     
-    void OnEffectFinished(UNiagaraComponent* NiagaraComponent};
-    void CleanupFinishedEffects(};
+    void OnEffectFinished(UNiagaraComponent* NiagaraComponent);
+    void CleanupFinishedEffects();
     
-    void UpdateEffectParameters(UNiagaraComponent* NiagaraComponent, const TMap<FName, float>& FloatParams, const TMap<FName, FLinearColor>& ColorParams};
+    void UpdateEffectParameters(UNiagaraComponent* NiagaraComponent, const TMap<FName, float>& FloatParams, const TMap<FName, FLinearColor>& ColorParams);
     
     UWorld* GetWorld() const;
 };

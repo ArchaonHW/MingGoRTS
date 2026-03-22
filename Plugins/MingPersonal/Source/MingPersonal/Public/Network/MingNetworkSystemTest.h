@@ -50,20 +50,20 @@ struct FNetworkTestCase
 };
 
 /**
- * ºôµ¸¨t²Î´ú¸Õ®M¥ó
- * Åç??¦h¤H??À¸ºôµ¸¨t²Î??®Ö¤ß?X */
+ * ç¶²çµ¡ç³»çµ±æ¸¬è©¦å¥—ä»¶
+ * é©—??å¤šäºº??æˆ²ç¶²çµ¡ç³»çµ±??æ ¸å¿ƒ?X */
 UCLASS()
 class MINGPERSONAL_API UMingNetworkSystemTest : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingNetworkSystemTest(};
+    UMingNetworkSystemTest();
 
-    // ???X???´ú??    UFUNCTION(BlueprintCallable, Category = "Network Test")
+    // ???X???æ¸¬??    UFUNCTION(BlueprintCallable, Category = "Network Test")
     bool RunAllTests();
 
-    // ´ú¸Õµ²??
+    // æ¸¬è©¦çµ??
     UFUNCTION(BlueprintPure, Category = "Network Test")
     FString GetTestResults() const { return TestResults; }
 
@@ -79,7 +79,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Network Test")
     TArray<FNetworkTestCase> GetTestCases() const { return TestCases; }
 
-    // ??§O´ú¸Õ
+    // ??åˆ¥æ¸¬è©¦
     UFUNCTION(BlueprintCallable, Category = "Network Test")
     bool TestNetworkManagerCreation();
 
@@ -129,7 +129,7 @@ public:
     bool TestErrorHandling();
 
 private:
-    // ´ú¸Õµ²?X???
+    // æ¸¬è©¦çµ?X???
     UPROPERTY()
     FString TestResults;
 
@@ -145,12 +145,13 @@ private:
     UPROPERTY()
     TArray<FNetworkTestCase> TestCases;
 
-    // ´ú¸ÕÀ°§U??¼Æ
+    // æ¸¬è©¦å¹«åŠ©??æ•¸
     void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
     void ResetTestCounts();
     void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
 
-    // ??«Ø´ú¸Õ????ºŞ?X    UMingPersonalManager* CreateTestPersonalManager();
+    // æ¸¬è©¦å¹«åŠ©å‡½æ•¸ - å‰µå»ºæ¸¬è©¦ç”¨çš„ç®¡ç†å™¨
+    UMingPersonalManager* CreateTestPersonalManager();
     UMingNetworkManager* CreateTestNetworkManager();
     UMingLobbySystem* CreateTestLobbySystem();
 };

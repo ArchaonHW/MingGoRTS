@@ -4,19 +4,19 @@ echo ========================================
 echo MingGoRTS CulturalAdaptationSystem Compile Verification
 echo ========================================
 echo.
-echo UE5 Engine: 5.4
+echo UE5 Engine: 5.7
 echo Target: Development Win64
 echo Module: MingGoRTS
 echo.
 
-set UBT_PATH=C:\Program Files\Epic Games\UE_5.4\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe
+set UBT_PATH=C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe
 set PROJECT=C:\HW\MingGoRTS\MingGoRTS.uproject
 
 if not exist "%UBT_PATH%" (
     echo [ERROR] UnrealBuildTool not found at:
     echo %UBT_PATH%
     echo.
-    echo Please verify UE5.4 installation path.
+    echo Please verify UE5.7 installation path.
     pause
     exit /b 1
 )

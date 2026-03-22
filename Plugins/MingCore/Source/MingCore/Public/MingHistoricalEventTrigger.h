@@ -504,3 +504,6 @@ private:
     FMingHistoricalEvent GenerateDynamicEvent(const FString& Context) const;
 };
 
+
+
+#endif // MINGHISTORICALEVENTTRIGGER_H
