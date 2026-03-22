@@ -5,7 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "RepublicEraFactions/MingRTSFactionTypes.h"
+#include "../Factions/MingRTSFactionTypes.h"
 #include "MingRTSFactionBase.generated.h"
 
 class AMingRTSUnit;
