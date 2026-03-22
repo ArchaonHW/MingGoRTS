@@ -322,7 +322,3 @@ UMingLocalizationManager* UMingLocalizedWidget::GetLocalizationManager() const
     // 實際實現需要根據項目架構調整
     return UMingLocalizationManager::GetLocalizationManager(GetWorld());
 }
-
-// 藍圖可實現的事件
-UFUNCTION(BlueprintImplementableEvent, Category = "Localized Widget")
-void OnTextUpdated(const FText& NewText);
