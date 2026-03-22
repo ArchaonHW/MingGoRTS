@@ -17,7 +17,7 @@ enum class EMingLayer : uint8
 
 // 資源類型枚舉
 UENUM(BlueprintType)
-enum class EMingResourceType : uint8
+enum class EMingStrategicResourceType : uint8
 {
     None        UMETA(DisplayName = "None"),
     Gold        UMETA(DisplayName = "Gold"),
@@ -31,7 +31,7 @@ enum class EMingResourceType : uint8
 
 // 遊戲事件結構
 USTRUCT(BlueprintType)
-struct FMingGameEvent
+struct FMingStrategicFourLayerEvent
 {
     GENERATED_BODY()
 
