@@ -1,4 +1,4 @@
-﻿// AR Plane Detection and Anchor Asset Definitions for MingGoRTS
+// AR Plane Detection and Anchor Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - AR Plane and Anchor Assets
 
 #pragma once
@@ -417,7 +417,7 @@ struct FARScanningVisualConfig
  * AR Plane and Anchor Asset Definition
  */
 UCLASS(BlueprintType)
-class MINGGORTS_API UMingARPlaneAssets : public UDataAsset
+class MINGRTS_API UMingARPlaneAssets : public UDataAsset
 {
     GENERATED_BODY()
 

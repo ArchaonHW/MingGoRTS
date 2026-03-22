@@ -1,4 +1,4 @@
-﻿// AR Cursor and Interaction Asset Definitions for MingGoRTS
+// AR Cursor and Interaction Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - AR Interaction Assets
 
 #pragma once
@@ -292,7 +292,7 @@ struct FARHandOverlayConfig
  * AR Cursor Asset Definition
  */
 UCLASS(BlueprintType)
-class MINGGORTS_API UMingARCursorAssets : public UDataAsset
+class MINGRTS_API UMingARCursorAssets : public UDataAsset
 {
     GENERATED_BODY()
 

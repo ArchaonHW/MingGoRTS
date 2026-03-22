@@ -97,7 +97,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProcessScheduled, const FString&
  * 負責進程創建、調度、終止和資源管理
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSProcessManager : public UObject
+class MINGRTS_API UMingRTSProcessManager : public UObject
 {
     GENERATED_BODY()
 

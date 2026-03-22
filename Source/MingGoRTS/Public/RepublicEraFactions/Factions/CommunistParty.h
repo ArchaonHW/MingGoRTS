@@ -25,7 +25,7 @@
  * 4. Logistics Support Corps - Supply from the masses
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UCommunistParty : public UMingRTSFactionBase
+class MINGRTS_API UCommunistParty : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

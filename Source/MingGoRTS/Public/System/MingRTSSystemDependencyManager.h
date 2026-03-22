@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -91,7 +91,7 @@ struct FSystemInitInfo
  * 系統依賴管理器 - 負責系統初始化順序和依賴管理
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSSystemDependencyManager : public UObject
+class MINGRTS_API UMingRTSSystemDependencyManager : public UObject
 {
     GENERATED_BODY()
 

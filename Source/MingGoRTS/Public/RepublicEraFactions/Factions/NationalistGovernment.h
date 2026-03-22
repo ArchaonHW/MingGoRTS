@@ -25,7 +25,7 @@
  * 4. Political Work Teams - Propaganda and morale units
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UNationalistGovernment : public UMingRTSFactionBase
+class MINGRTS_API UNationalistGovernment : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

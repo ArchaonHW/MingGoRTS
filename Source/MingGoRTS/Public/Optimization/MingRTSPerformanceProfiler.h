@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,14 +6,14 @@
 
 UENUM(BlueprintType)
 enum class EProfilingType: uint8 {
-    CPU, UMETA(DisplayName = "CPU Performance"),
-    Memory, UMETA(DisplayName = "Memory Usage"),
-    GPU, UMETA(DisplayName = "GPU Performance"),
-    Network, UMETA(DisplayName = "Network Performance"),
-    Disk, UMETA(DisplayName = "Disk I/O Performance"),
-    Rendering, UMETA(DisplayName = "Rendering Performance"),
-    Audio, UMETA(DisplayName = "Audio Performance"),
-    Physics, UMETA(DisplayName = "Physics Performance")
+    CPU UMETA(DisplayName = "CPU Performance"),
+    Memory UMETA(DisplayName = "Memory Usage"),
+    GPU UMETA(DisplayName = "GPU Performance"),
+    Network UMETA(DisplayName = "Network Performance"),
+    Disk UMETA(DisplayName = "Disk I/O Performance"),
+    Rendering UMETA(DisplayName = "Rendering Performance"),
+    Audio UMETA(DisplayName = "Audio Performance"),
+    Physics UMETA(DisplayName = "Physics Performance")
 };
 
 UENUM(BlueprintType)
@@ -58,7 +58,7 @@ struct FPerformanceMetric
  * MingGoRTS Performance Profiler
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSPerformanceProfiler : public UObject
+class MINGRTS_API UMingRTSPerformanceProfiler : public UObject
 {
     GENERATED_BODY()
 
@@ -91,4 +91,4 @@ protected:
     void CollectNetworkMetrics();
     EPerformanceLevel CalculatePerformanceLevel(float Value, EProfilingType Type);
     FString GetPerformanceUnit(EProfilingType Type);
-);
+};

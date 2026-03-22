@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Causality Calculator - Analyzes and calculates causal relationships between events
 
 #pragma once
@@ -34,7 +34,7 @@ enum class ECausalityConfidence: uint8 {
 
 // Causality Analysis Result
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FCausalityAnalysisResult
+struct MINGRTS_API FCausalityAnalysisResult
 {
     GENERATED_BODY()
 
@@ -80,7 +80,7 @@ struct MINGGORTS_API FCausalityAnalysisResult
 
 // Causality Network Node
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FCausalityNetworkNode
+struct MINGRTS_API FCausalityNetworkNode
 {
     GENERATED_BODY()
 
@@ -112,7 +112,7 @@ struct MINGGORTS_API FCausalityNetworkNode
 
 // Causality Analysis Configuration
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FCausalityAnalysisConfig
+struct MINGRTS_API FCausalityAnalysisConfig
 {
     GENERATED_BODY()
 
@@ -164,7 +164,7 @@ struct MINGGORTS_API FCausalityAnalysisConfig
  * between events, providing confidence scores and explanations for each relationship.
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSCausalityCalculator : public UObject
+class MINGRTS_API UMingRTSCausalityCalculator : public UObject
 {
     GENERATED_BODY()
 

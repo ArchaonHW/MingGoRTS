@@ -9,7 +9,7 @@
  * 民族主義、現代化、統一中國的理想
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSNationalistGovernment : public UMingRTSFactionBase
+class MINGRTS_API UMingRTSNationalistGovernment : public UMingRTSFactionBase
 {
     GENERATED_BODY()
 

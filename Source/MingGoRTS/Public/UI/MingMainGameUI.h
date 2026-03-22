@@ -24,7 +24,7 @@ class UImage;
  * 提供統一的用戶界面來訪問所有系統功能
  */
 UCLASS()
-class MINGGORTS_API UMingMainGameUI : public UUserWidget
+class MINGRTS_API UMingMainGameUI : public UUserWidget
 {
     GENERATED_BODY()
 

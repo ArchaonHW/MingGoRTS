@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -158,7 +158,7 @@ struct FSageRoleEvaluation
  * 管理至聖者、偽聖者、魔王三種角色的規範和行為
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (SageCommand))
-class MINGGORTS_API UMingSageRoles : public UObject
+class MINGRTS_API UMingSageRoles : public UObject
 {
     GENERATED_BODY()
 

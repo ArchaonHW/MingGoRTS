@@ -25,7 +25,7 @@
  * 4. Sichuan River Navy - Naval forces on Yangtze
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API USichuanClique : public UMingRTSFactionBase
+class MINGRTS_API USichuanClique : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

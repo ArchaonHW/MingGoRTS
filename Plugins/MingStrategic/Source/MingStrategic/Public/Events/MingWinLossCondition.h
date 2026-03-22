@@ -466,40 +466,40 @@ protected:
     void CreateScoreBasedConditions();
 
     // 檢查軍�?條件
-    bool CheckMilitaryCondition(const FWinLossCondition& Condition);
+    bool CheckMilitaryCondition(const FWinLossCondition& Condition};
 
     // 檢查?�治條件
-    bool CheckPoliticalCondition(const FWinLossCondition& Condition);
+    bool CheckPoliticalCondition(const FWinLossCondition& Condition};
 
     // 檢查經�?條件
-    bool CheckEconomicCondition(const FWinLossCondition& Condition);
+    bool CheckEconomicCondition(const FWinLossCondition& Condition};
 
     // 檢查?��?條件
-    bool CheckTerritorialCondition(const FWinLossCondition& Condition);
+    bool CheckTerritorialCondition(const FWinLossCondition& Condition};
 
     // 檢查?��?條件
-    bool CheckTimeBasedCondition(const FWinLossCondition& Condition);
+    bool CheckTimeBasedCondition(const FWinLossCondition& Condition};
 
     // 檢查?�數條件
-    bool CheckScoreBasedCondition(const FWinLossCondition& Condition);
+    bool CheckScoreBasedCondition(const FWinLossCondition& Condition};
 
     // 檢查?��?義�?�?
-    bool CheckCustomCondition(const FWinLossCondition& Condition);
+    bool CheckCustomCondition(const FWinLossCondition& Condition};
 
     // 評估條件滿足�?
-    float EvaluateConditionSatisfaction(const FWinLossCondition& Condition);
+    float EvaluateConditionSatisfaction(const FWinLossCondition& Condition};
 
     // 計�X��X�數
-    void CalculateWinLossScores(FWinLossEvaluationResult& Result);
+    void CalculateWinLossScores(FWinLossEvaluationResult& Result};
 
     // 確�X�終�X
-    EWinLossResult DetermineFinalResult(const FWinLossEvaluationResult& Result);
+    EWinLossResult DetermineFinalResult(const FWinLossEvaluationResult& Result};
 
     // ?�新統�X��?
-    void UpdateStatistics(const FWinLossEvaluationResult& Result);
+    void UpdateStatistics(const FWinLossEvaluationResult& Result};
 
     // ?�知?��?變�?
-    void NotifyWinLossChange(EWinLossResult OldResult, EWinLossResult NewResult);
+    void NotifyWinLossChange(EWinLossResult OldResult, EWinLossResult NewResult};
 
     // ?��X�戲?�?��?
     FString GetGameStateValue(const FString& Key) const;
@@ -511,7 +511,7 @@ protected:
     bool ValidateConditionConfig(const FWinLossCondition& Condition) const;
 
     // 記�X��X��?
-    void LogWinLossEvent(const FString& Message);
+    void LogWinLossEvent(const FString& Message};
 
     // ?��X��X��?
     FString GenerateWinLossReport(const FWinLossEvaluationResult& Result) const;
@@ -520,7 +520,7 @@ protected:
     TArray<FString> ParseConditionParameters(const FString& ParameterString) const;
 
     // 設置條件?�X
-    void SetConditionState(const FString& ConditionID, EWinLossConditionState NewState);
+    void SetConditionState(const FString& ConditionID, EWinLossConditionState NewState};
 
     // ?��?條件滿足�?
     float GetConditionSatisfaction(const FString& ConditionID) const;
@@ -530,5 +530,5 @@ protected:
 
     // ?��X��?結�?
     void HandleGameOver(EWinLossResult Result, const FString& Reason);
-);
+};
 

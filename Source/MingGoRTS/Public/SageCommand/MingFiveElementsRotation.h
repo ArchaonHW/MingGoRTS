@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -133,7 +133,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRotationEventOccurred, const FRot
  * 管理五行元素的輪轉和正邪屬性的變化
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (SageCommand))
-class MINGGORTS_API UMingFiveElementsRotation : public UObject
+class MINGRTS_API UMingFiveElementsRotation : public UObject
 {
     GENERATED_BODY()
 

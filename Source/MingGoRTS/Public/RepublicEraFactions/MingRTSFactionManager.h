@@ -10,7 +10,7 @@
  * 管理12個歷史勢力的創建、平衡和交互
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSFactionManager : public UObject
+class MINGRTS_API UMingRTSFactionManager : public UObject
 {
     GENERATED_BODY()
 

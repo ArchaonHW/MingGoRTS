@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - AR Support Component
 
 #pragma once
@@ -163,7 +163,7 @@ struct FARContentOverlay
  * Provides comprehensive AR functionality for the RTS game
  */
 UCLASS()
-class MINGGORTS_API UMingRTSARSupport : public UGameInstanceSubsystem
+class MINGRTS_API UMingRTSARSupport : public UGameInstanceSubsystem
 {
     GENERATED_BODY()
 

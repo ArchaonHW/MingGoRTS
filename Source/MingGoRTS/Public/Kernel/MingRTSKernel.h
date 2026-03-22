@@ -126,7 +126,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInterrupt, EInterruptType, Interr
  * 提供系統調用接口、進程管理、中斷處理等核心功能
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSKernel : public UObject
+class MINGRTS_API UMingRTSKernel : public UObject
 {
     GENERATED_BODY()
 

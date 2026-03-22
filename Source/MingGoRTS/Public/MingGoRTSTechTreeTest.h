@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,7 +6,7 @@
 #include "MingGoRTSTechTreeTest.generated.h"
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSTechTreeTest : public UObject
+class MINGRTS_API UMingGoRTSTechTreeTest : public UObject
 {
     GENERATED_BODY()
 
@@ -49,7 +49,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestConcurrentResearchLimit();
 
-    // ���լ�??��????
+    // ���լ�??��摧毀
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechTreeConfiguration();
 
@@ -61,11 +61,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestRepublicanEraTechs();
 
-    // ???X???��??
+    // 目標數量��??
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool RunAllTests();
 
-    // ????���յ�??
+    // 摧毀���յ�??
     UFUNCTION(BlueprintPure, Category = "Tech Tree Test")
     FString GetTestResults() const;
 
@@ -78,7 +78,7 @@ private:
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // ����???X???
+    // ����目標數量
     int32 PassedTests;
 
     // ���ե�?X???
@@ -96,7 +96,7 @@ private:
     // ��?X?�o??X
     bool VerifyResearchStatus(const FString& TechID, ETechStatus ExpectedStatus);
 
-    // ???X???��??ID
+    // 目標數量��??ID
     FString GetRandomTechID(ETechCategory Category) const;
 
     // ??�m���խp��X

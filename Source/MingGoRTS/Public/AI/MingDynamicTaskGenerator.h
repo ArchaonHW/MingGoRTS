@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -114,7 +114,7 @@ struct FPlayerBehaviorProfile
 };
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingDynamicTaskGenerator : public UObject
+class MINGRTS_API UMingDynamicTaskGenerator : public UObject
 {
     GENERATED_BODY()
 

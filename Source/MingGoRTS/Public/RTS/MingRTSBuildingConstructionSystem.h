@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -146,7 +146,7 @@ struct FRTSConstructionQueueItem
 };
 
 UCLASS(ClassGroup = (RTS), meta = (DisplayName = "RTS Building Construction System"))
-class MINGGORTS_API UMingRTSBuildingConstructionSystem : public UObject
+class MINGRTS_API UMingRTSBuildingConstructionSystem : public UObject
 {
     GENERATED_BODY()
 

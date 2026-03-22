@@ -1,4 +1,4 @@
-﻿// VR Teleport Marker and Comfort Asset Definitions for MingGoRTS
+// VR Teleport Marker and Comfort Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - VR Comfort Assets
 
 #pragma once
@@ -335,7 +335,7 @@ struct FVRSnapTurnConfig
  * VR Comfort Asset Definition
  */
 UCLASS(BlueprintType)
-class MINGGORTS_API UMingVRComfortAssets : public UDataAsset
+class MINGRTS_API UMingVRComfortAssets : public UDataAsset
 {
     GENERATED_BODY()
 

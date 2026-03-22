@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -147,7 +147,7 @@ struct FAchievementStats
  * ?�就系統 - 管�X�戲?�就
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSAchievementSystem : public UObject
+class MINGRTS_API UMingRTSAchievementSystem : public UObject
 {
     GENERATED_BODY()
     

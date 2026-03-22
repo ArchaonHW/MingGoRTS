@@ -13,7 +13,7 @@
  * 繼承自 Character，整合聖者系統和陰陽五行系統
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API AMingSageCharacter : public ACharacter
+class MINGRTS_API AMingSageCharacter : public ACharacter
 {
     GENERATED_BODY()
 

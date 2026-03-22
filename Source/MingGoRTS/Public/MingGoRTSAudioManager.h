@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -84,14 +84,14 @@ struct FAudioMixSettings
 
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSAudioManager : public UObject
+class MINGRTS_API UMingGoRTSAudioManager : public UObject
 {
     GENERATED_BODY()
 
 public:
     UMingGoRTSAudioManager();
 
-    // ????��??
+    // 摧毀��??
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void AddAudioTrack(const FAudioTrack& Track);
 
@@ -149,7 +149,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     bool IsMixedAudioPlaying() const;
 
-    // ???X???
+    // 目標數量
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void PlayMusicTrack(USoundWave* Music, float Volume = 1.0f);
 
@@ -166,7 +166,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     USoundWave* GetMixedAudioResult() const { return MixedAudioResult; }
 
-    // ??�W????
+    // ??�W摧毀
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     float GetAudioDuration(USoundWave* SoundWave) const;
 

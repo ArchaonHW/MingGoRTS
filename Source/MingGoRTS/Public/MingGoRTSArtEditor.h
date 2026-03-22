@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,38 +8,42 @@
 #include "MingGoRTSArtEditor.generated.h"
 
 UENUM(BlueprintType)
-enum class EEditingTool: uint8 {
-    Brush, UMETA(DisplayName = "Brush"),
-    Eraser, UMETA(DisplayName = "Eraser"),
-    Clone, UMETA(DisplayName = "Clone"),
-    Heal, UMETA(DisplayName = "Heal"),
-    Blur, UMETA(DisplayName = "Blur"),
-    Sharpen, UMETA(DisplayName = "Sharpen"),
-    Smudge, UMETA(DisplayName = "Smudge"),
-    Dodge, UMETA(DisplayName = "Dodge"),
-    Burn, UMETA(DisplayName = "Burn"),
-    ColorPicker, UMETA(DisplayName = "Color Picker")
+enum class EEditingTool : uint8
+{
+    Brush UMETA(DisplayName = "Brush"),
+    Eraser UMETA(DisplayName = "Eraser"),
+    Clone UMETA(DisplayName = "Clone"),
+    Heal UMETA(DisplayName = "Heal"),
+    Blur UMETA(DisplayName = "Blur"),
+    Sharpen UMETA(DisplayName = "Sharpen"),
+    Smudge UMETA(DisplayName = "Smudge"),
+    Dodge UMETA(DisplayName = "Dodge"),
+    Burn UMETA(DisplayName = "Burn"),
+    ColorPicker UMETA(DisplayName = "Color Picker"),
+    MAX UMETA(Hidden)
 };
 
 UENUM(BlueprintType)
-enum class EBrushMode: uint8 {
-    Normal, UMETA(DisplayName = "Normal"),
-    Multiply, UMETA(DisplayName = "Multiply"),
-    Screen, UMETA(DisplayName = "Screen"),
-    Overlay, UMETA(DisplayName = "Overlay"),
-    SoftLight, UMETA(DisplayName = "Soft Light"),
-    HardLight, UMETA(DisplayName = "Hard Light"),
-    ColorDodge, UMETA(DisplayName = "Color Dodge"),
-    ColorBurn, UMETA(DisplayName = "Color Burn"),
-    Darken, UMETA(DisplayName = "Darken"),
-    Lighten, UMETA(DisplayName = "Lighten")
+enum class EBrushMode : uint8
+{
+    Normal UMETA(DisplayName = "Normal"),
+    Multiply UMETA(DisplayName = "Multiply"),
+    Screen UMETA(DisplayName = "Screen"),
+    Overlay UMETA(DisplayName = "Overlay"),
+    SoftLight UMETA(DisplayName = "Soft Light"),
+    HardLight UMETA(DisplayName = "Hard Light"),
+    ColorDodge UMETA(DisplayName = "Color Dodge"),
+    ColorBurn UMETA(DisplayName = "Color Burn"),
+    Darken UMETA(DisplayName = "Darken"),
+    Lighten UMETA(DisplayName = "Lighten"),
+    MAX UMETA(Hidden)
 };
 
 /**
  * MingGoRTS Art Editor
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSArtEditor : public UObject
+class MINGRTS_API UMingGoRTSArtEditor : public UObject
 {
     GENERATED_BODY()
 

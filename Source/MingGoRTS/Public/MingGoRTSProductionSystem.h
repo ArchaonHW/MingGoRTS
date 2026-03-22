@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -330,7 +330,7 @@ struct FPRODUCTION_API FProductionSystemConfig
  * X?syt�WDO
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSProductionSystem : public UObject
+class MINGRTS_API UMingGoRTSProductionSystem : public UObject
 {
     GENERATED_BODY()
 

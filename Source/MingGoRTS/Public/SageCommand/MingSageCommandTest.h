@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -47,7 +47,7 @@ enum class ESageCommandTestCategory: uint8 {
  * 單個測試結果結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FSageCommandTestResult
+struct MINGRTS_API FSageCommandTestResult
 {
     GENERATED_BODY()
 
@@ -86,7 +86,7 @@ struct MINGGORTS_API FSageCommandTestResult
  * 測試套件摘要結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FTestSuiteSummary
+struct MINGRTS_API FTestSuiteSummary
 {
     GENERATED_BODY()
 
@@ -139,7 +139,7 @@ struct MINGGORTS_API FTestSuiteSummary
  * 測試所有子系統的功能和集成
  */
 UCLASS(ClassGroup = (SageCommand), meta = (BlueprintSpawnableComponent))
-class MINGGORTS_API UMingSageCommandTest : public UObject
+class MINGRTS_API UMingSageCommandTest : public UObject
 {
     GENERATED_BODY()
 

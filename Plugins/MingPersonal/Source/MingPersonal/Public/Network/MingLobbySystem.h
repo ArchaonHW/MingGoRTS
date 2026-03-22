@@ -8,29 +8,29 @@
 
 UENUM(BlueprintType)
 enum class EMingLobbyType: uint8 {
-    Public = 0, UMETA,DisplayName = "Public Lobby"),
-    Private, UMETA(DisplayName = "Private Lobby"),
-    FriendsOnly, UMETA(DisplayName = "Friends Only"),
-    Tournament, UMETA(DisplayName = "Tournament Lobby"),
-    Custom, UMETA(DisplayName = "Custom Lobby")
+    Public = 0 UMETA(DisplayName = "Public Lobby"),
+    Private UMETA(DisplayName = "Private Lobby"),
+    FriendsOnly UMETA(DisplayName = "Friends Only"),
+    Tournament UMETA(DisplayName = "Tournament Lobby"),
+    Custom UMETA(DisplayName = "Custom Lobby")
 };
 
 UENUM(BlueprintType)
 enum class EMingLobbyState: uint8 {
-    Waiting, UMETA,DisplayName = "Waiting"),
-    InProgress, UMETA(DisplayName = "In Progress"),
-    Starting, UMETA(DisplayName = "Starting"),
-    Finished, UMETA(DisplayName = "Finished"),
-    Cancelled, UMETA(DisplayName = "Cancelled")
+    Waiting UMETA(DisplayName = "Waiting"),
+    InProgress UMETA(DisplayName = "In Progress"),
+    Starting UMETA(DisplayName = "Starting"),
+    Finished UMETA(DisplayName = "Finished"),
+    Cancelled UMETA(DisplayName = "Cancelled")
 };
 
 UENUM(BlueprintType)
 enum class EMingLobbyPlayerState: uint8 {
-    Connected, UMETA,DisplayName = "Connected"),
-    Ready, UMETA(DisplayName = "Ready"),
-    NotReady, UMETA(DisplayName = "Not Ready"),
-    Loading, UMETA(DisplayName = "Loading"),
-    Disconnected, UMETA(DisplayName = "Disconnected")
+    Connected UMETA(DisplayName = "Connected"),
+    Ready UMETA(DisplayName = "Ready"),
+    NotReady UMETA(DisplayName = "Not Ready"),
+    Loading UMETA(DisplayName = "Loading"),
+    Disconnected UMETA(DisplayName = "Disconnected")
 };
 
 USTRUCT(BlueprintType)

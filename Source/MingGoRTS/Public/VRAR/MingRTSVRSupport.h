@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - VR Support Component
 
 #pragma once
@@ -111,7 +111,7 @@ struct FVRDeviceInfo
  * Provides comprehensive VR functionality for the RTS game
  */
 UCLASS()
-class MINGGORTS_API UMingRTSVRSupport : public UGameInstanceSubsystem
+class MINGRTS_API UMingRTSVRSupport : public UGameInstanceSubsystem
 {
     GENERATED_BODY()
 

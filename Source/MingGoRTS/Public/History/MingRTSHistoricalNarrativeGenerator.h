@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Historical Narrative Generator - Creates compelling historical narratives from events
 
 #pragma once
@@ -49,7 +49,7 @@ enum class ENarrativeFocus: uint8 {
 
 // Narrative Structure
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FNarrativeStructure
+struct MINGRTS_API FNarrativeStructure
 {
     GENERATED_BODY()
 
@@ -90,7 +90,7 @@ struct MINGGORTS_API FNarrativeStructure
 
 // Narrative Generation Request
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FNarrativeGenerationRequest
+struct MINGRTS_API FNarrativeGenerationRequest
 {
     GENERATED_BODY()
 
@@ -145,7 +145,7 @@ struct MINGGORTS_API FNarrativeGenerationRequest
  * using various styles, tones, and focuses to create immersive storytelling.
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSHistoricalNarrativeGenerator : public UObject
+class MINGRTS_API UMingRTSHistoricalNarrativeGenerator : public UObject
 {
     GENERATED_BODY()
 

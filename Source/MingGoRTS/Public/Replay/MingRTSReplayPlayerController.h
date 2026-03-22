@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,7 +9,7 @@ class UMingRTSReplaySystem;
 /**
  * ??放??放??制X- ??制??放??放??UI??交?? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSReplayPlayerController : public UObject
+class MINGRTS_API UMingRTSReplayPlayerController : public UObject
 {
     GENERATED_BODY()
     
@@ -43,7 +43,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     float GetPlaybackSpeed() const;
     
-    // ????軸控X
+    // 摧毀軸控X
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void JumpToTime(float TimeInSeconds);
     

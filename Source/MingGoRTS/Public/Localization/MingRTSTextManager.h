@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Text Manager Component
 
 #pragma once
@@ -59,7 +59,7 @@ struct FTextMetadata
  * Handles formatting, pluralization, and text organization
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UMingRTSTextManager : public UObject
+class MINGRTS_API UMingRTSTextManager : public UObject
 {
     GENERATED_BODY()
     
@@ -162,7 +162,7 @@ private:
     TMap<FString, FTextMetadata> TextMetadataMap;
     
     /** Category to keys mapping */
-    UMap<ETextCategory, TArray<FString>> CategoryKeys;
+    TMap<ETextCategory, TArray<FString>> CategoryKeys;
     
     /** Get raw text from localization system */
     FString GetRawText(const FString& Key) const;

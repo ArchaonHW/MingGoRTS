@@ -24,7 +24,7 @@ if not exist "%UBT_PATH%" (
 echo [1/3] Engine verified
 echo [2/3] Starting compilation...
 echo.
-"%UBT_PATH%" MingGoRTS Win64 Development -Project="%PROJECT%" -NoHotReload
+"%UBT_PATH%" MingGoRTSEditor Win64 Development -Project="%PROJECT%" -waitmutex
 echo.
 echo [3/3] Compile complete with exit code: %ERRORLEVEL%
 

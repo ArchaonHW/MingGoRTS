@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // 系統整合測試套件 - 頭文件
 
 #pragma once
@@ -314,7 +314,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestSuiteCompleted, const FIntegr
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSingleTestCompleted, EIntegrationTestType, TestType, const FIntegrationTestResult&, Result);
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSIntegrationTestSuite : public UObject
+class MINGRTS_API UMingRTSIntegrationTestSuite : public UObject
 {
     GENERATED_BODY()
 

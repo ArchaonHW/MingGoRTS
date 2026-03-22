@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - VR/AR Performance Optimization
 
 #pragma once
@@ -138,7 +138,7 @@ struct FVARPerformanceMetrics
  * Manages performance settings and adaptive quality for VR/AR modes
  */
 UCLASS()
-class MINGGORTS_API UMingRTSVARPerformanceOptimizer : public UGameInstanceSubsystem
+class MINGRTS_API UMingRTSVARPerformanceOptimizer : public UGameInstanceSubsystem
 {
     GENERATED_BODY()
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
@@ -6,7 +6,7 @@
 #include "MingGoRTSCharacterCreationGameMode.generated.h"
 
 UCLASS()
-class MINGGORTS_API AMingGoRTSCharacterCreationGameMode : public AGameModeBase
+class MINGRTS_API AMingGoRTSCharacterCreationGameMode : public AGameModeBase
 {
     GENERATED_BODY()
 
@@ -23,15 +23,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     void ShowCharacterCreationUI();
 
-    // ????����??�� UI
+    // 摧毀����??�� UI
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     void HideCharacterCreationUI();
 
-    // ????����??�ا�??
+    // 摧毀����??�ا�??
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     void OnCharacterCreationCompleted(const FMingCharacterData& CharacterData);
 
-    // ????����??��????
+    // 摧毀����??��摧毀
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     void OnCharacterCreationCancelled();
 
@@ -48,17 +48,17 @@ public:
     FString GameStartLevelName;
 
 protected:
-    // ????���XUI
+    // 摧毀���XUI
     UPROPERTY()
     TObjectPtr<class UUserWidget> CurrentUI;
 
-    // ???X??X?�Ыغ�??��
+    // 故事重要性?�Ыغ�??��
     void InitializeCharacterCreationManager();
 
     // ??�ب���??UI
     UUserWidget* CreateAndShowWidget(TSubclassOf<class UUserWidget> WidgetClass);
 
-    // ����???? UI
+    // ����摧毀 UI
     void RemoveCurrentUI();
 
     // ???X?��
@@ -67,7 +67,7 @@ protected:
     // ��??�D?X
     void ReturnToMainMenu();
 
-    // �O??����???X??X?��??
+    // �O??����故事重要性?��??
     void SaveCharacterToGameInstance(const FMingCharacterData& CharacterData);
 );
 

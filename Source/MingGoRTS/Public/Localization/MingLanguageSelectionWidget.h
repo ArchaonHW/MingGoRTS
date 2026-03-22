@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Language Selection UI Widget
 
 #pragma once
@@ -14,7 +14,7 @@
  * Provides UI for language and cultural region selection
  */
 UCLASS(ClassGroup = (MingRTS), BlueprintType, Blueprintable)
-class MINGGORTS_API UMingLanguageSelectionWidget : public UUserWidget
+class MINGRTS_API UMingLanguageSelectionWidget : public UUserWidget
 {
     GENERATED_BODY()
 

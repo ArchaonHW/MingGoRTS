@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - VR/AR System Test Suite
 
 #pragma once
@@ -92,7 +92,7 @@ struct FVARTestSuiteSummary
  * Comprehensive testing for all VR/AR components
  */
 UCLASS()
-class MINGGORTS_API UMingRTSVARSystemTest : public UObject
+class MINGRTS_API UMingRTSVARSystemTest : public UObject
 {
     GENERATED_BODY()
 

@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -25,7 +25,7 @@ enum class ESageCharacterType: uint8 {
  * 角色特性數據結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FSageCharacterTraits
+struct MINGRTS_API FSageCharacterTraits
 {
     GENERATED_BODY()
 
@@ -72,7 +72,7 @@ struct MINGGORTS_API FSageCharacterTraits
  * 角色數據結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FSageCharacterData
+struct MINGRTS_API FSageCharacterData
 {
     GENERATED_BODY()
 
@@ -122,7 +122,7 @@ struct MINGGORTS_API FSageCharacterData
  * 管理聖者、魔王、偽聖者三種角色類型
  */
 UCLASS(ClassGroup = (SageCommand), meta = (BlueprintSpawnableComponent))
-class MINGGORTS_API UMingSageCharacterSystem : public UObject
+class MINGRTS_API UMingSageCharacterSystem : public UObject
 {
     GENERATED_BODY()
 

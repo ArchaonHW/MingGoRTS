@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // 势力关系网络系统头文件
 
 #pragma once
@@ -163,7 +163,7 @@ struct FFactionNetworkNode
  * 管理势力间的外交关系和互动
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UMingRTSFactionRelationshipNetwork : public UObject
+class MINGRTS_API UMingRTSFactionRelationshipNetwork : public UObject
 {
     GENERATED_BODY()
     

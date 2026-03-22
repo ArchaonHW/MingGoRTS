@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -40,7 +40,7 @@ enum class EStrategyDirection: uint8 {
  * 策略數據結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FStrategyData
+struct MINGRTS_API FStrategyData
 {
     GENERATED_BODY()
 
@@ -96,7 +96,7 @@ struct MINGGORTS_API FStrategyData
  * 策略效果結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FStrategyEffect
+struct MINGRTS_API FStrategyEffect
 {
     GENERATED_BODY()
 
@@ -140,7 +140,7 @@ struct MINGGORTS_API FStrategyEffect
  * 決定何時使用正道，何時使用逆術
  */
 UCLASS(ClassGroup = (SageCommand), meta = (BlueprintSpawnableComponent))
-class MINGGORTS_API UMingStrategyAuthority : public UObject
+class MINGRTS_API UMingStrategyAuthority : public UObject
 {
     GENERATED_BODY()
 

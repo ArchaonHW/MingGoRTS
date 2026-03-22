@@ -66,15 +66,15 @@ public:
 
     // 註�?決�?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    void RegisterDecision(const FMingDecision& Decision);
+    void RegisterDecision(const FMingDecision& Decision};
 
     // ?��?觸發決�?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    bool TriggerDecision(const FString& DecisionId);
+    bool TriggerDecision(const FString& DecisionId};
 
     // ?��?決�X��?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    bool ExecuteDecisionOption(const FString& DecisionId, const FString& OptionId);
+    bool ExecuteDecisionOption(const FString& DecisionId, const FString& OptionId};
 
     // ?��X��?活�?決�?
     UFUNCTION(BlueprintPure, Category = "Decision")
@@ -94,7 +94,7 @@ public:
 
     // ?�新?�戲?��? (?�於?��?觸發?�決�?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    void UpdateGameTime(float CurrentGameTime);
+    void UpdateGameTime(float CurrentGameTime};
 
     // 檢查條件觸發?�決�?
     UFUNCTION(BlueprintCallable, Category = "Decision")
@@ -144,5 +144,5 @@ private:
     void RecordDecision(const FString& DecisionId, const FString& OptionId, const FText& DecisionTitle, const FText& OptionTitle);
     FMingDecision* FindRegisteredDecision(const FString& DecisionId);
     FMingDecision* FindActiveDecision(const FString& DecisionId);
-);
+};
 

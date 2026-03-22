@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -133,7 +133,7 @@ struct FPerformanceAlert
  * 系統性能監控和診斷工具
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSPerformanceMonitor : public UObject
+class MINGRTS_API UMingRTSPerformanceMonitor : public UObject
 {
     GENERATED_BODY()
 

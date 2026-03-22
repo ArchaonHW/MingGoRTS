@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -243,7 +243,7 @@ struct FRoleplaySession
 
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSHistoricalRoleplay : public UObject
+class MINGRTS_API UMingGoRTSHistoricalRoleplay : public UObject
 {
     GENERATED_BODY()
 

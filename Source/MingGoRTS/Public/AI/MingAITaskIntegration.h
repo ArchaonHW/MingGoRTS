@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -68,7 +68,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBehaviorPredicted, const FPredict
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInsightGenerated, const FTaskBehaviorInsight&, Insight);
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingAITaskIntegration : public UObject
+class MINGRTS_API UMingAITaskIntegration : public UObject
 {
     GENERATED_BODY()
 

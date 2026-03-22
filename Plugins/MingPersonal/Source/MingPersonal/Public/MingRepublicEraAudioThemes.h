@@ -221,7 +221,7 @@ private:
     TArray<FString> MilitaryInstruments;
     TArray<FString> UrbanInstruments;
 
-    // X
+    // Initialize instrument lists
     void InitializeInstrumentLists();
-);
+};
 

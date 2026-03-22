@@ -174,7 +174,7 @@ struct FPlayerCareerStats
 };
 
 /**
- * ????統??
+ * 摧毀統??
  */
 USTRUCT(BlueprintType)
 struct FFactionStatistics
@@ -207,56 +207,50 @@ struct FFactionStatistics
 /**
  * 統??系統 - 記?X??X?玩家統計數X */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSStatisticsSystem : public UObject
+class MINGRTS_API UMingRTSStatisticsSystem : public UObject
 {
     GENERATED_BODY()
     
 public:
-    UMingRTSStatisticsSystem();
+    UMingRTSStatisticsSystem(};
     // ???X
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void InitializeStatisticsSystem();
+    void InitializeStatisticsSystem(};
     // 記??對?X???
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void RecordMatchStart(const FString& PlayerID, const FString& MatchID, const FString& MapName, const FString& Faction);
-    
+    void RecordMatchStart(const FString& PlayerID, const FString& MatchID, const FString& MapName, const FString& Faction};
     // 記??對??結??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void RecordMatchEnd(const FString& PlayerID, const FString& MatchID, bool bIsVictory, const FMatchStatistics& Stats);
-    
+    void RecordMatchEnd(const FString& PlayerID, const FString& MatchID, bool bIsVictory, const FMatchStatistics& Stats};
     // ??新實??統??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void UpdateLiveStat(const FString& PlayerID, EStatType StatType, float Value);
-    
+    void UpdateLiveStat(const FString& PlayerID, EStatType StatType, float Value};
     // 記?X??X?殺
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void RecordUnitKilled(const FString& PlayerID, const FString& MatchID, int32 UnitValue);
-    
+    void RecordUnitKilled(const FString& PlayerID, const FString& MatchID, int32 UnitValue};
     // 記??資?X???
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void RecordResourceGathered(const FString& PlayerID, const FString& MatchID, int32 Amount);
-    
+    void RecordResourceGathered(const FString& PlayerID, const FString& MatchID, int32 Amount};
     // 記??APM
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void RecordAPM(const FString& PlayerID, const FString& MatchID, float CurrentAPM);
-    
+    void RecordAPM(const FString& PlayerID, const FString& MatchID, float CurrentAPM};
     // ???X?涯統??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     FPlayerCareerStats GetCareerStats(const FString& PlayerID) const;
     
-    // ????對??歷史
+    // 摧毀對??歷史
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     TArray<FMatchStatistics> GetMatchHistory(const FString& PlayerID, int32 Count = 10) const;
     
-    // ???X???統??
+    // 目標數量統??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     TArray<FFactionStatistics> GetFactionStats(const FString& PlayerID) const;
     
-    // ???X???統?X
+    // 目標數量統?X
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     float GetStatValue(const FString& PlayerID, EStatType StatType) const;
     
-    // ????統??趨勢
+    // 摧毀統??趨勢
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     TArray<float> GetStatTrend(const FString& PlayerID, EStatType StatType, int32 Days = 30) const;
     
@@ -264,11 +258,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     FString CompareStats(const FString& PlayerID1, const FString& PlayerID2) const;
     
-    // ???X???榜????
+    // 目標數量榜摧毀
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     int32 GetLeaderboardRank(const FString& PlayerID, EStatType StatType) const;
     
-    // ????統?X???
+    // 摧毀統?X???
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     FString GetStatsSummary(const FString& PlayerID) const;
     
@@ -278,16 +272,13 @@ public:
     
     // ??置統??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void ResetStatistics(const FString& PlayerID);
-    
+    void ResetStatistics(const FString& PlayerID};
     // 保??統??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void SaveStatistics(const FString& PlayerID);
-    
+    void SaveStatistics(const FString& PlayerID};
     // 載入統??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void LoadStatistics(const FString& PlayerID);
-    
+    void LoadStatistics(const FString& PlayerID};
     // 事件委??
     
     
@@ -315,11 +306,11 @@ private:
     UPROPERTY()
     TMap<FString, TMap<FString, FFactionStatistics>> FactionStats;
     
-    void CalculateWinRate(FPlayerCareerStats& Stats);
-    void UpdateFactionStats(const FString& PlayerID, const FString& Faction, bool bIsVictory, float Duration);
-    void CheckMilestones(const FString& PlayerID, const FPlayerCareerStats& Stats);
-    void SaveStatsToFile(const FString& PlayerID);
-    void LoadStatsFromFile(const FString& PlayerID);
+    void CalculateWinRate(FPlayerCareerStats& Stats};
+    void UpdateFactionStats(const FString& PlayerID, const FString& Faction, bool bIsVictory, float Duration};
+    void CheckMilestones(const FString& PlayerID, const FPlayerCareerStats& Stats};
+    void SaveStatsToFile(const FString& PlayerID};
+    void LoadStatsFromFile(const FString& PlayerID};
     FString GetStatsFilePath(const FString& PlayerID) const;
 };
 

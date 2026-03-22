@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -99,7 +99,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourceLoaded, const FString&, 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnResourcePoolCleanup, int32, FreedResourceCount);
 
 UCLASS(ClassGroup=(MingGoRTS), Blueprintable)
-class MINGGORTS_API UMingSmartResourceManager : public UObject
+class MINGRTS_API UMingSmartResourceManager : public UObject
 {
     GENERATED_BODY()
 

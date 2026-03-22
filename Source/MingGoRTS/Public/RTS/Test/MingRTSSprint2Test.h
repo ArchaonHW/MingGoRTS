@@ -26,7 +26,7 @@ struct FSprint2TestResult
 };
 
 UCLASS(ClassGroup = (Test), meta = (DisplayName = "Sprint 2 - Resource Building Economy Test Suite"))
-class MINGGORTS_API UMingRTSSprint2Test : public UObject
+class MINGRTS_API UMingRTSSprint2Test : public UObject
 {
     GENERATED_BODY()
 

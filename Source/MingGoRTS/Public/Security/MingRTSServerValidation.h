@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -34,7 +34,7 @@ struct FValidationResult
 };
 
 /**
- * ??��????��X */
+ * ??��摧毀��X */
 USTRUCT(BlueprintType)
 struct FGameStateSnapshot
 {
@@ -74,7 +74,7 @@ struct FGameStateSnapshot
 };
 
 /**
- * �Ȥ�ݩR�O???? */
+ * �Ȥ�ݩR�O摧毀 */
 USTRUCT(BlueprintType)
 struct FClientCommandValidation
 {
@@ -109,9 +109,9 @@ struct FClientCommandValidation
 };
 
 /**
- * ???X???�Ҩt??- �v?X??X????? */
+ * 目標數量�Ҩt??- �v?X??X摧毀? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSServerValidation : public UObject
+class MINGRTS_API UMingRTSServerValidation : public UObject
 {
     GENERATED_BODY()
     
@@ -147,7 +147,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     TArray<FString> DetectAnomalousState(const FGameStateSnapshot& Snapshot);
     
-    // ???X??X???��?X
+    // 整理背包物品��?X
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     FGameStateSnapshot GetAuthoritativeState(const FString& MatchID, const FString& PlayerID);
     

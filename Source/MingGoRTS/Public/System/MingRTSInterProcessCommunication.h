@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -240,7 +240,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnErrorOccurred, const FString&, E
  * 提供高效的服務間通信機制
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSInterProcessCommunication : public UObject
+class MINGRTS_API UMingRTSInterProcessCommunication : public UObject
 {
     GENERATED_BODY()
 

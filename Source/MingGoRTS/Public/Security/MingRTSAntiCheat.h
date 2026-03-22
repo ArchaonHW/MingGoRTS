@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -12,13 +12,13 @@ enum class ECheatType: uint8 {
     None                    UMETA(DisplayName = "無"),
     MemoryModification      UMETA(DisplayName = "記憶體修改"),
     SpeedHack               UMETA(DisplayName = "??度修改"),
-    AimBot                  UMETA(DisplayName = "???X???"),
+    AimBot                  UMETA(DisplayName = "目標數量"),
     MacroScript             UMETA(DisplayName = "腳本/宏"),
-    MapHack                 UMETA(DisplayName = "????外??"),
+    MapHack                 UMETA(DisplayName = "摧毀外??"),
     ResourceHack            UMETA(DisplayName = "資??修改"),
     Injection               UMETA(DisplayName = "注入作??"),
     Bypass                  UMETA(DisplayName = "繞??檢測"),
-    Collusion               UMETA(DisplayName = "????作??")
+    Collusion               UMETA(DisplayName = "摧毀作??")
 };
 
 /**
@@ -28,7 +28,7 @@ UENUM(BlueprintType)
 enum class EPenaltyLevel: uint8 {
     Warning         UMETA(DisplayName = "警??"),
     Restriction     UMETA(DisplayName = "??制"),
-    Suspension      UMETA(DisplayName = "????封??"),
+    Suspension      UMETA(DisplayName = "摧毀封??"),
     PermanentBan    UMETA(DisplayName = "永??封??"),
     LegalAction     UMETA(DisplayName = "法??追訴")
 };
@@ -125,9 +125,9 @@ struct FPlayerBehaviorRecord
 };
 
 /**
- * ????弊核心系?? */
+ * 摧毀弊核心系?? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSAntiCheat : public UObject
+class MINGRTS_API UMingRTSAntiCheat : public UObject
 {
     GENERATED_BODY()
     
@@ -138,7 +138,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void InitializeAntiCheat();
     
-    // ????檢測
+    // 摧毀檢測
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void StartMonitoring();
     
@@ -146,7 +146,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void StopMonitoring();
     
-    // ???X???行為
+    // 目標數量行為
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void ReportSuspiciousBehavior(const FString& PlayerID, ECheatType Type, const FString& Details);
     
@@ -158,7 +158,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     bool DetectSpeedHack(const FString& PlayerID, float CurrentSpeed);
     
-    // 檢測???X?本
+    // 檢測選項文本
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     bool DetectMacroUsage(const FString& PlayerID, const TArray<float>& ActionTimings);
     
@@ -166,7 +166,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void AnalyzePlayerBehavior(const FString& PlayerID);
     
-    // ????檢測結??
+    // 摧毀檢測結??
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void ProcessDetection(const FCheatDetectionResult& Result);
     
@@ -174,19 +174,19 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void ApplyPenalty(const FString& PlayerID, EPenaltyLevel Penalty, const FString& Reason);
     
-    // ???X?家????歷史
+    // ???X?家摧毀歷史
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     TArray<FCheatDetectionResult> GetPlayerViolationHistory(const FString& PlayerID) const;
     
-    // 檢查??家??否被????
+    // 檢查??家??否被摧毀
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     bool IsPlayerBanned(const FString& PlayerID) const;
     
-    // ????封?? (管?X??X
+    // 摧毀封?? (管?X??X
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void UnbanPlayer(const FString& PlayerID, const FString& AdminID, const FString& Reason);
     
-    // 上傳檢測???X??X?器
+    // 上傳檢測故事重要性?器
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
     void UploadDetectionReport(const FCheatDetectionResult& Result);
     

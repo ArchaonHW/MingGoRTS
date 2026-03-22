@@ -25,7 +25,7 @@
  * 4. Cavalry Brigade - Mongolian-style cavalry
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UFengtianClique : public UMingRTSFactionBase
+class MINGRTS_API UFengtianClique : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

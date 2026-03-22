@@ -15,7 +15,7 @@
  * their interactions, and potential convergence points.
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSTimelineManager : public UObject
+class MINGRTS_API UMingRTSTimelineManager : public UObject
 {
     GENERATED_BODY()
 

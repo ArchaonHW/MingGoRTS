@@ -647,7 +647,6 @@ private:
 
     // �]�m�@?X???
     void SetWorldData(const TMap<FString, FString>& WorldData);
-);
+};
 
 #endif // MINGRTSSAVELOADENHANCEDSYSTEM_H
-

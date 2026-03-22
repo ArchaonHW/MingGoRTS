@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,41 +7,41 @@
 #include "MingGoRTSProductionUI.generated.h"
 
 /**
- * ??���uUI�ե�
+ * 進科技�uUI�ե�
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSProductionLineWidget : public UUserWidget
+class MINGRTS_API UMingGoRTSProductionLineWidget : public UUserWidget
 {
     GENERATED_BODY()
 
 public:
     UMingGoRTSProductionLineWidget();
 
-    // �]�m??���u��X
+    // �]�m進科技�u科技X
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void SetProductionLine(const FProductionLine& ProductionLine);
 
-    // ??�s??��??X
+    // 進�s進科技?數據
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void UpdateProductionStatus(EProductionStatus NewStatus);
 
-    // ??�s??��??��
+    // 進�s進科技進科技
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void UpdateProductionProgress(float Progress, float TimeRemaining);
 
-    // �]�m??��??��
+    // �]�m進科技進科技
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void SetCurrentRecipe(const FProductionRecipe& Recipe);
 
-    // �]�m??�_�Q��??
+    // �]�m進�_�Q科技進
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void SetIsSelected(bool bSelected);
 
-    // ???X?���uID
+    // 拆除中X?科技�uID
     UFUNCTION(BlueprintPure, Category = "Production Line UI")
     FString GetProductionLineID() const;
 
-    // ???X?�_�Q��??
+    // 拆除中X?�_�Q科技進
     UFUNCTION(BlueprintPure, Category = "Production Line UI")
     bool IsSelected() const;
 
@@ -86,86 +86,86 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UBorder* LineBorder;
 
-    // ???X?���u��X
+    // 拆除中X?科技�u科技X
     UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
     FProductionLine CurrentProductionLine;
 
-    // ???X?��
+    // 拆除中X?科技
     UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
     FProductionRecipe CurrentRecipe;
 
-    // ??�_�Q��??
+    // 進�_�Q科技進
     UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
     bool bIsSelected;
 
-    // ???X?UI
+    // 拆除中X?UI
     virtual void NativeConstruct() override;
 
-    // ??�sUI���
+    // 進�sUI科技�
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Line UI")
     void OnUpdateUI();
 
-    // ???X??X???
+    // 拆除中X?數據進?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnStartClicked();
 
-    // ???X??X???
+    // 拆除中X?數據進?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnPauseClicked();
 
-    // ???X??X???
+    // 拆除中X?數據進?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnCancelClicked();
 
-    // ???X??X???
+    // 拆除中X?數據進?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnUpgradeClicked();
 
-    // ???X??X??X
+    // 拆除中X?數據?數據
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnAutomateClicked();
 
-    // ???X????X
+    // 拆除中X進?數據
     FLinearColor GetStatusColor(EProductionStatus Status) const;
 
-    // ???X???��?X
+    // 拆除中X進?科技數據
     FLinearColor GetPriorityColor(EProductionPriority Priority) const;
 
-    // ???X??X?��??
+    // 拆除中X?數據?科技進
     FString FormatTime(float TimeSeconds) const;
 
 private:
-    // �j??�ƥ�
+    // �j進�ƥ�
     void BindEvents();
 
-    // ?X�ƥ�
+    // 數據�ƥ�
     void UnbindEvents();
 };
 
 /**
- * ??��??��UI�ե�
+ * 進科技進科技UI�ե�
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSRecipeWidget : public UUserWidget
+class MINGRTS_API UMingGoRTSRecipeWidget : public UUserWidget
 {
     GENERATED_BODY()
 
 public:
     UMingGoRTSRecipeWidget();
 
-    // �]�m??��????
+    // �]�m進科技進進
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void SetRecipe(const FProductionRecipe& Recipe);
 
-    // �]�m??�_???X
+    // �]�m進�_進數據
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void SetCanProduce(bool bCanProduce);
 
-    // �]�m??�_�Q��??
+    // �]�m進�_�Q科技進
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void SetIsSelected(bool bSelected);
 
-    // ???X?��ID
+    // 拆除中X?科技ID
     UFUNCTION(BlueprintPure, Category = "Recipe UI")
     FString GetRecipeID() const;
 
@@ -201,79 +201,79 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UBorder* RecipeBorder;
 
-    // ???X?��
+    // 拆除中X?科技
     UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
     FProductionRecipe CurrentRecipe;
 
-    // ??�_???X
+    // 進�_進數據
     UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
     bool bCanProduce;
 
-    // ??�_�Q��??
+    // 進�_�Q科技進
     UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
     bool bIsSelected;
 
-    // ???X?UI
+    // 拆除中X?UI
     virtual void NativeConstruct() override;
 
-    // ??�sUI���
+    // 進�sUI科技�
     UFUNCTION(BlueprintImplementableEvent, Category = "Recipe UI")
     void OnUpdateUI();
 
-    // ???X?��????
+    // 拆除中X?科技進進
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void OnProduceClicked();
 
-    // ???X?�J???X???
+    // 拆除中X?�J進數據進?
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void OnQueueClicked();
 
-    // ??�ظ�?X?��X
+    // 進�ظ�數據?科技X
     UUserWidget* CreateResourceItem(EResourceType ResourceType, float Amount, bool bIsInput);
 
-    // ???X???����??
+    // 拆除中X進?科技科技進
     FString FormatResourceDisplay(EResourceType ResourceType, float Amount) const;
 
 private:
-    // �j??�ƥ�
+    // �j進�ƥ�
     void BindEvents();
 
-    // ?X�ƥ�
+    // 數據�ƥ�
     void UnbindEvents();
 };
 
 /**
- * ??��????UI�ե�
+ * 進科技進進UI�ե�
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSProductionQueueWidget : public UUserWidget
+class MINGRTS_API UMingGoRTSProductionQueueWidget : public UUserWidget
 {
     GENERATED_BODY()
 
 public:
     UMingGoRTSProductionQueueWidget();
 
-    // �]�m??��???X???
+    // �]�m進科技進數據進?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void SetProductionQueue(const FProductionQueue& Queue);
 
-    // ??�s???X?��
+    // 進�s進數據?科技
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void UpdateQueueItem(int32 Index, const FString& RecipeID);
 
-    // ����???X?��
+    // 科技科技進數據?科技
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void RemoveQueueItem(int32 Index);
 
-    // �M��????
+    // �M科技進進
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void ClearQueue();
 
-    // �]�m�`���??
+    // �]�m�`科技�進
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void SetLooping(bool bIsLooping);
 
-    // �]�m???X???
+    // �]�m進數據進?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void SetAutoStart(bool bAutoStart);
 
@@ -297,96 +297,96 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* QueueCount;
 
-    // ???X???
+    // 拆除中X進?
     UPROPERTY(BlueprintReadOnly, Category = "Production Queue UI")
     FProductionQueue CurrentQueue;
 
-    // ???X?��Widget????
+    // 拆除中X?科技Widget進進
     UPROPERTY(BlueprintReadOnly, Category = "Production Queue UI")
     TArray<class UMingGoRTSRecipeWidget*> QueueItemWidgets;
 
-    // ???X?UI
+    // 拆除中X?UI
     virtual void NativeConstruct() override;
 
-    // ??��???X?��Widget
+    // 進科技進數據?科技Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Queue UI")
     UMingGoRTSRecipeWidget* CreateQueueItemWidget(const FString& RecipeID);
 
-    // ????�M��????
+    // 拆除中?�M科技進進
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void OnClearQueueClicked();
 
-    // ????�`���??�ܧ�
+    // 拆除中?�`科技�進�ܧ�
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void OnLoopingChanged(bool bIsLooping);
 
-    // ???X??X???�ܧ�
+    // 拆除中X?數據進?�ܧ�
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void OnAutoStartChanged(bool bAutoStart);
 
-    // ??�s????�p��
+    // 進�s進進�p科技
     void UpdateQueueCount();
 
 private:
-    // �j??�ƥ�
+    // �j進�ƥ�
     void BindEvents();
 
-    // ?X�ƥ�
+    // 數據�ƥ�
     void UnbindEvents();
 };
 
 /**
- * ??����??�DUI�ե�
+ * 進科技科技進�DUI�ե�
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSProductionManagerWidget : public UUserWidget
+class MINGRTS_API UMingGoRTSProductionManagerWidget : public UUserWidget
 {
     GENERATED_BODY()
 
 public:
     UMingGoRTSProductionManagerWidget();
 
-    // �]�m??���t�Τޥ�
+    // �]�m進科技�t�Τޥ�
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void SetProductionSystem(UMingGoRTSProductionSystem* ProductionSystem);
 
-    // ���????���O???X
+    // 科技�進進科技�O進數據
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ShowRecipeCategory(EProductionCategory Category);
 
-    // ���?????X
+    // 科技�進進數據
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ShowAllCategories();
 
-    // ??��??��??
+    // 進科技進科技進
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void SelectProductionLine(const FString& ProductionLineID);
 
-    // �M��??��??X
+    // �M科技進科技?數據
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ClearSelection();
 
-    // ??��???X???
+    // 進科技進數據進?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void CreateNewProductionLine();
 
-    // ���??����??
+    // 科技�進科技科技進
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ShowProductionStatistics();
 
-    // �]�m??�oX
+    // �]�m進�oX
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void SetFilter(EProductionCategory CategoryFilter, EProductionPriority PriorityFilter);
 
-    // �M��??�oX
+    // �M科技進�oX
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ClearFilter();
 
-    // ???X??X?��???X???
+    // 拆除中X?數據?科技進數據進?
     UFUNCTION(BlueprintPure, Category = "Production Manager UI")
     FString GetSelectedProductionLineID() const;
 
-    // ???X???���???X
+    // 拆除中X進?科技�進數據
     UFUNCTION(BlueprintPure, Category = "Production Manager UI")
     EProductionCategory GetCurrentCategory() const;
 
@@ -419,122 +419,122 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* ActiveProductionCount;
 
-    // ??���t�Τޥ�
+    // 進科技�t�Τޥ�
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     UMingGoRTSProductionSystem* ProductionSystem;
 
-    // ???X?��???X???ID
+    // 拆除中X?科技進數據進?ID
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     FString SelectedProductionLineID;
 
-    // ????���???X
+    // 拆除中?科技�進數據
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     EProductionCategory CurrentCategory;
 
-    // ???X?�oX
+    // 拆除中X?�oX
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     EProductionCategory CategoryFilter;
 
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     EProductionPriority PriorityFilter;
 
-    // ??���uWidget????
+    // 進科技�uWidget進進
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     TMap<FString, UMingGoRTSProductionLineWidget*> ProductionLineWidgets;
 
-    // ??��Widget????
+    // 進科技Widget進進
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     TArray<UMingGoRTSRecipeWidget*> RecipeWidgets;
 
-    // ???X?UI
+    // 拆除中X?UI
     virtual void NativeConstruct() override;
 
-    // ??��??���uWidget
+    // 進科技進科技�uWidget
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Manager UI")
     UMingGoRTSProductionLineWidget* CreateProductionLineWidget(const FProductionLine& ProductionLine);
 
-    // ??��??��Widget
+    // 進科技進科技Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Manager UI")
     UMingGoRTSRecipeWidget* CreateRecipeWidget(const FProductionRecipe& Recipe);
 
-    // ???X?���u?X
+    // 拆除中X?科技�u數據
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionLineClicked(const FString& ProductionLineID);
 
-    // ???X?���I??
+    // 拆除中X?科技�I進
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnRecipeClicked(const FString& RecipeID);
 
-    // ???X?��????
+    // 拆除中X?科技進進
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionStarted(const FString& ProductionLineID, const FString& RecipeID);
 
-    // ???X?��??��
+    // 拆除中X?科技進科技
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionProgress(const FString& ProductionLineID, float Progress, float TimeRemaining);
 
-    // ???X?����??
+    // 拆除中X?科技科技進
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionCompleted(const FString& ProductionLineID, const TMap<EResourceType, float>& OutputResources);
 
-    // ???X?����??
+    // 拆除中X?科技科技進
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionFailed(const FString& ProductionLineID, const FString& ErrorMessage);
 
-    // ??�s??���u????
+    // 進�s進科技�u進進
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void UpdateProductionLines();
 
-    // ??�s??��??��
+    // 進�s進科技進科技
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void UpdateRecipeList();
 
-    // ??�����O����
+    // 進科技科技�O科技科技
     void CreateCategoryTabs();
 
-    // ??��????��??�o��
+    // 進科技進進科技進�o科技
     void CreatePriorityFilters();
 
-    // ??��??�oX
+    // 進科技進�oX
     void ApplyFilters();
 
-    // ??�s��??�H��
+    // 進�s科技進�H科技
     void UpdateStatistics();
 
 private:
-    // �j?X?���t�Ψƥ�
+    // �j數據?科技�t�Ψƥ�
     void BindProductionSystemEvents();
 
-    // ?X?���t�Ψƥ�
+    // 數據?科技�t�Ψƥ�
     void UnbindProductionSystemEvents();
 
-    // �M?X???Widget
+    // �M數據進規idget
     void ClearExistingWidgets();
 
-    // ????���O�C��
+    // 拆除中?科技�O�C科技
     FLinearColor GetCategoryColor(EProductionCategory Category) const;
 };
 
 /**
- * ??����??UI�ե�
+ * 進科技科技進UI�ե�
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSProductionStatsWidget : public UUserWidget
+class MINGRTS_API UMingGoRTSProductionStatsWidget : public UUserWidget
 {
     GENERATED_BODY()
 
 public:
     UMingGoRTSProductionStatsWidget();
 
-    // �]�m??����?X???
+    // �]�m進科技科技數據進?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void SetProductionStatistics(const FProductionStatistics& Stats);
 
-    // ��ܸԲӲ�??
+    // 科技ܸԲӲ�進
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void ShowDetailedStats();
 
-    // �ɥX��?X???
+    // �ɥX科技數據進?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void ExportStatsReport();
 
@@ -570,43 +570,43 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UButton* CloseButton;
 
-    // ????��??
+    // 拆除中?科技進
     UPROPERTY(BlueprintReadOnly, Category = "Production Stats UI")
     FProductionStatistics CurrentStats;
 
-    // ???X?UI
+    // 拆除中X?UI
     virtual void NativeConstruct() override;
 
-    // ??�ز�?X?��
+    // 進�ز�數據?科技
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Stats UI")
     UUserWidget* CreateStatItem(const FString& Label, const FString& Value);
 
-    // ??�ظ�?X?��??��
+    // 進�ظ�數據?科技進科技
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Stats UI")
     UUserWidget* CreateResourceStatItem(EResourceType ResourceType, float Amount);
 
-    // ??�����O??��??��
+    // 進科技科技�O進科技進科技
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Stats UI")
     UUserWidget* CreateCategoryStatItem(EProductionCategory Category, float Amount);
 
-    // ???X?�έp��X
+    // 拆除中X?�έp科技X
     FString FormatStatValue(float Value) const;
 
-    // �p?X??X
+    // �p數據?數據
     float CalculateSuccessRate() const;
 
-    // ????�ɥX????
+    // 拆除中?�ɥX進進
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void OnExportClicked();
 
-    // ???X??X???
+    // 拆除中X?數據進?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void OnCloseClicked();
 
 private:
-    // �j??�ƥ�
+    // �j進�ƥ�
     void BindEvents();
 
-    // ?X�ƥ�
+    // 數據�ƥ�
     void UnbindEvents();
 };

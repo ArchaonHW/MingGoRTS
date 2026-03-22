@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -231,7 +231,7 @@ struct FBlueprintBindingConfig
  * - Automatic code synchronization
  */
 UCLASS(ClassGroup = (MingGoRTS), BlueprintType)
-class MINGGORTS_API UMingRTSBlueprintBindingSystem : public UObject
+class MINGRTS_API UMingRTSBlueprintBindingSystem : public UObject
 {
     GENERATED_BODY()
 

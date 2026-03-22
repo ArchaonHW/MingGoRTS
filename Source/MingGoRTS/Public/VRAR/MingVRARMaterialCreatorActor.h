@@ -19,7 +19,7 @@
  * 5. Check Output Log for creation results
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API AMingVRARMaterialCreatorActor : public AActor
+class MINGRTS_API AMingVRARMaterialCreatorActor : public AActor
 {
     GENERATED_BODY()
 

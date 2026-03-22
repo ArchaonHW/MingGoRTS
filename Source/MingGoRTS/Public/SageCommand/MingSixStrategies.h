@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -127,7 +127,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSixStrategyEventOccurred, const F
  * 基於六策的戰略決策和執行系統
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (SageCommand))
-class MINGGORTS_API UMingSixStrategies : public UObject
+class MINGRTS_API UMingSixStrategies : public UObject
 {
     GENERATED_BODY()
 

@@ -28,7 +28,7 @@ struct FSprint3TestResult
 };
 
 UCLASS()
-class MINGGORTS_API UMingRTSSprint3Test : public UObject
+class MINGRTS_API UMingRTSSprint3Test : public UObject
 {
     GENERATED_BODY()
 

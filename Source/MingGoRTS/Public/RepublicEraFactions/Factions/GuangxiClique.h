@@ -25,7 +25,7 @@
  * 4. Local Alliance Forces - Coalition of local powers
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UGuangxiClique : public UMingRTSFactionBase
+class MINGRTS_API UGuangxiClique : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

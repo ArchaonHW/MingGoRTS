@@ -26,7 +26,7 @@
  * 4. Local Power Alliance - Coalition of local leaders
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UXinjiangForces : public UMingRTSFactionBase
+class MINGRTS_API UXinjiangForces : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

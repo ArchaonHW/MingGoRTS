@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -116,7 +116,7 @@ struct FRTSPlayerInventory
 };
 
 UCLASS(ClassGroup = (RTS), meta = (DisplayName = "RTS Resource Gathering System"))
-class MINGGORTS_API UMingRTSResourceGatheringSystem : public UObject
+class MINGRTS_API UMingRTSResourceGatheringSystem : public UObject
 {
     GENERATED_BODY()
 

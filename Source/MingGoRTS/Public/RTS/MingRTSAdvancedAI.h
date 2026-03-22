@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -184,7 +184,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAITacticalDecisionMade, FString,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAIAdaptationOccurred, FString, AIControllerID);
 
 UCLASS(ClassGroup=(RTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSAdvancedAI : public UObject
+class MINGRTS_API UMingRTSAdvancedAI : public UObject
 {
     GENERATED_BODY()
 

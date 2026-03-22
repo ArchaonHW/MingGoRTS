@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - VR/AR Asset Management
 
 #pragma once
@@ -98,7 +98,7 @@ struct FVARAssetPoolConfig
  * Manages loading, caching, and pooling of VR/AR specific assets
  */
 UCLASS()
-class MINGGORTS_API UMingRTSVARAssetManager : public UGameInstanceSubsystem
+class MINGRTS_API UMingRTSVARAssetManager : public UGameInstanceSubsystem
 {
     GENERATED_BODY()
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -52,7 +52,7 @@ struct FMingGameRelationship
  * MingGoRTS Relationship Network System
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSRelationshipNetwork : public UObject
+class MINGRTS_API UMingGoRTSRelationshipNetwork : public UObject
 {
     GENERATED_BODY()
 

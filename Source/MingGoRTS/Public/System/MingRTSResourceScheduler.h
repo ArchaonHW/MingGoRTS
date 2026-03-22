@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -211,7 +211,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourceUtilizationChanged, ERes
  * 提供CPU、內存、GPU等資源的智能分配和管理
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSResourceScheduler : public UObject
+class MINGRTS_API UMingRTSResourceScheduler : public UObject
 {
     GENERATED_BODY()
 

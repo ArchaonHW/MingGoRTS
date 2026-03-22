@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -63,7 +63,7 @@ struct FAlgorithmProfile
  * MingGoRTS Algorithm Optimizer
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSAlgorithmOptimizer : public UObject
+class MINGRTS_API UMingRTSAlgorithmOptimizer : public UObject
 {
     GENERATED_BODY()
 

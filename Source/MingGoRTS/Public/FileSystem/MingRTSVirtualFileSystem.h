@@ -185,7 +185,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFileSystemError, const FString&, 
  * 提供完整的文件系統功能，包括文件操作、目錄管理、權限控制等
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSVirtualFileSystem : public UObject
+class MINGRTS_API UMingRTSVirtualFileSystem : public UObject
 {
     GENERATED_BODY()
 

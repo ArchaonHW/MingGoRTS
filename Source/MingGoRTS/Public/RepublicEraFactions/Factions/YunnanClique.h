@@ -25,7 +25,7 @@
  * 4. Frontier Patrol Corps - Scouts and border guards
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UYunnanClique : public UMingRTSFactionBase
+class MINGRTS_API UYunnanClique : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

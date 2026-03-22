@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -64,7 +64,7 @@ struct FSkillData
  * MingGoRTS Skill System
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSSkillSystem : public UObject
+class MINGRTS_API UMingGoRTSSkillSystem : public UObject
 {
     GENERATED_BODY()
 

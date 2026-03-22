@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -59,7 +59,7 @@ struct FCodexEntry
  * MingGoRTS Codex System
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSCodexSystem : public UObject
+class MINGRTS_API UMingRTSCodexSystem : public UObject
 {
     GENERATED_BODY()
 

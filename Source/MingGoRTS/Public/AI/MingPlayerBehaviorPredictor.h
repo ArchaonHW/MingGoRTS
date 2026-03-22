@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -106,7 +106,7 @@ struct FContentPreloadRequest
 };
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingPlayerBehaviorPredictor : public UObject
+class MINGRTS_API UMingPlayerBehaviorPredictor : public UObject
 {
     GENERATED_BODY()
 

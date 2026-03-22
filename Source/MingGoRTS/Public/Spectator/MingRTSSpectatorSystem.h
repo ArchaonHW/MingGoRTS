@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -110,7 +110,7 @@ struct FSpectatorRoom
 /**
  * 觀?�系�?- 管�X�戲觀?��X */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSSpectatorSystem : public UObject
+class MINGRTS_API UMingRTSSpectatorSystem : public UObject
 {
     GENERATED_BODY()
     

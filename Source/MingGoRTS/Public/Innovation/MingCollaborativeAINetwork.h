@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -381,7 +381,7 @@ public:
  * 實現多AI智能體協作、分布式決策和集體智能學習
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (Innovation))
-class MINGGORTS_API UMingCollaborativeAINetwork : public UObject, public ICollaborativeAINetworkInterface
+class MINGRTS_API UMingCollaborativeAINetwork : public UObject, public ICollaborativeAINetworkInterface
 {
     GENERATED_BODY()
 

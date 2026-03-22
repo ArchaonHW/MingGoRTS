@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,10 +6,10 @@
 
 UENUM(BlueprintType)
 enum class EOptimizationMode: uint8 {
-    Development, UMETA(DisplayName = "Development Mode"),
-    Testing, UMETA(DisplayName = "Testing Mode"),
-    Release, UMETA(DisplayName = "Release Mode"),
-    Performance, UMETA(DisplayName = "Performance Mode")
+    Development UMETA(DisplayName = "Development Mode"),
+    Testing UMETA(DisplayName = "Testing Mode"),
+    Release UMETA(DisplayName = "Release Mode"),
+    Performance UMETA(DisplayName = "Performance Mode")
 };
 
 USTRUCT(BlueprintType)
@@ -45,7 +45,7 @@ struct FOptimizationConfiguration
  * MingGoRTS Optimization System Manager
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSOptimizationSystemManager : public UObject
+class MINGRTS_API UMingRTSOptimizationSystemManager : public UObject
 {
     GENERATED_BODY()
 
@@ -84,4 +84,4 @@ protected:
     void ApplyReleaseMode();
     void ApplyPerformanceMode();
     bool ValidateConfiguration(const FOptimizationConfiguration& Config);
-);
+};

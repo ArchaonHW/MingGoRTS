@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
@@ -39,7 +39,7 @@ struct FMingGameSessionData
 };
 
 UCLASS()
-class MINGGORTS_API UMingGoRTSGameInstance : public UGameInstance
+class MINGRTS_API UMingGoRTSGameInstance : public UGameInstance
 {
     GENERATED_BODY()
 
@@ -49,27 +49,27 @@ public:
     virtual void Init() override;
     virtual void Shutdown() override;
 
-    // ??��??��????
+    // ??��??��摧毀
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Session")
     FMingGameSessionData GameSessionData;
 
-    // �]�m????����????
+    // �]�m摧毀����摧毀
     UFUNCTION(BlueprintCallable, Category = "Game Session")
     void SetCurrentCharacterData(const FMingCharacterData& CharacterData);
 
-    // ???X???����????
+    // 目標數量����摧毀
     UFUNCTION(BlueprintPure, Category = "Game Session")
     FMingCharacterData GetCurrentCharacterData() const;
 
-    // �]�m�s??��????
+    // �]�m�s??��摧毀
     UFUNCTION(BlueprintCallable, Category = "Game Session")
     void SetSaveSlotName(const FString& SlotName);
 
-    // ????�s??��????
+    // 摧毀�s??��摧毀
     UFUNCTION(BlueprintPure, Category = "Game Session")
     FString GetSaveSlotName() const;
 
-    // ???X??X?��??��
+    // 故事重要性?��??��
     UFUNCTION(BlueprintCallable, Category = "Game Session")
     void StartNewGameSession(const FMingCharacterData& CharacterData, const FString& SaveSlot);
 
@@ -85,19 +85,19 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Game Session")
     bool LoadGameSession(const FString& SlotName);
 
-    // �ˬd??�_??��??�i?X?????
+    // �ˬd??�_??��??�i?X摧毀?
     UFUNCTION(BlueprintPure, Category = "Game Session")
     bool HasActiveSession() const;
 
-    // ???X?��???X???
+    // ???X?��目標數量
     UFUNCTION(BlueprintPure, Category = "Game Session")
     float GetSessionDuration() const;
 
-    // �]�m??��????
+    // �]�m??��摧毀
     UFUNCTION(BlueprintCallable, Category = "Game Session")
     void SetGameTime(ERepublicEra Era, int32 Year);
 
-    // ???X?��????
+    // ???X?��摧毀
     UFUNCTION(BlueprintPure, Category = "Game Session")
     void GetGameTime(ERepublicEra& OutEra, int32& OutYear) const;
 
@@ -109,13 +109,13 @@ protected:
     // ???X?�� ID
     FString GenerateSessionID();
 
-    // ??��????��?X
+    // ??��摧毀��?X
     FString SerializeSessionData() const;
 
-    // ??��???X??X???
+    // ??��整理背包物品
     bool DeserializeSessionData(const FString& SerializedData);
 
-    // �M?X?��????
+    // �M?X?��摧毀
     void ClearSessionData();
 };
 

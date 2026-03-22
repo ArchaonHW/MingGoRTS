@@ -12,7 +12,7 @@
  * This class provides integration tests for the Republic Era Faction System,
  * testing the interaction between different components and systems.
  */
-class MINGGORTS_API MingRTSFactionIntegrationTest
+class MINGRTS_API MingRTSFactionIntegrationTest
 {
 public:
     /**

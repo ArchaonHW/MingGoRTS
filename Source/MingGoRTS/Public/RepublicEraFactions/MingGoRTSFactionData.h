@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
@@ -33,7 +33,7 @@ enum class EFactionRelation: uint8 {
 
 // 勢力基礎數據結構
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FFactionBaseData
+struct MINGRTS_API FFactionBaseData
 {
     GENERATED_BODY()
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - AR Controller Component
 
 #pragma once
@@ -145,7 +145,7 @@ struct FARVirtualObject
  * Handles AR input gestures and RTS-specific interactions
  */
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSARController : public UActorComponent
+class MINGRTS_API UMingRTSARController : public UActorComponent
 {
     GENERATED_BODY()
 

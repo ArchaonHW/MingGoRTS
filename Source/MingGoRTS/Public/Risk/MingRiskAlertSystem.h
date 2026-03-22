@@ -10,43 +10,47 @@
 #include "MingRiskAlertSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EAlertType: uint8 {
-    Info = 0, UMETA(DisplayName = "Information"),
-    Warning, UMETA(DisplayName = "Warning"),
-    Critical, UMETA(DisplayName = "Critical"),
-    Emergency, UMETA(DisplayName = "Emergency"),
-    Notification, UMETA(DisplayName = "Notification"),
-    Maintenance, UMETA(DisplayName = "Maintenance"),
+enum class EAlertType : uint8
+{
+    Info = 0 UMETA(DisplayName = "Information"),
+    Warning UMETA(DisplayName = "Warning"),
+    Critical UMETA(DisplayName = "Critical"),
+    Emergency UMETA(DisplayName = "Emergency"),
+    Notification UMETA(DisplayName = "Notification"),
+    Maintenance UMETA(DisplayName = "Maintenance"),
     Performance, UMETA(DisplayName = "Performance"),
     Security, UMETA(DisplayName = "Security"),
     Stability UMETA(DisplayName = "Stability")
 };
 
 UENUM(BlueprintType)
-enum class EAlertPriority: uint8 {
-    Lowest = 0, UMETA(DisplayName = "Lowest"),
-    Low, UMETA(DisplayName = "Low"),
-    Normal, UMETA(DisplayName = "Normal"),
+enum class EAlertPriority : uint8
+{
+    Lowest = 0 UMETA(DisplayName = "Lowest"),
+    Low UMETA(DisplayName = "Low"),
+    Normal UMETA(DisplayName = "Normal"),
     High, UMETA(DisplayName = "High"),
     Highest, UMETA(DisplayName = "Highest"),
     Critical UMETA(DisplayName = "Critical")
 };
 
 UENUM(BlueprintType)
-enum class EAlertStatus: uint8 {
-    New = 0, UMETA(DisplayName = "New"),
-    Acknowledged, UMETA(DisplayName = "Acknowledged"),
-    InProgress, UMETA(DisplayName = "In Progress"),
+enum class EAlertStatus : uint8
+{
+    New = 0 UMETA(DisplayName = "New"),
+    Acknowledged UMETA(DisplayName = "Acknowledged"),
+    InProgress UMETA(DisplayName = "In Progress"),
     Resolved, UMETA(DisplayName = "Resolved"),
     Dismissed, UMETA(DisplayName = "Dismissed"),
     Escalated UMETA(DisplayName = "Escalated")
 };
 
 UENUM(BlueprintType)
-enum class ENotificationChannel: uint8 {
-    InGame = 0, UMETA(DisplayName = "In-Game"),
-    Email, UMETA(DisplayName = "Email"),
-    Push, UMETA(DisplayName = "Push Notification"),
+enum class ENotificationChannel : uint8
+{
+    InGame = 0 UMETA(DisplayName = "In-Game"),
+    Email UMETA(DisplayName = "Email"),
+    Push UMETA(DisplayName = "Push Notification"),
     Dashboard, UMETA(DisplayName = "Dashboard"),
     Log, UMETA(DisplayName = "Log Only"),
     Sound, UMETA(DisplayName = "Sound Alert"),

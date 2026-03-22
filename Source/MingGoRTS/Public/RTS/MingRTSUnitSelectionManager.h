@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -27,7 +27,7 @@ enum class ERTSMoveCommandType: uint8 {
 };
 
 UCLASS(ClassGroup = (RTS), meta = (DisplayName = "RTS Unit Selection Manager"))
-class MINGGORTS_API UMingRTSUnitSelectionManager : public UObject
+class MINGRTS_API UMingRTSUnitSelectionManager : public UObject
 {
     GENERATED_BODY()
 

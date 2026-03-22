@@ -103,7 +103,7 @@ struct FUnitGroup
     UPROPERTY(BlueprintReadOnly)
     FString GroupID;
 
-    // ???X?稱
+    // 物品名稱
     UPROPERTY(BlueprintReadOnly)
     FString GroupName;
 

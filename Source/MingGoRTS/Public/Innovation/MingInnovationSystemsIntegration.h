@@ -278,7 +278,7 @@ public:
  * 實現所有創新系統的統一集成和管理
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (Innovation))
-class MINGGORTS_API UMingInnovationSystemsIntegration : public UObject, public IInnovationSystemsIntegrationInterface
+class MINGRTS_API UMingInnovationSystemsIntegration : public UObject, public IInnovationSystemsIntegrationInterface
 {
     GENERATED_BODY()
 

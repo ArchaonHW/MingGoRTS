@@ -9,7 +9,7 @@
  * Comprehensive development automation and efficiency tools
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSDeveloperToolSystem : public UObject
+class MINGRTS_API UMingRTSDeveloperToolSystem : public UObject
 {
     GENERATED_BODY()
 

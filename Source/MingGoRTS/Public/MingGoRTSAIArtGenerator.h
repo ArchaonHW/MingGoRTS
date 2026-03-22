@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -27,8 +27,8 @@ enum class EArtStyle: uint8 {
     TraditionalChinese, // ��?X?��??��
     Military,         // �x??����
     Historical,       // ���v����
-    ConceptArt,      // ����????
-    PixelArt         // ???X???
+    ConceptArt,      // ����摧毀
+    PixelArt         // 目標數量
 };
 
 UENUM(BlueprintType)
@@ -40,7 +40,7 @@ enum class EArtCategory: uint8 {
     Vehicle,          // ����]??
     Architecture,     // ��??�]??
     UI,               // UI�]??
-    Icon,             // ????�]??
+    Icon,             // 摧毀�]??
     Texture,          // ��??�]??
     Concept           // �����]??
 };
@@ -137,7 +137,7 @@ struct FArtPostProcessSettings
 
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSAIArtGenerator : public UObject
+class MINGRTS_API UMingGoRTSAIArtGenerator : public UObject
 {
     GENERATED_BODY()
 
@@ -157,7 +157,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     EArtGenerationStatus GetGenerationStatus() const { return CurrentStatus; }
 
-    // Stable Diffusion ????
+    // Stable Diffusion 摧毀
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void SetStableDiffusionAPI(const FString& APIEndpoint, const FString& APIKey);
 
@@ -171,14 +171,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void ClearControlNetImage();
 
-    // ???X???
+    // 目標數量
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void GenerateArtBatch(const TArray<FArtGenerationParameters>& BatchParameters);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void GenerateVariations(UTexture2D* SourceImage, int32 VariationCount = 4);
 
-    // ????��?X
+    // 摧毀��?X
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     UTexture2D* PostProcessImage(UTexture2D* SourceImage, const FArtPostProcessSettings& Settings);
 
@@ -194,7 +194,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     UTexture2D* FlipImage(UTexture2D* SourceImage, bool bHorizontal, bool bVertical);
 
-    // ????�겣��??
+    // 摧毀�겣��??
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void AddToArtLibrary(UTexture2D* Art, const FString& ArtName);
 
@@ -207,7 +207,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void ClearArtLibrary();
 
-    // ??��????
+    // ??��摧毀
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     UMaterialInterface* GenerateMaterial(UTexture2D* BaseTexture, const FString& MaterialName);
 
@@ -227,7 +227,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     FArtGenerationParameters GetTraditionalChineseStyle();
 
-    // ????�ɥX
+    // 摧毀�ɥX
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void ExportArt(UTexture2D* Art, const FString& FilePath);
 

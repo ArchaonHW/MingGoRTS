@@ -11,7 +11,7 @@
  * Drag this actor into any level and call ExecuteMaterialCreation() from Blueprint or C++.
  */
 UCLASS(BlueprintType)
-class MINGGORTS_API AMingVRARMaterialExecutor : public AActor
+class MINGRTS_API AMingVRARMaterialExecutor : public AActor
 {
     GENERATED_BODY()
 

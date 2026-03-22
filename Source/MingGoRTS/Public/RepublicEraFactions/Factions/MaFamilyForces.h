@@ -25,7 +25,7 @@
  * 4. Religious Mobilization Corps - Faith-based units
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UMaFamilyForces : public UMingRTSFactionBase
+class MINGRTS_API UMaFamilyForces : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

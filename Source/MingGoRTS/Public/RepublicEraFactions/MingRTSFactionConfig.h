@@ -147,7 +147,7 @@ struct FFactionConfig
  * 势力配置管理器 - JSON配置加载系统
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UMingRTSFactionConfigManager : public UObject
+class MINGRTS_API UMingRTSFactionConfigManager : public UObject
 {
     GENERATED_BODY()
     

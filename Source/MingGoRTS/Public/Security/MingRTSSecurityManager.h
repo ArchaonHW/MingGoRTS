@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -54,7 +54,7 @@ struct FSecurityAlert
 /**
  * 安全管�X- 統�X�?��X�系�? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSSecurityManager : public UObject
+class MINGRTS_API UMingRTSSecurityManager : public UObject
 {
     GENERATED_BODY()
     

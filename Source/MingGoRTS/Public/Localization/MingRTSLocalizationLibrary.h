@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Localization Blueprint Function Library
 
 #pragma once
@@ -13,7 +13,7 @@
  * Provides easy access to localization from Blueprints
  */
 UCLASS()
-class MINGGORTS_API UMingRTSLocalizationLibrary : public UBlueprintFunctionLibrary
+class MINGRTS_API UMingRTSLocalizationLibrary : public UBlueprintFunctionLibrary
 {
     GENERATED_BODY()
     

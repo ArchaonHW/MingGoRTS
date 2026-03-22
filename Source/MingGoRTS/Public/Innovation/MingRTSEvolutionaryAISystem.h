@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -50,7 +50,7 @@ struct FEvolutionaryTrait
  * MingGoRTS Evolutionary AI System
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSEvolutionaryAISystem : public UObject
+class MINGRTS_API UMingRTSEvolutionaryAISystem : public UObject
 {
     GENERATED_BODY()
 

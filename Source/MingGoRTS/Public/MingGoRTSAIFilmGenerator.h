@@ -43,7 +43,7 @@ struct FFilmSequenceData
 
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSAIFilmGenerator : public UObject
+class MINGRTS_API UMingGoRTSAIFilmGenerator : public UObject
 {
     GENERATED_BODY()
 
@@ -63,11 +63,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     EFilmGenerationStatus GetGenerationStatus() const { return CurrentStatus; }
 
-    // ???X???
+    // 目標數量
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void GenerateSingleFrame(const FString& Prompt, const FString& Style, int32 FrameIndex);
 
-    // Stable Diffusion ????
+    // Stable Diffusion 摧毀
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void SetStableDiffusionAPI(const FString& APIEndpoint, const FString& APIKey);
 
@@ -128,3 +128,5 @@ private:
     void NotifyGenerationCompleted(bool bSuccess, const FString& ErrorMessage = FString()};
 };
 
+
+);

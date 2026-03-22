@@ -12,7 +12,7 @@ class UMingRTSBuildingSystem;
 class UMingRTSEconomicSystem;
 
 /**
- * RTS¨t²Î´ú¸Õ???X * ´ú¸Õ????RTS????¨t²Î???X??X?¯à
+ * RTSç³»çµ±æ¸¬è©¦???X * æ¸¬è©¦æ‘§æ¯€RTSæ‘§æ¯€ç³»çµ±æ•…äº‹é‡è¦æ€§?èƒ½
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSSystemTest : public UObject
@@ -21,152 +21,152 @@ class MINGCORE_API UMingRTSSystemTest : public UObject
 
 public:
     /**
-     * ???X???RTS¨t²Î´ú¸Õ
+     * ç›®æ¨™æ•¸é‡RTSç³»çµ±æ¸¬è©¦
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static void RunAllRTSTests();
 
     /**
-     * ´ú¸Õ????ºŞ?X     */
+     * æ¸¬è©¦æ‘§æ¯€ç®¡?X     */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestUnitManager();
 
     /**
-     * ´ú¸Õ??°«¨t²Î
+     * æ¸¬è©¦??é¬¥ç³»çµ±
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestCombatSystem();
 
     /**
-     * ´ú¸ÕAI??¨îX     */
+     * æ¸¬è©¦AI??åˆ¶X     */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestAIController();
 
     /**
-     * ´ú¸Õ¸ê??ºŞ?X     */
+     * æ¸¬è©¦è³‡??ç®¡?X     */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestResourceManager();
 
     /**
-     * ´ú¸Õ«Ø??¨t²Î
+     * æ¸¬è©¦å»º??ç³»çµ±
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestBuildingSystem();
 
     /**
-     * ´ú¸Õ¸g??¨t²Î
+     * æ¸¬è©¦ç¶“??ç³»çµ±
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestEconomicSystem();
 
     /**
-     * ´ú¸Õ¨t²Î????
+     * æ¸¬è©¦ç³»çµ±æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestSystemIntegration();
 
     /**
-     * ??¯à´ú¸Õ
+     * ??èƒ½æ¸¬è©¦
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestPerformance();
 
     /**
-     * À£??´ú¸Õ
+     * å£“??æ¸¬è©¦
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestStressTest();
 
     /**
-     * ????´ú¸Õ
+     * æ‘§æ¯€æ¸¬è©¦
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestBoundaryConditions();
 
     /**
-     * ??»~????´ú¸Õ
+     * ??èª¤æ‘§æ¯€æ¸¬è©¦
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestErrorHandling();
 
     /**
-     * ??«Ø´ú¸Õ????
+     * ??å»ºæ¸¬è©¦æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static void CreateTestData();
 
     /**
-     * ²M??´ú¸Õ????
+     * æ¸…??æ¸¬è©¦æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static void CleanupTestData();
 
     /**
-     * Åç??¨t²Î??±d??X     */
+     * é©—??ç³»çµ±??åº·??X     */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "RTS System Test")
     static bool VerifySystemHealth();
 
     /**
-     * ????´ú¸Õ????
+     * æ‘§æ¯€æ¸¬è©¦æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "RTS System Test")
     static FString GetTestReport();
 
     /**
-     * ???X?¯à????
+     * ???X?èƒ½æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "RTS System Test")
     static FString GeneratePerformanceReport();
 
     /**
-     * ´ú¸Õ???X??X?²¾X     */
+     * æ¸¬è©¦æ•…äº‹é‡è¦æ€§?ç§»X     */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestUnitSelectionAndMovement();
 
     /**
-     * ´ú¸ÕX¨t²Î
+     * æ¸¬è©¦Xç³»çµ±
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestFormationSystem();
 
     /**
-     * ´ú¸Õ??°«¾÷¨î
+     * æ¸¬è©¦??é¬¥æ©Ÿåˆ¶
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestCombatMechanics();
 
     /**
-     * ´ú¸ÕAI¦æ¬°
+     * æ¸¬è©¦AIè¡Œç‚º
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestAIBehavior();
 
     /**
-     * ´ú¸Õ¸ê?X?²£
+     * æ¸¬è©¦è³‡?X?ç”¢
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestResourceProduction();
 
     /**
-     * ´ú¸Õ«Ø??«Ø³]
+     * æ¸¬è©¦å»º??å»ºè¨­
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestBuildingConstruction();
 
     /**
-     * ´ú¸Õ¸g??´`Àô
+     * æ¸¬è©¦ç¶“??å¾ªç’°
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestEconomicCycle();
 
     /**
-     * ´ú¸Õ¶T??¨t²Î
+     * æ¸¬è©¦è²¿??ç³»çµ±
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestTradeSystem();
 
     /**
-     * ´ú¸Õ¥«³õ¾÷¨î
+     * æ¸¬è©¦å¸‚å ´æ©Ÿåˆ¶
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestMarketMechanics();

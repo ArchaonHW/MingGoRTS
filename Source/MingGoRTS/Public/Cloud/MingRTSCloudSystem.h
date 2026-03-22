@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -193,7 +193,7 @@ struct FCloudServiceStats
  * 雲端服務系統 - 管理雲端功能和服務集成
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSCloudSystem : public UObject
+class MINGRTS_API UMingRTSCloudSystem : public UObject
 {
     GENERATED_BODY()
     

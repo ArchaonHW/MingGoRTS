@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -76,7 +76,7 @@ struct FHistoricalEvent
  * MingGoRTS Dynamic History System
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSDynamicHistorySystem : public UObject
+class MINGRTS_API UMingRTSDynamicHistorySystem : public UObject
 {
     GENERATED_BODY()
 

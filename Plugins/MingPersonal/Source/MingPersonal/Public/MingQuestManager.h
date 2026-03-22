@@ -6,7 +6,7 @@
 #include "MingItemManager.h"
 #include "MingQuestManager.generated.h"
 
-// 任??類??
+// 任務類型
 UENUM(BlueprintType)
 enum class EMingQuestType: uint8 {
     Main,              // 主線任務
@@ -19,7 +19,8 @@ enum class EMingQuestType: uint8 {
     Achievement         // 成就任務
 };
 
-// 任務狀態UENUM(BlueprintType)
+// 任務狀態
+UENUM(BlueprintType)
 enum class EMingQuestStatus: uint8 {
     Available,          // 可接受
     Active,             // 進行中
@@ -217,7 +218,7 @@ struct MINGPERSONAL_API FMingQuestData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString QuestDescription;
 
-    // 任??類??
+    // 任務類型
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingQuestType QuestType;
 

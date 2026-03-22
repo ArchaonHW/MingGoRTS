@@ -70,7 +70,7 @@ struct MINGPERSONAL_API FMingItemData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemID;
 
-    // ???X?稱
+    // 物品名稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemName;
 

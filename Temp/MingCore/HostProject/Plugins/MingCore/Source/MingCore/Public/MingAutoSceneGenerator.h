@@ -24,7 +24,7 @@ enum class ESceneType : uint8
     City,           // X??
     Temple,         // ?xX??
     Battlefield,    // X??X??
-    Custom,         // ??w?q????
+    Custom,         // ??w?q摧毀
 };
 
 UENUM(BlueprintType)
@@ -39,16 +39,16 @@ enum class ESceneComplexity : uint8
 UENUM(BlueprintType)
 enum class ESceneStyle : uint8
 {
-    Realistic,      // ?g????
-    Stylized,       // ?????
-    Cartoon,        // ?d?q????
-    Watercolor,     // ??m????
-    Ink,            // ???????
-    OilPainting,    // ?o?e????
-    PixelArt,       // ???????N
+    Realistic,      // ?g摧毀
+    Stylized,       // 摧毀?
+    Cartoon,        // ?d?q摧毀
+    Watercolor,     // ??m摧毀
+    Ink,            // 摧毀???
+    OilPainting,    // ?o?e摧毀
+    PixelArt,       // 摧毀???N
     LowPoly,        // ?C?h???
-    CelShaded,      // ???i?i????
-    Photorealistic,  // ?????u??
+    CelShaded,      // ???i?i摧毀
+    Photorealistic,  // 摧毀?u??
 };
 
 USTRUCT(BlueprintType)
@@ -153,7 +153,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSceneGenerationCompleted, const 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSceneGenerationFailed, const FString&, SceneName, const FString&, ErrorMessage};
 
 /**
- * X??X * X?D??X?e?X????X??
+ * X??X * X?D??X?e?X摧毀X??
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingAutoSceneGenerator : public UObject
@@ -176,7 +176,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     TArray<FString> GenerateMultipleScenes(const TArray<FSceneRequirement>& RequirementsList};
 
-    // X?]X????O
+    // X?]X摧毀O
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     FSceneRequirement GetBattleSceneTemplate(const FString& BattleDescription) {};
 
@@ -189,7 +189,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     FSceneRequirement GetNatureSceneTemplate(ESceneType NatureType, const FString& Environment) {};
 
-    // X????X
+    // X摧毀X
     UFUNCTION(BlueprintPure, Category = "Auto Scene Generator")
     TArray<FGeneratedScene> GetAllGeneratedScenes() const;
 
@@ -212,7 +212,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Auto Scene Generator")
     bool IsPreviewActive() const { return bPreviewActive; }
 
-    // X????X
+    // X摧毀X
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     void ExportScene(const FString& SceneName, const FString& ExportPath) {};
 
@@ -255,7 +255,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Auto Scene Generator")
     TArray<FString> GetAvailableTemplates() const;
 
-    // X????X
+    // X摧毀X
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     TArray<FSceneRequirement> GenerateSceneVariants(const FSceneRequirement& BaseRequirements, int32 VariantCount};
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -119,7 +119,7 @@ struct FLogEntry
  * 統一的錯誤處理和日誌系統
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSErrorHandlingSystem : public UObject
+class MINGRTS_API UMingRTSErrorHandlingSystem : public UObject
 {
     GENERATED_BODY()
 

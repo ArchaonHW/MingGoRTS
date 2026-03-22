@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -81,7 +81,7 @@ struct FHistoricalCharacter
  * Manages historical characters and their interactions
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSHistoricalCharacters : public UObject
+class MINGRTS_API UMingGoRTSHistoricalCharacters : public UObject
 {
     GENERATED_BODY()
 

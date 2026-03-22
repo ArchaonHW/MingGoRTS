@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,14 +7,14 @@
 struct FReplayMetadata;
 
 /**
- * ??��???X???
+ * ??��目標數量
  */
 UENUM(BlueprintType)
 enum class EReplaySortMethod: uint8 {
-    DateNewest          UMETA(DisplayName = "????(??X"),
-    DateOldest          UMETA(DisplayName = "????(??X"),
-    NameAscending       UMETA(DisplayName = "??��(????)"),
-    NameDescending      UMETA(DisplayName = "??��(????)"),
+    DateNewest          UMETA(DisplayName = "摧毀(??X"),
+    DateOldest          UMETA(DisplayName = "摧毀(??X"),
+    NameAscending       UMETA(DisplayName = "??��(摧毀)"),
+    NameDescending      UMETA(DisplayName = "??��(摧毀)"),
     DurationLongest     UMETA(DisplayName = "??��(??X"),
     DurationShortest    UMETA(DisplayName = "??��(??X")
 };
@@ -55,10 +55,10 @@ struct FReplayFilter
 };
 
 /**
- * ??���?X- ��?X?��??��???X???�˯�
+ * ??���?X- ��?X?��??��目標數量�˯�
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSReplayManager : public UObject
+class MINGRTS_API UMingRTSReplayManager : public UObject
 {
     GENERATED_BODY()
     
@@ -69,7 +69,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     void InitializeReplayManager();
     
-    // ???X????X
+    // 目標數量?X
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     TArray<FReplayMetadata> GetAllReplays() const;
     
@@ -101,7 +101,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     int32 DeleteReplaysBatch(const TArray<FString>& ReplayIDs);
     
-    // �ɥX??��????�w��??
+    // �ɥX??��摧毀�w��??
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     bool ExportReplay(const FString& ReplayID, const FString& ExportPath);
     
@@ -109,15 +109,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     FReplayMetadata ImportReplay(const FString& FilePath);
     
-    // ????�s�x�ϥ�???? (MB)
+    // 摧毀�s�x�ϥ�摧毀 (MB)
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     float GetStorageUsage() const;
     
-    // ????�s�x???? (MB)
+    // 摧毀�s�x摧毀 (MB)
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     float GetStorageQuota() const;
     
-    // �]�m�s�x????
+    // �]�m�s�x摧毀
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     void SetStorageQuota(float QuotaMB);
     
@@ -129,23 +129,23 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     bool CreateReplayFolder(const FString& FolderName);
     
-    // ???X?��????
+    // ???X?��摧毀
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     TArray<FString> GetReplayFolders() const;
     
-    // ��?X?��????��
+    // ��?X?��摧毀��
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     bool MoveReplayToFolder(const FString& ReplayID, const FString& FolderName);
     
-    // ??��??��????
+    // ??��??��摧毀
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     void AddReplayToFavorites(const FString& ReplayID);
     
-    // ����????
+    // ����摧毀
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     void RemoveReplayFromFavorites(const FString& ReplayID);
     
-    // ???X??X??X
+    // 故事選項X
     UFUNCTION(BlueprintCallable, Category = "ReplayManager")
     TArray<FReplayMetadata> GetFavoriteReplays() const;
     

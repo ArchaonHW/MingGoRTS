@@ -18,7 +18,7 @@
  * evolution mechanism, ensuring system reliability and performance.
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSHistorySystemTest : public UObject
+class MINGRTS_API UMingRTSHistorySystemTest : public UObject
 {
     GENERATED_BODY()
 

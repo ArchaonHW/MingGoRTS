@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -113,7 +113,7 @@ enum class EMingUpgradeResourceType: uint8 {
  * ��?X???�t��
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSBuildingUpgradeSystem : public UObject
+class MINGRTS_API UMingGoRTSBuildingUpgradeSystem : public UObject
 {
     GENERATED_BODY()
 
@@ -128,19 +128,19 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     void RegisterUpgradePath(const FBuildingUpgradePath& UpgradePath);
 
-    // ????��?X???
+    // 摧毀��?X???
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool StartBuildingUpgrade(const FString& BuildingID, const FString& PathID, int32 TargetLevel);
 
-    // ???X???
+    // 目標數量
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool PauseUpgrade(const FString& BuildingID);
 
-    // ??�_????
+    // ??�_摧毀
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool ResumeUpgrade(const FString& BuildingID);
 
-    // ???X???
+    // 目標數量
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool CancelUpgrade(const FString& BuildingID);
 
@@ -148,23 +148,23 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool InstantCompleteUpgrade(const FString& BuildingID);
 
-    // ???X??X?��
+    // 故事重要性?��
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     FBuildingUpgradeProgress GetUpgradeProgress(const FString& BuildingID) const;
 
-    // ???X?????�Ÿ�??
+    // 目標數量??�Ÿ�??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     TArray<FBuildingUpgradePath> GetAllUpgradePaths() const;
 
-    // ???X???���O????�Ÿ�??
+    // 目標數量���O摧毀�Ÿ�??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     TArray<FBuildingUpgradePath> GetUpgradePathsByType(EMingBuildingType BuildingType) const;
 
-    // ????��?X???��??
+    // 摧毀��?X???��??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     int32 GetBuildingCurrentLevel(const FString& BuildingID) const;
 
-    // ???X???��??
+    // 目標數量��??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     FBuildingUpgradeStatistics GetUpgradeStatistics() const;
 
@@ -172,15 +172,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool CanUpgrade(const FString& BuildingID, const FString& PathID, int32 TargetLevel) const;
 
-    // ???X??X?��
+    // 故事重要性?��
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     TMap<EMingUpgradeResourceType, float> GetUpgradeCost(const FString& BuildingID, const FString& PathID, int32 TargetLevel) const;
 
-    // ???X??X???
+    // 整理背包物品
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     float GetUpgradeTime(const FString& BuildingID, const FString& PathID, int32 TargetLevel) const;
 
-    // ???X??X???
+    // 整理背包物品
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     TArray<FBuildingUpgradeEffect> GetUpgradeEffects(const FString& PathID, int32 Level) const;
 
@@ -188,7 +188,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     void UnlockUpgradePath(const FString& PathID, EMingBuildingType BuildingType);
 
-    // �ˬd????��?X?�_�w��X
+    // �ˬd摧毀��?X?�_�w��X
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade")
     bool IsUpgradePathUnlocked(const FString& PathID) const;
 
@@ -215,7 +215,7 @@ public:
     FOnUpgradePathUnlocked OnUpgradePathUnlocked;
 
 protected:
-    // ????��?X???
+    // 摧毀��?X???
     UPROPERTY(BlueprintReadOnly, Category = "Building Upgrade")
     TMap<FString, FBuildingUpgradePath> UpgradePaths;
 
@@ -238,7 +238,7 @@ protected:
     // ��?X???
     void CompleteUpgrade(const FString& BuildingID);
 
-    // ??��???X???
+    // ??��目標數量
     void ApplyUpgradeEffects(const FString& BuildingID, const TArray<FBuildingUpgradeEffect>& Effects);
 
     // �p??��?X??X???
@@ -247,11 +247,11 @@ protected:
     // �ˬd��?X?�_��??
     bool HasEnoughResources(const TMap<EMingUpgradeResourceType, float>& Cost) const;
 
-    // ����????
+    // ����摧毀
     bool ConsumeResources(const TMap<EMingUpgradeResourceType, float>& Cost);
 
 private:
-    // ???X?????
+    // 目標數量??
     bool bInitialized;
 );
 

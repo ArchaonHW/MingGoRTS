@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -105,7 +105,7 @@ struct FModInfo
 /**
  * 模??系統 - 管??模?X?創??工???X */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSModSystem : public UObject
+class MINGRTS_API UMingRTSModSystem : public UObject
 {
     GENERATED_BODY()
     
@@ -116,19 +116,19 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void InitializeModSystem();
     
-    // 從創??工??獲??模組????
+    // 從創??工??獲??模組摧毀
     UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FModInfo> GetWorkshopMods(const FString& SearchQuery, const TArray<EModType>& FilterTypes);
     
-    // ????已??裝模??
+    // 摧毀已??裝模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FModInfo> GetInstalledMods() const;
     
-    // ????已?X?模??
+    // 摧毀已完成?模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FModInfo> GetEnabledMods() const;
     
-    // ????模??詳??
+    // 摧毀模??詳??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     bool GetModInfo(const FString& ModID, FModInfo& OutModInfo) const;
     
@@ -136,7 +136,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void DownloadMod(const FString& ModID);
     
-    // ????下??
+    // 摧毀下??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void CancelDownload(const FString& ModID);
     
@@ -144,7 +144,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Mod")
     bool InstallMod(const FString& FilePath);
     
-    // ????模??
+    // 摧毀模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void UninstallMod(const FString& ModID);
     
@@ -176,7 +176,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void SubscribeToMod(const FString& ModID);
     
-    // ????訂閱
+    // 摧毀訂閱
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void UnsubscribeFromMod(const FString& ModID);
     
@@ -184,7 +184,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void RateMod(const FString& ModID, float Rating);
     
-    // ????模??
+    // 摧毀模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void ReportMod(const FString& ModID, const FString& Reason);
     
@@ -192,23 +192,23 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Mod")
     bool ValidateMod(const FString& ModID);
     
-    // ????模??
+    // 摧毀模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void ScanForMods();
     
-    // ???X????X???模??
+    // 目標數量?X???模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void LoadEnabledMods();
     
-    // ????模?X???
+    // 摧毀模?X???
     UFUNCTION(BlueprintCallable, Category = "Mod")
     FString GetModsDirectory() const;
     
-    // 設置???X???
+    // 設置目標數量
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void SetModLoadOrder(const TArray<FString>& ModIDs);
     
-    // ????依賴衝??
+    // 摧毀依賴衝??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FString> GetDependencyConflicts(const FString& ModID) const;
     

@@ -494,7 +494,7 @@ public:
  * 實現複雜的社會關係網絡、社會階層流動、文化傳播和群體行為模擬
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (Innovation))
-class MINGGORTS_API UMingSocialDynamicsSystem : public UObject, public ISocialDynamicsSystemInterface
+class MINGRTS_API UMingSocialDynamicsSystem : public UObject, public ISocialDynamicsSystemInterface
 {
     GENERATED_BODY()
 

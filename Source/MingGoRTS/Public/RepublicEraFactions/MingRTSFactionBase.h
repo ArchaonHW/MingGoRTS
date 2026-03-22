@@ -15,7 +15,7 @@ class UMingRTSPlayerController;
  * Base class for all Republic Era factions
  */
 UCLASS(Abstract, Blueprintable, BlueprintType)
-class MINGGORTS_API UMingRTSFactionBase : public UObject
+class MINGRTS_API UMingRTSFactionBase : public UObject
 {
     GENERATED_BODY()
     

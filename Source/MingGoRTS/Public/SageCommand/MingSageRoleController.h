@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -95,7 +95,7 @@ struct FSageRoleAbility
  * 管理玩家的角色選擇、發展和轉換
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (SageCommand))
-class MINGGORTS_API AMingSageRoleController : public APlayerController
+class MINGRTS_API AMingSageRoleController : public APlayerController
 {
     GENERATED_BODY()
 

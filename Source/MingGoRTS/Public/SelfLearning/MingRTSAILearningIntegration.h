@@ -102,23 +102,20 @@ struct FAIAdaptationParameters
  * MingGoRTS AI Learning Integration
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSAILearningIntegration : public UObject
+class MINGRTS_API UMingRTSAILearningIntegration : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingRTSAILearningIntegration();
+    UMingRTSAILearningIntegration(};
     virtual void BeginDestroy() override;
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning")
-    void InitializeAILearning(UMingRTSSelfLearningSystem* SelfLearningSystem);
-
+    void InitializeAILearning(UMingRTSSelfLearningSystem* SelfLearningSystem};
     UFUNCTION(BlueprintCallable, Category = "AI Learning")
-    void ShutdownAILearning();
-
+    void ShutdownAILearning(};
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Analysis")
-    void AnalyzePlayerBehavior(const FString& PlayerID, const TMap<FString, FString>& MatchData);
-
+    void AnalyzePlayerBehavior(const FString& PlayerID, const TMap<FString, FString>& MatchData};
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Analysis")
     FPlayerBehaviorAnalysis GetPlayerAnalysis(const FString& PlayerID) const;
 
@@ -126,17 +123,14 @@ public:
     TArray<FPlayerBehaviorAnalysis> GetAllPlayerAnalyses() const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Adaptation")
-    void AdaptAIToPlayer(const FString& PlayerID);
-
+    void AdaptAIToPlayer(const FString& PlayerID};
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Adaptation")
     FAIAdaptationParameters GetRecommendedAdaptations(const FString& PlayerID) const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Match")
-    void RecordMatchStart(const FString& PlayerID, const FString& MatchID);
-
+    void RecordMatchStart(const FString& PlayerID, const FString& MatchID};
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Match")
-    void RecordMatchEnd(const FString& PlayerID, const FString& MatchID, bool bVictory);
-
+    void RecordMatchEnd(const FString& PlayerID, const FString& MatchID, bool bVictory};
 protected:
     UPROPERTY()
     UMingRTSSelfLearningSystem* LearningSystem;
@@ -147,11 +141,11 @@ protected:
     UPROPERTY()
     TMap<FString, FAIAdaptationParameters> AdaptationHistory;
 
-    void ProcessPlayerData(const FString& PlayerID, const TMap<FString, FString>& Data);
-    void CalculateStrategyPattern(FPlayerBehaviorAnalysis& Analysis);
-    void UpdateAdaptationParameters(const FString& PlayerID);
-    float CalculateAggressionScore(const TMap<FString, FString>& Data);
-    float CalculateEconomicEfficiency(const TMap<FString, FString>& Data);
-    float CalculateMicroSkill(const TMap<FString, FString>& Data);
-    float CalculateMacroSkill(const TMap<FString, FString>& Data);
+    void ProcessPlayerData(const FString& PlayerID, const TMap<FString, FString>& Data};
+    void CalculateStrategyPattern(FPlayerBehaviorAnalysis& Analysis};
+    void UpdateAdaptationParameters(const FString& PlayerID};
+    float CalculateAggressionScore(const TMap<FString, FString>& Data};
+    float CalculateEconomicEfficiency(const TMap<FString, FString>& Data};
+    float CalculateMicroSkill(const TMap<FString, FString>& Data};
+    float CalculateMacroSkill(const TMap<FString, FString>& Data};
 };

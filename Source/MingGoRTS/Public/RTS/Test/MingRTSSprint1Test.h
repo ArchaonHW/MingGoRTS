@@ -26,7 +26,7 @@ struct FSprint1TestResult
 };
 
 UCLASS(ClassGroup = (Test), meta = (DisplayName = "Sprint 1 - RTS Core Test Suite"))
-class MINGGORTS_API UMingRTSSprint1Test : public UObject
+class MINGRTS_API UMingRTSSprint1Test : public UObject
 {
     GENERATED_BODY()
 

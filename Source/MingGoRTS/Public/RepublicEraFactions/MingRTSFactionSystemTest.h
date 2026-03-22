@@ -12,7 +12,7 @@
  * Tests cover faction manager initialization, faction creation, attributes, units, mechanics,
  * and gameplay guides.
  */
-class MINGGORTS_API MingRTSFactionSystemTest
+class MINGRTS_API MingRTSFactionSystemTest
 {
 public:
     /**

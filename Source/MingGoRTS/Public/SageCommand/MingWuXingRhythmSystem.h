@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -25,7 +25,7 @@ enum class EWuXingPhase: uint8 {
  * 五行節奏狀態結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FWuXingRhythmState
+struct MINGRTS_API FWuXingRhythmState
 {
     GENERATED_BODY()
 
@@ -70,7 +70,7 @@ struct MINGGORTS_API FWuXingRhythmState
  * 五行效果數據結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FWuXingEffectData
+struct MINGRTS_API FWuXingEffectData
 {
     GENERATED_BODY()
 
@@ -134,7 +134,7 @@ struct MINGGORTS_API FWuXingEffectData
  * 五行相生提供加成，五行相剋造成減益
  */
 UCLASS(ClassGroup = (SageCommand), meta = (BlueprintSpawnableComponent))
-class MINGGORTS_API UMingWuXingRhythmSystem : public UObject
+class MINGRTS_API UMingWuXingRhythmSystem : public UObject
 {
     GENERATED_BODY()
 

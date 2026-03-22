@@ -519,5 +519,5 @@ private:
     void NotifyMarketConditionChanged(ERTSMarketCondition NewCondition);
     void NotifyResourcePriceChanged(ERTSResourceType ResourceType, float NewPrice);
     void NotifyTradeRouteCompleted(const FString& RouteID, float Profit);
-);
+};
 

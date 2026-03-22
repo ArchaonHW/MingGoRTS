@@ -1,5 +1,5 @@
 ﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// ??��??��???X- �D?X??X?��??��????
+// ??��??��???X- �D?X??X?��??��摧毀
 
 #pragma once
 
@@ -27,7 +27,7 @@ enum class EScreenType: uint8 {
 };
 
 /**
- * ??������????
+ * ??������摧毀
  */
 UENUM(BlueprintType)
 enum class EScreenStyle: uint8 {
@@ -89,11 +89,11 @@ struct FScreenGenerationParams
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     FLinearColor SecondaryColor;
 
-    /** ????�C�� */
+    /** 摧毀�C�� */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     FLinearColor TextColor;
 
-    /** ??�e???? */
+    /** ??�e摧毀 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     bool bEnableAnimation;
 
@@ -101,7 +101,7 @@ struct FScreenGenerationParams
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     bool bEnableParticles;
 
-    /** ??�v???? */
+    /** ??�v摧毀 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     bool bEnableLighting;
 
@@ -128,14 +128,14 @@ struct FScreenGenerationParams
 };
 
 /**
- * ??��???X???
+ * ??��目標數量
  */
 USTRUCT(BlueprintType)
 struct FScreenElement
 {
     GENERATED_BODY()
 
-    /** ????��?? */
+    /** 摧毀��?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FString ElementType;
 
@@ -151,11 +151,11 @@ struct FScreenElement
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FVector2D Size;
 
-    /** ???? */
+    /** 摧毀 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     float Rotation;
 
-    /** ??????*/
+    /** 摧毀??*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     float Opacity;
 
@@ -175,7 +175,7 @@ struct FScreenElement
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     int32 FontSize;
 
-    /** ??�_???? */
+    /** ??�_摧毀 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     bool bVisible;
 
@@ -231,7 +231,7 @@ struct FGeneratedScreen
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     int32 Height;
 
-    /** ??��???? */
+    /** ??��摧毀 */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     TArray<FScreenElement> Elements;
 
@@ -239,7 +239,7 @@ struct FGeneratedScreen
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     UTexture2D* ScreenTexture;
 
-    /** ???X??? */
+    /** 目標數量 */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     FDateTime GenerationTime;
 
@@ -279,11 +279,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateScreen(const FScreenGenerationParams& Params);
 
-    /** ????�D?X?�eX*/
+    /** 摧毀�D?X?�eX*/
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateMainMenu(const FScreenGenerationParams& Params);
 
-    /** ???X??X??X?�� */
+    /** 故事選項X?�� */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateFactionSelect(const FScreenGenerationParams& Params);
 
@@ -295,15 +295,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateBattleScene(const FScreenGenerationParams& Params);
 
-    /** ???X???��?X?�� */
+    /** 目標數量��?X?�� */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateCityView(const FScreenGenerationParams& Params);
 
-    /** ????�~��??�O??�� */
+    /** 摧毀�~��??�O??�� */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateDiplomacyPanel(const FScreenGenerationParams& Params);
 
-    /** ????�g?X?�O??�� */
+    /** 摧毀�g?X?�O??�� */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateEconomyPanel(const FScreenGenerationParams& Params);
 
@@ -311,19 +311,19 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateResearchPanel(const FScreenGenerationParams& Params);
 
-    /** ????�]�m??��??�� */
+    /** 摧毀�]�m??��??�� */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateSettingsMenu(const FScreenGenerationParams& Params);
 
-    /** ????���J??�� */
+    /** 摧毀���J??�� */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateLoadingScreen(const FScreenGenerationParams& Params);
 
-    /** ???X??X?�eX*/
+    /** 故事重要性?�eX*/
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FGeneratedScreen GetGeneratedScreen(const FString& ScreenID);
 
-    /** ???X????X??X?�� */
+    /** 目標數量?X??X?�� */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     TArray<FGeneratedScreen> GetAllGeneratedScreens();
 
@@ -343,7 +343,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     void ApplyScreenTheme(FScreenElement& Element, EScreenStyle Style);
 
-    /** �K?X?�e???? */
+    /** �K?X?�e摧毀 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     void AddAnimationEffect(FScreenElement& Element, const FString& AnimationType);
 
@@ -352,13 +352,13 @@ public:
     void AddParticleEffect(FScreenElement& Element, const FString& ParticleType);
 
 public:
-    /** ??��???X???�ƥ� */
+    /** ??��目標數量�ƥ� */
     
 
-    /** ??��????��??�ƥ� */
+    /** ??��摧毀��??�ƥ� */
     
 
-    /** ??��????��??�ƥ� */
+    /** ??��摧毀��??�ƥ� */
     
 
     UPROPERTY(BlueprintAssignable, Category = "Screen Generator|Events")
@@ -371,10 +371,10 @@ public:
     FOnScreenGenerationFailed OnScreenGenerationFailed;
 
 protected:
-    /** ??��??��???? */
+    /** ??��??��摧毀 */
     FScreenElement CreateScreenElement(const FString& Type, const FString& Name, const FVector2D& Position, const FVector2D& Size);
 
-    /** �]�m?????X */
+    /** �]�m摧毀?X */
     void SetElementStyle(FScreenElement& Element, const FScreenGenerationParams& Params);
 
     /** ��?X?�� */
@@ -392,14 +392,14 @@ protected:
     /** ��?X?�� */
     bool ValidateParams(const FScreenGenerationParams& Params);
 
-    /** ?????X�׳]??*/
+    /** 摧毀?X�׳]??*/
     void GetResolutionSettings(EScreenResolution Resolution, int32& OutWidth, int32& OutHeight);
 
     /** ??�έ���D?? */
     void ApplyStyleTheme(FScreenGenerationParams& Params, EScreenStyle Style);
 
 private:
-    /** ???X?�e??????*/
+    /** ???X?�e摧毀??*/
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     TArray<FGeneratedScreen> GeneratedScreens;
 
@@ -407,7 +407,7 @@ private:
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     bool bInitialized;
 
-    /** ??����X???? */
+    /** ??����X摧毀 */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     FString OutputDirectory;
 
@@ -421,7 +421,7 @@ private:
 };
 
 /**
- * ??��????�ҪO
+ * ??��摧毀�ҪO
  */
 USTRUCT(BlueprintType)
 struct FScreenElementTemplate
@@ -432,7 +432,7 @@ struct FScreenElementTemplate
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString TemplateName;
 
-    /** ????��?? */
+    /** 摧毀��?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString ElementType;
 
@@ -448,7 +448,7 @@ struct FScreenElementTemplate
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString DefaultTexture;
 
-    /** ??�e???? */
+    /** ??�e摧毀 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString AnimationEffect;
 
@@ -486,26 +486,26 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
     void RegisterTemplate(const FScreenElementTemplate& Template);
 
-    /** ????�ҪO */
+    /** 摧毀�ҪO */
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
     FScreenElementTemplate GetTemplate(const FString& TemplateName);
 
-    /** ???X???��X*/
+    /** 目標數量��X*/
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
     TArray<FScreenElementTemplate> GetAllTemplates();
 
-    /** �q��??�Ы�????*/
+    /** �q��??�Ы�摧毀*/
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
     FScreenElement CreateElementFromTemplate(const FString& TemplateName, const FString& ElementName, const FVector2D& Position);
 
 protected:
-    /** ????�q??�ҪO */
+    /** 摧毀�q??�ҪO */
     void LoadDefaultTemplates();
 
     /** �O??�ҪO */
     bool SaveTemplate(const FScreenElementTemplate& Template);
 
-    /** ????�ҪO */
+    /** 摧毀�ҪO */
     void LoadTemplates();
 
 private:

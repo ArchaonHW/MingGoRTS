@@ -1,4 +1,4 @@
-﻿// VR Controller Asset Definitions for MingGoRTS
+// VR Controller Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - VR Controller Assets
 // This file defines the visual assets for VR controllers
 
@@ -139,7 +139,7 @@ struct FVRControllerVisualConfig
  * Primary asset for VR controller visual configuration
  */
 UCLASS(BlueprintType)
-class MINGGORTS_API UMingVRControllerAssets : public UDataAsset
+class MINGRTS_API UMingVRControllerAssets : public UDataAsset
 {
     GENERATED_BODY()
 

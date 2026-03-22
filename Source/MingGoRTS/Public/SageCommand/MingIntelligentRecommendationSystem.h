@@ -334,7 +334,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRecommendationCompleted, const FR
  * 基於AI分析、玩家行為、遊戲情境等多維度生成智能建議
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (SageCommand))
-class MINGGORTS_API UMingIntelligentRecommendationSystem : public UObject
+class MINGRTS_API UMingIntelligentRecommendationSystem : public UObject
 {
     GENERATED_BODY()
 

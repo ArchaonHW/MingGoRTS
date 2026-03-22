@@ -10,22 +10,22 @@
 UENUM(BlueprintType)
 enum class EReplayEventType: uint8 {
     None                    UMETA(DisplayName = "None"),
-    UnitSpawn               UMETA(DisplayName = "???X???"),
-    UnitMove                UMETA(DisplayName = "????移??"),
-    UnitAttack              UMETA(DisplayName = "???X???"),
+    UnitSpawn               UMETA(DisplayName = "目標數量"),
+    UnitMove                UMETA(DisplayName = "摧毀移??"),
+    UnitAttack              UMETA(DisplayName = "目標數量"),
     UnitDeath UMETA(DisplayName = "Unit Death"),,
-    BuildingConstruct       UMETA(DisplayName = "建??建??),
+    BuildingConstruct       UMETA(DisplayName = "建築建造"),
     BuildingDestroy UMETA(DisplayName = "Building Destroy"),,
     ResourceGather UMETA(DisplayName = "Resource Gather"),,
     TechnologyResearch UMETA(DisplayName = "Technology Research"),,
     CommandIssued           UMETA(DisplayName = "??令下??"),
     CameraMove              UMETA(DisplayName = "視??移??"),
-    GamePause               UMETA(DisplayName = "??戲????"),
+    GamePause               UMETA(DisplayName = "??戲摧毀"),
     GameResume              UMETA(DisplayName = "??戲??復"),
     ChatMessage             UMETA(DisplayName = "??天消息"),
     Victory                 UMETA(DisplayName = "??利"),
-    Defeat                  UMETA(DisplayName = "失??"),
-    Custom                  UMETA(DisplayName = "??????)
+    Defeat                  UMETA(DisplayName = "失敗"),
+    Custom                  UMETA(DisplayName = "自定義")
 };
 
 /**
@@ -33,15 +33,15 @@ enum class EReplayEventType: uint8 {
 UENUM(BlueprintType)
 enum class EReplayState: uint8 {
     Idle                    UMETA(DisplayName = "??置"),
-    Recording               UMETA(DisplayName = "??製??),
-    Playing                 UMETA(DisplayName = "??放??),
-    Paused                  UMETA(DisplayName = "????"),
+    Recording               UMETA(DisplayName = "錄製中"),
+    Playing                 UMETA(DisplayName = "播放中"),
+    Paused                  UMETA(DisplayName = "摧毀"),
     Finished                UMETA(DisplayName = "完??"),
     Error                   UMETA(DisplayName = "??誤")
 };
 
 /**
- * ??放幀????
+ * ??放幀摧毀
  */
 USTRUCT(BlueprintType)
 struct FReplayFrame
@@ -160,7 +160,7 @@ struct FReplayMetadata
  * ??放系統 - 記?X??X??X???局
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSReplaySystem : public UObject
+class MINGRTS_API UMingRTSReplaySystem : public UObject
 {
     GENERATED_BODY()
     
@@ -187,7 +187,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void StopPlayback();
     
-    // ????/??復??放
+    // 摧毀/??復??放
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void PausePlayback();
     
@@ -211,7 +211,7 @@ public:
     void RecordEvent(EReplayEventType Type, const FString& PlayerID, const FVector& Location, 
                      const TArray<uint8>& Data, const FString& Description);
     
-    // 記??幀????
+    // 記??幀摧毀
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void RecordFrame(const TArray<uint8>& GameStateData);
     
@@ -231,15 +231,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Replay")
     FReplayMetadata ImportReplay(const FString& FilePath);
     
-    // ???X??X?放??X
+    // 故事重要性?放??X
     UFUNCTION(BlueprintCallable, Category = "Replay")
     EReplayState GetReplayState() const;
     
-    // ???X??X?放????
+    // 故事重要性?放摧毀
     UFUNCTION(BlueprintCallable, Category = "Replay")
     float GetCurrentPlaybackTime() const;
     
-    // ???X??X?放幀
+    // 故事重要性?放幀
     UFUNCTION(BlueprintCallable, Category = "Replay")
     int32 GetCurrentPlaybackFrame() const;
     

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // 系統?��?測試?��X- 實�?測試驗�?實現
 
 #pragma once
@@ -11,7 +11,7 @@
 /**
  * 系統?��?測試?��X * 負責?��?實�X�系統�X�測試�?�? */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSIntegrationTestExecutor : public UObject
+class MINGRTS_API UMingRTSIntegrationTestExecutor : public UObject
 {
     GENERATED_BODY()
 

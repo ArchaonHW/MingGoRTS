@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -12,8 +12,8 @@ enum class ESimulationType: uint8 {
     Military          UMETA(DisplayName = "�x??����"),
     Economic          UMETA(DisplayName = "�g??����"),
     Social            UMETA(DisplayName = "��??����"),
-    Cultural          UMETA(DisplayName = "????����"),
-    International     UMETA(DisplayName = "????����")
+    Cultural          UMETA(DisplayName = "摧毀����"),
+    International     UMETA(DisplayName = "摧毀����")
 };
 
 UENUM(BlueprintType)
@@ -60,10 +60,10 @@ struct FSimulationParameter
 
 UENUM(BlueprintType)
 enum class EConsequenceOperation: uint8 {
-    Add         UMETA(DisplayName = "????"),
+    Add         UMETA(DisplayName = "摧毀"),
     Subtract    UMETA(DisplayName = "��??"),
     Multiply    UMETA(DisplayName = "��??"),
-    Divide      UMETA(DisplayName = "????"),
+    Divide      UMETA(DisplayName = "摧毀"),
     Set         UMETA(DisplayName = "�]�m"),
     Reset       UMETA(DisplayName = "??�m")
 };
@@ -264,7 +264,7 @@ struct FSimulationResult
 
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSHistoricalSimulation : public UObject
+class MINGRTS_API UMingGoRTSHistoricalSimulation : public UObject
 {
     GENERATED_BODY()
 
@@ -285,19 +285,19 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     void InitializeSimulationSystem();
 
-    // ???X???��X
+    // 目標數量��X
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<FHistoricalSimulation> GetAllSimulations() const;
 
-    // ????����
+    // 摧毀����
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     FHistoricalSimulation GetSimulation(const FString& SimulationID) const;
 
-    // ????����
+    // 摧毀����
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool StartSimulation(const FString& SimulationID, const TMap<FString, float>& PlayerDecisions);
 
-    // ????����
+    // 摧毀����
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool PauseSimulation(const FString& SimulationID);
 
@@ -313,23 +313,23 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool InterveneInSimulation(const FString& SimulationID, const FString& ParameterName, float NewValue);
 
-    // ????����??X
+    // 摧毀����??X
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     ESimulationPhase GetSimulationPhase(const FString& SimulationID) const;
 
-    // ???X??X?��
+    // 故事重要性?��
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<FSimulationParameter> GetCurrentParameters(const FString& SimulationID) const;
 
-    // ????����??��
+    // 摧毀����??��
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     float GetSimulationProgress(const FString& SimulationID) const;
 
-    // ????������??
+    // 摧毀������??
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     FSimulationResult GetSimulationResult(const FString& SimulationID) const;
 
-    // ????�������v
+    // 摧毀�������v
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<FString> GetSimulationHistory(const FString& SimulationID) const;
 
@@ -341,24 +341,24 @@ public:
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     float CompareWithHistoricalBaseline(const FString& SimulationID) const;
 
-    // ????������??
+    // 摧毀������??
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TMap<FString, float> GetSimulationStatistics(const FString& SimulationID) const;
 
-    // �O??����????
+    // �O??����摧毀
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool SaveSimulationData(const FString& SaveSlotName);
 
-    // ���J����????
+    // ���J����摧毀
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool LoadSimulationData(const FString& SaveSlotName);
 
 protected:
-    // ????��X
+    // 摧毀��X
     UPROPERTY()
     TArray<FHistoricalSimulation> AllSimulations;
 
-    // ����ID??��???X???
+    // ����ID??��目標數量
     UPROPERTY()
     TMap<FString, FHistoricalSimulation> SimulationMap;
 
@@ -369,7 +369,7 @@ protected:
     // ����??�� - �`??�GTMap<TArray> ����XUPROPERTY
     TMap<FString, TArray<FSimulationParameter>> SimulationParameters;
 
-    // ??�Ƨ�?? - �`??�G????TMap ����XUPROPERTY
+    // ??�Ƨ�?? - �`??�G摧毀TMap ����XUPROPERTY
     TMap<FString, TMap<FString, int32>> ParameterCache;
 
     // ������??
@@ -384,7 +384,7 @@ protected:
     UPROPERTY()
     TMap<FString, int32> EventTriggerDepth;
 
-    // ??�j??��Ĳ??�`??(??��????�`��)
+    // ??�j??��Ĳ??�`??(??��摧毀�`��)
     int32 MaxEventTriggerDepth = 10;
 
     // ??�_�w??�l??
@@ -405,16 +405,16 @@ protected:
     // ??�ت�??����
     void CreateSocialSimulations();
 
-    // ??��????����
+    // ??��摧毀����
     void CreateCulturalSimulations();
 
-    // ??��????����
+    // ??��摧毀����
     void CreateInternationalSimulations();
 
-    // ????�����B??
+    // 摧毀�����B??
     void ExecuteSimulationStep(const FString& SimulationID);
 
-    // ????�����ƥ�
+    // 摧毀�����ƥ�
     void ProcessSimulationEvents(const FString& SimulationID);
 
     // Ĳ�o�����ƥ�
@@ -423,13 +423,13 @@ protected:
     // �p?X?����??
     void CalculateParameterChanges(const FString& SimulationID);
 
-    // �ˬd????����
+    // �ˬd摧毀����
     bool CheckSuccessConditions(const FString& SimulationID);
 
     // �ˬd��??����
     bool CheckFailureConditions(const FString& SimulationID);
 
-    // ????������??
+    // 摧毀������??
     void GenerateSimulationResult(const FString& SimulationID);
 
     // �p??���v�ǽTX
@@ -444,19 +444,19 @@ protected:
     // �O??�����ƥ�
     void RecordSimulationEvent(const FString& SimulationID, const FString& EventName);
 
-    // ???X?��X(????���??��X
+    // ???X?��X(摧毀���??��X
     float GetParameterValue(const FString& SimulationID, const FString& ParameterName) const;
 
-    // �]�m??��X(????���??��X
+    // �]�m??��X(摧毀���??��X
     void SetParameterValue(const FString& SimulationID, const FString& ParameterName, float Value);
 
     // �c��??�Ƨ�??
     void BuildParameterCache(const FString& SimulationID);
 
-    // ????����ID
+    // 摧毀����ID
     FString GenerateSimulationID(const FString& BaseName, ESimulationType Type) const;
 
-    // ????������?X?��
+    // 摧毀������?X?��
     FString GetSimulationTypePrefix(ESimulationType Type) const;
 
     // ��??����??��
@@ -468,7 +468,7 @@ protected:
     // ??�Ψƥ��??
     void ApplyEventConsequences(const FString& SimulationID, const FSimulationEvent& Event);
 
-    // ????����????
+    // 摧毀����摧毀
     FString GenerateSimulationReport(const FString& SimulationID) const;
 };
 

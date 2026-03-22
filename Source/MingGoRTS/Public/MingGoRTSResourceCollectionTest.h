@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,7 +6,7 @@
 #include "MingGoRTSResourceCollectionTest.generated.h"
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSResourceCollectionTest : public UObject
+class MINGRTS_API UMingGoRTSResourceCollectionTest : public UObject
 {
     GENERATED_BODY()
 
@@ -45,11 +45,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Resource Test")
     bool TestResourceDecay();
 
-    // ???X???��??
+    // 目標數量��??
     UFUNCTION(BlueprintCallable, Category = "Resource Test")
     bool RunAllTests();
 
-    // ????���յ�??
+    // 摧毀���յ�??
     UFUNCTION(BlueprintPure, Category = "Resource Test")
     FString GetTestResults() const;
 
@@ -62,7 +62,7 @@ private:
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // ����???X???
+    // ����目標數量
     int32 PassedTests;
 
     // ���ե�?X???
@@ -74,7 +74,7 @@ private:
     // ??�ش��զs�x
     FString CreateTestStorage(const FString& StorageName, float Capacity);
 
-    // ??�ش���????
+    // ??�ش���摧毀
     FString CreateTestCollection(EResourceType ResourceType, ECollectionMethod Method);
 
     // ��??��?X???

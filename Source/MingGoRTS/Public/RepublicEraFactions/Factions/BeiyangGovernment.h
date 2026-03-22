@@ -25,7 +25,7 @@
  * 4. Foreign Advisor Corps - Combat bonuses from foreign advisors
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UBeiyangGovernment : public UMingRTSFactionBase
+class MINGRTS_API UBeiyangGovernment : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

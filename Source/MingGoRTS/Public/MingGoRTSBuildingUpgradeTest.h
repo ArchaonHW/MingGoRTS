@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,7 +6,7 @@
 #include "MingGoRTSBuildingUpgradeTest.generated.h"
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSBuildingUpgradeTest : public UObject
+class MINGRTS_API UMingGoRTSBuildingUpgradeTest : public UObject
 {
     GENERATED_BODY()
 
@@ -25,7 +25,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestBuildingUpgradeSystemInitialization();
 
-    // ����????��?X?��
+    // ����摧毀��?X?��
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradePathCreation();
 
@@ -33,31 +33,31 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestBuildingUpgradeFlow();
 
-    // ����???X??X?�_
+    // ����故事重要性?�_
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradePauseResume();
 
-    // ����???X???
+    // ����目標數量
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeCancellation();
 
-    // ���եߧY????
+    // ���եߧY摧毀
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestInstantUpgrade();
 
-    // ����???X?????
+    // ����目標數量??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradePriority();
 
-    // ����????��???X
+    // ����摧毀��???X
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradePathUnlocking();
 
-    // ����???X??X?��
+    // ����故事重要性?��
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeEffectsApplication();
 
-    // ����????�����ˬd
+    // ����摧毀�����ˬd
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeRequirementsCheck();
 
@@ -65,15 +65,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeCostCalculation();
 
-    // ����???X???�p??
+    // ����目標數量�p??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeTimeCalculation();
 
-    // ���ե�?X??X?��????��??
+    // ���ե�?X??X?��摧毀��??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestRepublicanEraUpgradePaths();
 
-    // ����????��??
+    // ����摧毀��??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeStatistics();
 
@@ -81,7 +81,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradeConfiguration();
 
-    // ����????�O??���J
+    // ����摧毀�O??���J
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestSaveAndLoad();
 
@@ -93,11 +93,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool TestUpgradePreview();
 
-    // ???X???��??
+    // 目標數量��??
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Test")
     bool RunAllTests();
 
-    // ????���յ�??
+    // 摧毀���յ�??
     UFUNCTION(BlueprintPure, Category = "Building Upgrade Test")
     FString GetTestResults() const;
 
@@ -110,7 +110,7 @@ private:
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // ����???X???
+    // ����目標數量
     int32 PassedTests;
 
     // ���ե�?X???
@@ -122,7 +122,7 @@ private:
     // ??�ش��ի�??
     FString CreateTestBuilding(const FString& BuildingName, EBuildingType BuildingType);
 
-    // ??�ش���????��??
+    // ??�ش���摧毀��??
     FBuildingUpgradePath CreateTestUpgradePath(const FString& PathName, EBuildingType BuildingType);
 
     // ��?X???��?X???
@@ -131,7 +131,7 @@ private:
     // ��?X??X?��
     bool VerifyUpgradeProgress(const FString& BuildingID, EBuildingUpgradeStatus ExpectedStatus);
 
-    // ???X??X???��??ID
+    // 整理背包物品��??ID
     FString GetRandomUpgradePathID(EBuildingType BuildingType) const;
 
     // ??�m���խp��X
@@ -146,16 +146,16 @@ private:
     // ��?X???��??
     bool WaitForUpgradeCompletion(const FString& BuildingID, float TimeoutSeconds = 10.0f);
 
-    // ����????�y??
+    // ����摧毀�y??
     void SimulateTimeProgress(float DeltaTime);
 
     // ��?X??X???
     bool VerifyUpgradeEffects(const FString& BuildingID, const TArray<FBuildingUpgradeEffect>& ExpectedEffects);
 
-    // ??�ش���???X???
+    // ??�ش���目標數量
     TArray<FBuildingUpgradeEffect> CreateTestEffects();
 
-    // ??�ش���???X???
+    // ??�ش���目標數量
     TArray<FBuildingUpgradeRequirement> CreateTestRequirements();
 };
 

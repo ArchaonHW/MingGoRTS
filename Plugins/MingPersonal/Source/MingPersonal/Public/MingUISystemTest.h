@@ -20,31 +20,31 @@ public:
     static void RunAllUITests();
 
     /**
-     * 測試UI管�X��?始�?
+     * 測試UI管理器初始化
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
-    static bool TestUIManagerInitialization);
+    static bool TestUIManagerInitialization();
 
     /**
-     * 測試?��X�板?�能
+     * 測試關係面板功能
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
-    static bool TestRelationshipPanelFunctionality);
+    static bool TestRelationshipPanelFunctionality();
 
     /**
-     * 測試?��X�板?�能
+     * 測試聲望面板功能
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
-    static bool TestReputationPanelFunctionality);
+    static bool TestReputationPanelFunctionality();
 
     /**
-     * 測試對話?�板?�能
+     * 測試對話面板功能
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
-    static bool TestDialoguePanelFunctionality);
+    static bool TestDialoguePanelFunctionality();
 
     /**
-     * 測試任�X�板?�能
+     * 測試任務面板功能
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestQuestPanelFunctionality);

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,25 +6,25 @@
 #include "MingRTSOptimizationIntegration.generated.h"
 
 /**
- * ????�sĶ�t��?????? * �N�u??�sĶ�t��?X?��MingGoRTS�D?X?��
+ * 摧毀�sĶ�t��摧毀?? * �N�u??�sĶ�t��?X?��MingGoRTS�D?X?��
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSOptimizationIntegration : public UObject
+class MINGRTS_API UMingRTSOptimizationIntegration : public UObject
 {
     GENERATED_BODY()
 
 public:
     UMingRTSOptimizationIntegration();
 
-    // ??��???X??X??X???�t��
+    // ??��故事選項X???�t��
     UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     void IntegrateOptimizationSystem();
 
-    // ??��???X??X?�uX
+    // ??��故事重要性?�uX
     UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     void StartGameOptimization();
 
-    // ??��???X???���uX
+    // ??��目標數量���uX
     UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     void RuntimeOptimization();
 
@@ -40,7 +40,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     void LoadGameOptimization();
 
-    // ????�t��??X
+    // 摧毀�t��??X
     UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     bool IsOptimizationSystemActive() const;
 
@@ -49,7 +49,7 @@ public:
     FString GetGamePerformanceStats();
 
 protected:
-    // ????�t�κ�?X
+    // 摧毀�t�κ�?X
     UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
@@ -66,7 +66,7 @@ private:
     void ConfigureGameOptimizationParameters();
     void IntegrateWithGameSystems();
     
-    // ??��???X???
+    // ??��目標數量
     void OptimizeGameLoop();
     void OptimizeRendering();
     void OptimizeAI();
@@ -77,7 +77,7 @@ private:
     void MonitorGamePerformance();
     void HandlePerformanceWarnings(const FString& Component, const FString& Warning, float Severity);
     
-    // ???X???
+    // 目標數量
     void AutoOptimizeBasedOnPerformance();
     void AdjustQualitySettings();
 };

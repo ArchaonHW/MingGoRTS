@@ -10,43 +10,43 @@ class UMingRTSUnitManager;
 
 UENUM(BlueprintType)
 enum class ERTSBuildingType: uint8 {
-    Residential,     // ??X
-    Commercial,      // X?~
-    Industrial,      // ?u?~
-    Military,        // ?xX
-    Agricultural,   // ?A?~
-    Educational,    // X?|
-    Medical,         // X
-    Storage,         // X?x
-    Power,           // X
-    Defense,         // X?m
-    Resource,        // ??X
-    Research,        // X?s
-    Entertainment,   // ?TX
-    Government,      // X
-    Religious,       // ?vX
-    Custom          // ??w?q??v
+    Residential,     // 住宅
+    Commercial,      // 商業
+    Industrial,      // 工業
+    Military,        // 軍事
+    Agricultural,   // 農業
+    Educational,    // 教育
+    Medical,         // 醫療
+    Storage,         // 倉儲
+    Power,           // 電力
+    Defense,         // 防禦
+    Resource,        // 資源
+    Research,        // 研究
+    Entertainment,   // 娛樂
+    Government,      // 政府
+    Religious,       // 宗教
+    Custom          // 自定義
 };
 
 UENUM(BlueprintType)
 enum class ERTSBuildingState: uint8 {
-    Planning,        // ?W摧毀
-    UnderConstruction, // ??]??
-    Operational,     // ?B?�}
-    Damaged,         // ???l
-    Repairing,       // ??_??
-    Upgrading,       // 摧毀
-    Demolishing,     // ?��??
-    Abandoned,       // ?o??
-    Destroyed        // 摧毀
+    Planning,        // 規劃中
+    UnderConstruction, // 建造中
+    Operational,     // 運作中
+    Damaged,         // 受損
+    Repairing,       // 維修中
+    Upgrading,       // 升級中
+    Demolishing,     // 拆除中
+    Abandoned,       // 廢棄
+    Destroyed        // 已摧毀
 };
 
 UENUM(BlueprintType)
 enum class ERTSBuildingSize: uint8 {
-    Small,           // ?pX
-    Medium,          // ??X
-    Large,           // ?jX
-    ExtraLarge      // ?W?j??
+    Small,           // 小型
+    Medium,          // 中型
+    Large,           // 大型
+    ExtraLarge      // 超大型
 };
 
 USTRUCT(BlueprintType)
@@ -153,7 +153,7 @@ struct FRTSBuildingData
     }
 };
 
-// X??X?]?m
+// 政府?數據?]防禦
 USTRUCT(BlueprintType)
 struct FBuildingPerformanceSettings
 {
@@ -284,8 +284,8 @@ struct FRTSBuildingUpgrade
 };
 
 /**
- * RTS??X?t??
- * ??X??v??X??
+ * RTS?數據?t進
+ * ?數據?宗?數據進
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSBuildingSystem : public UObject
@@ -298,7 +298,7 @@ public:
     
     void InitializeBuildingSystem(UMingRTSResourceManager* InResourceManager, UMingRTSUnitManager* InUnitManager);
 
-    // ??X??X
+    // 建築?數據
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     FString CreateBuilding(const FRTSBuildingTemplate& Template, const FVector& Location, const FRotator& Rotation) {};
 
@@ -338,7 +338,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void CompleteConstruction(const FString& BuildingID) {};
 
-    // ??X
+    // 建築
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     bool UpgradeBuilding(const FString& BuildingID, const FRTSBuildingUpgrade& Upgrade) {};
 
@@ -351,7 +351,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void AddBuildingUpgrade(const FString& BuildingID, const FRTSBuildingUpgrade& Upgrade) {};
 
-    // ??X???@
+    // 建築進?@
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void RepairBuilding(const FString& BuildingID, float RepairAmount);
 
@@ -364,7 +364,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     float GetBuildingHealthPercentage(const FString& BuildingID) const;
 
-    // ??X??
+    // 建築進
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void UpdateBuildingProduction(float DeltaTime);
 
@@ -374,7 +374,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void SetBuildingProductionRate(const FString& BuildingID, float Rate);
 
-    // ??X?t??X??X
+    // 建築?t?數據?數據
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void EnhanceBuildingSystem();
 
@@ -387,7 +387,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void ImplementSmartBuildingManagement();
 
-    // ?u?H??X
+    // 分配工人
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     bool AssignWorkers(const FString& BuildingID, int32 WorkerCount);
 
@@ -400,7 +400,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     bool HasEnoughWorkers(const FString& BuildingID) const;
 
-    // ??X??O
+    // 建築進O
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void AddBuildingTemplate(const FRTSBuildingTemplate& Template) {};
 
@@ -416,7 +416,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     TArray<FRTSBuildingTemplate> GetBuildingTemplatesByType(ERTSBuildingType BuildingType) const;
 
-    // ??X?m
+    // 建築防禦
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     bool CanPlaceBuilding(const FRTSBuildingTemplate& Template, const FVector& Location) const;
 
@@ -426,7 +426,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     FVector FindBestLocation(const FRTSBuildingTemplate& Template, const FVector& PreferredLocation) const;
 
-    // ??X
+    // 建築
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void ConnectBuilding(const FString& BuildingID, const FString& TargetBuildingID) {};
 
@@ -439,7 +439,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     TArray<FString> GetConnectedBuildings(const FString& BuildingID) const;
 
-    // ??X??X
+    // 建築?數據
     UFUNCTION(BlueprintPure, Category = "RTS Building System")
     int32 GetTotalBuildingCount() const;
 
@@ -455,7 +455,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "RTS Building System")
     float GetTotalMaintenanceCost() const;
 
-    // ??X???
+    // 建築進?
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void OnBuildingAttacked(const FString& BuildingID, float Damage);
 
@@ -465,7 +465,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void OnResourceDepleted(const FString& BuildingID) {};
 
-    // ???
+    // 拆除中
     UPROPERTY(BlueprintAssignable, Category = "RTS Building Events")
     FOnBuildingConstructed OnBuildingConstructed;
 
@@ -479,14 +479,14 @@ public:
     FOnBuildingUpgraded OnBuildingUpgraded;
 
 protected:
-    // ?t?�V??
+    // ?t?�V進
     UPROPERTY()
     TObjectPtr<UMingRTSResourceManager> ResourceManager;
 
     UPROPERTY()
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
-    // ??X
+    // 建築
     UPROPERTY()
     TMap<FString, FRTSBuildingData> Buildings;
 
@@ -499,7 +499,7 @@ protected:
     
     TMap<FString, TArray<FString>> BuildingConnections;
 
-    // ?]?m
+    // 設置
     UPROPERTY(BlueprintReadWrite, Category = "Building Settings")
     float ConstructionSpeedMultiplier = 1.0f;
 
@@ -515,7 +515,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Building Settings")
     bool bAutoUpgrade = false;
 
-    // ??X??
+    // 建築進
     UPROPERTY(BlueprintReadWrite, Category = "Enhancement Settings")
     float EfficiencyBonus = 1.2f;
 
@@ -531,7 +531,7 @@ protected:
     
     bool bIsInitialized;
 
-    // X??X??
+    // 政府?數據進
     void InitializeDefaultTemplates();
     void ProcessBuildingConstruction(FRTSBuildingData& Building, float DeltaTime);
     void ProcessBuildingProduction(FRTSBuildingData& Building, float DeltaTime);
@@ -544,7 +544,7 @@ protected:
     void ApplyBuildingEffects(const FString& BuildingID, const FRTSBuildingUpgrade& Upgrade) {};
     void CheckBuildingIntegrity(FRTSBuildingData& Building);
 
-    // ??X??X??
+    // 建築?數據進
     void OptimizeBuildingEfficiency();
     void CalculateOptimalLayout();
     void ImproveConstructionSpeed();
@@ -553,7 +553,7 @@ protected:
     void AutoOrganizeBuildings();
     void OptimizeResourceFlow();
 
-// X??X
+// 政府?數據
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void OptimizeLargeScaleBuildingManagement();
 
@@ -582,13 +582,13 @@ protected:
     void BatchUpdateBuildings(const TArray<FString>& BuildingIDs);
 
 private:
-    // ???UX??
+    // 拆除中UX進
     void NotifyBuildingConstructed(const FString& BuildingID, ERTSBuildingType BuildingType);
     void NotifyBuildingDestroyed(const FString& BuildingID, ERTSBuildingType BuildingType);
     void NotifyBuildingStateChanged(const FString& BuildingID, ERTSBuildingState NewState);
     void NotifyBuildingUpgraded(const FString& BuildingID, const FString& UpgradeID) {};
 
-    // X??X??X??
+    // 政府?數據?數據進
     void OptimizeBuildingDataStructures();
     void ImplementBuildingPooling();
     void OptimizeBuildingUpdates();

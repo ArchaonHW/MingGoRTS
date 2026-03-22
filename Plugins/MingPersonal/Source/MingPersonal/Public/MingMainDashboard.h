@@ -38,13 +38,13 @@ struct FDashboardQuickAction
 
     FDashboardQuickAction()
     {
-        ActionName = TEXT(""};
-        ActionDescription = TEXT(""};
-        ActionIcon = TEXT(""};
+        ActionName = TEXT("");
+        ActionDescription = TEXT("");
+        ActionIcon = TEXT("");
         bIsAvailable = true;
         ActionColor = FLinearColor::White;
     }
-);
+};
 
 USTRUCT(BlueprintType)
 struct FDashboardSummary
@@ -91,8 +91,8 @@ struct FDashboardSummary
         CompletedQuests = 0;
         AverageReputation = 0.0f;
         HighestReputation = EReputationLevel::Unknown;
-        CurrentRegion = TEXT(""};
-        CurrentTheme = TEXT(""};
+        CurrentRegion = TEXT("");
+        CurrentTheme = TEXT("");
     }
 };
 
@@ -166,7 +166,7 @@ public:
 
     // ??���t��
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
-    void ShowNotification(const FString& Message, const FString& Type = TEXT("Info")};
+    void ShowNotification(const FString& Message, const FString& Type = TEXT("Info"));
 
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void ShowWarning(const FString& Message);

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -41,7 +41,7 @@ struct FFilmPlaybackSettings
 
 
 UCLASS(BlueprintType, Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingGoRTSFilmRenderManager : public UActorComponent
+class MINGRTS_API UMingGoRTSFilmRenderManager : public UActorComponent
 {
     GENERATED_BODY()
 
@@ -77,7 +77,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     TArray<UTexture2D*> GetFilmFrames() const { return FilmFrames; }
 
-    // ??��????�d??
+    // ??��摧毀�d??
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     EFilmPlaybackState GetPlaybackState() const { return CurrentPlaybackState; }
 

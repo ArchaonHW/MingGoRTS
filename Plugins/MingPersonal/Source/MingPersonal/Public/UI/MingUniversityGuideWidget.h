@@ -6,7 +6,7 @@
 #include "MingUniversityGuideWidget.generated.h"
 
 /**
- * °ª®Õ¤Ş??UI Widget
+ * é«˜æ ¡å¼•??UI Widget
  */
 UCLASS()
 class MINGPERSONAL_API UMingUniversityGuideWidget : public UUserWidget
@@ -18,39 +18,39 @@ public:
     virtual void NativeDestruct() override;
 
     /**
-     * ³]¸m¤Ş??ºŞ?X     */
+     * è¨­ç½®å¼•??ç®¡?X     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void SetGuideManager(UMingUniversityGuideManager* Manager);
 
     /**
-     * Åã¥Ü¤Ş?X?®e
+     * é¡¯ç¤ºå¼•?X?å®¹
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void DisplayContent(const FUniversityGuideContent& Content);
 
     /**
-     * ??·s??«×??     */
+     * ??æ–°??åº¦??     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void UpdateProgressBar(float Progress);
 
     /**
-     * Åã¥Ü/????¾É¯è????
+     * é¡¯ç¤º/æ‘§æ¯€å°èˆªæ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void SetNavigationButtonsEnabled(bool bPreviousEnabled, bool bNextEnabled);
 
     /**
-     * ??©ñ??®e??µe
+     * ??æ”¾??å®¹??ç•«
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void PlayContentAnimation();
 
     /**
-     * Åã¥Ü§¹??¹ï¸Ü??     */
+     * é¡¯ç¤ºå®Œ??å°è©±??     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void ShowCompletionDialog();
 
-    // UI????¸j??¡]¦b????¤¤¹ê????
+    // UIæ‘§æ¯€ç¶??ï¼ˆåœ¨æ‘§æ¯€ä¸­å¯¦æ‘§æ¯€
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* TitleText;
 
@@ -72,7 +72,7 @@ public:
     UPROPERTY(meta = (BindWidget))
     class UHorizontalBox* NavigationBox;
 
-    // ????¨Æ¥ó????
+    // æ‘§æ¯€äº‹ä»¶æ‘§æ¯€
     UFUNCTION()
     void OnPreviousButtonClicked();
 

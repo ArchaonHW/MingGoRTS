@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -229,7 +229,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceIssueDetected, const F
  * 提供實時系統狀態監控和性能分析
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSSystemMonitorDashboard : public UObject
+class MINGRTS_API UMingRTSSystemMonitorDashboard : public UObject
 {
     GENERATED_BODY()
 

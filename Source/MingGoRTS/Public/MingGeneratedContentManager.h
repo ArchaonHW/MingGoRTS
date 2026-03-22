@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "MingGoRTS.h"
@@ -23,7 +23,7 @@ struct FGeneratedAsset
 };
 
 UCLASS(BlueprintType)
-class MINGGORTS_API UMingGeneratedContentManager : public UObject
+class MINGRTS_API UMingGeneratedContentManager : public UObject
 {
     GENERATED_BODY()
 

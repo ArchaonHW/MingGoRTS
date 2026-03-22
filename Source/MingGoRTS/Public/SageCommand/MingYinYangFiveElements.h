@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -139,7 +139,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnYinYangEventOccurred, const FYinY
  * 基於中國古代哲學的陰陽五行理論
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (SageCommand))
-class MINGGORTS_API UMingYinYangFiveElements : public UObject
+class MINGRTS_API UMingYinYangFiveElements : public UObject
 {
     GENERATED_BODY()
 

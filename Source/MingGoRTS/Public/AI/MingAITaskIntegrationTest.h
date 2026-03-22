@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -33,7 +33,7 @@ struct FTestReport
 };
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingAITaskIntegrationTest : public UObject
+class MINGRTS_API UMingAITaskIntegrationTest : public UObject
 {
     GENERATED_BODY()
 

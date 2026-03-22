@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -157,7 +157,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChapterUnlocked, FString, Chapter
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoryEventTriggered, FString, EventID);
 
 UCLASS(ClassGroup=(RTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSCampaignSystem : public UObject
+class MINGRTS_API UMingRTSCampaignSystem : public UObject
 {
     GENERATED_BODY()
 

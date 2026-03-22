@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -24,7 +24,7 @@ enum class EFallSymptomType: uint8 {
  * 墮落徵象數據結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FFallSymptomData
+struct MINGRTS_API FFallSymptomData
 {
     GENERATED_BODY()
 
@@ -59,7 +59,7 @@ struct MINGGORTS_API FFallSymptomData
  * 道德邊界結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FMoralBoundary
+struct MINGRTS_API FMoralBoundary
 {
     GENERATED_BODY()
 
@@ -98,7 +98,7 @@ struct MINGGORTS_API FMoralBoundary
  * 負責監測墮落徵象，確保指揮者不墮入魔道
  */
 UCLASS(ClassGroup = (SageCommand), meta = (BlueprintSpawnableComponent))
-class MINGGORTS_API UMingMoralAuthority : public UObject
+class MINGRTS_API UMingMoralAuthority : public UObject
 {
     GENERATED_BODY()
 

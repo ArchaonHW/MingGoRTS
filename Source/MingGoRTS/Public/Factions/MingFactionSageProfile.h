@@ -47,7 +47,7 @@ enum class EFactionCommandPhilosophy : uint8
  * 勢力專屬策略修正數據
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FFactionStrategyModifier
+struct MINGRTS_API FFactionStrategyModifier
 {
     GENERATED_BODY()
 
@@ -92,7 +92,7 @@ struct MINGGORTS_API FFactionStrategyModifier
  * 勢力五行偏好數據
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FFactionWuXingAffinity
+struct MINGRTS_API FFactionWuXingAffinity
 {
     GENERATED_BODY()
 
@@ -134,7 +134,7 @@ struct MINGGORTS_API FFactionWuXingAffinity
  * 勢力贖罪任務配置
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FFactionAtonementConfig
+struct MINGRTS_API FFactionAtonementConfig
 {
     GENERATED_BODY()
 
@@ -170,7 +170,7 @@ struct MINGGORTS_API FFactionAtonementConfig
  * 定義每個勢力的指揮哲學、策略偏好、五行屬性等
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FFactionSageProfile
+struct MINGRTS_API FFactionSageProfile
 {
     GENERATED_BODY()
 
@@ -223,7 +223,7 @@ struct MINGGORTS_API FFactionSageProfile
  * 管理所有勢力的指揮學屬性和遊戲內應用
  */
 UCLASS(ClassGroup = (Faction), meta = (BlueprintSpawnableComponent))
-class MINGGORTS_API UMingFactionSageManager : public UObject
+class MINGRTS_API UMingFactionSageManager : public UObject
 {
     GENERATED_BODY()
 

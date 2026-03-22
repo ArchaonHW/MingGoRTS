@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -60,7 +60,7 @@ struct FTelemetryEvent
 };
 
 /**
- * ??能????
+ * ??能摧毀
  */
 USTRUCT(BlueprintType)
 struct FPerformanceMetrics
@@ -137,9 +137,9 @@ struct FTelemetrySession
 };
 
 /**
- * ??測系統 - ???X??X??X???測數X */
+ * ??測系統 - 故事選項X???測數X */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSTelemetrySystem : public UObject
+class MINGRTS_API UMingRTSTelemetrySystem : public UObject
 {
     GENERATED_BODY()
     
@@ -166,7 +166,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordEvent(ETelemetryEventType Type, const FString& EventName, const TMap<FString, FString>& Parameters, float Value = 0.0f);
     
-    // 記?X?家????
+    // 記?X?家摧毀
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordPlayerAction(const FString& ActionName, const FString& Target, float Duration);
     
@@ -174,7 +174,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordUIInteraction(const FString& ElementName, const FString& InteractionType);
     
-    // 記?X?能????
+    // 記?X?能摧毀
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordPerformanceMetrics(const FPerformanceMetrics& Metrics);
     
@@ -190,15 +190,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordFeatureUsage(const FString& FeatureName, int32 UsageCount);
     
-    // ???X?送????
+    // ???X?送摧毀
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void FlushEvents();
     
-    // ???X??X?話ID
+    // 故事重要性?話ID
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     FString GetCurrentSessionID() const;
     
-    // ????緩??事件????
+    // 摧毀緩??事件摧毀
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     int32 GetCachedEventCount() const;
     
@@ -210,7 +210,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void SetFlushInterval(float Seconds);
     
-    // 導出???X???
+    // 導出目標數量
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     bool ExportRawData(const FString& FilePath) const;
     

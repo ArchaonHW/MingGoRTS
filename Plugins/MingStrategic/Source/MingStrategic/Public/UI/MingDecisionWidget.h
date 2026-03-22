@@ -25,11 +25,11 @@ class MINGSTRATEGIC_API UMingDecisionWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingDecisionWidget(const FObjectInitializer& ObjectInitializer);
+    UMingDecisionWidget(const FObjectInitializer& ObjectInitializer};
 
     // ?��X�決策顯�?
     UFUNCTION(BlueprintCallable, Category = "Decision UI")
-    void SetupDecision(const FMingDecision& Decision);
+    void SetupDecision(const FMingDecision& Decision};
 
     // 顯示決�X�面
     UFUNCTION(BlueprintCallable, Category = "Decision UI")
@@ -73,11 +73,11 @@ protected:
 
     // ?�建?��X�鈪X
     UFUNCTION()
-    void CreateOptionButtons(const TArray<FMingDecisionOption>& Options);
+    void CreateOptionButtons(const TArray<FMingDecisionOption>& Options};
 
     // ?��X�鈪?��X��X
     UFUNCTION()
-    void OnOptionButtonClicked(const FString& OptionId);
+    void OnOptionButtonClicked(const FString& OptionId};
 
     // 延�X�鈪?��X��X
     UFUNCTION()

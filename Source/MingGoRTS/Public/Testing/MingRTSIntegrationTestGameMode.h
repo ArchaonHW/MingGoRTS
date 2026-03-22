@@ -1,5 +1,5 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// ¨t²Î????´ú¸Õ????¥Ü?? - GameMode????
+// ï¿½tï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½æ‘§æ¯€ï¿½ï¿½?? - GameModeæ‘§æ¯€
 
 #pragma once
 
@@ -9,52 +9,52 @@
 #include "MingRTSIntegrationTestGameMode.generated.h"
 
 /**
- * ¨t²Î????´ú¸ÕGameMode
- * ??©ó????¨t²Î????´ú¸Õ???X?GameMode
+ * ï¿½tï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½GameMode
+ * ??ï¿½ï¿½æ‘§æ¯€ï¿½tï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½???X?GameMode
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API AMingRTSIntegrationTestGameMode : public AGameModeBase
+class MINGRTS_API AMingRTSIntegrationTestGameMode : public AGameModeBase
 {
     GENERATED_BODY()
 
 public:
     AMingRTSIntegrationTestGameMode();
 
-    /** GameMode???X?°õ??*/
+    /** GameMode???X?ï¿½ï¿½??*/
     virtual void BeginPlay() override;
 
-    /** ????¨t²Î????´ú¸Õ */
+    /** æ‘§æ¯€ï¿½tï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartIntegrationTest();
 
-    /** ????´ú¸Õ???X*/
+    /** æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½???X*/
     UFUNCTION(BlueprintPure, Category = "Integration Test")
     UMingRTSIntegrationTestExecutor* GetTestExecutor() const { return TestExecutor; }
 
 protected:
-    /** ´ú¸Õ???X*/
+    /** ï¿½ï¿½ï¿½ï¿½???X*/
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
     TObjectPtr<UMingRTSIntegrationTestExecutor> TestExecutor;
 
-    /** ´ú¸Õ°õ¦æ¶}©l¨Æ¥ó */
+    /** ï¿½ï¿½ï¿½Õ°ï¿½ï¿½ï¿½}ï¿½lï¿½Æ¥ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void OnTestExecutionStarted();
 
-    /** ´ú¸Õ°õ¦æ§¹¦¨¨Æ¥ó */
+    /** ï¿½ï¿½ï¿½Õ°ï¿½ï¿½æ§¹ï¿½ï¿½ï¿½Æ¥ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void OnTestExecutionCompleted(bool bAllTestsPassed);
 
-    /** ´ú¸Õ??¬q§¹?X??? */
+    /** ï¿½ï¿½ï¿½ï¿½??ï¿½qï¿½ï¿½?X??? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void OnTestPhaseCompleted(const FString& PhaseName, bool bPassed);
 
 private:
-    /** ???X?´ú¸Õ°õ¦æ¾¹ */
+    /** ???X?ï¿½ï¿½ï¿½Õ°ï¿½ï¿½æ¾¹ */
     void InitializeTestExecutor();
 
-    /** ³]¸m´ú¸ÕÀô¹Ò°Ñ¼Æ */
+    /** ï¿½]ï¿½mï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò°Ñ¼ï¿½ */
     void SetupTestEnvironment();
 
-    /** ²M²z´ú¸ÕÀô¹Ò°Ñ¼Æ */
+    /** ï¿½Mï¿½zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò°Ñ¼ï¿½ */
     void CleanupTestEnvironment();
 };

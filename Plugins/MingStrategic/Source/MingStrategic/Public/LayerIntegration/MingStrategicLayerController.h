@@ -236,7 +236,7 @@ public:
     TArray<FMingFactionInfo> GetAllFactions() const;
 
     UFUNCTION(BlueprintCallable, Category = "Faction Management")
-    void UpdateFactionStrength(const FString& FactionID, int32 MilitaryDelta, int32 EconomicDelta);
+    void UpdateFactionStrength(const FString& FactionID, int32 MilitaryDelta, int32 EconomicDelta};
 
     // Diplomacy Management
     UFUNCTION(BlueprintCallable, Category = "Diplomacy")
@@ -283,7 +283,7 @@ public:
     void DevelopRegion(const FString& RegionID, const FString& DevelopmentType);
 
     UFUNCTION(BlueprintCallable, Category = "Strategic Actions")
-    void LaunchCampaign(const FString& FromRegion, const FString& TargetRegion, int32 TroopCount);
+    void LaunchCampaign(const FString& FromRegion, const FString& TargetRegion, int32 TroopCount};
 
     // Intelligence & Information
     UFUNCTION(BlueprintCallable, Category = "Intelligence")
@@ -296,7 +296,7 @@ public:
     void RevealRegion(const FString& RegionID, const FString& FactionID);
 
     UFUNCTION(BlueprintCallable, Category = "Intelligence")
-    void ConcealRegion(const FString& RegionID, const FString& FactionID);
+    void ConcealRegion(const FString& RegionID, const FString& FactionID};
 
     // Economy & Resources
     UFUNCTION(BlueprintCallable, Category = "Economy")

@@ -185,7 +185,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMemoryError, const FString&, Erro
  * 提供動態內存分配、碎片整理、內存保護等功能
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSMemoryManager : public UObject
+class MINGRTS_API UMingRTSMemoryManager : public UObject
 {
     GENERATED_BODY()
 

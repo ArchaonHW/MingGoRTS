@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -20,24 +20,24 @@ enum class EMusicGenerationStatus: uint8 {
 UENUM(BlueprintType)
 enum class EMusicStyle: uint8 {
     Orchestral,        // �ީ�??
-    TraditionalChinese, // ��?X?��????
+    TraditionalChinese, // ��?X?��摧毀
     Military,          // �x?X???
-    Ambient,           // ???X???
-    Battle,            // ??��????
-    Cinematic,         // ??�v????
-    Victory,           // ??�Q????
-    Suspense           // ???X???
+    Ambient,           // 目標數量
+    Battle,            // ??��摧毀
+    Cinematic,         // ??�v摧毀
+    Victory,           // ??�Q摧毀
+    Suspense           // 目標數量
 };
 
 UENUM(BlueprintType)
 enum class ESoundEffectType: uint8 {
     Explosion,         // ??��
     Gunshot,           // �j�n
-    SwordClash,        // ????
+    SwordClash,        // 摧毀
     Footsteps,         // ??�BX
     Vehicle,           // ����X
-    Nature,            // ??�M????
-    Interface,         // ??��????
+    Nature,            // ??�M摧毀
+    Interface,         // ??��摧毀
     Voice              // �y��
 };
 
@@ -106,7 +106,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoundEffectGenerated, class USoun
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMusicGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage);
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSAIMusicGenerator : public UObject
+class MINGRTS_API UMingGoRTSAIMusicGenerator : public UObject
 {
     GENERATED_BODY()
 
@@ -129,14 +129,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     EMusicGenerationStatus GetGenerationStatus() const { return CurrentStatus; }
 
-    // AIVA API ????
+    // AIVA API 摧毀
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void SetAIVAAPI(const FString& APIEndpoint, const FString& APIKey);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     bool TestAIVAConnection();
 
-    // ????�w��X
+    // 摧毀�w��X
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void AddToMusicLibrary(USoundWave* Music, const FString& MusicName);
 
@@ -172,7 +172,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void PlaySoundEffect2D(USoundWave* SoundEffect);
 
-    // ???X???
+    // 目標數量
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void GenerateMusicPack(const TArray<FMusicGenerationParameters>& MusicParameters);
 

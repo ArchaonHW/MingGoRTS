@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 8.1: Self-Learning System Implementation
 // 
 // This system provides self-learning capabilities for MingGoRTS, enabling the game
@@ -213,7 +213,7 @@ struct FAdaptiveParameters
  * based on user behavior and game data analysis.
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (MingGoRTS))
-class MINGGORTS_API UMingRTSSelfLearningSystem : public UObject
+class MINGRTS_API UMingRTSSelfLearningSystem : public UObject
 {
     GENERATED_BODY()
 

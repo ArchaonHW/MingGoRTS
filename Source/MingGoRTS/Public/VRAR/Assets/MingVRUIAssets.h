@@ -1,4 +1,4 @@
-﻿// VR UI Asset Definitions for MingGoRTS
+// VR UI Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - VR User Interface Assets
 
 #pragma once
@@ -349,7 +349,7 @@ struct FVRVirtualKeyboardConfig
  * VR UI Asset Definition
  */
 UCLASS(BlueprintType)
-class MINGGORTS_API UMingVRUIAssets : public UDataAsset
+class MINGRTS_API UMingVRUIAssets : public UDataAsset
 {
     GENERATED_BODY()
 

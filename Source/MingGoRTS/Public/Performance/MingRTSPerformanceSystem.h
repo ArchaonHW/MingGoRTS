@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -233,7 +233,7 @@ struct FPerformanceHistory
  * 性能優化系統
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSPerformanceSystem : public UObject
+class MINGRTS_API UMingRTSPerformanceSystem : public UObject
 {
     GENERATED_BODY()
     

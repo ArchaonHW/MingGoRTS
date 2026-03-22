@@ -17,7 +17,7 @@
  * 5. Verify materials in Content Browser at /Game/VR/Materials/ and /Game/AR/Materials/
  */
 UCLASS()
-class MINGGORTS_API AVRARMaterialGameMode : public AGameModeBase
+class MINGRTS_API AVRARMaterialGameMode : public AGameModeBase
 {
     GENERATED_BODY()
 

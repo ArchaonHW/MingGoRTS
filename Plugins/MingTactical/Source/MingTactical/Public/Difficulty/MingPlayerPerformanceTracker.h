@@ -71,11 +71,15 @@ struct MINGTACTICAL_API FPlayerPerformanceStats
     UPROPERTY(BlueprintReadOnly, Category = "Stats")
     float TrendSlope = 0.0f;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Stats")
-    float Volatility = 0.0f;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Stats")
-    int32 SampleCount = 0;
+    UENUM(BlueprintType)
+    enum class EPlayerPerformanceRating : uint8
+    {
+        Average UMETA(DisplayName = "Average"),
+        Good UMETA(DisplayName = "Good"),
+        Excellent UMETA(DisplayName = "Excellent"),
+        Bad UMETA(DisplayName = "Bad"),
+        Terrible UMETA(DisplayName = "Terrible")
+    };
 
     UPROPERTY(BlueprintReadOnly, Category = "Stats")
     EPlayerPerformanceRating OverallRating = EPlayerPerformanceRating::Average;
@@ -84,7 +88,7 @@ struct MINGTACTICAL_API FPlayerPerformanceStats
     float RecommendationScore = 0.0f;
 
     void UpdateFromDataPoints(const TArray<FPlayerPerformanceDataPoint>& DataPoints);
-);
+};
 
 /**
  * ??�a��?�l?X * 摧毀��摧毀����a?X?��?? * 

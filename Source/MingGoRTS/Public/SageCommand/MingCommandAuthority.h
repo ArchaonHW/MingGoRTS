@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -129,7 +129,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCommandEffectivenessEvaluated, co
  * 管理和維護指揮者的權威性和合法性
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (SageCommand))
-class MINGGORTS_API UMingCommandAuthority : public UObject
+class MINGRTS_API UMingCommandAuthority : public UObject
 {
     GENERATED_BODY()
 

@@ -25,7 +25,7 @@
  * 4. Local Militia Corps - Mass conscript units
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UZhiliClique : public UMingRTSFactionBase
+class MINGRTS_API UZhiliClique : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

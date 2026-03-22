@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -37,7 +37,7 @@ enum class ECommandPriority: uint8 {
  * 命令數據結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FMilitaryCommandData
+struct MINGRTS_API FMilitaryCommandData
 {
     GENERATED_BODY()
 
@@ -96,7 +96,7 @@ struct MINGGORTS_API FMilitaryCommandData
  * 命令執行結果結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FCommandExecutionResult
+struct MINGRTS_API FCommandExecutionResult
 {
     GENERATED_BODY()
 
@@ -129,7 +129,7 @@ struct MINGGORTS_API FCommandExecutionResult
  * 在白日之下發號施令，承擔後果
  */
 UCLASS(ClassGroup = (SageCommand), meta = (BlueprintSpawnableComponent))
-class MINGGORTS_API UMingMilitaryAuthority : public UObject
+class MINGRTS_API UMingMilitaryAuthority : public UObject
 {
     GENERATED_BODY()
 

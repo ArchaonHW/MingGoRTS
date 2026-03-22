@@ -25,7 +25,7 @@ class UMingRTSFactionBase;
  * 单个势力卡片UI
  */
 UCLASS()
-class MINGGORTS_API UMingFactionCardWidget : public UUserWidget
+class MINGRTS_API UMingFactionCardWidget : public UUserWidget
 {
     GENERATED_BODY()
     
@@ -104,7 +104,7 @@ private:
  * 势力详情面板UI
  */
 UCLASS()
-class MINGGORTS_API UMingFactionDetailPanel : public UUserWidget
+class MINGRTS_API UMingFactionDetailPanel : public UUserWidget
 {
     GENERATED_BODY()
     
@@ -180,7 +180,7 @@ private:
  * 主势力选择界面
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UMingFactionSelectionWidget : public UUserWidget
+class MINGRTS_API UMingFactionSelectionWidget : public UUserWidget
 {
     GENERATED_BODY()
     

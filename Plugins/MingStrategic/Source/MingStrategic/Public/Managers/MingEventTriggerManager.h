@@ -27,19 +27,19 @@ public:
 
     // 每�X�新
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
-    void Tick(float DeltaTime);
+    void Tick(float DeltaTime};
 
     // 註�?觸發X
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
-    void RegisterTrigger(UMingEventTrigger* Trigger);
+    void RegisterTrigger(UMingEventTrigger* Trigger};
 
     // 註銷觸發X
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
-    void UnregisterTrigger(const FString& TriggerId);
+    void UnregisterTrigger(const FString& TriggerId};
 
     // ?��?觸發
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
-    bool ManualTrigger(const FString& TriggerId);
+    bool ManualTrigger(const FString& TriggerId};
 
     // ?��?觸發X
     UFUNCTION(BlueprintPure, Category = "Trigger Manager")
@@ -55,11 +55,11 @@ public:
 
     // ?�用/禁用觸發X
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
-    void SetTriggerEnabled(const FString& TriggerId, bool bEnabled);
+    void SetTriggerEnabled(const FString& TriggerId, bool bEnabled};
 
     // ?�置觸發X
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
-    void ResetTrigger(const FString& TriggerId);
+    void ResetTrigger(const FString& TriggerId};
 
     // ?�置?�?�觸?�器
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
@@ -67,11 +67,11 @@ public:
 
     // ?��?/?�復?�?�觸?�器
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
-    void SetAllTriggersPaused(bool bPaused);
+    void SetAllTriggersPaused(bool bPaused};
 
     // ?�建觸發X(工�X��?)
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager", meta = (DeterminesOutputType = "TriggerClass"))
-    UMingEventTrigger* CreateTrigger(TSubclassOf<UMingEventTrigger> TriggerClass, const FString& TriggerId, const FString& EventId);
+    UMingEventTrigger* CreateTrigger(TSubclassOf<UMingEventTrigger> TriggerClass, const FString& TriggerId, const FString& EventId};
 
     // ?��?事件委�?
     UPROPERTY(BlueprintAssignable, Category = "Trigger Manager|Events")

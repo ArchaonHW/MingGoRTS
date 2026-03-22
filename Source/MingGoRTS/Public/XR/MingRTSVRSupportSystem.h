@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -225,7 +225,7 @@ struct FARTrackingConfig
  * VR/AR支持系統
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSVRSupportSystem : public UObject
+class MINGRTS_API UMingRTSVRSupportSystem : public UObject
 {
     GENERATED_BODY()
     

@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingGoRTSIntroManager.generated.h"
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSIntroManager : public UObject
+class MINGRTS_API UMingGoRTSIntroManager : public UObject
 {
     GENERATED_BODY()
 

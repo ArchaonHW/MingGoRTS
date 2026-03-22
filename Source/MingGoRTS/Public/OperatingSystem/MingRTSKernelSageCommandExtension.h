@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -55,7 +55,7 @@ enum class ESageCommandSystemCall: uint8 {
  * 至聖者指揮學系統狀態結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FSageCommandKernelStatus
+struct MINGRTS_API FSageCommandKernelStatus
 {
     GENERATED_BODY()
 
@@ -132,7 +132,7 @@ struct MINGGORTS_API FSageCommandKernelStatus
  * 至聖者指揮學內核請求結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FSageCommandKernelRequest
+struct MINGRTS_API FSageCommandKernelRequest
 {
     GENERATED_BODY()
 
@@ -168,7 +168,7 @@ struct MINGGORTS_API FSageCommandKernelRequest
  * 至聖者指揮學內核響應結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FSageCommandKernelResponse
+struct MINGRTS_API FSageCommandKernelResponse
 {
     GENERATED_BODY()
 
@@ -210,7 +210,7 @@ struct MINGGORTS_API FSageCommandKernelResponse
  * 將指揮學系統整合到OS核心，提供系統級別的指揮哲學支持
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSKernelSageCommandExtension : public UObject
+class MINGRTS_API UMingRTSKernelSageCommandExtension : public UObject
 {
     GENERATED_BODY()
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -34,7 +34,7 @@ enum class EOptimizationType: uint8 {
  * MingGoRTS Optimization Compiler
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSOptimizationCompiler : public UObject
+class MINGRTS_API UMingRTSOptimizationCompiler : public UObject
 {
     GENERATED_BODY()
 

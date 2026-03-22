@@ -9,7 +9,7 @@
  * 中央正統、外交優勢、軍事強大但內部不穩定
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSBeiyangGovernment : public UMingRTSFactionBase
+class MINGRTS_API UMingRTSBeiyangGovernment : public UMingRTSFactionBase
 {
     GENERATED_BODY()
 

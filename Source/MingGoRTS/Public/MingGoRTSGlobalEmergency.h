@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,23 +9,23 @@ UENUM(BlueprintType)
 enum class EEmergencyType: uint8 {
     NaturalDisaster,    // ??�M??�`
     Pandemic,          // ???X?�o
-    ClimateCrisis,     // ????�M??
+    ClimateCrisis,     // 摧毀�M??
     ResourceShortage,  // ��?X?��
     Technological,     // ??�N�M??
     Economic,          // �g?X???
-    Political,         // ??�v????
+    Political,         // ??�v摧毀
     Military,          // �x?X???
-    Environmental,     // ???X???
+    Environmental,     // 目標數量
     Social             // ��?X???
 };
 
 UENUM(BlueprintType)
 enum class EEmergencyResponse: uint8 {
-    Local,             // ??�a????
-    Regional,          // ????�TX
-    National,          // ??�a????
-    International,     // ???X???
-    Global             // ???X???
+    Local,             // ??�a摧毀
+    Regional,          // 摧毀�TX
+    National,          // ??�a摧毀
+    International,     // 目標數量
+    Global             // 目標數量
 };
 
 USTRUCT(BlueprintType)
@@ -112,7 +112,7 @@ struct FEmergencyResponsePlan
 
 
 UCLASS(BlueprintType, Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingGoRTSGlobalEmergency : public UActorComponent
+class MINGRTS_API UMingGoRTSGlobalEmergency : public UActorComponent
 {
     GENERATED_BODY()
 
@@ -138,7 +138,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
     bool IsEmergencyActive(const FString& EventName) const;
 
-    // ???X??X?��
+    // 故事重要性?��
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
     void CoordinateGlobalResponse(const FEmergencyEvent& Emergency);
 
@@ -190,7 +190,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
     void CoordinateSearchAndRescue(const FString& EventName);
 
-    // ??�_??????
+    // ??�_摧毀??
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
     void InitiateRecoveryPhase(const FString& EventName);
 
@@ -216,7 +216,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
     void TrainEmergencyResponders();
 
-    // ???X??X?��??
+    // 故事重要性?��??
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
     void AnalyzeEmergencyPatterns();
 

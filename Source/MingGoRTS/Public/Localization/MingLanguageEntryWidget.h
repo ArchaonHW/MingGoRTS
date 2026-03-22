@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Language Entry Widget for Language Selection List
 
 #pragma once
@@ -13,7 +13,7 @@
  * Displays language name, flag, and selection state
  */
 UCLASS(ClassGroup = (MingRTS), BlueprintType, Blueprintable)
-class MINGGORTS_API UMingLanguageEntryWidget : public UUserWidget
+class MINGRTS_API UMingLanguageEntryWidget : public UUserWidget
 {
     GENERATED_BODY()
 

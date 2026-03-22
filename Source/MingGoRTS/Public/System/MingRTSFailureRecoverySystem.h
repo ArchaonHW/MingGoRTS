@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -280,7 +280,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManualInterventionRequired, const
  * 提供自動故障檢測和恢復機制
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSFailureRecoverySystem : public UObject
+class MINGRTS_API UMingRTSFailureRecoverySystem : public UObject
 {
     GENERATED_BODY()
 

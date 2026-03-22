@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Region Entry Widget for Region Selection List
 
 #pragma once
@@ -13,7 +13,7 @@
  * Displays region name, icon, and selection state
  */
 UCLASS(ClassGroup = (MingRTS), BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRegionEntryWidget : public UUserWidget
+class MINGRTS_API UMingRegionEntryWidget : public UUserWidget
 {
     GENERATED_BODY()
 

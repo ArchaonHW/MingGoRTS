@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "MingGoRTSHUD.generated.h"
 
 UCLASS()
-class MINGGORTS_API AMingGoRTSHUD : public AHUD
+class MINGRTS_API AMingGoRTSHUD : public AHUD
 {
     GENERATED_BODY()
 

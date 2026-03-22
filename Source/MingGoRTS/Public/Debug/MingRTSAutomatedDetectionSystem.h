@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // 自動化檢測系統頭文件
 
 #pragma once
@@ -307,7 +307,7 @@ struct FDetectionResult
  * 提供全面的項目健康檢測、代碼品質檢測、性能檢測等功能
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UMingRTSAutomatedDetectionSystem : public UObject
+class MINGRTS_API UMingRTSAutomatedDetectionSystem : public UObject
 {
     GENERATED_BODY()
     

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -257,7 +257,7 @@ struct FLeaderboardEntry
  * 競技與錦標賽系統
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSTournamentSystem : public UObject
+class MINGRTS_API UMingRTSTournamentSystem : public UObject
 {
     GENERATED_BODY()
     

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -61,7 +61,7 @@ struct FEmotionState
  * MingGoRTS Emotional AI Engine
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSEmotionalAIEngine : public UObject
+class MINGRTS_API UMingRTSEmotionalAIEngine : public UObject
 {
     GENERATED_BODY()
 

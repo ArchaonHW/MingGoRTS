@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Multi-Language Support System
 
 #pragma once
@@ -20,7 +20,7 @@ enum class ERTSLanguageCode: uint8 {
     fr_FR     UMETA(DisplayName = "Français (French)"),
     de_DE     UMETA(DisplayName = "Deutsch (German)"),
     es_ES     UMETA(DisplayName = "Español (Spanish)"),
-    ru_RU     UMETA(DisplayName = "????кий (Russian)"),
+    ru_RU     UMETA(DisplayName = "摧毀кий (Russian)"),
     ar_SA     UMETA(DisplayName = "ا?عرب?ة (Arabic)")
 };
 
@@ -29,39 +29,39 @@ enum class ERTSLanguageCode: uint8 {
  */
 UENUM(BlueprintType)
 enum class ETextDirection: uint8 {
-    LeftToRight, UMETA(DisplayName = "Left to Right"),
-    RightToLeft, UMETA(DisplayName = "Right to Left"),
-    TopToBottom, UMETA(DisplayName = "Top to Bottom"),
-    Auto, UMETA(DisplayName = "Auto Detect"),
-    Custom, UMETA(DisplayName = "Custom")
+    LeftToRight UMETA(DisplayName = "Left to Right"),
+    RightToLeft UMETA(DisplayName = "Right to Left"),
+    TopToBottom UMETA(DisplayName = "Top to Bottom"),
+    Auto UMETA(DisplayName = "Auto Detect"),
+    Custom UMETA(DisplayName = "Custom")
 };
 
 /**
  * MingGoRTS Localization System
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSLocalizationSystem : public UObject
+class MINGRTS_API UMingRTSLocalizationSystem : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingRTSLocalizationSystem(};
+    UMingRTSLocalizationSystem();
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    void InitializeLocalization(};
+    void InitializeLocalization();
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    void SetLanguage(ERTSLanguageCode Language};
+    void SetLanguage(ERTSLanguageCode Language);
     UFUNCTION(BlueprintPure, Category = "Localization")
     ERTSLanguageCode GetCurrentLanguage() const;
 
     UFUNCTION(BlueprintPure, Category = "Localization")
-    FString GetLocalizedText(const FString& Key};
+    FString GetLocalizedText(const FString& Key);
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    FString FormatLocalizedText(const FString& Key, const TArray<FString>& Args};
+    FString FormatLocalizedText(const FString& Key, const TArray<FString>& Args);
     UFUNCTION(BlueprintPure, Category = "Localization")
     ETextDirection GetTextDirection() const;
 
     UFUNCTION(BlueprintCallable, Category = "Localization")
-    bool LoadLanguagePack(ERTSLanguageCode Language};
+    bool LoadLanguagePack(ERTSLanguageCode Language);
 protected:
     UPROPERTY()
     ERTSLanguageCode CurrentLanguage;
@@ -69,7 +69,7 @@ protected:
     UPROPERTY()
     TMap<FString, FString> LocalizedStrings;
 
-    void InitializeLanguagePack(};
-    FString LoadLanguageFile(ERTSLanguageCode Language};
-    ETextDirection GetTextDirectionForLanguage(ERTSLanguageCode Language};
+    void InitializeLanguagePack();
+    FString LoadLanguageFile(ERTSLanguageCode Language);
+    ETextDirection GetTextDirectionForLanguage(ERTSLanguageCode Language);
 };

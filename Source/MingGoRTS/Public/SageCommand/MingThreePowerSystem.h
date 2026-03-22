@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -29,7 +29,7 @@ enum class EThreePowerType: uint8 {
  * 三權狀態結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FThreePowerStatus
+struct MINGRTS_API FThreePowerStatus
 {
     GENERATED_BODY()
 
@@ -65,7 +65,7 @@ struct MINGGORTS_API FThreePowerStatus
  * 權力分配結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FPowerDistribution
+struct MINGRTS_API FPowerDistribution
 {
     GENERATED_BODY()
 
@@ -98,7 +98,7 @@ struct MINGGORTS_API FPowerDistribution
  * 管理道權、策權、兵權的協調與分配
  */
 UCLASS(ClassGroup = (SageCommand), meta = (BlueprintSpawnableComponent))
-class MINGGORTS_API UMingThreePowerSystem : public UObject
+class MINGRTS_API UMingThreePowerSystem : public UObject
 {
     GENERATED_BODY()
 

@@ -15,7 +15,7 @@ class UMingRTSFactionManager;
  * Tests faction balance, unit stats, and mechanics
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UMingRTSFactionBalanceTest : public UObject
+class MINGRTS_API UMingRTSFactionBalanceTest : public UObject
 {
     GENERATED_BODY()
     

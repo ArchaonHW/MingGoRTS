@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
@@ -7,7 +7,7 @@
 #include "MingGoRTSCamera.generated.h"
 
 UCLASS()
-class MINGGORTS_API AMingGoRTSCamera : public APawn
+class MINGRTS_API AMingGoRTSCamera : public APawn
 {
     GENERATED_BODY()
 

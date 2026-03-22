@@ -20,7 +20,7 @@ class UMingRTSCulturalAdaptationSystem;
 
 
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UMingRTSLocalizationSubsystem : public UGameInstanceSubsystem
+class MINGRTS_API UMingRTSLocalizationSubsystem : public UGameInstanceSubsystem
 {
     GENERATED_BODY()
     

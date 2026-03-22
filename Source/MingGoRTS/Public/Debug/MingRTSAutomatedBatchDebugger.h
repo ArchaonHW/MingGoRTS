@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // 自動化批量除錯系統頭文件
 
 #pragma once
@@ -266,7 +266,7 @@ struct FBatchDebugResult
  * 提供完整的批次除錯、問題檢測和自動修復功能
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UMingRTSAutomatedBatchDebugger : public UObject
+class MINGRTS_API UMingRTSAutomatedBatchDebugger : public UObject
 {
     GENERATED_BODY()
     

@@ -9,7 +9,7 @@
  * 人民戰爭、游擊戰、群眾動員
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSCommunistParty : public UMingRTSFactionBase
+class MINGRTS_API UMingRTSCommunistParty : public UMingRTSFactionBase
 {
     GENERATED_BODY()
 

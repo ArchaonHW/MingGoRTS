@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -31,7 +31,7 @@ enum class ERTSAIBehaviorType: uint8 {
 };
 
 UCLASS(ClassGroup = (AI), meta = (DisplayName = "RTS Base AI Controller"))
-class MINGGORTS_API AMingRTSBaseAIController : public AAIController
+class MINGRTS_API AMingRTSBaseAIController : public AAIController
 {
     GENERATED_BODY()
 

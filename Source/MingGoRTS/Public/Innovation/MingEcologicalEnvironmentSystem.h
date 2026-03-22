@@ -384,7 +384,7 @@ public:
  * 實現真實的環境變化模擬、生態系統平衡和資源再生
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (Innovation))
-class MINGGORTS_API UMingEcologicalEnvironmentSystem : public UObject, public IEcologicalEnvironmentSystemInterface
+class MINGRTS_API UMingEcologicalEnvironmentSystem : public UObject, public IEcologicalEnvironmentSystemInterface
 {
     GENERATED_BODY()
 

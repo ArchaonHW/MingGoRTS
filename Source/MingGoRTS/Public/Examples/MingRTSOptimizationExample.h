@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,17 +6,17 @@
 #include "MingRTSOptimizationExample.generated.h"
 
 /**
- * ????�sĶ�t�ΨϥΥ�??
+ * 摧毀�sĶ�t�ΨϥΥ�??
  * �t�ܦp??�ϥ�MingGoRTS??�u??�sĶ�t?? */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSOptimizationExample : public UObject
+class MINGRTS_API UMingRTSOptimizationExample : public UObject
 {
     GENERATED_BODY()
 
 public:
     UMingRTSOptimizationExample();
 
-    // ????�ϥΥ�??
+    // 摧毀�ϥΥ�??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void BasicUsageExample();
 
@@ -24,11 +24,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void QuickOptimizationExample();
 
-    // �`��????��??
+    // �`��摧毀��??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void DeepOptimizationExample();
 
-    // ????�q??�m��??
+    // 摧毀�q??�m��??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void CustomConfigurationExample();
 
@@ -36,7 +36,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void RealTimeMonitoringExample();
 
-    // ??��????��??
+    // ??��摧毀��??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void PerformanceAnalysisExample();
 
@@ -44,20 +44,20 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void AlgorithmOptimizationExample();
 
-    // ???X???��??
+    // 目標數量��??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void BatchProcessingExample();
 
-    // ????�u??�y??��??
+    // 摧毀�u??�y??��??
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     void IntegratedWorkflowExample();
 
-    // ????�ϥ�????
+    // 摧毀�ϥ�摧毀
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
     FString GetUsageGuide();
 
 protected:
-    // ????�t�κ�?X
+    // 摧毀�t�κ�?X
     UPROPERTY(BlueprintReadOnly, Category = "Optimization Example")
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
@@ -65,7 +65,7 @@ private:
     // ???X?��??
     void InitializeExample();
     
-    // �t�ܻ��U????
+    // �t�ܻ��U摧毀
     void LogExampleResult(const FString& ExampleName, const FString& Result);
     void ShowConfigurationDetails(const FOptimizationConfiguration& Config);
     void DisplayPerformanceReport(const FString& Report);

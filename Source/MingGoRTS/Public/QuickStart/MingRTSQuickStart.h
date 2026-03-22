@@ -55,7 +55,7 @@ struct FQuickStartProgress
  * MingGoRTS Quick Start System
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSQuickStart : public UObject
+class MINGRTS_API UMingRTSQuickStart : public UObject
 {
     GENERATED_BODY()
 

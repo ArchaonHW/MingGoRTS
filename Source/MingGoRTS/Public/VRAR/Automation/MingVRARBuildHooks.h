@@ -12,7 +12,7 @@
  * to create materials before or after building the project.
  */
 UCLASS()
-class MINGGORTS_API UMingVRARBuildHooks : public UObject
+class MINGRTS_API UMingVRARBuildHooks : public UObject
 {
     GENERATED_BODY()
 

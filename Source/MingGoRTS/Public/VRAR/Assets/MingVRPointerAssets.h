@@ -1,4 +1,4 @@
-﻿// VR Pointer and Cursor Asset Definitions for MingGoRTS
+// VR Pointer and Cursor Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - VR Interaction Assets
 
 #pragma once
@@ -233,7 +233,7 @@ struct FVRComfortVignetteConfig
  * VR Pointer Asset Definition
  */
 UCLASS(BlueprintType)
-class MINGGORTS_API UMingVRPointerAssets : public UDataAsset
+class MINGRTS_API UMingVRPointerAssets : public UDataAsset
 {
     GENERATED_BODY()
 

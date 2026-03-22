@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -40,7 +40,7 @@ struct FMingCharacterData
 
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSCharacterCreationManager : public UObject
+class MINGRTS_API UMingGoRTSCharacterCreationManager : public UObject
 {
     GENERATED_BODY()
 
@@ -55,7 +55,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     bool CreateCharacter(const FMingCharacterData& CharacterData);
 
-    // ��??����????
+    // ��??����摧毀
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     bool ValidateCharacterData(const FMingCharacterData& CharacterData);
 
@@ -63,11 +63,11 @@ public:
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     FString GetBackgroundDescription(ECharacterBackground Background);
 
-    // ???X?��????�l?X
+    // ???X?��摧毀�l?X
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     TArray<FCharacterSkill> GetRecommendedSkills(ECharacterBackground Background);
 
-    // �O??����??????
+    // �O??����摧毀??
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     bool SaveCharacterToSlot(const FMingCharacterData& CharacterData, const FString& SlotName);
 
@@ -79,7 +79,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     bool IsCharacterNameAvailable(const FString& CharacterName);
 
-    // ???X???����??��
+    // 目標數量����??��
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     FString GenerateRandomCharacterName();
 
@@ -89,7 +89,7 @@ protected:
     bool ValidateAttributes(const FCharacterAttributes& Attributes);
     bool ValidateAge(int32 InAge);
 
-    // ????�q??����??��??
+    // 摧毀�q??����??��??
     UPROPERTY()
     TArray<FString> MaleNames;
 
@@ -99,13 +99,13 @@ protected:
     UPROPERTY()
     TArray<FString> Surnames;
 
-    // ???X???��??
+    // 目標數量��??
     void InitializeNamePools();
 
-    // ???X???�m??
+    // 目標數量�m??
     FString GetRandomSurname();
 
-    // ???X??X???
+    // 整理背包物品
     FString GetRandomGivenName(bool bIsMale);
 );
 

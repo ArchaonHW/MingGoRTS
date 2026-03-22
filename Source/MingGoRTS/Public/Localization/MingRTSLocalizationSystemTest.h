@@ -40,7 +40,7 @@ struct FLocalizationTestResult
  * Comprehensive test suite for localization and cultural adaptation systems
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UMingRTSLocalizationSystemTest : public UObject
+class MINGRTS_API UMingRTSLocalizationSystemTest : public UObject
 {
     GENERATED_BODY()
     

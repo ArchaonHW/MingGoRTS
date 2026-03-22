@@ -25,7 +25,7 @@
  * 4. Local Garrison - Defensive units
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UAnhuiClique : public UMingRTSFactionBase
+class MINGRTS_API UAnhuiClique : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

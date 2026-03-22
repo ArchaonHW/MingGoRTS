@@ -6,7 +6,7 @@
 #include "MingGoRTSUnit.generated.h"
 
 UCLASS()
-class MINGGORTS_API AMingGoRTSUnit : public ACharacter
+class MINGRTS_API AMingGoRTSUnit : public ACharacter
 {
     GENERATED_BODY()
 

@@ -241,7 +241,7 @@ protected:
     // 獲取最佳供應商
     EAIProvider GetBestProvider(EAIContentType ContentType, EAIContentQualityLevel TargetQuality) const;
 
-private:
+protected:
     // 供應商配置映射
     UPROPERTY(BlueprintReadOnly, Category = "AI Content Quality")
     TMap<EAIProvider, FAIProviderConfig> ProviderConfigs;

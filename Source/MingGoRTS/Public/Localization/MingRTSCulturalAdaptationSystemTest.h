@@ -18,7 +18,7 @@
  * - Content rating and filtering
  */
 UCLASS()
-class MINGGORTS_API UMingRTSCulturalAdaptationSystemTest : public UObject
+class MINGRTS_API UMingRTSCulturalAdaptationSystemTest : public UObject
 {
     GENERATED_BODY()
 

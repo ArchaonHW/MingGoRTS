@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,7 +6,7 @@
 #include "MingGoRTSProductionTest.generated.h"
 
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingGoRTSProductionTest : public UObject
+class MINGRTS_API UMingGoRTSProductionTest : public UObject
 {
     GENERATED_BODY()
 
@@ -37,11 +37,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Production Test")
     bool TestProductionFlow();
 
-    // ����??��????��??
+    // ����??��摧毀��??
     UFUNCTION(BlueprintCallable, Category = "Production Test")
     bool TestProductionQueueManagement();
 
-    // ����??��????�p??
+    // ����??��摧毀�p??
     UFUNCTION(BlueprintCallable, Category = "Production Test")
     bool TestProductionEfficiencyCalculation();
 
@@ -49,15 +49,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Production Test")
     bool TestProductionPauseResume();
 
-    // ����??��??????
+    // ����??��摧毀??
     UFUNCTION(BlueprintCallable, Category = "Production Test")
     bool TestProductionPriority();
 
-    // ����??���u????
+    // ����??���u摧毀
     UFUNCTION(BlueprintCallable, Category = "Production Test")
     bool TestProductionLineUpgrade();
 
-    // ����???X??X
+    // ����故事重要性
     UFUNCTION(BlueprintCallable, Category = "Production Test")
     bool TestAutomationFeatures();
 
@@ -77,11 +77,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Production Test")
     bool TestSaveAndLoad();
 
-    // ???X???��??
+    // 目標數量��??
     UFUNCTION(BlueprintCallable, Category = "Production Test")
     bool RunAllTests();
 
-    // ????���յ�??
+    // 摧毀���յ�??
     UFUNCTION(BlueprintPure, Category = "Production Test")
     FString GetTestResults() const;
 
@@ -94,7 +94,7 @@ private:
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // ����???X???
+    // ����目標數量
     int32 PassedTests;
 
     // ���ե�?X???
@@ -112,13 +112,13 @@ private:
     // ��?X?���u��X
     bool VerifyProductionLineData(const FProductionLine& ProductionLine, const FString& ExpectedName);
 
-    // ��?X?��????
+    // ��?X?��摧毀
     bool VerifyRecipeData(const FProductionRecipe& Recipe, const FString& ExpectedName, EProductionCategory ExpectedCategory);
 
     // ��?X?��??X
     bool VerifyProductionStatus(const FString& ProductionLineID, EProductionStatus ExpectedStatus);
 
-    // ???X??X?��ID
+    // 故事重要性?��ID
     FString GetRandomRecipeID(EProductionCategory Category) const;
 
     // ??�m���խp��X
@@ -133,7 +133,7 @@ private:
     // ��?X?����??
     bool WaitForProductionCompletion(const FString& ProductionLineID, float TimeoutSeconds = 10.0f);
 
-    // ����????�y??
+    // ����摧毀�y??
     void SimulateTimeProgress(float DeltaTime);
 
     // ��??��??��??

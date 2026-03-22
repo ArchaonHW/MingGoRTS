@@ -25,7 +25,7 @@
  * 4. Local Security Forces - Provincial defense troops
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UShanxiClique : public UMingRTSFactionBase
+class MINGRTS_API UShanxiClique : public UMingRTSFactionBase
 {
     GENERATED_BODY()
     

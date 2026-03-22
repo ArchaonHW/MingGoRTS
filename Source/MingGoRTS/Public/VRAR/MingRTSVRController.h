@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - VR Controller Component
 
 #pragma once
@@ -97,7 +97,7 @@ struct FVRInputAction
  * Handles VR controller tracking, input, and interaction
  */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class MINGGORTS_API UMingRTSVRController : public UActorComponent
+class MINGRTS_API UMingRTSVRController : public UActorComponent
 {
     GENERATED_BODY()
 

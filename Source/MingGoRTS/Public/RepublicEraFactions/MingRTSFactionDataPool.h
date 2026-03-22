@@ -114,7 +114,7 @@ struct FFactionVariantData
  * 实现共享模板 + 差异数据的存储模式，降低内存占用
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
-class MINGGORTS_API UMingRTSFactionDataPool : public UObject
+class MINGRTS_API UMingRTSFactionDataPool : public UObject
 {
     GENERATED_BODY()
     

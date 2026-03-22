@@ -27,7 +27,7 @@ class UMingRTSPerformanceSystem;
  * 示例 GameMode - 展示如何集成所有 MingGoRTS 系統
  */
 UCLASS()
-class MINGGORTS_API AMingGoRTSExampleGameMode : public AGameModeBase
+class MINGRTS_API AMingGoRTSExampleGameMode : public AGameModeBase
 {
     GENERATED_BODY()
 

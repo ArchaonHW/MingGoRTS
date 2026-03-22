@@ -106,7 +106,7 @@ struct FTestSuiteSummary
  * including data collection, model training, AI integration, and adaptation mechanisms.
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (MingGoRTS))
-class MINGGORTS_API UMingRTSSelfLearningSystemTest : public UObject
+class MINGRTS_API UMingRTSSelfLearningSystemTest : public UObject
 {
     GENERATED_BODY()
 

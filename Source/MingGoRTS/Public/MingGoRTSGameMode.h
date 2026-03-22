@@ -24,7 +24,7 @@ class UMingMainGameUI;
  * 負責系統初始化、協調和生命週期管理
  */
 UCLASS()
-class MINGGORTS_API AMingGoRTSGameMode : public AGameModeBase
+class MINGRTS_API AMingGoRTSGameMode : public AGameModeBase
 {
     GENERATED_BODY()
 

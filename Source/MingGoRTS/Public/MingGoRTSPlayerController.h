@@ -5,7 +5,7 @@
 #include "MingGoRTSPlayerController.generated.h"
 
 UCLASS()
-class MINGGORTS_API AMingGoRTSPlayerController : public APlayerController
+class MINGRTS_API AMingGoRTSPlayerController : public APlayerController
 {
     GENERATED_BODY()
 

@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -22,7 +22,7 @@ enum class EAtonementTaskStatus: uint8 {
  * 贖罪任務數據結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FAtonementTaskData
+struct MINGRTS_API FAtonementTaskData
 {
     GENERATED_BODY()
 
@@ -75,7 +75,7 @@ struct MINGGORTS_API FAtonementTaskData
  * 墮落狀態結構
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FFallStatusData
+struct MINGRTS_API FFallStatusData
 {
     GENERATED_BODY()
 
@@ -132,7 +132,7 @@ struct MINGGORTS_API FFallStatusData
  * 監測三大墮落徵象，實現贖罪機制，防止指揮者墮入魔道
  */
 UCLASS(ClassGroup = (SageCommand), meta = (BlueprintSpawnableComponent))
-class MINGGORTS_API UMingAntiFallSystem : public UObject
+class MINGRTS_API UMingAntiFallSystem : public UObject
 {
     GENERATED_BODY()
 

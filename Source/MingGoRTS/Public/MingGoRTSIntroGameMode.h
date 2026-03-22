@@ -5,7 +5,7 @@
 #include "MingGoRTSIntroGameMode.generated.h"
 
 UCLASS()
-class MINGGORTS_API AMingGoRTSIntroGameMode : public AGameModeBase
+class MINGRTS_API AMingGoRTSIntroGameMode : public AGameModeBase
 {
     GENERATED_BODY()
 
@@ -33,7 +33,7 @@ private:
     class UMingGoRTSIntroManager* IntroManager;
 
     UPROPERTY()
-    class UObject* IntroWidget; // ?�為 UObject*
+    class UObject* IntroWidget; // ?�為 UObject*
 
     UPROPERTY()
     bool bIntroCompleted;
