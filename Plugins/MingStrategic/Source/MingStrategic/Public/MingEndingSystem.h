@@ -5,7 +5,7 @@
 #include "MingEndingSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingEndingType : uint8
+enum class EMingStrategicEndingType : uint8
 {
     Victory UMETA(DisplayName = "Victory"),
     Defeat UMETA(DisplayName = "Defeat"),

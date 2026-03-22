@@ -2,14 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "MingDecisionEffect.h"
-#include "MingDecisionOption.generated.h"
+#include "MingStrategicDecisionOption.generated.h"
 
 /**
  * 決策選項結構
  * 定義決策的一個選項及其後果
  */
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingDecisionOption
+struct MINGSTRATEGIC_API FMingStrategicDecisionOption
 {
     GENERATED_BODY()
     

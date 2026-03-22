@@ -354,10 +354,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Historical Events|Visualization")
     static TArray<FMingHistoricalEvent> GetEventTimeline(ERepublicEra Era);
 
-    /**
-     * 獲取事件關係圖
-     */
-    UFUNCTION(BlueprintCallable, Category = "Historical Events|Visualization")
+    // 獲取事件關係圖 - 注意：TMap<TArray> 不支持 Blueprint
     static TMap<FString, TArray<FString>> GetEventRelationships();
 
     /**

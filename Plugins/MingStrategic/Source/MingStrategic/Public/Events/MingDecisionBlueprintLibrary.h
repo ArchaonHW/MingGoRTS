@@ -423,10 +423,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence|History")
     static TArray<float> GetDecisionTimeline(const FString& DecisionID);
 
-    /**
-     * 獲取決策影響網絡
-     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence|Network")
+    // 獲取決策影響網絡 - 注意：TMap<TArray> 不支持 Blueprint
     static TMap<FString, TArray<FString>> GetDecisionImpactNetwork(const FString& DecisionID);
 
     /**

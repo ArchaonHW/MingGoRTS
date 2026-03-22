@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Events/MingEventTrigger.h"
-#include "MingEventTriggerCondition.generated.h"
+#include "MingStrategicEventTriggerCondition.generated.h"
 
 /**
  * 條件操作符

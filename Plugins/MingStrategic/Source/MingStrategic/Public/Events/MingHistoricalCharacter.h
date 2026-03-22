@@ -119,7 +119,7 @@ enum class ECharacterSkillType : uint8
  * 人物屬性
  */
 USTRUCT(BlueprintType)
-struct FCharacterAttributes
+struct FHistoricalCharacterAttributes
 {
     GENERATED_BODY()
 
@@ -187,7 +187,7 @@ struct FCharacterAttributes
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     int32 Level;
 
-    FCharacterAttributes()
+    FHistoricalCharacterAttributes()
         : Leadership(50.0f)
         , Military(50.0f)
         , Diplomacy(50.0f)
@@ -211,7 +211,7 @@ struct FCharacterAttributes
  * 人物技能
  */
 USTRUCT(BlueprintType)
-struct FCharacterSkill
+struct FHistoricalCharacterSkill
 {
     GENERATED_BODY()
 
@@ -251,7 +251,7 @@ struct FCharacterSkill
     UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     TArray<FString> SkillEffects;
 
-    FCharacterSkill()
+    FHistoricalCharacterSkill()
         : SkillType(ECharacterSkillType::Leadership)
         , SkillName(TEXT(""))
         , SkillDescription(TEXT(""))
@@ -425,7 +425,7 @@ struct FDialogueEvent
  * 民國歷史人物
  */
 USTRUCT(BlueprintType)
-struct FMingHistoricalCharacter
+struct FMingStrategicHistoricalCharacter
 {
     GENERATED_BODY()
 
@@ -479,11 +479,11 @@ struct FMingHistoricalCharacter
 
     // 人物屬性
     UPROPERTY(BlueprintReadOnly)
-    FCharacterAttributes Attributes;
+    FHistoricalCharacterAttributes Attributes;
 
     // 人物技能
     UPROPERTY(BlueprintReadOnly)
-    TArray<FCharacterSkill> Skills;
+    TArray<FHistoricalCharacterSkill> Skills;
 
     // 人物關係
     UPROPERTY(BlueprintReadOnly)
@@ -785,8 +785,7 @@ protected:
     UPROPERTY()
     TMap<FString, FMingHistoricalCharacter> CharacterMap;
 
-    // 人物關係網絡
-    UPROPERTY()
+    // 人物關係網絡 - 注意：TMap<TArray> 不支持 UPROPERTY
     TMap<FString, TArray<FCharacterRelationship>> RelationshipNetwork;
 
     // 對話事件記錄

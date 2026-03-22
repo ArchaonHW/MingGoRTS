@@ -27,7 +27,7 @@ enum class EMingHistoricalEventType : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FMingHistoricalEvent
+struct FMingStrategicHistoricalEvent
 {
     GENERATED_BODY()
 
@@ -97,7 +97,7 @@ struct FMingHistoricalEvent
 };
 
 USTRUCT(BlueprintType)
-struct FMingEventChoice
+struct FMingStrategicDecisionOptionChoice
 {
     GENERATED_BODY()
 
@@ -125,7 +125,7 @@ struct FMingEventChoice
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsAvailable;
 
-    FMingEventChoice()
+    FMingStrategicDecisionOptionChoice()
         : InfluenceWeight(1.0f)
         , bIsHistorical(false)
         , bIsAvailable(true)
@@ -158,16 +158,16 @@ public:
     void CompleteEvent(const FString& EventID, const FString& ChoiceID);
 
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    TArray<FMingHistoricalEvent> GetEventsByEra(EMingHistoricalEra Era) const;
+    TArray<FMingStrategicHistoricalEvent> GetEventsByEra(EMingHistoricalEra Era) const;
 
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    TArray<FMingHistoricalEvent> GetAvailableEvents() const;
+    TArray<FMingStrategicHistoricalEvent> GetAvailableEvents() const;
 
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    TArray<FMingHistoricalEvent> GetTriggeredEvents() const;
+    TArray<FMingStrategicHistoricalEvent> GetTriggeredEvents() const;
 
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    FMingHistoricalEvent GetEvent(const FString& EventID) const;
+    FMingStrategicHistoricalEvent GetEvent(const FString& EventID) const;
 
     // Event Choices
     UFUNCTION(BlueprintCallable, Category = "Event Choices")
@@ -177,7 +177,7 @@ public:
     void SelectEventChoice(const FString& EventID, const FString& ChoiceID);
 
     UFUNCTION(BlueprintPure, Category = "Event Choices")
-    TArray<FMingEventChoice> GetEventChoices(const FString& EventID) const;
+    TArray<FMingStrategicDecisionOptionChoice> GetEventChoices(const FString& EventID) const;
 
     // Historical Context
     UFUNCTION(BlueprintCallable, Category = "Historical Context")
@@ -213,7 +213,7 @@ public:
     float GetHistoricalAccuracy() const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHistoricalEventTriggered, const FMingHistoricalEvent&, Event, const TArray<FMingEventChoice>&, Choices);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHistoricalEventTriggered, FMingStrategicHistoricalEvent&, Event, const TArray<FMingStrategicDecisionOptionChoice>&, Choices);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnEventChoiceSelected, const FString&, EventID, const FString&, ChoiceID, const FString&, Outcome);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHistoricalContextShown, const FString&, EventID, const FString&, Context);
 
@@ -241,19 +241,13 @@ public:
 
 protected:
     UPROPERTY()
-    TMap<FString, FMingHistoricalEvent> HistoricalEvents;
-
-    // 注意：TArray 不能直接作為 TMap 的 UPROPERTY 值類型
-    // TMap<FString, TArray<FMingEventChoice>> EventChoices;
+    TMap<FString, FMingStrategicHistoricalEvent> HistoricalEvents;
 
     UPROPERTY()
     TMap<FString, float> PlayerInfluence;
 
     UPROPERTY()
     TMap<FString, FString> PlayerEventChoices;
-
-    // 注意：TArray 不能直接作為 TMap 的 UPROPERTY 值類型
-    // TMap<FString, TArray<FString>> HistoricalNotes;
 
     UPROPERTY()
     TSet<FString> TriggeredEvents;
@@ -274,7 +268,7 @@ protected:
     void RecordPlayerDecision(const FString& EventID, const FString& ChoiceID);
 
     // Helpers
-    FMingHistoricalEvent* FindEvent(const FString& EventID);
-    bool AreEventConditionsMet(const FMingHistoricalEvent& Event) const;
-    void TriggerEventInternal(const FMingHistoricalEvent& Event);
+    FMingStrategicHistoricalEvent* FindEvent(const FString& EventID);
+    bool AreEventConditionsMet(const FMingStrategicHistoricalEvent& Event) const;
+    void TriggerEventInternal(const FMingStrategicHistoricalEvent& Event);
 };

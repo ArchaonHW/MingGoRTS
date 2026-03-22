@@ -2,9 +2,189 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MingHistoricalEvents.h"
 #include "Events/MingEventTrigger.h"
 #include "MingHistoricalEventManager.generated.h"
+
+/**
+ * 民國時期階段
+ */
+UENUM(BlueprintType)
+enum class ERepublicEra : uint8
+{
+    EarlyRepublic      UMETA(DisplayName = "Early Republic (1912-1928)"),
+    NanjingDecade      UMETA(DisplayName = "Nanjing Decade (1928-1937)"),
+    WarOfResistance    UMETA(DisplayName = "War of Resistance (1937-1945)"),
+    CivilWar           UMETA(DisplayName = "Civil War (1945-1949)")
+};
+
+/**
+ * 歷史事件類型
+ */
+UENUM(BlueprintType)
+enum class EHistoricalEventType : uint8
+{
+    Political           UMETA(DisplayName = "Political"),
+    Military            UMETA(DisplayName = "Military"),
+    Economic            UMETA(DisplayName = "Economic"),
+    Social              UMETA(DisplayName = "Social"),
+    Cultural            UMETA(DisplayName = "Cultural"),
+    Diplomatic          UMETA(DisplayName = "Diplomatic"),
+    Revolutionary      UMETA(DisplayName = "Revolutionary")
+};
+
+/**
+ * 事件影響範圍
+ */
+UENUM(BlueprintType)
+enum class EEventImpactScope : uint8
+{
+    Local               UMETA(DisplayName = "Local"),
+    Regional            UMETA(DisplayName = "Regional"),
+    National            UMETA(DisplayName = "National"),
+    International       UMETA(DisplayName = "International")
+};
+
+/**
+ * 民國歷史事件定義 (Event Manager 版本)
+ */
+USTRUCT(BlueprintType)
+struct FMingManagerEvent
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    FString EventID;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    FString EventName;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    FString EventDescription;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    ERepublicEra Era;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    int32 HistoricalYear;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    EHistoricalEventType EventType;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    EEventImpactScope ImpactScope;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    int32 Priority;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    bool bIsCriticalEvent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    TArray<FString> TriggerConditions;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    TArray<FString> EventConsequences;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    TArray<FString> RelatedFigures;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    TArray<FString> RelatedLocations;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    TArray<FString> EventTags;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    TArray<FString> PrerequisiteEvents;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Historical Event")
+    TArray<FString> FollowUpEvents;
+
+    FMingManagerEvent()
+        : EventID(TEXT(""))
+        , EventName(TEXT(""))
+        , EventDescription(TEXT(""))
+        , Era(ERepublicEra::EarlyRepublic)
+        , HistoricalYear(1912)
+        , EventType(EHistoricalEventType::Political)
+        , ImpactScope(EEventImpactScope::National)
+        , Priority(0)
+        , bIsCriticalEvent(false)
+    {}
+};
+
+/**
+ * 事件觸發上下文
+ */
+USTRUCT(BlueprintType)
+struct FEventTriggerContext
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    float CurrentGameTime;
+
+    UPROPERTY(BlueprintReadOnly)
+    ERepublicEra CurrentEra;
+
+    UPROPERTY(BlueprintReadOnly)
+    int32 CurrentYear;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, FString> PlayerDecisions;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, int32> ResourceStatus;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, int32> BuildingStatus;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, int32> MilitaryStatus;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, int32> DiplomaticRelations;
+
+    FEventTriggerContext()
+        : CurrentGameTime(0.0f)
+        , CurrentEra(ERepublicEra::EarlyRepublic)
+        , CurrentYear(1912)
+    {}
+};
+
+/**
+ * 事件執行結果
+ */
+USTRUCT(BlueprintType)
+struct FEventExecutionResult
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    bool bSuccess;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString EventID;
+
+    UPROPERTY(BlueprintReadOnly)
+    float ExecutionTime;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString ErrorMessage;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> ExecutedConsequences;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, FString> AffectedStates;
+
+    FEventExecutionResult()
+        : bSuccess(false)
+        , EventID(TEXT(""))
+        , ExecutionTime(0.0f)
+        , ErrorMessage(TEXT(""))
+    {}
+};
 
 /**
  * 民國歷史事件管理器
@@ -34,7 +214,7 @@ public:
      * 註冊歷史事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    bool RegisterHistoricalEvent(const FMingHistoricalEvent& Event);
+    bool RegisterHistoricalEvent(const FMingManagerEvent& Event);
 
     /**
      * 取消註冊歷史事件
@@ -58,31 +238,31 @@ public:
      * 獲取歷史事件
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    FMingHistoricalEvent GetHistoricalEvent(const FString& EventID) const;
+    FMingManagerEvent GetHistoricalEvent(const FString& EventID) const;
 
     /**
      * 獲取所有歷史事件
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    TArray<FMingHistoricalEvent> GetAllHistoricalEvents() const;
+    TArray<FMingManagerEvent> GetAllHistoricalEvents() const;
 
     /**
      * 獲取指定時期的事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    TArray<FMingHistoricalEvent> GetEventsByEra(ERepublicEra Era) const;
+    TArray<FMingManagerEvent> GetEventsByEra(ERepublicEra Era) const;
 
     /**
      * 獲取指定類型的事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    TArray<FMingHistoricalEvent> GetEventsByType(EHistoricalEventType EventType) const;
+    TArray<FMingManagerEvent> GetEventsByType(EHistoricalEventType EventType) const;
 
     /**
      * 獲取關鍵事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    TArray<FMingHistoricalEvent> GetCriticalEvents() const;
+    TArray<FMingManagerEvent> GetCriticalEvents() const;
 
     /**
      * 獲取可觸發事件
@@ -94,7 +274,7 @@ public:
      * 獲取事件鏈
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    TArray<FMingHistoricalEvent> GetEventChain(const FString& EventID) const;
+    TArray<FMingManagerEvent> GetEventChain(const FString& EventID) const;
 
     /**
      * 更新遊戲上下文
@@ -148,16 +328,16 @@ public:
      * 獲取推薦事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    TArray<FMingHistoricalEvent> GetRecommendedEvents(const FEventTriggerContext& Context) const;
+    TArray<FMingManagerEvent> GetRecommendedEvents(const FEventTriggerContext& Context) const;
 
 protected:
     // 已註冊的歷史事件
     UPROPERTY()
-    TArray<FMingHistoricalEvent> RegisteredEvents;
+    TArray<FMingManagerEvent> RegisteredEvents;
 
     // 事件ID到事件的映射
     UPROPERTY()
-    TMap<FString, FMingHistoricalEvent> EventMap;
+    TMap<FString, FMingManagerEvent> EventMap;
 
     // 當前遊戲上下文
     UPROPERTY()
@@ -211,7 +391,7 @@ protected:
     bool ExecuteEventConsequence(const FString& Consequence, const FString& EventID);
 
     // 應用事件影響
-    void ApplyEventImpact(const FMingHistoricalEvent& Event);
+    void ApplyEventImpact(const FMingManagerEvent& Event);
 
     // 更新事件統計
     void UpdateEventStatistics(const FString& EventID);
@@ -220,7 +400,7 @@ protected:
     bool ValidateEventDependencies(const FString& EventID) const;
 
     // 獲取事件影響分數
-    float CalculateEventImpact(const FMingHistoricalEvent& Event) const;
+    float CalculateEventImpact(const FMingManagerEvent& Event) const;
 
     // 記錄事件日誌
     void LogEvent(const FString& EventID, const FString& Message);

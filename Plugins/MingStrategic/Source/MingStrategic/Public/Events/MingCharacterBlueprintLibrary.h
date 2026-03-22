@@ -454,10 +454,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Historical Character|AI")
     static TArray<FString> GetRecruitmentRecommendations(const FString& PlayerFaction);
 
-    /**
-     * 獲取人物關係網絡
-     */
-    UFUNCTION(BlueprintCallable, Category = "Historical Character|Network")
+    // 獲取人物關係網絡 - 注意：TMap<TArray> 不支持 Blueprint
     static TMap<FString, TArray<FString>> GetCharacterNetwork(const FString& CharacterID);
 
     /**
