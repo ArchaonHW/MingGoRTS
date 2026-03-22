@@ -29,7 +29,7 @@ struct MINGTACTICAL_API FSpatialGridCell
     FMingSpatialGridCell() = default;
     explicit FMingSpatialGridCell(const FIntVector& InCoord) : GridCoord(InCoord) {}
 
-    void AddUnit(AMingTacticalUnit* Unit};
+    void AddUnit(AMingTacticalUnit* Unit);
     void RemoveUnit(AMingTacticalUnit* Unit);
     bool Contains(AMingTacticalUnit* Unit) const;
     void Clear();
@@ -53,7 +53,7 @@ struct MINGTACTICAL_API FSpatialQueryResult
     UPROPERTY(BlueprintReadOnly)
     float QueryTimeMs = 0.0f;
 
-    void AddUnit(AMingTacticalUnit* Unit};
+    void AddUnit(AMingTacticalUnit* Unit);
 };
 
 /**
@@ -73,71 +73,71 @@ class MINGTACTICAL_API UMingSpatialPartition : public UObject
     GENERATED_BODY()
 
 public:
-    UMingSpatialPartition(};
+    UMingSpatialPartition();
 
     /**
      * ?��X�空?��X�系�?     * @param WorldBounds 世�?边�?
      * @param CellSize 网格?��?大�?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void Initialize(const FBox& WorldBounds, float CellSize = 1000.0f};
+    void Initialize(const FBox& WorldBounds, float CellSize = 1000.0f);
 
     /**
      * ?�闭系�?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void Shutdown(};
+    void Shutdown();
 
     /**
      * 注�X��X�空?��X     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void RegisterUnit(AMingTacticalUnit* Unit};
+    void RegisterUnit(AMingTacticalUnit* Unit);
 
     /**
      * 从空?��X�注?�?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void UnregisterUnit(AMingTacticalUnit* Unit};
+    void UnregisterUnit(AMingTacticalUnit* Unit);
 
     /**
      * ?�新?��?位置
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void UpdateUnitPosition(AMingTacticalUnit* Unit, const FVector& NewLocation};
+    void UpdateUnitPosition(AMingTacticalUnit* Unit, const FVector& NewLocation);
 
     /**
      * ?�围?�询 - ?��X��X�围?��X�?��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    FSpatialQueryResult QueryUnitsInRadius(const FVector& Center, float Radius, int32 TeamId = -1};
+    FSpatialQueryResult QueryUnitsInRadius(const FVector& Center, float Radius, int32 TeamId = -1);
 
     /**
      * 框查�?- ?��X��X�围?��X��X��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    FSpatialQueryResult QueryUnitsInBox(const FBox& Box, int32 TeamId = -1};
+    FSpatialQueryResult QueryUnitsInBox(const FBox& Box, int32 TeamId = -1);
 
     /**
      * ?��X�近�X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    AMingTacticalUnit* GetNearestUnit(const FVector& Location, float MaxRadius, int32 TeamId = -1};
+    AMingTacticalUnit* GetNearestUnit(const FVector& Location, float MaxRadius, int32 TeamId = -1);
 
     /**
      * ?��X�近�X�方?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    AMingTacticalUnit* GetNearestEnemyUnit(AMingTacticalUnit* SourceUnit, float MaxRadius};
+    AMingTacticalUnit* GetNearestEnemyUnit(AMingTacticalUnit* SourceUnit, float MaxRadius);
 
     /**
      * ?��X�围?��X�方?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    FSpatialQueryResult GetEnemyUnitsInRadius(AMingTacticalUnit* SourceUnit, float Radius};
+    FSpatialQueryResult GetEnemyUnitsInRadius(AMingTacticalUnit* SourceUnit, float Radius);
 
     /**
      * ?��X�围?��X�方?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    FSpatialQueryResult GetFriendlyUnitsInRadius(AMingTacticalUnit* SourceUnit, float Radius};
+    FSpatialQueryResult GetFriendlyUnitsInRadius(AMingTacticalUnit* SourceUnit, float Radius);
 
     /**
      * 视线?�询 - 检测两个�?置间?�否?��?位阻X     */

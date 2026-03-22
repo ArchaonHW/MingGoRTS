@@ -60,13 +60,13 @@ public:
 
 public:
     /** 測試?��X��?事件 */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTestExecutionStarted};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTestExecutionStarted);
 
     /** 測試?��?完�?事件 */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestExecutionCompleted, bool, bAllTestsPassed};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestExecutionCompleted, bool, bAllTestsPassed);
 
     /** 測試?�段完�?事件 */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestPhaseExecutionCompleted, FString, PhaseName, bool, bPassed};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestPhaseExecutionCompleted, FString, PhaseName, bool, bPassed);
 
     UPROPERTY(BlueprintAssignable, Category = "Integration Test Executor|Events")
     FOnTestExecutionStarted OnTestExecutionStarted;

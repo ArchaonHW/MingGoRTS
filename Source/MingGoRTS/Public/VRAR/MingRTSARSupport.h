@@ -218,43 +218,43 @@ public:
     TArray<FARTrackedPlane> GetDetectedPlanes() const;
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Planes")
-    void SetPlaneDetectionMode(EARPlaneDetectionMode Mode};
+    void SetPlaneDetectionMode(EARPlaneDetectionMode Mode);
 
     // Content Overlay
     UFUNCTION(BlueprintCallable, Category = "AR Support|Overlay")
-    void RegisterContentOverlay(EARContentOverlayType Type, const FTransform& WorldTransform};
+    void RegisterContentOverlay(EARContentOverlayType Type, const FTransform& WorldTransform);
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Overlay")
-    void UnregisterContentOverlay(EARContentOverlayType Type};
+    void UnregisterContentOverlay(EARContentOverlayType Type);
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Overlay")
-    void UpdateOverlayPosition(EARContentOverlayType Type, const FTransform& NewTransform};
+    void UpdateOverlayPosition(EARContentOverlayType Type, const FTransform& NewTransform);
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Overlay")
-    void SetOverlayVisibility(EARContentOverlayType Type, bool bVisible};
+    void SetOverlayVisibility(EARContentOverlayType Type, bool bVisible);
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Overlay")
-    void SetOverlayOpacity(EARContentOverlayType Type, float Opacity};
+    void SetOverlayOpacity(EARContentOverlayType Type, float Opacity);
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Overlay")
     TArray<FARContentOverlay> GetActiveOverlays() const;
 
     // Raycasting
     UFUNCTION(BlueprintCallable, Category = "AR Support|Raycast")
-    bool PerformARRaycast(const FVector2D& ScreenPosition, FVector& OutHitLocation, FVector& OutHitNormal};
+    bool PerformARRaycast(const FVector2D& ScreenPosition, FVector& OutHitLocation, FVector& OutHitNormal);
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Raycast")
-    bool PerformARRaycastFromCenter(FVector& OutHitLocation, FVector& OutHitNormal};
+    bool PerformARRaycastFromCenter(FVector& OutHitLocation, FVector& OutHitNormal);
 
     // Game World Integration
     UFUNCTION(BlueprintCallable, Category = "AR Support|Game")
-    void SpawnGameWorldOnPlane(const FARTrackedPlane& Plane, const FVector& Offset};
+    void SpawnGameWorldOnPlane(const FARTrackedPlane& Plane, const FVector& Offset);
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Game")
     void AlignGameWorldToRealWorld();
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Game")
-    void SetGameWorldScale(float Scale};
+    void SetGameWorldScale(float Scale);
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Game")
     float GetGameWorldScale() const { return GameWorldScale; }
@@ -268,7 +268,7 @@ public:
 
     // Performance
     UFUNCTION(BlueprintCallable, Category = "AR Support|Performance")
-    void SetARPerformanceMode(bool bLowPowerMode};
+    void SetARPerformanceMode(bool bLowPowerMode);
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Performance")
     bool IsLowPowerModeEnabled() const { return bLowPowerMode; }
@@ -315,13 +315,13 @@ private:
     void UpdateDetectedPlanes();
     void UpdateContentOverlays();
     void UpdateLightingEstimation();
-    void UpdateSessionStatus(EARSessionStatus NewStatus};
+    void UpdateSessionStatus(EARSessionStatus NewStatus);
     EARDeviceType DetectARDeviceType() const;
 };
 
 // Event delegate declarations
-declare dynamic multicast delegate FOnARSessionStarted();
-declare dynamic multicast delegate FOnARSessionStopped();
-declare dynamic multicast delegate FOnARPlaneDetected(const FARTrackedPlane& Plane};
-declare dynamic multicast delegate FOnARTrackingQualityChanged(EARTrackingQuality NewQuality};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnARSessionStarted);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnARSessionStopped);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnARPlaneDetected, const FARTrackedPlane&, Plane);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnARTrackingQualityChanged, EARTrackingQuality, NewQuality);
 

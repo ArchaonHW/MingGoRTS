@@ -395,3 +395,6 @@ protected:
     UWorld* GetWorld() const;
 };
 
+
+
+#endif // MINGNIAGARAEFFECTSSYSTEM_H
