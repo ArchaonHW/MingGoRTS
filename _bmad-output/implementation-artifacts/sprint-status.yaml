@@ -89,10 +89,10 @@ development_status:
   epic-5-retrospective: optional
 
   # Epic 6: 跨平台技術基礎 (建議優先實施)
-  epic-6: backlog
-  6-1-ue5-modular-plugin-architecture: backlog
-  6-2-event-driven-communication: backlog
-  6-3-cross-platform-adaptation: backlog
+  epic-6: in-progress
+  6-1-ue5-modular-plugin-architecture: done
+  6-2-event-driven-communication: done
+  6-3-cross-platform-adaptation: ready-for-dev
   6-4-performance-optimization: backlog
   6-5-ai-asset-pipeline: backlog
   epic-6-retrospective: optional

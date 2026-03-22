@@ -1,0 +1,125 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "UObject/Interface.h"
+#include "MingCoreEventBus.generated.h"
+
+class MINGCORE_API IMingCoreEventBus
+{
+public:
+    virtual ~IMingCoreEventBus() {}
+    
+    // 事件發布接口
+    template<typename EventType>
+    static void PublishEvent(const EventType& Event);
+    
+    // 事件訂閱接口
+    template<typename EventType>
+    static void Subscribe(class UObject* Listener, TFunction<void(const EventType&)> Callback);
+    
+    // 事件取消訂閱
+    template<typename EventType>
+    static void Unsubscribe(class UObject* Listener);
+    
+    // 批處理事件發布（性能優化）
+    static void PublishBatchEvents(const TArray<struct FMingCoreEvent>& Events);
+    
+    // 事件優先級處理
+    enum class EventPriority : uint8
+    {
+        Critical = 0,  // 單位選擇、攻擊指令
+        High = 1,      // 戰術移動、狀態變更
+        Normal = 2,    // 資源更新、UI刷新
+        Low = 3        // 統計數據、日誌記錄
+    };
+};
+
+// 基礎事件結構
+USTRUCT(BlueprintType)
+struct MINGCORE_API FMingCoreEvent
+{
+    GENERATED_BODY()
+    
+    UPROPERTY(BlueprintReadOnly)
+    FString EventId;
+    
+    UPROPERTY(BlueprintReadOnly)
+    TEnumAsByte<IMingCoreEventBus::EventPriority> Priority;
+    
+    UPROPERTY(BlueprintReadOnly)
+    FDateTime Timestamp;
+    
+    UPROPERTY(BlueprintReadOnly)
+    UObject* Source;
+    
+    FMingCoreEvent()
+        : Priority(IMingCoreEventBus::EventPriority::Normal)
+        , Timestamp(FDateTime::Now())
+        , Source(nullptr)
+    {
+        EventId = FGuid::NewGuid().ToString();
+    }
+};
+
+// 單位選擇事件
+USTRUCT(BlueprintType)
+struct MINGCORE_API FUnitSelectedEvent : public FMingCoreEvent
+{
+    GENERATED_BODY()
+    
+    UPROPERTY(BlueprintReadOnly)
+    int32 UnitId;
+    
+    UPROPERTY(BlueprintReadOnly)
+    FVector2D SelectionPosition;
+    
+    FUnitSelectedEvent(int32 InUnitId, FVector2D InPosition)
+        : UnitId(InUnitId), SelectionPosition(InPosition)
+    {
+        Priority = EventPriority::Critical;
+    }
+};
+
+// 單位移動事件
+USTRUCT(BlueprintType)
+struct MINGCORE_API FUnitMovedEvent : public FMingCoreEvent
+{
+    GENERATED_BODY()
+    
+    UPROPERTY(BlueprintReadOnly)
+    int32 UnitId;
+    
+    UPROPERTY(BlueprintReadOnly)
+    FVector TargetPosition;
+    
+    UPROPERTY(BlueprintReadOnly)
+    bool bIsAttackMove;
+    
+    FUnitMovedEvent(int32 InUnitId, FVector InTargetPos, bool bInAttackMove = false)
+        : UnitId(InUnitId), TargetPosition(InTargetPos), bIsAttackMove(bInAttackMove)
+    {
+        Priority = EventPriority::High;
+    }
+};
+
+// 資源更新事件
+USTRUCT(BlueprintType)
+struct MINGCORE_API FResourceUpdateEvent : public FMingCoreEvent
+{
+    GENERATED_BODY()
+    
+    UPROPERTY(BlueprintReadOnly)
+    FString ResourceType;
+    
+    UPROPERTY(BlueprintReadOnly)
+    int32 Amount;
+    
+    UPROPERTY(BlueprintReadOnly)
+    int32 NewTotal;
+    
+    FResourceUpdateEvent(const FString& InType, int32 InAmount, int32 InNewTotal)
+        : ResourceType(InType), Amount(InAmount), NewTotal(InNewTotal)
+    {
+        Priority = EventPriority::Normal;
+    }
+};

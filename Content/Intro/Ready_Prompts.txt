@@ -1,0 +1,36 @@
+# MingGoRTS 立即可用提示詞
+# 模型下載完成後，複製這些提示詞到 Stable Diffusion WebUI
+
+## 🎯 第一個素材: 標題卡片背景
+Chinese Republican era elegant title card background, 1912-1949, aged parchment texture with traditional Chinese cloud patterns in corners, warm sepia tones, ornate border with dragon motifs, vintage paper texture, calligraphy style elements, historical authenticity, cinematic quality, 1920x1080, ultra detailed, 8K, photorealistic
+
+## 🎯 第二個素材: 遊戲 Logo
+"MingGoRTS" logo design, Chinese Republican era style, English text with Chinese characters "民國歷史", traditional calligraphy font, gold gradient effect, subtle shadow, transparent background, vector style, professional logo design, elegant and historical, 800x400, high resolution
+
+## 🎯 第三個素材: 最終遊戲標題
+Epic game title "MingGoRTS" with Chinese subtitle "民國歷史背景即時戰略遊戲", dramatic background with battlefield scene, gold and red color scheme, cinematic lighting, professional game title design, historical elements, 1920x1080, ultra high quality
+
+## 🎯 第四個素材: 辛亥革命場景
+1911 Xinhai Revolution historical scene, Dr. Sun Yat-sen giving speech, revolutionary soldiers in uniform, Chinese Republican era flags, indoor government building, dramatic lighting, historical accuracy, sepia tone effect, vintage photography style, 1920x1080, ultra realistic, detailed
+
+## 🎯 第五個素材: 民國建立場景
+Founding ceremony of Republic of China, 1912, five-color flag ceremony, government officials in formal attire, traditional Chinese architecture, outdoor plaza, clear daylight, historical accuracy, formal composition, vintage photography style, 1920x1080, detailed
+
+## ⚙️ 推薦參數設置
+- 模型: deliberate_v2.safetensors
+- 解析度: 1920x1080
+- 採樣步數: 30-50
+- CFG Scale: 7-10
+- 採樣器: DPM++ 2M Karras
+
+## 📁 保存位置
+生成的圖像保存到:
+C:\HW\MingGoRTS\Content\Intro\Generated\Images\
+
+## 🚀 執行順序
+1. 下載模型完成後，雙擊桌面 "Stable Diffusion WebUI"
+2. 等待 WebUI 啟動 (首次較慢)
+3. 選擇 deliberate_v2.safetensors 模型
+4. 設置參數
+5. 按順序使用提示詞生成素材
+6. 保存到指定位置
