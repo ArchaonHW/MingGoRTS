@@ -197,12 +197,12 @@ struct FMingResourceFlow
     float Efficiency = 1.0f;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingConstructed, const FMingBuildingInstance&, Building};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingUpgraded, const FMingBuildingInstance&, Building};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingDestroyed, const FString&, BuildingID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProductionCompleted, const FString&, UnitType};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBaseAttacked, const FString&, BaseID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingSelected, const FString&, BuildingID, bool, bIsSelected};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingConstructed, const FMingBuildingInstance&, Building);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingUpgraded, const FMingBuildingInstance&, Building);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingDestroyed, const FString&, BuildingID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProductionCompleted, const FString&, UnitType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBaseAttacked, const FString&, BaseID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingSelected, const FString&, BuildingID, bool, bIsSelected);
 
 /**
  * Building Layer Controller

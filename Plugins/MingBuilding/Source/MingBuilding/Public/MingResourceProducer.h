@@ -89,11 +89,11 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<class UMingResourceSystem> ResourceSystem;
 
-    void ProduceResource(};
-    bool CheckOperatingCosts(};
-    void ConsumeOperatingCosts(};
+    void ProduceResource();
+    bool CheckOperatingCosts();
+    void ConsumeOperatingCosts();
 
     UFUNCTION()
-    void OnResourceSystemAvailable(};
+    void OnResourceSystemAvailable();
 };
 

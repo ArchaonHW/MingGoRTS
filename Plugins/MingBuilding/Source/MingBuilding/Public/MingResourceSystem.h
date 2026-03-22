@@ -111,16 +111,16 @@ public:
     void InitializeDefaultResources();
 
     UFUNCTION(BlueprintCallable, Category = "Resources")
-    void AddResource(EMingResourceType Type, int32 Amount};
+    void AddResource(EMingResourceType Type, int32 Amount);
 
     UFUNCTION(BlueprintCallable, Category = "Resources")
-    bool ConsumeResource(EMingResourceType Type, int32 Amount};
+    bool ConsumeResource(EMingResourceType Type, int32 Amount);
 
     UFUNCTION(BlueprintCallable, Category = "Resources")
     bool HasEnoughResources(const TArray<FMingResourceCost>& Costs) const;
 
     UFUNCTION(BlueprintCallable, Category = "Resources")
-    bool ConsumeResources(const TArray<FMingResourceCost>& Costs};
+    bool ConsumeResources(const TArray<FMingResourceCost>& Costs);
 
     UFUNCTION(BlueprintPure, Category = "Resources")
     int32 GetResourceAmount(EMingResourceType Type) const;
