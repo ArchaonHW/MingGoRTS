@@ -1,5 +1,5 @@
 ---
-stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 inputDocuments: ["PROJECT_PLAN.md", "PROJECT_STATUS.md"]
 ---
 
@@ -1092,6 +1092,241 @@ flowchart TD
 - 多感官反饋（視覺+音效+觸覺）
 - 反饋強度與操作重要性匹配
 - 提供進度感知，管理用戶期望
+
+## UX Consistency Patterns
+
+### Button Hierarchy
+
+**Primary Action Buttons (戰術主要操作)**
+- **When to Use:** 核心戰術操作 - 攻擊、移動、建造
+- **Visual Design:** 民國紅色背景，白色文字，較大尺寸，圓角設計
+- **Behavior:** 點擊時聲音確認 + 視覺反饋，< 50ms 響應
+- **Accessibility:** Tab 鍵導航，Enter 執行，ARIA 標籤
+- **Mobile Considerations:** 觸控區域 44px+，防誤觸設計（長按確認 300ms）
+- **Variants:** 正常、懸停、按下、禁用、冷卻中
+
+**Secondary Action Buttons (次要操作)**
+- **When to Use:** 設置、查看、切換等輔助功能
+- **Visual Design:** 灰色背景，黑色文字，標準尺寸
+- **Behavior:** 懸停高亮，點擊輕微聲音反饋
+- **Accessibility:** 完整鍵盤導航支援
+- **Mobile Considerations:** 適配觸控操作
+- **Variants:** 正常、懸停、按下、禁用
+
+**Emergency Action Buttons (緊急操作)**
+- **When to Use:** 緊急撤退、特殊技能等關鍵時刻
+- **Visual Design:** 紅色邊框，閃爍動畫，醒目尺寸
+- **Behavior:** 強烈視覺 + 警告音效，需要二次確認
+- **Accessibility:** 高對比度模式，語音警告
+- **Mobile Considerations:** 防誤觸保護，明確確認步驟
+- **Variants:** 警告、確認、執行中
+
+### Feedback Patterns
+
+**Success Feedback (成功反饋)**
+- **When to Use:** 操作成功完成時
+- **Visual Design:** 綠色高亮，向上飄動文字，2秒淡出
+- **Behavior:** 正面確認音效 + 視覺慶祝動畫
+- **Accessibility:** 語音播報「成功」，高對比度模式
+- **Mobile Considerations:** 震動反饋支援
+- **Variants:** 小成功、大成功、里程碑成就
+
+**Error Feedback (錯誤反饋)**
+- **When to Use:** 操作失敗或無效時
+- **Visual Design:** 紅色閃爍，震動效果，明確錯誤訊息
+- **Behavior:** 警告音效 + 具體錯誤說明，提供解決方案
+- **Accessibility:** 語音播報錯誤，螢幕閱讀器優化
+- **Mobile Considerations:** 震動警告，簡化錯誤訊息
+- **Variants:** 網路錯誤、操作錯誤、系統錯誤
+
+**Warning Feedback (警告反饋)**
+- **When to Use:** 需要注意但不緊急的情況
+- **Visual Design:** 黃色邊框，感嘆號圖標，溫和動畫
+- **Behavior:** 溫和提示音 + 確認對話框
+- **Accessibility:** 語音提示，高對比度支援
+- **Mobile Considerations:** 簡化警告訊息
+- **Variants:** 資源不足、確認操作、注意事項
+
+**Info Feedback (資訊反饋)**
+- **When to Use:** 一般資訊提示和狀態更新
+- **Visual Design:** 藍色資訊框，自動消失，5秒計時
+- **Behavior:** 輕微提示音 + 非干擾式顯示
+- **Accessibility:** 語音播報選項，可關閉
+- **Mobile Considerations:** 底部彈出，不遮擋內容
+- **Variants:** 狀態更新、提示訊息、系統通知
+
+### Network State Patterns (新增)
+
+**網路狀態指示器 (Network State Indicator)**
+- **When to Use:** 多人遊戲時顯示連線狀態
+- **Visual Design:** 
+  - 輕微延遲：綠色指示器（不影響操作）
+  - 中度延遲：黃色警告 + 自動降級為離線模式
+  - 斷線：紅色提示 + 自動重連嘗試
+- **Behavior:** 即時狀態更新，非侵入式顯示
+- **Accessibility:** 語音播報連線狀態變化
+- **Mobile Considerations:** 節省電量，智能更新頻率
+- **Variants:** 穩定、延遲、斷線、重連中
+
+**戰局重連模式 (Battle Reconnection)**
+- **When to Use:** 斷線後恢復連線時
+- **Visual Design:** 進度條 + 「正在恢復戰局」訊息
+- **Behavior:** 本地 50MB 快取，透明重連，戰局回放
+- **Accessibility:** 語音播報重連進度
+- **Mobile Considerations:** 背景重連，不影響其他操作
+- **Variants:** 快速重連、完整同步、戰局回放
+
+### Form Patterns
+
+**Tactical Settings Form (戰術設置表單)**
+- **When to Use:** 遊戲設置、單位配置等
+- **Visual Design:** 民國風格表單設計，清晰分組
+- **Behavior:** 即時驗證，自動儲存，撤销支援
+- **Accessibility:** 完整鍵盤導航，語音輸入支援
+- **Mobile Considerations:** 觸控優化，大尺寸輸入框
+- **Variants:** 基礎設置、進階設置、自定義設置
+
+**Resource Input Form (資源輸入表單)**
+- **When to Use:** 資源分配、生產設置等
+- **Visual Design:** 數值輸入框，滑塊控制，即時預覽
+- **Behavior:** 數值驗證，範圍限制，智能建議
+- **Accessibility:** 語音讀數，步進控制
+- **Mobile Considerations:** 數字鍵盤優化
+- **Variants:** 數值輸入、滑塊選擇、批量設置
+
+### Navigation Patterns
+
+**Battlefield Navigation (戰場導航)**
+- **When to Use:** 戰術地圖瀏覽和單位控制
+- **Visual Design:** 小地圖固定右下角，可拖動縮放
+- **Behavior:** 空格鍵居中，數字鍵跳轉，雙擊放大
+- **Accessibility:** 鍵盤完全導航，語音位置報告
+- **Mobile Considerations:** 觸控手勢，雙指縮放
+- **Variants:** 小地圖、全屏地圖、戰術視圖
+
+**Menu Navigation (選單導航)**
+- **When to Use:** 遊戲選單和設置介面
+- **Visual Design:** 層級結構，麵包屑導航
+- **Behavior:** ESC 返回，Tab 切換，快速搜尋
+- **Accessibility:** 完整鍵盤支援，跳轉導航
+- **Mobile Considerations:** 漢堡選單，底部導航
+- **Variants:** 主選單、設置選單、上下文選單
+
+### Historical Event Patterns (新增)
+
+**動態時間決策 (Dynamic Time Decision)**
+- **When to Use:** 歷史事件中的時間限制決策
+- **Visual Design:** 計時器顯示，時間緊迫感漸變
+- **Behavior:** 
+  - 首次遇到某類事件：2 倍標準時間
+  - 完成教學後：標準時間
+  - 開啟「硬核模式」：縮短時間增加挑戰
+- **Accessibility:** 語音倒數計時，震動提醒
+- **Mobile Considerations:** 可暫停計時（單人模式）
+- **Variants:** 寬鬆、標準、挑戰、極限
+
+**事件預告模式 (Event Preview)**
+- **When to Use:** 重大歷史事件前的準備時間
+- **Visual Design:** 預告橫幅，準備時間倒計時
+- **Behavior:** 給予玩家準備時間，可提前查看事件資訊
+- **Accessibility:** 語音預告，提前通知
+- **Mobile Considerations:** 推送通知支援
+- **Variants:** 緊急事件、計劃事件、隨機事件
+
+### Additional Patterns
+
+**Loading States (載入狀態)**
+- **When to Use:** 資源載入、處理等待時
+- **Visual Design:** 民國風格載入動畫，進度條 + 百分比
+- **Behavior:** 30秒超時取消，背景操作支援
+- **Accessibility:** 載入進度語音播報
+- **Mobile Considerations:** 簡化動畫，節省電量
+- **Variants:** 初始載入、資源載入、處理中
+
+**Empty States (空狀態)**
+- **When to Use:** 無資料、首次使用等情況
+- **Visual Design:** 友好插畫 + 引導文字，民國風格
+- **Behavior:** 明確下一步操作，教程連結
+- **Accessibility:** 語音引導，操作說明
+- **Mobile Considerations:** 大按鈕設計，清晰引導
+- **Variants:** 無資料、首次使用、搜尋無結果
+
+**Modal Patterns (模態覆蓋)**
+- **When to Use:** 確認對話、重要訊息等
+- **Visual Design:** 半透明背景，民國風格邊框
+- **Behavior:** ESC 關閉，點擊外部關閉，焦點鎖定
+- **Accessibility:** 焦點管理，語音播報
+- **Mobile Considerations:** 全屏顯示，底部按鈕
+- **Variants:** 確認對話、資訊對話、警告對話
+
+## DLC Expansion UX Patterns
+
+### Theme System Architecture
+
+**可擴展主題系統：**
+- **基礎主題**：民國時期（Republican Era）
+- **DLC 主題**：唐朝（Tang Dynasty）、奇幻世界（Fantasy Realm）、現代戰爭（Modern Warfare）
+- **核心相容性**：戰術操作邏輯跨主題保持一致
+
+### Theme Switching Patterns
+
+**主題選擇介面 (Theme Selector)**
+- **When to Use:** 主選單中切換遊戲主題風格
+- **Visual Design:** 各主題預覽縮圖，當前主題高亮顯示
+- **Behavior:** 即時預覽，確認後載入新主題資源
+- **Accessibility:** 語音播報主題名稱，鍵盤導航
+- **Mobile Considerations:** 觸控滑動選擇，大按鈕設計
+- **Variants:** 網格展示、列表展示、輪播展示
+
+**動態主題載入 (Dynamic Theme Loading)**
+- **When to Use:** 切換主題時的資源載入
+- **Visual Design:** 主題載入進度條，預覽圖片
+- **Behavior:** 懶加載，快取機制，背景載入
+- **Accessibility:** 載入進度語音播報
+- **Mobile Considerations:** 節省流量，僅載入必要資源
+- **Variants:** 首次載入、快取載入、部分更新
+
+### Cross-Theme Consistency Patterns
+
+**核心操作一致性：**
+- 單位選擇、戰術移動、資源採集、建築建造操作邏輯不變
+- 僅視覺表現和音效隨主題變化
+
+**UI 組件主題化：**
+
+**Themed Button Variants:**
+- **Republican:** 民國紅色，軍事風格邊框
+- **Tang Dynasty:** 金色龍紋，古典中式邊框
+- **Fantasy:** 魔法光效，神秘符文邊框
+
+**Themed Panel Variants:**
+- **Republican:** 軍用地圖風格，報紙質感
+- **Tang Dynasty:** 卷軸風格，毛筆字體
+- **Fantasy:** 魔法書風格，發光邊框
+
+**Themed Feedback Variants:**
+- **Republican:** 軍號音效，旗幟動畫
+- **Tang Dynasty:** 鑼鼓音效，龍紋動畫
+- **Fantasy:** 魔法音效，粒子特效
+
+### DLC Content Integration
+
+**歷史/奇幻事件系統擴展：**
+- **事件模板：** 跨主題通用的結構和流程
+- **內容填充：** 各主題特定的事件故事和角色
+- **觸發系統：** 主題無關的條件判斷邏輯
+
+### DLC Commerce UX
+
+**DLC Discovery Pattern:**
+- **鎖定內容顯示：** 「需要 DLC」標籤 + 預覽圖片
+- **試玩模式：** 允許體驗第一個任務
+- **一鍵購買：** 簡化購買流程，自動下載啟用
+
+**Cross-Theme Progression:**
+- **通用成就：** 部分成就跨主題有效
+- **統計追蹤：** 各主題遊戲時間和成就
+- **排行榜：** 支援單主題和綜合排名
 
 ## Component Strategy
 

@@ -106,7 +106,7 @@ public:
     TArray<FAudioTrack> GetAudioTracks() const { return AudioTracks; }
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
-    FAudioTrack* GetAudioTrack(const FString& TrackName);
+    bool GetAudioTrack(const FString& TrackName, FAudioTrack& OutTrack);
 
     // 音軌控制
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")

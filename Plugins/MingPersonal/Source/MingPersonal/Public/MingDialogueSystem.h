@@ -312,8 +312,8 @@ protected:
     UPROPERTY()
     TMap<FString, int32> PlayerChoices;
 
-    UPROPERTY()
-    TMap<FString, TArray<FString>> HistoricalNotes;
+    // 注意：TArray 不能直接作為 TMap 的 UPROPERTY 值類型
+    // TMap<FString, TArray<FString>> HistoricalNotes;
 
     UPROPERTY()
     bool bIsConversationActive;

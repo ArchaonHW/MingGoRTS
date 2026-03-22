@@ -86,7 +86,7 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<class UMingResourceSystem> ResourceSystem;
 
-    UPROPERTY()
+    // 注意：非UObject指針不能用於UPROPERTY
     TMap<EMingResourceType, FResourceDisplayItem*> ResourceDisplayMap;
 
     // 初始化
