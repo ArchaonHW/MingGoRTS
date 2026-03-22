@@ -7,7 +7,8 @@
 #include "MingAIUIManager.h"
 #include "Save/MingSaveGameManager.h"
 #include "Save/MingSaveGame.h"
-#include "Network/MingNetworkManager.h"
+#include "MingPerformanceManager.h"
+#include "MingMemoryOptimizer.h"
 #include "Network/MingLobbySystem.h"
 #include "Localization/MingLocalizationManager.h"
 #include "MingUniversityGuideManager.h"
@@ -199,6 +200,46 @@ public:
     UFUNCTION(BlueprintPure, Category = "Localization")
     UMingLocalizationManager* GetLocalizationManager() const;
 
+    // 性能優化系統接口
+    UFUNCTION(BlueprintCallable, Category = "Performance")
+    void InitializePerformanceSystem();
+
+    UFUNCTION(BlueprintCallable, Category = "Performance")
+    void SetPerformanceLevel(EMingPerformanceLevel NewLevel);
+
+    UFUNCTION(BlueprintPure, Category = "Performance")
+    EMingPerformanceLevel GetCurrentPerformanceLevel() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Performance")
+    void OptimizePerformance();
+
+    UFUNCTION(BlueprintCallable, Category = "Performance")
+    void SetTargetFrameRate(float TargetFPS);
+
+    UFUNCTION(BlueprintPure, Category = "Performance")
+    FMingPerformanceMetrics GetPerformanceMetrics() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Performance")
+    void StartPerformanceMonitoring();
+
+    UFUNCTION(BlueprintCallable, Category = "Performance")
+    void StopPerformanceMonitoring();
+
+    UFUNCTION(BlueprintCallable, Category = "Memory")
+    void OptimizeMemory();
+
+    UFUNCTION(BlueprintCallable, Category = "Memory")
+    void SetMemoryBudget(int32 MaxMemoryMB);
+
+    UFUNCTION(BlueprintPure, Category = "Memory")
+    float GetMemoryUsagePercent() const;
+
+    UFUNCTION(BlueprintPure, Category = "Performance")
+    UMingPerformanceManager* GetPerformanceManager() const;
+
+    UFUNCTION(BlueprintPure, Category = "Performance")
+    UMingMemoryOptimizer* GetMemoryOptimizer() const;
+
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void StartUniversityGuide();
 
@@ -234,9 +275,13 @@ private:
     UPROPERTY()
     TObjectPtr<UMingSaveGameManager> SaveGameManager;
 
-    // 網絡管理器
+    // 性能優化管理器
     UPROPERTY()
-    TObjectPtr<UMingNetworkManager> NetworkManager;
+    TObjectPtr<UMingPerformanceManager> PerformanceManager;
+
+    // 內存優化器
+    UPROPERTY()
+    TObjectPtr<UMingMemoryOptimizer> MemoryOptimizer;
 
     // 大廳系統
     UPROPERTY()

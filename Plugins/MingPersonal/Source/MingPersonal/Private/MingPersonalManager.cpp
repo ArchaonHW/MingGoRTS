@@ -3,6 +3,8 @@
 #include "MingAudioRelationshipManager.h"
 #include "MingAIUIManager.h"
 #include "Save/MingSaveGameManager.h"
+#include "MingPerformanceManager.h"
+#include "MingMemoryOptimizer.h"
 #include "Network/MingNetworkManager.h"
 #include "Network/MingLobbySystem.h"
 #include "MingLocalizationManager.h"
@@ -72,6 +74,20 @@ void UMingPersonalManager::Initialize()
         LocalizationManager->InitializeLocalization(this);
     }
 
+    // 初始化性能優化管理器
+    PerformanceManager = NewObject<UMingPerformanceManager>(this);
+    if (PerformanceManager)
+    {
+        PerformanceManager->Initialize();
+    }
+
+    // 初始化內存優化器
+    MemoryOptimizer = NewObject<UMingMemoryOptimizer>(this);
+    if (MemoryOptimizer)
+    {
+        MemoryOptimizer->Initialize();
+    }
+
     // 初始化高校引導管理器（延遲創建，按需啟動）
     // UniversityGuideManager 將在 StartUniversityGuide 時創建
 
@@ -100,6 +116,20 @@ void UMingPersonalManager::Shutdown()
     {
         LocalizationManager->Shutdown();
         LocalizationManager = nullptr;
+    }
+
+    // 關閉性能優化管理器
+    if (PerformanceManager)
+    {
+        PerformanceManager->Shutdown();
+        PerformanceManager = nullptr;
+    }
+
+    // 關閉內存優化器
+    if (MemoryOptimizer)
+    {
+        MemoryOptimizer->Shutdown();
+        MemoryOptimizer = nullptr;
     }
 
     // 關閉大廳系統
