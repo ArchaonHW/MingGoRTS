@@ -4,6 +4,9 @@
 #include "UObject/NoExportTypes.h"
 #include "MingRelationshipManager.h"
 #include "MingAudioRelationshipManager.h"
+#include "MingAIUIManager.h"
+#include "Save/MingSaveGameManager.h"
+#include "Save/MingSaveGame.h"
 #include "MingPersonalManager.generated.h"
 
 /**
@@ -83,6 +86,50 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio")
     void SetAudioVolume(float RelationshipVolume, float ReputationVolume, float DialogueVolume);
 
+    // AI UI系統接口
+    UFUNCTION(BlueprintCallable, Category = "AI UI")
+    void InitializeAIUISystem();
+
+    UFUNCTION(BlueprintCallable, Category = "AI UI")
+    void TrackUserBehavior(const FString& BehaviorType, const FString& Context, float Value = 1.0f);
+
+    UFUNCTION(BlueprintCallable, Category = "AI UI")
+    void OptimizeUIForUser();
+
+    UFUNCTION(BlueprintCallable, Category = "AI UI")
+    void ShowContextualHelp(const FString& Context);
+
+    UFUNCTION(BlueprintCallable, Category = "AI UI")
+    TArray<FString> GetAIRecommendations();
+
+    // 保存和載入系統接口
+    UFUNCTION(BlueprintCallable, Category = "Save System")
+    void InitializeSaveSystem();
+
+    UFUNCTION(BlueprintCallable, Category = "Save System")
+    EMingSaveGameResult SaveGame(int32 SlotIndex, const FString& SaveName);
+
+    UFUNCTION(BlueprintCallable, Category = "Save System")
+    EMingSaveGameResult QuickSave();
+
+    UFUNCTION(BlueprintCallable, Category = "Save System")
+    EMingSaveGameResult LoadGame(int32 SlotIndex);
+
+    UFUNCTION(BlueprintCallable, Category = "Save System")
+    EMingSaveGameResult QuickLoad();
+
+    UFUNCTION(BlueprintCallable, Category = "Save System")
+    bool DeleteSaveGame(int32 SlotIndex);
+
+    UFUNCTION(BlueprintCallable, Category = "Save System")
+    void SetAutoSaveEnabled(bool bEnabled);
+
+    UFUNCTION(BlueprintPure, Category = "Save System")
+    bool IsAutoSaveEnabled() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Save System")
+    UMingSaveGameManager* GetSaveGameManager() const;
+
 protected:
     void OnExperienceGained(int32 Amount);
     void OnLevelUp();
@@ -100,4 +147,12 @@ private:
     // 音頻關係管理器
     UPROPERTY()
     TObjectPtr<UMingAudioRelationshipManager> AudioRelationshipManager;
+
+    // AI UI管理器
+    UPROPERTY()
+    TObjectPtr<UMingAIUIManager> AIUIManager;
+
+    // 保存遊戲管理器
+    UPROPERTY()
+    TObjectPtr<UMingSaveGameManager> SaveGameManager;
 };

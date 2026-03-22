@@ -2,6 +2,8 @@
 #include "MingCoreEventBus.h"
 #include "MingRelationshipManager.h"
 #include "MingAudioRelationshipManager.h"
+#include "MingAIUIManager.h"
+#include "MingPersonalUIManager.h"
 
 // 定義角色相關事件
 USTRUCT()
@@ -48,6 +50,20 @@ void UMingPersonalManager::Initialize()
 
     // 創建音頻關係管理器
     AudioRelationshipManager = NewObject<UMingAudioRelationshipManager>(this);
+    if (AudioRelationshipManager)
+    {
+        AudioRelationshipManager->InitializeAudioSystem(nullptr);
+    }
+
+    // 創建AI UI管理器
+    AIUIManager = NewObject<UMingAIUIManager>(this);
+
+    // 創建保存遊戲管理器
+    SaveGameManager = NewObject<UMingSaveGameManager>(this);
+    if (SaveGameManager)
+    {
+        SaveGameManager->Initialize();
+    }
 
     SetupEventSubscriptions();
     bIsInitialized = true;
@@ -481,4 +497,218 @@ void UMingPersonalManager::SetAudioVolume(float RelationshipVolume, float Reputa
         AudioRelationshipManager->SetReputationAudioVolume(ReputationVolume);
         AudioRelationshipManager->SetDialogueAudioVolume(DialogueVolume);
     }
+}
+
+void UMingPersonalManager::InitializeAIUISystem()
+{
+    if (AIUIManager && RelationshipManager)
+    {
+        // 獲取UI管理器實例（這裡需要從遊戲實例獲取）
+        UMingPersonalUIManager* UIManager = nullptr; // 實際實現中需要獲取UI管理器
+        AIUIManager->InitializeAIUIManager(UIManager, RelationshipManager);
+        
+        // 開始追蹤用戶行為
+        TrackUserBehavior(TEXT("SystemInitialized"), TEXT("AIUI"), 1.0f);
+        
+        UE_LOG(LogTemp, Log, TEXT("AI UI System initialized"));
+    }
+}
+
+void UMingPersonalManager::TrackUserBehavior(const FString& BehaviorType, const FString& Context, float Value)
+{
+    if (AIUIManager)
+    {
+        AIUIManager->TrackUserBehavior(BehaviorType, Context, Value);
+    }
+}
+
+void UMingPersonalManager::OptimizeUIForUser()
+{
+    if (AIUIManager)
+    {
+        AIUIManager->AnalyzeUserBehavior();
+        AIUIManager->ApplyAllRecommendedAdaptations();
+        
+        TrackUserBehavior(TEXT("UIOptimization"), TEXT("PersonalManager"), 1.0f);
+    }
+}
+
+void UMingPersonalManager::ShowContextualHelp(const FString& Context)
+{
+    if (AIUIManager)
+    {
+        AIUIManager->ShowContextualHelp(Context);
+        TrackUserBehavior(TEXT("ContextualHelp"), Context, 1.0f);
+    }
+}
+
+TArray<FString> UMingPersonalManager::GetAIRecommendations()
+{
+    TArray<FString> Recommendations;
+    
+    if (AIUIManager)
+    {
+        // 獲取推薦任務
+        TArray<FString> QuestRecommendations = AIUIManager->GetRecommendedQuests();
+        Recommendations.Append(QuestRecommendations);
+        
+        // 獲取建議角色
+        TArray<FString> CharacterSuggestions = AIUIManager->GetSuggestedCharacters();
+        Recommendations.Append(CharacterSuggestions);
+        
+        // 添加基於用戶檔案的建議
+        FAIUserProfileData Profile = AIUIManager->GetCurrentProfile();
+        switch (Profile.ProfileType)
+        {
+        case EAIUserProfile::NewPlayer:
+            Recommendations.Add(TEXT("Focus on building relationships early"));
+            break;
+        case EAIUserProfile::SocialPlayer:
+            Recommendations.Add(TEXT("Visit the relationship panel frequently"));
+            break;
+        case EAIUserProfile::PowerPlayer:
+            Recommendations.Add(TEXT("Optimize your combat strategies"));
+            break;
+        default:
+            break;
+        }
+    }
+    
+    return Recommendations;
+}
+
+// 保存和載入系統實現
+void UMingPersonalManager::InitializeSaveSystem()
+{
+    if (!SaveGameManager)
+    {
+        SaveGameManager = NewObject<UMingSaveGameManager>(this);
+    }
+
+    if (SaveGameManager)
+    {
+        SaveGameManager->Initialize();
+        UE_LOG(LogTemp, Log, TEXT("Save system initialized"));
+    }
+}
+
+EMingSaveGameResult UMingPersonalManager::SaveGame(int32 SlotIndex, const FString& SaveName)
+{
+    if (!SaveGameManager)
+    {
+        return EMingSaveGameResult::Failed_Unknown;
+    }
+
+    EMingSaveGameResult Result = SaveGameManager->SaveGame(SlotIndex, SaveName, false);
+
+    if (Result == EMingSaveGameResult::Success)
+    {
+        UE_LOG(LogTemp, Log, TEXT("Game saved to slot %d: %s"), SlotIndex, *SaveName);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Failed to save game to slot %d: %d"), SlotIndex, static_cast<int32>(Result));
+    }
+
+    return Result;
+}
+
+EMingSaveGameResult UMingPersonalManager::QuickSave()
+{
+    if (!SaveGameManager)
+    {
+        return EMingSaveGameResult::Failed_Unknown;
+    }
+
+    int32 QuickSlot = SaveGameManager->GetQuickSaveSlot();
+    EMingSaveGameResult Result = SaveGameManager->QuickSave();
+
+    if (Result == EMingSaveGameResult::Success)
+    {
+        UE_LOG(LogTemp, Log, TEXT("Quick save completed to slot %d"), QuickSlot);
+    }
+
+    return Result;
+}
+
+EMingSaveGameResult UMingPersonalManager::LoadGame(int32 SlotIndex)
+{
+    if (!SaveGameManager)
+    {
+        return EMingSaveGameResult::Failed_Unknown;
+    }
+
+    if (!SaveGameManager->DoesSaveExist(SlotIndex))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No save game exists in slot %d"), SlotIndex);
+        return EMingSaveGameResult::Failed_CorruptData;
+    }
+
+    EMingSaveGameResult Result = SaveGameManager->LoadGame(SlotIndex);
+
+    if (Result == EMingSaveGameResult::Success)
+    {
+        UE_LOG(LogTemp, Log, TEXT("Game loaded from slot %d"), SlotIndex);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Failed to load game from slot %d: %d"), SlotIndex, static_cast<int32>(Result));
+    }
+
+    return Result;
+}
+
+EMingSaveGameResult UMingPersonalManager::QuickLoad()
+{
+    if (!SaveGameManager)
+    {
+        return EMingSaveGameResult::Failed_Unknown;
+    }
+
+    int32 QuickSlot = SaveGameManager->GetQuickSaveSlot();
+    return LoadGame(QuickSlot);
+}
+
+bool UMingPersonalManager::DeleteSaveGame(int32 SlotIndex)
+{
+    if (!SaveGameManager)
+    {
+        return false;
+    }
+
+    bool bSuccess = SaveGameManager->DeleteSaveGame(SlotIndex);
+
+    if (bSuccess)
+    {
+        UE_LOG(LogTemp, Log, TEXT("Save game deleted from slot %d"), SlotIndex);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Failed to delete save game from slot %d"), SlotIndex);
+    }
+
+    return bSuccess;
+}
+
+void UMingPersonalManager::SetAutoSaveEnabled(bool bEnabled)
+{
+    if (SaveGameManager)
+    {
+        SaveGameManager->SetAutosaveEnabled(bEnabled);
+        UE_LOG(LogTemp, Log, TEXT("Auto save %s"), bEnabled ? TEXT("enabled") : TEXT("disabled"));
+    }
+}
+
+bool UMingPersonalManager::IsAutoSaveEnabled() const
+{
+    if (SaveGameManager)
+    {
+        return SaveGameManager->IsAutosaveEnabled();
+    }
+    return false;
+}
+
+UMingSaveGameManager* UMingPersonalManager::GetSaveGameManager() const
+{
+    return SaveGameManager;
 }
