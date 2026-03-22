@@ -37,7 +37,7 @@ struct FFilmPlaybackSettings
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFilmFrameChanged, int32, CurrentFrame);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnFilmPlaybackStateChanged, EFilmPlaybackState, NewState, int32, CurrentFrame);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFilmPlaybackStateChanged, EFilmPlaybackState, NewState, int32, CurrentFrame);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFilmPlaybackEnded);
 
 UCLASS(BlueprintType, Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))

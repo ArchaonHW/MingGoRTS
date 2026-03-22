@@ -29,6 +29,9 @@ public:
     UPROPERTY(meta = (BindWidgetOptional))
     TObjectPtr<class UHorizontalBox> ResourceContainer;
 
+    UPROPERTY(meta = (BindWidgetOptional))
+    TObjectPtr<class UMingResourceDisplayWidget> ResourceDisplayWidget;
+
     // Unit Info Panel
     UPROPERTY(meta = (BindWidgetOptional))
     TObjectPtr<class UBorder> UnitInfoPanel;

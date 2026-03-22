@@ -3,6 +3,8 @@
 #include "MingTacticalUnit.h"
 #include "MingRTSPlayerController.h"
 #include "MingSelectionManager.h"
+#include "MingResourceDisplayWidget.h"
+#include "MingBuilding/Source/MingBuilding/Public/MingResourceSystem.h"
 #include "Components/TextBlock.h"
 #include "Components/Border.h"
 #include "Components/ProgressBar.h"
@@ -26,6 +28,12 @@ void UMingHUDWidget::NativeConstruct()
             SelectionManager = OwningController->GetSelectionManager();
             SetupBindings();
         }
+    }
+    
+    // 初始化資源顯示 Widget
+    if (ResourceDisplayWidget)
+    {
+        ResourceDisplayWidget->InitializeResourceDisplays();
     }
     
     // 初始化UI狀態
@@ -219,6 +227,35 @@ void UMingHUDWidget::ClearUnitInfo()
 
 void UMingHUDWidget::UpdateResources(const TMap<FString, int32>& Resources)
 {
+    // 如果有專門的資源顯示 Widget，使用它
+    if (ResourceDisplayWidget)
+    {
+        // 轉換資源格式
+        TMap<EMingResourceType, int32> TypedResources;
+        TMap<EMingResourceType, int32> Capacities;
+        
+        // 這裡需要根據實際資源系統來獲取正確的數據
+        // 暫時使用默認值
+        TypedResources.Add(EMingResourceType::Food, Resources.FindRef("糧食"));
+        TypedResources.Add(EMingResourceType::Money, Resources.FindRef("資金"));
+        TypedResources.Add(EMingResourceType::Materials, Resources.FindRef("原材料"));
+        TypedResources.Add(EMingResourceType::Fuel, Resources.FindRef("燃料"));
+        TypedResources.Add(EMingResourceType::Ammo, Resources.FindRef("彈藥"));
+        TypedResources.Add(EMingResourceType::Manpower, Resources.FindRef("人力"));
+        
+        // 設置容量（暫時使用固定值）
+        Capacities.Add(EMingResourceType::Food, 1000);
+        Capacities.Add(EMingResourceType::Money, 50000);
+        Capacities.Add(EMingResourceType::Materials, 2000);
+        Capacities.Add(EMingResourceType::Fuel, 1000);
+        Capacities.Add(EMingResourceType::Ammo, 500);
+        Capacities.Add(EMingResourceType::Manpower, 500);
+        
+        ResourceDisplayWidget->UpdateAllResources(TypedResources, Capacities);
+        return;
+    }
+    
+    // 後備方案：使用簡單的文字顯示
     if (!ResourceText)
     {
         return;

@@ -49,6 +49,12 @@ public:
     bool bIsAttacking;
 
     UPROPERTY(BlueprintReadOnly, Category = "Unit|State")
+    bool bIsGathering;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Unit|State")
+    bool bIsCarryingResources;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Unit|State")
     FVector TargetPosition;
 
 protected:
@@ -62,10 +68,26 @@ protected:
     UFUNCTION()
     void OnUnitMoved(const FUnitMovedEvent& Event);
 
+    // 選擇視覺反饋
+    UFUNCTION()
+    void UpdateSelectionVisuals();
+
+    UFUNCTION()
+    void ShowSelectionHighlight();
+
+    UFUNCTION()
+    void HideSelectionHighlight();
+
     // 單位行為
     void MoveToPosition(const FVector& Position, bool bIsAttackMove = false);
     void AttackTarget(class AActor* Target);
     void StopCurrentAction();
+
+    // 採集行為
+    void GatherResource(class AMingResourceNode* ResourceNode);
+    void DeliverResources();
+    void ProcessGathering(float DeltaTime);
+    void ProcessResourceDelivery(float DeltaTime);
 
     // 性能優化：避免Tick()濫用
     void UpdateUnitState(float DeltaTime);
@@ -90,6 +112,31 @@ private:
     TObjectPtr<AActor> CurrentTarget;
     bool bHasValidTarget;
 
+    // 採集相關
+    TObjectPtr<class AMingResourceNode> TargetResourceNode;
+    TObjectPtr<class UMingResourceSystem> ResourceSystem;
+    float GatheringProgress;
+    float GatheringTime;
+    int32 CarriedResourceAmount;
+    EMingResourceType CarriedResourceType;
+    FVector DeliveryLocation;
+
+    // 選擇視覺反饋組件
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Selection", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<class UStaticMeshComponent> SelectionRingMesh;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Selection", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<class UDecalComponent> SelectionDecal;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Selection", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<class UMaterialInterface> SelectionRingMaterial;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Selection", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<class UMaterialInterface> SelectionDecalMaterial;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Selection", meta = (AllowPrivateAccess = "true"))
+    float SelectionRingSize;
+
     // 事件訂閱管理
     void SubscribeToEvents();
     void UnsubscribeFromEvents();
@@ -111,6 +158,15 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Unit|Combat")
     void SetAttackTarget(AActor* Target);
+
+    UFUNCTION(BlueprintCallable, Category = "Unit|Gathering")
+    void StartGathering(class AMingResourceNode* ResourceNode);
+
+    UFUNCTION(BlueprintCallable, Category = "Unit|Gathering")
+    void StopGathering();
+
+    UFUNCTION(BlueprintCallable, Category = "Unit|Gathering")
+    void ReturnToBase();
 
     // 獲取單位信息
     UFUNCTION(BlueprintPure, Category = "Unit|Info")

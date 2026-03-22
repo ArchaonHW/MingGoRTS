@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Containers/Ticker.h"
 #include "UObject/NoExportTypes.h"
 #include "Engine/Texture2D.h"
 #include "Sound/SoundBase.h"
@@ -40,7 +41,7 @@ struct FFilmSequenceData
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFilmFrameGenerated, int32, FrameIndex);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnFilmGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFilmGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage);
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSAIFilmGenerator : public UObject

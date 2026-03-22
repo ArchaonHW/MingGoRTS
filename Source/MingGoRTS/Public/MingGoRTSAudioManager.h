@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Containers/Ticker.h"
 #include "UObject/NoExportTypes.h"
 #include "Sound/SoundBase.h"
 #include "Sound/SoundWave.h"
@@ -81,7 +82,7 @@ struct FAudioMixSettings
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAudioMixCompleted, class USoundWave*, MixedAudio);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnAudioMixProgress, float, Progress, const FString&, CurrentOperation);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAudioMixProgress, float, Progress, const FString&, CurrentOperation);
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSAudioManager : public UObject

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Containers/Ticker.h"
 #include "UObject/NoExportTypes.h"
 #include "Engine/Texture2D.h"
 #include "Materials/MaterialInterface.h"
@@ -135,7 +136,7 @@ struct FArtPostProcessSettings
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnArtGenerated, class UTexture2D*, GeneratedArt);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnArtGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnArtGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnArtGenerationProgress, float, Progress);
 
 UCLASS(BlueprintType, Blueprintable)

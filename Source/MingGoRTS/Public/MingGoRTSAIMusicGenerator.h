@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Containers/Ticker.h"
 #include "UObject/NoExportTypes.h"
 #include "Sound/SoundBase.h"
 #include "Sound/SoundWave.h"
@@ -105,7 +106,7 @@ struct FSoundEffectParameters
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMusicGenerated, class USoundWave*, GeneratedMusic);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoundEffectGenerated, class USoundWave*, GeneratedSFX);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnMusicGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMusicGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage);
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSAIMusicGenerator : public UObject

@@ -1,12 +1,16 @@
 #include "MingTacticalUnit.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components/DecalComponent.h"
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "DrawDebugHelpers.h"
+#include "Materials/MaterialInterface.h"
+#include "MingBuilding/Source/MingBuilding/Public/MingResourceNode.h"
+#include "MingBuilding/Source/MingBuilding/Public/MingResourceSystem.h"
 
 // 靜態成員初始化
 TArray<AMingTacticalUnit*> AMingTacticalUnit::UnitPool;
@@ -30,6 +34,8 @@ AMingTacticalUnit::AMingTacticalUnit()
     bIsSelected = false;
     bIsMoving = false;
     bIsAttacking = false;
+    bIsGathering = false;
+    bIsCarryingResources = false;
     TargetPosition = FVector::ZeroVector;
     
     // 初始化性能變量
@@ -42,6 +48,18 @@ AMingTacticalUnit::AMingTacticalUnit()
     CurrentTarget = nullptr;
     bHasValidTarget = false;
     
+    // 初始化採集相關
+    TargetResourceNode = nullptr;
+    ResourceSystem = nullptr;
+    GatheringProgress = 0.0f;
+    GatheringTime = 2.0f;
+    CarriedResourceAmount = 0;
+    CarriedResourceType = EMingResourceType::Food;
+    DeliveryLocation = FVector::ZeroVector;
+    
+    // 初始化選擇視覺反饋
+    SelectionRingSize = 100.0f;
+    
     // 創建組件
     USphereComponent* CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphere"));
     RootComponent = CollisionSphere;
@@ -49,6 +67,20 @@ AMingTacticalUnit::AMingTacticalUnit()
     
     UStaticMeshComponent* MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
     MeshComponent->SetupAttachment(RootComponent);
+    
+    // 創建選擇環組件（默認隱藏）
+    SelectionRingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SelectionRingMesh"));
+    SelectionRingMesh->SetupAttachment(RootComponent);
+    SelectionRingMesh->SetVisibility(false);
+    SelectionRingMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    SelectionRingMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -90.0f)); // 在單位底部
+    
+    // 創建選擇貼花組件（默認隱藏）
+    SelectionDecal = CreateDefaultSubobject<UDecalComponent>(TEXT("SelectionDecal"));
+    SelectionDecal->SetupAttachment(RootComponent);
+    SelectionDecal->SetVisibility(false);
+    SelectionDecal->DecalSize = FVector(100.0f, 100.0f, 100.0f);
+    SelectionDecal->SetRelativeLocation(FVector(0.0f, 0.0f, -90.0f));
     
     // 設置碰撞
     CollisionSphere->SetCollisionProfileName(TEXT("Unit"));
@@ -132,6 +164,18 @@ void AMingTacticalUnit::UpdateUnitState(float DeltaTime)
     if (bIsAttacking && bHasValidTarget)
     {
         ProcessCombat(DeltaTime);
+    }
+    
+    // 處理採集
+    if (bIsGathering)
+    {
+        ProcessGathering(DeltaTime);
+    }
+    
+    // 處理資源運送
+    if (bIsCarryingResources)
+    {
+        ProcessResourceDelivery(DeltaTime);
     }
 }
 
@@ -246,11 +290,161 @@ void AMingTacticalUnit::StopCurrentAction()
 {
     bIsMoving = false;
     bIsAttacking = false;
+    bIsGathering = false;
     CurrentTarget = nullptr;
     bHasValidTarget = false;
+    TargetResourceNode = nullptr;
     CurrentPath.Reset();
     
     UE_LOG(LogTemp, Log, TEXT("Unit %d stopped all actions"), UnitId);
+}
+
+// 採集相關方法
+void AMingTacticalUnit::GatherResource(AMingResourceNode* ResourceNode)
+{
+    if (!ResourceNode || !ResourceNode->CanBeGathered())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Unit %d cannot gather from resource node"), UnitId);
+        return;
+    }
+
+    // 停止當前動作
+    StopCurrentAction();
+    
+    // 設置採集目標
+    TargetResourceNode = ResourceNode;
+    bIsGathering = true;
+    GatheringProgress = 0.0f;
+    GatheringTime = ResourceNode->GatherTime;
+    
+    // 註冊為採集者
+    ResourceNode->RegisterGatherer();
+    
+    // 移動到資源節點
+    MoveToPosition(ResourceNode->GetActorLocation());
+    
+    UE_LOG(LogTemp, Log, TEXT("Unit %d started gathering from %s"), UnitId, *ResourceNode->GetName());
+}
+
+void AMingTacticalUnit::DeliverResources()
+{
+    if (!bIsCarryingResources || CarriedResourceAmount <= 0)
+    {
+        return;
+    }
+
+    // 移動到送達位置
+    if (!DeliveryLocation.IsZero())
+    {
+        MoveToPosition(DeliveryLocation);
+        bIsMoving = true;
+    }
+    else
+    {
+        // 如果沒有設置送達位置，直接添加到資源系統
+        if (ResourceSystem)
+        {
+            ResourceSystem->AddResource(CarriedResourceType, CarriedResourceAmount);
+            UE_LOG(LogTemp, Log, TEXT("Unit %d delivered %d %s"), UnitId, 
+                   CarriedResourceAmount, *UMingResourceSystem::GetResourceName(CarriedResourceType));
+        }
+        
+        // 清除運送狀態
+        bIsCarryingResources = false;
+        CarriedResourceAmount = 0;
+    }
+}
+
+void AMingTacticalUnit::ProcessGathering(float DeltaTime)
+{
+    if (!TargetResourceNode || !TargetResourceNode->CanBeGathered())
+    {
+        StopGathering();
+        return;
+    }
+
+    // 檢查是否已到達資源節點
+    float DistanceToTarget = FVector::Dist(GetActorLocation(), TargetResourceNode->GetActorLocation());
+    if (DistanceToTarget > 100.0f) // 到達閾值
+    {
+        // 還在移動中，等待到達
+        return;
+    }
+
+    // 停止移動，開始採集
+    bIsMoving = false;
+    
+    // 更新採集進度
+    GatheringProgress += DeltaTime;
+    
+    if (GatheringProgress >= GatheringTime)
+    {
+        // 採集完成
+        int32 GatheredAmount = TargetResourceNode->GatherResource(TargetResourceNode->GatherAmountPerTrip);
+        
+        if (GatheredAmount > 0)
+        {
+            // 開始運送資源
+            bIsGathering = false;
+            bIsCarryingResources = true;
+            CarriedResourceAmount = GatheredAmount;
+            CarriedResourceType = TargetResourceNode->ResourceType;
+            
+            // 取消註冊採集者
+            TargetResourceNode->UnregisterGatherer();
+            
+            // 設置送達位置（默認為玩家位置或基地位置）
+            if (ResourceSystem)
+            {
+                DeliveryLocation = GetActorLocation() + FVector(0, 0, 100); // 臨時位置
+            }
+            
+            // 開始送達
+            DeliverResources();
+            
+            UE_LOG(LogTemp, Log, TEXT("Unit %d gathered %d %s, now delivering"), UnitId,
+                   GatheredAmount, *UMingResourceSystem::GetResourceName(CarriedResourceType));
+        }
+        else
+        {
+            // 資源耗盡，停止採集
+            StopGathering();
+        }
+    }
+}
+
+void AMingTacticalUnit::ProcessResourceDelivery(float DeltaTime)
+{
+    if (!bIsCarryingResources)
+    {
+        return;
+    }
+
+    // 檢查是否已到達送達位置
+    if (!DeliveryLocation.IsZero())
+    {
+        float DistanceToDelivery = FVector::Dist(GetActorLocation(), DeliveryLocation);
+        if (DistanceToDelivery > 100.0f) // 到達閾值
+        {
+            // 還在移動中
+            return;
+        }
+    }
+
+    // 送達完成，添加資源到系統
+    if (ResourceSystem)
+    {
+        ResourceSystem->AddResource(CarriedResourceType, CarriedResourceAmount);
+        
+        UE_LOG(LogTemp, Log, TEXT("Unit %d delivered %d %s"), UnitId,
+               CarriedResourceAmount, *UMingResourceSystem::GetResourceName(CarriedResourceType));
+    }
+
+    // 清除運送狀態
+    bIsCarryingResources = false;
+    bIsMoving = false;
+    CarriedResourceAmount = 0;
+    DeliveryLocation = FVector::ZeroVector;
 }
 
 // Blueprint callable functions
@@ -260,6 +454,9 @@ void AMingTacticalUnit::SelectUnit()
     {
         bIsSelected = true;
         UE_LOG(LogTemp, Log, TEXT("Unit %d selected"), UnitId);
+        
+        // 顯示選擇視覺反饋
+        ShowSelectionHighlight();
         
         // 發布選擇事件
         FUnitSelectedEvent SelectionEvent(UnitId, FVector2D::ZeroVector);
@@ -273,7 +470,79 @@ void AMingTacticalUnit::DeselectUnit()
     {
         bIsSelected = false;
         UE_LOG(LogTemp, Log, TEXT("Unit %d deselected"), UnitId);
+        
+        // 隱藏選擇視覺反饋
+        HideSelectionHighlight();
     }
+}
+
+void AMingTacticalUnit::UpdateSelectionVisuals()
+{
+    // 更新選擇視覺效果（如閃爍、旋轉等動畫效果）
+    if (bIsSelected)
+    {
+        // 可以在此處添加選擇環的動畫效果
+        // 例如：讓選擇環緩慢旋轉或閃爍
+        if (SelectionRingMesh && SelectionRingMesh->IsVisible())
+        {
+            // 緩慢旋轉選擇環
+            FRotator CurrentRotation = SelectionRingMesh->GetRelativeRotation();
+            CurrentRotation.Yaw += 0.5f; // 每幀旋轉0.5度
+            SelectionRingMesh->SetRelativeRotation(CurrentRotation);
+        }
+    }
+}
+
+void AMingTacticalUnit::ShowSelectionHighlight()
+{
+    // 顯示選擇環
+    if (SelectionRingMesh)
+    {
+        SelectionRingMesh->SetVisibility(true);
+        
+        // 如果設置了材質，應用它
+        if (SelectionRingMaterial)
+        {
+            SelectionRingMesh->SetMaterial(0, SelectionRingMaterial);
+        }
+    }
+    
+    // 顯示選擇貼花
+    if (SelectionDecal)
+    {
+        SelectionDecal->SetVisibility(true);
+        
+        // 如果設置了材質，應用它
+        if (SelectionDecalMaterial)
+        {
+            SelectionDecal->SetDecalMaterial(SelectionDecalMaterial);
+        }
+    }
+    
+    // 調整選擇環大小
+    if (SelectionRingMesh)
+    {
+        SelectionRingMesh->SetWorldScale3D(FVector(SelectionRingSize / 100.0f));
+    }
+    
+    UE_LOG(LogTemp, Verbose, TEXT("Unit %d selection highlight shown"), UnitId);
+}
+
+void AMingTacticalUnit::HideSelectionHighlight()
+{
+    // 隱藏選擇環
+    if (SelectionRingMesh)
+    {
+        SelectionRingMesh->SetVisibility(false);
+    }
+    
+    // 隱藏選擇貼花
+    if (SelectionDecal)
+    {
+        SelectionDecal->SetVisibility(false);
+    }
+    
+    UE_LOG(LogTemp, Verbose, TEXT("Unit %d selection highlight hidden"), UnitId);
 }
 
 void AMingTacticalUnit::MoveToLocation(const FVector& TargetLocation, bool bAttackMove)
@@ -299,6 +568,52 @@ void AMingTacticalUnit::SetAttackTarget(AActor* Target)
         bIsMoving = false;
         
         UE_LOG(LogTemp, Log, TEXT("Unit %d set attack target to %s"), UnitId, *Target->GetName());
+    }
+}
+
+// 採集相關 Blueprint callable functions
+void AMingTacticalUnit::StartGathering(AMingResourceNode* ResourceNode)
+{
+    if (IsAlive() && ResourceNode)
+    {
+        // 獲取資源系統引用
+        if (!ResourceSystem)
+        {
+            // 從遊戲模式或玩家控制器獲取資源系統
+            // 這裡需要根據實際項目結構來獲取
+            // 暫時創建一個臨時的資源系統引用
+            ResourceSystem = NewObject<UMingResourceSystem>();
+            ResourceSystem->InitializeDefaultResources();
+        }
+        
+        GatherResource(ResourceNode);
+    }
+}
+
+void AMingTacticalUnit::StopGathering()
+{
+    if (bIsGathering && TargetResourceNode)
+    {
+        // 取消註冊採集者
+        TargetResourceNode->UnregisterGatherer();
+    }
+    
+    bIsGathering = false;
+    TargetResourceNode = nullptr;
+    GatheringProgress = 0.0f;
+    
+    UE_LOG(LogTemp, Log, TEXT("Unit %d stopped gathering"), UnitId);
+}
+
+void AMingTacticalUnit::ReturnToBase()
+{
+    if (bIsCarryingResources)
+    {
+        DeliverResources();
+    }
+    else if (bIsGathering)
+    {
+        StopGathering();
     }
 }
 

@@ -96,7 +96,7 @@ struct FLayerInfo
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnArtEdited, class UTexture2D*, EditedArt);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnLayerChanged, const FString&, LayerName, int32, LayerIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLayerChanged, const FString&, LayerName, int32, LayerIndex);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnToolChanged, EEditingTool, NewTool);
 
 UCLASS(BlueprintType, Blueprintable)

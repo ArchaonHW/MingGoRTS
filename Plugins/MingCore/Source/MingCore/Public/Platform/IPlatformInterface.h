@@ -84,7 +84,7 @@ struct FPlatformCapabilities
  * 定義所有平台相關功能的統一接口
  */
 UINTERFACE(MinimalAPI)
-class UIPlatformInterface : public UInterface
+class MINGCORE_API UPlatformInterface : public UInterface
 {
     GENERATED_BODY()
 };
