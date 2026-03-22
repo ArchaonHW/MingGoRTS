@@ -174,13 +174,13 @@ struct FMingNetworkStats
 };
 
 // Delegate declarations
-declare dynamic multicast delegate(FOnNetworkConnected);
-declare dynamic multicast_delegate(FOnNetworkDisconnected, const FString&, Reason);
-declare dynamic_multicast_delegate(FOnNetworkConnectionFailed, const FString&, ErrorMessage);
-declare dynamic_multicast_delegate(FOnPlayerJoined, int32, PlayerID, const FString&, PlayerName);
-declare dynamic_multicast_delegate(FOnPlayerLeft, int32, PlayerID, const FString&, Reason);
-declare dynamic_multicast_delegate(FOnNetworkStateChanged, EMingNetworkConnectionState, NewState);
-declare dynamic_multicast_delegate(FOnHostMigrated, int32, NewHostPlayerID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNetworkConnected);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkDisconnected, const FString&, Reason);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkConnectionFailed, const FString&, ErrorMessage);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerJoined, int32, PlayerID, const FString&, PlayerName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerLeft, int32, PlayerID, const FString&, Reason);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkStateChanged, EMingNetworkConnectionState, NewState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHostMigrated, int32, NewHostPlayerID);
 
 /**
  * 多人遊戲網絡管理器

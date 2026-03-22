@@ -277,7 +277,7 @@ public:
 
     // 顯示指定類別的升級路徑
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Manager UI")
-    void ShowUpgradePathsByType(EBuildingType BuildingType);
+    void ShowUpgradePathsByType(EMingBuildingType BuildingType);
 
     // 顯示所有升級路徑
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Manager UI")
@@ -305,7 +305,7 @@ public:
 
     // 設置過濾器
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Manager UI")
-    void SetFilter(EBuildingType BuildingTypeFilter, EBuildingUpgradeStatus StatusFilter);
+    void SetFilter(EMingBuildingType BuildingTypeFilter, EBuildingUpgradeStatus StatusFilter);
 
     // 清除過濾器
     UFUNCTION(BlueprintCallable, Category = "Building Upgrade Manager UI")
@@ -374,7 +374,7 @@ protected:
 
     // 當前過濾器
     UPROPERTY(BlueprintReadOnly, Category = "Building Upgrade Manager UI")
-    EBuildingType BuildingTypeFilter;
+    EMingBuildingType BuildingTypeFilter;
 
     UPROPERTY(BlueprintReadOnly, Category = "Building Upgrade Manager UI")
     EBuildingUpgradeStatus StatusFilter;
@@ -461,7 +461,7 @@ private:
     void ClearExistingWidgets();
 
     // 獲取建築類別顏色
-    FLinearColor GetBuildingTypeColor(EBuildingType BuildingType) const;
+    FLinearColor GetBuildingTypeColor(EMingBuildingType BuildingType) const;
 };
 
 /**
@@ -639,7 +639,7 @@ protected:
 
     // 創建建築類型統計項目
     UFUNCTION(BlueprintImplementableEvent, Category = "Upgrade Stats UI")
-    UUserWidget* CreateBuildingTypeStatItem(EBuildingType BuildingType, int32 Count);
+    UUserWidget* CreateBuildingTypeStatItem(EMingBuildingType BuildingType, int32 Count);
 
     // 創建效果類型統計項目
     UFUNCTION(BlueprintImplementableEvent, Category = "Upgrade Stats UI")

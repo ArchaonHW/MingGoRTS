@@ -267,29 +267,29 @@ public:
     void ExecuteLineAttack(AMingGoRTSUnit* Attacker, const FVector& Start, const FVector& End, float Width);
 
     // 技能系統
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     void AddAbility(AMingGoRTSUnit* Unit, const FRTSAbilityData& Ability);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     void RemoveAbility(AMingGoRTSUnit* Unit, const FString& AbilityName);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     bool UseAbility(AMingGoRTSUnit* Unit, const FString& AbilityName, AMingGoRTSUnit* Target = nullptr);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     TArray<FRTSAbilityData> GetUnitAbilities(AMingGoRTSUnit* Unit) const;
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     bool IsAbilityAvailable(AMingGoRTSUnit* Unit, const FString& AbilityName) const;
 
     // 狀態效果
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     void ApplyStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName, float Duration, float Power);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     void RemoveStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName);
 
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
     bool HasStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")

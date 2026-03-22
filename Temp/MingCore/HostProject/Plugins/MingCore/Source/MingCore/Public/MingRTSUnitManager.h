@@ -322,10 +322,10 @@ protected:
     TObjectPtr<AMingGoRTSPlayerController> PlayerController;
 
     // 單位存儲
-    UPROPERTY()
+    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
     TMap<FString, AMingGoRTSUnit*> AllUnits;
 
-    UPROPERTY()
+    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
     TArray<AMingGoRTSUnit*> SelectedUnits;
 
     // 注意：TMap<TArray> 不支持 UPROPERTY

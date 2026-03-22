@@ -99,8 +99,8 @@ development_status:
 
   # Epic 7: 本地化与国际系统
   epic-7: in-progress
-  7-1-multi-language-support: ready-for-dev
-  7-2-cultural-adaptation: backlog
+  7-1-multi-language-support: in-progress
+  7-2-cultural-adaptation: ready-for-dev
   7-3-regional-content: backlog
   7-4-localization-assets: backlog
   7-5-dynamic-language-switch: backlog
