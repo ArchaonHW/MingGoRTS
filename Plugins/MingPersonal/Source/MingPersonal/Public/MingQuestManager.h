@@ -228,11 +228,11 @@ struct MINGPERSONAL_API FMingQuestData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SuggestedLevel;
 
-    // ä»»å??®æ??—è¡¨
+    // ä»»å??®æ??—è"
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingQuestObjective> QuestObjectives;
 
-    // ?…ä??¸é??—è¡¨
+    // ?…ä??¸é??—è"
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingStoryChoice> StoryChoices;
 
@@ -415,7 +415,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool MakeStoryChoice(int32 QuestID, int32 ChoiceID);
 
-    // ?²å?ä»»å??—è¡¨
+    // ?²å?ä»»å??—è"
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TArray<FMingQuestData> GetAvailableQuests() const;
 
@@ -493,7 +493,7 @@ protected:
     // ?…ä?ç¯€é»æ•¸?šåº« - æ³¨æ?ï¼šTMap<TArray> ä¸æ”¯??UPROPERTY
     TMap<int32, TArray<FMingStoryNode>> StoryNodeDatabase;
 
-    // æ´»è?ä»»å??—è¡¨
+    // æ´»è?ä»»å??—è"
     UPROPERTY()
     TArray<int32> ActiveQuests;
 

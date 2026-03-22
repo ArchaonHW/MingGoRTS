@@ -10,7 +10,7 @@
 #include "MingPerformanceManager.h"
 #include "MingMemoryOptimizer.h"
 #include "Network/MingLobbySystem.h"
-#include "Localization/MingLocalizationManager.h"
+#include "MingLocalizationManager.h"
 #include "MingUniversityGuideManager.h"
 #include "MingPersonalManager.generated.h"
 
