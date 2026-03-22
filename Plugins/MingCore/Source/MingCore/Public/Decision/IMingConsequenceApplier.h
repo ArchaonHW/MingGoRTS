@@ -7,7 +7,7 @@
 
 // 介面類 - 後果應用器
 UINTERFACE(MinimalAPI, BlueprintType)
-class UIMingConsequenceApplier : public UInterface
+class UMingConsequenceApplier : public UInterface
 {
     GENERATED_BODY()
 };

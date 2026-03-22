@@ -7,7 +7,7 @@
 
 // 介面類 - 後果計算器
 UINTERFACE(MinimalAPI, BlueprintType)
-class UIMingConsequenceCalculator : public UInterface
+class UMingConsequenceCalculator : public UInterface
 {
     GENERATED_BODY()
 };

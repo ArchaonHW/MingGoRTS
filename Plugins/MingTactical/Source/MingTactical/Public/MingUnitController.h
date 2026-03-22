@@ -12,7 +12,7 @@ class UMingSelectionManager;
  * 單位狀態
  */
 UENUM(BlueprintType)
-enum class EUnitState : uint8
+enum class EMingUnitState : uint8
 {
     Idle                UMETA(DisplayName = "Idle"),
     Moving              UMETA(DisplayName = "Moving"),
@@ -409,13 +409,13 @@ public:
      * 獲取單位狀態
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    EUnitState GetUnitState(AMingTacticalUnit* Unit) const;
+    EMingUnitState GetUnitState(AMingTacticalUnit* Unit) const;
 
     /**
      * 設置單位狀態
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    bool SetUnitState(AMingTacticalUnit* Unit, EUnitState NewState);
+    bool SetUnitState(AMingTacticalUnit* Unit, EMingUnitState NewState);
 
     /**
      * 獲取單位命令隊列
@@ -452,9 +452,9 @@ protected:
     UPROPERTY()
     TArray<AMingTacticalUnit*> ControlledUnits;
 
-    // 單位狀態映射
+    // 注意：無 BlueprintType，避免引擎名稱衝突
     UPROPERTY()
-    TMap<AMingTacticalUnit*, EUnitState> UnitStates;
+    TMap<AMingTacticalUnit*, EMingUnitState> UnitStates;
 
     // 單位命令隊列
     UPROPERTY()

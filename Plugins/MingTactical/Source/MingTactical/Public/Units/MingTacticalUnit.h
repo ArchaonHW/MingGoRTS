@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "MingUnitController.h"
 #include "MingTacticalUnit.generated.h"
 
 UENUM(BlueprintType)
@@ -13,16 +14,6 @@ enum class EUnitType : uint8
     Tank,
     Aircraft,
     Support
-};
-
-UENUM(BlueprintType)
-enum class EUnitState : uint8
-{
-    Idle,
-    Moving,
-    Attacking,
-    Defending,
-    Dead
 };
 
 USTRUCT(BlueprintType)
