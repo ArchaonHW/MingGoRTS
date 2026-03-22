@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -12,27 +12,27 @@ enum class ERTSUnitType : uint8
 {
     Infantry,       // Ê≠•ÂÖµ
     Cavalry,        // È®éÂÖµ
-    Artillery,      // ?´ÁÇÆ
-    Scout,          // ?•ÂÄ?    Engineer,       // Â∑•ÂÖµ
-    Medic,          // ?´Á???    Commander,      // ?áÊèÆÂÆ?    Supply          // Ë£úÁµ¶?Æ‰?
+    Artillery,      // ?ÔøΩÁÇÆ
+    Scout,          // ?ÔøΩÔøΩ?    Engineer,       // Â∑•ÂÖµ
+    Medic,          // ?ÔøΩÔøΩX    Commander,      // ?ÔøΩÊèÆÔøΩ?    Supply          // Ë£úÁµ¶?ÔøΩÔøΩ?
 };
 
 UENUM(BlueprintType)
 enum class ERTSUnitState : uint8
 {
-    Idle,           // Á©∫È?
-    Moving,         // ÁßªÂ?‰∏?    Attacking,      // ?ªÊ?‰∏?    Defending,      // ?≤Á¶¶‰∏?    Retreating,     // ?§ÈÄÄ‰∏?    Dead,           // Ê≠ª‰∫°
+    Idle,           // Á©∫ÔøΩ?
+    Moving,         // ÁßªÔøΩ?ÔøΩ?    Attacking,      // ?ÔøΩÔøΩ?ÔøΩ?    Defending,      // ?ÔøΩÁ¶¶ÔøΩ?    Retreating,     // ?ÔøΩÈÄÄÔøΩ?    Dead,           // Ê≠ª‰∫°
     Building        // Âª∫ÈÄ†‰∏≠
 };
 
 UENUM(BlueprintType)
 enum class ERTSFormationType : uint8
 {
-    None,           // ?°Èô£??    Line,           // Á∑öÂΩ¢???
-    Column,         // Á∏±È????
-    Wedge,          // Ê•îÂΩ¢???
-    Circle,         // ?ìÂΩ¢???
-    Square          // ?πÂΩ¢???
+    None,           // ?ÔøΩÈô£X    Line,           // Á∑öÂΩ¢X
+    Column,         // Á∏±ÔøΩX
+    Wedge,          // Ê•îÂΩ¢X
+    Circle,         // ?ÔøΩÂΩ¢X
+    Square          // ?ÔøΩÂΩ¢X
 };
 
 USTRUCT(BlueprintType)
@@ -84,7 +84,7 @@ struct FRTSUnitData
 
     FRTSUnitData()
     {
-        UnitID = TEXT("");
+        UnitID = TEXT(""};
         UnitType = ERTSUnitType::Infantry;
         CurrentState = ERTSUnitState::Idle;
         CurrentLocation = FVector::ZeroVector;
@@ -129,30 +129,30 @@ struct FRTSFormationData
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitSelected, AMingGoRTSUnit*, Unit, bool, bIsSelected);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitStateChanged, AMingGoRTSUnit*, Unit, ERTSUnitState, NewState);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnUnitsMoved, const TArray<AMingGoRTSUnit*>&, Units, const FVector&, TargetLocation, bool, bIsFormation);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitDamaged, AMingGoRTSUnit*, Unit);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitSelected, AMingGoRTSUnit*, Unit, bool, bIsSelected};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitStateChanged, AMingGoRTSUnit*, Unit, ERTSUnitState, NewState};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnUnitsMoved, const TArray<AMingGoRTSUnit*>&, Units, const FVector&, TargetLocation, bool, bIsFormation};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitDamaged, AMingGoRTSUnit*, Unit};
 
 /**
- * RTS?Æ‰?ÁÆ°Á??? * ÁÆ°Á??Ä?âRTS?Æ‰??ÑÈÅ∏?á„ÄÅÁßª?ï„ÄÅÈô£?ãÂ??Ä?? */
+ * RTS?ÔøΩÔøΩ?ÁÆ°ÔøΩX * ÁÆ°ÔøΩXÔøΩ?ÔøΩRTS?ÔøΩÔøΩXÔøΩÈÅ∏?ÔøΩ„ÄÅÁßª?ÔøΩ„ÄÅÈô£?ÔøΩÔøΩXÔøΩX */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSUnitManager : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingRTSUnitManager();
+    UMingRTSUnitManager(};
 
-    // ?ùÂ???    UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void InitializeUnitManager(AMingGoRTSPlayerController* InPlayerController);
+    // ?ÔøΩÔøΩX    UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
+    void InitializeUnitManager(AMingGoRTSPlayerController* InPlayerController};
 
-    // ?Æ‰?ÁÆ°Á?
+    // ?ÔøΩÔøΩ?ÁÆ°ÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void RegisterUnit(AMingGoRTSUnit* Unit);
+    void RegisterUnit(AMingGoRTSUnit* Unit};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void UnregisterUnit(AMingGoRTSUnit* Unit);
+    void UnregisterUnit(AMingGoRTSUnit* Unit};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     AMingGoRTSUnit* GetUnit(const FString& UnitID) const;
@@ -166,75 +166,75 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     TArray<AMingGoRTSUnit*> GetUnitsByState(ERTSUnitState State) const;
 
-    // ?∏Ê?Á≥ªÁµ±
+    // ?ÔøΩÔøΩ?Á≥ªÁµ±
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void SelectUnit(AMingGoRTSUnit* Unit, bool bAddToSelection = false);
+    void SelectUnit(AMingGoRTSUnit* Unit, bool bAddToSelection = false};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void SelectUnits(const TArray<AMingGoRTSUnit*>& Units);
+    void SelectUnits(const TArray<AMingGoRTSUnit*>& Units};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void SelectUnitsInRect(FVector2D ScreenStart, FVector2D ScreenEnd);
+    void SelectUnitsInRect(FVector2D ScreenStart, FVector2D ScreenEnd};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void DeselectAllUnits();
+    void DeselectAllUnits(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void DeselectUnit(AMingGoRTSUnit* Unit);
+    void DeselectUnit(AMingGoRTSUnit* Unit};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     TArray<AMingGoRTSUnit*> GetSelectedUnits() const { return SelectedUnits; }
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    int32 GetSelectedUnitCount() const { return SelectedUnits.Num(); }
+    int32 GetSelectedUnitCount() const { return SelectedUnits.Num(}; }
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     bool IsUnitSelected(AMingGoRTSUnit* Unit) const;
 
-    // ÁßªÂ?Á≥ªÁµ±
+    // ÁßªÔøΩ?Á≥ªÁµ±
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void MoveUnits(const TArray<AMingGoRTSUnit*>& Units, const FVector& TargetLocation);
+    void MoveUnits(const TArray<AMingGoRTSUnit*>& Units, const FVector& TargetLocation) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void MoveSelectedUnits(const FVector& TargetLocation);
+    void MoveSelectedUnits(const FVector& TargetLocation) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void StopUnitMovement(AMingGoRTSUnit* Unit);
+    void StopUnitMovement(AMingGoRTSUnit* Unit};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void StopAllUnitMovement();
+    void StopAllUnitMovement(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     bool IsUnitMoving(AMingGoRTSUnit* Unit) const;
 
-    // ???Á≥ªÁµ±
+    // XÁ≥ªÁµ±
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void SetFormation(ERTSFormationType FormationType);
+    void SetFormation(ERTSFormationType FormationType};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void ApplyFormationToSelectedUnits(const FVector& Center);
+    void ApplyFormationToSelectedUnits(const FVector& Center) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    FRTSFormationData CalculateFormation(ERTSFormationType FormationType, const TArray<AMingGoRTSUnit*>& Units, const FVector& Center);
+    FRTSFormationData CalculateFormation(ERTSFormationType FormationType, const TArray<AMingGoRTSUnit*>& Units, const FVector& Center) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void UpdateFormation();
+    void UpdateFormation(};
 
-    // ?Ä?ãÁÆ°??    UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void SetUnitState(AMingGoRTSUnit* Unit, ERTSUnitState NewState);
+    // ?ÔøΩ?ÔøΩÁÆ°X    UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
+    void SetUnitState(AMingGoRTSUnit* Unit, ERTSUnitState NewState};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     ERTSUnitState GetUnitState(AMingGoRTSUnit* Unit) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void UpdateUnitStates(float DeltaTime);
+    void UpdateUnitStates(float DeltaTime};
 
-    // ?∞È¨•Á≥ªÁµ±
+    // ?ÔøΩÈ¨•Á≥ªÁµ±
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void AttackUnit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
+    void AttackUnit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void StopAttack(AMingGoRTSUnit* Unit);
+    void StopAttack(AMingGoRTSUnit* Unit};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     bool CanAttackUnit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target) const;
@@ -242,40 +242,40 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     TArray<AMingGoRTSUnit*> GetUnitsInRange(AMingGoRTSUnit* Unit, float Range) const;
 
-    // ?Æ‰??∏Ê?
+    // ?ÔøΩÔøΩXÔøΩÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     FRTSUnitData GetUnitData(AMingGoRTSUnit* Unit) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void SetUnitData(AMingGoRTSUnit* Unit, const FRTSUnitData& UnitData);
+    void SetUnitData(AMingGoRTSUnit* Unit, const FRTSUnitData& UnitData) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void UpdateUnitHealth(AMingGoRTSUnit* Unit, float HealthChange);
+    void UpdateUnitHealth(AMingGoRTSUnit* Unit, float HealthChange};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     bool IsUnitAlive(AMingGoRTSUnit* Unit) const;
 
-    // Ë∑ØÂ?Ë¶èÂ?
+    // Ë∑ØÔøΩ?Ë¶èÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    TArray<FVector> CalculatePath(AMingGoRTSUnit* Unit, const FVector& TargetLocation);
+    TArray<FVector> CalculatePath(AMingGoRTSUnit* Unit, const FVector& TargetLocation) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     bool HasValidPath(AMingGoRTSUnit* Unit) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void RecalculatePaths();
+    void RecalculatePaths(};
 
-    // Áæ§Á??ßÂà∂
+    // Áæ§ÔøΩXÔøΩÂà∂
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void CreateUnitGroup(const TArray<AMingGoRTSUnit*>& Units, const FString& GroupName);
+    void CreateUnitGroup(const TArray<AMingGoRTSUnit*>& Units, const FString& GroupName) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
-    void SelectUnitGroup(const FString& GroupName);
+    void SelectUnitGroup(const FString& GroupName) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     TArray<FString> GetUnitGroups() const;
 
-    // Áµ±Ë?‰ø°ÊÅØ
+    // Áµ±ÔøΩ?‰ø°ÊÅØ
     UFUNCTION(BlueprintPure, Category = "RTS Unit Manager")
     int32 GetTotalUnitCount() const;
 
@@ -309,24 +309,24 @@ protected:
     UPROPERTY()
     TObjectPtr<AMingGoRTSPlayerController> PlayerController;
 
-    // ?Æ‰?Â≠òÂÑ≤
-    // Ê≥®Ê?ÔºöAMingGoRTSUnit ?Ø‰∏ªÂ∞àÊ?È°ûÂ?Ôºå‰??©Â? UPROPERTY
+    // ?ÔøΩÔøΩ?Â≠òÂÑ≤
+    // Ê≥®ÔøΩ?ÔºöAMingGoRTSUnit ?ÔøΩ‰∏ªÂ∞àÔøΩ?È°ûÔøΩ?ÔºåÔøΩXÔøΩÔøΩ? UPROPERTY
     TMap<FString, AMingGoRTSUnit*> AllUnits;
 
-    // Ê≥®Ê?ÔºöAMingGoRTSUnit ?Ø‰∏ªÂ∞àÊ?È°ûÂ?Ôºå‰??©Â? UPROPERTY
+    // Ê≥®ÔøΩ?ÔºöAMingGoRTSUnit ?ÔøΩ‰∏ªÂ∞àÔøΩ?È°ûÔøΩ?ÔºåÔøΩXÔøΩÔøΩ? UPROPERTY
     TArray<AMingGoRTSUnit*> SelectedUnits;
 
-    // Ê≥®Ê?ÔºöTMap<TArray> ‰∏çÊîØ??UPROPERTY
+    // Ê≥®ÔøΩ?ÔºöTMap<TArray> ‰∏çÊîØXUPROPERTY
     TMap<FString, TArray<AMingGoRTSUnit*>> UnitGroups;
 
-    // ????∏Ê?
+    // XÔøΩÔøΩ?
     UPROPERTY()
     ERTSFormationType CurrentFormation;
 
     UPROPERTY()
     FRTSFormationData CurrentFormationData;
 
-    // ?Ä??    UPROPERTY()
+    // ?ÔøΩX    UPROPERTY()
     bool bIsInitialized;
 
     // Ë®≠ÁΩÆ
@@ -339,19 +339,20 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "RTS Settings")
     bool bAutoFormation = true;
 
-    // ?ßÈÉ®?ΩÊï∏
-    void UpdateUnitSelection();
-    void ProcessUnitMovement(float DeltaTime);
-    void ProcessCombat(float DeltaTime);
+    // ?ÔøΩÈÉ®?ÔøΩÊï∏
+    void UpdateUnitSelection(};
+    void ProcessUnitMovement(float DeltaTime};
+    void ProcessCombat(float DeltaTime};
     FVector CalculateFormationPosition(AMingGoRTSUnit* Unit, const FRTSFormationData& Formation) const;
     bool IsUnitInSelectionRect(AMingGoRTSUnit* Unit, FVector2D ScreenStart, FVector2D ScreenEnd) const;
-    void CleanupDeadUnits();
+    void CleanupDeadUnits(};
     FString GenerateUnitID(ERTSUnitType UnitType) const;
 
 private:
-    // ËºîÂä©?ΩÊï∏
-    void NotifyUnitSelected(AMingGoRTSUnit* Unit, bool bIsSelected);
-    void NotifyUnitStateChanged(AMingGoRTSUnit* Unit, ERTSUnitState NewState);
-    void NotifyUnitsMoved(const TArray<AMingGoRTSUnit*>& Units, const FVector& TargetLocation, bool bIsFormation);
-    void NotifyUnitDamaged(AMingGoRTSUnit* Unit);
+    // ËºîÂä©?ÔøΩÊï∏
+    void NotifyUnitSelected(AMingGoRTSUnit* Unit, bool bIsSelected};
+    void NotifyUnitStateChanged(AMingGoRTSUnit* Unit, ERTSUnitState NewState};
+    void NotifyUnitsMoved(const TArray<AMingGoRTSUnit*>& Units, const FVector& TargetLocation, bool bIsFormation};
+    void NotifyUnitDamaged(AMingGoRTSUnit* Unit};
 };
+

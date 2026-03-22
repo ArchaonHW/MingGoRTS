@@ -11,10 +11,10 @@
 class MINGCORE_API FExampleTacticalSubscriber : public IMingEventSubscriber
 {
 public:
-    FExampleTacticalSubscriber();
+    FExampleTacticalSubscriber(};
     
     // IMingEventSubscriber interface
-    virtual FName GetSubscriberId() const override { return FName("ExampleTactical"); }
+    virtual FName GetSubscriberId() const override { return FName("ExampleTactical"}; }
     virtual TArray<FString> GetInterestedLayers() const override;
     virtual TArray<FName> GetInterestedEventTypes() const override;
     virtual void HandleEvent(TSharedPtr<IMingEvent> Event) override;
@@ -27,6 +27,7 @@ public:
 private:
     int32 HandledEventCount = 0;
     
-    void HandleUnitMovement(TSharedPtr<IMingEvent> Event);
-    void HandleCombat(TSharedPtr<IMingEvent> Event);
+    void HandleUnitMovement(TSharedPtr<IMingEvent> Event};
+    void HandleCombat(TSharedPtr<IMingEvent> Event};
 };
+

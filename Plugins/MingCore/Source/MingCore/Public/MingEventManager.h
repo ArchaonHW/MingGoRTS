@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -91,7 +91,7 @@ struct FMingGameEvent
     {}
 };
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnGameEvent, const FMingGameEvent&, Event);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnGameEvent, const FMingGameEvent&, Event};
 
 /**
  * Event Manager for MingGoRTS
@@ -103,84 +103,84 @@ class MINGCORE_API UMingEventManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingEventManager();
+    UMingEventManager(};
 
     // Singleton access
     UFUNCTION(BlueprintPure, Category = "Event Manager", meta = (WorldContext = "WorldContextObject"))
-    static UMingEventManager* Get(UObject* WorldContextObject);
+    static UMingEventManager* Get(UObject* WorldContextObject};
 
     // Event Publishing
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void PublishEvent(const FMingGameEvent& Event);
+    void PublishEvent(const FMingGameEvent& Event) {};
 
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void PublishSimpleEvent(EMingGameEventType Type, UObject* Source = nullptr, UObject* Target = nullptr);
+    void PublishSimpleEvent(EMingGameEventType Type, UObject* Source = nullptr, UObject* Target = nullptr};
 
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void PublishCombatEvent(EMingGameEventType Type, class AActor* Attacker, class AActor* Target, int32 DamageDealt);
+    void PublishCombatEvent(EMingGameEventType Type, class AActor* Attacker, class AActor* Target, int32 DamageDealt};
 
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void PublishResourceEvent(EMingGameEventType Type, EMingResourceType Resource, int32 Amount, UObject* Source);
+    void PublishResourceEvent(EMingGameEventType Type, EMingResourceType Resource, int32 Amount, UObject* Source};
 
     // Event Subscription
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void SubscribeToEvent(EMingGameEventType EventType, const FOnGameEvent& Callback);
+    void SubscribeToEvent(EMingGameEventType EventType, const FOnGameEvent& Callback) {};
 
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void UnsubscribeFromEvent(EMingGameEventType EventType, const FOnGameEvent& Callback);
+    void UnsubscribeFromEvent(EMingGameEventType EventType, const FOnGameEvent& Callback) {};
 
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void SubscribeToAllEvents(const FOnGameEvent& Callback);
+    void SubscribeToAllEvents(const FOnGameEvent& Callback) {};
 
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void ClearAllSubscriptions();
+    void ClearAllSubscriptions(};
 
     // Event History
     UFUNCTION(BlueprintCallable, Category = "History")
-    TArray<FMingGameEvent> GetEventHistory(EMingGameEventType EventType, float TimeWindow = -1.0f);
+    TArray<FMingGameEvent> GetEventHistory(EMingGameEventType EventType, float TimeWindow = -1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "History")
-    TArray<FMingGameEvent> GetAllEventHistory(float TimeWindow = -1.0f);
+    TArray<FMingGameEvent> GetAllEventHistory(float TimeWindow = -1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "History")
-    void ClearHistory();
+    void ClearHistory(};
 
     UFUNCTION(BlueprintPure, Category = "History")
-    int32 GetEventCount(EMingGameEventType EventType, float TimeWindow = -1.0f);
+    int32 GetEventCount(EMingGameEventType EventType, float TimeWindow = -1.0f};
 
     // Event Query
     UFUNCTION(BlueprintPure, Category = "Query")
-    bool HasEventOccurred(EMingGameEventType EventType, float TimeWindow = -1.0f);
+    bool HasEventOccurred(EMingGameEventType EventType, float TimeWindow = -1.0f};
 
     UFUNCTION(BlueprintPure, Category = "Query")
-    FMingGameEvent GetLastEventOfType(EMingGameEventType EventType);
+    FMingGameEvent GetLastEventOfType(EMingGameEventType EventType};
 
     UFUNCTION(BlueprintCallable, Category = "Query")
-    TArray<FMingGameEvent> GetEventsForObject(UObject* Object, float TimeWindow = -1.0f);
+    TArray<FMingGameEvent> GetEventsForObject(UObject* Object, float TimeWindow = -1.0f};
 
     // Event Processing
     UFUNCTION(BlueprintCallable, Category = "Processing")
-    void SetEventBatchingEnabled(bool bEnabled);
+    void SetEventBatchingEnabled(bool bEnabled};
 
     UFUNCTION(BlueprintCallable, Category = "Processing")
-    void SetBatchInterval(float Interval);
+    void SetBatchInterval(float Interval};
 
     UFUNCTION(BlueprintCallable, Category = "Processing")
-    void ProcessPendingEvents();
+    void ProcessPendingEvents(};
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetEventTypeName(EMingGameEventType Type);
+    static FString GetEventTypeName(EMingGameEventType Type};
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FLinearColor GetEventTypeColor(EMingGameEventType Type);
+    static FLinearColor GetEventTypeColor(EMingGameEventType Type};
 
     // Statistics
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    TMap<EMingGameEventType, int32> GetEventStatistics(float TimeWindow = -1.0f);
+    TMap<EMingGameEventType, int32> GetEventStatistics(float TimeWindow = -1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void ExportEventLog(const FString& FilePath);
+    void ExportEventLog(const FString& FilePath) {};
 
 protected:
     // Event storage
@@ -209,11 +209,12 @@ protected:
     int32 MaxHistorySize;
 
     // Internal functions
-    void DispatchEvent(const FMingGameEvent& Event);
-    void AddToHistory(const FMingGameEvent& Event);
-    void CleanupOldHistory();
-    void ProcessBatch();
+    void DispatchEvent(const FMingGameEvent& Event) {};
+    void AddToHistory(const FMingGameEvent& Event) {};
+    void CleanupOldHistory(};
+    void ProcessBatch(};
     
     UPROPERTY()
     TWeakObjectPtr<UWorld> CachedWorld;
 };
+

@@ -1,37 +1,40 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "MingCoreEventBus.generated.h"
 
-// äº‹ä»¶?ªå?ç´šæ???(?¨ç?å®šç¾©ä»¥æ”¯??UHT)
+// ï¿½Æ¥ï¿½Xï¿½ï¿½X(Xï¿½wï¿½qï¿½Hï¿½ï¿½XUHT)
 UENUM(BlueprintType)
 enum class EEventPriority : uint8
 {
-    Critical = 0,  // ?®ä??¸æ??æ”»?Šæ?ä»?    High = 1,      // ?°è?ç§»å??ç??‹è???    Normal = 2,    // è³‡æ??´æ–°?UI?·æ–°
-    Low = 3        // çµ±è??¸æ??æ—¥èªŒè???};
+    Critical = 0,   // ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½ - ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ş§@
+    High = 1,       // ï¿½ï¿½ï¿½uï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½nï¿½Æ¥ï¿½Mï¿½Î¤ï¿½æ¤¬
+    Normal = 2,     // ï¿½ï¿½ï¿½qï¿½uï¿½ï¿½ï¿½ï¿½ - ï¿½ê·½ï¿½ï¿½sï¿½BUIï¿½ï¿½s
+    Low = 3         // ï¿½Cï¿½uï¿½ï¿½ï¿½ï¿½ - ï¿½Î­pï¿½Æ¥ï¿½Bï¿½ï¿½xï¿½Oï¿½ï¿½
+};
 
 class MINGCORE_API IMingCoreEventBus
 {
 public:
     virtual ~IMingCoreEventBus() {}
     
-    // äº‹ä»¶?¼å??¥å£
+    // ï¿½Æ¥ï¿½Xï¿½f
     template<typename EventType>
-    static void PublishEvent(const EventType& Event);
+    static void PublishEvent(const EventType& Event) {};
     
-    // äº‹ä»¶è¨‚é–±?¥å£
+    // ï¿½Æ¥ï¿½qï¿½\Xï¿½f
     template<typename EventType>
-    static void Subscribe(class UObject* Listener, TFunction<void(const EventType&)> Callback);
+    static void Subscribe(class UObject* Listener, TFunction<void(const EventType&)> Callback};
     
-    // äº‹ä»¶?–æ?è¨‚é–±
+    // ï¿½Æ¥ï¿½Xï¿½qï¿½\
     template<typename EventType>
-    static void Unsubscribe(class UObject* Listener);
+    static void Unsubscribe(class UObject* Listener};
     
-    // ?¹è??†ä?ä»¶ç™¼å¸ƒï??§èƒ½?ªå?ï¼?    static void PublishBatchEvents(const TArray<struct FMingCoreEvent>& Events);
+    // Xï¿½ï¿½oï¿½ï¿½Xï¿½ï¿½X    static void PublishBatchEvents(const TArray<struct FMingCoreEvent>& Events};
 };
 
-// ?ºç?äº‹ä»¶çµæ?
+// Xï¿½Æ¥ï¿½X
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingCoreEvent
 {
@@ -54,11 +57,11 @@ struct MINGCORE_API FMingCoreEvent
         , Timestamp(FDateTime::Now())
         , Source(nullptr)
     {
-        EventId = FGuid::NewGuid().ToString();
+        EventId = FGuid::NewGuid().ToString(};
     }
 };
 
-// ?®ä??¸æ?äº‹ä»¶
+// Xï¿½Æ¥ï¿½
 USTRUCT(BlueprintType)
 struct MINGCORE_API FUnitSelectedEvent : public FMingCoreEvent
 {
@@ -77,7 +80,7 @@ struct MINGCORE_API FUnitSelectedEvent : public FMingCoreEvent
     }
 };
 
-// ?®ä?ç§»å?äº‹ä»¶
+// Xï¿½ï¿½Xï¿½Æ¥ï¿½
 USTRUCT(BlueprintType)
 struct MINGCORE_API FUnitMovedEvent : public FMingCoreEvent
 {
@@ -99,7 +102,7 @@ struct MINGCORE_API FUnitMovedEvent : public FMingCoreEvent
     }
 };
 
-// è³‡æ??´æ–°äº‹ä»¶
+// ï¿½ï¿½Xï¿½sï¿½Æ¥ï¿½
 USTRUCT(BlueprintType)
 struct MINGCORE_API FResourceUpdateEvent : public FMingCoreEvent
 {
@@ -120,3 +123,4 @@ struct MINGCORE_API FResourceUpdateEvent : public FMingCoreEvent
         Priority = EEventPriority::Normal;
     }
 };
+

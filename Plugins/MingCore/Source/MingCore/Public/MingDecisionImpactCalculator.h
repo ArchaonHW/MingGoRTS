@@ -1,119 +1,120 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingDecisionImpactCalculator.generated.h"
 
-// å½±éŸ¿é¡å??šè?
+// ï¿½vï¿½Tï¿½ï¿½X
 UENUM(BlueprintType)
 enum class EMingImpactType : uint8
 {
-    Immediate,      // ç«‹å³å½±éŸ¿
-    ShortTerm,      // ?­æ?å½±éŸ¿ (1-3å¹?
-    MediumTerm,     // ä¸­æ?å½±éŸ¿ (3-10å¹?
-    LongTerm,       // ?·æ?å½±éŸ¿ (10å¹´ä»¥ä¸?
-    Permanent       // æ°¸ä?å½±éŸ¿
+    Immediate,      // ï¿½ß§Yï¿½vï¿½T
+    ShortTerm,      // Xï¿½vï¿½T (1-3X
+    MediumTerm,     // ï¿½ï¿½Xï¿½vï¿½T (3-10X
+    LongTerm,       // Xï¿½vï¿½T (10ï¿½~ï¿½HX
+    Permanent       // ï¿½ï¿½Xï¿½vï¿½T
 };
 
-// å½±éŸ¿ç¯„å??šè?
+// ï¿½vï¿½Tï¿½dX
 UENUM(BlueprintType)
 enum class EMingImpactScope : uint8
 {
-    Personal,       // ?‹äººå±¤é¢
-    Regional,       // ?°å?å±¤é¢
-    National,       // ?‹å®¶å±¤é¢
-    International,  // ?‹é?å±¤é¢
-    Historical       // æ­·å²å±¤é¢
+    Personal,       // Xï¿½Hï¿½hï¿½ï¿½
+    Regional,       // Xï¿½hï¿½ï¿½
+    National,       // Xï¿½aï¿½hï¿½ï¿½
+    International,  // Xï¿½hï¿½ï¿½
+    Historical       // ï¿½ï¿½ï¿½vï¿½hï¿½ï¿½
 };
 
-// å½±éŸ¿ç¨‹åº¦?šè?
+// ï¿½vï¿½Tï¿½{ï¿½ï¿½X
 UENUM(BlueprintType)
 enum class EMingImpactMagnitude : uint8
 {
-    Minimal,        // æ¥µå?
-    Minor,          // è¼•å¾®
-    Moderate,       // ä¸­ç?
-    Significant,    // é¡¯è?
-    Major,          // ?å¤§
-    Catastrophic    // ?½é›£??};
+    Minimal,        // ï¿½ï¿½X
+    Minor,          // ï¿½ï¿½ï¿½L
+    Moderate,       // ï¿½ï¿½X
+    Significant,    // ï¿½ï¿½X
+    Major,          // Xï¿½j
+    Catastrophic,   // ï¿½aï¿½ï¿½ï¿½ï¿½
+};
 
-// æ­·å²è·¯å??†æ”¯
+// ï¿½ï¿½ï¿½vï¿½ï¿½Xï¿½ï¿½
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingHistoricalPath
 {
     GENERATED_BODY()
 
-    // è·¯å?ID
+    // ï¿½ï¿½XID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 PathID;
 
-    // è·¯å??ç¨±
+    // ï¿½ï¿½Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString PathName;
 
-    // è·¯å??è¿°
+    // ï¿½ï¿½Xï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString PathDescription;
 
-    // è·¯å?æ¨™ç±¤
+    // ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> PathTags;
 
-    // è·¯å?æ¬Šé?
+    // ï¿½ï¿½Xï¿½vX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float PathWeight;
 
-    // ?¯å¦?ºä¸»è¦è·¯å¾?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½_Xï¿½Dï¿½nï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsMainPath;
 
     FMingHistoricalPath()
     {
         PathID = -1;
-        PathName = TEXT("");
-        PathDescription = TEXT("");
-        PathTags.Empty();
+        PathName = TEXT(""};
+        PathDescription = TEXT(""};
+        PathTags.Empty(};
         PathWeight = 1.0f;
         bIsMainPath = false;
     }
 };
 
-// æ±ºç?å½±éŸ¿è©³ç´°ä¿¡æ¯
+// ï¿½MXï¿½vï¿½Tï¿½Ô²Ó«Hï¿½ï¿½
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingDecisionImpactDetail
 {
     GENERATED_BODY()
 
-    // å½±éŸ¿é¡å?
+    // ï¿½vï¿½Tï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingImpactType ImpactType;
 
-    // å½±éŸ¿ç¯„å?
+    // ï¿½vï¿½Tï¿½dX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingImpactScope ImpactScope;
 
-    // å½±éŸ¿ç¨‹åº¦
+    // ï¿½vï¿½Tï¿½{ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingImpactMagnitude ImpactMagnitude;
 
-    // å½±éŸ¿?è¿°
+    // ï¿½vï¿½TXï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ImpactDescription;
 
-    // å½±éŸ¿?¸å€?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ï¿½vï¿½TX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ImpactValue;
 
-    // å½±éŸ¿?ç??‚é? (å¹?
+    // ï¿½vï¿½TX (X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 DurationYears;
 
-    // ?‹å??‚é? (æ±ºç?å¾Œå¹´??
+    // X (ï¿½MXï¿½ï¿½~X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 StartYear;
 
-    // å½±éŸ¿?„å±¬??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ï¿½vï¿½TXï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> AffectedAttributes;
 
-    // æ­·å²?¥è??§å®¹
+    // ï¿½ï¿½ï¿½vXï¿½e
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HistoricalKnowledge;
 
@@ -122,58 +123,58 @@ struct FINGCORE_API FMingDecisionImpactDetail
         ImpactType = EMingImpactType::Immediate;
         ImpactScope = EMingImpactScope::Personal;
         ImpactMagnitude = EMingImpactMagnitude::Moderate;
-        ImpactDescription = TEXT("");
+        ImpactDescription = TEXT(""};
         ImpactValue = 0.0f;
         DurationYears = 0;
         StartYear = 0;
-        AffectedAttributes.Empty();
-        HistoricalKnowledge = TEXT("");
+        AffectedAttributes.Empty(};
+        HistoricalKnowledge = TEXT(""};
     }
 };
 
-// å®Œæ•´æ±ºç?å½±éŸ¿?±å?
+// ï¿½ï¿½ï¿½ï¿½MXï¿½vï¿½TX
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingDecisionImpactReport
 {
     GENERATED_BODY()
 
-    // æ±ºç?ID
+    // ï¿½MXID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 DecisionID;
 
-    // ?¸æ??„é¸?…ID
+    // Xï¿½ï¿½XID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ChosenOptionID;
 
-    // è¨ˆç??‚é?
+    // ï¿½pX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime CalculationTime;
 
-    // ç¸½é?å½±éŸ¿è©•å?
+    // ï¿½`Xï¿½vï¿½Tï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float OverallImpactScore;
 
-    // æ­·å²è·¯å?å½±éŸ¿
+    // ï¿½ï¿½ï¿½vï¿½ï¿½Xï¿½vï¿½T
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingHistoricalPath> AffectedPaths;
 
-    // è©³ç´°å½±éŸ¿?—è¡¨
+    // ï¿½Ô²Ó¼vï¿½TXï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingDecisionImpactDetail> ImpactDetails;
 
-    // è§’è‰²?²æ?è®Šå?
+    // ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ReputationChanges;
 
-    // ?¢å?ç¯„å?è®Šå?
+    // Xï¿½dXï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, int32> TerritoryChanges;
 
-    // å¾Œç?äº‹ä»¶è§¸ç™¼æ¢ä»¶?´æ–°
+    // ï¿½ï¿½Xï¿½Æ¥ï¿½Ä²ï¿½oï¿½ï¿½ï¿½ï¿½Xï¿½s
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UpdatedEventConditions;
 
-    // ?™è‚²?§å®¹?˜è?
+    // Xï¿½|Xï¿½eX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EducationalSummary;
 
@@ -181,49 +182,49 @@ struct FINGCORE_API FMingDecisionImpactReport
     {
         DecisionID = -1;
         ChosenOptionID = -1;
-        CalculationTime = FDateTime::Now();
+        CalculationTime = FDateTime::Now(};
         OverallImpactScore = 0.0f;
-        AffectedPaths.Empty();
-        ImpactDetails.Empty();
-        ReputationChanges.Empty();
-        TerritoryChanges.Empty();
-        UpdatedEventConditions.Empty();
-        EducationalSummary = TEXT("");
+        AffectedPaths.Empty(};
+        ImpactDetails.Empty(};
+        ReputationChanges.Empty(};
+        TerritoryChanges.Empty(};
+        UpdatedEventConditions.Empty(};
+        EducationalSummary = TEXT(""};
     }
 };
 
-// ?¢å?ç¯„å??¸æ?
+// Xï¿½dX
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingTerritoryData
 {
     GENERATED_BODY()
 
-    // ?¢å??ç¨±
+    // Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString FactionName;
 
-    // ?§åˆ¶?ä»½?¸é?
+    // Xï¿½ï¿½Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ControlledProvinces;
 
-    // ?§åˆ¶?å??¸é?
+    // Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ControlledCities;
 
-    // è»ä?å¯¦å??‡æ•¸
+    // ï¿½xXï¿½ï¿½Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MilitaryStrength;
 
-    // ç¶“æ?å¯¦å??‡æ•¸
+    // ï¿½gXï¿½ï¿½Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float EconomicStrength;
 
-    // æ°‘çœ¾?¯æ?åº?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ï¿½ï¿½ï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float PopularSupport;
 
     FMingTerritoryData()
     {
-        FactionName = TEXT("");
+        FactionName = TEXT(""};
         ControlledProvinces = 0;
         ControlledCities = 0;
         MilitaryStrength = 0.0f;
@@ -232,12 +233,12 @@ struct FINGCORE_API FMingTerritoryData
     }
 };
 
-// å½±éŸ¿è¨ˆç?äº‹ä»¶å§”è?
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnImpactCalculated, const FMingDecisionImpactReport&, Report);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHistoricalPathChanged, const FString&, PathName, float, NewWeight);
+// ï¿½vï¿½Tï¿½pXï¿½Æ¥ï¿½eX
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnImpactCalculated, const FMingDecisionImpactReport&, Report};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHistoricalPathChanged, const FString&, PathName, float, NewWeight};
 
 /**
- * æ±ºç?å½±éŸ¿è¨ˆç??? * è² è²¬è¨ˆç??Œå??æ­·?²æ±ºç­–ç??„ç¨®å½±éŸ¿
+ * ï¿½MXï¿½vï¿½Tï¿½pX * ï¿½tï¿½dï¿½pXï¿½ï¿½Xï¿½Mï¿½ï¿½Xï¿½Ø¼vï¿½T
  */
 UCLASS(ClassGroup = (Historical), Blueprintable, BlueprintType)
 class MINGCORE_API UMingDecisionImpactCalculator : public UObject
@@ -245,59 +246,59 @@ class MINGCORE_API UMingDecisionImpactCalculator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingDecisionImpactCalculator();
+    UMingDecisionImpactCalculator(};
 
-    // è¨ˆç?æ±ºç?å½±éŸ¿
+    // ï¿½pXï¿½MXï¿½vï¿½T
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
-    FMingDecisionImpactReport CalculateDecisionImpact(int32 DecisionID, int32 ChosenOptionID);
+    FMingDecisionImpactReport CalculateDecisionImpact(int32 DecisionID, int32 ChosenOptionID};
 
-    // è¨ˆç?æ­·å²è·¯å?å½±éŸ¿
+    // ï¿½pXï¿½ï¿½ï¿½vï¿½ï¿½Xï¿½vï¿½T
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
-    TArray<FMingHistoricalPath> CalculateHistoricalPathImpact(int32 DecisionID, int32 ChosenOptionID);
+    TArray<FMingHistoricalPath> CalculateHistoricalPathImpact(int32 DecisionID, int32 ChosenOptionID};
 
-    // è¨ˆç?è§’è‰²?²æ?å½±éŸ¿
+    // ï¿½pXï¿½ï¿½ï¿½ï¿½Xï¿½vï¿½T
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
-    TMap<FString, float> CalculateReputationImpact(int32 DecisionID, int32 ChosenOptionID);
+    TMap<FString, float> CalculateReputationImpact(int32 DecisionID, int32 ChosenOptionID};
 
-    // è¨ˆç??¢å?ç¯„å?å½±éŸ¿
+    // ï¿½pXï¿½dXï¿½vï¿½T
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
-    TMap<FString, int32> CalculateTerritoryImpact(int32 DecisionID, int32 ChosenOptionID);
+    TMap<FString, int32> CalculateTerritoryImpact(int32 DecisionID, int32 ChosenOptionID};
 
-    // ?Ÿæ??™è‚²?§å®¹
+    // Xï¿½|Xï¿½e
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
-    FString GenerateEducationalContent(int32 DecisionID, int32 ChosenOptionID);
+    FString GenerateEducationalContent(int32 DecisionID, int32 ChosenOptionID};
 
-    // ?´æ–°äº‹ä»¶è§¸ç™¼æ¢ä»¶
+    // Xï¿½sï¿½Æ¥ï¿½Ä²ï¿½oï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
-    TArray<FString> UpdateEventTriggerConditions(int32 DecisionID, int32 ChosenOptionID);
+    TArray<FString> UpdateEventTriggerConditions(int32 DecisionID, int32 ChosenOptionID};
 
-    // ?²å?å½±éŸ¿è©•ä¼°
+    // Xï¿½vï¿½Tï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Decision Impact")
-    EMingImpactMagnitude GetImpactMagnitude(float ImpactValue);
+    EMingImpactMagnitude GetImpactMagnitude(float ImpactValue};
 
-    // ?²å?å½±éŸ¿?è¿°
+    // Xï¿½vï¿½TXï¿½z
     UFUNCTION(BlueprintPure, Category = "Decision Impact")
-    FString GetImpactDescription(EMingImpactMagnitude Magnitude);
+    FString GetImpactDescription(EMingImpactMagnitude Magnitude};
 
-    // æ¨¡æ“¬?·æ?å½±éŸ¿
+    // ï¿½ï¿½ï¿½ï¿½Xï¿½vï¿½T
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
-    TArray<FMingDecisionImpactDetail> SimulateLongTermImpact(int32 DecisionID, int32 ChosenOptionID, int32 SimulationYears);
+    TArray<FMingDecisionImpactDetail> SimulateLongTermImpact(int32 DecisionID, int32 ChosenOptionID, int32 SimulationYears};
 
-    // æ¯”è?ä¸å??¸æ??„å½±??    UFUNCTION(BlueprintCallable, Category = "Decision Impact")
-    TMap<int32, FMingDecisionImpactReport> CompareDecisionOptions(int32 DecisionID);
+    // ï¿½ï¿½Xï¿½ï¿½Xï¿½vX    UFUNCTION(BlueprintCallable, Category = "Decision Impact")
+    TMap<int32, FMingDecisionImpactReport> CompareDecisionOptions(int32 DecisionID};
 
-    // ?²å??¶å?æ­·å²è·¯å??€??    UFUNCTION(BlueprintPure, Category = "Decision Impact")
-    TArray<FMingHistoricalPath> GetCurrentHistoricalPaths();
+    // Xï¿½ï¿½ï¿½vï¿½ï¿½X    UFUNCTION(BlueprintPure, Category = "Decision Impact")
+    TArray<FMingHistoricalPath> GetCurrentHistoricalPaths(};
 
-    // è¨ˆç?æ±ºç?æ¬Šé?
+    // ï¿½pXï¿½MXï¿½vX
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
-    float CalculateDecisionWeight(int32 DecisionID, int32 ChosenOptionID);
+    float CalculateDecisionWeight(int32 DecisionID, int32 ChosenOptionID};
 
-    // ?Ÿæ?å½±éŸ¿?æ¸¬
+    // Xï¿½vï¿½TXï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
-    FMingDecisionImpactReport GenerateImpactPrediction(int32 DecisionID, int32 OptionID);
+    FMingDecisionImpactReport GenerateImpactPrediction(int32 DecisionID, int32 OptionID};
 
-    // äº‹ä»¶å§”è?
+    // ï¿½Æ¥ï¿½eX
     UPROPERTY(BlueprintAssignable)
     FOnImpactCalculated OnImpactCalculated;
 
@@ -305,39 +306,40 @@ public:
     FOnHistoricalPathChanged OnHistoricalPathChanged;
 
 protected:
-    // æ­·å²è·¯å??¸æ?åº?    UPROPERTY()
+    // ï¿½ï¿½ï¿½vï¿½ï¿½X    UPROPERTY()
     TArray<FMingHistoricalPath> HistoricalPaths;
 
-    // ?¢å??¸æ?
+    // X
     UPROPERTY()
     TMap<FString, FMingTerritoryData> FactionData;
 
-    // å½±éŸ¿è¨ˆç?è¦å?
+    // ï¿½vï¿½Tï¿½pXï¿½WX
     UPROPERTY()
     TMap<EMingDecisionType, float> ImpactWeights;
 
-    // æ­·å²?¥è?åº?    UPROPERTY()
+    // ï¿½ï¿½ï¿½vX    UPROPERTY()
     TMap<int32, FString> HistoricalKnowledgeBase;
 
 private:
-    // ?å??–æ­·?²è·¯å¾?    void InitializeHistoricalPaths();
+    // Xï¿½ï¿½Xï¿½ï¿½X    void InitializeHistoricalPaths(};
 
-    // ?å??–å‹¢?›æ•¸??    void InitializeFactionData();
+    // Xï¿½ï¿½Xï¿½ï¿½X    void InitializeFactionData(};
 
-    // ?å??–å½±?¿æ???    void InitializeImpactWeights();
+    // Xï¿½vX    void InitializeImpactWeights(};
 
-    // ?å??–æ­·?²çŸ¥è­˜åº«
-    void InitializeHistoricalKnowledge();
+    // Xï¿½ï¿½Xï¿½ï¿½ï¿½Ñ®w
+    void InitializeHistoricalKnowledge(};
 
-    // è¨ˆç?å½±éŸ¿è©•å?
-    float CalculateImpactScore(const TArray<FMingDecisionImpactDetail>& Impacts);
+    // ï¿½pXï¿½vï¿½Tï¿½ï¿½X
+    float CalculateImpactScore(const TArray<FMingDecisionImpactDetail>& Impacts};
 
-    // ?´æ–°æ­·å²è·¯å?æ¬Šé?
-    void UpdateHistoricalPathWeights(const FMingDecisionImpactReport& Report);
+    // Xï¿½sï¿½ï¿½ï¿½vï¿½ï¿½Xï¿½vX
+    void UpdateHistoricalPathWeights(const FMingDecisionImpactReport& Report) {};
 
-    // ?Ÿæ?å½±éŸ¿ç´°ç?
-    TArray<FMingDecisionImpactDetail> GenerateImpactDetails(int32 DecisionID, int32 ChosenOptionID);
+    // Xï¿½vï¿½Tï¿½ï¿½X
+    TArray<FMingDecisionImpactDetail> GenerateImpactDetails(int32 DecisionID, int32 ChosenOptionID};
 
-    // é©—è?å½±éŸ¿?¸æ?
+    // ï¿½ï¿½Xï¿½vï¿½TX
     bool ValidateImpactData(const FMingDecisionImpactReport& Report) const;
 };
+

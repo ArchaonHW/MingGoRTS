@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,7 +6,7 @@
 #include "MingPlatformManager.generated.h"
 
 /**
- * å¹³å°ç®¡ç??? * è² è²¬ç®¡ç??Œå?èª¿å¹³?°é©?å™¨
+ * å¹³å°ç®¡ï¿½X * è² è²¬ç®¡ï¿½Xï¿½ï¿½?èª¿å¹³?ï¿½é©?ï¿½å™¨
  */
 UCLASS()
 class MINGCORE_API UMingPlatformManager : public UObject
@@ -14,65 +14,66 @@ class MINGCORE_API UMingPlatformManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingPlatformManager();
+    UMingPlatformManager(};
 
-    // ?å??–å¹³?°ç®¡?†å™¨
+    // ?ï¿½ï¿½Xï¿½å¹³?ï¿½ç®¡?ï¿½å™¨
     UFUNCTION(BlueprintCallable, Category = "Platform")
-    void Initialize();
+    void Initialize(};
 
-    // ?œé?å¹³å°ç®¡ç???    UFUNCTION(BlueprintCallable, Category = "Platform")
-    void Shutdown();
+    // ?ï¿½ï¿½?å¹³å°ç®¡ï¿½X    UFUNCTION(BlueprintCallable, Category = "Platform")
+    void Shutdown(};
 
-    // ?²å??¶å?å¹³å°?©é???    UFUNCTION(BlueprintCallable, Category = "Platform")
+    // ?ï¿½ï¿½Xï¿½ï¿½?å¹³å°?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Platform")
     TScriptInterface<IPlatformInterface> GetCurrentPlatform() const;
 
-    // ?²å??¶å?å¹³å°é¡å?
+    // ?ï¿½ï¿½Xï¿½ï¿½?å¹³å°é¡ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Platform")
     EPlatformType GetCurrentPlatformType() const;
 
-    // ?²å??¶å?å¹³å°?½å?
+    // ?ï¿½ï¿½Xï¿½ï¿½?å¹³å°?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Platform")
     FPlatformCapabilities GetPlatformCapabilities() const;
 
-    // ?²å?å±å?DPI
+    // ?ï¿½ï¿½?å±ï¿½?DPI
     UFUNCTION(BlueprintCallable, Category = "Platform")
     float GetScreenDPI() const;
 
-    // ?²å?å®‰å…¨?€??    UFUNCTION(BlueprintCallable, Category = "Platform")
+    // ?ï¿½ï¿½?å®‰å…¨?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Platform")
     FMargin GetSafeZone() const;
 
-    // ?¯å¦?ºè§¸?§è¨­??    UFUNCTION(BlueprintCallable, Category = "Platform")
+    // ?ï¿½å¦?ï¿½è§¸?ï¿½è¨­X    UFUNCTION(BlueprintCallable, Category = "Platform")
     bool IsTouchDevice() const;
 
-    // è¨­ç½®?§èƒ½æ¨¡å?
+    // è¨­ç½®?ï¿½èƒ½æ¨¡ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Platform")
-    void SetPerformanceMode(int32 Mode);
+    void SetPerformanceMode(int32 Mode};
 
-    // ?²å??»æ??»é?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Platform")
     float GetBatteryLevel() const;
 
-    // é¡¯ç¤ºå¹³å°å°è©±æ¡?    UFUNCTION(BlueprintCallable, Category = "Platform")
-    void ShowPlatformDialog(const FString& Title, const FString& Message);
+    // é¡¯ç¤ºå¹³å°å°è©±ï¿½?    UFUNCTION(BlueprintCallable, Category = "Platform")
+    void ShowPlatformDialog(const FString& Title, const FString& Message};
 
-    // ?†äº«?§å®¹
+    // ?ï¿½äº«?ï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Platform")
-    void ShareContent(const FString& Content);
+    void ShareContent(const FString& Content};
 
-    // è«‹æ??‰ç”¨è©•å?
+    // è«‹ï¿½Xï¿½ç”¨è©•ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Platform")
-    void RequestAppRating();
+    void RequestAppRating(};
 
-    // ?œæ??²å?å¯¦ä?ï¼ˆæ–¹ä¾¿å…¨å±€è¨ªå?ï¼?    static UMingPlatformManager* Get();
+    // ?ï¿½ï¿½Xï¿½ï¿½?å¯¦ï¿½?ï¼ˆæ–¹ä¾¿å…¨å±€è¨ªï¿½?ï¿½?    static UMingPlatformManager* Get(};
 
 private:
     bool bInitialized;
     
-    // ?¶å?å¹³å°?©é???    UPROPERTY()
+    // ?ï¿½ï¿½?å¹³å°?ï¿½ï¿½X    UPROPERTY()
     TObjectPtr<UObject> CurrentPlatformAdapter;
     
-    // ?®ä?å¯¦ä?
+    // ?ï¿½ï¿½?å¯¦ï¿½?
     static UMingPlatformManager* Instance;
     
-    // ?µå»ºå¹³å°?©é???    void CreatePlatformAdapter();
+    // ?ï¿½å»ºå¹³å°?ï¿½ï¿½X    void CreatePlatformAdapter(};
 };
+

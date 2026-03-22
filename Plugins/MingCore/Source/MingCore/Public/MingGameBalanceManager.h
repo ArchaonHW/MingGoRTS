@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -141,89 +141,89 @@ class MINGBALANCE_API UMingGameBalanceManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGameBalanceManager();
+    UMingGameBalanceManager(};
 
     // Balance Management
     UFUNCTION(BlueprintCallable, Category = "Balance Management")
-    void InitializeBalanceManager();
+    void InitializeBalanceManager(};
 
     UFUNCTION(BlueprintCallable, Category = "Balance Management")
-    void ApplyAllBalanceSettings();
+    void ApplyAllBalanceSettings(};
 
     UFUNCTION(BlueprintCallable, Category = "Balance Management")
-    void ResetToDefaultBalance();
+    void ResetToDefaultBalance(};
 
     UFUNCTION(BlueprintCallable, Category = "Balance Management")
-    void SaveCurrentBalance(const FString& ProfileName);
+    void SaveCurrentBalance(const FString& ProfileName) {};
 
     UFUNCTION(BlueprintCallable, Category = "Balance Management")
-    void LoadBalanceProfile(const FString& ProfileName);
+    void LoadBalanceProfile(const FString& ProfileName) {};
 
     // Unit Balance
     UFUNCTION(BlueprintCallable, Category = "Unit Balance")
-    void SetUnitBalance(const FString& UnitType, const FMingUnitBalance& Balance);
+    void SetUnitBalance(const FString& UnitType, const FMingUnitBalance& Balance) {};
 
     UFUNCTION(BlueprintPure, Category = "Unit Balance")
     FMingUnitBalance GetUnitBalance(const FString& UnitType) const;
 
     UFUNCTION(BlueprintCallable, Category = "Unit Balance")
-    void AdjustUnitStat(const FString& UnitType, const FString& StatName, float NewValue);
+    void AdjustUnitStat(const FString& UnitType, const FString& StatName, float NewValue};
 
     UFUNCTION(BlueprintCallable, Category = "Unit Balance")
-    void ScaleAllUnits(float HealthScale, float DamageScale, float CostScale);
+    void ScaleAllUnits(float HealthScale, float DamageScale, float CostScale};
 
     // Resource Balance
     UFUNCTION(BlueprintCallable, Category = "Resource Balance")
-    void SetResourceBalance(const FMingResourceBalance& Balance);
+    void SetResourceBalance(const FMingResourceBalance& Balance) {};
 
     UFUNCTION(BlueprintPure, Category = "Resource Balance")
     FMingResourceBalance GetResourceBalance() const;
 
     UFUNCTION(BlueprintCallable, Category = "Resource Balance")
-    void AdjustResourceIncome(float Multiplier);
+    void AdjustResourceIncome(float Multiplier};
 
     UFUNCTION(BlueprintCallable, Category = "Resource Balance")
-    void AdjustGatheringSpeed(float Multiplier);
+    void AdjustGatheringSpeed(float Multiplier};
 
     // Difficulty Balance
     UFUNCTION(BlueprintCallable, Category = "Difficulty Balance")
-    void SetDifficultyBalance(const FString& DifficultyLevel, const FMingDifficultyBalance& Balance);
+    void SetDifficultyBalance(const FString& DifficultyLevel, const FMingDifficultyBalance& Balance) {};
 
     UFUNCTION(BlueprintPure, Category = "Difficulty Balance")
     FMingDifficultyBalance GetDifficultyBalance(const FString& DifficultyLevel) const;
 
     UFUNCTION(BlueprintCallable, Category = "Difficulty Balance")
-    void ApplyDifficultyLevel(const FString& DifficultyLevel);
+    void ApplyDifficultyLevel(const FString& DifficultyLevel) {};
 
     UFUNCTION(BlueprintCallable, Category = "Difficulty Balance")
-    void AdjustAIDifficulty(float ResourceMultiplier, float HealthMultiplier, float DamageMultiplier);
+    void AdjustAIDifficulty(float ResourceMultiplier, float HealthMultiplier, float DamageMultiplier};
 
     // Balance Analysis
     UFUNCTION(BlueprintCallable, Category = "Balance Analysis")
-    void AnalyzeGameBalance();
+    void AnalyzeGameBalance(};
 
     UFUNCTION(BlueprintPure, Category = "Balance Analysis")
     bool IsGameBalanced() const;
 
     UFUNCTION(BlueprintCallable, Category = "Balance Analysis")
-    void GenerateBalanceReport();
+    void GenerateBalanceReport(};
 
     UFUNCTION(BlueprintCallable, Category = "Balance Analysis")
-    void IdentifyBalanceIssues();
+    void IdentifyBalanceIssues(};
 
     // Validation
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void ValidateBalanceSettings();
+    void ValidateBalanceSettings(};
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void CheckForExploits();
+    void CheckForExploits(};
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void VerifyUnitCounters();
+    void VerifyUnitCounters(};
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetBalanceCategoryName(EMingBalanceCategory Category);
+    static FString GetBalanceCategoryName(EMingBalanceCategory Category};
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
     FString ExportBalanceData() const;
@@ -242,10 +242,10 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeDefaultBalances();
-    void SetupUnitBalances();
-    void SetupResourceBalances();
-    void SetupDifficultyBalances();
+    void InitializeDefaultBalances(};
+    void SetupUnitBalances(};
+    void SetupResourceBalances(};
+    void SetupDifficultyBalances(};
 
     // Balance Validation
     bool ValidateUnitBalance(const FMingUnitBalance& Balance) const;
@@ -253,14 +253,15 @@ protected:
     bool ValidateDifficultyBalance(const FMingDifficultyBalance& Balance) const;
 
     // Analysis Functions
-    void AnalyzeUnitBalance();
-    void AnalyzeResourceBalance();
-    void AnalyzeCombatBalance();
-    void AnalyzeEconomicBalance();
-    void AnalyzeDifficultyCurve();
+    void AnalyzeUnitBalance(};
+    void AnalyzeResourceBalance(};
+    void AnalyzeCombatBalance(};
+    void AnalyzeEconomicBalance(};
+    void AnalyzeDifficultyCurve(};
 
     // Adjustment Functions
-    void AutoAdjustBalance();
-    void SuggestBalanceChanges();
-    void ApplyBalanceCorrections();
+    void AutoAdjustBalance(};
+    void SuggestBalanceChanges(};
+    void ApplyBalanceCorrections(};
 };
+

@@ -1,222 +1,227 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingHistoricalEndingSystem.generated.h"
 
-// çµå?é¡å??šè?
+// ï¿½ï¿½Xï¿½ï¿½X
 UENUM(BlueprintType)
 enum class EMingEndingType : uint8
 {
-    Victory,            // ?åˆ©çµå?
-    Defeat,             // å¤±æ?çµå?
-    Neutral,            // ä¸­ç?çµå?
-    Historical,         // æ­·å²çµå?
-    Alternative,        // ?¿ä»£æ­·å²çµå?
-    Secret              // ?±è?çµå?
+    Victory,            // Xï¿½Qï¿½ï¿½X
+    Defeat,             // ï¿½ï¿½Xï¿½ï¿½X
+    Neutral,            // ï¿½ï¿½Xï¿½ï¿½X
+    Historical,         // ï¿½ï¿½ï¿½vï¿½ï¿½X
+    Alternative,        // Xï¿½Nï¿½ï¿½ï¿½vï¿½ï¿½X
+    Secret              // Xï¿½ï¿½X
 };
 
-// çµå?è©•åƒ¹ç´šåˆ¥
+// ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Å§O
 UENUM(BlueprintType)
 enum class EMingEndingRating : uint8
 {
-    S_Rank,             // ?²è©©ç´?    A_Rank,             // ?ªç?ç´?    B_Rank,             // ?¯å¥½ç´?    C_Rank,             // ?®é€šç?
-    D_Rank,             // è¼ƒå·®ç´?    F_Rank              // å¤±æ?ç´?};
+    S_Rank,         // ï¿½vï¿½Ö¯ï¿½
+    A_Rank,         // ï¿½uï¿½qï¿½ï¿½
+    B_Rank,         // ï¿½}ï¿½nï¿½ï¿½
+    C_Rank,         // ï¿½ï¿½ï¿½qï¿½ï¿½
+    D_Rank,         // ï¿½ï¿½ï¿½tï¿½ï¿½
+    F_Rank          // ï¿½ï¿½ï¿½Ñ¯ï¿½
+};
 
-// çµå?é¡åˆ¥
+// ï¿½ï¿½Xï¿½ï¿½ï¿½O
 UENUM(BlueprintType)
 enum class EMingEndingCategory : uint8
 {
-    PoliticalUnity,     // ?¿æ²»çµ±ä?
-    MilitaryConquest,   // è»ä?å¾æ?
-    EconomicProsperity, // ç¶“æ?ç¹æ¦®
-    CulturalRenaissance, // ?‡å?å¾©è?
-    SocialReform,       // ç¤¾æ??¹é©
-    NationalIndependence, // æ°‘æ??¨ç?
-    WorldPower,         // ä¸–ç?å¼·å?
-    HistoricalPreservation // æ­·å²ä¿å?
+    PoliticalUnity,     // Xï¿½vï¿½ï¿½X
+    MilitaryConquest,   // ï¿½xXï¿½ï¿½X
+    EconomicProsperity, // ï¿½gXï¿½cï¿½a
+    CulturalRenaissance, // Xï¿½_X
+    SocialReform,       // ï¿½ï¿½Xï¿½ï¿½
+    NationalIndependence, // ï¿½ï¿½X
+    WorldPower,         // ï¿½@Xï¿½jX
+    HistoricalPreservation // ï¿½ï¿½ï¿½vï¿½OX
 };
 
-// çµå?æ¢ä»¶
+// ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingEndingCondition
 {
     GENERATED_BODY()
 
-    // æ¢ä»¶ID
+    // ï¿½ï¿½ï¿½ï¿½ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ConditionID;
 
-    // æ¢ä»¶?ç¨±
+    // ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionName;
 
-    // æ¢ä»¶?è¿°
+    // ï¿½ï¿½ï¿½ï¿½Xï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionDescription;
 
-    // æ¢ä»¶é¡å?
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionType;
 
-    // æ¢ä»¶?ƒæ•¸
+    // ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ConditionParameters;
 
-    // æ¢ä»¶æ¬Šé?
+    // ï¿½ï¿½ï¿½ï¿½ï¿½vX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ConditionWeight;
 
-    // ?¯å¦?ºå?è¦æ?ä»?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½_Xï¿½nX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsRequired;
 
-    // æ¢ä»¶æ¯”è??‹ç?ç¬?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ï¿½ï¿½ï¿½ï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ComparisonOperator;
 
     FMingEndingCondition()
     {
         ConditionID = -1;
-        ConditionName = TEXT("");
-        ConditionDescription = TEXT("");
-        ConditionType = TEXT("");
-        ConditionParameters.Empty();
+        ConditionName = TEXT(""};
+        ConditionDescription = TEXT(""};
+        ConditionType = TEXT(""};
+        ConditionParameters.Empty(};
         ConditionWeight = 1.0f;
         bIsRequired = false;
-        ComparisonOperator = TEXT(">=");
+        ComparisonOperator = TEXT(">="};
     }
 };
 
-// æ­·å²çµå??¸æ?
+// ï¿½ï¿½ï¿½vï¿½ï¿½X
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingHistoricalEnding
 {
     GENERATED_BODY()
 
-    // çµå?ID
+    // ï¿½ï¿½XID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EndingID;
 
-    // çµå??ç¨±
+    // ï¿½ï¿½Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EndingName;
 
-    // çµå??è¿°
+    // ï¿½ï¿½Xï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EndingDescription;
 
-    // çµå?è©³ç´°?è¿°
+    // ï¿½ï¿½Xï¿½Ô²ï¿½Xï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EndingDetails;
 
-    // çµå?é¡å?
+    // ï¿½ï¿½Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEndingType EndingType;
 
-    // çµå?è©•åƒ¹
+    // ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEndingRating EndingRating;
 
-    // çµå?é¡åˆ¥
+    // ï¿½ï¿½Xï¿½ï¿½ï¿½O
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEndingCategory EndingCategory;
 
-    // è§??æ¢ä»¶?—è¡¨
+    // Xï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingEndingCondition> UnlockConditions;
 
-    // çµå?è§¸ç™¼å¹´ä»½
+    // ï¿½ï¿½XÄ²ï¿½oï¿½~ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 TriggerYear;
 
-    // æ­·å²?Œæ™¯èªªæ?
+    // ï¿½ï¿½ï¿½vXï¿½ï¿½ï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HistoricalBackground;
 
-    // çµå?å½±éŸ¿
+    // ï¿½ï¿½Xï¿½vï¿½T
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> EndingConsequences;
 
-    // çµå??–ç?è·¯å?
+    // ï¿½ï¿½Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EndingImagePath;
 
-    // çµå??³æ?è·¯å?
+    // ï¿½ï¿½Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EndingMusicPath;
 
-    // çµå?æ¨™ç±¤
+    // ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> EndingTags;
 
-    // ?¯å¦?ºéš±?ç?å±€
+    // Xï¿½_Xï¿½ï¿½Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsHiddenEnding;
 
-    // çµå?ç¨€?‰åº¦
+    // ï¿½ï¿½Xï¿½}Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float EndingRarity;
 
     FMingHistoricalEnding()
     {
         EndingID = -1;
-        EndingName = TEXT("");
-        EndingDescription = TEXT("");
-        EndingDetails = TEXT("");
+        EndingName = TEXT(""};
+        EndingDescription = TEXT(""};
+        EndingDetails = TEXT(""};
         EndingType = EMingEndingType::Neutral;
         EndingRating = EMingEndingRating::C_Rank;
         EndingCategory = EMingEndingCategory::PoliticalUnity;
-        UnlockConditions.Empty();
+        UnlockConditions.Empty(};
         TriggerYear = 1949;
-        HistoricalBackground = TEXT("");
-        EndingConsequences.Empty();
-        EndingImagePath = TEXT("");
-        EndingMusicPath = TEXT("");
-        EndingTags.Empty();
+        HistoricalBackground = TEXT(""};
+        EndingConsequences.Empty(};
+        EndingImagePath = TEXT(""};
+        EndingMusicPath = TEXT(""};
+        EndingTags.Empty(};
         bIsHiddenEnding = false;
         EndingRarity = 1.0f;
     }
 };
 
-// çµå?è©•å??¸æ?
+// ï¿½ï¿½Xï¿½ï¿½X
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingEndingScore
 {
     GENERATED_BODY()
 
-    // çµå?ID
+    // ï¿½ï¿½XID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EndingID;
 
-    // ç¸½é?è©•å?
+    // ï¿½`Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TotalScore;
 
-    // ?„é??¥è???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> CategoryScores;
 
-    // æ±ºç?è©•å?
+    // ï¿½MXï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<int32, float> DecisionScores;
 
-    // äº‹ä»¶è©•å?
+    // ï¿½Æ¥ï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<int32, float> EventScores;
 
-    // äººç‰©?œä?è©•å?
+    // ï¿½Hï¿½ï¿½Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> RelationshipScores;
 
-    // æ­·å²æº–ç¢ºåº¦è???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ï¿½ï¿½ï¿½vï¿½Ç½Tï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float HistoricalAccuracy;
 
-    // ?µæ–°?§è???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½sX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float InnovationScore;
 
-    // ?“å¾·è©•å?
+    // Xï¿½wï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MoralityScore;
 
-    // ?°ç•¥è©•å?
+    // Xï¿½ï¿½ï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float StrategyScore;
 
@@ -224,10 +229,10 @@ struct FINGCORE_API FMingEndingScore
     {
         EndingID = -1;
         TotalScore = 0.0f;
-        CategoryScores.Empty();
-        DecisionScores.Empty();
-        EventScores.Empty();
-        RelationshipScores.Empty();
+        CategoryScores.Empty(};
+        DecisionScores.Empty(};
+        EventScores.Empty(};
+        RelationshipScores.Empty(};
         HistoricalAccuracy = 0.0f;
         InnovationScore = 0.0f;
         MoralityScore = 0.0f;
@@ -235,70 +240,70 @@ struct FINGCORE_API FMingEndingScore
     }
 };
 
-// ?å°±?¸æ?
+// Xï¿½NX
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingAchievement
 {
     GENERATED_BODY()
 
-    // ?å°±ID
+    // Xï¿½NID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 AchievementID;
 
-    // ?å°±?ç¨±
+    // Xï¿½NXï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString AchievementName;
 
-    // ?å°±?è¿°
+    // Xï¿½NXï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString AchievementDescription;
 
-    // ?å°±é¡å?
+    // Xï¿½Nï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString AchievementType;
 
-    // è§??æ¢ä»¶
+    // Xï¿½ï¿½ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UnlockConditions;
 
-    // ?å°±?–æ?è·¯å?
+    // Xï¿½NXï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString AchievementIconPath;
 
-    // ?å°±?å‹µ
+    // Xï¿½NXï¿½y
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> AchievementRewards;
 
-    // ?¯å¦å·²è§£??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½_ï¿½wï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsUnlocked;
 
-    // è§???‚é?
+    // X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime UnlockTime;
 
     FMingAchievement()
     {
         AchievementID = -1;
-        AchievementName = TEXT("");
-        AchievementDescription = TEXT("");
-        AchievementType = TEXT("");
-        UnlockConditions.Empty();
-        AchievementIconPath = TEXT("");
-        AchievementRewards.Empty();
+        AchievementName = TEXT(""};
+        AchievementDescription = TEXT(""};
+        AchievementType = TEXT(""};
+        UnlockConditions.Empty(};
+        AchievementIconPath = TEXT(""};
+        AchievementRewards.Empty(};
         bIsUnlocked = false;
-        UnlockTime = FDateTime::Now();
+        UnlockTime = FDateTime::Now(};
     }
 };
 
-// çµå?è©•åƒ¹å§”è?
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEndingDetermined, const FMingHistoricalEnding&, Ending);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEndingScoreCalculated, const FMingEndingScore&, Score);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAchievementUnlocked, const FMingAchievement&, Achievement);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEndingPreview, const FMingHistoricalEnding&, Ending, float, Probability);
+// ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½eX
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEndingDetermined, const FMingHistoricalEnding&, Ending};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEndingScoreCalculated, const FMingEndingScore&, Score};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAchievementUnlocked, const FMingAchievement&, Achievement};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEndingPreview, const FMingHistoricalEnding&, Ending, float, Probability};
 
 /**
- * æ­·å²çµå?ç³»çµ±
- * è² è²¬è©•åƒ¹?©å®¶?„æ­·?²æ±ºç­–è·¯å¾‘ä¸¦ç¢ºå??€çµ‚ç?å±€
+ * ï¿½ï¿½ï¿½vï¿½ï¿½Xï¿½tï¿½ï¿½
+ * ï¿½tï¿½dï¿½ï¿½ï¿½ï¿½Xï¿½aXï¿½ï¿½Xï¿½Mï¿½ï¿½ï¿½ï¿½|ï¿½Ã½TXï¿½ï¿½Xï¿½ï¿½
  */
 UCLASS(ClassGroup = (Historical), Blueprintable, BlueprintType)
 class MINGCORE_API UMingHistoricalEndingSystem : public UObject
@@ -306,68 +311,68 @@ class MINGCORE_API UMingHistoricalEndingSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingHistoricalEndingSystem();
+    UMingHistoricalEndingSystem(};
 
-    // ?å??–ç?å±€ç³»çµ±
+    // Xï¿½ï¿½ï¿½tï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    bool InitializeEndingSystem();
+    bool InitializeEndingSystem(};
 
-    // è¨»å?æ­·å²çµå?
+    // ï¿½ï¿½Xï¿½ï¿½ï¿½vï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    bool RegisterHistoricalEnding(const FMingHistoricalEnding& Ending);
+    bool RegisterHistoricalEnding(const FMingHistoricalEnding& Ending) {};
 
-    // è©•åƒ¹?©å®¶è·¯å?
+    // ï¿½ï¿½ï¿½ï¿½Xï¿½aï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    FMingEndingScore EvaluatePlayerPath();
+    FMingEndingScore EvaluatePlayerPath(};
 
-    // ç¢ºå??€çµ‚ç?å±€
+    // ï¿½TXï¿½ï¿½Xï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    FMingHistoricalEnding DetermineEnding(const FMingEndingScore& PlayerScore);
+    FMingHistoricalEnding DetermineEnding(const FMingEndingScore& PlayerScore) {};
 
-    // æª¢æŸ¥çµå?æ¢ä»¶
+    // ï¿½Ë¬dï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    bool CheckEndingConditions(int32 EndingID);
+    bool CheckEndingConditions(int32 EndingID};
 
-    // ?²å?çµå?ä¿¡æ¯
+    // Xï¿½ï¿½Xï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Historical Ending")
     FMingHistoricalEnding GetEndingInfo(int32 EndingID) const;
 
-    // ?²å??¯ç”¨çµå?
+    // Xï¿½Îµï¿½X
     UFUNCTION(BlueprintPure, Category = "Historical Ending")
     TArray<int32> GetAvailableEndings() const;
 
-    // ?²å?çµå??è¦½
+    // Xï¿½ï¿½Xï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    TArray<FMingHistoricalEnding> GetEndingPreview();
+    TArray<FMingHistoricalEnding> GetEndingPreview(};
 
-    // è¨ˆç?çµå?æ¦‚ç?
+    // ï¿½pXï¿½ï¿½Xï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    float CalculateEndingProbability(int32 EndingID);
+    float CalculateEndingProbability(int32 EndingID};
 
-    // è§???å°±
+    // Xï¿½N
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    bool UnlockAchievement(int32 AchievementID);
+    bool UnlockAchievement(int32 AchievementID};
 
-    // ?²å?å·²è§£?–æ?å°?    UFUNCTION(BlueprintPure, Category = "Historical Ending")
+    // Xï¿½wï¿½ï¿½X    UFUNCTION(BlueprintPure, Category = "Historical Ending")
     TArray<FMingAchievement> GetUnlockedAchievements() const;
 
-    // ?²å?çµå?çµ±è?
+    // Xï¿½ï¿½Xï¿½ï¿½X
     UFUNCTION(BlueprintPure, Category = "Historical Ending")
     TMap<EMingEndingType, int32> GetEndingStatistics() const;
 
-    // ä¿å?çµå??¸æ?
+    // ï¿½OXï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    bool SaveEndingData();
+    bool SaveEndingData(};
 
-    // è¼‰å…¥çµå??¸æ?
+    // ï¿½ï¿½ï¿½Jï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    bool LoadEndingData();
+    bool LoadEndingData(};
 
-    // ?ç½®çµå?ç³»çµ±
+    // Xï¿½mï¿½ï¿½Xï¿½tï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    void ResetEndingSystem();
+    void ResetEndingSystem(};
 
-    // äº‹ä»¶å§”è?
+    // ï¿½Æ¥ï¿½eX
     UPROPERTY(BlueprintAssignable)
     FOnEndingDetermined OnEndingDetermined;
 
@@ -381,59 +386,60 @@ public:
     FOnEndingPreview OnEndingPreview;
 
 protected:
-    // çµå??¸æ?åº?    UPROPERTY()
+    // ï¿½ï¿½X    UPROPERTY()
     TMap<int32, FMingHistoricalEnding> EndingDatabase;
 
-    // ?å°±?¸æ?åº?    UPROPERTY()
+    // Xï¿½NX    UPROPERTY()
     TMap<int32, FMingAchievement> AchievementDatabase;
 
-    // ?©å®¶çµå?æ­·å²
+    // Xï¿½aï¿½ï¿½Xï¿½ï¿½ï¿½v
     UPROPERTY()
     TArray<FMingHistoricalEnding> PlayerEndingHistory;
 
-    // ?¶å?è©•å?
+    // Xï¿½ï¿½X
     UPROPERTY()
     FMingEndingScore CurrentScore;
 
-    // ?¯å¦å·²å?å§‹å?
+    // Xï¿½_ï¿½wXï¿½lX
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // è¼‰å…¥?è¨­çµå?
-    void LoadDefaultEndings();
+    // ï¿½ï¿½ï¿½JXï¿½]ï¿½ï¿½X
+    void LoadDefaultEndings(};
 
-    // è¼‰å…¥?è¨­?å°±
-    void LoadDefaultAchievements();
+    // ï¿½ï¿½ï¿½JXï¿½]Xï¿½N
+    void LoadDefaultAchievements(};
 
-    // é©—è?çµå??¸æ?
+    // ï¿½ï¿½Xï¿½ï¿½X
     bool ValidateEndingData(const FMingHistoricalEnding& Ending) const;
 
-    // è¨ˆç?æ±ºç?è©•å?
-    float CalculateDecisionScore();
+    // ï¿½pXï¿½MXï¿½ï¿½X
+    float CalculateDecisionScore(};
 
-    // è¨ˆç?äº‹ä»¶è©•å?
-    float CalculateEventScore();
+    // ï¿½pXï¿½Æ¥ï¿½ï¿½X
+    float CalculateEventScore(};
 
-    // è¨ˆç??œä?è©•å?
-    float CalculateRelationshipScore();
+    // ï¿½pXï¿½ï¿½X
+    float CalculateRelationshipScore(};
 
-    // è¨ˆç?æ­·å²æº–ç¢ºåº?    float CalculateHistoricalAccuracy();
+    // ï¿½pXï¿½ï¿½ï¿½vï¿½Ç½TX    float CalculateHistoricalAccuracy(};
 
-    // è¨ˆç??µæ–°?§è???    float CalculateInnovationScore();
+    // ï¿½pXï¿½sX    float CalculateInnovationScore(};
 
-    // è¨ˆç??“å¾·è©•å?
-    float CalculateMoralityScore();
+    // ï¿½pXï¿½wï¿½ï¿½X
+    float CalculateMoralityScore(};
 
-    // è¨ˆç??°ç•¥è©•å?
-    float CalculateStrategyScore();
+    // ï¿½pXï¿½ï¿½ï¿½ï¿½X
+    float CalculateStrategyScore(};
 
-    // æª¢æŸ¥?å°±æ¢ä»¶
-    bool CheckAchievementConditions(int32 AchievementID);
+    // ï¿½Ë¬dXï¿½Nï¿½ï¿½ï¿½ï¿½
+    bool CheckAchievementConditions(int32 AchievementID};
 
-    // ?Ÿæ?çµå??è¿°
+    // Xï¿½ï¿½Xï¿½z
     FString GenerateEndingDescription(const FMingHistoricalEnding& Ending, const FMingEndingScore& Score) const;
 
-    // ?²å?çµå?è©•åƒ¹
+    // Xï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½
     EMingEndingRating GetEndingRating(float Score) const;
 };
+

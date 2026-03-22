@@ -1,80 +1,92 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingCharacterGrowthSystem.generated.h"
 
-// è§’è‰²?·æ¥­é¡å?
+// ï¿½ï¿½ï¿½ï¿½Xï¿½~ï¿½ï¿½X
 UENUM(BlueprintType)
 enum class EMingCharacterClass : uint8
 {
-    Infantry,          // æ­¥å…µè»å?
-    Cavalry,           // é¨å…µè»å?
-    Artillery,         // ?²å…µè»å?
-    Engineer,           // å·¥ç?å¸?    Medic,             // ?«å?
-    Scout,             // ?µå???    Commander,         // ?‡æ®å®?    Diplomat           // å¤–äº¤å®?};
+    Infantry,          // ï¿½Bï¿½Lï¿½xX
+    Cavalry,           // ï¿½Mï¿½Lï¿½xX
+    Artillery,         // Xï¿½Lï¿½xX
+    Engineer,         // ï¿½uï¿½{ï¿½v
+    Medic,           // ï¿½ï¿½ï¿½ï¿½ï¿½L
+    Scout,           // ï¿½ï¿½ï¿½ï¿½L
+    Commander,       // ï¿½ï¿½ï¿½ï¿½ï¿½x
+    Diplomat         // ï¿½~ï¿½ï¿½x
+};
 
-// ?€?½é???UENUM(BlueprintType)
+// XUENUM(BlueprintType)
 enum class EMingSkillType : uint8
 {
-    Combat,            // ?°é¬¥?€??    Leadership,         // ?‡æ®?€??    Strategy,          // ?°ç•¥?€??    Diplomacy,         // å¤–äº¤?€??    Engineering,       // å·¥ç??€??    Medical,           // ?«ç??€??    Scouting,          // ?µå??€??    Survival           // ?Ÿå??€??};
+    Combat,           // ï¿½Ô°ï¿½ï¿½Ş¯ï¿½
+    Leadership,      // ï¿½ï¿½ï¿½ï¿½ï¿½Ş¯ï¿½
+    Strategy,         // ï¿½Ô²ï¿½ï¿½Ş¯ï¿½
+    Diplomacy,        // ï¿½~ï¿½ï¿½Ş¯ï¿½
+    Engineering,      // ï¿½uï¿½{ï¿½Ş¯ï¿½
+    Medical,          // ï¿½ï¿½ï¿½ï¿½ï¿½Ş¯ï¿½
+    Scouting,         // ï¿½ï¿½ï¿½ï¿½Ş¯ï¿½
+    Survival          // ï¿½Í¦sï¿½Ş¯ï¿½
+};
 
-// ç¶“é?ä¾†æ?
+// ï¿½gXï¿½ï¿½X
 UENUM(BlueprintType)
 enum class EMingExperienceSource : uint8
 {
-    Combat,            // ?°é¬¥ç¶“é?
-    Mission,           // ä»»å?ç¶“é?
-    Exploration,       // ?¢ç´¢ç¶“é?
-    Diplomacy,         // å¤–äº¤ç¶“é?
-    Training,          // è¨“ç·´ç¶“é?
-    Achievement,       // ?å°±ç¶“é?
-    Story              // ?…ä?ç¶“é?
+    Combat,            // Xï¿½ï¿½ï¿½gX
+    Mission,           // ï¿½ï¿½Xï¿½gX
+    Exploration,       // Xï¿½ï¿½ï¿½gX
+    Diplomacy,         // ï¿½~ï¿½ï¿½gX
+    Training,          // ï¿½Vï¿½mï¿½gX
+    Achievement,       // Xï¿½Nï¿½gX
+    Story              // Xï¿½gX
 };
 
-// è§’è‰²å±¬æ€?USTRUCT(BlueprintType)
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½XUSTRUCT(BlueprintType)
 struct MINGCORE_API FMingCharacterAttributes
 {
     GENERATED_BODY()
 
-    // ?ºç?å±¬æ€?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Strength;          // ?›é?
+    // Xï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Strength;          // X
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Agility;           // ?æ·
+    float Agility;           // Xï¿½ï¿½
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Intelligence;       // ?ºå?
+    float Intelligence;       // X
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Charisma;          // é­…å?
+    float Charisma;          // ï¿½yX
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Constitution;      // é«”è³ª
+    float Constitution;      // ï¿½ï¿½ï¿½
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Wisdom;            // ?ºæ…§
+    float Wisdom;            // Xï¿½z
 
-    // ?°é¬¥å±¬æ€?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float CombatSkill;        // ?°é¬¥?€??
+    // Xï¿½ï¿½ï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float CombatSkill;        // Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Leadership;         // ?˜å???
+    float Leadership;         // X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float TacticalSense;      // ?°è??Ÿè¦º
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Marksmanship;       // å°„æ?ç²¾åº¦
-
-    // ç¤¾äº¤å±¬æ€?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Diplomacy;         // å¤–äº¤?½å?
+    float TacticalSense;      // XÄ±
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Negotiation;        // è«‡åˆ¤?€å·?
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Intimidation;       // å¨å??½å?
+    float Marksmanship;       // ï¿½gXï¿½ï¿½ï¿½
+
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Diplomacy;         // ï¿½~ï¿½ï¿½X
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Persuasion;        // èªªæ???
+    float Negotiation;        // ï¿½Í§PX
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Intimidation;       // ï¿½ï¿½X
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Persuasion;        // ï¿½ï¿½X
     FMingCharacterAttributes()
     {
         Strength = 50.0f;
@@ -94,119 +106,119 @@ struct MINGCORE_API FMingCharacterAttributes
     }
 };
 
-// ?€?½æ•¸??USTRUCT(BlueprintType)
+// Xï¿½ï¿½XUSTRUCT(BlueprintType)
 struct MINGCORE_API FMingSkillData
 {
     GENERATED_BODY()
 
-    // ?€?½ID
+    // XID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SkillID;
 
-    // ?€?½å?ç¨?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString SkillName;
 
-    // ?€?½æ?è¿?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString SkillDescription;
 
-    // ?€?½é???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingSkillType SkillType;
 
-    // ?¶å?ç­‰ç?
+    // Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CurrentLevel;
 
-    // ?€å¤§ç?ç´?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½jX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 MaxLevel;
 
-    // ?¶å?ç¶“é?
+    // Xï¿½gX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CurrentExperience;
 
-    // ?‡ç??€?€ç¶“é?
+    // Xï¿½gX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ExperienceToNextLevel;
 
-    // ?€?½æ???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> SkillEffects;
 
-    // ?ç½®?€??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½mX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> PrerequisiteSkills;
 
-    // è§??æ¢ä»¶
+    // Xï¿½ï¿½ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UnlockConditions;
 
-    // ?€?½å?æ¨™è·¯å¾?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½Ğ¸ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString SkillIconPath;
 
-    // ?¯å¦?ºä¸»?•æ???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½_Xï¿½DX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsActiveSkill;
 
-    // ?·å»?‚é?
+    // Xï¿½oX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CooldownTime;
 
-    // æ¶ˆè€—è?æº?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ï¿½ï¿½ï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ResourceCost;
 
     FMingSkillData()
     {
         SkillID = -1;
-        SkillName = TEXT("");
-        SkillDescription = TEXT("");
+        SkillName = TEXT(""};
+        SkillDescription = TEXT(""};
         SkillType = EMingSkillType::Combat;
         CurrentLevel = 1;
         MaxLevel = 10;
         CurrentExperience = 0.0f;
         ExperienceToNextLevel = 100.0f;
-        SkillEffects.Empty();
-        PrerequisiteSkills.Empty();
-        UnlockConditions.Empty();
-        SkillIconPath = TEXT("");
+        SkillEffects.Empty(};
+        PrerequisiteSkills.Empty(};
+        UnlockConditions.Empty(};
+        SkillIconPath = TEXT(""};
         bIsActiveSkill = false;
         CooldownTime = 0.0f;
-        ResourceCost.Empty();
+        ResourceCost.Empty(};
     }
 };
 
-// è§’è‰²ç­‰ç??¸æ?
+// ï¿½ï¿½ï¿½âµ¥X
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingCharacterLevel
 {
     GENERATED_BODY()
 
-    // ?¶å?ç­‰ç?
+    // Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CurrentLevel;
 
-    // ?¶å?ç¶“é?
+    // Xï¿½gX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CurrentExperience;
 
-    // ?‡ç??€?€ç¶“é?
+    // Xï¿½gX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ExperienceToNextLevel;
 
-    // ç¸½ç?é©—å€?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ï¿½`Xï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TotalExperience;
 
-    // ç­‰ç?æ¨™é?
+    // ï¿½ï¿½Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString LevelTitle;
 
-    // ç­‰ç?æ¬Šé?
+    // ï¿½ï¿½Xï¿½vX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> LevelPermissions;
 
-    // ç­‰ç??å‹µ
+    // ï¿½ï¿½Xï¿½y
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> LevelRewards;
 
-    // ?€?½é???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SkillPoints;
 
-    // å±¬æ€§é???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ï¿½İ©ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 AttributePoints;
 
     FMingCharacterLevel()
@@ -215,101 +227,101 @@ struct MINGCORE_API FMingCharacterLevel
         CurrentExperience = 0.0f;
         ExperienceToNextLevel = 100.0f;
         TotalExperience = 0.0f;
-        LevelTitle = TEXT("?°å…µ");
-        LevelPermissions.Empty();
-        LevelRewards.Empty();
+        LevelTitle = TEXT("Xï¿½L"};
+        LevelPermissions.Empty(};
+        LevelRewards.Empty(};
         SkillPoints = 0;
         AttributePoints = 0;
     }
 };
 
-// è£å??©å??¸æ?
+// ï¿½ï¿½X
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingEquipmentItem
 {
     GENERATED_BODY()
 
-    // ?©å?ID
+    // XID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemID;
 
-    // ?©å??ç¨±
+    // Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemName;
 
-    // ?©å??è¿°
+    // Xï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemDescription;
 
-    // ?©å?é¡å?
+    // Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemType;
 
-    // ?©å?ç¨€?‰åº¦
+    // Xï¿½}Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemRarity;
 
-    // ?©å?ç­‰ç?
+    // Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemLevel;
 
-    // ?©å?å±¬æ€§å???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½İ©ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ItemAttributes;
 
-    // è£å?ä½ç½®
+    // ï¿½ï¿½Xï¿½ï¿½m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipSlot;
 
-    // ?¯å¦å·²è???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½_ï¿½wX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsEquipped;
 
-    // ?©å??¸é?
+    // X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemQuantity;
 
-    // ?©å??ä?åº?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ItemDurability;
 
-    // ?€å¤§è€ä?åº?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½jï¿½@X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MaxDurability;
 
-    // ?©å??–æ?è·¯å?
+    // Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemIconPath;
 
-    // ?©å?3Dæ¨¡å?è·¯å?
+    // X3Dï¿½ï¿½Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemModelPath;
 
     FMingEquipmentItem()
     {
         ItemID = -1;
-        ItemName = TEXT("");
-        ItemDescription = TEXT("");
-        ItemType = TEXT("");
-        ItemRarity = TEXT("?®é€?);
+        ItemName = TEXT(""};
+        ItemDescription = TEXT(""};
+        ItemType = TEXT(""};
+        ItemRarity = TEXT("ï¿½ï¿½ï¿½q"};
         ItemLevel = 1;
-        ItemAttributes.Empty();
-        EquipSlot = TEXT("");
+        ItemAttributes.Empty(};
+        EquipSlot = TEXT(""};
         bIsEquipped = false;
         ItemQuantity = 1;
         ItemDurability = 100.0f;
         MaxDurability = 100.0f;
-        ItemIconPath = TEXT("");
-        ItemModelPath = TEXT("");
+        ItemIconPath = TEXT(""};
+        ItemModelPath = TEXT(""};
     }
 };
 
-// è§’è‰²?é•·äº‹ä»¶å§”è?
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterLevelUp, int32, NewLevel, const FMingCharacterAttributes&, NewAttributes);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelUp, int32, SkillID, int32, NewLevel);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnExperienceGained, EMingExperienceSource, Source, float, ExperienceAmount);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEquipped, int32, ItemID, const FString&, EquipSlot);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAttributeChanged, const FString&, AttributeName, float, NewValue);
+// ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½Æ¥ï¿½eX
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterLevelUp, int32, NewLevel, const FMingCharacterAttributes&, NewAttributes};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelUp, int32, SkillID, int32, NewLevel};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnExperienceGained, EMingExperienceSource, Source, float, ExperienceAmount};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEquipped, int32, ItemID, const FString&, EquipSlot};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAttributeChanged, const FString&, AttributeName, float, NewValue};
 
 /**
- * è§’è‰²?é•·ç³»çµ±
- * è² è²¬ç®¡ç?è§’è‰²ç­‰ç??æ??½ã€ç?é©—å?è£å??é•·
+ * ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½tï¿½ï¿½
+ * ï¿½tï¿½dï¿½ï¿½Xï¿½ï¿½ï¿½âµ¥Xï¿½BXï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½
  */
 UCLASS(ClassGroup = (Character), Blueprintable, BlueprintType)
 class MINGCORE_API UMingCharacterGrowthSystem : public UObject
@@ -317,82 +329,82 @@ class MINGCORE_API UMingCharacterGrowthSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingCharacterGrowthSystem();
+    UMingCharacterGrowthSystem(};
 
-    // ?å??–è??²æ??·ç³»çµ?    UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool InitializeGrowthSystem();
+    // Xï¿½tX    UFUNCTION(BlueprintCallable, Category = "Character Growth")
+    bool InitializeGrowthSystem(};
 
-    // ?µå»º?°è???    UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool CreateCharacter(const FString& CharacterName, EMingCharacterClass CharacterClass);
+    // Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Character Growth")
+    bool CreateCharacter(const FString& CharacterName, EMingCharacterClass CharacterClass};
 
-    // ?²å?ç¶“é?
+    // Xï¿½gX
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool GainExperience(EMingExperienceSource Source, float ExperienceAmount);
+    bool GainExperience(EMingExperienceSource Source, float ExperienceAmount};
 
-    // ?‡ç?è§’è‰²
+    // Xï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool LevelUpCharacter();
+    bool LevelUpCharacter(};
 
-    // ?†é?å±¬æ€§é?
+    // Xï¿½İ©ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool AllocateAttributePoint(const FString& AttributeName, int32 Points);
+    bool AllocateAttributePoint(const FString& AttributeName, int32 Points};
 
-    // ?†é??€?½é?
+    // X
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool AllocateSkillPoint(int32 SkillID);
+    bool AllocateSkillPoint(int32 SkillID};
 
-    // å­¸ç??€??    UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool LearnSkill(int32 SkillID);
+    // ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Character Growth")
+    bool LearnSkill(int32 SkillID};
 
-    // ?‡ç??€??    UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool UpgradeSkill(int32 SkillID);
+    // X    UFUNCTION(BlueprintCallable, Category = "Character Growth")
+    bool UpgradeSkill(int32 SkillID};
 
-    // ?²å?è§’è‰²ä¿¡æ¯
+    // Xï¿½ï¿½ï¿½ï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Character Growth")
     FMingCharacterAttributes GetCharacterAttributes() const;
 
-    // ?²å?è§’è‰²ç­‰ç?
+    // Xï¿½ï¿½ï¿½âµ¥X
     UFUNCTION(BlueprintPure, Category = "Character Growth")
     FMingCharacterLevel GetCharacterLevel() const;
 
-    // ?²å??€?½å?è¡?    UFUNCTION(BlueprintPure, Category = "Character Growth")
+    // X    UFUNCTION(BlueprintPure, Category = "Character Growth")
     TArray<FMingSkillData> GetCharacterSkills() const;
 
-    // ?²å??¹å??€??    UFUNCTION(BlueprintPure, Category = "Character Growth")
+    // X    UFUNCTION(BlueprintPure, Category = "Character Growth")
     FMingSkillData GetSkill(int32 SkillID) const;
 
-    // è£å??©å?
+    // ï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool EquipItem(int32 ItemID, const FString& EquipSlot);
+    bool EquipItem(int32 ItemID, const FString& EquipSlot) {};
 
-    // ?¸ä??©å?
+    // X
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool UnequipItem(const FString& EquipSlot);
+    bool UnequipItem(const FString& EquipSlot) {};
 
-    // ?²å?è£å??©å?
+    // Xï¿½ï¿½X
     UFUNCTION(BlueprintPure, Category = "Character Growth")
     TArray<FMingEquipmentItem> GetEquippedItems() const;
 
-    // è¨ˆç??°é¬¥??    UFUNCTION(BlueprintPure, Category = "Character Growth")
+    // ï¿½pXï¿½ï¿½X    UFUNCTION(BlueprintPure, Category = "Character Growth")
     float CalculateCombatPower() const;
 
-    // è¨ˆç?ç¸½é?å¯¦å?
+    // ï¿½pXï¿½`Xï¿½ï¿½X
     UFUNCTION(BlueprintPure, Category = "Character Growth")
     float CalculateOverallPower() const;
 
-    // ä¿å?è§’è‰²?¸æ?
+    // ï¿½OXï¿½ï¿½ï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool SaveCharacterData();
+    bool SaveCharacterData(};
 
-    // è¼‰å…¥è§’è‰²?¸æ?
+    // ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool LoadCharacterData();
+    bool LoadCharacterData(};
 
-    // ?ç½®è§’è‰²
+    // Xï¿½mï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    void ResetCharacter();
+    void ResetCharacter(};
 
-    // äº‹ä»¶å§”è?
+    // ï¿½Æ¥ï¿½eX
     UPROPERTY(BlueprintAssignable)
     FOnCharacterLevelUp OnCharacterLevelUp;
 
@@ -409,82 +421,83 @@ public:
     FOnAttributeChanged OnAttributeChanged;
 
 protected:
-    // è§’è‰²å±¬æ€?    UPROPERTY()
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½X    UPROPERTY()
     FMingCharacterAttributes CharacterAttributes;
 
-    // è§’è‰²ç­‰ç?
+    // ï¿½ï¿½ï¿½âµ¥X
     UPROPERTY()
     FMingCharacterLevel CharacterLevel;
 
-    // ?€?½æ•¸?šåº«
+    // Xï¿½ï¿½Xï¿½w
     UPROPERTY()
     TMap<int32, FMingSkillData> SkillDatabase;
 
-    // è£å??©å?åº?    UPROPERTY()
+    // ï¿½ï¿½X    UPROPERTY()
     TMap<FString, FMingEquipmentItem> EquippedItems;
 
-    // ?Œå??©å?
+    // X
     UPROPERTY()
     TArray<FMingEquipmentItem> InventoryItems;
 
-    // è§’è‰²?·æ¥­
+    // ï¿½ï¿½ï¿½ï¿½Xï¿½~
     UPROPERTY()
     EMingCharacterClass CharacterClass;
 
-    // è§’è‰²?ç¨±
+    // ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½
     UPROPERTY()
     FString CharacterName;
 
-    // ?¯å¦å·²å?å§‹å?
+    // Xï¿½_ï¿½wXï¿½lX
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // è¼‰å…¥?è¨­?€?½æ•¸??    void LoadDefaultSkills();
+    // ï¿½ï¿½ï¿½JXï¿½]Xï¿½ï¿½X    void LoadDefaultSkills(};
 
-    // è¼‰å…¥?è¨­è£å??¸æ?
-    void LoadDefaultEquipment();
+    // ï¿½ï¿½ï¿½JXï¿½]ï¿½ï¿½X
+    void LoadDefaultEquipment(};
 
-    // è¨ˆç??‡ç??€?€ç¶“é?
+    // ï¿½pXï¿½gX
     float CalculateExperienceToNextLevel(int32 CurrentLevel) const;
 
-    // è¨ˆç??€?½å?ç´šæ??€ç¶“é?
+    // ï¿½pXï¿½ï¿½Xï¿½gX
     float CalculateSkillExperienceToNextLevel(int32 CurrentLevel) const;
 
-    // ?‰ç”¨ç­‰ç??å‹µ
-    void ApplyLevelRewards(int32 NewLevel);
+    // Xï¿½Îµï¿½Xï¿½y
+    void ApplyLevelRewards(int32 NewLevel};
 
-    // ?‰ç”¨?€?½æ???    void ApplySkillEffects(int32 SkillID, int32 NewLevel);
+    // Xï¿½ï¿½X    void ApplySkillEffects(int32 SkillID, int32 NewLevel};
 
-    // ?‰ç”¨è£å??ˆæ?
-    void ApplyEquipmentEffects(const FMingEquipmentItem& Item);
+    // Xï¿½Î¸ï¿½X
+    void ApplyEquipmentEffects(const FMingEquipmentItem& Item) {};
 
-    // ç§»é™¤è£å??ˆæ?
-    void RemoveEquipmentEffects(const FMingEquipmentItem& Item);
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½X
+    void RemoveEquipmentEffects(const FMingEquipmentItem& Item) {};
 
-    // é©—è??€?½å­¸ç¿’æ?ä»?    bool CanLearnSkill(int32 SkillID) const;
+    // ï¿½ï¿½Xï¿½Ç²ï¿½X    bool CanLearnSkill(int32 SkillID) const;
 
-    // è¨ˆç?å±¬æ€§å½±??    float CalculateAttributeModifier(const FString& AttributeName) const;
+    // ï¿½pXï¿½İ©Ê¼vX    float CalculateAttributeModifier(const FString& AttributeName) const;
 
-    // ?Ÿæ??¨æ?è£å?
+    // Xï¿½ï¿½X
     FMingEquipmentItem GenerateRandomEquipment(int32 ItemLevel) const;
 
-    // ?´æ–°è§’è‰²?°é¬¥??    void UpdateCharacterPower();
+    // Xï¿½sï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½X    void UpdateCharacterPower(};
 
-    // ä¿å?è§’è‰²å¿«ç…§
-    void SaveCharacterSnapshot();
+    // ï¿½OXï¿½ï¿½ï¿½ï¿½Ö·ï¿½
+    void SaveCharacterSnapshot(};
 
-    // è¼‰å…¥è§’è‰²å¿«ç…§
-    void LoadCharacterSnapshot();
+    // ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½Ö·ï¿½
+    void LoadCharacterSnapshot(};
 
-    // é©—è?è§’è‰²?¸æ?
+    // ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½X
     bool ValidateCharacterData() const;
 
-    // è¨ˆç??€?½æ¨¹
+    // ï¿½pXï¿½ï¿½
     TArray<int32> CalculateSkillTree() const;
 
-    // è§???°æ???    void UnlockNewSkills(int32 NewLevel);
+    // X    void UnlockNewSkills(int32 NewLevel};
 
-    // è¨ˆç??·æ¥­? æ?
+    // ï¿½pXï¿½~X
     TMap<FString, float> CalculateClassBonuses() const;
 };
+

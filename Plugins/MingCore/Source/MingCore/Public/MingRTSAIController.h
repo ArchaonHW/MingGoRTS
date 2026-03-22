@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "AIController.h"
@@ -11,30 +11,33 @@ class UMingRTSCombatSystem;
 UENUM(BlueprintType)
 enum class ERTSAIBehavior : uint8
 {
-    Idle,           // Á©∫È?
-    Patrol,         // Â∑°È?
-    Guard,          // ÂÆàË?
-    Attack,         // ?ªÊ?
-    Retreat,        // ?§ÈÄÄ
-    Follow,         // Ë∑üÈö®
-    Gather,         // ?°È?
-    Build,          // Âª∫ÈÄ?    Repair,         // ‰øÆÂæ©
-    Explore         // ?¢Á¥¢
+    Idle,           // ÔøΩÔøΩX
+    Follow,         // ÔøΩÔøΩÔøΩH
+    Gather,         // ÔøΩÔøΩÔøΩÔøΩ
+    Build,          // ÔøΩÿ≥y
+    Repair,         // ÔøΩ◊¥_
+    Explore         // ÔøΩÔøΩÔøΩÔøΩ
 };
 
 UENUM(BlueprintType)
 enum class ERTSAITargetPriority : uint8
 {
-    None,           // ?°ÁõÆÊ®?    Low,            // ‰ΩéÂÑ™?àÁ?
-    Medium,         // ‰∏≠ÂÑ™?àÁ?
-    High,           // È´òÂÑ™?àÁ?
-    Critical        // ?úÈçµ?™Â?Á¥?};
+    None,           // ÔøΩLÔøΩÿºÔøΩ
+    Low,            // ÔøΩCÔøΩuÔøΩÔøΩÔøΩÔøΩ
+    Medium,         // ÔøΩÔøΩÔøΩuÔøΩÔøΩÔøΩÔøΩ
+    High,           // ÔøΩÔøΩÔøΩuÔøΩÔøΩÔøΩÔøΩ
+    Critical        // ÔøΩÔøΩÔøΩÔøΩÔøΩuÔøΩÔøΩÔøΩÔøΩ
+};
 
 UENUM(BlueprintType)
 enum class ERTSAIState : uint8
 {
-    Thinking,       // ?ùËÄÉ‰∏≠
-    Planning,        // Ë®àÂ?‰∏?    Executing,      // ?∑Ë?‰∏?    Waiting,        // Á≠âÂ?‰∏?    Reacting        // ?çÊ?‰∏?};
+    Thinking,       // ÔøΩÔøΩ“§ÔøΩ
+    Planning,        // ÔøΩpÔøΩÔøΩÔøΩÔøΩ
+    Executing,      // ÔøΩÔøΩÔøΩÊ§§
+    Waiting,        // ÔøΩÔøΩÔøΩ›§ÔøΩ
+    Reacting        // ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ
+};
 
 USTRUCT(BlueprintType)
 struct FRTSAITarget
@@ -126,61 +129,61 @@ struct FRTSAIDecision
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIBehaviorChanged, ERTSAIBehavior, OldBehavior, ERTSAIBehavior, NewBehavior);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAITargetChanged, const FRTSAITarget&, OldTarget, const FRTSAITarget&, NewTarget);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAIDecisionMade, const FRTSAIDecision&, Decision, ERTSAIState, AIState, float, Confidence);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIBehaviorChanged, ERTSAIBehavior, OldBehavior, ERTSAIBehavior, NewBehavior};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAITargetChanged, const FRTSAITarget&, OldTarget, const FRTSAITarget&, NewTarget};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAIDecisionMade, const FRTSAIDecision&, Decision, ERTSAIState, AIState, float, Confidence};
 
 /**
- * RTS AI?ßÂà∂?? * ÁÆ°Á??Æ‰??ÑAIË°åÁÇ∫?åÊ±∫Á≠? */
+ * RTS AIXÔøΩÔøΩX * ÔøΩÔøΩXAIÔøΩÊ¨∞XÔøΩMX */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API AMingRTSAIController : public AAIController
 {
     GENERATED_BODY()
 
 public:
-    AMingRTSAIController();
+    AMingRTSAIController(};
 
-    // ?ùÂ???    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void InitializeAI(UMingRTSUnitManager* InUnitManager, UMingRTSCombatSystem* InCombatSystem);
+    // X    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
+    void InitializeAI(UMingRTSUnitManager* InUnitManager, UMingRTSCombatSystem* InCombatSystem};
 
-    // AIË°åÁÇ∫?ßÂà∂
+    // AIÔøΩÊ¨∞XÔøΩÔøΩ
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetBehavior(ERTSAIBehavior NewBehavior);
+    void SetBehavior(ERTSAIBehavior NewBehavior};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     ERTSAIBehavior GetCurrentBehavior() const { return CurrentBehavior; }
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void ExecuteBehavior(float DeltaTime);
+    void ExecuteBehavior(float DeltaTime};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void UpdateAI(float DeltaTime);
+    void UpdateAI(float DeltaTime};
 
-    // ?ÆÊ?ÁÆ°Á?
+    // XÔøΩÔøΩX
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetTarget(const FRTSAITarget& NewTarget);
+    void SetTarget(const FRTSAITarget& NewTarget) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     FRTSAITarget GetCurrentTarget() const { return CurrentTarget; }
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void ClearTarget();
+    void ClearTarget(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     bool HasValidTarget() const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void UpdateTarget();
+    void UpdateTarget(};
 
-    // ?üÁü•Á≥ªÁµ±
+    // XÔøΩÔøΩÔøΩtÔøΩÔøΩ
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void ScanForEnemies(float ScanRadius);
-
-    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void ScanForAllies(float ScanRadius);
+    void ScanForEnemies(float ScanRadius};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void ScanForResources(float ScanRadius);
+    void ScanForAllies(float ScanRadius};
+
+    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
+    void ScanForResources(float ScanRadius};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     TArray<FRTSAITarget> GetDetectedEnemies() const;
@@ -188,12 +191,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     TArray<FRTSAITarget> GetDetectedAllies() const;
 
-    // Ê±∫Á?Á≥ªÁµ±
+    // ÔøΩMXÔøΩtÔøΩÔøΩ
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    FRTSAIDecision MakeDecision();
+    FRTSAIDecision MakeDecision(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void EvaluateThreats();
+    void EvaluateThreats(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     float CalculateThreatLevel(AActor* Target) const;
@@ -201,28 +204,28 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     ERTSAITargetPriority GetTargetPriority(AActor* Target) const;
 
-    // Â∑°È?Á≥ªÁµ±
+    // ÔøΩÔøΩXÔøΩtÔøΩÔøΩ
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetPatrolPath(const FRTSAIPatrolPath& Path);
+    void SetPatrolPath(const FRTSAIPatrolPath& Path) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void AddPatrolPoint(const FVector& Point);
+    void AddPatrolPoint(const FVector& Point) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void ClearPatrolPath();
+    void ClearPatrolPath(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    FVector GetNextPatrolPoint();
+    FVector GetNextPatrolPoint(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     bool IsAtPatrolPoint() const;
 
-    // ?∞È¨•AI
+    // XÔøΩÔøΩAI
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void EngageTarget(AActor* Target);
+    void EngageTarget(AActor* Target};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void DisengageTarget();
+    void DisengageTarget(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     bool ShouldEngage(AActor* Target) const;
@@ -231,53 +234,53 @@ public:
     bool ShouldRetreat() const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void FindBestAttackPosition();
+    void FindBestAttackPosition(};
 
-    // ÁßªÂ?AI
+    // ÔøΩÔøΩXAI
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void MoveToTarget();
+    void MoveToTarget(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void MoveToPosition(const FVector& Position);
+    void MoveToPosition(const FVector& Position) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     bool IsMoving() const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void StopMovement();
+    void StopMovement(};
 
-    // ?Ä?ãÁÆ°??    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
+    // XÔøΩÔøΩX    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     ERTSAIState GetAIState() const { return AIState; }
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetAIState(ERTSAIState NewState);
+    void SetAIState(ERTSAIState NewState};
 
-    // AIË®≠ÁΩÆ
+    // AIÔøΩ]ÔøΩm
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetAggressiveness(float Value);
-
-    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetReactionTime(float Value);
+    void SetAggressiveness(float Value};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetDecisionFrequency(float Value);
+    void SetReactionTime(float Value};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetPerceptionRange(float Value);
-
-    // AIË°åÁÇ∫?πÈÄ?    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void ImproveAIBehavior();
+    void SetDecisionFrequency(float Value};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void OptimizeDecisionMaking();
+    void SetPerceptionRange(float Value};
+
+    // AIÔøΩÊ¨∞X    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
+    void ImproveAIBehavior(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void EnhanceTargetSelection();
+    void OptimizeDecisionMaking(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void AdaptToPlayerBehavior();
+    void EnhanceTargetSelection(};
 
-    // Ë™øË©¶?åÁõ£??    UFUNCTION(BlueprintPure, Category = "RTS AI Controller")
+    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
+    void AdaptToPlayerBehavior(};
+
+    // ÔøΩ’∏ÔøΩXÔøΩÔøΩX    UFUNCTION(BlueprintPure, Category = "RTS AI Controller")
     FString GetCurrentBehaviorName() const;
 
     UFUNCTION(BlueprintPure, Category = "RTS AI Controller")
@@ -287,9 +290,9 @@ public:
     bool IsAIActive() const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void EnableDebugMode(bool bEnable);
+    void EnableDebugMode(bool bEnable};
 
-    // ‰∫ã‰ª∂
+    // ÔøΩ∆•ÔøΩ
     UPROPERTY(BlueprintAssignable, Category = "RTS AI Events")
     FOnAIBehaviorChanged OnAIBehaviorChanged;
 
@@ -303,14 +306,14 @@ protected:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
 
-    // Á≥ªÁµ±ÂºïÁî®
+    // ÔøΩtÔøΩŒ§ﬁ•ÔøΩ
     UPROPERTY()
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
     UPROPERTY()
     TObjectPtr<UMingRTSCombatSystem> CombatSystem;
 
-    // AI?Ä??    UPROPERTY()
+    // AIX    UPROPERTY()
     ERTSAIBehavior CurrentBehavior;
 
     UPROPERTY()
@@ -328,7 +331,7 @@ protected:
     UPROPERTY()
     TArray<FRTSAITarget> DetectedAllies;
 
-    // AIË®≠ÁΩÆ
+    // AIÔøΩ]ÔøΩm
     UPROPERTY(BlueprintReadWrite, Category = "AI Settings")
     float Aggressiveness = 0.5f;
 
@@ -353,7 +356,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "AI Settings")
     bool bDebugMode = false;
 
-    // AI?πÈÄ≤Â???    UPROPERTY(BlueprintReadWrite, Category = "AI Improvement")
+    // AIXÔøΩiX    UPROPERTY(BlueprintReadWrite, Category = "AI Improvement")
     float LearningRate = 0.1f;
 
     UPROPERTY(BlueprintReadWrite, Category = "AI Improvement")
@@ -368,7 +371,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "AI Improvement")
     bool bEnableAdaptation = true;
 
-    // ?ßÈÉ®ËÆäÈ?
+    // XÔøΩÔøΩÔøΩÔøΩX
     UPROPERTY()
     float LastDecisionTime;
 
@@ -381,7 +384,7 @@ protected:
     UPROPERTY()
     FVector LastKnownTargetLocation;
 
-    // AIÂ≠∏Á??åÈÅ©?âÊï∏??    UPROPERTY()
+    // AIÔøΩÔøΩXÔøΩAXÔøΩÔøΩX    UPROPERTY()
     TArray<FRTSAIDecision> DecisionHistory;
 
     UPROPERTY()
@@ -390,35 +393,36 @@ protected:
     UPROPERTY()
     TMap<AActor*, float> TargetThreatHistory;
 
-    // ?ßÈÉ®?ΩÊï∏
-    void ExecuteIdleBehavior(float DeltaTime);
-    void ExecutePatrolBehavior(float DeltaTime);
-    void ExecuteGuardBehavior(float DeltaTime);
-    void ExecuteAttackBehavior(float DeltaTime);
-    void ExecuteRetreatBehavior(float DeltaTime);
-    void ExecuteFollowBehavior(float DeltaTime);
-    void ExecuteGatherBehavior(float DeltaTime);
-    void ExecuteBuildBehavior(float DeltaTime);
-    void ExecuteRepairBehavior(float DeltaTime);
-    void ExecuteExploreBehavior(float DeltaTime);
+    // XÔøΩÔøΩXÔøΩÔøΩ
+    void ExecuteIdleBehavior(float DeltaTime};
+    void ExecutePatrolBehavior(float DeltaTime};
+    void ExecuteGuardBehavior(float DeltaTime};
+    void ExecuteAttackBehavior(float DeltaTime};
+    void ExecuteRetreatBehavior(float DeltaTime};
+    void ExecuteFollowBehavior(float DeltaTime};
+    void ExecuteGatherBehavior(float DeltaTime};
+    void ExecuteBuildBehavior(float DeltaTime};
+    void ExecuteRepairBehavior(float DeltaTime};
+    void ExecuteExploreBehavior(float DeltaTime};
 
-    void ProcessDecision(const FRTSAIDecision& Decision);
-    void UpdatePerception(float DeltaTime);
-    void MakeAIDecision();
+    void ProcessDecision(const FRTSAIDecision& Decision) {};
+    void UpdatePerception(float DeltaTime};
+    void MakeAIDecision(};
     bool ShouldMakeDecision() const;
     FRTSAITarget FindBestTarget() const;
     void LogAIDebug(const FString& Message) const;
 
-    // AI?πÈÄ≤ÂÖß?®ÂáΩ??    void UpdateDecisionHistory(const FRTSAIDecision& Decision);
-    void AnalyzeBehaviorPatterns();
-    void AdaptBehaviorBasedOnHistory();
-    void OptimizeTargetSelection();
-    void LearnFromExperience();
+    // AIXÔøΩiÔøΩÔøΩXÔøΩÔøΩX    void UpdateDecisionHistory(const FRTSAIDecision& Decision) {};
+    void AnalyzeBehaviorPatterns(};
+    void AdaptBehaviorBasedOnHistory(};
+    void OptimizeTargetSelection(};
+    void LearnFromExperience(};
     float CalculateBehaviorSuccess(const FString& BehaviorName) const;
 
 private:
-    // ËºîÂä©?ΩÊï∏
-    void NotifyBehaviorChanged(ERTSAIBehavior OldBehavior, ERTSAIBehavior NewBehavior);
-    void NotifyTargetChanged(const FRTSAITarget& OldTarget, const FRTSAITarget& NewTarget);
-    void NotifyDecisionMade(const FRTSAIDecision& Decision, ERTSAIState AIState, float Confidence);
+    // ÔøΩÔøΩÔøΩUXÔøΩÔøΩ
+    void NotifyBehaviorChanged(ERTSAIBehavior OldBehavior, ERTSAIBehavior NewBehavior};
+    void NotifyTargetChanged(const FRTSAITarget& OldTarget, const FRTSAITarget& NewTarget) {};
+    void NotifyDecisionMade(const FRTSAIDecision& Decision, ERTSAIState AIState, float Confidence};
 };
+

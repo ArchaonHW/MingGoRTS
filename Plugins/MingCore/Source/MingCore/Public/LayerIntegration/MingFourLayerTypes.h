@@ -315,3 +315,4 @@ struct FMingLayerSyncData
         : GlobalTime(0.0f)
     {}
 };
+

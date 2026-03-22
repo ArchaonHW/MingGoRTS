@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRepublicEraPromptLibrary.generated.h"
 
 /**
- * æ°‘å??‚æ??ç¤ºè©åº«
- * ?ä?æ­·å²æº–ç¢º?„é¢¨?¼æ?è¿°ç”¨?¼AIè³‡ç”¢?Ÿæ?
+ * æ°‘ï¿½Xï¿½ï¿½Xï¿½ç¤ºè©åº«
+ * ?ï¿½ï¿½?æ­·å²æº–ç¢º?ï¿½é¢¨?ï¿½ï¿½?è¿°ç”¨?ï¿½AIè³‡ç”¢?ï¿½ï¿½?
  */
 UCLASS(BlueprintType)
 class MINGCORE_API UMingRepublicEraPromptLibrary : public UObject
@@ -14,98 +14,99 @@ class MINGCORE_API UMingRepublicEraPromptLibrary : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRepublicEraPromptLibrary();
+    UMingRepublicEraPromptLibrary(};
 
     /**
-     * ?²å?æ°‘å??‚æ??´é?é¢¨æ ¼?è¿°
+     * ?ï¿½ï¿½?æ°‘ï¿½Xï¿½ï¿½Xï¿½ï¿½?é¢¨æ ¼?ï¿½è¿°
      */
     UFUNCTION(BlueprintPure, Category = "Republic Era Prompts")
-    static FString GetEraStyleDescription(ERepublicEraStyle EraStyle);
+    static FString GetEraStyleDescription(ERepublicEraStyle EraStyle};
 
     /**
-     * ?²å?è§’è‰²?–å??ç¤ºè©?     */
+     * ?ï¿½ï¿½?è§’è‰²?ï¿½ï¿½Xï¿½ç¤ºï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Republic Era Prompts")
-    static FString GetCharacterPortraitPrompt(ERepublicEraStyle EraStyle, const FString& CharacterType);
+    static FString GetCharacterPortraitPrompt(ERepublicEraStyle EraStyle, const FString& CharacterType) {};
 
     /**
-     * ?²å?å»ºç??©æ?ç¤ºè?
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½?ç¤ºï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Republic Era Prompts")
-    static FString GetBuildingPrompt(ERepublicEraStyle EraStyle, const FString& BuildingType);
+    static FString GetBuildingPrompt(ERepublicEraStyle EraStyle, const FString& BuildingType) {};
 
     /**
-     * ?²å?æ­¦å™¨?ç¤ºè©?     */
+     * ?ï¿½ï¿½?æ­¦å™¨?ï¿½ç¤ºï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Republic Era Prompts")
-    static FString GetWeaponPrompt(ERepublicEraStyle EraStyle, const FString& WeaponType);
+    static FString GetWeaponPrompt(ERepublicEraStyle EraStyle, const FString& WeaponType) {};
 
     /**
-     * ?²å?è»æ??ç¤ºè©?     */
+     * ?ï¿½ï¿½?è»ï¿½Xï¿½ç¤ºï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Republic Era Prompts")
-    static FString GetUniformPrompt(ERepublicEraStyle EraStyle, const FString& MilitaryBranch);
+    static FString GetUniformPrompt(ERepublicEraStyle EraStyle, const FString& MilitaryBranch) {};
 
     /**
-     * ?²å??³æ?é¢¨æ ¼?ç¤ºè©?     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?é¢¨æ ¼?ï¿½ç¤ºï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Republic Era Prompts")
-    static FString GetMusicPrompt(ERepublicEraStyle EraStyle, const FString& MusicMood);
+    static FString GetMusicPrompt(ERepublicEraStyle EraStyle, const FString& MusicMood) {};
 
     /**
-     * ?²å??´æ™¯?ç¤ºè©?     */
+     * ?ï¿½ï¿½Xï¿½æ™¯?ï¿½ç¤ºï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Republic Era Prompts")
-    static FString GetScenePrompt(ERepublicEraStyle EraStyle, const FString& SceneType);
+    static FString GetScenePrompt(ERepublicEraStyle EraStyle, const FString& SceneType) {};
 
     /**
-     * ?²å??šç”¨è³ªé??å?è©?     */
+     * ?ï¿½ï¿½Xï¿½ç”¨è³ªï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Republic Era Prompts")
-    static FString GetQualityEnhancers();
+    static FString GetQualityEnhancers(};
 
     /**
-     * ?²å?è² é¢?ç¤ºè©?     */
+     * ?ï¿½ï¿½?è² é¢?ï¿½ç¤ºï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Republic Era Prompts")
-    static FString GetNegativePrompts();
+    static FString GetNegativePrompts(};
 
     /**
-     * ?²å?å®Œæ•´?„ç??ˆæ?ç¤ºè?
+     * ?ï¿½ï¿½?å®Œæ•´?ï¿½ï¿½Xï¿½ï¿½?ç¤ºï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Republic Era Prompts")
-    static FString GetFullPrompt(ERepublicEraStyle EraStyle, EAIAssetType AssetType, const FString& SpecificDescription);
+    static FString GetFullPrompt(ERepublicEraStyle EraStyle, EAIAssetType AssetType, const FString& SpecificDescription) {};
 
 private:
-    // æ°‘å??‚æ?æ­·å²?Œæ™¯
+    // æ°‘ï¿½Xï¿½ï¿½?æ­·å²?ï¿½æ™¯
     static const FString EarlyRepublicContext;
     static const FString NanjingDecadeContext;
     static const FString WarOfResistanceContext;
     static const FString CivilWarContext;
 
-    // è§’è‰²é¡å??è¿°
+    // è§’è‰²é¡ï¿½Xï¿½è¿°
     static const FString SoldierDescription;
     static const FString OfficerDescription;
     static const FString CivilianDescription;
     static const FString ScholarDescription;
     static const FString MerchantDescription;
 
-    // å»ºç?é¡å??è¿°
+    // å»ºï¿½?é¡ï¿½Xï¿½è¿°
     static const FString GovernmentBuildingDescription;
     static const FString TraditionalHouseDescription;
     static const FString WesternStyleBuildingDescription;
     static const FString MilitaryFacilityDescription;
     static const FString TempleDescription;
 
-    // æ­¦å™¨é¡å??è¿°
+    // æ­¦å™¨é¡ï¿½Xï¿½è¿°
     static const FString RifleDescription;
     static const FString PistolDescription;
     static const FString MachineGunDescription;
     static const FString ArtilleryDescription;
     static const FString SwordDescription;
 
-    // ?³æ?é¢¨æ ¼?è¿°
+    // ?ï¿½ï¿½?é¢¨æ ¼?ï¿½è¿°
     static const FString PatrioticMusicDescription;
     static const FString DramaticMusicDescription;
     static const FString TraditionalMusicDescription;
     static const FString MilitaryMarchDescription;
 
-    // ?´æ™¯é¡å??è¿°
+    // ?ï¿½æ™¯é¡ï¿½Xï¿½è¿°
     static const FString UrbanSceneDescription;
     static const FString RuralSceneDescription;
     static const FString BattlefieldDescription;
     static const FString StreetSceneDescription;
 };
+

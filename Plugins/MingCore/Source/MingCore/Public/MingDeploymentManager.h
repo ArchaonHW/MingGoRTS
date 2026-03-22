@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -127,17 +127,17 @@ class MINGDEPLOYMENT_API UMingDeploymentManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingDeploymentManager();
+    UMingDeploymentManager(};
 
     // Build Control
     UFUNCTION(BlueprintCallable, Category = "Build Control")
-    void InitializeDeploymentManager();
+    void InitializeDeploymentManager(};
 
     UFUNCTION(BlueprintCallable, Category = "Build Control")
-    void StartBuildProcess(const FMingBuildSettings& Settings);
+    void StartBuildProcess(const FMingBuildSettings& Settings) {};
 
     UFUNCTION(BlueprintCallable, Category = "Build Control")
-    void CancelBuild();
+    void CancelBuild(};
 
     UFUNCTION(BlueprintCallable, Category = "Build Control")
     bool IsBuildInProgress() const;
@@ -147,83 +147,83 @@ public:
 
     // Build Steps
     UFUNCTION(BlueprintCallable, Category = "Build Steps")
-    void ExecuteBuildSteps();
+    void ExecuteBuildSteps(};
 
     UFUNCTION(BlueprintCallable, Category = "Build Steps")
-    void PreBuildValidation();
+    void PreBuildValidation(};
 
     UFUNCTION(BlueprintCallable, Category = "Build Steps")
-    void CompileProject();
+    void CompileProject(};
 
     UFUNCTION(BlueprintCallable, Category = "Build Steps")
-    void CookContent();
+    void CookContent(};
 
     UFUNCTION(BlueprintCallable, Category = "Build Steps")
-    void PackageGame();
+    void PackageGame(};
 
     UFUNCTION(BlueprintCallable, Category = "Build Steps")
-    void PostBuildValidation();
+    void PostBuildValidation(};
 
     UFUNCTION(BlueprintCallable, Category = "Build Steps")
-    void GenerateInstaller();
+    void GenerateInstaller(};
 
     // Platform Support
     UFUNCTION(BlueprintCallable, Category = "Platform Support")
-    void ConfigureForWindows();
+    void ConfigureForWindows(};
 
     UFUNCTION(BlueprintCallable, Category = "Platform Support")
-    void ConfigureForAndroid();
+    void ConfigureForAndroid(};
 
     UFUNCTION(BlueprintCallable, Category = "Platform Support")
-    void ConfigureForIOS();
+    void ConfigureForIOS(};
 
     UFUNCTION(BlueprintCallable, Category = "Platform Support")
-    void SetupCrossPlatformAssets();
+    void SetupCrossPlatformAssets(};
 
     // Deployment
     UFUNCTION(BlueprintCallable, Category = "Deployment")
-    void DeployToStaging();
+    void DeployToStaging(};
 
     UFUNCTION(BlueprintCallable, Category = "Deployment")
-    void DeployToProduction();
+    void DeployToProduction(};
 
     UFUNCTION(BlueprintCallable, Category = "Deployment")
-    void CreateDistributionPackage();
+    void CreateDistributionPackage(};
 
     UFUNCTION(BlueprintCallable, Category = "Deployment")
-    void UploadToCDN();
+    void UploadToCDN(};
 
     UFUNCTION(BlueprintCallable, Category = "Deployment")
-    void UpdateVersionInfo();
+    void UpdateVersionInfo(};
 
     // Version Management
     UFUNCTION(BlueprintCallable, Category = "Version Management")
-    void IncrementVersion();
+    void IncrementVersion(};
 
     UFUNCTION(BlueprintCallable, Category = "Version Management")
-    void SetVersionNumber(const FString& Version);
+    void SetVersionNumber(const FString& Version) {};
 
     UFUNCTION(BlueprintPure, Category = "Version Management")
     FString GetCurrentVersion() const;
 
     UFUNCTION(BlueprintCallable, Category = "Version Management")
-    void GenerateReleaseNotes();
+    void GenerateReleaseNotes(};
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetBuildConfigName(EMingBuildConfiguration Config);
+    static FString GetBuildConfigName(EMingBuildConfiguration Config};
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetPlatformName(EMingPlatformTarget Platform);
+    static FString GetPlatformName(EMingPlatformTarget Platform};
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetDeploymentStatusName(EMingDeploymentStatus Status);
+    static FString GetDeploymentStatusName(EMingDeploymentStatus Status};
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
-    void ExportBuildManifest();
+    void ExportBuildManifest(};
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
-    void CleanupOldBuilds();
+    void CleanupOldBuilds(};
 
 protected:
     UPROPERTY()
@@ -239,35 +239,36 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeBuildEnvironment();
-    void ValidateBuildSettings();
-    void SetupBuildDirectories();
-    void CleanupBuildArtifacts();
+    void InitializeBuildEnvironment(};
+    void ValidateBuildSettings(};
+    void SetupBuildDirectories(};
+    void CleanupBuildArtifacts(};
 
     // Build Step Implementations
-    bool ValidateSourceCode();
-    bool RunCompilation();
-    bool CookGameContent();
-    bool CreateGamePackage();
-    bool ValidatePackage();
-    bool CreateInstallerPackage();
+    bool ValidateSourceCode(};
+    bool RunCompilation(};
+    bool CookGameContent(};
+    bool CreateGamePackage(};
+    bool ValidatePackage(};
+    bool CreateInstallerPackage(};
 
     // Platform Configuration
-    void SetupWindowsSpecifics();
-    void SetupAndroidSpecifics();
-    void SetupIOSSpecifics();
-    void SetupCrossPlatformSupport();
+    void SetupWindowsSpecifics(};
+    void SetupAndroidSpecifics(};
+    void SetupIOSSpecifics(};
+    void SetupCrossPlatformSupport(};
 
     // Deployment Implementation
-    bool UploadToStagingServer();
-    bool UploadToProductionServer();
-    bool UpdateCDNCache();
-    bool NotifyDistributionPlatforms();
+    bool UploadToStagingServer(};
+    bool UploadToProductionServer(};
+    bool UpdateCDNCache(};
+    bool NotifyDistributionPlatforms(};
 
     // Helpers
-    FString GenerateBuildID();
-    int64 CalculatePackageSize();
-    FString CalculateMD5Hash();
-    void LogBuildEvent(const FString& Event, const FString& Details);
-    void ReportBuildProgress(float Progress, const FString& Stage);
+    FString GenerateBuildID(};
+    int64 CalculatePackageSize(};
+    FString CalculateMD5Hash(};
+    void LogBuildEvent(const FString& Event, const FString& Details) {};
+    void ReportBuildProgress(float Progress, const FString& Stage) {};
 };
+

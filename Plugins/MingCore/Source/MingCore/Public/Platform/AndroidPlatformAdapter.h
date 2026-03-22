@@ -1,18 +1,18 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "Platform\IPlatformInterface.h"
 #include "AndroidPlatformAdapter.generated.h"
 
 /**
- * Android Âπ≥Âè∞?©È??? */
+ * Android Âπ≥Âè∞?ÔøΩÔøΩX */
 UCLASS()
 class MINGCORE_API UAndroidPlatformAdapter : public UObject, public IPlatformInterface
 {
     GENERATED_BODY()
 
 public:
-    UAndroidPlatformAdapter();
+    UAndroidPlatformAdapter(};
 
     // IPlatformInterface ÂØ¶Áèæ
     virtual EPlatformType GetPlatformType() const override;
@@ -31,7 +31,7 @@ public:
     virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) override;
     virtual FString LoadFromPlatformStorage(const FString& Key) const override;
 
-    // Android ?πÂ??üËÉΩ
+    // Android ?ÔøΩÔøΩXÔøΩËÉΩ
     UFUNCTION(BlueprintCallable, Category = "Platform|Android")
     FString GetAndroidVersion() const;
 
@@ -39,15 +39,16 @@ public:
     bool IsTablet() const;
 
     UFUNCTION(BlueprintCallable, Category = "Platform|Android")
-    void ShowToast(const FString& Message, int32 Duration = 2000);
+    void ShowToast(const FString& Message, int32 Duration = 2000};
 
     UFUNCTION(BlueprintCallable, Category = "Platform|Android")
-    void Vibrate(int32 Duration = 100);
+    void Vibrate(int32 Duration = 100};
 
 private:
     bool bInitialized;
     int32 CurrentPerformanceMode;
     
-    // ÂÆâÂÖ®?Ä?üÁ∑©Â≠?    FMargin CachedSafeZone;
+    // ÂÆâÂÖ®?ÔøΩ?ÔøΩÁ∑©ÔøΩ?    FMargin CachedSafeZone;
     bool bSafeZoneCached;
 };
+

@@ -1,41 +1,42 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "MingDecisionConsequenceManager.h"
 #include "IMingConsequenceApplier.generated.h"
 
-// ä»‹é¢é¡?- å¾Œæ??‰ç”¨??UINTERFACE(MinimalAPI, BlueprintType)
+// ä»‹é¢ï¿½?- å¾Œï¿½Xï¿½ç”¨XUINTERFACE(MinimalAPI, BlueprintType)
 class UMingConsequenceApplier : public UInterface
 {
     GENERATED_BODY()
 };
 
 /**
- * å¾Œæ??‰ç”¨?¨ä??? * è² è²¬å°‡è?ç®—å‡º?„å??œæ??¨åˆ°?Šæˆ²ä¸–ç?
+ * å¾Œï¿½Xï¿½ç”¨?ï¿½ï¿½X * è² è²¬å°‡ï¿½?ç®—å‡º?ï¿½ï¿½Xï¿½ï¿½Xï¿½åˆ°?ï¿½æˆ²ä¸–ï¿½?
  */
 class MINGCORE_API IMingConsequenceApplier
 {
     GENERATED_BODY()
 
 public:
-    // ?‰ç”¨å¾Œæ?
+    // ?ï¿½ç”¨å¾Œï¿½?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
-    bool Apply(const FMingConsequenceResult& ConsequenceResult);
+    bool Apply(const FMingConsequenceResult& ConsequenceResult};
 
-    // æª¢æŸ¥?¯å¦?¯ä»¥?‰ç”¨è©²å???    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
+    // æª¢æŸ¥?ï¿½å¦?ï¿½ä»¥?ï¿½ç”¨è©²ï¿½X    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
     bool CanApply(const FMingConsequenceResult& ConsequenceResult) const;
 
-    // ?¤éŠ·å¾Œæ?
+    // ?ï¿½éŠ·å¾Œï¿½?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
-    bool Undo(const FString& ConsequenceID);
+    bool Undo(const FString& ConsequenceID};
 
-    // ?²å??‰ç”¨?¨å?ç¨?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
+    // ?ï¿½ï¿½Xï¿½ç”¨?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
     FString GetApplierName() const;
 
-    // ?²å??‰ç”¨?¨æ?è¿?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
+    // ?ï¿½ï¿½Xï¿½ç”¨?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
     FString GetApplierDescription() const;
 
-    // ?²å??‰ç”¨?ªå?ç´?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
+    // ?ï¿½ï¿½Xï¿½ç”¨?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
     int32 GetPriority() const;
 };
+

@@ -1,12 +1,12 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingStressTestSuite.generated.h"
 
 /**
- * 壓�?測試套件
- * 測試系統?�極?��?件�??�穩定性�??�能
+ * 壓�?測試套件
+ * 測試系統?�極?��?件�X�穩定性�X�能
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingStressTestSuite : public UObject
@@ -14,21 +14,21 @@ class MINGCORE_API UMingStressTestSuite : public UObject
     GENERATED_BODY()
 
 public:
-    UMingStressTestSuite();
+    UMingStressTestSuite(};
 
-    // ========== ?��??�穩定性測�?==========
+    // ========== ?��X�穩定性測�?==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Stability")
-    void Start24HourStabilityTest();
+    void Start24HourStabilityTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Stability")
-    void StopStabilityTest();
+    void StopStabilityTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Stability")
-    void StartLongTermMemoryTest();
+    void StartLongTermMemoryTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Stability")
-    void StopLongTermMemoryTest();
+    void StopLongTermMemoryTest(};
     
     UFUNCTION(BlueprintPure, Category = "Stress Test | Stability")
     bool IsStabilityTestPass() const;
@@ -45,19 +45,19 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Stability")
     bool HasMemoryLeak() const;
 
-    // ========== 大�?模性能測試 ==========
+    // ========== 大�?模性能測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Performance")
-    void StartMassiveUnitTest(int32 UnitCount = 10000);
+    void StartMassiveUnitTest(int32 UnitCount = 10000};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Performance")
-    void StopMassiveUnitTest();
+    void StopMassiveUnitTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Performance")
-    void StartLargeScaleBattleTest();
+    void StartLargeScaleBattleTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Performance")
-    void StopLargeScaleBattleTest();
+    void StopLargeScaleBattleTest(};
     
     UFUNCTION(BlueprintPure, Category = "Stress Test | Performance")
     bool IsMassiveTestPass() const;
@@ -74,19 +74,19 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Performance")
     float GetSimulationTime() const;
 
-    // ========== 並發?�戶測試 ==========
+    // ========== 並發?�戶測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Concurrent")
-    void StartConcurrentUserTest(int32 UserCount = 100);
+    void StartConcurrentUserTest(int32 UserCount = 100};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Concurrent")
-    void StopConcurrentUserTest();
+    void StopConcurrentUserTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Concurrent")
-    void StartNetworkStressTest();
+    void StartNetworkStressTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Concurrent")
-    void StopNetworkStressTest();
+    void StopNetworkStressTest(};
     
     UFUNCTION(BlueprintPure, Category = "Stress Test | Concurrent")
     bool IsConcurrentTestPass() const;
@@ -100,25 +100,25 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Concurrent")
     float GetNetworkThroughput() const;
 
-    // ========== 資�?壓�?測試 ==========
+    // ========== 資�?壓�?測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Resource")
-    void StartResourceStressTest();
+    void StartResourceStressTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Resource")
-    void StopResourceStressTest();
+    void StopResourceStressTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Resource")
-    void StartMemoryStressTest();
+    void StartMemoryStressTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Resource")
-    void StopMemoryStressTest();
+    void StopMemoryStressTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Resource")
-    void StartCPUStressTest();
+    void StartCPUStressTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Resource")
-    void StopCPUStressTest();
+    void StopCPUStressTest(};
     
     UFUNCTION(BlueprintPure, Category = "Stress Test | Resource")
     bool IsResourceTestPass() const;
@@ -132,16 +132,16 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Resource")
     int32 GetResourceAllocations() const;
 
-    // ========== 綜�?壓�?測試 ==========
+    // ========== 綜�?壓�?測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test")
-    void RunAllStressTests();
+    void RunAllStressTests(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test")
-    void RunQuickStressTest();
+    void RunQuickStressTest(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test")
-    void RunFullStressTest();
+    void RunFullStressTest(};
     
     UFUNCTION(BlueprintPure, Category = "Stress Test")
     bool AreAllStressTestsPassed() const;
@@ -153,16 +153,16 @@ public:
     int32 GetFailedTestCount() const;
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test")
-    FString GenerateStressTestReport();
+    FString GenerateStressTestReport(};
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test")
-    void ExportStressTestData(const FString& FilePath);
+    void ExportStressTestData(const FString& FilePath};
 
 protected:
     virtual void Tick(float DeltaTime) override;
 
 private:
-    // 測試?�??    UPROPERTY()
+    // 測試?�X    UPROPERTY()
     bool bStabilityTestRunning;
     
     UPROPERTY()
@@ -174,7 +174,7 @@ private:
     UPROPERTY()
     bool bResourceTestRunning;
     
-    // 穩�??�測試數??    UPROPERTY()
+    // 穩�X�測試數X    UPROPERTY()
     float TestStartTime;
     
     UPROPERTY()
@@ -189,7 +189,7 @@ private:
     UPROPERTY()
     bool bMemoryLeakDetected;
     
-    // ?�能測試?��?
+    // ?�能測試?��?
     UPROPERTY()
     float AverageFPS;
     
@@ -205,7 +205,7 @@ private:
     UPROPERTY()
     float TotalFrameTime;
     
-    // 並發測試?��?
+    // 並發測試?��?
     UPROPERTY()
     float AverageLatency;
     
@@ -215,7 +215,7 @@ private:
     UPROPERTY()
     float NetworkThroughput;
     
-    // 資�?測試?��?
+    // 資�?測試?��?
     UPROPERTY()
     float MemoryUsagePercentage;
     
@@ -225,7 +225,7 @@ private:
     UPROPERTY()
     int32 ResourceAllocations;
     
-    // 測試結�?
+    // 測試結�?
     UPROPERTY()
     int32 PassedTests;
     
@@ -235,24 +235,25 @@ private:
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // ?�部?�數
-    void UpdateStabilityMetrics(float DeltaTime);
-    void UpdatePerformanceMetrics(float DeltaTime);
-    void UpdateConcurrentMetrics(float DeltaTime);
-    void UpdateResourceMetrics(float DeltaTime);
+    // ?�部?�數
+    void UpdateStabilityMetrics(float DeltaTime};
+    void UpdatePerformanceMetrics(float DeltaTime};
+    void UpdateConcurrentMetrics(float DeltaTime};
+    void UpdateResourceMetrics(float DeltaTime};
     
-    void MonitorSystemHealth();
-    void CheckMemoryLeaks();
-    void ValidateSystemIntegrity();
-    void LogStressMetrics();
+    void MonitorSystemHealth(};
+    void CheckMemoryLeaks(};
+    void ValidateSystemIntegrity(};
+    void LogStressMetrics(};
     
-    void AddTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT(""));
-    void ResetTestResults();
-    void CalculateTestStatistics();
+    void AddTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
+    void ResetTestResults(};
+    void CalculateTestStatistics(};
     
-    // 壓�?測試輔助
-    void SimulateHighLoad();
-    void GenerateTestLoad();
-    void MonitorSystemResources();
-    void ValidatePerformanceThresholds();
+    // 壓�?測試輔助
+    void SimulateHighLoad(};
+    void GenerateTestLoad(};
+    void MonitorSystemResources(};
+    void ValidatePerformanceThresholds(};
 };
+

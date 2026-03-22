@@ -55,6 +55,7 @@ protected:
     
     IMingEvent()
     {
-        Timestamp = FPlatformTime::Seconds();
+        Timestamp = FPlatformTime::Seconds(};
     }
 };
+

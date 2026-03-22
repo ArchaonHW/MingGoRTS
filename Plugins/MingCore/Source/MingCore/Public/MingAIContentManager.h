@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -13,17 +13,17 @@ class APlayerController;
 UENUM(BlueprintType)
 enum class EAIContentType : uint8
 {
-    Image,          // ?ñÂ?
-    Video,          // ÂΩ±Á?
-    Music,          // ?≥Ê?
-    SoundEffect,    // ?≥Ê?
-    Texture,        // Ë≤ºÂ?
-    Mesh,           // Ê®°Â?
-    Material,       // ?êË≥™
-    Animation,      // ?ïÁï´
-    Level,          // ?úÂç°
+    Image,          // ?ÔøΩÔøΩ?
+    Video,          // ÂΩ±ÔøΩ?
+    Music,          // ?ÔøΩÔøΩ?
+    SoundEffect,    // ?ÔøΩÔøΩ?
+    Texture,        // Ë≤ºÔøΩ?
+    Mesh,           // Ê®°ÔøΩ?
+    Material,       // ?ÔøΩË≥™
+    Animation,      // ?ÔøΩÁï´
+    Level,          // ?ÔøΩÂç°
     UI,             // UI
-    Text,           // ?áÊú¨
+    Text,           // ?ÔøΩÊú¨
     Voice           // Ë™ûÈü≥
 };
 
@@ -61,13 +61,13 @@ struct FAIContentProject
 
     FAIContentProject()
     {
-        ProjectName = TEXT("");
-        ProjectDescription = TEXT("");
-        TargetPlatform = TEXT("PC");
+        ProjectName = TEXT(""};
+        ProjectDescription = TEXT(""};
+        TargetPlatform = TEXT("PC"};
         DefaultQuality = EGenerationQuality::Standard;
         bAutoGenerate = true;
         bRealTimePreview = true;
-        OutputDirectory = TEXT("/Game/AIContent/");
+        OutputDirectory = TEXT("/Game/AIContent/"};
     }
 };
 
@@ -99,7 +99,7 @@ struct FAIContentPipeline
 
     FAIContentPipeline()
     {
-        PipelineName = TEXT("");
+        PipelineName = TEXT(""};
         bParallelProcessing = false;
         bAutoAdvance = true;
         CurrentStage = 0;
@@ -107,12 +107,12 @@ struct FAIContentPipeline
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnContentGenerated, EAIContentType, ContentType, const FString&, ContentPath);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProjectCompleted, const FString&, ProjectName, bool, bSuccess);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPipelineStageCompleted, int32, StageIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnContentGenerated, EAIContentType, ContentType, const FString&, ContentPath};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProjectCompleted, const FString&, ProjectName, bool, bSuccess};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPipelineStageCompleted, int32, StageIndex};
 
 /**
- * AI ?ßÂÆπÁÆ°Á??? * Áµ±‰?ÁÆ°Á?AI?ßÂÆπ?üÊ??åÊ∏≤?ìÁ?ÂÆåÊï¥Á≥ªÁµ±
+ * AI ?ÔøΩÂÆπÁÆ°ÔøΩX * Áµ±ÔøΩ?ÁÆ°ÔøΩ?AI?ÔøΩÂÆπ?ÔøΩÔøΩXÔøΩÊ∏≤?ÔøΩÔøΩ?ÂÆåÊï¥Á≥ªÁµ±
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingAIContentManager : public UObject
@@ -120,23 +120,23 @@ class MINGCORE_API UMingAIContentManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAIContentManager();
+    UMingAIContentManager(};
 
-    // ?ùÂ??ñÁ≥ªÁµ?    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void InitializeAIContentManager();
+    // ?ÔøΩÔøΩXÔøΩÁ≥ªÔøΩ?    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    void InitializeAIContentManager(};
 
-    // ?ÖÁõÆÁÆ°Á?
+    // ?ÔøΩÁõÆÁÆ°ÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    FString CreateAIContentProject(const FAIContentProject& Project);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    bool LoadAIContentProject(const FString& ProjectName);
+    FString CreateAIContentProject(const FAIContentProject& Project) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void SaveAIContentProject(const FString& ProjectName);
+    bool LoadAIContentProject(const FString& ProjectName) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void DeleteAIContentProject(const FString& ProjectName);
+    void SaveAIContentProject(const FString& ProjectName) {};
+
+    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    void DeleteAIContentProject(const FString& ProjectName) {};
 
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     TArray<FAIContentProject> GetAllProjects() const;
@@ -144,95 +144,95 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     FAIContentProject GetCurrentProject() const { return CurrentProject; }
 
-    // ?ßÂÆπ?üÊ?
+    // ?ÔøΩÂÆπ?ÔøΩÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    FString GenerateContent(EAIContentType ContentType, const FString& Prompt, EGenerationQuality Quality = EGenerationQuality::Standard);
+    FString GenerateContent(EAIContentType ContentType, const FString& Prompt, EGenerationQuality Quality = EGenerationQuality::Standard};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    TArray<FString> GenerateProjectContent(const FString& ProjectName);
+    TArray<FString> GenerateProjectContent(const FString& ProjectName) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void GenerateContentAsync(EAIContentType ContentType, const FString& Prompt);
+    void GenerateContentAsync(EAIContentType ContentType, const FString& Prompt) {};
 
-    // ?ßÂÆπÁÆ°È?
+    // ?ÔøΩÂÆπÁÆ°ÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    FString CreateContentPipeline(const FAIContentPipeline& Pipeline);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void ExecutePipeline(const FString& PipelineName);
+    FString CreateContentPipeline(const FAIContentPipeline& Pipeline) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void PausePipeline(const FString& PipelineName);
+    void ExecutePipeline(const FString& PipelineName) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void ResumePipeline(const FString& PipelineName);
+    void PausePipeline(const FString& PipelineName) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void CancelPipeline(const FString& PipelineName);
-
-    // ?¥ÊôØ?üÊ?
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void GenerateGameScene(const FString& SceneDescription, const FAISceneConfiguration& SceneConfig);
+    void ResumePipeline(const FString& PipelineName) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void GenerateInteractiveScene(const FString& SceneDescription);
+    void CancelPipeline(const FString& PipelineName) {};
+
+    // ?ÔøΩÊôØ?ÔøΩÔøΩ?
+    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    void GenerateGameScene(const FString& SceneDescription, const FAISceneConfiguration& SceneConfig) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void GenerateCinematicScene(const FString& SceneDescription, float Duration);
-
-    // ÂØ¶Ê??êË¶Ω
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void StartRealTimePreview();
+    void GenerateInteractiveScene(const FString& SceneDescription) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void StopRealTimePreview();
+    void GenerateCinematicScene(const FString& SceneDescription, float Duration};
+
+    // ÂØ¶ÔøΩXÔøΩË¶Ω
+    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    void StartRealTimePreview(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void UpdatePreviewSettings(const FAIRenderSettings& RenderSettings);
+    void StopRealTimePreview(};
+
+    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    void UpdatePreviewSettings(const FAIRenderSettings& RenderSettings) {};
 
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     bool IsPreviewActive() const { return bPreviewActive; }
 
-    // ?ßÂÆπÂ∫´ÁÆ°??    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void AddToContentLibrary(EAIContentType ContentType, const FString& ContentPath, const FString& Description);
+    // ?ÔøΩÂÆπÂ∫´ÁÆ°X    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    void AddToContentLibrary(EAIContentType ContentType, const FString& ContentPath, const FString& Description) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void RemoveFromContentLibrary(const FString& ContentPath);
+    void RemoveFromContentLibrary(const FString& ContentPath) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     TArray<FString> GetContentLibrary(EAIContentType ContentType) const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void SearchContentLibrary(const FString& Query, TArray<FString>& Results);
+    void SearchContentLibrary(const FString& Query, TArray<FString>& Results};
 
-    // Ê®°Êùø?åÈ?Ë®?    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void SaveContentTemplate(const FString& TemplateName, const FAIContentProject& Project);
+    // Ê®°Êùø?ÔøΩÔøΩ?ÔøΩ?    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    void SaveContentTemplate(const FString& TemplateName, const FAIContentProject& Project) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    FAIContentProject LoadContentTemplate(const FString& TemplateName);
+    FAIContentProject LoadContentTemplate(const FString& TemplateName) {};
 
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     TArray<FString> GetAvailableTemplates() const;
 
-    // ?πÈ??ç‰?
+    // ?ÔøΩÔøΩXÔøΩÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void BatchGenerateContent(const TArray<EAIContentType>& ContentTypes, const TArray<FString>& Prompts);
+    void BatchGenerateContent(const TArray<EAIContentType>& ContentTypes, const TArray<FString>& Prompts};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void BatchImportContent(const TArray<FString>& ContentPaths);
+    void BatchImportContent(const TArray<FString>& ContentPaths};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void BatchExportContent(const TArray<FString>& ContentPaths, const FString& ExportFormat);
+    void BatchExportContent(const TArray<FString>& ContentPaths, const FString& ExportFormat) {};
 
-    // Ë≥áÁî¢ÁÆ°Á?
+    // Ë≥áÁî¢ÁÆ°ÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void OptimizeAssets();
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void CompressAssets();
+    void OptimizeAssets(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void ValidateAssets();
+    void CompressAssets(};
+
+    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    void ValidateAssets(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     float GetAssetSize(const FString& AssetPath) const;
@@ -240,27 +240,27 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     float GetTotalAssetSize() const;
 
-    // ?î‰??üËÉΩ
+    // ?ÔøΩÔøΩXÔøΩËÉΩ
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void ShareProject(const FString& ProjectName, const FString& TargetUser);
+    void ShareProject(const FString& ProjectName, const FString& TargetUser) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void ImportSharedProject(const FString& ShareCode);
+    void ImportSharedProject(const FString& ShareCode) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void SyncProjectCloud(const FString& ProjectName);
+    void SyncProjectCloud(const FString& ProjectName) {};
 
-    // ?àÊú¨?ßÂà∂
+    // ?ÔøΩÊú¨?ÔøΩÂà∂
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void CreateProjectVersion(const FString& ProjectName, const FString& VersionName);
+    void CreateProjectVersion(const FString& ProjectName, const FString& VersionName) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void RevertToVersion(const FString& ProjectName, const FString& VersionName);
+    void RevertToVersion(const FString& ProjectName, const FString& VersionName) {};
 
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     TArray<FString> GetProjectVersions(const FString& ProjectName) const;
 
-    // ?ßËÉΩ??éß
+    // ?ÔøΩËÉΩXÔøΩÔøΩ
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     float GetGenerationProgress() const;
 
@@ -273,31 +273,31 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     int32 GetTotalGeneratedContent() const;
 
-    // ?çÁΩÆÁÆ°Á?
+    // ?ÔøΩÁΩÆÁÆ°ÔøΩ?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void SetDefaultProvider(EAIModelProvider Provider);
+    void SetDefaultProvider(EAIModelProvider Provider};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void SetAPIKey(EAIModelProvider Provider, const FString& APIKey);
+    void SetAPIKey(EAIModelProvider Provider, const FString& APIKey) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void SetQualitySettings(EGenerationQuality Quality);
+    void SetQualitySettings(EGenerationQuality Quality};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void SetOutputSettings(const FString& Directory, bool bAutoSave);
+    void SetOutputSettings(const FString& Directory, bool bAutoSave};
 
     // Á≥ªÁµ±Á∂≠Ë≠∑
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void ClearCache();
+    void ClearCache(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void CleanupOldContent();
+    void CleanupOldContent(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void RebuildContentIndex();
+    void RebuildContentIndex(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void ValidateSystemIntegrity();
+    void ValidateSystemIntegrity(};
 
     // ‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "AI Content Events")
@@ -317,18 +317,18 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingAIContentRenderer> AIContentRenderer;
 
-    // ?ÖÁõÆÁÆ°Á?
+    // ?ÔøΩÁõÆÁÆ°ÔøΩ?
     UPROPERTY()
     TMap<FString, FAIContentProject> Projects;
 
     UPROPERTY()
     FAIContentProject CurrentProject;
 
-    // ?ßÂÆπÁÆ°È?
+    // ?ÔøΩÂÆπÁÆ°ÔøΩ?
     UPROPERTY()
     TMap<FString, FAIContentPipeline> ContentPipelines;
 
-    // ?ßÂÆπÂ∫?- Ê≥®Ê?ÔºöTMap<TArray> ‰∏çÊîØ??UPROPERTY
+    // ?ÔøΩÂÆπÔøΩ?- Ê≥®ÔøΩ?ÔºöTMap<TArray> ‰∏çÊîØXUPROPERTY
     TMap<EAIContentType, TArray<FString>> ContentLibrary;
 
     UPROPERTY()
@@ -338,10 +338,10 @@ protected:
     UPROPERTY()
     TMap<FString, FAIContentProject> ContentTemplates;
 
-    // ?àÊú¨?ßÂà∂ - Ê≥®Ê?ÔºöTMap<TArray> ‰∏çÊîØ??UPROPERTY
+    // ?ÔøΩÊú¨?ÔøΩÂà∂ - Ê≥®ÔøΩ?ÔºöTMap<TArray> ‰∏çÊîØXUPROPERTY
     TMap<FString, TArray<FString>> ProjectVersions;
 
-    // ?Ä??    UPROPERTY()
+    // ?ÔøΩX    UPROPERTY()
     bool bIsInitialized;
 
     UPROPERTY()
@@ -353,7 +353,7 @@ protected:
     UPROPERTY()
     TArray<FString> ActiveGenerations;
 
-    // Áµ±Ë?
+    // Áµ±ÔøΩ?
     UPROPERTY()
     int32 TotalGeneratedCount;
 
@@ -363,22 +363,23 @@ protected:
     UPROPERTY()
     TMap<EAIContentType, int32> ContentTypeCounts;
 
-    // ?ßÈÉ®?ΩÊï∏
-    void InitializeContentSystem();
-    void InitializeRenderer();
-    void LoadDefaultTemplates();
-    void ProcessPipelineStage(const FString& PipelineName, int32 StageIndex);
-    void CompletePipeline(const FString& PipelineName, bool bSuccess);
-    void NotifyContentGenerated(EAIContentType ContentType, const FString& ContentPath);
-    void NotifyProjectCompleted(const FString& ProjectName, bool bSuccess);
-    void NotifyPipelineStageCompleted(int32 StageIndex);
+    // ?ÔøΩÈÉ®?ÔøΩÊï∏
+    void InitializeContentSystem(};
+    void InitializeRenderer(};
+    void LoadDefaultTemplates(};
+    void ProcessPipelineStage(const FString& PipelineName, int32 StageIndex};
+    void CompletePipeline(const FString& PipelineName, bool bSuccess};
+    void NotifyContentGenerated(EAIContentType ContentType, const FString& ContentPath) {};
+    void NotifyProjectCompleted(const FString& ProjectName, bool bSuccess};
+    void NotifyPipelineStageCompleted(int32 StageIndex};
 
 private:
-    // ËºîÂä©?ΩÊï∏
+    // ËºîÂä©?ÔøΩÊï∏
     FString GenerateUniqueContentName(EAIContentType ContentType) const;
     FString GetContentPath(EAIContentType ContentType, const FString& ContentName) const;
     bool ValidateContent(const FString& ContentPath) const;
-    void UpdateStatistics(EAIContentType ContentType, float GenerationTime);
-    void SaveProjectData();
-    void LoadProjectData();
+    void UpdateStatistics(EAIContentType ContentType, float GenerationTime};
+    void SaveProjectData(};
+    void LoadProjectData(};
 };
+

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -46,7 +46,7 @@ struct FMingTriggerCondition
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingGameEventType EventType; // For EventOccurred
 
-    // 注�?：EMingResourceType 定義?�其他�?件中，�??��? UPROPERTY
+    // 注�?：EMingResourceType 定義?�其他�?件中，�X��? UPROPERTY
     int32 ResourceTypeInt; // For ResourceThreshold, mapped to EMingResourceType
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -64,7 +64,7 @@ struct FMingTriggerCondition
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Radius;
 
-    // 注�?：�?迴�?構�??�用 UPROPERTY
+    // 注�?：�?迴�?構�X�用 UPROPERTY
     TArray<FMingTriggerCondition> SubConditions; // For Compound conditions
 
     FMingTriggerCondition()
@@ -162,8 +162,8 @@ struct FMingGameTrigger
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerActivated, const FMingGameTrigger&, Trigger);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTriggerConditionMet, const FMingGameTrigger&, Trigger, const FMingTriggerCondition&, Condition);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerActivated, const FMingGameTrigger&, Trigger};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTriggerConditionMet, const FMingGameTrigger&, Trigger, const FMingTriggerCondition&, Condition};
 
 /**
  * Trigger Manager for MingGoRTS
@@ -175,27 +175,27 @@ class MINGCORE_API UMingTriggerManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingTriggerManager();
+    UMingTriggerManager(};
 
     // Singleton access
     UFUNCTION(BlueprintPure, Category = "Trigger Manager", meta = (WorldContext = "WorldContextObject"))
-    static UMingTriggerManager* Get(UObject* WorldContextObject);
+    static UMingTriggerManager* Get(UObject* WorldContextObject};
 
     // Trigger Registration
     UFUNCTION(BlueprintCallable, Category = "Triggers")
-    FString RegisterTrigger(const FMingGameTrigger& Trigger);
+    FString RegisterTrigger(const FMingGameTrigger& Trigger) {};
 
     UFUNCTION(BlueprintCallable, Category = "Triggers")
-    void UnregisterTrigger(const FString& TriggerID);
+    void UnregisterTrigger(const FString& TriggerID) {};
 
     UFUNCTION(BlueprintCallable, Category = "Triggers")
-    void ActivateTrigger(const FString& TriggerID);
+    void ActivateTrigger(const FString& TriggerID) {};
 
     UFUNCTION(BlueprintCallable, Category = "Triggers")
-    void DeactivateTrigger(const FString& TriggerID);
+    void DeactivateTrigger(const FString& TriggerID) {};
 
     UFUNCTION(BlueprintCallable, Category = "Triggers")
-    void ResetTrigger(const FString& TriggerID);
+    void ResetTrigger(const FString& TriggerID) {};
 
     // Trigger Queries
     UFUNCTION(BlueprintPure, Category = "Triggers")
@@ -215,33 +215,33 @@ public:
 
     // Update
     UFUNCTION(BlueprintCallable, Category = "Update")
-    void UpdateTriggers(float DeltaTime);
+    void UpdateTriggers(float DeltaTime};
 
     // Event Integration
     UFUNCTION()
-    void OnGameEvent(const FMingGameEvent& Event);
+    void OnGameEvent(const FMingGameEvent& Event) {};
 
     // Predefined Triggers
     UFUNCTION(BlueprintCallable, Category = "Presets")
-    FString CreateVictoryTrigger(const FString& TriggerName, const TArray<FMingTriggerCondition>& Conditions);
+    FString CreateVictoryTrigger(const FString& TriggerName, const TArray<FMingTriggerCondition>& Conditions};
 
     UFUNCTION(BlueprintCallable, Category = "Presets")
-    FString CreateDefeatTrigger(const FString& TriggerName, const TArray<FMingTriggerCondition>& Conditions);
+    FString CreateDefeatTrigger(const FString& TriggerName, const TArray<FMingTriggerCondition>& Conditions};
 
     UFUNCTION(BlueprintCallable, Category = "Presets")
-    FString CreateResourceGoalTrigger(const FString& TriggerName, int32 ResourceTypeInt, int32 TargetAmount);
+    FString CreateResourceGoalTrigger(const FString& TriggerName, int32 ResourceTypeInt, int32 TargetAmount};
 
     UFUNCTION(BlueprintCallable, Category = "Presets")
-    FString CreateUnitCountTrigger(const FString& TriggerName, int32 MinUnitCount);
+    FString CreateUnitCountTrigger(const FString& TriggerName, int32 MinUnitCount};
 
     UFUNCTION(BlueprintCallable, Category = "Presets")
-    FString CreateBuildingTrigger(const FString& TriggerName, int32 BuildingTypeInt);
+    FString CreateBuildingTrigger(const FString& TriggerName, int32 BuildingTypeInt};
 
     UFUNCTION(BlueprintCallable, Category = "Presets")
-    FString CreateTimeLimitTrigger(const FString& TriggerName, float TimeLimitSeconds);
+    FString CreateTimeLimitTrigger(const FString& TriggerName, float TimeLimitSeconds};
 
     UFUNCTION(BlueprintCallable, Category = "Presets")
-    FString CreateAreaTrigger(const FString& TriggerName, const FVector& Location, float Radius, int32 RequiredUnits);
+    FString CreateAreaTrigger(const FString& TriggerName, const FVector& Location, float Radius, int32 RequiredUnits};
 
     // Event Delegates
     UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -252,10 +252,10 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static bool EvaluateCondition(const FMingTriggerCondition& Condition, UObject* WorldContext);
+    static bool EvaluateCondition(const FMingTriggerCondition& Condition, UObject* WorldContext};
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
-    void ClearAllTriggers();
+    void ClearAllTriggers(};
 
     UFUNCTION(BlueprintPure, Category = "Utility")
     int32 GetActiveTriggerCount() const;
@@ -265,10 +265,10 @@ public:
 
     // Serialization
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    FString ExportTriggersToJson();
+    FString ExportTriggersToJson(};
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void ImportTriggersFromJson(const FString& JsonString);
+    void ImportTriggersFromJson(const FString& JsonString) {};
 
 protected:
     UPROPERTY()
@@ -281,22 +281,23 @@ protected:
     TWeakObjectPtr<class UMingEventManager> EventManager;
 
     // Evaluation functions
-    bool EvaluateTrigger(const FMingGameTrigger& Trigger);
-    bool EvaluateConditionInternal(const FMingTriggerCondition& Condition);
-    bool EvaluateCompoundAND(const FMingTriggerCondition& Condition);
-    bool EvaluateCompoundOR(const FMingTriggerCondition& Condition);
-    bool EvaluateResourceThreshold(const FMingTriggerCondition& Condition);
-    bool EvaluateUnitCount(const FMingTriggerCondition& Condition);
-    bool EvaluateBuildingConstructed(const FMingTriggerCondition& Condition);
-    bool EvaluateTimeElapsed(const FMingTriggerCondition& Condition);
-    bool EvaluateAreaEntered(const FMingTriggerCondition& Condition);
+    bool EvaluateTrigger(const FMingGameTrigger& Trigger) {};
+    bool EvaluateConditionInternal(const FMingTriggerCondition& Condition) {};
+    bool EvaluateCompoundAND(const FMingTriggerCondition& Condition) {};
+    bool EvaluateCompoundOR(const FMingTriggerCondition& Condition) {};
+    bool EvaluateResourceThreshold(const FMingTriggerCondition& Condition) {};
+    bool EvaluateUnitCount(const FMingTriggerCondition& Condition) {};
+    bool EvaluateBuildingConstructed(const FMingTriggerCondition& Condition) {};
+    bool EvaluateTimeElapsed(const FMingTriggerCondition& Condition) {};
+    bool EvaluateAreaEntered(const FMingTriggerCondition& Condition) {};
 
     // Action execution
-    void ExecuteActions(const FMingGameTrigger& Trigger);
-    void ExecuteAction(const FMingTriggerAction& Action);
+    void ExecuteActions(const FMingGameTrigger& Trigger) {};
+    void ExecuteAction(const FMingTriggerAction& Action) {};
 
     // Helpers
-    bool CompareValues(int32 Value1, int32 Value2, EMingTriggerComparison Comparison);
-    bool CompareValues(float Value1, float Value2, EMingTriggerComparison Comparison);
-    FString GenerateTriggerID();
+    bool CompareValues(int32 Value1, int32 Value2, EMingTriggerComparison Comparison};
+    bool CompareValues(float Value1, float Value2, EMingTriggerComparison Comparison};
+    FString GenerateTriggerID(};
 };
+

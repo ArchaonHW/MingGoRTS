@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -20,45 +20,48 @@ class USoundBase;
 UENUM(BlueprintType)
 enum class ERenderQuality : uint8
 {
-    Low,        // ‰ΩéË≥™??    Medium,     // ‰∏≠Á?Ë≥™È?
-    High,       // È´òË≥™??    Ultra,      // Ë∂ÖÈ?Ë≥™È?
-    Cinematic   // ?ªÂΩ±Á¥öË≥™??};
+    Low,            // ÔøΩCÔøΩÔøΩq
+    Medium,         // ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩq
+    High,           // ÔøΩÔøΩÔøΩÔøΩq
+    Ultra,          // ÔøΩWÔøΩÔøΩÔøΩÔøΩq
+    Cinematic       // ÔøΩqÔøΩvÔøΩ≈ΩÔøΩq
+};
 
 UENUM(BlueprintType)
 enum class ETimeOfDay : uint8
 {
-    Dawn,       // ÈªéÊ?
-    Morning,    // ?©Êô®
-    Noon,       // Ê≠??
-    Afternoon,  // ‰∏ãÂ?
-    Dusk,       // ÈªÉÊ?
-    Night,      // Â§úÊ?
-    Midnight    // ?àÂ?
+    Dawn,       // ÔøΩÔøΩÔøΩÔøΩ
+    Morning,    // ÔøΩÔøΩÔøΩÔøΩ
+    Noon,       // ÔøΩÔøΩÔøΩÔøΩ
+    Afternoon,  // ÔøΩUÔøΩÔøΩ
+    Dusk,       // ÔøΩÔøΩÔøΩÔøΩ
+    Night,      // ÔøΩ]ÔøΩÔøΩ
+    Midnight    // ÔøΩ»©]
 };
 
 UENUM(BlueprintType)
 enum class EWeatherType : uint8
 {
-    Clear,      // ?¥Ê?
-    Cloudy,     // Â§öÈõ≤
-    Overcast,   // ?∞Â§©
-    Rainy,      // ‰∏ãÈõ®
-    Stormy,     // ?¥Èõ®
-    Snowy,      // ‰∏ãÈõ™
-    Foggy,      // ?âÈúß
-    Windy       // ?âÈ¢®
+    Clear,      // X
+    Cloudy,     // ÔøΩhÔøΩÔøΩ
+    Overcast,   // XÔøΩÔøΩ
+    Rainy,      // ÔøΩUÔøΩB
+    Stormy,     // XÔøΩB
+    Snowy,      // ÔøΩUÔøΩÔøΩ
+    Foggy,      // XÔøΩÔøΩ
+    Windy       // XÔøΩÔøΩ
 };
 
 UENUM(BlueprintType)
 enum class ESceneMood : uint8
 {
-    Peaceful,   // Âπ≥Â?
-    Dramatic,   // ?≤Â???    Mysterious, // Á•ûÁ?
-    Epic,       // ?≤Ë©©
-    Intimate,   // Ë¶™Â?
-    Tense,      // Á∑äÂºµ
-    Joyful,     // Ê≠°Âø´
-    Melancholy  // ?ÇÈ¨±
+    Peaceful,   // ÔøΩÔøΩX
+    Dramatic,   // X    Mysterious, // ÔøΩÔøΩX
+    Epic,       // XÔøΩÔøΩ
+    Intimate,   // ÔøΩÔøΩX
+    Tense,      // ÔøΩÔøΩi
+    Joyful,     // ÔøΩwÔøΩÔøΩ
+    Melancholy  // XÔøΩ{
 };
 
 USTRUCT(BlueprintType)
@@ -122,20 +125,20 @@ struct FAISceneConfiguration
 
     FAISceneConfiguration()
     {
-        SceneName = TEXT("AIScene");
-        LocationDescription = TEXT("Beautiful landscape");
+        SceneName = TEXT("AIScene"};
+        LocationDescription = TEXT("Beautiful landscape"};
         TimeOfDay = ETimeOfDay::Morning;
         Weather = EWeatherType::Clear;
         Mood = ESceneMood::Peaceful;
         RenderQuality = ERenderQuality::High;
-        CameraPosition = FVector(0.0f, 0.0f, 200.0f);
-        CameraRotation = FRotator(0.0f, 0.0f, 0.0f);
+        CameraPosition = FVector(0.0f, 0.0f, 200.0f};
+        CameraRotation = FRotator(0.0f, 0.0f, 0.0f};
         FieldOfView = 90.0f;
-        AmbientColor = FLinearColor(0.2f, 0.2f, 0.2f, 1.0f);
-        DirectionalLightColor = FLinearColor(1.0f, 0.95f, 0.8f, 1.0f);
-        DirectionalLightDirection = FVector(-1.0f, -1.0f, -1.0f);
+        AmbientColor = FLinearColor(0.2f, 0.2f, 0.2f, 1.0f};
+        DirectionalLightColor = FLinearColor(1.0f, 0.95f, 0.8f, 1.0f};
+        DirectionalLightDirection = FVector(-1.0f, -1.0f, -1.0f};
         FogDensity = 0.0f;
-        FogColor = FLinearColor(0.5f, 0.6f, 0.7f, 1.0f);
+        FogColor = FLinearColor(0.5f, 0.6f, 0.7f, 1.0f};
         bEnablePostProcessing = true;
         bEnableVolumetricFog = false;
         bEnableLensFlare = true;
@@ -209,11 +212,11 @@ struct FAIRenderSettings
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSceneRendered, const FString&, SceneName, UTexture2D*, RenderedTexture);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnVideoFrameRendered, const FString&, SceneName, int32, FrameIndex, UTexture2D*, FrameTexture);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSceneRendered, const FString&, SceneName, UTexture2D*, RenderedTexture};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnVideoFrameRendered, const FString&, SceneName, int32, FrameIndex, UTexture2D*, FrameTexture};
 
 /**
- * AI ?ßÂÆπÊ∏≤Ê??? * Ë≤†Ë≤¨Â∞áAI?üÊ??ÑÂÖßÂÆπÊ∏≤?ìÂà∞?äÊà≤?´Èù¢
+ * AI XÔøΩeÔøΩÔøΩX * ÔøΩtÔøΩdÔøΩNAIXÔøΩÔøΩÔøΩeÔøΩÔøΩXÔøΩÔøΩXÔøΩÔøΩXÔøΩÔøΩ
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingAIContentRenderer : public USceneComponent
@@ -221,128 +224,128 @@ class MINGCORE_API UMingAIContentRenderer : public USceneComponent
     GENERATED_BODY()
 
 public:
-    UMingAIContentRenderer();
+    UMingAIContentRenderer(};
 
-    // ?ùÂ???    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void InitializeRenderer();
+    // X    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    void InitializeRenderer(};
 
-    // ?¥ÊôØË®≠ÁΩÆ
+    // XÔøΩÔøΩÔøΩ]ÔøΩm
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetupScene(const FAISceneConfiguration& SceneConfig);
-
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void UpdateSceneConfiguration(const FAISceneConfiguration& SceneConfig);
-
-    // Ê∏≤Ê??ßÂà∂
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    UTexture2D* RenderSceneToTexture(const FAIRenderSettings& RenderSettings);
+    void SetupScene(const FAISceneConfiguration& SceneConfig) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void RenderSceneToVideo(const FAIRenderSettings& RenderSettings, float Duration, const FString& OutputPath);
+    void UpdateSceneConfiguration(const FAISceneConfiguration& SceneConfig) {};
+
+    // ÔøΩÔøΩXÔøΩÔøΩ
+    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    UTexture2D* RenderSceneToTexture(const FAIRenderSettings& RenderSettings) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void StartRealTimeRendering(const FAIRenderSettings& RenderSettings);
+    void RenderSceneToVideo(const FAIRenderSettings& RenderSettings, float Duration, const FString& OutputPath) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void StopRealTimeRendering();
-
-    // ?âÁÖßË®≠ÁΩÆ
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetupLighting(ETimeOfDay TimeOfDay, EWeatherType Weather);
+    void StartRealTimeRendering(const FAIRenderSettings& RenderSettings) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void UpdateDirectionalLight(const FVector& Direction, const FLinearColor& Color, float Intensity);
+    void StopRealTimeRendering(};
+
+    // XÔøΩ”≥]ÔøΩm
+    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    void SetupLighting(ETimeOfDay TimeOfDay, EWeatherType Weather};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetupAmbientLight(const FLinearColor& Color, float Intensity);
+    void UpdateDirectionalLight(const FVector& Direction, const FLinearColor& Color, float Intensity};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetupSkyLight(const FLinearColor& Color, float Intensity);
-
-    // ?∞Â?Ë®≠ÁΩÆ
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetupFog(float Density, const FLinearColor& Color, float Height);
+    void SetupAmbientLight(const FLinearColor& Color, float Intensity};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetupAtmosphere(const FString& AtmosphereType);
+    void SetupSkyLight(const FLinearColor& Color, float Intensity};
+
+    // XÔøΩ]ÔøΩm
+    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    void SetupFog(float Density, const FLinearColor& Color, float Height};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetupWeatherEffects(EWeatherType Weather);
-
-    // ÂæåË???    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetupPostProcessing(const FAISceneConfiguration& SceneConfig);
+    void SetupAtmosphere(const FString& AtmosphereType) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void AddBloomEffect(float Intensity, const FLinearColor& Tint);
+    void SetupWeatherEffects(EWeatherType Weather};
+
+    // ÔøΩÔøΩX    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    void SetupPostProcessing(const FAISceneConfiguration& SceneConfig) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void AddVignetteEffect(float Intensity, const FLinearColor& Color);
+    void AddBloomEffect(float Intensity, const FLinearColor& Tint) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void AddColorGrading(const FLinearColor& Shadows, const FLinearColor& Midtones, const FLinearColor& Highlights);
+    void AddVignetteEffect(float Intensity, const FLinearColor& Color) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void AddDepthOfField(float FocusDistance, float FocusRange, float NearTransition, float FarTransition);
-
-    // ?ùÂ?Ê©üÊéß??    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetupCamera(const FVector& Position, const FRotator& Rotation, float FieldOfView);
+    void AddColorGrading(const FLinearColor& Shadows, const FLinearColor& Midtones, const FLinearColor& Highlights) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void AnimateCamera(const FVector& TargetPosition, float Duration, const FString& AnimationType);
+    void AddDepthOfField(float FocusDistance, float FocusRange, float NearTransition, float FarTransition};
+
+    // XÔøΩÔøΩÔøΩÔøΩX    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    void SetupCamera(const FVector& Position, const FRotator& Rotation, float FieldOfView};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetCameraShake(float Intensity, float Duration);
-
-    // ?êË≥™?åÁ???    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void ApplyGeneratedTexture(UTexture2D* Texture, const FString& MaterialSlot);
+    void AnimateCamera(const FVector& TargetPosition, float Duration, const FString& AnimationType) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void ApplyGeneratedMaterial(UMaterialInterface* Material, const FString& ComponentName);
+    void SetCameraShake(float Intensity, float Duration};
+
+    // XÔøΩÔøΩX    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    void ApplyGeneratedTexture(UTexture2D* Texture, const FString& MaterialSlot) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void UpdateMaterialParameters(const TMap<FString, float>& Parameters);
-
-    // ?≥È†ª?ÜÊ?
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void PlayGeneratedMusic(USoundBase* Music, float Volume = 1.0f);
+    void ApplyGeneratedMaterial(UMaterialInterface* Material, const FString& ComponentName) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void PlayGeneratedSoundEffect(USoundBase* SoundEffect, const FVector& Location);
+    void UpdateMaterialParameters(const TMap<FString, float>& Parameters};
+
+    // XÔøΩWX
+    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    void PlayGeneratedMusic(USoundBase* Music, float Volume = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetAudioEnvironment(const FString& EnvironmentType);
-
-    // ?ïÁï´Á≥ªÁµ±
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void PlayGeneratedAnimation(const FString& AnimationName, float PlayRate = 1.0f);
+    void PlayGeneratedSoundEffect(USoundBase* SoundEffect, const FVector& Location) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void BlendAnimations(const TArray<FString>& AnimationNames, const TArray<float>& Weights);
+    void SetAudioEnvironment(const FString& EnvironmentType) {};
+
+    // XÔøΩeÔøΩtÔøΩÔøΩ
+    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    void PlayGeneratedAnimation(const FString& AnimationName, float PlayRate = 1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetAnimationMood(ESceneMood Mood);
-
-    // ?πÊ?Á≥ªÁµ±
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SpawnParticleEffect(const FString& EffectName, const FVector& Location);
+    void BlendAnimations(const TArray<FString>& AnimationNames, const TArray<float>& Weights};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void CreateEnvironmentalEffects(EWeatherType Weather);
+    void SetAnimationMood(ESceneMood Mood};
+
+    // XÔøΩtÔøΩÔøΩ
+    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    void SpawnParticleEffect(const FString& EffectName, const FVector& Location) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void AddScreenEffects(const TArray<FString>& EffectNames);
-
-    // ?ßËÉΩ?™Â?
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void OptimizeForQuality(ERenderQuality Quality);
+    void CreateEnvironmentalEffects(EWeatherType Weather};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void OptimizeForPerformance();
+    void AddScreenEffects(const TArray<FString>& EffectNames};
+
+    // XÔøΩÔøΩX
+    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    void OptimizeForQuality(ERenderQuality Quality};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
-    void SetLODSettings(int32 MaxLOD, float LODDistance);
+    void OptimizeForPerformance(};
 
-    // ?Ä?ãÊü•Ë©?    UFUNCTION(BlueprintPure, Category = "AI Content Renderer")
+    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    void SetLODSettings(int32 MaxLOD, float LODDistance};
+
+    // XÔøΩdX    UFUNCTION(BlueprintPure, Category = "AI Content Renderer")
     bool IsRendering() const;
 
     UFUNCTION(BlueprintPure, Category = "AI Content Renderer")
@@ -354,7 +357,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Renderer")
     UTexture2D* GetLastRenderedTexture() const { return LastRenderedTexture; }
 
-    // ‰∫ã‰ª∂
+    // ÔøΩ∆•ÔøΩ
     UPROPERTY(BlueprintAssignable, Category = "AI Renderer Events")
     FOnSceneRendered OnSceneRendered;
 
@@ -366,7 +369,7 @@ protected:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-    // ?¥ÊôØÁµÑ‰ª∂
+    // XÔøΩÔøΩÔøΩ’•ÔøΩ
     UPROPERTY()
     class USceneCaptureComponent2D* SceneCapture;
 
@@ -388,22 +391,22 @@ private:
     UPROPERTY()
     class UAudioComponent* AudioComponent;
 
-    // Ê∏≤Ê??ÆÊ?
+    // ÔøΩÔøΩX
     UPROPERTY()
     UTextureRenderTarget2D* RenderTarget;
 
-    // ?¥ÊôØ?çÁΩÆ
+    // XÔøΩÔøΩXÔøΩm
     UPROPERTY()
     FAISceneConfiguration CurrentSceneConfig;
 
     UPROPERTY()
     FAIRenderSettings CurrentRenderSettings;
 
-    // AI ?ßÂÆπÁ≥ªÁµ±ÂºïÁî®
+    // AI XÔøΩeÔøΩtÔøΩŒ§ﬁ•ÔøΩ
     UPROPERTY()
     TObjectPtr<UMingAIGeneratedContentSystem> AIContentSystem;
 
-    // ?Ä??    UPROPERTY()
+    // X    UPROPERTY()
     bool bIsInitialized;
 
     UPROPERTY()
@@ -424,7 +427,7 @@ private:
     UPROPERTY()
     UTexture2D* LastRenderedTexture;
 
-    // ?ïÁï´?åÊ???    UPROPERTY()
+    // XÔøΩeX    UPROPERTY()
     float ElapsedTime;
 
     UPROPERTY()
@@ -439,22 +442,23 @@ private:
     UPROPERTY()
     float CameraAnimationDuration;
 
-    // ?ßÈÉ®?ΩÊï∏
-    void InitializeSceneComponents();
-    void SetupDefaultScene();
-    void UpdateLightingForTimeOfDay(ETimeOfDay TimeOfDay);
-    void UpdateWeatherEffects(EWeatherType Weather);
-    void UpdatePostProcessingForMood(ESceneMood Mood);
-    void OptimizeRenderSettings(ERenderQuality Quality);
-    void CaptureSceneFrame();
-    void ProcessVideoFrame();
-    void UpdateCameraAnimation(float DeltaTime);
-    void UpdateEnvironmentalEffects(float DeltaTime);
+    // XÔøΩÔøΩXÔøΩÔøΩ
+    void InitializeSceneComponents(};
+    void SetupDefaultScene(};
+    void UpdateLightingForTimeOfDay(ETimeOfDay TimeOfDay};
+    void UpdateWeatherEffects(EWeatherType Weather};
+    void UpdatePostProcessingForMood(ESceneMood Mood};
+    void OptimizeRenderSettings(ERenderQuality Quality};
+    void CaptureSceneFrame(};
+    void ProcessVideoFrame(};
+    void UpdateCameraAnimation(float DeltaTime};
+    void UpdateEnvironmentalEffects(float DeltaTime};
 
-    // ËºîÂä©?ΩÊï∏
+    // ÔøΩÔøΩÔøΩUXÔøΩÔøΩ
     FLinearColor GetTimeOfDayColor(ETimeOfDay TimeOfDay) const;
     FVector GetLightDirection(ETimeOfDay TimeOfDay) const;
     float GetLightIntensity(ETimeOfDay TimeOfDay, EWeatherType Weather) const;
     FLinearColor GetFogColor(EWeatherType Weather) const;
     float GetFogDensity(EWeatherType Weather) const;
 };
+

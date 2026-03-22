@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "IPlatformInterface.generated.h"
 
 /**
- * å¹³å°é¡å??šè?
+ * å¹³å°é¡ï¿½Xï¿½ï¿½?
  */
 UENUM(BlueprintType)
 enum class EPlatformType : uint8
@@ -17,7 +17,7 @@ enum class EPlatformType : uint8
 };
 
 /**
- * è¼¸å…¥é¡å??šè?
+ * è¼¸å…¥é¡ï¿½Xï¿½ï¿½?
  */
 UENUM(BlueprintType)
 enum class EInputType : uint8
@@ -28,40 +28,40 @@ enum class EInputType : uint8
 };
 
 /**
- * å¹³å°?½å?çµæ?
+ * å¹³å°?ï¿½ï¿½?çµï¿½?
  */
 USTRUCT(BlueprintType)
 struct FPlatformCapabilities
 {
     GENERATED_BODY()
     
-    // ?¯å¦?¯æ?å¤šé?è§¸æ§
+    // ?ï¿½å¦?ï¿½ï¿½?å¤šï¿½?è§¸æ§
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsMultiTouch;
     
-    // ?€å¤§å??‚è§¸?§é???    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½å¤§ï¿½Xï¿½è§¸?ï¿½ï¿½X    UPROPERTY(BlueprintReadOnly)
     int32 MaxTouchPoints;
     
-    // ?¯å¦?¯æ??©ç??µç›¤
+    // ?ï¿½å¦?ï¿½ï¿½Xï¿½ï¿½Xï¿½ç›¤
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsHardwareKeyboard;
     
-    // ?¯å¦?¯æ?é¼ æ?
+    // ?ï¿½å¦?ï¿½ï¿½?é¼ ï¿½?
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsMouse;
     
-    // é»˜è?è¼¸å…¥é¡å?
+    // é»˜ï¿½?è¼¸å…¥é¡ï¿½?
     UPROPERTY(BlueprintReadOnly)
     EInputType DefaultInputType;
     
-    // ?¯å¦?€è¦é›»æ± å„ª??    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½å¦?ï¿½è¦é›»æ± å„ªX    UPROPERTY(BlueprintReadOnly)
     bool bRequiresBatteryOptimization;
     
-    // å»ºè­°?„æ?å¤§å??‚å–®ä½æ•¸
+    // å»ºè­°?ï¿½ï¿½?å¤§ï¿½Xï¿½å–®ä½æ•¸
     UPROPERTY(BlueprintReadOnly)
     int32 RecommendedMaxUnits;
     
-    // å»ºè­°?„ç•«è³ªç?ç´?    UPROPERTY(BlueprintReadOnly)
+    // å»ºè­°?ï¿½ç•«è³ªï¿½?ï¿½?    UPROPERTY(BlueprintReadOnly)
     int32 RecommendedQualityLevel;
     
     FPlatformCapabilities()
@@ -77,8 +77,8 @@ struct FPlatformCapabilities
 };
 
 /**
- * å¹³å°?½è±¡?¥å£
- * å®šç¾©?€?‰å¹³?°ç›¸?œå??½ç?çµ±ä??¥å£
+ * å¹³å°?ï¿½è±¡?ï¿½å£
+ * å®šç¾©?ï¿½?ï¿½å¹³?ï¿½ç›¸?ï¿½ï¿½Xï¿½ï¿½?çµ±ï¿½Xï¿½å£
  */
 UINTERFACE(MinimalAPI)
 class MINGCORE_API UPlatformInterface : public UInterface
@@ -93,44 +93,45 @@ class MINGCORE_API IPlatformInterface
 public:
     virtual ~IPlatformInterface() {}
     
-    // ?²å??¶å?å¹³å°é¡å?
+    // ?ï¿½ï¿½Xï¿½ï¿½?å¹³å°é¡ï¿½?
     virtual EPlatformType GetPlatformType() const = 0;
     
-    // ?²å?å¹³å°?½å?
+    // ?ï¿½ï¿½?å¹³å°?ï¿½ï¿½?
     virtual FPlatformCapabilities GetCapabilities() const = 0;
     
-    // ?å??–å¹³??    virtual void Initialize() = 0;
+    // ?ï¿½ï¿½Xï¿½å¹³X    virtual void Initialize() = 0;
     
-    // ?œé?å¹³å°
+    // ?ï¿½ï¿½?å¹³å°
     virtual void Shutdown() = 0;
     
-    // ?²å?å±å?DPI
+    // ?ï¿½ï¿½?å±ï¿½?DPI
     virtual float GetScreenDPI() const = 0;
     
-    // ?²å?å®‰å…¨?€??(?¨æ–¼ç§»å?ç«¯ç??‰æµ·å±ç?)
+    // ?ï¿½ï¿½?å®‰å…¨?ï¿½X(?ï¿½æ–¼ç§»ï¿½?ç«¯ï¿½Xï¿½æµ·å±ï¿½?)
     virtual FMargin GetSafeZone() const = 0;
     
-    // æª¢æŸ¥?¯å¦?ºè§¸?§è¨­??    virtual bool IsTouchDevice() const = 0;
+    // æª¢æŸ¥?ï¿½å¦?ï¿½è§¸?ï¿½è¨­X    virtual bool IsTouchDevice() const = 0;
     
-    // è¨­ç½®?§èƒ½æ¨¡å?
+    // è¨­ç½®?ï¿½èƒ½æ¨¡ï¿½?
     virtual void SetPerformanceMode(int32 Mode) = 0;
     
-    // ?²å??¶å??»æ??»é? (0-1, -1è¡¨ç¤ºä¸æ”¯??
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½? (0-1, -1è¡¨ç¤ºä¸æ”¯X
     virtual float GetBatteryLevel() const = 0;
     
-    // ?¯å¦æ­?œ¨?…é›»
+    // ?ï¿½å¦ï¿½?ï¿½ï¿½?ï¿½é›»
     virtual bool IsCharging() const = 0;
     
-    // é¡¯ç¤ºå¹³å°?¹å??„å?è©±æ?
+    // é¡¯ç¤ºå¹³å°?ï¿½ï¿½Xï¿½ï¿½?è©±ï¿½?
     virtual void ShowPlatformDialog(const FString& Title, const FString& Message) = 0;
     
-    // ?†äº«?Ÿèƒ½
+    // ?ï¿½äº«?ï¿½èƒ½
     virtual void ShareContent(const FString& Content) = 0;
     
-    // è©•å?è«‹æ?
+    // è©•ï¿½?è«‹ï¿½?
     virtual void RequestAppRating() = 0;
     
-    // ä¿å??¸æ??°å¹³?°ç‰¹å®šå???    virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) = 0;
+    // ä¿ï¿½Xï¿½ï¿½Xï¿½å¹³?ï¿½ç‰¹å®šï¿½X    virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) = 0;
     
-    // å¾å¹³?°ç‰¹å®šå??²è??–æ•¸??    virtual FString LoadFromPlatformStorage(const FString& Key) const = 0;
+    // å¾å¹³?ï¿½ç‰¹å®šï¿½Xï¿½ï¿½Xï¿½æ•¸X    virtual FString LoadFromPlatformStorage(const FString& Key) const = 0;
 };
+

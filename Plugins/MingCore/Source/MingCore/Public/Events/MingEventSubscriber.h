@@ -7,7 +7,7 @@
  * Delegate for handling events.
  * This is a multicast delegate that can bind multiple handlers.
  */
-DECLARE_MULTICAST_DELEGATE_OneParam(FMingEventDelegate, TSharedPtr<IMingEvent>);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMingEventDelegate, TSharedPtr<IMingEvent>};
 
 /**
  * Interface for event subscribers.
@@ -33,7 +33,7 @@ public:
      * Get the event types this subscriber wants to receive.
      * Empty array means subscribe to all events.
      */
-    virtual TArray<FName> GetInterestedEventTypes() const { return TArray<FName>(); }
+    virtual TArray<FName> GetInterestedEventTypes() const { return TArray<FName>(}; }
     
     /**
      * Handle an incoming event.
@@ -47,3 +47,4 @@ public:
      */
     virtual int32 GetPriority() const { return 0; }
 };
+

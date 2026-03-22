@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
@@ -18,7 +18,7 @@ public:
      */
     static FMingCoreModule& Get()
     {
-        return FModuleManager::LoadModuleChecked<FMingCoreModule>("MingCore");
+        return FModuleManager::LoadModuleChecked<FMingCoreModule>("MingCore"};
     }
 
     /**
@@ -28,13 +28,14 @@ public:
      */
     static bool IsAvailable()
     {
-        return FModuleManager::Get().IsModuleLoaded("MingCore");
+        return FModuleManager::Get().IsModuleLoaded("MingCore"};
     }
 
 private:
-    // æ¨¡ç??å??–ç›¸??    void RegisterEventTypes();
-    void SetupPerformanceMonitoring();
+    // æ¨¡ï¿½Xï¿½ï¿½Xï¿½ç›¸X    void RegisterEventTypes(};
+    void SetupPerformanceMonitoring(};
     
-    // ?§èƒ½??§
+    // ?ï¿½èƒ½Xï¿½ï¿½
     class FPerformanceMonitor* PerformanceMonitor;
 };
+

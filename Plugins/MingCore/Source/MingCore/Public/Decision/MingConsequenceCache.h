@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Decision/MingDecisionConsequenceManager.h"
 #include "MingConsequenceCache.generated.h"
 
-// ç·©å?æ¢ç›®
+// ç·©ï¿½?æ¢ç›®
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingConsequenceCacheEntry
 {
@@ -31,8 +31,8 @@ struct MINGCORE_API FMingConsequenceCacheEntry
 };
 
 /**
- * å¾Œæ?è¨ˆç?ç·©å?ç³»çµ±
- * ?å??è?æ±ºç??„è?ç®—æ€§èƒ½
+ * å¾Œï¿½?è¨ˆï¿½?ç·©ï¿½?ç³»çµ±
+ * ?ï¿½ï¿½Xï¿½ï¿½?æ±ºï¿½Xï¿½ï¿½?ç®—æ€§èƒ½
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingConsequenceCache : public UObject
@@ -40,57 +40,58 @@ class MINGCORE_API UMingConsequenceCache : public UObject
     GENERATED_BODY()
 
 public:
-    // å»ºæ?å­?    UMingConsequenceCache();
+    // å»ºï¿½?ï¿½?    UMingConsequenceCache(};
 
-    // ?å??–ç·©å­?    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
-    void Initialize(int32 MaxCacheSize = 1000, float CacheExpirationHours = 24.0f);
+    // ?ï¿½ï¿½Xï¿½ç·©ï¿½?    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
+    void Initialize(int32 MaxCacheSize = 1000, float CacheExpirationHours = 24.0f};
 
-    // ?²å?ç·©å?çµæ?
+    // ?ï¿½ï¿½?ç·©ï¿½?çµï¿½?
     UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
-    bool GetCachedResult(const FString& CacheKey, FMingConsequenceResult& OutResult);
+    bool GetCachedResult(const FString& CacheKey, FMingConsequenceResult& OutResult};
 
-    // ç·©å?çµæ?
+    // ç·©ï¿½?çµï¿½?
     UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
-    void CacheResult(const FString& CacheKey, const FMingConsequenceResult& Result);
+    void CacheResult(const FString& CacheKey, const FMingConsequenceResult& Result};
 
-    // æ¸…é™¤?æ?ç·©å?
+    // æ¸…é™¤?ï¿½ï¿½?ç·©ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
-    void ClearExpiredCache();
+    void ClearExpiredCache(};
 
-    // æ¸…é™¤?€?‰ç·©å­?    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
-    void ClearAllCache();
+    // æ¸…é™¤?ï¿½?ï¿½ç·©ï¿½?    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
+    void ClearAllCache(};
 
-    // ?²å?ç·©å?çµ±è?
+    // ?ï¿½ï¿½?ç·©ï¿½?çµ±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
-    void GetCacheStatistics(int32& TotalEntries, int32& CacheHits, int32& CacheMisses, float& HitRate);
+    void GetCacheStatistics(int32& TotalEntries, int32& CacheHits, int32& CacheMisses, float& HitRate};
 
-    // ?Ÿæ?ç·©å???    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
+    // ?ï¿½ï¿½?ç·©ï¿½X    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
     FString GenerateCacheKey(const FMingDecisionContext& Context) const;
 
 protected:
-    // ç·©å?å­˜å„²
+    // ç·©ï¿½?å­˜å„²
     TMap<FString, FMingConsequenceCacheEntry> CacheMap;
 
-    // ç·©å??ç½®
+    // ç·©ï¿½Xï¿½ç½®
     int32 MaxCacheSize;
     float CacheExpirationHours;
 
-    // çµ±è??¸æ?
+    // çµ±ï¿½Xï¿½ï¿½?
     int32 CacheHits;
     int32 CacheMisses;
 
-    // æ¸…ç?ä½æ??ç·©å­?    void CleanupLowWeightCache();
+    // æ¸…ï¿½?ä½ï¿½Xï¿½ç·©ï¿½?    void CleanupLowWeightCache(};
 
-    // è¨ˆç?ç·©å?æ¬Šé?
+    // è¨ˆï¿½?ç·©ï¿½?æ¬Šï¿½?
     float CalculateCacheWeight(const FMingConsequenceCacheEntry& Entry) const;
 
-    // æª¢æŸ¥ç·©å??¯å¦?æ?
+    // æª¢æŸ¥ç·©ï¿½Xï¿½å¦?ï¿½ï¿½?
     bool IsCacheExpired(const FMingConsequenceCacheEntry& Entry) const;
 
-    // ?´æ–°ç·©å?è¨ªå?çµ±è?
-    void UpdateCacheAccess(const FString& CacheKey);
+    // ?ï¿½æ–°ç·©ï¿½?è¨ªï¿½?çµ±ï¿½?
+    void UpdateCacheAccess(const FString& CacheKey};
 
 private:
-    // ?¯å¦å·²å?å§‹å?
+    // ?ï¿½å¦å·²ï¿½?å§‹ï¿½?
     bool bInitialized = false;
 };
+

@@ -1,18 +1,18 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "Platform\IPlatformInterface.h"
 #include "IOSPlatformAdapter.generated.h"
 
 /**
- * iOS Âπ≥Âè∞?©È??? */
+ * iOS Âπ≥Âè∞?ÔøΩÔøΩX */
 UCLASS()
 class MINGCORE_API UIOSPlatformAdapter : public UObject, public IPlatformInterface
 {
     GENERATED_BODY()
 
 public:
-    UIOSPlatformAdapter();
+    UIOSPlatformAdapter(};
 
     // IPlatformInterface ÂØ¶Áèæ
     virtual EPlatformType GetPlatformType() const override;
@@ -31,7 +31,7 @@ public:
     virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) override;
     virtual FString LoadFromPlatformStorage(const FString& Key) const override;
 
-    // iOS ?πÂ??üËÉΩ
+    // iOS ?ÔøΩÔøΩXÔøΩËÉΩ
     UFUNCTION(BlueprintCallable, Category = "Platform|iOS")
     FString GetIOSVersion() const;
 
@@ -39,15 +39,16 @@ public:
     bool IsIPad() const;
 
     UFUNCTION(BlueprintCallable, Category = "Platform|iOS")
-    void HapticFeedback(int32 Intensity = 1);
+    void HapticFeedback(int32 Intensity = 1};
 
     UFUNCTION(BlueprintCallable, Category = "Platform|iOS")
-    void RegisterForPushNotifications();
+    void RegisterForPushNotifications(};
 
 private:
     bool bInitialized;
     int32 CurrentPerformanceMode;
     
-    // ÂÆâÂÖ®?Ä?üÁ∑©Â≠?    FMargin CachedSafeZone;
+    // ÂÆâÂÖ®?ÔøΩ?ÔøΩÁ∑©ÔøΩ?    FMargin CachedSafeZone;
     bool bSafeZoneCached;
 };
+
