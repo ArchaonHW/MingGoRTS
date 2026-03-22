@@ -109,7 +109,7 @@ struct MINGTACTICAL_API FMingDamageCalculation
         DamageType = EMingDamageType::Kinetic;
         EquipmentType = EMingEquipmentType::Rifle;
         AttackDistance = 0.0f;
-        HitLocation = TEXT(""};
+        HitLocation = FString("");
         ArmorValue = 0.0f;
         ArmorPenetration = 0.0f;
         CriticalChance = 0.1f;

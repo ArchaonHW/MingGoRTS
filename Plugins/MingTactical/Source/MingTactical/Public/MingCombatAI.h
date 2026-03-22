@@ -809,15 +809,16 @@ protected:
 
     // 計�?複�?�?    float CalculateComplexity() const;
 
-    // 管�?記憶使用
-    void ManageMemoryUsage(};
+    // 管理記憶使用
+    void ManageMemoryUsage();
 
-    // ?��?計�?資�?
-    void OptimizeComputationalResources(};
+    // 優化計算資源
+    void OptimizeComputationalResources();
 
-    // ?��?AI?�誤
-    void HandleAIError(const FString& ErrorType, const FString& ErrorMessage};
+    // 處理AI錯誤
+    void HandleAIError(const FString& ErrorType, const FString& ErrorMessage);
 
-    // ?�復AI?�X    void RecoverAIState(};
+    // 恢復AI狀態
+    void RecoverAIState();
 };
 
