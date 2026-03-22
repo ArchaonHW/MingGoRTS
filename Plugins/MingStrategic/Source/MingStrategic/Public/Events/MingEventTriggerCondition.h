@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Events/MingEventTrigger.h"
-#include "MingStrategicEventTriggerCondition.generated.h"
+#include "MingEventTriggerCondition.generated.h"
 
 /**
  * 條件操作符
@@ -93,12 +93,12 @@ struct FConditionGroup
  * 基於遊戲狀態條件觸發事件
  */
 UCLASS()
-class MINGSTRATEGIC_API UMingEventTriggerCondition : public UMingEventTrigger
+class MINGSTRATEGIC_API UMingStrategicEventCondition : public UMingEventTrigger
 {
     GENERATED_BODY()
 
 public:
-    UMingEventTriggerCondition();
+    UMingStrategicEventCondition();
 
     // 添加單個條件
     UFUNCTION(BlueprintCallable, Category = "Condition Trigger")

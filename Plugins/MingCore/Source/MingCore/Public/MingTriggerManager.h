@@ -32,7 +32,7 @@ enum class EMingTriggerComparison : uint8
     NotEqual UMETA(DisplayName = "Not Equal")
 };
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FMingTriggerCondition
 {
     GENERATED_BODY()

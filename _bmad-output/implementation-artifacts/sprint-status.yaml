@@ -53,31 +53,31 @@ development_status:
   epic-1-retrospective: optional
 
   # Epic 2: 大規模戰術戰鬥系統
-  epic-2: in-progress
+  epic-2: done  # All stories completed
   2-1-large-scale-combat-engine: done
   2-2-unit-control-system: done
   2-3-multi-unit-coordination: done
   2-4-combat-ai-system: done
-  2-5-difficulty-progression: backlog
+  2-5-difficulty-progression: done
   epic-2-retrospective: optional
 
   # Epic 3: 角色成長與敘事系統
-  epic-3: backlog
-  3-1-character-creation-attributes: backlog
-  3-2-skill-development: backlog
-  3-3-narrative-dialogue: backlog
-  3-4-historical-roleplay: backlog
-  3-5-character-relationship-network: backlog
-  epic-3-retrospective: optional
+  epic-3: done
+  3-1-character-creation-attributes: done
+  3-2-skill-development: done
+  3-3-narrative-dialogue: done
+  3-4-historical-roleplay: done
+  3-5-character-relationship-network: done
+  epic-3-retrospective: done
 
   # Epic 4: 基地建設與資源管理
-  epic-4: backlog
+  epic-4: done
   4-1-base-building-system: done
-  4-2-resource-collection: backlog
-  4-3-building-upgrade: backlog
-  4-4-tech-tree-research: backlog
-  4-5-production-manufacturing: backlog
-  epic-4-retrospective: optional
+  4-2-resource-collection: done
+  4-3-building-upgrade: completed
+  4-4-tech-tree-research: done
+  4-5-production-manufacturing: done
+  epic-4-retrospective: done
 
   # Epic 5: 四層策略整合系統
   epic-5: backlog

@@ -7,7 +7,7 @@
 #include "MingGoRTSRelationshipNetwork.generated.h"
 
 UENUM(BlueprintType)
-enum class ERelationshipType : uint8
+enum class EMingGameRelationshipType : uint8
 {
     Family            UMETA(DisplayName = "家庭關係"),
     Friend            UMETA(DisplayName = "朋友關係"),
@@ -45,6 +45,20 @@ enum class ERelationshipStatus : uint8
     Broken            UMETA(DisplayName = "破裂"),
     Developing        UMETA(DisplayName = "發展中"),
     Improving         UMETA(DisplayName = "改善中")
+};
+
+/**
+ * FString 數組包裝結構 (用於 TMap<TArray> 嵌套)
+ */
+USTRUCT(BlueprintType)
+struct FStringArrayWrapper
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<FString> Items;
+
+    FStringArrayWrapper() {}
 };
 
 USTRUCT(BlueprintType)
@@ -184,10 +198,11 @@ struct FRelationshipNetwork
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Relationship Network")
     TArray<FRelationshipInfluence> Influences;
 
-    // 注意：TMap<TArray> 不支持 UPROPERTY
-    TMap<FString, TArray<FString>> DirectConnections;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Relationship Network")
+    TMap<FString, FStringArrayWrapper> DirectConnections;
 
-    TMap<FString, TArray<FString>> IndirectConnections;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Relationship Network")
+    TMap<FString, FStringArrayWrapper> IndirectConnections;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Relationship Network")
     float NetworkDensity;

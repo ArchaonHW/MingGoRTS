@@ -49,7 +49,7 @@ struct MINGSTRATEGIC_API FMingStrategicDecisionOption
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FString AvailabilityCondition;
     
-    FMingDecisionOption()
+    FMingStrategicDecisionOption()
         : OptionIcon(nullptr)
         , bEndDecisionChain(false)
     {}

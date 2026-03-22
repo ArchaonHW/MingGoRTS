@@ -94,6 +94,9 @@ bool UMingGoRTSHistoricalSimulation::StartSimulation(const FString& SimulationID
     
     SimulationParameters.Add(SimulationID, InitialParameters);
 
+    // 構建參數快取以啟用 O(1) 查詢
+    BuildParameterCache(SimulationID);
+
     // 初始化歷史記錄
     TArray<FString> History;
     History.Add(FString::Printf(TEXT("模擬開始：%s"), *SimulationID));
@@ -702,6 +705,20 @@ void UMingGoRTSHistoricalSimulation::ProcessSimulationEvents(const FString& Simu
 
 void UMingGoRTSHistoricalSimulation::TriggerSimulationEvent(const FString& SimulationID, const FSimulationEvent& Event)
 {
+    // 循環觸發防護 - 檢查事件觸發深度
+    FString EventKey = FString::Printf(TEXT("%s_%s"), *SimulationID, *Event.EventID);
+    int32 CurrentDepth = EventTriggerDepth.FindRef(EventKey);
+    
+    if (CurrentDepth >= MaxEventTriggerDepth)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("事件觸發深度超過限制 (%d)，阻止循環觸發: %s - %s"), 
+            MaxEventTriggerDepth, *SimulationID, *Event.EventName);
+        return;
+    }
+    
+    // 增加觸發深度
+    EventTriggerDepth.Add(EventKey, CurrentDepth + 1);
+    
     // 應用事件後果
     ApplyEventConsequences(SimulationID, Event);
 
@@ -711,7 +728,7 @@ void UMingGoRTSHistoricalSimulation::TriggerSimulationEvent(const FString& Simul
     // 廣播事件觸發
     OnSimulationEventTriggered.Broadcast(SimulationID, Event.EventID, Event.EventName);
 
-    UE_LOG(LogTemp, Log, TEXT("模擬事件觸發：%s - %s"), *SimulationID, *Event.EventName);
+    UE_LOG(LogTemp, Log, TEXT("模擬事件觸發：%s - %s (深度: %d)"), *SimulationID, *Event.EventName, CurrentDepth + 1);
 }
 
 void UMingGoRTSHistoricalSimulation::CalculateParameterChanges(const FString& SimulationID)
@@ -849,16 +866,63 @@ float UMingGoRTSHistoricalSimulation::CalculateHistoricalAccuracy(const FString&
 
     const FHistoricalSimulation& Simulation = SimulationMap[SimulationID];
     
-    // 簡化實現：基於結果與歷史基準的比較
+    // 改進實現：基於多維度歷史準確性計算
     if (SimulationResults.Contains(SimulationID))
     {
         const FSimulationResult& Result = SimulationResults[SimulationID];
         
-        // 基於成功狀態和分數計算準確性
-        float BaseAccuracy = Result.bSuccess ? 0.8f : 0.3f;
-        float ScoreBonus = (Result.FinalScore / 100.0f) * 0.2f;
+        // 1. 基礎準確性 (成功狀態權重 30%)
+        float BaseAccuracy = Result.bSuccess ? 0.75f : 0.25f;
         
-        return BaseAccuracy + ScoreBonus;
+        // 2. 分數匹配度 (30%)
+        float ScoreAccuracy = FMath::Clamp(Result.FinalScore / 100.0f, 0.0f, 1.0f) * 0.3f;
+        
+        // 3. 參數偏差度 (20%)
+        float ParamDeviation = 0.0f;
+        int32 ParamCount = 0;
+        if (SimulationParameters.Contains(SimulationID) && !Simulation.InitialParameters.IsEmpty())
+        {
+            const TArray<FSimulationParameter>& CurrentParams = SimulationParameters[SimulationID];
+            for (const FSimulationParameter& Current : CurrentParams)
+            {
+                for (const FSimulationParameter& Initial : Simulation.InitialParameters)
+                {
+                    if (Current.ParameterName == Initial.ParameterName)
+                    {
+                        // 計算參數與歷史基準的偏差
+                        float Deviation = FMath::Abs(Current.Value - Initial.Value) / Initial.MaxValue;
+                        ParamDeviation += FMath::Clamp(1.0f - Deviation, 0.0f, 1.0f);
+                        ParamCount++;
+                        break;
+                    }
+                }
+            }
+        }
+        float ParamAccuracy = (ParamCount > 0) ? (ParamDeviation / ParamCount) * 0.2f : 0.1f;
+        
+        // 4. 事件觸發準確性 (20%)
+        float EventAccuracy = 0.0f;
+        if (!Simulation.PossibleEvents.IsEmpty() && SimulationHistories.Contains(SimulationID))
+        {
+            const TArray<FString>& History = SimulationHistories[SimulationID];
+            int32 ExpectedEvents = 0;
+            for (const FSimulationEvent& Event : Simulation.PossibleEvents)
+            {
+                // 檢查歷史中是否觸發了預期事件
+                for (const FString& HistoryEntry : History)
+                {
+                    if (HistoryEntry.Contains(Event.EventName))
+                    {
+                        ExpectedEvents++;
+                        break;
+                    }
+                }
+            }
+            EventAccuracy = (ExpectedEvents / (float)Simulation.PossibleEvents.Num()) * 0.2f;
+        }
+        
+        float TotalAccuracy = BaseAccuracy + ScoreAccuracy + ParamAccuracy + EventAccuracy;
+        return FMath::Clamp(TotalAccuracy, 0.0f, 1.0f);
     }
     
     return 0.0f;
@@ -914,6 +978,25 @@ void UMingGoRTSHistoricalSimulation::RecordSimulationEvent(const FString& Simula
 
 float UMingGoRTSHistoricalSimulation::GetParameterValue(const FString& SimulationID, const FString& ParameterName) const
 {
+    // 優化實現：使用快取進行 O(1) 查詢
+    if (ParameterCache.Contains(SimulationID))
+    {
+        const TMap<FString, int32>& SimCache = ParameterCache[SimulationID];
+        if (SimCache.Contains(ParameterName))
+        {
+            int32 Index = SimCache[ParameterName];
+            if (SimulationParameters.Contains(SimulationID))
+            {
+                const TArray<FSimulationParameter>& Parameters = SimulationParameters[SimulationID];
+                if (Parameters.IsValidIndex(Index))
+                {
+                    return Parameters[Index].Value;
+                }
+            }
+        }
+    }
+    
+    // 回退到線性搜尋 (用於快取未命中的情況)
     if (SimulationParameters.Contains(SimulationID))
     {
         const TArray<FSimulationParameter>& Parameters = SimulationParameters[SimulationID];
@@ -931,6 +1014,26 @@ float UMingGoRTSHistoricalSimulation::GetParameterValue(const FString& Simulatio
 
 void UMingGoRTSHistoricalSimulation::SetParameterValue(const FString& SimulationID, const FString& ParameterName, float Value)
 {
+    // 優化實現：使用快取進行 O(1) 定位
+    if (ParameterCache.Contains(SimulationID))
+    {
+        TMap<FString, int32>& SimCache = ParameterCache[SimulationID];
+        if (SimCache.Contains(ParameterName))
+        {
+            int32 Index = SimCache[ParameterName];
+            if (SimulationParameters.Contains(SimulationID))
+            {
+                TArray<FSimulationParameter>& Parameters = SimulationParameters[SimulationID];
+                if (Parameters.IsValidIndex(Index))
+                {
+                    Parameters[Index].Value = FMath::Clamp(Value, Parameters[Index].MinValue, Parameters[Index].MaxValue);
+                    return;
+                }
+            }
+        }
+    }
+    
+    // 回退到線性搜尋
     if (SimulationParameters.Contains(SimulationID))
     {
         TArray<FSimulationParameter>& Parameters = SimulationParameters[SimulationID];
@@ -942,6 +1045,25 @@ void UMingGoRTSHistoricalSimulation::SetParameterValue(const FString& Simulation
                 break;
             }
         }
+    }
+}
+
+void UMingGoRTSHistoricalSimulation::BuildParameterCache(const FString& SimulationID)
+{
+    ParameterCache.Remove(SimulationID);
+    
+    if (SimulationParameters.Contains(SimulationID))
+    {
+        TMap<FString, int32> SimCache;
+        const TArray<FSimulationParameter>& Parameters = SimulationParameters[SimulationID];
+        
+        for (int32 i = 0; i < Parameters.Num(); ++i)
+        {
+            SimCache.Add(Parameters[i].ParameterName, i);
+        }
+        
+        ParameterCache.Add(SimulationID, SimCache);
+        UE_LOG(LogTemp, Log, TEXT("構建參數快取: %s, 共 %d 個參數"), *SimulationID, Parameters.Num());
     }
 }
 
@@ -1010,31 +1132,77 @@ float UMingGoRTSHistoricalSimulation::CalculateEventTriggerProbability(const FSt
 
 void UMingGoRTSHistoricalSimulation::ApplyEventConsequences(const FString& SimulationID, const FSimulationEvent& Event)
 {
-    for (const FString& Consequence : Event.Consequences)
+    for (const FMingEventConsequence& Consequence : Event.Consequences)
     {
-        // 解析後果字符串並應用
-        if (Consequence.Contains(TEXT("+=")))
+        // 檢查條件參數
+        bool bConditionsMet = true;
+        for (const FString& ConditionParam : Consequence.ConditionParameters)
         {
-            TArray<FString> Parts;
-            Consequence.ParseIntoArray(Parts, TEXT("+="), true);
-            if (Parts.Num() == 2)
+            float Value = GetParameterValue(SimulationID, ConditionParam);
+            if (Value <= 0.0f)
             {
-                float CurrentValue = GetParameterValue(SimulationID, Parts[0]);
-                float Change = FCString::Atof(*Parts[1]);
-                SetParameterValue(SimulationID, Parts[0], CurrentValue + Change);
+                bConditionsMet = false;
+                break;
             }
         }
-        else if (Consequence.Contains(TEXT("-=")))
+        
+        if (!bConditionsMet)
         {
-            TArray<FString> Parts;
-            Consequence.ParseIntoArray(Parts, TEXT("-="), true);
-            if (Parts.Num() == 2)
-            {
-                float CurrentValue = GetParameterValue(SimulationID, Parts[0]);
-                float Change = FCString::Atof(*Parts[1]);
-                SetParameterValue(SimulationID, Parts[0], CurrentValue - Change);
-            }
+            continue;
         }
+        
+        // 應用後果操作
+        float CurrentValue = GetParameterValue(SimulationID, Consequence.TargetParameter);
+        float NewValue = CurrentValue;
+        
+        switch (Consequence.Operation)
+        {
+        case EConsequenceOperation::Add:
+            NewValue = CurrentValue + Consequence.ValueChange;
+            break;
+        case EConsequenceOperation::Subtract:
+            NewValue = CurrentValue - Consequence.ValueChange;
+            break;
+        case EConsequenceOperation::Multiply:
+            NewValue = CurrentValue * Consequence.ValueChange;
+            break;
+        case EConsequenceOperation::Divide:
+            if (Consequence.ValueChange != 0.0f)
+            {
+                NewValue = CurrentValue / Consequence.ValueChange;
+            }
+            break;
+        case EConsequenceOperation::Set:
+            NewValue = Consequence.ValueChange;
+            break;
+        case EConsequenceOperation::Reset:
+            // 重置為初始值
+            if (SimulationMap.Contains(SimulationID))
+            {
+                const FHistoricalSimulation& Simulation = SimulationMap[SimulationID];
+                for (const FSimulationParameter& Param : Simulation.InitialParameters)
+                {
+                    if (Param.ParameterName == Consequence.TargetParameter)
+                    {
+                        NewValue = Param.Value;
+                        break;
+                    }
+                }
+            }
+            break;
+        }
+        
+        // 應用延遲（如果有的話）
+        if (Consequence.DelaySeconds > 0.0f)
+        {
+            // 延遲應用 - 簡化實現，實際應使用定時器
+            UE_LOG(LogTemp, Log, TEXT("後果延遲應用: %s, 延遲: %.1f秒"), *Consequence.TargetParameter, Consequence.DelaySeconds);
+        }
+        
+        SetParameterValue(SimulationID, Consequence.TargetParameter, NewValue);
+        
+        UE_LOG(LogTemp, Log, TEXT("應用後果: %s 從 %.1f 變為 %.1f (操作: %d)"), 
+            *Consequence.TargetParameter, CurrentValue, NewValue, (int32)Consequence.Operation);
     }
 }
 

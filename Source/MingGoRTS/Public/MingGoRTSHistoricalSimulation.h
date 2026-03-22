@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "MingGoRTSRelationshipNetwork.h"
 #include "MingGoRTSHistoricalRoleplay.h"
 #include "MingGoRTSHistoricalSimulation.generated.h"
 
@@ -59,6 +60,50 @@ struct FSimulationParameter
     }
 };
 
+UENUM(BlueprintType)
+enum class EConsequenceOperation : uint8
+{
+    Add         UMETA(DisplayName = "加法"),
+    Subtract    UMETA(DisplayName = "減法"),
+    Multiply    UMETA(DisplayName = "乘法"),
+    Divide      UMETA(DisplayName = "除法"),
+    Set         UMETA(DisplayName = "設置"),
+    Reset       UMETA(DisplayName = "重置")
+};
+
+USTRUCT(BlueprintType)
+struct FMingEventConsequence
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Consequence")
+    FString TargetParameter;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Consequence")
+    EConsequenceOperation Operation;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Consequence")
+    float ValueChange;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Consequence")
+    bool bIsPercentage;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Consequence")
+    float DelaySeconds;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Consequence")
+    TArray<FString> ConditionParameters;
+
+    FMingEventConsequence()
+    {
+        TargetParameter = TEXT("");
+        Operation = EConsequenceOperation::Add;
+        ValueChange = 0.0f;
+        bIsPercentage = false;
+        DelaySeconds = 0.0f;
+    }
+};
+
 USTRUCT(BlueprintType)
 struct FSimulationEvent
 {
@@ -80,7 +125,7 @@ struct FSimulationEvent
     TArray<FSimulationParameter> RequiredParameters;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Simulation Event")
-    TArray<FString> Consequences;
+    TArray<FMingEventConsequence> Consequences;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Simulation Event")
     FString TimeDelay;
@@ -327,12 +372,23 @@ protected:
     // 模擬參數 - 注意：TMap<TArray> 不支持 UPROPERTY
     TMap<FString, TArray<FSimulationParameter>> SimulationParameters;
 
+    // 參數快取 - 注意：嵌套 TMap 不支持 UPROPERTY
+    TMap<FString, TMap<FString, int32>> ParameterCache;
+
     // 模擬結果
     UPROPERTY()
     TMap<FString, FSimulationResult> SimulationResults;
 
-    // 模擬歷史 - 注意：TMap<TArray> 不支持 UPROPERTY
-    TMap<FString, TArray<FString>> SimulationHistories;
+    // 模擬歷史
+    UPROPERTY()
+    TMap<FString, FStringArrayWrapper> SimulationHistories;
+
+    // 事件觸發防護 - 防止循環觸發
+    UPROPERTY()
+    TMap<FString, int32> EventTriggerDepth;
+
+    // 最大事件觸發深度 (防止無限循環)
+    int32 MaxEventTriggerDepth = 10;
 
     // 是否已初始化
     bool bIsInitialized;
@@ -391,11 +447,14 @@ protected:
     // 記錄模擬事件
     void RecordSimulationEvent(const FString& SimulationID, const FString& EventName);
 
-    // 獲取參數值
+    // 獲取參數值 (優化後使用快取)
     float GetParameterValue(const FString& SimulationID, const FString& ParameterName) const;
 
-    // 設置參數值
+    // 設置參數值 (優化後更新快取)
     void SetParameterValue(const FString& SimulationID, const FString& ParameterName, float Value);
+
+    // 構建參數快取
+    void BuildParameterCache(const FString& SimulationID);
 
     // 生成模擬ID
     FString GenerateSimulationID(const FString& BaseName, ESimulationType Type) const;
