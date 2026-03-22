@@ -85,8 +85,17 @@ struct FMingDatabaseSnapshot
 	}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDatabaseCreated, const FString&, DatabaseName);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDatabaseDestroyed, const FString&, DatabaseName);
+class UMingRTSDynamicDatabase;
+
+class MINGCORE_API FMingDatabaseManagerHelper
+{
+public:
+	static UMingRTSDatabaseManager* GetManager();
+	static void ShutdownManager();
+
+private:
+	static UMingRTSDatabaseManager* Instance;
+};
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSDatabaseManager : public UObject
@@ -94,6 +103,8 @@ class MINGCORE_API UMingRTSDatabaseManager : public UObject
 	GENERATED_BODY()
 
 public:
+	static UMingRTSDatabaseManager* Get();
+	
 	UFUNCTION(BlueprintCallable, Category = "Database|Manager")
 	bool InitializeManager();
 
@@ -105,6 +116,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Database|Manager")
 	bool DestroyDatabase(const FString& DatabaseName);
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDatabaseCreated, const FString&, DatabaseName);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDatabaseDestroyed, const FString&, DatabaseName);
 
 	UFUNCTION(BlueprintCallable, Category = "Database|Manager")
 	UMingRTSDynamicDatabase* GetDatabase(const FString& DatabaseName) const;
