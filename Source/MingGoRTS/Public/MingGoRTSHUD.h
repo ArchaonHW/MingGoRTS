@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
@@ -18,7 +18,7 @@ protected:
 
 public:
     UFUNCTION(BlueprintCallable, Category = "HUD")
-    void DrawSelectionBox(FVector2D Start, FVector2D End};
+    void DrawSelectionBox(FVector2D Start, FVector2D End);
 
     UFUNCTION(BlueprintCallable, Category = "HUD")
     void ClearSelectionBox();

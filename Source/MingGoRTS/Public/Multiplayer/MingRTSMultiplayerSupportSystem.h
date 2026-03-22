@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,8 +8,7 @@
  * 網絡連接狀態
  */
 UENUM(BlueprintType)
-enum class EMultiplayerConnectionState : uint8
-{
+enum class EMultiplayerConnectionState: uint8 {
     Offline               UMETA(DisplayName = "離線"),
     Connecting            UMETA(DisplayName = "連接中"),
     Connected             UMETA(DisplayName = "已連接"),
@@ -25,8 +24,7 @@ enum class EMultiplayerConnectionState : uint8
  * 多人遊戲模式
  */
 UENUM(BlueprintType)
-enum class EMultiplayerGameMode : uint8
-{
+enum class EMultiplayerGameMode: uint8 {
     Cooperative           UMETA(DisplayName = "合作模式"),
     Competitive           UMETA(DisplayName = "對抗模式"),
     TeamBattle            UMETA(DisplayName = "團隊戰"),
@@ -40,8 +38,7 @@ enum class EMultiplayerGameMode : uint8
  * 玩家網絡角色
  */
 UENUM(BlueprintType)
-enum class ENetworkPlayerRole : uint8
-{
+enum class ENetworkPlayerRole: uint8 {
     None                  UMETA(DisplayName = "無"),
     Host                  UMETA(DisplayName = "房主"),
     Client                UMETA(DisplayName = "客戶端"),

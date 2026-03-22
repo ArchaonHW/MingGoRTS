@@ -1,53 +1,51 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingHistoricalEventTrigger.generated.h"
 
-// ?????X
+// 摧毀?X
 UENUM(BlueprintType)
-enum class EMingEventType : uint8
-{
+enum class EMingEventType: uint8 {
     Political,         // X?v???
     Military,          // ?xX???
     Economic,          // ?gX???
-    Diplomatic,         // ?~????
+    Diplomatic,         // ?~摧毀
     Social,             // ??X???
     Cultural,          // X???
     NaturalDisaster,    // X?MX?`
     Revolution         // X?R???
 };
 
-// ?????o??X
+// 摧毀?o??X
 UENUM(BlueprintType)
-enum class EMingEventTriggerType : uint8
-{
+enum class EMingEventTriggerType: uint8 {
     TimeBased,          // X??o
     DecisionBased,      // ?MX??o
-    ConditionBased,     // ??????o
+    ConditionBased,     // 摧毀??o
     Random,             // X??o
     Chain,              // X??o
     PlayerAction        // X?a??X??o
 };
 
 // ???XUENUM(BlueprintType)
-enum class EMingEventImportance : uint8
-{
+enum class EMingEventImportance: uint8 {
     Minor,              // ??X???
     Moderate,           // ??X???
     Major,              // X???
-    Critical,           // X????
+    Critical,           // X摧毀
     WorldChanging,  // X?@X};
 
 // ???XUENUM(BlueprintType)
-enum class EMingEventStatus : uint8
-{
+enum class EMingEventStatus: uint8 {
     Pending,            // ??X??o
-    Active,             // ??X    Resolved,           // ?w??X    Failed,             // ??X
+    Active,             // ??X
+    Resolved,           // ?w??X
+    Failed,             // ??X
     Expired,  // ?wX};
 
 /**
- * ?????o????X
+ * 摧毀?o摧毀X
  */
 USTRUCT(BlueprintType)
 struct FMingEventTriggerCondition
@@ -79,29 +77,29 @@ struct FMingEventTriggerCondition
     {}
 };
 
-// ?????o????
+// 摧毀?o摧毀
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingCoreEventTriggerCondition
 {
     GENERATED_BODY()
 
-    // ????ID
+    // 目標ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ConditionID;
 
-    // ??????X
+    // 摧毀??X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEventTriggerType TriggerType;
 
-    // ????X?z
+    // 摧毀X?z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionDescription;
 
-    // ????X??
+    // 摧毀X??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, FString> ConditionParameters;
 
-    // ?????vX
+    // 摧毀?vX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ConditionWeight;
 
@@ -141,7 +139,7 @@ struct FINGCORE_API FMingEventOption
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> Consequences;
 
-    // X?m????
+    // X?m摧毀
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> Prerequisites;
 
@@ -161,7 +159,7 @@ struct FINGCORE_API FMingEventOption
     {
         OptionID = -1;
         OptionTitle = TEXT(""};
-        OptionDescription = TEXT(""};
+        OptionDescription = TEXT("");
         Consequences.Empty();
         Prerequisites.Empty();
         SuccessProbability = 1.0f;
@@ -192,7 +190,7 @@ struct FINGCORE_API FMingHistoricalEvent
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HistoricalBackground;
 
-    // ?????X
+    // 摧毀?X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEventType EventType;
 
@@ -214,7 +212,7 @@ struct FINGCORE_API FMingHistoricalEvent
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EventLocation;
 
-    // ??o????X??
+    // ??o摧毀X??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingCoreEventTriggerCondition> TriggerConditions;
 
@@ -237,7 +235,7 @@ struct FINGCORE_API FMingHistoricalEvent
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> ChainEvents;
 
-    // ??????
+    // 摧毀??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> EventTags;
 
@@ -252,7 +250,7 @@ struct FINGCORE_API FMingHistoricalEvent
         EventStatus = EMingEventStatus::Pending;
         EventYear = 1920;
         EventMonth = 1;
-        EventLocation = TEXT(""};
+        EventLocation = TEXT("");
         TriggerConditions.Empty();
         EventOptions.Empty();
         DurationMonths = 1;
@@ -322,7 +320,7 @@ struct FINGCORE_API FMingEventResult
     }
 };
 
-// ????X
+// 摧毀X
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingEventStatistics
 {
@@ -360,14 +358,14 @@ struct FINGCORE_API FMingEventStatistics
     }
 };
 
-// ?????o?eX
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEventTriggered, const FMingHistoricalEvent&, Event};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEventOptionChosen, int32, EventID, int32, OptionID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEventResolved, const FMingEventResult&, Result};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEventChainTriggered, int32, ChainEventID};
+// 摧毀?o?eX
+
+
+
+
 
 /**
- * ???v?????oX * ?t?d??X?X??X */
+ * ???v摧毀?oX * ?t?d??X?X??X */
 UCLASS(ClassGroup = (Historical), Blueprintable, BlueprintType)
 class MINGCORE_API UMingHistoricalEventTrigger : public UObject
 {
@@ -383,17 +381,17 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Historical Event")
     bool RegisterHistoricalEvent(const FMingHistoricalEvent& Event) {};
 
-    // ??d?????o????
+    // ??d摧毀?o摧毀
     UFUNCTION(BlueprintCallable, Category = "Historical Event")
-    bool CheckEventTriggerConditions(int32 EventID};
+    bool CheckEventTriggerConditions(int32 EventID);
 
     // ??o???v???
     UFUNCTION(BlueprintCallable, Category = "Historical Event")
-    bool TriggerHistoricalEvent(int32 EventID};
+    bool TriggerHistoricalEvent(int32 EventID);
 
     // X???X
     UFUNCTION(BlueprintCallable, Category = "Historical Event")
-    bool ProcessEventChoice(int32 EventID, int32 OptionID};
+    bool ProcessEventChoice(int32 EventID, int32 OptionID);
 
     // X???H??
     UFUNCTION(BlueprintPure, Category = "Historical Event")
@@ -406,22 +404,22 @@ public:
     
     TArray<int32> GetEventsForYear(int32 Year) const;
 
-    // X?????v
+    // X摧毀?v
     UFUNCTION(BlueprintPure, Category = "Historical Event")
     TArray<FMingEventResult> GetEventHistory() const;
 
     
-    bool UpdateEventStatus(int32 EventID, EMingEventStatus NewStatus};
+    bool UpdateEventStatus(int32 EventID, EMingEventStatus NewStatus);
 
     // ??dX???
     UFUNCTION(BlueprintCallable, Category = "Historical Event")
     void CheckChainEvents(int32 EventID, const FMingEventResult& Result) {};
 
-    // ?????????o
+    // 摧毀摧毀?o
     UFUNCTION(BlueprintCallable, Category = "Historical Event")
-    TArray<int32> SimulateEventTriggers(int32 CurrentYear, int32 CurrentMonth};
+    TArray<int32> SimulateEventTriggers(int32 CurrentYear, int32 CurrentMonth);
 
-    // X????X
+    // X摧毀X
     UFUNCTION(BlueprintPure, Category = "Historical Event")
     FMingEventStatistics GetEventStatistics() const;
 
@@ -453,7 +451,7 @@ protected:
     
     TMap<int32, FMingHistoricalEvent> EventDatabase;
 
-    // ?????v?OX
+    // 摧毀?v?OX
     UPROPERTY()
     TArray<FMingEventResult> EventHistory;
 
@@ -479,28 +477,28 @@ private:
     // ??X???X
     bool ValidateEventData(const FMingHistoricalEvent& Event) const;
 
-    // ??dX??o????
+    // ??dX??o摧毀
     bool CheckTimeTrigger(const FMingCoreEventTriggerCondition& Condition) const;
 
-    // ??d?MX??o????
+    // ??d?MX??o摧毀
     bool CheckDecisionTrigger(const FMingCoreEventTriggerCondition& Condition) const;
 
-    // ??d??????o
+    // ??d摧毀??o
     bool CheckConditionTrigger(const FMingCoreEventTriggerCondition& Condition) const;
 
-    // X????X
-    void ProcessEventConsequences(int32 EventID, int32 OptionID};
+    // X摧毀X
+    void ProcessEventConsequences(int32 EventID, int32 OptionID);
 
     // X???
-    void UnlockChainEvents(int32 EventID};
+    void UnlockChainEvents(int32 EventID);
 
     // X?s???vX
     void UpdateHistoricalProgress(const FMingEventResult& Result) {};
 
-    // ?p?????\?v
+    // ?p摧毀?\?v
     float CalculateEventSuccessRate(int32 EventID, int32 OptionID) const;
 
-    // ?????A???
+    // 摧毀?A???
     FMingHistoricalEvent GenerateDynamicEvent(const FString& Context) const;
 };
 

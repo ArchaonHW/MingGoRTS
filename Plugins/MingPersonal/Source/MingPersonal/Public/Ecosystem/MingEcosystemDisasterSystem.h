@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingEcosystemDisasterSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class ENaturalDisasterType : uint8
-{
+enum class ENaturalDisasterType: uint8 {
     Drought              UMETA(DisplayName = "干旱"),
     Flood                UMETA(DisplayName = "洪水"),
     Earthquake           UMETA(DisplayName = "地震"),
@@ -25,8 +24,7 @@ enum class ENaturalDisasterType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EDisasterSeverity : uint8
-{
+enum class EDisasterSeverity: uint8 {
     Minor           UMETA(DisplayName = "轻微"),
     Moderate        UMETA(DisplayName = "中等"),
     Severe          UMETA(DisplayName = "严重"),
@@ -35,8 +33,7 @@ enum class EDisasterSeverity : uint8
 };
 
 UENUM(BlueprintType)
-enum class EDisasterPhase : uint8
-{
+enum class EDisasterPhase: uint8 {
     Dormant         UMETA(DisplayName = "休眠"),
     Building        UMETA(DisplayName = "酝酿"),
     Active          UMETA(DisplayName = "活跃"),

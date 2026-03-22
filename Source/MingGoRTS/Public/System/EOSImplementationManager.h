@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "EOSImplementationManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EOSImplementationPhase : uint8
-{
+enum class EOSImplementationPhase: uint8 {
     Planning     UMETA(DisplayName = "Planning"),
     Kernel      UMETA(DisplayName = "Kernel Development"),
     Services    UMETA(DisplayName = "System Services"),
@@ -16,8 +15,7 @@ enum class EOSImplementationPhase : uint8
 };
 
 UENUM(BlueprintType)
-enum class EOSImplementationStatus : uint8
-{
+enum class EOSImplementationStatus: uint8 {
     NotStarted     UMETA(DisplayName = "Not Started"),
     InProgress     UMETA(DisplayName = "In Progress"),
     Testing        UMETA(DisplayName = "Testing"),

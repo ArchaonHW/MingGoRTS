@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSInterProcessCommunication.generated.h"
 
 UENUM(BlueprintType)
-enum class EMessageType : uint8
-{
+enum class EMessageType: uint8 {
     Command,        // 命令消息
     Response,       // 響應消息
     Event,          // 事件消息
@@ -20,8 +19,7 @@ enum class EMessageType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ECommunicationProtocol : uint8
-{
+enum class ECommunicationProtocol: uint8 {
     TCP,            // TCP協議
     UDP,            // UDP協議
     SharedMemory,   // 共享內存
@@ -33,8 +31,7 @@ enum class ECommunicationProtocol : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMessagePriority : uint8
-{
+enum class EMessagePriority: uint8 {
     Low,            // 低優先級
     Normal,         // 普通優先級
     High,           // 高優先級
@@ -43,8 +40,7 @@ enum class EMessagePriority : uint8
 };
 
 UENUM(BlueprintType)
-enum class EConnectionState : uint8
-{
+enum class EConnectionState: uint8 {
     Disconnected,   // 未連接
     Connecting,     // 連接中
     Connected,      // 已連接

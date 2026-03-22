@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingYinYangSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EYinYangAttribute : uint8
-{
+enum class EYinYangAttribute: uint8 {
     Visible,        // 可見：陽性屬性
     Invisible,      // 不可見：陰性屬性
     Order,          // 秩序：陽性屬性

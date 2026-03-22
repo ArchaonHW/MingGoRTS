@@ -12,8 +12,7 @@
  * AR Device Types supported by MingGoRTS
  */
 UENUM(BlueprintType)
-enum class EARDeviceType : uint8
-{
+enum class EARDeviceType: uint8 {
     None                UMETA(DisplayName = "None"),
     ARCore              UMETA(DisplayName = "ARCore (Android)"),
     ARKit               UMETA(DisplayName = "ARKit (iOS)"),
@@ -27,8 +26,7 @@ enum class EARDeviceType : uint8
  * AR Tracking Quality Levels
  */
 UENUM(BlueprintType)
-enum class EARTrackingQuality : uint8
-{
+enum class EARTrackingQuality: uint8 {
     NotAvailable    UMETA(DisplayName = "Not Available"),
     Limited         UMETA(DisplayName = "Limited Tracking"),
     Normal          UMETA(DisplayName = "Normal Tracking"),
@@ -40,8 +38,7 @@ enum class EARTrackingQuality : uint8
  * AR Session Status
  */
 UENUM(BlueprintType)
-enum class EARSessionStatus : uint8
-{
+enum class EARSessionStatus: uint8 {
     NotStarted      UMETA(DisplayName = "Not Started"),
     Starting        UMETA(DisplayName = "Starting"),
     Running         UMETA(DisplayName = "Running"),
@@ -55,8 +52,7 @@ enum class EARSessionStatus : uint8
  * AR Content Overlay Types
  */
 UENUM(BlueprintType)
-enum class EARContentOverlayType : uint8
-{
+enum class EARContentOverlayType: uint8 {
     GameWorld       UMETA(DisplayName = "Game World Overlay"),
     UI              UMETA(DisplayName = "UI Overlay"),
     Minimap         UMETA(DisplayName = "Minimap Overlay"),
@@ -71,8 +67,7 @@ enum class EARContentOverlayType : uint8
  * AR Plane Detection Modes
  */
 UENUM(BlueprintType)
-enum class EARPlaneDetectionMode : uint8
-{
+enum class EARPlaneDetectionMode: uint8 {
     None            UMETA(DisplayName = "None"),
     Horizontal      UMETA(DisplayName = "Horizontal Only"),
     Vertical        UMETA(DisplayName = "Vertical Only"),
@@ -322,6 +317,7 @@ private:
 // Event delegate declarations
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnARSessionStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnARSessionStopped);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnARPlaneDetected, const FARTrackedPlane&, Plane);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnARTrackingQualityChanged, EARTrackingQuality, NewQuality};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnARPlaneDetected, const FARTrackedPlane&, Plane};
+
+
 

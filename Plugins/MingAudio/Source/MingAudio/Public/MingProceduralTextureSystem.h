@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,8 +7,7 @@
 #include "MingProceduralTextureSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingTextureType : uint8
-{
+enum class EMingTextureType: uint8 {
     Diffuse UMETA(DisplayName = "Diffuse"),
     Normal UMETA(DisplayName = "Normal"),
     Roughness UMETA(DisplayName = "Roughness"),

@@ -1,4 +1,4 @@
-# Auto-generated Sound Effect Generation Script
+﻿# Auto-generated Sound Effect Generation Script
 # Generated: 03/23/2026 02:24:35
 
 function Invoke-SoundGeneration {

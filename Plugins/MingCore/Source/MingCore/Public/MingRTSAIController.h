@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "AIController.h"
@@ -9,34 +9,31 @@ class UMingRTSUnitManager;
 class UMingRTSCombatSystem;
 
 UENUM(BlueprintType)
-enum class ERTSAIBehavior : uint8
-{
+enum class ERTSAIBehavior: uint8 {
     Idle,           // ??X
     Follow,         // ???H
-    Gather,         // ????
+    Gather,         // 摧毀
     Build,          // ??y
     Repair,         // ??_
-    Explore         // ????
+    Explore         // 摧毀
 };
 
 UENUM(BlueprintType)
-enum class ERTSAITargetPriority : uint8
-{
+enum class ERTSAITargetPriority: uint8 {
     None,           // ?L???
-    Low,            // ?C?u????
-    Medium,         // ???u????
-    High,           // ???u????
-    Critical        // ?????u????
+    Low,            // ?C?u摧毀
+    Medium,         // ???u摧毀
+    High,           // ???u摧毀
+    Critical        // 摧毀?u摧毀
 };
 
 UENUM(BlueprintType)
-enum class ERTSAIState : uint8
-{
-    Thinking,       // ????
-    Planning,        // ?p????
-    Executing,      // ????
-    Waiting,        // ?????
-    Reacting        // ??????
+enum class ERTSAIState: uint8 {
+    Thinking,       // 摧毀
+    Planning,        // ?p摧毀
+    Executing,      // 摧毀
+    Waiting,        // 摧毀?
+    Reacting        // 摧毀??
 };
 
 USTRUCT(BlueprintType)
@@ -129,9 +126,9 @@ struct FRTSAIDecision
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIBehaviorChanged, ERTSAIBehavior, OldBehavior, ERTSAIBehavior, NewBehavior};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAITargetChanged, const FRTSAITarget&, OldTarget, const FRTSAITarget&, NewTarget};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAIDecisionMade, const FRTSAIDecision&, Decision, ERTSAIState, AIState, float, Confidence};
+
+
+
 
 /**
  * RTS AIX??X * ??XAI??X?MX */
@@ -144,20 +141,20 @@ public:
     AMingRTSAIController();
 
     
-    void InitializeAI(UMingRTSUnitManager* InUnitManager, UMingRTSCombatSystem* InCombatSystem};
+    void InitializeAI(UMingRTSUnitManager* InUnitManager, UMingRTSCombatSystem* InCombatSystem);
 
     // AI??X??
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetBehavior(ERTSAIBehavior NewBehavior};
+    void SetBehavior(ERTSAIBehavior NewBehavior);
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     ERTSAIBehavior GetCurrentBehavior() const { return CurrentBehavior; }
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void ExecuteBehavior(float DeltaTime};
+    void ExecuteBehavior(float DeltaTime);
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void UpdateAI(float DeltaTime};
+    void UpdateAI(float DeltaTime);
 
     // X??X
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
@@ -177,13 +174,13 @@ public:
 
     // X???t??
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void ScanForEnemies(float ScanRadius};
+    void ScanForEnemies(float ScanRadius);
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void ScanForAllies(float ScanRadius};
+    void ScanForAllies(float ScanRadius);
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void ScanForResources(float ScanRadius};
+    void ScanForResources(float ScanRadius);
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     TArray<FRTSAITarget> GetDetectedEnemies() const;
@@ -222,7 +219,7 @@ public:
 
     // X??AI
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void EngageTarget(AActor* Target};
+    void EngageTarget(AActor* Target);
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void DisengageTarget();
@@ -253,20 +250,20 @@ public:
     ERTSAIState GetAIState() const { return AIState; }
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetAIState(ERTSAIState NewState};
+    void SetAIState(ERTSAIState NewState);
 
     // AI?]?m
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetAggressiveness(float Value};
+    void SetAggressiveness(float Value);
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetReactionTime(float Value};
+    void SetReactionTime(float Value);
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetDecisionFrequency(float Value};
+    void SetDecisionFrequency(float Value);
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void SetPerceptionRange(float Value};
+    void SetPerceptionRange(float Value);
 
     
     void ImproveAIBehavior();
@@ -290,7 +287,7 @@ public:
     bool IsAIActive() const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
-    void EnableDebugMode(bool bEnable};
+    void EnableDebugMode(bool bEnable);
 
     // ???
     UPROPERTY(BlueprintAssignable, Category = "RTS AI Events")
@@ -306,7 +303,7 @@ protected:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
 
-    // ?t?�V??
+    // ?t?�V??
     UPROPERTY()
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
@@ -371,7 +368,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "AI Improvement")
     bool bEnableAdaptation = true;
 
-    // X????X
+    // X摧毀X
     UPROPERTY()
     float LastDecisionTime;
 
@@ -394,25 +391,26 @@ protected:
     TMap<AActor*, float> TargetThreatHistory;
 
     // X??X??
-    void ExecuteIdleBehavior(float DeltaTime};
-    void ExecutePatrolBehavior(float DeltaTime};
-    void ExecuteGuardBehavior(float DeltaTime};
-    void ExecuteAttackBehavior(float DeltaTime};
-    void ExecuteRetreatBehavior(float DeltaTime};
-    void ExecuteFollowBehavior(float DeltaTime};
-    void ExecuteGatherBehavior(float DeltaTime};
-    void ExecuteBuildBehavior(float DeltaTime};
-    void ExecuteRepairBehavior(float DeltaTime};
-    void ExecuteExploreBehavior(float DeltaTime};
+    void ExecuteIdleBehavior(float DeltaTime);
+    void ExecutePatrolBehavior(float DeltaTime);
+    void ExecuteGuardBehavior(float DeltaTime);
+    void ExecuteAttackBehavior(float DeltaTime);
+    void ExecuteRetreatBehavior(float DeltaTime);
+    void ExecuteFollowBehavior(float DeltaTime);
+    void ExecuteGatherBehavior(float DeltaTime);
+    void ExecuteBuildBehavior(float DeltaTime);
+    void ExecuteRepairBehavior(float DeltaTime);
+    void ExecuteExploreBehavior(float DeltaTime);
 
     void ProcessDecision(const FRTSAIDecision& Decision) {};
-    void UpdatePerception(float DeltaTime};
+    void UpdatePerception(float DeltaTime);
     void MakeAIDecision();
     bool ShouldMakeDecision() const;
     FRTSAITarget FindBestTarget() const;
     void LogAIDebug(const FString& Message) const;
 
-    // AIX?i??X??X    void UpdateDecisionHistory(const FRTSAIDecision& Decision) {};
+    // AIX?i??X??X
+    void UpdateDecisionHistory(const FRTSAIDecision& Decision) {};
     void AnalyzeBehaviorPatterns();
     void AdaptBehaviorBasedOnHistory();
     void OptimizeTargetSelection();
@@ -421,8 +419,8 @@ protected:
 
 private:
     // ???UX??
-    void NotifyBehaviorChanged(ERTSAIBehavior OldBehavior, ERTSAIBehavior NewBehavior};
+    void NotifyBehaviorChanged(ERTSAIBehavior OldBehavior, ERTSAIBehavior NewBehavior);
     void NotifyTargetChanged(const FRTSAITarget& OldTarget, const FRTSAITarget& NewTarget) {};
-    void NotifyDecisionMade(const FRTSAIDecision& Decision, ERTSAIState AIState, float Confidence};
-};
+    void NotifyDecisionMade(const FRTSAIDecision& Decision, ERTSAIState AIState, float Confidence);
+);
 

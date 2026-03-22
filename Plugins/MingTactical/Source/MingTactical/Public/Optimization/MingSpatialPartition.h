@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -19,12 +19,15 @@ struct MINGTACTICAL_API FSpatialGridCell
     UPROPERTY()
     FIntVector GridCoord;
 
-    // ?�含?��?�?    UPROPERTY()
+    // ?�含?��?�?
+    UPROPERTY()
     TArray<TWeakObjectPtr<AMingTacticalUnit>> Units;
 
-    // ?�?�更?�时X    float LastUpdateTime = 0.0f;
+    // ?�?�更?�时X
+    float LastUpdateTime = 0.0f;
 
-    // ?�围X    FBox Bounds;
+    // ?�围X
+    FBox Bounds;
 
     FMingSpatialGridCell() = default;
     explicit FMingSpatialGridCell(const FIntVector& InCoord) : GridCoord(InCoord) {}
@@ -243,16 +246,19 @@ private:
     int32 QueryCount;
     float TotalQueryTime;
 
-    // ?��X��?建�X��X    FSpatialGridCell* GetOrCreateCell(const FIntVector& Coord);
+    // ?��X��?建�X��X
+    FSpatialGridCell* GetOrCreateCell(const FIntVector& Coord);
     FSpatialGridCell* GetCell(const FIntVector& Coord);
 
     // ?��X�邻网格?��?
     TArray<FIntVector> GetNeighboringCells(const FIntVector& Center, int32 Radius = 1);
 
-    // ?��X�询?�?�?��X��X    TArray<FIntVector> GetCellsInRadius(const FVector& Center, float Radius);
+    // ?��X�询?�?�?��X��X
+    TArray<FIntVector> GetCellsInRadius(const FVector& Center, float Radius);
     TArray<FIntVector> GetCellsInBox(const FBox& Box);
 
-    // 清�?空�X    void CleanupEmptyCells();
+    // 清�?空�X
+    void CleanupEmptyCells();
 
     // 验�X��X�否?�边?��?
     bool IsValidGridCoord(const FIntVector& Coord) const;

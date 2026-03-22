@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
@@ -18,17 +18,20 @@ struct FMingComponentSpatialGridCell
     UPROPERTY()
     FIntVector GridPosition;
 
-    // ?�含?�單�?    UPROPERTY()
+    // ?�含?�單�?
+    UPROPERTY()
     TArray<TObjectPtr<AMingTacticalUnit>> Units;
 
     // 活�?標�? (?�否?�要更X
     UPROPERTY()
     bool bIsActive;
 
-    // ?�後更?��X    UPROPERTY()
+    // ?�後更?��X
+    UPROPERTY()
     float LastUpdateTime;
 
-    // ?�新?��?�?    UPROPERTY()
+    // ?�新?��?�?
+    UPROPERTY()
     float UpdatePriority;
 
     FSpatialGridCell()
@@ -134,7 +137,8 @@ public:
     void GetDebugGridInfo(TArray<FVector>& CellCenters, TArray<int32>& CellUnitCounts) const;
 
 protected:
-    // 註�X�單�?    UPROPERTY()
+    // 註�X�單�?
+    UPROPERTY()
     TArray<TObjectPtr<AMingTacticalUnit>> RegisteredUnits;
 
     // ?��X�網?��X��?
@@ -158,13 +162,15 @@ protected:
     // ?��?視�?
     FRotator CameraRotation;
 
-    // ?�新計�X    float UpdateTimer;
+    // ?�新計�X
+    float UpdateTimer;
     
     // ?�新?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance")
     float UpdateFrequency;
 
-    // ?�大�?幀?�新網格X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance")
+    // ?�大�?幀?�新網格X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance")
     int32 MaxCellsPerFrame;
 
     // ?��X�新索�? (?�於?��X�新)
@@ -176,12 +182,14 @@ protected:
     // 確�?網格存在
     FSpatialGridCell& GetOrCreateCell(const FIntVector& GridPosition);
 
-    // 從網?�移?�單�?    void RemoveUnitFromCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition);
+    // 從網?�移?�單�?
+    void RemoveUnitFromCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition);
 
     // 將單位添?�到網格
     void AddUnitToCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition);
 
-    // ?�新網格活�X�X    void UpdateCellActivity();
+    // ?�新網格活�X�X
+    void UpdateCellActivity();
 
     // ?�新活�?網格中�X��?
     void UpdateActiveCells(float DeltaTime);
@@ -192,12 +200,14 @@ protected:
     // 檢查網格?�否?��X�內
     bool IsCellInFrustum(const FIntVector& CellPosition) const;
 
-    // ?��?視�X��?�?    void GetFrustumCorners(TArray<FVector>& OutCorners) const;
+    // ?��?視�X��?�?
+    void GetFrustumCorners(TArray<FVector>& OutCorners) const;
 
     // 計�?網格?�AABB
     FBox GetCellBounds(const FIntVector& CellPosition) const;
 
-    // 距離?��?級�?�?    float CalculateCellPriority(const FIntVector& CellPosition) const;
+    // 距離?��?級�?�?
+    float CalculateCellPriority(const FIntVector& CellPosition) const;
 
     // ?��X�新?��?
     void BatchUpdateUnits(const TArray<AMingTacticalUnit*>& Units, float DeltaTime);

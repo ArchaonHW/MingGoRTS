@@ -1,56 +1,54 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingHistoricalDecisionManager.generated.h"
 
-// ¨M??Ãþ?X???
+// ï¿½M??ï¿½ï¿½?X???
 UENUM(BlueprintType)
-enum class EMingDecisionType : uint8
-{
-    Political,      // ??ªv¨M??
-    Military,       // ­x??¨M??
-    Economic,       // ¸g??¨M??
-    Diplomatic,     // ¥~¥æ¨M??
-    Personal        // ??¤H¨M??
+enum class EMingDecisionType: uint8 {
+    Political,      // ??ï¿½vï¿½M??
+    Military,       // ï¿½x??ï¿½M??
+    Economic,       // ï¿½g??ï¿½M??
+    Diplomatic,     // ï¿½~ï¿½ï¿½M??
+    Personal        // ??ï¿½Hï¿½M??
 };
 
-// ¨M?X??X??XUENUM(BlueprintType)
-enum class EMingDecisionImportance : uint8
-{
-    Minor,          // ¦¸??
-    Moderate,       // ¤¤??
-    Major,          // ????
-    Critical        // ??Áä
+// ï¿½M?X??X??XUENUM(BlueprintType)
+enum class EMingDecisionImportance: uint8 {
+    Minor,          // ï¿½ï¿½??
+    Moderate,       // ï¿½ï¿½??
+    Major,          // æ‘§æ¯€
+    Critical        // ??ï¿½ï¿½
 };
 
-// ¨M?X???µ²??
+// ï¿½M?X???ï¿½ï¿½??
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingDecisionOption
 {
     GENERATED_BODY()
 
-    // ????ID
+    // ç›®æ¨™ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 OptionID;
 
-    // ????¼Ð??
+    // æ‘§æ¯€ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString OptionTitle;
 
-    // ???X?­z
+    // ???X?ï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString OptionDescription;
 
-    // ????Åv?? (¼vÅT¨M??µ²??)
+    // æ‘§æ¯€ï¿½v?? (ï¿½vï¿½Tï¿½M??ï¿½ï¿½??)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float OptionWeight;
 
-    // ???X?¸m±ø¥ó
+    // ???X?ï¿½mï¿½ï¿½ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> Prerequisites;
 
-    // ????«á??¼vÅT
+    // æ‘§æ¯€ï¿½ï¿½??ï¿½vï¿½T
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> Consequences;
 
@@ -58,59 +56,59 @@ struct FINGCORE_API FMingDecisionOption
     {
         OptionID = -1;
         OptionTitle = TEXT(""};
-        OptionDescription = TEXT(""};
+        OptionDescription = TEXT("");
         OptionWeight = 1.0f;
         Prerequisites.Empty();
         Consequences.Empty();
     }
 };
 
-// ¾ú¥v¨M??µ²??
+// ï¿½ï¿½ï¿½vï¿½M??ï¿½ï¿½??
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingHistoricalDecision
 {
     GENERATED_BODY()
 
-    // ¨M??ID
+    // ï¿½M??ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 DecisionID;
 
-    // ¨M??¼Ð??
+    // ï¿½M??ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DecisionTitle;
 
-    // ¨M?X?­z
+    // ï¿½M?X?ï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DecisionDescription;
 
-    // ¾ú¥v??´º«H®§
+    // ï¿½ï¿½ï¿½v??ï¿½ï¿½ï¿½Hï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HistoricalContext;
 
-    // ¨M??Ãþ??
+    // ï¿½M??ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingDecisionType DecisionType;
 
     
     EMingDecisionImportance Importance;
 
-    // ¨M?X?????(¦~¥÷)
+    // ï¿½M?Xæ‘§æ¯€?(ï¿½~ï¿½ï¿½)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 Year;
 
-    // ¨M?X??X?ªí
+    // ï¿½M?X??X?ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingDecisionOption> Options;
 
-    // ¨M??Ä²µo±ø¥ó
+    // ï¿½M??Ä²ï¿½oï¿½ï¿½ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> TriggerConditions;
 
-    // ??§_¤w?X?¥X¨M??
+    // ??ï¿½_ï¿½w?X?ï¿½Xï¿½M??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bDecisionMade;
 
-    // ??®a???X?¿ï??ID
+    // ??ï¿½a???X?ï¿½ï¿½??ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ChosenOptionID;
 
@@ -122,7 +120,7 @@ struct FINGCORE_API FMingHistoricalDecision
         DecisionID = -1;
         DecisionTitle = TEXT(""};
         DecisionDescription = TEXT(""};
-        HistoricalContext = TEXT(""};
+        HistoricalContext = TEXT("");
         DecisionType = EMingDecisionType::Political;
         Importance = EMingDecisionImportance::Moderate;
         Year = 1920;
@@ -134,32 +132,32 @@ struct FINGCORE_API FMingHistoricalDecision
     }
 };
 
-// ¨M??µ²??µ²??
+// ï¿½M??ï¿½ï¿½??ï¿½ï¿½??
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingDecisionResult
 {
     GENERATED_BODY()
 
-    // ¨M??ID
+    // ï¿½M??ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 DecisionID;
 
-    // ???X?¿ï??ID
+    // ???X?ï¿½ï¿½??ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ChosenOptionID;
 
-    // ¨M?X???
+    // ï¿½M?X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime DecisionTime;
 
     
     TMap<FString, float> AffectedAttributes;
 
-    // ¾ú¥v¸ô??¼vÅT
+    // ï¿½ï¿½ï¿½vï¿½ï¿½??ï¿½vï¿½T
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> HistoricalPathChanges;
 
-    // ?X?·s¨M??
+    // ?X?ï¿½sï¿½M??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> UnlockedDecisions;
 
@@ -178,13 +176,13 @@ struct FINGCORE_API FMingDecisionResult
     }
 };
 
-// ¨M??¨Æ¥ó©e??
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnDecisionPresented, int32, DecisionID, const FMingHistoricalDecision&, Decision, const TArray<FMingDecisionOption>&, AvailableOptions};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDecisionMade, int32, DecisionID, int32, ChosenOptionID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDecisionCompleted, const FMingDecisionResult&, Result};
+// ï¿½M??ï¿½Æ¥ï¿½e??
+
+
+
 
 /**
- * ¾ú¥v¨M??ºÞ?X * ­t³dºÞ?X?À¸¤¤??¾ú¥v¨M??¨t²Î
+ * ï¿½ï¿½ï¿½vï¿½M??ï¿½ï¿½?X * ï¿½tï¿½dï¿½ï¿½?X?ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½ï¿½vï¿½M??ï¿½tï¿½ï¿½
  */
 UCLASS(ClassGroup = (Historical), Blueprintable, BlueprintType)
 class MINGCORE_API UMingHistoricalDecisionManager : public UObject
@@ -197,56 +195,56 @@ public:
     
     bool InitializeDecisionSystem();
 
-    // µù??¾ú¥v¨M??
+    // ï¿½ï¿½??ï¿½ï¿½ï¿½vï¿½M??
     UFUNCTION(BlueprintCallable, Category = "Historical Decision")
     bool RegisterHistoricalDecision(const FMingHistoricalDecision& Decision) {};
 
-    // ÀË¬d¨M??Ä²µo±ø¥ó
+    // ï¿½Ë¬dï¿½M??Ä²ï¿½oï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Historical Decision")
-    bool CheckDecisionTriggerConditions(int32 DecisionID};
+    bool CheckDecisionTriggerConditions(int32 DecisionID);
 
     
-    bool PresentDecisionToPlayer(int32 DecisionID};
+    bool PresentDecisionToPlayer(int32 DecisionID);
 
-    // ???X?®a¨M??
+    // ???X?ï¿½aï¿½M??
     UFUNCTION(BlueprintCallable, Category = "Historical Decision")
-    bool ProcessPlayerDecision(int32 DecisionID, int32 ChosenOptionID};
+    bool ProcessPlayerDecision(int32 DecisionID, int32 ChosenOptionID);
 
-    // ????¨M??«H®§
+    // æ‘§æ¯€ï¿½M??ï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Historical Decision")
     FMingHistoricalDecision GetDecisionInfo(int32 DecisionID) const;
 
-    // ???X?¥Î¨M?X???
+    // ???X?ï¿½Î¨M?X???
     UFUNCTION(BlueprintPure, Category = "Historical Decision")
     TArray<FMingDecisionOption> GetAvailableOptions(int32 DecisionID) const;
 
-    // ????¨M??¾ú¥v
+    // æ‘§æ¯€ï¿½M??ï¿½ï¿½ï¿½v
     UFUNCTION(BlueprintPure, Category = "Historical Decision")
     TArray<FMingDecisionResult> GetDecisionHistory() const;
 
     
-    TArray<int32> GetAvailableDecisionsForYear(int32 CurrentYear};
+    TArray<int32> GetAvailableDecisionsForYear(int32 CurrentYear);
 
-    // ­p??¨M??¼vÅT
+    // ï¿½p??ï¿½M??ï¿½vï¿½T
     UFUNCTION(BlueprintCallable, Category = "Historical Decision")
-    FMingDecisionResult CalculateDecisionImpact(int32 DecisionID, int32 ChosenOptionID};
+    FMingDecisionResult CalculateDecisionImpact(int32 DecisionID, int32 ChosenOptionID);
 
-    // «O??¨M?X???
+    // ï¿½O??ï¿½M?X???
     UFUNCTION(BlueprintCallable, Category = "Historical Decision")
     bool SaveDecisionData();
 
-    // ¸ü¤J¨M?X???
+    // ï¿½ï¿½ï¿½Jï¿½M?X???
     UFUNCTION(BlueprintCallable, Category = "Historical Decision")
     bool LoadDecisionData();
 
     
     void ClearAllDecisions();
 
-    // ????¨M??²Î??«H®§
+    // æ‘§æ¯€ï¿½M??ï¿½ï¿½??ï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Historical Decision")
     TMap<EMingDecisionType, int32> GetDecisionStatistics() const;
 
-    // ¨Æ¥ó©e??
+    // ï¿½Æ¥ï¿½e??
     UPROPERTY(BlueprintAssignable)
     FOnDecisionPresented OnDecisionPresented;
 
@@ -260,43 +258,45 @@ protected:
     
     TMap<int32, FMingHistoricalDecision> DecisionDatabase;
 
-    // ¨M??¾ú¥v°O??
+    // ï¿½M??ï¿½ï¿½ï¿½vï¿½O??
     UPROPERTY()
     TArray<FMingDecisionResult> DecisionHistory;
 
-    // ????¬¡??¨M??
+    // æ‘§æ¯€ï¿½ï¿½??ï¿½M??
     UPROPERTY()
     TArray<int32> ActiveDecisions;
 
     
     TMap<FString, float> PlayerAttributes;
 
-    // ¾ú¥v¸ô??°lÂÜ
+    // ï¿½ï¿½ï¿½vï¿½ï¿½??ï¿½lï¿½ï¿½
     UPROPERTY()
     TArray<FString> HistoricalPath;
 
-    // ??§_¤w??©l??
+    // ??ï¿½_ï¿½w??ï¿½l??
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // ¸ü¤J??³]¨M?X???
+    // ï¿½ï¿½ï¿½J??ï¿½]ï¿½M?X???
     void LoadDefaultDecisions();
 
-    // Åç??¨M?X???
+    // ï¿½ï¿½??ï¿½M?X???
     bool ValidateDecisionData(const FMingHistoricalDecision& Decision) const;
 
-    // ??·s??®aÄÝ??    void UpdatePlayerAttributes(const FMingDecisionResult& Result) {};
+    // ??ï¿½s??ï¿½aï¿½ï¿½??
+    void UpdatePlayerAttributes(const FMingDecisionResult& Result) {};
 
-    // ??·s¾ú¥v¸ô??
+    // ??ï¿½sï¿½ï¿½ï¿½vï¿½ï¿½??
     void UpdateHistoricalPath(const FMingDecisionResult& Result) {};
 
-    // ?X?¨M??    void UnlockNewDecisions(const FMingDecisionResult& Result) {};
+    // ?X?ï¿½M??
+    void UnlockNewDecisions(const FMingDecisionResult& Result) {};
 
-    // Ä²µo«á??¨Æ¥ó
+    // Ä²ï¿½oï¿½ï¿½??ï¿½Æ¥ï¿½
     void TriggerFollowUpEvents(const FMingDecisionResult& Result) {};
 
-    // °O??¨M??µ²??
+    // ï¿½O??ï¿½M??ï¿½ï¿½??
     void RecordDecisionResult(const FMingDecisionResult& Result) {};
 };
 

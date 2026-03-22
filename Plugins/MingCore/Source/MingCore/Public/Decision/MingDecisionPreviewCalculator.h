@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Decision/MingDecisionConsequenceManager.h"
 #include "MingDecisionPreviewCalculator.generated.h"
 
-// ¨M?X?Äý????
+// ï¿½M?X?ï¿½ï¿½æ‘§æ¯€
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingConsequencePreview
 {
@@ -30,7 +30,7 @@ struct MINGCORE_API FMingConsequencePreview
     int32 DurationMonths;
 };
 
-// ¨M?X?Äýµ²??
+// ï¿½M?X?ï¿½ï¿½ï¿½ï¿½??
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingDecisionPreview
 {
@@ -56,59 +56,60 @@ struct MINGCORE_API FMingDecisionPreview
 };
 
 /**
- * ¨M?X?Äý­p?X * ??¥Î????¨Ñ¨Mµ¦?X??X?´ú??«Ø?? */
+ * ï¿½M?X?ï¿½ï¿½ï¿½p?X * ??ï¿½ï¿½æ‘§æ¯€ï¿½Ñ¨Mï¿½ï¿½?X??X?ï¿½ï¿½??ï¿½ï¿½?? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingDecisionPreviewCalculator : public UObject
 {
     GENERATED_BODY()
 
 public:
-    // «Ø????    UMingDecisionPreviewCalculator();
+    // ï¿½ï¿½æ‘§æ¯€
+    UMingDecisionPreviewCalculator();
 
-    // ­p??¨M?X?Äý
+    // ï¿½p??ï¿½M?X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
-    void CalculateDecisionPreview(const FMingDecisionContext& Context, FMingDecisionPreview& OutPreview};
+    void CalculateDecisionPreview(const FMingDecisionContext& Context, FMingDecisionPreview& OutPreview);
 
-    // §Ö³t????(??¥D­n¼vX
+    // ï¿½Ö³tæ‘§æ¯€(??ï¿½Dï¿½nï¿½vX
     UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
-    void CalculateQuickPreview(const FMingDecisionContext& Context, TArray<FMingConsequencePreview>& OutPreviews};
+    void CalculateQuickPreview(const FMingDecisionContext& Context, TArray<FMingConsequencePreview>& OutPreviews);
 
     
-    void CompareDecisionOptions(const TArray<FMingDecisionContext>& Options, TArray<FMingDecisionPreview>& OutComparisons};
+    void CompareDecisionOptions(const TArray<FMingDecisionContext>& Options, TArray<FMingDecisionPreview>& OutComparisons);
 
 protected:
-    // ???X?ªv¼vÅT??Äý
-    void AnalyzePoliticalPreview(const FMingDecisionContext& Context, TArray<FMingConsequencePreview>& OutPreviews};
+    // ???X?ï¿½vï¿½vï¿½T??ï¿½ï¿½
+    void AnalyzePoliticalPreview(const FMingDecisionContext& Context, TArray<FMingConsequencePreview>& OutPreviews);
 
-    // ????­x??¼vÅT??Äý
-    void AnalyzeMilitaryPreview(const FMingDecisionContext& Context, TArray<FMingConsequencePreview>& OutPreviews};
+    // æ‘§æ¯€ï¿½x??ï¿½vï¿½T??ï¿½ï¿½
+    void AnalyzeMilitaryPreview(const FMingDecisionContext& Context, TArray<FMingConsequencePreview>& OutPreviews);
 
-    // ????¸g??¼vÅT??Äý
-    void AnalyzeEconomicPreview(const FMingDecisionContext& Context, TArray<FMingConsequencePreview>& OutPreviews};
+    // æ‘§æ¯€ï¿½g??ï¿½vï¿½T??ï¿½ï¿½
+    void AnalyzeEconomicPreview(const FMingDecisionContext& Context, TArray<FMingConsequencePreview>& OutPreviews);
 
-    // ????ªÀ??¼vÅT??Äý
-    void AnalyzeSocialPreview(const FMingDecisionContext& Context, TArray<FMingConsequencePreview>& OutPreviews};
+    // æ‘§æ¯€ï¿½ï¿½??ï¿½vï¿½T??ï¿½ï¿½
+    void AnalyzeSocialPreview(const FMingDecisionContext& Context, TArray<FMingConsequencePreview>& OutPreviews);
 
-    // ­p??Á`??¼vÅT??¼Æ
-    float CalculateOverallImpactScore(const TArray<FMingConsequencePreview>& Previews};
+    // ï¿½p??ï¿½`??ï¿½vï¿½T??ï¿½ï¿½
+    float CalculateOverallImpactScore(const TArray<FMingConsequencePreview>& Previews);
 
-    // ÃÑ§O­·ÀI????
-    void IdentifyRiskFactors(const TArray<FMingConsequencePreview>& Previews, TArray<FString>& OutRiskFactors};
+    // ï¿½Ñ§Oï¿½ï¿½ï¿½Iæ‘§æ¯€
+    void IdentifyRiskFactors(const TArray<FMingConsequencePreview>& Previews, TArray<FString>& OutRiskFactors);
 
-    // ÃÑ§O¾÷?X???
-    void IdentifyOpportunityFactors(const TArray<FMingConsequencePreview>& Previews, TArray<FString>& OutOpportunityFactors};
+    // ï¿½Ñ§Oï¿½ï¿½?X???
+    void IdentifyOpportunityFactors(const TArray<FMingConsequencePreview>& Previews, TArray<FString>& OutOpportunityFactors);
 
-    // ????«ØÄ³Á`??
-    void GenerateRecommendationSummary(const FMingDecisionPreview& Preview, FString& OutSummary};
+    // æ‘§æ¯€ï¿½ï¿½Ä³ï¿½`??
+    void GenerateRecommendationSummary(const FMingDecisionPreview& Preview, FString& OutSummary);
 
-    // ­p??«H??¤ô¥­
-    float CalculateConfidenceLevel(const FMingDecisionContext& Context};
+    // ï¿½p??ï¿½H??ï¿½ï¿½ï¿½
+    float CalculateConfidenceLevel(const FMingDecisionContext& Context);
 
 private:
-    // ??Äý­p??Åv??
+    // ??ï¿½ï¿½ï¿½p??ï¿½v??
     static constexpr float POLITICAL_WEIGHT = 0.3f;
     static constexpr float MILITARY_WEIGHT = 0.3f;
     static constexpr float ECONOMIC_WEIGHT = 0.25f;
     static constexpr float SOCIAL_WEIGHT = 0.15f;
-};
+);
 

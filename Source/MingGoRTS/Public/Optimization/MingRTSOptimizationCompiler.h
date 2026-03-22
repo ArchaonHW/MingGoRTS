@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSOptimizationCompiler.generated.h"
 
 UENUM(BlueprintType)
-enum class EOptimizationLevel : uint8
-{
+enum class EOptimizationLevel: uint8 {
     Debug, UMETA(DisplayName = "Debug"),
     Development, UMETA(DisplayName = "Development"),
     Release, UMETA(DisplayName = "Release"),
@@ -14,8 +13,7 @@ enum class EOptimizationLevel : uint8
 };
 
 UENUM(BlueprintType)
-enum class ECompilationPhase : uint8
-{
+enum class ECompilationPhase: uint8 {
     PreProcessing, UMETA(DisplayName = "Pre Processing"),
     Compilation, UMETA(DisplayName = "Compilation"),
     Optimization, UMETA(DisplayName = "Optimization"),
@@ -24,8 +22,7 @@ enum class ECompilationPhase : uint8
 };
 
 UENUM(BlueprintType)
-enum class EOptimizationType : uint8
-{
+enum class EOptimizationType: uint8 {
     Speed, UMETA(DisplayName = "Speed"),
     Memory, UMETA(DisplayName = "Memory"),
     Size, UMETA(DisplayName = "Size"),
@@ -42,13 +39,13 @@ class MINGGORTS_API UMingRTSOptimizationCompiler : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationCompiler(};
+    UMingRTSOptimizationCompiler();
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    void InitializeCompiler(};
+    void InitializeCompiler();
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    bool SetOptimizationLevel(EOptimizationLevel Level};
+    bool SetOptimizationLevel(EOptimizationLevel Level);
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    bool CompileProject(};
+    bool CompileProject();
     UFUNCTION(BlueprintPure, Category = "Optimization Compiler")
     ECompilationPhase GetCurrentPhase() const;
 
@@ -62,5 +59,5 @@ protected:
     UPROPERTY()
     ECompilationPhase CurrentPhase;
 
-    void InitializeCompilationPhases(};
+    void InitializeCompilationPhases();
 };

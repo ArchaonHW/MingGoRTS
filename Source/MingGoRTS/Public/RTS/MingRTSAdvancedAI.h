@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSAdvancedAI.generated.h"
 
 UENUM(BlueprintType)
-enum class ERTSAIBehaviorPattern : uint8
-{
+enum class ERTSAIBehaviorPattern: uint8 {
     Rush        UMETA(DisplayName = "Rush"),
     Turtle      UMETA(DisplayName = "Turtle"),
     Boom        UMETA(DisplayName = "Boom"),
@@ -22,8 +21,7 @@ enum class ERTSAIBehaviorPattern : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERTSAITacticalRole : uint8
-{
+enum class ERTSAITacticalRole: uint8 {
     Commander   UMETA(DisplayName = "Commander"),
     Assault     UMETA(DisplayName = "Assault"),
     Support     UMETA(DisplayName = "Support"),
@@ -37,8 +35,7 @@ enum class ERTSAITacticalRole : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERTSAIMemoryType : uint8
-{
+enum class ERTSAIMemoryType: uint8 {
     ShortTerm   UMETA(DisplayName = "Short Term"),
     LongTerm    UMETA(DisplayName = "Long Term"),
     Strategic   UMETA(DisplayName = "Strategic"),
@@ -48,8 +45,7 @@ enum class ERTSAIMemoryType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERTSAIEmotionalState : uint8
-{
+enum class ERTSAIEmotionalState: uint8 {
     Calm        UMETA(DisplayName = "Calm"),
     Confident   UMETA(DisplayName = "Confident"),
     Anxious     UMETA(DisplayName = "Anxious"),

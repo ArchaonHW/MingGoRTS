@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingGameFlowManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingGamePhase : uint8
-{
+enum class EMingGamePhase: uint8 {
     MainMenu UMETA(DisplayName = "Main Menu"),
     CampaignSelection UMETA(DisplayName = "Campaign Selection"),
     MissionBriefing UMETA(DisplayName = "Mission Briefing"),
@@ -19,8 +18,7 @@ enum class EMingGamePhase : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingGameMode : uint8
-{
+enum class EMingGameMode: uint8 {
     Campaign UMETA(DisplayName = "Campaign"),
     Skirmish UMETA(DisplayName = "Skirmish"),
     Mercenary UMETA(DisplayName = "Mercenary"),
@@ -29,8 +27,7 @@ enum class EMingGameMode : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingDifficulty : uint8
-{
+enum class EMingDifficulty: uint8 {
     Easy UMETA(DisplayName = "Easy"),
     Normal UMETA(DisplayName = "Normal"),
     Hard UMETA(DisplayName = "Hard"),
@@ -141,7 +138,7 @@ public:
     void InitializeGameFlow();
 
     UFUNCTION(BlueprintCallable, Category = "Game Flow")
-    void StartNewGame(EMingGameMode GameMode, EMingDifficulty Difficulty};
+    void StartNewGame(EMingGameMode GameMode, EMingDifficulty Difficulty);
 
     UFUNCTION(BlueprintCallable, Category = "Game Flow")
     void LoadGame(const FString& SaveSlot) {};
@@ -182,7 +179,7 @@ public:
 
     // Session Management
     UFUNCTION(BlueprintCallable, Category = "Session")
-    void CreateSession(EMingGameMode GameMode, EMingDifficulty Difficulty};
+    void CreateSession(EMingGameMode GameMode, EMingDifficulty Difficulty);
 
     UFUNCTION(BlueprintCallable, Category = "Session")
     void EndSession();
@@ -194,7 +191,7 @@ public:
     bool HasActiveSession() const;
 
     UFUNCTION(BlueprintCallable, Category = "Session")
-    void UpdateSessionStats(const FString& StatName, float Value};
+    void UpdateSessionStats(const FString& StatName, float Value);
 
     UFUNCTION(BlueprintCallable, Category = "Session")
     void CompleteObjective(const FString& ObjectiveID) {};
@@ -282,11 +279,11 @@ public:
     bool CanLoadGame() const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPhaseChanged, EMingGamePhase, OldPhase, EMingGamePhase, NewPhase};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameStarted, EMingGameMode, GameMode, EMingDifficulty, Difficulty};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameEnded, const FMingGameSession&, Session, bool, bWasCompleted};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMissionCompleted, const FString&, MissionID, bool, bSuccess};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnObjectiveCompleted, const FString&, ObjectiveID};
+    
+    
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnPhaseChanged OnPhaseChanged;
@@ -305,13 +302,13 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetPhaseName(EMingGamePhase Phase};
+    static FString GetPhaseName(EMingGamePhase Phase);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetGameModeName(EMingGameMode GameMode};
+    static FString GetGameModeName(EMingGameMode GameMode);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetDifficultyName(EMingDifficulty Difficulty};
+    static FString GetDifficultyName(EMingDifficulty Difficulty);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveGameFlowData() const;
@@ -337,9 +334,9 @@ protected:
     void SetupDefaultPhaseSettings();
 
     // Phase Management
-    void EnterPhase(EMingGamePhase Phase};
-    void ExitPhase(EMingGamePhase Phase};
-    void UpdatePhaseState(EMingGamePhase Phase};
+    void EnterPhase(EMingGamePhase Phase);
+    void ExitPhase(EMingGamePhase Phase);
+    void UpdatePhaseState(EMingGamePhase Phase);
     bool ValidatePhaseTransition(EMingGamePhase FromPhase, EMingGamePhase ToPhase) const;
 
     // Session Management
@@ -371,6 +368,6 @@ protected:
     // Helpers
     FString GenerateSessionID();
     void LogGameFlowEvent(const FString& Event, const FString& Details) {};
-    void BroadcastPhaseChange(EMingGamePhase OldPhase, EMingGamePhase NewPhase};
-};
+    void BroadcastPhaseChange(EMingGamePhase OldPhase, EMingGamePhase NewPhase);
+);
 

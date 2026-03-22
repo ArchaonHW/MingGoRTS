@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Region Entry Widget for Region Selection List
 
 #pragma once
@@ -22,7 +22,7 @@ public:
 
     /** Set the region code for this entry */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetRegionCode(ECulturalRegion RegionCode};
+    void SetRegionCode(ECulturalRegion RegionCode);
 
     /** Get the region code */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
@@ -30,7 +30,7 @@ public:
 
     /** Set whether this entry is selected */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetIsSelected(bool bSelected};
+    void SetIsSelected(bool bSelected);
 
     /** Get whether this entry is selected */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
@@ -119,10 +119,11 @@ private:
 
 public:
     /** Delegate for entry selection */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRegionEntrySelected, ECulturalRegion, RegionCode, class UMingRegionEntryWidget*, EntryWidget};
+    
 
     /** Event fired when this entry is selected */
     UPROPERTY(BlueprintAssignable, Category = "MingRTS|Localization|UI|Events")
     FOnRegionEntrySelected OnRegionSelected;
 };
+
 

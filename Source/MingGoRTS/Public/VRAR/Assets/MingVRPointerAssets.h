@@ -1,4 +1,4 @@
-// VR Pointer and Cursor Asset Definitions for MingGoRTS
+﻿// VR Pointer and Cursor Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - VR Interaction Assets
 
 #pragma once
@@ -11,8 +11,7 @@
  * Pointer Types for VR Interaction
  */
 UENUM(BlueprintType)
-enum class EVRPointerType : uint8
-{
+enum class EVRPointerType: uint8 {
     Laser           UMETA(DisplayName = "Laser Pointer"),
     Beam            UMETA(DisplayName = "Beam Pointer"),
     Line            UMETA(DisplayName = "Line Pointer"),
@@ -26,8 +25,7 @@ enum class EVRPointerType : uint8
  * Cursor Types for VR UI
  */
 UENUM(BlueprintType)
-enum class EVRCursorType : uint8
-{
+enum class EVRCursorType: uint8 {
     Default         UMETA(DisplayName = "Default Cursor"),
     Crosshair       UMETA(DisplayName = "Crosshair"),
     Circle          UMETA(DisplayName = "Circle"),

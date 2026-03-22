@@ -7,8 +7,7 @@
 /**
  * 觀察模式 */
 UENUM(BlueprintType)
-enum class ESpectatorMode : uint8
-{
+enum class ESpectatorMode: uint8 {
     FreeCamera        UMETA(DisplayName = "Free Camera"),
     FollowPlayer      UMETA(DisplayName = "Follow Player"),
     FollowUnit        UMETA(DisplayName = "Follow Unit"),
@@ -118,28 +117,36 @@ class MINGGORTS_API UMingRTSSpectatorSystem : public UObject
 public:
     UMingRTSSpectatorSystem();
     
-    // ?��X    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?��X
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void InitializeSpectatorSystem();
     
-    // ?�建觀?�房X    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?�建觀?�房X
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     FString CreateSpectatorRoom(const FString& MatchID, const FString& RoomName, int32 MaxSpectators, bool bPasswordProtected, const FString& Password);
     
-    // ?��?觀?�房X    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?��?觀?�房X
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void CloseSpectatorRoom(const FString& RoomID);
     
-    // ?�入觀X    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?�入觀X
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     bool JoinSpectatorRoom(const FString& RoomID, const FSpectatorInfo& Spectator, const FString& Password);
     
-    // ?��?觀X    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?��?觀X
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void LeaveSpectatorRoom(const FString& RoomID, const FString& SpectatorID);
     
-    // ?��?觀?�房?��?�?    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?��?觀?�房?��?�?
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     TArray<FSpectatorRoom> GetAvailableRooms() const;
     
-    // ?��?觀?�房?�信X    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?��?觀?�房?�信X
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     bool GetRoomInfo(const FString& RoomID, FSpectatorRoom& OutRoom) const;
     
-    // 設置觀?�模�?    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // 設置觀?�模�?
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void SetSpectatorMode(const FString& SpectatorID, ESpectatorMode Mode);
     
     // 跟隨?�家
@@ -158,32 +165,40 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Spectator")
     void SetZoomLevel(const FString& SpectatorID, float ZoomLevel);
     
-    // ?��X�中X    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?��X�中X
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void TogglePictureInPicture(const FString& SpectatorID, bool bEnable);
     
-    // ?�送�X��?天�X    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?�送�X��?天�X
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void SendSpectatorChat(const FString& RoomID, const FString& SpectatorID, const FString& Message);
     
-    // ?��?觀?�者�?�?    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?��?觀?�者�?�?
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     TArray<FSpectatorInfo> GetSpectatorsInRoom(const FString& RoomID) const;
     
-    // ?��?觀?�者數X    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?��?觀?�者數X
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     int32 GetSpectatorCount(const FString& RoomID) const;
     
-    // ?�否?�許觀X    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?�否?�許觀X
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     bool IsSpectatingEnabled(const FString& MatchID) const;
     
-    // ?�用/禁用觀X    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // ?�用/禁用觀X
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void SetSpectatingEnabled(const FString& MatchID, bool bEnabled);
     
     // 設置?��?密碼
     UFUNCTION(BlueprintCallable, Category = "Spectator")
     void SetRoomPassword(const FString& RoomID, const FString& NewPassword);
     
-    // 踢出觀?��?    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // 踢出觀?��?
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void KickSpectator(const FString& RoomID, const FString& SpectatorID, const FString& Reason);
     
-    // 禁�?觀?��?    UFUNCTION(BlueprintCallable, Category = "Spectator")
+    // 禁�?觀?��?
+    UFUNCTION(BlueprintCallable, Category = "Spectator")
     void MuteSpectator(const FString& RoomID, const FString& SpectatorID, int32 DurationMinutes);
     
     // 事件委�?

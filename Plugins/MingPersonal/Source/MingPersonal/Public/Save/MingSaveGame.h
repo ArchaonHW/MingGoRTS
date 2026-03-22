@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
 #include "MingSaveGame.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingSaveGameVersion : uint8
-{
+enum class EMingSaveGameVersion: uint8 {
     Initial = 1,
     Version_1_1 = 2,
     Version_1_2 = 3,

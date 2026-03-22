@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingDeploymentManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingBuildConfiguration : uint8
-{
+enum class EMingBuildConfiguration: uint8 {
     Development UMETA(DisplayName = "Development"),
     Test UMETA(DisplayName = "Test"),
     Shipping UMETA(DisplayName = "Shipping"),
@@ -14,8 +13,7 @@ enum class EMingBuildConfiguration : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingPlatformTarget : uint8
-{
+enum class EMingPlatformTarget: uint8 {
     Windows UMETA(DisplayName = "Windows"),
     Android UMETA(DisplayName = "Android"),
     iOS UMETA(DisplayName = "iOS"),
@@ -24,8 +22,7 @@ enum class EMingPlatformTarget : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingDeploymentStatus : uint8
-{
+enum class EMingDeploymentStatus: uint8 {
     NotStarted UMETA(DisplayName = "Not Started"),
     InProgress UMETA(DisplayName = "In Progress"),
     Packaging UMETA(DisplayName = "Packaging"),
@@ -211,13 +208,13 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetBuildConfigName(EMingBuildConfiguration Config};
+    static FString GetBuildConfigName(EMingBuildConfiguration Config);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetPlatformName(EMingPlatformTarget Platform};
+    static FString GetPlatformName(EMingPlatformTarget Platform);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetDeploymentStatusName(EMingDeploymentStatus Status};
+    static FString GetDeploymentStatusName(EMingDeploymentStatus Status);
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
     void ExportBuildManifest();

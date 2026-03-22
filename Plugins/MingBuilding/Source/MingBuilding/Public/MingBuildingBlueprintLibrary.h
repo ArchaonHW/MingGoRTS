@@ -81,19 +81,19 @@ public:
      * 檢查?�置位置?�否?��?
      */
     UFUNCTION(BlueprintPure, Category = "Building|Placement")
-    static bool IsValidPlacementLocation(EMingBuildingType BuildingType, const FVector& Location};
+    static bool IsValidPlacementLocation(EMingBuildingType BuildingType, const FVector& Location);
 
     /**
      * ?��?建�?網格大�?
      */
     UFUNCTION(BlueprintPure, Category = "Building|Placement")
-    static FVector GetBuildingGridSize(EMingBuildingType BuildingType};
+    static FVector GetBuildingGridSize(EMingBuildingType BuildingType);
 
     /**
      * 顯示建�X�置?�覽
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Placement")
-    static void ShowPlacementPreview(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation};
+    static void ShowPlacementPreview(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
 
     /**
      * ?��?建�X�置?�覽
@@ -104,12 +104,12 @@ public:
     /**
      * ?��?工人?�建�?     */
     UFUNCTION(BlueprintCallable, Category = "Building|Workers")
-    static bool AssignWorker(const FString& BuildingID};
+    static bool AssignWorker(const FString& BuildingID);
 
     /**
      * 從建築移?�工�?     */
     UFUNCTION(BlueprintCallable, Category = "Building|Workers")
-    static bool RemoveWorker(const FString& BuildingID};
+    static bool RemoveWorker(const FString& BuildingID);
 
     /**
      * ?��X�用工人?��?
@@ -121,75 +121,75 @@ public:
      * ?��?建�?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Maintenance")
-    static bool UpgradeBuilding(const FString& BuildingID};
+    static bool UpgradeBuilding(const FString& BuildingID);
 
     /**
      * ?��?建�?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Maintenance")
-    static bool DestroyBuilding(const FString& BuildingID};
+    static bool DestroyBuilding(const FString& BuildingID);
 
     /**
      * 修復建�?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Maintenance")
-    static bool RepairBuilding(const FString& BuildingID, int32 RepairAmount};
+    static bool RepairBuilding(const FString& BuildingID, int32 RepairAmount);
 
     /**
      * ?��?建�?影響範�X��?建�?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Query")
-    static TArray<AMingBuildingActor*> GetBuildingsInRadius(const FVector& Center, float Radius};
+    static TArray<AMingBuildingActor*> GetBuildingsInRadius(const FVector& Center, float Radius);
 
     /**
      * ?��?建�?供�X     */
     UFUNCTION(BlueprintCallable, Category = "Building|Query")
-    static TArray<AMingBuildingActor*> GetSupplyChain(const FString& BuildingID};
+    static TArray<AMingBuildingActor*> GetSupplyChain(const FString& BuildingID);
 
     /**
      * ?��?建�X�本
      */
     UFUNCTION(BlueprintPure, Category = "Building|Costs")
-    static FMingBuildingCost GetBuildingCost(EMingBuildingType BuildingType};
+    static FMingBuildingCost GetBuildingCost(EMingBuildingType BuildingType);
 
     /**
      * 檢查?�否?�以建�?     */
     UFUNCTION(BlueprintPure, Category = "Building|Costs")
-    static bool CanAffordBuilding(EMingBuildingType BuildingType};
+    static bool CanAffordBuilding(EMingBuildingType BuildingType);
 
     /**
      * ?��?建�X�述
      */
     UFUNCTION(BlueprintPure, Category = "Building|Info")
-    static FString GetBuildingDescription(EMingBuildingType BuildingType};
+    static FString GetBuildingDescription(EMingBuildingType BuildingType);
 
     /**
      * ?��?建�?類�X�稱
      */
     UFUNCTION(BlueprintPure, Category = "Building|Info")
-    static FString GetBuildingTypeName(EMingBuildingType BuildingType};
+    static FString GetBuildingTypeName(EMingBuildingType BuildingType);
 
     /**
      * ?��?建�X�?��?�?     */
     UFUNCTION(BlueprintPure, Category = "Building|Info")
-    static FString GetBuildingStateName(EMingBuildingState BuildingState};
+    static FString GetBuildingStateName(EMingBuildingState BuildingState);
 
     /**
      * ?��?建造建�?     */
     UFUNCTION(BlueprintCallable, Category = "Building|Batch")
-    static TArray<FString> BatchConstructBuildings(const TArray<EMingBuildingType>& BuildingTypes, const TArray<FVector>& Locations, const TArray<FRotator>& Rotations};
+    static TArray<FString> BatchConstructBuildings(const TArray<EMingBuildingType>& BuildingTypes, const TArray<FVector>& Locations, const TArray<FRotator>& Rotations);
 
     /**
      * ?��X��?建�?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Batch")
-    static TArray<bool> BatchUpgradeBuildings(const TArray<FString>& BuildingIDs};
+    static TArray<bool> BatchUpgradeBuildings(const TArray<FString>& BuildingIDs);
 
     /**
      * ?��?修復建�?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Batch")
-    static TArray<bool> BatchRepairBuildings(const TArray<FString>& BuildingIDs, int32 RepairAmount};
+    static TArray<bool> BatchRepairBuildings(const TArray<FString>& BuildingIDs, int32 RepairAmount);
 
     /**
      * ?��?系統?�X     */
@@ -212,18 +212,18 @@ public:
      * ?��?建�X�置建議
      */
     UFUNCTION(BlueprintCallable, Category = "Building|AI")
-    static FVector GetOptimalPlacementLocation(EMingBuildingType BuildingType, const FVector& ReferencePoint, float SearchRadius};
+    static FVector GetOptimalPlacementLocation(EMingBuildingType BuildingType, const FVector& ReferencePoint, float SearchRadius);
 
     /**
      * ?��?建造建�?     */
     UFUNCTION(BlueprintCallable, Category = "Building|AI")
-    static FString AutoConstructBuilding(EMingBuildingType BuildingType, const FVector& ReferencePoint};
+    static FString AutoConstructBuilding(EMingBuildingType BuildingType, const FVector& ReferencePoint);
 
     /**
      * ?��?建�X��?
      */
     UFUNCTION(BlueprintPure, Category = "Building|Analysis")
-    static float GetBuildingEfficiency(const FString& BuildingID};
+    static float GetBuildingEfficiency(const FString& BuildingID);
 
     /**
      * ?��X�地總�X��?
@@ -241,12 +241,12 @@ public:
      * 設置建�?系統?�數
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Configuration")
-    static void SetBuildingSystemParameters(int32 TotalWorkers, int32 MaxConcurrentConstruction};
+    static void SetBuildingSystemParameters(int32 TotalWorkers, int32 MaxConcurrentConstruction);
 
     /**
      * ?��?建�?系統?�數
      */
     UFUNCTION(BlueprintPure, Category = "Building|Configuration")
-    static void GetBuildingSystemParameters(int32& TotalWorkers, int32& MaxConcurrentConstruction};
+    static void GetBuildingSystemParameters(int32& TotalWorkers, int32& MaxConcurrentConstruction);
 };
 

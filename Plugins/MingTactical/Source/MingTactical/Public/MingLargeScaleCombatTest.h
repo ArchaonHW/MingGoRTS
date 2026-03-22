@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,8 +8,8 @@ class AMingTacticalUnit;
 class UMingSelectionManager;
 
 /**
- * ¤j??¼Ò¾Ô°«©Ê¯à´ú¸Õ
- * ´ú¸Õ1000+???X?¾Ô°«©Ê¯à
+ * ï¿½j??ï¿½Ò¾Ô°ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½1000+???X?ï¿½Ô°ï¿½ï¿½Ê¯ï¿½
  */
 UCLASS()
 class MINGTACTICAL_API UMingLargeScaleCombatTest : public UObject
@@ -19,26 +19,27 @@ class MINGTACTICAL_API UMingLargeScaleCombatTest : public UObject
 public:
     UMingLargeScaleCombatTest();
 
-    // ???X?´ú??    UFUNCTION(BlueprintCallable, Category = "Performance Test")
+    // ???X?ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "Performance Test")
     void InitializeTest();
 
-    // ²M??´ú¸Õ
+    // ï¿½M??ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     void CleanupTest();
 
-    // ??«Ø´ú¸Õ????
+    // ??ï¿½Ø´ï¿½ï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    void CreateTestUnits(int32 UnitCount = 1000};
+    void CreateTestUnits(int32 UnitCount = 1000);
 
-    // ???X?¯à´ú¸Õ
+    // ???X?ï¿½ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     void StartPerformanceTest();
 
-    // ??¤î??¯à´ú¸Õ
+    // ??ï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     void StopPerformanceTest();
 
-    // ???X?¯à²Î??
+    // ???X?ï¿½ï¿½ï¿½??
     UFUNCTION(BlueprintPure, Category = "Performance Test")
     float GetAverageFPS() const { return AverageFPS; }
 
@@ -51,52 +52,53 @@ public:
     UFUNCTION(BlueprintPure, Category = "Performance Test")
     int32 GetActiveUnitCount() const { return TestUnits.Num(); }
 
-    // ´ú¸Õµ²??
+    // ï¿½ï¿½ï¿½Õµï¿½??
     UFUNCTION(BlueprintPure, Category = "Performance Test")
     bool IsPerformanceTestPass() const;
 
 protected:
-    virtual void Tick(float DeltaTime};
+    virtual void Tick(float DeltaTime);
 
 private:
-    // ´ú¸Õ????
+    // ï¿½ï¿½ï¿½ï¿½æ‘§æ¯€
     UPROPERTY()
     TArray<TObjectPtr<AMingTacticalUnit>> TestUnits;
 
-    // ??¯àX??
+    // ??ï¿½ï¿½X??
     bool bIsTestRunning;
     float TestStartTime;
     float TotalFrameTime;
     int32 FrameCount;
     
-    // FPS²Î??
+    // FPSï¿½ï¿½??
     float AverageFPS;
     float MinFPS;
     float MaxFPS;
     float LastFrameTime;
 
-    // ????ºŞ?X    UPROPERTY()
+    // æ‘§æ¯€ï¿½ï¿½?X
+    UPROPERTY()
     TObjectPtr<UMingSelectionManager> SelectionManager;
 
-    // ??«Ø????
-    AMingTacticalUnit* CreateTestUnit(const FVector& Location, int32 TeamId, EUnitType UnitType};
+    // ??ï¿½ï¿½æ‘§æ¯€
+    AMingTacticalUnit* CreateTestUnit(const FVector& Location, int32 TeamId, EUnitType UnitType);
 
-    // ??·s??¯à²Î??
-    void UpdatePerformanceStats(float DeltaTime};
+    // ??ï¿½s??ï¿½ï¿½ï¿½??
+    void UpdatePerformanceStats(float DeltaTime);
 
-    // ??¸m??¯à²Î??
+    // ??ï¿½m??ï¿½ï¿½ï¿½??
     void ResetPerformanceStats();
 
-    // ¼ÒÀÀ????¦æ¬°
-    void SimulateUnitBehavior(float DeltaTime};
+    // ï¿½ï¿½ï¿½ï¿½æ‘§æ¯€ï¿½æ¬°
+    void SimulateUnitBehavior(float DeltaTime);
 
-    // ´ú¸Õ???X???
+    // ï¿½ï¿½ï¿½ï¿½ç›®æ¨™æ•¸é‡
     void TestUnitSelection();
 
-    // ´ú¸Õ????²¾??
+    // ï¿½ï¿½ï¿½ï¿½æ‘§æ¯€ï¿½ï¿½??
     void TestUnitMovement();
 
-    // ´ú¸Õ???X?°«
+    // ï¿½ï¿½ï¿½ï¿½???X?ï¿½ï¿½
     void TestUnitCombat();
 };
 

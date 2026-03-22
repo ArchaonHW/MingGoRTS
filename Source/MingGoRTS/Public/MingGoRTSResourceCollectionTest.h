@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -13,71 +13,74 @@ class MINGGORTS_API UMingGoRTSResourceCollectionTest : public UObject
 public:
     UMingGoRTSResourceCollectionTest();
 
-    // ¸ê??¨t²Î¹ê??
+    // ï¿½ï¿½??ï¿½tï¿½Î¹ï¿½??
     UPROPERTY(BlueprintReadOnly, Category = "Resource Test")
     UMingGoRTSResourceSystem* ResourceSystem;
 
-    // ???X?´ú??    UFUNCTION(BlueprintCallable, Category = "Resource Test")
+    // ???X?ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "Resource Test")
     void InitializeTest();
 
-    // ´ú¸Õ??¥»¸ê?X???
+    // ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½?X???
     UFUNCTION(BlueprintCallable, Category = "Resource Test")
     bool TestBasicResourceCollection();
 
-    // ´ú¸Õ¸ê??¦sÀx
+    // ï¿½ï¿½ï¿½Õ¸ï¿½??ï¿½sï¿½x
     UFUNCTION(BlueprintCallable, Category = "Resource Test")
     bool TestResourceStorage();
 
-    // ´ú¸Õ¸ê??Âà??
+    // ï¿½ï¿½ï¿½Õ¸ï¿½??ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Resource Test")
     bool TestResourceConversion();
 
-    // ´ú¸Õ¸ê?X?¿é
+    // ï¿½ï¿½ï¿½Õ¸ï¿½?X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Resource Test")
     bool TestResourceTransport();
 
-    // ´ú¸Õ¸ê??¥æ??
+    // ï¿½ï¿½ï¿½Õ¸ï¿½??ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Resource Test")
     bool TestResourceTrade();
 
-    // ´ú¸Õ¸ê??°I??
+    // ï¿½ï¿½ï¿½Õ¸ï¿½??ï¿½I??
     UFUNCTION(BlueprintCallable, Category = "Resource Test")
     bool TestResourceDecay();
 
-    // ???X???´ú??    UFUNCTION(BlueprintCallable, Category = "Resource Test")
+    // ???X???ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "Resource Test")
     bool RunAllTests();
 
-    // ????´ú¸Õµ²??
+    // ????ï¿½ï¿½ï¿½Õµï¿½??
     UFUNCTION(BlueprintPure, Category = "Resource Test")
     FString GetTestResults() const;
 
-    // ²M??´ú¸Õ
+    // ï¿½M??ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Resource Test")
     void CleanupTest();
 
 private:
-    // ´ú¸Õµ²??
+    // ï¿½ï¿½ï¿½Õµï¿½??
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // ´ú¸Õ???X???
+    // ï¿½ï¿½ï¿½ï¿½???X???
     int32 PassedTests;
 
-    // ´ú¸Õ¥¢?X???
+    // ï¿½ï¿½ï¿½Õ¥ï¿½?X???
     int32 FailedTests;
 
-    // ²K??´ú¸Õµ²??
+    // ï¿½K??ï¿½ï¿½ï¿½Õµï¿½??
     void AddTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
 
-    // ??«Ø´ú¸Õ¦sÀx
-    FString CreateTestStorage(const FString& StorageName, float Capacity};
+    // ??ï¿½Ø´ï¿½ï¿½Õ¦sï¿½x
+    FString CreateTestStorage(const FString& StorageName, float Capacity);
 
-    // ??«Ø´ú¸Õ????
-    FString CreateTestCollection(EResourceType ResourceType, ECollectionMethod Method};
+    // ??ï¿½Ø´ï¿½ï¿½ï¿½????
+    FString CreateTestCollection(EResourceType ResourceType, ECollectionMethod Method);
 
-    // Åç??¸ê?X???
-    bool VerifyResourceQuantity(const FString& StorageID, EResourceType ResourceType, float ExpectedQuantity};
+    // ï¿½ï¿½??ï¿½ï¿½?X???
+    bool VerifyResourceQuantity(const FString& StorageID, EResourceType ResourceType, float ExpectedQuantity);
 
-    // ??¸m´ú¸Õ­p¼ÆX    void ResetTestCounters();
+    // ??ï¿½mï¿½ï¿½ï¿½Õ­pï¿½ï¿½X
+    void ResetTestCounters();
 };
 

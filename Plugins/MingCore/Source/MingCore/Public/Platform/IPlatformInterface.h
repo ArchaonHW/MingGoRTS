@@ -1,15 +1,14 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "IPlatformInterface.generated.h"
 
 /**
- * ¥­¥xÃş?X???
+ * ï¿½ï¿½ï¿½xï¿½ï¿½?X???
  */
 UENUM(BlueprintType)
-enum class EPlatformType : uint8
-{
+enum class EPlatformType: uint8 {
     Windows       UMETA(DisplayName = "Windows"),
     Android       UMETA(DisplayName = "Android"),
     IOS           UMETA(DisplayName = "iOS"),
@@ -17,47 +16,46 @@ enum class EPlatformType : uint8
 };
 
 /**
- * ¿é¤JÃş?X???
+ * ï¿½ï¿½Jï¿½ï¿½?X???
  */
 UENUM(BlueprintType)
-enum class EInputType : uint8
-{
+enum class EInputType: uint8 {
     MouseKeyboard UMETA(DisplayName = "Mouse & Keyboard"),
     Touch         UMETA(DisplayName = "Touch"),
     Gamepad       UMETA(DisplayName = "Gamepad")
 };
 
 /**
- * ¥­¥x????µ²??
+ * ï¿½ï¿½ï¿½xæ‘§æ¯€ï¿½ï¿½??
  */
 USTRUCT(BlueprintType)
 struct FPlatformCapabilities
 {
     GENERATED_BODY()
     
-    // ??§_????¦h??Ä²±±
+    // ??ï¿½_æ‘§æ¯€ï¿½h??Ä²ï¿½ï¿½
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsMultiTouch;
     
     
     int32 MaxTouchPoints;
     
-    // ??§_???X??X?½L
+    // ??ï¿½_æ•…äº‹é‡è¦æ€§?ï¿½L
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsHardwareKeyboard;
     
-    // ??§_????¹«??
+    // ??ï¿½_æ‘§æ¯€ï¿½ï¿½??
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsMouse;
     
-    // Àq??¿é¤JÃş??
+    // ï¿½q??ï¿½ï¿½Jï¿½ï¿½??
     UPROPERTY(BlueprintReadOnly)
     EInputType DefaultInputType;
     
     
     bool bRequiresBatteryOptimization;
     
-    // «ØÄ³????¤j?X?³æ¦ì¼Æ
+    // ï¿½ï¿½Ä³æ‘§æ¯€ï¿½j?X?ï¿½ï¿½ï¿½ï¿½
     UPROPERTY(BlueprintReadOnly)
     int32 RecommendedMaxUnits;
     
@@ -77,8 +75,8 @@ struct FPlatformCapabilities
 };
 
 /**
- * ¥­¥x??¶H??¤f
- * ©w¸q????¥­??¬Û???X???²Î?X?¤f
+ * ï¿½ï¿½ï¿½x??ï¿½H??ï¿½f
+ * ï¿½wï¿½qæ‘§æ¯€ï¿½ï¿½??ï¿½ï¿½ç›®æ¨™æ•¸é‡ï¿½ï¿½?X?ï¿½f
  */
 UINTERFACE(MinimalAPI)
 class MINGCORE_API UPlatformInterface : public UInterface
@@ -93,45 +91,49 @@ class MINGCORE_API IPlatformInterface
 public:
     virtual ~IPlatformInterface() {}
     
-    // ???X???¥­¥xÃş??
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½ï¿½xï¿½ï¿½??
     virtual EPlatformType GetPlatformType() const = 0;
     
-    // ????¥­¥x????
+    // æ‘§æ¯€ï¿½ï¿½ï¿½xæ‘§æ¯€
     virtual FPlatformCapabilities GetCapabilities() const = 0;
     
-    // ???X?¥­X    virtual void Initialize() = 0;
+    // ???X?ï¿½ï¿½X
+    virtual void Initialize() = 0;
     
-    // ????¥­¥x
+    // æ‘§æ¯€ï¿½ï¿½ï¿½x
     virtual void Shutdown() = 0;
     
-    // ????«Ì??DPI
+    // æ‘§æ¯€ï¿½ï¿½??DPI
     virtual float GetScreenDPI() const = 0;
     
-    // ????¦w¥ş??X(??©ó²¾??ºİ?X?®ü«Ì??)
+    // æ‘§æ¯€ï¿½wï¿½ï¿½??X(??ï¿½ï¿½??ï¿½ï¿½?X?ï¿½ï¿½ï¿½ï¿½??)
     virtual FMargin GetSafeZone() const = 0;
     
-    // ÀË¬d??§_??Ä²??³]X    virtual bool IsTouchDevice() const = 0;
+    // ï¿½Ë¬d??ï¿½_??Ä²??ï¿½]X
+    virtual bool IsTouchDevice() const = 0;
     
-    // ³]¸m??¯à¼Ò??
+    // ï¿½]ï¿½m??ï¿½ï¿½ï¿½??
     virtual void SetPerformanceMode(int32 Mode) = 0;
     
-    // ???X??X??X??? (0-1, -1ªí¥Ü¤£¤äX
+    // æ•…äº‹é¸é …X??? (0-1, -1ï¿½ï¿½Ü¤ï¿½ï¿½ï¿½X
     virtual float GetBatteryLevel() const = 0;
     
-    // ??§_??????¹q
+    // ??ï¿½_æ‘§æ¯€??ï¿½q
     virtual bool IsCharging() const = 0;
     
-    // Åã¥Ü¥­¥x???X???¸Ü??
+    // ï¿½ï¿½Ü¥ï¿½ï¿½xç›®æ¨™æ•¸é‡ï¿½ï¿½??
     virtual void ShowPlatformDialog(const FString& Title, const FString& Message) = 0;
     
-    // ??¨É??¯à
+    // ??ï¿½ï¿½??ï¿½ï¿½
     virtual void ShareContent(const FString& Content) = 0;
     
-    // µû??½Ğ??
+    // ï¿½ï¿½??ï¿½ï¿½??
     virtual void RequestAppRating() = 0;
     
-    // «O?X??X?¥­??¯S©w?X    virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) = 0;
+    // ï¿½O?X??X?ï¿½ï¿½??ï¿½Sï¿½w?X
+    virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) = 0;
     
-    // ±q¥­??¯S©w?X??X?¼ÆX    virtual FString LoadFromPlatformStorage(const FString& Key) const = 0;
+    // ï¿½qï¿½ï¿½??ï¿½Sï¿½w?X??X?ï¿½ï¿½X
+    virtual FString LoadFromPlatformStorage(const FString& Key) const = 0;
 };
 

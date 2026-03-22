@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -9,8 +9,7 @@
 #include "MingRTSNetworkManager.generated.h"
 
 UENUM(BlueprintType)
-enum class ENetworkGameMode : uint8
-{
+enum class ENetworkGameMode: uint8 {
 	SinglePlayer		UMETA(DisplayName = "單人遊戲"),
 	ListenServer			UMETA(DisplayName = "監聽服務器"),
 	DedicatedServer			UMETA(DisplayName = "專用服務器"),
@@ -18,8 +17,7 @@ enum class ENetworkGameMode : uint8
 };
 
 UENUM(BlueprintType)
-enum class ENetworkConnectionState : uint8
-{
+enum class ENetworkConnectionState: uint8 {
 	Disconnected			UMETA(DisplayName = "斷開連接"),
 	Connecting				UMETA(DisplayName = "正在連接"),
 	Connected				UMETA(DisplayName = "已連接"),
@@ -28,8 +26,7 @@ enum class ENetworkConnectionState : uint8
 };
 
 UENUM(BlueprintType)
-enum class ENetworkSyncPriority : uint8
-{
+enum class ENetworkSyncPriority: uint8 {
 	Critical				UMETA(DisplayName = "關鍵"),
 	High					UMETA(DisplayName = "高"),
 	Normal					UMETA(DisplayName = "普通"),

@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,8 +8,7 @@
 
 // 资源类型 (与Epic 2.x系统对应)
 UENUM(BlueprintType)
-enum class ERTSResourceType : uint8
-{
+enum class ERTSResourceType: uint8 {
     Gold            UMETA(DisplayName = "Gold"),
     Food            UMETA(DisplayName = "Food"),
     Wood            UMETA(DisplayName = "Wood"),
@@ -24,8 +23,7 @@ enum class ERTSResourceType : uint8
 
 // 采集者类型
 UENUM(BlueprintType)
-enum class ERTSGathererType : uint8
-{
+enum class ERTSGathererType: uint8 {
     Worker          UMETA(DisplayName = "Worker"),
     Farmer          UMETA(DisplayName = "Farmer"),
     Lumberjack      UMETA(DisplayName = "Lumberjack"),

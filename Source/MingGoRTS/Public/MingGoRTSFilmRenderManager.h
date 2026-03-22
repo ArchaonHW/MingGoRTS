@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -8,8 +8,7 @@
 #include "MingGoRTSFilmRenderManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EFilmPlaybackState : uint8
-{
+enum class EFilmPlaybackState: uint8 {
     Stopped,
     Playing,
     Paused,
@@ -37,9 +36,9 @@ struct FFilmPlaybackSettings
     float FadeOutDuration = 1.0f;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFilmFrameChanged, int32, CurrentFrame};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFilmPlaybackStateChanged, EFilmPlaybackState, NewState, int32, CurrentFrame};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFilmPlaybackEnded};
+
+
+
 
 UCLASS(BlueprintType, Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingGoRTSFilmRenderManager : public UActorComponent
@@ -49,7 +48,7 @@ class MINGGORTS_API UMingGoRTSFilmRenderManager : public UActorComponent
 public:
     UMingGoRTSFilmRenderManager();
 
-    // ¼v?X?©ñ??¨î
+    // ï¿½v?X?ï¿½ï¿½??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void PlayFilm();
 
@@ -60,17 +59,17 @@ public:
     void StopFilm();
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void SeekToFrame(int32 FrameIndex};
+    void SeekToFrame(int32 FrameIndex);
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void SeekToTime(float TimeInSeconds};
+    void SeekToTime(float TimeInSeconds);
 
-    // ¼v?X???ºÞ??
+    // ï¿½v?X???ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void SetFilmFrames(const TArray<UTexture2D*>& Frames};
+    void SetFilmFrames(const TArray<UTexture2D*>& Frames);
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void AddFrame(UTexture2D* NewFrame};
+    void AddFrame(UTexture2D* NewFrame);
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void ClearFrames();
@@ -78,7 +77,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     TArray<UTexture2D*> GetFilmFrames() const { return FilmFrames; }
 
-    // ??©ñ????¬d??    UFUNCTION(BlueprintCallable, Category = "Film Render")
+    // ??ï¿½ï¿½????ï¿½d??
+    UFUNCTION(BlueprintCallable, Category = "Film Render")
     EFilmPlaybackState GetPlaybackState() const { return CurrentPlaybackState; }
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
@@ -96,24 +96,24 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     bool IsPaused() const { return CurrentPlaybackState == EFilmPlaybackState::Paused; }
 
-    // ³]¸m
+    // ï¿½]ï¿½m
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void SetPlaybackSettings(const FFilmPlaybackSettings& Settings};
+    void SetPlaybackSettings(const FFilmPlaybackSettings& Settings);
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     FFilmPlaybackSettings GetPlaybackSettings() const { return PlaybackSettings; }
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void SetFrameRate(float NewFrameRate};
+    void SetFrameRate(float NewFrameRate);
 
-    // ´è??¿é¥X
+    // ï¿½ï¿½??ï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     UTexture2D* GetCurrentFrameTexture() const;
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void RenderToRenderTarget(class UTextureRenderTarget2D* RenderTarget};
+    void RenderToRenderTarget(class UTextureRenderTarget2D* RenderTarget);
 
-    // ©e??¨Æ¥ó
+    // ï¿½e??ï¿½Æ¥ï¿½
     UPROPERTY(BlueprintAssignable, Category = "Film Render")
     FOnFilmFrameChanged OnFilmFrameChanged;
 
@@ -146,15 +146,15 @@ private:
     UPROPERTY()
     FFilmPlaybackSettings PlaybackSettings;
 
-    // ª`??¡G??UObjectÃþ??¤£¯à??UPROPERTY
+    // ï¿½`??ï¿½G??UObjectï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½??UPROPERTY
     FTickerDelegate PlaybackTicker;
     FDelegateHandle PlaybackTickerHandle;
 
-    void UpdatePlayback(float DeltaTime};
+    void UpdatePlayback(float DeltaTime);
     void AdvanceToNextFrame();
     void HandlePlaybackEnd();
     void NotifyFrameChanged();
-    void NotifyPlaybackStateChanged(EFilmPlaybackState NewState};
-    bool OnPlaybackTick(float DeltaTime};
-};
+    void NotifyPlaybackStateChanged(EFilmPlaybackState NewState);
+    bool OnPlaybackTick(float DeltaTime);
+);
 

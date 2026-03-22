@@ -11,8 +11,7 @@
  * 修復類�X��?
  */
 UENUM(BlueprintType)
-enum class EFixType : uint8
-{
+enum class EFixType: uint8 {
     MemoryLeak		UMETA(DisplayName = "Memory Leak Fix"),
     ThreadSafety	UMETA(DisplayName = "Thread Safety Fix"),
     Performance		UMETA(DisplayName = "Performance Fix"),
@@ -23,8 +22,7 @@ enum class EFixType : uint8
 /**
  * 修復?��?級�X */
 UENUM(BlueprintType)
-enum class EFixPriority : uint8
-{
+enum class EFixPriority: uint8 {
     Critical	UMETA(DisplayName = "Critical"),
     High		UMETA(DisplayName = "High"),
     Medium		UMETA(DisplayName = "Medium"),
@@ -124,7 +122,7 @@ public:
 
     /** 修復?��X�件 */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixSpecificFile(const FString& FilePath};
+    FFixResult FixSpecificFile(const FString& FilePath);
 
     /** ?��?修復歷史 */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
@@ -140,13 +138,13 @@ public:
 
 public:
     /** 修復?��?事件 */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFixStarted, EFixType, FixType};
+    
 
     /** 修復完�?事件 */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFixCompleted, const FFixResult&, FixResult};
+    
 
     /** 修復失�?事件 */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFixFailed, const FFixResult&, FixResult};
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Weakness Fixer|Events")
     FOnFixStarted OnFixStarted;
@@ -159,19 +157,19 @@ public:
 
 protected:
     /** ?��?�?��弱�? */
-    TArray<FString> AnalyzeWeaknesses(const FString& FilePath};
+    TArray<FString> AnalyzeWeaknesses(const FString& FilePath);
 
     /** ?�用修復 */
-    bool ApplyFix(const FString& FilePath, const FString& Weakness, const FString& Fix};
+    bool ApplyFix(const FString& FilePath, const FString& Weakness, const FString& Fix);
 
     /** ?�份?��?�?*/
-    bool BackupFile(const FString& FilePath};
+    bool BackupFile(const FString& FilePath);
 
     /** 驗�?修復 */
-    bool ValidateFix(const FString& FilePath, const FString& OriginalContent, const FString& FixedContent};
+    bool ValidateFix(const FString& FilePath, const FString& OriginalContent, const FString& FixedContent);
 
     /** 記�?修復 */
-    void RecordFix(const FFixResult& FixResult};
+    void RecordFix(const FFixResult& FixResult);
 
 private:
     /** 修復歷史 */
@@ -190,4 +188,5 @@ private:
     UPROPERTY(BlueprintReadOnly, Category = "Weakness Fixer", meta = (AllowPrivateAccess = "true"))
     TMap<FString, FString> FixRules;
 };
+
 

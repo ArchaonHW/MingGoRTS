@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,25 +8,25 @@
 #include "MingAccessibilityHelper.generated.h"
 
 UENUM(BlueprintType)
-enum class EAccessibilityFeature : uint8
-{
-    HighContrast,          // ?¤ñ«×
-    LargeText,            // X    ScreenReader,         // X    ColorBlindMode,       // X¼Ò?
+enum class EAccessibilityFeature: uint8 {
+    HighContrast,          // ?ï¿½ï¿½ï¿½
+    LargeText,            // X
+    ScreenReader,         // X
+    ColorBlindMode,       // Xï¿½ï¿½?
     ReducedMotion,        // X
     KeyboardNavigation,   // X
-    VoiceControl,         // »y­µX
-    VisualCues,           // µøÄ±X
+    VoiceControl,         // ï¿½yï¿½ï¿½X
+    VisualCues,           // ï¿½ï¿½Ä±X
     AudioDescriptions,    // X
     SimplifiedUI          // X
 };
 
 UENUM(BlueprintType)
-enum class EPersonalDisabilityType : uint8
-{
-    VisualImpairment,     // µøÄ±X
+enum class EPersonalDisabilityType: uint8 {
+    VisualImpairment,     // ï¿½ï¿½Ä±X
     HearingImpairment,    // X
     MotorImpairment,      // X
-    CognitiveImpairment,   // »{ª¾X
+    CognitiveImpairment,   // ï¿½{ï¿½ï¿½X
     ColorBlindness,       // X
     None                  // X
 };
@@ -104,7 +104,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAccessibilityFeatureToggled, EAc
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAccessibilityNeedDetected, EPersonalDisabilityType, DisabilityType);
 
 /**
- * AIX * XÀËX»²§UX */
+ * AIX * Xï¿½ï¿½Xï¿½ï¿½ï¿½UX */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingAccessibilityHelper : public UObject
 {
@@ -113,10 +113,12 @@ class MINGPERSONAL_API UMingAccessibilityHelper : public UObject
 public:
     UMingAccessibilityHelper();
 
-    // X    UFUNCTION(BlueprintCallable, Category = "Accessibility")
+    // X
+    UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void InitializeAccessibility(UMingAIUIManager* InAIManager, UMingBehaviorAnalytics* InAnalytics);
 
-    // ?¨DÀË?    UFUNCTION(BlueprintCallable, Category = "Accessibility")
+    // ?ï¿½Dï¿½ï¿½?
+    UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void DetectAccessibilityNeeds();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
@@ -128,7 +130,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     bool ShouldEnableFeature(EAccessibilityFeature Feature);
 
-    // ?¸mºÞ?
+    // ?ï¿½mï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void SetAccessibilityProfile(const FAccessibilityProfile& Profile);
 
@@ -163,7 +165,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void EnableKeyboardNavigation();
 
-    // »y­µX
+    // ï¿½yï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void StartVoiceControl();
 
@@ -176,7 +178,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     TArray<FString> GetAvailableVoiceCommands() const;
 
-    // X    UFUNCTION(BlueprintCallable, Category = "Accessibility")
+    // X
+    UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void EnableScreenReader();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
@@ -204,7 +207,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void SetCustomKeyBinding(const FString& Action, const FString& Key);
 
-    // µøÄ±»²§U
+    // ï¿½ï¿½Ä±ï¿½ï¿½ï¿½U
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void ShowVisualCues();
 
@@ -240,7 +243,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     TArray<EAccessibilityFeature> GetRecommendedFeatures() const;
 
-    // ´ú¸ÕX    UFUNCTION(BlueprintCallable, Category = "Accessibility")
+    // ï¿½ï¿½ï¿½ï¿½X
+    UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void RunAccessibilityTest();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
@@ -249,7 +253,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     FString GenerateAccessibilityReport() const;
 
-    // X    UFUNCTION(BlueprintPure, Category = "Accessibility")
+    // X
+    UFUNCTION(BlueprintPure, Category = "Accessibility")
     bool IsAccessibilityEnabled() const { return bAccessibilityEnabled; }
 
     UFUNCTION(BlueprintPure, Category = "Accessibility")
@@ -261,7 +266,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Accessibility")
     float GetAccessibilityScore() const;
 
-    // ³]¸m
+    // ï¿½]ï¿½m
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void SetAccessibilityEnabled(bool bEnabled);
 
@@ -277,7 +282,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void ResetToDefaults();
 
-    // ¨Æ¥ó
+    // ï¿½Æ¥ï¿½
     UPROPERTY(BlueprintAssignable, Category = "Accessibility Events")
     FOnAccessibilityProfileChanged OnAccessibilityProfileChanged;
 
@@ -288,7 +293,7 @@ public:
     FOnAccessibilityNeedDetected OnAccessibilityNeedDetected;
 
 protected:
-    // ¨t²Î¤Þ¥Î
+    // ï¿½tï¿½Î¤Þ¥ï¿½
     UPROPERTY()
     TObjectPtr<UMingAIUIManager> AIManager;
 
@@ -308,7 +313,7 @@ protected:
     UPROPERTY()
     FAccessibilitySettings Settings;
 
-    // ÀË´úX
+    // ï¿½Ë´ï¿½X
     UPROPERTY()
     TMap<EPersonalDisabilityType, float> DisabilityScores;
 
@@ -321,14 +326,15 @@ protected:
     UPROPERTY()
     TArray<float> KeyboardUsageHistory;
 
-    // »y­µX
+    // ï¿½yï¿½ï¿½X
     UPROPERTY()
     bool bVoiceControlEnabled = false;
 
     UPROPERTY()
     TMap<FString, FString> VoiceCommandMap;
 
-    // X    UPROPERTY()
+    // X
+    UPROPERTY()
     bool bScreenReaderEnabled = false;
 
     UPROPERTY()
@@ -346,13 +352,13 @@ protected:
     void UpdateUIForAccessibility();
     float CalculateDisabilityScore(EPersonalDisabilityType DisabilityType) const;
 
-    // AI»²§U
+    // AIï¿½ï¿½ï¿½U
     void TrainAccessibilityModel();
     EPersonalDisabilityType PredictDisabilityType() const;
     TArray<EAccessibilityFeature> RecommendFeaturesForDisability(EPersonalDisabilityType DisabilityType) const;
 
 private:
-    // »²§UX
+    // ï¿½ï¿½ï¿½UX
     void InitializeDefaultProfiles();
     void SetupEventListeners();
     void SaveAccessibilityData();

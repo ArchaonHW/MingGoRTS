@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -6,7 +6,7 @@
 #include "MingRelationshipBlueprintLibrary.generated.h"
 
 /**
- * ???X?聲??系??Blueprint ??數?? * ???X?便XBlueprint ??口來訪????係?X??X?能
+ * ???X?聲??系??Blueprint ??數?? * ???X?便XBlueprint ??口來訪摧毀係?X??X?能
  */
 UCLASS()
 class MINGPERSONAL_API UMingRelationshipBlueprintLibrary : public UBlueprintFunctionLibrary
@@ -14,10 +14,11 @@ class MINGPERSONAL_API UMingRelationshipBlueprintLibrary : public UBlueprintFunc
     GENERATED_BODY()
 
 public:
-    // ???X???管?X?實??    UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
+    // 目標數量管?X?實??
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
     static UMingRelationshipManager* GetRelationshipManager();
 
-    // ????管?X?數
+    // 摧毀管?X?數
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
     static void UpdateCharacterRelationship(const FString& CharacterID, float ChangeAmount, const FString& Reason);
 
@@ -34,9 +35,9 @@ public:
     static void AddSharedMemory(const FString& CharacterID, const FString& Memory);
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static TArray<FString> GetSharedMemories(const FString& CharacterID};
+    static TArray<FString> GetSharedMemories(const FString& CharacterID);
 
-    // ????管?X?數
+    // 摧毀管?X?數
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
     static void UpdateRegionReputation(const FString& RegionID, float ChangeAmount, const FString& Reason);
 
@@ -51,7 +52,7 @@ public:
 
     // ??戲影響??數
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static TArray<FString> GetDialogueOptions(const FString& CharacterID};
+    static TArray<FString> GetDialogueOptions(const FString& CharacterID);
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
     static float GetPriceModifier(const FString& CharacterID);
@@ -59,7 +60,7 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
     static bool CanAcceptQuest(const FString& QuestID, const FString& RegionID);
 
-    // ???X??X?數
+    // 故事重要性?數
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
     static void ProcessInteractionEffect(const FString& CharacterID, const FString& RegionID, 
                                        float RelationshipChange, float ReputationChange, const FString& Reason);
@@ -83,7 +84,8 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
     static bool HasBadReputation(const FString& RegionID);
 
-    // 字符串?X?函X    UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
+    // 字符串?X?函X
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
     static FString GetRelationshipTypeString(ERelationshipType RelationshipType);
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
@@ -113,16 +115,16 @@ public:
 
     // 高?X?詢??數
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static TArray<FString> GetCharactersByRelationshipType(ERelationshipType RelationshipType};
+    static TArray<FString> GetCharactersByRelationshipType(ERelationshipType RelationshipType);
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
-    static TArray<FString> GetCharactersByRelationshipRange(float MinValue, float MaxValue};
+    static TArray<FString> GetCharactersByRelationshipRange(float MinValue, float MaxValue);
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static TArray<FString> GetRegionsByReputationLevel(EReputationLevel ReputationLevel};
+    static TArray<FString> GetRegionsByReputationLevel(EReputationLevel ReputationLevel);
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static TArray<FString> GetRegionsByReputationRange(float MinScore, float MaxScore};
+    static TArray<FString> GetRegionsByReputationRange(float MinScore, float MaxScore);
 
     // 驗?X?數
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")
@@ -133,7 +135,8 @@ public:
 
     // 調試??數
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
-    static void LogAllRelationships();
+    // 摧毀t摧毀 
+    void LoadRelationshipData();
 
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
     static void LogAllReputations();
@@ -143,5 +146,5 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
     static void LogReputationStatus(const FString& RegionID);
-);
+};
 

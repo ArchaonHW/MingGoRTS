@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Platform\IPlatformInterface.h"
 #include "AndroidPlatformAdapter.generated.h"
 
 /**
- * Android ¥­¥x???X */
+ * Android ï¿½ï¿½ï¿½x???X */
 UCLASS()
 class MINGCORE_API UAndroidPlatformAdapter : public UObject, public IPlatformInterface
 {
@@ -14,7 +14,7 @@ class MINGCORE_API UAndroidPlatformAdapter : public UObject, public IPlatformInt
 public:
     UAndroidPlatformAdapter();
 
-    // IPlatformInterface ¹ê²{
+    // IPlatformInterface ï¿½ï¿½{
     virtual EPlatformType GetPlatformType() const override;
     virtual FPlatformCapabilities GetCapabilities() const override;
     virtual void Initialize() override;
@@ -31,7 +31,7 @@ public:
     virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) override;
     virtual FString LoadFromPlatformStorage(const FString& Key) const override;
 
-    // Android ???X?¯à
+    // Android ???X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Platform|Android")
     FString GetAndroidVersion() const;
 
@@ -39,16 +39,17 @@ public:
     bool IsTablet() const;
 
     UFUNCTION(BlueprintCallable, Category = "Platform|Android")
-    void ShowToast(const FString& Message, int32 Duration = 2000};
+    void ShowToast(const FString& Message, int32 Duration = 2000);
 
     UFUNCTION(BlueprintCallable, Category = "Platform|Android")
-    void Vibrate(int32 Duration = 100};
+    void Vibrate(int32 Duration = 100);
 
 private:
     bool bInitialized;
     int32 CurrentPerformanceMode;
     
-    // ¦w¥þ????½w??    FMargin CachedSafeZone;
+    // ï¿½wï¿½ï¿½æ‘§æ¯€ï¿½w??
+    FMargin CachedSafeZone;
     bool bSafeZoneCached;
-};
+);
 

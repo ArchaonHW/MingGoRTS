@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingAIAutoSceneComposer.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingSceneType : uint8
-{
+enum class EMingSceneType: uint8 {
     None UMETA(DisplayName = "None"),
     Battlefield UMETA(DisplayName = "Battlefield"),
     Village UMETA(DisplayName = "Village"),
@@ -23,8 +22,7 @@ enum class EMingSceneType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingSceneComplexity : uint8
-{
+enum class EMingSceneComplexity: uint8 {
     Simple UMETA(DisplayName = "Simple"),
     Medium UMETA(DisplayName = "Medium"),
     Complex UMETA(DisplayName = "Complex"),
@@ -33,8 +31,7 @@ enum class EMingSceneComplexity : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingSceneMood : uint8
-{
+enum class EMingSceneMood: uint8 {
     Peaceful UMETA(DisplayName = "Peaceful"),
     Tense UMETA(DisplayName = "Tense"),
     Epic UMETA(DisplayName = "Epic"),
@@ -146,30 +143,30 @@ public:
 
     // Scene Templates
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    FMingSceneCompositionRequest GetBattlefieldTemplate(const FString& Description};
+    FMingSceneCompositionRequest GetBattlefieldTemplate(const FString& Description);
 
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    FMingSceneCompositionRequest GetVillageTemplate(const FString& Description};
+    FMingSceneCompositionRequest GetVillageTemplate(const FString& Description);
 
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    FMingSceneCompositionRequest GetPalaceTemplate(const FString& Description};
+    FMingSceneCompositionRequest GetPalaceTemplate(const FString& Description);
 
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    FMingSceneCompositionRequest GetForestTemplate(const FString& Description};
+    FMingSceneCompositionRequest GetForestTemplate(const FString& Description);
 
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    FMingSceneCompositionRequest GetCustomTemplate(EMingSceneType SceneType, const FString& Description};
+    FMingSceneCompositionRequest GetCustomTemplate(EMingSceneType SceneType, const FString& Description);
 
     // Scene Composition
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    FGuid ComposeScene(const FMingSceneCompositionRequest& Request};
+    FGuid ComposeScene(const FMingSceneCompositionRequest& Request);
 
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    TArray<FGuid> ComposeSceneBatch(const TArray<FMingSceneCompositionRequest>& Requests};
+    TArray<FGuid> ComposeSceneBatch(const TArray<FMingSceneCompositionRequest>& Requests);
 
     // Scene Variations
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    TArray<FGuid> GenerateSceneVariations(const FMingSceneCompositionRequest& BaseRequest, int32 VariationCount};
+    TArray<FGuid> GenerateSceneVariations(const FMingSceneCompositionRequest& BaseRequest, int32 VariationCount);
 
     // Smart Recommendations
     UFUNCTION(BlueprintPure, Category = "AI Scene Composition")
@@ -177,16 +174,16 @@ public:
 
     // Scene Components
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    FGuid GenerateSceneBackground(const FMingSceneCompositionRequest& Request};
+    FGuid GenerateSceneBackground(const FMingSceneCompositionRequest& Request);
 
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    TArray<FGuid> GenerateSceneCharacters(const FMingSceneCompositionRequest& Request};
+    TArray<FGuid> GenerateSceneCharacters(const FMingSceneCompositionRequest& Request);
 
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    FGuid GenerateSceneLighting(const FMingSceneCompositionRequest& Request};
+    FGuid GenerateSceneLighting(const FMingSceneCompositionRequest& Request);
 
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    FGuid GenerateSceneAudio(const FMingSceneCompositionRequest& Request};
+    FGuid GenerateSceneAudio(const FMingSceneCompositionRequest& Request);
 
     // Results
     UFUNCTION(BlueprintPure, Category = "AI Scene Composition")
@@ -196,12 +193,12 @@ protected:
     UPROPERTY()
     TMap<FGuid, FMingSceneCompositionResult> CompositionResults;
 
-    void ProcessSceneComposition(FGuid CompositionID, const FMingSceneCompositionRequest& Request};
+    void ProcessSceneComposition(FGuid CompositionID, const FMingSceneCompositionRequest& Request);
     FString BuildScenePrompt(const FMingSceneCompositionRequest& Request) const;
     FString BuildCharacterPrompt(const FMingSceneCompositionRequest& Request, int32 CharacterIndex) const;
     FString BuildAudioPrompt(const FMingSceneCompositionRequest& Request) const;
     TArray<FMingAIContentRequest> DecomposeSceneRequest(const FMingSceneCompositionRequest& Request) const;
-    void OnComponentGenerated(FGuid CompositionID, FGuid ComponentID, bool bSuccess};
+    void OnComponentGenerated(FGuid CompositionID, FGuid ComponentID, bool bSuccess);
     
     FString GetSceneTypeKeywords(EMingSceneType SceneType) const;
     FString GetComplexityKeywords(EMingSceneComplexity Complexity) const;

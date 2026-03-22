@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingStressTestSuite.generated.h"
 
 /**
- * À£??´ú¸Õ®M¥ó
- * ´ú¸Õ¨t²Î??·¥????¥ó?X?Ã­©w©Ê?X?¯à
+ * ??Õ®M
+ * Õ¨tæ‘§æ¯€???X?Ã­w?X?
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingStressTestSuite : public UObject
@@ -16,7 +16,7 @@ class MINGCORE_API UMingStressTestSuite : public UObject
 public:
     UMingStressTestSuite();
 
-    // ========== ???X?Ã­©w©Ê´ú??==========
+    // ========== ???X?Ã­wÊ´??==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Stability")
     void Start24HourStabilityTest();
@@ -45,10 +45,10 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Stability")
     bool HasMemoryLeak() const;
 
-    // ========== ¤j??¼Ò©Ê¯à´ú¸Õ ==========
+    // ========== j??Ò©Ê¯ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Performance")
-    void StartMassiveUnitTest(int32 UnitCount = 10000};
+    void StartMassiveUnitTest(int32 UnitCount = 10000);
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Performance")
     void StopMassiveUnitTest();
@@ -74,10 +74,10 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Performance")
     float GetSimulationTime() const;
 
-    // ========== ¨Ãµo??¤á´ú¸Õ ==========
+    // ========== Ãµo?? ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Concurrent")
-    void StartConcurrentUserTest(int32 UserCount = 100};
+    void StartConcurrentUserTest(int32 UserCount = 100);
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Concurrent")
     void StopConcurrentUserTest();
@@ -100,7 +100,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Concurrent")
     float GetNetworkThroughput() const;
 
-    // ========== ¸ê??À£??´ú¸Õ ==========
+    // ========== æ‘§æ¯€ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Resource")
     void StartResourceStressTest();
@@ -132,7 +132,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Resource")
     int32 GetResourceAllocations() const;
 
-    // ========== ºî??À£??´ú¸Õ ==========
+    // ========== æ‘§æ¯€ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test")
     void RunAllStressTests();
@@ -156,7 +156,7 @@ public:
     FString GenerateStressTestReport();
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test")
-    void ExportStressTestData(const FString& FilePath};
+    void ExportStressTestData(const FString& FilePath);
 
 protected:
     virtual void Tick(float DeltaTime) override;
@@ -189,7 +189,7 @@ private:
     UPROPERTY()
     bool bMemoryLeakDetected;
     
-    // ??¯à´ú¸Õ????
+    // æ‘§æ¯€??
     UPROPERTY()
     float AverageFPS;
     
@@ -205,7 +205,7 @@ private:
     UPROPERTY()
     float TotalFrameTime;
     
-    // ¨Ãµo´ú¸Õ????
+    // Ãµoæ‘§æ¯€
     UPROPERTY()
     float AverageLatency;
     
@@ -215,7 +215,7 @@ private:
     UPROPERTY()
     float NetworkThroughput;
     
-    // ¸ê??´ú¸Õ????
+    // æ‘§æ¯€??
     UPROPERTY()
     float MemoryUsagePercentage;
     
@@ -225,7 +225,7 @@ private:
     UPROPERTY()
     int32 ResourceAllocations;
     
-    // ´ú¸Õµ²??
+    // Õµ??
     UPROPERTY()
     int32 PassedTests;
     
@@ -235,11 +235,11 @@ private:
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // ??³¡??¼Æ
-    void UpdateStabilityMetrics(float DeltaTime};
-    void UpdatePerformanceMetrics(float DeltaTime};
-    void UpdateConcurrentMetrics(float DeltaTime};
-    void UpdateResourceMetrics(float DeltaTime};
+    // æ‘§æ¯€
+    void UpdateStabilityMetrics(float DeltaTime);
+    void UpdatePerformanceMetrics(float DeltaTime);
+    void UpdateConcurrentMetrics(float DeltaTime);
+    void UpdateResourceMetrics(float DeltaTime);
     
     void MonitorSystemHealth();
     void CheckMemoryLeaks();
@@ -250,7 +250,7 @@ private:
     void ResetTestResults();
     void CalculateTestStatistics();
     
-    // À£??´ú¸Õ»²§U
+    // ??Õ»U
     void SimulateHighLoad();
     void GenerateTestLoad();
     void MonitorSystemResources();

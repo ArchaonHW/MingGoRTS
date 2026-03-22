@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSSystemMonitorDashboard.generated.h"
 
 UENUM(BlueprintType)
-enum class EMonitorMetricType : uint8
-{
+enum class EMonitorMetricType: uint8 {
     CPU,             // CPU使用率
     Memory,          // 內存使用率
     GPU,             // GPU使用率
@@ -20,8 +19,7 @@ enum class EMonitorMetricType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EAlertLevel : uint8
-{
+enum class EAlertLevel: uint8 {
     Info,            // 信息
     Warning,         // 警告
     Critical,        // 關鍵
@@ -29,8 +27,7 @@ enum class EAlertLevel : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESystemState : uint8
-{
+enum class ESystemState: uint8 {
     Healthy,          // 健康
     Warning,          // 警告
     Critical,         // 關鍵

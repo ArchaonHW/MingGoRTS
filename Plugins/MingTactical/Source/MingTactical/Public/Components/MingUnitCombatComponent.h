@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
@@ -7,22 +7,23 @@
 class AMingTacticalUnit;
 
 /**
- * ???X?¥Oµ²??
+ * ???X?ï¿½Oï¿½ï¿½??
  */
 USTRUCT(BlueprintType)
 struct FAttackCommand
 {
     GENERATED_BODY()
     
-    // ???X???
+    // ç›®æ¨™æ•¸é‡
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TWeakObjectPtr<AMingTacticalUnit> TargetUnit;
     
-    // ????¦ì¸m
+    // æ‘§æ¯€ï¿½ï¿½m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector TargetLocation;
     
-    // ??§_????¸m§ğX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??ï¿½_æ‘§æ¯€ï¿½mï¿½ï¿½X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsLocationAttack;
     
     FAttackCommand()
@@ -33,8 +34,8 @@ struct FAttackCommand
 };
 
 /**
- * ???X?°«²Õ¥ó
- * ???X??X?§ğ??¡B¨¾¿m?X?®`??¿è
+ * ???X?ï¿½ï¿½ï¿½Õ¥ï¿½
+ * æ•…äº‹é‡è¦æ€§?ï¿½ï¿½??ï¿½Bï¿½ï¿½ï¿½m?X?ï¿½`??ï¿½ï¿½
  */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MINGTACTICAL_API UMingUnitCombatComponent : public UActorComponent
@@ -47,85 +48,89 @@ public:
     virtual void BeginPlay() override;
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-    // ???X?¥O
+    // ???X?ï¿½O
     UFUNCTION(BlueprintCallable, Category = "Combat")
     void AttackTarget(AMingTacticalUnit* Target);
 
     UFUNCTION(BlueprintCallable, Category = "Combat")
     void AttackLocation(const FVector& TargetLocation);
 
-    // ??¤î????
+    // ??ï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Combat")
     void StopAttack();
 
-    // ??§_??§ğ???X?¤º
+    // ??ï¿½_??ï¿½ï¿½???X?ï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Combat")
     bool IsTargetInRange(AMingTacticalUnit* Target) const;
 
     UFUNCTION(BlueprintPure, Category = "Combat")
     bool IsLocationInRange(const FVector& Location) const;
 
-    // ???X??X???
+    // æ•…äº‹é¸é …?
     UFUNCTION(BlueprintPure, Category = "Combat")
     AMingTacticalUnit* GetCurrentTarget() const { return CurrentTarget.Get(); }
 
-    // ??§_??¥H????
+    // ??ï¿½_??ï¿½Hæ‘§æ¯€
     UFUNCTION(BlueprintPure, Category = "Combat")
     bool CanAttack() const;
 
-    // ³]¸m???X?«o
+    // ï¿½]ï¿½m???X?ï¿½o
     UFUNCTION(BlueprintCallable, Category = "Combat")
     void SetAttackCooldown(float Cooldown);
 
 protected:
-    // ???X?³æ??    UPROPERTY()
+    // ???X?ï¿½ï¿½??
+    UPROPERTY()
     TObjectPtr<AMingTacticalUnit> OwnerUnit;
 
-    // ???X??X???
+    // æ•…äº‹é¸é …?
     UPROPERTY()
     TWeakObjectPtr<AMingTacticalUnit> CurrentTarget;
 
-    // ????¦ì¸m????
+    // æ‘§æ¯€ï¿½ï¿½mæ‘§æ¯€
     UPROPERTY()
     FVector TargetAttackLocation;
 
-    // ??§_??§ğ??????    UPROPERTY()
+    // ??ï¿½_??ï¿½ï¿½æ‘§æ¯€??
+    UPROPERTY()
     bool bIsAttackingLocation;
 
-    // ??§_??§ğX    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+    // ??ï¿½_??ï¿½ï¿½X
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
     bool bIsAttacking;
 
-    // ???X?«o????
+    // ???X?ï¿½oæ‘§æ¯€
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
     float AttackCooldown;
 
-    // ???X?«o????
+    // ???X?ï¿½oæ‘§æ¯€
     UPROPERTY()
     float CurrentCooldown;
 
-    // ????½d??
+    // æ‘§æ¯€ï¿½d??
     UPROPERTY()
     float AttackRange;
 
-    // ???X?®`
+    // ???X?ï¿½`
     UPROPERTY()
     float AttackDamage;
 
-    // ???X???
+    // ç›®æ¨™æ•¸é‡
     void PerformAttack();
 
-    // ¹ï¥Ø¼Ğ³y?X?®`
-    void DealDamageToTarget(AMingTacticalUnit* Target};
+    // ï¿½ï¿½Ø¼Ğ³y?X?ï¿½`
+    void DealDamageToTarget(AMingTacticalUnit* Target);
 
-    // ´M§ä½d?X??X?¤H
+    // ï¿½Mï¿½ï¿½d?X??X?ï¿½H
     AMingTacticalUnit* FindEnemyInRange();
 
-    // ???X?¥Ø??    void RotateToTarget(float DeltaTime};
+    // ???X?ï¿½ï¿½??
+    void RotateToTarget(float DeltaTime);
 
-    // ÀË¬d???X?§_????
+    // ï¿½Ë¬d???X?ï¿½_æ‘§æ¯€
     bool IsValidTarget(AMingTacticalUnit* Target) const;
 
-    // ???X?µeÄ²µo
+    // ???X?ï¿½eÄ²ï¿½o
     void TriggerAttackAnimation();
 };
 

@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSResourceManager.generated.h"
 
 UENUM(BlueprintType)
-enum class ERTSResourceType : uint8
-{
+enum class ERTSResourceType: uint8 {
     Gold,           // ??X
     Wood,           // X
     Stone,          // X
@@ -16,28 +15,26 @@ enum class ERTSResourceType : uint8
     Oil,            // X?o
     Uranium,        // X?q
     Crystal,        // ???
-    Silk            // ????
+    Silk            // 摧毀
 };
 
 UENUM(BlueprintType)
-enum class ERTSResourceSource : uint8
-{
+enum class ERTSResourceSource: uint8 {
     Mine,           // ?q?s
     Forest,         // ??X
-    Quarry,         // ????
+    Quarry,         // 摧毀
     Farm,           // ?A??
     OilWell,        // ?oX
-    CrystalCave,    // ????}??
-    SilkFarm,       // ?????A??
-    TradingPost     // ?T????
+    CrystalCave,    // 摧毀}??
+    SilkFarm,       // 摧毀?A??
+    TradingPost     // ?T摧毀
 };
 
 UENUM(BlueprintType)
-enum class ERTSResourceState : uint8
-{
+enum class ERTSResourceState: uint8 {
     Available,      // X??
     Depleted,       // X??
-    Occupied,       // ?Q????
+    Occupied,       // ?Q摧毀
     UnderConstruction, // ??]??
     Damaged,        // ???l
     Repairing       // ??_??
@@ -80,10 +77,10 @@ struct FRTSResourceData
         ProductionRate = 10.0f;
         ConsumptionRate = 0.0f;
         ResourceState = ERTSResourceState::Available;
-        ResourceName = TEXT(""};
-        Description = TEXT(""};
+        ResourceName = TEXT("");
+        Description = TEXT("");
     }
-};
+);
 
 USTRUCT(BlueprintType)
 struct FRTSResourceSourceData
@@ -128,8 +125,8 @@ struct FRTSResourceSourceData
 
     FRTSResourceSourceData()
     {
-        SourceID = TEXT(""};
-        SourceName = TEXT(""};
+        SourceID = TEXT("");
+        SourceName = TEXT("");
         ResourceType = ERTSResourceType::Gold;
         SourceType = ERTSResourceSource::Mine;
         Location = FVector::ZeroVector;
@@ -140,7 +137,7 @@ struct FRTSResourceSourceData
         CurrentWorkers = 0;
         MaxWorkers = 5;
     }
-};
+);
 
 USTRUCT(BlueprintType)
 struct FRTSTradeData
@@ -176,17 +173,17 @@ struct FRTSTradeData
         RequestAmount = 50.0f;
         ExchangeRate = 2.0f;
         bIsAvailable = true;
-        TradingPartner = TEXT(""};
+        TradingPartner = TEXT("");
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourceChanged, ERTSResourceType, ResourceType, float, NewAmount};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourceSourceStateChanged, const FString&, SourceID, ERTSResourceState, NewState};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnResourceDepleted, ERTSResourceType, ResourceType};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTradeCompleted, const FRTSTradeData&, TradeData, bool, bSuccess};
+
+
+
+
 
 /**
- * RTS??X??X * ??X????X??
+ * RTS??X??X * ??X摧毀X??
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSResourceManager : public UObject
@@ -201,10 +198,10 @@ public:
 
     // ??X??X
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void AddResource(ERTSResourceType ResourceType, float Amount};
+    void AddResource(ERTSResourceType ResourceType, float Amount);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void RemoveResource(ERTSResourceType ResourceType, float Amount};
+    void RemoveResource(ERTSResourceType ResourceType, float Amount);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     bool HasEnoughResource(ERTSResourceType ResourceType, float Amount) const;
@@ -216,13 +213,13 @@ public:
     float GetMaxResourceAmount(ERTSResourceType ResourceType) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void SetMaxResourceAmount(ERTSResourceType ResourceType, float MaxAmount};
+    void SetMaxResourceAmount(ERTSResourceType ResourceType, float MaxAmount);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void SetResourceProductionRate(ERTSResourceType ResourceType, float Rate};
+    void SetResourceProductionRate(ERTSResourceType ResourceType, float Rate);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void SetResourceConsumptionRate(ERTSResourceType ResourceType, float Rate};
+    void SetResourceConsumptionRate(ERTSResourceType ResourceType, float Rate);
 
     
     void AddResourceSource(const FRTSResourceSourceData& SourceData) {};
@@ -240,14 +237,14 @@ public:
     TArray<FRTSResourceSourceData> GetResourceSourcesByType(ERTSResourceType ResourceType) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void OperateResourceSource(const FString& SourceID, bool bOperate};
+    void OperateResourceSource(const FString& SourceID, bool bOperate);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     bool IsResourceSourceOperational(const FString& SourceID) const;
 
     // ??X??
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void UpdateResourceProduction(float DeltaTime};
+    void UpdateResourceProduction(float DeltaTime);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     float CalculateTotalProduction() const;
@@ -315,10 +312,10 @@ public:
     float GetResourceEfficiency(ERTSResourceType ResourceType) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void ImproveResourceEfficiency(ERTSResourceType ResourceType, float EfficiencyBonus};
+    void ImproveResourceEfficiency(ERTSResourceType ResourceType, float EfficiencyBonus);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void SetResourceEfficiency(ERTSResourceType ResourceType, float Efficiency};
+    void SetResourceEfficiency(ERTSResourceType ResourceType, float Efficiency);
 
     // ??X?H??
     UFUNCTION(BlueprintPure, Category = "RTS Resource Manager")
@@ -341,7 +338,7 @@ public:
     void OnResourceSourceCaptured(const FString& SourceID, const FString& NewOwner) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void OnWorkerAssigned(const FString& SourceID, int32 WorkerCount};
+    void OnWorkerAssigned(const FString& SourceID, int32 WorkerCount);
 
     // ???
     UPROPERTY(BlueprintAssignable, Category = "RTS Resource Events")
@@ -408,8 +405,8 @@ protected:
     // X??X??
     void InitializeDefaultResources();
     void InitializeResourceEfficiencies();
-    void ProcessResourceSource(FRTSResourceSourceData& Source, float DeltaTime};
-    void UpdateResourceState(ERTSResourceType ResourceType};
+    void ProcessResourceSource(FRTSResourceSourceData& Source, float DeltaTime);
+    void UpdateResourceState(ERTSResourceType ResourceType);
     FString GenerateResourceSourceID(ERTSResourceSource SourceType) const;
 
     // X??X??
@@ -426,9 +423,9 @@ protected:
 
 private:
     // ???UX??
-    void NotifyResourceChanged(ERTSResourceType ResourceType, float NewAmount};
-    void NotifyResourceSourceStateChanged(const FString& SourceID, ERTSResourceState NewState};
-    void NotifyResourceDepleted(ERTSResourceType ResourceType};
-    void NotifyTradeCompleted(const FRTSTradeData& TradeData, bool bSuccess};
-};
+    void NotifyResourceChanged(ERTSResourceType ResourceType, float NewAmount);
+    void NotifyResourceSourceStateChanged(const FString& SourceID, ERTSResourceState NewState);
+    void NotifyResourceDepleted(ERTSResourceType ResourceType);
+    void NotifyTradeCompleted(const FRTSTradeData& TradeData, bool bSuccess);
+};;
 

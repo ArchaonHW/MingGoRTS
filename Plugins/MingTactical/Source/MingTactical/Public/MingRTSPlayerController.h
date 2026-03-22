@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -39,22 +39,22 @@ protected:
 
     // Input handlers
     UFUNCTION()
-    void OnSelectStarted(const FInputActionValue& Value};
+    void OnSelectStarted(const FInputActionValue& Value);
 
     UFUNCTION()
-    void OnSelectTriggered(const FInputActionValue& Value};
+    void OnSelectTriggered(const FInputActionValue& Value);
 
     UFUNCTION()
-    void OnSelectCompleted(const FInputActionValue& Value};
+    void OnSelectCompleted(const FInputActionValue& Value);
 
     UFUNCTION()
-    void OnMoveCommand(const FInputActionValue& Value};
+    void OnMoveCommand(const FInputActionValue& Value);
 
     UFUNCTION()
-    void OnAttackCommand(const FInputActionValue& Value};
+    void OnAttackCommand(const FInputActionValue& Value);
 
     UFUNCTION()
-    void OnSelectAllUnits(const FInputActionValue& Value};
+    void OnSelectAllUnits(const FInputActionValue& Value);
 
     // Selection Management
     UPROPERTY(BlueprintReadOnly, Category = "Selection")
@@ -67,15 +67,15 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
     float EdgeScrollingThreshold;
 
-    void UpdateCameraMovement(float DeltaTime};
+    void UpdateCameraMovement(float DeltaTime);
     void HandleEdgeScrolling();
 
     // Command System
     UFUNCTION(BlueprintCallable, Category = "Commands")
-    void IssueMoveCommand(const FVector& TargetLocation, bool bIsAttackMove = false};
+    void IssueMoveCommand(const FVector& TargetLocation, bool bIsAttackMove = false);
 
     UFUNCTION(BlueprintCallable, Category = "Commands")
-    void IssueAttackCommand(AActor* Target};
+    void IssueAttackCommand(AActor* Target);
 
     UFUNCTION(BlueprintCallable, Category = "Commands")
     void IssueStopCommand();
@@ -95,8 +95,8 @@ protected:
     FVector2D SelectionStartPosition;
 
     // Unit Control Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitsMoveCommand, const FVector&, TargetLocation};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitsAttackCommand, AActor*, Target};
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Commands|Events")
     FOnUnitsMoveCommand OnUnitsMoveCommand;
@@ -109,7 +109,7 @@ public:
     UMingSelectionManager* GetSelectionManager() const { return SelectionManager; }
 
     UFUNCTION(BlueprintCallable, Category = "Debug")
-    void EnableDebugVisualization(bool bEnable};
+    void EnableDebugVisualization(bool bEnable);
 
     UFUNCTION(BlueprintPure, Category = "Debug")
     bool IsDebugVisualizationEnabled() const;

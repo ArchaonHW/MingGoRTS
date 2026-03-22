@@ -1,26 +1,24 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingHistoricalCharacter.generated.h"
 
 /**
- * ¤Hª«??§O
+ * ï¿½Hï¿½ï¿½??ï¿½O
  */
 UENUM(BlueprintType)
-enum class ECharacterGender : uint8
-{
+enum class ECharacterGender: uint8 {
     Male                UMETA(DisplayName = "Male"),
     Female              UMETA(DisplayName = "Female"),
     Unknown             UMETA(DisplayName = "Unknown")
 };
 
 /**
- * ¤Hª«??·~/¨­¥÷
+ * ï¿½Hï¿½ï¿½??ï¿½~/ï¿½ï¿½ï¿½ï¿½
  */
 UENUM(BlueprintType)
-enum class ECharacterProfession : uint8
-{
+enum class ECharacterProfession: uint8 {
     Politician          UMETA(DisplayName = "Politician"),
     Military            UMETA(DisplayName = "Military"),
     Businessman         UMETA(DisplayName = "Businessman"),
@@ -40,11 +38,10 @@ enum class ECharacterProfession : uint8
 };
 
 /**
- * ¤Hª«X/¬£¨t
+ * ï¿½Hï¿½ï¿½X/ï¿½ï¿½ï¿½t
  */
 UENUM(BlueprintType)
-enum class ECharacterFaction : uint8
-{
+enum class ECharacterFaction: uint8 {
     Nationalist         UMETA(DisplayName = "Nationalist"),
     Communist           UMETA(DisplayName = "Communist"),
     Warlord             UMETA(DisplayName = "Warlord"),
@@ -56,10 +53,9 @@ enum class ECharacterFaction : uint8
 };
 
 /**
- * ¤Hª«??X */
+ * ï¿½Hï¿½ï¿½??X */
 UENUM(BlueprintType)
-enum class ECharacterState : uint8
-{
+enum class ECharacterState: uint8 {
     Active              UMETA(DisplayName = "Active"),
     Inactive            UMETA(DisplayName = "Inactive"),
     Imprisoned          UMETA(DisplayName = "Imprisoned"),
@@ -71,11 +67,10 @@ enum class ECharacterState : uint8
 };
 
 /**
- * ¤Hª«????Ãş??
+ * ï¿½Hï¿½ï¿½æ‘§æ¯€ï¿½ï¿½??
  */
 UENUM(BlueprintType)
-enum class ECharacterRelationshipType : uint8
-{
+enum class ECharacterRelationshipType: uint8 {
     Family              UMETA(DisplayName = "Family"),
     Friend              UMETA(DisplayName = "Friend"),
     Ally                UMETA(DisplayName = "Ally"),
@@ -92,10 +87,9 @@ enum class ECharacterRelationshipType : uint8
 };
 
 /**
- * ¤Hª«?????X */
+ * ï¿½Hï¿½ï¿½æ‘§æ¯€?X */
 UENUM(BlueprintType)
-enum class ECharacterSkillType : uint8
-{
+enum class ECharacterSkillType: uint8 {
     Leadership          UMETA(DisplayName = "Leadership"),
     Military            UMETA(DisplayName = "Military"),
     Diplomacy           UMETA(DisplayName = "Diplomacy"),
@@ -114,7 +108,7 @@ enum class ECharacterSkillType : uint8
 };
 
 /**
- * ¤Hª«Äİ?? */
+ * ï¿½Hï¿½ï¿½ï¿½ï¿½?? */
 USTRUCT(BlueprintType)
 struct FHistoricalCharacterAttributes
 {
@@ -124,63 +118,63 @@ struct FHistoricalCharacterAttributes
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Leadership;
 
-    // ­x?X?¯à (0-100)
+    // ï¿½x?X?ï¿½ï¿½ (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Military;
 
-    // ¥~¥æ???? (0-100)
+    // ï¿½~ï¿½ï¿½æ‘§æ¯€ (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Diplomacy;
 
-    // ¸g?X?¯à (0-100)
+    // ï¿½g?X?ï¿½ï¿½ (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Economics;
 
-    // ????¤ô¥­ (0-100)
+    // æ‘§æ¯€ï¿½ï¿½ï¿½ (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Intelligence;
 
-    // ¾y?X(0-100)
+    // ï¿½y?X(0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Charisma;
 
-    // ¦æ¬F???? (0-100)
+    // ï¿½ï¿½Fæ‘§æ¯€ (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Administration;
 
-    // ??²¤??ºû (0-100)
+    // ??ï¿½ï¿½??ï¿½ï¿½ (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Strategy;
 
-    // ºt?X??? (0-100)
+    // ï¿½t?X??? (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Oratory;
 
-    // ¼g?X??? (0-100)
+    // ï¿½g?X??? (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Writing;
 
-    // ¬ì¾Ç???? (0-100)
+    // ï¿½ï¿½ï¿½æ‘§æ¯€ (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Science;
 
-    // ¤u?X???(0-100)
+    // ï¿½u?X???(0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Engineering;
 
-    // ??¾Ç???? (0-100)
+    // ??ï¿½ï¿½æ‘§æ¯€ (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Medicine;
 
-    // ???X?¯à (0-100)
+    // ???X?ï¿½ï¿½ (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Art;
 
-    // ¸g?X(0-1000)
+    // ï¿½g?X(0-1000)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     int32 Experience;
 
-    // µ¥?? (1-10)
+    // ï¿½ï¿½?? (1-10)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     int32 Level;
 
@@ -205,41 +199,46 @@ struct FHistoricalCharacterAttributes
 };
 
 /**
- * ¤Hª«??X */
+ * ï¿½Hï¿½ï¿½??X */
 USTRUCT(BlueprintType)
 struct FHistoricalCharacterSkill
 {
     GENERATED_BODY()
 
-    // ?????X    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
+    // æ‘§æ¯€?X
+    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     ECharacterSkillType SkillType;
 
-    // ????????    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
+    // æ‘§æ¯€æ‘§æ¯€
+    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     FString SkillName;
 
-    // ????????    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
+    // æ‘§æ¯€æ‘§æ¯€
+    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     FString SkillDescription;
 
-    // ????????(0-10)
+    // æ‘§æ¯€æ‘§æ¯€(0-10)
     UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     int32 SkillLevel;
 
-    // ????????(0-1000)
+    // æ‘§æ¯€æ‘§æ¯€(0-1000)
     UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     int32 SkillExperience;
 
-    // ??§_¤w¸ÑX    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
+    // ??ï¿½_ï¿½wï¿½ï¿½X
+    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     bool bIsUnlocked;
 
-    // ????§N???X(??
+    // æ‘§æ¯€ï¿½N???X(??
     UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     float CooldownTime;
 
-    // ¤W¦¸¨Ï¥Î????
+    // ï¿½Wï¿½ï¿½ï¿½Ï¥ï¿½æ‘§æ¯€
     UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     float LastUsedTime;
 
-    // ?????X    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
+    // æ‘§æ¯€?X
+    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     TArray<FString> SkillEffects;
 
     FHistoricalCharacterSkill()
@@ -255,42 +254,43 @@ struct FHistoricalCharacterSkill
 };
 
 /**
- * ¤Hª«????
+ * ï¿½Hï¿½ï¿½æ‘§æ¯€
  */
 USTRUCT(BlueprintType)
 struct FCharacterRelationship
 {
     GENERATED_BODY()
 
-    // ????Ãş??
+    // æ‘§æ¯€ï¿½ï¿½??
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     ECharacterRelationshipType RelationshipType;
 
-    // ????¹ï¶HID
+    // æ‘§æ¯€ï¿½ï¿½HID
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     FString TargetCharacterID;
 
-    // ????±j«× (0-100)
+    // æ‘§æ¯€ï¿½jï¿½ï¿½ (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     float RelationshipStrength;
 
-    // ???X?­z
+    // ???X?ï¿½z
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     FString RelationshipDescription;
 
-    // «Ø?X???
+    // ï¿½ï¿½?X???
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     float EstablishedTime;
 
-    // ??§_????
+    // ??ï¿½_æ‘§æ¯€
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     bool bIsPublic;
 
-    // ¤¬??¦¸¼Æ
+    // ï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     int32 InteractionCount;
 
-    // ??«á?X??X    UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
+    // ??ï¿½ï¿½?X??X
+    UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     float LastInteractionTime;
 
     FCharacterRelationship()
@@ -306,38 +306,38 @@ struct FCharacterRelationship
 };
 
 /**
- * ¹ï¸Ü????
+ * ï¿½ï¿½ï¿½æ‘§æ¯€
  */
 USTRUCT(BlueprintType)
 struct FDialogueOption
 {
     GENERATED_BODY()
 
-    // ????ID
+    // ç›®æ¨™ID
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     FString OptionID;
 
-    // ???X?¥»
+    // ???X?ï¿½ï¿½
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     FString OptionText;
 
-    // ???X?­z
+    // ???X?ï¿½z
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     FString OptionDescription;
 
-    // ????±ø¥ó
+    // æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     TArray<FString> Conditions;
 
-    // ????«á??
+    // æ‘§æ¯€ï¿½ï¿½??
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     TArray<FString> Consequences;
 
-    // ????Åv??
+    // æ‘§æ¯€ï¿½v??
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     float Weight;
 
-    // ??§_??¥Î
+    // ??ï¿½_??ï¿½ï¿½
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     bool bIsAvailable;
 
@@ -351,50 +351,51 @@ struct FDialogueOption
 };
 
 /**
- * ¹ï¸Ü¨Æ¥ó
+ * ï¿½ï¿½Ü¨Æ¥ï¿½
  */
 USTRUCT(BlueprintType)
 struct FDialogueEvent
 {
     GENERATED_BODY()
 
-    // ¨Æ¥óID
+    // ï¿½Æ¥ï¿½ID
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString EventID;
 
-    // ¹ï¸Ü??¥»
+    // ï¿½ï¿½ï¿½??ï¿½ï¿½
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString DialogueText;
 
-    // »¡¸Ü??ID
+    // ï¿½ï¿½ï¿½ï¿½??ID
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString SpeakerID;
 
-    // ??²³ID
+    // ??ï¿½ï¿½ID
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString AudienceID;
 
-    // ¹ï¸Ü????
+    // ï¿½ï¿½ï¿½æ‘§æ¯€
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     TArray<FDialogueOption> DialogueOptions;
 
-    // ¹ï¸Ü????
+    // ï¿½ï¿½ï¿½æ‘§æ¯€
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     float DialogueTime;
 
-    // ¹ï¸Ü????
+    // ï¿½ï¿½ï¿½æ‘§æ¯€
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString DialogueLocation;
 
-    // ¹ï¸Ü¥D??
+    // ï¿½ï¿½Ü¥D??
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString DialogueTopic;
 
-    // ¹ï¸Ü????
+    // ï¿½ï¿½ï¿½æ‘§æ¯€
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString DialogueMood;
 
-    // ¹ï¸Ü???X    UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
+    // ï¿½ï¿½ï¿½???X
+    UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     float DialogueImportance;
 
     FDialogueEvent()
@@ -411,82 +412,86 @@ struct FDialogueEvent
 };
 
 /**
- * ¥Á??¾ú¥v¤Hª«
+ * ï¿½ï¿½??ï¿½ï¿½ï¿½vï¿½Hï¿½ï¿½
  */
 USTRUCT(BlueprintType)
 struct FMingStrategicHistoricalCharacter
 {
     GENERATED_BODY()
 
-    // ¤Hª«ID
+    // ï¿½Hï¿½ï¿½ID
     UPROPERTY(BlueprintReadOnly)
     FString CharacterID;
 
-    // ¤Hª«©m??
+    // ï¿½Hï¿½ï¿½ï¿½m??
     UPROPERTY(BlueprintReadOnly)
     FString CharacterName;
 
-    // ¤Hª«¦r??
+    // ï¿½Hï¿½ï¿½ï¿½r??
     UPROPERTY(BlueprintReadOnly)
     FString CourtesyName;
 
-    // ¤Hª«???X    UPROPERTY(BlueprintReadOnly)
+    // ï¿½Hï¿½ï¿½???X
+    UPROPERTY(BlueprintReadOnly)
     FString EnglishName;
 
-    // ¤Hª«??­z
+    // ï¿½Hï¿½ï¿½??ï¿½z
     UPROPERTY(BlueprintReadOnly)
     FString CharacterDescription;
 
-    // ¤Hª«????
+    // ï¿½Hï¿½ï¿½æ‘§æ¯€
     UPROPERTY(BlueprintReadOnly)
     FString PortraitPath;
 
-    // ??§O
+    // ??ï¿½O
     UPROPERTY(BlueprintReadOnly)
     ECharacterGender Gender;
 
-    // ??·~/¨­¥÷
+    // ??ï¿½~/ï¿½ï¿½ï¿½ï¿½
     UPROPERTY(BlueprintReadOnly)
     ECharacterProfession Profession;
 
-    // X/¬£¨t
+    // X/ï¿½ï¿½ï¿½t
     UPROPERTY(BlueprintReadOnly)
     ECharacterFaction Faction;
 
-    // ????¦~¥÷
+    // æ‘§æ¯€ï¿½~ï¿½ï¿½
     UPROPERTY(BlueprintReadOnly)
     int32 BirthYear;
 
-    // ¦º¤`¦~¥÷
+    // ï¿½ï¿½ï¿½`ï¿½~ï¿½ï¿½
     UPROPERTY(BlueprintReadOnly)
     int32 DeathYear;
 
-    // ¤Hª«??X    UPROPERTY(BlueprintReadOnly)
+    // ï¿½Hï¿½ï¿½??X
+    UPROPERTY(BlueprintReadOnly)
     ECharacterState State;
 
-    // ¤Hª«Äİ??    UPROPERTY(BlueprintReadOnly)
+    // ï¿½Hï¿½ï¿½ï¿½ï¿½??
+    UPROPERTY(BlueprintReadOnly)
     FHistoricalCharacterAttributes Attributes;
 
-    // ¤Hª«??X    UPROPERTY(BlueprintReadOnly)
+    // ï¿½Hï¿½ï¿½??X
+    UPROPERTY(BlueprintReadOnly)
     TArray<FHistoricalCharacterSkill> Skills;
 
-    // ¤Hª«????
+    // ï¿½Hï¿½ï¿½æ‘§æ¯€
     UPROPERTY(BlueprintReadOnly)
     TArray<FCharacterRelationship> Relationships;
 
-    // ¤Hª«¼ĞÅÒ
+    // ï¿½Hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> CharacterTags;
 
-    // ¾ú¥v¨Æ??
+    // ï¿½ï¿½ï¿½vï¿½ï¿½??
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> HistoricalEvents;
 
-    // ???X?´N
+    // ???X?ï¿½N
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> Achievements;
 
-    // ¼vÅT????(0-1000)
+    // ï¿½vï¿½Tæ‘§æ¯€(0-1000)
     UPROPERTY(BlueprintReadOnly)
     float Influence;
 
@@ -494,33 +499,35 @@ struct FMingStrategicHistoricalCharacter
     UPROPERTY(BlueprintReadOnly)
     float Reputation;
 
-    // ©¾????(0-100)
+    // ï¿½ï¿½æ‘§æ¯€(0-100)
     UPROPERTY(BlueprintReadOnly)
     float Loyalty;
 
-    // ??±d????(0-100)
+    // ??ï¿½dæ‘§æ¯€(0-100)
     UPROPERTY(BlueprintReadOnly)
     float Health;
 
-    // ºë?X?X(0-100)
+    // ï¿½ï¿½?X?X(0-100)
     UPROPERTY(BlueprintReadOnly)
     float Morale;
 
-    // ????¦ì¸m
+    // æ‘§æ¯€ï¿½ï¿½m
     UPROPERTY(BlueprintReadOnly)
     FString CurrentLocation;
 
-    // ???X???
+    // ç›®æ¨™æ•¸é‡
     UPROPERTY(BlueprintReadOnly)
     FString CurrentPosition;
 
-    // ??§_???X?¤HX    UPROPERTY(BlueprintReadOnly)
+    // ??ï¿½_???X?ï¿½HX
+    UPROPERTY(BlueprintReadOnly)
     bool bIsKeyCharacter;
 
-    // ??§_???X    UPROPERTY(BlueprintReadOnly)
+    // ??ï¿½_???X
+    UPROPERTY(BlueprintReadOnly)
     bool bIsRecruitable;
 
-    // ???X?¥»
+    // ???X?ï¿½ï¿½
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, int32> RecruitmentCost;
 
@@ -550,47 +557,50 @@ struct FMingStrategicHistoricalCharacter
 };
 
 /**
- * ¤Hª«¤¬??µ²??
+ * ï¿½Hï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½??
  */
 USTRUCT(BlueprintType)
 struct FCharacterInteractionResult
 {
     GENERATED_BODY()
 
-    // ??§_????
+    // ??ï¿½_æ‘§æ¯€
     UPROPERTY(BlueprintReadOnly)
     bool bSuccess;
 
-    // ¤¬??Ãş??
+    // ï¿½ï¿½??ï¿½ï¿½??
     UPROPERTY(BlueprintReadOnly)
     FString InteractionType;
 
-    // ¤¬??¹ï¶HID
+    // ï¿½ï¿½??ï¿½ï¿½HID
     UPROPERTY(BlueprintReadOnly)
     FString TargetCharacterID;
 
-    // ¤¬?X???
+    // ï¿½ï¿½?X???
     UPROPERTY(BlueprintReadOnly)
     float InteractionTime;
 
-    // ¤¬?X???
+    // ï¿½ï¿½?X???
     UPROPERTY(BlueprintReadOnly)
     FString InteractionLocation;
 
-    // ¤¬??µ²?X?­z
+    // ï¿½ï¿½??ï¿½ï¿½?X?ï¿½z
     UPROPERTY(BlueprintReadOnly)
     FString ResultDescription;
 
-    // ¼vÅT??¤H??ÄİX    UPROPERTY(BlueprintReadOnly)
+    // ï¿½vï¿½T??ï¿½H??ï¿½ï¿½X
+    UPROPERTY(BlueprintReadOnly)
     TMap<FString, float> AffectedAttributes;
 
-    // ¼vÅT??¤H??????    UPROPERTY(BlueprintReadOnly)
+    // ï¿½vï¿½T??ï¿½Hæ‘§æ¯€??
+    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedRelationships;
 
-    // ???X?????    UPROPERTY(BlueprintReadOnly)
+    // ç›®æ¨™æ•¸é‡??
+    UPROPERTY(BlueprintReadOnly)
     int32 GainedExperience;
 
-    // ¤¬?X?¼Æ
+    // ï¿½ï¿½?X?ï¿½ï¿½
     UPROPERTY(BlueprintReadOnly)
     float InteractionScore;
 
@@ -607,7 +617,7 @@ struct FCharacterInteractionResult
 };
 
 /**
- * ¾ú¥v¤Hª«ºŞ?X * ºŞ?X????X?¾ú??¤H????¤¬?X????? */
+ * ï¿½ï¿½ï¿½vï¿½Hï¿½ï¿½ï¿½ï¿½?X * ï¿½ï¿½?Xæ‘§æ¯€X?ï¿½ï¿½??ï¿½Hæ‘§æ¯€ï¿½ï¿½?Xæ‘§æ¯€? */
 UCLASS(BlueprintType)
 class MINGSTRATEGIC_API UMingHistoricalCharacterManager : public UObject
 {
@@ -617,231 +627,235 @@ public:
     UMingHistoricalCharacterManager();
 
     /**
-     * ???X?¤H??ºŞ??¾¹
+     * ???X?ï¿½H??ï¿½ï¿½??ï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     void Initialize();
 
     /**
-     * ????¤Hª«ºŞ?X     */
+     * æ‘§æ¯€ï¿½Hï¿½ï¿½ï¿½ï¿½?X     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     void Shutdown();
 
     /**
-     * µù??¾ú¥v¤Hª«
+     * ï¿½ï¿½??ï¿½ï¿½ï¿½vï¿½Hï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool RegisterHistoricalCharacter(const FMingHistoricalCharacter& Character};
+    bool RegisterHistoricalCharacter(const FMingHistoricalCharacter& Character);
 
     /**
-     * ????µù??¾ú¥v¤Hª«
+     * æ‘§æ¯€ï¿½ï¿½??ï¿½ï¿½ï¿½vï¿½Hï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool UnregisterHistoricalCharacter(const FString& CharacterID};
+    bool UnregisterHistoricalCharacter(const FString& CharacterID);
 
     /**
-     * ????¾ú¥v¤Hª«
+     * æ‘§æ¯€ï¿½ï¿½ï¿½vï¿½Hï¿½ï¿½
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     FMingHistoricalCharacter GetHistoricalCharacter(const FString& CharacterID) const;
 
     /**
-     * ???X???¾ú??¤HX     */
+     * ç›®æ¨™æ•¸é‡ï¿½ï¿½??ï¿½HX     */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetAllHistoricalCharacters() const;
 
     /**
-     * ???X??X?¤HX     */
+     * æ•…äº‹é‡è¦æ€§?ï¿½HX     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetCharactersByFaction(ECharacterFaction Faction) const;
 
     /**
-     * ???X??X?·~??¤HX     */
+     * æ•…äº‹é‡è¦æ€§?ï¿½~??ï¿½HX     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetCharactersByProfession(ECharacterProfession Profession) const;
 
     /**
-     * ???X?Áä¤Hª«
+     * ???X?ï¿½ï¿½Hï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetKeyCharacters() const;
 
     /**
-     * ???X??X?¤HX     */
+     * æ•…äº‹é‡è¦æ€§?ï¿½HX     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetRecruitableCharacters() const;
 
     /**
-     * ????¬¡??¤Hª«
+     * æ‘§æ¯€ï¿½ï¿½??ï¿½Hï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetActiveCharacters() const;
 
     /**
-     * ¤Hª«¤¬??
+     * ï¿½Hï¿½ï¿½ï¿½ï¿½??
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    FCharacterInteractionResult InteractWithCharacter(const FString& CharacterID, const FString& InteractionType, const FString& InteractionDetails};
+    FCharacterInteractionResult InteractWithCharacter(const FString& CharacterID, const FString& InteractionType, const FString& InteractionDetails);
 
     /**
-     * ¹ï¸Ü¨t²Î
+     * ï¿½ï¿½Ü¨tï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    FDialogueEvent StartDialogue(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic};
+    FDialogueEvent StartDialogue(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic);
 
     /**
-     * ????¹ï¸Ü????
+     * æ‘§æ¯€ï¿½ï¿½ï¿½æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    FDialogueEvent ProcessDialogueOption(const FString& DialogueEventID, const FString& OptionID};
+    FDialogueEvent ProcessDialogueOption(const FString& DialogueEventID, const FString& OptionID);
 
     /**
-     * ????¤Hª«
+     * æ‘§æ¯€ï¿½Hï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool RecruitCharacter(const FString& CharacterID};
+    bool RecruitCharacter(const FString& CharacterID);
 
     /**
-     * ????¤Hª«
+     * æ‘§æ¯€ï¿½Hï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool DismissCharacter(const FString& CharacterID};
+    bool DismissCharacter(const FString& CharacterID);
 
     /**
-     * ????¤Hª«??X     */
+     * æ‘§æ¯€ï¿½Hï¿½ï¿½??X     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool UpgradeCharacterSkill(const FString& CharacterID, ECharacterSkillType SkillType};
+    bool UpgradeCharacterSkill(const FString& CharacterID, ECharacterSkillType SkillType);
 
     /**
-     * ????¤Hª«????
+     * æ‘§æ¯€ï¿½Hï¿½ï¿½æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FCharacterRelationship> GetCharacterRelationships(const FString& CharacterID) const;
 
     /**
-     * ²K??¤Hª«????
+     * ï¿½K??ï¿½Hï¿½ï¿½æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool AddCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, ECharacterRelationshipType RelationshipType, float Strength};
+    bool AddCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, ECharacterRelationshipType RelationshipType, float Strength);
 
     /**
-     * ??·s¤Hª«????
+     * ??ï¿½sï¿½Hï¿½ï¿½æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool UpdateCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, float NewStrength};
+    bool UpdateCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, float NewStrength);
 
     /**
-     * ????¤Hª«²Î??
+     * æ‘§æ¯€ï¿½Hï¿½ï¿½ï¿½ï¿½??
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     TMap<FString, int32> GetCharacterStatistics() const;
 
     /**
-     * ????¤Hª«¼vÅT???X     */
+     * æ‘§æ¯€ï¿½Hï¿½ï¿½ï¿½vï¿½T???X     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetCharacterInfluenceRanking() const;
 
     /**
-     * ???X?ÂË¤Hª«
+     * ???X?ï¿½Ë¤Hï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetRecommendedCharacters(const FString& PlayerFaction) const;
 
 protected:
-    // ¤wµù????¾ú¥v¤Hª«
+    // ï¿½wï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½vï¿½Hï¿½ï¿½
     UPROPERTY()
     TArray<FMingHistoricalCharacter> RegisteredCharacters;
 
-    // ¤Hª«ID??¤H???X???
+    // ï¿½Hï¿½ï¿½ID??ï¿½Hç›®æ¨™æ•¸é‡
     UPROPERTY()
     TMap<FString, FMingHistoricalCharacter> CharacterMap;
 
-    // ¤Hª«????ºôµ¸ - ª`??¡GTMap<TArray> ¤£¤äXUPROPERTY
+    // ï¿½Hï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½ - ï¿½`??ï¿½GTMap<TArray> ï¿½ï¿½ï¿½ï¿½XUPROPERTY
     TMap<FString, TArray<FCharacterRelationship>> RelationshipNetwork;
 
-    // ¹ï¸Ü¨Æ¥ó°O??
+    // ï¿½ï¿½Ü¨Æ¥ï¿½O??
     UPROPERTY()
     TArray<FDialogueEvent> DialogueHistory;
 
-    // ¤Hª«²Î??
+    // ï¿½Hï¿½ï¿½ï¿½ï¿½??
     UPROPERTY()
     TMap<FString, int32> CharacterStatistics;
 
-    // ??§_¤w??©l??
+    // ??ï¿½_ï¿½w??ï¿½l??
     bool bIsInitialized;
 
-    // ???X??X?¾ú??¤H??®w
+    // æ•…äº‹é‡è¦æ€§?ï¿½ï¿½??ï¿½H??ï¿½w
     void InitializeHistoricalCharacterLibrary();
 
-    // ??«Ø??ªv¤Hª«
+    // ??ï¿½ï¿½??ï¿½vï¿½Hï¿½ï¿½
     void CreatePoliticalCharacters();
 
-    // ??«Ø­x??¤Hª«
+    // ??ï¿½Ø­x??ï¿½Hï¿½ï¿½
     void CreateMilitaryCharacters();
 
-    // ??«Ø¸g??¤Hª«
+    // ??ï¿½Ø¸g??ï¿½Hï¿½ï¿½
     void CreateBusinessCharacters();
 
-    // ??«Ø¾Ç??¤Hª«
+    // ??ï¿½Ø¾ï¿½??ï¿½Hï¿½ï¿½
     void CreateScholarCharacters();
 
-    // ??«Ø??©R¤Hª«
+    // ??ï¿½ï¿½??ï¿½Rï¿½Hï¿½ï¿½
     void CreateRevolutionaryCharacters();
 
-    // ??«Ø¥~¥æ¤Hª«
+    // ??ï¿½Ø¥~ï¿½ï¿½Hï¿½ï¿½
     void CreateDiplomaticCharacters();
 
-    // ??«Ø????¤Hª«
+    // ??ï¿½ï¿½æ‘§æ¯€ï¿½Hï¿½ï¿½
     void CreateCulturalCharacters();
 
-    // ????¤Hª«¤¬?X?¿è
-    void HandleCharacterInteraction(const FString& CharacterID, const FString& InteractionType, FCharacterInteractionResult& Result};
+    // æ‘§æ¯€ï¿½Hï¿½ï¿½ï¿½ï¿½?X?ï¿½ï¿½
+    void HandleCharacterInteraction(const FString& CharacterID, const FString& InteractionType, FCharacterInteractionResult& Result);
 
-    // ????¹ï¸Ü??¿è
-    void HandleDialogueLogic(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic, FDialogueEvent& Event};
+    // æ‘§æ¯€ï¿½ï¿½ï¿½??ï¿½ï¿½
+    void HandleDialogueLogic(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic, FDialogueEvent& Event);
 
-    // ­p??¤¬?X?¼Æ
+    // ï¿½p??ï¿½ï¿½?X?ï¿½ï¿½
     float CalculateInteractionScore(const FString& CharacterID, const FString& InteractionType) const;
 
-    // ??·s¤Hª«????
-    void UpdateCharacterRelationships(const FString& CharacterID, const FString& TargetCharacterID, const FString& InteractionType};
+    // ??ï¿½sï¿½Hï¿½ï¿½æ‘§æ¯€
+    void UpdateCharacterRelationships(const FString& CharacterID, const FString& TargetCharacterID, const FString& InteractionType);
 
-    // ????¤Hª«????????    int32 GetCharacterSkillLevel(const FString& CharacterID, ECharacterSkillType SkillType) const;
+    // æ‘§æ¯€ï¿½Hï¿½ï¿½æ‘§æ¯€æ‘§æ¯€
+    int32 GetCharacterSkillLevel(const FString& CharacterID, ECharacterSkillType SkillType) const;
 
-    // ÀË¬d¤¬??±ø¥ó
+    // ï¿½Ë¬dï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½
     bool CheckInteractionConditions(const FString& CharacterID, const FString& InteractionType) const;
 
-    // ??¥Î¤¬?X???
-    void ApplyInteractionEffects(const FString& CharacterID, const FString& InteractionType, FCharacterInteractionResult& Result};
+    // ??ï¿½Î¤ï¿½?X???
+    void ApplyInteractionEffects(const FString& CharacterID, const FString& InteractionType, FCharacterInteractionResult& Result);
 
-    // ????¤Hª«¼vÅTX    float CalculateCharacterInfluence(const FMingHistoricalCharacter& Character) const;
+    // æ‘§æ¯€ï¿½Hï¿½ï¿½ï¿½vï¿½TX
+    float CalculateCharacterInfluence(const FMingHistoricalCharacter& Character) const;
 
-    // ????¤Hª«????
+    // æ‘§æ¯€ï¿½Hï¿½ï¿½æ‘§æ¯€
     float CalculateCharacterReputation(const FMingHistoricalCharacter& Character) const;
 
-    // ??·s¤Hª«??X    void UpdateCharacterState(const FString& CharacterID, ECharacterState NewState};
+    // ??ï¿½sï¿½Hï¿½ï¿½??X
+    void UpdateCharacterState(const FString& CharacterID, ECharacterState NewState);
 
-    // °O??¹ï¸Ü¨Æ¥ó
-    void RecordDialogueEvent(const FDialogueEvent& Event};
+    // ï¿½O??ï¿½ï¿½Ü¨Æ¥ï¿½
+    void RecordDialogueEvent(const FDialogueEvent& Event);
 
-    // ????¤Hª«??ÂË??¼Æ
+    // æ‘§æ¯€ï¿½Hï¿½ï¿½??ï¿½ï¿½??ï¿½ï¿½
     float GetCharacterRecommendationScore(const FMingHistoricalCharacter& Character, const FString& PlayerFaction) const;
 
-    // Åç??¤Hª«??¸m
+    // ï¿½ï¿½??ï¿½Hï¿½ï¿½??ï¿½m
     bool ValidateCharacterConfig(const FMingHistoricalCharacter& Character) const;
 
-    // °O??¤Hª«????
-    void LogCharacterEvent(const FString& CharacterID, const FString& Message};
+    // ï¿½O??ï¿½Hï¿½ï¿½æ‘§æ¯€
+    void LogCharacterEvent(const FString& CharacterID, const FString& Message);
 
-    // ????¤Hª«????
+    // æ‘§æ¯€ï¿½Hï¿½ï¿½æ‘§æ¯€
     FString GenerateCharacterReport(const FString& CharacterID) const;
 
-    // ????¤Hª«??­z
+    // æ‘§æ¯€ï¿½Hï¿½ï¿½??ï¿½z
     FString GetCharacterDescription(const FString& CharacterID) const;
 
-    // ????¤Hª«????????    FString GetSkillDescription(ECharacterSkillType SkillType) const;
+    // æ‘§æ¯€ï¿½Hï¿½ï¿½æ‘§æ¯€æ‘§æ¯€
+    FString GetSkillDescription(ECharacterSkillType SkillType) const;
 
-    // ???X??X?­z
+    // æ•…äº‹é‡è¦æ€§?ï¿½z
     FString GetRelationshipDescription(ECharacterRelationshipType RelationshipType) const;
 };
 

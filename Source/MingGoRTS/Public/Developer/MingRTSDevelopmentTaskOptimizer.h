@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSDevelopmentTaskOptimizer.generated.h"
 
 UENUM(BlueprintType)
-enum class EDevelopmentTaskType : uint8
-{
+enum class EDevelopmentTaskType: uint8 {
     Coding, UMETA(DisplayName = "Coding"),
     Testing, UMETA(DisplayName = "Testing"),
     Documentation, UMETA(DisplayName = "Documentation"),
@@ -15,8 +14,7 @@ enum class EDevelopmentTaskType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EDevelopmentStatus : uint8
-{
+enum class EDevelopmentStatus: uint8 {
     Pending, UMETA(DisplayName = "Pending"),
     InProgress, UMETA(DisplayName = "In Progress"),
     Completed, UMETA(DisplayName = "Completed"),
@@ -25,8 +23,7 @@ enum class EDevelopmentStatus : uint8
 };
 
 UENUM(BlueprintType)
-enum class EDevelopmentResource : uint8
-{
+enum class EDevelopmentResource: uint8 {
     Developer, UMETA(DisplayName = "Developer"),
     Tester, UMETA(DisplayName = "Tester"),
     Designer, UMETA(DisplayName = "Designer"),
@@ -109,3 +106,4 @@ DECLARE_DYNAMIC_DELEGATE(FOnTaskStatusChanged, const FString&, TaskId, EDevelopm
 DECLARE_DYNAMIC_DELEGATE(FOnResourcesReallocated, const TMap<EDevelopmentResource, TArray<FResourceAllocation>>&, NewAllocations);
 
 #include "MingRTSDevelopmentTaskOptimizer.generated.h"
+

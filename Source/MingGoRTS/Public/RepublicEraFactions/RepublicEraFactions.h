@@ -12,8 +12,7 @@
  * ?��X��?��?
  */
 UENUM(BlueprintType)
-enum class EFactionDifficulty : uint8
-{
+enum class EFactionDifficulty: uint8 {
     VeryEasy	UMETA(DisplayName = "Very Easy"),
     Easy		UMETA(DisplayName = "Easy"),
     Medium		UMETA(DisplayName = "Medium"),
@@ -25,8 +24,7 @@ enum class EFactionDifficulty : uint8
  * ?��?類�X��?
  */
 UENUM(BlueprintType)
-enum class EFactionType : uint8
-{
+enum class EFactionType: uint8 {
     Central		UMETA(DisplayName = "Central Government"),
     Warlord		UMETA(DisplayName = "Warlord"),
     Revolutionary	UMETA(DisplayName = "Revolutionary"),
@@ -38,8 +36,7 @@ enum class EFactionType : uint8
  * ?��X��?類�X��?
  */
 UENUM(BlueprintType)
-enum class EFactionUnitType : uint8
-{
+enum class EFactionUnitType: uint8 {
     Infantry	UMETA(DisplayName = "Infantry"),
     Cavalry		UMETA(DisplayName = "Cavalry"),
     Artillery	UMETA(DisplayName = "Artillery"),

@@ -10,8 +10,7 @@
 #include "MingTestCoverageAnalyzer.generated.h"
 
 UENUM(BlueprintType)
-enum class ECoverageType : uint8
-{
+UENUM(BlueprintType)\nenum class ECoverageType : uint8\n{
     Line = 0, UMETA(DisplayName = "Line Coverage"),
     Branch, UMETA(DisplayName = "Branch Coverage"),
     Function, UMETA(DisplayName = "Function Coverage"),
@@ -25,8 +24,7 @@ enum class ECoverageType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ETestType : uint8
-{
+enum class ETestType: uint8 {
     Unit = 0, UMETA(DisplayName = "Unit Test"),
     Integration, UMETA(DisplayName = "Integration Test"),
     System, UMETA(DisplayName = "System Test"),
@@ -40,8 +38,7 @@ enum class ETestType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ETestStatus : uint8
-{
+enum class ETestStatus: uint8 {
     NotRun = 0, UMETA(DisplayName = "Not Run"),
     Running, UMETA(DisplayName = "Running"),
     Passed, UMETA(DisplayName = "Passed"),
@@ -260,11 +257,11 @@ struct FTestSuiteConfig
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoverageDataUpdated, FCoverageData, Coverage};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestCompleted, FTestResult, Result};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoverageTargetMet, ECoverageType, Type};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCoverageBelowTarget, ECoverageType, Type, float, CurrentCoverage};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReportGenerated, FCoverageReport, Report};
+
+
+
+
+
 /**
  * Test Coverage Analyzer
  * Provides comprehensive test coverage analysis and reporting
@@ -275,24 +272,24 @@ class MINGRTS_API UMingTestCoverageAnalyzer : public UObject
     GENERATED_BODY()
 
 public:
-    UMingTestCoverageAnalyzer(};
+    UMingTestCoverageAnalyzer();
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    void InitializeAnalyzer(};
+    void InitializeAnalyzer();
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    void ShutdownAnalyzer(};
+    void ShutdownAnalyzer();
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    void SetCoverageTarget(const FCoverageTarget& Target};
+    void SetCoverageTarget(const FCoverageTarget& Target);
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    FCoverageData AnalyzeFileCoverage(const FString& FilePath, ECoverageType Type};
+    FCoverageData AnalyzeFileCoverage(const FString& FilePath, ECoverageType Type);
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    TArray<FCoverageData> AnalyzeProjectCoverage(const FString& ProjectPath};
+    TArray<FCoverageData> AnalyzeProjectCoverage(const FString& ProjectPath);
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
     float CalculateCoveragePercent(const FCoverageData& Data) const;
 
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    bool RunTests(const FTestSuiteConfig& Config};
+    bool RunTests(const FTestSuiteConfig& Config);
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    bool RunTest(const FString& TestName, ETestType Type};
+    bool RunTest(const FString& TestName, ETestType Type);
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
     TArray<FTestResult> GetTestResults() const;
 
@@ -303,17 +300,17 @@ public:
     TArray<FTestResult> GetTestsByType(ETestType Type) const;
 
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    FCoverageReport GenerateCoverageReport(};
+    FCoverageReport GenerateCoverageReport();
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    void ExportCoverageReport(const FString& FilePath};
+    void ExportCoverageReport(const FString& FilePath);
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    void ExportTestResults(const FString& FilePath};
+    void ExportTestResults(const FString& FilePath);
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    TArray<FString> IdentifyUntestedCode(};
+    TArray<FString> IdentifyUntestedCode();
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    TArray<FString> IdentifyHighRiskAreas(};
+    TArray<FString> IdentifyHighRiskAreas();
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    TArray<FString> SuggestTestsForFile(const FString& FilePath};
+    TArray<FString> SuggestTestsForFile(const FString& FilePath);
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
     bool IsCoverageTargetMet(ECoverageType Type) const;
 
@@ -321,13 +318,13 @@ public:
     float GetCurrentCoverage(ECoverageType Type) const;
 
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    void StartContinuousMonitoring(};
+    void StartContinuousMonitoring();
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    void StopContinuousMonitoring(};
+    void StopContinuousMonitoring();
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    void SetCoverageThreshold(ECoverageType Type, float Target, float Minimum};
+    void SetCoverageThreshold(ECoverageType Type, float Target, float Minimum);
     UFUNCTION(BlueprintCallable, Category = "Test Coverage")
-    void GenerateCoverageBadge(};
+    void GenerateCoverageBadge();
     UFUNCTION(BlueprintPure, Category = "Test Coverage")
     int32 GetTotalTestsRun() const { return TestResults.Num(); }
 
@@ -368,19 +365,19 @@ protected:
     UPROPERTY()
     bool bIsMonitoring;
 
-    void StartMonitoring(};
-    void StopMonitoring(};
-    void PerformMonitoringCheck(};
-    FCoverageData ParseCoverageData(const FString& RawData, ECoverageType Type};
-    void UpdateCoverageData(const FCoverageData& NewData};
-    void CheckCoverageTargets(};
-    bool ExecuteTest(const FString& TestName, ETestType Type};
-    TArray<FString> DiscoverTests(const FTestSuiteConfig& Config};
-    FString GenerateReportID(};
-    void StoreTestResult(const FTestResult& Result};
-    void LogCoverageActivity(const FString& Activity};
-    float CalculateWeightedCoverage(const TArray<FCoverageData>& Data};
-    TArray<FString> FindCriticalUncoveredLines(const FCoverageData& Data};
-    void GenerateRecommendations(FCoverageReport& Report};
-    static UMingTestCoverageAnalyzer* Get(UObject* WorldContextObject};
-};
+    void StartMonitoring();
+    void StopMonitoring();
+    void PerformMonitoringCheck();
+    FCoverageData ParseCoverageData(const FString& RawData, ECoverageType Type);
+    void UpdateCoverageData(const FCoverageData& NewData);
+    void CheckCoverageTargets();
+    bool ExecuteTest(const FString& TestName, ETestType Type);
+    TArray<FString> DiscoverTests(const FTestSuiteConfig& Config);
+    FString GenerateReportID();
+    void StoreTestResult(const FTestResult& Result);
+    void LogCoverageActivity(const FString& Activity);
+    float CalculateWeightedCoverage(const TArray<FCoverageData>& Data);
+    TArray<FString> FindCriticalUncoveredLines(const FCoverageData& Data);
+    void GenerateRecommendations(FCoverageReport& Report);
+    static UMingTestCoverageAnalyzer* Get(UObject* WorldContextObject);
+);

@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -17,8 +17,7 @@ class UMingMilitaryAuthority;
  * 兵權：執行指揮 (Military Authority)
  */
 UENUM(BlueprintType)
-enum class EThreePowerType : uint8
-{
+enum class EThreePowerType: uint8 {
     None            UMETA(DisplayName = "None"),
     Moral           UMETA(DisplayName = "道權"),      // 掌天道、掌大義、掌不傳之秘
     Strategy        UMETA(DisplayName = "策權"),    // 掌正逆、掌陰陽、掌五行節奏

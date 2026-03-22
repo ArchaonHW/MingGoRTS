@@ -1,58 +1,58 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingCharacterGrowthSystem.h"
 #include "MingItemManager.generated.h"
 
-// ????稀??度
+// 摧毀稀??度
 UENUM(BlueprintType)
-enum class EMingItemRarity : uint8
-{
-    Common,            // ????    Uncommon,          // 不常??    Rare,              // 稀X    Epic,              // ??詩
-    Legendary           // ????
+enum class EMingItemRarity: uint8 {
+    Common,            // 摧毀
+    Uncommon,          // 不常??
+    Rare,              // 稀X
+    Epic,              // ??詩
+    Legendary           // 摧毀
 };
 
-// ????類??
+// 選項類型
 UENUM(BlueprintType)
-enum class EMingItemType : uint8
-{
+enum class EMingItemType: uint8 {
     Weapon,            // 武器
     Armor,             // 護甲
     Accessory,         // ??飾
     Consumable,        // 消耗??
-    Material,          // ????
-    Blueprint,         // ????
+    Material,          // 摧毀
+    Blueprint,         // 摧毀
     Currency,          // 貨幣
-    Quest,             // 任?X???
+    Quest,             // 任務目標
     Cosmetic           // 外?X???
 };
 
 // 裝??槽??
 UENUM(BlueprintType)
-enum class EMingEquipSlot : uint8
-{
+enum class EMingEquipSlot: uint8 {
     MainHand,          // 主??
-    OffHand,           // ????
+    OffHand,           // 摧毀
     Head,              // ??部
     Body,              // 身??
     Hands,             // ??部
     Legs,              // ??部
     Feet,              // ??部
     Neck,              // ??部
-    Ring1,             // ????1
-    Ring2,             // ????2
+    Ring1,             // 摧毀1
+    Ring2,             // 摧毀2
     Trinket1,          // 飾物1
     Trinket2,          // 飾物2
-    Backpack           // ????
+    Backpack           // 摧毀
 };
 
-// ????強??類??
+// 摧毀強??類??
 UENUM(BlueprintType)
-enum class EMingEnhancementType : uint8
-{
-    None,               // ??強X    Sharp,             // ??利
-    Durable,           // ????
+enum class EMingEnhancementType: uint8 {
+    None,               // ??強X
+    Sharp,             // ??利
+    Durable,           // 摧毀
     Powerful,          // 威??
     Swift,             // 迅捷
     Magical,           // 魔??
@@ -60,13 +60,13 @@ enum class EMingEnhancementType : uint8
     Cursed             // 詛??
 };
 
-// ???X???
+// 目標數量
 USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingItemData
 {
     GENERATED_BODY()
 
-    // ????ID
+    // 目標ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemID;
 
@@ -74,54 +74,59 @@ struct MINGPERSONAL_API FMingItemData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemName;
 
-    // ???X?述
+    // 選項描述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemDescription;
 
-    // ????類??
+    // 選項類型
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingItemType ItemType;
 
-    // ????稀??度
+    // 摧毀稀??度
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingItemRarity ItemRarity;
 
-    // ????等??
+    // 摧毀等??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemLevel;
 
-    // ???X???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 目標數量
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemValue;
 
-    // ???X???
+    // 目標數量
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ItemWeight;
 
-    // ???X??X???
+    // 故事選項?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 StackSize;
 
-    // ???X??X???
+    // 故事選項?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CurrentStack;
 
-    // ????屬??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 摧毀屬??
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ItemAttributes;
 
     // 裝??槽??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEquipSlot EquipSlot;
 
-    // ??否已?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??否已完成
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsEquipped;
 
-    // ???X?????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 目標數量??
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CurrentDurability;
 
-    // ??大耐????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??大耐摧毀
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MaxDurability;
 
-    // ????強??類??
+    // 摧毀強??類??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEnhancementType EnhancementType;
 
@@ -129,11 +134,11 @@ struct MINGPERSONAL_API FMingItemData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EnhancementLevel;
 
-    // ???X???路??
+    // 目標數量路??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemIconPath;
 
-    // ????3D模??路??
+    // 摧毀3D模??路??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemModelPath;
 
@@ -141,30 +146,31 @@ struct MINGPERSONAL_API FMingItemData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemMaterialPath;
 
-    // ???X???路??
+    // 目標數量路??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemEffectPath;
 
-    // ???X???路??
+    // 目標數量路??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemSoundPath;
 
-    // ??否??唯一????
+    // ??否??唯一摧毀
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsUnique;
 
-    // ??否????定物X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 是否可見定物X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsSoulbound;
 
-    // ????標籤
+    // 摧毀標籤
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> ItemTags;
 
-    // ???X??X???
+    // 故事選項?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime AcquiredTime;
 
-    // ????來??
+    // 摧毀來??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemSource;
 
@@ -230,20 +236,24 @@ struct MINGPERSONAL_API FMingEquipmentData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EquipmentLevel;
 
-    // 裝??屬??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 裝??屬??
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> EquipmentAttributes;
 
     // 裝??槽??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEquipSlot EquipSlot;
 
-    // ??否已?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??否已完成
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsEquipped;
 
-    // 裝?X?????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 裝?X摧毀?
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CurrentDurability;
 
-    // ??大耐????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??大耐摧毀
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MaxDurability;
 
     // 裝??強??類??
@@ -274,7 +284,8 @@ struct MINGPERSONAL_API FMingEquipmentData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipmentSoundPath;
 
-    // 裝?X???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 裝?X???
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> EquipmentRequirements;
 
     // 裝?X??X???
@@ -311,7 +322,7 @@ struct MINGPERSONAL_API FMingEquipmentData
     }
 };
 
-// ???X??X?方
+// 故事重要性?方
 USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingCraftingRecipe
 {
@@ -329,19 +340,19 @@ struct MINGPERSONAL_API FMingCraftingRecipe
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString RecipeDescription;
 
-    // ????????
+    // 摧毀摧毀
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingItemData> RequiredMaterials;
 
-    // ????結??
+    // 摧毀結??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingItemData> ResultItems;
 
-    // ???X???
+    // 目標數量
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CraftingTime;
 
-    // ???X???
+    // 目標數量
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float SuccessRate;
 
@@ -349,13 +360,15 @@ struct MINGPERSONAL_API FMingCraftingRecipe
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingItemRarity RecipeRarity;
 
-    // ??方??求?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??方??求?X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> RequiredSkills;
 
-    // ??方??求????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??方??求摧毀
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 RequiredLevel;
 
-    // ??方????路??
+    // ??方摧毀路??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString RecipeIconPath;
 
@@ -375,17 +388,17 @@ struct MINGPERSONAL_API FMingCraftingRecipe
     }
 };
 
-// ????管??事件委??
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemAcquired, const FMingItemData&, Item, int32, Quantity};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemLost, const FMingItemData&, Item, int32, Quantity};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEquipped, const FMingEquipmentData&, Equipment, const FString&, Slot};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemUnequipped, const FMingEquipmentData&, Equipment, const FString&, Slot};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEnhanced, const FMingEquipmentData&, Equipment, EMingEnhancementType, EnhancementType};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemCrafted, const FMingCraftingRecipe&, Recipe, const TArray<FMingItemData>&, Results};
+// 摧毀管??事件委??
+
+
+
+
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemRepaired, const FMingEquipmentData&, Equipment, float, RepairAmount);
 
 /**
- * ????管?X * 負責管?X?人裝?X?物??系?? */
+ * 摧毀管?X * 負責管?X?人裝?X?物??系?? */
 UCLASS(ClassGroup = (Personal), Blueprintable, BlueprintType)
 class MINGPERSONAL_API UMingItemManager : public UObject
 {
@@ -394,31 +407,35 @@ class MINGPERSONAL_API UMingItemManager : public UObject
 public:
     UMingItemManager();
 
-    // ???X?物??系??    UFUNCTION(BlueprintCallable, Category = "Item Manager")
+    // ???X?物??系??
+    UFUNCTION(BlueprintCallable, Category = "Item Manager")
     bool InitializeItemSystem();
 
-    // 添?X??X??X    UFUNCTION(BlueprintCallable, Category = "Item Manager")
+    // 添?X??X??X
+    UFUNCTION(BlueprintCallable, Category = "Item Manager")
     bool AddItemToInventory(const FMingItemData& Item, int32 Quantity = 1);
 
-    // 從?X?移??物X    UFUNCTION(BlueprintCallable, Category = "Item Manager")
+    // 從?X?移??物X
+    UFUNCTION(BlueprintCallable, Category = "Item Manager")
     bool RemoveItemFromInventory(int32 ItemID, int32 Quantity = 1);
 
     // 裝?X???
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
     bool EquipItem(int32 ItemID, const FString& EquipSlot);
 
-    // ???X???
+    // 目標數量
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
     bool UnequipItem(const FString& EquipSlot);
 
-    // ???X??X???
+    // 故事選項?
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     TArray<FMingItemData> GetInventoryItems() const;
 
-    // ????已?X?物X    UFUNCTION(BlueprintPure, Category = "Item Manager")
+    // 摧毀已完成?物X
+    UFUNCTION(BlueprintPure, Category = "Item Manager")
     TArray<FMingEquipmentData> GetEquippedItems() const;
 
-    // ???X???槽?X???
+    // 目標數量槽?X???
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     FMingEquipmentData GetEquippedItem(const FString& EquipSlot) const;
 
@@ -434,23 +451,23 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
     bool RepairItem(int32 ItemID, float RepairAmount = 100.0f);
 
-    // ???X???
+    // 目標數量
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
     bool CraftItem(int32 RecipeID);
 
-    // ??解????
+    // ??解摧毀
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
     bool DisassembleItem(int32 ItemID);
 
-    // ???X??X???
+    // 故事選項?
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     int32 GetItemCount(int32 ItemID) const;
 
-    // ???X???信息
+    // 目標數量信息
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     FMingItemData GetItemInfo(int32 ItemID) const;
 
-    // ????裝??信息
+    // 摧毀裝??信息
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     FMingEquipmentData GetEquipmentInfo(int32 EquipmentID) const;
 
@@ -458,21 +475,23 @@ public:
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     TArray<FMingCraftingRecipe> GetAvailableRecipes() const;
 
-    // 檢查????條件
+    // 檢查摧毀條件
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     bool CanCraftRecipe(int32 RecipeID) const;
 
-    // ???X???總價X    UFUNCTION(BlueprintPure, Category = "Item Manager")
+    // 目標數量總價X
+    UFUNCTION(BlueprintPure, Category = "Item Manager")
     int32 GetTotalInventoryValue() const;
 
-    // ???X???容??
+    // 目標數量容??
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     int32 GetInventoryCapacity() const;
 
-    // ???X???使用X    UFUNCTION(BlueprintPure, Category = "Item Manager")
+    // 目標數量使用X
+    UFUNCTION(BlueprintPure, Category = "Item Manager")
     int32 GetInventoryUsed() const;
 
-    // ???X??X???
+    // 故事選項?
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
     void SortInventory(EMingItemType SortBy, bool bAscending = true);
 
@@ -480,11 +499,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
     bool SaveItemData();
 
-    // 載入???X???
+    // 載入目標數量
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
     bool LoadItemData();
 
-    // 清除????物??數X    UFUNCTION(BlueprintCallable, Category = "Item Manager")
+    // 清除摧毀物??數X
+    UFUNCTION(BlueprintCallable, Category = "Item Manager")
     void ClearAllItemData();
 
     // 事件委??
@@ -510,27 +530,32 @@ public:
     FOnItemRepaired OnItemRepaired;
 
 protected:
-    // ???X?????    UPROPERTY()
+    // 目標數量??
+    UPROPERTY()
     TMap<int32, FMingItemData> ItemDatabase;
 
-    // 裝?X?????    UPROPERTY()
+    // 裝?X摧毀?
+    UPROPERTY()
     TMap<int32, FMingEquipmentData> EquipmentDatabase;
 
-    // ???X???
+    // 目標數量
     UPROPERTY()
     TArray<FMingItemData> InventoryItems;
 
-    // 已?X?物X    UPROPERTY()
+    // 已完成?物X
+    UPROPERTY()
     TMap<FString, FMingEquipmentData> EquippedItems;
 
-    // ???X?方??????    UPROPERTY()
+    // ???X?方摧毀??
+    UPROPERTY()
     TMap<int32, FMingCraftingRecipe> CraftingRecipeDatabase;
 
-    // ????容??
+    // 摧毀容??
     UPROPERTY()
     int32 InventoryCapacity;
 
-    // ????使用X    UPROPERTY()
+    // 摧毀使用X
+    UPROPERTY()
     int32 InventoryUsed;
 
     // ??否已??始??
@@ -538,80 +563,85 @@ protected:
     bool bInitialized;
 
 private:
-    // 載入??設????
+    // 載入??設摧毀
     void LoadDefaultItems();
 
-    // 載入??設??方
+    // 載入默認配方
     void LoadDefaultRecipes();
 
-    // 驗?X??X???
+    // 驗證物品數據
     bool ValidateItemData(const FMingItemData& Item) const;
 
-    // 驗??裝?X???
+    // 驗證裝備數據
     bool ValidateEquipmentData(const FMingEquipmentData& Equipment) const;
 
-    // 計?X???總?X    float CalculateTotalInventoryWeight() const;
+    // 計算背包總重
+    float CalculateTotalInventoryWeight() const;
 
-    // 計??裝?X???
+    // 計算裝備加成
     TMap<FString, float> CalculateEquipmentBonuses() const;
 
-    // ??用裝?X???
+    // 應用裝備效果
     void ApplyEquipmentEffects(const FMingEquipmentData& Equipment);
 
-    // 移除裝?X???
+    // 移除裝備效果
     void RemoveEquipmentEffects(const FMingEquipmentData& Equipment);
 
-    // ??新????容??使用
+    // ??新摧毀容??使用
     void UpdateInventoryUsage();
 
-    // 檢查????空??
+    // 檢查摧毀空??
     bool HasInventorySpace(const FMingItemData& Item, int32 Quantity) const;
 
-    // ???X??X???
+    // 故事選項?
     FMingItemData GenerateRandomItem(EMingItemRarity Rarity, EMingItemType ItemType) const;
 
-    // 計?X??X???    int32 CalculateItemValue(const FMingItemData& Item) const;
+    // 計算物品價值
+    int32 CalculateItemValue(const FMingItemData& Item) const;
 
-    // ???X???稀??度顏色
+    // 目標數量稀??度顏色
     FLinearColor GetRarityColor(EMingItemRarity Rarity) const;
 
-    // ???X???類?X???
+    // 目標數量類?X???
     FString GetItemTypeIcon(EMingItemType ItemType) const;
 
-    // ??新???X?????    void UpdateItemDurability(int32 ItemID, float Delta);
+    // ??新目標數量??
+    void UpdateItemDurability(int32 ItemID, float Delta);
 
-    // 檢查???X?否????
+    // 檢查???X?否摧毀
     bool IsItemDamaged(int32 ItemID) const;
 
-    // 修復???X???
+    // 修復目標數量
     void RepairDamagedItems();
 
-    // ???X??X???
+    // 故事選項?
     void AutoOrganizeInventory();
 
-    // ??併???X???
+    // ??併目標數量
     void MergeStackableItems();
 
-    // ??離???X???
+    // ??離目標數量
     void SplitItemStack(int32 ItemID, int32 SplitQuantity);
 
-    // 計?X??X??X    float CalculateCraftingSuccessRate(int32 RecipeID) const;
+    // 計算製作成功率
+    float CalculateCraftingSuccessRate(int32 RecipeID) const;
 
-    // 消耗?X??X    bool ConsumeCraftingMaterials(int32 RecipeID);
+    // 消耗製作材料
+    bool ConsumeCraftingMaterials(int32 RecipeID);
 
-    // 添?X???結??
+    // 添加製作結果
     bool AddCraftingResults(int32 RecipeID);
 
-    // ???X???統??
+    // 目標數量統??
     TMap<EMingItemType, int32> GetItemStatistics() const;
 
-    // ????稀??度統??
+    // 摧毀稀??度統??
     TMap<EMingItemRarity, int32> GetRarityStatistics() const;
 
-    // 保?X???快照
+    // 保存物品快照
     void SaveItemSnapshot();
 
-    // 載入????快照
+    // 載入摧毀快照
     void LoadItemSnapshot();
 };
 

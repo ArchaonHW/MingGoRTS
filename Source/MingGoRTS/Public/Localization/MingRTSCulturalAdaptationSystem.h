@@ -1,12 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MingRTSCulturalAdaptationSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class ECulturalRegion : uint8
-{
+enum class ECulturalRegion: uint8 {
     EastAsia, UMETA(DisplayName = "East Asia"),
     SoutheastAsia, UMETA(DisplayName = "Southeast Asia"),
     SouthAsia, UMETA(DisplayName = "South Asia"),
@@ -21,8 +19,7 @@ enum class ECulturalRegion : uint8
 };
 
 UENUM(BlueprintType)
-enum class EContentVariant : uint8
-{
+enum class EContentVariant: uint8 {
     Default, UMETA(DisplayName = "Default"),
     Regional, UMETA(DisplayName = "Regional"),
     Cultural, UMETA(DisplayName = "Cultural"),
@@ -147,7 +144,7 @@ struct FCacheStatistics
  * MingGoRTS Cultural Adaptation System
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGGORTS_API UMingRTSCulturalAdaptationSystem : public UObject
+class MINGRTS_API UMingRTSCulturalAdaptationSystem : public UObject
 {
     GENERATED_BODY()
 
@@ -264,3 +261,6 @@ private:
     // Helper data
     TMap<FString, FString> DefaultContent;
 };
+
+#include "MingRTSCulturalAdaptationSystem.generated.h"
+

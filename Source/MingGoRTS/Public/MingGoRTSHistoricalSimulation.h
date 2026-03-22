@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,23 +7,21 @@
 #include "MingGoRTSHistoricalSimulation.generated.h"
 
 UENUM(BlueprintType)
-enum class ESimulationType : uint8
-{
-    Political         UMETA(DisplayName = "??ªv¼ÒÀÀ"),
-    Military          UMETA(DisplayName = "­x??¼ÒÀÀ"),
-    Economic          UMETA(DisplayName = "¸g??¼ÒÀÀ"),
-    Social            UMETA(DisplayName = "ªÀ??¼ÒÀÀ"),
-    Cultural          UMETA(DisplayName = "????¼ÒÀÀ"),
-    International     UMETA(DisplayName = "????¼ÒÀÀ")
+enum class ESimulationType: uint8 {
+    Political         UMETA(DisplayName = "??ï¿½vï¿½ï¿½ï¿½ï¿½"),
+    Military          UMETA(DisplayName = "ï¿½x??ï¿½ï¿½ï¿½ï¿½"),
+    Economic          UMETA(DisplayName = "ï¿½g??ï¿½ï¿½ï¿½ï¿½"),
+    Social            UMETA(DisplayName = "ï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½"),
+    Cultural          UMETA(DisplayName = "????ï¿½ï¿½ï¿½ï¿½"),
+    International     UMETA(DisplayName = "????ï¿½ï¿½ï¿½ï¿½")
 };
 
 UENUM(BlueprintType)
-enum class ESimulationPhase : uint8
-{
-    Setup             UMETA(DisplayName = "³]¸m??¬q"),
-    Execution         UMETA(DisplayName = "???X?¬q"),
-    Analysis          UMETA(DisplayName = "???X?¬q"),
-    Results           UMETA(DisplayName = "µ²?X?¬q")
+enum class ESimulationPhase: uint8 {
+    Setup             UMETA(DisplayName = "ï¿½]ï¿½m??ï¿½q"),
+    Execution         UMETA(DisplayName = "???X?ï¿½q"),
+    Analysis          UMETA(DisplayName = "???X?ï¿½q"),
+    Results           UMETA(DisplayName = "ï¿½ï¿½?X?ï¿½q")
 };
 
 USTRUCT(BlueprintType)
@@ -58,17 +56,16 @@ struct FSimulationParameter
         Unit = TEXT(""};
         Description = TEXT(""};
     }
-};
+);
 
 UENUM(BlueprintType)
-enum class EConsequenceOperation : uint8
-{
+enum class EConsequenceOperation: uint8 {
     Add         UMETA(DisplayName = "????"),
-    Subtract    UMETA(DisplayName = "´î??"),
-    Multiply    UMETA(DisplayName = "­¼??"),
+    Subtract    UMETA(DisplayName = "ï¿½ï¿½??"),
+    Multiply    UMETA(DisplayName = "ï¿½ï¿½??"),
     Divide      UMETA(DisplayName = "????"),
-    Set         UMETA(DisplayName = "³]¸m"),
-    Reset       UMETA(DisplayName = "??¸m")
+    Set         UMETA(DisplayName = "ï¿½]ï¿½m"),
+    Reset       UMETA(DisplayName = "??ï¿½m")
 };
 
 USTRUCT(BlueprintType)
@@ -102,7 +99,7 @@ struct FMingEventConsequence
         bIsPercentage = false;
         DelaySeconds = 0.0f;
     }
-};
+);
 
 USTRUCT(BlueprintType)
 struct FSimulationEvent
@@ -138,7 +135,7 @@ struct FSimulationEvent
         TriggerProbability = 0.0f;
         TimeDelay = TEXT(""};
     }
-};
+);
 
 USTRUCT(BlueprintType)
 struct FHistoricalSimulation
@@ -207,7 +204,7 @@ struct FHistoricalSimulation
         bIsRealTime = false;
         bCanIntervene = false;
     }
-};
+);
 
 USTRUCT(BlueprintType)
 struct FSimulationResult
@@ -260,11 +257,11 @@ struct FSimulationResult
         HistoricalAccuracy = 0.0f;
         PlayerImpact = TEXT(""};
     }
-};
+);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSimulationStarted, const FString&, SimulationID, ESimulationType, Type};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSimulationEventTriggered, const FString&, SimulationID, const FString&, EventID, const FString&, EventName};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSimulationCompleted, const FString&, SimulationID, const FSimulationResult&, Result};
+
+
+
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSHistoricalSimulation : public UObject
@@ -274,7 +271,7 @@ class MINGGORTS_API UMingGoRTSHistoricalSimulation : public UObject
 public:
     UMingGoRTSHistoricalSimulation();
 
-    // ¼ÒÀÀ¨t²Î¨Æ¥ó
+    // ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½Î¨Æ¥ï¿½
     UPROPERTY(BlueprintAssignable, Category = "Simulation System")
     FOnSimulationStarted OnSimulationStarted;
 
@@ -284,188 +281,194 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Simulation System")
     FOnSimulationCompleted OnSimulationCompleted;
 
-    // ???X?¼Ò??¨t??    UFUNCTION(BlueprintCallable, Category = "Simulation System")
+    // ???X?ï¿½ï¿½??ï¿½t??
+    UFUNCTION(BlueprintCallable, Category = "Simulation System")
     void InitializeSimulationSystem();
 
-    // ???X???¼ÒX    UFUNCTION(BlueprintPure, Category = "Simulation System")
+    // ???X???ï¿½ï¿½X
+    UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<FHistoricalSimulation> GetAllSimulations() const;
 
-    // ????¼ÒÀÀ
+    // ????ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     FHistoricalSimulation GetSimulation(const FString& SimulationID) const;
 
-    // ????¼ÒÀÀ
+    // ????ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool StartSimulation(const FString& SimulationID, const TMap<FString, float>& PlayerDecisions};
+    bool StartSimulation(const FString& SimulationID, const TMap<FString, float>& PlayerDecisions);
 
-    // ????¼ÒÀÀ
+    // ????ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool PauseSimulation(const FString& SimulationID};
+    bool PauseSimulation(const FString& SimulationID);
 
-    // Ä~??¼ÒÀÀ
+    // ï¿½~??ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool ResumeSimulation(const FString& SimulationID};
+    bool ResumeSimulation(const FString& SimulationID);
 
-    // ??¤î¼ÒÀÀ
+    // ??ï¿½ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool StopSimulation(const FString& SimulationID};
+    bool StopSimulation(const FString& SimulationID);
 
-    // ¤z??¼ÒÀÀ
+    // ï¿½z??ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool InterveneInSimulation(const FString& SimulationID, const FString& ParameterName, float NewValue};
+    bool InterveneInSimulation(const FString& SimulationID, const FString& ParameterName, float NewValue);
 
-    // ????¼ÒÀÀ??X    UFUNCTION(BlueprintPure, Category = "Simulation System")
+    // ????ï¿½ï¿½ï¿½ï¿½??X
+    UFUNCTION(BlueprintPure, Category = "Simulation System")
     ESimulationPhase GetSimulationPhase(const FString& SimulationID) const;
 
-    // ???X??X?¼Æ
+    // ???X??X?ï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<FSimulationParameter> GetCurrentParameters(const FString& SimulationID) const;
 
-    // ????¼ÒÀÀ??«×
+    // ????ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     float GetSimulationProgress(const FString& SimulationID) const;
 
-    // ????¼ÒÀÀµ²??
+    // ????ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½??
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     FSimulationResult GetSimulationResult(const FString& SimulationID) const;
 
-    // ????¼ÒÀÀ¾ú¥v
+    // ????ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½v
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<FString> GetSimulationHistory(const FString& SimulationID) const;
 
-    // ­p??¼ÒÀÀ??´ú
+    // ï¿½p??ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<float> PredictSimulationOutcome(const FString& SimulationID, const TMap<FString, float>& ParameterChanges) const;
 
-    // ¤ñ??¼ÒÀÀµ²??
+    // ï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½??
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     float CompareWithHistoricalBaseline(const FString& SimulationID) const;
 
-    // ????¼ÒÀÀ²Î??
+    // ????ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½??
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TMap<FString, float> GetSimulationStatistics(const FString& SimulationID) const;
 
-    // «O??¼ÒÀÀ????
+    // ï¿½O??ï¿½ï¿½ï¿½ï¿½????
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool SaveSimulationData(const FString& SaveSlotName};
+    bool SaveSimulationData(const FString& SaveSlotName);
 
-    // ¸ü¤J¼ÒÀÀ????
+    // ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½????
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool LoadSimulationData(const FString& SaveSlotName};
+    bool LoadSimulationData(const FString& SaveSlotName);
 
 protected:
-    // ????¼ÒX    UPROPERTY()
+    // ????ï¿½ï¿½X
+    UPROPERTY()
     TArray<FHistoricalSimulation> AllSimulations;
 
-    // ¼ÒÀÀID??¼Ò???X???
+    // ï¿½ï¿½ï¿½ï¿½ID??ï¿½ï¿½???X???
     UPROPERTY()
     TMap<FString, FHistoricalSimulation> SimulationMap;
 
-    // ¬¡??¼ÒÀÀ??X    UPROPERTY()
+    // ï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½??X
+    UPROPERTY()
     TMap<FString, ESimulationPhase> ActiveSimulations;
 
-    // ¼ÒÀÀ??¼Æ - ª`??¡GTMap<TArray> ¤£¤äXUPROPERTY
+    // ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½ - ï¿½`??ï¿½GTMap<TArray> ï¿½ï¿½ï¿½ï¿½XUPROPERTY
     TMap<FString, TArray<FSimulationParameter>> SimulationParameters;
 
-    // ??¼Æ§Ö?? - ª`??¡G????TMap ¤£¤äXUPROPERTY
+    // ??ï¿½Æ§ï¿½?? - ï¿½`??ï¿½G????TMap ï¿½ï¿½ï¿½ï¿½XUPROPERTY
     TMap<FString, TMap<FString, int32>> ParameterCache;
 
-    // ¼ÒÀÀµ²??
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½??
     UPROPERTY()
     TMap<FString, FSimulationResult> SimulationResults;
 
-    // ¼ÒÀÀ¾ú¥v
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½v
     UPROPERTY()
     TMap<FString, FStringArrayWrapper> SimulationHistories;
 
-    // ¨Æ¥óÄ²µo??Å@ - ??¤î´`ÀôÄ²µo
+    // ï¿½Æ¥ï¿½Ä²ï¿½o??ï¿½@ - ??ï¿½ï¿½`ï¿½ï¿½Ä²ï¿½o
     UPROPERTY()
     TMap<FString, int32> EventTriggerDepth;
 
-    // ??¤j??¥óÄ²??²`??(??¤î????´`Àô)
+    // ??ï¿½j??ï¿½ï¿½Ä²??ï¿½`??(??ï¿½ï¿½????ï¿½`ï¿½ï¿½)
     int32 MaxEventTriggerDepth = 10;
 
-    // ??§_¤w??©l??
+    // ??ï¿½_ï¿½w??ï¿½l??
     bool bIsInitialized;
 
-    // ???X?¼Ò??®w
+    // ???X?ï¿½ï¿½??ï¿½w
     void InitializeSimulationLibrary();
 
-    // ??«Ø??ªv¼ÒÀÀ
+    // ??ï¿½ï¿½??ï¿½vï¿½ï¿½ï¿½ï¿½
     void CreatePoliticalSimulations();
 
-    // ??«Ø­x??¼ÒÀÀ
+    // ??ï¿½Ø­x??ï¿½ï¿½ï¿½ï¿½
     void CreateMilitarySimulations();
 
-    // ??«Ø¸g??¼ÒÀÀ
+    // ??ï¿½Ø¸g??ï¿½ï¿½ï¿½ï¿½
     void CreateEconomicSimulations();
 
-    // ??«ØªÀ??¼ÒÀÀ
+    // ??ï¿½Øªï¿½??ï¿½ï¿½ï¿½ï¿½
     void CreateSocialSimulations();
 
-    // ??«Ø????¼ÒÀÀ
+    // ??ï¿½ï¿½????ï¿½ï¿½ï¿½ï¿½
     void CreateCulturalSimulations();
 
-    // ??«Ø????¼ÒÀÀ
+    // ??ï¿½ï¿½????ï¿½ï¿½ï¿½ï¿½
     void CreateInternationalSimulations();
 
-    // ????¼ÒÀÀ¨B??
-    void ExecuteSimulationStep(const FString& SimulationID};
+    // ????ï¿½ï¿½ï¿½ï¿½ï¿½B??
+    void ExecuteSimulationStep(const FString& SimulationID);
 
-    // ????¼ÒÀÀ¨Æ¥ó
-    void ProcessSimulationEvents(const FString& SimulationID};
+    // ????ï¿½ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½
+    void ProcessSimulationEvents(const FString& SimulationID);
 
-    // Ä²µo¼ÒÀÀ¨Æ¥ó
-    void TriggerSimulationEvent(const FString& SimulationID, const FSimulationEvent& Event};
+    // Ä²ï¿½oï¿½ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½
+    void TriggerSimulationEvent(const FString& SimulationID, const FSimulationEvent& Event);
 
-    // ­p?X?¼ÆÅÜ??
-    void CalculateParameterChanges(const FString& SimulationID};
+    // ï¿½p?X?ï¿½ï¿½ï¿½ï¿½??
+    void CalculateParameterChanges(const FString& SimulationID);
 
-    // ÀË¬d????±ø¥ó
-    bool CheckSuccessConditions(const FString& SimulationID};
+    // ï¿½Ë¬d????ï¿½ï¿½ï¿½ï¿½
+    bool CheckSuccessConditions(const FString& SimulationID);
 
-    // ÀË¬d¥¢??±ø¥ó
-    bool CheckFailureConditions(const FString& SimulationID};
+    // ï¿½Ë¬dï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½
+    bool CheckFailureConditions(const FString& SimulationID);
 
-    // ????¼ÒÀÀµ²??
-    void GenerateSimulationResult(const FString& SimulationID};
+    // ????ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½??
+    void GenerateSimulationResult(const FString& SimulationID);
 
-    // ­p??¾ú¥v·Ç½TX    float CalculateHistoricalAccuracy(const FString& SimulationID};
+    // ï¿½p??ï¿½ï¿½ï¿½vï¿½Ç½TX
+    float CalculateHistoricalAccuracy(const FString& SimulationID);
 
-    // ­p?X?®a¼vÅT
-    float CalculatePlayerImpact(const FString& SimulationID};
+    // ï¿½p?X?ï¿½aï¿½vï¿½T
+    float CalculatePlayerImpact(const FString& SimulationID);
 
-    // ??·s¼ÒÀÀ??«×
-    void UpdateSimulationProgress(const FString& SimulationID};
+    // ??ï¿½sï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½
+    void UpdateSimulationProgress(const FString& SimulationID);
 
-    // °O??¼ÒÀÀ¨Æ¥ó
-    void RecordSimulationEvent(const FString& SimulationID, const FString& EventName};
+    // ï¿½O??ï¿½ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½
+    void RecordSimulationEvent(const FString& SimulationID, const FString& EventName);
 
-    // ???X?¼ÆX(????«á¨Ï??§ÖX
+    // ???X?ï¿½ï¿½X(????ï¿½ï¿½ï¿½??ï¿½ï¿½X
     float GetParameterValue(const FString& SimulationID, const FString& ParameterName) const;
 
-    // ³]¸m??¼ÆX(????«á§ó??§ÖX
-    void SetParameterValue(const FString& SimulationID, const FString& ParameterName, float Value};
+    // ï¿½]ï¿½m??ï¿½ï¿½X(????ï¿½ï¿½ï¿½??ï¿½ï¿½X
+    void SetParameterValue(const FString& SimulationID, const FString& ParameterName, float Value);
 
-    // ºc«Ø??¼Æ§Ö??
-    void BuildParameterCache(const FString& SimulationID};
+    // ï¿½cï¿½ï¿½??ï¿½Æ§ï¿½??
+    void BuildParameterCache(const FString& SimulationID);
 
-    // ????¼ÒÀÀID
+    // ????ï¿½ï¿½ï¿½ï¿½ID
     FString GenerateSimulationID(const FString& BaseName, ESimulationType Type) const;
 
-    // ????¼ÒÀÀÃþ?X?ºó
+    // ????ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?X?ï¿½ï¿½
     FString GetSimulationTypePrefix(ESimulationType Type) const;
 
-    // Åç??¼ÒÀÀ??¼Æ
+    // ï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½
     bool ValidateSimulationParameters(const FString& SimulationID, const TMap<FString, float>& Parameters) const;
 
-    // ­p??¨Æ¥óÄ²µo·§??
+    // ï¿½p??ï¿½Æ¥ï¿½Ä²ï¿½oï¿½ï¿½??
     float CalculateEventTriggerProbability(const FString& SimulationID, const FSimulationEvent& Event) const;
 
-    // ??¥Î¨Æ¥ó«á??
-    void ApplyEventConsequences(const FString& SimulationID, const FSimulationEvent& Event};
+    // ??ï¿½Î¨Æ¥ï¿½ï¿½??
+    void ApplyEventConsequences(const FString& SimulationID, const FSimulationEvent& Event);
 
-    // ????¼ÒÀÀ????
+    // ????ï¿½ï¿½ï¿½ï¿½????
     FString GenerateSimulationReport(const FString& SimulationID) const;
 };
 

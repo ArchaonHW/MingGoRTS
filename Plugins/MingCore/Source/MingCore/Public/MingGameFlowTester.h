@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingGameFlowTester.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingTestScenario : uint8
-{
+enum class EMingTestScenario: uint8 {
     NewGameFlow UMETA(DisplayName = "New Game Flow"),
     LoadGameFlow UMETA(DisplayName = "Load Game Flow"),
     CampaignFlow UMETA(DisplayName = "Campaign Flow"),
@@ -22,8 +21,7 @@ enum class EMingTestScenario : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingTestStep : uint8
-{
+enum class EMingTestStep: uint8 {
     NotStarted UMETA(DisplayName = "Not Started"),
     InProgress UMETA(DisplayName = "In Progress"),
     Completed UMETA(DisplayName = "Completed"),
@@ -136,7 +134,7 @@ public:
     void ExecuteAllFlowTests();
 
     UFUNCTION(BlueprintCallable, Category = "Game Flow Testing")
-    void ExecuteScenario(EMingTestScenario Scenario};
+    void ExecuteScenario(EMingTestScenario Scenario);
 
     UFUNCTION(BlueprintCallable, Category = "Game Flow Testing")
     void ExecuteNewGameFlow();
@@ -236,9 +234,9 @@ public:
     void LoadFlowState();
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFlowTestStarted, EMingTestScenario, Scenario, const FString&, TestName};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFlowTestCompleted, const FMingGameFlowTest&, Test, bool, bSuccess};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAllFlowTestsCompleted, float, SuccessRate};
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnFlowTestStarted OnFlowTestStarted;
@@ -251,10 +249,10 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetScenarioName(EMingTestScenario Scenario};
+    static FString GetScenarioName(EMingTestScenario Scenario);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetStepStatusName(EMingTestStep Status};
+    static FString GetStepStatusName(EMingTestStep Status);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveFlowTestData() const;
@@ -283,8 +281,8 @@ protected:
     // Test Execution
     void ExecuteTestSteps(const FString& TestID) {};
     void ValidateTestStep(const FString& TestID, const FString& StepName) {};
-    void CompleteTestStep(const FString& TestID, const FString& StepName, bool bSuccess};
-    void FinalizeTest(const FString& TestID, bool bSuccess};
+    void CompleteTestStep(const FString& TestID, const FString& StepName, bool bSuccess);
+    void FinalizeTest(const FString& TestID, bool bSuccess);
 
     // Flow Simulation
     void SimulateMainMenu();
@@ -336,6 +334,6 @@ protected:
     FMingGameFlowTest* FindFlowTest(const FString& TestID) {};
     void AddFlowTest(const FMingGameFlowTest& Test) {};
     void LogFlowTestEvent(const FString& Event, const FString& Details) {};
-    void BroadcastTestProgress(const FString& TestName, float Progress};
-};
+    void BroadcastTestProgress(const FString& TestName, float Progress);
+);
 

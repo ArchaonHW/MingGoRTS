@@ -10,8 +10,7 @@
  * Blockchain network types
  */
 UENUM(BlueprintType)
-enum class EBlockchainNetwork : uint8
-{
+enum class EBlockchainNetwork: uint8 {
     EthereumMainnet  = 0,
     EthereumTestnet  = 1,
     PolygonMainnet   = 2,
@@ -26,8 +25,7 @@ enum class EBlockchainNetwork : uint8
  * Gas price strategies
  */
 UENUM(BlueprintType)
-enum class EGasPriceStrategy : uint8
-{
+enum class EGasPriceStrategy: uint8 {
     Slow       = 0,
     Standard   = 1,
     Fast       = 2,
@@ -39,8 +37,7 @@ enum class EGasPriceStrategy : uint8
  * Security levels
  */
 UENUM(BlueprintType)
-enum class ESecurityLevel : uint8
-{
+enum class ESecurityLevel: uint8 {
     Low        = 0,
     Medium     = 1,
     High       = 2,
@@ -431,11 +428,11 @@ private:
     TMap<EBlockchainNetwork, FNetworkConfig> NetworkConfigs;
 
     /** Configuration version */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+    UPROPERTY(EditAnywhere, Category = "Settings")
     FString ConfigVersion;
 
     /** Settings file name */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+    UPROPERTY(EditAnywhere, Category = "Settings")
     FString SettingsFileName;
 
     /** Whether settings have been modified */

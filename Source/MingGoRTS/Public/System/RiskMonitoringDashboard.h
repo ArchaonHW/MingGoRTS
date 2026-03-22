@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "RiskMonitoringDashboard.generated.h"
 
 UENUM(BlueprintType)
-enum class ERiskLevel : uint8
-{
+enum class ERiskLevel: uint8 {
     Critical    UMETA(DisplayName = "Critical"),
     High        UMETA(DisplayName = "High"),
     Medium      UMETA(DisplayName = "Medium"),
@@ -16,8 +15,7 @@ enum class ERiskLevel : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERiskCategory : uint8
-{
+enum class ERiskCategory: uint8 {
     Technical   UMETA(DisplayName = "Technical"),
     Schedule    UMETA(DisplayName = "Schedule"),
     Budget      UMETA(DisplayName = "Budget"),
@@ -29,8 +27,7 @@ enum class ERiskCategory : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERiskStatus : uint8
-{
+enum class ERiskStatus: uint8 {
     Active      UMETA(DisplayName = "Active"),
     Mitigated   UMETA(DisplayName = "Mitigated"),
     Accepted    UMETA(DisplayName = "Accepted"),

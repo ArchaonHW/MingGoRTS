@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Text Manager Component
 
 #pragma once
@@ -11,8 +11,7 @@
  * Text category for organization
  */
 UENUM(BlueprintType)
-enum class ETextCategory : uint8
-{
+enum class ETextCategory: uint8 {
     UI                UMETA(DisplayName = "UI Text"),
     Dialogue          UMETA(DisplayName = "Dialogue"),
     Tutorial          UMETA(DisplayName = "Tutorial"),
@@ -110,7 +109,7 @@ public:
     
     /** Register text metadata for organization */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Text")
-    void RegisterTextMetadata(const FString& Key, const FTextMetadata& Metadata};
+    void RegisterTextMetadata(const FString& Key, const FTextMetadata& Metadata);
     
     /** Get text metadata */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Text")
@@ -151,7 +150,7 @@ public:
     
     /** Import translations from file */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Text|Development")
-    bool ImportTranslations(const FString& FilePath};
+    bool ImportTranslations(const FString& FilePath);
 
 private:
     /** Reference to localization system */
@@ -185,4 +184,5 @@ private:
     /** Get current locale for string operations */
     FString GetCurrentLocale() const;
 };
+
 

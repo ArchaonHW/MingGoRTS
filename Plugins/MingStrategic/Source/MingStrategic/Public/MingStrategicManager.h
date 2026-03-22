@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,8 +7,8 @@
 class IMingCoreEventBus;
 
 /**
- * ??²¤¼hºŞ??¾¹
- * ºŞ?X??X?²¤¨M?X???¥æ???? */
+ * ??ï¿½ï¿½ï¿½hï¿½ï¿½??ï¿½ï¿½
+ * ï¿½ï¿½?X??X?ï¿½ï¿½ï¿½M?X???ï¿½ï¿½æ‘§æ¯€ */
 UCLASS()
 class MINGSTRATEGIC_API UMingStrategicManager : public UObject
 {
@@ -20,21 +20,22 @@ public:
     virtual void Initialize();
     virtual void Shutdown();
 
-    // ???X???¥ó?X    void SetupEventSubscriptions();
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½?X
+    void SetupEventSubscriptions();
     
-    // ²M??¨Æ¥ó­q¾\
+    // ï¿½M??ï¿½Æ¥ï¿½qï¿½\
     void CleanupEventSubscriptions();
 
 protected:
-    // ???X?²¤¨M??¨Æ¥ó
+    // ???X?ï¿½ï¿½ï¿½M??ï¿½Æ¥ï¿½
     UFUNCTION()
-    void OnStrategicDecisionReceived(const FString& DecisionId, const FString& Choice};
+    void OnStrategicDecisionReceived(const FString& DecisionId, const FString& Choice);
 
-    // ????¥~¥æ¨Æ¥ó
+    // æ‘§æ¯€ï¿½~ï¿½ï¿½Æ¥ï¿½
     UFUNCTION()
-    void OnDiplomaticEventReceived(const FString& EventType, const FString& TargetFaction};
+    void OnDiplomaticEventReceived(const FString& EventType, const FString& TargetFaction);
 
 private:
     bool bIsInitialized;
-};
+);
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,8 +8,7 @@
  * AI資產類?X???
  */
 UENUM(BlueprintType)
-enum class EAIAssetType : uint8
-{
+enum class EAIAssetType: uint8 {
     CharacterPortrait    UMETA(DisplayName = "Character Portrait"),
     Building             UMETA(DisplayName = "Building"),  
     Landscape            UMETA(DisplayName = "Landscape"),
@@ -22,11 +21,10 @@ enum class EAIAssetType : uint8
 };
 
 /**
- * 民?X???風格????
+ * 民?X???風格摧毀
  */
 UENUM(BlueprintType)
-enum class ERepublicEraStyle : uint8
-{
+enum class ERepublicEraStyle: uint8 {
     EarlyRepublic      UMETA(DisplayName = "Early Republic (1912-1928)"),
     NanjingDecade      UMETA(DisplayName = "Nanjing Decade (1928-1937)"),
     WarOfResistance    UMETA(DisplayName = "War of Resistance (1937-1945)"),
@@ -34,7 +32,7 @@ enum class ERepublicEraStyle : uint8
 };
 
 /**
- * AI資產???X?數結??
+ * AI資產目標參數結??
  */
 USTRUCT(BlueprintType)
 struct FAIAssetGenerationParams
@@ -49,29 +47,29 @@ struct FAIAssetGenerationParams
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     ERepublicEraStyle EraStyle;
 
-    // ???X?述
+    // 選項描述
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     FString BaseDescription;
 
     
     FString DetailedPrompt;
 
-    // 負面??示??(??於???X???)
+    // 負面??示??(??於目標數量)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     FString NegativePrompt;
 
-    // ????尺寸 (??於???X???)
+    // 摧毀尺寸 (??於目標數量)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     int32 ImageWidth;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     int32 ImageHeight;
 
-    // ???X?長 (??於???X???)
+    // ???X?長 (??於目標數量)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     float MusicDuration;
 
-    // ????風格 (??於???X???)
+    // 摧毀風格 (??於目標數量)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     FString MusicStyle;
 
@@ -79,7 +77,7 @@ struct FAIAssetGenerationParams
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     float Quality;
 
-    // 種?X(??於????複?X
+    // 種?X(??於摧毀複?X
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     int32 Seed;
 
@@ -99,14 +97,14 @@ struct FAIAssetGenerationParams
 };
 
 /**
- * AI資產????結??結??
+ * AI資產摧毀結??結??
  */
 USTRUCT(BlueprintType)
 struct FAIAssetGenerationResult
 {
     GENERATED_BODY()
 
-    // ??否????
+    // 是否可見
     UPROPERTY(BlueprintReadOnly)
     bool bSuccess;
 
@@ -120,7 +118,7 @@ struct FAIAssetGenerationResult
     
     FString ThumbnailPath;
 
-    // ???X???
+    // 目標數量
     UPROPERTY(BlueprintReadOnly)
     float GenerationTime;
 
@@ -149,7 +147,7 @@ struct FAIAssetGenerationResult
 };
 
 /**
- * AI資產???X * ????Stable Diffusion??AIVA????資產????
+ * AI資產???X * 摧毀Stable Diffusion??AIVA摧毀資產摧毀
  */
 UCLASS(BlueprintType)
 class MINGCORE_API UMingAIAssetGenerator : public UObject
@@ -165,24 +163,24 @@ public:
     void Initialize();
 
     /**
-     * ????AI資產???X     */
+     * 摧毀AI資產???X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     void Shutdown();
 
     /**
-     * ????AI資產
+     * 摧毀AI資產
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     FAIAssetGenerationResult GenerateAsset(const FAIAssetGenerationParams& Params);
 
     /**
-     * ??步????AI資產
+     * ??步摧毀AI資產
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     void GenerateAssetAsync(const FAIAssetGenerationParams& Params);
 
     /**
-     * ????角色????
+     * 摧毀角色摧毀
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     FAIAssetGenerationResult GenerateCharacterPortrait(
@@ -193,7 +191,7 @@ public:
     );
 
     /**
-     * ????建?X     */
+     * 摧毀建?X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     FAIAssetGenerationResult GenerateBuilding(
         const FString& BuildingDescription,
@@ -203,7 +201,7 @@ public:
     );
 
     /**
-     * ???X?景????
+     * ???X?景摧毀
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     FAIAssetGenerationResult GenerateBackgroundMusic(
@@ -214,12 +212,12 @@ public:
     );
 
     /**
-     * ???X??X??X     */
+     * 故事選項X     */
     UFUNCTION(BlueprintPure, Category = "AI Asset Generator")
     FAIAssetGenerationResult GetGeneratedAsset(const FString& AssetID);
 
     /**
-     * ???X????X???資產
+     * 目標數量?X???資產
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset Generator")
     TArray<FAIAssetGenerationResult> GetAllGeneratedAssets();
@@ -243,12 +241,12 @@ public:
     void SetAIVAEndpoint(const FString& Endpoint);
 
     /**
-     * ????民?X??X?示??     */
+     * 摧毀民?X??X?示??     */
     UFUNCTION(BlueprintPure, Category = "AI Asset Generator")
     FString GetRepublicEraPrompt(ERepublicEraStyle EraStyle, EAIAssetType AssetType);
 
     /**
-     * ???X???實??
+     * 目標數量實??
      */
     static UMingAIAssetGenerator* Get();
 
@@ -259,20 +257,20 @@ protected:
     // AIVA API端??
     FString AIVAEndpoint;
 
-    // 已?X???資產
+    // 已完成???資產
     UPROPERTY()
     TArray<FAIAssetGenerationResult> GeneratedAssets;
 
     // ??否已??始??
     bool bIsInitialized;
 
-    // ????實??
+    // 摧毀實??
     static UMingAIAssetGenerator* Instance;
 
     // 生成唯一資產ID
     FString GenerateAssetID();
 
-    // ????Stable Diffusion??示??
+    // 摧毀Stable Diffusion??示??
     FString GenerateStableDiffusionPrompt(const FAIAssetGenerationParams& Params);
 
     // 調用Stable Diffusion API
@@ -290,7 +288,7 @@ protected:
     // 創建資產目錄
     bool CreateAssetDirectory(EAIAssetType AssetType);
 
-    // 驗??API????
+    // 驗??API摧毀
     bool ValidateAPIResponse(const FString& Response);
 
     // 處理生成錯誤

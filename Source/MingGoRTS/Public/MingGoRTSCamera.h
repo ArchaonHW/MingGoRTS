@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
@@ -26,10 +26,10 @@ public:
     UCameraComponent* Camera;
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void SetCameraDistance(float Distance};
+    void SetCameraDistance(float Distance);
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void MoveCamera(const FVector& Direction};
+    void MoveCamera(const FVector& Direction);
 
 private:
     UPROPERTY()

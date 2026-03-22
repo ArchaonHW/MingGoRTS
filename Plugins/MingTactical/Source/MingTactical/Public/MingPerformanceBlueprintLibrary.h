@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -10,7 +10,7 @@ class UMingPerformanceMonitor;
 class AMingTacticalUnit;
 
 /**
- * ??¯à???X??X?¼Æ?? * ???X??X?½Õ???X?¯à???X?¯à
+ * æ‘§æ¯€?X??X??? * æ•…äº‹é‡è¦æ€§?ç›®æ¨™æ•¸é‡?X?
  */
 UCLASS()
 class MINGTACTICAL_API UMingPerformanceBlueprintLibrary : public UBlueprintFunctionLibrary
@@ -19,176 +19,176 @@ class MINGTACTICAL_API UMingPerformanceBlueprintLibrary : public UBlueprintFunct
 
 public:
     /**
-     * ???X?¯àX????¹ê??     */
+     * ???X?Xæ‘§æ¯€??     */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static UMingPerformanceMonitor* GetPerformanceMonitor();
 
     /**
-     * ???X?©Ê¯àX??
+     * ???X?Ê¯X??
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     static void InitializePerformanceMonitor();
 
     /**
-     * ???X???FPS
+     * ç›®æ¨™æ•¸é‡FPS
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static float GetCurrentFPS();
 
     /**
-     * ????¥­??FPS
+     * æ‘§æ¯€??FPS
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static float GetAverageFPS();
 
     /**
-     * ???X?§CFPS
+     * ???X?CFPS
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static float GetMinFPS();
 
     /**
-     * ???X?°ªFPS
+     * ???X?FPS
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static float GetMaxFPS();
 
     /**
-     * ????´V???? (²@??)
+     * æ‘§æ¯€Væ‘§æ¯€ (@??)
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static float GetFrameTimeMs();
 
     /**
-     * ???X?¯à???X???
+     * ç›®æ¨™æ•¸é‡?X???
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static FString GetPerformanceReport();
 
     /**
-     * ????Â²µu??¯à????
+     * æ‘§æ¯€Â²uæ‘§æ¯€??
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static FString GetShortPerformanceText();
 
     /**
-     * ??§_??¯à????
+     * ??_æ‘§æ¯€??
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static bool IsPerformanceAcceptable();
 
     /**
-     * ³]¸m????FPS
+     * ]mæ‘§æ¯€FPS
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    static void SetTargetFPS(float TargetFPS};
+    static void SetTargetFPS(float TargetFPS);
 
     /**
-     * ???X?¯à°O??
+     * ???X?O??
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     static void StartPerformanceRecording();
 
     /**
-     * ??¤î??¯à°O??
+     * æ‘§æ¯€O??
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     static void StopPerformanceRecording();
 
     /**
-     * ¾É¥X??¯à????
+     * É¥Xæ‘§æ¯€??
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    static bool ExportPerformanceReport(const FString& FilePath};
+    static bool ExportPerformanceReport(const FString& FilePath);
 
     /**
-     * ????°O¾ĞÅé¨ÏX(MB)
+     * æ‘§æ¯€OX(MB)
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static float GetMemoryUsageMB();
 
     /**
-     * ????´è??¹ê?X???
+     * æ‘§æ¯€ç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static int32 GetRenderedInstanceCount();
 
     /**
-     * ???X?°£¹ê?X???
+     * æ•…äº‹é¸é …?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static int32 GetCulledInstanceCount();
 
     /**
-     * ????¬¡??ºô®æ????
+     * æ‘§æ¯€æ‘§æ¯€??
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static int32 GetActiveGridCellCount();
 
     /**
-     * µù?X??X?¹ê¨Ò??´è??¨t²Î
+     * ?X??Xæ‘§æ¯€?t
      */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    static void RegisterUnitForInstancedRendering(AMingTacticalUnit* Unit};
+    static void RegisterUnitForInstancedRendering(AMingTacticalUnit* Unit);
 
     /**
-     * ±q¹ê¨Ò??´è??¨t²Î²¾°£????
+     * qæ‘§æ¯€tÎ²æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    static void UnregisterUnitFromInstancedRendering(AMingTacticalUnit* Unit};
+    static void UnregisterUnitFromInstancedRendering(AMingTacticalUnit* Unit);
 
     /**
-     * ³]¸m???X??X     */
+     * ]mæ•…äº‹é‡è¦æ€§     */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    static void SetUnitVisibility(AMingTacticalUnit* Unit, bool bVisible};
+    static void SetUnitVisibility(AMingTacticalUnit* Unit, bool bVisible);
 
     /**
-     * ???X???LOD¯Å§O
+     * ç›®æ¨™æ•¸é‡LODÅ§O
      */
     UFUNCTION(BlueprintPure, Category = "LOD")
-    static int32 GetUnitLODLevel(AMingTacticalUnit* Unit};
+    static int32 GetUnitLODLevel(AMingTacticalUnit* Unit);
 
     /**
-     * ³]¸mLOD¶ZÂ÷????     */
+     * ]mLODZæ‘§æ¯€     */
     UFUNCTION(BlueprintCallable, Category = "LOD")
-    static void SetLODDistanceThresholds(const TArray<float>& Thresholds};
+    static void SetLODDistanceThresholds(const TArray<float>& Thresholds);
 
     /**
-     * µù?X??X?ªÅ????¶ô¨t??     */
+     * ?X??Xæ‘§æ¯€?t??     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    static void RegisterUnitForSpatialPartition(AMingTacticalUnit* Unit};
+    static void RegisterUnitForSpatialPartition(AMingTacticalUnit* Unit);
 
     /**
-     * ±qªÅ????¶ô¨t²Î²¾??³æ??     */
+     * qæ‘§æ¯€tÎ²æ‘§æ¯€     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    static void UnregisterUnitFromSpatialPartition(AMingTacticalUnit* Unit};
+    static void UnregisterUnitFromSpatialPartition(AMingTacticalUnit* Unit);
 
     /**
-     * ???X??X??X??X???
+     * æ•…äº‹é¸é …X??X???
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    static TArray<AMingTacticalUnit*> GetUnitsInRadius(const FVector& Center, float Radius};
+    static TArray<AMingTacticalUnit*> GetUnitsInRadius(const FVector& Center, float Radius);
 
     /**
-     * ³]¸mªÅ?X???ºô®æ¤j??
+     * ]m?X???j??
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    static void SetSpatialPartitionCellSize(float CellSize};
+    static void SetSpatialPartitionCellSize(float CellSize);
 
     /**
-     * ³]¸mªÅ?X??X?·s????
+     * ]m?X??X?sæ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    static void SetSpatialPartitionUpdateRadius(float Radius};
+    static void SetSpatialPartitionUpdateRadius(float Radius);
 
     /**
-     * ????ºô®æ½Õ¸Õ¸ê??
+     * æ‘§æ¯€Õ¸Õ¸??
      */
     UFUNCTION(BlueprintCallable, Category = "Debug")
-    static void GetDebugGridInfo(TArray<FVector>& CellCenters, TArray<int32>& CellUnitCounts};
+    static void GetDebugGridInfo(TArray<FVector>& CellCenters, TArray<int32>& CellUnitCounts);
 
     /**
-     * ???X???«ØÄ³
+     * ç›®æ¨™æ•¸é‡Ä³
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     static FString GetOptimizationSuggestions();

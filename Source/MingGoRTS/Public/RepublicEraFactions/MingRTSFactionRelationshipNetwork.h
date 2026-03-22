@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // 势力关系网络系统头文件
 
 #pragma once
@@ -16,8 +16,7 @@ class UMingRTSFactionBase;
  * 势力关系类型枚举
  */
 UENUM(BlueprintType)
-enum class EFactionRelationType : uint8
-{
+enum class EFactionRelationType: uint8 {
     Alliance        UMETA(DisplayName = "同盟"),
     Friendly        UMETA(DisplayName = "友好"),
     Neutral         UMETA(DisplayName = "中立"),
@@ -82,8 +81,7 @@ struct FFactionRelation
  * 外交行动类型
  */
 UENUM(BlueprintType)
-enum class EDiplomaticAction : uint8
-{
+enum class EDiplomaticAction: uint8 {
     ProposeAlliance         UMETA(DisplayName = "提议同盟"),
     BreakAlliance           UMETA(DisplayName = "断绝同盟"),
     DeclareWar              UMETA(DisplayName = "宣战"),

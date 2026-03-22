@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -13,8 +13,7 @@
  * 偽聖者：不能用卻假裝不用，外交加成但無法使用逆策
  */
 UENUM(BlueprintType)
-enum class ESageCharacterType : uint8
-{
+enum class ESageCharacterType: uint8 {
     None            UMETA(DisplayName = "None"),
     Sage            UMETA(DisplayName = "聖者"),      // 至聖者 - 正邪皆兵而不墮
     DemonKing       UMETA(DisplayName = "魔王"),      // 魔王 - 能用邪而不能停

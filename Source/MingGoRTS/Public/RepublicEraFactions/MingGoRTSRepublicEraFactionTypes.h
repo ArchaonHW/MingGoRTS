@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Republic Era Factions - Core Types and Enums
 
 #pragma once
@@ -11,8 +11,7 @@
  * Faction difficulty level
  */
 UENUM(BlueprintType)
-enum class EFactionDifficulty : uint8
-{
+enum class EFactionDifficulty: uint8 {
     VeryEasy    UMETA(DisplayName = "Very Easy"),
     Easy        UMETA(DisplayName = "Easy"),
     Normal      UMETA(DisplayName = "Normal"),
@@ -24,8 +23,7 @@ enum class EFactionDifficulty : uint8
  * Faction type category
  */
 UENUM(BlueprintType)
-enum class EFactionCategory : uint8
-{
+enum class EFactionCategory: uint8 {
     CentralGovernment   UMETA(DisplayName = "Central Government"),
     RegionalWarlord     UMETA(DisplayName = "Regional Warlord"),
     Revolutionary       UMETA(DisplayName = "Revolutionary Force"),
@@ -37,8 +35,7 @@ enum class EFactionCategory : uint8
  * Unit type classification
  */
 UENUM(BlueprintType)
-enum class EFactionUnitType : uint8
-{
+enum class EFactionUnitType: uint8 {
     Infantry        UMETA(DisplayName = "Infantry"),
     Cavalry         UMETA(DisplayName = "Cavalry"),
     Artillery       UMETA(DisplayName = "Artillery"),
@@ -52,8 +49,7 @@ enum class EFactionUnitType : uint8
  * Unit specialization trait
  */
 UENUM(BlueprintType)
-enum class EUnitTrait : uint8
-{
+enum class EUnitTrait: uint8 {
     None            UMETA(DisplayName = "None"),
     ShockTroop      UMETA(DisplayName = "Shock Troop"),
     Defensive       UMETA(DisplayName = "Defensive Specialist"),
@@ -73,8 +69,7 @@ enum class EUnitTrait : uint8
  * Faction unique mechanic type
  */
 UENUM(BlueprintType)
-enum class EFactionMechanicType : uint8
-{
+enum class EFactionMechanicType: uint8 {
     Diplomatic      UMETA(DisplayName = "Diplomatic Advantage"),
     Economic        UMETA(DisplayName = "Economic Bonus"),
     Military        UMETA(DisplayName = "Military Specialization"),

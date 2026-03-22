@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingCrossPlatform.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingPlatform : uint8
-{
+enum class EMingPlatform: uint8 {
     Windows UMETA(DisplayName = "Windows"),
     Android UMETA(DisplayName = "Android"),
     iOS UMETA(DisplayName = "iOS"),
@@ -15,8 +14,7 @@ enum class EMingPlatform : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingInputMethod : uint8
-{
+enum class EMingInputMethod: uint8 {
     MouseKeyboard UMETA(DisplayName = "Mouse & Keyboard"),
     Touch UMETA(DisplayName = "Touch"),
     Gamepad UMETA(DisplayName = "Gamepad"),
@@ -24,8 +22,7 @@ enum class EMingInputMethod : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingGraphicsQuality : uint8
-{
+enum class EMingGraphicsQuality: uint8 {
     Low UMETA(DisplayName = "Low"),
     Medium UMETA(DisplayName = "Medium"),
     High UMETA(DisplayName = "High"),
@@ -186,38 +183,38 @@ public:
     void SavePlatformSettings();
 
     UFUNCTION(BlueprintCallable, Category = "Settings")
-    void ApplyPlatformSettings(const FMingPlatformSettings& Settings};
+    void ApplyPlatformSettings(const FMingPlatformSettings& Settings);
 
     UFUNCTION(BlueprintPure, Category = "Settings")
     FMingPlatformSettings GetCurrentSettings() const;
 
     UFUNCTION(BlueprintCallable, Category = "Settings")
-    void SetGraphicsQuality(EMingGraphicsQuality Quality};
+    void SetGraphicsQuality(EMingGraphicsQuality Quality);
 
     UFUNCTION(BlueprintCallable, Category = "Settings")
-    void SetResolution(int32 Width, int32 Height};
+    void SetResolution(int32 Width, int32 Height);
 
     UFUNCTION(BlueprintCallable, Category = "Settings")
-    void SetFullscreen(bool bFullscreen};
+    void SetFullscreen(bool bFullscreen);
 
     UFUNCTION(BlueprintCallable, Category = "Settings")
-    void SetUIScale(float Scale};
+    void SetUIScale(float Scale);
 
     // Input Adaptation
     UFUNCTION(BlueprintCallable, Category = "Input")
     void AdaptInputScheme();
 
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void SetInputMethod(EMingInputMethod InputMethod};
+    void SetInputMethod(EMingInputMethod InputMethod);
 
     UFUNCTION(BlueprintPure, Category = "Input")
     EMingInputMethod GetPreferredInputMethod() const;
 
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void EnableTouchControls(bool bEnable};
+    void EnableTouchControls(bool bEnable);
 
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void EnableGamepadSupport(bool bEnable};
+    void EnableGamepadSupport(bool bEnable);
 
     UFUNCTION(BlueprintCallable, Category = "Input")
     void CalibrateTouchControls();
@@ -243,10 +240,10 @@ public:
     void OptimizeForPlatform();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void EnableAdaptivePerformance(bool bEnable};
+    void EnableAdaptivePerformance(bool bEnable);
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetTargetFPS(int32 FPS};
+    void SetTargetFPS(int32 FPS);
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void AdjustQualitySettings();
@@ -259,26 +256,26 @@ public:
     void AdaptGraphicsForPlatform();
 
     UFUNCTION(BlueprintCallable, Category = "Graphics")
-    void SetTextureQuality(int32 Quality};
+    void SetTextureQuality(int32 Quality);
 
     UFUNCTION(BlueprintCallable, Category = "Graphics")
-    void SetShadowQuality(int32 Quality};
+    void SetShadowQuality(int32 Quality);
 
     UFUNCTION(BlueprintCallable, Category = "Graphics")
-    void SetParticleQuality(int32 Quality};
+    void SetParticleQuality(int32 Quality);
 
     UFUNCTION(BlueprintCallable, Category = "Graphics")
-    void EnablePostProcessing(bool bEnable};
+    void EnablePostProcessing(bool bEnable);
 
     // Audio Adaptation
     UFUNCTION(BlueprintCallable, Category = "Audio")
     void AdaptAudioForPlatform();
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void SetAudioQuality(int32 Quality};
+    void SetAudioQuality(int32 Quality);
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void EnableHapticFeedback(bool bEnable};
+    void EnableHapticFeedback(bool bEnable);
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
     void OptimizeAudioLatency();
@@ -288,23 +285,23 @@ public:
     void AdaptStorageForPlatform();
 
     UFUNCTION(BlueprintCallable, Category = "Storage")
-    void EnableCloudSave(bool bEnable};
+    void EnableCloudSave(bool bEnable);
 
     UFUNCTION(BlueprintCallable, Category = "Storage")
-    void SetAutoSaveInterval(float Interval};
+    void SetAutoSaveInterval(float Interval);
 
     UFUNCTION(BlueprintCallable, Category = "Storage")
-    void CompressSaveData(bool bCompress};
+    void CompressSaveData(bool bCompress);
 
     // Network Adaptation
     UFUNCTION(BlueprintCallable, Category = "Network")
     void AdaptNetworkForPlatform();
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void SetNetworkQuality(int32 Quality};
+    void SetNetworkQuality(int32 Quality);
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void EnableMobileOptimizedNetworking(bool bEnable};
+    void EnableMobileOptimizedNetworking(bool bEnable);
 
     UFUNCTION(BlueprintCallable, Category = "Network")
     void AdjustBandwidthUsage();
@@ -326,9 +323,9 @@ public:
     bool SupportsHapticFeedback() const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlatformChanged, EMingPlatform, OldPlatform, EMingPlatform, NewPlatform};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSettingsChanged, const FMingPlatformSettings&, Settings, const FString&, SettingName};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceModeChanged, const FString&, Mode};
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnPlatformChanged OnPlatformChanged;
@@ -341,19 +338,19 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetPlatformName(EMingPlatform Platform};
+    static FString GetPlatformName(EMingPlatform Platform);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetInputMethodName(EMingInputMethod InputMethod};
+    static FString GetInputMethodName(EMingInputMethod InputMethod);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetGraphicsQualityName(EMingGraphicsQuality Quality};
+    static FString GetGraphicsQualityName(EMingGraphicsQuality Quality);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SavePlatformData() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadPlatformData(const FString& JsonString};
+    void LoadPlatformData(const FString& JsonString);
 
 protected:
     UPROPERTY()

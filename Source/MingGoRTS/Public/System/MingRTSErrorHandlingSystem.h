@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingRTSErrorHandlingSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EErrorSeverity : uint8
-{
+enum class EErrorSeverity: uint8 {
     Info,               // 信息
     Warning,            // 警告
     Error,              // 錯誤
@@ -16,8 +15,7 @@ enum class EErrorSeverity : uint8
 };
 
 UENUM(BlueprintType)
-enum class EErrorCategory : uint8
-{
+enum class EErrorCategory: uint8 {
     System,             // 系統錯誤
     Network,            // 網絡錯誤
     Database,           // 數據庫錯誤

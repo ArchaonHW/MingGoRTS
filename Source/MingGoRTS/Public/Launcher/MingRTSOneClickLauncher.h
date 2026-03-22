@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,7 +6,7 @@
 #include "MingRTSOneClickLauncher.generated.h"
 
 /**
- * MingGoRTS ¤@???X?¨t?? * ??Â²³æ??¤è¦¡?X?¨Ã???X???½sÄ¶¨t²Î
+ * MingGoRTS ï¿½@???X?ï¿½t?? * ??Â²ï¿½ï¿½??ï¿½è¦¡?X?ï¿½ï¿½???X???ï¿½sÄ¶ï¿½tï¿½ï¿½
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = "MingGoRTS")
 class MINGGORTS_API UMingRTSOneClickLauncher : public UObject
@@ -16,46 +16,53 @@ class MINGGORTS_API UMingRTSOneClickLauncher : public UObject
 public:
     UMingRTSOneClickLauncher();
 
-    // X ¤@???X- ??Â²³æ??¨Ï??¤è??    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "X ¤@???X?Àu??¨t??))
+    // X ï¿½@???X- ??Â²ï¿½ï¿½??ï¿½ï¿½??ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "X ï¿½@???X?ï¿½u??ï¿½t??))
     static UMingRTSOneClickLauncher* LaunchOptimizationSystem();
 
-    // X§Ö³t?X- ???X?¸m¨Ã??©lÀuX    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "X§Ö³t?X?¨Ã????"))
+    // Xï¿½Ö³t?X- ???X?ï¿½mï¿½ï¿½??ï¿½lï¿½uX
+    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "Xï¿½Ö³t?X?ï¿½ï¿½????"))
     void QuickLaunchAndOptimize();
 
-    // ??? ??¯à???? - ????¨t²Î???X??X?¨Î????    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "??? ??¯à????"))
+    // ??? ??ï¿½ï¿½???? - ????ï¿½tï¿½ï¿½???X??X?ï¿½ï¿½????
+    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "??? ??ï¿½ï¿½????"))
     void SmartLaunch();
 
-    // ??? ·¥­P???? - ??°ª©Ê¯à??¸m
-    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "??? ·¥­P????"))
+    // ??? ï¿½ï¿½ï¿½P???? - ??ï¿½ï¿½ï¿½Ê¯ï¿½??ï¿½m
+    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "??? ï¿½ï¿½ï¿½P????"))
     void ExtremeLaunch();
 
-    // X ???X??X?X    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "X ????¨t²Î??X))
+    // X ???X??X?X
+    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "X ????ï¿½tï¿½ï¿½??X))
     FString GetLaunchStatus();
 
-    // ??? ???X?¯à????
-    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "??? ???X?¯à????"))
+    // ??? ???X?ï¿½ï¿½????
+    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "??? ???X?ï¿½ï¿½????"))
     FString GetPerformanceReport();
 
-    // X ??·s????
-    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "X ??·s????¨t²Î"))
+    // X ??ï¿½s????
+    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "X ??ï¿½s????ï¿½tï¿½ï¿½"))
     void RestartSystem();
 
-    // ???? ??¤î¨t²Î
-    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "???? ??¤î????¨t²Î"))
+    // ???? ??ï¿½ï¿½tï¿½ï¿½
+    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "???? ??ï¿½ï¿½????ï¿½tï¿½ï¿½"))
     void StopSystem();
 
-    // X ????¨t²Î??±d??    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "X ????¨t²Î??±d??))
+    // X ????ï¿½tï¿½ï¿½??ï¿½d??
+    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "X ????ï¿½tï¿½ï¿½??ï¿½d??))
     float GetSystemHealth();
 
-    // ??? ¤@??©Ê¯àÀË¬d
-    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "??? ¤@??©Ê¯àÀË¬d"))
+    // ??? ï¿½@??ï¿½Ê¯ï¿½ï¿½Ë¬d
+    UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayName = "??? ï¿½@??ï¿½Ê¯ï¿½ï¿½Ë¬d"))
     void OneClickPerformanceCheck();
 
 protected:
-    // ????¨t²ÎºÞ?X    UPROPERTY(BlueprintReadOnly, Category = "One Click Launcher")
+    // ????ï¿½tï¿½Îºï¿½?X
+    UPROPERTY(BlueprintReadOnly, Category = "One Click Launcher")
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
-    // ¨t²Î??X    UPROPERTY(BlueprintReadOnly, Category = "One Click Launcher")
+    // ï¿½tï¿½ï¿½??X
+    UPROPERTY(BlueprintReadOnly, Category = "One Click Launcher")
     bool bSystemLaunched;
 
     UPROPERTY(BlueprintReadOnly, Category = "One Click Launcher")
@@ -65,22 +72,24 @@ protected:
     FDateTime LaunchTime;
 
 private:
-    // ??³¡???X?¿è
+    // ??ï¿½ï¿½???X?ï¿½ï¿½
     void InitializeLauncher();
-    void ConfigureForMode(EOptimizationMode Mode};
+    void ConfigureForMode(EOptimizationMode Mode);
     void StartOptimization();
     
-    // ????ÀËX    bool IsSystemHealthy();
+    // ????ï¿½ï¿½X
+    bool IsSystemHealthy();
     void UpdateLaunchStatus();
     
-    // Åã¥Ü??¯à
+    // ï¿½ï¿½ï¿½??ï¿½ï¿½
     void ShowLaunchSuccess();
     void ShowPerformanceResults();
     void DisplaySystemInfo();
     
-    // »²§U????
-    FString GetLaunchModeName(EOptimizationMode Mode};
-    FString GetSystemHealthStatus(float Health};
+    // ï¿½ï¿½ï¿½U????
+    FString GetLaunchModeName(EOptimizationMode Mode);
+    FString GetSystemHealthStatus(float Health);
     FString GenerateLaunchReport();
 };
+
 

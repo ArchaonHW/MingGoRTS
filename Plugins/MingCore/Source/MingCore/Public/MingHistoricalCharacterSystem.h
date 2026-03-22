@@ -1,50 +1,52 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingHistoricalCharacterSystem.generated.h"
 
-// ¤Hª«Ãş?X???
+// ï¿½Hï¿½ï¿½ï¿½ï¿½?X???
 UENUM(BlueprintType)
-enum class EMingCharacterType : uint8
-{
-    MilitaryLeader,    // ­x?X???
-    Politician,        // ??ªv??    Diplomat,          // ¥~¥æ??    Businessman,       // ??¤H
-    Scholar,           // ¾Ç??    Revolutionary,     // ??©R??    Warlord,           // ­x»Ö
-    ForeignAdvisor     // ¥~??ÅU??
+enum class EMingCharacterType: uint8 {
+    MilitaryLeader,    // ï¿½x?X???
+    Politician,        // ??ï¿½v??
+    Diplomat,          // ï¿½~ï¿½ï¿½??
+    Businessman,       // ??ï¿½H
+    Scholar,           // ï¿½ï¿½??
+    Revolutionary,     // ??ï¿½R??
+    Warlord,           // ï¿½xï¿½ï¿½
+    ForeignAdvisor     // ï¿½~??ï¿½U??
 };
 
-// ¤Hª«????Ãş??
+// ï¿½Hï¿½ï¿½æ‘§æ¯€ï¿½ï¿½??
 UENUM(BlueprintType)
-enum class EMingRelationshipType : uint8
-{
-    Ally,              // ????
-    Enemy,             // ????
-    Neutral,           // ¤¤??
-    Subordinate,       // ¤UÄİ
-    Superior,          // ¤W??
-    Family,            // ®a??
-    Mentor,            // ¾É®v
-    Rival              // Ävª§¹ï??
+enum class EMingRelationshipType: uint8 {
+    Ally,              // æ‘§æ¯€
+    Enemy,             // æ‘§æ¯€
+    Neutral,           // ï¿½ï¿½??
+    Subordinate,       // ï¿½Uï¿½ï¿½
+    Superior,          // ï¿½W??
+    Family,            // ï¿½a??
+    Mentor,            // ï¿½É®v
+    Rival              // ï¿½vï¿½ï¿½ï¿½ï¿½??
 };
 
-// ¹ï¸ÜÃş??
+// ï¿½ï¿½ï¿½ï¿½ï¿½??
 UENUM(BlueprintType)
-enum class EMingDialogueType : uint8
-{
-    Greeting,          // ????    Political,         // ??ªv°Q??
-    Military,          // ­x?X?Ä³
-    Economic,          // ¸g??½Í§P
-    Personal,          // ??¤H¥æ??
-    Diplomatic,        // ¥~¥æ¥æ??
-    Threat,            // «Â??
-    Persuasion,        // »¡??
-    Request,           // ½Ğ??
-    Information        // «H®§????
+enum class EMingDialogueType: uint8 {
+    Greeting,          // æ‘§æ¯€
+    Political,         // ??ï¿½vï¿½Q??
+    Military,          // ï¿½x?X?Ä³
+    Economic,          // ï¿½g??ï¿½Í§P
+    Personal,          // ??ï¿½Hï¿½ï¿½??
+    Diplomatic,        // ï¿½~ï¿½ï¿½ï¿½??
+    Threat,            // ï¿½ï¿½??
+    Persuasion,        // ï¿½ï¿½??
+    Request,           // ï¿½ï¿½??
+    Information        // ï¿½Hï¿½ï¿½æ‘§æ¯€
 };
 
 /**
- * ??ªv????°O??µ²?? (??¥N TTuple)
+ * ??ï¿½væ‘§æ¯€ï¿½O??ï¿½ï¿½?? (??ï¿½N TTuple)
  */
 USTRUCT(BlueprintType)
 struct FMingPoliticalAlliance
@@ -63,41 +65,41 @@ struct FMingPoliticalAlliance
     {}
 };
 
-// ¹ï¸Ü????µ²??
+// ï¿½ï¿½ï¿½æ‘§æ¯€ï¿½ï¿½??
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingDialogueOption
 {
     GENERATED_BODY()
 
-    // ????ID
+    // ç›®æ¨™ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 OptionID;
 
-    // ???X?¥»
+    // ???X?ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString OptionText;
 
-    // ???X?­z
+    // ???X?ï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString OptionDescription;
 
-    // ????Ãş??
+    // æ‘§æ¯€ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingDialogueType DialogueType;
 
-    // ???X?¸m±ø¥ó
+    // ???X?ï¿½mï¿½ï¿½ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> Prerequisites;
 
-    // ????«á??
+    // æ‘§æ¯€ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> Consequences;
 
-    // ????¼vÅT
+    // æ‘§æ¯€ï¿½vï¿½T
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, int32> RelationshipChanges;
 
-    // ?X?·s¹ï¸Ü
+    // ?X?ï¿½sï¿½ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> UnlockedDialogues;
 
@@ -105,7 +107,7 @@ struct FINGCORE_API FMingDialogueOption
     {
         OptionID = -1;
         OptionText = TEXT(""};
-        OptionDescription = TEXT(""};
+        OptionDescription = TEXT("");
         DialogueType = EMingDialogueType::Greeting;
         Prerequisites.Empty();
         Consequences.Empty();
@@ -114,12 +116,12 @@ struct FINGCORE_API FMingDialogueOption
     }
 };
 
-// ¹ï¸Ü¸`ÂI????USTRUCT(BlueprintType)
+// ï¿½ï¿½Ü¸`ï¿½Iæ‘§æ¯€USTRUCT(BlueprintType)
 struct FINGCORE_API FMingDialogueNode
 {
     GENERATED_BODY()
 
-    // ¸`ÂIID
+    // ï¿½`ï¿½IID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 NodeID;
 
@@ -129,23 +131,23 @@ struct FINGCORE_API FMingDialogueNode
     
     FString SpeakerName;
 
-    // ¹ï¸ÜÃş??
+    // ï¿½ï¿½ï¿½ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingDialogueType DialogueType;
 
-    // ¹ï¸Ü????
+    // ï¿½ï¿½ï¿½æ‘§æ¯€
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingDialogueOption> Options;
 
-    // ±ø¥óÀË¬d
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ë¬d
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> Conditions;
 
-    // ¹ï¸Ü????
+    // ï¿½ï¿½ï¿½æ‘§æ¯€
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DialogueSound;
 
-    // ¹ï¸Ü??µe
+    // ï¿½ï¿½ï¿½??ï¿½e
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DialogueAnimation;
 
@@ -153,42 +155,42 @@ struct FINGCORE_API FMingDialogueNode
     {
         NodeID = -1;
         NodeText = TEXT(""};
-        SpeakerName = TEXT(""};
+        SpeakerName = TEXT("");
         DialogueType = EMingDialogueType::Greeting;
         Options.Empty();
         Conditions.Empty();
         DialogueSound = TEXT(""};
         DialogueAnimation = TEXT(""};
     }
-};
+);
 
-// ¾ú¥v¤Hª«????
+// ï¿½ï¿½ï¿½vï¿½Hï¿½ï¿½æ‘§æ¯€
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingHistoricalCharacter
 {
     GENERATED_BODY()
 
-    // ¤Hª«ID
+    // ï¿½Hï¿½ï¿½ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CharacterID;
 
-    // ¤Hª«©m??
+    // ï¿½Hï¿½ï¿½ï¿½m??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CharacterName;
 
-    // ¤Hª«¦r??
+    // ï¿½Hï¿½ï¿½ï¿½r??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CourtesyName;
 
-    // ¤Hª«Ãş??
+    // ï¿½Hï¿½ï¿½ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingCharacterType CharacterType;
 
-    // ¤Hª«??­z
+    // ï¿½Hï¿½ï¿½??ï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CharacterDescription;
 
-    // ¾ú¥v??´º
+    // ï¿½ï¿½ï¿½v??ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HistoricalBackground;
 
@@ -198,11 +200,11 @@ struct FINGCORE_API FMingHistoricalCharacter
     
     TArray<FString> Skills;
 
-    // ¤Hª«????
+    // ï¿½Hï¿½ï¿½æ‘§æ¯€
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, int32> Relationships;
 
-    // ????¦ì¸m
+    // æ‘§æ¯€ï¿½ï¿½m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CurrentLocation;
 
@@ -225,7 +227,7 @@ struct FINGCORE_API FMingHistoricalCharacter
         CourtesyName = TEXT(""};
         CharacterType = EMingCharacterType::MilitaryLeader;
         CharacterDescription = TEXT(""};
-        HistoricalBackground = TEXT(""};
+        HistoricalBackground = TEXT("");
         CharacterAttributes.Empty();
         Skills.Empty();
         Relationships.Empty();
@@ -235,47 +237,47 @@ struct FINGCORE_API FMingHistoricalCharacter
         bAvailableForDialogue = true;
         RootDialogueNode = -1;
     }
-};
+);
 
-// ¤Hª«¤¬??°O??
+// ï¿½Hï¿½ï¿½ï¿½ï¿½??ï¿½O??
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingCharacterInteraction
 {
     GENERATED_BODY()
 
-    // ¤¬??ID
+    // ï¿½ï¿½??ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 InteractionID;
 
-    // ¤Hª«ID
+    // ï¿½Hï¿½ï¿½ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CharacterID;
 
-    // ¤¬?X???
+    // ï¿½ï¿½?X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime InteractionTime;
 
-    // ¤¬?X???
+    // ï¿½ï¿½?X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString InteractionLocation;
 
-    // ¹ï¸Ü¸`ÂIID
+    // ï¿½ï¿½Ü¸`ï¿½IID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 DialogueNodeID;
 
-    // ???X?¿ï??ID
+    // ???X?ï¿½ï¿½??ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ChosenOptionID;
 
-    // ¤¬??µ²??
+    // ï¿½ï¿½??ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> InteractionResults;
 
-    // ????ÅÜ??
+    // æ‘§æ¯€ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, int32> RelationshipChanges;
 
-    // ?X?·s??®e
+    // ?X?ï¿½s??ï¿½e
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UnlockedContent;
 
@@ -293,16 +295,16 @@ struct FINGCORE_API FMingCharacterInteraction
     }
 };
 
-// ¤Hª«¨Æ¥ó©e??
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterEncountered, int32, CharacterID, const FMingHistoricalCharacter&, Character};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnDialogueStarted, int32, CharacterID, int32, NodeID, const FMingDialogueNode&, DialogueNode};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueOptionChosen, int32, CharacterID, int32, OptionID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRelationshipChanged, const FString&, CharacterName, int32, NewRelationshipValue};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractionCompleted, const FMingCharacterInteraction&, Interaction};
+// ï¿½Hï¿½ï¿½ï¿½Æ¥ï¿½e??
+
+
+
+
+
 
 /**
- * ¾ú¥v¤Hª«¨t²Î
- * ­t³dºŞ??¾ú¥v¤Hª«????¸Ü??¤¬??
+ * ï¿½ï¿½ï¿½vï¿½Hï¿½ï¿½ï¿½tï¿½ï¿½
+ * ï¿½tï¿½dï¿½ï¿½??ï¿½ï¿½ï¿½vï¿½Hï¿½ï¿½æ‘§æ¯€ï¿½ï¿½??ï¿½ï¿½??
  */
 UCLASS(ClassGroup = (Historical), Blueprintable, BlueprintType)
 class MINGCORE_API UMingHistoricalCharacterSystem : public UObject
@@ -315,68 +317,68 @@ public:
     
     bool InitializeCharacterSystem();
 
-    // µù??¾ú¥v¤Hª«
+    // ï¿½ï¿½??ï¿½ï¿½ï¿½vï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool RegisterHistoricalCharacter(const FMingHistoricalCharacter& Character) {};
 
-    // ????¤Hª««H®§
+    // æ‘§æ¯€ï¿½Hï¿½ï¿½ï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     FMingHistoricalCharacter GetCharacterInfo(int32 CharacterID) const;
 
     
     TArray<int32> GetCharactersAtLocation(const FString& Location) {};
 
-    // ????¹ï¸Ü
+    // æ‘§æ¯€ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool StartDialogue(int32 CharacterID};
+    bool StartDialogue(int32 CharacterID);
 
     
     FMingDialogueNode GetDialogueNode(int32 NodeID) const;
 
-    // ????¹ï¸Ü????
+    // æ‘§æ¯€ï¿½ï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool ChooseDialogueOption(int32 CharacterID, int32 NodeID, int32 OptionID};
+    bool ChooseDialogueOption(int32 CharacterID, int32 NodeID, int32 OptionID);
 
-    // ÀË¬d¹ï¸Ü±ø¥ó
+    // ï¿½Ë¬dï¿½ï¿½Ü±ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool CheckDialogueConditions(int32 NodeID) const;
 
-    // ????¤Hª«????
+    // æ‘§æ¯€ï¿½Hï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     int32 GetRelationshipValue(int32 CharacterID, const FString& TargetCharacterName) const;
 
-    // ??·s¤Hª«????
+    // ??ï¿½sï¿½Hï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool UpdateRelationship(int32 CharacterID, const FString& TargetCharacterName, int32 ChangeValue};
+    bool UpdateRelationship(int32 CharacterID, const FString& TargetCharacterName, int32 ChangeValue);
 
-    // ????¤¬??¾ú¥v
+    // æ‘§æ¯€ï¿½ï¿½??ï¿½ï¿½ï¿½v
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     TArray<FMingCharacterInteraction> GetInteractionHistory(int32 CharacterID) const;
 
-    // «Ø?X?ªv????
+    // ï¿½ï¿½?X?ï¿½væ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool CreatePoliticalAlliance(int32 CharacterID1, int32 CharacterID2};
+    bool CreatePoliticalAlliance(int32 CharacterID1, int32 CharacterID2);
 
-    // ???X?ªv????
+    // ???X?ï¿½væ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool BreakPoliticalAlliance(int32 CharacterID1, int32 CharacterID2};
+    bool BreakPoliticalAlliance(int32 CharacterID1, int32 CharacterID2);
 
-    // ????¤Hª«²Î??
+    // æ‘§æ¯€ï¿½Hï¿½ï¿½ï¿½ï¿½??
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     TMap<EMingCharacterType, int32> GetCharacterStatistics() const;
 
-    // «O??¤Hª«????
+    // ï¿½O??ï¿½Hï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool SaveCharacterData();
 
-    // ¸ü¤J¤Hª«????
+    // ï¿½ï¿½ï¿½Jï¿½Hï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool LoadCharacterData();
 
     
     void ClearAllCharacterData();
 
-    // ¨Æ¥ó©e??
+    // ï¿½Æ¥ï¿½e??
     UPROPERTY(BlueprintAssignable)
     FOnCharacterEncountered OnCharacterEncountered;
 
@@ -396,51 +398,52 @@ protected:
     
     TMap<int32, FMingHistoricalCharacter> CharacterDatabase;
 
-    // ¹ï¸Ü¸`ÂI¼Æ??®w
+    // ï¿½ï¿½Ü¸`ï¿½Iï¿½ï¿½??ï¿½w
     UPROPERTY()
     TMap<int32, FMingDialogueNode> DialogueNodeDatabase;
 
-    // ¤¬??¾ú¥v°O??
+    // ï¿½ï¿½??ï¿½ï¿½ï¿½vï¿½O??
     UPROPERTY()
     TArray<FMingCharacterInteraction> InteractionHistory;
 
-    // ????¹ï¸Ü¤¤??¤Hª«
+    // æ‘§æ¯€ï¿½ï¿½Ü¤ï¿½??ï¿½Hï¿½ï¿½
     UPROPERTY()
     TArray<int32> ActiveDialogueCharacters;
 
-    // ??ªv????°O?? - ¨Ï¥Î????µ²?X?¥N TTuple
+    // ??ï¿½væ‘§æ¯€ï¿½O?? - ï¿½Ï¥ï¿½æ‘§æ¯€ï¿½ï¿½?X?ï¿½N TTuple
     UPROPERTY()
     TArray<FMingPoliticalAlliance> PoliticalAlliances;
 
-    // ??§_¤w??©l??
+    // ??ï¿½_ï¿½w??ï¿½l??
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // ¸ü¤J??³]¤Hª«????
+    // ï¿½ï¿½ï¿½J??ï¿½]ï¿½Hï¿½ï¿½æ‘§æ¯€
     void LoadDefaultCharacters();
 
-    // ¸ü¤J??³]¹ï¸Ü????
+    // ï¿½ï¿½ï¿½J??ï¿½]ï¿½ï¿½ï¿½æ‘§æ¯€
     void LoadDefaultDialogues();
 
-    // Åç??¤Hª«????
+    // ï¿½ï¿½??ï¿½Hï¿½ï¿½æ‘§æ¯€
     bool ValidateCharacterData(const FMingHistoricalCharacter& Character) const;
 
-    // Åç??¹ï¸Ü????
+    // ï¿½ï¿½??ï¿½ï¿½ï¿½æ‘§æ¯€
     bool ValidateDialogueData(const FMingDialogueNode& DialogueNode) const;
 
-    // ????¹ï¸Ü????«á??
-    void ProcessDialogueConsequences(int32 CharacterID, int32 NodeID, int32 OptionID};
+    // æ‘§æ¯€ï¿½ï¿½ï¿½æ‘§æ¯€ï¿½ï¿½??
+    void ProcessDialogueConsequences(int32 CharacterID, int32 NodeID, int32 OptionID);
 
-    // ??·s¤Hª«??X    void UpdateCharacterStatus(int32 CharacterID, const FString& NewStatus) {};
+    // ??ï¿½sï¿½Hï¿½ï¿½??X
+    void UpdateCharacterStatus(int32 CharacterID, const FString& NewStatus) {};
 
-    // °O??¤¬??
+    // ï¿½O??ï¿½ï¿½??
     void RecordInteraction(const FMingCharacterInteraction& Interaction) {};
 
-    // Ä²µo¤Hª«¨Æ¥ó
+    // Ä²ï¿½oï¿½Hï¿½ï¿½ï¿½Æ¥ï¿½
     void TriggerCharacterEvent(int32 CharacterID, const FString& EventType) {};
 
-    // ???X???¹ï¸Ü
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½ï¿½
     FMingDialogueNode GenerateDynamicDialogue(int32 CharacterID, const FString& Context) const;
 };
 

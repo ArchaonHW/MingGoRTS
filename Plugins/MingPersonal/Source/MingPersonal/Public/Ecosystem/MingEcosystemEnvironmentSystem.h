@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingEcosystemEnvironmentSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class ESeasonType : uint8
-{
+enum class ESeasonType: uint8 {
     Spring      UMETA(DisplayName = "春季"),
     Summer      UMETA(DisplayName = "夏季"),
     Autumn      UMETA(DisplayName = "秋季"),
@@ -14,8 +13,7 @@ enum class ESeasonType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EWeatherType : uint8
-{
+enum class EWeatherType: uint8 {
     Clear       UMETA(DisplayName = "晴朗"),
     Cloudy      UMETA(DisplayName = "多云"),
     Overcast    UMETA(DisplayName = "阴天"),
@@ -29,8 +27,7 @@ enum class EWeatherType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EDayNightCycle : uint8
-{
+enum class EDayNightCycle: uint8 {
     Dawn        UMETA(DisplayName = "黎明"),
     Morning     UMETA(DisplayName = "上午"),
     Noon        UMETA(DisplayName = "中午"),
@@ -42,8 +39,7 @@ enum class EDayNightCycle : uint8
 };
 
 UENUM(BlueprintType)
-enum class EClimateZone : uint8
-{
+enum class EClimateZone: uint8 {
     Tropical        UMETA(DisplayName = "热带"),
     Subtropical     UMETA(DisplayName = "亚热带"),
     Temperate       UMETA(DisplayName = "温带"),

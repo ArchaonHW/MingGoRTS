@@ -1,4 +1,4 @@
-# MingGoRTS 自動化開發系統
+﻿# MingGoRTS 自動化開發系統
 # 提供完整的自動化開發工作流程
 
 param(

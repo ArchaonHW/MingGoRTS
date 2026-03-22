@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // 陰陽屬性增強枚舉
 UENUM(BlueprintType)
-enum class EYinYangAttribute : uint8
-{
+enum class EYinYangAttribute: uint8 {
     PureYin = 0,        // 純陰 - 極致防守、內斂
     YangInYin = 1,       // 陰中陽 - 防中有攻
     BalancedYinYang = 2,  // 陰陽平衡 - 攻守兼備
@@ -17,8 +16,7 @@ enum class EYinYangAttribute : uint8
 
 // 五行狀態枚舉
 UENUM(BlueprintType)
-enum class EElementState : uint8
-{
+enum class EElementState: uint8 {
     Dormant = 0,     // 潛伏狀態
     Rising = 1,      // 上升狀態
     Peak = 2,        // 巔峰狀態
@@ -28,8 +26,7 @@ enum class EElementState : uint8
 
 // 五行關係類型
 UENUM(BlueprintType)
-enum class EElementRelationship : uint8
-{
+enum class EElementRelationship: uint8 {
     Generating = 0,   // 相生關係
     Overcoming = 1,   // 相克關係
     Insulting = 2,    // 相侮關係

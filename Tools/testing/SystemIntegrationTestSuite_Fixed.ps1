@@ -1,4 +1,4 @@
-# MingGoRTS System Integration Test Suite (Fixed Version)
+﻿# MingGoRTS System Integration Test Suite (Fixed Version)
 param(
     [string]$TestMode = "Full",
     [string]$OutputPath = "c:\HW\MingGoRTS\TestReports",

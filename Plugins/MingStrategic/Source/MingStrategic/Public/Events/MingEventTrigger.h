@@ -7,8 +7,7 @@
 /**
  * 觸發?��X��X */
 UENUM(BlueprintType)
-enum class EEventTriggerState : uint8
-{
+enum class EEventTriggerState: uint8 {
     Inactive            UMETA(DisplayName = "Inactive"),
     Active              UMETA(DisplayName = "Active"),
     Triggered           UMETA(DisplayName = "Triggered"),
@@ -18,8 +17,7 @@ enum class EEventTriggerState : uint8
 /**
  * 觸發?��X��X */
 UENUM(BlueprintType)
-enum class EEventTriggerType : uint8
-{
+enum class EEventTriggerType: uint8 {
     Base                UMETA(DisplayName = "Base"),
     Time                UMETA(DisplayName = "Time"),
     Condition           UMETA(DisplayName = "Condition"),
@@ -65,7 +63,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
     virtual void Initialize();
 
-    // ?��?觸發X    UFUNCTION(BlueprintCallable, Category = "Event Trigger")
+    // ?��?觸發X
+    UFUNCTION(BlueprintCallable, Category = "Event Trigger")
     virtual void Shutdown();
 
     // 每�X�新
@@ -80,7 +79,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
     virtual bool Trigger();
 
-    // ?�置觸發X    UFUNCTION(BlueprintCallable, Category = "Event Trigger")
+    // ?�置觸發X
+    UFUNCTION(BlueprintCallable, Category = "Event Trigger")
     virtual void Reset();
 
     // ?�用/禁用
@@ -90,10 +90,12 @@ public:
     UFUNCTION(BlueprintPure, Category = "Event Trigger")
     bool IsEnabled() const { return bEnabled; }
 
-    // ?��?觸發?��X    UFUNCTION(BlueprintPure, Category = "Event Trigger")
+    // ?��?觸發?��X
+    UFUNCTION(BlueprintPure, Category = "Event Trigger")
     EEventTriggerType GetTriggerType() const { return TriggerType; }
 
-    // ?��X��X�X    UFUNCTION(BlueprintPure, Category = "Event Trigger")
+    // ?��X��X�X
+    UFUNCTION(BlueprintPure, Category = "Event Trigger")
     EEventTriggerState GetCurrentState() const { return CurrentState; }
 
     // 事件ID
@@ -104,10 +106,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Trigger")
     FString TriggerId;
 
-    // ?��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Trigger")
+    // ?��?�?
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Trigger")
     int32 Priority;
 
-    // ?�否一次性觸X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Trigger")
+    // ?�否一次性觸X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Trigger")
     bool bOneShot;
 
     // ?�卻?��?
@@ -123,10 +127,12 @@ public:
     FOnEventTriggered OnTriggered;
 
 protected:
-    // 觸發?��X    UPROPERTY()
+    // 觸發?��X
+    UPROPERTY()
     EEventTriggerType TriggerType;
 
-    // ?��X�X    UPROPERTY()
+    // ?��X�X
+    UPROPERTY()
     EEventTriggerState CurrentState;
 
     // ?�否?�用
@@ -144,7 +150,8 @@ protected:
     // ?�新?�卻
     void UpdateCooldown(float DeltaTime);
 
-    // 設置?�X    void SetState(EEventTriggerState NewState);
+    // 設置?�X
+    void SetState(EEventTriggerState NewState);
 
     // ?�部觸發?�輯 (子�?實現)
     virtual bool PerformTrigger();

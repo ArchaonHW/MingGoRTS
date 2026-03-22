@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,8 +8,7 @@
  * VR設備類型
  */
 UENUM(BlueprintType)
-enum class EVRDeviceType : uint8
-{
+enum class EVRDeviceType: uint8 {
     None                  UMETA(DisplayName = "無"),
     OculusRift            UMETA(DisplayName = "Oculus Rift"),
     OculusQuest           UMETA(DisplayName = "Oculus Quest"),
@@ -26,8 +25,7 @@ enum class EVRDeviceType : uint8
  * AR設備類型
  */
 UENUM(BlueprintType)
-enum class EARDeviceType : uint8
-{
+enum class EARDeviceType: uint8 {
     None                  UMETA(DisplayName = "無"),
     ARKit                 UMETA(DisplayName = "ARKit (iOS)"),
     ARCore                UMETA(DisplayName = "ARCore (Android)"),
@@ -40,8 +38,7 @@ enum class EARDeviceType : uint8
  * VR/AR系統狀態
  */
 UENUM(BlueprintType)
-enum class EXRSystemStatus : uint8
-{
+enum class EXRSystemStatus: uint8 {
     NotAvailable          UMETA(DisplayName = "不可用"),
     Available             UMETA(DisplayName = "可用"),
     Initializing          UMETA(DisplayName = "初始化中"),
@@ -55,8 +52,7 @@ enum class EXRSystemStatus : uint8
  * VR追踪模式
  */
 UENUM(BlueprintType)
-enum class EVRTrackingMode : uint8
-{
+enum class EVRTrackingMode: uint8 {
     Seated                UMETA(DisplayName = "坐姿"),
     Standing              UMETA(DisplayName = "站立"),
     RoomScale             UMETA(DisplayName = "房間規模")
@@ -66,8 +62,7 @@ enum class EVRTrackingMode : uint8
  * VR輸入類型
  */
 UENUM(BlueprintType)
-enum class EVRInputType : uint8
-{
+enum class EVRInputType: uint8 {
     Head                  UMETA(DisplayName = "頭部"),
     LeftHand              UMETA(DisplayName = "左手"),
     RightHand             UMETA(DisplayName = "右手"),

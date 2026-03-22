@@ -1,4 +1,4 @@
-# Fix compilation errors in MingGoRTS
+﻿# Fix compilation errors in MingGoRTS
 # This script fixes common syntax errors
 
 Write-Host "Starting compilation error fixes..."

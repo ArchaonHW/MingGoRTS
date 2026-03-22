@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -10,8 +10,7 @@ class UMingMemoryOptimizer;
 
 // Performance category
 UENUM(BlueprintType)
-enum class EMingPerformanceCategory : uint8
-{
+enum class EMingPerformanceCategory: uint8 {
     Rendering             UMETA(DisplayName = "Rendering"),
     Physics               UMETA(DisplayName = "Physics"),
     AI                    UMETA(DisplayName = "AI"),
@@ -27,8 +26,7 @@ enum class EMingPerformanceCategory : uint8
 
 // Performance level
 UENUM(BlueprintType)
-enum class EMingPerformanceLevel : uint8
-{
+enum class EMingPerformanceLevel: uint8 {
     Low                   UMETA(DisplayName = "Low"),
     Medium                UMETA(DisplayName = "Medium"),
     High                  UMETA(DisplayName = "High"),
@@ -39,8 +37,7 @@ enum class EMingPerformanceLevel : uint8
 
 // Optimization mode
 UENUM(BlueprintType)
-enum class EMingOptimizationMode : uint8
-{
+enum class EMingOptimizationMode: uint8 {
     Manual                UMETA(DisplayName = "Manual"),
     Auto                  UMETA(DisplayName = "Auto"),
     Adaptive              UMETA(DisplayName = "Adaptive"),
@@ -226,13 +223,13 @@ struct FMingOptimizationResult
 };
 
 // Delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceWarning, FMingPerformanceWarning, Warning};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceMetricsUpdated, FMingPersonalPerformanceMetrics, Metrics};
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOptimizationApplied, FMingOptimizationResult, Result);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPerformanceLevelChanged);
 
 /**
- * ??¯àºÞ?X * X????Àu???X?©Ê¯à
+ * ??ï¿½ï¿½ï¿½?X * Xæ‘§æ¯€ï¿½u???X?ï¿½Ê¯ï¿½
  */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingPerformanceManager : public UObject
@@ -423,11 +420,11 @@ private:
     // Internal functions
     void UpdateMetrics();
     void CheckPerformanceWarnings();
-    void ApplyPerformanceLevel(EMingPerformanceLevel Level};
+    void ApplyPerformanceLevel(EMingPerformanceLevel Level);
     void AutoOptimizeIfNeeded();
     void RecordMetrics();
     bool ShouldTriggerOptimization() const;
-    FMingOptimizationResult RunSpecificOptimization(EMingPerformanceCategory Category, const FString& OptName};
+    FMingOptimizationResult RunSpecificOptimization(EMingPerformanceCategory Category, const FString& OptName);
     void UpdateDynamicResolution();
     float CalculateAverageFrameRate() const;
 };

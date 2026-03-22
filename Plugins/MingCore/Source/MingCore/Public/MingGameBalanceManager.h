@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingGameBalanceManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingBalanceCategory : uint8
-{
+enum class EMingBalanceCategory: uint8 {
     UnitStats UMETA(DisplayName = "Unit Stats"),
     ResourceEconomy UMETA(DisplayName = "Resource Economy"),
     BuildingCosts UMETA(DisplayName = "Building Costs"),
@@ -167,10 +166,10 @@ public:
     FMingUnitBalance GetUnitBalance(const FString& UnitType) const;
 
     UFUNCTION(BlueprintCallable, Category = "Unit Balance")
-    void AdjustUnitStat(const FString& UnitType, const FString& StatName, float NewValue};
+    void AdjustUnitStat(const FString& UnitType, const FString& StatName, float NewValue);
 
     UFUNCTION(BlueprintCallable, Category = "Unit Balance")
-    void ScaleAllUnits(float HealthScale, float DamageScale, float CostScale};
+    void ScaleAllUnits(float HealthScale, float DamageScale, float CostScale);
 
     // Resource Balance
     UFUNCTION(BlueprintCallable, Category = "Resource Balance")
@@ -180,10 +179,10 @@ public:
     FMingResourceBalance GetResourceBalance() const;
 
     UFUNCTION(BlueprintCallable, Category = "Resource Balance")
-    void AdjustResourceIncome(float Multiplier};
+    void AdjustResourceIncome(float Multiplier);
 
     UFUNCTION(BlueprintCallable, Category = "Resource Balance")
-    void AdjustGatheringSpeed(float Multiplier};
+    void AdjustGatheringSpeed(float Multiplier);
 
     // Difficulty Balance
     UFUNCTION(BlueprintCallable, Category = "Difficulty Balance")
@@ -196,7 +195,7 @@ public:
     void ApplyDifficultyLevel(const FString& DifficultyLevel) {};
 
     UFUNCTION(BlueprintCallable, Category = "Difficulty Balance")
-    void AdjustAIDifficulty(float ResourceMultiplier, float HealthMultiplier, float DamageMultiplier};
+    void AdjustAIDifficulty(float ResourceMultiplier, float HealthMultiplier, float DamageMultiplier);
 
     // Balance Analysis
     UFUNCTION(BlueprintCallable, Category = "Balance Analysis")
@@ -223,7 +222,7 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetBalanceCategoryName(EMingBalanceCategory Category};
+    static FString GetBalanceCategoryName(EMingBalanceCategory Category);
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
     FString ExportBalanceData() const;

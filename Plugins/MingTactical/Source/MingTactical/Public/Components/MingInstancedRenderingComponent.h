@@ -17,7 +17,8 @@ struct FRenderBatch
     TArray<FMatrix> InstanceTransforms;
     TArray<FLinearColor> InstanceColors;
     
-    // ?��X��?�?    TArray<bool> InstanceVisibility;
+    // ?��X��?�?
+    TArray<bool> InstanceVisibility;
     
     // ?�次ID
     int32 BatchId;
@@ -35,8 +36,7 @@ struct FRenderBatch
  * LOD級別?��?
  */
 UENUM(BlueprintType)
-enum class ELODLevel : uint8
-{
+enum class ELODLevel: uint8 {
     LOD0    UMETA(DisplayName = "LOD 0 - Full Detail"),      // 完整細�?
     LOD1    UMETA(DisplayName = "LOD 1 - High Detail"),       // 高細節
     LOD2    UMETA(DisplayName = "LOD 2 - Medium Detail"),   // 中�?細�?
@@ -119,7 +119,8 @@ public:
     void SetUpdateFrequency(float Frequency);
 
 protected:
-    // 註�X�單�?    UPROPERTY()
+    // 註�X�單�?
+    UPROPERTY()
     TArray<TObjectPtr<AMingTacticalUnit>> RegisteredUnits;
 
     // ?��X�批次索引�X��?
@@ -129,10 +130,12 @@ protected:
     UPROPERTY()
     TArray<FRenderBatch> RenderBatches;
 
-    // LOD距離?��?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LOD")
+    // LOD距離?��?
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LOD")
     TArray<float> LODDistanceThresholds;
 
-    // ?�新計�X    float UpdateTimer;
+    // ?�新計�X
+    float UpdateTimer;
     
     // ?�新?��? (�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance")
@@ -146,9 +149,11 @@ protected:
     // ?��?位置 (?�於LOD計�?)
     FVector CameraLocation;
 
-    // ?��X�LOD?��?    void InitializeLODThresholds();
+    // ?��X�LOD?��?
+    void InitializeLODThresholds();
 
-    // ?�建?�獲?�批�?    int32 GetOrCreateBatchForUnit(AMingTacticalUnit* Unit);
+    // ?�建?�獲?�批�?
+    int32 GetOrCreateBatchForUnit(AMingTacticalUnit* Unit);
 
     // ?�新?�次實�X��?
     void UpdateBatchInstanceData(int32 BatchIndex);
@@ -156,7 +161,8 @@ protected:
     // ?��?LOD計�?
     void PerformLODUpdate();
 
-    // ?�新實�X��X    void UpdateInstanceVisibility();
+    // ?�新實�X��X
+    void UpdateInstanceVisibility();
 
     // ?��X��?位置
     void UpdateCameraLocation();
@@ -167,7 +173,8 @@ protected:
     // ?�次?�割 (?��?大批�?
     void SplitLargeBatches();
 
-    // ?�大批次大�?    UPROPERTY(EditAnywhere, Category = "Performance")
+    // ?�大批次大�?
+    UPROPERTY(EditAnywhere, Category = "Performance")
     int32 MaxBatchSize;
 
     // ?�小批次大�?(低於此值考慮?�併)

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -13,90 +13,99 @@ class MINGGORTS_API UMingGoRTSTechTreeTest : public UObject
 public:
     UMingGoRTSTechTreeTest();
 
-    // ¬ì??¾ð¨t²Î¹ê??    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree Test")
+    // ï¿½ï¿½??ï¿½ï¿½tï¿½Î¹ï¿½??
+    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree Test")
     UMingGoRTSTechTree* TechTreeSystem;
 
-    // ???X?´ú??    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
+    // ???X?ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     void InitializeTest();
 
-    // ´ú¸Õ¬ì??¾ð??©l??
+    // ï¿½ï¿½ï¿½Õ¬ï¿½??ï¿½ï¿½??ï¿½l??
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechTreeInitialization();
 
-    // ´ú¸Õ¬ì??¸`ÂI³Ð??    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
+    // ï¿½ï¿½ï¿½Õ¬ï¿½??ï¿½`ï¿½Iï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechNodeCreation();
 
-    // ´ú¸Õ¬ì?X?µo¬y??
+    // ï¿½ï¿½ï¿½Õ¬ï¿½?X?ï¿½oï¿½y??
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechResearchFlow();
 
-    // ´ú¸Õ??¸m±ø¥óÀË¬d
+    // ï¿½ï¿½ï¿½ï¿½??ï¿½mï¿½ï¿½ï¿½ï¿½ï¿½Ë¬d
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestPrerequisiteChecking();
 
-    // ´ú¸Õ¬ì?X??X?¥Î
+    // ï¿½ï¿½ï¿½Õ¬ï¿½?X??X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechEffectApplication();
 
-    // ´ú¸Õ¬ì???X¾÷¨î
+    // ï¿½ï¿½ï¿½Õ¬ï¿½???Xï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechUnlocking();
 
-    // ´ú¸Õ¨Ã?X?µo??¨î
+    // ï¿½ï¿½ï¿½Õ¨ï¿½?X?ï¿½o??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestConcurrentResearchLimit();
 
-    // ´ú¸Õ¬ì??¾ð????    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
+    // ï¿½ï¿½ï¿½Õ¬ï¿½??ï¿½ï¿½????
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechTreeConfiguration();
 
-    // ´ú¸Õ¬ì??¾ð??¦s??¸ü¤J
+    // ï¿½ï¿½ï¿½Õ¬ï¿½??ï¿½ï¿½??ï¿½s??ï¿½ï¿½ï¿½J
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestSaveAndLoad();
 
-    // ´ú¸Õ¥Á?X??X?¦â¬ì??
+    // ï¿½ï¿½ï¿½Õ¥ï¿½?X??X?ï¿½ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestRepublicanEraTechs();
 
-    // ???X???´ú??    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
+    // ???X???ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool RunAllTests();
 
-    // ????´ú¸Õµ²??
+    // ????ï¿½ï¿½ï¿½Õµï¿½??
     UFUNCTION(BlueprintPure, Category = "Tech Tree Test")
     FString GetTestResults() const;
 
-    // ²M??´ú¸Õ
+    // ï¿½M??ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     void CleanupTest();
 
 private:
-    // ´ú¸Õµ²??
+    // ï¿½ï¿½ï¿½Õµï¿½??
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // ´ú¸Õ???X???
+    // ï¿½ï¿½ï¿½ï¿½???X???
     int32 PassedTests;
 
-    // ´ú¸Õ¥¢?X???
+    // ï¿½ï¿½ï¿½Õ¥ï¿½?X???
     int32 FailedTests;
 
-    // ²K??´ú¸Õµ²??
+    // ï¿½K??ï¿½ï¿½ï¿½Õµï¿½??
     void AddTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
 
-    // ??«Ø´ú¸Õ¬ì??¸`??    FTechNode CreateTestTechNode(const FString& TechID, const FString& TechName, ETechCategory Category};
+    // ??ï¿½Ø´ï¿½ï¿½Õ¬ï¿½??ï¿½`??
+    FTechNode CreateTestTechNode(const FString& TechID, const FString& TechName, ETechCategory Category);
 
-    // Åç??¬ì??¸`ÂI¼ÆX    bool VerifyTechNodeData(const FTechNode& TechNode, const FString& ExpectedName, ETechCategory ExpectedCategory};
+    // ï¿½ï¿½??ï¿½ï¿½??ï¿½`ï¿½Iï¿½ï¿½X
+    bool VerifyTechNodeData(const FTechNode& TechNode, const FString& ExpectedName, ETechCategory ExpectedCategory);
 
-    // Åç?X?µo??X    bool VerifyResearchStatus(const FString& TechID, ETechStatus ExpectedStatus};
+    // ï¿½ï¿½?X?ï¿½o??X
+    bool VerifyResearchStatus(const FString& TechID, ETechStatus ExpectedStatus);
 
-    // ???X???¬ì??ID
+    // ???X???ï¿½ï¿½??ID
     FString GetRandomTechID(ETechCategory Category) const;
 
-    // ??¸m´ú¸Õ­p¼ÆX    void ResetTestCounters();
+    // ??ï¿½mï¿½ï¿½ï¿½Õ­pï¿½ï¿½X
+    void ResetTestCounters();
 
-    // ??«Ø´ú¸Õ??¸m
+    // ??ï¿½Ø´ï¿½ï¿½ï¿½??ï¿½m
     FTechTreeConfig CreateTestConfig();
 
-    // Åç?X?¸m??¥Î
-    bool VerifyConfigApplication(const FTechTreeConfig& ExpectedConfig};
+    // ï¿½ï¿½?X?ï¿½m??ï¿½ï¿½
+    bool VerifyConfigApplication(const FTechTreeConfig& ExpectedConfig);
+);
 };
-

@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -10,8 +10,7 @@
  * 墮落徵象類型枚舉
  */
 UENUM(BlueprintType)
-enum class EFallSymptomType : uint8
-{
+enum class EFallSymptomType: uint8 {
     None            UMETA(DisplayName = "None"),
     InternalDoubt   UMETA(DisplayName = "內部始疑"),    // 連續使用逆策後部隊忠誠度下降
     EnemyAbnormal   UMETA(DisplayName = "敵轉異常"),    // 敵人AI察覺玩家逆策模式

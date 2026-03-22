@@ -11,8 +11,7 @@
  * Mining difficulty levels
  */
 UENUM(BlueprintType)
-enum class EMiningDifficulty : uint8
-{
+enum class EMiningDifficulty: uint8 {
     Easy       = 0,
     Medium     = 1,
     Hard       = 2,
@@ -24,8 +23,7 @@ enum class EMiningDifficulty : uint8
  * Mining algorithm types
  */
 UENUM(BlueprintType)
-enum class EMiningAlgorithm : uint8
-{
+enum class EMiningAlgorithm: uint8 {
     ProofOfWork    = 0,
     ProofOfStake   = 1,
     Hybrid         = 2,
@@ -36,8 +34,7 @@ enum class EMiningAlgorithm : uint8
  * Mining reward types
  */
 UENUM(BlueprintType)
-enum class EMiningRewardType : uint8
-{
+enum class EMiningRewardType: uint8 {
     Token          = 0,
     NFT            = 1,
     Experience     = 2,
@@ -385,11 +382,11 @@ private:
     TMap<FString, FMiningStatistics> PlayerStatistics;
 
     /** Current mining difficulty */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mining|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Mining|Configuration")
     EMiningDifficulty CurrentDifficulty;
 
     /** Whether mining is enabled */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mining|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Mining|Configuration")
     bool bMiningEnabled;
 
     /** Current hash rate */
@@ -397,19 +394,19 @@ private:
     float CurrentHashRate;
 
     /** Mining efficiency bonus */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mining|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Mining|Configuration")
     float MiningEfficiencyBonus;
 
     /** Base mining reward amount */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mining|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Mining|Configuration")
     float BaseRewardAmount;
 
     /** Mining progress update interval */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mining|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Mining|Configuration")
     float ProgressUpdateInterval;
 
     /** Maximum concurrent mining sessions */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mining|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Mining|Configuration")
     int32 MaxConcurrentSessions;
 
     /** Time since last progress update */

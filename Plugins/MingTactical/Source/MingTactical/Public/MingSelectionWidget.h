@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -33,16 +33,16 @@ public:
     float SelectionBoxOpacity;
 
     UFUNCTION(BlueprintCallable, Category = "Selection Box")
-    void ShowSelectionBox(const FVector2D& StartPosition, const FVector2D& CurrentPosition};
+    void ShowSelectionBox(const FVector2D& StartPosition, const FVector2D& CurrentPosition);
 
     UFUNCTION(BlueprintCallable, Category = "Selection Box")
-    void UpdateSelectionBox(const FVector2D& CurrentPosition};
+    void UpdateSelectionBox(const FVector2D& CurrentPosition);
 
     UFUNCTION(BlueprintCallable, Category = "Selection Box")
     void HideSelectionBox();
 
     UFUNCTION(BlueprintCallable, Category = "Selection Info")
-    void UpdateSelectionCount(int32 SelectedCount, int32 TotalCount};
+    void UpdateSelectionCount(int32 SelectedCount, int32 TotalCount);
 
     UFUNCTION(BlueprintCallable, Category = "Selection Info")
     void ShowSelectionInfo();

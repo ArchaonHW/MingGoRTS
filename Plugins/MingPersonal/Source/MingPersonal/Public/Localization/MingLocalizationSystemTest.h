@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // Test result enum
 UENUM(BlueprintType)
-enum class ELocalizationTestResult : uint8
-{
+enum class ELocalizationTestResult: uint8 {
     NotRun            UMETA(DisplayName = "Not Run"),
     Passed            UMETA(DisplayName = "Passed"),
     Failed            UMETA(DisplayName = "Failed"),
@@ -49,7 +48,7 @@ class UMingCultureAdapter;
 class UMingRegionalContentManager;
 
 /**
- * ??¦a??¨t²Î´ú¸Õ???? * Åç?X?¦a??¨t²Î?X??X?¯à
+ * ??ï¿½a??ï¿½tï¿½Î´ï¿½ï¿½ï¿½æ‘§æ¯€ * ï¿½ï¿½?X?ï¿½a??ï¿½tï¿½ï¿½?X??X?ï¿½ï¿½
  */
 UCLASS()
 class MINGPERSONAL_API UMingLocalizationSystemTest : public UObject
@@ -59,10 +58,11 @@ class MINGPERSONAL_API UMingLocalizationSystemTest : public UObject
 public:
     UMingLocalizationSystemTest();
 
-    // ???X???´ú??    UFUNCTION(BlueprintCallable, Category = "Localization Test")
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "Localization Test")
     bool RunAllTests();
 
-    // ´ú¸Õµ²??
+    // ï¿½ï¿½ï¿½Õµï¿½??
     UFUNCTION(BlueprintPure, Category = "Localization Test")
     FString GetTestResults() const { return TestResults; }
 
@@ -78,7 +78,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Localization Test")
     TArray<FLocalizationTestCase> GetTestCases() const { return TestCases; }
 
-    // ??§O´ú¸Õ
+    // ??ï¿½Oï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
     bool TestLocalizationManagerCreation();
 
@@ -137,7 +137,7 @@ public:
     bool TestExportImport();
 
 private:
-    // ´ú¸Õµ²?X???
+    // ï¿½ï¿½ï¿½Õµï¿½?X???
     UPROPERTY()
     FString TestResults;
 
@@ -153,12 +153,12 @@ private:
     UPROPERTY()
     TArray<FLocalizationTestCase> TestCases;
 
-    // ´ú¸ÕÀ°§U??¼Æ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½U??ï¿½ï¿½
     void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
     void ResetTestCounts();
     void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
 
-    // ³Ğ«Ø´ú¸Õ¥»¦a¤ÆºŞ²z¾¹
+    // ï¿½Ğ«Ø´ï¿½ï¿½Õ¥ï¿½ï¿½aï¿½ÆºŞ²zï¿½ï¿½
     UMingLocalizationManager* CreateTestLocalizationManager();
 };
 

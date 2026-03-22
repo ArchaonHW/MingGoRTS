@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSSystemDependencyManager.generated.h"
 
 UENUM(BlueprintType)
-enum class ESystemInitPriority : uint8
-{
+enum class ESystemInitPriority: uint8 {
     Critical = 0,        // 核心系統 - 必須首先初始化
     High = 1,           // 高優先級 - 依賴核心系統
     Medium = 2,         // 中優先級 - 依賴高優先級系統
@@ -15,8 +14,7 @@ enum class ESystemInitPriority : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESystemDependencyType : uint8
-{
+enum class ESystemDependencyType: uint8 {
     Required,           // 必需依賴 - 必須滿足
     Optional,           // 可選依賴 - 可以缺失
     Weak,               // 弱依賴 - 僅用於優化

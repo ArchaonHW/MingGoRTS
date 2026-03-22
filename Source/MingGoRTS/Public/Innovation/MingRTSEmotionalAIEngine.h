@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSEmotionalAIEngine.generated.h"
 
 UENUM(BlueprintType)
-enum class EEmotionType : uint8
-{
+enum class EEmotionType: uint8 {
     Joy, UMETA(DisplayName = "Joy"),
     Sadness, UMETA(DisplayName = "Sadness"),
     Anger, UMETA(DisplayName = "Anger"),
@@ -25,8 +24,7 @@ enum class EEmotionType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EEmotionIntensity : uint8
-{
+enum class EEmotionIntensity: uint8 {
     VeryLow, UMETA(DisplayName = "Very Low"),
     Low, UMETA(DisplayName = "Low"),
     Medium, UMETA(DisplayName = "Medium"),
@@ -96,3 +94,4 @@ protected:
     float CalculateEmotionIntensity(const FString& Input);
     EEmotionType DetectEmotionType(const FString& Input);
 };
+

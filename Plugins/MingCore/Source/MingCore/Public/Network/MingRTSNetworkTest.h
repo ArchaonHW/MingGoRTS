@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -7,8 +7,7 @@
 #include "MingRTSNetworkTest.generated.h"
 
 UENUM(BlueprintType)
-enum class ENetworkTestCategory : uint8
-{
+enum class ENetworkTestCategory: uint8 {
 	Connection,
 	SessionManagement,
 	PlayerSync,

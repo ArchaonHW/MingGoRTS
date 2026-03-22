@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingEcosystemResourceSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EResourceNodeType : uint8
-{
+enum class EResourceNodeType: uint8 {
     Forest              UMETA(DisplayName = "森林"),
     Mine                UMETA(DisplayName = "矿场"),
     Quarry              UMETA(DisplayName = "采石场"),
@@ -22,8 +21,7 @@ enum class EResourceNodeType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EResourceExtractionMethod : uint8
-{
+enum class EResourceExtractionMethod: uint8 {
     Manual              UMETA(DisplayName = "手工"),
     Tool                UMETA(DisplayName = "工具"),
     Mechanized          UMETA(DisplayName = "机械化"),
@@ -34,8 +32,7 @@ enum class EResourceExtractionMethod : uint8
 };
 
 UENUM(BlueprintType)
-enum class EResourceQuality : uint8
-{
+enum class EResourceQuality: uint8 {
     Poor                UMETA(DisplayName = "劣质"),
     Common              UMETA(DisplayName = "普通"),
     Good                UMETA(DisplayName = "良好"),

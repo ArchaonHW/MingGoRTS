@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSResourceScheduler.generated.h"
 
 UENUM(BlueprintType)
-enum class EResourceType : uint8
-{
+enum class EResourceType: uint8 {
     CPU,
     Memory,
     GPU,
@@ -16,8 +15,7 @@ enum class EResourceType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESchedulingPolicy : uint8
-{
+enum class ESchedulingPolicy: uint8 {
     FIFO,           // First In, First Out
     Priority,       // Priority-based scheduling
     RoundRobin,     // Round-robin scheduling
@@ -27,8 +25,7 @@ enum class ESchedulingPolicy : uint8
 };
 
 UENUM(BlueprintType)
-enum class EResourcePriority : uint8
-{
+enum class EResourcePriority: uint8 {
     Critical,       // Critical system processes
     High,           // High priority processes
     Normal,         // Normal priority processes

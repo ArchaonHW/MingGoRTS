@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingSmartResourceManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EResourcePriority : uint8
-{
+enum class EResourcePriority: uint8 {
     Critical,	// 關鍵資源，必須立即加載
     High,		// 高優先級，優先加載
     Normal,		// 普通優先級
@@ -15,8 +14,7 @@ enum class EResourcePriority : uint8
 };
 
 UENUM(BlueprintType)
-enum class EResourceType : uint8
-{
+enum class EResourceType: uint8 {
     Texture,
     Mesh,
     Sound,

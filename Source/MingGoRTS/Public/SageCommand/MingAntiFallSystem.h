@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -10,8 +10,7 @@
  * 贖罪任務狀態枚舉
  */
 UENUM(BlueprintType)
-enum class EAtonementTaskStatus : uint8
-{
+enum class EAtonementTaskStatus: uint8 {
     NotStarted  UMETA(DisplayName = "未開始"),
     InProgress  UMETA(DisplayName = "進行中"),
     Completed   UMETA(DisplayName = "已完成"),

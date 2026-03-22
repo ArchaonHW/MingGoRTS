@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -7,8 +7,7 @@
 #include "MingRTSDynamicDatabase.generated.h"
 
 UENUM(BlueprintType)
-enum class EDatabaseValueType : uint8
-{
+enum class EDatabaseValueType: uint8 {
 	Null		UMETA(DisplayName = "空值"),
 	Boolean		UMETA(DisplayName = "布爾值"),
 	Integer		UMETA(DisplayName = "整數"),

@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "MingGoRTSCharacter.generated.h"
 
 UENUM(BlueprintType)
-enum class ECharacterBackground : uint8
-{
+enum class ECharacterBackground: uint8 {
     MilitaryAcademy,
     WarlordSon,
     Revolutionary,

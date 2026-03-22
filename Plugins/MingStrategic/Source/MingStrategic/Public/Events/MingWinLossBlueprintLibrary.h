@@ -29,13 +29,13 @@ public:
      * 註�X��?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static bool RegisterWinLossCondition(const FWinLossCondition& Condition};
+    static bool RegisterWinLossCondition(const FWinLossCondition& Condition);
 
     /**
      * ?��?註�X��?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static bool UnregisterWinLossCondition(const FString& ConditionID};
+    static bool UnregisterWinLossCondition(const FString& ConditionID);
 
     /**
      * 評估?��X��?     */
@@ -45,13 +45,13 @@ public:
     /**
      * 檢查?�個�?�?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static bool CheckCondition(const FString& ConditionID};
+    static bool CheckCondition(const FString& ConditionID);
 
     /**
      * ?��X��?條件
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static FWinLossCondition GetWinLossCondition(const FString& ConditionID};
+    static FWinLossCondition GetWinLossCondition(const FString& ConditionID);
 
     /**
      * ?��X�?��?負�?�?     */
@@ -61,7 +61,7 @@ public:
     /**
      * ?��X��?類�X��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static TArray<FWinLossCondition> GetConditionsByType(EWinLossConditionType ConditionType};
+    static TArray<FWinLossCondition> GetConditionsByType(EWinLossConditionType ConditionType);
 
     /**
      * ?��X�鍵條件
@@ -84,7 +84,7 @@ public:
     /**
      * 設置?�戲?�X     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static void SetGameState(const TMap<FString, FString>& GameState};
+    static void SetGameState(const TMap<FString, FString>& GameState);
 
     /**
      * ?��X�戲?�X     */
@@ -94,7 +94,7 @@ public:
     /**
      * ?�新?�戲?�?��?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    static void UpdateGameStateValue(const FString& Key, const FString& Value};
+    static void UpdateGameStateValue(const FString& Key, const FString& Value);
 
     /**
      * ?��X��?統�?
@@ -141,23 +141,23 @@ public:
      * ?��?結�X�稱
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static FString GetResultName(EWinLossResult Result};
+    static FString GetResultName(EWinLossResult Result);
 
     /**
      * ?��?條件類�X�稱
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static FString GetConditionTypeName(EWinLossConditionType ConditionType};
+    static FString GetConditionTypeName(EWinLossConditionType ConditionType);
 
     /**
      * ?��X��?級�?�?     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static FString GetPriorityName(EWinLossPriority Priority};
+    static FString GetPriorityName(EWinLossPriority Priority);
 
     /**
      * ?��X�?��?�?     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
-    static FString GetStateName(EWinLossConditionState State};
+    static FString GetStateName(EWinLossConditionState State);
 
     /**
      * ?�建?��?條件
@@ -171,7 +171,7 @@ public:
         EWinLossResult ResultType,
         EWinLossPriority Priority,
         bool bIsCriticalCondition
-    };
+    );
 
     /**
      * 添�?條件?�數
@@ -184,7 +184,7 @@ public:
         const FString& ComparisonOperator,
         bool bIsRequired,
         float Weight
-    };
+    );
 
     /**
      * 設置檢查?��?
@@ -193,7 +193,7 @@ public:
     static FWinLossCondition SetCheckInterval(
         const FWinLossCondition& Condition,
         float CheckInterval
-    };
+    );
 
     /**
      * 添�?條件標籤
@@ -202,7 +202,7 @@ public:
     static FWinLossCondition AddConditionTag(
         const FWinLossCondition& Condition,
         const FString& Tag
-    };
+    );
 
     /**
      * 添�X��?事件
@@ -211,19 +211,19 @@ public:
     static FWinLossCondition AddRelatedEvent(
         const FWinLossCondition& Condition,
         const FString& EventID
-    };
+    );
 
     /**
      * ?��?檢查條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Batch")
-    static TArray<bool> BatchCheckConditions(const TArray<FString>& ConditionIDs};
+    static TArray<bool> BatchCheckConditions(const TArray<FString>& ConditionIDs);
 
     /**
      * ?��?註�?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Batch")
-    static TArray<bool> BatchRegisterConditions(const TArray<FWinLossCondition>& Conditions};
+    static TArray<bool> BatchRegisterConditions(const TArray<FWinLossCondition>& Conditions);
 
     /**
      * ?��?系統?�X     */
@@ -334,7 +334,7 @@ public:
      * ?��X��?趨勢
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Trend")
-    static TArray<EWinLossResult> GetWinLossTrend(int32 HistoryCount};
+    static TArray<EWinLossResult> GetWinLossTrend(int32 HistoryCount);
 
     /**
      * ?��?趨勢?��?
@@ -346,25 +346,25 @@ public:
      * 模擬?��?結�?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Simulation")
-    static TArray<EWinLossResult> SimulateWinLoss(int32 SimulationCount};
+    static TArray<EWinLossResult> SimulateWinLoss(int32 SimulationCount);
 
     /**
      * 模擬條件變�?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Simulation")
-    static TArray<FString> SimulateConditionChanges(const FString& ConditionID, const FString& NewValue};
+    static TArray<FString> SimulateConditionChanges(const FString& ConditionID, const FString& NewValue);
 
     /**
      * 導出?��X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Export")
-    static bool ExportWinLossData(const FString& FilePath};
+    static bool ExportWinLossData(const FString& FilePath);
 
     /**
      * 導入?��X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Import")
-    static bool ImportWinLossData(const FString& FilePath};
+    static bool ImportWinLossData(const FString& FilePath);
 
     /**
      * ?��X��X��?
@@ -376,7 +376,7 @@ public:
      * ?��?條件詳細?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Report")
-    static FString GenerateConditionReport(const FString& ConditionID};
+    static FString GenerateConditionReport(const FString& ConditionID);
 
     /**
      * ?��?統�X��?

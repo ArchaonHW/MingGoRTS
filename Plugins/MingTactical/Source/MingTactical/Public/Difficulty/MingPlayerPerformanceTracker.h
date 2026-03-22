@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,8 @@
 #include "MingPlayerPerformanceTracker.generated.h"
 
 /**
- * ??®aªí²{??????| Player Performance Data Point
- * ¦sÀx??­Ó?X??X?®aªí²{???? | Store player performance data at a single time point
+ * ??ï¿½aï¿½ï¿½{æ‘§æ¯€??| Player Performance Data Point
+ * ï¿½sï¿½x??ï¿½ï¿½?X??X?ï¿½aï¿½ï¿½{æ‘§æ¯€ | Store player performance data at a single time point
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FPlayerPerformanceDataPoint
@@ -49,16 +49,16 @@ struct MINGTACTICAL_API FPlayerPerformanceDataPoint
         : Timestamp(InTimestamp)
     {}
 
-    /** ­p??ºî??ªí²{??¼Æ 0-100 | Calculate overall performance score 0-100 */
+    /** ï¿½p??ï¿½ï¿½??ï¿½ï¿½{??ï¿½ï¿½ 0-100 | Calculate overall performance score 0-100 */
     float CalculatePerformanceScore() const;
 
-    /** Åç?X??X??X| Validate data validity */
+    /** ï¿½ï¿½?X??X??X| Validate data validity */
     bool IsValid() const;
 };
 
 /**
- * ??®aªí???
- * ????¦h???Õu??????«H®§
+ * ??ï¿½aï¿½ï¿½???
+ * æ‘§æ¯€ï¿½h???ï¿½uæ‘§æ¯€??ï¿½Hï¿½ï¿½
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FPlayerPerformanceStats
@@ -83,14 +83,14 @@ struct MINGTACTICAL_API FPlayerPerformanceStats
     UPROPERTY(BlueprintReadOnly, Category = "Stats")
     float RecommendationScore = 0.0f;
 
-    void UpdateFromDataPoints(const TArray<FPlayerPerformanceDataPoint>& DataPoints};
-};
+    void UpdateFromDataPoints(const TArray<FPlayerPerformanceDataPoint>& DataPoints);
+);
 
 /**
- * ??®aªí?°l?X * ????±±????¦ôª±®a?X?¤ô?? * 
- * ??¯à?? * - ???X?¥¢??°l?? * - ??X??X???°l?
- * - ¥ô?§¹?X??°l?
- * - ??X????X???? */
+ * ??ï¿½aï¿½ï¿½?ï¿½l?X * æ‘§æ¯€ï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½a?X?ï¿½ï¿½?? * 
+ * ??ï¿½ï¿½?? * - ???X?ï¿½ï¿½??ï¿½l?? * - ??X??X???ï¿½l?
+ * - ï¿½ï¿½?ï¿½ï¿½?X??ï¿½l?
+ * - ??X?ç›®æ¨™æ•¸é‡? */
 UCLASS()
 class MINGTACTICAL_API UMingPlayerPerformanceTracker : public UObject
 {
@@ -101,75 +101,75 @@ public:
 
     virtual void Initialize();
     virtual void Shutdown();
-    void Tick(float DeltaTime};
+    void Tick(float DeltaTime);
 
-    // ==== ¨Æ¥ó°l???¤f ====
+    // ==== ï¿½Æ¥ï¿½l???ï¿½f ====
 
-    /** ??X??X?¥¢¨Æ¥ó */
+    /** ??X??X?ï¿½ï¿½ï¿½Æ¥ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
-    void RecordUnitLost(int32 UnitId, int32 UnitType, float UnitValue};
+    void RecordUnitLost(int32 UnitId, int32 UnitType, float UnitValue);
 
-    /** ??X??X?«Ø¨Æ¥ó */
+    /** ??X??X?ï¿½Ø¨Æ¥ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
-    void RecordUnitCreated(int32 UnitId, int32 UnitType, float UnitCost};
+    void RecordUnitCreated(int32 UnitId, int32 UnitType, float UnitCost);
 
-    /** ?????X???¨Æ¥ó */
+    /** ??ç›®æ¨™æ•¸é‡ï¿½Æ¥ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
-    void RecordResourceCollected(float ResourceType, float Amount, float ExpectedRate};
+    void RecordResourceCollected(float ResourceType, float Amount, float ExpectedRate);
 
-    /** ???¥ô????*/
+    /** ???ï¿½ï¿½æ‘§æ¯€*/
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
-    void RecordMissionStarted(const FString& MissionId, float ExpectedDuration};
+    void RecordMissionStarted(const FString& MissionId, float ExpectedDuration);
 
-    /** ???¥ô?§¹?? */
+    /** ???ï¿½ï¿½?ï¿½ï¿½?? */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
-    void RecordMissionCompleted(const FString& MissionId, bool bSuccess, float CompletionTime};
+    void RecordMissionCompleted(const FString& MissionId, bool bSuccess, float CompletionTime);
 
-    /** ??X?????? */
+    /** ??Xæ‘§æ¯€?? */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
-    void RecordCombatResult(int32 EnemiesKilled, int32 AlliesLost, float DamageDealt, float DamageTaken};
+    void RecordCombatResult(int32 EnemiesKilled, int32 AlliesLost, float DamageDealt, float DamageTaken);
 
-    // ==== ??¯à?¦ô??¤f ====
+    // ==== ??ï¿½ï¿½?ï¿½ï¿½??ï¿½f ====
 
-    /** ???????ªí??? */
+    /** æ‘§æ¯€???ï¿½ï¿½??? */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     FPlayerPerformanceStats GetCurrentStats() const { return CurrentStats; }
 
-    /** ???X????X0-100 */
+    /** ç›®æ¨™æ•¸é‡?X0-100 */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     float GetSkillIndex() const { return CurrentStats.AveragePerformanceScore; }
 
-    /** ???X?®a????ªí */
+    /** ???X?ï¿½aæ‘§æ¯€ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     TArray<FString> GetPlayerStrengths() const;
 
-    /** ???X?®a®z???ªí */
+    /** ???X?ï¿½aï¿½z???ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     TArray<FString> GetPlayerWeaknesses() const;
 
-    /** ???X?«×?¾ã«Ø? */
+    /** ???X?ï¿½ï¿½?ï¿½ï¿½ï¿½? */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     EDifficultyChangeDirection GetDifficultyRecommendation() const;
 
-    /** ??§_²Ö?¤F¨¬??X*/
+    /** ??ï¿½_ï¿½ï¿½?ï¿½Fï¿½ï¿½??X*/
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     bool HasSufficientData(int32 MinSamples = 5) const;
 
-    // ==== ??¸m??¤f ====
+    // ==== ??ï¿½m??ï¿½f ====
 
-    /** ?¸m?¦ô????¡]????*/
+    /** ?ï¿½m?ï¿½ï¿½æ‘§æ¯€ï¿½]æ‘§æ¯€*/
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
-    void SetEvaluationInterval(float IntervalSeconds};
+    void SetEvaluationInterval(float IntervalSeconds);
 
-    /** ?¸m??Õu«O?X???¤W?? */
+    /** ?ï¿½m??ï¿½uï¿½O?X???ï¿½W?? */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
-    void SetMaxDataPoints(int32 MaxPoints};
+    void SetMaxDataPoints(int32 MaxPoints);
 
-    /** ??¸m????°l??X*/
+    /** ??ï¿½mæ‘§æ¯€ï¿½l??X*/
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     void ResetTracking();
 
-    // ==== ??X?¤f ====
+    // ==== ??X?ï¿½f ====
 
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking|Debug")
     void PrintDebugInfo();
@@ -178,19 +178,19 @@ public:
     FString GetDebugString() const;
 
 protected:
-    /** ©w???¦ôªí? */
+    /** ï¿½w???ï¿½ï¿½ï¿½? */
     void EvaluatePerformance();
 
-    /** ????????? */
+    /** æ‘§æ¯€æ‘§æ¯€? */
     float CalculateTrendSlope() const;
 
-    /** ???ªi?X*/
+    /** ???ï¿½i?X*/
     float CalculateVolatility() const;
 
-    /** ÚÌ?X????? */
+    /** ï¿½ï¿½?Xæ‘§æ¯€? */
     EPlayerPerformanceRating DetermineRating(float Score) const;
 
-    /** ??X???¨Æ¥ó */
+    /** ??X???ï¿½Æ¥ï¿½ */
     void SetupEventSubscriptions();
     void CleanupEventSubscriptions();
 
@@ -203,19 +203,21 @@ private:
     TArray<FPlayerPerformanceDataPoint> DataPoints;
     FPlayerPerformanceStats CurrentStats;
 
-    // ???°l?????    int32 CurrentTotalUnits;
+    // ???ï¿½læ‘§æ¯€?
+    int32 CurrentTotalUnits;
     int32 CurrentUnitsLost;
     float CurrentResourcesCollected;
     float CurrentExpectedResources;
     TMap<FString, float> ActiveMissions;
 
-    // ??????
+    // æ‘§æ¯€??
     int32 SessionEnemiesKilled;
     int32 SessionAlliesLost;
     float SessionDamageDealt;
     float SessionDamageTaken;
 
-    // ??¥v???X???    float BestPerformanceScore;
+    // ??ï¿½vç›®æ¨™æ•¸é‡
+    float BestPerformanceScore;
     float WorstPerformanceScore;
 };
 

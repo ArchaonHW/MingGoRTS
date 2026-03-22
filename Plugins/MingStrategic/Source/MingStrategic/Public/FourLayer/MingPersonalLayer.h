@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,8 +7,7 @@
 
 // 角色職業類型
 UENUM(BlueprintType)
-enum class EMingCharacterProfession : uint8
-{
+enum class EMingCharacterProfession: uint8 {
     Military,       // 軍人
     Politician,     // 政治家
     Scholar,        // 學者
@@ -23,8 +22,7 @@ enum class EMingCharacterProfession : uint8
 
 // 角色技能類型
 UENUM(BlueprintType)
-enum class EMingCharacterSkill : uint8
-{
+enum class EMingCharacterSkill: uint8 {
     Leadership,      // 領導力
     Combat,         // 戰鬥
     Diplomacy,      // 外交
@@ -39,8 +37,7 @@ enum class EMingCharacterSkill : uint8
 
 // 關係狀態
 UENUM(BlueprintType)
-enum class EMingRelationshipStatus : uint8
-{
+enum class EMingRelationshipStatus: uint8 {
     Stranger,       // 陌生人
     Acquaintance,   // 認識
     Friend,         // 朋友

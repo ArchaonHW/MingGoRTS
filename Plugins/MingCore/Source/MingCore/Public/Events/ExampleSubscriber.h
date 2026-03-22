@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "MingEventSubscriber.h"
@@ -27,7 +27,7 @@ public:
 private:
     int32 HandledEventCount = 0;
     
-    void HandleUnitMovement(TSharedPtr<IMingEvent> Event};
-    void HandleCombat(TSharedPtr<IMingEvent> Event};
-};
+    void HandleUnitMovement(TSharedPtr<IMingEvent> Event);
+    void HandleCombat(TSharedPtr<IMingEvent> Event);
+);
 

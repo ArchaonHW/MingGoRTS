@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "MingDecisionEffect.h"
@@ -40,7 +40,8 @@ struct MINGSTRATEGIC_API FMingStrategicDecisionOption
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FString NextDecisionId;
     
-    // ?�否結�X��?決�X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
+    // ?�否結�X��?決�X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     bool bEndDecisionChain;
     
     // ?��X�用?��?�?(?��?空表示�?終可X

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -79,9 +79,9 @@ protected:
     void CleanupTestEnvironment();
 
     // Test Execution Helpers
-    void ExecuteTestWithTimeout(EMingValidationType ValidationType, float TimeoutSeconds};
+    void ExecuteTestWithTimeout(EMingValidationType ValidationType, float TimeoutSeconds);
     void MonitorTestProgress();
-    void HandleTestCompletion(EMingValidationType ValidationType, bool bSuccess};
+    void HandleTestCompletion(EMingValidationType ValidationType, bool bSuccess);
 
     // Real-time Monitoring
     void CollectRealTimeData();
@@ -97,11 +97,11 @@ protected:
 
     // Utility Functions
     void LogTestEvent(const FString& Event, const FString& Details) {};
-    void BroadcastTestProgress(const FString& TestName, float Progress};
+    void BroadcastTestProgress(const FString& TestName, float Progress);
 };
 
 #include "MingIntegrationTestExecutor.generated.h"
-};
+);
 
 
 #endif // MINGINTEGRATIONTESTEXECUTOR_H

@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSServerValidation.generated.h"
 
 /**
- * Åç??µ²??
+ * ï¿½ï¿½??ï¿½ï¿½??
  */
 USTRUCT(BlueprintType)
 struct FValidationResult
@@ -34,7 +34,7 @@ struct FValidationResult
 };
 
 /**
- * ??À¸????§ÖX */
+ * ??ï¿½ï¿½????ï¿½ï¿½X */
 USTRUCT(BlueprintType)
 struct FGameStateSnapshot
 {
@@ -74,7 +74,7 @@ struct FGameStateSnapshot
 };
 
 /**
- * «È¤áºÝ©R¥O???? */
+ * ï¿½È¤ï¿½Ý©Rï¿½O???? */
 USTRUCT(BlueprintType)
 struct FClientCommandValidation
 {
@@ -109,7 +109,7 @@ struct FClientCommandValidation
 };
 
 /**
- * ???X???ÃÒ¨t??- Åv?X??X????? */
+ * ???X???ï¿½Ò¨t??- ï¿½v?X??X????? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSServerValidation : public UObject
 {
@@ -118,51 +118,58 @@ class MINGGORTS_API UMingRTSServerValidation : public UObject
 public:
     UMingRTSServerValidation();
     
-    // ???X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    // ???X
+    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     void InitializeServerValidation();
     
-    // Åç??«È¤áºÝ©R??    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    // ï¿½ï¿½??ï¿½È¤ï¿½Ý©R??
+    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
     FClientCommandValidation ValidateClientCommand(const FString& PlayerID, const FString& CommandType, 
-        const TArray<uint8>& CommandData};
+        const TArray<uint8>& CommandData);
     
-    // Åç?X?À¸??X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
-    FValidationResult ValidateGameState(const FGameStateSnapshot& ClientSnapshot};
-    
-    // ¤ñ?X???®ÕÅç??
+    // ï¿½ï¿½?X?ï¿½ï¿½??X
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
-    bool VerifyStateChecksum(int32 ClientChecksum, int32 ServerChecksum};
+    FValidationResult ValidateGameState(const FGameStateSnapshot& ClientSnapshot);
     
-    // °O??«È¤áºÝ©R??    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
-    void RecordClientCommand(const FString& PlayerID, const FString& CommandID, const FString& CommandType};
-    
-    // ÀË¬d??¥O§Ç??
+    // ï¿½ï¿½?X???ï¿½ï¿½ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
-    bool VerifyCommandSequence(const FString& PlayerID, int32 ExpectedSequence};
+    bool VerifyStateChecksum(int32 ClientChecksum, int32 ServerChecksum);
     
-    // ÀË´ú??±`??X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
-    TArray<FString> DetectAnomalousState(const FGameStateSnapshot& Snapshot};
-    
-    // ???X??X???«Â?X    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
-    FGameStateSnapshot GetAuthoritativeState(const FString& MatchID, const FString& PlayerID};
-    
-    // ??¥Î???X?®Õ??    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
-    void ApplyServerCorrection(const FString& PlayerID, const FGameStateSnapshot& CorrectedState};
-    
-    // ???X?¸ÜÅç??
+    // ï¿½O??ï¿½È¤ï¿½Ý©R??
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
-    void StartSessionValidation(const FString& MatchID};
+    void RecordClientCommand(const FString& PlayerID, const FString& CommandID, const FString& CommandType);
     
-    // µ²?X?¸ÜÅç??
+    // ï¿½Ë¬d??ï¿½Oï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
-    void EndSessionValidation(const FString& MatchID};
+    bool VerifyCommandSequence(const FString& PlayerID, int32 ExpectedSequence);
     
-    // ³]¸mÅç?X?®æ¼Ò??
+    // ï¿½Ë´ï¿½??ï¿½`??X
     UFUNCTION(BlueprintCallable, Category = "ServerValidation")
-    void SetStrictValidation(bool bStrict};
+    TArray<FString> DetectAnomalousState(const FGameStateSnapshot& Snapshot);
     
-    // ¨Æ¥ó©e??
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnValidationFailed, const FString&, PlayerID, const FValidationResult&, Result};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStateMismatch, const FString&, MatchID, const FValidationResult&, MismatchInfo};
+    // ???X??X???ï¿½ï¿½?X
+    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    FGameStateSnapshot GetAuthoritativeState(const FString& MatchID, const FString& PlayerID);
+    
+    // ??ï¿½ï¿½???X?ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    void ApplyServerCorrection(const FString& PlayerID, const FGameStateSnapshot& CorrectedState);
+    
+    // ???X?ï¿½ï¿½ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    void StartSessionValidation(const FString& MatchID);
+    
+    // ï¿½ï¿½?X?ï¿½ï¿½ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    void EndSessionValidation(const FString& MatchID);
+    
+    // ï¿½]ï¿½mï¿½ï¿½?X?ï¿½ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "ServerValidation")
+    void SetStrictValidation(bool bStrict);
+    
+    // ï¿½Æ¥ï¿½e??
+    
+    
     
     UPROPERTY(BlueprintAssignable, Category = "ServerValidation|Events")
     FOnValidationFailed OnValidationFailed;
@@ -186,16 +193,17 @@ private:
     UPROPERTY()
     TArray<FString> ActiveSessions;
     
-    int32 CalculateResourceChecksum(const FString& MatchID, const FString& PlayerID};
-    int32 CalculateUnitChecksum(const FString& MatchID, const FString& PlayerID};
-    int32 CalculateBuildingChecksum(const FString& MatchID, const FString& PlayerID};
+    int32 CalculateResourceChecksum(const FString& MatchID, const FString& PlayerID);
+    int32 CalculateUnitChecksum(const FString& MatchID, const FString& PlayerID);
+    int32 CalculateBuildingChecksum(const FString& MatchID, const FString& PlayerID);
     
-    bool IsCommandAllowed(const FString& CommandType, const FGameStateSnapshot& State};
-    bool IsResourceAmountValid(int32 ResourceAmount, const FGameStateSnapshot& State};
-    bool IsUnitCountValid(int32 UnitCount, const FGameStateSnapshot& State};
-    bool IsPositionValid(const FVector& Position, const FGameStateSnapshot& State};
+    bool IsCommandAllowed(const FString& CommandType, const FGameStateSnapshot& State);
+    bool IsResourceAmountValid(int32 ResourceAmount, const FGameStateSnapshot& State);
+    bool IsUnitCountValid(int32 UnitCount, const FGameStateSnapshot& State);
+    bool IsPositionValid(const FVector& Position, const FGameStateSnapshot& State);
     
-    void LogValidationFailure(const FString& PlayerID, const FValidationResult& Result};
-    void ReportToAntiCheat(const FString& PlayerID, const FValidationResult& Result};
+    void LogValidationFailure(const FString& PlayerID, const FValidationResult& Result);
+    void ReportToAntiCheat(const FString& PlayerID, const FValidationResult& Result);
 };
+
 

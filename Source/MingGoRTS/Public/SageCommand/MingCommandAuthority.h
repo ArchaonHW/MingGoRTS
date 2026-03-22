@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // 指揮權類型枚舉
 UENUM(BlueprintType)
-enum class ECommandAuthorityType : uint8
-{
+enum class ECommandAuthorityType: uint8 {
     MoralAuthority = 0,     // 道德權威 - 基於倫理和正義
     LegalAuthority = 1,     // 法理權威 - 基於法律和制度
     CharismaticAuthority = 2, // 魅力權威 - 基於個人魅力
@@ -18,8 +17,7 @@ enum class ECommandAuthorityType : uint8
 
 // 權威狀態枚舉
 UENUM(BlueprintType)
-enum class EAuthorityState : uint8
-{
+enum class EAuthorityState: uint8 {
     Strong = 0,        // 強大權威
     Stable = 1,        // 穩定權威
     Weakening = 2,     // 衰弱權威
@@ -30,8 +28,7 @@ enum class EAuthorityState : uint8
 
 // 權威合法性來源
 UENUM(BlueprintType)
-enum class EAuthorityLegitimacySource : uint8
-{
+enum class EAuthorityLegitimacySource: uint8 {
     DivineRight = 0,       // 天命所歸
     PopularSupport = 1,    // 民心所向
     LegalFramework = 2,    // 法理依據

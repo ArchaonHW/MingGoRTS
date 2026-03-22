@@ -11,9 +11,9 @@ class AMingCombatAI;
  * 池�?象�X| Pool Object State
  */
 UENUM(BlueprintType)
-enum class EPoolObjectState : uint8
-{
-    Unused      UMETA(DisplayName = "Unused"),      // ?�使X    Available   UMETA(DisplayName = "Available"),   // ?�用 | Available
+enum class EPoolObjectState: uint8 {
+    Unused      UMETA(DisplayName = "Unused"),      // ?�使X
+    Available   UMETA(DisplayName = "Available"),   // ?�用 | Available
     InUse       UMETA(DisplayName = "In Use"),      // 使用�?| In Use
     Pending     UMETA(DisplayName = "Pending Return"), // 待歸X| Pending Return
     Disabled    UMETA(DisplayName = "Disabled")     // 禁用 | Disabled
@@ -244,10 +244,12 @@ public:
     void Tick(float DeltaTime);
 
 private:
-    // ?��?�?    UPROPERTY()
+    // ?��?�?
+    UPROPERTY()
     TArray<FUnitPoolItem> UnitPool;
 
-    // AI�?    UPROPERTY()
+    // AI�?
+    UPROPERTY()
     TArray<FAIPoolItem> AIPool;
 
     // ?�置
@@ -272,31 +274,37 @@ private:
     float LastExpandTime;
     float ExpandCooldown;
 
-    // ?��?类�?默认�?    UPROPERTY()
+    // ?��?类�?默认�?
+    UPROPERTY()
     TSubclassOf<AMingTacticalUnit> DefaultUnitClass;
 
     UPROPERTY()
     TSubclassOf<AMingCombatAI> DefaultAIClass;
 
-    // ?�建?��?�?    AMingTacticalUnit* CreateNewUnit(UClass* UnitClass);
+    // ?�建?��?�?
+    AMingTacticalUnit* CreateNewUnit(UClass* UnitClass);
 
     // ?�建?�AI
     AMingCombatAI* CreateNewAI(UClass* AIClass);
 
-    // ?�置?��X��?    void ResetUnit(AMingTacticalUnit* Unit);
+    // ?�置?��X��?
+    void ResetUnit(AMingTacticalUnit* Unit);
 
-    // ?�置AI?��?    void ResetAI(AMingCombatAI* AI);
+    // ?�置AI?��?
+    void ResetAI(AMingCombatAI* AI);
 
     // ?�正?�毁对象�?归�X��X��?
     void DestroyUnit(AMingTacticalUnit* Unit);
     void DestroyAI(AMingCombatAI* AI);
 
-    // 检?�是?��?要自?�扩�?    void CheckAutoExpand();
+    // 检?�是?��?要自?�扩�?
+    void CheckAutoExpand();
 
     // 清�X��?引用
     void CleanupInvalidReferences();
 
-    // ?�找?�用?��?�?    int32 FindAvailableUnitIndex() const;
+    // ?�找?�用?��?�?
+    int32 FindAvailableUnitIndex() const;
     int32 FindAvailableAIIndex() const;
 
     // ?�找?��?对象?��?索�?

@@ -25,14 +25,16 @@ struct FMingDecisionRecord
     UPROPERTY(BlueprintReadOnly)
     float DecisionTime;
     
-    // ?�戲?�日X    UPROPERTY(BlueprintReadOnly)
+    // ?�戲?�日X
+    UPROPERTY(BlueprintReadOnly)
     FString InGameDate;
     
     // 決�?標�?
     UPROPERTY(BlueprintReadOnly)
     FText DecisionTitle;
     
-    // ?��X�選?��X    UPROPERTY(BlueprintReadOnly)
+    // ?��X�選?��X
+    UPROPERTY(BlueprintReadOnly)
     FText SelectedOptionTitle;
     
     FMingDecisionRecord()
@@ -40,8 +42,8 @@ struct FMingDecisionRecord
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDecisionTriggered, const FMingDecision&, Decision};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDecisionMade, const FString&, DecisionId, const FString&, SelectedOptionId};
+
+
 
 /**
  * 決�?管�X * 管�X�?�歷?�決策�?觸發?�執行�?記�?
@@ -54,7 +56,8 @@ class MINGSTRATEGIC_API UMingDecisionManager : public UObject
 public:
     UMingDecisionManager();
 
-    // ?��X    UFUNCTION(BlueprintCallable, Category = "Decision")
+    // ?��X
+    UFUNCTION(BlueprintCallable, Category = "Decision")
     void Initialize();
 
     // ?��?
@@ -63,15 +66,15 @@ public:
 
     // 註�?決�?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    void RegisterDecision(const FMingDecision& Decision};
+    void RegisterDecision(const FMingDecision& Decision);
 
     // ?��?觸發決�?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    bool TriggerDecision(const FString& DecisionId};
+    bool TriggerDecision(const FString& DecisionId);
 
     // ?��?決�X��?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    bool ExecuteDecisionOption(const FString& DecisionId, const FString& OptionId};
+    bool ExecuteDecisionOption(const FString& DecisionId, const FString& OptionId);
 
     // ?��X��?活�?決�?
     UFUNCTION(BlueprintPure, Category = "Decision")
@@ -81,17 +84,20 @@ public:
     UFUNCTION(BlueprintPure, Category = "Decision")
     const TArray<FMingDecisionRecord>& GetDecisionHistory() const { return DecisionHistory; }
 
-    // 檢查決�X�否已�X    UFUNCTION(BlueprintPure, Category = "Decision")
+    // 檢查決�X�否已�X
+    UFUNCTION(BlueprintPure, Category = "Decision")
     bool HasDecisionBeenMade(const FString& DecisionId) const;
 
-    // ?��X��?決�X��X    UFUNCTION(BlueprintPure, Category = "Decision")
+    // ?��X��?決�X��X
+    UFUNCTION(BlueprintPure, Category = "Decision")
     FMingDecisionRecord GetDecisionRecord(const FString& DecisionId) const;
 
     // ?�新?�戲?��? (?�於?��?觸發?�決�?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    void UpdateGameTime(float CurrentGameTime};
+    void UpdateGameTime(float CurrentGameTime);
 
-    // 檢查條件觸發?�決�?    UFUNCTION(BlueprintCallable, Category = "Decision")
+    // 檢查條件觸發?�決�?
+    UFUNCTION(BlueprintCallable, Category = "Decision")
     void CheckConditionBasedDecisions();
 
     // 事件委�?
@@ -132,11 +138,11 @@ private:
 
     // ?�部?��?
     void ProcessTimeBasedDecisions();
-    void ProcessEventBasedDecisions(const FString& EventName};
+    void ProcessEventBasedDecisions(const FString& EventName);
     bool CheckTriggerCondition(const FMingDecision& Decision) const;
-    void ApplyDecisionEffects(const TArray<FMingDecisionEffect>& Effects};
-    void RecordDecision(const FString& DecisionId, const FString& OptionId, const FText& DecisionTitle, const FText& OptionTitle};
-    FMingDecision* FindRegisteredDecision(const FString& DecisionId};
-    FMingDecision* FindActiveDecision(const FString& DecisionId};
-};
+    void ApplyDecisionEffects(const TArray<FMingDecisionEffect>& Effects);
+    void RecordDecision(const FString& DecisionId, const FString& OptionId, const FText& DecisionTitle, const FText& OptionTitle);
+    FMingDecision* FindRegisteredDecision(const FString& DecisionId);
+    FMingDecision* FindActiveDecision(const FString& DecisionId);
+);
 

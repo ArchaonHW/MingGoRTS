@@ -6,8 +6,7 @@
 #include "MingRTSLocalizationTypes.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingRTSLanguage : uint8
-{
+enum class EMingRTSLanguage: uint8 {
     English, UMETA(DisplayName = "English"),
     SimplifiedChinese, UMETA(DisplayName = "Simplified Chinese"),
     TraditionalChinese, UMETA(DisplayName = "Traditional Chinese"),
@@ -32,8 +31,7 @@ enum class EMingRTSLanguage : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingRTSRegion : uint8
-{
+enum class EMingRTSRegion: uint8 {
     Global, UMETA(DisplayName = "Global"),
     Asia, UMETA(DisplayName = "Asia"),
     Europe, UMETA(DisplayName = "Europe"),
@@ -55,8 +53,7 @@ enum class EMingRTSRegion : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingTextDirection : uint8
-{
+enum class EMingTextDirection: uint8 {
     LeftToRight, UMETA(DisplayName = "Left to Right"),
     RightToLeft, UMETA(DisplayName = "Right to Left"),
     TopToBottom, UMETA(DisplayName = "Top to Bottom"),
@@ -66,8 +63,7 @@ enum class EMingTextDirection : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingDateFormat : uint8
-{
+enum class EMingDateFormat: uint8 {
     MDY, UMETA(DisplayName = "MM/DD/YYYY"),
     DMY, UMETA(DisplayName = "DD/MM/YYYY"),
     YMD, UMETA(DisplayName = "YYYY/MM/DD"),
@@ -77,8 +73,7 @@ enum class EMingDateFormat : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingNumberFormat : uint8
-{
+enum class EMingNumberFormat: uint8 {
     DotDecimal, UMETA(DisplayName = "1,234.56"),
     CommaDecimal, UMETA(DisplayName = "1.234,56"),
     SpaceDecimal, UMETA(DisplayName = "1 234,56"),
@@ -89,8 +84,7 @@ enum class EMingNumberFormat : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingCurrencySymbol : uint8
-{
+enum class EMingCurrencySymbol: uint8 {
     USD, UMETA(DisplayName = "$"),
     EUR, UMETA(DisplayName = "EUR"),
     GBP, UMETA(DisplayName = "£"),
@@ -196,5 +190,6 @@ struct FMingLocalizedText
         , bIsTranslated(false)
     {}
 };
+
 
 

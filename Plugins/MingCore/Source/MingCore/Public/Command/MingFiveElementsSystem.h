@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingFiveElementsSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EFiveElementsPhase : uint8
-{
+enum class EFiveElementsPhase: uint8 {
     Wood,           // 木：立名與正當性
     Fire,           // 火：造勢與加速
     Earth,          // 土：收權與止亂
@@ -15,8 +14,7 @@ enum class EFiveElementsPhase : uint8
 };
 
 UENUM(BlueprintType)
-enum class EFiveElementsRelation : uint8
-{
+enum class EFiveElementsRelation: uint8 {
     Generating,     // 相生
     Overcoming,     // 相剋
     Insulting,      // 相侮

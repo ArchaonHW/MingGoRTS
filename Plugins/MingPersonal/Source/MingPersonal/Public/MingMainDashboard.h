@@ -7,14 +7,13 @@
 #include "MingMainDashboard.generated.h"
 
 UENUM(BlueprintType)
-enum class EDashboardTab : uint8
-{
-    Overview,       // Á`Äý
-    Relationships,  // ????
-    Reputation,     // ????
-    Quests,         // ¥ô??
-    Audio,          // ??ÀW
-    Settings        // ³]¸m
+enum class EDashboardTab: uint8 {
+    Overview,       // ï¿½`ï¿½ï¿½
+    Relationships,  // æ‘§æ¯€
+    Reputation,     // æ‘§æ¯€
+    Quests,         // ï¿½ï¿½??
+    Audio,          // ??ï¿½W
+    Settings        // ï¿½]ï¿½m
 };
 
 USTRUCT(BlueprintType)
@@ -39,13 +38,13 @@ struct FDashboardQuickAction
 
     FDashboardQuickAction()
     {
-        ActionName = TEXT("");
-        ActionDescription = TEXT("");
-        ActionIcon = TEXT("");
+        ActionName = TEXT(""};
+        ActionDescription = TEXT(""};
+        ActionIcon = TEXT(""};
         bIsAvailable = true;
         ActionColor = FLinearColor::White;
     }
-};
+);
 
 USTRUCT(BlueprintType)
 struct FDashboardSummary
@@ -92,18 +91,18 @@ struct FDashboardSummary
         CompletedQuests = 0;
         AverageReputation = 0.0f;
         HighestReputation = EReputationLevel::Unknown;
-        CurrentRegion = TEXT("");
-        CurrentTheme = TEXT("");
+        CurrentRegion = TEXT(""};
+        CurrentTheme = TEXT(""};
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDashboardTabChanged, EDashboardTab, NewTab};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuickActionExecuted, const FString&, ActionName};
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDashboardRefreshed, const FDashboardSummary&, Summary);
 
 /**
- * ¥D­Ó¤H¨t²Î??ªíªOWidget
- * ²Î??ºÞ?X???­Ó¤H¨t²Î??­±
+ * ï¿½Dï¿½Ó¤Hï¿½tï¿½ï¿½??ï¿½ï¿½OWidget
+ * ï¿½ï¿½??ï¿½ï¿½?X???ï¿½Ó¤Hï¿½tï¿½ï¿½??ï¿½ï¿½
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingMainDashboard : public UUserWidget
@@ -111,12 +110,14 @@ class MINGPERSONAL_API UMingMainDashboard : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingMainDashboard(const FObjectInitializer& ObjectInitializer};
+    UMingMainDashboard(const FObjectInitializer& ObjectInitializer);
 
-    // ???X    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
+    // ???X
+    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void InitializeDashboard(UMingPersonalManager* InPersonalManager);
 
-    // ¼ÐÅÒ??ºÞX    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
+    // ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½X
+    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void SwitchToTab(EDashboardTab Tab);
 
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
@@ -137,7 +138,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void ShowSettings();
 
-    // ???X?·s
+    // ???X?ï¿½s
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void RefreshDashboard();
 
@@ -147,7 +148,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void UpdateQuickActions();
 
-    // §Ö³t????    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
+    // ï¿½Ö³tæ‘§æ¯€
+    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void ExecuteQuickAction(const FString& ActionName);
 
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
@@ -162,7 +164,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void QuickOpenDialogue(const FString& CharacterID);
 
-    // ??ª¾¨t²Î
+    // ??ï¿½ï¿½ï¿½tï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void ShowNotification(const FString& Message, const FString& Type = TEXT("Info")};
 
@@ -178,7 +180,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void ShowAchievementUnlocked(const FString& AchievementName, const FString& Description);
 
-    // ????¬d??    UFUNCTION(BlueprintPure, Category = "Main Dashboard")
+    // æ‘§æ¯€ï¿½d??
+    UFUNCTION(BlueprintPure, Category = "Main Dashboard")
     EDashboardTab GetCurrentTab() const { return CurrentTab; }
 
     UFUNCTION(BlueprintPure, Category = "Main Dashboard")
@@ -193,7 +196,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Main Dashboard")
     int32 GetNotificationCount() const;
 
-    // ²Î??«H®§
+    // ï¿½ï¿½??ï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Main Dashboard")
     float GetRelationshipProgress() const;
 
@@ -206,7 +209,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Main Dashboard")
     float GetOverallProgress() const;
 
-    // ¤¬?X???
+    // ï¿½ï¿½?X???
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void OnTabButtonClicked(EDashboardTab Tab);
 
@@ -219,7 +222,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void OnRefreshButtonClicked();
 
-    // ¨Æ¥ó
+    // ï¿½Æ¥ï¿½
     UPROPERTY(BlueprintAssignable, Category = "Dashboard Events")
     FOnDashboardTabChanged OnDashboardTabChanged;
 
@@ -230,11 +233,12 @@ public:
     FOnDashboardRefreshed OnDashboardRefreshed;
 
 protected:
-    // ¨t²Î¤Þ¥Î
+    // ï¿½tï¿½Î¤Þ¥ï¿½
     UPROPERTY()
     TObjectPtr<UMingPersonalManager> PersonalManager;
 
-    // ???X?X    UPROPERTY(BlueprintReadOnly, Category = "Dashboard State")
+    // ???X?X
+    UPROPERTY(BlueprintReadOnly, Category = "Dashboard State")
     EDashboardTab CurrentTab;
 
     UPROPERTY(BlueprintReadOnly, Category = "Dashboard State")
@@ -246,7 +250,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Dashboard State")
     TArray<FString> Notifications;
 
-    // ³]¸m
+    // ï¿½]ï¿½m
     UPROPERTY(BlueprintReadWrite, Category = "Dashboard Settings")
     bool bAutoRefresh = true;
 
@@ -256,7 +260,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Dashboard Settings")
     int32 MaxNotifications = 10;
 
-    // UI²Õ¥ó¤Þ¥Î¡]??­n¦bBlueprint¤¤??©w??
+    // UIï¿½Õ¥ï¿½Þ¥Î¡]??ï¿½nï¿½bBlueprintï¿½ï¿½??ï¿½w??
     UPROPERTY(meta = (BindWidget))
     class UVerticalBox* TabContainer;
 
@@ -290,7 +294,7 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UButton* SettingsButton;
 
-    // ¼ÐÅÒ??Widget¤Þ¥Î
+    // ï¿½ï¿½ï¿½ï¿½??Widgetï¿½Þ¥ï¿½
     UPROPERTY()
     TObjectPtr<UUserWidget> OverviewWidget;
 
@@ -309,11 +313,11 @@ protected:
     UPROPERTY()
     TObjectPtr<UUserWidget> SettingsWidget;
 
-    // ??ÀÀ??¼Æ
+    // ??ï¿½ï¿½??ï¿½ï¿½
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // ??³¡??¼Æ
+    // ??ï¿½ï¿½??ï¿½ï¿½
     void InitializeTabs();
     void InitializeQuickActions();
     void UpdateTabUI();
@@ -326,21 +330,21 @@ protected:
     void CreateTabButtons();
     void CreateQuickActionButtons();
 
-    // ¨Æ¥ó¸j??
+    // ï¿½Æ¥ï¿½j??
     void SetupEventBindings();
-    void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
-    void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason};
-    void OnQuestCompleted(const FString& QuestID, const FString& RegionID, const FString& QuestGiverID};
+    void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason);
+    void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason);
+    void OnQuestCompleted(const FString& QuestID, const FString& RegionID, const FString& QuestGiverID);
 
 private:
-    // »²§U??¼Æ
-    void ShowTabContent(EDashboardTab Tab};
+    // ï¿½ï¿½ï¿½U??ï¿½ï¿½
+    void ShowTabContent(EDashboardTab Tab);
     void HideAllTabContent();
-    void AddNotification(const FString& Message, const FString& Type};
-    void RemoveNotification(int32 Index};
+    void AddNotification(const FString& Message, const FString& Type);
+    void RemoveNotification(int32 Index);
     void RefreshTimer();
     void UpdateProgressBars();
 
-    // ©w?X    FTimerHandle RefreshTimerHandle;
-);
-
+    // 
+    FTimerHandle RefreshTimerHandle;
+};

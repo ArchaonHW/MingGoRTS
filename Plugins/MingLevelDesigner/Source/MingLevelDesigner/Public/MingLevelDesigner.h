@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingLevelDesigner.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingTerrainType : uint8
-{
+enum class EMingTerrainType: uint8 {
     Grass UMETA(DisplayName = "Grass"),
     Desert UMETA(DisplayName = "Desert"),
     Forest UMETA(DisplayName = "Forest"),
@@ -18,8 +17,7 @@ enum class EMingTerrainType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingMapSize : uint8
-{
+enum class EMingMapSize: uint8 {
     Small UMETA(DisplayName = "Small (2x2 km)"),
     Medium UMETA(DisplayName = "Medium (4x4 km)"),
     Large UMETA(DisplayName = "Large (8x8 km)"),
@@ -27,8 +25,7 @@ enum class EMingMapSize : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingWeatherType : uint8
-{
+enum class EMingWeatherType: uint8 {
     Clear UMETA(DisplayName = "Clear"),
     Cloudy UMETA(DisplayName = "Cloudy"),
     Rain UMETA(DisplayName = "Rain"),
@@ -204,16 +201,16 @@ public:
     void InitializeLevelDesigner();
 
     UFUNCTION(BlueprintCallable, Category = "Level")
-    void CreateNewLevel(const FString& LevelID, EMingMapSize MapSize};
+    void CreateNewLevel(const FString& LevelID, EMingMapSize MapSize);
 
     UFUNCTION(BlueprintCallable, Category = "Level")
-    void LoadLevel(const FString& LevelID};
+    void LoadLevel(const FString& LevelID);
 
     UFUNCTION(BlueprintCallable, Category = "Level")
-    void SaveLevel(const FString& LevelID};
+    void SaveLevel(const FString& LevelID);
 
     UFUNCTION(BlueprintCallable, Category = "Level")
-    void DeleteLevel(const FString& LevelID};
+    void DeleteLevel(const FString& LevelID);
 
     UFUNCTION(BlueprintPure, Category = "Level")
     TArray<FMingLevelData> GetAllLevels() const;
@@ -223,19 +220,19 @@ public:
 
     // Terrain Editing
     UFUNCTION(BlueprintCallable, Category = "Terrain")
-    void AddTerrainPatch(const FMingTerrainData& TerrainData};
+    void AddTerrainPatch(const FMingTerrainData& TerrainData);
 
     UFUNCTION(BlueprintCallable, Category = "Terrain")
-    void RemoveTerrainPatch(const FVector2D& Position};
+    void RemoveTerrainPatch(const FVector2D& Position);
 
     UFUNCTION(BlueprintCallable, Category = "Terrain")
-    void ModifyTerrainHeight(const FVector2D& Position, float HeightDelta, float Radius};
+    void ModifyTerrainHeight(const FVector2D& Position, float HeightDelta, float Radius);
 
     UFUNCTION(BlueprintCallable, Category = "Terrain")
-    void SetTerrainType(const FVector2D& Position, EMingTerrainType TerrainType, float Radius};
+    void SetTerrainType(const FVector2D& Position, EMingTerrainType TerrainType, float Radius);
 
     UFUNCTION(BlueprintCallable, Category = "Terrain")
-    void SmoothTerrain(const FVector2D& Position, float Radius, float Strength};
+    void SmoothTerrain(const FVector2D& Position, float Radius, float Strength);
 
     UFUNCTION(BlueprintPure, Category = "Terrain")
     TArray<FMingTerrainData> GetTerrainData() const;
@@ -245,19 +242,19 @@ public:
 
     // Object Placement
     UFUNCTION(BlueprintCallable, Category = "Objects")
-    void PlaceObject(const FMingMapObject& MapObject};
+    void PlaceObject(const FMingMapObject& MapObject);
 
     UFUNCTION(BlueprintCallable, Category = "Objects")
-    void RemoveObject(const FString& ObjectID};
+    void RemoveObject(const FString& ObjectID);
 
     UFUNCTION(BlueprintCallable, Category = "Objects")
-    void MoveObject(const FString& ObjectID, FVector NewLocation};
+    void MoveObject(const FString& ObjectID, FVector NewLocation);
 
     UFUNCTION(BlueprintCallable, Category = "Objects")
-    void RotateObject(const FString& ObjectID, FRotator NewRotation};
+    void RotateObject(const FString& ObjectID, FRotator NewRotation);
 
     UFUNCTION(BlueprintCallable, Category = "Objects")
-    void ScaleObject(const FString& ObjectID, FVector NewScale};
+    void ScaleObject(const FString& ObjectID, FVector NewScale);
 
     UFUNCTION(BlueprintPure, Category = "Objects")
     TArray<FMingMapObject> GetMapObjects() const;
@@ -270,22 +267,22 @@ public:
 
     // Level Properties
     UFUNCTION(BlueprintCallable, Category = "Properties")
-    void SetMapSize(EMingMapSize NewSize};
+    void SetMapSize(EMingMapSize NewSize);
 
     UFUNCTION(BlueprintCallable, Category = "Properties")
-    void SetWeatherType(EMingWeatherType Weather};
+    void SetWeatherType(EMingWeatherType Weather);
 
     UFUNCTION(BlueprintCallable, Category = "Properties")
-    void SetTimeOfDay(float Time};
+    void SetTimeOfDay(float Time);
 
     UFUNCTION(BlueprintCallable, Category = "Properties")
-    void SetTimeLimit(float Limit};
+    void SetTimeLimit(float Limit);
 
     UFUNCTION(BlueprintCallable, Category = "Properties")
-    void AddObjective(const FString& ObjectiveID, bool bIsRequired};
+    void AddObjective(const FString& ObjectiveID, bool bIsRequired);
 
     UFUNCTION(BlueprintCallable, Category = "Properties")
-    void RemoveObjective(const FString& ObjectiveID};
+    void RemoveObjective(const FString& ObjectiveID);
 
     UFUNCTION(BlueprintPure, Category = "Properties")
     FVector2D GetMapBounds() const;
@@ -308,33 +305,33 @@ public:
 
     // Level Templates
     UFUNCTION(BlueprintCallable, Category = "Templates")
-    void LoadTemplate(const FString& TemplateID};
+    void LoadTemplate(const FString& TemplateID);
 
     UFUNCTION(BlueprintCallable, Category = "Templates")
-    void SaveAsTemplate(const FString& TemplateID};
+    void SaveAsTemplate(const FString& TemplateID);
 
     UFUNCTION(BlueprintPure, Category = "Templates")
     TArray<FString> GetAvailableTemplates() const;
 
     // Import/Export
     UFUNCTION(BlueprintCallable, Category = "Import/Export")
-    void ExportLevel(const FString& FilePath};
+    void ExportLevel(const FString& FilePath);
 
     UFUNCTION(BlueprintCallable, Category = "Import/Export")
-    void ImportLevel(const FString& FilePath};
+    void ImportLevel(const FString& FilePath);
 
     UFUNCTION(BlueprintCallable, Category = "Import/Export")
-    void ExportToJSON(const FString& FilePath};
+    void ExportToJSON(const FString& FilePath);
 
     UFUNCTION(BlueprintCallable, Category = "Import/Export")
-    void ImportFromJSON(const FString& FilePath};
+    void ImportFromJSON(const FString& FilePath);
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelCreated, const FString&, LevelID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelLoaded, const FString&, LevelID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelSaved, const FString&, LevelID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTerrainModified, const FVector2D&, Position};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnObjectPlaced, const FString&, ObjectID, const FVector&, Location};
+    
+    
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnLevelCreated OnLevelCreated;
@@ -353,19 +350,19 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetTerrainTypeName(EMingTerrainType TerrainType};
+    static FString GetTerrainTypeName(EMingTerrainType TerrainType);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetMapSizeName(EMingMapSize MapSize};
+    static FString GetMapSizeName(EMingMapSize MapSize);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetWeatherTypeName(EMingWeatherType WeatherType};
+    static FString GetWeatherTypeName(EMingWeatherType WeatherType);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveLevelData() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadLevelData(const FString& JsonString};
+    void LoadLevelData(const FString& JsonString);
 
 protected:
     UPROPERTY()
@@ -392,7 +389,7 @@ protected:
     void ValidateLevelIntegrity();
 
     // Terrain Helpers
-    void GenerateTerrain(EMingMapSize MapSize, EMingTerrainType DefaultTerrain};
+    void GenerateTerrain(EMingMapSize MapSize, EMingTerrainType DefaultTerrain);
     void ApplyTerrainModifiers();
     void OptimizeTerrainData();
 
@@ -409,6 +406,6 @@ protected:
 
     // Template Helpers
     void CreateDefaultTemplates();
-    void ApplyTemplate(const FMingLevelData& Template};
-};
+    void ApplyTemplate(const FMingLevelData& Template);
+);
 

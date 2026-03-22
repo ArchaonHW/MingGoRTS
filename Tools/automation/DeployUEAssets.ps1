@@ -1,4 +1,4 @@
-# MingGoRTS UE素材自動化部署系統
+﻿# MingGoRTS UE素材自動化部署系統
 # 自動化部署和管理Unreal Engine素材資源
 
 param(

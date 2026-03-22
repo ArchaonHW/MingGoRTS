@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSCollaborativeAINetwork.generated.h"
 
 UENUM(BlueprintType)
-enum class EAIAgentRole : uint8
-{
+enum class EAIAgentRole: uint8 {
     Commander UMETA(DisplayName = "指揮官"),
     Scout UMETA(DisplayName = "偵察兵"),
     Defender UMETA(DisplayName = "防禦者"),
@@ -21,8 +20,7 @@ enum class EAIAgentRole : uint8
 };
 
 UENUM(BlueprintType)
-enum class ECollaborationType : uint8
-{
+enum class ECollaborationType: uint8 {
     None UMETA(DisplayName = "無"),
     Coordination UMETA(DisplayName = "協調"),
     Cooperation UMETA(DisplayName = "合作"),
@@ -35,8 +33,7 @@ enum class ECollaborationType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ECommunicationProtocol : uint8
-{
+enum class ECommunicationProtocol: uint8 {
     Direct UMETA(DisplayName = "直接通信"),
     Broadcast UMETA(DisplayName = "廣播"),
     Multicast UMETA(DisplayName = "多播"),

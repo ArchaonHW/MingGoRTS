@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,8 +8,7 @@
  * ??測事件類??
  */
 UENUM(BlueprintType)
-enum class ETelemetryEventType : uint8
-{
+enum class ETelemetryEventType: uint8 {
     SessionStart          UMETA(DisplayName = "Session Start"),
     SessionEnd            UMETA(DisplayName = "Session End"),
     MatchStart            UMETA(DisplayName = "Match Start"),
@@ -147,7 +146,8 @@ class MINGGORTS_API UMingRTSTelemetrySystem : public UObject
 public:
     UMingRTSTelemetrySystem();
     
-    // ???X    UFUNCTION(BlueprintCallable, Category = "Telemetry")
+    // ???X
+    UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void InitializeTelemetrySystem();
     
     // ??用/禁用??測
@@ -190,7 +190,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void RecordFeatureUsage(const FString& FeatureName, int32 UsageCount);
     
-    // ???X?送????    UFUNCTION(BlueprintCallable, Category = "Telemetry")
+    // ???X?送????
+    UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void FlushEvents();
     
     // ???X??X?話ID
@@ -205,7 +206,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void SetBatchSize(int32 Size);
     
-    // 設置??送?X    UFUNCTION(BlueprintCallable, Category = "Telemetry")
+    // 設置??送?X
+    UFUNCTION(BlueprintCallable, Category = "Telemetry")
     void SetFlushInterval(float Seconds);
     
     // 導出???X???

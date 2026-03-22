@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // 自動化檢測系統頭文件
 
 #pragma once
@@ -13,8 +13,7 @@
  * 檢測類型枚舉
  */
 UENUM(BlueprintType)
-enum class EDetectionType : uint8
-{
+enum class EDetectionType: uint8 {
     ProjectHealth         UMETA(DisplayName = "項目健康"),
     CodeQuality           UMETA(DisplayName = "代碼品質"),
     PerformanceMetrics    UMETA(DisplayName = "性能指標"),
@@ -31,8 +30,7 @@ enum class EDetectionType : uint8
  * 檢測狀態
  */
 UENUM(BlueprintType)
-enum class EDetectionStatus : uint8
-{
+enum class EDetectionStatus: uint8 {
     NotStarted    UMETA(DisplayName = "未開始"),
     InProgress    UMETA(DisplayName = "進行中"),
     Passed        UMETA(DisplayName = "通過"),
@@ -45,8 +43,7 @@ enum class EDetectionStatus : uint8
  * 檢測結果嚴重級別
  */
 UENUM(BlueprintType)
-enum class EDetectionSeverity : uint8
-{
+enum class EDetectionSeverity: uint8 {
     Info          UMETA(DisplayName = "資訊"),
     Low           UMETA(DisplayName = "低"),
     Medium        UMETA(DisplayName = "中"),

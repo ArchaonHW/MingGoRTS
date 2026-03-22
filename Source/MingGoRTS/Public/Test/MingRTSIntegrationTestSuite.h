@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // 系統整合測試套件 - 頭文件
 
 #pragma once
@@ -9,8 +9,7 @@
 #include "MingRTSIntegrationTestSuite.generated.h"
 
 UENUM(BlueprintType)
-enum class EIntegrationTestType : uint8
-{
+enum class EIntegrationTestType: uint8 {
     SystemInitialization      UMETA(DisplayName = "System Initialization"),
     CrossSystemDataFlow       UMETA(DisplayName = "Cross-System Data Flow"),
     EventPropagation          UMETA(DisplayName = "Event Propagation"),
@@ -29,8 +28,7 @@ enum class EIntegrationTestType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EIntegrationTestStatus : uint8
-{
+enum class EIntegrationTestStatus: uint8 {
     Passed   UMETA(DisplayName = "Passed"),
     Failed   UMETA(DisplayName = "Failed"),
     Warning  UMETA(DisplayName = "Warning"),

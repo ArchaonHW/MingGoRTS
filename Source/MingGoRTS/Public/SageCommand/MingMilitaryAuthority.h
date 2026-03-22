@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -10,8 +10,7 @@
  * 命令類型枚舉
  */
 UENUM(BlueprintType)
-enum class EMilitaryCommandType : uint8
-{
+enum class EMilitaryCommandType: uint8 {
     None            UMETA(DisplayName = "None"),
     Move            UMETA(DisplayName = "移動"),
     Attack          UMETA(DisplayName = "攻擊"),
@@ -26,8 +25,7 @@ enum class EMilitaryCommandType : uint8
  * 命令優先級枚舉
  */
 UENUM(BlueprintType)
-enum class ECommandPriority : uint8
-{
+enum class ECommandPriority: uint8 {
     Low         UMETA(DisplayName = "低"),
     Normal      UMETA(DisplayName = "普通"),
     High        UMETA(DisplayName = "高"),
@@ -197,7 +195,7 @@ public:
     FOnCommandIssued OnCommandIssued;
 
     // 事件：命令執行
-    DECLARE_DYNAMIC_MULTICAST_Delegate_TwoParams(FOnCommandExecuted, int32, CommandID, const FCommandExecutionResult&, Result);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCommandExecuted, int32, CommandID, const FCommandExecutionResult&, Result);
     UPROPERTY(BlueprintAssignable, Category = "SageCommand|Military")
     FOnCommandExecuted OnCommandExecuted;
 
@@ -254,3 +252,4 @@ protected:
     UPROPERTY()
     bool bIsInitialized = false;
 };
+

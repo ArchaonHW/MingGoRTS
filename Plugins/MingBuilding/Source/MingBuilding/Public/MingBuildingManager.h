@@ -68,7 +68,8 @@ struct FBuildingQueueItem
     UPROPERTY(BlueprintReadOnly)
     float Progress;
 
-    // ?�否�?��建�?    UPROPERTY(BlueprintReadOnly)
+    // ?�否�?��建�?
+    UPROPERTY(BlueprintReadOnly)
     bool bIsConstructing;
 
     FBuildingQueueItem()
@@ -89,7 +90,8 @@ struct FBuildingStatistics
 {
     GENERATED_BODY()
 
-    // 總建築數X    UPROPERTY(BlueprintReadOnly)
+    // 總建築數X
+    UPROPERTY(BlueprintReadOnly)
     int32 TotalBuildings;
 
     // 活�?建�X��?
@@ -104,17 +106,20 @@ struct FBuildingStatistics
     UPROPERTY(BlueprintReadOnly)
     int32 DamagedBuildings;
 
-    // ?��X�建築數X    UPROPERTY(BlueprintReadOnly)
+    // ?��X�建築數X
+    UPROPERTY(BlueprintReadOnly)
     TMap<EMingBuildingType, int32> BuildingCounts;
 
-    // 總工人數X    UPROPERTY(BlueprintReadOnly)
+    // 總工人數X
+    UPROPERTY(BlueprintReadOnly)
     int32 TotalWorkers;
 
     // ?�置工人?��?
     UPROPERTY(BlueprintReadOnly)
     int32 AvailableWorkers;
 
-    // 建造�X�長�?    UPROPERTY(BlueprintReadOnly)
+    // 建造�X�長�?
+    UPROPERTY(BlueprintReadOnly)
     int32 QueueLength;
 
     FBuildingStatistics()
@@ -147,19 +152,19 @@ public:
 
     // === 建�X�置?�建X===
     UFUNCTION(BlueprintCallable, Category = "Building")
-    FBuildingPlacementResult PlaceBuilding(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation};
+    FBuildingPlacementResult PlaceBuilding(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool StartConstruction(const FString& BuildingID};
+    bool StartConstruction(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool CancelConstruction(const FString& BuildingID};
+    bool CancelConstruction(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    FString AddToConstructionQueue(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation};
+    FString AddToConstructionQueue(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool RemoveFromConstructionQueue(const FString& QueueID};
+    bool RemoveFromConstructionQueue(const FString& QueueID);
 
     // === 建�?管�? ===
     UFUNCTION(BlueprintPure, Category = "Building")
@@ -185,30 +190,30 @@ public:
     FVector GetBuildingGridSize(EMingBuildingType BuildingType) const;
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    void ShowPlacementPreview(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation};
+    void ShowPlacementPreview(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
 
     UFUNCTION(BlueprintCallable, Category = "Building")
     void HidePlacementPreview();
 
     // === 工人管�? ===
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool AssignWorker(const FString& BuildingID};
+    bool AssignWorker(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool RemoveWorker(const FString& BuildingID};
+    bool RemoveWorker(const FString& BuildingID);
 
     UFUNCTION(BlueprintPure, Category = "Building")
     int32 GetAvailableWorkers() const;
 
     // === 建�X��X�維�?===
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool UpgradeBuilding_Impl(const FString& BuildingID};
+    bool UpgradeBuilding_Impl(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool DestroyBuilding(const FString& BuildingID};
+    bool DestroyBuilding(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool RepairBuilding(const FString& BuildingID, int32 RepairAmount};
+    bool RepairBuilding(const FString& BuildingID, int32 RepairAmount);
 
     // === 建�X�詢 ===
     UFUNCTION(BlueprintPure, Category = "Building")
@@ -219,34 +224,34 @@ public:
 
     // === ?��?介面 (?�容X ===
     UFUNCTION(BlueprintCallable, Category = "Building")
-    void ConstructBuilding(const FString& BuildingType, const FVector& Position};
+    void ConstructBuilding(const FString& BuildingType, const FVector& Position);
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    void UpgradeBuilding_Impl(int32 BuildingId};
+    void UpgradeBuilding_Impl(int32 BuildingId);
 
     // === 資�?管�? ===
     UFUNCTION(BlueprintCallable, Category = "Resource")
-    void AddResource(const FString& ResourceType, int32 Amount};
+    void AddResource(const FString& ResourceType, int32 Amount);
 
     UFUNCTION(BlueprintPure, Category = "Resource")
     int32 GetResourceAmount(const FString& ResourceType) const;
 
 protected:
-    void OnBuildingConstructed(const FString& BuildingType};
-    void OnResourceUpdated(const FString& ResourceType, int32 NewAmount};
+    void OnBuildingConstructed(const FString& BuildingType);
+    void OnResourceUpdated(const FString& ResourceType, int32 NewAmount);
 
     // === ?��X�內?�方�?===
-    void ProcessConstructionQueue(float DeltaTime};
+    void ProcessConstructionQueue(float DeltaTime);
     void StartNextConstruction();
     FString GenerateBuildingID();
     FString GenerateQueueID();
     bool HasEnoughResources(EMingBuildingType BuildingType) const;
-    bool ConsumeConstructionResources(EMingBuildingType BuildingType};
-    void RefundConstructionResources(EMingBuildingType BuildingType};
+    bool ConsumeConstructionResources(EMingBuildingType BuildingType);
+    void RefundConstructionResources(EMingBuildingType BuildingType);
     void UpdateBuildingStatistics();
-    void OnBuildingConstructionStarted(const FString& BuildingID};
-    void OnBuildingConstructionCompleted(const FString& BuildingID};
-    void OnBuildingDestroyed(const FString& BuildingID};
+    void OnBuildingConstructionStarted(const FString& BuildingID);
+    void OnBuildingConstructionCompleted(const FString& BuildingID);
+    void OnBuildingDestroyed(const FString& BuildingID);
     void SaveBuildingData();
     void LoadBuildingData();
     void CleanupPlacementPreview();
@@ -254,7 +259,7 @@ protected:
     bool IsTerrainSuitable(EMingBuildingType BuildingType, const FVector& Location) const;
     float CalculateBuildingEfficiency(AMingBuildingActor* Building) const;
     void UpdateSupplyChains();
-    void ProcessBuildingUpgrades(float DeltaTime};
+    void ProcessBuildingUpgrades(float DeltaTime);
 
 private:
     bool bIsInitialized;

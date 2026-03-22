@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "MingStrategic.generated.h"
@@ -7,8 +7,7 @@
  * 12勢力類型 - 民國史詩時期主要勢力
  */
 UENUM(BlueprintType)
-enum class EFactionType : uint8
-{
+enum class EFactionType: uint8 {
     // 核心勢力 (3個)
     BeiyangGovernment      UMETA(DisplayName = "北洋政府"),      // 北京，中央正統
     NationalistGovernment  UMETA(DisplayName = "國民政府"),      // 南京/廣州，民族主義
@@ -38,8 +37,7 @@ enum class EFactionType : uint8
  * 勢力難度等級
  */
 UENUM(BlueprintType)
-enum class EFactionDifficulty : uint8
-{
+enum class EFactionDifficulty: uint8 {
     Easy          UMETA(DisplayName = "容易 ★★☆☆☆"),
     Normal        UMETA(DisplayName = "普通 ★★★☆☆"),
     Hard          UMETA(DisplayName = "困難 ★★★★☆"),
@@ -51,8 +49,7 @@ enum class EFactionDifficulty : uint8
  * 勢力特色機制類型
  */
 UENUM(BlueprintType)
-enum class EFactionSpecialMechanic : uint8
-{
+enum class EFactionSpecialMechanic: uint8 {
     // 政治機制
     CentralLegitimacy    UMETA(DisplayName = "中央正統"),      // 外交優勢
     Nationalism          UMETA(DisplayName = "民族主義"),      // 現代化
@@ -85,8 +82,7 @@ enum class EFactionSpecialMechanic : uint8
  * 勢力關係類型
  */
 UENUM(BlueprintType)
-enum class EFactionRelationType : uint8
-{
+enum class EFactionRelationType: uint8 {
     Ally           UMETA(DisplayName = "同盟"),
     Friendly       UMETA(DisplayName = "友好"),
     Neutral        UMETA(DisplayName = "中立"),
@@ -100,8 +96,7 @@ enum class EFactionRelationType : uint8
  * 勢力狀態
  */
 UENUM(BlueprintType)
-enum class EFactionState : uint8
-{
+enum class EFactionState: uint8 {
     Active         UMETA(DisplayName = "活躍"),
     Defeated       UMETA(DisplayName = "被擊敗"),
     Absorbed       UMETA(DisplayName = "被吸收"),
@@ -115,8 +110,7 @@ enum class EFactionState : uint8
  * 起始地區
  */
 UENUM(BlueprintType)
-enum class EStartingRegion : uint8
-{
+enum class EStartingRegion: uint8 {
     // 華北
     Beijing        UMETA(DisplayName = "北京"),
     Baoding        UMETA(DisplayName = "保定"),
@@ -157,8 +151,7 @@ enum class EStartingRegion : uint8
  * 專屬單位類型
  */
 UENUM(BlueprintType)
-enum class EUniqueUnitType : uint8
-{
+enum class EUniqueUnitType: uint8 {
     // 北洋政府
     BeiyangEliteInfantry    UMETA(DisplayName = "北洋精銳步兵"),
     ZhongnanhaiGuard        UMETA(DisplayName = "中南海衛隊"),
@@ -214,8 +207,7 @@ enum class EUniqueUnitType : uint8
  * 勢力AI策略類型
  */
 UENUM(BlueprintType)
-enum class EFactionAIStrategy : uint8
-{
+enum class EFactionAIStrategy: uint8 {
     AggressiveExpansion    UMETA(DisplayName = "侵略擴張"),
     DefensiveConsolidation UMETA(DisplayName = "防禦鞏固"),
     EconomicDevelopment  UMETA(DisplayName = "經濟發展"),

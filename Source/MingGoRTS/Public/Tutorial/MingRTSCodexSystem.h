@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,8 +8,7 @@
  * Codex entry types
  */
 UENUM(BlueprintType)
-enum class ECodexEntryType : uint8
-{
+enum class ECodexEntryType: uint8 {
     GameBasics UMETA(DisplayName = "Game Basics"),
     FactionInfo UMETA(DisplayName = "Faction Info"),
     UnitInfo UMETA(DisplayName = "Unit Info"),

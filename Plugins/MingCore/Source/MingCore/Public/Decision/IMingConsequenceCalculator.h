@@ -1,33 +1,33 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "MingDecisionConsequenceManager.h"
 #include "IMingConsequenceCalculator.generated.h"
 
-// ¤¶­±??- «á??­p?XUINTERFACE(MinimalAPI, BlueprintType)
+// ??- ??p?XUINTERFACE(MinimalAPI, BlueprintType)
 class UMingConsequenceCalculator : public UInterface
 {
     GENERATED_BODY()
 };
 
 /**
- * «á??­p?X??X * ????¨ãÅé??ºâ¾¹????­n¹ê??¦¹¤¶­±
+ * ??p?X??X * æ‘§æ¯€??â¾¹æ‘§æ¯€n??
  */
 class MINGCORE_API IMingConsequenceCalculator
 {
     GENERATED_BODY()
 
 public:
-    // ­p??«á??
+    // pæ‘§æ¯€
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
-    void Calculate(const FMingDecisionContext& Context, FMingConsequenceResult& Result};
+    void Calculate(const FMingDecisionContext& Context, FMingConsequenceResult& Result);
 
-    // ÀË¬d??§_??¥H????¸Ó¨Mµ¦??¤U??
+    // Ë¬d??_??Hæ‘§æ¯€Ó¨M??U??
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
     bool CanHandle(const FMingDecisionContext& Context) const;
 
-    // ????­p?X??X(??©ó????)
+    // æ‘§æ¯€p?X??X(æ‘§æ¯€??)
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
     float GetWeight() const;
 

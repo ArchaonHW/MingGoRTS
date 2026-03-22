@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingRTSPerformanceMonitor.generated.h"
 
 UENUM(BlueprintType)
-enum class EPerformanceMetricType : uint8
-{
+enum class EPerformanceMetricType: uint8 {
     CPU,                // CPU使用率
     Memory,             // 內存使用量
     GPU,                // GPU使用率
@@ -25,8 +24,7 @@ enum class EPerformanceMetricType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EPerformanceAlertLevel : uint8
-{
+enum class EPerformanceAlertLevel: uint8 {
     Normal,             // 正常範圍
     Warning,            // 警告
     Critical,           // 嚴重

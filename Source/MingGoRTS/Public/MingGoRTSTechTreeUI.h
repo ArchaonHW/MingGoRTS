@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -17,28 +17,34 @@ class MINGGORTS_API UMingGoRTSTechNodeWidget : public UUserWidget
 public:
     UMingGoRTSTechNodeWidget();
 
-    // 設置科??節點數X    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
-    void SetTechNode(const FTechNode& TechNode};
+    // 設置科??節點數X
+    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
+    void SetTechNode(const FTechNode& TechNode);
 
-    // ??新節點?X    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
-    void UpdateNodeStatus(ETechStatus NewStatus};
+    // ??新節點?X
+    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
+    void UpdateNodeStatus(ETechStatus NewStatus);
 
     // ??新??發??度
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void UpdateResearchProgress(float Progress);
 
-    // 设置是否被选中    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
+    // 设置是否被选中
+    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void SetIsSelected(bool bSelected);
 
-    // 设置节点位置    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
+    // 设置节点位置
+    UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void SetNodePosition(const FVector2D& Position);
 
     // 获取科技节点ID
     UFUNCTION(BlueprintPure, Category = "Tech Node UI")
     FString GetTechID() const;
 
-    // 是否被选中    UFUNCTION(BlueprintPure, Category = "Tech Node UI")
-    // ???X?否被選??    UFUNCTION(BlueprintPure, Category = "Tech Node UI")
+    // 是否被选中
+    UFUNCTION(BlueprintPure, Category = "Tech Node UI")
+    // ???X?否被選??
+    UFUNCTION(BlueprintPure, Category = "Tech Node UI")
     bool IsSelected() const;
 
 protected:
@@ -64,16 +70,20 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UOverlay* StatusOverlay;
 
-    // ????科??節點數X    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
+    // ????科??節點數X
+    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     FTechNode CurrentTechNode;
 
-    // ???X?X    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
+    // ???X?X
+    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     ETechStatus CurrentStatus;
 
-    // ??否被選??    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
+    // ??否被選??
+    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     bool bIsSelected;
 
-    // 節點????    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
+    // 節點????
+    UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     FVector2D NodePosition;
 
     // ???X?UI
@@ -95,7 +105,8 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void OnNodeUnhovered();
 
-    // ???X????X    FLinearColor GetStatusColor(ETechStatus Status) const;
+    // ???X????X
+    FLinearColor GetStatusColor(ETechStatus Status) const;
 
     // ????類別顏色
     FLinearColor GetCategoryColor(ETechCategory Category) const;
@@ -119,17 +130,21 @@ class MINGGORTS_API UMingGoRTSTechConnectionWidget : public UUserWidget
 public:
     UMingGoRTSTechConnectionWidget();
 
-    // 設置X????兩??????    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
-    void SetConnection(const FString& FromTechID, const FString& ToTechID};
+    // 設置X????兩??????
+    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
+    void SetConnection(const FString& FromTechID, const FString& ToTechID);
 
-    // 設置X????X    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
-    void SetConnectionStatus(bool bIsActive};
+    // 設置X????X
+    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
+    void SetConnectionStatus(bool bIsActive);
 
-    // 設置X??線?X    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
-    void SetConnectionColor(const FLinearColor& Color};
+    // 設置X??線?X
+    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
+    void SetConnectionColor(const FLinearColor& Color);
 
-    // ??新X??線????    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
-    void UpdateConnectionPosition(const FVector2D& FromPosition, const FVector2D& ToPosition};
+    // ??新X??線????
+    UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
+    void UpdateConnectionPosition(const FVector2D& FromPosition, const FVector2D& ToPosition);
 
 protected:
     // UI組件引用
@@ -144,14 +159,16 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Tech Connection UI")
     FString ToTechID;
 
-    // X????否激??    UPROPERTY(BlueprintReadOnly, Category = "Tech Connection UI")
+    // X????否激??
+    UPROPERTY(BlueprintReadOnly, Category = "Tech Connection UI")
     bool bIsActive;
 
     // ???X?UI
     virtual void NativeConstruct() override;
 
 private:
-    // 計?X??線路??    void CalculateConnectionPath();
+    // 計?X??線路??
+    void CalculateConnectionPath();
 };
 
 /**
@@ -165,39 +182,48 @@ class MINGGORTS_API UMingGoRTSTechTreeWidget : public UUserWidget
 public:
     UMingGoRTSTechTreeWidget();
 
-    // 設置科??樹系統?X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
-    void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem};
+    // 設置科??樹系統?X
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem);
 
-    // 顯示????類別???X???    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
-    void ShowTechCategory(ETechCategory Category};
+    // 顯示????類別???X???
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    void ShowTechCategory(ETechCategory Category);
 
-    // 顯示?????X???    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // 顯示?????X???
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ShowAllCategories();
 
-    // ??中科??節??    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
-    void SelectTechNode(const FString& TechID};
+    // ??中科??節??
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    void SelectTechNode(const FString& TechID);
 
-    // 清除??中??X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // 清除??中??X
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ClearSelection();
 
     // ???X?發??中???X?
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     bool StartResearchSelectedTech();
 
-    // ??新科??樹顯??    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // ??新科??樹顯??
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void UpdateTechTreeDisplay();
 
-    // 設置??濾X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
-    void SetFilter(ETechCategory CategoryFilter, ETechTier TierFilter};
+    // 設置??濾X
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    void SetFilter(ETechCategory CategoryFilter, ETechTier TierFilter);
 
-    // 清除??濾X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // 清除??濾X
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ClearFilter();
 
     // ???X??X?中???X?
     UFUNCTION(BlueprintPure, Category = "Tech Tree UI")
     FString GetSelectedTechID() const;
 
-    // ???X???顯示???X    UFUNCTION(BlueprintPure, Category = "Tech Tree UI")
+    // ???X???顯示???X
+    UFUNCTION(BlueprintPure, Category = "Tech Tree UI")
     ETechCategory GetCurrentCategory() const;
 
 protected:
@@ -229,17 +255,20 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UProgressBar* ResearchProgress;
 
-    // 科??樹系統?X    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
+    // 科??樹系統?X
+    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     UMingGoRTSTechTree* TechTreeSystem;
 
     // ???X?中???X?ID
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     FString SelectedTechID;
 
-    // ????顯示???X    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
+    // ????顯示???X
+    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     ETechCategory CurrentCategory;
 
-    // ???X?濾X    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
+    // ???X?濾X
+    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     ETechCategory CategoryFilter;
 
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
@@ -258,47 +287,53 @@ protected:
 
     // ??建科??節點Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Tech Tree UI")
-    UMingGoRTSTechNodeWidget* CreateTechNodeWidget(const FTechNode& TechNode};
+    UMingGoRTSTechNodeWidget* CreateTechNodeWidget(const FTechNode& TechNode);
 
     // ??建X??Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Tech Tree UI")
-    UMingGoRTSTechConnectionWidget* CreateConnectionWidget(const FString& FromTechID, const FString& ToTechID};
+    UMingGoRTSTechConnectionWidget* CreateConnectionWidget(const FString& FromTechID, const FString& ToTechID);
 
-    // ????科??節點?X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
-    void OnTechNodeClicked(const FString& TechID};
+    // ????科??節點?X
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    void OnTechNodeClicked(const FString& TechID);
 
     // ????科?X?發????
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
-    void OnTechResearchStarted(const FString& TechID, const FString& BuildingID};
+    void OnTechResearchStarted(const FString& TechID, const FString& BuildingID);
 
     // ????科?X?發完??
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
-    void OnTechResearchCompleted(const FString& TechID, const TArray<FTechEffect>& Effects};
+    void OnTechResearchCompleted(const FString& TechID, const TArray<FTechEffect>& Effects);
 
     // ????科???X
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
-    void OnTechUnlocked(const FString& TechID, ETechCategory Category};
+    void OnTechUnlocked(const FString& TechID, ETechCategory Category);
 
     // ??新??中科??信息
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void UpdateSelectedTechInfo();
 
-    // 佈??科??節??    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // 佈??科??節??
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void LayoutTechNodes();
 
-    // ??建科?X????    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // ??建科?X????
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void CreateTechConnections();
 
-    // ??用??濾X    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
+    // ??用??濾X
+    UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ApplyFilters();
 
     // ????節點??局位置
     FVector2D GetNodeLayoutPosition(const FString& TechID, int32 Row, int32 Column) const;
 
 private:
-    // 綁??科??樹????    void BindTechTreeEvents();
+    // 綁??科??樹????
+    void BindTechTreeEvents();
 
-    // ?X科??樹????    void UnbindTechTreeEvents();
+    // ?X科??樹????
+    void UnbindTechTreeEvents();
 
     // 清?X???Widget
     void ClearExistingWidgets();
@@ -306,7 +341,8 @@ private:
     // ??建類別標籤
     void CreateCategoryTabs();
 
-    // ??建等?X?濾X    void CreateTierFilters();
+    // ??建等?X?濾X
+    void CreateTierFilters();
 };
 
 /**
@@ -320,8 +356,9 @@ class MINGGORTS_API UMingGoRTSResearchPanelWidget : public UUserWidget
 public:
     UMingGoRTSResearchPanelWidget();
 
-    // 設置科??樹系統?X    UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
-    void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem};
+    // 設置科??樹系統?X
+    UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
+    void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem);
 
     // 顯示??發??板
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
@@ -337,15 +374,15 @@ public:
 
     // ???X?發
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
-    void PauseResearch(const FString& TechID};
+    void PauseResearch(const FString& TechID);
 
     // ???X?發
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
-    void CancelResearch(const FString& TechID};
+    void CancelResearch(const FString& TechID);
 
     // 設置??發建??
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
-    void SetResearchBuilding(const FString& BuildingID};
+    void SetResearchBuilding(const FString& BuildingID);
 
 protected:
     // UI組件引用
@@ -361,10 +398,12 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UComboBoxString* ResearchBuildingSelector;
 
-    // 科??樹系統?X    UPROPERTY(BlueprintReadOnly, Category = "Research Panel UI")
+    // 科??樹系統?X
+    UPROPERTY(BlueprintReadOnly, Category = "Research Panel UI")
     UMingGoRTSTechTree* TechTreeSystem;
 
-    // ???X?中???X?建??    UPROPERTY(BlueprintReadOnly, Category = "Research Panel UI")
+    // ???X?中???X?建??
+    UPROPERTY(BlueprintReadOnly, Category = "Research Panel UI")
     FString SelectedBuildingID;
 
     // ???X?UI
@@ -372,11 +411,11 @@ protected:
 
     // ??建??發??目Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Research Panel UI")
-    UUserWidget* CreateResearchItemWidget(const FTechResearchProgress& ResearchProgress};
+    UUserWidget* CreateResearchItemWidget(const FTechResearchProgress& ResearchProgress);
 
     // ???X?發??度??新
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
-    void OnResearchProgressUpdated(const FString& TechID, float Progress, float TimeRemaining};
+    void OnResearchProgressUpdated(const FString& TechID, float Progress, float TimeRemaining);
 
     // ??新統??信息
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
@@ -406,14 +445,15 @@ public:
 
     // 顯示科??詳??
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
-    void ShowTechDetails(const FTechNode& TechNode};
+    void ShowTechDetails(const FTechNode& TechNode);
 
     // ????科??詳??
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void HideTechDetails();
 
-    // 設置科??樹系統?X    UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
-    void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem};
+    // 設置科??樹系統?X
+    UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
+    void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem);
 
 protected:
     // UI組件引用
@@ -448,7 +488,8 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Tech Details UI")
     FTechNode CurrentTechNode;
 
-    // 科??樹系統?X    UPROPERTY(BlueprintReadOnly, Category = "Tech Details UI")
+    // 科??樹系統?X
+    UPROPERTY(BlueprintReadOnly, Category = "Tech Details UI")
     UMingGoRTSTechTree* TechTreeSystem;
 
     // ???X?UI
@@ -467,7 +508,8 @@ protected:
     void OnCloseClicked();
 
 private:
-    // ??建???X?表X    UUserWidget* CreateEffectItem(const FTechEffect& Effect);
+    // ??建???X?表X
+    UUserWidget* CreateEffectItem(const FTechEffect& Effect);
 
     // CreatePrerequisiteItem
     UUserWidget* CreatePrerequisiteItem(const FString& TechID);

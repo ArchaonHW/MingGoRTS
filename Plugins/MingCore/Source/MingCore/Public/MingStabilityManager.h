@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingStabilityManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingErrorSeverity : uint8
-{
+enum class EMingErrorSeverity: uint8 {
     Info UMETA(DisplayName = "Info"),
     Warning UMETA(DisplayName = "Warning"),
     Error UMETA(DisplayName = "Error"),
@@ -15,8 +14,7 @@ enum class EMingErrorSeverity : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingErrorCategory : uint8
-{
+enum class EMingErrorCategory: uint8 {
     System UMETA(DisplayName = "System"),
     Gameplay UMETA(DisplayName = "Gameplay"),
     Network UMETA(DisplayName = "Network"),
@@ -147,13 +145,13 @@ public:
 
     // Error Handling
     UFUNCTION(BlueprintCallable, Category = "Error Handling")
-    void ReportError(const FString& Message, EMingErrorSeverity Severity, EMingErrorCategory Category};
+    void ReportError(const FString& Message, EMingErrorSeverity Severity, EMingErrorCategory Category);
 
     UFUNCTION(BlueprintCallable, Category = "Error Handling")
-    void LogWarning(const FString& Message, EMingErrorCategory Category};
+    void LogWarning(const FString& Message, EMingErrorCategory Category);
 
     UFUNCTION(BlueprintCallable, Category = "Error Handling")
-    void LogInfo(const FString& Message, EMingErrorCategory Category};
+    void LogInfo(const FString& Message, EMingErrorCategory Category);
 
     UFUNCTION(BlueprintCallable, Category = "Error Handling")
     void HandleCrash(const FString& Context) {};
@@ -211,10 +209,10 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetSeverityName(EMingErrorSeverity Severity};
+    static FString GetSeverityName(EMingErrorSeverity Severity);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetCategoryName(EMingErrorCategory Category};
+    static FString GetCategoryName(EMingErrorCategory Category);
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
     FString ExportErrorLog() const;
@@ -223,9 +221,9 @@ public:
     void ClearErrorLog();
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCriticalError, const FMingErrorRecord&, Error};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSystemUnstable, float, StabilityScore};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSystemRecovered};
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnCriticalError OnCriticalError;
@@ -259,8 +257,8 @@ protected:
 
     // Error Processing
     void ProcessNewError(const FMingErrorRecord& Error) {};
-    void CategorizeError(FMingErrorRecord& Error};
-    void DetermineSeverity(FMingErrorRecord& Error};
+    void CategorizeError(FMingErrorRecord& Error);
+    void DetermineSeverity(FMingErrorRecord& Error);
     void UpdateErrorCounters();
 
     // Stability Analysis

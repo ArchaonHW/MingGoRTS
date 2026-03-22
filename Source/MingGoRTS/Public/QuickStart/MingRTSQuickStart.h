@@ -1,12 +1,59 @@
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Quick Start System for New Players
+
 #pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Optimization/MingRTSOptimizationSystemManager.h"
 #include "MingRTSQuickStart.generated.h"
 
+UENUM(BlueprintType)
+enum class EQuickStartStep : uint8
+{
+    Welcome, UMETA(DisplayName = "Welcome"),
+    Tutorial, UMETA(DisplayName = "Tutorial"),
+    FirstMission, UMETA(DisplayName = "First Mission"),
+    BasicControls, UMETA(DisplayName = "Basic Controls"),
+    ResourceManagement, UMETA(DisplayName = "Resource Management"),
+    UnitControl, UMETA(DisplayName = "Unit Control"),
+    BuildingConstruction, UMETA(DisplayName = "Building Construction"),
+    CombatBasics, UMETA(DisplayName = "Combat Basics"),
+    AdvancedFeatures, UMETA(DisplayName = "Advanced Features"),
+    Completed, UMETA(DisplayName = "Completed")
+};
+
+USTRUCT(BlueprintType)
+struct FQuickStartProgress
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly, Category = "Quick Start Progress")
+    EQuickStartStep CurrentStep;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Quick Start Progress")
+    float ProgressPercentage;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Quick Start Progress")
+    int32 StepsCompleted;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Quick Start Progress")
+    int32 TotalSteps;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Quick Start Progress")
+    bool bIsCompleted;
+
+    FQuickStartProgress()
+        : CurrentStep(EQuickStartStep::Welcome)
+        , ProgressPercentage(0.0f)
+        , StepsCompleted(0)
+        , TotalSteps(10)
+        , bIsCompleted(false)
+    {}
+};
+
 /**
- * MingGoRTS ????編譯系統快速?X * 立即????使用????編譯系統??示?? */
+ * MingGoRTS Quick Start System
+ */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSQuickStart : public UObject
 {
@@ -15,37 +62,44 @@ class MINGGORTS_API UMingRTSQuickStart : public UObject
 public:
     UMingRTSQuickStart();
 
-    // 立即????使用 - 一???X?優??系??    UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    void StartOptimizationNow();
-
-    // ????系統??X    UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    FString GetSystemStatus();
-
-    // 快速性能檢查
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    void QuickPerformanceCheck();
+    void StartQuickStart();
 
-    // 立即???X??X?目
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    void OptimizeCurrentProject();
+    void StopQuickStart();
 
-    // ???X???結??
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    FString GetOptimizationResults();
+    void NextStep();
+
+    UFUNCTION(BlueprintCallable, Category = "Quick Start")
+    void PreviousStep();
+
+    UFUNCTION(BlueprintPure, Category = "Quick Start")
+    EQuickStartStep GetCurrentStep() const;
+
+    UFUNCTION(BlueprintPure, Category = "Quick Start")
+    FQuickStartProgress GetProgress() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Quick Start")
+    void SetStep(EQuickStartStep Step);
+
+    UFUNCTION(BlueprintCallable, Category = "Quick Start")
+    bool IsQuickStartActive() const;
 
 protected:
-    // ????系統管?X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
-    TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
+    UPROPERTY()
+    EQuickStartStep CurrentStep;
 
-    // 系統??X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
+    UPROPERTY()
+    FQuickStartProgress Progress;
+
+    UPROPERTY()
     bool bSystemStarted;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
+    UPROPERTY()
     bool bOptimizationRunning;
 
 private:
-    // ???X?快???X    void InitializeQuickStart();
-    
-    // 顯示結??
+    void InitializeQuickStart();
     void DisplayResults(const FString& Results);
 };

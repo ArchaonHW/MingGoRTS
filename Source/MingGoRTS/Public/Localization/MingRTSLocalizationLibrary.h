@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Localization Blueprint Function Library
 
 #pragma once
@@ -21,17 +21,17 @@ public:
     /** Get localized text by key */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static FString GetLocalizedText(const FString& Key};
+    static FString GetLocalizedText(const FString& Key);
     
     /** Get localized text with namespace */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static FString GetLocalizedTextEx(const FString& Namespace, const FString& Key};
+    static FString GetLocalizedTextEx(const FString& Namespace, const FString& Key);
     
     /** Set current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static void SetGameLanguage(ERTSLanguageCode LanguageCode};
+    static void SetGameLanguage(ERTSLanguageCode LanguageCode);
     
     /** Get current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
@@ -41,12 +41,12 @@ public:
     /** Format text with arguments */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject", AutoCreateRefTerm = "Args"))
-    static FString FormatLocalizedText(const FString& Key, const TArray<FString>& Args};
+    static FString FormatLocalizedText(const FString& Key, const TArray<FString>& Args);
     
     /** Check if key exists */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static bool HasLocalizedKey(const FString& Key};
+    static bool HasLocalizedKey(const FString& Key);
     
     /** Get text direction for current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
@@ -60,11 +60,11 @@ public:
     
     /** Get language display name */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization")
-    static FString GetLanguageDisplayName(ERTSLanguageCode LanguageCode};
+    static FString GetLanguageDisplayName(ERTSLanguageCode LanguageCode);
     
     /** Get language native name */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization")
-    static FString GetLanguageNativeName(ERTSLanguageCode LanguageCode};
+    static FString GetLanguageNativeName(ERTSLanguageCode LanguageCode);
     
     /** Get all supported languages */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization")
@@ -73,22 +73,22 @@ public:
     /** Truncate text to max length */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
     static FString TruncateText(const FString& Text, int32 MaxLength, 
-                                const FString& Ellipsis};
+                                const FString& Ellipsis);
     
     /** Convert to uppercase */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
-    static FString TextToUpper(const FString& Text};
+    static FString TextToUpper(const FString& Text);
     
     /** Convert to lowercase */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
-    static FString TextToLower(const FString& Text};
+    static FString TextToLower(const FString& Text);
     
     /** Get pluralized text (singular/plural based on count) */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
     static FString GetPluralizedText(const FString& KeySingular, 
                                      const FString& KeyPlural, 
-                                     int32 Count};
+                                     int32 Count);
     
     /** Reload current language (development only) */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Development",
@@ -97,19 +97,20 @@ public:
     
     /** Format currency value for current locale */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
-    static FString FormatCurrency(int32 Amount, const FString& CurrencyCode};
+    static FString FormatCurrency(int32 Amount, const FString& CurrencyCode);
     
     /** Format number with locale-specific separators */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
-    static FString FormatNumber(int32 Number};
+    static FString FormatNumber(int32 Number);
     
     /** Format date for current locale */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")
-    static FString FormatDate(const FDateTime& Date};
+    static FString FormatDate(const FDateTime& Date);
     
     /** Get localized game title */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
     static FString GetGameTitle();
 };
+
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
@@ -15,56 +15,59 @@ public:
 
     virtual void BeginPlay() override;
 
-    // ¨¤¦â??«ØºÞ?X    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Creation")
+    // ï¿½ï¿½ï¿½ï¿½??ï¿½Øºï¿½?X
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Creation")
     TObjectPtr<UMingGoRTSCharacterCreationManager> CharacterCreationManager;
 
-    // Åã¥Ü¨¤¦â??«Ø UI
+    // ï¿½ï¿½Ü¨ï¿½ï¿½ï¿½??ï¿½ï¿½ UI
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     void ShowCharacterCreationUI();
 
-    // ????¨¤¦â??«Ø UI
+    // ????ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½ UI
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     void HideCharacterCreationUI();
 
-    // ????¨¤¦â??«Ø§¹??
+    // ????ï¿½ï¿½ï¿½ï¿½??ï¿½Ø§ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
-    void OnCharacterCreationCompleted(const FMingCharacterData& CharacterData};
+    void OnCharacterCreationCompleted(const FMingCharacterData& CharacterData);
 
-    // ????¨¤¦â??«Ø????
+    // ????ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½????
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     void OnCharacterCreationCancelled();
 
-    // ³]¸m¨¤¦â??«Ø UI Ãþ§O
+    // ï¿½]ï¿½mï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½ UI ï¿½ï¿½ï¿½O
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Creation")
     TSubclassOf<class UUserWidget> CharacterCreationUIClass;
 
-    // ³]¸m¥D?XUI Ãþ§O
+    // ï¿½]ï¿½mï¿½D?XUI ï¿½ï¿½ï¿½O
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Creation")
     TSubclassOf<class UUserWidget> MainMenuUIClass;
 
-    // ³]¸m??À¸???X?´º
+    // ï¿½]ï¿½m??ï¿½ï¿½???X?ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Creation")
     FString GameStartLevelName;
 
 protected:
-    // ????Åã¥ÜXUI
+    // ????ï¿½ï¿½ï¿½XUI
     UPROPERTY()
     TObjectPtr<class UUserWidget> CurrentUI;
 
-    // ???X??X?³Ð«ØºÞ??¾¹
+    // ???X??X?ï¿½Ð«Øºï¿½??ï¿½ï¿½
     void InitializeCharacterCreationManager();
 
-    // ??«Ø¨ÃÅã??UI
-    UUserWidget* CreateAndShowWidget(TSubclassOf<class UUserWidget> WidgetClass};
+    // ??ï¿½Ø¨ï¿½ï¿½ï¿½??UI
+    UUserWidget* CreateAndShowWidget(TSubclassOf<class UUserWidget> WidgetClass);
 
-    // ²¾°£???? UI
+    // ï¿½ï¿½ï¿½ï¿½???? UI
     void RemoveCurrentUI();
 
-    // ???X?À¸
-    void StartGameWithCharacter(const FMingCharacterData& CharacterData};
+    // ???X?ï¿½ï¿½
+    void StartGameWithCharacter(const FMingCharacterData& CharacterData);
 
-    // ªð??¥D?X    void ReturnToMainMenu();
+    // ï¿½ï¿½??ï¿½D?X
+    void ReturnToMainMenu();
 
-    // «O??¨¤¦â???X??X?¹ê??    void SaveCharacterToGameInstance(const FMingCharacterData& CharacterData};
-};
+    // ï¿½O??ï¿½ï¿½ï¿½ï¿½???X??X?ï¿½ï¿½??
+    void SaveCharacterToGameInstance(const FMingCharacterData& CharacterData);
+);
 

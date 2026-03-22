@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -6,8 +6,7 @@
 #include "MingTacticalUnit.generated.h"
 
 UENUM(BlueprintType)
-enum class EUnitType : uint8
-{
+enum class EUnitType: uint8 {
     Infantry,
     Cavalry,
     Artillery,

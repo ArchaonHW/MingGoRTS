@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingSixStrategiesSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class ESixStrategyType : uint8
-{
+enum class ESixStrategyType: uint8 {
     // 正六策：立國、立制、立人
     EstablishNation,     // 立國：伐心之正道
     EstablishSystem,     // 立制：伐勢、伐命之正道
@@ -19,16 +18,14 @@ enum class ESixStrategyType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESixStrategyNature : uint8
-{
+enum class ESixStrategyNature: uint8 {
     Orthodox,            // 正道：順天應人、堂堂之陣、陽剛之用
     Unconventional,      // 逆術：違時背理、隱隱之行、陰柔之變
     Hybrid              // 混合：正中用逆，逆中藏正
 };
 
 UENUM(BlueprintType)
-enum class ESixStrategyTarget : uint8
-{
+enum class ESixStrategyTarget: uint8 {
     Heart,              // 伐心：奪其志
     Energy,             // 伐氣：挫其銳
     Shadow,             // 伐影：亂其象

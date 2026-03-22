@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 8.1: Self-Learning System Implementation
 // 
 // This system provides self-learning capabilities for MingGoRTS, enabling the game
@@ -24,8 +24,7 @@ class UMingAIGeneratedContentSystem;
 
 // Learning data types
 UENUM(BlueprintType)
-enum class ELearningDataType : uint8
-{
+enum class ELearningDataType: uint8 {
     UserBehavior,        // User interaction patterns
     GameplayMetrics,     // Game performance metrics
     CulturalPreference,  // Cultural adaptation preferences
@@ -39,8 +38,7 @@ enum class ELearningDataType : uint8
 
 // Learning algorithm types
 UENUM(BlueprintType)
-enum class ELearningAlgorithm : uint8
-{
+enum class ELearningAlgorithm: uint8 {
     ReinforcementLearning,  // RL for adaptive behavior
     NeuralNetwork,          // Deep learning for pattern recognition
     Clustering,             // Unsupervised learning for grouping
@@ -53,8 +51,7 @@ enum class ELearningAlgorithm : uint8
 
 // Learning confidence levels
 UENUM(BlueprintType)
-enum class ELearningConfidence : uint8
-{
+enum class ELearningConfidence: uint8 {
     VeryLow,     // 0-20% confidence
     Low,         // 20-40% confidence
     Medium,      // 40-60% confidence

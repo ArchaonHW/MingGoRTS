@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Auto-Alert Mechanism System - B2-3
 // Provides automated risk detection and alerting
 
@@ -10,8 +10,7 @@
 #include "MingRiskAlertSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EAlertType : uint8
-{
+enum class EAlertType: uint8 {
     Info = 0, UMETA(DisplayName = "Information"),
     Warning, UMETA(DisplayName = "Warning"),
     Critical, UMETA(DisplayName = "Critical"),
@@ -24,8 +23,7 @@ enum class EAlertType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EAlertPriority : uint8
-{
+enum class EAlertPriority: uint8 {
     Lowest = 0, UMETA(DisplayName = "Lowest"),
     Low, UMETA(DisplayName = "Low"),
     Normal, UMETA(DisplayName = "Normal"),
@@ -35,8 +33,7 @@ enum class EAlertPriority : uint8
 };
 
 UENUM(BlueprintType)
-enum class EAlertStatus : uint8
-{
+enum class EAlertStatus: uint8 {
     New = 0, UMETA(DisplayName = "New"),
     Acknowledged, UMETA(DisplayName = "Acknowledged"),
     InProgress, UMETA(DisplayName = "In Progress"),
@@ -46,8 +43,7 @@ enum class EAlertStatus : uint8
 };
 
 UENUM(BlueprintType)
-enum class ENotificationChannel : uint8
-{
+enum class ENotificationChannel: uint8 {
     InGame = 0, UMETA(DisplayName = "In-Game"),
     Email, UMETA(DisplayName = "Email"),
     Push, UMETA(DisplayName = "Push Notification"),
@@ -262,11 +258,11 @@ struct FAlertFilter
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlertTriggered, FRiskAlert, Alert};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlertAcknowledged, FRiskAlert, Alert};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlertResolved, FRiskAlert, Alert};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlertEscalated, FRiskAlert, Alert};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlertDismissed, FRiskAlert, Alert};
+
+
+
+
+
 /**
  * Auto-Alert Mechanism System
  * Provides automated risk detection and alerting
@@ -277,31 +273,31 @@ class MINGRTS_API UMingRiskAlertSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRiskAlertSystem(};
+    UMingRiskAlertSystem();
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void InitializeAlertSystem(};
+    void InitializeAlertSystem();
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void ShutdownAlertSystem(};
+    void ShutdownAlertSystem();
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void RegisterAlertRule(const FAlertRule& Rule};
+    void RegisterAlertRule(const FAlertRule& Rule);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void UnregisterAlertRule(FName RuleID};
+    void UnregisterAlertRule(FName RuleID);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void EnableAlertRule(FName RuleID, bool bEnabled};
+    void EnableAlertRule(FName RuleID, bool bEnabled);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void TriggerAlert(const FRiskAlert& Alert};
+    void TriggerAlert(const FRiskAlert& Alert);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void TriggerCustomAlert(const FString& Title, const FString& Message, EAlertType Type, EAlertPriority Priority};
+    void TriggerCustomAlert(const FString& Title, const FString& Message, EAlertType Type, EAlertPriority Priority);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void AcknowledgeAlert(FName AlertID, const FString& AcknowledgedBy};
+    void AcknowledgeAlert(FName AlertID, const FString& AcknowledgedBy);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void ResolveAlert(FName AlertID, const FString& ResolvedBy};
+    void ResolveAlert(FName AlertID, const FString& ResolvedBy);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void DismissAlert(FName AlertID};
+    void DismissAlert(FName AlertID);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void EscalateAlert(FName AlertID};
+    void EscalateAlert(FName AlertID);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void CheckRiskLevelsAndTriggerAlerts(};
+    void CheckRiskLevelsAndTriggerAlerts();
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
     TArray<FRiskAlert> GetActiveAlerts() const;
 
@@ -324,17 +320,17 @@ public:
     FAlertStatistics GetAlertStatistics() const;
 
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void SetNotificationChannelEnabled(ENotificationChannel Channel, bool bEnabled};
+    void SetNotificationChannelEnabled(ENotificationChannel Channel, bool bEnabled);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void SendNotificationToChannel(ENotificationChannel Channel, const FString& Message};
+    void SendNotificationToChannel(ENotificationChannel Channel, const FString& Message);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void ExportAlertsToFile(const FString& FilePath};
+    void ExportAlertsToFile(const FString& FilePath);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void CleanupOldAlerts(int32 MaxAgeHours};
+    void CleanupOldAlerts(int32 MaxAgeHours);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void ScheduleAlertDigest(float IntervalHours};
+    void ScheduleAlertDigest(float IntervalHours);
     UFUNCTION(BlueprintCallable, Category = "Risk Alert System")
-    void CancelScheduledDigest(};
+    void CancelScheduledDigest();
     UPROPERTY(BlueprintAssignable, Category = "Risk Alert Events")
     FOnAlertTriggered OnAlertTriggered;
 
@@ -375,20 +371,20 @@ protected:
     UPROPERTY()
     TMap<FName, uint32> LastAlertTimes;
 
-    void StartAlertMonitoring(};
-    void StopAlertMonitoring(};
-    void ProcessAlertRules(};
-    bool ShouldTriggerAlert(const FAlertRule& Rule, const FRiskMetric& Metric};
-    bool IsRuleOnCooldown(FName RuleID};
-    void UpdateCooldown(FName RuleID};
-    FRiskAlert CreateAlertFromRule(const FAlertRule& Rule, const FRiskMetric& Metric};
-    FName GenerateAlertID(};
-    void NotifyChannels(const FRiskAlert& Alert};
-    void ShowInGameNotification(const FRiskAlert& Alert};
-    void LogAlert(const FRiskAlert& Alert};
-    void PlayAlertSound(EAlertPriority Priority};
-    void UpdateAlertStatistics(};
-    void AutoEscalateIfNeeded(FRiskAlert& Alert};
-    void GenerateAlertDigest(};
-    static UMingRiskAlertSystem* Get(UObject* WorldContextObject};
+    void StartAlertMonitoring();
+    void StopAlertMonitoring();
+    void ProcessAlertRules();
+    bool ShouldTriggerAlert(const FAlertRule& Rule, const FRiskMetric& Metric);
+    bool IsRuleOnCooldown(FName RuleID);
+    void UpdateCooldown(FName RuleID);
+    FRiskAlert CreateAlertFromRule(const FAlertRule& Rule, const FRiskMetric& Metric);
+    FName GenerateAlertID();
+    void NotifyChannels(const FRiskAlert& Alert);
+    void ShowInGameNotification(const FRiskAlert& Alert);
+    void LogAlert(const FRiskAlert& Alert);
+    void PlayAlertSound(EAlertPriority Priority);
+    void UpdateAlertStatistics();
+    void AutoEscalateIfNeeded(FRiskAlert& Alert);
+    void GenerateAlertDigest();
+    static UMingRiskAlertSystem* Get(UObject* WorldContextObject);
 };

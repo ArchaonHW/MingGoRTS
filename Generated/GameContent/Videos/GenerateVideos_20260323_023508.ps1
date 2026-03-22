@@ -1,4 +1,4 @@
-# Auto-generated Video Generation Script
+﻿# Auto-generated Video Generation Script
 # Generated: 03/23/2026 02:35:08
 
 function Invoke-VideoGeneration {

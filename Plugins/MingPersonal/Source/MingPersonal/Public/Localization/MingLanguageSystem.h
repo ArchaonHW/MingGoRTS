@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // 支援的語言
 UENUM(BlueprintType)
-enum class EMingSupportedLanguage : uint8
-{
+enum class EMingSupportedLanguage: uint8 {
     English,        // 英文
     TraditionalChinese, // 繁體中文
     SimplifiedChinese,  // 簡體中文
@@ -21,8 +20,7 @@ enum class EMingSupportedLanguage : uint8
 
 // 語言資料類型
 UENUM(BlueprintType)
-enum class ELanguageDataType : uint8
-{
+enum class ELanguageDataType: uint8 {
     Text,           // 文字
     Audio,          // 音頻
     Subtitle,       // 字幕

@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSBlockchainIntegration.generated.h"
 
 UENUM(BlueprintType)
-enum class EBlockchainType : uint8
-{
+enum class EBlockchainType: uint8 {
     Ethereum UMETA(DisplayName = "以太坊"),
     BinanceSmartChain UMETA(DisplayName = "幣安智能鏈"),
     Polygon UMETA(DisplayName = "Polygon"),
@@ -16,8 +15,7 @@ enum class EBlockchainType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ETokenType : uint8
-{
+enum class ETokenType: uint8 {
     ERC20 UMETA(DisplayName = "ERC20"),
     ERC721 UMETA(DisplayName = "ERC721"),
     ERC1155 UMETA(DisplayName = "ERC1155"),

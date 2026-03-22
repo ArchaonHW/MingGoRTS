@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -127,10 +127,10 @@ public:
 
 protected:
     // Core AI systems
-    UPROPERTY(BlueprintReadOnly, Category = "AI Task Integration")
+    UPROPERTY(Category = "AI Task Integration")
     TObjectPtr<UMingDynamicTaskGenerator> TaskGenerator;
 
-    UPROPERTY(BlueprintReadOnly, Category = "AI Task Integration")
+    UPROPERTY(Category = "AI Task Integration")
     TObjectPtr<UMingPlayerBehaviorPredictor> BehaviorPredictor;
 
     // Configuration parameters
@@ -156,9 +156,10 @@ private:
     FTaskBehaviorInsight GetCachedInsight(const FString& PlayerID);
 
     // Cache system
-    UPROPERTY(BlueprintReadOnly, Category = "AI Task Integration")
+    UPROPERTY(Category = "AI Task Integration")
     TMap<FString, FTaskBehaviorInsight> InsightCache;
 
-    UPROPERTY(BlueprintReadOnly, Category = "AI Task Integration")
+    UPROPERTY(Category = "AI Task Integration")
     TMap<FString, FDateTime> LastInsightUpdate;
 };
+

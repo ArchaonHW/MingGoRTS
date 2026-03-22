@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
@@ -56,7 +56,7 @@ public:
     void ResumeProduction();
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void SetProductionRate(float NewRate};
+    void SetProductionRate(float NewRate);
 
     UFUNCTION(BlueprintPure, Category = "Production")
     bool IsOperational() const;
@@ -65,13 +65,13 @@ public:
     float GetProductionProgress() const;
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void UpdateProduction(float DeltaTime};
+    void UpdateProduction(float DeltaTime);
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProductionTick, EMingResourceType, ResourceType, int32, Amount};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProductionStarted};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProductionStopped};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInsufficientResources};
+    
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnProductionTick OnProductionTick;

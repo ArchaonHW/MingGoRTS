@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,8 +9,7 @@
 #include "MingBlockchainTestSuite.generated.h"
 
 UENUM(BlueprintType)
-enum class EBlockchainTestCategory : uint8
-{
+enum class EBlockchainTestCategory: uint8 {
     MiningSystem,
     WalletSystem,
     PlayToEarnSystem,
@@ -24,8 +23,7 @@ enum class EBlockchainTestCategory : uint8
 };
 
 UENUM(BlueprintType)
-enum class EBlockchainTestResult : uint8
-{
+enum class EBlockchainTestResult: uint8 {
     NotRun,
     Passed,
     Failed,

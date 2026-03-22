@@ -25,10 +25,11 @@ class MINGSTRATEGIC_API UMingDecisionWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingDecisionWidget(const FObjectInitializer& ObjectInitializer};
+    UMingDecisionWidget(const FObjectInitializer& ObjectInitializer);
 
-    // ?��X�決策顯�?    UFUNCTION(BlueprintCallable, Category = "Decision UI")
-    void SetupDecision(const FMingDecision& Decision};
+    // ?��X�決策顯�?
+    UFUNCTION(BlueprintCallable, Category = "Decision UI")
+    void SetupDecision(const FMingDecision& Decision);
 
     // 顯示決�X�面
     UFUNCTION(BlueprintCallable, Category = "Decision UI")
@@ -63,18 +64,23 @@ protected:
     UPROPERTY()
     FString CurrentDecisionId;
 
-    // ?��X�鈪?��?�?    UPROPERTY()
+    // ?��X�鈪?��?�?
+    UPROPERTY()
     TArray<TObjectPtr<UButton>> OptionButtons;
 
-    // ?��X    virtual void NativeConstruct() override;
+    // ?��X
+    virtual void NativeConstruct() override;
 
-    // ?�建?��X�鈪X    UFUNCTION()
-    void CreateOptionButtons(const TArray<FMingDecisionOption>& Options};
+    // ?�建?��X�鈪X
+    UFUNCTION()
+    void CreateOptionButtons(const TArray<FMingDecisionOption>& Options);
 
-    // ?��X�鈪?��X��X    UFUNCTION()
-    void OnOptionButtonClicked(const FString& OptionId};
+    // ?��X�鈪?��X��X
+    UFUNCTION()
+    void OnOptionButtonClicked(const FString& OptionId);
 
-    // 延�X�鈪?��X��X    UFUNCTION()
+    // 延�X�鈪?��X��X
+    UFUNCTION()
     void OnPostponeClicked();
 
     // ?�畫?�放

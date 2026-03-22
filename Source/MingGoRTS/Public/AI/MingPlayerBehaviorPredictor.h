@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingPlayerBehaviorPredictor.generated.h"
 
 UENUM(BlueprintType)
-enum class EPlayerActionType : uint8
-{
+enum class EPlayerActionType: uint8 {
     MoveUnit,
     Attack,
     Build,
@@ -20,8 +19,7 @@ enum class EPlayerActionType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EPredictionConfidence : uint8
-{
+enum class EPredictionConfidence: uint8 {
     VeryLow,
     Low,
     Medium,

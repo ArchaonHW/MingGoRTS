@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSDynamicHistorySystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EHistoricalEventType : uint8
-{
+enum class EHistoricalEventType: uint8 {
     Political UMETA(DisplayName = "Political"),
     Military UMETA(DisplayName = "Military"),
     Economic UMETA(DisplayName = "Economic"),
@@ -18,8 +17,7 @@ enum class EHistoricalEventType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EHistoricalImpact : uint8
-{
+enum class EHistoricalImpact: uint8 {
     Local UMETA(DisplayName = "Local"),
     Regional UMETA(DisplayName = "Regional"),
     National UMETA(DisplayName = "National"),
@@ -28,8 +26,7 @@ enum class EHistoricalImpact : uint8
 };
 
 UENUM(BlueprintType)
-enum class EHistoricalSignificance : uint8
-{
+enum class EHistoricalSignificance: uint8 {
     Trivial UMETA(DisplayName = "Trivial"),
     Minor UMETA(DisplayName = "Minor"),
     Moderate UMETA(DisplayName = "Moderate"),

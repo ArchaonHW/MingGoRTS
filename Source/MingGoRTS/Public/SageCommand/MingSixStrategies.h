@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // 策略類型枚舉
 UENUM(BlueprintType)
-enum class ESixStrategyType : uint8
-{
+enum class ESixStrategyType: uint8 {
     HeavenStrategy = 0,    // 天道策略 - 順應天時，利用自然
     EarthStrategy = 1,     // 地道策略 - 利用地形，佔據要地
     HumanStrategy = 2,     // 人道策略 - 收買人心，分化敵人
@@ -18,8 +17,7 @@ enum class ESixStrategyType : uint8
 
 // 策略狀態枚舉
 UENUM(BlueprintType)
-enum class EStrategyState : uint8
-{
+enum class EStrategyState: uint8 {
     Planning = 0,      // 計劃階段
     Preparing = 1,     // 準備階段
     Executing = 2,     // 執行階段
@@ -30,8 +28,7 @@ enum class EStrategyState : uint8
 
 // 策略複雜度
 UENUM(BlueprintType)
-enum class EStrategyComplexity : uint8
-{
+enum class EStrategyComplexity: uint8 {
     Simple = 0,        // 簡單策略
     Moderate = 1,      // 中等複雜度
     Complex = 2,       // 複雜策略

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -233,7 +233,8 @@ public:
     FString GenerateOptimizationReport() const;
 
 private:
-    // 子系�?    UPROPERTY()
+    // 子系�?
+    UPROPERTY()
     UMingSpatialPartition* SpatialPartition;
 
     UPROPERTY()
@@ -257,7 +258,8 @@ private:
     float CriticalFPSThreshold;
 
     // ?�适�?优�?
-    int32 OptimizationLevel; // 0-4，�?高�X��?激�?    float LastOptimizationAdjustTime;
+    int32 OptimizationLevel; // 0-4，�?高�X��?激�?
+    float LastOptimizationAdjustTime;
     float OptimizationAdjustCooldown;
 
     // ?��X��?系�?
@@ -273,6 +275,7 @@ private:
     // 调整优�?级别
     void SetOptimizationLevel(int32 NewLevel);
 
-    // ?�据?��X��?调整池大�?    void AdjustPoolSizeForUnitCount(int32 UnitCount);
+    // ?�据?��X��?调整池大�?
+    void AdjustPoolSizeForUnitCount(int32 UnitCount);
 };
 

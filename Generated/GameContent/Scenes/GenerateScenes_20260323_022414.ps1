@@ -1,4 +1,4 @@
-# Auto-generated Scene Generation Script
+﻿# Auto-generated Scene Generation Script
 # Generated: 03/23/2026 02:24:14
 
 # Scene Generation for MingGoRTS

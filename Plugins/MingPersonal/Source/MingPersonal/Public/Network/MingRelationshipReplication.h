@@ -10,8 +10,7 @@ class UMingRelationshipManager;
 
 // Replication modes
 UENUM(BlueprintType)
-enum class ERelationshipReplicationMode : uint8
-{
+enum class ERelationshipReplicationMode: uint8 {
     ServerAuthoritative     UMETA(DisplayName = "Server Authoritative"),
     ClientPredictive        UMETA(DisplayName = "Client Predictive"),
     Hybrid                  UMETA(DisplayName = "Hybrid"),
@@ -20,8 +19,7 @@ enum class ERelationshipReplicationMode : uint8
 
 // Sync priorities
 UENUM(BlueprintType)
-enum class ERelationshipSyncPriority : uint8
-{
+enum class ERelationshipSyncPriority: uint8 {
     Low                     UMETA(DisplayName = "Low"),
     Medium                  UMETA(DisplayName = "Medium"),
     High                    UMETA(DisplayName = "High"),

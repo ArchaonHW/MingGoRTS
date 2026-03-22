@@ -77,7 +77,7 @@ public:
         AMingBuildingActor* Building, 
         const FString& UpgradeID, 
         UMingTechTree* TechTree,
-        const TMap<EMingResourceType, int32>& AvailableResources};
+        const TMap<EMingResourceType, int32>& AvailableResources);
 
     /**
      * ?��X��X�本 | Get Upgrade Cost
@@ -86,7 +86,7 @@ public:
      * @return 資�X�本 | Resource costs
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade")
-    static TArray<FMingResourceCost> GetUpgradeCost(const FString& UpgradeID, UMingTechTree* TechTree};
+    static TArray<FMingResourceCost> GetUpgradeCost(const FString& UpgradeID, UMingTechTree* TechTree);
 
     /**
      * ?��X��X�?�?��? | Get Upgrade Time
@@ -95,7 +95,7 @@ public:
      * @return ?�?�?��?(�? | Time in seconds
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade")
-    static float GetUpgradeTime(const FString& UpgradeID, UMingTechTree* TechTree};
+    static float GetUpgradeTime(const FString& UpgradeID, UMingTechTree* TechTree);
 
     /**
      * ?�用?��X��X�建�?| Apply Upgrade Effects to Building
@@ -103,7 +103,7 @@ public:
      * @param UpgradeData ?��X��? | Upgrade data
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
-    static void ApplyUpgradeToBuilding(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData};
+    static void ApplyUpgradeToBuilding(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData);
 
     /**
      * ?��?建�X��?後�X�命X| Get Building Health After Upgrade
@@ -112,7 +112,7 @@ public:
      * @return ?��?後�X��?| Health after upgrade
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
-    static int32 GetUpgradedHealth(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData};
+    static int32 GetUpgradedHealth(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData);
 
     /**
      * ?��?建�X��?後�X�產?��? | Get Building Production After Upgrade
@@ -121,7 +121,7 @@ public:
      * @return ?��?後�X��X| Production after upgrade
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
-    static float GetUpgradedProduction(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData};
+    static float GetUpgradedProduction(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData);
 
     /**
      * ?��?建�X��?後�X�禦X| Get Building Defense After Upgrade
@@ -130,6 +130,6 @@ public:
      * @return ?��?後防禦�?| Defense after upgrade
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
-    static float GetUpgradedDefense(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData};
-};
+    static float GetUpgradedDefense(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData);
+);
 

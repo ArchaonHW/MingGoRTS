@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingBoundaryTestSuite.generated.h"
 
 /**
- * ????´ú¸Õ®M¥ó
- * ´ú¸Õ¨t²Î???X???¥ó??·¥?X */
+ * æ‘§æ¯€ï¿½ï¿½ï¿½Õ®Mï¿½ï¿½
+ * ï¿½ï¿½ï¿½Õ¨tï¿½ï¿½ç›®æ¨™æ•¸é‡ï¿½ï¿½??ï¿½ï¿½?X */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingBoundaryTestSuite : public UObject
 {
@@ -15,7 +15,7 @@ class MINGCORE_API UMingBoundaryTestSuite : public UObject
 public:
     UMingBoundaryTestSuite();
 
-    // ========== ¸ê??¨t²Î????´ú¸Õ ==========
+    // ========== ï¿½ï¿½??ï¿½tï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Resource")
     bool TestResourceBoundaryConditions();
@@ -35,7 +35,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Resource")
     bool TestFloatingPointResources();
 
-    // ========== ????¨t²Î????´ú¸Õ ==========
+    // ========== æ‘§æ¯€ï¿½tï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Unit")
     bool TestUnitBoundaryConditions();
@@ -55,7 +55,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Unit")
     bool TestInvalidUnitStates();
 
-    // ========== «Ø??¨t²Î????´ú¸Õ ==========
+    // ========== ï¿½ï¿½??ï¿½tï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Building")
     bool TestBuildingBoundaryConditions();
@@ -75,7 +75,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Building")
     bool TestBuildingPositionBoundaries();
 
-    // ========== ºôµ¸¨t²Î????´ú¸Õ ==========
+    // ========== ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Network")
     bool TestNetworkBoundaryConditions();
@@ -95,7 +95,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Network")
     bool TestInvalidNetworkStates();
 
-    // ========== «O??¨t²Î????´ú¸Õ ==========
+    // ========== ï¿½O??ï¿½tï¿½ï¿½æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Save")
     bool TestSaveSystemBoundaryConditions();
@@ -115,7 +115,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Save")
     bool TestInvalidSaveStates();
 
-    // ========== ºî?X???´ú¸Õ ==========
+    // ========== ï¿½ï¿½?X???ï¿½ï¿½ï¿½ï¿½ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test")
     void RunAllBoundaryTests();
@@ -149,19 +149,21 @@ protected:
     TArray<FString> TestResults;
 
 private:
-    // »²§U??¼Æ
-    void AddTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
+    // ï¿½ï¿½ï¿½U??ï¿½ï¿½
+    void AddTestResult)(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};[0:-1];
     void ResetTestResults();
-    bool ValidateBoundaryValue(const FString& TestName, float Value, float Min, float Max};
-    bool TestNumericBoundary(const FString& TestName, int32 Value, int32 Min, int32 Max};
-    bool TestFloatBoundary(const FString& TestName, float Value, float Min, float Max};
+    bool ValidateBoundaryValue(const FString& TestName, float Value, float Min, float Max);
+    bool TestNumericBoundary(const FString& TestName, int32 Value, int32 Min, int32 Max);
+    bool TestFloatBoundary(const FString& TestName, float Value, float Min, float Max);
     
-    // ·¥?X?´ú¸Õ?X    bool TestZeroValue(const FString& TestName, TFunction<void()> TestFunction};
+    // ï¿½ï¿½?X?ï¿½ï¿½ï¿½ï¿½?X
+    bool TestZeroValue(const FString& TestName, TFunction<void()> TestFunction};
     bool TestMaxValue(const FString& TestName, TFunction<void()> TestFunction};
     bool TestNegativeValue(const FString& TestName, TFunction<void()> TestFunction};
     bool TestOverflowValue(const FString& TestName, TFunction<void()> TestFunction};
     
-    // ??????ÃÒ?X    bool ValidateSystemState(const FString& TestName};
+    // æ‘§æ¯€??ï¿½ï¿½?X
+    bool ValidateSystemState(const FString& TestName);
     bool CheckSystemIntegrity();
     bool VerifyDataConsistency();
 };

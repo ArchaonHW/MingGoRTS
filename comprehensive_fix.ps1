@@ -1,4 +1,4 @@
-# Comprehensive fix for MingGoRTS compilation errors
+﻿# Comprehensive fix for MingGoRTS compilation errors
 Write-Host "Starting comprehensive compilation error fixes..."
 
 # Get all header files that might have syntax errors

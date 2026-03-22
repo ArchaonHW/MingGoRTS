@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,8 +8,7 @@
 #include "MingConfigurationManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EConfigCategory : uint8
-{
+enum class EConfigCategory: uint8 {
 	Engine,
 	Graphics,
 	Audio,
@@ -23,8 +22,7 @@ enum class EConfigCategory : uint8
 };
 
 UENUM(BlueprintType)
-enum class EConfigValueType : uint8
-{
+enum class EConfigValueType: uint8 {
 	Bool,
 	Int,
 	Float,

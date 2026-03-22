@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Relationship Panel UI Component
 
 #pragma once
@@ -11,22 +11,20 @@
 class UMingRelationshipManager;
 
 UENUM(BlueprintType)
-enum class ERelationshipSortType : uint8
-{
-    Name, UMETA(DisplayName = "Name"),
-    Level, UMETA(DisplayName = "Level"),
-    Status, UMETA(DisplayName = "Status"),
-    LastInteraction, UMETA(DisplayName = "Last Interaction")
+enum class ERelationshipSortType: uint8 {
+    Name UMETA(DisplayName = "Name"),
+    Level UMETA(DisplayName = "Level"),
+    Status UMETA(DisplayName = "Status"),
+    LastInteraction UMETA(DisplayName = "Last Interaction")
 };
 
 UENUM(BlueprintType)
-enum class ERelationshipFilterType : uint8
-{
-    All, UMETA(DisplayName = "All"),
-    Friends, UMETA(DisplayName = "Friends"),
-    Allies, UMETA(DisplayName = "Allies"),
-    Neutral, UMETA(DisplayName = "Neutral"),
-    Enemies, UMETA(DisplayName = "Enemies")
+enum class ERelationshipFilterType: uint8 {
+    All UMETA(DisplayName = "All"),
+    Friends UMETA(DisplayName = "Friends"),
+    Allies UMETA(DisplayName = "Allies"),
+    Neutral UMETA(DisplayName = "Neutral"),
+    Enemies UMETA(DisplayName = "Enemies")
 };
 
 USTRUCT(BlueprintType)

@@ -1,4 +1,4 @@
-# UE Content Import Script
+﻿# UE Content Import Script
 # Auto-generated for MingGoRTS
 
 # Import Scene Configurations

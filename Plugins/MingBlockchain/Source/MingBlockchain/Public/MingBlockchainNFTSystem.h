@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -11,8 +11,7 @@
  * NFT rarity levels
  */
 UENUM(BlueprintType)
-enum class ENFTRarity : uint8
-{
+enum class ENFTRarity: uint8 {
     Common     = 0,
     Uncommon   = 1,
     Rare       = 2,
@@ -25,8 +24,7 @@ enum class ENFTRarity : uint8
  * NFT categories
  */
 UENUM(BlueprintType)
-enum class ENFTCategory : uint8
-{
+enum class ENFTCategory: uint8 {
     Character    = 0,
     Weapon      = 1,
     Armor       = 2,
@@ -558,30 +556,30 @@ private:
     TMap<ENFTRarity, float> NFTCreationCosts;
 
     /** Default NFT contract address */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NFT|Configuration")
+    UPROPERTY(EditAnywhere, Category = "NFT|Configuration")
     FString DefaultNFTContract;
 
     /** Marketplace fee percentage */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NFT|Configuration")
+    UPROPERTY(EditAnywhere, Category = "NFT|Configuration")
     float MarketplaceFeePercentage;
 
     /** Maximum marketplace listings */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NFT|Configuration")
+    UPROPERTY(EditAnywhere, Category = "NFT|Configuration")
     int32 MaxMarketplaceListings;
 
     /** NFT transfer cooldown in seconds */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NFT|Configuration")
+    UPROPERTY(EditAnywhere, Category = "NFT|Configuration")
     float NFTTransferCooldown;
 
     /** Whether NFT system is enabled */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NFT|Configuration")
+    UPROPERTY(EditAnywhere, Category = "NFT|Configuration")
     bool bNFTSystemEnabled;
 
     /** Time since last marketplace update */
     float TimeSinceLastMarketplaceUpdate;
 
     /** Marketplace update interval */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NFT|Configuration")
+    UPROPERTY(EditAnywhere, Category = "NFT|Configuration")
     float MarketplaceUpdateInterval;
 
     /** Initialize NFT configuration */

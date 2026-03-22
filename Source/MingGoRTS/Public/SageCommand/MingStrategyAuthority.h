@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -12,8 +12,7 @@
  * 逆六策：破局、破結構、不破人
  */
 UENUM(BlueprintType)
-enum class ESixStrategyType : uint8
-{
+enum class ESixStrategyType: uint8 {
     None            UMETA(DisplayName = "None"),
     // 正六策
     EstablishNation UMETA(DisplayName = "立國"),      // 伐心之正道
@@ -30,8 +29,7 @@ enum class ESixStrategyType : uint8
  * 策略方向枚舉
  */
 UENUM(BlueprintType)
-enum class EStrategyDirection : uint8
-{
+enum class EStrategyDirection: uint8 {
     None        UMETA(DisplayName = "None"),
     Righteous   UMETA(DisplayName = "正道"),    // 正策
     Evil        UMETA(DisplayName = "逆術"),    // 逆策
@@ -211,12 +209,12 @@ public:
     FOnStrategyUsed OnStrategyUsed;
 
     // 事件：策略方向切換
-    DECLARE_DYNAMIC_MULTICAST_Delegate_OneParam(FOnDirectionSwitched, EStrategyDirection, NewDirection);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDirectionSwitched, EStrategyDirection, NewDirection);
     UPROPERTY(BlueprintAssignable, Category = "SageCommand|Strategy")
     FOnDirectionSwitched OnDirectionSwitched;
 
     // 事件：策略冷卻完成
-    DECLARE_DYNAMIC_MULTICAST_Delegate_OneParam(FOnStrategyCooldownComplete, ESixStrategyType, StrategyType);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStrategyCooldownComplete, ESixStrategyType, StrategyType);
     UPROPERTY(BlueprintAssignable, Category = "SageCommand|Strategy")
     FOnStrategyCooldownComplete OnStrategyCooldownComplete;
 
@@ -261,3 +259,4 @@ protected:
     UPROPERTY()
     int32 ConsecutiveRighteousUses = 0;
 };
+

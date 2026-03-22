@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingPerformanceBenchmark.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingBenchmarkType : uint8
-{
+enum class EMingBenchmarkType: uint8 {
     LoadTime UMETA(DisplayName = "Load Time"),
     MemoryUsage UMETA(DisplayName = "Memory Usage"),
     FPS UMETA(DisplayName = "FPS"),
@@ -151,7 +150,7 @@ public:
 
     // Target Management
     UFUNCTION(BlueprintCallable, Category = "Targets")
-    void SetBenchmarkTarget(EMingBenchmarkType BenchmarkType, float TargetValue};
+    void SetBenchmarkTarget(EMingBenchmarkType BenchmarkType, float TargetValue);
 
     UFUNCTION(BlueprintPure, Category = "Targets")
     float GetBenchmarkTarget(EMingBenchmarkType BenchmarkType) const;
@@ -161,7 +160,7 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetBenchmarkTypeName(EMingBenchmarkType BenchmarkType};
+    static FString GetBenchmarkTypeName(EMingBenchmarkType BenchmarkType);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveBenchmarkData() const;
@@ -197,10 +196,10 @@ protected:
     void ExecuteEventLatencyTest();
 
     // Data Collection
-    void CollectPerformanceSample(EMingBenchmarkType BenchmarkType};
-    void ProcessBenchmarkData(EMingBenchmarkType BenchmarkType};
-    void CalculateStatistics(FMingBenchmarkResult& Result};
-    void EvaluatePerformance(FMingBenchmarkResult& Result};
+    void CollectPerformanceSample(EMingBenchmarkType BenchmarkType);
+    void ProcessBenchmarkData(EMingBenchmarkType BenchmarkType);
+    void CalculateStatistics(FMingBenchmarkResult& Result);
+    void EvaluatePerformance(FMingBenchmarkResult& Result);
 
     // Monitoring
     void CollectMonitoringData();

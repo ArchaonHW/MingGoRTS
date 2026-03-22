@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Causality Calculator - Analyzes and calculates causal relationships between events
 
 #pragma once
@@ -10,8 +10,7 @@
 
 // Causality Analysis Methods
 UENUM(BlueprintType)
-enum class ECausalityAnalysisMethod : uint8
-{
+enum class ECausalityAnalysisMethod: uint8 {
     TemporalProximity UMETA(DisplayName = "時間接近性"),
     SpatialProximity UMETA(DisplayName = "空間接近性"),
     LogicalInference UMETA(DisplayName = "邏輯推理"),
@@ -24,8 +23,7 @@ enum class ECausalityAnalysisMethod : uint8
 
 // Causality Confidence Levels
 UENUM(BlueprintType)
-enum class ECausalityConfidence : uint8
-{
+enum class ECausalityConfidence: uint8 {
     VeryLow UMETA(DisplayName = "很低"),
     Low UMETA(DisplayName = "低"),
     Medium UMETA(DisplayName = "中等"),

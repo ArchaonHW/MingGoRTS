@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,11 +6,10 @@
 #include "MingUIManager.generated.h"
 
 /**
- * UI ¥¬??Ãş??
+ * UI ï¿½ï¿½??ï¿½ï¿½??
  */
 UENUM(BlueprintType)
-enum class EUILayoutType : uint8
-{
+enum class EUILayoutType: uint8 {
     Desktop           UMETA(DisplayName = "Desktop"),
     Tablet            UMETA(DisplayName = "Tablet"),
     PhonePortrait     UMETA(DisplayName = "Phone Portrait"),
@@ -19,7 +18,7 @@ enum class EUILayoutType : uint8
 };
 
 /**
- * «Ì??¤Ø¤oÃş§O
+ * ï¿½ï¿½??ï¿½Ø¤oï¿½ï¿½ï¿½O
  */
 USTRUCT(BlueprintType)
 struct FScreenSizeCategory
@@ -29,18 +28,18 @@ struct FScreenSizeCategory
     
     float MinWidth;
     
-    // ??¤j¼e«×?X?????1 ªí¥Ü???X???
+    // ??ï¿½jï¿½eï¿½ï¿½?Xæ‘§æ¯€?1 ï¿½ï¿½ï¿½ç›®æ¨™æ•¸é‡
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MaxWidth;
     
     
     float MinHeight;
     
-    // ??¤j??«×?X?????1 ªí¥Ü???X???
+    // ??ï¿½j??ï¿½ï¿½?Xæ‘§æ¯€?1 ï¿½ï¿½ï¿½ç›®æ¨™æ•¸é‡
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MaxHeight;
     
-    // ¹ï?XUI ¥¬??Ãş??
+    // ï¿½ï¿½?XUI ï¿½ï¿½??ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EUILayoutType LayoutType;
     
@@ -58,26 +57,26 @@ struct FScreenSizeCategory
 };
 
 /**
- * UI ÁY©ñ³]¸m
+ * UI ï¿½Yï¿½ï¿½]ï¿½m
  */
 USTRUCT(BlueprintType)
 struct FUIScaleSettings
 {
     GENERATED_BODY()
     
-    // DPI ÁY©ñ????
+    // DPI ï¿½Yï¿½ï¿½æ‘§æ¯€
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float DPIScale;
     
-    // ???? UI ÁY©ñ
+    // æ‘§æ¯€ UI ï¿½Yï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float GlobalUIScale;
     
-    // ¦r??ÁY©ñ
+    // ï¿½r??ï¿½Yï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float FontScale;
     
-    // ????ÁY©ñ
+    // æ‘§æ¯€ï¿½Yï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float IconScale;
     
@@ -90,7 +89,7 @@ struct FUIScaleSettings
 };
 
 /**
- * UI ºŞ?X * ºŞ?X?????UI ??¥­??¾AX */
+ * UI ï¿½ï¿½?X * ï¿½ï¿½?Xæ‘§æ¯€?UI ??ï¿½ï¿½??ï¿½AX */
 UCLASS()
 class MINGCORE_API UMingUIManager : public UObject
 {
@@ -105,23 +104,23 @@ public:
     
     void Shutdown();
 
-    // ¨C?X?·s
+    // ï¿½C?X?ï¿½s
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void Tick(float DeltaTime};
+    void Tick(float DeltaTime);
 
-    // ???X??? UI ¥¬??Ãş??
+    // ç›®æ¨™æ•¸é‡ UI ï¿½ï¿½??ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "UI")
     EUILayoutType GetCurrentLayoutType() const { return CurrentLayoutType; }
 
-    // ????«Ì??¤Ø¤oÃş§O
+    // æ‘§æ¯€ï¿½ï¿½??ï¿½Ø¤oï¿½ï¿½ï¿½O
     UFUNCTION(BlueprintCallable, Category = "UI")
     FScreenSizeCategory GetScreenSizeCategory() const { return CurrentSizeCategory; }
 
-    // ???X???ÁY©ñ³]¸m
+    // ç›®æ¨™æ•¸é‡ï¿½Yï¿½ï¿½]ï¿½m
     UFUNCTION(BlueprintCallable, Category = "UI")
     FUIScaleSettings GetCurrentScaleSettings() const { return CurrentScaleSettings; }
 
-    // ­p?X??XUI ¤Ø¤o
+    // ï¿½p?X??XUI ï¿½Ø¤o
     UFUNCTION(BlueprintCallable, Category = "UI")
     float GetScaledSize(float BaseSize) const;
 
@@ -134,54 +133,55 @@ public:
     
     FMargin GetSafeZonePadding() const;
 
-    // µù??«Ì??¤Ø¤oÅÜ?X?½Õ
+    // ï¿½ï¿½??ï¿½ï¿½??ï¿½Ø¤oï¿½ï¿½?X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void RegisterScreenSizeChangedCallback(UObject* Listener, FName FunctionName};
+    void RegisterScreenSizeChangedCallback(UObject* Listener, FName FunctionName);
 
-    // µù¾P??½Õ
+    // ï¿½ï¿½ï¿½P??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void UnregisterScreenSizeChangedCallback(UObject* Listener};
+    void UnregisterScreenSizeChangedCallback(UObject* Listener);
 
-    // ???X???¹ê??
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½??
     static UMingUIManager* Get();
 
 private:
     bool bInitialized;
     
-    // ???? UI ¥¬??Ãş??
+    // æ‘§æ¯€ UI ï¿½ï¿½??ï¿½ï¿½??
     UPROPERTY()
     EUILayoutType CurrentLayoutType;
     
-    // ????«Ì??¤Ø¤oÃş§O
+    // æ‘§æ¯€ï¿½ï¿½??ï¿½Ø¤oï¿½ï¿½ï¿½O
     FScreenSizeCategory CurrentSizeCategory;
     
-    // ????ÁY©ñ³]¸m
+    // æ‘§æ¯€ï¿½Yï¿½ï¿½]ï¿½m
     FUIScaleSettings CurrentScaleSettings;
     
-    // «Ì??¤Ø¤o©w¸q
+    // ï¿½ï¿½??ï¿½Ø¤oï¿½wï¿½q
     TArray<FScreenSizeCategory> ScreenSizeDefinitions;
     
-    // «Ì??¤Ø¤oÅÜ?X?½Õ
+    // ï¿½ï¿½??ï¿½Ø¤oï¿½ï¿½?X?ï¿½ï¿½
     TMap<TWeakObjectPtr<UObject>, FName> ScreenSizeChangedCallbacks;
     
-    // ??«á??«Ì??¤Ø¤o¡]¥Î??ÀË´ú?X???
+    // ??ï¿½ï¿½??ï¿½ï¿½??ï¿½Ø¤oï¿½]ï¿½ï¿½??ï¿½Ë´ï¿½?X???
     FVector2D LastScreenSize;
     
-    // ????¹ê??
+    // æ‘§æ¯€ï¿½ï¿½??
     static UMingUIManager* Instance;
     
-    // ???X???¹õ¤Ø¤o????    void InitializeScreenSizeDefinitions();
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½ï¿½Ø¤oæ‘§æ¯€
+    void InitializeScreenSizeDefinitions();
     
-    // ÀË´ú«Ì??¤Ø¤oÅÜ??
+    // ï¿½Ë´ï¿½ï¿½ï¿½??ï¿½Ø¤oï¿½ï¿½??
     void CheckScreenSizeChange();
     
-    // ??·s UI ¥¬??
+    // ??ï¿½s UI ï¿½ï¿½??
     void UpdateUILayout();
     
-    // ­p??ÁY©ñ³]¸m
+    // ï¿½p??ï¿½Yï¿½ï¿½]ï¿½m
     void CalculateScaleSettings();
     
-    // ??ª¾«Ì??¤Ø¤oÅÜ??
+    // ??ï¿½ï¿½ï¿½ï¿½??ï¿½Ø¤oï¿½ï¿½??
     void NotifyScreenSizeChanged();
 };
 

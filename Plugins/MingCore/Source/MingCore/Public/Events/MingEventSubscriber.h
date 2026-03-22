@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "MingEvent.h"
@@ -7,7 +7,7 @@
  * Delegate for handling events.
  * This is a multicast delegate that can bind multiple handlers.
  */
-DECLARE_MULTICAST_DELEGATE_OneParam(FMingEventDelegate, TSharedPtr<IMingEvent>};
+DECLARE_MULTICAST_DELEGATE_OneParam(FMingEventDelegate, TSharedPtr<IMingEvent>);
 
 /**
  * Interface for event subscribers.

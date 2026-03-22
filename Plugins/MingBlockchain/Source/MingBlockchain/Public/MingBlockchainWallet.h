@@ -10,8 +10,7 @@
  * Wallet connection status
  */
 UENUM(BlueprintType)
-enum class EWalletConnectionStatus : uint8
-{
+enum class EWalletConnectionStatus: uint8 {
     Disconnected    = 0,
     Connecting      = 1,
     Connected       = 2,
@@ -23,8 +22,7 @@ enum class EWalletConnectionStatus : uint8
  * Transaction status
  */
 UENUM(BlueprintType)
-enum class ETransactionStatus : uint8
-{
+enum class ETransactionStatus: uint8 {
     Pending         = 0,
     Confirmed       = 1,
     Failed          = 2,
@@ -408,19 +406,19 @@ private:
     FString ConnectedProvider;
 
     /** Current network configuration */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wallet|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Wallet|Configuration")
     FString CurrentNetwork;
 
     /** Whether auto-refresh is enabled */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wallet|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Wallet|Configuration")
     bool bAutoRefreshEnabled;
 
     /** Auto-refresh interval in seconds */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wallet|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Wallet|Configuration")
     float AutoRefreshInterval;
 
     /** Maximum transaction history */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wallet|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Wallet|Configuration")
     int32 MaxTransactionHistory;
 
     /** Time since last refresh */

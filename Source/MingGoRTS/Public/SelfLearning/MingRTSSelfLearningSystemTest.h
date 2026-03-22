@@ -11,8 +11,7 @@
 
 // Test result types
 UENUM(BlueprintType)
-enum class ETestResult : uint8
-{
+enum class ETestResult: uint8 {
     NotRun,       // Test hasn't been executed
     Passed,       // Test passed successfully
     Failed,       // Test failed
@@ -22,8 +21,7 @@ enum class ETestResult : uint8
 
 // Test categories
 UENUM(BlueprintType)
-enum class ETestCategory : uint8
-{
+enum class ETestCategory: uint8 {
     SystemInitialization,    // System startup and initialization tests
     DataCollection,         // Data collection and storage tests
     ModelTraining,          // Model training and prediction tests
@@ -324,5 +322,6 @@ private:
     int32 TestsFailed;
 };
 
-#endif // MINGRTSSELFSLEARNINGSYSTEMTEST_H
 
+
+#endif // MINGRTSSELFSLEARNINGSYSTEMTEST_H

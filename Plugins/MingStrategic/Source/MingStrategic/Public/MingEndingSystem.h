@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingEndingSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingStrategicEndingType : uint8
-{
+enum class EMingStrategicEndingType: uint8 {
     Victory UMETA(DisplayName = "Victory"),
     Defeat UMETA(DisplayName = "Defeat"),
     Historical UMETA(DisplayName = "Historical"),
@@ -16,8 +15,7 @@ enum class EMingStrategicEndingType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingEndingCondition : uint8
-{
+enum class EMingEndingCondition: uint8 {
     MilitaryVictory UMETA(DisplayName = "Military Victory"),
     PoliticalUnity UMETA(DisplayName = "Political Unity"),
     EconomicProsperity UMETA(DisplayName = "Economic Prosperity"),
@@ -136,10 +134,10 @@ public:
     void CheckEndingConditions();
 
     UFUNCTION(BlueprintCallable, Category = "Ending")
-    void TriggerEnding(const FString& EndingID};
+    void TriggerEnding(const FString& EndingID);
 
     UFUNCTION(BlueprintCallable, Category = "Ending")
-    void ForceEnding(const FString& EndingID};
+    void ForceEnding(const FString& EndingID);
 
     UFUNCTION(BlueprintPure, Category = "Ending")
     TArray<FMingEnding> GetAllEndings() const;
@@ -171,10 +169,10 @@ public:
 
     // Victory/Defeat Conditions
     UFUNCTION(BlueprintCallable, Category = "Conditions")
-    void SetVictoryCondition(EMingEndingCondition Condition, float Value};
+    void SetVictoryCondition(EMingEndingCondition Condition, float Value);
 
     UFUNCTION(BlueprintCallable, Category = "Conditions")
-    void SetDefeatCondition(EMingEndingCondition Condition, float Value};
+    void SetDefeatCondition(EMingEndingCondition Condition, float Value);
 
     UFUNCTION(BlueprintPure, Category = "Conditions")
     bool IsVictoryConditionMet(EMingEndingCondition Condition) const;
@@ -200,7 +198,7 @@ public:
 
     // Secret Endings
     UFUNCTION(BlueprintCallable, Category = "Secret")
-    void UnlockSecretEnding(const FString& EndingID};
+    void UnlockSecretEnding(const FString& EndingID);
 
     UFUNCTION(BlueprintPure, Category = "Secret")
     TArray<FMingEnding> GetSecretEndings() const;
@@ -209,10 +207,10 @@ public:
     bool IsEndingSecret(const FString& EndingID) const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEndingTriggered, const FMingEnding&, Ending, float, Score};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVictoryAchieved, const FString&, EndingID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDefeatSuffered, const FString&, EndingID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSecretEndingUnlocked, const FString&, EndingID};
+    
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnEndingTriggered OnEndingTriggered;
@@ -228,16 +226,16 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetEndingTypeName(EMingEndingType Type};
+    static FString GetEndingTypeName(EMingEndingType Type);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetConditionTypeName(EMingEndingCondition Condition};
+    static FString GetConditionTypeName(EMingEndingCondition Condition);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveEndingData() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadEndingData(const FString& JsonString};
+    void LoadEndingData(const FString& JsonString);
 
 protected:
     UPROPERTY()

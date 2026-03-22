@@ -1,4 +1,4 @@
-# Visual Studio 2022 銝???鋆??Write-Host "=== Visual Studio 2022 Community 摰? ===" -ForegroundColor Green
+﻿# Visual Studio 2022 銝???鋆??Write-Host "=== Visual Studio 2022 Community 摰? ===" -ForegroundColor Green
 
 # ?萄遣銝??桅?
 $downloadPath = "C:\VS2022_Download"

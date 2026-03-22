@@ -17,8 +17,7 @@ class UMingRTSCulturalAdaptationSystem;
  * Game subsystem for managing localization across the game session
  * Provides centralized access to localization services
  */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSubsystemLanguageChanged, 
-    TEnumAsByte<ERTSLanguageCode>, NewLanguage};
+
 
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
 class MINGGORTS_API UMingRTSLocalizationSubsystem : public UGameInstanceSubsystem
@@ -53,7 +52,7 @@ public:
     
     /** Set cultural region */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    void SetCulturalRegion(ECulturalRegion Region};
+    void SetCulturalRegion(ECulturalRegion Region);
     
     /** Get current cultural region */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
@@ -69,7 +68,7 @@ public:
     
     /** Quick access: Set language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    void SetLanguage(ERTSLanguageCode LanguageCode};
+    void SetLanguage(ERTSLanguageCode LanguageCode);
     
     /** Quick access: Get current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
@@ -85,7 +84,7 @@ public:
     
     /** Save user language preference */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    void SaveUserLanguagePreference(ERTSLanguageCode LanguageCode};
+    void SaveUserLanguagePreference(ERTSLanguageCode LanguageCode);
     
     /** Check if language is available */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
@@ -120,7 +119,7 @@ private:
     
     /** Handle language changed event from localization system */
     UFUNCTION()
-    void HandleLanguageChanged(ERTSLanguageCode NewLanguage};
+    void HandleLanguageChanged(ERTSLanguageCode NewLanguage);
 };
 
 /**

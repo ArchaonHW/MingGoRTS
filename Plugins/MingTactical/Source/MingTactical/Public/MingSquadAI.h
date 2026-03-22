@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingSquadAI.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingSquadRole : uint8
-{
+enum class EMingSquadRole: uint8 {
     Assault UMETA(DisplayName = "Assault"),
     Support UMETA(DisplayName = "Support"),
     Defense UMETA(DisplayName = "Defense"),
@@ -16,8 +15,7 @@ enum class EMingSquadRole : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingSquadTactic : uint8
-{
+enum class EMingSquadTactic: uint8 {
     FlankLeft UMETA(DisplayName = "Flank Left"),
     FlankRight UMETA(DisplayName = "Flank Right"),
     Pincer UMETA(DisplayName = "Pincer"),
@@ -87,30 +85,30 @@ public:
     UMingSquadAI();
 
     UFUNCTION(BlueprintCallable, Category = "Squad")
-    void InitializeSquad(const TArray<FMingSquadMember>& Members};
+    void InitializeSquad(const TArray<FMingSquadMember>& Members);
 
     UFUNCTION(BlueprintCallable, Category = "Squad")
-    void AddUnitToSquad(class AMingTacticalUnit* Unit, EMingSquadRole Role};
+    void AddUnitToSquad(class AMingTacticalUnit* Unit, EMingSquadRole Role);
 
     UFUNCTION(BlueprintCallable, Category = "Squad")
-    void RemoveUnitFromSquad(class AMingTacticalUnit* Unit};
+    void RemoveUnitFromSquad(class AMingTacticalUnit* Unit);
 
     UFUNCTION(BlueprintCallable, Category = "Orders")
-    void IssueSquadOrder(const FMingSquadOrder& Order};
+    void IssueSquadOrder(const FMingSquadOrder& Order);
 
     UFUNCTION(BlueprintCallable, Category = "Orders")
-    void SetTactic(EMingSquadTactic NewTactic};
+    void SetTactic(EMingSquadTactic NewTactic);
 
     UFUNCTION(BlueprintCallable, Category = "Orders")
-    void AttackTarget(AActor* Target};
+    void AttackTarget(AActor* Target);
 
     UFUNCTION(BlueprintCallable, Category = "Orders")
-    void MoveToLocation(FVector Location};
+    void MoveToLocation(FVector Location);
 
     UFUNCTION(BlueprintCallable, Category = "Orders")
-    void DefendPosition(FVector Position};
+    void DefendPosition(FVector Position);
 
-    virtual void Tick(float DeltaTime};
+    virtual void Tick(float DeltaTime);
 
 protected:
     UPROPERTY(BlueprintReadOnly, Category = "Squad")

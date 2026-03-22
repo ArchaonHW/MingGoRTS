@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSSocialDynamics.generated.h"
 
 UENUM(BlueprintType)
-enum class ESocialClass : uint8
-{
+enum class ESocialClass: uint8 {
     Peasant UMETA(DisplayName = "農民"),
     Artisan UMETA(DisplayName = "工匠"),
     Merchant UMETA(DisplayName = "商人"),
@@ -20,8 +19,7 @@ enum class ESocialClass : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESocialRelationType : uint8
-{
+enum class ESocialRelationType: uint8 {
     Family UMETA(DisplayName = "家族"),
     Friend UMETA(DisplayName = "朋友"),
     Rival UMETA(DisplayName = "競爭對手"),

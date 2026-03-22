@@ -1,12 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingDialogueSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingDialogueSpeaker : uint8
-{
+enum class EMingDialogueSpeaker: uint8 {
     Player UMETA(DisplayName = "Player"),
     NPC UMETA(DisplayName = "NPC"),
     System UMETA(DisplayName = "System"),
@@ -14,8 +13,7 @@ enum class EMingDialogueSpeaker : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingPersonalDialogueType : uint8
-{
+enum class EMingPersonalDialogueType: uint8 {
     Conversation UMETA(DisplayName = "Conversation"),
     Briefing UMETA(DisplayName = "Briefing"),
     Debriefing UMETA(DisplayName = "Debriefing"),
@@ -102,7 +100,7 @@ struct FMingDialogueLine
     {}
 };
 
-// ª`??¡G??°j??ºc?X?¥Î BlueprintType
+// ï¿½`??ï¿½G??ï¿½j??ï¿½c?X?ï¿½ï¿½ BlueprintType
 USTRUCT(BlueprintType)
 struct FMingPersonalDialogueNode
 {
@@ -114,7 +112,7 @@ struct FMingPersonalDialogueNode
     UPROPERTY(BlueprintReadOnly)
     FMingDialogueLine DialogueLine;
 
-    // ª`??¡G??°j??ºc?X?¥Î UPROPERTY
+    // ï¿½`??ï¿½G??ï¿½j??ï¿½c?X?ï¿½ï¿½ UPROPERTY
     TArray<FMingDialogueNode> ChildNodes;
 
     UPROPERTY(BlueprintReadOnly)
@@ -264,11 +262,11 @@ public:
     bool GetDialogueCondition(const FString& ConditionName) const;
 
     UFUNCTION(BlueprintCallable, Category = "Conditions")
-    void TriggerDialogueEvent(const FString& EventName};
+    void TriggerDialogueEvent(const FString& EventName);
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueStarted, const FMingDialogueLine&, DialogueLine, const FString&, ConversationID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueEnded, const FString&, ConversationID, bool, bWasCompleted};
+    
+    
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueOptionSelected, int32, OptionIndex, const FString&, DialogueID);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHistoricalContextShown, const FString&, EventID);
 
@@ -313,7 +311,7 @@ protected:
     UPROPERTY()
     TMap<FString, int32> PlayerChoices;
 
-    // ª`??¡GTArray ¤£¯à??±µ§@¬° TMap XUPROPERTY ???X    // TMap<FString, TArray<FString>> HistoricalNotes;
+    // ï¿½`??ï¿½GTArray ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½ï¿½@ï¿½ï¿½ TMap XUPROPERTY ???X    // TMap<FString, TArray<FString>> HistoricalNotes;
 
     UPROPERTY()
     bool bIsConversationActive;
@@ -328,15 +326,15 @@ protected:
     void InitializeDefaultDialogues();
     void SetupHistoricalDialogues();
     void SetupTutorialDialogues();
-    void ProcessDialogueTriggers(const FMingDialogueLine& DialogueLine};
+    void ProcessDialogueTriggers(const FMingDialogueLine& DialogueLine);
     void ProcessChoiceConsequences(const FMingDialogueOption& Option);
     bool CheckDialogueConditions(const TArray<FString>& Conditions) const;
     void UpdateDialogueOptions();
     void AutoAdvanceDialogue();
 
     // Helpers
-    FMingDialogueLine* FindDialogueLine(const FString& DialogueID};
-    FMingDialogueConversation* FindConversation(const FString& ConversationID};
-    void MarkDialogueAsVisited(const FString& DialogueID};
+    FMingDialogueLine* FindDialogueLine(const FString& DialogueID);
+    FMingDialogueConversation* FindConversation(const FString& ConversationID);
+    void MarkDialogueAsVisited(const FString& DialogueID);
 );
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingRTSProcessManager_Old.generated.h"
 
 UENUM(BlueprintType)
-enum class EProcessState : uint8
-{
+enum class EProcessState: uint8 {
     Created     UMETA(DisplayName = "Created"),
     Running     UMETA(DisplayName = "Running"),
     Suspended   UMETA(DisplayName = "Suspended"),
@@ -16,8 +15,7 @@ enum class EProcessState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EProcessPriority : uint8
-{
+enum class EProcessPriority: uint8 {
     Idle        UMETA(DisplayName = "Idle"),
     Low         UMETA(DisplayName = "Low"),
     Normal      UMETA(DisplayName = "Normal"),

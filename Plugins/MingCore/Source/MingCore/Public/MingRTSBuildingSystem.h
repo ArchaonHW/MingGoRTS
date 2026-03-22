@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,8 +9,7 @@ class UMingRTSResourceManager;
 class UMingRTSUnitManager;
 
 UENUM(BlueprintType)
-enum class ERTSBuildingType : uint8
-{
+enum class ERTSBuildingType: uint8 {
     Residential,     // ??X
     Commercial,      // X?~
     Industrial,      // ?u?~
@@ -30,22 +29,20 @@ enum class ERTSBuildingType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERTSBuildingState : uint8
-{
-    Planning,        // ?W????
+enum class ERTSBuildingState: uint8 {
+    Planning,        // ?Wæ‘§æ¯€
     UnderConstruction, // ??]??
-    Operational,     // ?B?ô}
+    Operational,     // ?B?ï¿½}
     Damaged,         // ???l
     Repairing,       // ??_??
-    Upgrading,       // ????
-    Demolishing,     // ?œÞ??
+    Upgrading,       // æ‘§æ¯€
+    Demolishing,     // ?ï¿½ï¿½??
     Abandoned,       // ?o??
-    Destroyed        // ????
+    Destroyed        // æ‘§æ¯€
 };
 
 UENUM(BlueprintType)
-enum class ERTSBuildingSize : uint8
-{
+enum class ERTSBuildingSize: uint8 {
     Small,           // ?pX
     Medium,          // ??X
     Large,           // ?jX
@@ -131,13 +128,13 @@ struct FRTSBuildingData
 
     FRTSBuildingData()
     {
-        BuildingID = TEXT(""};
-        BuildingName = TEXT(""};
+        BuildingID = TEXT("");
+        BuildingName = TEXT("");
         BuildingType = ERTSBuildingType::Residential;
         BuildingSize = ERTSBuildingSize::Small;
         Location = FVector::ZeroVector;
         Rotation = FRotator::ZeroRotator;
-        State = ERTSBuildingState::Planned;
+        BuildingState = ERTSBuildingState::Planning;
         Health = 100.0f;
         MaxHealth = 100.0f;
         ConstructionProgress = 0.0f;
@@ -150,10 +147,9 @@ struct FRTSBuildingData
         CurrentLOD = 0;
         bIsVisible = true;
         bRequiresUpdate = true;
-        LastUpdateTime = FDateTime::Now();
         bIsPowered = false;
         bIsConnected = false;
-        OwnerID = TEXT(""};
+        LastUpdateTime = FDateTime::Now();
     }
 };
 
@@ -232,14 +228,14 @@ struct FRTSBuildingTemplate
 
     FRTSBuildingTemplate()
     {
-        TemplateID = TEXT(""};
-        TemplateName = TEXT(""};
+        TemplateID = TEXT("");
+        TemplateName = TEXT("");
         BuildingType = ERTSBuildingType::Residential;
         BuildingSize = ERTSBuildingSize::Small;
         ConstructionCost = 100.0f;
         ConstructionTime = 60.0f;
-        BlueprintPath = TEXT(""};
-        Description = TEXT(""};
+        BlueprintPath = TEXT("");
+        Description = TEXT("");
         bIsAvailable = true;
     }
 };
@@ -278,19 +274,14 @@ struct FRTSBuildingUpgrade
 
     FRTSBuildingUpgrade()
     {
-        UpgradeID = TEXT(""};
-        UpgradeName = TEXT(""};
-        Description = TEXT(""};
+        UpgradeID = TEXT("");
+        UpgradeName = TEXT("");
+        Description = TEXT("");
         UpgradeCost = 50.0f;
         UpgradeTime = 30.0f;
         bIsAvailable = true;
     }
 };
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingConstructed, const FString&, BuildingID, ERTSBuildingType, BuildingType};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingDestroyed, const FString&, BuildingID, ERTSBuildingType, BuildingType};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingStateChanged, const FString&, BuildingID, ERTSBuildingState, NewState};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingUpgraded, const FString&, BuildingID, const FString&, UpgradeID};
 
 /**
  * RTS??X?t??
@@ -305,7 +296,7 @@ public:
     UMingRTSBuildingSystem();
 
     
-    void InitializeBuildingSystem(UMingRTSResourceManager* InResourceManager, UMingRTSUnitManager* InUnitManager};
+    void InitializeBuildingSystem(UMingRTSResourceManager* InResourceManager, UMingRTSUnitManager* InUnitManager);
 
     // ??X??X
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
@@ -330,7 +321,7 @@ public:
     TArray<FRTSBuildingData> GetBuildingsInArea(const FVector& Center, float Radius) const;
 
     
-    void SetBuildingState(const FString& BuildingID, ERTSBuildingState NewState};
+    void SetBuildingState(const FString& BuildingID, ERTSBuildingState NewState);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     ERTSBuildingState GetBuildingState(const FString& BuildingID) const;
@@ -362,10 +353,10 @@ public:
 
     // ??X???@
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
-    void RepairBuilding(const FString& BuildingID, float RepairAmount};
+    void RepairBuilding(const FString& BuildingID, float RepairAmount);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
-    void DamageBuilding(const FString& BuildingID, float DamageAmount};
+    void DamageBuilding(const FString& BuildingID, float DamageAmount);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     float GetBuildingHealth(const FString& BuildingID) const;
@@ -375,13 +366,13 @@ public:
 
     // ??X??
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
-    void UpdateBuildingProduction(float DeltaTime};
+    void UpdateBuildingProduction(float DeltaTime);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     float GetBuildingProductionRate(const FString& BuildingID) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
-    void SetBuildingProductionRate(const FString& BuildingID, float Rate};
+    void SetBuildingProductionRate(const FString& BuildingID, float Rate);
 
     // ??X?t??X??X
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
@@ -398,10 +389,10 @@ public:
 
     // ?u?H??X
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
-    bool AssignWorkers(const FString& BuildingID, int32 WorkerCount};
+    bool AssignWorkers(const FString& BuildingID, int32 WorkerCount);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
-    void RemoveWorkers(const FString& BuildingID, int32 WorkerCount};
+    void RemoveWorkers(const FString& BuildingID, int32 WorkerCount);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     int32 GetAvailableWorkerCapacity(const FString& BuildingID) const;
@@ -466,7 +457,7 @@ public:
 
     // ??X???
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
-    void OnBuildingAttacked(const FString& BuildingID, float Damage};
+    void OnBuildingAttacked(const FString& BuildingID, float Damage);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     void OnBuildingCaptured(const FString& BuildingID, const FString& NewOwner) {};
@@ -488,7 +479,7 @@ public:
     FOnBuildingUpgraded OnBuildingUpgraded;
 
 protected:
-    // ?t?£V??
+    // ?t?ï¿½V??
     UPROPERTY()
     TObjectPtr<UMingRTSResourceManager> ResourceManager;
 
@@ -542,16 +533,16 @@ protected:
 
     // X??X??
     void InitializeDefaultTemplates();
-    void ProcessBuildingConstruction(FRTSBuildingData& Building, float DeltaTime};
-    void ProcessBuildingProduction(FRTSBuildingData& Building, float DeltaTime};
-    void ProcessBuildingMaintenance(FRTSBuildingData& Building, float DeltaTime};
+    void ProcessBuildingConstruction(FRTSBuildingData& Building, float DeltaTime);
+    void ProcessBuildingProduction(FRTSBuildingData& Building, float DeltaTime);
+    void ProcessBuildingMaintenance(FRTSBuildingData& Building, float DeltaTime);
     void UpdateBuildingConnections(const FString& BuildingID) {};
     FString GenerateBuildingID(ERTSBuildingType BuildingType) const;
     FString GetBuildingName(ERTSBuildingType BuildingType) const;
     float GetBuildingSizeMultiplier(ERTSBuildingSize BuildingSize) const;
     bool ValidateBuildingPlacement(const FRTSBuildingTemplate& Template, const FVector& Location) const;
     void ApplyBuildingEffects(const FString& BuildingID, const FRTSBuildingUpgrade& Upgrade) {};
-    void CheckBuildingIntegrity(FRTSBuildingData& Building};
+    void CheckBuildingIntegrity(FRTSBuildingData& Building);
 
     // ??X??X??
     void OptimizeBuildingEfficiency();
@@ -576,7 +567,7 @@ protected:
     void OptimizeNetworkSynchronization();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
-    void EnablePerformanceMode(bool bEnable};
+    void EnablePerformanceMode(bool bEnable);
 
     UFUNCTION(BlueprintPure, Category = "RTS Building System")
     float GetBuildingSystemPerformance() const;
@@ -585,16 +576,16 @@ protected:
     int32 GetActiveBuildingCount() const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
-    void UpdateBuildingLOD(const FString& BuildingID, int32 LODLevel};
+    void UpdateBuildingLOD(const FString& BuildingID, int32 LODLevel);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
-    void BatchUpdateBuildings(const TArray<FString>& BuildingIDs};
+    void BatchUpdateBuildings(const TArray<FString>& BuildingIDs);
 
 private:
     // ???UX??
-    void NotifyBuildingConstructed(const FString& BuildingID, ERTSBuildingType BuildingType};
-    void NotifyBuildingDestroyed(const FString& BuildingID, ERTSBuildingType BuildingType};
-    void NotifyBuildingStateChanged(const FString& BuildingID, ERTSBuildingState NewState};
+    void NotifyBuildingConstructed(const FString& BuildingID, ERTSBuildingType BuildingType);
+    void NotifyBuildingDestroyed(const FString& BuildingID, ERTSBuildingType BuildingType);
+    void NotifyBuildingStateChanged(const FString& BuildingID, ERTSBuildingState NewState);
     void NotifyBuildingUpgraded(const FString& BuildingID, const FString& UpgradeID) {};
 
     // X??X??X??

@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,8 +8,7 @@
 #include "MingSystemEventBus.generated.h"
 
 UENUM(BlueprintType)
-enum class ESystemEventType : uint8
-{
+enum class ESystemEventType: uint8 {
 	GameStarted,
 	GamePaused,
 	GameResumed,
@@ -45,8 +44,7 @@ enum class ESystemEventType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESystemEventPriority : uint8
-{
+enum class ESystemEventPriority: uint8 {
 	Critical,
 	High,
 	Normal,

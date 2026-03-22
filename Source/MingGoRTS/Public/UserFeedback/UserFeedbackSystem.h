@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // ??????t - ???X??X?X
 #pragma once
 
@@ -11,8 +11,7 @@
  * ?????X???
  */
 UENUM(BlueprintType)
-enum class EFeedbackType : uint8
-{
+enum class EFeedbackType: uint8 {
     Bug			UMETA(DisplayName = "Bug Report"),
     Feature		UMETA(DisplayName = "Feature Request"),
     Balance		UMETA(DisplayName = "Balance Issue"),
@@ -26,8 +25,7 @@ enum class EFeedbackType : uint8
 /**
  * ???X????X */
 UENUM(BlueprintType)
-enum class EFeedbackPriority : uint8
-{
+enum class EFeedbackPriority: uint8 {
     Low		UMETA(DisplayName = "Low"),
     Medium	UMETA(DisplayName = "Medium"),
     High	UMETA(DisplayName = "High"),
@@ -37,8 +35,7 @@ enum class EFeedbackPriority : uint8
 /**
  * ???X????X */
 UENUM(BlueprintType)
-enum class EFeedbackStatus : uint8
-{
+enum class EFeedbackStatus: uint8 {
     New		UMETA(DisplayName = "New"),
     InProgress	UMETA(DisplayName = "In Progress"),
     Reviewed	UMETA(DisplayName = "Reviewed"),

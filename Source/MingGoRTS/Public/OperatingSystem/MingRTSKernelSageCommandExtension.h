@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -19,8 +19,7 @@ class UMingAntiFallSystem;
  * 至聖者指揮學系統調用類型
  */
 UENUM(BlueprintType)
-enum class ESageCommandSystemCall : uint8
-{
+enum class ESageCommandSystemCall: uint8 {
     // 角色系統調用
     CreateSageCharacter,       // 創建指揮者角色
     GetCharacterTraits,        // 獲取角色特性

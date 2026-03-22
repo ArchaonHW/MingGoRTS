@@ -11,8 +11,7 @@
  * Transaction priority levels
  */
 UENUM(BlueprintType)
-enum class ETransactionPriority : uint8
-{
+enum class ETransactionPriority: uint8 {
     Low       = 0,
     Medium    = 1,
     High      = 2,
@@ -24,8 +23,7 @@ enum class ETransactionPriority : uint8
  * Transaction fee types
  */
 UENUM(BlueprintType)
-enum class ETransactionFeeType : uint8
-{
+enum class ETransactionFeeType: uint8 {
     Standard   = 0,
     Fast       = 1,
     Instant    = 2,
@@ -511,34 +509,34 @@ private:
     TMap<FString, FTransactionStatistics> PlayerStatistics;
 
     /** Current transaction fee type */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Transaction|Configuration")
     ETransactionFeeType CurrentFeeType;
 
     /** Whether auto-retry is enabled */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Transaction|Configuration")
     bool bAutoRetryEnabled;
 
     /** Maximum retry attempts */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Transaction|Configuration")
     int32 MaxRetryAttempts;
 
     /** Default gas price */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Transaction|Configuration")
     float DefaultGasPrice;
 
     /** Maximum pending transactions */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Transaction|Configuration")
     int32 MaxPendingTransactions;
 
     /** Transaction timeout in seconds */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Transaction|Configuration")
     float TransactionTimeout;
 
     /** Time since last gas price update */
     float TimeSinceLastGasUpdate;
 
     /** Gas price update interval */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transaction|Configuration")
+    UPROPERTY(EditAnywhere, Category = "Transaction|Configuration")
     float GasUpdateInterval;
 
     /** Initialize transaction configuration */

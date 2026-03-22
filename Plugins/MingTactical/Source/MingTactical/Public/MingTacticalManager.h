@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -41,6 +41,7 @@ private:
     bool bIsInitialized;
     int32 ActiveUnitCount;
     
-    // 記憶體�X��X��?�?    bool bMemoryPoolInitialized;
+    // 記憶體�X��X��?�?
+    bool bMemoryPoolInitialized;
 };
 

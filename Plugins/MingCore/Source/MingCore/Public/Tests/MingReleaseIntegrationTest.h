@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
@@ -6,17 +6,22 @@
 #include "MingReleaseIntegrationTest.generated.h"
 
 UENUM(BlueprintType)
-enum class EReleaseTestCategory : uint8
-{
+enum class EReleaseTestCategory: uint8 {
     Epic1_RTSCombat,        // Epic 1.1: RTS X???t??
     Epic2_Economic,         // Epic 2.1: ?gX?t??
-    Epic3_AICampaign,       // Epic 3.1: AI X???tX    Epic4_UIAudio,          // Epic 4.1: UI X??X?tX    Epic5_Network,          // Epic 5.1: ???X?HX?tX    Epic6_SaveLoad,         // Epic 6.1: ?OX?tX    Epic7_Localization,     // Epic 7.1: X?aX?tX    Epic8_Performance,      // Epic 8.1: X??X???tX    Epic9_AIContentGen,     // Epic 9: AI X?eX?t??
-    Epic10_FourLayer,       // Epic 5: X?h????X?t??
-    SystemIntegration,      // X?t?£i?X    FinalValidation,  // X??X};
+    Epic3_AICampaign,       // Epic 3.1: AI X???tX
+    Epic4_UIAudio,          // Epic 4.1: UI X??X?tX
+    Epic5_Network,          // Epic 5.1: ???X?HX?tX
+    Epic6_SaveLoad,         // Epic 6.1: ?OX?tX
+    Epic7_Localization,     // Epic 7.1: X?aX?tX
+    Epic8_Performance,      // Epic 8.1: X??X???tX
+    Epic9_AIContentGen,     // Epic 9: AI X?eX?t??
+    Epic10_FourLayer,       // Epic 5: X?hæ‘§æ¯€X?t??
+    SystemIntegration,      // X?t?ï¿½i?X
+    FinalValidation,  // X??X};
 
 UENUM(BlueprintType)
-enum class EReleaseTestResult : uint8
-{
+enum class EReleaseTestResult: uint8 {
     NotRun,
     Passed,
     Failed,
@@ -59,12 +64,12 @@ struct FReleaseTestResult
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnReleaseTestCompleted, const FString&, TestName, const FReleaseTestResult&, Result};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReleaseTestSuiteCompleted, const TArray<FReleaseTestResult>&, AllResults};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEpicTestCompleted, int32, EpicNumber};
+
+
+
 
 /**
- * Release X??X??X????X * ????XEpic ?t??X??X */
+ * Release X??X??Xæ‘§æ¯€X * æ‘§æ¯€XEpic ?t??X??X */
 UCLASS()
 class MINGPERSONAL_API UMingReleaseIntegrationTest : public UGameInstanceSubsystem
 {
@@ -77,7 +82,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test")
     void InitializeReleaseTestSuite();
 
-    // ========== Epic 1: RTS X???t?£_??? ==========
+    // ========== Epic 1: RTS X???t?ï¿½_??? ==========
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 1")
     FReleaseTestResult TestEpic1_RTSUnitSelection();
 
@@ -90,7 +95,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 1")
     FReleaseTestResult TestEpic1_RTSAIController();
 
-    // ========== Epic 2: ?gX?t?£_??? ==========
+    // ========== Epic 2: ?gX?t?ï¿½_??? ==========
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 2")
     FReleaseTestResult TestEpic2_EconomicSystem();
 
@@ -100,7 +105,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 2")
     FReleaseTestResult TestEpic2_ResourceManager();
 
-    // ========== Epic 3: AI X???t?£_?X==========
+    // ========== Epic 3: AI X???t?ï¿½_?X==========
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 3")
     FReleaseTestResult TestEpic3_CampaignSystem();
 
@@ -110,7 +115,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 3")
     FReleaseTestResult TestEpic3_RelationshipSystem();
 
-    // ========== Epic 4: UI X??X?t?£_?X==========
+    // ========== Epic 4: UI X??X?t?ï¿½_?X==========
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 4")
     FReleaseTestResult TestEpic4_UIEnhancedSystem();
 
@@ -120,7 +125,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 4")
     FReleaseTestResult TestEpic4_RepublicEraAudio();
 
-    // ========== Epic 5: ???X?HX?t?£_?X==========
+    // ========== Epic 5: ???X?HX?t?ï¿½_?X==========
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 5")
     FReleaseTestResult TestEpic5_NetworkSystem();
 
@@ -130,7 +135,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 5")
     FReleaseTestResult TestEpic5_DataSynchronization();
 
-    // ========== Epic 6: ?OX?t?£_?X==========
+    // ========== Epic 6: ?OX?t?ï¿½_?X==========
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 6")
     FReleaseTestResult TestEpic6_SaveLoadSystem();
 
@@ -140,7 +145,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 6")
     FReleaseTestResult TestEpic6_CloudSave();
 
-    // ========== Epic 7: X?aX?t?£_?X==========
+    // ========== Epic 7: X?aX?t?ï¿½_?X==========
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 7")
     FReleaseTestResult TestEpic7_LocalizationSystem();
 
@@ -150,7 +155,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 7")
     FReleaseTestResult TestEpic7_MultiLanguageSupport();
 
-    // ========== Epic 8: X??X???t?£_?X==========
+    // ========== Epic 8: X??X???t?ï¿½_?X==========
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 8")
     FReleaseTestResult TestEpic8_PerformanceSystem();
 
@@ -160,7 +165,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 8")
     FReleaseTestResult TestEpic8_OptimizationModes();
 
-    // ========== Epic 9: AI X?eX?t?£_??? ==========
+    // ========== Epic 9: AI X?eX?t?ï¿½_??? ==========
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 9")
     FReleaseTestResult TestEpic9_AIContentGeneration();
 
@@ -170,7 +175,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 9")
     FReleaseTestResult TestEpic9_SceneAutoGeneration();
 
-    // ========== Epic 10: X?h????X?t?£_??? ==========
+    // ========== Epic 10: X?hæ‘§æ¯€X?t?ï¿½_??? ==========
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 10")
     FReleaseTestResult TestEpic10_FourLayerIntegration();
 
@@ -180,7 +185,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test | Epic 10")
     FReleaseTestResult TestEpic10_DataSynchronization();
 
-    // ========== X?t?£i?X??X==========
+    // ========== X?t?ï¿½i?X??X==========
     UFUNCTION(BlueprintCallable, Category = "Release Test | Integration")
     FReleaseTestResult TestFullSystemIntegration();
 
@@ -206,7 +211,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Release Test | Validation")
     FReleaseTestResult TestSecurityAndStability();
 
-    // ========== X????X ==========
+    // ========== Xæ‘§æ¯€X ==========
     UFUNCTION(BlueprintCallable, Category = "Release Test")
     void RunEpic1Tests();
 
@@ -275,7 +280,7 @@ public:
     bool IsReleaseReady() const;
 
     UFUNCTION(BlueprintCallable, Category = "Release Test")
-    void GenerateReleaseReport(const FString& FilePath};
+    void GenerateReleaseReport(const FString& FilePath);
 
     UFUNCTION(BlueprintCallable, Category = "Release Test")
     FString GetReleaseSummary() const;
@@ -304,14 +309,14 @@ protected:
     int32 CurrentEpicNumber;
 
     // ???UX??
-    void RecordResult(const FReleaseTestResult& Result};
-    FReleaseTestResult CreateSuccessResult(const FString& TestName, EReleaseTestCategory Category, int32 EpicNum, const FString& Message};
-    FReleaseTestResult CreateFailureResult(const FString& TestName, EReleaseTestCategory Category, int32 EpicNum, const FString& Message};
-    FReleaseTestResult CreateWarningResult(const FString& TestName, EReleaseTestCategory Category, int32 EpicNum, const FString& Message};
-    FReleaseTestResult CreateCriticalResult(const FString& TestName, EReleaseTestCategory Category, int32 EpicNum, const FString& Message};
+    void RecordResult(const FReleaseTestResult& Result);
+    FReleaseTestResult CreateSuccessResult(const FString& TestName, EReleaseTestCategory Category, int32 EpicNum, const FString& Message);
+    FReleaseTestResult CreateFailureResult(const FString& TestName, EReleaseTestCategory Category, int32 EpicNum, const FString& Message);
+    FReleaseTestResult CreateWarningResult(const FString& TestName, EReleaseTestCategory Category, int32 EpicNum, const FString& Message);
+    FReleaseTestResult CreateCriticalResult(const FString& TestName, EReleaseTestCategory Category, int32 EpicNum, const FString& Message);
 
 private:
-    void LogTestStart(const FString& TestName, int32 EpicNumber};
-    void LogTestEnd(const FString& TestName, EReleaseTestResult Result};
-};
+    void LogTestStart(const FString& TestName, int32 EpicNumber);
+    void LogTestEnd(const FString& TestName, EReleaseTestResult Result);
+);
 

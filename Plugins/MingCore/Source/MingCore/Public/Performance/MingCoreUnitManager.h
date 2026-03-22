@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,8 +8,7 @@
 #include "MingRTSUnitManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EUnitLODLevel : uint8
-{
+enum class EUnitLODLevel: uint8 {
 	LOD0,    // Full detail - close units
 	LOD1,    // Medium detail
 	LOD2,    // Low detail
@@ -18,8 +17,7 @@ enum class EUnitLODLevel : uint8
 };
 
 UENUM(BlueprintType)
-enum class EUnitPoolType : uint8
-{
+enum class EUnitPoolType: uint8 {
 	Infantry,
 	Cavalry,
 	Archer,

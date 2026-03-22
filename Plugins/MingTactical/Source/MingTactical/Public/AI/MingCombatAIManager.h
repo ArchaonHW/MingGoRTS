@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // AI X??X
 UENUM(BlueprintType)
-enum class EMingAIDifficulty : uint8
-{
+enum class EMingAIDifficulty: uint8 {
     Recruit,        // X?L
     Regular,        // ?`X
     Veteran,        // X?L
@@ -16,34 +15,37 @@ enum class EMingAIDifficulty : uint8
 };
 
 // AI ?`?IXUENUM(BlueprintType)
-enum class EMingAINodeResult : uint8
-{
-    Running,        // X    Success,        // X
+enum class EMingAINodeResult: uint8 {
+    Running,        // X
+    Success,        // X
     Failure         // ??X
 };
 
 // AI X??X?n
 UENUM(BlueprintType)
-enum class EMingStrategicPreference : uint8
-{
-    Aggressive,     // X    Defensive,      // X?mX    Balanced,       // ????X    Economic,       // ?gX    Diplomatic  //~X};
+enum class EMingStrategicPreference: uint8 {
+    Aggressive,     // X
+    Defensive,      // X?mX
+    Balanced,       // 摧毀X
+    Economic,       // ?gX
+    Diplomatic  //~X};
 
-// AI X????
+// AI X摧毀
 UENUM(BlueprintType)
-enum class EMingTacticalStyle : uint8
-{
+enum class EMingTacticalStyle: uint8 {
     DirectAssault,  // X??X
     Flanking,       // X?lX
-    Guerrilla,       // ??X    Siege,          // X??X    Mobile  //~X};
+    Guerrilla,       // ??X
+    Siege,          // X??X
+    Mobile  //~X};
 
-// ?x????X
+// ?x摧毀X
 UENUM(BlueprintType)
-enum class EMingWarlordType : uint8
-{
+enum class EMingWarlordType: uint8 {
     Northeastern,    // X?x??
     Northwestern,    // ??X?x??
     Southwestern,    // ??X?x??
-    Central,         // ?????x??
+    Central,         // 摧毀?x??
     Independent      // X?x??
 };
 
@@ -136,23 +138,28 @@ class MINGTACTICAL_API UMingCombatAIManager : public UObject
     GENERATED_BODY()
 
 public:
-    // ??X    UMingCombatAIManager();
+    // ??X
+    UMingCombatAIManager();
 
-    // XAI ??X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // XAI ??X
+    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void Initialize();
 
-    // AI X?s?D?`X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void UpdateCombatAI(float DeltaTime};
+    // AI X?s?D?`X
+    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    void UpdateCombatAI(float DeltaTime);
 
-    // ??X AI X??X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void RegisterAIController(class AController* AIController};
+    // ??X AI X??X
+    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    void RegisterAIController(class AController* AIController);
 
-    // ???? AI X??X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void UnregisterAIController(class AController* AIController};
+    // 摧毀 AI X??X
+    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    void UnregisterAIController(class AController* AIController);
 
     // ?]?mX AI X
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void SetAIDifficulty(EMingAIDifficulty Difficulty};
+    void SetAIDifficulty(EMingAIDifficulty Difficulty);
 
     // X AI X?]?m
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
@@ -175,7 +182,8 @@ public:
     void ResetAllAI();
 
 protected:
-    // AI X??X    TArray<TWeakObjectPtr<class AController>> AIControllers;
+    // AI X??X
+    TArray<TWeakObjectPtr<class AController>> AIControllers;
 
     // AI X?sX
     float AIUpdateInterval;
@@ -192,7 +200,8 @@ protected:
     // X?]?mX
     TMap<EMingAIDifficulty, FMingAIDifficultySettings> DifficultySettings;
 
-    // X????]X    void InitializeDifficultySettings();
+    // X摧毀]X
+    void InitializeDifficultySettings();
 
     // X?s??X?H??
     void UpdateStatistics();

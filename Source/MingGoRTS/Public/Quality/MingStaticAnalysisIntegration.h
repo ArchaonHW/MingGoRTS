@@ -19,7 +19,7 @@ enum class EAnalysisIssueSeverity : uint8
     Security, UMETA(DisplayName = "Security Issue"),
     Performance, UMETA(DisplayName = "Performance Issue"),
     Style, UMETA(DisplayName = "Style Issue"),
-    Portability, UMETA(DisplayName = "Portability Issue")
+    Portability UMETA(DisplayName = "Portability Issue")
 };
 
 UENUM(BlueprintType)
@@ -44,7 +44,7 @@ enum class EAnalysisStatus : uint8
     Running, UMETA(DisplayName = "Running"),
     Completed, UMETA(DisplayName = "Completed"),
     Failed, UMETA(DisplayName = "Failed"),
-    Cancelled UMETA(DisplayName = "Cancelled")
+    Cancelled, UMETA(DisplayName = "Cancelled")
 };
 
 USTRUCT(BlueprintType)
@@ -440,3 +440,4 @@ protected:
     void LogAnalysisActivity(const FString& Activity);
     static UMingStaticAnalysisIntegration* Get(UObject* WorldContextObject);
 };
+

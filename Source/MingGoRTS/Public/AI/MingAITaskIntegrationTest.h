@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingAITaskIntegrationTest.generated.h"
 
 UENUM(BlueprintType)
-enum class ETestResult : uint8
-{
+enum class ETestResult: uint8 {
     NotRun,
     Passed,
     Failed,

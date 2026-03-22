@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
@@ -21,7 +21,8 @@ class MINGSTRATEGIC_API IMingGameLayer
     GENERATED_BODY()
 
 public:
-    // ?��X�層�?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
+    // ?��X�層�?
+    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     void InitializeLayer();
 
     // ?�新層�?
@@ -36,7 +37,8 @@ public:
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     FString GetLayerName() const;
 
-    // ?��?層�X��?�?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
+    // ?��?層�X��?�?
+    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     float GetLayerPriority() const;
 
     // ?��?層�?事件
@@ -47,14 +49,16 @@ public:
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     void HandleLayerDecision(const FMingGameDecision& Decision);
 
-    // ?��?層�?資�X��?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
+    // ?��?層�?資�X��?
+    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     TMap<EMingResourceType, float> GetResourceRequirements() const;
 
     // ?��?層�?資�X��?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     TMap<EMingResourceType, float> GetResourceContributions() const;
 
-    // ?��?層�X�X    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
+    // ?��?層�X�X
+    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     FString GetLayerStatus() const;
 
     // 檢查層�?衝�?
@@ -65,7 +69,8 @@ public:
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     void ResolveLayerConflicts(const TArray<FMingLayerConflict>& Conflicts);
 
-    // ?�調?�其他層�?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
+    // ?�調?�其他層�?
+    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     void CoordinateWithOtherLayers(const TArray<EMingGameLayer>& OtherLayers);
 
     // ?��?層�X�能統�?

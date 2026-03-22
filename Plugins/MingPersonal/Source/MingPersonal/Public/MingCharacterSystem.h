@@ -1,12 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingCharacterSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingCharacterRole : uint8
-{
+enum class EMingCharacterRole: uint8 {
     Leader UMETA(DisplayName = "Leader"),
     Commander UMETA(DisplayName = "Commander"),
     Diplomat UMETA(DisplayName = "Diplomat"),
@@ -18,8 +17,7 @@ enum class EMingCharacterRole : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingPersonalSkillType : uint8
-{
+enum class EMingPersonalSkillType: uint8 {
     Leadership UMETA(DisplayName = "Leadership"),
     Military UMETA(DisplayName = "Military"),
     Diplomacy UMETA(DisplayName = "Diplomacy"),
@@ -280,8 +278,8 @@ public:
     TArray<FString> GetCharacterEvents(const FString& CharacterID) const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterRecruited, const FMingHistoricalCharacter&, Character, const FString&, Role};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelUp, const FString&, CharacterID, const FMingCharacterSkill&, Skill};
+    
+    
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterPromoted, const FString&, CharacterID, int32, NewLevel);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTraitDeveloped, const FString&, CharacterID, const FString&, TraitID);
 
@@ -314,11 +312,11 @@ protected:
     UPROPERTY()
     TMap<FString, FMingHistoricalCharacter> Characters;
 
-    // ??¡GTMap ¤£¯àX??XTMap XUPROPERTY X    // TMap<FString, TMap<FString, float>> CharacterRelationships;
+    // ??ï¿½GTMap ï¿½ï¿½ï¿½ï¿½X??XTMap XUPROPERTY X    // TMap<FString, TMap<FString, float>> CharacterRelationships;
 
-    // ??¡GTArray ¤£¯àX??XTMap XUPROPERTY X    // TMap<FString, TArray<FString>> CharacterEffects;
+    // ??ï¿½GTArray ï¿½ï¿½ï¿½ï¿½X??XTMap XUPROPERTY X    // TMap<FString, TArray<FString>> CharacterEffects;
 
-    // ??¡GTArray ¤£¯àX??XTMap XUPROPERTY X    // TMap<FString, TArray<FString>> HistoricalEvents;
+    // ??ï¿½GTArray ï¿½ï¿½ï¿½ï¿½X??XTMap XUPROPERTY X    // TMap<FString, TArray<FString>> HistoricalEvents;
 
     UPROPERTY()
     TWeakObjectPtr<UWorld> WorldContext;
@@ -332,15 +330,15 @@ protected:
     // Skill Management
     void ProcessSkillExperience(FMingCharacterSkill& Skill, int32 Experience);
     bool CanLevelUpSkill(const FMingCharacterSkill& Skill) const;
-    void ApplySkillEffects(const FString& CharacterID, const FMingCharacterSkill& Skill};
+    void ApplySkillEffects(const FString& CharacterID, const FMingCharacterSkill& Skill);
 
     // Internal Functions
-    void UpdateCharacterStats(const FString& CharacterID};
-    void CheckSkillPrerequisites(const FString& CharacterID, const FString& SkillID};
-    void ProcessTraitEffects(const FString& CharacterID, const FMingCharacterTrait& Trait};
+    void UpdateCharacterStats(const FString& CharacterID);
+    void CheckSkillPrerequisites(const FString& CharacterID, const FString& SkillID);
+    void ProcessTraitEffects(const FString& CharacterID, const FMingCharacterTrait& Trait);
 
     // Helpers
-    FMingHistoricalCharacter* FindCharacter(const FString& CharacterID};
-    FMingCharacterSkill* FindCharacterSkill(const FString& CharacterID, EMingSkillType SkillType};
+    FMingHistoricalCharacter* FindCharacter(const FString& CharacterID);
+    FMingCharacterSkill* FindCharacterSkill(const FString& CharacterID, EMingSkillType SkillType);
 );
 

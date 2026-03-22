@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -13,8 +13,7 @@
 #include "MingRTSSaveLoadEnhancedSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class ESaveDataType : uint8
-{
+enum class ESaveDataType: uint8 {
     GameState      UMETA(DisplayName = "Game State"),
     PlayerData     UMETA(DisplayName = "Player Data"),
     WorldData      UMETA(DisplayName = "World Data"),
@@ -29,8 +28,7 @@ enum class ESaveDataType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESaveFormat : uint8
-{
+enum class ESaveFormat: uint8 {
     Binary         UMETA(DisplayName = "Binary"),
     JSON           UMETA(DisplayName = "JSON"),
     XML            UMETA(DisplayName = "XML"),
@@ -44,8 +42,7 @@ enum class ESaveFormat : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESaveLocation : uint8
-{
+enum class ESaveLocation: uint8 {
     Local          UMETA(DisplayName = "Local"),
     Cloud          UMETA(DisplayName = "Cloud"),
     Network        UMETA(DisplayName = "Network"),
@@ -59,8 +56,7 @@ enum class ESaveLocation : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESaveStatus : uint8
-{
+enum class ESaveStatus: uint8 {
     None           UMETA(DisplayName = "None"),
     Saving         UMETA(DisplayName = "Saving"),
     Loading        UMETA(DisplayName = "Loading"),
@@ -74,8 +70,7 @@ enum class ESaveStatus : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESavePriority : uint8
-{
+enum class ESavePriority: uint8 {
     Low            UMETA(DisplayName = "Low"),
     Medium         UMETA(DisplayName = "Medium"),
     High           UMETA(DisplayName = "High"),
@@ -288,18 +283,18 @@ struct FSaveOperation
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSaveStarted, const FString&, SaveID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSaveProgress, const FString&, SaveID, float, Progress};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSaveCompleted, const FString&, SaveID, bool, bSuccess};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLoadStarted, const FString&, SaveID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLoadProgress, const FString&, SaveID, float, Progress};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLoadCompleted, const FString&, SaveID, bool, bSuccess};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSaveSlotCreated, const FSaveSlot&, SaveSlot};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSaveSlotDeleted, const FString&, SlotID};
+
+
+
+
+
+
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAutoSaveTriggered, const FString&, Reason);
 
 /**
- * MingGoRTS ¼W±j«O?X??X?¨t?? * ???X?À¸???X???¦s¡B?X?¡B??¥÷¡B«ì´_?X?¯à
+ * MingGoRTS ï¿½Wï¿½jï¿½O?X??X?ï¿½t?? * ???X?ï¿½ï¿½ç›®æ¨™æ•¸é‡ï¿½sï¿½B?X?ï¿½B??ï¿½ï¿½ï¿½Bï¿½ï¿½_?X?ï¿½ï¿½
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = "MingRTS")
 class MINGPERSONAL_API UMingRTSSaveLoadEnhancedSystem : public UObject
@@ -309,116 +304,124 @@ class MINGPERSONAL_API UMingRTSSaveLoadEnhancedSystem : public UObject
 public:
     UMingRTSSaveLoadEnhancedSystem();
 
-    // ???X???±j??¦s?X?¨t??    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ç›®æ¨™æ•¸é‡ï¿½j??ï¿½s?X?ï¿½t??
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void InitializeSaveLoadEnhancedSystem(UWorld* World);
 
-    // ??·s¼W±j«O??¸ü¤J¨t²Î¡]??´V½Õ¥Î??    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ??ï¿½sï¿½Wï¿½jï¿½O??ï¿½ï¿½ï¿½Jï¿½tï¿½Î¡]??ï¿½Vï¿½Õ¥ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void UpdateSaveLoadEnhancedSystem(float DeltaTime);
 
-    // «O?X?À¸????
+    // ï¿½O?X?ï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FString SaveGameData(const FString& SaveName, ESaveDataType DataType, const TArray<uint8>& Data, ESaveFormat Format = ESaveFormat::Binary);
 
-    // ¸ü¤J??À¸????
+    // ï¿½ï¿½ï¿½J??ï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool LoadGameData(const FString& SaveID, TArray<uint8>& OutData);
 
-    // «O?X?¼Ñ??    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ï¿½O?X?ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool SaveToSlot(const FString& SlotName, const FString& Description, const FString& ThumbnailPath = TEXT("")};
 
-    // ±q¼Ñ¦ì?X    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ï¿½qï¿½Ñ¦ï¿½?X
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool LoadFromSlot(const FString& SlotID);
 
-    // ??«Ø«O??¼Ñ??
+    // ??ï¿½Ø«O??ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FString CreateSaveSlot(const FString& SlotName, const FString& Description, int32 MaxSaves = 10);
 
-    // ??°£«O??¼Ñ??
+    // ??ï¿½ï¿½ï¿½O??ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool DeleteSaveSlot(const FString& SlotID);
 
-    // ????«O??¼Ñ??
+    // æ‘§æ¯€ï¿½O??ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FSaveSlot GetSaveSlot(const FString& SlotID) const;
 
-    // ???X?????¦s¼Ñ??    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ç›®æ¨™æ•¸é‡??ï¿½sï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<FSaveSlot> GetAllSaveSlots() const;
 
-    // ????«O?X???
+    // æ‘§æ¯€ï¿½O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FSaveGameData GetSaveGameData(const FString& SaveID) const;
 
-    // ????«O??
+    // æ‘§æ¯€ï¿½O??
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void AutoSave(const FString& Reason = TEXT("AutoSave")};
 
-    // ³]¸m????«O?X???
+    // ï¿½]ï¿½mæ‘§æ¯€ï¿½O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void SetAutoSaveInterval(float Interval);
 
-    // ??¥÷«O?X???
+    // ??ï¿½ï¿½ï¿½O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool BackupSaveData(const FString& SaveID, const FString& BackupLocation = TEXT("")};
 
-    // ??´_??¥÷????
+    // ??ï¿½_??ï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool RestoreBackup(const FString& BackupID);
 
-    // Åç??«O?X???
+    // ï¿½ï¿½??ï¿½O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool ValidateSaveData(const FString& SaveID);
 
-    // ­×´_???X???¦s¼ÆX    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ï¿½×´_ç›®æ¨™æ•¸é‡ï¿½sï¿½ï¿½X
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool RepairSaveData(const FString& SaveID);
 
-    // À£ÁY«O?X???
+    // ï¿½ï¿½ï¿½Yï¿½O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool CompressSaveData(const FString& SaveID);
 
-    // ?XÁY??¦s¼ÆX    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ?Xï¿½Y??ï¿½sï¿½ï¿½X
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool DecompressSaveData(const FString& SaveID);
 
-    // ????«O?X???
+    // æ‘§æ¯€ï¿½O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool EncryptSaveData(const FString& SaveID, const FString& EncryptionKey);
 
-    // ?X«O?X???
+    // ?Xï¿½O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool DecryptSaveData(const FString& SaveID, const FString& EncryptionKey);
 
-    // ¾É¥X«O?X???
+    // ï¿½É¥Xï¿½O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool ExportSaveData(const FString& SaveID, const FString& ExportPath, ESaveFormat Format = ESaveFormat::JSON);
 
-    // ¾É¤J«O?X???
+    // ï¿½É¤Jï¿½O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool ImportSaveData(const FString& ImportPath, ESaveFormat Format = ESaveFormat::JSON);
 
-    // ????«O??²Î??
+    // æ‘§æ¯€ï¿½O??ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TMap<FString, float> GetSaveStatistics() const;
 
-    // ²M?X???«O?X???
+    // ï¿½M?X???ï¿½O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void CleanupOldSaveData(float MaxAge = 30.0f);
 
-    // ????«O?X?¯à
+    // æ‘§æ¯€ï¿½O?X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void OptimizeSavePerformance();
 
-    // ³]¸m«O?X?????    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ï¿½]ï¿½mï¿½O?Xæ‘§æ¯€?
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void SetSavePriority(const FString& SaveID, ESavePriority Priority);
 
-    // ????«O??
+    // æ‘§æ¯€ï¿½O??
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void BatchSave(const TArray<FString>& SaveIDs);
 
-    // ????¸ü¤J
+    // æ‘§æ¯€ï¿½ï¿½ï¿½J
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void BatchLoad(const TArray<FString>& SaveIDs);
 
 public:
-    // ¨Æ¥ó©e??
+    // ï¿½Æ¥ï¿½e??
     UPROPERTY(BlueprintAssignable, Category = "Save Load Enhanced System Events")
     FOnSaveStarted OnSaveStarted;
 
@@ -447,43 +450,47 @@ public:
     FOnAutoSaveTriggered OnAutoSaveTriggered;
 
 protected:
-    // ????«O?X???
+    // æ‘§æ¯€ï¿½O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void ProcessSaveOperations(float DeltaTime);
 
-    // ????¸ü¤J????
+    // æ‘§æ¯€ï¿½ï¿½ï¿½Jæ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void ProcessLoadOperations(float DeltaTime);
 
-    // ???X???«O??
+    // ç›®æ¨™æ•¸é‡ï¿½O??
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void ProcessAutoSave(float DeltaTime);
 
-    // ???X?¥÷????
+    // ???X?ï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void ProcessBackupOperations(float DeltaTime);
 
-    // Åç??«O??§¹¾ãX    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ï¿½ï¿½??ï¿½O??ï¿½ï¿½ï¿½ï¿½X
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool ValidateSaveIntegrity(const FSaveGameData& SaveData) const;
 
-    // ­p?X??X    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ï¿½p?X??X
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FString CalculateChecksum(const TArray<uint8>& Data) const;
 
-    // §Ç?X?¼ÆX    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ï¿½ï¿½?X?ï¿½ï¿½X
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<uint8> SerializeData(const TMap<FString, FString>& Data, ESaveFormat Format) const;
 
-    // ???X??X???
+    // æ•…äº‹é¸é …?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TMap<FString, FString> DeserializeData(const TArray<uint8>& Data, ESaveFormat Format) const;
 
-    // À£ÁY????
+    // ï¿½ï¿½ï¿½Yæ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<uint8> CompressData(const TArray<uint8>& Data) const;
 
-    // ?XÁY¼ÆX    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ?Xï¿½Yï¿½ï¿½X
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<uint8> DecompressData(const TArray<uint8>& Data) const;
 
-    // ???X???
+    // ç›®æ¨™æ•¸é‡
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<uint8> EncryptData(const TArray<uint8>& Data, const FString& Key) const;
 
@@ -491,150 +498,155 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<uint8> DecryptData(const TArray<uint8>& Data, const FString& Key) const;
 
-    // ????ÁY²¤X    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // æ‘§æ¯€ï¿½Yï¿½ï¿½X
+    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FString GenerateThumbnail(const FString& SlotID) const;
 
-    // ????«O??¸ô??
+    // æ‘§æ¯€ï¿½O??ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FString GetSavePath(ESaveLocation Location, const FString& FileName) const;
 
-    // ??«Ø«O?X???
+    // ??ï¿½Ø«O?X???
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool CreateSaveDirectory(const FString& Path) const;
 
 protected:
-    // ????¥@??¤Ş¥Î
+    // æ‘§æ¯€ï¿½@??ï¿½Ş¥ï¿½
     UPROPERTY()
     TObjectPtr<UWorld> CurrentWorld;
 
-    // «O?X??X???
+    // ï¿½O?X??X???
     UPROPERTY()
     TMap<FString, FSaveGameData> SaveGameData;
 
-    // «O??¼Ñ?X???
+    // ï¿½O??ï¿½ï¿½?X???
     UPROPERTY()
     TMap<FString, FSaveSlot> SaveSlots;
 
-    // «O?X??X???
+    // ï¿½O?X??X???
     UPROPERTY()
     TMap<FString, FSaveOperation> SaveOperations;
 
-    // ????¼Ñ??ID
+    // æ‘§æ¯€ï¿½ï¿½??ID
     UPROPERTY()
     FString CurrentSlotID;
 
-    // «O?X?·s????
+    // ï¿½O?X?ï¿½sæ‘§æ¯€
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     float SaveUpdateInterval;
 
-    // ¤W¦¸«O?X?·s????
+    // ï¿½Wï¿½ï¿½ï¿½O?X?ï¿½sæ‘§æ¯€
     UPROPERTY()
     float LastSaveUpdateTime;
 
-    // ????«O?X???
+    // æ‘§æ¯€ï¿½O?X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     float AutoSaveInterval;
 
-    // ¤W¦¸????«O?X???
+    // ï¿½Wï¿½ï¿½æ‘§æ¯€ï¿½O?X???
     UPROPERTY()
     float LastAutoSaveTime;
 
-    // ??¤j??¦s¼ÆX    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
+    // ??ï¿½j??ï¿½sï¿½ï¿½X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     int32 MaxSaveCount;
 
-    // ??¤j¼Ñ¦ì¼ÆX    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
+    // ??ï¿½jï¿½Ñ¦ï¿½ï¿½X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     int32 MaxSlotCount;
 
-    // Àq??«O?X???
+    // ï¿½q??ï¿½O?X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     ESaveFormat DefaultFormat;
 
-    // Àq??«O??¦ì¸m
+    // ï¿½q??ï¿½O??ï¿½ï¿½m
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     ESaveLocation DefaultLocation;
 
-    // ??§_??¥Î????«O??
+    // ??ï¿½_??ï¿½ï¿½æ‘§æ¯€ï¿½O??
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     bool bAutoSaveEnabled;
 
-    // ??§_??¥ÎÀ£ÁY
+    // ??ï¿½_??ï¿½ï¿½ï¿½ï¿½ï¿½Y
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     bool bCompressionEnabled;
 
-    // ??§_??¥Î????
+    // ??ï¿½_??ï¿½ï¿½æ‘§æ¯€
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     bool bEncryptionEnabled;
 
 private:
-    // ????«O?X??X?ºÙ
+    // æ‘§æ¯€ï¿½O?X??X?ï¿½ï¿½
     FString GetSaveDataName(ESaveDataType DataType) const;
 
-    // ????«O?X??X?ºÙ
+    // æ‘§æ¯€ï¿½O?X??X?ï¿½ï¿½
     FString GetSaveFormatName(ESaveFormat Format) const;
 
-    // ????«O??¦ì¸m??ºÙ
+    // æ‘§æ¯€ï¿½O??ï¿½ï¿½m??ï¿½ï¿½
     FString GetSaveLocationName(ESaveLocation Location) const;
 
-    // ???X???ID
+    // ç›®æ¨™æ•¸é‡ID
     FString GenerateUniqueID(const FString& Prefix) const;
 
-    // Åç??«O?X???
+    // ï¿½ï¿½??ï¿½O?X???
     bool ValidateSaveData(const FSaveGameData& SaveData) const;
 
-    // Åç??«O??¼Ñ??
+    // ï¿½ï¿½??ï¿½O??ï¿½ï¿½??
     bool ValidateSaveSlot(const FSaveSlot& SaveSlot) const;
 
-    // ????«O?X?»~
-    void HandleSaveError(const FString& OperationID, const FString& ErrorMessage};
+    // æ‘§æ¯€ï¿½O?X?ï¿½~
+    void HandleSaveError(const FString& OperationID, const FString& ErrorMessage);
 
-    // ????¸ü¤J??»~
-    void HandleLoadError(const FString& OperationID, const FString& ErrorMessage};
+    // æ‘§æ¯€ï¿½ï¿½ï¿½J??ï¿½~
+    void HandleLoadError(const FString& OperationID, const FString& ErrorMessage);
 
-    // ²M?X???«O?X???
+    // ï¿½M?X???ï¿½O?X???
     void CleanupInvalidSaveData();
 
-    // ²M?X???«O??¼Ñ??
+    // ï¿½M?X???ï¿½O??ï¿½ï¿½??
     void CleanupInvalidSaveSlots();
 
-    // ????«O?X???¼ÒªO
+    // æ‘§æ¯€ï¿½O?X???ï¿½ÒªO
     FSaveGameData GetSaveDataTemplate() const;
 
-    // ????«O??¼Ñ??¼ÒªO
+    // æ‘§æ¯€ï¿½O??ï¿½ï¿½??ï¿½ÒªO
     FSaveSlot GetSaveSlotTemplate() const;
 
-    // ????«O?X???¼ÒªO
+    // æ‘§æ¯€ï¿½O?X???ï¿½ÒªO
     FSaveOperation GetSaveOperationTemplate() const;
 
-    // °O??«O??²Î??
+    // ï¿½O??ï¿½O??ï¿½ï¿½??
     void RecordSaveStatistics();
 
-    // ??´ú«O??­t??
+    // ??ï¿½ï¿½ï¿½O??ï¿½t??
     float PredictSaveLoad() const;
 
-    // ¥­¿Å«O??­t??
+    // ï¿½ï¿½ï¿½Å«O??ï¿½t??
     void BalanceSaveLoad();
 
-    // ????«O??½Ä??
+    // æ‘§æ¯€ï¿½O??ï¿½ï¿½??
     void ResolveSaveConflicts();
 
-    // ????«O?X?¯à
+    // æ‘§æ¯€ï¿½O?X?ï¿½ï¿½
     void OptimizeSavePerformance();
 
-    // ???X??X?À¸??X    TMap<FString, FString> GetCurrentGameState() const;
+    // æ•…äº‹é‡è¦æ€§?ï¿½ï¿½??X
+    TMap<FString, FString> GetCurrentGameState() const;
 
-    // ³]¸m??À¸??X    void SetGameState(const TMap<FString, FString>& GameState);
+    // ï¿½]ï¿½m??ï¿½ï¿½??X
+    void SetGameState(const TMap<FString, FString>& GameState);
 
-    // ???X??X?®a????
+    // æ•…äº‹é‡è¦æ€§?ï¿½aæ‘§æ¯€
     TMap<FString, FString> GetCurrentPlayerData() const;
 
-    // ³]¸m??®a????
+    // ï¿½]ï¿½m??ï¿½aæ‘§æ¯€
     void SetPlayerData(const TMap<FString, FString>& PlayerData);
 
-    // ???X???¥@?X???
+    // ç›®æ¨™æ•¸é‡ï¿½@?X???
     TMap<FString, FString> GetCurrentWorldData() const;
 
-    // ³]¸m¥@?X???
-    void SetWorldData(const TMap<FString, FString>& WorldData};
+    // ï¿½]ï¿½mï¿½@?X???
+    void SetWorldData(const TMap<FString, FString>& WorldData);
 );
 
 #endif // MINGRTSSAVELOADENHANCEDSYSTEM_H

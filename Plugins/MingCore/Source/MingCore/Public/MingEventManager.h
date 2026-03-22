@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingEventManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingGameEventType : uint8
-{
+enum class EMingGameEventType: uint8 {
     // Combat Events
     UnitSpawned UMETA(DisplayName = "Unit Spawned"),
     UnitKilled UMETA(DisplayName = "Unit Killed"),

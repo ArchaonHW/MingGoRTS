@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -9,8 +9,7 @@
 #include "MingGoRTSAIMusicGenerator.generated.h"
 
 UENUM(BlueprintType)
-enum class EMusicGenerationStatus : uint8
-{
+enum class EMusicGenerationStatus: uint8 {
     Idle,
     Generating,
     Rendering,
@@ -19,26 +18,27 @@ enum class EMusicGenerationStatus : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMusicStyle : uint8
-{
-    Orchestral,        // ºÞ©¶??    TraditionalChinese, // ¤¤?X?²Î????
-    Military,          // ­x?X???
+enum class EMusicStyle: uint8 {
+    Orchestral,        // ï¿½Þ©ï¿½??
+    TraditionalChinese, // ï¿½ï¿½?X?ï¿½ï¿½????
+    Military,          // ï¿½x?X???
     Ambient,           // ???X???
-    Battle,            // ??°«????
-    Cinematic,         // ??¼v????
-    Victory,           // ??§Q????
+    Battle,            // ??ï¿½ï¿½????
+    Cinematic,         // ??ï¿½v????
+    Victory,           // ??ï¿½Q????
     Suspense           // ???X???
 };
 
 UENUM(BlueprintType)
-enum class ESoundEffectType : uint8
-{
-    Explosion,         // ??¬µ
-    Gunshot,           // ºjÁn
+enum class ESoundEffectType: uint8 {
+    Explosion,         // ??ï¿½ï¿½
+    Gunshot,           // ï¿½jï¿½n
     SwordClash,        // ????
-    Footsteps,         // ??¨BX    Vehicle,           // ¸ü¨ãX    Nature,            // ??µM????
-    Interface,         // ??­±????
-    Voice              // »y­µ
+    Footsteps,         // ??ï¿½BX
+    Vehicle,           // ï¿½ï¿½ï¿½ï¿½X
+    Nature,            // ??ï¿½M????
+    Interface,         // ??ï¿½ï¿½????
+    Voice              // ï¿½yï¿½ï¿½
 };
 
 USTRUCT(BlueprintType)
@@ -113,12 +113,12 @@ class MINGGORTS_API UMingGoRTSAIMusicGenerator : public UObject
 public:
     UMingGoRTSAIMusicGenerator();
 
-    // ¥D?X??X??X?¯à
+    // ï¿½D?X??X??X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void GenerateMusic(const FMusicGenerationParameters& Parameters};
+    void GenerateMusic(const FMusicGenerationParameters& Parameters);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void GenerateSoundEffect(const FSoundEffectParameters& Parameters};
+    void GenerateSoundEffect(const FSoundEffectParameters& Parameters);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void StartMusicGeneration();
@@ -131,16 +131,17 @@ public:
 
     // AIVA API ????
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void SetAIVAAPI(const FString& APIEndpoint, const FString& APIKey};
+    void SetAIVAAPI(const FString& APIEndpoint, const FString& APIKey);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     bool TestAIVAConnection();
 
-    // ????®wºÞX    UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void AddToMusicLibrary(USoundWave* Music, const FString& MusicName};
+    // ????ï¿½wï¿½ï¿½X
+    UFUNCTION(BlueprintCallable, Category = "AI Music")
+    void AddToMusicLibrary(USoundWave* Music, const FString& MusicName);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    USoundWave* GetMusicFromLibrary(const FString& MusicName};
+    USoundWave* GetMusicFromLibrary(const FString& MusicName);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     TArray<FString> GetMusicLibraryNames() const;
@@ -148,7 +149,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void ClearMusicLibrary();
 
-    // ???X?©ñ??¨î
+    // ???X?ï¿½ï¿½??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void PlayGeneratedMusic();
 
@@ -159,26 +160,26 @@ public:
     void PauseMusic();
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void SetMusicVolume(float Volume};
+    void SetMusicVolume(float Volume);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     bool IsMusicPlaying() const;
 
-    // ???X?©ñ
+    // ???X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void PlaySoundEffect(USoundWave* SoundEffect, const FVector& Location = FVector::ZeroVector};
+    void PlaySoundEffect(USoundWave* SoundEffect, const FVector& Location = FVector::ZeroVector);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void PlaySoundEffect2D(USoundWave* SoundEffect};
+    void PlaySoundEffect2D(USoundWave* SoundEffect);
 
     // ???X???
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void GenerateMusicPack(const TArray<FMusicGenerationParameters>& MusicParameters};
+    void GenerateMusicPack(const TArray<FMusicGenerationParameters>& MusicParameters);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void GenerateSoundEffectPack(const TArray<FSoundEffectParameters>& SFXParameters};
+    void GenerateSoundEffectPack(const TArray<FSoundEffectParameters>& SFXParameters);
 
-    // ??³]­·®æ
+    // ??ï¿½]ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     FMusicGenerationParameters GetRepublicanEraStyle();
 
@@ -188,7 +189,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     FMusicGenerationParameters GetAmbientStyle();
 
-    // ©e??¨Æ¥ó
+    // ï¿½e??ï¿½Æ¥ï¿½
     UPROPERTY(BlueprintAssignable, Category = "AI Music")
     FOnMusicGenerated OnMusicGenerated;
 
@@ -230,12 +231,12 @@ protected:
 private:
     void ProcessMusicGeneration();
     void ProcessSoundEffectGeneration();
-    bool OnGenerationTick(float DeltaTime};
-    void SendAIVARequest(const FMusicGenerationParameters& Parameters};
-    void HandleAIVAResponse(bool bSuccess, const FString& ResponseData};
-    FString BuildMusicPrompt(const FMusicGenerationParameters& Parameters};
-    FString BuildSFXPrompt(const FSoundEffectParameters& Parameters};
-    USoundWave* CreateSoundWaveFromAudioData(const TArray<uint8>& AudioData};
+    bool OnGenerationTick(float DeltaTime);
+    void SendAIVARequest(const FMusicGenerationParameters& Parameters);
+    void HandleAIVAResponse(bool bSuccess, const FString& ResponseData);
+    FString BuildMusicPrompt(const FMusicGenerationParameters& Parameters);
+    FString BuildSFXPrompt(const FSoundEffectParameters& Parameters);
+    USoundWave* CreateSoundWaveFromAudioData(const TArray<uint8>& AudioData);
     void NotifyGenerationCompleted(bool bSuccess, const FString& ErrorMessage = FString()};
     void InitializeAudioComponent();
 };

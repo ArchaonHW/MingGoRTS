@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,7 +6,7 @@
 #include "MingPlatformManager.generated.h"
 
 /**
- * ¥­¥xºŞ?X * ­t³dºŞ?X???½Õ¥­??¾A??¾¹
+ * ï¿½ï¿½ï¿½xï¿½ï¿½?X * ï¿½tï¿½dï¿½ï¿½?X???ï¿½Õ¥ï¿½??ï¿½A??ï¿½ï¿½
  */
 UCLASS()
 class MINGCORE_API UMingPlatformManager : public UObject
@@ -16,7 +16,7 @@ class MINGCORE_API UMingPlatformManager : public UObject
 public:
     UMingPlatformManager();
 
-    // ???X?¥­??ºŞ??¾¹
+    // ???X?ï¿½ï¿½??ï¿½ï¿½??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Platform")
     void Initialize();
 
@@ -26,15 +26,15 @@ public:
     
     TScriptInterface<IPlatformInterface> GetCurrentPlatform() const;
 
-    // ???X???¥­¥xÃş??
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½ï¿½xï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Platform")
     EPlatformType GetCurrentPlatformType() const;
 
-    // ???X???¥­¥x????
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½ï¿½xæ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Platform")
     FPlatformCapabilities GetPlatformCapabilities() const;
 
-    // ????«Ì??DPI
+    // æ‘§æ¯€ï¿½ï¿½??DPI
     UFUNCTION(BlueprintCallable, Category = "Platform")
     float GetScreenDPI() const;
 
@@ -44,26 +44,27 @@ public:
     
     bool IsTouchDevice() const;
 
-    // ³]¸m??¯à¼Ò??
+    // ï¿½]ï¿½m??ï¿½ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Platform")
-    void SetPerformanceMode(int32 Mode};
+    void SetPerformanceMode(int32 Mode);
 
-    // ???X??X???
+    // æ•…äº‹é¸é …?
     UFUNCTION(BlueprintCallable, Category = "Platform")
     float GetBatteryLevel() const;
 
     
-    void ShowPlatformDialog(const FString& Title, const FString& Message};
+    void ShowPlatformDialog(const FString& Title, const FString& Message);
 
-    // ??¨É??®e
+    // ??ï¿½ï¿½??ï¿½e
     UFUNCTION(BlueprintCallable, Category = "Platform")
-    void ShareContent(const FString& Content};
+    void ShareContent(const FString& Content);
 
-    // ½Ğ?X?¥Îµû??
+    // ï¿½ï¿½?X?ï¿½Îµï¿½??
     UFUNCTION(BlueprintCallable, Category = "Platform")
     void RequestAppRating();
 
-    // ???X???¹ê??¡]¤è«K¥ş§½³X????    static UMingPlatformManager* Get();
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½??ï¿½]ï¿½ï¿½Kï¿½ï¿½ï¿½ï¿½ï¿½Xæ‘§æ¯€
+    static UMingPlatformManager* Get();
 
 private:
     bool bInitialized;
@@ -71,9 +72,10 @@ private:
     
     TObjectPtr<UObject> CurrentPlatformAdapter;
     
-    // ????¹ê??
+    // æ‘§æ¯€ï¿½ï¿½??
     static UMingPlatformManager* Instance;
     
-    // ??«Ø¥­¥x???X    void CreatePlatformAdapter();
+    // ??ï¿½Ø¥ï¿½ï¿½x???X
+    void CreatePlatformAdapter();
 };
 

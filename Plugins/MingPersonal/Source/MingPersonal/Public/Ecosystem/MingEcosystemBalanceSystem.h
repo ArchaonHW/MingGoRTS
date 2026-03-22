@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingEcosystemBalanceSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class ESpeciesType : uint8
-{
+enum class ESpeciesType: uint8 {
     Flora_Tree          UMETA(DisplayName = "树木"),
     Flora_Grass         UMETA(DisplayName = "草类"),
     Flora_Crop          UMETA(DisplayName = "作物"),
@@ -20,8 +19,7 @@ enum class ESpeciesType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EResourceType : uint8
-{
+enum class EResourceType: uint8 {
     Water               UMETA(DisplayName = "水"),
     Nitrogen            UMETA(DisplayName = "氮"),
     Phosphorus          UMETA(DisplayName = "磷"),
@@ -34,8 +32,7 @@ enum class EResourceType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EcosystemHealthState : uint8
-{
+enum class EcosystemHealthState: uint8 {
     Thriving            UMETA(DisplayName = "繁荣"),
     Healthy             UMETA(DisplayName = "健康"),
     Stable              UMETA(DisplayName = "稳定"),

@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSFailureRecoverySystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EFailureType : uint8
-{
+enum class EFailureType: uint8 {
     ProcessCrash,        // 進程崩潰
     ServiceFailure,       // 服務故障
     NetworkFailure,       // 網絡故障
@@ -21,8 +20,7 @@ enum class EFailureType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EFailureSeverity : uint8
-{
+enum class EFailureSeverity: uint8 {
     Low,          // 低嚴重性
     Medium,       // 中等嚴重性
     High,         // 高嚴重性
@@ -31,8 +29,7 @@ enum class EFailureSeverity : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERecoveryAction : uint8
-{
+enum class ERecoveryAction: uint8 {
     Restart,          // 重啟
     Repair,           // 修復
     Rollback,         // 回滾
@@ -46,8 +43,7 @@ enum class ERecoveryAction : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERecoveryStatus : uint8
-{
+enum class ERecoveryStatus: uint8 {
     Pending,           // 待處理
     InProgress,        // 進行中
     Completed,         // 已完成

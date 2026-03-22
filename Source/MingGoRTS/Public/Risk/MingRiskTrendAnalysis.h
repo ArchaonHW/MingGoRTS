@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Risk Trend Analysis System - B2-4
 // Provides risk trend analysis and forecasting
 
@@ -10,8 +10,7 @@
 #include "MingRiskTrendAnalysis.generated.h"
 
 UENUM(BlueprintType)
-enum class ETrendDirection : uint8
-{
+enum class ETrendDirection: uint8 {
     Stable = 0, UMETA(DisplayName = "Stable"),
     Improving, UMETA(DisplayName = "Improving"),
     Degrading, UMETA(DisplayName = "Degrading"),
@@ -21,8 +20,7 @@ enum class ETrendDirection : uint8
 };
 
 UENUM(BlueprintType)
-enum class EForecastModel : uint8
-{
+enum class EForecastModel: uint8 {
     Linear = 0, UMETA(DisplayName = "Linear Regression"),
     Exponential, UMETA(DisplayName = "Exponential Smoothing"),
     MovingAverage, UMETA(DisplayName = "Moving Average"),
@@ -32,8 +30,7 @@ enum class EForecastModel : uint8
 };
 
 UENUM(BlueprintType)
-enum class EAnalysisPeriod : uint8
-{
+enum class EAnalysisPeriod: uint8 {
     OneHour = 0, UMETA(DisplayName = "1 Hour"),
     SixHours, UMETA(DisplayName = "6 Hours"),
     OneDay, UMETA(DisplayName = "1 Day"),
@@ -247,10 +244,10 @@ struct FRiskCorrelation
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrendDetected, FRiskTrend, Trend};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnForecastGenerated, FRiskForecast, Forecast};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrendDirectionChanged, FRiskTrend, ChangedTrend};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCriticalTrendDetected, FRiskTrend, CriticalTrend};
+
+
+
+
 /**
  * Risk Trend Analysis System
  * Provides risk trend analysis and forecasting
@@ -261,43 +258,43 @@ class MINGRTS_API UMingRiskTrendAnalysis : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRiskTrendAnalysis(};
+    UMingRiskTrendAnalysis();
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    void InitializeTrendAnalysis(const FTrendAnalysisConfig& Config};
+    void InitializeTrendAnalysis(const FTrendAnalysisConfig& Config);
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    void ShutdownTrendAnalysis(};
+    void ShutdownTrendAnalysis();
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
     void AddDataPoint(ERiskCategory Category, uint32 Timestamp, float Value, const FString& Label = TEXT("")};
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    FRiskTrend AnalyzeTrend(ERiskCategory Category, EAnalysisPeriod Period};
+    FRiskTrend AnalyzeTrend(ERiskCategory Category, EAnalysisPeriod Period);
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    TArray<FRiskTrend> AnalyzeAllTrends(EAnalysisPeriod Period};
+    TArray<FRiskTrend> AnalyzeAllTrends(EAnalysisPeriod Period);
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    FRiskForecast GenerateForecast(ERiskCategory Category, float HoursAhead};
+    FRiskForecast GenerateForecast(ERiskCategory Category, float HoursAhead);
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    TArray<FRiskForecast> GenerateForecastsForAllCategories(float HoursAhead};
+    TArray<FRiskForecast> GenerateForecastsForAllCategories(float HoursAhead);
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    TArray<FTimeSeriesData> GetTimeSeriesData(ERiskCategory Category, uint32 StartTime, uint32 EndTime};
+    TArray<FTimeSeriesData> GetTimeSeriesData(ERiskCategory Category, uint32 StartTime, uint32 EndTime);
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    void SetForecastModel(ERiskCategory Category, EForecastModel Model};
+    void SetForecastModel(ERiskCategory Category, EForecastModel Model);
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    TArray<FRiskCorrelation> AnalyzeCorrelations(};
+    TArray<FRiskCorrelation> AnalyzeCorrelations();
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    float CalculateCorrelation(ERiskCategory CategoryA, ERiskCategory CategoryB};
+    float CalculateCorrelation(ERiskCategory CategoryA, ERiskCategory CategoryB);
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    void ExportTrendData(const FString& FilePath};
+    void ExportTrendData(const FString& FilePath);
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    void ImportTrendData(const FString& FilePath};
+    void ImportTrendData(const FString& FilePath);
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    void ClearHistoricalData(};
+    void ClearHistoricalData();
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    void ClearCategoryData(ERiskCategory Category};
+    void ClearCategoryData(ERiskCategory Category);
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    void StartAutoAnalysis(};
+    void StartAutoAnalysis();
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    void StopAutoAnalysis(};
+    void StopAutoAnalysis();
     UFUNCTION(BlueprintCallable, Category = "Risk Trend Analysis")
-    void GenerateTrendReport(};
+    void GenerateTrendReport();
     UFUNCTION(BlueprintPure, Category = "Risk Trend Analysis")
     FTrendAnalysisConfig GetConfig() const { return Config; }
 
@@ -338,27 +335,27 @@ protected:
     UPROPERTY()
     TMap<ERiskCategory, ETrendDirection> PreviousDirections;
 
-    void ScheduleAutoAnalysis(};
-    void CancelAutoAnalysis(};
-    void PerformAutoAnalysis(};
-    float CalculateMovingAverage(const TArray<FTimeSeriesData>& Data, int32 WindowSize};
-    float CalculateExponentialSmoothing(const TArray<FTimeSeriesData>& Data, float Alpha};
-    float CalculateLinearRegression(const TArray<FTimeSeriesData>& Data, uint32 TargetTime};
-    float CalculateTrendSlope(const TArray<FTimeSeriesData>& Data};
-    float CalculateVolatility(const TArray<FTimeSeriesData>& Data};
-    ETrendDirection DetermineTrendDirection(float CurrentSlope, float PreviousSlope, float Volatility};
-    FLinearColor GetTrendColor(ETrendDirection Direction};
-    void DetectTrendChanges(};
-    void TrimHistoricalDataIfNeeded(};
-    void StoreCurrentTrends(};
-    FString GenerateTrendDescription(const FRiskTrend& Trend};
-    float CalculateConfidenceScore(int32 DataPoints, float Volatility};
-    TArray<float> CalculateConfidenceRange(float PredictedValue, float ConfidenceScore};
-    void GenerateForecastRationale(FRiskForecast& Forecast, const FRiskTrend& Trend};
-    void IdentifyContributingFactors(FRiskForecast& Forecast, ERiskCategory Category};
-    TArray<FString> GenerateSuggestedActions(const FRiskForecast& Forecast};
-    void NotifyTrendDetected(const FRiskTrend& Trend};
-    void NotifyCriticalTrend(const FRiskTrend& Trend};
-    uint32 GetPeriodDuration(EAnalysisPeriod Period};
-    static UMingRiskTrendAnalysis* Get(UObject* WorldContextObject};
-};
+    void ScheduleAutoAnalysis();
+    void CancelAutoAnalysis();
+    void PerformAutoAnalysis();
+    float CalculateMovingAverage(const TArray<FTimeSeriesData>& Data, int32 WindowSize);
+    float CalculateExponentialSmoothing(const TArray<FTimeSeriesData>& Data, float Alpha);
+    float CalculateLinearRegression(const TArray<FTimeSeriesData>& Data, uint32 TargetTime);
+    float CalculateTrendSlope(const TArray<FTimeSeriesData>& Data);
+    float CalculateVolatility(const TArray<FTimeSeriesData>& Data);
+    ETrendDirection DetermineTrendDirection(float CurrentSlope, float PreviousSlope, float Volatility);
+    FLinearColor GetTrendColor(ETrendDirection Direction);
+    void DetectTrendChanges();
+    void TrimHistoricalDataIfNeeded();
+    void StoreCurrentTrends();
+    FString GenerateTrendDescription(const FRiskTrend& Trend);
+    float CalculateConfidenceScore(int32 DataPoints, float Volatility);
+    TArray<float> CalculateConfidenceRange(float PredictedValue, float ConfidenceScore);
+    void GenerateForecastRationale(FRiskForecast& Forecast, const FRiskTrend& Trend);
+    void IdentifyContributingFactors(FRiskForecast& Forecast, ERiskCategory Category);
+    TArray<FString> GenerateSuggestedActions(const FRiskForecast& Forecast);
+    void NotifyTrendDetected(const FRiskTrend& Trend);
+    void NotifyCriticalTrend(const FRiskTrend& Trend);
+    uint32 GetPeriodDuration(EAnalysisPeriod Period);
+    static UMingRiskTrendAnalysis* Get(UObject* WorldContextObject);
+);

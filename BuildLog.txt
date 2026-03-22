@@ -3,9 +3,9 @@ Log file: C:\Users\potat\AppData\Local\UnrealBuildTool\Log_GPF.txt
 Generating VisualStudio project files:
 Discovering modules, targets and source code for project...
 Adding projects for all targets...
-Adding projects for all targets took 7.20s
+Adding projects for all targets took 1.09s
 Adding projects for all game projects took 0.01s
-Adding projects for all modules took 0.28s
+Adding projects for all modules took 0.48s
 Compiling Rules Assemblies
 @progress 'Compiling Rules Assemblies' 0%
 @progress 'Compiling Rules Assemblies' 50%
@@ -16,6 +16,146 @@ Creating Build Targets
 @progress 'Creating Build Targets' 50%
 @progress 'Creating Build Targets' 100%
 Creating Build Targets 100%
-Creating Build Targets took 8.44s
+Creating Build Targets took 10.07s
 Binding IntelliSense data...
 @progress 'Binding IntelliSense data...' 0%
+@progress 'Binding IntelliSense data...' 1%
+Binding IntelliSense data... 1%
+@progress 'Binding IntelliSense data...' 2%
+@progress 'Binding IntelliSense data...' 3%
+@progress 'Binding IntelliSense data...' 4%
+@progress 'Binding IntelliSense data...' 5%
+@progress 'Binding IntelliSense data...' 6%
+@progress 'Binding IntelliSense data...' 7%
+@progress 'Binding IntelliSense data...' 8%
+@progress 'Binding IntelliSense data...' 9%
+@progress 'Binding IntelliSense data...' 10%
+@progress 'Binding IntelliSense data...' 11%
+@progress 'Binding IntelliSense data...' 12%
+@progress 'Binding IntelliSense data...' 13%
+@progress 'Binding IntelliSense data...' 14%
+@progress 'Binding IntelliSense data...' 15%
+@progress 'Binding IntelliSense data...' 16%
+@progress 'Binding IntelliSense data...' 17%
+@progress 'Binding IntelliSense data...' 18%
+@progress 'Binding IntelliSense data...' 19%
+Binding IntelliSense data... 19%
+@progress 'Binding IntelliSense data...' 20%
+@progress 'Binding IntelliSense data...' 21%
+@progress 'Binding IntelliSense data...' 22%
+@progress 'Binding IntelliSense data...' 23%
+@progress 'Binding IntelliSense data...' 24%
+@progress 'Binding IntelliSense data...' 25%
+@progress 'Binding IntelliSense data...' 26%
+@progress 'Binding IntelliSense data...' 27%
+@progress 'Binding IntelliSense data...' 28%
+@progress 'Binding IntelliSense data...' 29%
+@progress 'Binding IntelliSense data...' 30%
+@progress 'Binding IntelliSense data...' 31%
+@progress 'Binding IntelliSense data...' 32%
+@progress 'Binding IntelliSense data...' 33%
+@progress 'Binding IntelliSense data...' 34%
+@progress 'Binding IntelliSense data...' 35%
+@progress 'Binding IntelliSense data...' 36%
+@progress 'Binding IntelliSense data...' 37%
+@progress 'Binding IntelliSense data...' 38%
+@progress 'Binding IntelliSense data...' 39%
+Binding IntelliSense data... 39%
+@progress 'Binding IntelliSense data...' 40%
+@progress 'Binding IntelliSense data...' 41%
+@progress 'Binding IntelliSense data...' 42%
+@progress 'Binding IntelliSense data...' 43%
+@progress 'Binding IntelliSense data...' 44%
+@progress 'Binding IntelliSense data...' 45%
+@progress 'Binding IntelliSense data...' 46%
+@progress 'Binding IntelliSense data...' 47%
+@progress 'Binding IntelliSense data...' 48%
+@progress 'Binding IntelliSense data...' 49%
+@progress 'Binding IntelliSense data...' 50%
+@progress 'Binding IntelliSense data...' 51%
+@progress 'Binding IntelliSense data...' 52%
+@progress 'Binding IntelliSense data...' 53%
+@progress 'Binding IntelliSense data...' 54%
+@progress 'Binding IntelliSense data...' 55%
+Binding IntelliSense data... 55%
+@progress 'Binding IntelliSense data...' 56%
+@progress 'Binding IntelliSense data...' 57%
+@progress 'Binding IntelliSense data...' 58%
+@progress 'Binding IntelliSense data...' 59%
+@progress 'Binding IntelliSense data...' 60%
+@progress 'Binding IntelliSense data...' 61%
+@progress 'Binding IntelliSense data...' 62%
+@progress 'Binding IntelliSense data...' 63%
+@progress 'Binding IntelliSense data...' 64%
+@progress 'Binding IntelliSense data...' 65%
+@progress 'Binding IntelliSense data...' 66%
+@progress 'Binding IntelliSense data...' 67%
+@progress 'Binding IntelliSense data...' 68%
+@progress 'Binding IntelliSense data...' 69%
+@progress 'Binding IntelliSense data...' 70%
+@progress 'Binding IntelliSense data...' 71%
+Binding IntelliSense data... 71%
+@progress 'Binding IntelliSense data...' 72%
+@progress 'Binding IntelliSense data...' 73%
+@progress 'Binding IntelliSense data...' 74%
+@progress 'Binding IntelliSense data...' 75%
+@progress 'Binding IntelliSense data...' 76%
+@progress 'Binding IntelliSense data...' 77%
+@progress 'Binding IntelliSense data...' 78%
+@progress 'Binding IntelliSense data...' 79%
+@progress 'Binding IntelliSense data...' 80%
+@progress 'Binding IntelliSense data...' 81%
+@progress 'Binding IntelliSense data...' 82%
+@progress 'Binding IntelliSense data...' 83%
+@progress 'Binding IntelliSense data...' 84%
+@progress 'Binding IntelliSense data...' 85%
+@progress 'Binding IntelliSense data...' 86%
+@progress 'Binding IntelliSense data...' 87%
+@progress 'Binding IntelliSense data...' 88%
+@progress 'Binding IntelliSense data...' 89%
+@progress 'Binding IntelliSense data...' 90%
+@progress 'Binding IntelliSense data...' 91%
+@progress 'Binding IntelliSense data...' 92%
+@progress 'Binding IntelliSense data...' 93%
+@progress 'Binding IntelliSense data...' 94%
+@progress 'Binding IntelliSense data...' 95%
+@progress 'Binding IntelliSense data...' 96%
+@progress 'Binding IntelliSense data...' 97%
+@progress 'Binding IntelliSense data...' 98%
+@progress 'Binding IntelliSense data...' 99%
+@progress 'Binding IntelliSense data...' 100%
+Binding IntelliSense data... 100%
+Binding IntelliSense data took 100.45s
+Writing project files...
+@progress 'Writing project files...' 0%
+@progress 'Writing project files...' 33%
+@progress 'Writing project files...' 67%
+@progress 'Writing project files...' 100%
+Writing project files... 100%
+Writing project files took 7.93s
+
+Generating QueryTargets data for editor...
+Compiling Rules Assemblies
+@progress 'Compiling Rules Assemblies' 0%
+@progress 'Compiling Rules Assemblies' 50%
+@progress 'Compiling Rules Assemblies' 100%
+Compiling Rules Assemblies 100%
+Writing Query Target Info
+@progress 'Writing Query Target Info' 0%
+@progress 'Writing Query Target Info' 50%
+@progress 'Writing Query Target Info' 100%
+Writing Query Target Info 100%
+Generating QueryTargets data for editor took 0.05s
+
+Result: Succeeded
+Total execution time: 124.58 seconds
+Log file: C:\Users\potat\AppData\Local\UnrealBuildTool\Log.txt
+Using 'git status' to determine working set for adaptive non-unity build (C:\HW\MingGoRTS).
+Creating makefile for MingGoRTSEditor (no existing makefile)
+Log file: C:\Users\potat\AppData\Local\UnrealBuildTool\Log.txt
+Using 'git status' to determine working set for adaptive non-unity build (C:\HW\MingGoRTS).
+Creating makefile for MingGoRTSEditor (no existing makefile)
+Targets cannot be built in the Debug configuration with this engine distribution.
+
+Result: Failed (OtherCompilationError)
+Total execution time: 3.00 seconds

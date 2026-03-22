@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Cloud Services System - Epic 10.1
 //
 // This system provides cloud-based save synchronization,
@@ -13,8 +13,7 @@
 
 // Cloud service types
 UENUM(BlueprintType)
-enum class ECloudServiceType : uint8
-{
+enum class ECloudServiceType: uint8 {
     SaveSync            UMETA(DisplayName = "Save Sync"),
     AIComputation       UMETA(DisplayName = "AI Computation"),
     Analytics           UMETA(DisplayName = "Analytics"),
@@ -27,8 +26,7 @@ enum class ECloudServiceType : uint8
 
 // Cloud connection states
 UENUM(BlueprintType)
-enum class ECloudConnectionState : uint8
-{
+enum class ECloudConnectionState: uint8 {
     Disconnected        UMETA(DisplayName = "Disconnected"),
     Connecting          UMETA(DisplayName = "Connecting"),
     Connected           UMETA(DisplayName = "Connected"),

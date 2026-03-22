@@ -1,4 +1,4 @@
-# MingGoRTS CulturalAdaptationSystem Compile Verification
+﻿# MingGoRTS CulturalAdaptationSystem Compile Verification
 # PowerShell Script
 
 $EnginePath = "C:\Program Files\Epic Games\UE_5.7"

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,8 @@
 #include "MingNationalRevolutionaryArmyAI.generated.h"
 
 /**
- * ???X?©R??AI
- * Åé²{???X??X??X?©R­x?X??X?¦â
+ * ???X?ï¿½R??AI
+ * ï¿½ï¿½{æ•…äº‹é¸é …X?ï¿½Rï¿½x?X??X?ï¿½ï¿½
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGTACTICAL_API UMingNationalRevolutionaryArmyAI : public UMingBaseCombatAI
@@ -15,106 +15,112 @@ class MINGTACTICAL_API UMingNationalRevolutionaryArmyAI : public UMingBaseCombat
     GENERATED_BODY()
 
 public:
-    // «Ø????    UMingNationalRevolutionaryArmyAI();
+    // ï¿½ï¿½æ‘§æ¯€
+    UMingNationalRevolutionaryArmyAI();
 
-    // ???X    virtual void Initialize(class AController* Controller) override;
+    // ???X
+    virtual void Initialize(class AController* Controller) override;
 
-    // »s?X???¨M??
+    // ï¿½s?X???ï¿½M??
     virtual FMingTacticalDecision MakeTacticalDecision(const FMingAIContext& Context) override;
 
-    // µû¦ô??³õ§½X    virtual float AssessBattlefieldSituation(const FMingAIContext& Context) override;
+    // ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½X
+    virtual float AssessBattlefieldSituation(const FMingAIContext& Context) override;
 
 protected:
-    // ???X??X???
+    // æ•…äº‹é¸é …?
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void ExecuteNorthernExpeditionTactics(const FMingAIContext& Context};
+    void ExecuteNorthernExpeditionTactics(const FMingAIContext& Context);
 
-    // ??ªv¤u??¼vÅT
+    // ??ï¿½vï¿½u??ï¿½vï¿½T
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void ApplyPoliticalWorkEffects(FMingAIState& AIState};
+    void ApplyPoliticalWorkEffects(FMingAIState& AIState);
 
-    // ??ÁpÅU??¼vÅT
+    // ??ï¿½pï¿½U??ï¿½vï¿½T
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void ApplySovietAdvisorInfluence(FMingTacticalDecision& Decision};
+    void ApplySovietAdvisorInfluence(FMingTacticalDecision& Decision);
 
-    // ??©R????¼vÅT
+    // ??ï¿½Ræ‘§æ¯€ï¿½vï¿½T
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void ApplyRevolutionaryZeal(FMingAIState& AIState};
+    void ApplyRevolutionaryZeal(FMingAIState& AIState);
 
-    // ²Î?X???µ¦²¤
+    // ï¿½ï¿½?X???ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void ExecuteUnitedFrontStrategy(const FMingAIContext& Context};
+    void ExecuteUnitedFrontStrategy(const FMingAIContext& Context);
 
-    // ¸s²³??­û
+    // ï¿½sï¿½ï¿½??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void MobilizeMasses(const FMingAIContext& Context};
+    void MobilizeMasses(const FMingAIContext& Context);
 
-    // ??ªv????????
+    // ??ï¿½væ‘§æ¯€æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    float CalculatePoliticalPropagandaEffect(const FVector& Location};
+    float CalculatePoliticalPropagandaEffect(const FVector& Location);
 
-    // ??Áp??§Uµ{«×
+    // ??ï¿½p??ï¿½Uï¿½{ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     float GetSovietAidLevel() const { return SovietAidLevel; }
 
-    // ³]¸m??Áp??§Uµ¥??
+    // ï¿½]ï¿½m??ï¿½p??ï¿½Uï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void SetSovietAidLevel(float Level) { SovietAidLevel = FMath::Clamp(Level, 0.0f, 1.0f}; }
 
-    // ???X?ªv©e­û¼vÅTX    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // ???X?ï¿½vï¿½eï¿½ï¿½ï¿½vï¿½TX
+    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     float GetPoliticalCommissarInfluence() const { return PoliticalCommissarInfluence; }
 
-    // ³]¸m??ªv©e­û¼vÅTX    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // ï¿½]ï¿½m??ï¿½vï¿½eï¿½ï¿½ï¿½vï¿½TX
+    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void SetPoliticalCommissarInfluence(float Influence) { PoliticalCommissarInfluence = FMath::Clamp(Influence, 0.0f, 1.0f}; }
 
 protected:
-    // ??ªv©e­û¼vÅTX(0.0-1.0)
+    // ??ï¿½vï¿½eï¿½ï¿½ï¿½vï¿½TX(0.0-1.0)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NRA|Political")
     float PoliticalCommissarInfluence;
 
-    // ??ÁpÅU??µ¥?? (0-5)
+    // ??ï¿½pï¿½U??ï¿½ï¿½?? (0-5)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NRA|Advisor")
     int32 SovietAdvisorLevel;
 
-    // ??Áp??§Uµ{«× (0.0-1.0)
+    // ??ï¿½p??ï¿½Uï¿½{ï¿½ï¿½ (0.0-1.0)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NRA|Aid")
     float SovietAidLevel;
 
-    // ??©R???? (0.0-1.0)
+    // ??ï¿½Ræ‘§æ¯€ (0.0-1.0)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NRA|Morale")
     float RevolutionaryZeal;
 
-    // ²Î?X???±j«× (0.0-1.0)
+    // ï¿½ï¿½?X???ï¿½jï¿½ï¿½ (0.0-1.0)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NRA|United")
     float UnitedFrontStrength;
 
-    // ¸s²³??????(0.0-1.0)
+    // ï¿½sï¿½ï¿½æ‘§æ¯€??(0.0-1.0)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NRA|Support")
     float MassSupport;
 
-    // ??ªv???????? (0.0-1.0)
+    // ??ï¿½væ‘§æ¯€æ‘§æ¯€ (0.0-1.0)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NRA|Propaganda")
     float PropagandaEffectiveness;
 
 private:
-    // ???X?¬q
+    // ???X?ï¿½q
     int32 NorthernExpeditionPhase;
 
-    // ???X?ªvX
+    // ???X?ï¿½vX
     FString CurrentPoliticalSlogan;
 
-    // ??Áp­x??ÅU??¼vÅT
+    // ??ï¿½pï¿½x??ï¿½U??ï¿½vï¿½T
     float SovietMilitaryInfluence;
 
-    // ¤T??¥D¸q¼vÅTX    float ThreePrinciplesInfluence;
+    // ï¿½T??ï¿½Dï¿½qï¿½vï¿½TX
+    float ThreePrinciplesInfluence;
 
-    // ­p?X?ªv¤h®ğ????
+    // ï¿½p?X?ï¿½vï¿½hï¿½ï¿½æ‘§æ¯€
     float CalculatePoliticalMoraleBonus();
 
-    // ­p??²Î?X??X??X???
-    float CalculateUnitedFrontBonus(const FMingAIContext& Context};
+    // ï¿½p??ï¿½ï¿½?X??X??X???
+    float CalculateUnitedFrontBonus(const FMingAIContext& Context);
 
-    // ¨M?X?§_???X?ªv??¶Õ
-    bool ShouldLaunchPoliticalOffensive(const FMingAIContext& Context};
-};
+    // ï¿½M?X?ï¿½_???X?ï¿½v??ï¿½ï¿½
+    bool ShouldLaunchPoliticalOffensive(const FMingAIContext& Context);
+);
 

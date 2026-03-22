@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -48,91 +48,94 @@ struct FSaveSlotUIInfo
 };
 
 /**
- * «O??/¸ü¤J??­±²Õ¥ó
- * ????¦s??¼Ñ??ªíÅã¥Ü¡B??¦s¡B?X?¡B§R???X */
+ * ï¿½O??/ï¿½ï¿½ï¿½J??ï¿½ï¿½ï¿½Õ¥ï¿½
+ * æ‘§æ¯€ï¿½s??ï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½Ü¡B??ï¿½sï¿½B?X?ï¿½Bï¿½R???X */
 UCLASS(ClassGroup = (UI), Blueprintable)
 class MINGUI_API UMingSaveLoadWidget : public UUserWidget
 {
     GENERATED_BODY()
 
 public:
-    UMingSaveLoadWidget(const FObjectInitializer& ObjectInitializer};
+    UMingSaveLoadWidget(const FObjectInitializer& ObjectInitializer);
 
-    // ???X?????    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
-    void InitializeSaveLoadWidget(UMingSaveGameManager* InSaveManager};
+    // ç›®æ¨™æ•¸é‡??
+    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
+    void InitializeSaveLoadWidget(UMingSaveGameManager* InSaveManager);
 
-    // ³]¸m¼Ò??¡]??¦s??¸ü¤J??    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
-    void SetMode(bool bInSaveMode};
+    // ï¿½]ï¿½mï¿½ï¿½??ï¿½]??ï¿½s??ï¿½ï¿½ï¿½J??
+    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
+    void SetMode(bool bInSaveMode);
 
-    // ??·s¦s?X?ªí
+    // ??ï¿½sï¿½s?X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void RefreshSaveSlotList();
 
-    // ????¦s????    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
-    void SelectSaveSlot(int32 SlotIndex};
+    // æ‘§æ¯€ï¿½sæ‘§æ¯€
+    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
+    void SelectSaveSlot(int32 SlotIndex);
 
-    // ???X??X?¤¤????ÀÉ¼Ñ
+    // æ•…äº‹é‡è¦æ€§?ï¿½ï¿½æ‘§æ¯€ï¿½É¼ï¿½
     UFUNCTION(BlueprintPure, Category = "Save/Load UI")
     int32 GetSelectedSlotIndex() const { return SelectedSlotIndex; }
 
-    // ????«O??
+    // æ‘§æ¯€ï¿½O??
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ExecuteSave();
 
-    // ????¸ü¤J
+    // æ‘§æ¯€ï¿½ï¿½ï¿½J
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ExecuteLoad();
 
-    // ???X?°£
+    // ???X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ExecuteDelete();
 
-    // ³]¸m¦s?X?ºÙ
+    // ï¿½]ï¿½mï¿½s?X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
-    void SetSaveName(const FString& NewName};
+    void SetSaveName(const FString& NewName);
 
-    // ????¦s?X?ºÙ
+    // æ‘§æ¯€ï¿½s?X?ï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Save/Load UI")
     FString GetSaveName() const;
 
-    // ??«Ø????ÀÉ??¨Ï¥Î²Ä?X?ªÅ¼Ñ??
+    // ??ï¿½ï¿½æ‘§æ¯€ï¿½ï¿½??ï¿½Ï¥Î²ï¿½?X?ï¿½Å¼ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void CreateNewSave();
 
-    // ¾É¥X¦s??
+    // ï¿½É¥Xï¿½s??
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ExportSelectedSave();
 
-    // ¾É¤J¦s??
+    // ï¿½É¤Jï¿½s??
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ImportSave();
 
-    // ???X?§Ö????¦s¼Ñ
+    // ???X?ï¿½ï¿½æ‘§æ¯€ï¿½sï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void SelectQuickSaveSlot();
 
-    // ???X?¦Û????¦s¼Ñ
+    // ???X?ï¿½ï¿½æ‘§æ¯€ï¿½sï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void SelectAutoSaveSlot();
 
-    // ¨Æ¥ó??½Õ
+    // ï¿½Æ¥ï¿½??ï¿½ï¿½
     UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
-    void OnSaveCompleted(bool bSuccess, int32 SlotIndex};
+    void OnSaveCompleted(bool bSuccess, int32 SlotIndex);
 
     UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
-    void OnLoadCompleted(bool bSuccess, int32 SlotIndex};
+    void OnLoadCompleted(bool bSuccess, int32 SlotIndex);
 
     UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
-    void OnDeleteCompleted(bool bSuccess, int32 SlotIndex};
+    void OnDeleteCompleted(bool bSuccess, int32 SlotIndex);
 
     UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
-    void OnSaveSlotSelected(int32 SlotIndex, const FSaveSlotUIInfo& SlotInfo};
+    void OnSaveSlotSelected(int32 SlotIndex, const FSaveSlotUIInfo& SlotInfo);
 
     UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
-    void OnSaveSlotListRefreshed(const TArray<FSaveSlotUIInfo>& SlotInfos};
+    void OnSaveSlotListRefreshed(const TArray<FSaveSlotUIInfo>& SlotInfos);
 
     UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
-    void OnErrorOccurred(const FString& ErrorMessage};
+    void OnErrorOccurred(const FString& ErrorMessage);
 
 protected:
     // Native Construct
@@ -141,44 +144,48 @@ protected:
     // Native Destruct
     virtual void NativeDestruct() override;
 
-    // ¸j??UI¨Æ¥ó
+    // ï¿½j??UIï¿½Æ¥ï¿½
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void BindUIEvents();
 
-    // ??·sUI??X    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
+    // ??ï¿½sUI??X
+    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void UpdateUIState();
 
-    // ????¦s??¼ÑUI«H®§
+    // æ‘§æ¯€ï¿½s??ï¿½ï¿½UIï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     FSaveSlotUIInfo GetSaveSlotUIInfo(int32 SlotIndex) const;
 
-    // ½T??¹ï¸Ü??    UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
-    void ShowConfirmDialog(const FString& Title, const FString& Message};
+    // ï¿½T??ï¿½ï¿½ï¿½??
+    UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
+    void ShowConfirmDialog(const FString& Title, const FString& Message);
 
-    // ???X??X    UFUNCTION(BlueprintPure, Category = "Save/Load UI")
+    // æ•…äº‹é‡è¦æ€§
+    UFUNCTION(BlueprintPure, Category = "Save/Load UI")
     FString FormatPlayTime(int32 TotalSeconds) const;
 
-    // Åç??¿é¤J
+    // ï¿½ï¿½??ï¿½ï¿½J
     UFUNCTION(BlueprintPure, Category = "Save/Load UI")
     bool IsValidSaveName(const FString& Name) const;
 
 private:
-    // «O??ºŞ?X??X    UPROPERTY()
+    // ï¿½O??ï¿½ï¿½?X??X
+    UPROPERTY()
     TObjectPtr<UMingSaveGameManager> SaveManager;
 
-    // ????¼Ò??
+    // æ‘§æ¯€ï¿½ï¿½??
     UPROPERTY()
     bool bSaveMode;
 
-    // ???X?¤¤????ÀÉ¼Ñ
+    // ???X?ï¿½ï¿½æ‘§æ¯€ï¿½É¼ï¿½
     UPROPERTY()
     int32 SelectedSlotIndex;
 
-    // ????¦s?X?ºÙ
+    // æ‘§æ¯€ï¿½s?X?ï¿½ï¿½
     UPROPERTY()
     FString CurrentSaveName;
 
-    // UI ²Õ¥ó¸j??¡]¦b????¤¤³]¸m??
+    // UI ï¿½Õ¥ï¿½j??ï¿½]ï¿½bæ‘§æ¯€ï¿½ï¿½ï¿½]ï¿½m??
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UScrollBox> SaveSlotScrollBox;
 
@@ -224,10 +231,11 @@ private:
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UTextBlock> ModeTitleText;
 
-    // ¦s??¼Ñ?X?¼Æ??    UPROPERTY()
+    // ï¿½s??ï¿½ï¿½?X?ï¿½ï¿½??
+    UPROPERTY()
     TArray<TObjectPtr<UButton>> SaveSlotButtons;
 
-    // ????ÂI?X???
+    // æ‘§æ¯€ï¿½I?X???
     UFUNCTION()
     void OnSaveButtonClicked();
 
@@ -253,31 +261,34 @@ private:
     void OnCloseButtonClicked();
 
     UFUNCTION()
-    void OnSaveNameTextChanged(const FText& Text};
+    void OnSaveNameTextChanged(const FText& Text);
 
     UFUNCTION()
-    void OnSaveNameTextCommitted(const FText& Text, ETextCommit::Type CommitMethod};
+    void OnSaveNameTextCommitted(const FText& Text, ETextCommit::Type CommitMethod);
 
-    // ¦s??¼Ñ¿ï???X    UFUNCTION()
-    void OnSaveSlotButtonClicked(int32 SlotIndex};
-
-    // «O??/¸ü¤J/??°£§¹?X?½Õ
+    // ï¿½s??ï¿½Ñ¿ï¿½???X
     UFUNCTION()
-    void HandleSaveCompleted(EMingSaveGameResult Result, int32 SlotIndex};
+    void OnSaveSlotButtonClicked(int32 SlotIndex);
 
+    // ï¿½O??/ï¿½ï¿½ï¿½J/??ï¿½ï¿½ï¿½ï¿½?X?ï¿½ï¿½
     UFUNCTION()
-    void HandleLoadCompleted(EMingSaveGameResult Result, int32 SlotIndex};
+    void HandleSaveCompleted(EMingSaveGameResult Result, int32 SlotIndex);
 
     UFUNCTION()
-    void HandleDeleteCompleted(bool bSuccess};
+    void HandleLoadCompleted(EMingSaveGameResult Result, int32 SlotIndex);
 
-    // ??·s??¤¤¼ÑÅã??    void UpdateSelectedSlotDisplay();
+    UFUNCTION()
+    void HandleDeleteCompleted(bool bSuccess);
 
-    // ??«Ø¦s??¼Ñ?X?UI
+    // ??ï¿½s??ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½??
+    void UpdateSelectedSlotDisplay();
+
+    // ??ï¿½Ø¦s??ï¿½ï¿½?X?UI
     UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
-    void CreateSaveSlotEntry(int32 SlotIndex, const FSaveSlotUIInfo& SlotInfo};
+    void CreateSaveSlotEntry(int32 SlotIndex, const FSaveSlotUIInfo& SlotInfo);
 
-    // ²M°£¦s??¼Ñ????    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
+    // ï¿½Mï¿½ï¿½ï¿½s??ï¿½ï¿½æ‘§æ¯€
+    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ClearSaveSlotList();
 };
 

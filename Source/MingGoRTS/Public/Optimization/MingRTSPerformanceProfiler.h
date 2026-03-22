@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSPerformanceProfiler.generated.h"
 
 UENUM(BlueprintType)
-enum class EProfilingType : uint8
-{
+enum class EProfilingType: uint8 {
     CPU, UMETA(DisplayName = "CPU Performance"),
     Memory, UMETA(DisplayName = "Memory Usage"),
     GPU, UMETA(DisplayName = "GPU Performance"),
@@ -18,8 +17,7 @@ enum class EProfilingType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EPerformanceLevel : uint8
-{
+enum class EPerformanceLevel: uint8 {
     Excellent, UMETA(DisplayName = "Excellent (>90%)"),
     Good, UMETA(DisplayName = "Good (70-90%)"),
     Average, UMETA(DisplayName = "Average (50-70%)"),
@@ -65,18 +63,18 @@ class MINGGORTS_API UMingRTSPerformanceProfiler : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSPerformanceProfiler(};
+    UMingRTSPerformanceProfiler();
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void InitializeProfiler(};
+    void InitializeProfiler();
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void StartProfiling(EProfilingType Type};
+    void StartProfiling(EProfilingType Type);
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void StopProfiling(EProfilingType Type};
+    void StopProfiling(EProfilingType Type);
     UFUNCTION(BlueprintPure, Category = "Performance Profiler")
     TArray<FPerformanceMetric> GetPerformanceMetrics() const;
 
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void GeneratePerformanceReport(};
+    void GeneratePerformanceReport();
     UFUNCTION(BlueprintPure, Category = "Performance Profiler")
     EPerformanceLevel GetOverallPerformanceLevel() const;
 
@@ -87,10 +85,10 @@ protected:
     UPROPERTY()
     TMap<EProfilingType, bool> ActiveProfilingSessions;
 
-    void CollectCPUMetrics(};
-    void CollectMemoryMetrics(};
-    void CollectGPUMetrics(};
-    void CollectNetworkMetrics(};
-    EPerformanceLevel CalculatePerformanceLevel(float Value, EProfilingType Type};
-    FString GetPerformanceUnit(EProfilingType Type};
-};
+    void CollectCPUMetrics();
+    void CollectMemoryMetrics();
+    void CollectGPUMetrics();
+    void CollectNetworkMetrics();
+    EPerformanceLevel CalculatePerformanceLevel(float Value, EProfilingType Type);
+    FString GetPerformanceUnit(EProfilingType Type);
+);

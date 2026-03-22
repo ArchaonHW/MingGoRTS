@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -18,8 +18,7 @@ class UMingAntiFallSystem;
  * 測試結果類型枚舉
  */
 UENUM(BlueprintType)
-enum class ETestResultType : uint8
-{
+enum class ETestResultType: uint8 {
     NotRun      UMETA(DisplayName = "未運行"),
     Passed      UMETA(DisplayName = "通過"),
     Failed      UMETA(DisplayName = "失敗"),
@@ -32,8 +31,7 @@ enum class ETestResultType : uint8
  * 測試類別枚舉
  */
 UENUM(BlueprintType)
-enum class ESageCommandTestCategory : uint8
-{
+enum class ESageCommandTestCategory: uint8 {
     CharacterSystem     UMETA(DisplayName = "角色類型系統"),
     ThreePowerSystem    UMETA(DisplayName = "三權指揮系統"),
     MoralAuthority      UMETA(DisplayName = "道權系統"),

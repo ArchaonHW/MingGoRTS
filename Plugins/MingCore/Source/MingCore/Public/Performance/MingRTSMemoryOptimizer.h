@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,8 +8,7 @@
 #include "MingRTSMemoryOptimizer.generated.h"
 
 UENUM(BlueprintType)
-enum class EResourceType : uint8
-{
+enum class EResourceType: uint8 {
 	Texture,
 	Mesh,
 	Animation,
@@ -21,8 +20,7 @@ enum class EResourceType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ELoadingPriority : uint8
-{
+enum class ELoadingPriority: uint8 {
 	Immediate,
 	High,
 	Normal,
@@ -31,8 +29,7 @@ enum class ELoadingPriority : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMemoryPressureLevel : uint8
-{
+enum class EMemoryPressureLevel: uint8 {
 	Normal,
 	Elevated,
 	Critical,

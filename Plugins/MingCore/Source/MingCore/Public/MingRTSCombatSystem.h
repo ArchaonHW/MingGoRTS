@@ -1,41 +1,38 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSCombatSystem.generated.h"
 
-// ???X???
+// ÁõÆÊ®ôÊï∏Èáè
 class AMingGoRTSUnit;
 class UMingRTSUnitManager;
 
 UENUM(BlueprintType)
-enum class ERTSCombatType : uint8
-{
-    Melee,          // ™Òæ‘
-    Ranged,         // ????
-    Artillery,      // ??¨∂
-    Siege,          // ????
-    Naval           // Æ¸æ‘
+enum class ERTSCombatType: uint8 {
+    Melee,          // ÔøΩÔøΩÔøΩ
+    Ranged,         // ÊëßÊØÄ
+    Artillery,      // ??ÔøΩÔøΩ
+    Siege,          // ÊëßÊØÄ
+    Naval           // ÔøΩÔøΩÔøΩÔøΩ
 };
 
 UENUM(BlueprintType)
-enum class ERTSDamageType : uint8
-{
-    Physical,       // ???X?Æ`
-    Fire,           // ??µK??Æ`
-    Explosive,      // ??¨µ??Æ`
-    Piercing,       // ¨Ô®Î??Æ`
-    Magic,          // ≈]?X?Æ`
-    Poison          // ¨r?X?Æ`
+enum class ERTSDamageType: uint8 {
+    Physical,       // ???X?ÔøΩ`
+    Fire,           // ??ÔøΩK??ÔøΩ`
+    Explosive,      // ??ÔøΩÔøΩ??ÔøΩ`
+    Piercing,       // ÔøΩÔøΩÔøΩ??ÔøΩ`
+    Magic,          // ÔøΩ]?X?ÔøΩ`
+    Poison          // ÔøΩr?X?ÔøΩ`
 };
 
 UENUM(BlueprintType)
-enum class ERTSCombatStance : uint8
-{
-    Aggressive,     // ????´∫??
-    Defensive,      // ??øm´∫??
-    Neutral,        // §§??´∫??
-    Passive         // ≥Q??´∫??
+enum class ERTSCombatStance: uint8 {
+    Aggressive,     // ÊëßÊØÄÔøΩÔøΩ??
+    Defensive,      // ??ÔøΩmÔøΩÔøΩ??
+    Neutral,        // ÔøΩÔøΩ??ÔøΩÔøΩ??
+    Passive         // ÔøΩQ??ÔøΩÔøΩ??
 };
 
 USTRUCT(BlueprintType)
@@ -174,17 +171,17 @@ struct FRTSAbilityData
         bIsAvailable = true;
         bIsActive = false;
     }
-};
+);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnCombatStarted, AMingGoRTSUnit*, Attacker, AMingGoRTSUnit*, Target, ERTSCombatType, CombatType, ERTSDamageType, DamageType};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnCombatHit, AMingGoRTSUnit*, Attacker, AMingGoRTSUnit*, Target, const FRTSCombatResult&, Result};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCombatMissed, AMingGoRTSUnit*, Attacker, AMingGoRTSUnit*, Target};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitKilled, AMingGoRTSUnit*, Victim, AMingGoRTSUnit*, Killer};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAbilityUsed, AMingGoRTSUnit*, Unit, const FString&, AbilityName};
+
+
+
+
+
 
 /**
- * RTS??∞´®t≤Œ
- * ∫ﬁ?X???æ‘∞´¨€???X?øË?????? */
+ * RTS??ÔøΩÔøΩÔøΩtÔøΩÔøΩ
+ * ÔøΩÔøΩ?X???ÔøΩ‘∞ÔøΩÔøΩÔøΩ???X?ÔøΩÔøΩÊëßÊØÄ?? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSCombatSystem : public UObject
 {
@@ -194,9 +191,9 @@ public:
     UMingRTSCombatSystem();
 
     
-    void InitializeCombatSystem(UMingRTSUnitManager* InUnitManager};
+    void InitializeCombatSystem(UMingRTSUnitManager* InUnitManager);
 
-    // ??∞´≤Œ??
+    // ??ÔøΩÔøΩÔøΩÔøΩ??
     
     void SetUnitCombatStats(AMingGoRTSUnit* Unit, const FRTSCombatStats& CombatStats) {};
 
@@ -204,42 +201,42 @@ public:
     FRTSCombatStats GetUnitCombatStats(AMingGoRTSUnit* Unit) const;
 
     
-    void UpdateCombatStats(AMingGoRTSUnit* Unit, float DamageMultiplier = 1.0f, float DefenseMultiplier = 1.0f};
+    void UpdateCombatStats(AMingGoRTSUnit* Unit, float DamageMultiplier = 1.0f, float DefenseMultiplier = 1.0f);
 
-    // ??∞´????
+    // ??ÔøΩÔøΩÊëßÊØÄ
     
-    FRTSCombatResult ExecuteCombat(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
+    FRTSCombatResult ExecuteCombat(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
-    bool CanAttack(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
+    bool CanAttack(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
-    void StartCombat(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, ERTSCombatType CombatType};
+    void StartCombat(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, ERTSCombatType CombatType);
 
-    void StopCombat(AMingGoRTSUnit* Unit};
+    void StopCombat(AMingGoRTSUnit* Unit);
 
     bool IsInCombat(AMingGoRTSUnit* Unit) const;
 
-    // ??Æ`≠p??
+    // ??ÔøΩ`ÔøΩp??
     
-    float CalculateDamage(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
+    float CalculateDamage(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
-    float ApplyDamageReduction(float BaseDamage, ERTSDamageType DamageType, float DefenseRating};
+    float ApplyDamageReduction(float BaseDamage, ERTSDamageType DamageType, float DefenseRating);
 
     
-    bool CheckHit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
+    bool CheckHit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
     
-    bool CheckCritical(AMingGoRTSUnit* Attacker};
+    bool CheckCritical(AMingGoRTSUnit* Attacker);
 
     
-    bool CheckDodge(AMingGoRTSUnit* Target};
+    bool CheckDodge(AMingGoRTSUnit* Target);
 
     
-    bool CheckBlock(AMingGoRTSUnit* Target};
+    bool CheckBlock(AMingGoRTSUnit* Target);
 
-    // ??∞´´∫??
+    // ??ÔøΩÔøΩÔøΩÔøΩ??
     
-    void SetCombatStance(AMingGoRTSUnit* Unit, ERTSCombatStance Stance};
+    void SetCombatStance(AMingGoRTSUnit* Unit, ERTSCombatStance Stance);
 
     
     ERTSCombatStance GetCombatStance(AMingGoRTSUnit* Unit) const;
@@ -250,15 +247,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     float GetStanceDefenseMultiplier(ERTSCombatStance Stance) const;
 
-    // Ωd?X???
+    // ÔøΩd?X???
     
-    TArray<AMingGoRTSUnit*> GetUnitsInArea(const FVector& Center, float Radius, AMingGoRTSUnit* ExcludedUnit = nullptr};
+    TArray<AMingGoRTSUnit*> GetUnitsInArea(const FVector& Center, float Radius, AMingGoRTSUnit* ExcludedUnit = nullptr);
 
     
-    void ExecuteAreaAttack(AMingGoRTSUnit* Attacker, const FVector& Center, float Radius};
+    void ExecuteAreaAttack(AMingGoRTSUnit* Attacker, const FVector& Center, float Radius);
 
     
-    void ExecuteLineAttack(AMingGoRTSUnit* Attacker, const FVector& Start, const FVector& End, float Width};
+    void ExecuteLineAttack(AMingGoRTSUnit* Attacker, const FVector& Start, const FVector& End, float Width);
 
     
     void AddAbility(AMingGoRTSUnit* Unit, const FRTSAbilityData& Ability) {};
@@ -267,7 +264,7 @@ public:
     void RemoveAbility(AMingGoRTSUnit* Unit, const FString& AbilityName) {};
 
     
-    bool UseAbility(AMingGoRTSUnit* Unit, const FString& AbilityName, AMingGoRTSUnit* Target = nullptr};
+    bool UseAbility(AMingGoRTSUnit* Unit, const FString& AbilityName, AMingGoRTSUnit* Target = nullptr);
 
     
     TArray<FRTSAbilityData> GetUnitAbilities(AMingGoRTSUnit* Unit) const;
@@ -276,7 +273,7 @@ public:
     bool IsAbilityAvailable(AMingGoRTSUnit* Unit, const FString& AbilityName) const;
 
     
-    void ApplyStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName, float Duration, float Power};
+    void ApplyStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName, float Duration, float Power);
 
     
     void RemoveStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName) {};
@@ -285,9 +282,9 @@ public:
     bool HasStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
-    void UpdateStatusEffects(float DeltaTime};
+    void UpdateStatusEffects(float DeltaTime);
 
-    // ??∞´•≠ø≈Ω’æ„
+    // ??ÔøΩÔøΩÔøΩÔøΩÔøΩ≈Ω’æÔøΩ
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void BalanceCombatStats();
 
@@ -295,19 +292,19 @@ public:
     void AdjustUnitTypeAdvantages();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
-    void SetDifficultyMultiplier(float Multiplier};
+    void SetDifficultyMultiplier(float Multiplier);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void OptimizeCombatPerformance();
 
-    // ??∞´??∑s
+    // ??ÔøΩÔøΩ??ÔøΩs
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
-    void UpdateCombat(float DeltaTime};
+    void UpdateCombat(float DeltaTime);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void ProcessCombatQueue();
 
-    // ??∞´≤Œ??
+    // ??ÔøΩÔøΩÔøΩÔøΩ??
     UFUNCTION(BlueprintPure, Category = "RTS Combat System")
     int32 GetActiveCombatCount() const;
 
@@ -320,7 +317,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void ResetCombatStats();
 
-    // ®∆•Û
+    // ÔøΩ∆•ÔøΩ
     UPROPERTY(BlueprintAssignable, Category = "RTS Combat Events")
     FOnCombatStarted OnCombatStarted;
 
@@ -337,11 +334,11 @@ public:
     FOnAbilityUsed OnAbilityUsed;
 
 protected:
-    // ®t≤Œ§ﬁ•Œ
+    // ÔøΩtÔøΩŒ§ﬁ•ÔøΩ
     UPROPERTY()
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
-    // ??∞´????
+    // ??ÔøΩÔøΩÊëßÊØÄ
     
     TMap<AMingGoRTSUnit*, FRTSCombatStats> UnitCombatStats;
 
@@ -357,7 +354,7 @@ protected:
     
     TMap<AMingGoRTSUnit*, AMingGoRTSUnit*> CombatPairs;
 
-    // ??∞´≥]∏m
+    // ??ÔøΩÔøΩÔøΩ]ÔøΩm
     UPROPERTY(BlueprintReadWrite, Category = "Combat Settings")
     float BaseDamageMultiplier = 1.0f;
 
@@ -376,7 +373,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Combat Settings")
     bool bEnableBlocking = true;
 
-    // •≠ø≈Ω’æ„??º∆
+    // ÔøΩÔøΩÔøΩ≈Ω’æÔøΩ??ÔøΩÔøΩ
     UPROPERTY(BlueprintReadWrite, Category = "Balance Settings")
     float DifficultyMultiplier = 1.0f;
 
@@ -389,7 +386,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Balance Settings")
     TMap<ERTSDamageType, float> DamageTypeEffectiveness;
 
-    // ≤Œ?X???
+    // ÔøΩÔøΩ?X???
     UPROPERTY()
     int32 TotalDamageDealt;
 
@@ -399,20 +396,20 @@ protected:
     
     bool bIsInitialized;
 
-    // ??≥°??º∆
-    void ProcessCombatPair(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, float DeltaTime};
+    // ??ÔøΩÔøΩ??ÔøΩÔøΩ
+    void ProcessCombatPair(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, float DeltaTime);
     void ApplyCombatResult(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, const FRTSCombatResult& Result) {};
     FString GenerateCombatResultMessage(const FRTSCombatResult& Result) const;
     float GetDamageTypeMultiplier(ERTSDamageType DamageType, ERTSDamageType DefenseType) const;
     void CleanupDeadUnits();
-    void UpdateAbilityCooldowns(float DeltaTime};
+    void UpdateAbilityCooldowns(float DeltaTime);
 
 private:
-    // ª≤ßU??º∆
-    void NotifyCombatStarted(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, ERTSCombatType CombatType, ERTSDamageType DamageType};
+    // ÔøΩÔøΩÔøΩU??ÔøΩÔøΩ
+    void NotifyCombatStarted(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, ERTSCombatType CombatType, ERTSDamageType DamageType);
     void NotifyCombatHit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, const FRTSCombatResult& Result) {};
-    void NotifyCombatMissed(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
-    void NotifyUnitKilled(AMingGoRTSUnit* Victim, AMingGoRTSUnit* Killer};
+    void NotifyCombatMissed(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
+    void NotifyUnitKilled(AMingGoRTSUnit* Victim, AMingGoRTSUnit* Killer);
     void NotifyAbilityUsed(AMingGoRTSUnit* Unit, const FString& AbilityName) {};
 };
 

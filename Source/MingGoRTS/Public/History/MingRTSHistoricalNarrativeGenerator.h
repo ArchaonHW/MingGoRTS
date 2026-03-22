@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Historical Narrative Generator - Creates compelling historical narratives from events
 
 #pragma once
@@ -10,8 +10,7 @@
 
 // Narrative Style Types
 UENUM(BlueprintType)
-enum class ENarrativeStyle : uint8
-{
+enum class ENarrativeStyle: uint8 {
     Chronological UMETA(DisplayName = "編年體"),
     Thematic UMETA(DisplayName = "主題體"),
     Biographical UMETA(DisplayName = "傳記體"),
@@ -24,8 +23,7 @@ enum class ENarrativeStyle : uint8
 
 // Narrative Tone Types
 UENUM(BlueprintType)
-enum class ENarrativeTone : uint8
-{
+enum class ENarrativeTone: uint8 {
     Neutral UMETA(DisplayName = "中立"),
     Triumphant UMETA(DisplayName = "勝利"),
     Tragic UMETA(DisplayName = "悲劇"),
@@ -38,8 +36,7 @@ enum class ENarrativeTone : uint8
 
 // Narrative Focus Types
 UENUM(BlueprintType)
-enum class ENarrativeFocus : uint8
-{
+enum class ENarrativeFocus: uint8 {
     Events UMETA(DisplayName = "事件"),
     Characters UMETA(DisplayName = "人物"),
     Consequences UMETA(DisplayName = "後果"),

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingBuildingLayerController.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingLayerBuildingType : uint8
-{
+enum class EMingLayerBuildingType: uint8 {
     Headquarters UMETA(DisplayName = "Headquarters"),
     Barracks UMETA(DisplayName = "Barracks"),
     Factory UMETA(DisplayName = "Factory"),
@@ -25,8 +24,7 @@ enum class EMingLayerBuildingType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingBuildStatus : uint8
-{
+enum class EMingBuildStatus: uint8 {
     Planned UMETA(DisplayName = "Planned"),
     UnderConstruction UMETA(DisplayName = "Under Construction"),
     Active UMETA(DisplayName = "Active"),
@@ -231,10 +229,10 @@ public:
 
     // Base Management
     UFUNCTION(BlueprintCallable, Category = "Base Management")
-    void LoadBase(const FString& BaseID};
+    void LoadBase(const FString& BaseID);
 
     UFUNCTION(BlueprintCallable, Category = "Base Management")
-    void CreateNewBase(const FString& BaseName, FVector Location, const FString& FactionID};
+    void CreateNewBase(const FString& BaseName, FVector Location, const FString& FactionID);
 
     UFUNCTION(BlueprintCallable, Category = "Base Management")
     void ClearBase();
@@ -243,32 +241,32 @@ public:
     bool GetCurrentBase(FMingBaseLayout& OutBase) const;
 
     UFUNCTION(BlueprintCallable, Category = "Base Management")
-    void SetBaseUnderAttack(bool bUnderAttack};
+    void SetBaseUnderAttack(bool bUnderAttack);
 
     UFUNCTION(BlueprintCallable, Category = "Base Management")
     void DefendBase();
 
     // Building Management
     UFUNCTION(BlueprintCallable, Category = "Building Management")
-    FString PlaceBuildingBlueprint(EMingBuildingType Type, FVector Location, FRotator Rotation};
+    FString PlaceBuildingBlueprint(EMingBuildingType Type, FVector Location, FRotator Rotation);
 
     UFUNCTION(BlueprintCallable, Category = "Building Management")
-    void StartConstruction(const FString& BuildingID};
+    void StartConstruction(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building Management")
-    void CancelConstruction(const FString& BuildingID};
+    void CancelConstruction(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building Management")
-    void CompleteConstruction(const FString& BuildingID};
+    void CompleteConstruction(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building Management")
-    void UpgradeBuilding(const FString& BuildingID};
+    void UpgradeBuilding(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building Management")
-    void DemolishBuilding(const FString& BuildingID};
+    void DemolishBuilding(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building Management")
-    void RepairBuilding(const FString& BuildingID};
+    void RepairBuilding(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building Management")
     bool GetBuilding(const FString& BuildingID, FMingBuildingInstance& OutBuilding) const;
@@ -286,10 +284,10 @@ public:
     TArray<FMingBuildingInstance> GetUnderConstructionBuildings() const;
 
     UFUNCTION(BlueprintCallable, Category = "Building Management")
-    void SelectBuilding(const FString& BuildingID};
+    void SelectBuilding(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building Management")
-    void DeselectBuilding(const FString& BuildingID};
+    void DeselectBuilding(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Building Management")
     void ClearBuildingSelection();
@@ -299,13 +297,13 @@ public:
 
     // Worker Management
     UFUNCTION(BlueprintCallable, Category = "Workers")
-    void AssignWorkers(const FString& BuildingID, int32 WorkerCount};
+    void AssignWorkers(const FString& BuildingID, int32 WorkerCount);
 
     UFUNCTION(BlueprintCallable, Category = "Workers")
-    void RemoveWorkers(const FString& BuildingID, int32 WorkerCount};
+    void RemoveWorkers(const FString& BuildingID, int32 WorkerCount);
 
     UFUNCTION(BlueprintCallable, Category = "Workers")
-    void SetBuildingPriority(const FString& BuildingID, int32 Priority};
+    void SetBuildingPriority(const FString& BuildingID, int32 Priority);
 
     UFUNCTION(BlueprintCallable, Category = "Workers")
     int32 GetAvailableWorkers() const;
@@ -314,26 +312,26 @@ public:
     int32 GetTotalWorkers() const;
 
     UFUNCTION(BlueprintCallable, Category = "Workers")
-    void HireWorkers(int32 Count};
+    void HireWorkers(int32 Count);
 
     UFUNCTION(BlueprintCallable, Category = "Workers")
-    void ReassignWorkers(const FString& FromBuildingID, const FString& ToBuildingID, int32 Count};
+    void ReassignWorkers(const FString& FromBuildingID, const FString& ToBuildingID, int32 Count);
 
     // Production Management
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void QueueUnitProduction(const FString& BuildingID, const FString& UnitType};
+    void QueueUnitProduction(const FString& BuildingID, const FString& UnitType);
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void CancelUnitProduction(const FString& BuildingID, int32 QueueIndex};
+    void CancelUnitProduction(const FString& BuildingID, int32 QueueIndex);
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void PauseProduction(const FString& BuildingID};
+    void PauseProduction(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void ResumeProduction(const FString& BuildingID};
+    void ResumeProduction(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void RushProduction(const FString& BuildingID};
+    void RushProduction(const FString& BuildingID);
 
     UFUNCTION(BlueprintPure, Category = "Production")
     FMingProductionQueue GetProductionQueue(const FString& BuildingID) const;
@@ -362,13 +360,13 @@ public:
 
     // Grid & Placement
     UFUNCTION(BlueprintCallable, Category = "Grid")
-    FVector SnapToGrid(FVector Location, float GridSize = 100.0f};
+    FVector SnapToGrid(FVector Location, float GridSize = 100.0f);
 
     UFUNCTION(BlueprintCallable, Category = "Grid")
     bool IsValidBuildLocation(FVector Location, float Radius) const;
 
     UFUNCTION(BlueprintCallable, Category = "Grid")
-    void SetBuildRadius(float Radius};
+    void SetBuildRadius(float Radius);
 
     UFUNCTION(BlueprintCallable, Category = "Grid")
     void ShowBuildableAreas();
@@ -381,7 +379,7 @@ public:
 
     // Camera & View
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void FocusOnBuilding(const FString& BuildingID};
+    void FocusOnBuilding(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
     void FocusOnBaseCenter();
@@ -390,26 +388,26 @@ public:
     void SetOverviewCamera();
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void SetFollowCamera(const FString& BuildingID};
+    void SetFollowCamera(const FString& BuildingID);
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void ZoomCamera(float Amount};
+    void ZoomCamera(float Amount);
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void PanCamera(FVector Direction};
+    void PanCamera(FVector Direction);
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void RotateCamera(float Angle};
+    void RotateCamera(float Angle);
 
     // Layer Integration
     UFUNCTION(BlueprintCallable, Category = "Layer Integration")
-    void RequestStrategicSupport(const FString& SupportType};
+    void RequestStrategicSupport(const FString& SupportType);
 
     UFUNCTION(BlueprintCallable, Category = "Layer Integration")
-    void SendResourcesToStrategic(TMap<FString, int32> Resources};
+    void SendResourcesToStrategic(TMap<FString, int32> Resources);
 
     UFUNCTION(BlueprintCallable, Category = "Layer Integration")
-    void ReceiveUnitFromTactical(const FString& UnitID};
+    void ReceiveUnitFromTactical(const FString& UnitID);
 
     UFUNCTION(BlueprintCallable, Category = "Layer Integration")
     void ReturnToStrategic();
@@ -428,10 +426,10 @@ public:
     float GetBaseEfficiency() const;
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
-    void ToggleBuildingVisibility(EMingBuildingType Type, bool bVisible};
+    void ToggleBuildingVisibility(EMingBuildingType Type, bool bVisible);
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
-    void ToggleGridDisplay(bool bShow};
+    void ToggleGridDisplay(bool bShow);
 
     // Events
     UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -479,19 +477,19 @@ protected:
 
     // Internal functions
     void InitializeDefaultBuildings();
-    void ProcessConstructionTick(float DeltaTime};
-    void ProcessProductionTick(float DeltaTime};
+    void ProcessConstructionTick(float DeltaTime);
+    void ProcessProductionTick(float DeltaTime);
     void UpdateResourceProduction();
     void CheckBuildingHealth();
     
-    void OnBuildingCompleted(const FString& BuildingID};
-    void OnUnitProductionFinished(const FString& BuildingID, const FString& UnitType};
-    void OnBuildingDamaged(const FString& BuildingID, float DamageAmount};
+    void OnBuildingCompleted(const FString& BuildingID);
+    void OnUnitProductionFinished(const FString& BuildingID, const FString& UnitType);
+    void OnBuildingDamaged(const FString& BuildingID, float DamageAmount);
     void OnBaseDefenseTriggered();
     
     bool CanAffordBuilding(const FMingBuildingInstance& Building) const;
-    void DeductBuildingCost(const FMingBuildingInstance& Building};
-    void RefundBuildingCost(const FMingBuildingInstance& Building};
+    void DeductBuildingCost(const FMingBuildingInstance& Building);
+    void RefundBuildingCost(const FMingBuildingInstance& Building);
     
     FString GenerateBuildingID();
     int32 CalculateMaxWorkers(EMingBuildingType Type) const;

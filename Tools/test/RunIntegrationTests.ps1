@@ -1,4 +1,4 @@
-# Integration Test Execution Script
+﻿# Integration Test Execution Script
 # For MingGoRTS Project
 # Usage: Run this script in PowerShell to execute integration tests
 

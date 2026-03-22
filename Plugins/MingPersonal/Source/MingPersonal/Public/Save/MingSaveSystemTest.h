@@ -10,8 +10,8 @@ class UMingSaveGameManager;
 class UMingRelationshipManager;
 
 /**
- * «O??¨t²Î´ú¸Õ®M¥ó
- * Åç??«O?X??X?¨t²Î?X??X?¯à
+ * ï¿½O??ï¿½tï¿½Î´ï¿½ï¿½Õ®Mï¿½ï¿½
+ * ï¿½ï¿½??ï¿½O?X??X?ï¿½tï¿½ï¿½?X??X?ï¿½ï¿½
  */
 UCLASS()
 class MINGPERSONAL_API UMingSaveSystemTest : public UObject
@@ -21,10 +21,11 @@ class MINGPERSONAL_API UMingSaveSystemTest : public UObject
 public:
     UMingSaveSystemTest();
 
-    // ???X???´ú??    UFUNCTION(BlueprintCallable, Category = "Save System Test")
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½??
+    UFUNCTION(BlueprintCallable, Category = "Save System Test")
     bool RunAllTests();
 
-    // ´ú¸Õµ²??
+    // ï¿½ï¿½ï¿½Õµï¿½??
     UFUNCTION(BlueprintPure, Category = "Save System Test")
     FString GetTestResults() const { return TestResults; }
 
@@ -37,7 +38,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Save System Test")
     float GetTestPassRate() const;
 
-    // ??§O´ú¸Õ
+    // ??ï¿½Oï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
     bool TestSaveGameCreation();
 
@@ -78,7 +79,7 @@ public:
     bool TestCompressionEncryption();
 
 private:
-    // ´ú¸Õµ²?X???
+    // ï¿½ï¿½ï¿½Õµï¿½?X???
     UPROPERTY()
     FString TestResults;
 
@@ -91,17 +92,17 @@ private:
     UPROPERTY()
     TArray<FString> ErrorMessages;
 
-    // ´ú¸ÕÀ°§U??¼Æ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½U??ï¿½ï¿½
     void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")) {};
     void ResetTestCounts() {};
 
-    // ²M²z´ú¸Õ¦sÀÉ
+    // ï¿½Mï¿½zï¿½ï¿½ï¿½Õ¦sï¿½ï¿½
     void CleanupTestSaves() {};
 
-    // ³Ğ«Ø´ú¸Õ­Ó¤HºŞ²z¾¹
+    // ï¿½Ğ«Ø´ï¿½ï¿½Õ­Ó¤Hï¿½Ş²zï¿½ï¿½
     UMingPersonalManager* CreateTestPersonalManager() {};
 
-    // ³Ğ«Ø´ú¸Õ¦sÀÉºŞ²z¾¹
+    // ï¿½Ğ«Ø´ï¿½ï¿½Õ¦sï¿½ÉºŞ²zï¿½ï¿½
     UMingSaveGameManager* CreateTestSaveManager() {};
 };
 

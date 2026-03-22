@@ -1,4 +1,4 @@
-# OPTIMIZED: Added error handling wrapper for reliability
+﻿# OPTIMIZED: Added error handling wrapper for reliability
 $ErrorActionPreference = "Stop"
 try {
 # OPTIMIZED: Script uses buffered logging for better performance

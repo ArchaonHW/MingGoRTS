@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // Prediction Types
 UENUM(BlueprintType)
-enum class EPredictionType : uint8
-{
+enum class EPredictionType: uint8 {
     PlayerBehavior      UMETA(DisplayName = "玩家行为"),
     GameOutcome         UMETA(DisplayName = "游戏结果"),
     ResourceTrend       UMETA(DisplayName = "资源趋势"),
@@ -22,8 +21,7 @@ enum class EPredictionType : uint8
 
 // Prediction Confidence Level
 UENUM(BlueprintType)
-enum class EPredictionConfidence : uint8
-{
+enum class EPredictionConfidence: uint8 {
     VeryLow             UMETA(DisplayName = "非常低"),
     Low                 UMETA(DisplayName = "低"),
     Medium              UMETA(DisplayName = "中等"),
@@ -33,8 +31,7 @@ enum class EPredictionConfidence : uint8
 
 // Player Behavior Patterns
 UENUM(BlueprintType)
-enum class EPlayerBehaviorPattern : uint8
-{
+enum class EPlayerBehaviorPattern: uint8 {
     AggressiveRush      UMETA(DisplayName = "激进快攻"),
     DefensiveTurtle     UMETA(DisplayName = "防御龟缩"),
     EconomicFocus       UMETA(DisplayName = "经济导向"),
@@ -50,8 +47,7 @@ enum class EPlayerBehaviorPattern : uint8
 
 // Trend Direction
 UENUM(BlueprintType)
-enum class ETrendDirection : uint8
-{
+enum class ETrendDirection: uint8 {
     Increasing          UMETA(DisplayName = "上升"),
     Decreasing          UMETA(DisplayName = "下降"),
     Stable              UMETA(DisplayName = "稳定"),

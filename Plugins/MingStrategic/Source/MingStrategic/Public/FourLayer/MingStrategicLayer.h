@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,8 +7,7 @@
 
 // 戰略目標類型
 UENUM(BlueprintType)
-enum class EMingStrategicObjective : uint8
-{
+enum class EMingStrategicObjective: uint8 {
     TerritoryExpansion,     // 領土擴張
     ResourceControl,        // 資源控制
     MilitarySupremacy,      // 軍事霸權
@@ -23,8 +22,7 @@ enum class EMingStrategicObjective : uint8
 
 // 外交關係狀態
 UENUM(BlueprintType)
-enum class EMingStrategicDiplomacy : uint8
-{
+enum class EMingStrategicDiplomacy: uint8 {
     Allied,         // 同盟
     Friendly,       // 友好
     Neutral,        // 中立
@@ -39,8 +37,7 @@ enum class EMingStrategicDiplomacy : uint8
 
 // 戰略決策類型
 UENUM(BlueprintType)
-enum class EMingStrategicDecision : uint8
-{
+enum class EMingStrategicDecision: uint8 {
     MilitaryCampaign,   // 軍事行動
     DiplomaticTreaty,    // 外交條約
     EconomicPolicy,     // 經濟政策

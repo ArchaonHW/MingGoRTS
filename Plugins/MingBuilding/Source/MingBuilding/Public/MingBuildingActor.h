@@ -6,8 +6,7 @@
 #include "MingBuildingActor.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingBuildingType : uint8
-{
+enum class EMingBuildingType: uint8 {
     CommandCenter UMETA(DisplayName = "Command Center"),
     Barracks UMETA(DisplayName = "Barracks"),
     Factory UMETA(DisplayName = "Factory"),
@@ -17,8 +16,7 @@ enum class EMingBuildingType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingActorBuildingState : uint8
-{
+enum class EMingActorBuildingState: uint8 {
     Planned UMETA(DisplayName = "Planned"),
     Constructing UMETA(DisplayName = "Constructing"),
     Active UMETA(DisplayName = "Active"),

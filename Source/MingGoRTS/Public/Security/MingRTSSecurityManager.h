@@ -11,8 +11,7 @@ class UMingRTSServerValidation;
  * 安全警報級別
  */
 UENUM(BlueprintType)
-enum class ESecurityAlertLevel : uint8
-{
+enum class ESecurityAlertLevel: uint8 {
     Info        UMETA(DisplayName = "Info"),
     Low         UMETA(DisplayName = "Low"),
     Medium      UMETA(DisplayName = "Medium"),
@@ -62,29 +61,36 @@ class MINGGORTS_API UMingRTSSecurityManager : public UObject
 public:
     UMingRTSSecurityManager();
     
-    // ?��X    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?��X
+    UFUNCTION(BlueprintCallable, Category = "Security")
     void InitializeSecurityManager();
     
-    // ?��X��?弊系�?    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?��X��?弊系�?
+    UFUNCTION(BlueprintCallable, Category = "Security")
     UMingRTSAntiCheat* GetAntiCheatSystem() const;
     
-    // ?��X��X��?證系�?    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?��X��X��?證系�?
+    UFUNCTION(BlueprintCallable, Category = "Security")
     UMingRTSServerValidation* GetServerValidation() const;
     
-    // ?��X�?��X�系�?    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?��X�?��X�系�?
+    UFUNCTION(BlueprintCallable, Category = "Security")
     void StartAllSecuritySystems();
     
-    // ?�止?�?��X�系�?    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?�止?�?��X�系�?
+    UFUNCTION(BlueprintCallable, Category = "Security")
     void StopAllSecuritySystems();
     
     // ?��?安全警報
     UFUNCTION(BlueprintCallable, Category = "Security")
     void ReportSecurityAlert(ESecurityAlertLevel Level, const FText& Title, const FText& Message);
     
-    // ?��X�?�警X    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?��X�?�警X
+    UFUNCTION(BlueprintCallable, Category = "Security")
     TArray<FSecurityAlert> GetAllAlerts() const;
     
-    // ?��X�確認警X    UFUNCTION(BlueprintCallable, Category = "Security")
+    // ?��X�確認警X
+    UFUNCTION(BlueprintCallable, Category = "Security")
     TArray<FSecurityAlert> GetUnacknowledgedAlerts() const;
     
     // 確�?警報
@@ -95,7 +101,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Security")
     void ClearAlert(FName AlertID);
     
-    // 檢查?�家安全?�X    UFUNCTION(BlueprintCallable, Category = "Security")
+    // 檢查?�家安全?�X
+    UFUNCTION(BlueprintCallable, Category = "Security")
     bool IsPlayerSecure(const FString& PlayerID) const;
     
     // ?��X�家安全評�?

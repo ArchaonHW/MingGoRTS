@@ -1,5 +1,5 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// ??À¸??­±???X- ¥D?X??X?À¸??´º????
+ï»¿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// ??ï¿½ï¿½??ï¿½ï¿½???X- ï¿½D?X??X?ï¿½ï¿½??ï¿½ï¿½????
 
 #pragma once
 
@@ -10,11 +10,10 @@
 #include "GameScreenGenerator.generated.h"
 
 /**
- * ??­±Ãþ?X???
+ * ??ï¿½ï¿½ï¿½ï¿½?X???
  */
 UENUM(BlueprintType)
-enum class EScreenType : uint8
-{
+enum class EScreenType: uint8 {
     MainMenu		UMETA(DisplayName = "Main Menu"),
     FactionSelect	UMETA(DisplayName = "Faction Selection"),
     StrategicMap		UMETA(DisplayName = "Strategic Map"),
@@ -28,11 +27,10 @@ enum class EScreenType : uint8
 };
 
 /**
- * ??­±­·®æ????
+ * ??ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½????
  */
 UENUM(BlueprintType)
-enum class EScreenStyle : uint8
-{
+enum class EScreenStyle: uint8 {
     Traditional		UMETA(DisplayName = "Traditional Chinese"),
     Modern			UMETA(DisplayName = "Modern"),
     Minimal			UMETA(DisplayName = "Minimal"),
@@ -41,10 +39,9 @@ enum class EScreenStyle : uint8
 };
 
 /**
- * ??­±?X«×?X */
+ * ??ï¿½ï¿½?Xï¿½ï¿½?X */
 UENUM(BlueprintType)
-enum class EScreenResolution : uint8
-{
+enum class EScreenResolution: uint8 {
     HD_720p			UMETA(DisplayName = "1280x720"),
     FullHD_1080p	UMETA(DisplayName = "1920x1080"),
     QHD_1440p		UMETA(DisplayName = "2560x1440"),
@@ -53,18 +50,18 @@ enum class EScreenResolution : uint8
 };
 
 /**
- * ??­±???X?¼Æ
+ * ??ï¿½ï¿½???X?ï¿½ï¿½
  */
 USTRUCT(BlueprintType)
 struct FScreenGenerationParams
 {
     GENERATED_BODY()
 
-    /** ??­±Ãþ?? */
+    /** ??ï¿½ï¿½ï¿½ï¿½?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     EScreenType ScreenType;
 
-    /** ??­±­·®æ */
+    /** ??ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     EScreenStyle ScreenStyle;
 
@@ -72,43 +69,43 @@ struct FScreenGenerationParams
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     EScreenResolution Resolution;
 
-    /** ¼e«× */
+    /** ï¿½eï¿½ï¿½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     int32 Width;
 
-    /** °ª«× */
+    /** ï¿½ï¿½ï¿½ï¿½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     int32 Height;
 
-    /** ??´ºÃC¦â */
+    /** ??ï¿½ï¿½ï¿½Cï¿½ï¿½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     FLinearColor BackgroundColor;
 
-    /** ¥D??ÃC¦â */
+    /** ï¿½D??ï¿½Cï¿½ï¿½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     FLinearColor PrimaryColor;
 
-    /** ¦¸??ÃC¦â */
+    /** ï¿½ï¿½??ï¿½Cï¿½ï¿½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     FLinearColor SecondaryColor;
 
-    /** ????ÃC¦â */
+    /** ????ï¿½Cï¿½ï¿½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     FLinearColor TextColor;
 
-    /** ??µe???? */
+    /** ??ï¿½e???? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     bool bEnableAnimation;
 
-    /** ²É?X??? */
+    /** ï¿½ï¿½?X??? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     bool bEnableParticles;
 
-    /** ??¼v???? */
+    /** ??ï¿½v???? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     bool bEnableLighting;
 
-    /** ½è??¯Å§O */
+    /** ï¿½ï¿½??ï¿½Å§O */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     int32 QualityLevel;
 
@@ -131,26 +128,26 @@ struct FScreenGenerationParams
 };
 
 /**
- * ??­±???X???
+ * ??ï¿½ï¿½???X???
  */
 USTRUCT(BlueprintType)
 struct FScreenElement
 {
     GENERATED_BODY()
 
-    /** ????Ãþ?? */
+    /** ????ï¿½ï¿½?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FString ElementType;
 
-    /** ???X?ºÙ */
+    /** ???X?ï¿½ï¿½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FString ElementName;
 
-    /** ¦ì¸m */
+    /** ï¿½ï¿½m */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FVector2D Position;
 
-    /** ¤j?? */
+    /** ï¿½j?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FVector2D Size;
 
@@ -162,27 +159,27 @@ struct FScreenElement
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     float Opacity;
 
-    /** ÃC¦â */
+    /** ï¿½Cï¿½ï¿½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FLinearColor Color;
 
-    /** ¯¾??¸ô?? */
+    /** ï¿½ï¿½??ï¿½ï¿½?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FString TexturePath;
 
-    /** ???X?®e */
+    /** ???X?ï¿½e */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FString TextContent;
 
-    /** ¦r??¤j?? */
+    /** ï¿½r??ï¿½j?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     int32 FontSize;
 
-    /** ??§_???? */
+    /** ??ï¿½_???? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     bool bVisible;
 
-    /** ??§_??¥æ??*/
+    /** ??ï¿½_??ï¿½ï¿½??*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     bool bInteractive;
 
@@ -204,21 +201,21 @@ struct FScreenElement
 };
 
 /**
- * ???X?µe??¼ÆX */
+ * ???X?ï¿½e??ï¿½ï¿½X */
 USTRUCT(BlueprintType)
 struct FGeneratedScreen
 {
     GENERATED_BODY()
 
-    /** ??­±ID */
+    /** ??ï¿½ï¿½ID */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     FString ScreenID;
 
-    /** ??­±Ãþ?? */
+    /** ??ï¿½ï¿½ï¿½ï¿½?? */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     EScreenType ScreenType;
 
-    /** ??­±­·®æ */
+    /** ??ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     EScreenStyle ScreenStyle;
 
@@ -226,19 +223,19 @@ struct FGeneratedScreen
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     EScreenResolution Resolution;
 
-    /** ¼e«× */
+    /** ï¿½eï¿½ï¿½ */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     int32 Width;
 
-    /** °ª«× */
+    /** ï¿½ï¿½ï¿½ï¿½ */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     int32 Height;
 
-    /** ??­±???? */
+    /** ??ï¿½ï¿½???? */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     TArray<FScreenElement> Elements;
 
-    /** ¯¾?? */
+    /** ï¿½ï¿½?? */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     UTexture2D* ScreenTexture;
 
@@ -246,7 +243,7 @@ struct FGeneratedScreen
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     FDateTime GenerationTime;
 
-    /** ??¥ó¸ô?? */
+    /** ??ï¿½ï¿½ï¿½?? */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     FString FilePath;
 
@@ -265,7 +262,7 @@ struct FGeneratedScreen
 };
 
 /**
- * ??À¸??­±???X */
+ * ??ï¿½ï¿½??ï¿½ï¿½???X */
 UCLASS(BlueprintType, Blueprintable)
 class GAMESCREENGENERATOR_API UGameScreenGenerator : public UObject
 {
@@ -274,95 +271,95 @@ class GAMESCREENGENERATOR_API UGameScreenGenerator : public UObject
 public:
     UGameScreenGenerator();
 
-    /** ???X?µe???X?¾¹ */
+    /** ???X?ï¿½e???X?ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     void InitializeScreenGenerator();
 
-    /** ???X?­± */
+    /** ???X?ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FString GenerateScreen(const FScreenGenerationParams& Params};
+    FString GenerateScreen(const FScreenGenerationParams& Params);
 
-    /** ????¥D?X?µeX*/
+    /** ????ï¿½D?X?ï¿½eX*/
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FString GenerateMainMenu(const FScreenGenerationParams& Params};
+    FString GenerateMainMenu(const FScreenGenerationParams& Params);
 
-    /** ???X??X??X?­± */
+    /** ???X??X??X?ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FString GenerateFactionSelect(const FScreenGenerationParams& Params};
+    FString GenerateFactionSelect(const FScreenGenerationParams& Params);
 
-    /** ???X?²¤???X?­± */
+    /** ???X?ï¿½ï¿½???X?ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FString GenerateStrategicMap(const FScreenGenerationParams& Params};
+    FString GenerateStrategicMap(const FScreenGenerationParams& Params);
 
-    /** ???X?°«??´º??­± */
+    /** ???X?ï¿½ï¿½??ï¿½ï¿½??ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FString GenerateBattleScene(const FScreenGenerationParams& Params};
+    FString GenerateBattleScene(const FScreenGenerationParams& Params);
 
-    /** ???X???µø?X?­± */
+    /** ???X???ï¿½ï¿½?X?ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FString GenerateCityView(const FScreenGenerationParams& Params};
+    FString GenerateCityView(const FScreenGenerationParams& Params);
 
-    /** ????¥~¥æ??ªO??­± */
+    /** ????ï¿½~ï¿½ï¿½??ï¿½O??ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FString GenerateDiplomacyPanel(const FScreenGenerationParams& Params};
+    FString GenerateDiplomacyPanel(const FScreenGenerationParams& Params);
 
-    /** ????¸g?X?ªO??­± */
+    /** ????ï¿½g?X?ï¿½O??ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FString GenerateEconomyPanel(const FScreenGenerationParams& Params};
+    FString GenerateEconomyPanel(const FScreenGenerationParams& Params);
 
-    /** ???X?¨s??ªO??­± */
+    /** ???X?ï¿½s??ï¿½O??ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FString GenerateResearchPanel(const FScreenGenerationParams& Params};
+    FString GenerateResearchPanel(const FScreenGenerationParams& Params);
 
-    /** ????³]¸m??³æ??­± */
+    /** ????ï¿½]ï¿½m??ï¿½ï¿½??ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FString GenerateSettingsMenu(const FScreenGenerationParams& Params};
+    FString GenerateSettingsMenu(const FScreenGenerationParams& Params);
 
-    /** ????¸ü¤J??­± */
+    /** ????ï¿½ï¿½ï¿½J??ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FString GenerateLoadingScreen(const FScreenGenerationParams& Params};
+    FString GenerateLoadingScreen(const FScreenGenerationParams& Params);
 
-    /** ???X??X?µeX*/
+    /** ???X??X?ï¿½eX*/
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    FGeneratedScreen GetGeneratedScreen(const FString& ScreenID};
+    FGeneratedScreen GetGeneratedScreen(const FString& ScreenID);
 
-    /** ???X????X??X?­± */
+    /** ???X????X??X?ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     TArray<FGeneratedScreen> GetAllGeneratedScreens();
 
-    /** ??°£???X?µeX*/
+    /** ??ï¿½ï¿½???X?ï¿½eX*/
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    bool DeleteGeneratedScreen(const FString& ScreenID};
+    bool DeleteGeneratedScreen(const FString& ScreenID);
 
-    /** ¾É¥X??­±???X*/
+    /** ï¿½É¥X??ï¿½ï¿½???X*/
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    bool ExportScreenAsImage(const FString& ScreenID, const FString& FilePath};
+    bool ExportScreenAsImage(const FString& ScreenID, const FString& FilePath);
 
-    /** ??Äý??­± */
+    /** ??ï¿½ï¿½??ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    void PreviewScreen(const FString& ScreenID};
+    void PreviewScreen(const FString& ScreenID);
 
-    /** ??¥Î??­±¥D?? */
+    /** ??ï¿½ï¿½??ï¿½ï¿½ï¿½D?? */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    void ApplyScreenTheme(FScreenElement& Element, EScreenStyle Style};
+    void ApplyScreenTheme(FScreenElement& Element, EScreenStyle Style);
 
-    /** ²K?X?µe???? */
+    /** ï¿½K?X?ï¿½e???? */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    void AddAnimationEffect(FScreenElement& Element, const FString& AnimationType};
+    void AddAnimationEffect(FScreenElement& Element, const FString& AnimationType);
 
-    /** ²K??²É?X??? */
+    /** ï¿½K??ï¿½ï¿½?X??? */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
-    void AddParticleEffect(FScreenElement& Element, const FString& ParticleType};
+    void AddParticleEffect(FScreenElement& Element, const FString& ParticleType);
 
 public:
-    /** ??­±???X???¨Æ¥ó */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScreenGenerationStarted, const FString&, ScreenID};
+    /** ??ï¿½ï¿½???X???ï¿½Æ¥ï¿½ */
+    
 
-    /** ??­±????§¹??¨Æ¥ó */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnScreenGenerationCompleted, const FString&, ScreenID, const FGeneratedScreen&, GeneratedScreen};
+    /** ??ï¿½ï¿½????ï¿½ï¿½??ï¿½Æ¥ï¿½ */
+    
 
-    /** ??­±????¥¢??¨Æ¥ó */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnScreenGenerationFailed, const FString&, ScreenID, const FString&, ErrorMessage};
+    /** ??ï¿½ï¿½????ï¿½ï¿½??ï¿½Æ¥ï¿½ */
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Screen Generator|Events")
     FOnScreenGenerationStarted OnScreenGenerationStarted;
@@ -374,88 +371,88 @@ public:
     FOnScreenGenerationFailed OnScreenGenerationFailed;
 
 protected:
-    /** ??«Ø??­±???? */
-    FScreenElement CreateScreenElement(const FString& Type, const FString& Name, const FVector2D& Position, const FVector2D& Size};
+    /** ??ï¿½ï¿½??ï¿½ï¿½???? */
+    FScreenElement CreateScreenElement(const FString& Type, const FString& Name, const FVector2D& Position, const FVector2D& Size);
 
-    /** ³]¸m?????X */
-    void SetElementStyle(FScreenElement& Element, const FScreenGenerationParams& Params};
+    /** ï¿½]ï¿½m?????X */
+    void SetElementStyle(FScreenElement& Element, const FScreenGenerationParams& Params);
 
-    /** ´è?X?­± */
-    UTexture2D* RenderScreen(const TArray<FScreenElement>& Elements, const FScreenGenerationParams& Params};
+    /** ï¿½ï¿½?X?ï¿½ï¿½ */
+    UTexture2D* RenderScreen(const TArray<FScreenElement>& Elements, const FScreenGenerationParams& Params);
 
-    /** «O?X?­± */
-    bool SaveScreen(const FGeneratedScreen& Screen};
+    /** ï¿½O?X?ï¿½ï¿½ */
+    bool SaveScreen(const FGeneratedScreen& Screen);
 
-    /** ???X?­± */
-    FGeneratedScreen LoadScreen(const FString& ScreenID};
+    /** ???X?ï¿½ï¿½ */
+    FGeneratedScreen LoadScreen(const FString& ScreenID);
 
-    /** ???X?­±ID */
+    /** ???X?ï¿½ï¿½ID */
     FString GenerateScreenID();
 
-    /** Åç?X?¼Æ */
-    bool ValidateParams(const FScreenGenerationParams& Params};
+    /** ï¿½ï¿½?X?ï¿½ï¿½ */
+    bool ValidateParams(const FScreenGenerationParams& Params);
 
-    /** ?????X«×³]??*/
-    void GetResolutionSettings(EScreenResolution Resolution, int32& OutWidth, int32& OutHeight};
+    /** ?????Xï¿½×³]??*/
+    void GetResolutionSettings(EScreenResolution Resolution, int32& OutWidth, int32& OutHeight);
 
-    /** ??¥Î­·®æ¥D?? */
-    void ApplyStyleTheme(FScreenGenerationParams& Params, EScreenStyle Style};
+    /** ??ï¿½Î­ï¿½ï¿½ï¿½D?? */
+    void ApplyStyleTheme(FScreenGenerationParams& Params, EScreenStyle Style);
 
 private:
-    /** ???X?µe??????*/
+    /** ???X?ï¿½e??????*/
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     TArray<FGeneratedScreen> GeneratedScreens;
 
-    /** ¨t²Î??§_¤w??©l?? */
+    /** ï¿½tï¿½ï¿½??ï¿½_ï¿½w??ï¿½l?? */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     bool bInitialized;
 
-    /** ??­±¿é¥X???? */
+    /** ??ï¿½ï¿½ï¿½ï¿½X???? */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     FString OutputDirectory;
 
-    /** Àq?X?¼Æ */
+    /** ï¿½q?X?ï¿½ï¿½ */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     FScreenGenerationParams DefaultParams;
 
-    /** ??­±­p¼ÆX*/
+    /** ??ï¿½ï¿½ï¿½pï¿½ï¿½X*/
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     int32 ScreenCounter;
 };
 
 /**
- * ??­±????¼ÒªO
+ * ??ï¿½ï¿½????ï¿½ÒªO
  */
 USTRUCT(BlueprintType)
 struct FScreenElementTemplate
 {
     GENERATED_BODY()
 
-    /** ¼ÒªO??ºÙ */
+    /** ï¿½ÒªO??ï¿½ï¿½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString TemplateName;
 
-    /** ????Ãþ?? */
+    /** ????ï¿½ï¿½?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString ElementType;
 
-    /** Àq??¤j?? */
+    /** ï¿½q??ï¿½j?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FVector2D DefaultSize;
 
-    /** Àq??ÃC¦â */
+    /** ï¿½q??ï¿½Cï¿½ï¿½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FLinearColor DefaultColor;
 
-    /** Àq??¯¾?? */
+    /** ï¿½q??ï¿½ï¿½?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString DefaultTexture;
 
-    /** ??µe???? */
+    /** ??ï¿½e???? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString AnimationEffect;
 
-    /** ²É?X??? */
+    /** ï¿½ï¿½?X??? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString ParticleEffect;
 
@@ -472,7 +469,7 @@ struct FScreenElementTemplate
 };
 
 /**
- * ??­±¼ÒªOºÞ?X */
+ * ??ï¿½ï¿½ï¿½ÒªOï¿½ï¿½?X */
 UCLASS(BlueprintType, Blueprintable)
 class GAMESCREENGENERATOR_API UScreenTemplateManager : public UObject
 {
@@ -481,47 +478,48 @@ class GAMESCREENGENERATOR_API UScreenTemplateManager : public UObject
 public:
     UScreenTemplateManager();
 
-    /** ???X?¼Ò??ºÞ??¾¹ */
+    /** ???X?ï¿½ï¿½??ï¿½ï¿½??ï¿½ï¿½ */
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
     void InitializeTemplateManager();
 
-    /** µù??¼ÒªO */
+    /** ï¿½ï¿½??ï¿½ÒªO */
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
-    void RegisterTemplate(const FScreenElementTemplate& Template};
+    void RegisterTemplate(const FScreenElementTemplate& Template);
 
-    /** ????¼ÒªO */
+    /** ????ï¿½ÒªO */
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
-    FScreenElementTemplate GetTemplate(const FString& TemplateName};
+    FScreenElementTemplate GetTemplate(const FString& TemplateName);
 
-    /** ???X???¼ÒX*/
+    /** ???X???ï¿½ï¿½X*/
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
     TArray<FScreenElementTemplate> GetAllTemplates();
 
-    /** ±q¼Ò??³Ð«Ø????*/
+    /** ï¿½qï¿½ï¿½??ï¿½Ð«ï¿½????*/
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
-    FScreenElement CreateElementFromTemplate(const FString& TemplateName, const FString& ElementName, const FVector2D& Position};
+    FScreenElement CreateElementFromTemplate(const FString& TemplateName, const FString& ElementName, const FVector2D& Position);
 
 protected:
-    /** ????Àq??¼ÒªO */
+    /** ????ï¿½q??ï¿½ÒªO */
     void LoadDefaultTemplates();
 
-    /** «O??¼ÒªO */
-    bool SaveTemplate(const FScreenElementTemplate& Template};
+    /** ï¿½O??ï¿½ÒªO */
+    bool SaveTemplate(const FScreenElementTemplate& Template);
 
-    /** ????¼ÒªO */
+    /** ????ï¿½ÒªO */
     void LoadTemplates();
 
 private:
-    /** ¼ÒªO??ªí */
+    /** ï¿½ÒªO??ï¿½ï¿½ */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Template Manager", meta = (AllowPrivateAccess = "true"))
     TArray<FScreenElementTemplate> Templates;
 
-    /** ¨t²Î??§_¤w??©l?? */
+    /** ï¿½tï¿½ï¿½??ï¿½_ï¿½w??ï¿½l?? */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Template Manager", meta = (AllowPrivateAccess = "true"))
     bool bInitialized;
 
-    /** ¼ÒªO??¥ó¸ô?? */
+    /** ï¿½ÒªO??ï¿½ï¿½ï¿½?? */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Template Manager", meta = (AllowPrivateAccess = "true"))
     FString TemplateFilePath;
 };
+
 

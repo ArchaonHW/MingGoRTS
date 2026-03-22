@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - AR Controller Component
 
 #pragma once
@@ -11,8 +11,7 @@
  * AR Gesture Types for interaction
  */
 UENUM(BlueprintType)
-enum class EARGestureType : uint8
-{
+enum class EARGestureType: uint8 {
     None                UMETA(DisplayName = "None"),
     Tap                 UMETA(DisplayName = "Tap"),
     DoubleTap           UMETA(DisplayName = "Double Tap"),
@@ -29,8 +28,7 @@ enum class EARGestureType : uint8
  * AR Interaction Modes
  */
 UENUM(BlueprintType)
-enum class EARInteractionMode : uint8
-{
+enum class EARInteractionMode: uint8 {
     Touch               UMETA(DisplayName = "Touch"),
     AirTap              UMETA(DisplayName = "Air Tap"),
     HandGesture         UMETA(DisplayName = "Hand Gesture"),

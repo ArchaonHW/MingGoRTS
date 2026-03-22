@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,8 +8,7 @@
  * 雲端服務類型
  */
 UENUM(BlueprintType)
-enum class ECloudServiceType : uint8
-{
+enum class ECloudServiceType: uint8 {
     SaveSync              UMETA(DisplayName = "存檔同步"),
     Leaderboard           UMETA(DisplayName = "排行榜"),
     Matchmaking           UMETA(DisplayName = "配對系統"),
@@ -26,8 +25,7 @@ enum class ECloudServiceType : uint8
  * 雲端服務狀態
  */
 UENUM(BlueprintType)
-enum class ECloudServiceStatus : uint8
-{
+enum class ECloudServiceStatus: uint8 {
     Disconnected          UMETA(DisplayName = "未連接"),
     Connecting            UMETA(DisplayName = "連接中"),
     Connected             UMETA(DisplayName = "已連接"),

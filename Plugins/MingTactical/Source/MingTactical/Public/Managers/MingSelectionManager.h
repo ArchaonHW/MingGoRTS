@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -42,13 +42,13 @@ public:
     void Shutdown();
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void SelectUnit(AMingTacticalUnit* Unit, bool bAdditive};
+    void SelectUnit(AMingTacticalUnit* Unit, bool bAdditive);
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void SelectUnits(const TArray<AMingTacticalUnit*>& Units, bool bAdditive};
+    void SelectUnits(const TArray<AMingTacticalUnit*>& Units, bool bAdditive);
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void DeselectUnit(AMingTacticalUnit* Unit};
+    void DeselectUnit(AMingTacticalUnit* Unit);
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
     void DeselectAll();
@@ -63,10 +63,10 @@ public:
     int32 GetSelectedUnitCount() const { return SelectedUnits.Num(); }
 
     UFUNCTION(BlueprintCallable, Category = "Selection Box")
-    void StartSelectionBox(const FVector2D& ScreenPosition};
+    void StartSelectionBox(const FVector2D& ScreenPosition);
 
     UFUNCTION(BlueprintCallable, Category = "Selection Box")
-    void UpdateSelectionBox(const FVector2D& ScreenPosition};
+    void UpdateSelectionBox(const FVector2D& ScreenPosition);
 
     UFUNCTION(BlueprintCallable, Category = "Selection Box")
     void EndSelectionBox();

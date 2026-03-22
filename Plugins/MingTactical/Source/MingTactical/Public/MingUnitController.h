@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Unit Controller for Tactical Units
 
 #pragma once
@@ -11,16 +11,14 @@ class AMingTacticalUnit;
 class UMingTacticalAI;
 
 UENUM(BlueprintType)
-enum class EUnitControlMode : uint8
-{
+enum class EUnitControlMode: uint8 {
     Manual, UMETA(DisplayName = "Manual Control"),
     AI, UMETA(DisplayName = "AI Control"),
     Mixed, UMETA(DisplayName = "Mixed Control")
 };
 
 UENUM(BlueprintType)
-enum class EUnitStance : uint8
-{
+enum class EUnitStance: uint8 {
     Aggressive, UMETA(DisplayName = "Aggressive"),
     Defensive, UMETA(DisplayName = "Defensive"),
     Hold, UMETA(DisplayName = "Hold Position"),

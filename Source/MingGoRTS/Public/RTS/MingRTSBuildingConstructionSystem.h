@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,8 +8,7 @@
 
 // 建筑类型
 UENUM(BlueprintType)
-enum class ERTSBuildingType : uint8
-{
+enum class ERTSBuildingType: uint8 {
     // 基础设施
     Headquarters    UMETA(DisplayName = "Headquarters"),
     Barracks        UMETA(DisplayName = "Barracks"),
@@ -37,8 +36,7 @@ enum class ERTSBuildingType : uint8
 
 // 建筑状态
 UENUM(BlueprintType)
-enum class ERTSBuildingState : uint8
-{
+enum class ERTSBuildingState: uint8 {
     Planned         UMETA(DisplayName = "Planned"),
     Constructing    UMETA(DisplayName = "Constructing"),
     Operational     UMETA(DisplayName = "Operational"),

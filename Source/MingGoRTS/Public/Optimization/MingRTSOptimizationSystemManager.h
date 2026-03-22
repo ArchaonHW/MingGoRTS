@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSOptimizationSystemManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EOptimizationMode : uint8
-{
+enum class EOptimizationMode: uint8 {
     Development, UMETA(DisplayName = "Development Mode"),
     Testing, UMETA(DisplayName = "Testing Mode"),
     Release, UMETA(DisplayName = "Release Mode"),
@@ -51,24 +50,24 @@ class MINGGORTS_API UMingRTSOptimizationSystemManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationSystemManager(};
+    UMingRTSOptimizationSystemManager();
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
-    void InitializeOptimizationManager(};
+    void InitializeOptimizationManager();
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
-    void SetOptimizationMode(EOptimizationMode Mode};
+    void SetOptimizationMode(EOptimizationMode Mode);
     UFUNCTION(BlueprintPure, Category = "Optimization Manager")
     EOptimizationMode GetCurrentOptimizationMode() const;
 
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
-    void ApplyOptimizationConfiguration(const FOptimizationConfiguration& Config};
+    void ApplyOptimizationConfiguration(const FOptimizationConfiguration& Config);
 
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
-    void OptimizeSystemPerformance(};
+    void OptimizeSystemPerformance();
     UFUNCTION(BlueprintPure, Category = "Optimization Manager")
     FOptimizationConfiguration GetCurrentConfiguration() const;
 
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
-    void ResetToDefaults(};
+    void ResetToDefaults();
 protected:
     UPROPERTY()
     EOptimizationMode CurrentMode;
@@ -79,10 +78,10 @@ protected:
     UPROPERTY()
     bool bIsOptimizing;
 
-    void InitializeDefaultConfiguration(};
-    void ApplyDevelopmentMode(};
-    void ApplyTestingMode(};
-    void ApplyReleaseMode(};
-    void ApplyPerformanceMode(};
-    bool ValidateConfiguration(const FOptimizationConfiguration& Config};
-};
+    void InitializeDefaultConfiguration();
+    void ApplyDevelopmentMode();
+    void ApplyTestingMode();
+    void ApplyReleaseMode();
+    void ApplyPerformanceMode();
+    bool ValidateConfiguration(const FOptimizationConfiguration& Config);
+);

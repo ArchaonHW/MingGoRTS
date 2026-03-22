@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
@@ -15,8 +15,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnARContentPlaced, const FString&, 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLearningProgressUpdated, const FString&, PlayerID, const FMingEducationalProgress&, Progress);
 
 UENUM(BlueprintType)
-enum class EMingImmersiveMode : uint8
-{
+enum class EMingImmersiveMode: uint8 {
     None            = 0,
     Educational     = 1,
     VR              = 2,

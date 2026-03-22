@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Network Security Manager - B1-4
 // Enhances network security with encryption and anti-cheat
 
@@ -11,8 +11,7 @@
 #include "MingNetworkSecurityManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EEncryptionLevel : uint8
-{
+enum class EEncryptionLevel: uint8 {
     None = 0, UMETA(DisplayName = "No Encryption"),
     Light, UMETA(DisplayName = "Light Encryption"),
     Standard, UMETA(DisplayName = "Standard Encryption"),
@@ -21,8 +20,7 @@ enum class EEncryptionLevel : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESecurityAlertLevel : uint8
-{
+enum class ESecurityAlertLevel: uint8 {
     Normal = 0, UMETA(DisplayName = "Normal"),
     Suspicious, UMETA(DisplayName = "Suspicious Activity"),
     Warning, UMETA(DisplayName = "Security Warning"),
@@ -31,8 +29,7 @@ enum class ESecurityAlertLevel : uint8
 };
 
 UENUM(BlueprintType)
-enum class ECheatType : uint8
-{
+enum class ECheatType: uint8 {
     SpeedHack = 0, UMETA(DisplayName = "Speed Hack"),
     Aimbot, UMETA(DisplayName = "Aimbot"),
     Wallhack, UMETA(DisplayName = "Wallhack"),
@@ -46,8 +43,7 @@ enum class ECheatType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EActionTaken : uint8
-{
+enum class EActionTaken: uint8 {
     None = 0, UMETA(DisplayName = "No Action"),
     Warning, UMETA(DisplayName = "Issue Warning"),
     Kick, UMETA(DisplayName = "Kick Player"),
@@ -242,11 +238,11 @@ struct FPacketSecurityInfo
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSecurityAlert, FSecurityIncident, Incident};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCheatDetected, int32, PlayerID, ECheatType, CheatType};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSecurityLevelChanged, ESecurityAlertLevel, NewLevel};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerBanned, int32, PlayerID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnauthorizedAccessAttempt, FString, SourceIP};
+
+
+
+
+
 /**
  * Network Security Manager
  * Provides encryption, anti-cheat, and security monitoring
@@ -257,93 +253,93 @@ class MINGRTS_API UMingNetworkSecurityManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingNetworkSecurityManager(};
+    UMingNetworkSecurityManager();
     UFUNCTION(BlueprintCallable, Category = "Security Management")
-    void InitializeSecurityManager(const FSecurityConfig& Config};
+    void InitializeSecurityManager(const FSecurityConfig& Config);
     UFUNCTION(BlueprintCallable, Category = "Security Management")
-    void ShutdownSecurityManager(};
+    void ShutdownSecurityManager();
     // Encryption functions
     UFUNCTION(BlueprintCallable, Category = "Encryption")
-    void SetEncryptionLevel(EEncryptionLevel Level};
+    void SetEncryptionLevel(EEncryptionLevel Level);
     UFUNCTION(BlueprintCallable, Category = "Encryption")
-    TArray<uint8> EncryptData(const TArray<uint8>& Data, int32 TargetPlayerID};
+    TArray<uint8> EncryptData(const TArray<uint8>& Data, int32 TargetPlayerID);
     UFUNCTION(BlueprintCallable, Category = "Encryption")
-    TArray<uint8> DecryptData(const TArray<uint8>& EncryptedData, int32 SourcePlayerID};
+    TArray<uint8> DecryptData(const TArray<uint8>& EncryptedData, int32 SourcePlayerID);
     UFUNCTION(BlueprintCallable, Category = "Encryption")
-    void GenerateSessionKeys(};
+    void GenerateSessionKeys();
     UFUNCTION(BlueprintCallable, Category = "Encryption")
-    void RotateEncryptionKeys(};
+    void RotateEncryptionKeys();
     UFUNCTION(BlueprintCallable, Category = "Encryption")
-    bool VerifyDataIntegrity(const TArray<uint8>& Data, const TArray<uint8>& Checksum};
+    bool VerifyDataIntegrity(const TArray<uint8>& Data, const TArray<uint8>& Checksum);
     UFUNCTION(BlueprintCallable, Category = "Encryption")
-    TArray<uint8> CalculateChecksum(const TArray<uint8>& Data};
+    TArray<uint8> CalculateChecksum(const TArray<uint8>& Data);
     // Anti-cheat functions
     UFUNCTION(BlueprintCallable, Category = "Anti-Cheat")
-    void EnableAntiCheat(bool bEnable};
+    void EnableAntiCheat(bool bEnable);
     UFUNCTION(BlueprintCallable, Category = "Anti-Cheat")
-    void ReportPlayerAction(int32 PlayerID, const FString& ActionType, const TArray<uint8>& ActionData};
+    void ReportPlayerAction(int32 PlayerID, const FString& ActionType, const TArray<uint8>& ActionData);
     UFUNCTION(BlueprintCallable, Category = "Anti-Cheat")
-    void AnalyzePlayerBehavior(int32 PlayerID};
+    void AnalyzePlayerBehavior(int32 PlayerID);
     UFUNCTION(BlueprintCallable, Category = "Anti-Cheat")
     float CalculateCheatProbability(int32 PlayerID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Anti-Cheat")
-    bool ValidatePlayerPosition(int32 PlayerID, const FVector& Position, float Timestamp};
+    bool ValidatePlayerPosition(int32 PlayerID, const FVector& Position, float Timestamp);
     UFUNCTION(BlueprintCallable, Category = "Anti-Cheat")
-    bool ValidatePlayerAction(int32 PlayerID, const FString& Action, float Timestamp};
+    bool ValidatePlayerAction(int32 PlayerID, const FString& Action, float Timestamp);
     UFUNCTION(BlueprintCallable, Category = "Anti-Cheat")
-    void SetSpeedLimit(int32 PlayerID, float MaxSpeed};
+    void SetSpeedLimit(int32 PlayerID, float MaxSpeed);
     UFUNCTION(BlueprintCallable, Category = "Anti-Cheat")
-    void MonitorResourceChanges(int32 PlayerID};
+    void MonitorResourceChanges(int32 PlayerID);
     // Security incident handling
     UFUNCTION(BlueprintCallable, Category = "Security Incidents")
-    void ReportSecurityIncident(const FSecurityIncident& Incident};
+    void ReportSecurityIncident(const FSecurityIncident& Incident);
     UFUNCTION(BlueprintCallable, Category = "Security Incidents")
-    void TakeAction(int32 PlayerID, EActionTaken Action};
+    void TakeAction(int32 PlayerID, EActionTaken Action);
     UFUNCTION(BlueprintCallable, Category = "Security Incidents")
-    void BanPlayer(int32 PlayerID, int32 DurationMinutes, const FString& Reason};
+    void BanPlayer(int32 PlayerID, int32 DurationMinutes, const FString& Reason);
     UFUNCTION(BlueprintCallable, Category = "Security Incidents")
-    void UnbanPlayer(int32 PlayerID};
+    void UnbanPlayer(int32 PlayerID);
     UFUNCTION(BlueprintCallable, Category = "Security Incidents")
-    void ShadowBanPlayer(int32 PlayerID};
+    void ShadowBanPlayer(int32 PlayerID);
     UFUNCTION(BlueprintCallable, Category = "Security Incidents")
-    void IssueWarning(int32 PlayerID, const FString& Message};
+    void IssueWarning(int32 PlayerID, const FString& Message);
     // Rate limiting
     UFUNCTION(BlueprintCallable, Category = "Rate Limiting")
-    bool CheckRateLimit(int32 PlayerID, const FString& ActionType};
+    bool CheckRateLimit(int32 PlayerID, const FString& ActionType);
     UFUNCTION(BlueprintCallable, Category = "Rate Limiting")
-    void UpdateRateLimits(};
+    void UpdateRateLimits();
     UFUNCTION(BlueprintCallable, Category = "Rate Limiting")
-    void SetPlayerRateLimit(int32 PlayerID, int32 MaxActionsPerSecond};
+    void SetPlayerRateLimit(int32 PlayerID, int32 MaxActionsPerSecond);
     // Authentication
     UFUNCTION(BlueprintCallable, Category = "Authentication")
-    bool AuthenticatePlayer(int32 PlayerID, const FString& Credentials};
+    bool AuthenticatePlayer(int32 PlayerID, const FString& Credentials);
     UFUNCTION(BlueprintCallable, Category = "Authentication")
-    bool VerifyHardwareID(int32 PlayerID, const FString& HardwareID};
+    bool VerifyHardwareID(int32 PlayerID, const FString& HardwareID);
     UFUNCTION(BlueprintCallable, Category = "Authentication")
-    void RegisterPlayerHardware(int32 PlayerID, const FString& HardwareID};
+    void RegisterPlayerHardware(int32 PlayerID, const FString& HardwareID);
     UFUNCTION(BlueprintCallable, Category = "Authentication")
     bool IsPlayerAuthenticated(int32 PlayerID) const;
 
     // IP and access control
     UFUNCTION(BlueprintCallable, Category = "Access Control")
-    void BlockIP(const FString& IPAddress};
+    void BlockIP(const FString& IPAddress);
     UFUNCTION(BlueprintCallable, Category = "Access Control")
-    void UnblockIP(const FString& IPAddress};
+    void UnblockIP(const FString& IPAddress);
     UFUNCTION(BlueprintCallable, Category = "Access Control")
     bool IsIPBlocked(const FString& IPAddress) const;
 
     UFUNCTION(BlueprintCallable, Category = "Access Control")
-    void WhitelistIP(const FString& IPAddress};
+    void WhitelistIP(const FString& IPAddress);
     // Packet validation
     UFUNCTION(BlueprintCallable, Category = "Packet Security")
-    bool ValidatePacket(const FPacketSecurityInfo& PacketInfo};
+    bool ValidatePacket(const FPacketSecurityInfo& PacketInfo);
     UFUNCTION(BlueprintCallable, Category = "Packet Security")
-    FPacketSecurityInfo SignPacket(const TArray<uint8>& Data, int32 SenderID};
+    FPacketSecurityInfo SignPacket(const TArray<uint8>& Data, int32 SenderID);
     UFUNCTION(BlueprintCallable, Category = "Packet Security")
-    bool DetectReplayAttack(const FPacketSecurityInfo& PacketInfo};
+    bool DetectReplayAttack(const FPacketSecurityInfo& PacketInfo);
     UFUNCTION(BlueprintCallable, Category = "Packet Security")
-    bool DetectPacketTampering(const TArray<uint8>& Data, const TArray<uint8>& ExpectedChecksum};
+    bool DetectPacketTampering(const TArray<uint8>& Data, const TArray<uint8>& ExpectedChecksum);
     UFUNCTION(BlueprintPure, Category = "Security Status")
     ESecurityAlertLevel GetCurrentAlertLevel() const { return CurrentAlertLevel; }
 
@@ -411,21 +407,21 @@ protected:
     UPROPERTY()
     bool bAntiCheatEnabled;
 
-    void ProcessSecurityAlerts(};
-    void UpdateAlertLevel(};
-    void DetectAnomalies(};
+    void ProcessSecurityAlerts();
+    void UpdateAlertLevel();
+    void DetectAnomalies();
     bool IsActionSuspicious(int32 PlayerID, const FString& Action) const;
-    void RecordPlayerBehavior(int32 PlayerID, float BehaviorMetric};
+    void RecordPlayerBehavior(int32 PlayerID, float BehaviorMetric);
     TArray<float> GetBehaviorPattern(int32 PlayerID) const;
     float CalculateBehaviorAnomaly(int32 PlayerID) const;
-    void AutoRespondToThreat(const FSecurityIncident& Incident};
-    void EscalateAlert(ESecurityAlertLevel NewLevel};
-    void NotifySecurityPersonnel(const FSecurityIncident& Incident};
-    void GenerateSecurityReport(};
-    void CleanupOldIncidents(};
-    void RotateSessionKeys(};
+    void AutoRespondToThreat(const FSecurityIncident& Incident);
+    void EscalateAlert(ESecurityAlertLevel NewLevel);
+    void NotifySecurityPersonnel(const FSecurityIncident& Incident);
+    void GenerateSecurityReport();
+    void CleanupOldIncidents();
+    void RotateSessionKeys();
     bool VerifySessionKey(const TArray<uint8>& Key) const;
-    void BlockSuspiciousActivity(int32 PlayerID};
-    void LogSecurityEvent(const FString& Event};
-    static UMingNetworkSecurityManager* Get(UObject* WorldContextObject};
-};
+    void BlockSuspiciousActivity(int32 PlayerID);
+    void LogSecurityEvent(const FString& Event);
+    static UMingNetworkSecurityManager* Get(UObject* WorldContextObject);
+);

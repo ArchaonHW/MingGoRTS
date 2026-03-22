@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,16 +8,14 @@
 #include "MingDataFlowManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EDataFlowType : uint8
-{
+enum class EDataFlowType: uint8 {
 	Input,
 	Output,
 	Bidirectional
 };
 
 UENUM(BlueprintType)
-enum class EDataChannel : uint8
-{
+enum class EDataChannel: uint8 {
 	Gameplay,
 	UI,
 	Network,

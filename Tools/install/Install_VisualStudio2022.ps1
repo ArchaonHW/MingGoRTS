@@ -1,4 +1,4 @@
-# Visual Studio 2022 摰??單
+﻿# Visual Studio 2022 摰??單
 # MingGoRTS ??啣?閮剔蔭
 
 Write-Host "=== Visual Studio 2022 摰??? ===" -ForegroundColor Green

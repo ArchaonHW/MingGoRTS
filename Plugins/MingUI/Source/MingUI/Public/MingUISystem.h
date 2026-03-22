@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingUISystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingUIScreen : uint8
-{
+enum class EMingUIScreen: uint8 {
     MainMenu UMETA(DisplayName = "Main Menu"),
     CampaignMap UMETA(DisplayName = "Campaign Map"),
     BattleHUD UMETA(DisplayName = "Battle HUD"),
@@ -21,8 +20,7 @@ enum class EMingUIScreen : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingUIAnimationType : uint8
-{
+enum class EMingUIAnimationType: uint8 {
     Fade UMETA(DisplayName = "Fade"),
     Slide UMETA(DisplayName = "Slide"),
     Scale UMETA(DisplayName = "Scale"),
@@ -140,19 +138,19 @@ public:
     void InitializeUI();
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void ShowScreen(EMingUIScreen ScreenType};
+    void ShowScreen(EMingUIScreen ScreenType);
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void HideScreen(EMingUIScreen ScreenType};
+    void HideScreen(EMingUIScreen ScreenType);
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void CloseScreen(EMingUIScreen ScreenType};
+    void CloseScreen(EMingUIScreen ScreenType);
 
     UFUNCTION(BlueprintCallable, Category = "UI")
     void CloseAllScreens();
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void ShowModalScreen(EMingUIScreen ScreenType};
+    void ShowModalScreen(EMingUIScreen ScreenType);
 
     UFUNCTION(BlueprintPure, Category = "UI")
     bool IsScreenVisible(EMingUIScreen ScreenType) const;
@@ -165,7 +163,7 @@ public:
 
     // Navigation
     UFUNCTION(BlueprintCallable, Category = "Navigation")
-    void NavigateToScreen(EMingUIScreen ScreenType};
+    void NavigateToScreen(EMingUIScreen ScreenType);
 
     UFUNCTION(BlueprintCallable, Category = "Navigation")
     void GoBack();
@@ -181,33 +179,33 @@ public:
 
     // Animations
     UFUNCTION(BlueprintCallable, Category = "Animations")
-    void PlayScreenAnimation(EMingUIScreen ScreenType, EMingUIAnimationType AnimationType, float Duration = 0.5f};
+    void PlayScreenAnimation(EMingUIScreen ScreenType, EMingUIAnimationType AnimationType, float Duration = 0.5f);
 
     UFUNCTION(BlueprintCallable, Category = "Animations")
-    void FadeScreen(EMingUIScreen ScreenType, float TargetAlpha = 1.0f, float Duration = 0.5f};
+    void FadeScreen(EMingUIScreen ScreenType, float TargetAlpha = 1.0f, float Duration = 0.5f);
 
     UFUNCTION(BlueprintCallable, Category = "Animations")
-    void SlideScreen(EMingUIScreen ScreenType, FVector2D Direction, float Duration = 0.5f};
+    void SlideScreen(EMingUIScreen ScreenType, FVector2D Direction, float Duration = 0.5f);
 
     UFUNCTION(BlueprintCallable, Category = "Animations")
-    void ScaleScreen(EMingUIScreen ScreenType, float Scale, float Duration = 0.5f};
+    void ScaleScreen(EMingUIScreen ScreenType, float Scale, float Duration = 0.5f);
 
     // Styling
     UFUNCTION(BlueprintCallable, Category = "Styling")
-    void SetUIStyle(const FMingUIStyle& NewStyle};
+    void SetUIStyle(const FMingUIStyle& NewStyle);
 
     UFUNCTION(BlueprintPure, Category = "Styling")
     FMingUIStyle GetCurrentStyle() const;
 
     UFUNCTION(BlueprintCallable, Category = "Styling")
-    void ApplyTheme(const FString& ThemeName};
+    void ApplyTheme(const FString& ThemeName);
 
     UFUNCTION(BlueprintPure, Category = "Styling")
     TArray<FString> GetAvailableThemes() const;
 
     // Screen Data
     UFUNCTION(BlueprintCallable, Category = "Screen Data")
-    void RegisterScreen(const FMingUIScreenData& ScreenData};
+    void RegisterScreen(const FMingUIScreenData& ScreenData);
 
     UFUNCTION(BlueprintPure, Category = "Screen Data")
     FMingUIScreenData GetScreenData(EMingUIScreen ScreenType) const;
@@ -217,18 +215,18 @@ public:
 
     // Widget Management
     UFUNCTION(BlueprintCallable, Category = "Widgets")
-    UUserWidget* CreateWidget(EMingUIScreen ScreenType};
+    UUserWidget* CreateWidget(EMingUIScreen ScreenType);
 
     UFUNCTION(BlueprintCallable, Category = "Widgets")
-    void DestroyWidget(EMingUIScreen ScreenType};
+    void DestroyWidget(EMingUIScreen ScreenType);
 
     UFUNCTION(BlueprintPure, Category = "Widgets")
     UUserWidget* GetWidget(EMingUIScreen ScreenType) const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnScreenShown, EMingUIScreen, ScreenType, UUserWidget*, Widget};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnScreenHidden, EMingUIScreen, ScreenType, UUserWidget*, Widget};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUIScreenChanged, EMingUIScreen, NewScreenType};
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnScreenShown OnScreenShown;
@@ -241,16 +239,16 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetScreenName(EMingUIScreen ScreenType};
+    static FString GetScreenName(EMingUIScreen ScreenType);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetAnimationTypeName(EMingUIAnimationType AnimationType};
+    static FString GetAnimationTypeName(EMingUIAnimationType AnimationType);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveUISettings() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadUISettings(const FString& JsonString};
+    void LoadUISettings(const FString& JsonString);
 
 protected:
     UPROPERTY()
@@ -278,19 +276,19 @@ protected:
     void InitializeDefaultScreens();
     void InitializeDefaultThemes();
     void SetupScreenHistory();
-    void UpdateScreenStack(EMingUIScreen ScreenType};
+    void UpdateScreenStack(EMingUIScreen ScreenType);
 
     // Animation Helpers
-    void PlayAnimationInternal(UUserWidget* Widget, EMingUIAnimationType AnimationType, float Duration};
-    void CleanupAnimation(UUserWidget* Widget};
+    void PlayAnimationInternal(UUserWidget* Widget, EMingUIAnimationType AnimationType, float Duration);
+    void CleanupAnimation(UUserWidget* Widget);
 
     // Widget Helpers
-    UUserWidget* CreateWidgetInternal(const FMingUIScreenData& ScreenData};
-    void DestroyWidgetInternal(EMingUIScreen ScreenType};
-    void PositionWidget(UUserWidget* Widget, EMingUIScreen ScreenType};
+    UUserWidget* CreateWidgetInternal(const FMingUIScreenData& ScreenData);
+    void DestroyWidgetInternal(EMingUIScreen ScreenType);
+    void PositionWidget(UUserWidget* Widget, EMingUIScreen ScreenType);
 
     // Navigation Helpers
-    void AddToHistory(EMingUIScreen ScreenType};
+    void AddToHistory(EMingUIScreen ScreenType);
     EMingUIScreen GetPreviousScreen() const;
     EMingUIScreen GetNextScreen() const;
 };

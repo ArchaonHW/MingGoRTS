@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Cultural Adapter System for Localization
 
 #pragma once
@@ -8,8 +8,7 @@
 
 // Cultural content appropriateness level
 UENUM(BlueprintType)
-enum class ECulturalAppropriateness : uint8
-{
+enum class ECulturalAppropriateness: uint8 {
     Appropriate        UMETA(DisplayName = "Appropriate"),
     Caution            UMETA(DisplayName = "Caution"),
     Inappropriate      UMETA(DisplayName = "Inappropriate"),
@@ -19,8 +18,7 @@ enum class ECulturalAppropriateness : uint8
 
 // Cultural content type
 UENUM(BlueprintType)
-enum class ECulturalContentType : uint8
-{
+enum class ECulturalContentType: uint8 {
     Religious          UMETA(DisplayName = "Religious"),
     Political          UMETA(DisplayName = "Political"),
     Historical         UMETA(DisplayName = "Historical"),
@@ -165,3 +163,5 @@ protected:
 // Event delegates
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCulturalContentChanged, const FString&, ContentID, const FString&, ContentType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnCulturalRuleViolated, const FString&, ContentID, const FString&, RegionCode, const FString&, RuleName);
+
+#include "MingCultureAdapter_Fixed.generated.h"

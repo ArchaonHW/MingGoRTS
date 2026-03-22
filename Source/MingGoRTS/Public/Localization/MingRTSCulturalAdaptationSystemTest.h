@@ -94,11 +94,12 @@ private:
     int32 TestsFailed;
 
     /** Helper methods */
-    void LogTest(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
+    void LogTest(const FString& TestName, bool bPassed, const FString& Details = TEXT(""));
     void InitializeTestResults();
     void FinalizeTestResults();
-    bool ValidateRegionContent(ECulturalRegion Region};
+    bool ValidateRegionContent(ECulturalRegion Region);
     bool TestCacheEfficiency();
     void SimulateCacheLoad();
 };
+
 

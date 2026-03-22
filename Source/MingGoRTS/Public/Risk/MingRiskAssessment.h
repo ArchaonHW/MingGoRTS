@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Real-Time Risk Assessment System - B2-2
 // Provides real-time risk evaluation and scoring
 
@@ -10,8 +10,7 @@
 #include "MingRiskAssessment.generated.h"
 
 UENUM(BlueprintType)
-enum class EAssessmentStatus : uint8
-{
+enum class EAssessmentStatus: uint8 {
     Idle = 0, UMETA(DisplayName = "Idle"),
     Assessing, UMETA(DisplayName = "Assessing"),
     Completed, UMETA(DisplayName = "Completed"),
@@ -20,8 +19,7 @@ enum class EAssessmentStatus : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERiskFactorType : uint8
-{
+enum class ERiskFactorType: uint8 {
     Performance = 0, UMETA(DisplayName = "Performance"),
     Stability, UMETA(DisplayName = "Stability"),
     Security, UMETA(DisplayName = "Security"),
@@ -35,8 +33,7 @@ enum class ERiskFactorType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EAssessmentWeight : uint8
-{
+enum class EAssessmentWeight: uint8 {
     VeryLow = 0, UMETA(DisplayName = "Very Low"),
     Low, UMETA(DisplayName = "Low"),
     Medium, UMETA(DisplayName = "Medium"),
@@ -202,10 +199,10 @@ struct FRiskScoringRule
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAssessmentCompleted, FRiskAssessmentResult, Result};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFactorScoreChanged, ERiskFactorType, FactorType, float, NewScore};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCriticalRiskDetected, FRiskAssessmentResult, CriticalResult};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAssessmentStatusChanged, EAssessmentStatus, NewStatus};
+
+
+
+
 /**
  * Real-Time Risk Assessment System
  * Provides real-time risk evaluation and scoring
@@ -216,27 +213,27 @@ class MINGRTS_API UMingRiskAssessment : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRiskAssessment(};
+    UMingRiskAssessment();
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    void InitializeAssessment(const FAssessmentConfig& Config};
+    void InitializeAssessment(const FAssessmentConfig& Config);
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    void ShutdownAssessment(};
+    void ShutdownAssessment();
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    FRiskAssessmentResult PerformAssessment(};
+    FRiskAssessmentResult PerformAssessment();
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    void StartRealTimeAssessment(};
+    void StartRealTimeAssessment();
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    void StopRealTimeAssessment(};
+    void StopRealTimeAssessment();
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    void PauseAssessment(};
+    void PauseAssessment();
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    void ResumeAssessment(};
+    void ResumeAssessment();
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    void SetFactorWeight(ERiskFactorType Factor, float Weight};
+    void SetFactorWeight(ERiskFactorType Factor, float Weight);
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    void EnableFactor(ERiskFactorType Factor, bool bEnabled};
+    void EnableFactor(ERiskFactorType Factor, bool bEnabled);
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    void SetScoringRule(ERiskFactorType Factor, const FRiskScoringRule& Rule};
+    void SetScoringRule(ERiskFactorType Factor, const FRiskScoringRule& Rule);
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
     FRiskAssessmentResult GetLastAssessmentResult() const;
 
@@ -253,11 +250,11 @@ public:
     ERiskLevel GetCurrentOverallRiskLevel() const;
 
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    TArray<FString> GenerateRecommendations(const FRiskAssessmentResult& Result};
+    TArray<FString> GenerateRecommendations(const FRiskAssessmentResult& Result);
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    void ExportAssessmentReport(const FString& FilePath};
+    void ExportAssessmentReport(const FString& FilePath);
     UFUNCTION(BlueprintCallable, Category = "Risk Assessment")
-    void SetCriticalThresholds(float Critical, float High, float Medium};
+    void SetCriticalThresholds(float Critical, float High, float Medium);
     UFUNCTION(BlueprintPure, Category = "Risk Assessment")
     EAssessmentStatus GetAssessmentStatus() const { return CurrentStatus; }
 
@@ -304,24 +301,24 @@ protected:
     UPROPERTY()
     FString CurrentAssessmentID;
 
-    float CalculateWeightedScore(const TArray<FRiskFactor>& Factors};
-    ERiskLevel DetermineRiskLevel(float Score};
-    FRiskFactor EvaluateFactor(ERiskFactorType FactorType};
-    float CalculatePerformanceScore(};
-    float CalculateStabilityScore(};
-    float CalculateSecurityScore(};
-    float CalculateScalabilityScore(};
-    float CalculateMaintainabilityScore(};
-    float CalculateCompatibilityScore(};
-    float CalculateResourceUsageScore(};
-    float CalculatePlayerSatisfactionScore(};
-    float CalculateCodeQualityScore(};
-    float CalculateTestCoverageScore(};
-    void StoreAssessmentResult(const FRiskAssessmentResult& Result};
-    void TrimHistoryIfNeeded(};
-    FString GenerateAssessmentID(};
-    void NotifyCriticalRisk(const FRiskAssessmentResult& Result};
-    void UpdateFactorScores(};
-    float ApplyScoringRule(float RawValue, const FRiskScoringRule& Rule};
-    static UMingRiskAssessment* Get(UObject* WorldContextObject};
-};
+    float CalculateWeightedScore(const TArray<FRiskFactor>& Factors);
+    ERiskLevel DetermineRiskLevel(float Score);
+    FRiskFactor EvaluateFactor(ERiskFactorType FactorType);
+    float CalculatePerformanceScore();
+    float CalculateStabilityScore();
+    float CalculateSecurityScore();
+    float CalculateScalabilityScore();
+    float CalculateMaintainabilityScore();
+    float CalculateCompatibilityScore();
+    float CalculateResourceUsageScore();
+    float CalculatePlayerSatisfactionScore();
+    float CalculateCodeQualityScore();
+    float CalculateTestCoverageScore();
+    void StoreAssessmentResult(const FRiskAssessmentResult& Result);
+    void TrimHistoryIfNeeded();
+    FString GenerateAssessmentID();
+    void NotifyCriticalRisk(const FRiskAssessmentResult& Result);
+    void UpdateFactorScores();
+    float ApplyScoringRule(float RawValue, const FRiskScoringRule& Rule);
+    static UMingRiskAssessment* Get(UObject* WorldContextObject);
+);

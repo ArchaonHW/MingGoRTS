@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingIntegrationManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingIntegrationStatus : uint8
-{
+enum class EMingIntegrationStatus: uint8 {
     NotStarted UMETA(DisplayName = "Not Started"),
     InProgress UMETA(DisplayName = "In Progress"),
     Completed UMETA(DisplayName = "Completed"),
@@ -15,8 +14,7 @@ enum class EMingIntegrationStatus : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingSystemType : uint8
-{
+enum class EMingSystemType: uint8 {
     Core UMETA(DisplayName = "Core"),
     Tactical UMETA(DisplayName = "Tactical"),
     Building UMETA(DisplayName = "Building"),
@@ -244,7 +242,7 @@ public:
     TArray<FMingPerformanceMetrics> GetPerformanceHistory() const;
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetPerformanceTarget(float TargetFPS, float TargetMemory};
+    void SetPerformanceTarget(float TargetFPS, float TargetMemory);
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     bool IsPerformanceTargetMet() const;
@@ -279,10 +277,10 @@ public:
     void FixHealthIssue(const FString& Issue) {};
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSystemLoaded, const FString&, SystemName, float, LoadTime};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSystemFailed, const FString&, SystemName, const FString&, Error};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAllSystemsLoaded, bool, bSuccess};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnIntegrationTestCompleted, bool, bAllPassed};
+    
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnSystemLoaded OnSystemLoaded;
@@ -298,10 +296,10 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetSystemTypeName(EMingSystemType SystemType};
+    static FString GetSystemTypeName(EMingSystemType SystemType);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetStatusName(EMingIntegrationStatus Status};
+    static FString GetStatusName(EMingIntegrationStatus Status);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveIntegrationData() const;

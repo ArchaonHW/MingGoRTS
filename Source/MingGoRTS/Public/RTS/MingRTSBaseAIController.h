@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,8 +8,7 @@
 
 // AI行为状态
 UENUM(BlueprintType)
-enum class ERTSAIState : uint8
-{
+enum class ERTSAIState: uint8 {
     Idle            UMETA(DisplayName = "Idle"),
     Moving          UMETA(DisplayName = "Moving"),
     Attacking       UMETA(DisplayName = "Attacking"),
@@ -22,8 +21,7 @@ enum class ERTSAIState : uint8
 
 // AI行为类型
 UENUM(BlueprintType)
-enum class ERTSAIBehaviorType : uint8
-{
+enum class ERTSAIBehaviorType: uint8 {
     Aggressive      UMETA(DisplayName = "Aggressive"),
     Defensive       UMETA(DisplayName = "Defensive"),
     Passive         UMETA(DisplayName = "Passive"),

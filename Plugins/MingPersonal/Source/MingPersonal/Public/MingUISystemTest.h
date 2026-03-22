@@ -14,10 +14,10 @@ class MINGPERSONAL_API UMingUISystemTest : public UObject
 
 public:
     /**
-     * ?��X�?�UI系統測試
+     * ?��X�?�UI系統測試
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
-    static void RunAllUITests);
+    static void RunAllUITests();
 
     /**
      * 測試UI管�X��?始�?
@@ -86,7 +86,7 @@ public:
     static bool TestUIDataBinding);
 
     /**
-     * 測試UI?�?�管X     */
+     * 測試UI?�?�管X     */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUIStateManagement);
 

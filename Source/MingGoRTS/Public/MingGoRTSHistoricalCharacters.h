@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingGoRTSHistoricalCharacters.generated.h"
 
 UENUM(BlueprintType)
-enum class EHistoricalFaction : uint8
-{
+enum class EHistoricalFaction: uint8 {
     Nationalist, UMETA(DisplayName = "Nationalist"),
     Communist, UMETA(DisplayName = "Communist"),
     Warlord, UMETA(DisplayName = "Warlord"),
@@ -16,8 +15,7 @@ enum class EHistoricalFaction : uint8
 };
 
 UENUM(BlueprintType)
-enum class ECharacterRole : uint8
-{
+enum class ECharacterRole: uint8 {
     Leader, UMETA(DisplayName = "Leader"),
     Military, UMETA(DisplayName = "Military"),
     Political, UMETA(DisplayName = "Political"),

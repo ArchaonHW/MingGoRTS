@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,8 +8,7 @@
 #include "MingRTSRenderingOptimizer.generated.h"
 
 UENUM(BlueprintType)
-enum class ECullingMethod : uint8
-{
+enum class ECullingMethod: uint8 {
 	None,
 	Frustum,
 	Occlusion,
@@ -18,8 +17,7 @@ enum class ECullingMethod : uint8
 };
 
 UENUM(BlueprintType)
-enum class EInstancingMethod : uint8
-{
+enum class EInstancingMethod: uint8 {
 	None,
 	StaticMesh,
 	HISM,

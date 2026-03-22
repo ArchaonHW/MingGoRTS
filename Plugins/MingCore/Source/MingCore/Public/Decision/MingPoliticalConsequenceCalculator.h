@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,8 @@
 #include "MingPoliticalConsequenceCalculator.generated.h"
 
 /**
- * ??ªv«á??­p?X * ±M??­p??¨M??¹ï¬Fªv¼h????¼vÅT
- * ??§t¬£¨t???X?¬FªvÃ­©w©Ê¡B??¥æ??«Y??
+ * ??ï¿½vï¿½ï¿½??ï¿½p?X * ï¿½M??ï¿½p??ï¿½M??ï¿½ï¿½Fï¿½vï¿½hæ‘§æ¯€ï¿½vï¿½T
+ * ??ï¿½tï¿½ï¿½ï¿½t???X?ï¿½Fï¿½vÃ­ï¿½wï¿½Ê¡B??ï¿½ï¿½??ï¿½Y??
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingPoliticalConsequenceCalculator : public UObject, public IMingConsequenceCalculator
@@ -15,9 +15,10 @@ class MINGCORE_API UMingPoliticalConsequenceCalculator : public UObject, public 
     GENERATED_BODY()
 
 public:
-    // «Ø????    UMingPoliticalConsequenceCalculator();
+    // ï¿½ï¿½æ‘§æ¯€
+    UMingPoliticalConsequenceCalculator();
 
-    // ¹ê²{¤¶­±????
+    // ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½æ‘§æ¯€
     virtual void Calculate_Implementation(const FMingDecisionContext& Context, FMingConsequenceResult& Result) override;
     virtual bool CanHandle_Implementation(const FMingDecisionContext& Context) const override;
     virtual float GetWeight_Implementation() const override;
@@ -25,43 +26,47 @@ public:
     virtual FString GetCalculatorDescription_Implementation() const override;
 
 protected:
-    // ­p?X?ªv¼vÅT
-    void CalculatePoliticalImpact(const FMingDecisionContext& Context, FMingPoliticalConsequence& Impact};
+    // ï¿½p?X?ï¿½vï¿½vï¿½T
+    void CalculatePoliticalImpact(const FMingDecisionContext& Context, FMingPoliticalConsequence& Impact);
 
-    // ­p??¬£¨t????ÅÜ??
-    void CalculateFactionRelations(const FMingDecisionContext& Context, TMap<FString, float>& Relations};
+    // ï¿½p??ï¿½ï¿½ï¿½tæ‘§æ¯€ï¿½ï¿½??
+    void CalculateFactionRelations(const FMingDecisionContext& Context, TMap<FString, float>& Relations);
 
-    // ­p?X?ªvÃ­?X    void CalculatePoliticalStability(const FMingDecisionContext& Context, float& StabilityChange};
+    // ï¿½p?X?ï¿½vÃ­?X
+    void CalculatePoliticalStability(const FMingDecisionContext& Context, float& StabilityChange);
 
-    // ­p?X?ªv????
-    void CalculatePoliticalReputation(const FMingDecisionContext& Context, float& ReputationChange};
+    // ï¿½p?X?ï¿½væ‘§æ¯€
+    void CalculatePoliticalReputation(const FMingDecisionContext& Context, float& ReputationChange);
 
-    // ­p?X?³¡??ªvÀ£??
-    void CalculateInternalPressure(const FMingDecisionContext& Context, float& PressureChange};
+    // ï¿½p?X?ï¿½ï¿½??ï¿½vï¿½ï¿½??
+    void CalculateInternalPressure(const FMingDecisionContext& Context, float& PressureChange);
 
-    // ¥Á?X?¦â­p??
-    void CalculateRepublicanEraPolitics(const FMingDecisionContext& Context, FMingPoliticalConsequence& Impact};
+    // ï¿½ï¿½?X?ï¿½ï¿½p??
+    void CalculateRepublicanEraPolitics(const FMingDecisionContext& Context, FMingPoliticalConsequence& Impact);
 
-    // ????ÄÒ¬£¨t??«Y????    void CalculateKMTFactionRelations(const FMingDecisionContext& Context, TMap<FString, float>& Relations};
+    // æ‘§æ¯€ï¿½Ò¬ï¿½ï¿½t??ï¿½Yæ‘§æ¯€
+    void CalculateKMTFactionRelations(const FMingDecisionContext& Context, TMap<FString, float>& Relations);
 
-    // ­x»Ö©¾??«×????    void CalculateWarlordLoyalty(const FMingDecisionContext& Context, TMap<FString, float>& Relations};
+    // ï¿½xï¿½Ö©ï¿½??ï¿½ï¿½æ‘§æ¯€
+    void CalculateWarlordLoyalty(const FMingDecisionContext& Context, TMap<FString, float>& Relations);
 
-    // ??¦@????­p??
-    void CalculateKMTCCPRelations(const FMingDecisionContext& Context, TMap<FString, float>& Relations};
+    // ??ï¿½@æ‘§æ¯€ï¿½p??
+    void CalculateKMTCCPRelations(const FMingDecisionContext& Context, TMap<FString, float>& Relations);
 
-    // ¥~¥æÀ£??­p??
-    void CalculateDiplomaticPressure(const FMingDecisionContext& Context, float& PressureChange};
+    // ï¿½~ï¿½ï¿½ï¿½ï¿½??ï¿½p??
+    void CalculateDiplomaticPressure(const FMingDecisionContext& Context, float& PressureChange);
 
 private:
-    // ­p?X??X    static constexpr float CALCULATOR_WEIGHT = 0.9f;
+    // ï¿½p?X??X
+    static constexpr float CALCULATOR_WEIGHT = 0.9f;
 
-    // ¥Á?X???¬£¨t??ªí
+    // ï¿½ï¿½?X???ï¿½ï¿½ï¿½t??ï¿½ï¿½
     static const TArray<FString> RepublicanEraFactions;
 
-    // ­x»Ö??ªí
+    // ï¿½xï¿½ï¿½??ï¿½ï¿½
     static const TArray<FString> WarlordFactions;
 
-    // ¥~?X??X?ªí
+    // ï¿½~?X??X?ï¿½ï¿½
     static const TArray<FString> ForeignPowers;
-};
+);
 

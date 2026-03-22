@@ -1,4 +1,4 @@
-// VR UI Asset Definitions for MingGoRTS
+﻿// VR UI Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - VR User Interface Assets
 
 #pragma once
@@ -11,8 +11,7 @@
  * VR UI Panel Types
  */
 UENUM(BlueprintType)
-enum class EVRPanelType : uint8
-{
+enum class EVRPanelType: uint8 {
     MainMenu        UMETA(DisplayName = "Main Menu"),
     HUD             UMETA(DisplayName = "HUD"),
     Settings        UMETA(DisplayName = "Settings"),
@@ -33,8 +32,7 @@ enum class EVRPanelType : uint8
  * VR UI Element Types
  */
 UENUM(BlueprintType)
-enum class EVRUIElementType : uint8
-{
+enum class EVRUIElementType: uint8 {
     Button          UMETA(DisplayName = "Button"),
     Toggle          UMETA(DisplayName = "Toggle"),
     Slider          UMETA(DisplayName = "Slider"),

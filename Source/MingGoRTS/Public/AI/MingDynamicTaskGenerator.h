@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingDynamicTaskGenerator.generated.h"
 
 UENUM(BlueprintType)
-enum class ETaskType : uint8
-{
+enum class ETaskType: uint8 {
     Combat,
     Exploration,
     Construction,
@@ -18,8 +17,7 @@ enum class ETaskType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ETaskDifficulty : uint8
-{
+enum class ETaskDifficulty: uint8 {
     VeryEasy,
     Easy,
     Normal,

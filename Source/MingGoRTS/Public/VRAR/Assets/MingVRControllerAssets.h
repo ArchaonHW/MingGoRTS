@@ -1,4 +1,4 @@
-// VR Controller Asset Definitions for MingGoRTS
+﻿// VR Controller Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - VR Controller Assets
 // This file defines the visual assets for VR controllers
 
@@ -12,8 +12,7 @@
  * VR Controller Button Types
  */
 UENUM(BlueprintType)
-enum class EVRControllerButtonType : uint8
-{
+enum class EVRControllerButtonType: uint8 {
     Trigger         UMETA(DisplayName = "Trigger"),
     Grip            UMETA(DisplayName = "Grip"),
     Thumbstick      UMETA(DisplayName = "Thumbstick"),
@@ -28,8 +27,7 @@ enum class EVRControllerButtonType : uint8
  * VR Controller Part Types
  */
 UENUM(BlueprintType)
-enum class EVRControllerPartType : uint8
-{
+enum class EVRControllerPartType: uint8 {
     Body            UMETA(DisplayName = "Body"),
     Grip            UMETA(DisplayName = "Grip"),
     Button          UMETA(DisplayName = "Button"),

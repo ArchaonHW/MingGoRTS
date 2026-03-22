@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,8 +7,7 @@
 #include "MingTechTree.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingTechCategory : uint8
-{
+enum class EMingTechCategory: uint8 {
     Military UMETA(DisplayName = "Military"),
     Economy UMETA(DisplayName = "Economy"),
     Infrastructure UMETA(DisplayName = "Infrastructure"),
@@ -43,13 +42,14 @@ struct FMingTechUnlock
 };
 
 // Wrapper struct to allow TArray in TMap (UHT limitation)
-// ™`??°GTArray ??≠˚XUPROPERTY ??≠n?X?§wßπæ„©w∏q
+// ÔøΩ`??ÔøΩGTArray ??ÔøΩÔøΩXUPROPERTY ??ÔøΩn?X?ÔøΩwÔøΩÔøΩÔøΩÔøΩwÔøΩq
 USTRUCT(BlueprintType)
 struct FMingBuildingUpgradeList
 {
     GENERATED_BODY()
 
-    // XUPROPERTY°A?XFMingBuildingUpgrade ??¶π´·????    TArray<FMingBuildingUpgrade> Upgrades;
+    // XUPROPERTYÔøΩA?XFMingBuildingUpgrade ??ÔøΩÔøΩÔøΩÔøΩÊëßÊØÄ
+    TArray<FMingBuildingUpgrade> Upgrades;
 };
 
 USTRUCT(BlueprintType)
@@ -104,51 +104,51 @@ struct FMingTechNode
 };
 
 /**
- * ´ÿ?X??X???µ≤?? | Building Upgrade Data Structure
- * ©w∏q´ÿ?X??X?ƒ›???X?•ª | Define building upgrade properties and costs
+ * ÔøΩÔøΩ?X??X???ÔøΩÔøΩ?? | Building Upgrade Data Structure
+ * ÔøΩwÔøΩqÔøΩÔøΩ?X??X?ÔøΩÔøΩ???X?ÔøΩÔøΩ | Define building upgrade properties and costs
  */
 USTRUCT(BlueprintType)
 struct FMingBuildingUpgrade
 {
     GENERATED_BODY()
 
-    /** ????ID | Upgrade ID */
+    /** ÁõÆÊ®ôID | Upgrade ID */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString UpgradeID;
 
-    /** ???X?∫Ÿ | Upgrade Name */
+    /** ???X?ÔøΩÔøΩ | Upgrade Name */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString UpgradeName;
 
-    /** ???X?≠z | Upgrade Description */
+    /** ???X?ÔøΩz | Upgrade Description */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString Description;
 
-    /** ???X?•ª | Upgrade Cost */
+    /** ???X?ÔøΩÔøΩ | Upgrade Cost */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     TArray<FMingResourceCost> UpgradeCost;
 
-    /** ???X???(?? | Upgrade Time (seconds) */
+    /** ÁõÆÊ®ôÊï∏Èáè(?? | Upgrade Time (seconds) */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float UpgradeTime;
 
-    /** ??§j??Ø≈????| Max Upgrade Level */
+    /** ??ÔøΩj??ÔøΩÔøΩÊëßÊØÄ| Max Upgrade Level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     int32 MaxUpgradeLevel;
 
-    /** ????µ•?? | Current Level */
+    /** ÊëßÊØÄÔøΩÔøΩ?? | Current Level */
     UPROPERTY(BlueprintReadOnly)
     int32 CurrentLevel;
 
-    /** ®C?X?©R??≠ø?? | Health Multiplier per level (1.2 = +20%) */
+    /** ÔøΩC?X?ÔøΩR??ÔøΩÔøΩ?? | Health Multiplier per level (1.2 = +20%) */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float HealthMultiplier;
 
-    /** ®C?X?≤£???X??? | Production Multiplier per level */
+    /** ÔøΩC?X?ÔøΩÔøΩÁõÆÊ®ôÊï∏Èáè | Production Multiplier per level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float ProductionMultiplier;
 
-    /** ®C?X?øm???? | Defense Multiplier per level */
+    /** ÔøΩC?X?ÔøΩmÊëßÊØÄ | Defense Multiplier per level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float DefenseMultiplier;
 
@@ -179,14 +179,14 @@ public:
     void InitializeDefaultTechTree();
 
     UFUNCTION(BlueprintCallable, Category = "Tech Tree")
-    void LoadTechTree(const TArray<FMingTechNode>& TechNodes};
+    void LoadTechTree(const TArray<FMingTechNode>& TechNodes);
 
     // Tech Node Management
     UFUNCTION(BlueprintCallable, Category = "Tech Nodes")
-    void AddTechNode(const FMingTechNode& Node};
+    void AddTechNode(const FMingTechNode& Node);
 
     UFUNCTION(BlueprintCallable, Category = "Tech Nodes")
-    bool RemoveTechNode(const FString& TechID};
+    bool RemoveTechNode(const FString& TechID);
 
     UFUNCTION(BlueprintPure, Category = "Tech Nodes")
     FMingTechNode GetTechNode(const FString& TechID) const;
@@ -208,16 +208,16 @@ public:
     bool CanResearchTech(const FString& TechID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Research")
-    bool StartResearch(const FString& TechID};
+    bool StartResearch(const FString& TechID);
 
     UFUNCTION(BlueprintCallable, Category = "Research")
-    void CancelResearch(const FString& TechID};
+    void CancelResearch(const FString& TechID);
 
     UFUNCTION(BlueprintCallable, Category = "Research")
-    void UpdateResearch(float DeltaTime};
+    void UpdateResearch(float DeltaTime);
 
     UFUNCTION(BlueprintCallable, Category = "Research")
-    void CompleteResearch(const FString& TechID};
+    void CompleteResearch(const FString& TechID);
 
     UFUNCTION(BlueprintPure, Category = "Research")
     bool IsTechResearched(const FString& TechID) const;
@@ -243,13 +243,13 @@ public:
 
     // Building Upgrades
     UFUNCTION(BlueprintCallable, Category = "Upgrades")
-    void RegisterBuildingUpgrade(EMingBuildingType BuildingType, const FMingBuildingUpgrade& Upgrade};
+    void RegisterBuildingUpgrade(EMingBuildingType BuildingType, const FMingBuildingUpgrade& Upgrade);
 
     UFUNCTION(BlueprintCallable, Category = "Upgrades")
     bool CanUpgradeBuilding(const FString& UpgradeID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Upgrades")
-    bool UpgradeBuilding(const FString& UpgradeID};
+    bool UpgradeBuilding(const FString& UpgradeID);
 
     UFUNCTION(BlueprintPure, Category = "Upgrades")
     FMingBuildingUpgrade GetBuildingUpgrade(const FString& UpgradeID) const;
@@ -260,7 +260,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Upgrades")
     int32 GetUpgradeLevel(const FString& UpgradeID) const;
 
-    /** ≥]∏m¿q??´ÿ?X??X?∏m | Setup Default Building Upgrades */
+    /** ÔøΩ]ÔøΩmÔøΩq??ÔøΩÔøΩ?X??X?ÔøΩm | Setup Default Building Upgrades */
     UFUNCTION(BlueprintCallable, Category = "Upgrades")
     void SetupDefaultBuildingUpgrades();
 
@@ -286,10 +286,10 @@ public:
     bool HasAbilityUnlocked(const FString& AbilityName) const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTechResearched, const FMingTechNode&, TechNode};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnResearchProgress, const FMingTechNode&, TechNode};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingUnlocked, EMingBuildingType, BuildingType};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingUpgraded, EMingBuildingType, BuildingType, int32, NewLevel};
+    
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnTechResearched OnTechResearched;

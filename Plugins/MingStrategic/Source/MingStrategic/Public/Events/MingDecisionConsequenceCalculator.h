@@ -8,8 +8,7 @@
  * 決�?後�?類�?
  */
 UENUM(BlueprintType)
-enum class EDecisionConsequenceType : uint8
-{
+enum class EDecisionConsequenceType: uint8 {
     Immediate           UMETA(DisplayName = "Immediate"),
     Delayed             UMETA(DisplayName = "Delayed"),
     Cumulative          UMETA(DisplayName = "Cumulative"),
@@ -24,8 +23,7 @@ enum class EDecisionConsequenceType : uint8
  * 後�?影響範�?
  */
 UENUM(BlueprintType)
-enum class EConsequenceImpactScope : uint8
-{
+enum class EConsequenceImpactScope: uint8 {
     Personal            UMETA(DisplayName = "Personal"),
     Local               UMETA(DisplayName = "Local"),
     Regional            UMETA(DisplayName = "Regional"),
@@ -38,8 +36,7 @@ enum class EConsequenceImpactScope : uint8
  * 後�X��?程度
  */
 UENUM(BlueprintType)
-enum class EConsequenceSeverity : uint8
-{
+enum class EConsequenceSeverity: uint8 {
     Trivial             UMETA(DisplayName = "Trivial"),
     Minor               UMETA(DisplayName = "Minor"),
     Moderate            UMETA(DisplayName = "Moderate"),
@@ -52,8 +49,7 @@ enum class EConsequenceSeverity : uint8
  * 後�X��X��?
  */
 UENUM(BlueprintType)
-enum class EConsequenceDuration : uint8
-{
+enum class EConsequenceDuration: uint8 {
     Instant             UMETA(DisplayName = "Instant"),
     Short               UMETA(DisplayName = "Short"),
     Medium              UMETA(DisplayName = "Medium"),
@@ -66,8 +62,7 @@ enum class EConsequenceDuration : uint8
  * 後�?影響類�?
  */
 UENUM(BlueprintType)
-enum class EConsequenceImpactType : uint8
-{
+enum class EConsequenceImpactType: uint8 {
     Positive            UMETA(DisplayName = "Positive"),
     Negative            UMETA(DisplayName = "Negative"),
     Mixed               UMETA(DisplayName = "Mixed"),
@@ -87,7 +82,8 @@ struct FConsequenceParameter
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString ParameterName;
 
-    // ?�數X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
+    // ?�數X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString ParameterValue;
 
     // ?�數類�?
@@ -98,7 +94,8 @@ struct FConsequenceParameter
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     bool bIsRequired;
 
-    // 默�X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
+    // 默�X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString DefaultValue;
 
     // ?�述
@@ -195,7 +192,8 @@ struct FDecisionConsequence
     UPROPERTY(BlueprintReadOnly)
     float CooldownTime;
 
-    // ?�否已觸X    UPROPERTY(BlueprintReadOnly)
+    // ?�否已觸X
+    UPROPERTY(BlueprintReadOnly)
     bool bIsTriggered;
 
     // 觸發?��?
@@ -253,22 +251,28 @@ struct FConsequenceCalculationResult
     UPROPERTY(BlueprintReadOnly)
     TArray<FDecisionConsequence> CalculatedConsequences;
 
-    // 影響?��X��X    UPROPERTY(BlueprintReadOnly)
+    // 影響?��X��X
+    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> AffectedGameState;
 
-    // 影響?�人X    UPROPERTY(BlueprintReadOnly)
+    // 影響?�人X
+    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedCharacters;
 
-    // 影響?��?�?    UPROPERTY(BlueprintReadOnly)
+    // 影響?��?�?
+    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedEvents;
 
-    // 影響?��?�?    UPROPERTY(BlueprintReadOnly)
+    // 影響?��?�?
+    UPROPERTY(BlueprintReadOnly)
     TMap<FString, int32> AffectedResources;
 
-    // 影響?�建�?    UPROPERTY(BlueprintReadOnly)
+    // 影響?�建�?
+    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedBuildings;
 
-    // 影響?�單�?    UPROPERTY(BlueprintReadOnly)
+    // 影響?�單�?
+    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedUnits;
 
     // 總�?影響?�數
@@ -334,22 +338,28 @@ struct FDecisionContext
     UPROPERTY(BlueprintReadOnly)
     FString DecisionOption;
 
-    // ?��X�戲?�X    UPROPERTY(BlueprintReadOnly)
+    // ?��X�戲?�X
+    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> CurrentGameState;
 
-    // ?��?人物?�X    UPROPERTY(BlueprintReadOnly)
+    // ?��?人物?�X
+    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> CharacterStates;
 
-    // ?��?事件?�X    UPROPERTY(BlueprintReadOnly)
+    // ?��?事件?�X
+    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> EventStates;
 
-    // 資�X�X    UPROPERTY(BlueprintReadOnly)
+    // 資�X�X
+    UPROPERTY(BlueprintReadOnly)
     TMap<FString, int32> ResourceStates;
 
-    // 建�X�X    UPROPERTY(BlueprintReadOnly)
+    // 建�X�X
+    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> BuildingStates;
 
-    // ?��X�X    UPROPERTY(BlueprintReadOnly)
+    // ?��X�X
+    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> UnitStates;
 
     // 民�X��?
@@ -502,13 +512,13 @@ public:
      * ?�測決�?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FDecisionConsequence> PredictDecisionConsequences(const FDecisionContext& Context, int32 PredictionCount};
+    TArray<FDecisionConsequence> PredictDecisionConsequences(const FDecisionContext& Context, int32 PredictionCount);
 
     /**
      * 模擬決�?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FConsequenceCalculationResult> SimulateDecisionConsequences(const FDecisionContext& Context, int32 SimulationCount};
+    TArray<FConsequenceCalculationResult> SimulateDecisionConsequences(const FDecisionContext& Context, int32 SimulationCount);
 
 protected:
     // 已註?��?決�?後�?
@@ -580,17 +590,23 @@ protected:
     // 檢查後�?條件
     bool CheckConsequenceConditions(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // ?�用後�X��X��X    void ApplyConsequenceToGameState(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, FString>& AffectedStates) const;
+    // ?�用後�X��X��X
+    void ApplyConsequenceToGameState(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, FString>& AffectedStates) const;
 
-    // ?�用後�X�人X    void ApplyConsequenceToCharacters(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedCharacters) const;
+    // ?�用後�X�人X
+    void ApplyConsequenceToCharacters(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedCharacters) const;
 
-    // ?�用後�X��?�?    void ApplyConsequenceToEvents(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedEvents) const;
+    // ?�用後�X��?�?
+    void ApplyConsequenceToEvents(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedEvents) const;
 
-    // ?�用後�X��?�?    void ApplyConsequenceToResources(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, int32>& AffectedResources) const;
+    // ?�用後�X��?�?
+    void ApplyConsequenceToResources(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, int32>& AffectedResources) const;
 
-    // ?�用後�X�建�?    void ApplyConsequenceToBuildings(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedBuildings) const;
+    // ?�用後�X�建�?
+    void ApplyConsequenceToBuildings(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedBuildings) const;
 
-    // ?�用後�X�單�?    void ApplyConsequenceToUnits(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedUnits) const;
+    // ?�用後�X�單�?
+    void ApplyConsequenceToUnits(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedUnits) const;
 
     // ?�新後�?統�?
     void UpdateConsequenceStatistics(const FString& ConsequenceID);
@@ -622,7 +638,8 @@ protected:
     // 檢查後�X�否?�逆�?
     bool IsConsequenceReversible(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // ?��?後�X��?�?    int32 GetConsequencePriority(const FDecisionConsequence& Consequence) const;
+    // ?��?後�X��?�?
+    int32 GetConsequencePriority(const FDecisionConsequence& Consequence) const;
 
     // ?��?後�?
     void SortConsequencesByPriority(TArray<FDecisionConsequence>& Consequences) const;

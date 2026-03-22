@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,8 +7,7 @@
 #include "MingRTSServiceManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EServiceType : uint8
-{
+enum class EServiceType: uint8 {
     Core        UMETA(DisplayName = "Core"),
     AI          UMETA(DisplayName = "AI"),
     Audio       UMETA(DisplayName = "Audio"),
@@ -22,8 +21,7 @@ enum class EServiceType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EServiceState : uint8
-{
+enum class EServiceState: uint8 {
     Uninitialized UMETA(DisplayName = "Uninitialized"),
     Initializing  UMETA(DisplayName = "Initializing"),
     Running       UMETA(DisplayName = "Running"),
@@ -34,8 +32,7 @@ enum class EServiceState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EServicePriority : uint8
-{
+enum class EServicePriority: uint8 {
     Critical     UMETA(DisplayName = "Critical"),
     High         UMETA(DisplayName = "High"),
     Normal       UMETA(DisplayName = "Normal"),

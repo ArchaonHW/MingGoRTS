@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingMultiplayerTypes.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingNetworkRole : uint8
-{
+enum class EMingNetworkRole: uint8 {
     None UMETA(DisplayName = "None"),
     Client UMETA(DisplayName = "Client"),
     Host UMETA(DisplayName = "Host"),
@@ -15,8 +14,7 @@ enum class EMingNetworkRole : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingConnectionState : uint8
-{
+enum class EMingConnectionState: uint8 {
     Disconnected UMETA(DisplayName = "Disconnected"),
     Connecting UMETA(DisplayName = "Connecting"),
     Connected UMETA(DisplayName = "Connected"),
@@ -27,8 +25,7 @@ enum class EMingConnectionState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingNetworkProtocol : uint8
-{
+enum class EMingNetworkProtocol: uint8 {
     UDP UMETA(DisplayName = "UDP"),
     TCP UMETA(DisplayName = "TCP"),
     Reliable UDP UMETA(DisplayName = "Reliable UDP"),
@@ -37,8 +34,7 @@ enum class EMingNetworkProtocol : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingSyncPriority : uint8
-{
+enum class EMingSyncPriority: uint8 {
     Critical UMETA(DisplayName = "Critical"),
     High UMETA(DisplayName = "High"),
     Normal UMETA(DisplayName = "Normal"),
@@ -47,8 +43,7 @@ enum class EMingSyncPriority : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingReplicationMode : uint8
-{
+enum class EMingReplicationMode: uint8 {
     Always UMETA(DisplayName = "Always"),
     OwnerOnly UMETA(DisplayName = "Owner Only"),
     ServerOnly UMETA(DisplayName = "Server Only"),
@@ -595,8 +590,7 @@ struct FMingCoopScore
 };
 
 UENUM(BlueprintType)
-enum class EMingCoopMode : uint8
-{
+enum class EMingCoopMode: uint8 {
     Campaign     = 0,
     Skirmish     = 1,
     Survival     = 2,
@@ -606,8 +600,7 @@ enum class EMingCoopMode : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingCoopRole : uint8
-{
+enum class EMingCoopRole: uint8 {
     Leader       = 0,
     Commander    = 1,
     Specialist   = 2,
@@ -617,8 +610,7 @@ enum class EMingCoopRole : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingObjectiveType : uint8
-{
+enum class EMingObjectiveType: uint8 {
     Capture      = 0,
     Defend       = 1,
     Escort       = 2,
@@ -632,8 +624,7 @@ enum class EMingObjectiveType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingObjectiveStatus : uint8
-{
+enum class EMingObjectiveStatus: uint8 {
     Active       = 0,
     Completed    = 1,
     Failed       = 2,
@@ -643,8 +634,7 @@ enum class EMingObjectiveStatus : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingResourceSharingPolicy : uint8
-{
+enum class EMingResourceSharingPolicy: uint8 {
     Individual   = 0,
     Shared      = 1,
     Requested   = 2,
@@ -653,8 +643,7 @@ enum class EMingResourceSharingPolicy : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingCoopMessageType : uint8
-{
+enum class EMingCoopMessageType: uint8 {
     General     = 0,
     Tactical    = 1,
     Request     = 2,
@@ -666,8 +655,7 @@ enum class EMingCoopMessageType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingCoopGameState : uint8
-{
+enum class EMingCoopGameState: uint8 {
     Waiting     = 0,
     Starting    = 1,
     Playing     = 2,
@@ -678,8 +666,7 @@ enum class EMingCoopGameState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingAIAssistanceType : uint8
-{
+enum class EMingAIAssistanceType: uint8 {
     None        = 0,
     Guidance    = 1,
     Reinforcement = 2,
@@ -690,8 +677,7 @@ enum class EMingAIAssistanceType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingAIAssistanceLevel : uint8
-{
+enum class EMingAIAssistanceLevel: uint8 {
     Off         = 0,
     Minimal     = 1,
     Normal      = 2,
@@ -700,8 +686,7 @@ enum class EMingAIAssistanceLevel : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingTacticalUpdateType : uint8
-{
+enum class EMingTacticalUpdateType: uint8 {
     EnemySpotted     = 0,
     ResourceFound    = 1,
     ObjectiveUpdate  = 2,
@@ -713,8 +698,7 @@ enum class EMingTacticalUpdateType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingDifficulty : uint8
-{
+enum class EMingDifficulty: uint8 {
     Easy        = 0,
     Normal      = 1,
     Hard        = 2,
@@ -1248,8 +1232,7 @@ struct FMingARSessionConfig
 
 // VR Enums
 UENUM(BlueprintType)
-enum class EMingVRMode : uint8
-{
+enum class EMingVRMode: uint8 {
     Disabled    = 0,
     Seated      = 1,
     Standing    = 2,
@@ -1258,8 +1241,7 @@ enum class EMingVRMode : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingVRDeviceType : uint8
-{
+enum class EMingVRDeviceType: uint8 {
     HeadMounted     = 0,
     Controller      = 1,
     Tracker         = 2,
@@ -1268,8 +1250,7 @@ enum class EMingVRDeviceType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingVRInteractionType : uint8
-{
+enum class EMingVRInteractionType: uint8 {
     None            = 0,
     Trigger         = 1,
     Grip            = 2,
@@ -1280,8 +1261,7 @@ enum class EMingVRInteractionType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingVRComfortMode : uint8
-{
+enum class EMingVRComfortMode: uint8 {
     None            = 0,
     SnapTurning     = 1,
     SmoothTurning   = 2,
@@ -1292,8 +1272,7 @@ enum class EMingVRComfortMode : uint8
 
 // AR Enums
 UENUM(BlueprintType)
-enum class EMingARTrackingState : uint8
-{
+enum class EMingARTrackingState: uint8 {
     NotAvailable    = 0,
     Limited         = 1,
     Normal          = 2,
@@ -1302,8 +1281,7 @@ enum class EMingARTrackingState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingARDeviceType : uint8
-{
+enum class EMingARDeviceType: uint8 {
     Smartphone      = 0,
     Tablet          = 1,
     HeadMounted     = 2,
@@ -1312,16 +1290,14 @@ enum class EMingARDeviceType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingARAlignmentType : uint8
-{
+enum class EMingARAlignmentType: uint8 {
     World           = 0,
     Camera          = 1,
     Gravity         = 2
 };
 
 UENUM(BlueprintType)
-enum class EMingARPlaneDetectionMode : uint8
-{
+enum class EMingARPlaneDetectionMode: uint8 {
     None            = 0,
     Horizontal      = 1,
     Vertical        = 2,
@@ -1329,8 +1305,7 @@ enum class EMingARPlaneDetectionMode : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingARPlaneType : uint8
-{
+enum class EMingARPlaneType: uint8 {
     None            = 0,
     HorizontalUp    = 1,
     HorizontalDown  = 2,
@@ -1339,8 +1314,7 @@ enum class EMingARPlaneType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingARInteractionType : uint8
-{
+enum class EMingARInteractionType: uint8 {
     None            = 0,
     Touch           = 1,
     Gesture         = 2,
@@ -1350,8 +1324,7 @@ enum class EMingARInteractionType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingAROcclusionMode : uint8
-{
+enum class EMingAROcclusionMode: uint8 {
     None            = 0,
     Environment     = 1,
     People          = 2,
@@ -1359,8 +1332,7 @@ enum class EMingAROcclusionMode : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingARQualityLevel : uint8
-{
+enum class EMingARQualityLevel: uint8 {
     Low             = 0,
     Medium          = 1,
     High            = 2,
@@ -1922,8 +1894,7 @@ struct FMingEducationalContent
 
 // Educational Enums
 UENUM(BlueprintType)
-enum class EMingEducationalMode : uint8
-{
+enum class EMingEducationalMode: uint8 {
     Disabled        = 0,
     Tutorial        = 1,
     GuidedLearning  = 2,
@@ -1933,8 +1904,7 @@ enum class EMingEducationalMode : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingEducationalDifficulty : uint8
-{
+enum class EMingEducationalDifficulty: uint8 {
     Beginner        = 0,
     Intermediate    = 1,
     Advanced        = 2,
@@ -1943,8 +1913,7 @@ enum class EMingEducationalDifficulty : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingEducationalCategory : uint8
-{
+enum class EMingEducationalCategory: uint8 {
     History         = 0,
     Culture         = 1,
     Military        = 2,
@@ -1959,8 +1928,7 @@ enum class EMingEducationalCategory : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingQuestionType : uint8
-{
+enum class EMingQuestionType: uint8 {
     MultipleChoice  = 0,
     TrueFalse       = 1,
     FillInBlank     = 2,
@@ -1972,8 +1940,7 @@ enum class EMingQuestionType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingInteractiveLearningType : uint8
-{
+enum class EMingInteractiveLearningType: uint8 {
     Simulation      = 0,
     VirtualTour     = 1,
     RolePlaying     = 2,
@@ -1985,8 +1952,7 @@ enum class EMingInteractiveLearningType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingInteractionType : uint8
-{
+enum class EMingInteractionType: uint8 {
     Question        = 0,
     Choice          = 1,
     Input           = 2,
@@ -1998,8 +1964,7 @@ enum class EMingInteractionType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingAchievementType : uint8
-{
+enum class EMingAchievementType: uint8 {
     Learning        = 0,
     Exploration     = 1,
     Completion      = 2,
@@ -2012,8 +1977,7 @@ enum class EMingAchievementType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingLearningStyle : uint8
-{
+enum class EMingLearningStyle: uint8 {
     Visual          = 0,
     Auditory        = 1,
     Kinesthetic      = 2,

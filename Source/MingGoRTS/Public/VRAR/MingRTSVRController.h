@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - VR Controller Component
 
 #pragma once
@@ -11,8 +11,7 @@
  * VR Controller Types
  */
 UENUM(BlueprintType)
-enum class EVRControllerType : uint8
-{
+enum class EVRControllerType: uint8 {
     LeftHand        UMETA(DisplayName = "Left Hand"),
     RightHand       UMETA(DisplayName = "Right Hand"),
     Head            UMETA(DisplayName = "Head/HMD"),
@@ -23,8 +22,7 @@ enum class EVRControllerType : uint8
  * VR Interaction Modes
  */
 UENUM(BlueprintType)
-enum class EVRInteractionMode : uint8
-{
+enum class EVRInteractionMode: uint8 {
     Pointer     UMETA(DisplayName = "Pointer/Laser"),
     DirectTouch UMETA(DisplayName = "Direct Touch"),
     Grab        UMETA(DisplayName = "Grab"),

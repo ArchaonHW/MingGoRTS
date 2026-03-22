@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,23 +7,20 @@
 #include "MingSageCommandSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class ESageType : uint8
-{
+enum class ESageType: uint8 {
     Sage,           // 聖者：能用而能封
     DemonKing,      // 魔王：能用而不能停
     FalseSage       // 偽聖者：不能用卻假裝不用
 };
 
 UENUM(BlueprintType)
-enum class EYinYangNature : uint8
-{
+enum class EYinYangNature: uint8 {
     Yang,           // 陽：秩序、公開、可承擔
     Yin             // 陰：破局、隱蔽、非常態
 };
 
 UENUM(BlueprintType)
-enum class EFiveElements : uint8
-{
+enum class EFiveElements: uint8 {
     Wood,           // 木：立名與正當性
     Fire,           // 火：造勢與加速
     Earth,          // 土：收權與止亂
@@ -32,8 +29,7 @@ enum class EFiveElements : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESixStrategies : uint8
-{
+enum class ESixStrategies: uint8 {
     // 正六策：立國、立制、立人
     EstablishNation,     // 立國：伐心之正道
     EstablishSystem,     // 立制：伐勢、伐命之正道
@@ -46,16 +42,14 @@ enum class ESixStrategies : uint8
 };
 
 UENUM(BlueprintType)
-enum class ECommandAuthority : uint8
-{
+enum class ECommandAuthority: uint8 {
     TaoAuthority,         // 道權：最高指揮權
     StrategyAuthority,     // 策策權：戰術制定權
     MilitaryAuthority     // 兵兵權：執行指揮權
 };
 
 UENUM(BlueprintType)
-enum class ESageFallWarning : uint8
-{
+enum class ESageFallWarning: uint8 {
     None,                 // 無墮落徵象
     ObsessedWithVictory,   // 沉迷勝利
     MeansAsEnds,         // 手段即目的

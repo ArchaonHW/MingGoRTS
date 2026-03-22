@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -72,8 +72,7 @@ struct FMingPerformanceTestMetrics
 };
 
 UENUM(BlueprintType)
-enum class EMingPerformanceTestType : uint8
-{
+enum class EMingPerformanceTestType: uint8 {
     UnitSpawning UMETA(DisplayName = "Unit Spawning"),
     MovementStress UMETA(DisplayName = "Movement Stress"),
     CombatStress UMETA(DisplayName = "Combat Stress"),
@@ -125,13 +124,13 @@ public:
 
     // Test Actions
     UFUNCTION(BlueprintCallable, Category = "Test Actions")
-    void SpawnTestUnits(int32 Count};
+    void SpawnTestUnits(int32 Count);
 
     UFUNCTION(BlueprintCallable, Category = "Test Actions")
     void DestroyAllTestUnits();
 
     UFUNCTION(BlueprintCallable, Category = "Test Actions")
-    void StressTestSelection(int32 SelectionCount};
+    void StressTestSelection(int32 SelectionCount);
 
     UFUNCTION(BlueprintCallable, Category = "Test Actions")
     void StressTestMovement();
@@ -140,7 +139,7 @@ public:
     void StressTestCombat();
 
     UFUNCTION(BlueprintCallable, Category = "Test Actions")
-    void TestFormationSystem(int32 UnitCount, EMingFormationType FormationType};
+    void TestFormationSystem(int32 UnitCount, EMingFormationType FormationType);
 
     // Results
     UFUNCTION(BlueprintPure, Category = "Results")
@@ -153,7 +152,7 @@ public:
     float GetTestProgress() const;
 
     UFUNCTION(BlueprintCallable, Category = "Results")
-    void ExportResultsToFile(const FString& FilePath};
+    void ExportResultsToFile(const FString& FilePath);
 
     UFUNCTION(BlueprintCallable, Category = "Results")
     FString GenerateReport() const;
@@ -170,7 +169,7 @@ public:
 
     // Debug Visualization
     UFUNCTION(BlueprintCallable, Category = "Debug")
-    void EnableDebugVisualization(bool bEnable};
+    void EnableDebugVisualization(bool bEnable);
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug")
     bool bShowDebugInfo;
@@ -194,29 +193,29 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "State")
     TArray<FMingPerformanceMetrics> MetricsHistory;
 
-    // 注�?：TArray<TWeakObjectPtr> 不被 Blueprint ?��?
+    // 注?：TArray<TWeakObjectPtr> 不被 Blueprint ??
     TArray<TWeakObjectPtr<class AMingTacticalUnit>> TestUnits;
 
     // Performance tracking
-    void UpdateMetrics(float DeltaTime};
-    void TrackFPS(float DeltaTime};
+    void UpdateMetrics(float DeltaTime);
+    void TrackFPS(float DeltaTime);
     void TrackMemory();
     void TrackUnitPerformance();
     void TrackEventSystem();
     void TrackAIPerformance();
 
     // Test scenarios
-    void RunUnitSpawningTest(float DeltaTime};
-    void RunMovementStressTest(float DeltaTime};
-    void RunCombatStressTest(float DeltaTime};
-    void RunSelectionStressTest(float DeltaTime};
-    void RunFormationStressTest(float DeltaTime};
-    void RunFullSimulationTest(float DeltaTime};
+    void RunUnitSpawningTest(float DeltaTime);
+    void RunMovementStressTest(float DeltaTime);
+    void RunCombatStressTest(float DeltaTime);
+    void RunSelectionStressTest(float DeltaTime);
+    void RunFormationStressTest(float DeltaTime);
+    void RunFullSimulationTest(float DeltaTime);
 
     // Helpers
     FVector GetRandomSpawnLocation() const;
     FVector GetRandomDestination() const;
-    void SelectRandomUnits(int32 Count};
+    void SelectRandomUnits(int32 Count);
     void IssueRandomCommands();
 
     UPROPERTY()
@@ -241,6 +240,6 @@ public:
     static float GetUsedMemoryMB();
 
     UFUNCTION(BlueprintPure, Category = "Utilities", meta = (StaticFunction = "true"))
-    static int32 GetObjectCount(UWorld* World, TSubclassOf<AActor> ActorClass};
+    static int32 GetObjectCount(UWorld* World, TSubclassOf<AActor> ActorClass);
 };
 

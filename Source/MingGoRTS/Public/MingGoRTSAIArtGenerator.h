@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Containers/Ticker.h"
@@ -9,8 +9,7 @@
 #include "MingGoRTSAIArtGenerator.generated.h"
 
 UENUM(BlueprintType)
-enum class EArtGenerationStatus : uint8
-{
+enum class EArtGenerationStatus: uint8 {
     Idle,
     Generating,
     Processing,
@@ -19,33 +18,31 @@ enum class EArtGenerationStatus : uint8
 };
 
 UENUM(BlueprintType)
-enum class EArtStyle : uint8
-{
-    Realistic,         // ¼g¹ê­·®æ
-    Anime,            // ??º©­·®æ
-    OilPainting,      // ªoµe­·®æ
-    Watercolor,       // ¤ô±m­·®æ
-    Sketch,           // ¯À??­·®æ
-    TraditionalChinese, // ¤¤?X?²Î??­·
-    Military,         // ­x??­·®æ
-    Historical,       // ¾ú¥v­·®æ
-    ConceptArt,      // ·§©À????
+enum class EArtStyle: uint8 {
+    Realistic,         // ï¿½gï¿½ê­·ï¿½ï¿½
+    Anime,            // ??ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    OilPainting,      // ï¿½oï¿½eï¿½ï¿½ï¿½ï¿½
+    Watercolor,       // ï¿½ï¿½mï¿½ï¿½ï¿½ï¿½
+    Sketch,           // ï¿½ï¿½??ï¿½ï¿½ï¿½ï¿½
+    TraditionalChinese, // ï¿½ï¿½?X?ï¿½ï¿½??ï¿½ï¿½
+    Military,         // ï¿½x??ï¿½ï¿½ï¿½ï¿½
+    Historical,       // ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½
+    ConceptArt,      // ï¿½ï¿½ï¿½ï¿½????
     PixelArt         // ???X???
 };
 
 UENUM(BlueprintType)
-enum class EArtCategory : uint8
-{
-    Character,         // ¨¤¦â³]??
-    Environment,       // ??³õ³]??
-    Prop,             // ??¨ã³]??
-    Weapon,           // ªZ¾¹³]??
-    Vehicle,          // ¸ü¨ã³]??
-    Architecture,     // «Ø??³]??
-    UI,               // UI³]??
-    Icon,             // ????³]??
-    Texture,          // ¯¾??³]??
-    Concept           // ·§©À³]??
+enum class EArtCategory: uint8 {
+    Character,         // ï¿½ï¿½ï¿½ï¿½]??
+    Environment,       // ??ï¿½ï¿½ï¿½]??
+    Prop,             // ??ï¿½ï¿½]??
+    Weapon,           // ï¿½Zï¿½ï¿½ï¿½]??
+    Vehicle,          // ï¿½ï¿½ï¿½ï¿½]??
+    Architecture,     // ï¿½ï¿½??ï¿½]??
+    UI,               // UIï¿½]??
+    Icon,             // ????ï¿½]??
+    Texture,          // ï¿½ï¿½??ï¿½]??
+    Concept           // ï¿½ï¿½ï¿½ï¿½ï¿½]??
 };
 
 USTRUCT(BlueprintType)
@@ -135,9 +132,9 @@ struct FArtPostProcessSettings
     float NoiseStrength = 0.1f;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnArtGenerated, class UTexture2D*, GeneratedArt};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnArtGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnArtGenerationProgress, float, Progress};
+
+
+
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSAIArtGenerator : public UObject
@@ -147,9 +144,9 @@ class MINGGORTS_API UMingGoRTSAIArtGenerator : public UObject
 public:
     UMingGoRTSAIArtGenerator();
 
-    // ¥D??Ã¸?X??X?¯à
+    // ï¿½D??Ã¸?X??X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    void GenerateArt(const FArtGenerationParameters& Parameters};
+    void GenerateArt(const FArtGenerationParameters& Parameters);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void StartArtGeneration();
@@ -162,46 +159,47 @@ public:
 
     // Stable Diffusion ????
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    void SetStableDiffusionAPI(const FString& APIEndpoint, const FString& APIKey};
+    void SetStableDiffusionAPI(const FString& APIEndpoint, const FString& APIKey);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     bool TestAPIConnection();
 
-    // ControlNet ??¯à
+    // ControlNet ??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    void SetControlNetImage(UTexture2D* ControlImage, const FString& Model};
+    void SetControlNetImage(UTexture2D* ControlImage, const FString& Model);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void ClearControlNetImage();
 
     // ???X???
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    void GenerateArtBatch(const TArray<FArtGenerationParameters>& BatchParameters};
+    void GenerateArtBatch(const TArray<FArtGenerationParameters>& BatchParameters);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    void GenerateVariations(UTexture2D* SourceImage, int32 VariationCount = 4};
+    void GenerateVariations(UTexture2D* SourceImage, int32 VariationCount = 4);
 
-    // ????«á?X    UFUNCTION(BlueprintCallable, Category = "AI Art")
-    UTexture2D* PostProcessImage(UTexture2D* SourceImage, const FArtPostProcessSettings& Settings};
+    // ????ï¿½ï¿½?X
+    UFUNCTION(BlueprintCallable, Category = "AI Art")
+    UTexture2D* PostProcessImage(UTexture2D* SourceImage, const FArtPostProcessSettings& Settings);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    UTexture2D* ResizeImage(UTexture2D* SourceImage, int32 NewWidth, int32 NewHeight};
+    UTexture2D* ResizeImage(UTexture2D* SourceImage, int32 NewWidth, int32 NewHeight);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    UTexture2D* CropImage(UTexture2D* SourceImage, int32 X, int32 Y, int32 Width, int32 Height};
+    UTexture2D* CropImage(UTexture2D* SourceImage, int32 X, int32 Y, int32 Width, int32 Height);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    UTexture2D* RotateImage(UTexture2D* SourceImage, float Angle};
+    UTexture2D* RotateImage(UTexture2D* SourceImage, float Angle);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    UTexture2D* FlipImage(UTexture2D* SourceImage, bool bHorizontal, bool bVertical};
+    UTexture2D* FlipImage(UTexture2D* SourceImage, bool bHorizontal, bool bVertical);
 
-    // ????¸ê²£ºÞ??
+    // ????ï¿½ê²£ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    void AddToArtLibrary(UTexture2D* Art, const FString& ArtName};
+    void AddToArtLibrary(UTexture2D* Art, const FString& ArtName);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    UTexture2D* GetArtFromLibrary(const FString& ArtName};
+    UTexture2D* GetArtFromLibrary(const FString& ArtName);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     TArray<FString> GetArtLibraryNames() const;
@@ -209,14 +207,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     void ClearArtLibrary();
 
-    // ??½è????
+    // ??ï¿½ï¿½????
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    UMaterialInterface* GenerateMaterial(UTexture2D* BaseTexture, const FString& MaterialName};
+    UMaterialInterface* GenerateMaterial(UTexture2D* BaseTexture, const FString& MaterialName);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    void GenerateTextureSet(const FArtGenerationParameters& Parameters, TArray<UTexture2D*>& OutTextures};
+    void GenerateTextureSet(const FArtGenerationParameters& Parameters, TArray<UTexture2D*>& OutTextures);
 
-    // ??³]­·®æ
+    // ??ï¿½]ï¿½ï¿½ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     FArtGenerationParameters GetRepublicanEraCharacterStyle();
 
@@ -229,14 +227,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Art")
     FArtGenerationParameters GetTraditionalChineseStyle();
 
-    // ????¾É¥X
+    // ????ï¿½É¥X
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    void ExportArt(UTexture2D* Art, const FString& FilePath};
+    void ExportArt(UTexture2D* Art, const FString& FilePath);
 
     UFUNCTION(BlueprintCallable, Category = "AI Art")
-    void ExportArtBatch(const TArray<UTexture2D*>& Arts, const FString& DirectoryPath};
+    void ExportArtBatch(const TArray<UTexture2D*>& Arts, const FString& DirectoryPath);
 
-    // ©e??¨Æ¥ó
+    // ï¿½e??ï¿½Æ¥ï¿½
     UPROPERTY(BlueprintAssignable, Category = "AI Art")
     FOnArtGenerated OnArtGenerated;
 
@@ -283,16 +281,16 @@ protected:
 
 private:
     void ProcessArtGeneration();
-    bool OnGenerationTick(float DeltaTime};
-    void SendStableDiffusionRequest(const FArtGenerationParameters& Parameters};
-    void HandleGenerationResponse(bool bSuccess, const FString& ResponseData};
-    FString BuildEnhancedPrompt(const FArtGenerationParameters& Parameters};
-    FString GetStylePrompt(EArtStyle Style};
-    FString GetCategoryPrompt(EArtCategory Category};
-    UTexture2D* CreateTextureFromImageData(const TArray<uint8>& ImageData};
+    bool OnGenerationTick(float DeltaTime);
+    void SendStableDiffusionRequest(const FArtGenerationParameters& Parameters);
+    void HandleGenerationResponse(bool bSuccess, const FString& ResponseData);
+    FString BuildEnhancedPrompt(const FArtGenerationParameters& Parameters);
+    FString GetStylePrompt(EArtStyle Style);
+    FString GetCategoryPrompt(EArtCategory Category);
+    UTexture2D* CreateTextureFromImageData(const TArray<uint8>& ImageData);
     void NotifyGenerationCompleted(bool bSuccess, const FString& ErrorMessage = FString()};
-    void NotifyGenerationProgress(float Progress};
-    void ApplyPostProcessing(UTexture2D* Texture, const FArtPostProcessSettings& Settings};
+    void NotifyGenerationProgress(float Progress);
+    void ApplyPostProcessing(UTexture2D* Texture, const FArtPostProcessSettings& Settings);
     void InitializeDefaultStyles();
 };
 

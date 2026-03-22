@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingFourLayerTypes.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingGameLayer : uint8
-{
+enum class EMingGameLayer: uint8 {
     None UMETA(DisplayName = "None"),
     Strategic UMETA(DisplayName = "Strategic Layer"),
     Tactical UMETA(DisplayName = "Tactical Layer"),
@@ -15,8 +14,7 @@ enum class EMingGameLayer : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingLayerTransitionType : uint8
-{
+enum class EMingLayerTransitionType: uint8 {
     Instant UMETA(DisplayName = "Instant"),
     Fade UMETA(DisplayName = "Fade"),
     Slide UMETA(DisplayName = "Slide"),
@@ -25,8 +23,7 @@ enum class EMingLayerTransitionType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingStrategicAction : uint8
-{
+enum class EMingStrategicAction: uint8 {
     None UMETA(DisplayName = "None"),
     DeclareWar UMETA(DisplayName = "Declare War"),
     FormAlliance UMETA(DisplayName = "Form Alliance"),
@@ -38,8 +35,7 @@ enum class EMingStrategicAction : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingTacticalCommand : uint8
-{
+enum class EMingTacticalCommand: uint8 {
     None UMETA(DisplayName = "None"),
     Attack UMETA(DisplayName = "Attack"),
     Defend UMETA(DisplayName = "Defend"),

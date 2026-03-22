@@ -25,7 +25,7 @@ def fix_eof_and_braces(file_path):
             line = re.sub(r'(\([^)]*)}\s*;\s*$', r'\1);', line)
             
             if original != line:
-                changes.append(f"Line {i+1}: Fixed }; to );")
+                changes.append(f"Line {i+1}: Fixed '}};' to ');'")
             
             fixed_lines.append(line)
         

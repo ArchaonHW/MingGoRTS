@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Language Selection UI Widget
 
 #pragma once
@@ -35,11 +35,11 @@ public:
 
     /** Set current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetCurrentLanguage(ERTSLanguageCode LanguageCode};
+    void SetCurrentLanguage(ERTSLanguageCode LanguageCode);
 
     /** Set current region */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetCurrentRegion(ECulturalRegion Region};
+    void SetCurrentRegion(ECulturalRegion Region);
 
     /** Get current language display name */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
@@ -107,11 +107,11 @@ protected:
 
     /** Handle language change event */
     UFUNCTION()
-    void OnLanguageChanged(ERTSLanguageCode NewLanguage};
+    void OnLanguageChanged(ERTSLanguageCode NewLanguage);
 
     /** Handle region change event */
     UFUNCTION()
-    void OnRegionChanged(ECulturalRegion NewRegion};
+    void OnRegionChanged(ECulturalRegion NewRegion);
 
     /** Validate settings */
     bool ValidateSettings() const;
@@ -230,4 +230,5 @@ public:
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
     bool IsSettingsModified() const { return bSettingsModified; }
 };
+
 

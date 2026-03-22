@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,20 +9,20 @@ class UMingRTSUnitManager;
 class AMingGoRTSPlayerController;
 
 UENUM(BlueprintType)
-enum class ERTSSelectionType : uint8
-{
-    Single,         // ??¿ï
-    Multiple,       // ¦h¿ï
-    Box,            // ®Ø¿ï
-    Group           // ???X???
+enum class ERTSSelectionType: uint8 {
+    Single,         // ??ï¿½ï¿½
+    Multiple,       // ï¿½hï¿½ï¿½
+    Box,            // ï¿½Ø¿ï¿½
+    Group           // ç›®æ¨™æ•¸é‡
 };
 
 UENUM(BlueprintType)
-enum class ERTSSelectionFilter : uint8
-{
-    All,            // ????³æ??    SameType,       // ????Ãş??
-    SameState,      // ???X?X    Damaged,        // ???X???
-    Idle            // ªÅ?X???
+enum class ERTSSelectionFilter: uint8 {
+    All,            // æ‘§æ¯€ï¿½ï¿½??
+    SameType,       // æ‘§æ¯€ï¿½ï¿½??
+    SameState,      // ???X?X
+    Damaged,        // ç›®æ¨™æ•¸é‡
+    Idle            // ï¿½ï¿½?X???
 };
 
 USTRUCT(BlueprintType)
@@ -53,11 +53,11 @@ struct FRTSSelectionData
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitsSelected, const TArray<AMingGoRTSUnit*>&, Units, ERTSSelectionType, SelectionType};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSelectionCleared, ERTSSelectionType, PreviousSelectionType};
+
+
 
 /**
- * RTS???X??X * ???X??X??X??X?¡B??Âo?X??X?¯à
+ * RTSæ•…äº‹é‡è¦æ€§ * æ•…äº‹é¸é …X??X?ï¿½B??ï¿½o?X??X?ï¿½ï¿½
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSUnitSelector : public UObject
@@ -66,25 +66,25 @@ class MINGCORE_API UMingRTSUnitSelector : public UObject
 
 public:
     UMingRTSUnitSelector(); 
-    void InitializeSelector(AMingGoRTSPlayerController* InPlayerController};
+    void InitializeSelector(AMingGoRTSPlayerController* InPlayerController);
 
-    // ???X??X?¯à
+    // æ•…äº‹é‡è¦æ€§?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
-    void SelectUnit(AMingGoRTSUnit* Unit, bool bAddToSelection = false};
-
-    UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
-    void SelectUnits(const TArray<AMingGoRTSUnit*>& Units, bool bAddToSelection = false};
+    void SelectUnit(AMingGoRTSUnit* Unit, bool bAddToSelection = false);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
-    void SelectUnitsInBox(FVector2D ScreenStart, FVector2D ScreenEnd, bool bAddToSelection = false};
+    void SelectUnits(const TArray<AMingGoRTSUnit*>& Units, bool bAddToSelection = false);
+
+    UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
+    void SelectUnitsInBox(FVector2D ScreenStart, FVector2D ScreenEnd, bool bAddToSelection = false);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     void DeselectAllUnits();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
-    void DeselectUnit(AMingGoRTSUnit* Unit};
+    void DeselectUnit(AMingGoRTSUnit* Unit);
 
-    // ???X?¸ß
+    // ???X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     TArray<AMingGoRTSUnit*> GetSelectedUnits() const { return CurrentSelection.SelectedUnits; }
 
@@ -97,26 +97,26 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     AMingGoRTSUnit* GetPrimarySelection() const;
 
-    // ???X?Âo
+    // ???X?ï¿½o
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     TArray<AMingGoRTSUnit*> FilterSelection(ERTSSelectionFilter FilterType) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
-    void ApplySelectionFilter(ERTSSelectionFilter FilterType};
+    void ApplySelectionFilter(ERTSSelectionFilter FilterType);
 
-    // ®Ø¿ï??¯à
+    // ï¿½Ø¿ï¿½??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     bool IsUnitInSelectionBox(AMingGoRTSUnit* Unit, FVector2D BoxStart, FVector2D BoxEnd) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     TArray<AMingGoRTSUnit*> GetUnitsInBox(FVector2D BoxStart, FVector2D BoxEnd) const;
 
-    // ???X?¯à
+    // ???X?ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
-    void CreateUnitGroup(const FString& GroupName, const TArray<AMingGoRTSUnit*>& Units};
+    void CreateUnitGroup(const FString& GroupName, const TArray<AMingGoRTSUnit*>& Units);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
-    void SelectUnitGroup(const FString& GroupName, bool bAddToSelection = false};
+    void SelectUnitGroup(const FString& GroupName, bool bAddToSelection = false);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     TArray<AMingGoRTSUnit*> GetUnitGroup(const FString& GroupName) const;
@@ -124,17 +124,17 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     TArray<FString> GetAllUnitGroups() const;
 
-    // ????¾ú¥v
+    // æ‘§æ¯€ï¿½ï¿½ï¿½v
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     void SaveSelectionToHistory();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
-    void RestoreSelectionFromHistory(int32 HistoryIndex = -1};
+    void RestoreSelectionFromHistory(int32 HistoryIndex = -1);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     TArray<FRTSSelectionData> GetSelectionHistory() const { return SelectionHistory; }
 
-    // ????²Î??
+    // æ‘§æ¯€ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     FVector GetSelectionCenter() const;
 
@@ -144,7 +144,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     FDateTime GetSelectionTime() const { return CurrentSelection.SelectionTime; }
 
-    // µøÄ±????
+    // ï¿½ï¿½Ä±æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     void ShowSelectionEffects();
 
@@ -152,7 +152,7 @@ public:
     void HideSelectionEffects();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
-    void UpdateSelectionVisuals(); // ¨Æ¥ó©e??
+    void UpdateSelectionVisuals(); // ï¿½Æ¥ï¿½e??
     UPROPERTY(BlueprintAssignable, Category = "RTS Unit Selector")
     FOnUnitsSelected OnUnitsSelected;
 
@@ -160,36 +160,36 @@ public:
     FOnSelectionCleared OnSelectionCleared;
 
 protected:
-    // ??³¡????
-    void UpdateCurrentSelection(const TArray<AMingGoRTSUnit*>& Units, ERTSSelectionType SelectionType};
+    // ??ï¿½ï¿½æ‘§æ¯€
+    void UpdateCurrentSelection(const TArray<AMingGoRTSUnit*>& Units, ERTSSelectionType SelectionType);
     void ClearSelectionInternal();
     bool ValidateSelection(const TArray<AMingGoRTSUnit*>& Units) const;
-    void NotifySelectionChanged(); // »²§U????
+    void NotifySelectionChanged(); // ï¿½ï¿½ï¿½Uæ‘§æ¯€
     FVector2D WorldToScreen(const FVector& WorldLocation) const;
     FVector ScreenToWorld(const FVector2D& ScreenLocation, float Z = 0.0f) const;
     bool IsPointInBox(FVector2D Point, FVector2D BoxStart, FVector2D BoxEnd) const;
 
 protected:
-    // ???X???
+    // ç›®æ¨™æ•¸é‡
     UPROPERTY()
     TObjectPtr<AMingGoRTSPlayerController> PlayerController;
 
     UPROPERTY()
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
-    // ???X???
+    // ç›®æ¨™æ•¸é‡
     UPROPERTY()
     FRTSSelectionData CurrentSelection;
 
-    // ????¾ú¥v
+    // æ‘§æ¯€ï¿½ï¿½ï¿½v
     UPROPERTY()
     TArray<FRTSSelectionData> SelectionHistory;
 
-    // ???X???
+    // ç›®æ¨™æ•¸é‡
     
     TMap<FString, TArray<AMingGoRTSUnit*>> UnitGroups;
 
-    // ??¸m
+    // ??ï¿½m
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Selection Config")
     float MaxSelectionRadius = 5000.0f;
 

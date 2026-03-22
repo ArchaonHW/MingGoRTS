@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "AIController.h"
@@ -6,8 +6,7 @@
 #include "MingAIController.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingAIState : uint8
-{
+enum class EMingAIState: uint8 {
     Idle UMETA(DisplayName = "Idle"),
     Moving UMETA(DisplayName = "Moving"),
     Attacking UMETA(DisplayName = "Attacking"),
@@ -55,7 +54,7 @@ class MINGTACTICAL_API AMingAIController : public AAIController
     GENERATED_BODY()
 
 public:
-    AMingAIController(const FObjectInitializer& ObjectInitializer};
+    AMingAIController(const FObjectInitializer& ObjectInitializer);
 
     virtual void OnPossess(APawn* InPawn) override;
     virtual void OnUnPossess() override;
@@ -63,23 +62,23 @@ public:
 
     // Command Interface
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
-    void IssueMoveCommand(const FVector& TargetLocation, bool bAttackMove = false};
+    void IssueMoveCommand(const FVector& TargetLocation, bool bAttackMove = false);
 
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
-    void IssueAttackCommand(AActor* Target};
+    void IssueAttackCommand(AActor* Target);
 
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
     void IssueStopCommand();
 
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
-    void IssuePatrolCommand(const FVector& PatrolPoint};
+    void IssuePatrolCommand(const FVector& PatrolPoint);
 
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
-    void IssueFollowCommand(AActor* Leader, float FollowDistance = 200.0f};
+    void IssueFollowCommand(AActor* Leader, float FollowDistance = 200.0f);
 
     // Formation System
     UFUNCTION(BlueprintCallable, Category = "AI|Formation")
-    void SetFormationPosition(const FVector& FormationOffset};
+    void SetFormationPosition(const FVector& FormationOffset);
 
     UFUNCTION(BlueprintCallable, Category = "AI|Formation")
     void ClearFormationPosition();
@@ -88,9 +87,9 @@ public:
     bool HasFormationPosition() const;
 
     // Navigation (overriding parent functions - no UFUNCTION macro needed)
-    bool MoveToLocation(const FVector& TargetLocation, float AcceptanceRadius = 50.0f};
+    bool MoveToLocation(const FVector& TargetLocation, float AcceptanceRadius = 50.0f);
 
-    bool MoveToActor(AActor* TargetActor, float AcceptanceRadius = 50.0f};
+    bool MoveToActor(AActor* TargetActor, float AcceptanceRadius = 50.0f);
 
     void StopMovement();
 
@@ -105,7 +104,7 @@ public:
     bool CanAttackTarget(AActor* Target) const;
 
     UFUNCTION(BlueprintCallable, Category = "AI|Combat")
-    void SetAttackTarget(AActor* Target};
+    void SetAttackTarget(AActor* Target);
 
     UFUNCTION(BlueprintPure, Category = "AI|Combat")
     AActor* GetCurrentAttackTarget() const { return CurrentAttackTarget.Get(); }
@@ -125,7 +124,8 @@ public:
 
 protected:
     // AI State
-    // ??¨î???? - ¨Ï¥Î TObjectPtr ????¸mÁnX    class AMingTacticalUnit;
+    // ??ï¿½ï¿½æ‘§æ¯€ - ï¿½Ï¥ï¿½ TObjectPtr æ‘§æ¯€ï¿½mï¿½nX
+    class AMingTacticalUnit;
     UPROPERTY(BlueprintReadWrite, Category = "AI|Control")
     TObjectPtr<AMingTacticalUnit> ControlledUnit;
 
@@ -170,18 +170,18 @@ protected:
     float TimeSinceLastUpdate;
 
     // Internal functions
-    virtual void UpdateAI(float DeltaTime};
-    virtual void ProcessCurrentCommand(float DeltaTime};
-    virtual void UpdateMovement(float DeltaTime};
-    virtual void UpdateCombat(float DeltaTime};
-    virtual void UpdateFormation(float DeltaTime};
+    virtual void UpdateAI(float DeltaTime);
+    virtual void ProcessCurrentCommand(float DeltaTime);
+    virtual void UpdateMovement(float DeltaTime);
+    virtual void UpdateCombat(float DeltaTime);
+    virtual void UpdateFormation(float DeltaTime);
 
     // State handlers
-    virtual void EnterState(EMingAIState NewState};
-    virtual void ExitState(EMingAIState OldState};
+    virtual void EnterState(EMingAIState NewState);
+    virtual void ExitState(EMingAIState OldState);
 
     // Combat helpers
-    virtual void PerformAttack(AActor* Target};
+    virtual void PerformAttack(AActor* Target);
     virtual void FindNewTarget();
 
     // Navigation helpers
@@ -190,10 +190,10 @@ protected:
 
     // Event handlers
     UFUNCTION()
-    void OnTargetDestroyed(AActor* DestroyedActor};
+    void OnTargetDestroyed(AActor* DestroyedActor);
 
     UFUNCTION()
-    void OnMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result};
+    void OnMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
 
 private:
     // Cached components (only declare once)

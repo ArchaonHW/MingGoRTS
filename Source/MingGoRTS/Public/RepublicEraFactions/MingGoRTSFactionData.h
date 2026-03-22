@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
@@ -6,8 +6,7 @@
 
 // 勢力類型枚舉
 UENUM(BlueprintType)
-enum class ERepublicEraFaction : uint8
-{
+enum class ERepublicEraFaction: uint8 {
     BeiyangGovernment     UMETA(DisplayName = "北洋政府"),
     NationalistGovernment  UMETA(DisplayName = "國民政府"),
     CommunistParty        UMETA(DisplayName = "中國共產黨"),
@@ -24,8 +23,7 @@ enum class ERepublicEraFaction : uint8
 
 // 勢力關係枚舉
 UENUM(BlueprintType)
-enum class EFactionRelation : uint8
-{
+enum class EFactionRelation: uint8 {
     Allied      UMETA(DisplayName = "同盟"),
     Friendly    UMETA(DisplayName = "友好"),
     Neutral     UMETA(DisplayName = "中立"),

@@ -1,17 +1,16 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "MingCoreEventBus.generated.h"
 
-// ???X??X(X?w?q?H??XUHT)
+// 故事重要性(X?w?q?H??XUHT)
 UENUM(BlueprintType)
-enum class EEventPriority : uint8
-{
-    Critical = 0,   // ?????? - ?t???????@
-    High = 1,       // ???u???? - ???n???M?�V??
-    Normal = 2,     // ???q?u???? - ????s?BUI??s
-    Low = 3         // ?C?u???? - ??p???B??x?O??
+enum class EEventPriority: uint8 {
+    Critical = 0,   // 摧毀?? - ?t摧毀???@
+    High = 1,       // ???u摧毀 - ???n???M?V??
+    Normal = 2,     // ???q?u摧毀 - 摧毀s?BUI??s
+    Low = 3         // ?C?u摧毀 - ??p???B??x?O??
 };
 
 class MINGCORE_API IMingCoreEventBus
@@ -25,13 +24,13 @@ public:
     
     // ???q?\X?f
     template<typename EventType>
-    static void Subscribe(class UObject* Listener, TFunction<void(const EventType&)> Callback};
+    static void Subscribe(class UObject* Listener, TFunction<void(const EventType&)> Callback);
     
     // ???X?q?\
     template<typename EventType>
-    static void Unsubscribe(class UObject* Listener};
-    
-    // X??o??X??X    static void PublishBatchEvents(const TArray<struct FMingCoreEvent>& Events};
+    static void Unsubscribe(class UObject* Listener);    
+    // X??o??X??X
+    static void PublishBatchEvents(const TArray<struct FMingCoreEvent>& Events);
 };
 
 // X???X

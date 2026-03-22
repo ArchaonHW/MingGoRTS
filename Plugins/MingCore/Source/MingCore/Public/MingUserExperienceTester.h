@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingUserExperienceTester.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingUXTestType : uint8
-{
+enum class EMingUXTestType: uint8 {
     Navigation UMETA(DisplayName = "Navigation"),
     Interface UMETA(DisplayName = "Interface"),
     Feedback UMETA(DisplayName = "Feedback"),
@@ -18,8 +17,7 @@ enum class EMingUXTestType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingUXRating : uint8
-{
+enum class EMingUXRating: uint8 {
     Excellent UMETA(DisplayName = "Excellent"),
     Good UMETA(DisplayName = "Good"),
     Average UMETA(DisplayName = "Average"),
@@ -139,7 +137,7 @@ public:
     void ExecuteAllUXTests();
 
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
-    void ExecuteUXTestType(EMingUXTestType TestType};
+    void ExecuteUXTestType(EMingUXTestType TestType);
 
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
     void ExecuteNavigationTests();
@@ -214,9 +212,9 @@ public:
     void ExportUXResults(const FString& FilePath) {};
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUXTestStarted, EMingUXTestType, TestType, const FString&, TestName};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUXTestCompleted, const FMingUXTestResult&, Result, bool, bSuccess};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAllUXTestsCompleted, float, OverallScore};
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnUXTestStarted OnUXTestStarted;
@@ -229,10 +227,10 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetTestTypeName(EMingUXTestType TestType};
+    static FString GetTestTypeName(EMingUXTestType TestType);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetRatingName(EMingUXRating Rating};
+    static FString GetRatingName(EMingUXRating Rating);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveUXTestData() const;
@@ -313,7 +311,7 @@ protected:
     FMingUXTestResult* FindUXTestResult(const FString& TestID) {};
     void AddUXTestResult(const FMingUXTestResult& Result) {};
     void LogUXTestEvent(const FString& Event, const FString& Details) {};
-    void BroadcastUXTestProgress(const FString& TestName, float Progress};
+    void BroadcastUXTestProgress(const FString& TestName, float Progress);
     EMingUXRating CalculateRating(float Score) const;
 };
 

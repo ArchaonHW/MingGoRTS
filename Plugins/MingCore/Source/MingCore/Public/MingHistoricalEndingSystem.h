@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // ??X??X
 UENUM(BlueprintType)
-enum class EMingEndingType : uint8
-{
+enum class EMingEndingType: uint8 {
     Victory,            // X?Q??X
     Defeat,             // ??X??X
     Neutral,            // ??X??X
@@ -16,22 +15,20 @@ enum class EMingEndingType : uint8
     Secret              // X??X
 };
 
-// ??X??????O
+// ??X摧毀??O
 UENUM(BlueprintType)
-enum class EMingEndingRating : uint8
-{
+enum class EMingEndingRating: uint8 {
     S_Rank,         // ?v???
     A_Rank,         // ?u?q??
     B_Rank,         // ?}?n??
     C_Rank,         // ???q??
     D_Rank,         // ???t??
-    F_Rank          // ?????
+    F_Rank          // 摧毀?
 };
 
 // ??X???O
 UENUM(BlueprintType)
-enum class EMingEndingCategory : uint8
-{
+enum class EMingEndingCategory: uint8 {
     PoliticalUnity,     // X?v??X
     MilitaryConquest,   // ?xX??X
     EconomicProsperity, // ?gX?c?a
@@ -42,33 +39,33 @@ enum class EMingEndingCategory : uint8
     HistoricalPreservation // ???v?OX
 };
 
-// ??X????
+// ??X摧毀
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingEndingCondition
 {
     GENERATED_BODY()
 
-    // ????ID
+    // 目標ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ConditionID;
 
-    // ????X??
+    // 摧毀X??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionName;
 
-    // ????X?z
+    // 摧毀X?z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionDescription;
 
-    // ??????X
+    // 摧毀??X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionType;
 
-    // ????X??
+    // 摧毀X??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ConditionParameters;
 
-    // ?????vX
+    // 摧毀?vX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ConditionWeight;
 
@@ -83,7 +80,7 @@ struct FINGCORE_API FMingEndingCondition
         ConditionID = -1;
         ConditionName = TEXT(""};
         ConditionDescription = TEXT(""};
-        ConditionType = TEXT(""};
+        ConditionType = TEXT("");
         ConditionParameters.Empty();
         ConditionWeight = 1.0f;
         bIsRequired = false;
@@ -117,7 +114,7 @@ struct FINGCORE_API FMingHistoricalEnding
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEndingType EndingType;
 
-    // ??X????
+    // ??X摧毀
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEndingRating EndingRating;
 
@@ -125,7 +122,7 @@ struct FINGCORE_API FMingHistoricalEnding
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEndingCategory EndingCategory;
 
-    // X????X??
+    // X摧毀X??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingEndingCondition> UnlockConditions;
 
@@ -133,7 +130,7 @@ struct FINGCORE_API FMingHistoricalEnding
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 TriggerYear;
 
-    // ???vX????X
+    // ???vX摧毀X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HistoricalBackground;
 
@@ -149,7 +146,7 @@ struct FINGCORE_API FMingHistoricalEnding
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EndingMusicPath;
 
-    // ??X????
+    // ??X摧毀
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> EndingTags;
 
@@ -166,7 +163,7 @@ struct FINGCORE_API FMingHistoricalEnding
         EndingID = -1;
         EndingName = TEXT(""};
         EndingDescription = TEXT(""};
-        EndingDetails = TEXT(""};
+        EndingDetails = TEXT("");
         EndingType = EMingEndingType::Neutral;
         EndingRating = EMingEndingRating::C_Rank;
         EndingCategory = EMingEndingCategory::PoliticalUnity;
@@ -175,7 +172,7 @@ struct FINGCORE_API FMingHistoricalEnding
         HistoricalBackground = TEXT(""};
         EndingConsequences.Empty();
         EndingImagePath = TEXT(""};
-        EndingMusicPath = TEXT(""};
+        EndingMusicPath = TEXT("");
         EndingTags.Empty();
         bIsHiddenEnding = false;
         EndingRarity = 1.0f;
@@ -203,7 +200,7 @@ struct FINGCORE_API FMingEndingScore
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<int32, float> DecisionScores;
 
-    // ????X
+    // 摧毀X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<int32, float> EventScores;
 
@@ -221,7 +218,7 @@ struct FINGCORE_API FMingEndingScore
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MoralityScore;
 
-    // X????X
+    // X摧毀X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float StrategyScore;
 
@@ -262,7 +259,7 @@ struct FINGCORE_API FMingAchievement
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString AchievementType;
 
-    // X????
+    // X摧毀
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UnlockConditions;
 
@@ -286,7 +283,7 @@ struct FINGCORE_API FMingAchievement
         AchievementID = -1;
         AchievementName = TEXT(""};
         AchievementDescription = TEXT(""};
-        AchievementType = TEXT(""};
+        AchievementType = TEXT("");
         UnlockConditions.Empty();
         AchievementIconPath = TEXT(""};
         AchievementRewards.Empty();
@@ -295,15 +292,15 @@ struct FINGCORE_API FMingAchievement
     }
 };
 
-// ??X?????eX
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEndingDetermined, const FMingHistoricalEnding&, Ending};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEndingScoreCalculated, const FMingEndingScore&, Score};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAchievementUnlocked, const FMingAchievement&, Achievement};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEndingPreview, const FMingHistoricalEnding&, Ending, float, Probability};
+// ??X摧毀?eX
+
+
+
+
 
 /**
  * ???v??X?t??
- * ?t?d????X?aX??X?M????|?yTX??X??
+ * ?t?d摧毀X?aX??X?M摧毀|?yTX??X??
  */
 UCLASS(ClassGroup = (Historical), Blueprintable, BlueprintType)
 class MINGCORE_API UMingHistoricalEndingSystem : public UObject
@@ -321,7 +318,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     bool RegisterHistoricalEnding(const FMingHistoricalEnding& Ending) {};
 
-    // ????X?a??X
+    // 摧毀X?a??X
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     FMingEndingScore EvaluatePlayerPath();
 
@@ -329,15 +326,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     FMingHistoricalEnding DetermineEnding(const FMingEndingScore& PlayerScore) {};
 
-    // ??d??X????
+    // ??d??X摧毀
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    bool CheckEndingConditions(int32 EndingID};
+    bool CheckEndingConditions(int32 EndingID);
 
     // X??X?H??
     UFUNCTION(BlueprintPure, Category = "Historical Ending")
     FMingHistoricalEnding GetEndingInfo(int32 EndingID) const;
 
-    // X?�`?X
+    // X?�`?X
     UFUNCTION(BlueprintPure, Category = "Historical Ending")
     TArray<int32> GetAvailableEndings() const;
 
@@ -347,11 +344,11 @@ public:
 
     // ?pX??X??X
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    float CalculateEndingProbability(int32 EndingID};
+    float CalculateEndingProbability(int32 EndingID);
 
     // X?N
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
-    bool UnlockAchievement(int32 AchievementID};
+    bool UnlockAchievement(int32 AchievementID);
 
     
     TArray<FMingAchievement> GetUnlockedAchievements() const;
@@ -417,29 +414,31 @@ private:
     // ?pX?MX??X
     float CalculateDecisionScore();
 
-    // ?pX????X
+    // ?pX摧毀X
     float CalculateEventScore();
 
     // ?pX??X
     float CalculateRelationshipScore();
 
-    // ?pX???v??TX    float CalculateHistoricalAccuracy();
+    // ?pX???v??TX
+    float CalculateHistoricalAccuracy();
 
-    // ?pX?sX    float CalculateInnovationScore();
+    // ?pX?sX
+    float CalculateInnovationScore();
 
     // ?pX?w??X
     float CalculateMoralityScore();
 
-    // ?pX????X
+    // ?pX摧毀X
     float CalculateStrategyScore();
 
-    // ??dX?N????
-    bool CheckAchievementConditions(int32 AchievementID};
+    // ??dX?N摧毀
+    bool CheckAchievementConditions(int32 AchievementID);
 
     // X??X?z
     FString GenerateEndingDescription(const FMingHistoricalEnding& Ending, const FMingEndingScore& Score) const;
 
-    // X??X????
+    // X??X摧毀
     EMingEndingRating GetEndingRating(float Score) const;
 };
 

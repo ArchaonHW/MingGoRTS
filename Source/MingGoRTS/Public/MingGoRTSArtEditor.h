@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,8 +8,7 @@
 #include "MingGoRTSArtEditor.generated.h"
 
 UENUM(BlueprintType)
-enum class EEditingTool : uint8
-{
+enum class EEditingTool: uint8 {
     Brush, UMETA(DisplayName = "Brush"),
     Eraser, UMETA(DisplayName = "Eraser"),
     Clone, UMETA(DisplayName = "Clone"),
@@ -23,8 +22,7 @@ enum class EEditingTool : uint8
 };
 
 UENUM(BlueprintType)
-enum class EBrushMode : uint8
-{
+enum class EBrushMode: uint8 {
     Normal, UMETA(DisplayName = "Normal"),
     Multiply, UMETA(DisplayName = "Multiply"),
     Screen, UMETA(DisplayName = "Screen"),

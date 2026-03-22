@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -25,8 +25,7 @@ struct MINGPERSONAL_API FTestResult
 
 // 測試類別
 UENUM(BlueprintType)
-enum class ETestCategory : uint8
-{
+enum class ETestCategory: uint8 {
     SaveLoad,       // 存取測試
     DataIntegrity,  // 資料完整性
     Performance,    // 效能測試

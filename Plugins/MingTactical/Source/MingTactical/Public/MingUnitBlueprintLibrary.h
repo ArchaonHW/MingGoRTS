@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -8,7 +8,7 @@
 class AMingTacticalUnit;
 
 /**
- * ???X??X?¼Æ?? * ???X??X?½Õ???X??X?¨î¨t²Î??¯à
+ * æ•…äº‹é¸é …? * æ•…äº‹é‡è¦æ€§æ‘§æ¯€X??X?t??
  */
 UCLASS()
 class MINGTACTICAL_API UMingUnitBlueprintLibrary : public UBlueprintFunctionLibrary
@@ -17,205 +17,205 @@ class MINGTACTICAL_API UMingUnitBlueprintLibrary : public UBlueprintFunctionLibr
 
 public:
     /**
-     * ???X??X?¨îX     */
+     * æ•…äº‹é‡è¦æ€§?X     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
     static AMingUnitController* GetUnitController();
 
     /**
-     * ???X?³æ¦ì±±??¾¹
+     * ???X?ì±±??
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
     static void InitializeUnitController();
 
     /**
-     * ???X??X?¨îX     */
+     * æ•…äº‹é‡è¦æ€§?X     */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
     static void ShutdownUnitController();
 
     /**
-     * ²K?X?±±????
+     * K?Xæ‘§æ¯€?
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static bool AddControlledUnit(AMingTacticalUnit* Unit};
+    static bool AddControlledUnit(AMingTacticalUnit* Unit);
 
     /**
-     * ²¾°£??±±????
+     * æ‘§æ¯€??
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static bool RemoveControlledUnit(AMingTacticalUnit* Unit};
+    static bool RemoveControlledUnit(AMingTacticalUnit* Unit);
 
     /**
-     * ???X????X?³æ??     */
+     * ç›®æ¨™æ•¸é‡?X???     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
     static TArray<AMingTacticalUnit*> GetControlledUnits();
 
     /**
-     * ????©w?X??X???
+     * æ‘§æ¯€w?X??X???
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static TArray<AMingTacticalUnit*> GetUnitsByType(const FString& UnitType};
+    static TArray<AMingTacticalUnit*> GetUnitsByType(const FString& UnitType);
 
     /**
-     * ????¬¡?X???
+     * ??ç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
     static TArray<AMingTacticalUnit*> GetActiveUnits();
 
     /**
-     * ???X??X?¥O
+     * æ•…äº‹é‡è¦æ€§?O
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static FUnitControlResult IssueUnitCommand(const FUnitCommand& Command};
+    static FUnitControlResult IssueUnitCommand(const FUnitCommand& Command);
 
     /**
-     * ???X??X?¥O
+     * æ•…äº‹é‡è¦æ€§?O
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static TArray<FUnitControlResult> BatchIssueCommands(const TArray<FUnitCommand>& Commands};
+    static TArray<FUnitControlResult> BatchIssueCommands(const TArray<FUnitCommand>& Commands);
 
     /**
-     * ???X?¥O
+     * ???X?O
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static bool CancelCommand(const FString& CommandID};
+    static bool CancelCommand(const FString& CommandID);
 
     /**
-     * ???X???©R??     */
+     * ç›®æ¨™æ•¸é‡R??     */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
     static bool CancelAllCommands();
 
     /**
-     * ²¾?X??X?????     */
+     * ?X??Xæ‘§æ¯€?     */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static FUnitControlResult MoveUnitsToLocation(const TArray<AMingTacticalUnit*>& Units, const FVector& TargetLocation, EUnitMovementType MovementType};
+    static FUnitControlResult MoveUnitsToLocation(const TArray<AMingTacticalUnit*>& Units, const FVector& TargetLocation, EUnitMovementType MovementType);
 
     /**
-     * ???X???
+     * ç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static FUnitControlResult AttackTarget(const TArray<AMingTacticalUnit*>& Units, AMingTacticalUnit* TargetUnit, EUnitAttackType AttackType};
+    static FUnitControlResult AttackTarget(const TArray<AMingTacticalUnit*>& Units, AMingTacticalUnit* TargetUnit, EUnitAttackType AttackType);
 
     /**
-     * ????«Ø??
+     * æ‘§æ¯€??
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static FUnitControlResult AttackBuilding(const TArray<AMingTacticalUnit*>& Units, AActor* TargetBuilding, EUnitAttackType AttackType};
+    static FUnitControlResult AttackBuilding(const TArray<AMingTacticalUnit*>& Units, AActor* TargetBuilding, EUnitAttackType AttackType);
 
     /**
-     * ??¤î????????     */
+     * æ‘§æ¯€æ‘§æ¯€??     */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static FUnitControlResult StopUnits(const TArray<AMingTacticalUnit*>& Units};
+    static FUnitControlResult StopUnits(const TArray<AMingTacticalUnit*>& Units);
 
     /**
-     * ??¿m¦ì¸m
+     * ??mm
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static FUnitControlResult HoldPosition(const TArray<AMingTacticalUnit*>& Units, const FVector& HoldLocation};
+    static FUnitControlResult HoldPosition(const TArray<AMingTacticalUnit*>& Units, const FVector& HoldLocation);
 
     /**
-     * ¨µ??¸ô??
+     * æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static FUnitControlResult PatrolPath(const TArray<AMingTacticalUnit*>& Units, const TArray<FVector>& PatrolPoints};
+    static FUnitControlResult PatrolPath(const TArray<AMingTacticalUnit*>& Units, const TArray<FVector>& PatrolPoints);
 
     /**
-     * ¦uÅ@????
+     * u@æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static FUnitControlResult GuardTarget(const TArray<AMingTacticalUnit*>& Units, AMingTacticalUnit* TargetToGuard};
+    static FUnitControlResult GuardTarget(const TArray<AMingTacticalUnit*>& Units, AMingTacticalUnit* TargetToGuard);
 
     /**
-     * ??°h
+     * ??h
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static FUnitControlResult RetreatUnits(const TArray<AMingTacticalUnit*>& Units, const FVector& RetreatLocation};
+    static FUnitControlResult RetreatUnits(const TArray<AMingTacticalUnit*>& Units, const FVector& RetreatLocation);
 
     /**
-     * ²Õ??½s??
+     * ??s??
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static FUnitControlResult FormUpUnits(const TArray<AMingTacticalUnit*>& Units, EUnitFormationType FormationType, const FVector& FormationCenter};
+    static FUnitControlResult FormUpUnits(const TArray<AMingTacticalUnit*>& Units, EUnitFormationType FormationType, const FVector& FormationCenter);
 
     /**
-     * ¨Ï¥Î??X     */
+     * Ï¥??X     */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static FUnitControlResult UseAbility(const TArray<AMingTacticalUnit*>& Units, const FString& AbilityID, AMingTacticalUnit* TargetUnit = nullptr};
+    static FUnitControlResult UseAbility(const TArray<AMingTacticalUnit*>& Units, const FString& AbilityID, AMingTacticalUnit* TargetUnit = nullptr);
 
     /**
-     * ???X??X?X     */
+     * æ•…äº‹é‡è¦æ€§?X     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static EMingUnitState GetUnitState(AMingTacticalUnit* Unit};
+    static EMingUnitState GetUnitState(AMingTacticalUnit* Unit);
 
     /**
-     * ³]¸m???X?X     */
+     * ]m???X?X     */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static bool SetUnitState(AMingTacticalUnit* Unit, EMingUnitState NewState};
+    static bool SetUnitState(AMingTacticalUnit* Unit, EMingUnitState NewState);
 
     /**
-     * ???X??X?¥O????
-     */
-    UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static TArray<FUnitCommand> GetUnitCommandQueue(AMingTacticalUnit* Unit};
-
-    /**
-     * ???X??X?¥O
+     * æ•…äº‹é‡è¦æ€§?Oæ‘§æ¯€
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static FUnitCommand GetCurrentCommand(AMingTacticalUnit* Unit};
+    static TArray<FUnitCommand> GetUnitCommandQueue(AMingTacticalUnit* Unit);
 
     /**
-     * ÀË¬d???X?§_??°õ¦æ©R??     */
+     * æ•…äº‹é‡è¦æ€§?O
+     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static bool CanExecuteCommand(AMingTacticalUnit* Unit, const FUnitCommand& Command};
+    static FUnitCommand GetCurrentCommand(AMingTacticalUnit* Unit);
 
     /**
-     * ???X??X?¨î²Î??
+     * Ë¬d???X?_??R??     */
+    UFUNCTION(BlueprintPure, Category = "Unit Controller")
+    static bool CanExecuteCommand(AMingTacticalUnit* Unit, const FUnitCommand& Command);
+
+    /**
+     * æ•…äº‹é¸é …?
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
     static TMap<FString, int32> GetUnitControlStatistics();
 
     /**
-     * ???X?¨î??©Ê¯à????
+     * ç›®æ¨™æ•¸é‡Ê¯æ‘§æ¯€
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
     static TMap<FString, float> GetPerformanceMetrics();
 
     /**
-     * ???X???????     */
+     * ç›®æ¨™æ•¸é‡æ‘§æ¯€     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static FString GetStateName(EMingUnitState State};
+    static FString GetStateName(EMingUnitState State);
 
     /**
-     * ???X?¥OÃş?X?ºÙ
+     * ???X?O?X?
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static FString GetCommandTypeName(EUnitCommandType CommandType};
+    static FString GetCommandTypeName(EUnitCommandType CommandType);
 
     /**
-     * ???X?¥O????¯Å????     */
+     * ???X?Oæ‘§æ¯€æ‘§æ¯€     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static FString GetPriorityName(EUnitCommandPriority Priority};
+    static FString GetPriorityName(EUnitCommandPriority Priority);
 
     /**
-     * ????²¾??Ãş?X?ºÙ
+     * æ‘§æ¯€???X?
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static FString GetMovementTypeName(EUnitMovementType MovementType};
+    static FString GetMovementTypeName(EUnitMovementType MovementType);
 
     /**
-     * ???X???Ãş?X?ºÙ
+     * ç›®æ¨™æ•¸é‡?X?
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static FString GetAttackTypeName(EUnitAttackType AttackType};
+    static FString GetAttackTypeName(EUnitAttackType AttackType);
 
     /**
-     * ????½s??Ãş?X?ºÙ
+     * æ‘§æ¯€s???X?
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static FString GetFormationTypeName(EUnitFormationType FormationType};
+    static FString GetFormationTypeName(EUnitFormationType FormationType);
 
     /**
-     * ??«Ø???X?¥O
+     * æ‘§æ¯€?X?O
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Creation")
     static FUnitCommand CreateUnitCommand(
@@ -227,314 +227,314 @@ public:
         EUnitMovementType MovementType,
         EUnitAttackType AttackType,
         EUnitFormationType FormationType
-    };
+    );
 
     /**
-     * ³]¸m??¥O??¼Æ
+     * ]m??O??
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Creation")
-    static FUnitCommand SetCommandParameter(const FUnitCommand& Command, const FString& ParameterName, const FString& ParameterValue};
+    static FUnitCommand SetCommandParameter(const FUnitCommand& Command, const FString& ParameterName, const FString& ParameterValue);
 
     /**
-     * ³]¸m??¥O??¸Õ¦¸¼Æ
+     * ]m??O??Õ¦
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Creation")
-    static FUnitCommand SetCommandRetryCount(const FUnitCommand& Command, int32 MaxRetryCount};
+    static FUnitCommand SetCommandRetryCount(const FUnitCommand& Command, int32 MaxRetryCount);
 
     /**
-     * ????²¾?X???
+     * ??ç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Batch")
-    static TArray<FUnitControlResult> BatchMoveUnits(const TArray<AMingTacticalUnit*>& Units, const TArray<FVector>& TargetLocations, EUnitMovementType MovementType};
+    static TArray<FUnitControlResult> BatchMoveUnits(const TArray<AMingTacticalUnit*>& Units, const TArray<FVector>& TargetLocations, EUnitMovementType MovementType);
 
     /**
-     * ???X??X???
+     * æ•…äº‹é¸é …?
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Batch")
-    static TArray<FUnitControlResult> BatchAttackTargets(const TArray<AMingTacticalUnit*>& Units, const TArray<AMingTacticalUnit*>& TargetUnits, EUnitAttackType AttackType};
+    static TArray<FUnitControlResult> BatchAttackTargets(const TArray<AMingTacticalUnit*>& Units, const TArray<AMingTacticalUnit*>& TargetUnits, EUnitAttackType AttackType);
 
     /**
-     * ???X?¤î????
+     * ç›®æ¨™æ•¸é‡??
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Batch")
-    static TArray<FUnitControlResult> BatchStopUnits(const TArray<AMingTacticalUnit*>& Units};
+    static TArray<FUnitControlResult> BatchStopUnits(const TArray<AMingTacticalUnit*>& Units);
 
     /**
-     * ????¨t²Î??X     */
+     * æ‘§æ¯€t??X     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|System")
     static bool IsUnitControllerInitialized();
 
     /**
-     * ????¨t²Î??¥»
+     * æ‘§æ¯€t??
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|System")
     static FString GetUnitControllerVersion();
 
     /**
-     * ???X?±±???X???
+     * ç›®æ¨™æ•¸é‡?X???
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|System")
     static int32 GetControlledUnitCount();
 
     /**
-     * ????¬¡?X??X???
+     * æ‘§æ¯€?X??X???
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|System")
     static int32 GetActiveUnitCount();
 
     /**
-     * ???X?¥OÁ`¼Æ
+     * ???X?O`
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|System")
     static int32 GetTotalCommandCount();
 
     /**
-     * ???X???¤¤©R¥O¼ÆX     */
+     * ç›®æ¨™æ•¸é‡ROX     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|System")
     static int32 GetExecutingCommandCount();
 
     /**
-     * ÀË¬d???X?§_??±±
+     * Ë¬d???X?_??
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Info")
-    static bool IsUnitControlled(AMingTacticalUnit* Unit};
+    static bool IsUnitControlled(AMingTacticalUnit* Unit);
 
     /**
-     * ÀË¬d???X?§_¬¡??
+     * Ë¬d???X?_??
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Info")
-    static bool IsUnitActive(AMingTacticalUnit* Unit};
+    static bool IsUnitActive(AMingTacticalUnit* Unit);
 
     /**
-     * ÀË¬d???X?§_ªÅ??
+     * Ë¬d???X?_??
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Info")
-    static bool IsUnitIdle(AMingTacticalUnit* Unit};
+    static bool IsUnitIdle(AMingTacticalUnit* Unit);
 
     /**
-     * ÀË¬d???X?§_??²¾X     */
+     * Ë¬d???X?_??X     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Info")
-    static bool IsUnitMoving(AMingTacticalUnit* Unit};
+    static bool IsUnitMoving(AMingTacticalUnit* Unit);
 
     /**
-     * ÀË¬d???X?§_??§ğX     */
+     * Ë¬d???X?_??X     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Info")
-    static bool IsUnitAttacking(AMingTacticalUnit* Unit};
+    static bool IsUnitAttacking(AMingTacticalUnit* Unit);
 
     /**
-     * ÀË¬d???X?§_??¨¾??     */
+     * Ë¬d???X?_æ‘§æ¯€     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Info")
-    static bool IsUnitDefending(AMingTacticalUnit* Unit};
+    static bool IsUnitDefending(AMingTacticalUnit* Unit);
 
     /**
-     * ???X???¦ì¸m
+     * ç›®æ¨™æ•¸é‡m
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Info")
-    static FVector GetUnitLocation(AMingTacticalUnit* Unit};
+    static FVector GetUnitLocation(AMingTacticalUnit* Unit);
 
     /**
-     * ???X??X???
+     * æ•…äº‹é¸é …?
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Info")
-    static FRotator GetUnitRotation(AMingTacticalUnit* Unit};
+    static FRotator GetUnitRotation(AMingTacticalUnit* Unit);
 
     /**
-     * ³]¸m????¦ì¸m
+     * ]mæ‘§æ¯€m
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Info")
-    static bool SetUnitLocation(AMingTacticalUnit* Unit, const FVector& NewLocation};
+    static bool SetUnitLocation(AMingTacticalUnit* Unit, const FVector& NewLocation);
 
     /**
-     * ³]¸m???X???
+     * ]mç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Info")
-    static bool SetUnitRotation(AMingTacticalUnit* Unit, const FRotator& NewRotation};
+    static bool SetUnitRotation(AMingTacticalUnit* Unit, const FRotator& NewRotation);
 
     /**
-     * ­p?X???¶ZÂ÷
+     * p?X???Z
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Math")
-    static float CalculateDistance(const FVector& PointA, const FVector& PointB};
+    static float CalculateDistance(const FVector& PointA, const FVector& PointB);
 
     /**
-     * ­p?X??X??X     */
+     * p?X??X??X     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Math")
-    static float CalculateUnitDistance(AMingTacticalUnit* UnitA, AMingTacticalUnit* UnitB};
+    static float CalculateUnitDistance(AMingTacticalUnit* UnitA, AMingTacticalUnit* UnitB);
 
     /**
-     * ÀË¬d??§_???X?¤º
+     * Ë¬d??_???X?
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Math")
-    static bool IsInRange(const FVector& PointA, const FVector& PointB, float Range};
+    static bool IsInRange(const FVector& PointA, const FVector& PointB, float Range);
 
     /**
-     * ÀË¬d???X?§_??§ğ???X?¤º
+     * Ë¬d???X?_æ‘§æ¯€?X?
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Math")
-    static bool IsUnitInAttackRange(AMingTacticalUnit* Attacker, AMingTacticalUnit* Target};
+    static bool IsUnitInAttackRange(AMingTacticalUnit* Attacker, AMingTacticalUnit* Target);
 
     /**
-     * ????²¾?X?«×
+     * æ‘§æ¯€?X?
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Calculation")
-    static float GetMovementSpeed(AMingTacticalUnit* Unit, EUnitMovementType MovementType};
+    static float GetMovementSpeed(AMingTacticalUnit* Unit, EUnitMovementType MovementType);
 
     /**
-     * ­p??²¾?X???
+     * pç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Calculation")
-    static float CalculateMovementTime(AMingTacticalUnit* Unit, const FVector& StartLocation, const FVector& TargetLocation, EUnitMovementType MovementType};
+    static float CalculateMovementTime(AMingTacticalUnit* Unit, const FVector& StartLocation, const FVector& TargetLocation, EUnitMovementType MovementType);
 
     /**
-     * ­p?X??X?®`
+     * p?X??X?`
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Calculation")
-    static float CalculateAttackDamage(AMingTacticalUnit* Attacker, AMingTacticalUnit* Target, EUnitAttackType AttackType};
+    static float CalculateAttackDamage(AMingTacticalUnit* Attacker, AMingTacticalUnit* Target, EUnitAttackType AttackType);
 
     /**
-     * ­p??½s??¦ì¸m
+     * p??s??m
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Formation")
-    static TArray<FVector> CalculateFormationPositions(const TArray<AMingTacticalUnit*>& Units, EUnitFormationType FormationType, const FVector& Center};
+    static TArray<FVector> CalculateFormationPositions(const TArray<AMingTacticalUnit*>& Units, EUnitFormationType FormationType, const FVector& Center);
 
     /**
-     * ÀË¬d½s??§¹¾ãX     */
+     * Ë¬ds??X     */
     UFUNCTION(BlueprintPure, Category = "Unit Controller|Formation")
-    static bool IsFormationComplete(const TArray<AMingTacticalUnit*>& Units, const TArray<FVector>& FormationPositions};
+    static bool IsFormationComplete(const TArray<AMingTacticalUnit*>& Units, const TArray<FVector>& FormationPositions);
 
     /**
-     * ??·s½s??
+     * ??ss??
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Formation")
-    static bool UpdateFormation(const TArray<AMingTacticalUnit*>& Units, const TArray<FVector>& FormationPositions};
+    static bool UpdateFormation(const TArray<AMingTacticalUnit*>& Units, const TArray<FVector>& FormationPositions);
 
     /**
-     * ???X???«ØÄ³
+     * ç›®æ¨™æ•¸é‡Ä³
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|AI")
-    static TArray<FString> GetUnitRecommendations(AMingTacticalUnit* Unit};
+    static TArray<FString> GetUnitRecommendations(AMingTacticalUnit* Unit);
 
     /**
-     * ???X???«ØÄ³
+     * ç›®æ¨™æ•¸é‡Ä³
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|AI")
-    static TArray<FString> GetTacticalRecommendations(const TArray<AMingTacticalUnit*>& Units};
+    static TArray<FString> GetTacticalRecommendations(const TArray<AMingTacticalUnit*>& Units);
 
     /**
-     * ???X???«ØÄ³
+     * ç›®æ¨™æ•¸é‡Ä³
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|AI")
-    static TArray<AMingTacticalUnit*> GetAttackTargets(const TArray<AMingTacticalUnit*>& Units};
+    static TArray<AMingTacticalUnit*> GetAttackTargets(const TArray<AMingTacticalUnit*>& Units);
 
     /**
-     * ???X?¿m«ØÄ³
+     * ???X?mÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|AI")
-    static TArray<FVector> GetDefensePositions(const TArray<AMingTacticalUnit*>& Units};
+    static TArray<FVector> GetDefensePositions(const TArray<AMingTacticalUnit*>& Units);
 
     /**
-     * ???X?Â÷«ØÄ³
+     * ???X?Ä³
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|AI")
-    static TArray<FVector> GetRetreatPositions(const TArray<AMingTacticalUnit*>& Units};
+    static TArray<FVector> GetRetreatPositions(const TArray<AMingTacticalUnit*>& Units);
 
     /**
-     * ¼ÒÀÀ??°«µ²??
+     * æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Simulation")
-    static TArray<FUnitControlResult> SimulateBattle(const TArray<AMingTacticalUnit*>& Attackers, const TArray<AMingTacticalUnit*>& Defenders, int32 SimulationCount};
+    static TArray<FUnitControlResult> SimulateBattle(const TArray<AMingTacticalUnit*>& Attackers, const TArray<AMingTacticalUnit*>& Defenders, int32 SimulationCount);
 
     /**
-     * ¼ÒÀÀ²¾??¸ô??
+     * æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Simulation")
-    static TArray<FVector> SimulateMovementPath(AMingTacticalUnit* Unit, const FVector& StartLocation, const FVector& TargetLocation};
+    static TArray<FVector> SimulateMovementPath(AMingTacticalUnit* Unit, const FVector& StartLocation, const FVector& TargetLocation);
 
     /**
-     * ???X???¾ú¥v
+     * ç›®æ¨™æ•¸é‡v
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|History")
-    static TArray<FUnitCommand> GetUnitHistory(AMingTacticalUnit* Unit};
+    static TArray<FUnitCommand> GetUnitHistory(AMingTacticalUnit* Unit);
 
     /**
-     * ???X?¥O¾ú¥v
+     * ???X?Ov
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|History")
     static TArray<FUnitControlResult> GetCommandHistory();
 
     /**
-     * ???X?°«²Î??
+     * ç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Statistics")
     static TMap<FString, int32> GetBattleStatistics();
 
     /**
-     * ???X???²Î??
+     * ç›®æ¨™æ•¸é‡??
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Statistics")
     static TMap<FString, int32> GetUnitStatistics();
 
     /**
-     * ???X?¯à²Î??
+     * ç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Statistics")
     static TMap<FString, float> GetPerformanceStatistics();
 
     /**
-     * ¾É¥X???X???
+     * É¥Xç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Export")
-    static bool ExportUnitData(const FString& FilePath};
+    static bool ExportUnitData(const FString& FilePath);
 
     /**
-     * ¾É¤J???X???
+     * É¤Jç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Import")
-    static bool ImportUnitData(const FString& FilePath};
+    static bool ImportUnitData(const FString& FilePath);
 
     /**
-     * ???X??X???
+     * æ•…äº‹é¸é …?
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Report")
-    static FString GenerateUnitReport(AMingTacticalUnit* Unit};
+    static FString GenerateUnitReport(AMingTacticalUnit* Unit);
 
     /**
-     * ???X?¨î??³øX     */
+     * ç›®æ¨™æ•¸é‡X     */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Report")
     static FString GenerateControllerReport();
 
     /**
-     * ???X?°«????
+     * ç›®æ¨™æ•¸é‡??
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|Report")
-    static FString GenerateBattleReport(const TArray<AMingTacticalUnit*>& Attackers, const TArray<AMingTacticalUnit*>& Defenders};
+    static FString GenerateBattleReport(const TArray<AMingTacticalUnit*>& Attackers, const TArray<AMingTacticalUnit*>& Defenders);
 
     /**
-     * ??¸m???X?¨îX     */
+     * ??m???X?X     */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|System")
     static void ResetUnitController();
 
     /**
-     * ²M°£????©R??     */
+     * Mæ‘§æ¯€R??     */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|System")
     static void ClearAllCommands();
 
     /**
-     * ²M°£????¾ú¥v
+     * Mæ‘§æ¯€v
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|System")
     static void ClearUnitHistory();
 
     /**
-     * ??¥÷???X???
+     * ??ç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|System")
-    static bool BackupUnitData(const FString& BackupPath};
+    static bool BackupUnitData(const FString& BackupPath);
 
     /**
-     * ??´_???X???
+     * ??_ç›®æ¨™æ•¸é‡
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller|System")
-    static bool RestoreUnitData(const FString& BackupPath};
-};
+    static bool RestoreUnitData(const FString& BackupPath);
+);
 

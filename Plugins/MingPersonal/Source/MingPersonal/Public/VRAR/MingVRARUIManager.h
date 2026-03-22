@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // VR/AR UI Manager - Handles 3D UI adaptation for VR/AR environments
 
 #pragma once
@@ -10,8 +10,7 @@
 
 // VR UI panel types
 UENUM(BlueprintType)
-enum class EVRUIPanelType : uint8
-{
+enum class EVRUIPanelType: uint8 {
     MainMenu            UMETA(DisplayName = "Main Menu"),
     HUD                 UMETA(DisplayName = "HUD"),
     UnitSelection       UMETA(DisplayName = "Unit Selection"),
@@ -27,8 +26,7 @@ enum class EVRUIPanelType : uint8
 
 // VR UI interaction modes
 UENUM(BlueprintType)
-enum class EVRUIInteractionMode : uint8
-{
+enum class EVRUIInteractionMode: uint8 {
     LaserPointer        UMETA(DisplayName = "Laser Pointer"),
     DirectTouch         UMETA(DisplayName = "Direct Touch"),
     Gaze                UMETA(DisplayName = "Gaze Selection"),
@@ -254,8 +252,7 @@ declare dynamic multicast delegate(FOnVRUIInteraction, const FString&, PanelName
 
 // Hand gesture enum for input
 UENUM(BlueprintType)
-enum class EVRHandGesture : uint8
-{
+enum class EVRHandGesture: uint8 {
     None                UMETA(DisplayName = "None"),
     Point               UMETA(DisplayName = "Point"),
     Pinch               UMETA(DisplayName = "Pinch"),

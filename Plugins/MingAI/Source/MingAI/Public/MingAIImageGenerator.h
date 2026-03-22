@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingAIImageGenerator.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingImageStyle : uint8
-{
+enum class EMingImageStyle: uint8 {
     None UMETA(DisplayName = "None"),
     Photorealistic UMETA(DisplayName = "Photorealistic"),
     Stylized UMETA(DisplayName = "Stylized"),
@@ -21,8 +20,7 @@ enum class EMingImageStyle : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingImageAspectRatio : uint8
-{
+enum class EMingImageAspectRatio: uint8 {
     Square UMETA(DisplayName = "1:1 Square"),
     Portrait UMETA(DisplayName = "2:3 Portrait"),
     Landscape UMETA(DisplayName = "3:2 Landscape"),
@@ -93,49 +91,49 @@ public:
 
     // Image Generation Methods
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    FGuid GenerateCharacterPortrait(const FString& CharacterDescription, EMingImageStyle Style, int32 Resolution};
+    FGuid GenerateCharacterPortrait(const FString& CharacterDescription, EMingImageStyle Style, int32 Resolution);
 
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    FGuid GenerateEnvironment(const FString& EnvironmentDescription, EMingImageStyle Style, EMingImageAspectRatio AspectRatio};
+    FGuid GenerateEnvironment(const FString& EnvironmentDescription, EMingImageStyle Style, EMingImageAspectRatio AspectRatio);
 
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    FGuid GenerateItemIcon(const FString& ItemDescription, int32 Size};
+    FGuid GenerateItemIcon(const FString& ItemDescription, int32 Size);
 
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    FGuid GenerateBuildingConcept(const FString& BuildingDescription, EMingImageStyle Style};
+    FGuid GenerateBuildingConcept(const FString& BuildingDescription, EMingImageStyle Style);
 
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    FGuid GenerateTexture(const FString& TextureDescription, int32 Width, int32 Height};
+    FGuid GenerateTexture(const FString& TextureDescription, int32 Width, int32 Height);
 
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    FGuid GenerateUIElement(const FString& ElementDescription, int32 Width, int32 Height};
+    FGuid GenerateUIElement(const FString& ElementDescription, int32 Width, int32 Height);
 
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    FGuid GeneratePromotionalArt(const FString& SceneDescription, EMingImageStyle Style, EMingImageAspectRatio AspectRatio};
+    FGuid GeneratePromotionalArt(const FString& SceneDescription, EMingImageStyle Style, EMingImageAspectRatio AspectRatio);
 
     // Batch Generation
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    TArray<FGuid> GenerateCharacterPortraitsBatch(const TArray<FString>& CharacterDescriptions, EMingImageStyle Style};
+    TArray<FGuid> GenerateCharacterPortraitsBatch(const TArray<FString>& CharacterDescriptions, EMingImageStyle Style);
 
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    TArray<FGuid> GenerateEnvironmentBatch(const TArray<FString>& EnvironmentDescriptions, EMingImageStyle Style};
+    TArray<FGuid> GenerateEnvironmentBatch(const TArray<FString>& EnvironmentDescriptions, EMingImageStyle Style);
 
     // Image Processing
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    bool UpscaleImage(const FString& ImagePath, int32 TargetWidth, int32 TargetHeight};
+    bool UpscaleImage(const FString& ImagePath, int32 TargetWidth, int32 TargetHeight);
 
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    bool RemoveBackground(const FString& ImagePath};
+    bool RemoveBackground(const FString& ImagePath);
 
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    bool ApplyStyleTransfer(const FString& SourceImagePath, const FString& StyleReferencePath};
+    bool ApplyStyleTransfer(const FString& SourceImagePath, const FString& StyleReferencePath);
 
     // Presets
     UFUNCTION(BlueprintPure, Category = "AI Image Generation")
     FMingImageGenerationConfig GetPresetConfig(const FString& PresetName) const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    void SavePresetConfig(const FString& PresetName, const FMingImageGenerationConfig& Config};
+    void SavePresetConfig(const FString& PresetName, const FMingImageGenerationConfig& Config);
 
     // Prompt Helpers
     UFUNCTION(BlueprintPure, Category = "AI Image Generation")

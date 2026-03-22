@@ -1,4 +1,4 @@
-# MingGoRTS 自动化素材生成与部署系统
+﻿# MingGoRTS 自动化素材生成与部署系统
 # Auto-Generate & Deploy Assets to Unreal Engine
 # 功能：自动生成素材（音乐/美术）并自动部署到UE项目中
 
@@ -92,8 +92,12 @@ function Invoke-MusicGeneration {
     }
     
     try {
-        # 执行音乐生成脚本
-        & $MusicScript -Silent:$Silent -MaxRetries $MaxRetries 2>&1 | Out-Null
+        # 执行音乐生成脚本（简化参数）
+        $Arguments = @()
+        if ($Silent) { $Arguments += "-Silent" }
+        if ($MaxRetries -ne 3) { $Arguments += "-MaxRetries"; $Arguments += $MaxRetries }
+        
+        & $MusicScript @Arguments 2>&1 | Out-Null
         $ExitCode = $LASTEXITCODE
         
         if ($ExitCode -eq 0) {
@@ -132,8 +136,11 @@ function Invoke-ArtGeneration {
         # 设置环境变量指定势力
         $env:MING_FACTION = $Faction
         
-        # 执行美术生成
-        & $ArtScript -BatchMode -MaxRetries $MaxRetries 2>&1 | Out-Null
+        # 执行美术生成（简化参数）
+        $Arguments = @("-All")
+        if ($MaxRetries -ne 3) { $Arguments += "-MaxRetries"; $Arguments += $MaxRetries }
+        
+        & $ArtScript @Arguments 2>&1 | Out-Null
         $ExitCode = $LASTEXITCODE
         
         if ($ExitCode -eq 0) {

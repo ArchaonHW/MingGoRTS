@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Multiplayer Enhanced System - Advanced multiplayer relationship and cooperation features
 
 #pragma once
@@ -10,8 +10,7 @@
 
 // Multiplayer relationship types
 UENUM(BlueprintType)
-enum class EMultiplayerRelationshipType : uint8
-{
+enum class EMultiplayerRelationshipType: uint8 {
     Ally               UMETA(DisplayName = "Ally"),
     Enemy              UMETA(DisplayName = "Enemy"),
     Neutral            UMETA(DisplayName = "Neutral"),
@@ -25,8 +24,7 @@ enum class EMultiplayerRelationshipType : uint8
 
 // Multiplayer diplomatic actions
 UENUM(BlueprintType)
-enum class EDiplomaticAction : uint8
-{
+enum class EDiplomaticAction: uint8 {
     DeclareWar         UMETA(DisplayName = "Declare War"),
     MakePeace          UMETA(DisplayName = "Make Peace"),
     FormAlliance       UMETA(DisplayName = "Form Alliance"),
@@ -40,8 +38,7 @@ enum class EDiplomaticAction : uint8
 
 // Multiplayer cooperative mode
 UENUM(BlueprintType)
-enum class ECooperativeMode : uint8
-{
+enum class ECooperativeMode: uint8 {
     FreeForAll         UMETA(DisplayName = "Free For All"),
     Teams              UMETA(DisplayName = "Teams"),
     CoopVsAI           UMETA(DisplayName = "Co-op vs AI"),

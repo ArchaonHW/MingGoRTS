@@ -8,8 +8,7 @@
  * 決�?觸發類�?
  */
 UENUM(BlueprintType)
-enum class EDecisionTriggerType : uint8
-{
+enum class EDecisionTriggerType: uint8 {
     Manual              UMETA(DisplayName = "Manual"),
     TimeBased           UMETA(DisplayName = "Time Based"),
     EventBased          UMETA(DisplayName = "Event Based"),
@@ -20,8 +19,7 @@ enum class EDecisionTriggerType : uint8
 /**
  * 決�X��?�? */
 UENUM(BlueprintType)
-enum class EDecisionPriority : uint8
-{
+enum class EDecisionPriority: uint8 {
     Low                 UMETA(DisplayName = "Low"),
     Normal              UMETA(DisplayName = "Normal"),
     High                UMETA(DisplayName = "High"),
@@ -61,7 +59,8 @@ struct MINGSTRATEGIC_API FMingDecision
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     EDecisionTriggerType TriggerType;
     
-    // ?��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
+    // ?��?�?
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
     EDecisionPriority Priority;
     
     // 觸發條件 (JSON?��X�自定義字符�?

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingMetaSoundsSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingProceduralSFXType : uint8
-{
+enum class EMingProceduralSFXType: uint8 {
     Gunshot UMETA(DisplayName = "Gunshot"),
     Footstep UMETA(DisplayName = "Footstep"),
     Explosion UMETA(DisplayName = "Explosion"),
@@ -19,8 +18,7 @@ enum class EMingProceduralSFXType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingSurfaceType : uint8
-{
+enum class EMingSurfaceType: uint8 {
     Concrete UMETA(DisplayName = "Concrete"),
     Wood UMETA(DisplayName = "Wood"),
     Metal UMETA(DisplayName = "Metal"),

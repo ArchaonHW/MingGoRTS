@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,8 +8,7 @@
 
 // 单位选择模式
 UENUM(BlueprintType)
-enum class ERTSUnitSelectionMode : uint8
-{
+enum class ERTSUnitSelectionMode: uint8 {
     Single          UMETA(DisplayName = "Single Selection"),
     Box             UMETA(DisplayName = "Box Selection"),
     Group           UMETA(DisplayName = "Group Selection"),
@@ -19,8 +18,7 @@ enum class ERTSUnitSelectionMode : uint8
 
 // 移动命令类型
 UENUM(BlueprintType)
-enum class ERTSMoveCommandType : uint8
-{
+enum class ERTSMoveCommandType: uint8 {
     Move            UMETA(DisplayName = "Move"),
     AttackMove      UMETA(DisplayName = "Attack Move"),
     Patrol          UMETA(DisplayName = "Patrol"),

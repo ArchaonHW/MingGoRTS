@@ -7,8 +7,7 @@
  * 決�X��?類�?
  */
 UENUM(BlueprintType)
-enum class EDecisionEffectType : uint8
-{
+enum class EDecisionEffectType: uint8 {
     ResourceChange      UMETA(DisplayName = "Resource Change"),
     FactionRelation     UMETA(DisplayName = "Faction Relation"),
     CharacterAttribute  UMETA(DisplayName = "Character Attribute"),

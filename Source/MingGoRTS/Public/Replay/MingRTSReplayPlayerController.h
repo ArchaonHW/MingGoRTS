@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -16,8 +16,9 @@ class MINGGORTS_API UMingRTSReplayPlayerController : public UObject
 public:
     UMingRTSReplayPlayerController();
     
-    // ???X    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
-    void InitializePlayerController(UMingRTSReplaySystem* ReplaySystem};
+    // ???X
+    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
+    void InitializePlayerController(UMingRTSReplaySystem* ReplaySystem);
     
     // ??放??制
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
@@ -37,16 +38,17 @@ public:
     
     // ??度??制
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
-    void SetPlaybackSpeed(float Speed};
+    void SetPlaybackSpeed(float Speed);
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     float GetPlaybackSpeed() const;
     
-    // ????軸控X    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
-    void JumpToTime(float TimeInSeconds};
+    // ????軸控X
+    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
+    void JumpToTime(float TimeInSeconds);
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
-    void JumpToPercentage(float Percentage};
+    void JumpToPercentage(float Percentage);
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     float GetCurrentTime() const;
@@ -59,16 +61,16 @@ public:
     
     // ??籤系統
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Bookmarks")
-    void AddBookmark(float Time, const FText& Label};
+    void AddBookmark(float Time, const FText& Label);
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Bookmarks")
-    void RemoveBookmark(float Time};
+    void RemoveBookmark(float Time);
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Bookmarks")
     TArray<float> GetBookmarks() const;
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Bookmarks")
-    void JumpToBookmark(int32 BookmarkIndex};
+    void JumpToBookmark(int32 BookmarkIndex);
     
     // 事件標??
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Events")
@@ -82,43 +84,43 @@ public:
     
     // 視?X?制
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Camera")
-    void SetFreeCameraMode(bool bFreeCamera};
+    void SetFreeCameraMode(bool bFreeCamera);
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Camera")
     bool IsFreeCameraMode() const;
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Camera")
-    void FollowPlayer(const FString& PlayerID};
+    void FollowPlayer(const FString& PlayerID);
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Camera")
-    void FollowUnit(int32 UnitID};
+    void FollowUnit(int32 UnitID);
     
     // 顯示設置
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Display")
-    void ShowUI(bool bVisible};
+    void ShowUI(bool bVisible);
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Display")
-    void ShowEventMarkers(bool bVisible};
+    void ShowEventMarkers(bool bVisible);
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Display")
-    void ShowResourceGraph(bool bVisible};
+    void ShowResourceGraph(bool bVisible);
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Display")
-    void ShowAPMGraph(bool bVisible};
+    void ShowAPMGraph(bool bVisible);
     
     // 導出??能
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Export")
-    void ExportCurrentFrameAsImage(const FString& FilePath};
+    void ExportCurrentFrameAsImage(const FString& FilePath);
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Export")
-    void ExportTimeRangeAsVideo(float StartTime, float EndTime, const FString& FilePath};
+    void ExportTimeRangeAsVideo(float StartTime, float EndTime, const FString& FilePath);
     
     // 事件委??
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackStarted};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackPaused};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackStopped};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimeChanged, float, NewTime};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpeedChanged, float, NewSpeed};
+    
+    
+    
+    
+    
     
     UPROPERTY(BlueprintAssignable, Category = "ReplayPlayer|Events")
     FOnPlaybackStarted OnPlaybackStarted;
@@ -163,4 +165,5 @@ private:
     void OnReplayFinished();
 };
 };
+
 

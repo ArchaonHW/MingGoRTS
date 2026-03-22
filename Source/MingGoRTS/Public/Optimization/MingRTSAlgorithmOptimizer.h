@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSAlgorithmOptimizer.generated.h"
 
 UENUM(BlueprintType)
-enum class EAlgorithmType : uint8
-{
+enum class EAlgorithmType: uint8 {
     Sorting UMETA(DisplayName = "Sorting Algorithm"),
     Searching UMETA(DisplayName = "Searching Algorithm"),
     Pathfinding UMETA(DisplayName = "Pathfinding Algorithm"),
@@ -20,8 +19,7 @@ enum class EAlgorithmType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EOptimizationTechnique : uint8
-{
+enum class EOptimizationTechnique: uint8 {
     TimeComplexity UMETA(DisplayName = "Time Complexity"),
     SpaceComplexity UMETA(DisplayName = "Space Complexity"),
     CacheOptimization UMETA(DisplayName = "Cache Optimization"),

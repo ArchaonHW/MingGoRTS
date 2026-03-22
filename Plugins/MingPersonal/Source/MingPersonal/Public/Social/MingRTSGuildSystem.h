@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // 公會等級
 UENUM(BlueprintType)
-enum class EGuildRank : uint8
-{
+enum class EGuildRank: uint8 {
     Leader              UMETA(DisplayName = "會長"),
     Officer             UMETA(DisplayName = "官員"),
     Veteran             UMETA(DisplayName = "元老"),
@@ -18,8 +17,7 @@ enum class EGuildRank : uint8
 
 // 聯盟類型
 UENUM(BlueprintType)
-enum class EAllianceType : uint8
-{
+enum class EAllianceType: uint8 {
     Military            UMETA(DisplayName = "軍事聯盟"),
     Economic            UMETA(DisplayName = "經濟聯盟"),
     Research            UMETA(DisplayName = "研究聯盟"),
@@ -30,8 +28,7 @@ enum class EAllianceType : uint8
 
 // 公會權限
 UENUM(BlueprintType)
-enum class EGuildPermission : uint8
-{
+enum class EGuildPermission: uint8 {
     InviteMembers       UMETA(DisplayName = "邀請成員"),
     KickMembers         UMETA(DisplayName = "踢出成員"),
     PromoteMembers      UMETA(DisplayName = "晉升成員"),
@@ -353,8 +350,7 @@ struct MINGPERSONAL_API FGuildInfo
 
 // 公會外交關係
 UENUM(BlueprintType)
-enum class EGuildDiplomacyStatus : uint8
-{
+enum class EGuildDiplomacyStatus: uint8 {
     Neutral             UMETA(DisplayName = "中立"),
     Allied              UMETA(DisplayName = "同盟"),
     Friendly            UMETA(DisplayName = "友好"),

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,22 +8,21 @@ class AMingTacticalUnit;
 class AMingCombatAI;
 
 /**
- * Tick ¼h??Ãş?? | Tick Level Type
+ * Tick ï¿½h??ï¿½ï¿½?? | Tick Level Type
  */
 UENUM(BlueprintType)
-enum class ETickLevel : uint8
-{
-    Critical    UMETA(DisplayName = "Critical"),    // ¨C?X?·s | Every Frame (??°ªÀu???? | Highest Priority)
-    High        UMETA(DisplayName = "High"),        // ¨C?X?·s | Every Frame
+enum class ETickLevel: uint8 {
+    Critical    UMETA(DisplayName = "Critical"),    // ï¿½C?X?ï¿½s | Every Frame (??ï¿½ï¿½ï¿½uæ‘§æ¯€ | Highest Priority)
+    High        UMETA(DisplayName = "High"),        // ï¿½C?X?ï¿½s | Every Frame
     Normal      UMETA(DisplayName = "Normal"),      // 30 FPS
     Low         UMETA(DisplayName = "Low"),         // 15 FPS
     VeryLow     UMETA(DisplayName = "Very Low"),    // 5 FPS
-    Background  UMETA(DisplayName = "Background"),   // ???X?·s | On Demand
-    Paused      UMETA(DisplayName = "Paused")       // ???X?·s | Paused
+    Background  UMETA(DisplayName = "Background"),   // ???X?ï¿½s | On Demand
+    Paused      UMETA(DisplayName = "Paused")       // ???X?ï¿½s | Paused
 };
 
 /**
- * Tick ²Õ????| Tick Group Definition
+ * Tick ï¿½ï¿½æ‘§æ¯€| Tick Group Definition
  */
 USTRUCT()
 struct MINGTACTICAL_API FTickGroup
@@ -63,12 +62,12 @@ struct MINGTACTICAL_API FTickGroup
 };
 
 /**
- * ???? Tick ¨t??
+ * æ‘§æ¯€ Tick ï¿½t??
  * 
- * É¬??¤j??¼Ò??¦ì?? Tick ??¯à?? * - ??Õu???X???X??XTick ???
- * - ????¨C???·s????¦ì????X * - ???????¿Å
+ * É¬??ï¿½j??ï¿½ï¿½??ï¿½ï¿½?? Tick ??ï¿½ï¿½?? * - ??ï¿½uç›®æ¨™æ•¸é‡X??XTick ???
+ * - æ‘§æ¯€ï¿½C???ï¿½sæ‘§æ¯€ï¿½ï¿½æ‘§æ¯€X * - æ‘§æ¯€???ï¿½ï¿½
  * 
- * ??¥Î??1000+ ???X?¤j?¼Ò???X?´º
+ * ??ï¿½ï¿½??1000+ ???X?ï¿½j?ï¿½ï¿½???X?ï¿½ï¿½
  */
 UCLASS(ClassGroup = (Optimization), Blueprintable)
 class MINGTACTICAL_API UMingHierarchicalTickSystem : public UObject
@@ -79,12 +78,12 @@ public:
     UMingHierarchicalTickSystem();
 
     /**
-     * ???X?¨t??     */
+     * ???X?ï¿½t??     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void Initialize();
 
     /**
-     * ???¨t??
+     * ???ï¿½t??
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void Shutdown();
@@ -95,96 +94,96 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void Tick(float DeltaTime);
 
-    // ==== ????ºŞ?? ====
+    // ==== æ‘§æ¯€ï¿½ï¿½?? ====
 
     /**
-     * ª`?X??X?¨t??     */
+     * ï¿½`?X??X?ï¿½t??     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void RegisterUnit(AMingTacticalUnit* Unit, ETickLevel InitialLevel = ETickLevel::Normal);
 
     /**
-     * ª`?X???
+     * ï¿½`?X???
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void UnregisterUnit(AMingTacticalUnit* Unit);
 
     /**
-     * ?¸m???XTick ??
+     * ?ï¿½m???XTick ??
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void SetUnitTickLevel(AMingTacticalUnit* Unit, ETickLevel NewLevel);
 
     /**
-     * ???X??X??XTick ??
+     * æ•…äº‹é¸é …XTick ??
      */
     UFUNCTION(BlueprintPure, Category = "Hierarchical Tick")
     ETickLevel GetUnitTickLevel(AMingTacticalUnit* Unit) const;
 
-    // ==== AI ºŞ?? ====
+    // ==== AI ï¿½ï¿½?? ====
 
     /**
-     * ª`?? AI ??¨îX     */
+     * ï¿½`?? AI ??ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
-    void RegisterAI(AMingCombatAI* AI, ETickLevel InitialLevel = ETickLevel::Normal};
+    void RegisterAI(AMingCombatAI* AI, ETickLevel InitialLevel = ETickLevel::Normal);
 
     /**
-     * ª`?? AI ??¨îX     */
+     * ï¿½`?? AI ??ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
-    void UnregisterAI(AMingCombatAI* AI};
+    void UnregisterAI(AMingCombatAI* AI);
 
     /**
-     * ?¸m AI XTick ??
+     * ?ï¿½m AI XTick ??
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
-    void SetAITickLevel(AMingCombatAI* AI, ETickLevel NewLevel};
+    void SetAITickLevel(AMingCombatAI* AI, ETickLevel NewLevel);
 
-    // ==== É¬????X====
+    // ==== É¬æ‘§æ¯€X====
 
     /**
-     * ???¦ì?X?¨ì Critical ??
-     * (¨Ò??¡G³Q??®a??¤¤??????
+     * ???ï¿½ï¿½?X?ï¿½ï¿½ Critical ??
+     * (ï¿½ï¿½??ï¿½Gï¿½Q??ï¿½a??ï¿½ï¿½æ‘§æ¯€??
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
-    void PromoteToCritical(AMingTacticalUnit* Unit, float DurationSeconds = 5.0f};
+    void PromoteToCritical(AMingTacticalUnit* Unit, float DurationSeconds = 5.0f);
 
     /**
-     * ???¦ì???¨ì??´º??
-     * (¨Ò??¡G??¹õ?X?????
+     * ???ï¿½ï¿½???ï¿½ï¿½??ï¿½ï¿½??
+     * (ï¿½ï¿½??ï¿½G??ï¿½ï¿½?Xæ‘§æ¯€?
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
-    void DemoteToBackground(AMingTacticalUnit* Unit};
+    void DemoteToBackground(AMingTacticalUnit* Unit);
 
     /**
-     * ??Õu¶ZÖÃ??Éó????ÖÃ¦Û???X?????     */
+     * ??ï¿½uï¿½Zï¿½ï¿½??ï¿½ï¿½æ‘§æ¯€ï¿½Ã¦ï¿½ç›®æ¨™æ•¸é‡??     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
-    void AutoAdjustLevelByDistance(AMingTacticalUnit* Unit, float DistanceToCamera};
+    void AutoAdjustLevelByDistance(AMingTacticalUnit* Unit, float DistanceToCamera);
 
     /**
-     * ??Õu???X???X?????     */
+     * ??ï¿½uç›®æ¨™æ•¸é‡Xæ‘§æ¯€?     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
-    void AdjustLevelByCombatState(AMingTacticalUnit* Unit, bool bInCombat};
+    void AdjustLevelByCombatState(AMingTacticalUnit* Unit, bool bInCombat);
 
-    // ==== ??¸m ====
+    // ==== ??ï¿½m ====
 
     /**
-     * ?¸m??????XTick ????
+     * ?ï¿½mæ‘§æ¯€??XTick æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Config")
-    void SetTickInterval(ETickLevel Level, float IntervalSeconds};
+    void SetTickInterval(ETickLevel Level, float IntervalSeconds);
 
     /**
-     * ?¸m?????????????¤j?X???¦ì?
+     * ?ï¿½mæ‘§æ¯€æ‘§æ¯€æ‘§æ¯€?ï¿½j?X???ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Config")
-    void SetMaxUnitsPerFrame(ETickLevel Level, int32 MaxUnits};
+    void SetMaxUnitsPerFrame(ETickLevel Level, int32 MaxUnits);
 
     /**
-     * ??¥Î/¸T¥Î???????¿Å
+     * ??ï¿½ï¿½/ï¿½Tï¿½ï¿½æ‘§æ¯€???ï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Config")
-    void SetAutoBalancingEnabled(bool bEnabled};
+    void SetAutoBalancingEnabled(bool bEnabled);
 
-    // ==== ??«H®§ ====
+    // ==== ??ï¿½Hï¿½ï¿½ ====
 
     UFUNCTION(BlueprintPure, Category = "Hierarchical Tick|Stats")
     int32 GetTotalRegisteredUnits() const;
@@ -213,22 +212,23 @@ public:
     FString GetDebugString() const;
 
 private:
-    // Tick ?????    UPROPERTY()
+    // Tick æ‘§æ¯€?
+    UPROPERTY()
     TMap<ETickLevel, FTickGroup> TickGroups;
 
-    // ???X?????X???
+    // ç›®æ¨™æ•¸é‡??X???
     UPROPERTY()
     TMap<TWeakObjectPtr<AMingTacticalUnit>, ETickLevel> UnitLevels;
 
-    // AI ??????X???
+    // AI ???ç›®æ¨™æ•¸é‡
     UPROPERTY()
     TMap<TWeakObjectPtr<AMingCombatAI>, ETickLevel> AILevels;
 
-    // ?????????¦ì?X??X??
+    // æ‘§æ¯€æ‘§æ¯€?ï¿½ï¿½?X??X??
     UPROPERTY()
     TMap<TWeakObjectPtr<AMingTacticalUnit>, float> PromotedUnits;
 
-    // ??¸m
+    // ??ï¿½m
     bool bIsInitialized;
     bool bAutoBalancingEnabled;
 
@@ -239,29 +239,32 @@ private:
     TArray<float> TickTimeHistory;
     int32 TickHistoryIndex;
 
-    // ???XTick ??    void InitializeTickGroups();
+    // ???XTick ??
+    void InitializeTickGroups();
 
-    // ????????
+    // æ‘§æ¯€æ‘§æ¯€
     void ProcessPromotedUnits(float DeltaTime);
 
-    // ???????¿Å
+    // æ‘§æ¯€???ï¿½ï¿½
     void PerformLoadBalancing();
 
-    // ??X??X?????    ETickLevel CalculateRecommendedLevel(AMingTacticalUnit* Unit) const;
+    // ??X??Xæ‘§æ¯€?
+    ETickLevel CalculateRecommendedLevel(AMingTacticalUnit* Unit) const;
 
-    // ??·s??
+    // ??ï¿½s??
     void UpdateTickStats(float TickTimeMs);
 
-    // ²M?X???¤Ş¥Î
+    // ï¿½M?X???ï¿½Ş¥ï¿½
     void CleanupInvalidReferences();
 
-    // ???? Tick ???¤Ş¥Î
+    // æ‘§æ¯€ Tick ???ï¿½Ş¥ï¿½
     FTickGroup* GetTickGroup(ETickLevel Level);
     const FTickGroup* GetTickGroup(ETickLevel Level) const;
 
-    // ????????????X    static float GetDefaultInterval(ETickLevel Level);
+    // æ‘§æ¯€æ‘§æ¯€æ‘§æ¯€X
+    static float GetDefaultInterval(ETickLevel Level);
 
-    // ????????????????¤j??¦ì?
+    // æ‘§æ¯€æ‘§æ¯€æ‘§æ¯€æ‘§æ¯€ï¿½j??ï¿½ï¿½?
     static int32 GetDefaultMaxUnits(ETickLevel Level);
 };
 

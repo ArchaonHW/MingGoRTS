@@ -1,4 +1,4 @@
-// VR Teleport Marker and Comfort Asset Definitions for MingGoRTS
+﻿// VR Teleport Marker and Comfort Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - VR Comfort Assets
 
 #pragma once
@@ -11,8 +11,7 @@
  * Teleport Marker Types
  */
 UENUM(BlueprintType)
-enum class ETeleportMarkerType : uint8
-{
+enum class ETeleportMarkerType: uint8 {
     Default         UMETA(DisplayName = "Default Marker"),
     Valid           UMETA(DisplayName = "Valid Destination"),
     Invalid         UMETA(DisplayName = "Invalid Destination"),
@@ -26,8 +25,7 @@ enum class ETeleportMarkerType : uint8
  * Comfort Setting Visual Types
  */
 UENUM(BlueprintType)
-enum class EComfortVisualType : uint8
-{
+enum class EComfortVisualType: uint8 {
     Vignette        UMETA(DisplayName = "Vignette"),
     Grid            UMETA(DisplayName = "Reference Grid"),
     Horizon         UMETA(DisplayName = "Horizon Line"),

@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "AIContentQualityController.generated.h"
 
 UENUM(BlueprintType)
-enum class EAIContentQualityLevel : uint8
-{
+enum class EAIContentQualityLevel: uint8 {
     VeryLow     UMETA(DisplayName = "Very Low"),
     Low         UMETA(DisplayName = "Low"),
     Medium      UMETA(DisplayName = "Medium"),
@@ -16,8 +15,7 @@ enum class EAIContentQualityLevel : uint8
 };
 
 UENUM(BlueprintType)
-enum class EAIContentType : uint8
-{
+enum class EAIContentType: uint8 {
     Image       UMETA(DisplayName = "Image"),
     Video       UMETA(DisplayName = "Video"),
     Audio       UMETA(DisplayName = "Audio"),
@@ -32,8 +30,7 @@ enum class EAIContentType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EAIProvider : uint8
-{
+enum class EAIProvider: uint8 {
     StableDiffusion  UMETA(DisplayName = "Stable Diffusion"),
     DALLE           UMETA(DisplayName = "DALL-E"),
     Midjourney       UMETA(DisplayName = "Midjourney"),

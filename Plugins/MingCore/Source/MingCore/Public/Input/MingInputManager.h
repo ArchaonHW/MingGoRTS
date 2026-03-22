@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,11 +6,10 @@
 #include "MingInputManager.generated.h"
 
 /**
- * ¿é¤J????Ãş??
+ * ï¿½ï¿½Jæ‘§æ¯€ï¿½ï¿½??
  */
 UENUM(BlueprintType)
-enum class EInputAction : uint8
-{
+enum class EInputAction: uint8 {
     Select            UMETA(DisplayName = "Select"),
     Move              UMETA(DisplayName = "Move"),
     Attack            UMETA(DisplayName = "Attack"),
@@ -28,11 +27,10 @@ enum class EInputAction : uint8
 };
 
 /**
- * ¿é¤J??¶ÕÃş??
+ * ï¿½ï¿½J??ï¿½ï¿½ï¿½ï¿½??
  */
 UENUM(BlueprintType)
-enum class EInputGesture : uint8
-{
+enum class EInputGesture: uint8 {
     None              UMETA(DisplayName = "None"),
     Tap               UMETA(DisplayName = "Tap"),
     DoubleTap         UMETA(DisplayName = "Double Tap"),
@@ -48,29 +46,29 @@ enum class EInputGesture : uint8
 };
 
 /**
- * ¿é¤J¨Æ¥óµ²??
+ * ï¿½ï¿½Jï¿½Æ¥ï¿½??
  */
 USTRUCT(BlueprintType)
 struct FInputEventData
 {
     GENERATED_BODY()
     
-    // ¿é¤J¦ì¸m¡]??¹õ®y¼Ğ??
+    // ï¿½ï¿½Jï¿½ï¿½mï¿½]??ï¿½ï¿½ï¿½yï¿½ï¿½??
     UPROPERTY(BlueprintReadOnly)
     FVector2D ScreenPosition;
     
     
     FVector WorldPosition;
     
-    // ¿é¤J????Ãş??
+    // ï¿½ï¿½Jæ‘§æ¯€ï¿½ï¿½??
     UPROPERTY(BlueprintReadOnly)
     EInputAction Action;
     
-    // ??¶ÕÃş??¡]Ä²????
+    // ??ï¿½ï¿½ï¿½ï¿½??ï¿½]Ä²æ‘§æ¯€
     UPROPERTY(BlueprintReadOnly)
     EInputGesture Gesture;
     
-    // Ä²±±ID¡]??ÂIÄ²????
+    // Ä²ï¿½ï¿½IDï¿½]??ï¿½IÄ²æ‘§æ¯€
     UPROPERTY(BlueprintReadOnly)
     int32 TouchId;
     
@@ -100,7 +98,7 @@ struct FInputEventData
 };
 
 /**
- * ¿é¤JºŞ?X * ²Î??ºŞ??¹«?X?½L??Ä²??¿éX */
+ * ï¿½ï¿½Jï¿½ï¿½?X * ï¿½ï¿½??ï¿½ï¿½??ï¿½ï¿½?X?ï¿½L??Ä²??ï¿½ï¿½X */
 UCLASS()
 class MINGCORE_API UMingInputManager : public UObject
 {
@@ -109,36 +107,36 @@ class MINGCORE_API UMingInputManager : public UObject
 public:
     UMingInputManager();
 
-    // ???X?¿é??ºŞ??¾¹
+    // ???X?ï¿½ï¿½??ï¿½ï¿½??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Input")
     void Initialize();
 
     
     void Shutdown();
 
-    // ¨C?X?·s
+    // ï¿½C?X?ï¿½s
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void Tick(float DeltaTime};
+    void Tick(float DeltaTime);
 
-    // ³]¸m????¿é¤JÃş??
+    // ï¿½]ï¿½mæ‘§æ¯€ï¿½ï¿½Jï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void SetInputType(EInputType NewInputType};
+    void SetInputType(EInputType NewInputType);
 
-    // ???X???¿é¤JÃş??
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½Jï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Input")
     EInputType GetCurrentInputType() const { return CurrentInputType; }
 
-    // ¸j??¿é¤J????¡]Blueprint??½Õ????
+    // ï¿½j??ï¿½ï¿½Jæ‘§æ¯€ï¿½]Blueprint??ï¿½ï¿½æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void BindAction(EInputAction Action, UObject* Listener, FName FunctionName};
+    void BindAction(EInputAction Action, UObject* Listener, FName FunctionName);
 
-    // ????¸j??
+    // æ‘§æ¯€ï¿½j??
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void UnbindAction(EInputAction Action, UObject* Listener};
+    void UnbindAction(EInputAction Action, UObject* Listener);
 
-    // Ä²µo¿é¤J¨Æ¥ó
+    // Ä²ï¿½oï¿½ï¿½Jï¿½Æ¥ï¿½
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void TriggerInputEvent(const FInputEventData& EventData};
+    void TriggerInputEvent(const FInputEventData& EventData);
 
     
     bool IsTouchInput() const;
@@ -147,29 +145,32 @@ public:
     FVector2D GetLastInputPosition() const { return LastInputPosition; }
 
     
-    void SetTouchSensitivity(float Sensitivity};
+    void SetTouchSensitivity(float Sensitivity);
 
     
     float GetTouchSensitivity() const { return TouchSensitivity; }
 
-    // ???X???¹ê??
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½??
     static UMingInputManager* Get();
 
 private:
     bool bInitialized;
     
-    // ????¿é¤JÃş??
+    // æ‘§æ¯€ï¿½ï¿½Jï¿½ï¿½??
     UPROPERTY()
     EInputType CurrentInputType;
     
-    // ??«á¿é??????    FVector2D LastInputPosition;
+    // ??ï¿½ï¿½ï¿½æ‘§æ¯€??
+    FVector2D LastInputPosition;
     
-    // Ä²±±??????    float TouchSensitivity;
+    // Ä²ï¿½ï¿½æ‘§æ¯€??
+    float TouchSensitivity;
     
-    // ¿é¤J¸j?X???
+    // ï¿½ï¿½Jï¿½j?X???
     TMap<EInputAction, TMap<TWeakObjectPtr<UObject>, FName>> InputBindings;
     
-    // Ä²±±????°l??    struct FTouchState
+    // Ä²ï¿½ï¿½æ‘§æ¯€ï¿½l??
+    struct FTouchState
     {
         FVector2D StartPosition;
         FVector2D CurrentPosition;
@@ -179,18 +180,18 @@ private:
     
     TMap<int32, FTouchState> ActiveTouches;
     
-    // ??¶ÕÀË´ú??¼Æ
+    // ??ï¿½ï¿½ï¿½Ë´ï¿½??ï¿½ï¿½
     float TapTimeThreshold;
     float TapDistanceThreshold;
     float LongPressTimeThreshold;
     
-    // ????¹ê??
+    // æ‘§æ¯€ï¿½ï¿½??
     static UMingInputManager* Instance;
     
-    // ¿é¤J???X?¼Æ
-    void ProcessTouchInput(float DeltaTime};
-    void ProcessMouseInput(float DeltaTime};
-    void DetectGestures(const FTouchState& TouchState, int32 TouchId};
-    void ExecuteInputBinding(EInputAction Action, const FInputEventData& EventData};
+    // ï¿½ï¿½J???X?ï¿½ï¿½
+    void ProcessTouchInput(float DeltaTime);
+    void ProcessMouseInput(float DeltaTime);
+    void DetectGestures(const FTouchState& TouchState, int32 TouchId);
+    void ExecuteInputBinding(EInputAction Action, const FInputEventData& EventData);
 };
 

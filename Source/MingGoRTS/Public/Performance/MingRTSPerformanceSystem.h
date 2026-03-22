@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,8 +8,7 @@
  * 性能監控類別
  */
 UENUM(BlueprintType)
-enum class EPerformanceCategory : uint8
-{
+enum class EPerformanceCategory: uint8 {
     FPS                   UMETA(DisplayName = "幀率"),
     Memory                UMETA(DisplayName = "內存"),
     CPU                   UMETA(DisplayName = "CPU"),
@@ -26,8 +25,7 @@ enum class EPerformanceCategory : uint8
  * 性能級別
  */
 UENUM(BlueprintType)
-enum class EPerformanceLevel : uint8
-{
+enum class EPerformanceLevel: uint8 {
     Excellent             UMETA(DisplayName = "優秀"),
     Good                  UMETA(DisplayName = "良好"),
     Acceptable            UMETA(DisplayName = "可接受"),
@@ -39,8 +37,7 @@ enum class EPerformanceLevel : uint8
  * 優化設置
  */
 UENUM(BlueprintType)
-enum class EOptimizationPreset : uint8
-{
+enum class EOptimizationPreset: uint8 {
     Ultra                 UMETA(DisplayName = "極致"),
     High                  UMETA(DisplayName = "高"),
     Medium                UMETA(DisplayName = "中"),

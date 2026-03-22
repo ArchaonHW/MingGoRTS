@@ -1,4 +1,4 @@
-// AR Cursor and Interaction Asset Definitions for MingGoRTS
+﻿// AR Cursor and Interaction Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - AR Interaction Assets
 
 #pragma once
@@ -11,8 +11,7 @@
  * AR Cursor Types
  */
 UENUM(BlueprintType)
-enum class EARCursorType : uint8
-{
+enum class EARCursorType: uint8 {
     Default         UMETA(DisplayName = "Default Cursor"),
     Touch           UMETA(DisplayName = "Touch Cursor"),
     Pinch           UMETA(DisplayName = "Pinch Cursor"),
@@ -30,8 +29,7 @@ enum class EARCursorType : uint8
  * AR Gesture Types
  */
 UENUM(BlueprintType)
-enum class EARGestureType : uint8
-{
+enum class EARGestureType: uint8 {
     Tap             UMETA(DisplayName = "Tap"),
     DoubleTap       UMETA(DisplayName = "Double Tap"),
     LongPress       UMETA(DisplayName = "Long Press"),

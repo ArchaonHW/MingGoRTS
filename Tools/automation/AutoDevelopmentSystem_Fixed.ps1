@@ -1,4 +1,4 @@
-# MingGoRTS Automated Development System
+﻿# MingGoRTS Automated Development System
 # Complete automated development workflow
 
 param(

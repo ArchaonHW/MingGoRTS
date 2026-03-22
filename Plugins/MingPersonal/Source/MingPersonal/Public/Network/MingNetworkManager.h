@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -12,8 +12,7 @@ class UMingReputationReplication;
 
 // Network connection state
 UENUM(BlueprintType)
-enum class EMingNetworkConnectionState : uint8
-{
+enum class EMingNetworkConnectionState: uint8 {
     Disconnected      UMETA(DisplayName = "Disconnected"),
     Connecting        UMETA(DisplayName = "Connecting"),
     Connected         UMETA(DisplayName = "Connected"),
@@ -24,8 +23,7 @@ enum class EMingNetworkConnectionState : uint8
 
 // Network role
 UENUM(BlueprintType)
-enum class EMingNetworkRole : uint8
-{
+enum class EMingNetworkRole: uint8 {
     None              UMETA(DisplayName = "None"),
     Host              UMETA(DisplayName = "Host"),
     Client            UMETA(DisplayName = "Client"),
@@ -210,8 +208,7 @@ struct FMingChatMessage
 
 // Network error types
 UENUM(BlueprintType)
-enum class EMingNetworkError : uint8
-{
+enum class EMingNetworkError: uint8 {
     None                      UMETA(DisplayName = "None"),
     ConnectionFailed          UMETA(DisplayName = "Connection Failed"),
     ConnectionLost            UMETA(DisplayName = "Connection Lost"),
@@ -239,7 +236,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameEnded);
 
 /**
- * 網絡管?X * ????多人??戲??網絡??????玩家管???X??X?步
+ * 網絡管?X * 摧毀多人??戲??網絡摧毀??玩家管故事重要性?步
  */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingNetworkManager : public UObject

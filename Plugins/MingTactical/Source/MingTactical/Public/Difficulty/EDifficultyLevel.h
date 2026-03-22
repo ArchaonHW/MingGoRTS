@@ -8,8 +8,7 @@
  * �w�qX��X������X��X�q��X| Define four standard difficulty levels and custom option
  */
 UENUM(BlueprintType)
-enum class EDifficultyLevel : uint8
-{
+enum class EDifficultyLevel: uint8 {
     Easy       UMETA(DisplayName = "²�� | Easy"),    // Easy
     Normal     UMETA(DisplayName = "X| Normal"),    // Normal
     Hard       UMETA(DisplayName = "X�� | Hard"),    // Hard
@@ -31,8 +30,7 @@ enum class EDifficultyLevel : uint8
  * X��X�վ�X��X�� | Used for dynamically adjusting specific game parameters
  */
 UENUM(BlueprintType)
-enum class EDifficultyParameter : uint8
-{
+enum class EDifficultyParameter: uint8 {
     // AI X�� | AI Related Parameters
     AIReactionSpeed      UMETA(DisplayName = "AIX�� | AI Reaction Speed"),  // AI Reaction Speed
     AIIntelligence       UMETA(DisplayName = "AIX��{�� | AI Intelligence"),  // AI Intelligence
@@ -60,8 +58,7 @@ enum class EDifficultyParameter : uint8
  * X��X�ƥ� | Difficulty Changed Event
  */
 UENUM(BlueprintType)
-enum class EDifficultyChangeDirection : uint8
-{
+enum class EDifficultyChangeDirection: uint8 {
     Increase    UMETA(DisplayName = "�WX�� | Increase Difficulty"),
     Decrease    UMETA(DisplayName = "X�� | Decrease Difficulty"),
     Maintain    UMETA(DisplayName = "X | Maintain Current")
@@ -71,8 +68,7 @@ enum class EDifficultyChangeDirection : uint8
  * X�a��X
  */
 UENUM(BlueprintType)
-enum class EPlayerPerformanceRating : uint8
-{
+enum class EPlayerPerformanceRating: uint8 {
     Excellent   UMETA(DisplayName = "ɬX"),
     Good        UMETA(DisplayName = "X�n"),
     Average     UMETA(DisplayName = "�@��"),

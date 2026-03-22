@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingIntegrationValidator.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingValidationResult : uint8
-{
+enum class EMingValidationResult: uint8 {
     NotTested UMETA(DisplayName = "Not Tested"),
     Passed UMETA(DisplayName = "Passed"),
     Failed UMETA(DisplayName = "Failed"),
@@ -15,8 +14,7 @@ enum class EMingValidationResult : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingValidationType : uint8
-{
+enum class EMingValidationType: uint8 {
     LoadOrder UMETA(DisplayName = "Load Order"),
     Dependencies UMETA(DisplayName = "Dependencies"),
     Integration UMETA(DisplayName = "Integration"),
@@ -165,7 +163,7 @@ public:
     void RunAllValidations();
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void RunValidationType(EMingValidationType ValidationType};
+    void RunValidationType(EMingValidationType ValidationType);
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
     void RunSpecificValidation(const FString& ValidationID) {};
@@ -313,9 +311,9 @@ public:
     void ExportResults(const FString& FilePath) {};
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnValidationStarted, EMingValidationType, ValidationType, const FString&, TestName};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnValidationCompleted, const FMingValidationReport&, Report, bool, bSuccess};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAllValidationsCompleted, float, SuccessRate};
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnValidationStarted OnValidationStarted;
@@ -328,10 +326,10 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetValidationTypeName(EMingValidationType ValidationType};
+    static FString GetValidationTypeName(EMingValidationType ValidationType);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetValidationResultName(EMingValidationResult Result};
+    static FString GetValidationResultName(EMingValidationResult Result);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveValidationData() const;
@@ -412,7 +410,7 @@ protected:
     FMingLoadOrderEntry* FindLoadOrderEntry(const FString& SystemName) {};
     FMingDependencyCheck* FindDependencyCheck(const FString& SystemName, const FString& DependencyName) {};
     void AddValidationReport(const FMingValidationReport& Report) {};
-    void UpdateValidationProgress(const FString& TestName, float Progress};
+    void UpdateValidationProgress(const FString& TestName, float Progress);
     void LogValidationEvent(const FString& Event, const FString& Details) {};
 };
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - VR/AR Performance Optimization
 
 #pragma once
@@ -11,8 +11,7 @@
  * VR/AR Performance Quality Levels
  */
 UENUM(BlueprintType)
-enum class EVARPerformanceLevel : uint8
-{
+enum class EVARPerformanceLevel: uint8 {
     Low         UMETA(DisplayName = "Low Quality"),
     Medium      UMETA(DisplayName = "Medium Quality"),
     High        UMETA(DisplayName = "High Quality"),
@@ -24,8 +23,7 @@ enum class EVARPerformanceLevel : uint8
  * Frame Rate Targets
  */
 UENUM(BlueprintType)
-enum class EVARFrameRate : uint8
-{
+enum class EVARFrameRate: uint8 {
     FPS30       UMETA(DisplayName = "30 FPS"),
     FPS60       UMETA(DisplayName = "60 FPS"),
     FPS72       UMETA(DisplayName = "72 FPS"),

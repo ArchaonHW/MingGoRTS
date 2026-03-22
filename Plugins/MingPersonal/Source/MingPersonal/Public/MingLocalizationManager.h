@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -14,8 +14,7 @@ class UMingCultureAdapter;
 
 // Supported languages
 UENUM(BlueprintType)
-enum class EMingLanguage : uint8
-{
+enum class EMingLanguage: uint8 {
     ChineseSimplified  UMETA(DisplayName = "Chinese (Simplified)"),
     ChineseTraditional UMETA(DisplayName = "Chinese (Traditional)"),
     English            UMETA(DisplayName = "English"),
@@ -38,8 +37,7 @@ enum class EMingLanguage : uint8
 
 // Supported regions
 UENUM(BlueprintType)
-enum class EMingRegion : uint8
-{
+enum class EMingRegion: uint8 {
     MainlandChina      UMETA(DisplayName = "Mainland China"),
     Taiwan             UMETA(DisplayName = "Taiwan"),
     HongKong           UMETA(DisplayName = "Hong Kong"),

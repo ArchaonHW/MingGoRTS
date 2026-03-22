@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingAIMusicGenerator.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingMusicGenre : uint8
-{
+enum class EMingMusicGenre: uint8 {
     None UMETA(DisplayName = "None"),
     EpicOrchestral UMETA(DisplayName = "Epic Orchestral"),
     Ambient UMETA(DisplayName = "Ambient"),
@@ -21,8 +20,7 @@ enum class EMingMusicGenre : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingSoundEffectCategory : uint8
-{
+enum class EMingSoundEffectCategory: uint8 {
     None UMETA(DisplayName = "None"),
     UI UMETA(DisplayName = "UI"),
     Combat UMETA(DisplayName = "Combat"),
@@ -118,71 +116,71 @@ public:
 
     // Music Generation
     UFUNCTION(BlueprintCallable, Category = "AI Music Generation")
-    FGuid GenerateBackgroundMusic(const FString& SceneDescription, EMingMusicGenre Genre, float Duration};
+    FGuid GenerateBackgroundMusic(const FString& SceneDescription, EMingMusicGenre Genre, float Duration);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music Generation")
-    FGuid GenerateBattleMusic(float Intensity, float Duration};
+    FGuid GenerateBattleMusic(float Intensity, float Duration);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music Generation")
-    FGuid GenerateAmbientMusic(const FString& EnvironmentType, float Duration, bool bDaytime};
+    FGuid GenerateAmbientMusic(const FString& EnvironmentType, float Duration, bool bDaytime);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music Generation")
-    FGuid GenerateVictoryMusic(float Duration};
+    FGuid GenerateVictoryMusic(float Duration);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music Generation")
-    FGuid GenerateDefeatMusic(float Duration};
+    FGuid GenerateDefeatMusic(float Duration);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music Generation")
-    FGuid GenerateChineseTraditionalMusic(const FString& Mood, float Duration};
+    FGuid GenerateChineseTraditionalMusic(const FString& Mood, float Duration);
 
     // Sound Effect Generation
     UFUNCTION(BlueprintCallable, Category = "AI Sound Effects")
-    FGuid GenerateUIEffect(const FString& EffectType};
+    FGuid GenerateUIEffect(const FString& EffectType);
 
     UFUNCTION(BlueprintCallable, Category = "AI Sound Effects")
-    FGuid GenerateCombatEffect(const FString& WeaponType, const FString& ImpactType};
+    FGuid GenerateCombatEffect(const FString& WeaponType, const FString& ImpactType);
 
     UFUNCTION(BlueprintCallable, Category = "AI Sound Effects")
-    FGuid GenerateEnvironmentEffect(const FString& EnvironmentType, const FString& Element};
+    FGuid GenerateEnvironmentEffect(const FString& EnvironmentType, const FString& Element);
 
     UFUNCTION(BlueprintCallable, Category = "AI Sound Effects")
-    FGuid GenerateFootstepEffect(const FString& SurfaceType, const FString& MovementType};
+    FGuid GenerateFootstepEffect(const FString& SurfaceType, const FString& MovementType);
 
     UFUNCTION(BlueprintCallable, Category = "AI Sound Effects")
-    FGuid GenerateBuildingEffect(const FString& ActionType, const FString& BuildingMaterial};
+    FGuid GenerateBuildingEffect(const FString& ActionType, const FString& BuildingMaterial);
 
     UFUNCTION(BlueprintCallable, Category = "AI Sound Effects")
-    FGuid GenerateWeatherEffect(const FString& WeatherType, float Intensity};
+    FGuid GenerateWeatherEffect(const FString& WeatherType, float Intensity);
 
     // Voice Generation
     UFUNCTION(BlueprintCallable, Category = "AI Voice Generation")
-    FGuid GenerateVoiceLine(const FString& Text, const FString& VoiceID, float Speed, float Pitch};
+    FGuid GenerateVoiceLine(const FString& Text, const FString& VoiceID, float Speed, float Pitch);
 
     UFUNCTION(BlueprintCallable, Category = "AI Voice Generation")
-    FGuid GenerateNarration(const FString& Text, float Speed};
+    FGuid GenerateNarration(const FString& Text, float Speed);
 
     UFUNCTION(BlueprintCallable, Category = "AI Voice Generation")
-    FGuid GenerateCharacterVoice(const FString& Text, const FString& CharacterType, const FString& Emotion};
+    FGuid GenerateCharacterVoice(const FString& Text, const FString& CharacterType, const FString& Emotion);
 
     // Batch Generation
     UFUNCTION(BlueprintCallable, Category = "AI Audio Batch")
-    TArray<FGuid> GenerateSoundEffectBatch(EMingSoundEffectCategory Category, const TArray<FString>& Descriptions};
+    TArray<FGuid> GenerateSoundEffectBatch(EMingSoundEffectCategory Category, const TArray<FString>& Descriptions);
 
     UFUNCTION(BlueprintCallable, Category = "AI Audio Batch")
-    TArray<FGuid> GenerateMusicVariations(const FString& BaseDescription, EMingMusicGenre Genre, int32 Count};
+    TArray<FGuid> GenerateMusicVariations(const FString& BaseDescription, EMingMusicGenre Genre, int32 Count);
 
     // Presets
     UFUNCTION(BlueprintPure, Category = "AI Music Generation")
     FMingMusicGenerationConfig GetMusicPreset(const FString& PresetName) const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Music Generation")
-    void SaveMusicPreset(const FString& PresetName, const FMingMusicGenerationConfig& Config};
+    void SaveMusicPreset(const FString& PresetName, const FMingMusicGenerationConfig& Config);
 
     UFUNCTION(BlueprintPure, Category = "AI Sound Effects")
     FMingSoundEffectConfig GetSFXPreset(const FString& PresetName) const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Sound Effects")
-    void SaveSFXPreset(const FString& PresetName, const FMingSoundEffectConfig& Config};
+    void SaveSFXPreset(const FString& PresetName, const FMingSoundEffectConfig& Config);
 
 protected:
     UPROPERTY()

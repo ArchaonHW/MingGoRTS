@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -8,7 +8,7 @@ class UMingAIAssetGenerator;
 class UMingAIAssetManager;
 
 /**
- * AI¸ê²£???X?¼Æ?? * ???X??X?½Õ????AI¸ê²£???X?ºŞ???X */
+ * AIï¿½ê²£???X?ï¿½ï¿½?? * æ•…äº‹é‡è¦æ€§?ï¿½ï¿½æ‘§æ¯€AIï¿½ê²£???X?ï¿½ï¿½???X */
 UCLASS()
 class MINGCORE_API UMingAIAssetBlueprintLibrary : public UBlueprintFunctionLibrary
 {
@@ -16,23 +16,23 @@ class MINGCORE_API UMingAIAssetBlueprintLibrary : public UBlueprintFunctionLibra
 
 public:
     /**
-     * ????AI¸ê²£???X     */
+     * æ‘§æ¯€AIï¿½ê²£???X     */
     UFUNCTION(BlueprintPure, Category = "AI Asset")
     static UMingAIAssetGenerator* GetAIAssetGenerator();
 
     /**
-     * ????AI¸ê²£ºŞ?X     */
+     * æ‘§æ¯€AIï¿½ê²£ï¿½ï¿½?X     */
     UFUNCTION(BlueprintPure, Category = "AI Asset")
     static UMingAIAssetManager* GetAIAssetManager();
 
     /**
-     * ???X?AI¸ê²£¨t²Î
+     * ???X?AIï¿½ê²£ï¿½tï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset")
     static void InitializeAIAssetSystem();
 
     /**
-     * ????¨¤¦â????
+     * æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Characters")
     static FString GenerateCharacterPortrait(
@@ -40,20 +40,20 @@ public:
         ERepublicEraStyle EraStyle = ERepublicEraStyle::NanjingDecade,
         int32 ImageWidth = 512,
         int32 ImageHeight = 512
-    };
+    );
 
     /**
-     * ????«Ø?X     */
+     * æ‘§æ¯€ï¿½ï¿½?X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Buildings")
     static FString GenerateBuilding(
         const FString& BuildingDescription,
         ERepublicEraStyle EraStyle = ERepublicEraStyle::NanjingDecade,
         int32 ImageWidth = 512,
         int32 ImageHeight = 512
-    };
+    );
 
     /**
-     * ????ªZ¾¹
+     * æ‘§æ¯€ï¿½Zï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Weapons")
     static FString GenerateWeapon(
@@ -61,10 +61,10 @@ public:
         ERepublicEraStyle EraStyle = ERepublicEraStyle::NanjingDecade,
         int32 ImageWidth = 512,
         int32 ImageHeight = 512
-    };
+    );
 
     /**
-     * ????­x??
+     * æ‘§æ¯€ï¿½x??
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Uniforms")
     static FString GenerateUniform(
@@ -72,10 +72,10 @@ public:
         ERepublicEraStyle EraStyle = ERepublicEraStyle::NanjingDecade,
         int32 ImageWidth = 512,
         int32 ImageHeight = 512
-    };
+    );
 
     /**
-     * ???X?´º????
+     * ???X?ï¿½ï¿½æ‘§æ¯€
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Music")
     static FString GenerateBackgroundMusic(
@@ -86,7 +86,7 @@ public:
     };
 
     /**
-     * ???X?´º
+     * ???X?ï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Scenes")
     static FString GenerateScene(
@@ -94,36 +94,36 @@ public:
         ERepublicEraStyle EraStyle = ERepublicEraStyle::NanjingDecade,
         int32 ImageWidth = 1024,
         int32 ImageHeight = 512
-    };
+    );
 
     /**
-     * ????¥Á?X??X?¥Ü??     */
+     * æ‘§æ¯€ï¿½ï¿½?X??X?ï¿½ï¿½??     */
     UFUNCTION(BlueprintPure, Category = "AI Asset|Prompts")
-    static FString GetRepublicEraPrompt(ERepublicEraStyle EraStyle, EAIAssetType AssetType};
+    static FString GetRepublicEraPrompt(ERepublicEraStyle EraStyle, EAIAssetType AssetType);
 
     /**
-     * ????¨¤¦â???X?¥Ü??     */
+     * æ‘§æ¯€ï¿½ï¿½ï¿½ï¿½???X?ï¿½ï¿½??     */
     UFUNCTION(BlueprintPure, Category = "AI Asset|Prompts")
     static FString GetCharacterPortraitPrompt(ERepublicEraStyle EraStyle, const FString& CharacterType) {};
 
     /**
-     * ????«Ø?X???¥Ü??
+     * æ‘§æ¯€ï¿½ï¿½?X???ï¿½ï¿½??
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset|Prompts")
     static FString GetBuildingPrompt(ERepublicEraStyle EraStyle, const FString& BuildingType) {};
 
     /**
-     * ????ªZ¾¹??¥Ü??     */
+     * æ‘§æ¯€ï¿½Zï¿½ï¿½??ï¿½ï¿½??     */
     UFUNCTION(BlueprintPure, Category = "AI Asset|Prompts")
     static FString GetWeaponPrompt(ERepublicEraStyle EraStyle, const FString& WeaponType) {};
 
     /**
-     * ???X??X?¥Ü??     */
+     * æ•…äº‹é‡è¦æ€§?ï¿½ï¿½??     */
     UFUNCTION(BlueprintPure, Category = "AI Asset|Prompts")
     static FString GetMusicPrompt(ERepublicEraStyle EraStyle, const FString& MusicMood) {};
 
     /**
-     * ??¯Á¸ê²£
+     * ??ï¿½ï¿½ï¿½ê²£
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Management")
     static TArray<FString> SearchAssets(
@@ -135,102 +135,102 @@ public:
     };
 
     /**
-     * ????¸ê²£«H®§
+     * æ‘§æ¯€ï¿½ê²£ï¿½Hï¿½ï¿½
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset|Management")
     static FString GetAssetInfo(const FString& AssetID) {};
 
     /**
-     * ¼Ğ??¸ê²£??¦¬X     */
+     * ï¿½ï¿½??ï¿½ê²£??ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Management")
-    static bool SetAssetFavorite(const FString& AssetID, bool bFavorite};
+    static bool SetAssetFavorite(const FString& AssetID, bool bFavorite);
 
     /**
-     * µû??¸ê²£
+     * ï¿½ï¿½??ï¿½ê²£
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Management")
-    static bool RateAsset(const FString& AssetID, float Rating};
+    static bool RateAsset(const FString& AssetID, float Rating);
 
     /**
-     * ¾É¥X¸ê²£
+     * ï¿½É¥Xï¿½ê²£
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Management")
     static bool ExportAsset(const FString& AssetID, const FString& ExportPath) {};
 
     /**
-     * ????¸ê²£²Î??
+     * æ‘§æ¯€ï¿½ê²£ï¿½ï¿½??
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset|Management")
     static TMap<EAssetCategory, int32> GetAssetStatistics();
 
     /**
-     * ???X?ÂË¸ê²£
+     * ???X?ï¿½Ë¸ê²£
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Management")
-    static TArray<FString> GetRecommendedAssets(EAssetCategory Category, int32 Count = 10};
+    static TArray<FString> GetRecommendedAssets(EAssetCategory Category, int32 Count = 10);
 
     /**
-     * ????¦sÀx¨Ï¥Î????
+     * æ‘§æ¯€ï¿½sï¿½xï¿½Ï¥ï¿½æ‘§æ¯€
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset|Management")
     static float GetStorageUsageMB();
 
     /**
-     * ²M?X???¸ê²£
+     * ï¿½M?X???ï¿½ê²£
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Management")
     static int32 CleanupInvalidAssets();
 
     /**
-     * ???X???¨¤¦â???X     */
+     * ç›®æ¨™æ•¸é‡ï¿½ï¿½ï¿½ï¿½???X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Batch Generation")
     static TArray<FString> GenerateCharacterPortraitSet(
         const TArray<FString>& CharacterDescriptions,
         ERepublicEraStyle EraStyle = ERepublicEraStyle::NanjingDecade
-    };
+    );
 
     /**
-     * ???X???«Ø?X???
+     * ç›®æ¨™æ•¸é‡ï¿½ï¿½?X???
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Batch Generation")
     static TArray<FString> GenerateBuildingSet(
         const TArray<FString>& BuildingDescriptions,
         ERepublicEraStyle EraStyle = ERepublicEraStyle::NanjingDecade
-    };
+    );
 
     /**
-     * ???X??X??X     */
+     * æ•…äº‹é¸é …X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Batch Generation")
     static TArray<FString> GenerateMusicSet(
         const TArray<FString>& MusicDescriptions,
         ERepublicEraStyle EraStyle = ERepublicEraStyle::NanjingDecade,
         float Duration = 30.0f
-    };
+    );
 
     /**
-     * ³]¸mStable Diffusionºİ??
+     * ï¿½]ï¿½mStable Diffusionï¿½ï¿½??
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Configuration")
     static void SetStableDiffusionEndpoint(const FString& Endpoint) {};
 
     /**
-     * ³]¸mAIVAºİ??
+     * ï¿½]ï¿½mAIVAï¿½ï¿½??
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|Configuration")
     static void SetAIVAEndpoint(const FString& Endpoint) {};
 
     /**
-     * ????¨t²Î??X     */
+     * æ‘§æ¯€ï¿½tï¿½ï¿½??X     */
     UFUNCTION(BlueprintPure, Category = "AI Asset|System")
     static bool IsAIAssetSystemInitialized();
 
     /**
-     * ???X??X??X?X     */
+     * æ•…äº‹é¸é …X?X     */
     UFUNCTION(BlueprintPure, Category = "AI Asset|System")
     static int32 GetGenerationQueueCount();
 
     /**
-     * ???X????X?¥ôX     */
+     * ç›®æ¨™æ•¸é‡?X?ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset|System")
     static void CancelAllGenerations();
 };

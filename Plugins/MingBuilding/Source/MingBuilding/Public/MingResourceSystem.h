@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingResourceSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingResourceSystemType : uint8
-{
+enum class EMingResourceSystemType: uint8 {
     Food UMETA(DisplayName = "Food"),
     Money UMETA(DisplayName = "Money"),
     Materials UMETA(DisplayName = "Materials"),
@@ -133,21 +132,21 @@ public:
 
     // Production Management
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void RegisterResourceProducer(UMingResourceProducer* Producer};
+    void RegisterResourceProducer(UMingResourceProducer* Producer);
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void UnregisterResourceProducer(UMingResourceProducer* Producer};
+    void UnregisterResourceProducer(UMingResourceProducer* Producer);
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void AddProduction(const FMingResourceProduction& Production};
+    void AddProduction(const FMingResourceProduction& Production);
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void RemoveProduction(EMingResourceType Type};
+    void RemoveProduction(EMingResourceType Type);
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourceChanged, EMingResourceType, ResourceType, int32, NewAmount};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnResourceInsufficient, EMingResourceType, ResourceType};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourceProduced, EMingResourceType, ResourceType, int32, Amount};
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnResourceChanged OnResourceChanged;
@@ -160,30 +159,30 @@ public:
 
     // Update
     UFUNCTION(BlueprintCallable, Category = "Update")
-    void UpdateProduction(float DeltaTime};
+    void UpdateProduction(float DeltaTime);
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetResourceName(EMingResourceType Type};
+    static FString GetResourceName(EMingResourceType Type);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FLinearColor GetResourceColor(EMingResourceType Type};
+    static FLinearColor GetResourceColor(EMingResourceType Type);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     TMap<EMingResourceType, int32> SerializeResources() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void DeserializeResources(const TMap<EMingResourceType, int32>& SavedResources};
+    void DeserializeResources(const TMap<EMingResourceType, int32>& SavedResources);
 
 protected:
     UPROPERTY()
     TWeakObjectPtr<class AMingRTSPlayerController> OwningPlayer;
 
-    void ProcessProduction(float DeltaTime};
+    void ProcessProduction(float DeltaTime);
     void ClampResourcesToCapacity();
-    void NotifyResourceChange(EMingResourceType Type, int32 NewAmount};
+    void NotifyResourceChange(EMingResourceType Type, int32 NewAmount);
 
     // Resource change buffer for batch processing
     TArray<EMingResourceType> PendingResourceChanges;
-};
+);
 

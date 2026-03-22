@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingSaveGameManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingSaveGameResult : uint8
-{
+enum class EMingSaveGameResult: uint8 {
     Success UMETA(DisplayName = "Success"),
     Failed_NoSpace UMETA(DisplayName = "Failed - No Space"),
     Failed_CorruptData UMETA(DisplayName = "Failed - Corrupt Data"),

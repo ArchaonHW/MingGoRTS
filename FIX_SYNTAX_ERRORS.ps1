@@ -1,4 +1,4 @@
-# PowerShell script to fix common syntax errors in header files
+﻿# PowerShell script to fix common syntax errors in header files
 
 # Function to fix unterminated character constants
 function Repair-UnterminatedCharacterConstants {

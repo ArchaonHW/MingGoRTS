@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -13,8 +13,7 @@ class UMingPersonalManager;
 
 // Test result enum
 UENUM(BlueprintType)
-enum class ENetworkTestResult : uint8
-{
+enum class ENetworkTestResult: uint8 {
     NotRun            UMETA(DisplayName = "Not Run"),
     Passed            UMETA(DisplayName = "Passed"),
     Failed            UMETA(DisplayName = "Failed"),
@@ -60,7 +59,8 @@ class MINGPERSONAL_API UMingNetworkSystemTest : public UObject
 public:
     UMingNetworkSystemTest();
 
-    // ???X???測??    UFUNCTION(BlueprintCallable, Category = "Network Test")
+    // 目標數量測??
+    UFUNCTION(BlueprintCallable, Category = "Network Test")
     bool RunAllTests();
 
     // 測試結??

@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // AI Content Rendering System
 
 #pragma once
@@ -8,8 +8,7 @@
 #include "MingAIContentRenderer.generated.h"
 
 UENUM(BlueprintType)
-enum class ERenderQuality : uint8
-{
+enum class ERenderQuality: uint8 {
     Low UMETA(DisplayName = "Low"),
     Medium UMETA(DisplayName = "Medium"),
     High UMETA(DisplayName = "High"),
@@ -18,8 +17,7 @@ enum class ERenderQuality : uint8
 };
 
 UENUM(BlueprintType)
-enum class ETimeOfDay : uint8
-{
+enum class ETimeOfDay: uint8 {
     Dawn UMETA(DisplayName = "Dawn"),
     Morning UMETA(DisplayName = "Morning"),
     Noon UMETA(DisplayName = "Noon"),
@@ -30,8 +28,7 @@ enum class ETimeOfDay : uint8
 };
 
 UENUM(BlueprintType)
-enum class EWeatherType : uint8
-{
+enum class EWeatherType: uint8 {
     Clear UMETA(DisplayName = "Clear"),
     Cloudy UMETA(DisplayName = "Cloudy"),
     Rainy UMETA(DisplayName = "Rainy"),

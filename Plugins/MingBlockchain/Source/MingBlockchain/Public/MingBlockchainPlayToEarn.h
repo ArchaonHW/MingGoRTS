@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -12,8 +12,7 @@
  * Play-to-earn event types
  */
 UENUM(BlueprintType)
-enum class EPlayToEarnEventType : uint8
-{
+enum class EPlayToEarnEventType: uint8 {
     BattleVictory      = 0,
     ResourceGather     = 1,
     BuildingComplete   = 2,
@@ -30,8 +29,7 @@ enum class EPlayToEarnEventType : uint8
  * Reward tier levels
  */
 UENUM(BlueprintType)
-enum class ERewardTier : uint8
-{
+enum class ERewardTier: uint8 {
     Bronze    = 0,
     Silver    = 1,
     Gold      = 2,
@@ -487,36 +485,8 @@ private:
     UPROPERTY()
     TArray<FLeaderboardEntry> Leaderboard;
 
-    /** Whether play-to-earn is enabled */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayToEarn|Configuration")
-    bool bPlayToEarnEnabled;
-
-    /** Global reward multiplier */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayToEarn|Configuration")
-    float GlobalRewardMultiplier;
-
-    /** Experience required per tier level */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayToEarn|Configuration")
-    float ExperiencePerLevel;
-
-    /** Daily bonus amount */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayToEarn|Configuration")
-    float DailyBonusAmount;
-
-    /** Referral bonus percentage */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayToEarn|Configuration")
-    float ReferralBonusPercentage;
-
-    /** Maximum events per player per day */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayToEarn|Configuration")
-    int32 MaxEventsPerDay;
-
     /** Time since last leaderboard update */
     float TimeSinceLastLeaderboardUpdate;
-
-    /** Leaderboard update interval */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayToEarn|Configuration")
-    float LeaderboardUpdateInterval;
 
     /** Initialize reward configurations */
     void InitializeRewardConfigs();

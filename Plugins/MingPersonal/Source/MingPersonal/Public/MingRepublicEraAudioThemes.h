@@ -1,37 +1,36 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRepublicEraAudioThemes.generated.h"
 
 UENUM(BlueprintType)
-enum class ERepublicEraTheme : uint8
-{
-    BattleTheme,        // X¥D?
-    PeacefulTheme,      // ?¥­¥D?
-    TensionTheme,       // ºò±i?
-    VictoryTheme,       // X¥D?
+enum class ERepublicEraTheme: uint8 {
+    BattleTheme,        // Xï¿½D?
+    PeacefulTheme,      // ?ï¿½ï¿½ï¿½D?
+    TensionTheme,       // ï¿½ï¿½i?
+    VictoryTheme,       // Xï¿½D?
     DefeatTheme,        // X
-    DiplomaticTheme,    // ¥~¥æ?
+    DiplomaticTheme,    // ï¿½~ï¿½ï¿½?
     EconomicTheme,      // X
     CulturalTheme,      // X
-    RevolutionaryTheme, // X¥D?
+    RevolutionaryTheme, // Xï¿½D?
     NostalgicTheme      // X
 };
 
 UENUM(BlueprintType)
-enum class EPersonalRepublicEraRegion : uint8
-{
-    Beijing,            // X
-    Shanghai,           // ¤W®ü
-    Nanjing,            // X
-    Guangzhou,          // X
-    Tianjin,            // ¤Ñ¬z
-    Wuhan,              // ªZº~
-    Chongqing,          // X
-    Xian,               // ?
-    Chengdu,            // X
-    Harbin              // X};
+enum class EPersonalRepublicEraRegion: uint8 {
+    Beijing UMETA(DisplayName = "Beijing"),
+    Shanghai UMETA(DisplayName = "Shanghai"),
+    Nanjing UMETA(DisplayName = "Nanjing"),
+    Guangzhou UMETA(DisplayName = "Guangzhou"),
+    Tianjin UMETA(DisplayName = "Tianjin"),
+    Wuhan UMETA(DisplayName = "Wuhan"),
+    Chongqing UMETA(DisplayName = "Chongqing"),
+    Xian UMETA(DisplayName = "Xian"),
+    Chengdu UMETA(DisplayName = "Chengdu"),
+    Harbin UMETA(DisplayName = "Harbin")
+};
 
 USTRUCT(BlueprintType)
 struct FRepublicEraAudioTheme
@@ -104,7 +103,7 @@ struct FRepublicEraRegionalAudio
 };
 
 /**
- * X¥DX * X¥DX
+ * Xï¿½DX * Xï¿½DX
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingRepublicEraAudioThemes : public UObject
@@ -114,10 +113,11 @@ class MINGPERSONAL_API UMingRepublicEraAudioThemes : public UObject
 public:
     UMingRepublicEraAudioThemes();
 
-    // X    UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
+    // X
+    UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void InitializeRepublicEraThemes();
 
-    // X¥DX
+    // Xï¿½DX
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void PlayTheme(ERepublicEraTheme ThemeType, float Intensity = 1.0f);
 
@@ -160,7 +160,7 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Republic Era Audio")
     FRepublicEraRegionalAudio GetRegionalAudio(EPersonalRepublicEraRegion Region) const;
 
-    // X³]?
+    // Xï¿½]?
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void SetMasterVolume(float Volume);
 
@@ -170,7 +170,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void SetRegionalVolume(float Volume);
 
-    // X    UFUNCTION(BlueprintPure, Category = "Republic Era Audio")
+    // X
+    UFUNCTION(BlueprintPure, Category = "Republic Era Audio")
     bool IsThemePlaying() const;
 
     UFUNCTION(BlueprintPure, Category = "Republic Era Audio")
@@ -191,7 +192,7 @@ protected:
     UPROPERTY()
     TMap<EPersonalRepublicEraRegion, FRepublicEraRegionalAudio> RegionalAudioMap;
 
-    // X³]?
+    // Xï¿½]?
     UPROPERTY()
     float MasterVolume = 1.0f;
 
@@ -201,7 +202,8 @@ protected:
     UPROPERTY()
     float RegionalVolume = 1.0f;
 
-    // X    UPROPERTY()
+    // X
+    UPROPERTY()
     ERepublicEraTheme CurrentTheme = ERepublicEraTheme::PeacefulTheme;
 
     UPROPERTY()
@@ -219,6 +221,7 @@ private:
     TArray<FString> MilitaryInstruments;
     TArray<FString> UrbanInstruments;
 
-    // X    void InitializeInstrumentLists();
+    // X
+    void InitializeInstrumentLists();
 );
 

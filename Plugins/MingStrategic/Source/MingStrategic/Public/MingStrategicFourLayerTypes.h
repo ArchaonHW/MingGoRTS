@@ -7,8 +7,7 @@
 
 // ?戲層X
 UENUM(BlueprintType)
-enum class EMingLayer : uint8
-{
+enum class EMingLayer: uint8 {
     None, UMETA(DisplayName = "None"),
     Personal, UMETA(DisplayName = "Personal"),
     Tactical, UMETA(DisplayName = "Tactical"),
@@ -18,8 +17,7 @@ enum class EMingLayer : uint8
 
 // 資?類X
 UENUM(BlueprintType)
-enum class EMingStrategicResourceType : uint8
-{
+enum class EMingStrategicResourceType: uint8 {
     None, UMETA(DisplayName = "None"),
     Gold, UMETA(DisplayName = "Gold"),
     Food, UMETA(DisplayName = "Food"),
@@ -170,8 +168,7 @@ struct MINGSTRATEGIC_API FMingTacticalState
 };
 
 // XUENUM(BlueprintType)
-enum class EMingTacticalUnitState : uint8
-{
+enum class EMingTacticalUnitState: uint8 {
     Idle, UMETA(DisplayName = "Idle"),
     Moving, UMETA(DisplayName = "Moving"),
     Attacking, UMETA(DisplayName = "Attacking"),

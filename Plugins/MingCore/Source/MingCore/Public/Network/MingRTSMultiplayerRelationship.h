@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -7,8 +7,7 @@
 #include "MingRTSMultiplayerRelationship.generated.h"
 
 UENUM(BlueprintType)
-enum class EMultiplayerRelationType : uint8
-{
+enum class EMultiplayerRelationType: uint8 {
 	Neutral					UMETA(DisplayName = "中立"),
 	Ally					UMETA(DisplayName = "盟友"),
 	Enemy					UMETA(DisplayName = "敵人"),
@@ -20,8 +19,7 @@ enum class EMultiplayerRelationType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EDiplomaticAction : uint8
-{
+enum class EDiplomaticAction: uint8 {
 	DeclareWar				UMETA(DisplayName = "宣戰"),
 	OfferPeace				UMETA(DisplayName = "求和"),
 	FormAlliance			UMETA(DisplayName = "結盟"),

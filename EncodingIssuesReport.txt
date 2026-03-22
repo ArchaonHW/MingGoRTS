@@ -1,0 +1,5992 @@
+================================================================================
+MingGoRTS 項目中文編碼問題完整報告
+================================================================================
+
+掃描文件總數: 959
+問題文件數: 181
+
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Events\MingHistoricalCharacter.h
+問題數: 121
+--------------------------------------------------------------------------------
+Line 56: * �H��??X */
+Line 117: // ???X(0-100)
+Line 121: // �x?X?�� (0-100)
+Line 125: // �~��摧毀 (0-100)
+Line 129: // �g?X?�� (0-100)
+Line 133: // 摧毀��� (0-100)
+Line 137: // �y?X(0-100)
+Line 141: // ��F摧毀 (0-100)
+Line 145: // ??��??�� (0-100)
+Line 149: // �t?X??? (0-100)
+Line 153: // �g?X??? (0-100)
+Line 157: // ���摧毀 (0-100)
+Line 161: // �u?X???(0-100)
+Line 165: // ??��摧毀 (0-100)
+Line 169: // ???X?�� (0-100)
+Line 173: // �g?X(0-1000)
+Line 177: // ��?? (1-10)
+Line 202: * �H��??X */
+Line 208: // 摧毀?X
+Line 228: // ??�_�w��X
+Line 232: // 摧毀�N???X(??
+Line 236: // �W���ϥ�摧毀
+Line 240: // 摧毀?X
+Line 264: // 摧毀��??
+Line 268: // 摧毀��HID
+Line 272: // 摧毀�j�� (0-100)
+Line 276: // ???X?�z
+Line 280: // ��?X???
+Line 284: // ??�_摧毀
+Line 288: // ��??����
+Line 292: // ??��?X??X
+Line 320: // ???X?��
+Line 324: // ???X?�z
+Line 328: // 摧毀����
+Line 332: // 摧毀��??
+Line 336: // 摧毀�v??
+Line 340: // ??�_??��
+Line 361: // �ƥ�ID
+Line 365: // ���??��
+Line 369: // ����??ID
+Line 373: // ??��ID
+Line 377: // ���摧毀
+Line 381: // ���摧毀
+Line 385: // ���摧毀
+Line 389: // ��ܥD??
+Line 393: // ���摧毀
+Line 397: // ���???X
+Line 422: // �H��ID
+Line 426: // �H���m??
+Line 430: // �H���r??
+Line 434: // �H��???X
+Line 438: // �H��??�z
+Line 442: // �H��摧毀
+Line 446: // ??�O
+Line 450: // ??�~/����
+Line 454: // X/���t
+Line 458: // 摧毀�~��
+Line 462: // ���`�~��
+Line 466: // �H��??X
+Line 470: // �H����??
+Line 474: // �H��??X
+Line 478: // �H��摧毀
+Line 482: // �H������
+Line 486: // ���v��??
+Line 490: // ???X?�N
+Line 494: // �v�T摧毀(0-1000)
+Line 498: // ???X(0-1000)
+Line 502: // ��摧毀(0-100)
+Line 506: // ??�d摧毀(0-100)
+Line 510: // ��?X?X(0-100)
+Line 514: // 摧毀��m
+Line 522: // ??�_???X?�HX
+Line 526: // ??�_???X
+Line 530: // ???X?��
+Line 567: // ??�_摧毀
+Line 571: // ��??��??
+Line 575: // ��??��HID
+Line 579: // ��?X???
+Line 583: // ��?X???
+Line 587: // ��??��?X?�z
+Line 591: // �v�T??�H??��X
+Line 595: // �v�T??�H摧毀??
+Line 599: // 目標數量??
+Line 603: // ��?X?��
+Line 630: * ???X?�H??��??��
+Line 674: * ???X?��H��
+Line 721: * 摧毀�H��??X     */
+Line 750: * 摧毀�H���v�T???X     */
+Line 755: * ???X?�ˤH��
+Line 761: // �w��摧毀���v�H��
+Line 765: // �H��ID??�H目標數量
+Line 769: // �H��摧毀��� - �`??�GTMap<TArray> ����XUPROPERTY
+Line 772: // ��ܨƥ�O??
+Line 776: // �H����??
+Line 780: // ??�_�w??�l??
+Line 783: // 故事重要性?��??�H??�w
+Line 786: // ??��??�v�H��
+Line 789: // ??�حx??�H��
+Line 792: // ??�ظg??�H��
+Line 795: // ??�ؾ�??�H��
+Line 798: // ??��??�R�H��
+Line 801: // ??�إ~��H��
+Line 804: // ??��摧毀�H��
+Line 807: // 摧毀�H����?X?��
+Line 810: // 摧毀���??��
+Line 813: // �p??��?X?��
+Line 816: // ??�s�H��摧毀
+Line 819: // 摧毀�H��摧毀摧毀
+Line 822: // �ˬd��??����
+Line 825: // ??�Τ�?X???
+Line 828: // 摧毀�H���v�TX
+Line 831: // 摧毀�H��摧毀
+Line 834: // ??�s�H��??X
+Line 837: // �O??��ܨƥ�
+Line 840: // 摧毀�H��??��??��
+Line 843: // ��??�H��??�m
+Line 846: // �O??�H��摧毀
+Line 849: // 摧毀�H��摧毀
+Line 852: // 摧毀�H��??�z
+Line 855: // 摧毀�H��摧毀摧毀
+Line 858: // 故事重要性?�z
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingCombatDamageManager.h
+問題數: 117
+--------------------------------------------------------------------------------
+Line 8: // ??�`��??
+Line 11: Kinetic,           // ??��??�` (�j?X?��??)
+Line 12: Explosive,         // ??��??�` (??�h�u�B��??)
+Line 13: Fire,              // ??�K??�`
+Line 14: Chemical,          // ??��??�`
+Line 15: Psychological,      // ��?X?�`
+Line 16: Environmental      // ???X?`
+Line 19: // ��??��??
+Line 23: Rifle,             // �B??
+Line 24: MachineGun,         // ��??
+Line 25: Artillery,         // ??�L
+Line 26: Mortar,            // ��?X
+Line 27: Grenade,           // ??�h??
+Line 30: Aircraft,          // ��??
+Line 31: NavalGun,          // ??��
+Line 32: Melee              // ��ԪZ��
+Line 35: // �ɵ���??
+Line 38: Ammunition,        // �u��
+Line 40: Food,              // ³??
+Line 42: Equipment,         // ��??
+Line 43: Reinforcements     // �W��摧毀
+Line 46: // ??�`�p?X?��
+Line 52: // ???X?�`
+Line 56: // ??�`��??
+Line 60: // ��??��??
+Line 64: // 摧毀�Z��
+Line 68: // ??��摧毀
+Line 72: // �@��X
+Line 76: // �@�Ҭ�??
+Line 80: // 摧毀��??
+Line 84: // ???X?��
+Line 88: // ??�`�I??�Y��
+Line 92: // �u����??�ץ�
+Line 96: // ??�μv�T摧毀
+Line 100: // �Ѯ�v�T摧毀
+Line 104: // �h��v�T摧毀
+Line 127: // �ɵ�摧毀
+Line 133: // �ɵ���??
+Line 141: // ??�j�eX
+Line 145: // ���ӳt??
+Line 149: // �ɵ�摧毀??
+Line 153: // �ɵ���??
+Line 157: // ??��??��?X
+Line 161: // �ɵ�??X
+Line 165: // ���??���HX
+Line 183: // ��Ԩ�?X???
+Line 189: // ��??ID
+Line 193: // ��?X?��
+Line 197: // ��??��??
+Line 201: // 摧毀��m
+Line 205: // 摧毀��m
+Line 209: // �ɵ�摧毀
+Line 213: // ��?X?��
+Line 217: // �@??��??
+Line 221: // ??�o摧毀
+Line 229: // ��?X?X
+Line 233: // �@?X???
+Line 237: // ���I����
+Line 259: // ??�`��??
+Line 265: // ???X?ID
+Line 269: // ??�m??ID
+Line 273: // ��?X?�`
+Line 277: // ???X?�`
+Line 281: // ??�`��??
+Line 285: // ??�_摧毀
+Line 289: // ??�_��z�@X
+Line 293: // ??�`摧毀
+Line 297: // ??�`�p??��??
+Line 301: // �ɵ���??
+Line 305: // ??��摧毀
+Line 309: // ??����m
+Line 330: // ??��??�`�ƥ�e??
+Line 348: // ???X?�ˮ`�t??
+Line 352: // �p?X?��??�`
+Line 356: // ��?X???�ɵ�
+Line 360: // ??�s摧毀�ɵ�
+Line 364: // 目標數量�ɵ�
+Line 368: // ����摧毀
+Line 372: // ??�ث�Ԩ�??
+Line 376: // ������Ԩ�??
+Line 380: // 摧毀��??�H��
+Line 384: // ??�s��??��m
+Line 388: // 摧毀�ɵ�摧毀
+Line 392: // �p??�ɵ�摧毀??
+Line 396: // ???X?�`��??
+Line 400: // �O?X?�`摧毀
+Line 404: // ���J??�`摧毀
+Line 408: // �M��摧毀�ˮ`��X
+Line 412: // �ƥ�e??
+Line 435: // 摧毀�ɵ�摧毀??- �`??�G摧毀TMap ����XUPROPERTY
+Line 438: // ��Ԩ�?X摧毀?
+Line 442: // ??�`���v�O??
+Line 446: // ��?X?�`??
+Line 450: // �u��??�`�ץ�??
+Line 454: // ??��??�`�ץ�??
+Line 458: // �Ѯ�??�`�ץ�??
+Line 462: // ??�_�w??�l??
+Line 467: // ���J??�]??�`??
+Line 470: // �p?X??X?�`
+Line 473: // �p??�@�Ҵ��
+Line 476: // �p??�Z���I??
+Line 479: // �p?X??X?�`
+Line 482: // �p?X?�μv�T
+Line 485: // �p??�Ѯ�v�T
+Line 488: // �p??�h��v�T
+Line 491: // �p??�ɵ���??
+Line 494: // ??�s???X?��
+Line 497: // 摧毀��Ԩ�??��??
+Line 500: // �ˬd�ɵ�摧毀
+Line 503: // �p??��??���I
+Line 506: // 摧毀�ɵ���??
+Line 509: // ��?X?�`�p??
+Line 512: // ��??�ɵ�摧毀
+Line 515: // �p?X?�`摧毀
+Line 518: // 摧毀�ɵ����摧毀
+Line 521: // ??�s��?X?X
+Line 524: // �p??�ɵ�摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingCombatAI.h
+問題數: 115
+--------------------------------------------------------------------------------
+Line 13: * AI�欰??X */
+Line 129: // �`�IID
+Line 133: // �`�I摧毀
+Line 137: // �`�I?X
+Line 141: // �����摧毀
+Line 145: // �v??
+Line 149: // 摧毀??
+Line 153: // �l摧毀
+Line 157: // 摧毀����
+Line 161: // 摧毀����
+Line 165: // ��??����
+Line 169: // ??�����?X
+Line 173: // �`�I?X
+Line 177: // ??�_??��
+Line 212: // ��??����
+Line 216: // ��??����
+Line 220: // ??�յ���
+Line 224: // X??����
+Line 228: // 摧毀��ĳ
+Line 232: // ���I����
+Line 236: // ��??�ѧO
+Line 240: // ??��??��
+Line 244: // ???X?��
+Line 248: // �m�H??
+Line 252: // ???X?��
+Line 276: // ��??ID
+Line 280: // ��??��??
+Line 284: // ��J摧毀
+Line 288: // ��X摧毀
+Line 292: // ??�yX
+Line 296: // ??�@X
+Line 300: // ��?X???
+Line 304: // ��??����
+Line 308: // ???X
+Line 312: // ???X
+Line 316: // ��?X?��
+Line 340: // �M?X???
+Line 348: // ???X
+Line 352: // ???X?��
+Line 360: // ��?X?��
+Line 364: // ???X?��
+Line 368: // ??��??��
+Line 372: // ??�s??��
+Line 376: // ��??�ϥ�X
+Line 380: // �p??��摧毀
+Line 384: // �O�Шϥ�X
+Line 406: * ��?X?��??���M?X??X */
+Line 416: * ???X?�԰�AI�t��
+Line 422: * ???X?��AI�t��
+Line 547: * ???X?�m�M??
+Line 559: * ???X?�h�M??
+Line 565: * ???X?�l�M??
+Line 577: * ???X?���M??
+Line 583: * ???X?�ըM??
+Line 649: // ??��???X?��
+Line 653: // �M??�`�I摧毀
+Line 657: // 目標數量��??
+Line 661: // ��?X???
+Line 665: // AI��?X???
+Line 669: // ??��摧毀
+Line 673: // AI??�m
+Line 677: // ???X?��???X
+Line 681: // �h���??�վ��ޥ�
+Line 685: // AIX??��??
+Line 689: // AI摧毀��??
+Line 693: // AI��??��??
+Line 697: // ??�_�w??�l??
+Line 700: // Tick??�s
+Line 703: // 摧毀�M摧毀
+Line 706: // 摧毀�欰??
+Line 709: // ����M??����
+Line 712: // �p??�M??�v??
+Line 715: // ???X?�ΨM??
+Line 718: // 摧毀�M??�`??
+Line 721: // ??�s�M??�`�I��??
+Line 724: // �p?X??X?��
+Line 727: // �p??��??����
+Line 730: // �p??��??����
+Line 733: // �p?X?�յ���
+Line 736: // �p?X??����
+Line 739: // 目標數量��ĳ
+Line 742: // ??��??���??
+Line 745: // 摧毀�j??��??
+Line 748: // ???X??��??
+Line 751: // ???X?��X摧毀
+Line 754: // 目標數量��??
+Line 757: // 摧毀��??�����??
+Line 760: // 摧毀�M??���??
+Line 763: // 摧毀�欰���??
+Line 766: // 目標數量??��??
+Line 769: // 摧毀��??��??
+Line 772: // ???X?�Ǿ�??
+Line 775: // 摧毀�s??��??
+Line 778: // 摧毀�V??��??
+Line 781: // ??�s��?X???
+Line 784: // �p??��?X???
+Line 787: // 摧毀AI??��
+Line 790: // �վ�M??�v??
+Line 793: // 目標數量��??
+Line 796: // ��?X?�a�欰
+Line 799: // ??��??�a摧毀
+Line 802: // ???X?���
+Line 805: // ����AI��{
+Line 808: // ??�s??��摧毀
+Line 811: // �O??AI�ƥ�
+Line 817: // ��??AI??�m
+Line 820: // 摧毀�M?X?�z
+Line 823: // 故事重要性?�z
+Line 826: // 目標數量?�z
+Line 829: // 摧毀��?X?�z
+Line 832: // �p??��摧毀
+Line 835: // �޲z�O�Шϥ�
+Line 838: // �u�ƭp��귽
+Line 841: // �B�zAI���~
+Line 844: // ��_AI���A
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingFormationManager.h
+問題數: 113
+--------------------------------------------------------------------------------
+Line 8: // �s?X?�O��??
+Line 11: CreateFormation,    // ??�ؽs??
+Line 12: ChangeFormation,     // �ܧ�s??
+Line 13: DisbandFormation,   // 摧毀�s??
+Line 14: MergeFormations,     // ??�ֽs??
+Line 15: SplitFormation,     // 摧毀�s??
+Line 16: RotateFormation,     // 摧毀�s??
+Line 17: ScaleFormation,      // �Y��s??
+Line 18: MirrorFormation     // 摧毀�s??
+Line 21: // �s?X?XUENUM(BlueprintType)
+Line 23: Forming,           // �s摧毀
+Line 24: Active,            // ��??
+Line 25: Transitioning,      // ��摧毀
+Line 26: Disrupted,         // �Q摧毀
+Line 27: Disbanded          // �w��X};
+Line 29: // �s?X摧毀?UENUM(BlueprintType)
+Line 31: Low,               // �C�u摧毀
+Line 32: Normal,            // ??�q�u摧毀
+Line 33: High,              // ���u摧毀
+Line 34: Critical           // ??��摧毀??};
+Line 36: // �s?X???����
+Line 41: Flanker,           // ??�l
+Line 42: Support,           // ??��
+Line 43: Rearguard,         // ��??
+Line 44: Reserve,           // ???X
+Line 45: Artillery,         // ??�L
+Line 47: Medic              // ???X};
+Line 49: // �s?X???
+Line 55: // �s??ID
+Line 59: // �s?X?��
+Line 63: // �s??��??
+Line 67: // �s?X?X
+Line 71: // �s?X摧毀?
+Line 75: // �s??��摧毀
+Line 79: // �s?X???
+Line 83: // �s??�W��
+Line 87: // ???X?��
+Line 91: // 摧毀����摧毀
+Line 95: // �s??��m摧毀
+Line 99: // �s?X???
+Line 103: // �s??��??
+Line 107: // ??��摧毀
+Line 111: // ??���???X
+Line 115: // �s?X?���xID
+Line 119: // ??��??���xID
+Line 123: // �s??�g?X
+Line 127: // �s??�h��
+Line 131: // �s??��??
+Line 135: // ??�_???X?�sX
+Line 139: // ??�_??��??�sX
+Line 170: // �s?X?�O摧毀
+Line 176: // ??�OID
+Line 180: // ??�O��??
+Line 184: // 摧毀�s??ID
+Line 188: // ??�O??��
+Line 192: // ??�O摧毀??
+Line 200: // ??�O??�z
+Line 216: // �s??�ҪO
+Line 222: // �ҪOID
+Line 226: // �ҪO??��
+Line 230: // �ҪO??�z
+Line 234: // �s??��??
+Line 238: // ??��摧毀��??
+Line 242: // ??�p����X
+Line 246: // ??�j����X
+Line 250: // ��?X???
+Line 254: // ��??�`��
+Line 258: // ��??�e��
+Line 262: // �ҪO摧毀
+Line 266: // �ҪO�ϥα���
+Line 270: // ??�_??��??�sX
+Line 274: // ���v??��
+Line 297: // �s??��??�ƥ�e??
+Line 316: // ???X?�s??��??��
+Line 320: // ??�ؽs??
+Line 324: // 摧毀�s??
+Line 328: // �ܧ�s??��??
+Line 332: // �K?X??X?�sX
+Line 336: // �q�s??��??��??
+Line 340: // �]�m�s?X?��??
+Line 344: // 摧毀�s??
+Line 348: // �Y��s??
+Line 352: // ��??�s??
+Line 356: // 摧毀�s??�H��
+Line 360: // 摧毀�s?X?��
+Line 364: // 摧毀�s??�ҪO
+Line 368: // ??�νs??�ҪO
+Line 372: // 摧毀�s??��??
+Line 376: // �p??�s?X???
+Line 380: // �ˬd�s??����X
+Line 384: // �״_�s??
+Line 388: // �O??�s?X???
+Line 392: // ���J�s?X???
+Line 396: // �M��摧毀�sX
+Line 400: // �ƥ�e??
+Line 420: // �s?X摧毀?
+Line 424: // �s??�ҪO摧毀??
+Line 428: // �s?X?�O摧毀
+Line 432: // 摧毀��??�s??
+Line 436: // ??�_�w??�l??
+Line 441: // ���J??�]�s??�ҪO
+Line 444: // 摧毀�s??��m
+Line 447: // �p??�s?X???
+Line 450: // �p??�s??��??
+Line 453: // ??�s�s?X?X
+Line 456: // 摧毀�s?X?�O
+Line 459: // ��??�s?X???
+Line 462: // ??�νs?X??X?��??
+Line 465: // �����s?X???�q��??
+Line 468: // 摧毀�״_�s??
+Line 471: // �p?X?�νs???X
+Line 474: // �ˬd�s??��??
+Line 477: // 摧毀�s??��??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSProductionUI.h
+問題數: 108
+--------------------------------------------------------------------------------
+Line 20: // �]�m??���u��X
+Line 24: // ??�s??��??X
+Line 28: // ??�s??��??��
+Line 32: // �]�m??��??��
+Line 36: // �]�m??�_�Q��??
+Line 40: // ???X?���uID
+Line 44: // ???X?�_�Q��??
+Line 49: // UI�ե�ޥ�
+Line 89: // ???X?���u��X
+Line 93: // ???X?��
+Line 97: // ??�_�Q��??
+Line 101: // ???X?UI
+Line 104: // ??�sUI���
+Line 108: // ???X??X???
+Line 112: // ???X??X???
+Line 116: // ???X??X???
+Line 120: // ???X??X???
+Line 124: // ???X??X??X
+Line 128: // ???X????X
+Line 131: // ???X???��?X
+Line 134: // ???X??X?��??
+Line 138: // �j??�ƥ�
+Line 141: // ?X�ƥ�
+Line 156: // �]�m??��????
+Line 160: // �]�m??�_???X
+Line 164: // �]�m??�_�Q��??
+Line 168: // ???X?��ID
+Line 173: // UI�ե�ޥ�
+Line 204: // ???X?��
+Line 208: // ??�_???X
+Line 212: // ??�_�Q��??
+Line 216: // ???X?UI
+Line 219: // ??�sUI���
+Line 223: // ???X?��????
+Line 227: // ???X?�J???X???
+Line 231: // ??�ظ�?X?��X
+Line 234: // ???X???����??
+Line 238: // �j??�ƥ�
+Line 241: // ?X�ƥ�
+Line 256: // �]�m??��???X???
+Line 260: // ??�s???X?��
+Line 264: // ����???X?��
+Line 268: // �M��????
+Line 272: // �]�m�`���??
+Line 276: // �]�m???X???
+Line 281: // UI�ե�ޥ�
+Line 300: // ???X???
+Line 304: // ???X?��Widget????
+Line 308: // ???X?UI
+Line 311: // ??��???X?��Widget
+Line 315: // ????�M��????
+Line 319: // ????�`���??�ܧ�
+Line 323: // ???X??X???�ܧ�
+Line 327: // ??�s????�p��
+Line 331: // �j??�ƥ�
+Line 334: // ?X�ƥ�
+Line 349: // �]�m??���t�Τޥ�
+Line 353: // ���????���O???X
+Line 357: // ���?????X
+Line 361: // ??��??��??
+Line 365: // �M��??��??X
+Line 369: // ??��???X???
+Line 373: // ���??����??
+Line 377: // �]�m??�oX
+Line 381: // �M��??�oX
+Line 385: // ???X??X?��???X???
+Line 389: // ???X???���???X
+Line 394: // UI�ե�ޥ�
+Line 422: // ??���t�Τޥ�
+Line 426: // ???X?��???X???ID
+Line 430: // ????���???X
+Line 434: // ???X?�oX
+Line 441: // ??���uWidget????
+Line 445: // ??��Widget????
+Line 449: // ???X?UI
+Line 452: // ??��??���uWidget
+Line 456: // ??��??��Widget
+Line 460: // ???X?���u?X
+Line 464: // ???X?���I??
+Line 468: // ???X?��????
+Line 472: // ???X?��??��
+Line 476: // ???X?����??
+Line 480: // ???X?����??
+Line 484: // ??�s??���u????
+Line 488: // ??�s??��??��
+Line 492: // ??�����O����
+Line 495: // ??��????��??�o��
+Line 498: // ??��??�oX
+Line 501: // ??�s��??�H��
+Line 505: // �j?X?���t�Ψƥ�
+Line 508: // ?X?���t�Ψƥ�
+Line 511: // �M?X???Widget
+Line 514: // ????���O�C��
+Line 529: // �]�m??����?X???
+Line 533: // ��ܸԲӲ�??
+Line 537: // �ɥX��?X???
+Line 542: // UI�ե�ޥ�
+Line 573: // ????��??
+Line 577: // ???X?UI
+Line 580: // ??�ز�?X?��
+Line 584: // ??�ظ�?X?��??��
+Line 588: // ??�����O??��??��
+Line 592: // ???X?�έp��X
+Line 595: // �p?X??X
+Line 598: // ????�ɥX????
+Line 602: // ???X??X???
+Line 607: // �j??�ƥ�
+Line 610: // ?X�ƥ�
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingAICombatManager.h
+問題數: 108
+--------------------------------------------------------------------------------
+Line 9: // AI�欰��??
+Line 12: Aggressive,         // ???X
+Line 13: Defensive,          // ??�mX
+Line 14: Balanced,           // ����X
+Line 15: Cautious,           // ��?X
+Line 16: Reckless,           // �|��X
+Line 17: Tactical,           // ???X
+Line 18: Adaptive            // ??�A摧毀
+Line 21: // AI�M??�v??
+Line 24: Critical,           // ??��M??
+Line 25: High,               // ���u摧毀
+Line 26: Medium,             // ��?X摧毀?
+Line 27: Low,                // �C�u摧毀
+Line 28: Minimal            // ??�C�u摧毀
+Line 34: DestroyEnemy,        // ��?X?�H
+Line 35: CaptureObjective,    // ��?X???
+Line 36: DefendPosition,     // 摧毀��m
+Line 37: FlankEnemy,         // ??�l摧毀
+Line 38: SupportAllies,       // ??��摧毀
+Line 39: Retreat,             // ??�h
+Line 41: Ambush,             // ��??
+Line 42: HoldGround           // ???X??
+Line 45: // AI��??����
+Line 51: // ��?X???ID
+Line 55: // ��??��??
+Line 59: // ��??��??
+Line 63: // ��??�Z��
+Line 67: // ��?X???
+Line 71: // ��?X??X???
+Line 75: // ��?X摧毀?
+Line 91: // AI摧毀�M??
+Line 97: // �M??ID
+Line 101: // �M??��??
+Line 105: // �M?X?�z
+Line 113: // 摧毀��m
+Line 117: // �M??�v??
+Line 125: // �M?X?��
+Line 129: // 摧毀��??
+Line 133: // �M??�H摧毀
+Line 137: // �M?X??X
+Line 157: // AI???X?XUSTRUCT(BlueprintType)
+Line 166: // 摧毀�欰
+Line 174: // 目標數量��m
+Line 178: // ��??����
+Line 186: // �g?X
+Line 190: // ��?X???
+Line 198: // �M?X?�o摧毀
+Line 202: // ??��M��?X
+Line 232: // ??��??X
+Line 236: // ??��摧毀
+Line 240: // ??��摧毀
+Line 244: // ??��摧毀
+Line 248: // ��?X???
+Line 252: // ??��??��
+Line 256: // 目標數量��??
+Line 260: // 摧毀��ĳ
+Line 283: // AI??���ƥ�e??
+Line 300: // ???X?AI??���t��
+Line 304: // ����??AI摧毀
+Line 308: // ����AI摧毀
+Line 312: // ??�sAI???X?X
+Line 316: // ???X?����X
+Line 320: // �����??
+Line 324: // �s?X???�M??
+Line 328: // 摧毀AI�M??
+Line 332: // �]�mAI�欰��??
+Line 336: // 摧毀AI???X?X
+Line 340: // 摧毀AI�M??���v
+Line 344: // �p??AI??�൥??
+Line 348: // ��?X?�a�欰
+Line 352: // 摧毀AI����
+Line 356: // 摧毀AI��??
+Line 360: // �O??AI摧毀
+Line 364: // ���JAI摧毀
+Line 368: // �M��摧毀AI摧毀
+Line 372: // ========== ��?XAI 摧毀 (Parallel Processing) ==========
+Line 375: * ��?X??X?XAI 摧毀�M?? (ParallelFor)
+Line 376: * ??��X100+ ???X?�j�W��??��
+Line 382: * 摧毀�����?? (��?X??X
+Line 388: * 故事選項?�M?? (��?X??X
+Line 394: * �]�m��?X??X???(�W??����故事重要性?��??�æ�??)
+Line 405: // �ƥ�e??
+Line 422: // AI目標數量��??�w
+Line 426: // AI�M??���v - �`??�GTMap<TArray> ����XUPROPERTY
+Line 429: // ??�a�欰��?X???
+Line 433: // AI�����ҪO - �`??�GTMap<TArray> ����XUPROPERTY
+Line 436: // ???X?��摧毀
+Line 440: // ??�_�w??�l??
+Line 444: // ��?X?�]??
+Line 445: int32 ParallelThreshold = 50;  // �W?? 50 ??���?X?�æ�??
+Line 449: // 摧毀��?X???�M??��??��?? (��?X??X?��X
+Line 454: // ���J??�]AI����
+Line 457: // �p??��??��??
+Line 460: // ����???X?��
+Line 463: // ???X?�ΨM??
+Line 466: // ??�sAI��??
+Line 469: // 目標數量��ĳ
+Line 472: // ??��??�a�欰
+Line 475: // �p??�M??�H摧毀
+Line 478: // ��??AI�M??
+Line 481: // ??�sAI???X
+Line 484: // 摧毀AI�M?X?�o
+Line 487: // �p?X??X???��??
+Line 490: // �p?X?�mX??
+Line 493: // ???X?��??��
+Line 496: // ??��??�H��??
+Line 499: // �p?X???��??
+Line 502: // ����M??��??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingItemManager.h
+問題數: 103
+--------------------------------------------------------------------------------
+Line 8: // 摧毀稀??度
+Line 12: Uncommon,          // 不常??
+Line 14: Epic,              // ??詩
+Line 23: Accessory,         // ??飾
+Line 24: Consumable,        // 消耗??
+Line 29: Cosmetic           // 外?X???
+Line 32: // 裝??槽??
+Line 35: MainHand,          // 主??
+Line 37: Head,              // ??部
+Line 38: Body,              // 身??
+Line 39: Hands,             // ??部
+Line 40: Legs,              // ??部
+Line 41: Feet,              // ??部
+Line 42: Neck,              // ??部
+Line 50: // 摧毀強??類??
+Line 53: None,               // ??強X
+Line 54: Sharp,             // ??利
+Line 56: Powerful,          // 威??
+Line 58: Magical,           // 魔??
+Line 59: Blessed,           // 祝??
+Line 60: Cursed             // 詛??
+Line 73: // ???X?稱
+Line 85: // 摧毀稀??度
+Line 89: // 摧毀等??
+Line 109: // 摧毀屬??
+Line 113: // 裝??槽??
+Line 117: // ??否已完成
+Line 121: // 目標數量??
+Line 125: // ??大耐摧毀
+Line 129: // 摧毀強??類??
+Line 133: // 強??等??
+Line 137: // 目標數量路??
+Line 141: // 摧毀3D模??路??
+Line 145: // ???X?質路??
+Line 149: // 目標數量路??
+Line 153: // 目標數量路??
+Line 157: // ??否??唯一摧毀
+Line 173: // 摧毀來??
+Line 209: // 裝?X???
+Line 215: // 裝??ID
+Line 219: // 裝?X?稱
+Line 223: // 裝?X?述
+Line 227: // 裝??類??
+Line 231: // 裝??稀??度
+Line 235: // 裝??等??
+Line 239: // 裝??屬??
+Line 243: // 裝??槽??
+Line 247: // ??否已完成
+Line 251: // 裝?X摧毀?
+Line 255: // ??大耐摧毀
+Line 259: // 裝??強??類??
+Line 263: // 強??等??
+Line 267: // 裝?X???路??
+Line 271: // 裝??3D模??路??
+Line 275: // 裝?X?質路??
+Line 279: // 裝?X???路??
+Line 283: // 裝?X???路??
+Line 287: // 裝?X???
+Line 291: // 裝?X??X???
+Line 295: // 裝??來??
+Line 325: // 故事重要性?方
+Line 331: // ??方ID
+Line 335: // ??方??稱
+Line 339: // ??方??述
+Line 347: // 摧毀結??
+Line 359: // ??方稀??度
+Line 363: // ??方??求?X
+Line 367: // ??方??求摧毀
+Line 371: // ??方摧毀路??
+Line 391: // 摧毀管??事件委??
+Line 410: // ???X?物??系??
+Line 414: // 添?X??X??X
+Line 418: // 從?X?移??物X
+Line 422: // 裝?X???
+Line 434: // 摧毀已完成?物X
+Line 438: // 目標數量槽?X???
+Line 442: // 檢查??否??以裝??
+Line 446: // 強?X???
+Line 450: // 修?X???
+Line 458: // ??解摧毀
+Line 470: // 摧毀裝??信息
+Line 474: // ???X?用??方
+Line 486: // 目標數量容??
+Line 498: // 保?X??X???
+Line 506: // 清除摧毀物??數X
+Line 510: // 事件委??
+Line 533: // 目標數量??
+Line 537: // 裝?X摧毀?
+Line 545: // 已完成?物X
+Line 549: // ???X?方摧毀??
+Line 553: // 摧毀容??
+Line 561: // ??否已??始??
+Line 566: // 載入??設摧毀
+Line 590: // ??新摧毀容??使用
+Line 593: // 檢查摧毀空??
+Line 602: // 目標數量稀??度顏色
+Line 605: // 目標數量類?X???
+Line 608: // ??新目標數量??
+Line 611: // 檢查???X?否摧毀
+Line 620: // ??併目標數量
+Line 623: // ??離目標數量
+Line 635: // 目標數量統??
+Line 638: // 摧毀稀??度統??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingMultiUnitCoordinator.h
+問題數: 98
+--------------------------------------------------------------------------------
+Line 106: // ???X?稱
+Line 126: // 摧毀等??
+Line 130: // 目標數量??
+Line 134: // ???X?X
+Line 142: // 摧毀屬??
+Line 146: // ??建摧毀
+Line 150: // ??後更???X
+Line 154: // ??否活??
+Line 158: // ??否??解X
+Line 186: // ??令ID
+Line 190: // ??令??稱
+Line 194: // ??令類??
+Line 198: // ??令??述
+Line 210: // ??令???X
+Line 214: // ??步類??
+Line 218: // ??信??議
+Line 222: // ??令??段
+Line 226: // ???X?段
+Line 230: // ??令??數
+Line 234: // 目標數量??
+Line 238: // ??步??
+Line 246: // ??令??X
+Line 250: // ??建摧毀
+Line 258: // 完?X???
+Line 262: // ??否已執??
+Line 266: // ??否已完成
+Line 270: // ??否已摧毀
+Line 305: // ??調ID
+Line 309: // ??令ID
+Line 317: // 結?X?述
+Line 333: // 失?X???
+Line 337: // ??調摧毀
+Line 341: // ??調統??
+Line 345: // ??調??數
+Line 349: // ??步精度
+Line 353: // ??信質??
+Line 357: // ??誤信息
+Line 436: * 添?X??X摧毀?     */
+Line 451: * ???X?調??令
+Line 457: * ???X?調摧毀
+Line 467: * ???X?調防禦
+Line 477: * ???X?調移??
+Line 487: * ???X?調??退
+Line 497: * ???X?調??援
+Line 507: * ???X?調伏??
+Line 517: * ???X?調??翼摧毀
+Line 527: * ???X?調摧毀
+Line 537: * ???X?調突破
+Line 547: * ???X?調??令
+Line 553: * ???X?調??令
+Line 570: * 檢查??調??X     */
+Line 575: * ???X?調統??
+Line 581: * ???X?調??能摧毀
+Line 587: * ??步???X?X     */
+Line 608: * ???X?信X??
+Line 614: * ???X?信質??
+Line 619: // ========== 並?X?單位摧毀(Parallel Processing) ==========
+Line 640: * 摧毀上次並?X??X???
+Line 650: // ??調??令摧毀
+Line 654: // ??信X摧毀?? - 注??：摧毀TMap 不支XUPROPERTY
+Line 657: // ??調統??
+Line 661: // ??能摧毀
+Line 665: // 時間限制???X
+Line 669: // ??否已??始??
+Line 672: // 並?X??X??X??X
+Line 675: // 摧毀緒?X???
+Line 678: // Tick??新
+Line 681: // ???X?調??令
+Line 684: // ???X?步摧毀
+Line 696: // ???X?段摧毀
+Line 702: // 摧毀事件驅?X???
+Line 705: // 檢查??步條件
+Line 708: // 計?X?步精度
+Line 711: // 計?X?信質??
+Line 714: // ??新???X?X
+Line 717: // ??新??調統??
+Line 720: // ??新??能摧毀
+Line 723: // 驗?X??X?置
+Line 726: // 驗?X?調??令
+Line 729: // 故事重要性?述
+Line 732: // ???X?令??述
+Line 735: // ???X?步類?X?述
+Line 738: // ???X?信??議??述
+Line 741: // 記?X?調事件
+Line 744: // ???X?調摧毀
+Line 747: // 計?X?調??數
+Line 750: // ???X?信延遲
+Line 753: // ???X?信干擾
+Line 756: // ???X?信摧毀
+Line 759: // ???X?佳??調?X
+Line 762: // ???X?佳通信??議
+Line 765: // 計?X??X?調摧毀
+Line 768: // 計?X??X?調摧毀
+Line 771: // ???X?調失敗
+Line 774: // ???X?調摧毀
+Line 777: // 清??已完成??X?調
+Line 780: // ??份??調摧毀
+Line 783: // ??復??調摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Events\MingDecisionConsequenceCalculator.h
+問題數: 98
+--------------------------------------------------------------------------------
+Line 81: // ?�數?�稱
+Line 85: // ?�數X
+Line 89: // ?�數類�?
+Line 93: // ?�否必�?
+Line 97: // 默�X
+Line 101: // ?�述
+Line 123: // 後�?ID
+Line 127: // 後�X�稱
+Line 131: // 後�X�述
+Line 135: // 後�?類�?
+Line 139: // 影響範�?
+Line 143: // ?��?程度
+Line 147: // ?��X��?
+Line 151: // 影響類�?
+Line 155: // 後�X�數
+Line 163: // 後�X��?
+Line 167: // 後�?標籤
+Line 171: // ?��?決�?ID
+Line 175: // ?��?人物ID
+Line 179: // ?��?事件ID
+Line 183: // ?��?概�? (0-1)
+Line 187: // 延�X��? (�?
+Line 191: // ?�卻?��? (�?
+Line 195: // ?�否已觸X
+Line 199: // 觸發?��?
+Line 203: // ?�否?�逆�?
+Line 207: // ?�逆�?條件
+Line 238: // ?�否?��?計�?
+Line 242: // 後�?ID
+Line 246: // 計�X��?
+Line 250: // 計�X��?後�?
+Line 254: // 影響?��X��X
+Line 258: // 影響?�人X
+Line 262: // 影響?��?�?
+Line 266: // 影響?��?�?
+Line 270: // 影響?�建�?
+Line 274: // 影響?�單�?
+Line 278: // 總�?影響?�數
+Line 282: // �?��影響?�數
+Line 286: // 負面影響?�數
+Line 290: // 計�?詳�?
+Line 294: // ?�誤信息
+Line 317: // 決�?ID
+Line 321: // 決�X��?
+Line 325: // 決�X��?
+Line 329: // 決�X�ID
+Line 333: // 決�?類�?
+Line 337: // 決�X��?
+Line 341: // ?��X�戲?�X
+Line 345: // ?��?人物?�X
+Line 349: // ?��?事件?�X
+Line 353: // 資�X�X
+Line 357: // 建�X�X
+Line 361: // ?��X�X
+Line 365: // 民�X��?
+Line 369: // ?��?年份
+Line 373: // ?�家X
+Line 377: // X��等�?
+Line 524: // 已註?��?決�?後�?
+Line 528: // 後�?ID?��X��X��?
+Line 532: // 後�?統�?
+Line 536: // ?�否已�?始�?
+Line 539: // ?��X��X�歷?�決策�X�庫
+Line 542: // ?�建?�治決�?後�?
+Line 545: // ?�建軍�?決�?後�?
+Line 548: // ?�建經�?決�?後�?
+Line 551: // ?�建社�?決�?後�?
+Line 554: // ?�建?��?決�?後�?
+Line 557: // ?�建外交決�?後�?
+Line 560: // 計�X��?後�?
+Line 563: // 計�?延�?後�?
+Line 566: // 計�?累�?後�?
+Line 569: // 計�?條件後�?
+Line 572: // 計�X��?後�?
+Line 575: // 計�X��?後�?
+Line 578: // 計�?永�?後�?
+Line 581: // 計�X��?後�?
+Line 584: // 計�?後�?影響?�數
+Line 587: // 計�?總�?影響?�數
+Line 590: // 檢查後�?條件
+Line 593: // ?�用後�X��X��X
+Line 596: // ?�用後�X�人X
+Line 599: // ?�用後�X��?�?
+Line 602: // ?�用後�X��?�?
+Line 605: // ?�用後�X�建�?
+Line 608: // ?�用後�X�單�?
+Line 611: // ?�新後�?統�?
+Line 614: // ?��?後�X�述
+Line 617: // 驗�?後�X�置
+Line 620: // 記�?後�X��?
+Line 623: // ?��?後�X��?
+Line 626: // �X後�X�數
+Line 629: // 計�?後�?概�?
+Line 632: // 計�?後�?延�?
+Line 635: // 計�?後�X��X��?
+Line 638: // 檢查後�X�否?�逆�?
+Line 641: // ?��?後�X��?�?
+Line 644: // ?��?後�?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingFogOfWarManager.h
+問題數: 96
+--------------------------------------------------------------------------------
+Line 8: // ��??��??
+Line 11: Normal,            // 摧毀��??
+Line 12: Enhanced,          // �W�j��??
+Line 13: NightVision,        // �]??
+Line 14: Thermal,           // ???X
+Line 15: Satellite,         // ��??��??
+Line 16: Aerial             // �Ť�摧毀
+Line 19: // �g����??
+Line 22: Clear,             // �M��
+Line 23: Light,             // ����
+Line 24: Medium,            // ����
+Line 25: Heavy,             // �@��
+Line 26: Complete           // �����g��
+Line 29: // ??����??
+Line 32: Open,              // ???X?��
+Line 33: Forest,            // ��??
+Line 34: Mountain,          // �s�a
+Line 36: Desert,            // �F??
+Line 37: Water,             // ��??
+Line 38: Swamp,             // �h�A
+Line 39: Snow               // ??�a
+Line 42: // ???X?XUENUM(BlueprintType)
+Line 44: Idle,              // ��??
+Line 45: Scouting,          // 摧毀??
+Line 47: Reporting,          // 摧毀??
+Line 48: Hidden,            // ??��
+Line 49: Detected           // �Q�oX};
+Line 51: // ��?X???
+Line 61: // ��?X???
+Line 65: // ��??��??
+Line 69: // ��??����
+Line 73: // ��?X??X???
+Line 77: // ??�_摧毀��?X
+Line 81: // ��?X?�s摧毀
+Line 85: // 故事重要性?��
+Line 89: // �w����?X
+Line 93: // ??���???X
+Line 112: // �g�����摧毀
+Line 118: // ���y??
+Line 122: // �g����??
+Line 126: // ??�_�Q����??
+Line 138: // ??����??
+Line 142: // ??��??��X
+Line 146: // ��?X?�B摧毀
+Line 150: // ??��i��?X
+Line 186: // 摧毀��m
+Line 190: // 摧毀�d??
+Line 194: // ??�{??��??
+Line 198: // ??�{??�ؿv��
+Line 202: // ??�ΫH��
+Line 206: // ��??����
+Line 210: // 摧毀�Բ�??
+Line 234: // ??���g���ƥ�e??
+Line 252: // ???X?��??�g??�t??
+Line 256: // ��?X???��??
+Line 260: // ??�s摧毀��??
+Line 264: // 目標數量��??
+Line 272: // �ˬd故事重要性
+Line 276: // ??�s??���g��
+Line 280: // 摧毀�g����??
+Line 284: // �]�m??����??
+Line 288: // �K??��?X?�BX
+Line 292: // 目標數量��??
+Line 300: // �]�m???X?X
+Line 304: // �p??��??�d??
+Line 308: // 摧毀�g�����
+Line 312: // �O??�g��摧毀
+Line 316: // ���J�g��摧毀
+Line 320: // �M��摧毀�g??��X
+Line 324: // �ƥ�e??
+Line 347: // 摧毀��?X摧毀?
+Line 351: // �g�����
+Line 355: // ??��摧毀
+Line 359: // ��?X?�B??��X
+Line 367: // 摧毀��?X???
+Line 371: // ���]�m
+Line 381: // ??�_�w??�l??
+Line 386: // ???X?�g??��X
+Line 389: // ??�s摧毀��??
+Line 392: // �p??��?X???���
+Line 395: // ??�s�g�����
+Line 398: // �ˬd??��??��
+Line 401: // �ˬd��?X?�BX
+Line 404: // �p??��摧毀
+Line 407: // 目標數量��??
+Line 413: // ??�s??�ΫH��
+Line 416: // �@??�y??��?X?��??�y??
+Line 419: // ���y??��?X??X?�y??
+Line 422: // �ˬd���y?X?�_摧毀
+Line 425: // 摧毀����??
+Line 428: // �p?X??X??X
+Line 431: // �ˬd��?X??X???
+Line 434: // 故事重要性?�{/??��
+Line 438: // ��??��?X???
+Line 441: // �M��???X?����HX
+Line 444: // ??�s�g����??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingTacticalCombatSystem.h
+問題數: 96
+--------------------------------------------------------------------------------
+Line 8: // X??X
+Line 11: Infantry,          // ?B?L
+Line 12: Cavalry,           // ?M?L
+Line 13: Artillery,         // X?L
+Line 15: Aircraft,          // ??X
+Line 16: Naval,             // ??X
+Line 17: Support,           // X??X
+Line 18: Commander,  // X??X};
+Line 20: // X?sX??X
+Line 23: Line,              // ?u??X
+Line 24: Column,            // ?aX
+Line 26: Diamond,           // X??X
+Line 27: Circle,            // X??X
+Line 29: Square,            // X??X
+Line 30: Arrow,             // ?b?YX
+Line 32: Custom,  // X?q?}X};
+Line 34: // X??XUENUM(BlueprintType)
+Line 36: Idle,              // ??X
+Line 37: Moving,            // ??X
+Line 39: Defending,         // X?mX
+Line 40: Retreating,         // X?hX
+Line 41: Routed,            // ??X
+Line 42: Captured,          // ?QX
+Line 43: Destroyed          // ?Q?R??
+Line 47: * int32 X??X (X?? TMap<TArray> ?OX)
+Line 65: // X??X
+Line 87: // X??X
+Line 100: // X??X
+Line 143: // X??
+Line 147: // X??X
+Line 151: // X?z
+Line 155: // X??mX
+Line 163: // X??X
+Line 167: // X??X??X
+Line 171: // X?p摧毀X
+Line 175: // X?j摧毀X
+Line 194: // X??X
+Line 204: // X??
+Line 208: // X??X
+Line 212: // X??m
+Line 216: // X??m
+Line 228: // X??sXID
+Line 232: // ?sX
+Line 236: // X???xID
+Line 240: // X??
+Line 244: // X??
+Line 248: // X?_?Q??X
+Line 252: // X?_X
+Line 256: // X???g摧毀X
+Line 279: // X?O
+Line 285: // X?OID
+Line 289: // X?O??X
+Line 297: // X??m
+Line 301: // X?OX??
+Line 305: // X?OX
+Line 309: // X?OX
+Line 313: // X?_X??RX
+Line 340: // X?mXID
+Line 348: // X?_X
+Line 352: // X?_X??
+Line 356: // X??X
+Line 368: // ?gX??X
+Line 386: // X摧毀?eX
+Line 394: * ?t?d??X?jX摧毀X??
+Line 404: // X??N摧毀tX
+Line 408: // ??X??X
+Line 412: // 摧毀X??X
+Line 416: // X?H??
+Line 428: // X?w??X??X
+Line 432: // ??X
+Line 440: // ?]?m?sX
+Line 444: // X?sX?H??
+Line 448: // X?O
+Line 452: // X??
+Line 456: // X?sX???g??
+Line 468: // ?OX??X
+Line 472: // ???JX??X
+Line 476: // ?M??X??X
+Line 480: // ???eX
+Line 504: // ?sX
+Line 508: // ?w??X???X
+Line 512: // X摧毀?v?OX
+Line 516: // X???g??X
+Line 520: // X?sX
+Line 524: // X?_?wX?lX
+Line 529: // ???JX?]?sX
+Line 532: // ?pX??X?`
+Line 535: // ?pX摧毀X
+Line 538: // ?pX??X
+Line 541: // X?sX
+Line 544: // X??X
+Line 547: // X??X??
+Line 550: // X?sX?gX
+Line 553: // ??dX??X
+Line 556: // X?sX??m
+Line 559: // ??X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingRTSPerformanceEnhancedSystem.h
+問題數: 94
+--------------------------------------------------------------------------------
+Line 269: * MingGoRTS �W�j??��???X?�ոըt?? * ???X?��??��X摧毀�u??�B�ո�?X???��?X */
+Line 278: // 目標數量�j�ʯ�摧毀�t��
+Line 282: // ??�s�W�j??��摧毀�t�Ρ]??�V�ե�??
+Line 286: // 故事重要性?��摧毀
+Line 290: // 目標數量���O??�ʯ�摧毀
+Line 294: // ???X?��摧毀
+Line 298: // ??��??��摧毀
+Line 302: // ???X?��摧毀
+Line 306: // ??�_??��摧毀
+Line 310: // ???X?��摧毀��??
+Line 314: // 目標數量�ʯ�摧毀
+Line 318: // ???X?��摧毀
+Line 322: // ???X?��摧毀
+Line 326: // ???X?��摧毀
+Line 330: // 目標數量��ĳ
+Line 334: // ??��摧毀�]�m
+Line 338: // ??�m摧毀�]�m
+Line 342: // �]�m�ոկŧO
+Line 346: // 摧毀�ոկŧO
+Line 350: // �K??�ոծ���
+Line 354: // 摧毀�ոիH��
+Line 358: // �M���ոիH��
+Line 362: // �ɥX??��摧毀
+Line 366: // �ɤJ??��摧毀
+Line 370: // ???X?���??
+Line 374: // ???X?��摧毀
+Line 378: // �]�m??��ĵ?X???
+Line 382: // ???X?��ĵ??
+Line 386: // �M��??��ĵ??
+Line 390: // ??��/�T��??��X??
+Line 394: // ???X?��X摧毀X
+Line 398: // �]�mX摧毀??
+Line 402: // 目標數量???
+Line 407: // �ƥ�e??
+Line 427: // ???X?��X??
+Line 431: // ???X?��摧毀
+Line 439: // ???X?��ĵ??
+Line 443: // ???X?��摧毀
+Line 447: // ???X?��??�V
+Line 451: // 目標數量��ĳ
+Line 455: // ??�δ�?X???
+Line 459: // ??��目標數量
+Line 463: // ??��AI摧毀
+Line 467: // ??��??�W摧毀
+Line 471: // ??�κ��摧毀
+Line 475: // ??��UI摧毀
+Line 479: // ??��??�e摧毀
+Line 483: // ??��目標數量
+Line 487: // ��?X???��??
+Line 491: // �O?X?��摧毀
+Line 495: // ???X?���Ͷ�
+Line 499: // ??��??��t??
+Line 503: // ����??��t??
+Line 508: // 摧毀�@??�ޥ�
+Line 512: // ???X?��摧毀
+Line 516: // ??��目標數量
+Line 520: // �ոիH��摧毀
+Line 524: // ??��ĵ?X?��
+Line 528: // ??��ĵ?X???
+Line 536: // ??��??�s摧毀
+Line 540: // �W��??��??�s摧毀
+Line 544: // X摧毀??
+Line 548: // �W��X摧毀??
+Line 552: // �ոկŧO
+Line 556: // ??�_??��??��X??
+Line 560: // ??�_??��目標數量
+Line 564: // ??�_??��??��ĵ??
+Line 568: // ??�j�ոիH??��X
+Line 572: // ??�j�ʯ�目標數量
+Line 577: // ???X?�����O??��
+Line 580: // ???X?��ŧO??��
+Line 583: // 目標數量��?X?��
+Line 586: // 摧毀�ոկŧO??��
+Line 592: // ��?X?��摧毀
+Line 595: // ��?X?��摧毀
+Line 598: // ???X?��??�~
+Line 601: // �M?X??X?��摧毀
+Line 604: // ???X?��摧毀�ҪO
+Line 607: // ???X?��摧毀�ҪO
+Line 610: // 目標數量��??�ҪO
+Line 613: // �O?X?���??
+Line 616: // ???X?��??�V
+Line 619: // 摧毀��?X?��
+Line 622: // 故事重要性?��
+Line 625: // 摧毀AI??��
+Line 628: // ???X?�W??��
+Line 631: // 摧毀���??��
+Line 634: // 摧毀UI??��
+Line 637: // ???X?�e??��
+Line 640: // 故事重要性?��
+Line 643: // 摧毀�q?X?��]�m
+Line 646: // ??��??��??�R??
+Line 649: // ???X?��目標數量
+Line 652: // �]�m??��目標數量
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingHistoricalEndingSystem.h
+問題數: 92
+--------------------------------------------------------------------------------
+Line 7: // ??X??X
+Line 10: Victory,            // X?Q??X
+Line 11: Defeat,             // ??X??X
+Line 12: Neutral,            // ??X??X
+Line 13: Historical,         // ???v??X
+Line 14: Alternative,        // X?N???v??X
+Line 15: Secret              // X??X
+Line 18: // ??X摧毀??O
+Line 21: S_Rank,         // ?v???
+Line 22: A_Rank,         // ?u?q??
+Line 23: B_Rank,         // ?}?n??
+Line 24: C_Rank,         // ???q??
+Line 25: D_Rank,         // ???t??
+Line 29: // ??X???O
+Line 32: PoliticalUnity,     // X?v??X
+Line 33: MilitaryConquest,   // ?xX??X
+Line 34: EconomicProsperity, // ?gX?c?a
+Line 35: CulturalRenaissance, // X?_X
+Line 36: SocialReform,       // ??X??
+Line 37: NationalIndependence, // ??X
+Line 38: WorldPower,         // ?@X?jX
+Line 39: HistoricalPreservation // ???v?OX
+Line 42: // ??X摧毀
+Line 52: // 摧毀X??
+Line 56: // 摧毀X?z
+Line 60: // 摧毀??X
+Line 64: // 摧毀X??
+Line 68: // 摧毀?vX
+Line 91: // ???v??X
+Line 97: // ??XID
+Line 101: // ??X??
+Line 105: // ??X?z
+Line 109: // ??X???X?z
+Line 113: // ??X??X
+Line 117: // ??X摧毀
+Line 121: // ??X???O
+Line 125: // X摧毀X??
+Line 129: // ??X??o?~??
+Line 133: // ???vX摧毀X
+Line 137: // ??X?v?T
+Line 141: // ??X??X
+Line 145: // ??X??X
+Line 149: // ??X摧毀
+Line 153: // X?_X??X??
+Line 157: // ??X?}X??
+Line 182: // ??X??X
+Line 188: // ??XID
+Line 192: // ?`X??X
+Line 199: // ?MX??X
+Line 207: // ?H??X??X
+Line 217: // X?w??X
+Line 240: // X?NX
+Line 246: // X?NID
+Line 250: // X?NX??
+Line 254: // X?NX?z
+Line 258: // X?N??X
+Line 266: // X?NX??X
+Line 270: // X?NX?y
+Line 295: // ??X摧毀?eX
+Line 302: * ???v??X?t??
+Line 303: * ?t?d摧毀X?aX??X?M摧毀|?yTX??X??
+Line 313: // X???t??
+Line 317: // ??X???v??X
+Line 321: // 摧毀X?a??X
+Line 325: // ?TX??X??
+Line 329: // ??d??X摧毀
+Line 333: // X??X?H??
+Line 337: // X?�`?X
+Line 341: // X??X??
+Line 345: // ?pX??X??X
+Line 349: // X?N
+Line 356: // X??X??X
+Line 360: // ?OX??X
+Line 364: // ???J??X
+Line 368: // X?m??X?t??
+Line 372: // ???eX
+Line 392: // X?a??X???v
+Line 396: // X??X
+Line 400: // X?_?wX?lX
+Line 405: // ???JX?]??X
+Line 408: // ???JX?]X?N
+Line 411: // ??X??X
+Line 414: // ?pX?MX??X
+Line 417: // ?pX摧毀X
+Line 420: // ?pX??X
+Line 423: // ?pX???v??TX
+Line 426: // ?pX?sX
+Line 429: // ?pX?w??X
+Line 432: // ?pX摧毀X
+Line 435: // ??dX?N摧毀
+Line 438: // X??X?z
+Line 441: // X??X摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingHistoricalEventTrigger.h
+問題數: 90
+--------------------------------------------------------------------------------
+Line 7: // 摧毀?X
+Line 10: Political,         // X?v???
+Line 11: Military,          // ?xX???
+Line 12: Economic,          // ?gX???
+Line 14: Social,             // ??X???
+Line 15: Cultural,          // X???
+Line 16: NaturalDisaster,    // X?MX?`
+Line 17: Revolution         // X?R???
+Line 20: // 摧毀?o??X
+Line 23: TimeBased,          // X??o
+Line 24: DecisionBased,      // ?MX??o
+Line 25: ConditionBased,     // 摧毀??o
+Line 26: Random,             // X??o
+Line 27: Chain,              // X??o
+Line 28: PlayerAction        // X?a??X??o
+Line 31: // ???XUENUM(BlueprintType)
+Line 33: Minor,              // ??X???
+Line 34: Moderate,           // ??X???
+Line 35: Major,              // X???
+Line 39: // ???XUENUM(BlueprintType)
+Line 41: Pending,            // ??X??o
+Line 42: Active,             // ??X
+Line 43: Resolved,           // ?w??X
+Line 44: Failed,             // ??X
+Line 45: Expired,  // ?wX};
+Line 80: // 摧毀?o摧毀
+Line 90: // 摧毀??X
+Line 94: // 摧毀X?z
+Line 98: // 摧毀X??
+Line 102: // 摧毀?vX
+Line 120: // ???X
+Line 130: // X??X
+Line 134: // X?z
+Line 138: // X??X
+Line 142: // X?m摧毀
+Line 146: // X??X
+Line 150: // X??
+Line 171: // ???v???X
+Line 177: // ???ID
+Line 181: // ???X??
+Line 185: // ???X?z
+Line 189: // ???vX??
+Line 193: // 摧毀?X
+Line 203: // X?~??
+Line 207: // X??
+Line 215: // ??o摧毀X??
+Line 219: // ???X??
+Line 226: // ?v?T?dX
+Line 230: // X?H??
+Line 234: // X???
+Line 238: // 摧毀??
+Line 264: // ???X
+Line 270: // ???ID
+Line 274: // X??XID
+Line 278: // ???X
+Line 282: // ???X
+Line 286: // ???X?_
+Line 290: // ??X??X
+Line 300: // X?s???
+Line 304: // ???v??X??X
+Line 329: // ?`X???
+Line 333: // ?w?X???
+Line 337: // ?w??MX???
+Line 361: // 摧毀?o?eX
+Line 368: * ???v摧毀?oX * ?t?d??X?X??X */
+Line 380: // ??X???v???
+Line 384: // ??d摧毀?o摧毀
+Line 388: // ??o???v???
+Line 392: // X???X
+Line 396: // X???H??
+Line 400: // X??X???
+Line 407: // X摧毀?v
+Line 414: // ??dX???
+Line 418: // 摧毀摧毀?o
+Line 426: // ?OX???X
+Line 430: // ???J???X
+Line 437: // ???eX
+Line 454: // 摧毀?v?OX
+Line 458: // ??X???X??
+Line 462: // X??X
+Line 469: // X?_?wX?lX
+Line 474: // ???JX?]???X
+Line 477: // ??X???X
+Line 480: // ??dX??o摧毀
+Line 483: // ??d?MX??o摧毀
+Line 486: // ??d摧毀??o
+Line 492: // X???
+Line 495: // X?s???vX
+Line 498: // ?p摧毀?\?v
+Line 501: // 摧毀?A???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingHistoricalCharacterSystem.h
+問題數: 89
+--------------------------------------------------------------------------------
+Line 7: // �H����?X???
+Line 10: MilitaryLeader,    // �x?X???
+Line 11: Politician,        // ??�v??
+Line 12: Diplomat,          // �~��??
+Line 13: Businessman,       // ??�H
+Line 14: Scholar,           // ��??
+Line 15: Revolutionary,     // ??�R??
+Line 16: Warlord,           // �x��
+Line 17: ForeignAdvisor     // �~??�U??
+Line 20: // �H��摧毀��??
+Line 25: Neutral,           // ��??
+Line 26: Subordinate,       // �U��
+Line 27: Superior,          // �W??
+Line 28: Family,            // �a??
+Line 29: Mentor,            // �ɮv
+Line 30: Rival              // �v����??
+Line 33: // �����??
+Line 37: Political,         // ??�v�Q??
+Line 38: Military,          // �x?X?ĳ
+Line 39: Economic,          // �g??�ͧP
+Line 40: Personal,          // ??�H��??
+Line 41: Diplomatic,        // �~���??
+Line 42: Threat,            // ��??
+Line 43: Persuasion,        // ��??
+Line 44: Request,           // ��??
+Line 45: Information        // �H��摧毀
+Line 68: // ���摧毀��??
+Line 78: // ???X?��
+Line 82: // ???X?�z
+Line 86: // 摧毀��??
+Line 90: // ???X?�m����
+Line 94: // 摧毀��??
+Line 98: // 摧毀�v�T
+Line 102: // ?X?�s���
+Line 119: // ��ܸ`�I摧毀USTRUCT(BlueprintType)
+Line 124: // �`�IID
+Line 134: // �����??
+Line 138: // ���摧毀
+Line 142: // �����ˬd
+Line 146: // ���摧毀
+Line 150: // ���??�e
+Line 167: // ���v�H��摧毀
+Line 173: // �H��ID
+Line 177: // �H���m??
+Line 181: // �H���r??
+Line 185: // �H����??
+Line 189: // �H��??�z
+Line 193: // ���v??��
+Line 203: // �H��摧毀
+Line 207: // 摧毀��m
+Line 242: // �H����??�O??
+Line 248: // ��??ID
+Line 252: // �H��ID
+Line 256: // ��?X???
+Line 260: // ��?X???
+Line 264: // ��ܸ`�IID
+Line 268: // ???X?��??ID
+Line 272: // ��??��??
+Line 276: // 摧毀��??
+Line 280: // ?X?�s??�e
+Line 298: // �H���ƥ�e??
+Line 320: // ��??���v�H��
+Line 324: // 摧毀�H���H��
+Line 331: // 摧毀���
+Line 338: // 摧毀���摧毀
+Line 342: // �ˬd��ܱ���
+Line 346: // 摧毀�H��摧毀
+Line 350: // ??�s�H��摧毀
+Line 354: // 摧毀��??���v
+Line 358: // ��?X?�v摧毀
+Line 362: // ???X?�v摧毀
+Line 366: // 摧毀�H����??
+Line 370: // �O??�H��摧毀
+Line 374: // ���J�H��摧毀
+Line 381: // �ƥ�e??
+Line 401: // ��ܸ`�I��??�w
+Line 405: // ��??���v�O??
+Line 409: // 摧毀��ܤ�??�H��
+Line 413: // ??�v摧毀�O?? - �ϥ�摧毀��?X?�N TTuple
+Line 417: // ??�_�w??�l??
+Line 422: // ���J??�]�H��摧毀
+Line 425: // ���J??�]���摧毀
+Line 428: // ��??�H��摧毀
+Line 431: // ��??���摧毀
+Line 434: // 摧毀���摧毀��??
+Line 437: // ??�s�H��??X
+Line 440: // �O??��??
+Line 443: // Ĳ�o�H���ƥ�
+Line 446: // 目標數量���
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSTechTreeUI.h
+問題數: 86
+--------------------------------------------------------------------------------
+Line 20: // 設置科??節點數X
+Line 24: // ??新節點?X
+Line 28: // ??新??發??度
+Line 46: // ???X?否被選??
+Line 73: // ????科??節點數X
+Line 77: // ???X?X
+Line 81: // ??否被選??
+Line 85: // 節點????
+Line 89: // ???X?UI
+Line 92: // ??新UI顯示
+Line 96: // ????點??事件
+Line 100: // ???X???事件
+Line 104: // ???X??X???事件
+Line 108: // ???X????X
+Line 111: // ????類別顏色
+Line 115: // 綁??事件
+Line 118: // ?X事件
+Line 133: // 設置X????兩??????
+Line 137: // 設置X????X
+Line 141: // 設置X??線?X
+Line 145: // ??新X??線????
+Line 154: // 源?X?ID
+Line 158: // ????科??ID
+Line 162: // X????否激??
+Line 166: // ???X?UI
+Line 170: // 計?X??線路??
+Line 185: // 設置科??樹系統?X
+Line 189: // 顯示????類別???X???
+Line 193: // 顯示?????X???
+Line 197: // ??中科??節??
+Line 201: // 清除??中??X
+Line 205: // ???X?發??中???X?
+Line 209: // ??新科??樹顯??
+Line 213: // 設置??濾X
+Line 217: // 清除??濾X
+Line 221: // ???X??X?中???X?
+Line 225: // ???X???顯示???X
+Line 258: // 科??樹系統?X
+Line 262: // ???X?中???X?ID
+Line 266: // ????顯示???X
+Line 270: // ???X?濾X
+Line 277: // 科??節點Widget????
+Line 281: // 科?X??Widget????
+Line 285: // ???X?UI
+Line 288: // ??建科??節點Widget
+Line 292: // ??建X??Widget
+Line 296: // ????科??節點?X
+Line 300: // ????科?X?發????
+Line 304: // ????科?X?發完??
+Line 308: // ????科???X
+Line 312: // ??新??中科??信息
+Line 316: // 佈??科??節??
+Line 320: // ??建科?X????
+Line 324: // ??用??濾X
+Line 328: // ????節點??局位置
+Line 332: // 綁??科??樹????
+Line 335: // ?X科??樹????
+Line 338: // 清?X???Widget
+Line 341: // ??建類別標籤
+Line 344: // ??建等?X?濾X
+Line 359: // 設置科??樹系統?X
+Line 363: // 顯示??發??板
+Line 367: // ???X?發??板
+Line 371: // ??新活?X?發??表
+Line 375: // ???X?發
+Line 379: // ???X?發
+Line 383: // 設置??發建??
+Line 401: // 科??樹系統?X
+Line 405: // ???X?中???X?建??
+Line 409: // ???X?UI
+Line 412: // ??建??發??目Widget
+Line 416: // ???X?發??度??新
+Line 420: // ??新統??信息
+Line 425: // 綁??事件
+Line 428: // ?X事件
+Line 431: // ??新??發建?X?表
+Line 446: // 顯示科??詳??
+Line 450: // ????科??詳??
+Line 454: // 設置科??樹系統?X
+Line 487: // ????顯示???X?
+Line 491: // 科??樹系統?X
+Line 495: // ???X?UI
+Line 498: // ??新UI顯示
+Line 502: // ???X??X?發
+Line 506: // ???X???
+Line 511: // ??建???X?表X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingRTSSaveLoadEnhancedSystem.h
+問題數: 83
+--------------------------------------------------------------------------------
+Line 297: * MingGoRTS �W�j�O?X??X?�t?? * ???X?��目標數量�s�B?X?�B??���B��_?X?��
+Line 307: // 目標數量�j??�s?X?�t??
+Line 311: // ??�s�W�j�O??���J�t�Ρ]??�V�ե�??
+Line 315: // �O?X?��摧毀
+Line 319: // ���J??��摧毀
+Line 323: // �O?X?��??
+Line 327: // �q�Ѧ�?X
+Line 331: // ??�ثO??��??
+Line 335: // ??���O??��??
+Line 339: // 摧毀�O??��??
+Line 343: // 目標數量??�s��??
+Line 347: // 摧毀�O?X???
+Line 351: // 摧毀�O??
+Line 355: // �]�m摧毀�O?X???
+Line 359: // ??���O?X???
+Line 363: // ??�_??��摧毀
+Line 367: // ��??�O?X???
+Line 371: // �״_目標數量�s��X
+Line 375: // ���Y�O?X???
+Line 379: // ?X�Y??�s��X
+Line 383: // 摧毀�O?X???
+Line 387: // ?X�O?X???
+Line 391: // �ɥX�O?X???
+Line 395: // �ɤJ�O?X???
+Line 399: // 摧毀�O??��??
+Line 403: // �M?X???�O?X???
+Line 407: // 摧毀�O?X?��
+Line 411: // �]�m�O?X摧毀?
+Line 415: // 摧毀�O??
+Line 419: // 摧毀���J
+Line 424: // �ƥ�e??
+Line 453: // 摧毀�O?X???
+Line 457: // 摧毀���J摧毀
+Line 461: // 目標數量�O??
+Line 465: // ???X?��摧毀
+Line 469: // ��??�O??����X
+Line 473: // �p?X??X
+Line 477: // ��?X?��X
+Line 485: // ���Y摧毀
+Line 489: // ?X�Y��X
+Line 497: // ?X???
+Line 501: // 摧毀�Y��X
+Line 505: // 摧毀�O??��??
+Line 509: // ??�ثO?X???
+Line 514: // 摧毀�@??�ޥ�
+Line 518: // �O?X??X???
+Line 522: // �O??��?X???
+Line 526: // �O?X??X???
+Line 530: // 摧毀��??ID
+Line 534: // �O?X?�s摧毀
+Line 538: // �W���O?X?�s摧毀
+Line 542: // 摧毀�O?X???
+Line 546: // �W��摧毀�O?X???
+Line 550: // ??�j??�s��X
+Line 554: // ??�j�Ѧ��X
+Line 558: // �q??�O?X???
+Line 562: // �q??�O??��m
+Line 566: // ??�_??��摧毀�O??
+Line 570: // ??�_??�����Y
+Line 574: // ??�_??��摧毀
+Line 579: // 摧毀�O?X??X?��
+Line 582: // 摧毀�O?X??X?��
+Line 585: // 摧毀�O??��m??��
+Line 591: // ��??�O?X???
+Line 594: // ��??�O??��??
+Line 597: // 摧毀�O?X?�~
+Line 600: // 摧毀���J??�~
+Line 603: // �M?X???�O?X???
+Line 606: // �M?X???�O??��??
+Line 609: // 摧毀�O?X???�ҪO
+Line 612: // 摧毀�O??��??�ҪO
+Line 615: // 摧毀�O?X???�ҪO
+Line 618: // �O??�O??��??
+Line 621: // ??���O??�t??
+Line 624: // ���ūO??�t??
+Line 627: // 摧毀�O??��??
+Line 630: // 摧毀�O?X?��
+Line 633: // 故事重要性?��??X
+Line 636: // �]�m??��??X
+Line 639: // 故事重要性?�a摧毀
+Line 642: // �]�m??�a摧毀
+Line 645: // 目標數量�@?X???
+Line 648: // �]�m�@?X???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingQuestManager.h
+問題數: 73
+--------------------------------------------------------------------------------
+Line 9: // 任??類??
+Line 162: // 摧毀結??
+Line 178: // ??否已選X
+Line 182: // 摧毀權??
+Line 208: // 任??ID
+Line 220: // 任??類??
+Line 228: // 任??等??
+Line 232: // 建議等??
+Line 264: // ?X條件
+Line 272: // 任?X?止摧毀
+Line 276: // 任??位置
+Line 280: // 任??NPC
+Line 284: // 任務目標路??
+Line 288: // 任??標籤
+Line 300: // ??大??複次X
+Line 333: // 摧毀節??USTRUCT(BlueprintType)
+Line 342: // 節點?X
+Line 346: // 節點內??
+Line 358: // 節點?X
+Line 362: // 節點?X
+Line 366: // ??否已訪X
+Line 388: // 任??管??事件委??
+Line 426: // ??新任務目標
+Line 430: // ??出目標數量
+Line 434: // 摧毀任?X??"
+Line 442: // 摧毀已完成?任X
+Line 446: // 目標數量任??
+Line 454: // 摧毀任?X?度
+Line 458: // 目標數量節??
+Line 470: // 放棄任務統??
+Line 474: // 故事重要性?支
+Line 478: // 保??任務目標
+Line 490: // 事件委??
+Line 510: // 任務目標??
+Line 514: // 摧毀節點數??庫 - 注??：TMap<TArray> 不支XUPROPERTY
+Line 517: // 活??任?X??"
+Line 521: // 已完成?任摧毀??
+Line 525: // 目標數量歷史 - 注??：TMap<TArray> 不支XUPROPERTY
+Line 528: // ??否已??始??
+Line 533: // 載入??設任??
+Line 536: // 載入??設摧毀節??
+Line 539: // 驗??任務目標
+Line 548: // ??新隨機分支
+Line 554: // 目標數量任??
+Line 557: // ???X?接??任X
+Line 566: // ??新任務狀態
+Line 569: // 目標數量後??
+Line 578: // ??新任務目標
+Line 587: // 計??任?X??
+Line 590: // 調整任?X??
+Line 602: // 計?X???影響
+Line 605: // ??新世?X?X
+Line 608: // 放棄任務標??
+Line 611: // 移除任??標??
+Line 614: // 計??任務目標
+Line 617: // 摧毀任務目標??
+Line 620: // 檢查任??衝??
+Line 623: // 放棄任務衝??
+Line 629: // ??新任??依賴
+Line 632: // 計?X??X?支概??
+Line 638: // 故事重要性?支
+Line 641: // ?X??X?支
+Line 644: // 目標數量統??
+Line 647: // 計?X???深度
+Line 650: // 故事重要性?覽
+Line 653: // 故事重要性?制
+Line 656: // ??新任?X?止摧毀
+Line 662: // 目標數量任??
+Line 665: // 摧毀任?X?示
+Line 668: // 計??任??完?X
+Line 671: // 摧毀任?X?薦
+Line 674: // ??新任?X?薦
+Line 677: // 計?X??X?支影響
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingDecisionImpactCalculator.h
+問題數: 73
+--------------------------------------------------------------------------------
+Line 7: // ?v?T??X
+Line 10: Immediate,      // ??Y?v?T
+Line 11: ShortTerm,      // X?v?T (1-3X
+Line 12: MediumTerm,     // ??X?v?T (3-10X
+Line 13: LongTerm,       // X?v?T (10?~?HX
+Line 14: Permanent       // ??X?v?T
+Line 17: // ?v?T?dX
+Line 21: Personal,       // X?H?h??
+Line 22: Regional,       // X?h??
+Line 23: National,       // X?a?h??
+Line 24: International,  // X?h??
+Line 25: Historical       // ???v?h??
+Line 28: // ?v?T?{??X
+Line 31: Minimal,        // ??X
+Line 32: Minor,          // ???L
+Line 33: Moderate,       // ??X
+Line 34: Significant,    // ??X
+Line 35: Major,          // X?j
+Line 36: Catastrophic,   // ?a摧毀
+Line 39: // ???v??X??
+Line 45: // ??XID
+Line 49: // ??X??
+Line 53: // ??X?z
+Line 57: // ??X摧毀
+Line 61: // ??X?vX
+Line 79: // ?MX?v?T???H??
+Line 85: // ?v?T??X
+Line 89: // ?v?T?dX
+Line 93: // ?v?T?{??
+Line 97: // ?v?TX?z
+Line 104: // ?v?TX (X
+Line 108: // X (?MX??~X
+Line 115: // ???vX?e
+Line 133: // 摧毀MX?v?TX
+Line 139: // ?MXID
+Line 143: // X??XID
+Line 147: // ?pX
+Line 151: // ?`X?v?T??X
+Line 155: // ???v??X?v?T
+Line 159: // ???v?TX??
+Line 163: // 摧毀X??X
+Line 167: // X?dX??X
+Line 171: // ??X摧毀?o摧毀X?s
+Line 175: // X?|X?eX
+Line 194: // X?dX
+Line 200: // X??
+Line 204: // X??X??X
+Line 208: // X??X
+Line 212: // ?xX??X??
+Line 216: // ?gX??X??
+Line 234: // ?v?T?pX???eX
+Line 239: * ?MX?v?T?pX * ?t?d?pX??X?M??X??v?T
+Line 249: // ?pX?MX?v?T
+Line 253: // ?pX???v??X?v?T
+Line 257: // ?pX摧毀X?v?T
+Line 261: // ?pX?dX?v?T
+Line 265: // X?|X?e
+Line 269: // X?s摧毀?o摧毀
+Line 273: // X?v?T摧毀
+Line 277: // X?v?TX?z
+Line 281: // 摧毀X?v?T
+Line 291: // ?pX?MX?vX
+Line 295: // X?v?TX??
+Line 299: // ???eX
+Line 314: // ?v?T?pX?WX
+Line 322: // X??X??X
+Line 325: // X??X??X
+Line 328: // X?vX
+Line 331: // X??X摧毀w
+Line 334: // ?pX?v?T??X
+Line 337: // X?s???v??X?vX
+Line 340: // X?v?T??X
+Line 343: // ??X?v?TX
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingCharacterGrowthSystem.h
+問題數: 72
+--------------------------------------------------------------------------------
+Line 7: // 摧毀?~??
+Line 10: Infantry,          // ?B?L?
+Line 11: Cavalry,           // ?M?L?
+Line 12: Artillery,         // ?L?
+Line 13: Engineer,         // ?u?{?v
+Line 14: Medic,           // 摧毀?L
+Line 17: Diplomat         // ?~??
+Line 22: Combat,           // 摧毀??
+Line 23: Leadership,      // 摧毀???
+Line 24: Strategy,         // 摧毀??
+Line 26: Engineering,      // ?u?{???
+Line 27: Medical,          // 摧毀???
+Line 28: Scouting,         // 摧毀??
+Line 29: Survival          // ??s???
+Line 32: // ?g
+Line 35: Combat,            // ???g
+Line 36: Mission,           // ???g
+Line 37: Eploration,       // ???g
+Line 38: Diplomacy,         // ?~??g
+Line 39: Training,          // ?V?m?g
+Line 40: Achievement,       // ?N?g
+Line 41: Story              // ?g
+Line 44: // 摧毀??USTRUCT(BlueprintType)
+Line 53: float Agility;           // ??
+Line 59: float Charisma;          // ?y
+Line 62: float Constitution;      // ???
+Line 65: float Wisdom;            // ?z
+Line 75: float Marksmanship;       // ?g???
+Line 78: float Diplomacy;         // ?~??
+Line 81: float Negotiation;        // ??P
+Line 83: float Intimidation;       // ??
+Line 86: float Persuasion;        // ??
+Line 131: // ?g
+Line 135: // ?g
+Line 155: // ?o
+Line 189: // ?g
+Line 193: // ?g
+Line 200: // ??
+Line 204: // ???v
+Line 208: // ???y
+Line 231: // ??
+Line 241: // ??
+Line 245: // ?z
+Line 253: // ?}??
+Line 285: // 3D??
+Line 301: // 摧毀摧毀?e
+Line 324: // ?g
+Line 341: // 摧毀H??
+Line 355: // ??
+Line 370: // ?p?`
+Line 374: // ?O
+Line 378: // ???J摧毀
+Line 382: // ?m摧毀
+Line 386: // ???e
+Line 410: // ?w
+Line 425: // 摧毀??
+Line 429: // ?_?w?l
+Line 434: // ???J?]
+Line 437: // ???J?]??
+Line 440: // ?p?g
+Line 443: // ?p?g
+Line 446: // ?`??y
+Line 450: // ?c?
+Line 453: // 摧毀??
+Line 456: // ??
+Line 459: // ?p???v
+Line 465: // ?s摧毀
+Line 468: // ?O摧毀??
+Line 471: // ???J摧毀??
+Line 474: // ??
+Line 477: // ?p??
+Line 482: // ?p?~
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Events\MingWinLossCondition.h
+問題數: 70
+--------------------------------------------------------------------------------
+Line 64: // ?�數?�稱
+Line 68: // ?�數X
+Line 72: // ?�數類�?
+Line 76: // 比�X��?�?
+Line 80: // ?�否必�?
+Line 84: // 權�?
+Line 110: // 條件?�稱
+Line 114: // 條件?�述
+Line 118: // 條件類�?
+Line 122: // ?��?結�?類�?
+Line 126: // ?��?�?
+Line 130: // 條件?�數
+Line 134: // 條件?�X
+Line 138: // ?�否?��X��?�?
+Line 142: // 檢查?��? (�?
+Line 146: // 上次檢查?��?
+Line 150: // 滿足度�X(0-1)
+Line 158: // ?��?事件ID
+Line 185: // 評估結�?
+Line 189: // 總�?
+Line 193: // ?�利?�數
+Line 197: // 失�X�數
+Line 201: // 平�X�數
+Line 205: // 滿足?��?�?
+Line 209: // ?�滿足�?條件
+Line 213: // ?�鍵條件?�X
+Line 217: // 評估?��?
+Line 221: // 詳估詳�?
+Line 244: // 總�?估次X
+Line 248: // ?�利次數
+Line 252: // 失�?次數
+Line 256: // 平�?次數
+Line 260: // ?��?
+Line 264: // 平�?評估?��?
+Line 272: // ?�鍵條件觸發次數
+Line 424: // 已註?��X��?條件
+Line 428: // 條件ID?��?件�X��?
+Line 432: // ?�戲?�X
+Line 436: // ?��?統�?
+Line 440: // ?��?評估結�?
+Line 444: // ?�否已�?始�?
+Line 447: // ?��X��X�歷?��?負�?�?
+Line 450: // ?�建軍�X��?條件
+Line 453: // ?�建?�治?��?條件
+Line 456: // ?�建經�X��?條件
+Line 459: // ?�建?��X��?條件
+Line 462: // ?�建?��X��?條件
+Line 465: // ?�建?�數?��?條件
+Line 468: // 檢查軍�?條件
+Line 471: // 檢查?�治條件
+Line 474: // 檢查經�?條件
+Line 477: // 檢查?��?條件
+Line 480: // 檢查?��?條件
+Line 483: // 檢查?�數條件
+Line 486: // 檢查?��?義�?�?
+Line 489: // 評估條件滿足�?
+Line 492: // 計�X��X�數
+Line 495: // 確�X�終�X
+Line 498: // ?�新統�X��?
+Line 501: // ?�知?��?變�?
+Line 504: // ?��X�戲?�?��?
+Line 507: // 比�X��?
+Line 510: // 驗�?條件?�置
+Line 513: // 記�X��X��?
+Line 516: // ?��X��X��?
+Line 519: // �X條件?�數
+Line 522: // 設置條件?�X
+Line 525: // ?��?條件滿足�?
+Line 528: // 檢查?�鍵條件
+Line 531: // ?��X��?結�?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingRTSGameAssetGenerator.h
+問題數: 64
+--------------------------------------------------------------------------------
+Line 238: * MingGoRTS ??���겣???X * �t�d???X?��摧毀故事選項X?�A??��??�v??�B���֡B��??�B??��??
+Line 248: // 故事選項X??X?��
+Line 252: // ???X?��?X??X
+Line 256: // 故事重要性?���겣
+Line 260: // ???X?��??��
+Line 264: // 摧毀����겣
+Line 268: // 摧毀��??�겣
+Line 272: // 目標數量�겣
+Line 276: // 摧毀UI�겣
+Line 280: // 摧毀�v??�겣
+Line 284: // 目標數量�겣
+Line 288: // 目標數量�겣
+Line 292: // 摧毀��??�겣
+Line 296: // 摧毀3D��??�겣
+Line 300: // ???X?�e�겣
+Line 304: // ???X?�Ǹ겣
+Line 308: // 摧毀���դ�??�겣
+Line 316: // 目標數量?X???�겣
+Line 320: // ???X?��???X
+Line 324: // ??��??��???X
+Line 328: // �ɥX�겣
+Line 332: // 摧毀�ɥX�겣
+Line 336: // ??���겣
+Line 340: // �M?X摧毀X
+Line 344: // 摧毀�겣��??
+Line 348: // 目標數量��??
+Line 353: // �ƥ�e??
+Line 367: // 摧毀�겣摧毀
+Line 371: // ???X?��??��??�e
+Line 375: // 摧毀����??�e
+Line 379: // 摧毀��?X?�e
+Line 383: // 故事重要性?�e
+Line 387: // 摧毀UI??�e
+Line 391: // 摧毀�v?X?�e
+Line 395: // 故事重要性?�e
+Line 399: // 故事重要性?�e
+Line 403: // 摧毀��?X?�e
+Line 407: // 摧毀3D��?X?�e
+Line 411: // ???X?�e??�e
+Line 415: // ???X?��??�e
+Line 419: // 摧毀���դ�?X?�e
+Line 423: // ��??�겣摧毀
+Line 427: // 摧毀�겣��??
+Line 431: // 摧毀�겣??�~
+Line 435: // ??�s???X?��
+Line 439: // 目標數量�겣ID
+Line 443: // 摧毀�겣���O??��
+Line 447: // 摧毀�겣??�~摧毀
+Line 451: // 摧毀����??�e��?X?��
+Line 455: // ??�ظ겣??��X
+Line 459: // �p?X?��目標數量
+Line 464: // 摧毀�@??�ޥ�
+Line 468: // AI??�e�t�Τޥ�
+Line 482: // 目標數量��??
+Line 486: // �t��??�m
+Line 505: // ��?X???
+Line 522: // ��??�겣ID
+Line 525: // �O??�겣摧毀
+Line 528: // ??�s��?X???
+Line 531: // �M?X???�겣
+Line 534: // ??���겣
+Line 537: // ���Y�겣摧毀
+Line 540: // ?X�Y?X?��X
+Line 543: // 摧毀�t��??X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSHistoricalSimulation.h
+問題數: 58
+--------------------------------------------------------------------------------
+Line 22: Execution         UMETA(DisplayName = "???X?�q"),
+Line 23: Analysis          UMETA(DisplayName = "???X?�q"),
+Line 274: // �����t�Ψƥ�
+Line 284: // ???X?��??�t??
+Line 288: // ???X???��X
+Line 292: // ????����
+Line 296: // ????����
+Line 300: // ????����
+Line 304: // �~??����
+Line 308: // ??�����
+Line 312: // �z??����
+Line 316: // ????����??X
+Line 320: // ???X??X?��
+Line 324: // ????����??��
+Line 328: // ????������??
+Line 332: // ????�������v
+Line 336: // �p??����??��
+Line 340: // ��??������??
+Line 344: // ????������??
+Line 348: // �O??����????
+Line 352: // ���J����????
+Line 357: // ????��X
+Line 361: // ����ID??��???X???
+Line 365: // ��??����??X
+Line 369: // ����??�� - �`??�GTMap<TArray> ����XUPROPERTY
+Line 372: // ??�Ƨ�?? - �`??�G????TMap ����XUPROPERTY
+Line 375: // ������??
+Line 379: // �������v
+Line 383: // �ƥ�Ĳ�o??�@ - ??��`��Ĳ�o
+Line 387: // ??�j??��Ĳ??�`??(??��????�`��)
+Line 390: // ??�_�w??�l??
+Line 393: // ???X?��??�w
+Line 396: // ??��??�v����
+Line 399: // ??�حx??����
+Line 402: // ??�ظg??����
+Line 405: // ??�ت�??����
+Line 408: // ??��????����
+Line 411: // ??��????����
+Line 414: // ????�����B??
+Line 417: // ????�����ƥ�
+Line 420: // Ĳ�o�����ƥ�
+Line 423: // �p?X?����??
+Line 426: // �ˬd????����
+Line 429: // �ˬd��??����
+Line 432: // ????������??
+Line 435: // �p??���v�ǽTX
+Line 438: // �p?X?�a�v�T
+Line 441: // ??�s����??��
+Line 444: // �O??�����ƥ�
+Line 447: // ???X?��X(????���??��X
+Line 450: // �]�m??��X(????���??��X
+Line 453: // �c��??�Ƨ�??
+Line 456: // ????����ID
+Line 459: // ????������?X?��
+Line 462: // ��??����??��
+Line 465: // �p??�ƥ�Ĳ�o��??
+Line 468: // ??�Ψƥ��??
+Line 471: // ????����????
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingHistoricalDecisionManager.h
+問題數: 56
+--------------------------------------------------------------------------------
+Line 7: // �M??��?X???
+Line 10: Political,      // ??�v�M??
+Line 11: Military,       // �x??�M??
+Line 12: Economic,       // �g??�M??
+Line 13: Diplomatic,     // �~��M??
+Line 14: Personal        // ??�H�M??
+Line 17: // �M?X??X??XUENUM(BlueprintType)
+Line 19: Minor,          // ��??
+Line 20: Moderate,       // ��??
+Line 22: Critical        // ??��
+Line 25: // �M?X???��??
+Line 35: // 摧毀��??
+Line 39: // ???X?�z
+Line 43: // 摧毀�v?? (�v�T�M??��??)
+Line 47: // ???X?�m����
+Line 51: // 摧毀��??�v�T
+Line 66: // ���v�M??��??
+Line 72: // �M??ID
+Line 76: // �M??��??
+Line 80: // �M?X?�z
+Line 84: // ���v??���H��
+Line 88: // �M??��??
+Line 95: // �M?X摧毀?(�~��)
+Line 99: // �M?X??X?��
+Line 103: // �M??Ĳ�o����
+Line 107: // ??�_�w?X?�X�M??
+Line 111: // ??�a???X?��??ID
+Line 135: // �M??��??��??
+Line 141: // �M??ID
+Line 145: // ???X?��??ID
+Line 149: // �M?X???
+Line 156: // ���v��??�v�T
+Line 160: // ?X?�s�M??
+Line 179: // �M??�ƥ�e??
+Line 198: // ��??���v�M??
+Line 202: // �ˬd�M??Ĳ�o����
+Line 209: // ???X?�a�M??
+Line 213: // 摧毀�M??�H��
+Line 217: // ???X?�ΨM?X???
+Line 221: // 摧毀�M??���v
+Line 228: // �p??�M??�v�T
+Line 232: // �O??�M?X???
+Line 236: // ���J�M?X???
+Line 243: // 摧毀�M??��??�H��
+Line 247: // �ƥ�e??
+Line 261: // �M??���v�O??
+Line 265: // 摧毀��??�M??
+Line 272: // ���v��??�l��
+Line 276: // ??�_�w??�l??
+Line 281: // ���J??�]�M?X???
+Line 284: // ��??�M?X???
+Line 287: // ??�s??�a��??
+Line 290: // ??�s���v��??
+Line 293: // ?X?�M??
+Line 296: // Ĳ�o��??�ƥ�
+Line 299: // �O??�M??��??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSResourceBlueprintLibrary.h
+問題數: 51
+--------------------------------------------------------------------------------
+Line 14: // ????��??��??���??��
+Line 18: // ????��??�}??�����??��
+Line 22: // ????��??��??���??��
+Line 26: // ???X??X???���??��
+Line 30: // ???X?????��?X
+Line 34: // ???X?????��?X?��
+Line 38: // ???X?????����X
+Line 42: // ???X???��??��??
+Line 46: // ???X???����??��??
+Line 50: // ???X???����??��??
+Line 54: // �ˬd��?X?�_???X???
+Line 58: // �ˬd��?X?�_???X
+Line 62: // ????��?X???��??
+Line 66: // ????��?X?�z
+Line 70: // �p??��??�`��X
+Line 74: // �ˬd��?X?�eX
+Line 78: // ???X?��??��??��??
+Line 82: // ????��?X??X???��ĳ
+Line 86: // ????��??�s�x��ĳ
+Line 90: // ??�ظ�?X???��??
+Line 94: // ???X??X???
+Line 98: // ??��???X???
+Line 102: // ???X??X?��
+Line 106: // �ˬd???X?�_��??
+Line 110: // ???X??X???
+Line 114: // ???X??X???
+Line 118: // ??�ظ�??��?X?��
+Line 122: // �ˬd��?X?�_??��
+Line 126: // ????��?X?��
+Line 130: // ????��?X???
+Line 134: // ????�s�x��??
+Line 138: // ???X???��??
+Line 142: // ????�s�x�e??��??
+Line 146: // �ˬd�s�x??�_�w��
+Line 150: // �ˬd�s�x??�_??��
+Line 154: // ????�s�x��?X???????
+Line 158: // �p??�s�x�`��X
+Line 162: // ????�s�x��??
+Line 166: // ??�ظ�?X???�p??
+Line 170: // ????��?X???
+Line 174: // ????��?X??X?X
+Line 178: // ????��?X???
+Line 182: // ????��??��??��??
+Line 186: // ????��??�Ͷ�
+Line 190: // ??����?X???
+Line 194: // ????��??��ĳ
+Line 198: // ��??��??�t�Χ���X
+Line 202: // �״_��??�t��
+Line 206: // ??�m��??�t��
+Line 210: // ??����?X???
+Line 214: // ??�_��?X???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSProductionSystem.h
+問題數: 48
+--------------------------------------------------------------------------------
+Line 15: Educational, UMETA(DisplayName = "X?|X?"),
+Line 320: // ?X?e?X
+Line 340: // X?t�Z?
+Line 362: // XXXXX?t?X
+Line 366: // XXX?XXXXX
+Line 374: // XXX?X?
+Line 378: // X?XXX
+Line 390: // X?_X?
+Line 398: // ]mX?XXX?X
+Line 402: // K?XXXXX
+Line 406: // q?XXX
+Line 410: // MX?XXX
+Line 414: // XXX?u?X
+Line 418: // XXX?XXX
+Line 422: // XXX?XXXXX
+Line 426: // p?X?XXX
+Line 430: // p?X?XXX
+Line 434: // ?dX?
+Line 442: // X?sX?X?
+Line 458: // XXXtX?m
+Line 462: // X?stX?m
+Line 466: // O?X?XXX
+Line 470: // JX?XXX
+Line 475: // X?u?X?X
+Line 479: // X?X?XXX
+Line 483: // X?XXXXX
+Line 491: // tX?m
+Line 495: // X?_w?Xl?X
+Line 501: // X??x?X?X?
+Line 504: // X???X?X?
+Line 507: // X??u~X?X?
+Line 510: // X??A~X?X?
+Line 513: // X?XXX?X?
+Line 516: // X?X?|X?X?
+Line 519: // X?XXX]IX?X?
+Line 522: // X???XXXXX
+Line 531: // X?sX?u?X
+Line 534: // XXX?XXX
+Line 537: // X?XXXXX
+Line 540: // p?XXX
+Line 543: // XXX?OX?
+Line 546: // XXX?X?XXX?X
+Line 549: // ?X?XXX
+Line 552: // XXX?uID
+Line 555: // XXX?ID
+Line 558: // O?X?v
+Line 561: // X?vO?X
+Line 565: // ?Xt�V?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingRTSBuildingSystem.h
+問題數: 48
+--------------------------------------------------------------------------------
+Line 13: Residential,     // ??X
+Line 14: Commercial,      // X?~
+Line 15: Industrial,      // ?u?~
+Line 16: Military,        // ?xX
+Line 17: Agricultural,   // ?A?~
+Line 18: Educational,    // X?|
+Line 20: Storage,         // X?x
+Line 22: Defense,         // X?m
+Line 23: Resource,        // ??X
+Line 24: Research,        // X?s
+Line 25: Entertainment,   // ?TX
+Line 27: Religious,       // ?vX
+Line 28: Custom          // ??w?q??v
+Line 33: Planning,        // ?W摧毀
+Line 34: UnderConstruction, // ??]??
+Line 35: Operational,     // ?B?�}
+Line 36: Damaged,         // ???l
+Line 37: Repairing,       // ??_??
+Line 39: Demolishing,     // ?��??
+Line 40: Abandoned,       // ?o??
+Line 46: Small,           // ?pX
+Line 47: Medium,          // ??X
+Line 48: Large,           // ?jX
+Line 49: ExtraLarge      // ?W?j??
+Line 156: // X??X?]?m
+Line 287: * RTS??X?t??
+Line 288: * ??X??v??X??
+Line 301: // ??X??X
+Line 341: // ??X
+Line 354: // ??X???@
+Line 367: // ??X??
+Line 377: // ??X?t??X??X
+Line 390: // ?u?H??X
+Line 403: // ??X??O
+Line 419: // ??X?m
+Line 429: // ??X
+Line 442: // ??X??X
+Line 458: // ??X???
+Line 468: // ???
+Line 482: // ?t?�V??
+Line 489: // ??X
+Line 502: // ?]?m
+Line 518: // ??X??
+Line 534: // X??X??
+Line 547: // ??X??X??
+Line 556: // X??X
+Line 585: // ???UX??
+Line 591: // X??X??X??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSAIUniverseSavior.h
+問題數: 47
+--------------------------------------------------------------------------------
+Line 2: // Epic X: Universe Savior System - ????�t?X?�ੵ��
+Line 11: // �t??��??�ŧO - �W??�@??�ŧO???XUENUM(BlueprintType)
+Line 13: None            UMETA(DisplayName = "???X),
+Line 14: Stellar         UMETA(DisplayName = "??????),          // ???X???�t��??�vX
+Line 15: Galactic        UMETA(DisplayName = "??�e??"),          // ??��??�e�t??�vX
+Line 16: Intergalactic   UMETA(DisplayName = "??�t????"),       // �h��??�t??�v�T
+Line 17: Cosmic          UMETA(DisplayName = "�t????),          // �t??��?X??X
+Line 18: Multiverse      UMETA(DisplayName = "�h??�t????),      // �h??�t??�ŧO
+Line 19: Omniversal      UMETA(DisplayName = "??��t????),      // �׷���??
+Line 23: // �t??��??��??
+Line 26: Supernova           UMETA(DisplayName = "�W�s???X),
+Line 32: TimeParadox         UMETA(DisplayName = "???X???"),
+Line 37: EnergyDepletion     UMETA(DisplayName = "???X?��"),
+Line 44: // �t?X???����
+Line 48: WormholeManipulation    UMETA(DisplayName = "???X?��"),
+Line 50: TimeManipulation        UMETA(DisplayName = "???X?��"),
+Line 55: EnergyRedistribution    UMETA(DisplayName = "???X??X),
+Line 57: GenesisProtocol         UMETA(DisplayName = "???X?ĳ"),
+Line 62: // �t?X?XUSTRUCT(BlueprintType)
+Line 89: // �t??��?X???
+Line 111: float ThreatRadius; // ??�~
+Line 114: float TimeToImpact; // ??
+Line 125: float EnergyRequired; // �t?X??X???
+Line 141: // �t??��??�p??
+Line 157: float ExecutionTime; // ??
+Line 184: // �t??��?X???
+Line 219: // ???X??X???
+Line 247: // �t?X???��??��??
+Line 283: // �t?X???�t��
+Line 290: // �c�y��X
+Line 293: // �ե�??�R????
+Line 297: // ========== �t?X??�t�� ==========
+Line 313: // ========== ��??��?? ==========
+Line 326: // ========== ????���� ==========
+Line 339: // ========== ��??��?? ==========
+Line 352: // ========== ???X??? ==========
+Line 365: // ========== ���????==========
+Line 378: // ========== �h����????==========
+Line 391: // ========== �t��??�� ==========
+Line 404: // ========== ????�d??==========
+Line 417: // ========== �ƥ�e?? ==========
+Line 437: // �t��??X
+Line 465: // ????�s�x
+Line 487: // X??�p?X
+Line 491: // ??��????
+Line 507: // ���U??��
+Line 528: // �ƥ�e??��??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\UserFeedback\UserFeedbackSystem.h
+問題數: 45
+--------------------------------------------------------------------------------
+Line 2: // ??????t - ???X??X?X
+Line 11: * ?????X???
+Line 26: * ???X????X */
+Line 36: * ???X????X */
+Line 48: * ???X?????
+Line 63: /** ???X?????*/
+Line 67: /** ???X?X*/
+Line 154: * ?????X???
+Line 161: /** `??X */
+Line 165: /** ???X???*/
+Line 173: /** ???X???*/
+Line 177: /** ?X??X??? */
+Line 181: /** ????X*/
+Line 209: /** ???X???Xt??*/
+Line 217: /** ???X??X? */
+Line 221: /** ???X????? */
+Line 225: /** ??s???X?X*/
+Line 229: /** ???X??? */
+Line 237: /** ?????X??? */
+Line 241: /** ɥX???X??? */
+Line 245: /** ???X??X??? */
+Line 253: /** ˬd???X??? */
+Line 257: /** ???X??X??? */
+Line 262: /** ???X?ƥ */
+Line 265: /** ???X?????????*/
+Line 268: /** ???X???ƥ */
+Line 271: /** ????Xqƥ */
+Line 287: /** ???X???ID */
+Line 290: /** ?X??X??? */
+Line 293: /** O?X??X??? */
+Line 296: /** ???X??X??? */
+Line 305: /** ???X??X?e */
+Line 312: /** ??????XX*/
+Line 324: /** ???X??X??? */
+Line 349: /** ???X??? */
+Line 353: /** ???X??? */
+Line 357: /** ?????X? */
+Line 365: /** ???X??X? */
+Line 374: /** ?????X??? */
+Line 377: /** ?????X??? */
+Line 380: /** ???????X? */
+Line 391: /** ???????X*/
+Line 395: /** ???X??? */
+Line 399: /** ???X??? */
+Line 403: /** ?????X? */
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\AI\MingCombatAIManager.h
+問題數: 44
+--------------------------------------------------------------------------------
+Line 7: // AI X??X
+Line 10: Recruit,        // X?L
+Line 12: Veteran,        // X?L
+Line 13: Elite,          // ??U
+Line 17: // AI ?`?IXUENUM(BlueprintType)
+Line 21: Failure         // ??X
+Line 24: // AI X??X?n
+Line 28: Defensive,      // X?mX
+Line 30: Economic,       // ?gX
+Line 36: DirectAssault,  // X??X
+Line 37: Flanking,       // X?lX
+Line 38: Guerrilla,       // ??X
+Line 39: Siege,          // X??X
+Line 42: // ?x摧毀X
+Line 45: Northeastern,    // X?x??
+Line 46: Northwestern,    // ??X?x??
+Line 47: Southwestern,    // ??X?x??
+Line 48: Central,         // 摧毀?x??
+Line 49: Independent      // X?x??
+Line 52: // AI ??X?H??
+Line 80: // AI ?WXUSTRUCT(BlueprintType)
+Line 107: // AI X?]?m
+Line 133: * X?? AI ??X * ?t?d??X??XAI X??X??
+Line 141: // ??X
+Line 144: // XAI ??X
+Line 148: // AI X?s?D?`X
+Line 152: // ??X AI X??X
+Line 156: // 摧毀 AI X??X
+Line 160: // ?]?mX AI X
+Line 164: // X AI X?]?m
+Line 168: // X AI ??X?H??
+Line 172: // X AI X?s
+Line 176: // X?_ AI X?s
+Line 180: // X?mXAI
+Line 185: // AI X??X
+Line 188: // AI X?sX
+Line 191: // X?]?m
+Line 194: // X?_X
+Line 197: // ??X
+Line 200: // X?]?mX
+Line 206: // X?s??X?H??
+Line 209: // X AI X?sX
+Line 213: // X?_?wX?lX
+Line 216: // ??X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSHistoricalRoleplay.h
+問題數: 43
+--------------------------------------------------------------------------------
+Line 253: // ����X�ƥ�
+Line 263: // X��t�t?
+Line 267: // X����X��
+Line 271: // ��?����X��
+Line 275: // X��
+Line 279: // X��X
+Line 291: // ?�X�M?
+Line 295: // X�MX
+Line 299: // �p?�M?��?
+Line 303: // ����M?
+Line 307: // X���v�ǽTX
+Line 311: // X�M?��?��?
+Line 315: // X�I��X
+Line 319: // X�ܾ��v
+Line 323: // X����X��?
+Line 327: // �O?����X
+Line 331: // ���J����X
+Line 336: // X��X
+Line 340: // XIDX��X
+Line 344: // ����IDX��?��X - �`?�GTMap<TArray> ����XUPROPERTY
+Line 347: // ��X��
+Line 351: // X�a����
+Line 355: // ?�_�w?�l?
+Line 358: // X�Үw
+Line 361: // ?��?�v�MX
+Line 364: // ?�حx?����X
+Line 367: // ?�إ~��ͧPX
+Line 370: // ?�ظgX
+Line 373: // ?�ت�X��X
+Line 376: // ?��?�HX
+Line 379: // ��?�MX
+Line 382: // ?�ΨM?��?
+Line 385: // ?�s?�ܵ�?
+Line 388: // �p?���v�ǽTX
+Line 391: // �p?�M?��?
+Line 394: // �p?�I��X
+Line 397: // X��ID
+Line 400: // �ˬdX��X
+Line 403: // X����X
+Line 406: // �ˬd�MX�m����
+Line 409: // �O?�M?���v
+Line 412: // ?�s����X
+Line 415: // Ĳ�o��?�ƥ�
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Decision\MingDecisionConsequenceManager.h
+問題數: 41
+--------------------------------------------------------------------------------
+Line 11: // �M??�W?XUSTRUCT(BlueprintType)
+Line 16: // �M?X?���H��
+Line 26: // �M?X???
+Line 46: // ??�v��??
+Line 52: // ���t摧毀��??
+Line 59: // ??�v摧毀
+Line 63: // ??��??�v��??
+Line 68: // �x??��??
+Line 74: // �x??��??��??
+Line 87: // �x?X???��??
+Line 92: // �g??��??
+Line 98: // �g??��??��??
+Line 102: // �g?X???
+Line 112: // 摧毀�]�I��??
+Line 117: // ��??��??
+Line 129: // ??�|���
+Line 133: // ??�@??�d
+Line 137: // ��?X???
+Line 142: // ��??��??
+Line 148: // ��?X?���H��
+Line 158: // ��??��?X???
+Line 171: // ��?X???�{��
+Line 175: // ��?X??X???
+Line 190: * �M??��??��?X * �t�d�p?X??X?�M��?X???��{����??�M��?X */
+Line 197: // ��摧毀
+Line 200: // ???X?��??��
+Line 207: // ��?X?��
+Line 211: // ��?X?��
+Line 215: // ��?X?�P
+Line 219: // 摧毀��??���v
+Line 223: // �M����??���v
+Line 228: // ��??�p?X
+Line 231: // ��?X?��X
+Line 234: // ��??���v
+Line 240: // 故事重要性?��
+Line 243: // 摧毀��??ID
+Line 246: // �p??��?X???�{��
+Line 249: // 摧毀��?X?�z
+Line 252: // �O??��??�p??
+Line 255: // ��??��?X??X???
+Line 259: // ??�_�w??�l??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSBuildingUpgradeTest.h
+問題數: 40
+--------------------------------------------------------------------------------
+Line 16: // ��?X???�t�ι�??
+Line 20: // ???X?��??
+Line 24: // ���ի�?X???�t��???X
+Line 28: // ����????��?X?��
+Line 32: // ���ի�?X???�y??
+Line 36: // ����???X??X?�_
+Line 40: // ����???X???
+Line 44: // ���եߧY????
+Line 48: // ����???X?????
+Line 52: // ����????��???X
+Line 56: // ����???X??X?��
+Line 60: // ����????�����ˬd
+Line 64: // ����???X?���p??
+Line 68: // ����???X???�p??
+Line 72: // ���ե�?X??X?��????��??
+Line 76: // ����????��??
+Line 80: // ����???X?�m
+Line 84: // ����????�O??���J
+Line 88: // ���ը�?X??X?��
+Line 92: // ����???X?��??��
+Line 96: // ???X???��??
+Line 100: // ????���յ�??
+Line 104: // �M??����
+Line 109: // ���յ�??
+Line 113: // ����???X???
+Line 116: // ���ե�?X???
+Line 119: // �K??���յ�??
+Line 122: // ??�ش��ի�??
+Line 125: // ??�ش���????��??
+Line 128: // ��?X???��?X???
+Line 131: // ��?X??X?��
+Line 134: // ???X??X???��??ID
+Line 137: // ??�m���խp��X
+Line 140: // ??�ش���??�m
+Line 143: // ��?X?�m??��
+Line 146: // ��?X???��??
+Line 149: // ����????�y??
+Line 152: // ��?X??X???
+Line 155: // ??�ش���???X???
+Line 158: // ??�ش���???X???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingAutoSceneGenerator.h
+問題數: 39
+--------------------------------------------------------------------------------
+Line 16: Battle,         // X??X??
+Line 17: Village,        // X??
+Line 18: Palace,         // ?c??X??
+Line 19: Forest,         // ??X??
+Line 20: Mountain,       // ?s?aX??
+Line 21: River,          // ?eX??
+Line 22: Desert,         // ?FX??
+Line 23: City,           // X??
+Line 24: Temple,         // ?xX??
+Line 25: Battlefield,    // X??X??
+Line 26: Custom,         // ??w?q摧毀
+Line 31: Simple,         // 2??X??
+Line 32: Medium,         // ??X??
+Line 33: Complex,        // ??X??
+Line 34: Epic            // X??X??
+Line 39: Realistic,      // ?g摧毀
+Line 41: Cartoon,        // ?d?q摧毀
+Line 42: Watercolor,     // ??m摧毀
+Line 43: Ink,            // 摧毀???
+Line 44: OilPainting,    // ?o?e摧毀
+Line 45: PixelArt,       // 摧毀???N
+Line 46: LowPoly,        // ?C?h???
+Line 47: CelShaded,      // ???i?i摧毀
+Line 48: Photorealistic,  // 摧毀?u??
+Line 153: * X??X * X?D??X?e?X摧毀X??
+Line 166: // X??X
+Line 202: // X??X??
+Line 222: // X??X
+Line 245: // ??O??X
+Line 262: // X??X??
+Line 269: // X??X
+Line 282: // X?m??X
+Line 292: // ???
+Line 306: // ?t??]??
+Line 310: // X??X
+Line 329: // X?m
+Line 339: // ??X
+Line 346: // X??X??
+Line 358: // ???UX??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingAIGeneratedContentSystem.h
+問題數: 37
+--------------------------------------------------------------------------------
+Line 20: Video,          // ?vX
+Line 23: Texture,        // ?KX
+Line 24: Mesh,           // ??X
+Line 25: Material,       // X??X
+Line 26: Animation,      // X?eX
+Line 27: Level,          // X?dX
+Line 29: Text,           // X??X
+Line 30: Voice           // ?y??X
+Line 39: ElevenLabs,        // ElevenLabs (?y??)
+Line 41: Local,             // X?a??X
+Line 42: Custom,            // ??w?q???
+Line 47: Draft,          // X?Z??X
+Line 48: Standard,       // ??X??X
+Line 50: Ultra,          // ?W摧毀q
+Line 51: Custom,         // ??w?q??q
+Line 84: float Duration; // X??X?W/???W
+Line 215: * X?vX?B摧毀B??X??X?e??X?eX */
+Line 234: // ?vX
+Line 255: // ?y??X
+Line 262: // ?KX
+Line 266: // ??X
+Line 270: // X??X
+Line 274: // X?eX
+Line 278: // X?dX
+Line 286: // X??X
+Line 290: // X??X??X
+Line 333: // X?m??X
+Line 343: // X?]??O
+Line 353: // X??X
+Line 372: // ???
+Line 383: // ?t?�]??
+Line 399: // ?]?m
+Line 427: // ??X
+Line 434: // X??X??
+Line 444: // X??{
+Line 451: // X??X???U
+Line 458: // ???UX??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingRTSResourceManager.h
+問題數: 36
+--------------------------------------------------------------------------------
+Line 9: Gold,           // ??X
+Line 12: Iron,           // X?q
+Line 14: Coal,           // X??
+Line 15: Oil,            // X?o
+Line 16: Uranium,        // X?q
+Line 17: Crystal,        // ???
+Line 23: Mine,           // ?q?s
+Line 24: Forest,         // ??X
+Line 26: Farm,           // ?A??
+Line 27: OilWell,        // ?oX
+Line 28: CrystalCave,    // 摧毀}??
+Line 29: SilkFarm,       // 摧毀?A??
+Line 30: TradingPost     // ?T摧毀
+Line 35: Available,      // X??
+Line 36: Depleted,       // X??
+Line 37: Occupied,       // ?Q摧毀
+Line 38: UnderConstruction, // ??]??
+Line 39: Damaged,        // ???l
+Line 40: Repairing       // ??_??
+Line 186: * RTS??X??X * ??X摧毀X??
+Line 199: // ??X??X
+Line 245: // ??X??
+Line 258: // ??X??X
+Line 274: // ??X
+Line 287: // ??X??
+Line 294: // ??X??X?t??X
+Line 310: // ??X
+Line 320: // ??X?H??
+Line 333: // ??X???
+Line 343: // ???
+Line 357: // ??X
+Line 373: // ?]?m
+Line 389: // X??
+Line 405: // X??X??
+Line 412: // X??X??
+Line 425: // ???UX??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingRTSUnitManager.h
+問題數: 36
+--------------------------------------------------------------------------------
+Line 12: Infantry,       // �B�L
+Line 13: Cavalry,        // �M�L
+Line 14: Artillery,      // ??��
+Line 16: Engineer,       // �u�L
+Line 17: Medic,          // ???X
+Line 18: Commander,      // ??��??
+Line 19: Supply          // �ɵ�摧毀
+Line 24: Idle,           // ��??
+Line 25: Moving,         // ��摧毀
+Line 26: Attacking,      // 摧毀??
+Line 27: Defending,      // ??�m??
+Line 28: Retreating,     // ??�h??
+Line 29: Dead,           // ���`
+Line 30: Building        // �سy��
+Line 35: None,           // ??�}X
+Line 36: Line,           // �u��X
+Line 37: Column,         // �a?X
+Line 38: Wedge,          // ����X
+Line 39: Circle,         // ??��X
+Line 40: Square          // ??��X
+Line 143: * RTS摧毀��?X * ��?X???RTS???X?��??�B��??�B�}???X?X */
+Line 155: // 摧毀��??
+Line 174: // 摧毀�t��
+Line 199: // ��??�t��
+Line 215: // X�t��
+Line 237: // ??���t��
+Line 263: // ��??�W??
+Line 273: // �s?X?��
+Line 283: // ��??�H��
+Line 299: // �ƥ�
+Line 313: // �t�Τޥ�
+Line 317: // 摧毀�s�x
+Line 327: // X???
+Line 337: // �]�m
+Line 347: // ??��??��
+Line 357: // ���U??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSProductionTest.h
+問題數: 35
+--------------------------------------------------------------------------------
+Line 16: // ??���t�ι�??
+Line 20: // ???X?��??
+Line 24: // ����??���t��???X
+Line 28: // ����??���u��??
+Line 32: // ����??��??��??��
+Line 36: // ����??���y??
+Line 40: // ����??��????��??
+Line 44: // ����??��????�p??
+Line 48: // ����??��???X?�_
+Line 52: // ����??��??????
+Line 56: // ����??���u????
+Line 60: // ����???X??X
+Line 64: // ���ե�?X??X?��??��
+Line 68: // ����??����??
+Line 72: // ����??��??�m
+Line 76: // ����??���O??���J
+Line 80: // ???X???��??
+Line 84: // ????���յ�??
+Line 88: // �M??����
+Line 93: // ���յ�??
+Line 97: // ����???X???
+Line 100: // ���ե�?X???
+Line 103: // �K??���յ�??
+Line 106: // ??�ش���??��??
+Line 109: // ??�ش���??��
+Line 112: // ��?X?���u��X
+Line 115: // ��?X?��????
+Line 118: // ��?X?��??X
+Line 121: // ???X??X?��ID
+Line 124: // ??�m���խp��X
+Line 127: // ??�ش���??�m
+Line 130: // ��?X?�m??��
+Line 133: // ��?X?����??
+Line 136: // ����????�y??
+Line 139: // ��??��??��??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingAudioRelationshipManager.h
+問題數: 35
+--------------------------------------------------------------------------------
+Line 12: RelationshipDecrease,    // 摧毀�U?X???
+Line 14: NewFriendship,          // 摧毀�˭�X
+Line 16: Reconciliation,         // ??��摧毀
+Line 17: FirstMeeting,           // ??������摧毀
+Line 18: Farewell                // ??�O摧毀
+Line 24: ReputationDecrease,     // 摧毀�U?X???
+Line 25: NewReputationLevel,     // ??�n摧毀�ŭ�X
+Line 26: LegendaryAchievement,   // ???X?�N摧毀
+Line 27: RegionWelcome,          // 摧毀�w?X???
+Line 33: Friendly,               // ??�n���摧毀
+Line 34: Hostile,                // 摧毀���摧毀
+Line 35: Neutral,                // ��??���摧毀
+Line 36: Romantic,               // �������摧毀
+Line 37: Business,               // ??�~���摧毀
+Line 38: Intimidation,           // ��??���摧毀
+Line 39: Persuasion,             // ��?X???
+Line 40: Request                 // ��??���摧毀
+Line 136: * ??�W摧毀��?X * �t�d???X?�n??�t��?X?�W摧毀
+Line 146: // ???X?��??�t??
+Line 150: // ???X?�W摧毀
+Line 160: // ???X?�W摧毀
+Line 170: // ���??�W摧毀
+Line 180: // ��?X???�D?X?�W
+Line 190: // ??�W�]�m
+Line 203: // ??�W摧毀�d??
+Line 210: // �ƥ�
+Line 221: // ??�W�t�Τޥ�
+Line 225: // ??�W�]�m
+Line 238: // ??X
+Line 242: // ??��??�W???X?��
+Line 248: // ??�W??�ƭp??
+Line 253: // ??�W??��
+Line 257: // ��?X??X?�W�D??
+Line 271: // ???X?�D??
+Line 277: // ???X?�W�D??��??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingRelationshipManager.h
+問題數: 35
+--------------------------------------------------------------------------------
+Line 12: Rival,           // �v����??
+Line 13: Enemy,           // ??�H
+Line 14: Family,          // �a�H
+Line 15: Mentor,          // �ɮv
+Line 16: Student,         // ��??
+Line 17: Business,        // ??�~�٦�
+Line 19: Neutral          // ��??
+Line 24: Unknown,         // ??��
+Line 25: Disliked,        // �Q��X
+Line 26: Neutral,         // ��??
+Line 27: Respected,       // ???X
+Line 28: Honored,         // ??�qX
+Line 117: * ����???X?�n??��??�t?? * ��?X?�a??NPC摧毀�Y�H??�b??�Ӧa摧毀�nX */
+Line 126: // ???X?�t??
+Line 130: // ???X?�S�w?X??X???
+Line 134: // ??�s����摧毀
+Line 142: // ??�s目標數量
+Line 146: // 摧毀��?X???
+Line 150: // �ˬd??�_??�H目標數量��??�]��??�n摧毀
+Line 154: // 摧毀���摧毀�]��摧毀�Y??
+Line 158: // ???X?��ץ��]��摧毀�Y??
+Line 162: // 目標數量��??
+Line 166: // 目標數量��??
+Line 170: // �K?X???�O��
+Line 174: // 目標數量??�Y��X
+Line 178: // 目標數量�n??��X
+Line 183: // ����目標數量
+Line 191: // ???X?��X
+Line 195: // 摧毀��?X?��
+Line 199: // 摧毀��?X?��
+Line 204: // �p?X???��??
+Line 207: // �p?X???��??
+Line 210: // ??��摧毀�I??�]��故事選項?
+Line 213: // �O??�t��摧毀
+Line 216: // 摧毀�t��摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Decision\MingConsequenceConflictResolver.h
+問題數: 35
+--------------------------------------------------------------------------------
+Line 8: // ??X??X??X
+Line 12: PoliticalConflict,     // X?v??X??X
+Line 13: MilitaryConflict,      // ?xX??X??X
+Line 14: EconomicConflict,      // ?gX??X??X
+Line 15: SocialConflict,        // ??X??X??X
+Line 16: CrossDomainConflict,   // 摧毀??
+Line 19: // ??X??X
+Line 47: // ??X摧毀
+Line 50: PriorityBased,         // X??X
+Line 51: WeightedAverage,      // X??X
+Line 52: DomainOverride,       // X??X
+Line 53: Conservative,         // ?OX摧毀
+Line 54: Aggressive,           // ?EX
+Line 59: * ??X??X * ???X??MX摧毀X */
+Line 66: // ??X
+Line 69: // 摧毀?X??X
+Line 73: // X??X
+Line 77: // X??X
+Line 81: // X??X摧毀
+Line 85: // ??X??X
+Line 90: // ???X?v??X
+Line 93: // 摧毀xX??X
+Line 96: // 摧毀gX??X
+Line 99: // 摧毀?X??X
+Line 102: // 摧毀?X
+Line 105: // X??X???X
+Line 108: // X??X
+Line 111: // X??X
+Line 114: // ?OX摧毀X
+Line 117: // ?EX??X
+Line 120: // ?pX??X?{??
+Line 126: // X??X
+Line 130: // ?pX?uX
+Line 133: // ??X???X
+Line 136: // X?uX
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingUI\Source\MingUI\Public\Save\MingSaveLoadWidget.h
+問題數: 34
+--------------------------------------------------------------------------------
+Line 52: * 摧毀�s??��??����ܡB??�s�B?X?�B�R???X */
+Line 61: // 目標數量??
+Line 65: // �]�m��??�]??�s??���J??
+Line 69: // ??�s�s?X?��
+Line 73: // 摧毀�s摧毀
+Line 77: // 故事重要性?��摧毀�ɼ�
+Line 81: // 摧毀�O??
+Line 85: // 摧毀���J
+Line 89: // ???X?��
+Line 93: // �]�m�s?X?��
+Line 97: // 摧毀�s?X?��
+Line 101: // ??��摧毀��??�ϥβ�?X?�ż�??
+Line 105: // �ɥX�s??
+Line 109: // �ɤJ�s??
+Line 113: // ???X?��摧毀�s��
+Line 117: // ???X?��摧毀�s��
+Line 121: // �ƥ�??��
+Line 147: // �j??UI�ƥ�
+Line 151: // ??�sUI??X
+Line 155: // 摧毀�s??��UI�H��
+Line 159: // �T??���??
+Line 167: // ��??��J
+Line 172: // �O??��?X??X
+Line 176: // 摧毀��??
+Line 180: // ???X?��摧毀�ɼ�
+Line 184: // 摧毀�s?X?��
+Line 188: // UI �ե�j??�]�b摧毀���]�m??
+Line 234: // �s??��?X?��??
+Line 238: // 摧毀�I?X???
+Line 269: // �s??�ѿ�???X
+Line 273: // �O??/���J/??����?X?��
+Line 283: // ??�s??������??
+Line 286: // ??�ئs??��?X?UI
+Line 290: // �M���s??��摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingAIUIManager.h
+問題數: 34
+--------------------------------------------------------------------------------
+Line 14: NewPlayer,             // ??��??
+Line 15: CasualPlayer,          // ��?X?�a
+Line 16: StrategicPlayer,       // ����??�a
+Line 17: PowerPlayer,           // ??��??�a
+Line 18: SocialPlayer,          // ����??�a
+Line 19: Explorer,              // ??��X
+Line 20: StoryFocused,          // 摧毀��??
+Line 21: AchievementHunter      // ??�N??�H
+Line 26: Layout,                // �G?X???
+Line 27: ColorScheme,           // ??��摧毀
+Line 28: AnimationSpeed,        // ??�e??��
+Line 29: InformationDensity,    // �H���K��
+Line 30: InteractionPattern,    // ��??��??
+Line 31: NotificationLevel,     // ??���ŧO
+Line 32: TooltipFrequency,      // ??��摧毀
+Line 33: AutoSaveInterval       // 摧毀�O?X???
+Line 124: // ???X?AI UI�t��
+Line 129: // ??��欰�l��
+Line 174: // ??��??��
+Line 184: // ??��?X?��
+Line 194: // A/B����
+Line 204: // 摧毀�d??
+Line 217: // �]�m
+Line 230: // �ƥ�
+Line 241: // �t�Τޥ�
+Line 248: // AI??�m
+Line 261: // ??����??
+Line 265: // �欰摧毀
+Line 278: // ???X?�m
+Line 285: // A/B����摧毀
+Line 286: // �`??�GTMap<TMap> ����XUPROPERTY
+Line 289: // ??��??��
+Line 298: // AI��??
+Line 305: // ���U??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingUI\Source\MingUI\Public\Localization\MingLocalizedWidget.h
+問題數: 33
+--------------------------------------------------------------------------------
+Line 38: * ??�a目標數量?? * 目標數量�y?X??X??X?���摧毀 */
+Line 47: // ???X
+Line 51: // === ??�a??��]�m ===
+Line 53: // �]�m??�a??��
+Line 63: // === ??��摧毀 ===
+Line 65: // �]�m??��
+Line 75: // === ??��??�s ===
+Line 77: // ???X?�s??��
+Line 81: // �j��??�s
+Line 85: // === ??��摧毀 ===
+Line 87: // �]�m??���j摧毀
+Line 94: // �]�m??�_摧毀
+Line 98: // === ��??===
+Line 100: // ??�a??��
+Line 104: // 摧毀��??
+Line 108: // �q?X?�� (???X?��???X?��??
+Line 112: // ??�s��??
+Line 116: // ??���j摧毀
+Line 120: // ??�_�]�m
+Line 127: // �ϥδI?X
+Line 135: // === �ƥ�摧毀 ===
+Line 137: // �y?X??X??X?��
+Line 141: // 目標數量���???X
+Line 145: // 故事重要性?�a???X(???X
+Line 150: // ??�Ʀs�x
+Line 154: // 摧毀���???X
+Line 158: // �j?X?��摧毀�t��
+Line 161: // 摧毀�j??
+Line 164: // ??��??��摧毀 (�j??�g�B�I摧毀)
+Line 167: // ??�Τj??�g?X
+Line 170: // ??��??�_
+Line 173: // ??��摧毀
+Line 176: // ???X?�a??��??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingAudioPanel.h
+問題數: 33
+--------------------------------------------------------------------------------
+Line 12: Master,         // �D��X
+Line 15: Dialogue,       // ���摧毀
+Line 17: Music,          // ??��摧毀
+Line 23: Battle,         // ??���D??
+Line 24: Peaceful,       // ??���D??
+Line 25: Tension,        // ��i�D??
+Line 26: Victory,        // ??�Q�D??
+Line 27: Defeat,         // ��??�D??
+Line 28: Diplomatic,     // �~��D??
+Line 29: Economic,       // �g??�D??
+Line 30: Cultural,       // 摧毀�D??
+Line 31: Revolutionary,  // ??�R�D??
+Line 32: Nostalgic       // 摧毀�D??
+Line 123: // ???X
+Line 127: // ???X?��
+Line 152: // ??��??��
+Line 162: // �D?X?��
+Line 181: // ???X?�W
+Line 194: // ??�W����
+Line 207: // �]�m��??
+Line 220: // 摧毀�d??
+Line 236: // ??�W��??
+Line 246: // ��?X???
+Line 259: // �ƥ�
+Line 270: // �t�Τޥ�
+Line 277: // ??�W??��摧毀
+Line 284: // ???X?X
+Line 294: // �]�m
+Line 301: // UI�ե�ޥΡ]??�n�bBlueprint��??�w??
+Line 332: // ??��??��
+Line 336: // ??��??��
+Line 351: // �ƥ�j??
+Line 358: // ���U??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingPerformanceMonitor.h
+問題數: 32
+--------------------------------------------------------------------------------
+Line 19: // ��??FPS
+Line 23: // ??�CFPS
+Line 27: // ??��FPS
+Line 31: // �V摧毀 (�@??)
+Line 35: // ��??�V摧毀
+Line 39: // ��??�u?X???
+Line 43: // ??���u?X???
+Line 51: // �ϥ�目標數量 (MB)
+Line 55: // ��?X?��Ҽ�X
+Line 59: // ??��??��Ҽ�X
+Line 63: // ��??���摧毀
+Line 67: // �`��??��X
+Line 90: * ??��X??X * ��?X摧毀��??��摧毀
+Line 103: * ???X?�ʯ�X??
+Line 109: * ???X?��X??
+Line 127: * ???X?��目標數量
+Line 157: * ???X?��O??
+Line 195: // ???X?��摧毀
+Line 203: // ??�_摧毀�O??
+Line 207: // �O?X?��X
+Line 211: // ??�j?X??X
+Line 215: // 摧毀�q�ʯ��??
+Line 219: // 摧毀��??
+Line 222: // �p??FPS
+Line 225: // ??�s�O�����X
+Line 228: // ??�s�u?X???
+Line 231: // �O?X摧毀?
+Line 234: // 摧毀�O�����X
+Line 237: // 摧毀��??�u?X???
+Line 240: // ???X?���u?X???
+Line 246: // 摧毀��??��?X???
+Line 249: // ???X?����?X???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingRTSPathfinder.h
+問題數: 32
+--------------------------------------------------------------------------------
+Line 13: AStar,          // A*??X
+Line 14: Dijkstra,       // Dijkstra??X
+Line 15: FloydWarshall,  // Floyd-Warshall??X
+Line 16: Custom          // ??w?q??k
+Line 21: Walkable,       // ?i??
+Line 23: Difficult,      // X??X??
+Line 24: Water,          // ??X
+Line 25: Mountain,       // ?s?a
+Line 26: Forest          // ??X
+Line 31: Idle,           // ??X
+Line 32: Calculating,    // ?pX
+Line 33: Ready,          // ?NX
+Line 34: Failed          // ??X
+Line 46: float GCost;        // ?q?_?I??X?`?IX??X??
+Line 49: float HCost;        // ?q??X?I故事重要性
+Line 165: * RTS??X?WX * X?h??M故事重要性 */
+Line 177: // ??X?pX
+Line 187: // ??X
+Line 201: // X?�Zt??
+Line 214: // ???t??
+Line 224: // X??X
+Line 234: // ???X??
+Line 241: // ???eX
+Line 249: // X??X
+Line 254: // ???UX
+Line 265: // X?BX
+Line 270: // X???
+Line 274: // ??X?pX
+Line 281: // ???t??
+Line 300: // X???X
+Line 310: // X?m
+Line 329: // X??X??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSBuildingUpgradeSystem.h
+問題數: 31
+--------------------------------------------------------------------------------
+Line 123: // ???X?�t??
+Line 127: // ��??��?X???��??
+Line 131: // ????��?X???
+Line 135: // ???X???
+Line 139: // ??�_????
+Line 143: // ???X???
+Line 147: // �ߧY��?X???
+Line 151: // ???X??X?��
+Line 155: // ???X?????�Ÿ�??
+Line 159: // ???X???���O????�Ÿ�??
+Line 163: // ????��?X???��??
+Line 167: // ???X???��??
+Line 171: // �ˬd???X?�_??��
+Line 175: // ???X??X?��
+Line 179: // ???X??X???
+Line 183: // ???X??X???
+Line 187: // ?X???��??
+Line 191: // �ˬd????��?X?�_�w��X
+Line 195: // �ƥ�e��
+Line 218: // ????��?X???
+Line 222: // ��?X??X???
+Line 226: // ��??��?X???
+Line 230: // �w��??��|?X
+Line 234: // ??�s???X?��
+Line 238: // ��?X???
+Line 241: // ??��???X???
+Line 244: // �p??��?X??X???
+Line 247: // �ˬd��?X?�_��??
+Line 250: // ����????
+Line 254: // ???X?????
+Line 258: // �ƥ�e����?X???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingQuestPanel.h
+問題數: 31
+--------------------------------------------------------------------------------
+Line 11: Available,      // ??��X
+Line 12: Active,         // 摧毀??
+Line 13: Completed,      // �w?X
+Line 14: Failed,         // ��??
+Line 20: Main,           // �D??��??
+Line 21: Side,           // 摧毀��??
+Line 22: Daily,          // �C���??
+Line 23: Weekly,         // �C�g��X
+Line 24: Special,        // 摧毀��??
+Line 25: Relationship,    // 摧毀��??
+Line 26: Reputation,      // 摧毀��??
+Line 27: Exploration      // ??����??
+Line 161: // ???X
+Line 165: // ��??��??
+Line 187: // ��?X?��
+Line 206: // ??�o摧毀??
+Line 228: // ??��
+Line 235: // ��??�H��
+Line 251: // �ԲӫH��
+Line 261: // ��?X???
+Line 271: // �ɥX???X
+Line 278: // �ƥ�
+Line 292: // �t�Τޥ�
+Line 296: // ��?X???
+Line 306: // ??�o??X
+Line 322: // ???X?X
+Line 335: // UI�ե�ޥΡ]??�n�bBlueprint��??�w??
+Line 360: // ??��??��
+Line 364: // ??��??��
+Line 374: // �ƥ�j??
+Line 379: // ���U??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSAIArtGenerator.h
+問題數: 30
+--------------------------------------------------------------------------------
+Line 22: Realistic,         // �g�ꭷ��
+Line 23: Anime,            // ??������
+Line 24: OilPainting,      // �o�e����
+Line 25: Watercolor,       // ��m����
+Line 26: Sketch,           // ��??����
+Line 27: TraditionalChinese, // ��?X?��??��
+Line 28: Military,         // �x??����
+Line 29: Historical,       // ���v����
+Line 30: ConceptArt,      // ����????
+Line 31: PixelArt         // ???X???
+Line 36: Character,         // ����]??
+Line 37: Environment,       // ??���]??
+Line 38: Prop,             // ??��]??
+Line 39: Weapon,           // �Z���]??
+Line 40: Vehicle,          // ����]??
+Line 41: Architecture,     // ��??�]??
+Line 42: UI,               // UI�]??
+Line 43: Icon,             // ????�]??
+Line 44: Texture,          // ��??�]??
+Line 45: Concept           // �����]??
+Line 147: // �D??ø?X??X?��
+Line 160: // Stable Diffusion ????
+Line 167: // ControlNet ??��
+Line 174: // ???X???
+Line 181: // ????��?X
+Line 197: // ????�겣��??
+Line 210: // ??��????
+Line 217: // ??�]����
+Line 230: // ????�ɥX
+Line 237: // �e??�ƥ�
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingUnitBlueprintLibrary.h
+問題數: 30
+--------------------------------------------------------------------------------
+Line 11: * 故事選項? * 故事重要性摧毀X??X?t??
+Line 25: * ???X?챱??
+Line 53: * 摧毀w?X??X???
+Line 77: * ???X?O
+Line 88: * ?X??X摧毀?     */
+Line 140: * ϥ??X     */
+Line 150: * ]m???X?X     */
+Line 167: * ˬd???X?_??R??     */
+Line 189: * ???X?O?X?
+Line 195: * ???X?O摧毀摧毀     */
+Line 200: * 摧毀???X?
+Line 212: * 摧毀s???X?
+Line 263: * 摧毀t??X     */
+Line 280: * 摧毀?X??X???
+Line 286: * ???X?O`
+Line 297: * ˬd???X?_??
+Line 303: * ˬd???X?_??
+Line 309: * ˬd???X?_??
+Line 315: * ˬd???X?_??X     */
+Line 320: * ˬd???X?_??X     */
+Line 325: * ˬd???X?_摧毀     */
+Line 360: * p?X??X??X     */
+Line 365: * ˬd??_???X?
+Line 371: * ˬd???X?_摧毀?X?
+Line 389: * p?X??X?`
+Line 401: * ˬds??X     */
+Line 430: * ???X?mĳ
+Line 436: * ???X?ĳ
+Line 460: * ???X?Ov
+Line 513: * ??m???X?X     */
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\AI\MingNationalRevolutionaryArmyAI.h
+問題數: 30
+--------------------------------------------------------------------------------
+Line 9: * ???X?�R??AI
+Line 10: * ��{故事選項X?�R�x?X??X?��
+Line 18: // ��摧毀
+Line 21: // ???X
+Line 24: // �s?X???�M??
+Line 27: // ����??����X
+Line 35: // ??�v�u??�v�T
+Line 39: // ??�p�U??�v�T
+Line 43: // ??�R摧毀�v�T
+Line 47: // ��?X???����
+Line 51: // �s��??��
+Line 55: // ??�v摧毀摧毀
+Line 59: // ??�p??�U�{��
+Line 63: // �]�m??�p??�U��??
+Line 67: // ???X?�v�e���v�TX
+Line 71: // �]�m??�v�e���v�TX
+Line 76: // ??�v�e���v�TX(0.0-1.0)
+Line 80: // ??�p�U??��?? (0-5)
+Line 84: // ??�p??�U�{�� (0.0-1.0)
+Line 88: // ??�R摧毀 (0.0-1.0)
+Line 92: // ��?X???�j�� (0.0-1.0)
+Line 96: // �s��摧毀??(0.0-1.0)
+Line 100: // ??�v摧毀摧毀 (0.0-1.0)
+Line 105: // ???X?�q
+Line 108: // ???X?�vX
+Line 111: // ??�p�x??�U??�v�T
+Line 114: // �T??�D�q�v�TX
+Line 117: // �p?X?�v�h��摧毀
+Line 120: // �p??��?X??X??X???
+Line 123: // �M?X?�_???X?�v??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingPersonalUIManager.h
+問題數: 30
+--------------------------------------------------------------------------------
+Line 15: RelationshipPanel,     // ???X?�O
+Line 16: ReputationPanel,       // ???X?�O
+Line 17: DialoguePanel,         // ���??�O
+Line 18: QuestPanel,            // ��?X?�O
+Line 19: AudioPanel,            // ??�W??�O
+Line 20: MainDashboard,         // �D??��O
+Line 21: CharacterDetails,      // �����??
+Line 22: RegionDetails,         // 摧毀��??
+Line 23: SystemSettings         // �t�γ]�m
+Line 28: None,                  // ???X
+Line 29: Fade,                  // �H�J�H�X
+Line 30: Slide,                 // ��??
+Line 31: Scale,                 // �Y��
+Line 33: Bounce                 // �u��
+Line 93: // ???X?UI�t��
+Line 99: // UI??�O��??
+Line 118: // Widget��??
+Line 128: // UI??�m
+Line 138: // ??�e�t��
+Line 148: // ???X?�s
+Line 164: // �D??��O
+Line 174: // 摧毀�d??
+Line 184: // �ƥ�
+Line 195: // �t�Τޥ�
+Line 205: // Widget�s�x
+Line 209: // UI??�m
+Line 213: // ??X
+Line 223: // ??��??��
+Line 232: // Widget??�ػ��U??��
+Line 243: // ??�e���U??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingRTSCombatSystem.h
+問題數: 30
+--------------------------------------------------------------------------------
+Line 13: Melee,          // ���
+Line 15: Artillery,      // ??��
+Line 17: Naval           // ����
+Line 22: Physical,       // ???X?�`
+Line 23: Fire,           // ??�K??�`
+Line 24: Explosive,      // ??��??�`
+Line 25: Piercing,       // ���??�`
+Line 26: Magic,          // �]?X?�`
+Line 27: Poison          // �r?X?�`
+Line 32: Aggressive,     // 摧毀��??
+Line 33: Defensive,      // ??�m��??
+Line 34: Neutral,        // ��??��??
+Line 35: Passive         // �Q??��??
+Line 184: * ��?X???�԰���???X?��摧毀?? */
+Line 196: // ??����??
+Line 206: // ??��摧毀
+Line 218: // ??�`�p??
+Line 237: // ??����??
+Line 250: // �d?X???
+Line 287: // ??�����Žվ�
+Line 300: // ??��??�s
+Line 307: // ??����??
+Line 320: // �ƥ�
+Line 337: // �t�Τޥ�
+Line 341: // ??��摧毀
+Line 357: // ??���]�m
+Line 376: // ���Žվ�??��
+Line 389: // ��?X???
+Line 399: // ??��??��
+Line 408: // ���U??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Components\MingSpatialPartitionComponent.h
+問題數: 29
+--------------------------------------------------------------------------------
+Line 21: // ?�含?�單�?
+Line 25: // 活�?標�? (?�否?�要更X
+Line 29: // ?�後更?��X
+Line 33: // ?�新?��?�?
+Line 140: // 註�X�單�?
+Line 144: // ?��X�網?��X��?
+Line 147: // 網格?��?
+Line 151: // 網格大�?
+Line 155: // ?�新?��?
+Line 159: // ?��?位置
+Line 162: // ?��?視�?
+Line 165: // ?�新計�X
+Line 168: // ?�新?��?
+Line 172: // ?�大�?幀?�新網格X
+Line 176: // ?��X�新索�? (?�於?��X�新)
+Line 179: // ?�新?��?資�?
+Line 182: // 確�?網格存在
+Line 185: // 從網?�移?�單�?
+Line 188: // 將單位添?�到網格
+Line 191: // ?�新網格活�X�X
+Line 194: // ?�新活�?網格中�X��?
+Line 197: // ?��?視�X�除
+Line 200: // 檢查網格?�否?��X�內
+Line 203: // ?��?視�X��?�?
+Line 206: // 計�?網格?�AABB
+Line 209: // 距離?��?級�?�?
+Line 212: // ?��X�新?��?
+Line 215: // 休�?網格中�X��?
+Line 218: // ?��?網格中�X��?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Events\MingEventTriggerRandom.h
+問題數: 29
+--------------------------------------------------------------------------------
+Line 15: // ?��?ID (對�?不�X��?�?
+Line 19: // 權�? (?�於?��X��?)
+Line 23: // ?�小觸?��X(?�卻)
+Line 27: // 上次觸發?��?
+Line 49: // 設置?��?觸發概�? (0-1)
+Line 53: // 設置概�?衰�? (每次觸發後�X��?�?
+Line 57: // 設置?��X�大觸?��X
+Line 61: // 添�X��X��X��?
+Line 65: // 清除?�?�選X
+Line 69: // ?��X��?概�?
+Line 73: // ?��?距離下次?�能觸發?��X
+Line 77: // ?��?觸發?��X��? (返�X�中?��?件ID)
+Line 81: // ?�新計�?概�?
+Line 86: // ?��?概�?
+Line 90: // ?��?概�?
+Line 94: // 概�?衰�X��? (0-1, 1表示不衰�?
+Line 98: // 概�?增長?��? (?��X��X��X
+Line 102: // ?�小觸?��X
+Line 106: // ?�大觸?��X
+Line 110: // 距離上次觸發?��X
+Line 114: // ?��X��?窗口?�是?�可觸發
+Line 118: // ?��X��X��X�表
+Line 122: // ?�否使用?��X��?
+Line 126: // ?�寫?��X��?
+Line 132: // ?��X��?檢查
+Line 135: // ?��X��X��X��?
+Line 138: // ?�新?��?窗口
+Line 141: // 檢查?�否?��X�小�X
+Line 144: // ?�置觸發?�X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingRTSEconomicSystem.h
+問題數: 29
+--------------------------------------------------------------------------------
+Line 13: Growth,         // 摧毀??
+Line 14: Stagnation,     // 摧毀??
+Line 15: Recession,      // ?I?h??
+Line 16: Depression,     // 摧毀??
+Line 17: Recovery,       // ?_?d??
+Line 18: Boom            // ?c?a??
+Line 23: Land,           // X??
+Line 25: Air,            // ??X
+Line 26: Rail,           // X??
+Line 27: Digital         // X?TX
+Line 35: Volatile        // ?iX
+Line 210: * ??X???X??
+Line 223: // ?gX??X
+Line 242: // ??X???X
+Line 264: // ?TX??X??X
+Line 305: // ?gX
+Line 330: // ?gX
+Line 346: // ?gX??
+Line 359: // ?gX???
+Line 372: // ??X?H??
+Line 385: // ?gX?`摧毀???
+Line 398: // ???
+Line 412: // ?t?�V??
+Line 422: // ?gX
+Line 432: // ?]?m
+Line 457: // 摧毀??X??
+Line 485: // X??X??
+Line 507: // 摧毀??X??X??
+Line 517: // ???UX??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Replay\MingRTSReplayManager.h
+問題數: 28
+--------------------------------------------------------------------------------
+Line 10: * ??��???X???
+Line 14: DateNewest          UMETA(DisplayName = "????(??X"),
+Line 15: DateOldest          UMETA(DisplayName = "????(??X"),
+Line 18: DurationLongest     UMETA(DisplayName = "??��(??X"),
+Line 19: DurationShortest    UMETA(DisplayName = "??��(??X")
+Line 58: * ??���?X- ��?X?��??��???X???�˯�
+Line 68: // ???X
+Line 72: // ???X????X
+Line 76: // ??�o??��
+Line 80: // ???X?��
+Line 84: // ??��??��
+Line 88: // ???X?���??
+Line 92: // ??�R???X
+Line 96: // ??��??��
+Line 100: // ???X?��
+Line 104: // �ɥX??��????�w��??
+Line 108: // �q??��?X??X
+Line 112: // ????�s�x�ϥ�???? (MB)
+Line 116: // ????�s�x???? (MB)
+Line 120: // �]�m�s�x????
+Line 124: // �M?X??X
+Line 128: // ??��??��??��??
+Line 132: // ???X?��????
+Line 136: // ��?X?��????��
+Line 140: // ??��??��????
+Line 144: // ����????
+Line 148: // ???X??X??X
+Line 152: // �ƥ�e??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingCombatAIBlueprintLibrary.h
+問題數: 28
+--------------------------------------------------------------------------------
+Line 34: * ???X?AIt
+Line 40: * ???X?԰AIt
+Line 46: * ???X?AIt
+Line 171: * ???X?mM??
+Line 183: * ???X?hM??
+Line 189: * ???X?lM??
+Line 201: * ???X?M??
+Line 207: * ???X?ըM??
+Line 260: * 摧毀M???X?
+Line 278: * 摧毀???X?
+Line 358: // 故事選項X??? - ϥ FUnitArrayWrapper 摧毀??
+Line 368: * 摧毀t??X     */
+Line 402: * ˬd???X?_??
+Line 408: * ˬdM??`IO???X     */
+Line 413: * ˬdM??`IO???X     */
+Line 435: * p??M???X?
+Line 441: * p?X??X??X?
+Line 453: * ???X?ΨM摧毀     */
+Line 458: * ???X?tM摧毀     */
+Line 463: * ???X?˨M摧毀
+Line 475: * ???X?X摧毀
+Line 493: * ???X?ĳ
+Line 505: * ???X?mĳ
+Line 517: * ???X?hĳ
+Line 722: * ???X?
+Line 740: * 摧毀AI??X     */
+Line 757: * ˬdAI??d??X     */
+Line 774: * ??_AI??X     */
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Components\MingInstancedRenderingComponent.h
+問題數: 28
+--------------------------------------------------------------------------------
+Line 16: // 實�X��?
+Line 20: // ?��X��?�?
+Line 23: // ?�次ID
+Line 26: // 實�X��?
+Line 40: LOD0    UMETA(DisplayName = "LOD 0 - Full Detail"),      // 完整細�?
+Line 42: LOD2    UMETA(DisplayName = "LOD 2 - Medium Detail"),   // 中�?細�?
+Line 44: LOD4    UMETA(DisplayName = "LOD 4 - Lowest Detail"),    // ?�低細節
+Line 45: Culled  UMETA(DisplayName = "Culled")                     // 完全?�除
+Line 122: // 註�X�單�?
+Line 126: // ?��X�批次索引�X��?
+Line 129: // 渲�X�次
+Line 133: // LOD距離?��?
+Line 137: // ?�新計�X
+Line 140: // ?�新?��? (�?
+Line 144: // ?�能統�?
+Line 149: // ?��?位置 (?�於LOD計�?)
+Line 152: // ?��X�LOD?��?
+Line 155: // ?�建?�獲?�批�?
+Line 158: // ?�新?�次實�X��?
+Line 161: // ?��?LOD計�?
+Line 164: // ?�新實�X��X
+Line 167: // ?��X��?位置
+Line 170: // ?�次?�併 (?��?小批�?
+Line 173: // ?�次?�割 (?��?大批�?
+Line 176: // ?�大批次大�?
+Line 180: // ?�小批次大�?(低於此值考慮?�併)
+Line 184: // ?�否?�用LOD
+Line 188: // ?�否?�用?��X�次調整
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Components\MingUnitMovementComponent.h
+問題數: 28
+--------------------------------------------------------------------------------
+Line 16: // 摧毀��m
+Line 20: // ??�_摧毀��??
+Line 24: // ??�_�ϥ�??��
+Line 28: // ??�Τ�??��m
+Line 57: // ��?X?�O
+Line 64: // ??�??
+Line 68: // ??�_摧毀��??
+Line 72: // 故事重要性?��
+Line 76: // �]�m��?X?��
+Line 80: // ��?X???
+Line 95: // ???X?��??
+Line 99: // 摧毀��?X?X
+Line 103: // ��?X?��
+Line 107: // ???X?��
+Line 111: // ??��Z�� (故事選項X?�HX
+Line 115: // 摧毀��摧毀
+Line 119: // 摧毀��??��??
+Line 123: // 目標數量��m
+Line 131: // ??�_摧毀��??
+Line 135: // ??��??��
+Line 139: // ��??��??ID
+Line 142: // �ɯ�t�Τޥ�
+Line 145: // ��??��??
+Line 148: // ��?X?��??��
+Line 151: // �u??��??��??
+Line 154: // ��?X???
+Line 157: // �ˬd??�_目標數量
+Line 160: // ??�s��?X?X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingAIContentManager.h
+問題數: 28
+--------------------------------------------------------------------------------
+Line 16: Video,          // �v??
+Line 19: Texture,        // �K??
+Line 20: Mesh,           // ��??
+Line 21: Material,       // ??��
+Line 22: Animation,      // ??�e
+Line 23: Level,          // ??�d
+Line 25: Text,           // ??��
+Line 26: Voice           // �y��
+Line 114: * AI ??�e��?X * ��??��??AI??�e???X?��摧毀����t��
+Line 127: // ??�غ�??
+Line 146: // ??�e摧毀
+Line 156: // ??�e��??
+Line 172: // ??��摧毀
+Line 182: // ��?X?��
+Line 226: // �겣��??
+Line 242: // ???X?��
+Line 252: // ??��??��
+Line 262: // ??��X??
+Line 275: // ??�m��??
+Line 288: // �t�κ��@
+Line 301: // �ƥ�
+Line 312: // �t�βե�
+Line 319: // ??�غ�??
+Line 326: // ??�e��??
+Line 336: // �ҪO
+Line 355: // ��??
+Line 365: // ??��??��
+Line 376: // ���U??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Tests\MingReleaseIntegrationTest.h
+問題數: 28
+--------------------------------------------------------------------------------
+Line 10: Epic1_RTSCombat,        // Epic 1.1: RTS X???t??
+Line 11: Epic2_Economic,         // Epic 2.1: ?gX?t??
+Line 12: Epic3_AICampaign,       // Epic 3.1: AI X???tX
+Line 13: Epic4_UIAudio,          // Epic 4.1: UI X??X?tX
+Line 14: Epic5_Network,          // Epic 5.1: ???X?HX?tX
+Line 15: Epic6_SaveLoad,         // Epic 6.1: ?OX?tX
+Line 16: Epic7_Localization,     // Epic 7.1: X?aX?tX
+Line 17: Epic8_Performance,      // Epic 8.1: X??X???tX
+Line 18: Epic9_AIContentGen,     // Epic 9: AI X?eX?t??
+Line 19: Epic10_FourLayer,       // Epic 5: X?h摧毀X?t??
+Line 20: SystemIntegration,      // X?t?�i?X
+Line 21: FinalValidation,  // X??X};
+Line 72: * Release X??X??X摧毀X * 摧毀XEpic ?t??X??X */
+Line 85: // ========== Epic 1: RTS X???t?�_??? ==========
+Line 98: // ========== Epic 2: ?gX?t?�_??? ==========
+Line 108: // ========== Epic 3: AI X???t?�_?X==========
+Line 118: // ========== Epic 4: UI X??X?t?�_?X==========
+Line 128: // ========== Epic 5: ???X?HX?t?�_?X==========
+Line 138: // ========== Epic 6: ?OX?t?�_?X==========
+Line 148: // ========== Epic 7: X?aX?t?�_?X==========
+Line 158: // ========== Epic 8: X??X???t?�_?X==========
+Line 168: // ========== Epic 9: AI X?eX?t?�_??? ==========
+Line 178: // ========== Epic 10: X?h摧毀X?t?�_??? ==========
+Line 188: // ========== X?t?�i?X??X==========
+Line 201: // ========== X??X???X==========
+Line 257: // ========== ??X??X ==========
+Line 291: // ???
+Line 311: // ???UX??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingBuilding\Source\MingBuilding\Public\MingBuildingManager.h
+問題數: 28
+--------------------------------------------------------------------------------
+Line 16: // ?�否?��?
+Line 20: // ?�誤信息
+Line 24: // ?�置位置
+Line 28: // 建�?ID
+Line 47: // 建�?類�?
+Line 51: // 建�?位置
+Line 55: // 建�X��?
+Line 59: // ?��?ID
+Line 63: // ?��?完�X��?
+Line 67: // ?��X�度
+Line 71: // ?�否�?��建�?
+Line 97: // 活�?建�X��?
+Line 101: // 建造中建�X��?
+Line 105: // ?��?建�X��?
+Line 109: // ?��X�建築數X
+Line 117: // ?�置工人?��?
+Line 121: // 建造�X�長�?
+Line 153: // === 建�X�置?�建X===
+Line 169: // === 建�?管�? ===
+Line 185: // === 建�X�置驗�? ===
+Line 198: // === 工人管�? ===
+Line 208: // === 建�X��X�維�?===
+Line 218: // === 建�X�詢 ===
+Line 225: // === ?��?介面 (?�容X ===
+Line 232: // === 資�?管�? ===
+Line 243: // === ?��X�內?�方�?===
+Line 267: // === ?��?資�?存儲 (?�容X ===
+Line 270: // === ?��X�建築管?�數X===
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\GameScreenGenerator\GameScreenGenerator.h
+問題數: 27
+--------------------------------------------------------------------------------
+Line 2: // ??��??��???X- �D?X??X?��??��????
+Line 53: * ??��???X?��
+Line 131: * ??��???X???
+Line 142: /** ???X?�� */
+Line 170: /** ???X?�e */
+Line 204: * ???X?�e??��X */
+Line 242: /** ???X??? */
+Line 265: * ??��??��???X */
+Line 274: /** ???X?�e???X?�� */
+Line 278: /** ???X?�� */
+Line 286: /** ???X??X??X?�� */
+Line 290: /** ???X?��???X?�� */
+Line 294: /** ???X?��??��??�� */
+Line 298: /** ???X???��?X?�� */
+Line 310: /** ???X?�s??�O??�� */
+Line 322: /** ???X??X?�eX*/
+Line 326: /** ???X????X??X?�� */
+Line 330: /** ??��???X?�eX*/
+Line 334: /** �ɥX??��???X*/
+Line 355: /** ??��???X???�ƥ� */
+Line 377: /** �]�m?????X */
+Line 386: /** ???X?�� */
+Line 389: /** ???X?��ID */
+Line 395: /** ?????X�׳]??*/
+Line 402: /** ???X?�e??????*/
+Line 481: /** ???X?��??��??�� */
+Line 493: /** ???X???��X*/
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Mod\MingRTSModSystem.h
+問題數: 27
+--------------------------------------------------------------------------------
+Line 106: * 模??系統 - 管??模?X?創??工???X */
+Line 115: // ???X
+Line 119: // 從創??工??獲??模組????
+Line 123: // ????已??裝模??
+Line 127: // ????已?X?模??
+Line 131: // ????模??詳??
+Line 135: // 下??模??
+Line 139: // ????下??
+Line 143: // 安??模??
+Line 147: // ????模??
+Line 151: // ??用模??
+Line 155: // 禁用模??
+Line 159: // ??新模??
+Line 163: // 檢查??新
+Line 167: // 上傳模?X?創??工X
+Line 171: // ??建??地模??
+Line 175: // 訂閱模??
+Line 179: // ????訂閱
+Line 183: // 評??模??
+Line 187: // ????模??
+Line 191: // 驗??模??
+Line 195: // ????模??
+Line 199: // ???X????X???模??
+Line 203: // ????模?X???
+Line 207: // 設置???X???
+Line 211: // ????依賴衝??
+Line 215: // 事件委??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Optimization\MingHierarchicalTickSystem.h
+問題數: 27
+--------------------------------------------------------------------------------
+Line 15: Critical    UMETA(DisplayName = "Critical"),    // �C?X?�s | Every Frame (??���u
+Line 16: High        UMETA(DisplayName = "High"),        // �C?X?�s | Every Frame
+Line 20: Background  UMETA(DisplayName = "Background"),   // ???X?�s | On Demand
+Line 21: Paused      UMETA(DisplayName = "Paused")       // ???X?�s | Paused
+Line 67: * ɬ??�j??��??��?? Tick ??��?? * - ??�u目標數量X??XTick ???
+Line 70: * ??��??1000+ ???X?�j?��???X?��
+Line 81: * ???X?�t??     */
+Line 97: // ==== 摧毀��?? ====
+Line 100: * �`?X??X?�t??     */
+Line 111: * ?�m???XTick ??
+Line 122: // ==== AI ��?? ====
+Line 166: // ==== ??�m ====
+Line 169: * ?�m摧毀??XTick 摧毀
+Line 186: // ==== ??�H�� ====
+Line 203: // ==== ??? ====
+Line 219: // 目標數量??X???
+Line 223: // AI ???目標數量
+Line 227: // 摧毀摧毀?��?X??X??
+Line 231: // ??�m
+Line 235: // ??
+Line 242: // ???XTick ??
+Line 248: // 摧毀???��
+Line 251: // ??X??X摧毀?
+Line 254: // ??�s??
+Line 257: // �M?X???�ޥ�
+Line 260: // 摧毀 Tick ???�ޥ�
+Line 267: // 摧毀摧毀摧毀摧毀�j??��?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Events\MingHistoricalEventManager.h
+問題數: 27
+--------------------------------------------------------------------------------
+Line 319: // 已註?��?歷史事件
+Line 323: // 事件ID?��?件�X��?
+Line 327: // ?��X�戲上�X
+Line 331: // 事件統�?
+Line 335: // 已觸?��?事件
+Line 339: // ?�否已�?始�?
+Line 342: // ?��X��X�歷?��?件庫
+Line 345: // ?�建?��X��X��?�?
+Line 348: // ?�建?�京?�年事件
+Line 351: // ?�建?�戰事件
+Line 354: // ?�建?�戰事件
+Line 357: // 檢查?��?條件
+Line 360: // 檢查決�?條件
+Line 363: // 檢查資�?條件
+Line 366: // 檢查建�?條件
+Line 369: // 檢查軍�?條件
+Line 375: // ?��?事件後�?
+Line 378: // ?�用事件影響
+Line 381: // ?�新事件統�?
+Line 384: // 驗�?事件依賴
+Line 387: // ?��?事件影響?�數
+Line 390: // 記�?事件?��?
+Line 393: // ?��?事件?��?
+Line 396: // �X條件字符�?
+Line 399: // 比�X��?
+Line 402: // ?��?上�X��?
+Line 405: // 設置上�X��?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Managers\MingDecisionManager.h
+問題數: 27
+--------------------------------------------------------------------------------
+Line 16: // 決�?ID
+Line 20: // ?��X�選?�ID
+Line 24: // 決�X��?
+Line 28: // ?�戲?�日X
+Line 32: // 決�?標�?
+Line 36: // ?��X�選?��X
+Line 59: // ?��X
+Line 63: // ?��?
+Line 67: // 註�?決�?
+Line 71: // ?��?觸發決�?
+Line 75: // ?��?決�X��?
+Line 79: // ?��X��?活�?決�?
+Line 83: // ?��?決�?歷史
+Line 87: // 檢查決�X�否已�X
+Line 91: // ?��X��?決�X��X
+Line 95: // ?�新?�戲?��? (?�於?��?觸發?�決�?
+Line 99: // 檢查條件觸發?�決�?
+Line 103: // 事件委�?
+Line 110: // ?��X��?實�?
+Line 114: // ?�?�註?��?決�?
+Line 118: // ?��?活�X�決�?(等�X�家?��?)
+Line 122: // 決�?歷史記�?
+Line 126: // 已�X��?決�?ID?��?
+Line 130: // ?��X�戲?��?
+Line 133: // ?�否已�?始�?
+Line 136: // ?��?實�?
+Line 139: // ?�部?��?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\UI\MingUIManager.h
+問題數: 27
+--------------------------------------------------------------------------------
+Line 31: // ??�j�e��?X摧毀?1 ���目標數量
+Line 38: // ??�j??��?X摧毀?1 ���目標數量
+Line 42: // ��?XUI ��??��??
+Line 67: // DPI �Y��摧毀
+Line 71: // 摧毀 UI �Y��
+Line 75: // �r??�Y��
+Line 79: // 摧毀�Y��
+Line 107: // �C?X?�s
+Line 111: // 目標數量 UI ��??��??
+Line 115: // 摧毀��??�ؤo���O
+Line 119: // 目標數量�Y��]�m
+Line 123: // �p?X??XUI �ؤo
+Line 136: // ��??��??�ؤo��?X?��
+Line 140: // ���P??��
+Line 144: // 目標數量��??
+Line 150: // 摧毀 UI ��??��??
+Line 154: // 摧毀��??�ؤo���O
+Line 157: // 摧毀�Y��]�m
+Line 160: // ��??�ؤo�w�q
+Line 163: // ��??�ؤo��?X?��
+Line 166: // ??��??��??�ؤo�]��??�˴�?X???
+Line 169: // 摧毀��??
+Line 172: // 目標數量���ؤo摧毀
+Line 175: // �˴���??�ؤo��??
+Line 178: // ??�s UI ��??
+Line 181: // �p??�Y��]�m
+Line 184: // ??����??�ؤo��??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSTechTreeTest.h
+問題數: 26
+--------------------------------------------------------------------------------
+Line 16: // ��??��t�ι�??
+Line 20: // ???X?��??
+Line 24: // ���լ�??��??�l??
+Line 28: // ���լ�??�`�I��??
+Line 32: // ���լ�?X?�o�y??
+Line 36: // ����??�m�����ˬd
+Line 40: // ���լ�?X??X?��
+Line 44: // ���լ�???X����
+Line 48: // ���ը�?X?�o??��
+Line 52: // ���լ�??��????
+Line 56: // ���լ�??��??�s??���J
+Line 60: // ���ե�?X??X?���??
+Line 64: // ???X???��??
+Line 68: // ????���յ�??
+Line 72: // �M??����
+Line 77: // ���յ�??
+Line 81: // ����???X???
+Line 84: // ���ե�?X???
+Line 87: // �K??���յ�??
+Line 90: // ??�ش��լ�??�`??
+Line 93: // ��??��??�`�I��X
+Line 96: // ��?X?�o??X
+Line 99: // ???X???��??ID
+Line 102: // ??�m���խp��X
+Line 105: // ??�ش���??�m
+Line 108: // ��?X?�m??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingMultiUnitBlueprintLibrary.h
+問題數: 26
+--------------------------------------------------------------------------------
+Line 100: * K?X??X摧毀?     */
+Line 141: * ???X?ղ??
+Line 171: * ???X?ե??
+Line 201: * ???X?լ}
+Line 239: * ???X?ղ??
+Line 251: * ??B???X?X     */
+Line 272: * ???X?HX??
+Line 278: * ???X?H??
+Line 296: * ???X?B?X?
+Line 302: * ???X?H??ĳ??
+Line 369: * 摧毀t??X     */
+Line 386: * 摧毀?X??X???
+Line 403: * ˬd???X?_sb
+Line 409: * ˬd???X?_??
+Line 415: * ˬd???X?_??X     */
+Line 482: * p?X??X摧毀?
+Line 488: * p?X??X摧毀?
+Line 499: * ???X?γqH??ĳ
+Line 505: * ???X?իĳ
+Line 523: * ???X?mĳ
+Line 535: * ???X?hĳ
+Line 568: * ???X?Ov
+Line 574: * ???X?Hv
+Line 580: * ???X?ղ??
+Line 592: * ???X?H??
+Line 627: * ???X?O摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingRTSAIController.h
+問題數: 26
+--------------------------------------------------------------------------------
+Line 13: Idle,           // ??X
+Line 14: Follow,         // ???H
+Line 16: Build,          // ??y
+Line 17: Repair,         // ??_
+Line 23: None,           // ?L???
+Line 24: Low,            // ?C?u摧毀
+Line 25: Medium,         // ???u摧毀
+Line 26: High,           // ???u摧毀
+Line 27: Critical        // 摧毀?u摧毀
+Line 33: Planning,        // ?p摧毀
+Line 36: Reacting        // 摧毀??
+Line 134: * RTS AIX??X * ??XAI??X?MX */
+Line 146: // AI??X??
+Line 159: // X??X
+Line 175: // X???t??
+Line 191: // ?MX?t??
+Line 204: // ??X?t??
+Line 220: // X??AI
+Line 236: // ??XAI
+Line 255: // AI?]?m
+Line 292: // ???
+Line 306: // ?t?�V??
+Line 331: // AI?]?m
+Line 393: // X??X??
+Line 412: // AIX?i??X??X
+Line 421: // ???UX??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSGlobalEmergency.h
+問題數: 25
+--------------------------------------------------------------------------------
+Line 10: NaturalDisaster,    // ??�M??�`
+Line 11: Pandemic,          // ???X?�o
+Line 12: ClimateCrisis,     // ????�M??
+Line 13: ResourceShortage,  // ��?X?��
+Line 14: Technological,     // ??�N�M??
+Line 15: Economic,          // �g?X???
+Line 16: Political,         // ??�v????
+Line 17: Military,          // �x?X???
+Line 18: Environmental,     // ???X???
+Line 19: Social             // ��?X???
+Line 24: Local,             // ??�a????
+Line 25: Regional,          // ????�TX
+Line 26: National,          // ??�a????
+Line 27: International,     // ???X???
+Line 28: Global             // ???X???
+Line 122: // ���??���X
+Line 141: // ???X??X?��
+Line 154: // ��?X???
+Line 167: // ??ĵ�t��
+Line 180: // ??����??
+Line 193: // ??�_??????
+Line 206: // ??��???X
+Line 219: // ???X??X?��??
+Line 232: // �t��??��
+Line 245: // �e??�ƥ�
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingDialoguePanel.h
+問題數: 25
+--------------------------------------------------------------------------------
+Line 11: Idle,           // ��??
+Line 12: Speaking,       // ����??
+Line 13: Listening,      // ??��??
+Line 14: Choosing,       // 摧毀??
+Line 15: Finished        // ��??
+Line 110: // ???X
+Line 114: // ���??��
+Line 143: // ���??�e
+Line 156: // 摧毀�d??
+Line 169: // ��ı摧毀
+Line 185: // ??�W摧毀
+Line 195: // ���v�O??
+Line 208: // �ֱ�摧毀
+Line 218: // �ƥ�
+Line 232: // �t�Τޥ�
+Line 236: // ���摧毀
+Line 246: // ??X
+Line 262: // �]�m
+Line 272: // UI�ե�ޥΡ]??�n�bBlueprint��??�w??
+Line 297: // ??��??��
+Line 301: // ??��??��
+Line 311: // �ƥ�j??
+Line 316: // ���U??��
+Line 323: // �w?X
+Line 327: // 摧毀��?X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSAIMusicGenerator.h
+問題數: 24
+--------------------------------------------------------------------------------
+Line 22: Orchestral,        // �ީ�??
+Line 23: TraditionalChinese, // ��?X?��????
+Line 24: Military,          // �x?X???
+Line 25: Ambient,           // ???X???
+Line 26: Battle,            // ??��????
+Line 27: Cinematic,         // ??�v????
+Line 28: Victory,           // ??�Q????
+Line 29: Suspense           // ???X???
+Line 34: Explosion,         // ??��
+Line 35: Gunshot,           // �j�n
+Line 36: SwordClash,        // ????
+Line 37: Footsteps,         // ??�BX
+Line 38: Vehicle,           // ����X
+Line 39: Nature,            // ??�M????
+Line 40: Interface,         // ??��????
+Line 41: Voice              // �y��
+Line 116: // �D?X??X??X?��
+Line 132: // AIVA API ????
+Line 139: // ????�w��X
+Line 152: // ???X?��??��
+Line 168: // ???X?��
+Line 175: // ???X???
+Line 182: // ??�]����
+Line 192: // �e??�ƥ�
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Replay\MingRTSReplaySystem.h
+問題數: 24
+--------------------------------------------------------------------------------
+Line 13: UnitSpawn               UMETA(DisplayName = "???X???"),
+Line 15: UnitAttack              UMETA(DisplayName = "???X???"),
+Line 32: * ??放??X */
+Line 160: * ??放系統 - 記?X??X??X???局
+Line 170: // ???X
+Line 174: // ???X?製
+Line 178: // ??止??製
+Line 182: // ???X?放
+Line 186: // ??止??放
+Line 190: // ????/??復??放
+Line 197: // 設置??放??度
+Line 201: // 跳?X???定?X
+Line 205: // 跳?X???定??
+Line 209: // 記??事件
+Line 214: // 記??幀????
+Line 218: // ???X?放??表
+Line 222: // ??除??放
+Line 226: // 導出??放
+Line 230: // 導入??放
+Line 234: // ???X??X?放??X
+Line 238: // ???X??X?放????
+Line 242: // ???X??X?放幀
+Line 246: // ???X?放總?X
+Line 250: // 事件委??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Events\MingEventTrigger.h
+問題數: 23
+--------------------------------------------------------------------------------
+Line 62: // ?��X�觸?�器
+Line 66: // ?��?觸發X
+Line 70: // 每�X�新
+Line 74: // 檢查?�否?�以觸發
+Line 78: // ?��?觸發
+Line 82: // ?�置觸發X
+Line 86: // ?�用/禁用
+Line 93: // ?��?觸發?��X
+Line 97: // ?��X��X�X
+Line 105: // 觸發?�ID
+Line 109: // ?��?�?
+Line 113: // ?�否一次性觸X
+Line 117: // ?�卻?��?
+Line 121: // ?�大觸?�次X(-1 表示?��X
+Line 125: // 觸發事件委�?
+Line 130: // 觸發?��X
+Line 134: // ?��X�X
+Line 138: // ?�否?�用
+Line 142: // ?��X�卻?��?
+Line 150: // ?�新?�卻
+Line 153: // 設置?�X
+Line 156: // ?�部觸發?�輯 (子�?實現)
+Line 159: // 檢查觸發條件 (子�?實現)
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingAIAssetGenerator.h
+問題數: 23
+--------------------------------------------------------------------------------
+Line 42: // 資產類??
+Line 46: // 民?X???風格
+Line 57: // 負面??示??(??於目標數量)
+Line 61: // 摧毀尺寸 (??於目標數量)
+Line 68: // ???X?長 (??於目標數量)
+Line 72: // 摧毀風格 (??於目標數量)
+Line 76: // 質??設置
+Line 80: // 種?X(??於摧毀複?X
+Line 111: // 資產類??
+Line 125: // ??誤信息
+Line 150: * AI資產???X * 摧毀Stable Diffusion??AIVA摧毀資產摧毀
+Line 161: * ???X?AI資產???X     */
+Line 166: * 摧毀AI資產???X     */
+Line 204: * ???X?景摧毀
+Line 244: * 摧毀民?X??X?示??     */
+Line 254: // Stable Diffusion API端??
+Line 257: // AIVA API端??
+Line 260: // 已完成???資產
+Line 264: // ??否已??始??
+Line 267: // 摧毀實??
+Line 273: // 摧毀Stable Diffusion??示??
+Line 282: // 保?X??X??X
+Line 291: // 驗??API摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\GameMode\OneClick\MyOneClickGameMode.h
+問題數: 22
+--------------------------------------------------------------------------------
+Line 7: * MingGoRTS �@???X??X?��?? * ????�@???X??X???����??����??��??
+Line 21: // X �@???X?�u??�t??
+Line 22: UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayNa
+Line 25: // ??? ??��????�]��??�t�Φ�????�m??
+Line 29: // ??? ���P????�]??���ʯ�??
+Line 33: // X ????�t��??X
+Line 34: UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayNa
+Line 37: // ??? ???X?��????
+Line 38: UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayNa
+Line 41: // X ??�s????�t��
+Line 45: // ??? �@??�ʯ��ˬd
+Line 49: // ???? ??��????�t��
+Line 53: // X ????�t��??�d??
+Line 54: UFUNCTION(BlueprintCallable, Category = "One Click Game Mode", meta = (DisplayNa
+Line 57: // ??? ���??��H��
+Line 61: // ??? ??�e�ʯ�??��
+Line 66: // �@???X?��
+Line 70: // �t��??�m
+Line 87: // ??��??��
+Line 93: // �p?X
+Line 97: // ????????
+Line 102: // ???X??X?���?X?��????���X????
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Components\MingUnitCombatComponent.h
+問題數: 22
+--------------------------------------------------------------------------------
+Line 10: * ???X?�O��??
+Line 21: // 摧毀��m
+Line 25: // ??�_摧毀�m��X
+Line 37: * ???X?���ե�
+Line 51: // ???X?�O
+Line 58: // ??��摧毀
+Line 62: // ??�_??��???X?��
+Line 73: // ??�_??�H摧毀
+Line 77: // �]�m???X?�o
+Line 82: // ???X?��??
+Line 90: // 摧毀��m摧毀
+Line 94: // ??�_??��摧毀??
+Line 98: // ??�_??��X
+Line 102: // ???X?�o摧毀
+Line 106: // ???X?�o摧毀
+Line 110: // 摧毀�d??
+Line 114: // ???X?�`
+Line 121: // ��ؼгy?X?�`
+Line 124: // �M��d?X??X?�H
+Line 127: // ???X?��??
+Line 130: // �ˬd???X?�_摧毀
+Line 133: // ???X?�eĲ�o
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Difficulty\MingDifficultyManager.h
+問題數: 22
+--------------------------------------------------------------------------------
+Line 9: // 摧毀???
+Line 44: * ??�׺�?X * ��??��?X?��??�m摧毀??X *
+Line 61: // ==== ??�׵�?��?? ====
+Line 67: /** 摧毀??X?�׵�? */
+Line 71: /** 摧毀??X?��??��??? */
+Line 75: /** 目標數量�i???X?�׵�? */
+Line 83: // ==== 摧毀��?X====
+Line 93: /** ???�D?X?��?��???X*/
+Line 97: /** ???X?�ס]�����目標數量 */
+Line 105: // ==== 摧毀��??�f ====
+Line 111: /** ?�m摧毀??X?�Τ_�۩w?X?��??*/
+Line 127: // ==== ???X?��?�� ====
+Line 137: /** ?��??X??X*/
+Line 153: // ==== ��???�� ====
+Line 167: // ==== ??���t?? ====
+Line 177: // ==== ???X====
+Line 191: // ==== ??? ====
+Line 199: // ==== �ƥ�e?? ====
+Line 207: /** ???X?��?�� */
+Line 213: /** ???X?��?�� */
+Line 228: /** ??X???�ƥ� */
+Line 249: // �q???�m???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingAIAssetManager.h
+問題數: 22
+--------------------------------------------------------------------------------
+Line 35: // 資產??稱
+Line 39: // 資產類??
+Line 47: // 民?X???風格
+Line 51: // ??建摧毀
+Line 55: // ??件大?? (bytes)
+Line 59: // ??件路??
+Line 70: // 評?? (1-5)
+Line 106: // 資產類??
+Line 114: // 民?X???風格
+Line 124: // ??顯示已使用
+Line 239: * ???X?薦資產
+Line 250: // 資產??表
+Line 254: // ??否已??始??
+Line 257: // 摧毀實??
+Line 260: // 資產???X?件路??
+Line 266: // 摧毀資產摧毀??
+Line 269: // 保??資產摧毀??
+Line 272: // ??建資產??數X
+Line 275: // 確??資產摧毀
+Line 278: // 驗??資產??件
+Line 284: // ???X?件大??
+Line 293: // 建??資產摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Spectator\MingRTSSpectatorSystem.h
+問題數: 21
+--------------------------------------------------------------------------------
+Line 120: // ?��X
+Line 124: // ?�建觀?�房X
+Line 128: // ?��?觀?�房X
+Line 132: // ?�入觀X
+Line 136: // ?��?觀X
+Line 140: // ?��?觀?�房?��?�?
+Line 144: // ?��?觀?�房?�信X
+Line 148: // 設置觀?�模�?
+Line 152: // 跟隨?�家
+Line 156: // 跟隨?��?
+Line 160: // 設置?��?機�?置�X��?
+Line 168: // ?��X�中X
+Line 172: // ?�送�X��?天�X
+Line 176: // ?��?觀?�者�?�?
+Line 180: // ?��?觀?�者數X
+Line 184: // ?�否?�許觀X
+Line 188: // ?�用/禁用觀X
+Line 192: // 設置?��?密碼
+Line 196: // 踢出觀?��?
+Line 200: // 禁�?觀?��?
+Line 204: // 事件委�?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Stats\MingRTSStatisticsSystem.h
+問題數: 21
+--------------------------------------------------------------------------------
+Line 208: * 統??系統 - 記?X??X?玩家統計數X */
+Line 216: // ???X
+Line 219: // 記??對?X???
+Line 223: // 記??對??結??
+Line 227: // ??新實??統??
+Line 231: // 記?X??X?殺
+Line 235: // 記??資?X???
+Line 239: // 記??APM
+Line 243: // ???X?涯統??
+Line 247: // ????對??歷史
+Line 251: // ???X???統??
+Line 255: // ???X???統?X
+Line 259: // ????統??趨勢
+Line 263: // 比??統??
+Line 267: // ???X???榜????
+Line 271: // ????統?X???
+Line 275: // 導出統?X???
+Line 279: // ??置統??
+Line 283: // 保??統??
+Line 287: // 載入統??
+Line 291: // 事件委??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Optimization\MingObjectPoolSystem.h
+問題數: 21
+--------------------------------------------------------------------------------
+Line 15: Unused      UMETA(DisplayName = "Unused"),      // ?�使X
+Line 16: Available   UMETA(DisplayName = "Available"),   // ?�用 | Available
+Line 17: InUse       UMETA(DisplayName = "In Use"),      // 使用�?| In Use
+Line 112: // ==== ?��?池�?�?====
+Line 138: // ==== AI池�?�?====
+Line 226: // ==== 调�? ====
+Line 247: // ?��?�?
+Line 251: // AI�?
+Line 255: // ?�置
+Line 269: // ?�用?�件索�?快�?（避?��X��?尋�?
+Line 273: // ?��X�却（防止�?度扩展�?
+Line 277: // ?��?类�?默认�?
+Line 284: // ?�建?��?�?
+Line 287: // ?�建?�AI
+Line 290: // ?�置?��X��?
+Line 293: // ?�置AI?��?
+Line 296: // ?�正?�毁对象�?归�X��X��?
+Line 300: // 检?�是?��?要自?�扩�?
+Line 303: // 清�X��?引用
+Line 306: // ?�找?�用?��?�?
+Line 310: // ?�找?��?对象?��?索�?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Managers\MingEventTriggerManager.h
+問題數: 21
+--------------------------------------------------------------------------------
+Line 20: // ?��X
+Line 24: // ?��?
+Line 28: // 每�X�新
+Line 32: // 註�?觸發X
+Line 40: // ?��?觸發
+Line 44: // ?��?觸發X
+Line 48: // ?��X�?�觸?�器
+Line 52: // ?��X��?類�X�觸?�器
+Line 56: // ?�用/禁用觸發X
+Line 60: // ?�置觸發X
+Line 64: // ?�置?�?�觸?�器
+Line 68: // ?��?/?�復?�?�觸?�器
+Line 72: // ?�建觸發X(工�X��?)
+Line 76: // ?��?事件委�?
+Line 80: // ?��X��?實�?
+Line 84: // 註�X�觸?�器?�表
+Line 88: // 觸發?�ID?�索引�X��?
+Line 91: // ?�否已�?始�?
+Line 94: // ?�否?��?
+Line 97: // ?��?實�?
+Line 100: // ?�部?��?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingMainDashboard.h
+問題數: 21
+--------------------------------------------------------------------------------
+Line 11: Overview,       // �`��
+Line 14: Quests,         // ��??
+Line 15: Audio,          // ??�W
+Line 16: Settings        // �]�m
+Line 115: // ???X
+Line 119: // ����??��X
+Line 141: // ???X?�s
+Line 167: // ??���t��
+Line 183: // 摧毀�d??
+Line 199: // ��??�H��
+Line 212: // ��?X???
+Line 225: // �ƥ�
+Line 236: // �t�Τޥ�
+Line 240: // ???X?X
+Line 253: // �]�m
+Line 263: // UI�ե�ޥΡ]??�n�bBlueprint��??�w??
+Line 297: // ����??Widget�ޥ�
+Line 316: // ??��??��
+Line 320: // ??��??��
+Line 333: // �ƥ�j??
+Line 340: // ���U??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingRTSUnitSelector.h
+問題數: 21
+--------------------------------------------------------------------------------
+Line 13: Single,         // ??��
+Line 14: Multiple,       // �h��
+Line 15: Box,            // �ؿ�
+Line 21: All,            // 摧毀��??
+Line 22: SameType,       // 摧毀��??
+Line 23: SameState,      // ???X?X
+Line 25: Idle            // ��?X???
+Line 60: * RTS故事重要性 * 故事選項X??X?�B??�o?X??X?��
+Line 71: // 故事重要性?��
+Line 87: // ???X?��
+Line 100: // ???X?�o
+Line 107: // �ؿ�??��
+Line 114: // ???X?��
+Line 127: // 摧毀���v
+Line 137: // 摧毀��??
+Line 147: // ��ı摧毀
+Line 155: void UpdateSelectionVisuals(); // �ƥ�e??
+Line 163: // ??��摧毀
+Line 167: void NotifySelectionChanged(); // ���U摧毀
+Line 184: // 摧毀���v
+Line 192: // ??�m
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Launcher\MingRTSOneClickLauncher.h
+問題數: 20
+--------------------------------------------------------------------------------
+Line 9: * MingGoRTS �@???X?�t?? * ??²��??�覡?X?��???X???�sĶ�t��
+Line 19: // X �@???X- ??²��??��??��??
+Line 20: UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayNam
+Line 23: // X�ֳt?X- ???X?�m��??�l�uX
+Line 27: // ??? ??��???? - ????�t��???X??X?��????
+Line 31: // ??? ���P???? - ??���ʯ�??�m
+Line 35: // X ???X??X?X
+Line 36: UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayNam
+Line 39: // ??? ???X?��????
+Line 40: UFUNCTION(BlueprintCallable, Category = "One Click Launcher", meta = (DisplayNam
+Line 43: // X ??�s????
+Line 47: // ???? ??��t��
+Line 51: // X ????�t��??�d??
+Line 55: // ??? �@??�ʯ��ˬd
+Line 60: // ????�t�κ�?X
+Line 64: // �t��??X
+Line 75: // ??��???X?��
+Line 80: // ????��X
+Line 84: // ���??��
+Line 89: // ���U????
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Telemetry\MingRTSTelemetrySystem.h
+問題數: 20
+--------------------------------------------------------------------------------
+Line 140: * ??測系統 - ???X??X??X???測數X */
+Line 149: // ???X
+Line 153: // ??用/禁用??測
+Line 157: // ???X?話
+Line 161: // 結?X?話
+Line 165: // 記??事件
+Line 169: // 記?X?家????
+Line 173: // 記??UI交??
+Line 177: // 記?X?能????
+Line 181: // 記?X?誤
+Line 185: // 記??崩潰
+Line 189: // 記?X?能使用
+Line 193: // ???X?送????
+Line 197: // ???X??X?話ID
+Line 201: // ????緩??事件????
+Line 205: // 設置??次大??
+Line 209: // 設置??送?X
+Line 213: // 導出???X???
+Line 217: // 清除緩??
+Line 221: // 事件委??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Difficulty\EDifficultyLevel.h
+問題數: 20
+--------------------------------------------------------------------------------
+Line 12: Easy       UMETA(DisplayName = "²�� | Easy"),    // Easy
+Line 14: Hard       UMETA(DisplayName = "X�� | Hard"),    // Hard
+Line 15: Expert     UMETA(DisplayName = "�M�a | Expert"),    // Expert
+Line 34: // AI X�� | AI Related Parameters
+Line 35: AIReactionSpeed      UMETA(DisplayName = "AIX�� | AI Reaction Speed"),  // AI Re
+Line 36: AIIntelligence       UMETA(DisplayName = "AIX��{�� | AI Intelligence"),  // AI I
+Line 37: AIUnitStrength       UMETA(DisplayName = "AIX�j�� | AI Unit Strength"),  // AI U
+Line 39: // ��X�� | Resource Related Parameters
+Line 40: ResourceCollection   UMETA(DisplayName = "��X | Resource Collection"), // Resour
+Line 41: ResourceConsumption  UMETA(DisplayName = "��X����X | Resource Consumption"),  //
+Line 43: // X��X�� | Combat Related Parameters
+Line 44: PlayerDamageTaken    UMETA(DisplayName = "X�aX��X�` | Player Damage Taken"), // 
+Line 45: PlayerDamageDealt    UMETA(DisplayName = "X�aX�` | Player Damage Dealt"), // Pla
+Line 46: UnitHealth           UMETA(DisplayName = "X�RX| Unit Health"),    // Unit Health
+Line 48: // ��X�� | Mission Related Parameters
+Line 49: MissionTimeLimit     UMETA(DisplayName = "��X�� | Mission Time Limit"), // Missi
+Line 50: MissionObjective     UMETA(DisplayName = "��X | Mission Objective Difficulty"), 
+Line 52: // X�@X�� | Penalty Related Parameters
+Line 53: DeathPenalty         UMETA(DisplayName = "���`X�@ | Death Penalty"),     // Deat
+Line 54: FailureCost          UMETA(DisplayName = "��X | Failure Cost")      // Failure C
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Difficulty\MingPlayerPerformanceTracker.h
+問題數: 20
+--------------------------------------------------------------------------------
+Line 10: * �s�x??��?X??X?�a��{摧毀 | Store player performance data at a single time point
+Line 55: /** ��?X??X??X| Validate data validity */
+Line 91: * ??��?? * - ???X?��??�l?? * - ??X??X???�l?
+Line 93: * - ??X?目標數量? */
+Line 106: // ==== �ƥ�l???�f ====
+Line 108: /** ??X??X?���ƥ� */
+Line 112: /** ??X??X?�بƥ� */
+Line 128: /** ??X摧毀?? */
+Line 132: // ==== ??��?��??�f ====
+Line 142: /** ???X?�a摧毀�� */
+Line 146: /** ???X?�a�z???�� */
+Line 150: /** ???X?��?���? */
+Line 154: /** ??�_��?�F��??X*/
+Line 158: // ==== ??�m??�f ====
+Line 168: /** ??�m摧毀�l??X*/
+Line 172: // ==== ??X?�f ====
+Line 193: /** ??X???�ƥ� */
+Line 206: // ???�l摧毀?
+Line 213: // 摧毀??
+Line 219: // ??�v目標數量
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingReputationPanel.h
+問題數: 20
+--------------------------------------------------------------------------------
+Line 59: * ???X?�OWidget
+Line 70: // ???X
+Line 74: // ???X?�s
+Line 84: // ??�o摧毀??
+Line 97: // ??��
+Line 104: // ��??�H��
+Line 120: // �ԲӫH��
+Line 133: // ��?X???
+Line 143: // ��?X???
+Line 150: // �ɥX???X
+Line 157: // �ƥ�
+Line 165: // �t�Τޥ�
+Line 169: // 摧毀�s�x
+Line 179: // ??�o??X
+Line 189: // ???X?X
+Line 196: // UI�ե�ޥΡ]??�n�bBlueprint��??�w??
+Line 224: // ??��??��
+Line 228: // ??��??��
+Line 239: // �ƥ�j??
+Line 244: // ���U??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Input\MingInputManager.h
+問題數: 20
+--------------------------------------------------------------------------------
+Line 56: // ��J��m�]??���y��??
+Line 63: // ��J摧毀��??
+Line 67: // ??����??�]Ĳ摧毀
+Line 71: // Ĳ��ID�]??�IĲ摧毀
+Line 110: // ???X?��??��??��
+Line 117: // �C?X?�s
+Line 121: // �]�m摧毀��J��??
+Line 125: // 目標數量��J��??
+Line 129: // �j??��J摧毀�]Blueprint??��摧毀
+Line 133: // 摧毀�j??
+Line 137: // Ĳ�o��J�ƥ�
+Line 153: // 目標數量��??
+Line 159: // 摧毀��J��??
+Line 163: // ??���摧毀??
+Line 166: // Ĳ��摧毀??
+Line 169: // ��J�j?X???
+Line 172: // Ĳ��摧毀�l??
+Line 183: // ??���˴�??��
+Line 188: // 摧毀��??
+Line 191: // ��J???X?��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Platform\IPlatformInterface.h
+問題數: 20
+--------------------------------------------------------------------------------
+Line 36: // ??�_摧毀�h??Ĳ��
+Line 43: // ??�_故事重要性?�L
+Line 47: // ??�_摧毀��??
+Line 51: // �q??��J��??
+Line 58: // ��ĳ摧毀�j?X?����
+Line 94: // 目標數量���x��??
+Line 97: // 摧毀���x摧毀
+Line 100: // ???X?��X
+Line 103: // 摧毀���x
+Line 106: // 摧毀��??DPI
+Line 109: // 摧毀�w��??X(??��??��?X?����??)
+Line 112: // �ˬd??�_??Ĳ??�]X
+Line 115: // �]�m??���??
+Line 118: // 故事選項X??? (0-1, -1��ܤ���X
+Line 121: // ??�_摧毀??�q
+Line 124: // ��ܥ��x目標數量��??
+Line 127: // ??��??��
+Line 130: // ��??��??
+Line 133: // �O?X??X?��??�S�w?X
+Line 136: // �q��??�S�w?X??X?��X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSResourceCollectionTest.h
+問題數: 19
+--------------------------------------------------------------------------------
+Line 16: // ��??�t�ι�??
+Line 20: // ???X?��??
+Line 24: // ����??����?X???
+Line 28: // ���ո�??�s�x
+Line 32: // ���ո�??��??
+Line 36: // ���ո�?X?��
+Line 40: // ���ո�??��??
+Line 44: // ���ո�??�I??
+Line 48: // ???X???��??
+Line 52: // ????���յ�??
+Line 56: // �M??����
+Line 61: // ���յ�??
+Line 65: // ����???X???
+Line 68: // ���ե�?X???
+Line 71: // �K??���յ�??
+Line 74: // ??�ش��զs�x
+Line 77: // ??�ش���????
+Line 80: // ��??��?X???
+Line 83: // ??�m���խp��X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Stats\MingRTSAchievementSystem.h
+問題數: 19
+--------------------------------------------------------------------------------
+Line 157: // ?��X
+Line 161: // 載入?�就定義
+Line 165: // ?��X�?��?�?
+Line 169: // ?��X��?類�X�就
+Line 173: // ?��X��?稀?�度?�就
+Line 177: // ?��X�就詳�?
+Line 181: // ?��X�家?�就?�度
+Line 185: // ?�新?�就?�度
+Line 189: // 增�X�就?�度
+Line 193: // �X�就
+Line 197: // 檢查?�就?�否已解X
+Line 201: // ?��?已解?��?�?
+Line 205: // ?��X��?中�?�?
+Line 209: // ?��X�就統�?
+Line 213: // ?��X�近解?��X�就
+Line 217: // ?�置?�家?�就
+Line 221: // 保�X�就?��?
+Line 225: // 載入?�就?��?
+Line 229: // 事件委�?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingLargeScaleCombatTest.h
+問題數: 19
+--------------------------------------------------------------------------------
+Line 12: * ����1000+???X?�԰��ʯ�
+Line 22: // ???X?��??
+Line 26: // �M??����
+Line 30: // ??�ش���摧毀
+Line 34: // ???X?�����
+Line 38: // ??��??�����
+Line 42: // ???X?���??
+Line 55: // ���յ�??
+Line 63: // ����摧毀
+Line 67: // ??��X??
+Line 73: // FPS��??
+Line 79: // 摧毀��?X
+Line 83: // ??��摧毀
+Line 86: // ??�s??���??
+Line 89: // ??�m??���??
+Line 92: // ����摧毀�欰
+Line 95: // ����目標數量
+Line 98: // ����摧毀��??
+Line 101: // ����???X?��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Events\MingEventTriggerCondition.h
+問題數: 19
+--------------------------------------------------------------------------------
+Line 34: // 條件??稱 (??於調試)
+Line 38: // 摧毀對象 (資??類?X??X?ID故事選項?)
+Line 42: // 摧毀??
+Line 50: // 是否可見符串比??
+Line 54: // 字符串目標??(如?X?於字符串摧毀
+Line 73: // 組內條件??表
+Line 77: // 組內??輯摧毀??(AND/OR)
+Line 96: // 添?X?個摧毀
+Line 100: // 添??條件??
+Line 104: // 設置???X?輯摧毀??
+Line 108: // ??新條件X(???X?系統調X
+Line 115: // 清除摧毀??件??
+Line 119: // 摧毀條件評估結?? (??於調試)
+Line 128: // ???X?輯摧毀??(組??組?X
+Line 136: // 摧毀條件X(字符??
+Line 140: // ??寫目標數量
+Line 144: // 評估條件??
+Line 147: // 評估??個摧毀
+Line 150: // ??值摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingBehaviorAnalytics.h
+問題數: 19
+--------------------------------------------------------------------------------
+Line 115: * �`��???X?��欰��?X?��X */
+Line 124: // 故事重要性?�t??
+Line 128: // �ƥ�O??
+Line 148: // ��??�˴�
+Line 161: // �Ͷ�摧毀
+Line 171: // ??�`�˴�
+Line 181: // ??��摧毀
+Line 191: // ???X?��X
+Line 201: // ??��??�s
+Line 221: // 摧毀�d??
+Line 234: // �]�m
+Line 247: // �ƥ�
+Line 258: // 摧毀�s�x
+Line 271: // �`??�GTMap<TArray> ����XUPROPERTY
+Line 277: // ???X?��
+Line 281: // ??�m
+Line 297: // ??��??��
+Line 309: // ������??���U
+Line 315: // ���U??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingDynamicContentGenerator.h
+問題數: 19
+--------------------------------------------------------------------------------
+Line 117: * ???X?�e???X * ??��AI摧毀�U?X??X???UI??�e
+Line 127: // ???X?���e?X?��
+Line 131: // ??�e摧毀
+Line 153: // �ҪO��??
+Line 166: // �W?X??X
+Line 176: // ??�e摧毀
+Line 193: // ??�e�w??
+Line 203: // ??�a??��X
+Line 210: // ??�e����
+Line 220: // 摧毀�d??
+Line 233: // �]�m
+Line 246: // �ƥ�
+Line 254: // �t�Τޥ�
+Line 258: // ??�m
+Line 274: // 摧毀�s�x
+Line 284: // �`??�GTMap<TArray> ����XUPROPERTY
+Line 290: // ??��??��
+Line 298: // AI摧毀���U
+Line 305: // ���U??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSGameInstance.h
+問題數: 18
+--------------------------------------------------------------------------------
+Line 52: // ??��??��????
+Line 56: // �]�m????����????
+Line 60: // ???X???����????
+Line 64: // �]�m�s??��????
+Line 68: // ????�s??��????
+Line 72: // ???X??X?��??��
+Line 76: // ��?X??X?��??��
+Line 80: // �O?X?��??��
+Line 84: // ���J??��??��
+Line 88: // �ˬd??�_??��??�i?X?????
+Line 92: // ???X?��???X???
+Line 96: // �]�m??��????
+Line 100: // ???X?��????
+Line 105: // ??��??�_��??
+Line 109: // ???X?�� ID
+Line 112: // ??��????��?X
+Line 115: // ??��???X??X???
+Line 118: // �M?X?��????
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingAccessibilityHelper.h
+問題數: 18
+--------------------------------------------------------------------------------
+Line 12: HighContrast,          // ?���
+Line 15: ColorBlindMode,       // X��?
+Line 18: VoiceControl,         // �y��X
+Line 19: VisualCues,           // ��ıX
+Line 26: VisualImpairment,     // ��ıX
+Line 29: CognitiveImpairment,   // �{��X
+Line 120: // ?�D��?
+Line 133: // ?�m��?
+Line 168: // �y��X
+Line 210: // ��ı���U
+Line 246: // ����X
+Line 269: // �]�m
+Line 285: // �ƥ�
+Line 296: // �t�Τޥ�
+Line 316: // �˴�X
+Line 329: // �y��X
+Line 355: // AI���U
+Line 361: // ���UX
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Decision\MingPoliticalConsequenceCalculator.h
+問題數: 17
+--------------------------------------------------------------------------------
+Line 10: * ??�t���t???X?�F�ví�w�ʡB??��??�Y??
+Line 18: // ��摧毀
+Line 21: // ��{����摧毀
+Line 29: // �p?X?�v�v�T
+Line 32: // �p??���t摧毀��??
+Line 35: // �p?X?�ví?X
+Line 38: // �p?X?�v摧毀
+Line 41: // �p?X?��??�v��??
+Line 44: // ��?X?��p??
+Line 47: // 摧毀�Ҭ��t??�Y摧毀
+Line 50: // �x�֩�??��摧毀
+Line 53: // ??�@摧毀�p??
+Line 56: // �~����??�p??
+Line 60: // �p?X??X
+Line 63: // ��?X???���t??��
+Line 66: // �x��??��
+Line 69: // �~?X??X?��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Decision\MingSocialConsequenceCalculator.h
+問題數: 17
+--------------------------------------------------------------------------------
+Line 18: // ��摧毀
+Line 21: // ��{����摧毀
+Line 29: // �p??����摧毀??
+Line 32: // �p??��??í?X
+Line 35: // �p?X?�|����v�T
+Line 38: // �p?X?�@??�d�v�T
+Line 41: // �p??��?X???
+Line 44: // ��?X?��p??
+Line 47: // 故事重要性?�v摧毀??
+Line 50: // ??�|??���v�T�p??
+Line 53: // ���k摧毀�v�T�p??
+Line 56: // 目標數量�v�T�p??
+Line 60: // �p?X??X
+Line 63: // ��?X???��?X??X?��
+Line 66: // ??�|��??��??
+Line 69: // �D?X??X?��
+Line 72: // ��?X?�h
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Optimization\MingTacticalOptimizationManager.h
+問題數: 16
+--------------------------------------------------------------------------------
+Line 104: // ==== ?��?管�? ====
+Line 146: // ==== AI管�? ====
+Line 159: // ==== ?�能?�控 ====
+Line 173: // ==== ?�动优�? ====
+Line 187: // ==== ?�置 ====
+Line 218: // ==== 调�? ====
+Line 236: // 子系�?
+Line 246: // ?�能统计
+Line 251: // ?�置
+Line 260: // ?�适�?优�?
+Line 261: int32 OptimizationLevel; // 0-4，�?高�X��?激�?
+Line 265: // ?��X��?系�?
+Line 269: // ?�新?�能统计
+Line 272: // ?�适�?优�?调整
+Line 275: // 调整优�?级别
+Line 278: // ?�据?��X��?调整池大�?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Decisions\MingDecision.h
+問題數: 16
+--------------------------------------------------------------------------------
+Line 38: // 決�?ID (?��?標�?)
+Line 42: // 決�?標�?
+Line 46: // 決�X�景?�述
+Line 50: // 決�X�景?��?
+Line 54: // 決�X��X�表
+Line 58: // 觸發類�?
+Line 62: // ?��?�?
+Line 66: // 觸發條件 (JSON?��X�自定義字符�?
+Line 70: // ?��X��? (?�戲?��X��?-1表示不�X
+Line 74: // ?�否?�以延�X��?
+Line 78: // 決�?類別 (?�於?��?顯示)
+Line 82: // 歷史?��? (如�?1924-1927 ?��X��?)
+Line 86: // ?��?角色ID?�表
+Line 90: // ?��X��?
+Line 102: // 檢查決�X�否?��?
+Line 105: // ?��X�用?��X�表
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\FourLayer\IMingGameLayer.h
+問題數: 16
+--------------------------------------------------------------------------------
+Line 8: // ?�戲層�?介面
+Line 24: // ?��X�層�?
+Line 28: // ?�新層�?
+Line 32: // ?��?層�?類�?
+Line 36: // ?��?層�X�稱
+Line 40: // ?��?層�X��?�?
+Line 44: // ?��?層�?事件
+Line 48: // ?��?層�?決�?
+Line 52: // ?��?層�?資�X��?
+Line 56: // ?��?層�?資�X��?
+Line 60: // ?��?層�X�X
+Line 64: // 檢查層�?衝�?
+Line 68: // �?��層�?衝�?
+Line 72: // ?�調?�其他層�?
+Line 76: // ?��?層�X�能統�?
+Line 80: // ?�置層�?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Decision\MingDecisionPreviewCalculator.h
+問題數: 16
+--------------------------------------------------------------------------------
+Line 8: // �M?X?��摧毀
+Line 33: // �M?X?����??
+Line 59: * �M?X?���p?X * ??��摧毀�ѨM��?X??X?��??��?? */
+Line 66: // ��摧毀
+Line 69: // �p??�M?X?��
+Line 73: // �ֳt摧毀(??�D�n�vX
+Line 81: // ???X?�v�v�T??��
+Line 84: // 摧毀�x??�v�T??��
+Line 87: // 摧毀�g??�v�T??��
+Line 90: // 摧毀��??�v�T??��
+Line 93: // �p??�`??�v�T??��
+Line 96: // �ѧO���I摧毀
+Line 99: // �ѧO��?X???
+Line 102: // 摧毀��ĳ�`??
+Line 105: // �p??�H??���
+Line 109: // ??���p??�v??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Decision\MingEconomicConsequenceCalculator.h
+問題數: 16
+--------------------------------------------------------------------------------
+Line 18: // ��摧毀
+Line 21: // ��{����摧毀
+Line 29: // �p??�g??��??��??
+Line 32: // �p??�g?X???��??
+Line 35: // �p?X???�]�I��??
+Line 38: // �p??�T?X???�v�T
+Line 41: // ��?X?��p??
+Line 44: // 摧毀??���v�T�p??
+Line 47: // �u�~??�v摧毀??
+Line 50: // �A�~摧毀�v�T�p??
+Line 53: // �~�T�̿�v�T�p??
+Line 57: // �p?X??X
+Line 60: // ��?X???�f����??
+Line 63: // �g??��??��??
+Line 66: // 摧毀�]�I��??
+Line 69: // �T??�٦�
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Decision\MingMilitaryConsequenceCalculator.h
+問題數: 16
+--------------------------------------------------------------------------------
+Line 18: // ��摧毀
+Line 21: // ��{����摧毀
+Line 29: // �p??�x??��??��??
+Line 32: // �p?X?����m�v�T
+Line 35: // �p?X?��摧毀?X
+Line 38: // �p??�x?X???��??
+Line 41: // �p??�h����??
+Line 44: // ��?X?��p??
+Line 47: // ???X?���v�T�p??
+Line 50: // ??��??���v�T�p??
+Line 53: // �x�ֲV�Լv�T�p??
+Line 56: // �x?X?�N??�v摧毀??
+Line 60: // �p?X??X
+Line 63: // ��?X???�D?X?��??��
+Line 66: // ??����m??��
+Line 69: // �x??��??��??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSCharacterCreationGameMode.h
+問題數: 15
+--------------------------------------------------------------------------------
+Line 18: // ����??�غ�?X
+Line 22: // ��ܨ���??�� UI
+Line 26: // ????����??�� UI
+Line 30: // ????����??�ا�??
+Line 34: // ????����??��????
+Line 38: // �]�m����??�� UI ���O
+Line 42: // �]�m�D?XUI ���O
+Line 46: // �]�m??��???X?��
+Line 51: // ????���XUI
+Line 55: // ???X??X?�Ыغ�??��
+Line 58: // ??�ب���??UI
+Line 61: // ����???? UI
+Line 64: // ???X?��
+Line 67: // ��??�D?X
+Line 70: // �O??����???X??X?��??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Security\MingRTSAntiCheat.h
+問題數: 15
+--------------------------------------------------------------------------------
+Line 15: AimBot                  UMETA(DisplayName = "???X???"),
+Line 137: // ???X
+Line 141: // ????檢測
+Line 145: // ??止檢測
+Line 149: // ???X???行為
+Line 157: // 檢測??度作??
+Line 161: // 檢測???X?本
+Line 165: // ???X?家行為模??
+Line 169: // ????檢測結??
+Line 173: // ??用??罰
+Line 177: // ???X?家????歷史
+Line 181: // 檢查??家??否被????
+Line 185: // ????封?? (管?X??X
+Line 189: // 上傳檢測???X??X?器
+Line 193: // 事件委??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingUI\Source\MingUI\Public\Network\MingMultiplayerWidget.h
+問題數: 15
+--------------------------------------------------------------------------------
+Line 28: // ???X
+Line 32: // ���/???X?��
+Line 45: // === �D?X??X===
+Line 59: // === X摧毀�� ===
+Line 73: // === �j�U??�� ===
+Line 93: // === ??��??�� ===
+Line 104: // === ??�a??�� ===
+Line 118: // === ??�s??�� ===
+Line 132: // === �ƥ�摧毀 ===
+Line 156: // �j??UI摧毀�]�b摧毀����摧毀
+Line 169: // ??�s���
+Line 174: // �����?X??X
+Line 178: // �j�U�t�Τޥ�
+Line 182: // 摧毀���??X
+Line 186: // UI摧毀�ޥΡ]�b摧毀���]�m??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Optimization\MingSpatialPartition.h
+問題數: 15
+--------------------------------------------------------------------------------
+Line 18: // 网格?��?
+Line 22: // ?�含?��?�?
+Line 26: // ?�?�更?�时X
+Line 29: // ?�围X
+Line 210: // ==== ?��X��? ====
+Line 228: // 网格?��X��?
+Line 232: // ?��X��X��X��X��?
+Line 236: // 被追踪�X��?
+Line 240: // ?�置
+Line 249: // ?��X��?建�X��X
+Line 253: // ?��X�邻网格?��?
+Line 256: // ?��X�询?�?�?��X��X
+Line 260: // 清�?空�X
+Line 263: // 验�X��X�否?�边?��?
+Line 266: // ?�新统计
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Events\MingCharacterBlueprintLibrary.h
+問題數: 15
+--------------------------------------------------------------------------------
+Line 61: * ???X?H
+Line 108: * 摧毀H??X     */
+Line 137: * 摧毀HvT???X     */
+Line 142: * ???X?ˤH
+Line 148: * ???X?O??
+Line 154: * ???X?~??
+Line 160: * ???X?
+Line 222: * K??H??X     */
+Line 283: * 摧毀t??X     */
+Line 306: * ???X?H摧毀
+Line 312: * 故事重要性?H??X     */
+Line 329: * ˬdH??_???X     */
+Line 334: * ˬdH??_???X?HX     */
+Line 349: * ˬdH??_???X?X     */
+Line 433: // 摧毀H摧毀 - `??GTMap<TArray> XBlueprint
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingBuilding\Source\MingBuilding\Public\MingBuildingResourceSystem.h
+問題數: 15
+--------------------------------------------------------------------------------
+Line 9: * �w�q��?X??X?�ظ�??��?? | Define various resource types from Republican era
+Line 13: // 摧毀��?? | Basic Resources
+Line 20: // �q����?? | Mineral Resources
+Line 27: // �A��X| Agricultural Products
+Line 32: // 摧毀��?? | Special Resources
+Line 36: // �x??��?? | Military Resources
+Line 43: // �u�~��?? | Industrial Resources
+Line 52: // 摧毀�]?? | Communication Equipment
+Line 54: Radio             UMETA(DisplayName = "???X| Radio"),
+Line 93: Harvest           UMETA(DisplayName = "???X?ì | Harvest"),
+Line 158: * ��?X??X??? | Resource Collection Data
+Line 316: * ��?? MingGoRTS ??����?X摧毀?����??�B?X???��摧毀 * - 40��?X??X???��?X * - �h��目標數量�
+Line 317: * - ��??�s�x??��X * - ��??��?X??X */
+Line 395: /** �p?X??X??? | Calculate Collection Efficiency */
+Line 432: /** ��?X??X??? | Resource Collection Map */
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSCharacterCreationManager.h
+問題數: 14
+--------------------------------------------------------------------------------
+Line 50: // ����??�بƥ�
+Line 54: // ??�ب���
+Line 58: // ��??����????
+Line 62: // ???X?��??�z
+Line 66: // ???X?��????�l?X
+Line 70: // �O??����??????
+Line 74: // �q??��?X??X
+Line 78: // �ˬd����??��??�_??��
+Line 82: // ???X???����??��
+Line 87: // ??����?X?��
+Line 92: // ????�q??����??��??
+Line 102: // ???X???��??
+Line 105: // ???X???�m??
+Line 108: // ???X??X???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Integration\MingRTSOptimizationIntegration.h
+問題數: 14
+--------------------------------------------------------------------------------
+Line 19: // ??��???X??X??X???�t��
+Line 23: // ??��???X??X?�uX
+Line 27: // ??��???X???���uX
+Line 31: // ??�d???X?�uX
+Line 35: // �O?X?�uX
+Line 39: // ???X?�uX
+Line 43: // ????�t��??X
+Line 47: // ???X?���??
+Line 52: // ????�t�κ�?X
+Line 56: // �t��??X
+Line 64: // ???X?��
+Line 69: // ??��???X???
+Line 76: // ??��X??
+Line 80: // ???X???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Security\MingRTSServerValidation.h
+問題數: 14
+--------------------------------------------------------------------------------
+Line 112: * ???X???�Ҩt??- �v?X??X????? */
+Line 121: // ???X
+Line 125: // ��??�Ȥ�ݩR??
+Line 130: // ��?X?��??X
+Line 134: // ��?X???����??
+Line 138: // �O??�Ȥ�ݩR??
+Line 142: // �ˬd??�O��??
+Line 146: // �˴�??�`??X
+Line 150: // ???X??X???��?X
+Line 154: // ??��???X?��??
+Line 158: // ???X?����??
+Line 162: // ��?X?����??
+Line 166: // �]�m��?X?���??
+Line 170: // �ƥ�e??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Difficulty\MingDifficultyBlueprintLibrary.h
+問題數: 14
+--------------------------------------------------------------------------------
+Line 12: * ??רt?X摧毀??? * 目標數量?n???׺??X */
+Line 19: // ==== ??׵摧毀? ====
+Line 21: /** 摧毀??X?׵? */
+Line 69: // ==== ֱ摧毀?? ====
+Line 71: /** ???X? */
+Line 75: /** ???X? */
+Line 83: // ==== ??רt摧毀? ====
+Line 97: // ==== ??a?l? ====
+Line 99: /** ??X??X?]?X???t摧毀?*/
+Line 103: /** ??X??X? */
+Line 115: /** ??X摧毀?? */
+Line 123: // ==== ?? ====
+Line 133: // ==== ??? ====
+Line 144: /** ???X?׺?X摧毀?*/
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingPersonalManager.h
+問題數: 14
+--------------------------------------------------------------------------------
+Line 33: // 角色摧毀???
+Line 44: // 目標數量?系統?�X
+Line 73: // ???�系�摧毀
+Line 108: // �?X??X?系統?�X
+Line 136: // 多人???�系�摧毀
+Line 173: // 摧毀?系統?�X
+Line 201: // 摧毀???系統摧毀
+Line 260: // 目標數量?�摧毀
+Line 264: // 摧毀???�?X
+Line 268: // AI UI�?X
+Line 272: // �?X??�管?X
+Line 276: // 摧毀???�?X
+Line 288: // 摧毀?�??
+Line 292: // 高校�??�?X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Decision\MingConsequenceCache.h
+問題數: 14
+--------------------------------------------------------------------------------
+Line 8: // �w??����
+Line 43: // ��摧毀
+Line 49: // 摧毀�w??��??
+Line 53: // �w??��??
+Line 57: // �M��摧毀�w??
+Line 64: // 摧毀�w??��??
+Line 72: // �w??�s�x
+Line 75: // �w?X?�m
+Line 79: // ��?X???
+Line 83: // �M??�C?X?�w??
+Line 86: // �p??�w??�v??
+Line 89: // �ˬd�w?X?�_摧毀
+Line 92: // ??�s�w??�X??��??
+Line 96: // ??�_�w??�l??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Examples\MingRTSOptimizationExample.h
+問題數: 13
+--------------------------------------------------------------------------------
+Line 19: // ????�ϥΥ�??
+Line 23: // �ֳt�u??��??
+Line 27: // �`��????��??
+Line 31: // ????�q??�m��??
+Line 35: // ��?X??��??
+Line 39: // ??��????��??
+Line 43: // ��?X???��??
+Line 47: // ???X???��??
+Line 51: // ????�u??�y??��??
+Line 55: // ????�ϥ�????
+Line 60: // ????�t�κ�?X
+Line 65: // ???X?��??
+Line 68: // �t�ܻ��U????
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Security\MingRTSSecurityManager.h
+問題數: 13
+--------------------------------------------------------------------------------
+Line 64: // ?��X
+Line 68: // ?��X��?弊系�?
+Line 72: // ?��X��X��?證系�?
+Line 76: // ?��X�?��X�系�?
+Line 80: // ?�止?�?��X�系�?
+Line 84: // ?��?安全警報
+Line 88: // ?��X�?�警X
+Line 92: // ?��X�確認警X
+Line 96: // 確�?警報
+Line 104: // 檢查?�家安全?�X
+Line 108: // ?��X�家安全評�?
+Line 112: // ?��?安全?��?
+Line 116: // 事件委�?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingCoreEventBus.h
+問題數: 13
+--------------------------------------------------------------------------------
+Line 7: // 故事重要性(X?w?q?H??XUHT)
+Line 10: Critical = 0,   // 摧毀?? - ?t摧毀???@
+Line 11: High = 1,       // ???u摧毀 - ???n???M?V??
+Line 12: Normal = 2,     // ???q?u摧毀 - 摧毀s?BUI??s
+Line 13: Low = 3         // ?C?u摧毀 - ??p???B??x?O??
+Line 21: // ???X?f
+Line 25: // ???q?\X?f
+Line 29: // ???X?q?\
+Line 32: // X??o??X??X
+Line 36: // X???X
+Line 63: // X???
+Line 82: // X??X???
+Line 104: // ??X?s???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingResourceDisplayWidget.h
+問題數: 12
+--------------------------------------------------------------------------------
+Line 8: // ��?X?�ص�??
+Line 34: * ���6��??��?X??X?�i��?? */
+Line 44: // ��??��ܮe��
+Line 48: // 6��??��??���??��
+Line 67: // ??�s??��
+Line 77: // ��ı摧毀
+Line 88: // �`??�G??UObject摧毀����??��UPROPERTY
+Line 91: // ???X
+Line 96: // ���U??��
+Line 102: // �ƥ�摧毀
+Line 113: // ??�e�p?X
+Line 117: // ��ı摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\UI\MingDecisionWidget.h
+問題數: 12
+--------------------------------------------------------------------------------
+Line 30: // ?��X�決策顯�?
+Line 34: // 顯示決�X�面
+Line 38: // ?��?決�X�面
+Line 42: // ?��X��?事件
+Line 63: // ?��?顯示?�決策ID
+Line 67: // ?��X�鈪?��?�?
+Line 71: // ?��X
+Line 74: // ?�建?��X�鈪X
+Line 78: // ?��X�鈪?��X��X
+Line 82: // 延�X�鈪?��X��X
+Line 86: // ?�畫?�放
+Line 93: // 平台?��?設置
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingRelationshipBlueprintLibrary.h
+問題數: 12
+--------------------------------------------------------------------------------
+Line 9: * ???X?聲??系??Blueprint ??數?? * ???X?便XBlueprint ??口來訪摧毀係?X??X?能
+Line 17: // 目標數量管?X?實??
+Line 21: // 摧毀管?X?數
+Line 40: // 摧毀管?X?數
+Line 53: // ??戲影響??數
+Line 63: // 故事重要性?數
+Line 71: // 便利??數
+Line 87: // 字符串?X?函X
+Line 100: // 統?X?數
+Line 116: // 高?X?詢??數
+Line 129: // 驗?X?數
+Line 136: // 調試??數
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingPerformanceBlueprintLibrary.h
+問題數: 10
+--------------------------------------------------------------------------------
+Line 13: * 摧毀?X??X??? * 故事重要性?目標數量?X?
+Line 22: * ???X?X摧毀??     */
+Line 27: * ???X?ʯX??
+Line 45: * ???X?CFPS
+Line 51: * ???X?FPS
+Line 87: * ???X?O??
+Line 129: * ?X??X摧毀?t
+Line 157: * ?X??X摧毀?t??     */
+Line 167: * 故事選項X??X???
+Line 179: * ]m?X??X?s摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingPerformanceTestManager.h
+問題數: 10
+--------------------------------------------------------------------------------
+Line 15: // ??
+Line 19: // ??_摧毀
+Line 31: // ??CFPS
+Line 43: // ??~H
+Line 105: * 6: ?X??X?
+Line 150: // յ??
+Line 154: // 摧毀??
+Line 157: // ???X?δ
+Line 160: // ??ش摧毀
+Line 169: // O??յ??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Decisions\MingDecisionOption.h
+問題數: 10
+--------------------------------------------------------------------------------
+Line 15: // ?��?ID
+Line 19: // ?��?標�?
+Line 23: // ?��X�述 (詳細說�?)
+Line 27: // ?��X�覽 (簡短說�?顯示?��X��?)
+Line 31: // ?��X��?
+Line 35: // ?��X��X�表
+Line 39: // 後�?決�?ID (?��?此選?��?觸發?��?一?�決�?
+Line 43: // ?�否結�X��?決�X
+Line 47: // ?��X�用?��?�?(?��?空表示�?終可X
+Line 56: // 檢查?��X�否?�用
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingAIAssetBlueprintLibrary.h
+問題數: 10
+--------------------------------------------------------------------------------
+Line 11: * AI�겣???X?��?? * 故事重要性?��摧毀AI�겣???X?��???X */
+Line 19: * 摧毀AI�겣???X     */
+Line 29: * ???X?AI�겣�t��
+Line 78: * ???X?��摧毀
+Line 89: * ???X?��
+Line 100: * 摧毀��?X??X?��??     */
+Line 105: * 摧毀����???X?��??     */
+Line 167: * ???X?�˸겣
+Line 185: * 目標數量����???X     */
+Line 223: * 摧毀�t��??X     */
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Platform\MingPlatformManager.h
+問題數: 10
+--------------------------------------------------------------------------------
+Line 19: // ???X?��??��??��
+Line 29: // 目標數量���x��??
+Line 33: // 目標數量���x摧毀
+Line 37: // 摧毀��??DPI
+Line 47: // �]�m??���??
+Line 58: // ??��??�e
+Line 62: // ��?X?�ε�??
+Line 66: // 目標數量��??�]��K�����X摧毀
+Line 75: // 摧毀��??
+Line 78: // ??�إ��x???X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSAudioManager.h
+問題數: 9
+--------------------------------------------------------------------------------
+Line 94: // ????��??
+Line 110: // ???X?��
+Line 123: // �V��??��
+Line 139: // ��??�V��
+Line 152: // ???X???
+Line 162: // ??�W�ɥX
+Line 169: // ??�W????
+Line 176: // �e??�ƥ�
+Line 205: // �`??�G??UObject��??����??UPROPERTY
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Replay\MingRTSReplayPlayerController.h
+問題數: 9
+--------------------------------------------------------------------------------
+Line 19: // ???X
+Line 23: // ??放??制
+Line 39: // ??度??制
+Line 46: // ????軸控X
+Line 62: // ??籤系統
+Line 75: // 事件標??
+Line 85: // 視?X?制
+Line 111: // 導出??能
+Line 118: // 事件委??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\Save\MingSaveSystemTest.h
+問題數: 9
+--------------------------------------------------------------------------------
+Line 14: * ��??�O?X??X?�t��?X??X?��
+Line 24: // 目標數量��??
+Line 28: // ���յ�??
+Line 41: // ??�O����
+Line 82: // ���յ�?X???
+Line 95: // �������U??��
+Line 99: // �M�z���զs��
+Line 102: // �Ыش��խӤH�޲z��
+Line 105: // �Ыش��զs�ɺ޲z��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingRepublicEraPromptLibrary.h
+問題數: 9
+--------------------------------------------------------------------------------
+Line 8: * ?X??X?ܵw
+Line 20: * 摧毀?X??X摧毀?z
+Line 57: * ???X?ν?X摧毀?     */
+Line 73: // ?X???v??
+Line 79: // ?X?z
+Line 86: // ???X?z
+Line 93: // Z?X?z
+Line 100: // 摧毀??z
+Line 106: // ???X?z
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Tests\MingBoundaryTestSuite.h
+問題數: 9
+--------------------------------------------------------------------------------
+Line 18: // ========== ��??�t��摧毀���� ==========
+Line 38: // ========== 摧毀�t��摧毀���� ==========
+Line 58: // ========== ��??�t��摧毀���� ==========
+Line 78: // ========== ����t��摧毀���� ==========
+Line 98: // ========== �O??�t��摧毀���� ==========
+Line 118: // ========== ��?X???���� ==========
+Line 152: // ���U??��
+Line 159: // ��?X?����?X
+Line 165: // 摧毀??��?X
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Tests\MingStressTestSuite.h
+問題數: 8
+--------------------------------------------------------------------------------
+Line 9: * ըt摧毀???X?íw?X?
+Line 19: // ========== ???X?íwʴ??==========
+Line 48: // ========== j??ҩʯ ==========
+Line 77: // ========== õo?? ==========
+Line 192: // 摧毀??
+Line 218: // 摧毀??
+Line 228: // յ??
+Line 253: // ??ջU
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Tests\MingUserExperienceTest.h
+問題數: 8
+--------------------------------------------------------------------------------
+Line 128: // ========== ?X??? ==========
+Line 154: // ========== 摧毀?? ==========
+Line 180: // ========== ?X??? ==========
+Line 216: // 目標數量??
+Line 229: // `摧毀??
+Line 267: // ?X??X???
+Line 280: // ??目標數量
+Line 311: // յ??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingBuilding\Source\MingBuilding\Public\MingTechTree.h
+問題數: 8
+--------------------------------------------------------------------------------
+Line 45: // �`??�GTArray ??��XUPROPERTY ??�n?X?�w����w�q
+Line 51: // XUPROPERTY�A?XFMingBuildingUpgrade ??����摧毀
+Line 107: * ��?X??X???��?? | Building Upgrade Data Structure
+Line 108: * �w�q��?X??X?��???X?�� | Define building upgrade properties and costs
+Line 119: /** ???X?�� | Upgrade Name */
+Line 123: /** ???X?�z | Upgrade Description */
+Line 127: /** ???X?�� | Upgrade Cost */
+Line 263: /** �]�m�q??��?X??X?�m | Setup Default Building Upgrades */
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSAIFilmGenerator.h
+問題數: 7
+--------------------------------------------------------------------------------
+Line 53: // �D??�v?X??X?��
+Line 66: // ???X???
+Line 70: // Stable Diffusion ????
+Line 77: // �v??��??��??
+Line 87: // ??��??��
+Line 94: // �e??�ƥ�
+Line 118: // �`??�G??UObject��??����??UPROPERTY
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSFilmRenderManager.h
+問題數: 7
+--------------------------------------------------------------------------------
+Line 51: // �v?X?��??��
+Line 67: // �v?X???��??
+Line 80: // ??��????�d??
+Line 99: // �]�m
+Line 109: // ��??��X
+Line 116: // �e??�ƥ�
+Line 149: // �`??�G??UObject��??����??UPROPERTY
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Decisions\MingDecisionEffect.h
+問題數: 7
+--------------------------------------------------------------------------------
+Line 27: // ?��?ID
+Line 31: // ?��?類�?
+Line 35: // ?��?對象 (資�?類�X��X�ID�?
+Line 39: // ?��X��?(�?��為增�?，�X�為減�?)
+Line 43: // ?��X��? (0?�永�?
+Line 47: // ?��X�述
+Line 51: // ?�否立即?��?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingRepublicEraAudioThemes.h
+問題數: 7
+--------------------------------------------------------------------------------
+Line 9: BattleTheme,        // X�D?
+Line 10: PeacefulTheme,      // ?���D?
+Line 11: TensionTheme,       // ��i?
+Line 12: VictoryTheme,       // X�D?
+Line 14: DiplomaticTheme,    // �~��?
+Line 17: RevolutionaryTheme, // X�D?
+Line 120: // X�DX
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\Localization\MingLocalizationSystemTest.h
+問題數: 7
+--------------------------------------------------------------------------------
+Line 51: * ??�a??�t�δ���摧毀 * ��?X?�a??�t��?X??X?��
+Line 61: // 目標數量��??
+Line 65: // ���յ�??
+Line 81: // ??�O����
+Line 140: // ���յ�?X???
+Line 156: // �������U??��
+Line 161: // �Ыش��ե��a�ƺ޲z��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Testing\MingRTSIntegrationTestGameMode.h
+問題數: 6
+--------------------------------------------------------------------------------
+Line 2: // �t��????����????��?? - GameMode????
+Line 13: * ??��????�t��????����???X?GameMode
+Line 23: /** GameMode???X?��??*/
+Line 30: /** ????����???X*/
+Line 35: /** ����???X*/
+Line 52: /** ???X?���հ��澹 */
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingTacticalBlueprintLibrary.h
+問題數: 6
+--------------------------------------------------------------------------------
+Line 25: * ???X?ʯ
+Line 37: * ???X?
+Line 49: * ???X?յ??
+Line 61: * ???X?CFPS
+Line 67: * ???X?FPS
+Line 73: * 摧毀?X??X???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\MingStrategicFourLayerTypes.h
+問題數: 6
+--------------------------------------------------------------------------------
+Line 8: // ?戲層X
+Line 18: // 資?類X
+Line 31: // ?戲事件結?
+Line 58: // ?略層XUSTRUCT(BlueprintType)
+Line 85: // ?人層XUSTRUCT(BlueprintType)
+Line 112: // 建?層XUSTRUCT(BlueprintType)
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingAudioSystemTest.h
+問題數: 6
+--------------------------------------------------------------------------------
+Line 8: * ??�W�t�δ���???X * ����??�W????�Y�t��?X??X?��
+Line 17: * ???X???��??�t�δ�??     */
+Line 46: * ���ե�?X??X?�W�D??
+Line 52: * ����???X?�W�t��
+Line 58: * ����??�W???X?��
+Line 93: * ��?X?�W�t��??X     */
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\Difficulty\FMingDifficultySettings_backup.h
+問題數: 5
+--------------------------------------------------------------------------------
+Line 9: * s摧毀摧毀摧毀X??X??
+Line 50: /** ?m摧毀摧毀?X??X??? */
+Line 83: * ???mD?X * ?X摧毀׬???X?m
+Line 123: /** 目標數量??X??X*/
+Line 130: /** ?m???X*/
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\MingStrategicManager.h
+問題數: 5
+--------------------------------------------------------------------------------
+Line 11: * ��?X??X?���M?X???��摧毀 */
+Line 23: // 目標數量��?X
+Line 26: // �M??�ƥ�q�\
+Line 30: // ???X?���M??�ƥ�
+Line 34: // 摧毀�~��ƥ�
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\Network\MingNetworkSystemTest.h
+問題數: 5
+--------------------------------------------------------------------------------
+Line 62: // 目標數量測??
+Line 66: // 測試結??
+Line 82: // ??別測試
+Line 132: // 測試結?X???
+Line 148: // 測試幫助??數
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingRTSSystemTest.h
+問題數: 5
+--------------------------------------------------------------------------------
+Line 15: * RTS�t�δ���???X * ����????RTS????�t��???X??X?��
+Line 24: * ???X???RTS�t�δ���
+Line 105: * ��??�t��??�d??X     */
+Line 116: * ???X?��????
+Line 122: * ����???X??X?��X     */
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\MingCampaignSystem.h
+問題數: 4
+--------------------------------------------------------------------------------
+Line 287: // ??�м�?X?�e摧毀
+Line 316: // ??�e???X?��
+Line 329: // ??��??��
+Line 338: // ??�e???X?��??��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Decision\IMingConsequenceApplier.h
+問題數: 4
+--------------------------------------------------------------------------------
+Line 8: // ??- ?X?XUINTERFACE(MinimalAPI, BlueprintType)
+Line 15: * ?X摧毀X * tdN??X故事選項?@??
+Line 22: // ??Ϋ??
+Line 29: // ??P??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Decision\IMingConsequenceCalculator.h
+問題數: 4
+--------------------------------------------------------------------------------
+Line 8: // ??- ??p?XUINTERFACE(MinimalAPI, BlueprintType)
+Line 15: * ??p?X??X * 摧毀??⾹摧毀n??
+Line 26: // ˬd??_??H摧毀ӨM??U??
+Line 30: // 摧毀p?X??X(摧毀??)
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Platform\AndroidPlatformAdapter.h
+問題數: 4
+--------------------------------------------------------------------------------
+Line 8: * Android ���x???X */
+Line 17: // IPlatformInterface ��{
+Line 34: // Android ???X?��
+Line 51: // �w��摧毀�w??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Platform\IOSPlatformAdapter.h
+問題數: 4
+--------------------------------------------------------------------------------
+Line 8: * iOS ���x???X */
+Line 17: // IPlatformInterface ��{
+Line 34: // iOS ???X?��
+Line 51: // �w��摧毀�w??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingTacticalManager.h
+問題數: 3
+--------------------------------------------------------------------------------
+Line 25: // ?��X�制?�口
+Line 32: // ?�能X��
+Line 44: // 記憶體�X��X��?�?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingCharacterSystem.h
+問題數: 3
+--------------------------------------------------------------------------------
+Line 315: // ??�GTMap ����X??XTMap XUPROPERTY X    // TMap<FString, TMap<FString, float>> 
+Line 317: // ??�GTArray ����X??XTMap XUPROPERTY X    // TMap<FString, TArray<FString>> Cha
+Line 319: // ??�GTArray ����X??XTMap XUPROPERTY X    // TMap<FString, TArray<FString>> His
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingDialogueSystem.h
+問題數: 3
+--------------------------------------------------------------------------------
+Line 103: // �`??�G??�j??�c?X?�� BlueprintType
+Line 115: // �`??�G??�j??�c?X?�� UPROPERTY
+Line 314: // �`??�GTArray ����??���@�� TMap XUPROPERTY ???X    // TMap<FString, TArray<FSt
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\Platform\WindowsPlatformAdapter.h
+問題數: 3
+--------------------------------------------------------------------------------
+Line 8: * Windows ���x???X */
+Line 17: // IPlatformInterface ��{
+Line 34: // Windows ???X?��
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSIntroManager.h
+問題數: 2
+--------------------------------------------------------------------------------
+Line 15: // ?頭?畫?制
+Line 25: // ?畫?段
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingRelationshipManagerTest.h
+問題數: 2
+--------------------------------------------------------------------------------
+Line 8: * ???X?聲??系統測試??行器
+Line 43: * ??於填??測試目標數量係?X??X???
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingUniversityGuideManager.h
+問題數: 2
+--------------------------------------------------------------------------------
+Line 112: * ���դ�??��?X * ��?X?��摧毀���դ�?X??X?��?? */
+Line 234: // �ƥ�摧毀
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\UI\MingUniversityGuideWidget.h
+問題數: 2
+--------------------------------------------------------------------------------
+Line 53: // UI????�j??�]�b????����????
+Line 75: // ????�ƥ�????
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingCore\Source\MingCore\Public\MingCoreModule.h
+問題數: 2
+--------------------------------------------------------------------------------
+Line 35: // ��?X??X?��X
+Line 39: // ??��X??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingBuilding\Source\MingBuilding\Public\MingBuildingActor.h
+問題數: 2
+--------------------------------------------------------------------------------
+Line 189: // 建�X��X��X��? | Building Upgrade Methods
+Line 238: // ?��X��?屬�?| Upgrade Properties
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\MingGoRTSIntroGameMode.h
+問題數: 1
+--------------------------------------------------------------------------------
+Line 36: class UObject* IntroWidget; // ?�為 UObject*
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\RepublicEraFactions\RepublicEraFactions.h
+問題數: 1
+--------------------------------------------------------------------------------
+Line 2: // 民�X�詩?��?系統 - ?��X��?結�?定義
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\Testing\MingRTSIntegrationTestExecutor.h
+問題數: 1
+--------------------------------------------------------------------------------
+Line 2: // 系統?��?測試?��X- 實�?測試驗�?實現
+
+================================================================================
+文件: c:\HW\MingGoRTS\Source\MingGoRTS\Public\WeaknessFixer\WeaknessFixer.h
+問題數: 1
+--------------------------------------------------------------------------------
+Line 2: // 弱�?修復工具 - ?��?修復常�X��?
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingAIController.h
+問題數: 1
+--------------------------------------------------------------------------------
+Line 127: // ??��摧毀 - �ϥ� TObjectPtr 摧毀�m�nX
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingFormationSystem.h
+問題數: 1
+--------------------------------------------------------------------------------
+Line 141: // 注?：TMap<TWeakObjectPtr> 不被 Blueprint ??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingTactical\Source\MingTactical\Public\MingPerformanceTest.h
+問題數: 1
+--------------------------------------------------------------------------------
+Line 196: // 注?：TArray<TWeakObjectPtr> 不被 Blueprint ??
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Events\MingDecisionBlueprintLibrary.h
+問題數: 1
+--------------------------------------------------------------------------------
+Line 405: // ?��?決�?影響網絡 - 注�?：TMap<TArray> 不支XBlueprint
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingStrategic\Source\MingStrategic\Public\Events\MingEventBlueprintLibrary.h
+問題數: 1
+--------------------------------------------------------------------------------
+Line 341: // ?��?事件?��X- 注�?：TMap<TArray> 不支XBlueprint
+
+================================================================================
+文件: c:\HW\MingGoRTS\Plugins\MingPersonal\Source\MingPersonal\Public\MingPerformanceManager.h
+問題數: 1
+--------------------------------------------------------------------------------
+Line 232: * ??���?X * X摧毀�u???X?�ʯ�

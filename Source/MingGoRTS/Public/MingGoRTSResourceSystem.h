@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingGoRTSResourceSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EResourceType : uint8
-{
+enum class EResourceType: uint8 {
     Wood, UMETA(DisplayName = "Wood"),
     Stone, UMETA(DisplayName = "Stone"),
     Metal, UMETA(DisplayName = "Metal"),
@@ -58,29 +57,22 @@ class MINGGORTS_API UMingGoRTSResourceSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSResourceSystem();
-
+    UMingGoRTSResourceSystem(};
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    void InitializeResourceSystem();
-
+    void InitializeResourceSystem(};
     UFUNCTION(BlueprintPure, Category = "Resource System")
-    FResourceData GetResource(EResourceType ResourceType);
-
+    FResourceData GetResource(EResourceType ResourceType};
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool AddResource(EResourceType ResourceType, int32 Amount);
-
+    bool AddResource(EResourceType ResourceType, int32 Amount};
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool ConsumeResource(EResourceType ResourceType, int32 Amount);
-
+    bool ConsumeResource(EResourceType ResourceType, int32 Amount};
     UFUNCTION(BlueprintPure, Category = "Resource System")
-    TArray<FResourceData> GetAllResources();
-
+    TArray<FResourceData> GetAllResources(};
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool SetProductionRate(EResourceType ResourceType, float Rate);
-
+    bool SetProductionRate(EResourceType ResourceType, float Rate};
 protected:
     UPROPERTY()
     TMap<EResourceType, FResourceData> ResourceMap;
 
-    void InitializeDefaultResources();
+    void InitializeDefaultResources(};
 };

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "MingEvent.h"
@@ -126,7 +126,7 @@ private:
      * @param Event - The event to check
      * @return Array of interested subscribers sorted by priority
      */
-    TArray<TSharedPtr<IMingEventSubscriber>> FindInterestedSubscribers(TSharedPtr<IMingEvent> Event};
+    TArray<TSharedPtr<IMingEventSubscriber>> FindInterestedSubscribers(TSharedPtr<IMingEvent> Event);
     
     /**
      * Sort subscribers by priority (higher priority first).
@@ -136,6 +136,6 @@ private:
     /**
      * Check if a subscriber is interested in a specific event.
      */
-    bool IsSubscriberInterested(TSharedPtr<IMingEventSubscriber> Subscriber, TSharedPtr<IMingEvent> Event};
+    bool IsSubscriberInterested(TSharedPtr<IMingEventSubscriber> Subscriber, TSharedPtr<IMingEvent> Event);
 };
 

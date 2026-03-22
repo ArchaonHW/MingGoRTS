@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // 觸發時間類型
 UENUM(BlueprintType)
-enum class ETriggerTimeType : uint8
-{
+enum class ETriggerTimeType: uint8 {
     Absolute,       // 絕對時間
     Relative,       // 相對時間
     Periodic,       // 週期性

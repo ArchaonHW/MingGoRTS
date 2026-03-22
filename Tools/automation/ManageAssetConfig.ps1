@@ -1,4 +1,4 @@
-# MingGoRTS 素材部署配置管理器
+﻿# MingGoRTS 素材部署配置管理器
 # 管理UE素材部署的配置文件和規則
 
 param(

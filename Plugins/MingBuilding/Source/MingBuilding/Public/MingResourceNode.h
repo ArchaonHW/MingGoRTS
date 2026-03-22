@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -6,15 +6,14 @@
 #include "MingResourceNode.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingResourceNodeState : uint8
-{
-    Available     UMETA(DisplayName = "??•Œ"),
-    Depleted      UMETA(DisplayName = "??∫…"),
-    Regenerating  UMETA(DisplayName = "??????)
+enum class EMingResourceNodeState: uint8 {
+    Available     UMETA(DisplayName = "??"),
+    Depleted      UMETA(DisplayName = "??"),
+    Regenerating  UMETA(DisplayName = "ÊëßÊØÄ??)
 };
 
 /**
- * ∏Í??∏`??- ??¶¨????∏Í???? * ??Æa??•H´ÿ≥y±ƒ??≥]???X???∏Í??
+ * ??`??- ÊëßÊØÄÊëßÊØÄ?? * ??a??Hÿ≥y??]ÁõÆÊ®ôÊï∏Èáè??
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGBUILDING_API AMingResourceNode : public AActor
@@ -38,7 +37,7 @@ public:
     class UBoxComponent* CollisionComponent;
 
     UFUNCTION(BlueprintCallable, Category = "Resource Node")
-    void SetNodeState(EMingResourceNodeState NewState};
+    void SetNodeState(EMingResourceNodeState NewState);
 
     UFUNCTION(BlueprintPure, Category = "Resource Node")
     bool IsAvailable() const;
@@ -51,9 +50,9 @@ public:
 
 protected:
     UFUNCTION(BlueprintImplementableEvent, Category = "Resource Node")
-    void OnNodeStateChanged(EMingResourceNodeState OldState, EMingResourceNodeState NewState};
+    void OnNodeStateChanged(EMingResourceNodeState OldState, EMingResourceNodeState NewState);
 
 private:
     EMingResourceNodeState PreviousState;
-};
+);
 

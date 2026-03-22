@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,8 +7,7 @@
 #include "MingGoRTSRelationshipNetwork.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingGameRelationshipType : uint8
-{
+enum class EMingGameRelationshipType: uint8 {
     Family, UMETA(DisplayName = "Family"),
     Friend, UMETA(DisplayName = "Friend"),
     Mentor, UMETA(DisplayName = "Mentor"),

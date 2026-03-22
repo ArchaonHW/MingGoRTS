@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,8 +8,7 @@
  * 錦標賽類型
  */
 UENUM(BlueprintType)
-enum class ETournamentType : uint8
-{
+enum class ETournamentType: uint8 {
     SingleElimination     UMETA(DisplayName = "單敗淘汰"),
     DoubleElimination     UMETA(DisplayName = "雙敗淘汰"),
     RoundRobin            UMETA(DisplayName = "循環賽"),
@@ -25,8 +24,7 @@ enum class ETournamentType : uint8
  * 錦標賽狀態
  */
 UENUM(BlueprintType)
-enum class ETournamentStatus : uint8
-{
+enum class ETournamentStatus: uint8 {
     Registration          UMETA(DisplayName = "報名中"),
     Starting              UMETA(DisplayName = "即將開始"),
     InProgress            UMETA(DisplayName = "進行中"),
@@ -39,8 +37,7 @@ enum class ETournamentStatus : uint8
  * 比賽狀態
  */
 UENUM(BlueprintType)
-enum class EMatchStatus : uint8
-{
+enum class EMatchStatus: uint8 {
     Pending               UMETA(DisplayName = "待定"),
     Scheduled             UMETA(DisplayName = "已排程"),
     InProgress            UMETA(DisplayName = "進行中"),

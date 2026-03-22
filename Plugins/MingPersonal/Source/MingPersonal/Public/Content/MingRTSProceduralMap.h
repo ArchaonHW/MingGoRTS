@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // 地形類型
 UENUM(BlueprintType)
-enum class ETerrainType : uint8
-{
+enum class ETerrainType: uint8 {
     Plains              UMETA(DisplayName = "平原"),
     Hills               UMETA(DisplayName = "丘陵"),
     Mountains           UMETA(DisplayName = "山地"),
@@ -26,8 +25,7 @@ enum class ETerrainType : uint8
 
 // 資源類型
 UENUM(BlueprintType)
-enum class EMapResourceType : uint8
-{
+enum class EMapResourceType: uint8 {
     Wood                UMETA(DisplayName = "木材"),
     Stone               UMETA(DisplayName = "石料"),
     Iron                UMETA(DisplayName = "鐵礦"),
@@ -42,8 +40,7 @@ enum class EMapResourceType : uint8
 
 // 地圖尺寸
 UENUM(BlueprintType)
-enum class EMapSize : uint8
-{
+enum class EMapSize: uint8 {
     Tiny                UMETA(DisplayName = "微小 - 64x64"),
     Small               UMETA(DisplayName = "小型 - 128x128"),
     Medium              UMETA(DisplayName = "中型 - 256x256"),
@@ -54,8 +51,7 @@ enum class EMapSize : uint8
 
 // 地圖風格
 UENUM(BlueprintType)
-enum class EMapStyle : uint8
-{
+enum class EMapStyle: uint8 {
     Historical          UMETA(DisplayName = "歷史風格"),
     Fantasy             UMETA(DisplayName = "奇幻風格"),
     Realistic           UMETA(DisplayName = "寫實風格"),
@@ -66,8 +62,7 @@ enum class EMapStyle : uint8
 
 // 氣候類型
 UENUM(BlueprintType)
-enum class EClimateType : uint8
-{
+enum class EClimateType: uint8 {
     Temperate           UMETA(DisplayName = "溫帶"),
     Tropical            UMETA(DisplayName = "熱帶"),
     Arid                UMETA(DisplayName = "乾旱"),

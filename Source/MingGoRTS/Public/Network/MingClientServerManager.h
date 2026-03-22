@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Client-Server Architecture Manager - B1-3
 // Stabilizes and manages client-server communication
 
@@ -11,8 +11,7 @@
 #include "MingClientServerManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EServerState : uint8
-{
+enum class EServerState: uint8 {
     Offline = 0, UMETA(DisplayName = "Offline"),
     Starting, UMETA(DisplayName = "Starting"),
     Online, UMETA(DisplayName = "Online"),
@@ -22,8 +21,7 @@ enum class EServerState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EClientState : uint8
-{
+enum class EClientState: uint8 {
     Disconnected = 0, UMETA(DisplayName = "Disconnected"),
     Connecting, UMETA(DisplayName = "Connecting"),
     Connected, UMETA(DisplayName = "Connected"),
@@ -34,8 +32,7 @@ enum class EClientState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EConnectionQuality : uint8
-{
+enum class EConnectionQuality: uint8 {
     Excellent = 0, UMETA(DisplayName = "Excellent"),
     Good, UMETA(DisplayName = "Good"),
     Fair, UMETA(DisplayName = "Fair"),
@@ -184,11 +181,11 @@ struct FServerPerformanceMetrics
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnServerStateChanged, EServerState, NewState};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnClientConnected, int32, ClientID, FString, PlayerName};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnClientDisconnected, int32, ClientID, FString, Reason};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConnectionQualityChanged, EConnectionQuality, Quality};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnServerPerformanceWarning, FString, WarningMessage};
+
+
+
+
+
 /**
  * Client-Server Architecture Manager
  * Manages stable client-server communication

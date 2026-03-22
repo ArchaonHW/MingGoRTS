@@ -1,4 +1,4 @@
-# Auto-generated Music Generation Script
+﻿# Auto-generated Music Generation Script
 # Generated: 03/23/2026 02:24:35
 
 function Invoke-MusicGeneration {

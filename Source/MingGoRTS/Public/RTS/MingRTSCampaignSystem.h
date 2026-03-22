@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSCampaignSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class ERTSCampaignType : uint8
-{
+enum class ERTSCampaignType: uint8 {
     MainStory      UMETA(DisplayName = "Main Story"),
     SideQuest      UMETA(DisplayName = "Side Quest"),
     Tutorial       UMETA(DisplayName = "Tutorial"),
@@ -18,8 +17,7 @@ enum class ERTSCampaignType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERTSCampaignDifficulty : uint8
-{
+enum class ERTSCampaignDifficulty: uint8 {
     Easy       UMETA(DisplayName = "Easy"),
     Normal     UMETA(DisplayName = "Normal"),
     Hard       UMETA(DisplayName = "Hard"),
@@ -29,8 +27,7 @@ enum class ERTSCampaignDifficulty : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERTSCampaignState : uint8
-{
+enum class ERTSCampaignState: uint8 {
     NotStarted  UMETA(DisplayName = "Not Started"),
     InProgress  UMETA(DisplayName = "In Progress"),
     Paused      UMETA(DisplayName = "Paused"),
@@ -40,8 +37,7 @@ enum class ERTSCampaignState : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERTSObjectiveType : uint8
-{
+enum class ERTSObjectiveType: uint8 {
     Destroy     UMETA(DisplayName = "Destroy"),
     Capture     UMETA(DisplayName = "Capture"),
     Defend      UMETA(DisplayName = "Defend"),

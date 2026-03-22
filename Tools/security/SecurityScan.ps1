@@ -1,4 +1,4 @@
-# MingGoRTS 自動化弱點掃描系統 / Automated Vulnerability Scanning System
+﻿# MingGoRTS 自動化弱點掃描系統 / Automated Vulnerability Scanning System
 # 版本 / Version: 1.0
 # 作者 / Author: MingGoRTS Security Team
 # 最後更新 / Last Updated: 2026-03-23

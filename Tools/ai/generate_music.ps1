@@ -1,4 +1,4 @@
-# MingGoRTS AI Music Generator PowerShell Script
+﻿# MingGoRTS AI Music Generator PowerShell Script
 # ?砍 AI ?單????單 - PowerShell ?
 # 雿輻?孵?: .\generate_music.ps1 [?賊?]
 

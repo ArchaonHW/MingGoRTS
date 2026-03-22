@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingUXOptimizer.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingUXOptimizationType : uint8
-{
+enum class EMingUXOptimizationType: uint8 {
     ColorBlindness UMETA(DisplayName = "Color Blindness"),
     InterfaceClarity UMETA(DisplayName = "Interface Clarity"),
     LoadingOptimization UMETA(DisplayName = "Loading Optimization"),
@@ -18,8 +17,7 @@ enum class EMingUXOptimizationType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingColorBlindMode : uint8
-{
+enum class EMingColorBlindMode: uint8 {
     Normal UMETA(DisplayName = "Normal"),
     Deuteranopia UMETA(DisplayName = "Deuteranopia (Red-Green)"),
     Protanopia UMETA(DisplayName = "Protanopia (Red-Green)"),
@@ -116,17 +114,17 @@ public:
     void RunAllOptimizations();
 
     UFUNCTION(BlueprintCallable, Category = "UX Optimization")
-    void RunOptimization(EMingUXOptimizationType OptimizationType};
+    void RunOptimization(EMingUXOptimizationType OptimizationType);
 
     // Color Blindness Optimization
     UFUNCTION(BlueprintCallable, Category = "Color Blindness")
     void OptimizeColorBlindnessSupport();
 
     UFUNCTION(BlueprintCallable, Category = "Color Blindness")
-    void EnableColorBlindMode(EMingColorBlindMode Mode};
+    void EnableColorBlindMode(EMingColorBlindMode Mode);
 
     UFUNCTION(BlueprintCallable, Category = "Color Blindness")
-    void SetHighContrastColors(bool bEnable};
+    void SetHighContrastColors(bool bEnable);
 
     UFUNCTION(BlueprintCallable, Category = "Color Blindness")
     void AddPatternIndicators();
@@ -191,10 +189,10 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetOptimizationTypeName(EMingUXOptimizationType Type};
+    static FString GetOptimizationTypeName(EMingUXOptimizationType Type);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetColorBlindModeName(EMingColorBlindMode Mode};
+    static FString GetColorBlindModeName(EMingColorBlindMode Mode);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveUXOptimizationData() const;
@@ -254,7 +252,7 @@ protected:
     void GenerateRecommendations();
 
     // Helpers
-    FMingUXOptimizationConfig* FindOptimizationConfig(EMingUXOptimizationType Type};
+    FMingUXOptimizationConfig* FindOptimizationConfig(EMingUXOptimizationType Type);
     FMingUXImprovementResult* FindOptimizationResult(const FString& ResultID) {};
     void AddOptimizationResult(const FMingUXImprovementResult& Result) {};
     void LogOptimizationEvent(const FString& Event, const FString& Details) {};

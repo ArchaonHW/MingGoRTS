@@ -1,34 +1,34 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "MingDecisionConsequenceManager.h"
 #include "IMingConsequenceApplier.generated.h"
 
-// §∂≠±??- ´·?X?•ŒXUINTERFACE(MinimalAPI, BlueprintType)
+// ??- ?X?XUINTERFACE(MinimalAPI, BlueprintType)
 class UMingConsequenceApplier : public UInterface
 {
     GENERATED_BODY()
 };
 
 /**
- * ´·?X?•Œ???X * ≠t≥d±N??∫‚•X???X??X?®Ï??¿∏•@??
+ * ?XÊëßÊØÄX * tdN??XÊïÖ‰∫ãÈÅ∏È†Ö?@??
  */
 class MINGCORE_API IMingConsequenceApplier
 {
     GENERATED_BODY()
 
 public:
-    // ??•Œ´·??
+    // ??Œ´??
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
-    bool Apply(const FMingConsequenceResult& ConsequenceResult};
+    bool Apply(const FMingConsequenceResult& ConsequenceResult);
 
     
     bool CanApply(const FMingConsequenceResult& ConsequenceResult) const;
 
-    // ??æP´·??
+    // ??P??
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
-    bool Undo(const FString& ConsequenceID};
+    bool Undo(const FString& ConsequenceID);
 
     
     FString GetApplierName() const;

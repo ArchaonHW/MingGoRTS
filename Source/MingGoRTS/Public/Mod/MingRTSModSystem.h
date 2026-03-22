@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,8 +8,7 @@
  * 模??類??
  */
 UENUM(BlueprintType)
-enum class EModType : uint8
-{
+enum class EModType: uint8 {
     Map                   UMETA(DisplayName = "Map"),
     Unit                  UMETA(DisplayName = "Unit"),
     Building              UMETA(DisplayName = "Building"),
@@ -26,8 +25,7 @@ enum class EModType : uint8
 /**
  * 模?X?X */
 UENUM(BlueprintType)
-enum class EModStatus : uint8
-{
+enum class EModStatus: uint8 {
     NotInstalled          UMETA(DisplayName = "Not Installed"),
     Installing            UMETA(DisplayName = "Installing"),
     Installed             UMETA(DisplayName = "Installed"),
@@ -114,16 +112,20 @@ class MINGGORTS_API UMingRTSModSystem : public UObject
 public:
     UMingRTSModSystem();
     
-    // ???X    UFUNCTION(BlueprintCallable, Category = "Mod")
+    // ???X
+    UFUNCTION(BlueprintCallable, Category = "Mod")
     void InitializeModSystem();
     
-    // 從創??工??獲??模組????    UFUNCTION(BlueprintCallable, Category = "Mod")
-    TArray<FModInfo> GetWorkshopMods(const FString& SearchQuery, const TArray<EModType>& FilterTypes};
+    // 從創??工??獲??模組????
+    UFUNCTION(BlueprintCallable, Category = "Mod")
+    TArray<FModInfo> GetWorkshopMods(const FString& SearchQuery, const TArray<EModType>& FilterTypes);
     
-    // ????已??裝模??    UFUNCTION(BlueprintCallable, Category = "Mod")
+    // ????已??裝模??
+    UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FModInfo> GetInstalledMods() const;
     
-    // ????已?X?模??    UFUNCTION(BlueprintCallable, Category = "Mod")
+    // ????已?X?模??
+    UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FModInfo> GetEnabledMods() const;
     
     // ????模??詳??
@@ -132,62 +134,63 @@ public:
     
     // 下??模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    void DownloadMod(const FString& ModID};
+    void DownloadMod(const FString& ModID);
     
     // ????下??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    void CancelDownload(const FString& ModID};
+    void CancelDownload(const FString& ModID);
     
     // 安??模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    bool InstallMod(const FString& FilePath};
+    bool InstallMod(const FString& FilePath);
     
     // ????模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    void UninstallMod(const FString& ModID};
+    void UninstallMod(const FString& ModID);
     
     // ??用模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    void EnableMod(const FString& ModID};
+    void EnableMod(const FString& ModID);
     
     // 禁用模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    void DisableMod(const FString& ModID};
+    void DisableMod(const FString& ModID);
     
     // ??新模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    void UpdateMod(const FString& ModID};
+    void UpdateMod(const FString& ModID);
     
     // 檢查??新
     UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FModInfo> CheckForUpdates();
     
-    // 上傳模?X?創??工X    UFUNCTION(BlueprintCallable, Category = "Mod")
-    bool UploadMod(const FString& ModID, const FString& Description, const TArray<FString>& Tags};
+    // 上傳模?X?創??工X
+    UFUNCTION(BlueprintCallable, Category = "Mod")
+    bool UploadMod(const FString& ModID, const FString& Description, const TArray<FString>& Tags);
     
     // ??建??地模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    FString CreateLocalMod(const FString& Name, EModType Type, const FString& Description};
+    FString CreateLocalMod(const FString& Name, EModType Type, const FString& Description);
     
     // 訂閱模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    void SubscribeToMod(const FString& ModID};
+    void SubscribeToMod(const FString& ModID);
     
     // ????訂閱
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    void UnsubscribeFromMod(const FString& ModID};
+    void UnsubscribeFromMod(const FString& ModID);
     
     // 評??模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    void RateMod(const FString& ModID, float Rating};
+    void RateMod(const FString& ModID, float Rating);
     
     // ????模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    void ReportMod(const FString& ModID, const FString& Reason};
+    void ReportMod(const FString& ModID, const FString& Reason);
     
     // 驗??模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    bool ValidateMod(const FString& ModID};
+    bool ValidateMod(const FString& ModID);
     
     // ????模??
     UFUNCTION(BlueprintCallable, Category = "Mod")
@@ -203,19 +206,19 @@ public:
     
     // 設置???X???
     UFUNCTION(BlueprintCallable, Category = "Mod")
-    void SetModLoadOrder(const TArray<FString>& ModIDs};
+    void SetModLoadOrder(const TArray<FString>& ModIDs);
     
     // ????依賴衝??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FString> GetDependencyConflicts(const FString& ModID) const;
     
     // 事件委??
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnModDownloaded, const FString&, ModID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnModInstalled, const FString&, ModID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnModUninstalled, const FString&, ModID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnModEnabled, const FString&, ModID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnModDisabled, const FString&, ModID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnModError, const FString&, ErrorMessage};
+    
+    
+    
+    
+    
+    
     
     UPROPERTY(BlueprintAssignable, Category = "Mod|Events")
     FOnModDownloaded OnModDownloaded;
@@ -246,12 +249,13 @@ private:
     TArray<FString> ModLoadOrder;
     
     FString GetModFilePath(const FString& ModID) const;
-    bool ExtractModArchive(const FString& ArchivePath, const FString& DestPath};
-    bool ValidateModDependencies(const FModInfo& Mod};
+    bool ExtractModArchive(const FString& ArchivePath, const FString& DestPath);
+    bool ValidateModDependencies(const FModInfo& Mod);
     void SaveModList();
     void LoadModList();
-    void RegisterMod(const FModInfo& ModInfo};
-    void UnregisterMod(const FString& ModID};
-    void BroadcastModEvent(EModStatus NewStatus, const FString& ModID};
-};
+    void RegisterMod(const FModInfo& ModInfo);
+    void UnregisterMod(const FString& ModID);
+    void BroadcastModEvent(EModStatus NewStatus, const FString& ModID);
+);
+
 

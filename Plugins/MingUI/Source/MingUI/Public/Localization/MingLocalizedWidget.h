@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -9,8 +9,7 @@ class UMingLocalizationManager;
 
 // Text case options
 UENUM(BlueprintType)
-enum class ELocalizedTextCase : uint8
-{
+enum class ELocalizedTextCase: uint8 {
     Default            UMETA(DisplayName = "Default"),
     Uppercase          UMETA(DisplayName = "Uppercase"),
     Lowercase          UMETA(DisplayName = "Lowercase"),
@@ -20,8 +19,7 @@ enum class ELocalizedTextCase : uint8
 
 // Text truncation options
 UENUM(BlueprintType)
-enum class ETextTruncation : uint8
-{
+enum class ETextTruncation: uint8 {
     None               UMETA(DisplayName = "None"),
     Character          UMETA(DisplayName = "Character"),
     Word               UMETA(DisplayName = "Word"),
@@ -30,29 +28,29 @@ enum class ETextTruncation : uint8
 
 // Text update mode
 UENUM(BlueprintType)
-enum class ELocalizationUpdateMode : uint8
-{
+enum class ELocalizationUpdateMode: uint8 {
     Auto               UMETA(DisplayName = "Auto"),
     Manual             UMETA(DisplayName = "Manual"),
     OnLanguageChanged  UMETA(DisplayName = "On Language Changed")
 };
 
 /**
- * ??¦a???X????? * ???X???»y?X??X??X?Åã¥Ü???? */
+ * ??ï¿½aç›®æ¨™æ•¸é‡?? * ç›®æ¨™æ•¸é‡ï¿½y?X??X??X?ï¿½ï¿½ï¿½æ‘§æ¯€ */
 UCLASS(ClassGroup = (Localization), Blueprintable, meta = (DisableNativeTick))
 class MINGPERSONAL_API UMingLocalizedWidget : public UUserWidget
 {
     GENERATED_BODY()
 
 public:
-    UMingLocalizedWidget(const FObjectInitializer& ObjectInitializer};
+    UMingLocalizedWidget(const FObjectInitializer& ObjectInitializer);
 
-    // ???X    virtual void NativeConstruct() override;
+    // ???X
+    virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // === ??¦a??Áä³]¸m ===
+    // === ??ï¿½a??ï¿½ï¿½]ï¿½m ===
 
-    // ³]¸m??¦a??Áä
+    // ï¿½]ï¿½m??ï¿½a??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Localized Widget")
     void SetLocalizationKey(const FString& Key, const FString& Namespace = TEXT("Default")};
 
@@ -62,114 +60,120 @@ public:
     UFUNCTION(BlueprintPure, Category = "Localized Widget")
     FString GetNamespace() const { return Namespace; }
 
-    // === ??¼Æ???? ===
+    // === ??ï¿½ï¿½æ‘§æ¯€ ===
 
-    // ³]¸m??¼Æ
+    // ï¿½]ï¿½m??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Parameters")
-    void SetParameter(const FString& ParamName, const FString& Value};
+    void SetParameter(const FString& ParamName, const FString& Value);
 
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Parameters")
-    void SetParameters(const TMap<FString, FString>& Params};
+    void SetParameters(const TMap<FString, FString>& Params);
 
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Parameters")
     void ClearParameters();
 
-    // === ??¥»??·s ===
+    // === ??ï¿½ï¿½??ï¿½s ===
 
-    // ???X?·s??¥»
+    // ???X?ï¿½s??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Update")
     void UpdateText();
 
-    // ±j¨î??·s
+    // ï¿½jï¿½ï¿½??ï¿½s
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Update")
     void ForceRefresh();
 
-    // === ??¥»???? ===
+    // === ??ï¿½ï¿½æ‘§æ¯€ ===
 
-    // ³]¸m??¥»¤j????    UFUNCTION(BlueprintCallable, Category = "Localized Widget|Formatting")
-    void SetTextCase(ELocalizedTextCase NewCase};
+    // ï¿½]ï¿½m??ï¿½ï¿½ï¿½jæ‘§æ¯€
+    UFUNCTION(BlueprintCallable, Category = "Localized Widget|Formatting")
+    void SetTextCase(ELocalizedTextCase NewCase);
 
     UFUNCTION(BlueprintPure, Category = "Localized Widget|Formatting")
     ELocalizedTextCase GetTextCase() const { return TextCase; }
 
-    // ³]¸m??Â_????
+    // ï¿½]ï¿½m??ï¿½_æ‘§æ¯€
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Formatting")
-    void SetTruncation(ETextTruncation TruncationType, int32 MaxLength = 100};
+    void SetTruncation(ETextTruncation TruncationType, int32 MaxLength = 100);
 
-    // === Äİ??===
+    // === ï¿½ï¿½??===
 
-    // ??¦a??Áä
+    // ??ï¿½a??ï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget", meta = (ExposeOnSpawn = true))
     FString LocalizationKey;
 
-    // ????ªÅ??
+    // æ‘§æ¯€ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget", meta = (ExposeOnSpawn = true))
     FString Namespace;
 
-    // Àq?X?¥» (???X?¥»???X?Åã??
+    // ï¿½q?X?ï¿½ï¿½ (???X?ï¿½ï¿½???X?ï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget")
     FText DefaultText;
 
-    // ??·s¼Ò??
+    // ??ï¿½sï¿½ï¿½??
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget")
     ELocalizationUpdateMode UpdateMode;
 
-    // ??¥»¤j????    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget|Formatting")
+    // ??ï¿½ï¿½ï¿½jæ‘§æ¯€
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget|Formatting")
     ELocalizedTextCase TextCase;
 
-    // ??Â_³]¸m
+    // ??ï¿½_ï¿½]ï¿½m
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget|Formatting")
     ETextTruncation Truncation;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget|Formatting", meta = (EditCondition = "Truncation != ETextTruncation::None"))
     int32 MaxTextLength;
 
-    // ¨Ï¥Î´I?X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget")
+    // ï¿½Ï¥Î´I?X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget")
     bool bUseRichText;
 
-    // ???X???
+    // ç›®æ¨™æ•¸é‡
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget")
     bool bAutoWrapText;
 
-    // === ¨Æ¥ó???? ===
+    // === ï¿½Æ¥ï¿½æ‘§æ¯€ ===
 
-    // »y?X??X??X?½Õ
+    // ï¿½y?X??X??X?ï¿½ï¿½
     UFUNCTION()
-    void OnLanguageChanged(EMingLanguage NewLanguage};
+    void OnLanguageChanged(EMingLanguage NewLanguage);
 
-    // ???X???Åã¥Ü???X    UFUNCTION(BlueprintPure, Category = "Localized Widget")
+    // ç›®æ¨™æ•¸é‡ï¿½ï¿½ï¿½???X
+    UFUNCTION(BlueprintPure, Category = "Localized Widget")
     FText GetCurrentText() const;
 
-    // ???X??X?¦a???X(???X
+    // æ•…äº‹é‡è¦æ€§?ï¿½a???X(???X
     UFUNCTION(BlueprintPure, Category = "Localized Widget")
     FText GetRawLocalizedText() const;
 
 protected:
-    // ??¼Æ¦sÀx
+    // ??ï¿½Æ¦sï¿½x
     UPROPERTY()
     TMap<FString, FString> Parameters;
 
-    // ????Åã¥Ü???X    UPROPERTY()
+    // æ‘§æ¯€ï¿½ï¿½ï¿½???X
+    UPROPERTY()
     FText CurrentText;
 
-    // ¸j?X?¥»????¨t²Î
+    // ï¿½j?X?ï¿½ï¿½æ‘§æ¯€ï¿½tï¿½ï¿½
     void BindToLocalizationSystem();
 
-    // ????¸j??
+    // æ‘§æ¯€ï¿½j??
     void UnbindFromLocalizationSystem();
 
-    // ??¥Î??¥»???? (¤j??¼g¡BºI????)
+    // ??ï¿½ï¿½??ï¿½ï¿½æ‘§æ¯€ (ï¿½j??ï¿½gï¿½Bï¿½Iæ‘§æ¯€)
     FText ProcessText(const FText& RawText) const;
 
-    // ??¥Î¤j??¼g?X    FText ApplyTextCase(const FText& Text) const;
+    // ??ï¿½Î¤j??ï¿½g?X
+    FText ApplyTextCase(const FText& Text) const;
 
-    // ??¥Î??Â_
+    // ??ï¿½ï¿½??ï¿½_
     FText ApplyTruncation(const FText& Text) const;
 
-    // ??¼Æ????
+    // ??ï¿½ï¿½æ‘§æ¯€
     FText ReplaceParameters(const FText& Text) const;
 
-    // ???X?¦a??ºŞ??¾¹
+    // ???X?ï¿½a??ï¿½ï¿½??ï¿½ï¿½
     UMingLocalizationManager* GetLocalizationManager() const;
 };
 

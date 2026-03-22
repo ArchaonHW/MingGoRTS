@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingUserExperienceTest.generated.h"
 
 /**
- * ??¤áÅé??´ú¸Õ®M¥ó
- * ´ú¸Õ??¹ê??¤á??´º??¥i???? */
+ * æ‘§æ¯€Õ®M
+ * æ‘§æ¯€æ‘§æ¯€iæ‘§æ¯€ */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingUserExperienceTest : public UObject
 {
@@ -15,7 +15,7 @@ class MINGCORE_API UMingUserExperienceTest : public UObject
 public:
     UMingUserExperienceTest();
 
-    // ========== ???X?¤áÅé??´ú¸Õ ==========
+    // ========== ç›®æ¨™æ•¸é‡ ==========
     
     UFUNCTION(BlueprintCallable, Category = "UX Test | New User")
     void StartNewUserExperienceTest();
@@ -41,7 +41,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "UX Test | New User")
     float GetNewUserSatisfaction() const;
 
-    // ========== ¸ê²`??¤áÅé??´ú¸Õ ==========
+    // ========== `æ‘§æ¯€ ==========
     
     UFUNCTION(BlueprintCallable, Category = "UX Test | Expert User")
     void StartExpertUserTest();
@@ -67,7 +67,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "UX Test | Expert User")
     float GetExpertSatisfaction() const;
 
-    // ========== ??­±??¥Î??´ú??==========
+    // ========== æ‘§æ¯€æ‘§æ¯€==========
     
     UFUNCTION(BlueprintCallable, Category = "UX Test | UI")
     void StartUIUsabilityTest();
@@ -96,7 +96,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "UX Test | UI")
     float GetUIResponsiveness() const;
 
-    // ========== ¥æ??Åé??´ú¸Õ ==========
+    // ========== æ‘§æ¯€ ==========
     
     UFUNCTION(BlueprintCallable, Category = "UX Test | Interaction")
     void StartInteractionTest();
@@ -125,7 +125,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "UX Test | Interaction")
     float GetInteractionSatisfaction() const;
 
-    // ========== ¾Ç?X???´ú¸Õ ==========
+    // ========== ?X??? ==========
     
     UFUNCTION(BlueprintCallable, Category = "UX Test | Learning")
     void StartLearningCurveTest();
@@ -151,7 +151,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "UX Test | Learning")
     float GetDifficultyBalance() const;
 
-    // ========== ????Åé??´ú¸Õ ==========
+    // ========== æ‘§æ¯€?? ==========
     
     UFUNCTION(BlueprintCallable, Category = "UX Test | Emotional")
     void StartEmotionalExperienceTest();
@@ -177,7 +177,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "UX Test | Emotional")
     float GetEmotionalBalance() const;
 
-    // ========== ºî?X?¤áÅé??´ú¸Õ ==========
+    // ========== ?X??? ==========
     
     UFUNCTION(BlueprintCallable, Category = "UX Test")
     void RunAllUserExperienceTests();
@@ -201,7 +201,7 @@ public:
     FString GenerateUXTestReport();
     
     UFUNCTION(BlueprintCallable, Category = "UX Test")
-    void ExportUXTestData(const FString& FilePath};
+    void ExportUXTestData(const FString& FilePath);
     
     UFUNCTION(BlueprintPure, Category = "UX Test")
     float GetOverallUXScore() const;
@@ -213,7 +213,7 @@ protected:
     virtual void Tick(float DeltaTime) override;
 
 private:
-    // ???X?¤á????
+    // ç›®æ¨™æ•¸é‡??
     UPROPERTY()
     float NewUserCompletionRate;
     
@@ -226,7 +226,7 @@ private:
     UPROPERTY()
     float NewUserSatisfaction;
     
-    // ¸ê²`??¤á????
+    // `æ‘§æ¯€??
     UPROPERTY()
     float ExpertEfficiency;
     
@@ -251,7 +251,7 @@ private:
     UPROPERTY()
     float UIResponsiveness;
     
-    // ¥æ??Åé?X???
+    // ç›®æ¨™æ•¸é‡
     UPROPERTY()
     float AverageInputLatency;
     
@@ -264,7 +264,7 @@ private:
     UPROPERTY()
     float InteractionSatisfaction;
     
-    // ¾Ç?X??X???
+    // ?X??X???
     UPROPERTY()
     float LearningRate;
     
@@ -277,7 +277,7 @@ private:
     UPROPERTY()
     float DifficultyBalance;
     
-    // ????Åé?X???
+    // ??ç›®æ¨™æ•¸é‡
     UPROPERTY()
     float EngagementScore;
     
@@ -308,7 +308,7 @@ private:
     UPROPERTY()
     bool bEmotionalTestRunning;
     
-    // ´ú¸Õµ²??
+    // Õµ??
     UPROPERTY()
     int32 PassedTests;
     
@@ -318,13 +318,13 @@ private:
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // ??³¡??¼Æ
-    void UpdateNewUserMetrics(float DeltaTime};
-    void UpdateExpertUserMetrics(float DeltaTime};
-    void UpdateUIMetrics(float DeltaTime};
-    void UpdateInteractionMetrics(float DeltaTime};
-    void UpdateLearningMetrics(float DeltaTime};
-    void UpdateEmotionalMetrics(float DeltaTime};
+    // æ‘§æ¯€
+    void UpdateNewUserMetrics(float DeltaTime);
+    void UpdateExpertUserMetrics(float DeltaTime);
+    void UpdateUIMetrics(float DeltaTime);
+    void UpdateInteractionMetrics(float DeltaTime);
+    void UpdateLearningMetrics(float DeltaTime);
+    void UpdateEmotionalMetrics(float DeltaTime);
     
     void GuideThroughTutorial();
     void MonitorLearningProgress();
@@ -351,7 +351,7 @@ private:
     void CalculateUXStatistics();
     void GenerateRecommendations();
     
-    // ??¤áÅé?X???
+    // ç›®æ¨™æ•¸é‡
     void AnalyzeUserJourney();
     void IdentifyPainPoints();
     void ValidateFlowEfficiency();

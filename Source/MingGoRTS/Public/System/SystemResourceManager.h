@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "SystemResourceManager.generated.h"
 
 UENUM(BlueprintType)
-enum class ESystemResourceType : uint8
-{
+enum class ESystemResourceType: uint8 {
     CPU         UMETA(DisplayName = "CPU"),
     Memory      UMETA(DisplayName = "Memory"),
     GPU         UMETA(DisplayName = "GPU"),
@@ -20,8 +19,7 @@ enum class ESystemResourceType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EPerformanceTier : uint8
-{
+enum class EPerformanceTier: uint8 {
     Low         UMETA(DisplayName = "Low"),
     Medium      UMETA(DisplayName = "Medium"),
     High        UMETA(DisplayName = "High"),
@@ -30,8 +28,7 @@ enum class EPerformanceTier : uint8
 };
 
 UENUM(BlueprintType)
-enum class EResourcePriority : uint8
-{
+enum class EResourcePriority: uint8 {
     Critical    UMETA(DisplayName = "Critical"),
     High        UMETA(DisplayName = "High"),
     Normal      UMETA(DisplayName = "Normal"),

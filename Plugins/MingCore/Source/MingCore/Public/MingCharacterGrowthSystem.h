@@ -1,40 +1,37 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoEportTypes.h"
 #include "MingCharacterGrowthSystem.generated.h"
 
-// ?????~??
+// 摧毀?~??
 UENUM(BlueprintType)
-enum class EMingCharacterClass : uint8
-{
+enum class EMingCharacterClass: uint8 {
     Infantry,          // ?B?L?
     Cavalry,           // ?M?L?
     Artillery,         // ?L?
     Engineer,         // ?u?{?v
-    Medic,           // ?????L
-    Scout,           // ????L
-    Commander,       // ?????
+    Medic,           // 摧毀?L
+    Scout,           // 摧毀L
+    Commander,       // 摧毀?
     Diplomat         // ?~??
 };
 
 // UENUM(BlueprintType)
-enum class EMingSkillType : uint8
-{
-    Combat,           // ??????
-    Leadership,      // ???????
-    Strategy,         // ??????
-    Diplomacy,        // ?~????
+enum class EMingSkillType: uint8 {
+    Combat,           // 摧毀??
+    Leadership,      // 摧毀???
+    Strategy,         // 摧毀??
+    Diplomacy,        // ?~摧毀
     Engineering,      // ?u?{???
-    Medical,          // ???????
-    Scouting,         // ??????
+    Medical,          // 摧毀???
+    Scouting,         // 摧毀??
     Survival          // ??s???
 };
 
 // ?g
 UENUM(BlueprintType)
-enum class EMingEperienceSource : uint8
-{
+enum class EMingEperienceSource: uint8 {
     Combat,            // ???g
     Mission,           // ???g
     Eploration,       // ???g
@@ -44,7 +41,7 @@ enum class EMingEperienceSource : uint8
     Story              // ?g
 };
 
-// ??????USTRUCT(BlueprintType)
+// 摧毀??USTRUCT(BlueprintType)
 struct MINGCORE_API FMingCharacterAttributes
 {
     GENERATED_BODY()
@@ -145,7 +142,7 @@ struct MINGCORE_API FMingSkillData
     
     TArray<int32> PrerequisiteSkills;
 
-    // ????
+    // 摧毀
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UnlockConditions;
 
@@ -165,9 +162,7 @@ struct MINGCORE_API FMingSkillData
     FMingSkillData()
     {
         SkillID = -1;
-        SkillName = TET(""};
-        SkillDescription = TET(""};
-        SkillType = EMingSkillType::Combat;
+        SkillName = TET("");        SkillDescription = TET("");        SkillType = EMingSkillType::Combat;
         CurrentLevel = 1;
         MaLevel = 10;
         CurrentEperience = 0.0f;
@@ -175,14 +170,13 @@ struct MINGCORE_API FMingSkillData
         SkillEffects.Empty();
         PrerequisiteSkills.Empty();
         UnlockConditions.Empty();
-        SkillIconPath = TET(""};
-        bIsActiveSkill = false;
+        SkillIconPath = TET("");        bIsActiveSkill = false;
         CooldownTime = 0.0f;
         ResourceCost.Empty();
     }
 };
 
-// ????
+// 摧毀
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingCharacterLevel
 {
@@ -227,8 +221,7 @@ struct MINGCORE_API FMingCharacterLevel
         CurrentEperience = 0.0f;
         EperienceToNetLevel = 100.0f;
         TotalEperience = 0.0f;
-        LevelTitle = TET("?L"};
-        LevelPermissions.Empty();
+        LevelTitle = TET("?L");        LevelPermissions.Empty();
         LevelRewards.Empty();
         SkillPoints = 0;
         AttributePoints = 0;
@@ -268,7 +261,7 @@ struct MINGCORE_API FMingEquipmentItem
     
     TMap<FString, float> ItemAttributes;
 
-    // ????m
+    // 摧毀m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipSlot;
 
@@ -296,32 +289,24 @@ struct MINGCORE_API FMingEquipmentItem
     FMingEquipmentItem()
     {
         ItemID = -1;
-        ItemName = TET(""};
-        ItemDescription = TET(""};
-        ItemType = TET(""};
-        ItemRarity = TET("???q"};
-        ItemLevel = 1;
+        ItemName = TET("");        ItemDescription = TET("");        ItemType = TET("");        ItemRarity = TET("???q");        ItemLevel = 1;
         ItemAttributes.Empty();
-        EquipSlot = TET(""};
-        bIsEquipped = false;
+        EquipSlot = TET("");        bIsEquipped = false;
         ItemQuantity = 1;
         ItemDurability = 100.0f;
         MaDurability = 100.0f;
-        ItemIconPath = TET(""};
-        ItemModelPath = TET(""};
-    }
+        ItemIconPath = TET("");        ItemModelPath = TET("");    }
 };
 
-// ?????????e
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterLevelUp, int32, NewLevel, const FMingCharacterAttributes&, NewAttributes};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelUp, int32, SkillID, int32, NewLevel};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEperienceGained, EMingEperienceSource, Source, float, EperienceAmount};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEquipped, int32, ItemID, const FString&, EquipSlot};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAttributeChanged, const FString&, AttributeName, float, NewValue};
-
+// 摧毀摧毀?e
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterLevelUp, int32, NewLevel, const FMingCharacterAttributes&, NewAttributes);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelUp, int32, SkillID, int32, NewLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEperienceGained, EMingEperienceSource, Source, float, EperienceAmount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEquipped, int32, ItemID, const FString&, EquipSlot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAttributeChanged, const FString&, AttributeName, float, NewValue);
 /**
- * ???????t??
- * ?t?d???B????
+ * 摧毀???t??
+ * ?t?d???B摧毀
  */
 UCLASS(ClassGroup = (Character), Blueprintable, BlueprintType)
 class MINGCORE_API UMingCharacterGrowthSystem : public UObject
@@ -335,31 +320,25 @@ public:
     bool InitializeGrowthSystem();
 
     
-    bool CreateCharacter(const FString& CharacterName, EMingCharacterClass CharacterClass};
-
+    bool CreateCharacter(const FString& CharacterName, EMingCharacterClass CharacterClass);
     // ?g
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool GainEperience(EMingEperienceSource Source, float EperienceAmount};
-
-    // ????
+    bool GainEperience(EMingEperienceSource Source, float EperienceAmount);
+    // 摧毀
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool LevelUpCharacter();
 
     // 
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool AllocateAttributePoint(const FString& AttributeName, int32 Points};
-
+    bool AllocateAttributePoint(const FString& AttributeName, int32 Points);
     // 
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
-    bool AllocateSkillPoint(int32 SkillID};
-
+    bool AllocateSkillPoint(int32 SkillID);
     
-    bool LearnSkill(int32 SkillID};
-
+    bool LearnSkill(int32 SkillID);
     
-    bool UpgradeSkill(int32 SkillID};
-
-    // ????H??
+    bool UpgradeSkill(int32 SkillID);
+    // 摧毀H??
     UFUNCTION(BlueprintPure, Category = "Character Growth")
     FMingCharacterAttributes GetCharacterAttributes() const;
 
@@ -396,11 +375,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool SaveCharacterData();
 
-    // ???J????
+    // ???J摧毀
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool LoadCharacterData();
 
-    // ?m????
+    // ?m摧毀
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     void ResetCharacter();
 
@@ -424,7 +403,7 @@ protected:
     
     FMingCharacterAttributes CharacterAttributes;
 
-    // ????
+    // 摧毀
     UPROPERTY()
     FMingCharacterLevel CharacterLevel;
 
@@ -439,11 +418,11 @@ protected:
     UPROPERTY()
     TArray<FMingEquipmentItem> InventoryItems;
 
-    // ?????~
+    // 摧毀?~
     UPROPERTY()
     EMingCharacterClass CharacterClass;
 
-    // ??????
+    // 摧毀??
     UPROPERTY()
     FString CharacterName;
 
@@ -452,7 +431,8 @@ protected:
     bool bInitialized;
 
 private:
-    // ???J?]    void LoadDefaultSkills();
+    // ???J?]
+    void LoadDefaultSkills();
 
     // ???J?]??
     void LoadDefaultEquipment();
@@ -463,30 +443,32 @@ private:
     // ?p?g
     float CalculateSkillEperienceToNetLevel(int32 CurrentLevel) const;
 
-    // ?�`??y
-    void ApplyLevelRewards(int32 NewLevel};
-
-    //     void ApplySkillEffects(int32 SkillID, int32 NewLevel};
-
-    // ?�c?
+    // ?`??y
+    void ApplyLevelRewards(int32 NewLevel);
+    // 
+    void ApplySkillEffects(int32 SkillID, int32 NewLevel);
+    // ?c?
     void ApplyEquipmentEffects(const FMingEquipmentItem& Item) {};
 
-    // ??????
+    // 摧毀??
     void RemoveEquipmentEffects(const FMingEquipmentItem& Item) {};
 
-    // ??    bool CanLearnSkill(int32 SkillID) const;
+    // ??
+    bool CanLearnSkill(int32 SkillID) const;
 
-    // ?p???v    float CalculateAttributeModifier(const FString& AttributeName) const;
+    // ?p???v
+    float CalculateAttributeModifier(const FString& AttributeName) const;
 
     // 
     FMingEquipmentItem GenerateRandomEquipment(int32 ItemLevel) const;
 
-    // ?s????    void UpdateCharacterPower();
+    // ?s摧毀
+    void UpdateCharacterPower();
 
-    // ?O??????
+    // ?O摧毀??
     void SaveCharacterSnapshot();
 
-    // ???J??????
+    // ???J摧毀??
     void LoadCharacterSnapshot();
 
     // ??
@@ -495,8 +477,8 @@ private:
     // ?p??
     TArray<int32> CalculateSkillTree() const;
 
-    //     void UnlockNewSkills(int32 NewLevel};
-
+    // 
+    void UnlockNewSkills(int32 NewLevel);
     // ?p?~
     TMap<FString, float> CalculateClassBonuses() const;
 };

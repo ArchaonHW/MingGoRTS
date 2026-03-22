@@ -15,6 +15,8 @@ AMingGoRTSPlayerController::AMingGoRTSPlayerController()
     SelectionStart = FVector2D::ZeroVector;
     SelectionEnd = FVector2D::ZeroVector;
     RTSCamera = nullptr;
+    LastClickTime = 0.0f;
+    DoubleClickThreshold = 0.3f; // 300ms 雙擊閾值
 }
 
 void AMingGoRTSPlayerController::BeginPlay()
@@ -37,6 +39,12 @@ void AMingGoRTSPlayerController::SetupInputComponent()
     InputComponent->BindAction("RightMouse", IE_Pressed, this, &AMingGoRTSPlayerController::OnRightMouseButtonPressed);
     InputComponent->BindAction("MouseScrollUp", IE_Pressed, this, &AMingGoRTSPlayerController::OnMouseScrollUp);
     InputComponent->BindAction("MouseScrollDown", IE_Pressed, this, &AMingGoRTSPlayerController::OnMouseScrollDown);
+    
+    // 選擇過濾快捷鍵
+    InputComponent->BindAction("SelectSameType", IE_Pressed, this, &AMingGoRTSPlayerController::SelectSameType);
+    InputComponent->BindAction("SelectDamaged", IE_Pressed, this, &AMingGoRTSPlayerController::SelectDamaged);
+    InputComponent->BindAction("SelectIdle", IE_Pressed, this, &AMingGoRTSPlayerController::SelectIdle);
+    InputComponent->BindAction("DeselectAll", IE_Pressed, this, &AMingGoRTSPlayerController::DeselectAll);
 
     // 相機移動
     InputComponent->BindAxis("MoveCameraForward", this, &AMingGoRTSPlayerController::OnMoveCameraForward);
@@ -58,6 +66,20 @@ void AMingGoRTSPlayerController::PlayerTick(float DeltaTime)
 
 void AMingGoRTSPlayerController::OnLeftMouseButtonPressed()
 {
+    // 檢測雙擊
+    float CurrentTime = GetWorld()->GetTimeSeconds();
+    float TimeSinceLastClick = CurrentTime - LastClickTime;
+    
+    if (TimeSinceLastClick <= DoubleClickThreshold)
+    {
+        // 雙擊檢測到 - 選擇屏幕上所有同類型單位
+        UE_LOG(LogTemp, Log, TEXT("Double-click detected - selecting same type units"));
+        SelectSameType();
+        LastClickTime = 0.0f; // 重置避免三擊觸發
+        return;
+    }
+    
+    LastClickTime = CurrentTime;
     StartSelection();
 }
 
@@ -253,4 +275,136 @@ void AMingGoRTSPlayerController::ZoomCamera(float Delta)
         float CurrentDistance = RTSCamera->SpringArm->TargetArmLength;
         RTSCamera->SetCameraDistance(CurrentDistance - Delta * 100.0f);
     }
+}
+
+void AMingGoRTSPlayerController::SelectSameType()
+{
+    if (SelectedUnits.Num() == 0)
+    {
+        return;
+    }
+
+    // 獲取主選單位的類型
+    AMingGoRTSUnit* PrimaryUnit = SelectedUnits[0];
+    if (!PrimaryUnit)
+    {
+        return;
+    }
+
+    FString UnitType = PrimaryUnit->GetUnitType();
+    
+    // 清除當前選擇
+    for (AMingGoRTSUnit* Unit : SelectedUnits)
+    {
+        if (Unit)
+        {
+            Unit->SetSelected(false);
+        }
+    }
+    SelectedUnits.Empty();
+
+    // 選擇屏幕上所有同類型單位
+    TArray<AActor*> AllUnits;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMingGoRTSUnit::StaticClass(), AllUnits);
+    
+    for (AActor* Actor : AllUnits)
+    {
+        AMingGoRTSUnit* Unit = Cast<AMingGoRTSUnit>(Actor);
+        if (Unit && Unit->GetUnitType() == UnitType)
+        {
+            FVector UnitLocation = Unit->GetActorLocation();
+            FVector2D ScreenPos;
+            if (ProjectWorldLocationToScreen(UnitLocation, ScreenPos))
+            {
+                // 只選擇屏幕內的可見單位
+                int32 ScreenX, ScreenY;
+                GetViewportSize(ScreenX, ScreenY);
+                if (ScreenPos.X >= 0 && ScreenPos.X <= ScreenX && ScreenPos.Y >= 0 && ScreenPos.Y <= ScreenY)
+                {
+                    SelectedUnits.Add(Unit);
+                    Unit->SetSelected(true);
+                }
+            }
+        }
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("Selected %d units of type %s"), SelectedUnits.Num(), *UnitType);
+}
+
+void AMingGoRTSPlayerController::SelectDamaged()
+{
+    // 從當前選擇中過濾出受損單位
+    TArray<AMingGoRTSUnit*> DamagedUnits;
+    for (AMingGoRTSUnit* Unit : SelectedUnits)
+    {
+        if (Unit && Unit->IsDamaged())
+        {
+            DamagedUnits.Add(Unit);
+        }
+    }
+
+    // 清除當前選擇
+    for (AMingGoRTSUnit* Unit : SelectedUnits)
+    {
+        if (Unit)
+        {
+            Unit->SetSelected(false);
+        }
+    }
+    SelectedUnits.Empty();
+
+    // 只保留受損單位
+    for (AMingGoRTSUnit* Unit : DamagedUnits)
+    {
+        SelectedUnits.Add(Unit);
+        Unit->SetSelected(true);
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("Selected %d damaged units"), SelectedUnits.Num());
+}
+
+void AMingGoRTSPlayerController::SelectIdle()
+{
+    // 從當前選擇中過濾出空閒單位
+    TArray<AMingGoRTSUnit*> IdleUnits;
+    for (AMingGoRTSUnit* Unit : SelectedUnits)
+    {
+        if (Unit && Unit->GetUnitState() == ERTSUnitState::Idle)
+        {
+            IdleUnits.Add(Unit);
+        }
+    }
+
+    // 清除當前選擇
+    for (AMingGoRTSUnit* Unit : SelectedUnits)
+    {
+        if (Unit)
+        {
+            Unit->SetSelected(false);
+        }
+    }
+    SelectedUnits.Empty();
+
+    // 只保留空閒單位
+    for (AMingGoRTSUnit* Unit : IdleUnits)
+    {
+        SelectedUnits.Add(Unit);
+        Unit->SetSelected(true);
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("Selected %d idle units"), SelectedUnits.Num());
+}
+
+void AMingGoRTSPlayerController::DeselectAll()
+{
+    for (AMingGoRTSUnit* Unit : SelectedUnits)
+    {
+        if (Unit)
+        {
+            Unit->SetSelected(false);
+        }
+    }
+    SelectedUnits.Empty();
+    
+    UE_LOG(LogTemp, Log, TEXT("Deselected all units"));
 }

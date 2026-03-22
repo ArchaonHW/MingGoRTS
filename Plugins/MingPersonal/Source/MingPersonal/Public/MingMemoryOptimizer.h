@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,8 +9,7 @@ class UMingPerformanceManager;
 
 // Memory pool type
 UENUM(BlueprintType)
-enum class EMingMemoryPoolType : uint8
-{
+enum class EMingMemoryPoolType: uint8 {
     Texture                UMETA(DisplayName = "Texture"),
     Mesh                   UMETA(DisplayName = "Mesh"),
     Audio                  UMETA(DisplayName = "Audio"),
@@ -25,8 +24,7 @@ enum class EMingMemoryPoolType : uint8
 
 // Memory optimization strategy
 UENUM(BlueprintType)
-enum class EMingMemoryStrategy : uint8
-{
+enum class EMingMemoryStrategy: uint8 {
     Conservative           UMETA(DisplayName = "Conservative"),
     Balanced               UMETA(DisplayName = "Balanced"),
     Aggressive             UMETA(DisplayName = "Aggressive"),
@@ -132,7 +130,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMemoryOptimizationCompleted, FMin
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMemoryWarning, float, UsedPercent, float, Threshold);
 
 /**
- * ???X??X * ±M??≠t≥d????∫ﬁ?X?¿uX */
+ * ÊïÖ‰∫ãÈáçË¶ÅÊÄß * M??tdÊëßÊØÄ?X?uX */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingMemoryOptimizer : public UObject
 {
@@ -283,14 +281,14 @@ private:
     void UpdateMemoryStats();
     void CheckMemoryWarnings();
     float CalculateCacheSize() const;
-    void EvictLeastUsedCacheItems(float TargetSizeMB};
+    void EvictLeastUsedCacheItems(float TargetSizeMB);
     void FlushRenderResourceCache();
     void FlushAnimationCache();
     void FlushAudioCache();
     void FlushAICache();
     void FlushNetworkCache();
     void FlushUICache();
-    void PerformGarbageCollection(bool bFullPurge};
+    void PerformGarbageCollection(bool bFullPurge);
     void CompactAllocator();
 );
-
+};

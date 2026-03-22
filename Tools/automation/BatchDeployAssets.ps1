@@ -1,4 +1,4 @@
-# MingGoRTS 素材批次部署腳本
+﻿# MingGoRTS 素材批次部署腳本
 # 專門處理大量素材的自動化導入
 
 param(

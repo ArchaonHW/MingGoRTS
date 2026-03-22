@@ -1,4 +1,4 @@
-# MingGoRTS 性能優化驗證套件
+﻿# MingGoRTS 性能優化驗證套件
 # 確保所有系統在高負載下穩定運行
 
 param(

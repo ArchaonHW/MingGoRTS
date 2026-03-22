@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,14 +7,13 @@
 
 // ??X??X??X
 UENUM(BlueprintType)
-enum class EMingConsequenceConflictType : uint8
-{
+enum class EMingConsequenceConflictType: uint8 {
     None,
     PoliticalConflict,     // X?v??X??X
     MilitaryConflict,      // ?xX??X??X
     EconomicConflict,      // ?gX??X??X
     SocialConflict,        // ??X??X??X
-    CrossDomainConflict,   // ??????
+    CrossDomainConflict,   // 摧毀??
 };
 
 // ??X??X
@@ -45,27 +44,29 @@ struct MINGCORE_API FMingConsequenceConflict
     FString RecommendedResolution;
 };
 
-// ??X????
+// ??X摧毀
 UENUM(BlueprintType)
-enum class EMingConflictResolutionStrategy : uint8
-{
-    PriorityBased,         // X??X    WeightedAverage,      // X??X
+enum class EMingConflictResolutionStrategy: uint8 {
+    PriorityBased,         // X??X
+    WeightedAverage,      // X??X
     DomainOverride,       // X??X
-    Conservative,         // ?OX????
-    Aggressive,           // ?EX    Manual               // X
+    Conservative,         // ?OX摧毀
+    Aggressive,           // ?EX
+    Manual               // X
 };
 
 /**
- * ??X??X * ???X??MX????X */
+ * ??X??X * ???X??MX摧毀X */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingConsequenceConflictResolver : public UObject
 {
     GENERATED_BODY()
 
 public:
-    // ??X    UMingConsequenceConflictResolver();
+    // ??X
+    UMingConsequenceConflictResolver();
 
-    // ?????X??X
+    // 摧毀?X??X
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
     bool DetectConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
@@ -77,7 +78,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
     void ApplyConflictResolution(const FMingConsequenceConflict& Conflict, FMingConsequenceResult& Result);
 
-    // X??X????
+    // X??X摧毀
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
     EMingConflictResolutionStrategy GetRecommendedStrategy(const FMingConsequenceConflict& Conflict);
 
@@ -89,18 +90,20 @@ protected:
     // ???X?v??X
     void DetectPoliticalConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // ????xX??X
+    // 摧毀xX??X
     void DetectMilitaryConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // ????gX??X
+    // 摧毀gX??X
     void DetectEconomicConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // ?????X??X
+    // 摧毀?X??X
     void DetectSocialConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // ?????X    void DetectCrossDomainConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
+    // 摧毀?X
+    void DetectCrossDomainConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // X??X???X    void ResolvePriorityBased(TArray<FMingConsequenceResult>& Results);
+    // X??X???X
+    void ResolvePriorityBased(TArray<FMingConsequenceResult>& Results);
 
     // X??X
     void ResolveWeightedAverage(TArray<FMingConsequenceResult>& Results);
@@ -108,10 +111,11 @@ protected:
     // X??X
     void ResolveDomainOverride(TArray<FMingConsequenceResult>& Results);
 
-    // ?OX????X
+    // ?OX摧毀X
     void ResolveConservative(TArray<FMingConsequenceResult>& Results);
 
-    // ?EX??X    void ResolveAggressive(TArray<FMingConsequenceResult>& Results);
+    // ?EX??X
+    void ResolveAggressive(TArray<FMingConsequenceResult>& Results);
 
     // ?pX??X?{??
     float CalculateConflictSeverity(const FMingConsequenceConflict& Conflict);
@@ -126,7 +130,8 @@ private:
     // ?pX?uX
     TMap<FString, float> CalculatorPriorities;
 
-    // ??X???X    static constexpr float CONFLICT_THRESHOLD = 0.3f;
+    // ??X???X
+    static constexpr float CONFLICT_THRESHOLD = 0.3f;
 
     // X?uX
     void InitializePriorities();

@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingAIContentTypes.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingAIContentType : uint8
-{
+enum class EMingAIContentType: uint8 {
     None UMETA(DisplayName = "None"),
     Image UMETA(DisplayName = "Image"),
     Video UMETA(DisplayName = "Video"),
@@ -24,8 +23,7 @@ enum class EMingAIContentType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingAIProvider : uint8
-{
+enum class EMingAIProvider: uint8 {
     None UMETA(DisplayName = "None"),
     StableDiffusion UMETA(DisplayName = "Stable Diffusion"),
     DALL_E UMETA(DisplayName = "DALL-E"),
@@ -38,8 +36,7 @@ enum class EMingAIProvider : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingAIQualityLevel : uint8
-{
+enum class EMingAIQualityLevel: uint8 {
     Draft UMETA(DisplayName = "Draft"),
     Standard UMETA(DisplayName = "Standard"),
     High UMETA(DisplayName = "High"),
@@ -49,8 +46,7 @@ enum class EMingAIQualityLevel : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingAIGenerationStatus : uint8
-{
+enum class EMingAIGenerationStatus: uint8 {
     Idle UMETA(DisplayName = "Idle"),
     Queued UMETA(DisplayName = "Queued"),
     Generating UMETA(DisplayName = "Generating"),

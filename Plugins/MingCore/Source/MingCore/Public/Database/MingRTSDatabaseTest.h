@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -7,8 +7,7 @@
 #include "MingRTSDatabaseTest.generated.h"
 
 UENUM(BlueprintType)
-enum class EDatabaseTestCategory : uint8
-{
+enum class EDatabaseTestCategory: uint8 {
 	BasicOperations,
 	SchemaManagement,
 	QueryOperations,

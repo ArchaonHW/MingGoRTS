@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 7.1: Language Entry Widget for Language Selection List
 
 #pragma once
@@ -22,7 +22,7 @@ public:
 
     /** Set the language code for this entry */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetLanguageCode(ERTSLanguageCode LanguageCode};
+    void SetLanguageCode(ERTSLanguageCode LanguageCode);
 
     /** Get the language code */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
@@ -30,7 +30,7 @@ public:
 
     /** Set whether this entry is selected */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetIsSelected(bool bSelected};
+    void SetIsSelected(bool bSelected);
 
     /** Get whether this entry is selected */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
@@ -38,7 +38,7 @@ public:
 
     /** Set whether this entry is available */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|UI")
-    void SetIsAvailable(bool bAvailable};
+    void SetIsAvailable(bool bAvailable);
 
     /** Get whether this entry is available */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization|UI")
@@ -139,10 +139,11 @@ private:
 
 public:
     /** Delegate for entry selection */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLanguageEntrySelected, ERTSLanguageCode, LanguageCode, class UMingLanguageEntryWidget*, EntryWidget};
+    
 
     /** Event fired when this entry is selected */
     UPROPERTY(BlueprintAssignable, Category = "MingRTS|Localization|UI|Events")
     FOnLanguageEntrySelected OnLanguageSelected;
 };
+
 

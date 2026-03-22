@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -7,10 +7,12 @@
 #include "MingDialoguePanel.generated.h"
 
 UENUM(BlueprintType)
-enum class EDialogueState : uint8
-{
-    Idle,           // ™≈??
-    Speaking,       // ª°∏‹??    Listening,      // ??∏‹??    Choosing,       // ??????    Finished        // ßπ??
+enum class EDialogueState: uint8 {
+    Idle,           // ÔøΩÔøΩ??
+    Speaking,       // ÔøΩÔøΩÔøΩÔøΩ??
+    Listening,      // ??ÔøΩÔøΩ??
+    Choosing,       // ÊëßÊØÄ??
+    Finished        // ÔøΩÔøΩ??
 };
 
 USTRUCT(BlueprintType)
@@ -88,14 +90,14 @@ struct FDialogueData
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueStarted, const FString&, CharacterID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueFinished, const FString&, CharacterID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueOptionSelected, int32, OptionID, const FString&, OptionText};
+
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueStateChanged, EDialogueState, NewState);
 
 /**
- * πÔ∏‹??™OWidget
- * ∫ﬁ??®§¶‚πÔ∏‹??≠±
+ * ÔøΩÔøΩÔøΩ??ÔøΩOWidget
+ * ÔøΩÔøΩ??ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ??ÔøΩÔøΩ
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingDialoguePanel : public UUserWidget
@@ -103,12 +105,13 @@ class MINGPERSONAL_API UMingDialoguePanel : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingDialoguePanel(const FObjectInitializer& ObjectInitializer};
+    UMingDialoguePanel(const FObjectInitializer& ObjectInitializer);
 
-    // ???X    UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
+    // ???X
+    UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void InitializeDialoguePanel(UMingRelationshipManager* InRelationshipManager);
 
-    // πÔ∏‹??®Ó
+    // ÔøΩÔøΩÔøΩ??ÔøΩÔøΩ
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void StartDialogue(const FString& CharacterID, const FString& DialogueText, EDialogueType DialogueType);
 
@@ -124,7 +127,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void ResumeDialogue();
 
-    // ???X???
+    // ÁõÆÊ®ôÊï∏Èáè
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void ShowDialogueOptions(const TArray<FDialoguePanelOption>& Options);
 
@@ -137,7 +140,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void OnOptionClicked(int32 OptionID);
 
-    // πÔ∏‹??Æe
+    // ÔøΩÔøΩÔøΩ??ÔøΩe
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void SetDialogueText(const FString& Text);
 
@@ -150,7 +153,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void SetCharacterName(const FString& Name);
 
-    // ????¨d??    UFUNCTION(BlueprintPure, Category = "Dialogue Panel")
+    // ÊëßÊØÄÔøΩd??
+    UFUNCTION(BlueprintPure, Category = "Dialogue Panel")
     bool IsDialogueActive() const;
 
     UFUNCTION(BlueprintPure, Category = "Dialogue Panel")
@@ -162,7 +166,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Dialogue Panel")
     bool AreOptionsVisible() const { return bOptionsVisible; }
 
-    // µ¯ƒ±????
+    // ÔøΩÔøΩƒ±ÊëßÊØÄ
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void PlayTypewriterEffect(const FString& Text, float TypingSpeed = 0.05f);
 
@@ -178,7 +182,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void SetDialogueEmotion(EDialogueType DialogueType);
 
-    // ??¿W????
+    // ??ÔøΩWÊëßÊØÄ
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void PlayDialogueAudio(EDialogueType DialogueType);
 
@@ -188,7 +192,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void SetAudioVolume(float Volume);
 
-    // æ˙•v∞O??
+    // ÔøΩÔøΩÔøΩvÔøΩO??
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void AddToHistory(const FString& CharacterID, const FString& Text);
 
@@ -201,7 +205,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void ClearDialogueHistory();
 
-    // ß÷±∂????
+    // ÔøΩ÷±ÔøΩÊëßÊØÄ
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void QuickResponse(const FString& ResponseText);
 
@@ -211,7 +215,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void AutoAdvance(bool bEnabled);
 
-    // ®∆•Û
+    // ÔøΩ∆•ÔøΩ
     UPROPERTY(BlueprintAssignable, Category = "Dialogue Events")
     FOnDialogueStarted OnDialogueStarted;
 
@@ -225,11 +229,11 @@ public:
     FOnDialogueStateChanged OnDialogueStateChanged;
 
 protected:
-    // ®t≤Œ§ﬁ•Œ
+    // ÔøΩtÔøΩŒ§ﬁ•ÔøΩ
     UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
-    // πÔ∏‹????
+    // ÔøΩÔøΩÔøΩÊëßÊØÄ
     UPROPERTY(BlueprintReadOnly, Category = "Dialogue Data")
     FDialogueData CurrentDialogue;
 
@@ -239,7 +243,8 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Dialogue Data")
     TArray<FString> DialogueHistory;
 
-    // ??X    UPROPERTY(BlueprintReadOnly, Category = "Dialogue State")
+    // ??X
+    UPROPERTY(BlueprintReadOnly, Category = "Dialogue State")
     EDialogueState CurrentState;
 
     UPROPERTY(BlueprintReadOnly, Category = "Dialogue State")
@@ -254,7 +259,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Dialogue State")
     bool bTypewriterActive = false;
 
-    // ≥]∏m
+    // ÔøΩ]ÔøΩm
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Settings")
     float TypewriterSpeed = 0.05f;
 
@@ -264,7 +269,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Settings")
     float AudioVolume = 1.0f;
 
-    // UI≤’•Û§ﬁ•Œ°]??≠n¶bBlueprint§§??©w??
+    // UIÔøΩ’•ÔøΩﬁ•Œ°]??ÔøΩnÔøΩbBlueprintÔøΩÔøΩ??ÔøΩw??
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* CharacterNameText;
 
@@ -289,11 +294,11 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UProgressBar* TypewriterProgress;
 
-    // ??¿¿??º∆
+    // ??ÔøΩÔøΩ??ÔøΩÔøΩ
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // ??≥°??º∆
+    // ??ÔøΩÔøΩ??ÔøΩÔøΩ
     void UpdateDialogueUI();
     void UpdateCharacterUI();
     void UpdateOptionsUI();
@@ -303,23 +308,25 @@ protected:
     void ProcessTypewriterEffect();
     void OnAutoAdvanceTimer();
 
-    // ®∆•Û∏j??
+    // ÔøΩ∆•ÔøΩj??
     void SetupEventBindings();
-    void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
+    void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason);
 
 private:
-    // ª≤ßU??º∆
+    // ÔøΩÔøΩÔøΩU??ÔøΩÔøΩ
     void CreateOptionWidgets();
     void ClearOptionWidgets();
     bool IsOptionAvailable(const FDialoguePanelOption& Option) const;
     void PlayTypewriterSound();
     void StopTypewriterSound();
 
-    // ©w?X    FTimerHandle TypewriterTimer;
+    // ÔøΩw?X
+    FTimerHandle TypewriterTimer;
     FTimerHandle AutoAdvanceTimer;
 
-    // ????æ˜?X    FString TargetText;
+    // ÊëßÊØÄÔøΩÔøΩ?X
+    FString TargetText;
     FString CurrentText;
     int32 TypewriterIndex;
-);
+};
 

@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingUIAudioIntegration.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingUISoundType : uint8
-{
+enum class EMingUISoundType: uint8 {
     // Panel Sounds
     PanelOpen UMETA(DisplayName = "Panel Open"),
     PanelClose UMETA(DisplayName = "Panel Close"),
@@ -118,26 +117,26 @@ public:
 
     // Sound Playback
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayUISound(EMingUISoundType SoundType};
+    void PlayUISound(EMingUISoundType SoundType);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayUISoundWithVolume(EMingUISoundType SoundType, float Volume};
+    void PlayUISoundWithVolume(EMingUISoundType SoundType, float Volume);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void StopUISound(EMingUISoundType SoundType};
+    void StopUISound(EMingUISoundType SoundType);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
     void StopAllUISounds();
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void FadeOutUISound(EMingUISoundType SoundType, float FadeOutDuration};
+    void FadeOutUISound(EMingUISoundType SoundType, float FadeOutDuration);
 
     // Sound Mapping
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void RegisterSoundMapping(EMingUISoundType SoundType, USoundCue* SoundCue};
+    void RegisterSoundMapping(EMingUISoundType SoundType, USoundCue* SoundCue);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void RegisterSoundMappingStruct(const FMingUISoundMapping& Mapping};
+    void RegisterSoundMappingStruct(const FMingUISoundMapping& Mapping);
 
     UFUNCTION(BlueprintPure, Category = "UI Audio")
     USoundCue* GetSoundCue(EMingUISoundType SoundType) const;
@@ -147,19 +146,19 @@ public:
 
     // Volume Control
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void SetUISoundVolume(float Volume};
+    void SetUISoundVolume(float Volume);
 
     UFUNCTION(BlueprintPure, Category = "UI Audio")
     float GetUISoundVolume() const { return MasterVolume; }
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void SetSoundTypeVolume(EMingUISoundType SoundType, float Volume};
+    void SetSoundTypeVolume(EMingUISoundType SoundType, float Volume);
 
     UFUNCTION(BlueprintPure, Category = "UI Audio")
     float GetSoundTypeVolume(EMingUISoundType SoundType) const;
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void MuteAll(bool bMute};
+    void MuteAll(bool bMute);
 
     UFUNCTION(BlueprintPure, Category = "UI Audio")
     bool IsMuted() const { return bIsMuted; }
@@ -178,46 +177,46 @@ public:
     void PlayButtonClickSound();
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayNotificationSound(EMingUISoundType NotificationType};
+    void PlayNotificationSound(EMingUISoundType NotificationType);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayRelationshipSound(float DeltaValue};
+    void PlayRelationshipSound(float DeltaValue);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayReputationSound(float DeltaValue};
+    void PlayReputationSound(float DeltaValue);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayQuestSound(int32 QuestEventType};
+    void PlayQuestSound(int32 QuestEventType);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayDialogueSound(EMingUISoundType DialogueSoundType};
+    void PlayDialogueSound(EMingUISoundType DialogueSoundType);
 
     // Ambient Sounds
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void StartAmbientSound(EMingUISoundType AmbientType};
+    void StartAmbientSound(EMingUISoundType AmbientType);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void StopAmbientSound(EMingUISoundType AmbientType};
+    void StopAmbientSound(EMingUISoundType AmbientType);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void CrossfadeAmbient(EMingUISoundType FromAmbient, EMingUISoundType ToAmbient, float FadeDuration};
+    void CrossfadeAmbient(EMingUISoundType FromAmbient, EMingUISoundType ToAmbient, float FadeDuration);
 
     // Audio Feedback for UI Events
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayRelationshipChangeFeedback(float OldValue, float NewValue};
+    void PlayRelationshipChangeFeedback(float OldValue, float NewValue);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayReputationChangeFeedback(FName RegionID, float OldValue, float NewValue};
+    void PlayReputationChangeFeedback(FName RegionID, float OldValue, float NewValue);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayQuestUpdateFeedback(FName QuestID, int32 UpdateType};
+    void PlayQuestUpdateFeedback(FName QuestID, int32 UpdateType);
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayErrorFeedback(int32 ErrorType};
+    void PlayErrorFeedback(int32 ErrorType);
 
     // Audio Themes (Republic Era Style)
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void SetAudioTheme(const FString& ThemeName};
+    void SetAudioTheme(const FString& ThemeName);
 
     UFUNCTION(BlueprintPure, Category = "UI Audio")
     FString GetCurrentAudioTheme() const { return CurrentTheme; }
@@ -226,18 +225,18 @@ public:
     void LoadRepublicEraSounds();
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void ApplyCulturalAudioStyle(FName RegionID};
+    void ApplyCulturalAudioStyle(FName RegionID);
 
     // Integration with MetaSounds
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void SetMetaSoundsSystem(class UMingMetaSoundsSystem* MetaSounds};
+    void SetMetaSoundsSystem(class UMingMetaSoundsSystem* MetaSounds);
 
     UFUNCTION(BlueprintPure, Category = "UI Audio")
     UMingMetaSoundsSystem* GetMetaSoundsSystem() const { return MetaSoundsSystem; }
 
     // Sound Pool Management
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void SetMaxConcurrentSounds(int32 MaxSounds};
+    void SetMaxConcurrentSounds(int32 MaxSounds);
 
     UFUNCTION(BlueprintPure, Category = "UI Audio")
     int32 GetMaxConcurrentSounds() const { return MaxConcurrentSounds; }
@@ -247,15 +246,15 @@ public:
 
     // Debugging
     UFUNCTION(BlueprintCallable, Category = "Debug")
-    void EnableDebugLogging(bool bEnable};
+    void EnableDebugLogging(bool bEnable);
 
     UFUNCTION(BlueprintPure, Category = "Debug")
     FString GetDebugInfo() const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSoundPlayed, EMingUISoundType, SoundType, float, Volume};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoundStopped, EMingUISoundType, SoundType};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVolumeChanged, float, NewVolume};
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnSoundPlayed OnSoundPlayed;
@@ -299,17 +298,17 @@ protected:
     bool bDebugLogging;
 
     // Internal Functions
-    UAudioComponent* PlaySoundInternal(EMingUISoundType SoundType, float VolumeMultiplier};
-    void StopSoundInternal(EMingUISoundType SoundType, float FadeOutTime};
+    UAudioComponent* PlaySoundInternal(EMingUISoundType SoundType, float VolumeMultiplier);
+    void StopSoundInternal(EMingUISoundType SoundType, float FadeOutTime);
     void CleanupFinishedSounds();
     float GetVolumeForSoundType(EMingUISoundType SoundType) const;
     FString GetSoundTypeName(EMingUISoundType SoundType) const;
-    void LogSoundEvent(const FString& Event, EMingUISoundType SoundType};
+    void LogSoundEvent(const FString& Event, EMingUISoundType SoundType);
 
 public:
     // Static utility functions
     UFUNCTION(BlueprintPure, Category = "UI Audio", meta = (StaticFunction))
-    static FString GetSoundTypeDisplayName(EMingUISoundType SoundType};
+    static FString GetSoundTypeDisplayName(EMingUISoundType SoundType);
 
     UFUNCTION(BlueprintPure, Category = "UI Audio", meta = (StaticFunction))
     static TArray<EMingUISoundType> GetAllNotificationSoundTypes();

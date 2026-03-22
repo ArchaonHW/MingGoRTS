@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,8 +8,7 @@
 #include "MingGameInitializer.generated.h"
 
 UENUM(BlueprintType)
-enum class EGameInitPhase : uint8
-{
+enum class EGameInitPhase: uint8 {
 	PreInit					UMETA(DisplayName = "預初始化"),
 	Engine					UMETA(DisplayName = "引擎初始化"),
 	CoreSystems				UMETA(DisplayName = "核心系統"),

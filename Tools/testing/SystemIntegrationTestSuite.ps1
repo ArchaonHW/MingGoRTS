@@ -1,4 +1,4 @@
-# MingGoRTS 系統集成測試套件
+﻿# MingGoRTS 系統集成測試套件
 # 全面測試所有系統的協作和集成
 
 param(

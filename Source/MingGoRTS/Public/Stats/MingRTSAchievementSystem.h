@@ -8,8 +8,7 @@
  * ?�就稀?�度
  */
 UENUM(BlueprintType)
-enum class EAchievementRarity : uint8
-{
+enum class EAchievementRarity: uint8 {
     Common          UMETA(DisplayName = "普通"),
     Uncommon        UMETA(DisplayName = "稀有"),
     Rare            UMETA(DisplayName = "史詩"),
@@ -21,8 +20,7 @@ enum class EAchievementRarity : uint8
  * ?�就類�?
  */
 UENUM(BlueprintType)
-enum class EAchievementType : uint8
-{
+enum class EAchievementType: uint8 {
     Campaign        UMETA(DisplayName = "?�役?�就"),
     Combat          UMETA(DisplayName = "?�鬥?�就"),
     Economic        UMETA(DisplayName = "經�X�就"),
@@ -156,14 +154,16 @@ class MINGGORTS_API UMingRTSAchievementSystem : public UObject
 public:
     UMingRTSAchievementSystem();
     
-    // ?��X    UFUNCTION(BlueprintCallable, Category = "Achievement")
+    // ?��X
+    UFUNCTION(BlueprintCallable, Category = "Achievement")
     void InitializeAchievementSystem();
     
     // 載入?�就定義
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     void LoadAchievementDefinitions();
     
-    // ?��X�?��?�?    UFUNCTION(BlueprintCallable, Category = "Achievement")
+    // ?��X�?��?�?
+    UFUNCTION(BlueprintCallable, Category = "Achievement")
     TArray<FAchievementData> GetAllAchievements() const;
     
     // ?��X��?類�X�就
@@ -194,13 +194,16 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Achievement")
     void UnlockAchievement(const FString& PlayerID, FName AchievementID);
     
-    // 檢查?�就?�否已解X    UFUNCTION(BlueprintCallable, Category = "Achievement")
+    // 檢查?�就?�否已解X
+    UFUNCTION(BlueprintCallable, Category = "Achievement")
     bool IsAchievementUnlocked(const FString& PlayerID, FName AchievementID) const;
     
-    // ?��?已解?��?�?    UFUNCTION(BlueprintCallable, Category = "Achievement")
+    // ?��?已解?��?�?
+    UFUNCTION(BlueprintCallable, Category = "Achievement")
     TArray<FPlayerAchievementProgress> GetUnlockedAchievements(const FString& PlayerID) const;
     
-    // ?��X��?中�?�?    UFUNCTION(BlueprintCallable, Category = "Achievement")
+    // ?��X��?中�?�?
+    UFUNCTION(BlueprintCallable, Category = "Achievement")
     TArray<FPlayerAchievementProgress> GetInProgressAchievements(const FString& PlayerID) const;
     
     // ?��X�就統�?

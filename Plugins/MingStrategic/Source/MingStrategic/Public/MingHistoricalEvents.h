@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingHistoricalEvents.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingHistoricalEra : uint8
-{
+enum class EMingHistoricalEra: uint8 {
     LateQing UMETA(DisplayName = "Late Qing Dynasty"),
     Republic UMETA(DisplayName = "Republic Era"),
     Warlord UMETA(DisplayName = "Warlord Era"),
@@ -16,8 +15,7 @@ enum class EMingHistoricalEra : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingHistoricalEventType : uint8
-{
+enum class EMingHistoricalEventType: uint8 {
     Political UMETA(DisplayName = "Political Event"),
     Military UMETA(DisplayName = "Military Event"),
     Economic UMETA(DisplayName = "Economic Event"),
@@ -149,13 +147,13 @@ public:
     void InitializeHistoricalEvents();
 
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void TriggerEvent(const FString& EventID};
+    void TriggerEvent(const FString& EventID);
 
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     void TriggerEventByConditions();
 
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void CompleteEvent(const FString& EventID, const FString& ChoiceID};
+    void CompleteEvent(const FString& EventID, const FString& ChoiceID);
 
     UFUNCTION(BlueprintPure, Category = "Historical Events")
     TArray<FMingStrategicHistoricalEvent> GetEventsByEra(EMingHistoricalEra Era) const;
@@ -171,33 +169,33 @@ public:
 
     // Event Choices
     UFUNCTION(BlueprintCallable, Category = "Event Choices")
-    void PresentEventChoices(const FString& EventID};
+    void PresentEventChoices(const FString& EventID);
 
     UFUNCTION(BlueprintCallable, Category = "Event Choices")
-    void SelectEventChoice(const FString& EventID, const FString& ChoiceID};
+    void SelectEventChoice(const FString& EventID, const FString& ChoiceID);
 
     UFUNCTION(BlueprintPure, Category = "Event Choices")
     TArray<FMingStrategicDecisionOptionChoice> GetEventChoices(const FString& EventID) const;
 
     // Historical Context
     UFUNCTION(BlueprintCallable, Category = "Historical Context")
-    void ShowHistoricalBackground(const FString& EventID};
+    void ShowHistoricalBackground(const FString& EventID);
 
     UFUNCTION(BlueprintCallable, Category = "Historical Context")
-    void AddHistoricalNote(const FString& EventID, const FString& Note};
+    void AddHistoricalNote(const FString& EventID, const FString& Note);
 
     UFUNCTION(BlueprintPure, Category = "Historical Context")
     TArray<FString> GetHistoricalNotes(const FString& EventID) const;
 
     // Player Influence
     UFUNCTION(BlueprintCallable, Category = "Player Influence")
-    void SetPlayerInfluence(const FString& EventID, float Influence};
+    void SetPlayerInfluence(const FString& EventID, float Influence);
 
     UFUNCTION(BlueprintPure, Category = "Player Influence")
     float GetPlayerInfluence(const FString& EventID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Player Influence")
-    void ModifyEventOutcome(const FString& EventID, const FString& Modification};
+    void ModifyEventOutcome(const FString& EventID, const FString& Modification);
 
     // Event Tracking
     UFUNCTION(BlueprintPure, Category = "Event Tracking")
@@ -213,9 +211,9 @@ public:
     float GetHistoricalAccuracy() const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHistoricalEventTriggered, FMingStrategicHistoricalEvent&, Event, const TArray<FMingStrategicDecisionOptionChoice>&, Choices};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnEventChoiceSelected, const FString&, EventID, const FString&, ChoiceID, const FString&, Outcome};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHistoricalContextShown, const FString&, EventID, const FString&, Context};
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnHistoricalEventTriggered OnHistoricalEventTriggered;
@@ -228,16 +226,16 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetEraName(EMingHistoricalEra Era};
+    static FString GetEraName(EMingHistoricalEra Era);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetEventTypeName(EMingHistoricalEventType EventType};
+    static FString GetEventTypeName(EMingHistoricalEventType EventType);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveHistoricalData() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadHistoricalData(const FString& JsonString};
+    void LoadHistoricalData(const FString& JsonString);
 
 protected:
     UPROPERTY()
@@ -262,14 +260,14 @@ protected:
     void SetupCivilWarEvents();
 
     // Internal Functions
-    void ProcessEventConsequences(const FString& EventID, const FString& ChoiceID};
+    void ProcessEventConsequences(const FString& EventID, const FString& ChoiceID);
     void UpdateHistoricalAccuracy();
-    void CheckEventDependencies(const FString& EventID};
-    void RecordPlayerDecision(const FString& EventID, const FString& ChoiceID};
+    void CheckEventDependencies(const FString& EventID);
+    void RecordPlayerDecision(const FString& EventID, const FString& ChoiceID);
 
     // Helpers
-    FMingStrategicHistoricalEvent* FindEvent(const FString& EventID};
+    FMingStrategicHistoricalEvent* FindEvent(const FString& EventID);
     bool AreEventConditionsMet(const FMingStrategicHistoricalEvent& Event) const;
-    void TriggerEventInternal(const FMingStrategicHistoricalEvent& Event};
-};
+    void TriggerEventInternal(const FMingStrategicHistoricalEvent& Event);
+);
 

@@ -10,8 +10,7 @@
 #include "MingAPIDocumentationGenerator.generated.h"
 
 UENUM(BlueprintType)
-enum class EDocumentationFormat : uint8
-{
+UENUM(BlueprintType)\nenum class EDocumentationFormat : uint8\n{
     Markdown = 0, UMETA(DisplayName = "Markdown"),
     HTML, UMETA(DisplayName = "HTML"),
     PDF, UMETA(DisplayName = "PDF"),
@@ -23,8 +22,7 @@ enum class EDocumentationFormat : uint8
 };
 
 UENUM(BlueprintType)
-enum class EDocumentType : uint8
-{
+enum class EDocumentType: uint8 {
     APICode = 0, UMETA(DisplayName = "API Code Documentation"),
     DeveloperGuide, UMETA(DisplayName = "Developer Guide"),
     UserManual, UMETA(DisplayName = "User Manual"),
@@ -38,8 +36,7 @@ enum class EDocumentType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESymbolType : uint8
-{
+enum class ESymbolType: uint8 {
     Class = 0, UMETA(DisplayName = "Class"),
     Struct, UMETA(DisplayName = "Struct"),
     Enum, UMETA(DisplayName = "Enum"),
@@ -412,3 +409,4 @@ protected:
     void LogGenerationActivity(const FString& Activity);
     static UMingAPIDocumentationGenerator* Get(UObject* WorldContextObject);
 };
+

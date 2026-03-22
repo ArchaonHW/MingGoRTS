@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,107 +8,110 @@
 
 // 任??類??
 UENUM(BlueprintType)
-enum class EMingQuestType : uint8
-{
-    Main,              // 主??任??
-    Side,              // ????任??
-    Daily,              // 每日任??
-    Weekly,             // 每周任??
-    Event,              // 活??任??
-    Hidden,             // ????任??
-    Tutorial,           // ????任??
-    Achievement         // ??就任??
+enum class EMingQuestType: uint8 {
+    Main,              // 主線任務
+    Side,              // 支線任務
+    Daily,              // 每日任務
+    Weekly,             // 每周任務
+    Event,              // 活動任務
+    Hidden,             // 隱藏任務
+    Tutorial,           // 教學任務
+    Achievement         // 成就任務
 };
 
-// 任?X?XUENUM(BlueprintType)
-enum class EMingQuestStatus : uint8
-{
-    Available,          // ??接X    Active,             // ??????    Completed,          // 已?X    Failed,             // 失??
-    Abandoned,          // ????
-    Locked              // ????
+// 任務狀態UENUM(BlueprintType)
+enum class EMingQuestStatus: uint8 {
+    Available,          // 可接受
+    Active,             // 進行中
+    Completed,          // 已完成
+    Failed,             // 失敗
+    Abandoned,          // 已放棄
+    Locked              // 已鎖定
 };
 
-// 任?X???類??
+// 任務目標類型
 UENUM(BlueprintType)
-enum class EMingQuestObjectiveType : uint8
-{
-    Kill,               // ??殺
-    Collect,            // ????
-    Deliver,            // ????    Escort,             // 護??    Defend,             // ??禦
-    Explore,            // ??索
+enum class EMingQuestObjectiveType: uint8 {
+    Kill,               // 擊殺
+    Collect,            // 收集
+    Deliver,            // 交付
+    Escort,             // 護送
+    Defend,             // 防禦
+    Explore,            // 探索
     Talk,               // 對話
-    Interact,           // 互??
-    Survive,            // ????
-    Capture,            // 佔??
-    Destroy             // ????
+    Interact,           // 互動
+    Survive,            // 生存
+    Capture,            // 佔領
+    Destroy             // 摧毀
 };
 
-// ???X?支類??
+// 故事分支類型
 UENUM(BlueprintType)
-enum class EMingStoryBranch : uint8
-{
-    Linear,             // 線??    Choice,             // ???X?支
-    Conditional,        // 條件??支
-    Random,             // ???X?支
-    Moral,              // ??德????
-    Strategic,          // ??略????
-    Personal            // ??人????
+enum class EMingStoryBranch: uint8 {
+    Linear,             // 線性
+    Choice,             // 選擇分支
+    Conditional,        // 條件分支
+    Random,             // 隨機分支
+    Moral,              // 道德選擇
+    Strategic,          // 戰略選擇
+    Personal            // 個人選擇
 };
 
-// 任?X???
+// 任務目標
 USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingQuestObjective
 {
     GENERATED_BODY()
 
-    // ????ID
+    // 目標ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ObjectiveID;
 
-    // ???X?述
+    // 目標描述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ObjectiveDescription;
 
-    // ????類??
+    // 目標類型
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingQuestObjectiveType ObjectiveType;
 
-    // ???X???
+    // 目標數量
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 TargetCount;
 
-    // ???X?度
+    // 目標進度
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CurrentProgress;
 
-    // ???X?數
+    // 目標參數
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, FString> ObjectiveParameters;
 
-    // ??否????
+    // 是否可見
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsVisible;
 
-    // ??否完??
+    // 是否完成
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsCompleted;
 
-    // ??否??選X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 是否可選
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsOptional;
 
-    // ????位置
+    // 目標位置
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector TargetLocation;
 
-    // ????NPC
+    // 目標NPC
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString TargetNPC;
 
-    // ???X?制
+    // 時間限制
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TimeLimit;
 
-    // 失??條件
+    // 失敗條件
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> FailureConditions;
 
@@ -130,52 +133,53 @@ struct MINGPERSONAL_API FMingQuestObjective
     }
 };
 
-// ???X???
+// 目標數量
 USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingStoryChoice
 {
     GENERATED_BODY()
 
-    // ????ID
+    // 目標ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ChoiceID;
 
-    // ???X?本
+    // 選項文本
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ChoiceText;
 
-    // ???X?述
+    // 選項描述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ChoiceDescription;
 
-    // ????類??
+    // 選項類型
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingStoryBranch ChoiceType;
 
-    // ????條件
+    // 摧毀條件
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> ChoiceConditions;
 
-    // ????結??
+    // 摧毀結??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, FString> ChoiceResults;
 
-    // ??德影響
+    // 道德影響
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MoralImpact;
 
-    // ????影響
+    // 摧毀影響
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ReputationImpact;
 
-    // ????影響
+    // 摧毀影響
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> RelationshipImpact;
 
-    // ??否已選X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??否已選X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsChosen;
 
-    // ????權??
+    // 摧毀權??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ChoiceWeight;
 
@@ -195,7 +199,7 @@ struct MINGPERSONAL_API FMingStoryChoice
     }
 };
 
-// 任?X???
+// 任務目標
 USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingQuestData
 {
@@ -205,11 +209,11 @@ struct MINGPERSONAL_API FMingQuestData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 QuestID;
 
-    // 任?X?稱
+    // 任務名稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString QuestName;
 
-    // 任?X?述
+    // 任務描述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString QuestDescription;
 
@@ -217,7 +221,8 @@ struct MINGPERSONAL_API FMingQuestData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingQuestType QuestType;
 
-    // 任?X?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 任務狀態
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingQuestStatus QuestStatus;
 
     // 任??等??
@@ -228,31 +233,31 @@ struct MINGPERSONAL_API FMingQuestData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SuggestedLevel;
 
-    // 任?X??X??"
+    // 任務目標列表"
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingQuestObjective> QuestObjectives;
 
-    // ???X??X??"
+    // 故事選項"
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingStoryChoice> StoryChoices;
 
-    // 任?X?勵
+    // 任務獎勵
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, int32> QuestRewards;
 
-    // 經?X?勵
+    // 經驗獎勵
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ExperienceReward;
 
-    // ???X?勵
+    // 物品獎勵
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ReputationReward;
 
-    // ???X?勵
+    // 物品獎勵
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingItemData> ItemRewards;
 
-    // ??置任??
+    // 重置任務
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> PrerequisiteQuests;
 
@@ -260,11 +265,11 @@ struct MINGPERSONAL_API FMingQuestData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UnlockConditions;
 
-    // 任?X??X???
+    // 任務目標列表?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime StartTime;
 
-    // 任?X?止????
+    // 任?X?止摧毀
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime DeadlineTime;
 
@@ -276,7 +281,7 @@ struct MINGPERSONAL_API FMingQuestData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString QuestGiver;
 
-    // 任?X???路??
+    // 任務目標路??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString QuestIconPath;
 
@@ -284,14 +289,16 @@ struct MINGPERSONAL_API FMingQuestData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> QuestTags;
 
-    // ???X??X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 故事重要性
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float StoryImportance;
 
-    // ????次數
+    // 摧毀次數
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 RepeatCount;
 
-    // ??大??複次X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??大??複次X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 MaxRepeats;
 
     FMingQuestData()
@@ -323,7 +330,7 @@ struct MINGPERSONAL_API FMingQuestData
     }
 };
 
-// ????節??USTRUCT(BlueprintType)
+// 摧毀節??USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingStoryNode
 {
     GENERATED_BODY()
@@ -332,28 +339,36 @@ struct MINGPERSONAL_API FMingStoryNode
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 NodeID;
 
-    // 節點?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 節點?X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString NodeType;
 
-    // 節點內??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 節點內??
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString NodeContent;
 
-    // 節點選X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 節點選X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingStoryChoice> NodeChoices;
 
-    // 節點????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 節點摧毀
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> NodeConditions;
 
-    // 節點?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 節點?X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, FString> NodeResults;
 
-    // 節點?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 節點?X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float NodeWeight;
 
-    // ??否已訪X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??否已訪X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsVisited;
 
-    // 節點????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 節點摧毀
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector NodePosition;
 
     FMingStoryNode()
@@ -379,7 +394,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestFailed, const FMingQuestDat
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestAbandoned, int32, QuestID, const FString&, Reason);
 
 /**
- * 任??管?X * 負責管??任?X???事系?? */
+ * 任務管理器 * 負責管??任務目標事系?? */
 UCLASS(ClassGroup = (Personal), Blueprintable, BlueprintType)
 class MINGPERSONAL_API UMingQuestManager : public UObject
 {
@@ -388,83 +403,88 @@ class MINGPERSONAL_API UMingQuestManager : public UObject
 public:
     UMingQuestManager();
 
-    // ???X?任??系??    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
+    // 初始化任務系統
+    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool InitializeQuestSystem();
 
-    // ????任??
+    // 放棄任務
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool AcceptQuest(int32 QuestID, const FString& QuestGiver);
 
-    // ????任??
+    // 放棄任務
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool DeclineQuest(int32 QuestID);
 
-    // ????任??
+    // 放棄任務
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool AbandonQuest(int32 QuestID, const FString& Reason);
 
-    // 完??任??
+    // 完成任務
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool CompleteQuest(int32 QuestID, bool bSuccess = true);
 
-    // ??新任?X???
+    // ??新任務目標
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool UpdateQuestObjective(int32 QuestID, int32 ObjectiveID, int32 Progress);
 
-    // ??出???X???
+    // ??出目標數量
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool MakeStoryChoice(int32 QuestID, int32 ChoiceID);
 
-    // ????任?X??"
+    // 摧毀任?X??"
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TArray<FMingQuestData> GetAvailableQuests() const;
 
-    // ????活??任??
+    // 摧毀活動任務
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TArray<FMingQuestData> GetActiveQuests() const;
 
-    // ????已?X?任X    UFUNCTION(BlueprintPure, Category = "Quest Manager")
+    // 摧毀已完成?任X
+    UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TArray<FMingQuestData> GetCompletedQuests() const;
 
-    // ???X???任??
+    // 目標數量任??
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     FMingQuestData GetQuest(int32 QuestID) const;
 
-    // 檢查任??條件
+    // 檢查任務條件
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     bool CanAcceptQuest(int32 QuestID) const;
 
-    // ????任?X?度
+    // 摧毀任?X?度
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     float GetQuestProgress(int32 QuestID) const;
 
-    // ???X???節??    UFUNCTION(BlueprintPure, Category = "Quest Manager")
+    // 目標數量節??
+    UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TArray<FMingStoryNode> GetStoryNodes(int32 QuestID) const;
 
-    // ?X?任X    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
+    // 解鎖任務
+    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     void UnlockNewQuests();
 
-    // ??置任??
+    // 重置任務
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool ResetQuest(int32 QuestID);
 
-    // ????任??統??
+    // 放棄任務統??
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TMap<EMingQuestType, int32> GetQuestStatistics() const;
 
-    // ???X??X?支
+    // 故事重要性?支
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TArray<FMingStoryChoice> GetStoryChoices(int32 QuestID) const;
 
-    // 保??任?X???
+    // 保??任務目標
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool SaveQuestData();
 
-    // 載入任?X???
+    // 載入任務目標
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool LoadQuestData();
 
-    // 清除????任??數X    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
+    // 清除放棄任務數X
+    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     void ClearAllQuestData();
 
     // 事件委??
@@ -487,20 +507,22 @@ public:
     FOnQuestAbandoned OnQuestAbandoned;
 
 protected:
-    // 任?X?????    UPROPERTY()
+    // 任務目標??
+    UPROPERTY()
     TMap<int32, FMingQuestData> QuestDatabase;
 
-    // ????節點數??庫 - 注??：TMap<TArray> 不支XUPROPERTY
+    // 摧毀節點數??庫 - 注??：TMap<TArray> 不支XUPROPERTY
     TMap<int32, TArray<FMingStoryNode>> StoryNodeDatabase;
 
     // 活??任?X??"
     UPROPERTY()
     TArray<int32> ActiveQuests;
 
-    // 已?X?任??????    UPROPERTY()
+    // 已完成?任摧毀??
+    UPROPERTY()
     TArray<int32> CompletedQuests;
 
-    // ???X???歷史 - 注??：TMap<TArray> 不支XUPROPERTY
+    // 目標數量歷史 - 注??：TMap<TArray> 不支XUPROPERTY
     TMap<int32, TArray<int32>> StoryChoiceHistory;
 
     // ??否已??始??
@@ -511,51 +533,55 @@ private:
     // 載入??設任??
     void LoadDefaultQuests();
 
-    // 載入??設????節??    void LoadDefaultStoryNodes();
+    // 載入??設摧毀節??
+    void LoadDefaultStoryNodes();
 
-    // 驗??任?X???
+    // 驗??任務目標
     bool ValidateQuestData(const FMingQuestData& Quest) const;
 
-    // 檢查任??完??條件
+    // 檢查任務完成條件
     bool CheckQuestCompletion(int32 QuestID) const;
 
-    // ????任?X?勵
+    // 摧毀任務獎勵
     void ProcessQuestRewards(const FMingQuestData& Quest);
 
-    // ??新???X?支
+    // ??新隨機分支
     void UpdateStoryBranch(int32 QuestID, int32 ChoiceID);
 
-    // 計??任?X??X    float CalculateQuestImportance(const FMingQuestData& Quest) const;
+    // 計算任務重要性
+    float CalculateQuestImportance(const FMingQuestData& Quest) const;
 
-    // ???X???任??
+    // 目標數量任??
     FMingQuestData GenerateRandomQuest(EMingQuestType QuestType) const;
 
-    // ???X?接??任X    TArray<int32> GetAvailableQuestIDs() const;
+    // ???X?接??任X
+    TArray<int32> GetAvailableQuestIDs() const;
 
-    // 檢查??置任??
+    // 檢查重置任務
     bool CheckPrerequisiteQuests(const FMingQuestData& Quest) const;
 
-    // 檢查?X條件
+    // 檢查解鎖條件
     bool CheckUnlockConditions(const FMingQuestData& Quest) const;
 
-    // ??新任?X?X    void UpdateQuestStatus(int32 QuestID, EMingQuestStatus NewStatus);
+    // ??新任務狀態
+    void UpdateQuestStatus(int32 QuestID, EMingQuestStatus NewStatus);
 
-    // ???X???後??
+    // 目標數量後??
     void ProcessStoryConsequences(int32 QuestID, const FMingStoryChoice& Choice);
 
-    // 計?X???權??
+    // 計算選項權重
     float CalculateChoiceWeight(const FMingStoryChoice& Choice) const;
 
-    // ???X???線索
+    // 目標數量線索
     TArray<FString> GetStoryClues(int32 QuestID) const;
 
-    // ??新任?X???
-    void UpdateQuestLog(int32 QuestID, const FString& LogEntry};
+    // ??新任務目標
+    void UpdateQuestLog(int32 QuestID, const FString& LogEntry);
 
-    // 保?X???快照
+    // 保存物品快照
     void SaveStorySnapshot();
 
-    // 載入????快照
+    // 載入摧毀快照
     void LoadStorySnapshot();
 
     // 計??任?X??
@@ -564,37 +590,40 @@ private:
     // 調整任?X??
     void AdjustQuestDifficulty(int32 QuestID, float DifficultyModifier);
 
-    // ????任??建議
+    // 放棄任務建議
     TArray<FString> GetQuestSuggestions(int32 QuestID) const;
 
-    // ????任??失??
-    void HandleQuestFailure(int32 QuestID, const FString& FailureReason};
+    // 放棄任務失敗
+    void HandleQuestFailure(int32 QuestID, const FString& FailureReason);
 
-    // ????任?X???
+    // 摧毀任務目標
     void HandleQuestAbandonment(int32 QuestID, const FString& Reason);
 
     // 計?X???影響
     TMap<FString, float> CalculateStoryImpact(int32 QuestID, int32 ChoiceID) const;
 
-    // ??新世?X?X    void UpdateWorldState(int32 QuestID, const TMap<FString, FString>& Results};
+    // ??新世?X?X
+    void UpdateWorldState(int32 QuestID, const TMap<FString, FString>& Results);
 
-    // ????任??標??
-    void GenerateQuestMarkers(int32 QuestID};
+    // 放棄任務標??
+    void GenerateQuestMarkers(int32 QuestID);
 
     // 移除任??標??
     void RemoveQuestMarkers(int32 QuestID);
 
-    // 計??任?X???    float CalculateQuestValue(const FMingQuestData& Quest) const;
+    // 計??任務目標
+    float CalculateQuestValue(const FMingQuestData& Quest) const;
 
-    // ????任?X?????    TArray<FDateTime> GetQuestTimeline(int32 QuestID) const;
+    // 摧毀任務目標??
+    TArray<FDateTime> GetQuestTimeline(int32 QuestID) const;
 
     // 檢查任??衝??
     bool CheckQuestConflict(int32 QuestID1, int32 QuestID2) const;
 
-    // ????任??衝??
+    // 放棄任務衝??
     void ResolveQuestConflict(int32 QuestID1, int32 QuestID2);
 
-    // ????任??依賴
+    // 放棄任務依賴
     TArray<int32> GetQuestDependencies(int32 QuestID) const;
 
     // ??新任??依賴
@@ -603,41 +632,43 @@ private:
     // 計?X??X?支概??
     float CalculateStoryBranchProbability(const FMingStoryChoice& Choice) const;
 
-    // ???X???事選X    void RandomizeStoryChoices(int32 QuestID};
+    // 目標數量事選X
+    void RandomizeStoryChoices(int32 QuestID);
 
-    // ???X??X?支
-    void LockStoryBranch(int32 QuestID, int32 ChoiceID};
+    // 故事重要性?支
+    void LockStoryBranch(int32 QuestID, int32 ChoiceID);
 
     // ?X??X?支
     void UnlockStoryBranch(int32 QuestID, int32 ChoiceID);
 
-    // ???X???統??
+    // 目標數量統??
     TMap<FString, int32> GetStoryStatistics() const;
 
     // 計?X???深度
     int32 CalculateStoryDepth(int32 QuestID) const;
 
-    // ???X??X?覽
+    // 故事重要性?覽
     FString GetStoryPreview(int32 QuestID) const;
 
-    // ???X??X?制
+    // 故事重要性?制
     void ProcessTimeLimits();
 
-    // ??新任?X?止????
+    // ??新任?X?止摧毀
     void UpdateQuestDeadlines();
 
-    // 檢查任?X???
+    // 檢查任務目標
     void CheckQuestExpiration();
 
-    // ???X???任??
+    // 目標數量任??
     void HandleExpiredQuest(int32 QuestID);
 
-    // ????任?X?示
+    // 摧毀任?X?示
     TArray<FString> GenerateQuestHints(int32 QuestID) const;
 
-    // 計??任??完?X    float CalculateQuestCompletionRate() const;
+    // 計??任??完?X
+    float CalculateQuestCompletionRate() const;
 
-    // ????任?X?薦
+    // 摧毀任?X?薦
     TArray<int32> GetQuestRecommendations() const;
 
     // ??新任?X?薦

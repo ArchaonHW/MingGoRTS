@@ -8,8 +8,7 @@
  * ?��?結�?類�?
  */
 UENUM(BlueprintType)
-enum class EWinLossResult : uint8
-{
+enum class EWinLossResult: uint8 {
     Victory             UMETA(DisplayName = "Victory"),
     Defeat              UMETA(DisplayName = "Defeat"),
     Draw                UMETA(DisplayName = "Draw"),
@@ -22,8 +21,7 @@ enum class EWinLossResult : uint8
  * ?��?條件類�?
  */
 UENUM(BlueprintType)
-enum class EWinLossConditionType : uint8
-{
+enum class EWinLossConditionType: uint8 {
     Military             UMETA(DisplayName = "Military"),
     Political            UMETA(DisplayName = "Political"),
     Economic             UMETA(DisplayName = "Economic"),
@@ -36,8 +34,7 @@ enum class EWinLossConditionType : uint8
 /**
  * ?��X��?�? */
 UENUM(BlueprintType)
-enum class EWinLossPriority : uint8
-{
+enum class EWinLossPriority: uint8 {
     Critical            UMETA(DisplayName = "Critical"),
     High                UMETA(DisplayName = "High"),
     Medium              UMETA(DisplayName = "Medium"),
@@ -48,8 +45,7 @@ enum class EWinLossPriority : uint8
 /**
  * ?��?條件?�X */
 UENUM(BlueprintType)
-enum class EWinLossConditionState : uint8
-{
+enum class EWinLossConditionState: uint8 {
     Inactive            UMETA(DisplayName = "Inactive"),
     Active              UMETA(DisplayName = "Active"),
     Satisfied           UMETA(DisplayName = "Satisfied"),
@@ -69,14 +65,16 @@ struct FWinLossConditionParameter
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
     FString ParameterName;
 
-    // ?�數X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
+    // ?�數X
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
     FString ParameterValue;
 
     // ?�數類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
     FString ParameterType; // "int", "float", "bool", "string"
 
-    // 比�X��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
+    // 比�X��?�?
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Loss Condition")
     FString ComparisonOperator; // ">", "<", "==", ">=", "<=", "contains"
 
     // ?�否必�?
@@ -125,17 +123,20 @@ struct FWinLossCondition
     UPROPERTY(BlueprintReadOnly)
     EWinLossResult ResultType;
 
-    // ?��?�?    UPROPERTY(BlueprintReadOnly)
+    // ?��?�?
+    UPROPERTY(BlueprintReadOnly)
     EWinLossPriority Priority;
 
     // 條件?�數
     UPROPERTY(BlueprintReadOnly)
     TArray<FWinLossConditionParameter> Parameters;
 
-    // 條件?�X    UPROPERTY(BlueprintReadOnly)
+    // 條件?�X
+    UPROPERTY(BlueprintReadOnly)
     EWinLossConditionState State;
 
-    // ?�否?��X��?�?    UPROPERTY(BlueprintReadOnly)
+    // ?�否?��X��?�?
+    UPROPERTY(BlueprintReadOnly)
     bool bIsCriticalCondition;
 
     // 檢查?��? (�?
@@ -201,14 +202,16 @@ struct FWinLossEvaluationResult
     UPROPERTY(BlueprintReadOnly)
     float DrawScore;
 
-    // 滿足?��?�?    UPROPERTY(BlueprintReadOnly)
+    // 滿足?��?�?
+    UPROPERTY(BlueprintReadOnly)
     TArray<FString> SatisfiedConditions;
 
     // ?�滿足�?條件
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> UnsatisfiedConditions;
 
-    // ?�鍵條件?�X    UPROPERTY(BlueprintReadOnly)
+    // ?�鍵條件?�X
+    UPROPERTY(BlueprintReadOnly)
     TMap<FString, EWinLossConditionState> CriticalConditionStates;
 
     // 評估?��?
@@ -238,7 +241,8 @@ struct FWinLossStatistics
 {
     GENERATED_BODY()
 
-    // 總�?估次X    UPROPERTY(BlueprintReadOnly)
+    // 總�?估次X
+    UPROPERTY(BlueprintReadOnly)
     int32 TotalEvaluations;
 
     // ?�利次數
@@ -261,7 +265,8 @@ struct FWinLossStatistics
     UPROPERTY(BlueprintReadOnly)
     float AverageEvaluationTime;
 
-    // 條件滿足X    UPROPERTY(BlueprintReadOnly)
+    // 條件滿足X
+    UPROPERTY(BlueprintReadOnly)
     float ConditionSatisfactionRate;
 
     // ?�鍵條件觸發次數
@@ -307,13 +312,13 @@ public:
      * 註�X��?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    bool RegisterWinLossCondition(const FWinLossCondition& Condition};
+    bool RegisterWinLossCondition(const FWinLossCondition& Condition);
 
     /**
      * ?��?註�X��?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    bool UnregisterWinLossCondition(const FString& ConditionID};
+    bool UnregisterWinLossCondition(const FString& ConditionID);
 
     /**
      * 評估?��X��?     */
@@ -323,7 +328,7 @@ public:
     /**
      * 檢查?�個�?�?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    bool CheckCondition(const FString& ConditionID};
+    bool CheckCondition(const FString& ConditionID);
 
     /**
      * ?��X��?條件
@@ -362,7 +367,7 @@ public:
     /**
      * 設置?�戲?�X     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    void SetGameState(const TMap<FString, FString>& GameState};
+    void SetGameState(const TMap<FString, FString>& GameState);
 
     /**
      * ?��X�戲?�X     */
@@ -372,7 +377,7 @@ public:
     /**
      * ?�新?�戲?�?��?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    void UpdateGameStateValue(const FString& Key, const FString& Value};
+    void UpdateGameStateValue(const FString& Key, const FString& Value);
 
     /**
      * ?��X��?統�?
@@ -424,7 +429,8 @@ protected:
     UPROPERTY()
     TMap<FString, FWinLossCondition> ConditionMap;
 
-    // ?�戲?�X    UPROPERTY()
+    // ?�戲?�X
+    UPROPERTY()
     TMap<FString, FString> GameState;
 
     // ?��?統�?
@@ -438,7 +444,8 @@ protected:
     // ?�否已�?始�?
     bool bIsInitialized;
 
-    // ?��X��X�歷?��?負�?�?    void InitializeHistoricalWinLossConditions();
+    // ?��X��X�歷?��?負�?�?
+    void InitializeHistoricalWinLossConditions();
 
     // ?�建軍�X��?條件
     void CreateMilitaryConditions();
@@ -459,47 +466,52 @@ protected:
     void CreateScoreBasedConditions();
 
     // 檢查軍�?條件
-    bool CheckMilitaryCondition(const FWinLossCondition& Condition};
+    bool CheckMilitaryCondition(const FWinLossCondition& Condition);
 
     // 檢查?�治條件
-    bool CheckPoliticalCondition(const FWinLossCondition& Condition};
+    bool CheckPoliticalCondition(const FWinLossCondition& Condition);
 
     // 檢查經�?條件
-    bool CheckEconomicCondition(const FWinLossCondition& Condition};
+    bool CheckEconomicCondition(const FWinLossCondition& Condition);
 
     // 檢查?��?條件
-    bool CheckTerritorialCondition(const FWinLossCondition& Condition};
+    bool CheckTerritorialCondition(const FWinLossCondition& Condition);
 
     // 檢查?��?條件
-    bool CheckTimeBasedCondition(const FWinLossCondition& Condition};
+    bool CheckTimeBasedCondition(const FWinLossCondition& Condition);
 
     // 檢查?�數條件
-    bool CheckScoreBasedCondition(const FWinLossCondition& Condition};
+    bool CheckScoreBasedCondition(const FWinLossCondition& Condition);
 
-    // 檢查?��?義�?�?    bool CheckCustomCondition(const FWinLossCondition& Condition};
+    // 檢查?��?義�?�?
+    bool CheckCustomCondition(const FWinLossCondition& Condition);
 
-    // 評估條件滿足�?    float EvaluateConditionSatisfaction(const FWinLossCondition& Condition};
+    // 評估條件滿足�?
+    float EvaluateConditionSatisfaction(const FWinLossCondition& Condition);
 
     // 計�X��X�數
-    void CalculateWinLossScores(FWinLossEvaluationResult& Result};
+    void CalculateWinLossScores(FWinLossEvaluationResult& Result);
 
-    // 確�X�終�X    EWinLossResult DetermineFinalResult(const FWinLossEvaluationResult& Result};
+    // 確�X�終�X
+    EWinLossResult DetermineFinalResult(const FWinLossEvaluationResult& Result);
 
     // ?�新統�X��?
-    void UpdateStatistics(const FWinLossEvaluationResult& Result};
+    void UpdateStatistics(const FWinLossEvaluationResult& Result);
 
     // ?�知?��?變�?
-    void NotifyWinLossChange(EWinLossResult OldResult, EWinLossResult NewResult};
+    void NotifyWinLossChange(EWinLossResult OldResult, EWinLossResult NewResult);
 
-    // ?��X�戲?�?��?    FString GetGameStateValue(const FString& Key) const;
+    // ?��X�戲?�?��?
+    FString GetGameStateValue(const FString& Key) const;
 
-    // 比�X��?    bool CompareValues(const FString& Value1, const FString& Operator, const FString& Value2) const;
+    // 比�X��?
+    bool CompareValues(const FString& Value1, const FString& Operator, const FString& Value2) const;
 
     // 驗�?條件?�置
     bool ValidateConditionConfig(const FWinLossCondition& Condition) const;
 
     // 記�X��X��?
-    void LogWinLossEvent(const FString& Message};
+    void LogWinLossEvent(const FString& Message);
 
     // ?��X��X��?
     FString GenerateWinLossReport(const FWinLossEvaluationResult& Result) const;
@@ -507,14 +519,16 @@ protected:
     // �X條件?�數
     TArray<FString> ParseConditionParameters(const FString& ParameterString) const;
 
-    // 設置條件?�X    void SetConditionState(const FString& ConditionID, EWinLossConditionState NewState};
+    // 設置條件?�X
+    void SetConditionState(const FString& ConditionID, EWinLossConditionState NewState);
 
-    // ?��?條件滿足�?    float GetConditionSatisfaction(const FString& ConditionID) const;
+    // ?��?條件滿足�?
+    float GetConditionSatisfaction(const FString& ConditionID) const;
 
     // 檢查?�鍵條件
     bool CheckCriticalConditions();
 
     // ?��X��?結�?
-    void HandleGameOver(EWinLossResult Result, const FString& Reason};
-};
+    void HandleGameOver(EWinLossResult Result, const FString& Reason);
+);
 

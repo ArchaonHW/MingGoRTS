@@ -9,8 +9,7 @@
  * 民�X��X�段
  */
 UENUM(BlueprintType)
-enum class ERepublicEra : uint8
-{
+enum class ERepublicEra: uint8 {
     EarlyRepublic      UMETA(DisplayName = "Early Republic (1912-1928)"),
     NanjingDecade      UMETA(DisplayName = "Nanjing Decade (1928-1937)"),
     WarOfResistance    UMETA(DisplayName = "War of Resistance (1937-1945)"),
@@ -21,8 +20,7 @@ enum class ERepublicEra : uint8
  * 歷史事件類�?
  */
 UENUM(BlueprintType)
-enum class EHistoricalEventType : uint8
-{
+enum class EHistoricalEventType: uint8 {
     Political           UMETA(DisplayName = "Political"),
     Military            UMETA(DisplayName = "Military"),
     Economic            UMETA(DisplayName = "Economic"),
@@ -36,8 +34,7 @@ enum class EHistoricalEventType : uint8
  * 事件影響範�?
  */
 UENUM(BlueprintType)
-enum class EEventImpactScope : uint8
-{
+enum class EEventImpactScope: uint8 {
     Local               UMETA(DisplayName = "Local"),
     Regional            UMETA(DisplayName = "Regional"),
     National            UMETA(DisplayName = "National"),
@@ -210,25 +207,25 @@ public:
      * 註�?歷史事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    bool RegisterHistoricalEvent(const FMingManagerEvent& Event};
+    bool RegisterHistoricalEvent(const FMingManagerEvent& Event);
 
     /**
      * ?��?註�?歷史事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    bool UnregisterHistoricalEvent(const FString& EventID};
+    bool UnregisterHistoricalEvent(const FString& EventID);
 
     /**
      * 檢查事件觸發條件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    bool CheckEventTriggerConditions(const FString& EventID, const FEventTriggerContext& Context};
+    bool CheckEventTriggerConditions(const FString& EventID, const FEventTriggerContext& Context);
 
     /**
      * 觸發歷史事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    FEventExecutionResult TriggerHistoricalEvent(const FString& EventID, const FEventTriggerContext& Context};
+    FEventExecutionResult TriggerHistoricalEvent(const FString& EventID, const FEventTriggerContext& Context);
 
     /**
      * ?��?歷史事件
@@ -270,7 +267,7 @@ public:
     /**
      * ?�新?�戲上�X     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void UpdateGameContext(const FEventTriggerContext& Context};
+    void UpdateGameContext(const FEventTriggerContext& Context);
 
     /**
      * ?��X��X�戲上�X     */
@@ -281,19 +278,19 @@ public:
      * 設置?�戲?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void SetGameTime(float GameTime};
+    void SetGameTime(float GameTime);
 
     /**
      * 設置民�X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void SetRepublicEra(ERepublicEra Era};
+    void SetRepublicEra(ERepublicEra Era);
 
     /**
      * 添�X�家決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void AddPlayerDecision(const FString& DecisionID, const FString& DecisionValue};
+    void AddPlayerDecision(const FString& DecisionID, const FString& DecisionValue);
 
     /**
      * ?��?事件統�?
@@ -310,7 +307,7 @@ public:
      * 強制觸發事件 (?�於測試)
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    FEventExecutionResult ForceTriggerEvent(const FString& EventID};
+    FEventExecutionResult ForceTriggerEvent(const FString& EventID);
 
     /**
      * ?��X�薦事件
@@ -327,7 +324,8 @@ protected:
     UPROPERTY()
     TMap<FString, FMingManagerEvent> EventMap;
 
-    // ?��X�戲上�X    UPROPERTY()
+    // ?��X�戲上�X
+    UPROPERTY()
     FEventTriggerContext CurrentContext;
 
     // 事件統�?
@@ -344,7 +342,8 @@ protected:
     // ?��X��X�歷?��?件庫
     void InitializeHistoricalEventLibrary();
 
-    // ?�建?��X��X��?�?    void CreateEarlyRepublicEvents();
+    // ?�建?��X��X��?�?
+    void CreateEarlyRepublicEvents();
 
     // ?�建?�京?�年事件
     void CreateNanjingDecadeEvents();
@@ -374,13 +373,13 @@ protected:
     bool CheckDiplomaticCondition(const FString& Condition, const FEventTriggerContext& Context) const;
 
     // ?��?事件後�?
-    bool ExecuteEventConsequence(const FString& Consequence, const FString& EventID};
+    bool ExecuteEventConsequence(const FString& Consequence, const FString& EventID);
 
     // ?�用事件影響
-    void ApplyEventImpact(const FMingManagerEvent& Event};
+    void ApplyEventImpact(const FMingManagerEvent& Event);
 
     // ?�新事件統�?
-    void UpdateEventStatistics(const FString& EventID};
+    void UpdateEventStatistics(const FString& EventID);
 
     // 驗�?事件依賴
     bool ValidateEventDependencies(const FString& EventID) const;
@@ -389,17 +388,20 @@ protected:
     float CalculateEventImpact(const FMingManagerEvent& Event) const;
 
     // 記�?事件?��?
-    void LogEvent(const FString& EventID, const FString& Message};
+    void LogEvent(const FString& EventID, const FString& Message);
 
     // ?��?事件?��?
     FString GenerateEventReport(const FString& EventID, const FEventExecutionResult& Result) const;
 
-    // �X條件字符�?    TArray<FString> ParseConditionString(const FString& Condition) const;
+    // �X條件字符�?
+    TArray<FString> ParseConditionString(const FString& Condition) const;
 
-    // 比�X��?    bool CompareValues(float Value1, const FString& Operator, float Value2) const;
+    // 比�X��?
+    bool CompareValues(float Value1, const FString& Operator, float Value2) const;
 
-    // ?��?上�X��?    float GetContextValue(const FString& Key, const FEventTriggerContext& Context) const;
+    // ?��?上�X��?
+    float GetContextValue(const FString& Key, const FEventTriggerContext& Context) const;
 
-    // 設置上�X��?    void SetContextValue(const FString& Key, float Value, FEventTriggerContext& Context};
+    // 設置上�X��?
+    void SetContextValue(const FString& Key, float Value, FEventTriggerContext& Context);
 };
-

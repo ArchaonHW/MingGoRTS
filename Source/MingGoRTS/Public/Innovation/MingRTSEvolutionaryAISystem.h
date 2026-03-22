@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSEvolutionaryAISystem.generated.h"
 
 UENUM(BlueprintType)
-enum class EEvolutionPhase : uint8
-{
+enum class EEvolutionPhase: uint8 {
     Adaptation, UMETA(DisplayName = "Adaptation Phase"),
     Learning, UMETA(DisplayName = "Learning Phase"),
     Evolution, UMETA(DisplayName = "Evolution Phase"),
@@ -14,8 +13,7 @@ enum class EEvolutionPhase : uint8
 };
 
 UENUM(BlueprintType)
-enum class EAIFitnessLevel : uint8
-{
+enum class EAIFitnessLevel: uint8 {
     VeryLow, UMETA(DisplayName = "Very Low"),
     Low, UMETA(DisplayName = "Low"),
     Medium, UMETA(DisplayName = "Medium"),
@@ -95,3 +93,4 @@ protected:
     void SelectBestTraits();
     void MutateTraits();
 };
+

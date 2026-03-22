@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // 自動化批量除錯系統頭文件
 
 #pragma once
@@ -16,8 +16,7 @@
  * 除錯任務類型枚舉
  */
 UENUM(BlueprintType)
-enum class EDebugTaskType : uint8
-{
+enum class EDebugTaskType: uint8 {
     CompilationCheck      UMETA(DisplayName = "編譯檢查"),
     StaticAnalysis        UMETA(DisplayName = "靜態分析"),
     UnitTestExecution     UMETA(DisplayName = "單元測試"),
@@ -34,8 +33,7 @@ enum class EDebugTaskType : uint8
  * 問題嚴重程度
  */
 UENUM(BlueprintType)
-enum class EIssueSeverity : uint8
-{
+enum class EIssueSeverity: uint8 {
     Critical    UMETA(DisplayName = "嚴重"),
     Error       UMETA(DisplayName = "錯誤"),
     Warning     UMETA(DisplayName = "警告"),
@@ -47,8 +45,7 @@ enum class EIssueSeverity : uint8
  * 除錯結果狀態
  */
 UENUM(BlueprintType)
-enum class EDebugResultStatus : uint8
-{
+enum class EDebugResultStatus: uint8 {
     Pending     UMETA(DisplayName = "待處理"),
     Running     UMETA(DisplayName = "執行中"),
     Success     UMETA(DisplayName = "成功"),

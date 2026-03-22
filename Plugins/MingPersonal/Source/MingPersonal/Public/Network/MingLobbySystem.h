@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Lobby System for Multiplayer Games
 
 #pragma once
@@ -7,9 +7,8 @@
 #include "UObject/NoExportTypes.h"
 
 UENUM(BlueprintType)
-enum class EMingLobbyType : uint8
-{
-    Public = 0, UMETA(DisplayName = "Public Lobby"),
+enum class EMingLobbyType: uint8 {
+    Public = 0, UMETA,DisplayName = "Public Lobby"),
     Private, UMETA(DisplayName = "Private Lobby"),
     FriendsOnly, UMETA(DisplayName = "Friends Only"),
     Tournament, UMETA(DisplayName = "Tournament Lobby"),
@@ -17,9 +16,8 @@ enum class EMingLobbyType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingLobbyState : uint8
-{
-    Waiting, UMETA(DisplayName = "Waiting"),
+enum class EMingLobbyState: uint8 {
+    Waiting, UMETA,DisplayName = "Waiting"),
     InProgress, UMETA(DisplayName = "In Progress"),
     Starting, UMETA(DisplayName = "Starting"),
     Finished, UMETA(DisplayName = "Finished"),
@@ -27,9 +25,8 @@ enum class EMingLobbyState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingLobbyPlayerState : uint8
-{
-    Connected, UMETA(DisplayName = "Connected"),
+enum class EMingLobbyPlayerState: uint8 {
+    Connected, UMETA,DisplayName = "Connected"),
     Ready, UMETA(DisplayName = "Ready"),
     NotReady, UMETA(DisplayName = "Not Ready"),
     Loading, UMETA(DisplayName = "Loading"),

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -12,7 +12,7 @@ class MINGGORTS_API UMingGoRTSIntroManager : public UObject
 public:
     UMingGoRTSIntroManager();
 
-    // ?�頭?�畫?�制
+    // ?頭?畫?制
     UFUNCTION(BlueprintCallable, Category = "Intro")
     void StartIntroSequence();
 
@@ -22,7 +22,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Intro")
     bool IsIntroPlaying() const { return bIsIntroPlaying; }
 
-    // ?�畫?�段
+    // ?畫?段
     UFUNCTION(BlueprintCallable, Category = "Intro")
     void ShowTitleCard();
 
@@ -53,7 +53,7 @@ protected:
 
 private:
     void LoadIntroAssets();
-    void PlayIntroSound(int32 StageIndex};
-    void DisplayIntroImage(int32 StageIndex};
-};
+    void PlayIntroSound(int32 StageIndex);
+    void DisplayIntroImage(int32 StageIndex);
+);
 

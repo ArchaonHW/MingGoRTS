@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingPersonalLayerController.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingPersonalMode : uint8
-{
+enum class EMingPersonalMode: uint8 {
     Exploration UMETA(DisplayName = "Exploration"),
     Combat UMETA(DisplayName = "Combat"),
     Dialogue UMETA(DisplayName = "Dialogue"),

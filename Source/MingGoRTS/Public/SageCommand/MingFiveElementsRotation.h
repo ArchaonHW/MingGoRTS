@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // 輪轉模式枚舉
 UENUM(BlueprintType)
-enum class ERotationMode : uint8
-{
+enum class ERotationMode: uint8 {
     Natural = 0,       // 自然輪轉 - 按五行相生順序
     Strategic = 1,     // 戰略輪轉 - 基於戰略需求
     Defensive = 2,     // 防禦輪轉 - 優先防禦元素
@@ -18,8 +17,7 @@ enum class ERotationMode : uint8
 
 // 正邪屬性枚舉
 UENUM(BlueprintType)
-enum class EAlignmentAttribute : uint8
-{
+enum class EAlignmentAttribute: uint8 {
     Righteous = 0,     // 正義 - 堅守正道
     Neutral = 1,       // 中立 - 保持平衡
     Evil = 2,          // 邪惡 - 使用邪術
@@ -29,8 +27,7 @@ enum class EAlignmentAttribute : uint8
 
 // 輪轉狀態枚舉
 UENUM(BlueprintType)
-enum class ERotationState : uint8
-{
+enum class ERotationState: uint8 {
     Idle = 0,          // 閒置狀態
     Rotating = 1,      // 輪轉中
     Transitioning = 2, // 轉換中

@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingCombatVisualizer.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingCombatEffectType : uint8
-{
+enum class EMingCombatEffectType: uint8 {
     MuzzleFlash UMETA(DisplayName = "Muzzle Flash"),
     ProjectileTrail UMETA(DisplayName = "Projectile Trail"),
     Impact UMETA(DisplayName = "Impact"),
@@ -19,8 +18,7 @@ enum class EMingCombatEffectType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingDamageIndicatorType : uint8
-{
+enum class EMingDamageIndicatorType: uint8 {
     Normal UMETA(DisplayName = "Normal"),
     Critical UMETA(DisplayName = "Critical"),
     Miss UMETA(DisplayName = "Miss"),
@@ -97,102 +95,102 @@ public:
 
     // Singleton access
     UFUNCTION(BlueprintPure, Category = "Combat Visualizer", meta = (WorldContext = "WorldContextObject"))
-    static UMingCombatVisualizer* Get(UObject* WorldContextObject};
+    static UMingCombatVisualizer* Get(UObject* WorldContextObject);
 
     // Effect Spawning
     UFUNCTION(BlueprintCallable, Category = "Effects")
-    void SpawnCombatEffect(const FMingCombatEffect& Effect};
+    void SpawnCombatEffect(const FMingCombatEffect& Effect);
 
     UFUNCTION(BlueprintCallable, Category = "Effects")
-    void SpawnMuzzleFlash(AActor* Source, FVector Location, FVector Direction};
+    void SpawnMuzzleFlash(AActor* Source, FVector Location, FVector Direction);
 
     UFUNCTION(BlueprintCallable, Category = "Effects")
-    void SpawnProjectileTrail(FVector Start, FVector End, float Speed};
+    void SpawnProjectileTrail(FVector Start, FVector End, float Speed);
 
     UFUNCTION(BlueprintCallable, Category = "Effects")
-    void SpawnImpactEffect(FVector Location, FVector Normal};
+    void SpawnImpactEffect(FVector Location, FVector Normal);
 
     UFUNCTION(BlueprintCallable, Category = "Effects")
-    void SpawnExplosion(FVector Location, float Radius, float Damage};
+    void SpawnExplosion(FVector Location, float Radius, float Damage);
 
     UFUNCTION(BlueprintCallable, Category = "Effects")
-    void SpawnHealingEffect(AActor* Target, float Amount};
+    void SpawnHealingEffect(AActor* Target, float Amount);
 
     UFUNCTION(BlueprintCallable, Category = "Effects")
-    void SpawnShieldEffect(AActor* Target, float Duration};
+    void SpawnShieldEffect(AActor* Target, float Duration);
 
     // Damage Indicators
     UFUNCTION(BlueprintCallable, Category = "UI Feedback")
-    void ShowDamageNumber(int32 Damage, FVector Location, EMingDamageIndicatorType Type};
+    void ShowDamageNumber(int32 Damage, FVector Location, EMingDamageIndicatorType Type);
 
     UFUNCTION(BlueprintCallable, Category = "UI Feedback")
-    void ShowHealingNumber(int32 Amount, FVector Location};
+    void ShowHealingNumber(int32 Amount, FVector Location);
 
     UFUNCTION(BlueprintCallable, Category = "UI Feedback")
-    void ShowMissIndicator(FVector Location};
+    void ShowMissIndicator(FVector Location);
 
     UFUNCTION(BlueprintCallable, Category = "UI Feedback")
-    void ShowCriticalHitIndicator(FVector Location};
+    void ShowCriticalHitIndicator(FVector Location);
 
     // Screen Effects
     UFUNCTION(BlueprintCallable, Category = "Screen Effects")
-    void PlayScreenShake(float Intensity, float Duration};
+    void PlayScreenShake(float Intensity, float Duration);
 
     UFUNCTION(BlueprintCallable, Category = "Screen Effects")
-    void PlayHitBlur(float Duration};
+    void PlayHitBlur(float Duration);
 
     UFUNCTION(BlueprintCallable, Category = "Screen Effects")
-    void FlashScreenColor(FLinearColor Color, float Duration};
+    void FlashScreenColor(FLinearColor Color, float Duration);
 
     // Unit Animations
     UFUNCTION(BlueprintCallable, Category = "Animations")
-    void PlayAttackAnimation(AActor* Unit, FVector Target};
+    void PlayAttackAnimation(AActor* Unit, FVector Target);
 
     UFUNCTION(BlueprintCallable, Category = "Animations")
-    void PlayHitReaction(AActor* Unit, FVector HitDirection};
+    void PlayHitReaction(AActor* Unit, FVector HitDirection);
 
     UFUNCTION(BlueprintCallable, Category = "Animations")
-    void PlayDeathAnimation(AActor* Unit};
+    void PlayDeathAnimation(AActor* Unit);
 
     UFUNCTION(BlueprintCallable, Category = "Animations")
-    void PlayVictoryAnimation(AActor* Unit};
+    void PlayVictoryAnimation(AActor* Unit);
 
     UFUNCTION(BlueprintCallable, Category = "Animations")
-    void PlayReloadAnimation(AActor* Unit};
+    void PlayReloadAnimation(AActor* Unit);
 
     // Selection Feedback
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void ShowAttackTargetIndicator(AActor* Attacker, AActor* Target};
+    void ShowAttackTargetIndicator(AActor* Attacker, AActor* Target);
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void ShowMovementDestinationIndicator(FVector Location};
+    void ShowMovementDestinationIndicator(FVector Location);
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void ShowAreaEffectIndicator(FVector Center, float Radius, float Duration};
+    void ShowAreaEffectIndicator(FVector Center, float Radius, float Duration);
 
     // Batch Processing
     UFUNCTION(BlueprintCallable, Category = "Batch")
-    void EnableBatchMode(bool bEnable};
+    void EnableBatchMode(bool bEnable);
 
     UFUNCTION(BlueprintCallable, Category = "Batch")
     void FlushEffects();
 
     // Performance
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetMaxEffectsPerFrame(int32 MaxCount};
+    void SetMaxEffectsPerFrame(int32 MaxCount);
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void ClearAllEffects();
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FLinearColor GetEffectColor(EMingCombatEffectType Type};
+    static FLinearColor GetEffectColor(EMingCombatEffectType Type);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static float GetEffectDuration(EMingCombatEffectType Type};
+    static float GetEffectDuration(EMingCombatEffectType Type);
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
-    void SetEffectsEnabled(bool bEnabled};
+    void SetEffectsEnabled(bool bEnabled);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
     bool AreEffectsEnabled() const;
@@ -219,12 +217,12 @@ protected:
 
     // Internal functions
     void ProcessPendingEffects();
-    void SpawnEffectInternal(const FMingCombatEffect& Effect};
-    UFXSystemComponent* GetEffectFromPool(EMingCombatEffectType Type};
-    void ReturnEffectToPool(EMingCombatEffectType Type, UFXSystemComponent* Effect};
+    void SpawnEffectInternal(const FMingCombatEffect& Effect);
+    UFXSystemComponent* GetEffectFromPool(EMingCombatEffectType Type);
+    void ReturnEffectToPool(EMingCombatEffectType Type, UFXSystemComponent* Effect);
 
     // Helper functions
-    FVector GetRandomOffsetInRadius(float Radius};
-    FRotator CalculateRotationToTarget(FVector Source, FVector Target};
-};
+    FVector GetRandomOffsetInRadius(float Radius);
+    FRotator CalculateRotationToTarget(FVector Source, FVector Target);
+);
 

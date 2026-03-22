@@ -1,4 +1,4 @@
-# OPTIMIZED: Script uses buffered logging for better performance
+﻿# OPTIMIZED: Script uses buffered logging for better performance
 # Original had multiple Write-Host calls that can slow execution
 
 $Script:LogBuffer = @()

@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingAudioSaveData.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingAudioCategory : uint8
-{
+enum class EMingAudioCategory: uint8 {
     Master UMETA(DisplayName = "Master"),
     Music UMETA(DisplayName = "Music"),
     SFX UMETA(DisplayName = "SFX"),
@@ -16,8 +15,7 @@ enum class EMingAudioCategory : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingAudioOutputDevice : uint8
-{
+enum class EMingAudioOutputDevice: uint8 {
     Default UMETA(DisplayName = "Default"),
     Headphones UMETA(DisplayName = "Headphones"),
     Speakers UMETA(DisplayName = "Speakers"),
@@ -181,7 +179,7 @@ public:
 
     // Serialization
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    TArray<uint8> SerializeAudioSettings(class UMingMetaSoundsSystem* AudioSystem};
+    TArray<uint8> SerializeAudioSettings(class UMingMetaSoundsSystem* AudioSystem);
 
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
     bool DeserializeAudioSettings(const TArray<uint8>& Data, UMingMetaSoundsSystem* AudioSystem);
@@ -273,4 +271,4 @@ protected:
 };
 
 #endif // MINGAUDIOSAVEDATA_H
-
+#endif

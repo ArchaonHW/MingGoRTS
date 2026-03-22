@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 #include "MingGoRTSSkillSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class ESkillCategory : uint8
-{
+enum class ESkillCategory: uint8 {
     Combat, UMETA(DisplayName = "Combat"),
     Strategy, UMETA(DisplayName = "Strategy"),
     Diplomacy, UMETA(DisplayName = "Diplomacy"),
@@ -17,8 +16,7 @@ enum class ESkillCategory : uint8
 };
 
 UENUM(BlueprintType)
-enum class ESkillType : uint8
-{
+enum class ESkillType: uint8 {
     Active, UMETA(DisplayName = "Active"),
     Passive, UMETA(DisplayName = "Passive"),
     Toggle, UMETA(DisplayName = "Toggle"),

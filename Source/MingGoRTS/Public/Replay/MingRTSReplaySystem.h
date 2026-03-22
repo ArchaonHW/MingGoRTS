@@ -8,17 +8,16 @@
  * ??放事件類??
  */
 UENUM(BlueprintType)
-enum class EReplayEventType : uint8
-{
+enum class EReplayEventType: uint8 {
     None                    UMETA(DisplayName = "None"),
     UnitSpawn               UMETA(DisplayName = "???X???"),
     UnitMove                UMETA(DisplayName = "????移??"),
     UnitAttack              UMETA(DisplayName = "???X???"),
-    UnitDeath               UMETA(DisplayName = "????死亡"),
+    UnitDeath UMETA(DisplayName = "Unit Death"),,
     BuildingConstruct       UMETA(DisplayName = "建??建??),
-    BuildingDestroy         UMETA(DisplayName = "建?X???"),
-    ResourceGather          UMETA(DisplayName = "資?X???"),
-    TechnologyResearch      UMETA(DisplayName = "科?X?究"),
+    BuildingDestroy UMETA(DisplayName = "Building Destroy"),,
+    ResourceGather UMETA(DisplayName = "Resource Gather"),,
+    TechnologyResearch UMETA(DisplayName = "Technology Research"),,
     CommandIssued           UMETA(DisplayName = "??令下??"),
     CameraMove              UMETA(DisplayName = "視??移??"),
     GamePause               UMETA(DisplayName = "??戲????"),
@@ -32,8 +31,7 @@ enum class EReplayEventType : uint8
 /**
  * ??放??X */
 UENUM(BlueprintType)
-enum class EReplayState : uint8
-{
+enum class EReplayState: uint8 {
     Idle                    UMETA(DisplayName = "??置"),
     Recording               UMETA(DisplayName = "??製??),
     Playing                 UMETA(DisplayName = "??放??),
@@ -169,7 +167,8 @@ class MINGGORTS_API UMingRTSReplaySystem : public UObject
 public:
     UMingRTSReplaySystem();
     
-    // ???X    UFUNCTION(BlueprintCallable, Category = "Replay")
+    // ???X
+    UFUNCTION(BlueprintCallable, Category = "Replay")
     void InitializeReplaySystem();
     
     // ???X?製
@@ -199,7 +198,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Replay")
     void SetPlaybackSpeed(float Speed);
     
-    // 跳?X???定?X    UFUNCTION(BlueprintCallable, Category = "Replay")
+    // 跳?X???定?X
+    UFUNCTION(BlueprintCallable, Category = "Replay")
     void SeekToTime(float TimeInSeconds);
     
     // 跳?X???定??
@@ -231,7 +231,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Replay")
     FReplayMetadata ImportReplay(const FString& FilePath);
     
-    // ???X??X?放??X    UFUNCTION(BlueprintCallable, Category = "Replay")
+    // ???X??X?放??X
+    UFUNCTION(BlueprintCallable, Category = "Replay")
     EReplayState GetReplayState() const;
     
     // ???X??X?放????
@@ -242,7 +243,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Replay")
     int32 GetCurrentPlaybackFrame() const;
     
-    // ???X?放總?X    UFUNCTION(BlueprintCallable, Category = "Replay")
+    // ???X?放總?X
+    UFUNCTION(BlueprintCallable, Category = "Replay")
     float GetTotalDuration() const;
     
     // 事件委??

@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 REM MingGoRTS 系統測試執行器
 REM 執行系統集成測試和性能優化驗證
 

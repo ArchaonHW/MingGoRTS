@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,7 @@
 
 // 難度等級
 UENUM(BlueprintType)
-enum class EDifficultyLevel : uint8
-{
+enum class EDifficultyLevel: uint8 {
     VeryEasy            UMETA(DisplayName = "非常簡單"),
     Easy                UMETA(DisplayName = "簡單"),
     Normal              UMETA(DisplayName = "普通"),
@@ -19,8 +18,7 @@ enum class EDifficultyLevel : uint8
 
 // 玩家技能指標
 UENUM(BlueprintType)
-enum class ESkillMetric : uint8
-{
+enum class ESkillMetric: uint8 {
     APM                 UMETA(DisplayName = "每分鐘操作數"),
     ReactionTime        UMETA(DisplayName = "反應時間"),
     StrategicThinking   UMETA(DisplayName = "戰略思維"),
@@ -35,8 +33,7 @@ enum class ESkillMetric : uint8
 
 // 難度調整類型
 UENUM(BlueprintType)
-enum class EDifficultyAdjustment : uint8
-{
+enum class EDifficultyAdjustment: uint8 {
     AIIntelligence      UMETA(DisplayName = "AI智能"),
     AIResources         UMETA(DisplayName = "AI資源"),
     AIProductionSpeed   UMETA(DisplayName = "AI生產速度"),

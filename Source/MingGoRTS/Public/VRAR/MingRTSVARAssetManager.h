@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - VR/AR Asset Management
 
 #pragma once
@@ -11,8 +11,7 @@
  * VR/AR Asset Types
  */
 UENUM(BlueprintType)
-enum class EVARAssetType : uint8
-{
+enum class EVARAssetType: uint8 {
     VRControllerMesh     UMETA(DisplayName = "VR Controller Mesh"),
     VRHandMesh          UMETA(DisplayName = "VR Hand Mesh"),
     VRPointer           UMETA(DisplayName = "VR Pointer"),
@@ -66,8 +65,7 @@ struct FVARAssetInfo
  * Asset Loading Priority
  */
 UENUM(BlueprintType)
-enum class EVARAssetPriority : uint8
-{
+enum class EVARAssetPriority: uint8 {
     Low         UMETA(DisplayName = "Low"),
     Medium      UMETA(DisplayName = "Medium"),
     High        UMETA(DisplayName = "High"),

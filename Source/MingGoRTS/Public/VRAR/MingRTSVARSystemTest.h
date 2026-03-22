@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - VR/AR System Test Suite
 
 #pragma once
@@ -11,8 +11,7 @@
  * Test Categories for VR/AR System
  */
 UENUM(BlueprintType)
-enum class EVARTestCategory : uint8
-{
+enum class EVARTestCategory: uint8 {
     Initialization      UMETA(DisplayName = "Initialization"),
     VRDeviceDetection   UMETA(DisplayName = "VR Device Detection"),
     ARDeviceDetection   UMETA(DisplayName = "AR Device Detection"),

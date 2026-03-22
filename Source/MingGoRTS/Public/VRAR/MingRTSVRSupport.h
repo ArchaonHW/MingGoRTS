@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - VR Support Component
 
 #pragma once
@@ -12,8 +12,7 @@
  * VR Headset Types supported by MingGoRTS
  */
 UENUM(BlueprintType)
-enum class EVRHeadsetType : uint8
-{
+enum class EVRHeadsetType: uint8 {
     None            UMETA(DisplayName = "None"),
     OculusRift      UMETA(DisplayName = "Oculus Rift"),
     OculusQuest     UMETA(DisplayName = "Oculus Quest"),
@@ -28,8 +27,7 @@ enum class EVRHeadsetType : uint8
  * VR Tracking Space modes
  */
 UENUM(BlueprintType)
-enum class EVRTrackingSpace : uint8
-{
+enum class EVRTrackingSpace: uint8 {
     Stationary  UMETA(DisplayName = "Stationary - Seated/Standing"),
     RoomScale   UMETA(DisplayName = "Room Scale"),
     WorldScale  UMETA(DisplayName = "World Scale")
@@ -39,8 +37,7 @@ enum class EVRTrackingSpace : uint8
  * VR System Status
  */
 UENUM(BlueprintType)
-enum class EVRSystemStatus : uint8
-{
+enum class EVRSystemStatus: uint8 {
     NotInitialized  UMETA(DisplayName = "Not Initialized"),
     Initializing    UMETA(DisplayName = "Initializing"),
     Ready           UMETA(DisplayName = "Ready"),
@@ -168,7 +165,7 @@ public:
 
     // Performance Optimization
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    void SetVROptimizationLevel(int32 Level); // 0-3 (Low to Ultra)
+    void SetVROptimizationLevel(int32 Level}; // 0-3 (Low to Ultra)
 
     UFUNCTION(BlueprintCallable, Category = "VR Support")
     int32 GetCurrentVROptimizationLevel() const;
@@ -222,5 +219,5 @@ private:
 // Event delegate declarations
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVRDeviceConnected, EVRHeadsetType, HeadsetType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnVRDeviceDisconnected);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVRStatusChanged, EVRSystemStatus, OldStatus, EVRSystemStatus, NewStatus);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVRStatusChanged, EVRSystemStatus, OldStatus, EVRSystemStatus, NewStatus};
 

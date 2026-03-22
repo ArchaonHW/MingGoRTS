@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -11,27 +11,26 @@ class UMingAudioRelationshipManager;
 class UMingRepublicEraAudioThemes;
 
 UENUM(BlueprintType)
-enum class EPersonalUIType : uint8
-{
-    RelationshipPanel,     // ???X?ªO
-    ReputationPanel,       // ???X?ªO
-    DialoguePanel,         // ¹ï¸Ü??ªO
-    QuestPanel,            // ¥ô?X?ªO
-    AudioPanel,            // ??ÀW??ªO
-    MainDashboard,         // ¥D??ªíªO
-    CharacterDetails,      // ¨¤¦â¸Ô??
-    RegionDetails,         // ????¸Ô??
-    SystemSettings         // ¨t²Î³]¸m
+enum class EPersonalUIType: uint8 {
+    RelationshipPanel,     // ???X?ï¿½O
+    ReputationPanel,       // ???X?ï¿½O
+    DialoguePanel,         // ï¿½ï¿½ï¿½??ï¿½O
+    QuestPanel,            // ï¿½ï¿½?X?ï¿½O
+    AudioPanel,            // ??ï¿½W??ï¿½O
+    MainDashboard,         // ï¿½D??ï¿½ï¿½O
+    CharacterDetails,      // ï¿½ï¿½ï¿½ï¿½ï¿½??
+    RegionDetails,         // æ‘§æ¯€ï¿½ï¿½??
+    SystemSettings         // ï¿½tï¿½Î³]ï¿½m
 };
 
 UENUM(BlueprintType)
-enum class EUIAnimationType : uint8
-{
-    None,                  // ???X    Fade,                  // ²H¤J²H¥X
-    Slide,                 // ·Æ??
-    Scale,                 // ÁY©ñ
-    Rotate,                // ????
-    Bounce                 // ¼u¸õ
+enum class EUIAnimationType: uint8 {
+    None,                  // ???X
+    Fade,                  // ï¿½Hï¿½Jï¿½Hï¿½X
+    Slide,                 // ï¿½ï¿½??
+    Scale,                 // ï¿½Yï¿½ï¿½
+    Rotate,                // æ‘§æ¯€
+    Bounce                 // ï¿½uï¿½ï¿½
 };
 
 USTRUCT(BlueprintType)
@@ -76,12 +75,12 @@ struct FPersonalUIConfig
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUIPanelOpened, EPersonalUIType, UIType, UUserWidget*, Widget};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUIPanelClosed, EPersonalUIType, UIType, UUserWidget*, Widget};
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUIStateChanged, bool, bIsAnyPanelOpen);
 
 /**
- * ??¤H¨t²ÎUIºÞ?X * ºÞ?X?????«Y¡BÁn??¡B??¸Ü??UI??­±
+ * ??ï¿½Hï¿½tï¿½ï¿½UIï¿½ï¿½?X * ï¿½ï¿½?Xæ‘§æ¯€?ï¿½Yï¿½Bï¿½n??ï¿½B??ï¿½ï¿½??UI??ï¿½ï¿½
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingPersonalUIManager : public UObject
@@ -91,13 +90,13 @@ class MINGPERSONAL_API UMingPersonalUIManager : public UObject
 public:
     UMingPersonalUIManager();
 
-    // ???X?UI¨t²Î
+    // ???X?UIï¿½tï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void InitializeUIManager(UMingRelationshipManager* RelationshipManager, 
                             UMingAudioRelationshipManager* AudioManager,
                             UMingRepublicEraAudioThemes* ThemeManager);
 
-    // UI??ªOºÞ??
+    // UI??ï¿½Oï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void OpenUIPanel(EPersonalUIType UIType);
 
@@ -116,7 +115,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void HideMainDashboard();
 
-    // WidgetºÞ??
+    // Widgetï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     UUserWidget* GetWidget(EPersonalUIType UIType);
 
@@ -126,7 +125,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void SetWidgetVisibility(EPersonalUIType UIType, bool bVisible);
 
-    // UI??¸m
+    // UI??ï¿½m
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void AddUIConfig(const FPersonalUIConfig& Config);
 
@@ -136,7 +135,7 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Personal UI")
     FPersonalUIConfig GetUIConfig(EPersonalUIType UIType);
 
-    // ??µe¨t²Î
+    // ??ï¿½eï¿½tï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void PlayOpenAnimation(EPersonalUIType UIType);
 
@@ -146,7 +145,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void SetAnimationSpeed(float Speed);
 
-    // ???X?·s
+    // ???X?ï¿½s
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void UpdateRelationshipUI();
 
@@ -162,7 +161,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void UpdateAudioUI();
 
-    // ¥D??ªíªO
+    // ï¿½D??ï¿½ï¿½O
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void RefreshDashboard();
 
@@ -172,7 +171,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void ShowConfirmationDialog(const FString& Title, const FString& Message, const FString& OnConfirm);
 
-    // ????¬d??    UFUNCTION(BlueprintPure, Category = "Personal UI")
+    // æ‘§æ¯€ï¿½d??
+    UFUNCTION(BlueprintPure, Category = "Personal UI")
     bool IsAnyPanelOpen() const;
 
     UFUNCTION(BlueprintPure, Category = "Personal UI")
@@ -181,7 +181,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Personal UI")
     TArray<EPersonalUIType> GetVisiblePanels() const;
 
-    // ¨Æ¥ó
+    // ï¿½Æ¥ï¿½
     UPROPERTY(BlueprintAssignable, Category = "UI Events")
     FOnUIPanelOpened OnUIPanelOpened;
 
@@ -192,7 +192,7 @@ public:
     FOnUIStateChanged OnUIStateChanged;
 
 protected:
-    // ¨t²Î¤Þ¥Î
+    // ï¿½tï¿½Î¤Þ¥ï¿½
     UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
@@ -202,15 +202,16 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRepublicEraAudioThemes> ThemeManager;
 
-    // Widget¦sÀx
+    // Widgetï¿½sï¿½x
     UPROPERTY()
     TMap<EPersonalUIType, UUserWidget*> WidgetMap;
 
-    // UI??¸m
+    // UI??ï¿½m
     UPROPERTY()
     TMap<EPersonalUIType, FPersonalUIConfig> UIConfigMap;
 
-    // ??X    UPROPERTY()
+    // ??X
+    UPROPERTY()
     EPersonalUIType ActivePanelType = EPersonalUIType::MainDashboard;
 
     UPROPERTY()
@@ -219,16 +220,16 @@ protected:
     UPROPERTY()
     float AnimationSpeed = 1.0f;
 
-    // ??³¡??¼Æ
-    UUserWidget* CreateWidget(EPersonalUIType UIType};
+    // ??ï¿½ï¿½??ï¿½ï¿½
+    UUserWidget* CreateWidget(EPersonalUIType UIType);
     void InitializeDefaultConfigs();
     void SetupEventBindings();
-    void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
-    void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason};
-    void OnDialogueStarted(const FString& CharacterID, EDialogueAudioType DialogueType};
+    void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason);
+    void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason);
+    void OnDialogueStarted(const FString& CharacterID, EDialogueAudioType DialogueType);
 
 private:
-    // Widget??«Ø»²§U??¼Æ
+    // Widget??ï¿½Ø»ï¿½ï¿½U??ï¿½ï¿½
     UUserWidget* CreateRelationshipPanel();
     UUserWidget* CreateReputationPanel();
     UUserWidget* CreateDialoguePanel();
@@ -239,8 +240,8 @@ private:
     UUserWidget* CreateRegionDetails();
     UUserWidget* CreateSystemSettings();
 
-    // ??µe»²§U??¼Æ
-    void PlayAnimation(UUserWidget* Widget, EUIAnimationType AnimationType, float Duration};
-    void StopAnimation(UUserWidget* Widget};
+    // ??ï¿½eï¿½ï¿½ï¿½U??ï¿½ï¿½
+    void PlayAnimation(UUserWidget* Widget, EUIAnimationType AnimationType, float Duration);
+    void StopAnimation(UUserWidget* Widget);
 );
 

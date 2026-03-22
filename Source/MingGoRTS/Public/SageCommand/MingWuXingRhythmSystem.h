@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -11,8 +11,7 @@
  * 木(春)→火(夏)→土(長夏)→金(秋)→水(冬)→木(春)
  */
 UENUM(BlueprintType)
-enum class EWuXingPhase : uint8
-{
+enum class EWuXingPhase: uint8 {
     None    UMETA(DisplayName = "None"),
     Wood    UMETA(DisplayName = "木 (春/立名)"),      // 春、生、曲直
     Fire    UMETA(DisplayName = "火 (夏/造勢)"),      // 夏、炎、明
@@ -208,7 +207,7 @@ public:
     FOnPhaseChanged OnPhaseChanged;
 
     // 事件：相生連擊達成
-    DECLARE_DYNAMIC_MULTICAST_Delegate_OneParam(FOnGeneratingCombo, int32, ComboCount);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGeneratingCombo, int32, ComboCount);
     UPROPERTY(BlueprintAssignable, Category = "SageCommand|WuXing")
     FOnGeneratingCombo OnGeneratingCombo;
 
@@ -218,7 +217,7 @@ public:
     FOnOvercomingOccured OnOvercomingOccured;
 
     // 事件：循環完成
-    DECLARE_DYNAMIC_MULTICAST_Delegate(FOnCycleCompleted);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCycleCompleted);
     UPROPERTY(BlueprintAssignable, Category = "SageCommand|WuXing")
     FOnCycleCompleted OnCycleCompleted;
 
@@ -267,3 +266,4 @@ protected:
     UPROPERTY()
     bool bIsInitialized = false;
 };
+

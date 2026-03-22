@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,8 +7,7 @@
 
 // 建築類型
 UENUM(BlueprintType)
-enum class EMingBuildingType : uint8
-{
+enum class EMingBuildingType: uint8 {
     Residential,     // 住宅
     Commercial,      // 商業
     Industrial,      // 工業
@@ -23,8 +22,7 @@ enum class EMingBuildingType : uint8
 
 // 建築狀態
 UENUM(BlueprintType)
-enum class EMingBuildingState : uint8
-{
+enum class EMingBuildingState: uint8 {
     Planning,        // 規劃中
     UnderConstruction, // 建設中
     Operational,     // 運營中
@@ -36,8 +34,7 @@ enum class EMingBuildingState : uint8
 
 // 建築等級
 UENUM(BlueprintType)
-enum class EMingBuildingLevel : uint8
-{
+enum class EMingBuildingLevel: uint8 {
     Level1,          // 等級1
     Level2,          // 等級2
     Level3,          // 等級3

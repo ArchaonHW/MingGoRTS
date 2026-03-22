@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -7,22 +7,24 @@
 #include "MingQuestPanel.generated.h"
 
 UENUM(BlueprintType)
-enum class EQuestStatus : uint8
-{
-    Available,      // ??±µX    Active,         // ??????    Completed,      // ¤w?X    Failed,         // ¥¢??
-    Abandoned       // ????
+enum class EQuestStatus: uint8 {
+    Available,      // ??ï¿½ï¿½X
+    Active,         // æ‘§æ¯€??
+    Completed,      // ï¿½w?X
+    Failed,         // ï¿½ï¿½??
+    Abandoned       // æ‘§æ¯€
 };
 
 UENUM(BlueprintType)
-enum class EQuestType : uint8
-{
-    Main,           // ¥D??¥ô??
-    Side,           // ????¥ô??
-    Daily,          // ¨C¤é¥ô??
-    Weekly,         // ¨C¶g¥ôX    Special,        // ????¥ô??
-    Relationship,    // ????¥ô??
-    Reputation,      // ????¥ô??
-    Exploration      // ??¯Á¥ô??
+enum class EQuestType: uint8 {
+    Main,           // ï¿½D??ï¿½ï¿½??
+    Side,           // æ‘§æ¯€ï¿½ï¿½??
+    Daily,          // ï¿½Cï¿½ï¿½ï¿½??
+    Weekly,         // ï¿½Cï¿½gï¿½ï¿½X
+    Special,        // æ‘§æ¯€ï¿½ï¿½??
+    Relationship,    // æ‘§æ¯€ï¿½ï¿½??
+    Reputation,      // æ‘§æ¯€ï¿½ï¿½??
+    Exploration      // ??ï¿½ï¿½ï¿½ï¿½??
 };
 
 USTRUCT(BlueprintType)
@@ -139,14 +141,14 @@ struct FQuestData
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestAccepted, const FString&, QuestID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestCompleted, const FString&, QuestID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestFailed, const FString&, QuestID};
+
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestSelected, const FString&, QuestID, EQuestStatus, Status);
 
 /**
- * ¥ô?X?ªOWidget
- * ºÞ??¥ô?X?­±
+ * ï¿½ï¿½?X?ï¿½OWidget
+ * ï¿½ï¿½??ï¿½ï¿½?X?ï¿½ï¿½
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingQuestPanel : public UUserWidget
@@ -154,12 +156,13 @@ class MINGPERSONAL_API UMingQuestPanel : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingQuestPanel(const FObjectInitializer& ObjectInitializer};
+    UMingQuestPanel(const FObjectInitializer& ObjectInitializer);
 
-    // ???X    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
+    // ???X
+    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void InitializeQuestPanel(UMingRelationshipManager* InRelationshipManager);
 
-    // ¥ô??ºÞ??
+    // ï¿½ï¿½??ï¿½ï¿½??
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void AddQuest(const FQuestData& QuestData);
 
@@ -181,7 +184,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void FailQuest(const FString& QuestID);
 
-    // ¥ô?X?¸ß
+    // ï¿½ï¿½?X?ï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Quest Panel")
     FQuestData GetQuest(const FString& QuestID) const;
 
@@ -200,7 +203,8 @@ public:
     UFUNCTION(BlueprintPure, Category = "Quest Panel")
     bool HasActiveQuests() const;
 
-    // ??Âo??????    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
+    // ??ï¿½oæ‘§æ¯€??
+    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void FilterByStatus(EQuestStatus Status, bool bActive);
 
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
@@ -221,14 +225,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void ClearFilters();
 
-    // ??¯Á
+    // ??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void SearchQuests(const FString& SearchText);
 
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void ClearSearch();
 
-    // ²Î??«H®§
+    // ï¿½ï¿½??ï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Quest Panel")
     int32 GetTotalQuestCount() const;
 
@@ -244,7 +248,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Quest Panel")
     float GetQuestCompletionRate() const;
 
-    // ¸Ô²Ó«H®§
+    // ï¿½Ô²Ó«Hï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void ShowQuestDetails(const FString& QuestID);
 
@@ -254,7 +258,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void UpdateQuestProgress(const FString& QuestID, const FString& RequirementText, float Progress);
 
-    // ¤¬?X???
+    // ï¿½ï¿½?X???
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void OnQuestClicked(const FString& QuestID);
 
@@ -264,13 +268,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void OnQuestRightClicked(const FString& QuestID);
 
-    // ¾É¥X???X    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
+    // ï¿½É¥X???X
+    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void ExportQuestData();
 
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void ImportQuestData();
 
-    // ¨Æ¥ó
+    // ï¿½Æ¥ï¿½
     UPROPERTY(BlueprintAssignable, Category = "Quest Events")
     FOnQuestAccepted OnQuestAccepted;
 
@@ -284,11 +289,11 @@ public:
     FOnQuestSelected OnQuestSelected;
 
 protected:
-    // ¨t²Î¤Þ¥Î
+    // ï¿½tï¿½Î¤Þ¥ï¿½
     UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
-    // ¥ô?X???
+    // ï¿½ï¿½?X???
     UPROPERTY(BlueprintReadOnly, Category = "Quest Data")
     TArray<FQuestData> AllQuests;
 
@@ -298,7 +303,8 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Quest Data")
     FQuestData SelectedQuest;
 
-    // ??Âo??X    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
+    // ??ï¿½o??X
+    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     TMap<EQuestStatus, bool> StatusFilters;
 
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
@@ -313,7 +319,8 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     bool bIsFiltered = false;
 
-    // ???X?X    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
+    // ???X?X
+    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortByDifficulty = false;
 
     UPROPERTY(BlueprintReadOnly, Category = "Sort State")
@@ -325,7 +332,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortAscending = true;
 
-    // UI²Õ¥ó¤Þ¥Î¡]??­n¦bBlueprint¤¤??©w??
+    // UIï¿½Õ¥ï¿½Þ¥Î¡]??ï¿½nï¿½bBlueprintï¿½ï¿½??ï¿½w??
     UPROPERTY(meta = (BindWidget))
     class UListView* QuestListView;
 
@@ -350,11 +357,11 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UScrollBox* DetailsScrollBox;
 
-    // ??ÀÀ??¼Æ
+    // ??ï¿½ï¿½??ï¿½ï¿½
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // ??³¡??¼Æ
+    // ??ï¿½ï¿½??ï¿½ï¿½
     void ProcessQuestData();
     void ApplyFilters();
     void ApplySorting();
@@ -364,16 +371,16 @@ protected:
     FString GetQuestTypeDisplayName(EQuestType Type) const;
     FString GetQuestStatusDisplayName(EQuestStatus Status) const;
 
-    // ¨Æ¥ó¸j??
+    // ï¿½Æ¥ï¿½j??
     void SetupEventBindings();
     void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason);
 
 private:
-    // »²§U??¼Æ
+    // ï¿½ï¿½ï¿½U??ï¿½ï¿½
     bool PassesFilter(const FQuestData& QuestData) const;
     bool PassesSearch(const FQuestData& QuestData) const;
     void RefreshDisplayList();
     void CheckQuestTimeLimits();
     void GenerateRandomQuests();
-);
+};
 

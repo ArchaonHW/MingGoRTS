@@ -5,8 +5,8 @@
 #include "MingRelationshipManagerTest.generated.h"
 
 /**
- * ???X?Án??¨t²Î´ú¸Õ??¦æ¾¹
- * ???? Blueprint ??¤f¨Ó??¦æ¨t²Î´ú?? */
+ * ???X?è²??ç³»çµ±æ¸¬è©¦??è¡Œå™¨
+ * æ‘§æ¯€ Blueprint ??å£ä¾†??è¡Œç³»çµ±æ¸¬?? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingRelationshipTestRunner : public UObject
 {
@@ -14,35 +14,35 @@ class MINGPERSONAL_API UMingRelationshipTestRunner : public UObject
 
 public:
     /**
-     * ???X?????«Y?X???¨t²Î´ú¸Õ
-     * ???X???½Õ¸Õ??¨ÏX     */
+     * ç›®æ¨™æ•¸é‡??ä¿‚?X???ç³»çµ±æ¸¬è©¦
+     * ç›®æ¨™æ•¸é‡èª¿è©¦??ä½¿X     */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
     static void RunRelationshipTests();
 
     /**
-     * ???X???´ú¸Õ
-     * @param TestIndex ´ú¸Õ½s?? (1-8)
+     * ç›®æ¨™æ•¸é‡æ¸¬è©¦
+     * @param TestIndex æ¸¬è©¦ç·¨?? (1-8)
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
     static void RunSpecificTest(int32 TestIndex);
 
     /**
-     * Åç?X???¨t²Î??¥»??¯à
+     * é©—?X???ç³»çµ±??æœ¬??èƒ½
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
     static bool VerifyRelationshipSystem();
 
     /**
-     * Åç?X???¨t²Î??¥»??¯à
+     * é©—?X???ç³»çµ±??æœ¬??èƒ½
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
     static bool VerifyReputationSystem();
 
     /**
-     * ??«Ø´ú¸Õ????
-     * ??©ó¶ñ??´ú¸Õ???X???«Y?X??X???
+     * ??å»ºæ¸¬è©¦æ‘§æ¯€
+     * ??æ–¼å¡«??æ¸¬è©¦ç›®æ¨™æ•¸é‡ä¿‚?X??X???
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
     static void CreateTestData();
-);
+};
 

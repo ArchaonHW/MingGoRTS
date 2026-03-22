@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "MingDialogueWidget.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingDialogueDisplayMode : uint8
-{
+enum class EMingDialogueDisplayMode: uint8 {
     Standard UMETA(DisplayName = "Standard"),
     Cinematic UMETA(DisplayName = "Cinematic"),
     Compact UMETA(DisplayName = "Compact"),
@@ -14,8 +13,7 @@ enum class EMingDialogueDisplayMode : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingDialogueOptionType : uint8
-{
+enum class EMingDialogueOptionType: uint8 {
     Normal UMETA(DisplayName = "Normal"),
     Persuasion UMETA(DisplayName = "Persuasion"),
     Intimidation UMETA(DisplayName = "Intimidation"),
@@ -124,7 +122,7 @@ class MINGUI_API UMingDialogueWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingDialogueWidget(const FObjectInitializer& ObjectInitializer};
+    UMingDialogueWidget(const FObjectInitializer& ObjectInitializer);
 
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
@@ -132,14 +130,14 @@ public:
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void InitializeDialogue(FName CharacterID, class UMingRelationshipManager* RelationshipManager};
+    void InitializeDialogue(FName CharacterID, class UMingRelationshipManager* RelationshipManager);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void SetDialogueMode(EMingDialogueDisplayMode NewMode};
+    void SetDialogueMode(EMingDialogueDisplayMode NewMode);
 
     // Dialogue Flow
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void StartDialogue(const TArray<FMingDialogueLine>& Lines};
+    void StartDialogue(const TArray<FMingDialogueLine>& Lines);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
     void ShowNextLine();
@@ -161,13 +159,13 @@ public:
 
     // Options
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void ShowOptions(const TArray<FMingDialogueOption>& Options};
+    void ShowOptions(const TArray<FMingDialogueOption>& Options);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
     void ClearOptions();
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void SelectOption(int32 OptionID};
+    void SelectOption(int32 OptionID);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
     void RefreshOptionAvailability();
@@ -180,10 +178,10 @@ public:
     int32 GetCurrentReputationRank() const;
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void ShowRelationshipImpactPreview(float ImpactValue};
+    void ShowRelationshipImpactPreview(float ImpactValue);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void ShowReputationImpactPreview(FName RegionID, float ImpactValue};
+    void ShowReputationImpactPreview(FName RegionID, float ImpactValue);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
     void HideImpactPreview();
@@ -199,52 +197,52 @@ public:
     float CalculateSuccessChance(const FMingDialogueOption& Option) const;
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void ShowOptionDetails(const FMingDialogueOption& Option};
+    void ShowOptionDetails(const FMingDialogueOption& Option);
 
     // Audio Integration
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void PlayDialogueAudio(FName AudioCue};
+    void PlayDialogueAudio(FName AudioCue);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
     void StopDialogueAudio();
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void SetAudioVolume(float Volume};
+    void SetAudioVolume(float Volume);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void PlayOptionSound(EMingDialogueOptionType OptionType};
+    void PlayOptionSound(EMingDialogueOptionType OptionType);
 
     // Visual Effects
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void PlayTextRevealAnimation(float Speed};
+    void PlayTextRevealAnimation(float Speed);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void ShowSpeakerTransition(FName NewSpeakerID};
+    void ShowSpeakerTransition(FName NewSpeakerID);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void ShakeDialogueBox(float Intensity, float Duration};
+    void ShakeDialogueBox(float Intensity, float Duration);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void FlashOption(int32 OptionID, FLinearColor FlashColor};
+    void FlashOption(int32 OptionID, FLinearColor FlashColor);
 
     // Cinematic Mode
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void EnableCinematicMode(bool bEnable};
+    void EnableCinematicMode(bool bEnable);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void SetLetterboxVisibility(bool bVisible};
+    void SetLetterboxVisibility(bool bVisible);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void FocusOnSpeaker(FName SpeakerID};
+    void FocusOnSpeaker(FName SpeakerID);
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueLineShown, int32, LineIndex};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueOptionSelected, int32, OptionID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRelationshipImpacted, FName, CharacterID, float, ImpactValue};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnReputationImpacted, FName, RegionID, float, ImpactValue};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDialogueStarted};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDialogueEnded};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOptionHovered, int32, OptionID};
+    
+    
+    
+    
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnDialogueLineShown OnDialogueLineShown;
@@ -347,37 +345,37 @@ protected:
     void OnContinueClicked();
 
     UFUNCTION()
-    void OnOptionButtonClicked(int32 OptionID};
+    void OnOptionButtonClicked(int32 OptionID);
 
     UFUNCTION()
-    void OnOptionButtonHovered(int32 OptionID};
+    void OnOptionButtonHovered(int32 OptionID);
 
     UFUNCTION()
     void OnSkipClicked();
 
     // Internal Functions
     void DisplayCurrentLine();
-    void UpdateSpeakerDisplay(const FMingDialogueLine& Line};
-    void CreateOptionButton(const FMingDialogueOption& Option};
+    void UpdateSpeakerDisplay(const FMingDialogueLine& Line);
+    void CreateOptionButton(const FMingDialogueOption& Option);
     void ClearOptionButtons();
     void UpdateOptionAvailability();
-    void UpdateOptionVisuals(class UButton* Button, const FMingDialogueOption& Option};
-    void ShowImpactPreviewInternal(float RelationshipDelta, float ReputationDelta};
+    void UpdateOptionVisuals(class UButton* Button, const FMingDialogueOption& Option);
+    void ShowImpactPreviewInternal(float RelationshipDelta, float ReputationDelta);
     FLinearColor GetOptionTypeColor(EMingDialogueOptionType OptionType) const;
     FString GetOptionTypeIcon(EMingDialogueOptionType OptionType) const;
-    void PlayTextReveal(float Speed};
+    void PlayTextReveal(float Speed);
     void CompleteTextReveal();
-    void UpdateAutoAdvance(float DeltaTime};
+    void UpdateAutoAdvance(float DeltaTime);
 
 public:
     // Static utilities
     UFUNCTION(BlueprintPure, Category = "Dialogue UI", meta = (StaticFunction))
-    static FText FormatDialogueText(const FText& RawText, const TMap<FString, FString>& Variables};
+    static FText FormatDialogueText(const FText& RawText, const TMap<FString, FString>& Variables);
 
     UFUNCTION(BlueprintPure, Category = "Dialogue UI", meta = (StaticFunction))
-    static float CalculateReadingTime(const FText& Text};
+    static float CalculateReadingTime(const FText& Text);
 
     UFUNCTION(BlueprintPure, Category = "Dialogue UI", meta = (StaticFunction))
-    static FLinearColor GetTypeColor(EMingDialogueOptionType Type};
-};
+    static FLinearColor GetTypeColor(EMingDialogueOptionType Type);
+);
 

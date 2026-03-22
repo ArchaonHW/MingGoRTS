@@ -1,4 +1,4 @@
-# Auto-generated Batch Content Generation Script
+﻿# Auto-generated Batch Content Generation Script
 # Generated: 03/23/2026 02:22:04
 
 # Batch Configuration

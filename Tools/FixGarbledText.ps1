@@ -1,0 +1,204 @@
+# PowerShell script to fix garbled Chinese characters in header files
+# This script fixes common encoding issues where Chinese characters appear as ?x? or ???
+
+param(
+    [string]$RootPath = "C:\HW\MingGoRTS",
+    [string]$BackupDir = "C:\HW\MingGoRTS\Backup_GarbledFix"
+)
+
+# Create backup directory
+if (!(Test-Path $BackupDir)) {
+    New-Item -ItemType Directory -Path $BackupDir -Force | Out-Null
+    Write-Host "Created backup directory: $BackupDir" -ForegroundColor Green
+}
+
+# Common garbled text patterns and their replacements
+$Replacements = @{
+    # Common garbled character patterns in comments
+    "// 任?X???" = "// 任務目標"
+    "// ????ID" = "// 目標ID"
+    "// ???X?述" = "// 目標描述"
+    "// ????類??" = "// 目標類型"
+    "// ???X???" = "// 目標數量"
+    "// ???X?度" = "// 目標進度"
+    "// ???X?數" = "// 目標參數"
+    "// ??否????" = "// 是否可見"
+    "// ??否完??" = "// 是否完成"
+    "// ??否??選X" = "// 是否可選"
+    "// ????位置" = "// 目標位置"
+    "// ????NPC" = "// 目標NPC"
+    "// ???X?制" = "// 時間限制"
+    "// 失??條件" = "// 失敗條件"
+    "// 每日任??" = "// 每日任務"
+    "// 每周任??" = "// 每周任務"
+    "// 活??任??" = "// 活動任務"
+    "// ????任??" = "// 隱藏任務"
+    "// ????任??" = "// 教學任務"
+    "// ??就任??" = "// 成就任務"
+    "// ??接X" = "// 可接受"
+    "// ??????" = "// 進行中"
+    "// 已?X" = "// 已完成"
+    "// 失??" = "// 失敗"
+    "// ????" = "// 已放棄"
+    "// ????" = "// 已鎖定"
+    "// ??殺" = "// 擊殺"
+    "// ????" = "// 收集"
+    "// ????" = "// 交付"
+    "// 護??" = "// 護送"
+    "// ??禦" = "// 防禦"
+    "// ??索" = "// 探索"
+    "// 互??" = "// 互動"
+    "// ????" = "// 生存"
+    "// 佔??" = "// 佔領"
+    "// ????" = "// 摧毀"
+    "// 線??" = "// 線性"
+    "// ???X?支" = "// 選擇分支"
+    "// 條件??支" = "// 條件分支"
+    "// ???X?支" = "// 隨機分支"
+    "// ??德????" = "// 道德選擇"
+    "// ??略????" = "// 戰略選擇"
+    "// ??人????" = "// 個人選擇"
+    "// ???X?本" = "// 選項文本"
+    "// ???X?述" = "// 選項描述"
+    "// ????類??" = "// 選項類型"
+    "// ????條件" = "// 選擇條件"
+    "// ????結??" = "// 選擇結果"
+    "// ??德影響" = "// 道德影響"
+    "// ????影響" = "// 聲望影響"
+    "// ????影響" = "// 關係影響"
+    "// ????權??" = "// 選項權重"
+    "// 任?X?稱" = "// 任務名稱"
+    "// 任?X?述" = "// 任務描述"
+    "// 任?X?X" = "// 任務狀態"
+    "// 任?X??X??" = "// 任務目標列表"
+    "// ???X??X??" = "// 故事選項"
+    "// 任?X?勵" = "// 任務獎勵"
+    "// 經?X?勵" = "// 經驗獎勵"
+    "// ???X?勵" = "// 聲望獎勵"
+    "// ???X?勵" = "// 物品獎勵"
+    "// 任?X??X???" = "// 任務開始時間"
+    "// 任?X?止????" = "// 任務截止日期"
+    "// 任?X???路??" = "// 任務圖標路徑"
+    "// ???X??X" = "// 故事重要性"
+    "// ????次數" = "// 重複次數"
+    "// 節點????" = "// 節點條件"
+    "// 節點????" = "// 節點位置"
+    "// 任??管?X" = "// 任務管理器"
+    "// ???X?任??系??" = "// 初始化任務系統"
+    "// ????任??" = "// 接受任務"
+    "// ????任??" = "// 拒絕任務"
+    "// ????任??" = "// 放棄任務"
+    "// 完??任??" = "// 完成任務"
+    "// ??新任?X???" = "// 更新任務目標"
+    "// ??出???X???" = "// 做出故事選擇"
+    "// ????任?X??" = "// 獲取可用任務"
+    "// ????活??任??" = "// 獲取進行中任務"
+    "// ????已?X?任X" = "// 獲取已完成任務"
+    "// ???X???任??" = "// 獲取特定任務"
+    "// 檢查任??條件" = "// 檢查任務條件"
+    "// ????任?X?度" = "// 獲取任務進度"
+    "// ???X???節??" = "// 獲取故事節點"
+    "// ?X?任X" = "// 解鎖任務"
+    "// ??置任??" = "// 重置任務"
+    "// ????任?X?勵" = "// 處理任務獎勵"
+    "// ??新???X?支" = "// 更新故事分支"
+    "// 計??任?X??X" = "// 計算任務重要性"
+    "// ???X???接??任X" = "// 獲取可接任務ID"
+    "// 檢查??置任??" = "// 檢查前置任務"
+    "// 檢查?X條件" = "// 檢查解鎖條件"
+    "// ??新任?X?X" = "// 更新任務狀態"
+    "// ???X???後??" = "// 處理故事後果"
+    "// 計?X???權??" = "// 計算選項權重"
+    "// ???X???線索" = "// 獲取故事線索"
+    "// 驗?X??X???" = "// 驗證目標完成"
+    "// ???X???後??" = "// 處理目標完成"
+    "// ??新??體?X??X" = "// 更新總體進度"
+    "// 檢查任??完??" = "// 檢查任務完成"
+    "// ???X???任??" = "// 檢查所有任務"
+    "// ???X???任??" = "// 載入默認任務"
+    "// 載入??設????節??" = "// 載入默認故事節點"
+    "// 驗??任?X???" = "// 驗證任務數據"
+    "// 檢查任??完??條件" = "// 檢查任務完成條件"
+    "// 載入??設???" = "// 載入默認物品"
+    "// 載入??設??方" = "// 載入默認配方"
+    "// 驗?X??X???" = "// 驗證物品數據"
+    "// 驗??裝?X???" = "// 驗證裝備數據"
+    "// 計?X???總?X" = "// 計算背包總重"
+    "// 計??裝?X???" = "// 計算裝備加成"
+    "// ??用裝?X???" = "// 應用裝備效果"
+    "// 移除裝?X???" = "// 移除裝備效果"
+    "// ??新????容??使用" = "// 更新背包容量使用"
+    "// 檢查????空??" = "// 檢查背包空間"
+    "// ???X??X???" = "// 生成隨機物品"
+    "// 計?X??X???" = "// 計算物品價值"
+    "// ???X???稀??度顏色" = "// 獲取稀有度顏色"
+    "// ???X???類?X???" = "// 獲取物品類型圖標"
+    "// ??新???X?????" = "// 更新物品耐久度"
+    "// 檢查???X?否????" = "// 檢查物品是否損壞"
+    "// 修復???X???" = "// 修復損壞物品"
+    "// ???X??X???" = "// 整理背包物品"
+    "// ??併???X???" = "// 合併可堆疊物品"
+    "// ??離???X???" = "// 分離物品堆疊"
+    "// 計?X??X??X" = "// 計算製作成功率"
+    "// 消耗?X??X" = "// 消耗製作材料"
+    "// 添?X???結??" = "// 添加製作結果"
+    "// ???X???統??" = "// 獲取物品統計"
+    "// ????稀??度統??" = "// 獲取稀有度統計"
+    "// 保?X???快照" = "// 保存物品快照"
+    "// 載入????快照" = "// 載入物品快照"
+}
+
+Write-Host "Starting garbled text fix script..." -ForegroundColor Cyan
+Write-Host "Root path: $RootPath" -ForegroundColor Gray
+
+# Get all .h files in Plugins directory
+$HeaderFiles = Get-ChildItem -Path "$RootPath\Plugins" -Filter "*.h" -Recurse -File
+$TotalFiles = $HeaderFiles.Count
+$ProcessedFiles = 0
+$FixedFiles = 0
+
+Write-Host "Found $TotalFiles header files to process" -ForegroundColor Yellow
+
+foreach ($File in $HeaderFiles) {
+    $ProcessedFiles++
+    $RelativePath = $File.FullName.Replace($RootPath, "")
+    
+    # Show progress every 10 files
+    if ($ProcessedFiles % 10 -eq 0) {
+        $Percent = [math]::Round(($ProcessedFiles / $TotalFiles) * 100, 1)
+        Write-Progress -Activity "Fixing garbled text" -Status "Processing file $ProcessedFiles of $TotalFiles" -PercentComplete $Percent
+    }
+    
+    # Read file content
+    $Content = Get-Content -Path $File.FullName -Raw -Encoding UTF8
+    $OriginalContent = $Content
+    $FileModified = $false
+    
+    # Apply replacements
+    foreach ($Pattern in $Replacements.Keys) {
+        if ($Content -match [regex]::Escape($Pattern)) {
+            $Content = $Content -replace [regex]::Escape($Pattern), $Replacements[$Pattern]
+            $FileModified = $true
+        }
+    }
+    
+    # Save if modified
+    if ($FileModified) {
+        # Backup original file
+        $BackupPath = Join-Path $BackupDir ($RelativePath.TrimStart('\').Replace('\', '_'))
+        Copy-Item -Path $File.FullName -Destination $BackupPath -Force
+        
+        # Write fixed content
+        Set-Content -Path $File.FullName -Value $Content -Encoding UTF8
+        $FixedFiles++
+        Write-Host "[$ProcessedFiles/$TotalFiles] Fixed: $RelativePath" -ForegroundColor Green
+    }
+}
+
+Write-Progress -Activity "Fixing garbled text" -Completed
+Write-Host "`n========================================" -ForegroundColor Cyan
+Write-Host "Fix Complete!" -ForegroundColor Green
+Write-Host "Total files processed: $TotalFiles" -ForegroundColor White
+Write-Host "Files fixed: $FixedFiles" -ForegroundColor Green
+Write-Host "Backup location: $BackupDir" -ForegroundColor Yellow
+Write-Host "========================================" -ForegroundColor Cyan

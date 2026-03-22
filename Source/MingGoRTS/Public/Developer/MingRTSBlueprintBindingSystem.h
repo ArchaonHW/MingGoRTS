@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -12,8 +12,7 @@
  * Blueprint asset types supported for binding
  */
 UENUM(BlueprintType)
-enum class EBlueprintBindingType : uint8
-{
+enum class EBlueprintBindingType: uint8 {
     Actor,
     ActorComponent,
     UserWidget,

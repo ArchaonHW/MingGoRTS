@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -15,8 +15,7 @@ class UMaterialInstanceDynamic;
 class UAudioComponent;
 
 UENUM(BlueprintType)
-enum class EAIGenerationType : uint8
-{
+enum class EAIGenerationType: uint8 {
     Image,          // X
     Video,          // ?vX  
     Music,          // X
@@ -32,8 +31,7 @@ enum class EAIGenerationType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EAIModelProvider : uint8
-{
+enum class EAIModelProvider: uint8 {
     StableDiffusion,    // Stable Diffusion
     DALL_E,            // DALL-E
     Midjourney,        // Midjourney
@@ -45,12 +43,11 @@ enum class EAIModelProvider : uint8
 };
 
 UENUM(BlueprintType)
-enum class EGenerationQuality : uint8
-{
+enum class EGenerationQuality: uint8 {
     Draft,          // X?Z??X
     Standard,       // ??X??X
-    High,           // ????q
-    Ultra,          // ?W????q
+    High,           // 摧毀q
+    Ultra,          // ?W摧毀q
     Custom,         // ??w?q??q
 };
 
@@ -109,7 +106,7 @@ struct FAIGenerationRequest
         bIsAsync = true;
         OutputPath = TEXT(""};
     }
-};
+);
 
 USTRUCT(BlueprintType)
 struct FAIGenerationResult
@@ -158,7 +155,7 @@ struct FAIGenerationResult
         GeneratedFilePath = TEXT(""};
         GenerationTime = 0.0f;
     }
-};
+);
 
 USTRUCT(BlueprintType)
 struct FAIGameSceneSetup
@@ -199,23 +196,23 @@ struct FAIGameSceneSetup
     {
         SceneName = TEXT(""};
         SceneDescription = TEXT(""};
-        TimeOfDay = TEXT("day"};
-        Weather = TEXT("clear"};
-        Location = TEXT("countryside"};
-        Mood = TEXT("peaceful"};
+        TimeOfDay = TEXT("day");
+        Weather = TEXT("clear");
+        Location = TEXT("countryside");
+        Mood = TEXT("peaceful");
         bAutoGenerateAssets = true;
         bCreateLighting = true;
         bAddEffects = true;
     }
-};
+);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAIGenerationCompleted, const FAIGenerationResult&, Result};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIGenerationProgress, const FString&, RequestID, float, Progress};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSceneGenerated, const FString&, SceneName};
+
+
+
 
 /**
  * AI X?eX?t??
- * X?vX?B????B??X??X?e??X?eX */
+ * X?vX?B摧毀B??X??X?e??X?eX */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingAIGeneratedContentSystem : public UObject
 {
@@ -236,21 +233,21 @@ public:
 
     // ?vX
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FString GenerateVideo(const FString& Prompt, float Duration = 5.0f, int32 FPS = 30, EGenerationQuality Quality = EGenerationQuality::Standard};
+    FString GenerateVideo(const FString& Prompt, float Duration = 5.0f, int32 FPS = 30, EGenerationQuality Quality = EGenerationQuality::Standard);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateVideoAsync(const FAIGenerationRequest& Request) {};
 
     // X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FString GenerateMusic(const FString& Style, float Duration = 30.0f, EGenerationQuality Quality = EGenerationQuality::Standard};
+    FString GenerateMusic(const FString& Style, float Duration = 30.0f, EGenerationQuality Quality = EGenerationQuality::Standard);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateMusicAsync(const FAIGenerationRequest& Request) {};
 
     // X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FString GenerateSoundEffect(const FString& Description, float Duration = 2.0f, EGenerationQuality Quality = EGenerationQuality::Standard};
+    FString GenerateSoundEffect(const FString& Description, float Duration = 2.0f, EGenerationQuality Quality = EGenerationQuality::Standard);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateSoundEffectAsync(const FAIGenerationRequest& Request) {};
@@ -264,23 +261,23 @@ public:
 
     // ?KX
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    UTexture2D* GenerateTexture(const FString& Description, int32 Width = 512, int32 Height = 512};
+    UTexture2D* GenerateTexture(const FString& Description, int32 Width = 512, int32 Height = 512);
 
     // ??X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    UStaticMesh* GenerateMesh(const FString& Description, float Complexity = 0.5f};
+    UStaticMesh* GenerateMesh(const FString& Description, float Complexity = 0.5f);
 
     // X??X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    UMaterialInterface* GenerateMaterial(const FString& Description, EGenerationQuality Quality = EGenerationQuality::Standard};
+    UMaterialInterface* GenerateMaterial(const FString& Description, EGenerationQuality Quality = EGenerationQuality::Standard);
 
     // X?eX
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FString GenerateAnimation(const FString& Description, float Duration = 5.0f};
+    FString GenerateAnimation(const FString& Description, float Duration = 5.0f);
 
     // X?dX
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FString GenerateLevel(const FString& Description, int32 Size = 1024};
+    FString GenerateLevel(const FString& Description, int32 Size = 1024);
 
     // UIX
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
@@ -297,18 +294,18 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void GenerateGameSceneAsync(const FAIGameSceneSetup& SceneSetup) {};
 
-    // X????X
+    // X摧毀X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    UTexture2D* RenderSceneToTexture(const FString& SceneName, int32 Width = 1920, int32 Height = 1080};
+    UTexture2D* RenderSceneToTexture(const FString& SceneName, int32 Width = 1920, int32 Height = 1080);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    FString RenderSceneToVideo(const FString& SceneName, float Duration = 10.0f, int32 FPS = 30};
+    FString RenderSceneToVideo(const FString& SceneName, float Duration = 10.0f, int32 FPS = 30);
 
     // X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    TArray<FString> BatchGenerateAssets(const TArray<FAIGenerationRequest>& Requests};
+    TArray<FString> BatchGenerateAssets(const TArray<FAIGenerationRequest>& Requests);
 
-    // ????X
+    // 摧毀X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void SaveGeneratedAsset(const FString& RequestID, const FString& AssetPath) {};
 
@@ -338,7 +335,7 @@ public:
     void SetModelProvider(EAIModelProvider Provider, const FString& APIKey = TEXT("")};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    void SetDefaultQuality(EGenerationQuality Quality};
+    void SetDefaultQuality(EGenerationQuality Quality);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void SetOutputDirectory(const FString& Directory) {};
@@ -383,7 +380,7 @@ public:
     FOnSceneGenerated OnSceneGenerated;
 
 protected:
-    // ?t?�]??
+    // ?t?�]??
     UPROPERTY()
     TMap<EAIModelProvider, FString> APIKeys;
 
@@ -438,10 +435,10 @@ protected:
     void InitializeDefaultPresets();
     FString GenerateRequestID();
     void ProcessGenerationRequest(const FAIGenerationRequest& Request) {};
-    void UpdateGenerationProgress(const FString& RequestID, float Progress};
+    void UpdateGenerationProgress(const FString& RequestID, float Progress);
     void CompleteGeneration(const FString& RequestID, const FAIGenerationResult& Result) {};
     void NotifyGenerationCompleted(const FAIGenerationResult& Result) {};
-    void NotifyGenerationProgress(const FString& RequestID, float Progress};
+    void NotifyGenerationProgress(const FString& RequestID, float Progress);
     void NotifySceneGenerated(const FString& SceneName) {};
 
     // X??{
@@ -465,6 +462,6 @@ private:
     bool ValidateRequest(const FAIGenerationRequest& Request) const;
     void CacheResult(const FAIGenerationResult& Result) {};
     FAIGenerationResult LoadFromCache(const FAIGenerationRequest& Request) const;
-    void UpdateStatistics(EAIGenerationType GenerationType, float GenerationTime};
-};
+    void UpdateStatistics(EAIGenerationType GenerationType, float GenerationTime);
+);
 

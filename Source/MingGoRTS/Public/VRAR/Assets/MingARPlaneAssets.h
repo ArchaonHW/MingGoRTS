@@ -1,4 +1,4 @@
-// AR Plane Detection and Anchor Asset Definitions for MingGoRTS
+﻿// AR Plane Detection and Anchor Asset Definitions for MingGoRTS
 // Epic 9.1: VR/AR Support System - AR Plane and Anchor Assets
 
 #pragma once
@@ -11,8 +11,7 @@
  * AR Plane Types
  */
 UENUM(BlueprintType)
-enum class EARPlaneType : uint8
-{
+enum class EARPlaneType: uint8 {
     Floor           UMETA(DisplayName = "Floor"),
     Ceiling         UMETA(DisplayName = "Ceiling"),
     Wall            UMETA(DisplayName = "Wall"),
@@ -27,8 +26,7 @@ enum class EARPlaneType : uint8
  * AR Plane Detection State
  */
 UENUM(BlueprintType)
-enum class EARPlaneDetectionState : uint8
-{
+enum class EARPlaneDetectionState: uint8 {
     Searching       UMETA(DisplayName = "Searching"),
     Detecting       UMETA(DisplayName = "Detecting"),
     Tracking        UMETA(DisplayName = "Tracking"),

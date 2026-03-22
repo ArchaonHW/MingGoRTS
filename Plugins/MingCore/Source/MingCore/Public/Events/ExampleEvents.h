@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "MingEvent.h"
@@ -19,12 +19,12 @@ public:
     
     virtual FName GetEventType() const override
     {
-        return FName("UnitMovement"};
+        return FName("UnitMovement");
     }
     
     virtual FString GetSourceLayer() const override
     {
-        return FString("Tactical"};
+        return FString("Tactical");
     }
     
     virtual int32 GetPriority() const override
@@ -57,12 +57,12 @@ public:
     
     virtual FName GetEventType() const override
     {
-        return FName("Combat"};
+        return FName("Combat");
     }
     
     virtual FString GetSourceLayer() const override
     {
-        return FString("Tactical"};
+        return FString("Tactical");
     }
     
     virtual int32 GetPriority() const override
@@ -95,12 +95,12 @@ public:
     
     virtual FName GetEventType() const override
     {
-        return FName("ResourceChanged"};
+        return FName("ResourceChanged");
     }
     
     virtual FString GetSourceLayer() const override
     {
-        return FString("Building"};
+        return FString("Building");
     }
     
     virtual int32 GetPriority() const override
@@ -133,12 +133,12 @@ public:
     
     virtual FName GetEventType() const override
     {
-        return FName("StrategicDecision"};
+        return FName("StrategicDecision");
     }
     
     virtual FString GetSourceLayer() const override
     {
-        return FString("Strategic"};
+        return FString("Strategic");
     }
     
     virtual int32 GetPriority() const override

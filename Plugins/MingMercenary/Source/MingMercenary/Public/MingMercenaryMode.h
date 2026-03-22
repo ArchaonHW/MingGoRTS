@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingMercenaryMode.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingMercenaryRank : uint8
-{
+enum class EMingMercenaryRank: uint8 {
     Rookie UMETA(DisplayName = "Rookie"),
     Veteran UMETA(DisplayName = "Veteran"),
     Elite UMETA(DisplayName = "Elite"),
@@ -14,8 +13,7 @@ enum class EMingMercenaryRank : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingMercenaryType : uint8
-{
+enum class EMingMercenaryType: uint8 {
     Infantry UMETA(DisplayName = "Infantry"),
     Cavalry UMETA(DisplayName = "Cavalry"),
     Artillery UMETA(DisplayName = "Artillery"),
@@ -27,8 +25,7 @@ enum class EMingMercenaryType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingContractType : uint8
-{
+enum class EMingContractType: uint8 {
     Assassination UMETA(DisplayName = "Assassination"),
     Escort UMETA(DisplayName = "Escort"),
     Sabotage UMETA(DisplayName = "Sabotage"),
@@ -236,16 +233,16 @@ public:
     void InitializeMercenaryMode();
 
     UFUNCTION(BlueprintCallable, Category = "Mercenary")
-    void HireMercenary(const FString& MercenaryID};
+    void HireMercenary(const FString& MercenaryID);
 
     UFUNCTION(BlueprintCallable, Category = "Mercenary")
-    void FireMercenary(const FString& MercenaryID};
+    void FireMercenary(const FString& MercenaryID);
 
     UFUNCTION(BlueprintCallable, Category = "Mercenary")
-    void TrainMercenary(const FString& MercenaryID, const FString& SkillType, float Duration};
+    void TrainMercenary(const FString& MercenaryID, const FString& SkillType, float Duration);
 
     UFUNCTION(BlueprintCallable, Category = "Mercenary")
-    void UpgradeMercenary(const FString& MercenaryID};
+    void UpgradeMercenary(const FString& MercenaryID);
 
     UFUNCTION(BlueprintPure, Category = "Mercenary")
     TArray<FMingMercenary> GetAvailableMercenaries() const;
@@ -261,16 +258,16 @@ public:
 
     // Contract Management
     UFUNCTION(BlueprintCallable, Category = "Contracts")
-    void AcceptContract(const FString& ContractID};
+    void AcceptContract(const FString& ContractID);
 
     UFUNCTION(BlueprintCallable, Category = "Contracts")
-    void CompleteContract(const FString& ContractID};
+    void CompleteContract(const FString& ContractID);
 
     UFUNCTION(BlueprintCallable, Category = "Contracts")
-    void FailContract(const FString& ContractID};
+    void FailContract(const FString& ContractID);
 
     UFUNCTION(BlueprintCallable, Category = "Contracts")
-    void AbandonContract(const FString& ContractID};
+    void AbandonContract(const FString& ContractID);
 
     UFUNCTION(BlueprintPure, Category = "Contracts")
     TArray<FMingContract> GetAvailableContracts() const;
@@ -289,10 +286,10 @@ public:
 
     // Mercenary Skills
     UFUNCTION(BlueprintCallable, Category = "Skills")
-    void ImproveSkill(const FString& MercenaryID, const FString& SkillType, float Amount};
+    void ImproveSkill(const FString& MercenaryID, const FString& SkillType, float Amount);
 
     UFUNCTION(BlueprintCallable, Category = "Skills")
-    void AddSpecialization(const FString& MercenaryID, const FString& Specialization};
+    void AddSpecialization(const FString& MercenaryID, const FString& Specialization);
 
     UFUNCTION(BlueprintPure, Category = "Skills")
     float GetSkillLevel(const FString& MercenaryID, const FString& SkillType) const;
@@ -302,10 +299,10 @@ public:
 
     // Reputation System
     UFUNCTION(BlueprintCallable, Category = "Reputation")
-    void AddReputation(const FString& MercenaryID, float Amount};
+    void AddReputation(const FString& MercenaryID, float Amount);
 
     UFUNCTION(BlueprintCallable, Category = "Reputation")
-    void RemoveReputation(const FString& MercenaryID, float Amount};
+    void RemoveReputation(const FString& MercenaryID, float Amount);
 
     UFUNCTION(BlueprintPure, Category = "Reputation")
     float GetReputation(const FString& MercenaryID) const;
@@ -314,27 +311,27 @@ public:
     EMingMercenaryRank GetRank(const FString& MercenaryID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Reputation")
-    void PromoteMercenary(const FString& MercenaryID};
+    void PromoteMercenary(const FString& MercenaryID);
 
     // Equipment Management
     UFUNCTION(BlueprintCallable, Category = "Equipment")
-    void EquipItem(const FString& MercenaryID, const FString& ItemID};
+    void EquipItem(const FString& MercenaryID, const FString& ItemID);
 
     UFUNCTION(BlueprintCallable, Category = "Equipment")
-    void UnequipItem(const FString& MercenaryID, const FString& ItemID};
+    void UnequipItem(const FString& MercenaryID, const FString& ItemID);
 
     UFUNCTION(BlueprintPure, Category = "Equipment")
     TArray<FString> GetMercenaryEquipment(const FString& MercenaryID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Equipment")
-    void PurchaseEquipment(const FString& ItemID};
+    void PurchaseEquipment(const FString& ItemID);
 
     // Financial Management
     UFUNCTION(BlueprintCallable, Category = "Finance")
     void PayMercenaries();
 
     UFUNCTION(BlueprintCallable, Category = "Finance")
-    void CollectContractReward(const FString& ContractID};
+    void CollectContractReward(const FString& ContractID);
 
     UFUNCTION(BlueprintPure, Category = "Finance")
     float GetDailyCosts() const;
@@ -347,10 +344,10 @@ public:
 
     // Mercenary AI
     UFUNCTION(BlueprintCallable, Category = "AI")
-    void AssignMercenaryToContract(const FString& MercenaryID, const FString& ContractID};
+    void AssignMercenaryToContract(const FString& MercenaryID, const FString& ContractID);
 
     UFUNCTION(BlueprintCallable, Category = "AI")
-    void RemoveMercenaryFromContract(const FString& MercenaryID};
+    void RemoveMercenaryFromContract(const FString& MercenaryID);
 
     UFUNCTION(BlueprintPure, Category = "AI")
     TArray<FString> GetAssignedMercenaries(const FString& ContractID) const;
@@ -359,11 +356,11 @@ public:
     FString GetCurrentContract(const FString& MercenaryID) const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMercenaryHired, const FMingMercenary&, Mercenary, float, Cost};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMercenaryFired, const FString&, MercenaryID, float, Severance};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnContractAccepted, const FMingContract&, Contract, const FString&, AssignedMercenary};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnContractCompleted, const FString&, ContractID, float, Reward};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMercenaryPromoted, const FString&, MercenaryID, EMingMercenaryRank, NewRank};
+    
+    
+    
+    
+    
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnMercenaryHired OnMercenaryHired;
@@ -382,19 +379,19 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetMercenaryTypeName(EMingMercenaryType MercType};
+    static FString GetMercenaryTypeName(EMingMercenaryType MercType);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetRankName(EMingMercenaryRank Rank};
+    static FString GetRankName(EMingMercenaryRank Rank);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetContractTypeName(EMingContractType ContractType};
+    static FString GetContractTypeName(EMingContractType ContractType);
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveMercenaryData() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadMercenaryData(const FString& JsonString};
+    void LoadMercenaryData(const FString& JsonString);
 
 protected:
     UPROPERTY()
@@ -421,31 +418,31 @@ protected:
     void SetupMercenarySkills();
 
     // Mercenary Management
-    void UpdateMercenaryStats(const FString& MercenaryID};
-    void CalculateMercenaryCost(FMingMercenary& Mercenary};
+    void UpdateMercenaryStats(const FString& MercenaryID);
+    void CalculateMercenaryCost(FMingMercenary& Mercenary);
     bool CanAffordMercenary(const FString& MercenaryID) const;
 
     // Contract Management
     void GenerateNewContracts();
     void UpdateContractDifficulty();
-    void EvaluateContractPerformance(const FString& ContractID};
+    void EvaluateContractPerformance(const FString& ContractID);
 
     // Reputation System
-    void UpdateReputationEffects(const FString& MercenaryID};
-    void CheckRankPromotion(const FString& MercenaryID};
+    void UpdateReputationEffects(const FString& MercenaryID);
+    void CheckRankPromotion(const FString& MercenaryID);
 
     // Financial System
     void ProcessDailyExpenses();
-    void CalculateContractReward(FMingContract& Contract};
+    void CalculateContractReward(FMingContract& Contract);
     void UpdateFinancialRecords();
 
     // AI System
-    void AssignOptimalMercenaries(const FString& ContractID};
-    void EvaluateMercenaryPerformance(const FString& MercenaryID, const FString& ContractID};
+    void AssignOptimalMercenaries(const FString& ContractID);
+    void EvaluateMercenaryPerformance(const FString& MercenaryID, const FString& ContractID);
 
     // Helpers
-    FMingMercenary* FindMercenary(const FString& MercenaryID};
-    FMingContract* FindContract(const FString& ContractID};
+    FMingMercenary* FindMercenary(const FString& MercenaryID);
+    FMingContract* FindContract(const FString& ContractID);
     bool HasRequiredSkills(const FString& MercenaryID, const TArray<FString>& RequiredSkills) const;
     float CalculateContractSuccessChance(const FString& ContractID) const;
 };

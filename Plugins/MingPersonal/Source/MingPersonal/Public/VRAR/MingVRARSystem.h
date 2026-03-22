@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // VR/AR Support System - Epic 9.1
 //
 // This system provides comprehensive VR/AR support for MingGoRTS,
@@ -13,8 +13,7 @@
 
 // VR/AR device types supported
 UENUM(BlueprintType)
-enum class EVRDeviceType : uint8
-{
+enum class EVRDeviceType: uint8 {
     None            UMETA(DisplayName = "None"),
     OculusRift      UMETA(DisplayName = "Oculus Rift"),
     OculusQuest     UMETA(DisplayName = "Oculus Quest"),
@@ -35,8 +34,7 @@ enum class EVRDeviceType : uint8
 
 // VR/AR session states
 UENUM(BlueprintType)
-enum class EVRARSessionState : uint8
-{
+enum class EVRARSessionState: uint8 {
     Idle                UMETA(DisplayName = "Idle"),
     Initializing        UMETA(DisplayName = "Initializing"),
     Ready               UMETA(DisplayName = "Ready"),
@@ -48,8 +46,7 @@ enum class EVRARSessionState : uint8
 
 // VR/AR interaction modes
 UENUM(BlueprintType)
-enum class EVRARInteractionMode : uint8
-{
+enum class EVRARInteractionMode: uint8 {
     Controller          UMETA(DisplayName = "Controller"),
     HandTracking        UMETA(DisplayName = "Hand Tracking"),
     Gesture             UMETA(DisplayName = "Gesture"),
@@ -61,8 +58,7 @@ enum class EVRARInteractionMode : uint8
 
 // VR/AR display modes
 UENUM(BlueprintType)
-enum class EVRARDisplayMode : uint8
-{
+enum class EVRARDisplayMode: uint8 {
     FullVR              UMETA(DisplayName = "Full VR"),
     AR_Passthrough      UMETA(DisplayName = "AR Passthrough"),
     AR_Overlay          UMETA(DisplayName = "AR Overlay"),
@@ -72,8 +68,7 @@ enum class EVRARDisplayMode : uint8
 
 // VR/AR tracking space
 UENUM(BlueprintType)
-enum class EVRARTrackingSpace : uint8
-{
+enum class EVRARTrackingSpace: uint8 {
     Seated              UMETA(DisplayName = "Seated"),
     Standing            UMETA(DisplayName = "Standing"),
     RoomScale           UMETA(DisplayName = "Room Scale"),

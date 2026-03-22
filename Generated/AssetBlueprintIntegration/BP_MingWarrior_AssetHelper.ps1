@@ -1,4 +1,4 @@
-# Asset-Blueprint Integration Helper Script
+﻿# Asset-Blueprint Integration Helper Script
 # 蝝????誨蝣潮??航??抵??# Generated: 03/23/2026 02:58:27
 
 param(

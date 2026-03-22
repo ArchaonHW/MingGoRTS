@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Events/MingEventTrigger.h"
@@ -54,21 +54,24 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void SetProbabilityDecay(float DecayFactor);
 
-    // 設置?��X�大觸?��X    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
+    // 設置?��X�大觸?��X
+    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void SetIntervalRange(float MinInterval, float MaxInterval);
 
     // 添�X��X��X��?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void AddWeightedOption(const FRandomTriggerOption& Option);
 
-    // 清除?�?�選X    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
+    // 清除?�?�選X
+    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void ClearOptions();
 
     // ?��X��?概�?
     UFUNCTION(BlueprintPure, Category = "Random Trigger")
     float GetCurrentProbability() const { return CurrentProbability; }
 
-    // ?��?距離下次?�能觸發?��X    UFUNCTION(BlueprintPure, Category = "Random Trigger")
+    // ?��?距離下次?�能觸發?��X
+    UFUNCTION(BlueprintPure, Category = "Random Trigger")
     float GetTimeToNextPossibleTrigger() const;
 
     // ?��?觸發?��X��? (返�X�中?��?件ID)
@@ -96,13 +99,16 @@ protected:
     UPROPERTY()
     float ProbabilityGrowth;
 
-    // ?�小觸?��X    UPROPERTY()
+    // ?�小觸?��X
+    UPROPERTY()
     float MinTriggerInterval;
 
-    // ?�大觸?��X    UPROPERTY()
+    // ?�大觸?��X
+    UPROPERTY()
     float MaxTriggerInterval;
 
-    // 距離上次觸發?��X    UPROPERTY()
+    // 距離上次觸發?��X
+    UPROPERTY()
     float TimeSinceLastTrigger;
 
     // ?��X��?窗口?�是?�可觸發
@@ -132,8 +138,10 @@ protected:
     // ?�新?��?窗口
     void UpdateTriggerWindow(float DeltaTime);
 
-    // 檢查?�否?��X�小�X    bool HasPassedMinInterval() const;
+    // 檢查?�否?��X�小�X
+    bool HasPassedMinInterval() const;
 
-    // ?�置觸發?�X    virtual void Reset() override;
+    // ?�置觸發?�X
+    virtual void Reset() override;
 };
 
