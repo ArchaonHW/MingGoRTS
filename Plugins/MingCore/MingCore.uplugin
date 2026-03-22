@@ -19,6 +19,11 @@
       "Name": "MingCore",
       "Type": "Runtime",
       "LoadingPhase": "PreDefault"
+    },
+    {
+      "Name": "MingCoreEditor",
+      "Type": "Editor",
+      "LoadingPhase": "Default"
     }
   ]
 }

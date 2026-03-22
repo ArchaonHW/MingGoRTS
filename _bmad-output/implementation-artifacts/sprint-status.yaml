@@ -54,7 +54,7 @@ development_status:
 
   # Epic 2: 大規模戰術戰鬥系統
   epic-2: in-progress
-  2-1-large-scale-combat-engine: ready-for-dev
+  2-1-large-scale-combat-engine: done
   2-2-unit-control-system: backlog
   2-3-multi-unit-coordination: backlog
   2-4-combat-ai-system: backlog
