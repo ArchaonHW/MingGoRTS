@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -141,17 +141,17 @@ class MINGBALANCE_API UMingGameBalanceManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGameBalanceManager(};
+    UMingGameBalanceManager();
 
     // Balance Management
     UFUNCTION(BlueprintCallable, Category = "Balance Management")
-    void InitializeBalanceManager(};
+    void InitializeBalanceManager();
 
     UFUNCTION(BlueprintCallable, Category = "Balance Management")
-    void ApplyAllBalanceSettings(};
+    void ApplyAllBalanceSettings();
 
     UFUNCTION(BlueprintCallable, Category = "Balance Management")
-    void ResetToDefaultBalance(};
+    void ResetToDefaultBalance();
 
     UFUNCTION(BlueprintCallable, Category = "Balance Management")
     void SaveCurrentBalance(const FString& ProfileName) {};
@@ -200,26 +200,26 @@ public:
 
     // Balance Analysis
     UFUNCTION(BlueprintCallable, Category = "Balance Analysis")
-    void AnalyzeGameBalance(};
+    void AnalyzeGameBalance();
 
     UFUNCTION(BlueprintPure, Category = "Balance Analysis")
     bool IsGameBalanced() const;
 
     UFUNCTION(BlueprintCallable, Category = "Balance Analysis")
-    void GenerateBalanceReport(};
+    void GenerateBalanceReport();
 
     UFUNCTION(BlueprintCallable, Category = "Balance Analysis")
-    void IdentifyBalanceIssues(};
+    void IdentifyBalanceIssues();
 
     // Validation
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void ValidateBalanceSettings(};
+    void ValidateBalanceSettings();
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void CheckForExploits(};
+    void CheckForExploits();
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void VerifyUnitCounters(};
+    void VerifyUnitCounters();
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
@@ -242,10 +242,10 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeDefaultBalances(};
-    void SetupUnitBalances(};
-    void SetupResourceBalances(};
-    void SetupDifficultyBalances(};
+    void InitializeDefaultBalances();
+    void SetupUnitBalances();
+    void SetupResourceBalances();
+    void SetupDifficultyBalances();
 
     // Balance Validation
     bool ValidateUnitBalance(const FMingUnitBalance& Balance) const;
@@ -253,15 +253,15 @@ protected:
     bool ValidateDifficultyBalance(const FMingDifficultyBalance& Balance) const;
 
     // Analysis Functions
-    void AnalyzeUnitBalance(};
-    void AnalyzeResourceBalance(};
-    void AnalyzeCombatBalance(};
-    void AnalyzeEconomicBalance(};
-    void AnalyzeDifficultyCurve(};
+    void AnalyzeUnitBalance();
+    void AnalyzeResourceBalance();
+    void AnalyzeCombatBalance();
+    void AnalyzeEconomicBalance();
+    void AnalyzeDifficultyCurve();
 
     // Adjustment Functions
-    void AutoAdjustBalance(};
-    void SuggestBalanceChanges(};
-    void ApplyBalanceCorrections(};
+    void AutoAdjustBalance();
+    void SuggestBalanceChanges();
+    void ApplyBalanceCorrections();
 };
 

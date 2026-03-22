@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -132,64 +132,64 @@ class MINGGAMEFLOW_API UMingUserExperienceTester : public UObject
     GENERATED_BODY()
 
 public:
-    UMingUserExperienceTester(};
+    UMingUserExperienceTester();
 
     // UX Testing Control
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
-    void ExecuteAllUXTests(};
+    void ExecuteAllUXTests();
 
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
     void ExecuteUXTestType(EMingUXTestType TestType};
 
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
-    void ExecuteNavigationTests(};
+    void ExecuteNavigationTests();
 
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
-    void ExecuteInterfaceTests(};
+    void ExecuteInterfaceTests();
 
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
-    void ExecuteFeedbackTests(};
+    void ExecuteFeedbackTests();
 
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
-    void ExecuteAccessibilityTests(};
+    void ExecuteAccessibilityTests();
 
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
-    void ExecutePerformanceTests(};
+    void ExecutePerformanceTests();
 
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
-    void ExecuteConsistencyTests(};
+    void ExecuteConsistencyTests();
 
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
-    void ExecuteIntuitivenessTests(};
+    void ExecuteIntuitivenessTests();
 
     UFUNCTION(BlueprintCallable, Category = "UX Testing")
-    void ExecuteResponsivenessTests(};
+    void ExecuteResponsivenessTests();
 
     // UX Simulation
     UFUNCTION(BlueprintCallable, Category = "UX Simulation")
-    void SimulateUserJourney(};
+    void SimulateUserJourney();
 
     UFUNCTION(BlueprintCallable, Category = "UX Simulation")
-    void SimulateNewPlayerExperience(};
+    void SimulateNewPlayerExperience();
 
     UFUNCTION(BlueprintCallable, Category = "UX Simulation")
-    void SimulateExperiencedPlayerFlow(};
+    void SimulateExperiencedPlayerFlow();
 
     UFUNCTION(BlueprintCallable, Category = "UX Simulation")
-    void SimulateAccessibilityScenarios(};
+    void SimulateAccessibilityScenarios();
 
     // UX Analysis
     UFUNCTION(BlueprintCallable, Category = "UX Analysis")
-    void AnalyzeUserInterface(};
+    void AnalyzeUserInterface();
 
     UFUNCTION(BlueprintCallable, Category = "UX Analysis")
-    void AnalyzeNavigationFlow(};
+    void AnalyzeNavigationFlow();
 
     UFUNCTION(BlueprintCallable, Category = "UX Analysis")
-    void AnalyzeFeedbackSystems(};
+    void AnalyzeFeedbackSystems();
 
     UFUNCTION(BlueprintCallable, Category = "UX Analysis")
-    void AnalyzeAccessibilityFeatures(};
+    void AnalyzeAccessibilityFeatures();
 
     // Results Evaluation
     UFUNCTION(BlueprintPure, Category = "Results")
@@ -208,7 +208,7 @@ public:
     bool IsUXAcceptable() const;
 
     UFUNCTION(BlueprintCallable, Category = "Results")
-    void GenerateUXReport(};
+    void GenerateUXReport();
 
     UFUNCTION(BlueprintCallable, Category = "Results")
     void ExportUXResults(const FString& FilePath) {};
@@ -254,9 +254,9 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeUXTests(};
-    void SetupUXTestEnvironment(};
-    void CleanupUXTestEnvironment(};
+    void InitializeUXTests();
+    void SetupUXTestEnvironment();
+    void CleanupUXTestEnvironment();
 
     // Test Execution
     void ExecuteNavigationTest(const FString& TestID) {};
@@ -269,45 +269,45 @@ protected:
     void ExecuteResponsivenessTest(const FString& TestID) {};
 
     // UX Simulation Functions
-    void SimulateMainMenuNavigation(};
-    void SimulateCampaignNavigation(};
-    void SimulateInGameInterface(};
-    void SimulateSettingsInterface(};
-    void SimulateSaveLoadInterface(};
-    void SimulatePauseMenu(};
+    void SimulateMainMenuNavigation();
+    void SimulateCampaignNavigation();
+    void SimulateInGameInterface();
+    void SimulateSettingsInterface();
+    void SimulateSaveLoadInterface();
+    void SimulatePauseMenu();
 
     // User Journey Simulation
-    void SimulateFirstTimePlayer(};
-    void SimulateReturningPlayer(};
-    void SimulatePowerUser(};
-    void SimulateCasualPlayer(};
+    void SimulateFirstTimePlayer();
+    void SimulateReturningPlayer();
+    void SimulatePowerUser();
+    void SimulateCasualPlayer();
 
     // Analysis Functions
-    void AnalyzeNavigationPatterns(};
-    void AnalyzeInterfaceElements(};
-    void AnalyzeFeedbackTiming(};
-    void AnalyzeAccessibilityCompliance(};
-    void AnalyzePerformanceImpact(};
-    void AnalyzeConsistencyIssues(};
-    void AnalyzeIntuitivenessFactors(};
-    void AnalyzeResponsivenessMetrics(};
+    void AnalyzeNavigationPatterns();
+    void AnalyzeInterfaceElements();
+    void AnalyzeFeedbackTiming();
+    void AnalyzeAccessibilityCompliance();
+    void AnalyzePerformanceImpact();
+    void AnalyzeConsistencyIssues();
+    void AnalyzeIntuitivenessFactors();
+    void AnalyzeResponsivenessMetrics();
 
     // Metrics Calculation
-    void CalculateNavigationEfficiency(};
-    void CalculateInterfaceClarity(};
-    void CalculateFeedbackQuality(};
-    void CalculateAccessibilityScore(};
-    void CalculatePerformanceScore(};
-    void CalculateConsistencyScore(};
-    void CalculateIntuitivenessScore(};
-    void CalculateResponsivenessScore(};
-    void CalculateOverallUXScore(};
+    void CalculateNavigationEfficiency();
+    void CalculateInterfaceClarity();
+    void CalculateFeedbackQuality();
+    void CalculateAccessibilityScore();
+    void CalculatePerformanceScore();
+    void CalculateConsistencyScore();
+    void CalculateIntuitivenessScore();
+    void CalculateResponsivenessScore();
+    void CalculateOverallUXScore();
 
     // Results Processing
-    void ProcessUXTestResults(};
-    void IdentifyUXIssues(};
-    void GenerateUXRecommendations(};
-    void CreateUXSummary(};
+    void ProcessUXTestResults();
+    void IdentifyUXIssues();
+    void GenerateUXRecommendations();
+    void CreateUXSummary();
 
     // Helpers
     FMingUXTestResult* FindUXTestResult(const FString& TestID) {};

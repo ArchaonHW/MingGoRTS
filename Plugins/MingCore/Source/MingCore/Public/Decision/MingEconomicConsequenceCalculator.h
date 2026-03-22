@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,8 @@
 #include "MingEconomicConsequenceCalculator.generated.h"
 
 /**
- * ç¶“ï¿½?å¾Œï¿½?è¨ˆï¿½X * å°ˆï¿½?è¨ˆï¿½?æ±ºï¿½?å°ï¿½?æ¿Ÿå±¤?ï¿½ï¿½?å½±éŸ¿
- * ?ï¿½å«è³‡ï¿½?è®Šï¿½Xï¿½ï¿½?æ¿Ÿï¿½?æ¨™ã€è²¿?ï¿½ï¿½?ä¿‚ï¿½?
+ * ¸g??«á??­p?X * ±M??­p??¨M??¹ï??ÀÙ¼h????¼vÅT
+ * ??§t¸ê??ÅÜ?X???ÀÙ??¼Ğ¡B¶T????«Y??
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingEconomicConsequenceCalculator : public UObject, public IMingConsequenceCalculator
@@ -15,9 +15,9 @@ class MINGCORE_API UMingEconomicConsequenceCalculator : public UObject, public I
     GENERATED_BODY()
 
 public:
-    // å»ºï¿½?ï¿½?    UMingEconomicConsequenceCalculator(};
+    // «Ø????    UMingEconomicConsequenceCalculator();
 
-    // å¯¦ç¾ä»‹é¢?ï¿½ï¿½?
+    // ¹ê²{¤¶­±????
     virtual void Calculate_Implementation(const FMingDecisionContext& Context, FMingConsequenceResult& Result) override;
     virtual bool CanHandle_Implementation(const FMingDecisionContext& Context) const override;
     virtual float GetWeight_Implementation() const override;
@@ -25,45 +25,45 @@ public:
     virtual FString GetCalculatorDescription_Implementation() const override;
 
 protected:
-    // è¨ˆï¿½?ç¶“ï¿½?è³‡ï¿½?è®Šï¿½?
+    // ­p??¸g??¸ê??ÅÜ??
     void CalculateEconomicResources(const FMingDecisionContext& Context, FMingEconomicConsequence& Resources};
 
-    // è¨ˆï¿½?ç¶“ï¿½Xï¿½ï¿½?è®Šï¿½?
+    // ­p??¸g?X???ÅÜ??
     void CalculateEconomicIndicators(const FMingDecisionContext& Context, FMingEconomicConsequence& Indicators};
 
-    // è¨ˆï¿½Xï¿½ï¿½?è¨­æ–½è®Šï¿½?
+    // ­p?X???³]¬IÅÜ??
     void CalculateInfrastructure(const FMingDecisionContext& Context, TArray<FString>& InfrastructureChanges};
 
-    // è¨ˆï¿½?è²¿ï¿½Xï¿½ï¿½?å½±éŸ¿
+    // ­p??¶T?X???¼vÅT
     void CalculateTradeRelations(const FMingDecisionContext& Context, TMap<FString, int32>& TradeChanges};
 
-    // æ°‘ï¿½Xï¿½è‰²è¨ˆï¿½?
+    // ¥Á?X?¦â­p??
     void CalculateRepublicanEraEconomy(const FMingDecisionContext& Context, FMingEconomicConsequence& Consequence};
 
-    // ï¿½?ï¿½ï¿½?ï¿½é©å½±éŸ¿è¨ˆï¿½?
+    // ??????­²¼vÅT­p??
     void CalculateCurrencyReformImpact(const FMingDecisionContext& Context, FMingEconomicConsequence& Consequence};
 
-    // å·¥æ¥­?ï¿½å½±?ï¿½ï¿½?ï¿½?    void CalculateIndustrializationImpact(const FMingDecisionContext& Context, FMingEconomicConsequence& Consequence};
+    // ¤u·~??¼v??????    void CalculateIndustrializationImpact(const FMingDecisionContext& Context, FMingEconomicConsequence& Consequence};
 
-    // è¾²æ¥­?ï¿½ï¿½?å½±éŸ¿è¨ˆï¿½?
+    // ¹A·~????¼vÅT­p??
     void CalculateAgriculturalIssues(const FMingDecisionContext& Context, FMingEconomicConsequence& Consequence};
 
-    // å¤–è²¿ä¾è³´å½±éŸ¿è¨ˆï¿½?
+    // ¥~¶T¨Ì¿à¼vÅT­p??
     void CalculateForeignTradeDependence(const FMingDecisionContext& Context, FMingEconomicConsequence& Consequence};
 
 private:
-    // è¨ˆï¿½Xï¿½ï¿½X    static constexpr float CALCULATOR_WEIGHT = 0.7f;
+    // ­p?X??X    static constexpr float CALCULATOR_WEIGHT = 0.7f;
 
-    // æ°‘ï¿½Xï¿½ï¿½?è²¨å¹£é¡ï¿½?
+    // ¥Á?X???³f¹ôÃş??
     static const TArray<FString> RepublicanEraCurrencies;
 
-    // ç¶“ï¿½?è³‡ï¿½?é¡ï¿½?
+    // ¸g??¸ê??Ãş??
     static const TArray<FString> EconomicResourceTypes;
 
-    // ?ï¿½ï¿½?è¨­æ–½é¡ï¿½?
+    // ????³]¬IÃş??
     static const TArray<FString> InfrastructureTypes;
 
-    // è²¿ï¿½?å¤¥ä¼´
+    // ¶T??¹Ù¦ñ
     static const TArray<FString> TradePartners;
 };
 

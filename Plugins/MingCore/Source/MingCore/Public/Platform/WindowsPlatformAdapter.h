@@ -1,20 +1,20 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Platform\IPlatformInterface.h"
 #include "WindowsPlatformAdapter.generated.h"
 
 /**
- * Windows Âπ≥Âè∞?ÔøΩÔøΩX */
+ * Windows •≠•x???X */
 UCLASS()
 class MINGCORE_API UWindowsPlatformAdapter : public UObject, public IPlatformInterface
 {
     GENERATED_BODY()
 
 public:
-    UWindowsPlatformAdapter(};
+    UWindowsPlatformAdapter();
 
-    // IPlatformInterface ÂØ¶Áèæ
+    // IPlatformInterface πÍ≤{
     virtual EPlatformType GetPlatformType() const override;
     virtual FPlatformCapabilities GetCapabilities() const override;
     virtual void Initialize() override;
@@ -31,7 +31,7 @@ public:
     virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) override;
     virtual FString LoadFromPlatformStorage(const FString& Key) const override;
 
-    // Windows ?ÔøΩÔøΩXÔøΩËÉΩ
+    // Windows ???X?Ø‡
     UFUNCTION(BlueprintCallable, Category = "Platform|Windows")
     bool IsRunningOnBattery() const;
 

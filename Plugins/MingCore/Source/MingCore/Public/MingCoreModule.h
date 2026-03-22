@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
@@ -32,10 +32,10 @@ public:
     }
 
 private:
-    // æ¨¡ï¿½Xï¿½ï¿½Xï¿½ç›¸X    void RegisterEventTypes(};
-    void SetupPerformanceMonitoring(};
+    // ¼Ò?X??X?¬ÛX    void RegisterEventTypes();
+    void SetupPerformanceMonitoring();
     
-    // ?ï¿½èƒ½Xï¿½ï¿½
+    // ??¯àX??
     class FPerformanceMonitor* PerformanceMonitor;
 };
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -11,22 +11,22 @@ class UMingRTSUnitManager;
 UENUM(BlueprintType)
 enum class ERTSEconomicPhase : uint8
 {
-    Growth,         // ������
-    Stagnation,     // ������
-    Recession,      // �I�h��
-    Depression,     // ������
-    Recovery,       // �_�d��
-    Boom            // �c�a��
+    Growth,         // ??????
+    Stagnation,     // ??????
+    Recession,      // ?I?h??
+    Depression,     // ??????
+    Recovery,       // ?_?d??
+    Boom            // ?c?a??
 };
 
 UENUM(BlueprintType)
 enum class ERTSTradeRoute : uint8
 {
-    Land,           // X��
-    Sea,            // ����
-    Air,            // ��X
-    Rail,           // X��
-    Digital         // X�TX
+    Land,           // X??
+    Sea,            // ????
+    Air,            // ??X
+    Rail,           // X??
+    Digital         // X?TX
 };
 
 UENUM(BlueprintType)
@@ -34,8 +34,8 @@ enum class ERTSMarketCondition : uint8
 {
     BullMarket,     // X
     BearMarket,     // X
-    Stable,         // íX
-    Volatile        // �iX
+    Stable,         // iX
+    Volatile        // ?iX
 };
 
 USTRUCT(BlueprintType)
@@ -209,8 +209,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourcePriceChanged, ERTSResour
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTradeRouteCompleted, const FString&, RouteID, float, Profit};
 
 /**
- * RTS�gX�t��
- * ��X�٬�X��
+ * RTS?gX?t??
+ * ??X???X??
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSEconomicSystem : public UObject
@@ -218,12 +218,12 @@ class MINGCORE_API UMingRTSEconomicSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSEconomicSystem(};
+    UMingRTSEconomicSystem();
 
     // X    UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void InitializeEconomicSystem(UMingRTSResourceManager* InResourceManager, UMingRTSBuildingSystem* InBuildingSystem, UMingRTSUnitManager* InUnitManager};
 
-    // �gX��X
+    // ?gX??X
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void UpdateEconomicData(float DeltaTime};
 
@@ -242,9 +242,9 @@ public:
     UFUNCTION(BlueprintPure, Category = "RTS Economic System")
     ERTSMarketCondition GetMarketCondition() const { return EconomicData.MarketCondition; }
 
-    // ��X���X
+    // ??X???X
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
-    void UpdateResourcePrices(};
+    void UpdateResourcePrices();
 
     UFUNCTION(BlueprintPure, Category = "RTS Economic System")
     float GetResourcePrice(ERTSResourceType ResourceType) const;
@@ -264,7 +264,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void UpdateResourceSupply(ERTSResourceType ResourceType, float Supply};
 
-    // �TX��X��X
+    // ?TX??X??X
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     FString CreateTradeRoute(const FString& Origin, const FString& Destination, ERTSTradeRoute RouteType};
 
@@ -284,9 +284,9 @@ public:
     float CalculateTradeProfit(const FString& RouteID, ERTSResourceType ResourceType, float Volume) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
-    void OptimizeTradeRoutes(};
+    void OptimizeTradeRoutes();
 
-    // ����X
+    // ????X
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     FRTSMarketData GetMarketData(ERTSResourceType ResourceType) const;
 
@@ -294,7 +294,7 @@ public:
     TArray<FRTSMarketData> GetAllMarketData() const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
-    void AnalyzeMarketTrends(};
+    void AnalyzeMarketTrends();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     bool IsMarketBullish() const;
@@ -305,7 +305,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     float GetMarketVolatility() const;
 
-    // �gX
+    // ?gX
     UFUNCTION(BlueprintPure, Category = "RTS Economic System")
     float GetGDP() const { return EconomicData.GDP; }
 
@@ -330,7 +330,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "RTS Economic System")
     float GetEconomicGrowthRate() const { return EconomicData.EconomicGrowthRate; }
 
-    // �gX
+    // ?gX
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void SetInterestRate(float Rate};
 
@@ -346,7 +346,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void RegulateMarket(ERTSResourceType ResourceType, float RegulationLevel};
 
-    // �gX��
+    // ?gX??
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     float PredictGDP(float TimeInMonths) const;
 
@@ -359,7 +359,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     bool PredictRecession(float TimeInMonths) const;
 
-    // �gX�ƥ�
+    // ?gX???
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void TriggerEconomicEvent(const FString& EventName, float Impact};
 
@@ -372,7 +372,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void HandleFinancialCrisis(float CrisisSeverity};
 
-    // ��X�H��
+    // ??X?H??
     UFUNCTION(BlueprintPure, Category = "RTS Economic System")
     int32 GetActiveTradeRouteCount() const;
 
@@ -385,20 +385,20 @@ public:
     UFUNCTION(BlueprintPure, Category = "RTS Economic System")
     float GetMarketCapitalization() const;
 
-    // �gX�`����Žվ�
+    // ?gX?`???????
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
-    void BalanceEconomicCycle(};
+    void BalanceEconomicCycle();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
-    void StabilizeMarket(};
+    void StabilizeMarket();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
-    void OptimizeTradeRoutes(};
+    void OptimizeTradeRoutes();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
-    void ImplementSmartEconomicManagement(};
+    void ImplementSmartEconomicManagement();
 
-    // �ƥ�
+    // ???
     UPROPERTY(BlueprintAssignable, Category = "RTS Economic Events")
     FOnEconomicPhaseChanged OnEconomicPhaseChanged;
 
@@ -412,7 +412,7 @@ public:
     FOnTradeRouteCompleted OnTradeRouteCompleted;
 
 protected:
-    // �t�Τޥ�
+    // ?t?�V??
     UPROPERTY()
     TObjectPtr<UMingRTSResourceManager> ResourceManager;
 
@@ -422,7 +422,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
-    // �gX
+    // ?gX
     UPROPERTY()
     FRTSEconomicData EconomicData;
 
@@ -432,7 +432,7 @@ protected:
     UPROPERTY()
     TMap<FString, FRTSTradeRouteData> TradeRoutes;
 
-    // �]�m
+    // ?]?m
     UPROPERTY(BlueprintReadWrite, Category = "Economic Settings")
     float EconomicUpdateInterval = 1.0f;
 
@@ -457,7 +457,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Economic Settings")
     bool bAutoOptimizeTrade = true;
 
-    // ���Žվ�X��
+    // ??????X??
     UPROPERTY(BlueprintReadWrite, Category = "Balance Settings")
     float EconomicStabilityThreshold = 0.8f;
 
@@ -485,9 +485,9 @@ protected:
     UPROPERTY()
     float TotalTradeProfit;
 
-    // X��X��
-    void InitializeEconomicData(};
-    void InitializeMarketData(};
+    // X??X??
+    void InitializeEconomicData();
+    void InitializeMarketData();
     void ProcessEconomicCycle(float DeltaTime};
     void ProcessPriceFluctuations(float DeltaTime};
     void ProcessTradeActivity(float DeltaTime};
@@ -497,9 +497,9 @@ protected:
     void UpdateTradeBalance(float DeltaTime};
     void UpdateConsumerConfidence(float DeltaTime};
     void UpdateIndustrialProduction(float DeltaTime};
-    void CalculateEconomicGrowth(};
-    void DetermineEconomicPhase(};
-    void DetermineMarketCondition(};
+    void CalculateEconomicGrowth();
+    void DetermineEconomicPhase();
+    void DetermineMarketCondition();
     float CalculateResourcePrice(ERTSResourceType ResourceType) const;
     void UpdateMarketData(ERTSResourceType ResourceType};
     FString GenerateTradeRouteID() const;
@@ -507,17 +507,17 @@ protected:
     void ApplyEconomicPolicies(float DeltaTime};
     void HandleRandomEvents(float DeltaTime};
 
-    // ���Žվ�X��X��
-    void OptimizeEconomicIndicators(};
-    void StabilizeMarketPrices(};
-    void BalanceTradeFlows(};
-    void CalculateOptimalEconomicPolicy(};
+    // ??????X??X??
+    void OptimizeEconomicIndicators();
+    void StabilizeMarketPrices();
+    void BalanceTradeFlows();
+    void CalculateOptimalEconomicPolicy();
     float CalculateEconomicStability() const;
-    void AutoBalanceEconomy(};
-    void OptimizeResourceAllocation(};
+    void AutoBalanceEconomy();
+    void OptimizeResourceAllocation();
 
 private:
-    // ���UX��
+    // ???UX??
     void NotifyEconomicPhaseChanged(ERTSEconomicPhase OldPhase, ERTSEconomicPhase NewPhase};
     void NotifyMarketConditionChanged(ERTSMarketCondition NewCondition};
     void NotifyResourcePriceChanged(ERTSResourceType ResourceType, float NewPrice};

@@ -1,19 +1,19 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingDecisionConsequenceManager.generated.h"
 
-// ?ï¿½ï¿½Xï¿½ï¿½?
+// ???X???
 class IMingConsequenceCalculator;
 class IMingConsequenceApplier;
 
-// æ±ºï¿½?ä¸Šï¿½XUSTRUCT(BlueprintType)
+// ¨M??¤W?XUSTRUCT(BlueprintType)
 struct MINGCORE_API FMingDecisionContext
 {
     GENERATED_BODY()
 
-    // æ±ºï¿½Xï¿½æœ¬ä¿¡æ¯
+    // ¨M?X?¥»«H®§
     UPROPERTY(BlueprintReadOnly)
     FString DecisionID;
 
@@ -23,55 +23,55 @@ struct MINGCORE_API FMingDecisionContext
     UPROPERTY(BlueprintReadOnly)
     FString DecisionDescription;
 
-    // æ±ºï¿½Xï¿½ï¿½?
+    // ¨M?X???
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> SelectedOptions;
 
-    // ?ï¿½ï¿½?ä¸Šï¿½X    UPROPERTY(BlueprintReadOnly)
+    // ????¤W?X    UPROPERTY(BlueprintReadOnly)
     int32 CurrentYear;
 
     UPROPERTY(BlueprintReadOnly)
     int32 CurrentMonth;
 
-    // ?ï¿½ï¿½?ä¸Šï¿½X    UPROPERTY(BlueprintReadOnly)
+    // ????¤W?X    UPROPERTY(BlueprintReadOnly)
     FString CurrentRegion;
 
-    // è§’è‰²ä¸Šï¿½X    UPROPERTY(BlueprintReadOnly)
+    // ¨¤¦â¤W?X    UPROPERTY(BlueprintReadOnly)
     TArray<FString> InvolvedCharacters;
 
-    // æ­·å²ä¸Šï¿½X    UPROPERTY(BlueprintReadOnly)
+    // ¾ú¥v¤W?X    UPROPERTY(BlueprintReadOnly)
     TArray<FString> PreviousEvents;
 };
 
-// ?ï¿½æ²»å¾Œï¿½?
+// ??ªv«á??
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingPoliticalConsequence
 {
     GENERATED_BODY()
 
-    // æ´¾ç³»?ï¿½ï¿½?è®Šï¿½?
+    // ¬£¨t????ÅÜ??
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, float> FactionRelationChanges;
 
-    // ?ï¿½æ²»ç©©ï¿½X    UPROPERTY(BlueprintReadOnly)
+    // ??ªvÃ­?X    UPROPERTY(BlueprintReadOnly)
     float PoliticalStabilityChange;
 
-    // ?ï¿½æ²»?ï¿½ï¿½?
+    // ??ªv????
     UPROPERTY(BlueprintReadOnly)
     float PoliticalReputationChange;
 
-    // ?ï¿½éƒ¨?ï¿½æ²»å£“ï¿½?
+    // ??³¡??ªvÀ£??
     UPROPERTY(BlueprintReadOnly)
     float InternalPoliticalPressure;
 };
 
-// è»ï¿½?å¾Œï¿½?
+// ­x??«á??
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingMilitaryConsequence
 {
     GENERATED_BODY()
 
-    // è»ï¿½?å¯¦ï¿½?è®Šï¿½?
+    // ­x??¹ê??ÅÜ??
     UPROPERTY(BlueprintReadOnly)
     int32 ManpowerChange;
 
@@ -81,25 +81,25 @@ struct MINGCORE_API FMingMilitaryConsequence
     UPROPERTY(BlueprintReadOnly)
     float MoraleChange;
 
-    // ?ï¿½çˆ­?ï¿½?ï¿½ï¿½X    UPROPERTY(BlueprintReadOnly)
+    // ??ª§?????X    UPROPERTY(BlueprintReadOnly)
     TArray<FString> WarStatusChanges;
 
-    // è»ï¿½Xï¿½ï¿½?è®Šï¿½?
+    // ­x?X???ÅÜ??
     UPROPERTY(BlueprintReadOnly)
     float MilitaryBudgetChange;
 };
 
-// ç¶“ï¿½?å¾Œï¿½?
+// ¸g??«á??
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingEconomicConsequence
 {
     GENERATED_BODY()
 
-    // ç¶“ï¿½?è³‡ï¿½?è®Šï¿½?
+    // ¸g??¸ê??ÅÜ??
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, int32> ResourceChanges;
 
-    // ç¶“ï¿½Xï¿½ï¿½?
+    // ¸g?X???
     UPROPERTY(BlueprintReadOnly)
     float GDPChange;
 
@@ -109,43 +109,43 @@ struct MINGCORE_API FMingEconomicConsequence
     UPROPERTY(BlueprintReadOnly)
     float TaxRevenueChange;
 
-    // ?ï¿½ï¿½?è¨­æ–½è®Šï¿½?
+    // ????³]¬IÅÜ??
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> InfrastructureChanges;
 };
 
-// ç¤¾ï¿½?å¾Œï¿½?
+// ªÀ??«á??
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingSocialConsequence
 {
     GENERATED_BODY()
 
-    // æ°‘çœ¾?ï¿½ï¿½?ï¿½?    UPROPERTY(BlueprintReadOnly)
+    // ¥Á²³??????    UPROPERTY(BlueprintReadOnly)
     float PublicSupportChange;
 
-    // ç¤¾ï¿½?ç©©ï¿½X    UPROPERTY(BlueprintReadOnly)
+    // ªÀ??Ã­?X    UPROPERTY(BlueprintReadOnly)
     float SocialStabilityChange;
 
-    // ?ï¿½è‚²æ°´å¹³
+    // ??¨|¤ô¥­
     UPROPERTY(BlueprintReadOnly)
     float EducationLevelChange;
 
-    // ?ï¿½å…±?ï¿½åº·
+    // ??¦@??±d
     UPROPERTY(BlueprintReadOnly)
     float PublicHealthChange;
 
-    // ç¤¾ï¿½Xï¿½ï¿½?
+    // ªÀ?X???
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> SocialMovements;
 };
 
-// å¾Œï¿½?çµï¿½?
+// «á??µ²??
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingConsequenceResult
 {
     GENERATED_BODY()
 
-    // å¾Œï¿½Xï¿½æœ¬ä¿¡æ¯
+    // «á?X?¥»«H®§
     UPROPERTY(BlueprintReadOnly)
     FString ConsequenceID;
 
@@ -155,7 +155,7 @@ struct MINGCORE_API FMingConsequenceResult
     UPROPERTY(BlueprintReadOnly)
     FString ConsequenceDescription;
 
-    // å¾Œï¿½?é¡ï¿½Xï¿½ï¿½?
+    // «á??Ãş?X???
     UPROPERTY(BlueprintReadOnly)
     FMingPoliticalConsequence PoliticalConsequences;
 
@@ -168,91 +168,91 @@ struct MINGCORE_API FMingConsequenceResult
     UPROPERTY(BlueprintReadOnly)
     FMingSocialConsequence SocialConsequences;
 
-    // å¾Œï¿½Xï¿½ï¿½?ç¨‹åº¦
+    // «á?X???µ{«×
     UPROPERTY(BlueprintReadOnly)
     float SeverityLevel;
 
-    // å¾Œï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // «á?X??X???
     UPROPERTY(BlueprintReadOnly)
     int32 DurationMonths;
 
-    // å¾Œï¿½Xï¿½ï¿½X    UPROPERTY(BlueprintReadOnly)
+    // «á?X??X    UPROPERTY(BlueprintReadOnly)
     bool bIsImmediate;
 
     UPROPERTY(BlueprintReadOnly)
     bool bIsLongTerm;
 
-    // å¾Œï¿½?è§¸ç™¼?ï¿½ï¿½?ï¿½?    UPROPERTY(BlueprintReadOnly)
+    // «á??Ä²µo??????    UPROPERTY(BlueprintReadOnly)
     TArray<FString> TriggeredEvents;
 };
 
 /**
- * æ±ºï¿½?å¾Œï¿½?ç®¡ï¿½X * è² è²¬è¨ˆï¿½Xï¿½ï¿½Xï¿½æ±ºç­–ï¿½Xï¿½ï¿½?å¯¦ç¾å®Œæ•´?ï¿½æ±ºç­–ï¿½X */
+ * ¨M??«á??ºŞ?X * ­t³d­p?X??X?¨Mµ¦?X???¹ê²{§¹¾ã??¨Mµ¦?X */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingDecisionConsequenceManager : public UObject
 {
     GENERATED_BODY()
 
 public:
-    // å»ºï¿½?ï¿½?    UMingDecisionConsequenceManager(};
+    // «Ø????    UMingDecisionConsequenceManager();
 
-    // ?ï¿½ï¿½Xï¿½ç®¡?ï¿½å™¨
+    // ???X?ºŞ??¾¹
     UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
-    void Initialize(};
+    void Initialize();
 
-    // å¾Œï¿½?è¨ˆï¿½?ä¸»ï¿½X    UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
+    // «á??­p??¥D?X    UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
     void CalculateConsequences(const FMingDecisionContext& DecisionContext, FMingConsequenceResult& OutResult};
 
-    // å¾Œï¿½Xï¿½ç”¨
+    // «á?X?¥Î
     UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
     void ApplyConsequences(const FMingConsequenceResult& ConsequenceResult};
 
-    // å¾Œï¿½Xï¿½è¦½
+    // «á?X?Äı
     UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
     void PreviewConsequences(const FMingDecisionContext& DecisionContext, TArray<FMingConsequenceResult>& OutPreviews};
 
-    // å¾Œï¿½Xï¿½éŠ·
+    // «á?X?¾P
     UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
     bool UndoConsequences(const FString& ConsequenceID};
 
-    // ?ï¿½ï¿½?å¾Œï¿½?æ­·å²
+    // ????«á??¾ú¥v
     UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
     TArray<FMingConsequenceResult> GetConsequenceHistory() const { return ConsequenceHistory; }
 
-    // æ¸…é™¤å¾Œï¿½?æ­·å²
+    // ²M°£«á??¾ú¥v
     UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
-    void ClearConsequenceHistory(};
+    void ClearConsequenceHistory();
 
 protected:
-    // å¾Œï¿½?è¨ˆï¿½X    TArray<TSharedPtr<IMingConsequenceCalculator>> ConsequenceCalculators;
+    // «á??­p?X    TArray<TSharedPtr<IMingConsequenceCalculator>> ConsequenceCalculators;
 
-    // å¾Œï¿½Xï¿½ç”¨X    TArray<TSharedPtr<IMingConsequenceApplier>> ConsequenceAppliers;
+    // «á?X?¥ÎX    TArray<TSharedPtr<IMingConsequenceApplier>> ConsequenceAppliers;
 
-    // å¾Œï¿½?æ­·å²
+    // «á??¾ú¥v
     TArray<FMingConsequenceResult> ConsequenceHistory;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?ç®—å™¨
-    void InitializeCalculators(};
+    // ???X???ºâ¾¹
+    void InitializeCalculators();
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½å™¨
-    void InitializeAppliers(};
+    // ???X??X?¾¹
+    void InitializeAppliers();
 
-    // ?ï¿½ï¿½?å¾Œï¿½?ID
+    // ????«á??ID
     FString GenerateConsequenceID(const FMingDecisionContext& DecisionContext) const;
 
-    // è¨ˆï¿½?ç¶œï¿½Xï¿½ï¿½?ç¨‹åº¦
+    // ­p??ºî?X???µ{«×
     void CalculateOverallSeverity(FMingConsequenceResult& Result) const;
 
-    // ?ï¿½ï¿½?å¾Œï¿½Xï¿½è¿°
+    // ????«á?X?­z
     void GenerateConsequenceDescription(FMingConsequenceResult& Result) const;
 
-    // è¨˜ï¿½?å¾Œï¿½?è¨ˆï¿½?
+    // °O??«á??­p??
     void RecordConsequenceCalculation(const FMingDecisionContext& Context, const FMingConsequenceResult& Result};
 
-    // é©—ï¿½?å¾Œï¿½Xï¿½ï¿½Xï¿½ï¿½?    bool CanApplyConsequences(const FMingConsequenceResult& ConsequenceResult) const;
+    // Åç??«á?X??X???    bool CanApplyConsequences(const FMingConsequenceResult& ConsequenceResult) const;
 
 private:
-    // ?ï¿½å¦å·²ï¿½?å§‹ï¿½?
+    // ??§_¤w??©l??
     bool bInitialized = false;
 };
 

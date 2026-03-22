@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,8 @@
 #include "MingSocialConsequenceCalculator.generated.h"
 
 /**
- * ç¤¾ï¿½?å¾Œï¿½?è¨ˆï¿½X * å°ˆï¿½?è¨ˆï¿½?æ±ºï¿½?å°ç¤¾?ï¿½å±¤?ï¿½ï¿½?å½±éŸ¿
- * ?ï¿½å«æ°‘çœ¾?ï¿½ï¿½?åº¦ã€ç¤¾?ï¿½ç©©å®šæ€§ã€ï¿½Xï¿½å½±?ï¿½ï¿½?
+ * ªÀ??«á??­p?X * ±M??­p??¨M??¹ïªÀ??¼h????¼vÅT
+ * ??§t¥Á²³????«×¡BªÀ??Ã­©w©Ê¡B?X?¼v????
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingSocialConsequenceCalculator : public UObject, public IMingConsequenceCalculator
@@ -15,9 +15,9 @@ class MINGCORE_API UMingSocialConsequenceCalculator : public UObject, public IMi
     GENERATED_BODY()
 
 public:
-    // å»ºï¿½?ï¿½?    UMingSocialConsequenceCalculator(};
+    // «Ø????    UMingSocialConsequenceCalculator();
 
-    // å¯¦ç¾ä»‹é¢?ï¿½ï¿½?
+    // ¹ê²{¤¶­±????
     virtual void Calculate_Implementation(const FMingDecisionContext& Context, FMingConsequenceResult& Result) override;
     virtual bool CanHandle_Implementation(const FMingDecisionContext& Context) const override;
     virtual float GetWeight_Implementation() const override;
@@ -25,46 +25,46 @@ public:
     virtual FString GetCalculatorDescription_Implementation() const override;
 
 protected:
-    // è¨ˆï¿½?æ°‘çœ¾?ï¿½ï¿½?ï¿½?    void CalculatePublicSupport(const FMingDecisionContext& Context, FMingSocialConsequence& Support};
+    // ­p??¥Á²³??????    void CalculatePublicSupport(const FMingDecisionContext& Context, FMingSocialConsequence& Support};
 
-    // è¨ˆï¿½?ç¤¾ï¿½?ç©©ï¿½X    void CalculateSocialStability(const FMingDecisionContext& Context, float& StabilityChange};
+    // ­p??ªÀ??Ã­?X    void CalculateSocialStability(const FMingDecisionContext& Context, float& StabilityChange};
 
-    // è¨ˆï¿½Xï¿½è‚²æ°´å¹³å½±éŸ¿
+    // ­p?X?¨|¤ô¥­¼vÅT
     void CalculateEducationLevel(const FMingDecisionContext& Context, float& EducationChange};
 
-    // è¨ˆï¿½Xï¿½å…±?ï¿½åº·å½±éŸ¿
+    // ­p?X?¦@??±d¼vÅT
     void CalculatePublicHealth(const FMingDecisionContext& Context, float& HealthChange};
 
-    // è¨ˆï¿½?ç¤¾ï¿½Xï¿½ï¿½?
+    // ­p??ªÀ?X???
     void CalculateSocialMovements(const FMingDecisionContext& Context, TArray<FString>& Movements};
 
-    // æ°‘ï¿½Xï¿½è‰²è¨ˆï¿½?
+    // ¥Á?X?¦â­p??
     void CalculateRepublicanEraSociety(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½å½±?ï¿½ï¿½?ï¿½?    void CalculateNewCultureMovement(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence};
+    // ???X??X?¼v??????    void CalculateNewCultureMovement(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence};
 
-    // ?ï¿½è‚²?ï¿½é©å½±éŸ¿è¨ˆï¿½?
+    // ??¨|??­²¼vÅT­p??
     void CalculateEducationReform(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence};
 
-    // å©¦å¥³ï¿½?ï¿½ï¿½å½±éŸ¿è¨ˆï¿½?
+    // °ü¤k????¼vÅT­p??
     void CalculateWomenLiberation(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?å½±éŸ¿è¨ˆï¿½?
+    // ???X???¼vÅT­p??
     void CalculateUrbanDevelopment(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence};
 
 private:
-    // è¨ˆï¿½Xï¿½ï¿½X    static constexpr float CALCULATOR_WEIGHT = 0.6f;
+    // ­p?X??X    static constexpr float CALCULATOR_WEIGHT = 0.6f;
 
-    // æ°‘ï¿½Xï¿½ï¿½?ç¤¾ï¿½Xï¿½ï¿½Xï¿½è¡¨
+    // ¥Á?X???ªÀ?X??X?ªí
     static const TArray<FString> RepublicanEraMovements;
 
-    // ?ï¿½è‚²æ©Ÿï¿½?é¡ï¿½?
+    // ??¨|¾÷??Ãş??
     static const TArray<FString> EducationInstitutions;
 
-    // ä¸»ï¿½Xï¿½ï¿½Xï¿½è¡¨
+    // ¥D?X??X?ªí
     static const TArray<FString> MajorCities;
 
-    // ç¤¾ï¿½Xï¿½å±¤
+    // ªÀ?X?¼h
     static const TArray<FString> SocialClasses;
 };
 

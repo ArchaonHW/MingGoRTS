@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -13,39 +13,39 @@ class MINGINTEGRATION_API UMingIntegrationTestExecutor : public UObject
     GENERATED_BODY()
 
 public:
-    UMingIntegrationTestExecutor(};
+    UMingIntegrationTestExecutor();
 
     // Test Execution Control
     UFUNCTION(BlueprintCallable, Category = "Test Execution")
-    void ExecuteAllTests(};
+    void ExecuteAllTests();
 
     UFUNCTION(BlueprintCallable, Category = "Test Execution")
-    void ExecuteLoadOrderValidation(};
+    void ExecuteLoadOrderValidation();
 
     UFUNCTION(BlueprintCallable, Category = "Test Execution")
-    void ExecuteDependencyValidation(};
+    void ExecuteDependencyValidation();
 
     UFUNCTION(BlueprintCallable, Category = "Test Execution")
-    void ExecuteIntegrationTests(};
+    void ExecuteIntegrationTests();
 
     UFUNCTION(BlueprintCallable, Category = "Test Execution")
-    void ExecutePerformanceBenchmarks(};
+    void ExecutePerformanceBenchmarks();
 
     UFUNCTION(BlueprintCallable, Category = "Test Execution")
-    void ExecuteCommunicationTests(};
+    void ExecuteCommunicationTests();
 
     UFUNCTION(BlueprintCallable, Category = "Test Execution")
-    void ExecuteHealthChecks(};
+    void ExecuteHealthChecks();
 
     // Real-time Monitoring
     UFUNCTION(BlueprintCallable, Category = "Monitoring")
-    void StartRealTimeMonitoring(};
+    void StartRealTimeMonitoring();
 
     UFUNCTION(BlueprintCallable, Category = "Monitoring")
-    void StopRealTimeMonitoring(};
+    void StopRealTimeMonitoring();
 
     UFUNCTION(BlueprintCallable, Category = "Monitoring")
-    void UpdateRealTimeMetrics(};
+    void UpdateRealTimeMetrics();
 
     UFUNCTION(BlueprintPure, Category = "Monitoring")
     bool IsMonitoringActive() const;
@@ -58,7 +58,7 @@ public:
     float GetOverallSuccessRate() const;
 
     UFUNCTION(BlueprintCallable, Category = "Results")
-    void GenerateTestReport(};
+    void GenerateTestReport();
 
     UFUNCTION(BlueprintCallable, Category = "Results")
     void ExportTestResults(const FString& FilePath) {};
@@ -74,26 +74,26 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeValidator(};
-    void SetupTestEnvironment(};
-    void CleanupTestEnvironment(};
+    void InitializeValidator();
+    void SetupTestEnvironment();
+    void CleanupTestEnvironment();
 
     // Test Execution Helpers
     void ExecuteTestWithTimeout(EMingValidationType ValidationType, float TimeoutSeconds};
-    void MonitorTestProgress(};
+    void MonitorTestProgress();
     void HandleTestCompletion(EMingValidationType ValidationType, bool bSuccess};
 
     // Real-time Monitoring
-    void CollectRealTimeData(};
-    void UpdatePerformanceMetrics(};
-    void CheckSystemStability(};
-    void LogRealTimeStatus(};
+    void CollectRealTimeData();
+    void UpdatePerformanceMetrics();
+    void CheckSystemStability();
+    void LogRealTimeStatus();
 
     // Results Processing
-    void ProcessTestResults(};
-    void AnalyzeFailures(};
-    void GenerateRecommendations(};
-    void CreateDetailedReport(};
+    void ProcessTestResults();
+    void AnalyzeFailures();
+    void GenerateRecommendations();
+    void CreateDetailedReport();
 
     // Utility Functions
     void LogTestEvent(const FString& Event, const FString& Details) {};

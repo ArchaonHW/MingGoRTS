@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -11,29 +11,29 @@ class UMingRTSUnitManager;
 UENUM(BlueprintType)
 enum class ERTSPathfindingAlgorithm : uint8
 {
-    AStar,          // A*��X
-    Dijkstra,       // Dijkstra��X
-    FloydWarshall,  // Floyd-Warshall��X
-    Custom          // �۩w�q��k
+    AStar,          // A*??X
+    Dijkstra,       // Dijkstra??X
+    FloydWarshall,  // Floyd-Warshall??X
+    Custom          // ??w?q??k
 };
 
 UENUM(BlueprintType)
 enum class ERTSTerrainType : uint8
 {
-    Walkable,       // �i�樫
-    Blocked,        // ����X
-    Difficult,      // X��X��
-    Water,          // ��X
-    Mountain,       // �s�a
-    Forest          // ��X
+    Walkable,       // ?i??
+    Blocked,        // ????X
+    Difficult,      // X??X??
+    Water,          // ??X
+    Mountain,       // ?s?a
+    Forest          // ??X
 };
 
 UENUM(BlueprintType)
 enum class ERTSPathfindingState : uint8
 {
-    Idle,           // ��X
-    Calculating,    // �pX    Ready,          // �NX
-    Failed          // ��X
+    Idle,           // ??X
+    Calculating,    // ?pX    Ready,          // ?NX
+    Failed          // ??X
 };
 
 USTRUCT(BlueprintType)
@@ -45,14 +45,14 @@ struct FRTSPathNode
     FVector Position;
 
     UPROPERTY(BlueprintReadOnly, Category = "Path Node")
-    float GCost;        // �q�_�I��X�`�IX��X��
+    float GCost;        // ?q?_?I??X?`?IX??X??
 
     UPROPERTY(BlueprintReadOnly, Category = "Path Node")
-    float HCost;        // �q��X�I���X��X
+    float HCost;        // ?q??X?I???X??X
     UPROPERTY(BlueprintReadOnly, Category = "Path Node")
     float FCost;        // GCost + HCost
 
-    // �`X�GFRTSPathNode X��X���AXUPROPERTY
+    // ?`X?GFRTSPathNode X??X???AXUPROPERTY
     FRTSPathNode* Parent;
 
     UPROPERTY(BlueprintReadOnly, Category = "Path Node")
@@ -100,7 +100,7 @@ struct FRTSPathRequest
     UPROPERTY(BlueprintReadOnly, Category = "Path Request")
     FVector TargetLocation;
 
-    // �`X�GAMingGoRTSUnit X�D�MX��X�AX UPROPERTY
+    // ?`X?GAMingGoRTSUnit X?D?MX??X?AX UPROPERTY
     TObjectPtr<AMingGoRTSUnit> RequestingUnit;
 
     UPROPERTY(BlueprintReadOnly, Category = "Path Request")
@@ -123,7 +123,7 @@ struct FRTSPathRequest
         Algorithm = ERTSPathfindingAlgorithm::AStar;
         MaxPathLength = 10000.0f;
         bAllowPartialPath = true;
-        RequestTime = FDateTime::Now(};
+        RequestTime = FDateTime::Now();
     }
 };
 
@@ -156,7 +156,7 @@ struct FRTSPathResult
         PathLength = 0.0f;
         CalculationTime = 0.0f;
         AlgorithmUsed = ERTSPathfindingAlgorithm::AStar;
-        CompletionTime = FDateTime::Now(};
+        CompletionTime = FDateTime::Now();
     }
 };
 
@@ -164,19 +164,19 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPathCalculated, const FRTSPathRe
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPathfindingStateChanged, ERTSPathfindingState, NewState};
 
 /**
- * RTS��X�WX * X�h�شM���X��X */
+ * RTS??X?WX * X?h??M???X??X */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSPathfinder : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingRTSPathfinder(};
+    UMingRTSPathfinder();
 
     // X    UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void InitializePathfinder(UMingRTSUnitManager* InUnitManager};
 
-    // ��X�pX
+    // ??X?pX
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void CalculatePathAsync(const FRTSPathRequest& Request) {};
 
@@ -186,7 +186,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     TArray<FVector> FindPath(FVector Start, FVector Target, ERTSPathfindingAlgorithm Algorithm = ERTSPathfindingAlgorithm::AStar};
 
-    // ��X
+    // ??X
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     TArray<FVector> OptimizePath(const TArray<FVector>& Path};
 
@@ -200,7 +200,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     TArray<FVector> RecalculatePath(const TArray<FVector>& OriginalPath, FVector CurrentPosition, FVector TargetPosition};
 
-    // X�Ψt��
+    // X?�Zt??
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void SetTerrainType(FVector Location, ERTSTerrainType TerrainType};
 
@@ -211,19 +211,19 @@ public:
     bool IsLocationWalkable(FVector Location) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
-    void UpdateTerrainMap(};
+    void UpdateTerrainMap();
 
-    // ���t��
+    // ???t??
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void CreateNavigationGrid(FVector Center, float GridSize, int32 GridResolution};
 
-    // �`X�GFRTSPathNode X���AXUFUNCTION BlueprintCallable
+    // ?`X?GFRTSPathNode X???AXUFUNCTION BlueprintCallable
     FRTSPathNode* GetNodeAtLocation(FVector Location) const;
 
-    // �`X�GFRTSPathNode X���AXUFUNCTION BlueprintCallable
+    // ?`X?GFRTSPathNode X???AXUFUNCTION BlueprintCallable
     TArray<FRTSPathNode*> GetNeighborNodes(FRTSPathNode* Node) const;
 
-    // X��X
+    // X??X
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     float GetAverageCalculationTime() const;
 
@@ -231,16 +231,16 @@ public:
     int32 GetPendingRequestCount() const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
-    void ClearPathCache(};
+    void ClearPathCache();
 
-    // �ո�X��
+    // ???X??
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void DrawDebugPath(const TArray<FVector>& Path, FLinearColor Color = FLinearColor::Green, float Duration = 5.0f};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void DrawDebugGrid(FLinearColor Color = FLinearColor::White, float Duration = 10.0f};
 
-    // �ƥ�eX
+    // ???eX
     UPROPERTY(BlueprintAssignable, Category = "RTS Pathfinder")
     FOnPathCalculated OnPathCalculated;
 
@@ -248,40 +248,40 @@ public:
     FOnPathfindingStateChanged OnPathfindingStateChanged;
 
 protected:
-    // X��X
+    // X??X
     TArray<FVector> CalculateAStarPath(FVector Start, FVector Target};
     TArray<FVector> CalculateDijkstraPath(FVector Start, FVector Target};
     TArray<FVector> CalculateFloydWarshallPath(FVector Start, FVector Target};
 
-    // ���UX
+    // ???UX
     float CalculateHeuristic(FVector From, FVector To) const;
     float CalculateTerrainCost(FVector Location) const;
     bool IsValidLocation(FVector Location) const;
     TArray<FVector> ReconstructPath(FRTSPathNode* EndNode) const;
 
-    // ����X
-    void InitializeGrid(};
-    void ClearGrid(};
+    // ????X
+    void InitializeGrid();
+    void ClearGrid();
     FRTSPathNode* CreateNode(FVector Location, bool bIsWalkable = true, ERTSTerrainType TerrainType = ERTSTerrainType::Walkable};
 
-    // X�BX
-    void ProcessPendingRequests(};
+    // X?BX
+    void ProcessPendingRequests();
     void CompletePathRequest(const FRTSPathRequest& Request, const FRTSPathResult& Result) {};
 
 protected:
-    // X�ե�
+    // X???
     UPROPERTY()
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
-    // ��X�pX
+    // ??X?pX
     UPROPERTY()
     TArray<FRTSPathRequest> PendingRequests;
 
     UPROPERTY()
     TMap<FString, FRTSPathResult> PathCache;
 
-    // ���t��
-    // �`X�GX�а}X UPROPERTY
+    // ???t??
+    // ?`X?GX??}X UPROPERTY
     TArray<TArray<FRTSPathNode*>> NavigationGrid;
 
     UPROPERTY()
@@ -299,7 +299,7 @@ protected:
     // X    UPROPERTY(BlueprintReadOnly, Category = "Pathfinding State")
     ERTSPathfindingState CurrentState;
 
-    // X���X
+    // X???X
     UPROPERTY()
     TArray<float> CalculationTimes;
 
@@ -309,7 +309,7 @@ protected:
     UPROPERTY()
     int32 CompletedRequests;
 
-    // X�m
+    // X?m
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pathfinding Config")
     ERTSPathfindingAlgorithm DefaultAlgorithm;
 
@@ -328,7 +328,7 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pathfinding Config")
     bool bEnableDebugDrawing = false;
 
-    // X��X��
+    // X??X??
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terrain Costs")
     float WalkableCost = 1.0f;
 

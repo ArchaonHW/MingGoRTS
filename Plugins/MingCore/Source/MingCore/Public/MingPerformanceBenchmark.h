@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -84,45 +84,45 @@ class MINGINTEGRATION_API UMingPerformanceBenchmark : public UObject
     GENERATED_BODY()
 
 public:
-    UMingPerformanceBenchmark(};
+    UMingPerformanceBenchmark();
 
     // Benchmark Execution
     UFUNCTION(BlueprintCallable, Category = "Benchmark")
-    void RunAllBenchmarks(};
+    void RunAllBenchmarks();
 
     UFUNCTION(BlueprintCallable, Category = "Benchmark")
-    void RunLoadTimeBenchmark(};
+    void RunLoadTimeBenchmark();
 
     UFUNCTION(BlueprintCallable, Category = "Benchmark")
-    void RunMemoryUsageBenchmark(};
+    void RunMemoryUsageBenchmark();
 
     UFUNCTION(BlueprintCallable, Category = "Benchmark")
-    void RunFPSBenchmark(};
+    void RunFPSBenchmark();
 
     UFUNCTION(BlueprintCallable, Category = "Benchmark")
-    void RunCPUBenchmark(};
+    void RunCPUBenchmark();
 
     UFUNCTION(BlueprintCallable, Category = "Benchmark")
-    void RunGPUBenchmark(};
+    void RunGPUBenchmark();
 
     UFUNCTION(BlueprintCallable, Category = "Benchmark")
-    void RunNetworkBenchmark(};
+    void RunNetworkBenchmark();
 
     UFUNCTION(BlueprintCallable, Category = "Benchmark")
-    void RunDiskIOBenchmark(};
+    void RunDiskIOBenchmark();
 
     UFUNCTION(BlueprintCallable, Category = "Benchmark")
-    void RunEventLatencyBenchmark(};
+    void RunEventLatencyBenchmark();
 
     // Continuous Monitoring
     UFUNCTION(BlueprintCallable, Category = "Monitoring")
-    void StartContinuousMonitoring(};
+    void StartContinuousMonitoring();
 
     UFUNCTION(BlueprintCallable, Category = "Monitoring")
-    void StopContinuousMonitoring(};
+    void StopContinuousMonitoring();
 
     UFUNCTION(BlueprintCallable, Category = "Monitoring")
-    void UpdateMonitoringData(};
+    void UpdateMonitoringData();
 
     UFUNCTION(BlueprintPure, Category = "Monitoring")
     bool IsMonitoringActive() const;
@@ -144,7 +144,7 @@ public:
     bool MeetsAllTargets() const;
 
     UFUNCTION(BlueprintCallable, Category = "Results")
-    void GeneratePerformanceReport(};
+    void GeneratePerformanceReport();
 
     UFUNCTION(BlueprintCallable, Category = "Results")
     void ExportBenchmarkResults(const FString& FilePath) {};
@@ -157,7 +157,7 @@ public:
     float GetBenchmarkTarget(EMingBenchmarkType BenchmarkType) const;
 
     UFUNCTION(BlueprintCallable, Category = "Targets")
-    void LoadDefaultTargets(};
+    void LoadDefaultTargets();
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
@@ -183,18 +183,18 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeBenchmarkTargets(};
-    void SetupMonitoringEnvironment(};
+    void InitializeBenchmarkTargets();
+    void SetupMonitoringEnvironment();
 
     // Benchmark Execution
-    void ExecuteLoadTimeTest(};
-    void ExecuteMemoryUsageTest(};
-    void ExecuteFPSTest(};
-    void ExecuteCPUTest(};
-    void ExecuteGPUTest(};
-    void ExecuteNetworkTest(};
-    void ExecuteDiskIOTest(};
-    void ExecuteEventLatencyTest(};
+    void ExecuteLoadTimeTest();
+    void ExecuteMemoryUsageTest();
+    void ExecuteFPSTest();
+    void ExecuteCPUTest();
+    void ExecuteGPUTest();
+    void ExecuteNetworkTest();
+    void ExecuteDiskIOTest();
+    void ExecuteEventLatencyTest();
 
     // Data Collection
     void CollectPerformanceSample(EMingBenchmarkType BenchmarkType};
@@ -203,15 +203,15 @@ protected:
     void EvaluatePerformance(FMingBenchmarkResult& Result};
 
     // Monitoring
-    void CollectMonitoringData(};
-    void UpdateMonitoringStatistics(};
-    void CheckPerformanceThresholds(};
+    void CollectMonitoringData();
+    void UpdateMonitoringStatistics();
+    void CheckPerformanceThresholds();
 
     // Analysis
-    void AnalyzePerformanceTrends(};
-    void IdentifyPerformanceBottlenecks(};
-    void GenerateOptimizationSuggestions(};
-    void CreatePerformanceSummary(};
+    void AnalyzePerformanceTrends();
+    void IdentifyPerformanceBottlenecks();
+    void GenerateOptimizationSuggestions();
+    void CreatePerformanceSummary();
 
     // Helpers
     FMingBenchmarkResult* FindBenchmarkResult(const FString& BenchmarkName) {};

@@ -11,7 +11,7 @@
 class MINGCORE_API FExampleTacticalSubscriber : public IMingEventSubscriber
 {
 public:
-    FExampleTacticalSubscriber(};
+    FExampleTacticalSubscriber();
     
     // IMingEventSubscriber interface
     virtual FName GetSubscriberId() const override { return FName("ExampleTactical"}; }

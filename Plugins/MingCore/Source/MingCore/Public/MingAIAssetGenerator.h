@@ -1,11 +1,11 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingAIAssetGenerator.generated.h"
 
 /**
- * AIè³‡ç”¢é¡ï¿½Xï¿½ï¿½?
+ * AI¸ê²£Ãş?X???
  */
 UENUM(BlueprintType)
 enum class EAIAssetType : uint8
@@ -22,7 +22,7 @@ enum class EAIAssetType : uint8
 };
 
 /**
- * æ°‘ï¿½Xï¿½ï¿½?é¢¨æ ¼?ï¿½ï¿½?
+ * ¥Á?X???­·®æ????
  */
 UENUM(BlueprintType)
 enum class ERepublicEraStyle : uint8
@@ -34,52 +34,52 @@ enum class ERepublicEraStyle : uint8
 };
 
 /**
- * AIè³‡ç”¢?ï¿½ï¿½Xï¿½æ•¸çµï¿½?
+ * AI¸ê²£???X?¼Æµ²??
  */
 USTRUCT(BlueprintType)
 struct FAIAssetGenerationParams
 {
     GENERATED_BODY()
 
-    // è³‡ç”¢é¡ï¿½?
+    // ¸ê²£Ãş??
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     EAIAssetType AssetType;
 
-    // æ°‘ï¿½Xï¿½ï¿½?é¢¨æ ¼
+    // ¥Á?X???­·®æ
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     ERepublicEraStyle EraStyle;
 
-    // ?ï¿½ï¿½Xï¿½è¿°
+    // ???X?­z
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     FString BaseDescription;
 
-    // è©³ç´°?ï¿½ç¤ºï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
+    // ¸Ô²Ó??¥Ü??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     FString DetailedPrompt;
 
-    // è² é¢?ï¿½ç¤ºï¿½?(?ï¿½æ–¼?ï¿½ï¿½Xï¿½ï¿½?)
+    // ­t­±??¥Ü??(??©ó???X???)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     FString NegativePrompt;
 
-    // ?ï¿½ï¿½?å°ºå¯¸ (?ï¿½æ–¼?ï¿½ï¿½Xï¿½ï¿½?)
+    // ????¤Ø¤o (??©ó???X???)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     int32 ImageWidth;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     int32 ImageHeight;
 
-    // ?ï¿½ï¿½Xï¿½é•· (?ï¿½æ–¼?ï¿½ï¿½Xï¿½ï¿½?)
+    // ???X?ªø (??©ó???X???)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     float MusicDuration;
 
-    // ?ï¿½ï¿½?é¢¨æ ¼ (?ï¿½æ–¼?ï¿½ï¿½Xï¿½ï¿½?)
+    // ????­·®æ (??©ó???X???)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     FString MusicStyle;
 
-    // è³ªï¿½?è¨­ç½®
+    // ½è??³]¸m
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     float Quality;
 
-    // ç¨®ï¿½X(?ï¿½æ–¼?ï¿½ï¿½?è¤‡ï¿½X
+    // ºØ?X(??©ó????½Æ?X
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     int32 Seed;
 
@@ -99,44 +99,44 @@ struct FAIAssetGenerationParams
 };
 
 /**
- * AIè³‡ç”¢?ï¿½ï¿½?çµï¿½?çµï¿½?
+ * AI¸ê²£????µ²??µ²??
  */
 USTRUCT(BlueprintType)
 struct FAIAssetGenerationResult
 {
     GENERATED_BODY()
 
-    // ?ï¿½å¦?ï¿½ï¿½?
+    // ??§_????
     UPROPERTY(BlueprintReadOnly)
     bool bSuccess;
 
-    // è³‡ç”¢é¡ï¿½?
+    // ¸ê²£Ãş??
     UPROPERTY(BlueprintReadOnly)
     EAIAssetType AssetType;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½è·¯ï¿½?    UPROPERTY(BlueprintReadOnly)
+    // ???X??X?¸ô??    UPROPERTY(BlueprintReadOnly)
     FString AssetPath;
 
-    // ç¸®ç•¥?ï¿½è·¯ï¿½?    UPROPERTY(BlueprintReadOnly)
+    // ÁY²¤??¸ô??    UPROPERTY(BlueprintReadOnly)
     FString ThumbnailPath;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?
+    // ???X???
     UPROPERTY(BlueprintReadOnly)
     float GenerationTime;
 
-    // ?ï¿½èª¤ä¿¡æ¯
+    // ??»~«H®§
     UPROPERTY(BlueprintReadOnly)
     FString ErrorMessage;
 
-    // è³‡ç”¢ID
+    // ¸ê²£ID
     UPROPERTY(BlueprintReadOnly)
     FString AssetID;
 
-    // è³‡ç”¢æ¨™ç±¤
+    // ¸ê²£¼ĞÅÒ
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> Tags;
 
-    // è³‡ç”¢?ï¿½æ•¸X    UPROPERTY(BlueprintReadOnly)
+    // ¸ê²£??¼ÆX    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> Metadata;
 
     FAIAssetGenerationResult()
@@ -149,7 +149,7 @@ struct FAIAssetGenerationResult
 };
 
 /**
- * AIè³‡ç”¢?ï¿½ï¿½X * ?ï¿½ï¿½?Stable Diffusion?ï¿½AIVA?ï¿½ï¿½?è³‡ç”¢?ï¿½ï¿½?
+ * AI¸ê²£???X * ????Stable Diffusion??AIVA????¸ê²£????
  */
 UCLASS(BlueprintType)
 class MINGCORE_API UMingAIAssetGenerator : public UObject
@@ -157,32 +157,32 @@ class MINGCORE_API UMingAIAssetGenerator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAIAssetGenerator(};
+    UMingAIAssetGenerator();
 
     /**
-     * ?ï¿½ï¿½Xï¿½AIè³‡ç”¢?ï¿½ï¿½X     */
+     * ???X?AI¸ê²£???X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
-    void Initialize(};
+    void Initialize();
 
     /**
-     * ?ï¿½ï¿½?AIè³‡ç”¢?ï¿½ï¿½X     */
+     * ????AI¸ê²£???X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
-    void Shutdown(};
+    void Shutdown();
 
     /**
-     * ?ï¿½ï¿½?AIè³‡ç”¢
+     * ????AI¸ê²£
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     FAIAssetGenerationResult GenerateAsset(const FAIAssetGenerationParams& Params) {};
 
     /**
-     * ?ï¿½æ­¥?ï¿½ï¿½?AIè³‡ç”¢
+     * ??¨B????AI¸ê²£
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     void GenerateAssetAsync(const FAIAssetGenerationParams& Params) {};
 
     /**
-     * ?ï¿½ï¿½?è§’è‰²?ï¿½ï¿½?
+     * ????¨¤¦â????
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     FAIAssetGenerationResult GenerateCharacterPortrait(
@@ -193,7 +193,7 @@ public:
     };
 
     /**
-     * ?ï¿½ï¿½?å»ºï¿½X     */
+     * ????«Ø?X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     FAIAssetGenerationResult GenerateBuilding(
         const FString& BuildingDescription,
@@ -203,7 +203,7 @@ public:
     };
 
     /**
-     * ?ï¿½ï¿½Xï¿½æ™¯?ï¿½ï¿½?
+     * ???X?´º????
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     FAIAssetGenerationResult GenerateBackgroundMusic(
@@ -214,84 +214,84 @@ public:
     };
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½X     */
+     * ???X??X??X     */
     UFUNCTION(BlueprintPure, Category = "AI Asset Generator")
     FAIAssetGenerationResult GetGeneratedAsset(const FString& AssetID) {};
 
     /**
-     * ?ï¿½ï¿½Xï¿½?ï¿½ï¿½Xï¿½ï¿½?è³‡ç”¢
+     * ???X????X???¸ê²£
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset Generator")
-    TArray<FAIAssetGenerationResult> GetAllGeneratedAssets(};
+    TArray<FAIAssetGenerationResult> GetAllGeneratedAssets();
 
     /**
-     * ?ï¿½é™¤è³‡ç”¢
+     * ??°£¸ê²£
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     bool DeleteAsset(const FString& AssetID) {};
 
     /**
-     * è¨­ç½®Stable Diffusion APIç«¯ï¿½?
+     * ³]¸mStable Diffusion APIºİ??
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     void SetStableDiffusionEndpoint(const FString& Endpoint) {};
 
     /**
-     * è¨­ç½®AIVA APIç«¯ï¿½?
+     * ³]¸mAIVA APIºİ??
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Generator")
     void SetAIVAEndpoint(const FString& Endpoint) {};
 
     /**
-     * ?ï¿½ï¿½?æ°‘ï¿½Xï¿½ï¿½Xï¿½ç¤ºï¿½?     */
+     * ????¥Á?X??X?¥Ü??     */
     UFUNCTION(BlueprintPure, Category = "AI Asset Generator")
     FString GetRepublicEraPrompt(ERepublicEraStyle EraStyle, EAIAssetType AssetType};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?å¯¦ï¿½?
+     * ???X???¹ê??
      */
-    static UMingAIAssetGenerator* Get(};
+    static UMingAIAssetGenerator* Get();
 
 protected:
-    // Stable Diffusion APIç«¯ï¿½?
+    // Stable Diffusion APIºİ??
     FString StableDiffusionEndpoint;
 
-    // AIVA APIç«¯ï¿½?
+    // AIVA APIºİ??
     FString AIVAEndpoint;
 
-    // å·²ï¿½Xï¿½ï¿½?è³‡ç”¢
+    // ¤w?X???¸ê²£
     UPROPERTY()
     TArray<FAIAssetGenerationResult> GeneratedAssets;
 
-    // ?ï¿½å¦å·²ï¿½?å§‹ï¿½?
+    // ??§_¤w??©l??
     bool bIsInitialized;
 
-    // ?ï¿½ï¿½?å¯¦ï¿½?
+    // ????¹ê??
     static UMingAIAssetGenerator* Instance;
 
-    // ç”Ÿæˆå”¯ä¸€è³‡ç”¢ID
+    // ¥Í¦¨°ß¤@¸ê²£ID
     FString GenerateAssetID() {};
 
-    // ?ï¿½ï¿½?Stable Diffusion?ï¿½ç¤ºï¿½?    FString GenerateStableDiffusionPrompt(const FAIAssetGenerationParams& Params) {};
+    // ????Stable Diffusion??¥Ü??    FString GenerateStableDiffusionPrompt(const FAIAssetGenerationParams& Params) {};
 
-    // èª¿ç”¨Stable Diffusion API
+    // ½Õ¥ÎStable Diffusion API
     FAIAssetGenerationResult CallStableDiffusionAPI(const FString& Prompt, const FString& NegativePrompt, int32 Width, int32 Height) {};
 
-    // èª¿ç”¨AIVA API
+    // ½Õ¥ÎAIVA API
     FAIAssetGenerationResult CallAIVAAPI(const FString& MusicDescription, float Duration, const FString& Style) {};
 
-    // ä¿ï¿½Xï¿½ï¿½Xï¿½ï¿½X    bool SaveGeneratedAsset(const FAIAssetGenerationResult& Result) {};
+    // «O?X??X??X    bool SaveGeneratedAsset(const FAIAssetGenerationResult& Result) {};
 
-    // ç”Ÿæˆè³‡ç”¢ç¸®ç•¥åœ–
+    // ¥Í¦¨¸ê²£ÁY²¤¹Ï
     FString GenerateThumbnail(const FString& AssetPath, EAIAssetType AssetType) {};
 
-    // å‰µå»ºè³‡ç”¢ç›®éŒ„
+    // ³Ğ«Ø¸ê²£¥Ø¿ı
     bool CreateAssetDirectory(EAIAssetType AssetType) {};
 
-    // é©—ï¿½?API?ï¿½ï¿½?
+    // Åç??API????
     bool ValidateAPIResponse(const FString& Response) {};
 
-    // è™•ç†ç”ŸæˆéŒ¯èª¤
+    // ³B²z¥Í¦¨¿ù»~
     FAIAssetGenerationResult HandleGenerationError(const FString& Error) {};
 };
 

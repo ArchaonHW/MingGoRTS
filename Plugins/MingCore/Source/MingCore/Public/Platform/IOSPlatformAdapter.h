@@ -1,20 +1,20 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Platform\IPlatformInterface.h"
 #include "IOSPlatformAdapter.generated.h"
 
 /**
- * iOS Âπ≥Âè∞?ÔøΩÔøΩX */
+ * iOS •≠•x???X */
 UCLASS()
 class MINGCORE_API UIOSPlatformAdapter : public UObject, public IPlatformInterface
 {
     GENERATED_BODY()
 
 public:
-    UIOSPlatformAdapter(};
+    UIOSPlatformAdapter();
 
-    // IPlatformInterface ÂØ¶Áèæ
+    // IPlatformInterface πÍ≤{
     virtual EPlatformType GetPlatformType() const override;
     virtual FPlatformCapabilities GetCapabilities() const override;
     virtual void Initialize() override;
@@ -31,7 +31,7 @@ public:
     virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) override;
     virtual FString LoadFromPlatformStorage(const FString& Key) const override;
 
-    // iOS ?ÔøΩÔøΩXÔøΩËÉΩ
+    // iOS ???X?Ø‡
     UFUNCTION(BlueprintCallable, Category = "Platform|iOS")
     FString GetIOSVersion() const;
 
@@ -42,13 +42,13 @@ public:
     void HapticFeedback(int32 Intensity = 1};
 
     UFUNCTION(BlueprintCallable, Category = "Platform|iOS")
-    void RegisterForPushNotifications(};
+    void RegisterForPushNotifications();
 
 private:
     bool bInitialized;
     int32 CurrentPerformanceMode;
     
-    // ÂÆâÂÖ®?ÔøΩ?ÔøΩÁ∑©ÔøΩ?    FMargin CachedSafeZone;
+    // ¶w•˛????Ωw??    FMargin CachedSafeZone;
     bool bSafeZoneCached;
 };
 

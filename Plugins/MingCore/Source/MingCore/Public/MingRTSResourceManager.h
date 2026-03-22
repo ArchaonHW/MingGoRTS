@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,40 +7,40 @@
 UENUM(BlueprintType)
 enum class ERTSResourceType : uint8
 {
-    Gold,           // ��X
+    Gold,           // ??X
     Wood,           // X
     Stone,          // X
-    Iron,           // X�q
-    Food,           // ³X
-    Coal,           // X��
-    Oil,            // X�o
-    Uranium,        // X�q
-    Crystal,        // ���
-    Silk            // ����
+    Iron,           // X?q
+    Food,           // 3X
+    Coal,           // X??
+    Oil,            // X?o
+    Uranium,        // X?q
+    Crystal,        // ???
+    Silk            // ????
 };
 
 UENUM(BlueprintType)
 enum class ERTSResourceSource : uint8
 {
-    Mine,           // �q�s
-    Forest,         // ��X
-    Quarry,         // �ĥ۳�
-    Farm,           // �A��
-    OilWell,        // �oX
-    CrystalCave,    // ����}��
-    SilkFarm,       // �����A��
-    TradingPost     // �T����
+    Mine,           // ?q?s
+    Forest,         // ??X
+    Quarry,         // ????
+    Farm,           // ?A??
+    OilWell,        // ?oX
+    CrystalCave,    // ????}??
+    SilkFarm,       // ?????A??
+    TradingPost     // ?T????
 };
 
 UENUM(BlueprintType)
 enum class ERTSResourceState : uint8
 {
-    Available,      // X��
-    Depleted,       // X��
-    Occupied,       // �Q����
-    UnderConstruction, // �س]��
-    Damaged,        // ���l
-    Repairing       // �״_��
+    Available,      // X??
+    Depleted,       // X??
+    Occupied,       // ?Q????
+    UnderConstruction, // ??]??
+    Damaged,        // ???l
+    Repairing       // ??_??
 };
 
 USTRUCT(BlueprintType)
@@ -186,7 +186,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnResourceDepleted, ERTSResourceTyp
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTradeCompleted, const FRTSTradeData&, TradeData, bool, bSuccess};
 
 /**
- * RTS��X��X * ��X����X��
+ * RTS??X??X * ??X????X??
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSResourceManager : public UObject
@@ -194,12 +194,12 @@ class MINGCORE_API UMingRTSResourceManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSResourceManager(};
+    UMingRTSResourceManager();
 
     // X    UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void InitializeResourceManager(};
+    void InitializeResourceManager();
 
-    // ��X��X
+    // ??X??X
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void AddResource(ERTSResourceType ResourceType, float Amount};
 
@@ -224,7 +224,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void SetResourceConsumptionRate(ERTSResourceType ResourceType, float Rate};
 
-    // ��X����X    UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
+    // ??X????X    UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void AddResourceSource(const FRTSResourceSourceData& SourceData) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
@@ -245,7 +245,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     bool IsResourceSourceOperational(const FString& SourceID) const;
 
-    // ��X��
+    // ??X??
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void UpdateResourceProduction(float DeltaTime};
 
@@ -256,9 +256,9 @@ public:
     float CalculateTotalConsumption() const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void OptimizeResourceAllocation(};
+    void OptimizeResourceAllocation();
 
-    // ��X��X
+    // ??X??X
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     bool ExecuteTrade(const FRTSTradeData& TradeData) {};
 
@@ -274,7 +274,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     float CalculateExchangeRate(ERTSResourceType OfferResource, ERTSResourceType RequestResource) const;
 
-    // ��X
+    // ??X
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void AllocateResource(ERTSResourceType ResourceType, float Amount, const FString& Purpose) {};
 
@@ -287,30 +287,30 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     TMap<FString, float> GetAllAllocations(ERTSResourceType ResourceType) const;
 
-    // ��X��
+    // ??X??
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     float PredictResourceAmount(ERTSResourceType ResourceType, float TimeInSeconds) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     bool WillResourceDeplete(ERTSResourceType ResourceType, float TimeInSeconds) const;
 
-    // ��X��X�t��X
+    // ??X??X?t??X
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void OptimizeResourceManagement(};
+    void OptimizeResourceManagement();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void BalanceResourceDistribution(};
+    void BalanceResourceDistribution();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void EnhanceResourceEfficiency(};
+    void EnhanceResourceEfficiency();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
-    void ImplementSmartAllocation(};
+    void ImplementSmartAllocation();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     float GetTimeToDepletion(ERTSResourceType ResourceType) const;
 
-    // ��X
+    // ??X
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     float GetResourceEfficiency(ERTSResourceType ResourceType) const;
 
@@ -320,7 +320,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void SetResourceEfficiency(ERTSResourceType ResourceType, float Efficiency};
 
-    // ��X�H��
+    // ??X?H??
     UFUNCTION(BlueprintPure, Category = "RTS Resource Manager")
     int32 GetTotalResourceSourceCount() const;
 
@@ -333,7 +333,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "RTS Resource Manager")
     TArray<ERTSResourceType> GetAvailableResourceTypes() const;
 
-    // ��X�ƥ�
+    // ??X???
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void OnResourceSourceDestroyed(const FString& SourceID) {};
 
@@ -343,7 +343,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void OnWorkerAssigned(const FString& SourceID, int32 WorkerCount};
 
-    // �ƥ�
+    // ???
     UPROPERTY(BlueprintAssignable, Category = "RTS Resource Events")
     FOnResourceChanged OnResourceChanged;
 
@@ -357,7 +357,7 @@ public:
     FOnTradeCompleted OnTradeCompleted;
 
 protected:
-    // ��X
+    // ??X
     UPROPERTY()
     TMap<ERTSResourceType, FRTSResourceData> Resources;
 
@@ -367,13 +367,13 @@ protected:
     UPROPERTY()
     TArray<FRTSTradeData> TradeOffers;
 
-    // �`X�GTMap<TMap> ����XUPROPERTY
+    // ?`X?GTMap<TMap> ????XUPROPERTY
     TMap<ERTSResourceType, TMap<FString, float>> ResourceAllocations;
 
     UPROPERTY()
     TMap<ERTSResourceType, float> ResourceEfficiencies;
 
-    // �]�m
+    // ?]?m
     UPROPERTY(BlueprintReadWrite, Category = "Resource Settings")
     float BaseProductionMultiplier = 1.0f;
 
@@ -389,7 +389,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Resource Settings")
     bool bAutoAllocate = true;
 
-    // X��
+    // X??
     UPROPERTY(BlueprintReadWrite, Category = "Optimization Settings")
     float OptimizationThreshold = 0.8f;
 
@@ -405,27 +405,27 @@ protected:
     // X    UPROPERTY()
     bool bIsInitialized;
 
-    // X��X��
-    void InitializeDefaultResources(};
-    void InitializeResourceEfficiencies(};
+    // X??X??
+    void InitializeDefaultResources();
+    void InitializeResourceEfficiencies();
     void ProcessResourceSource(FRTSResourceSourceData& Source, float DeltaTime};
     void UpdateResourceState(ERTSResourceType ResourceType};
     FString GenerateResourceSourceID(ERTSResourceSource SourceType) const;
 
-    // X��X��
-    void OptimizeProductionRates(};
-    void BalanceResourceConsumption(};
-    void CalculateOptimalAllocation(};
-    void UpdateEfficiencyMetrics(};
+    // X??X??
+    void OptimizeProductionRates();
+    void BalanceResourceConsumption();
+    void CalculateOptimalAllocation();
+    void UpdateEfficiencyMetrics();
     float CalculateResourcePriority(ERTSResourceType ResourceType) const;
-    void AutoBalanceResources(};
+    void AutoBalanceResources();
     FString GetResourceName(ERTSResourceType ResourceType) const;
     FString GetResourceSourceName(ERTSResourceSource SourceType) const;
     float GetResourceValue(ERTSResourceType ResourceType) const;
     bool ValidateTrade(const FRTSTradeData& TradeData) const;
 
 private:
-    // ���UX��
+    // ???UX??
     void NotifyResourceChanged(ERTSResourceType ResourceType, float NewAmount};
     void NotifyResourceSourceStateChanged(const FString& SourceID, ERTSResourceState NewState};
     void NotifyResourceDepleted(ERTSResourceType ResourceType};

@@ -29,14 +29,14 @@ class MINGCORE_API UMingFourLayerManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingFourLayerManager(};
+    UMingFourLayerManager();
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Four Layer Manager")
-    void InitializeFourLayerSystem(};
+    void InitializeFourLayerSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Four Layer Manager")
-    void ShutdownFourLayerSystem(};
+    void ShutdownFourLayerSystem();
 
     // Layer Management
     UFUNCTION(BlueprintCallable, Category = "Layer Management")
@@ -64,7 +64,7 @@ public:
     float GetTransitionProgress() const { return CurrentState.TransitionProgress; }
 
     UFUNCTION(BlueprintCallable, Category = "Layer Management")
-    void AbortTransition(};
+    void AbortTransition();
 
     // Strategic Layer Interface
     UFUNCTION(BlueprintCallable, Category = "Strategic Layer")
@@ -121,7 +121,7 @@ public:
     void MakePersonalChoice(const FString& ChoiceID, const FString& ConsequenceID};
 
     UFUNCTION(BlueprintCallable, Category = "Personal Layer")
-    void ReturnToTacticalFromPersonal(};
+    void ReturnToTacticalFromPersonal();
 
     // Building Layer Interface
     UFUNCTION(BlueprintCallable, Category = "Building Layer")
@@ -144,7 +144,7 @@ public:
 
     // Cross-Layer Integration
     UFUNCTION(BlueprintCallable, Category = "Cross-Layer")
-    void SyncLayerData(};
+    void SyncLayerData();
 
     UFUNCTION(BlueprintCallable, Category = "Cross-Layer")
     void PropagateStrategicToTactical(const FMingStrategicDecision& Decision};
@@ -163,13 +163,13 @@ public:
 
     // Layer State Management
     UFUNCTION(BlueprintCallable, Category = "Layer State")
-    void SaveLayerState(};
+    void SaveLayerState();
 
     UFUNCTION(BlueprintCallable, Category = "Layer State")
     void RestoreLayerState(const FMingLayerState& State};
 
     UFUNCTION(BlueprintCallable, Category = "Layer State")
-    void ClearLayerContext(};
+    void ClearLayerContext();
 
     UFUNCTION(BlueprintCallable, Category = "Layer State")
     void SetLayerContext(const FString& Context};
@@ -179,7 +179,7 @@ public:
 
     // Quick Access Functions
     UFUNCTION(BlueprintCallable, Category = "Quick Access")
-    void EnterStrategicMap(};
+    void EnterStrategicMap();
 
     UFUNCTION(BlueprintCallable, Category = "Quick Access")
     void EnterTacticalBattle(const FString& BattleID};
@@ -239,18 +239,18 @@ protected:
     // Internal functions
     void StartLayerTransition(EMingGameLayer TargetLayer, EMingLayerTransitionType TransitionType};
     bool UpdateLayerTransition(float DeltaTime};
-    void CompleteLayerTransition(};
-    void CancelLayerTransition(};
+    void CompleteLayerTransition();
+    void CancelLayerTransition();
 
-    void InitializeStrategicLayer(};
-    void InitializeTacticalLayer(};
-    void InitializePersonalLayer(};
-    void InitializeBuildingLayer(};
+    void InitializeStrategicLayer();
+    void InitializeTacticalLayer();
+    void InitializePersonalLayer();
+    void InitializeBuildingLayer();
 
-    void ShutdownStrategicLayer(};
-    void ShutdownTacticalLayer(};
-    void ShutdownPersonalLayer(};
-    void ShutdownBuildingLayer(};
+    void ShutdownStrategicLayer();
+    void ShutdownTacticalLayer();
+    void ShutdownPersonalLayer();
+    void ShutdownBuildingLayer();
 
     void ActivateLayer(EMingGameLayer Layer};
     void DeactivateLayer(EMingGameLayer Layer};
@@ -260,9 +260,9 @@ protected:
     bool ValidatePersonalAction(const FMingPersonalAction& Action) const;
     bool ValidateBuildingCommand(const FMingBuildingCommand& Command) const;
 
-    void RecordStateHistory(};
-    void NotifyLayerChanged(};
-    void SyncToAllLayers(};
+    void RecordStateHistory();
+    void NotifyLayerChanged();
+    void SyncToAllLayers();
 
     UWorld* GetWorld() const;
 };

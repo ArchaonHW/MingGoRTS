@@ -1,20 +1,20 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Platform\IPlatformInterface.h"
 #include "AndroidPlatformAdapter.generated.h"
 
 /**
- * Android Âπ≥Âè∞?ÔøΩÔøΩX */
+ * Android •≠•x???X */
 UCLASS()
 class MINGCORE_API UAndroidPlatformAdapter : public UObject, public IPlatformInterface
 {
     GENERATED_BODY()
 
 public:
-    UAndroidPlatformAdapter(};
+    UAndroidPlatformAdapter();
 
-    // IPlatformInterface ÂØ¶Áèæ
+    // IPlatformInterface πÍ≤{
     virtual EPlatformType GetPlatformType() const override;
     virtual FPlatformCapabilities GetCapabilities() const override;
     virtual void Initialize() override;
@@ -31,7 +31,7 @@ public:
     virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) override;
     virtual FString LoadFromPlatformStorage(const FString& Key) const override;
 
-    // Android ?ÔøΩÔøΩXÔøΩËÉΩ
+    // Android ???X?Ø‡
     UFUNCTION(BlueprintCallable, Category = "Platform|Android")
     FString GetAndroidVersion() const;
 
@@ -48,7 +48,7 @@ private:
     bool bInitialized;
     int32 CurrentPerformanceMode;
     
-    // ÂÆâÂÖ®?ÔøΩ?ÔøΩÁ∑©ÔøΩ?    FMargin CachedSafeZone;
+    // ¶w•˛????Ωw??    FMargin CachedSafeZone;
     bool bSafeZoneCached;
 };
 

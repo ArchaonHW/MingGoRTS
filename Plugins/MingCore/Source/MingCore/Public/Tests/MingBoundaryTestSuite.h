@@ -1,124 +1,124 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingBoundaryTestSuite.generated.h"
 
 /**
- * ?ÔøΩÔøΩ?Ê∏¨Ë©¶Â•ó‰ª∂
- * Ê∏¨Ë©¶Á≥ªÁµ±?ÔøΩÔøΩXÔøΩÔøΩ?‰ª∂ÔøΩ?Ê•µÔøΩX */
+ * ????¥˙∏’ÆM•Û
+ * ¥˙∏’®t≤Œ???X???•Û??∑•?X */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingBoundaryTestSuite : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingBoundaryTestSuite(};
+    UMingBoundaryTestSuite();
 
-    // ========== Ë≥áÔøΩ?Á≥ªÁµ±?ÔøΩÔøΩ?Ê∏¨Ë©¶ ==========
+    // ========== ∏Í??®t≤Œ????¥˙∏’ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Resource")
-    bool TestResourceBoundaryConditions(};
+    bool TestResourceBoundaryConditions();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Resource")
-    bool TestZeroResources(};
+    bool TestZeroResources();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Resource")
-    bool TestMaxResources(};
+    bool TestMaxResources();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Resource")
-    bool TestNegativeResources(};
+    bool TestNegativeResources();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Resource")
-    bool TestResourceOverflow(};
+    bool TestResourceOverflow();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Resource")
-    bool TestFloatingPointResources(};
+    bool TestFloatingPointResources();
 
-    // ========== ?ÔøΩÔøΩ?Á≥ªÁµ±?ÔøΩÔøΩ?Ê∏¨Ë©¶ ==========
+    // ========== ????®t≤Œ????¥˙∏’ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Unit")
-    bool TestUnitBoundaryConditions(};
+    bool TestUnitBoundaryConditions();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Unit")
-    bool TestZeroUnits(};
+    bool TestZeroUnits();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Unit")
-    bool TestMaxUnits(};
+    bool TestMaxUnits();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Unit")
-    bool TestUnitHealthBoundaries(};
+    bool TestUnitHealthBoundaries();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Unit")
-    bool TestUnitPositionBoundaries(};
+    bool TestUnitPositionBoundaries();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Unit")
-    bool TestInvalidUnitStates(};
+    bool TestInvalidUnitStates();
 
-    // ========== Âª∫ÔøΩ?Á≥ªÁµ±?ÔøΩÔøΩ?Ê∏¨Ë©¶ ==========
+    // ========== ´ÿ??®t≤Œ????¥˙∏’ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Building")
-    bool TestBuildingBoundaryConditions(};
+    bool TestBuildingBoundaryConditions();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Building")
-    bool TestZeroBuildings(};
+    bool TestZeroBuildings();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Building")
-    bool TestMaxBuildings(};
+    bool TestMaxBuildings();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Building")
-    bool TestBuildingLevelBoundaries(};
+    bool TestBuildingLevelBoundaries();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Building")
-    bool TestInvalidBuildingStates(};
+    bool TestInvalidBuildingStates();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Building")
-    bool TestBuildingPositionBoundaries(};
+    bool TestBuildingPositionBoundaries();
 
-    // ========== Á∂≤Áµ°Á≥ªÁµ±?ÔøΩÔøΩ?Ê∏¨Ë©¶ ==========
+    // ========== ∫Ùµ∏®t≤Œ????¥˙∏’ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Network")
-    bool TestNetworkBoundaryConditions(};
+    bool TestNetworkBoundaryConditions();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Network")
-    bool TestZeroConnections(};
+    bool TestZeroConnections();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Network")
-    bool TestMaxConnections(};
+    bool TestMaxConnections();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Network")
-    bool TestPacketSizeBoundaries(};
+    bool TestPacketSizeBoundaries();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Network")
-    bool TestLatencyBoundaries(};
+    bool TestLatencyBoundaries();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Network")
-    bool TestInvalidNetworkStates(};
+    bool TestInvalidNetworkStates();
 
-    // ========== ‰øùÔøΩ?Á≥ªÁµ±?ÔøΩÔøΩ?Ê∏¨Ë©¶ ==========
+    // ========== ´O??®t≤Œ????¥˙∏’ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Save")
-    bool TestSaveSystemBoundaryConditions(};
+    bool TestSaveSystemBoundaryConditions();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Save")
-    bool TestZeroSaveFiles(};
+    bool TestZeroSaveFiles();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Save")
-    bool TestMaxSaveFiles(};
+    bool TestMaxSaveFiles();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Save")
-    bool TestSaveFileSizeBoundaries(};
+    bool TestSaveFileSizeBoundaries();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Save")
-    bool TestSaveFrequencyBoundaries(};
+    bool TestSaveFrequencyBoundaries();
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Save")
-    bool TestInvalidSaveStates(};
+    bool TestInvalidSaveStates();
 
-    // ========== Á∂úÔøΩXÔøΩÔøΩ?Ê∏¨Ë©¶ ==========
+    // ========== ∫Ó?X???¥˙∏’ ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test")
-    void RunAllBoundaryTests(};
+    void RunAllBoundaryTests();
     
     UFUNCTION(BlueprintPure, Category = "Boundary Test")
     bool AreAllBoundaryTestsPassed() const;
@@ -133,7 +133,7 @@ public:
     float GetBoundaryTestCoverage() const;
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test")
-    FString GenerateBoundaryTestReport(};
+    FString GenerateBoundaryTestReport();
 
 protected:
     UPROPERTY()
@@ -149,20 +149,20 @@ protected:
     TArray<FString> TestResults;
 
 private:
-    // ËºîÂä©?ÔøΩÊï∏
+    // ª≤ßU??º∆
     void AddTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
-    void ResetTestResults(};
+    void ResetTestResults();
     bool ValidateBoundaryValue(const FString& TestName, float Value, float Min, float Max};
     bool TestNumericBoundary(const FString& TestName, int32 Value, int32 Min, int32 Max};
     bool TestFloatBoundary(const FString& TestName, float Value, float Min, float Max};
     
-    // Ê•µÔøΩXÔøΩÊ∏¨Ë©¶ÔøΩX    bool TestZeroValue(const FString& TestName, TFunction<void()> TestFunction};
+    // ∑•?X?¥˙∏’?X    bool TestZeroValue(const FString& TestName, TFunction<void()> TestFunction};
     bool TestMaxValue(const FString& TestName, TFunction<void()> TestFunction};
     bool TestNegativeValue(const FString& TestName, TFunction<void()> TestFunction};
     bool TestOverflowValue(const FString& TestName, TFunction<void()> TestFunction};
     
-    // ?ÔøΩ?ÔøΩÔøΩ?Ë≠âÔøΩX    bool ValidateSystemState(const FString& TestName};
-    bool CheckSystemIntegrity(};
-    bool VerifyDataConsistency(};
+    // ??????√“?X    bool ValidateSystemState(const FString& TestName};
+    bool CheckSystemIntegrity();
+    bool VerifyDataConsistency();
 };
 

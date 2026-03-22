@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -155,14 +155,14 @@ class MINGINTEGRATION_API UMingIntegrationValidator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingIntegrationValidator(};
+    UMingIntegrationValidator();
 
     // Validation Control
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void InitializeValidator(};
+    void InitializeValidator();
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void RunAllValidations(};
+    void RunAllValidations();
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
     void RunValidationType(EMingValidationType ValidationType};
@@ -171,20 +171,20 @@ public:
     void RunSpecificValidation(const FString& ValidationID) {};
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void StopValidation(};
+    void StopValidation();
 
     // Load Order Validation
     UFUNCTION(BlueprintCallable, Category = "Load Order")
-    void ValidateLoadOrder(};
+    void ValidateLoadOrder();
 
     UFUNCTION(BlueprintCallable, Category = "Load Order")
-    void TestLoadSequence(};
+    void TestLoadSequence();
 
     UFUNCTION(BlueprintCallable, Category = "Load Order")
-    void VerifyLoadTimes(};
+    void VerifyLoadTimes();
 
     UFUNCTION(BlueprintCallable, Category = "Load Order")
-    void CheckLoadFailures(};
+    void CheckLoadFailures();
 
     UFUNCTION(BlueprintPure, Category = "Load Order")
     TArray<FMingLoadOrderEntry> GetLoadOrder() const;
@@ -194,16 +194,16 @@ public:
 
     // Dependency Validation
     UFUNCTION(BlueprintCallable, Category = "Dependencies")
-    void ValidateDependencies(};
+    void ValidateDependencies();
 
     UFUNCTION(BlueprintCallable, Category = "Dependencies")
-    void CheckSystemDependencies(};
+    void CheckSystemDependencies();
 
     UFUNCTION(BlueprintCallable, Category = "Dependencies")
-    void VerifyDependencyChain(};
+    void VerifyDependencyChain();
 
     UFUNCTION(BlueprintCallable, Category = "Dependencies")
-    void TestCircularDependencies(};
+    void TestCircularDependencies();
 
     UFUNCTION(BlueprintPure, Category = "Dependencies")
     TArray<FMingDependencyCheck> GetDependencyChecks() const;
@@ -213,70 +213,70 @@ public:
 
     // Integration Testing
     UFUNCTION(BlueprintCallable, Category = "Integration")
-    void RunIntegrationTests(};
+    void RunIntegrationTests();
 
     UFUNCTION(BlueprintCallable, Category = "Integration")
-    void TestSystemCommunication(};
+    void TestSystemCommunication();
 
     UFUNCTION(BlueprintCallable, Category = "Integration")
-    void VerifyDataFlow(};
+    void VerifyDataFlow();
 
     UFUNCTION(BlueprintCallable, Category = "Integration")
-    void TestEventPropagation(};
+    void TestEventPropagation();
 
     UFUNCTION(BlueprintCallable, Category = "Integration")
-    void CheckCrossSystemFunctionality(};
+    void CheckCrossSystemFunctionality();
 
     UFUNCTION(BlueprintPure, Category = "Integration")
     bool IsIntegrationSuccessful() const;
 
     // Performance Benchmarking
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void RunPerformanceBenchmarks(};
+    void RunPerformanceBenchmarks();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void BenchmarkSystemLoad(};
+    void BenchmarkSystemLoad();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void BenchmarkMemoryUsage(};
+    void BenchmarkMemoryUsage();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void BenchmarkFPSPerformance(};
+    void BenchmarkFPSPerformance();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void BenchmarkNetworkLatency(};
+    void BenchmarkNetworkLatency();
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     bool MeetsPerformanceTargets() const;
 
     // Communication Testing
     UFUNCTION(BlueprintCallable, Category = "Communication")
-    void TestEventSystem(};
+    void TestEventSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Communication")
-    void TestMessagePassing(};
+    void TestMessagePassing();
 
     UFUNCTION(BlueprintCallable, Category = "Communication")
-    void TestRemoteProcedureCalls(};
+    void TestRemoteProcedureCalls();
 
     UFUNCTION(BlueprintCallable, Category = "Communication")
-    void TestDataSynchronization(};
+    void TestDataSynchronization();
 
     UFUNCTION(BlueprintPure, Category = "Communication")
     bool IsCommunicationWorking() const;
 
     // Health Monitoring
     UFUNCTION(BlueprintCallable, Category = "Health")
-    void RunHealthCheck(};
+    void RunHealthCheck();
 
     UFUNCTION(BlueprintCallable, Category = "Health")
-    void CheckSystemHealth(};
+    void CheckSystemHealth();
 
     UFUNCTION(BlueprintCallable, Category = "Health")
-    void MonitorResourceUsage(};
+    void MonitorResourceUsage();
 
     UFUNCTION(BlueprintCallable, Category = "Health")
-    void CheckErrorRates(};
+    void CheckErrorRates();
 
     UFUNCTION(BlueprintPure, Category = "Health")
     bool IsSystemHealthy() const;
@@ -307,7 +307,7 @@ public:
     float GetSuccessRate() const;
 
     UFUNCTION(BlueprintCallable, Category = "Results")
-    void GenerateValidationReport(};
+    void GenerateValidationReport();
 
     UFUNCTION(BlueprintCallable, Category = "Results")
     void ExportResults(const FString& FilePath) {};
@@ -356,56 +356,56 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeLoadOrder(};
-    void InitializeDependencies(};
-    void CreateValidationTests(};
+    void InitializeLoadOrder();
+    void InitializeDependencies();
+    void CreateValidationTests();
 
     // Load Order Validation
-    void GenerateLoadOrder(};
-    void VerifyLoadSequence(};
-    void CheckLoadDependencies(};
-    void MeasureLoadTimes(};
+    void GenerateLoadOrder();
+    void VerifyLoadSequence();
+    void CheckLoadDependencies();
+    void MeasureLoadTimes();
 
     // Dependency Validation
-    void MapDependencyGraph(};
-    void CheckDependencyAvailability(};
-    void ValidateDependencyIntegrity(};
-    void DetectCircularDependencies(};
+    void MapDependencyGraph();
+    void CheckDependencyAvailability();
+    void ValidateDependencyIntegrity();
+    void DetectCircularDependencies();
 
     // Integration Testing
-    void TestCoreIntegration(};
-    void TestTacticalIntegration(};
-    void TestBuildingIntegration(};
-    void TestStrategicIntegration(};
-    void TestPersonalIntegration(};
-    void TestUIIntegration(};
-    void TestAudioIntegration(};
-    void TestToolIntegration(};
-    void TestPlatformIntegration(};
+    void TestCoreIntegration();
+    void TestTacticalIntegration();
+    void TestBuildingIntegration();
+    void TestStrategicIntegration();
+    void TestPersonalIntegration();
+    void TestUIIntegration();
+    void TestAudioIntegration();
+    void TestToolIntegration();
+    void TestPlatformIntegration();
 
     // Performance Testing
-    void MeasureLoadPerformance(};
-    void MeasureMemoryPerformance(};
-    void MeasureCPUPerformance(};
-    void MeasureGPUPerformance(};
+    void MeasureLoadPerformance();
+    void MeasureMemoryPerformance();
+    void MeasureCPUPerformance();
+    void MeasureGPUPerformance();
 
     // Communication Testing
-    void TestCoreEventBus(};
-    void TestSystemEventBuses(};
-    void TestCrossSystemEvents(};
-    void TestEventPerformance(};
+    void TestCoreEventBus();
+    void TestSystemEventBuses();
+    void TestCrossSystemEvents();
+    void TestEventPerformance();
 
     // Health Monitoring
-    void MonitorSystemResources(};
-    void CheckErrorLogs(};
-    void ValidateSystemStability(};
-    void AssessOverallHealth(};
+    void MonitorSystemResources();
+    void CheckErrorLogs();
+    void ValidateSystemStability();
+    void AssessOverallHealth();
 
     // Reporting
-    void CompileResults(};
-    void CalculateStatistics(};
-    void GenerateRecommendations(};
-    void CreateSummaryReport(};
+    void CompileResults();
+    void CalculateStatistics();
+    void GenerateRecommendations();
+    void CreateSummaryReport();
 
     // Helpers
     FMingValidationReport* FindReport(const FString& ValidationID) {};

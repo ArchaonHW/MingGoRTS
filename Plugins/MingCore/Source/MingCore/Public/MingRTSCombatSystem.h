@@ -1,41 +1,41 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRTSCombatSystem.generated.h"
 
-// ?ï¿½ï¿½Xï¿½ï¿½?
+// ???X???
 class AMingGoRTSUnit;
 class UMingRTSUnitManager;
 
 UENUM(BlueprintType)
 enum class ERTSCombatType : uint8
 {
-    Melee,          // è¿‘æˆ°
-    Ranged,         // ?ï¿½ï¿½?
-    Artillery,      // ?ï¿½ç‚®
-    Siege,          // ?ï¿½ï¿½?
-    Naval           // æµ·æˆ°
+    Melee,          // ªñ¾Ô
+    Ranged,         // ????
+    Artillery,      // ??¬¶
+    Siege,          // ????
+    Naval           // ®ü¾Ô
 };
 
 UENUM(BlueprintType)
 enum class ERTSDamageType : uint8
 {
-    Physical,       // ?ï¿½ï¿½Xï¿½å®³
-    Fire,           // ?ï¿½ç„°?ï¿½å®³
-    Explosive,      // ?ï¿½ç‚¸?ï¿½å®³
-    Piercing,       // ç©¿åˆº?ï¿½å®³
-    Magic,          // é­”ï¿½Xï¿½å®³
-    Poison          // æ¯’ï¿½Xï¿½å®³
+    Physical,       // ???X?®`
+    Fire,           // ??µK??®`
+    Explosive,      // ??¬µ??®`
+    Piercing,       // ¬ï¨ë??®`
+    Magic,          // Å]?X?®`
+    Poison          // ¬r?X?®`
 };
 
 UENUM(BlueprintType)
 enum class ERTSCombatStance : uint8
 {
-    Aggressive,     // ?ï¿½ï¿½?å§¿ï¿½?
-    Defensive,      // ?ï¿½ç¦¦å§¿ï¿½?
-    Neutral,        // ä¸­ï¿½?å§¿ï¿½?
-    Passive         // è¢«ï¿½?å§¿ï¿½?
+    Aggressive,     // ????«º??
+    Defensive,      // ??¿m«º??
+    Neutral,        // ¤¤??«º??
+    Passive         // ³Q??«º??
 };
 
 USTRUCT(BlueprintType)
@@ -183,31 +183,31 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitKilled, AMingGoRTSUnit*, Vic
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAbilityUsed, AMingGoRTSUnit*, Unit, const FString&, AbilityName};
 
 /**
- * RTS?ï¿½é¬¥ç³»çµ±
- * ç®¡ï¿½Xï¿½?ï¿½æˆ°é¬¥ç›¸?ï¿½ï¿½Xï¿½è¼¯?ï¿½ï¿½?ï¿½? */
+ * RTS??°«¨t²Î
+ * ºŞ?X???¾Ô°«¬Û???X?¿è?????? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSCombatSystem : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingRTSCombatSystem(};
+    UMingRTSCombatSystem();
 
-    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // ???X    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void InitializeCombatSystem(UMingRTSUnitManager* InUnitManager};
 
-    // ?ï¿½é¬¥çµ±ï¿½?
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ??°«²Î??
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     void SetUnitCombatStats(AMingGoRTSUnit* Unit, const FRTSCombatStats& CombatStats) {};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     FRTSCombatStats GetUnitCombatStats(AMingGoRTSUnit* Unit) const;
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     void UpdateCombatStats(AMingGoRTSUnit* Unit, float DamageMultiplier = 1.0f, float DefenseMultiplier = 1.0f};
 
-    // ?ï¿½é¬¥?ï¿½ï¿½?
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ??°«????
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     FRTSCombatResult ExecuteCombat(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
 
     bool CanAttack(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
@@ -218,30 +218,30 @@ public:
 
     bool IsInCombat(AMingGoRTSUnit* Unit) const;
 
-    // ?ï¿½å®³è¨ˆï¿½?
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ??®`­p??
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     float CalculateDamage(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     float ApplyDamageReduction(float BaseDamage, ERTSDamageType DamageType, float DefenseRating};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     bool CheckHit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     bool CheckCritical(AMingGoRTSUnit* Attacker};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     bool CheckDodge(AMingGoRTSUnit* Target};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     bool CheckBlock(AMingGoRTSUnit* Target};
 
-    // ?ï¿½é¬¥å§¿ï¿½?
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ??°««º??
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     void SetCombatStance(AMingGoRTSUnit* Unit, ERTSCombatStance Stance};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     ERTSCombatStance GetCombatStance(AMingGoRTSUnit* Unit) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
@@ -250,64 +250,64 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     float GetStanceDefenseMultiplier(ERTSCombatStance Stance) const;
 
-    // ç¯„ï¿½Xï¿½ï¿½?
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ½d?X???
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     TArray<AMingGoRTSUnit*> GetUnitsInArea(const FVector& Center, float Radius, AMingGoRTSUnit* ExcludedUnit = nullptr};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     void ExecuteAreaAttack(AMingGoRTSUnit* Attacker, const FVector& Center, float Radius};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     void ExecuteLineAttack(AMingGoRTSUnit* Attacker, const FVector& Start, const FVector& End, float Width};
 
-    // ?ï¿½?ï¿½ç³»ï¿½?    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ????¨t??    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     void AddAbility(AMingGoRTSUnit* Unit, const FRTSAbilityData& Ability) {};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     void RemoveAbility(AMingGoRTSUnit* Unit, const FString& AbilityName) {};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     bool UseAbility(AMingGoRTSUnit* Unit, const FString& AbilityName, AMingGoRTSUnit* Target = nullptr};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     TArray<FRTSAbilityData> GetUnitAbilities(AMingGoRTSUnit* Unit) const;
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     bool IsAbilityAvailable(AMingGoRTSUnit* Unit, const FString& AbilityName) const;
 
-    // ?ï¿½?ï¿½ï¿½X    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ?????X    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     void ApplyStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName, float Duration, float Power};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     void RemoveStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName) {};
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ä½¿XUFUNCTION BlueprintCallable
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X?¨ÏXUFUNCTION BlueprintCallable
     bool HasStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void UpdateStatusEffects(float DeltaTime};
 
-    // ?ï¿½é¬¥å¹³è¡¡èª¿æ•´
+    // ??°«¥­¿Å½Õ¾ã
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
-    void BalanceCombatStats(};
+    void BalanceCombatStats();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
-    void AdjustUnitTypeAdvantages(};
+    void AdjustUnitTypeAdvantages();
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void SetDifficultyMultiplier(float Multiplier};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
-    void OptimizeCombatPerformance(};
+    void OptimizeCombatPerformance();
 
-    // ?ï¿½é¬¥?ï¿½æ–°
+    // ??°«??·s
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void UpdateCombat(float DeltaTime};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
-    void ProcessCombatQueue(};
+    void ProcessCombatQueue();
 
-    // ?ï¿½é¬¥çµ±ï¿½?
+    // ??°«²Î??
     UFUNCTION(BlueprintPure, Category = "RTS Combat System")
     int32 GetActiveCombatCount() const;
 
@@ -318,9 +318,9 @@ public:
     int32 GetUnitsKilled() const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
-    void ResetCombatStats(};
+    void ResetCombatStats();
 
-    // äº‹ä»¶
+    // ¨Æ¥ó
     UPROPERTY(BlueprintAssignable, Category = "RTS Combat Events")
     FOnCombatStarted OnCombatStarted;
 
@@ -337,27 +337,27 @@ public:
     FOnAbilityUsed OnAbilityUsed;
 
 protected:
-    // ç³»çµ±å¼•ç”¨
+    // ¨t²Î¤Ş¥Î
     UPROPERTY()
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
-    // ?ï¿½é¬¥?ï¿½ï¿½?
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ï¿½? UPROPERTY
+    // ??°«????
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X??? UPROPERTY
     TMap<AMingGoRTSUnit*, FRTSCombatStats> UnitCombatStats;
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ï¿½? UPROPERTY
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X??? UPROPERTY
     TMap<AMingGoRTSUnit*, ERTSCombatStance> UnitCombatStances;
 
-    // æ³¨ï¿½?ï¼šTMap<TArray> ä¸æ”¯XUPROPERTY
+    // ª`??¡GTMap<TArray> ¤£¤äXUPROPERTY
     TMap<AMingGoRTSUnit*, TArray<FRTSAbilityData>> UnitAbilities;
 
-    // æ³¨ï¿½?ï¼šTMap<TMap> ä¸æ”¯XUPROPERTY
+    // ª`??¡GTMap<TMap> ¤£¤äXUPROPERTY
     TMap<AMingGoRTSUnit*, TMap<FString, float>> StatusEffects;
 
-    // æ³¨ï¿½?ï¼šAMingGoRTSUnit ?ï¿½ä¸»å°ˆï¿½?é¡ï¿½?ï¼Œï¿½Xï¿½ï¿½? UPROPERTY
+    // ª`??¡GAMingGoRTSUnit ??¥D±M??Ãş??¡A?X??? UPROPERTY
     TMap<AMingGoRTSUnit*, AMingGoRTSUnit*> CombatPairs;
 
-    // ?ï¿½é¬¥è¨­ç½®
+    // ??°«³]¸m
     UPROPERTY(BlueprintReadWrite, Category = "Combat Settings")
     float BaseDamageMultiplier = 1.0f;
 
@@ -376,7 +376,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Combat Settings")
     bool bEnableBlocking = true;
 
-    // å¹³è¡¡èª¿æ•´?ï¿½æ•¸
+    // ¥­¿Å½Õ¾ã??¼Æ
     UPROPERTY(BlueprintReadWrite, Category = "Balance Settings")
     float DifficultyMultiplier = 1.0f;
 
@@ -389,26 +389,26 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Balance Settings")
     TMap<ERTSDamageType, float> DamageTypeEffectiveness;
 
-    // çµ±ï¿½Xï¿½ï¿½?
+    // ²Î?X???
     UPROPERTY()
     int32 TotalDamageDealt;
 
     UPROPERTY()
     int32 UnitsKilled;
 
-    // ?ï¿½X    UPROPERTY()
+    // ??X    UPROPERTY()
     bool bIsInitialized;
 
-    // ?ï¿½éƒ¨?ï¿½æ•¸
+    // ??³¡??¼Æ
     void ProcessCombatPair(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, float DeltaTime};
     void ApplyCombatResult(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, const FRTSCombatResult& Result) {};
     FString GenerateCombatResultMessage(const FRTSCombatResult& Result) const;
     float GetDamageTypeMultiplier(ERTSDamageType DamageType, ERTSDamageType DefenseType) const;
-    void CleanupDeadUnits(};
+    void CleanupDeadUnits();
     void UpdateAbilityCooldowns(float DeltaTime};
 
 private:
-    // è¼”åŠ©?ï¿½æ•¸
+    // »²§U??¼Æ
     void NotifyCombatStarted(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, ERTSCombatType CombatType, ERTSDamageType DamageType};
     void NotifyCombatHit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, const FRTSCombatResult& Result) {};
     void NotifyCombatMissed(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};

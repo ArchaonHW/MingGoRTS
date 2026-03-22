@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,8 @@
 #include "MingMilitaryConsequenceCalculator.generated.h"
 
 /**
- * è»ï¿½?å¾Œï¿½?è¨ˆï¿½X * å°ˆï¿½?è¨ˆï¿½?æ±ºï¿½?å°ï¿½?äº‹å±¤?ï¿½ï¿½?å½±éŸ¿
- * ?ï¿½å«?ï¿½ï¿½?è®Šï¿½Xï¿½æˆ°?ï¿½ï¿½?ç½®ã€æˆ°?ï¿½ï¿½Xï¿½ï¿½?
+ * ­x??«á??­p?X * ±M??­p??¨M??¹ï??¨Æ¼h????¼vÅT
+ * ??§t????ÅÜ?X?¾Ô????¸m¡B¾Ô???X???
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingMilitaryConsequenceCalculator : public UObject, public IMingConsequenceCalculator
@@ -15,9 +15,9 @@ class MINGCORE_API UMingMilitaryConsequenceCalculator : public UObject, public I
     GENERATED_BODY()
 
 public:
-    // å»ºï¿½?ï¿½?    UMingMilitaryConsequenceCalculator(};
+    // «Ø????    UMingMilitaryConsequenceCalculator();
 
-    // å¯¦ç¾ä»‹é¢?ï¿½ï¿½?
+    // ¹ê²{¤¶­±????
     virtual void Calculate_Implementation(const FMingDecisionContext& Context, FMingConsequenceResult& Result) override;
     virtual bool CanHandle_Implementation(const FMingDecisionContext& Context) const override;
     virtual float GetWeight_Implementation() const override;
@@ -25,44 +25,44 @@ public:
     virtual FString GetCalculatorDescription_Implementation() const override;
 
 protected:
-    // è¨ˆï¿½?è»ï¿½?å¯¦ï¿½?è®Šï¿½?
+    // ­p??­x??¹ê??ÅÜ??
     void CalculateMilitaryStrength(const FMingDecisionContext& Context, FMingMilitaryConsequence& Strength};
 
-    // è¨ˆï¿½Xï¿½ç•¥ä½ç½®å½±éŸ¿
+    // ­p?X?²¤¦ì¸m¼vÅT
     void CalculateStrategicPosition(const FMingDecisionContext& Context, TArray<FString>& PositionChanges};
 
-    // è¨ˆï¿½Xï¿½çˆ­?ï¿½?ï¿½ï¿½X    void CalculateWarStatus(const FMingDecisionContext& Context, TArray<FString>& WarStatusChanges};
+    // ­p?X?ª§?????X    void CalculateWarStatus(const FMingDecisionContext& Context, TArray<FString>& WarStatusChanges};
 
-    // è¨ˆï¿½?è»ï¿½Xï¿½ï¿½?è®Šï¿½?
+    // ­p??­x?X???ÅÜ??
     void CalculateMilitaryBudget(const FMingDecisionContext& Context, float& BudgetChange};
 
-    // è¨ˆï¿½?å£«æ°£è®Šï¿½?
+    // ­p??¤h®ğÅÜ??
     void CalculateMorale(const FMingDecisionContext& Context, float& MoraleChange};
 
-    // æ°‘ï¿½Xï¿½è‰²è¨ˆï¿½?
+    // ¥Á?X?¦â­p??
     void CalculateRepublicanEraMilitary(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence};
 
-    // ?ï¿½ï¿½Xï¿½çˆ­å½±éŸ¿è¨ˆï¿½?
+    // ???X?ª§¼vÅT­p??
     void CalculateNorthernExpeditionImpact(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence};
 
-    // ?ï¿½æ—¥?ï¿½çˆ­å½±éŸ¿è¨ˆï¿½?
+    // ??¤é??ª§¼vÅT­p??
     void CalculateAntiJapaneseWarImpact(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence};
 
-    // è»é–¥æ··æˆ°å½±éŸ¿è¨ˆï¿½?
+    // ­x»Ö²V¾Ô¼vÅT­p??
     void CalculateWarlordConflictImpact(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence};
 
-    // è»ï¿½Xï¿½ä»£?ï¿½å½±?ï¿½ï¿½?ï¿½?    void CalculateMilitaryModernization(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence};
+    // ­x?X?¥N??¼v??????    void CalculateMilitaryModernization(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence};
 
 private:
-    // è¨ˆï¿½Xï¿½ï¿½X    static constexpr float CALCULATOR_WEIGHT = 0.8f;
+    // ­p?X??X    static constexpr float CALCULATOR_WEIGHT = 0.8f;
 
-    // æ°‘ï¿½Xï¿½ï¿½?ä¸»ï¿½Xï¿½çˆ­?ï¿½è¡¨
+    // ¥Á?X???¥D?X?ª§??ªí
     static const TArray<FString> RepublicanEraWars;
 
-    // ?ï¿½ç•¥ä½ç½®?ï¿½è¡¨
+    // ??²¤¦ì¸m??ªí
     static const TArray<FString> StrategicPositions;
 
-    // è»ï¿½?è£ï¿½?é¡ï¿½?
+    // ­x??¸Ë??Ãş??
     static const TArray<FString> MilitaryEquipmentTypes;
 };
 

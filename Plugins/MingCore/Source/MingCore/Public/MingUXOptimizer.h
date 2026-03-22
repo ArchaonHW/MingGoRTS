@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -106,21 +106,21 @@ class MINGUX_API UMingUXOptimizer : public UObject
     GENERATED_BODY()
 
 public:
-    UMingUXOptimizer(};
+    UMingUXOptimizer();
 
     // Optimization Control
     UFUNCTION(BlueprintCallable, Category = "UX Optimization")
-    void InitializeOptimizer(};
+    void InitializeOptimizer();
 
     UFUNCTION(BlueprintCallable, Category = "UX Optimization")
-    void RunAllOptimizations(};
+    void RunAllOptimizations();
 
     UFUNCTION(BlueprintCallable, Category = "UX Optimization")
     void RunOptimization(EMingUXOptimizationType OptimizationType};
 
     // Color Blindness Optimization
     UFUNCTION(BlueprintCallable, Category = "Color Blindness")
-    void OptimizeColorBlindnessSupport(};
+    void OptimizeColorBlindnessSupport();
 
     UFUNCTION(BlueprintCallable, Category = "Color Blindness")
     void EnableColorBlindMode(EMingColorBlindMode Mode};
@@ -129,49 +129,49 @@ public:
     void SetHighContrastColors(bool bEnable};
 
     UFUNCTION(BlueprintCallable, Category = "Color Blindness")
-    void AddPatternIndicators(};
+    void AddPatternIndicators();
 
     UFUNCTION(BlueprintCallable, Category = "Color Blindness")
-    void TestColorCombinations(};
+    void TestColorCombinations();
 
     // Interface Clarity Optimization
     UFUNCTION(BlueprintCallable, Category = "Interface Clarity")
-    void OptimizeInterfaceClarity(};
+    void OptimizeInterfaceClarity();
 
     UFUNCTION(BlueprintCallable, Category = "Interface Clarity")
-    void ImproveTextReadability(};
+    void ImproveTextReadability();
 
     UFUNCTION(BlueprintCallable, Category = "Interface Clarity")
-    void EnhanceVisualHierarchy(};
+    void EnhanceVisualHierarchy();
 
     UFUNCTION(BlueprintCallable, Category = "Interface Clarity")
-    void SimplifyComplexElements(};
+    void SimplifyComplexElements();
 
     // Loading Time Optimization
     UFUNCTION(BlueprintCallable, Category = "Loading Optimization")
-    void OptimizeLoadingTimes(};
+    void OptimizeLoadingTimes();
 
     UFUNCTION(BlueprintCallable, Category = "Loading Optimization")
-    void ImplementAsyncLoading(};
+    void ImplementAsyncLoading();
 
     UFUNCTION(BlueprintCallable, Category = "Loading Optimization")
-    void OptimizeAssetLoading(};
+    void OptimizeAssetLoading();
 
     UFUNCTION(BlueprintCallable, Category = "Loading Optimization")
-    void AddLoadingProgressFeedback(};
+    void AddLoadingProgressFeedback();
 
     // New Player Experience Optimization
     UFUNCTION(BlueprintCallable, Category = "New Player Experience")
-    void OptimizeNewPlayerExperience(};
+    void OptimizeNewPlayerExperience();
 
     UFUNCTION(BlueprintCallable, Category = "New Player Experience")
-    void EnhanceTutorialSystem(};
+    void EnhanceTutorialSystem();
 
     UFUNCTION(BlueprintCallable, Category = "New Player Experience")
-    void AddContextualHints(};
+    void AddContextualHints();
 
     UFUNCTION(BlueprintCallable, Category = "New Player Experience")
-    void ImplementGuidedOnboarding(};
+    void ImplementGuidedOnboarding();
 
     // Results and Analysis
     UFUNCTION(BlueprintPure, Category = "Results")
@@ -184,7 +184,7 @@ public:
     bool AreTargetsMet() const;
 
     UFUNCTION(BlueprintCallable, Category = "Results")
-    void GenerateOptimizationReport(};
+    void GenerateOptimizationReport();
 
     UFUNCTION(BlueprintCallable, Category = "Results")
     void ExportOptimizationData(const FString& FilePath) {};
@@ -219,39 +219,39 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeOptimizationConfigs(};
-    void AnalyzeCurrentUXState(};
-    void PrioritizeOptimizations(};
+    void InitializeOptimizationConfigs();
+    void AnalyzeCurrentUXState();
+    void PrioritizeOptimizations();
 
     // Color Blindness Implementation
-    void ApplyColorBlindPalette(};
-    void AddSymbolIndicators(};
-    void ImplementPatternDifferentiation(};
-    void TestColorAccessibility(};
+    void ApplyColorBlindPalette();
+    void AddSymbolIndicators();
+    void ImplementPatternDifferentiation();
+    void TestColorAccessibility();
 
     // Interface Clarity Implementation
-    void IncreaseFontSizes(};
-    void ImproveContrastRatios(};
-    void SimplifyLayouts(};
-    void AddVisualGuidance(};
+    void IncreaseFontSizes();
+    void ImproveContrastRatios();
+    void SimplifyLayouts();
+    void AddVisualGuidance();
 
     // Loading Optimization Implementation
-    void SetupAsyncLoading(};
-    void OptimizeTextureLoading(};
-    void ImplementAssetCaching(};
-    void AddLoadingScreenImprovements(};
+    void SetupAsyncLoading();
+    void OptimizeTextureLoading();
+    void ImplementAssetCaching();
+    void AddLoadingScreenImprovements();
 
     // New Player Experience Implementation
-    void CreateInteractiveTutorial(};
-    void AddHelpTooltips(};
-    void ImplementSmartHints(};
-    void DesignProgressiveDisclosure(};
+    void CreateInteractiveTutorial();
+    void AddHelpTooltips();
+    void ImplementSmartHints();
+    void DesignProgressiveDisclosure();
 
     // Results Processing
-    void ProcessOptimizationResults(};
-    void CalculateImprovements(};
-    void VerifyOptimizationSuccess(};
-    void GenerateRecommendations(};
+    void ProcessOptimizationResults();
+    void CalculateImprovements();
+    void VerifyOptimizationSuccess();
+    void GenerateRecommendations();
 
     // Helpers
     FMingUXOptimizationConfig* FindOptimizationConfig(EMingUXOptimizationType Type};

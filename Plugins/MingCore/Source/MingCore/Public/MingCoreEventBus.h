@@ -1,17 +1,17 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "MingCoreEventBus.generated.h"
 
-// �ƥ�X��X(X�w�q�H��XUHT)
+// ???X??X(X?w?q?H??XUHT)
 UENUM(BlueprintType)
 enum class EEventPriority : uint8
 {
-    Critical = 0,   // ����ƥ� - �t������ާ@
-    High = 1,       // ���u���� - ���n�ƥ�M�Τ�椬
-    Normal = 2,     // ���q�u���� - �귽��s�BUI��s
-    Low = 3         // �C�u���� - �έp�ƥ�B��x�O��
+    Critical = 0,   // ?????? - ?t???????@
+    High = 1,       // ???u???? - ???n???M?�V??
+    Normal = 2,     // ???q?u???? - ????s?BUI??s
+    Low = 3         // ?C?u???? - ??p???B??x?O??
 };
 
 class MINGCORE_API IMingCoreEventBus
@@ -19,22 +19,22 @@ class MINGCORE_API IMingCoreEventBus
 public:
     virtual ~IMingCoreEventBus() {}
     
-    // �ƥ�X�f
+    // ???X?f
     template<typename EventType>
     static void PublishEvent(const EventType& Event) {};
     
-    // �ƥ�q�\X�f
+    // ???q?\X?f
     template<typename EventType>
     static void Subscribe(class UObject* Listener, TFunction<void(const EventType&)> Callback};
     
-    // �ƥ�X�q�\
+    // ???X?q?\
     template<typename EventType>
     static void Unsubscribe(class UObject* Listener};
     
-    // X��o��X��X    static void PublishBatchEvents(const TArray<struct FMingCoreEvent>& Events};
+    // X??o??X??X    static void PublishBatchEvents(const TArray<struct FMingCoreEvent>& Events};
 };
 
-// X�ƥ�X
+// X???X
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingCoreEvent
 {
@@ -57,11 +57,11 @@ struct MINGCORE_API FMingCoreEvent
         , Timestamp(FDateTime::Now())
         , Source(nullptr)
     {
-        EventId = FGuid::NewGuid().ToString(};
+        EventId = FGuid::NewGuid().ToString();
     }
 };
 
-// X�ƥ�
+// X???
 USTRUCT(BlueprintType)
 struct MINGCORE_API FUnitSelectedEvent : public FMingCoreEvent
 {
@@ -80,7 +80,7 @@ struct MINGCORE_API FUnitSelectedEvent : public FMingCoreEvent
     }
 };
 
-// X��X�ƥ�
+// X??X???
 USTRUCT(BlueprintType)
 struct MINGCORE_API FUnitMovedEvent : public FMingCoreEvent
 {
@@ -102,7 +102,7 @@ struct MINGCORE_API FUnitMovedEvent : public FMingCoreEvent
     }
 };
 
-// ��X�s�ƥ�
+// ??X?s???
 USTRUCT(BlueprintType)
 struct MINGCORE_API FResourceUpdateEvent : public FMingCoreEvent
 {

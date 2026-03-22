@@ -1,4 +1,4 @@
-ο»Ώ#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,8 @@
 #include "MingPoliticalConsequenceCalculator.generated.h"
 
 /**
- * ?οΏ½ζ²»εΎοΏ½?θ¨οΏ½X * ε°οΏ½?θ¨οΏ½?ζ±ΊοΏ½?ε°ζ”Ώζ²»ε±¤?οΏ½οΏ½?ε½±ιΏ
- * ?οΏ½ε«ζ΄Ύη³»?οΏ½οΏ½XοΏ½ζ”Ώζ²»η©©ε®ζ€§γ€οΏ½?δΊ¤οΏ½?δΏ‚οΏ½?
+ * ??ªv«α??­p?X * ±M??­p??¨M??Ήο¬FªvΌh????ΌvΕT
+ * ??§t¬£¨t???X?¬FªvΓ­©w©Κ΅B??¥ζ??«Y??
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingPoliticalConsequenceCalculator : public UObject, public IMingConsequenceCalculator
@@ -15,9 +15,9 @@ class MINGCORE_API UMingPoliticalConsequenceCalculator : public UObject, public 
     GENERATED_BODY()
 
 public:
-    // ε»ΊοΏ½?οΏ½?    UMingPoliticalConsequenceCalculator(};
+    // «Ψ????    UMingPoliticalConsequenceCalculator();
 
-    // ε―¦ηΎδ»‹ιΆ?οΏ½οΏ½?
+    // Ήκ²{¤¶­±????
     virtual void Calculate_Implementation(const FMingDecisionContext& Context, FMingConsequenceResult& Result) override;
     virtual bool CanHandle_Implementation(const FMingDecisionContext& Context) const override;
     virtual float GetWeight_Implementation() const override;
@@ -25,43 +25,43 @@ public:
     virtual FString GetCalculatorDescription_Implementation() const override;
 
 protected:
-    // θ¨οΏ½XοΏ½ζ²»ε½±ιΏ
+    // ­p?X?ªvΌvΕT
     void CalculatePoliticalImpact(const FMingDecisionContext& Context, FMingPoliticalConsequence& Impact};
 
-    // θ¨οΏ½?ζ΄Ύη³»?οΏ½οΏ½?θ®οΏ½?
+    // ­p??¬£¨t????Εά??
     void CalculateFactionRelations(const FMingDecisionContext& Context, TMap<FString, float>& Relations};
 
-    // θ¨οΏ½XοΏ½ζ²»η©©οΏ½X    void CalculatePoliticalStability(const FMingDecisionContext& Context, float& StabilityChange};
+    // ­p?X?ªvΓ­?X    void CalculatePoliticalStability(const FMingDecisionContext& Context, float& StabilityChange};
 
-    // θ¨οΏ½XοΏ½ζ²»?οΏ½οΏ½?
+    // ­p?X?ªv????
     void CalculatePoliticalReputation(const FMingDecisionContext& Context, float& ReputationChange};
 
-    // θ¨οΏ½XοΏ½ιƒ¨?οΏ½ζ²»ε£“οΏ½?
+    // ­p?X?³΅??ªvΐ£??
     void CalculateInternalPressure(const FMingDecisionContext& Context, float& PressureChange};
 
-    // ζ°‘οΏ½XοΏ½θ‰²θ¨οΏ½?
+    // ¥Α?X?¦β­p??
     void CalculateRepublicanEraPolitics(const FMingDecisionContext& Context, FMingPoliticalConsequence& Impact};
 
-    // ?οΏ½οΏ½?ι»¨ζ΄Ύη³»οΏ½?δΏ‚οΏ½?οΏ½?    void CalculateKMTFactionRelations(const FMingDecisionContext& Context, TMap<FString, float>& Relations};
+    // ????ΔÒ¬£¨t??«Y????    void CalculateKMTFactionRelations(const FMingDecisionContext& Context, TMap<FString, float>& Relations};
 
-    // θ»ι–¥εΏ οΏ½?εΊ¦οΏ½?οΏ½?    void CalculateWarlordLoyalty(const FMingDecisionContext& Context, TMap<FString, float>& Relations};
+    // ­x»Φ©Ύ??«Χ????    void CalculateWarlordLoyalty(const FMingDecisionContext& Context, TMap<FString, float>& Relations};
 
-    // ?οΏ½ε…±?οΏ½οΏ½?θ¨οΏ½?
+    // ??¦@????­p??
     void CalculateKMTCCPRelations(const FMingDecisionContext& Context, TMap<FString, float>& Relations};
 
-    // ε¤–δΊ¤ε£“οΏ½?θ¨οΏ½?
+    // ¥~¥ζΐ£??­p??
     void CalculateDiplomaticPressure(const FMingDecisionContext& Context, float& PressureChange};
 
 private:
-    // θ¨οΏ½XοΏ½οΏ½X    static constexpr float CALCULATOR_WEIGHT = 0.9f;
+    // ­p?X??X    static constexpr float CALCULATOR_WEIGHT = 0.9f;
 
-    // ζ°‘οΏ½XοΏ½οΏ½?ζ΄Ύη³»?οΏ½θ΅¨
+    // ¥Α?X???¬£¨t??ªν
     static const TArray<FString> RepublicanEraFactions;
 
-    // θ»ι–¥?οΏ½θ΅¨
+    // ­x»Φ??ªν
     static const TArray<FString> WarlordFactions;
 
-    // ε¤–οΏ½XοΏ½οΏ½XοΏ½θ΅¨
+    // ¥~?X??X?ªν
     static const TArray<FString> ForeignPowers;
 };
 

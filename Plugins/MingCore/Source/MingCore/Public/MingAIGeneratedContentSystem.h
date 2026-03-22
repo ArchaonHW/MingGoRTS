@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -18,17 +18,17 @@ UENUM(BlueprintType)
 enum class EAIGenerationType : uint8
 {
     Image,          // X
-    Video,          // �vX  
+    Video,          // ?vX  
     Music,          // X
     SoundEffect,    // X
-    Texture,        // �KX
-    Mesh,           // ��X
-    Material,       // X��X
-    Animation,      // X�eX
-    Level,          // X�dX
+    Texture,        // ?KX
+    Mesh,           // ??X
+    Material,       // X??X
+    Animation,      // X?eX
+    Level,          // X?dX
     UI,             // UIX
-    Text,           // X��X
-    Voice           // �y��X
+    Text,           // X??X
+    Voice           // ?y??X
 };
 
 UENUM(BlueprintType)
@@ -38,20 +38,20 @@ enum class EAIModelProvider : uint8
     DALL_E,            // DALL-E
     Midjourney,        // Midjourney
     AIVA,              // AIVA (X)
-    ElevenLabs,        // ElevenLabs (�y��)
+    ElevenLabs,        // ElevenLabs (?y??)
     OpenAI,            // OpenAI GPT
-    Local,             // X�a��X
-    Custom,            // �۩w�q�ҫ�
+    Local,             // X?a??X
+    Custom,            // ??w?q???
 };
 
 UENUM(BlueprintType)
 enum class EGenerationQuality : uint8
 {
-    Draft,          // X�Z��X
-    Standard,       // ��X��X
-    High,           // ����q
-    Ultra,          // �W����q
-    Custom,         // �۩w�q��q
+    Draft,          // X?Z??X
+    Standard,       // ??X??X
+    High,           // ????q
+    Ultra,          // ?W????q
+    Custom,         // ??w?q??q
 };
 
 USTRUCT(BlueprintType)
@@ -84,7 +84,7 @@ struct FAIGenerationRequest
     int32 Height;
 
     UPROPERTY(BlueprintReadWrite, Category = "AI Generation")
-    float Duration; // X��X�W/���W
+    float Duration; // X??X?W/???W
 
     UPROPERTY(BlueprintReadWrite, Category = "AI Generation")
     TMap<FString, FString> AdditionalParameters;
@@ -214,18 +214,18 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIGenerationProgress, const FStr
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSceneGenerated, const FString&, SceneName};
 
 /**
- * AI X�eX�t��
- * X�vX�B���֡B��X��X�ëإ�X�eX */
+ * AI X?eX?t??
+ * X?vX?B????B??X??X?e??X?eX */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingAIGeneratedContentSystem : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingAIGeneratedContentSystem(};
+    UMingAIGeneratedContentSystem();
 
-    // X�tX    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    void InitializeAIGenerationSystem(};
+    // X?tX    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
+    void InitializeAIGenerationSystem();
 
     // X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
@@ -234,7 +234,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateImageAsync(const FAIGenerationRequest& Request) {};
 
-    // �vX
+    // ?vX
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateVideo(const FString& Prompt, float Duration = 5.0f, int32 FPS = 30, EGenerationQuality Quality = EGenerationQuality::Standard};
 
@@ -255,30 +255,30 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateSoundEffectAsync(const FAIGenerationRequest& Request) {};
 
-    // �y��X
+    // ?y??X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateVoice(const FString& Text, const FString& VoiceID = TEXT(""), EGenerationQuality Quality = EGenerationQuality::Standard};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateVoiceAsync(const FAIGenerationRequest& Request) {};
 
-    // �KX
+    // ?KX
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     UTexture2D* GenerateTexture(const FString& Description, int32 Width = 512, int32 Height = 512};
 
-    // ��X
+    // ??X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     UStaticMesh* GenerateMesh(const FString& Description, float Complexity = 0.5f};
 
-    // X��X
+    // X??X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     UMaterialInterface* GenerateMaterial(const FString& Description, EGenerationQuality Quality = EGenerationQuality::Standard};
 
-    // X�eX
+    // X?eX
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateAnimation(const FString& Description, float Duration = 5.0f};
 
-    // X�dX
+    // X?dX
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateLevel(const FString& Description, int32 Size = 1024};
 
@@ -286,18 +286,18 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateUI(const FString& Description, const FString& UIType = TEXT("panel")};
 
-    // X��X
+    // X??X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateText(const FString& Prompt, const FString& Style = TEXT("narrative")};
 
-    // X��X��X
+    // X??X??X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void GenerateGameScene(const FAIGameSceneSetup& SceneSetup) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void GenerateGameSceneAsync(const FAIGameSceneSetup& SceneSetup) {};
 
-    // X����X
+    // X????X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     UTexture2D* RenderSceneToTexture(const FString& SceneName, int32 Width = 1920, int32 Height = 1080};
 
@@ -308,7 +308,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     TArray<FString> BatchGenerateAssets(const TArray<FAIGenerationRequest>& Requests};
 
-    // �겣��X
+    // ????X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void SaveGeneratedAsset(const FString& RequestID, const FString& AssetPath) {};
 
@@ -321,7 +321,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     UStaticMesh* LoadGeneratedMesh(const FString& AssetPath) {};
 
-    // X�dX    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
+    // X?dX    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
     bool IsGenerationInProgress(const FString& RequestID) const;
 
     UFUNCTION(BlueprintPure, Category = "AI Content Generation")
@@ -333,7 +333,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Generation")
     TArray<FString> GetActiveRequests() const;
 
-    // X�m��X
+    // X?m??X
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void SetModelProvider(EAIModelProvider Provider, const FString& APIKey = TEXT("")};
 
@@ -343,9 +343,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void SetOutputDirectory(const FString& Directory) {};
 
-    // X�]�ҪO
+    // X?]??O
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    void LoadGenerationPresets(};
+    void LoadGenerationPresets();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FAIGenerationRequest GetPresetRequest(const FString& PresetName) const;
@@ -353,7 +353,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void SavePresetRequest(const FString& PresetName, const FAIGenerationRequest& Request) {};
 
-    // X��X
+    // X??X
     UFUNCTION(BlueprintPure, Category = "AI Content Generation")
     float GetAverageGenerationTime(EAIGenerationType GenerationType) const;
 
@@ -363,16 +363,16 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Generation")
     float GetSystemLoad() const;
 
-    // �MX��X    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    void ClearCache(};
+    // ?MX??X    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
+    void ClearCache();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void CancelGeneration(const FString& RequestID) {};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
-    void CancelAllGenerations(};
+    void CancelAllGenerations();
 
-    // �ƥ�
+    // ???
     UPROPERTY(BlueprintAssignable, Category = "AI Generation Events")
     FOnAIGenerationCompleted OnAIGenerationCompleted;
 
@@ -383,7 +383,7 @@ public:
     FOnSceneGenerated OnSceneGenerated;
 
 protected:
-    // �t�βե�
+    // ?t?�]??
     UPROPERTY()
     TMap<EAIModelProvider, FString> APIKeys;
 
@@ -399,7 +399,7 @@ protected:
     UPROPERTY()
     TMap<FString, FAIGameSceneSetup> SceneSetups;
 
-    // �]�m
+    // ?]?m
     UPROPERTY(BlueprintReadWrite, Category = "AI Generation Settings")
     EAIModelProvider DefaultModelProvider;
 
@@ -427,16 +427,16 @@ protected:
     UPROPERTY()
     int32 CurrentGenerationCount;
 
-    // ��X
+    // ??X
     UPROPERTY()
     TMap<EAIGenerationType, float> AverageGenerationTimes;
 
     UPROPERTY()
     TMap<EAIGenerationType, int32> TotalGeneratedCounts;
 
-    // X��X��
-    void InitializeDefaultPresets(};
-    FString GenerateRequestID(};
+    // X??X??
+    void InitializeDefaultPresets();
+    FString GenerateRequestID();
     void ProcessGenerationRequest(const FAIGenerationRequest& Request) {};
     void UpdateGenerationProgress(const FString& RequestID, float Progress};
     void CompleteGeneration(const FString& RequestID, const FAIGenerationResult& Result) {};
@@ -444,21 +444,21 @@ protected:
     void NotifyGenerationProgress(const FString& RequestID, float Progress};
     void NotifySceneGenerated(const FString& SceneName) {};
 
-    // X��{
+    // X??{
     UTexture2D* GenerateImageInternal(const FAIGenerationRequest& Request) {};
     USoundBase* GenerateMusicInternal(const FAIGenerationRequest& Request) {};
     USoundBase* GenerateSoundEffectInternal(const FAIGenerationRequest& Request) {};
     UStaticMesh* GenerateMeshInternal(const FAIGenerationRequest& Request) {};
     UMaterialInterface* GenerateMaterialInternal(const FAIGenerationRequest& Request) {};
 
-    // X��X���U
+    // X??X???U
     void GenerateSceneLighting(const FAIGameSceneSetup& SceneSetup) {};
     void GenerateSceneEnvironment(const FAIGameSceneSetup& SceneSetup) {};
     void GenerateSceneEffects(const FAIGameSceneSetup& SceneSetup) {};
     void SetupSceneCamera(const FString& SceneName) {};
 
 private:
-    // ���UX��
+    // ???UX??
     FString GetModelAPIEndpoint(EAIModelProvider Provider) const;
     FString BuildAPIRequest(const FAIGenerationRequest& Request) const;
     FAIGenerationResult ParseAPIResponse(const FString& Response, const FString& RequestID) const;

@@ -10,38 +10,38 @@
  * 
  * Usage:
  *   // Subscribe to events
- *   FMingEventBus::Get().Subscribe(MySubscriber};
+ *   FMingEventBus::Get().Subscribe(MySubscriber);
  *   
  *   // Publish an event
- *   auto Event = MakeShared<FMyCustomEvent>(Args...};
- *   FMingEventBus::Get().Publish(Event};
+ *   auto Event = MakeShared<FMyCustomEvent>(Args...);
+ *   FMingEventBus::Get().Publish(Event);
  *   
  *   // Unsubscribe when done
- *   FMingEventBus::Get().Unsubscribe(MySubscriber->GetSubscriberId()};
+ *   FMingEventBus::Get().Unsubscribe(MySubscriber->GetSubscriberId());
  */
 class MINGCORE_API FMingEventBus
 {
 public:
     /** Get the singleton instance of the event bus. */
-    static FMingEventBus& Get(};
+    static FMingEventBus& Get();
     
     /** 
      * Subscribe a subscriber to receive events.
      * @param Subscriber - The subscriber to add
      */
-    void Subscribe(TSharedPtr<IMingEventSubscriber> Subscriber};
+    void Subscribe(TSharedPtr<IMingEventSubscriber> Subscriber);
     
     /**
      * Unsubscribe a subscriber by its ID.
      * @param SubscriberId - The ID of the subscriber to remove
      */
-    void Unsubscribe(FName SubscriberId};
+    void Unsubscribe(FName SubscriberId);
     
     /**
      * Publish an event to all interested subscribers.
      * @param Event - The event to publish
      */
-    void Publish(TSharedPtr<IMingEvent> Event};
+    void Publish(TSharedPtr<IMingEvent> Event);
     
     /**
      * Publish an event with automatic type detection.
@@ -52,14 +52,14 @@ public:
     template<typename T>
     void PublishTyped(TSharedPtr<T> Event)
     {
-        Publish(StaticCastSharedPtr<IMingEvent>(Event)};
+        Publish(StaticCastSharedPtr<IMingEvent>(Event));
     }
     
     /**
      * Process all pending events in the queue.
      * Should be called once per frame (e.g., in Tick).
      */
-    void ProcessPendingEvents(};
+    void ProcessPendingEvents();
     
     /**
      * Enable or disable event batching for performance.
@@ -75,12 +75,12 @@ public:
     /**
      * Get the number of pending events in the queue.
      */
-    int32 GetPendingEventCount() const { return PendingEvents.Num(}; }
+    int32 GetPendingEventCount() const { return PendingEvents.Num(); }
     
     /**
      * Clear all pending events without processing them.
      */
-    void ClearPendingEvents(};
+    void ClearPendingEvents();
     
     /**
      * Enable or disable async event processing.
@@ -96,7 +96,7 @@ public:
     /**
      * Shutdown the event bus and clean up all subscribers.
      */
-    void Shutdown(};
+    void Shutdown();
     
 private:
     FMingEventBus() = default;
@@ -131,7 +131,7 @@ private:
     /**
      * Sort subscribers by priority (higher priority first).
      */
-    void SortSubscribersByPriority(};
+    void SortSubscribersByPriority();
     
     /**
      * Check if a subscriber is interested in a specific event.

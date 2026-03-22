@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -142,7 +142,7 @@ struct FGeneratedScene
         ScenePath = TEXT(""};
         bIsComplete = false;
         GenerationProgress = 0.0f;
-        GenerationTime = FDateTime::Now(};
+        GenerationTime = FDateTime::Now();
         ThumbnailPath = TEXT(""};
     }
 };
@@ -161,10 +161,10 @@ class MINGCORE_API UMingAutoSceneGenerator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAutoSceneGenerator(};
+    UMingAutoSceneGenerator();
 
     // X?tX    UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
-    void InitializeAutoSceneGenerator(};
+    void InitializeAutoSceneGenerator();
 
     // X??X
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
@@ -207,7 +207,7 @@ public:
     void StartScenePreview(const FString& SceneName) {};
 
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
-    void StopScenePreview(};
+    void StopScenePreview();
 
     UFUNCTION(BlueprintPure, Category = "Auto Scene Generator")
     bool IsPreviewActive() const { return bPreviewActive; }
@@ -243,7 +243,7 @@ public:
     void BatchExportScenes(const TArray<FString>& SceneNames, const FString& ExportFormat) {};
 
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
-    void OptimizeAllScenes(};
+    void OptimizeAllScenes();
 
     // ??O??X
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
@@ -280,7 +280,7 @@ public:
     int32 GetTotalGeneratedScenes() const;
 
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
-    void ClearSceneCache(};
+    void ClearSceneCache();
 
     // X?m??X
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
@@ -306,7 +306,7 @@ public:
     FOnSceneGenerationFailed OnSceneGenerationFailed;
 
 protected:
-    // ?t?�]??
+    // ?t??]??
     UPROPERTY()
     TObjectPtr<UMingAIContentManager> AIContentManager;
 
@@ -366,7 +366,7 @@ private:
     TMap<EAIContentType, FString> GenerateAssetPrompts(const FSceneRequirement& Requirements) const;
     FAISceneConfiguration CreateSceneConfiguration(const FSceneRequirement& Requirements) const;
     float EstimateGenerationTime(const FSceneRequirement& Requirements) const;
-    void LoadDefaultTemplates(};
-    void SaveSceneData(};
-    void LoadSceneData(};
+    void LoadDefaultTemplates();
+    void SaveSceneData();
+    void LoadSceneData();
 };

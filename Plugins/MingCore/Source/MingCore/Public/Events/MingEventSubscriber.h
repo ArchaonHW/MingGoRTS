@@ -33,7 +33,7 @@ public:
      * Get the event types this subscriber wants to receive.
      * Empty array means subscribe to all events.
      */
-    virtual TArray<FName> GetInterestedEventTypes() const { return TArray<FName>(}; }
+    virtual TArray<FName> GetInterestedEventTypes() const { return TArray<FName>(); }
     
     /**
      * Handle an incoming event.

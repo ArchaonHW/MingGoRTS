@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -103,7 +103,7 @@ class MINGCORE_API UMingEventManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingEventManager(};
+    UMingEventManager();
 
     // Singleton access
     UFUNCTION(BlueprintPure, Category = "Event Manager", meta = (WorldContext = "WorldContextObject"))
@@ -133,7 +133,7 @@ public:
     void SubscribeToAllEvents(const FOnGameEvent& Callback) {};
 
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void ClearAllSubscriptions(};
+    void ClearAllSubscriptions();
 
     // Event History
     UFUNCTION(BlueprintCallable, Category = "History")
@@ -143,7 +143,7 @@ public:
     TArray<FMingGameEvent> GetAllEventHistory(float TimeWindow = -1.0f};
 
     UFUNCTION(BlueprintCallable, Category = "History")
-    void ClearHistory(};
+    void ClearHistory();
 
     UFUNCTION(BlueprintPure, Category = "History")
     int32 GetEventCount(EMingGameEventType EventType, float TimeWindow = -1.0f};
@@ -166,7 +166,7 @@ public:
     void SetBatchInterval(float Interval};
 
     UFUNCTION(BlueprintCallable, Category = "Processing")
-    void ProcessPendingEvents(};
+    void ProcessPendingEvents();
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
@@ -211,8 +211,8 @@ protected:
     // Internal functions
     void DispatchEvent(const FMingGameEvent& Event) {};
     void AddToHistory(const FMingGameEvent& Event) {};
-    void CleanupOldHistory(};
-    void ProcessBatch(};
+    void CleanupOldHistory();
+    void ProcessBatch();
     
     UPROPERTY()
     TWeakObjectPtr<UWorld> CachedWorld;

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -124,20 +124,20 @@ class MINGSTABILITY_API UMingStabilityManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingStabilityManager(};
+    UMingStabilityManager();
 
     // Stability Monitoring
     UFUNCTION(BlueprintCallable, Category = "Stability Monitoring")
-    void InitializeStabilityManager(};
+    void InitializeStabilityManager();
 
     UFUNCTION(BlueprintCallable, Category = "Stability Monitoring")
-    void StartMonitoring(};
+    void StartMonitoring();
 
     UFUNCTION(BlueprintCallable, Category = "Stability Monitoring")
-    void StopMonitoring(};
+    void StopMonitoring();
 
     UFUNCTION(BlueprintCallable, Category = "Stability Monitoring")
-    void UpdateStabilityMetrics(};
+    void UpdateStabilityMetrics();
 
     UFUNCTION(BlueprintPure, Category = "Stability Monitoring")
     FMingStabilityMetrics GetStabilityMetrics() const;
@@ -178,36 +178,36 @@ public:
     TArray<FMingErrorRecord> GetUnresolvedErrors() const;
 
     UFUNCTION(BlueprintCallable, Category = "Error Analysis")
-    void AnalyzeErrorPatterns(};
+    void AnalyzeErrorPatterns();
 
     UFUNCTION(BlueprintCallable, Category = "Error Analysis")
-    void GenerateErrorReport(};
+    void GenerateErrorReport();
 
     // Stability Improvements
     UFUNCTION(BlueprintCallable, Category = "Stability Improvements")
-    void ApplyStabilityFixes(};
+    void ApplyStabilityFixes();
 
     UFUNCTION(BlueprintCallable, Category = "Stability Improvements")
-    void OptimizeMemoryUsage(};
+    void OptimizeMemoryUsage();
 
     UFUNCTION(BlueprintCallable, Category = "Stability Improvements")
-    void ImproveErrorHandling(};
+    void ImproveErrorHandling();
 
     UFUNCTION(BlueprintCallable, Category = "Stability Improvements")
-    void AddRedundancySystems(};
+    void AddRedundancySystems();
 
     // Crash Prevention
     UFUNCTION(BlueprintCallable, Category = "Crash Prevention")
-    void SetupCrashPrevention(};
+    void SetupCrashPrevention();
 
     UFUNCTION(BlueprintCallable, Category = "Crash Prevention")
-    void ValidateSystemState(};
+    void ValidateSystemState();
 
     UFUNCTION(BlueprintCallable, Category = "Crash Prevention")
-    void CheckForMemoryLeaks(};
+    void CheckForMemoryLeaks();
 
     UFUNCTION(BlueprintCallable, Category = "Crash Prevention")
-    void MonitorPerformance(};
+    void MonitorPerformance();
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
@@ -220,7 +220,7 @@ public:
     FString ExportErrorLog() const;
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
-    void ClearErrorLog(};
+    void ClearErrorLog();
 
     // Event Delegates
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCriticalError, const FMingErrorRecord&, Error};
@@ -253,33 +253,33 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeErrorHandling(};
-    void SetupPerformanceMonitoring(};
-    void SetupMemoryMonitoring(};
+    void InitializeErrorHandling();
+    void SetupPerformanceMonitoring();
+    void SetupMemoryMonitoring();
 
     // Error Processing
     void ProcessNewError(const FMingErrorRecord& Error) {};
     void CategorizeError(FMingErrorRecord& Error};
     void DetermineSeverity(FMingErrorRecord& Error};
-    void UpdateErrorCounters(};
+    void UpdateErrorCounters();
 
     // Stability Analysis
-    void CalculateStabilityScore(};
-    void CheckStabilityThresholds(};
-    void PredictPotentialIssues(};
-    void GenerateStabilityReport(};
+    void CalculateStabilityScore();
+    void CheckStabilityThresholds();
+    void PredictPotentialIssues();
+    void GenerateStabilityReport();
 
     // Recovery Functions
-    void AttemptAutomaticRecovery(};
-    void SaveErrorState(};
+    void AttemptAutomaticRecovery();
+    void SaveErrorState();
     void NotifyDevelopers(const FMingErrorRecord& Error) {};
-    void GracefulDegradation(};
+    void GracefulDegradation();
 
     // Monitoring Functions
-    void MonitorFPS(};
-    void MonitorMemory(};
-    void MonitorNetwork(};
-    void MonitorAI(};
+    void MonitorFPS();
+    void MonitorMemory();
+    void MonitorNetwork();
+    void MonitorAI();
 
     // Helpers
     FString GenerateErrorID() const;

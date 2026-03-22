@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -134,11 +134,11 @@ class MINGGAMEFLOW_API UMingGameFlowManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGameFlowManager(};
+    UMingGameFlowManager();
 
     // Game Flow Management
     UFUNCTION(BlueprintCallable, Category = "Game Flow")
-    void InitializeGameFlow(};
+    void InitializeGameFlow();
 
     UFUNCTION(BlueprintCallable, Category = "Game Flow")
     void StartNewGame(EMingGameMode GameMode, EMingDifficulty Difficulty};
@@ -150,26 +150,26 @@ public:
     void SaveGame(const FString& SaveSlot) {};
 
     UFUNCTION(BlueprintCallable, Category = "Game Flow")
-    void ExitGame(};
+    void ExitGame();
 
     // Phase Management
     UFUNCTION(BlueprintCallable, Category = "Phase")
     void TransitionToPhase(EMingGamePhase NewPhase, const FString& Reason) {};
 
     UFUNCTION(BlueprintCallable, Category = "Phase")
-    void ReturnToPreviousPhase(};
+    void ReturnToPreviousPhase();
 
     UFUNCTION(BlueprintCallable, Category = "Phase")
-    void PauseGame(};
+    void PauseGame();
 
     UFUNCTION(BlueprintCallable, Category = "Phase")
-    void ResumeGame(};
+    void ResumeGame();
 
     UFUNCTION(BlueprintCallable, Category = "Phase")
-    void RestartMission(};
+    void RestartMission();
 
     UFUNCTION(BlueprintCallable, Category = "Phase")
-    void AbortMission(};
+    void AbortMission();
 
     UFUNCTION(BlueprintPure, Category = "Phase")
     EMingGamePhase GetCurrentPhase() const;
@@ -185,7 +185,7 @@ public:
     void CreateSession(EMingGameMode GameMode, EMingDifficulty Difficulty};
 
     UFUNCTION(BlueprintCallable, Category = "Session")
-    void EndSession(};
+    void EndSession();
 
     UFUNCTION(BlueprintPure, Category = "Session")
     FMingGameSession GetCurrentSession() const;
@@ -210,16 +210,16 @@ public:
     void StartMission(const FString& MissionID) {};
 
     UFUNCTION(BlueprintCallable, Category = "Campaign")
-    void CompleteMission(};
+    void CompleteMission();
 
     UFUNCTION(BlueprintCallable, Category = "Campaign")
-    void FailMission(};
+    void FailMission();
 
     UFUNCTION(BlueprintCallable, Category = "Campaign")
-    void NextMission(};
+    void NextMission();
 
     UFUNCTION(BlueprintCallable, Category = "Campaign")
-    void SkipMission(};
+    void SkipMission();
 
     UFUNCTION(BlueprintPure, Category = "Campaign")
     FString GetCurrentCampaign() const;
@@ -229,10 +229,10 @@ public:
 
     // Tutorial Flow
     UFUNCTION(BlueprintCallable, Category = "Tutorial")
-    void StartTutorial(};
+    void StartTutorial();
 
     UFUNCTION(BlueprintCallable, Category = "Tutorial")
-    void SkipTutorial(};
+    void SkipTutorial();
 
     UFUNCTION(BlueprintCallable, Category = "Tutorial")
     void CompleteTutorialStep(const FString& StepID) {};
@@ -245,13 +245,13 @@ public:
 
     // Save/Load Management
     UFUNCTION(BlueprintCallable, Category = "Save/Load")
-    void QuickSave(};
+    void QuickSave();
 
     UFUNCTION(BlueprintCallable, Category = "Save/Load")
-    void QuickLoad(};
+    void QuickLoad();
 
     UFUNCTION(BlueprintCallable, Category = "Save/Load")
-    void AutoSave(};
+    void AutoSave();
 
     UFUNCTION(BlueprintPure, Category = "Save/Load")
     TArray<FString> GetAvailableSaveSlots() const;
@@ -261,16 +261,16 @@ public:
 
     // Game State Validation
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void ValidateGameState(};
+    void ValidateGameState();
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void CheckWinConditions(};
+    void CheckWinConditions();
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void CheckLoseConditions(};
+    void CheckLoseConditions();
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    void CheckMissionObjectives(};
+    void CheckMissionObjectives();
 
     UFUNCTION(BlueprintPure, Category = "Validation")
     bool IsGameValid() const;
@@ -333,8 +333,8 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializePhaseTransitions(};
-    void SetupDefaultPhaseSettings(};
+    void InitializePhaseTransitions();
+    void SetupDefaultPhaseSettings();
 
     // Phase Management
     void EnterPhase(EMingGamePhase Phase};
@@ -343,33 +343,33 @@ protected:
     bool ValidatePhaseTransition(EMingGamePhase FromPhase, EMingGamePhase ToPhase) const;
 
     // Session Management
-    void InitializeSession(};
-    void UpdateSession(};
-    void FinalizeSession(};
+    void InitializeSession();
+    void UpdateSession();
+    void FinalizeSession();
 
     // Campaign Flow
-    void LoadCampaignData(};
-    void LoadMissionData(};
-    void ProcessMissionResults(};
-    void UpdateCampaignProgress(};
+    void LoadCampaignData();
+    void LoadMissionData();
+    void ProcessMissionResults();
+    void UpdateCampaignProgress();
 
     // Tutorial Flow
-    void InitializeTutorial(};
-    void ProcessTutorialStep(};
-    void CompleteTutorial(};
+    void InitializeTutorial();
+    void ProcessTutorialStep();
+    void CompleteTutorial();
 
     // Save/Load Management
     void CreateSaveSlot(const FString& SaveSlot) {};
     void DeleteSaveSlot(const FString& SaveSlot) {};
-    void ValidateSaveData(};
+    void ValidateSaveData();
 
     // Game State Management
-    void UpdateGameTime(};
-    void ProcessGameEvents(};
-    void CheckGameIntegrity(};
+    void UpdateGameTime();
+    void ProcessGameEvents();
+    void CheckGameIntegrity();
 
     // Helpers
-    FString GenerateSessionID(};
+    FString GenerateSessionID();
     void LogGameFlowEvent(const FString& Event, const FString& Details) {};
     void BroadcastPhaseChange(EMingGamePhase OldPhase, EMingGamePhase NewPhase};
 };

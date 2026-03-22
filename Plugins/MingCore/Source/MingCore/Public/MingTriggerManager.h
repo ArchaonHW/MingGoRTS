@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -46,7 +46,7 @@ struct FMingTriggerCondition
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingGameEventType EventType; // For EventOccurred
 
-    // æ³¨ï¿½?ï¼šEMingResourceType å®šç¾©?ï¿½å…¶ä»–ï¿½?ä»¶ä¸­ï¼Œï¿½Xï¿½ï¿½? UPROPERTY
+    // ª`??¡GEMingResourceType ©w¸q??¨ä¥L??¥ó¤¤¡A?X??? UPROPERTY
     int32 ResourceTypeInt; // For ResourceThreshold, mapped to EMingResourceType
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -64,7 +64,7 @@ struct FMingTriggerCondition
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Radius;
 
-    // æ³¨ï¿½?ï¼šï¿½?è¿´ï¿½?æ§‹ï¿½Xï¿½ç”¨ UPROPERTY
+    // ª`??¡G??°j??ºc?X?¥Î UPROPERTY
     TArray<FMingTriggerCondition> SubConditions; // For Compound conditions
 
     FMingTriggerCondition()
@@ -175,7 +175,7 @@ class MINGCORE_API UMingTriggerManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingTriggerManager(};
+    UMingTriggerManager();
 
     // Singleton access
     UFUNCTION(BlueprintPure, Category = "Trigger Manager", meta = (WorldContext = "WorldContextObject"))
@@ -255,7 +255,7 @@ public:
     static bool EvaluateCondition(const FMingTriggerCondition& Condition, UObject* WorldContext};
 
     UFUNCTION(BlueprintCallable, Category = "Utility")
-    void ClearAllTriggers(};
+    void ClearAllTriggers();
 
     UFUNCTION(BlueprintPure, Category = "Utility")
     int32 GetActiveTriggerCount() const;
@@ -265,7 +265,7 @@ public:
 
     // Serialization
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    FString ExportTriggersToJson(};
+    FString ExportTriggersToJson();
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     void ImportTriggersFromJson(const FString& JsonString) {};
@@ -298,6 +298,6 @@ protected:
     // Helpers
     bool CompareValues(int32 Value1, int32 Value2, EMingTriggerComparison Comparison};
     bool CompareValues(float Value1, float Value2, EMingTriggerComparison Comparison};
-    FString GenerateTriggerID(};
+    FString GenerateTriggerID();
 };
 
