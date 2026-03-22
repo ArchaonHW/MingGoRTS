@@ -1,50 +1,52 @@
-# MingRTSGuildSystem 系统文档
+# MingRTSGuildSystem 系統文檔 / MingRTSGuildSystem System Documentation
 
-## 概述
+## 概述 / Overview
 
-MingRTSGuildSystem 是一个完整的公会/联盟系统，支持公会创建、成员管理、资源管理、建筑升级、科技研究、联盟形成和外交关系管理。
+MingRTSGuildSystem 是一個完整的公會/聯盟系統，支持公會創建、成員管理、資源管理、建築升級、科技研究、聯盟形成和外交關係管理。
 
-## 核心功能
+MingRTSGuildSystem is a complete guild/alliance system supporting guild creation, member management, resource management, building upgrades, technology research, alliance formation, and diplomatic relationship management.
 
-### 1. 公会等级
-支持6种公会等级：
-- **Leader (会长)**: 公会最高领导者，拥有所有权限
-- **Officer (官员)**: 高级成员，可管理日常事务
-- **Veteran (元老)**: 资深成员，有一定管理权限
-- **Member (成员)**: 普通成员
-- **Recruit (新兵)**: 新加入成员，权限受限
-- **Guest (访客)**: 临时访问者，权限最小
+## 核心功能 / Core Features
 
-### 2. 公会权限
-- **InviteMembers**: 邀请新成员
-- **KickMembers**: 踢出成员
-- **PromoteMembers**: 晋升成员
-- **DemoteMembers**: 降级成员
-- **ManageResources**: 管理公会资源
-- **DeclareWar**: 宣战
-- **ManageDiplomacy**: 管理外交关系
-- **EditGuildInfo**: 编辑公会信息
-- **ManageBuildings**: 管理公会建筑
-- **AccessBank**: 使用公会仓库
+### 1. 公會等級 / Guild Ranks
+支持6種公會等級 / Supports 6 guild ranks：
+- **Leader (會長)**: 會長 / Leader - 公會最高領導者，擁有所有權限 / Guild leader with all permissions
+- **Officer (官員)**: 官員 / Officer - 高級成員，可管理日常事務 / Senior members who can manage daily affairs
+- **Veteran (元老)**: 元老 / Veteran - 資深成員，有一定管理權限 / Veteran members with some management permissions
+- **Member (成員)**: 成員 / Member - 普通成員 / Regular members
+- **Recruit (新兵)**: 新兵 / Recruit - 新加入成員，權限受限 / New members with limited permissions
+- **Guest (訪客)**: 訪客 / Guest - 臨時訪問者，權限最小 / Temporary visitors with minimal permissions
 
-### 3. 联盟类型
-- **Military**: 军事联盟 - 共同防御和进攻
-- **Economic**: 经济联盟 - 贸易协定和资源共享
-- **Research**: 研究联盟 - 科技合作
-- **Defense**: 防御联盟 - 互助防御
-- **Trade**: 贸易联盟 - 商业合作
-- **Cultural**: 文化联盟 - 文化交流
+### 2. 公會權限 / Guild Permissions
+- **InviteMembers**: 邀請新成員 / Invite new members
+- **KickMembers**: 踢出成員 / Kick members
+- **PromoteMembers**: 晉升成員 / Promote members
+- **DemoteMembers**: 降級成員 / Demote members
+- **ManageResources**: 管理公會資源 / Manage guild resources
+- **DeclareWar**: 宣戰 / Declare war
+- **ManageDiplomacy**: 管理外交關係 / Manage diplomatic relations
+- **EditGuildInfo**: 編輯公會信息 / Edit guild information
+- **ManageBuildings**: 管理公會建築 / Manage guild buildings
+- **AccessBank**: 使用公會倉庫 / Access guild bank
 
-### 4. 外交关系
-- **Neutral**: 中立
-- **Allied**: 同盟
-- **Friendly**: 友好
-- **Hostile**: 敌对
-- **AtWar**: 战争状态
-- **TradeAgreement**: 贸易协定
-- **NonAggression**: 互不侵犯
+### 3. 聯盟類型 / Alliance Types
+- **Military**: 軍事聯盟 / Military Alliance - 共同防禦和進攻 / Mutual defense and offense
+- **Economic**: 經濟聯盟 / Economic Alliance - 貿易協定和資源共享 / Trade agreements and resource sharing
+- **Research**: 研究聯盟 / Research Alliance - 科技合作 / Technology cooperation
+- **Defense**: 防禦聯盟 / Defense Alliance - 互助防禦 / Mutual defense
+- **Trade**: 貿易聯盟 / Trade Alliance - 商業合作 / Commercial cooperation
+- **Cultural**: 文化聯盟 / Cultural Alliance - 文化交流 / Cultural exchange
 
-## API 参考
+### 4. 外交關係 / Diplomatic Relations
+- **Neutral**: 中立 / Neutral
+- **Allied**: 同盟 / Allied
+- **Friendly**: 友好 / Friendly
+- **Hostile**: 敵對 / Hostile
+- **AtWar**: 戰爭狀態 / At War
+- **TradeAgreement**: 貿易協定 / Trade Agreement
+- **NonAggression**: 互不侵犯 / Non-Aggression
+
+## API 參考 / API Reference
 
 ### 系统初始化
 

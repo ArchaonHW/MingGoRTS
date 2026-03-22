@@ -1,58 +1,48 @@
-# MingRTSAIDynamicDifficulty 系统文档
+# MingRTSAIDynamicDifficulty 系統文檔 / MingRTSAIDynamicDifficulty System Documentation
 
-## 概述
+## 概述 / Overview
 
-MingRTSAIDynamicDifficulty 是一个AI难度动态平衡系统，根据玩家技能和表现自动调整游戏难度，提供个性化的游戏体验。
+MingRTSAIDynamicDifficulty 是一個AI難度動態平衡系統，根據玩家技能和表現自動調整遊戲難度，提供個性化的遊戲體驗。
 
-## 核心功能
+MingRTSAIDynamicDifficulty is an AI dynamic difficulty balancing system that automatically adjusts game difficulty based on player skill and performance, providing a personalized gaming experience.
 
-### 1. 难度等级
-系统支持7种难度等级：
-- **VeryEasy**: 非常简单，适合新手玩家
-- **Easy**: 简单，降低挑战
-- **Normal**: 正常，标准体验
-- **Hard**: 困难，增加挑战
-- **VeryHard**: 非常困难，高难度挑战
-- **Nightmare**: 噩梦级，极限挑战
-- **Adaptive**: 自适应，根据玩家表现动态调整
+## 核心功能 / Core Features
 
-### 2. 玩家技能评估
-跟踪10项玩家技能指标：
-- **ActionsPerMinute (APM)**: 每分钟操作数
-- **ReactionTime**: 反应时间
-- **StrategicThinking**: 战略思维能力
-- **ResourceManagement**: 资源管理能力
-- **TacticalExecution**: 战术执行能力
-- **Adaptability**: 适应能力
-- **UnitControl**: 单位控制能力
-- **MapAwareness**: 地图意识
-- **EconomyManagement**: 经济管理
-- **CombatEfficiency**: 战斗效率
+### 1. 難度等級 / Difficulty Levels
+系統支持7種難度等級 / System supports 7 difficulty levels：
+- **VeryEasy**: 非常簡單 / Very Easy - 適合新手玩家 / For new players
+- **Easy**: 簡單 / Easy - 降低挑戰 / Reduced challenge
+- **Normal**: 正常 / Normal - 標準體驗 / Standard experience
+- **Hard**: 困難 / Hard - 增加挑戰 / Increased challenge
+- **VeryHard**: 非常困難 / Very Hard - 高難度挑戰 / High difficulty challenge
+- **Nightmare**: 噩夢級 / Nightmare - 極限挑戰 / Extreme challenge
+- **Adaptive**: 自適應 / Adaptive - 根據玩家表現動態調整 / Dynamically adjusts based on performance
 
-### 3. 动态调整类型
-- **AIIntelligence**: AI智能等级
-- **ResourceBonus**: AI资源加成
-- **ProductionSpeed**: 生产速度
-- **CombatBonus**: 战斗加成
-- **TechProgression**: 科技进度
-- **DefensiveStrength**: 防御强度
-- **Aggressiveness**: AI侵略性
-- **UnitEfficiency**: 单位效率
-- **StrategicDepth**: 战略深度
+### 2. 玩家技能評估 / Player Skill Assessment
+跟踪10項玩家技能指標 / Tracks 10 player skill metrics：
+- **ActionsPerMinute (APM)**: 每分鐘操作數 / Actions per minute
+- **ReactionTime**: 反應時間 / Reaction time
+- **StrategicThinking**: 戰略思維能力 / Strategic thinking ability
+- **ResourceManagement**: 資源管理能力 / Resource management ability
+- **TacticalExecution**: 戰術執行能力 / Tactical execution ability
+- **Adaptability**: 適應能力 / Adaptability
+- **UnitControl**: 單位控制能力 / Unit control ability
+- **MapAwareness**: 地圖意識 / Map awareness
+- **EconomyManagement**: 經濟管理 / Economy management
+- **CombatEfficiency**: 戰鬥效率 / Combat efficiency
 
-### 4. 会话追踪
-- 跟踪玩家整个游戏会话的表现
-- 计算会话统计数据
-- 评估玩家整体技能水平
-- 生成表现报告
+### 3. 動態調整類型 / Dynamic Adjustment Types
+- **AIIntelligence**: AI智能等級 / AI intelligence level
+- **ResourceBonus**: AI資源加成 / AI resource bonus
+- **ProductionSpeed**: 生產速度 / Production speed
+- **CombatBonus**: 戰鬥加成 / Combat bonus
+- **TechProgression**: 科技進度 / Tech progression
+- **DefensiveStrength**: 防禦強度 / Defensive strength
+- **Aggressiveness**: AI侵略性 / AI aggressiveness
+- **UnitEfficiency**: 單位效率 / Unit efficiency
+- **StrategicDepth**: 戰略深度 / Strategic depth
 
-### 5. 挑战记录
-- 记录关键游戏挑战
-- 评估玩家如何应对挑战
-- 计算挑战成功率
-- 分析失败模式
-
-## API 参考
+## API 參考 / API Reference
 
 ### 系统初始化
 

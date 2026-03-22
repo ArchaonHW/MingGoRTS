@@ -1,41 +1,43 @@
-# MingRTSSelfLearningSystem 系统文档
+# MingRTSSelfLearningSystem 系統文檔 / MingRTSSelfLearningSystem System Documentation
 
-## 概述
+## 概述 / Overview
 
-MingRTSSelfLearningSystem 是一个自我学习系统，利用机器学习算法从玩家行为、游戏指标和系统性能中学习，提供个性化的游戏体验和智能AI适应。
+MingRTSSelfLearningSystem 是一個自我學習系統，利用機器學習算法從玩家行為、遊戲指標和系統性能中學習，提供個性化的遊戲體驗和智能AI適應。
 
-## 核心功能
+MingRTSSelfLearningSystem is a self-learning system that uses machine learning algorithms to learn from player behavior, game metrics, and system performance, providing personalized gaming experiences and intelligent AI adaptation.
 
-### 1. 学习数据类型
-支持8种学习数据类型：
-- **UserBehavior**: 用户行为 - 点击、移动、选择等操作
-- **GameMetrics**: 游戏指标 - 胜率、分数、时长等
-- **CulturalPreferences**: 文化偏好 - 语言、地区设置
-- **AudioPreferences**: 音频偏好 - 音量、音效类型
-- **UIPreferences**: UI偏好 - 界面布局、主题
-- **ContentPreferences**: 内容偏好 - 喜欢/不喜欢的内容
-- **AIPlayerStrategies**: AI玩家策略 - 战术模式识别
-- **SystemPerformance**: 系统性能 - FPS、内存使用等
+## 核心功能 / Core Features
 
-### 2. 机器学习算法
-支持7种算法：
-- **ReinforcementLearning**: 强化学习 - 基于奖励的学习
-- **NeuralNetwork**: 神经网络 - 深度模式识别
-- **Clustering**: 聚类 - 用户分群
-- **DecisionTree**: 决策树 - 规则提取
-- **Bayesian**: 贝叶斯 - 概率推理
-- **GeneticAlgorithm**: 遗传算法 - 进化优化
-- **CollaborativeFiltering**: 协同过滤 - 推荐系统
+### 1. 學習數據類型 / Learning Data Types
+支持8種學習數據類型 / Supports 8 learning data types：
+- **UserBehavior**: 用戶行為 / User Behavior - 點擊、移動、選擇等操作 / Clicks, movements, selections
+- **GameMetrics**: 遊戲指標 / Game Metrics - 勝率、分數、時長等 / Win rate, score, duration
+- **CulturalPreferences**: 文化偏好 / Cultural Preferences - 語言、地區設置 / Language, region settings
+- **AudioPreferences**: 音頻偏好 / Audio Preferences - 音量、音效類型 / Volume, sound types
+- **UIPreferences**: UI偏好 / UI Preferences - 界面佈局、主題 / Layout, themes
+- **ContentPreferences**: 內容偏好 / Content Preferences - 喜歡/不喜歡的內容 / Liked/disliked content
+- **AIPlayerStrategies**: AI玩家策略 / AI Player Strategies - 戰術模式識別 / Tactical pattern recognition
+- **SystemPerformance**: 系統性能 / System Performance - FPS、內存使用等 / FPS, memory usage
 
-### 3. 学习信心水平
-5种信心水平：
-- **VeryLow**: 很低 - < 30%
-- **Low**: 低 - 30-50%
-- **Medium**: 中等 - 50-70%
-- **High**: 高 - 70-85%
-- **VeryHigh**: 很高 - > 85%
+### 2. 機器學習算法 / Machine Learning Algorithms
+支持7種算法 / Supports 7 algorithms：
+- **ReinforcementLearning**: 強化學習 / Reinforcement Learning - 基於獎勵的學習 / Reward-based learning
+- **NeuralNetwork**: 神經網絡 / Neural Network - 深度模式識別 / Deep pattern recognition
+- **Clustering**: 聚類 / Clustering - 用戶分群 / User grouping
+- **DecisionTree**: 決策樹 / Decision Tree - 規則提取 / Rule extraction
+- **Bayesian**: 貝葉斯 / Bayesian - 概率推理 / Probabilistic reasoning
+- **GeneticAlgorithm**: 遺傳算法 / Genetic Algorithm - 進化優化 / Evolutionary optimization
+- **CollaborativeFiltering**: 協同過濾 / Collaborative Filtering - 推薦系統 / Recommendation system
 
-## API 参考
+### 3. 學習信心水平 / Learning Confidence Levels
+5種信心水平 / 5 confidence levels：
+- **VeryLow**: 很低 / Very Low - < 30%
+- **Low**: 低 / Low - 30-50%
+- **Medium**: 中等 / Medium - 50-70%
+- **High**: 高 / High - 70-85%
+- **VeryHigh**: 很高 / Very High - > 85%
+
+## API 參考 / API Reference
 
 ### 系统初始化
 

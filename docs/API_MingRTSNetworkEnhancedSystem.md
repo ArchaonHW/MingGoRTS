@@ -1,66 +1,68 @@
-# MingRTSNetworkEnhancedSystem 系统文档
+# MingRTSNetworkEnhancedSystem 系統文檔 / MingRTSNetworkEnhancedSystem System Documentation
 
-## 概述
+## 概述 / Overview
 
-MingRTSNetworkEnhancedSystem 是一个增强型网络系统，提供完整的网络游戏架构，支持多种网络类型、连接状态管理、数据同步和性能优化。
+MingRTSNetworkEnhancedSystem 是一個增強型網絡系統，提供完整的網絡遊戲架構，支持多種網絡類型、連接狀態管理、數據同步和性能優化。
 
-## 核心功能
+MingRTSNetworkEnhancedSystem is an enhanced networking system providing a complete online gaming architecture, supporting multiple network types, connection state management, data synchronization, and performance optimization.
 
-### 1. 网络类型
-支持10种网络类型：
-- **LAN**: 局域网 - 本地多人游戏
-- **WAN**: 广域网 - 互联网连接
-- **Internet**: 互联网 - 标准在线游戏
-- **Local**: 本地 - 单机模拟网络
-- **DedicatedServer**: 专用服务器 - 专业托管环境
-- **ListenServer**: 监听服务器 - 主机端兼任服务器
-- **PeerToPeer**: 点对点 - 玩家直接连接
-- **Hybrid**: 混合 - 组合模式
-- **Cloud**: 云端 - 云服务托管
-- **Custom**: 自定义 - 特殊配置
+## 核心功能 / Core Features
 
-### 2. 连接状态
-11种连接状态：
-- **Disconnected**: 已断开
-- **Connecting**: 连接中
-- **Connected**: 已连接
-- **Authenticating**: 认证中
-- **Authenticated**: 已认证
-- **Loading**: 加载中
-- **Ready**: 就绪
-- **Error**: 错误
-- **Timeout**: 超时
-- **Kicked**: 被踢出
-- **Banned**: 被封禁
+### 1. 網絡類型 / Network Types
+支持10種網絡類型 / Supports 10 network types：
+- **LAN**: 局域網 / Local Area Network - 本地多人遊戲 / Local multiplayer
+- **WAN**: 廣域網 / Wide Area Network - 互聯網連接 / Internet connection
+- **Internet**: 互聯網 / Internet - 標準在線遊戲 / Standard online gaming
+- **Local**: 本地 / Local - 單機模擬網絡 / Single-player simulated network
+- **DedicatedServer**: 專用服務器 / Dedicated Server - 專業託管環境 / Professional hosting
+- **ListenServer**: 監聽服務器 / Listen Server - 主機端兼任服務器 / Host-as-server
+- **PeerToPeer**: 點對點 / Peer to Peer - 玩家直接連接 / Direct player connection
+- **Hybrid**: 混合 / Hybrid - 組合模式 / Combined mode
+- **Cloud**: 雲端 / Cloud - 雲服務託管 / Cloud hosting
+- **Custom**: 自定義 / Custom - 特殊配置 / Special configuration
 
-### 3. 游戏模式
-11种游戏模式：
-- **SinglePlayer**: 单人游戏
-- **Cooperative**: 合作模式
-- **Versus**: 对抗模式
-- **TeamVersus**: 团队对抗
-- **FreeForAll**: 混战模式
-- **Campaign**: 战役模式
-- **Skirmish**: 遭遇战
-- **Tournament**: 锦标赛
-- **Survival**: 生存模式
-- **Sandbox**: 沙盒模式
-- **Custom**: 自定义
+### 2. 連接狀態 / Connection States
+11種連接狀態 / 11 connection states：
+- **Disconnected**: 已斷開 / Disconnected
+- **Connecting**: 連接中 / Connecting
+- **Connected**: 已連接 / Connected
+- **Authenticating**: 認證中 / Authenticating
+- **Authenticated**: 已認證 / Authenticated
+- **Loading**: 加載中 / Loading
+- **Ready**: 就緒 / Ready
+- **Error**: 錯誤 / Error
+- **Timeout**: 超時 / Timeout
+- **Kicked**: 被踢出 / Kicked
+- **Banned**: 被封禁 / Banned
 
-### 4. 同步模式
-10种同步模式：
-- **Full**: 完全同步 - 所有数据
-- **Partial**: 部分同步 - 选择性数据
-- **Delta**: 增量同步 - 仅变化数据
-- **Predictive**: 预测同步 - 预测性更新
-- **Deferred**: 延迟同步 - 延迟传输
-- **Event**: 事件同步 - 仅事件
-- **Periodic**: 定期同步 - 定时更新
-- **OnDemand**: 按需同步 - 请求时更新
-- **Hybrid**: 混合同步 - 组合模式
-- **Custom**: 自定义同步
+### 3. 遊戲模式 / Game Modes
+11種遊戲模式 / 11 game modes：
+- **SinglePlayer**: 單人遊戲 / Single Player
+- **Cooperative**: 合作模式 / Cooperative
+- **Versus**: 對抗模式 / Versus
+- **TeamVersus**: 團隊對抗 / Team Versus
+- **FreeForAll**: 混戰模式 / Free For All
+- **Campaign**: 戰役模式 / Campaign
+- **Skirmish**: 遭遇戰 / Skirmish
+- **Tournament**: 錦標賽 / Tournament
+- **Survival**: 生存模式 / Survival
+- **Sandbox**: 沙盒模式 / Sandbox
+- **Custom**: 自定義 / Custom
 
-## API 参考
+### 4. 同步模式 / Sync Modes
+10種同步模式 / 10 synchronization modes：
+- **Full**: 完全同步 / Full Sync - 所有數據 / All data
+- **Partial**: 部分同步 / Partial Sync - 選擇性數據 / Selective data
+- **Delta**: 增量同步 / Delta Sync - 僅變化數據 / Only changed data
+- **Predictive**: 預測同步 / Predictive Sync - 預測性更新 / Predictive updates
+- **Deferred**: 延遲同步 / Deferred Sync - 延遲傳輸 / Delayed transmission
+- **Event**: 事件同步 / Event Sync - 僅事件 / Events only
+- **Periodic**: 定期同步 / Periodic Sync - 定時更新 / Periodic updates
+- **OnDemand**: 按需同步 / On-Demand Sync - 請求時更新 / On request
+- **Hybrid**: 混合同步 / Hybrid Sync - 組合模式 / Combined mode
+- **Custom**: 自定義同步 / Custom Sync
+
+## API 參考 / API Reference
 
 ### 系统初始化
 

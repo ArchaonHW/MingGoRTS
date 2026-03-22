@@ -266,8 +266,8 @@ function Invoke-PerformanceMonitoring {
     $Metrics = @{
         Timestamp = Get-Date
         CPUUsage = (Get-WmiObject Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average
-        MemoryUsage = (Get-WmiObject Win32_OperatingSystem | ForEach-Object { [math]::Round($_.TotalVisibleMemorySize - $_.FreePhysicalMemory) / 1MB, 2) })
-        DiskUsage = (Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DeviceID -eq "C:" } | ForEach-Object { [math]::Round($_.Size - $_.FreeSpace) / 1GB, 2) }
+        MemoryUsage = (Get-WmiObject Win32_OperatingSystem | ForEach-Object { [math]::Round(($_.TotalVisibleMemorySize - $_.FreePhysicalMemory) / 1MB, 2) })
+        DiskUsage = (Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DeviceID -eq "C:" } | ForEach-Object { [math]::Round(($_.Size - $_.FreeSpace) / 1GB, 2) })
     }
     
     $MetricsPath = "$LogDir\Performance_$(Get-Date -Format 'yyyyMMdd').json"

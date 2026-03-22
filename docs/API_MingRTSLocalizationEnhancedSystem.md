@@ -1,62 +1,64 @@
-# MingRTSLocalizationEnhancedSystem 系统文档
+# MingRTSLocalizationEnhancedSystem 系統文檔 / MingRTSLocalizationEnhancedSystem System Documentation
 
-## 概述
+## 概述 / Overview
 
-MingRTSLocalizationEnhancedSystem 是一个增强型本地化和国际化系统，支持20种语言、17种地区文化适应，提供完整的翻译管理、文化内容适应和全球化支持。
+MingRTSLocalizationEnhancedSystem 是一個增強型本地化和國際化系統，支持20種語言、17種地區文化適應，提供完整的翻譯管理、文化內容適應和全球化支持。
 
-## 核心功能
+MingRTSLocalizationEnhancedSystem is an enhanced localization and internationalization system supporting 20 languages and 17 regional cultural adaptations, providing complete translation management, cultural content adaptation, and globalization support.
 
-### 1. 语言支持
-支持20种语言：
-- **English**: 英语
-- **SimplifiedChinese**: 简体中文
-- **TraditionalChinese**: 繁体中文
-- **Japanese**: 日语
-- **Korean**: 韩语
-- **French**: 法语
-- **German**: 德语
-- **Spanish**: 西班牙语
-- **Italian**: 意大利语
-- **Russian**: 俄语
-- **Arabic**: 阿拉伯语（RTL）
-- **Portuguese**: 葡萄牙语
-- **Hindi**: 印地语
-- **Thai**: 泰语
-- **Vietnamese**: 越南语
-- **Indonesian**: 印尼语
-- **Turkish**: 土耳其语
-- **Polish**: 波兰语
-- **Dutch**: 荷兰语
-- **Custom**: 自定义
+## 核心功能 / Core Features
 
-### 2. 地区支持
-支持17种地区：
-- **Global**: 全球
-- **Asia**: 亚洲
-- **Europe**: 欧洲
-- **Americas**: 美洲
-- **Africa**: 非洲
-- **Oceania**: 大洋洲
-- **MiddleEast**: 中东
-- **China**: 中国
-- **Japan**: 日本
-- **Korea**: 韩国
-- **SoutheastAsia**: 东南亚
-- **India**: 印度
-- **WesternEurope**: 西欧
-- **EasternEurope**: 东欧
-- **NorthAmerica**: 北美
-- **SouthAmerica**: 南美
-- **Custom**: 自定义
+### 1. 語言支持 / Language Support
+支持20種語言 / Supports 20 languages：
+- **English**: 英語 / English
+- **SimplifiedChinese**: 簡體中文 / Simplified Chinese
+- **TraditionalChinese**: 繁體中文 / Traditional Chinese
+- **Japanese**: 日語 / Japanese
+- **Korean**: 韓語 / Korean
+- **French**: 法語 / French
+- **German**: 德語 / German
+- **Spanish**: 西班牙語 / Spanish
+- **Italian**: 意大利語 / Italian
+- **Russian**: 俄語 / Russian
+- **Arabic**: 阿拉伯語（RTL）/ Arabic (RTL)
+- **Portuguese**: 葡萄牙語 / Portuguese
+- **Hindi**: 印地語 / Hindi
+- **Thai**: 泰語 / Thai
+- **Vietnamese**: 越南語 / Vietnamese
+- **Indonesian**: 印尼語 / Indonesian
+- **Turkish**: 土耳其語 / Turkish
+- **Polish**: 波蘭語 / Polish
+- **Dutch**: 荷蘭語 / Dutch
+- **Custom**: 自定義 / Custom
 
-### 3. 文本方向
-- **LTR**: 左到右（大部分语言）
-- **RTL**: 右到左（阿拉伯语、希伯来语）
-- **TTB**: 上到下（传统中文）
-- **Auto**: 自动检测
-- **Custom**: 自定义
+### 2. 地區支持 / Region Support
+支持17種地區 / Supports 17 regions：
+- **Global**: 全球 / Global
+- **Asia**: 亞洲 / Asia
+- **Europe**: 歐洲 / Europe
+- **Americas**: 美洲 / Americas
+- **Africa**: 非洲 / Africa
+- **Oceania**: 大洋洲 / Oceania
+- **MiddleEast**: 中東 / Middle East
+- **China**: 中國 / China
+- **Japan**: 日本 / Japan
+- **Korea**: 韓國 / Korea
+- **SoutheastAsia**: 東南亞 / Southeast Asia
+- **India**: 印度 / India
+- **WesternEurope**: 西歐 / Western Europe
+- **EasternEurope**: 東歐 / Eastern Europe
+- **NorthAmerica**: 北美 / North America
+- **SouthAmerica**: 南美 / South America
+- **Custom**: 自定義 / Custom
 
-## API 参考
+### 3. 文本方向 / Text Directions
+- **LTR**: 左到右 / Left to Right (大部分語言 / Most languages)
+- **RTL**: 右到左 / Right to Left (阿拉伯語、希伯來語 / Arabic, Hebrew)
+- **TTB**: 上到下 / Top to Bottom (傳統中文 / Traditional Chinese)
+- **Auto**: 自動檢測 / Auto-detect
+- **Custom**: 自定義 / Custom
+
+## API 參考 / API Reference
 
 ### 系统初始化
 

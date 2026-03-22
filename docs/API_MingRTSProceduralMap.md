@@ -1,55 +1,57 @@
-# MingRTSProceduralMap 系统文档
+# MingRTSProceduralMap 系統文檔 / MingRTSProceduralMap System Documentation
 
-## 概述
+## 概述 / Overview
 
-MingRTSProceduralMap 是一个程序生成地图系统，使用分形噪声和地形算法动态生成RTS游戏地图，支持多种地形类型、气候区域和战略要素。
+MingRTSProceduralMap 是一個程序生成地圖系統，使用分形噪聲和地形算法動態生成RTS遊戲地圖，支持多種地形類型、氣候區域和戰略要素。
 
-## 核心功能
+MingRTSProceduralMap is a procedural map generation system that uses fractal noise and terrain algorithms to dynamically generate RTS game maps, supporting multiple terrain types, climate regions, and strategic elements.
 
-### 1. 地形类型
-系统支持14种地形类型：
-- **Plains**: 平原 - 适合大规模战斗
-- **Hills**: 丘陵 - 提供战术高地优势
-- **Mountains**: 山地 - 难以通过的天然屏障
-- **Forest**: 森林 - 提供掩护和伏击机会
-- **Desert**: 沙漠 - 资源稀缺的开阔地带
-- **Swamp**: 沼泽 - 减缓移动速度的危险地形
-- **Water**: 水域 - 需要海军或桥梁才能通过
-- **River**: 河流 - 天然的防御线
-- **Lake**: 湖泊 - 战略资源点
-- **Beach**: 海滩 - 登陆战的关键位置
-- **Cliff**: 悬崖 - 不可逾越的地形障碍
-- **Canyon**: 峡谷 - 狭窄的战略通道
-- **Plateau**: 高原 - 视野开阔的战术要地
-- **Valley**: 山谷 - 资源丰富的封闭区域
+## 核心功能 / Core Features
 
-### 2. 地图尺寸
-支持6种标准尺寸：
-- **Tiny**: 64x64 - 快速对战
-- **Small**: 128x128 - 小型遭遇战
-- **Medium**: 256x256 - 标准对战
-- **Large**: 512x512 - 大规模战役
-- **Huge**: 768x768 - 史诗级战斗
-- **Gigantic**: 1024x1024 - 巨型沙盒
+### 1. 地形類型 / Terrain Types
+系統支持14種地形類型 / System supports 14 terrain types：
+- **Plains**: 平原 / Plains - 適合大規模戰鬥 / Suitable for large-scale battles
+- **Hills**: 丘陵 / Hills - 提供戰術高地優勢 / Provides tactical high ground advantage
+- **Mountains**: 山地 / Mountains - 難以通過的天然屏障 / Natural barriers difficult to traverse
+- **Forest**: 森林 / Forest - 提供掩護和伏擊機會 / Provides cover and ambush opportunities
+- **Desert**: 沙漠 / Desert - 資源稀缺的開闊地帶 / Open areas with scarce resources
+- **Swamp**: 沼澤 / Swamp - 減緩移動速度的危險地形 / Dangerous terrain slowing movement
+- **Water**: 水域 / Water - 需要海軍或橋樑才能通過 / Requires navy or bridges to cross
+- **River**: 河流 / River - 天然的防禦線 / Natural defensive lines
+- **Lake**: 湖泊 / Lake - 戰略資源點 / Strategic resource points
+- **Beach**: 海灘 / Beach - 登陸戰的關鍵位置 / Key positions for landing battles
+- **Cliff**: 懸崖 / Cliff - 不可逾越的地形障礙 / Impassable terrain obstacles
+- **Canyon**: 峽谷 / Canyon - 狹窄的戰略通道 / Narrow strategic passages
+- **Plateau**: 高原 / Plateau - 視野開闊的戰術要地 / Tactical high ground with open views
+- **Valley**: 山谷 / Valley - 資源豐富的封閉區域 / Enclosed areas rich in resources
 
-### 3. 气候类型
-- **Temperate**: 温带 - 平衡的资源分布
-- **Tropical**: 热带 - 丰富的植被和水源
-- **Arid**: 干旱 - 稀缺的资源，需要争夺
-- **Polar**: 极地 - 极端环境，特殊挑战
-- **Continental**: 大陆性 - 四季变化
-- **Mediterranean**: 地中海 - 独特的资源模式
+### 2. 地圖尺寸 / Map Sizes
+支持6種標準尺寸 / Supports 6 standard sizes：
+- **Tiny**: 64x64 - 快速對戰 / Quick matches
+- **Small**: 128x128 - 小型遭遇戰 / Small skirmishes
+- **Medium**: 256x256 - 標準對戰 / Standard matches
+- **Large**: 512x512 - 大規模戰役 / Large-scale campaigns
+- **Huge**: 768x768 - 史詩級戰鬥 / Epic battles
+- **Gigantic**: 1024x1024 - 巨型沙盒 / Giant sandbox
 
-### 4. 资源分布
-- **均匀分布**: 资源均匀散布
-- **随机分布**: 完全随机的资源位置
-- **聚类分布**: 资源成组出现
-- **边缘分布**: 资源集中在地图边缘
-- **中心分布**: 资源集中在地图中心
-- **带状分布**: 资源形成带状区域
-- **网络分布**: 资源沿道路网络分布
+### 3. 氣候類型 / Climate Types
+- **Temperate**: 溫帶 / Temperate - 平衡的資源分布 / Balanced resource distribution
+- **Tropical**: 熱帶 / Tropical - 豐富的植被和水源 / Rich vegetation and water sources
+- **Arid**: 乾旱 / Arid - 稀缺的資源，需要爭奪 / Scarce resources requiring competition
+- **Polar**: 極地 / Polar - 極端環境，特殊挑戰 / Extreme environment with special challenges
+- **Continental**: 大陸性 / Continental - 四季變化 / Four seasons variation
+- **Mediterranean**: 地中海 / Mediterranean - 獨特的資源模式 / Unique resource patterns
 
-## API 参考
+### 4. 資源分布 / Resource Distribution
+- **均勻分布**: 資源均勻散佈 / Uniform - Resources evenly distributed
+- **隨機分布**: 完全隨機的資源位置 / Random - Completely random resource positions
+- **聚類分布**: 資源成組出現 / Clustered - Resources appear in groups
+- **邊緣分布**: 資源集中在地圖邊緣 / Edge - Resources concentrated at map edges
+- **中心分布**: 資源集中在地圖中心 / Center - Resources concentrated at map center
+- **帶狀分布**: 資源形成帶狀區域 / Band - Resources form band-shaped regions
+- **網絡分布**: 資源沿道路網絡分布 / Network - Resources distributed along road networks
+
+## API 參考 / API Reference
 
 ### 系统初始化
 
