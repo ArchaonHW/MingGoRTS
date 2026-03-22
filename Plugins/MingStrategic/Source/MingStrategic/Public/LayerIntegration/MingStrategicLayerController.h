@@ -166,10 +166,10 @@ struct FMingDiplomaticRelation
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRegionSelected, const FMingMapRegion&, SelectedRegion);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFactionSelected, const FMingFactionInfo&, SelectedFaction);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDiplomaticAction, const FString&, TargetFaction, EMingStrategicAction, Action);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStrategicOrderIssued, const FMingStrategicDecision&, Order);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRegionSelected, const FMingMapRegion&, SelectedRegion};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFactionSelected, const FMingFactionInfo&, SelectedFaction};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDiplomaticAction, const FString&, TargetFaction, EMingStrategicAction, Action};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStrategicOrderIssued, const FMingStrategicDecision&, Order};
 
 /**
  * Strategic Layer Controller
@@ -181,33 +181,33 @@ class MINGSTRATEGIC_API UMingStrategicLayerController : public UObject
     GENERATED_BODY()
 
 public:
-    UMingStrategicLayerController();
+    UMingStrategicLayerController(};
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Strategic Layer")
-    void InitializeStrategicLayer();
+    void InitializeStrategicLayer(};
 
     UFUNCTION(BlueprintCallable, Category = "Strategic Layer")
-    void ShutdownStrategicLayer();
+    void ShutdownStrategicLayer(};
 
     UFUNCTION(BlueprintCallable, Category = "Strategic Layer")
-    void ActivateStrategicLayer();
+    void ActivateStrategicLayer(};
 
     UFUNCTION(BlueprintCallable, Category = "Strategic Layer")
-    void DeactivateStrategicLayer();
+    void DeactivateStrategicLayer(};
 
     // Map Management
     UFUNCTION(BlueprintCallable, Category = "Map Management")
-    void LoadStrategicMap(const FString& MapID);
+    void LoadStrategicMap(const FString& MapID};
 
     UFUNCTION(BlueprintCallable, Category = "Map Management")
-    void ClearStrategicMap();
+    void ClearStrategicMap(};
 
     UFUNCTION(BlueprintCallable, Category = "Map Management")
-    void AddRegion(const FMingMapRegion& Region);
+    void AddRegion(const FMingMapRegion& Region};
 
     UFUNCTION(BlueprintCallable, Category = "Map Management")
-    void RemoveRegion(const FString& RegionID);
+    void RemoveRegion(const FString& RegionID};
 
     UFUNCTION(BlueprintCallable, Category = "Map Management")
     bool GetRegion(const FString& RegionID, FMingMapRegion& OutRegion) const;
@@ -223,10 +223,10 @@ public:
 
     // Faction Management
     UFUNCTION(BlueprintCallable, Category = "Faction Management")
-    void RegisterFaction(const FMingFactionInfo& Faction);
+    void RegisterFaction(const FMingFactionInfo& Faction};
 
     UFUNCTION(BlueprintCallable, Category = "Faction Management")
-    void UnregisterFaction(const FString& FactionID);
+    void UnregisterFaction(const FString& FactionID};
 
     UFUNCTION(BlueprintCallable, Category = "Faction Management")
     bool GetFaction(const FString& FactionID, FMingFactionInfo& OutFaction) const;
@@ -238,29 +238,29 @@ public:
     TArray<FMingFactionInfo> GetAllFactions() const;
 
     UFUNCTION(BlueprintCallable, Category = "Faction Management")
-    void UpdateFactionStrength(const FString& FactionID, int32 MilitaryDelta, int32 EconomicDelta);
+    void UpdateFactionStrength(const FString& FactionID, int32 MilitaryDelta, int32 EconomicDelta};
 
     // Diplomacy Management
     UFUNCTION(BlueprintCallable, Category = "Diplomacy")
-    void SetDiplomaticRelation(const FString& FactionA, const FString& FactionB, EMingFactionRelation Relation);
+    void SetDiplomaticRelation(const FString& FactionA, const FString& FactionB, EMingFactionRelation Relation};
 
     UFUNCTION(BlueprintCallable, Category = "Diplomacy")
     FMingDiplomaticRelation GetDiplomaticRelation(const FString& FactionA, const FString& FactionB) const;
 
     UFUNCTION(BlueprintCallable, Category = "Diplomacy")
-    void DeclareWar(const FString& AttackerFaction, const FString& DefenderFaction);
+    void DeclareWar(const FString& AttackerFaction, const FString& DefenderFaction};
 
     UFUNCTION(BlueprintCallable, Category = "Diplomacy")
-    void NegotiatePeace(const FString& FactionA, const FString& FactionB);
+    void NegotiatePeace(const FString& FactionA, const FString& FactionB};
 
     UFUNCTION(BlueprintCallable, Category = "Diplomacy")
-    void FormAlliance(const FString& FactionA, const FString& FactionB, int32 DurationDays);
+    void FormAlliance(const FString& FactionA, const FString& FactionB, int32 DurationDays};
 
     UFUNCTION(BlueprintCallable, Category = "Diplomacy")
-    void EstablishTradeAgreement(const FString& FactionA, const FString& FactionB);
+    void EstablishTradeAgreement(const FString& FactionA, const FString& FactionB};
 
     UFUNCTION(BlueprintCallable, Category = "Diplomacy")
-    void BreakTreaty(const FString& FactionA, const FString& FactionB, const FString& TreatyType);
+    void BreakTreaty(const FString& FactionA, const FString& FactionB, const FString& TreatyType};
 
     UFUNCTION(BlueprintCallable, Category = "Diplomacy")
     TArray<FMingDiplomaticRelation> GetFactionRelations(const FString& FactionID) const;
@@ -273,58 +273,58 @@ public:
 
     // Strategic Actions
     UFUNCTION(BlueprintCallable, Category = "Strategic Actions")
-    void ExecuteStrategicDecision(const FMingStrategicDecision& Decision);
+    void ExecuteStrategicDecision(const FMingStrategicDecision& Decision};
 
     UFUNCTION(BlueprintCallable, Category = "Strategic Actions")
-    void MoveTroops(const FString& FromRegion, const FString& ToRegion, int32 TroopCount, const FString& FactionID);
+    void MoveTroops(const FString& FromRegion, const FString& ToRegion, int32 TroopCount, const FString& FactionID};
 
     UFUNCTION(BlueprintCallable, Category = "Strategic Actions")
-    void FortifyRegion(const FString& RegionID, int32 GarrisonIncrease);
+    void FortifyRegion(const FString& RegionID, int32 GarrisonIncrease};
 
     UFUNCTION(BlueprintCallable, Category = "Strategic Actions")
-    void DevelopRegion(const FString& RegionID, const FString& DevelopmentType);
+    void DevelopRegion(const FString& RegionID, const FString& DevelopmentType};
 
     UFUNCTION(BlueprintCallable, Category = "Strategic Actions")
-    void LaunchCampaign(const FString& FromRegion, const FString& TargetRegion, int32 TroopCount);
+    void LaunchCampaign(const FString& FromRegion, const FString& TargetRegion, int32 TroopCount};
 
     // Intelligence & Information
     UFUNCTION(BlueprintCallable, Category = "Intelligence")
     int32 GetRegionIntelligence(const FString& RegionID, const FString& FactionID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Intelligence")
-    void GatherIntelligence(const FString& TargetRegion, const FString& FactionID, int32 IntelLevel);
+    void GatherIntelligence(const FString& TargetRegion, const FString& FactionID, int32 IntelLevel};
 
     UFUNCTION(BlueprintCallable, Category = "Intelligence")
-    void RevealRegion(const FString& RegionID, const FString& FactionID);
+    void RevealRegion(const FString& RegionID, const FString& FactionID};
 
     UFUNCTION(BlueprintCallable, Category = "Intelligence")
-    void ConcealRegion(const FString& RegionID, const FString& FactionID);
+    void ConcealRegion(const FString& RegionID, const FString& FactionID};
 
     // Economy & Resources
     UFUNCTION(BlueprintCallable, Category = "Economy")
     int32 GetFactionResource(const FString& FactionID, const FString& ResourceType) const;
 
     UFUNCTION(BlueprintCallable, Category = "Economy")
-    void AddFactionResource(const FString& FactionID, const FString& ResourceType, int32 Amount);
+    void AddFactionResource(const FString& FactionID, const FString& ResourceType, int32 Amount};
 
     UFUNCTION(BlueprintCallable, Category = "Economy")
-    void ConsumeFactionResource(const FString& FactionID, const FString& ResourceType, int32 Amount);
+    void ConsumeFactionResource(const FString& FactionID, const FString& ResourceType, int32 Amount};
 
     UFUNCTION(BlueprintCallable, Category = "Economy")
-    void TradeResources(const FString& FromFaction, const FString& ToFaction, TMap<FString, int32> Resources);
+    void TradeResources(const FString& FromFaction, const FString& ToFaction, TMap<FString, int32> Resources};
 
     UFUNCTION(BlueprintCallable, Category = "Economy")
     int32 CalculateFactionIncome(const FString& FactionID) const;
 
     // UI Interface
     UFUNCTION(BlueprintCallable, Category = "UI Interface")
-    void SelectRegion(const FString& RegionID);
+    void SelectRegion(const FString& RegionID};
 
     UFUNCTION(BlueprintCallable, Category = "UI Interface")
-    void SelectFaction(const FString& FactionID);
+    void SelectFaction(const FString& FactionID};
 
     UFUNCTION(BlueprintCallable, Category = "UI Interface")
-    void ClearSelection();
+    void ClearSelection(};
 
     UFUNCTION(BlueprintPure, Category = "UI Interface")
     FString GetSelectedRegionID() const { return SelectedRegionID; }
@@ -371,15 +371,16 @@ protected:
     FString CurrentMapID;
 
     // Internal functions
-    void InitializeDefaultFactions();
-    void InitializeDefaultRegions();
-    void SetupDiplomaticDefaults();
+    void InitializeDefaultFactions(};
+    void InitializeDefaultRegions(};
+    void SetupDiplomaticDefaults(};
     
-    void UpdateRegionControl(const FString& RegionID, const FString& NewFactionID);
-    void CheckVictoryConditions();
-    void ProcessEconomicTick();
+    void UpdateRegionControl(const FString& RegionID, const FString& NewFactionID};
+    void CheckVictoryConditions(};
+    void ProcessEconomicTick(};
     
     FString GenerateRelationKey(const FString& FactionA, const FString& FactionB) const;
-    void NotifyRegionChanged(const FString& RegionID);
-    void NotifyFactionChanged(const FString& FactionID);
+    void NotifyRegionChanged(const FString& RegionID};
+    void NotifyFactionChanged(const FString& FactionID};
 };
+

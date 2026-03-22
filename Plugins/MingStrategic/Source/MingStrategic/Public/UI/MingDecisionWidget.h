@@ -13,7 +13,7 @@ class UScrollBox;
 
 /**
  * Ê±∫Á??∏È??âÈà™?ãÂ?Ë®? */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDecisionOptionSelected, const FString&, DecisionId, const FString&, OptionId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDecisionOptionSelected, const FString&, DecisionId, const FString&, OptionId};
 
 /**
  * Ê±∫Á??åÈù¢Widget
@@ -25,18 +25,18 @@ class MINGSTRATEGIC_API UMingDecisionWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UMingDecisionWidget(const FObjectInitializer& ObjectInitializer);
+    UMingDecisionWidget(const FObjectInitializer& ObjectInitializer};
 
     // ?ùÂ??ñÊ±∫Á≠ñÈ°ØÁ§?    UFUNCTION(BlueprintCallable, Category = "Decision UI")
-    void SetupDecision(const FMingDecision& Decision);
+    void SetupDecision(const FMingDecision& Decision};
 
     // È°ØÁ§∫Ê±∫Á??åÈù¢
     UFUNCTION(BlueprintCallable, Category = "Decision UI")
-    void ShowDecision();
+    void ShowDecision(};
 
     // ?±Ë?Ê±∫Á??åÈù¢
     UFUNCTION(BlueprintCallable, Category = "Decision UI")
-    void HideDecision();
+    void HideDecision(};
 
     // ?∏È??∏Ê?‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "Decision UI|Events")
@@ -69,21 +69,22 @@ protected:
     // ?ùÂ???    virtual void NativeConstruct() override;
 
     // ?µÂª∫?∏È??âÈà™??    UFUNCTION()
-    void CreateOptionButtons(const TArray<FMingDecisionOption>& Options);
+    void CreateOptionButtons(const TArray<FMingDecisionOption>& Options};
 
     // ?∏È??âÈà™?ãÈ??äË???    UFUNCTION()
-    void OnOptionButtonClicked(const FString& OptionId);
+    void OnOptionButtonClicked(const FString& OptionId};
 
     // Âª∂Â??âÈà™?ãÈ??äË???    UFUNCTION()
-    void OnPostponeClicked();
+    void OnPostponeClicked(};
 
     // ?ïÁï´?≠Êîæ
     UFUNCTION(BlueprintImplementableEvent, Category = "Decision UI|Animation")
-    void PlayShowAnimation();
+    void PlayShowAnimation(};
 
     UFUNCTION(BlueprintImplementableEvent, Category = "Decision UI|Animation")
-    void PlayHideAnimation();
+    void PlayHideAnimation(};
 
     // Âπ≥Âè∞?©È?Ë®≠ÁΩÆ
-    void SetupForPlatform();
+    void SetupForPlatform(};
 };
+

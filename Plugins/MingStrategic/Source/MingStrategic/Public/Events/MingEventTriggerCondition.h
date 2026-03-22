@@ -91,26 +91,26 @@ class MINGSTRATEGIC_API UMingStrategicEventCondition : public UMingEventTrigger
     GENERATED_BODY()
 
 public:
-    UMingStrategicEventCondition();
+    UMingStrategicEventCondition(};
 
     // Ê∑ªÂ??ÆÂÄãÊ?‰ª?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
-    void AddCondition(const FSingleCondition& Condition);
+    void AddCondition(const FSingleCondition& Condition};
 
     // Ê∑ªÂ?Ê¢ù‰ª∂Áµ?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
-    void AddConditionGroup(const FConditionGroup& Group);
+    void AddConditionGroup(const FConditionGroup& Group};
 
     // Ë®≠ÁΩÆ?®Â??èËºØ?ç‰?Á¨?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
-    void SetGlobalLogicOperator(ELogicOperator Operator);
+    void SetGlobalLogicOperator(ELogicOperator Operator};
 
     // ?¥Êñ∞Ê¢ù‰ª∂??(?±È??≤Á≥ªÁµ±Ë™ø??
     UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
-    void UpdateConditionValue(const FString& Key, float Value);
+    void UpdateConditionValue(const FString& Key, float Value};
 
     UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
-    void UpdateConditionStringValue(const FString& Key, const FString& Value);
+    void UpdateConditionStringValue(const FString& Key, const FString& Value};
 
     // Ê∏ÖÈô§?Ä?âÊ?‰ª∂ÂÄ?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
-    void ClearConditionValues();
+    void ClearConditionValues(};
 
     // ?≤Â?Ê¢ù‰ª∂Ë©ï‰º∞ÁµêÊ? (?®ÊñºË™øË©¶)
     UFUNCTION(BlueprintPure, Category = "Condition Trigger")
@@ -144,3 +144,4 @@ protected:
 
     // Â≠óÁ¨¶‰∏≤Ê?Ëº?    bool CompareStrings(const FString& Value1, const FString& Value2, EConditionOperator Op) const;
 };
+

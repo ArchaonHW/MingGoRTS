@@ -614,30 +614,30 @@ class MINGSTRATEGIC_API UMingHistoricalCharacterManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingHistoricalCharacterManager();
+    UMingHistoricalCharacterManager(};
 
     /**
      * ?ùÂ??ñ‰∫∫?©ÁÆ°?ÜÂô®
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    void Initialize();
+    void Initialize(};
 
     /**
      * ?úÈ?‰∫∫Áâ©ÁÆ°Á???     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    void Shutdown();
+    void Shutdown(};
 
     /**
      * Ë®ªÂ?Ê≠∑Âè≤‰∫∫Áâ©
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool RegisterHistoricalCharacter(const FMingHistoricalCharacter& Character);
+    bool RegisterHistoricalCharacter(const FMingHistoricalCharacter& Character};
 
     /**
      * ?ñÊ?Ë®ªÂ?Ê≠∑Âè≤‰∫∫Áâ©
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool UnregisterHistoricalCharacter(const FString& CharacterID);
+    bool UnregisterHistoricalCharacter(const FString& CharacterID};
 
     /**
      * ?≤Â?Ê≠∑Âè≤‰∫∫Áâ©
@@ -681,36 +681,36 @@ public:
      * ‰∫∫Áâ©‰∫íÂ?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    FCharacterInteractionResult InteractWithCharacter(const FString& CharacterID, const FString& InteractionType, const FString& InteractionDetails);
+    FCharacterInteractionResult InteractWithCharacter(const FString& CharacterID, const FString& InteractionType, const FString& InteractionDetails};
 
     /**
      * Â∞çË©±Á≥ªÁµ±
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    FDialogueEvent StartDialogue(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic);
+    FDialogueEvent StartDialogue(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic};
 
     /**
      * ?ïÁ?Â∞çË©±?∏È?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    FDialogueEvent ProcessDialogueOption(const FString& DialogueEventID, const FString& OptionID);
+    FDialogueEvent ProcessDialogueOption(const FString& DialogueEventID, const FString& OptionID};
 
     /**
      * ?õÂ?‰∫∫Áâ©
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool RecruitCharacter(const FString& CharacterID);
+    bool RecruitCharacter(const FString& CharacterID};
 
     /**
      * Ëß?É±‰∫∫Áâ©
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool DismissCharacter(const FString& CharacterID);
+    bool DismissCharacter(const FString& CharacterID};
 
     /**
      * ?êÂ?‰∫∫Áâ©?Ä??     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool UpgradeCharacterSkill(const FString& CharacterID, ECharacterSkillType SkillType);
+    bool UpgradeCharacterSkill(const FString& CharacterID, ECharacterSkillType SkillType};
 
     /**
      * ?≤Â?‰∫∫Áâ©?ú‰?
@@ -722,13 +722,13 @@ public:
      * Ê∑ªÂ?‰∫∫Áâ©?ú‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool AddCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, ECharacterRelationshipType RelationshipType, float Strength);
+    bool AddCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, ECharacterRelationshipType RelationshipType, float Strength};
 
     /**
      * ?¥Êñ∞‰∫∫Áâ©?ú‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    bool UpdateCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, float NewStrength);
+    bool UpdateCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, float NewStrength};
 
     /**
      * ?≤Â?‰∫∫Áâ©Áµ±Ë?
@@ -771,40 +771,40 @@ protected:
     bool bIsInitialized;
 
     // ?ùÂ??ñÊ??ãÊ≠∑?≤‰∫∫?©Â∫´
-    void InitializeHistoricalCharacterLibrary();
+    void InitializeHistoricalCharacterLibrary(};
 
     // ?µÂª∫?øÊ≤ª‰∫∫Áâ©
-    void CreatePoliticalCharacters();
+    void CreatePoliticalCharacters(};
 
     // ?µÂª∫Ëªç‰?‰∫∫Áâ©
-    void CreateMilitaryCharacters();
+    void CreateMilitaryCharacters(};
 
     // ?µÂª∫Á∂ìÊ?‰∫∫Áâ©
-    void CreateBusinessCharacters();
+    void CreateBusinessCharacters(};
 
     // ?µÂª∫Â≠∏Ë?‰∫∫Áâ©
-    void CreateScholarCharacters();
+    void CreateScholarCharacters(};
 
     // ?µÂª∫?©ÂëΩ‰∫∫Áâ©
-    void CreateRevolutionaryCharacters();
+    void CreateRevolutionaryCharacters(};
 
     // ?µÂª∫Â§ñ‰∫§‰∫∫Áâ©
-    void CreateDiplomaticCharacters();
+    void CreateDiplomaticCharacters(};
 
     // ?µÂª∫?áÂ?‰∫∫Áâ©
-    void CreateCulturalCharacters();
+    void CreateCulturalCharacters(};
 
     // ?ïÁ?‰∫∫Áâ©‰∫íÂ??èËºØ
-    void HandleCharacterInteraction(const FString& CharacterID, const FString& InteractionType, FCharacterInteractionResult& Result);
+    void HandleCharacterInteraction(const FString& CharacterID, const FString& InteractionType, FCharacterInteractionResult& Result};
 
     // ?ïÁ?Â∞çË©±?èËºØ
-    void HandleDialogueLogic(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic, FDialogueEvent& Event);
+    void HandleDialogueLogic(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic, FDialogueEvent& Event};
 
     // Ë®àÁ?‰∫íÂ??ÜÊï∏
     float CalculateInteractionScore(const FString& CharacterID, const FString& InteractionType) const;
 
     // ?¥Êñ∞‰∫∫Áâ©?ú‰?
-    void UpdateCharacterRelationships(const FString& CharacterID, const FString& TargetCharacterID, const FString& InteractionType);
+    void UpdateCharacterRelationships(const FString& CharacterID, const FString& TargetCharacterID, const FString& InteractionType};
 
     // ?≤Â?‰∫∫Áâ©?Ä?ΩÁ?Á¥?    int32 GetCharacterSkillLevel(const FString& CharacterID, ECharacterSkillType SkillType) const;
 
@@ -812,17 +812,17 @@ protected:
     bool CheckInteractionConditions(const FString& CharacterID, const FString& InteractionType) const;
 
     // ?âÁî®‰∫íÂ??àÊ?
-    void ApplyInteractionEffects(const FString& CharacterID, const FString& InteractionType, FCharacterInteractionResult& Result);
+    void ApplyInteractionEffects(const FString& CharacterID, const FString& InteractionType, FCharacterInteractionResult& Result};
 
     // ?≤Â?‰∫∫Áâ©ÂΩ±Èüø??    float CalculateCharacterInfluence(const FMingHistoricalCharacter& Character) const;
 
     // ?≤Â?‰∫∫Áâ©?≤Ê?
     float CalculateCharacterReputation(const FMingHistoricalCharacter& Character) const;
 
-    // ?¥Êñ∞‰∫∫Áâ©?Ä??    void UpdateCharacterState(const FString& CharacterID, ECharacterState NewState);
+    // ?¥Êñ∞‰∫∫Áâ©?Ä??    void UpdateCharacterState(const FString& CharacterID, ECharacterState NewState};
 
     // Ë®òÈ?Â∞çË©±‰∫ã‰ª∂
-    void RecordDialogueEvent(const FDialogueEvent& Event);
+    void RecordDialogueEvent(const FDialogueEvent& Event};
 
     // ?≤Â?‰∫∫Áâ©?®Ëñ¶?ÜÊï∏
     float GetCharacterRecommendationScore(const FMingHistoricalCharacter& Character, const FString& PlayerFaction) const;
@@ -831,7 +831,7 @@ protected:
     bool ValidateCharacterConfig(const FMingHistoricalCharacter& Character) const;
 
     // Ë®òÈ?‰∫∫Áâ©?•Ë?
-    void LogCharacterEvent(const FString& CharacterID, const FString& Message);
+    void LogCharacterEvent(const FString& CharacterID, const FString& Message};
 
     // ?üÊ?‰∫∫Áâ©?±Â?
     FString GenerateCharacterReport(const FString& CharacterID) const;
@@ -844,3 +844,4 @@ protected:
     // ?≤Â??ú‰??èËø∞
     FString GetRelationshipDescription(ECharacterRelationshipType RelationshipType) const;
 };
+

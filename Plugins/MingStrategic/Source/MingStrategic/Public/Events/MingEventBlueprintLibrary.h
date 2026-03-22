@@ -17,162 +17,162 @@ public:
     /**
      * ?≤Â?Ê≠∑Âè≤‰∫ã‰ª∂ÁÆ°Á???     */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static UMingHistoricalEventManager* GetHistoricalEventManager();
+    static UMingHistoricalEventManager* GetHistoricalEventManager(};
 
     /**
      * ?ùÂ??ñÊ≠∑?≤‰?‰ª∂Á≥ªÁµ?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static void InitializeHistoricalEventSystem();
+    static void InitializeHistoricalEventSystem(};
 
     /**
      * Ë®ªÂ?Ê≠∑Âè≤‰∫ã‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static bool RegisterHistoricalEvent(const FMingHistoricalEvent& Event);
+    static bool RegisterHistoricalEvent(const FMingHistoricalEvent& Event};
 
     /**
      * ?ñÊ?Ë®ªÂ?Ê≠∑Âè≤‰∫ã‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static bool UnregisterHistoricalEvent(const FString& EventID);
+    static bool UnregisterHistoricalEvent(const FString& EventID};
 
     /**
      * Ê™¢Êü•‰∫ã‰ª∂Ëß∏ÁôºÊ¢ù‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static bool CheckEventTriggerConditions(const FString& EventID);
+    static bool CheckEventTriggerConditions(const FString& EventID};
 
     /**
      * Ëß∏ÁôºÊ≠∑Âè≤‰∫ã‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static bool TriggerHistoricalEvent(const FString& EventID);
+    static bool TriggerHistoricalEvent(const FString& EventID};
 
     /**
      * ?≤Â?Ê≠∑Âè≤‰∫ã‰ª∂
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static FMingHistoricalEvent GetHistoricalEvent(const FString& EventID);
+    static FMingHistoricalEvent GetHistoricalEvent(const FString& EventID};
 
     /**
      * ?≤Â??Ä?âÊ≠∑?≤‰?‰ª?     */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static TArray<FMingHistoricalEvent> GetAllHistoricalEvents();
+    static TArray<FMingHistoricalEvent> GetAllHistoricalEvents(};
 
     /**
      * ?≤Â??áÂ??ÇÊ??Ñ‰?‰ª?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static TArray<FMingHistoricalEvent> GetEventsByEra(ERepublicEra Era);
+    static TArray<FMingHistoricalEvent> GetEventsByEra(ERepublicEra Era};
 
     /**
      * ?≤Â??áÂ?È°ûÂ??Ñ‰?‰ª?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static TArray<FMingHistoricalEvent> GetEventsByType(EHistoricalEventType EventType);
+    static TArray<FMingHistoricalEvent> GetEventsByType(EHistoricalEventType EventType};
 
     /**
      * ?≤Â??úÈçµ‰∫ã‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static TArray<FMingHistoricalEvent> GetCriticalEvents();
+    static TArray<FMingHistoricalEvent> GetCriticalEvents(};
 
     /**
      * ?≤Â??ØËß∏?º‰?‰ª?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static TArray<FString> GetTriggerableEvents();
+    static TArray<FString> GetTriggerableEvents(};
 
     /**
      * ?≤Â?‰∫ã‰ª∂??     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static TArray<FMingHistoricalEvent> GetEventChain(const FString& EventID);
+    static TArray<FMingHistoricalEvent> GetEventChain(const FString& EventID};
 
     /**
      * Ë®≠ÁΩÆ?äÊà≤?ÇÈ?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static void SetGameTime(float GameTime);
+    static void SetGameTime(float GameTime};
 
     /**
      * ?≤Â??äÊà≤?ÇÈ?
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static float GetGameTime();
+    static float GetGameTime(};
 
     /**
      * Ë®≠ÁΩÆÊ∞ëÂ??ÇÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static void SetRepublicEra(ERepublicEra Era);
+    static void SetRepublicEra(ERepublicEra Era};
 
     /**
      * ?≤Â??∂Â?Ê∞ëÂ??ÇÊ?
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static ERepublicEra GetCurrentRepublicEra();
+    static ERepublicEra GetCurrentRepublicEra(};
 
     /**
      * ?≤Â??∂Â?Âπ¥‰ªΩ
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static int32 GetCurrentYear();
+    static int32 GetCurrentYear(};
 
     /**
      * Ê∑ªÂ??©ÂÆ∂Ê±∫Á?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static void AddPlayerDecision(const FString& DecisionID, const FString& DecisionValue);
+    static void AddPlayerDecision(const FString& DecisionID, const FString& DecisionValue};
 
     /**
      * ?≤Â??©ÂÆ∂Ê±∫Á?
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static FString GetPlayerDecision(const FString& DecisionID);
+    static FString GetPlayerDecision(const FString& DecisionID};
 
     /**
      * ?≤Â?‰∫ã‰ª∂Áµ±Ë?
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static TMap<FString, int32> GetEventStatistics();
+    static TMap<FString, int32> GetEventStatistics(};
 
     /**
      * ?çÁΩÆ?Ä?â‰?‰ª?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static void ResetAllEvents();
+    static void ResetAllEvents(};
 
     /**
      * Âº∑Âà∂Ëß∏Áôº‰∫ã‰ª∂ (?®ÊñºÊ∏¨Ë©¶)
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static bool ForceTriggerEvent(const FString& EventID);
+    static bool ForceTriggerEvent(const FString& EventID};
 
     /**
      * ?≤Â??®Ëñ¶‰∫ã‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    static TArray<FMingHistoricalEvent> GetRecommendedEvents();
+    static TArray<FMingHistoricalEvent> GetRecommendedEvents(};
 
     /**
      * ?≤Â?‰∫ã‰ª∂?èËø∞
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static FString GetEventDescription(const FString& EventID);
+    static FString GetEventDescription(const FString& EventID};
 
     /**
      * ?≤Â??ÇÊ??çÁ®±
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static FString GetEraName(ERepublicEra Era);
+    static FString GetEraName(ERepublicEra Era};
 
     /**
      * ?≤Â?‰∫ã‰ª∂È°ûÂ??çÁ®±
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static FString GetEventTypeName(EHistoricalEventType EventType);
+    static FString GetEventTypeName(EHistoricalEventType EventType};
 
     /**
      * ?≤Â?ÂΩ±ÈüøÁØÑÂ??çÁ®±
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
-    static FString GetImpactScopeName(EEventImpactScope ImpactScope);
+    static FString GetImpactScopeName(EEventImpactScope ImpactScope};
 
     /**
      * ?µÂª∫Ê≠∑Âè≤‰∫ã‰ª∂
@@ -187,7 +187,7 @@ public:
         EHistoricalEventType EventType,
         EEventImpactScope ImpactScope,
         bool bIsCriticalEvent
-    );
+    };
 
     /**
      * Ê∑ªÂ?‰∫ã‰ª∂Ëß∏ÁôºÊ¢ù‰ª∂
@@ -196,7 +196,7 @@ public:
     static FMingHistoricalEvent AddTriggerCondition(
         const FMingHistoricalEvent& Event,
         const FString& Condition
-    );
+    };
 
     /**
      * Ê∑ªÂ?‰∫ã‰ª∂ÂæåÊ?
@@ -205,7 +205,7 @@ public:
     static FMingHistoricalEvent AddEventConsequence(
         const FMingHistoricalEvent& Event,
         const FString& Consequence
-    );
+    };
 
     /**
      * Ê∑ªÂ??∏È?‰∫∫Áâ©
@@ -214,7 +214,7 @@ public:
     static FMingHistoricalEvent AddRelatedFigure(
         const FMingHistoricalEvent& Event,
         const FString& FigureName
-    );
+    };
 
     /**
      * Ê∑ªÂ??∏È??∞È?
@@ -223,7 +223,7 @@ public:
     static FMingHistoricalEvent AddRelatedLocation(
         const FMingHistoricalEvent& Event,
         const FString& LocationName
-    );
+    };
 
     /**
      * Ë®≠ÁΩÆ?çÁΩÆ‰∫ã‰ª∂
@@ -232,7 +232,7 @@ public:
     static FMingHistoricalEvent SetPrerequisiteEvent(
         const FMingHistoricalEvent& Event,
         const FString& PrerequisiteEventID
-    );
+    };
 
     /**
      * Ë®≠ÁΩÆÂæåÁ?‰∫ã‰ª∂
@@ -241,115 +241,116 @@ public:
     static FMingHistoricalEvent SetFollowUpEvent(
         const FMingHistoricalEvent& Event,
         const FString& FollowUpEventID
-    );
+    };
 
     /**
      * ?πÈ?Ëß∏Áôº‰∫ã‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events|Batch")
-    static TArray<bool> BatchTriggerEvents(const TArray<FString>& EventIDs);
+    static TArray<bool> BatchTriggerEvents(const TArray<FString>& EventIDs};
 
     /**
      * ?πÈ?Ê™¢Êü•‰∫ã‰ª∂Ê¢ù‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events|Batch")
-    static TArray<bool> BatchCheckEventConditions(const TArray<FString>& EventIDs);
+    static TArray<bool> BatchCheckEventConditions(const TArray<FString>& EventIDs};
 
     /**
      * ?≤Â?Á≥ªÁµ±?Ä??     */
     UFUNCTION(BlueprintPure, Category = "Historical Events|System")
-    static bool IsHistoricalEventSystemInitialized();
+    static bool IsHistoricalEventSystemInitialized(};
 
     /**
      * ?≤Â?Á≥ªÁµ±?àÊú¨
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events|System")
-    static FString GetHistoricalEventSystemVersion();
+    static FString GetHistoricalEventSystemVersion(};
 
     /**
      * ?≤Â?Â∑≤Ëß∏?º‰?‰ª∂Êï∏??     */
     UFUNCTION(BlueprintPure, Category = "Historical Events|System")
-    static int32 GetTriggeredEventCount();
+    static int32 GetTriggeredEventCount(};
 
     /**
      * ?≤Â?Ë®ªÂ?‰∫ã‰ª∂?∏È?
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events|System")
-    static int32 GetRegisteredEventCount();
+    static int32 GetRegisteredEventCount(};
 
     /**
      * ?≤Â?‰∫ã‰ª∂Ëß∏Áôº??     */
     UFUNCTION(BlueprintPure, Category = "Historical Events|System")
-    static float GetEventTriggerRate();
+    static float GetEventTriggerRate(};
 
     /**
      * ?≤Â?Ê≠∑Âè≤Ê∫ñÁ¢∫?ßË???     */
     UFUNCTION(BlueprintPure, Category = "Historical Events|Analysis")
-    static float GetHistoricalAccuracyScore();
+    static float GetHistoricalAccuracyScore(};
 
     /**
      * ?≤Â?‰∫ã‰ª∂ÂΩ±Èüø?ÜÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events|Analysis")
-    static TMap<FString, float> GetEventImpactAnalysis();
+    static TMap<FString, float> GetEventImpactAnalysis(};
 
     /**
      * ?≤Â??©ÂÆ∂Ê±∫Á?ÂΩ±Èüø
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events|Analysis")
-    static TMap<FString, float> GetPlayerDecisionImpact();
+    static TMap<FString, float> GetPlayerDecisionImpact(};
 
     /**
      * ?≤Â??ÇÊ??≤Â∫¶
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events|Progress")
-    static float GetEraProgress();
+    static float GetEraProgress(};
 
     /**
      * ?≤Â?Ê≠∑Âè≤?≤Â∫¶
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events|Progress")
-    static float GetHistoricalProgress();
+    static float GetHistoricalProgress(};
 
     /**
      * ?≤Â?‰∏ã‰??ãÈ?Ë¶Å‰?‰ª?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events|Prediction")
-    static FMingHistoricalEvent GetNextMajorEvent();
+    static FMingHistoricalEvent GetNextMajorEvent(};
 
     /**
      * ?≤Â??ØËÉΩ?Ñ‰?‰ª∂Â???     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events|Prediction")
-    static TArray<FMingHistoricalEvent> GetPossibleEventBranches(const FString& EventID);
+    static TArray<FMingHistoricalEvent> GetPossibleEventBranches(const FString& EventID};
 
     /**
      * ?≤Â?‰∫ã‰ª∂Âª∫Ë≠∞
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events|AI")
-    static TArray<FString> GetEventRecommendations();
+    static TArray<FString> GetEventRecommendations(};
 
     /**
      * Ê®°Êì¨‰∫ã‰ª∂Ëß∏Áôº
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events|Simulation")
-    static TArray<FString> SimulateEventTriggers(float SimulationTime);
+    static TArray<FString> SimulateEventTriggers(float SimulationTime};
 
     /**
      * ?≤Â?‰∫ã‰ª∂?ÇÈ?Á∑?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events|Visualization")
-    static TArray<FMingHistoricalEvent> GetEventTimeline(ERepublicEra Era);
+    static TArray<FMingHistoricalEvent> GetEventTimeline(ERepublicEra Era};
 
     // ?≤Â?‰∫ã‰ª∂?ú‰???- Ê≥®Ê?ÔºöTMap<TArray> ‰∏çÊîØ??Blueprint
-    static TMap<FString, TArray<FString>> GetEventRelationships();
+    static TMap<FString, TArray<FString>> GetEventRelationships(};
 
     /**
      * Â∞éÂá∫‰∫ã‰ª∂?∏Ê?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events|Export")
-    static bool ExportEventData(const FString& FilePath);
+    static bool ExportEventData(const FString& FilePath};
 
     /**
      * Â∞éÂÖ•‰∫ã‰ª∂?∏Ê?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events|Import")
-    static bool ImportEventData(const FString& FilePath);
+    static bool ImportEventData(const FString& FilePath};
 };
+

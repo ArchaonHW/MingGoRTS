@@ -126,20 +126,20 @@ class MINGSTRATEGIC_API UMingEndingSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingEndingSystem();
+    UMingEndingSystem(};
 
     // Ending Management
     UFUNCTION(BlueprintCallable, Category = "Ending")
-    void InitializeEndings();
+    void InitializeEndings(};
 
     UFUNCTION(BlueprintCallable, Category = "Ending")
-    void CheckEndingConditions();
+    void CheckEndingConditions(};
 
     UFUNCTION(BlueprintCallable, Category = "Ending")
-    void TriggerEnding(const FString& EndingID);
+    void TriggerEnding(const FString& EndingID};
 
     UFUNCTION(BlueprintCallable, Category = "Ending")
-    void ForceEnding(const FString& EndingID);
+    void ForceEnding(const FString& EndingID};
 
     UFUNCTION(BlueprintPure, Category = "Ending")
     TArray<FMingEnding> GetAllEndings() const;
@@ -171,10 +171,10 @@ public:
 
     // Victory/Defeat Conditions
     UFUNCTION(BlueprintCallable, Category = "Conditions")
-    void SetVictoryCondition(EMingEndingCondition Condition, float Value);
+    void SetVictoryCondition(EMingEndingCondition Condition, float Value};
 
     UFUNCTION(BlueprintCallable, Category = "Conditions")
-    void SetDefeatCondition(EMingEndingCondition Condition, float Value);
+    void SetDefeatCondition(EMingEndingCondition Condition, float Value};
 
     UFUNCTION(BlueprintPure, Category = "Conditions")
     bool IsVictoryConditionMet(EMingEndingCondition Condition) const;
@@ -200,7 +200,7 @@ public:
 
     // Secret Endings
     UFUNCTION(BlueprintCallable, Category = "Secret")
-    void UnlockSecretEnding(const FString& EndingID);
+    void UnlockSecretEnding(const FString& EndingID};
 
     UFUNCTION(BlueprintPure, Category = "Secret")
     TArray<FMingEnding> GetSecretEndings() const;
@@ -209,10 +209,10 @@ public:
     bool IsEndingSecret(const FString& EndingID) const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEndingTriggered, const FMingEnding&, Ending, float, Score);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVictoryAchieved, const FString&, EndingID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDefeatSuffered, const FString&, EndingID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSecretEndingUnlocked, const FString&, EndingID);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEndingTriggered, const FMingEnding&, Ending, float, Score};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVictoryAchieved, const FString&, EndingID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDefeatSuffered, const FString&, EndingID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSecretEndingUnlocked, const FString&, EndingID};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnEndingTriggered OnEndingTriggered;
@@ -228,16 +228,16 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetEndingTypeName(EMingEndingType Type);
+    static FString GetEndingTypeName(EMingEndingType Type};
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetConditionTypeName(EMingEndingCondition Condition);
+    static FString GetConditionTypeName(EMingEndingCondition Condition};
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveEndingData() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadEndingData(const FString& JsonString);
+    void LoadEndingData(const FString& JsonString};
 
 protected:
     UPROPERTY()
@@ -262,22 +262,23 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Ending Setup
-    void SetupHistoricalEndings();
-    void SetupAlternateEndings();
-    void SetupSecretEndings();
-    void SetupBadEndings();
+    void SetupHistoricalEndings(};
+    void SetupAlternateEndings(};
+    void SetupSecretEndings(};
+    void SetupBadEndings(};
 
     // Internal Functions
-    void ProcessEnding(const FMingEnding& Ending);
-    void UpdateEndingScores();
-    void UnlockEnding(const FString& EndingID);
-    void RecordEndingStats(const FString& EndingID);
+    void ProcessEnding(const FMingEnding& Ending};
+    void UpdateEndingScores(};
+    void UnlockEnding(const FString& EndingID};
+    void RecordEndingStats(const FString& EndingID};
 
     // Condition Evaluation
     bool EvaluateCondition(const FMingEndingRequirement& Requirement) const;
     float GetConditionValue(EMingEndingCondition Condition) const;
 
     // Helpers
-    FMingEnding* FindEnding(const FString& EndingID);
-    void CalculateAllEndingScores();
+    FMingEnding* FindEnding(const FString& EndingID};
+    void CalculateAllEndingScores(};
 };
+

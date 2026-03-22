@@ -5,7 +5,7 @@
 #include "LayerIntegration/MingFourLayerTypes.h"
 #include "MingStrategicFourLayerTypes.generated.h"
 
-// ?äÊà≤Â±§Á??öË?
+// ?Êà≤Â±§???
 UENUM(BlueprintType)
 enum class EMingLayer : uint8
 {
@@ -16,7 +16,7 @@ enum class EMingLayer : uint8
     Empire, UMETA(DisplayName = "Empire")
 };
 
-// Ë≥áÊ?È°ûÂ??öË?
+// Ë≥á?È°û???
 UENUM(BlueprintType)
 enum class EMingStrategicResourceType : uint8
 {
@@ -30,7 +30,7 @@ enum class EMingStrategicResourceType : uint8
     Influence, UMETA(DisplayName = "Influence")
 };
 
-// ?äÊà≤‰∫ã‰ª∂ÁµêÊ?
+// ?Êà≤‰∫ã‰ª∂Áµê?
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStrategicFourLayerEvent
 {
@@ -57,7 +57,7 @@ struct MINGSTRATEGIC_API FMingStrategicFourLayerEvent
     {}
 };
 
-// ?∞Áï•Â±§Á???USTRUCT(BlueprintType)
+// ?Áï•Â±§???USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStrategicState
 {
     GENERATED_BODY()
@@ -84,7 +84,7 @@ struct MINGSTRATEGIC_API FMingStrategicState
     {}
 };
 
-// ?ã‰∫∫Â±§Á???USTRUCT(BlueprintType)
+// ?‰∫∫Â±§???USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingPersonalState
 {
     GENERATED_BODY()
@@ -111,7 +111,7 @@ struct MINGSTRATEGIC_API FMingPersonalState
     {}
 };
 
-// Âª∫Á?Â±§Á???USTRUCT(BlueprintType)
+// Âª∫?Â±§???USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingBuildingState
 {
     GENERATED_BODY()
@@ -142,7 +142,7 @@ struct MINGSTRATEGIC_API FMingBuildingState
     {}
 };
 
-// ?∞Ë?Â±§Á???USTRUCT(BlueprintType)
+// ??Â±§???USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingTacticalState
 {
     GENERATED_BODY()
@@ -169,7 +169,7 @@ struct MINGSTRATEGIC_API FMingTacticalState
     {}
 };
 
-// ?∞Ë??Æ‰??Ä?ãÊ???UENUM(BlueprintType)
+// ?????????UENUM(BlueprintType)
 enum class EMingTacticalUnitState : uint8
 {
     Idle, UMETA(DisplayName = "Idle"),
@@ -182,7 +182,7 @@ enum class EMingTacticalUnitState : uint8
     Disabled, UMETA(DisplayName = "Disabled")
 };
 
-// ?∞Ë??Æ‰?ÁµêÊ?
+// ????Áµê?
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStratTacticalUnit
 {
@@ -210,7 +210,7 @@ struct MINGSTRATEGIC_API FMingStratTacticalUnit
     {}
 };
 
-// ?∞Ë??Ω‰ª§ÁµêÊ?
+// ???‰ª§Áµê?
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStratTacticalOrder
 {
@@ -238,3 +238,4 @@ struct MINGSTRATEGIC_API FMingStratTacticalOrder
     {}
 };
 };
+

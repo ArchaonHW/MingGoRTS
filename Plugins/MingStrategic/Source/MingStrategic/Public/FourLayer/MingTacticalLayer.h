@@ -5,51 +5,69 @@
 #include "FourLayer/IMingGameLayer.h"
 #include "MingTacticalLayer.generated.h"
 
-// ?��??��??�??UENUM(BlueprintType)
-enum class EMingStrategicTacticalUnitState : uint8
+// 戰術單位狀態
+UENUM(BlueprintType)
+enum class EMingStratTacticalUnitState : uint8
 {
     Idle,           // 待命
-    Moving,         // 移�?�?    Attacking,      // ?��?�?    Defending,      // ?�禦�?    Retreating,     // ?�退�?    Regrouping      // ?��?�?};
-
-// ?��??�形類�?
-UENUM(BlueprintType)
-enum class EMingTacticalTerrain : uint8
-{
-    Plains,         // 平�?
-    Mountains,      // 山地
-    Forest,         // 森�?
-    River,          // 河�?
-    Urban,          // ?��?
-    Desert          // 沙�?
+    Moving,         // 移動中
+    Attacking,      // 攻擊中
+    Defending,      // 防禦中
+    Retreating,     // 撤退中
+    Regrouping,     // 重組中
+    Captured,       // 被俘
+    Destroyed       // 摧毀
 };
 
-// ?��?天氣?��?UENUM(BlueprintType)
-enum class EMingTacticalWeather : uint8
+// 戰術地形類型
+UENUM(BlueprintType)
+enum class EMingStratTacticalTerrain : uint8
 {
-    Clear,          // ?��?
-    Cloudy,         // 多雲
-    Rainy,          // 下雨
-    Snowy,          // 下雪
-    Foggy,          // ?�霧
-    Stormy          // ?�風??};
+    Plains,         // 平原
+    Mountains,      // 山地
+    Forest,         // 森林
+    Desert,         // 沙漠
+    River,          // 河流
+    Urban,          // 城市
+    Coastal,        // 海岸
+    Swamp,          // 沼澤
+    Tundra,         // 凍土
+    Jungle          // 叢林
+};
 
-// ?��??�令類�?
+// 戰術天氣狀況
+UENUM(BlueprintType)
+enum class EMingStratTacticalWeather : uint8
+{
+    Clear,          // 晴朗
+    Cloudy,         // 多雲
+    Rain,           // 下雨
+    Snow,           // 下雪
+    Fog,            // 霧
+    Storm,          // 暴風雨
+    Windy,          // 大風
+    Extreme         // 極端天氣
+};
+
+// 戰術命令類型
 UENUM(BlueprintType)
 enum class EMingStratTacticalCommand : uint8
 {
-    Move,           // 移�?
-    Attack,         // ?��?
-    Defend,         // ?�禦
-    Retreat,        // ?�退
-    Hold,           // ?��?
-    Patrol,         // 巡�?
-    Ambush,         // 伏�?
-    Flank           // ?�翼?��?
+    Move,           // 移動
+    Attack,         // 攻擊
+    Defend,         // 防禦
+    Retreat,        // 撤退
+    Hold,           // 堅守
+    Patrol,         // 巡邏
+    Ambush,         // 伏擊
+    Flank,          // 側翼攻擊
+    Charge,         // 衝鋒
+    Skirmish        // 騷擾
 };
 
-// ?��??��?信息
+// 戰術單位信息
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStrategicTacticalUnit
+struct MINGSTRATEGIC_API FMingStratTacticalUnit
 {
     GENERATED_BODY()
 
@@ -60,16 +78,13 @@ struct MINGSTRATEGIC_API FMingStrategicTacticalUnit
     FString UnitID;
 
     UPROPERTY(BlueprintReadOnly)
-    FString UnitType;
+    FString UnitName;
 
     UPROPERTY(BlueprintReadOnly)
-    EMingStrategicTacticalUnitState CurrentState;
+    EMingStratTacticalUnitState CurrentState;
 
     UPROPERTY(BlueprintReadOnly)
-    FVector CurrentPosition;
-
-    UPROPERTY(BlueprintReadOnly)
-    FVector TargetPosition;
+    FVector Position;
 
     UPROPERTY(BlueprintReadOnly)
     float Health;
@@ -78,15 +93,21 @@ struct MINGSTRATEGIC_API FMingStrategicTacticalUnit
     float Morale;
 
     UPROPERTY(BlueprintReadOnly)
-    float CombatEffectiveness;
+    float AttackPower;
 
     UPROPERTY(BlueprintReadOnly)
-    TArray<EMingStratTacticalCommand> AvailableCommands;
+    float DefensePower;
+
+    UPROPERTY(BlueprintReadOnly)
+    float MovementSpeed;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> CurrentOrders;
 };
 
-// ?��??�場信息
+// 戰術戰場信息
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingTacticalBattlefield
+struct MINGSTRATEGIC_API FMingStratTacticalBattlefield
 {
     GENERATED_BODY()
 
@@ -97,33 +118,30 @@ struct MINGSTRATEGIC_API FMingTacticalBattlefield
     FString BattlefieldName;
 
     UPROPERTY(BlueprintReadOnly)
-    FVector BattlefieldCenter;
+    FVector CenterLocation;
 
     UPROPERTY(BlueprintReadOnly)
     float BattlefieldRadius;
 
     UPROPERTY(BlueprintReadOnly)
-    EMingTacticalTerrain TerrainType;
+    EMingStratTacticalTerrain TerrainType;
 
     UPROPERTY(BlueprintReadOnly)
-    EMingTacticalWeather WeatherCondition;
+    EMingStratTacticalWeather WeatherCondition;
 
     UPROPERTY(BlueprintReadOnly)
-    TArray<FMingStrategicTacticalUnit> FriendlyUnits;
+    TArray<FMingStratTacticalUnit> AlliedUnits;
 
     UPROPERTY(BlueprintReadOnly)
-    TArray<FMingStrategicTacticalUnit> EnemyUnits;
+    TArray<FMingStratTacticalUnit> EnemyUnits;
 
     UPROPERTY(BlueprintReadOnly)
-    TArray<FVector> StrategicPoints;
-
-    UPROPERTY(BlueprintReadOnly)
-    float BattlefieldControl;
+    TArray<FString> StrategicObjectives;
 };
 
-// ?��??�令
+// 戰術命令
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStrategicTacticalOrder
+struct MINGSTRATEGIC_API FMingStratTacticalOrder
 {
     GENERATED_BODY()
 
@@ -134,24 +152,30 @@ struct MINGSTRATEGIC_API FMingStrategicTacticalOrder
     EMingStratTacticalCommand CommandType;
 
     UPROPERTY(BlueprintReadOnly)
-    FString TargetUnitID;
+    FString IssuingUnitID;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> TargetUnitIDs;
 
     UPROPERTY(BlueprintReadOnly)
     FVector TargetLocation;
 
     UPROPERTY(BlueprintReadOnly)
-    float OrderPriority;
+    FString OrderDescription;
+
+    UPROPERTY(BlueprintReadOnly)
+    float Priority;
 
     UPROPERTY(BlueprintReadOnly)
     FDateTime IssueTime;
 
     UPROPERTY(BlueprintReadOnly)
-    FDateTime Deadline;
+    FDateTime ExpectedCompletion;
 };
 
-// ?��?事件
+// 戰術事件
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingTacticalEvent
+struct MINGSTRATEGIC_API FMingStratTacticalEvent
 {
     GENERATED_BODY()
 
@@ -171,119 +195,15 @@ struct MINGSTRATEGIC_API FMingTacticalEvent
     TArray<FString> InvolvedUnits;
 
     UPROPERTY(BlueprintReadOnly)
-    FDateTime EventTime;
-};
-
-// ?��??��??�??UENUM(BlueprintType)
-enum class EMingStrategicUnitState : uint8
-{
-    Idle,           // 待命
-    Moving,         // 移�?�?    Attacking,      // ?��?�?    Defending,      // ?�禦�?    Retreating,     // ?�退�?    Regrouping      // ?��?�?};
-
-// ?��??��?信息
-USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStratUnit
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadOnly)
-    class AActor* UnitActor;
-
-    UPROPERTY(BlueprintReadOnly)
-    FString UnitID;
-
-    UPROPERTY(BlueprintReadOnly)
-    FString UnitType;
-
-    UPROPERTY(BlueprintReadOnly)
-    EMingTacticalUnitState CurrentState;
-
-    UPROPERTY(BlueprintReadOnly)
-    FVector CurrentPosition;
-
-    UPROPERTY(BlueprintReadOnly)
-    FVector TargetPosition;
-
-    UPROPERTY(BlueprintReadOnly)
-    float Health;
-
-    UPROPERTY(BlueprintReadOnly)
-    float Morale;
-
-    UPROPERTY(BlueprintReadOnly)
-    float CombatEffectiveness;
-};
-
-// ?��??�令
-USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStratOrder
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadOnly)
-    FString OrderID;
-
-    UPROPERTY(BlueprintReadOnly)
-    EMingStratTacticalCommand CommandType;
-
-    UPROPERTY(BlueprintReadOnly)
-    FString TargetUnitID;
-
-    UPROPERTY(BlueprintReadOnly)
-    FVector TargetLocation;
-
-    UPROPERTY(BlueprintReadOnly)
-    float Priority;
-};
-
-// ?��??�??USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStratState
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadOnly)
-    FString CurrentTactic;
-
-    UPROPERTY(BlueprintReadOnly)
-    float OverallSituation;
-
-    UPROPERTY(BlueprintReadOnly)
-    float FriendlyStrength;
-
-    UPROPERTY(BlueprintReadOnly)
-    float EnemyStrength;
-
-    UPROPERTY(BlueprintReadOnly)
-    float TerrainAdvantage;
-
-    UPROPERTY(BlueprintReadOnly)
-    float WeatherImpact;
-};
-
-// ?��?事件
-USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingTacticalEvent
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadOnly)
-    FString EventID;
-
-    UPROPERTY(BlueprintReadOnly)
-    FString EventType;
-
-    UPROPERTY(BlueprintReadOnly)
-    FString EventDescription;
-
-    UPROPERTY(BlueprintReadOnly)
-    float EventImpact;
+    float TacticalImpact;
 
     UPROPERTY(BlueprintReadOnly)
     FDateTime EventTime;
 };
 
 /**
- * ?��?層系�? * 負責?�場?�揮?�部?�調度、戰術執行�?
+ * 戰術層系統
+ * 負責戰場管理、部隊指揮、戰術執行等
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGSTRATEGIC_API UMingTacticalLayer : public UObject, public IMingGameLayer
@@ -291,9 +211,10 @@ class MINGSTRATEGIC_API UMingTacticalLayer : public UObject, public IMingGameLay
     GENERATED_BODY()
 
 public:
-    // 建�?�?    UMingTacticalLayer();
+    // 建構子
+    UMingTacticalLayer();
 
-    // 實現介面?��?
+    // 實現介面方法
     virtual void InitializeLayer_Implementation() override;
     virtual void UpdateLayer_Implementation(float DeltaTime) override;
     virtual EMingLayer GetLayerType_Implementation() const override;
@@ -302,30 +223,30 @@ public:
     virtual void HandleLayerEvent_Implementation(const FMingStrategicIntegrationEvent& Event) override;
     virtual void HandleLayerDecision_Implementation(const FMingGameDecision& Decision) override;
 
-    // ?�場管�?
+    // 戰場管理
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
-    void CreateBattlefield(const FString& BattlefieldID, const FVector& Center, float Radius);
+    void CreateBattlefield(const FString& BattlefieldID, const FString& BattlefieldName, const FVector& Center, float Radius);
 
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
-    void UpdateBattlefield(const FString& BattlefieldID, EMingTacticalTerrain Terrain, EMingTacticalWeather Weather);
+    void UpdateBattlefieldConditions(const FString& BattlefieldID, EMingStratTacticalTerrain Terrain, EMingStratTacticalWeather Weather);
 
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
-    FMingTacticalBattlefield GetBattlefield(const FString& BattlefieldID) const;
-
-    // ?��?管�?
-    UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
-    void AddTacticalUnit(class AActor* Unit, const FString& UnitID, const FString& UnitType);
+    FMingStratTacticalBattlefield GetBattlefield(const FString& BattlefieldID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
-    void RemoveTacticalUnit(const FString& UnitID);
+    TArray<FMingStratTacticalBattlefield> GetAllBattlefields() const;
+
+    // 部隊管理
+    UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
+    void AddTacticalUnit(const FString& UnitID, const FString& UnitName, const FVector& Position);
 
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
-    void UpdateTacticalUnit(const FString& UnitID, const FVector& Position, EMingTacticalUnitState State);
+    void UpdateTacticalUnit(const FString& UnitID, const FVector& Position, EMingStratTacticalUnitState State);
 
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     TArray<FMingStratTacticalUnit> GetTacticalUnits() const;
 
-    // ?��??�令
+    // 戰術命令
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     void IssueTacticalOrder(const FMingStratTacticalOrder& Order);
 
@@ -338,106 +259,108 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     TArray<FMingStratTacticalOrder> GetTacticalOrders() const;
 
-    // ?��??��?
+    // 戰術分析
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
-    float AnalyzeBattlefieldControl(const FString& BattlefieldID);
+    float CalculateBattlefieldControl(const FString& BattlefieldID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
-    TArray<FVector> IdentifyStrategicPoints(const FString& BattlefieldID);
+    TArray<FString> IdentifyTacticalOpportunities() const;
 
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
-    TArray<FString> AssessTacticalThreats(const FString& BattlefieldID);
+    TArray<FString> AssessTacticalThreats() const;
 
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
-    TArray<FString> IdentifyTacticalOpportunities(const FString& BattlefieldID);
+    float CalculateUnitCoordination() const;
 
-    // ?��??��??�??    UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
+    // 獲取戰術狀態
+    UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     FMingTacticalState GetTacticalState() const;
 
-    // ?��??�場?��"
-    UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
-    TArray<FString> GetBattlefieldList() const;
-
 protected:
-    // ?��??�??    UPROPERTY(BlueprintReadOnly)
+    // 戰術狀態
+    UPROPERTY(BlueprintReadOnly)
     FMingTacticalState TacticalState;
 
-    // ?�場?��"
+    // 戰場列表
     UPROPERTY(BlueprintReadOnly)
-    TMap<FString, FMingTacticalBattlefield> Battlefields;
+    TMap<FString, FMingStratTacticalBattlefield> Battlefields;
 
-    // ?��??��?
+    // 戰術單位
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, FMingStratTacticalUnit> TacticalUnits;
 
-    // ?��??�令
+    // 戰術命令
     UPROPERTY(BlueprintReadOnly)
     TArray<FMingStratTacticalOrder> TacticalOrders;
 
-    // ?��?事件歷史
+    // 戰術事件歷史
     UPROPERTY(BlueprintReadOnly)
-    TArray<FMingTacticalEvent> TacticalHistory;
+    TArray<FMingStratTacticalEvent> TacticalHistory;
 
-    // ?��?風格
+    // 戰術風格
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tactical|Settings")
     FString TacticalStyle;
 
-    // ?��??��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tactical|Settings")
-    float TacticalAggressiveness;
-
-    // 謹�??��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tactical|Settings")
-    float TacticalCautiousness;
-
-    // ?�調?��?
+    // 戰鬥偏好
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tactical|Settings")
-    float CoordinationSkill;
+    float CombatAggressiveness;
 
-    // ?��??�場局??    void AnalyzeBattlefieldSituation(const FString& BattlefieldID);
+    // 部隊協調偏好
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tactical|Settings")
+    float UnitCoordinationPreference;
 
-    // 評估?��??�??    void AssessUnitStatus();
+    // 分析戰場狀況
+    void AnalyzeBattlefieldConditions();
 
-    // 計�??��??�勢
-    float CalculateTacticalAdvantage(const FString& BattlefieldID);
+    // 評估部隊狀態
+    void AssessUnitStatus();
 
-    // ?�測?��?結�?
-    TArray<FString> PredictTacticalOutcome(const FString& BattlefieldID);
+    // 計算戰術優勢
+    float CalculateTacticalAdvantage();
 
-    // 民�??�色?��?
+    // 預測戰鬥結果
+    TArray<FString> PredictBattleOutcome(const FString& BattlefieldID);
+
+    // 民國特色戰術
     void ApplyRepublicanEraTactics();
 
-    // 軍閥混戰?��?
-    void ExecuteWarlordConflictTactics();
+    // 軍閥混戰協調
+    void ExecuteWarlordConflictCoordination();
 
-    // ?��??��?
-    void ExecuteNorthernExpeditionTactics();
+    // 現代化軍事改革
+    void ExecuteModernMilitaryReform();
 
-    // ?�日?��?
-    void ExecuteAntiJapaneseTactics();
+    // 游擊戰術
+    void ExecuteGuerrillaWarfare();
 
-    // 游�??��?
-    void ExecuteGuerrillaTactics();
+    // 正規戰術
+    void ExecuteConventionalWarfare();
 
-    // �???��?
-    void ExecuteConventionalTactics();
+    // 統一戰線戰術
+    void ExecuteUnitedFrontTactics();
+
+    // 抗日戰爭戰術
+    void ExecuteAntiJapaneseWarTactics();
 
 private:
-    // ?��??�新?��?
+    // 戰術更新間隔
     float TacticalUpdateInterval;
 
-    // 上次?�新?��?
+    // 上次更新時間
     float LastTacticalUpdate;
 
-    // ?�場?�制?��?    float BattlefieldControlThreshold;
+    // 戰場控制閾值
+    float BattlefieldControlThreshold;
 
-    // ?��??�調?��?
+    // 單位協調半徑
     float UnitCoordinationRadius;
 
-    // ?��?威�?評估
+    // 戰術威脅評估
     TMap<FString, float> TacticalThreats;
 
-    // ?��?機�?評估
+    // 戰術機會評估
     TMap<FString, float> TacticalOpportunities;
 
-    // ?��??�令歷史
-    TArray<FMingTacticalOrder> OrderHistory;
+    // 戰術決策歷史
+    TArray<FMingStratTacticalOrder> OrderHistory;
 };

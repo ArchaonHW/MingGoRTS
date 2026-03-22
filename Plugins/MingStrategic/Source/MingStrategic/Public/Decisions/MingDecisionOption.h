@@ -55,3 +55,4 @@ struct MINGSTRATEGIC_API FMingStrategicDecisionOption
     // æª¢æŸ¥?¸é??¯å¦?¯ç”¨
     bool IsAvailable() const;
 };
+

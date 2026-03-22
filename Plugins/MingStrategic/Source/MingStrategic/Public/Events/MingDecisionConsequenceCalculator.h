@@ -391,36 +391,36 @@ class MINGSTRATEGIC_API UMingDecisionConsequenceCalculator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingDecisionConsequenceCalculator();
+    UMingDecisionConsequenceCalculator(};
 
     /**
      * ?ùÂ??ñÂ??úË?ÁÆóÂô®
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    void Initialize();
+    void Initialize(};
 
     /**
      * ?úÈ?ÂæåÊ?Ë®àÁ???     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    void Shutdown();
+    void Shutdown(};
 
     /**
      * Ë®ªÂ?Ê±∫Á?ÂæåÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool RegisterDecisionConsequence(const FDecisionConsequence& Consequence);
+    bool RegisterDecisionConsequence(const FDecisionConsequence& Consequence};
 
     /**
      * ?ñÊ?Ë®ªÂ?Ê±∫Á?ÂæåÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool UnregisterDecisionConsequence(const FString& ConsequenceID);
+    bool UnregisterDecisionConsequence(const FString& ConsequenceID};
 
     /**
      * Ë®àÁ?Ê±∫Á?ÂæåÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    FConsequenceCalculationResult CalculateDecisionConsequences(const FDecisionContext& Context);
+    FConsequenceCalculationResult CalculateDecisionConsequences(const FDecisionContext& Context};
 
     /**
      * ?≤Â?Ê±∫Á?ÂæåÊ?
@@ -472,19 +472,19 @@ public:
      * Ëß∏ÁôºÂæåÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool TriggerConsequence(const FString& ConsequenceID, const FDecisionContext& Context);
+    bool TriggerConsequence(const FString& ConsequenceID, const FDecisionContext& Context};
 
     /**
      * ?âÁî®ÂæåÊ??àÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool ApplyConsequenceEffects(const FString& ConsequenceID, const FDecisionContext& Context);
+    bool ApplyConsequenceEffects(const FString& ConsequenceID, const FDecisionContext& Context};
 
     /**
      * ?ÜË?ÂæåÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool ReverseConsequence(const FString& ConsequenceID, const FDecisionContext& Context);
+    bool ReverseConsequence(const FString& ConsequenceID, const FDecisionContext& Context};
 
     /**
      * ?≤Â?ÂæåÊ?Áµ±Ë?
@@ -502,13 +502,13 @@ public:
      * ?êÊ∏¨Ê±∫Á?ÂæåÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FDecisionConsequence> PredictDecisionConsequences(const FDecisionContext& Context, int32 PredictionCount);
+    TArray<FDecisionConsequence> PredictDecisionConsequences(const FDecisionContext& Context, int32 PredictionCount};
 
     /**
      * Ê®°Êì¨Ê±∫Á?ÂæåÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FConsequenceCalculationResult> SimulateDecisionConsequences(const FDecisionContext& Context, int32 SimulationCount);
+    TArray<FConsequenceCalculationResult> SimulateDecisionConsequences(const FDecisionContext& Context, int32 SimulationCount};
 
 protected:
     // Â∑≤Ë®ª?äÁ?Ê±∫Á?ÂæåÊ?
@@ -527,49 +527,49 @@ protected:
     bool bIsInitialized;
 
     // ?ùÂ??ñÊ??ãÊ≠∑?≤Ê±∫Á≠ñÂ??úÂ∫´
-    void InitializeHistoricalDecisionConsequences();
+    void InitializeHistoricalDecisionConsequences(};
 
     // ?µÂª∫?øÊ≤ªÊ±∫Á?ÂæåÊ?
-    void CreatePoliticalDecisionConsequences();
+    void CreatePoliticalDecisionConsequences(};
 
     // ?µÂª∫Ëªç‰?Ê±∫Á?ÂæåÊ?
-    void CreateMilitaryDecisionConsequences();
+    void CreateMilitaryDecisionConsequences(};
 
     // ?µÂª∫Á∂ìÊ?Ê±∫Á?ÂæåÊ?
-    void CreateEconomicDecisionConsequences();
+    void CreateEconomicDecisionConsequences(};
 
     // ?µÂª∫Á§æÊ?Ê±∫Á?ÂæåÊ?
-    void CreateSocialDecisionConsequences();
+    void CreateSocialDecisionConsequences(};
 
     // ?µÂª∫?áÂ?Ê±∫Á?ÂæåÊ?
-    void CreateCulturalDecisionConsequences();
+    void CreateCulturalDecisionConsequences(};
 
     // ?µÂª∫Â§ñ‰∫§Ê±∫Á?ÂæåÊ?
-    void CreateDiplomaticDecisionConsequences();
+    void CreateDiplomaticDecisionConsequences(};
 
     // Ë®àÁ??≥Ê?ÂæåÊ?
-    void CalculateImmediateConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
+    void CalculateImmediateConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
     // Ë®àÁ?Âª∂Ë?ÂæåÊ?
-    void CalculateDelayedConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
+    void CalculateDelayedConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
     // Ë®àÁ?Á¥ØÁ?ÂæåÊ?
-    void CalculateCumulativeConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
+    void CalculateCumulativeConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
     // Ë®àÁ?Ê¢ù‰ª∂ÂæåÊ?
-    void CalculateConditionalConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
+    void CalculateConditionalConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
     // Ë®àÁ??®Ê?ÂæåÊ?
-    void CalculateRandomConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
+    void CalculateRandomConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
     // Ë®àÁ??±Ë?ÂæåÊ?
-    void CalculateHiddenConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
+    void CalculateHiddenConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
     // Ë®àÁ?Ê∞∏‰?ÂæåÊ?
-    void CalculatePermanentConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
+    void CalculatePermanentConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
     // Ë®àÁ??®Ê?ÂæåÊ?
-    void CalculateTemporaryConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
+    void CalculateTemporaryConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
 
     // Ë®àÁ?ÂæåÊ?ÂΩ±Èüø?ÜÊï∏
     float CalculateConsequenceImpact(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
@@ -593,7 +593,7 @@ protected:
     // ?âÁî®ÂæåÊ??∞ÂñÆ‰Ω?    void ApplyConsequenceToUnits(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedUnits) const;
 
     // ?¥Êñ∞ÂæåÊ?Áµ±Ë?
-    void UpdateConsequenceStatistics(const FString& ConsequenceID);
+    void UpdateConsequenceStatistics(const FString& ConsequenceID};
 
     // ?≤Â?ÂæåÊ??èËø∞
     FString GetConsequenceDescription(const FString& ConsequenceID) const;
@@ -602,7 +602,7 @@ protected:
     bool ValidateConsequenceConfig(const FDecisionConsequence& Consequence) const;
 
     // Ë®òÈ?ÂæåÊ??•Ë?
-    void LogConsequenceEvent(const FString& ConsequenceID, const FString& Message);
+    void LogConsequenceEvent(const FString& ConsequenceID, const FString& Message};
 
     // ?üÊ?ÂæåÊ??±Â?
     FString GenerateConsequenceReport(const FString& ConsequenceID, const FConsequenceCalculationResult& Result) const;
@@ -627,3 +627,4 @@ protected:
     // ?íÂ?ÂæåÊ?
     void SortConsequencesByPriority(TArray<FDecisionConsequence>& Consequences) const;
 };
+

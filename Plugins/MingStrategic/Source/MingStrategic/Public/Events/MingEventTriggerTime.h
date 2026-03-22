@@ -55,7 +55,7 @@ struct FGameDateTime
     // è½‰æ??ºç¸½?†é???(?¨æ–¼æ¯”è?)
     int64 ToTotalMinutes() const;
     
-    // å¾ç¸½?†é??¸è???    static FGameDateTime FromTotalMinutes(int64 TotalMinutes);
+    // å¾ç¸½?†é??¸è???    static FGameDateTime FromTotalMinutes(int64 TotalMinutes};
 };
 
 /**
@@ -67,27 +67,27 @@ class MINGSTRATEGIC_API UMingEventTriggerTime : public UMingEventTrigger
     GENERATED_BODY()
 
 public:
-    UMingEventTriggerTime();
+    UMingEventTriggerTime(};
 
     // è¨­ç½®çµ•å??‚é?è§¸ç™¼ (1926å¹???2??
     UFUNCTION(BlueprintCallable, Category = "Time Trigger")
-    void SetAbsoluteTime(int32 Year, int32 Month, int32 Day, int32 Hour = 0, int32 Minute = 0);
+    void SetAbsoluteTime(int32 Year, int32 Month, int32 Day, int32 Hour = 0, int32 Minute = 0};
 
     // è¨­ç½®?¸å??‚é?è§¸ç™¼ (3?‹æ?å¾?
     UFUNCTION(BlueprintCallable, Category = "Time Trigger")
-    void SetRelativeTime(int32 Months, int32 Days = 0, int32 Hours = 0);
+    void SetRelativeTime(int32 Months, int32 Days = 0, int32 Hours = 0};
 
     // è¨­ç½®?±æ??§è§¸??(æ¯?0å¤?
     UFUNCTION(BlueprintCallable, Category = "Time Trigger")
-    void SetPeriodic(float PeriodInDays);
+    void SetPeriodic(float PeriodInDays};
 
     // è¨­ç½®æ¯æ—¥è§¸ç™¼ (æ¯å¤©12:00)
     UFUNCTION(BlueprintCallable, Category = "Time Trigger")
-    void SetDaily(int32 Hour, int32 Minute = 0);
+    void SetDaily(int32 Hour, int32 Minute = 0};
 
     // ?´æ–°?¶å??Šæˆ²?‚é?
     UFUNCTION(BlueprintCallable, Category = "Time Trigger")
-    void UpdateGameTime(const FGameDateTime& CurrentTime);
+    void UpdateGameTime(const FGameDateTime& CurrentTime};
 
     // ?²å??®æ??‚é?
     UFUNCTION(BlueprintPure, Category = "Time Trigger")
@@ -143,5 +143,6 @@ protected:
     bool CheckDaily() const;
 
     // è¨ˆç??®æ??‚é? (?¸å?æ¨¡å?)
-    void CalculateTargetTime();
+    void CalculateTargetTime(};
 };
+

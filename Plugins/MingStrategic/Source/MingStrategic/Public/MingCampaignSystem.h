@@ -171,20 +171,20 @@ class MINGSTRATEGIC_API UMingCampaignSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingCampaignSystem();
+    UMingCampaignSystem(};
 
     // Campaign Management
     UFUNCTION(BlueprintCallable, Category = "Campaign")
-    void LoadCampaign(const FString& CampaignID);
+    void LoadCampaign(const FString& CampaignID};
 
     UFUNCTION(BlueprintCallable, Category = "Campaign")
-    void StartCampaign(const FString& CampaignID);
+    void StartCampaign(const FString& CampaignID};
 
     UFUNCTION(BlueprintCallable, Category = "Campaign")
-    void SaveCampaign(const FString& CampaignID);
+    void SaveCampaign(const FString& CampaignID};
 
     UFUNCTION(BlueprintCallable, Category = "Campaign")
-    void CompleteCampaign(const FString& CampaignID);
+    void CompleteCampaign(const FString& CampaignID};
 
     UFUNCTION(BlueprintPure, Category = "Campaign")
     FMingCampaign GetCurrentCampaign() const;
@@ -197,16 +197,16 @@ public:
 
     // Mission Management
     UFUNCTION(BlueprintCallable, Category = "Mission")
-    void StartMission(const FString& MissionID);
+    void StartMission(const FString& MissionID};
 
     UFUNCTION(BlueprintCallable, Category = "Mission")
-    void CompleteMission(const FString& MissionID);
+    void CompleteMission(const FString& MissionID};
 
     UFUNCTION(BlueprintCallable, Category = "Mission")
-    void FailMission(const FString& MissionID);
+    void FailMission(const FString& MissionID};
 
     UFUNCTION(BlueprintCallable, Category = "Mission")
-    void SkipMission(const FString& MissionID);
+    void SkipMission(const FString& MissionID};
 
     UFUNCTION(BlueprintPure, Category = "Mission")
     FMingMission GetCurrentMission() const;
@@ -219,13 +219,13 @@ public:
 
     // Objective Management
     UFUNCTION(BlueprintCallable, Category = "Objectives")
-    void UpdateObjectiveProgress(const FString& ObjectiveID, float Progress);
+    void UpdateObjectiveProgress(const FString& ObjectiveID, float Progress};
 
     UFUNCTION(BlueprintCallable, Category = "Objectives")
-    void CompleteObjective(const FString& ObjectiveID);
+    void CompleteObjective(const FString& ObjectiveID};
 
     UFUNCTION(BlueprintCallable, Category = "Objectives")
-    void FailObjective(const FString& ObjectiveID);
+    void FailObjective(const FString& ObjectiveID};
 
     UFUNCTION(BlueprintPure, Category = "Objectives")
     TArray<FMingMissionObjective> GetCurrentObjectives() const;
@@ -238,10 +238,10 @@ public:
 
     // Progression
     UFUNCTION(BlueprintCallable, Category = "Progression")
-    void UnlockNextMission();
+    void UnlockNextMission(};
 
     UFUNCTION(BlueprintCallable, Category = "Progression")
-    void SetMissionPrerequisite(const FString& MissionID, const FString& PrerequisiteID);
+    void SetMissionPrerequisite(const FString& MissionID, const FString& PrerequisiteID};
 
     UFUNCTION(BlueprintPure, Category = "Progression")
     TArray<FString> GetMissionChain(const FString& MissionID) const;
@@ -257,10 +257,10 @@ public:
     bool IsCampaignComplete(const FString& CampaignID) const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMissionStarted, const FMingMission&, Mission, const FString&, CampaignID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMissionCompleted, const FMingMission&, Mission, const FString&, CampaignID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMissionFailed, const FMingMission&, Mission, const FString&, CampaignID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnObjectiveUpdated, const FMingMissionObjective&, Objective, float, Progress);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMissionStarted, const FMingMission&, Mission, const FString&, CampaignID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMissionCompleted, const FMingMission&, Mission, const FString&, CampaignID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMissionFailed, const FMingMission&, Mission, const FString&, CampaignID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnObjectiveUpdated, const FMingMissionObjective&, Objective, float, Progress};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnMissionStarted OnMissionStarted;
@@ -276,29 +276,29 @@ public:
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetMissionTypeName(EMingMissionType Type);
+    static FString GetMissionTypeName(EMingMissionType Type};
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetCampaignTypeName(EMingCampaignType Type);
+    static FString GetCampaignTypeName(EMingCampaignType Type};
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     FString SaveCampaignData() const;
 
     UFUNCTION(BlueprintCallable, Category = "Persistence")
-    void LoadCampaignData(const FString& JsonString);
+    void LoadCampaignData(const FString& JsonString};
 
     // ?°å½¹æ¨¡å??§å®¹?´å?
     UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
-    void ExpandCampaignContent();
+    void ExpandCampaignContent(};
 
     UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
-    void AddDynamicMissions();
+    void AddDynamicMissions(};
 
     UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
-    void ImplementAdaptiveDifficulty();
+    void ImplementAdaptiveDifficulty(};
 
     UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
-    void GenerateProceduralContent();
+    void GenerateProceduralContent(};
 
 protected:
     UPROPERTY()
@@ -330,24 +330,25 @@ protected:
     float ContentExpansionRate = 1.5f;
 
     // ?§éƒ¨?½æ•¸
-    void InitializeDefaultCampaigns();
-    void SetupHistoricalCampaigns();
-    void SetupWhatIfCampaigns();
-    void SetupTutorialCampaign();
-    void CheckMissionCompletion();
-    void UnlockDependentMissions(const FString& CompletedMissionID);
-    void ValidateMissionProgression();
+    void InitializeDefaultCampaigns(};
+    void SetupHistoricalCampaigns(};
+    void SetupWhatIfCampaigns(};
+    void SetupTutorialCampaign(};
+    void CheckMissionCompletion(};
+    void UnlockDependentMissions(const FString& CompletedMissionID};
+    void ValidateMissionProgression(};
 
     // ?§å®¹?´å??§éƒ¨?½æ•¸
-    void GenerateNewMissions();
-    void AdjustMissionDifficulty();
-    void CreateProceduralMaps();
-    void ExpandCampaignNarrative();
+    void GenerateNewMissions(};
+    void AdjustMissionDifficulty(};
+    void CreateProceduralMaps(};
+    void ExpandCampaignNarrative(};
     float CalculatePlayerSkillLevel() const;
-    void OptimizeMissionFlow();
+    void OptimizeMissionFlow(};
 
     // Helpers
-    FMingMission* FindMission(const FString& MissionID);
-    FMingCampaign* FindCampaign(const FString& CampaignID);
+    FMingMission* FindMission(const FString& MissionID};
+    FMingCampaign* FindCampaign(const FString& CampaignID};
     bool ArePrerequisitesMet(const FString& MissionID) const;
 };
+

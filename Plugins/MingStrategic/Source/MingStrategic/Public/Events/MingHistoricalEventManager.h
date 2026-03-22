@@ -193,42 +193,42 @@ class MINGSTRATEGIC_API UMingHistoricalEventManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingHistoricalEventManager();
+    UMingHistoricalEventManager(};
 
     /**
      * ?ùÂ??ñ‰?‰ª∂ÁÆ°?ÜÂô®
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void Initialize();
+    void Initialize(};
 
     /**
      * ?úÈ?‰∫ã‰ª∂ÁÆ°Á???     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void Shutdown();
+    void Shutdown(};
 
     /**
      * Ë®ªÂ?Ê≠∑Âè≤‰∫ã‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    bool RegisterHistoricalEvent(const FMingManagerEvent& Event);
+    bool RegisterHistoricalEvent(const FMingManagerEvent& Event};
 
     /**
      * ?ñÊ?Ë®ªÂ?Ê≠∑Âè≤‰∫ã‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    bool UnregisterHistoricalEvent(const FString& EventID);
+    bool UnregisterHistoricalEvent(const FString& EventID};
 
     /**
      * Ê™¢Êü•‰∫ã‰ª∂Ëß∏ÁôºÊ¢ù‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    bool CheckEventTriggerConditions(const FString& EventID, const FEventTriggerContext& Context);
+    bool CheckEventTriggerConditions(const FString& EventID, const FEventTriggerContext& Context};
 
     /**
      * Ëß∏ÁôºÊ≠∑Âè≤‰∫ã‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    FEventExecutionResult TriggerHistoricalEvent(const FString& EventID, const FEventTriggerContext& Context);
+    FEventExecutionResult TriggerHistoricalEvent(const FString& EventID, const FEventTriggerContext& Context};
 
     /**
      * ?≤Â?Ê≠∑Âè≤‰∫ã‰ª∂
@@ -270,7 +270,7 @@ public:
     /**
      * ?¥Êñ∞?äÊà≤‰∏ä‰???     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void UpdateGameContext(const FEventTriggerContext& Context);
+    void UpdateGameContext(const FEventTriggerContext& Context};
 
     /**
      * ?≤Â??∂Â??äÊà≤‰∏ä‰???     */
@@ -281,19 +281,19 @@ public:
      * Ë®≠ÁΩÆ?äÊà≤?ÇÈ?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void SetGameTime(float GameTime);
+    void SetGameTime(float GameTime};
 
     /**
      * Ë®≠ÁΩÆÊ∞ëÂ??ÇÊ?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void SetRepublicEra(ERepublicEra Era);
+    void SetRepublicEra(ERepublicEra Era};
 
     /**
      * Ê∑ªÂ??©ÂÆ∂Ê±∫Á?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void AddPlayerDecision(const FString& DecisionID, const FString& DecisionValue);
+    void AddPlayerDecision(const FString& DecisionID, const FString& DecisionValue};
 
     /**
      * ?≤Â?‰∫ã‰ª∂Áµ±Ë?
@@ -304,13 +304,13 @@ public:
     /**
      * ?çÁΩÆ?Ä?â‰?‰ª?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void ResetAllEvents();
+    void ResetAllEvents(};
 
     /**
      * Âº∑Âà∂Ëß∏Áôº‰∫ã‰ª∂ (?®ÊñºÊ∏¨Ë©¶)
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    FEventExecutionResult ForceTriggerEvent(const FString& EventID);
+    FEventExecutionResult ForceTriggerEvent(const FString& EventID};
 
     /**
      * ?≤Â??®Ëñ¶‰∫ã‰ª∂
@@ -342,18 +342,18 @@ protected:
     bool bIsInitialized;
 
     // ?ùÂ??ñÊ??ãÊ≠∑?≤‰?‰ª∂Â∫´
-    void InitializeHistoricalEventLibrary();
+    void InitializeHistoricalEventLibrary(};
 
-    // ?µÂª∫?©Ê??±Â??ã‰?‰ª?    void CreateEarlyRepublicEvents();
+    // ?µÂª∫?©Ê??±Â??ã‰?‰ª?    void CreateEarlyRepublicEvents(};
 
     // ?µÂª∫?ó‰∫¨?ÅÂπ¥‰∫ã‰ª∂
-    void CreateNanjingDecadeEvents();
+    void CreateNanjingDecadeEvents(};
 
     // ?µÂª∫?óÊà∞‰∫ã‰ª∂
-    void CreateWarOfResistanceEvents();
+    void CreateWarOfResistanceEvents(};
 
     // ?µÂª∫?ßÊà∞‰∫ã‰ª∂
-    void CreateCivilWarEvents();
+    void CreateCivilWarEvents(};
 
     // Ê™¢Êü•?ÇÈ?Ê¢ù‰ª∂
     bool CheckTimeCondition(const FString& Condition, const FEventTriggerContext& Context) const;
@@ -374,13 +374,13 @@ protected:
     bool CheckDiplomaticCondition(const FString& Condition, const FEventTriggerContext& Context) const;
 
     // ?∑Ë?‰∫ã‰ª∂ÂæåÊ?
-    bool ExecuteEventConsequence(const FString& Consequence, const FString& EventID);
+    bool ExecuteEventConsequence(const FString& Consequence, const FString& EventID};
 
     // ?âÁî®‰∫ã‰ª∂ÂΩ±Èüø
-    void ApplyEventImpact(const FMingManagerEvent& Event);
+    void ApplyEventImpact(const FMingManagerEvent& Event};
 
     // ?¥Êñ∞‰∫ã‰ª∂Áµ±Ë?
-    void UpdateEventStatistics(const FString& EventID);
+    void UpdateEventStatistics(const FString& EventID};
 
     // È©óË?‰∫ã‰ª∂‰æùË≥¥
     bool ValidateEventDependencies(const FString& EventID) const;
@@ -389,7 +389,7 @@ protected:
     float CalculateEventImpact(const FMingManagerEvent& Event) const;
 
     // Ë®òÈ?‰∫ã‰ª∂?•Ë?
-    void LogEvent(const FString& EventID, const FString& Message);
+    void LogEvent(const FString& EventID, const FString& Message};
 
     // ?üÊ?‰∫ã‰ª∂?±Â?
     FString GenerateEventReport(const FString& EventID, const FEventExecutionResult& Result) const;
@@ -400,5 +400,6 @@ protected:
 
     // ?≤Â?‰∏ä‰??áÂÄ?    float GetContextValue(const FString& Key, const FEventTriggerContext& Context) const;
 
-    // Ë®≠ÁΩÆ‰∏ä‰??áÂÄ?    void SetContextValue(const FString& Key, float Value, FEventTriggerContext& Context);
+    // Ë®≠ÁΩÆ‰∏ä‰??áÂÄ?    void SetContextValue(const FString& Key, float Value, FEventTriggerContext& Context};
 };
+

@@ -22,11 +22,11 @@ class MINGSTRATEGIC_API IMingGameLayer
 
 public:
     // ?ùÂ??ñÂ±§Á¥?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void InitializeLayer();
+    void InitializeLayer(};
 
     // ?¥Êñ∞Â±§Á?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void UpdateLayer(float DeltaTime);
+    void UpdateLayer(float DeltaTime};
 
     // ?≤Â?Â±§Á?È°ûÂ?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
@@ -41,11 +41,11 @@ public:
 
     // ?ïÁ?Â±§Á?‰∫ã‰ª∂
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void HandleLayerEvent(const FMingGameEvent& Event);
+    void HandleLayerEvent(const FMingGameEvent& Event};
 
     // ?ïÁ?Â±§Á?Ê±∫Á?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void HandleLayerDecision(const FMingGameDecision& Decision);
+    void HandleLayerDecision(const FMingGameDecision& Decision};
 
     // ?≤Â?Â±§Á?Ë≥áÊ??ÄÊ±?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     TMap<EMingResourceType, float> GetResourceRequirements() const;
@@ -63,10 +63,10 @@ public:
 
     // Ëß?±∫Â±§Á?Ë°ùÁ?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void ResolveLayerConflicts(const TArray<FMingLayerConflict>& Conflicts);
+    void ResolveLayerConflicts(const TArray<FMingLayerConflict>& Conflicts};
 
     // ?îË™ø?áÂÖ∂‰ªñÂ±§Á¥?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void CoordinateWithOtherLayers(const TArray<EMingGameLayer>& OtherLayers);
+    void CoordinateWithOtherLayers(const TArray<EMingGameLayer>& OtherLayers};
 
     // ?≤Â?Â±§Á??ßËÉΩÁµ±Ë?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
@@ -74,5 +74,6 @@ public:
 
     // ?çÁΩÆÂ±§Á?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void ResetLayer();
+    void ResetLayer(};
 };
+

@@ -106,3 +106,4 @@ struct MINGSTRATEGIC_API FMingDecision
     // ?²å??¯ç”¨?¸é??—è¡¨
     TArray<FMingDecisionOption> GetAvailableOptions() const;
 };
+

@@ -290,40 +290,40 @@ class MINGSTRATEGIC_API UMingWinLossCondition : public UObject
     GENERATED_BODY()
 
 public:
-    UMingWinLossCondition();
+    UMingWinLossCondition(};
 
     /**
      * ?ùÂ??ñÂ?Ë≤†Ê?‰ª∂Á≥ªÁµ?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    void Initialize();
+    void Initialize(};
 
     /**
      * ?úÈ??ùË?Ê¢ù‰ª∂Á≥ªÁµ±
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    void Shutdown();
+    void Shutdown(};
 
     /**
      * Ë®ªÂ??ùË?Ê¢ù‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    bool RegisterWinLossCondition(const FWinLossCondition& Condition);
+    bool RegisterWinLossCondition(const FWinLossCondition& Condition};
 
     /**
      * ?ñÊ?Ë®ªÂ??ùË?Ê¢ù‰ª∂
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    bool UnregisterWinLossCondition(const FString& ConditionID);
+    bool UnregisterWinLossCondition(const FString& ConditionID};
 
     /**
      * Ë©ï‰º∞?ùË??ÄÊ≥?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    FWinLossEvaluationResult EvaluateWinLoss();
+    FWinLossEvaluationResult EvaluateWinLoss(};
 
     /**
      * Ê™¢Êü•?ÆÂÄãÊ?‰ª?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    bool CheckCondition(const FString& ConditionID);
+    bool CheckCondition(const FString& ConditionID};
 
     /**
      * ?≤Â??ùË?Ê¢ù‰ª∂
@@ -362,7 +362,7 @@ public:
     /**
      * Ë®≠ÁΩÆ?äÊà≤?Ä??     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    void SetGameState(const TMap<FString, FString>& GameState);
+    void SetGameState(const TMap<FString, FString>& GameState};
 
     /**
      * ?≤Â??äÊà≤?Ä??     */
@@ -372,7 +372,7 @@ public:
     /**
      * ?¥Êñ∞?äÊà≤?Ä?ãÂÄ?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    void UpdateGameStateValue(const FString& Key, const FString& Value);
+    void UpdateGameStateValue(const FString& Key, const FString& Value};
 
     /**
      * ?≤Â??ùË?Áµ±Ë?
@@ -384,13 +384,13 @@ public:
      * ?çÁΩÆÁµ±Ë??∏Ê?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    void ResetStatistics();
+    void ResetStatistics(};
 
     /**
      * Âº∑Âà∂Ë©ï‰º∞ (?®ÊñºÊ∏¨Ë©¶)
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
-    FWinLossEvaluationResult ForceEvaluation();
+    FWinLossEvaluationResult ForceEvaluation(};
 
     /**
      * ?≤Â??∂Â??ùË?ÁµêÊ?
@@ -438,58 +438,58 @@ protected:
     // ?ØÂê¶Â∑≤Â?ÂßãÂ?
     bool bIsInitialized;
 
-    // ?ùÂ??ñÊ??ãÊ≠∑?≤Â?Ë≤†Ê?‰ª?    void InitializeHistoricalWinLossConditions();
+    // ?ùÂ??ñÊ??ãÊ≠∑?≤Â?Ë≤†Ê?‰ª?    void InitializeHistoricalWinLossConditions(};
 
     // ?µÂª∫Ëªç‰??ùË?Ê¢ù‰ª∂
-    void CreateMilitaryConditions();
+    void CreateMilitaryConditions(};
 
     // ?µÂª∫?øÊ≤ª?ùË?Ê¢ù‰ª∂
-    void CreatePoliticalConditions();
+    void CreatePoliticalConditions(};
 
     // ?µÂª∫Á∂ìÊ??ùË?Ê¢ù‰ª∂
-    void CreateEconomicConditions();
+    void CreateEconomicConditions(};
 
     // ?µÂª∫?òÂ??ùË?Ê¢ù‰ª∂
-    void CreateTerritorialConditions();
+    void CreateTerritorialConditions(};
 
     // ?µÂª∫?ÇÈ??ùË?Ê¢ù‰ª∂
-    void CreateTimeBasedConditions();
+    void CreateTimeBasedConditions(};
 
     // ?µÂª∫?ÜÊï∏?ùË?Ê¢ù‰ª∂
-    void CreateScoreBasedConditions();
+    void CreateScoreBasedConditions(};
 
     // Ê™¢Êü•Ëªç‰?Ê¢ù‰ª∂
-    bool CheckMilitaryCondition(const FWinLossCondition& Condition);
+    bool CheckMilitaryCondition(const FWinLossCondition& Condition};
 
     // Ê™¢Êü•?øÊ≤ªÊ¢ù‰ª∂
-    bool CheckPoliticalCondition(const FWinLossCondition& Condition);
+    bool CheckPoliticalCondition(const FWinLossCondition& Condition};
 
     // Ê™¢Êü•Á∂ìÊ?Ê¢ù‰ª∂
-    bool CheckEconomicCondition(const FWinLossCondition& Condition);
+    bool CheckEconomicCondition(const FWinLossCondition& Condition};
 
     // Ê™¢Êü•?òÂ?Ê¢ù‰ª∂
-    bool CheckTerritorialCondition(const FWinLossCondition& Condition);
+    bool CheckTerritorialCondition(const FWinLossCondition& Condition};
 
     // Ê™¢Êü•?ÇÈ?Ê¢ù‰ª∂
-    bool CheckTimeBasedCondition(const FWinLossCondition& Condition);
+    bool CheckTimeBasedCondition(const FWinLossCondition& Condition};
 
     // Ê™¢Êü•?ÜÊï∏Ê¢ù‰ª∂
-    bool CheckScoreBasedCondition(const FWinLossCondition& Condition);
+    bool CheckScoreBasedCondition(const FWinLossCondition& Condition};
 
-    // Ê™¢Êü•?™Â?Áæ©Ê?‰ª?    bool CheckCustomCondition(const FWinLossCondition& Condition);
+    // Ê™¢Êü•?™Â?Áæ©Ê?‰ª?    bool CheckCustomCondition(const FWinLossCondition& Condition};
 
-    // Ë©ï‰º∞Ê¢ù‰ª∂ÊªøË∂≥Â∫?    float EvaluateConditionSatisfaction(const FWinLossCondition& Condition);
+    // Ë©ï‰º∞Ê¢ù‰ª∂ÊªøË∂≥Â∫?    float EvaluateConditionSatisfaction(const FWinLossCondition& Condition};
 
     // Ë®àÁ??ùË??ÜÊï∏
-    void CalculateWinLossScores(FWinLossEvaluationResult& Result);
+    void CalculateWinLossScores(FWinLossEvaluationResult& Result};
 
-    // Á¢∫Â??ÄÁµÇÁ???    EWinLossResult DetermineFinalResult(const FWinLossEvaluationResult& Result);
+    // Á¢∫Â??ÄÁµÇÁ???    EWinLossResult DetermineFinalResult(const FWinLossEvaluationResult& Result};
 
     // ?¥Êñ∞Áµ±Ë??∏Ê?
-    void UpdateStatistics(const FWinLossEvaluationResult& Result);
+    void UpdateStatistics(const FWinLossEvaluationResult& Result};
 
     // ?öÁü•?ùË?ËÆäÂ?
-    void NotifyWinLossChange(EWinLossResult OldResult, EWinLossResult NewResult);
+    void NotifyWinLossChange(EWinLossResult OldResult, EWinLossResult NewResult};
 
     // ?≤Â??äÊà≤?Ä?ãÂÄ?    FString GetGameStateValue(const FString& Key) const;
 
@@ -499,7 +499,7 @@ protected:
     bool ValidateConditionConfig(const FWinLossCondition& Condition) const;
 
     // Ë®òÈ??ùË??•Ë?
-    void LogWinLossEvent(const FString& Message);
+    void LogWinLossEvent(const FString& Message};
 
     // ?üÊ??ùË??±Â?
     FString GenerateWinLossReport(const FWinLossEvaluationResult& Result) const;
@@ -507,13 +507,14 @@ protected:
     // Ëß??Ê¢ù‰ª∂?ÉÊï∏
     TArray<FString> ParseConditionParameters(const FString& ParameterString) const;
 
-    // Ë®≠ÁΩÆÊ¢ù‰ª∂?Ä??    void SetConditionState(const FString& ConditionID, EWinLossConditionState NewState);
+    // Ë®≠ÁΩÆÊ¢ù‰ª∂?Ä??    void SetConditionState(const FString& ConditionID, EWinLossConditionState NewState};
 
     // ?≤Â?Ê¢ù‰ª∂ÊªøË∂≥Â∫?    float GetConditionSatisfaction(const FString& ConditionID) const;
 
     // Ê™¢Êü•?úÈçµÊ¢ù‰ª∂
-    bool CheckCriticalConditions();
+    bool CheckCriticalConditions(};
 
     // ?ïÁ??ùË?ÁµêÊ?
-    void HandleGameOver(EWinLossResult Result, const FString& Reason);
+    void HandleGameOver(EWinLossResult Result, const FString& Reason};
 };
+

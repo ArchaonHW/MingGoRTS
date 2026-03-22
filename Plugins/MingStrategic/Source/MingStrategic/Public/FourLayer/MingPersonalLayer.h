@@ -5,46 +5,56 @@
 #include "FourLayer/IMingGameLayer.h"
 #include "MingPersonalLayer.generated.h"
 
-// 角色?�業類�?
+// 角色職業類型
 UENUM(BlueprintType)
 enum class EMingCharacterProfession : uint8
 {
     Military,       // 軍人
-    Politician,     // ?�治�?    Scholar,        // 學�?    Merchant,       // ?�人
-    Farmer,         // 農�?
+    Politician,     // 政治家
+    Scholar,        // 學者
+    Merchant,       // 商人
+    Farmer,         // 農民
     Worker,         // 工人
-    Doctor,         // ?��?
-    Teacher,        // ?�師
-    Journalist,     // 記�?    Artist          // ?��?�?};
+    Doctor,         // 醫生
+    Teacher,        // 教師
+    Journalist,     // 記者
+    Artist          // 藝術家
+};
 
-// 角色?�?��???UENUM(BlueprintType)
+// 角色技能類型
+UENUM(BlueprintType)
 enum class EMingCharacterSkill : uint8
 {
-    Leadership,      // ?��???    Combat,         // ?�鬥
+    Leadership,      // 領導力
+    Combat,         // 戰鬥
     Diplomacy,      // 外交
-    Economics,      // 經�?
-    Scholarship,    // 學�?
-    Medicine,       // ?�學
-    Engineering,    // 工�?
-    Art,            // ?��?
-    Speech,         // 演�?
-    Survival        // ?��?
+    Economics,      // 經濟
+    Scholarship,    // 學術
+    Medicine,       // 醫學
+    Engineering,    // 工程
+    Art,            // 藝術
+    Speech,         // 演講
+    Survival        // 生存
 };
 
-// ?��??�??UENUM(BlueprintType)
+// 關係狀態
+UENUM(BlueprintType)
 enum class EMingRelationshipStatus : uint8
 {
-    Stranger,       // ?��?�?    Acquaintance,   // 認�?
-    Friend,         // ?��?
-    CloseFriend,    // 好�???    Family,         // 家人
-    Lover,          // ?�人
-    Rival,          // 對�?
-    Enemy,          // ?�人
+    Stranger,       // 陌生人
+    Acquaintance,   // 認識
+    Friend,         // 朋友
+    CloseFriend,    // 好朋友
+    Family,         // 家人
+    Lover,          // 情人
+    Rival,          // 對手
+    Enemy,          // 敵人
     Mentor,         // 導師
-    Student         // 學�?
+    Student         // 學生
 };
 
-// 角色?�??USTRUCT(BlueprintType)
+// 角色狀態
+USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingCharacterStatus
 {
     GENERATED_BODY()
@@ -92,7 +102,7 @@ struct MINGSTRATEGIC_API FMingCharacterStatus
     TArray<FString> ActiveQuests;
 };
 
-// ?�人決�?
+// 個人決策
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingPersonalDecision
 {
@@ -123,7 +133,7 @@ struct MINGSTRATEGIC_API FMingPersonalDecision
     float PersonalRisk;
 };
 
-// ?�人事件
+// 個人事件
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingPersonalEvent
 {
@@ -151,7 +161,7 @@ struct MINGSTRATEGIC_API FMingPersonalEvent
     FDateTime EventTime;
 };
 
-// 角色?�長記�?
+// 角色成長記錄
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingCharacterGrowth
 {
@@ -179,8 +189,47 @@ struct MINGSTRATEGIC_API FMingCharacterGrowth
     TArray<FString> CompletedQuests;
 };
 
+// 個人狀態
+USTRUCT(BlueprintType)
+struct MINGSTRATEGIC_API FMingPersonalState
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    bool bIsActive;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString CurrentLocation;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString CurrentActivity;
+
+    UPROPERTY(BlueprintReadOnly)
+    float OverallHappiness;
+
+    UPROPERTY(BlueprintReadOnly)
+    float SocialStanding;
+
+    UPROPERTY(BlueprintReadOnly)
+    float EconomicStatus;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> ActiveRelationships;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> CurrentGoals;
+
+    FMingPersonalState()
+        : bIsActive(true)
+        , OverallHappiness(50.0f)
+        , SocialStanding(50.0f)
+        , EconomicStatus(50.0f)
+    {}
+};
+
 /**
- * ?�人層系�? * 負責角色?��??�個人?�長?��?係管?��?
+ * 個人層系統
+ * 負責角色扮演、個人成長、關係管理等
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGSTRATEGIC_API UMingPersonalLayer : public UObject, public IMingGameLayer
@@ -188,18 +237,19 @@ class MINGSTRATEGIC_API UMingPersonalLayer : public UObject, public IMingGameLay
     GENERATED_BODY()
 
 public:
-    // 建�?�?    UMingPersonalLayer();
+    // 建構子
+    UMingPersonalLayer();
 
-    // 實現介面?��?
+    // 實現介面方法
     virtual void InitializeLayer_Implementation() override;
     virtual void UpdateLayer_Implementation(float DeltaTime) override;
     virtual EMingLayer GetLayerType_Implementation() const override;
     virtual FString GetLayerName_Implementation() const override;
     virtual float GetLayerPriority_Implementation() const override;
-    virtual void HandleLayerEvent_Implementation(const FMingGameEvent& Event) override;
+    virtual void HandleLayerEvent_Implementation(const FMingStrategicIntegrationEvent& Event) override;
     virtual void HandleLayerDecision_Implementation(const FMingGameDecision& Decision) override;
 
-    // 角色管�?
+    // 角色管理
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     void CreateCharacter(const FString& CharacterID, const FString& CharacterName, EMingCharacterProfession Profession);
 
@@ -212,7 +262,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     TArray<FMingCharacterStatus> GetAllCharacters() const;
 
-    // ?�?�管??    UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
+    // 技能管理
+    UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     void ImproveSkill(const FString& CharacterID, EMingCharacterSkill Skill, float Amount);
 
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
@@ -221,7 +272,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     TMap<EMingCharacterSkill, float> GetAllSkills(const FString& CharacterID) const;
 
-    // ?��?管�?
+    // 關係管理
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     void UpdateRelationship(const FString& CharacterID, const FString& TargetID, EMingRelationshipStatus Status);
 
@@ -231,7 +282,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     TMap<FString, EMingRelationshipStatus> GetAllRelationships(const FString& CharacterID) const;
 
-    // ?�人決�?
+    // 個人決策
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     void MakePersonalDecision(const FMingPersonalDecision& Decision);
 
@@ -241,109 +292,117 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     TArray<FMingPersonalDecision> GetPersonalDecisions() const;
 
-    // 角色?�長
+    // 角色成長
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     void ProcessCharacterGrowth(const FString& CharacterID);
 
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     FMingCharacterGrowth GetCharacterGrowth(const FString& CharacterID) const;
 
-    // ?��??�人?�??    UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
+    // 獲取個人狀態
+    UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     FMingPersonalState GetPersonalState() const;
 
-    // ?��?主�?角色
+    // 獲取主要角色
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     FMingCharacterStatus GetMainCharacter() const;
 
-    // 設置主�?角色
+    // 設置主要角色
     UFUNCTION(BlueprintCallable, Category = "Ming|Personal")
     void SetMainCharacter(const FString& CharacterID);
 
 protected:
-    // ?�人?�??    UPROPERTY(BlueprintReadOnly)
+    // 個人狀態
+    UPROPERTY(BlueprintReadOnly)
     FMingPersonalState PersonalState;
 
-    // 角色?��"
+    // 角色列表
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, FMingCharacterStatus> Characters;
 
-    // ?�人決�?
+    // 個人決策
     UPROPERTY(BlueprintReadOnly)
     TArray<FMingPersonalDecision> PersonalDecisions;
 
-    // ?�人事件歷史
+    // 個人事件歷史
     UPROPERTY(BlueprintReadOnly)
     TArray<FMingPersonalEvent> PersonalHistory;
 
-    // 角色?�長記�?
+    // 角色成長記錄
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, FMingCharacterGrowth> CharacterGrowthRecords;
 
-    // 主�?角色ID
+    // 主要角色ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Personal|Settings")
     FString MainCharacterID;
 
-    // 角色?��?風格
+    // 角色發展風格
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Personal|Settings")
     FString CharacterDevelopmentStyle;
 
-    // ?��?管�??�好
+    // 關係管理偏好
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Personal|Settings")
     float RelationshipManagementPreference;
 
-    // ?�?�發展�?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Personal|Settings")
+    // 技能發展偏好
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Personal|Settings")
     TMap<EMingCharacterSkill, float> SkillDevelopmentPreferences;
 
-    // ?��?角色?�??    void AnalyzeCharacterStatus(const FString& CharacterID);
+    // 分析角色狀態
+    void AnalyzeCharacterStatus(const FString& CharacterID);
 
-    // 評估?��?網絡
+    // 評估關係網絡
     void AssessRelationshipNetwork(const FString& CharacterID);
 
-    // 計�?角色影響??    float CalculateCharacterInfluence(const FString& CharacterID);
+    // 計算角色影響力
+    float CalculateCharacterInfluence(const FString& CharacterID);
 
-    // ?�測決�?後�?
+    // 預測決策後果
     TArray<FString> PredictDecisionOutcome(const FMingPersonalDecision& Decision);
 
-    // 民�??�色?�人?��?
+    // 民國特色個人發展
     void ApplyRepublicanEraCharacterDevelopment();
 
-    // ?��??��??�影??    void ApplyNewCultureMovementInfluence(const FString& CharacterID);
+    // 新文化運動影響
+    void ApplyNewCultureMovementInfluence(const FString& CharacterID);
 
-    // ?�育?�革機�?
+    // 教育改革機遇
     void ApplyEducationReformOpportunities(const FString& CharacterID);
 
-    // 女性解?��???    void ApplyWomenLiberationMovement(const FString& CharacterID);
+    // 女性解放運動
+    void ApplyWomenLiberationMovement(const FString& CharacterID);
 
-    // ?��??��??��?
+    // 知識分子選擇
     void ApplyIntellectualChoices(const FString& CharacterID);
 
-    // ?�業?��?機�?
+    // 商業發展機遇
     void ApplyBusinessDevelopmentOpportunities(const FString& CharacterID);
 
-    // 軍�??�涯?��?
+    // 軍事生涯發展
     void ApplyMilitaryCareerDevelopment(const FString& CharacterID);
 
 private:
-    // ?�人?�新?��?
+    // 個人更新間隔
     float PersonalUpdateInterval;
 
-    // 上次?�新?��?
+    // 上次更新時間
     float LastPersonalUpdate;
 
-    // 角色等�?上�?
+    // 角色等級上限
     int32 MaxCharacterLevel;
 
-    // ?�?��?級�???    float MaxSkillLevel;
+    // 技能等級上限
+    float MaxSkillLevel;
 
-    // ?��?影響?��?
+    // 關係影響半徑
     float RelationshipInfluenceRadius;
 
-    // ?�人威�?評估
+    // 個人威脅評估
     TMap<FString, float> PersonalThreats;
 
-    // ?�人機�?評估
+    // 個人機會評估
     TMap<FString, float> PersonalOpportunities;
 
-    // ?�人決�?歷史
+    // 個人決策歷史
     TArray<FMingPersonalDecision> DecisionHistory;
 };

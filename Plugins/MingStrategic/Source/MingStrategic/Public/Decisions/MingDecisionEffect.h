@@ -60,3 +60,4 @@ struct MINGSTRATEGIC_API FMingDecisionEffect
         , bImmediate(true)
     {}
 };
+

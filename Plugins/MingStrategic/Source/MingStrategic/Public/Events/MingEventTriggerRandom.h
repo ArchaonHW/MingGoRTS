@@ -44,25 +44,25 @@ class MINGSTRATEGIC_API UMingEventTriggerRandom : public UMingEventTrigger
     GENERATED_BODY()
 
 public:
-    UMingEventTriggerRandom();
+    UMingEventTriggerRandom(};
 
     // Ë®≠ÁΩÆ?∫Á?Ëß∏ÁôºÊ¶ÇÁ? (0-1)
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void SetBaseProbability(float Probability);
+    void SetBaseProbability(float Probability};
 
     // Ë®≠ÁΩÆÊ¶ÇÁ?Ë°∞Ê? (ÊØèÊ¨°Ëß∏ÁôºÂæåÊ??áÈ?‰Ω?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void SetProbabilityDecay(float DecayFactor);
+    void SetProbabilityDecay(float DecayFactor};
 
     // Ë®≠ÁΩÆ?ÄÂ∞??ÄÂ§ßËß∏?ºÈ???    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void SetIntervalRange(float MinInterval, float MaxInterval);
+    void SetIntervalRange(float MinInterval, float MaxInterval};
 
     // Ê∑ªÂ??†Ê??®Ê??∏È?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void AddWeightedOption(const FRandomTriggerOption& Option);
+    void AddWeightedOption(const FRandomTriggerOption& Option};
 
     // Ê∏ÖÈô§?Ä?âÈÅ∏??    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void ClearOptions();
+    void ClearOptions(};
 
     // ?≤Â??∂Â?Ê¶ÇÁ?
     UFUNCTION(BlueprintPure, Category = "Random Trigger")
@@ -73,11 +73,11 @@ public:
 
     // ?ãÂ?Ëß∏Áôº?®Ê??∏Ê? (ËøîÂ??∏‰∏≠?Ñ‰?‰ª∂ID)
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    FString TriggerRandomSelection();
+    FString TriggerRandomSelection(};
 
     // ?çÊñ∞Ë®àÁ?Ê¶ÇÁ?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void RecalculateProbability(float DeltaTime);
+    void RecalculateProbability(float DeltaTime};
 
 protected:
     // ?∫Á?Ê¶ÇÁ?
@@ -127,12 +127,13 @@ protected:
     bool RollProbability() const;
 
     // ?∏Ê??†Ê??®Ê??∏È?
-    FString SelectWeightedOption();
+    FString SelectWeightedOption(};
 
     // ?¥Êñ∞?ÇÈ?Á™óÂè£
-    void UpdateTriggerWindow(float DeltaTime);
+    void UpdateTriggerWindow(float DeltaTime};
 
     // Ê™¢Êü•?ØÂê¶?öÈ??ÄÂ∞èÈ???    bool HasPassedMinInterval() const;
 
     // ?çÁΩÆËß∏Áôº?Ä??    virtual void Reset() override;
 };
+

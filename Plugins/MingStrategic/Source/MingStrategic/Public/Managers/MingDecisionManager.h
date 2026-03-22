@@ -40,8 +40,8 @@ struct FMingDecisionRecord
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDecisionTriggered, const FMingDecision&, Decision);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDecisionMade, const FString&, DecisionId, const FString&, SelectedOptionId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDecisionTriggered, const FMingDecision&, Decision};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDecisionMade, const FString&, DecisionId, const FString&, SelectedOptionId};
 
 /**
  * Ê±∫Á?ÁÆ°Á??? * ÁÆ°Á??Ä?âÊ≠∑?≤Ê±∫Á≠ñÁ?Ëß∏Áôº?ÅÂü∑Ë°åÂ?Ë®òÈ?
@@ -52,26 +52,26 @@ class MINGSTRATEGIC_API UMingDecisionManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingDecisionManager();
+    UMingDecisionManager(};
 
     // ?ùÂ???    UFUNCTION(BlueprintCallable, Category = "Decision")
-    void Initialize();
+    void Initialize(};
 
     // ?úÈ?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    void Shutdown();
+    void Shutdown(};
 
     // Ë®ªÂ?Ê±∫Á?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    void RegisterDecision(const FMingDecision& Decision);
+    void RegisterDecision(const FMingDecision& Decision};
 
     // ?ãÂ?Ëß∏ÁôºÊ±∫Á?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    bool TriggerDecision(const FString& DecisionId);
+    bool TriggerDecision(const FString& DecisionId};
 
     // ?∑Ë?Ê±∫Á??∏È?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    bool ExecuteDecisionOption(const FString& DecisionId, const FString& OptionId);
+    bool ExecuteDecisionOption(const FString& DecisionId, const FString& OptionId};
 
     // ?≤Â??∂Â?Ê¥ªË?Ê±∫Á?
     UFUNCTION(BlueprintPure, Category = "Decision")
@@ -89,10 +89,10 @@ public:
 
     // ?¥Êñ∞?äÊà≤?ÇÈ? (?®Êñº?ÇÈ?Ëß∏Áôº?ÑÊ±∫Á≠?
     UFUNCTION(BlueprintCallable, Category = "Decision")
-    void UpdateGameTime(float CurrentGameTime);
+    void UpdateGameTime(float CurrentGameTime};
 
     // Ê™¢Êü•Ê¢ù‰ª∂Ëß∏Áôº?ÑÊ±∫Á≠?    UFUNCTION(BlueprintCallable, Category = "Decision")
-    void CheckConditionBasedDecisions();
+    void CheckConditionBasedDecisions(};
 
     // ‰∫ã‰ª∂ÂßîË?
     UPROPERTY(BlueprintAssignable, Category = "Decision|Events")
@@ -102,7 +102,7 @@ public:
     FOnDecisionMade OnDecisionMade;
 
     // ?úÊ??≤Â?ÂØ¶‰?
-    static UMingDecisionManager* Get();
+    static UMingDecisionManager* Get(};
 
 private:
     // ?Ä?âË®ª?äÁ?Ê±∫Á?
@@ -131,11 +131,12 @@ private:
     static UMingDecisionManager* Instance;
 
     // ?ßÈÉ®?πÊ?
-    void ProcessTimeBasedDecisions();
-    void ProcessEventBasedDecisions(const FString& EventName);
+    void ProcessTimeBasedDecisions(};
+    void ProcessEventBasedDecisions(const FString& EventName};
     bool CheckTriggerCondition(const FMingDecision& Decision) const;
-    void ApplyDecisionEffects(const TArray<FMingDecisionEffect>& Effects);
-    void RecordDecision(const FString& DecisionId, const FString& OptionId, const FText& DecisionTitle, const FText& OptionTitle);
-    FMingDecision* FindRegisteredDecision(const FString& DecisionId);
-    FMingDecision* FindActiveDecision(const FString& DecisionId);
+    void ApplyDecisionEffects(const TArray<FMingDecisionEffect>& Effects};
+    void RecordDecision(const FString& DecisionId, const FString& OptionId, const FText& DecisionTitle, const FText& OptionTitle};
+    FMingDecision* FindRegisteredDecision(const FString& DecisionId};
+    FMingDecision* FindActiveDecision(const FString& DecisionId};
 };
+

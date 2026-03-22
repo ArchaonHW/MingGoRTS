@@ -49,7 +49,7 @@ struct FEventTriggerResult
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEventTriggered, const FString&, EventId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEventTriggered, const FString&, EventId};
 
 /**
  * äº‹ä»¶è§¸ç™¼?¨åŸºé¡? * ?€?‰è§¸?¼å™¨?„åŸºç¤æ¥?? */
@@ -59,18 +59,18 @@ class MINGSTRATEGIC_API UMingEventTrigger : public UObject
     GENERATED_BODY()
 
 public:
-    UMingEventTrigger();
+    UMingEventTrigger(};
 
     // ?å??–è§¸?¼å™¨
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    virtual void Initialize();
+    virtual void Initialize(};
 
     // ?œé?è§¸ç™¼??    UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    virtual void Shutdown();
+    virtual void Shutdown(};
 
     // æ¯å??´æ–°
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    virtual void Tick(float DeltaTime);
+    virtual void Tick(float DeltaTime};
 
     // æª¢æŸ¥?¯å¦?¯ä»¥è§¸ç™¼
     UFUNCTION(BlueprintPure, Category = "Event Trigger")
@@ -78,14 +78,14 @@ public:
 
     // ?·è?è§¸ç™¼
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    virtual bool Trigger();
+    virtual bool Trigger(};
 
     // ?ç½®è§¸ç™¼??    UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    virtual void Reset();
+    virtual void Reset(};
 
     // ?Ÿç”¨/ç¦ç”¨
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    void SetEnabled(bool bEnabled);
+    void SetEnabled(bool bEnabled};
 
     UFUNCTION(BlueprintPure, Category = "Event Trigger")
     bool IsEnabled() const { return bEnabled; }
@@ -142,13 +142,14 @@ protected:
     int32 TriggerCount;
 
     // ?´æ–°?·å»
-    void UpdateCooldown(float DeltaTime);
+    void UpdateCooldown(float DeltaTime};
 
-    // è¨­ç½®?€??    void SetState(EEventTriggerState NewState);
+    // è¨­ç½®?€??    void SetState(EEventTriggerState NewState};
 
     // ?§éƒ¨è§¸ç™¼?è¼¯ (å­é?å¯¦ç¾)
-    virtual bool PerformTrigger();
+    virtual bool PerformTrigger(};
 
     // æª¢æŸ¥è§¸ç™¼æ¢ä»¶ (å­é?å¯¦ç¾)
     virtual bool CheckTriggerCondition() const;
 };
+

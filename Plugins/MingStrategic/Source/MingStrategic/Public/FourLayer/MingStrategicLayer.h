@@ -5,39 +5,55 @@
 #include "FourLayer/IMingGameLayer.h"
 #include "MingStrategicLayer.generated.h"
 
-// ?�略?��?類�?
+// 戰略目標類型
 UENUM(BlueprintType)
-enum class EMingStrategicObjectiveType : uint8
+enum class EMingStrategicObjective : uint8
 {
-    MilitaryConquest,    // 軍�?征�?
-    PoliticalUnity,      // ?�治統�?
-    EconomicDevelopment,  // 經�??��?
-    CulturalInfluence,    // ?��?影響
-    TerritorialExpansion  // ?��??�張
+    TerritoryExpansion,     // 領土擴張
+    ResourceControl,        // 資源控制
+    MilitarySupremacy,      // 軍事霸權
+    EconomicDominance,      // 經濟主導
+    PoliticalInfluence,     // 政治影響
+    TechnologicalAdvancement, // 技術進步
+    CulturalSupremacy,      // 文化霸權
+    DiplomaticAlliance,     // 外交聯盟
+    NationalUnity,          // 國家統一
+    RevolutionaryGoals      // 革命目標
 };
 
-// 外交?��??�??UENUM(BlueprintType)
-enum class EMingDiplomaticStatus : uint8
-{
-    Allied,         // ?��?
-    Friendly,       // ?�好
-    Neutral,        // 中�?
-    Hostile,        // ?��?
-    AtWar          // ?�爭
-};
-
-// ?�略決�?類�?
+// 外交關係狀態
 UENUM(BlueprintType)
-enum class EMingStrategicDecisionType : uint8
+enum class EMingStrategicDiplomacy : uint8
 {
-    DeclareWar,         // �?��
-    FormAlliance,       // 結�?
-    EconomicReform,     // 經�??�革
-    MilitaryExpansion,   // 軍�??�張
-    CulturalPolicy      // ?��??��?
+    Allied,         // 同盟
+    Friendly,       // 友好
+    Neutral,        // 中立
+    Suspicious,     // 懷疑
+    Hostile,        // 敵對
+    AtWar,          // 戰爭
+    Vassal,         // 附庸
+    Protectorate,   // 保護國
+    TradePartner,   // 貿易夥伴
+    Rival           // 競爭對手
 };
 
-// ?�略事件
+// 戰略決策類型
+UENUM(BlueprintType)
+enum class EMingStrategicDecision : uint8
+{
+    MilitaryCampaign,   // 軍事行動
+    DiplomaticTreaty,    // 外交條約
+    EconomicPolicy,     // 經濟政策
+    SocialReform,       // 社會改革
+    TechnologicalResearch, // 技術研究
+    CulturalInitiative, // 文化倡議
+    InfrastructureProject, // 基礎設施項目
+    IntelligenceOperation, // 情報行動
+    TradeAgreement,     // 貿易協議
+    AllianceFormation   // 聯盟形成
+};
+
+// 戰略事件
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStrategicEvent
 {
@@ -62,23 +78,26 @@ struct MINGSTRATEGIC_API FMingStrategicEvent
     FDateTime EventTime;
 };
 
-// ?�略?��?
+// 戰略目標
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStrategicObjective
+struct MINGSTRATEGIC_API FMingStrategicGoal
 {
     GENERATED_BODY()
 
     UPROPERTY(BlueprintReadOnly)
-    FString ObjectiveID;
+    FString GoalID;
 
     UPROPERTY(BlueprintReadOnly)
-    EMingStrategicObjectiveType ObjectiveType;
+    EMingStrategicObjective ObjectiveType;
 
     UPROPERTY(BlueprintReadOnly)
-    FString ObjectiveDescription;
+    FString GoalDescription;
 
     UPROPERTY(BlueprintReadOnly)
-    TArray<FString> TargetRegions;
+    TArray<FString> RequiredResources;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> StrategicPrerequisites;
 
     UPROPERTY(BlueprintReadOnly)
     float Priority;
@@ -90,9 +109,9 @@ struct MINGSTRATEGIC_API FMingStrategicObjective
     FDateTime Deadline;
 };
 
-// ?�略決�?
+// 戰略決策
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStratLayerDecision
+struct MINGSTRATEGIC_API FMingStrategicDecision
 {
     GENERATED_BODY()
 
@@ -100,7 +119,7 @@ struct MINGSTRATEGIC_API FMingStratLayerDecision
     FString DecisionID;
 
     UPROPERTY(BlueprintReadOnly)
-    EMingStrategicDecisionType DecisionType;
+    EMingStrategicDecision DecisionType;
 
     UPROPERTY(BlueprintReadOnly)
     FString DecisionDescription;
@@ -112,38 +131,15 @@ struct MINGSTRATEGIC_API FMingStratLayerDecision
     TArray<FString> AffectedRegions;
 
     UPROPERTY(BlueprintReadOnly)
-    float ExpectedImpact;
+    float LongTermImpact;
 
     UPROPERTY(BlueprintReadOnly)
-    float RiskLevel;
-};
-
-// ?�略?�??USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStrategicState
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadOnly)
-    FString CurrentStrategy;
-
-    UPROPERTY(BlueprintReadOnly)
-    float OverallStrength;
-
-    UPROPERTY(BlueprintReadOnly)
-    float EconomicPower;
-
-    UPROPERTY(BlueprintReadOnly)
-    float MilitaryPower;
-
-    UPROPERTY(BlueprintReadOnly)
-    float DiplomaticInfluence;
-
-    UPROPERTY(BlueprintReadOnly)
-    TMap<FString, float> TerritoryControl;
+    float ImmediateCost;
 };
 
 /**
- * ?�略層系�? * 負責宏�??�略決�??��?源�??�、�?交�?係�?
+ * 戰略層系統
+ * 負責高層決策、資源分配、外交關係等
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGSTRATEGIC_API UMingStrategicLayer : public UObject, public IMingGameLayer
@@ -151,125 +147,172 @@ class MINGSTRATEGIC_API UMingStrategicLayer : public UObject, public IMingGameLa
     GENERATED_BODY()
 
 public:
-    // 建�?�?    UMingStrategicLayer();
+    // 建構子
+    UMingStrategicLayer();
 
-    // 實現介面?��?
+    // 實現介面方法
     virtual void InitializeLayer_Implementation() override;
     virtual void UpdateLayer_Implementation(float DeltaTime) override;
     virtual EMingLayer GetLayerType_Implementation() const override;
     virtual FString GetLayerName_Implementation() const override;
     virtual float GetLayerPriority_Implementation() const override;
-    virtual void HandleLayerEvent_Implementation(const FMingGameEvent& Event) override;
+    virtual void HandleLayerEvent_Implementation(const FMingStrategicIntegrationEvent& Event) override;
     virtual void HandleLayerDecision_Implementation(const FMingGameDecision& Decision) override;
 
-    // ?�略決�?
+    // 戰略目標管理
+    UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
+    void SetStrategicGoal(const FMingStrategicGoal& Goal);
+
+    UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
+    void UpdateGoalProgress(const FString& GoalID, float Progress);
+
+    UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
+    void CompleteGoal(const FString& GoalID);
+
+    UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
+    TArray<FMingStrategicGoal> GetActiveGoals() const;
+
+    // 戰略決策
     UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
     void MakeStrategicDecision(const FMingStrategicDecision& Decision);
 
-    // 設置?�略?��?
     UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
-    void SetStrategicObjective(const FMingStrategicObjective& Objective);
+    void ProcessStrategicDecisions();
 
-    // 管�?外交?��?
     UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
-    void ManageDiplomaticRelations(const FString& Faction, EMingDiplomaticStatus Status);
+    TArray<FMingStrategicDecision> GetStrategicDecisions() const;
 
-    // ?��??�略資�?
+    // 外交管理
     UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
-    void AllocateStrategicResources(const TMap<EMingResourceType, float>& Allocation);
+    void EstablishDiplomaticRelation(const FString& FactionID, EMingStrategicDiplomacy Relation);
 
-    // 評估?�略威�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
-    TArray<FString> AssessStrategicThreats();
+    void UpdateDiplomaticRelation(const FString& FactionID, EMingStrategicDiplomacy Relation);
 
-    // 識別?�略機�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
-    TArray<FString> IdentifyStrategicOpportunities();
+    EMingStrategicDiplomacy GetDiplomaticRelation(const FString& FactionID) const;
 
-    // ?��??��??�略?�??    UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
-    FMingStrategicState GetCurrentStrategicState() const;
-
-    // ?��??�略?��??�度
     UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
-    TArray<FMingStrategicObjective> GetStrategicObjectives() const;
+    TMap<FString, EMingStrategicDiplomacy> GetAllDiplomaticRelations() const;
 
-    // ?��?外交?��?
+    // 資源分配
     UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
-    TMap<FString, EMingDiplomaticStatus> GetDiplomaticRelations() const;
+    void AllocateResources(const TMap<EMingResourceType, float>& Allocation);
+
+    UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
+    TMap<EMingResourceType, float> GetResourceAllocation() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
+    float GetResourceEfficiency() const;
+
+    // 威脅評估
+    UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
+    TArray<FString> IdentifyStrategicThreats() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
+    TArray<FString> IdentifyStrategicOpportunities() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
+    float CalculateStrategicPosition() const;
+
+    // 獲取戰略狀態
+    UFUNCTION(BlueprintCallable, Category = "Ming|Strategic")
+    FMingStrategicState GetStrategicState() const;
 
 protected:
-    // ?�略?�??    UPROPERTY(BlueprintReadOnly)
+    // 戰略狀態
+    UPROPERTY(BlueprintReadOnly)
     FMingStrategicState StrategicState;
 
-    // ?�略?��??�表
+    // 戰略目標
     UPROPERTY(BlueprintReadOnly)
-    TArray<FMingStrategicObjective> StrategicObjectives;
+    TArray<FMingStrategicGoal> StrategicGoals;
 
-    // 外交?��?
+    // 戰略決策
     UPROPERTY(BlueprintReadOnly)
-    TMap<FString, EMingDiplomaticStatus> DiplomaticRelations;
+    TArray<FMingStrategicDecision> StrategicDecisions;
 
-    // ?�略資�??��?
+    // 外交關係
     UPROPERTY(BlueprintReadOnly)
-    TMap<EMingResourceType, float> StrategicResourceAllocation;
+    TMap<FString, EMingStrategicDiplomacy> DiplomaticRelations;
 
-    // ?�略事件歷史
+    // 戰略事件歷史
     UPROPERTY(BlueprintReadOnly)
     TArray<FMingStrategicEvent> StrategicHistory;
 
-    // ?��??�略
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strategic|Settings")
-    FString CurrentStrategy;
-
-    // ?�略風格
+    // 戰略風格
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strategic|Settings")
     FString StrategicStyle;
 
-    // ?��??��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strategic|Settings")
-    float AggressivenessLevel;
-
-    // 外交?��?
+    // 擴張偏好
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strategic|Settings")
-    float DiplomaticTendency;
+    float ExpansionPreference;
 
-    // ?��??�略局??    void AnalyzeStrategicSituation();
+    // 外交偏好
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Strategic|Settings")
+    float DiplomacyPreference;
 
-    // 評估資�??��?    void AssessResourceRequirements();
+    // 分析戰略狀況
+    void AnalyzeStrategicSituation();
 
-    // 計�??�略風險
-    float CalculateStrategicRisk(const FMingStrategicDecision& Decision);
+    // 評估威脅
+    void AssessThreats();
 
-    // ?�測決�?後�?
-    TArray<FString> PredictDecisionOutcome(const FMingStrategicDecision& Decision);
+    // 識別機會
+    void IdentifyOpportunities();
 
-    // 民�??�色?�略
+    // 計算戰略優勢
+    float CalculateStrategicAdvantage();
+
+    // 預測決策後果
+    TArray<FString> PredictDecisionConsequences(const FMingStrategicDecision& Decision);
+
+    // 民國特色戰略
     void ApplyRepublicanEraStrategy();
 
-    // ?��?統�??�略
-    void ExecuteNorthernExpeditionStrategy();
+    // 統一戰線策略
+    void ExecuteUnitedFrontStrategy();
 
-    // ?�日?�爭?�略
-    void ExecuteAntiJapaneseStrategy();
+    // 北伐統一計劃
+    void ExecuteNorthernExpeditionPlan();
 
-    // 經�?建設?�略
-    void ExecuteEconomicDevelopmentStrategy();
+    // 抗日戰爭總體戰
+    void ExecuteAntiJapaneseWarStrategy();
 
-    // ?��?影響?�略
-    void ExecuteCulturalInfluenceStrategy();
+    // 新生活運動
+    void ExecuteNewLifeMovement();
+
+    // 國家建設計劃
+    void ExecuteNationalConstructionPlan();
+
+    // 經濟現代化
+    void ExecuteEconomicModernization();
+
+    // 軍事現代化
+    void ExecuteMilitaryModernization();
 
 private:
-    // ?�略?�新?��?
+    // 戰略更新間隔
     float StrategicUpdateInterval;
 
-    // 上次?�新?��?
+    // 上次更新時間
     float LastStrategicUpdate;
 
-    // ?�略威�?評估
+    // 戰略目標上限
+    int32 MaxStrategicGoals;
+
+    // 外交關係上限
+    int32 MaxDiplomaticRelations;
+
+    // 資源分配效率
+    float ResourceAllocationEfficiency;
+
+    // 戰略威脅評估
     TMap<FString, float> StrategicThreats;
 
-    // ?�略機�?評估
+    // 戰略機會評估
     TMap<FString, float> StrategicOpportunities;
 
-    // ?�略決�?歷史
+    // 戰略決策歷史
     TArray<FMingStrategicDecision> DecisionHistory;
 };
