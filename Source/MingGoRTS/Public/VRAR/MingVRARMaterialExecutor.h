@@ -19,15 +19,15 @@ public:
     AMingVRARMaterialExecutor();
 
     // Execute material creation (call this from Blueprint or C++)
-    UFUNCTION(BlueprintCallable, Category = "VR/AR Material Creation", CallInEditor = true)
+    UFUNCTION(BlueprintCallable, Category = "VR/AR Material Creation", CallInEditor)
     bool ExecuteMaterialCreation();
 
     // Create only VR materials
-    UFUNCTION(BlueprintCallable, Category = "VR/AR Material Creation", CallInEditor = true)
+    UFUNCTION(BlueprintCallable, Category = "VR/AR Material Creation", CallInEditor)
     bool CreateVRMaterialsOnly();
 
     // Create only AR materials
-    UFUNCTION(BlueprintCallable, Category = "VR/AR Material Creation", CallInEditor = true)
+    UFUNCTION(BlueprintCallable, Category = "VR/AR Material Creation", CallInEditor)
     bool CreateARMaterialsOnly();
 
     // Get the last execution result

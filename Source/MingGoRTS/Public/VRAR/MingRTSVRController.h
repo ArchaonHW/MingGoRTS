@@ -105,7 +105,7 @@ class MINGGORTS_API UMingRTSVRController : public UActorComponent
 
 public:
     // Sets default values for this component's properties
-    UMingRTSVRController(};
+    UMingRTSVRController();
 
     // Called every frame
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, 
@@ -116,7 +116,7 @@ public:
     void InitializeController(EVRControllerType Type};
 
     UFUNCTION(BlueprintCallable, Category = "VR Controller")
-    void ShutdownController(};
+    void ShutdownController();
 
     UFUNCTION(BlueprintCallable, Category = "VR Controller")
     bool IsControllerTracking() const;
@@ -149,20 +149,20 @@ public:
     void PlayHapticEffect(float Intensity, float Duration, bool bIsHand = true};
 
     UFUNCTION(BlueprintCallable, Category = "VR Controller")
-    void StopHapticEffect(};
+    void StopHapticEffect();
 
     // RTS Specific Functions
     UFUNCTION(BlueprintCallable, Category = "VR Controller|RTS")
-    void SelectUnitAtPointer(};
+    void SelectUnitAtPointer();
 
     UFUNCTION(BlueprintCallable, Category = "VR Controller|RTS")
-    void MoveSelectedUnits(};
+    void MoveSelectedUnits();
 
     UFUNCTION(BlueprintCallable, Category = "VR Controller|RTS")
-    void OpenRadialMenu(};
+    void OpenRadialMenu();
 
     UFUNCTION(BlueprintCallable, Category = "VR Controller|RTS")
-    void PanCamera(};
+    void PanCamera();
 
     // Input Handling
     UFUNCTION(BlueprintCallable, Category = "VR Controller|Input")
@@ -218,11 +218,11 @@ private:
     UPROPERTY()
     float HapticTimer = 0.0f;
 
-    void UpdateControllerState(float DeltaTime);
+    void UpdateControllerState(float DeltaTime};
     void ProcessInput();
     void UpdatePointerVisuals();
     void HandleRTSInput();
-    void PerformLineTraceForSelection(FHitResult& OutHit);
+    void PerformLineTraceForSelection(FHitResult& OutHit};
     
     // Cached motion controller component reference
     UPROPERTY()
@@ -230,11 +230,11 @@ private:
 };
 
 // Event delegate declarations
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnControllerTrackingStateChanged, bool, bIsTracking);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerButtonPressed, EVRControllerType, Controller, FName, ButtonName);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerButtonReleased, EVRControllerType, Controller, FName, ButtonName);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerPressed, EVRControllerType, Controller);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerReleased, EVRControllerType, Controller);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitSelected, AActor*, SelectedUnit);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitsMoved, const FVector&, MoveLocation, const TArray<AActor*>&, Units);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnControllerTrackingStateChanged, bool, bIsTracking};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerButtonPressed, EVRControllerType, Controller, FName, ButtonName};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerButtonReleased, EVRControllerType, Controller, FName, ButtonName};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerPressed, EVRControllerType, Controller};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerReleased, EVRControllerType, Controller};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitSelected, AActor*, SelectedUnit};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitsMoved, const FVector&, MoveLocation, const TArray<AActor*>&, Units};
 

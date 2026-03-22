@@ -115,10 +115,10 @@ protected:
     FPlayerBehaviorProfile CreateTestProfile();
 
 private:
-    UPROPERTY(BlueprintReadOnly, Category = "AI Task Integration Test")
+    UPROPERTY(Category = "AI Task Integration Test")
     TObjectPtr<UMingAITaskIntegration> TestIntegration;
 
-    UPROPERTY(BlueprintReadOnly, Category = "AI Task Integration Test")
+    UPROPERTY(Category = "AI Task Integration Test")
     TArray<FTestReport> TestResults;
 
     // Helper methods

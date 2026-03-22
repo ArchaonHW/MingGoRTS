@@ -1,208 +1,244 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 系統整合測試套件頭文件
+// 系統整合測試套件 - 頭文件
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "UObject/Object.h"
-#include "Engine/EngineTypes.h"
+#include "Templates/Function.h"
 #include "MingRTSIntegrationTestSuite.generated.h"
 
-/**
- * 整合測試類型
- */
 UENUM(BlueprintType)
 enum class EIntegrationTestType : uint8
 {
-    SystemInitialization     UMETA(DisplayName = "系統初始化"),
-    CrossSystemDataFlow      UMETA(DisplayName = "跨系統數據流"),
-    EventPropagation         UMETA(DisplayName = "事件傳播"),
-    PerformanceStress        UMETA(DisplayName = "性能壓力測試"),
-    MemoryLeakDetection      UMETA(DisplayName = "內存洩漏檢測"),
-    ConcurrentAccess         UMETA(DisplayName = "並發訪問"),
-    ErrorRecovery            UMETA(DisplayName = "錯誤恢復"),
-    SaveLoadIntegration      UMETA(DisplayName = "存檔載入整合"),
-    NetworkSynchronization   UMETA(DisplayName = "網絡同步"),
-    UISystemIntegration      UMETA(DisplayName = "UI系統整合"),
-    AudioSystemIntegration     UMETA(DisplayName = "音頻系統整合"),
-    AIBehaviorIntegration    UMETA(DisplayName = "AI行為整合"),
-    LocalizationIntegration  UMETA(DisplayName = "本地化整合"),
-    RegressionTest           UMETA(DisplayName = "回歸測試"),
-    EndToEndScenario         UMETA(DisplayName = "端到端場景")
+    SystemInitialization      UMETA(DisplayName = "System Initialization"),
+    CrossSystemDataFlow       UMETA(DisplayName = "Cross-System Data Flow"),
+    EventPropagation          UMETA(DisplayName = "Event Propagation"),
+    PerformanceStress         UMETA(DisplayName = "Performance Stress"),
+    MemoryLeakDetection       UMETA(DisplayName = "Memory Leak Detection"),
+    ConcurrentAccess          UMETA(DisplayName = "Concurrent Access"),
+    ErrorRecovery             UMETA(DisplayName = "Error Recovery"),
+    SaveLoadIntegration       UMETA(DisplayName = "Save/Load Integration"),
+    NetworkSynchronization    UMETA(DisplayName = "Network Synchronization"),
+    UISystemIntegration       UMETA(DisplayName = "UI System Integration"),
+    AudioSystemIntegration    UMETA(DisplayName = "Audio System Integration"),
+    AIBehaviorIntegration     UMETA(DisplayName = "AI Behavior Integration"),
+    LocalizationIntegration   UMETA(DisplayName = "Localization Integration"),
+    RegressionTest          UMETA(DisplayName = "Regression Test"),
+    EndToEndScenario          UMETA(DisplayName = "End-to-End Scenario")
 };
 
-/**
- * 測試結果狀態
- */
 UENUM(BlueprintType)
 enum class EIntegrationTestStatus : uint8
 {
-    NotStarted    UMETA(DisplayName = "未開始"),
-    Running       UMETA(DisplayName = "運行中"),
-    Passed        UMETA(DisplayName = "通過"),
-    Failed        UMETA(DisplayName = "失敗"),
-    Warning       UMETA(DisplayName = "警告"),
-    Skipped       UMETA(DisplayName = "已跳過")
+    Passed   UMETA(DisplayName = "Passed"),
+    Failed   UMETA(DisplayName = "Failed"),
+    Warning  UMETA(DisplayName = "Warning"),
+    Skipped  UMETA(DisplayName = "Skipped"),
+    Running  UMETA(DisplayName = "Running")
 };
 
-/**
- * 性能測試指標
- */
-USTRUCT(BlueprintType)
-struct FPerformanceMetrics
-{
-    GENERATED_BODY()
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float AverageFPS;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float MinFPS;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float MaxFPS;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float AverageFrameTime;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float MemoryUsageMB;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float CPUUsagePercent;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 ObjectCount;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 TextureMemoryMB;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 MeshMemoryMB;
-    
-    FPerformanceMetrics()
-        : AverageFPS(60.0f)
-        , MinFPS(60.0f)
-        , MaxFPS(60.0f)
-        , AverageFrameTime(16.67f)
-        , MemoryUsageMB(0.0f)
-        , CPUUsagePercent(0.0f)
-        , ObjectCount(0)
-        , TextureMemoryMB(0)
-        , MeshMemoryMB(0)
-    {}
-};
-
-/**
- * 內存快照
- */
-USTRUCT(BlueprintType)
-struct FMemorySnapshot
-{
-    GENERATED_BODY()
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int64 TotalVirtualMemory;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int64 TotalPhysicalMemory;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int64 AvailableVirtualMemory;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int64 AvailablePhysicalMemory;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int64 ProcessMemoryUsage;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FDateTime SnapshotTime;
-    
-    FMemorySnapshot()
-        : TotalVirtualMemory(0)
-        , TotalPhysicalMemory(0)
-        , AvailableVirtualMemory(0)
-        , AvailablePhysicalMemory(0)
-        , ProcessMemoryUsage(0)
-    {}
-};
-
-/**
- * 單個測試結果
- */
 USTRUCT(BlueprintType)
 struct FIntegrationTestResult
 {
     GENERATED_BODY()
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
     EIntegrationTestType TestType;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    EIntegrationTestStatus Status;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
     FString TestName;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
     FText Description;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float ExecutionTimeSeconds;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FDateTime StartTime;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FDateTime EndTime;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FPerformanceMetrics PerformanceData;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
+    EIntegrationTestStatus Status;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
     TArray<FString> ErrorMessages;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
     TArray<FString> WarningMessages;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TMap<FString, FString> CustomData;
-    
+
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
+    FDateTime StartTime;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
+    FDateTime EndTime;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
+    float ExecutionTimeSeconds;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
+    TMap<FString, float> PerformanceData;
+
     FIntegrationTestResult()
         : TestType(EIntegrationTestType::SystemInitialization)
-        , Status(EIntegrationTestStatus::NotStarted)
+        , Status(EIntegrationTestStatus::Skipped)
         , ExecutionTimeSeconds(0.0f)
     {}
 };
 
-/**
- * 系統對測試結果
- */
+USTRUCT(BlueprintType)
+struct FIntegrationTestSuiteConfig
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite, Category = "Integration Test Suite")
+    FString SuiteName;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Integration Test Suite")
+    TArray<EIntegrationTestType> EnabledTests;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Integration Test Suite")
+    bool bStopOnFirstFailure;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Integration Test Suite")
+    bool bGenerateDetailedReport;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Integration Test Suite")
+    bool bSaveResultsToFile;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Integration Test Suite")
+    FString OutputPath;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Integration Test Suite")
+    TArray<FString> SystemPairsToTest;
+
+    FIntegrationTestSuiteConfig()
+        : bStopOnFirstFailure(false)
+        , bGenerateDetailedReport(true)
+        , bSaveResultsToFile(true)
+    {}
+};
+
+USTRUCT(BlueprintType)
+struct FMemorySnapshot
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly, Category = "Memory")
+    FDateTime SnapshotTime;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Memory")
+    int64 TotalPhysicalMemory;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Memory")
+    int64 AvailablePhysicalMemory;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Memory")
+    int64 TotalVirtualMemory;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Memory")
+    int64 AvailableVirtualMemory;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Memory")
+    int64 ProcessMemoryUsage;
+
+    FMemorySnapshot()
+        : TotalPhysicalMemory(0)
+        , AvailablePhysicalMemory(0)
+        , TotalVirtualMemory(0)
+        , AvailableVirtualMemory(0)
+        , ProcessMemoryUsage(0)
+    {}
+};
+
+USTRUCT(BlueprintType)
+struct FPerformanceMetrics
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly, Category = "Performance")
+    float AverageFPS;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Performance")
+    float MinFPS;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Performance")
+    float MaxFPS;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Performance")
+    float AverageFrameTime;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Performance")
+    float MemoryUsageMB;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Performance")
+    float CPUUsagePercent;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Performance")
+    int32 ObjectCount;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Performance")
+    float TextureMemoryMB;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Performance")
+    float MeshMemoryMB;
+
+    FPerformanceMetrics()
+        : AverageFPS(0.0f)
+        , MinFPS(0.0f)
+        , MaxFPS(0.0f)
+        , AverageFrameTime(0.0f)
+        , MemoryUsageMB(0.0f)
+        , CPUUsagePercent(0.0f)
+        , ObjectCount(0)
+        , TextureMemoryMB(0.0f)
+        , MeshMemoryMB(0.0f)
+    {}
+};
+
+USTRUCT(BlueprintType)
+struct FStressTestConfig
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite, Category = "Stress Test")
+    int32 ConcurrentUnitCount;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Stress Test")
+    int32 SimulatedPlayerCount;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Stress Test")
+    float TestDurationSeconds;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Stress Test")
+    float TargetFPS;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Stress Test")
+    float MaxMemoryUsageMB;
+
+    FStressTestConfig()
+        : ConcurrentUnitCount(100)
+        , SimulatedPlayerCount(4)
+        , TestDurationSeconds(60.0f)
+        , TargetFPS(30.0f)
+        , MaxMemoryUsageMB(2048.0f)
+    {}
+};
+
 USTRUCT(BlueprintType)
 struct FSystemPairTestResult
 {
     GENERATED_BODY()
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "System Pair")
     FString SystemA;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "System Pair")
     FString SystemB;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "System Pair")
     bool bCommunicationWorking;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "System Pair")
     bool bDataTransferWorking;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "System Pair")
     float DataTransferLatency;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString CompatibilityIssues;
-    
+
     FSystemPairTestResult()
         : bCommunicationWorking(false)
         , bDataTransferWorking(false)
@@ -210,156 +246,61 @@ struct FSystemPairTestResult
     {}
 };
 
-/**
- * 壓力測試配置
- */
-USTRUCT(BlueprintType)
-struct FStressTestConfig
-{
-    GENERATED_BODY()
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 ConcurrentUnitCount;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 SimulatedPlayerCount;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float TestDurationSeconds;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float TargetFPS;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float MaxMemoryUsageMB;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bEnableNetworkSimulation;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float NetworkLatencyMs;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bEnableMemoryStress;
-    
-    FStressTestConfig()
-        : ConcurrentUnitCount(100)
-        , SimulatedPlayerCount(8)
-        , TestDurationSeconds(300.0f)
-        , TargetFPS(30.0f)
-        , MaxMemoryUsageMB(2048.0f)
-        , bEnableNetworkSimulation(false)
-        , NetworkLatencyMs(50.0f)
-        , bEnableMemoryStress(false)
-    {}
-};
-
-/**
- * 測試套件配置
- */
-USTRUCT(BlueprintType)
-struct FIntegrationTestSuiteConfig
-{
-    GENERATED_BODY()
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString SuiteName;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<EIntegrationTestType> EnabledTests;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FStressTestConfig StressConfig;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bGenerateDetailedReport;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bSaveResultsToFile;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString OutputPath;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bStopOnFirstFailure;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bRunMemoryLeakDetection;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bRunRegressionTests;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FString> SystemPairsToTest;
-    
-    FIntegrationTestSuiteConfig()
-        : SuiteName(TEXT("MingGoRTS 整合測試套件"))
-        , bGenerateDetailedReport(true)
-        , bSaveResultsToFile(true)
-        , bStopOnFirstFailure(false)
-        , bRunMemoryLeakDetection(true)
-        , bRunRegressionTests(true)
-    {}
-};
-
-/**
- * 完整測試套件結果
- */
 USTRUCT(BlueprintType)
 struct FIntegrationTestSuiteResult
 {
     GENERATED_BODY()
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
     FString SuiteName;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
     FDateTime StartTime;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
     FDateTime EndTime;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float TotalExecutionTime;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FIntegrationTestResult> TestResults;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FSystemPairTestResult> SystemPairResults;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
+    double TotalExecutionTime;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
     int32 TotalTests;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
     int32 PassedTests;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
     int32 FailedTests;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
     int32 WarningTests;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
     int32 SkippedTests;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
     float SuccessRate;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FMemorySnapshot StartMemory;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FMemorySnapshot EndMemory;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int64 MemoryDelta;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
+    TArray<FIntegrationTestResult> TestResults;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
+    TArray<FSystemPairTestResult> SystemPairResults;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
     FString ReportFilePath;
-    
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
+    FMemorySnapshot StartMemory;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
+    FMemorySnapshot EndMemory;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Test Suite Result")
+    int64 MemoryDelta;
+
     FIntegrationTestSuiteResult()
-        : TotalExecutionTime(0.0f)
+        : TotalExecutionTime(0.0)
         , TotalTests(0)
         , PassedTests(0)
         , FailedTests(0)
@@ -370,193 +311,79 @@ struct FIntegrationTestSuiteResult
     {}
 };
 
-/**
- * 系統整合測試套件
- * 執行跨系統功能測試、性能壓力測試、內存洩漏檢測
- */
-UCLASS(ClassGroup = (MingRTS), Blueprintable)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestSuiteStarted, const FString&, SuiteName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestSuiteCompleted, const FIntegrationTestSuiteResult&, Result);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSingleTestCompleted, EIntegrationTestType, TestType, const FIntegrationTestResult&, Result);
+
+UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSIntegrationTestSuite : public UObject
 {
     GENERATED_BODY()
-    
+
 public:
-    /** 初始化測試套件 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
+    UMingRTSIntegrationTestSuite();
+
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Suite")
     void InitializeTestSuite();
-    
-    /** 執行完整測試套件 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
+
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Suite")
     FIntegrationTestSuiteResult RunFullTestSuite(const FIntegrationTestSuiteConfig& Config);
-    
-    /** 執行單個測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
+
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Suite")
     FIntegrationTestResult RunSingleTest(EIntegrationTestType TestType);
-    
-    /** 執行系統初始化測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult TestSystemInitialization();
-    
-    /** 執行跨系統數據流測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult TestCrossSystemDataFlow();
-    
-    /** 執行事件傳播測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult TestEventPropagation();
-    
-    /** 執行性能壓力測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult RunPerformanceStressTest(const FStressTestConfig& Config);
-    
-    /** 執行內存洩漏檢測 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult RunMemoryLeakDetection();
-    
-    /** 執行並發訪問測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult TestConcurrentAccess();
-    
-    /** 執行錯誤恢復測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult TestErrorRecovery();
-    
-    /** 執行存檔載入整合測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult TestSaveLoadIntegration();
-    
-    /** 執行網絡同步測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult TestNetworkSynchronization();
-    
-    /** 執行UI系統整合測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult TestUISystemIntegration();
-    
-    /** 執行音頻系統整合測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult TestAudioSystemIntegration();
-    
-    /** 執行AI行為整合測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult TestAIBehaviorIntegration();
-    
-    /** 執行本地化整合測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult TestLocalizationIntegration();
-    
-    /** 執行回歸測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult RunRegressionTest();
-    
-    /** 執行端到端場景測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestResult RunEndToEndScenarioTest();
-    
-    /** 測試系統對之間的通信 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FSystemPairTestResult TestSystemPairCommunication(const FString& SystemA, const FString& SystemB);
-    
-    /** 生成測試報告 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FString GenerateTestReport(const FIntegrationTestSuiteResult& Result, bool bAsHTML = true);
-    
-    /** 導出結果到JSON */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    bool ExportResultsToJSON(const FIntegrationTestSuiteResult& Result, const FString& FilePath);
-    
-    /** 獲取預設測試配置 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FIntegrationTestSuiteConfig GetDefaultTestConfig();
-    
-    /** 獲取壓力測試配置 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    FStressTestConfig GetDefaultStressConfig();
-    
-    /** 獲取測試統計 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    TMap<EIntegrationTestStatus, int32> GetTestStatistics(const FIntegrationTestSuiteResult& Result);
-    
-    /** 獲取失敗的測試 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    TArray<FIntegrationTestResult> GetFailedTests(const FIntegrationTestSuiteResult& Result);
-    
-    /** 檢查是否所有測試通過 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    bool AreAllTestsPassed(const FIntegrationTestSuiteResult& Result);
-    
-    /** 計算測試成功率 */
-    UFUNCTION(BlueprintCallable, Category = "Integration Testing")
-    float CalculateSuccessRate(const FIntegrationTestSuiteResult& Result);
-    
-    /** 事件：測試套件開始 */
-    UPROPERTY(BlueprintAssignable, Category = "Integration Testing Events")
-    FOnIntegrationTestStarted OnTestSuiteStarted;
-    
-    /** 事件：單個測試完成 */
-    UPROPERTY(BlueprintAssignable, Category = "Integration Testing Events")
-    FOnSingleTestCompleted OnSingleTestCompleted;
-    
-    /** 事件：發現問題 */
-    UPROPERTY(BlueprintAssignable, Category = "Integration Testing Events")
-    FOnTestIssueFound OnTestIssueFound;
-    
-    /** 事件：測試套件完成 */
-    UPROPERTY(BlueprintAssignable, Category = "Integration Testing Events")
-    FOnTestSuiteCompleted OnTestSuiteCompleted;
-    
-protected:
-    /** 捕獲內存快照 */
-    FMemorySnapshot CaptureMemorySnapshot();
-    
-    /** 比較內存快照 */
-    bool CompareMemorySnapshots(const FMemorySnapshot& Before, const FMemorySnapshot& After, int64& OutDelta);
-    
-    /** 收集性能指標 */
-    FPerformanceMetrics CollectPerformanceMetrics(float Duration);
-    
-    /** 驗證性能指標 */
-    bool ValidatePerformanceMetrics(const FPerformanceMetrics& Metrics, const FStressTestConfig& Config);
-    
-    /** 模擬高負載場景 */
-    void SimulateHighLoad(const FStressTestConfig& Config);
-    
-    /** 清理測試資源 */
+
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Suite")
     void CleanupTestResources();
-    
-    /** 生成HTML報告 */
-    FString GenerateHTMLReport(const FIntegrationTestSuiteResult& Result);
-    
-    /** 生成文本報告 */
-    FString GenerateTextReport(const FIntegrationTestSuiteResult& Result);
-    
-    /** 發送測試通知 */
-    void SendTestNotification(const FIntegrationTestSuiteResult& Result);
-    
-    /** 記錄測試開始 */
-    void LogTestStart(const FString& TestName);
-    
-    /** 記錄測試完成 */
-    void LogTestComplete(const FString& TestName, EIntegrationTestStatus Status, float Duration);
-    
-private:
-    /** 當前是否正在運行測試 */
+
+    UPROPERTY(BlueprintAssignable, Category = "Integration Test Suite Events")
+    FOnTestSuiteStarted OnTestSuiteStarted;
+
+    UPROPERTY(BlueprintAssignable, Category = "Integration Test Suite Events")
+    FOnTestSuiteCompleted OnTestSuiteCompleted;
+
+    UPROPERTY(BlueprintAssignable, Category = "Integration Test Suite Events")
+    FOnSingleTestCompleted OnSingleTestCompleted;
+
+protected:
+    UPROPERTY()
     bool bIsRunningTests;
-    
-    /** 當前測試配置 */
+
+    UPROPERTY()
     FIntegrationTestSuiteConfig CurrentConfig;
-    
-    /** 測試結果緩存 */
-    TArray<FIntegrationTestResult> CachedResults;
+
+    UPROPERTY()
+    TArray<FIntegrationTestSuiteResult> CachedResults;
+
+    // Individual test implementations
+    FIntegrationTestResult TestSystemInitialization();
+    FIntegrationTestResult TestCrossSystemDataFlow();
+    FIntegrationTestResult TestEventPropagation();
+    FIntegrationTestResult RunPerformanceStressTest(const FStressTestConfig& Config);
+    FIntegrationTestResult RunMemoryLeakDetection();
+    FIntegrationTestResult TestConcurrentAccess();
+    FIntegrationTestResult TestErrorRecovery();
+    FIntegrationTestResult TestSaveLoadIntegration();
+    FIntegrationTestResult TestNetworkSynchronization();
+    FIntegrationTestResult TestUISystemIntegration();
+    FIntegrationTestResult TestAudioSystemIntegration();
+    FIntegrationTestResult TestAIBehaviorIntegration();
+    FIntegrationTestResult TestLocalizationIntegration();
+    FIntegrationTestResult RunRegressionTest();
+    FIntegrationTestResult RunEndToEndScenarioTest();
+
+    // Helper functions
+    FSystemPairTestResult TestSystemPairCommunication(const FString& SystemA, const FString& SystemB);
+    FMemorySnapshot CaptureMemorySnapshot();
+    bool CompareMemorySnapshots(const FMemorySnapshot& Before, const FMemorySnapshot& After, int64& OutDelta);
+    FPerformanceMetrics CollectPerformanceMetrics(float Duration);
+    bool ValidatePerformanceMetrics(const FPerformanceMetrics& Metrics, const FStressTestConfig& Config);
+    void SimulateHighLoad(const FStressTestConfig& Config);
+    float CalculateSuccessRate(const FIntegrationTestSuiteResult& Result) const;
+    FString GenerateTestReport(const FIntegrationTestSuiteResult& Result, bool bAsHTML);
+    FString GenerateHTMLReport(const FIntegrationTestSuiteResult& Result);
+    FString GenerateTextReport(const FIntegrationTestSuiteResult& Result);
+    void ExportResultsToJSON(const FIntegrationTestSuiteResult& Result, const FString& FilePath);
+    void LogTestStart(const FString& TestName);
+    void LogTestComplete(const FString& TestName, EIntegrationTestStatus Status, float Duration);
+    FStressTestConfig GetDefaultStressConfig() const;
 };
-
-/** 測試開始事件委託 */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnIntegrationTestStarted, const FString&, SuiteName);
-
-/** 單個測試完成事件委託 */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSingleTestCompleted, EIntegrationTestType, TestType, const FIntegrationTestResult&, Result);
-
-/** 測試問題發現事件委託 */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestIssueFound, EIntegrationTestType, TestType, const FString&, IssueMessage);
-
-/** 測試套件完成事件委託 */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestSuiteCompleted, const FIntegrationTestSuiteResult&, Result);
