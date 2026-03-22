@@ -281,10 +281,10 @@ private:
     UPROPERTY()
     FString CurrentConstructionID;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building Manager")
+    UPROPERTY(EditAnywhere, Category = "Building Manager")
     int32 TotalWorkers;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building Manager")
+    UPROPERTY(EditAnywhere, Category = "Building Manager")
     int32 MaxConcurrentConstruction;
 
     UPROPERTY()
