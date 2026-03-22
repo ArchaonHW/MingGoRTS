@@ -40,3 +40,6 @@ protected:
     bool bIsMoving;
 };
 
+
+
+#endif // MINGGORTSUNIT_H
