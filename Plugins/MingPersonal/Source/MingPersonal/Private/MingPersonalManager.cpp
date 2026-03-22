@@ -712,3 +712,155 @@ UMingSaveGameManager* UMingPersonalManager::GetSaveGameManager() const
 {
     return SaveGameManager;
 }
+
+// 多人遊戲系統實現
+void UMingPersonalManager::InitializeMultiplayerSystem()
+{
+    if (!NetworkManager)
+    {
+        NetworkManager = NewObject<UMingNetworkManager>(this);
+    }
+
+    if (NetworkManager)
+    {
+        NetworkManager->InitializeNetworkManager(this);
+        UE_LOG(LogTemp, Log, TEXT("Network system initialized"));
+    }
+
+    if (!LobbySystem)
+    {
+        LobbySystem = NewObject<UMingLobbySystem>(this);
+    }
+
+    if (LobbySystem)
+    {
+        LobbySystem->InitializeLobbySystem(NetworkManager);
+        UE_LOG(LogTemp, Log, TEXT("Lobby system initialized"));
+    }
+}
+
+bool UMingPersonalManager::CreateMultiplayerServer(const FMingNetworkConfig& Config)
+{
+    if (!NetworkManager)
+    {
+        InitializeMultiplayerSystem();
+    }
+
+    if (NetworkManager)
+    {
+        bool bSuccess = NetworkManager->CreateServer(Config);
+        if (bSuccess)
+        {
+            // 創建大廳
+            if (LobbySystem)
+            {
+                FLobbyConfig LobbyConfig;
+                LobbyConfig.MaxPlayers = Config.MaxPlayers;
+                LobbyConfig.GameMode = EMingNetworkGameMode::Cooperative;
+                LobbySystem->CreateLobby(LobbyConfig);
+            }
+        }
+        return bSuccess;
+    }
+
+    return false;
+}
+
+bool UMingPersonalManager::ConnectToMultiplayerServer(const FString& ServerAddress, int32 Port)
+{
+    if (!NetworkManager)
+    {
+        InitializeMultiplayerSystem();
+    }
+
+    if (NetworkManager)
+    {
+        return NetworkManager->ConnectToServer(ServerAddress, Port);
+    }
+
+    return false;
+}
+
+void UMingPersonalManager::DisconnectFromMultiplayerServer()
+{
+    if (LobbySystem)
+    {
+        LobbySystem->LeaveLobby();
+    }
+
+    if (NetworkManager)
+    {
+        NetworkManager->DisconnectFromServer();
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("Disconnected from multiplayer server"));
+}
+
+bool UMingPersonalManager::IsMultiplayerConnected() const
+{
+    if (NetworkManager)
+    {
+        return NetworkManager->IsConnected();
+    }
+    return false;
+}
+
+bool UMingPersonalManager::IsMultiplayerHost() const
+{
+    if (NetworkManager)
+    {
+        return NetworkManager->IsHost();
+    }
+    return false;
+}
+
+int32 UMingPersonalManager::GetLocalPlayerID() const
+{
+    if (NetworkManager)
+    {
+        return NetworkManager->GetLocalPlayerID();
+    }
+    return 0;
+}
+
+void UMingPersonalManager::SetPlayerReady(bool bReady)
+{
+    if (LobbySystem)
+    {
+        LobbySystem->SetPlayerReady(bReady);
+    }
+}
+
+void UMingPersonalManager::StartMultiplayerGame()
+{
+    if (LobbySystem && IsMultiplayerHost())
+    {
+        if (LobbySystem->CanStartGame())
+        {
+            LobbySystem->StartGame();
+            UE_LOG(LogTemp, Log, TEXT("Multiplayer game started"));
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Cannot start game - conditions not met"));
+        }
+    }
+}
+
+void UMingPersonalManager::SendMultiplayerChatMessage(const FString& Message)
+{
+    if (LobbySystem)
+    {
+        LobbySystem->SendChatMessage(Message);
+    }
+}
+
+UMingNetworkManager* UMingPersonalManager::GetNetworkManager() const
+{
+    return NetworkManager;
+}
+
+UMingLobbySystem* UMingPersonalManager::GetLobbySystem() const
+{
+    return LobbySystem;
+}

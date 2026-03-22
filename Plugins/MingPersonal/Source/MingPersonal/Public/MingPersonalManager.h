@@ -7,6 +7,8 @@
 #include "MingAIUIManager.h"
 #include "Save/MingSaveGameManager.h"
 #include "Save/MingSaveGame.h"
+#include "Network/MingNetworkManager.h"
+#include "Network/MingLobbySystem.h"
 #include "MingPersonalManager.generated.h"
 
 /**
@@ -130,6 +132,43 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Save System")
     UMingSaveGameManager* GetSaveGameManager() const;
 
+    // 多人遊戲系統接口
+    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
+    void InitializeMultiplayerSystem();
+
+    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
+    bool CreateMultiplayerServer(const FMingNetworkConfig& Config);
+
+    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
+    bool ConnectToMultiplayerServer(const FString& ServerAddress, int32 Port);
+
+    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
+    void DisconnectFromMultiplayerServer();
+
+    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
+    bool IsMultiplayerConnected() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
+    bool IsMultiplayerHost() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
+    int32 GetLocalPlayerID() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
+    void SetPlayerReady(bool bReady);
+
+    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
+    void StartMultiplayerGame();
+
+    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
+    void SendMultiplayerChatMessage(const FString& Message);
+
+    UFUNCTION(BlueprintPure, Category = "Multiplayer")
+    UMingNetworkManager* GetNetworkManager() const;
+
+    UFUNCTION(BlueprintPure, Category = "Multiplayer")
+    UMingLobbySystem* GetLobbySystem() const;
+
 protected:
     void OnExperienceGained(int32 Amount);
     void OnLevelUp();
@@ -155,4 +194,12 @@ private:
     // 保存遊戲管理器
     UPROPERTY()
     TObjectPtr<UMingSaveGameManager> SaveGameManager;
+
+    // 網絡管理器
+    UPROPERTY()
+    TObjectPtr<UMingNetworkManager> NetworkManager;
+
+    // 大廳系統
+    UPROPERTY()
+    TObjectPtr<UMingLobbySystem> LobbySystem;
 };
