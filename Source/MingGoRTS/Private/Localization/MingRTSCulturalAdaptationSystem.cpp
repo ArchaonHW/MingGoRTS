@@ -68,10 +68,24 @@ void UMingRTSCulturalAdaptationSystem::SetPlayerRegion(ECulturalRegion Region)
 FString UMingRTSCulturalAdaptationSystem::GetAdaptedContent(const FString& ContentKey, 
     ECulturalRegion Region) const
 {
+    // Check cache first for performance - thread safe read
+    FString CacheKey = FString::Printf(TEXT("%s_%d"), *ContentKey, (int32)Region);
+    {
+        FScopeLock Lock(&ContentCacheLock);
+        const FString* CachedContent = ContentCache.Find(CacheKey);
+        if (CachedContent)
+        {
+            return *CachedContent;
+        }
+    }
+    
     // Find best variant
     const FCulturalVariant* Variant = FindBestVariant(ContentKey, Region);
     if (Variant && !Variant->AdaptedText.IsEmpty())
     {
+        // Cache the result - thread safe write
+        FScopeLock Lock(&ContentCacheLock);
+        ContentCache.Add(CacheKey, Variant->AdaptedText);
         return Variant->AdaptedText;
     }
     
@@ -79,10 +93,15 @@ FString UMingRTSCulturalAdaptationSystem::GetAdaptedContent(const FString& Conte
     const FString* Default = DefaultContent.Find(ContentKey);
     if (Default)
     {
+        // Cache the result - thread safe write
+        FScopeLock Lock(&ContentCacheLock);
+        ContentCache.Add(CacheKey, *Default);
         return *Default;
     }
     
-    // Last resort: return key
+    // Last resort: return key and cache it - thread safe write
+    FScopeLock Lock(&ContentCacheLock);
+    ContentCache.Add(CacheKey, ContentKey);
     return ContentKey;
 }
 
@@ -190,21 +209,36 @@ ECulturalRegion UMingRTSCulturalAdaptationSystem::DetectRegionFromSystem() const
     {
         return ECulturalRegion::Oceania;
     }
+    else if (Locale.StartsWith(TEXT("pl")) || Locale.StartsWith(TEXT("cs")) || 
+             Locale.StartsWith(TEXT("hu")) || Locale.StartsWith(TEXT("ro")) ||
+             Locale.StartsWith(TEXT("bg")) || Locale.StartsWith(TEXT("hr")) ||
+             Locale.StartsWith(TEXT("sr")) || Locale.StartsWith(TEXT("sk")) ||
+             Locale.StartsWith(TEXT("sl")) || Locale.StartsWith(TEXT("et")) ||
+             Locale.StartsWith(TEXT("lv")) || Locale.StartsWith(TEXT("lt")) ||
+             Locale.StartsWith(TEXT("ru")) || Locale.StartsWith(TEXT("uk")) ||
+             Locale.StartsWith(TEXT("be")) || Locale.StartsWith(TEXT("mk")) ||
+             Locale.StartsWith(TEXT("sq")) || Locale.StartsWith(TEXT("ka")) ||
+             Locale.StartsWith(TEXT("hy")) || Locale.StartsWith(TEXT("az")))
+    {
+        return ECulturalRegion::EasternEurope;
+    }
     else if (Locale.StartsWith(TEXT("de")) || Locale.StartsWith(TEXT("fr")) || 
              Locale.StartsWith(TEXT("es")) || Locale.StartsWith(TEXT("it")) ||
-             Locale.StartsWith(TEXT("nl")) || Locale.StartsWith(TEXT("pt")))
+             Locale.StartsWith(TEXT("nl")) || Locale.StartsWith(TEXT("pt")) ||
+             Locale.StartsWith(TEXT("sv")) || Locale.StartsWith(TEXT("da")) ||
+             Locale.StartsWith(TEXT("fi")) || Locale.StartsWith(TEXT("nb")) ||
+             Locale.StartsWith(TEXT("is")) || Locale.StartsWith(TEXT("ga")) ||
+             Locale.StartsWith(TEXT("mt")) || Locale.StartsWith(TEXT("ca")) ||
+             Locale.StartsWith(TEXT("eu")) || Locale.StartsWith(TEXT("gl")) ||
+             Locale.StartsWith(TEXT("wa")) || Locale.StartsWith(TEXT("br")) ||
+             Locale.StartsWith(TEXT("co")) || Locale.StartsWith(TEXT("oc")) ||
+             Locale.StartsWith(TEXT("lb")) || Locale.StartsWith(TEXT("li")) ||
+             Locale.StartsWith(TEXT("rm")) || Locale.StartsWith(TEXT("sc")) ||
+             Locale.StartsWith(TEXT("vo")) || Locale.StartsWith(TEXT("wo")) ||
+             Locale.StartsWith(TEXT("ji")) || Locale.StartsWith(TEXT("yi")) ||
+             Locale.StartsWith(TEXT("kw")) || Locale.StartsWith(TEXT("gv")) ||
+             Locale.StartsWith(TEXT("tr")) || Locale.StartsWith(TEXT("el")))
     {
-        // Check for Western vs Eastern Europe
-        if (Locale.StartsWith(TEXT("pl")) || Locale.StartsWith(TEXT("cs")) || 
-            Locale.StartsWith(TEXT("hu")) || Locale.StartsWith(TEXT("ro")) ||
-            Locale.StartsWith(TEXT("bg")) || Locale.StartsWith(TEXT("hr")) ||
-            Locale.StartsWith(TEXT("sr")) || Locale.StartsWith(TEXT("sk")) ||
-            Locale.StartsWith(TEXT("sl")) || Locale.StartsWith(TEXT("et")) ||
-            Locale.StartsWith(TEXT("lv")) || Locale.StartsWith(TEXT("lt")) ||
-            Locale.StartsWith(TEXT("ru")))
-        {
-            return ECulturalRegion::EasternEurope;
-        }
         return ECulturalRegion::WesternEurope;
     }
     else if (Locale.StartsWith(TEXT("ar")) || Locale.StartsWith(TEXT("he")) || 
@@ -251,7 +285,7 @@ void UMingRTSCulturalAdaptationSystem::DetectRegionFromIP()
     OnIPRegionDetected(TEXT(""));
 }
 
-void UMingRTSCulturalAdaptationSystem::SetCulturalPreferences(const FCulturalPreferences& NewPreferences)
+void UMingRTSCulturalAdaptationSystem::SetCulturalPreferences(const FRTSCulturalPreferences& NewPreferences)
 {
     Preferences = NewPreferences;
     
@@ -264,7 +298,7 @@ void UMingRTSCulturalAdaptationSystem::SetCulturalPreferences(const FCulturalPre
     UE_LOG(LogMingRTSCultural, Log, TEXT("Cultural preferences updated"));
 }
 
-FCulturalPreferences UMingRTSCulturalAdaptationSystem::GetCulturalPreferences() const
+FRTSCulturalPreferences UMingRTSCulturalAdaptationSystem::GetCulturalPreferences() const
 {
     return Preferences;
 }
@@ -295,10 +329,15 @@ void UMingRTSCulturalAdaptationSystem::LoadCulturalPreferences()
         if (EnumPtr)
         {
             int64 Value = EnumPtr->GetValueByNameString(RegionString);
-            if (Value != INDEX_NONE)
+            // Validate enum value is within valid range to prevent undefined behavior
+            if (Value != INDEX_NONE && Value >= 0 && Value < (int64)ECulturalRegion::Global)
             {
                 Preferences.PrimaryRegion = static_cast<ECulturalRegion>(Value);
                 CurrentRegion = Preferences.PrimaryRegion;
+            }
+            else
+            {
+                UE_LOG(LogMingRTSCultural, Warning, TEXT("Invalid region value '%s' in config, using default"), *RegionString);
             }
         }
     }
@@ -449,7 +488,7 @@ const FCulturalVariant* UMingRTSCulturalAdaptationSystem::FindBestVariant(
         return nullptr;
     }
     
-    // Look for exact region match
+    // Use const reference for better performance
     for (const FCulturalVariant& Variant : *Variants)
     {
         if (Variant.Region == Region && Variant.bEnabled)
@@ -501,4 +540,33 @@ void UMingRTSCulturalAdaptationSystem::OnIPRegionDetected(const FString& Country
     
     // Broadcast detection completed
     OnRegionDetectionCompleted.Broadcast(DetectedRegion);
+}
+
+void UMingRTSCulturalAdaptationSystem::ClearContentCache()
+{
+    FScopeLock Lock(&ContentCacheLock);
+    int32 PreviousSize = ContentCache.Num();
+    ContentCache.Empty();
+    UE_LOG(LogMingRTSCultural, Log, TEXT("Content cache cleared. Previous size: %d, Current size: %d"), 
+        PreviousSize, ContentCache.Num());
+}
+
+void UMingRTSCulturalAdaptationSystem::CheckAndTrimCache()
+{
+    FScopeLock Lock(&ContentCacheLock);
+    if (ContentCache.Num() > MAX_CONTENT_CACHE_SIZE)
+    {
+        // Remove oldest 25% of entries when cache exceeds limit
+        int32 EntriesToRemove = ContentCache.Num() / 4;
+        TArray<FString> Keys;
+        ContentCache.GetKeys(Keys);
+        
+        for (int32 i = 0; i < EntriesToRemove && i < Keys.Num(); ++i)
+        {
+            ContentCache.Remove(Keys[i]);
+        }
+        
+        UE_LOG(LogMingRTSCultural, Log, TEXT("Cache trimmed: removed %d entries, new size: %d"),
+            EntriesToRemove, ContentCache.Num());
+    }
 }

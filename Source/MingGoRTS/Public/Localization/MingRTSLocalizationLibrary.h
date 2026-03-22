@@ -5,6 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Localization/MingRTSLocalizationSystem.h"
 #include "MingRTSLocalizationLibrary.generated.h"
 
 /**
@@ -30,12 +31,12 @@ public:
     /** Set current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static void SetGameLanguage(TEnumAsByte<enum class ELanguageCode> LanguageCode);
+    static void SetGameLanguage(ELanguageCode LanguageCode);
     
     /** Get current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",
              meta = (WorldContext = "WorldContextObject"))
-    static TEnumAsByte<enum class ELanguageCode> GetCurrentGameLanguage();
+    static ELanguageCode GetCurrentGameLanguage();
     
     /** Format text with arguments */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization",

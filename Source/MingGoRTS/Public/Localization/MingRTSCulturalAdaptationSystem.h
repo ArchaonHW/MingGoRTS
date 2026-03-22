@@ -5,6 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Containers/Map.h"
 #include "MingRTSCulturalAdaptationSystem.generated.h"
 
 /**
@@ -108,7 +109,7 @@ struct FRegionalGameplayParams
  * Player cultural preferences
  */
 USTRUCT(BlueprintType)
-struct MINGGORTS_API FMingRTSCulturalPreferences
+struct FRTSCulturalPreferences
 {
     GENERATED_BODY()
     
@@ -130,7 +131,7 @@ struct MINGGORTS_API FMingRTSCulturalPreferences
     UPROPERTY(BlueprintReadWrite)
     bool bEnableRegionalArtVariants;
     
-    FCulturalPreferences()
+    FRTSCulturalPreferences()
         : PrimaryRegion(ECulturalRegion::EastAsia)
         , ContentSensitivityLevel(0)
         , bEnableCulturalEvents(true)
@@ -200,11 +201,11 @@ public:
     
     /** Set cultural preferences */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    void SetCulturalPreferences(const FCulturalPreferences& Preferences);
+    void SetCulturalPreferences(const FRTSCulturalPreferences& NewPreferences);
     
     /** Get cultural preferences */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
-    FCulturalPreferences GetCulturalPreferences() const;
+    FRTSCulturalPreferences GetCulturalPreferences() const;
     
     /** Save preferences to settings */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
@@ -230,6 +231,14 @@ public:
     UFUNCTION(BlueprintPure, Category = "MingRTS|Cultural")
     static TArray<ECulturalRegion> GetAllRegions();
     
+    /** Clear content cache for memory management */
+    UFUNCTION(BlueprintCallable, Category = "MingRTS|Cultural")
+    void ClearContentCache();
+    
+    /** Get cache statistics */
+    UFUNCTION(BlueprintPure, Category = "MingRTS|Cultural")
+    int32 GetCacheSize() const { return ContentCache.Num(); }
+    
     /** Event: Region changed */
     UPROPERTY(BlueprintAssignable, Category = "MingRTS|Cultural|Events")
     FOnCulturalRegionChanged OnRegionChanged;
@@ -251,10 +260,9 @@ private:
     
     /** Player preferences */
     UPROPERTY()
-    FCulturalPreferences Preferences;
+    FRTSCulturalPreferences Preferences;
     
-    /** Content variants database */
-    UPROPERTY()
+    /** Content variants database - optimized with inline storage */
     TMap<FString, TArray<FCulturalVariant>> ContentVariants;
     
     /** Regional gameplay parameters cache */
@@ -269,6 +277,13 @@ private:
     UPROPERTY()
     TMap<FString, FString> DefaultContent;
     
+    /** Cache for frequently accessed content - thread safe with lock */
+    mutable FCriticalSection ContentCacheLock;
+    mutable TMap<FString, FString> ContentCache;
+    
+    /** Maximum cache size to prevent memory leaks (1000 entries) */
+    static constexpr int32 MAX_CONTENT_CACHE_SIZE = 1000;
+    
     /** Initialize default content */
     void InitializeDefaultContent();
     
@@ -277,6 +292,9 @@ private:
     
     /** Initialize regional parameters */
     void InitializeRegionalParams();
+    
+    /** Check and trim cache if it exceeds size limit */
+    void CheckAndTrimCache();
     
     /** Get appropriate variant for region */
     const FCulturalVariant* FindBestVariant(const FString& ContentKey, 

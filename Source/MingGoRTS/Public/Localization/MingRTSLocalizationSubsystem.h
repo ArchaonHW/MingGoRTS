@@ -5,6 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "Localization/MingRTSLocalizationSystem.h"
 #include "MingRTSLocalizationSubsystem.generated.h"
 
 // Forward declarations
@@ -65,11 +66,11 @@ public:
     
     /** Quick access: Set language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    void SetLanguage(TEnumAsByte<enum class ELanguageCode> LanguageCode);
+    void SetLanguage(ELanguageCode LanguageCode);
     
     /** Quick access: Get current language */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
-    TEnumAsByte<enum class ELanguageCode> GetCurrentLanguage() const;
+    ELanguageCode GetCurrentLanguage() const;
     
     /** Get user's preferred language from system settings */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Subsystem")
