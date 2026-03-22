@@ -88,7 +88,7 @@ public:
     void InitializeWidget(class UMingPersonalManager* InPersonalManager};
 
     UFUNCTION(BlueprintCallable, Category = "Reputation UI")
-    void RefreshDisplay(};
+    void RefreshDisplay();
 
     // View Modes
     UFUNCTION(BlueprintCallable, Category = "Reputation UI")
@@ -102,7 +102,7 @@ public:
     void SelectRegion(FName RegionID};
 
     UFUNCTION(BlueprintCallable, Category = "Reputation UI")
-    void ClearRegionSelection(};
+    void ClearRegionSelection();
 
     UFUNCTION(BlueprintPure, Category = "Reputation UI")
     FName GetSelectedRegion() const { return SelectedRegionID; }
@@ -138,10 +138,10 @@ public:
     void FilterByMinimumRank(int32 MinRank};
 
     UFUNCTION(BlueprintCallable, Category = "Reputation UI")
-    void ShowOnlyRegionsWithQuests(};
+    void ShowOnlyRegionsWithQuests();
 
     UFUNCTION(BlueprintCallable, Category = "Reputation UI")
-    void ClearFilters(};
+    void ClearFilters();
 
     // Visual Feedback
     UFUNCTION(BlueprintCallable, Category = "Reputation UI")
@@ -228,31 +228,31 @@ protected:
 
     // Button Handlers
     UFUNCTION()
-    void OnOverviewButtonClicked(};
+    void OnOverviewButtonClicked();
 
     UFUNCTION()
-    void OnDetailsButtonClicked(};
+    void OnDetailsButtonClicked();
 
     UFUNCTION()
-    void OnTimelineButtonClicked(};
+    void OnTimelineButtonClicked();
 
     UFUNCTION()
-    void OnCloseButtonClicked(};
+    void OnCloseButtonClicked();
 
     UFUNCTION()
     void OnRegionButtonClicked(FName RegionID};
 
     // Internal Functions
-    void PopulateRegionList(};
-    void UpdateRegionDetails(};
-    void UpdateStatsOverview(};
-    void DrawReputationGraph(};
-    void DrawTimeline(};
+    void PopulateRegionList();
+    void UpdateRegionDetails();
+    void UpdateStatsOverview();
+    void DrawReputationGraph();
+    void DrawTimeline();
     void CreateRegionEntry(const FMingReputationDisplayData& Data};
     void CreateEffectEntry(const FString& EffectDescription};
-    void ClearRegionList(};
-    void ClearEffectsList(};
-    void FilterAndSortData(};
+    void ClearRegionList();
+    void ClearEffectsList();
+    void FilterAndSortData();
     FLinearColor GetReputationColor(float Value) const;
     FString GetRankTitle(int32 Rank) const;
     float CalculateNextRankProgress(float Value, int32 CurrentRank) const;
@@ -271,6 +271,6 @@ public:
     static FString GetRankTitleForLevel(int32 Rank};
 
     UFUNCTION(BlueprintPure, Category = "Reputation UI", meta = (StaticFunction))
-    static int32 GetMaxRank(};
+    static int32 GetMaxRank();
 };
 

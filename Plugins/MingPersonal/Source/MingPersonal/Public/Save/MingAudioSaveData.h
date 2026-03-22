@@ -177,7 +177,7 @@ class MINGPERSONAL_API UMingAudioSaveDataHandler : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAudioSaveDataHandler(};
+    UMingAudioSaveDataHandler();
 
     // Serialization
     UFUNCTION(BlueprintCallable, Category = "Audio Save")

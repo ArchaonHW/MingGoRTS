@@ -128,14 +128,14 @@ public:
 
     // System initialization
     UFUNCTION(BlueprintCallable, Category = "AI Learning")
-    void InitializeAILearning(UMingRTSSelfLearningSystem* SelfLearningSystem};
+    void InitializeAILearning(UMingRTSSelfLearningSystem* SelfLearningSystem);
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning")
     void ShutdownAILearning();
 
     // Player behavior analysis
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Analysis")
-    void AnalyzePlayerBehavior(const FString& PlayerID, const TMap<FString, FString>& MatchData};
+    void AnalyzePlayerBehavior(const FString& PlayerID, const TMap<FString, FString>& MatchData);
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Analysis")
     FPlayerBehaviorAnalysis GetPlayerAnalysis(const FString& PlayerID) const;
@@ -145,43 +145,43 @@ public:
 
     // AI adaptation
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Adaptation")
-    void AdaptAIToPlayer(const FString& PlayerID};
+    void AdaptAIToPlayer(const FString& PlayerID);
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Adaptation")
-    void ApplyAIAdaptations(const FAIAdaptationParameters& Parameters};
+    void ApplyAIAdaptations(const FAIAdaptationParameters& Parameters);
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Adaptation")
     FAIAdaptationParameters GetRecommendedAdaptations(const FString& PlayerID) const;
 
     // Learning model management
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Models")
-    bool CreatePlayerStrategyModel(const FString& ModelName};
+    bool CreatePlayerStrategyModel(const FString& ModelName);
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Models")
     bool TrainStrategyModel();
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Models")
-    EPlayerStrategyPattern PredictPlayerStrategy(const FString& PlayerID, const TMap<FString, FString>& CurrentState};
+    EPlayerStrategyPattern PredictPlayerStrategy(const FString& PlayerID, const TMap<FString, FString>& CurrentState);
 
     // Match data collection
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Data")
-    void RecordMatchStart(const FString& PlayerID, const FString& MatchID};
+    void RecordMatchStart(const FString& PlayerID, const FString& MatchID);
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Data")
-    void RecordPlayerAction(const FString& PlayerID, const FString& Action, const TMap<FString, FString>& Context};
+    void RecordPlayerAction(const FString& PlayerID, const FString& Action, const TMap<FString, FString>& Context);
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Data")
-    void RecordMatchEnd(const FString& PlayerID, const FString& MatchID, bool bVictory, const TMap<FString, FString>& Results};
+    void RecordMatchEnd(const FString& PlayerID, const FString& MatchID, bool bVictory, const TMap<FString, FString>& Results);
 
     // Strategy pattern recognition
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Patterns")
-    EPlayerStrategyPattern IdentifyStrategyPattern(const TArray<TMap<FString, FString>>& ActionHistory};
+    EPlayerStrategyPattern IdentifyStrategyPattern(const TArray<TMap<FString, FString>>& ActionHistory);
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Patterns")
-    float CalculateAggressionScore(const TArray<TMap<FString, FString>>& ActionHistory};
+    float CalculateAggressionScore(const TArray<TMap<FString, FString>>& ActionHistory);
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Patterns")
-    float CalculateEconomicFocus(const TArray<TMap<FString, FString>>& ActionHistory};
+    float CalculateEconomicFocus(const TArray<TMap<FString, FString>>& ActionHistory);
 
     // Performance monitoring
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Performance")
@@ -191,12 +191,12 @@ public:
     EAILearningConfidence GetLearningConfidence(const FString& PlayerID) const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Learning|Performance")
-    void ResetLearningData(const FString& PlayerID};
+    void ResetLearningData(const FString& PlayerID);
 
     // Events and delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerAnalyzed, const FString&, PlayerID, const FPlayerBehaviorAnalysis&, Analysis};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIAdapted, const FString&, PlayerID, const FAIAdaptationParameters&, Adaptations};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnStrategyPredicted, const FString&, PlayerID, EPlayerStrategyPattern, Strategy, float, Confidence};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerAnalyzed, const FString&, PlayerID, const FPlayerBehaviorAnalysis&, Analysis);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIAdapted, const FString&, PlayerID, const FAIAdaptationParameters&, Adaptations);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnStrategyPredicted, const FString&, PlayerID, EPlayerStrategyPattern, Strategy, float, Confidence);
 
     UPROPERTY(BlueprintAssignable)
     FOnPlayerAnalyzed OnPlayerAnalyzed;
@@ -209,26 +209,26 @@ public:
 
 protected:
     // Analysis algorithms
-    void AnalyzeAggressionPattern(const FString& PlayerID};
-    void AnalyzeEconomicPattern(const FString& PlayerID};
-    void AnalyzeUnitPreferences(const FString& PlayerID};
-    void AnalyzeTimingPatterns(const FString& PlayerID};
-    void AnalyzeMicroMacroBalance(const FString& PlayerID};
+    void AnalyzeAggressionPattern(const FString& PlayerID);
+    void AnalyzeEconomicPattern(const FString& PlayerID);
+    void AnalyzeUnitPreferences(const FString& PlayerID);
+    void AnalyzeTimingPatterns(const FString& PlayerID);
+    void AnalyzeMicroMacroBalance(const FString& PlayerID);
 
     // Strategy identification
-    EPlayerStrategyPattern ClassifyPlayerStrategy(const FPlayerBehaviorAnalysis& Analysis};
-    void UpdateStrategyWeights(FPlayerBehaviorAnalysis& Analysis};
-    void ValidateAnalysis(FPlayerBehaviorAnalysis& Analysis};
+    EPlayerStrategyPattern ClassifyPlayerStrategy(const FPlayerBehaviorAnalysis& Analysis);
+    void UpdateStrategyWeights(FPlayerBehaviorAnalysis& Analysis);
+    void ValidateAnalysis(FPlayerBehaviorAnalysis& Analysis);
 
     // AI adaptation logic
-    FAIAdaptationParameters GenerateAdaptations(const FPlayerBehaviorAnalysis& Analysis};
-    void ApplyCounterStrategies(FAIAdaptationParameters& Parameters, const FPlayerBehaviorAnalysis& Analysis};
-    void AdjustDifficulty(FAIAdaptationParameters& Parameters, const FPlayerBehaviorAnalysis& Analysis};
+    FAIAdaptationParameters GenerateAdaptations(const FPlayerBehaviorAnalysis& Analysis);
+    void ApplyCounterStrategies(FAIAdaptationParameters& Parameters, const FPlayerBehaviorAnalysis& Analysis);
+    void AdjustDifficulty(FAIAdaptationParameters& Parameters, const FPlayerBehaviorAnalysis& Analysis);
 
     // Data processing
-    void ProcessMatchData(const FString& PlayerID};
-    void ExtractFeatures(const TMap<FString, FString>& RawData, TArray<float>& Features};
-    void NormalizeFeatures(TArray<float>& Features};
+    void ProcessMatchData(const FString& PlayerID);
+    void ExtractFeatures(const TMap<FString, FString>& RawData, TArray<float>& Features);
+    void NormalizeFeatures(TArray<float>& Features);
 
 private:
     // Core system reference

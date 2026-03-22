@@ -144,13 +144,13 @@ class MINGMULTIPLAYER_API UMingReputationReplication : public UObject
     GENERATED_BODY()
 
 public:
-    UMingReputationReplication(};
+    UMingReputationReplication();
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Replication")
     void InitializeReplication(class UMingNetworkManager* NetworkManager, class UMingReputationManager* ReputationManager};
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Replication")
-    void ShutdownReplication(};
+    void ShutdownReplication();
 
     // Sync Configuration
     UFUNCTION(BlueprintCallable, Category = "Reputation Replication")
@@ -173,7 +173,7 @@ public:
     void RequestRegionalSync(const TArray<FName>& RegionIDs};
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Replication")
-    void ForceSyncAllRegions(};
+    void ForceSyncAllRegions();
 
     // Server-side Operations
     UFUNCTION(BlueprintCallable, Category = "Reputation Replication")
@@ -304,10 +304,10 @@ protected:
     TArray<float> SyncLatencies;
 
     // Internal Functions
-    void PerformFullSync(};
-    void PerformDeltaSync(};
-    void PerformEventDrivenSync(};
-    void PerformRegionalSync(};
+    void PerformFullSync();
+    void PerformDeltaSync();
+    void PerformEventDrivenSync();
+    void PerformRegionalSync();
 
     void SendReputationSyncRequest(int32 TargetPlayerID, bool bFullSync};
     void ProcessReputationSyncResponse(const TArray<FMingReplicatedReputationData>& ReputationData};
@@ -318,9 +318,9 @@ protected:
     bool ShouldSyncRegion(FName RegionID) const;
     bool IsInRegionalSyncRange(FName RegionID) const;
 
-    TArray<FMingReplicatedReputationData> BuildFullSyncData(};
+    TArray<FMingReplicatedReputationData> BuildFullSyncData();
     TArray<FMingReplicatedReputationData> BuildRegionalSyncData(const TArray<FName>& RegionIDs};
-    TArray<FMingReplicatedReputationData> BuildDeltaSyncData(};
+    TArray<FMingReplicatedReputationData> BuildDeltaSyncData();
 
     void ApplyDeltaToLocalData(const FMingReputationSyncDelta& Delta};
     void BroadcastDeltaToClients(const FMingReputationSyncDelta& Delta};

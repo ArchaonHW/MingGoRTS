@@ -5,20 +5,20 @@
 #include "MingRTSSpectatorSystem.generated.h"
 
 /**
- * 觀?�模�? */
+ * 觀察模式 */
 UENUM(BlueprintType)
 enum class ESpectatorMode : uint8
 {
-    FreeCamera        UMETA(DisplayName = "?�由視�?"),
-    FollowPlayer      UMETA(DisplayName = "跟隨?�家"),
-    FollowUnit        UMETA(DisplayName = "跟隨?��?"),
-    TacticalView      UMETA(DisplayName = "?��?視�?"),
-    PictureInPicture  UMETA(DisplayName = "?�中X),
-    BroadcastDirector UMETA(DisplayName = "導播模�?")
+    FreeCamera        UMETA(DisplayName = "Free Camera"),
+    FollowPlayer      UMETA(DisplayName = "Follow Player"),
+    FollowUnit        UMETA(DisplayName = "Follow Unit"),
+    TacticalView      UMETA(DisplayName = "Tactical View"),
+    PictureInPicture  UMETA(DisplayName = "Picture in Picture"),
+    BroadcastDirector UMETA(DisplayName = "Broadcast Director")
 };
 
 /**
- * 觀?�者信X */
+ * 觀察者信息 */
 USTRUCT(BlueprintType)
 struct FSpectatorInfo
 {
@@ -122,16 +122,16 @@ public:
     void InitializeSpectatorSystem();
     
     // ?�建觀?�房X    UFUNCTION(BlueprintCallable, Category = "Spectator")
-    FString CreateSpectatorRoom(const FString& MatchID, const FString& RoomName, int32 MaxSpectators, bool bPasswordProtected, const FString& Password};
+    FString CreateSpectatorRoom(const FString& MatchID, const FString& RoomName, int32 MaxSpectators, bool bPasswordProtected, const FString& Password);
     
     // ?��?觀?�房X    UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void CloseSpectatorRoom(const FString& RoomID};
+    void CloseSpectatorRoom(const FString& RoomID);
     
     // ?�入觀X    UFUNCTION(BlueprintCallable, Category = "Spectator")
-    bool JoinSpectatorRoom(const FString& RoomID, const FSpectatorInfo& Spectator, const FString& Password};
+    bool JoinSpectatorRoom(const FString& RoomID, const FSpectatorInfo& Spectator, const FString& Password);
     
     // ?��?觀X    UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void LeaveSpectatorRoom(const FString& RoomID, const FString& SpectatorID};
+    void LeaveSpectatorRoom(const FString& RoomID, const FString& SpectatorID);
     
     // ?��?觀?�房?��?�?    UFUNCTION(BlueprintCallable, Category = "Spectator")
     TArray<FSpectatorRoom> GetAvailableRooms() const;
@@ -140,29 +140,29 @@ public:
     bool GetRoomInfo(const FString& RoomID, FSpectatorRoom& OutRoom) const;
     
     // 設置觀?�模�?    UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void SetSpectatorMode(const FString& SpectatorID, ESpectatorMode Mode};
+    void SetSpectatorMode(const FString& SpectatorID, ESpectatorMode Mode);
     
     // 跟隨?�家
     UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void FollowPlayer(const FString& SpectatorID, const FString& TargetPlayerID};
+    void FollowPlayer(const FString& SpectatorID, const FString& TargetPlayerID);
     
     // 跟隨?��?
     UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void FollowUnit(const FString& SpectatorID, int32 TargetUnitID};
+    void FollowUnit(const FString& SpectatorID, int32 TargetUnitID);
     
     // 設置?��?機�?置�X��?
     UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void SetCameraTransform(const FString& SpectatorID, const FVector& Location, const FRotator& Rotation};
+    void SetCameraTransform(const FString& SpectatorID, const FVector& Location, const FRotator& Rotation);
     
     // 設置縮放
     UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void SetZoomLevel(const FString& SpectatorID, float ZoomLevel};
+    void SetZoomLevel(const FString& SpectatorID, float ZoomLevel);
     
     // ?��X�中X    UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void TogglePictureInPicture(const FString& SpectatorID, bool bEnable};
+    void TogglePictureInPicture(const FString& SpectatorID, bool bEnable);
     
     // ?�送�X��?天�X    UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void SendSpectatorChat(const FString& RoomID, const FString& SpectatorID, const FString& Message};
+    void SendSpectatorChat(const FString& RoomID, const FString& SpectatorID, const FString& Message);
     
     // ?��?觀?�者�?�?    UFUNCTION(BlueprintCallable, Category = "Spectator")
     TArray<FSpectatorInfo> GetSpectatorsInRoom(const FString& RoomID) const;
@@ -174,23 +174,23 @@ public:
     bool IsSpectatingEnabled(const FString& MatchID) const;
     
     // ?�用/禁用觀X    UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void SetSpectatingEnabled(const FString& MatchID, bool bEnabled};
+    void SetSpectatingEnabled(const FString& MatchID, bool bEnabled);
     
     // 設置?��?密碼
     UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void SetRoomPassword(const FString& RoomID, const FString& NewPassword};
+    void SetRoomPassword(const FString& RoomID, const FString& NewPassword);
     
     // 踢出觀?��?    UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void KickSpectator(const FString& RoomID, const FString& SpectatorID, const FString& Reason};
+    void KickSpectator(const FString& RoomID, const FString& SpectatorID, const FString& Reason);
     
     // 禁�?觀?��?    UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void MuteSpectator(const FString& RoomID, const FString& SpectatorID, int32 DurationMinutes};
+    void MuteSpectator(const FString& RoomID, const FString& SpectatorID, int32 DurationMinutes);
     
     // 事件委�?
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpectatorJoined, const FString&, RoomID, const FSpectatorInfo&, Spectator};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpectatorLeft, const FString&, RoomID, const FString&, SpectatorID};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSpectatorChat, const FString&, RoomID, const FString&, SpectatorID, const FString&, Message};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpectatorModeChanged, const FString&, SpectatorID, ESpectatorMode, NewMode};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpectatorJoined, const FString&, RoomID, const FSpectatorInfo&, Spectator);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpectatorLeft, const FString&, RoomID, const FString&, SpectatorID);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSpectatorChat, const FString&, RoomID, const FString&, SpectatorID, const FString&, Message);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpectatorModeChanged, const FString&, SpectatorID, ESpectatorMode, NewMode);
     
     UPROPERTY(BlueprintAssignable, Category = "Spectator|Events")
     FOnSpectatorJoined OnSpectatorJoined;
@@ -215,7 +215,7 @@ private:
     TSet<FString> SpectatingEnabledMatches;
     
     FString GenerateRoomID();
-    void BroadcastToRoom(const FString& RoomID, const FString& Message};
-    void UpdateSpectatorInfo(const FString& SpectatorID, const FSpectatorInfo& Info};
+    void BroadcastToRoom(const FString& RoomID, const FString& Message);
+    void UpdateSpectatorInfo(const FString& SpectatorID, const FSpectatorInfo& Info);
 };
 

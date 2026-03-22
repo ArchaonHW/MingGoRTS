@@ -92,12 +92,12 @@ UENUM(BlueprintType)
 enum class EMingCurrencySymbol : uint8
 {
     USD, UMETA(DisplayName = "$"),
-    EUR, UMETA(DisplayName = "X),
+    EUR, UMETA(DisplayName = "EUR"),
     GBP, UMETA(DisplayName = "£"),
     JPY, UMETA(DisplayName = "¥"),
     CNY, UMETA(DisplayName = "¥"),
-    KRW, UMETA(DisplayName = "X),
-    INR, UMETA(DisplayName = "X),
+    KRW, UMETA(DisplayName = "KRW"),
+    INR, UMETA(DisplayName = "INR"),
     Custom, UMETA(DisplayName = "Custom"),
     Max, UMETA(Hidden)
 };

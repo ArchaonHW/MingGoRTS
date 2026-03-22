@@ -62,7 +62,7 @@ class MINGTACTICAL_API AMingTacticalUnit : public AActor
     GENERATED_BODY()
 
 public:
-    AMingTacticalUnit(};
+    AMingTacticalUnit();
 
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
@@ -105,16 +105,16 @@ public:
     void SetUnitStats(const FUnitStats& NewStats) { UnitStats = NewStats; }
 
     UFUNCTION(BlueprintCallable, Category = "Unit Stats")
-    void TakeDamage(int32 DamageAmount};
+    void TakeDamage(int32 DamageAmount);
 
     UFUNCTION(BlueprintCallable, Category = "Unit Stats")
-    void Heal(int32 HealAmount};
+    void Heal(int32 HealAmount);
 
     UFUNCTION(BlueprintCallable, Category = "Unit")
-    void MoveToLocation(const FVector& TargetLocation};
+    void MoveToLocation(const FVector& TargetLocation);
 
     UFUNCTION(BlueprintCallable, Category = "Unit")
-    void AttackTarget(AActor* Target};
+    void AttackTarget(AActor* Target);
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
@@ -147,11 +147,11 @@ protected:
 private:
     static int32 GlobalUnitCounter;
 
-    void RegisterToInstancedRendering(};
-    void UnregisterFromInstancedRendering(};
-    void RegisterToSpatialPartition(};
-    void UnregisterFromSpatialPartition(};
-    void PublishUnitDeathEvent(};
-    void UpdateSelectionVisuals(};
+    void RegisterToInstancedRendering();
+    void UnregisterFromInstancedRendering();
+    void RegisterToSpatialPartition();
+    void UnregisterFromSpatialPartition();
+    void PublishUnitDeathEvent();
+    void UpdateSelectionVisuals();
 };
 

@@ -229,11 +229,11 @@ class MINGMERCENARY_API UMingMercenaryMode : public UObject
     GENERATED_BODY()
 
 public:
-    UMingMercenaryMode(};
+    UMingMercenaryMode();
 
     // Mercenary Management
     UFUNCTION(BlueprintCallable, Category = "Mercenary")
-    void InitializeMercenaryMode(};
+    void InitializeMercenaryMode();
 
     UFUNCTION(BlueprintCallable, Category = "Mercenary")
     void HireMercenary(const FString& MercenaryID};
@@ -331,7 +331,7 @@ public:
 
     // Financial Management
     UFUNCTION(BlueprintCallable, Category = "Finance")
-    void PayMercenaries(};
+    void PayMercenaries();
 
     UFUNCTION(BlueprintCallable, Category = "Finance")
     void CollectContractReward(const FString& ContractID};
@@ -416,9 +416,9 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeDefaultMercenaries(};
-    void InitializeDefaultContracts(};
-    void SetupMercenarySkills(};
+    void InitializeDefaultMercenaries();
+    void InitializeDefaultContracts();
+    void SetupMercenarySkills();
 
     // Mercenary Management
     void UpdateMercenaryStats(const FString& MercenaryID};
@@ -426,8 +426,8 @@ protected:
     bool CanAffordMercenary(const FString& MercenaryID) const;
 
     // Contract Management
-    void GenerateNewContracts(};
-    void UpdateContractDifficulty(};
+    void GenerateNewContracts();
+    void UpdateContractDifficulty();
     void EvaluateContractPerformance(const FString& ContractID};
 
     // Reputation System
@@ -435,9 +435,9 @@ protected:
     void CheckRankPromotion(const FString& MercenaryID};
 
     // Financial System
-    void ProcessDailyExpenses(};
+    void ProcessDailyExpenses();
     void CalculateContractReward(FMingContract& Contract};
-    void UpdateFinancialRecords(};
+    void UpdateFinancialRecords();
 
     // AI System
     void AssignOptimalMercenaries(const FString& ContractID};

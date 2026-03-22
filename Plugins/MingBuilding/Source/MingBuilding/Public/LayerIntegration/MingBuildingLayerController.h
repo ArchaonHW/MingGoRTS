@@ -214,20 +214,20 @@ class MINGBUILDING_API UMingBuildingLayerController : public UObject
     GENERATED_BODY()
 
 public:
-    UMingBuildingLayerController(};
+    UMingBuildingLayerController();
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Building Layer")
-    void InitializeBuildingLayer(};
+    void InitializeBuildingLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Building Layer")
-    void ShutdownBuildingLayer(};
+    void ShutdownBuildingLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Building Layer")
-    void ActivateBuildingLayer(};
+    void ActivateBuildingLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Building Layer")
-    void DeactivateBuildingLayer(};
+    void DeactivateBuildingLayer();
 
     // Base Management
     UFUNCTION(BlueprintCallable, Category = "Base Management")
@@ -237,7 +237,7 @@ public:
     void CreateNewBase(const FString& BaseName, FVector Location, const FString& FactionID};
 
     UFUNCTION(BlueprintCallable, Category = "Base Management")
-    void ClearBase(};
+    void ClearBase();
 
     UFUNCTION(BlueprintCallable, Category = "Base Management")
     bool GetCurrentBase(FMingBaseLayout& OutBase) const;
@@ -246,7 +246,7 @@ public:
     void SetBaseUnderAttack(bool bUnderAttack};
 
     UFUNCTION(BlueprintCallable, Category = "Base Management")
-    void DefendBase(};
+    void DefendBase();
 
     // Building Management
     UFUNCTION(BlueprintCallable, Category = "Building Management")
@@ -292,7 +292,7 @@ public:
     void DeselectBuilding(const FString& BuildingID};
 
     UFUNCTION(BlueprintCallable, Category = "Building Management")
-    void ClearBuildingSelection(};
+    void ClearBuildingSelection();
 
     UFUNCTION(BlueprintPure, Category = "Building Management")
     TArray<FString> GetSelectedBuildings() const { return SelectedBuildingIDs; }
@@ -358,7 +358,7 @@ public:
     bool HasPowerSurplus() const;
 
     UFUNCTION(BlueprintCallable, Category = "Resources")
-    void OptimizeResourceDistribution(};
+    void OptimizeResourceDistribution();
 
     // Grid & Placement
     UFUNCTION(BlueprintCallable, Category = "Grid")
@@ -371,10 +371,10 @@ public:
     void SetBuildRadius(float Radius};
 
     UFUNCTION(BlueprintCallable, Category = "Grid")
-    void ShowBuildableAreas(};
+    void ShowBuildableAreas();
 
     UFUNCTION(BlueprintCallable, Category = "Grid")
-    void HideBuildableAreas(};
+    void HideBuildableAreas();
 
     UFUNCTION(BlueprintCallable, Category = "Grid")
     FVector FindNearestValidLocation(FVector DesiredLocation, EMingBuildingType Type) const;
@@ -384,10 +384,10 @@ public:
     void FocusOnBuilding(const FString& BuildingID};
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void FocusOnBaseCenter(};
+    void FocusOnBaseCenter();
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void SetOverviewCamera(};
+    void SetOverviewCamera();
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
     void SetFollowCamera(const FString& BuildingID};
@@ -412,7 +412,7 @@ public:
     void ReceiveUnitFromTactical(const FString& UnitID};
 
     UFUNCTION(BlueprintCallable, Category = "Layer Integration")
-    void ReturnToStrategic(};
+    void ReturnToStrategic();
 
     // Utility Functions
     UFUNCTION(BlueprintPure, Category = "Utility")
@@ -478,22 +478,22 @@ protected:
     int32 NextBuildingID = 1;
 
     // Internal functions
-    void InitializeDefaultBuildings(};
+    void InitializeDefaultBuildings();
     void ProcessConstructionTick(float DeltaTime};
     void ProcessProductionTick(float DeltaTime};
-    void UpdateResourceProduction(};
-    void CheckBuildingHealth(};
+    void UpdateResourceProduction();
+    void CheckBuildingHealth();
     
     void OnBuildingCompleted(const FString& BuildingID};
     void OnUnitProductionFinished(const FString& BuildingID, const FString& UnitType};
     void OnBuildingDamaged(const FString& BuildingID, float DamageAmount};
-    void OnBaseDefenseTriggered(};
+    void OnBaseDefenseTriggered();
     
     bool CanAffordBuilding(const FMingBuildingInstance& Building) const;
     void DeductBuildingCost(const FMingBuildingInstance& Building};
     void RefundBuildingCost(const FMingBuildingInstance& Building};
     
-    FString GenerateBuildingID(};
+    FString GenerateBuildingID();
     int32 CalculateMaxWorkers(EMingBuildingType Type) const;
     float CalculateBuildTime(EMingBuildingType Type, int32 Level) const;
 };

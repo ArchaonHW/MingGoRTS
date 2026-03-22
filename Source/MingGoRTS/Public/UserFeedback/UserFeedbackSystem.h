@@ -359,7 +359,7 @@ public:
 
     /** ?????X? */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void ShowFeedbackDetailsUI(const FString& FeedbackID};
+    void ShowFeedbackDetailsUI(const FString& FeedbackID);
 
     /** ܲ?X? */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
@@ -371,7 +371,7 @@ public:
 
     /** ]m????t */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void SetFeedbackSystem(UUserFeedbackSystem* InFeedbackSystem};
+    void SetFeedbackSystem(UUserFeedbackSystem* InFeedbackSystem);
 
 protected:
     /** ?????X??? */

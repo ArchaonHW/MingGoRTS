@@ -306,6 +306,7 @@ protected:
     // 驗證風險項目
     bool ValidateRiskItem(const FRiskItem& RiskItem) const;
 
+public:
     // 風險項目列表
     UPROPERTY(BlueprintReadOnly, Category = "Risk Monitoring Dashboard")
     TArray<FRiskItem> RiskItems;

@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
@@ -7,22 +7,22 @@
 class AMingTacticalUnit;
 
 /**
- * ?ï¿½ï¿½Xï¿½ä»¤çµï¿½?
+ * ???X?¥Oµ²??
  */
 USTRUCT(BlueprintType)
 struct FAttackCommand
 {
     GENERATED_BODY()
     
-    // ?ï¿½ï¿½Xï¿½ï¿½?
+    // ???X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TWeakObjectPtr<AMingTacticalUnit> TargetUnit;
     
-    // ?ï¿½ï¿½?ä½ç½®
+    // ????¦ì¸m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector TargetLocation;
     
-    // ?ï¿½å¦?ï¿½ï¿½?ç½®æ”»X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??§_????¸m§ğX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsLocationAttack;
     
     FAttackCommand()
@@ -33,8 +33,8 @@ struct FAttackCommand
 };
 
 /**
- * ?ï¿½ï¿½Xï¿½é¬¥çµ„ä»¶
- * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ”»?ï¿½ã€é˜²ç¦¦ï¿½Xï¿½å®³?ï¿½è¼¯
+ * ???X?°«²Õ¥ó
+ * ???X??X?§ğ??¡B¨¾¿m?X?®`??¿è
  */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MINGTACTICAL_API UMingUnitCombatComponent : public UActorComponent
@@ -42,90 +42,90 @@ class MINGTACTICAL_API UMingUnitCombatComponent : public UActorComponent
     GENERATED_BODY()
 
 public:
-    UMingUnitCombatComponent(};
+    UMingUnitCombatComponent();
 
     virtual void BeginPlay() override;
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-    // ?ï¿½ï¿½Xï¿½ä»¤
+    // ???X?¥O
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void AttackTarget(AMingTacticalUnit* Target};
+    void AttackTarget(AMingTacticalUnit* Target);
 
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void AttackLocation(const FVector& TargetLocation};
+    void AttackLocation(const FVector& TargetLocation);
 
-    // ?ï¿½æ­¢?ï¿½ï¿½?
+    // ??¤î????
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void StopAttack(};
+    void StopAttack();
 
-    // ?ï¿½å¦?ï¿½æ”»?ï¿½ï¿½Xï¿½å…§
+    // ??§_??§ğ???X?¤º
     UFUNCTION(BlueprintPure, Category = "Combat")
     bool IsTargetInRange(AMingTacticalUnit* Target) const;
 
     UFUNCTION(BlueprintPure, Category = "Combat")
     bool IsLocationInRange(const FVector& Location) const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UFUNCTION(BlueprintPure, Category = "Combat")
-    AMingTacticalUnit* GetCurrentTarget() const { return CurrentTarget.Get(}; }
+    AMingTacticalUnit* GetCurrentTarget() const { return CurrentTarget.Get(); }
 
-    // ?ï¿½å¦?ï¿½ä»¥?ï¿½ï¿½?
+    // ??§_??¥H????
     UFUNCTION(BlueprintPure, Category = "Combat")
     bool CanAttack() const;
 
-    // è¨­ç½®?ï¿½ï¿½Xï¿½å»
+    // ³]¸m???X?«o
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void SetAttackCooldown(float Cooldown};
+    void SetAttackCooldown(float Cooldown);
 
 protected:
-    // ?ï¿½ï¿½Xï¿½å–®ï¿½?    UPROPERTY()
+    // ???X?³æ??    UPROPERTY()
     TObjectPtr<AMingTacticalUnit> OwnerUnit;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UPROPERTY()
     TWeakObjectPtr<AMingTacticalUnit> CurrentTarget;
 
-    // ?ï¿½ï¿½?ä½ç½®?ï¿½ï¿½?
+    // ????¦ì¸m????
     UPROPERTY()
     FVector TargetAttackLocation;
 
-    // ?ï¿½å¦?ï¿½æ”»?ï¿½ï¿½?ï¿½?    UPROPERTY()
+    // ??§_??§ğ??????    UPROPERTY()
     bool bIsAttackingLocation;
 
-    // ?ï¿½å¦?ï¿½æ”»X    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+    // ??§_??§ğX    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
     bool bIsAttacking;
 
-    // ?ï¿½ï¿½Xï¿½å»?ï¿½ï¿½?
+    // ???X?«o????
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
     float AttackCooldown;
 
-    // ?ï¿½ï¿½Xï¿½å»?ï¿½ï¿½?
+    // ???X?«o????
     UPROPERTY()
     float CurrentCooldown;
 
-    // ?ï¿½ï¿½?ç¯„ï¿½?
+    // ????½d??
     UPROPERTY()
     float AttackRange;
 
-    // ?ï¿½ï¿½Xï¿½å®³
+    // ???X?®`
     UPROPERTY()
     float AttackDamage;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?
-    void PerformAttack(};
+    // ???X???
+    void PerformAttack();
 
-    // å°ç›®æ¨™é€ ï¿½Xï¿½å®³
+    // ¹ï¥Ø¼Ğ³y?X?®`
     void DealDamageToTarget(AMingTacticalUnit* Target};
 
-    // å°‹æ‰¾ç¯„ï¿½Xï¿½ï¿½Xï¿½äºº
-    AMingTacticalUnit* FindEnemyInRange(};
+    // ´M§ä½d?X??X?¤H
+    AMingTacticalUnit* FindEnemyInRange();
 
-    // ?ï¿½ï¿½Xï¿½ç›®ï¿½?    void RotateToTarget(float DeltaTime};
+    // ???X?¥Ø??    void RotateToTarget(float DeltaTime};
 
-    // æª¢æŸ¥?ï¿½ï¿½Xï¿½å¦?ï¿½ï¿½?
+    // ÀË¬d???X?§_????
     bool IsValidTarget(AMingTacticalUnit* Target) const;
 
-    // ?ï¿½ï¿½Xï¿½ç•«è§¸ç™¼
-    void TriggerAttackAnimation(};
+    // ???X?µeÄ²µo
+    void TriggerAttackAnimation();
 };
 

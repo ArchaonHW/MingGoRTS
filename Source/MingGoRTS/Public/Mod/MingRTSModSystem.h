@@ -5,40 +5,40 @@
 #include "MingRTSModSystem.generated.h"
 
 /**
- * º“??√˛??
+ * Ê®°??È°û??
  */
 UENUM(BlueprintType)
 enum class EModType : uint8
 {
-    Map                   UMETA(DisplayName = "????"),
-    Unit                  UMETA(DisplayName = "????"),
-    Building              UMETA(DisplayName = "´ÿ??"),
-    Technology            UMETA(DisplayName = "¨Ï??"),
-    Faction               UMETA(DisplayName = "????"),
-    Campaign              UMETA(DisplayName = "??ß–"),
-    UI                    UMETA(DisplayName = "??≠±"),
-    Audio                 UMETA(DisplayName = "??¿W"),
-    Graphics              UMETA(DisplayName = "??ßŒ"),
-    Gameplay              UMETA(DisplayName = "????"),
-    TotalConversion       UMETA(DisplayName = "??≠±¬‡??")
+    Map                   UMETA(DisplayName = "Map"),
+    Unit                  UMETA(DisplayName = "Unit"),
+    Building              UMETA(DisplayName = "Building"),
+    Technology            UMETA(DisplayName = "Technology"),
+    Faction               UMETA(DisplayName = "Faction"),
+    Campaign              UMETA(DisplayName = "Campaign"),
+    UI                    UMETA(DisplayName = "UI"),
+    Audio                 UMETA(DisplayName = "Audio"),
+    Graphics              UMETA(DisplayName = "Graphics"),
+    Gameplay              UMETA(DisplayName = "Gameplay"),
+    TotalConversion       UMETA(DisplayName = "Total Conversion")
 };
 
 /**
- * º“?X?X */
+ * Ê®°?X?X */
 UENUM(BlueprintType)
 enum class EModStatus : uint8
 {
-    NotInstalled          UMETA(DisplayName = "??????),
-    Installing            UMETA(DisplayName = "¶w????),
-    Installed             UMETA(DisplayName = "§w????),
-    Enabled               UMETA(DisplayName = "§w?X),
-    Disabled              UMETA(DisplayName = "§w?X),
-    NeedsUpdate           UMETA(DisplayName = "??≠nßÛX),
-    Error                 UMETA(DisplayName = "??ª~")
+    NotInstalled          UMETA(DisplayName = "Not Installed"),
+    Installing            UMETA(DisplayName = "Installing"),
+    Installed             UMETA(DisplayName = "Installed"),
+    Enabled               UMETA(DisplayName = "Enabled"),
+    Disabled              UMETA(DisplayName = "Disabled"),
+    NeedsUpdate           UMETA(DisplayName = "Needs Update"),
+    Error                 UMETA(DisplayName = "Error")
 };
 
 /**
- * º“??´HÆß
+ * Ê®°??‰ø°ÊÅØ
  */
 USTRUCT(BlueprintType)
 struct FModInfo
@@ -105,7 +105,7 @@ struct FModInfo
 };
 
 /**
- * º“??®t≤Œ - ∫ﬁ??º“?X?≥–??§u???X */
+ * Ê®°??Á≥ªÁµ± - ÁÆ°??Ê®°?X?Ââµ??Â∑•???X */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSModSystem : public UObject
 {
@@ -117,99 +117,99 @@ public:
     // ???X    UFUNCTION(BlueprintCallable, Category = "Mod")
     void InitializeModSystem();
     
-    // ±q≥–??§u??¿Ú??º“≤’????    UFUNCTION(BlueprintCallable, Category = "Mod")
+    // ÂæûÂâµ??Â∑•??Áç≤??Ê®°ÁµÑ????    UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FModInfo> GetWorkshopMods(const FString& SearchQuery, const TArray<EModType>& FilterTypes};
     
-    // ????§w??∏Àº“??    UFUNCTION(BlueprintCallable, Category = "Mod")
+    // ????Â∑≤??Ë£ùÊ®°??    UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FModInfo> GetInstalledMods() const;
     
-    // ????§w?X?º“??    UFUNCTION(BlueprintCallable, Category = "Mod")
+    // ????Â∑≤?X?Ê®°??    UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FModInfo> GetEnabledMods() const;
     
-    // ????º“??∏‘??
+    // ????Ê®°??Ë©≥??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     bool GetModInfo(const FString& ModID, FModInfo& OutModInfo) const;
     
-    // §U??º“??
+    // ‰∏ã??Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void DownloadMod(const FString& ModID};
     
-    // ????§U??
+    // ????‰∏ã??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void CancelDownload(const FString& ModID};
     
-    // ¶w??º“??
+    // ÂÆâ??Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     bool InstallMod(const FString& FilePath};
     
-    // ????º“??
+    // ????Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void UninstallMod(const FString& ModID};
     
-    // ??•Œº“??
+    // ??Áî®Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void EnableMod(const FString& ModID};
     
-    // ∏T•Œº“??
+    // Á¶ÅÁî®Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void DisableMod(const FString& ModID};
     
-    // ??∑sº“??
+    // ??Êñ∞Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void UpdateMod(const FString& ModID};
     
-    // ¿À¨d??∑s
+    // Ê™¢Êü•??Êñ∞
     UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FModInfo> CheckForUpdates();
     
-    // §W∂«º“?X?≥–??§uX    UFUNCTION(BlueprintCallable, Category = "Mod")
+    // ‰∏äÂÇ≥Ê®°?X?Ââµ??Â∑•X    UFUNCTION(BlueprintCallable, Category = "Mod")
     bool UploadMod(const FString& ModID, const FString& Description, const TArray<FString>& Tags};
     
-    // ??´ÿ??¶aº“??
+    // ??Âª∫??Âú∞Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     FString CreateLocalMod(const FString& Name, EModType Type, const FString& Description};
     
-    // ≠qæ\º“??
+    // Ë®ÇÈñ±Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void SubscribeToMod(const FString& ModID};
     
-    // ????≠qæ\
+    // ????Ë®ÇÈñ±
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void UnsubscribeFromMod(const FString& ModID};
     
-    // µ˚??º“??
+    // Ë©ï??Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void RateMod(const FString& ModID, float Rating};
     
-    // ????º“??
+    // ????Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void ReportMod(const FString& ModID, const FString& Reason};
     
-    // ≈Á??º“??
+    // È©ó??Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     bool ValidateMod(const FString& ModID};
     
-    // ????º“??
+    // ????Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void ScanForMods();
     
-    // ???X????X???º“??
+    // ???X????X???Ê®°??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void LoadEnabledMods();
     
-    // ????º“?X???
+    // ????Ê®°?X???
     UFUNCTION(BlueprintCallable, Category = "Mod")
     FString GetModsDirectory() const;
     
-    // ≥]∏m???X???
+    // Ë®≠ÁΩÆ???X???
     UFUNCTION(BlueprintCallable, Category = "Mod")
     void SetModLoadOrder(const TArray<FString>& ModIDs};
     
-    // ????®Ãø‡Ωƒ??
+    // ????‰æùË≥¥Ë°ù??
     UFUNCTION(BlueprintCallable, Category = "Mod")
     TArray<FString> GetDependencyConflicts(const FString& ModID) const;
     
-    // ®∆•Û©e??
+    // ‰∫ã‰ª∂Âßî??
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnModDownloaded, const FString&, ModID};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnModInstalled, const FString&, ModID};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnModUninstalled, const FString&, ModID};

@@ -218,7 +218,7 @@ public:
     TArray<FARTrackedPlane> GetDetectedPlanes() const;
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Planes")
-    void SetPlaneDetectionMode(EARPlaneDetectionMode Mode);
+    void SetPlaneDetectionMode(EARPlaneDetectionMode Mode};
 
     // Content Overlay
     UFUNCTION(BlueprintCallable, Category = "AR Support|Overlay")
@@ -244,7 +244,7 @@ public:
     bool PerformARRaycast(const FVector2D& ScreenPosition, FVector& OutHitLocation, FVector& OutHitNormal);
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Raycast")
-    bool PerformARRaycastFromCenter(FVector& OutHitLocation, FVector& OutHitNormal);
+    bool PerformARRaycastFromCenter(FVector& OutHitLocation, FVector& OutHitNormal};
 
     // Game World Integration
     UFUNCTION(BlueprintCallable, Category = "AR Support|Game")
@@ -323,5 +323,5 @@ private:
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnARSessionStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnARSessionStopped);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnARPlaneDetected, const FARTrackedPlane&, Plane);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnARTrackingQualityChanged, EARTrackingQuality, NewQuality);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnARTrackingQualityChanged, EARTrackingQuality, NewQuality};
 

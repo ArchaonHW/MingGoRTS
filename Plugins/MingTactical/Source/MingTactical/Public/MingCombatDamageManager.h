@@ -1,105 +1,105 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingTacticalCombatSystem.h"
 #include "MingCombatDamageManager.generated.h"
 
-// ?ï¿½å®³é¡ï¿½?
+// ??®`Ãş??
 UENUM(BlueprintType)
 enum class EMingDamageType : uint8
 {
-    Kinetic,           // ?ï¿½èƒ½?ï¿½å®³ (æ§ï¿½Xï¿½ç ²ï¿½?
-    Explosive,         // ?ï¿½ç‚¸?ï¿½å®³ (?ï¿½æ¦´å½ˆã€ç‚¸ï¿½?
-    Fire,              // ?ï¿½ç„°?ï¿½å®³
-    Chemical,          // ?ï¿½å­¸?ï¿½å®³
-    Psychological,      // å¿ƒï¿½Xï¿½å®³
-    Environmental      // ?ï¿½ï¿½Xï¿½å®³
+    Kinetic,           // ??¯à??®` (ºj?X?¯¥??
+    Explosive,         // ??¬µ??®` (??ºh¼u¡B¬µ??
+    Fire,              // ??µK??®`
+    Chemical,          // ??¾Ç??®`
+    Psychological,      // ¤ß?X?®`
+    Environmental      // ???X?®`
 };
 
-// è£ï¿½?é¡ï¿½?
+// ¸Ë??Ãş??
 UENUM(BlueprintType)
 enum class EMingEquipmentType : uint8
 {
-    Rifle,             // æ­¥ï¿½?
-    MachineGun,         // æ©Ÿï¿½?
-    Artillery,         // ?ï¿½å…µ
-    Mortar,            // è¿«ï¿½X    Grenade,           // ?ï¿½æ¦´ï¿½?    Bayonet,           // ?ï¿½ï¿½?
-    Tank,              // ?ï¿½ï¿½?
-    Aircraft,          // é£›ï¿½?
-    NavalGun,          // ?ï¿½ç ²
-    Melee              // è¿‘æˆ°æ­¦å™¨
+    Rifle,             // ¨B??
+    MachineGun,         // ¾÷??
+    Artillery,         // ??§L
+    Mortar,            // ­¢?X    Grenade,           // ??ºh??    Bayonet,           // ????
+    Tank,              // ????
+    Aircraft,          // ­¸??
+    NavalGun,          // ??¯¥
+    Melee              // ªñ¾ÔªZ¾¹
 };
 
-// è£œçµ¦é¡ï¿½?
+// ¸Éµ¹Ãş??
 UENUM(BlueprintType)
 enum class EMingSupplyType : uint8
 {
-    Ammunition,        // å½ˆè—¥
-    Fuel,              // ?ï¿½ï¿½?
-    Food,              // ç³§ï¿½?
-    Medical,           // ?ï¿½ï¿½Xï¿½ï¿½?
-    Equipment,         // è£ï¿½?
-    Reinforcements     // å¢æ´?ï¿½ï¿½?
+    Ammunition,        // ¼uÃÄ
+    Fuel,              // ????
+    Food,              // Â³??
+    Medical,           // ???X???
+    Equipment,         // ¸Ë??
+    Reinforcements     // ¼W´©????
 };
 
-// ?ï¿½å®³è¨ˆï¿½Xï¿½æ•¸
+// ??®`­p?X?¼Æ
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingDamageCalculation
 {
     GENERATED_BODY()
 
-    // ?ï¿½ï¿½Xï¿½å®³
+    // ???X?®`
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float BaseDamage;
 
-    // ?ï¿½å®³é¡ï¿½?
+    // ??®`Ãş??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingDamageType DamageType;
 
-    // è£ï¿½?é¡ï¿½?
+    // ¸Ë??Ãş??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEquipmentType EquipmentType;
 
-    // ?ï¿½ï¿½?è·é›¢
+    // ????¶ZÂ÷
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float AttackDistance;
 
-    // ?ï¿½ä¸­?ï¿½ï¿½?
+    // ??¤¤????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HitLocation;
 
-    // è­·ç”²X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Å@¥ÒX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ArmorValue;
 
-    // è­·ç”²ç©¿ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Å@¥Ò¬ï??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ArmorPenetration;
 
-    // ?ï¿½ï¿½?æ¦‚ï¿½?
+    // ????·§??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CriticalChance;
 
-    // ?ï¿½ï¿½Xï¿½æ•¸
+    // ???X?¼Æ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CriticalMultiplier;
 
-    // ?ï¿½å®³è¡°ï¿½?ä¿‚æ•¸
+    // ??®`°I??«Y¼Æ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float DamageFalloff;
 
-    // å½ˆè—¥é¡ï¿½?ä¿®æ­£
+    // ¼uÃÄÃş??­×¥¿
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float AmmoTypeModifier;
 
-    // ?ï¿½å½¢å½±éŸ¿?ï¿½ï¿½?
+    // ??§Î¼vÅT????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TerrainModifier;
 
-    // å¤©æ°£å½±éŸ¿?ï¿½ï¿½?
+    // ¤Ñ®ğ¼vÅT????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float WeatherModifier;
 
-    // å£«æ°£å½±éŸ¿?ï¿½ï¿½?
+    // ¤h®ğ¼vÅT????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MoraleModifier;
 
@@ -122,41 +122,41 @@ struct MINGTACTICAL_API FMingDamageCalculation
     }
 };
 
-// è£œçµ¦?ï¿½ï¿½?
+// ¸Éµ¹????
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingSupplyData
 {
     GENERATED_BODY()
 
-    // è£œçµ¦é¡ï¿½?
+    // ¸Éµ¹Ãş??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingSupplyType SupplyType;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?
+    // ???X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CurrentAmount;
 
-    // ?ï¿½å¤§å®¹X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??¤j®eX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MaxCapacity;
 
-    // æ¶ˆè€—é€Ÿï¿½?
+    // ®ø¯Ó³t??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ConsumptionRate;
 
-    // è£œçµ¦?ï¿½ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ¸Éµ¹??????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SupplyPriority;
 
-    // è£œçµ¦ä¾†ï¿½?
+    // ¸Éµ¹¨Ó??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SupplySourceID;
 
-    // ?ï¿½å¾Œï¿½?çµ¦ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??«á??µ¹?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime LastSupplyTime;
 
-    // è£œçµ¦?ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ¸Éµ¹??X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString SupplyStatus;
 
-    // ç·Šæ€¥ï¿½?çµ¦é–¾X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ºò«æ??µ¹ìHX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float EmergencyThreshold;
 
     FMingSupplyData()
@@ -167,66 +167,66 @@ struct MINGTACTICAL_API FMingSupplyData
         ConsumptionRate = 1.0f;
         SupplyPriority = 1;
         SupplySourceID = -1;
-        LastSupplyTime = FDateTime::Now(};
+        LastSupplyTime = FDateTime::Now();
         SupplyStatus = TEXT("normal"};
         EmergencyThreshold = 20.0f;
     }
 };
 
-// å¾Œå‹¤è»Šï¿½Xï¿½ï¿½?
+// «á¶Ô¨®?X???
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingLogisticsConvoy
 {
     GENERATED_BODY()
 
-    // è»Šï¿½?ID
+    // ¨®??ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ConvoyID;
 
-    // è»Šï¿½Xï¿½ç¨±
+    // ¨®?X?ºÙ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConvoyName;
 
-    // è»Šï¿½?é¡ï¿½?
+    // ¨®??Ãş??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConvoyType;
 
-    // ?ï¿½ï¿½?ä½ç½®
+    // ????¦ì¸m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector CurrentPosition;
 
-    // ?ï¿½ï¿½?ä½ç½®
+    // ????¦ì¸m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector TargetPosition;
 
-    // è£œçµ¦?ï¿½ï¿½?
+    // ¸Éµ¹????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingSupplyData> Cargo;
 
-    // ç§»ï¿½Xï¿½åº¦
+    // ²¾?X?«×
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MovementSpeed;
 
-    // è­·ï¿½?ç­‰ï¿½?
+    // Å@??µ¥??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ProtectionLevel;
 
-    // ?ï¿½ç™¼?ï¿½ï¿½?
+    // ??µo????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime DepartureTime;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime EstimatedArrivalTime;
 
-    // è»Šï¿½Xï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ¨®?X?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConvoyStatus;
 
-    // è­·ï¿½Xï¿½ï¿½?
+    // Å@?X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> EscortUnits;
 
-    // é¢¨éšªè©•ä¼°
+    // ­·ÀIµû¦ô
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float RiskAssessment;
 
@@ -237,66 +237,66 @@ struct MINGTACTICAL_API FMingLogisticsConvoy
         ConvoyType = TEXT(""};
         CurrentPosition = FVector::ZeroVector;
         TargetPosition = FVector::ZeroVector;
-        Cargo.Empty(};
+        Cargo.Empty();
         MovementSpeed = 20.0f;
         ProtectionLevel = 1.0f;
-        DepartureTime = FDateTime::Now(};
-        EstimatedArrivalTime = FDateTime::Now(};
+        DepartureTime = FDateTime::Now();
+        EstimatedArrivalTime = FDateTime::Now();
         ConvoyStatus = TEXT("preparing"};
-        EscortUnits.Empty(};
+        EscortUnits.Empty();
         RiskAssessment = 0.5f;
     }
 };
 
-// ?ï¿½å®³çµï¿½?
+// ??®`µ²??
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingDamageResult
 {
     GENERATED_BODY()
 
-    // ?ï¿½ï¿½Xï¿½ID
+    // ???X?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 AttackerID;
 
-    // ?ï¿½ç¦¦?ï¿½ID
+    // ??¿m??ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 DefenderID;
 
-    // å¯¦ï¿½Xï¿½å®³
+    // ¹ê?X?®`
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ActualDamage;
 
-    // ?ï¿½ï¿½Xï¿½å®³
+    // ???X?®`
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float BaseDamage;
 
-    // ?ï¿½å®³é¡ï¿½?
+    // ??®`Ãş??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingDamageType DamageType;
 
-    // ?ï¿½å¦?ï¿½ï¿½?
+    // ??§_????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsCriticalHit;
 
-    // ?ï¿½å¦ç©¿é€è­·X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??§_¬ï³zÅ@X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bArmorPenetrated;
 
-    // ?ï¿½å®³?ï¿½ï¿½?
+    // ??®`????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DamageLocation;
 
-    // ?ï¿½å®³è¨ˆï¿½?è©³ï¿½?
+    // ??®`­p??¸Ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DamageCalculationDetails;
 
-    // è£œçµ¦æ¶ˆï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ¸Éµ¹®ø??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<EMingSupplyType, float> SupplyConsumption;
 
-    // ?ï¿½é¬¥?ï¿½ï¿½?
+    // ??°«????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime CombatTime;
 
-    // ?ï¿½é¬¥ä½ç½®
+    // ??°«¦ì¸m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector CombatLocation;
 
@@ -311,13 +311,13 @@ struct MINGTACTICAL_API FMingDamageResult
         bArmorPenetrated = false;
         DamageLocation = TEXT(""};
         DamageCalculationDetails = TEXT(""};
-        SupplyConsumption.Empty(};
-        CombatTime = FDateTime::Now(};
+        SupplyConsumption.Empty();
+        CombatTime = FDateTime::Now();
         CombatLocation = FVector::ZeroVector;
     }
 };
 
-// ?ï¿½é¬¥?ï¿½å®³äº‹ä»¶å§”ï¿½?
+// ??°«??®`¨Æ¥ó©e??
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDamageCalculated, const FMingDamageResult&, DamageResult};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSupplyConsumed, int32, UnitID, const TMap<EMingSupplyType, float>&, ConsumedSupplies};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSupplyDelivered, const FMingLogisticsConvoy&, Convoy};
@@ -325,7 +325,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSupplyStatusChanged, int32, Un
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnConvoyStatusChanged, int32, ConvoyID, FString, NewStatus};
 
 /**
- * ?ï¿½é¬¥?ï¿½å®³ç®¡ï¿½X * è² è²¬è¨ˆï¿½Xï¿½å¯¦?ï¿½æˆ°é¬¥å‚·å®³ï¿½?ç®¡ï¿½?å¾Œå‹¤è£œçµ¦ç³»çµ±
+ * ??°«??®`ºŞ?X * ­t³d­p?X?¹ê??¾Ô°«¶Ë®`??ºŞ??«á¶Ô¸Éµ¹¨t²Î
  */
 UCLASS(ClassGroup = (Tactical), Blueprintable, BlueprintType)
 class MINGTACTICAL_API UMingCombatDamageManager : public UObject
@@ -333,68 +333,68 @@ class MINGTACTICAL_API UMingCombatDamageManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingCombatDamageManager(};
+    UMingCombatDamageManager();
 
-    // ?ï¿½ï¿½Xï¿½å‚·å®³ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    bool InitializeDamageSystem(};
+    // ???X?¶Ë®`¨t??    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
+    bool InitializeDamageSystem();
 
-    // è¨ˆï¿½Xï¿½é¬¥?ï¿½å®³
+    // ­p?X?°«??®`
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     FMingDamageResult CalculateCombatDamage(const FMingDamageCalculation& DamageCalc};
 
-    // è¨»ï¿½Xï¿½ï¿½?è£œçµ¦
+    // µù?X???¸Éµ¹
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool RegisterUnitSupply(int32 UnitID, const FMingSupplyData& SupplyData};
 
-    // ?ï¿½æ–°?ï¿½ï¿½?è£œçµ¦
+    // ??·s????¸Éµ¹
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool UpdateUnitSupply(int32 UnitID, EMingSupplyType SupplyType, float Amount};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?è£œçµ¦
+    // ???X???¸Éµ¹
     UFUNCTION(BlueprintPure, Category = "Combat Damage")
     FMingSupplyData GetUnitSupply(int32 UnitID, EMingSupplyType SupplyType) const;
 
-    // æ¶ˆè€—ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
+    // ®ø¯Ó????    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool ConsumeSupply(int32 UnitID, EMingSupplyType SupplyType, float Amount};
 
-    // ?ï¿½å»ºå¾Œå‹¤è»Šï¿½?
+    // ??«Ø«á¶Ô¨®??
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     int32 CreateLogisticsConvoy(const TArray<FMingSupplyData>& Cargo, const FVector& TargetLocation};
 
-    // æ´¾é£å¾Œå‹¤è»Šï¿½?
+    // ¬£»º«á¶Ô¨®??
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool DispatchConvoy(int32 ConvoyID};
 
-    // ?ï¿½ï¿½?è»Šï¿½?ä¿¡æ¯
+    // ????¨®??«H®§
     UFUNCTION(BlueprintPure, Category = "Combat Damage")
     FMingLogisticsConvoy GetConvoyInfo(int32 ConvoyID) const;
 
-    // ?ï¿½æ–°è»Šï¿½?ä½ç½®
+    // ??·s¨®??¦ì¸m
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool UpdateConvoyPosition(int32 ConvoyID, const FVector& NewPosition};
 
-    // ?ï¿½ï¿½?è£œçµ¦?ï¿½ï¿½?    UFUNCTION(BlueprintPure, Category = "Combat Damage")
+    // ????¸Éµ¹????    UFUNCTION(BlueprintPure, Category = "Combat Damage")
     TArray<FMingSupplyData> GetSupplyDemands() const;
 
-    // è¨ˆï¿½?è£œçµ¦?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
+    // ­p??¸Éµ¹??????    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     int32 CalculateSupplyPriority(int32 UnitID, EMingSupplyType SupplyType};
 
-    // ?ï¿½ï¿½Xï¿½å®³çµ±ï¿½?
+    // ???X?®`²Î??
     UFUNCTION(BlueprintPure, Category = "Combat Damage")
     TMap<EMingDamageType, int32> GetDamageStatistics() const;
 
-    // ä¿ï¿½Xï¿½å®³?ï¿½ï¿½?
+    // «O?X?®`????
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    bool SaveDamageData(};
+    bool SaveDamageData();
 
-    // è¼‰å…¥?ï¿½å®³?ï¿½ï¿½?
+    // ¸ü¤J??®`????
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    bool LoadDamageData(};
+    bool LoadDamageData();
 
-    // æ¸…é™¤?ï¿½?ï¿½å‚·å®³æ•¸X    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    void ClearAllDamageData(};
+    // ²M°£????¶Ë®`¼ÆX    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
+    void ClearAllDamageData();
 
-    // äº‹ä»¶å§”ï¿½?
+    // ¨Æ¥ó©e??
     UPROPERTY(BlueprintAssignable)
     FOnDamageCalculated OnDamageCalculated;
 
@@ -417,86 +417,86 @@ protected:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    // ?ï¿½ï¿½?è£œçµ¦?ï¿½ï¿½?ï¿½?- æ³¨ï¿½?ï¼šï¿½?ï¿½?TMap ä¸æ”¯XUPROPERTY
+    // ????¸Éµ¹??????- ª`??¡G????TMap ¤£¤äXUPROPERTY
     TMap<int32, TMap<EMingSupplyType, FMingSupplyData>> UnitSupplyDatabase;
 
-    // å¾Œå‹¤è»Šï¿½Xï¿½ï¿½?ï¿½?    UPROPERTY()
+    // «á¶Ô¨®?X?????    UPROPERTY()
     TMap<int32, FMingLogisticsConvoy> ConvoyDatabase;
 
-    // ?ï¿½å®³æ­·å²è¨˜ï¿½?
+    // ??®`¾ú¥v°O??
     UPROPERTY()
     TArray<FMingDamageResult> DamageHistory;
 
-    // è£ï¿½Xï¿½å®³ï¿½?    UPROPERTY()
+    // ¸Ë?X?®`??    UPROPERTY()
     TMap<EMingEquipmentType, float> EquipmentDamageTable;
 
-    // å½ˆè—¥?ï¿½å®³ä¿®æ­£ï¿½?    UPROPERTY()
+    // ¼uÃÄ??®`­×¥¿??    UPROPERTY()
     TMap<FString, float> AmmoDamageModifiers;
 
-    // ?ï¿½å½¢?ï¿½å®³ä¿®æ­£ï¿½?    UPROPERTY()
+    // ??§Î??®`­×¥¿??    UPROPERTY()
     TMap<FString, float> TerrainDamageModifiers;
 
-    // å¤©æ°£?ï¿½å®³ä¿®æ­£ï¿½?    UPROPERTY()
+    // ¤Ñ®ğ??®`­×¥¿??    UPROPERTY()
     TMap<FString, float> WeatherDamageModifiers;
 
-    // ?ï¿½å¦å·²ï¿½?å§‹ï¿½?
+    // ??§_¤w??©l??
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // è¼‰å…¥?ï¿½è¨­?ï¿½å®³ï¿½?    void LoadDefaultDamageTables(};
+    // ¸ü¤J??³]??®`??    void LoadDefaultDamageTables();
 
-    // è¨ˆï¿½Xï¿½ï¿½Xï¿½å®³
+    // ­p?X??X?®`
     float CalculateBaseDamage(const FMingDamageCalculation& DamageCalc) const;
 
-    // è¨ˆï¿½?è­·ç”²æ¸›å‚·
+    // ­p??Å@¥Ò´î¶Ë
     float CalculateArmorReduction(const FMingDamageCalculation& DamageCalc) const;
 
-    // è¨ˆï¿½?è·é›¢è¡°ï¿½?
+    // ­p??¶ZÂ÷°I??
     float CalculateDistanceFalloff(const FMingDamageCalculation& DamageCalc) const;
 
-    // è¨ˆï¿½Xï¿½ï¿½Xï¿½å®³
+    // ­p?X??X?®`
     float CalculateCriticalDamage(float BaseDamage, const FMingDamageCalculation& DamageCalc) const;
 
-    // è¨ˆï¿½Xï¿½å½¢å½±éŸ¿
+    // ­p?X?§Î¼vÅT
     float CalculateTerrainEffect(const FMingDamageCalculation& DamageCalc) const;
 
-    // è¨ˆï¿½?å¤©æ°£å½±éŸ¿
+    // ­p??¤Ñ®ğ¼vÅT
     float CalculateWeatherEffect(const FMingDamageCalculation& DamageCalc) const;
 
-    // è¨ˆï¿½?å£«æ°£å½±éŸ¿
+    // ­p??¤h®ğ¼vÅT
     float CalculateMoraleEffect(const FMingDamageCalculation& DamageCalc) const;
 
-    // è¨ˆï¿½?è£œçµ¦æ¶ˆï¿½?    TMap<EMingSupplyType, float> CalculateSupplyConsumption(const FMingDamageCalculation& DamageCalc) const;
+    // ­p??¸Éµ¹®ø??    TMap<EMingSupplyType, float> CalculateSupplyConsumption(const FMingDamageCalculation& DamageCalc) const;
 
-    // ?ï¿½æ–°?ï¿½ï¿½Xï¿½èƒ½
+    // ??·s???X?¯à
     void UpdateUnitPerformance(int32 UnitID, const TMap<EMingSupplyType, FMingSupplyData>& Supplies};
 
-    // ?ï¿½ï¿½?å¾Œå‹¤è»Šï¿½?ç§»ï¿½?
+    // ????«á¶Ô¨®??²¾??
     void ProcessConvoyMovement(float DeltaTime};
 
-    // æª¢æŸ¥è£œçµ¦?ï¿½ï¿½?    void CheckSupplyDemands(};
+    // ÀË¬d¸Éµ¹????    void CheckSupplyDemands();
 
-    // è¨ˆï¿½?è»Šï¿½?é¢¨éšª
+    // ­p??¨®??­·ÀI
     float CalculateConvoyRisk(const FMingLogisticsConvoy& Convoy) const;
 
-    // ?ï¿½ï¿½?è£œçµ¦è·¯ï¿½?
+    // ????¸Éµ¹¸ô??
     TArray<FVector> GenerateSupplyRoute(const FVector& Start, const FVector& End) const;
 
-    // é©—ï¿½Xï¿½å®³è¨ˆï¿½?
+    // Åç?X?®`­p??
     bool ValidateDamageCalculation(const FMingDamageCalculation& DamageCalc) const;
 
-    // é©—ï¿½?è£œçµ¦?ï¿½ï¿½?
+    // Åç??¸Éµ¹????
     bool ValidateSupplyData(const FMingSupplyData& SupplyData) const;
 
-    // è¨ˆï¿½Xï¿½å®³?ï¿½ï¿½?
+    // ­p?X?®`????
     FString CalculateHitLocation(const FVector& ImpactPoint) const;
 
-    // ?ï¿½ï¿½?è£œçµ¦ç·Šæ€¥ï¿½?ï¿½?    void HandleSupplyEmergency(int32 UnitID, EMingSupplyType SupplyType};
+    // ????¸Éµ¹ºò«æ????    void HandleSupplyEmergency(int32 UnitID, EMingSupplyType SupplyType};
 
-    // ?ï¿½æ–°è»Šï¿½Xï¿½X    void UpdateConvoyStatus(int32 ConvoyID, const FString& NewStatus};
+    // ??·s¨®?X?X    void UpdateConvoyStatus(int32 ConvoyID, const FString& NewStatus};
 
-    // è¨ˆï¿½?è£œçµ¦?ï¿½ï¿½?
+    // ­p??¸Éµ¹????
     float CalculateSupplyEfficiency(int32 UnitID) const;
 };
 

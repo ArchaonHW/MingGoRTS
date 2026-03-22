@@ -133,11 +133,11 @@ class MINGUI_API UMingUISystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingUISystem(};
+    UMingUISystem();
 
     // Screen Management
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void InitializeUI(};
+    void InitializeUI();
 
     UFUNCTION(BlueprintCallable, Category = "UI")
     void ShowScreen(EMingUIScreen ScreenType};
@@ -149,7 +149,7 @@ public:
     void CloseScreen(EMingUIScreen ScreenType};
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void CloseAllScreens(};
+    void CloseAllScreens();
 
     UFUNCTION(BlueprintCallable, Category = "UI")
     void ShowModalScreen(EMingUIScreen ScreenType};
@@ -168,10 +168,10 @@ public:
     void NavigateToScreen(EMingUIScreen ScreenType};
 
     UFUNCTION(BlueprintCallable, Category = "Navigation")
-    void GoBack(};
+    void GoBack();
 
     UFUNCTION(BlueprintCallable, Category = "Navigation")
-    void GoForward(};
+    void GoForward();
 
     UFUNCTION(BlueprintPure, Category = "Navigation")
     bool CanGoBack() const;
@@ -275,9 +275,9 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeDefaultScreens(};
-    void InitializeDefaultThemes(};
-    void SetupScreenHistory(};
+    void InitializeDefaultScreens();
+    void InitializeDefaultThemes();
+    void SetupScreenHistory();
     void UpdateScreenStack(EMingUIScreen ScreenType};
 
     // Animation Helpers

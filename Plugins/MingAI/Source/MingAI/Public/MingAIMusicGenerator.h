@@ -111,10 +111,10 @@ class MINGAI_API UMingAIMusicGenerator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAIMusicGenerator(};
+    UMingAIMusicGenerator();
 
     UFUNCTION(BlueprintCallable, Category = "AI Music Generation")
-    void InitializeGenerator(};
+    void InitializeGenerator();
 
     // Music Generation
     UFUNCTION(BlueprintCallable, Category = "AI Music Generation")
@@ -191,7 +191,7 @@ protected:
     UPROPERTY()
     TMap<FString, FMingSoundEffectConfig> SFXPresets;
 
-    void InitializeDefaultPresets(};
+    void InitializeDefaultPresets();
     FString BuildMusicPrompt(const FString& Description, EMingMusicGenre Genre, const FMingMusicGenerationConfig& Config) const;
     FString BuildSoundEffectPrompt(EMingSoundEffectCategory Category, const FString& Description, const FMingSoundEffectConfig& Config) const;
     FString BuildVoicePrompt(const FString& Text, const FString& VoiceCharacteristics, float Speed, float Pitch) const;

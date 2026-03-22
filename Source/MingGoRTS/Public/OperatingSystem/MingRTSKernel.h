@@ -5,6 +5,9 @@
 #include "Engine/Engine.h"
 #include "MingRTSKernel.generated.h"
 
+// 前向聲明至聖者指揮學擴展
+class UMingRTSKernelSageCommandExtension;
+
 UENUM(BlueprintType)
 enum class EKernelState : uint8
 {
@@ -57,6 +60,17 @@ enum class ESystemCall : uint8
     ConnectSocket,      // 連接套接字
     SendData,           // 發送數據
     ReceiveData,        // 接收數據
+    
+    // 至聖者指揮學系統調用
+    SageCommand_CreateCharacter,       // 創建指揮者角色
+    SageCommand_UseStrategy,          // 使用策略
+    SageCommand_CoordinatePowers,     // 協調三權
+    SageCommand_CheckFallStatus,      // 檢查墮落狀態
+    SageCommand_StartWuXingCycle,     // 啟動五行循環
+    SageCommand_AdvanceWuXingPhase,   // 推進五行階段
+    SageCommand_CreateAtonementTask,  // 創建贖罪任務
+    SageCommand_CompleteAtonementTask, // 完成贖罪任務
+    SageCommand_GetStatus,            // 獲取指揮學系統狀態
     
     Custom              // 自定義系統調用
 };
@@ -154,8 +168,8 @@ struct FKernelInfo
     float CPUUsage;
 
     FKernelInfo()
-        : KernelVersion(TEXT("1.0.0"))
-        , BuildNumber(TEXT("20260323"))
+        : KernelVersion(TEXT("1.0.0-SageCommand"))
+        , BuildNumber(TEXT("20260323-Sage"))
         , CurrentState(EKernelState::Uninitialized)
         , UptimeSeconds(0.0f)
         , TotalProcesses(0)
@@ -270,6 +284,19 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Kernel")
     bool LoadKernelState(const FString& FilePath);
 
+    // 至聖者指揮學擴展接口
+    UFUNCTION(BlueprintCallable, Category = "Kernel|SageCommand")
+    bool InitializeSageCommandExtension();
+
+    UFUNCTION(BlueprintCallable, Category = "Kernel|SageCommand")
+    bool IsSageCommandExtensionEnabled() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Kernel|SageCommand")
+    FString GetSageCommandVersion() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Kernel|SageCommand")
+    UObject* GetSageCommandExtension() const;
+
     // 事件委託
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnKernelStateChanged, EKernelState, OldState, EKernelState, NewState);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSystemCall, const FSystemCallRequest&, Request, const FSystemCallResponse&, Response);
@@ -358,7 +385,10 @@ private:
     UPROPERTY()
     FDateTime StartTime;
 
-    // 內部計時器
+    // 至聖者指揮學擴展
     UPROPERTY()
-    FTimerHandle KernelUpdateTimer;
+    TObjectPtr<UMingRTSKernelSageCommandExtension> SageCommandExtension;
+    
+    UPROPERTY()
+    bool bSageCommandExtensionEnabled;
 };

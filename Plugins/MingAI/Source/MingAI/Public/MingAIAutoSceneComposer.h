@@ -139,10 +139,10 @@ class MINGAI_API UMingAIAutoSceneComposer : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAIAutoSceneComposer(};
+    UMingAIAutoSceneComposer();
 
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")
-    void InitializeComposer(};
+    void InitializeComposer();
 
     // Scene Templates
     UFUNCTION(BlueprintCallable, Category = "AI Scene Composition")

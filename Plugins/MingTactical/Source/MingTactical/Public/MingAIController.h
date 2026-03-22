@@ -1,4 +1,4 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "AIController.h"
@@ -41,7 +41,7 @@ struct FMingAICommand
         , TargetLocation(FVector::ZeroVector)
         , Priority(1.0f)
     {
-        IssueTime = FDateTime::Now(};
+        IssueTime = FDateTime::Now();
     }
 };
 
@@ -69,7 +69,7 @@ public:
     void IssueAttackCommand(AActor* Target};
 
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
-    void IssueStopCommand(};
+    void IssueStopCommand();
 
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
     void IssuePatrolCommand(const FVector& PatrolPoint};
@@ -82,7 +82,7 @@ public:
     void SetFormationPosition(const FVector& FormationOffset};
 
     UFUNCTION(BlueprintCallable, Category = "AI|Formation")
-    void ClearFormationPosition(};
+    void ClearFormationPosition();
 
     UFUNCTION(BlueprintPure, Category = "AI|Formation")
     bool HasFormationPosition() const;
@@ -92,7 +92,7 @@ public:
 
     bool MoveToActor(AActor* TargetActor, float AcceptanceRadius = 50.0f};
 
-    void StopMovement(};
+    void StopMovement();
 
     // Combat
     UFUNCTION(BlueprintCallable, Category = "AI|Combat")
@@ -108,7 +108,7 @@ public:
     void SetAttackTarget(AActor* Target};
 
     UFUNCTION(BlueprintPure, Category = "AI|Combat")
-    AActor* GetCurrentAttackTarget() const { return CurrentAttackTarget.Get(}; }
+    AActor* GetCurrentAttackTarget() const { return CurrentAttackTarget.Get(); }
 
     // State
     UFUNCTION(BlueprintPure, Category = "AI|State")
@@ -125,7 +125,7 @@ public:
 
 protected:
     // AI State
-    // ?ÔøΩÂà∂?ÔøΩÔøΩ? - ‰ΩøÁî® TObjectPtr ?ÔøΩÔøΩ?ÁΩÆËÅ≤X    class AMingTacticalUnit;
+    // ??®Ó???? - ®œ•Œ TObjectPtr ????∏m¡nX    class AMingTacticalUnit;
     UPROPERTY(BlueprintReadWrite, Category = "AI|Control")
     TObjectPtr<AMingTacticalUnit> ControlledUnit;
 
@@ -182,7 +182,7 @@ protected:
 
     // Combat helpers
     virtual void PerformAttack(AActor* Target};
-    virtual void FindNewTarget(};
+    virtual void FindNewTarget();
 
     // Navigation helpers
     virtual bool HasReachedDestination() const;

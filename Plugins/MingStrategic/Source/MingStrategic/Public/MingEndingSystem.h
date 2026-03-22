@@ -126,14 +126,14 @@ class MINGSTRATEGIC_API UMingEndingSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingEndingSystem(};
+    UMingEndingSystem();
 
     // Ending Management
     UFUNCTION(BlueprintCallable, Category = "Ending")
-    void InitializeEndings(};
+    void InitializeEndings();
 
     UFUNCTION(BlueprintCallable, Category = "Ending")
-    void CheckEndingConditions(};
+    void CheckEndingConditions();
 
     UFUNCTION(BlueprintCallable, Category = "Ending")
     void TriggerEnding(const FString& EndingID};
@@ -262,23 +262,23 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Ending Setup
-    void SetupHistoricalEndings(};
-    void SetupAlternateEndings(};
-    void SetupSecretEndings(};
-    void SetupBadEndings(};
+    void SetupHistoricalEndings();
+    void SetupAlternateEndings();
+    void SetupSecretEndings();
+    void SetupBadEndings();
 
     // Internal Functions
-    void ProcessEnding(const FMingEnding& Ending};
-    void UpdateEndingScores(};
-    void UnlockEnding(const FString& EndingID};
-    void RecordEndingStats(const FString& EndingID};
+    void ProcessEnding(const FMingEnding& Ending);
+    void UpdateEndingScores();
+    void UnlockEnding(const FString& EndingID);
+    void RecordEndingStats(const FString& EndingID);
 
     // Condition Evaluation
     bool EvaluateCondition(const FMingEndingRequirement& Requirement) const;
     float GetConditionValue(EMingEndingCondition Condition) const;
 
     // Helpers
-    FMingEnding* FindEnding(const FString& EndingID};
-    void CalculateAllEndingScores(};
+    FMingEnding* FindEnding(const FString& EndingID);
+    void CalculateAllEndingScores();
 };
 

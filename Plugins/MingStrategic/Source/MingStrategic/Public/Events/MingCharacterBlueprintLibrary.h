@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -6,7 +6,7 @@
 #include "MingCharacterBlueprintLibrary.generated.h"
 
 /**
- * äººç‰©?ï¿½ï¿½Xï¿½æ•¸ï¿½? * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½?æ­·å²äººç‰©ç³»çµ±?ï¿½èƒ½
+ * ¤Hª«???X?¼Æ?? * ???X??X?½Õ????¾ú¥v¤Hª«¨t²Î??¯à
  */
 UCLASS()
 class MINGSTRATEGIC_API UMingCharacterBlueprintLibrary : public UBlueprintFunctionLibrary
@@ -15,171 +15,171 @@ class MINGSTRATEGIC_API UMingCharacterBlueprintLibrary : public UBlueprintFuncti
 
 public:
     /**
-     * ?ï¿½ï¿½?æ­·å²äººç‰©ç®¡ï¿½X     */
+     * ????¾ú¥v¤Hª«ºŞ?X     */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
-    static UMingHistoricalCharacterManager* GetHistoricalCharacterManager(};
+    static UMingHistoricalCharacterManager* GetHistoricalCharacterManager();
 
     /**
-     * ?ï¿½ï¿½Xï¿½æ­·?ï¿½äºº?ï¿½ç³»ï¿½?     */
+     * ???X?¾ú??¤H??¨t??     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    static void InitializeHistoricalCharacterSystem(};
+    static void InitializeHistoricalCharacterSystem();
 
     /**
-     * è¨»ï¿½?æ­·å²äººç‰©
+     * µù??¾ú¥v¤Hª«
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static bool RegisterHistoricalCharacter(const FMingHistoricalCharacter& Character};
 
     /**
-     * ?ï¿½ï¿½?è¨»ï¿½?æ­·å²äººç‰©
+     * ????µù??¾ú¥v¤Hª«
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static bool UnregisterHistoricalCharacter(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?æ­·å²äººç‰©
+     * ????¾ú¥v¤Hª«
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     static FMingHistoricalCharacter GetHistoricalCharacter(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½Xï¿½?ï¿½æ­·?ï¿½äººX     */
+     * ???X???¾ú??¤HX     */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
-    static TArray<FMingHistoricalCharacter> GetAllHistoricalCharacters(};
+    static TArray<FMingHistoricalCharacter> GetAllHistoricalCharacters();
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½äººX     */
+     * ???X??X?¤HX     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static TArray<FMingHistoricalCharacter> GetCharactersByFaction(ECharacterFaction Faction};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ¥­?ï¿½äººX     */
+     * ???X??X?·~??¤HX     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static TArray<FMingHistoricalCharacter> GetCharactersByProfession(ECharacterProfession Profession};
 
     /**
-     * ?ï¿½ï¿½Xï¿½éµäººç‰©
+     * ???X?Áä¤Hª«
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    static TArray<FMingHistoricalCharacter> GetKeyCharacters(};
+    static TArray<FMingHistoricalCharacter> GetKeyCharacters();
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½äººX     */
+     * ???X??X?¤HX     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    static TArray<FMingHistoricalCharacter> GetRecruitableCharacters(};
+    static TArray<FMingHistoricalCharacter> GetRecruitableCharacters();
 
     /**
-     * ?ï¿½ï¿½?æ´»ï¿½?äººç‰©
+     * ????¬¡??¤Hª«
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    static TArray<FMingHistoricalCharacter> GetActiveCharacters(};
+    static TArray<FMingHistoricalCharacter> GetActiveCharacters();
 
     /**
-     * äººç‰©äº’ï¿½?
+     * ¤Hª«¤¬??
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static FCharacterInteractionResult InteractWithCharacter(const FString& CharacterID, const FString& InteractionType, const FString& InteractionDetails};
 
     /**
-     * å°è©±ç³»çµ±
+     * ¹ï¸Ü¨t²Î
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static FDialogueEvent StartDialogue(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic};
 
     /**
-     * ?ï¿½ï¿½?å°è©±?ï¿½ï¿½?
+     * ????¹ï¸Ü????
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static FDialogueEvent ProcessDialogueOption(const FString& DialogueEventID, const FString& OptionID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©
+     * ????¤Hª«
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static bool RecruitCharacter(const FString& CharacterID};
 
     /**
-     * ï¿½?ï¿½ï¿½äººç‰©
+     * ????¤Hª«
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static bool DismissCharacter(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©?ï¿½X     */
+     * ????¤Hª«??X     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static bool UpgradeCharacterSkill(const FString& CharacterID, ECharacterSkillType SkillType};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©?ï¿½ï¿½?
+     * ????¤Hª«????
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static TArray<FCharacterRelationship> GetCharacterRelationships(const FString& CharacterID};
 
     /**
-     * æ·»ï¿½?äººç‰©?ï¿½ï¿½?
+     * ²K??¤Hª«????
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static bool AddCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, ECharacterRelationshipType RelationshipType, float Strength};
 
     /**
-     * ?ï¿½æ–°äººç‰©?ï¿½ï¿½?
+     * ??·s¤Hª«????
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static bool UpdateCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, float NewStrength};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©çµ±ï¿½?
+     * ????¤Hª«²Î??
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
-    static TMap<FString, int32> GetCharacterStatistics(};
+    static TMap<FString, int32> GetCharacterStatistics();
 
     /**
-     * ?ï¿½ï¿½?äººç‰©å½±éŸ¿?ï¿½ï¿½X     */
+     * ????¤Hª«¼vÅT???X     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
-    static TArray<FMingHistoricalCharacter> GetCharacterInfluenceRanking(};
+    static TArray<FMingHistoricalCharacter> GetCharacterInfluenceRanking();
 
     /**
-     * ?ï¿½ï¿½Xï¿½è–¦äººç‰©
+     * ???X?ÂË¤Hª«
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     static TArray<FMingHistoricalCharacter> GetRecommendedCharacters(const FString& PlayerFaction};
 
     /**
-     * ?ï¿½ï¿½Xï¿½åˆ¥?ï¿½ç¨±
+     * ???X?§O??ºÙ
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     static FString GetGenderName(ECharacterGender Gender};
 
     /**
-     * ?ï¿½ï¿½Xï¿½æ¥­?ï¿½ç¨±
+     * ???X?·~??ºÙ
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     static FString GetProfessionName(ECharacterProfession Profession};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ç¨±
+     * ???X?ºÙ
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     static FString GetFactionName(ECharacterFaction Faction};
 
     /**
-     * ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?ï¿½?     */
+     * ???X???????     */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     static FString GetStateName(ECharacterState State};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½ç¨±
+     * ???X???Ãş?X?ºÙ
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     static FString GetRelationshipTypeName(ECharacterRelationshipType RelationshipType};
 
     /**
-     * ?ï¿½ï¿½Xï¿½?ï¿½ï¿½Xï¿½ï¿½?ï¿½?     */
+     * ???X????X?????     */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     static FString GetSkillTypeName(ECharacterSkillType SkillType};
 
     /**
-     * ?ï¿½å»ºæ­·å²äººç‰©
+     * ??«Ø¾ú¥v¤Hª«
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Creation")
     static FMingHistoricalCharacter CreateHistoricalCharacter(
@@ -198,7 +198,7 @@ public:
     };
 
     /**
-     * è¨­ç½®äººç‰©å±¬ï¿½?     */
+     * ³]¸m¤Hª«Äİ??     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Creation")
     static FMingHistoricalCharacter SetCharacterAttributes(
         const FMingHistoricalCharacter& Character,
@@ -219,7 +219,7 @@ public:
     };
 
     /**
-     * æ·»ï¿½?äººç‰©?ï¿½X     */
+     * ²K??¤Hª«??X     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Creation")
     static FMingHistoricalCharacter AddCharacterSkill(
         const FMingHistoricalCharacter& Character,
@@ -231,7 +231,7 @@ public:
     };
 
     /**
-     * æ·»ï¿½?äººç‰©æ¨™ç±¤
+     * ²K??¤Hª«¼ĞÅÒ
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Creation")
     static FMingHistoricalCharacter AddCharacterTag(
@@ -240,7 +240,7 @@ public:
     };
 
     /**
-     * æ·»ï¿½?æ­·å²äº‹ä»¶
+     * ²K??¾ú¥v¨Æ¥ó
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Creation")
     static FMingHistoricalCharacter AddHistoricalEvent(
@@ -249,7 +249,7 @@ public:
     };
 
     /**
-     * æ·»ï¿½Xï¿½å°±
+     * ²K?X?´N
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Creation")
     static FMingHistoricalCharacter AddAchievement(
@@ -258,7 +258,7 @@ public:
     };
 
     /**
-     * è¨­ç½®å½±éŸ¿?ï¿½ï¿½Xï¿½ï¿½?
+     * ³]¸m¼vÅT???X???
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Creation")
     static FMingHistoricalCharacter SetInfluenceAndReputation(
@@ -268,227 +268,227 @@ public:
     };
 
     /**
-     * ?ï¿½ï¿½?äº’ï¿½?
+     * ????¤¬??
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Batch")
     static TArray<FCharacterInteractionResult> BatchInteractWithCharacters(const TArray<FString>& CharacterIDs, const FString& InteractionType};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?
+     * ???X???
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Batch")
     static TArray<bool> BatchRecruitCharacters(const TArray<FString>& CharacterIDs};
 
     /**
-     * ?ï¿½ï¿½?ç³»çµ±?ï¿½X     */
+     * ????¨t²Î??X     */
     UFUNCTION(BlueprintPure, Category = "Historical Character|System")
-    static bool IsHistoricalCharacterSystemInitialized(};
+    static bool IsHistoricalCharacterSystemInitialized();
 
     /**
-     * ?ï¿½ï¿½?ç³»çµ±?ï¿½æœ¬
+     * ????¨t²Î??¥»
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|System")
-    static FString GetHistoricalCharacterSystemVersion(};
+    static FString GetHistoricalCharacterSystemVersion();
 
     /**
-     * ?ï¿½ï¿½?è¨»ï¿½?äººç‰©?ï¿½ï¿½?
+     * ????µù??¤Hª«????
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|System")
-    static int32 GetRegisteredCharacterCount(};
+    static int32 GetRegisteredCharacterCount();
 
     /**
-     * ?ï¿½ï¿½?æ´»ï¿½?äººç‰©?ï¿½ï¿½?
+     * ????¬¡??¤Hª«????
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|System")
-    static int32 GetActiveCharacterCount(};
+    static int32 GetActiveCharacterCount();
 
     /**
-     * ?ï¿½ï¿½Xï¿½éµäººç‰©?ï¿½ï¿½?
+     * ???X?Áä¤Hª«????
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|System")
-    static int32 GetKeyCharacterCount(};
+    static int32 GetKeyCharacterCount();
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½äºº?ï¿½æ•¸X     */
+     * ???X??X?¤H??¼ÆX     */
     UFUNCTION(BlueprintPure, Category = "Historical Character|System")
-    static int32 GetRecruitableCharacterCount(};
+    static int32 GetRecruitableCharacterCount();
 
     /**
-     * ?ï¿½ï¿½?äººç‰©?ï¿½è¿°
+     * ????¤Hª«??­z
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Info")
     static FString GetCharacterDescription(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©å¹´é½¡
+     * ????¤Hª«¦~ÄÖ
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Info")
     static int32 GetCharacterAge(const FString& CharacterID};
 
     /**
-     * æª¢æŸ¥äººç‰©?ï¿½å¦?ï¿½ï¿½X     */
+     * ÀË¬d¤Hª«??§_???X     */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Info")
     static bool IsCharacterRecruitable(const FString& CharacterID};
 
     /**
-     * æª¢æŸ¥äººç‰©?ï¿½å¦?ï¿½ï¿½Xï¿½äººX     */
+     * ÀË¬d¤Hª«??§_???X?¤HX     */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Info")
     static bool IsCharacterKeyCharacter(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©?ï¿½?ï¿½ï¿½?ï¿½?     */
+     * ????¤Hª«????????     */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Skills")
     static int32 GetCharacterSkillLevel(const FString& CharacterID, ECharacterSkillType SkillType};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©?ï¿½?ï¿½ï¿½X     */
+     * ????¤Hª«?????X     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Skills")
     static TArray<FCharacterSkill> GetCharacterSkills(const FString& CharacterID};
 
     /**
-     * æª¢æŸ¥äººç‰©?ï¿½å¦?ï¿½ï¿½Xï¿½X     */
+     * ÀË¬d¤Hª«??§_???X?X     */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Skills")
     static bool HasCharacterSkill(const FString& CharacterID, ECharacterSkillType SkillType};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?å¼·åº¦
+     * ???X???±j«×
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Relationships")
     static float GetRelationshipStrength(const FString& CharacterID, const FString& TargetCharacterID};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½?
+     * ???X???Ãş??
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Relationships")
     static ECharacterRelationshipType GetRelationshipType(const FString& CharacterID, const FString& TargetCharacterID};
 
     /**
-     * æª¢æŸ¥?ï¿½å¦å­˜åœ¨?ï¿½ï¿½?
+     * ÀË¬d??§_¦s¦b????
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Relationships")
     static bool HasRelationship(const FString& CharacterID, const FString& TargetCharacterID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©å½±éŸ¿X     */
+     * ????¤Hª«¼vÅTX     */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Analysis")
     static float GetCharacterInfluence(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©?ï¿½ï¿½?
+     * ????¤Hª«????
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Analysis")
     static float GetCharacterReputation(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©å¿ ï¿½?ï¿½?     */
+     * ????¤Hª«©¾????     */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Analysis")
     static float GetCharacterLoyalty(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©?ï¿½åº·?ï¿½ï¿½?     */
+     * ????¤Hª«??±d????     */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Analysis")
     static float GetCharacterHealth(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©ç²¾ï¿½Xï¿½X     */
+     * ????¤Hª«ºë?X?X     */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Analysis")
     static float GetCharacterMorale(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©ç­‰ï¿½?
+     * ????¤Hª«µ¥??
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Analysis")
     static int32 GetCharacterLevel(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©ç¶“ï¿½?
+     * ????¤Hª«¸g??
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character|Analysis")
     static int32 GetCharacterExperience(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©ç¸½ï¿½?è©•ï¿½?
+     * ????¤Hª«Á`??µû??
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Analysis")
     static float GetCharacterOverallScore(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äº’ï¿½?å»ºè­°
+     * ????¤¬??«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|AI")
     static TArray<FString> GetInteractionRecommendations(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?å°è©±å»ºè­°
+     * ????¹ï¸Ü«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|AI")
     static TArray<FString> GetDialogueRecommendations(const FString& SpeakerID, const FString& AudienceID};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?å»ºè­°
+     * ???X???«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|AI")
     static TArray<FString> GetRecruitmentRecommendations(const FString& PlayerFaction};
 
-    // ?ï¿½ï¿½?äººç‰©?ï¿½ï¿½?ç¶²çµ¡ - æ³¨ï¿½?ï¼šTMap<TArray> ä¸æ”¯XBlueprint
+    // ????¤Hª«????ºôµ¸ - ª`??¡GTMap<TArray> ¤£¤äXBlueprint
     static TMap<FString, TArray<FString>> GetCharacterNetwork(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?å½±éŸ¿?ï¿½ï¿½?
+     * ???X???¼vÅT????
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Network")
     static TMap<FString, float> GetRelationshipImpactAnalysis(const FString& CharacterID};
 
     /**
-     * æ¨¡æ“¬äººç‰©äº’ï¿½?
+     * ¼ÒÀÀ¤Hª«¤¬??
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Simulation")
     static TArray<FCharacterInteractionResult> SimulateCharacterInteractions(const FString& CharacterID, int32 SimulationCount};
 
     /**
-     * æ¨¡æ“¬å°è©±çµï¿½?
+     * ¼ÒÀÀ¹ï¸Üµ²??
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Simulation")
     static TArray<FDialogueEvent> SimulateDialogue(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic, int32 SimulationCount};
 
     /**
-     * å°å‡ºäººç‰©?ï¿½ï¿½?
+     * ¾É¥X¤Hª«????
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Export")
     static bool ExportCharacterData(const FString& FilePath};
 
     /**
-     * å°å…¥äººç‰©?ï¿½ï¿½?
+     * ¾É¤J¤Hª«????
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Import")
     static bool ImportCharacterData(const FString& FilePath};
 
     /**
-     * ?ï¿½ï¿½?äººç‰©?ï¿½ï¿½?
+     * ????¤Hª«????
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Report")
     static FString GenerateCharacterReport(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?çµ±ï¿½Xï¿½ï¿½?
+     * ????²Î?X???
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Report")
-    static FString GenerateStatisticsReport(};
+    static FString GenerateStatisticsReport();
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+     * ???X??X???
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|Report")
     static FString GenerateRelationshipReport(const FString& CharacterID};
 
     /**
-     * ?ï¿½ï¿½?äº’ï¿½?æ­·å²
+     * ????¤¬??¾ú¥v
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|History")
-    static TArray<FDialogueEvent> GetDialogueHistory(};
+    static TArray<FDialogueEvent> GetDialogueHistory();
 
     /**
-     * ?ï¿½ï¿½?å°è©±æ­·å²
+     * ????¹ï¸Ü¾ú¥v
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character|History")
     static TArray<FDialogueEvent> GetDialogueHistoryForCharacter(const FString& CharacterID};

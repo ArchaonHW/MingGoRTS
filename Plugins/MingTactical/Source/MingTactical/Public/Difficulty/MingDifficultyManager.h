@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,11 +6,11 @@
 #include "Difficulty/EDifficultyLevel.h"
 #include "MingDifficultyManager.generated.h"
 
-// ?ï¿½ï¿½?å£°ï¿½?
+// ???????
 class UMingPlayerPerformanceTracker;
 
 /**
- * ?ï¿½åº¦?ï¿½ï¿½?äº‹ä»¶
+ * ??«×????¨Æ¥ó
  */
 USTRUCT(BlueprintType)
 struct FDifficultyChangedEvent
@@ -41,10 +41,10 @@ struct FDifficultyChangedEvent
 };
 
 /**
- * ?ï¿½åº¦ç®¡ï¿½X * ç®¡ï¿½?æ¸¸ï¿½Xï¿½åº¦?ï¿½ç½®?ï¿½åŠ¨?ï¿½ï¿½X * 
- * ?ï¿½èƒ½ï¿½? * - ?ï¿½åº¦ç­‰çº§ç®¡ï¿½? (Easy/Normal/Hard/Expert/Custom)
- * - ?ï¿½æ€éš¾åº¦ï¿½X * - ?ï¿½åº¦äº‹ä»¶è§¦ï¿½?
- * - å¹³ï¿½?è¿‡æ¸¡ç®—ï¿½?
+ * ??«×ºŞ?X * ºŞ??´å?X?«×??¸m??????X * 
+ * ??¯à?? * - ??«×µ¥?ºŞ?? (Easy/Normal/Hard/Expert/Custom)
+ * - ????«×?X * - ??«×¨Æ¥óàD??
+ * - ¥­???´çºâ??
  */
 UCLASS()
 class MINGTACTICAL_API UMingDifficultyManager : public UObject
@@ -52,151 +52,151 @@ class MINGTACTICAL_API UMingDifficultyManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingDifficultyManager(};
+    UMingDifficultyManager();
 
-    virtual void Initialize(};
-    virtual void Shutdown(};
+    virtual void Initialize();
+    virtual void Shutdown();
     void Tick(float DeltaTime};
 
-    // ==== ?ï¿½åº¦ç­‰çº§ç®¡ï¿½? ====
+    // ==== ??«×µ¥?ºŞ?? ====
 
-    /** è®¾ç½®?ï¿½åº¦ç­‰çº§ */
+    /** ?¸m??«×µ¥? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty")
     void SetDifficultyLevel(EDifficultyLevel NewLevel};
 
-    /** ?ï¿½ï¿½?å½“ï¿½Xï¿½åº¦ç­‰çº§ */
+    /** ??????X?«×µ¥? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty")
     EDifficultyLevel GetCurrentDifficultyLevel() const;
 
-    /** ?ï¿½ï¿½?å½“ï¿½Xï¿½åº¦?ï¿½ç¤º?ï¿½ç§° */
+    /** ??????X?«×??¥Ü??? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty")
     FString GetCurrentDifficultyDisplayName() const;
 
-    /** ?ï¿½ï¿½Xï¿½?ï¿½å¯?ï¿½ï¿½Xï¿½åº¦ç­‰çº§ */
+    /** ???X???¥i???X?«×µ¥? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty")
-    static TArray<EDifficultyLevel> GetAvailableDifficultyLevels(};
+    static TArray<EDifficultyLevel> GetAvailableDifficultyLevels();
 
-    /** ?ï¿½ï¿½?é¢„è®¾?ï¿½åº¦?ï¿½ç½® */
+    /** ????????«×??¸m */
     UFUNCTION(BlueprintCallable, Category = "Difficulty")
     FMingPresetDifficultyConfig GetPresetConfig(EDifficultyLevel Level) const;
 
-    // ==== ?ï¿½æ€éš¾åº¦ï¿½X====
+    // ==== ????«×?X====
 
-    /** ?ï¿½ç”¨/ç¦ç”¨?ï¿½æ€éš¾åº¦ï¿½X*/
+    /** ??¥Î/¸T¥Î????«×?X*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
     void SetDynamicAdjustmentEnabled(bool bEnabled};
 
-    /** ?ï¿½å¦?ï¿½ç”¨?ï¿½æ€ï¿½X*/
+    /** ??§_??¥Î????X*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
     bool IsDynamicAdjustmentEnabled() const;
 
-    /** ?ï¿½åŠ¨è§¦ï¿½Xï¿½åº¦è¯„ä¼°?ï¿½ï¿½X*/
+    /** ???àD?X?«×?¦ô???X*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
-    void ForceDifficultyEvaluation(};
+    void ForceDifficultyEvaluation();
 
-    /** ?ï¿½ï¿½Xï¿½åº¦ï¼ˆé˜²æ­¢è‡ª?ï¿½ï¿½Xï¿½ï¿½? */
+    /** ???X?«×¡]¨¾¤î¦Û???X??? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
     void LockDifficulty(bool bLocked};
 
-    /** ?ï¿½åº¦?ï¿½å¦è¢«ï¿½?ï¿½?*/
+    /** ??«×??§_³Q????*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
     bool IsDifficultyLocked() const;
 
-    // ==== ?ï¿½æ•°è°ƒæ•´?ï¿½å£ ====
+    // ==== ????¾ã??¤f ====
 
-    /** ?ï¿½ï¿½Xï¿½æ•°å½“ï¿½X*/
+    /** ???X????X*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
     float GetParameterValue(EDifficultyParameter Parameter) const;
 
-    /** è®¾ç½®?ï¿½æ•°?ï¿½ï¿½Xï¿½ç”¨äºè‡ªå®šï¿½Xï¿½åº¦ï¿½?*/
+    /** ?¸m??????X?¥Î¤_¦Û©w?X?«×??*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
     void SetParameterValue(EDifficultyParameter Parameter, float Value};
 
-    /** è°ƒæ•´?ï¿½æ•°?ï¿½ï¿½?å¸¦ï¿½Xï¿½ï¿½? */
+    /** ?¾ã?????????X??? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
     bool AdjustParameter(EDifficultyParameter Parameter, float Delta};
 
-    /** ?ï¿½ï¿½Xï¿½?ï¿½ï¿½Xï¿½è®¾ï¿½?*/
+    /** ???X????X????*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
     FMingDifficultySettings GetDifficultySettings() const;
 
-    /** åº”ç”¨å®Œæ•´è®¾ç½® */
+    /** ?¥Î§¹¾ã?¸m */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
     void ApplyDifficultySettings(const FMingDifficultySettings& Settings};
 
-    // ==== ?ï¿½ï¿½Xï¿½èƒ½è°ƒæ•´ ====
+    // ==== ???X?¯à?¾ã ====
 
-    /** è°ƒæ•´AI?ï¿½åº¦ */
+    /** ?¾ãAI??«× */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|AI")
     void AdjustAIDifficulty(float NewReactionSpeed, float NewIntelligence};
 
-    /** ?ï¿½ï¿½?AI?ï¿½åº¦ç³»æ•° */
+    /** ????AI??«×¨t? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|AI")
     float GetAIDifficultyMultiplier() const;
 
-    /** è°ƒæ•´èµ„ï¿½Xï¿½ï¿½X*/
+    /** ?¾ã??X??X*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Resources")
     void AdjustResourceGeneration(float NewCollectionRate, float NewConsumptionRate};
 
-    /** ?ï¿½ï¿½?èµ„ï¿½Xï¿½ï¿½?ç³»æ•° */
+    /** ??????X???¨t? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Resources")
     float GetResourceMultiplier() const;
 
-    /** è°ƒæ•´ä»»åŠ¡?ï¿½ï¿½Xï¿½åº¦ */
+    /** ?¾ã¥ô????X?«× */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Missions")
     void AdjustMissionDifficulty(float NewTimeLimit, float NewObjectiveScale};
 
-    /** ?ï¿½ï¿½?ä»»åŠ¡?ï¿½åº¦ç³»æ•° */
+    /** ????¥ô???«×¨t? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Missions")
     float GetMissionDifficultyMultiplier() const;
 
-    // ==== å¹³ï¿½?è¿‡æ¸¡ ====
+    // ==== ¥­???´ç ====
 
-    /** ?ï¿½å¦ï¿½?ï¿½ï¿½è¿‡æ¸¡ï¿½?*/
+    /** ??§_?????´ç??*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Transition")
     bool IsTransitioning() const;
 
-    /** ?ï¿½ï¿½?å½“ï¿½?è¿‡æ¸¡è¿›åº¦ 0-1 */
+    /** ????????´ç?«× 0-1 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Transition")
     float GetTransitionProgress() const;
 
-    /** ä¸­æ–­ï¿½?ï¿½ï¿½è¿›ï¿½Xï¿½ï¿½?ï¿½?*/
+    /** ¤¤???????X?????*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Transition")
-    void AbortTransition(};
+    void AbortTransition();
 
-    // ==== ?ï¿½çŸ¥ç³»ï¿½? ====
+    // ==== ??ª¾¨t?? ====
 
-    /** è®¾ç½®?ï¿½å¦?ï¿½çŸ¥?ï¿½å®¶?ï¿½åº¦?ï¿½ï¿½? */
+    /** ?¸m??§_??ª¾??®a??«×???? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Notifications")
     void SetPlayerNotificationEnabled(bool bEnabled};
 
-    /** ?ï¿½é€è‡ªå®šï¿½Xï¿½åº¦?ï¿½çŸ¥ */
+    /** ??°e¦Û©w?X?«×??ª¾ */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Notifications")
     void SendDifficultyNotification(const FString& Message, float Duration = 5.0f};
 
-    // ==== ?ï¿½ï¿½X====
+    // ==== ???X====
 
-    /** ä¿ï¿½?å½“ï¿½Xï¿½åº¦?ï¿½ç½® */
+    /** «O????X?«×??¸m */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Save")
-    void SaveDifficultySettings(};
+    void SaveDifficultySettings();
 
-    /** ?ï¿½è½½?ï¿½åº¦?ï¿½ç½® */
+    /** ?????«×??¸m */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Save")
-    void LoadDifficultySettings(};
+    void LoadDifficultySettings();
 
-    /** ?ï¿½ç½®ä¸ºï¿½?è®¤ï¿½?ï¿½?*/
+    /** ??¸m????????*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Save")
-    void ResetToDefault(};
+    void ResetToDefault();
 
-    // ==== è°ƒï¿½? ====
+    // ==== ??? ====
 
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Debug")
-    void PrintDebugInfo(};
+    void PrintDebugInfo();
 
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Debug")
     FString GetDebugString() const;
 
-    // ==== äº‹ä»¶å§”ï¿½? ====
+    // ==== ¨Æ¥ó©e?? ====
 
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDifficultyChanged, const FDifficultyChangedEvent&, Event};
 
@@ -204,30 +204,30 @@ public:
     FOnDifficultyChanged OnDifficultyChanged;
 
 protected:
-    /** ?ï¿½ï¿½Xï¿½åº¦è¯„ä¼° */
-    void PerformDifficultyEvaluation(};
+    /** ???X?«×?¦ô */
+    void PerformDifficultyEvaluation();
 
-    /** ?ï¿½æ®?ï¿½å®¶è¡¨ç°è®¡ï¿½?å»ºè®®?ï¿½éš¾åº¦ï¿½X*/
+    /** ??Õu??®aªí????«Ø????«×?X*/
     EDifficultyChangeDirection CalculateRecommendedChange() const;
 
-    /** ?ï¿½ï¿½Xï¿½åº¦è°ƒæ•´ */
+    /** ???X?«×?¾ã */
     void ExecuteDifficultyAdjustment(EDifficultyChangeDirection Direction};
 
-    /** å¹³ï¿½?è¿‡æ¸¡?ï¿½æ–° */
+    /** ¥­???´ç??·s */
     void UpdateTransition(float DeltaTime};
 
-    /** å®Œï¿½?è¿‡æ¸¡ */
-    void CompleteTransition(};
+    /** §¹???´ç */
+    void CompleteTransition();
 
-    /** è§¦ï¿½Xï¿½åº¦?ï¿½ï¿½?äº‹ä»¶ */
+    /** àD?X?«×????¨Æ¥ó */
     void BroadcastDifficultyChanged(const FString& Reason};
 
-    /** ?ï¿½æ­¢?ï¿½è¡ï¼šï¿½Xï¿½ï¿½?è¿‘ï¿½?è°ƒæ•´?ï¿½å² */
+    /** ??¤î???¡G?X???ªñ???¾ã??¥v */
     bool ShouldPreventOscillation() const;
 
-    /** è®¢ï¿½Xï¿½ï¿½?äº‹ä»¶ */
-    void SetupEventSubscriptions(};
-    void CleanupEventSubscriptions(};
+    /** ??X???¨Æ¥ó */
+    void SetupEventSubscriptions();
+    void CleanupEventSubscriptions();
 
 private:
     bool bIsInitialized;
@@ -246,7 +246,7 @@ private:
 
     TWeakObjectPtr<UMingPlayerPerformanceTracker> PerformanceTracker;
 
-    // é»˜è®¤?ï¿½ç½®ç¼“ï¿½?
+    // Àq???¸m???
     static TMap<EDifficultyLevel, FMingPresetDifficultyConfig> CachedPresetConfigs;
 };
 

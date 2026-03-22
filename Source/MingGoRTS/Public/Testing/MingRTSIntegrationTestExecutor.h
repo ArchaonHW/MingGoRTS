@@ -79,7 +79,7 @@ public:
 
 protected:
     /** 記�?測試結�? */
-    void RecordTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
+    void RecordTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT(""));
 
     /** 驗�?系統X�� */
     bool ValidateSystemConnections();

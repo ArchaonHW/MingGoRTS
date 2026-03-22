@@ -92,7 +92,7 @@ class MINGTACTICAL_API UMingPerformanceTest : public UObject
     GENERATED_BODY()
 
 public:
-    UMingPerformanceTest(};
+    UMingPerformanceTest();
 
     // Test Configuration
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test Config")
@@ -112,32 +112,32 @@ public:
 
     // Test Control
     UFUNCTION(BlueprintCallable, Category = "Test Control")
-    void StartTest(};
+    void StartTest();
 
     UFUNCTION(BlueprintCallable, Category = "Test Control")
-    void StopTest(};
+    void StopTest();
 
     UFUNCTION(BlueprintCallable, Category = "Test Control")
-    void PauseTest(};
+    void PauseTest();
 
     UFUNCTION(BlueprintCallable, Category = "Test Control")
-    void ResumeTest(};
+    void ResumeTest();
 
     // Test Actions
     UFUNCTION(BlueprintCallable, Category = "Test Actions")
     void SpawnTestUnits(int32 Count};
 
     UFUNCTION(BlueprintCallable, Category = "Test Actions")
-    void DestroyAllTestUnits(};
+    void DestroyAllTestUnits();
 
     UFUNCTION(BlueprintCallable, Category = "Test Actions")
     void StressTestSelection(int32 SelectionCount};
 
     UFUNCTION(BlueprintCallable, Category = "Test Actions")
-    void StressTestMovement(};
+    void StressTestMovement();
 
     UFUNCTION(BlueprintCallable, Category = "Test Actions")
-    void StressTestCombat(};
+    void StressTestCombat();
 
     UFUNCTION(BlueprintCallable, Category = "Test Actions")
     void TestFormationSystem(int32 UnitCount, EMingFormationType FormationType};
@@ -200,10 +200,10 @@ protected:
     // Performance tracking
     void UpdateMetrics(float DeltaTime};
     void TrackFPS(float DeltaTime};
-    void TrackMemory(};
-    void TrackUnitPerformance(};
-    void TrackEventSystem(};
-    void TrackAIPerformance(};
+    void TrackMemory();
+    void TrackUnitPerformance();
+    void TrackEventSystem();
+    void TrackAIPerformance();
 
     // Test scenarios
     void RunUnitSpawningTest(float DeltaTime};
@@ -217,7 +217,7 @@ protected:
     FVector GetRandomSpawnLocation() const;
     FVector GetRandomDestination() const;
     void SelectRandomUnits(int32 Count};
-    void IssueRandomCommands(};
+    void IssueRandomCommands();
 
     UPROPERTY()
     TWeakObjectPtr<class UWorld> WorldContext;
@@ -235,10 +235,10 @@ protected:
 public:
     // Static utility functions
     UFUNCTION(BlueprintPure, Category = "Utilities", meta = (StaticFunction = "true"))
-    static float GetCurrentFPS(};
+    static float GetCurrentFPS();
 
     UFUNCTION(BlueprintPure, Category = "Utilities", meta = (StaticFunction = "true"))
-    static float GetUsedMemoryMB(};
+    static float GetUsedMemoryMB();
 
     UFUNCTION(BlueprintPure, Category = "Utilities", meta = (StaticFunction = "true"))
     static int32 GetObjectCount(UWorld* World, TSubclassOf<AActor> ActorClass};

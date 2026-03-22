@@ -6,7 +6,7 @@
 #include "MingRTSQuickStart.generated.h"
 
 /**
- * MingGoRTS ????½sÄ¶¨t²Î§Ö³t?X * ¥ß§Y????¨Ï¥Î????½sÄ¶¨t²Î??¥Ü?? */
+ * MingGoRTS ????ç·¨è­¯ç³»çµ±å¿«é€Ÿ?X * ç«‹å³????ä½¿ç”¨????ç·¨è­¯ç³»çµ±??ç¤º?? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSQuickStart : public UObject
 {
@@ -15,37 +15,37 @@ class MINGGORTS_API UMingRTSQuickStart : public UObject
 public:
     UMingRTSQuickStart();
 
-    // ¥ß§Y????¨Ï¥Î - ¤@???X?Àu??¨t??    UFUNCTION(BlueprintCallable, Category = "Quick Start")
+    // ç«‹å³????ä½¿ç”¨ - ä¸€???X?å„ª??ç³»??    UFUNCTION(BlueprintCallable, Category = "Quick Start")
     void StartOptimizationNow();
 
-    // ????¨t²Î??X    UFUNCTION(BlueprintCallable, Category = "Quick Start")
+    // ????ç³»çµ±??X    UFUNCTION(BlueprintCallable, Category = "Quick Start")
     FString GetSystemStatus();
 
-    // §Ö³t©Ê¯àÀË¬d
+    // å¿«é€Ÿæ€§èƒ½æª¢æŸ¥
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
     void QuickPerformanceCheck();
 
-    // ¥ß§Y???X??X?¥Ø
+    // ç«‹å³???X??X?ç›®
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
     void OptimizeCurrentProject();
 
-    // ???X???µ²??
+    // ???X???çµ??
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
     FString GetOptimizationResults();
 
 protected:
-    // ????¨t²ÎºŞ?X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
+    // ????ç³»çµ±ç®¡?X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
-    // ¨t²Î??X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
+    // ç³»çµ±??X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
     bool bSystemStarted;
 
     UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
     bool bOptimizationRunning;
 
 private:
-    // ???X?§Ö???X    void InitializeQuickStart();
+    // ???X?å¿«???X    void InitializeQuickStart();
     
-    // Åã¥Üµ²??
-    void DisplayResults(const FString& Results};
+    // é¡¯ç¤ºçµ??
+    void DisplayResults(const FString& Results);
 };

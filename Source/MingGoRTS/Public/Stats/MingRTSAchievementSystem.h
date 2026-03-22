@@ -245,11 +245,12 @@ private:
     TMap<FString, TMap<FName, FPlayerAchievementProgress>> PlayerAchievements;
     
     void InitializeDefaultAchievements();
-    void CheckPrerequisites(const FString& PlayerID, FName AchievementID};
-    void CheckRelatedAchievements(const FString& PlayerID, FName AchievementID};
-    void BroadcastAchievementUnlock(const FString& PlayerID, FName AchievementID};
+    void CheckPrerequisites(const FString& PlayerID, FName AchievementID);
+    void CheckRelatedAchievements(const FString& PlayerID, FName AchievementID);
+    void BroadcastAchievementUnlock(const FString& PlayerID, FName AchievementID);
     
     FAchievementData CreateAchievement(FName ID, const FText& Title, const FText& Description,
-        EAchievementType Type, EAchievementRarity Rarity, int32 Points, bool bIsSecret = false};
+        EAchievementType Type, EAchievementRarity Rarity, int32 Points, bool bIsSecret = false);
+};
 };
 

@@ -1,11 +1,11 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "MingResourceSystem.h"
 #include "MingResourceDisplayWidget.generated.h"
 
-// è³‡ï¿½Xï¿½ç›®çµï¿½?
+// ¸ê?X?¥Øµ²??
 USTRUCT(BlueprintType)
 struct FResourceDisplayItem
 {
@@ -30,8 +30,8 @@ struct FResourceDisplayItem
 };
 
 /**
- * è³‡ï¿½?é¡¯ç¤º Widget
- * é¡¯ç¤º6ç¨®ï¿½?æºï¿½Xï¿½ï¿½Xï¿½é€²åº¦ï¿½? */
+ * ¸ê??Åã¥Ü Widget
+ * Åã¥Ü6ºØ??·½?X??X?¶i«×?? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGTACTICAL_API UMingResourceDisplayWidget : public UUserWidget
 {
@@ -41,11 +41,11 @@ public:
     virtual void NativeConstruct() override;
     virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-    // è³‡ï¿½?é¡¯ç¤ºå®¹å™¨
+    // ¸ê??Åã¥Ü®e¾¹
     UPROPERTY(meta = (BindWidgetOptional))
     TObjectPtr<class UHorizontalBox> ResourceContainer;
 
-    // 6ç¨®ï¿½?æºï¿½?é¡¯ç¤º?ï¿½ç›®
+    // 6ºØ??·½??Åã¥Ü??¥Ø
     UPROPERTY(BlueprintReadOnly, Category = "Resources")
     FResourceDisplayItem FoodDisplay;
 
@@ -64,7 +64,7 @@ public:
     UPROPERTY(BlueprintReadOnly, Category = "Resources")
     FResourceDisplayItem ManpowerDisplay;
 
-    // ?ï¿½æ–°?ï¿½æ•¸
+    // ??·s??¼Æ
     UFUNCTION(BlueprintCallable, Category = "Resources")
     void UpdateResourceDisplay(EMingResourceType ResourceType, int32 Amount, int32 Capacity};
 
@@ -72,9 +72,9 @@ public:
     void UpdateAllResources(const TMap<EMingResourceType, int32>& Resources, const TMap<EMingResourceType, int32>& Capacities};
 
     UFUNCTION(BlueprintCallable, Category = "Resources")
-    void InitializeResourceDisplays(};
+    void InitializeResourceDisplays();
 
-    // è¦–è¦º?ï¿½ï¿½?
+    // µøÄ±????
     UFUNCTION(BlueprintCallable, Category = "Visual")
     void SetResourceHighlighted(EMingResourceType ResourceType, bool bHighlighted};
 
@@ -85,20 +85,20 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<class UMingResourceSystem> ResourceSystem;
 
-    // æ³¨ï¿½?ï¼šï¿½?UObject?ï¿½ï¿½?ä¸èƒ½?ï¿½æ–¼UPROPERTY
+    // ª`??¡G??UObject????¤£¯à??©óUPROPERTY
     TMap<EMingResourceType, FResourceDisplayItem*> ResourceDisplayMap;
 
-    // ?ï¿½ï¿½X    virtual bool Initialize() override;
-    void SetupResourceDisplays(};
-    void BindResourceEvents(};
+    // ???X    virtual bool Initialize() override;
+    void SetupResourceDisplays();
+    void BindResourceEvents();
 
-    // è¼”åŠ©?ï¿½æ•¸
+    // »²§U??¼Æ
     FResourceDisplayItem* GetResourceDisplayItem(EMingResourceType ResourceType};
     void UpdateSingleResourceItem(FResourceDisplayItem* Item, EMingResourceType ResourceType, int32 Amount, int32 Capacity};
     FString GetResourceDisplayName(EMingResourceType ResourceType) const;
     FLinearColor GetResourceDisplayColor(EMingResourceType ResourceType) const;
 
-    // äº‹ä»¶?ï¿½ï¿½?
+    // ¨Æ¥ó????
     UFUNCTION()
     void OnResourceChanged(EMingResourceType ResourceType, int32 NewAmount};
 
@@ -109,10 +109,10 @@ protected:
     void OnResourceInsufficient(EMingResourceType ResourceType};
 
 private:
-    // ?ï¿½ç•«è¨ˆï¿½X    TMap<EMingResourceType, float> AnimationTimers;
+    // ??µe­p?X    TMap<EMingResourceType, float> AnimationTimers;
     TMap<EMingResourceType, int32> LastResourceAmounts;
     
-    // è¦–è¦º?ï¿½ï¿½?
+    // µøÄ±????
     void PlayResourceChangeEffect(FResourceDisplayItem* Item, int32 ChangeAmount};
     void UpdateResourceColor(FResourceDisplayItem* Item, float Percentage};
 };

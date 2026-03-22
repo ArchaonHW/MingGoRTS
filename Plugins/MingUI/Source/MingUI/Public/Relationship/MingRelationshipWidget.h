@@ -80,7 +80,7 @@ public:
     void InitializeWidget(UMingRelationshipManager* InRelationshipManager};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
-    void RefreshDisplay(};
+    void RefreshDisplay();
 
     // View Modes
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
@@ -94,7 +94,7 @@ public:
     void SelectCharacter(FName CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
-    void ClearCharacterSelection(};
+    void ClearCharacterSelection();
 
     UFUNCTION(BlueprintPure, Category = "Relationship UI")
     FName GetSelectedCharacter() const { return SelectedCharacterID; }
@@ -117,7 +117,7 @@ public:
     void SetSearchFilter(const FString& SearchText};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
-    void ClearAllFilters(};
+    void ClearAllFilters();
 
     // Sorting
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
@@ -127,14 +127,14 @@ public:
     void SortByRelationshipValue(bool bAscending = false};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
-    void SortByType(};
+    void SortByType();
 
     // Interaction
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
     void OpenInteractionMenu(FName CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
-    void CloseInteractionMenu(};
+    void CloseInteractionMenu();
 
     UFUNCTION(BlueprintCallable, Category = "Relationship UI")
     void ShowRelationshipHistory(FName CharacterID};
@@ -236,35 +236,35 @@ protected:
 
     // Bindable Events
     UFUNCTION()
-    void OnOverviewButtonClicked(};
+    void OnOverviewButtonClicked();
 
     UFUNCTION()
-    void OnDetailsButtonClicked(};
+    void OnDetailsButtonClicked();
 
     UFUNCTION()
-    void OnGraphButtonClicked(};
+    void OnGraphButtonClicked();
 
     UFUNCTION()
-    void OnCloseButtonClicked(};
+    void OnCloseButtonClicked();
 
     UFUNCTION()
     void OnCharacterButtonClicked(FName CharacterID};
 
     // Internal Functions
-    void PopulateCharacterList(};
-    void UpdateCharacterDetails(};
+    void PopulateCharacterList();
+    void UpdateCharacterDetails();
     void UpdateProgressBar(float Value};
     FLinearColor GetRelationshipColor(float Value) const;
     FString GetRelationshipDescription(float Value) const;
-    void FilterDisplayData(};
-    void SortDisplayData(};
+    void FilterDisplayData();
+    void SortDisplayData();
     void CreateCharacterEntry(const FMingRelationshipDisplayData& Data};
-    void ClearCharacterList(};
+    void ClearCharacterList();
 
     // Network Graph Functions
-    void DrawNetworkGraph(};
-    void CalculateNodePositions(};
-    void DrawConnectionLines(};
+    void DrawNetworkGraph();
+    void CalculateNodePositions();
+    void DrawConnectionLines();
 
     // Animation Functions
     void AnimateProgressBar(float TargetValue, float Duration};
@@ -280,6 +280,6 @@ public:
     static FString GetRelationshipTypeDisplayName(EMingRelationshipType Type};
 
     UFUNCTION(BlueprintPure, Category = "Relationship UI", meta = (StaticFunction))
-    static UTexture2D* GetDefaultPortrait(};
+    static UTexture2D* GetDefaultPortrait();
 };
 

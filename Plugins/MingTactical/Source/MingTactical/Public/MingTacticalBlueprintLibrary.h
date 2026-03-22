@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -7,7 +7,7 @@
 class UMingLargeScaleCombatTest;
 
 /**
- * ?ï¿½ï¿½?ç³»çµ±?ï¿½ï¿½Xï¿½æ•¸ï¿½? * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½Xï¿½ï¿½?ç³»çµ±?ï¿½èƒ½
+ * ????¨t²Î???X?¼Æ?? * ???X??X?½Õ???X???¨t²Î??¯à
  */
 UCLASS()
 class MINGTACTICAL_API UMingTacticalBlueprintLibrary : public UBlueprintFunctionLibrary
@@ -16,73 +16,73 @@ class MINGTACTICAL_API UMingTacticalBlueprintLibrary : public UBlueprintFunction
 
 public:
     /**
-     * ?ï¿½å»ºå¤§ï¿½?æ¨¡æˆ°é¬¥æ€§èƒ½æ¸¬è©¦å¯¦ï¿½?
+     * ??«Ø¤j??¼Ò¾Ô°«©Ê¯à´ú¸Õ¹ê??
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
-    static UMingLargeScaleCombatTest* CreatePerformanceTest(};
+    static UMingLargeScaleCombatTest* CreatePerformanceTest();
 
     /**
-     * ?ï¿½ï¿½Xï¿½æ€§èƒ½æ¸¬è©¦
+     * ???X?©Ê¯à´ú¸Õ
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
     static void InitializePerformanceTest(UMingLargeScaleCombatTest* TestInstance};
 
     /**
-     * ?ï¿½å»ºæ¸¬è©¦?ï¿½ï¿½?
+     * ??«Ø´ú¸Õ????
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
     static void CreateTestUnits(UMingLargeScaleCombatTest* TestInstance, int32 UnitCount = 1000};
 
     /**
-     * ?ï¿½ï¿½Xï¿½èƒ½æ¸¬è©¦
+     * ???X?¯à´ú¸Õ
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
     static void StartPerformanceTest(UMingLargeScaleCombatTest* TestInstance};
 
     /**
-     * ?ï¿½æ­¢?ï¿½èƒ½æ¸¬è©¦
+     * ??¤î??¯à´ú¸Õ
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
     static void StopPerformanceTest(UMingLargeScaleCombatTest* TestInstance};
 
     /**
-     * ?ï¿½ï¿½Xï¿½èƒ½æ¸¬è©¦çµï¿½?
+     * ???X?¯à´ú¸Õµ²??
      */
     UFUNCTION(BlueprintPure, Category = "Tactical|Performance")
     static bool IsPerformanceTestPassing(UMingLargeScaleCombatTest* TestInstance};
 
     /**
-     * ?ï¿½ï¿½?å¹³ï¿½?FPS
+     * ????¥­??FPS
      */
     UFUNCTION(BlueprintPure, Category = "Tactical|Performance")
     static float GetAverageFPS(UMingLargeScaleCombatTest* TestInstance};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ä½FPS
+     * ???X?§CFPS
      */
     UFUNCTION(BlueprintPure, Category = "Tactical|Performance")
     static float GetMinFPS(UMingLargeScaleCombatTest* TestInstance};
 
     /**
-     * ?ï¿½ï¿½Xï¿½é«˜FPS
+     * ???X?°ªFPS
      */
     UFUNCTION(BlueprintPure, Category = "Tactical|Performance")
     static float GetMaxFPS(UMingLargeScaleCombatTest* TestInstance};
 
     /**
-     * ?ï¿½ï¿½?æ´»ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+     * ????¬¡?X??X???
      */
     UFUNCTION(BlueprintPure, Category = "Tactical|Performance")
     static int32 GetActiveUnitCount(UMingLargeScaleCombatTest* TestInstance};
 
     /**
-     * æ¸…ï¿½Xï¿½èƒ½æ¸¬è©¦
+     * ²M?X?¯à´ú¸Õ
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical|Performance", CallInEditor)
     static void CleanupPerformanceTest(UMingLargeScaleCombatTest* TestInstance};
 
     /**
-     * ?ï¿½ï¿½Xï¿½èƒ½æ¸¬è©¦?ï¿½?ï¿½ï¿½?ï¿½?     */
+     * ???X?¯à´ú¸Õ????????     */
     UFUNCTION(BlueprintPure, Category = "Tactical|Performance")
     static FString GetPerformanceStatusText(UMingLargeScaleCombatTest* TestInstance};
 };

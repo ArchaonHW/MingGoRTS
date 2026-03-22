@@ -228,18 +228,18 @@ enum class EMingNetworkError : uint8
 };
 
 // Delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkConnectionStateChanged, EMingNetworkConnectionState, NewState};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerJoined, FMingPlayerNetworkInfo, PlayerInfo};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerLeft, int32, PlayerID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerReadyChanged, int32, PlayerID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChatMessageReceived, FMingChatMessage, Message};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkError, EMingNetworkError, Error};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHostMigrated, int32, NewHostPlayerID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkConnectionStateChanged, EMingNetworkConnectionState, NewState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerJoined, FMingPlayerNetworkInfo, PlayerInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerLeft, int32, PlayerID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerReadyChanged, int32, PlayerID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChatMessageReceived, FMingChatMessage, Message);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkError, EMingNetworkError, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHostMigrated, int32, NewHostPlayerID);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameEnded);
 
 /**
- * ºôµ¸ºÞ?X * ????¦h¤H??À¸??ºôµ¸??????ª±®aºÞ???X??X?¨B
+ * ç¶²çµ¡ç®¡?X * ????å¤šäºº??æˆ²??ç¶²çµ¡??????çŽ©å®¶ç®¡???X??X?æ­¥
  */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingNetworkManager : public UObject
@@ -247,7 +247,7 @@ class MINGPERSONAL_API UMingNetworkManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingNetworkManager(};
+    UMingNetworkManager();
 
     // Initialize/Shutdown
     UFUNCTION(BlueprintCallable, Category = "Network")
@@ -265,7 +265,7 @@ public:
 
     // Client connection
     UFUNCTION(BlueprintCallable, Category = "Network")
-    bool ConnectToServer(const FString& ServerAddress, int32 Port, const FString& Password = TEXT("")};
+    bool ConnectToServer(const FString& ServerAddress, int32 Port, const FString& Password = TEXT(""));
 
     UFUNCTION(BlueprintCallable, Category = "Network")
     void Disconnect();
@@ -405,17 +405,17 @@ private:
     FMingNetworkStats NetworkStats;
 
     // Internal functions
-    void UpdateConnectionState(EMingNetworkConnectionState NewState};
-    void HandleConnectionSuccess(};
-    void HandleConnectionFailure(EMingNetworkError Error, const FString& Message};
-    void UpdateNetworkStats(};
-    void BroadcastChatMessageToAll(const FMingChatMessage& Message};
-    void BroadcastChatMessageToPlayer(const FMingChatMessage& Message, int32 TargetPlayerID};
-    void AddPlayer(const FMingPlayerNetworkInfo& PlayerInfo};
-    void RemovePlayer(int32 PlayerID};
-    void UpdatePlayerReadyState(int32 PlayerID, bool bReady};
+    void UpdateConnectionState(EMingNetworkConnectionState NewState);
+    void HandleConnectionSuccess();
+    void HandleConnectionFailure(EMingNetworkError Error, const FString& Message);
+    void UpdateNetworkStats();
+    void BroadcastChatMessageToAll(const FMingChatMessage& Message);
+    void BroadcastChatMessageToPlayer(const FMingChatMessage& Message, int32 TargetPlayerID);
+    void AddPlayer(const FMingPlayerNetworkInfo& PlayerInfo);
+    void RemovePlayer(int32 PlayerID);
+    void UpdatePlayerReadyState(int32 PlayerID, bool bReady);
     int32 GeneratePlayerID();
     bool ValidatePassword(const FString& Password) const;
-    void OnRep_ConnectionState(};
-);
+    void OnRep_ConnectionState();
+};
 

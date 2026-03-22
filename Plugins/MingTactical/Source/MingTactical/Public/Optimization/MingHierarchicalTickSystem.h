@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,22 +8,22 @@ class AMingTacticalUnit;
 class AMingCombatAI;
 
 /**
- * Tick å±¤ï¿½?é¡ï¿½? | Tick Level Type
+ * Tick ¼h??Ãş?? | Tick Level Type
  */
 UENUM(BlueprintType)
 enum class ETickLevel : uint8
 {
-    Critical    UMETA(DisplayName = "Critical"),    // æ¯ï¿½Xï¿½æ–° | Every Frame (?ï¿½é«˜å„ª?ï¿½ï¿½? | Highest Priority)
-    High        UMETA(DisplayName = "High"),        // æ¯ï¿½Xï¿½æ–° | Every Frame
+    Critical    UMETA(DisplayName = "Critical"),    // ¨C?X?·s | Every Frame (??°ªÀu???? | Highest Priority)
+    High        UMETA(DisplayName = "High"),        // ¨C?X?·s | Every Frame
     Normal      UMETA(DisplayName = "Normal"),      // 30 FPS
     Low         UMETA(DisplayName = "Low"),         // 15 FPS
     VeryLow     UMETA(DisplayName = "Very Low"),    // 5 FPS
-    Background  UMETA(DisplayName = "Background"),   // ?ï¿½ï¿½Xï¿½æ–° | On Demand
-    Paused      UMETA(DisplayName = "Paused")       // ?ï¿½ï¿½Xï¿½æ–° | Paused
+    Background  UMETA(DisplayName = "Background"),   // ???X?·s | On Demand
+    Paused      UMETA(DisplayName = "Paused")       // ???X?·s | Paused
 };
 
 /**
- * Tick çµ„ï¿½?ï¿½?| Tick Group Definition
+ * Tick ²Õ????| Tick Group Definition
  */
 USTRUCT()
 struct MINGTACTICAL_API FTickGroup
@@ -52,23 +52,23 @@ struct MINGTACTICAL_API FTickGroup
         , CurrentIndex(0)
     {}
 
-    void AddUnit(AMingTacticalUnit* Unit};
-    void RemoveUnit(AMingTacticalUnit* Unit};
-    void AddAI(AMingCombatAI* AI};
-    void RemoveAI(AMingCombatAI* AI};
-    bool ShouldTick(float DeltaTime};
-    void ProcessTick(float DeltaTime};
-    void CleanupInvalidReferences(};
+    void AddUnit(AMingTacticalUnit* Unit);
+    void RemoveUnit(AMingTacticalUnit* Unit);
+    void AddAI(AMingCombatAI* AI);
+    void RemoveAI(AMingCombatAI* AI);
+    bool ShouldTick(float DeltaTime);
+    void ProcessTick(float DeltaTime);
+    void CleanupInvalidReferences();
     int32 GetActiveCount() const;
 };
 
 /**
- * ?ï¿½ï¿½? Tick ç³»ï¿½?
+ * ???? Tick ¨t??
  * 
- * ä¼˜ï¿½?å¤§ï¿½?æ¨¡ï¿½?ä½ï¿½? Tick ?ï¿½èƒ½ï¿½? * - ?ï¿½æ®?ï¿½ï¿½Xï¿½æ€ï¿½Xï¿½ï¿½XTick é¢‘ï¿½?
- * - ?ï¿½ï¿½?æ¯å¸§?ï¿½æ–°?ï¿½ï¿½?ä½æ•°?ï¿½ï¿½X * - ?ï¿½åŠ¨è´Ÿè½½?ï¿½è¡¡
+ * É¬??¤j??¼Ò??¦ì?? Tick ??¯à?? * - ??Õu???X???X??XTick ???
+ * - ????¨C???·s????¦ì????X * - ???????¿Å
  * 
- * ?ï¿½ç”¨ï¿½?1000+ ?ï¿½ï¿½Xï¿½å¤§è§„æ¨¡?ï¿½ï¿½Xï¿½æ™¯
+ * ??¥Î??1000+ ???X?¤j?¼Ò???X?´º
  */
 UCLASS(ClassGroup = (Optimization), Blueprintable)
 class MINGTACTICAL_API UMingHierarchicalTickSystem : public UObject
@@ -76,115 +76,115 @@ class MINGTACTICAL_API UMingHierarchicalTickSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingHierarchicalTickSystem(};
+    UMingHierarchicalTickSystem();
 
     /**
-     * ?ï¿½ï¿½Xï¿½ç³»ï¿½?     */
+     * ???X?¨t??     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
-    void Initialize(};
+    void Initialize();
 
     /**
-     * ?ï¿½é—­ç³»ï¿½?
+     * ???¨t??
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
-    void Shutdown(};
+    void Shutdown();
 
     /**
-     * ï¿½?Tick ?ï¿½æ•°
+     * ??Tick ???
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
-    void Tick(float DeltaTime};
+    void Tick(float DeltaTime);
 
-    // ==== ?ï¿½ï¿½?ç®¡ï¿½? ====
+    // ==== ????ºŞ?? ====
 
     /**
-     * æ³¨ï¿½Xï¿½ï¿½Xï¿½ç³»ï¿½?     */
+     * ª`?X??X?¨t??     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
-    void RegisterUnit(AMingTacticalUnit* Unit, ETickLevel InitialLevel = ETickLevel::Normal};
+    void RegisterUnit(AMingTacticalUnit* Unit, ETickLevel InitialLevel = ETickLevel::Normal);
 
     /**
-     * æ³¨ï¿½Xï¿½ï¿½?
+     * ª`?X???
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
-    void UnregisterUnit(AMingTacticalUnit* Unit};
+    void UnregisterUnit(AMingTacticalUnit* Unit);
 
     /**
-     * è®¾ç½®?ï¿½ï¿½XTick å±‚çº§
+     * ?¸m???XTick ??
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
-    void SetUnitTickLevel(AMingTacticalUnit* Unit, ETickLevel NewLevel};
+    void SetUnitTickLevel(AMingTacticalUnit* Unit, ETickLevel NewLevel);
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½XTick å±‚çº§
+     * ???X??X??XTick ??
      */
     UFUNCTION(BlueprintPure, Category = "Hierarchical Tick")
     ETickLevel GetUnitTickLevel(AMingTacticalUnit* Unit) const;
 
-    // ==== AI ç®¡ï¿½? ====
+    // ==== AI ºŞ?? ====
 
     /**
-     * æ³¨ï¿½? AI ?ï¿½åˆ¶X     */
+     * ª`?? AI ??¨îX     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void RegisterAI(AMingCombatAI* AI, ETickLevel InitialLevel = ETickLevel::Normal};
 
     /**
-     * æ³¨ï¿½? AI ?ï¿½åˆ¶X     */
+     * ª`?? AI ??¨îX     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void UnregisterAI(AMingCombatAI* AI};
 
     /**
-     * è®¾ç½® AI XTick å±‚çº§
+     * ?¸m AI XTick ??
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void SetAITickLevel(AMingCombatAI* AI, ETickLevel NewLevel};
 
-    // ==== ä¼˜ï¿½?çº§ï¿½X====
+    // ==== É¬????X====
 
     /**
-     * å°†ï¿½?ä½ï¿½Xï¿½åˆ° Critical å±‚çº§
-     * (ä¾‹ï¿½?ï¼šè¢«?ï¿½å®¶?ï¿½ä¸­?ï¿½ï¿½?ï¿½?
+     * ???¦ì?X?¨ì Critical ??
+     * (¨Ò??¡G³Q??®a??¤¤??????
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
     void PromoteToCritical(AMingTacticalUnit* Unit, float DurationSeconds = 5.0f};
 
     /**
-     * å°†ï¿½?ä½ï¿½?çº§åˆ°?ï¿½æ™¯å±‚çº§
-     * (ä¾‹ï¿½?ï¼šï¿½?å¹•ï¿½Xï¿½ï¿½?ï¿½?
+     * ???¦ì???¨ì??´º??
+     * (¨Ò??¡G??¹õ?X?????
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
     void DemoteToBackground(AMingTacticalUnit* Unit};
 
     /**
-     * ?ï¿½æ®è·ç¦»?ï¿½æœº?ï¿½ï¿½?ç¦»è‡ª?ï¿½ï¿½Xï¿½ï¿½?ï¿½?     */
+     * ??Õu¶ZÖÃ??Éó????ÖÃ¦Û???X?????     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
     void AutoAdjustLevelByDistance(AMingTacticalUnit* Unit, float DistanceToCamera};
 
     /**
-     * ?ï¿½æ®?ï¿½ï¿½Xï¿½æ€ï¿½Xï¿½ï¿½?ï¿½?     */
+     * ??Õu???X???X?????     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
     void AdjustLevelByCombatState(AMingTacticalUnit* Unit, bool bInCombat};
 
-    // ==== ?ï¿½ç½® ====
+    // ==== ??¸m ====
 
     /**
-     * è®¾ç½®?ï¿½ï¿½?å±‚çº§XTick ?ï¿½ï¿½?
+     * ?¸m??????XTick ????
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Config")
     void SetTickInterval(ETickLevel Level, float IntervalSeconds};
 
     /**
-     * è®¾ç½®?ï¿½ï¿½?å±‚çº§?ï¿½ï¿½?å¸§ï¿½?å¤§ï¿½Xï¿½ï¿½?ä½æ•°
+     * ?¸m?????????????¤j?X???¦ì?
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Config")
     void SetMaxUnitsPerFrame(ETickLevel Level, int32 MaxUnits};
 
     /**
-     * ?ï¿½ç”¨/ç¦ç”¨?ï¿½åŠ¨è´Ÿè½½?ï¿½è¡¡
+     * ??¥Î/¸T¥Î???????¿Å
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Config")
     void SetAutoBalancingEnabled(bool bEnabled};
 
-    // ==== ç»Ÿè®¡ä¿¡æ¯ ====
+    // ==== ??«H®§ ====
 
     UFUNCTION(BlueprintPure, Category = "Hierarchical Tick|Stats")
     int32 GetTotalRegisteredUnits() const;
@@ -201,67 +201,67 @@ public:
     UFUNCTION(BlueprintPure, Category = "Hierarchical Tick|Stats")
     float GetCurrentFPS() const;
 
-    // ==== è°ƒï¿½? ====
+    // ==== ??? ====
 
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Debug")
-    void PrintDebugInfo(};
+    void PrintDebugInfo();
 
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Debug")
-    void DrawDebugVisualization(};
+    void DrawDebugVisualization();
 
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Debug")
     FString GetDebugString() const;
 
 private:
-    // Tick ç»„ï¿½?ï¿½?    UPROPERTY()
+    // Tick ?????    UPROPERTY()
     TMap<ETickLevel, FTickGroup> TickGroups;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?çº§ï¿½Xï¿½ï¿½?
+    // ???X?????X???
     UPROPERTY()
     TMap<TWeakObjectPtr<AMingTacticalUnit>, ETickLevel> UnitLevels;
 
-    // AI ?ï¿½ï¿½?çº§ï¿½Xï¿½ï¿½?
+    // AI ??????X???
     UPROPERTY()
     TMap<TWeakObjectPtr<AMingCombatAI>, ETickLevel> AILevels;
 
-    // ä¸´æ—¶?ï¿½çº§?ï¿½ï¿½?ä½ï¿½Xï¿½ï¿½Xï¿½é—´
+    // ?????????¦ì?X??X??
     UPROPERTY()
     TMap<TWeakObjectPtr<AMingTacticalUnit>, float> PromotedUnits;
 
-    // ?ï¿½ç½®
+    // ??¸m
     bool bIsInitialized;
     bool bAutoBalancingEnabled;
 
-    // ç»Ÿè®¡
+    // ??
     float AverageTickTimeMs;
     int32 TickedUnitsLastFrame;
     float CurrentTickTimeMs;
     TArray<float> TickTimeHistory;
     int32 TickHistoryIndex;
 
-    // ?ï¿½ï¿½XTick ï¿½?    void InitializeTickGroups(};
+    // ???XTick ??    void InitializeTickGroups();
 
-    // å¤„ï¿½?ä¸´æ—¶?ï¿½çº§
-    void ProcessPromotedUnits(float DeltaTime};
+    // ????????
+    void ProcessPromotedUnits(float DeltaTime);
 
-    // ?ï¿½åŠ¨è´Ÿè½½?ï¿½è¡¡
-    void PerformLoadBalancing(};
+    // ???????¿Å
+    void PerformLoadBalancing();
 
-    // è®¡ï¿½Xï¿½ï¿½Xï¿½ï¿½?ï¿½?    ETickLevel CalculateRecommendedLevel(AMingTacticalUnit* Unit) const;
+    // ??X??X?????    ETickLevel CalculateRecommendedLevel(AMingTacticalUnit* Unit) const;
 
-    // ?ï¿½æ–°ç»Ÿè®¡
-    void UpdateTickStats(float TickTimeMs};
+    // ??·s??
+    void UpdateTickStats(float TickTimeMs);
 
-    // æ¸…ï¿½Xï¿½ï¿½?å¼•ç”¨
-    void CleanupInvalidReferences(};
+    // ²M?X???¤Ş¥Î
+    void CleanupInvalidReferences();
 
-    // ?ï¿½ï¿½? Tick ç»„ï¿½?å¼•ç”¨
-    FTickGroup* GetTickGroup(ETickLevel Level};
+    // ???? Tick ???¤Ş¥Î
+    FTickGroup* GetTickGroup(ETickLevel Level);
     const FTickGroup* GetTickGroup(ETickLevel Level) const;
 
-    // ?ï¿½ï¿½?å±‚çº§?ï¿½ï¿½?è®¤é—´X    static float GetDefaultInterval(ETickLevel Level};
+    // ????????????X    static float GetDefaultInterval(ETickLevel Level);
 
-    // ?ï¿½ï¿½?å±‚çº§?ï¿½ï¿½?è®¤ï¿½?å¸§ï¿½?å¤§ï¿½?ä½æ•°
-    static int32 GetDefaultMaxUnits(ETickLevel Level};
+    // ????????????????¤j??¦ì?
+    static int32 GetDefaultMaxUnits(ETickLevel Level);
 };
 

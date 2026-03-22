@@ -107,11 +107,11 @@ class MINGUI_API UMingUIAudioIntegration : public UObject
     GENERATED_BODY()
 
 public:
-    UMingUIAudioIntegration(};
+    UMingUIAudioIntegration();
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void Initialize(};
+    void Initialize();
 
     UFUNCTION(BlueprintPure, Category = "UI Audio")
     bool IsInitialized() const { return bIsInitialized; }
@@ -127,7 +127,7 @@ public:
     void StopUISound(EMingUISoundType SoundType};
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void StopAllUISounds(};
+    void StopAllUISounds();
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
     void FadeOutUISound(EMingUISoundType SoundType, float FadeOutDuration};
@@ -166,16 +166,16 @@ public:
 
     // Specific Sound Functions
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayPanelOpenSound(};
+    void PlayPanelOpenSound();
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayPanelCloseSound(};
+    void PlayPanelCloseSound();
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayButtonHoverSound(};
+    void PlayButtonHoverSound();
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void PlayButtonClickSound(};
+    void PlayButtonClickSound();
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
     void PlayNotificationSound(EMingUISoundType NotificationType};
@@ -223,7 +223,7 @@ public:
     FString GetCurrentAudioTheme() const { return CurrentTheme; }
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
-    void LoadRepublicEraSounds(};
+    void LoadRepublicEraSounds();
 
     UFUNCTION(BlueprintCallable, Category = "UI Audio")
     void ApplyCulturalAudioStyle(FName RegionID};
@@ -243,7 +243,7 @@ public:
     int32 GetMaxConcurrentSounds() const { return MaxConcurrentSounds; }
 
     UFUNCTION(BlueprintPure, Category = "UI Audio")
-    int32 GetActiveSoundCount() const { return ActiveSounds.Num(}; }
+    int32 GetActiveSoundCount() const { return ActiveSounds.Num(); }
 
     // Debugging
     UFUNCTION(BlueprintCallable, Category = "Debug")
@@ -301,7 +301,7 @@ protected:
     // Internal Functions
     UAudioComponent* PlaySoundInternal(EMingUISoundType SoundType, float VolumeMultiplier};
     void StopSoundInternal(EMingUISoundType SoundType, float FadeOutTime};
-    void CleanupFinishedSounds(};
+    void CleanupFinishedSounds();
     float GetVolumeForSoundType(EMingUISoundType SoundType) const;
     FString GetSoundTypeName(EMingUISoundType SoundType) const;
     void LogSoundEvent(const FString& Event, EMingUISoundType SoundType};
@@ -312,9 +312,9 @@ public:
     static FString GetSoundTypeDisplayName(EMingUISoundType SoundType};
 
     UFUNCTION(BlueprintPure, Category = "UI Audio", meta = (StaticFunction))
-    static TArray<EMingUISoundType> GetAllNotificationSoundTypes(};
+    static TArray<EMingUISoundType> GetAllNotificationSoundTypes();
 
     UFUNCTION(BlueprintPure, Category = "UI Audio", meta = (StaticFunction))
-    static TArray<EMingUISoundType> GetAllRelationshipSoundTypes(};
+    static TArray<EMingUISoundType> GetAllRelationshipSoundTypes();
 };
 

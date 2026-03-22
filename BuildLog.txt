@@ -1,4 +1,21 @@
-A conflicting instance of Global\UnrealBuildTool_Mutex_cc1e4ec248d9b3ed35259397698050712f573880 is already running.
+Log file: C:\Users\potat\AppData\Local\UnrealBuildTool\Log_GPF.txt
 
-Result: Failed (ConflictingInstance)
-Total execution time: 2.18 seconds
+Generating VisualStudio project files:
+Discovering modules, targets and source code for project...
+Adding projects for all targets...
+Adding projects for all targets took 7.20s
+Adding projects for all game projects took 0.01s
+Adding projects for all modules took 0.28s
+Compiling Rules Assemblies
+@progress 'Compiling Rules Assemblies' 0%
+@progress 'Compiling Rules Assemblies' 50%
+@progress 'Compiling Rules Assemblies' 100%
+Compiling Rules Assemblies 100%
+Creating Build Targets
+@progress 'Creating Build Targets' 0%
+@progress 'Creating Build Targets' 50%
+@progress 'Creating Build Targets' 100%
+Creating Build Targets 100%
+Creating Build Targets took 8.44s
+Binding IntelliSense data...
+@progress 'Binding IntelliSense data...' 0%

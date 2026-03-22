@@ -18,7 +18,7 @@ class MINGMULTIPLAYER_API UMingNetworkManager : public UGameInstanceSubsystem
     GENERATED_BODY()
 
 public:
-    UMingNetworkManager(};
+    UMingNetworkManager();
 
     virtual void Initialize(FSubsystemCollectionBase& Collection) override;
     virtual void Deinitialize() override;
@@ -28,17 +28,17 @@ public:
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void InitializeNetwork(};
+    void InitializeNetwork();
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void ShutdownNetwork(};
+    void ShutdownNetwork();
 
     // Connection Management
     UFUNCTION(BlueprintCallable, Category = "Network")
     bool ConnectToServer(const FString& ServerAddress, int32 Port};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void Disconnect(};
+    void Disconnect();
 
     UFUNCTION(BlueprintCallable, Category = "Network")
     bool CreateSession(const FMingNetworkSessionInfo& SessionInfo};
@@ -47,10 +47,10 @@ public:
     bool JoinSession(const FString& SessionID, const FString& Password};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void LeaveSession(};
+    void LeaveSession();
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void DiscoverSessions(};
+    void DiscoverSessions();
 
     // Server Management
     UFUNCTION(BlueprintCallable, Category = "Network")
@@ -60,7 +60,7 @@ public:
     bool StartDedicatedServer(int32 Port};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void StopServer(};
+    void StopServer();
 
     // Player Management
     UFUNCTION(BlueprintCallable, Category = "Network")
@@ -187,15 +187,15 @@ protected:
 
     // Internal Functions
     void UpdateNetworkStats(float DeltaTime};
-    void ProcessIncomingMessages(};
+    void ProcessIncomingMessages();
     void HandlePlayerConnection(int32 PlayerID};
     void HandlePlayerDisconnection(int32 PlayerID};
     bool ValidateMessage(const FMingNetworkMessage& Message) const;
     void CompressBatch(FMingSyncBatch& Batch};
     void DecompressBatch(FMingSyncBatch& Batch};
-    void SendHeartbeat(};
-    void CheckConnectionHealth(};
-    void CleanupDisconnectedPlayers(};
+    void SendHeartbeat();
+    void CheckConnectionHealth();
+    void CleanupDisconnectedPlayers();
 
     // Delegates
     UFUNCTION()

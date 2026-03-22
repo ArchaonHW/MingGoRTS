@@ -1,7 +1,7 @@
 # MingGoRTS CulturalAdaptationSystem Compile Verification
 # PowerShell Script
 
-$EnginePath = "C:\Program Files\Epic Games\UE_5.4"
+$EnginePath = "C:\Program Files\Epic Games\UE_5.7"
 $UBT = "$EnginePath\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe"
 $ProjectPath = "C:\HW\MingGoRTS\MingGoRTS.uproject"
 

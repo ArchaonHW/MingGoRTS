@@ -84,7 +84,7 @@ class MINGTACTICAL_API UMingSquadAI : public UObject
     GENERATED_BODY()
 
 public:
-    UMingSquadAI(};
+    UMingSquadAI();
 
     UFUNCTION(BlueprintCallable, Category = "Squad")
     void InitializeSquad(const TArray<FMingSquadMember>& Members};
@@ -122,8 +122,8 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "State")
     EMingSquadTactic CurrentTactic;
 
-    void ExecuteTactic(};
-    void CoordinateMembers(};
-    bool IsSquadCohesive(};
+    void ExecuteTactic();
+    void CoordinateMembers();
+    bool IsSquadCohesive();
 };
 

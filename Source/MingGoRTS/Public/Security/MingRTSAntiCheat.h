@@ -150,30 +150,30 @@ public:
     
     // ???X???行為
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
-    void ReportSuspiciousBehavior(const FString& PlayerID, ECheatType Type, const FString& Details};
+    void ReportSuspiciousBehavior(const FString& PlayerID, ECheatType Type, const FString& Details);
     
     // 檢測記憶體修X    UFUNCTION(BlueprintCallable, Category = "AntiCheat")
-    bool DetectMemoryModification(const FString& PlayerID};
+    bool DetectMemoryModification(const FString& PlayerID);
     
     // 檢測??度作??
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
-    bool DetectSpeedHack(const FString& PlayerID, float CurrentSpeed};
+    bool DetectSpeedHack(const FString& PlayerID, float CurrentSpeed);
     
     // 檢測???X?本
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
-    bool DetectMacroUsage(const FString& PlayerID, const TArray<float>& ActionTimings};
+    bool DetectMacroUsage(const FString& PlayerID, const TArray<float>& ActionTimings);
     
     // ???X?家行為模??
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
-    void AnalyzePlayerBehavior(const FString& PlayerID};
+    void AnalyzePlayerBehavior(const FString& PlayerID);
     
     // ????檢測結??
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
-    void ProcessDetection(const FCheatDetectionResult& Result};
+    void ProcessDetection(const FCheatDetectionResult& Result);
     
     // ??用??罰
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
-    void ApplyPenalty(const FString& PlayerID, EPenaltyLevel Penalty, const FString& Reason};
+    void ApplyPenalty(const FString& PlayerID, EPenaltyLevel Penalty, const FString& Reason);
     
     // ???X?家????歷史
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
@@ -184,16 +184,16 @@ public:
     
     // ????封?? (管?X??X
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
-    void UnbanPlayer(const FString& PlayerID, const FString& AdminID, const FString& Reason};
+    void UnbanPlayer(const FString& PlayerID, const FString& AdminID, const FString& Reason);
     
     // 上傳檢測???X??X?器
     UFUNCTION(BlueprintCallable, Category = "AntiCheat")
-    void UploadDetectionReport(const FCheatDetectionResult& Result};
+    void UploadDetectionReport(const FCheatDetectionResult& Result);
     
     // 事件委??
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCheatDetected, const FCheatDetectionResult&, Detection};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPlayerPenalized, const FString&, PlayerID, EPenaltyLevel, Penalty, const FText&, Reason};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerBanned, const FString&, PlayerID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCheatDetected, const FCheatDetectionResult&, Detection);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPlayerPenalized, const FString&, PlayerID, EPenaltyLevel, Penalty, const FText&, Reason);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerBanned, const FString&, PlayerID);
     
     UPROPERTY(BlueprintAssignable, Category = "AntiCheat|Events")
     FOnCheatDetected OnCheatDetected;
@@ -230,10 +230,10 @@ private:
     bool CheckForKnownCheats();
     bool VerifyProcessIntegrity();
     
-    float CalculateBehaviorAnomalyScore(const FPlayerBehaviorRecord& Record};
-    EPenaltyLevel DeterminePenaltyLevel(const FCheatDetectionResult& Detection};
+    float CalculateBehaviorAnomalyScore(const FPlayerBehaviorRecord& Record);
+    EPenaltyLevel DeterminePenaltyLevel(const FCheatDetectionResult& Detection);
     
-    void LogDetection(const FCheatDetectionResult& Result};
-    void NotifyServer(const FCheatDetectionResult& Result};
+    void LogDetection(const FCheatDetectionResult& Result);
+    void NotifyServer(const FCheatDetectionResult& Result);
 };
 

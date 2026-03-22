@@ -263,7 +263,7 @@ protected:
 
 private:
 
-    // 系統性能評分
-    UPROPERTY(BlueprintReadOnly, Category = "System Resource Manager")
+    // System performance score
+    UPROPERTY(VisibleDefaultsOnly, Category = "System Resource Manager")
     float SystemPerformanceScore;
 };

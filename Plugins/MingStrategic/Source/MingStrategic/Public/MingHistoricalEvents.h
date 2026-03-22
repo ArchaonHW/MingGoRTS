@@ -142,17 +142,17 @@ class MINGSTRATEGIC_API UMingHistoricalEvents : public UObject
     GENERATED_BODY()
 
 public:
-    UMingHistoricalEvents(};
+    UMingHistoricalEvents();
 
     // Event Management
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void InitializeHistoricalEvents(};
+    void InitializeHistoricalEvents();
 
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     void TriggerEvent(const FString& EventID};
 
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
-    void TriggerEventByConditions(};
+    void TriggerEventByConditions();
 
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     void CompleteEvent(const FString& EventID, const FString& ChoiceID};
@@ -256,14 +256,14 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Historical Events Setup
-    void Setup1911RevolutionEvents(};
-    void SetupNorthernExpeditionEvents(};
-    void SetupSecondSinoJapaneseEvents(};
-    void SetupCivilWarEvents(};
+    void Setup1911RevolutionEvents();
+    void SetupNorthernExpeditionEvents();
+    void SetupSecondSinoJapaneseEvents();
+    void SetupCivilWarEvents();
 
     // Internal Functions
     void ProcessEventConsequences(const FString& EventID, const FString& ChoiceID};
-    void UpdateHistoricalAccuracy(};
+    void UpdateHistoricalAccuracy();
     void CheckEventDependencies(const FString& EventID};
     void RecordPlayerDecision(const FString& EventID, const FString& ChoiceID};
 

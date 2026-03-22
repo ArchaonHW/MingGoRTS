@@ -202,20 +202,20 @@ class MINGTACTICAL_API UMingTacticalLayerController : public UObject
     GENERATED_BODY()
 
 public:
-    UMingTacticalLayerController(};
+    UMingTacticalLayerController();
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Tactical Layer")
-    void InitializeTacticalLayer(};
+    void InitializeTacticalLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Layer")
-    void ShutdownTacticalLayer(};
+    void ShutdownTacticalLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Layer")
-    void ActivateTacticalLayer(};
+    void ActivateTacticalLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Layer")
-    void DeactivateTacticalLayer(};
+    void DeactivateTacticalLayer();
 
     // Battle Management
     UFUNCTION(BlueprintCallable, Category = "Battle Management")
@@ -293,7 +293,7 @@ public:
     void SelectAllUnits(const FString& FactionID};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void ClearSelection(};
+    void ClearSelection();
 
     UFUNCTION(BlueprintPure, Category = "Selection")
     TArray<int32> GetSelectedUnits() const;
@@ -318,7 +318,7 @@ public:
     void AttackMove(FVector TargetLocation};
 
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void HoldPosition(};
+    void HoldPosition();
 
     UFUNCTION(BlueprintCallable, Category = "Command")
     void RetreatAllUnits(const FString& FactionID};
@@ -327,7 +327,7 @@ public:
     void SetUnitStance(EMingUnitStance NewStance};
 
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void StopCurrentAction(};
+    void StopCurrentAction();
 
     // Formation Management
     UFUNCTION(BlueprintCallable, Category = "Formation")
@@ -350,7 +350,7 @@ public:
     void FocusOnUnit(int32 UnitID};
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void FocusOnSelection(};
+    void FocusOnSelection();
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
     void FocusOnBattleCenter(const FString& BattleID};
@@ -428,7 +428,7 @@ protected:
     void CalculateBattleOutcome(const FString& BattleID};
     
     void OnUnitDestroyed(int32 UnitID};
-    void NotifySelectionChanged(};
+    void NotifySelectionChanged();
     
     bool CanAttack(int32 AttackerID, int32 DefenderID) const;
     float CalculateDamage(const FMingGameTacticalUnit& Attacker, const FMingGameTacticalUnit& Defender) const;

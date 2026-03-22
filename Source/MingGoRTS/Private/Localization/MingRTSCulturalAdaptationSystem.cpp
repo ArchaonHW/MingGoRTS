@@ -36,7 +36,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogMingRTSCultural, Log, All);
 
 // Constructor: Initialize with default East Asian region
 UMingRTSCulturalAdaptationSystem::UMingRTSCulturalAdaptationSystem()
-    : CurrentRegion(ERTSCulturalRegion::EastAsia)
+    : CurrentRegion(ECulturalRegion::EastAsia)
 {
     // Initialize member variables to their default states
     CacheAccessCounter = 0;
@@ -56,9 +56,9 @@ void UMingRTSCulturalAdaptationSystem::InitializeCulturalSystem()
     
     // Auto-detect region if no user preference is saved
     // This provides a good default experience for first-time users
-    if (Preferences.PrimaryRegion == ERTSCulturalRegion::Global)
+    if (Preferences.PrimaryRegion == ECulturalRegion::Global)
     {
-        ERTSCulturalRegion SystemRegion = DetectRegionFromSystem();
+        ECulturalRegion SystemRegion = DetectRegionFromSystem();
         SetPlayerRegion(SystemRegion);
     }
     
@@ -68,7 +68,7 @@ void UMingRTSCulturalAdaptationSystem::InitializeCulturalSystem()
 
 // Set the player's cultural region and update all related systems
 // This triggers content loading, preference updates, and event broadcasting
-void UMingRTSCulturalAdaptationSystem::SetPlayerRegion(ERTSCulturalRegion Region)
+void UMingRTSCulturalAdaptationSystem::SetPlayerRegion(ECulturalRegion Region)
 {
     // Early return if the region is already set to avoid unnecessary work
     if (Region == CurrentRegion)
@@ -77,7 +77,7 @@ void UMingRTSCulturalAdaptationSystem::SetPlayerRegion(ERTSCulturalRegion Region
     }
     
     // Store the previous region for logging and event purposes
-    ERTSCulturalRegion PreviousRegion = CurrentRegion;
+    ECulturalRegion PreviousRegion = CurrentRegion;
     CurrentRegion = Region;
     Preferences.PrimaryRegion = Region;
     
@@ -100,7 +100,7 @@ void UMingRTSCulturalAdaptationSystem::SetPlayerRegion(ERTSCulturalRegion Region
 // Get culturally adapted content for a specific content key and region
 // This method implements thread-safe caching for performance optimization
 FString UMingRTSCulturalAdaptationSystem::GetAdaptedContent(const FString& ContentKey, 
-    ERTSCulturalRegion Region) const
+    ECulturalRegion Region) const
 {
     // Update cache statistics and access counter for performance monitoring
     FScopeLock StatsLock(&ContentCacheLock);
@@ -177,7 +177,7 @@ FString UMingRTSCulturalAdaptationSystem::GetAdaptedContentForCurrentRegion(cons
 }
 
 bool UMingRTSCulturalAdaptationSystem::IsContentAllowed(const FString& ContentKey, 
-    int32 UserAge, ERTSCulturalRegion Region) const
+    int32 UserAge, ECulturalRegion Region) const
 {
     const FCulturalVariant* Variant = FindBestVariant(ContentKey, Region);
     if (Variant)
@@ -208,7 +208,7 @@ TArray<FCulturalVariant> UMingRTSCulturalAdaptationSystem::GetAvailableVariants(
     return Variants;
 }
 
-bool UMingRTSCulturalAdaptationSystem::LoadRegionalContentPack(ERTSCulturalRegion Region)
+bool UMingRTSCulturalAdaptationSystem::LoadRegionalContentPack(ECulturalRegion Region)
 {
     UE_LOG(LogMingRTSCultural, Log, TEXT("Loading regional content pack for: %s"), 
         *GetRegionDisplayName(Region));
@@ -225,7 +225,7 @@ bool UMingRTSCulturalAdaptationSystem::LoadRegionalContentPack(ERTSCulturalRegio
     return true;
 }
 
-void UMingRTSCulturalAdaptationSystem::UnloadRegionalContentPack(ERTSCulturalRegion Region)
+void UMingRTSCulturalAdaptationSystem::UnloadRegionalContentPack(ECulturalRegion Region)
 {
     UE_LOG(LogMingRTSCultural, Log, TEXT("Unloading regional content pack for: %s"),
         *GetRegionDisplayName(Region));
@@ -233,7 +233,7 @@ void UMingRTSCulturalAdaptationSystem::UnloadRegionalContentPack(ERTSCulturalReg
     LoadedContentPacks.Add(Region, false);
 }
 
-FRegionalGameplayParams UMingRTSCulturalAdaptationSystem::GetRegionalGameplayParams(ERTSCulturalRegion Region) const
+FRegionalGameplayParams UMingRTSCulturalAdaptationSystem::GetRegionalGameplayParams(ECulturalRegion Region) const
 {
     const FRegionalGameplayParams* Params = RegionalParams.Find(Region);
     if (Params)
@@ -247,7 +247,7 @@ FRegionalGameplayParams UMingRTSCulturalAdaptationSystem::GetRegionalGameplayPar
 
 // Detect the user's cultural region from system locale settings
 // This provides automatic region detection for first-time users
-ERTSCulturalRegion UMingRTSCulturalAdaptationSystem::DetectRegionFromSystem() const
+ECulturalRegion UMingRTSCulturalAdaptationSystem::DetectRegionFromSystem() const
 {
     // Get the current system locale from UE's internationalization system
     const FString SystemLocale = FInternationalization::Get().GetCurrentLocale().GetName();
@@ -258,67 +258,67 @@ ERTSCulturalRegion UMingRTSCulturalAdaptationSystem::DetectRegionFromSystem() co
     // This handles the most common locales explicitly
     if (SystemLocale.StartsWith(TEXT("zh")))          // Chinese locales
     {
-        return ERTSCulturalRegion::EastAsia;
+        return ECulturalRegion::EastAsia;
     }
     else if (SystemLocale.StartsWith(TEXT("ja")))      // Japanese
     {
-        return ERTSCulturalRegion::EastAsia;
+        return ECulturalRegion::EastAsia;
     }
     else if (SystemLocale.StartsWith(TEXT("ko")))      // Korean
     {
-        return ERTSCulturalRegion::EastAsia;
+        return ECulturalRegion::EastAsia;
     }
     else if (SystemLocale.StartsWith(TEXT("en")))      // English (default to North America)
     {
-        return ERTSCulturalRegion::NorthAmerica;
+        return ECulturalRegion::NorthAmerica;
     }
     else if (SystemLocale.StartsWith(TEXT("fr")))      // French
     {
-        return ERTSCulturalRegion::WesternEurope;
+        return ECulturalRegion::WesternEurope;
     }
     else if (SystemLocale.StartsWith(TEXT("de")))      // German
     {
-        return ERTSCulturalRegion::WesternEurope;
+        return ECulturalRegion::WesternEurope;
     }
     else if (SystemLocale.StartsWith(TEXT("es")))      // Spanish
     {
-        return ERTSCulturalRegion::LatinAmerica;
+        return ECulturalRegion::LatinAmerica;
     }
     else if (SystemLocale.StartsWith(TEXT("pt")))      // Portuguese
     {
-        return ERTSCulturalRegion::LatinAmerica;
+        return ECulturalRegion::LatinAmerica;
     }
     else if (SystemLocale.StartsWith(TEXT("ru")))      // Russian
     {
-        return ERTSCulturalRegion::EasternEurope;
+        return ECulturalRegion::EasternEurope;
     }
     else if (SystemLocale.StartsWith(TEXT("ar")))      // Arabic
     {
-        return ERTSCulturalRegion::MiddleEast;
+        return ECulturalRegion::MiddleEast;
     }
     else if (SystemLocale.StartsWith(TEXT("hi")))      // Hindi
     {
-        return ERTSCulturalRegion::SouthAsia;
+        return ECulturalRegion::SouthAsia;
     }
     else if (SystemLocale.StartsWith(TEXT("th")))      // Thai
     {
-        return ERTSCulturalRegion::SoutheastAsia;
+        return ECulturalRegion::SoutheastAsia;
     }
     else if (SystemLocale.StartsWith(TEXT("vi")))      // Vietnamese
     {
-        return ERTSCulturalRegion::SoutheastAsia;
+        return ECulturalRegion::SoutheastAsia;
     }
     
     // Default to Global region for unsupported locales
     UE_LOG(LogMingRTSCultural, Warning, TEXT("Unsupported locale '%s', defaulting to Global"), *SystemLocale);
-    return ERTSCulturalRegion::Global;
+    return ECulturalRegion::Global;
 }
 
 void UMingRTSCulturalAdaptationSystem::DetectRegionFromIP()
 {
     // Async IP-based detection would be implemented here
     // For now, fallback to system detection
-    ERTSCulturalRegion Region = DetectRegionFromSystem(); // Fallback
+    ECulturalRegion Region = DetectRegionFromSystem(); // Fallback
     
     // Broadcast detection completed
     OnRegionDetectionCompleted.Broadcast(Region);
@@ -330,7 +330,7 @@ void UMingRTSCulturalAdaptationSystem::SaveCulturalPreferences()
 {
     // Save to config
     FString RegionString = UEnum::GetValueAsString(Preferences.PrimaryRegion);
-    RegionString.RemoveFromStart(TEXT("ERTSCulturalRegion::"));
+    RegionString.RemoveFromStart(TEXT("ECulturalRegion::"));
     
     GConfig->SetString(TEXT("Cultural"), TEXT("PrimaryRegion"), *RegionString, GGameIni);
     GConfig->SetInt(TEXT("Cultural"), TEXT("UserAge"), Preferences.UserAge, GGameIni);
@@ -353,14 +353,14 @@ void UMingRTSCulturalAdaptationSystem::LoadCulturalPreferences()
     if (GConfig->GetString(TEXT("Cultural"), TEXT("PrimaryRegion"), RegionString, GGameIni))
     {
         // Convert string back to enum value safely
-        UEnum* EnumPtr = StaticEnum<ERTSCulturalRegion>();
+        UEnum* EnumPtr = StaticEnum<ECulturalRegion>();
         if (EnumPtr)
         {
             int64 Value = EnumPtr->GetValueByNameString(RegionString);
             // Validate enum value is within valid range to prevent undefined behavior
-            if (Value != INDEX_NONE && Value >= 0 && Value <= static_cast<int64>(ERTSCulturalRegion::Global))
+            if (Value != INDEX_NONE && Value >= 0 && Value <= static_cast<int64>(ECulturalRegion::Global))
             {
-                Preferences.PrimaryRegion = static_cast<ERTSCulturalRegion>(Value);
+                Preferences.PrimaryRegion = static_cast<ECulturalRegion>(Value);
                 CurrentRegion = Preferences.PrimaryRegion;
             }
             else
@@ -408,7 +408,7 @@ void UMingRTSCulturalAdaptationSystem::LoadCulturalPreferences()
 
 // Get region-specific holidays and cultural events for a given year
 // This provides cultural context for special events and content
-TArray<FString> UMingRTSCulturalAdaptationSystem::GetRegionalHolidays(ERTSCulturalRegion Region, int32 Year) const
+TArray<FString> UMingRTSCulturalAdaptationSystem::GetRegionalHolidays(ECulturalRegion Region, int32 Year) const
 {
     TArray<FString> Holidays;
     
@@ -416,64 +416,64 @@ TArray<FString> UMingRTSCulturalAdaptationSystem::GetRegionalHolidays(ERTSCultur
     // This helps provide authentic cultural experiences for each region
     switch (Region)
     {
-    case ERTSCulturalRegion::EastAsia:
+    case ECulturalRegion::EastAsia:
         // Traditional East Asian holidays
         Holidays.Add(TEXT("LunarNewYear"));        // Chinese New Year
         Holidays.Add(TEXT("DragonBoatFestival"));   // Dragon Boat Festival
         Holidays.Add(TEXT("MidAutumnFestival"));    // Mid-Autumn Festival
         break;
         
-    case ERTSCulturalRegion::MiddleEast:
+    case ECulturalRegion::MiddleEast:
         // Islamic holidays
         Holidays.Add(TEXT("EidAlFitr"));            // End of Ramadan
         Holidays.Add(TEXT("EidAlAdha"));            // Feast of Sacrifice
         break;
         
-    case ERTSCulturalRegion::WesternEurope:
-    case ERTSCulturalRegion::NorthAmerica:
+    case ECulturalRegion::WesternEurope:
+    case ECulturalRegion::NorthAmerica:
         // Western holidays
         Holidays.Add(TEXT("Christmas"));            // Christmas
         Holidays.Add(TEXT("NewYear"));              // New Year's Day
         Holidays.Add(TEXT("Thanksgiving"));         // Thanksgiving (North America)
         break;
         
-    case ERTSCulturalRegion::SouthAsia:
+    case ECulturalRegion::SouthAsia:
         // South Asian holidays
         Holidays.Add(TEXT("Diwali"));               // Festival of Lights
         Holidays.Add(TEXT("Holi"));                 // Festival of Colors
         break;
         
-    case ERTSCulturalRegion::SoutheastAsia:
+    case ECulturalRegion::SoutheastAsia:
         // Southeast Asian holidays
         Holidays.Add(TEXT("Songkran"));             // Thai New Year
         Holidays.Add(TEXT("Vesak"));                // Buddha's Birthday
         break;
         
-    case ERTSCulturalRegion::LatinAmerica:
+    case ECulturalRegion::LatinAmerica:
         // Latin American holidays
         Holidays.Add(TEXT("DiaDeLosMuertos"));      // Day of the Dead
         Holidays.Add(TEXT("Carnival"));             // Carnival
         break;
         
-    case ERTSCulturalRegion::EasternEurope:
+    case ECulturalRegion::EasternEurope:
         // Eastern European holidays
         Holidays.Add(TEXT("OrthodoxChristmas"));    // Orthodox Christmas
         Holidays.Add(TEXT("Maslenitsa"));           // Butter Week
         break;
         
-    case ERTSCulturalRegion::Africa:
+    case ECulturalRegion::Africa:
         // African holidays (simplified representation)
         Holidays.Add(TEXT("Kwanzaa"));              // Kwanzaa
         Holidays.Add(TEXT("AfricaDay"));            // Africa Day
         break;
         
-    case ERTSCulturalRegion::Oceania:
+    case ECulturalRegion::Oceania:
         // Oceanian holidays
         Holidays.Add(TEXT("ANZACDay"));             // ANZAC Day
         Holidays.Add(TEXT("WaitangiDay"));          // Waitangi Day (New Zealand)
         break;
         
-    case ERTSCulturalRegion::Global:
+    case ECulturalRegion::Global:
     default:
         // Global/International holidays
         Holidays.Add(TEXT("NewYear"));              // New Year's Day
@@ -484,7 +484,7 @@ TArray<FString> UMingRTSCulturalAdaptationSystem::GetRegionalHolidays(ERTSCultur
     return Holidays;
 }
 
-bool UMingRTSCulturalAdaptationSystem::IsRegionalHoliday(ERTSCulturalRegion Region) const
+bool UMingRTSCulturalAdaptationSystem::IsRegionalHoliday(ECulturalRegion Region) const
 {
     FDateTime Today = FDateTime::Now();
     TArray<FString> Holidays = GetRegionalHolidays(Region, Today.GetYear());
@@ -494,9 +494,9 @@ bool UMingRTSCulturalAdaptationSystem::IsRegionalHoliday(ERTSCulturalRegion Regi
     return Holidays.Num() > 0;
 }
 
-FString UMingRTSCulturalAdaptationSystem::GetRegionDisplayName(ERTSCulturalRegion Region)
+FString UMingRTSCulturalAdaptationSystem::GetRegionDisplayName(ECulturalRegion Region)
 {
-    UEnum* EnumPtr = StaticEnum<ERTSCulturalRegion>();
+    UEnum* EnumPtr = StaticEnum<ECulturalRegion>();
     if (EnumPtr)
     {
         return EnumPtr->GetDisplayNameTextByValue((int64)Region).ToString();
@@ -504,17 +504,17 @@ FString UMingRTSCulturalAdaptationSystem::GetRegionDisplayName(ERTSCulturalRegio
     return TEXT("Unknown");
 }
 
-TArray<ERTSCulturalRegion> UMingRTSCulturalAdaptationSystem::GetAllRegions()
+TArray<ECulturalRegion> UMingRTSCulturalAdaptationSystem::GetAllRegions()
 {
-    TArray<ERTSCulturalRegion> Regions;
+    TArray<ECulturalRegion> Regions;
     
-    UEnum* EnumPtr = StaticEnum<ERTSCulturalRegion>();
+    UEnum* EnumPtr = StaticEnum<ECulturalRegion>();
     if (EnumPtr)
     {
         for (int32 i = 0; i < EnumPtr->NumEnums() - 1; ++i)
         {
-            ERTSCulturalRegion Region = static_cast<ERTSCulturalRegion>(EnumPtr->GetValueByIndex(i));
-            if (Region != ERTSCulturalRegion::Global)
+            ECulturalRegion Region = static_cast<ECulturalRegion>(EnumPtr->GetValueByIndex(i));
+            if (Region != ECulturalRegion::Global)
             {
                 Regions.Add(Region);
             }
@@ -543,7 +543,7 @@ void UMingRTSCulturalAdaptationSystem::LoadContentVariants()
 void UMingRTSCulturalAdaptationSystem::InitializeRegionalParams()
 {
     // Initialize default regional parameters
-    const auto AddParams = [this](ERTSCulturalRegion Region, float Difficulty, float Resources, 
+    const auto AddParams = [this](ECulturalRegion Region, float Difficulty, float Resources, 
                                   float AI, float Tutorial)
     {
         FRegionalGameplayParams Params;
@@ -554,28 +554,28 @@ void UMingRTSCulturalAdaptationSystem::InitializeRegionalParams()
         RegionalParams.Add(Region, Params);
     };
     
-    AddParams(ERTSCulturalRegion::EastAsia, 
+    AddParams(ECulturalRegion::EastAsia, 
               CulturalAdaptationConstants::DefaultDifficultyMultiplier, 
               CulturalAdaptationConstants::DefaultResourceMultiplier, 
               0.9f, 0.9f);
-    AddParams(ERTSCulturalRegion::WesternEurope, 
+    AddParams(ECulturalRegion::WesternEurope, 
               CulturalAdaptationConstants::DefaultDifficultyMultiplier, 
               CulturalAdaptationConstants::DefaultResourceMultiplier, 
               CulturalAdaptationConstants::DefaultAIAggressiveness, 
               CulturalAdaptationConstants::DefaultTutorialPacing);
-    AddParams(ERTSCulturalRegion::NorthAmerica, 0.9f, 1.1f, 
+    AddParams(ECulturalRegion::NorthAmerica, 0.9f, 1.1f, 
               CulturalAdaptationConstants::DefaultAIAggressiveness, 1.1f);
-    AddParams(ERTSCulturalRegion::LatinAmerica, 1.1f, 0.9f, 1.1f, 0.9f);
-    AddParams(ERTSCulturalRegion::SoutheastAsia, 
+    AddParams(ECulturalRegion::LatinAmerica, 1.1f, 0.9f, 1.1f, 0.9f);
+    AddParams(ECulturalRegion::SoutheastAsia, 
               CulturalAdaptationConstants::DefaultDifficultyMultiplier, 
               CulturalAdaptationConstants::DefaultResourceMultiplier, 
               CulturalAdaptationConstants::DefaultAIAggressiveness, 
               CulturalAdaptationConstants::DefaultTutorialPacing);
-    AddParams(ERTSCulturalRegion::MiddleEast, 1.1f, 0.9f, 1.2f, 0.8f);
+    AddParams(ECulturalRegion::MiddleEast, 1.1f, 0.9f, 1.2f, 0.8f);
 }
 
 const FCulturalVariant* UMingRTSCulturalAdaptationSystem::FindBestVariant(
-    const FString& ContentKey, ERTSCulturalRegion Region) const
+    const FString& ContentKey, ECulturalRegion Region) const
 {
     const TArray<FCulturalVariant>* Variants = ContentVariants.Find(ContentKey);
     if (!Variants)
@@ -595,7 +595,7 @@ const FCulturalVariant* UMingRTSCulturalAdaptationSystem::FindBestVariant(
     // Fallback to global/default
     for (const FCulturalVariant& Variant : *Variants)
     {
-        if (Variant.Region == ERTSCulturalRegion::Global && Variant.bEnabled)
+        if (Variant.Region == ECulturalRegion::Global && Variant.bEnabled)
         {
             return &Variant;
         }
@@ -639,7 +639,7 @@ bool UMingRTSCulturalAdaptationSystem::CheckContentRating(const FCulturalVariant
 void UMingRTSCulturalAdaptationSystem::OnIPRegionDetected(const FString& CountryCode)
 {
     // Parse country code and map to region
-    ERTSCulturalRegion DetectedRegion = DetectRegionFromSystem(); // Fallback
+    ECulturalRegion DetectedRegion = DetectRegionFromSystem(); // Fallback
     
     // Broadcast detection completed
     OnRegionDetectionCompleted.Broadcast(DetectedRegion);

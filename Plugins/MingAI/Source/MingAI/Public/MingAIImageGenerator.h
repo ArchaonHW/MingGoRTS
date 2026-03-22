@@ -86,10 +86,10 @@ class MINGAI_API UMingAIImageGenerator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAIImageGenerator(};
+    UMingAIImageGenerator();
 
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
-    void InitializeGenerator(};
+    void InitializeGenerator();
 
     // Image Generation Methods
     UFUNCTION(BlueprintCallable, Category = "AI Image Generation")
@@ -148,7 +148,7 @@ protected:
     UPROPERTY()
     TMap<FString, FMingImageGenerationConfig> Presets;
 
-    void InitializeDefaultPresets(};
+    void InitializeDefaultPresets();
     FString GetAspectRatioDimensions(EMingImageAspectRatio AspectRatio) const;
     FString BuildStylePrompt(EMingImageStyle Style) const;
     FString BuildCharacterPrompt(const FString& Description, EMingImageStyle Style) const;

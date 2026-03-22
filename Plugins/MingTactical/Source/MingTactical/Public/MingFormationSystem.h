@@ -80,7 +80,7 @@ class MINGTACTICAL_API UMingFormationSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingFormationSystem(};
+    UMingFormationSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
     void InitializeFormation(EMingFormationType Type, FVector Center, FVector Direction, int32 UnitCount};
@@ -98,7 +98,7 @@ public:
     void RemoveUnitFromFormation(class AMingTacticalUnit* Unit};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void DisbandFormation(};
+    void DisbandFormation();
 
     UFUNCTION(BlueprintPure, Category = "Formation")
     FVector GetSlotPosition(int32 SlotIndex) const;
@@ -132,7 +132,7 @@ public:
     static TArray<FVector> GenerateCircleFormation(int32 UnitCount, float Radius};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void RegenerateFormation(};
+    void RegenerateFormation();
 
 protected:
     UPROPERTY(BlueprintReadOnly, Category = "Formation")
@@ -143,8 +143,8 @@ protected:
     UPROPERTY()
     TMap<int32, TWeakObjectPtr<AMingTacticalUnit>> UnitSlotMap;
 
-    void GenerateFormationSlots(};
-    void UpdateSlotPositions(};
+    void GenerateFormationSlots();
+    void UpdateSlotPositions();
     
     UFUNCTION()
     void OnUnitDestroyed(AActor* DestroyedActor};

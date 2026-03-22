@@ -49,7 +49,7 @@ struct FEventTriggerResult
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEventTriggered, const FString&, EventId};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEventTriggered, const FString&, EventId);
 
 /**
  * 事件觸發?�基�? * ?�?�觸?�器?�基礎接X */
@@ -70,7 +70,7 @@ public:
 
     // 每�X�新
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    virtual void Tick(float DeltaTime};
+    virtual void Tick(float DeltaTime);
 
     // 檢查?�否?�以觸發
     UFUNCTION(BlueprintPure, Category = "Event Trigger")
@@ -85,7 +85,7 @@ public:
 
     // ?�用/禁用
     UFUNCTION(BlueprintCallable, Category = "Event Trigger")
-    void SetEnabled(bool bEnabled};
+    void SetEnabled(bool bEnabled);
 
     UFUNCTION(BlueprintPure, Category = "Event Trigger")
     bool IsEnabled() const { return bEnabled; }
@@ -142,9 +142,9 @@ protected:
     int32 TriggerCount;
 
     // ?�新?�卻
-    void UpdateCooldown(float DeltaTime};
+    void UpdateCooldown(float DeltaTime);
 
-    // 設置?�X    void SetState(EEventTriggerState NewState};
+    // 設置?�X    void SetState(EEventTriggerState NewState);
 
     // ?�部觸發?�輯 (子�?實現)
     virtual bool PerformTrigger();

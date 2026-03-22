@@ -119,16 +119,16 @@ public:
 
     // Test suite execution
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test")
-    void InitializeTestSuite(UMingRTSSelfLearningSystem* LearningSystem, UMingRTSAILearningIntegration* AIIntegration};
+    void InitializeTestSuite(UMingRTSSelfLearningSystem* LearningSystem, UMingRTSAILearningIntegration* AIIntegration);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test")
     FTestSuiteSummary RunAllTests();
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test")
-    FTestSuiteSummary RunTestCategory(ETestCategory Category};
+    FTestSuiteSummary RunTestCategory(ETestCategory Category);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test")
-    FTestResult RunSingleTest(const FString& TestName};
+    FTestResult RunSingleTest(const FString& TestName);
 
     // Individual test methods
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|System")
@@ -208,7 +208,7 @@ public:
 
     // Test utilities
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Utilities")
-    void GenerateTestData(int32 NumDataPoints};
+    void GenerateTestData(int32 NumDataPoints);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Utilities")
     void ClearTestData();
@@ -217,7 +217,7 @@ public:
     FTestSuiteSummary GetLastTestResults() const;
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Utilities")
-    void ExportTestResults(const FString& FilePath};
+    void ExportTestResults(const FString& FilePath);
 
     // Performance benchmarks
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Benchmarks")
@@ -227,9 +227,9 @@ public:
     float GetBenchmarkResult(const FString& BenchmarkName) const;
 
     // Events and delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestCompleted, const FTestResult&, TestResult};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestSuiteCompleted, const FTestSuiteSummary&, Summary};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestProgress, int32, CurrentTest, int32, TotalTests};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestCompleted, const FTestResult&, TestResult);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestSuiteCompleted, const FTestSuiteSummary&, Summary);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestProgress, int32, CurrentTest, int32, TotalTests);
 
     UPROPERTY(BlueprintAssignable)
     FOnTestCompleted OnTestCompleted;
@@ -242,14 +242,14 @@ public:
 
 protected:
     // Test execution helpers
-    FTestResult ExecuteTest(const FString& TestName, TFunction<void()> TestFunction};
-    void RecordTestResult(const FTestResult& Result};
+    FTestResult ExecuteTest(const FString& TestName, TFunction<void()> TestFunction);
+    void RecordTestResult(const FTestResult& Result);
     void UpdateTestProgress();
 
     // Test data generators
-    void GenerateUserBehaviorData(int32 Count};
-    void GenerateGameplayMetricsData(int32 Count};
-    void GenerateCustomData(ELearningDataType DataType, int32 Count};
+    void GenerateUserBehaviorData(int32 Count);
+    void GenerateGameplayMetricsData(int32 Count);
+    void GenerateCustomData(ELearningDataType DataType, int32 Count);
 
     // Validation helpers
     bool ValidateLearningSystem() const;
@@ -257,16 +257,16 @@ protected:
     bool ValidateTestData() const;
 
     // Performance measurement
-    double MeasureExecutionTime(TFunction<void()> Function};
-    void RecordBenchmark(const FString& Name, double Time};
+    double MeasureExecutionTime(TFunction<void()> Function);
+    void RecordBenchmark(const FString& Name, double Time);
 
     // Test assertion helpers
-    bool AssertTrue(bool Condition, const FString& Message};
-    bool AssertFalse(bool Condition, const FString& Message};
-    bool AssertEqual(const FString& Expected, const FString& Actual, const FString& Message};
-    bool AssertNotEqual(const FString& Expected, const FString& Actual, const FString& Message};
-    bool AssertNotNull(const void* Pointer, const FString& Message};
-    bool AssertNull(const void* Pointer, const FString& Message};
+    bool AssertTrue(bool Condition, const FString& Message);
+    bool AssertFalse(bool Condition, const FString& Message);
+    bool AssertEqual(const FString& Expected, const FString& Actual, const FString& Message);
+    bool AssertNotEqual(const FString& Expected, const FString& Actual, const FString& Message);
+    bool AssertNotNull(const void* Pointer, const FString& Message);
+    bool AssertNull(const void* Pointer, const FString& Message);
 
 private:
     // System references

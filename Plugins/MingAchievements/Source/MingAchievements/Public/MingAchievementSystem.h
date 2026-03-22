@@ -177,11 +177,11 @@ class MINGACHIEVEMENTS_API UMingAchievementSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAchievementSystem(};
+    UMingAchievementSystem();
 
     // Achievement Management
     UFUNCTION(BlueprintCallable, Category = "Achievements")
-    void InitializeAchievements(};
+    void InitializeAchievements();
 
     UFUNCTION(BlueprintCallable, Category = "Achievements")
     void UnlockAchievement(const FString& AchievementID};
@@ -218,7 +218,7 @@ public:
     void TrackStatistic(const FString& StatName, float Value};
 
     UFUNCTION(BlueprintCallable, Category = "Progress")
-    void UpdateGameStatistics(};
+    void UpdateGameStatistics();
 
     UFUNCTION(BlueprintPure, Category = "Progress")
     float GetAchievementProgress(const FString& AchievementID) const;
@@ -281,7 +281,7 @@ public:
     void GrantReward(const FString& AchievementID};
 
     UFUNCTION(BlueprintCallable, Category = "Rewards")
-    void GrantAllRewards(};
+    void GrantAllRewards();
 
     UFUNCTION(BlueprintPure, Category = "Rewards")
     TArray<FString> GetPendingRewards() const;
@@ -356,14 +356,14 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeCombatAchievements(};
-    void InitializeCampaignAchievements(};
-    void InitializeExplorationAchievements(};
-    void InitializeMercenaryAchievements(};
-    void InitializeHistoricalAchievements(};
-    void InitializeEconomicAchievements(};
-    void InitializeSpecialAchievements(};
-    void InitializeSecretAchievements(};
+    void InitializeCombatAchievements();
+    void InitializeCampaignAchievements();
+    void InitializeExplorationAchievements();
+    void InitializeMercenaryAchievements();
+    void InitializeHistoricalAchievements();
+    void InitializeEconomicAchievements();
+    void InitializeSpecialAchievements();
+    void InitializeSecretAchievements();
 
     // Achievement Processing
     void ProcessProgressEvent(const FString& EventName, float Value};
@@ -385,6 +385,6 @@ protected:
     FMingAchievement* FindAchievement(const FString& AchievementID};
     FMingAchievementChain* FindChain(const FString& ChainID};
     float CalculateProgressPercentage(const FString& AchievementID) const;
-    void UnlockHiddenAchievements(};
+    void UnlockHiddenAchievements();
 };
 

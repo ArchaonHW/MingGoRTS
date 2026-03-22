@@ -11,6 +11,7 @@ AMingGoRTSPlayerController::AMingGoRTSPlayerController()
     bEnableClickEvents = true;
     bEnableMouseOverEvents = true;
     bIsSelecting = false;
+    bIsAdditiveSelection = false;
     SelectionStart = FVector2D::ZeroVector;
     SelectionEnd = FVector2D::ZeroVector;
     RTSCamera = nullptr;
@@ -115,6 +116,9 @@ void AMingGoRTSPlayerController::StartSelection()
 {
     bIsSelecting = true;
     
+    // 檢查是否按住 Ctrl 鍵進行添加選擇
+    bIsAdditiveSelection = IsInputKeyDown(EKeys::LeftControl) || IsInputKeyDown(EKeys::RightControl);
+    
     float MouseX, MouseY;
     if (GetMousePosition(MouseX, MouseY))
     {
@@ -122,15 +126,18 @@ void AMingGoRTSPlayerController::StartSelection()
         SelectionEnd = SelectionStart;
     }
 
-    // 清除之前選擇的單位
-    for (AMingGoRTSUnit* Unit : SelectedUnits)
+    // 如果不是添加模式，清除之前選擇的單位
+    if (!bIsAdditiveSelection)
     {
-        if (Unit)
+        for (AMingGoRTSUnit* Unit : SelectedUnits)
         {
-            Unit->SetSelected(false);
+            if (Unit)
+            {
+                Unit->SetSelected(false);
+            }
         }
+        SelectedUnits.Empty();
     }
-    SelectedUnits.Empty();
 }
 
 void AMingGoRTSPlayerController::EndSelection()
@@ -151,23 +158,81 @@ void AMingGoRTSPlayerController::SelectUnitsInRect(FVector2D Start, FVector2D En
         HUD->ClearSelectionBox();
     }
 
-    // 這裡應該實現單位選擇邏輯
-    // 簡化版本：獲取所有單位並檢查是否在選擇框內
+    // 確定選擇框的邊界
+    FVector2D Min(FMath::Min(Start.X, End.X), FMath::Min(Start.Y, End.Y));
+    FVector2D Max(FMath::Max(Start.X, End.X), FMath::Max(Start.Y, End.Y));
+
+    // 框太小時視為單擊選擇
+    bool bIsClick = (Max - Min).SizeSquared() < 100.0f; // 10x10 pixels threshold
+
+    // 獲取所有單位
     TArray<AActor*> AllUnits;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMingGoRTSUnit::StaticClass(), AllUnits);
 
+    // 如果不是添加模式，清除當前選擇
+    if (!bIsAdditiveSelection)
+    {
+        for (AMingGoRTSUnit* Unit : SelectedUnits)
+        {
+            if (Unit)
+            {
+                Unit->SetSelected(false);
+            }
+        }
+        SelectedUnits.Empty();
+    }
+
+    int32 NewlySelectedCount = 0;
     for (AActor* Actor : AllUnits)
     {
         AMingGoRTSUnit* Unit = Cast<AMingGoRTSUnit>(Actor);
-        if (Unit)
+        if (!Unit)
         {
-            // 簡化的選擇邏輯 - 實際應該檢查螢幕座標
-            SelectedUnits.Add(Unit);
-            Unit->SetSelected(true);
+            continue;
+        }
+
+        // 將單位世界位置轉換為屏幕位置
+        FVector UnitLocation = Unit->GetActorLocation();
+        FVector2D ScreenPos;
+        
+        if (ProjectWorldLocationToScreen(UnitLocation, ScreenPos))
+        {
+            bool bIsInBox = (ScreenPos.X >= Min.X && ScreenPos.X <= Max.X &&
+                            ScreenPos.Y >= Min.Y && ScreenPos.Y <= Max.Y);
+
+            // 如果是單擊，檢查是否點擊在單位上（擴大的命中區域）
+            if (bIsClick)
+            {
+                const float HitTolerance = 20.0f;
+                FVector2D ClickCenter = (Min + Max) * 0.5f;
+                bIsInBox = (FMath::Abs(ScreenPos.X - ClickCenter.X) <= HitTolerance &&
+                           FMath::Abs(ScreenPos.Y - ClickCenter.Y) <= HitTolerance);
+            }
+
+            if (bIsInBox)
+            {
+                if (!SelectedUnits.Contains(Unit))
+                {
+                    SelectedUnits.Add(Unit);
+                    Unit->SetSelected(true);
+                    NewlySelectedCount++;
+                }
+            }
         }
     }
 
-    UE_LOG(LogTemp, Log, TEXT("Selected %d units"), SelectedUnits.Num());
+    // 如果是單擊且沒有選中任何單位，發送移動命令
+    if (bIsClick && NewlySelectedCount == 0 && SelectedUnits.Num() > 0)
+    {
+        FHitResult Hit;
+        if (GetHitResultUnderCursor(ECC_Visibility, false, Hit))
+        {
+            MoveSelectedUnits(Hit.Location);
+        }
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("Selected %d units in rect (click=%s)"), 
+        NewlySelectedCount, bIsClick ? TEXT("true") : TEXT("false"));
 }
 
 void AMingGoRTSPlayerController::MoveSelectedUnits(FVector Location)

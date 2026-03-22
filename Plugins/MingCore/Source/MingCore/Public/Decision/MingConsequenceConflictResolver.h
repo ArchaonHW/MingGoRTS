@@ -67,60 +67,60 @@ public:
 
     // ?????X??X
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
-    bool DetectConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts};
+    bool DetectConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
     // X??X
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
-    void ResolveConflicts(TArray<FMingConsequenceResult>& Results, EMingConflictResolutionStrategy Strategy = EMingConflictResolutionStrategy::PriorityBased};
+    void ResolveConflicts(TArray<FMingConsequenceResult>& Results, EMingConflictResolutionStrategy Strategy = EMingConflictResolutionStrategy::PriorityBased);
 
     // X??X
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
-    void ApplyConflictResolution(const FMingConsequenceConflict& Conflict, FMingConsequenceResult& Result};
+    void ApplyConflictResolution(const FMingConsequenceConflict& Conflict, FMingConsequenceResult& Result);
 
     // X??X????
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
-    EMingConflictResolutionStrategy GetRecommendedStrategy(const FMingConsequenceConflict& Conflict};
+    EMingConflictResolutionStrategy GetRecommendedStrategy(const FMingConsequenceConflict& Conflict);
 
     // ??X??X
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
-    bool ValidateResolution(const TArray<FMingConsequenceResult>& Results};
+    bool ValidateResolution(const TArray<FMingConsequenceResult>& Results);
 
 protected:
     // ???X?v??X
-    void DetectPoliticalConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts};
+    void DetectPoliticalConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
     // ????xX??X
-    void DetectMilitaryConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts};
+    void DetectMilitaryConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
     // ????gX??X
-    void DetectEconomicConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts};
+    void DetectEconomicConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
     // ?????X??X
-    void DetectSocialConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts};
+    void DetectSocialConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // ?????X    void DetectCrossDomainConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts};
+    // ?????X    void DetectCrossDomainConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // X??X???X    void ResolvePriorityBased(TArray<FMingConsequenceResult>& Results};
-
-    // X??X
-    void ResolveWeightedAverage(TArray<FMingConsequenceResult>& Results};
+    // X??X???X    void ResolvePriorityBased(TArray<FMingConsequenceResult>& Results);
 
     // X??X
-    void ResolveDomainOverride(TArray<FMingConsequenceResult>& Results};
+    void ResolveWeightedAverage(TArray<FMingConsequenceResult>& Results);
+
+    // X??X
+    void ResolveDomainOverride(TArray<FMingConsequenceResult>& Results);
 
     // ?OX????X
-    void ResolveConservative(TArray<FMingConsequenceResult>& Results};
+    void ResolveConservative(TArray<FMingConsequenceResult>& Results);
 
-    // ?EX??X    void ResolveAggressive(TArray<FMingConsequenceResult>& Results};
+    // ?EX??X    void ResolveAggressive(TArray<FMingConsequenceResult>& Results);
 
     // ?pX??X?{??
-    float CalculateConflictSeverity(const FMingConsequenceConflict& Conflict};
+    float CalculateConflictSeverity(const FMingConsequenceConflict& Conflict);
 
     // X
-    void GenerateResolutionOptions(const FMingConsequenceConflict& Conflict, TArray<FString>& OutOptions};
+    void GenerateResolutionOptions(const FMingConsequenceConflict& Conflict, TArray<FString>& OutOptions);
 
     // X??X
-    void GenerateRecommendedResolution(const FMingConsequenceConflict& Conflict, FString& OutResolution};
+    void GenerateRecommendedResolution(const FMingConsequenceConflict& Conflict, FString& OutResolution);
 
 private:
     // ?pX?uX

@@ -142,16 +142,16 @@ public:
     void StartDialogue(const TArray<FMingDialogueLine>& Lines};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void ShowNextLine(};
+    void ShowNextLine();
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void ShowPreviousLine(};
+    void ShowPreviousLine();
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void SkipDialogue(};
+    void SkipDialogue();
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void EndDialogue(};
+    void EndDialogue();
 
     UFUNCTION(BlueprintPure, Category = "Dialogue UI")
     bool HasMoreLines() const;
@@ -164,13 +164,13 @@ public:
     void ShowOptions(const TArray<FMingDialogueOption>& Options};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void ClearOptions(};
+    void ClearOptions();
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
     void SelectOption(int32 OptionID};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void RefreshOptionAvailability(};
+    void RefreshOptionAvailability();
 
     // Relationship Integration
     UFUNCTION(BlueprintPure, Category = "Dialogue UI")
@@ -186,7 +186,7 @@ public:
     void ShowReputationImpactPreview(FName RegionID, float ImpactValue};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void HideImpactPreview(};
+    void HideImpactPreview();
 
     // Option Hints
     UFUNCTION(BlueprintPure, Category = "Dialogue UI")
@@ -206,7 +206,7 @@ public:
     void PlayDialogueAudio(FName AudioCue};
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
-    void StopDialogueAudio(};
+    void StopDialogueAudio();
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue UI")
     void SetAudioVolume(float Volume};
@@ -344,7 +344,7 @@ protected:
 
     // Button Handlers
     UFUNCTION()
-    void OnContinueClicked(};
+    void OnContinueClicked();
 
     UFUNCTION()
     void OnOptionButtonClicked(int32 OptionID};
@@ -353,20 +353,20 @@ protected:
     void OnOptionButtonHovered(int32 OptionID};
 
     UFUNCTION()
-    void OnSkipClicked(};
+    void OnSkipClicked();
 
     // Internal Functions
-    void DisplayCurrentLine(};
+    void DisplayCurrentLine();
     void UpdateSpeakerDisplay(const FMingDialogueLine& Line};
     void CreateOptionButton(const FMingDialogueOption& Option};
-    void ClearOptionButtons(};
-    void UpdateOptionAvailability(};
+    void ClearOptionButtons();
+    void UpdateOptionAvailability();
     void UpdateOptionVisuals(class UButton* Button, const FMingDialogueOption& Option};
     void ShowImpactPreviewInternal(float RelationshipDelta, float ReputationDelta};
     FLinearColor GetOptionTypeColor(EMingDialogueOptionType OptionType) const;
     FString GetOptionTypeIcon(EMingDialogueOptionType OptionType) const;
     void PlayTextReveal(float Speed};
-    void CompleteTextReveal(};
+    void CompleteTextReveal();
     void UpdateAutoAdvance(float DeltaTime};
 
 public:

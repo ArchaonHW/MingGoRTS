@@ -39,16 +39,16 @@ public:
     void UpdateSelectionBox(const FVector2D& CurrentPosition};
 
     UFUNCTION(BlueprintCallable, Category = "Selection Box")
-    void HideSelectionBox(};
+    void HideSelectionBox();
 
     UFUNCTION(BlueprintCallable, Category = "Selection Info")
     void UpdateSelectionCount(int32 SelectedCount, int32 TotalCount};
 
     UFUNCTION(BlueprintCallable, Category = "Selection Info")
-    void ShowSelectionInfo(};
+    void ShowSelectionInfo();
 
     UFUNCTION(BlueprintCallable, Category = "Selection Info")
-    void HideSelectionInfo(};
+    void HideSelectionInfo();
 
     UFUNCTION(BlueprintPure, Category = "Selection Box")
     bool IsSelectionBoxVisible() const;
@@ -61,7 +61,7 @@ private:
     FVector2D SelectionEndPosition;
     bool bIsSelectionBoxVisible;
 
-    void UpdateSelectionBoxVisuals(};
+    void UpdateSelectionBoxVisuals();
     FVector2D GetViewportPosition(FVector2D ScreenPosition) const;
 };
 

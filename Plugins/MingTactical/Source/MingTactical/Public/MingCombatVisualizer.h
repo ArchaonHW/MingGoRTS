@@ -93,7 +93,7 @@ class MINGTACTICAL_API UMingCombatVisualizer : public UObject
     GENERATED_BODY()
 
 public:
-    UMingCombatVisualizer(};
+    UMingCombatVisualizer();
 
     // Singleton access
     UFUNCTION(BlueprintPure, Category = "Combat Visualizer", meta = (WorldContext = "WorldContextObject"))
@@ -175,14 +175,14 @@ public:
     void EnableBatchMode(bool bEnable};
 
     UFUNCTION(BlueprintCallable, Category = "Batch")
-    void FlushEffects(};
+    void FlushEffects();
 
     // Performance
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void SetMaxEffectsPerFrame(int32 MaxCount};
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void ClearAllEffects(};
+    void ClearAllEffects();
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
@@ -218,7 +218,7 @@ protected:
     TMap<EMingCombatEffectType, FMingEffectPoolEntry> EffectPools;
 
     // Internal functions
-    void ProcessPendingEffects(};
+    void ProcessPendingEffects();
     void SpawnEffectInternal(const FMingCombatEffect& Effect};
     UFXSystemComponent* GetEffectFromPool(EMingCombatEffectType Type};
     void ReturnEffectToPool(EMingCombatEffectType Type, UFXSystemComponent* Effect};

@@ -190,14 +190,14 @@ class MINGAUDIO_API UMingNiagaraEffectsSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingNiagaraEffectsSystem(};
+    UMingNiagaraEffectsSystem();
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Niagara Effects")
-    void InitializeNiagaraSystem(};
+    void InitializeNiagaraSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Niagara Effects")
-    void ShutdownNiagaraSystem(};
+    void ShutdownNiagaraSystem();
 
     // Explosion Effects
     UFUNCTION(BlueprintCallable, Category = "Niagara Effects|Explosions")
@@ -281,7 +281,7 @@ public:
     UNiagaraComponent* SpawnDustStorm(float Intensity = 0.7f};
 
     UFUNCTION(BlueprintCallable, Category = "Niagara Effects|Weather")
-    void StopWeatherEffect(};
+    void StopWeatherEffect();
 
     // Environment Effects
     UFUNCTION(BlueprintCallable, Category = "Niagara Effects|Environment")
@@ -327,10 +327,10 @@ public:
 
     // System Management
     UFUNCTION(BlueprintCallable, Category = "Niagara Effects|System")
-    void PreloadEffectSystems(};
+    void PreloadEffectSystems();
 
     UFUNCTION(BlueprintCallable, Category = "Niagara Effects|System")
-    void ClearEffectPool(};
+    void ClearEffectPool();
 
     UFUNCTION(BlueprintCallable, Category = "Niagara Effects|System")
     void SetMaxConcurrentEffects(int32 MaxCount};

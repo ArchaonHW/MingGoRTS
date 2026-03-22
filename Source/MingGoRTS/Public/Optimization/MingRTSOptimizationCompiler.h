@@ -42,17 +42,13 @@ class MINGGORTS_API UMingRTSOptimizationCompiler : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationCompiler();
-
+    UMingRTSOptimizationCompiler(};
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    void InitializeCompiler();
-
+    void InitializeCompiler(};
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    bool SetOptimizationLevel(EOptimizationLevel Level);
-
+    bool SetOptimizationLevel(EOptimizationLevel Level};
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    bool CompileProject();
-
+    bool CompileProject(};
     UFUNCTION(BlueprintPure, Category = "Optimization Compiler")
     ECompilationPhase GetCurrentPhase() const;
 
@@ -66,5 +62,5 @@ protected:
     UPROPERTY()
     ECompilationPhase CurrentPhase;
 
-    void InitializeCompilationPhases();
+    void InitializeCompilationPhases(};
 };

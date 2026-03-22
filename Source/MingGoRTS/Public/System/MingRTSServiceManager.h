@@ -293,40 +293,40 @@ protected:
     // 獲取服務啟動延遲
     float GetServiceStartupDelay(EServicePriority Priority) const;
 
-private:
+protected:
     // 活躍服務列表
-    UPROPERTY(BlueprintReadOnly, Category = "Service Manager")
+    UPROPERTY(VisibleDefaultsOnly, Category = "Service Manager")
     TMap<FString, FServiceInfo> ActiveServices;
 
     // 服務依賴關係圖
-    UPROPERTY(BlueprintReadOnly, Category = "Service Manager")
+    UPROPERTY(VisibleDefaultsOnly, Category = "Service Manager")
     TMap<FString, TArray<FString>> ServiceDependencies;
 
     // 服務依賴者關係圖
-    UPROPERTY(BlueprintReadOnly, Category = "Service Manager")
+    UPROPERTY(VisibleDefaultsOnly, Category = "Service Manager")
     TMap<FString, TArray<FString>> ServiceDependents;
 
     // 服務ID計數器
-    UPROPERTY(BlueprintReadOnly, Category = "Service Manager")
+    UPROPERTY(VisibleDefaultsOnly, Category = "Service Manager")
     static int32 ServiceIDCounter;
 
     // 最後監控時間
-    UPROPERTY(BlueprintReadOnly, Category = "Service Manager")
+    UPROPERTY(VisibleDefaultsOnly, Category = "Service Manager")
     FDateTime LastMonitoringTime;
 
     // 監控間隔（秒）
-    UPROPERTY(BlueprintReadOnly, Category = "Service Manager")
+    UPROPERTY(VisibleDefaultsOnly, Category = "Service Manager")
     float MonitoringInterval;
 
     // 是否啟用自動監控
-    UPROPERTY(BlueprintReadOnly, Category = "Service Manager")
+    UPROPERTY(VisibleDefaultsOnly, Category = "Service Manager")
     bool bAutoMonitoringEnabled;
 
     // 是否啟用自動重啟
-    UPROPERTY(BlueprintReadOnly, Category = "Service Manager")
+    UPROPERTY(VisibleDefaultsOnly, Category = "Service Manager")
     bool bAutoRestartEnabled;
 
     // 系統資源使用情況
-    UPROPERTY(BlueprintReadOnly, Category = "Service Manager")
+    UPROPERTY(VisibleDefaultsOnly, Category = "Service Manager")
     TMap<FString, float> SystemResourceUsage;
 };

@@ -157,11 +157,11 @@ class MINGPLATFORM_API UMingCrossPlatform : public UObject
     GENERATED_BODY()
 
 public:
-    UMingCrossPlatform(};
+    UMingCrossPlatform();
 
     // Platform Detection
     UFUNCTION(BlueprintCallable, Category = "Platform")
-    void InitializePlatform(};
+    void InitializePlatform();
 
     UFUNCTION(BlueprintPure, Category = "Platform")
     EMingPlatform GetCurrentPlatform() const;
@@ -180,10 +180,10 @@ public:
 
     // Settings Management
     UFUNCTION(BlueprintCallable, Category = "Settings")
-    void LoadPlatformSettings(};
+    void LoadPlatformSettings();
 
     UFUNCTION(BlueprintCallable, Category = "Settings")
-    void SavePlatformSettings(};
+    void SavePlatformSettings();
 
     UFUNCTION(BlueprintCallable, Category = "Settings")
     void ApplyPlatformSettings(const FMingPlatformSettings& Settings};
@@ -205,7 +205,7 @@ public:
 
     // Input Adaptation
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void AdaptInputScheme(};
+    void AdaptInputScheme();
 
     UFUNCTION(BlueprintCallable, Category = "Input")
     void SetInputMethod(EMingInputMethod InputMethod};
@@ -220,27 +220,27 @@ public:
     void EnableGamepadSupport(bool bEnable};
 
     UFUNCTION(BlueprintCallable, Category = "Input")
-    void CalibrateTouchControls(};
+    void CalibrateTouchControls();
 
     // UI Adaptation
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void AdaptUIForPlatform(};
+    void AdaptUIForPlatform();
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void SetMobileUILayout(};
+    void SetMobileUILayout();
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void SetDesktopUILayout(};
+    void SetDesktopUILayout();
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void AdjustUIElements(};
+    void AdjustUIElements();
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void OptimizeTouchTargets(};
+    void OptimizeTouchTargets();
 
     // Performance Optimization
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void OptimizeForPlatform(};
+    void OptimizeForPlatform();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void EnableAdaptivePerformance(bool bEnable};
@@ -249,14 +249,14 @@ public:
     void SetTargetFPS(int32 FPS};
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void AdjustQualitySettings(};
+    void AdjustQualitySettings();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void MonitorPerformance(};
+    void MonitorPerformance();
 
     // Graphics Adaptation
     UFUNCTION(BlueprintCallable, Category = "Graphics")
-    void AdaptGraphicsForPlatform(};
+    void AdaptGraphicsForPlatform();
 
     UFUNCTION(BlueprintCallable, Category = "Graphics")
     void SetTextureQuality(int32 Quality};
@@ -272,7 +272,7 @@ public:
 
     // Audio Adaptation
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void AdaptAudioForPlatform(};
+    void AdaptAudioForPlatform();
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
     void SetAudioQuality(int32 Quality};
@@ -281,11 +281,11 @@ public:
     void EnableHapticFeedback(bool bEnable};
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
-    void OptimizeAudioLatency(};
+    void OptimizeAudioLatency();
 
     // Storage Adaptation
     UFUNCTION(BlueprintCallable, Category = "Storage")
-    void AdaptStorageForPlatform(};
+    void AdaptStorageForPlatform();
 
     UFUNCTION(BlueprintCallable, Category = "Storage")
     void EnableCloudSave(bool bEnable};
@@ -298,7 +298,7 @@ public:
 
     // Network Adaptation
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void AdaptNetworkForPlatform(};
+    void AdaptNetworkForPlatform();
 
     UFUNCTION(BlueprintCallable, Category = "Network")
     void SetNetworkQuality(int32 Quality};
@@ -307,7 +307,7 @@ public:
     void EnableMobileOptimizedNetworking(bool bEnable};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void AdjustBandwidthUsage(};
+    void AdjustBandwidthUsage();
 
     // Platform Capabilities
     UFUNCTION(BlueprintPure, Category = "Capabilities")
@@ -369,31 +369,31 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void DetectCurrentPlatform(};
-    void InitializePlatformCapabilities(};
-    void ApplyDefaultSettings(};
+    void DetectCurrentPlatform();
+    void InitializePlatformCapabilities();
+    void ApplyDefaultSettings();
 
     // Platform-specific adaptations
-    void AdaptForWindows(};
-    void AdaptForAndroid(};
-    void AdaptForiOS(};
-    void AdaptForWeb(};
-    void AdaptForConsole(};
+    void AdaptForWindows();
+    void AdaptForAndroid();
+    void AdaptForiOS();
+    void AdaptForWeb();
+    void AdaptForConsole();
 
     // Performance monitoring
-    void StartPerformanceMonitoring(};
-    void StopPerformanceMonitoring(};
-    void UpdatePerformanceMetrics(};
+    void StartPerformanceMonitoring();
+    void StopPerformanceMonitoring();
+    void UpdatePerformanceMetrics();
 
     // Settings helpers
-    void ApplyGraphicsSettings(};
-    void ApplyAudioSettings(};
-    void ApplyInputSettings(};
-    void ApplyUISettings(};
+    void ApplyGraphicsSettings();
+    void ApplyAudioSettings();
+    void ApplyInputSettings();
+    void ApplyUISettings();
 
     // Helpers
     bool IsFeatureSupported(const FString& Feature) const;
-    void OptimizeForHardware(};
-    void AdjustQualityBasedOnPerformance(};
+    void OptimizeForHardware();
+    void AdjustQualityBasedOnPerformance();
 };
 

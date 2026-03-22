@@ -21,10 +21,10 @@ public:
     UDecalComponent* SelectionDecal;
 
     UFUNCTION(BlueprintCallable, Category = "Unit")
-    void SetSelected(bool bIsSelected};
+    void SetSelected(bool bIsSelected);
 
     UFUNCTION(BlueprintCallable, Category = "Unit")
-    void MoveToLocation(const FVector& TargetLocation};
+    void MoveToLocation(const FVector& TargetLocation);
 
     UFUNCTION(BlueprintPure, Category = "Unit")
     bool IsSelected() const { return bIsSelected; }

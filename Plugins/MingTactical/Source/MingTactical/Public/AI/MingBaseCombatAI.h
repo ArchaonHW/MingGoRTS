@@ -93,36 +93,36 @@ class MINGTACTICAL_API UMingBaseCombatAI : public UObject
     GENERATED_BODY()
 
 public:
-    // 建�?�?    UMingBaseCombatAI(};
+    // 建�?�?    UMingBaseCombatAI();
 
     // ?��XAI
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual void Initialize(class AController* Controller};
+    virtual void Initialize(class AController* Controller);
 
     // ?�新 AI
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual void UpdateAI(float DeltaTime};
+    virtual void UpdateAI(float DeltaTime);
 
     // 製�X��?決�?
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual FMingTacticalDecision MakeTacticalDecision(const FMingAIContext& Context};
+    virtual FMingTacticalDecision MakeTacticalDecision(const FMingAIContext& Context);
 
     // ?��X��X�令
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual void ExecuteUnitCommand(class AActor* Unit, const FMingUnitCommand& Command};
+    virtual void ExecuteUnitCommand(class AActor* Unit, const FMingUnitCommand& Command);
 
     // 評估?�場局X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual float AssessBattlefieldSituation(const FMingAIContext& Context};
+    virtual float AssessBattlefieldSituation(const FMingAIContext& Context);
 
     // 設置 AI X��
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual void SetDifficulty(EMingAIDifficulty Difficulty};
+    virtual void SetDifficulty(EMingAIDifficulty Difficulty);
 
     // ?��? AI ?�X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     FMingAIState GetAIState() const { return CurrentAIState; }
 
     // ?�置 AI ?�X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual void ResetAIState(};
+    virtual void ResetAIState();
 
 protected:
     // AI ?�制X    UPROPERTY(BlueprintReadOnly)
@@ -154,31 +154,31 @@ protected:
     float CoordinationSkill;
 
     // ?��?威�?
-    virtual TArray<class AActor*> AnalyzeThreats(const TArray<class AActor*>& EnemyUnits};
+    virtual TArray<class AActor*> AnalyzeThreats(const TArray<class AActor*>& EnemyUnits);
 
     // 識別機�?
-    virtual TArray<FVector> IdentifyOpportunities(const FMingAIContext& Context};
+    virtual TArray<FVector> IdentifyOpportunities(const FMingAIContext& Context);
 
-    // 評估?��X�X    virtual float AssessUnitStatus(class AActor* Unit};
+    // 評估?��X�X    virtual float AssessUnitStatus(class AActor* Unit);
 
     // 規�?機�?路�?
-    virtual TArray<FVector> PlanMovementPath(class AActor* Unit, const FVector& Destination};
+    virtual TArray<FVector> PlanMovementPath(class AActor* Unit, const FVector& Destination);
 
-    // 計�X��X��?�?    virtual float CalculateAttackPriority(class AActor* Target};
+    // 計�X��X��?�?    virtual float CalculateAttackPriority(class AActor* Target);
 
     // 決�X�否?�退
-    virtual bool ShouldRetreat(const FMingAIContext& Context};
+    virtual bool ShouldRetreat(const FMingAIContext& Context);
 
     // 決�X�否?�禦
-    virtual bool ShouldDefend(const FMingAIContext& Context};
+    virtual bool ShouldDefend(const FMingAIContext& Context);
 
     // 決�X�否?��?
-    virtual bool ShouldAttack(const FMingAIContext& Context};
+    virtual bool ShouldAttack(const FMingAIContext& Context);
 
     // ?�新士氣
-    virtual void UpdateMorale(const FMingAIContext& Context};
+    virtual void UpdateMorale(const FMingAIContext& Context);
 
-    // ?�新?��X    virtual void UpdateCohesion(const TArray<class AActor*>& Units};
+    // ?�新?��X    virtual void UpdateCohesion(const TArray<class AActor*>& Units);
 
 private:
     // ?�後更?��X    float LastUpdateTime;

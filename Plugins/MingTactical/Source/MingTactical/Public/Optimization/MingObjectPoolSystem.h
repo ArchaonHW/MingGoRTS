@@ -89,25 +89,25 @@ class MINGTACTICAL_API UMingObjectPoolSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingObjectPoolSystem(};
+    UMingObjectPoolSystem();
 
     /**
      * ?��X�对象�?
      * @param InitialUnitPoolSize ?��X��?池大�?     * @param InitialAIPoolSize ?��?AI池大�?     * @param MaxPoolSize ?�大�?大�?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
-    void Initialize(int32 InitialUnitPoolSize = 100, int32 InitialAIPoolSize = 20, int32 MaxPoolSize = 5000};
+    void Initialize(int32 InitialUnitPoolSize = 100, int32 InitialAIPoolSize = 20, int32 MaxPoolSize = 5000);
 
     /**
      * ?�闭对象池系�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
-    void Shutdown(};
+    void Shutdown();
 
     /**
      * 预填?�对象�?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
-    void PrepopulatePools(};
+    void PrepopulatePools();
 
     // ==== ?��?池�?�?====
 
@@ -115,25 +115,25 @@ public:
      * 从�X��?一个�?�?     * @return ?�用?��?位�?例�?如�?没�X��Xnullptr
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
-    AMingTacticalUnit* AcquireUnit(UClass* UnitClass = nullptr};
+    AMingTacticalUnit* AcquireUnit(UClass* UnitClass = nullptr);
 
     /**
      * 将�?位�?还到池中
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
-    void ReturnUnit(AMingTacticalUnit* Unit};
+    void ReturnUnit(AMingTacticalUnit* Unit);
 
     /**
      * ?��X��X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
-    TArray<AMingTacticalUnit*> AcquireUnits(int32 Count, UClass* UnitClass = nullptr};
+    TArray<AMingTacticalUnit*> AcquireUnits(int32 Count, UClass* UnitClass = nullptr);
 
     /**
      * ?��?归�X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
-    void ReturnUnits(const TArray<AMingTacticalUnit*>& Units};
+    void ReturnUnits(const TArray<AMingTacticalUnit*>& Units);
 
     // ==== AI池�?�?====
 
@@ -141,57 +141,57 @@ public:
      * 从�X��?一个AI
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|AI")
-    AMingCombatAI* AcquireAI(UClass* AIClass = nullptr};
+    AMingCombatAI* AcquireAI(UClass* AIClass = nullptr);
 
     /**
      * 将AI归�X��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|AI")
-    void ReturnAI(AMingCombatAI* AI};
+    void ReturnAI(AMingCombatAI* AI);
 
     // ==== 池管X====
 
     /**
      * ?��X��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
-    void ExpandUnitPool(int32 AdditionalCount};
+    void ExpandUnitPool(int32 AdditionalCount);
 
     /**
      * ?��?AI�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
-    void ExpandAIPool(int32 AdditionalCount};
+    void ExpandAIPool(int32 AdditionalCount);
 
     /**
      * ?�缩池�X�除?�使?��?对象�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
-    void ShrinkUnusedPools(};
+    void ShrinkUnusedPools();
 
     /**
      * 强制清�X�?�对象�X�用�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
-    void ForceClearAll(};
+    void ForceClearAll();
 
     /**
      * 设置?�大�?大�X�制
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
-    void SetMaxPoolSize(int32 NewMaxSize};
+    void SetMaxPoolSize(int32 NewMaxSize);
 
     /**
      * 设置?�动?��X��?     * 当可?�对象�?于此?��?比时?�动?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
-    void SetAutoExpandThreshold(float Percentage};
+    void SetAutoExpandThreshold(float Percentage);
 
     /**
      * ?�用/禁用?�动?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
-    void SetAutoExpandEnabled(bool bEnabled};
+    void SetAutoExpandEnabled(bool bEnabled);
 
     // ==== 统计信息 ====
 
     UFUNCTION(BlueprintPure, Category = "Object Pool|Stats")
-    int32 GetTotalUnitPoolSize() const { return UnitPool.Num(}; }
+    int32 GetTotalUnitPoolSize() const { return UnitPool.Num(); }
 
     UFUNCTION(BlueprintPure, Category = "Object Pool|Stats")
     int32 GetAvailableUnitCount() const;
@@ -200,7 +200,7 @@ public:
     int32 GetInUseUnitCount() const;
 
     UFUNCTION(BlueprintPure, Category = "Object Pool|Stats")
-    int32 GetTotalAIPoolSize() const { return AIPool.Num(}; }
+    int32 GetTotalAIPoolSize() const { return AIPool.Num(); }
 
     UFUNCTION(BlueprintPure, Category = "Object Pool|Stats")
     int32 GetAvailableAICount() const;
@@ -226,22 +226,22 @@ public:
     // ==== 调�? ====
 
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Debug")
-    void PrintDebugInfo(};
+    void PrintDebugInfo();
 
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Debug")
     FString GetDebugString() const;
 
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Debug")
-    bool ValidateIntegrity(};
+    bool ValidateIntegrity();
 
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Debug")
-    void DumpPoolContents(};
+    void DumpPoolContents();
 
     /**
      * Tick ?�新（�X��X��?检?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
-    void Tick(float DeltaTime};
+    void Tick(float DeltaTime);
 
 private:
     // ?��?�?    UPROPERTY()
@@ -278,23 +278,23 @@ private:
     UPROPERTY()
     TSubclassOf<AMingCombatAI> DefaultAIClass;
 
-    // ?�建?��?�?    AMingTacticalUnit* CreateNewUnit(UClass* UnitClass};
+    // ?�建?��?�?    AMingTacticalUnit* CreateNewUnit(UClass* UnitClass);
 
     // ?�建?�AI
-    AMingCombatAI* CreateNewAI(UClass* AIClass};
+    AMingCombatAI* CreateNewAI(UClass* AIClass);
 
-    // ?�置?��X��?    void ResetUnit(AMingTacticalUnit* Unit};
+    // ?�置?��X��?    void ResetUnit(AMingTacticalUnit* Unit);
 
-    // ?�置AI?��?    void ResetAI(AMingCombatAI* AI};
+    // ?�置AI?��?    void ResetAI(AMingCombatAI* AI);
 
     // ?�正?�毁对象�?归�X��X��?
-    void DestroyUnit(AMingTacticalUnit* Unit};
-    void DestroyAI(AMingCombatAI* AI};
+    void DestroyUnit(AMingTacticalUnit* Unit);
+    void DestroyAI(AMingCombatAI* AI);
 
-    // 检?�是?��?要自?�扩�?    void CheckAutoExpand(};
+    // 检?�是?��?要自?�扩�?    void CheckAutoExpand();
 
     // 清�X��?引用
-    void CleanupInvalidReferences(};
+    void CleanupInvalidReferences();
 
     // ?�找?�用?��?�?    int32 FindAvailableUnitIndex() const;
     int32 FindAvailableAIIndex() const;

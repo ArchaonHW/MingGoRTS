@@ -71,7 +71,7 @@ class MINGMULTIPLAYER_API AMingRTSGameMode : public AGameModeBase
     GENERATED_BODY()
 
 public:
-    AMingRTSGameMode(};
+    AMingRTSGameMode();
 
     virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
     virtual void StartPlay() override;
@@ -122,13 +122,13 @@ public:
 
     // Game State Management
     UFUNCTION(BlueprintCallable, Category = "Game State")
-    void PauseGame(};
+    void PauseGame();
 
     UFUNCTION(BlueprintCallable, Category = "Game State")
-    void ResumeGame(};
+    void ResumeGame();
 
     UFUNCTION(BlueprintCallable, Category = "Game State")
-    void RestartGame(};
+    void RestartGame();
 
     UFUNCTION(BlueprintCallable, Category = "Game State")
     void ChangeMap(const FString& MapName};
@@ -138,13 +138,13 @@ public:
 
     // Data Synchronization
     UFUNCTION(BlueprintCallable, Category = "Sync")
-    void BroadcastGameState(};
+    void BroadcastGameState();
 
     UFUNCTION(BlueprintCallable, Category = "Sync")
     void SyncPlayerData(int32 PlayerID};
 
     UFUNCTION(BlueprintCallable, Category = "Sync")
-    void SyncAllPlayersData(};
+    void SyncAllPlayersData();
 
     // Relationship & Reputation Server Logic
     UFUNCTION(BlueprintCallable, Category = "Personal System")
@@ -211,24 +211,24 @@ protected:
     TObjectPtr<class UMingReputationReplication> ReputationReplication;
 
     // Internal Functions
-    void InitializeMultiplayerSystems(};
-    void ShutdownMultiplayerSystems(};
+    void InitializeMultiplayerSystems();
+    void ShutdownMultiplayerSystems();
     
-    void CheckIdlePlayers(};
+    void CheckIdlePlayers();
     void UpdatePlayerActivity(int32 PlayerID};
     
-    int32 AssignPlayerID(};
+    int32 AssignPlayerID();
     void ReleasePlayerID(int32 PlayerID};
     
     bool AuthenticatePlayer(int32 PlayerID, const FString& AuthToken};
     void HandlePlayerTimeout(int32 PlayerID};
     
-    void OnGamePaused(};
-    void OnGameResumed(};
+    void OnGamePaused();
+    void OnGameResumed();
     void OnPlayerActivity(int32 PlayerID};
     
-    void SaveServerState(};
-    void LoadServerState(};
+    void SaveServerState();
+    void LoadServerState();
 
     // Admin Commands
     UFUNCTION(Exec)
@@ -238,10 +238,10 @@ protected:
     void AdminBan(const FString& PlayerName, const FString& Reason, int32 DurationMinutes};
 
     UFUNCTION(Exec)
-    void AdminPause(};
+    void AdminPause();
 
     UFUNCTION(Exec)
-    void AdminUnpause(};
+    void AdminUnpause();
 
     UFUNCTION(Exec)
     void AdminChangeMap(const FString& MapName};

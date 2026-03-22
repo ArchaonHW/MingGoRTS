@@ -93,7 +93,7 @@ public:
     
     /** Generate test report */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
-    FString GenerateTestReport(const TArray<FLocalizationTestResult>& TestResults};
+    FString GenerateTestReport(const TArray<FLocalizationTestResult>& TestResults);
     
     /** Initialize test systems */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization|Test")
@@ -114,14 +114,14 @@ private:
     
     /** Helper method to create test result */
     FLocalizationTestResult CreateTestResult(bool bPassed, const FString& Name, 
-        const FString& Error = FString(), float Time = 0.0f};
+        const FString& Error = FString(), float Time = 0.0f);
     
     /** Measure execution time */
     template<typename Func>
-    float MeasureExecutionTime(Func&& Function};
+    float MeasureExecutionTime(Func&& Function);
     
     /** Validate text content */
-    bool ValidateTextContent(const FString& Key, const FString& ExpectedLanguage};
+    bool ValidateTextContent(const FString& Key, const FString& ExpectedLanguage);
     
     /** Test data generation */
     void GenerateTestData();

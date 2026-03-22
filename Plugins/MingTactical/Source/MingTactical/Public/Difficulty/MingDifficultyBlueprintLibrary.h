@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -9,139 +9,139 @@ class UMingDifficultyManager;
 class UMingPlayerPerformanceTracker;
 
 /**
- * ?ï¿½åº¦ç³»ï¿½Xï¿½å›¾?ï¿½æ•°ï¿½? * ?ï¿½ï¿½Xï¿½å›¾?ï¿½å¥½?ï¿½éš¾åº¦ç®¡?ï¿½æ¥X */
+ * ??«×¨t?X??????? * ???X????¦n???«×ºŞ??±µX */
 UCLASS()
 class MINGTACTICAL_API UMingDifficultyBlueprintLibrary : public UBlueprintFunctionLibrary
 {
     GENERATED_BODY()
 
 public:
-    // ==== ?ï¿½åº¦ç­‰çº§?ï¿½ï¿½? ====
+    // ==== ??«×µ¥????? ====
 
-    /** ?ï¿½ï¿½?å½“ï¿½Xï¿½åº¦ç­‰çº§ */
+    /** ??????X?«×µ¥? */
     UFUNCTION(BlueprintPure, Category = "MingGoRTS|Difficulty", meta = (WorldContext = "WorldContextObject"))
     static EDifficultyLevel GetCurrentDifficultyLevel(UObject* WorldContextObject};
 
-    /** è®¾ç½®?ï¿½åº¦ç­‰çº§ */
+    /** ?¸m??«×µ¥? */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty", meta = (WorldContext = "WorldContextObject"))
     static void SetDifficultyLevel(UObject* WorldContextObject, EDifficultyLevel NewLevel};
 
-    /** ?ï¿½ï¿½Xï¿½åº¦?ï¿½ç¤º?ï¿½ç§° */
+    /** ???X?«×??¥Ü??? */
     UFUNCTION(BlueprintPure, Category = "MingGoRTS|Difficulty")
     static FString GetDifficultyDisplayName(EDifficultyLevel Level};
 
-    /** ?ï¿½ï¿½Xï¿½?ï¿½éš¾åº¦ï¿½?çº§é€‰é¡¹ */
+    /** ???X????«×????? */
     UFUNCTION(BlueprintPure, Category = "MingGoRTS|Difficulty")
-    static TArray<EDifficultyLevel> GetAllDifficultyLevels(};
+    static TArray<EDifficultyLevel> GetAllDifficultyLevels();
 
-    // ==== ?ï¿½åº¦?ï¿½æ•°?ï¿½ï¿½? ====
+    // ==== ??«×??????? ====
 
-    /** ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ•°?ï¿½ï¿½?*/
+    /** ???X??X??????*/
     UFUNCTION(BlueprintPure, Category = "MingGoRTS|Difficulty|Parameters", meta = (WorldContext = "WorldContextObject"))
     static float GetDifficultyParameter(UObject* WorldContextObject, EDifficultyParameter Parameter};
 
-    /** è®¾ç½®?ï¿½ï¿½Xï¿½æ•°?ï¿½å€¼ï¿½?ä»…ï¿½Xï¿½ï¿½?ä¹‰éš¾åº¦ï¿½? */
+    /** ?¸m???X????­È????X?????«×?? */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Parameters", meta = (WorldContext = "WorldContextObject"))
     static void SetDifficultyParameter(UObject* WorldContextObject, EDifficultyParameter Parameter, float Value};
 
-    // ==== ?ï¿½æ€éš¾åº¦æ§X====
+    // ==== ????«×±±X====
 
-    /** ?ï¿½ç”¨/ç¦ç”¨?ï¿½æ€éš¾åº¦ï¿½X*/
+    /** ??¥Î/¸T¥Î????«×?X*/
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Dynamic", meta = (WorldContext = "WorldContextObject"))
     static void SetDynamicDifficultyEnabled(UObject* WorldContextObject, bool bEnabled};
 
-    /** ?ï¿½å¦?ï¿½ç”¨äº†åŠ¨?ï¿½éš¾ï¿½?*/
+    /** ??§_??¥Î¤F??????*/
     UFUNCTION(BlueprintPure, Category = "MingGoRTS|Difficulty|Dynamic", meta = (WorldContext = "WorldContextObject"))
     static bool IsDynamicDifficultyEnabled(UObject* WorldContextObject};
 
-    /** ?ï¿½ï¿½?/ï¿½Xï¿½åº¦ï¼ˆé˜²æ­¢è‡ª?ï¿½ï¿½Xï¿½ï¿½? */
+    /** ????/?X?«×¡]¨¾¤î¦Û???X??? */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Dynamic", meta = (WorldContext = "WorldContextObject"))
     static void LockDifficulty(UObject* WorldContextObject, bool bLocked};
 
-    /** ?ï¿½å¦è¢«ï¿½?ï¿½?*/
+    /** ??§_³Q????*/
     UFUNCTION(BlueprintPure, Category = "MingGoRTS|Difficulty|Dynamic", meta = (WorldContext = "WorldContextObject"))
     static bool IsDifficultyLocked(UObject* WorldContextObject};
 
-    /** ?ï¿½åŠ¨è§¦ï¿½Xï¿½åº¦è¯„ä¼° */
+    /** ???àD?X?«×?¦ô */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Dynamic", meta = (WorldContext = "WorldContextObject"))
     static void ForceDifficultyEvaluation(UObject* WorldContextObject};
 
-    // ==== å¿«æ·?ï¿½åº¦?ï¿½ï¿½? ====
+    // ==== §Ö±¶??«×???? ====
 
-    /** ?ï¿½ï¿½Xï¿½åº¦ */
+    /** ???X?«× */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty", meta = (WorldContext = "WorldContextObject"))
     static void IncreaseDifficulty(UObject* WorldContextObject};
 
-    /** ?ï¿½ï¿½Xï¿½åº¦ */
+    /** ???X?«× */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty", meta = (WorldContext = "WorldContextObject"))
     static void DecreaseDifficulty(UObject* WorldContextObject};
 
-    /** ?ï¿½ç½®ä¸ºï¿½?è®¤è®¾ï¿½?*/
+    /** ??¸m???????*/
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty", meta = (WorldContext = "WorldContextObject"))
     static void ResetDifficulty(UObject* WorldContextObject};
 
-    // ==== ?ï¿½åº¦ç³»æ•°?ï¿½ï¿½? ====
+    // ==== ??«×¨t????? ====
 
-    /** ?ï¿½ï¿½?AI?ï¿½åº¦ç³»æ•° */
+    /** ????AI??«×¨t? */
     UFUNCTION(BlueprintPure, Category = "MingGoRTS|Difficulty|Multipliers", meta = (WorldContext = "WorldContextObject"))
     static float GetAIDifficultyMultiplier(UObject* WorldContextObject};
 
-    /** ?ï¿½ï¿½?èµ„ï¿½Xï¿½ï¿½?ç³»æ•° */
+    /** ??????X???¨t? */
     UFUNCTION(BlueprintPure, Category = "MingGoRTS|Difficulty|Multipliers", meta = (WorldContext = "WorldContextObject"))
     static float GetResourceMultiplier(UObject* WorldContextObject};
 
-    /** ?ï¿½ï¿½?ä»»åŠ¡?ï¿½åº¦ç³»æ•° */
+    /** ????¥ô???«×¨t? */
     UFUNCTION(BlueprintPure, Category = "MingGoRTS|Difficulty|Multipliers", meta = (WorldContext = "WorldContextObject"))
     static float GetMissionDifficultyMultiplier(UObject* WorldContextObject};
 
-    // ==== ?ï¿½å®¶è¡¨ç°è¿½è¸ª ====
+    // ==== ??®aªí?°l? ====
 
-    /** è®°ï¿½Xï¿½ï¿½Xï¿½å¤±ï¼ˆï¿½Xï¿½ï¿½?ç³»ï¿½?è°ƒç”¨ï¿½?*/
+    /** ??X??X?¥¢¡]?X???¨t???¥Î??*/
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Tracking", meta = (WorldContext = "WorldContextObject"))
     static void TrackUnitLoss(UObject* WorldContextObject, int32 UnitId, int32 UnitType, float UnitValue};
 
-    /** è®°ï¿½Xï¿½ï¿½Xï¿½å»º */
+    /** ??X??X?«Ø */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Tracking", meta = (WorldContext = "WorldContextObject"))
     static void TrackUnitCreation(UObject* WorldContextObject, int32 UnitId, int32 UnitType, float UnitCost};
 
-    /** è®°ï¿½?èµ„ï¿½Xï¿½ï¿½? */
+    /** ?????X??? */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Tracking", meta = (WorldContext = "WorldContextObject"))
     static void TrackResourceCollection(UObject* WorldContextObject, float ResourceType, float Amount, float ExpectedRate};
 
-    /** è®°ï¿½?ä»»åŠ¡å®Œï¿½? */
+    /** ???¥ô?§¹?? */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Tracking", meta = (WorldContext = "WorldContextObject"))
     static void TrackMissionComplete(UObject* WorldContextObject, const FString& MissionId, bool bSuccess, float CompletionTime};
 
-    /** è®°ï¿½Xï¿½ï¿½?ç»“ï¿½? */
+    /** ??X?????? */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Tracking", meta = (WorldContext = "WorldContextObject"))
     static void TrackCombatResult(UObject* WorldContextObject, int32 EnemiesKilled, int32 AlliesLost, float DamageDealt, float DamageTaken};
 
-    /** ?ï¿½ï¿½?å½“ï¿½Xï¿½?ï¿½ï¿½X*/
+    /** ??????X????X*/
     UFUNCTION(BlueprintPure, Category = "MingGoRTS|Difficulty|Tracking", meta = (WorldContext = "WorldContextObject"))
     static float GetPlayerSkillIndex(UObject* WorldContextObject};
 
-    // ==== ?ï¿½çŸ¥ ====
+    // ==== ??ª¾ ====
 
-    /** ?ï¿½é€éš¾åº¦é€šçŸ¥ */
+    /** ??°e?«×³qª¾ */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Notifications", meta = (WorldContext = "WorldContextObject"))
     static void SendDifficultyNotification(UObject* WorldContextObject, const FString& Message, float Duration = 5.0f};
 
-    /** è®¾ç½®?ï¿½å¦?ï¿½çŸ¥?ï¿½å®¶ */
+    /** ?¸m??§_??ª¾??®a */
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Notifications", meta = (WorldContext = "WorldContextObject"))
     static void SetDifficultyNotificationsEnabled(UObject* WorldContextObject, bool bEnabled};
 
-    // ==== è°ƒï¿½? ====
+    // ==== ??? ====
 
-    /** ?ï¿½å°è°ƒï¿½?ä¿¡æ¯?ï¿½æ—¥ï¿½?*/
+    /** ??¦L???«H®§??¤é??*/
     UFUNCTION(BlueprintCallable, Category = "MingGoRTS|Difficulty|Debug", meta = (WorldContext = "WorldContextObject"))
     static void PrintDifficultyDebugInfo(UObject* WorldContextObject};
 
-    /** ?ï¿½ï¿½?è°ƒï¿½?å­—ç¬¦ï¿½?*/
+    /** ???????¦r²Å??*/
     UFUNCTION(BlueprintPure, Category = "MingGoRTS|Difficulty|Debug", meta = (WorldContext = "WorldContextObject"))
     static FString GetDifficultyDebugString(UObject* WorldContextObject};
 
 private:
-    /** ?ï¿½ï¿½Xï¿½åº¦ç®¡ï¿½Xï¿½ï¿½?ï¿½?*/
+    /** ???X?«×ºŞ?X?????*/
     static UMingDifficultyManager* GetDifficultyManager(UObject* WorldContextObject};
     static UMingPlayerPerformanceTracker* GetPerformanceTracker(UObject* WorldContextObject};
 };

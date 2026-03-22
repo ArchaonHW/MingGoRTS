@@ -48,18 +48,18 @@ public:
 
     // 設置?��?觸發概�? (0-1)
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void SetBaseProbability(float Probability};
+    void SetBaseProbability(float Probability);
 
     // 設置概�?衰�? (每次觸發後�X��?�?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void SetProbabilityDecay(float DecayFactor};
+    void SetProbabilityDecay(float DecayFactor);
 
     // 設置?��X�大觸?��X    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void SetIntervalRange(float MinInterval, float MaxInterval};
+    void SetIntervalRange(float MinInterval, float MaxInterval);
 
     // 添�X��X��X��?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void AddWeightedOption(const FRandomTriggerOption& Option};
+    void AddWeightedOption(const FRandomTriggerOption& Option);
 
     // 清除?�?�選X    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void ClearOptions();
@@ -77,7 +77,7 @@ public:
 
     // ?�新計�?概�?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void RecalculateProbability(float DeltaTime};
+    void RecalculateProbability(float DeltaTime);
 
 protected:
     // ?��?概�?
@@ -130,7 +130,7 @@ protected:
     FString SelectWeightedOption();
 
     // ?�新?��?窗口
-    void UpdateTriggerWindow(float DeltaTime};
+    void UpdateTriggerWindow(float DeltaTime);
 
     // 檢查?�否?��X�小�X    bool HasPassedMinInterval() const;
 

@@ -6,7 +6,7 @@
 #include "MingAIAssetManager.generated.h"
 
 /**
- * ∏Í≤£???X???
+ * Ë≥áÁî¢???X???
  */
 UENUM(BlueprintType)
 enum class EAssetCategory : uint8
@@ -23,60 +23,60 @@ enum class EAssetCategory : uint8
 };
 
 /**
- * ∏Í≤£??º∆?????? */
+ * Ë≥áÁî¢??Êï∏?????? */
 USTRUCT(BlueprintType)
 struct FAssetMetadata
 {
     GENERATED_BODY()
 
-    // ∏Í≤£ID
+    // Ë≥áÁî¢ID
     UPROPERTY(BlueprintReadOnly)
     FString AssetID;
 
-    // ∏Í≤£??∫Ÿ
+    // Ë≥áÁî¢??Á®±
     UPROPERTY(BlueprintReadOnly)
     FString AssetName;
 
-    // ∏Í≤£√˛??
+    // Ë≥áÁî¢È°û??
     UPROPERTY(BlueprintReadOnly)
     EAIAssetType AssetType;
 
-    // ∏Í≤£????
+    // Ë≥áÁî¢????
     UPROPERTY(BlueprintReadOnly)
     EAssetCategory Category;
 
-    // •¡?X???≠∑ÆÊ
+    // Ê∞ë?X???È¢®Ê†º
     UPROPERTY(BlueprintReadOnly)
     ERepublicEraStyle EraStyle;
 
-    // ??´ÿ????
+    // ??Âª∫????
     UPROPERTY(BlueprintReadOnly)
     FDateTime CreatedTime;
 
-    // ??•Û§j?? (bytes)
+    // ??‰ª∂Â§ß?? (bytes)
     UPROPERTY(BlueprintReadOnly)
     int64 FileSize;
 
-    // ??•Û∏Ù??
+    // ??‰ª∂Ë∑Ø??
     UPROPERTY(BlueprintReadOnly)
     FString FilePath;
 
     
     FString ThumbnailPath;
 
-    // º–≈“
+    // Ê®ôÁ±§
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> Tags;
 
-    // µ˚?? (1-5)
+    // Ë©ï?? (1-5)
     UPROPERTY(BlueprintReadOnly)
     float Rating;
 
-    // ®œ•Œ¶∏º∆
+    // ‰ΩøÁî®Ê¨°Êï∏
     UPROPERTY(BlueprintReadOnly)
     int32 UsageCount;
 
-    // ??ß_????
+    // ??Âê¶????
     UPROPERTY(BlueprintReadOnly)
     bool bIsFavorite;
 
@@ -95,7 +95,7 @@ struct FAssetMetadata
 };
 
 /**
- * ∏Í≤£??Ø¡??¬oX */
+ * Ë≥áÁî¢??Á¥¢??ÊøæX */
 USTRUCT(BlueprintType)
 struct FAssetFilter
 {
@@ -104,15 +104,15 @@ struct FAssetFilter
     
     FString SearchKeyword;
 
-    // ∏Í≤£√˛??
+    // Ë≥áÁî¢È°û??
     UPROPERTY(BlueprintReadWrite)
     TArray<EAIAssetType> AssetTypes;
 
-    // ∏Í≤£????
+    // Ë≥áÁî¢????
     UPROPERTY(BlueprintReadWrite)
     TArray<EAssetCategory> Categories;
 
-    // •¡?X???≠∑ÆÊ
+    // Ê∞ë?X???È¢®Ê†º
     UPROPERTY(BlueprintReadWrite)
     TArray<ERepublicEraStyle> EraStyles;
 
@@ -122,7 +122,7 @@ struct FAssetFilter
     
     bool bFavoritesOnly;
 
-    // ??≈„•‹§w®œ•Œ
+    // ??È°ØÁ§∫Â∑≤‰ΩøÁî®
     UPROPERTY(BlueprintReadWrite)
     bool bUsedOnly;
 
@@ -134,7 +134,7 @@ struct FAssetFilter
 };
 
 /**
- * AI∏Í≤£∫ﬁ?X * ∫ﬁ?X???AI???X??X */
+ * AIË≥áÁî¢ÁÆ°?X * ÁÆ°?X???AI???X??X */
 UCLASS(BlueprintType)
 class MINGCORE_API UMingAIAssetManager : public UObject
 {
@@ -144,36 +144,36 @@ public:
     UMingAIAssetManager();
 
     /**
-     * ???X??X?∫ﬁ??æπ
+     * ???X??X?ÁÆ°??Âô®
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     void Initialize();
 
     /**
-     * ????∏Í≤£∫ﬁ?X     */
+     * ????Ë≥áÁî¢ÁÆ°?X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     void Shutdown();
 
     /**
-     * ≤K??∏Í≤£
+     * Ê∑ª??Ë≥áÁî¢
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     bool AddAsset(const FAIAssetGenerationResult& GenerationResult) {};
 
     /**
-     * ≤æ∞£∏Í≤£
+     * ÁßªÈô§Ë≥áÁî¢
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     bool RemoveAsset(const FString& AssetID) {};
 
     /**
-     * ????∏Í≤£
+     * ????Ë≥áÁî¢
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset Manager")
     FAssetMetadata GetAsset(const FString& AssetID) const;
 
     /**
-     * ??Ø¡∏Í≤£
+     * ??Á¥¢Ë≥áÁî¢
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     TArray<FAssetMetadata> SearchAssets(const FAssetFilter& Filter) const;
@@ -184,110 +184,114 @@ public:
     TArray<FAssetMetadata> GetAllAssets() const;
 
     /**
-     * ????∏Í≤£≤Œ??
+     * ????Ë≥áÁî¢Áµ±??
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset Manager")
     TMap<EAssetCategory, int32> GetAssetStatistics() const;
 
     /**
-     * º–??∏Í≤£??¶¨X     */
+     * Ê®ô??Ë≥áÁî¢??Êî∂X     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
-    bool SetAssetFavorite(const FString& AssetID, bool bFavorite};
+    bool SetAssetFavorite(const FString& AssetID, bool bFavorite);
 
     /**
-     * µ˚??∏Í≤£
+     * Ë©ï??Ë≥áÁî¢
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
-    bool RateAsset(const FString& AssetID, float Rating};
+    bool RateAsset(const FString& AssetID, float Rating);
 
     /**
-     * ºW??®œ•Œ¶∏º∆
+     * Â¢û??‰ΩøÁî®Ê¨°Êï∏
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     bool IncrementUsage(const FString& AssetID) {};
 
     /**
-     * æ…•X∏Í≤£
+     * Â∞éÂá∫Ë≥áÁî¢
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     bool ExportAsset(const FString& AssetID, const FString& ExportPath) const;
 
     /**
-     * ????æ…•X∏Í≤£
+     * ????Â∞éÂá∫Ë≥áÁî¢
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     bool ExportAssets(const TArray<FString>& AssetIDs, const FString& ExportDirectory) const;
 
     /**
-     * æ…§J∏Í≤£
+     * Â∞éÂÖ•Ë≥áÁî¢
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
-    bool ImportAsset(const FString& FilePath, EAssetCategory Category};
+    bool ImportAsset(const FString& FilePath, EAssetCategory Category);
 
     /**
-     * ≤M?X???∏Í≤£
+     * Ê∏Ö?X???Ë≥áÁî¢
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     int32 CleanupInvalidAssets();
 
     /**
-     * ????¶s¿x™≈??®œ•Œ????
+     * ????Â≠òÂÑ≤Á©∫??‰ΩøÁî®????
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset Manager")
     float GetStorageUsageMB() const;
 
     /**
-     * ???X?¬À∏Í≤£
+     * ???X?Ëñ¶Ë≥áÁî¢
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     TArray<FAssetMetadata> GetRecommendedAssets(EAssetCategory Category, int32 Count = 10) const;
 
     /**
-     * ???X???πÍ??
+     * ???X???ÂØ¶??
      */
     static UMingAIAssetManager* Get();
 
 protected:
-    // ∏Í≤£??™Ì
+    // Ë≥áÁî¢??Ë°®
     UPROPERTY()
     TArray<FAssetMetadata> AssetList;
 
-    // ??ß_§w??©l??
+    // ??Âê¶Â∑≤??Âßã??
     bool bIsInitialized;
 
-    // ????πÍ??
+    // ????ÂØ¶??
     static UMingAIAssetManager* Instance;
 
-    // ∏Í≤£???X?•Û∏Ù??
+    // Ë≥áÁî¢???X?‰ª∂Ë∑Ø??
     FString AssetDatabasePath;
 
-    // ∏Í≤£¶s¿x????
+    // Ë≥áÁî¢Â≠òÂÑ≤????
     FString AssetStorageDirectory;
 
-    // ????∏Í≤£??????    bool LoadAssetDatabase();
+    // ????Ë≥áÁî¢??????
+    bool LoadAssetDatabase();
 
-    // ´O??∏Í≤£??????    bool SaveAssetDatabase() const;
+    // ‰øù??Ë≥áÁî¢??????
+    bool SaveAssetDatabase() const;
 
-    // ??´ÿ∏Í≤£??º∆X    FAssetMetadata CreateAssetMetadata(const FAIAssetGenerationResult& GenerationResult) {};
+    // ??Âª∫Ë≥áÁî¢??Êï∏X
+    FAssetMetadata CreateAssetMetadata(const FAIAssetGenerationResult& GenerationResult) {};
 
-    // ΩT??∏Í≤£????
-    EAssetCategory DetermineAssetCategory(EAIAssetType AssetType};
+    // Á¢∫??Ë≥áÁî¢????
+    EAssetCategory DetermineAssetCategory(EAssetCategory AssetType);
 
-    // ≈Á??∏Í≤£??•Û
+    // È©ó??Ë≥áÁî¢??‰ª∂
     bool ValidateAssetFile(const FString& FilePath) const;
 
-    // ????¡Y≤§X    FString GenerateThumbnail(const FString& AssetPath) const;
+    // ????Á∏ÆÁï•X
+    FString GenerateThumbnail(const FString& AssetPath) const;
 
-    // ???X?•Û§j??
+    // ???X?‰ª∂Â§ß??
     int64 GetFileSize(const FString& FilePath) const;
 
-    // ??Ø¡????¿À¨d
+    // ??Á¥¢????Ê™¢Êü•
     bool MatchesFilter(const FAssetMetadata& Asset, const FAssetFilter& Filter) const;
 
-    // ????∏Í≤£
+    // ????Ë≥áÁî¢
     void SortAssets(TArray<FAssetMetadata>& Assets, const FString& SortBy) const;
 
-    // ´ÿ??∏Í≤£????
+    // Âª∫??Ë≥áÁî¢????
     bool CreateAssetDirectories();
 };
 

@@ -142,19 +142,19 @@ public:
     /**
      * 视线?�询 - 检测两个�?置间?�否?��?位阻X     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    bool HasLineOfSight(const FVector& Start, const FVector& End, float CheckRadius = 50.0f};
+    bool HasLineOfSight(const FVector& Start, const FVector& End, float CheckRadius = 50.0f);
 
     /**
      * ?��?视线?��X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    FSpatialQueryResult GetUnitsInLineOfSight(const FVector& Start, const FVector& End, float Width};
+    FSpatialQueryResult GetUnitsInLineOfSight(const FVector& Start, const FVector& End, float Width);
 
     /**
      * ?��X��?网格?��X��X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    TArray<AMingTacticalUnit*> GetUnitsInCell(const FIntVector& GridCoord};
+    TArray<AMingTacticalUnit*> GetUnitsInCell(const FIntVector& GridCoord);
 
     /**
      * ?��X��X�?��?网格?��?
@@ -176,13 +176,13 @@ public:
      * ?��?系�?统计信息
      */
     UFUNCTION(BlueprintPure, Category = "Spatial Partition|Stats")
-    int32 GetTotalCellCount() const { return GridCells.Num(}; }
+    int32 GetTotalCellCount() const { return GridCells.Num(); }
 
     UFUNCTION(BlueprintPure, Category = "Spatial Partition|Stats")
     int32 GetOccupiedCellCount() const;
 
     UFUNCTION(BlueprintPure, Category = "Spatial Partition|Stats")
-    int32 GetTotalUnitCount() const { return TrackedUnits.Num(}; }
+    int32 GetTotalUnitCount() const { return TrackedUnits.Num(); }
 
     UFUNCTION(BlueprintPure, Category = "Spatial Partition|Stats")
     float GetAverageUnitsPerCell() const;
@@ -191,35 +191,35 @@ public:
      * 调�?绘制
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Debug")
-    void DrawDebugVisualization(bool bDrawGrid = true, bool bDrawUnits = false};
+    void DrawDebugVisualization(bool bDrawGrid = true, bool bDrawUnits = false);
 
     /**
      * 验�?系�?完整X     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Debug")
-    bool ValidateIntegrity(};
+    bool ValidateIntegrity();
 
     /**
      * 清�X��?引用
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void CleanupInvalidReferences(};
+    void CleanupInvalidReferences();
 
     // ==== ?��X��? ====
 
     /**
      * ?��?注�X��?
      */
-    void BatchRegisterUnits(const TArray<AMingTacticalUnit*>& Units};
+    void BatchRegisterUnits(const TArray<AMingTacticalUnit*>& Units);
 
     /**
      * ?��?注�X��?
      */
-    void BatchUnregisterUnits(const TArray<AMingTacticalUnit*>& Units};
+    void BatchUnregisterUnits(const TArray<AMingTacticalUnit*>& Units);
 
     /**
      * ?��X�新位置
      */
-    void BatchUpdatePositions(const TMap<AMingTacticalUnit*, FVector>& PositionUpdates};
+    void BatchUpdatePositions(const TMap<AMingTacticalUnit*, FVector>& PositionUpdates);
 
 private:
     // 网格?��X��?
@@ -243,21 +243,21 @@ private:
     int32 QueryCount;
     float TotalQueryTime;
 
-    // ?��X��?建�X��X    FSpatialGridCell* GetOrCreateCell(const FIntVector& Coord};
-    FSpatialGridCell* GetCell(const FIntVector& Coord};
+    // ?��X��?建�X��X    FSpatialGridCell* GetOrCreateCell(const FIntVector& Coord);
+    FSpatialGridCell* GetCell(const FIntVector& Coord);
 
     // ?��X�邻网格?��?
-    TArray<FIntVector> GetNeighboringCells(const FIntVector& Center, int32 Radius = 1};
+    TArray<FIntVector> GetNeighboringCells(const FIntVector& Center, int32 Radius = 1);
 
-    // ?��X�询?�?�?��X��X    TArray<FIntVector> GetCellsInRadius(const FVector& Center, float Radius};
-    TArray<FIntVector> GetCellsInBox(const FBox& Box};
+    // ?��X�询?�?�?��X��X    TArray<FIntVector> GetCellsInRadius(const FVector& Center, float Radius);
+    TArray<FIntVector> GetCellsInBox(const FBox& Box);
 
-    // 清�?空�X    void CleanupEmptyCells(};
+    // 清�?空�X    void CleanupEmptyCells();
 
     // 验�X��X�否?�边?��?
     bool IsValidGridCoord(const FIntVector& Coord) const;
 
     // ?�新统计
-    void RecordQueryTime(float TimeMs};
+    void RecordQueryTime(float TimeMs);
 };
 

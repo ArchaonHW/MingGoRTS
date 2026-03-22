@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -171,7 +171,7 @@ class MINGSTRATEGIC_API UMingCampaignSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingCampaignSystem(};
+    UMingCampaignSystem();
 
     // Campaign Management
     UFUNCTION(BlueprintCallable, Category = "Campaign")
@@ -238,7 +238,7 @@ public:
 
     // Progression
     UFUNCTION(BlueprintCallable, Category = "Progression")
-    void UnlockNextMission(};
+    void UnlockNextMission();
 
     UFUNCTION(BlueprintCallable, Category = "Progression")
     void SetMissionPrerequisite(const FString& MissionID, const FString& PrerequisiteID};
@@ -287,18 +287,18 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     void LoadCampaignData(const FString& JsonString};
 
-    // ?ï¿½å½¹æ¨¡ï¿½Xï¿½å®¹?ï¿½ï¿½?
+    // ??§Ð¼Ò?X?®e????
     UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
-    void ExpandCampaignContent(};
+    void ExpandCampaignContent();
 
     UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
-    void AddDynamicMissions(};
+    void AddDynamicMissions();
 
     UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
-    void ImplementAdaptiveDifficulty(};
+    void ImplementAdaptiveDifficulty();
 
     UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
-    void GenerateProceduralContent(};
+    void GenerateProceduralContent();
 
 protected:
     UPROPERTY()
@@ -316,7 +316,7 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<UWorld> WorldContext;
 
-    // ?ï¿½å®¹?ï¿½ï¿½Xï¿½æ•¸
+    // ??®e???X?¼Æ
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Campaign Enhancement")
     bool bEnableDynamicContent = true;
 
@@ -329,22 +329,22 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Campaign Enhancement")
     float ContentExpansionRate = 1.5f;
 
-    // ?ï¿½éƒ¨?ï¿½æ•¸
-    void InitializeDefaultCampaigns(};
-    void SetupHistoricalCampaigns(};
-    void SetupWhatIfCampaigns(};
-    void SetupTutorialCampaign(};
-    void CheckMissionCompletion(};
+    // ??³¡??¼Æ
+    void InitializeDefaultCampaigns();
+    void SetupHistoricalCampaigns();
+    void SetupWhatIfCampaigns();
+    void SetupTutorialCampaign();
+    void CheckMissionCompletion();
     void UnlockDependentMissions(const FString& CompletedMissionID};
-    void ValidateMissionProgression(};
+    void ValidateMissionProgression();
 
-    // ?ï¿½å®¹?ï¿½ï¿½Xï¿½éƒ¨?ï¿½æ•¸
-    void GenerateNewMissions(};
-    void AdjustMissionDifficulty(};
-    void CreateProceduralMaps(};
-    void ExpandCampaignNarrative(};
+    // ??®e???X?³¡??¼Æ
+    void GenerateNewMissions();
+    void AdjustMissionDifficulty();
+    void CreateProceduralMaps();
+    void ExpandCampaignNarrative();
     float CalculatePlayerSkillLevel() const;
-    void OptimizeMissionFlow(};
+    void OptimizeMissionFlow();
 
     // Helpers
     FMingMission* FindMission(const FString& MissionID};

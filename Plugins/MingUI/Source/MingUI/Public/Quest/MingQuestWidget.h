@@ -122,7 +122,7 @@ public:
     void InitializeWidget(class UMingPersonalManager* InPersonalManager};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void RefreshQuestList(};
+    void RefreshQuestList();
 
     // View Modes
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
@@ -136,7 +136,7 @@ public:
     void SelectQuest(FName QuestID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ClearQuestSelection(};
+    void ClearQuestSelection();
 
     UFUNCTION(BlueprintPure, Category = "Quest UI")
     FName GetSelectedQuest() const { return SelectedQuestID; }
@@ -178,13 +178,13 @@ public:
     void FilterByGiver(FName CharacterID};
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ShowOnlyAvailable(};
+    void ShowOnlyAvailable();
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ShowOnlyPriority(};
+    void ShowOnlyPriority();
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void ClearFilters(};
+    void ClearFilters();
 
     // Requirements Check
     UFUNCTION(BlueprintPure, Category = "Quest UI")
@@ -221,7 +221,7 @@ public:
 
     // Tracking HUD
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
-    void UpdateTrackingHUD(};
+    void UpdateTrackingHUD();
 
     UFUNCTION(BlueprintCallable, Category = "Quest UI")
     void ShowTrackingHUD(bool bShow};
@@ -338,47 +338,47 @@ protected:
 
     // Button Handlers
     UFUNCTION()
-    void OnActiveTabClicked(};
+    void OnActiveTabClicked();
 
     UFUNCTION()
-    void OnAvailableTabClicked(};
+    void OnAvailableTabClicked();
 
     UFUNCTION()
-    void OnCompletedTabClicked(};
+    void OnCompletedTabClicked();
 
     UFUNCTION()
     void OnQuestButtonClicked(FName QuestID};
 
     UFUNCTION()
-    void OnAcceptButtonClicked(};
+    void OnAcceptButtonClicked();
 
     UFUNCTION()
-    void OnAbandonButtonClicked(};
+    void OnAbandonButtonClicked();
 
     UFUNCTION()
-    void OnTrackButtonClicked(};
+    void OnTrackButtonClicked();
 
     UFUNCTION()
-    void OnCloseButtonClicked(};
+    void OnCloseButtonClicked();
 
     // Internal Functions
-    void PopulateQuestList(};
-    void UpdateQuestDetails(};
+    void PopulateQuestList();
+    void UpdateQuestDetails();
     void CreateQuestEntry(const FMingQuestDisplayData& Data};
     void CreateObjectiveEntry(const FText& ObjectiveText, bool bIsCompleted, int32 Index};
     void CreateRewardEntry(const FText& RewardText};
-    void ClearQuestList(};
-    void ClearObjectivesList(};
-    void ClearRewardsList(};
-    void FilterAndSortData(};
-    void UpdateButtonStates(};
+    void ClearQuestList();
+    void ClearObjectivesList();
+    void ClearRewardsList();
+    void FilterAndSortData();
+    void UpdateButtonStates();
     FLinearColor GetQuestColor(int32 Status) const;
     FString FormatTimeRemaining(float Seconds) const;
 
     // Animation
     void AnimateProgressBar(float TargetValue};
     void AnimateQuestEntry(UWidget* EntryWidget};
-    void PlayCompletionEffects(};
+    void PlayCompletionEffects();
 
 public:
     // Static utilities

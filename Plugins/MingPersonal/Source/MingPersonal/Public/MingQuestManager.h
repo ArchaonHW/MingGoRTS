@@ -6,56 +6,56 @@
 #include "MingItemManager.h"
 #include "MingQuestManager.generated.h"
 
-// •Ù??√˛??
+// ‰ªª??È°û??
 UENUM(BlueprintType)
 enum class EMingQuestType : uint8
 {
-    Main,              // •D??•Ù??
-    Side,              // ????•Ù??
-    Daily,              // ®C§È•Ù??
-    Weekly,             // ®C©P•Ù??
-    Event,              // ¨°??•Ù??
-    Hidden,             // ????•Ù??
-    Tutorial,           // ????•Ù??
-    Achievement         // ??¥N•Ù??
+    Main,              // ‰∏ª??‰ªª??
+    Side,              // ????‰ªª??
+    Daily,              // ÊØèÊó•‰ªª??
+    Weekly,             // ÊØèÂë®‰ªª??
+    Event,              // Ê¥ª??‰ªª??
+    Hidden,             // ????‰ªª??
+    Tutorial,           // ????‰ªª??
+    Achievement         // ??Â∞±‰ªª??
 };
 
-// •Ù?X?XUENUM(BlueprintType)
+// ‰ªª?X?XUENUM(BlueprintType)
 enum class EMingQuestStatus : uint8
 {
-    Available,          // ??±µX    Active,             // ??????    Completed,          // §w?X    Failed,             // •¢??
+    Available,          // ??Êé•X    Active,             // ??????    Completed,          // Â∑≤?X    Failed,             // Â§±??
     Abandoned,          // ????
     Locked              // ????
 };
 
-// •Ù?X???√˛??
+// ‰ªª?X???È°û??
 UENUM(BlueprintType)
 enum class EMingQuestObjectiveType : uint8
 {
-    Kill,               // ??±˛
+    Kill,               // ??ÊÆ∫
     Collect,            // ????
-    Deliver,            // ????    Escort,             // ≈@??    Defend,             // ??øm
-    Explore,            // ??Ø¡
-    Talk,               // πÔ∏‹
-    Interact,           // §¨??
+    Deliver,            // ????    Escort,             // Ë≠∑??    Defend,             // ??Á¶¶
+    Explore,            // ??Á¥¢
+    Talk,               // Â∞çË©±
+    Interact,           // ‰∫í??
     Survive,            // ????
-    Capture,            // ¶˚??
+    Capture,            // ‰Ωî??
     Destroy             // ????
 };
 
-// ???X?§‰√˛??
+// ???X?ÊîØÈ°û??
 UENUM(BlueprintType)
 enum class EMingStoryBranch : uint8
 {
-    Linear,             // Ωu??    Choice,             // ???X?§‰
-    Conditional,        // ±¯•Û??§‰
-    Random,             // ???X?§‰
-    Moral,              // ??ºw????
-    Strategic,          // ??≤§????
-    Personal            // ??§H????
+    Linear,             // Á∑ö??    Choice,             // ???X?ÊîØ
+    Conditional,        // Ê¢ù‰ª∂??ÊîØ
+    Random,             // ???X?ÊîØ
+    Moral,              // ??Âæ∑????
+    Strategic,          // ??Áï•????
+    Personal            // ??‰∫∫????
 };
 
-// •Ù?X???
+// ‰ªª?X???
 USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingQuestObjective
 {
@@ -65,11 +65,11 @@ struct MINGPERSONAL_API FMingQuestObjective
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ObjectiveID;
 
-    // ???X?≠z
+    // ???X?Ëø∞
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ObjectiveDescription;
 
-    // ????√˛??
+    // ????È°û??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingQuestObjectiveType ObjectiveType;
 
@@ -77,26 +77,26 @@ struct MINGPERSONAL_API FMingQuestObjective
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 TargetCount;
 
-    // ???X?´◊
+    // ???X?Â∫¶
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CurrentProgress;
 
-    // ???X?º∆
+    // ???X?Êï∏
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, FString> ObjectiveParameters;
 
-    // ??ß_????
+    // ??Âê¶????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsVisible;
 
-    // ??ß_ßπ??
+    // ??Âê¶ÂÆå??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsCompleted;
 
-    // ??ß_??øÔX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??Âê¶??ÈÅ∏X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsOptional;
 
-    // ????¶Ï∏m
+    // ????‰ΩçÁΩÆ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector TargetLocation;
 
@@ -104,11 +104,11 @@ struct MINGPERSONAL_API FMingQuestObjective
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString TargetNPC;
 
-    // ???X?®Ó
+    // ???X?Âà∂
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TimeLimit;
 
-    // •¢??±¯•Û
+    // Â§±??Ê¢ù‰ª∂
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> FailureConditions;
 
@@ -140,42 +140,42 @@ struct MINGPERSONAL_API FMingStoryChoice
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ChoiceID;
 
-    // ???X?•ª
+    // ???X?Êú¨
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ChoiceText;
 
-    // ???X?≠z
+    // ???X?Ëø∞
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ChoiceDescription;
 
-    // ????√˛??
+    // ????È°û??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingStoryBranch ChoiceType;
 
-    // ????±¯•Û
+    // ????Ê¢ù‰ª∂
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> ChoiceConditions;
 
-    // ????µ≤??
+    // ????Áµê??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, FString> ChoiceResults;
 
-    // ??ºwºv≈T
+    // ??Âæ∑ÂΩ±Èüø
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MoralImpact;
 
-    // ????ºv≈T
+    // ????ÂΩ±Èüø
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ReputationImpact;
 
-    // ????ºv≈T
+    // ????ÂΩ±Èüø
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> RelationshipImpact;
 
-    // ??ß_§wøÔX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??Âê¶Â∑≤ÈÅ∏X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsChosen;
 
-    // ????≈v??
+    // ????Ê¨ä??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ChoiceWeight;
 
@@ -195,40 +195,40 @@ struct MINGPERSONAL_API FMingStoryChoice
     }
 };
 
-// •Ù?X???
+// ‰ªª?X???
 USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingQuestData
 {
     GENERATED_BODY()
 
-    // •Ù??ID
+    // ‰ªª??ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 QuestID;
 
-    // •Ù?X?∫Ÿ
+    // ‰ªª?X?Á®±
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString QuestName;
 
-    // •Ù?X?≠z
+    // ‰ªª?X?Ëø∞
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString QuestDescription;
 
-    // •Ù??√˛??
+    // ‰ªª??È°û??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingQuestType QuestType;
 
-    // •Ù?X?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ‰ªª?X?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingQuestStatus QuestStatus;
 
-    // •Ù??µ•??
+    // ‰ªª??Á≠â??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 QuestLevel;
 
-    // ´ÿƒ≥µ•??
+    // Âª∫Ë≠∞Á≠â??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SuggestedLevel;
 
-    // •Ù?X??X??"
+    // ‰ªª?X??X??"
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingQuestObjective> QuestObjectives;
 
@@ -236,62 +236,62 @@ struct MINGPERSONAL_API FMingQuestData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingStoryChoice> StoryChoices;
 
-    // •Ù?X?¿y
+    // ‰ªª?X?Âãµ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, int32> QuestRewards;
 
-    // ∏g?X?¿y
+    // Á∂ì?X?Âãµ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ExperienceReward;
 
-    // ???X?¿y
+    // ???X?Âãµ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ReputationReward;
 
-    // ???X?¿y
+    // ???X?Âãµ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingItemData> ItemRewards;
 
-    // ??∏m•Ù??
+    // ??ÁΩÆ‰ªª??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> PrerequisiteQuests;
 
-    // ?X±¯•Û
+    // ?XÊ¢ù‰ª∂
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UnlockConditions;
 
-    // •Ù?X??X???
+    // ‰ªª?X??X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime StartTime;
 
-    // •Ù?X?§Ó????
+    // ‰ªª?X?Ê≠¢????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime DeadlineTime;
 
-    // •Ù??¶Ï∏m
+    // ‰ªª??‰ΩçÁΩÆ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector QuestLocation;
 
-    // •Ù??NPC
+    // ‰ªª??NPC
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString QuestGiver;
 
-    // •Ù?X???∏Ù??
+    // ‰ªª?X???Ë∑Ø??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString QuestIconPath;
 
-    // •Ù??º–≈“
+    // ‰ªª??Ê®ôÁ±§
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> QuestTags;
 
     // ???X??X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float StoryImportance;
 
-    // ????¶∏º∆
+    // ????Ê¨°Êï∏
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 RepeatCount;
 
-    // ??§j??Ω∆¶∏X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??Â§ß??Ë§áÊ¨°X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 MaxRepeats;
 
     FMingQuestData()
@@ -323,37 +323,37 @@ struct MINGPERSONAL_API FMingQuestData
     }
 };
 
-// ????∏`??USTRUCT(BlueprintType)
+// ????ÁØÄ??USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingStoryNode
 {
     GENERATED_BODY()
 
-    // ∏`¬IID
+    // ÁØÄÈªûID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 NodeID;
 
-    // ∏`¬I?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ÁØÄÈªû?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString NodeType;
 
-    // ∏`¬I§∫??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ÁØÄÈªûÂÖß??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString NodeContent;
 
-    // ∏`¬IøÔX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ÁØÄÈªûÈÅ∏X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingStoryChoice> NodeChoices;
 
-    // ∏`¬I????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ÁØÄÈªû????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> NodeConditions;
 
-    // ∏`¬I?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ÁØÄÈªû?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, FString> NodeResults;
 
-    // ∏`¬I?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ÁØÄÈªû?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float NodeWeight;
 
-    // ??ß_§w≥XX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??Âê¶Â∑≤Ë®™X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsVisited;
 
-    // ∏`¬I????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ÁØÄÈªû????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector NodePosition;
 
     FMingStoryNode()
@@ -370,16 +370,16 @@ struct MINGPERSONAL_API FMingStoryNode
     }
 };
 
-// •Ù??∫ﬁ??®∆•Û©e??
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestAccepted, const FMingQuestData&, Quest, const FString&, QuestGiver};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestCompleted, const FMingQuestData&, Quest, bool, bSuccess};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnQuestObjectiveUpdated, int32, QuestID, int32, ObjectiveID, int32, NewProgress};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnStoryChoiceMade, int32, QuestID, int32, ChoiceID, const FMingStoryChoice&, Choice};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestFailed, const FMingQuestData&, Quest, const FString&, FailureReason};
+// ‰ªª??ÁÆ°??‰∫ã‰ª∂Âßî??
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestAccepted, const FMingQuestData&, Quest, const FString&, QuestGiver);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestCompleted, const FMingQuestData&, Quest, bool, bSuccess);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnQuestObjectiveUpdated, int32, QuestID, int32, ObjectiveID, int32, NewProgress);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnStoryChoiceMade, int32, QuestID, int32, ChoiceID, const FMingStoryChoice&, Choice);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestFailed, const FMingQuestData&, Quest, const FString&, FailureReason);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestAbandoned, int32, QuestID, const FString&, Reason);
 
 /**
- * •Ù??∫ﬁ?X * ≠t≥d∫ﬁ??•Ù?X???®∆®t?? */
+ * ‰ªª??ÁÆ°?X * Ë≤†Ë≤¨ÁÆ°??‰ªª?X???‰∫ãÁ≥ª?? */
 UCLASS(ClassGroup = (Personal), Blueprintable, BlueprintType)
 class MINGPERSONAL_API UMingQuestManager : public UObject
 {
@@ -388,86 +388,86 @@ class MINGPERSONAL_API UMingQuestManager : public UObject
 public:
     UMingQuestManager();
 
-    // ???X?•Ù??®t??    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
+    // ???X?‰ªª??Á≥ª??    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool InitializeQuestSystem();
 
-    // ????•Ù??
+    // ????‰ªª??
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool AcceptQuest(int32 QuestID, const FString& QuestGiver);
 
-    // ????•Ù??
+    // ????‰ªª??
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool DeclineQuest(int32 QuestID);
 
-    // ????•Ù??
+    // ????‰ªª??
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool AbandonQuest(int32 QuestID, const FString& Reason);
 
-    // ßπ??•Ù??
+    // ÂÆå??‰ªª??
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool CompleteQuest(int32 QuestID, bool bSuccess = true);
 
-    // ??∑s•Ù?X???
+    // ??Êñ∞‰ªª?X???
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool UpdateQuestObjective(int32 QuestID, int32 ObjectiveID, int32 Progress);
 
-    // ??•X???X???
+    // ??Âá∫???X???
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool MakeStoryChoice(int32 QuestID, int32 ChoiceID);
 
-    // ????•Ù?X??"
+    // ????‰ªª?X??"
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TArray<FMingQuestData> GetAvailableQuests() const;
 
-    // ????¨°??•Ù??
+    // ????Ê¥ª??‰ªª??
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TArray<FMingQuestData> GetActiveQuests() const;
 
-    // ????§w?X?•ÙX    UFUNCTION(BlueprintPure, Category = "Quest Manager")
+    // ????Â∑≤?X?‰ªªX    UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TArray<FMingQuestData> GetCompletedQuests() const;
 
-    // ???X???•Ù??
+    // ???X???‰ªª??
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     FMingQuestData GetQuest(int32 QuestID) const;
 
-    // ¿À¨d•Ù??±¯•Û
+    // Ê™¢Êü•‰ªª??Ê¢ù‰ª∂
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     bool CanAcceptQuest(int32 QuestID) const;
 
-    // ????•Ù?X?´◊
+    // ????‰ªª?X?Â∫¶
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     float GetQuestProgress(int32 QuestID) const;
 
-    // ???X???∏`??    UFUNCTION(BlueprintPure, Category = "Quest Manager")
+    // ???X???ÁØÄ??    UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TArray<FMingStoryNode> GetStoryNodes(int32 QuestID) const;
 
-    // ?X?•ÙX    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
+    // ?X?‰ªªX    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     void UnlockNewQuests();
 
-    // ??∏m•Ù??
+    // ??ÁΩÆ‰ªª??
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool ResetQuest(int32 QuestID);
 
-    // ????•Ù??≤Œ??
+    // ????‰ªª??Áµ±??
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TMap<EMingQuestType, int32> GetQuestStatistics() const;
 
-    // ???X??X?§‰
+    // ???X??X?ÊîØ
     UFUNCTION(BlueprintPure, Category = "Quest Manager")
     TArray<FMingStoryChoice> GetStoryChoices(int32 QuestID) const;
 
-    // ´O??•Ù?X???
+    // ‰øù??‰ªª?X???
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool SaveQuestData();
 
-    // ∏¸§J•Ù?X???
+    // ËºâÂÖ•‰ªª?X???
     UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool LoadQuestData();
 
-    // ≤M∞£????•Ù??º∆X    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
+    // Ê∏ÖÈô§????‰ªª??Êï∏X    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     void ClearAllQuestData();
 
-    // ®∆•Û©e??
+    // ‰∫ã‰ª∂Âßî??
     UPROPERTY(BlueprintAssignable)
     FOnQuestAccepted OnQuestAccepted;
 
@@ -487,163 +487,163 @@ public:
     FOnQuestAbandoned OnQuestAbandoned;
 
 protected:
-    // •Ù?X?????    UPROPERTY()
+    // ‰ªª?X?????    UPROPERTY()
     TMap<int32, FMingQuestData> QuestDatabase;
 
-    // ????∏`¬Iº∆??Æw - ™`??°GTMap<TArray> §£§‰XUPROPERTY
+    // ????ÁØÄÈªûÊï∏??Â∫´ - Ê≥®??ÔºöTMap<TArray> ‰∏çÊîØXUPROPERTY
     TMap<int32, TArray<FMingStoryNode>> StoryNodeDatabase;
 
-    // ¨°??•Ù?X??"
+    // Ê¥ª??‰ªª?X??"
     UPROPERTY()
     TArray<int32> ActiveQuests;
 
-    // §w?X?•Ù??????    UPROPERTY()
+    // Â∑≤?X?‰ªª??????    UPROPERTY()
     TArray<int32> CompletedQuests;
 
-    // ???X???æ˙•v - ™`??°GTMap<TArray> §£§‰XUPROPERTY
+    // ???X???Ê≠∑Âè≤ - Ê≥®??ÔºöTMap<TArray> ‰∏çÊîØXUPROPERTY
     TMap<int32, TArray<int32>> StoryChoiceHistory;
 
-    // ??ß_§w??©l??
+    // ??Âê¶Â∑≤??Âßã??
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // ∏¸§J??≥]•Ù??
+    // ËºâÂÖ•??Ë®≠‰ªª??
     void LoadDefaultQuests();
 
-    // ∏¸§J??≥]????∏`??    void LoadDefaultStoryNodes();
+    // ËºâÂÖ•??Ë®≠????ÁØÄ??    void LoadDefaultStoryNodes();
 
-    // ≈Á??•Ù?X???
+    // È©ó??‰ªª?X???
     bool ValidateQuestData(const FMingQuestData& Quest) const;
 
-    // ¿À¨d•Ù??ßπ??±¯•Û
+    // Ê™¢Êü•‰ªª??ÂÆå??Ê¢ù‰ª∂
     bool CheckQuestCompletion(int32 QuestID) const;
 
-    // ????•Ù?X?¿y
-    void ProcessQuestRewards(const FMingQuestData& Quest};
+    // ????‰ªª?X?Âãµ
+    void ProcessQuestRewards(const FMingQuestData& Quest);
 
-    // ??∑s???X?§‰
+    // ??Êñ∞???X?ÊîØ
     void UpdateStoryBranch(int32 QuestID, int32 ChoiceID);
 
-    // ≠p??•Ù?X??X    float CalculateQuestImportance(const FMingQuestData& Quest) const;
+    // Ë®à??‰ªª?X??X    float CalculateQuestImportance(const FMingQuestData& Quest) const;
 
-    // ???X???•Ù??
+    // ???X???‰ªª??
     FMingQuestData GenerateRandomQuest(EMingQuestType QuestType) const;
 
-    // ???X?±µ??•ÙX    TArray<int32> GetAvailableQuestIDs() const;
+    // ???X?Êé•??‰ªªX    TArray<int32> GetAvailableQuestIDs() const;
 
-    // ¿À¨d??∏m•Ù??
+    // Ê™¢Êü•??ÁΩÆ‰ªª??
     bool CheckPrerequisiteQuests(const FMingQuestData& Quest) const;
 
-    // ¿À¨d?X±¯•Û
+    // Ê™¢Êü•?XÊ¢ù‰ª∂
     bool CheckUnlockConditions(const FMingQuestData& Quest) const;
 
-    // ??∑s•Ù?X?X    void UpdateQuestStatus(int32 QuestID, EMingQuestStatus NewStatus};
+    // ??Êñ∞‰ªª?X?X    void UpdateQuestStatus(int32 QuestID, EMingQuestStatus NewStatus);
 
-    // ???X???´·??
+    // ???X???Âæå??
     void ProcessStoryConsequences(int32 QuestID, const FMingStoryChoice& Choice);
 
-    // ≠p?X???≈v??
+    // Ë®à?X???Ê¨ä??
     float CalculateChoiceWeight(const FMingStoryChoice& Choice) const;
 
-    // ???X???ΩuØ¡
+    // ???X???Á∑öÁ¥¢
     TArray<FString> GetStoryClues(int32 QuestID) const;
 
-    // ??∑s•Ù?X???
+    // ??Êñ∞‰ªª?X???
     void UpdateQuestLog(int32 QuestID, const FString& LogEntry};
 
-    // ´O?X???ß÷∑”
+    // ‰øù?X???Âø´ÁÖß
     void SaveStorySnapshot();
 
-    // ∏¸§J????ß÷∑”
+    // ËºâÂÖ•????Âø´ÁÖß
     void LoadStorySnapshot();
 
-    // ≠p??•Ù?X??
+    // Ë®à??‰ªª?X??
     float CalculateQuestDifficulty(const FMingQuestData& Quest) const;
 
-    // Ω’æ„•Ù?X??
+    // Ë™øÊï¥‰ªª?X??
     void AdjustQuestDifficulty(int32 QuestID, float DifficultyModifier);
 
-    // ????•Ù??´ÿƒ≥
+    // ????‰ªª??Âª∫Ë≠∞
     TArray<FString> GetQuestSuggestions(int32 QuestID) const;
 
-    // ????•Ù??•¢??
+    // ????‰ªª??Â§±??
     void HandleQuestFailure(int32 QuestID, const FString& FailureReason};
 
-    // ????•Ù?X???
+    // ????‰ªª?X???
     void HandleQuestAbandonment(int32 QuestID, const FString& Reason);
 
-    // ≠p?X???ºv≈T
+    // Ë®à?X???ÂΩ±Èüø
     TMap<FString, float> CalculateStoryImpact(int32 QuestID, int32 ChoiceID) const;
 
-    // ??∑s•@?X?X    void UpdateWorldState(int32 QuestID, const TMap<FString, FString>& Results};
+    // ??Êñ∞‰∏ñ?X?X    void UpdateWorldState(int32 QuestID, const TMap<FString, FString>& Results};
 
-    // ????•Ù??º–??
+    // ????‰ªª??Ê®ô??
     void GenerateQuestMarkers(int32 QuestID};
 
-    // ≤æ∞£•Ù??º–??
+    // ÁßªÈô§‰ªª??Ê®ô??
     void RemoveQuestMarkers(int32 QuestID);
 
-    // ≠p??•Ù?X???    float CalculateQuestValue(const FMingQuestData& Quest) const;
+    // Ë®à??‰ªª?X???    float CalculateQuestValue(const FMingQuestData& Quest) const;
 
-    // ????•Ù?X?????    TArray<FDateTime> GetQuestTimeline(int32 QuestID) const;
+    // ????‰ªª?X?????    TArray<FDateTime> GetQuestTimeline(int32 QuestID) const;
 
-    // ¿À¨d•Ù??Ωƒ??
+    // Ê™¢Êü•‰ªª??Ë°ù??
     bool CheckQuestConflict(int32 QuestID1, int32 QuestID2) const;
 
-    // ????•Ù??Ωƒ??
+    // ????‰ªª??Ë°ù??
     void ResolveQuestConflict(int32 QuestID1, int32 QuestID2);
 
-    // ????•Ù??®Ãø‡
+    // ????‰ªª??‰æùË≥¥
     TArray<int32> GetQuestDependencies(int32 QuestID) const;
 
-    // ??∑s•Ù??®Ãø‡
+    // ??Êñ∞‰ªª??‰æùË≥¥
     void UpdateQuestDependencies(int32 QuestID);
 
-    // ≠p?X??X?§‰∑ß??
+    // Ë®à?X??X?ÊîØÊ¶Ç??
     float CalculateStoryBranchProbability(const FMingStoryChoice& Choice) const;
 
-    // ???X???®∆øÔX    void RandomizeStoryChoices(int32 QuestID};
+    // ???X???‰∫ãÈÅ∏X    void RandomizeStoryChoices(int32 QuestID};
 
-    // ???X??X?§‰
+    // ???X??X?ÊîØ
     void LockStoryBranch(int32 QuestID, int32 ChoiceID};
 
-    // ?X??X?§‰
+    // ?X??X?ÊîØ
     void UnlockStoryBranch(int32 QuestID, int32 ChoiceID);
 
-    // ???X???≤Œ??
+    // ???X???Áµ±??
     TMap<FString, int32> GetStoryStatistics() const;
 
-    // ≠p?X???≤`´◊
+    // Ë®à?X???Ê∑±Â∫¶
     int32 CalculateStoryDepth(int32 QuestID) const;
 
-    // ???X??X?ƒ˝
+    // ???X??X?Ë¶Ω
     FString GetStoryPreview(int32 QuestID) const;
 
-    // ???X??X?®Ó
+    // ???X??X?Âà∂
     void ProcessTimeLimits();
 
-    // ??∑s•Ù?X?§Ó????
+    // ??Êñ∞‰ªª?X?Ê≠¢????
     void UpdateQuestDeadlines();
 
-    // ¿À¨d•Ù?X???
+    // Ê™¢Êü•‰ªª?X???
     void CheckQuestExpiration();
 
-    // ???X???•Ù??
+    // ???X???‰ªª??
     void HandleExpiredQuest(int32 QuestID);
 
-    // ????•Ù?X?•‹
+    // ????‰ªª?X?Á§∫
     TArray<FString> GenerateQuestHints(int32 QuestID) const;
 
-    // ≠p??•Ù??ßπ?X    float CalculateQuestCompletionRate() const;
+    // Ë®à??‰ªª??ÂÆå?X    float CalculateQuestCompletionRate() const;
 
-    // ????•Ù?X?¬À
+    // ????‰ªª?X?Ëñ¶
     TArray<int32> GetQuestRecommendations() const;
 
-    // ??∑s•Ù?X?¬À
+    // ??Êñ∞‰ªª?X?Ëñ¶
     void UpdateQuestRecommendations();
 
-    // ≠p?X??X?§‰ºv≈T
+    // Ë®à?X??X?ÊîØÂΩ±Èüø
     TMap<FString, float> CalculateBranchImpact(const FMingStoryChoice& Choice) const;
 };
 

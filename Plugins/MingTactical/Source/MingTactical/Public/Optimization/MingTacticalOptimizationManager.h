@@ -49,7 +49,7 @@ struct MINGTACTICAL_API FPerformanceStats
     UPROPERTY(BlueprintReadOnly)
     float MemoryUsageMB = 0.0f;
 
-    void Update(float DeltaTime};
+    void Update(float DeltaTime);
 };
 
 /**
@@ -69,7 +69,7 @@ class MINGTACTICAL_API UMingTacticalOptimizationManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingTacticalOptimizationManager(};
+    UMingTacticalOptimizationManager();
 
     /**
      * ?��X�優?�管?�器 | Initialize Optimization Manager
@@ -77,18 +77,18 @@ public:
      * @param ExpectedUnitCount ?��X��X��? | Expected unit count
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization")
-    void Initialize(const FBox& WorldBounds, int32 ExpectedUnitCount = 1000};
+    void Initialize(const FBox& WorldBounds, int32 ExpectedUnitCount = 1000);
 
     /**
      * ?�闭优�?管�X     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization")
-    void Shutdown(};
+    void Shutdown();
 
     /**
      * �?Tick ?�数
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization")
-    void Tick(float DeltaTime};
+    void Tick(float DeltaTime);
 
     // ==== 子系统访X====
 
@@ -106,55 +106,55 @@ public:
     /**
      * 注�X��X��X��X�系�?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void RegisterUnit(class AMingTacticalUnit* Unit};
+    void RegisterUnit(class AMingTacticalUnit* Unit);
 
     /**
      * 从�X��X�系统注?�?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void UnregisterUnit(class AMingTacticalUnit* Unit};
+    void UnregisterUnit(class AMingTacticalUnit* Unit);
 
     /**
      * ?��?注�X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void BatchRegisterUnits(const TArray<class AMingTacticalUnit*>& Units};
+    void BatchRegisterUnits(const TArray<class AMingTacticalUnit*>& Units);
 
     /**
      * ?��?注�X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void BatchUnregisterUnits(const TArray<class AMingTacticalUnit*>& Units};
+    void BatchUnregisterUnits(const TArray<class AMingTacticalUnit*>& Units);
 
     /**
      * ?�新?��?位置（�?步到空间?�区�?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void UpdateUnitPosition(class AMingTacticalUnit* Unit, const FVector& NewLocation};
+    void UpdateUnitPosition(class AMingTacticalUnit* Unit, const FVector& NewLocation);
 
     /**
      * 设置?��XTick 层级
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void SetUnitTickLevel(class AMingTacticalUnit* Unit, ETickLevel NewLevel};
+    void SetUnitTickLevel(class AMingTacticalUnit* Unit, ETickLevel NewLevel);
 
     /**
      * ?��X��XCritical 层级（临?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void PromoteUnitToCritical(class AMingTacticalUnit* Unit, float DurationSeconds = 5.0f};
+    void PromoteUnitToCritical(class AMingTacticalUnit* Unit, float DurationSeconds = 5.0f);
 
     // ==== AI管�? ====
 
     /**
      * 注�?AI?��X�系�?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|AI")
-    void RegisterAI(class AMingCombatAI* AI};
+    void RegisterAI(class AMingCombatAI* AI);
 
     /**
      * 从�X�系统注?�AI
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|AI")
-    void UnregisterAI(class AMingCombatAI* AI};
+    void UnregisterAI(class AMingCombatAI* AI);
 
     // ==== ?�能?�控 ====
 
@@ -176,13 +176,13 @@ public:
      * ?�用/禁用?�动优�?调整
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Auto")
-    void SetAutoOptimizationEnabled(bool bEnabled};
+    void SetAutoOptimizationEnabled(bool bEnabled);
 
     /**
      * ?�据?�能?�动调整优�?级别
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Auto")
-    void AutoAdjustOptimizationLevel(};
+    void AutoAdjustOptimizationLevel();
 
     // ==== ?�置 ====
 
@@ -190,41 +190,41 @@ public:
      * 设置?��? FPS
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
-    void SetTargetFPS(float TargetFPS};
+    void SetTargetFPS(float TargetFPS);
 
     /**
      * 设置?�能临�X�值�?低�?此值触?�自?��X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
-    void SetPerformanceCriticalThreshold(float FPS};
+    void SetPerformanceCriticalThreshold(float FPS);
 
     /**
      * ?�用/禁用空间?�区
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
-    void SetSpatialPartitionEnabled(bool bEnabled};
+    void SetSpatialPartitionEnabled(bool bEnabled);
 
     /**
      * ?�用/禁用?��? Tick
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
-    void SetHierarchicalTickEnabled(bool bEnabled};
+    void SetHierarchicalTickEnabled(bool bEnabled);
 
     /**
      * ?�用/禁用对象�?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
-    void SetObjectPoolEnabled(bool bEnabled};
+    void SetObjectPoolEnabled(bool bEnabled);
 
     // ==== 调�? ====
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Debug")
-    void PrintDebugInfo(};
+    void PrintDebugInfo();
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Debug")
     FString GetDebugString() const;
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Debug")
-    void DrawDebugVisualization(bool bDrawSpatialGrid = true, bool bDrawTickLevels = false};
+    void DrawDebugVisualization(bool bDrawSpatialGrid = true, bool bDrawTickLevels = false);
 
     /**
      * ?��?优�X��?
@@ -261,18 +261,18 @@ private:
     float OptimizationAdjustCooldown;
 
     // ?��X��?系�?
-    void InitializeSubsystems(const FBox& WorldBounds, int32 ExpectedUnitCount};
-    void ShutdownSubsystems(};
+    void InitializeSubsystems(const FBox& WorldBounds, int32 ExpectedUnitCount);
+    void ShutdownSubsystems();
 
     // ?�新?�能统计
-    void UpdatePerformanceStats(float DeltaTime};
+    void UpdatePerformanceStats(float DeltaTime);
 
     // ?�适�?优�?调整
-    void PerformAutoOptimization(float DeltaTime};
+    void PerformAutoOptimization(float DeltaTime);
 
     // 调整优�?级别
-    void SetOptimizationLevel(int32 NewLevel};
+    void SetOptimizationLevel(int32 NewLevel);
 
-    // ?�据?��X��?调整池大�?    void AdjustPoolSizeForUnitCount(int32 UnitCount};
+    // ?�据?��X��?调整池大�?    void AdjustPoolSizeForUnitCount(int32 UnitCount);
 };
 

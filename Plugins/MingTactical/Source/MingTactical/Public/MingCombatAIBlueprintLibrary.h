@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -8,7 +8,7 @@
 class AMingTacticalUnit;
 
 /**
- * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?çµï¿½? (?ï¿½æ–¼ TArray<TArray<>> åµŒï¿½?)
+ * ???X??X???µ²?? (??©ó TArray<TArray<>> ´O??)
  */
 USTRUCT(BlueprintType)
 struct FCombatAIUnitArrayWrapper
@@ -22,7 +22,7 @@ struct FCombatAIUnitArrayWrapper
 };
 
 /**
- * ?ï¿½é¬¥AI?ï¿½ï¿½Xï¿½æ•¸ï¿½? * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½Xï¿½é¬¥AIç³»çµ±?ï¿½èƒ½
+ * ??°«AI???X?¼Æ?? * ???X??X?½Õ???X?°«AI¨t²Î??¯à
  */
 UCLASS()
 class MINGTACTICAL_API UMingCombatAIBlueprintLibrary : public UBlueprintFunctionLibrary
@@ -31,78 +31,78 @@ class MINGTACTICAL_API UMingCombatAIBlueprintLibrary : public UBlueprintFunction
 
 public:
     /**
-     * ?ï¿½ï¿½Xï¿½é¬¥AIç³»çµ±
+     * ???X?°«AI¨t²Î
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI")
-    static AMingCombatAI* GetCombatAI(};
+    static AMingCombatAI* GetCombatAI();
 
     /**
-     * ?ï¿½ï¿½Xï¿½æˆ°é¬¥AIç³»çµ±
+     * ???X?¾Ô°«AI¨t²Î
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
-    static void InitializeCombatAI(};
+    static void InitializeCombatAI();
 
     /**
-     * ?ï¿½ï¿½Xï¿½é¬¥AIç³»çµ±
+     * ???X?°«AI¨t²Î
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
-    static void ShutdownCombatAI(};
+    static void ShutdownCombatAI();
 
     /**
-     * è¨­ç½®AIXï¿½ï¿½ç­‰ï¿½?
+     * ³]¸mAIX??µ¥??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     static void SetAIDifficultyLevel(EAIDifficultyLevel DifficultyLevel};
 
     /**
-     * è¨­ç½®AI?ï¿½ï¿½?é¡ï¿½?
+     * ³]¸mAI????Ãş??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     static void SetAITacticalType(EAITacticalType TacticalType};
 
     /**
-     * è¨­ç½®AIå­¸ï¿½?é¡ï¿½?
+     * ³]¸mAI¾Ç??Ãş??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     static void SetAILearningType(EAILearningType LearningType};
 
     /**
-     * æ·»ï¿½Xï¿½æ§?ï¿½ï¿½?
+     * ²K?X?±±????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     static bool AddControlledUnit(AMingTacticalUnit* Unit};
 
     /**
-     * ç§»é™¤?ï¿½æ§?ï¿½ï¿½?
+     * ²¾°£??±±????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     static bool RemoveControlledUnit(AMingTacticalUnit* Unit};
 
     /**
-     * ?ï¿½ï¿½Xï¿½?ï¿½ï¿½Xï¿½å–®ï¿½?     */
+     * ???X????X?³æ??     */
     UFUNCTION(BlueprintPure, Category = "Combat AI")
-    static TArray<AMingTacticalUnit*> GetControlledUnits(};
+    static TArray<AMingTacticalUnit*> GetControlledUnits();
 
     /**
-     * ?ï¿½ï¿½?AIæ±ºï¿½?
+     * ????AI¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     static bool ExecuteAIDecision(AMingTacticalUnit* Unit};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+     * ???X??X???
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     static FAITacticalAnalysis ExecuteTacticalAnalysis(const TArray<AMingTacticalUnit*>& Units};
 
     /**
-     * ?ï¿½ï¿½?AIå­¸ï¿½?
+     * ????AI¾Ç??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     static bool ExecuteAILearning(const FAILearningData& LearningData};
 
     /**
-     * ?ï¿½å»ºæ±ºï¿½?ç¯€ï¿½?     */
+     * ??«Ø¨M??¸`??     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Creation")
     static FAIDecisionNode CreateDecisionNode(
         const FString& NodeName,
@@ -113,175 +113,175 @@ public:
     };
 
     /**
-     * æ·»ï¿½?æ±ºï¿½?ç¯€ï¿½?     */
+     * ²K??¨M??¸`??     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Decision")
     static bool AddDecisionNode(const FAIDecisionNode& Node};
 
     /**
-     * ç§»é™¤æ±ºï¿½?ç¯€ï¿½?     */
+     * ²¾°£¨M??¸`??     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Decision")
     static bool RemoveDecisionNode(const FString& NodeID};
 
     /**
-     * ?ï¿½ï¿½?æ±ºï¿½?ç¯€ï¿½?     */
+     * ????¨M??¸`??     */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Decision")
     static FAIDecisionNode GetDecisionNode(const FString& NodeID};
 
     /**
-     * ?ï¿½ï¿½Xï¿½?ï¿½æ±ºç­–ï¿½?ï¿½?     */
+     * ???X???¨Mµ¦????     */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Decision")
-    static TArray<FAIDecisionNode> GetAllDecisionNodes(};
+    static TArray<FAIDecisionNode> GetAllDecisionNodes();
 
     /**
-     * è©•ä¼°?ï¿½ï¿½?å±€X     */
+     * µû¦ô????§½X     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Analysis")
     static FAITacticalAnalysis EvaluateTacticalSituation(const TArray<AMingTacticalUnit*>& FriendlyUnits, const TArray<AMingTacticalUnit*>& EnemyUnits};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?å»ºè­°
+     * ???X???«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Analysis")
     static TArray<FString> GenerateTacticalRecommendations(const TArray<AMingTacticalUnit*>& Units};
 
     /**
-     * ?ï¿½æ¸¬?ï¿½æ–¹è¡Œï¿½?
+     * ??´ú??¤è¦æ??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Analysis")
     static TArray<FString> PredictEnemyActions(const TArray<AMingTacticalUnit*>& EnemyUnits};
 
     /**
-     * è¨ˆï¿½?å¨ï¿½?ç­‰ï¿½?
+     * ­p??«Â??µ¥??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Calculation")
     static float CalculateThreatLevel(AMingTacticalUnit* Unit, const TArray<AMingTacticalUnit*>& EnemyUnits};
 
     /**
-     * è¨ˆï¿½?æ©Ÿï¿½?ç­‰ï¿½?
+     * ­p??¾÷??µ¥??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Calculation")
     static float CalculateOpportunityLevel(AMingTacticalUnit* Unit, const TArray<AMingTacticalUnit*>& EnemyUnits};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?æ±ºï¿½?
+     * ???X???¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Execution")
     static bool ExecuteAttackDecision(AMingTacticalUnit* Unit, AMingTacticalUnit* TargetUnit};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ç¦¦æ±ºï¿½?
+     * ???X?¿m¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Execution")
     static bool ExecuteDefenseDecision(AMingTacticalUnit* Unit, const FVector& DefensePosition};
 
     /**
-     * ?ï¿½ï¿½?ç§»ï¿½?æ±ºï¿½?
+     * ????²¾??¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Execution")
     static bool ExecuteMovementDecision(AMingTacticalUnit* Unit, const FVector& TargetPosition};
 
     /**
-     * ?ï¿½ï¿½Xï¿½é€€æ±ºï¿½?
+     * ???X?°h¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Execution")
     static bool ExecuteRetreatDecision(AMingTacticalUnit* Unit, const FVector& RetreatPosition};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ç¿¼æ±ºï¿½?
+     * ???X?Ál¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Execution")
     static bool ExecuteFlankDecision(AMingTacticalUnit* Unit, AMingTacticalUnit* TargetUnit};
 
     /**
-     * ?ï¿½ï¿½?ä¼ï¿½?æ±ºï¿½?
+     * ????¥ñ??¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Execution")
     static bool ExecuteAmbushDecision(AMingTacticalUnit* Unit, const TArray<AMingTacticalUnit*>& TargetUnits};
 
     /**
-     * ?ï¿½ï¿½Xï¿½æ´æ±ºï¿½?
+     * ???X?´©¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Execution")
     static bool ExecuteSupportDecision(AMingTacticalUnit* Unit, AMingTacticalUnit* TargetUnit};
 
     /**
-     * ?ï¿½ï¿½Xï¿½èª¿æ±ºï¿½?
+     * ???X?½Õ¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Execution")
     static bool ExecuteCoordinationDecision(const TArray<AMingTacticalUnit*>& Units, EAIDecisionType DecisionType};
 
     /**
-     * ?ï¿½ï¿½?å­¸ï¿½?æ±ºï¿½?
+     * ????¾Ç??¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Execution")
     static bool ExecuteLearningDecision(AMingTacticalUnit* Unit, const FAILearningData& LearningData};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?æ±ºï¿½?
+     * ???X???¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Execution")
     static bool ExecuteAdaptationDecision(AMingTacticalUnit* Unit, const TArray<float>& AdaptationData};
 
     /**
-     * èª¿æ•´AIXï¿½ï¿½
+     * ½Õ¾ãAIX??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Difficulty")
     static void AdjustAIDifficulty(float PerformanceFactor};
 
     /**
-     * ?ï¿½ï¿½?AI?ï¿½èƒ½?ï¿½ï¿½?
+     * ????AI??¯à????
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Performance")
-    static FAIPerformanceMetrics GetAIPerformanceMetrics(};
+    static FAIPerformanceMetrics GetAIPerformanceMetrics();
 
     /**
-     * ?ï¿½ï¿½?AIçµ±ï¿½Xï¿½ï¿½?
+     * ????AI²Î?X???
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Performance")
-    static TMap<FString, int32> GetAIStatistics_BPLibrary(};
+    static TMap<FString, int32> GetAIStatistics_BPLibrary();
 
     /**
-     * ?ï¿½ï¿½?AI?ï¿½ç½®
+     * ????AI??¸m
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Configuration")
-    static TMap<FString, FString> GetAIConfiguration(};
+    static TMap<FString, FString> GetAIConfiguration();
 
     /**
-     * è¨­ç½®AI?ï¿½ç½®
+     * ³]¸mAI??¸m
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Configuration")
     static bool SetAIConfiguration(const TMap<FString, FString>& Configuration};
 
     /**
-     * ?ï¿½ï¿½?AI?ï¿½?ï¿½ï¿½?ï¿½?     */
+     * ????AI????????     */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
     static FString GetAIStateName(EAIState AIState};
 
     /**
-     * ?ï¿½ï¿½?æ±ºï¿½?é¡ï¿½Xï¿½ç¨±
+     * ????¨M??Ãş?X?ºÙ
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
     static FString GetDecisionTypeName(EAIDecisionType DecisionType};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½ç¨±
+     * ???X???Ãş?X?ºÙ
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
     static FString GetTacticalTypeName(EAITacticalType TacticalType};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½ç­‰ï¿½Xï¿½ç¨±
+     * ???X??µ¥?X?ºÙ
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
     static FString GetDifficultyLevelName(EAIDifficultyLevel DifficultyLevel};
 
     /**
-     * ?ï¿½ï¿½?å­¸ï¿½?é¡ï¿½Xï¿½ç¨±
+     * ????¾Ç??Ãş?X?ºÙ
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
     static FString GetLearningTypeName(EAILearningType LearningType};
 
     /**
-     * ?ï¿½å»ºå­¸ï¿½Xï¿½ï¿½?
+     * ??«Ø¾Ç?X???
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Creation")
     static FAILearningData CreateLearningData(
@@ -293,17 +293,17 @@ public:
     };
 
     /**
-     * è¨­ç½®æ±ºï¿½?ç¯€é»ï¿½X     */
+     * ³]¸m¨M??¸`ÂI?X     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Creation")
     static FAIDecisionNode SetDecisionNodeParameter(const FAIDecisionNode& Node, const FString& ParameterName, const FString& ParameterValue};
 
     /**
-     * æ·»ï¿½?æ±ºï¿½?ç¯€é»ï¿½?ç¯€ï¿½?     */
+     * ²K??¨M??¸`ÂI??¸`??     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Creation")
     static FAIDecisionNode AddDecisionNodeChild(const FAIDecisionNode& Node, const FString& ChildNodeID};
 
     /**
-     * ?ï¿½å»º?ï¿½ï¿½Xï¿½ï¿½?
+     * ??«Ø???X???
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Creation")
     static FAITacticalAnalysis CreateTacticalAnalysis(
@@ -314,465 +314,465 @@ public:
     };
 
     /**
-     * æ·»ï¿½Xï¿½ï¿½?å»ºè­°
+     * ²K?X???«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Creation")
     static FAITacticalAnalysis AddTacticalRecommendation(const FAITacticalAnalysis& Analysis, const FString& Recommendation};
 
     /**
-     * æ·»ï¿½?é¢¨éšªè©•ä¼°
+     * ²K??­·ÀIµû¦ô
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Creation")
     static FAITacticalAnalysis AddRiskAssessment(const FAITacticalAnalysis& Analysis, const FString& Risk};
 
     /**
-     * æ·»ï¿½?æ©Ÿï¿½?è­˜åˆ¥
+     * ²K??¾÷??ÃÑ§O
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Creation")
     static FAITacticalAnalysis AddOpportunityIdentification(const FAITacticalAnalysis& Analysis, const FString& Opportunity};
 
     /**
-     * æ·»ï¿½Xï¿½æ–¹?ï¿½æ¸¬
+     * ²K?X?¤è??´ú
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Creation")
     static FAITacticalAnalysis AddEnemyPrediction(const FAITacticalAnalysis& Analysis, const FString& Prediction};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?AIæ±ºï¿½?
+     * ???X???AI¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Batch")
     static TArray<bool> BatchExecuteAIDecisions(const TArray<AMingTacticalUnit*>& Units};
 
     /**
-     * ?ï¿½ï¿½?æ·»ï¿½Xï¿½æ§?ï¿½ï¿½?
+     * ????²K?X?±±????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Batch")
     static TArray<bool> BatchAddControlledUnits(const TArray<AMingTacticalUnit*>& Units};
 
     /**
-     * ?ï¿½ï¿½?ç§»é™¤?ï¿½æ§?ï¿½ï¿½?
+     * ????²¾°£??±±????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Batch")
     static TArray<bool> BatchRemoveControlledUnits(const TArray<AMingTacticalUnit*>& Units};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½? - ä½¿ç”¨ FUnitArrayWrapper ?ï¿½ï¿½?çµï¿½?
+    // ???X??X??X??? - ¨Ï¥Î FUnitArrayWrapper ????µ²??
     static TArray<FAITacticalAnalysis> BatchExecuteTacticalAnalysis(const TArray<FUnitArrayWrapper>& UnitGroups};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?AIå­¸ï¿½?
+     * ???X???AI¾Ç??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Batch")
     static TArray<bool> BatchExecuteAILearning(const TArray<FAILearningData>& LearningDataArray};
 
     /**
-     * ?ï¿½ï¿½?ç³»çµ±?ï¿½X     */
+     * ????¨t²Î??X     */
     UFUNCTION(BlueprintPure, Category = "Combat AI|System")
-    static bool IsCombatAIInitialized(};
+    static bool IsCombatAIInitialized();
 
     /**
-     * ?ï¿½ï¿½?ç³»çµ±?ï¿½æœ¬
+     * ????¨t²Î??¥»
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|System")
-    static FString GetCombatAIVersion(};
+    static FString GetCombatAIVersion();
 
     /**
-     * ?ï¿½ï¿½Xï¿½æ§?ï¿½ï¿½?ç¸½æ•¸
+     * ???X?±±????Á`¼Æ
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|System")
-    static int32 GetControlledUnitCount(};
+    static int32 GetControlledUnitCount();
 
     /**
-     * ?ï¿½ï¿½?æ±ºï¿½?ç¯€é»ç¸½X     */
+     * ????¨M??¸`ÂIÁ`X     */
     UFUNCTION(BlueprintPure, Category = "Combat AI|System")
-    static int32 GetDecisionNodeCount(};
+    static int32 GetDecisionNodeCount();
 
     /**
-     * ?ï¿½ï¿½?å­¸ï¿½Xï¿½ï¿½?ç¸½æ•¸
+     * ????¾Ç?X???Á`¼Æ
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|System")
-    static int32 GetLearningDataCount(};
+    static int32 GetLearningDataCount();
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?ç¸½æ•¸
+     * ???X??X???Á`¼Æ
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|System")
-    static int32 GetTacticalAnalysisCount(};
+    static int32 GetTacticalAnalysisCount();
 
     /**
-     * æª¢æŸ¥?ï¿½ï¿½Xï¿½å¦?ï¿½æ§
+     * ÀË¬d???X?§_??±±
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
     static bool IsUnitControlled(AMingTacticalUnit* Unit};
 
     /**
-     * æª¢æŸ¥æ±ºï¿½?ç¯€é»æ˜¯?ï¿½ï¿½X     */
+     * ÀË¬d¨M??¸`ÂI¬O???X     */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
     static bool DoesDecisionNodeExist(const FString& NodeID};
 
     /**
-     * æª¢æŸ¥æ±ºï¿½?ç¯€é»æ˜¯?ï¿½ï¿½X     */
+     * ÀË¬d¨M??¸`ÂI¬O???X     */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
     static bool IsDecisionNodeEnabled(const FString& NodeID};
 
     /**
-     * ?ï¿½ï¿½?æ±ºï¿½?ç¯€é»åŸ·è¡Œæ¬¡X     */
+     * ????¨M??¸`ÂI°õ¦æ¦¸X     */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
     static int32 GetDecisionNodeExecutionCount(const FString& NodeID};
 
     /**
-     * ?ï¿½ï¿½?æ±ºï¿½?ç¯€é»ï¿½Xï¿½ï¿½?
+     * ????¨M??¸`ÂI?X???
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
     static float GetDecisionNodeSuccessRate(const FString& NodeID};
 
     /**
-     * è¨ˆï¿½?AI?ï¿½èƒ½?ï¿½æ•¸
+     * ­p??AI??¯à??¼Æ
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Calculation")
-    static float CalculateAIPerformanceScore(};
+    static float CalculateAIPerformanceScore();
 
     /**
-     * è¨ˆï¿½?æ±ºï¿½?è³ªï¿½Xï¿½æ•¸
+     * ­p??¨M??½è?X?¼Æ
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Calculation")
     static float CalculateDecisionQualityScore(const FString& NodeID};
 
     /**
-     * è¨ˆï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½æ•¸
+     * ­p?X??X??X?¼Æ
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Calculation")
     static float CalculateTacticalAnalysisScore(const FAITacticalAnalysis& Analysis};
 
     /**
-     * è¨ˆï¿½?å­¸ï¿½Xï¿½ï¿½Xï¿½æ•¸
+     * ­p??¾Ç?X??X?¼Æ
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Calculation")
     static float CalculateLearningEffectScore(const FAILearningData& LearningData};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ä½³æ±ºç­–ï¿½?ï¿½?     */
+     * ???X?¨Î¨Mµ¦????     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Optimization")
     static FAIDecisionNode GetBestDecisionNode(AMingTacticalUnit* Unit};
 
     /**
-     * ?ï¿½ï¿½Xï¿½å·®æ±ºç­–ï¿½?ï¿½?     */
+     * ???X?®t¨Mµ¦????     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Optimization")
     static FAIDecisionNode GetWorstDecisionNode(AMingTacticalUnit* Unit};
 
     /**
-     * ?ï¿½ï¿½Xï¿½è–¦æ±ºï¿½?é¡ï¿½?
+     * ???X?ÂË¨M??Ãş??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Optimization")
     static EAIDecisionType GetRecommendedDecisionType(AMingTacticalUnit* Unit};
 
     /**
-     * ?ï¿½ï¿½Xï¿½è–¦?ï¿½ï¿½?é¡ï¿½?
+     * ???X?ÂË????Ãş??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Optimization")
     static EAITacticalType GetRecommendedTacticalType(const TArray<AMingTacticalUnit*>& Units};
 
     /**
-     * ?ï¿½ï¿½Xï¿½è–¦Xï¿½ï¿½ç­‰ï¿½?
+     * ???X?ÂËX??µ¥??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Optimization")
     static EAIDifficultyLevel GetRecommendedDifficultyLevel(float PlayerPerformance};
 
     /**
-     * ?ï¿½ï¿½?AIå»ºè­°
+     * ????AI«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|AI")
     static TArray<FString> GetAIRecommendations(AMingTacticalUnit* Unit};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?å»ºè­°
+     * ???X???«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|AI")
     static TArray<FString> GetTacticalRecommendations(const TArray<AMingTacticalUnit*>& Units};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ç•¥å»ºè­°
+     * ???X?²¤«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|AI")
     static TArray<FString> GetStrategicRecommendations(const TArray<AMingTacticalUnit*>& Units};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?å»ºè­°
+     * ???X???«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|AI")
     static TArray<AMingTacticalUnit*> GetAttackRecommendations(AMingTacticalUnit* Unit};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ç¦¦å»ºè­°
+     * ???X?¿m«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|AI")
     static TArray<FVector> GetDefenseRecommendations(AMingTacticalUnit* Unit};
 
     /**
-     * ?ï¿½ï¿½?ç§»ï¿½?å»ºè­°
+     * ????²¾??«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|AI")
     static TArray<FVector> GetMovementRecommendations(AMingTacticalUnit* Unit};
 
     /**
-     * ?ï¿½ï¿½Xï¿½é€€å»ºè­°
+     * ???X?°h«ØÄ³
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|AI")
     static TArray<FVector> GetRetreatRecommendations(AMingTacticalUnit* Unit};
 
     /**
-     * æ¨¡æ“¬AIæ±ºï¿½?
+     * ¼ÒÀÀAI¨M??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Simulation")
     static TArray<bool> SimulateAIDecisions(const TArray<AMingTacticalUnit*>& Units, int32 SimulationCount};
 
     /**
-     * æ¨¡æ“¬?ï¿½ï¿½Xï¿½ï¿½?
+     * ¼ÒÀÀ???X???
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Simulation")
     static TArray<FAITacticalAnalysis> SimulateTacticalAnalysis(const TArray<AMingTacticalUnit*>& Units, int32 SimulationCount};
 
     /**
-     * æ¨¡æ“¬AIå­¸ï¿½?
+     * ¼ÒÀÀAI¾Ç??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Simulation")
     static TArray<bool> SimulateAILearning(const TArray<FAILearningData>& LearningDataArray, int32 SimulationCount};
 
     /**
-     * ?ï¿½ï¿½?AIæ­·å²
+     * ????AI¾ú¥v
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|History")
-    static TArray<FString> GetAIHistory(};
+    static TArray<FString> GetAIHistory();
 
     /**
-     * ?ï¿½ï¿½?æ±ºï¿½?æ­·å²
+     * ????¨M??¾ú¥v
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|History")
-    static TArray<FString> GetDecisionHistory(};
+    static TArray<FString> GetDecisionHistory();
 
     /**
-     * ?ï¿½ï¿½?å­¸ï¿½?æ­·å²
+     * ????¾Ç??¾ú¥v
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|History")
-    static TArray<FString> GetLearningHistory(};
+    static TArray<FString> GetLearningHistory();
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?æ­·å²
+     * ???X???¾ú¥v
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|History")
-    static TArray<FString> GetTacticalHistory(};
+    static TArray<FString> GetTacticalHistory();
 
     /**
-     * ?ï¿½ï¿½?AIçµ±ï¿½?
+     * ????AI²Î??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Statistics")
-    static TMap<FString, int32> GetAIStatistics_BPLibrary(};
+    static TMap<FString, int32> GetAIStatistics_BPLibrary();
 
     /**
-     * ?ï¿½ï¿½?æ±ºï¿½?çµ±ï¿½?
+     * ????¨M??²Î??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Statistics")
-    static TMap<FString, int32> GetDecisionStatistics(};
+    static TMap<FString, int32> GetDecisionStatistics();
 
     /**
-     * ?ï¿½ï¿½?å­¸ï¿½?çµ±ï¿½?
+     * ????¾Ç??²Î??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Statistics")
-    static TMap<FString, int32> GetLearningStatistics(};
+    static TMap<FString, int32> GetLearningStatistics();
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?çµ±ï¿½?
+     * ???X???²Î??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Statistics")
-    static TMap<FString, int32> GetTacticalStatistics(};
+    static TMap<FString, int32> GetTacticalStatistics();
 
     /**
-     * ?ï¿½ï¿½Xï¿½èƒ½çµ±ï¿½?
+     * ???X?¯à²Î??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Statistics")
-    static TMap<FString, float> GetPerformanceStatistics(};
+    static TMap<FString, float> GetPerformanceStatistics();
 
     /**
-     * å°å‡ºAI?ï¿½ï¿½?
+     * ¾É¥XAI????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Export")
     static bool ExportAIData(const FString& FilePath};
 
     /**
-     * å°å…¥AI?ï¿½ï¿½?
+     * ¾É¤JAI????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Import")
     static bool ImportAIData(const FString& FilePath};
 
     /**
-     * ?ï¿½ï¿½?AI?ï¿½ï¿½?
+     * ????AI????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Report")
-    static FString GenerateAIReport(};
+    static FString GenerateAIReport();
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?AI?ï¿½ï¿½?
+     * ???X???AI????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Report")
     static FString GenerateUnitAIReport(AMingTacticalUnit* Unit};
 
     /**
-     * ?ï¿½ï¿½?æ±ºï¿½Xï¿½ï¿½?
+     * ????¨M?X???
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Report")
     static FString GenerateDecisionReport(const FString& NodeID};
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+     * ???X??X??X???
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Report")
     static FString GenerateTacticalAnalysisReport(const FAITacticalAnalysis& Analysis};
 
     /**
-     * ?ï¿½ï¿½?å­¸ï¿½Xï¿½ï¿½?
+     * ????¾Ç?X???
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Report")
     static FString GenerateLearningReport(const FAILearningData& LearningData};
 
     /**
-     * ?ï¿½ï¿½?AI?ï¿½ï¿½Xï¿½ï¿½?
+     * ????AI???X???
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Report")
-    static FString GenerateAIAnalysisReport(};
+    static FString GenerateAIAnalysisReport();
 
     /**
-     * ?ï¿½ç½®AIç³»çµ±
+     * ??¸mAI¨t²Î
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|System")
-    static void ResetAISystem(};
+    static void ResetAISystem();
 
     /**
-     * æ¸…é™¤?ï¿½?ï¿½ï¿½Xï¿½å–®ï¿½?     */
+     * ²M°£?????X?³æ??     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|System")
-    static void ClearAllControlledUnits(};
+    static void ClearAllControlledUnits();
 
     /**
-     * æ¸…é™¤?ï¿½?ï¿½æ±ºç­–ï¿½?ï¿½?     */
+     * ²M°£????¨Mµ¦????     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|System")
-    static void ClearAllDecisionNodes(};
+    static void ClearAllDecisionNodes();
 
     /**
-     * æ¸…é™¤?ï¿½?ï¿½å­¸ç¿’æ•¸X     */
+     * ²M°£????¾Ç²ß¼ÆX     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|System")
-    static void ClearAllLearningData(};
+    static void ClearAllLearningData();
 
     /**
-     * æ¸…é™¤?ï¿½?ï¿½æˆ°è¡“ï¿½X     */
+     * ²M°£????¾Ô³N?X     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|System")
-    static void ClearAllTacticalAnalyses(};
+    static void ClearAllTacticalAnalyses();
 
     /**
-     * ?ï¿½ä»½AI?ï¿½ï¿½?
+     * ??¥÷AI????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|System")
     static bool BackupAIData(const FString& BackupPath};
 
     /**
-     * ?ï¿½å¾©AI?ï¿½ï¿½?
+     * ??´_AI????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|System")
     static bool RestoreAIData(const FString& BackupPath};
 
     /**
-     * ?ï¿½ï¿½?AI?ï¿½èƒ½
+     * ????AI??¯à
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Optimization")
-    static void OptimizeAIPerformance(};
+    static void OptimizeAIPerformance();
 
     /**
-     * ?ï¿½ï¿½?æ±ºï¿½?ç¯€ï¿½?     */
+     * ????¨M??¸`??     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Optimization")
-    static void OptimizeDecisionNodes(};
+    static void OptimizeDecisionNodes();
 
     /**
-     * ?ï¿½ï¿½?å­¸ï¿½?ç®—ï¿½?
+     * ????¾Ç??ºâ??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Optimization")
-    static void OptimizeLearningAlgorithms(};
+    static void OptimizeLearningAlgorithms();
 
     /**
-     * èª¿æ•´æ±ºï¿½?æ¬Šï¿½?
+     * ½Õ¾ã¨M??Åv??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Optimization")
-    static void AdjustDecisionWeights(};
+    static void AdjustDecisionWeights();
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?è®Šï¿½?
+     * ???X???ÅÜ??
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Optimization")
-    static void AdaptToTacticalChanges(};
+    static void AdaptToTacticalChanges();
 
     /**
-     * å­¸ï¿½Xï¿½å®¶è¡Œç‚º
+     * ¾Ç?X?®a¦æ¬°
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|AI")
-    static void LearnPlayerBehavior(};
+    static void LearnPlayerBehavior();
 
     /**
-     * ?ï¿½æ¸¬?ï¿½å®¶?ï¿½ï¿½?
+     * ??´ú??®a????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|AI")
-    static TArray<FString> PredictPlayerIntent(};
+    static TArray<FString> PredictPlayerIntent();
 
     /**
-     * ?ï¿½ï¿½Xï¿½åˆ¶ç­–ç•¥
+     * ???X?¨îµ¦²¤
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|AI")
-    static TArray<FString> GenerateCounterStrategies(};
+    static TArray<FString> GenerateCounterStrategies();
 
     /**
-     * è©•ä¼°AIè¡¨ç¾
+     * µû¦ôAIªí²{
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Performance")
-    static float EvaluateAIPerformance(};
+    static float EvaluateAIPerformance();
 
     /**
-     * ?ï¿½æ–°?ï¿½èƒ½?ï¿½ï¿½?
+     * ??·s??¯à????
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Performance")
-    static void UpdatePerformanceMetrics(};
+    static void UpdatePerformanceMetrics();
 
     /**
-     * ?ï¿½ï¿½?AI?ï¿½X     */
+     * ????AI??X     */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
-    static FString GetAIStatus(};
+    static FString GetAIStatus();
 
     /**
-     * ?ï¿½ï¿½?AIæ¨¡ï¿½?
+     * ????AI¼Ò??
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
-    static FString GetAIMode(};
+    static FString GetAIMode();
 
     /**
-     * ?ï¿½ï¿½?AI?ï¿½æœ¬ä¿¡æ¯
+     * ????AI??¥»«H®§
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Info")
-    static FString GetAIVersionInfo(};
+    static FString GetAIVersionInfo();
 
     /**
-     * æª¢æŸ¥AI?ï¿½åº·?ï¿½X     */
+     * ÀË¬dAI??±d??X     */
     UFUNCTION(BlueprintPure, Category = "Combat AI|System")
-    static bool IsAIHealthy(};
+    static bool IsAIHealthy();
 
     /**
-     * ?ï¿½ï¿½?AI?ï¿½èª¤ä¿¡æ¯
+     * ????AI??»~«H®§
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|System")
-    static TArray<FString> GetAIErrorMessages(};
+    static TArray<FString> GetAIErrorMessages();
 
     /**
-     * æ¸…é™¤AI?ï¿½èª¤
+     * ²M°£AI??»~
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|System")
-    static void ClearAIErrors(};
+    static void ClearAIErrors();
 
     /**
-     * ?ï¿½å¾©AI?ï¿½X     */
+     * ??´_AI??X     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|System")
-    static void RecoverAIState(};
+    static void RecoverAIState();
 };
 

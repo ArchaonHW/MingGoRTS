@@ -65,23 +65,18 @@ class MINGGORTS_API UMingRTSPerformanceProfiler : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSPerformanceProfiler();
-
+    UMingRTSPerformanceProfiler(};
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void InitializeProfiler();
-
+    void InitializeProfiler(};
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void StartProfiling(EProfilingType Type);
-
+    void StartProfiling(EProfilingType Type};
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void StopProfiling(EProfilingType Type);
-
+    void StopProfiling(EProfilingType Type};
     UFUNCTION(BlueprintPure, Category = "Performance Profiler")
     TArray<FPerformanceMetric> GetPerformanceMetrics() const;
 
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void GeneratePerformanceReport();
-
+    void GeneratePerformanceReport(};
     UFUNCTION(BlueprintPure, Category = "Performance Profiler")
     EPerformanceLevel GetOverallPerformanceLevel() const;
 
@@ -92,10 +87,10 @@ protected:
     UPROPERTY()
     TMap<EProfilingType, bool> ActiveProfilingSessions;
 
-    void CollectCPUMetrics();
-    void CollectMemoryMetrics();
-    void CollectGPUMetrics();
-    void CollectNetworkMetrics();
-    EPerformanceLevel CalculatePerformanceLevel(float Value, EProfilingType Type);
-    FString GetPerformanceUnit(EProfilingType Type);
+    void CollectCPUMetrics(};
+    void CollectMemoryMetrics(};
+    void CollectGPUMetrics(};
+    void CollectNetworkMetrics(};
+    EPerformanceLevel CalculatePerformanceLevel(float Value, EProfilingType Type};
+    FString GetPerformanceUnit(EProfilingType Type};
 };

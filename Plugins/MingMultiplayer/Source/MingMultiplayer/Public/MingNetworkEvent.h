@@ -157,13 +157,13 @@ class MINGMULTIPLAYER_API UMingNetworkEventSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingNetworkEventSystem(};
+    UMingNetworkEventSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
     void InitializeEventSystem(class UMingNetworkManager* NetworkManager};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void ShutdownEventSystem(};
+    void ShutdownEventSystem();
 
     // Event Registration
     UFUNCTION(BlueprintCallable, Category = "Network Events")
@@ -221,10 +221,10 @@ public:
 
     // Event Processing
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void ProcessPendingEvents(};
+    void ProcessPendingEvents();
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void ClearPendingEvents(};
+    void ClearPendingEvents();
 
     UFUNCTION(BlueprintPure, Category = "Network Events")
     int32 GetPendingEventCount() const;
@@ -244,7 +244,7 @@ public:
     void EnableEventHistory(bool bEnabled};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void ClearEventHistory(};
+    void ClearEventHistory();
 
     UFUNCTION(BlueprintPure, Category = "Network Events")
     TArray<FMingNetworkEvent> GetEventHistory(float SinceTimestamp) const;
@@ -313,9 +313,9 @@ protected:
     void ProcessEvent(const FMingNetworkEvent& Event};
     void ExecuteEventHandler(const FMingNetworkEventHandler& Handler, const FMingNetworkEvent& Event};
     void AddToHistory(const FMingNetworkEvent& Event};
-    void TrimHistory(};
+    void TrimHistory();
 
-    FName GenerateHandlerID(};
+    FName GenerateHandlerID();
     bool ShouldProcessEvent(const FMingNetworkEvent& Event) const;
     void SendEventOverNetwork(const FMingNetworkEvent& Event};
     void ReceiveEventFromNetwork(const FMingNetworkEvent& Event};

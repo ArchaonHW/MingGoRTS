@@ -14,6 +14,7 @@
 - [調試技巧](#調試技巧)
 - [性能優化](#性能優化)
 - [常見問題](#常見問題)
+- [新系統集成](#新系統集成)
 
 ---
 
@@ -1044,6 +1045,188 @@ bool FMySubsystemTest::RunTest(const FString& Parameters)
     
     AddWarning(TEXT("Test passed"));
     return true;
+}
+```
+
+---
+
+## 新系統集成
+
+### AI內容質量控制系統
+
+#### 系統概述
+AI內容質量控制系統提供多供應商AI內容生成和質量管理功能。
+
+#### 集成步驟
+
+1. **初始化系統**
+```cpp
+// 在遊戲模式中初始化
+UMingAIContentQualityController* QualityController = NewObject<UMingAIContentQualityController>();
+QualityController->InitializeAIContentQualityController();
+```
+
+2. **配置供應商**
+```cpp
+// 配置AI供應商
+FProviderConfig Config;
+Config.APIKey = TEXT("your-api-key");
+Config.EndpointURL = TEXT("https://api.example.com");
+Config.MaxRequestsPerMinute = 60;
+
+QualityController->ConfigureProvider(EAIProvider::StableDiffusion, Config);
+```
+
+3. **生成內容**
+```cpp
+// 生成內容並進行質量控制
+FContentGenerationRequest Request;
+Request.ContentType = EContentType::Image;
+Request.Description = TEXT("Ming dynasty warrior");
+Request.QualityLevel = EQualityLevel::High;
+
+QualityController->GenerateContentWithQualityControl(Request);
+```
+
+#### 最佳實踐
+- 使用異步操作避免阻塞主線程
+- 實施預算控制避免超額使用
+- 監控供應商性能和可靠性
+- 實施內容緩存提高效率
+
+### 多人遊戲系統
+
+#### 系統概述
+多人遊戲系統提供完整的網絡同步和多人關係管理功能。
+
+#### 集成步驟
+
+1. **初始化多人系統**
+```cpp
+UMingMultiplayerSystem* MultiplayerSystem = NewObject<UMingMultiplayerSystem>();
+MultiplayerSystem->InitializeMultiplayerSystem();
+
+// 綁定事件
+MultiplayerSystem->OnPlayerConnected.AddDynamic(this, &AMyGameMode::OnPlayerConnected);
+MultiplayerSystem->OnPlayerDisconnected.AddDynamic(this, &AMyGameMode::OnPlayerDisconnected);
+```
+
+2. **創建會話**
+```cpp
+FSessionSettings Settings;
+Settings.SessionName = TEXT("MingGoRTS Game");
+Settings.MaxPlayers = 8;
+Settings.NetworkMode = ENetworkMode::Internet;
+
+MultiplayerSystem->CreateSession(Settings);
+```
+
+3. **數據同步**
+```cpp
+// 同步玩家位置
+FSynchronizationData SyncData;
+SyncData.DataType = TEXT("PlayerPosition");
+SyncData.TargetPlayerID = PlayerID;
+// 設置數據內容
+
+MultiplayerSystem->SynchronizeData(SyncData);
+
+// 同步關係數據
+FRelationshipSyncData RelationshipData;
+RelationshipData.PlayerID = PlayerID;
+RelationshipData.TargetPlayerID = TargetID;
+RelationshipData.RelationshipValue = 75.0f;
+
+MultiplayerSystem->SynchronizeRelationship(RelationshipData);
+```
+
+#### 最佳實踐
+- 使用適當的同步類型（實時、增量、事件驅動）
+- 實施網絡優化策略
+- 處理網絡中斷和重連
+- 監控網絡性能和質量
+
+### 技術債務管理系統
+
+#### 系統概述
+技術債務管理系統提供代碼質量監控、技術債務追蹤和自動化優化功能。
+
+#### 集成步驟
+
+1. **初始化系統**
+```cpp
+UMingTechnicalDebtManager* DebtManager = NewObject<UMingTechnicalDebtManager>();
+DebtManager->InitializeTechnicalDebtManager();
+
+// 綁定事件
+DebtManager->OnTechnicalDebtIdentified.AddDynamic(this, &AMyGameMode::OnTechnicalDebtIdentified);
+```
+
+2. **自動分析**
+```cpp
+// 啟用自動分析
+DebtManager->AutoIdentifyTechnicalDebt();
+
+// 分析特定文件
+DebtManager->AnalyzeCodeQuality(TEXT("Source/GameCode.cpp"));
+
+// 分析性能
+DebtManager->AnalyzePerformance();
+```
+
+3. **優化計劃**
+```cpp
+// 創建優化計劃
+TArray<FString> TargetFiles = {TEXT("File1.cpp"), TEXT("File2.cpp")};
+DebtManager->CreateOptimizationPlan(TargetFiles, EOptimizationType::CodeRefactoring);
+
+// 執行優化計劃
+FString PlanID = TEXT("plan-123");
+DebtManager->ExecuteOptimizationPlan(PlanID);
+```
+
+#### 最佳實踐
+- 定期運行代碼質量分析
+- 監控技術債務趨勢
+- 優先處理高優先級技術債務
+- 使用自動化工具提高效率
+
+### 系統間集成
+
+#### 統一初始化
+```cpp
+// 在遊戲模式中統一初始化所有系統
+void AMingGameMode::InitializeSystems()
+{
+    // 初始化AI內容質量控制
+    AIQualityController = NewObject<UMingAIContentQualityController>();
+    AIQualityController->InitializeAIContentQualityController();
+    
+    // 初始化多人系統
+    MultiplayerSystem = NewObject<UMingMultiplayerSystem>();
+    MultiplayerSystem->InitializeMultiplayerSystem();
+    
+    // 初始化技術債務管理
+    TechnicalDebtManager = NewObject<UMingTechnicalDebtManager>();
+    TechnicalDebtManager->InitializeTechnicalDebtManager();
+    
+    // 設置系統間通信
+    SetupSystemCommunication();
+}
+```
+
+#### 事件協調
+```cpp
+void AMingGameMode::SetupSystemCommunication()
+{
+    // AI內容生成完成後通知多人系統
+    AIQualityController->OnContentQualityChecked.AddDynamic(this, &AMingGameMode::OnContentQualityChecked);
+    
+    // 多人系統連接變化時通知技術債務系統
+    MultiplayerSystem->OnPlayerConnected.AddDynamic(this, &AMingGameMode::OnPlayerConnected);
+    
+    // 技術債務系統發現問題時通知其他系統
+    TechnicalDebtManager->OnTechnicalDebtIdentified.AddDynamic(this, &AMingGameMode::OnTechnicalDebtIdentified);
 }
 ```
 

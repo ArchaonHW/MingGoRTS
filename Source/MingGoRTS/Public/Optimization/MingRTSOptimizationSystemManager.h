@@ -51,14 +51,11 @@ class MINGGORTS_API UMingRTSOptimizationSystemManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationSystemManager();
-
+    UMingRTSOptimizationSystemManager(};
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
-    void InitializeOptimizationManager();
-
+    void InitializeOptimizationManager(};
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
     void SetOptimizationMode(EOptimizationMode Mode};
-
     UFUNCTION(BlueprintPure, Category = "Optimization Manager")
     EOptimizationMode GetCurrentOptimizationMode() const;
 
@@ -66,14 +63,12 @@ public:
     void ApplyOptimizationConfiguration(const FOptimizationConfiguration& Config};
 
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
-    void OptimizeSystemPerformance();
-
+    void OptimizeSystemPerformance(};
     UFUNCTION(BlueprintPure, Category = "Optimization Manager")
     FOptimizationConfiguration GetCurrentConfiguration() const;
 
     UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
-    void ResetToDefaults();
-
+    void ResetToDefaults(};
 protected:
     UPROPERTY()
     EOptimizationMode CurrentMode;
@@ -84,10 +79,10 @@ protected:
     UPROPERTY()
     bool bIsOptimizing;
 
-    void InitializeDefaultConfiguration();
-    void ApplyDevelopmentMode();
-    void ApplyTestingMode();
-    void ApplyReleaseMode();
-    void ApplyPerformanceMode();
+    void InitializeDefaultConfiguration(};
+    void ApplyDevelopmentMode(};
+    void ApplyTestingMode(};
+    void ApplyReleaseMode(};
+    void ApplyPerformanceMode(};
     bool ValidateConfiguration(const FOptimizationConfiguration& Config};
 };

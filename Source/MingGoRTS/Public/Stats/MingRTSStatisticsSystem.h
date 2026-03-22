@@ -5,31 +5,31 @@
 #include "MingRTSStatisticsSystem.generated.h"
 
 /**
- * ²Î?X???Ãş??
+ * çµ±?X???é¡??
  */
 UENUM(BlueprintType)
 enum class EStatType : uint8
 {
-    MatchesPlayed,         UMETA(DisplayName = "¹ï¾Ô³õ¦¸"),
-    MatchesWon,            UMETA(DisplayName = "³Ó§Q³õ¦¸"),
-    MatchesLost,           UMETA(DisplayName = "¥¢±Ñ³õ¦¸"),
-    WinRate,               UMETA(DisplayName = "³Ó²v"),
-    TotalPlayTime,         UMETA(DisplayName = "Á`¹CÀ¸®É¶¡"),
-    UnitsKilled,           UMETA(DisplayName = "®ø·À³æ¦ì¼Æ"),
-    UnitsLost,             UMETA(DisplayName = "·l¥¢³æ¦ì¼Æ¶q"),
-    BuildingsConstructed,  UMETA(DisplayName = "«Ø³y«Ø¿v¼Æ¶q"),
-    BuildingsDestroyed,    UMETA(DisplayName = "ºR·´«Ø¿v¼Æ¶q"),
-    ResourcesGathered,     UMETA(DisplayName = "¦¬¶°¸ê·½Á`¼Æ"),
-    ResourcesSpent,        UMETA(DisplayName = "®ø¯Ó¸ê·½Á`¼Æ"),
-    TechnologiesResearched, UMETA(DisplayName = "¬ã¨s¬ì§Ş¼Æ"),
-    APM UMETA(DisplayName = "¥­§¡¨C¤ÀÄÁ¾Ş§@¼Æ"),
-    PeakAPM UMETA(DisplayName = "®p­È¨C¤ÀÄÁ¾Ş§@¼Æ"),
-    FavoriteFaction UMETA(DisplayName = "³Ì·R°}Àç"),
-    FavoriteMap UMETA(DisplayName = "³Ì·R¦a¹Ï")
+    MatchesPlayed,         UMETA(DisplayName = "å°æˆ°å ´æ¬¡"),
+    MatchesWon,            UMETA(DisplayName = "å‹åˆ©å ´æ¬¡"),
+    MatchesLost,           UMETA(DisplayName = "å¤±æ•—å ´æ¬¡"),
+    WinRate,               UMETA(DisplayName = "å‹ç‡"),
+    TotalPlayTime,         UMETA(DisplayName = "ç¸½éŠæˆ²æ™‚é–“"),
+    UnitsKilled,           UMETA(DisplayName = "æ¶ˆæ»…å–®ä½æ•¸"),
+    UnitsLost,             UMETA(DisplayName = "æå¤±å–®ä½æ•¸é‡"),
+    BuildingsConstructed,  UMETA(DisplayName = "å»ºé€ å»ºç¯‰æ•¸é‡"),
+    BuildingsDestroyed,    UMETA(DisplayName = "æ‘§æ¯€å»ºç¯‰æ•¸é‡"),
+    ResourcesGathered,     UMETA(DisplayName = "æ”¶é›†è³‡æºç¸½æ•¸"),
+    ResourcesSpent,        UMETA(DisplayName = "æ¶ˆè€—è³‡æºç¸½æ•¸"),
+    TechnologiesResearched, UMETA(DisplayName = "ç ”ç©¶ç§‘æŠ€æ•¸"),
+    APM, UMETA(DisplayName = "å¹³å‡æ¯åˆ†é˜æ“ä½œæ•¸"),
+    PeakAPM, UMETA(DisplayName = "å³°å€¼æ¯åˆ†é˜æ“ä½œæ•¸"),
+    FavoriteFaction, UMETA(DisplayName = "æœ€æ„›é™£ç‡Ÿ"),
+    FavoriteMap UMETA(DisplayName = "æœ€æ„›åœ°åœ–")
 };
 
 /**
- * ¹ï??²Î??
+ * å°??çµ±??
  */
 USTRUCT(BlueprintType)
 struct FMatchStatistics
@@ -92,7 +92,7 @@ struct FMatchStatistics
 };
 
 /**
- * ??®a??²P²Î??
+ * ??å®¶??æ¶¯çµ±??
  */
 USTRUCT(BlueprintType)
 struct FPlayerCareerStats
@@ -174,7 +174,7 @@ struct FPlayerCareerStats
 };
 
 /**
- * ????²Î??
+ * ????çµ±??
  */
 USTRUCT(BlueprintType)
 struct FFactionStatistics
@@ -205,89 +205,87 @@ struct FFactionStatistics
 };
 
 /**
- * ²Î??¨t²Î - °O?X??X?ª±®a²Î­p¼ÆX */
+ * çµ±??ç³»çµ± - è¨˜?X??X?ç©å®¶çµ±è¨ˆæ•¸X */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSStatisticsSystem : public UObject
 {
     GENERATED_BODY()
     
 public:
-    UMingRTSStatisticsSystem();
-    
+    UMingRTSStatisticsSystem(};
     // ???X    UFUNCTION(BlueprintCallable, Category = "Statistics")
-    void InitializeStatisticsSystem();
-    
-    // °O??¹ï?X???
+    void InitializeStatisticsSystem(};
+    // è¨˜??å°?X???
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     void RecordMatchStart(const FString& PlayerID, const FString& MatchID, const FString& MapName, const FString& Faction};
     
-    // °O??¹ï??µ²??
+    // è¨˜??å°??çµ??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     void RecordMatchEnd(const FString& PlayerID, const FString& MatchID, bool bIsVictory, const FMatchStatistics& Stats};
     
-    // ??·s¹ê??²Î??
+    // ??æ–°å¯¦??çµ±??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     void UpdateLiveStat(const FString& PlayerID, EStatType StatType, float Value};
     
-    // °O?X??X?±ş
+    // è¨˜?X??X?æ®º
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     void RecordUnitKilled(const FString& PlayerID, const FString& MatchID, int32 UnitValue};
     
-    // °O??¸ê?X???
+    // è¨˜??è³‡?X???
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     void RecordResourceGathered(const FString& PlayerID, const FString& MatchID, int32 Amount};
     
-    // °O??APM
+    // è¨˜??APM
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     void RecordAPM(const FString& PlayerID, const FString& MatchID, float CurrentAPM};
     
-    // ???X?²P²Î??
+    // ???X?æ¶¯çµ±??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     FPlayerCareerStats GetCareerStats(const FString& PlayerID) const;
     
-    // ????¹ï??¾ú¥v
+    // ????å°??æ­·å²
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     TArray<FMatchStatistics> GetMatchHistory(const FString& PlayerID, int32 Count = 10) const;
     
-    // ???X???²Î??
+    // ???X???çµ±??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     TArray<FFactionStatistics> GetFactionStats(const FString& PlayerID) const;
     
-    // ???X???²Î?X    UFUNCTION(BlueprintCallable, Category = "Statistics")
+    // ???X???çµ±?X    UFUNCTION(BlueprintCallable, Category = "Statistics")
     float GetStatValue(const FString& PlayerID, EStatType StatType) const;
     
-    // ????²Î??ÁÍ¶Õ
+    // ????çµ±??è¶¨å‹¢
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     TArray<float> GetStatTrend(const FString& PlayerID, EStatType StatType, int32 Days = 30) const;
     
-    // ¤ñ??²Î??
+    // æ¯”??çµ±??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     FString CompareStats(const FString& PlayerID1, const FString& PlayerID2) const;
     
-    // ???X???º]????    UFUNCTION(BlueprintCallable, Category = "Statistics")
+    // ???X???æ¦œ????    UFUNCTION(BlueprintCallable, Category = "Statistics")
     int32 GetLeaderboardRank(const FString& PlayerID, EStatType StatType) const;
     
-    // ????²Î?X???
+    // ????çµ±?X???
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     FString GetStatsSummary(const FString& PlayerID) const;
     
-    // ¾É¥X²Î?X???
+    // å°å‡ºçµ±?X???
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     bool ExportStatsToCSV(const FString& PlayerID, const FString& FilePath) const;
     
-    // ??¸m²Î??
+    // ??ç½®çµ±??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     void ResetStatistics(const FString& PlayerID};
     
-    // «O??²Î??
+    // ä¿??çµ±??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     void SaveStatistics(const FString& PlayerID};
     
-    // ¸ü¤J²Î??
+    // è¼‰å…¥çµ±??
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     void LoadStatistics(const FString& PlayerID};
     
-    // ¨Æ¥ó©e??
+    // äº‹ä»¶å§”??
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnStatUpdated, const FString&, PlayerID, EStatType, StatType, float, NewValue};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMatchRecorded, const FString&, PlayerID, const FMatchStatistics&, MatchStats};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMilestoneReached, const FString&, MilestoneText};

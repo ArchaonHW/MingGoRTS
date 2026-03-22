@@ -144,13 +144,13 @@ class MINGAI_API UMingAIBatchGenerationPipeline : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAIBatchGenerationPipeline(};
+    UMingAIBatchGenerationPipeline();
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    void InitializePipeline(};
+    void InitializePipeline();
 
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")
-    void ShutdownPipeline(};
+    void ShutdownPipeline();
 
     // Batch Management
     UFUNCTION(BlueprintCallable, Category = "Batch Generation")

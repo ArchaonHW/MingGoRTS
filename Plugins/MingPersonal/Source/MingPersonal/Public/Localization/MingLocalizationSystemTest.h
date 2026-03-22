@@ -57,7 +57,7 @@ class MINGPERSONAL_API UMingLocalizationSystemTest : public UObject
     GENERATED_BODY()
 
 public:
-    UMingLocalizationSystemTest(};
+    UMingLocalizationSystemTest();
 
     // ???X???´ú??    UFUNCTION(BlueprintCallable, Category = "Localization Test")
     bool RunAllTests();

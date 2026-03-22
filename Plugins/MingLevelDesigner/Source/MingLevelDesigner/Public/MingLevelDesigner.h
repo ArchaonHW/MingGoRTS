@@ -197,11 +197,11 @@ class MINGLEVELDESIGNER_API UMingLevelDesigner : public UObject
     GENERATED_BODY()
 
 public:
-    UMingLevelDesigner(};
+    UMingLevelDesigner();
 
     // Level Management
     UFUNCTION(BlueprintCallable, Category = "Level")
-    void InitializeLevelDesigner(};
+    void InitializeLevelDesigner();
 
     UFUNCTION(BlueprintCallable, Category = "Level")
     void CreateNewLevel(const FString& LevelID, EMingMapSize MapSize};
@@ -295,13 +295,13 @@ public:
 
     // Level Testing
     UFUNCTION(BlueprintCallable, Category = "Testing")
-    void TestLevel(};
+    void TestLevel();
 
     UFUNCTION(BlueprintCallable, Category = "Testing")
-    void StopTest(};
+    void StopTest();
 
     UFUNCTION(BlueprintCallable, Category = "Testing")
-    void ValidateLevel(};
+    void ValidateLevel();
 
     UFUNCTION(BlueprintPure, Category = "Testing")
     TArray<FString> GetValidationErrors() const;
@@ -387,28 +387,28 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal Functions
-    void InitializeDefaultTemplates(};
-    void SetupDefaultLevels(};
-    void ValidateLevelIntegrity(};
+    void InitializeDefaultTemplates();
+    void SetupDefaultLevels();
+    void ValidateLevelIntegrity();
 
     // Terrain Helpers
     void GenerateTerrain(EMingMapSize MapSize, EMingTerrainType DefaultTerrain};
-    void ApplyTerrainModifiers(};
-    void OptimizeTerrainData(};
+    void ApplyTerrainModifiers();
+    void OptimizeTerrainData();
 
     // Object Helpers
-    FString GenerateUniqueObjectID(};
+    FString GenerateUniqueObjectID();
     bool IsValidObjectPlacement(const FMingMapObject& Object) const;
-    void UpdateObjectReferences(};
+    void UpdateObjectReferences();
 
     // Validation Helpers
-    bool ValidatePlayerStarts(};
-    bool ValidateObjectives(};
-    bool ValidateTerrainIntegrity(};
-    bool ValidateMapBounds(};
+    bool ValidatePlayerStarts();
+    bool ValidateObjectives();
+    bool ValidateTerrainIntegrity();
+    bool ValidateMapBounds();
 
     // Template Helpers
-    void CreateDefaultTemplates(};
+    void CreateDefaultTemplates();
     void ApplyTemplate(const FMingLevelData& Template};
 };
 

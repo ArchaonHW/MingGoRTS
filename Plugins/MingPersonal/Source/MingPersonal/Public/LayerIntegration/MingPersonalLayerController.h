@@ -190,7 +190,7 @@ class MINGPERSONAL_API UMingPersonalLayerController : public UObject
     GENERATED_BODY()
 
 public:
-    UMingPersonalLayerController(};
+    UMingPersonalLayerController();
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Personal Layer")

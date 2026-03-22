@@ -11,7 +11,7 @@ class MINGTACTICAL_API AMingRTSPlayerController : public APlayerController
     GENERATED_BODY()
 
 public:
-    AMingRTSPlayerController(};
+    AMingRTSPlayerController();
 
 protected:
     virtual void BeginPlay() override;
@@ -68,7 +68,7 @@ protected:
     float EdgeScrollingThreshold;
 
     void UpdateCameraMovement(float DeltaTime};
-    void HandleEdgeScrolling(};
+    void HandleEdgeScrolling();
 
     // Command System
     UFUNCTION(BlueprintCallable, Category = "Commands")
@@ -78,10 +78,10 @@ protected:
     void IssueAttackCommand(AActor* Target};
 
     UFUNCTION(BlueprintCallable, Category = "Commands")
-    void IssueStopCommand(};
+    void IssueStopCommand();
 
     UFUNCTION(BlueprintCallable, Category = "Commands")
-    void IssueHoldPositionCommand(};
+    void IssueHoldPositionCommand();
 
     // Utility functions
     FVector GetMouseWorldLocation() const;

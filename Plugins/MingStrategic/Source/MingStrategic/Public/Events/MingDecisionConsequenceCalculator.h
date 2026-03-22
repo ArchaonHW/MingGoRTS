@@ -408,19 +408,19 @@ public:
      * 註�?決�?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool RegisterDecisionConsequence(const FDecisionConsequence& Consequence};
+    bool RegisterDecisionConsequence(const FDecisionConsequence& Consequence);
 
     /**
      * ?��?註�?決�?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool UnregisterDecisionConsequence(const FString& ConsequenceID};
+    bool UnregisterDecisionConsequence(const FString& ConsequenceID);
 
     /**
      * 計�?決�?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    FConsequenceCalculationResult CalculateDecisionConsequences(const FDecisionContext& Context};
+    FConsequenceCalculationResult CalculateDecisionConsequences(const FDecisionContext& Context);
 
     /**
      * ?��?決�?後�?
@@ -472,19 +472,19 @@ public:
      * 觸發後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool TriggerConsequence(const FString& ConsequenceID, const FDecisionContext& Context};
+    bool TriggerConsequence(const FString& ConsequenceID, const FDecisionContext& Context);
 
     /**
      * ?�用後�X��?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool ApplyConsequenceEffects(const FString& ConsequenceID, const FDecisionContext& Context};
+    bool ApplyConsequenceEffects(const FString& ConsequenceID, const FDecisionContext& Context);
 
     /**
      * ?��?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool ReverseConsequence(const FString& ConsequenceID, const FDecisionContext& Context};
+    bool ReverseConsequence(const FString& ConsequenceID, const FDecisionContext& Context);
 
     /**
      * ?��?後�?統�?
@@ -548,28 +548,28 @@ protected:
     void CreateDiplomaticDecisionConsequences();
 
     // 計�X��?後�?
-    void CalculateImmediateConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
+    void CalculateImmediateConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
     // 計�?延�?後�?
-    void CalculateDelayedConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
+    void CalculateDelayedConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
     // 計�?累�?後�?
-    void CalculateCumulativeConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
+    void CalculateCumulativeConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
     // 計�?條件後�?
-    void CalculateConditionalConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
+    void CalculateConditionalConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
     // 計�X��?後�?
-    void CalculateRandomConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
+    void CalculateRandomConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
     // 計�X��?後�?
-    void CalculateHiddenConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
+    void CalculateHiddenConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
     // 計�?永�?後�?
-    void CalculatePermanentConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
+    void CalculatePermanentConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
     // 計�X��?後�?
-    void CalculateTemporaryConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result};
+    void CalculateTemporaryConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
     // 計�?後�?影響?�數
     float CalculateConsequenceImpact(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
@@ -593,7 +593,7 @@ protected:
     // ?�用後�X�單�?    void ApplyConsequenceToUnits(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedUnits) const;
 
     // ?�新後�?統�?
-    void UpdateConsequenceStatistics(const FString& ConsequenceID};
+    void UpdateConsequenceStatistics(const FString& ConsequenceID);
 
     // ?��?後�X�述
     FString GetConsequenceDescription(const FString& ConsequenceID) const;
@@ -602,7 +602,7 @@ protected:
     bool ValidateConsequenceConfig(const FDecisionConsequence& Consequence) const;
 
     // 記�?後�X��?
-    void LogConsequenceEvent(const FString& ConsequenceID, const FString& Message};
+    void LogConsequenceEvent(const FString& ConsequenceID, const FString& Message);
 
     // ?��?後�X��?
     FString GenerateConsequenceReport(const FString& ConsequenceID, const FConsequenceCalculationResult& Result) const;

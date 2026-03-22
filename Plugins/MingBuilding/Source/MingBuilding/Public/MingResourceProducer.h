@@ -11,7 +11,7 @@ class MINGBUILDING_API UMingResourceProducer : public UActorComponent
     GENERATED_BODY()
 
 public:
-    UMingResourceProducer(};
+    UMingResourceProducer();
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Production")
     EMingResourceType ProducedResource;
@@ -44,16 +44,16 @@ public:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void StartProduction(};
+    void StartProduction();
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void StopProduction(};
+    void StopProduction();
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void PauseProduction(};
+    void PauseProduction();
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void ResumeProduction(};
+    void ResumeProduction();
 
     UFUNCTION(BlueprintCallable, Category = "Production")
     void SetProductionRate(float NewRate};

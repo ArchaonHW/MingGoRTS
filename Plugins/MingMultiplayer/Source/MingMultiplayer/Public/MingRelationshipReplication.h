@@ -162,13 +162,13 @@ class MINGMULTIPLAYER_API UMingRelationshipReplication : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRelationshipReplication(};
+    UMingRelationshipReplication();
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
     void InitializeReplication(class UMingNetworkManager* NetworkManager, class UMingRelationshipManager* RelationshipManager};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ShutdownReplication(};
+    void ShutdownReplication();
 
     // Sync Configuration
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
@@ -194,7 +194,7 @@ public:
     void RequestPartialSync(const TArray<FName>& CharacterIDs};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ForceSyncAll(};
+    void ForceSyncAll();
 
     // Server-side Operations
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
@@ -302,10 +302,10 @@ protected:
     TArray<float> SyncLatencies;
 
     // Internal Functions
-    void PerformFullSync(};
-    void PerformDeltaSync(};
-    void PerformEventDrivenSync(};
-    void PerformProximitySync(};
+    void PerformFullSync();
+    void PerformDeltaSync();
+    void PerformEventDrivenSync();
+    void PerformProximitySync();
     
     void SendSyncRequest(const FMingRelationshipSyncRequest& Request};
     void ProcessSyncResponse(const FMingRelationshipSyncResponse& Response};

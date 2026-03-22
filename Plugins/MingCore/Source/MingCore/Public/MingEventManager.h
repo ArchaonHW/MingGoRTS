@@ -91,7 +91,7 @@ struct FMingGameEvent
     {}
 };
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnGameEvent, const FMingGameEvent&, Event};
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnGameEvent, const FMingGameEvent&, Event);
 
 /**
  * Event Manager for MingGoRTS
@@ -107,20 +107,20 @@ public:
 
     // Singleton access
     UFUNCTION(BlueprintPure, Category = "Event Manager", meta = (WorldContext = "WorldContextObject"))
-    static UMingEventManager* Get(UObject* WorldContextObject};
+    static UMingEventManager* Get(UObject* WorldContextObject);
 
     // Event Publishing
     UFUNCTION(BlueprintCallable, Category = "Events")
     void PublishEvent(const FMingGameEvent& Event) {};
 
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void PublishSimpleEvent(EMingGameEventType Type, UObject* Source = nullptr, UObject* Target = nullptr};
+    void PublishSimpleEvent(EMingGameEventType Type, UObject* Source = nullptr, UObject* Target = nullptr);
 
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void PublishCombatEvent(EMingGameEventType Type, class AActor* Attacker, class AActor* Target, int32 DamageDealt};
+    void PublishCombatEvent(EMingGameEventType Type, class AActor* Attacker, class AActor* Target, int32 DamageDealt);
 
     UFUNCTION(BlueprintCallable, Category = "Events")
-    void PublishResourceEvent(EMingGameEventType Type, EMingResourceType Resource, int32 Amount, UObject* Source};
+    void PublishResourceEvent(EMingGameEventType Type, EMingResourceType Resource, int32 Amount, UObject* Source);
 
     // Event Subscription
     UFUNCTION(BlueprintCallable, Category = "Events")
@@ -137,47 +137,47 @@ public:
 
     // Event History
     UFUNCTION(BlueprintCallable, Category = "History")
-    TArray<FMingGameEvent> GetEventHistory(EMingGameEventType EventType, float TimeWindow = -1.0f};
+    TArray<FMingGameEvent> GetEventHistory(EMingGameEventType EventType, float TimeWindow = -1.0f);
 
     UFUNCTION(BlueprintCallable, Category = "History")
-    TArray<FMingGameEvent> GetAllEventHistory(float TimeWindow = -1.0f};
+    TArray<FMingGameEvent> GetAllEventHistory(float TimeWindow = -1.0f);
 
     UFUNCTION(BlueprintCallable, Category = "History")
     void ClearHistory();
 
     UFUNCTION(BlueprintPure, Category = "History")
-    int32 GetEventCount(EMingGameEventType EventType, float TimeWindow = -1.0f};
+    int32 GetEventCount(EMingGameEventType EventType, float TimeWindow = -1.0f);
 
     // Event Query
     UFUNCTION(BlueprintPure, Category = "Query")
-    bool HasEventOccurred(EMingGameEventType EventType, float TimeWindow = -1.0f};
+    bool HasEventOccurred(EMingGameEventType EventType, float TimeWindow = -1.0f);
 
     UFUNCTION(BlueprintPure, Category = "Query")
-    FMingGameEvent GetLastEventOfType(EMingGameEventType EventType};
+    FMingGameEvent GetLastEventOfType(EMingGameEventType EventType);
 
     UFUNCTION(BlueprintCallable, Category = "Query")
-    TArray<FMingGameEvent> GetEventsForObject(UObject* Object, float TimeWindow = -1.0f};
+    TArray<FMingGameEvent> GetEventsForObject(UObject* Object, float TimeWindow = -1.0f);
 
     // Event Processing
     UFUNCTION(BlueprintCallable, Category = "Processing")
-    void SetEventBatchingEnabled(bool bEnabled};
+    void SetEventBatchingEnabled(bool bEnabled);
 
     UFUNCTION(BlueprintCallable, Category = "Processing")
-    void SetBatchInterval(float Interval};
+    void SetBatchInterval(float Interval);
 
     UFUNCTION(BlueprintCallable, Category = "Processing")
     void ProcessPendingEvents();
 
     // Utility
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FString GetEventTypeName(EMingGameEventType Type};
+    static FString GetEventTypeName(EMingGameEventType Type);
 
     UFUNCTION(BlueprintPure, Category = "Utility")
-    static FLinearColor GetEventTypeColor(EMingGameEventType Type};
+    static FLinearColor GetEventTypeColor(EMingGameEventType Type);
 
     // Statistics
     UFUNCTION(BlueprintCallable, Category = "Statistics")
-    TMap<EMingGameEventType, int32> GetEventStatistics(float TimeWindow = -1.0f};
+    TMap<EMingGameEventType, int32> GetEventStatistics(float TimeWindow = -1.0f);
 
     UFUNCTION(BlueprintCallable, Category = "Statistics")
     void ExportEventLog(const FString& FilePath) {};

@@ -19,7 +19,7 @@ class MINGPERSONAL_API UMingSaveSystemTest : public UObject
     GENERATED_BODY()
 
 public:
-    UMingSaveSystemTest(};
+    UMingSaveSystemTest();
 
     // ???X???´ú??    UFUNCTION(BlueprintCallable, Category = "Save System Test")
     bool RunAllTests();

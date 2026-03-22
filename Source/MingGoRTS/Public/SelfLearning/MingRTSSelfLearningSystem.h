@@ -234,77 +234,77 @@ public:
 
     // Data collection interface
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Data")
-    void CollectUserBehaviorData(const FUserBehaviorData& BehaviorData};
+    void CollectUserBehaviorData(const FUserBehaviorData& BehaviorData);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Data")
-    void CollectGameplayMetrics(const FGameplayMetricsData& MetricsData};
+    void CollectGameplayMetrics(const FGameplayMetricsData& MetricsData);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Data")
-    void CollectCustomData(ELearningDataType DataType, const TMap<FString, FString>& Data};
+    void CollectCustomData(ELearningDataType DataType, const TMap<FString, FString>& Data);
 
     // Learning model management
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Models")
-    bool CreateLearningModel(const FString& ModelName, const FLearningModelConfig& Config};
+    bool CreateLearningModel(const FString& ModelName, const FLearningModelConfig& Config);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Models")
-    bool TrainLearningModel(const FString& ModelName};
+    bool TrainLearningModel(const FString& ModelName);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Models")
-    FLearningResult GetLearningPrediction(const FString& ModelName, const TMap<FString, FString>& InputData};
+    FLearningResult GetLearningPrediction(const FString& ModelName, const TMap<FString, FString>& InputData);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Models")
-    bool DeleteLearningModel(const FString& ModelName};
+    bool DeleteLearningModel(const FString& ModelName);
 
     // Adaptive system integration
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Adaptation")
-    void ApplyAdaptiveParameters(const FAdaptiveParameters& Parameters};
+    void ApplyAdaptiveParameters(const FAdaptiveParameters& Parameters);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Adaptation")
-    FAdaptiveParameters GetRecommendedAdaptations(const FString& UserID};
+    FAdaptiveParameters GetRecommendedAdaptations(const FString& UserID);
 
     // System integration interfaces
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Integration")
-    void IntegrateWithAISystem(UMingRTSAIController* AIController};
+    void IntegrateWithAISystem(UMingRTSAIController* AIController);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Integration")
-    void IntegrateWithCulturalSystem(UMingRTSCulturalAdaptationSystem* CulturalSystem};
+    void IntegrateWithCulturalSystem(UMingRTSCulturalAdaptationSystem* CulturalSystem);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Integration")
-    void IntegrateWithAudioSystem(UMingRTSAudioEnhancedSystem* AudioSystem};
+    void IntegrateWithAudioSystem(UMingRTSAudioEnhancedSystem* AudioSystem);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Integration")
-    void IntegrateWithUISystem(UMingRTSUIEnhancedSystem* UISystem};
+    void IntegrateWithUISystem(UMingRTSUIEnhancedSystem* UISystem);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Integration")
-    void IntegrateWithContentSystem(UMingAIGeneratedContentSystem* ContentSystem};
+    void IntegrateWithContentSystem(UMingAIGeneratedContentSystem* ContentSystem);
 
     // Learning analytics and monitoring
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Analytics")
     TMap<FString, FLearningResult> GetAllLearningResults();
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Analytics")
-    float GetLearningAccuracy(const FString& ModelName};
+    float GetLearningAccuracy(const FString& ModelName);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Analytics")
-    ELearningConfidence GetLearningConfidence(const FString& ModelName};
+    ELearningConfidence GetLearningConfidence(const FString& ModelName);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Analytics")
-    void ExportLearningData(const FString& FilePath};
+    void ExportLearningData(const FString& FilePath);
 
     // Configuration and settings
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Config")
-    void SetLearningRate(float Rate};
+    void SetLearningRate(float Rate);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Config")
-    void SetMaxDataPoints(int32 MaxPoints};
+    void SetMaxDataPoints(int32 MaxPoints);
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning|Config")
-    void EnableAutoLearning(bool bEnabled};
+    void EnableAutoLearning(bool bEnabled);
 
     // Events and delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLearningCompleted, const FString&, ModelName};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAdaptationRecommended, const FString&, UserID, const FAdaptiveParameters&, Parameters};
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLearningDataCollected, ELearningDataType, DataType};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLearningCompleted, const FString&, ModelName);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAdaptationRecommended, const FString&, UserID, const FAdaptiveParameters&, Parameters);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLearningDataCollected, ELearningDataType, DataType);
 
     UPROPERTY(BlueprintAssignable)
     FOnLearningCompleted OnLearningCompleted;
@@ -317,32 +317,32 @@ public:
 
 protected:
     // Core learning algorithms
-    void ProcessReinforcementLearning(const FString& ModelName};
-    void ProcessNeuralNetwork(const FString& ModelName};
-    void ProcessClustering(const FString& ModelName};
-    void ProcessDecisionTree(const FString& ModelName};
-    void ProcessBayesianLearning(const FString& ModelName};
-    void ProcessGeneticAlgorithm(const FString& ModelName};
-    void ProcessCollaborativeFiltering(const FString& ModelName};
+    void ProcessReinforcementLearning(const FString& ModelName);
+    void ProcessNeuralNetwork(const FString& ModelName);
+    void ProcessClustering(const FString& ModelName);
+    void ProcessDecisionTree(const FString& ModelName);
+    void ProcessBayesianLearning(const FString& ModelName);
+    void ProcessGeneticAlgorithm(const FString& ModelName);
+    void ProcessCollaborativeFiltering(const FString& ModelName);
 
     // Data processing utilities
-    void PreprocessData(ELearningDataType DataType};
-    void ValidateData(const TMap<FString, FString>& Data};
-    void NormalizeData(TMap<FString, float>& Data};
-    void FeatureExtraction(TMap<FString, FString>& Data, TArray<float>& Features};
+    void PreprocessData(ELearningDataType DataType);
+    void ValidateData(const TMap<FString, FString>& Data);
+    void NormalizeData(TMap<FString, float>& Data);
+    void FeatureExtraction(TMap<FString, FString>& Data, TArray<float>& Features);
 
     // Model management utilities
-    bool ValidateModelConfig(const FLearningModelConfig& Config};
-    void SaveModel(const FString& ModelName};
-    void LoadModel(const FString& ModelName};
-    void UpdateModelMetrics(const FString& ModelName, const FLearningResult& Result};
+    bool ValidateModelConfig(const FLearningModelConfig& Config);
+    void SaveModel(const FString& ModelName);
+    void LoadModel(const FString& ModelName);
+    void UpdateModelMetrics(const FString& ModelName, const FLearningResult& Result);
 
     // Adaptive system integration
-    void AdaptAISystem(const FAdaptiveParameters& Parameters};
-    void AdaptCulturalSystem(const FAdaptiveParameters& Parameters};
-    void AdaptAudioSystem(const FAdaptiveParameters& Parameters};
-    void AdaptUISystem(const FAdaptiveParameters& Parameters};
-    void AdaptContentSystem(const FAdaptiveParameters& Parameters};
+    void AdaptAISystem(const FAdaptiveParameters& Parameters);
+    void AdaptCulturalSystem(const FAdaptiveParameters& Parameters);
+    void AdaptAudioSystem(const FAdaptiveParameters& Parameters);
+    void AdaptUISystem(const FAdaptiveParameters& Parameters);
+    void AdaptContentSystem(const FAdaptiveParameters& Parameters);
 
     // Background processing
     void StartBackgroundLearning();

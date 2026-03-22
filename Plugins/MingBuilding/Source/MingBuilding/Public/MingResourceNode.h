@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -8,13 +8,13 @@
 UENUM(BlueprintType)
 enum class EMingResourceNodeState : uint8
 {
-    Available     UMETA(DisplayName = "?ï¿½ç”¨"),
-    Depleted      UMETA(DisplayName = "?ï¿½ç›¡"),
-    Regenerating  UMETA(DisplayName = "?ï¿½ï¿½?ï¿½?)
+    Available     UMETA(DisplayName = "??¥Î"),
+    Depleted      UMETA(DisplayName = "??ºÉ"),
+    Regenerating  UMETA(DisplayName = "??????)
 };
 
 /**
- * è³‡ï¿½?ç¯€ï¿½?- ?ï¿½æ”¶?ï¿½ï¿½?è³‡ï¿½?ï¿½? * ?ï¿½å®¶?ï¿½ä»¥å»ºé€ æŽ¡?ï¿½è¨­?ï¿½ï¿½Xï¿½ï¿½?è³‡ï¿½?
+ * ¸ê??¸`??- ??¦¬????¸ê???? * ??®a??¥H«Ø³y±Ä??³]???X???¸ê??
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGBUILDING_API AMingResourceNode : public AActor
@@ -22,7 +22,7 @@ class MINGBUILDING_API AMingResourceNode : public AActor
     GENERATED_BODY()
 
 public:
-    AMingResourceNode(};
+    AMingResourceNode();
 
 protected:
     virtual void BeginPlay() override;

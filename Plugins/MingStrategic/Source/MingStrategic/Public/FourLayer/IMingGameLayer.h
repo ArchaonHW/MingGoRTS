@@ -26,7 +26,7 @@ public:
 
     // ?�新層�?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void UpdateLayer(float DeltaTime};
+    void UpdateLayer(float DeltaTime);
 
     // ?��?層�?類�?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
@@ -41,11 +41,11 @@ public:
 
     // ?��?層�?事件
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void HandleLayerEvent(const FMingGameEvent& Event};
+    void HandleLayerEvent(const FMingGameEvent& Event);
 
     // ?��?層�?決�?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void HandleLayerDecision(const FMingGameDecision& Decision};
+    void HandleLayerDecision(const FMingGameDecision& Decision);
 
     // ?��?層�?資�X��?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
     TMap<EMingResourceType, float> GetResourceRequirements() const;
@@ -63,10 +63,10 @@ public:
 
     // �?��層�?衝�?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void ResolveLayerConflicts(const TArray<FMingLayerConflict>& Conflicts};
+    void ResolveLayerConflicts(const TArray<FMingLayerConflict>& Conflicts);
 
     // ?�調?�其他層�?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")
-    void CoordinateWithOtherLayers(const TArray<EMingGameLayer>& OtherLayers};
+    void CoordinateWithOtherLayers(const TArray<EMingGameLayer>& OtherLayers);
 
     // ?��?層�X�能統�?
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Layer")

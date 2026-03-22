@@ -7,7 +7,7 @@
 class UMingRTSReplaySystem;
 
 /**
- * ??©ñ??©ñ??¨îX- ??¨î??©ñ??©ñ??UI??¥æ?? */
+ * ??æ”¾??æ”¾??åˆ¶X- ??åˆ¶??æ”¾??æ”¾??UI??äº¤?? */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSReplayPlayerController : public UObject
 {
@@ -19,7 +19,7 @@ public:
     // ???X    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void InitializePlayerController(UMingRTSReplaySystem* ReplaySystem};
     
-    // ??©ñ??¨î
+    // ??æ”¾??åˆ¶
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void Play();
     
@@ -35,14 +35,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void StepBackward();
     
-    // ??«×??¨î
+    // ??åº¦??åˆ¶
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void SetPlaybackSpeed(float Speed};
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     float GetPlaybackSpeed() const;
     
-    // ????¶b±±X    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
+    // ????è»¸æŽ§X    UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     void JumpToTime(float TimeInSeconds};
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
@@ -57,7 +57,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer")
     float GetCurrentPercentage() const;
     
-    // ??ÅÒ¨t²Î
+    // ??ç±¤ç³»çµ±
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Bookmarks")
     void AddBookmark(float Time, const FText& Label};
     
@@ -70,7 +70,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Bookmarks")
     void JumpToBookmark(int32 BookmarkIndex};
     
-    // ¨Æ¥ó¼Ð??
+    // äº‹ä»¶æ¨™??
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Events")
     TArray<FString> GetEventMarkers() const;
     
@@ -80,7 +80,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Events")
     void JumpToPreviousEvent();
     
-    // µø?X?¨î
+    // è¦–?X?åˆ¶
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Camera")
     void SetFreeCameraMode(bool bFreeCamera};
     
@@ -93,7 +93,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Camera")
     void FollowUnit(int32 UnitID};
     
-    // Åã¥Ü³]¸m
+    // é¡¯ç¤ºè¨­ç½®
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Display")
     void ShowUI(bool bVisible};
     
@@ -106,14 +106,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Display")
     void ShowAPMGraph(bool bVisible};
     
-    // ¾É¥X??¯à
+    // å°Žå‡º??èƒ½
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Export")
     void ExportCurrentFrameAsImage(const FString& FilePath};
     
     UFUNCTION(BlueprintCallable, Category = "ReplayPlayer|Export")
     void ExportTimeRangeAsVideo(float StartTime, float EndTime, const FString& FilePath};
     
-    // ¨Æ¥ó©e??
+    // äº‹ä»¶å§”??
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackStarted};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackPaused};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlaybackStopped};
@@ -159,7 +159,8 @@ private:
     
     void BindToReplaySystem();
     void UnbindFromReplaySystem();
-    void OnReplayTimeChanged(float NewTime};
+    void OnReplayTimeChanged(float NewTime);
     void OnReplayFinished();
+};
 };
 

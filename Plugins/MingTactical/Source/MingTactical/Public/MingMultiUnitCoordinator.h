@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,7 +9,7 @@ class AMingTacticalUnit;
 class AMingUnitController;
 
 /**
- * ?��X��?類�?
+ * ???X???類??
  */
 UENUM(BlueprintType)
 enum class EUnitGroupType : uint8
@@ -32,7 +32,7 @@ enum class EUnitGroupType : uint8
 };
 
 /**
- * ?�調?�令類�?
+ * ??調??令類??
  */
 UENUM(BlueprintType)
 enum class ECoordinatedCommandType : uint8
@@ -56,7 +56,7 @@ enum class ECoordinatedCommandType : uint8
 };
 
 /**
- * ?�調?�步類�?
+ * ??調??步類??
  */
 UENUM(BlueprintType)
 enum class ECoordinationSyncType : uint8
@@ -76,7 +76,7 @@ enum class ECoordinationSyncType : uint8
 };
 
 /**
- * ?�信?�議類�?
+ * ??信??議類??
  */
 UENUM(BlueprintType)
 enum class ECommunicationProtocol : uint8
@@ -96,65 +96,65 @@ enum class ECommunicationProtocol : uint8
 };
 
 /**
- * ?��X��?定義
+ * ???X???定義
  */
 USTRUCT(BlueprintType)
 struct FUnitGroup
 {
     GENERATED_BODY()
 
-    // ?��?ID
+    // ????ID
     UPROPERTY(BlueprintReadOnly)
     FString GroupID;
 
-    // ?��X�稱
+    // ???X?稱
     UPROPERTY(BlueprintReadOnly)
     FString GroupName;
 
-    // ?��?類�?
+    // ????類??
     UPROPERTY(BlueprintReadOnly)
     EUnitGroupType GroupType;
 
-    // ?��X�述
+    // ???X?述
     UPROPERTY(BlueprintReadOnly)
     FString GroupDescription;
 
-    // ?��X��?
+    // ???X???
     UPROPERTY(BlueprintReadOnly)
     TArray<AMingTacticalUnit*> GroupUnits;
 
-    // ?��X��X    UPROPERTY(BlueprintReadOnly)
+    // ???X??X    UPROPERTY(BlueprintReadOnly)
     AMingTacticalUnit* GroupLeader;
 
-    // ?��?等�?
+    // ????等??
     UPROPERTY(BlueprintReadOnly)
     int32 GroupLevel;
 
-    // ?��X��?�?    UPROPERTY(BlueprintReadOnly)
+    // ???X?????    UPROPERTY(BlueprintReadOnly)
     int32 GroupPriority;
 
-    // ?��X�X    UPROPERTY(BlueprintReadOnly)
+    // ???X?X    UPROPERTY(BlueprintReadOnly)
     FString GroupStatus;
 
-    // ?��?標籤
+    // ????標籤
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> GroupTags;
 
-    // ?��?屬�?    UPROPERTY(BlueprintReadOnly)
+    // ????屬??    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> GroupAttributes;
 
-    // ?�建?��?
+    // ??建????
     UPROPERTY(BlueprintReadOnly)
     float CreationTime;
 
-    // ?�後更?��X    UPROPERTY(BlueprintReadOnly)
+    // ??後更???X    UPROPERTY(BlueprintReadOnly)
     float LastUpdateTime;
 
-    // ?�否活�?
+    // ??否活??
     UPROPERTY(BlueprintReadOnly)
     bool bIsActive;
 
-    // ?�否?�解X    UPROPERTY(BlueprintReadOnly)
+    // ??否??解X    UPROPERTY(BlueprintReadOnly)
     bool bCanDisband;
 
     FUnitGroup()
@@ -174,92 +174,92 @@ struct FUnitGroup
 };
 
 /**
- * ?�調?�令定義
+ * ??調??令定義
  */
 USTRUCT(BlueprintType)
 struct FCoordinatedCommand
 {
     GENERATED_BODY()
 
-    // ?�令ID
+    // ??令ID
     UPROPERTY(BlueprintReadOnly)
     FString CommandID;
 
-    // ?�令?�稱
+    // ??令??稱
     UPROPERTY(BlueprintReadOnly)
     FString CommandName;
 
-    // ?�令類�?
+    // ??令類??
     UPROPERTY(BlueprintReadOnly)
     ECoordinatedCommandType CommandType;
 
-    // ?�令?�述
+    // ??令??述
     UPROPERTY(BlueprintReadOnly)
     FString CommandDescription;
 
-    // ?��X��?
+    // ???X???
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> ParticipatingGroups;
 
-    // ?��X��?
+    // ???X???
     UPROPERTY(BlueprintReadOnly)
     TArray<AMingTacticalUnit*> ParticipatingUnits;
 
-    // ?�令?��X    UPROPERTY(BlueprintReadOnly)
+    // ??令???X    UPROPERTY(BlueprintReadOnly)
     AMingTacticalUnit* CommandLeader;
 
-    // ?�步類�?
+    // ??步類??
     UPROPERTY(BlueprintReadOnly)
     ECoordinationSyncType SyncType;
 
-    // ?�信?�議
+    // ??信??議
     UPROPERTY(BlueprintReadOnly)
     ECommunicationProtocol CommunicationProtocol;
 
-    // ?�令?�段
+    // ??令??段
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> CommandPhases;
 
-    // ?��X�段
+    // ???X?段
     UPROPERTY(BlueprintReadOnly)
     FString CurrentPhase;
 
-    // ?�令?�數
+    // ??令??數
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> CommandParameters;
 
-    // ?��X��?�?    UPROPERTY(BlueprintReadOnly)
+    // ???X?????    UPROPERTY(BlueprintReadOnly)
     TMap<FString, float> ExecutionSchedule;
 
-    // ?�步�?    UPROPERTY(BlueprintReadOnly)
+    // ??步??    UPROPERTY(BlueprintReadOnly)
     TArray<FString> SyncPoints;
 
-    // 依賴?��?
+    // 依賴????
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> Dependencies;
 
-    // ?�令?�X    UPROPERTY(BlueprintReadOnly)
+    // ??令??X    UPROPERTY(BlueprintReadOnly)
     FString CommandStatus;
 
-    // ?�建?��?
+    // ??建????
     UPROPERTY(BlueprintReadOnly)
     float CreationTime;
 
-    // ?��X��?
+    // ???X???
     UPROPERTY(BlueprintReadOnly)
     float StartTime;
 
-    // 完�X��?
+    // 完?X???
     UPROPERTY(BlueprintReadOnly)
     float CompletionTime;
 
-    // ?�否已執�?    UPROPERTY(BlueprintReadOnly)
+    // ??否已執??    UPROPERTY(BlueprintReadOnly)
     bool bIsExecuted;
 
-    // ?�否已�X    UPROPERTY(BlueprintReadOnly)
+    // ??否已?X    UPROPERTY(BlueprintReadOnly)
     bool bIsCompleted;
 
-    // ?�否已�?�?    UPROPERTY(BlueprintReadOnly)
+    // ??否已????    UPROPERTY(BlueprintReadOnly)
     bool bIsCancelled;
 
     FCoordinatedCommand()
@@ -282,70 +282,70 @@ struct FCoordinatedCommand
 };
 
 /**
- * ?�調結�?定義
+ * ??調結??定義
  */
 USTRUCT(BlueprintType)
 struct FCoordinationResult
 {
     GENERATED_BODY()
 
-    // ?�否?��?
+    // ??否????
     UPROPERTY(BlueprintReadOnly)
     bool bSuccess;
 
-    // ?�調ID
+    // ??調ID
     UPROPERTY(BlueprintReadOnly)
     FString CoordinationID;
 
-    // ?�令ID
+    // ??令ID
     UPROPERTY(BlueprintReadOnly)
     FString CommandID;
 
-    // ?��X��?
+    // ???X???
     UPROPERTY(BlueprintReadOnly)
     float ExecutionTime;
 
-    // 結�X�述
+    // 結?X?述
     UPROPERTY(BlueprintReadOnly)
     FString ResultDescription;
 
-    // ?��X��?
+    // ???X???
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> ParticipatingGroups;
 
-    // ?��X��?
+    // ???X???
     UPROPERTY(BlueprintReadOnly)
     TArray<AMingTacticalUnit*> ParticipatingUnits;
 
-    // ?��X��?
+    // ???X???
     UPROPERTY(BlueprintReadOnly)
     TArray<AMingTacticalUnit*> SuccessfulUnits;
 
-    // 失�X��?
+    // 失?X???
     UPROPERTY(BlueprintReadOnly)
     TArray<AMingTacticalUnit*> FailedUnits;
 
-    // ?�調?��?
+    // ??調????
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> CoordinationEffects;
 
-    // ?�調統�?
+    // ??調統??
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, int32> CoordinationStatistics;
 
-    // ?�調?�數
+    // ??調??數
     UPROPERTY(BlueprintReadOnly)
     float CoordinationScore;
 
-    // ?�步精度
+    // ??步精度
     UPROPERTY(BlueprintReadOnly)
     float SyncAccuracy;
 
-    // ?�信質�?
+    // ??信質??
     UPROPERTY(BlueprintReadOnly)
     float CommunicationQuality;
 
-    // ?�誤信息
+    // ??誤信息
     UPROPERTY(BlueprintReadOnly)
     FString ErrorMessage;
 
@@ -363,29 +363,29 @@ struct FCoordinationResult
 };
 
 /**
- * 多單位�?調器
- * 管�?大�?模單位�X�調?��?�? */
+ * 多單位??調器
+ * 管??大??模單位?X?調?????? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGTACTICAL_API AMingMultiUnitCoordinator : public AActor
 {
     GENERATED_BODY()
 
 public:
-    AMingMultiUnitCoordinator(};
+    AMingMultiUnitCoordinator();
 
     /**
-     * ?��X��X��X�調X     */
+     * ???X??X??X?調X     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    void InitializeMultiUnitCoordinator(};
+    void InitializeMultiUnitCoordinator();
 
     /**
-     * ?��?多單位�?調器
+     * ????多單位??調器
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    void ShutdownMultiUnitCoordinator(};
+    void ShutdownMultiUnitCoordinator();
 
     /**
-     * ?�建?��X��?
+     * ??建???X???
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     FUnitGroup CreateUnitGroup(
@@ -396,56 +396,56 @@ public:
     };
 
     /**
-     * �?��?��X��?
+     * ???????X???
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     bool DisbandUnitGroup(const FString& GroupID};
 
     /**
-     * ?��X��X��?
+     * ???X??X???
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     FUnitGroup GetUnitGroup(const FString& GroupID) const;
 
     /**
-     * ?��X�?�單位�?�?     */
+     * ???X???單位????     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     TArray<FUnitGroup> GetAllUnitGroups() const;
 
     /**
-     * ?��X��?類�X��?�?     */
+     * ???X???類?X?????     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     TArray<FUnitGroup> GetGroupsByType(EUnitGroupType GroupType) const;
 
     /**
-     * ?��?活�X��?
+     * ????活?X???
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     TArray<FUnitGroup> GetActiveGroups() const;
 
     /**
-     * 添�X��X��?�?     */
+     * 添?X??X?????     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     bool AddUnitToGroup(const FString& GroupID, AMingTacticalUnit* Unit};
 
     /**
-     * 從�?組移?�單�?     */
+     * 從??組移??單??     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     bool RemoveUnitFromGroup(const FString& GroupID, AMingTacticalUnit* Unit};
 
     /**
-     * 設置?��X��X     */
+     * 設置???X??X     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     bool SetGroupLeader(const FString& GroupID, AMingTacticalUnit* Leader};
 
     /**
-     * ?��X�調?�令
+     * ???X?調??令
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     FCoordinationResult IssueCoordinatedCommand(const FCoordinatedCommand& Command};
 
     /**
-     * ?��X�調?��?
+     * ???X?調????
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     FCoordinationResult ExecuteCoordinatedAttack(
@@ -455,7 +455,7 @@ public:
     };
 
     /**
-     * ?��X�調?�禦
+     * ???X?調??禦
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     FCoordinationResult ExecuteCoordinatedDefense(
@@ -465,7 +465,7 @@ public:
     };
 
     /**
-     * ?��X�調移�?
+     * ???X?調移??
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     FCoordinationResult ExecuteCoordinatedMovement(
@@ -475,7 +475,7 @@ public:
     };
 
     /**
-     * ?��X�調?�退
+     * ???X?調??退
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     FCoordinationResult ExecuteCoordinatedRetreat(
@@ -485,7 +485,7 @@ public:
     };
 
     /**
-     * ?��X�調?�援
+     * ???X?調??援
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     FCoordinationResult ExecuteCoordinatedSupport(
@@ -495,7 +495,7 @@ public:
     };
 
     /**
-     * ?��X�調伏�?
+     * ???X?調伏??
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     FCoordinationResult ExecuteCoordinatedAmbush(
@@ -505,7 +505,7 @@ public:
     };
 
     /**
-     * ?��X�調?�翼?��?
+     * ???X?調??翼????
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     FCoordinationResult ExecuteCoordinatedFlanking(
@@ -515,7 +515,7 @@ public:
     };
 
     /**
-     * ?��X�調?��?
+     * ???X?調????
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     FCoordinationResult ExecuteCoordinatedEncirclement(
@@ -525,7 +525,7 @@ public:
     };
 
     /**
-     * ?��X�調突破
+     * ???X?調突破
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     FCoordinationResult ExecuteCoordinatedBreakthrough(
@@ -535,239 +535,239 @@ public:
     };
 
     /**
-     * ?��X�調?�令
+     * ???X?調??令
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     bool CancelCoordinatedCommand(const FString& CommandID};
 
     /**
-     * ?��X�調?�令
+     * ???X?調??令
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     FCoordinatedCommand GetCoordinatedCommand(const FString& CommandID) const;
 
     /**
-     * ?��X�?��?調命�?     */
+     * ???X?????調命??     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     TArray<FCoordinatedCommand> GetAllCoordinatedCommands() const;
 
     /**
-     * ?��X��?中�X�令
+     * ???X???中?X?令
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     TArray<FCoordinatedCommand> GetExecutingCommands() const;
 
     /**
-     * 檢查?�調?�X     */
+     * 檢查??調??X     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     FString GetCoordinationStatus(const FString& CommandID) const;
 
     /**
-     * ?��X�調統�?
+     * ???X?調統??
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     TMap<FString, int32> GetCoordinationStatistics() const;
 
     /**
-     * ?��X�調?�能?��?
+     * ???X?調??能????
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     TMap<FString, float> GetCoordinationPerformanceMetrics() const;
 
     /**
-     * ?�步?��X�X     */
+     * ??步???X?X     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     bool SynchronizeUnitStates(const TArray<AMingTacticalUnit*>& Units};
 
     /**
-     * �?��消息?��?�?     */
+     * ????消息??????     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     bool BroadcastToGroup(const FString& GroupID, const FString& Message};
 
     /**
-     * 中繼消息?��?�?     */
+     * 中繼消息??????     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     bool RelayMessage(const FString& SourceGroupID, const FString& TargetGroupID, const FString& Message};
 
     /**
-     * 建�X�信X��
+     * 建?X?信X??
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     bool EstablishCommunication(const FString& GroupAID, const FString& GroupBID, ECommunicationProtocol Protocol};
 
     /**
-     * ?��X�信X��
+     * ???X?信X??
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     bool DisconnectCommunication(const FString& GroupAID, const FString& GroupBID};
 
     /**
-     * ?��X�信質�?
+     * ???X?信質??
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     float GetCommunicationQuality(const FString& GroupAID, const FString& GroupBID) const;
 
-    // ========== 並�X�單位�?�?(Parallel Processing) ==========
+    // ========== 並?X?單位????(Parallel Processing) ==========
     
     /**
-     * 並�?計�X��?移�?路�? (ParallelFor)
-     * ?�用?�大規模?��?群�?移�?
+     * 並??計?X???移??路?? (ParallelFor)
+     * ??用??大規模????群??移??
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Parallel")
     void CalculateMovementPathsParallel(const TArray<AMingTacticalUnit*>& Units, const FVector& TargetLocation};
 
     /**
-     * 並�X�新?��X��X�X     */
+     * 並?X?新???X??X?X     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Parallel")
-    void UpdateAllGroupStatusesParallel(};
+    void UpdateAllGroupStatusesParallel();
 
     /**
-     * 並�?驗�X��?編�?位置
+     * 並??驗?X???編??位置
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Parallel")
     void ValidateFormationPositionsParallel(const FString& GroupID};
 
     /**
-     * ?��?上次並�X��X��?
+     * ????上次並?X??X???
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Parallel")
     float GetLastParallelProcessingTimeMs() const { return LastParallelProcessingTimeMs; }
 
 protected:
-    // ?��X��X��?
+    // ???X??X???
     UPROPERTY()
     TMap<FString, FUnitGroup> UnitGroups;
 
-    // ?�調?�令?��?
+    // ??調??令????
     UPROPERTY()
     TMap<FString, FCoordinatedCommand> CoordinatedCommands;
 
-    // ?�信X��?��? - 注�?：�?�?TMap 不支XUPROPERTY
+    // ??信X?????? - 注??：????TMap 不支XUPROPERTY
     TMap<FString, TMap<FString, ECommunicationProtocol>> CommunicationConnections;
 
-    // ?�調統�?
+    // ??調統??
     UPROPERTY()
     TMap<FString, int32> CoordinationStatistics;
 
-    // ?�能?��?
+    // ??能????
     UPROPERTY()
     TMap<FString, float> PerformanceMetrics;
 
-    // ?��X�制?��X    UPROPERTY()
+    // ???X?制???X    UPROPERTY()
     AMingUnitController* UnitController;
 
-    // ?�否已�?始�?
+    // ??否已??始??
     bool bIsInitialized;
 
-    // 並�X��X��X��X    float LastParallelProcessingTimeMs = 0.0f;
+    // 並?X??X??X??X    float LastParallelProcessingTimeMs = 0.0f;
 
-    // ?��?緒�X��?
+    // ????緒?X???
     FCriticalSection ParallelLock;
 
-    // Tick?�新
+    // Tick??新
     virtual void Tick(float DeltaTime) override;
 
-    // ?��X�調?�令
-    void ExecuteCoordinatedCommand(const FCoordinatedCommand& Command};
+    // ???X?調??令
+    void ExecuteCoordinatedCommand(const FCoordinatedCommand& Command);
 
-    // ?��X�步?��?
-    void HandleSimultaneousExecution(const FCoordinatedCommand& Command};
+    // ???X?步????
+    void HandleSimultaneousExecution(const FCoordinatedCommand& Command);
 
-    // ?��X��X��?
-    void HandleSequentialExecution(const FCoordinatedCommand& Command};
+    // ???X??X???
+    void HandleSequentialExecution(const FCoordinatedCommand& Command);
 
-    // ?��?交錯?��?
-    void HandleStaggeredExecution(const FCoordinatedCommand& Command};
+    // ????交錯????
+    void HandleStaggeredExecution(const FCoordinatedCommand& Command);
 
-    // ?��?波浪?��?
-    void HandleWaveExecution(const FCoordinatedCommand& Command};
+    // ????波浪????
+    void HandleWaveExecution(const FCoordinatedCommand& Command);
 
-    // ?��X�段?��?
-    void HandlePhasedExecution(const FCoordinatedCommand& Command};
+    // ???X?段????
+    void HandlePhasedExecution(const FCoordinatedCommand& Command);
 
-    // ?��?條件?��?
-    void HandleConditionalExecution(const FCoordinatedCommand& Command};
+    // ????條件????
+    void HandleConditionalExecution(const FCoordinatedCommand& Command);
 
-    // ?��?事件驅�X��?
-    void HandleEventDrivenExecution(const FCoordinatedCommand& Command};
+    // ????事件驅?X???
+    void HandleEventDrivenExecution(const FCoordinatedCommand& Command);
 
-    // 檢查?�步條件
+    // 檢查??步條件
     bool CheckSyncConditions(const FCoordinatedCommand& Command) const;
 
-    // 計�X�步精度
+    // 計?X?步精度
     float CalculateSyncAccuracy(const FCoordinatedCommand& Command) const;
 
-    // 計�X�信質�?
+    // 計?X?信質??
     float CalculateCommunicationQuality(const FString& GroupAID, const FString& GroupBID) const;
 
-    // ?�新?��X�X    void UpdateGroupStatus(const FString& GroupID};
+    // ??新???X?X    void UpdateGroupStatus(const FString& GroupID);
 
-    // ?�新?�調統�?
-    void UpdateCoordinationStatistics(const FString& CommandID, const FCoordinationResult& Result};
+    // ??新??調統??
+    void UpdateCoordinationStatistics(const FString& CommandID, const FCoordinationResult& Result);
 
-    // ?�新?�能?��?
-    void UpdatePerformanceMetrics(};
+    // ??新??能????
+    void UpdatePerformanceMetrics();
 
-    // 驗�X��X�置
+    // 驗?X??X?置
     bool ValidateGroupConfig(const FUnitGroup& Group) const;
 
-    // 驗�X�調?�令
+    // 驗?X?調??令
     bool ValidateCoordinatedCommand(const FCoordinatedCommand& Command) const;
 
-    // ?��X��X�述
+    // ???X??X?述
     FString GetGroupDescription(const FString& GroupID) const;
 
-    // ?��X�令?�述
+    // ???X?令??述
     FString GetCommandDescription(const FString& CommandID) const;
 
-    // ?��X�步類�X�述
+    // ???X?步類?X?述
     FString GetSyncTypeDescription(ECoordinationSyncType SyncType) const;
 
-    // ?��X�信?�議?�述
+    // ???X?信??議??述
     FString GetProtocolDescription(ECommunicationProtocol Protocol) const;
 
-    // 記�X�調事件
-    void LogCoordinationEvent(const FString& EventType, const FString& Details};
+    // 記?X?調事件
+    void LogCoordinationEvent(const FString& EventType, const FString& Details);
 
-    // ?��X�調?��?
+    // ???X?調????
     FString GenerateCoordinationReport(const FString& CommandID) const;
 
-    // 計�X�調?�數
+    // 計?X?調??數
     float CalculateCoordinationScore(const FCoordinationResult& Result) const;
 
-    // ?��X�信延遲
+    // ???X?信延遲
     float HandleCommunicationDelay(const FString& SourceGroupID, const FString& TargetGroupID) const;
 
-    // ?��X�信干擾
+    // ???X?信干擾
     float HandleCommunicationInterference(const FString& SourceGroupID, const FString& TargetGroupID) const;
 
-    // ?��X�信?��?
+    // ???X?信????
     bool HandleCommunicationEncryption(const FString& SourceGroupID, const FString& TargetGroupID) const;
 
-    // ?��X�佳�?調�X    ECoordinationSyncType GetOptimalSyncType(const TArray<FString>& GroupIDs, ECoordinatedCommandType CommandType) const;
+    // ???X?佳??調?X    ECoordinationSyncType GetOptimalSyncType(const TArray<FString>& GroupIDs, ECoordinatedCommandType CommandType) const;
 
-    // ?��X�佳通信?�議
+    // ???X?佳通信??議
     ECommunicationProtocol GetOptimalCommunicationProtocol(const TArray<FString>& GroupIDs) const;
 
-    // 計�X��X�調?��?
+    // 計?X??X?調????
     float CalculateGroupCoordinationCapability(const FString& GroupID) const;
 
-    // 計�X��X�調?��?
+    // 計?X??X?調????
     float CalculateOverallCoordinationEfficiency() const;
 
-    // ?��X�調失�?
+    // ???X?調失??
     void HandleCoordinationFailure(const FString& CommandID, const FString& FailureReason};
 
-    // ?��X�調?��?
+    // ???X?調????
     void HandleCoordinationSuccess(const FString& CommandID};
 
-    // 清�?已�X��X�調
-    void CleanupCompletedCoordinations(};
+    // 清??已?X??X?調
+    void CleanupCompletedCoordinations();
 
-    // ?�份?�調?��?
-    void BackupCoordinationData(};
+    // ??份??調????
+    void BackupCoordinationData();
 
-    // ?�復?�調?��?
-    void RestoreCoordinationData(};
+    // ??復??調????
+    void RestoreCoordinationData();
 };
 

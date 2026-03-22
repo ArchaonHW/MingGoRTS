@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -43,13 +43,13 @@ struct FMingTechUnlock
 };
 
 // Wrapper struct to allow TArray in TMap (UHT limitation)
-// æ³¨ï¿½?ï¼šTArray ?ï¿½å“¡XUPROPERTY ?ï¿½è¦ï¿½Xï¿½å·²å®Œæ•´å®šç¾©
+// ª`??¡GTArray ??­ûXUPROPERTY ??­n?X?¤w§¹¾ã©w¸q
 USTRUCT(BlueprintType)
 struct FMingBuildingUpgradeList
 {
     GENERATED_BODY()
 
-    // XUPROPERTYï¼Œï¿½XFMingBuildingUpgrade ?ï¿½æ­¤å¾Œï¿½?ï¿½?    TArray<FMingBuildingUpgrade> Upgrades;
+    // XUPROPERTY¡A?XFMingBuildingUpgrade ??¦¹«á????    TArray<FMingBuildingUpgrade> Upgrades;
 };
 
 USTRUCT(BlueprintType)
@@ -104,51 +104,51 @@ struct FMingTechNode
 };
 
 /**
- * å»ºï¿½Xï¿½ï¿½Xï¿½ï¿½?çµï¿½? | Building Upgrade Data Structure
- * å®šç¾©å»ºï¿½Xï¿½ï¿½Xï¿½å±¬?ï¿½ï¿½Xï¿½æœ¬ | Define building upgrade properties and costs
+ * «Ø?X??X???µ²?? | Building Upgrade Data Structure
+ * ©w¸q«Ø?X??X?Äİ???X?¥» | Define building upgrade properties and costs
  */
 USTRUCT(BlueprintType)
 struct FMingBuildingUpgrade
 {
     GENERATED_BODY()
 
-    /** ?ï¿½ï¿½?ID | Upgrade ID */
+    /** ????ID | Upgrade ID */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString UpgradeID;
 
-    /** ?ï¿½ï¿½Xï¿½ç¨± | Upgrade Name */
+    /** ???X?ºÙ | Upgrade Name */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString UpgradeName;
 
-    /** ?ï¿½ï¿½Xï¿½è¿° | Upgrade Description */
+    /** ???X?­z | Upgrade Description */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString Description;
 
-    /** ?ï¿½ï¿½Xï¿½æœ¬ | Upgrade Cost */
+    /** ???X?¥» | Upgrade Cost */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     TArray<FMingResourceCost> UpgradeCost;
 
-    /** ?ï¿½ï¿½Xï¿½ï¿½?(ï¿½? | Upgrade Time (seconds) */
+    /** ???X???(?? | Upgrade Time (seconds) */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float UpgradeTime;
 
-    /** ?ï¿½å¤§ï¿½?ç´šï¿½?ï¿½?| Max Upgrade Level */
+    /** ??¤j??¯Å????| Max Upgrade Level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     int32 MaxUpgradeLevel;
 
-    /** ?ï¿½ï¿½?ç­‰ï¿½? | Current Level */
+    /** ????µ¥?? | Current Level */
     UPROPERTY(BlueprintReadOnly)
     int32 CurrentLevel;
 
-    /** æ¯ï¿½Xï¿½å‘½?ï¿½å€ï¿½? | Health Multiplier per level (1.2 = +20%) */
+    /** ¨C?X?©R??­¿?? | Health Multiplier per level (1.2 = +20%) */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float HealthMultiplier;
 
-    /** æ¯ï¿½Xï¿½ç”¢?ï¿½ï¿½Xï¿½ï¿½? | Production Multiplier per level */
+    /** ¨C?X?²£???X??? | Production Multiplier per level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float ProductionMultiplier;
 
-    /** æ¯ï¿½Xï¿½ç¦¦?ï¿½ï¿½? | Defense Multiplier per level */
+    /** ¨C?X?¿m???? | Defense Multiplier per level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float DefenseMultiplier;
 
@@ -172,11 +172,11 @@ class MINGBUILDING_API UMingTechTree : public UObject
     GENERATED_BODY()
 
 public:
-    UMingTechTree(};
+    UMingTechTree();
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Tech Tree")
-    void InitializeDefaultTechTree(};
+    void InitializeDefaultTechTree();
 
     UFUNCTION(BlueprintCallable, Category = "Tech Tree")
     void LoadTechTree(const TArray<FMingTechNode>& TechNodes};
@@ -260,9 +260,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Upgrades")
     int32 GetUpgradeLevel(const FString& UpgradeID) const;
 
-    /** è¨­ç½®é»˜ï¿½?å»ºï¿½Xï¿½ï¿½Xï¿½ç½® | Setup Default Building Upgrades */
+    /** ³]¸mÀq??«Ø?X??X?¸m | Setup Default Building Upgrades */
     UFUNCTION(BlueprintCallable, Category = "Upgrades")
-    void SetupDefaultBuildingUpgrades(};
+    void SetupDefaultBuildingUpgrades();
 
     // Prerequisites
     UFUNCTION(BlueprintPure, Category = "Prerequisites")
