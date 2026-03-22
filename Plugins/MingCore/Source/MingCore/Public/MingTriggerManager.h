@@ -46,7 +46,7 @@ struct FMingTriggerCondition
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingGameEventType EventType; // For EventOccurred
 
-    // 注??：EMingResourceType 定義??其他??件中，?X??? UPROPERTY
+    
     int32 ResourceTypeInt; // For ResourceThreshold, mapped to EMingResourceType
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -64,7 +64,7 @@ struct FMingTriggerCondition
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Radius;
 
-    // 注??：??迴??構?X?用 UPROPERTY
+    
     TArray<FMingTriggerCondition> SubConditions; // For Compound conditions
 
     FMingTriggerCondition()

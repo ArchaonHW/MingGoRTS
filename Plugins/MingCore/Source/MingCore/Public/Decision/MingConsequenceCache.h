@@ -42,7 +42,7 @@ class MINGCORE_API UMingConsequenceCache : public UObject
 public:
     // 建????    UMingConsequenceCache();
 
-    // ???X?緩??    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
+    
     void Initialize(int32 MaxCacheSize = 1000, float CacheExpirationHours = 24.0f};
 
     // ????緩??結??
@@ -57,14 +57,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
     void ClearExpiredCache();
 
-    // 清除????緩??    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
+    
     void ClearAllCache();
 
     // ????緩??統??
     UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
     void GetCacheStatistics(int32& TotalEntries, int32& CacheHits, int32& CacheMisses, float& HitRate};
 
-    // ????緩?X    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
+    
     FString GenerateCacheKey(const FMingDecisionContext& Context) const;
 
 protected:

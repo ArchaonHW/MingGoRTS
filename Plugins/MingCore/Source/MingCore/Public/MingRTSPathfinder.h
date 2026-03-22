@@ -52,7 +52,7 @@ struct FRTSPathNode
     UPROPERTY(BlueprintReadOnly, Category = "Path Node")
     float FCost;        // GCost + HCost
 
-    // ?`X?GFRTSPathNode X??X???AXUPROPERTY
+    
     FRTSPathNode* Parent;
 
     UPROPERTY(BlueprintReadOnly, Category = "Path Node")
@@ -100,7 +100,7 @@ struct FRTSPathRequest
     UPROPERTY(BlueprintReadOnly, Category = "Path Request")
     FVector TargetLocation;
 
-    // ?`X?GAMingGoRTSUnit X?D?MX??X?AX UPROPERTY
+    
     TObjectPtr<AMingGoRTSUnit> RequestingUnit;
 
     UPROPERTY(BlueprintReadOnly, Category = "Path Request")
@@ -173,7 +173,7 @@ class MINGCORE_API UMingRTSPathfinder : public UObject
 public:
     UMingRTSPathfinder();
 
-    // X    UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
+    
     void InitializePathfinder(UMingRTSUnitManager* InUnitManager};
 
     // ??X?pX
@@ -217,10 +217,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void CreateNavigationGrid(FVector Center, float GridSize, int32 GridResolution};
 
-    // ?`X?GFRTSPathNode X???AXUFUNCTION BlueprintCallable
+    
     FRTSPathNode* GetNodeAtLocation(FVector Location) const;
 
-    // ?`X?GFRTSPathNode X???AXUFUNCTION BlueprintCallable
+    
     TArray<FRTSPathNode*> GetNeighborNodes(FRTSPathNode* Node) const;
 
     // X??X
@@ -281,7 +281,7 @@ protected:
     TMap<FString, FRTSPathResult> PathCache;
 
     // ???t??
-    // ?`X?GX??}X UPROPERTY
+    
     TArray<TArray<FRTSPathNode*>> NavigationGrid;
 
     UPROPERTY()
@@ -296,7 +296,7 @@ protected:
     UPROPERTY()
     float NodeSize;
 
-    // X    UPROPERTY(BlueprintReadOnly, Category = "Pathfinding State")
+    
     ERTSPathfindingState CurrentState;
 
     // X???X

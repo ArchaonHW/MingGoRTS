@@ -239,7 +239,7 @@ private:
     UPROPERTY()
     float ExpertSatisfaction;
     
-    // UI??¥Î??¼ÆX    UPROPERTY()
+    
     float ClickAccuracy;
     
     UPROPERTY()
@@ -290,7 +290,7 @@ private:
     UPROPERTY()
     float EmotionalBalance;
     
-    // ´ú¸Õ??X    UPROPERTY()
+    
     bool bNewUserTestRunning;
     
     UPROPERTY()

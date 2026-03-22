@@ -53,7 +53,7 @@ struct FAIAssetGenerationParams
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
     FString BaseDescription;
 
-    // 詳細??示??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Asset")
+    
     FString DetailedPrompt;
 
     // 負面??示??(??於???X???)
@@ -114,10 +114,10 @@ struct FAIAssetGenerationResult
     UPROPERTY(BlueprintReadOnly)
     EAIAssetType AssetType;
 
-    // ???X??X?路??    UPROPERTY(BlueprintReadOnly)
+    
     FString AssetPath;
 
-    // 縮略??路??    UPROPERTY(BlueprintReadOnly)
+    
     FString ThumbnailPath;
 
     // ???X???
@@ -136,7 +136,7 @@ struct FAIAssetGenerationResult
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> Tags;
 
-    // 資產??數X    UPROPERTY(BlueprintReadOnly)
+    
     TMap<FString, FString> Metadata;
 
     FAIAssetGenerationResult()

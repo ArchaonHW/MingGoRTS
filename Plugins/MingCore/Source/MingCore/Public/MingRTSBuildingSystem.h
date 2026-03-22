@@ -304,7 +304,7 @@ class MINGCORE_API UMingRTSBuildingSystem : public UObject
 public:
     UMingRTSBuildingSystem();
 
-    // X    UFUNCTION(BlueprintCallable, Category = "RTS Building System")
+    
     void InitializeBuildingSystem(UMingRTSResourceManager* InResourceManager, UMingRTSUnitManager* InUnitManager};
 
     // ??X??X
@@ -329,7 +329,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
     TArray<FRTSBuildingData> GetBuildingsInArea(const FVector& Center, float Radius) const;
 
-    // ??X    UFUNCTION(BlueprintCallable, Category = "RTS Building System")
+    
     void SetBuildingState(const FString& BuildingID, ERTSBuildingState NewState};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Building System")
@@ -502,10 +502,10 @@ protected:
     UPROPERTY()
     TMap<FString, FRTSBuildingTemplate> BuildingTemplates;
 
-    // ?`X?GTMap<TArray> ????XUPROPERTY
+    
     TMap<FString, TArray<FRTSBuildingUpgrade>> BuildingUpgrades;
 
-    // ?`X?GTMap<TArray> ????XUPROPERTY
+    
     TMap<FString, TArray<FString>> BuildingConnections;
 
     // ?]?m
@@ -537,7 +537,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Enhancement Settings")
     bool bEnableAutoLayout = true;
 
-    // X    UPROPERTY()
+    
     bool bIsInitialized;
 
     // X??X??

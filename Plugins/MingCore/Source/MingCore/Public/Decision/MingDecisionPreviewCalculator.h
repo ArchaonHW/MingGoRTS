@@ -73,7 +73,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
     void CalculateQuickPreview(const FMingDecisionContext& Context, TArray<FMingConsequencePreview>& OutPreviews};
 
-    // 比??多個決策選X    UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
+    
     void CompareDecisionOptions(const TArray<FMingDecisionContext>& Options, TArray<FMingDecisionPreview>& OutComparisons};
 
 protected:

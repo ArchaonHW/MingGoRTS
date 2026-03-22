@@ -72,10 +72,10 @@ struct FINGCORE_API FMingEndingCondition
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ConditionWeight;
 
-    // X?_X?nX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     bool bIsRequired;
 
-    // ?????X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     FString ComparisonOperator;
 
     FMingEndingCondition()
@@ -196,7 +196,7 @@ struct FINGCORE_API FMingEndingScore
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TotalScore;
 
-    // X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     TMap<FString, float> CategoryScores;
 
     // ?MX??X
@@ -211,10 +211,10 @@ struct FINGCORE_API FMingEndingScore
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> RelationshipScores;
 
-    // ???v??T??X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     float HistoricalAccuracy;
 
-    // X?sX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     float InnovationScore;
 
     // X?w??X
@@ -274,7 +274,7 @@ struct FINGCORE_API FMingAchievement
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> AchievementRewards;
 
-    // X?_?w??X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     bool bIsUnlocked;
 
     // X
@@ -353,7 +353,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     bool UnlockAchievement(int32 AchievementID};
 
-    // X?w??X    UFUNCTION(BlueprintPure, Category = "Historical Ending")
+    
     TArray<FMingAchievement> GetUnlockedAchievements() const;
 
     // X??X??X
@@ -386,10 +386,10 @@ public:
     FOnEndingPreview OnEndingPreview;
 
 protected:
-    // ??X    UPROPERTY()
+    
     TMap<int32, FMingHistoricalEnding> EndingDatabase;
 
-    // X?NX    UPROPERTY()
+    
     TMap<int32, FMingAchievement> AchievementDatabase;
 
     // X?a??X???v

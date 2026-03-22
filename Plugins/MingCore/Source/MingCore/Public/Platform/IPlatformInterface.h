@@ -1,11 +1,11 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "IPlatformInterface.generated.h"
 
 /**
- * å¹³å°é¡ï¿½Xï¿½ï¿½?
+ * ¥­¥xÃş?X???
  */
 UENUM(BlueprintType)
 enum class EPlatformType : uint8
@@ -17,7 +17,7 @@ enum class EPlatformType : uint8
 };
 
 /**
- * è¼¸å…¥é¡ï¿½Xï¿½ï¿½?
+ * ¿é¤JÃş?X???
  */
 UENUM(BlueprintType)
 enum class EInputType : uint8
@@ -28,40 +28,40 @@ enum class EInputType : uint8
 };
 
 /**
- * å¹³å°?ï¿½ï¿½?çµï¿½?
+ * ¥­¥x????µ²??
  */
 USTRUCT(BlueprintType)
 struct FPlatformCapabilities
 {
     GENERATED_BODY()
     
-    // ?ï¿½å¦?ï¿½ï¿½?å¤šï¿½?è§¸æ§
+    // ??§_????¦h??Ä²±±
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsMultiTouch;
     
-    // ?ï¿½å¤§ï¿½Xï¿½è§¸?ï¿½ï¿½X    UPROPERTY(BlueprintReadOnly)
+    
     int32 MaxTouchPoints;
     
-    // ?ï¿½å¦?ï¿½ï¿½Xï¿½ï¿½Xï¿½ç›¤
+    // ??§_???X??X?½L
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsHardwareKeyboard;
     
-    // ?ï¿½å¦?ï¿½ï¿½?é¼ ï¿½?
+    // ??§_????¹«??
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsMouse;
     
-    // é»˜ï¿½?è¼¸å…¥é¡ï¿½?
+    // Àq??¿é¤JÃş??
     UPROPERTY(BlueprintReadOnly)
     EInputType DefaultInputType;
     
-    // ?ï¿½å¦?ï¿½è¦é›»æ± å„ªX    UPROPERTY(BlueprintReadOnly)
+    
     bool bRequiresBatteryOptimization;
     
-    // å»ºè­°?ï¿½ï¿½?å¤§ï¿½Xï¿½å–®ä½æ•¸
+    // «ØÄ³????¤j?X?³æ¦ì¼Æ
     UPROPERTY(BlueprintReadOnly)
     int32 RecommendedMaxUnits;
     
-    // å»ºè­°?ï¿½ç•«è³ªï¿½?ï¿½?    UPROPERTY(BlueprintReadOnly)
+    
     int32 RecommendedQualityLevel;
     
     FPlatformCapabilities()
@@ -77,8 +77,8 @@ struct FPlatformCapabilities
 };
 
 /**
- * å¹³å°?ï¿½è±¡?ï¿½å£
- * å®šç¾©?ï¿½?ï¿½å¹³?ï¿½ç›¸?ï¿½ï¿½Xï¿½ï¿½?çµ±ï¿½Xï¿½å£
+ * ¥­¥x??¶H??¤f
+ * ©w¸q????¥­??¬Û???X???²Î?X?¤f
  */
 UINTERFACE(MinimalAPI)
 class MINGCORE_API UPlatformInterface : public UInterface
@@ -93,45 +93,45 @@ class MINGCORE_API IPlatformInterface
 public:
     virtual ~IPlatformInterface() {}
     
-    // ?ï¿½ï¿½Xï¿½ï¿½?å¹³å°é¡ï¿½?
+    // ???X???¥­¥xÃş??
     virtual EPlatformType GetPlatformType() const = 0;
     
-    // ?ï¿½ï¿½?å¹³å°?ï¿½ï¿½?
+    // ????¥­¥x????
     virtual FPlatformCapabilities GetCapabilities() const = 0;
     
-    // ?ï¿½ï¿½Xï¿½å¹³X    virtual void Initialize() = 0;
+    // ???X?¥­X    virtual void Initialize() = 0;
     
-    // ?ï¿½ï¿½?å¹³å°
+    // ????¥­¥x
     virtual void Shutdown() = 0;
     
-    // ?ï¿½ï¿½?å±ï¿½?DPI
+    // ????«Ì??DPI
     virtual float GetScreenDPI() const = 0;
     
-    // ?ï¿½ï¿½?å®‰å…¨?ï¿½X(?ï¿½æ–¼ç§»ï¿½?ç«¯ï¿½Xï¿½æµ·å±ï¿½?)
+    // ????¦w¥ş??X(??©ó²¾??ºİ?X?®ü«Ì??)
     virtual FMargin GetSafeZone() const = 0;
     
-    // æª¢æŸ¥?ï¿½å¦?ï¿½è§¸?ï¿½è¨­X    virtual bool IsTouchDevice() const = 0;
+    // ÀË¬d??§_??Ä²??³]X    virtual bool IsTouchDevice() const = 0;
     
-    // è¨­ç½®?ï¿½èƒ½æ¨¡ï¿½?
+    // ³]¸m??¯à¼Ò??
     virtual void SetPerformanceMode(int32 Mode) = 0;
     
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½? (0-1, -1è¡¨ç¤ºä¸æ”¯X
+    // ???X??X??X??? (0-1, -1ªí¥Ü¤£¤äX
     virtual float GetBatteryLevel() const = 0;
     
-    // ?ï¿½å¦ï¿½?ï¿½ï¿½?ï¿½é›»
+    // ??§_??????¹q
     virtual bool IsCharging() const = 0;
     
-    // é¡¯ç¤ºå¹³å°?ï¿½ï¿½Xï¿½ï¿½?è©±ï¿½?
+    // Åã¥Ü¥­¥x???X???¸Ü??
     virtual void ShowPlatformDialog(const FString& Title, const FString& Message) = 0;
     
-    // ?ï¿½äº«?ï¿½èƒ½
+    // ??¨É??¯à
     virtual void ShareContent(const FString& Content) = 0;
     
-    // è©•ï¿½?è«‹ï¿½?
+    // µû??½Ğ??
     virtual void RequestAppRating() = 0;
     
-    // ä¿ï¿½Xï¿½ï¿½Xï¿½å¹³?ï¿½ç‰¹å®šï¿½X    virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) = 0;
+    // «O?X??X?¥­??¯S©w?X    virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) = 0;
     
-    // å¾å¹³?ï¿½ç‰¹å®šï¿½Xï¿½ï¿½Xï¿½æ•¸X    virtual FString LoadFromPlatformStorage(const FString& Key) const = 0;
+    // ±q¥­??¯S©w?X??X?¼ÆX    virtual FString LoadFromPlatformStorage(const FString& Key) const = 0;
 };
 

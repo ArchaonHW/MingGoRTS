@@ -30,7 +30,7 @@ struct FRTSSelectionData
 {
     GENERATED_BODY()
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X??? UPROPERTY
+    
     TArray<AMingGoRTSUnit*> SelectedUnits;
 
     UPROPERTY(BlueprintReadOnly, Category = "Selection Data")
@@ -65,7 +65,7 @@ class MINGCORE_API UMingRTSUnitSelector : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSUnitSelector(); // ???X    UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
+    UMingRTSUnitSelector(); 
     void InitializeSelector(AMingGoRTSPlayerController* InPlayerController};
 
     // ???X??X?能
@@ -186,7 +186,7 @@ protected:
     TArray<FRTSSelectionData> SelectionHistory;
 
     // ???X???
-    // 注??：AMingGoRTSUnit ??主專??類??，?X??? UPROPERTY
+    
     TMap<FString, TArray<AMingGoRTSUnit*>> UnitGroups;
 
     // ??置
@@ -202,7 +202,7 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Selection Config")
     bool bAutoSaveSelectionHistory = true;
 
-    // ??X    UPROPERTY(BlueprintReadOnly, Category = "Selection State")
+    
     bool bIsSelecting = false;
 
     UPROPERTY(BlueprintReadOnly, Category = "Selection State")

@@ -20,10 +20,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Platform")
     void Initialize();
 
-    // ????平台管?X    UFUNCTION(BlueprintCallable, Category = "Platform")
+    
     void Shutdown();
 
-    // ???X???平台???X    UFUNCTION(BlueprintCallable, Category = "Platform")
+    
     TScriptInterface<IPlatformInterface> GetCurrentPlatform() const;
 
     // ???X???平台類??
@@ -38,10 +38,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Platform")
     float GetScreenDPI() const;
 
-    // ????安全??X    UFUNCTION(BlueprintCallable, Category = "Platform")
+    
     FMargin GetSafeZone() const;
 
-    // ??否??觸??設X    UFUNCTION(BlueprintCallable, Category = "Platform")
+    
     bool IsTouchDevice() const;
 
     // 設置??能模??
@@ -52,7 +52,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Platform")
     float GetBatteryLevel() const;
 
-    // 顯示平台對話??    UFUNCTION(BlueprintCallable, Category = "Platform")
+    
     void ShowPlatformDialog(const FString& Title, const FString& Message};
 
     // ??享??容
@@ -68,7 +68,7 @@ public:
 private:
     bool bInitialized;
     
-    // ????平台???X    UPROPERTY()
+    
     TObjectPtr<UObject> CurrentPlatformAdapter;
     
     // ????實??

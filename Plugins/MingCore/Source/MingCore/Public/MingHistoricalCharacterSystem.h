@@ -123,10 +123,10 @@ struct FINGCORE_API FMingDialogueNode
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 NodeID;
 
-    // 節點?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     FString NodeText;
 
-    // 說話X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     FString SpeakerName;
 
     // 對話類??
@@ -192,10 +192,10 @@ struct FINGCORE_API FMingHistoricalCharacter
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HistoricalBackground;
 
-    // 人物屬??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     TMap<FString, float> CharacterAttributes;
 
-    // 人物??X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     TArray<FString> Skills;
 
     // 人物????
@@ -206,16 +206,16 @@ struct FINGCORE_API FMingHistoricalCharacter
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CurrentLocation;
 
-    // ??屬勢X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     FString Faction;
 
-    // 人物??X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     FString CurrentStatus;
 
-    // ??否??用??????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     bool bAvailableForDialogue;
 
-    // 對話樹根節??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     int32 RootDialogueNode;
 
     FMingHistoricalCharacter()
@@ -312,7 +312,7 @@ class MINGCORE_API UMingHistoricalCharacterSystem : public UObject
 public:
     UMingHistoricalCharacterSystem();
 
-    // ???X?人??系??    UFUNCTION(BlueprintCallable, Category = "Historical Character")
+    
     bool InitializeCharacterSystem();
 
     // 註??歷史人物
@@ -323,14 +323,14 @@ public:
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     FMingHistoricalCharacter GetCharacterInfo(int32 CharacterID) const;
 
-    // ???X???位置??人X    UFUNCTION(BlueprintPure, Category = "Historical Character")
+    
     TArray<int32> GetCharactersAtLocation(const FString& Location) {};
 
     // ????對話
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool StartDialogue(int32 CharacterID};
 
-    // ????對話節??    UFUNCTION(BlueprintPure, Category = "Historical Character")
+    
     FMingDialogueNode GetDialogueNode(int32 NodeID) const;
 
     // ????對話????
@@ -373,7 +373,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool LoadCharacterData();
 
-    // 清除????人??數X    UFUNCTION(BlueprintCallable, Category = "Historical Character")
+    
     void ClearAllCharacterData();
 
     // 事件委??
@@ -393,7 +393,7 @@ public:
     FOnInteractionCompleted OnInteractionCompleted;
 
 protected:
-    // 人物??????    UPROPERTY()
+    
     TMap<int32, FMingHistoricalCharacter> CharacterDatabase;
 
     // 對話節點數??庫

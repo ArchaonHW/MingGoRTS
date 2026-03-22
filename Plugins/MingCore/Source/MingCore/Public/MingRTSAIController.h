@@ -143,7 +143,7 @@ class MINGCORE_API AMingRTSAIController : public AAIController
 public:
     AMingRTSAIController();
 
-    // X    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
+    
     void InitializeAI(UMingRTSUnitManager* InUnitManager, UMingRTSCombatSystem* InCombatSystem};
 
     // AI??X??
@@ -249,7 +249,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void StopMovement();
 
-    // X??X    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
+    
     ERTSAIState GetAIState() const { return AIState; }
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
@@ -268,7 +268,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void SetPerceptionRange(float Value};
 
-    // AI??X    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
+    
     void ImproveAIBehavior();
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
@@ -280,7 +280,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void AdaptToPlayerBehavior();
 
-    // ???X??X    UFUNCTION(BlueprintPure, Category = "RTS AI Controller")
+    
     FString GetCurrentBehaviorName() const;
 
     UFUNCTION(BlueprintPure, Category = "RTS AI Controller")
@@ -313,7 +313,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRTSCombatSystem> CombatSystem;
 
-    // AIX    UPROPERTY()
+    
     ERTSAIBehavior CurrentBehavior;
 
     UPROPERTY()
@@ -356,7 +356,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "AI Settings")
     bool bDebugMode = false;
 
-    // AIX?iX    UPROPERTY(BlueprintReadWrite, Category = "AI Improvement")
+    
     float LearningRate = 0.1f;
 
     UPROPERTY(BlueprintReadWrite, Category = "AI Improvement")
@@ -384,7 +384,7 @@ protected:
     UPROPERTY()
     FVector LastKnownTargetLocation;
 
-    // AI??X?AX??X    UPROPERTY()
+    
     TArray<FRTSAIDecision> DecisionHistory;
 
     UPROPERTY()

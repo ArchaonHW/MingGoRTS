@@ -1,42 +1,42 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "MingDecisionConsequenceManager.h"
 #include "IMingConsequenceApplier.generated.h"
 
-// ä»‹é¢ï¿½?- å¾Œï¿½Xï¿½ç”¨XUINTERFACE(MinimalAPI, BlueprintType)
+// ¤¶­±??- «á?X?¥ÎXUINTERFACE(MinimalAPI, BlueprintType)
 class UMingConsequenceApplier : public UInterface
 {
     GENERATED_BODY()
 };
 
 /**
- * å¾Œï¿½Xï¿½ç”¨?ï¿½ï¿½X * è² è²¬å°‡ï¿½?ç®—å‡º?ï¿½ï¿½Xï¿½ï¿½Xï¿½åˆ°?ï¿½æˆ²ä¸–ï¿½?
+ * «á?X?¥Î???X * ­t³d±N??ºâ¥X???X??X?¨ì??À¸¥@??
  */
 class MINGCORE_API IMingConsequenceApplier
 {
     GENERATED_BODY()
 
 public:
-    // ?ï¿½ç”¨å¾Œï¿½?
+    // ??¥Î«á??
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
     bool Apply(const FMingConsequenceResult& ConsequenceResult};
 
-    // æª¢æŸ¥?ï¿½å¦?ï¿½ä»¥?ï¿½ç”¨è©²ï¿½X    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
+    
     bool CanApply(const FMingConsequenceResult& ConsequenceResult) const;
 
-    // ?ï¿½éŠ·å¾Œï¿½?
+    // ??¾P«á??
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
     bool Undo(const FString& ConsequenceID};
 
-    // ?ï¿½ï¿½Xï¿½ç”¨?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
+    
     FString GetApplierName() const;
 
-    // ?ï¿½ï¿½Xï¿½ç”¨?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
+    
     FString GetApplierDescription() const;
 
-    // ?ï¿½ï¿½Xï¿½ç”¨?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
+    
     int32 GetPriority() const;
 };
 

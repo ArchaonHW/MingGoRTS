@@ -91,7 +91,7 @@ struct FINGCORE_API FMingHistoricalDecision
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingDecisionType DecisionType;
 
-    // 決?X??X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     EMingDecisionImportance Importance;
 
     // 決?X?????(年份)
@@ -114,7 +114,7 @@ struct FINGCORE_API FMingHistoricalDecision
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ChosenOptionID;
 
-    // 決?X??X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     FDateTime DecisionTimestamp;
 
     FMingHistoricalDecision()
@@ -152,7 +152,7 @@ struct FINGCORE_API FMingDecisionResult
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime DecisionTime;
 
-    // 影響??屬X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     TMap<FString, float> AffectedAttributes;
 
     // 歷史路??影響
@@ -163,7 +163,7 @@ struct FINGCORE_API FMingDecisionResult
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> UnlockedDecisions;
 
-    // 觸發????續????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     TArray<FString> TriggeredEvents;
 
     FMingDecisionResult()
@@ -194,7 +194,7 @@ class MINGCORE_API UMingHistoricalDecisionManager : public UObject
 public:
     UMingHistoricalDecisionManager();
 
-    // ???X?決策系??    UFUNCTION(BlueprintCallable, Category = "Historical Decision")
+    
     bool InitializeDecisionSystem();
 
     // 註??歷史決??
@@ -205,7 +205,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Historical Decision")
     bool CheckDecisionTriggerConditions(int32 DecisionID};
 
-    // ??現決??給玩??    UFUNCTION(BlueprintCallable, Category = "Historical Decision")
+    
     bool PresentDecisionToPlayer(int32 DecisionID};
 
     // ???X?家決??
@@ -224,7 +224,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Historical Decision")
     TArray<FMingDecisionResult> GetDecisionHistory() const;
 
-    // ???X???年份??可??決??    UFUNCTION(BlueprintPure, Category = "Historical Decision")
+    
     TArray<int32> GetAvailableDecisionsForYear(int32 CurrentYear};
 
     // 計??決??影響
@@ -239,7 +239,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Historical Decision")
     bool LoadDecisionData();
 
-    // 清除????決策數X    UFUNCTION(BlueprintCallable, Category = "Historical Decision")
+    
     void ClearAllDecisions();
 
     // ????決??統??信息
@@ -257,7 +257,7 @@ public:
     FOnDecisionCompleted OnDecisionCompleted;
 
 protected:
-    // 決?X?????    UPROPERTY()
+    
     TMap<int32, FMingHistoricalDecision> DecisionDatabase;
 
     // 決??歷史記??
@@ -268,7 +268,7 @@ protected:
     UPROPERTY()
     TArray<int32> ActiveDecisions;
 
-    // ??家屬性影X    UPROPERTY()
+    
     TMap<FString, float> PlayerAttributes;
 
     // 歷史路??追蹤

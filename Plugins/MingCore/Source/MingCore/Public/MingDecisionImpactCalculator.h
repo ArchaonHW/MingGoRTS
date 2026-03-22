@@ -64,7 +64,7 @@ struct FINGCORE_API FMingHistoricalPath
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float PathWeight;
 
-    // X?_X?D?n??X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     bool bIsMainPath;
 
     FMingHistoricalPath()
@@ -100,7 +100,7 @@ struct FINGCORE_API FMingDecisionImpactDetail
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ImpactDescription;
 
-    // ?v?TX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     float ImpactValue;
 
     // ?v?TX (X
@@ -111,7 +111,7 @@ struct FINGCORE_API FMingDecisionImpactDetail
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 StartYear;
 
-    // ?v?TX??X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     TArray<FString> AffectedAttributes;
 
     // ???vX?e
@@ -219,7 +219,7 @@ struct FINGCORE_API FMingTerritoryData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float EconomicStrength;
 
-    // ????X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     float PopularSupport;
 
     FMingTerritoryData()
@@ -284,10 +284,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
     TArray<FMingDecisionImpactDetail> SimulateLongTermImpact(int32 DecisionID, int32 ChosenOptionID, int32 SimulationYears};
 
-    // ??X??X?vX    UFUNCTION(BlueprintCallable, Category = "Decision Impact")
+    
     TMap<int32, FMingDecisionImpactReport> CompareDecisionOptions(int32 DecisionID};
 
-    // X???v??X    UFUNCTION(BlueprintPure, Category = "Decision Impact")
+    
     TArray<FMingHistoricalPath> GetCurrentHistoricalPaths();
 
     // ?pX?MX?vX
@@ -306,7 +306,7 @@ public:
     FOnHistoricalPathChanged OnHistoricalPathChanged;
 
 protected:
-    // ???v??X    UPROPERTY()
+    
     TArray<FMingHistoricalPath> HistoricalPaths;
 
     // X
@@ -317,7 +317,7 @@ protected:
     UPROPERTY()
     TMap<EMingDecisionType, float> ImpactWeights;
 
-    // ???vX    UPROPERTY()
+    
     TMap<int32, FString> HistoricalKnowledgeBase;
 
 private:

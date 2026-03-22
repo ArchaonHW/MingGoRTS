@@ -220,7 +220,7 @@ class MINGCORE_API UMingRTSEconomicSystem : public UObject
 public:
     UMingRTSEconomicSystem();
 
-    // X    UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
+    
     void InitializeEconomicSystem(UMingRTSResourceManager* InResourceManager, UMingRTSBuildingSystem* InBuildingSystem, UMingRTSUnitManager* InUnitManager};
 
     // ?gX??X
@@ -470,7 +470,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Balance Settings")
     bool bEnableAutoBalancing = true;
 
-    // X    UPROPERTY()
+    
     bool bIsInitialized;
 
     UPROPERTY()

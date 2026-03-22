@@ -144,7 +144,7 @@ class MINGCORE_API UMingRTSUnitManager : public UObject
 public:
     UMingRTSUnitManager();
 
-    // ???X    UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
+    
     void InitializeUnitManager(AMingGoRTSPlayerController* InPlayerController};
 
     // ????管??
@@ -220,7 +220,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void UpdateFormation();
 
-    // ????管X    UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
+    
     void SetUnitState(AMingGoRTSUnit* Unit, ERTSUnitState NewState};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
@@ -310,13 +310,13 @@ protected:
     TObjectPtr<AMingGoRTSPlayerController> PlayerController;
 
     // ????存儲
-    // 注??：AMingGoRTSUnit ??主專??類??，?X??? UPROPERTY
+    
     TMap<FString, AMingGoRTSUnit*> AllUnits;
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X??? UPROPERTY
+    
     TArray<AMingGoRTSUnit*> SelectedUnits;
 
-    // 注??：TMap<TArray> 不支XUPROPERTY
+    
     TMap<FString, TArray<AMingGoRTSUnit*>> UnitGroups;
 
     // X???
@@ -326,7 +326,7 @@ protected:
     UPROPERTY()
     FRTSFormationData CurrentFormationData;
 
-    // ??X    UPROPERTY()
+    
     bool bIsInitialized;
 
     // 設置

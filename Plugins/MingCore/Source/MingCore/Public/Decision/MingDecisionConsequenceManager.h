@@ -27,19 +27,19 @@ struct MINGCORE_API FMingDecisionContext
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> SelectedOptions;
 
-    // ????上?X    UPROPERTY(BlueprintReadOnly)
+    
     int32 CurrentYear;
 
     UPROPERTY(BlueprintReadOnly)
     int32 CurrentMonth;
 
-    // ????上?X    UPROPERTY(BlueprintReadOnly)
+    
     FString CurrentRegion;
 
-    // 角色上?X    UPROPERTY(BlueprintReadOnly)
+    
     TArray<FString> InvolvedCharacters;
 
-    // 歷史上?X    UPROPERTY(BlueprintReadOnly)
+    
     TArray<FString> PreviousEvents;
 };
 
@@ -53,7 +53,7 @@ struct MINGCORE_API FMingPoliticalConsequence
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, float> FactionRelationChanges;
 
-    // ??治穩?X    UPROPERTY(BlueprintReadOnly)
+    
     float PoliticalStabilityChange;
 
     // ??治????
@@ -81,7 +81,7 @@ struct MINGCORE_API FMingMilitaryConsequence
     UPROPERTY(BlueprintReadOnly)
     float MoraleChange;
 
-    // ??爭?????X    UPROPERTY(BlueprintReadOnly)
+    
     TArray<FString> WarStatusChanges;
 
     // 軍?X???變??
@@ -120,10 +120,10 @@ struct MINGCORE_API FMingSocialConsequence
 {
     GENERATED_BODY()
 
-    // 民眾??????    UPROPERTY(BlueprintReadOnly)
+    
     float PublicSupportChange;
 
-    // 社??穩?X    UPROPERTY(BlueprintReadOnly)
+    
     float SocialStabilityChange;
 
     // ??育水平
@@ -176,13 +176,13 @@ struct MINGCORE_API FMingConsequenceResult
     UPROPERTY(BlueprintReadOnly)
     int32 DurationMonths;
 
-    // 後?X??X    UPROPERTY(BlueprintReadOnly)
+    
     bool bIsImmediate;
 
     UPROPERTY(BlueprintReadOnly)
     bool bIsLongTerm;
 
-    // 後??觸發??????    UPROPERTY(BlueprintReadOnly)
+    
     TArray<FString> TriggeredEvents;
 };
 
@@ -200,7 +200,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
     void Initialize();
 
-    // 後??計??主?X    UFUNCTION(BlueprintCallable, Category = "Ming|Decision")
+    
     void CalculateConsequences(const FMingDecisionContext& DecisionContext, FMingConsequenceResult& OutResult};
 
     // 後?X?用

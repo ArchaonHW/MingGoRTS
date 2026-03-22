@@ -162,7 +162,7 @@ protected:
     virtual void Tick(float DeltaTime) override;
 
 private:
-    // ´ú¸Õ??X    UPROPERTY()
+    
     bool bStabilityTestRunning;
     
     UPROPERTY()
@@ -174,7 +174,7 @@ private:
     UPROPERTY()
     bool bResourceTestRunning;
     
-    // Ã­?X?´ú¸Õ¼ÆX    UPROPERTY()
+    
     float TestStartTime;
     
     UPROPERTY()

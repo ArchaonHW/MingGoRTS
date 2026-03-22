@@ -1,40 +1,40 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "MingDecisionConsequenceManager.h"
 #include "IMingConsequenceCalculator.generated.h"
 
-// ä»‹é¢ï¿½?- å¾Œï¿½?è¨ˆï¿½XUINTERFACE(MinimalAPI, BlueprintType)
+// ¤¶­±??- «á??­p?XUINTERFACE(MinimalAPI, BlueprintType)
 class UMingConsequenceCalculator : public UInterface
 {
     GENERATED_BODY()
 };
 
 /**
- * å¾Œï¿½?è¨ˆï¿½Xï¿½ï¿½X * ?ï¿½?ï¿½å…·é«”ï¿½?ç®—å™¨?ï¿½ï¿½?è¦å¯¦?ï¿½æ­¤ä»‹é¢
+ * «á??­p?X??X * ????¨ãÅé??ºâ¾¹????­n¹ê??¦¹¤¶­±
  */
 class MINGCORE_API IMingConsequenceCalculator
 {
     GENERATED_BODY()
 
 public:
-    // è¨ˆï¿½?å¾Œï¿½?
+    // ­p??«á??
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
     void Calculate(const FMingDecisionContext& Context, FMingConsequenceResult& Result};
 
-    // æª¢æŸ¥?ï¿½å¦?ï¿½ä»¥?ï¿½ï¿½?è©²æ±ºç­–ï¿½?ä¸‹ï¿½?
+    // ÀË¬d??§_??¥H????¸Ó¨Mµ¦??¤U??
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
     bool CanHandle(const FMingDecisionContext& Context) const;
 
-    // ?ï¿½ï¿½?è¨ˆï¿½Xï¿½ï¿½X(?ï¿½æ–¼?ï¿½ï¿½?)
+    // ????­p?X??X(??©ó????)
     UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
     float GetWeight() const;
 
-    // ?ï¿½ï¿½?è¨ˆï¿½Xï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
+    
     FString GetCalculatorName() const;
 
-    // ?ï¿½ï¿½?è¨ˆï¿½Xï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintNativeEvent, Category = "Ming|Decision")
+    
     FString GetCalculatorDescription() const;
 };
 

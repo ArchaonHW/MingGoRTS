@@ -59,7 +59,7 @@ struct FInputEventData
     UPROPERTY(BlueprintReadOnly)
     FVector2D ScreenPosition;
     
-    // 世??位置（?X?????    UPROPERTY(BlueprintReadOnly)
+    
     FVector WorldPosition;
     
     // 輸入????類??
@@ -74,10 +74,10 @@ struct FInputEventData
     UPROPERTY(BlueprintReadOnly)
     int32 TouchId;
     
-    // ??否已?X    UPROPERTY(BlueprintReadOnly)
+    
     bool bHandled;
     
-    // ??鍵修飾符??Shift, Ctrl, Alt??    UPROPERTY(BlueprintReadOnly)
+    
     bool bShiftPressed;
     
     UPROPERTY(BlueprintReadOnly)
@@ -113,7 +113,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Input")
     void Initialize();
 
-    // ????輸入管?X    UFUNCTION(BlueprintCallable, Category = "Input")
+    
     void Shutdown();
 
     // 每?X?新
@@ -140,16 +140,16 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Input")
     void TriggerInputEvent(const FInputEventData& EventData};
 
-    // ??斷??否??觸??設X    UFUNCTION(BlueprintCallable, Category = "Input")
+    
     bool IsTouchInput() const;
 
-    // ???X?後輸??????    UFUNCTION(BlueprintCallable, Category = "Input")
+    
     FVector2D GetLastInputPosition() const { return LastInputPosition; }
 
-    // 設置觸控縮放??????    UFUNCTION(BlueprintCallable, Category = "Input")
+    
     void SetTouchSensitivity(float Sensitivity};
 
-    // ????觸控縮放??????    UFUNCTION(BlueprintCallable, Category = "Input")
+    
     float GetTouchSensitivity() const { return TouchSensitivity; }
 
     // ???X???實??

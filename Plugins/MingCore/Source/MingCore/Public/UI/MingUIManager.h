@@ -26,14 +26,14 @@ struct FScreenSizeCategory
 {
     GENERATED_BODY()
     
-    // ??小寬度?X?????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     float MinWidth;
     
     // ??大寬度?X?????1 表示???X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MaxWidth;
     
-    // ??小??度?X?????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     float MinHeight;
     
     // ??大??度?X?????1 表示???X???
@@ -44,7 +44,7 @@ struct FScreenSizeCategory
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EUILayoutType LayoutType;
     
-    // 觸控???X?小尺寸?X?????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     float MinTouchTargetSize;
     
     FScreenSizeCategory()
@@ -99,10 +99,10 @@ class MINGCORE_API UMingUIManager : public UObject
 public:
     UMingUIManager();
 
-    // ???XUI 管?X    UFUNCTION(BlueprintCallable, Category = "UI")
+    
     void Initialize();
 
-    // ???? UI 管?X    UFUNCTION(BlueprintCallable, Category = "UI")
+    
     void Shutdown();
 
     // 每?X?新
@@ -125,13 +125,13 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UI")
     float GetScaledSize(float BaseSize) const;
 
-    // ????觸控???X?小尺??    UFUNCTION(BlueprintCallable, Category = "UI")
+    
     float GetMinTouchTargetSize() const;
 
-    // 檢查??否??要適???X??X    UFUNCTION(BlueprintCallable, Category = "UI")
+    
     bool NeedsSafeZonePadding() const;
 
-    // ????安全????????    UFUNCTION(BlueprintCallable, Category = "UI")
+    
     FMargin GetSafeZonePadding() const;
 
     // 註??屏??尺寸變?X?調

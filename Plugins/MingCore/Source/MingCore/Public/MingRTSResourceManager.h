@@ -196,7 +196,7 @@ class MINGCORE_API UMingRTSResourceManager : public UObject
 public:
     UMingRTSResourceManager();
 
-    // X    UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
+    
     void InitializeResourceManager();
 
     // ??X??X
@@ -224,7 +224,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void SetResourceConsumptionRate(ERTSResourceType ResourceType, float Rate};
 
-    // ??X????X    UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
+    
     void AddResourceSource(const FRTSResourceSourceData& SourceData) {};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
@@ -367,7 +367,7 @@ protected:
     UPROPERTY()
     TArray<FRTSTradeData> TradeOffers;
 
-    // ?`X?GTMap<TMap> ????XUPROPERTY
+    
     TMap<ERTSResourceType, TMap<FString, float>> ResourceAllocations;
 
     UPROPERTY()
@@ -402,7 +402,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Optimization Settings")
     bool bEnableAutoBalancing = true;
 
-    // X    UPROPERTY()
+    
     bool bIsInitialized;
 
     // X??X??

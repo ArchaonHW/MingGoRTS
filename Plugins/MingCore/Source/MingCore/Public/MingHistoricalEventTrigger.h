@@ -105,7 +105,7 @@ struct FINGCORE_API FMingCoreEventTriggerCondition
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ConditionWeight;
 
-    // X?_X?nX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     bool bIsRequired;
 
     FMingEventTriggerCondition()
@@ -196,10 +196,10 @@ struct FINGCORE_API FMingHistoricalEvent
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEventType EventType;
 
-    // ???X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     EMingEventImportance EventImportance;
 
-    // ???X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     EMingEventStatus EventStatus;
 
     // X?~??
@@ -222,7 +222,7 @@ struct FINGCORE_API FMingHistoricalEvent
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingEventOption> EventOptions;
 
-    // ???X?]X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     int32 DurationMonths;
 
     // ?v?T?dX
@@ -293,10 +293,10 @@ struct FINGCORE_API FMingEventResult
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ActualOutcomes;
 
-    // ?v?TX?MX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     TArray<int32> AffectedDecisions;
 
-    // ?v?TX?HX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     TArray<int32> AffectedCharacters;
 
     // X?s???
@@ -340,13 +340,13 @@ struct FINGCORE_API FMingEventStatistics
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ResolvedEvents;
 
-    // ??X???X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     int32 FailedEvents;
 
-    // X???X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     TMap<EMingEventType, int32> EventTypeStats;
 
-    // X?n??X???X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    
     TMap<EMingEventImportance, int32> EventImportanceStats;
 
     FMingEventStatistics()
@@ -376,7 +376,7 @@ class MINGCORE_API UMingHistoricalEventTrigger : public UObject
 public:
     UMingHistoricalEventTrigger();
 
-    // X??tX    UFUNCTION(BlueprintCallable, Category = "Historical Event")
+    
     bool InitializeEventSystem();
 
     // ??X???v???
@@ -403,14 +403,14 @@ public:
     UFUNCTION(BlueprintPure, Category = "Historical Event")
     TArray<int32> GetActiveEvents() const;
 
-    // X?~??X    UFUNCTION(BlueprintPure, Category = "Historical Event")
+    
     TArray<int32> GetEventsForYear(int32 Year) const;
 
     // X?????v
     UFUNCTION(BlueprintPure, Category = "Historical Event")
     TArray<FMingEventResult> GetEventHistory() const;
 
-    // X?s???X    UFUNCTION(BlueprintCallable, Category = "Historical Event")
+    
     bool UpdateEventStatus(int32 EventID, EMingEventStatus NewStatus};
 
     // ??dX???
@@ -433,7 +433,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Historical Event")
     bool LoadEventData();
 
-    // ?M??X???X    UFUNCTION(BlueprintCallable, Category = "Historical Event")
+    
     void ClearAllEventData();
 
     // ???eX
@@ -450,7 +450,7 @@ public:
     FOnEventChainTriggered OnEventChainTriggered;
 
 protected:
-    // ???X    UPROPERTY()
+    
     TMap<int32, FMingHistoricalEvent> EventDatabase;
 
     // ?????v?OX

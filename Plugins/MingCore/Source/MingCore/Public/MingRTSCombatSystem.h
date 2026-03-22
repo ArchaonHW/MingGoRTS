@@ -193,21 +193,21 @@ class MINGCORE_API UMingRTSCombatSystem : public UObject
 public:
     UMingRTSCombatSystem();
 
-    // ???X    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    
     void InitializeCombatSystem(UMingRTSUnitManager* InUnitManager};
 
     // ??鬥統??
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     void SetUnitCombatStats(AMingGoRTSUnit* Unit, const FRTSCombatStats& CombatStats) {};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     FRTSCombatStats GetUnitCombatStats(AMingGoRTSUnit* Unit) const;
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     void UpdateCombatStats(AMingGoRTSUnit* Unit, float DamageMultiplier = 1.0f, float DefenseMultiplier = 1.0f};
 
     // ??鬥????
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     FRTSCombatResult ExecuteCombat(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
 
     bool CanAttack(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
@@ -219,29 +219,29 @@ public:
     bool IsInCombat(AMingGoRTSUnit* Unit) const;
 
     // ??害計??
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     float CalculateDamage(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     float ApplyDamageReduction(float BaseDamage, ERTSDamageType DamageType, float DefenseRating};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     bool CheckHit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     bool CheckCritical(AMingGoRTSUnit* Attacker};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     bool CheckDodge(AMingGoRTSUnit* Target};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     bool CheckBlock(AMingGoRTSUnit* Target};
 
     // ??鬥姿??
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     void SetCombatStance(AMingGoRTSUnit* Unit, ERTSCombatStance Stance};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     ERTSCombatStance GetCombatStance(AMingGoRTSUnit* Unit) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
@@ -251,37 +251,37 @@ public:
     float GetStanceDefenseMultiplier(ERTSCombatStance Stance) const;
 
     // 範?X???
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     TArray<AMingGoRTSUnit*> GetUnitsInArea(const FVector& Center, float Radius, AMingGoRTSUnit* ExcludedUnit = nullptr};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     void ExecuteAreaAttack(AMingGoRTSUnit* Attacker, const FVector& Center, float Radius};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     void ExecuteLineAttack(AMingGoRTSUnit* Attacker, const FVector& Start, const FVector& End, float Width};
 
-    // ????系??    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     void AddAbility(AMingGoRTSUnit* Unit, const FRTSAbilityData& Ability) {};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     void RemoveAbility(AMingGoRTSUnit* Unit, const FString& AbilityName) {};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     bool UseAbility(AMingGoRTSUnit* Unit, const FString& AbilityName, AMingGoRTSUnit* Target = nullptr};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     TArray<FRTSAbilityData> GetUnitAbilities(AMingGoRTSUnit* Unit) const;
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     bool IsAbilityAvailable(AMingGoRTSUnit* Unit, const FString& AbilityName) const;
 
-    // ?????X    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     void ApplyStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName, float Duration, float Power};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     void RemoveStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName) {};
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X?使XUFUNCTION BlueprintCallable
+    
     bool HasStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
@@ -342,19 +342,19 @@ protected:
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
     // ??鬥????
-    // 注??：AMingGoRTSUnit ??主專??類??，?X??? UPROPERTY
+    
     TMap<AMingGoRTSUnit*, FRTSCombatStats> UnitCombatStats;
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X??? UPROPERTY
+    
     TMap<AMingGoRTSUnit*, ERTSCombatStance> UnitCombatStances;
 
-    // 注??：TMap<TArray> 不支XUPROPERTY
+    
     TMap<AMingGoRTSUnit*, TArray<FRTSAbilityData>> UnitAbilities;
 
-    // 注??：TMap<TMap> 不支XUPROPERTY
+    
     TMap<AMingGoRTSUnit*, TMap<FString, float>> StatusEffects;
 
-    // 注??：AMingGoRTSUnit ??主專??類??，?X??? UPROPERTY
+    
     TMap<AMingGoRTSUnit*, AMingGoRTSUnit*> CombatPairs;
 
     // ??鬥設置
@@ -396,7 +396,7 @@ protected:
     UPROPERTY()
     int32 UnitsKilled;
 
-    // ??X    UPROPERTY()
+    
     bool bIsInitialized;
 
     // ??部??數

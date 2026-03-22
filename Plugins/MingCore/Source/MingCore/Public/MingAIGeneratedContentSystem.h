@@ -224,7 +224,7 @@ class MINGCORE_API UMingAIGeneratedContentSystem : public UObject
 public:
     UMingAIGeneratedContentSystem();
 
-    // X?tX    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
+    
     void InitializeAIGenerationSystem();
 
     // X
@@ -321,7 +321,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     UStaticMesh* LoadGeneratedMesh(const FString& AssetPath) {};
 
-    // X?dX    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
+    
     bool IsGenerationInProgress(const FString& RequestID) const;
 
     UFUNCTION(BlueprintPure, Category = "AI Content Generation")
@@ -363,7 +363,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Generation")
     float GetSystemLoad() const;
 
-    // ?MX??X    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
+    
     void ClearCache();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
@@ -421,7 +421,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "AI Generation Settings")
     float CacheExpirationTime;
 
-    // X    UPROPERTY()
+    
     bool bIsInitialized;
 
     UPROPERTY()

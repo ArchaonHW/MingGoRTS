@@ -163,7 +163,7 @@ class MINGCORE_API UMingAutoSceneGenerator : public UObject
 public:
     UMingAutoSceneGenerator();
 
-    // X?tX    UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
+    
     void InitializeAutoSceneGenerator();
 
     // X??X
@@ -317,7 +317,7 @@ protected:
     UPROPERTY()
     TMap<FString, FSceneRequirement> SceneTemplates;
 
-    // X    UPROPERTY()
+    
     bool bIsInitialized;
 
     UPROPERTY()

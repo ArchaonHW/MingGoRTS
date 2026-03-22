@@ -61,7 +61,7 @@ struct FAssetMetadata
     UPROPERTY(BlueprintReadOnly)
     FString FilePath;
 
-    // 縮略??路??    UPROPERTY(BlueprintReadOnly)
+    
     FString ThumbnailPath;
 
     // 標籤
@@ -80,7 +80,7 @@ struct FAssetMetadata
     UPROPERTY(BlueprintReadOnly)
     bool bIsFavorite;
 
-    // ????義屬X    UPROPERTY(BlueprintReadOnly)
+    
     TMap<FString, FString> CustomProperties;
 
     FAssetMetadata()
@@ -101,7 +101,7 @@ struct FAssetFilter
 {
     GENERATED_BODY()
 
-    // ??索??鍵??    UPROPERTY(BlueprintReadWrite)
+    
     FString SearchKeyword;
 
     // 資產類??
@@ -116,10 +116,10 @@ struct FAssetFilter
     UPROPERTY(BlueprintReadWrite)
     TArray<ERepublicEraStyle> EraStyles;
 
-    // ??小?X    UPROPERTY(BlueprintReadWrite)
+    
     float MinRating;
 
-    // ??顯示收X    UPROPERTY(BlueprintReadWrite)
+    
     bool bFavoritesOnly;
 
     // ??顯示已使用
