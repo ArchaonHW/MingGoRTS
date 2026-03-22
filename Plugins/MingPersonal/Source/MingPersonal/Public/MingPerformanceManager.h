@@ -226,8 +226,9 @@ struct FMingOptimizationResult
 };
 
 // Delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceMetricsUpdated, FMingPersonalPerformanceMetrics, Metrics);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOptimizationApplied, FMingOptimizationResult, Result);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceWarning, const FMingPerformanceWarning&, Warning);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceMetricsUpdated, const FMingPersonalPerformanceMetrics&, Metrics);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOptimizationApplied, const FMingOptimizationResult&, Result);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPerformanceLevelChanged);
 
 /**

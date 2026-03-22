@@ -179,7 +179,6 @@ struct MINGSTRATEGIC_API FMingTacticalEvent
     TArray<FString> InvolvedUnits;
 
     UPROPERTY(BlueprintReadOnly)
-    float TacticalImpact;
 
     UPROPERTY(BlueprintReadOnly)
     FDateTime EventTime;
@@ -187,7 +186,7 @@ struct MINGSTRATEGIC_API FMingTacticalEvent
 
 /**
  * 戰術層系統
- * 負責戰場指揮、部隊協調、戰術執行等
+ * 負責戰場指揮、部隊調度、戰術執行等
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGSTRATEGIC_API UMingTacticalLayer : public UObject, public IMingGameLayer

@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "LayerIntegration/MingFourLayerTypes.h"
+#include "MingFourLayerTypes.h"
 #include "IMingGameLayer.generated.h"
 
 // 遊戲層級介面

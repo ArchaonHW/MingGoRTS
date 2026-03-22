@@ -2,10 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "LayerIntegration/MingFourLayerTypes.h"
-#include "MingStrategicFourLayerTypes.generated.h"
+#include "GameFramework/Actor.h"
+#include "MingFourLayerTypes.generated.h"
 
-// 遊戲層級枚舉
+// Forward declarations
+UENUM(BlueprintType)
+enum class EMingLayer : uint8;
+
+// Layer type enum
 UENUM(BlueprintType)
 enum class EMingLayer : uint8
 {
@@ -16,23 +20,9 @@ enum class EMingLayer : uint8
     Empire      UMETA(DisplayName = "Empire")
 };
 
-// 資源類型枚舉
-UENUM(BlueprintType)
-enum class EMingStrategicResourceType : uint8
-{
-    None        UMETA(DisplayName = "None"),
-    Gold        UMETA(DisplayName = "Gold"),
-    Food        UMETA(DisplayName = "Food"),
-    Wood        UMETA(DisplayName = "Wood"),
-    Stone       UMETA(DisplayName = "Stone"),
-    Iron        UMETA(DisplayName = "Iron"),
-    Population  UMETA(DisplayName = "Population"),
-    Influence   UMETA(DisplayName = "Influence")
-};
-
-// 遊戲事件結構
+// Game event structure
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStrategicFourLayerEvent
+struct FMingGameEvent
 {
     GENERATED_BODY()
 
@@ -43,7 +33,7 @@ struct MINGSTRATEGIC_API FMingStrategicFourLayerEvent
     FString EventName;
 
     UPROPERTY(BlueprintReadWrite)
-    EMingGameLayer SourceLayer;
+    EMingLayer SourceLayer;
 
     UPROPERTY(BlueprintReadWrite)
     float Timestamp;
@@ -51,43 +41,74 @@ struct MINGSTRATEGIC_API FMingStrategicFourLayerEvent
     UPROPERTY(BlueprintReadWrite)
     TMap<FString, FString> EventData;
 
-    FMingStrategicFourLayerEvent()
-        : SourceLayer(EMingGameLayer::None)
+    FMingGameEvent()
+        : SourceLayer(EMingLayer::None)
         , Timestamp(0.0f)
     {}
 };
 
-// 戰略層狀態
+// Game decision structure
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStrategicState
+struct FMingGameDecision
 {
     GENERATED_BODY()
 
     UPROPERTY(BlueprintReadWrite)
-    FString FactionID;
+    FString DecisionID;
 
     UPROPERTY(BlueprintReadWrite)
-    FString FactionName;
+    FString DecisionName;
 
     UPROPERTY(BlueprintReadWrite)
-    int32 TerritoryCount;
+    EMingLayer SourceLayer;
 
     UPROPERTY(BlueprintReadWrite)
-    float Power;
+    EMingLayer TargetLayer;
 
     UPROPERTY(BlueprintReadWrite)
-    float Economy;
+    float Priority;
 
-    FMingStrategicState()
-        : TerritoryCount(0)
-        , Power(50.0f)
-        , Economy(50.0f)
+    UPROPERTY(BlueprintReadWrite)
+    TMap<FString, FString> DecisionData;
+
+    FMingGameDecision()
+        : SourceLayer(EMingLayer::None)
+        , TargetLayer(EMingLayer::None)
+        , Priority(1.0f)
     {}
 };
 
-// 個人層狀態
+// Layer conflict structure
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingPersonalState
+struct FMingLayerConflict
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FString ConflictID;
+
+    UPROPERTY(BlueprintReadWrite)
+    EMingLayer LayerA;
+
+    UPROPERTY(BlueprintReadWrite)
+    EMingLayer LayerB;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString ConflictDescription;
+
+    UPROPERTY(BlueprintReadWrite)
+    float Severity;
+
+    FMingLayerConflict()
+        : LayerA(EMingLayer::None)
+        , LayerB(EMingLayer::None)
+        , Severity(0.5f)
+    {}
+};
+
+// Personal layer state
+USTRUCT(BlueprintType)
+struct FMingPersonalState
 {
     GENERATED_BODY()
 
@@ -113,9 +134,9 @@ struct MINGSTRATEGIC_API FMingPersonalState
     {}
 };
 
-// 建築層狀態
+// Building layer state
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingBuildingState
+struct FMingBuildingState
 {
     GENERATED_BODY()
 
@@ -126,7 +147,7 @@ struct MINGSTRATEGIC_API FMingBuildingState
     FString BuildingName;
 
     UPROPERTY(BlueprintReadWrite)
-    EMingBuildingType BuildingType;
+    int32 BuildingType;
 
     UPROPERTY(BlueprintReadWrite)
     int32 Level;
@@ -138,42 +159,42 @@ struct MINGSTRATEGIC_API FMingBuildingState
     bool bIsActive;
 
     FMingBuildingState()
-        : BuildingType(EMingBuildingType::CommandCenter)
+        : BuildingType(0)
         , Level(1)
         , Health(100.0f)
         , bIsActive(true)
     {}
 };
 
-// 戰術層狀態
+// Strategic layer state
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingTacticalState
+struct FMingStrategicState
 {
     GENERATED_BODY()
 
     UPROPERTY(BlueprintReadWrite)
-    FString UnitID;
+    FString StrategyID;
 
     UPROPERTY(BlueprintReadWrite)
-    FString UnitName;
+    FString StrategyName;
 
     UPROPERTY(BlueprintReadWrite)
-    int32 UnitCount;
+    int32 Priority;
 
     UPROPERTY(BlueprintReadWrite)
-    FVector Position;
+    float Progress;
 
     UPROPERTY(BlueprintReadWrite)
-    float Morale;
+    bool bIsActive;
 
-    FMingTacticalState()
-        : UnitCount(1)
-        , Position(FVector::ZeroVector)
-        , Morale(100.0f)
+    FMingStrategicState()
+        : Priority(1)
+        , Progress(0.0f)
+        , bIsActive(true)
     {}
 };
 
-// 戰術單位狀態枚舉
+// Tactical unit state enum
 UENUM(BlueprintType)
 enum class EMingTacticalUnitState : uint8
 {
@@ -181,15 +202,15 @@ enum class EMingTacticalUnitState : uint8
     Moving      UMETA(DisplayName = "Moving"),
     Attacking   UMETA(DisplayName = "Attacking"),
     Defending   UMETA(DisplayName = "Defending"),
-    Retreating  UMETA(DisplayName = "Retreating"),
     Patrolling  UMETA(DisplayName = "Patrolling"),
-    Engaged     UMETA(DisplayName = "Engaged"),
-    Disabled    UMETA(DisplayName = "Disabled")
+    Retreating  UMETA(DisplayName = "Retreating"),
+    Stunned     UMETA(DisplayName = "Stunned"),
+    Dead        UMETA(DisplayName = "Dead")
 };
 
-// 戰術單位結構
+// Strategic tactical unit
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStratTacticalUnit
+struct FMingStratTacticalUnit
 {
     GENERATED_BODY()
 
@@ -200,24 +221,36 @@ struct MINGSTRATEGIC_API FMingStratTacticalUnit
     FString UnitName;
 
     UPROPERTY(BlueprintReadWrite)
-    EMingTacticalUnitState UnitState;
+    int32 UnitType;
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 Count;
 
     UPROPERTY(BlueprintReadWrite)
     FVector Position;
 
     UPROPERTY(BlueprintReadWrite)
+    EMingTacticalUnitState State;
+
+    UPROPERTY(BlueprintReadWrite)
     float Health;
 
+    UPROPERTY(BlueprintReadWrite)
+    float Morale;
+
     FMingStratTacticalUnit()
-        : UnitState(EMingTacticalUnitState::Idle)
+        : UnitType(0)
+        , Count(1)
         , Position(FVector::ZeroVector)
+        , State(EMingTacticalUnitState::Idle)
         , Health(100.0f)
+        , Morale(100.0f)
     {}
 };
 
-// 戰術命令結構
+// Strategic tactical order
 USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingStratTacticalOrder
+struct FMingStratTacticalOrder
 {
     GENERATED_BODY()
 
@@ -228,7 +261,10 @@ struct MINGSTRATEGIC_API FMingStratTacticalOrder
     FString OrderName;
 
     UPROPERTY(BlueprintReadWrite)
-    EMingTacticalCommand CommandType;
+    int32 OrderType;
+
+    UPROPERTY(BlueprintReadWrite)
+    TArray<FString> TargetUnitIDs;
 
     UPROPERTY(BlueprintReadWrite)
     FVector TargetPosition;
@@ -236,9 +272,27 @@ struct MINGSTRATEGIC_API FMingStratTacticalOrder
     UPROPERTY(BlueprintReadWrite)
     float Priority;
 
+    UPROPERTY(BlueprintReadWrite)
+    bool bIsActive;
+
     FMingStratTacticalOrder()
-        : CommandType(EMingTacticalCommand::None)
+        : OrderType(0)
         , TargetPosition(FVector::ZeroVector)
         , Priority(1.0f)
+        , bIsActive(true)
     {}
+};
+
+// Resource type enum
+UENUM(BlueprintType)
+enum class EMingResourceType : uint8
+{
+    None        UMETA(DisplayName = "None"),
+    Gold        UMETA(DisplayName = "Gold"),
+    Food        UMETA(DisplayName = "Food"),
+    Wood        UMETA(DisplayName = "Wood"),
+    Stone       UMETA(DisplayName = "Stone"),
+    Iron        UMETA(DisplayName = "Iron"),
+    Population  UMETA(DisplayName = "Population"),
+    Influence   UMETA(DisplayName = "Influence")
 };

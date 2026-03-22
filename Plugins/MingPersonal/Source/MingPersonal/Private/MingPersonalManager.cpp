@@ -50,7 +50,7 @@ void UMingPersonalManager::Initialize()
     SaveGameManager = NewObject<UMingSaveGameManager>(this);
     if (SaveGameManager)
     {
-        SaveGameManager->Initialize(this);
+        SaveGameManager->Initialize();
     }
 
     // 初始化網絡管理器

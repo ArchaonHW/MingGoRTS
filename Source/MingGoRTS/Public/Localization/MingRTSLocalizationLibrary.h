@@ -68,7 +68,7 @@ public:
     
     /** Get all supported languages */
     UFUNCTION(BlueprintPure, Category = "MingRTS|Localization")
-    static TArray<TEnumAsByte<enum class ELanguageCode>> GetSupportedLanguages();
+    static TArray<TEnumAsByte<ELanguageCode>> GetSupportedLanguages();
     
     /** Truncate text to max length */
     UFUNCTION(BlueprintCallable, Category = "MingRTS|Localization")

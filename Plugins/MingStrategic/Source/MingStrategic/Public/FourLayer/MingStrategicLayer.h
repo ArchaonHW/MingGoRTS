@@ -119,6 +119,31 @@ struct MINGSTRATEGIC_API FMingStratLayerDecision
     float RiskLevel;
 };
 
+// 戰略狀態
+USTRUCT(BlueprintType)
+struct MINGSTRATEGIC_API FMingStrategicState
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    FString CurrentStrategy;
+
+    UPROPERTY(BlueprintReadOnly)
+    float OverallStrength;
+
+    UPROPERTY(BlueprintReadOnly)
+    float EconomicPower;
+
+    UPROPERTY(BlueprintReadOnly)
+    float MilitaryPower;
+
+    UPROPERTY(BlueprintReadOnly)
+    float DiplomaticInfluence;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, float> TerritoryControl;
+};
+
 /**
  * 戰略層系統
  * 負責宏觀戰略決策、資源分配、外交關係等
