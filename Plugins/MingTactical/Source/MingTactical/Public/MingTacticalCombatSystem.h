@@ -1,48 +1,48 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GameFramework/Actor.h"
 #include "MingTacticalCombatSystem.generated.h"
 
-// ????Ãþ??????
+// Xï¿½ï¿½X
 UENUM(BlueprintType)
 enum class EMingUnitType : uint8
 {
-    Infantry,          // ¨B§L
-    Cavalry,           // ÃM§L
-    Artillery,         // ??§L
-    Tank,              // ????
-    Aircraft,          // ­¸??
-    Naval,             // ®ü??
-    Support,           // ??´©????
-    Commander,  // ??´§??};
+    Infantry,          // ï¿½Bï¿½L
+    Cavalry,           // ï¿½Mï¿½L
+    Artillery,         // Xï¿½L
+    Tank,              // X
+    Aircraft,          // ï¿½ï¿½X
+    Naval,             // ï¿½ï¿½X
+    Support,           // Xï¿½ï¿½X
+    Commander,  // Xï¿½ï¿½X};
 
-// ????½s??Ãþ??
+// Xï¿½sXï¿½ï¿½X
 UENUM(BlueprintType)
 enum class EMingTacticalFormationType : uint8
 {
-    Line,              // ½u§Î???
-    Column,            // Áa?????
-    Wedge,             // ·¤§Î???
-    Diamond,           // ??§Î???
-    Circle,            // ??§Î???
-    Skirmish,          // ???????
-    Square,            // ??§Î???
-    Arrow,             // ½bÀY???
-    Crescent,          // ???????
-    Custom,  // ????¸q°}??};
+    Line,              // ï¿½uï¿½ï¿½X
+    Column,            // ï¿½aX
+    Wedge,             // ï¿½ï¿½ï¿½ï¿½X
+    Diamond,           // Xï¿½ï¿½X
+    Circle,            // Xï¿½ï¿½X
+    Skirmish,          // X
+    Square,            // Xï¿½ï¿½X
+    Arrow,             // ï¿½bï¿½YX
+    Crescent,          // X
+    Custom,  // Xï¿½qï¿½}X};
 
-// ??°«????UENUM(BlueprintType)
+// Xï¿½ï¿½XUENUM(BlueprintType)
 enum class EMingCombatState : uint8
 {
-    Idle,              // ªÅ??
-    Moving,            // ²¾????    Attacking,          // ??????    Defending,         // ??¿m??    Retreating,         // ??°h??    Routed,            // ¼ì??
-    Captured,          // ³Q????    Destroyed          // ³QºR·´
+    Idle,              // ï¿½ï¿½X
+    Moving,            // ï¿½ï¿½X    Attacking,          // X    Defending,         // Xï¿½mX    Retreating,         // Xï¿½hX    Routed,            // ï¿½ï¿½X
+    Captured,          // ï¿½QX    Destroyed          // ï¿½Qï¿½Rï¿½ï¿½
 };
 
 /**
- * int32 ????????µ²?? (??©ó TMap<TArray> ´O??)
+ * int32 Xï¿½ï¿½X (Xï¿½ï¿½ TMap<TArray> ï¿½OX)
  */
 USTRUCT(BlueprintType)
 struct FInt32ArrayWrapper
@@ -55,12 +55,12 @@ struct FInt32ArrayWrapper
     FInt32ArrayWrapper() {}
 };
 
-// ??????°«ÄÝ??USTRUCT(BlueprintType)
+// Xï¿½ï¿½ï¿½ï¿½XUSTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingUnitCombatStats
 {
     GENERATED_BODY()
 
-    // ????ÄÝ??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Health;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -81,7 +81,7 @@ struct MINGTACTICAL_API FMingUnitCombatStats
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float VisionRange;
 
-    // ????ÄÝ??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Morale;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -93,7 +93,7 @@ struct MINGTACTICAL_API FMingUnitCombatStats
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Experience;
 
-    // ????ÄÝ??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Accuracy;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -125,48 +125,48 @@ struct MINGTACTICAL_API FMingUnitCombatStats
     }
 };
 
-// ???????????
+// X
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingTacticalFormation
 {
     GENERATED_BODY()
 
-    // ???ID
+    // XID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 FormationID;
 
-    // ?????ºÙ
+    // Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString FormationName;
 
-    // ???Ãþ??
+    // Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingFormationType FormationType;
 
-    // ?????­z
+    // Xï¿½z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString FormationDescription;
 
-    // ???¦ì¸m????
+    // Xï¿½ï¿½mX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FVector> FormationPositions;
 
-    // ???????
+    // X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> FormationBonuses;
 
-    // ???´î??
+    // Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> FormationPenalties;
 
-    // ??¥Î????Ãþ??
+    // Xï¿½ï¿½Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<EMingUnitType> ApplicableUnitTypes;
 
-    // ??¤p³æ¦ì¼Æ??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½pï¿½ï¿½ï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 MinUnitCount;
 
-    // ??¤j³æ¦ì¼Æ??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½jï¿½ï¿½ï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 MaxUnitCount;
 
     FMingTacticalFormation()
@@ -184,65 +184,65 @@ struct MINGTACTICAL_API FMingTacticalFormation
     }
 };
 
-// ??°«????????
+// Xï¿½ï¿½X
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingCombatUnit
 {
     GENERATED_BODY()
 
-    // ????ID
+    // XID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 UnitID;
 
-    // ??????ºÙ
+    // Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString UnitName;
 
-    // ????Ãþ??
+    // Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingUnitType UnitType;
 
-    // ????¦ì¸m
+    // Xï¿½ï¿½m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector CurrentPosition;
 
-    // ????¦ì¸m
+    // Xï¿½ï¿½m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector TargetPosition;
 
-    // ????????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingCombatState CurrentState;
 
-    // ??°«ÄÝ??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½ï¿½ï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FMingUnitCombatStats CombatStats;
 
-    // ??ÄÝ½s??ID
+    // Xï¿½Ý½sXID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 FormationID;
 
-    // ½s????????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ï¿½sX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 FormationPosition;
 
-    // ??´§©xID
+    // Xï¿½ï¿½ï¿½xID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CommanderID;
 
-    // ??????????ªí
+    // Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> EnemyUnits;
 
-    // ??????????ªí
+    // Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> FriendlyUnits;
 
-    // ??§_³Q¿ï??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½_ï¿½Qï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsSelected;
 
-    // ??§_????
+    // Xï¿½_X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsVisible;
 
-    // ??ª§°gÃúµ¥??
+    // Xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 FogOfWarLevel;
 
@@ -265,40 +265,40 @@ struct MINGTACTICAL_API FMingCombatUnit
     }
 };
 
-// ??????¥O
+// Xï¿½O
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingTacticalCommand
 {
     GENERATED_BODY()
 
-    // ??¥OID
+    // Xï¿½OID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CommandID;
 
-    // ??¥OÃþ??
+    // Xï¿½Oï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CommandType;
 
-    // ????????ID
+    // XID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 TargetUnitID;
 
-    // ????¦ì¸m
+    // Xï¿½ï¿½m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector TargetLocation;
 
-    // ??¥O??¼Æ
+    // Xï¿½OXï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, FString> CommandParameters;
 
-    // ??¥O??????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½OX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 Priority;
 
-    // ??¥O????????
+    // Xï¿½OX
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ExecutionTime;
 
-    // ??§_????Äò©R??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½_Xï¿½ï¿½RX    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsContinuous;
 
     FMingTacticalCommand()
@@ -314,44 +314,44 @@ struct MINGTACTICAL_API FMingTacticalCommand
     }
 };
 
-// ??°«µ²??
+// Xï¿½ï¿½ï¿½ï¿½X
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingCombatResult
 {
     GENERATED_BODY()
 
-    // ????????ID
+    // XID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 AttackerID;
 
-    // ??¿m????ID
+    // Xï¿½mXID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 DefenderID;
 
-    // ??®`????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // Xï¿½`X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float DamageDealt;
 
-    // ??§_????
+    // Xï¿½_X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsCriticalHit;
 
-    // ??§_??¤¤
+    // Xï¿½_Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsHit;
 
-    // ??°«????
+    // Xï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime CombatTime;
 
-    // ??°«¦ì¸m
+    // Xï¿½ï¿½ï¿½ï¿½m
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector CombatLocation;
 
-    // ??°«Ãþ??
+    // Xï¿½ï¿½ï¿½ï¿½X
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CombatType;
 
-    // ¸g????Àò??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ï¿½gXï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ExperienceGained;
 
     FMingCombatResult()
@@ -368,15 +368,15 @@ struct MINGTACTICAL_API FMingCombatResult
     }
 };
 
-// ??????°«¨Æ¥ó©e??
+// Xï¿½ï¿½ï¿½Æ¥ï¿½eX
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitStateChanged, const FMingCombatUnit&, Unit};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCombatOccurred, const FMingCombatResult&, Result, const TArray<FMingCombatUnit>&, InvolvedUnits};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnFormationChanged, int32, FormationID, EMingFormationType, NewFormationType, const TArray<FMingCombatUnit>&, Units};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTacticalCommandIssued, const FMingTacticalCommand&, Command};
 
 /**
- * ??????°«¨t²Î
- * ­t³dºÞ??¤j??¼Ò³æ¦ì±±??????????°«
+ * Xï¿½ï¿½ï¿½tï¿½ï¿½
+ * ï¿½tï¿½dï¿½ï¿½Xï¿½jXï¿½Ò³ï¿½ì±±Xï¿½ï¿½
  */
 UCLASS(ClassGroup = (Tactical), Blueprintable, BlueprintType)
 class MINGTACTICAL_API AMingTacticalCombatSystem : public AActor
@@ -386,80 +386,80 @@ class MINGTACTICAL_API AMingTacticalCombatSystem : public AActor
 public:
     AMingTacticalCombatSystem(};
 
-    // ??????¾Ô³N¾Ô°«¨t??    UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
+    // Xï¿½Ô³Nï¿½Ô°ï¿½ï¿½tX    UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     bool InitializeTacticalSystem(};
 
-    // µù????°«????
+    // ï¿½ï¿½Xï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     bool RegisterCombatUnit(const FMingCombatUnit& Unit};
 
-    // ²¾°£??°«????
+    // ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     bool RemoveCombatUnit(int32 UnitID};
 
-    // ????????«H®§
+    // Xï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Tactical Combat")
     FMingCombatUnit GetUnitInfo_Impl(int32 UnitID) const;
 
-    // ????????
+    // X
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     bool SelectUnits_Impl(const TArray<int32>& UnitIDs};
 
-    // ????????????
+    // X
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     bool DeselectUnits(const TArray<int32>& UnitIDs};
 
-    // ????¤w¿ï??³æ??    UFUNCTION(BlueprintPure, Category = "Tactical Combat")
+    // Xï¿½wï¿½ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintPure, Category = "Tactical Combat")
     TArray<int32> GetSelectedUnits() const;
 
-    // ²¾??????
+    // ï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     bool MoveUnits(const TArray<int32>& UnitIDs, const FVector& TargetLocation};
 
-    // ????????
+    // X
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     bool AttackTarget(int32 AttackerID, int32 TargetID};
 
-    // ³]¸m½s??
+    // ï¿½]ï¿½mï¿½sX
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     bool SetFormation(const TArray<int32>& UnitIDs, EMingFormationType FormationType};
 
-    // ????½s??«H®§
+    // Xï¿½sXï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintPure, Category = "Tactical Combat")
     FMingTacticalFormation GetFormationInfo(EMingFormationType FormationType) const;
 
-    // ??????????¥O
+    // Xï¿½O
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     bool IssueTacticalCommand(const FMingTacticalCommand& Command};
 
-    // ??????°«
+    // Xï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     FMingCombatResult ProcessCombat(int32 AttackerID, int32 DefenderID};
 
-    // ??·s??ª§°gÃú
+    // Xï¿½sXï¿½ï¿½ï¿½gï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     void UpdateFogOfWar(};
 
-    // ????????????
+    // X
     UFUNCTION(BlueprintPure, Category = "Tactical Combat")
     TArray<int32> GetVisibleUnits_Impl(int32 ViewerUnitID) const;
 
-    // ??????°«²Î??
+    // Xï¿½ï¿½ï¿½ï¿½X
     UFUNCTION(BlueprintPure, Category = "Tactical Combat")
     TMap<EMingUnitType, int32> GetCombatStatistics_Impl() const;
 
-    // «O????°«????
+    // ï¿½OXï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     bool SaveCombatData(};
 
-    // ¸ü¤J??°«????
+    // ï¿½ï¿½ï¿½JXï¿½ï¿½X
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     bool LoadCombatData(};
 
-    // ²M°£????³æ??    UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
+    // ï¿½Mï¿½ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
     void ClearAllUnits(};
 
-    // ¨Æ¥ó©e??
+    // ï¿½Æ¥ï¿½eX
     UPROPERTY(BlueprintAssignable)
     FOnUnitStateChanged OnUnitStateChanged;
 
@@ -479,62 +479,62 @@ protected:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    // ??????????    UPROPERTY()
+    // X    UPROPERTY()
     TMap<int32, FMingCombatUnit> UnitDatabase;
 
-    // ½s????????    UPROPERTY()
+    // ï¿½sX    UPROPERTY()
     TMap<EMingFormationType, FMingTacticalFormation> FormationDatabase;
 
-    // ¤w¿ï??³æ¦ì????    UPROPERTY()
+    // ï¿½wï¿½ï¿½Xï¿½ï¿½ï¿½X    UPROPERTY()
     TArray<int32> SelectedUnits;
 
-    // ??°«¾ú¥v°O??
+    // Xï¿½ï¿½ï¿½ï¿½ï¿½vï¿½OX
     UPROPERTY()
     TArray<FMingCombatResult> CombatHistory;
 
-    // ??ª§°gÃú????
+    // Xï¿½ï¿½ï¿½gï¿½ï¿½X
     UPROPERTY()
     TMap<int32, FInt32ArrayWrapper> VisibilityMap;
 
-    // ????½s??
+    // Xï¿½sX
     UPROPERTY()
     TMap<int32, EMingFormationType> UnitFormations;
 
-    // ??§_¤w??©l??
+    // Xï¿½_ï¿½wXï¿½lX
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // ¸ü¤J??³]½s??
+    // ï¿½ï¿½ï¿½JXï¿½]ï¿½sX
     void LoadDefaultFormations(};
 
-    // ­p????°«??®`
+    // ï¿½pXï¿½ï¿½Xï¿½`
     float CalculateCombatDamage(const FMingCombatUnit& Attacker, const FMingCombatUnit& Defender};
 
-    // ­p????¤¤·§??
+    // ï¿½pXï¿½ï¿½ï¿½ï¿½X
     float CalculateHitChance(const FMingCombatUnit& Attacker, const FMingCombatUnit& Defender};
 
-    // ­p??????·§??
+    // ï¿½pXï¿½ï¿½X
     float CalculateCriticalChance(const FMingCombatUnit& Attacker};
 
-    // ??·s????????    void UpdateUnitState(int32 UnitID, EMingCombatState NewState};
+    // Xï¿½sX    void UpdateUnitState(int32 UnitID, EMingCombatState NewState};
 
-    // ????????²¾??
+    // Xï¿½ï¿½X
     void ProcessUnitMovement(float DeltaTime};
 
-    // ??????°«??¿è
+    // Xï¿½ï¿½Xï¿½ï¿½
     void ProcessCombatLogic(float DeltaTime};
 
-    // ??·s????¸g??
+    // Xï¿½sXï¿½gX
     void UpdateUnitExperience(int32 UnitID, float ExperienceAmount};
 
-    // ÀË¬d????µø??
+    // ï¿½Ë¬dXï¿½ï¿½X
     bool IsUnitVisible(int32 ViewerID, int32 TargetID) const;
 
-    // ????½s??¦ì¸m
+    // Xï¿½sXï¿½ï¿½m
     TArray<FVector> GenerateFormationPositions(EMingFormationType FormationType, const FVector& Center, int32 UnitCount) const;
 
-    // Åç??????????
+    // ï¿½ï¿½X
     bool ValidateUnitData(const FMingCombatUnit& Unit) const;
 };
 

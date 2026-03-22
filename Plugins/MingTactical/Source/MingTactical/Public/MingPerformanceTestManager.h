@@ -1,46 +1,46 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingPerformanceTestManager.generated.h"
 
 /**
- * ?§èƒ½æ¸¬è©¦çµæ?çµæ?
+ * ?ï¿½èƒ½æ¸¬è©¦çµï¿½?çµï¿½?
  */
 USTRUCT(BlueprintType)
 struct FPerformanceTestResult
 {
     GENERATED_BODY()
 
-    // æ¸¬è©¦?ç¨±
+    // æ¸¬è©¦?ï¿½ç¨±
     UPROPERTY(BlueprintReadOnly)
     FString TestName;
 
-    // ?¯å¦?šé?
+    // ?ï¿½å¦?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     bool bPassed;
 
-    // ?®æ?FPS
+    // ?ï¿½ï¿½?FPS
     UPROPERTY(BlueprintReadOnly)
     float TargetFPS;
 
-    // å¯¦é?å¹³å?FPS
+    // å¯¦ï¿½?å¹³ï¿½?FPS
     UPROPERTY(BlueprintReadOnly)
     float ActualFPS;
 
-    // ?€ä½FPS
+    // ?ï¿½ä½FPS
     UPROPERTY(BlueprintReadOnly)
     float MinFPS;
 
-    // æ¸¬è©¦?®ä??¸é?
+    // æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     int32 UnitCount;
 
-    // æ¸¬è©¦?ç??‚é?
+    // æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float TestDuration;
 
-    // ?¯èª¤ä¿¡æ¯
+    // ?ï¿½èª¤ä¿¡æ¯
     UPROPERTY(BlueprintReadOnly)
     FString ErrorMessage;
 
@@ -55,7 +55,7 @@ struct FPerformanceTestResult
 };
 
 /**
- * ?§èƒ½æ¸¬è©¦ç®¡ç??? * é©—è?Epic 6.4?§èƒ½?ªå?ç³»çµ±
+ * ?ï¿½èƒ½æ¸¬è©¦ç®¡ï¿½X * é©—ï¿½?Epic 6.4?ï¿½èƒ½?ï¿½ï¿½?ç³»çµ±
  */
 UCLASS(BlueprintType)
 class MINGTACTICAL_API UMingPerformanceTestManager : public UObject
@@ -66,107 +66,107 @@ public:
     UMingPerformanceTestManager(};
 
     /**
-     * ?‹è??€?‰æ€§èƒ½æ¸¬è©¦
+     * ?ï¿½ï¿½Xï¿½?ï¿½æ€§èƒ½æ¸¬è©¦
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     void RunAllTests(};
 
     /**
-     * æ¸¬è©¦1: 100?®ä??ºæœ¬?§èƒ½
+     * æ¸¬è©¦1: 100?ï¿½ï¿½Xï¿½æœ¬?ï¿½èƒ½
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     FPerformanceTestResult Test100Units(};
 
     /**
-     * æ¸¬è©¦2: 500?®ä?ä¸­ç?è¦æ¨¡
+     * æ¸¬è©¦2: 500?ï¿½ï¿½?ä¸­ï¿½?è¦æ¨¡
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     FPerformanceTestResult Test500Units(};
 
     /**
-     * æ¸¬è©¦3: 1000?®ä?å¤§è?æ¨?(Epic 6.4?®æ?)
+     * æ¸¬è©¦3: 1000?ï¿½ï¿½?å¤§ï¿½?ï¿½?(Epic 6.4?ï¿½ï¿½?)
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     FPerformanceTestResult Test1000Units(};
 
     /**
-     * æ¸¬è©¦4: 2000?®ä?æ¥µé?æ¸¬è©¦
+     * æ¸¬è©¦4: 2000?ï¿½ï¿½?æ¥µï¿½?æ¸¬è©¦
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     FPerformanceTestResult Test2000Units(};
 
     /**
-     * æ¸¬è©¦5: å¯¦ä??–æ¸²?“æ€§èƒ½
+     * æ¸¬è©¦5: å¯¦ï¿½Xï¿½æ¸²?ï¿½æ€§èƒ½
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     FPerformanceTestResult TestInstancedRendering(};
 
     /**
-     * æ¸¬è©¦6: ç©ºé??†å??§èƒ½
+     * æ¸¬è©¦6: ç©ºï¿½Xï¿½ï¿½Xï¿½èƒ½
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     FPerformanceTestResult TestSpatialPartition(};
 
     /**
-     * æ¸¬è©¦7: LODç³»çµ±?§èƒ½
+     * æ¸¬è©¦7: LODç³»çµ±?ï¿½èƒ½
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     FPerformanceTestResult TestLODSystem(};
 
     /**
-     * ?²å??€?‰æ¸¬è©¦ç???     */
+     * ?ï¿½ï¿½Xï¿½?ï¿½æ¸¬è©¦ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Performance Test")
     TArray<FPerformanceTestResult> GetAllResults() const { return TestResults; }
 
     /**
-     * ?Ÿæ?æ¸¬è©¦?±å?
+     * ?ï¿½ï¿½?æ¸¬è©¦?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Performance Test")
     FString GenerateReport() const;
 
     /**
-     * ?¯å¦?€?‰æ¸¬è©¦é€šé?
+     * ?ï¿½å¦?ï¿½?ï¿½æ¸¬è©¦é€šï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Performance Test")
     bool AllTestsPassed() const;
 
     /**
-     * ?²å?Epic 6.4å®Œæ??€??     */
+     * ?ï¿½ï¿½?Epic 6.4å®Œï¿½Xï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Performance Test")
     bool IsEpic64Complete() const;
 
     /**
-     * å°å‡ºæ¸¬è©¦?±å?
+     * å°å‡ºæ¸¬è©¦?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     bool ExportTestReport(const FString& FilePath) const;
 
     /**
-     * ?œæ??²å?å¯¦ä?
+     * ?ï¿½ï¿½Xï¿½ï¿½?å¯¦ï¿½?
      */
     static UMingPerformanceTestManager* Get(};
 
 private:
-    // æ¸¬è©¦çµæ?
+    // æ¸¬è©¦çµï¿½?
     UPROPERTY()
     TArray<FPerformanceTestResult> TestResults;
 
-    // ?®ä?å¯¦ä?
+    // ?ï¿½ï¿½?å¯¦ï¿½?
     static UMingPerformanceTestManager* Instance;
 
-    // ?‹è??šç”¨æ¸¬è©¦
+    // ?ï¿½ï¿½Xï¿½ç”¨æ¸¬è©¦
     FPerformanceTestResult RunGenericTest(const FString& TestName, int32 UnitCount, float Duration, float TargetFPS};
 
-    // ?µå»ºæ¸¬è©¦?®ä?
+    // ?ï¿½å»ºæ¸¬è©¦?ï¿½ï¿½?
     void CreateTestUnits(int32 Count};
 
-    // ?·æ?æ¸¬è©¦?®ä?
+    // ?ï¿½ï¿½?æ¸¬è©¦?ï¿½ï¿½?
     void DestroyTestUnits(};
 
-    // ?²å??¶å?FPS
+    // ?ï¿½ï¿½Xï¿½ï¿½?FPS
     float MeasureFPS(float Duration};
 
-    // è¨˜é?æ¸¬è©¦çµæ?
+    // è¨˜ï¿½?æ¸¬è©¦çµï¿½?
     void RecordResult(const FPerformanceTestResult& Result};
 };
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,24 +7,24 @@
 class AMingTacticalUnit;
 
 /**
- * ç©ºé?ç¶²æ ¼?®å? | Spatial Grid Cell
- * å­˜å„²ä½æ–¼è©²ç¶²?¼å…§?„å–®ä½?| Store units located within this grid cell
+ * ç©ºï¿½?ç¶²æ ¼?ï¿½ï¿½? | Spatial Grid Cell
+ * å­˜å„²ä½æ–¼è©²ç¶²?ï¿½å…§?ï¿½å–®ï¿½?| Store units located within this grid cell
  */
 USTRUCT()
 struct MINGTACTICAL_API FSpatialGridCell
 {
     GENERATED_BODY()
 
-    // ç½‘æ ¼?æ?
+    // ç½‘æ ¼?ï¿½ï¿½?
     UPROPERTY()
     FIntVector GridCoord;
 
-    // ?…å«?„å?ä½?    UPROPERTY()
+    // ?ï¿½å«?ï¿½ï¿½?ï¿½?    UPROPERTY()
     TArray<TWeakObjectPtr<AMingTacticalUnit>> Units;
 
-    // ?€?æ›´?°æ—¶??    float LastUpdateTime = 0.0f;
+    // ?ï¿½?ï¿½æ›´?ï¿½æ—¶X    float LastUpdateTime = 0.0f;
 
-    // ?…å›´??    FBox Bounds;
+    // ?ï¿½å›´X    FBox Bounds;
 
     FMingSpatialGridCell() = default;
     explicit FMingSpatialGridCell(const FIntVector& InCoord) : GridCoord(InCoord) {}
@@ -37,7 +37,7 @@ struct MINGTACTICAL_API FSpatialGridCell
 };
 
 /**
- * ç©ºé??¥è©¢çµæ? | Spatial Query Result
+ * ç©ºï¿½Xï¿½è©¢çµï¿½? | Spatial Query Result
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FSpatialQueryResult
@@ -57,15 +57,15 @@ struct MINGTACTICAL_API FSpatialQueryResult
 };
 
 /**
- * ç©ºé??†å?ç³»çµ± | Spatial Partitioning System
+ * ç©ºï¿½Xï¿½ï¿½?ç³»çµ± | Spatial Partitioning System
  * 
- * ?ªå?å¤§è?æ¨¡å–®ä½å ´?¯ç?ç©ºé??¥è©¢?§èƒ½ï¼?| Optimize spatial query performance for large-scale unit scenes:
- * - ?®ä?ä½ç½®è¿½è¹¤ | Unit position tracking
- * - ç¯„å??¥è©¢ | Range queries
- * - ?€è¿‘é„°?¥è©¢ | Nearest neighbor queries
- * - è¦–ç??¥è©¢ | Line of sight queries
+ * ?ï¿½ï¿½?å¤§ï¿½?æ¨¡å–®ä½å ´?ï¿½ï¿½?ç©ºï¿½Xï¿½è©¢?ï¿½èƒ½ï¿½?| Optimize spatial query performance for large-scale unit scenes:
+ * - ?ï¿½ï¿½?ä½ç½®è¿½è¹¤ | Unit position tracking
+ * - ç¯„ï¿½Xï¿½è©¢ | Range queries
+ * - ?ï¿½è¿‘é„°?ï¿½è©¢ | Nearest neighbor queries
+ * - è¦–ï¿½Xï¿½è©¢ | Line of sight queries
  * 
- * ?©ç”¨??1000+ ?®ä??„å¤§è¦æ¨¡?°é¬¥?´æ™¯ | Suitable for 1000+ unit large-scale combat scenarios
+ * ?ï¿½ç”¨X1000+ ?ï¿½ï¿½Xï¿½å¤§è¦æ¨¡?ï¿½é¬¥?ï¿½æ™¯ | Suitable for 1000+ unit large-scale combat scenarios
  */
 UCLASS(ClassGroup = (Optimization), Blueprintable)
 class MINGTACTICAL_API UMingSpatialPartition : public UObject
@@ -76,104 +76,104 @@ public:
     UMingSpatialPartition(};
 
     /**
-     * ?å??–ç©º?´å??ºç³»ç»?     * @param WorldBounds ä¸–ç?è¾¹ç?
-     * @param CellSize ç½‘æ ¼?•å?å¤§å?
+     * ?ï¿½ï¿½Xï¿½ç©º?ï¿½ï¿½Xï¿½ç³»ï¿½?     * @param WorldBounds ä¸–ï¿½?è¾¹ï¿½?
+     * @param CellSize ç½‘æ ¼?ï¿½ï¿½?å¤§ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void Initialize(const FBox& WorldBounds, float CellSize = 1000.0f};
 
     /**
-     * ?³é—­ç³»ç?
+     * ?ï¿½é—­ç³»ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void Shutdown(};
 
     /**
-     * æ³¨å??•ä??°ç©º?´å???     */
+     * æ³¨ï¿½Xï¿½ï¿½Xï¿½ç©º?ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void RegisterUnit(AMingTacticalUnit* Unit};
 
     /**
-     * ä»ç©º?´å??ºæ³¨?€?•ä?
+     * ä»ç©º?ï¿½ï¿½Xï¿½æ³¨?ï¿½?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void UnregisterUnit(AMingTacticalUnit* Unit};
 
     /**
-     * ?´æ–°?•ä?ä½ç½®
+     * ?ï¿½æ–°?ï¿½ï¿½?ä½ç½®
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void UpdateUnitPosition(AMingTacticalUnit* Unit, const FVector& NewLocation};
 
     /**
-     * ?ƒå›´?¥è¯¢ - ?·å??‡å??ƒå›´?…ç??€?‰å?ä½?     */
+     * ?ï¿½å›´?ï¿½è¯¢ - ?ï¿½ï¿½Xï¿½ï¿½Xï¿½å›´?ï¿½ï¿½Xï¿½?ï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
     FSpatialQueryResult QueryUnitsInRadius(const FVector& Center, float Radius, int32 TeamId = -1};
 
     /**
-     * æ¡†æŸ¥è¯?- ?·å??‡å??…å›´?’å??„æ??‰å?ä½?     */
+     * æ¡†æŸ¥ï¿½?- ?ï¿½ï¿½Xï¿½ï¿½Xï¿½å›´?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
     FSpatialQueryResult QueryUnitsInBox(const FBox& Box, int32 TeamId = -1};
 
     /**
-     * ?·å??€è¿‘ç??•ä?
+     * ?ï¿½ï¿½Xï¿½è¿‘ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
     AMingTacticalUnit* GetNearestUnit(const FVector& Location, float MaxRadius, int32 TeamId = -1};
 
     /**
-     * ?·å??€è¿‘ç??Œæ–¹?•ä?
+     * ?ï¿½ï¿½Xï¿½è¿‘ï¿½Xï¿½æ–¹?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
     AMingTacticalUnit* GetNearestEnemyUnit(AMingTacticalUnit* SourceUnit, float MaxRadius};
 
     /**
-     * ?·å??ƒå›´?…ç??Œæ–¹?•ä?
+     * ?ï¿½ï¿½Xï¿½å›´?ï¿½ï¿½Xï¿½æ–¹?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
     FSpatialQueryResult GetEnemyUnitsInRadius(AMingTacticalUnit* SourceUnit, float Radius};
 
     /**
-     * ?·å??ƒå›´?…ç??‹æ–¹?•ä?
+     * ?ï¿½ï¿½Xï¿½å›´?ï¿½ï¿½Xï¿½æ–¹?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
     FSpatialQueryResult GetFriendlyUnitsInRadius(AMingTacticalUnit* SourceUnit, float Radius};
 
     /**
-     * è§†çº¿?¥è¯¢ - æ£€æµ‹ä¸¤ä¸ªä?ç½®é—´?¯å¦?‰å?ä½é˜»??     */
+     * è§†çº¿?ï¿½è¯¢ - æ£€æµ‹ä¸¤ä¸ªï¿½?ç½®é—´?ï¿½å¦?ï¿½ï¿½?ä½é˜»X     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
     bool HasLineOfSight(const FVector& Start, const FVector& End, float CheckRadius = 50.0f};
 
     /**
-     * ?·å?è§†çº¿?…ç??•ä?
+     * ?ï¿½ï¿½?è§†çº¿?ï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
     FSpatialQueryResult GetUnitsInLineOfSight(const FVector& Start, const FVector& End, float Width};
 
     /**
-     * ?·å??‡å?ç½‘æ ¼?•å??…ç??•ä?
+     * ?ï¿½ï¿½Xï¿½ï¿½?ç½‘æ ¼?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     TArray<AMingTacticalUnit*> GetUnitsInCell(const FIntVector& GridCoord};
 
     /**
-     * ?·å??•ä??€?¨ç?ç½‘æ ¼?æ?
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½?ï¿½ï¿½?ç½‘æ ¼?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Spatial Partition")
     FIntVector GetUnitGridCoord(AMingTacticalUnit* Unit) const;
 
     /**
-     * ?·å?ä¸–ç?ä½ç½®å¯¹å??„ç??¼å???     */
+     * ?ï¿½ï¿½?ä¸–ï¿½?ä½ç½®å¯¹ï¿½Xï¿½ï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Spatial Partition")
     FIntVector WorldToGrid(const FVector& WorldLocation) const;
 
     /**
-     * ?·å?ç½‘æ ¼?æ??„ä??Œä¸­å¿ƒä?ç½?     */
+     * ?ï¿½ï¿½?ç½‘æ ¼?ï¿½ï¿½Xï¿½ï¿½Xï¿½ä¸­å¿ƒï¿½?ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Spatial Partition")
     FVector GridToWorld(const FIntVector& GridCoord) const;
 
     /**
-     * ?·å?ç³»ç?ç»Ÿè®¡ä¿¡æ¯
+     * ?ï¿½ï¿½?ç³»ï¿½?ç»Ÿè®¡ä¿¡æ¯
      */
     UFUNCTION(BlueprintPure, Category = "Spatial Partition|Stats")
     int32 GetTotalCellCount() const { return GridCells.Num(}; }
@@ -188,53 +188,53 @@ public:
     float GetAverageUnitsPerCell() const;
 
     /**
-     * è°ƒè?ç»˜åˆ¶
+     * è°ƒï¿½?ç»˜åˆ¶
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Debug")
     void DrawDebugVisualization(bool bDrawGrid = true, bool bDrawUnits = false};
 
     /**
-     * éªŒè?ç³»ç?å®Œæ•´??     */
+     * éªŒï¿½?ç³»ï¿½?å®Œæ•´X     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Debug")
     bool ValidateIntegrity(};
 
     /**
-     * æ¸…ç?? æ?å¼•ç”¨
+     * æ¸…ï¿½Xï¿½ï¿½?å¼•ç”¨
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void CleanupInvalidReferences(};
 
-    // ==== ?¹é??ä? ====
+    // ==== ?ï¿½ï¿½Xï¿½ï¿½? ====
 
     /**
-     * ?¹é?æ³¨å??•ä?
+     * ?ï¿½ï¿½?æ³¨ï¿½Xï¿½ï¿½?
      */
     void BatchRegisterUnits(const TArray<AMingTacticalUnit*>& Units};
 
     /**
-     * ?¹é?æ³¨é??•ä?
+     * ?ï¿½ï¿½?æ³¨ï¿½Xï¿½ï¿½?
      */
     void BatchUnregisterUnits(const TArray<AMingTacticalUnit*>& Units};
 
     /**
-     * ?¹é??´æ–°ä½ç½®
+     * ?ï¿½ï¿½Xï¿½æ–°ä½ç½®
      */
     void BatchUpdatePositions(const TMap<AMingTacticalUnit*, FVector>& PositionUpdates};
 
 private:
-    // ç½‘æ ¼?•å?? å?
+    // ç½‘æ ¼?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY()
     TMap<FIntVector, FSpatialGridCell> GridCells;
 
-    // ?•ä??°ç??¼å??‡ç?? å?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY()
     TMap<TWeakObjectPtr<AMingTacticalUnit>, FIntVector> UnitToGridMap;
 
-    // è¢«è¿½è¸ªç??•ä?
+    // è¢«è¿½è¸ªï¿½Xï¿½ï¿½?
     UPROPERTY()
     TArray<TWeakObjectPtr<AMingTacticalUnit>> TrackedUnits;
 
-    // ?ç½®
+    // ?ï¿½ç½®
     float CellSize;
     FBox WorldBounds;
     bool bIsInitialized;
@@ -243,21 +243,21 @@ private:
     int32 QueryCount;
     float TotalQueryTime;
 
-    // ?·å??–å?å»ºç??¼å???    FSpatialGridCell* GetOrCreateCell(const FIntVector& Coord};
+    // ?ï¿½ï¿½Xï¿½ï¿½?å»ºï¿½Xï¿½ï¿½X    FSpatialGridCell* GetOrCreateCell(const FIntVector& Coord};
     FSpatialGridCell* GetCell(const FIntVector& Coord};
 
-    // ?·å??¸é‚»ç½‘æ ¼?æ?
+    // ?ï¿½ï¿½Xï¿½é‚»ç½‘æ ¼?ï¿½ï¿½?
     TArray<FIntVector> GetNeighboringCells(const FIntVector& Center, int32 Radius = 1};
 
-    // ?·å??¥è¯¢?€?€?„ç??¼è???    TArray<FIntVector> GetCellsInRadius(const FVector& Center, float Radius};
+    // ?ï¿½ï¿½Xï¿½è¯¢?ï¿½?ï¿½?ï¿½ï¿½Xï¿½ï¿½X    TArray<FIntVector> GetCellsInRadius(const FVector& Center, float Radius};
     TArray<FIntVector> GetCellsInBox(const FBox& Box};
 
-    // æ¸…ç?ç©ºå???    void CleanupEmptyCells(};
+    // æ¸…ï¿½?ç©ºï¿½X    void CleanupEmptyCells(};
 
-    // éªŒè??æ??¯å¦?¨è¾¹?Œå?
+    // éªŒï¿½Xï¿½ï¿½Xï¿½å¦?ï¿½è¾¹?ï¿½ï¿½?
     bool IsValidGridCoord(const FIntVector& Coord) const;
 
-    // ?´æ–°ç»Ÿè®¡
+    // ?ï¿½æ–°ç»Ÿè®¡
     void RecordQueryTime(float TimeMs};
 };
 

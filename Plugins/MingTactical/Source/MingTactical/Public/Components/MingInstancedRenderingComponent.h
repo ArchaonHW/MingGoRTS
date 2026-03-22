@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
@@ -6,23 +6,23 @@
 #include "MingInstancedRenderingComponent.generated.h"
 
 /**
- * æ¸²æ??¹æ¬¡çµæ?
+ * æ¸²ï¿½Xï¿½æ¬¡çµï¿½?
  */
 USTRUCT()
 struct FRenderBatch
 {
     GENERATED_BODY()
 
-    // å¯¦ä??¸æ?
+    // å¯¦ï¿½Xï¿½ï¿½?
     TArray<FMatrix> InstanceTransforms;
     TArray<FLinearColor> InstanceColors;
     
-    // ?¯è??§æ?è¨?    TArray<bool> InstanceVisibility;
+    // ?ï¿½ï¿½Xï¿½ï¿½?ï¿½?    TArray<bool> InstanceVisibility;
     
-    // ?¹æ¬¡ID
+    // ?ï¿½æ¬¡ID
     int32 BatchId;
     
-    // å¯¦ä??¸é?
+    // å¯¦ï¿½Xï¿½ï¿½?
     int32 InstanceCount;
     
     FRenderBatch()
@@ -32,23 +32,23 @@ struct FRenderBatch
 };
 
 /**
- * LODç´šåˆ¥?šè?
+ * LODç´šåˆ¥?ï¿½ï¿½?
  */
 UENUM(BlueprintType)
 enum class ELODLevel : uint8
 {
-    LOD0    UMETA(DisplayName = "LOD 0 - Full Detail"),      // å®Œæ•´ç´°ç?
+    LOD0    UMETA(DisplayName = "LOD 0 - Full Detail"),      // å®Œæ•´ç´°ï¿½?
     LOD1    UMETA(DisplayName = "LOD 1 - High Detail"),       // é«˜ç´°ç¯€
-    LOD2    UMETA(DisplayName = "LOD 2 - Medium Detail"),   // ä¸­ç?ç´°ç?
+    LOD2    UMETA(DisplayName = "LOD 2 - Medium Detail"),   // ä¸­ï¿½?ç´°ï¿½?
     LOD3    UMETA(DisplayName = "LOD 3 - Low Detail"),       // ä½ç´°ç¯€
-    LOD4    UMETA(DisplayName = "LOD 4 - Lowest Detail"),    // ?€ä½ç´°ç¯€
-    Culled  UMETA(DisplayName = "Culled")                     // å®Œå…¨?”é™¤
+    LOD4    UMETA(DisplayName = "LOD 4 - Lowest Detail"),    // ?ï¿½ä½ç´°ç¯€
+    Culled  UMETA(DisplayName = "Culled")                     // å®Œå…¨?ï¿½é™¤
 };
 
 class AMingTacticalUnit;
 
 /**
- * å¯¦ä??–æ¸²?“ç?ä»? * ?¨æ–¼é«˜æ?æ¸²æ?å¤§é??¸å?é¡å??„å–®ä½? */
+ * å¯¦ï¿½Xï¿½æ¸²?ï¿½ï¿½?ï¿½? * ?ï¿½æ–¼é«˜ï¿½?æ¸²ï¿½?å¤§ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½å–®ï¿½? */
 UCLASS(ClassGroup=(Performance), meta=(BlueprintSpawnableComponent))
 class MINGTACTICAL_API UMingInstancedRenderingComponent : public UActorComponent
 {
@@ -62,41 +62,41 @@ public:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
     /**
-     * è¨»å??®ä??°å¯¦ä¾‹å?æ¸²æ?ç³»çµ±
+     * è¨»ï¿½Xï¿½ï¿½Xï¿½å¯¦ä¾‹ï¿½?æ¸²ï¿½?ç³»çµ±
      */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
     void RegisterUnit(AMingTacticalUnit* Unit};
 
     /**
-     * å¾å¯¦ä¾‹å?æ¸²æ?ç³»çµ±ç§»é™¤?®ä?
+     * å¾å¯¦ä¾‹ï¿½?æ¸²ï¿½?ç³»çµ±ç§»é™¤?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
     void UnregisterUnit(AMingTacticalUnit* Unit};
 
     /**
-     * ?´æ–°?®ä?è®Šæ??©é™£
+     * ?ï¿½æ–°?ï¿½ï¿½?è®Šï¿½Xï¿½é™£
      */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
     void UpdateUnitTransform(AMingTacticalUnit* Unit, const FTransform& NewTransform};
 
     /**
-     * ?´æ–°?®ä??¯è???     */
+     * ?ï¿½æ–°?ï¿½ï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
     void SetUnitVisibility(AMingTacticalUnit* Unit, bool bVisible};
 
     /**
-     * è¨ˆç?LODç´šåˆ¥
+     * è¨ˆï¿½?LODç´šåˆ¥
      */
     UFUNCTION(BlueprintCallable, Category = "LOD")
     ELODLevel CalculateLODLevel(AMingTacticalUnit* Unit) const;
 
     /**
-     * è¨­ç½®LODè·é›¢?¾å€?     */
+     * è¨­ç½®LODè·é›¢?ï¿½ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "LOD")
     void SetLODDistanceThresholds(const TArray<float>& Thresholds};
 
     /**
-     * ?²å??§èƒ½çµ±è?
+     * ?ï¿½ï¿½Xï¿½èƒ½çµ±ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     int32 GetRegisteredUnitCount() const { return RegisteredUnits.Num(}; }
@@ -108,77 +108,77 @@ public:
     int32 GetCulledInstanceCount() const { return CulledInstanceCount; }
 
     /**
-     * å¼·åˆ¶?´æ–°?€?‰å¯¦ä¾?     */
+     * å¼·åˆ¶?ï¿½æ–°?ï¿½?ï¿½å¯¦ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
     void ForceUpdateAllInstances(};
 
     /**
-     * è¨­ç½®?´æ–°?»ç?
+     * è¨­ç½®?ï¿½æ–°?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void SetUpdateFrequency(float Frequency};
 
 protected:
-    // è¨»å??„å–®ä½?    UPROPERTY()
+    // è¨»ï¿½Xï¿½å–®ï¿½?    UPROPERTY()
     TArray<TObjectPtr<AMingTacticalUnit>> RegisteredUnits;
 
-    // ?®ä??°æ‰¹æ¬¡ç´¢å¼•ç?? å?
+    // ?ï¿½ï¿½Xï¿½æ‰¹æ¬¡ç´¢å¼•ï¿½Xï¿½ï¿½?
     TMap<AMingTacticalUnit*, int32> UnitToBatchIndex;
 
-    // æ¸²æ??¹æ¬¡
+    // æ¸²ï¿½Xï¿½æ¬¡
     UPROPERTY()
     TArray<FRenderBatch> RenderBatches;
 
-    // LODè·é›¢?¾å€?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LOD")
+    // LODè·é›¢?ï¿½ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LOD")
     TArray<float> LODDistanceThresholds;
 
-    // ?´æ–°è¨ˆæ???    float UpdateTimer;
+    // ?ï¿½æ–°è¨ˆï¿½X    float UpdateTimer;
     
-    // ?´æ–°?»ç? (ç§?
+    // ?ï¿½æ–°?ï¿½ï¿½? (ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance")
     float UpdateFrequency;
 
-    // ?§èƒ½çµ±è?
+    // ?ï¿½èƒ½çµ±ï¿½?
     int32 VisibleInstanceCount;
     int32 CulledInstanceCount;
     int32 LastUpdatedInstanceCount;
 
-    // ?¸æ?ä½ç½® (?¨æ–¼LODè¨ˆç?)
+    // ?ï¿½ï¿½?ä½ç½® (?ï¿½æ–¼LODè¨ˆï¿½?)
     FVector CameraLocation;
 
-    // ?å??–LOD?¾å€?    void InitializeLODThresholds(};
+    // ?ï¿½ï¿½Xï¿½LOD?ï¿½ï¿½?    void InitializeLODThresholds(};
 
-    // ?µå»º?–ç²?–æ‰¹æ¬?    int32 GetOrCreateBatchForUnit(AMingTacticalUnit* Unit};
+    // ?ï¿½å»º?ï¿½ç²?ï¿½æ‰¹ï¿½?    int32 GetOrCreateBatchForUnit(AMingTacticalUnit* Unit};
 
-    // ?´æ–°?¹æ¬¡å¯¦ä??¸æ?
+    // ?ï¿½æ–°?ï¿½æ¬¡å¯¦ï¿½Xï¿½ï¿½?
     void UpdateBatchInstanceData(int32 BatchIndex};
 
-    // ?·è?LODè¨ˆç?
+    // ?ï¿½ï¿½?LODè¨ˆï¿½?
     void PerformLODUpdate(};
 
-    // ?´æ–°å¯¦ä??¯è???    void UpdateInstanceVisibility(};
+    // ?ï¿½æ–°å¯¦ï¿½Xï¿½ï¿½X    void UpdateInstanceVisibility(};
 
-    // ?²å??¸æ?ä½ç½®
+    // ?ï¿½ï¿½Xï¿½ï¿½?ä½ç½®
     void UpdateCameraLocation(};
 
-    // ?¹æ¬¡?ˆä½µ (?ªå?å°æ‰¹æ¬?
+    // ?ï¿½æ¬¡?ï¿½ä½µ (?ï¿½ï¿½?å°æ‰¹ï¿½?
     void MergeSmallBatches(};
 
-    // ?¹æ¬¡?†å‰² (?¿å?å¤§æ‰¹æ¬?
+    // ?ï¿½æ¬¡?ï¿½å‰² (?ï¿½ï¿½?å¤§æ‰¹ï¿½?
     void SplitLargeBatches(};
 
-    // ?€å¤§æ‰¹æ¬¡å¤§å°?    UPROPERTY(EditAnywhere, Category = "Performance")
+    // ?ï¿½å¤§æ‰¹æ¬¡å¤§ï¿½?    UPROPERTY(EditAnywhere, Category = "Performance")
     int32 MaxBatchSize;
 
-    // ?€å°æ‰¹æ¬¡å¤§å°?(ä½æ–¼æ­¤å€¼è€ƒæ…®?ˆä½µ)
+    // ?ï¿½å°æ‰¹æ¬¡å¤§ï¿½?(ä½æ–¼æ­¤å€¼è€ƒæ…®?ï¿½ä½µ)
     UPROPERTY(EditAnywhere, Category = "Performance")
     int32 MinBatchSize;
 
-    // ?¯å¦?Ÿç”¨LOD
+    // ?ï¿½å¦?ï¿½ç”¨LOD
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LOD")
     bool bEnableLOD;
 
-    // ?¯å¦?Ÿç”¨?•æ??¹æ¬¡èª¿æ•´
+    // ?ï¿½å¦?ï¿½ç”¨?ï¿½ï¿½Xï¿½æ¬¡èª¿æ•´
     UPROPERTY(EditAnywhere, Category = "Performance")
     bool bEnableDynamicBatching;
 };

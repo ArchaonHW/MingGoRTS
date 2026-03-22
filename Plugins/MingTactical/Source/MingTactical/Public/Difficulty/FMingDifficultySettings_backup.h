@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Difficulty/EDifficultyLevel.h"
 #include "FMingDifficultySettings.generated.h"
 
 /**
- * ?¾åº¦?‚æ•°ç»“æ?
- * å­˜å‚¨?•ä¸ª?¾åº¦?‚æ•°?„å??å€¼å??ƒå›´
+ * ?ï¿½åº¦?ï¿½æ•°ç»“ï¿½?
+ * å­˜å‚¨?ï¿½ä¸ª?ï¿½åº¦?ï¿½æ•°?ï¿½ï¿½Xï¿½å€¼ï¿½Xï¿½å›´
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingDifficultyParameter
@@ -44,15 +44,15 @@ struct MINGTACTICAL_API FMingDifficultyParameter
         , AdjustmentStep(0.1f)
     {}
 
-    /** è°ƒæ•´?‚æ•°?¼ï?è¿”å??¯å¦è¾¾åˆ°è¾¹ç? */
+    /** è°ƒæ•´?ï¿½æ•°?ï¿½ï¿½?è¿”ï¿½Xï¿½å¦è¾¾åˆ°è¾¹ï¿½? */
     bool AdjustValue(float Delta};
 
-    /** è®¾ç½®?‚æ•°?¼ï?å¸¦è??´é??¶ï? */
+    /** è®¾ç½®?ï¿½æ•°?ï¿½ï¿½?å¸¦ï¿½Xï¿½ï¿½Xï¿½ï¿½? */
     void SetValue(float NewValue};
 };
 
 /**
- * é¢„è®¾?¾åº¦?ç½®ç»“æ?
+ * é¢„è®¾?ï¿½åº¦?ï¿½ç½®ç»“ï¿½?
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingPresetDifficultyConfig
@@ -63,10 +63,10 @@ struct MINGTACTICAL_API FMingPresetDifficultyConfig
     EDifficultyLevel Level = EDifficultyLevel::Normal;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
-    FString DisplayName = TEXT("?®é€?};
+    FString DisplayName = TEXT("?ï¿½ï¿½?};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
-    FString Description = TEXT("?‡å?æ¸¸æ??¾åº¦"};
+    FString Description = TEXT("?ï¿½ï¿½?æ¸¸ï¿½Xï¿½åº¦"};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
     TMap<EDifficultyParameter, float> ParameterValues;
@@ -80,7 +80,7 @@ struct MINGTACTICAL_API FMingPresetDifficultyConfig
 };
 
 /**
- * ?¾åº¦è®¾ç½®ä¸»ç??? * ç®¡ç??€?‰éš¾åº¦ç›¸?³ç??ç½®
+ * ?ï¿½åº¦è®¾ç½®ä¸»ï¿½X * ç®¡ï¿½Xï¿½?ï¿½éš¾åº¦ç›¸?ï¿½ï¿½Xï¿½ç½®
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingDifficultySettings
@@ -117,23 +117,23 @@ public:
 
     FMingDifficultySettings(};
 
-    /** ä»é?è®¾é?ç½®å?å§‹å? */
+    /** ä»ï¿½?è®¾ï¿½?ç½®ï¿½?å§‹ï¿½? */
     void InitializeFromPreset(EDifficultyLevel Level};
 
-    /** ?·å??‡å?ç±»å??„å???*/
+    /** ?ï¿½ï¿½Xï¿½ï¿½?ç±»ï¿½Xï¿½ï¿½X*/
     FMingDifficultyParameter* GetParameter(EDifficultyParameter Type};
     const FMingDifficultyParameter* GetParameter(EDifficultyParameter Type) const;
 
-    /** ?·å??‚æ•°å½“å???*/
+    /** ?ï¿½ï¿½Xï¿½æ•°å½“ï¿½X*/
     float GetParameterValue(EDifficultyParameter Type) const;
 
-    /** è®¾ç½®?‚æ•°??*/
+    /** è®¾ç½®?ï¿½æ•°X*/
     void SetParameterValue(EDifficultyParameter Type, float Value};
 
-    /** è°ƒæ•´?‚æ•°??*/
+    /** è°ƒæ•´?ï¿½æ•°X*/
     bool AdjustParameter(EDifficultyParameter Type, float Delta};
 
-    /** ?·å?é¢„è®¾?ç½®?™æ€æ–¹æ³?*/
+    /** ?ï¿½ï¿½?é¢„è®¾?ï¿½ç½®?ï¿½æ€æ–¹ï¿½?*/
     static FMingPresetDifficultyConfig GetPresetConfig(EDifficultyLevel Level};
     static TArray<FMingPresetDifficultyConfig> GetAllPresetConfigs(};
 

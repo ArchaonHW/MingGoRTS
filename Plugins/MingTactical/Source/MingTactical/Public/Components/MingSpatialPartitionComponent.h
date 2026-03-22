@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
@@ -7,7 +7,7 @@
 class AMingTacticalUnit;
 
 /**
- * ç©ºé?ç¶²æ ¼?®å?çµæ?
+ * ç©ºï¿½?ç¶²æ ¼?ï¿½ï¿½?çµï¿½?
  */
 USTRUCT()
 struct FMingComponentSpatialGridCell
@@ -18,17 +18,17 @@ struct FMingComponentSpatialGridCell
     UPROPERTY()
     FIntVector GridPosition;
 
-    // ?…å«?„å–®ä½?    UPROPERTY()
+    // ?ï¿½å«?ï¿½å–®ï¿½?    UPROPERTY()
     TArray<TObjectPtr<AMingTacticalUnit>> Units;
 
-    // æ´»è?æ¨™è? (?¯å¦?€è¦æ›´??
+    // æ´»ï¿½?æ¨™ï¿½? (?ï¿½å¦?ï¿½è¦æ›´X
     UPROPERTY()
     bool bIsActive;
 
-    // ?€å¾Œæ›´?°æ???    UPROPERTY()
+    // ?ï¿½å¾Œæ›´?ï¿½ï¿½X    UPROPERTY()
     float LastUpdateTime;
 
-    // ?´æ–°?ªå?ç´?    UPROPERTY()
+    // ?ï¿½æ–°?ï¿½ï¿½?ï¿½?    UPROPERTY()
     float UpdatePriority;
 
     FSpatialGridCell()
@@ -40,8 +40,8 @@ struct FMingComponentSpatialGridCell
 };
 
 /**
- * ç©ºé??†å?çµ„ä»¶
- * å°‡æˆ°?´å??†ç‚ºç¶²æ ¼ï¼Œå¯¦?¾å?å¡Šæ›´?°å?è¦–é??”é™¤
+ * ç©ºï¿½Xï¿½ï¿½?çµ„ä»¶
+ * å°‡æˆ°?ï¿½ï¿½Xï¿½ç‚ºç¶²æ ¼ï¼Œå¯¦?ï¿½ï¿½?å¡Šæ›´?ï¿½ï¿½?è¦–ï¿½Xï¿½é™¤
  */
 UCLASS(ClassGroup=(Performance), meta=(BlueprintSpawnableComponent))
 class MINGTACTICAL_API UMingSpatialPartitionComponent : public UActorComponent
@@ -56,52 +56,52 @@ public:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
     /**
-     * è¨»å??®ä??°ç©º?“å?å¡Šç³»çµ?     */
+     * è¨»ï¿½Xï¿½ï¿½Xï¿½ç©º?ï¿½ï¿½?å¡Šç³»ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void RegisterUnit(AMingTacticalUnit* Unit};
 
     /**
-     * å¾ç©º?“å?å¡Šç³»çµ±ç§»?¤å–®ä½?     */
+     * å¾ç©º?ï¿½ï¿½?å¡Šç³»çµ±ç§»?ï¿½å–®ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void UnregisterUnit(AMingTacticalUnit* Unit};
 
     /**
-     * ?´æ–°?®ä?ä½ç½® (ç§»å??°æ–°ç¶²æ ¼)
+     * ?ï¿½æ–°?ï¿½ï¿½?ä½ç½® (ç§»ï¿½Xï¿½æ–°ç¶²æ ¼)
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void UpdateUnitPosition(AMingTacticalUnit* Unit};
 
     /**
-     * ?²å??‡å?ä½ç½®?¨å??„å–®ä½?     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?ä½ç½®?ï¿½ï¿½Xï¿½å–®ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     TArray<AMingTacticalUnit*> GetUnitsInRadius(const FVector& Center, float Radius) const;
 
     /**
-     * ?²å??‡å?ç¶²æ ¼ä¸­ç??®ä?
+     * ?ï¿½ï¿½Xï¿½ï¿½?ç¶²æ ¼ä¸­ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     TArray<AMingTacticalUnit*> GetUnitsInCell(const FIntVector& GridPosition) const;
 
     /**
-     * ?²å??¸æ?è¦–é??§ç?ç¶²æ ¼
+     * ?ï¿½ï¿½Xï¿½ï¿½?è¦–ï¿½Xï¿½ï¿½?ç¶²æ ¼
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     TArray<FIntVector> GetVisibleGridCells() const;
 
     /**
-     * è¨­ç½®ç¶²æ ¼å¤§å?
+     * è¨­ç½®ç¶²æ ¼å¤§ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void SetCellSize(float NewCellSize};
 
     /**
-     * è¨­ç½®?´æ–°ç¯„å?
+     * è¨­ç½®?ï¿½æ–°ç¯„ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void SetUpdateRadius(float NewRadius};
 
     /**
-     * ?²å??§èƒ½çµ±è?
+     * ?ï¿½ï¿½Xï¿½èƒ½çµ±ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     int32 GetTotalGridCellCount() const { return GridCells.Num(}; }
@@ -113,99 +113,99 @@ public:
     int32 GetRegisteredUnitCount() const { return RegisteredUnits.Num(}; }
 
     /**
-     * ?²å?ä¸–ç?ä½ç½®å°æ??„ç¶²?¼å?æ¨?     */
+     * ?ï¿½ï¿½?ä¸–ï¿½?ä½ç½®å°ï¿½Xï¿½ç¶²?ï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Spatial Partition")
     FIntVector WorldToGrid(const FVector& WorldPosition) const;
 
     /**
-     * ?²å?ç¶²æ ¼ä¸­å??„ä??Œä?ç½?     */
+     * ?ï¿½ï¿½?ç¶²æ ¼ä¸­ï¿½Xï¿½ï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Spatial Partition")
     FVector GridToWorld(const FIntVector& GridPosition) const;
 
     /**
-     * å¼·åˆ¶?´æ–°?€?‰ç¶²??     */
+     * å¼·åˆ¶?ï¿½æ–°?ï¿½?ï¿½ç¶²X     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void ForceUpdateAllCells(};
 
     /**
-     * ?²å?ç¶²æ ¼èª¿è©¦è³‡è?
+     * ?ï¿½ï¿½?ç¶²æ ¼èª¿è©¦è³‡ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Debug")
     void GetDebugGridInfo(TArray<FVector>& CellCenters, TArray<int32>& CellUnitCounts) const;
 
 protected:
-    // è¨»å??„å–®ä½?    UPROPERTY()
+    // è¨»ï¿½Xï¿½å–®ï¿½?    UPROPERTY()
     TArray<TObjectPtr<AMingTacticalUnit>> RegisteredUnits;
 
-    // ?®ä??°ç¶²?¼ç?? å?
+    // ?ï¿½ï¿½Xï¿½ç¶²?ï¿½ï¿½Xï¿½ï¿½?
     TMap<AMingTacticalUnit*, FIntVector> UnitToCellMap;
 
-    // ç¶²æ ¼?¸æ?
+    // ç¶²æ ¼?ï¿½ï¿½?
     UPROPERTY()
     TMap<FIntVector, FSpatialGridCell> GridCells;
 
-    // ç¶²æ ¼å¤§å?
+    // ç¶²æ ¼å¤§ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spatial Partition")
     float CellSize;
 
-    // ?´æ–°?Šå?
+    // ?ï¿½æ–°?ï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spatial Partition")
     float UpdateRadius;
 
-    // ?¸æ?ä½ç½®
+    // ?ï¿½ï¿½?ä½ç½®
     FVector CameraLocation;
 
-    // ?¸æ?è¦–é?
+    // ?ï¿½ï¿½?è¦–ï¿½?
     FRotator CameraRotation;
 
-    // ?´æ–°è¨ˆæ???    float UpdateTimer;
+    // ?ï¿½æ–°è¨ˆï¿½X    float UpdateTimer;
     
-    // ?´æ–°?»ç?
+    // ?ï¿½æ–°?ï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance")
     float UpdateFrequency;
 
-    // ?€å¤§æ?å¹€?´æ–°ç¶²æ ¼??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance")
+    // ?ï¿½å¤§ï¿½?å¹€?ï¿½æ–°ç¶²æ ¼X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance")
     int32 MaxCellsPerFrame;
 
-    // ?¶å??´æ–°ç´¢å? (?¨æ–¼?†å??´æ–°)
+    // ?ï¿½ï¿½Xï¿½æ–°ç´¢ï¿½? (?ï¿½æ–¼?ï¿½ï¿½Xï¿½æ–°)
     int32 CurrentUpdateIndex;
 
-    // ?´æ–°?¸æ?è³‡è?
+    // ?ï¿½æ–°?ï¿½ï¿½?è³‡ï¿½?
     void UpdateCameraInfo(};
 
-    // ç¢ºä?ç¶²æ ¼å­˜åœ¨
+    // ç¢ºï¿½?ç¶²æ ¼å­˜åœ¨
     FSpatialGridCell& GetOrCreateCell(const FIntVector& GridPosition};
 
-    // å¾ç¶²?¼ç§»?¤å–®ä½?    void RemoveUnitFromCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition};
+    // å¾ç¶²?ï¿½ç§»?ï¿½å–®ï¿½?    void RemoveUnitFromCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition};
 
-    // å°‡å–®ä½æ·»? åˆ°ç¶²æ ¼
+    // å°‡å–®ä½æ·»?ï¿½åˆ°ç¶²æ ¼
     void AddUnitToCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition};
 
-    // ?´æ–°ç¶²æ ¼æ´»è??€??    void UpdateCellActivity(};
+    // ?ï¿½æ–°ç¶²æ ¼æ´»ï¿½Xï¿½X    void UpdateCellActivity(};
 
-    // ?´æ–°æ´»è?ç¶²æ ¼ä¸­ç??®ä?
+    // ?ï¿½æ–°æ´»ï¿½?ç¶²æ ¼ä¸­ï¿½Xï¿½ï¿½?
     void UpdateActiveCells(float DeltaTime};
 
-    // ?·è?è¦–é??”é™¤
+    // ?ï¿½ï¿½?è¦–ï¿½Xï¿½é™¤
     void PerformFrustumCulling(};
 
-    // æª¢æŸ¥ç¶²æ ¼?¯å¦?¨è??å…§
+    // æª¢æŸ¥ç¶²æ ¼?ï¿½å¦?ï¿½ï¿½Xï¿½å…§
     bool IsCellInFrustum(const FIntVector& CellPosition) const;
 
-    // ?²å?è¦–é????‹è?é»?    void GetFrustumCorners(TArray<FVector>& OutCorners) const;
+    // ?ï¿½ï¿½?è¦–ï¿½Xï¿½ï¿½?ï¿½?    void GetFrustumCorners(TArray<FVector>& OutCorners) const;
 
-    // è¨ˆç?ç¶²æ ¼?„AABB
+    // è¨ˆï¿½?ç¶²æ ¼?ï¿½AABB
     FBox GetCellBounds(const FIntVector& CellPosition) const;
 
-    // è·é›¢?ªå?ç´šè?ç®?    float CalculateCellPriority(const FIntVector& CellPosition) const;
+    // è·é›¢?ï¿½ï¿½?ç´šï¿½?ï¿½?    float CalculateCellPriority(const FIntVector& CellPosition) const;
 
-    // ?¹é??´æ–°?®ä?
+    // ?ï¿½ï¿½Xï¿½æ–°?ï¿½ï¿½?
     void BatchUpdateUnits(const TArray<AMingTacticalUnit*>& Units, float DeltaTime};
 
-    // ä¼‘ç?ç¶²æ ¼ä¸­ç??®ä?
+    // ä¼‘ï¿½?ç¶²æ ¼ä¸­ï¿½Xï¿½ï¿½?
     void SleepUnitsInCell(const FIntVector& CellPosition};
 
-    // ?šé?ç¶²æ ¼ä¸­ç??®ä?
+    // ?ï¿½ï¿½?ç¶²æ ¼ä¸­ï¿½Xï¿½ï¿½?
     void WakeUnitsInCell(const FIntVector& CellPosition};
 };
 

@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "AI/MingCombatAIManager.h"
 #include "MingBaseCombatAI.generated.h"
 
-// AI ?€??USTRUCT(BlueprintType)
+// AI ?ï¿½XUSTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingAIState
 {
     GENERATED_BODY()
@@ -38,7 +38,7 @@ struct MINGTACTICAL_API FMingAIState
     float LastDecisionTime;
 };
 
-// ?°è?æ±ºç?
+// ?ï¿½ï¿½?æ±ºï¿½?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingTacticalDecision
 {
@@ -63,7 +63,7 @@ struct MINGTACTICAL_API FMingTacticalDecision
     bool bRequiresCoordination;
 };
 
-// ?®ä??½ä»¤
+// ?ï¿½ï¿½Xï¿½ä»¤
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingUnitCommand
 {
@@ -86,107 +86,107 @@ struct MINGTACTICAL_API FMingUnitCommand
 };
 
 /**
- * ?ºç??°é¬¥ AI é¡? * ?€?‰å…·é«?AI é¡å??„åŸºé¡? */
+ * ?ï¿½ï¿½Xï¿½é¬¥ AI ï¿½? * ?ï¿½?ï¿½å…·ï¿½?AI é¡ï¿½Xï¿½åŸºï¿½? */
 UCLASS(BlueprintType, Blueprintable, Abstract)
 class MINGTACTICAL_API UMingBaseCombatAI : public UObject
 {
     GENERATED_BODY()
 
 public:
-    // å»ºæ?å­?    UMingBaseCombatAI(};
+    // å»ºï¿½?ï¿½?    UMingBaseCombatAI(};
 
-    // ?å???AI
+    // ?ï¿½ï¿½XAI
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     virtual void Initialize(class AController* Controller};
 
-    // ?´æ–° AI
+    // ?ï¿½æ–° AI
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     virtual void UpdateAI(float DeltaTime};
 
-    // è£½ä??°è?æ±ºç?
+    // è£½ï¿½Xï¿½ï¿½?æ±ºï¿½?
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     virtual FMingTacticalDecision MakeTacticalDecision(const FMingAIContext& Context};
 
-    // ?·è??®ä??½ä»¤
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ä»¤
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     virtual void ExecuteUnitCommand(class AActor* Unit, const FMingUnitCommand& Command};
 
-    // è©•ä¼°?°å ´å±€??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // è©•ä¼°?ï¿½å ´å±€X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     virtual float AssessBattlefieldSituation(const FMingAIContext& Context};
 
-    // è¨­ç½® AI ??º¦
+    // è¨­ç½® AI Xï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     virtual void SetDifficulty(EMingAIDifficulty Difficulty};
 
-    // ?²å? AI ?€??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // ?ï¿½ï¿½? AI ?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     FMingAIState GetAIState() const { return CurrentAIState; }
 
-    // ?ç½® AI ?€??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // ?ï¿½ç½® AI ?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     virtual void ResetAIState(};
 
 protected:
-    // AI ?§åˆ¶??    UPROPERTY(BlueprintReadOnly)
+    // AI ?ï¿½åˆ¶X    UPROPERTY(BlueprintReadOnly)
     class AController* AIController;
 
-    // ?¶å? AI ?€??    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½ï¿½? AI ?ï¿½X    UPROPERTY(BlueprintReadOnly)
     FMingAIState CurrentAIState;
 
-    // ?¶å???º¦
+    // ?ï¿½ï¿½Xï¿½ï¿½
     UPROPERTY(BlueprintReadOnly)
     EMingAIDifficulty CurrentDifficulty;
 
-    // ??º¦è¨­ç½®
+    // Xï¿½ï¿½è¨­ç½®
     UPROPERTY(BlueprintReadOnly)
     FMingAIDifficultySettings DifficultySettings;
 
-    // ?°è??å¥½
+    // ?ï¿½ï¿½Xï¿½å¥½
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingTacticalStyle TacticalStyle;
 
-    // ?»æ??§ç?ç´?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?ï¿½ï¿½Xï¿½ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Aggressiveness;
 
-    // è¬¹æ??§ç?ç´?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // è¬¹ï¿½Xï¿½ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Cautiousness;
 
-    // ?”èª¿?½å?
+    // ?ï¿½èª¿?ï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CoordinationSkill;
 
-    // ?†æ?å¨è?
+    // ?ï¿½ï¿½?å¨ï¿½?
     virtual TArray<class AActor*> AnalyzeThreats(const TArray<class AActor*>& EnemyUnits};
 
-    // è­˜åˆ¥æ©Ÿæ?
+    // è­˜åˆ¥æ©Ÿï¿½?
     virtual TArray<FVector> IdentifyOpportunities(const FMingAIContext& Context};
 
-    // è©•ä¼°?®ä??€??    virtual float AssessUnitStatus(class AActor* Unit};
+    // è©•ä¼°?ï¿½ï¿½Xï¿½X    virtual float AssessUnitStatus(class AActor* Unit};
 
-    // è¦å?æ©Ÿå?è·¯å?
+    // è¦ï¿½?æ©Ÿï¿½?è·¯ï¿½?
     virtual TArray<FVector> PlanMovementPath(class AActor* Unit, const FVector& Destination};
 
-    // è¨ˆç??»æ??ªå?ç´?    virtual float CalculateAttackPriority(class AActor* Target};
+    // è¨ˆï¿½Xï¿½ï¿½Xï¿½ï¿½?ï¿½?    virtual float CalculateAttackPriority(class AActor* Target};
 
-    // æ±ºå??¯å¦?¤é€€
+    // æ±ºï¿½Xï¿½å¦?ï¿½é€€
     virtual bool ShouldRetreat(const FMingAIContext& Context};
 
-    // æ±ºå??¯å¦?²ç¦¦
+    // æ±ºï¿½Xï¿½å¦?ï¿½ç¦¦
     virtual bool ShouldDefend(const FMingAIContext& Context};
 
-    // æ±ºå??¯å¦?»æ?
+    // æ±ºï¿½Xï¿½å¦?ï¿½ï¿½?
     virtual bool ShouldAttack(const FMingAIContext& Context};
 
-    // ?´æ–°å£«æ°£
+    // ?ï¿½æ–°å£«æ°£
     virtual void UpdateMorale(const FMingAIContext& Context};
 
-    // ?´æ–°?è???    virtual void UpdateCohesion(const TArray<class AActor*>& Units};
+    // ?ï¿½æ–°?ï¿½ï¿½X    virtual void UpdateCohesion(const TArray<class AActor*>& Units};
 
 private:
-    // ?€å¾Œæ›´?°æ???    float LastUpdateTime;
+    // ?ï¿½å¾Œæ›´?ï¿½ï¿½X    float LastUpdateTime;
 
-    // æ±ºç??·å»?‚é?
+    // æ±ºï¿½Xï¿½å»?ï¿½ï¿½?
     float DecisionCooldown;
 
-    // ?¶å?æ±ºç?
+    // ?ï¿½ï¿½?æ±ºï¿½?
     FMingTacticalDecision CurrentDecision;
 };
 

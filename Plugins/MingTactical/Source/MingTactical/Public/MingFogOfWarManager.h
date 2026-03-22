@@ -1,22 +1,22 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingTacticalCombatSystem.h"
 #include "MingFogOfWarManager.generated.h"
 
-// è¦–é?é¡å?
+// è¦–ï¿½?é¡ï¿½?
 UENUM(BlueprintType)
 enum class EMingVisionType : uint8
 {
-    Normal,            // æ­?¸¸è¦–é?
-    Enhanced,          // å¢å¼·è¦–é?
-    NightVision,        // å¤œè?
-    Thermal,           // ?±æ???    Satellite,         // è¡›æ?è¦–é?
-    Aerial             // ç©ºä¸­?µå?
+    Normal,            // ï¿½?ï¿½ï¿½è¦–ï¿½?
+    Enhanced,          // å¢å¼·è¦–ï¿½?
+    NightVision,        // å¤œï¿½?
+    Thermal,           // ?ï¿½ï¿½X    Satellite,         // è¡›ï¿½?è¦–ï¿½?
+    Aerial             // ç©ºä¸­?ï¿½ï¿½?
 };
 
-// è¿·éœ§ç­‰ç?
+// è¿·éœ§ç­‰ï¿½?
 UENUM(BlueprintType)
 enum class EMingFogLevel : uint8
 {
@@ -27,69 +27,69 @@ enum class EMingFogLevel : uint8
     Complete           // å®Œå…¨è¿·éœ§
 };
 
-// ?°å½¢é¡å?
+// ?ï¿½å½¢é¡ï¿½?
 UENUM(BlueprintType)
 enum class EMingTerrainType : uint8
 {
-    Open,              // ?‹é??°å½¢
-    Forest,            // æ£®æ?
+    Open,              // ?ï¿½ï¿½Xï¿½å½¢
+    Forest,            // æ£®ï¿½?
     Mountain,          // å±±åœ°
-    Urban,             // ?å?
-    Desert,            // æ²™æ?
-    Water,             // æ°´å?
+    Urban,             // ?ï¿½ï¿½?
+    Desert,            // æ²™ï¿½?
+    Water,             // æ°´ï¿½?
     Swamp,             // æ²¼æ¾¤
-    Snow               // ?ªåœ°
+    Snow               // ?ï¿½åœ°
 };
 
-// ?µå??€??UENUM(BlueprintType)
+// ?ï¿½ï¿½Xï¿½XUENUM(BlueprintType)
 enum class EMingScoutingStatus : uint8
 {
-    Idle,              // ç©ºé?
-    Scouting,          // ?µå?ä¸?    Observing,         // è§€å¯Ÿä¸­
-    Reporting,          // ?±å?ä¸?    Hidden,            // ?±è”½
-    Detected           // è¢«ç™¼??};
+    Idle,              // ç©ºï¿½?
+    Scouting,          // ?ï¿½ï¿½?ï¿½?    Observing,         // è§€å¯Ÿä¸­
+    Reporting,          // ?ï¿½ï¿½?ï¿½?    Hidden,            // ?ï¿½è”½
+    Detected           // è¢«ç™¼X};
 
-// è¦–é??¸æ?
+// è¦–ï¿½Xï¿½ï¿½?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingVisionData
 {
     GENERATED_BODY()
 
-    // ?®ä?ID
+    // ?ï¿½ï¿½?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 UnitID;
 
-    // è¦–é??Šå?
+    // è¦–ï¿½Xï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float VisionRadius;
 
-    // è¦–é?é¡å?
+    // è¦–ï¿½?é¡ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingVisionType VisionType;
 
-    // è¦–é?è§’åº¦
+    // è¦–ï¿½?è§’åº¦
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float VisionAngle;
 
-    // è¦–é??ç??‚é?
+    // è¦–ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float VisionDuration;
 
-    // ?¯å¦?ºæ?çºŒè???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?ï¿½å¦?ï¿½ï¿½?çºŒï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsPersistent;
 
-    // è¦–é??´æ–°?“é?
+    // è¦–ï¿½Xï¿½æ–°?ï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float VisionUpdateInterval;
 
-    // ?¯è??®ä??—è¡¨
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½è¡¨
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> VisibleUnits;
 
-    // å·²åµå¯Ÿå???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // å·²åµå¯Ÿï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FVector> ScoutedAreas;
 
-    // ?€å¾Œæ›´?°æ???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?ï¿½å¾Œæ›´?ï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime LastUpdateTime;
 
     FMingVisionData()
@@ -107,43 +107,43 @@ struct MINGTACTICAL_API FMingVisionData
     }
 };
 
-// è¿·éœ§ç¶²æ ¼?¸æ?
+// è¿·éœ§ç¶²æ ¼?ï¿½ï¿½?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingFogGridCell
 {
     GENERATED_BODY()
 
-    // ç¶²æ ¼åº§æ?
+    // ç¶²æ ¼åº§ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FIntPoint GridPosition;
 
-    // è¿·éœ§ç­‰ç?
+    // è¿·éœ§ç­‰ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingFogLevel FogLevel;
 
-    // ?¯å¦è¢«åµå¯Ÿé?
+    // ?ï¿½å¦è¢«åµå¯Ÿï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsScouted;
 
-    // ?µå??‚é?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime ScoutedTime;
 
-    // ?µå??®ä?ID
+    // ?ï¿½ï¿½Xï¿½ï¿½?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ScoutingUnitID;
 
-    // ?°å½¢é¡å?
+    // ?ï¿½å½¢é¡ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingTerrainType TerrainType;
 
-    // ?°å½¢?®è”½??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?ï¿½å½¢?ï¿½è”½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TerrainOcclusion;
 
-    // å»ºç??©é®?½å€?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // å»ºï¿½Xï¿½é®?ï¿½ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float StructureOcclusion;
 
-    // ?€å¾Œå¯è¦‹æ???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?ï¿½å¾Œå¯è¦‹ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime LastVisibleTime;
 
     FMingFogGridCell()
@@ -160,51 +160,51 @@ struct MINGTACTICAL_API FMingFogGridCell
     }
 };
 
-// ?µå??±å?
+// ?ï¿½ï¿½Xï¿½ï¿½?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingScoutingReport
 {
     GENERATED_BODY()
 
-    // ?±å?ID
+    // ?ï¿½ï¿½?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ReportID;
 
-    // ?µå??®ä?ID
+    // ?ï¿½ï¿½Xï¿½ï¿½?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ScoutingUnitID;
 
-    // ?µå??‚é?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime ScoutingTime;
 
-    // ?µå?ä½ç½®
+    // ?ï¿½ï¿½?ä½ç½®
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector ScoutingLocation;
 
-    // ?µå?ç¯„å?
+    // ?ï¿½ï¿½?ç¯„ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ScoutingRadius;
 
-    // ?¼ç¾?„å–®ä½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?ï¿½ç¾?ï¿½å–®ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> DiscoveredUnits;
 
-    // ?¼ç¾?„å»ºç¯‰ç‰©
+    // ?ï¿½ç¾?ï¿½å»ºç¯‰ç‰©
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> DiscoveredStructures;
 
-    // ?°å½¢ä¿¡æ¯
+    // ?ï¿½å½¢ä¿¡æ¯
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, FString> TerrainInfo;
 
-    // å¨è?è©•ä¼°
+    // å¨ï¿½?è©•ä¼°
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ThreatAssessment;
 
-    // ?±å?è©³ç´°åº?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?ï¿½ï¿½?è©³ç´°ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ReportDetail;
 
-    // ?±å??¯é???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?ï¿½ï¿½Xï¿½ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ReportReliability;
 
     FMingScoutingReport()
@@ -223,7 +223,7 @@ struct MINGTACTICAL_API FMingScoutingReport
     }
 };
 
-// ?°çˆ­è¿·éœ§äº‹ä»¶å§”è?
+// ?ï¿½çˆ­è¿·éœ§äº‹ä»¶å§”ï¿½?
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFogOfWarUpdated, const FVector&, Location, EMingFogLevel, NewFogLevel};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVisionUpdated, int32, UnitID, const TArray<int32>&, NewVisibleUnits};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoutingCompleted, const FMingScoutingReport&, Report};
@@ -231,7 +231,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitSpotted, int32, SpottingUnit
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitLostSight, int32, LosingUnitID, int32, LostUnitID};
 
 /**
- * ?°çˆ­è¿·éœ§ç®¡ç??? * è² è²¬ç®¡ç??°çˆ­è¿·éœ§?è??å??µå?ç³»çµ±
+ * ?ï¿½çˆ­è¿·éœ§ç®¡ï¿½X * è² è²¬ç®¡ï¿½Xï¿½çˆ­è¿·éœ§?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?ç³»çµ±
  */
 UCLASS(ClassGroup = (Tactical), Blueprintable, BlueprintType)
 class MINGTACTICAL_API UMingFogOfWarManager : public UObject
@@ -241,74 +241,74 @@ class MINGTACTICAL_API UMingFogOfWarManager : public UObject
 public:
     UMingFogOfWarManager(};
 
-    // ?å??–æˆ°?­è¿·?§ç³»çµ?    UFUNCTION(BlueprintCallable, Category = "Fog of War")
+    // ?ï¿½ï¿½Xï¿½æˆ°?ï¿½è¿·?ï¿½ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool InitializeFogOfWarSystem(};
 
-    // è¨»å??®ä?è¦–é?
+    // è¨»ï¿½Xï¿½ï¿½?è¦–ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool RegisterUnitVision(int32 UnitID, const FMingVisionData& VisionData};
 
-    // ?´æ–°?®ä?è¦–é?
+    // ?ï¿½æ–°?ï¿½ï¿½?è¦–ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool UpdateUnitVision(int32 UnitID, const FVector& NewPosition};
 
-    // ?²å??®ä?è¦–é?
+    // ?ï¿½ï¿½Xï¿½ï¿½?è¦–ï¿½?
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     FMingVisionData GetUnitVision(int32 UnitID) const;
 
-    // ?²å??¯è??®ä?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     TArray<int32> GetVisibleUnits(int32 UnitID) const;
 
-    // æª¢æŸ¥?®ä??¯è???    UFUNCTION(BlueprintPure, Category = "Fog of War")
+    // æª¢æŸ¥?ï¿½ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintPure, Category = "Fog of War")
     bool IsUnitVisible(int32 ViewerID, int32 TargetID) const;
 
-    // ?´æ–°?°çˆ­è¿·éœ§
+    // ?ï¿½æ–°?ï¿½çˆ­è¿·éœ§
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     void UpdateFogOfWar(};
 
-    // ?²å?è¿·éœ§ç­‰ç?
+    // ?ï¿½ï¿½?è¿·éœ§ç­‰ï¿½?
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     EMingFogLevel GetFogLevel(const FVector& Location) const;
 
-    // è¨­ç½®?°å½¢é¡å?
+    // è¨­ç½®?ï¿½å½¢é¡ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool SetTerrainType(const FVector& Location, EMingTerrainType TerrainType};
 
-    // æ·»å?å»ºç??©é®??    UFUNCTION(BlueprintCallable, Category = "Fog of War")
+    // æ·»ï¿½?å»ºï¿½Xï¿½é®X    UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool AddStructureOcclusion(const FVector& Location, float OcclusionValue};
 
-    // ?·è??µå?ä»»å?
+    // ?ï¿½ï¿½Xï¿½ï¿½?ä»»ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool ExecuteScoutingMission(int32 UnitID, const FVector& TargetLocation, float Radius};
 
-    // ?²å??µå??±å?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     TArray<FMingScoutingReport> GetScoutingReports() const;
 
-    // è¨­ç½®?µå??€??    UFUNCTION(BlueprintCallable, Category = "Fog of War")
+    // è¨­ç½®?ï¿½ï¿½Xï¿½X    UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool SetScoutingStatus(int32 UnitID, EMingScoutingStatus Status};
 
-    // è¨ˆç?è¦–é?ç¯„å?
+    // è¨ˆï¿½?è¦–ï¿½?ç¯„ï¿½?
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     TArray<FVector> CalculateVisionArea(int32 UnitID) const;
 
-    // ?²å?è¿·éœ§ç¶²æ ¼
+    // ?ï¿½ï¿½?è¿·éœ§ç¶²æ ¼
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     TArray<FMingFogGridCell> GetFogGrid() const;
 
-    // ä¿å?è¿·éœ§?¸æ?
+    // ä¿ï¿½?è¿·éœ§?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool SaveFogOfWarData(};
 
-    // è¼‰å…¥è¿·éœ§?¸æ?
+    // è¼‰å…¥è¿·éœ§?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool LoadFogOfWarData(};
 
-    // æ¸…é™¤?€?‰è¿·?§æ•¸??    UFUNCTION(BlueprintCallable, Category = "Fog of War")
+    // æ¸…é™¤?ï¿½?ï¿½è¿·?ï¿½æ•¸X    UFUNCTION(BlueprintCallable, Category = "Fog of War")
     void ClearAllFogOfWarData(};
 
-    // äº‹ä»¶å§”è?
+    // äº‹ä»¶å§”ï¿½?
     UPROPERTY(BlueprintAssignable)
     FOnFogOfWarUpdated OnFogOfWarUpdated;
 
@@ -331,24 +331,24 @@ protected:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    // ?®ä?è¦–é??¸æ?åº?    UPROPERTY()
+    // ?ï¿½ï¿½?è¦–ï¿½Xï¿½ï¿½?ï¿½?    UPROPERTY()
     TMap<int32, FMingVisionData> UnitVisionDatabase;
 
     // è¿·éœ§ç¶²æ ¼
     UPROPERTY()
     TArray<FMingFogGridCell> FogGrid;
 
-    // ?°å½¢?¸æ?
+    // ?ï¿½å½¢?ï¿½ï¿½?
     UPROPERTY()
     TMap<FIntPoint, EMingTerrainType> TerrainGrid;
 
-    // å»ºç??©é®?½æ•¸??    UPROPERTY()
+    // å»ºï¿½Xï¿½é®?ï¿½æ•¸X    UPROPERTY()
     TMap<FIntPoint, float> StructureOcclusionGrid;
 
-    // ?µå??±å??¸æ?åº?    UPROPERTY()
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?ï¿½?    UPROPERTY()
     TArray<FMingScoutingReport> ScoutingReports;
 
-    // ?µå?ä»»å??Šå?
+    // ?ï¿½ï¿½?ä»»ï¿½Xï¿½ï¿½?
     UPROPERTY()
     TArray<int32> ActiveScoutingUnits;
 
@@ -362,63 +362,63 @@ protected:
     UPROPERTY()
     float CellSize;
 
-    // ?¯å¦å·²å?å§‹å?
+    // ?ï¿½å¦å·²ï¿½?å§‹ï¿½?
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // ?å??–è¿·?§ç¶²??    void InitializeFogGrid(};
+    // ?ï¿½ï¿½Xï¿½è¿·?ï¿½ç¶²X    void InitializeFogGrid(};
 
-    // ?´æ–°?®ä?è¦–é?
+    // ?ï¿½æ–°?ï¿½ï¿½?è¦–ï¿½?
     void UpdateUnitVisionInternal(int32 UnitID};
 
-    // è¨ˆç?è¦–é??§ç?ç¶²æ ¼
+    // è¨ˆï¿½?è¦–ï¿½Xï¿½ï¿½?ç¶²æ ¼
     TArray<FIntPoint> CalculateVisibleGridCells(int32 UnitID};
 
-    // ?´æ–°è¿·éœ§ç¶²æ ¼
+    // ?ï¿½æ–°è¿·éœ§ç¶²æ ¼
     void UpdateFogGridCell(int32 GridX, int32 GridY, EMingFogLevel NewFogLevel, bool bIsScouted, int32 ScoutingUnitID};
 
-    // æª¢æŸ¥?°å½¢?®è”½
+    // æª¢æŸ¥?ï¿½å½¢?ï¿½è”½
     bool CheckTerrainOcclusion(const FVector& From, const FVector& To};
 
-    // æª¢æŸ¥å»ºç??©é®??    bool CheckStructureOcclusion(const FVector& From, const FVector& To};
+    // æª¢æŸ¥å»ºï¿½Xï¿½é®X    bool CheckStructureOcclusion(const FVector& From, const FVector& To};
 
-    // è¨ˆç?è¦–é?ç·?    TArray<FVector> CalculateVisionLines(int32 UnitID};
+    // è¨ˆï¿½?è¦–ï¿½?ï¿½?    TArray<FVector> CalculateVisionLines(int32 UnitID};
 
-    // ?•ç??µå?ä»»å?
+    // ?ï¿½ï¿½Xï¿½ï¿½?ä»»ï¿½?
     void ProcessScoutingMission(int32 UnitID, float DeltaTime};
 
-    // ?Ÿæ??µå??±å?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     FMingScoutingReport GenerateScoutingReport(int32 UnitID, const FVector& Location, float Radius};
 
-    // ?´æ–°?°å½¢ä¿¡æ¯
+    // ?ï¿½æ–°?ï¿½å½¢ä¿¡æ¯
     void UpdateTerrainInfo(const FVector& Location};
 
-    // ä¸–ç?åº§æ?è½‰æ??ºç¶²?¼åº§æ¨?    FIntPoint WorldToGrid(const FVector& WorldPosition) const;
+    // ä¸–ï¿½?åº§ï¿½?è½‰ï¿½Xï¿½ç¶²?ï¿½åº§ï¿½?    FIntPoint WorldToGrid(const FVector& WorldPosition) const;
 
-    // ç¶²æ ¼åº§æ?è½‰æ??ºä??Œåº§æ¨?    FVector GridToWorld(const FIntPoint& GridPosition) const;
+    // ç¶²æ ¼åº§ï¿½?è½‰ï¿½Xï¿½ï¿½Xï¿½åº§ï¿½?    FVector GridToWorld(const FIntPoint& GridPosition) const;
 
-    // æª¢æŸ¥ç¶²æ ¼åº§æ??¯å¦?‰æ?
+    // æª¢æŸ¥ç¶²æ ¼åº§ï¿½Xï¿½å¦?ï¿½ï¿½?
     bool IsValidGridPosition(const FIntPoint& GridPosition) const;
 
-    // ?²å?ç¶²æ ¼ç´¢å?
+    // ?ï¿½ï¿½?ç¶²æ ¼ç´¢ï¿½?
     int32 GetGridIndex(int32 GridX, int32 GridY) const;
 
-    // è¨ˆç??©é??“è???    float CalculateDistance(const FVector& Point1, const FVector& Point2) const;
+    // è¨ˆï¿½Xï¿½ï¿½Xï¿½ï¿½X    float CalculateDistance(const FVector& Point1, const FVector& Point2) const;
 
-    // æª¢æŸ¥è¦–é??§ç??®ä?
+    // æª¢æŸ¥è¦–ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     void CheckUnitsInVision(int32 UnitID};
 
-    // ?•ç??®ä??¼ç¾/?ºå¤±
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ç¾/?ï¿½å¤±
     void ProcessUnitDiscovery(int32 ViewerID, int32 DiscoveredUnitID};
     void ProcessUnitLossOfSight(int32 ViewerID, int32 LostUnitID};
 
-    // é©—è?è¦–é??¸æ?
+    // é©—ï¿½?è¦–ï¿½Xï¿½ï¿½?
     bool ValidateVisionData(const FMingVisionData& VisionData) const;
 
-    // æ¸…é™¤?æ??„åµå¯Ÿä¿¡??    void CleanExpiredScoutingInfo(};
+    // æ¸…é™¤?ï¿½ï¿½Xï¿½åµå¯Ÿä¿¡X    void CleanExpiredScoutingInfo(};
 
-    // ?´æ–°è¿·éœ§æ¸²æ?
+    // ?ï¿½æ–°è¿·éœ§æ¸²ï¿½?
     void UpdateFogRendering(};
 };
 

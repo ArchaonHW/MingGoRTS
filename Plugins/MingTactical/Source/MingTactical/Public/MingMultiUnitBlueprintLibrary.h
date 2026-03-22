@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -8,7 +8,7 @@
 class AMingTacticalUnit;
 
 /**
- * ?®ä??¸ç??…è?çµæ? (?¨æ–¼ TArray<TArray<>> åµŒå?)
+ * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?çµï¿½? (?ï¿½æ–¼ TArray<TArray<>> åµŒï¿½?)
  */
 USTRUCT(BlueprintType)
 struct FUnitArrayWrapper
@@ -22,8 +22,8 @@ struct FUnitArrayWrapper
 };
 
 /**
- * å¤šå–®ä½è??–å‡½?¸åº«
- * ?ä??å??¯èª¿?¨ç?å¤šå–®ä½å?èª¿ç³»çµ±å??? */
+ * å¤šå–®ä½ï¿½Xï¿½å‡½?ï¿½åº«
+ * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½?å¤šå–®ä½ï¿½?èª¿ç³»çµ±ï¿½X */
 UCLASS()
 class MINGTACTICAL_API UMingMultiUnitBlueprintLibrary : public UBlueprintFunctionLibrary
 {
@@ -31,24 +31,24 @@ class MINGTACTICAL_API UMingMultiUnitBlueprintLibrary : public UBlueprintFunctio
 
 public:
     /**
-     * ?²å?å¤šå–®ä½å?èª¿å™¨
+     * ?ï¿½ï¿½?å¤šå–®ä½ï¿½?èª¿å™¨
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static AMingMultiUnitCoordinator* GetMultiUnitCoordinator(};
 
     /**
-     * ?å??–å??®ä??”èª¿??     */
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½èª¿X     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static void InitializeMultiUnitCoordinator(};
 
     /**
-     * ?œé?å¤šå–®ä½å?èª¿å™¨
+     * ?ï¿½ï¿½?å¤šå–®ä½ï¿½?èª¿å™¨
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static void ShutdownMultiUnitCoordinator(};
 
     /**
-     * ?µå»º?®ä??†ç?
+     * ?ï¿½å»º?ï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static FUnitGroup CreateUnitGroup(
@@ -59,7 +59,7 @@ public:
     };
 
     /**
-     * ?µå»º?®ä??†ç? (?¹é?)
+     * ?ï¿½å»º?ï¿½ï¿½Xï¿½ï¿½? (?ï¿½ï¿½?)
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Batch")
     static TArray<FUnitGroup> BatchCreateGroups(
@@ -69,56 +69,56 @@ public:
     };
 
     /**
-     * è§?•£?®ä??†ç?
+     * ï¿½?ï¿½ï¿½?ï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static bool DisbandUnitGroup(const FString& GroupID};
 
     /**
-     * ?²å??®ä??†ç?
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static FUnitGroup GetUnitGroup(const FString& GroupID};
 
     /**
-     * ?²å??€?‰å–®ä½å?çµ?     */
+     * ?ï¿½ï¿½Xï¿½?ï¿½å–®ä½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static TArray<FUnitGroup> GetAllUnitGroups(};
 
     /**
-     * ?²å??‡å?é¡å??„å?çµ?     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static TArray<FUnitGroup> GetGroupsByType(EUnitGroupType GroupType};
 
     /**
-     * ?²å?æ´»è??†ç?
+     * ?ï¿½ï¿½?æ´»ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static TArray<FUnitGroup> GetActiveGroups(};
 
     /**
-     * æ·»å??®ä??°å?çµ?     */
+     * æ·»ï¿½Xï¿½ï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static bool AddUnitToGroup(const FString& GroupID, AMingTacticalUnit* Unit};
 
     /**
-     * å¾å?çµ„ç§»?¤å–®ä½?     */
+     * å¾ï¿½?çµ„ç§»?ï¿½å–®ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static bool RemoveUnitFromGroup(const FString& GroupID, AMingTacticalUnit* Unit};
 
     /**
-     * è¨­ç½®?†ç??˜å???     */
+     * è¨­ç½®?ï¿½ï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static bool SetGroupLeader(const FString& GroupID, AMingTacticalUnit* Leader};
 
     /**
-     * ?¼å??”èª¿?½ä»¤
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½ä»¤
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static FCoordinationResult IssueCoordinatedCommand(const FCoordinatedCommand& Command};
 
     /**
-     * ?·è??”èª¿?»æ?
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static FCoordinationResult ExecuteCoordinatedAttack(
@@ -128,7 +128,7 @@ public:
     };
 
     /**
-     * ?·è??”èª¿?²ç¦¦
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½ç¦¦
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static FCoordinationResult ExecuteCoordinatedDefense(
@@ -138,7 +138,7 @@ public:
     };
 
     /**
-     * ?·è??”èª¿ç§»å?
+     * ?ï¿½ï¿½Xï¿½èª¿ç§»ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static FCoordinationResult ExecuteCoordinatedMovement(
@@ -148,7 +148,7 @@ public:
     };
 
     /**
-     * ?·è??”èª¿?¤é€€
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½é€€
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static FCoordinationResult ExecuteCoordinatedRetreat(
@@ -158,7 +158,7 @@ public:
     };
 
     /**
-     * ?·è??”èª¿?¯æ´
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½æ´
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static FCoordinationResult ExecuteCoordinatedSupport(
@@ -168,7 +168,7 @@ public:
     };
 
     /**
-     * ?·è??”èª¿ä¼æ?
+     * ?ï¿½ï¿½Xï¿½èª¿ä¼ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static FCoordinationResult ExecuteCoordinatedAmbush(
@@ -178,7 +178,7 @@ public:
     };
 
     /**
-     * ?·è??”èª¿?´ç¿¼?»æ?
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½ç¿¼?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static FCoordinationResult ExecuteCoordinatedFlanking(
@@ -188,7 +188,7 @@ public:
     };
 
     /**
-     * ?·è??”èª¿?…å?
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static FCoordinationResult ExecuteCoordinatedEncirclement(
@@ -198,7 +198,7 @@ public:
     };
 
     /**
-     * ?·è??”èª¿çªç ´
+     * ?ï¿½ï¿½Xï¿½èª¿çªç ´
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static FCoordinationResult ExecuteCoordinatedBreakthrough(
@@ -208,104 +208,104 @@ public:
     };
 
     /**
-     * ?–æ??”èª¿?½ä»¤
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½ä»¤
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static bool CancelCoordinatedCommand(const FString& CommandID};
 
     /**
-     * ?²å??”èª¿?½ä»¤
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½ä»¤
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static FCoordinatedCommand GetCoordinatedCommand(const FString& CommandID};
 
     /**
-     * ?²å??€?‰å?èª¿å‘½ä»?     */
+     * ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?èª¿å‘½ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static TArray<FCoordinatedCommand> GetAllCoordinatedCommands(};
 
     /**
-     * ?²å??·è?ä¸­ç??½ä»¤
+     * ?ï¿½ï¿½Xï¿½ï¿½?ä¸­ï¿½Xï¿½ä»¤
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static TArray<FCoordinatedCommand> GetExecutingCommands(};
 
     /**
-     * æª¢æŸ¥?”èª¿?€??     */
+     * æª¢æŸ¥?ï¿½èª¿?ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static FString GetCoordinationStatus(const FString& CommandID};
 
     /**
-     * ?²å??”èª¿çµ±è?
+     * ?ï¿½ï¿½Xï¿½èª¿çµ±ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static TMap<FString, int32> GetCoordinationStats_BPLibrary(};
 
     /**
-     * ?²å??”èª¿?§èƒ½?‡æ?
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½èƒ½?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static TMap<FString, float> GetCoordinationPerformanceMetrics(};
 
     /**
-     * ?Œæ­¥?®ä??€??     */
+     * ?ï¿½æ­¥?ï¿½ï¿½Xï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static bool SynchronizeUnitStates(const TArray<AMingTacticalUnit*>& Units};
 
     /**
-     * å»?’­æ¶ˆæ¯?°å?çµ?     */
+     * ï¿½?ï¿½ï¿½æ¶ˆæ¯?ï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static bool BroadcastToGroup(const FString& GroupID, const FString& Message};
 
     /**
-     * ä¸­ç¹¼æ¶ˆæ¯?°å?çµ?     */
+     * ä¸­ç¹¼æ¶ˆæ¯?ï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static bool RelayMessage(const FString& SourceGroupID, const FString& TargetGroupID, const FString& Message};
 
     /**
-     * å»ºç??šä¿¡??¥
+     * å»ºï¿½Xï¿½ä¿¡Xï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static bool EstablishCommunication(const FString& GroupAID, const FString& GroupBID, ECommunicationProtocol Protocol};
 
     /**
-     * ?·é??šä¿¡??¥
+     * ?ï¿½ï¿½Xï¿½ä¿¡Xï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
     static bool DisconnectCommunication(const FString& GroupAID, const FString& GroupBID};
 
     /**
-     * ?²å??šä¿¡è³ªé?
+     * ?ï¿½ï¿½Xï¿½ä¿¡è³ªï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static float GetCommunicationQuality(const FString& GroupAID, const FString& GroupBID};
 
     /**
-     * ?²å??†ç?é¡å??ç¨±
+     * ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static FString GetGroupTypeName(EUnitGroupType GroupType};
 
     /**
-     * ?²å??”èª¿?½ä»¤é¡å??ç¨±
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½ä»¤é¡ï¿½Xï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static FString GetCoordinatedCommandTypeName(ECoordinatedCommandType CommandType};
 
     /**
-     * ?²å??Œæ­¥é¡å??ç¨±
+     * ?ï¿½ï¿½Xï¿½æ­¥é¡ï¿½Xï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static FString GetSyncTypeName(ECoordinationSyncType SyncType};
 
     /**
-     * ?²å??šä¿¡?”è­°?ç¨±
+     * ?ï¿½ï¿½Xï¿½ä¿¡?ï¿½è­°?ï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     static FString GetProtocolName(ECommunicationProtocol Protocol};
 
     /**
-     * ?µå»º?”èª¿?½ä»¤
+     * ?ï¿½å»º?ï¿½èª¿?ï¿½ä»¤
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Creation")
     static FCoordinatedCommand CreateCoordinatedCommand(
@@ -317,35 +317,35 @@ public:
     };
 
     /**
-     * è¨­ç½®?½ä»¤?ƒæ•¸
+     * è¨­ç½®?ï¿½ä»¤?ï¿½æ•¸
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Creation")
     static FCoordinatedCommand SetCommandParameter(const FCoordinatedCommand& Command, const FString& ParameterName, const FString& ParameterValue};
 
     /**
-     * æ·»å??½ä»¤?æ®µ
+     * æ·»ï¿½Xï¿½ä»¤?ï¿½æ®µ
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Creation")
     static FCoordinatedCommand AddCommandPhase(const FCoordinatedCommand& Command, const FString& PhaseName};
 
     /**
-     * è¨­ç½®?·è??‚é?è¡?     */
+     * è¨­ç½®?ï¿½ï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Creation")
     static FCoordinatedCommand SetExecutionSchedule(const FCoordinatedCommand& Command, const TMap<FString, float>& Schedule};
 
     /**
-     * æ·»å??Œæ­¥é»?     */
+     * æ·»ï¿½Xï¿½æ­¥ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Creation")
     static FCoordinatedCommand AddSyncPoint(const FCoordinatedCommand& Command, const FString& SyncPoint};
 
     /**
-     * æ·»å?ä¾è³´?œä?
+     * æ·»ï¿½?ä¾è³´?ï¿½ï¿½?
      */
     UFUNCTION(Category = "Multi Unit Coordinator|Creation")
     static FCoordinatedCommand AddDependency(const FCoordinatedCommand& Command, const FString& Dependency};
 
     /**
-     * ?¹é??µå»º?†ç?
+     * ?ï¿½ï¿½Xï¿½å»º?ï¿½ï¿½?
      */
     static TArray<FUnitGroup> BatchCreateGroups(
         const TArray<FString>& GroupNames,
@@ -354,191 +354,191 @@ public:
     };
 
     /**
-     * ?¹é??·è??”èª¿?½ä»¤
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èª¿?ï¿½ä»¤
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Batch")
     static TArray<FCoordinationResult> BatchExecuteCommands(const TArray<FCoordinatedCommand>& Commands};
 
     /**
-     * ?¹é??–æ??½ä»¤
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ä»¤
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Batch")
     static TArray<bool> BatchCancelCommands(const TArray<FString>& CommandIDs};
 
     /**
-     * ?²å?ç³»çµ±?€??     */
+     * ?ï¿½ï¿½?ç³»çµ±?ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|System")
     static bool IsMultiUnitCoordinatorInitialized(};
 
     /**
-     * ?²å?ç³»çµ±?ˆæœ¬
+     * ?ï¿½ï¿½?ç³»çµ±?ï¿½æœ¬
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|System")
     static FString GetMultiUnitCoordinatorVersion(};
 
     /**
-     * ?²å??†ç?ç¸½æ•¸
+     * ?ï¿½ï¿½Xï¿½ï¿½?ç¸½æ•¸
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|System")
     static int32 GetTotalGroupCount(};
 
     /**
-     * ?²å?æ´»è??†ç??¸é?
+     * ?ï¿½ï¿½?æ´»ï¿½Xï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|System")
     static int32 GetActiveGroupCount(};
 
     /**
-     * ?²å??”èª¿?½ä»¤ç¸½æ•¸
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½ä»¤ç¸½æ•¸
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|System")
     static int32 GetTotalCommandCount(};
 
     /**
-     * ?²å??·è?ä¸­å‘½ä»¤æ•¸??     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?ä¸­å‘½ä»¤æ•¸X     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|System")
     static int32 GetExecutingCommandCount(};
 
     /**
-     * æª¢æŸ¥?†ç??¯å¦å­˜åœ¨
+     * æª¢æŸ¥?ï¿½ï¿½Xï¿½å¦å­˜åœ¨
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Info")
     static bool DoesGroupExist(const FString& GroupID};
 
     /**
-     * æª¢æŸ¥?†ç??¯å¦æ´»è?
+     * æª¢æŸ¥?ï¿½ï¿½Xï¿½å¦æ´»ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Info")
     static bool IsGroupActive(const FString& GroupID};
 
     /**
-     * æª¢æŸ¥?†ç??¯å¦?¯è§£??     */
+     * æª¢æŸ¥?ï¿½ï¿½Xï¿½å¦?ï¿½è§£X     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Info")
     static bool CanGroupDisband(const FString& GroupID};
 
     /**
-     * ?²å??†ç??®ä??¸é?
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Info")
     static int32 GetGroupUnitCount(const FString& GroupID};
 
     /**
-     * ?²å??†ç??˜å???     */
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Info")
     static AMingTacticalUnit* GetGroupLeader(const FString& GroupID};
 
     /**
-     * ?²å??†ç??€??     */
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Info")
     static FString GetGroupStatus(const FString& GroupID};
 
     /**
-     * æª¢æŸ¥?½ä»¤?¯å¦å­˜åœ¨
+     * æª¢æŸ¥?ï¿½ä»¤?ï¿½å¦å­˜åœ¨
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Info")
     static bool DoesCommandExist(const FString& CommandID};
 
     /**
-     * æª¢æŸ¥?½ä»¤?¯å¦æ­?œ¨?·è?
+     * æª¢æŸ¥?ï¿½ä»¤?ï¿½å¦ï¿½?ï¿½ï¿½?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Info")
     static bool IsCommandExecuting(const FString& CommandID};
 
     /**
-     * æª¢æŸ¥?½ä»¤?¯å¦å·²å???     */
+     * æª¢æŸ¥?ï¿½ä»¤?ï¿½å¦å·²ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Info")
     static bool IsCommandCompleted(const FString& CommandID};
 
     /**
-     * æª¢æŸ¥?½ä»¤?¯å¦å·²å?æ¶?     */
+     * æª¢æŸ¥?ï¿½ä»¤?ï¿½å¦å·²ï¿½?ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Info")
     static bool IsCommandCancelled(const FString& CommandID};
 
     /**
-     * æª¢æŸ¥?šä¿¡??¥?¯å¦å­˜åœ¨
+     * æª¢æŸ¥?ï¿½ä¿¡Xï¿½ï¿½?ï¿½å¦å­˜åœ¨
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Info")
     static bool DoesCommunicationExist(const FString& GroupAID, const FString& GroupBID};
 
     /**
-     * è¨ˆç??”èª¿?†æ•¸
+     * è¨ˆï¿½Xï¿½èª¿?ï¿½æ•¸
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Calculation")
     static float CalculateCoordinationScore(const TArray<FString>& GroupIDs, ECoordinatedCommandType CommandType};
 
     /**
-     * è¨ˆç??Œæ­¥ç²¾åº¦
+     * è¨ˆï¿½Xï¿½æ­¥ç²¾åº¦
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Calculation")
     static float CalculateSyncAccuracy(const FString& CommandID};
 
     /**
-     * è¨ˆç??šä¿¡å»¶é²
+     * è¨ˆï¿½Xï¿½ä¿¡å»¶é²
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Calculation")
     static float CalculateCommunicationDelay(const FString& SourceGroupID, const FString& TargetGroupID};
 
     /**
-     * è¨ˆç??†ç??”èª¿?½å?
+     * è¨ˆï¿½Xï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Calculation")
     static float CalculateGroupCoordinationCapability(const FString& GroupID};
 
     /**
-     * è¨ˆç??´é??”èª¿?ˆç?
+     * è¨ˆï¿½Xï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Calculation")
     static float CalculateOverallCoordinationEfficiency(};
 
     /**
-     * ?²å??€ä½³å?æ­¥é???     */
+     * ?ï¿½ï¿½Xï¿½ä½³ï¿½?æ­¥ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Optimization")
     static ECoordinationSyncType GetOptimalSyncType(const TArray<FString>& GroupIDs, ECoordinatedCommandType CommandType};
 
     /**
-     * ?²å??€ä½³é€šä¿¡?”è­°
+     * ?ï¿½ï¿½Xï¿½ä½³é€šä¿¡?ï¿½è­°
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Optimization")
     static ECommunicationProtocol GetOptimalCommunicationProtocol(const TArray<FString>& GroupIDs};
 
     /**
-     * ?²å??”èª¿å»ºè­°
+     * ?ï¿½ï¿½Xï¿½èª¿å»ºè­°
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|AI")
     static TArray<FString> GetCoordinationRecommendations(const TArray<FString>& GroupIDs};
 
     /**
-     * ?²å??°è?å»ºè­°
+     * ?ï¿½ï¿½Xï¿½ï¿½?å»ºè­°
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|AI")
     static TArray<FString> GetTacticalRecommendations(const TArray<FString>& GroupIDs, ECoordinatedCommandType CommandType};
 
     /**
-     * ?²å??»æ?å»ºè­°
+     * ?ï¿½ï¿½Xï¿½ï¿½?å»ºè­°
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|AI")
     static TArray<AMingTacticalUnit*> GetAttackTargets(const TArray<FString>& GroupIDs};
 
     /**
-     * ?²å??²ç¦¦å»ºè­°
+     * ?ï¿½ï¿½Xï¿½ç¦¦å»ºè­°
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|AI")
     static TArray<FVector> GetDefensePositions(const TArray<FString>& GroupIDs};
 
     /**
-     * ?²å?ç§»å?å»ºè­°
+     * ?ï¿½ï¿½?ç§»ï¿½?å»ºè­°
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|AI")
     static TArray<FVector> GetMovementTargets(const TArray<FString>& GroupIDs};
 
     /**
-     * ?²å??¤é€€å»ºè­°
+     * ?ï¿½ï¿½Xï¿½é€€å»ºè­°
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|AI")
     static TArray<FVector> GetRetreatPositions(const TArray<FString>& GroupIDs};
 
     /**
-     * æ¨¡æ“¬?”èª¿çµæ?
+     * æ¨¡æ“¬?ï¿½èª¿çµï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Simulation")
     static TArray<FCoordinationResult> SimulateCoordination(
@@ -549,7 +549,7 @@ public:
     };
 
     /**
-     * æ¨¡æ“¬?šä¿¡?ˆæ?
+     * æ¨¡æ“¬?ï¿½ä¿¡?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Simulation")
     static TArray<float> SimulateCommunicationQuality(
@@ -559,112 +559,112 @@ public:
     };
 
     /**
-     * ?²å??†ç?æ­·å²
+     * ?ï¿½ï¿½Xï¿½ï¿½?æ­·å²
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|History")
     static TArray<FString> GetGroupHistory(const FString& GroupID};
 
     /**
-     * ?²å??½ä»¤æ­·å²
+     * ?ï¿½ï¿½Xï¿½ä»¤æ­·å²
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|History")
     static TArray<FString> GetCommandHistory(};
 
     /**
-     * ?²å??šä¿¡æ­·å²
+     * ?ï¿½ï¿½Xï¿½ä¿¡æ­·å²
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|History")
     static TArray<FString> GetCommunicationHistory(};
 
     /**
-     * ?²å??”èª¿çµ±è?
+     * ?ï¿½ï¿½Xï¿½èª¿çµ±ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Statistics")
     static TMap<FString, int32> GetCoordinationStats_BPLibrary(};
 
     /**
-     * ?²å??†ç?çµ±è?
+     * ?ï¿½ï¿½Xï¿½ï¿½?çµ±ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Statistics")
     static TMap<FString, int32> GetGroupStatistics(};
 
     /**
-     * ?²å??šä¿¡çµ±è?
+     * ?ï¿½ï¿½Xï¿½ä¿¡çµ±ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Statistics")
     static TMap<FString, int32> GetCommunicationStatistics(};
 
     /**
-     * ?²å??§èƒ½çµ±è?
+     * ?ï¿½ï¿½Xï¿½èƒ½çµ±ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Statistics")
     static TMap<FString, float> GetPerformanceStatistics(};
 
     /**
-     * å°å‡º?”èª¿?¸æ?
+     * å°å‡º?ï¿½èª¿?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Export")
     static bool ExportCoordinationData(const FString& FilePath};
 
     /**
-     * å°å…¥?”èª¿?¸æ?
+     * å°å…¥?ï¿½èª¿?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Import")
     static bool ImportCoordinationData(const FString& FilePath};
 
     /**
-     * ?²å??†ç??±å?
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Report")
     static FString GenerateGroupReport(const FString& GroupID};
 
     /**
-     * ?²å??”èª¿?¨å ±??     */
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½å ±X     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Report")
     static FString GenerateCoordinatorReport(};
 
     /**
-     * ?²å??½ä»¤?±å?
+     * ?ï¿½ï¿½Xï¿½ä»¤?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Report")
     static FString GenerateCommandReport(const FString& CommandID};
 
     /**
-     * ?²å??”èª¿?†æ??±å?
+     * ?ï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Report")
     static FString GenerateCoordinationAnalysisReport(};
 
     /**
-     * ?ç½®å¤šå–®ä½å?èª¿å™¨
+     * ?ï¿½ç½®å¤šå–®ä½ï¿½?èª¿å™¨
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|System")
     static void ResetMultiUnitCoordinator(};
 
     /**
-     * æ¸…é™¤?€?‰å?çµ?     */
+     * æ¸…é™¤?ï¿½?ï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|System")
     static void ClearAllGroups(};
 
     /**
-     * æ¸…é™¤?€?‰å‘½ä»?     */
+     * æ¸…é™¤?ï¿½?ï¿½å‘½ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|System")
     static void ClearAllCommands(};
 
     /**
-     * æ¸…é™¤?€?‰é€šä¿¡??¥
+     * æ¸…é™¤?ï¿½?ï¿½é€šä¿¡Xï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|System")
     static void ClearAllCommunications(};
 
     /**
-     * ?™ä»½?”èª¿?¸æ?
+     * ?ï¿½ä»½?ï¿½èª¿?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|System")
     static bool BackupCoordinationData(const FString& BackupPath};
 
     /**
-     * ?¢å¾©?”èª¿?¸æ?
+     * ?ï¿½å¾©?ï¿½èª¿?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|System")
     static bool RestoreCoordinationData(const FString& BackupPath};

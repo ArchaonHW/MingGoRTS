@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
@@ -6,26 +6,26 @@
 #include "MingUnitMovementComponent.generated.h"
 
 /**
- * ç§»å??½ä»¤çµæ?
+ * ç§»ï¿½Xï¿½ä»¤çµï¿½?
  */
 USTRUCT(BlueprintType)
 struct FMoveCommand
 {
     GENERATED_BODY()
     
-    // ?®æ?ä½ç½®
+    // ?ï¿½ï¿½?ä½ç½®
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector TargetLocation;
     
-    // ?¯å¦?»æ?ç§»å?
+    // ?ï¿½å¦?ï¿½ï¿½?ç§»ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bAttackMove;
     
-    // ?¯å¦ä½¿ç”¨?Šå½¢
+    // ?ï¿½å¦ä½¿ç”¨?ï¿½å½¢
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bUseFormation;
     
-    // ?Šå½¢ä¸­ç?ä½ç½®
+    // ?ï¿½å½¢ä¸­ï¿½?ä½ç½®
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector FormationOffset;
     
@@ -40,8 +40,8 @@ struct FMoveCommand
 class AMingTacticalUnit;
 
 /**
- * ?®ä?ç§»å?çµ„ä»¶
- * ?•ç??®ä??„ç§»?•é?è¼¯å?è·¯å?å°èˆª
+ * ?ï¿½ï¿½?ç§»ï¿½?çµ„ä»¶
+ * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ç§»?ï¿½ï¿½?è¼¯ï¿½?è·¯ï¿½?å°èˆª
  */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MINGTACTICAL_API UMingUnitMovementComponent : public UActorComponent
@@ -54,37 +54,37 @@ public:
     virtual void BeginPlay() override;
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-    // ç§»å??½ä»¤
+    // ç§»ï¿½Xï¿½ä»¤
     UFUNCTION(BlueprintCallable, Category = "Movement")
     void MoveToLocation(const FVector& TargetLocation, bool bAttackMove = false};
 
     UFUNCTION(BlueprintCallable, Category = "Movement")
     void MoveToLocationWithFormation(const FVector& TargetLocation, const FVector& FormationOffset};
 
-    // ?œæ­¢ç§»å?
+    // ?ï¿½æ­¢ç§»ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Movement")
     void StopMovement(};
 
-    // ?¯å¦æ­?œ¨ç§»å?
+    // ?ï¿½å¦ï¿½?ï¿½ï¿½ç§»ï¿½?
     UFUNCTION(BlueprintPure, Category = "Movement")
     bool IsMoving() const { return bIsMoving; }
 
-    // ?²å??¶å??Ÿåº¦
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½åº¦
     UFUNCTION(BlueprintPure, Category = "Movement")
     float GetCurrentSpeed() const;
 
-    // è¨­ç½®ç§»å??Ÿåº¦
+    // è¨­ç½®ç§»ï¿½Xï¿½åº¦
     UFUNCTION(BlueprintCallable, Category = "Movement")
     void SetMoveSpeed(float NewSpeed};
 
-    // è·¯å??¸é?
+    // è·¯ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintPure, Category = "Movement")
     bool HasValidPath() const { return CurrentPathPoints.Num() > 0; }
 
     UFUNCTION(BlueprintPure, Category = "Movement")
     FVector GetCurrentTargetLocation() const;
 
-    // ?‹è??¸é?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Movement")
     void RotateTowards(const FVector& TargetDirection, float DeltaTime};
 
@@ -92,68 +92,68 @@ public:
     void SetDesiredRotation(const FRotator& TargetRotation};
 
 protected:
-    // ?æ??…å–®ä½?    UPROPERTY()
+    // ?ï¿½ï¿½Xï¿½å–®ï¿½?    UPROPERTY()
     TObjectPtr<AMingTacticalUnit> OwnerUnit;
 
-    // ?¶å?ç§»å??€??    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+    // ?ï¿½ï¿½?ç§»ï¿½Xï¿½X    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
     bool bIsMoving;
 
-    // ç§»å??Ÿåº¦
+    // ç§»ï¿½Xï¿½åº¦
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
     float MoveSpeed;
 
-    // ?‹è??Ÿåº¦
+    // ?ï¿½ï¿½Xï¿½åº¦
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
     float RotationSpeed;
 
-    // ?œæ­¢è·é›¢ (?°é??®æ??„è??¢é–¾??
+    // ?ï¿½æ­¢è·é›¢ (?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½é–¾X
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
     float AcceptanceRadius;
 
-    // ?¶å?è·¯å?é»?    UPROPERTY()
+    // ?ï¿½ï¿½?è·¯ï¿½?ï¿½?    UPROPERTY()
     TArray<FVector> CurrentPathPoints;
 
-    // ?¶å?è·¯å?ç´¢å?
+    // ?ï¿½ï¿½?è·¯ï¿½?ç´¢ï¿½?
     UPROPERTY()
     int32 CurrentPathIndex;
 
-    // ?¶å??®æ?ä½ç½®
+    // ?ï¿½ï¿½Xï¿½ï¿½?ä½ç½®
     UPROPERTY()
     FVector CurrentTargetLocation;
 
-    // ?®æ??‹è?
+    // ?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY()
     FRotator DesiredRotation;
 
-    // ?¯å¦?»æ?ç§»å?
+    // ?ï¿½å¦?ï¿½ï¿½?ç§»ï¿½?
     UPROPERTY()
     bool bIsAttackMove;
 
-    // ?Šå½¢?ç§»
+    // ?ï¿½å½¢?ï¿½ç§»
     UPROPERTY()
     FVector FormationOffset;
 
-    // è·¯å?è«‹æ?ID
+    // è·¯ï¿½?è«‹ï¿½?ID
     uint32 PathRequestId;
 
     // å°èˆªç³»çµ±å¼•ç”¨
     class UNavigationSystemV1* NavSystem;
 
-    // è«‹æ?è·¯å?
+    // è«‹ï¿½?è·¯ï¿½?
     void RequestPath(const FVector& StartLocation, const FVector& EndLocation};
 
-    // è·¯å??¥è©¢?èª¿
+    // è·¯ï¿½Xï¿½è©¢?ï¿½èª¿
     void OnPathFound(uint32 InPathRequestId, ENavigationQueryResult::Type Result, FNavPathSharedPtr Path};
 
-    // æ²¿è?è·¯å?ç§»å?
+    // æ²¿ï¿½?è·¯ï¿½?ç§»ï¿½?
     void FollowPath(float DeltaTime};
 
-    // å¹³æ??‹è?
+    // å¹³ï¿½Xï¿½ï¿½?
     void SmoothRotateTowards(const FVector& Direction, float DeltaTime};
 
-    // æª¢æŸ¥?¯å¦?°é??®æ?
+    // æª¢æŸ¥?ï¿½å¦?ï¿½ï¿½Xï¿½ï¿½?
     bool HasReachedTarget() const;
 
-    // ?´æ–°ç§»å??€??    void UpdateMovementState(};
+    // ?ï¿½æ–°ç§»ï¿½Xï¿½X    void UpdateMovementState(};
 };
 

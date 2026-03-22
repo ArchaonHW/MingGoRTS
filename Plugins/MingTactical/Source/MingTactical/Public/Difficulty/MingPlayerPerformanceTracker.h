@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,8 +6,8 @@
 #include "MingPlayerPerformanceTracker.generated.h"
 
 /**
- * ?�家表現?��?�?| Player Performance Data Point
- * 存儲?�個�??��??�家表現?��? | Store player performance data at a single time point
+ * ?�家表現?��?�?| Player Performance Data Point
+ * 存儲?�個�X��X�家表現?��? | Store player performance data at a single time point
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FPlayerPerformanceDataPoint
@@ -49,16 +49,16 @@ struct MINGTACTICAL_API FPlayerPerformanceDataPoint
         : Timestamp(InTimestamp)
     {}
 
-    /** 計�?綜�?表現?�數 0-100 | Calculate overall performance score 0-100 */
+    /** 計�?綜�?表現?�數 0-100 | Calculate overall performance score 0-100 */
     float CalculatePerformanceScore() const;
 
-    /** 驗�??��??��???| Validate data validity */
+    /** 驗�X��X��X| Validate data validity */
     bool IsValid() const;
 };
 
 /**
- * ?�家表现统计
- * ?��?多个?�据?��?统计信息
+ * ?�家表现统计
+ * ?��?多个?�据?��?统计信息
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FPlayerPerformanceStats
@@ -87,10 +87,10 @@ struct MINGTACTICAL_API FPlayerPerformanceStats
 };
 
 /**
- * ?�家表现追踪?? * 实时?�控?��?估玩家�??�水�? * 
- * ?�能�? * - ?��??�失?�追�? * - 资�??��??��?追踪
- * - 任务完�??�间追踪
- * - 综�??�?��??�计�? */
+ * ?�家表现追踪X * 实时?�控?��?估玩家�X�水�? * 
+ * ?�能�? * - ?��X�失?�追�? * - 资�X��X��?追踪
+ * - 任务完�X�间追踪
+ * - 综�X�?��X�计�? */
 UCLASS()
 class MINGTACTICAL_API UMingPlayerPerformanceTracker : public UObject
 {
@@ -103,73 +103,73 @@ public:
     virtual void Shutdown(};
     void Tick(float DeltaTime};
 
-    // ==== 事件追踪?�口 ====
+    // ==== 事件追踪?�口 ====
 
-    /** 记�??��??�失事件 */
+    /** 记�X��X�失事件 */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     void RecordUnitLost(int32 UnitId, int32 UnitType, float UnitValue};
 
-    /** 记�??��??�建事件 */
+    /** 记�X��X�建事件 */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     void RecordUnitCreated(int32 UnitId, int32 UnitType, float UnitCost};
 
-    /** 记�?资�??��?事件 */
+    /** 记�?资�X��?事件 */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     void RecordResourceCollected(float ResourceType, float Amount, float ExpectedRate};
 
-    /** 记�?任务开�?*/
+    /** 记�?任务开�?*/
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     void RecordMissionStarted(const FString& MissionId, float ExpectedDuration};
 
-    /** 记�?任务完�? */
+    /** 记�?任务完�? */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     void RecordMissionCompleted(const FString& MissionId, bool bSuccess, float CompletionTime};
 
-    /** 记�??��?结�? */
+    /** 记�X��?结�? */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     void RecordCombatResult(int32 EnemiesKilled, int32 AlliesLost, float DamageDealt, float DamageTaken};
 
-    // ==== ?�能评估?�口 ====
+    // ==== ?�能评估?�口 ====
 
-    /** ?��?当�?表现统计 */
+    /** ?��?当�?表现统计 */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     FPlayerPerformanceStats GetCurrentStats() const { return CurrentStats; }
 
-    /** ?��??�?��???0-100 */
+    /** ?��X�?��X0-100 */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     float GetSkillIndex() const { return CurrentStats.AveragePerformanceScore; }
 
-    /** ?��??�家强项?�表 */
+    /** ?��X�家强项?�表 */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     TArray<FString> GetPlayerStrengths() const;
 
-    /** ?��??�家弱项?�表 */
+    /** ?��X�家弱项?�表 */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     TArray<FString> GetPlayerWeaknesses() const;
 
-    /** ?��??�度调整建议 */
+    /** ?��X�度调整建议 */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     EDifficultyChangeDirection GetDifficultyRecommendation() const;
 
-    /** ?�否累积了足够数??*/
+    /** ?�否累积了足够数X*/
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     bool HasSufficientData(int32 MinSamples = 5) const;
 
-    // ==== ?�置?�口 ====
+    // ==== ?�置?�口 ====
 
-    /** 设置评估?��?（�?�?*/
+    /** 设置评估?��?（�?�?*/
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     void SetEvaluationInterval(float IntervalSeconds};
 
-    /** 设置?�据保�??��?上�? */
+    /** 设置?�据保�X��?上�? */
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     void SetMaxDataPoints(int32 MaxPoints};
 
-    /** ?�置?�?�追踪数??*/
+    /** ?�置?�?�追踪数X*/
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking")
     void ResetTracking(};
 
-    // ==== 调�??�口 ====
+    // ==== 调�X�口 ====
 
     UFUNCTION(BlueprintCallable, Category = "Performance Tracking|Debug")
     void PrintDebugInfo(};
@@ -178,19 +178,19 @@ public:
     FString GetDebugString() const;
 
 protected:
-    /** 定�?评估表现 */
+    /** 定�?评估表现 */
     void EvaluatePerformance(};
 
-    /** 计�?趋势?��? */
+    /** 计�?趋势?��? */
     float CalculateTrendSlope() const;
 
-    /** 计�?波动??*/
+    /** 计�?波动X*/
     float CalculateVolatility() const;
 
-    /** 确�??��?评级 */
+    /** 确�X��?评级 */
     EPlayerPerformanceRating DetermineRating(float Score) const;
 
-    /** 订�??��?事件 */
+    /** 订�X��?事件 */
     void SetupEventSubscriptions(};
     void CleanupEventSubscriptions(};
 
@@ -203,19 +203,19 @@ private:
     TArray<FPlayerPerformanceDataPoint> DataPoints;
     FPlayerPerformanceStats CurrentStats;
 
-    // 当�?追踪?��?    int32 CurrentTotalUnits;
+    // 当�?追踪?��?    int32 CurrentTotalUnits;
     int32 CurrentUnitsLost;
     float CurrentResourcesCollected;
     float CurrentExpectedResources;
     TMap<FString, float> ActiveMissions;
 
-    // ?��?统计
+    // ?��?统计
     int32 SessionEnemiesKilled;
     int32 SessionAlliesLost;
     float SessionDamageDealt;
     float SessionDamageTaken;
 
-    // ?�史?��??��?    float BestPerformanceScore;
+    // ?�史?��X��?    float BestPerformanceScore;
     float WorstPerformanceScore;
 };
 

@@ -1,105 +1,105 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingTacticalCombatSystem.h"
 #include "MingCombatDamageManager.generated.h"
 
-// ?�害類�?
+// ?�害類�?
 UENUM(BlueprintType)
 enum class EMingDamageType : uint8
 {
-    Kinetic,           // ?�能?�害 (槍�??�砲�?
-    Explosive,         // ?�炸?�害 (?�榴彈、炸�?
-    Fire,              // ?�焰?�害
-    Chemical,          // ?�學?�害
-    Psychological,      // 心�??�害
-    Environmental      // ?��??�害
+    Kinetic,           // ?�能?�害 (槍�X�砲�?
+    Explosive,         // ?�炸?�害 (?�榴彈、炸�?
+    Fire,              // ?�焰?�害
+    Chemical,          // ?�學?�害
+    Psychological,      // 心�X�害
+    Environmental      // ?��X�害
 };
 
-// 裝�?類�?
+// 裝�?類�?
 UENUM(BlueprintType)
 enum class EMingEquipmentType : uint8
 {
-    Rifle,             // 步�?
-    MachineGun,         // 機�?
-    Artillery,         // ?�兵
-    Mortar,            // 迫�???    Grenade,           // ?�榴�?    Bayonet,           // ?��?
-    Tank,              // ?��?
-    Aircraft,          // 飛�?
-    NavalGun,          // ?�砲
+    Rifle,             // 步�?
+    MachineGun,         // 機�?
+    Artillery,         // ?�兵
+    Mortar,            // 迫�X    Grenade,           // ?�榴�?    Bayonet,           // ?��?
+    Tank,              // ?��?
+    Aircraft,          // 飛�?
+    NavalGun,          // ?�砲
     Melee              // 近戰武器
 };
 
-// 補給類�?
+// 補給類�?
 UENUM(BlueprintType)
 enum class EMingSupplyType : uint8
 {
     Ammunition,        // 彈藥
-    Fuel,              // ?��?
-    Food,              // 糧�?
-    Medical,           // ?��??��?
-    Equipment,         // 裝�?
-    Reinforcements     // 增援?��?
+    Fuel,              // ?��?
+    Food,              // 糧�?
+    Medical,           // ?��X��?
+    Equipment,         // 裝�?
+    Reinforcements     // 增援?��?
 };
 
-// ?�害計�??�數
+// ?�害計�X�數
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingDamageCalculation
 {
     GENERATED_BODY()
 
-    // ?��??�害
+    // ?��X�害
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float BaseDamage;
 
-    // ?�害類�?
+    // ?�害類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingDamageType DamageType;
 
-    // 裝�?類�?
+    // 裝�?類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEquipmentType EquipmentType;
 
-    // ?��?距離
+    // ?��?距離
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float AttackDistance;
 
-    // ?�中?��?
+    // ?�中?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HitLocation;
 
-    // 護甲??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 護甲X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ArmorValue;
 
-    // 護甲穿�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 護甲穿�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ArmorPenetration;
 
-    // ?��?概�?
+    // ?��?概�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CriticalChance;
 
-    // ?��??�數
+    // ?��X�數
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CriticalMultiplier;
 
-    // ?�害衰�?係數
+    // ?�害衰�?係數
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float DamageFalloff;
 
-    // 彈藥類�?修正
+    // 彈藥類�?修正
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float AmmoTypeModifier;
 
-    // ?�形影響?��?
+    // ?�形影響?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TerrainModifier;
 
-    // 天氣影響?��?
+    // 天氣影響?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float WeatherModifier;
 
-    // 士氣影響?��?
+    // 士氣影響?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MoraleModifier;
 
@@ -122,41 +122,41 @@ struct MINGTACTICAL_API FMingDamageCalculation
     }
 };
 
-// 補給?��?
+// 補給?��?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingSupplyData
 {
     GENERATED_BODY()
 
-    // 補給類�?
+    // 補給類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingSupplyType SupplyType;
 
-    // ?��??��?
+    // ?��X��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CurrentAmount;
 
-    // ?�大容??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�大容X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MaxCapacity;
 
-    // 消耗速�?
+    // 消耗速�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ConsumptionRate;
 
-    // 補給?��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 補給?��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SupplyPriority;
 
-    // 補給來�?
+    // 補給來�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SupplySourceID;
 
-    // ?�後�?給�???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�後�?給�X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime LastSupplyTime;
 
-    // 補給?�??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 補給?�X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString SupplyStatus;
 
-    // 緊急�?給閾??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 緊急�?給閾X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float EmergencyThreshold;
 
     FMingSupplyData()
@@ -173,56 +173,56 @@ struct MINGTACTICAL_API FMingSupplyData
     }
 };
 
-// 後勤車�??��?
+// 後勤車�X��?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingLogisticsConvoy
 {
     GENERATED_BODY()
 
-    // 車�?ID
+    // 車�?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ConvoyID;
 
-    // 車�??�稱
+    // 車�X�稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConvoyName;
 
-    // 車�?類�?
+    // 車�?類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConvoyType;
 
-    // ?��?位置
+    // ?��?位置
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector CurrentPosition;
 
-    // ?��?位置
+    // ?��?位置
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector TargetPosition;
 
-    // 補給?��?
+    // 補給?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingSupplyData> Cargo;
 
-    // 移�??�度
+    // 移�X�度
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MovementSpeed;
 
-    // 護�?等�?
+    // 護�?等�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ProtectionLevel;
 
-    // ?�發?��?
+    // ?�發?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime DepartureTime;
 
-    // ?��??��??��?
+    // ?��X��X��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime EstimatedArrivalTime;
 
-    // 車�??�??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 車�X�X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConvoyStatus;
 
-    // 護�??��?
+    // 護�X��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> EscortUnits;
 
@@ -248,55 +248,55 @@ struct MINGTACTICAL_API FMingLogisticsConvoy
     }
 };
 
-// ?�害結�?
+// ?�害結�?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingDamageResult
 {
     GENERATED_BODY()
 
-    // ?��??�ID
+    // ?��X�ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 AttackerID;
 
-    // ?�禦?�ID
+    // ?�禦?�ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 DefenderID;
 
-    // 實�??�害
+    // 實�X�害
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ActualDamage;
 
-    // ?��??�害
+    // ?��X�害
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float BaseDamage;
 
-    // ?�害類�?
+    // ?�害類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingDamageType DamageType;
 
-    // ?�否?��?
+    // ?�否?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsCriticalHit;
 
-    // ?�否穿透護??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�否穿透護X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bArmorPenetrated;
 
-    // ?�害?��?
+    // ?�害?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DamageLocation;
 
-    // ?�害計�?詳�?
+    // ?�害計�?詳�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DamageCalculationDetails;
 
-    // 補給消�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 補給消�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<EMingSupplyType, float> SupplyConsumption;
 
-    // ?�鬥?��?
+    // ?�鬥?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime CombatTime;
 
-    // ?�鬥位置
+    // ?�鬥位置
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector CombatLocation;
 
@@ -317,7 +317,7 @@ struct MINGTACTICAL_API FMingDamageResult
     }
 };
 
-// ?�鬥?�害事件委�?
+// ?�鬥?�害事件委�?
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDamageCalculated, const FMingDamageResult&, DamageResult};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSupplyConsumed, int32, UnitID, const TMap<EMingSupplyType, float>&, ConsumedSupplies};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSupplyDelivered, const FMingLogisticsConvoy&, Convoy};
@@ -325,7 +325,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSupplyStatusChanged, int32, Un
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnConvoyStatusChanged, int32, ConvoyID, FString, NewStatus};
 
 /**
- * ?�鬥?�害管�??? * 負責計�??�實?�戰鬥傷害�?管�?後勤補給系統
+ * ?�鬥?�害管�X * 負責計�X�實?�戰鬥傷害�?管�?後勤補給系統
  */
 UCLASS(ClassGroup = (Tactical), Blueprintable, BlueprintType)
 class MINGTACTICAL_API UMingCombatDamageManager : public UObject
@@ -335,66 +335,66 @@ class MINGTACTICAL_API UMingCombatDamageManager : public UObject
 public:
     UMingCombatDamageManager(};
 
-    // ?��??�傷害系�?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
+    // ?��X�傷害系�?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool InitializeDamageSystem(};
 
-    // 計�??�鬥?�害
+    // 計�X�鬥?�害
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     FMingDamageResult CalculateCombatDamage(const FMingDamageCalculation& DamageCalc};
 
-    // 註�??��?補給
+    // 註�X��?補給
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool RegisterUnitSupply(int32 UnitID, const FMingSupplyData& SupplyData};
 
-    // ?�新?��?補給
+    // ?�新?��?補給
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool UpdateUnitSupply(int32 UnitID, EMingSupplyType SupplyType, float Amount};
 
-    // ?��??��?補給
+    // ?��X��?補給
     UFUNCTION(BlueprintPure, Category = "Combat Damage")
     FMingSupplyData GetUnitSupply(int32 UnitID, EMingSupplyType SupplyType) const;
 
-    // 消耗�?�?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
+    // 消耗�?�?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool ConsumeSupply(int32 UnitID, EMingSupplyType SupplyType, float Amount};
 
-    // ?�建後勤車�?
+    // ?�建後勤車�?
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     int32 CreateLogisticsConvoy(const TArray<FMingSupplyData>& Cargo, const FVector& TargetLocation};
 
-    // 派遣後勤車�?
+    // 派遣後勤車�?
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool DispatchConvoy(int32 ConvoyID};
 
-    // ?��?車�?信息
+    // ?��?車�?信息
     UFUNCTION(BlueprintPure, Category = "Combat Damage")
     FMingLogisticsConvoy GetConvoyInfo(int32 ConvoyID) const;
 
-    // ?�新車�?位置
+    // ?�新車�?位置
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool UpdateConvoyPosition(int32 ConvoyID, const FVector& NewPosition};
 
-    // ?��?補給?��?    UFUNCTION(BlueprintPure, Category = "Combat Damage")
+    // ?��?補給?��?    UFUNCTION(BlueprintPure, Category = "Combat Damage")
     TArray<FMingSupplyData> GetSupplyDemands() const;
 
-    // 計�?補給?��?�?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
+    // 計�?補給?��?�?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     int32 CalculateSupplyPriority(int32 UnitID, EMingSupplyType SupplyType};
 
-    // ?��??�害統�?
+    // ?��X�害統�?
     UFUNCTION(BlueprintPure, Category = "Combat Damage")
     TMap<EMingDamageType, int32> GetDamageStatistics() const;
 
-    // 保�??�害?��?
+    // 保�X�害?��?
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool SaveDamageData(};
 
-    // 載入?�害?��?
+    // 載入?�害?��?
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     bool LoadDamageData(};
 
-    // 清除?�?�傷害數??    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
+    // 清除?�?�傷害數X    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
     void ClearAllDamageData(};
 
-    // 事件委�?
+    // 事件委�?
     UPROPERTY(BlueprintAssignable)
     FOnDamageCalculated OnDamageCalculated;
 
@@ -417,86 +417,86 @@ protected:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    // ?��?補給?��?�?- 注�?：�?�?TMap 不支??UPROPERTY
+    // ?��?補給?��?�?- 注�?：�?�?TMap 不支XUPROPERTY
     TMap<int32, TMap<EMingSupplyType, FMingSupplyData>> UnitSupplyDatabase;
 
-    // 後勤車�??��?�?    UPROPERTY()
+    // 後勤車�X��?�?    UPROPERTY()
     TMap<int32, FMingLogisticsConvoy> ConvoyDatabase;
 
-    // ?�害歷史記�?
+    // ?�害歷史記�?
     UPROPERTY()
     TArray<FMingDamageResult> DamageHistory;
 
-    // 裝�??�害�?    UPROPERTY()
+    // 裝�X�害�?    UPROPERTY()
     TMap<EMingEquipmentType, float> EquipmentDamageTable;
 
-    // 彈藥?�害修正�?    UPROPERTY()
+    // 彈藥?�害修正�?    UPROPERTY()
     TMap<FString, float> AmmoDamageModifiers;
 
-    // ?�形?�害修正�?    UPROPERTY()
+    // ?�形?�害修正�?    UPROPERTY()
     TMap<FString, float> TerrainDamageModifiers;
 
-    // 天氣?�害修正�?    UPROPERTY()
+    // 天氣?�害修正�?    UPROPERTY()
     TMap<FString, float> WeatherDamageModifiers;
 
-    // ?�否已�?始�?
+    // ?�否已�?始�?
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // 載入?�設?�害�?    void LoadDefaultDamageTables(};
+    // 載入?�設?�害�?    void LoadDefaultDamageTables(};
 
-    // 計�??��??�害
+    // 計�X��X�害
     float CalculateBaseDamage(const FMingDamageCalculation& DamageCalc) const;
 
-    // 計�?護甲減傷
+    // 計�?護甲減傷
     float CalculateArmorReduction(const FMingDamageCalculation& DamageCalc) const;
 
-    // 計�?距離衰�?
+    // 計�?距離衰�?
     float CalculateDistanceFalloff(const FMingDamageCalculation& DamageCalc) const;
 
-    // 計�??��??�害
+    // 計�X��X�害
     float CalculateCriticalDamage(float BaseDamage, const FMingDamageCalculation& DamageCalc) const;
 
-    // 計�??�形影響
+    // 計�X�形影響
     float CalculateTerrainEffect(const FMingDamageCalculation& DamageCalc) const;
 
-    // 計�?天氣影響
+    // 計�?天氣影響
     float CalculateWeatherEffect(const FMingDamageCalculation& DamageCalc) const;
 
-    // 計�?士氣影響
+    // 計�?士氣影響
     float CalculateMoraleEffect(const FMingDamageCalculation& DamageCalc) const;
 
-    // 計�?補給消�?    TMap<EMingSupplyType, float> CalculateSupplyConsumption(const FMingDamageCalculation& DamageCalc) const;
+    // 計�?補給消�?    TMap<EMingSupplyType, float> CalculateSupplyConsumption(const FMingDamageCalculation& DamageCalc) const;
 
-    // ?�新?��??�能
+    // ?�新?��X�能
     void UpdateUnitPerformance(int32 UnitID, const TMap<EMingSupplyType, FMingSupplyData>& Supplies};
 
-    // ?��?後勤車�?移�?
+    // ?��?後勤車�?移�?
     void ProcessConvoyMovement(float DeltaTime};
 
-    // 檢查補給?��?    void CheckSupplyDemands(};
+    // 檢查補給?��?    void CheckSupplyDemands(};
 
-    // 計�?車�?風險
+    // 計�?車�?風險
     float CalculateConvoyRisk(const FMingLogisticsConvoy& Convoy) const;
 
-    // ?��?補給路�?
+    // ?��?補給路�?
     TArray<FVector> GenerateSupplyRoute(const FVector& Start, const FVector& End) const;
 
-    // 驗�??�害計�?
+    // 驗�X�害計�?
     bool ValidateDamageCalculation(const FMingDamageCalculation& DamageCalc) const;
 
-    // 驗�?補給?��?
+    // 驗�?補給?��?
     bool ValidateSupplyData(const FMingSupplyData& SupplyData) const;
 
-    // 計�??�害?��?
+    // 計�X�害?��?
     FString CalculateHitLocation(const FVector& ImpactPoint) const;
 
-    // ?��?補給緊急�?�?    void HandleSupplyEmergency(int32 UnitID, EMingSupplyType SupplyType};
+    // ?��?補給緊急�?�?    void HandleSupplyEmergency(int32 UnitID, EMingSupplyType SupplyType};
 
-    // ?�新車�??�??    void UpdateConvoyStatus(int32 ConvoyID, const FString& NewStatus};
+    // ?�新車�X�X    void UpdateConvoyStatus(int32 ConvoyID, const FString& NewStatus};
 
-    // 計�?補給?��?
+    // 計�?補給?��?
     float CalculateSupplyEfficiency(int32 UnitID) const;
 };
 

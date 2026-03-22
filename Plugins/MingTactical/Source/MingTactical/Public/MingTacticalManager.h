@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingTacticalManager.generated.h"
 
 /**
- * ?°è?å±¤ç®¡?†å™¨
- * ç®¡ç?å¤§è?æ¨¡æˆ°é¬¥å??®ä??§åˆ¶
+ * ?ï¿½ï¿½?å±¤ç®¡?ï¿½å™¨
+ * ç®¡ï¿½?å¤§ï¿½?æ¨¡æˆ°é¬¥ï¿½Xï¿½ï¿½Xï¿½åˆ¶
  */
 UCLASS()
 class MINGTACTICAL_API UMingTacticalManager : public UObject
@@ -22,14 +22,14 @@ public:
     void SetupEventSubscriptions(};
     void CleanupEventSubscriptions(};
 
-    // ?®ä??§åˆ¶?¥å£
+    // ?ï¿½ï¿½Xï¿½åˆ¶?ï¿½å£
     UFUNCTION(BlueprintCallable, Category = "Tactical")
     void SelectUnits(const TArray<int32>& UnitIds};
 
     UFUNCTION(BlueprintCallable, Category = "Tactical")
     void MoveUnits(const TArray<int32>& UnitIds, const FVector& TargetPosition, bool bAttackMove = false};
 
-    // ?§èƒ½??§
+    // ?ï¿½èƒ½Xï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Performance")
     int32 GetActiveUnitCount() const { return ActiveUnitCount; }
 
@@ -41,6 +41,6 @@ private:
     bool bIsInitialized;
     int32 ActiveUnitCount;
     
-    // è¨˜æ†¶é«”æ??å??æ?è¨?    bool bMemoryPoolInitialized;
+    // è¨˜æ†¶é«”ï¿½Xï¿½ï¿½Xï¿½ï¿½?ï¿½?    bool bMemoryPoolInitialized;
 };
 

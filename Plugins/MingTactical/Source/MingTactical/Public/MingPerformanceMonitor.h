@@ -1,68 +1,68 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingPerformanceMonitor.generated.h"
 
 /**
- * ?§èƒ½?‡æ?çµæ?
+ * ?ï¿½èƒ½?ï¿½ï¿½?çµï¿½?
  */
 USTRUCT(BlueprintType)
 struct FPerformanceMetrics
 {
     GENERATED_BODY()
 
-    // ?¶å?FPS
+    // ?ï¿½ï¿½?FPS
     UPROPERTY(BlueprintReadOnly)
     float CurrentFPS;
 
-    // å¹³å?FPS
+    // å¹³ï¿½?FPS
     UPROPERTY(BlueprintReadOnly)
     float AverageFPS;
 
-    // ?€ä½FPS
+    // ?ï¿½ä½FPS
     UPROPERTY(BlueprintReadOnly)
     float MinFPS;
 
-    // ?€é«˜FPS
+    // ?ï¿½é«˜FPS
     UPROPERTY(BlueprintReadOnly)
     float MaxFPS;
 
-    // å¹€?‚é? (æ¯«ç?)
+    // å¹€?ï¿½ï¿½? (æ¯«ï¿½?)
     UPROPERTY(BlueprintReadOnly)
     float FrameTimeMs;
 
-    // å¹³å?å¹€?‚é?
+    // å¹³ï¿½?å¹€?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float AverageFrameTimeMs;
 
-    // æ¸²æ?ç·šç??‚é?
+    // æ¸²ï¿½?ç·šï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float RenderThreadTimeMs;
 
-    // ?Šæˆ²ç·šç??‚é?
+    // ?ï¿½æˆ²ç·šï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float GameThreadTimeMs;
 
-    // GPU?‚é?
+    // GPU?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float GPUTimeMs;
 
-    // ä½¿ç”¨?„è??¶é? (MB)
+    // ä½¿ç”¨?ï¿½ï¿½Xï¿½ï¿½? (MB)
     UPROPERTY(BlueprintReadOnly)
     float UsedMemoryMB;
 
-    // æ¸²æ??„å¯¦ä¾‹æ•¸??    UPROPERTY(BlueprintReadOnly)
+    // æ¸²ï¿½Xï¿½å¯¦ä¾‹æ•¸X    UPROPERTY(BlueprintReadOnly)
     int32 RenderedInstanceCount;
 
-    // ?”é™¤?„å¯¦ä¾‹æ•¸??    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½é™¤?ï¿½å¯¦ä¾‹æ•¸X    UPROPERTY(BlueprintReadOnly)
     int32 CulledInstanceCount;
 
-    // æ´»è?ç¶²æ ¼?¸é?
+    // æ´»ï¿½?ç¶²æ ¼?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     int32 ActiveGridCellCount;
 
-    // ç¸½ç¶²?¼æ•¸??    UPROPERTY(BlueprintReadOnly)
+    // ç¸½ç¶²?ï¿½æ•¸X    UPROPERTY(BlueprintReadOnly)
     int32 TotalGridCellCount;
 
     FPerformanceMetrics()
@@ -84,7 +84,7 @@ struct FPerformanceMetrics
 };
 
 /**
- * ?§èƒ½??§?? * å¯¦æ???§?Šæˆ²?§èƒ½?‡æ?
+ * ?ï¿½èƒ½Xï¿½ï¿½X * å¯¦ï¿½Xï¿½ï¿½?ï¿½æˆ²?ï¿½èƒ½?ï¿½ï¿½?
  */
 UCLASS(BlueprintType)
 class MINGTACTICAL_API UMingPerformanceMonitor : public UObject
@@ -97,148 +97,148 @@ public:
     virtual void BeginDestroy() override;
 
     /**
-     * ?å??–æ€§èƒ½??§
+     * ?ï¿½ï¿½Xï¿½æ€§èƒ½Xï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void Initialize(};
 
     /**
-     * ?œé??§èƒ½??§
+     * ?ï¿½ï¿½Xï¿½èƒ½Xï¿½ï¿½
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void Shutdown(};
 
     /**
-     * ?´æ–°?§èƒ½?¸æ? (æ¯å?èª¿ç”¨)
+     * ?ï¿½æ–°?ï¿½èƒ½?ï¿½ï¿½? (æ¯ï¿½?èª¿ç”¨)
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void Update(float DeltaTime};
 
     /**
-     * ?²å??¶å??§èƒ½?‡æ?
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     FPerformanceMetrics GetCurrentMetrics() const { return CurrentMetrics; }
 
     /**
-     * ?²å??§èƒ½?±å??‡å?
+     * ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     FString GetPerformanceReport() const;
 
     /**
-     * ?²å?ç°¡çŸ­?§èƒ½?‡å?
+     * ?ï¿½ï¿½?ç°¡çŸ­?ï¿½èƒ½?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     FString GetShortPerformanceText() const;
 
     /**
-     * ?¯å¦?§èƒ½?”æ?
+     * ?ï¿½å¦?ï¿½èƒ½?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     bool IsPerformanceAcceptable() const;
 
     /**
-     * è¨­ç½®?®æ?FPS
+     * è¨­ç½®?ï¿½ï¿½?FPS
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void SetTargetFPS(float TargetFPS};
 
     /**
-     * ?²å??®æ?FPS
+     * ?ï¿½ï¿½Xï¿½ï¿½?FPS
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     float GetTargetFPS() const { return TargetFPS; }
 
     /**
-     * ?‹å??§èƒ½è¨˜é?
+     * ?ï¿½ï¿½Xï¿½èƒ½è¨˜ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void StartRecording(};
 
     /**
-     * ?œæ­¢?§èƒ½è¨˜é?
+     * ?ï¿½æ­¢?ï¿½èƒ½è¨˜ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void StopRecording(};
 
     /**
-     * ?²å?è¨˜é??„æ•¸??     */
+     * ?ï¿½ï¿½?è¨˜ï¿½Xï¿½æ•¸X     */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     TArray<FPerformanceMetrics> GetRecordedData() const;
 
     /**
-     * å°å‡º?§èƒ½?±å??°æ?ä»?     */
+     * å°å‡º?ï¿½èƒ½?ï¿½ï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     bool ExportReport(const FString& FilePath) const;
 
     /**
-     * æ·»å??ªå?ç¾©æ€§èƒ½æ¨™è?
+     * æ·»ï¿½Xï¿½ï¿½?ç¾©æ€§èƒ½æ¨™ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void AddPerformanceMarker(const FString& MarkerName, float Value};
 
     /**
-     * ?²å??ªå?ç¾©æ?è¨˜å€?     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?ç¾©ï¿½?è¨˜ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Performance")
     float GetPerformanceMarker(const FString& MarkerName) const;
 
     /**
-     * ?œæ??²å?å¯¦ä?
+     * ?ï¿½ï¿½Xï¿½ï¿½?å¯¦ï¿½?
      */
     static UMingPerformanceMonitor* Get(};
 
 protected:
-    // ?¶å??§èƒ½?‡æ?
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UPROPERTY()
     FPerformanceMetrics CurrentMetrics;
 
-    // ?®æ?FPS
+    // ?ï¿½ï¿½?FPS
     UPROPERTY()
     float TargetFPS;
 
-    // ?¯å¦æ­?œ¨è¨˜é?
+    // ?ï¿½å¦ï¿½?ï¿½ï¿½è¨˜ï¿½?
     UPROPERTY()
     bool bIsRecording;
 
-    // è¨˜é??„æ•¸??    UPROPERTY()
+    // è¨˜ï¿½Xï¿½æ•¸X    UPROPERTY()
     TArray<FPerformanceMetrics> RecordedData;
 
-    // ?€å¤§è??„å???    UPROPERTY(EditAnywhere, Category = "Performance")
+    // ?ï¿½å¤§ï¿½Xï¿½ï¿½X    UPROPERTY(EditAnywhere, Category = "Performance")
     int32 MaxRecordedFrames;
 
-    // ?ªå?ç¾©æ€§èƒ½æ¨™è?
+    // ?ï¿½ï¿½?ç¾©æ€§èƒ½æ¨™ï¿½?
     UPROPERTY()
     TMap<FString, float> CustomMarkers;
 
-    // ?®ä?å¯¦ä?
+    // ?ï¿½ï¿½?å¯¦ï¿½?
     static UMingPerformanceMonitor* Instance;
 
-    // è¨ˆç?FPS
+    // è¨ˆï¿½?FPS
     void CalculateFPS(float DeltaTime};
 
-    // ?´æ–°è¨˜æ†¶é«”ä½¿??    void UpdateMemoryUsage(};
+    // ?ï¿½æ–°è¨˜æ†¶é«”ä½¿X    void UpdateMemoryUsage(};
 
-    // ?´æ–°ç·šç??‚é?
+    // ?ï¿½æ–°ç·šï¿½Xï¿½ï¿½?
     void UpdateThreadTimes(};
 
-    // è¨˜é??¸æ?é»?    void RecordDataPoint(};
+    // è¨˜ï¿½Xï¿½ï¿½?ï¿½?    void RecordDataPoint(};
 
-    // ?²å?è¨˜æ†¶é«”ä½¿??    float GetMemoryUsageMB() const;
+    // ?ï¿½ï¿½?è¨˜æ†¶é«”ä½¿X    float GetMemoryUsageMB() const;
 
-    // ?²å?æ¸²æ?ç·šç??‚é?
+    // ?ï¿½ï¿½?æ¸²ï¿½?ç·šï¿½Xï¿½ï¿½?
     float GetRenderThreadTime() const;
 
-    // ?²å??Šæˆ²ç·šç??‚é?
+    // ?ï¿½ï¿½Xï¿½æˆ²ç·šï¿½Xï¿½ï¿½?
     float GetGameThreadTime() const;
 
-    // ?²å?GPU?‚é?
+    // ?ï¿½ï¿½?GPU?ï¿½ï¿½?
     float GetGPUTime() const;
 
-    // ?²å?æ¸²æ?å¯¦ä??¸é?
+    // ?ï¿½ï¿½?æ¸²ï¿½?å¯¦ï¿½Xï¿½ï¿½?
     int32 GetRenderedInstanceCount() const;
 
-    // ?²å??”é™¤å¯¦ä??¸é?
+    // ?ï¿½ï¿½Xï¿½é™¤å¯¦ï¿½Xï¿½ï¿½?
     int32 GetCulledInstanceCount() const;
 };
 

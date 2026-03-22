@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,19 +8,19 @@ class AMingTacticalUnit;
 class AMingCombatAI;
 
 /**
- * æ± å?è±¡ç???| Pool Object State
+ * æ± ï¿½?è±¡ï¿½X| Pool Object State
  */
 UENUM(BlueprintType)
 enum class EPoolObjectState : uint8
 {
-    Unused      UMETA(DisplayName = "Unused"),      // ?ªä½¿??    Available   UMETA(DisplayName = "Available"),   // ?¯ç”¨ | Available
-    InUse       UMETA(DisplayName = "In Use"),      // ä½¿ç”¨ä¸?| In Use
-    Pending     UMETA(DisplayName = "Pending Return"), // å¾…æ­¸??| Pending Return
+    Unused      UMETA(DisplayName = "Unused"),      // ?ï¿½ä½¿X    Available   UMETA(DisplayName = "Available"),   // ?ï¿½ç”¨ | Available
+    InUse       UMETA(DisplayName = "In Use"),      // ä½¿ç”¨ï¿½?| In Use
+    Pending     UMETA(DisplayName = "Pending Return"), // å¾…æ­¸X| Pending Return
     Disabled    UMETA(DisplayName = "Disabled")     // ç¦ç”¨ | Disabled
 };
 
 /**
- * ?®ä?æ± é? | Unit Pool Item
+ * ?ï¿½ï¿½?æ± ï¿½? | Unit Pool Item
  */
 USTRUCT()
 struct MINGTACTICAL_API FUnitPoolItem
@@ -47,7 +47,7 @@ struct MINGTACTICAL_API FUnitPoolItem
 };
 
 /**
- * AIæ± é? | AI Pool Item
+ * AIæ± ï¿½? | AI Pool Item
  */
 USTRUCT()
 struct MINGTACTICAL_API FAIPoolItem
@@ -74,14 +74,14 @@ struct MINGTACTICAL_API FAIPoolItem
 };
 
 /**
- * å°è±¡æ± ç³»çµ?| Object Pool System
+ * å°è±¡æ± ç³»ï¿½?| Object Pool System
  * 
- * ?ªå?å¤§é??®ä?/AI?„å‰µå»ºå??·æ??§èƒ½ï¼?| Optimize creation/destruction performance:
- * - ?å??å?è±?| Pre-allocation
- * - å¾©ç”¨å·²éŠ·æ¯€?„å?è±?| Object reuse
- * - ?§åˆ¶?§å?ä½”ç”¨ | Memory management
+ * ?ï¿½ï¿½?å¤§ï¿½Xï¿½ï¿½?/AI?ï¿½å‰µå»ºï¿½Xï¿½ï¿½Xï¿½èƒ½ï¿½?| Optimize creation/destruction performance:
+ * - ?ï¿½ï¿½Xï¿½ï¿½?ï¿½?| Pre-allocation
+ * - å¾©ç”¨å·²éŠ·æ¯€?ï¿½ï¿½?ï¿½?| Object reuse
+ * - ?ï¿½åˆ¶?ï¿½ï¿½?ä½”ç”¨ | Memory management
  * 
- * ?©ç”¨??1000+ ?®ä??„å¤§è¦æ¨¡?°é¬¥?´æ™¯ | Suitable for 1000+ unit scenarios
+ * ?ï¿½ç”¨X1000+ ?ï¿½ï¿½Xï¿½å¤§è¦æ¨¡?ï¿½é¬¥?ï¿½æ™¯ | Suitable for 1000+ unit scenarios
  */
 UCLASS(ClassGroup = (Optimization), Blueprintable)
 class MINGTACTICAL_API UMingObjectPoolSystem : public UObject
@@ -92,98 +92,98 @@ public:
     UMingObjectPoolSystem(};
 
     /**
-     * ?å??–å¯¹è±¡æ?
-     * @param InitialUnitPoolSize ?å??•ä?æ± å¤§å°?     * @param InitialAIPoolSize ?å?AIæ± å¤§å°?     * @param MaxPoolSize ?€å¤§æ?å¤§å?
+     * ?ï¿½ï¿½Xï¿½å¯¹è±¡ï¿½?
+     * @param InitialUnitPoolSize ?ï¿½ï¿½Xï¿½ï¿½?æ± å¤§ï¿½?     * @param InitialAIPoolSize ?ï¿½ï¿½?AIæ± å¤§ï¿½?     * @param MaxPoolSize ?ï¿½å¤§ï¿½?å¤§ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
     void Initialize(int32 InitialUnitPoolSize = 100, int32 InitialAIPoolSize = 20, int32 MaxPoolSize = 5000};
 
     /**
-     * ?³é—­å¯¹è±¡æ± ç³»ç»?     */
+     * ?ï¿½é—­å¯¹è±¡æ± ç³»ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
     void Shutdown(};
 
     /**
-     * é¢„å¡«?…å¯¹è±¡æ?
+     * é¢„å¡«?ï¿½å¯¹è±¡ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
     void PrepopulatePools(};
 
-    // ==== ?•ä?æ± æ?ä½?====
+    // ==== ?ï¿½ï¿½?æ± ï¿½?ï¿½?====
 
     /**
-     * ä»æ??·å?ä¸€ä¸ªå?ä½?     * @return ?¯ç”¨?„å?ä½å?ä¾‹ï?å¦‚æ?æ²¡æ??™è???nullptr
+     * ä»ï¿½Xï¿½ï¿½?ä¸€ä¸ªï¿½?ï¿½?     * @return ?ï¿½ç”¨?ï¿½ï¿½?ä½ï¿½?ä¾‹ï¿½?å¦‚ï¿½?æ²¡ï¿½Xï¿½ï¿½Xnullptr
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
     AMingTacticalUnit* AcquireUnit(UClass* UnitClass = nullptr};
 
     /**
-     * å°†å?ä½å?è¿˜åˆ°æ± ä¸­
+     * å°†ï¿½?ä½ï¿½?è¿˜åˆ°æ± ä¸­
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
     void ReturnUnit(AMingTacticalUnit* Unit};
 
     /**
-     * ?¹é??·å??•ä?
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
     TArray<AMingTacticalUnit*> AcquireUnits(int32 Count, UClass* UnitClass = nullptr};
 
     /**
-     * ?¹é?å½’è??•ä?
+     * ?ï¿½ï¿½?å½’ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
     void ReturnUnits(const TArray<AMingTacticalUnit*>& Units};
 
-    // ==== AIæ± æ?ä½?====
+    // ==== AIæ± ï¿½?ï¿½?====
 
     /**
-     * ä»æ??·å?ä¸€ä¸ªAI
+     * ä»ï¿½Xï¿½ï¿½?ä¸€ä¸ªAI
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|AI")
     AMingCombatAI* AcquireAI(UClass* AIClass = nullptr};
 
     /**
-     * å°†AIå½’è??°æ?ä¸?     */
+     * å°†AIå½’ï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|AI")
     void ReturnAI(AMingCombatAI* AI};
 
-    // ==== æ± ç®¡??====
+    // ==== æ± ç®¡X====
 
     /**
-     * ?©å??•ä?æ±?     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void ExpandUnitPool(int32 AdditionalCount};
 
     /**
-     * ?©å?AIæ±?     */
+     * ?ï¿½ï¿½?AIï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void ExpandAIPool(int32 AdditionalCount};
 
     /**
-     * ?¶ç¼©æ± ï?? é™¤?ªä½¿?¨ç?å¯¹è±¡ï¼?     */
+     * ?ï¿½ç¼©æ± ï¿½Xï¿½é™¤?ï¿½ä½¿?ï¿½ï¿½?å¯¹è±¡ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void ShrinkUnusedPools(};
 
     /**
-     * å¼ºåˆ¶æ¸…ç??€?‰å¯¹è±¡ï??ç”¨ï¼?     */
+     * å¼ºåˆ¶æ¸…ï¿½Xï¿½?ï¿½å¯¹è±¡ï¿½Xï¿½ç”¨ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void ForceClearAll(};
 
     /**
-     * è®¾ç½®?€å¤§æ?å¤§å??åˆ¶
+     * è®¾ç½®?ï¿½å¤§ï¿½?å¤§ï¿½Xï¿½åˆ¶
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void SetMaxPoolSize(int32 NewMaxSize};
 
     /**
-     * è®¾ç½®?ªåŠ¨?©å??ˆå€?     * å½“å¯?¨å¯¹è±¡ä?äºæ­¤?¾å?æ¯”æ—¶?ªåŠ¨?©å?
+     * è®¾ç½®?ï¿½åŠ¨?ï¿½ï¿½Xï¿½ï¿½?     * å½“å¯?ï¿½å¯¹è±¡ï¿½?äºæ­¤?ï¿½ï¿½?æ¯”æ—¶?ï¿½åŠ¨?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void SetAutoExpandThreshold(float Percentage};
 
     /**
-     * ?¯ç”¨/ç¦ç”¨?ªåŠ¨?©å?
+     * ?ï¿½ç”¨/ç¦ç”¨?ï¿½åŠ¨?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void SetAutoExpandEnabled(bool bEnabled};
@@ -223,7 +223,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Object Pool|Stats")
     float GetAverageReuseRate() const;
 
-    // ==== è°ƒè? ====
+    // ==== è°ƒï¿½? ====
 
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Debug")
     void PrintDebugInfo(};
@@ -238,19 +238,19 @@ public:
     void DumpPoolContents(};
 
     /**
-     * Tick ?´æ–°ï¼ˆå??Ÿæ??†å?æ£€?¥ï?
+     * Tick ?ï¿½æ–°ï¼ˆï¿½Xï¿½ï¿½Xï¿½ï¿½?æ£€?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
     void Tick(float DeltaTime};
 
 private:
-    // ?•ä?æ±?    UPROPERTY()
+    // ?ï¿½ï¿½?ï¿½?    UPROPERTY()
     TArray<FUnitPoolItem> UnitPool;
 
-    // AIæ±?    UPROPERTY()
+    // AIï¿½?    UPROPERTY()
     TArray<FAIPoolItem> AIPool;
 
-    // ?ç½®
+    // ?ï¿½ç½®
     int32 MaxPoolSize;
     int32 InitialUnitPoolSize;
     int32 InitialAIPoolSize;
@@ -264,42 +264,42 @@ private:
     int32 TotalUnitAcquires;
     int32 TotalAIAcquires;
 
-    // ?¯ç”¨?©ä»¶ç´¢å?å¿«å?ï¼ˆé¿?ç??§æ?å°‹ï?
+    // ?ï¿½ç”¨?ï¿½ä»¶ç´¢ï¿½?å¿«ï¿½?ï¼ˆé¿?ï¿½ï¿½Xï¿½ï¿½?å°‹ï¿½?
     TArray<int32> AvailableUnitIndices;
     TArray<int32> AvailableAIIndices;
 
-    // ?©å??·å´ï¼ˆé˜²æ­¢è?åº¦æ‰©å±•ï?
+    // ?ï¿½ï¿½Xï¿½å´ï¼ˆé˜²æ­¢ï¿½?åº¦æ‰©å±•ï¿½?
     float LastExpandTime;
     float ExpandCooldown;
 
-    // ?•ä?ç±»ï?é»˜è®¤ï¼?    UPROPERTY()
+    // ?ï¿½ï¿½?ç±»ï¿½?é»˜è®¤ï¿½?    UPROPERTY()
     TSubclassOf<AMingTacticalUnit> DefaultUnitClass;
 
     UPROPERTY()
     TSubclassOf<AMingCombatAI> DefaultAIClass;
 
-    // ?›å»º?°å?ä½?    AMingTacticalUnit* CreateNewUnit(UClass* UnitClass};
+    // ?ï¿½å»º?ï¿½ï¿½?ï¿½?    AMingTacticalUnit* CreateNewUnit(UClass* UnitClass};
 
-    // ?›å»º?°AI
+    // ?ï¿½å»º?ï¿½AI
     AMingCombatAI* CreateNewAI(UClass* AIClass};
 
-    // ?ç½®?•ä??¶æ€?    void ResetUnit(AMingTacticalUnit* Unit};
+    // ?ï¿½ç½®?ï¿½ï¿½Xï¿½ï¿½?    void ResetUnit(AMingTacticalUnit* Unit};
 
-    // ?ç½®AI?¶æ€?    void ResetAI(AMingCombatAI* AI};
+    // ?ï¿½ç½®AI?ï¿½ï¿½?    void ResetAI(AMingCombatAI* AI};
 
-    // ?Ÿæ­£?€æ¯å¯¹è±¡ï?å½’è??°å??ï?
+    // ?ï¿½æ­£?ï¿½æ¯å¯¹è±¡ï¿½?å½’ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     void DestroyUnit(AMingTacticalUnit* Unit};
     void DestroyAI(AMingCombatAI* AI};
 
-    // æ£€?¥æ˜¯?¦é?è¦è‡ª?¨æ‰©å±?    void CheckAutoExpand(};
+    // æ£€?ï¿½æ˜¯?ï¿½ï¿½?è¦è‡ª?ï¿½æ‰©ï¿½?    void CheckAutoExpand(};
 
-    // æ¸…ç?? æ?å¼•ç”¨
+    // æ¸…ï¿½Xï¿½ï¿½?å¼•ç”¨
     void CleanupInvalidReferences(};
 
-    // ?¥æ‰¾?¯ç”¨?„æ?é¡?    int32 FindAvailableUnitIndex() const;
+    // ?ï¿½æ‰¾?ï¿½ç”¨?ï¿½ï¿½?ï¿½?    int32 FindAvailableUnitIndex() const;
     int32 FindAvailableAIIndex() const;
 
-    // ?¥æ‰¾?‡å?å¯¹è±¡?„æ?ç´¢å?
+    // ?ï¿½æ‰¾?ï¿½ï¿½?å¯¹è±¡?ï¿½ï¿½?ç´¢ï¿½?
     int32 FindUnitIndex(AMingTacticalUnit* Unit) const;
     int32 FindAIIndex(AMingCombatAI* AI) const;
 };

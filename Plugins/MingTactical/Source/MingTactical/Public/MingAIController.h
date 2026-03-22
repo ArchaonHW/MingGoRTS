@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "AIController.h"
@@ -125,7 +125,7 @@ public:
 
 protected:
     // AI State
-    // ?�制?��? - 使用 TObjectPtr ?��?置聲??    class AMingTacticalUnit;
+    // ?�制?��? - 使用 TObjectPtr ?��?置聲X    class AMingTacticalUnit;
     UPROPERTY(BlueprintReadWrite, Category = "AI|Control")
     TObjectPtr<AMingTacticalUnit> ControlledUnit;
 

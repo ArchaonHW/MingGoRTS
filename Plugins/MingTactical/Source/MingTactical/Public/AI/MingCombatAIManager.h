@@ -1,53 +1,53 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingCombatAIManager.generated.h"
 
-// AI ????µ¥??
+// AI Xï¿½ï¿½X
 UENUM(BlueprintType)
 enum class EMingAIDifficulty : uint8
 {
-    Recruit,        // ??§L
-    Regular,        // ±`??
-    Veteran,        // ??§L
-    Elite,          // ºë¾U
-    Legendary       // ????
+    Recruit,        // Xï¿½L
+    Regular,        // ï¿½`X
+    Veteran,        // Xï¿½L
+    Elite,          // ï¿½ï¿½U
+    Legendary       // X
 };
 
-// AI ¸`ÂI????UENUM(BlueprintType)
+// AI ï¿½`ï¿½IXUENUM(BlueprintType)
 enum class EMingAINodeResult : uint8
 {
-    Running,        // ??????    Success,        // ????
-    Failure         // ¥¢??
+    Running,        // X    Success,        // X
+    Failure         // ï¿½ï¿½X
 };
 
-// AI ??²¤??¦n
+// AI Xï¿½ï¿½Xï¿½n
 UENUM(BlueprintType)
 enum class EMingStrategicPreference : uint8
 {
-    Aggressive,     // ??????    Defensive,      // ??¿m??    Balanced,       // ¥­¿Å??    Economic,       // ¸g????    Diplomatic,  // ¥~¥æ??};
+    Aggressive,     // X    Defensive,      // Xï¿½mX    Balanced,       // ï¿½ï¿½ï¿½ï¿½X    Economic,       // ï¿½gX    Diplomatic,  // ï¿½~ï¿½ï¿½X};
 
-// AI ????­·®æ
+// AI Xï¿½ï¿½ï¿½ï¿½
 UENUM(BlueprintType)
 enum class EMingTacticalStyle : uint8
 {
-    DirectAssault,  // ??±µ????
-    Flanking,       // ??Ál????
-    Guerrilla,       // ´å????    Siege,          // ??§ð??    Mobile,  // ¾÷????};
+    DirectAssault,  // Xï¿½ï¿½X
+    Flanking,       // Xï¿½lX
+    Guerrilla,       // ï¿½ï¿½X    Siege,          // Xï¿½ï¿½X    Mobile,  // ï¿½ï¿½X};
 
-// ­x»ÖÃþ??
+// ï¿½xï¿½ï¿½ï¿½ï¿½X
 UENUM(BlueprintType)
 enum class EMingWarlordType : uint8
 {
-    Northeastern,    // ????­x»Ö
-    Northwestern,    // ¦è??­x»Ö
-    Southwestern,    // ¦è??­x»Ö
-    Central,         // ¤¤¥¡­x»Ö
-    Independent      // ????­x»Ö
+    Northeastern,    // Xï¿½xï¿½ï¿½
+    Northwestern,    // ï¿½ï¿½Xï¿½xï¿½ï¿½
+    Southwestern,    // ï¿½ï¿½Xï¿½xï¿½ï¿½
+    Central,         // ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½
+    Independent      // Xï¿½xï¿½ï¿½
 };
 
-// AI ²Î??«H®§
+// AI ï¿½ï¿½Xï¿½Hï¿½ï¿½
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingAIStatistics
 {
@@ -75,7 +75,7 @@ struct MINGTACTICAL_API FMingAIStatistics
     int32 SuccessfulDefenses;
 };
 
-// AI ¤W????USTRUCT(BlueprintType)
+// AI ï¿½WXUSTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingAIContext
 {
     GENERATED_BODY()
@@ -102,7 +102,7 @@ struct MINGTACTICAL_API FMingAIContext
     EMingAIDifficulty Difficulty;
 };
 
-// AI ????³]¸m
+// AI Xï¿½]ï¿½m
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingAIDifficultySettings
 {
@@ -128,7 +128,7 @@ struct MINGTACTICAL_API FMingAIDifficultySettings
 };
 
 /**
- * ??°« AI ºÞ???? * ­t³dºÞ??????¾Ô??AI ??¨î????¦æ¬°
+ * Xï¿½ï¿½ AI ï¿½ï¿½X * ï¿½tï¿½dï¿½ï¿½Xï¿½ï¿½XAI Xï¿½ï¿½Xï¿½æ¬°
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGTACTICAL_API UMingCombatAIManager : public UObject
@@ -136,75 +136,75 @@ class MINGTACTICAL_API UMingCombatAIManager : public UObject
     GENERATED_BODY()
 
 public:
-    // «Ø????    UMingCombatAIManager(};
+    // ï¿½ï¿½X    UMingCombatAIManager(};
 
-    // ??????AI ºÞ????    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // XAI ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void Initialize(};
 
-    // AI ??·s¥D´`??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // AI Xï¿½sï¿½Dï¿½`X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void UpdateCombatAI(float DeltaTime};
 
-    // µù?? AI ??¨î??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // ï¿½ï¿½X AI Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void RegisterAIController(class AController* AIController};
 
-    // ²¾°£ AI ??¨î??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // ï¿½ï¿½ï¿½ï¿½ AI Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void UnregisterAIController(class AController* AIController};
 
-    // ³]¸m???? AI ????
+    // ï¿½]ï¿½mX AI X
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void SetAIDifficulty(EMingAIDifficulty Difficulty};
 
-    // ???? AI ????³]¸m
+    // X AI Xï¿½]ï¿½m
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     FMingAIDifficultySettings GetDifficultySettings(EMingAIDifficulty Difficulty) const;
 
-    // ???? AI ²Î??«H®§
+    // X AI ï¿½ï¿½Xï¿½Hï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     FMingAIStatistics GetAIStatistics() const;
 
-    // ???? AI ??·s
+    // X AI Xï¿½s
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void PauseAI(};
 
-    // ??´_ AI ??·s
+    // Xï¿½_ AI Xï¿½s
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void ResumeAI(};
 
-    // ??¸m????AI
+    // Xï¿½mXAI
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void ResetAllAI(};
 
 protected:
-    // AI ??¨î??????    TArray<TWeakObjectPtr<class AController>> AIControllers;
+    // AI Xï¿½ï¿½X    TArray<TWeakObjectPtr<class AController>> AIControllers;
 
-    // AI ??·s????
+    // AI Xï¿½sX
     float AIUpdateInterval;
 
-    // ????????³]¸m
+    // Xï¿½]ï¿½m
     EMingAIDifficulty CurrentDifficulty;
 
-    // ??§_????
+    // Xï¿½_X
     bool bIsPaused;
 
-    // ²Î??????
+    // ï¿½ï¿½X
     FMingAIStatistics AIStatistics;
 
-    // ????³]¸m????
+    // Xï¿½]ï¿½mX
     TMap<EMingAIDifficulty, FMingAIDifficultySettings> DifficultySettings;
 
-    // ??????Ãø«×³]??    void InitializeDifficultySettings(};
+    // Xï¿½ï¿½ï¿½×³]X    void InitializeDifficultySettings(};
 
-    // ??·s²Î??«H®§
+    // Xï¿½sï¿½ï¿½Xï¿½Hï¿½ï¿½
     void UpdateStatistics(};
 
-    // ???? AI ??·s????
+    // X AI Xï¿½sX
     float GetAIUpdateTime() const;
 
 private:
-    // ??§_¤w??©l??
+    // Xï¿½_ï¿½wXï¿½lX
     bool bInitialized = false;
 
-    // ²Ö??????
+    // ï¿½ï¿½X
     float AccumulatedTime;
 };
 
