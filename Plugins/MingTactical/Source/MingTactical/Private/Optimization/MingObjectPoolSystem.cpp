@@ -69,7 +69,7 @@ void UMingObjectPoolSystem::PrepopulatePools()
 {
     if (!bIsInitialized) return;
 
-    // 预创建单位
+    // 預創建單位
     int32 UnitsToCreate = InitialUnitPoolSize - GetAvailableUnitCount();
     for (int32 i = 0; i < UnitsToCreate; ++i)
     {
@@ -80,11 +80,12 @@ void UMingObjectPoolSystem::PrepopulatePools()
             Item.Unit = Unit;
             Item.State = EPoolObjectState::Available;
             Item.LastUsedTime = FPlatformTime::Seconds();
-            UnitPool.Add(Item);
+            int32 Index = UnitPool.Add(Item);
+            AvailableUnitIndices.Add(Index);  // 快取可用索引
         }
     }
 
-    // 预创建AI
+    // 預創建AI
     int32 AIsToCreate = InitialAIPoolSize - GetAvailableAICount();
     for (int32 i = 0; i < AIsToCreate; ++i)
     {
@@ -95,7 +96,8 @@ void UMingObjectPoolSystem::PrepopulatePools()
             Item.AI = AI;
             Item.State = EPoolObjectState::Available;
             Item.LastUsedTime = FPlatformTime::Seconds();
-            AIPool.Add(Item);
+            int32 Index = AIPool.Add(Item);
+            AvailableAIIndices.Add(Index);  // 快取可用索引
         }
     }
 
@@ -114,6 +116,9 @@ AMingTacticalUnit* UMingObjectPoolSystem::AcquireUnit(UClass* UnitClass)
     
     if (AvailableIndex >= 0)
     {
+        // 從快取中移除已使用的索引
+        AvailableUnitIndices.Remove(AvailableIndex);
+        
         // 复用现有单位
         FUnitPoolItem& Item = UnitPool[AvailableIndex];
         Item.State = EPoolObjectState::InUse;
@@ -139,6 +144,9 @@ AMingTacticalUnit* UMingObjectPoolSystem::AcquireUnit(UClass* UnitClass)
         AvailableIndex = FindAvailableUnitIndex();
         if (AvailableIndex >= 0)
         {
+            // 從快取中移除已使用的索引
+            AvailableUnitIndices.Remove(AvailableIndex);
+            
             FUnitPoolItem& Item = UnitPool[AvailableIndex];
             Item.State = EPoolObjectState::InUse;
             Item.LastUsedTime = FPlatformTime::Seconds();
@@ -183,7 +191,11 @@ void UMingObjectPoolSystem::ReturnUnit(AMingTacticalUnit* Unit)
     if (Index >= 0)
     {
         FUnitPoolItem& Item = UnitPool[Index];
-        Item.State = EPoolObjectState::Available;
+        if (Item.State != EPoolObjectState::Available)  // 避免重複添加
+        {
+            Item.State = EPoolObjectState::Available;
+            AvailableUnitIndices.Add(Index);  // 添加到快取
+        }
         Item.LastUsedTime = FPlatformTime::Seconds();
         
         // 重置单位状态
@@ -235,6 +247,9 @@ AMingCombatAI* UMingObjectPoolSystem::AcquireAI(UClass* AIClass)
     
     if (AvailableIndex >= 0)
     {
+        // 從快取中移除已使用的索引
+        AvailableAIIndices.Remove(AvailableIndex);
+        
         FAIPoolItem& Item = AIPool[AvailableIndex];
         Item.State = EPoolObjectState::InUse;
         Item.LastUsedTime = FPlatformTime::Seconds();
@@ -274,7 +289,11 @@ void UMingObjectPoolSystem::ReturnAI(AMingCombatAI* AI)
     if (Index >= 0)
     {
         FAIPoolItem& Item = AIPool[Index];
-        Item.State = EPoolObjectState::Available;
+        if (Item.State != EPoolObjectState::Available)  // 避免重複添加
+        {
+            Item.State = EPoolObjectState::Available;
+            AvailableAIIndices.Add(Index);  // 添加到快取
+        }
         Item.LastUsedTime = FPlatformTime::Seconds();
         
         ResetAI(AI);
@@ -707,11 +726,17 @@ void UMingObjectPoolSystem::CleanupInvalidReferences()
 
 int32 UMingObjectPoolSystem::FindAvailableUnitIndex() const
 {
-    for (int32 i = 0; i < UnitPool.Num(); ++i)
+    // 使用快取的可用索引（O(1) 而不是 O(n)）
+    for (int32 i = AvailableUnitIndices.Num() - 1; i >= 0; --i)
     {
-        if (UnitPool[i].State == EPoolObjectState::Available && UnitPool[i].Unit.IsValid())
+        int32 Index = AvailableUnitIndices[i];
+        if (UnitPool.IsValidIndex(Index))
         {
-            return i;
+            const FUnitPoolItem& Item = UnitPool[Index];
+            if (Item.State == EPoolObjectState::Available && Item.Unit.IsValid())
+            {
+                return Index;
+            }
         }
     }
     return -1;
@@ -719,11 +744,17 @@ int32 UMingObjectPoolSystem::FindAvailableUnitIndex() const
 
 int32 UMingObjectPoolSystem::FindAvailableAIIndex() const
 {
-    for (int32 i = 0; i < AIPool.Num(); ++i)
+    // 使用快取的可用索引（O(1) 而不是 O(n)）
+    for (int32 i = AvailableAIIndices.Num() - 1; i >= 0; --i)
     {
-        if (AIPool[i].State == EPoolObjectState::Available && AIPool[i].AI.IsValid())
+        int32 Index = AvailableAIIndices[i];
+        if (AIPool.IsValidIndex(Index))
         {
-            return i;
+            const FAIPoolItem& Item = AIPool[Index];
+            if (Item.State == EPoolObjectState::Available && Item.AI.IsValid())
+            {
+                return Index;
+            }
         }
     }
     return -1;

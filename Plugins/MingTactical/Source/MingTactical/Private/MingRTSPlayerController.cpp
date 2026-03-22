@@ -240,13 +240,13 @@ void AMingRTSPlayerController::IssueAttackCommand(AActor* Target)
         return;
     }
     
-    TArray<int32> SelectedUnits = SelectionManager->SelectedUnitIds;
+    // 直接使用選擇管理器的單位數組（O(1) 而不是 O(N)）
+    const TArray<AMingTacticalUnit*>& SelectedUnits = SelectionManager->GetSelectedUnits();
     
     // 設置所有選中單位的攻擊目標
-    for (TActorIterator<AMingTacticalUnit> It(GetWorld()); It; ++It)
+    for (AMingTacticalUnit* Unit : SelectedUnits)
     {
-        AMingTacticalUnit* Unit = *It;
-        if (Unit && SelectedUnits.Contains(Unit->UnitId))
+        if (Unit)
         {
             Unit->SetAttackTarget(Target);
         }
@@ -266,12 +266,12 @@ void AMingRTSPlayerController::IssueStopCommand()
         return;
     }
     
-    TArray<int32> SelectedUnits = SelectionManager->SelectedUnitIds;
+    // 直接使用選擇管理器的單位數組（O(1) 而不是 O(N)）
+    const TArray<AMingTacticalUnit*>& SelectedUnits = SelectionManager->GetSelectedUnits();
     
-    for (TActorIterator<AMingTacticalUnit> It(GetWorld()); It; ++It)
+    for (AMingTacticalUnit* Unit : SelectedUnits)
     {
-        AMingTacticalUnit* Unit = *It;
-        if (Unit && SelectedUnits.Contains(Unit->UnitId))
+        if (Unit)
         {
             // 停止當前動作
             // 需要擴展MingTacticalUnit類別來支持Stop命令

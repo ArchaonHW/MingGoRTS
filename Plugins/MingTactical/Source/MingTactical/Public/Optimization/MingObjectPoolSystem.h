@@ -277,6 +277,10 @@ private:
     int32 TotalUnitAcquires;
     int32 TotalAIAcquires;
 
+    // 可用物件索引快取（避免線性搜尋）
+    TArray<int32> AvailableUnitIndices;
+    TArray<int32> AvailableAIIndices;
+
     // 扩展冷却（防止过度扩展）
     float LastExpandTime;
     float ExpandCooldown;

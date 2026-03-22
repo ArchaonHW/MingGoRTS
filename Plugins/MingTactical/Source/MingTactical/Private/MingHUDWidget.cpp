@@ -58,18 +58,11 @@ void UMingHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
     // 更新單位信息
     if (SelectionManager && SelectionManager->GetSelectedUnitCount() == 1)
     {
-        // 獲取選中的單位
-        int32 UnitId = SelectionManager->SelectedUnitIds[0];
-        if (UWorld* World = GetWorld())
+        // 直接使用選擇管理器的單位數組（O(1) 而不是 O(N)）
+        const TArray<AMingTacticalUnit*>& SelectedUnits = SelectionManager->GetSelectedUnits();
+        if (SelectedUnits.Num() > 0 && SelectedUnits[0])
         {
-            for (TActorIterator<AMingTacticalUnit> It(World); It; ++It)
-            {
-                if (It->UnitId == UnitId)
-                {
-                    UpdateUnitInfo(*It);
-                    break;
-                }
-            }
+            UpdateUnitInfo(SelectedUnits[0]);
         }
     }
     else if (SelectionManager && SelectionManager->GetSelectedUnitCount() == 0)
@@ -123,17 +116,11 @@ void UMingHUDWidget::OnSelectionChanged(int32 UnitId)
         }
         else if (SelectedCount == 1)
         {
-            // 顯示單個單位信息
-            if (UWorld* World = GetWorld())
+            // 直接使用選擇管理器的單位數組（O(1) 而不是 O(N)）
+            const TArray<AMingTacticalUnit*>& SelectedUnits = SelectionManager->GetSelectedUnits();
+            if (SelectedUnits.Num() > 0 && SelectedUnits[0])
             {
-                for (TActorIterator<AMingTacticalUnit> It(World); It; ++It)
-                {
-                    if (It->UnitId == UnitId)
-                    {
-                        UpdateUnitInfo(*It);
-                        break;
-                    }
-                }
+                UpdateUnitInfo(SelectedUnits[0]);
             }
             ShowCommandButtons({FName("Move"), FName("Attack"), FName("Stop")});
         }

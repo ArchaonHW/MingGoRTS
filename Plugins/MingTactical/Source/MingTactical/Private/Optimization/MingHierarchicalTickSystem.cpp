@@ -447,7 +447,7 @@ int32 UMingHierarchicalTickSystem::GetUnitCountByLevel(ETickLevel Level) const
 
 float UMingHierarchicalTickSystem::GetCurrentFPS() const
 {
-    if (AverageTickTimeMs <= 0.0f) return 60.0f;
+    if (AverageTickTimeMs <= 0.001f) return 60.0f;  // 設置最小閾值避免除零
     return 1000.0f / AverageTickTimeMs;
 }
 
