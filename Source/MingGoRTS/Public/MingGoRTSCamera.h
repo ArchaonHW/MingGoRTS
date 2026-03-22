@@ -12,7 +12,7 @@ class MINGGORTS_API AMingGoRTSCamera : public APawn
     GENERATED_BODY()
 
 public:
-    AMingGoRTSCamera();
+    AMingGoRTSCamera(};
 
 protected:
     virtual void BeginPlay() override;
@@ -26,12 +26,13 @@ public:
     UCameraComponent* Camera;
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void SetCameraDistance(float Distance);
+    void SetCameraDistance(float Distance};
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void MoveCamera(const FVector& Direction);
+    void MoveCamera(const FVector& Direction};
 
 private:
     UPROPERTY()
     float DefaultDistance;
 };
+

@@ -285,11 +285,11 @@ class FFACTIONMECHANICS_API URepublicEraFactionSystem : public UObject
     GENERATED_BODY()
 
 public:
-    URepublicEraFactionSystem();
+    URepublicEraFactionSystem(};
 
     /** ?ùÂ??ñÂã¢?õÁ≥ªÁµ?*/
     UFUNCTION(BlueprintCallable, Category = "Faction System")
-    void InitializeFactionSystem();
+    void InitializeFactionSystem(};
 
     /** ?≤Â??Ä?âÂã¢?õÊï∏??*/
     UFUNCTION(BlueprintCallable, Category = "Faction System")
@@ -321,11 +321,11 @@ public:
 
     /** ?µÂª∫?¢Â?ÂØ¶‰? */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
-    FFactionData CreateFactionInstance(int32 FactionID);
+    FFactionData CreateFactionInstance(int32 FactionID};
 
     /** ?âÁî®?¢Â?‰øÆÊ≠£ */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
-    void ApplyFactionModifiers(FFactionData& FactionData);
+    void ApplyFactionModifiers(FFactionData& FactionData};
 
     /** È©óË??¢Â??∏Ê? */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
@@ -333,13 +333,13 @@ public:
 
 protected:
     /** ?†Ë??¢Â??∏Ê? */
-    void LoadFactionData();
+    void LoadFactionData(};
 
     /** ?ùÂ??ñÈ?Ë™çÂã¢??*/
-    void InitializeDefaultFactions();
+    void InitializeDefaultFactions(};
 
     /** Ë®ªÂ??¢Â? */
-    void RegisterFaction(const FFactionData& FactionData);
+    void RegisterFaction(const FFactionData& FactionData};
 
 private:
     /** ?Ä?âÂã¢?õÊï∏??*/
@@ -354,3 +354,4 @@ private:
     UPROPERTY(BlueprintReadOnly, Category = "Faction System", meta = (AllowPrivateAccess = "true"))
     bool bInitialized;
 };
+

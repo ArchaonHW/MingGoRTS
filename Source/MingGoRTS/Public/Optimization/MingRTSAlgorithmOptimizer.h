@@ -63,7 +63,7 @@ struct FAlgorithmProfile
 
     FAlgorithmProfile()
     {
-        AlgorithmName = TEXT("");
+        AlgorithmName = TEXT(""};
         AlgorithmType = EAlgorithmType::Sorting;
         TimeComplexity = 0.0f;
         SpaceComplexity = 0.0f;
@@ -106,8 +106,8 @@ struct FOptimizationResult
 
     FOptimizationResult()
     {
-        OriginalAlgorithm = TEXT("");
-        OptimizedAlgorithm = TEXT("");
+        OriginalAlgorithm = TEXT(""};
+        OptimizedAlgorithm = TEXT(""};
         Technique = EOptimizationTechnique::TimeComplexity;
         TimeImprovement = 0.0f;
         SpaceImprovement = 0.0f;
@@ -116,8 +116,8 @@ struct FOptimizationResult
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAlgorithmOptimized, const FString&, AlgorithmName, const FOptimizationResult&, Result);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnOptimizationCompleted, const FString&, AlgorithmName, EOptimizationTechnique, Technique, float, Improvement);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAlgorithmOptimized, const FString&, AlgorithmName, const FOptimizationResult&, Result};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnOptimizationCompleted, const FString&, AlgorithmName, EOptimizationTechnique, Technique, float, Improvement};
 
 /**
  * ÁÆóÊ??™Â??®Á≥ªÁµ?- ?∫ËÉΩÁÆóÊ??ÜÊ??åÂÑ™?ñÁ≥ªÁµ? * ?ê‰?ÁÆóÊ??ßËÉΩ?ÜÊ??ÅËá™?ïÂÑ™?ñÂ?Âª∫Ë≠∞?üËÉΩ
@@ -128,59 +128,59 @@ class MINGGORTS_API UMingRTSAlgorithmOptimizer : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSAlgorithmOptimizer();
+    UMingRTSAlgorithmOptimizer(};
 
     // Á≥ªÁµ±?ùÂ???    UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    void InitializeAlgorithmOptimizer();
+    void InitializeAlgorithmOptimizer(};
 
     // ?ÜÊ?ÁÆóÊ??ßËÉΩ
     UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    FAlgorithmProfile AnalyzeAlgorithm(const FString& AlgorithmCode, EAlgorithmType AlgorithmType);
+    FAlgorithmProfile AnalyzeAlgorithm(const FString& AlgorithmCode, EAlgorithmType AlgorithmType};
 
     // ?™Â?ÁÆóÊ?
     UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    FOptimizationResult OptimizeAlgorithm(const FString& AlgorithmCode, EOptimizationTechnique Technique);
+    FOptimizationResult OptimizeAlgorithm(const FString& AlgorithmCode, EOptimizationTechnique Technique};
 
     // ?πÈ??™Â?
     UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    TArray<FOptimizationResult> BatchOptimizeAlgorithms(const TArray<FString>& AlgorithmCodes, const TArray<EOptimizationTechnique>& Techniques);
+    TArray<FOptimizationResult> BatchOptimizeAlgorithms(const TArray<FString>& AlgorithmCodes, const TArray<EOptimizationTechnique>& Techniques};
 
     // ÊØîË?ÁÆóÊ??ßËÉΩ
     UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    TMap<FString, float> CompareAlgorithms(const TArray<FString>& AlgorithmCodes);
+    TMap<FString, float> CompareAlgorithms(const TArray<FString>& AlgorithmCodes};
 
     // ?üÊ??™Â?Âª∫Ë≠∞
     UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    TArray<FString> GenerateOptimizationSuggestions(const FString& AlgorithmCode);
+    TArray<FString> GenerateOptimizationSuggestions(const FString& AlgorithmCode};
 
     // ?™Â??∏Ê??Ä‰Ω≥Á?Ê≥?    UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    FString SelectBestAlgorithm(const TArray<FString>& AlgorithmCodes, EAlgorithmType AlgorithmType);
+    FString SelectBestAlgorithm(const TArray<FString>& AlgorithmCodes, EAlgorithmType AlgorithmType};
 
     // Ë®àÁ?Ë§áÈ?Â∫?    UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    TMap<FString, float> CalculateComplexity(const FString& AlgorithmCode);
+    TMap<FString, float> CalculateComplexity(const FString& AlgorithmCode};
 
     // ?™Â??∏Ê?ÁµêÊ?
     UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    FString OptimizeDataStructure(const FString& AlgorithmCode);
+    FString OptimizeDataStructure(const FString& AlgorithmCode};
 
     // ?âÁî®Ë®òÊÜ∂??    UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    FString ApplyMemoization(const FString& AlgorithmCode);
+    FString ApplyMemoization(const FString& AlgorithmCode};
 
     // ‰∏¶Ë??ñÁ?Ê≥?    UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    FString ParallelizeAlgorithm(const FString& AlgorithmCode);
+    FString ParallelizeAlgorithm(const FString& AlgorithmCode};
 
     // ?âÁî®?üÁôºÂº?    UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    FString ApplyHeuristics(const FString& AlgorithmCode);
+    FString ApplyHeuristics(const FString& AlgorithmCode};
 
     // ?≤Â?ÁÆóÊ?Â∫?    UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
     TMap<EAlgorithmType, TArray<FString>> GetAlgorithmLibrary() const;
 
     // Ê∑ªÂ??™Â?Áæ©Á?Ê≥?    UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    void AddCustomAlgorithm(EAlgorithmType AlgorithmType, const FString& AlgorithmCode);
+    void AddCustomAlgorithm(EAlgorithmType AlgorithmType, const FString& AlgorithmCode};
 
     // Ë®≠ÁΩÆ?™Â??ÉÊï∏
     UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
-    void SetOptimizationParameters(float TimeWeight, float SpaceWeight, float AccuracyWeight);
+    void SetOptimizationParameters(float TimeWeight, float SpaceWeight, float AccuracyWeight};
 
     // ?≤Â??™Â?Áµ±Ë?
     UFUNCTION(BlueprintCallable, Category = "Algorithm Optimizer")
@@ -220,40 +220,41 @@ protected:
 
 private:
     // ?ßÈÉ®?™Â?ÁÆóÊ?
-    FOptimizationResult OptimizeTimeComplexity(const FString& AlgorithmCode);
-    FOptimizationResult OptimizeSpaceComplexity(const FString& AlgorithmCode);
-    FOptimizationResult OptimizeCachePerformance(const FString& AlgorithmCode);
-    FOptimizationResult OptimizeForParallelization(const FString& AlgorithmCode);
-    FOptimizationResult ApplyMemoizationOptimization(const FString& AlgorithmCode);
-    FOptimizationResult ApplyApproximationOptimization(const FString& AlgorithmCode);
-    FOptimizationResult ApplyHeuristicOptimization(const FString& AlgorithmCode);
-    FOptimizationResult ApplyHybridOptimization(const FString& AlgorithmCode);
+    FOptimizationResult OptimizeTimeComplexity(const FString& AlgorithmCode};
+    FOptimizationResult OptimizeSpaceComplexity(const FString& AlgorithmCode};
+    FOptimizationResult OptimizeCachePerformance(const FString& AlgorithmCode};
+    FOptimizationResult OptimizeForParallelization(const FString& AlgorithmCode};
+    FOptimizationResult ApplyMemoizationOptimization(const FString& AlgorithmCode};
+    FOptimizationResult ApplyApproximationOptimization(const FString& AlgorithmCode};
+    FOptimizationResult ApplyHeuristicOptimization(const FString& AlgorithmCode};
+    FOptimizationResult ApplyHybridOptimization(const FString& AlgorithmCode};
     
     // ÁÆóÊ??ÜÊ?
-    float AnalyzeTimeComplexity(const FString& AlgorithmCode);
-    float AnalyzeSpaceComplexity(const FString& AlgorithmCode);
-    float AnalyzeCacheEfficiency(const FString& AlgorithmCode);
-    float AnalyzeParallelizability(const FString& AlgorithmCode);
+    float AnalyzeTimeComplexity(const FString& AlgorithmCode};
+    float AnalyzeSpaceComplexity(const FString& AlgorithmCode};
+    float AnalyzeCacheEfficiency(const FString& AlgorithmCode};
+    float AnalyzeParallelizability(const FString& AlgorithmCode};
     
-    // Ë§áÈ?Â∫¶Ë?ÁÆ?    float CalculateTimeComplexityInternal(const FString& AlgorithmCode);
-    float CalculateSpaceComplexityInternal(const FString& AlgorithmCode);
-    float CalculateBigOComplexity(const FString& AlgorithmCode);
+    // Ë§áÈ?Â∫¶Ë?ÁÆ?    float CalculateTimeComplexityInternal(const FString& AlgorithmCode};
+    float CalculateSpaceComplexityInternal(const FString& AlgorithmCode};
+    float CalculateBigOComplexity(const FString& AlgorithmCode};
     
-    // ?™Â??ÄË°?    FString OptimizeLoops(const FString& AlgorithmCode);
-    FString OptimizeRecursion(const FString& AlgorithmCode);
-    FString OptimizeDataAccess(const FString& AlgorithmCode);
-    FString OptimizeConditionalStatements(const FString& AlgorithmCode);
+    // ?™Â??ÄË°?    FString OptimizeLoops(const FString& AlgorithmCode};
+    FString OptimizeRecursion(const FString& AlgorithmCode};
+    FString OptimizeDataAccess(const FString& AlgorithmCode};
+    FString OptimizeConditionalStatements(const FString& AlgorithmCode};
     
     // ËºîÂä©?ΩÊï∏
-    void UpdateOptimizationStatistics(const FString& AlgorithmName, const FAlgorithmProfile& Profile);
-    bool IsAlgorithmOptimizable(const FString& AlgorithmCode, EOptimizationTechnique Technique);
-    FString GenerateOptimizedCode(const FString& OriginalCode, const TArray<FString>& Optimizations);
-    float CalculatePerformanceGain(const FAlgorithmProfile& Original, const FAlgorithmProfile& Optimized);
+    void UpdateOptimizationStatistics(const FString& AlgorithmName, const FAlgorithmProfile& Profile};
+    bool IsAlgorithmOptimizable(const FString& AlgorithmCode, EOptimizationTechnique Technique};
+    FString GenerateOptimizedCode(const FString& OriginalCode, const TArray<FString>& Optimizations};
+    float CalculatePerformanceGain(const FAlgorithmProfile& Original, const FAlgorithmProfile& Optimized};
     
-    // ÁÆóÊ?Â∫´ÁÆ°??    void InitializeAlgorithmLibrary();
-    void LoadStandardAlgorithms();
-    void AddSortingAlgorithms();
-    void AddSearchingAlgorithms();
-    void AddPathfindingAlgorithms();
-    void AddMachineLearningAlgorithms();
+    // ÁÆóÊ?Â∫´ÁÆ°??    void InitializeAlgorithmLibrary(};
+    void LoadStandardAlgorithms(};
+    void AddSortingAlgorithms(};
+    void AddSearchingAlgorithms(};
+    void AddPathfindingAlgorithms(};
+    void AddMachineLearningAlgorithms(};
 };
+

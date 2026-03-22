@@ -58,13 +58,13 @@ struct FPerformanceMetric
 
     FPerformanceMetric()
     {
-        MetricName = TEXT("");
+        MetricName = TEXT(""};
         CurrentValue = 0.0f;
         AverageValue = 0.0f;
         PeakValue = 0.0f;
         MinValue = FLT_MAX;
         PerformanceLevel = EPerformanceLevel::Average;
-        LastUpdateTime = FDateTime::Now();
+        LastUpdateTime = FDateTime::Now(};
     }
 };
 
@@ -105,8 +105,8 @@ struct FProfilingSession
 
     FProfilingSession()
     {
-        SessionID = TEXT("");
-        SessionName = TEXT("");
+        SessionID = TEXT(""};
+        SessionName = TEXT(""};
         ProfilingType = EProfilingType::CPU;
         Duration = 0.0f;
         bIsActive = false;
@@ -138,17 +138,17 @@ struct FBottleneckAnalysis
 
     FBottleneckAnalysis()
     {
-        ComponentName = TEXT("");
+        ComponentName = TEXT(""};
         ProfilingType = EProfilingType::CPU;
         ImpactScore = 0.0f;
         PotentialImprovement = 0.0f;
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProfilingStarted, const FString&, SessionID, EProfilingType, ProfilingType);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProfilingCompleted, const FString&, SessionID, const FProfilingSession&, Session);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPerformanceWarning, const FString&, SessionID, const FString&, Warning, EPerformanceLevel, Level);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBottleneckDetected, const FString&, SessionID, const FBottleneckAnalysis&, Bottleneck);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProfilingStarted, const FString&, SessionID, EProfilingType, ProfilingType};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProfilingCompleted, const FString&, SessionID, const FProfilingSession&, Session};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPerformanceWarning, const FString&, SessionID, const FString&, Warning, EPerformanceLevel, Level};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBottleneckDetected, const FString&, SessionID, const FBottleneckAnalysis&, Bottleneck};
 
 /**
  * ?ßËÉΩ?ÜÊ??®Á≥ªÁµ?- ÂØ¶Ê??ßËÉΩ??éß?åÂ??êÁ≥ªÁµ? * ?ê‰??®Èù¢?ÑÊÄßËÉΩ?ÜÊ??ÅÁì∂?∏Ê™¢Ê∏¨Â??™Â?Âª∫Ë≠∞
@@ -159,18 +159,18 @@ class MINGGORTS_API UMingRTSPerformanceProfiler : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSPerformanceProfiler();
+    UMingRTSPerformanceProfiler(};
 
     // Á≥ªÁµ±?ùÂ???    UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void InitializeProfiler();
+    void InitializeProfiler(};
 
     // ?ãÂ??ßËÉΩ?ÜÊ??ÉË©±
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    FString StartProfilingSession(EProfilingType ProfilingType, const FString& SessionName);
+    FString StartProfilingSession(EProfilingType ProfilingType, const FString& SessionName};
 
     // ?úÊ≠¢?ßËÉΩ?ÜÊ??ÉË©±
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void StopProfilingSession(const FString& SessionID);
+    void StopProfilingSession(const FString& SessionID};
 
     // ?≤Â??∂Â??ßËÉΩ?áÊ?
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
@@ -178,45 +178,45 @@ public:
 
     // ?ÜÊ??ßËÉΩ?∂È†∏
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    TArray<FBottleneckAnalysis> AnalyzeBottlenecks(const FString& SessionID);
+    TArray<FBottleneckAnalysis> AnalyzeBottlenecks(const FString& SessionID};
 
     // ?üÊ??ßËÉΩ?±Â?
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    FString GeneratePerformanceReport(const FString& SessionID);
+    FString GeneratePerformanceReport(const FString& SessionID};
 
     // ÂØ¶Ê??ßËÉΩ??éß
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void StartRealTimeMonitoring();
+    void StartRealTimeMonitoring(};
 
     // ?úÊ≠¢ÂØ¶Ê???éß
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void StopRealTimeMonitoring();
+    void StopRealTimeMonitoring(};
 
     // Ë®≠ÁΩÆ?ßËÉΩ?æÂÄ?    UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void SetPerformanceThresholds(EProfilingType ProfilingType, float WarningThreshold, float CriticalThreshold);
+    void SetPerformanceThresholds(EProfilingType ProfilingType, float WarningThreshold, float CriticalThreshold};
 
     // ?≤Â??™Â?Âª∫Ë≠∞
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    TArray<FString> GetOptimizationSuggestions(const FString& SessionID);
+    TArray<FString> GetOptimizationSuggestions(const FString& SessionID};
 
     // ÊØîË??ßËÉΩ?ÉË©±
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    TMap<FString, float> CompareSessions(const FString& SessionID1, const FString& SessionID2);
+    TMap<FString, float> CompareSessions(const FString& SessionID1, const FString& SessionID2};
 
     // Â∞éÂá∫?ßËÉΩ?∏Ê?
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    bool ExportPerformanceData(const FString& SessionID, const FString& FilePath);
+    bool ExportPerformanceData(const FString& SessionID, const FString& FilePath};
 
     // Ë®≠ÁΩÆ??éß?ìÈ?
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void SetMonitoringInterval(float IntervalSeconds);
+    void SetMonitoringInterval(float IntervalSeconds};
 
     // ?≤Â?Á≥ªÁµ±?ßËÉΩÊ¶ÇË¶Ω
     UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
     TMap<EProfilingType, EPerformanceLevel> GetSystemPerformanceOverview() const;
 
     // Ê∏ÖÁ??äÊ?Ë©?    UFUNCTION(BlueprintCallable, Category = "Performance Profiler")
-    void CleanupOldSessions(int32 MaxSessionsToKeep);
+    void CleanupOldSessions(int32 MaxSessionsToKeep};
 
     // ‰∫ã‰ª∂ÂßîÊ?
     UPROPERTY(BlueprintAssignable)
@@ -262,42 +262,43 @@ protected:
 
 private:
     // ?ßÈÉ®?ßËÉΩ?ÜÊ??èËºØ
-    void UpdatePerformanceMetrics();
-    void CollectCPUMetrics();
-    void CollectMemoryMetrics();
-    void CollectGPUMetrics();
-    void CollectNetworkMetrics();
-    void CollectDiskMetrics();
-    void CollectRenderingMetrics();
-    void CollectAudioMetrics();
-    void CollectPhysicsMetrics();
+    void UpdatePerformanceMetrics(};
+    void CollectCPUMetrics(};
+    void CollectMemoryMetrics(};
+    void CollectGPUMetrics(};
+    void CollectNetworkMetrics(};
+    void CollectDiskMetrics(};
+    void CollectRenderingMetrics(};
+    void CollectAudioMetrics(};
+    void CollectPhysicsMetrics(};
     
     // ?ßËÉΩ?ÜÊ?ÁÆóÊ?
-    float CalculateCPUUsage();
-    float CalculateMemoryUsage();
-    float CalculateGPUUsage();
-    float CalculateNetworkLatency();
-    float CalculateDiskIO();
-    float CalculateRenderingPerformance();
-    float CalculateAudioPerformance();
-    float CalculatePhysicsPerformance();
+    float CalculateCPUUsage(};
+    float CalculateMemoryUsage(};
+    float CalculateGPUUsage(};
+    float CalculateNetworkLatency(};
+    float CalculateDiskIO(};
+    float CalculateRenderingPerformance(};
+    float CalculateAudioPerformance(};
+    float CalculatePhysicsPerformance(};
     
     // ?∂È†∏Ê™¢Ê∏¨
-    void DetectBottlenecks(const FString& SessionID);
-    FBottleneckAnalysis AnalyzeComponentPerformance(EProfilingType ProfilingType, const FPerformanceMetric& Metric);
+    void DetectBottlenecks(const FString& SessionID};
+    FBottleneckAnalysis AnalyzeComponentPerformance(EProfilingType ProfilingType, const FPerformanceMetric& Metric};
     
     // ?™Â?Âª∫Ë≠∞?üÊ?
-    TArray<FString> GenerateOptimizationSuggestions(EProfilingType ProfilingType, const FPerformanceMetric& Metric);
-    FString GeneratePerformanceReportInternal(const FProfilingSession& Session);
+    TArray<FString> GenerateOptimizationSuggestions(EProfilingType ProfilingType, const FPerformanceMetric& Metric};
+    FString GeneratePerformanceReportInternal(const FProfilingSession& Session};
     
     // ËºîÂä©?ΩÊï∏
-    EPerformanceLevel EvaluatePerformanceLevel(float Value, float WarningThreshold, float CriticalThreshold);
-    void UpdateHistoricalData(FPerformanceMetric& Metric);
-    void TriggerPerformanceWarning(const FString& SessionID, const FString& Warning, EPerformanceLevel Level);
+    EPerformanceLevel EvaluatePerformanceLevel(float Value, float WarningThreshold, float CriticalThreshold};
+    void UpdateHistoricalData(FPerformanceMetric& Metric};
+    void TriggerPerformanceWarning(const FString& SessionID, const FString& Warning, EPerformanceLevel Level};
     FString GetProfilingTypeName(EProfilingType ProfilingType) const;
     
     // ÂØ¶Ê???éß
-    void RealTimeMonitoringLoop();
+    void RealTimeMonitoringLoop(};
     bool bIsRealTimeMonitoringActive;
     FTimerHandle RealTimeMonitoringTimer;
 };
+

@@ -114,122 +114,122 @@ class MINGGORTS_API UMingRTSSelfLearningSystemTest : public UObject
 
 public:
     // Constructor and initialization
-    UMingRTSSelfLearningSystemTest();
+    UMingRTSSelfLearningSystemTest(};
     virtual void BeginDestroy() override;
 
     // Test suite execution
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test")
-    void InitializeTestSuite(UMingRTSSelfLearningSystem* LearningSystem, UMingRTSAILearningIntegration* AIIntegration);
+    void InitializeTestSuite(UMingRTSSelfLearningSystem* LearningSystem, UMingRTSAILearningIntegration* AIIntegration};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test")
-    FTestSuiteSummary RunAllTests();
+    FTestSuiteSummary RunAllTests(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test")
-    FTestSuiteSummary RunTestCategory(ETestCategory Category);
+    FTestSuiteSummary RunTestCategory(ETestCategory Category};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test")
-    FTestResult RunSingleTest(const FString& TestName);
+    FTestResult RunSingleTest(const FString& TestName};
 
     // Individual test methods
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|System")
-    FTestResult TestSystemInitialization();
+    FTestResult TestSystemInitialization(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|System")
-    FTestResult TestSystemShutdown();
+    FTestResult TestSystemShutdown(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Data")
-    FTestResult TestUserBehaviorCollection();
+    FTestResult TestUserBehaviorCollection(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Data")
-    FTestResult TestGameplayMetricsCollection();
+    FTestResult TestGameplayMetricsCollection(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Data")
-    FTestResult TestCustomDataCollection();
+    FTestResult TestCustomDataCollection(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Data")
-    FTestResult TestDataValidation();
+    FTestResult TestDataValidation(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Models")
-    FTestResult TestModelCreation();
+    FTestResult TestModelCreation(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Models")
-    FTestResult TestModelTraining();
+    FTestResult TestModelTraining(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Models")
-    FTestResult TestModelPrediction();
+    FTestResult TestModelPrediction(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Models")
-    FTestResult TestModelPersistence();
+    FTestResult TestModelPersistence(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|AI")
-    FTestResult TestAIIntegration();
+    FTestResult TestAIIntegration(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|AI")
-    FTestResult TestPlayerBehaviorAnalysis();
+    FTestResult TestPlayerBehaviorAnalysis(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|AI")
-    FTestResult TestStrategyPatternRecognition();
+    FTestResult TestStrategyPatternRecognition(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|AI")
-    FTestResult TestAIAdaptation();
+    FTestResult TestAIAdaptation(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Adaptation")
-    FTestResult TestAdaptiveParameters();
+    FTestResult TestAdaptiveParameters(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Adaptation")
-    FTestResult TestSystemAdaptation();
+    FTestResult TestSystemAdaptation(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Performance")
-    FTestResult TestLearningAccuracy();
+    FTestResult TestLearningAccuracy(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Performance")
-    FTestResult TestPredictionPerformance();
+    FTestResult TestPredictionPerformance(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Performance")
-    FTestResult TestMemoryUsage();
+    FTestResult TestMemoryUsage(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Concurrency")
-    FTestResult TestConcurrentDataCollection();
+    FTestResult TestConcurrentDataCollection(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Concurrency")
-    FTestResult TestConcurrentModelTraining();
+    FTestResult TestConcurrentModelTraining(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Error")
-    FTestResult TestInvalidDataHandling();
+    FTestResult TestInvalidDataHandling(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Error")
-    FTestResult TestModelFailureRecovery();
+    FTestResult TestModelFailureRecovery(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Integration")
-    FTestResult TestEndToEndLearning();
+    FTestResult TestEndToEndLearning(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Integration")
-    FTestResult TestCrossSystemIntegration();
+    FTestResult TestCrossSystemIntegration(};
 
     // Test utilities
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Utilities")
-    void GenerateTestData(int32 NumDataPoints);
+    void GenerateTestData(int32 NumDataPoints};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Utilities")
-    void ClearTestData();
+    void ClearTestData(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Utilities")
     FTestSuiteSummary GetLastTestResults() const;
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Utilities")
-    void ExportTestResults(const FString& FilePath);
+    void ExportTestResults(const FString& FilePath};
 
     // Performance benchmarks
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Benchmarks")
-    void RunPerformanceBenchmarks();
+    void RunPerformanceBenchmarks(};
 
     UFUNCTION(BlueprintCallable, Category = "Self-Learning Test|Benchmarks")
     float GetBenchmarkResult(const FString& BenchmarkName) const;
 
     // Events and delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestCompleted, const FTestResult&, TestResult);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestSuiteCompleted, const FTestSuiteSummary&, Summary);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestProgress, int32, CurrentTest, int32, TotalTests);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestCompleted, const FTestResult&, TestResult};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestSuiteCompleted, const FTestSuiteSummary&, Summary};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestProgress, int32, CurrentTest, int32, TotalTests};
 
     UPROPERTY(BlueprintAssignable)
     FOnTestCompleted OnTestCompleted;
@@ -242,14 +242,14 @@ public:
 
 protected:
     // Test execution helpers
-    FTestResult ExecuteTest(const FString& TestName, TFunction<void()> TestFunction);
-    void RecordTestResult(const FTestResult& Result);
-    void UpdateTestProgress();
+    FTestResult ExecuteTest(const FString& TestName, TFunction<void()> TestFunction};
+    void RecordTestResult(const FTestResult& Result};
+    void UpdateTestProgress(};
 
     // Test data generators
-    void GenerateUserBehaviorData(int32 Count);
-    void GenerateGameplayMetricsData(int32 Count);
-    void GenerateCustomData(ELearningDataType DataType, int32 Count);
+    void GenerateUserBehaviorData(int32 Count};
+    void GenerateGameplayMetricsData(int32 Count};
+    void GenerateCustomData(ELearningDataType DataType, int32 Count};
 
     // Validation helpers
     bool ValidateLearningSystem() const;
@@ -257,16 +257,16 @@ protected:
     bool ValidateTestData() const;
 
     // Performance measurement
-    double MeasureExecutionTime(TFunction<void()> Function);
-    void RecordBenchmark(const FString& Name, double Time);
+    double MeasureExecutionTime(TFunction<void()> Function};
+    void RecordBenchmark(const FString& Name, double Time};
 
     // Test assertion helpers
-    bool AssertTrue(bool Condition, const FString& Message);
-    bool AssertFalse(bool Condition, const FString& Message);
-    bool AssertEqual(const FString& Expected, const FString& Actual, const FString& Message);
-    bool AssertNotEqual(const FString& Expected, const FString& Actual, const FString& Message);
-    bool AssertNotNull(const void* Pointer, const FString& Message);
-    bool AssertNull(const void* Pointer, const FString& Message);
+    bool AssertTrue(bool Condition, const FString& Message};
+    bool AssertFalse(bool Condition, const FString& Message};
+    bool AssertEqual(const FString& Expected, const FString& Actual, const FString& Message};
+    bool AssertNotEqual(const FString& Expected, const FString& Actual, const FString& Message};
+    bool AssertNotNull(const void* Pointer, const FString& Message};
+    bool AssertNull(const void* Pointer, const FString& Message};
 
 private:
     // System references
@@ -323,3 +323,4 @@ private:
     UPROPERTY()
     int32 TestsFailed;
 };
+

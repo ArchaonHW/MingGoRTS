@@ -92,61 +92,61 @@ class WEAKNESSFIXER_API UWeaknessFixer : public UObject
     GENERATED_BODY()
 
 public:
-    UWeaknessFixer();
+    UWeaknessFixer(};
 
     /** ?å??–ä¿®å¾©å™¨ */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    void InitializeFixer();
+    void InitializeFixer(};
 
     /** ?‹è?å®Œæ•´ä¿®å¾© */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    TArray<FFixResult> RunFullFix();
+    TArray<FFixResult> RunFullFix(};
 
     /** ä¿®å¾©?§å?æ´©æ? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixMemoryLeaks();
+    FFixResult FixMemoryLeaks(};
 
     /** ä¿®å¾©ç·šç?å®‰å…¨?é? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixThreadSafety();
+    FFixResult FixThreadSafety(};
 
     /** ä¿®å¾©?§èƒ½?é? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixPerformanceIssues();
+    FFixResult FixPerformanceIssues(};
 
     /** ä¿®å¾©å®‰å…¨?é? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixSecurityIssues();
+    FFixResult FixSecurityIssues(};
 
     /** ä¿®å¾©ä»?¢¼è³ªé??é? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixCodeQuality();
+    FFixResult FixCodeQuality(};
 
     /** ä¿®å¾©?¹å??‡ä»¶ */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixSpecificFile(const FString& FilePath);
+    FFixResult FixSpecificFile(const FString& FilePath};
 
     /** ?²å?ä¿®å¾©æ­·å² */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    TArray<FFixResult> GetFixHistory();
+    TArray<FFixResult> GetFixHistory(};
 
     /** ?Ÿæ?ä¿®å¾©?±å? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FString GenerateFixReport();
+    FString GenerateFixReport(};
 
     /** é©—è?ä¿®å¾©?ˆæ? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    bool VerifyFixes();
+    bool VerifyFixes(};
 
 public:
     /** ä¿®å¾©?‹å?äº‹ä»¶ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFixStarted, EFixType, FixType);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFixStarted, EFixType, FixType};
 
     /** ä¿®å¾©å®Œæ?äº‹ä»¶ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFixCompleted, const FFixResult&, FixResult);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFixCompleted, const FFixResult&, FixResult};
 
     /** ä¿®å¾©å¤±æ?äº‹ä»¶ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFixFailed, const FFixResult&, FixResult);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFixFailed, const FFixResult&, FixResult};
 
     UPROPERTY(BlueprintAssignable, Category = "Weakness Fixer|Events")
     FOnFixStarted OnFixStarted;
@@ -159,19 +159,19 @@ public:
 
 protected:
     /** ?†æ?ä»?¢¼å¼±é? */
-    TArray<FString> AnalyzeWeaknesses(const FString& FilePath);
+    TArray<FString> AnalyzeWeaknesses(const FString& FilePath};
 
     /** ?‰ç”¨ä¿®å¾© */
-    bool ApplyFix(const FString& FilePath, const FString& Weakness, const FString& Fix);
+    bool ApplyFix(const FString& FilePath, const FString& Weakness, const FString& Fix};
 
     /** ?™ä»½?Ÿæ?ä»?*/
-    bool BackupFile(const FString& FilePath);
+    bool BackupFile(const FString& FilePath};
 
     /** é©—è?ä¿®å¾© */
-    bool ValidateFix(const FString& FilePath, const FString& OriginalContent, const FString& FixedContent);
+    bool ValidateFix(const FString& FilePath, const FString& OriginalContent, const FString& FixedContent};
 
     /** è¨˜é?ä¿®å¾© */
-    void RecordFix(const FFixResult& FixResult);
+    void RecordFix(const FFixResult& FixResult};
 
 private:
     /** ä¿®å¾©æ­·å² */
@@ -190,3 +190,4 @@ private:
     UPROPERTY(BlueprintReadOnly, Category = "Weakness Fixer", meta = (AllowPrivateAccess = "true"))
     TMap<FString, FString> FixRules;
 };
+

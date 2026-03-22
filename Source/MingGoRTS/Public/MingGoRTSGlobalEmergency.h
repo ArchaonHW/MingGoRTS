@@ -105,10 +105,10 @@ struct FEmergencyResponsePlan
     bool bActive;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmergencyDetected, const FEmergencyEvent&, EmergencyEvent);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmergencyResponseActivated, const FEmergencyResponsePlan&, ResponsePlan);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEmergencyStatusUpdated, const FString&, EventName, bool, bResolved);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGlobalEmergencyAlert, const FString&, AlertMessage);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmergencyDetected, const FEmergencyEvent&, EmergencyEvent};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmergencyResponseActivated, const FEmergencyResponsePlan&, ResponsePlan};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEmergencyStatusUpdated, const FString&, EventName, bool, bResolved};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGlobalEmergencyAlert, const FString&, AlertMessage};
 
 UCLASS(BlueprintType, Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingGoRTSGlobalEmergency : public UActorComponent
@@ -116,126 +116,126 @@ class MINGGORTS_API UMingGoRTSGlobalEmergency : public UActorComponent
     GENERATED_BODY()
 
 public:
-    UMingGoRTSGlobalEmergency();
+    UMingGoRTSGlobalEmergency(};
 
     // Á∑äÊÄ•‰?‰ª∂ÁÆ°??    UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void DetectEmergency(const FEmergencyEvent& EmergencyEvent);
+    void DetectEmergency(const FEmergencyEvent& EmergencyEvent};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void ActivateEmergencyResponse(const FEmergencyEvent& Emergency);
+    void ActivateEmergencyResponse(const FEmergencyEvent& Emergency};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void MonitorActiveEmergencies();
+    void MonitorActiveEmergencies(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
     TArray<FEmergencyEvent> GetActiveEmergencies() const { return ActiveEmergencies; }
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void ResolveEmergency(const FString& EventName);
+    void ResolveEmergency(const FString& EventName};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
     bool IsEmergencyActive(const FString& EventName) const;
 
     // ?®Â??øÊ??îË™ø
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void CoordinateGlobalResponse(const FEmergencyEvent& Emergency);
+    void CoordinateGlobalResponse(const FEmergencyEvent& Emergency};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void DeployInternationalAid(const FString& EventName);
+    void DeployInternationalAid(const FString& EventName};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void EstablishEmergencyProtocols();
+    void EstablishEmergencyProtocols(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void ActivateGlobalAlertSystem();
+    void ActivateGlobalAlertSystem(};
 
     // Ë≥áÊ??ÜÈ?
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void AllocateEmergencyResources(const FString& EventName, const TArray<FString>& Resources);
+    void AllocateEmergencyResources(const FString& EventName, const TArray<FString>& Resources};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void RequestInternationalAssistance(const FString& EventName);
+    void RequestInternationalAssistance(const FString& EventName};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void ManageResourceDistribution();
+    void ManageResourceDistribution(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
     TArray<FString> GetAvailableEmergencyResources() const;
 
     // ?êË≠¶Á≥ªÁµ±
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void IssueEmergencyWarning(const FEmergencyEvent& Emergency);
+    void IssueEmergencyWarning(const FEmergencyEvent& Emergency};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void BroadcastGlobalAlert(const FString& AlertMessage);
+    void BroadcastGlobalAlert(const FString& AlertMessage};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void UpdateAlertLevels();
+    void UpdateAlertLevels(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void EvacuateAffectedAreas(const FString& EventName);
+    void EvacuateAffectedAreas(const FString& EventName};
 
     // ?ëÊè¥Ë°åÂ?
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void LaunchRescueOperations(const FString& EventName);
+    void LaunchRescueOperations(const FString& EventName};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void DeployMedicalTeams(const FString& EventName);
+    void DeployMedicalTeams(const FString& EventName};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void EstablishReliefCamps(const FString& EventName);
+    void EstablishReliefCamps(const FString& EventName};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void CoordinateSearchAndRescue(const FString& EventName);
+    void CoordinateSearchAndRescue(const FString& EventName};
 
     // ?¢Âæ©?åÈ?Âª?    UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void InitiateRecoveryPhase(const FString& EventName);
+    void InitiateRecoveryPhase(const FString& EventName};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void CoordinateReconstructionEfforts(const FString& EventName);
+    void CoordinateReconstructionEfforts(const FString& EventName};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void ProvideLongTermSupport(const FString& EventName);
+    void ProvideLongTermSupport(const FString& EventName};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void MonitorRecoveryProgress(const FString& EventName);
+    void MonitorRecoveryProgress(const FString& EventName};
 
     // ?êÈò≤?åÊ???    UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void StrengthenPreparednessSystems();
+    void StrengthenPreparednessSystems(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void ConductEmergencyDrills();
+    void ConductEmergencyDrills(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void UpdateEmergencyProtocols();
+    void UpdateEmergencyProtocols(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void TrainEmergencyResponders();
+    void TrainEmergencyResponders(};
 
     // ?∏Ê??ÜÊ??åÂ≠∏Áø?    UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void AnalyzeEmergencyPatterns();
+    void AnalyzeEmergencyPatterns(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void GenerateEmergencyReport();
+    void GenerateEmergencyReport(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void UpdateResponseStrategies();
+    void UpdateResponseStrategies(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void ShareLessonsLearned();
+    void ShareLessonsLearned(};
 
     // Á≥ªÁµ±?ßÂà∂
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void ActivateGlobalEmergencyMode();
+    void ActivateGlobalEmergencyMode(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void DeactivateGlobalEmergencyMode();
+    void DeactivateGlobalEmergencyMode(};
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
     bool IsGlobalEmergencyActive() const { return bGlobalEmergencyActive; }
 
     UFUNCTION(BlueprintCallable, Category = "Global Emergency")
-    void ResetEmergencySystem();
+    void ResetEmergencySystem(};
 
     // ÂßîÊ?‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "Global Emergency")
@@ -282,17 +282,18 @@ private:
     UPROPERTY()
     FDelegateHandle EmergencyTickerHandle;
 
-    void ProcessEmergencies();
-    void UpdateGlobalStatus();
-    void CoordinateResponseEfforts();
-    void MonitorResourceLevels();
-    void UpdateEmergencyAlerts();
-    bool OnEmergencyTick(float DeltaTime);
-    void NotifyEmergencyDetected(const FEmergencyEvent& Emergency);
-    void NotifyResponseActivated(const FEmergencyResponsePlan& Plan);
-    void NotifyStatusUpdated(const FString& EventName, bool bResolved);
-    void NotifyGlobalAlert(const FString& AlertMessage);
-    FEmergencyResponsePlan GenerateResponsePlan(const FEmergencyEvent& Emergency);
-    void ExecuteResponsePlan(const FEmergencyResponsePlan& Plan);
-    void UpdateEmergencyProgress(const FString& EventName, float DeltaTime);
+    void ProcessEmergencies(};
+    void UpdateGlobalStatus(};
+    void CoordinateResponseEfforts(};
+    void MonitorResourceLevels(};
+    void UpdateEmergencyAlerts(};
+    bool OnEmergencyTick(float DeltaTime};
+    void NotifyEmergencyDetected(const FEmergencyEvent& Emergency};
+    void NotifyResponseActivated(const FEmergencyResponsePlan& Plan};
+    void NotifyStatusUpdated(const FString& EventName, bool bResolved};
+    void NotifyGlobalAlert(const FString& AlertMessage};
+    FEmergencyResponsePlan GenerateResponsePlan(const FEmergencyEvent& Emergency};
+    void ExecuteResponsePlan(const FEmergencyResponsePlan& Plan};
+    void UpdateEmergencyProgress(const FString& EventName, float DeltaTime};
 };
+

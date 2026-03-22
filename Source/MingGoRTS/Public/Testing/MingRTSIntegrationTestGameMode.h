@@ -18,14 +18,14 @@ class MINGGORTS_API AMingRTSIntegrationTestGameMode : public AGameModeBase
     GENERATED_BODY()
 
 public:
-    AMingRTSIntegrationTestGameMode();
+    AMingRTSIntegrationTestGameMode(};
 
     /** GameMode?ãÂ??ÇÂü∑Ë°?*/
     virtual void BeginPlay() override;
 
     /** ?üÂ?Á≥ªÁµ±?ÜÊ?Ê∏¨Ë©¶ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void StartIntegrationTest();
+    void StartIntegrationTest(};
 
     /** ?≤Â?Ê∏¨Ë©¶?∑Ë???*/
     UFUNCTION(BlueprintPure, Category = "Integration Test")
@@ -38,23 +38,24 @@ protected:
 
     /** Ê∏¨Ë©¶?∑Ë??ãÂ??ïÁ? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void OnTestExecutionStarted();
+    void OnTestExecutionStarted(};
 
     /** Ê∏¨Ë©¶?∑Ë?ÂÆåÊ??ïÁ? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void OnTestExecutionCompleted(bool bAllTestsPassed);
+    void OnTestExecutionCompleted(bool bAllTestsPassed};
 
     /** Ê∏¨Ë©¶?éÊÆµÂÆåÊ??ïÁ? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void OnTestPhaseCompleted(const FString& PhaseName, bool bPassed);
+    void OnTestPhaseCompleted(const FString& PhaseName, bool bPassed};
 
 private:
     /** ?ùÂ??ñÊ∏¨Ë©¶Âü∑Ë°åÂô® */
-    void InitializeTestExecutor();
+    void InitializeTestExecutor(};
 
     /** Ë®≠ÁΩÆÊ∏¨Ë©¶?∞Â? */
-    void SetupTestEnvironment();
+    void SetupTestEnvironment(};
 
     /** Ê∏ÖÁ?Ê∏¨Ë©¶?∞Â? */
-    void CleanupTestEnvironment();
+    void CleanupTestEnvironment(};
 };
+

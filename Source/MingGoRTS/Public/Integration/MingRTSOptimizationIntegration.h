@@ -14,33 +14,33 @@ class MINGGORTS_API UMingRTSOptimizationIntegration : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationIntegration();
+    UMingRTSOptimizationIntegration(};
 
     // ?äÊà≤?ùÂ??ñÊ??ÜÊ??™Â?Á≥ªÁµ±
     UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void IntegrateOptimizationSystem();
+    void IntegrateOptimizationSystem(};
 
     // ?äÊà≤?ãÂ??ÇÂ??ïÂÑ™??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void StartGameOptimization();
+    void StartGameOptimization(};
 
     // ?äÊà≤?ãË??ÇÊ?Á∫åÂÑ™??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void RuntimeOptimization();
+    void RuntimeOptimization(};
 
     // ?úÂç°?áÊ??ÇÂÑ™??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void LevelTransitionOptimization();
+    void LevelTransitionOptimization(};
 
     // ‰øùÂ??ÇÂÑ™??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void SaveGameOptimization();
+    void SaveGameOptimization(};
 
     // ?†Ë??ÇÂÑ™??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    void LoadGameOptimization();
+    void LoadGameOptimization(};
 
     // ?≤Â?Á≥ªÁµ±?Ä??    UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
     bool IsOptimizationSystemActive() const;
 
     // ?≤Â??ßËÉΩÁµ±Ë?
     UFUNCTION(BlueprintCallable, Category = "Optimization Integration")
-    FString GetGamePerformanceStats();
+    FString GetGamePerformanceStats(};
 
 protected:
     // ?™Â?Á≥ªÁµ±ÁÆ°Á???    UPROPERTY(BlueprintReadOnly, Category = "Optimization Integration")
@@ -54,22 +54,23 @@ protected:
 
 private:
     // ?ÜÊ??èËºØ
-    void SetupGameSpecificOptimizations();
-    void ConfigureGameOptimizationParameters();
-    void IntegrateWithGameSystems();
+    void SetupGameSpecificOptimizations(};
+    void ConfigureGameOptimizationParameters(};
+    void IntegrateWithGameSystems(};
     
     // ?äÊà≤?πÂ??™Â?
-    void OptimizeGameLoop();
-    void OptimizeRendering();
-    void OptimizeAI();
-    void OptimizeAudio();
-    void OptimizePhysics();
+    void OptimizeGameLoop(};
+    void OptimizeRendering(};
+    void OptimizeAI(};
+    void OptimizeAudio(};
+    void OptimizePhysics(};
     
     // ?ßËÉΩ??éß
-    void MonitorGamePerformance();
-    void HandlePerformanceWarnings(const FString& Component, const FString& Warning, float Severity);
+    void MonitorGamePerformance(};
+    void HandlePerformanceWarnings(const FString& Component, const FString& Warning, float Severity};
     
     // ?™Â??™Â?
-    void AutoOptimizeBasedOnPerformance();
-    void AdjustQualitySettings();
+    void AutoOptimizeBasedOnPerformance(};
+    void AdjustQualitySettings(};
 };
+

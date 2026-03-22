@@ -14,55 +14,56 @@ class MINGGORTS_API UMingRTSOptimizationExample : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationExample();
+    UMingRTSOptimizationExample(};
 
     // ?∫Á?‰ΩøÁî®Á§∫‰?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void BasicUsageExample();
+    void BasicUsageExample(};
 
     // Âø´ÈÄüÂÑ™?ñÁ§∫‰æ?    UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void QuickOptimizationExample();
+    void QuickOptimizationExample(};
 
     // Ê∑±Â∫¶?™Â?Á§∫‰?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void DeepOptimizationExample();
+    void DeepOptimizationExample(};
 
     // ?™Â?Áæ©È?ÁΩÆÁ§∫‰æ?    UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void CustomConfigurationExample();
+    void CustomConfigurationExample(};
 
     // ÂØ¶Ê???éßÁ§∫‰?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void RealTimeMonitoringExample();
+    void RealTimeMonitoringExample(};
 
     // ?ßËÉΩ?ÜÊ?Á§∫‰?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void PerformanceAnalysisExample();
+    void PerformanceAnalysisExample(};
 
     // ÁÆóÊ??™Â?Á§∫‰?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void AlgorithmOptimizationExample();
+    void AlgorithmOptimizationExample(};
 
     // ?πÈ??ïÁ?Á§∫‰?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void BatchProcessingExample();
+    void BatchProcessingExample(};
 
     // ?ÜÊ?Â∑•‰?ÊµÅÁ?Á§∫‰?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void IntegratedWorkflowExample();
+    void IntegratedWorkflowExample(};
 
     // ?≤Â?‰ΩøÁî®?áÂ?
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    FString GetUsageGuide();
+    FString GetUsageGuide(};
 
 protected:
     // ?™Â?Á≥ªÁµ±ÁÆ°Á???    UPROPERTY(BlueprintReadOnly, Category = "Optimization Example")
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
 private:
-    // ?ùÂ??ñÁ§∫‰æ?    void InitializeExample();
+    // ?ùÂ??ñÁ§∫‰æ?    void InitializeExample(};
     
     // ÊºîÁ§∫ËºîÂä©?πÊ?
-    void LogExampleResult(const FString& ExampleName, const FString& Result);
-    void ShowConfigurationDetails(const FOptimizationConfiguration& Config);
-    void DisplayPerformanceReport(const FString& Report);
+    void LogExampleResult(const FString& ExampleName, const FString& Result};
+    void ShowConfigurationDetails(const FOptimizationConfiguration& Config};
+    void DisplayPerformanceReport(const FString& Report};
 };
+

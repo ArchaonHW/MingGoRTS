@@ -112,39 +112,39 @@ class MINGGORTS_API UMingRTSIntegrationTestSuite : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSIntegrationTestSuite();
+    UMingRTSIntegrationTestSuite(};
 
     /** ?å??–é??æ¸¬è©¦å?ä»?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void InitializeIntegrationTestSuite();
+    void InitializeIntegrationTestSuite(};
 
     /** ?‹å?å®Œæ•´?†æ?æ¸¬è©¦ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void StartFullIntegrationTest();
+    void StartFullIntegrationTest(};
 
     /** ?‹å??ºç??†æ?æ¸¬è©¦ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void StartBasicIntegrationTest();
+    void StartBasicIntegrationTest(};
 
     /** ?‹å??¸æ?æµæ¸¬è©?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void StartDataFlowTest();
+    void StartDataFlowTest(};
 
     /** ?‹å??§èƒ½?†æ?æ¸¬è©¦ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void StartPerformanceIntegrationTest();
+    void StartPerformanceIntegrationTest(};
 
     /** ?‹å??¨æˆ¶é«”é?æ¸¬è©¦ */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void StartUserExperienceTest();
+    void StartUserExperienceTest(};
 
     /** ?‹å??¼å®¹?§æ¸¬è©?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void StartCompatibilityTest();
+    void StartCompatibilityTest(};
 
     /** ?‹å??€çµ‚é?è­‰æ¸¬è©?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void StartFinalValidationTest();
+    void StartFinalValidationTest(};
 
     /** ?²å??¶å?æ¸¬è©¦?æ®µ */
     UFUNCTION(BlueprintPure, Category = "Integration Test")
@@ -156,7 +156,7 @@ public:
 
     /** ?²å?æ¸¬è©¦çµæ??±å? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    FString GenerateTestReport();
+    FString GenerateTestReport(};
 
     /** ?²å??æ®µçµæ? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
@@ -168,23 +168,23 @@ public:
 
     /** ?ç½®æ¸¬è©¦?€??*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void ResetTestState();
+    void ResetTestState(};
 
 public:
     /** æ¸¬è©¦?æ®µ?‹å?äº‹ä»¶ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestPhaseStarted, ETestPhase, Phase);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestPhaseStarted, ETestPhase, Phase};
 
     /** æ¸¬è©¦?æ®µå®Œæ?äº‹ä»¶ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestPhaseCompleted, ETestPhase, Phase, ETestResult, Result);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestPhaseCompleted, ETestPhase, Phase, ETestResult, Result};
 
     /** æ¸¬è©¦?¨ä?å®Œæ?äº‹ä»¶ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnTestCaseCompleted, FString, TestCaseName, ETestResult, Result, float, ExecutionTime);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnTestCaseCompleted, FString, TestCaseName, ETestResult, Result, float, ExecutionTime};
 
     /** å®Œæ•´æ¸¬è©¦å®Œæ?äº‹ä»¶ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFullTestCompleted, bool, bAllPassed);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFullTestCompleted, bool, bAllPassed};
 
     /** æ¸¬è©¦?²åº¦?´æ–°äº‹ä»¶ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestProgressUpdated, float, Progress);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestProgressUpdated, float, Progress};
 
     UPROPERTY(BlueprintAssignable, Category = "Integration Test|Events")
     FOnTestPhaseStarted OnTestPhaseStarted;
@@ -203,19 +203,19 @@ public:
 
 protected:
     /** ?·è?æ¸¬è©¦?¨ä? */
-    void ExecuteTestCase(const FString& TestCaseName, TFunction<void()> TestFunction);
+    void ExecuteTestCase(const FString& TestCaseName, TFunction<void()> TestFunction};
 
     /** ?´æ–°æ¸¬è©¦?²åº¦ */
-    void UpdateTestProgress();
+    void UpdateTestProgress(};
 
     /** è¨˜é?æ¸¬è©¦çµæ? */
-    void RecordTestResult(const FString& TestCaseName, ETestResult Result, const FString& ErrorMessage = TEXT(""));
+    void RecordTestResult(const FString& TestCaseName, ETestResult Result, const FString& ErrorMessage = TEXT("")};
 
     /** å®Œæ??¶å??æ®µ */
-    void CompleteCurrentPhase(ETestResult Result);
+    void CompleteCurrentPhase(ETestResult Result};
 
     /** ç§»å??°ä?ä¸€?æ®µ */
-    void MoveToNextPhase();
+    void MoveToNextPhase(};
 
 private:
     /** ?¶å?æ¸¬è©¦?æ®µ */
@@ -251,38 +251,39 @@ private:
     bool bIsTestRunning;
 
     /** ?å??–åŸºç¤é??æ¸¬è©¦ç”¨ä¾?*/
-    void InitializeBasicIntegrationTests();
+    void InitializeBasicIntegrationTests(};
 
     /** ?å??–æ•¸?šæ?æ¸¬è©¦?¨ä? */
-    void InitializeDataFlowTests();
+    void InitializeDataFlowTests(};
 
     /** ?å??–æ€§èƒ½?†æ?æ¸¬è©¦?¨ä? */
-    void InitializePerformanceIntegrationTests();
+    void InitializePerformanceIntegrationTests(};
 
     /** ?å??–ç”¨?¶é?é©—æ¸¬è©¦ç”¨ä¾?*/
-    void InitializeUserExperienceTests();
+    void InitializeUserExperienceTests(};
 
     /** ?å??–å…¼å®¹æ€§æ¸¬è©¦ç”¨ä¾?*/
-    void InitializeCompatibilityTests();
+    void InitializeCompatibilityTests(};
 
     /** ?å??–æ?çµ‚é?è­‰æ¸¬è©¦ç”¨ä¾?*/
-    void InitializeFinalValidationTests();
+    void InitializeFinalValidationTests(};
 
     /** ?ºç??†æ?æ¸¬è©¦?·é?å¯¦ç¾ */
-    void RunBasicIntegrationTests();
+    void RunBasicIntegrationTests(};
 
     /** ?¸æ?æµæ¸¬è©¦å…·é«”å¯¦??*/
-    void RunDataFlowTests();
+    void RunDataFlowTests(};
 
     /** ?§èƒ½?†æ?æ¸¬è©¦?·é?å¯¦ç¾ */
-    void RunPerformanceIntegrationTests();
+    void RunPerformanceIntegrationTests(};
 
     /** ?¨æˆ¶é«”é?æ¸¬è©¦?·é?å¯¦ç¾ */
-    void RunUserExperienceTests();
+    void RunUserExperienceTests(};
 
     /** ?¼å®¹?§æ¸¬è©¦å…·é«”å¯¦??*/
-    void RunCompatibilityTests();
+    void RunCompatibilityTests(};
 
     /** ?€çµ‚é?è­‰æ¸¬è©¦å…·é«”å¯¦??*/
-    void RunFinalValidationTests();
+    void RunFinalValidationTests(};
 };
+

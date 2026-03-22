@@ -41,7 +41,7 @@ struct FEvolutionaryTrait
 
     FEvolutionaryTrait()
     {
-        TraitName = TEXT("");
+        TraitName = TEXT(""};
         TraitValue = 0.0f;
         MutationRate = 0.1f;
         InheritanceStrength = 0.8f;
@@ -73,7 +73,7 @@ struct FAIGenome
 
     FAIGenome()
     {
-        GenomeID = TEXT("");
+        GenomeID = TEXT(""};
         FitnessLevel = EAIFitnessLevel::Medium;
         FitnessScore = 0.5f;
         Generation = 1;
@@ -108,15 +108,15 @@ struct FEvolutionRecord
 
     FEvolutionRecord()
     {
-        RecordID = TEXT("");
+        RecordID = TEXT(""};
         Phase = EEvolutionPhase::Adaptation;
-        EvolutionTrigger = TEXT("");
+        EvolutionTrigger = TEXT(""};
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAIEvolution, const FString&, AIID, const FAIGenome&, OldGenome, const FAIGenome&, NewGenome);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFitnessUpdate, const FString&, AIID, float, NewFitnessScore);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEvolutionPhase, const FString&, AIID, TEnumAsByte<EEvolutionPhase>, NewPhase);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAIEvolution, const FString&, AIID, const FAIGenome&, OldGenome, const FAIGenome&, NewGenome};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFitnessUpdate, const FString&, AIID, float, NewFitnessScore};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEvolutionPhase, const FString&, AIID, TEnumAsByte<EEvolutionPhase>, NewPhase};
 
 /**
  * ?™ÈÄ≤Â?AIÁ≥ªÁµ± - ?∫Êñº?∫ÂÇ≥ÁÆóÊ??åÊ∑±Â∫¶Âº∑?ñÂ≠∏ÁøíÁ?AI?≤Â?Á≥ªÁµ±
@@ -128,34 +128,34 @@ class MINGGORTS_API UMingRTSEvolutionaryAISystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSEvolutionaryAISystem();
+    UMingRTSEvolutionaryAISystem(};
 
     // Á≥ªÁµ±?ùÂ???    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
-    void InitializeEvolutionarySystem();
+    void InitializeEvolutionarySystem(};
 
     // ?µÂª∫AI?∫Â?Áµ?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
-    FAIGenome CreateAIGenome(const FString& AIID, const TArray<FEvolutionaryTrait>& InitialTraits);
+    FAIGenome CreateAIGenome(const FString& AIID, const TArray<FEvolutionaryTrait>& InitialTraits};
 
     // AI?≤Â??ïÁ?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
-    void ProcessEvolution(const FString& AIID, const TArray<FString>& EnvironmentalFactors);
+    void ProcessEvolution(const FString& AIID, const TArray<FString>& EnvironmentalFactors};
 
     // ?∫Â?ÁµÑ‰∫§?âÁ?ÊÆ?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
-    FAIGenome CrossoverGenomes(const FAIGenome& Parent1, const FAIGenome& Parent2);
+    FAIGenome CrossoverGenomes(const FAIGenome& Parent1, const FAIGenome& Parent2};
 
     // ?∫Â?ÁµÑË???    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
-    FAIGenome MutateGenome(const FAIGenome& Genome, float MutationIntensity);
+    FAIGenome MutateGenome(const FAIGenome& Genome, float MutationIntensity};
 
     // ?©Ê?Â∫¶Ë?‰º?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
-    float EvaluateFitness(const FString& AIID, const FAIGenome& Genome);
+    float EvaluateFitness(const FString& AIID, const FAIGenome& Genome};
 
     // ?∏Ê??Ä‰Ω≥Âü∫?†Á?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
-    TArray<FAIGenome> SelectBestGenomes(const TArray<FAIGenome>& Population, int32 SelectionCount);
+    TArray<FAIGenome> SelectBestGenomes(const TArray<FAIGenome>& Population, int32 SelectionCount};
 
     // ?≤Â??éÊÆµÁÆ°Á?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
-    void SetEvolutionPhase(const FString& AIID, EEvolutionPhase NewPhase);
+    void SetEvolutionPhase(const FString& AIID, EEvolutionPhase NewPhase};
 
     // ?≤Â?AI?∫Â?Áµ?    UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
     FAIGenome GetAIGenome(const FString& AIID) const;
@@ -166,11 +166,11 @@ public:
 
     // Ë®≠ÁΩÆ?≤Â??ÉÊï∏
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
-    void SetEvolutionParameters(float CrossoverRate, float MutationRate, float SelectionPressure);
+    void SetEvolutionParameters(float CrossoverRate, float MutationRate, float SelectionPressure};
 
     // ?πÈ??≤Â??ïÁ?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
-    void ProcessBatchEvolution(const TArray<FString>& AIIDs);
+    void ProcessBatchEvolution(const TArray<FString>& AIIDs};
 
     // ?≤Â?Áµ±Ë??ÜÊ?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
@@ -178,7 +178,7 @@ public:
 
     // ?çÁΩÆAI?≤Â?
     UFUNCTION(BlueprintCallable, Category = "Evolutionary AI")
-    void ResetAIEvolution(const FString& AIID);
+    void ResetAIEvolution(const FString& AIID};
 
     // ‰∫ã‰ª∂ÂßîÊ?
     UPROPERTY(BlueprintAssignable)
@@ -224,19 +224,20 @@ protected:
 
 private:
     // ?ßÈÉ®?≤Â??èËºØ
-    void PerformCrossover(FAIGenome& Offspring, const FAIGenome& Parent1, const FAIGenome& Parent2);
-    void PerformMutation(FAIGenome& Genome);
-    float CalculateTraitFitness(const FEvolutionaryTrait& Trait, const TArray<FString>& EnvironmentalFactors);
-    void UpdateEvolutionPhase(const FString& AIID);
-    void RecordEvolution(const FString& AIID, const FAIGenome& OldGenome, const FAIGenome& NewGenome, const FString& Trigger);
+    void PerformCrossover(FAIGenome& Offspring, const FAIGenome& Parent1, const FAIGenome& Parent2};
+    void PerformMutation(FAIGenome& Genome};
+    float CalculateTraitFitness(const FEvolutionaryTrait& Trait, const TArray<FString>& EnvironmentalFactors};
+    void UpdateEvolutionPhase(const FString& AIID};
+    void RecordEvolution(const FString& AIID, const FAIGenome& OldGenome, const FAIGenome& NewGenome, const FString& Trigger};
     
-    // ?©Ê?Â∫¶ÂáΩ??    float CalculateAdaptationFitness(const FAIGenome& Genome);
-    float CalculateLearningFitness(const FAIGenome& Genome);
-    float CalculateEvolutionFitness(const FAIGenome& Genome);
-    float CalculateSpecializationFitness(const FAIGenome& Genome);
+    // ?©Ê?Â∫¶ÂáΩ??    float CalculateAdaptationFitness(const FAIGenome& Genome};
+    float CalculateLearningFitness(const FAIGenome& Genome};
+    float CalculateEvolutionFitness(const FAIGenome& Genome};
+    float CalculateSpecializationFitness(const FAIGenome& Genome};
     
     // ËºîÂä©?ΩÊï∏
-    FEvolutionaryTrait BlendTraits(const FEvolutionaryTrait& Trait1, const FEvolutionaryTrait& Trait2);
-    bool ShouldEvolve(const FString& AIID);
+    FEvolutionaryTrait BlendTraits(const FEvolutionaryTrait& Trait1, const FEvolutionaryTrait& Trait2};
+    bool ShouldEvolve(const FString& AIID};
     TArray<FString> GetActiveEnvironmentalFactors() const;
 };
+

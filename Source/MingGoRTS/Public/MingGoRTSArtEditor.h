@@ -10,30 +10,30 @@
 UENUM(BlueprintType)
 enum class EEditingTool : uint8
 {
-    Brush,            // ?��?
-    Eraser,           // 橡皮??    Clone,            // ?��?工具
+    Brush,            // ??
+    Eraser,           // 橡皮??    Clone,            // ??工具
     Heal,             // 修復工具
-    Blur,             // 模�?工具
-    Sharpen,          // ?��?工具
+    Blur,             // 模?工具
+    Sharpen,          // ??工具
     Smudge,           // 涂抹工具
     Dodge,            // 減淡工具
-    Burn,             // ?�深工具
-    ColorPicker       // 顏色?��???};
+    Burn,             // ?深工具
+    ColorPicker       // 顏色????};
 
 UENUM(BlueprintType)
 enum class EBrushMode : uint8
 {
-    Normal,           // �?��
-    Multiply,         // �???��?
+    Normal,           // ?
+    Multiply,         // ????
     Screen,           // 濾色
-    Overlay,          // ?��?
-    SoftLight,        // ?��?
-    HardLight,        // 強�?
+    Overlay,          // ??
+    SoftLight,        // ??
+    HardLight,        // 強?
     ColorDodge,       // 顏色減淡
-    ColorBurn,        // 顏色?�深
-    Darken,           // 變�?
+    ColorBurn,        // 顏色?深
+    Darken,           // 變?
     Lighten,          // 變亮
-    Difference        // 差�?};
+    Difference        // 差?};
 
 USTRUCT(BlueprintType)
 struct FBrushSettings
@@ -92,9 +92,9 @@ struct FLayerInfo
     int32 LayerIndex = 0;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnArtEdited, class UTexture2D*, EditedArt);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLayerChanged, const FString&, LayerName, int32, LayerIndex);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnToolChanged, EEditingTool, NewTool);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnArtEdited, class UTexture2D*, EditedArt};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLayerChanged, const FString&, LayerName, int32, LayerIndex};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnToolChanged, EEditingTool, NewTool};
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSArtEditor : public UObject
@@ -102,83 +102,83 @@ class MINGGORTS_API UMingGoRTSArtEditor : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSArtEditor();
+    UMingGoRTSArtEditor(};
 
-    // ?��?編輯?�本?�能
+    // ??編輯?本?能
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void LoadImage(UTexture2D* Image);
+    void LoadImage(UTexture2D* Image};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void SaveImage(const FString& FilePath);
+    void SaveImage(const FString& FilePath};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     UTexture2D* GetCurrentImage() const { return CurrentImage; }
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void CreateNewImage(int32 Width, int32 Height, FLinearColor BackgroundColor = FLinearColor::White);
+    void CreateNewImage(int32 Width, int32 Height, FLinearColor BackgroundColor = FLinearColor::White};
 
     // 編輯工具
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void SetEditingTool(EEditingTool Tool);
+    void SetEditingTool(EEditingTool Tool};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     EEditingTool GetCurrentTool() const { return CurrentTool; }
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void SetBrushSettings(const FBrushSettings& Settings);
+    void SetBrushSettings(const FBrushSettings& Settings};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     FBrushSettings GetBrushSettings() const { return BrushSettings; }
 
-    // 繪製?�能
+    // 繪製?能
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void StartStroke(const FVector2D& Position);
+    void StartStroke(const FVector2D& Position};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ContinueStroke(const FVector2D& Position);
+    void ContinueStroke(const FVector2D& Position};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void EndStroke();
+    void EndStroke(};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void DrawLine(const FVector2D& StartPos, const FVector2D& EndPos);
+    void DrawLine(const FVector2D& StartPos, const FVector2D& EndPos};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void DrawRectangle(const FVector2D& TopLeft, const FVector2D& BottomRight);
+    void DrawRectangle(const FVector2D& TopLeft, const FVector2D& BottomRight};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void DrawCircle(const FVector2D& Center, float Radius);
+    void DrawCircle(const FVector2D& Center, float Radius};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void FillArea(const FVector2D& Position, FLinearColor FillColor);
+    void FillArea(const FVector2D& Position, FLinearColor FillColor};
 
-    // ?�層系統
+    // ?層系統
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void AddLayer(const FString& LayerName);
-
-    UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void RemoveLayer(const FString& LayerName);
+    void AddLayer(const FString& LayerName};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void SelectLayer(const FString& LayerName);
+    void RemoveLayer(const FString& LayerName};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void MoveLayerUp(const FString& LayerName);
+    void SelectLayer(const FString& LayerName};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void MoveLayerDown(const FString& LayerName);
+    void MoveLayerUp(const FString& LayerName};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void SetLayerOpacity(const FString& LayerName, float Opacity);
+    void MoveLayerDown(const FString& LayerName};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void SetLayerBlendMode(const FString& LayerName, EBrushMode BlendMode);
+    void SetLayerOpacity(const FString& LayerName, float Opacity};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ToggleLayerVisibility(const FString& LayerName);
+    void SetLayerBlendMode(const FString& LayerName, EBrushMode BlendMode};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ToggleLayerLock(const FString& LayerName);
+    void ToggleLayerVisibility(const FString& LayerName};
+
+    UFUNCTION(BlueprintCallable, Category = "Art Editor")
+    void ToggleLayerLock(const FString& LayerName};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     TArray<FLayerInfo> GetLayers() const { return Layers; }
@@ -186,94 +186,94 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     FLayerInfo GetActiveLayer() const;
 
-    // ?��?調整
+    // ??調整
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void AdjustBrightness(float Brightness);
+    void AdjustBrightness(float Brightness};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void AdjustContrast(float Contrast);
+    void AdjustContrast(float Contrast};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void AdjustSaturation(float Saturation);
+    void AdjustSaturation(float Saturation};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void AdjustHue(float Hue);
+    void AdjustHue(float Hue};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void AdjustGamma(float Gamma);
+    void AdjustGamma(float Gamma};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void InvertColors();
+    void InvertColors(};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void Desaturate();
+    void Desaturate(};
 
-    // 濾鏡?��?
+    // 濾鏡??
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ApplyBlurFilter(float Radius);
-
-    UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ApplySharpenFilter(float Strength);
+    void ApplyBlurFilter(float Radius};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ApplyGaussianBlur(float Sigma);
+    void ApplySharpenFilter(float Strength};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ApplyEdgeDetection();
+    void ApplyGaussianBlur(float Sigma};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ApplyEmbossFilter();
+    void ApplyEdgeDetection(};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ApplyNoiseFilter(float Strength);
-
-    // ?��?工具
-    UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void SelectRectangular(const FVector2D& TopLeft, const FVector2D& BottomRight);
+    void ApplyEmbossFilter(};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void SelectElliptical(const FVector2D& Center, float RadiusX, float RadiusY);
+    void ApplyNoiseFilter(float Strength};
+
+    // ??工具
+    UFUNCTION(BlueprintCallable, Category = "Art Editor")
+    void SelectRectangular(const FVector2D& TopLeft, const FVector2D& BottomRight};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void SelectLasso(const TArray<FVector2D>& Points);
+    void SelectElliptical(const FVector2D& Center, float RadiusX, float RadiusY};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void SelectByColor(FLinearColor Color, float Tolerance = 0.1f);
+    void SelectLasso(const TArray<FVector2D>& Points};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ClearSelection();
+    void SelectByColor(FLinearColor Color, float Tolerance = 0.1f};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void InvertSelection();
+    void ClearSelection(};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void CopySelection();
+    void InvertSelection(};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void PasteSelection();
+    void CopySelection(};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void DeleteSelection();
-
-    // 變�?工具
-    UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ScaleImage(float ScaleX, float ScaleY);
+    void PasteSelection(};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void RotateImage(float Angle);
+    void DeleteSelection(};
+
+    // 變?工具
+    UFUNCTION(BlueprintCallable, Category = "Art Editor")
+    void ScaleImage(float ScaleX, float ScaleY};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void FlipImage(bool bHorizontal, bool bVertical);
+    void RotateImage(float Angle};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void CropImage(const FVector2D& TopLeft, const FVector2D& BottomRight);
-
-    // 歷史記�?
-    UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void Undo();
+    void FlipImage(bool bHorizontal, bool bVertical};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void Redo();
+    void CropImage(const FVector2D& TopLeft, const FVector2D& BottomRight};
+
+    // 歷史記?
+    UFUNCTION(BlueprintCallable, Category = "Art Editor")
+    void Undo(};
+
+    UFUNCTION(BlueprintCallable, Category = "Art Editor")
+    void Redo(};
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     bool CanUndo() const;
@@ -282,9 +282,9 @@ public:
     bool CanRedo() const;
 
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
-    void ClearHistory();
+    void ClearHistory(};
 
-    // 委�?事件
+    // 委?事件
     UPROPERTY(BlueprintAssignable, Category = "Art Editor")
     FOnArtEdited OnArtEdited;
 
@@ -326,15 +326,17 @@ protected:
     int32 MaxHistorySize;
 
 private:
-    void InitializeLayers();
-    void UpdateActiveLayer();
-    void SaveToHistory();
-    void MergeLayers();
-    void ApplyBrushStroke(const FVector2D& Position);
-    void BlendLayers();
-    void NotifyArtEdited();
-    void NotifyLayerChanged(const FString& LayerName, int32 LayerIndex);
-    void NotifyToolChanged(EEditingTool NewTool);
-    UTexture2D* CreateLayerTexture(int32 Width, int32 Height);
-    void ProcessSelection();
+    void InitializeLayers(};
+    void UpdateActiveLayer(};
+    void SaveToHistory(};
+    void MergeLayers(};
+    void ApplyBrushStroke(const FVector2D& Position};
+    void BlendLayers(};
+    void NotifyArtEdited(};
+    void NotifyLayerChanged(const FString& LayerName, int32 LayerIndex};
+    void NotifyToolChanged(EEditingTool NewTool};
+    UTexture2D* CreateLayerTexture(int32 Width, int32 Height};
+    void ProcessSelection(};
 };
+
+

@@ -13,25 +13,25 @@ class MINGGORTS_API UMingRTSQuickStart : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSQuickStart();
+    UMingRTSQuickStart(};
 
     // ç«‹å³?‹å?ä½¿ç”¨ - ä¸€?µå??•å„ª?–ç³»çµ?    UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    void StartOptimizationNow();
+    void StartOptimizationNow(};
 
     // ?²å?ç³»çµ±?€??    UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    FString GetSystemStatus();
+    FString GetSystemStatus(};
 
     // å¿«é€Ÿæ€§èƒ½æª¢æŸ¥
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    void QuickPerformanceCheck();
+    void QuickPerformanceCheck(};
 
     // ç«‹å³?ªå??¶å??…ç›®
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    void OptimizeCurrentProject();
+    void OptimizeCurrentProject(};
 
     // ?²å??ªå?çµæ?
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
-    FString GetOptimizationResults();
+    FString GetOptimizationResults(};
 
 protected:
     // ?ªå?ç³»çµ±ç®¡ç???    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
@@ -44,8 +44,9 @@ protected:
     bool bOptimizationRunning;
 
 private:
-    // ?å??–å¿«?Ÿå???    void InitializeQuickStart();
+    // ?å??–å¿«?Ÿå???    void InitializeQuickStart(};
     
     // é¡¯ç¤ºçµæ?
-    void DisplayResults(const FString& Results);
+    void DisplayResults(const FString& Results};
 };
+

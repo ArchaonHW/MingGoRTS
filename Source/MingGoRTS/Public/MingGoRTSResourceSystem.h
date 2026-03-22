@@ -7,72 +7,72 @@
 UENUM(BlueprintType)
 enum class EResourceType : uint8
 {
-    Wood              UMETA(DisplayName = "?®Ê?"),
-    Stone             UMETA(DisplayName = "?≥È†≠"),
-    Metal             UMETA(DisplayName = "?ëÂ±¨"),
-    Food              UMETA(DisplayName = "È£üÁâ©"),
-    Water             UMETA(DisplayName = "Ê∞?),
-    Coal              UMETA(DisplayName = "?§ÁÇ≠"),
-    Iron              UMETA(DisplayName = "?µÁ§¶"),
-    Copper            UMETA(DisplayName = "?ÖÁ§¶"),
-    Gold              UMETA(DisplayName = "ÈªÉÈ?"),
-    Silver            UMETA(DisplayName = "?ΩÈ?"),
-    Cotton            UMETA(DisplayName = "Ê£âËä±"),
-    Silk              UMETA(DisplayName = "Áµ≤Á∂¢"),
-    Tea               UMETA(DisplayName = "?∂Ë?"),
-    Opium             UMETA(DisplayName = "È¥âÁ?"),
-    Medicine          UMETA(DisplayName = "?•Â?"),
-    Weapons           UMETA(DisplayName = "Ê≠¶Âô®"),
-    Ammunition        UMETA(DisplayName = "ÂΩàËó•"),
-    Uniforms          UMETA(DisplayName = "ËªçÊ?"),
-    Horses            UMETA(DisplayName = "È¶¨Âåπ"),
-    Vehicles          UMETA(DisplayName = "ËªäË?"),
-    Fuel              UMETA(DisplayName = "?ÉÊ?"),
-    Rubber            UMETA(DisplayName = "Ê©°Ë?"),
-    Paper             UMETA(DisplayName = "Á¥ôÂºµ"),
-    Ink               UMETA(DisplayName = "Â¢®Ê∞¥"),
-    Books             UMETA(DisplayName = "?∏Á?"),
-    Tools             UMETA(DisplayName = "Â∑•ÂÖ∑"),
-    Machinery         UMETA(DisplayName = "Ê©üÊ¢∞"),
-    Electronics       UMETA(DisplayName = "?ªÂ?Ë®≠Â?"),
-    Radio             UMETA(DisplayName = "?°Á???),
-    Telephone         UMETA(DisplayName = "?ªË©±"),
-    Telegraph         UMETA(DisplayName = "?ªÂ†±Ê©?)
+    Wood, UMETA(DisplayName = "X??X"),
+    Stone, UMETA(DisplayName = "X?Y"),
+    Metal, UMETA(DisplayName = "X?"),
+    Food, UMETA(DisplayName = ""),
+    Water, UMETA(DisplayName = "?X),
+    Coal, UMETA(DisplayName = "X?"),
+    Iron, UMETA(DisplayName = "X?q"),
+    Copper, UMETA(DisplayName = "X?q"),
+    Gold, UMETA(DisplayName = "?X"),
+    Silver, UMETA(DisplayName = "X??X"),
+    Cotton, UMETA(DisplayName = "÷™"),
+    Silk, UMETA(DisplayName = ""),
+    Tea, UMETA(DisplayName = "X??X"),
+    Opium, UMETA(DisplayName = "~?X"),
+    Medicine, UMETA(DisplayName = "X??X"),
+    Weapons, UMETA(DisplayName = "Z"),
+    Ammunition, UMETA(DisplayName = "u"),
+    Uniforms, UMETA(DisplayName = "x?X"),
+    Horses, UMETA(DisplayName = ""),
+    Vehicles, UMETA(DisplayName = "?X"),
+    Fuel, UMETA(DisplayName = "X??X"),
+    Rubber, UMETA(DisplayName = "?X"),
+    Paper, UMETA(DisplayName = "»±i"),
+    Ink, UMETA(DisplayName = ""),
+    Books, UMETA(DisplayName = "X??X"),
+    Tools, UMETA(DisplayName = "u"),
+    Machinery, UMETA(DisplayName = ""),
+    Electronics, UMETA(DisplayName = "X??X]?X"),
+    Radio, UMETA(DisplayName = "X??X),
+    Telephone, UMETA(DisplayName = "X?"),
+    Telegraph, UMETA(DisplayName = "X??X)
 };
 
 UENUM(BlueprintType)
 enum class EResourceRarity : uint8
 {
-    Common            UMETA(DisplayName = "?ÆÈÄ?),
-    Uncommon          UMETA(DisplayName = "Á®Ä??),
-    Rare              UMETA(DisplayName = "?çÁ?"),
-    Epic              UMETA(DisplayName = "?≤Ë©©"),
-    Legendary         UMETA(DisplayName = "?≥Ë™™")
+    Common, UMETA(DisplayName = "X??X),
+    Uncommon, UMETA(DisplayName = "}X),
+    Rare, UMETA(DisplayName = "X??X"),
+    Epic, UMETA(DisplayName = "X?"),
+    Legendary, UMETA(DisplayName = "X?")
 };
 
 UENUM(BlueprintType)
 enum class EResourceQuality : uint8
 {
-    Poor              UMETA(DisplayName = "??≥™"),
-    Normal            UMETA(DisplayName = "?ÆÈÄ?),
-    Good              UMETA(DisplayName = "?™ËâØ"),
-    Excellent         UMETA(DisplayName = "?ìË?"),
-    Perfect           UMETA(DisplayName = "ÂÆåÁ?")
+    Poor, UMETA(DisplayName = "X??"),
+    Normal, UMETA(DisplayName = "X??X),
+    Good, UMETA(DisplayName = "X?}"),
+    Excellent, UMETA(DisplayName = "X??X"),
+    Perfect, UMETA(DisplayName = "?X")
 };
 
 UENUM(BlueprintType)
 enum class ECollectionMethod : uint8
 {
-    Manual            UMETA(DisplayName = "?ãÂ??∂È?"),
-    Automatic         UMETA(DisplayName = "?™Â??∂È?"),
-    Production        UMETA(DisplayName = "?üÁî¢Ë£ΩÈÄ?),
-    Trade             UMETA(DisplayName = "Ë≤øÊ??≤Â?"),
-    Plunder           UMETA(DisplayName = "?†Â•™?≤Â?"),
-    Harvest           UMETA(DisplayName = "?°È??∂Á©´"),
-    Mining            UMETA(DisplayName = "?ãÊé°?ñÊ?"),
-    Fishing           UMETA(DisplayName = "?ïÈ?"),
-    Hunting           UMETA(DisplayName = "?©Áçµ"),
-    Foraging          UMETA(DisplayName = "?°È?Ë¶ìÈ?")
+    Manual, UMETA(DisplayName = "X??X??X"),
+    Automatic, UMETA(DisplayName = "X??X??X"),
+    Production, UMETA(DisplayName = "X?s?X),
+    Trade, UMETA(DisplayName = "T?X??X"),
+    Plunder, UMETA(DisplayName = "X?X??X"),
+    Harvest, UMETA(DisplayName = "X??X?√¨"),
+    Mining, UMETA(DisplayName = "X?X??X"),
+    Fishing, UMETA(DisplayName = "X??X"),
+    Hunting, UMETA(DisplayName = "X?y"),
+    Foraging, UMETA(DisplayName = "X??XV?X")
 };
 
 USTRUCT(BlueprintType)
@@ -131,12 +131,12 @@ struct FResourceData
         MaxQuantity = 100.0f;
         UnitWeight = 1.0f;
         UnitValue = 1.0f;
-        Description = TEXT("");
-        IconPath = TEXT("");
+        Description = TEXT(""};
+        IconPath = TEXT(""};
         bIsStackable = true;
         bIsPerishable = false;
         PerishRate = 0.0f;
-        Tags.Empty();
+        Tags.Empty(};
     }
 };
 
@@ -198,11 +198,11 @@ struct FResourceCollection
 
     FResourceCollection()
     {
-        CollectionID = TEXT("");
+        CollectionID = TEXT(""};
         ResourceType = EResourceType::Wood;
         CollectionMethod = ECollectionMethod::Manual;
-        LocationID = TEXT("");
-        CollectorID = TEXT("");
+        LocationID = TEXT(""};
+        CollectorID = TEXT(""};
         CollectionRate = 1.0f;
         Efficiency = 1.0f;
         BaseYield = 10.0f;
@@ -210,9 +210,9 @@ struct FResourceCollection
         bIsActive = false;
         bIsAutomated = false;
         TotalCollected = 0.0f;
-        RequiredTools.Empty();
-        RequiredSkills.Empty();
-        EnvironmentalFactors.Empty();
+        RequiredTools.Empty(};
+        RequiredSkills.Empty(};
+        EnvironmentalFactors.Empty(};
     }
 };
 
@@ -259,16 +259,16 @@ struct FResourceStorage
 
     FResourceStorage()
     {
-        StorageID = TEXT("");
-        StorageName = TEXT("");
-        LocationID = TEXT("");
+        StorageID = TEXT(""};
+        StorageName = TEXT(""};
+        LocationID = TEXT(""};
         MaxCapacity = 1000.0f;
         CurrentCapacity = 0.0f;
         UsedCapacity = 0.0f;
         bIsClimateControlled = false;
         bIsSecure = false;
         SecurityLevel = 0.0f;
-        UpgradeSlots.Empty();
+        UpgradeSlots.Empty(};
     }
 };
 
@@ -309,21 +309,21 @@ struct FResourceConversion
 
     FResourceConversion()
     {
-        ConversionID = TEXT("");
-        ConversionName = TEXT("");
+        ConversionID = TEXT(""};
+        ConversionName = TEXT(""};
         ConversionTime = 1.0f;
         Efficiency = 1.0f;
         bIsAvailable = true;
-        Description = TEXT("");
-        RequiredBuildings.Empty();
-        RequiredSkills.Empty();
+        Description = TEXT(""};
+        RequiredBuildings.Empty(};
+        RequiredSkills.Empty(};
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourceCollected, EResourceType, ResourceType, float, Quantity);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnResourceStored, const FString&, StorageID, EResourceType, ResourceType, float, Quantity);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourceConverted, const FString&, ConversionID, bool, bSuccess);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStorageFull, const FString&, StorageID, float, Capacity);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourceCollected, EResourceType, ResourceType, float, Quantity};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnResourceStored, const FString&, StorageID, EResourceType, ResourceType, float, Quantity};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourceConverted, const FString&, ConversionID, bool, bSuccess};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStorageFull, const FString&, StorageID, float, Capacity};
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSResourceSystem : public UObject
@@ -331,9 +331,9 @@ class MINGGORTS_API UMingGoRTSResourceSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSResourceSystem();
+    UMingGoRTSResourceSystem(};
 
-    // Ë≥áÊ?Á≥ªÁµ±‰∫ã‰ª∂
+    // ?XtŒ®∆•
     UPROPERTY(BlueprintAssignable, Category = "Resource System")
     FOnResourceCollected OnResourceCollected;
 
@@ -346,483 +346,484 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Resource System")
     FOnStorageFull OnStorageFull;
 
-    // ?ùÂ??ñË?Ê∫êÁ≥ªÁµ?    UFUNCTION(BlueprintCallable, Category = "Resource System")
-    void InitializeResourceSystem();
+    // X??X??Xt?X    UFUNCTION(BlueprintCallable, Category = "Resource System")
+    void InitializeResourceSystem(};
 
-    // ?≤Â??Ä?âË?Ê∫êÈ???    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // X??X?X??X?X    UFUNCTION(BlueprintPure, Category = "Resource System")
     TArray<EResourceType> GetAllResourceTypes() const;
 
-    // ?≤Â?Ë≥áÊ?‰ø°ÊÅØ
+    // X??X?XH
     UFUNCTION(BlueprintPure, Category = "Resource System")
     FResourceData GetResourceInfo(EResourceType ResourceType) const;
 
-    // ?µÂª∫Ë≥áÊ??∂È?
+    // X?ÿ∏?X??X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    FString CreateResourceCollection(EResourceType ResourceType, ECollectionMethod Method, const FString& LocationID);
+    FString CreateResourceCollection(EResourceType ResourceType, ECollectionMethod Method, const FString& LocationID};
 
-    // ?ãÂ?Ë≥áÊ??∂È?
+    // X??X?X??X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool StartResourceCollection(const FString& CollectionID, const FString& CollectorID);
+    bool StartResourceCollection(const FString& CollectionID, const FString& CollectorID};
 
-    // ?úÊ≠¢Ë≥áÊ??∂È?
+    // X??X??X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool StopResourceCollection(const FString& CollectionID);
+    bool StopResourceCollection(const FString& CollectionID};
 
-    // ?∂È?Ë≥áÊ?
+    // X??X?X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    float CollectResource(const FString& CollectionID);
+    float CollectResource(const FString& CollectionID};
 
-    // ?µÂª∫Ë≥áÊ?Â≠òÂÑ≤
+    // X?ÿ∏?Xsx
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    FString CreateResourceStorage(const FString& StorageName, const FString& LocationID, float MaxCapacity);
+    FString CreateResourceStorage(const FString& StorageName, const FString& LocationID, float MaxCapacity};
 
-    // Â≠òÂÑ≤Ë≥áÊ?
+    // sx?X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool StoreResource(const FString& StorageID, EResourceType ResourceType, float Quantity);
+    bool StoreResource(const FString& StorageID, EResourceType ResourceType, float Quantity};
 
-    // ?êÂ?Ë≥áÊ?
+    // X??X?X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    float RetrieveResource(const FString& StorageID, EResourceType ResourceType, float Quantity);
+    float RetrieveResource(const FString& StorageID, EResourceType ResourceType, float Quantity};
 
-    // ?≤Â?Â≠òÂÑ≤Ë≥áÊ?
+    // X??Xsx?X
     UFUNCTION(BlueprintPure, Category = "Resource System")
     FResourceData GetStoredResource(const FString& StorageID, EResourceType ResourceType) const;
 
-    // ?≤Â?Â≠òÂÑ≤ÂÆπÈ?
+    // X??Xsxe?X
     UFUNCTION(BlueprintPure, Category = "Resource System")
     float GetStorageCapacity(const FString& StorageID) const;
 
-    // ËΩâÊ?Ë≥áÊ?
+    // ?X?X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool ConvertResources(const FString& ConversionID);
+    bool ConvertResources(const FString& ConversionID};
 
-    // ?µÂª∫Ë≥áÊ?ËΩâÊ?
+    // X?ÿ∏?X?X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    FString CreateResourceConversion(const FString& ConversionName, const TMap<EResourceType, float>& Input, const TMap<EResourceType, float>& Output);
+    FString CreateResourceConversion(const FString& ConversionName, const TMap<EResourceType, float>& Input, const TMap<EResourceType, float>& Output};
 
-    // Ë®àÁ??∂È??àÁ?
+    // p?X??X??X
     UFUNCTION(BlueprintPure, Category = "Resource System")
     float CalculateCollectionEfficiency(const FString& CollectionID) const;
 
-    // ?¥Êñ∞?∂È??àÁ?
+    // X?sX??X??X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    void UpdateCollectionEfficiency(const FString& CollectionID, float NewEfficiency);
+    void UpdateCollectionEfficiency(const FString& CollectionID, float NewEfficiency};
 
-    // ?≤Â??∂È??Ä??    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // X??X??X?X    UFUNCTION(BlueprintPure, Category = "Resource System")
     FResourceCollection GetCollectionStatus(const FString& CollectionID) const;
 
-    // ?≤Â??Ä?âÊ¥ª?ïÊî∂??    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // X??X?X?X?X    UFUNCTION(BlueprintPure, Category = "Resource System")
     TArray<FResourceCollection> GetActiveCollections() const;
 
-    // Ë≥áÊ?Ë≥™È??êÂ?
+    // ?X?X??X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool ImproveResourceQuality(const FString& StorageID, EResourceType ResourceType, EResourceQuality NewQuality);
+    bool ImproveResourceQuality(const FString& StorageID, EResourceType ResourceType, EResourceQuality NewQuality};
 
-    // Ë≥áÊ??ãËº∏
+    // ?X?
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool TransportResource(const FString& FromStorageID, const FString& ToStorageID, EResourceType ResourceType, float Quantity);
+    bool TransportResource(const FString& FromStorageID, const FString& ToStorageID, EResourceType ResourceType, float Quantity};
 
-    // Ë≥áÊ?‰∫§Ê?
+    // ?X?X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool TradeResource(const FString& StorageID, EResourceType GiveResource, float GiveQuantity, EResourceType GetResource, float GetQuantity);
+    bool TradeResource(const FString& StorageID, EResourceType GiveResource, float GiveQuantity, EResourceType GetResource, float GetQuantity};
 
-    // Ë≥áÊ??ÜÈ?
+    // ?X??X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool AllocateResource(const FString& StorageID, EResourceType ResourceType, float Quantity, const FString& Purpose);
+    bool AllocateResource(const FString& StorageID, EResourceType ResourceType, float Quantity, const FString& Purpose};
 
-    // Ê™¢Êü•Ë≥áÊ??ÖË∂≥??    UFUNCTION(BlueprintPure, Category = "Resource System")
+    // À¨d?X?X    UFUNCTION(BlueprintPure, Category = "Resource System")
     bool CheckResourceAvailability(const FString& StorageID, EResourceType ResourceType, float RequiredQuantity) const;
 
-    // ?≤Â?Ë≥áÊ?Á∏ΩÈ?
+    // X??X?X`?X
     UFUNCTION(BlueprintPure, Category = "Resource System")
     float GetTotalResourceQuantity(EResourceType ResourceType) const;
 
-    // Ë≥áÊ?Ë°∞Ê??ïÁ?
+    // ?XI?X??X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    void ProcessResourceDecay(float DeltaTime);
+    void ProcessResourceDecay(float DeltaTime};
 
-    // ‰øùÂ?Ë≥áÊ??∏Ê?
+    // O?X?X??X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool SaveResourceData(const FString& SaveSlotName);
+    bool SaveResourceData(const FString& SaveSlotName};
 
-    // ËºâÂÖ•Ë≥áÊ??∏Ê?
+    // J?X??X
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool LoadResourceData(const FString& SaveSlotName);
+    bool LoadResourceData(const FString& SaveSlotName};
 
 protected:
-    // Ë≥áÊ?‰ø°ÊÅØ?†Â?
+    // ?XHX??X
     UPROPERTY()
     TMap<EResourceType, FResourceData> ResourceInfoMap;
 
-    // Ë≥áÊ??∂È??†Â?
+    // ?X??X??X
     UPROPERTY()
     TMap<FString, FResourceCollection> ResourceCollections;
 
-    // Ë≥áÊ?Â≠òÂÑ≤?†Â?
+    // ?XsxX??X
     UPROPERTY()
     TMap<FString, FResourceStorage> ResourceStorages;
 
-    // Ë≥áÊ?ËΩâÊ??†Â?
+    // ?X?X??X
     UPROPERTY()
     TMap<FString, FResourceConversion> ResourceConversions;
 
-    // ?ØÂê¶Â∑≤Â?ÂßãÂ?
+    // X?_w?Xl?X
     bool bIsInitialized;
 
-    // ?ùÂ??ñË?Ê∫ê‰ø°??    void InitializeResourceInfo();
+    // X??X??XHX    void InitializeResourceInfo(};
 
-    // ?ùÂ??ñÊ≠∑?≤Ë?Ê∫?    void InitializeHistoricalResources();
+    // X??X?X??X?X    void InitializeHistoricalResources(};
 
-    // ?µÂª∫?®Ê?Ë≥áÊ?
-    void CreateWoodResource();
+    // X?X??X?X
+    void CreateWoodResource(};
 
-    // ?µÂª∫?≥È†≠Ë≥áÊ?
-    void CreateStoneResource();
+    // X?X?Y?X
+    void CreateStoneResource(};
 
-    // ?µÂª∫?ëÂ±¨Ë≥áÊ?
-    void CreateMetalResource();
+    // X?X?›∏?X
+    void CreateMetalResource(};
 
-    // ?µÂª∫È£üÁâ©Ë≥áÊ?
-    void CreateFoodResource();
+    // X?ÿ≠?X
+    void CreateFoodResource(};
 
-    // ?µÂª∫Ê∞¥Ë?Ê∫?    void CreateWaterResource();
+    // X?ÿ§?X?X    void CreateWaterResource(};
 
-    // ?µÂª∫?§ÁÇ≠Ë≥áÊ?
-    void CreateCoalResource();
+    // X?X??X
+    void CreateCoalResource(};
 
-    // ?µÂª∫?µÁ§¶Ë≥áÊ?
-    void CreateIronResource();
+    // X?X?q?X
+    void CreateIronResource(};
 
-    // ?µÂª∫?ÖÁ§¶Ë≥áÊ?
-    void CreateCopperResource();
+    // X?X?q?X
+    void CreateCopperResource(};
 
-    // ?µÂª∫ÈªÉÈ?Ë≥áÊ?
-    void CreateGoldResource();
+    // X?ÿ∂?X?X
+    void CreateGoldResource(};
 
-    // ?µÂª∫?ΩÈ?Ë≥áÊ?
-    void CreateSilverResource();
+    // X?X??X?X
+    void CreateSilverResource(};
 
-    // ?µÂª∫Ê£âËä±Ë≥áÊ?
-    void CreateCottonResource();
+    // X?ÿ¥÷™?X
+    void CreateCottonResource(};
 
-    // ?µÈÄ†Áµ≤Á∂¢Ë?Ê∫?    void CreateSilkResource();
+    // X?y?X?X    void CreateSilkResource(};
 
-    // ?µÂª∫?∂Ë?Ë≥áÊ?
-    void CreateTeaResource();
+    // X?X??X?X
+    void CreateTeaResource(};
 
-    // ?µÂª∫È¥âÁ?Ë≥áÊ?
-    void CreateOpiumResource();
+    // X?ÿæ~?X?X
+    void CreateOpiumResource(};
 
-    // ?µÂª∫?•Â?Ë≥áÊ?
-    void CreateMedicineResource();
+    // X?X??X?X
+    void CreateMedicineResource(};
 
-    // ?µÂª∫Ê≠¶Âô®Ë≥áÊ?
-    void CreateWeaponsResource();
+    // X?ÿ™Z?X
+    void CreateWeaponsResource(};
 
-    // ?µÂª∫ÂΩàËó•Ë≥áÊ?
-    void CreateAmmunitionResource();
+    // X?ÿºuƒ∏?X
+    void CreateAmmunitionResource(};
 
-    // ?µÂª∫ËªçÊ?Ë≥áÊ?
-    void CreateUniformsResource();
+    // X?ÿ≠x?X?X
+    void CreateUniformsResource(};
 
-    // ?µÂª∫È¶¨ÂåπË≥áÊ?
-    void CreateHorsesResource();
+    // X?ÿ∞«∏?X
+    void CreateHorsesResource(};
 
-    // ?µÂª∫ËªäË?Ë≥áÊ?
-    void CreateVehiclesResource();
+    // X?ÿ®?X?X
+    void CreateVehiclesResource(};
 
-    // ?µÂª∫?ÉÊ?Ë≥áÊ?
-    void CreateFuelResource();
+    // X?X??X?X
+    void CreateFuelResource(};
 
-    // ?µÂª∫Ê©°Ë?Ë≥áÊ?
-    void CreateRubberResource();
+    // X?ÿæ?X?X
+    void CreateRubberResource(};
 
-    // ?µÂª∫Á¥ôÂºµË≥áÊ?
-    void CreatePaperResource();
+    // X?ÿØ»±i?X
+    void CreatePaperResource(};
 
-    // ?µÂª∫Â¢®Ê∞¥Ë≥áÊ?
-    void CreateInkResource();
+    // X?ÿæ?X
+    void CreateInkResource(};
 
-    // ?µÂª∫?∏Á?Ë≥áÊ?
-    void CreateBooksResource();
+    // X?X??X?X
+    void CreateBooksResource(};
 
-    // ?µÂª∫Â∑•ÂÖ∑Ë≥áÊ?
-    void CreateToolsResource();
+    // X?ÿ§u?X
+    void CreateToolsResource(};
 
-    // ?µÂª∫Ê©üÊ¢∞Ë≥áÊ?
-    void CreateMachineryResource();
+    // X?ÿæ?X
+    void CreateMachineryResource(};
 
-    // ?µÂª∫?ªÂ?Ë®≠Â?Ë≥áÊ?
-    void CreateElectronicsResource();
+    // X?X??X]?X?X
+    void CreateElectronicsResource(};
 
-    // ?µÂª∫?°Á??ªË?Ê∫?    void CreateRadioResource();
+    // X?X??X??X?X    void CreateRadioResource(};
 
-    // ?µÂª∫?ªË©±Ë≥áÊ?
-    void CreateTelephoneResource();
+    // X?X?‹∏?X
+    void CreateTelephoneResource(};
 
-    // ?µÂª∫?ªÂ†±Ê©üË?Ê∫?    void CreateTelegraphResource();
+    // X?X??X?X    void CreateTelegraphResource(};
 
-    // ?¥Êñ∞?∂È??¢È?
-    void UpdateCollectionYield(const FString& CollectionID);
+    // X?sX??X??X
+    void UpdateCollectionYield(const FString& CollectionID};
 
-    // Ë®àÁ??∞Â??†Á?ÂΩ±Èüø
+    // p?X??X??XvT
     float CalculateEnvironmentalImpact(const FString& CollectionID) const;
 
-    // Ê™¢Êü•?∂È?Ê¢ù‰ª∂
+    // À¨dX??X
     bool CheckCollectionConditions(const FString& CollectionID) const;
 
-    // ?ïÁ??∂È?ÂÆåÊ?
-    void ProcessCollectionComplete(const FString& CollectionID);
+    // X??X??X?X
+    void ProcessCollectionComplete(const FString& CollectionID};
 
-    // ?¥Êñ∞Â≠òÂÑ≤ÂÆπÈ?
-    void UpdateStorageCapacity(const FString& StorageID);
+    // X?ssxe?X
+    void UpdateStorageCapacity(const FString& StorageID};
 
-    // Ê™¢Êü•Â≠òÂÑ≤?êÂà∂
+    // À¨dsxX?
     bool CheckStorageLimits(const FString& StorageID, EResourceType ResourceType, float Quantity) const;
 
-    // ?ïÁ?Â≠òÂÑ≤Êªø‰?
-    void HandleStorageFull(const FString& StorageID);
+    // X??Xsx?X
+    void HandleStorageFull(const FString& StorageID};
 
-    // Ë®àÁ?ËΩâÊ??êÊú¨
+    // p?X?X?
     float CalculateConversionCost(const FString& ConversionID) const;
 
-    // Ê™¢Êü•ËΩâÊ?Ê¢ù‰ª∂
+    // À¨d?X
     bool CheckConversionConditions(const FString& ConversionID) const;
 
-    // ?ïÁ?ËΩâÊ?ÂÆåÊ?
-    void ProcessConversionComplete(const FString& ConversionID);
+    // X??X?X?X
+    void ProcessConversionComplete(const FString& ConversionID};
 
-    // ?üÊ??∂È?ID
+    // X??X??XID
     FString GenerateCollectionID(EResourceType ResourceType) const;
 
-    // ?üÊ?Â≠òÂÑ≤ID
+    // X??XsxID
     FString GenerateStorageID(const FString& StorageName) const;
 
-    // ?üÊ?ËΩâÊ?ID
+    // X??X?XID
     FString GenerateConversionID(const FString& ConversionName) const;
 
-    // È©óË?Ë≥áÊ??∏Ê?
+    // ?X?X??X
     bool ValidateResourceData(const FResourceData& ResourceData) const;
 
-    // ?≤Â?Ë≥áÊ?È°ûÂ??çÁ®±
+    // X??X?X?X?
     FString GetResourceTypeName(EResourceType ResourceType) const;
 
-    // ?≤Â?Ë≥áÊ?È°ûÂ?Ê¨äÈ?
+    // X??X?X?Xv?X
     float GetResourceTypeWeight(EResourceType ResourceType) const;
 
-    // ?≤Â??∂È??πÊ??àÁ??†Ê?
+    // X??X??X??X??X??X
     float GetCollectionMethodBonus(ECollectionMethod Method) const;
 
-    // ?≤Â?Ë≥áÊ?Ë≥™È??†Ê?
+    // X??X?X?X??X
     float GetQualityBonus(EResourceQuality Quality) const;
 
-    // Ë®àÁ?Ë≥áÊ?Á∏ΩÂÉπ??    float CalculateResourceTotalValue(const FResourceData& ResourceData) const;
+    // p?X?X`X    float CalculateResourceTotalValue(const FResourceData& ResourceData) const;
 
-    // Ê™¢Êü•Ë≥áÊ??ºÂÆπ??    bool CheckResourceCompatibility(EResourceType ResourceType1, EResourceType ResourceType2) const;
+    // À¨d?X?eX    bool CheckResourceCompatibility(EResourceType ResourceType1, EResourceType ResourceType2) const;
 
-    // ?≤Â??®Ëñ¶?∂È??πÊ?
+    // X??X?X??X??X
     ECollectionMethod GetRecommendedCollectionMethod(EResourceType ResourceType) const;
 
-    // ?≤Â?Ë≥áÊ??∂È??∞È?
+    // X??X?X??X??X
     TArray<FString> GetResourceCollectionLocations(EResourceType ResourceType) const;
 
-    // ?≤Â?Ë≥áÊ?Â≠òÂÑ≤Âª∫Ë≠∞
+    // X??X?Xsxƒ≥
     TArray<FString> GetResourceStorageRecommendations(EResourceType ResourceType) const;
 
-    // ?üÊ?Ë≥áÊ??±Â?
+    // X??X?X??X
     FString GenerateResourceReport() const;
 
-    // ?ÜÊ?Ë≥áÊ?Ë∂®Âã¢
-    void AnalyzeResourceTrends();
+    // X??X?XÕ∂
+    void AnalyzeResourceTrends(};
 
-    // ?êÊ∏¨Ë≥áÊ??ÄÊ±?    TArray<EResourceType> PredictResourceNeeds() const;
+    // X??X??X    TArray<EResourceType> PredictResourceNeeds() const;
 
-    // ?™Â?Ë≥áÊ??ÜÈ?
-    void OptimizeResourceAllocation();
+    // X??X?X??X
+    void OptimizeResourceAllocation(};
 
-    // Ë®àÁ?Ë≥áÊ??àÁ?
+    // p?X?X??X
     float CalculateResourceEfficiency(EResourceType ResourceType) const;
 
-    // ?≤Â?Ë≥áÊ?Áµ±Ë?
+    // X??X?X?X
     TMap<EResourceType, float> GetResourceStatistics() const;
 
-    // ?¥Êñ∞Ë≥áÊ?Â∏ÇÂ†¥?πÊ†º
-    void UpdateResourceMarketPrices();
+    // X?s?XX?
+    void UpdateResourceMarketPrices(};
 
-    // ?≤Â?Ë≥áÊ?Â∏ÇÂ†¥?πÊ†º
+    // X??X?XX?
     float GetResourceMarketPrice(EResourceType ResourceType) const;
 
-    // ?ÜÊ?Ë≥áÊ?‰æõÈ?Âπ≥Ë°°
-    void AnalyzeResourceSupplyDemand();
+    // X??X?X?X
+    void AnalyzeResourceSupplyDemand(};
 
-    // ?≤Â?Ë≥áÊ?‰æõÈ??Ä??    TMap<EResourceType, FString> GetResourceSupplyDemandStatus() const;
+    // X??X?X?X?X    TMap<EResourceType, FString> GetResourceSupplyDemandStatus() const;
 
-    // Ë≥áÊ?Á®ÄÁº∫ÊÄßÂ???    TMap<EResourceType, float> AnalyzeResourceScarcity() const;
+    // ?X} ©?X    TMap<EResourceType, float> AnalyzeResourceScarcity() const;
 
-    // Ë≥áÊ??çË??ßÂ???    TMap<EResourceType, float> AnalyzeResourceImportance() const;
+    // ?X??X??X    TMap<EResourceType, float> AnalyzeResourceImportance() const;
 
-    // Ë≥áÊ??™Â?Á¥öÊ?Â∫?    TArray<EResourceType> GetResourcePriorityList() const;
+    // ?X??X?X?X    TArray<EResourceType> GetResourcePriorityList() const;
 
-    // Ë≥áÊ?È¢®Èö™Ë©ï‰º∞
+    // ?XI
     TMap<EResourceType, float> AssessResourceRisks() const;
 
-    // Ë≥áÊ?Ê©üÊ??ÜÊ?
+    // ?X?X??X
     TArray<FString> AnalyzeResourceOpportunities() const;
 
-    // Ë≥áÊ?Á≠ñÁï•Âª∫Ë≠∞
+    // ?Xƒ≥
     TArray<FString> GetResourceStrategyRecommendations() const;
 
-    // Ë≥áÊ?Ê≠∑Âè≤Ë®òÈ?
+    // ?XvO?X
     UPROPERTY()
     TArray<FString> ResourceHistory;
 
-    // Ê∑ªÂ?Ë≥áÊ?Ê≠∑Âè≤Ë®òÈ?
-    void AddResourceHistory(const FString& Event);
+    // K?X?XvO?X
+    void AddResourceHistory(const FString& Event};
 
-    // ?≤Â?Ë≥áÊ?Ê≠∑Âè≤
+    // X??X?Xv
     TArray<FString> GetResourceHistory() const;
 
-    // Ê∏ÖÁ??éÊ?Ë≥áÊ?
-    void CleanupExpiredResources();
+    // M?X??X?X
+    void CleanupExpiredResources(};
 
-    // Ë≥áÊ??ô‰ªΩ
-    bool BackupResources(const FString& BackupPath);
+    // ?X?
+    bool BackupResources(const FString& BackupPath};
 
-    // Ë≥áÊ??¢Âæ©
-    bool RestoreResources(const FString& BackupPath);
+    // ?X?_
+    bool RestoreResources(const FString& BackupPath};
 
-    // Ë≥áÊ??åÊ≠•
-    bool SyncResources(const FString& SourceID);
+    // ?X?B
+    bool SyncResources(const FString& SourceID};
 
-    // Ë≥áÊ?È©óË?
+    // ?X?X
     bool ValidateResourceIntegrity() const;
 
-    // Ë≥áÊ?‰øÆÂæ©
-    bool RepairResourceData();
+    // ?X◊¥_
+    bool RepairResourceData(};
 
-    // Ë≥áÊ??™Â?
-    void OptimizeResourceData();
+    // ?X??X
+    void OptimizeResourceData(};
 
-    // Ë≥áÊ?Â£ìÁ∏Æ
-    bool CompressResourceData();
+    // ?XY
+    bool CompressResourceData(};
 
-    // Ë≥áÊ?Ëß??
-    bool DecompressResourceData();
+    // ?X?X
+    bool DecompressResourceData(};
 
-    // Ë≥áÊ??†Â?
-    bool EncryptResourceData();
+    // ?X??X
+    bool EncryptResourceData(};
 
-    // Ë≥áÊ?Ëß??
-    bool DecryptResourceData();
+    // ?X?X
+    bool DecryptResourceData(};
 
-    // Ë≥áÊ?Â∞éÂá∫
-    bool ExportResources(const FString& FilePath);
+    // ?X…•X
+    bool ExportResources(const FString& FilePath};
 
-    // Ë≥áÊ?Â∞éÂÖ•
-    bool ImportResources(const FString& FilePath);
+    // ?X…§J
+    bool ImportResources(const FString& FilePath};
 
-    // Ë≥áÊ??∑Áßª
-    bool MigrateResources(const FString& FromPath, const FString& ToPath);
+    // ?X?
+    bool MigrateResources(const FString& FromPath, const FString& ToPath};
 
-    // Ë≥áÊ??à‰Ωµ
-    bool MergeResources(const FString& SourceID);
+    // ?X?
+    bool MergeResources(const FString& SourceID};
 
-    // Ë≥áÊ??ÜÈõ¢
-    bool SplitResources(const FString& TargetID);
+    // ?X?
+    bool SplitResources(const FString& TargetID};
 
-    // Ë≥áÊ??ãÈ?
-    bool CloneResources(const FString& SourceID, const FString& TargetID);
+    // ?X??X
+    bool CloneResources(const FString& SourceID, const FString& TargetID};
 
-    // Ë≥áÊ?ÊØîË?
+    // ?X?X
     TArray<FString> CompareResources(const FString& SourceID, const FString& TargetID) const;
 
-    // Ë≥áÊ??åÊ≠•Ê™¢Êü•
+    // ?X?BÀ¨d
     TArray<FString> CheckResourceSync(const FString& SourceID) const;
 
-    // Ë≥áÊ?Â∑ÆÁï∞‰øÆÂæ©
-    bool FixResourceDifferences(const FString& SourceID);
+    // ?Xt◊¥_
+    bool FixResourceDifferences(const FString& SourceID};
 
-    // Ë≥áÊ??àÊú¨?ßÂà∂
-    bool VersionControlResources(const FString& Version);
+    // ?X?X?
+    bool VersionControlResources(const FString& Version};
 
-    // Ë≥áÊ??ûÊªæ
-    bool RollbackResources(const FString& Version);
+    // ?X?u
+    bool RollbackResources(const FString& Version};
 
-    // Ë≥áÊ??ÜÊîØ
-    bool BranchResources(const FString& BranchName);
+    // ?X?
+    bool BranchResources(const FString& BranchName};
 
-    // Ë≥áÊ??à‰Ωµ?ÜÊîØ
-    bool MergeResourceBranches(const FString& SourceBranch, const FString& TargetBranch);
+    // ?X?X?
+    bool MergeResourceBranches(const FString& SourceBranch, const FString& TargetBranch};
 
-    // Ë≥áÊ?Ë°ùÁ?Ëß?±∫
-    bool ResolveResourceConflicts(const FString& ConflictID);
+    // ?X?X?X??
+    bool ResolveResourceConflicts(const FString& ConflictID};
 
-    // Ë≥áÊ??ñÂ?
-    bool LockResource(const FString& ResourceID);
+    // ?X??X
+    bool LockResource(const FString& ResourceID};
 
-    // Ë≥áÊ?Ëß??
-    bool UnlockResource(const FString& ResourceID);
+    // ?X?X
+    bool UnlockResource(const FString& ResourceID};
 
-    // Ë≥áÊ?Ê¨äÈ?Ê™¢Êü•
+    // ?Xv?XÀ¨d
     bool CheckResourcePermission(const FString& ResourceID, const FString& Permission) const;
 
-    // Ë≥áÊ?Ê¨äÈ?Ë®≠ÁΩÆ
-    bool SetResourcePermission(const FString& ResourceID, const FString& Permission, bool bGrant);
+    // ?Xv?X]m
+    bool SetResourcePermission(const FString& ResourceID, const FString& Permission, bool bGrant};
 
-    // Ë≥áÊ?ÂØ©Ë?
+    // ?Xf?X
     TArray<FString> AuditResources() const;
 
-    // Ë≥áÊ??•Ë?
-    void LogResourceEvent(const FString& Event);
+    // ?X??X
+    void LogResourceEvent(const FString& Event};
 
-    // Ë≥áÊ???éß
-    void MonitorResources();
+    // ?X??
+    void MonitorResources(};
 
-    // Ë≥áÊ?Ë≠¶Â†±
-    void TriggerResourceAlert(const FString& AlertType, const FString& Message);
+    // ?Xƒµ
+    void TriggerResourceAlert(const FString& AlertType, const FString& Message};
 
-    // Ë≥áÊ??êË≠¶
+    // ?X?ƒµ
     TArray<FString> GetResourceWarnings() const;
 
-    // Ë≥áÊ??ØË™§?ïÁ?
-    bool HandleResourceError(const FString& ErrorType, const FString& ErrorMessage);
+    // ?X?~X??X
+    bool HandleResourceError(const FString& ErrorType, const FString& ErrorMessage};
 
-    // Ë≥áÊ??¢Âæ©
-    bool RecoverFromResourceError(const FString& ErrorID);
+    // ?X?_
+    bool RecoverFromResourceError(const FString& ErrorID};
 
-    // Ë≥áÊ?Ë®∫Êñ∑
+    // ?XE_
     TArray<FString> DiagnoseResourceIssues() const;
 
-    // Ë≥áÊ??ßËÉΩ?ÜÊ?
+    // ?X?X??X
     TMap<FString, float> AnalyzeResourcePerformance() const;
 
-    // Ë≥áÊ??™Â?Âª∫Ë≠∞
+    // ?X??Xƒ≥
     TArray<FString> GetResourceOptimizationSuggestions() const;
 
-    // Ë≥áÊ??™Â???    bool AutomateResourceCollection(const FString& CollectionID);
+    // ?X??X    bool AutomateResourceCollection(const FString& CollectionID};
 
-    // Ë≥áÊ??™Â??ñÂ?Ê≠?    bool StopResourceAutomation(const FString& CollectionID);
+    // ?X??X??X?X    bool StopResourceAutomation(const FString& CollectionID};
 
-    // Ë≥áÊ?Ë®àÂ?
-    bool CreateResourcePlan(const FString& PlanName, const TMap<EResourceType, float>& Targets);
+    // ?Xp?X
+    bool CreateResourcePlan(const FString& PlanName, const TMap<EResourceType, float>& Targets};
 
-    // Ë≥áÊ?Ë®àÂ??∑Ë?
-    bool ExecuteResourcePlan(const FString& PlanName);
+    // ?Xp?X??X
+    bool ExecuteResourcePlan(const FString& PlanName};
 
-    // Ë≥áÊ?Ë®àÂ???éß
-    void MonitorResourcePlan(const FString& PlanName);
+    // ?Xp?X??
+    void MonitorResourcePlan(const FString& PlanName};
 
-    // Ë≥áÊ?Ë®àÂ?Ë™øÊï¥
-    bool AdjustResourcePlan(const FString& PlanName, const TMap<EResourceType, float>& NewTargets);
+    // ?Xp?X’æ
+    bool AdjustResourcePlan(const FString& PlanName, const TMap<EResourceType, float>& NewTargets};
 
-    // Ë≥áÊ?Ë®àÂ?ÂÆåÊ?
-    bool CompleteResourcePlan(const FString& PlanName);
+    // ?Xp?X?X
+    bool CompleteResourcePlan(const FString& PlanName};
 
-    // Ë≥áÊ?Ë®àÂ??ñÊ?
-    bool CancelResourcePlan(const FString& PlanName);
+    // ?Xp?X??X
+    bool CancelResourcePlan(const FString& PlanName};
 
-    // Ë≥áÊ?Ë®àÂ??Ä??    FString GetResourcePlanStatus(const FString& PlanName) const;
+    // ?Xp?X?X    FString GetResourcePlanStatus(const FString& PlanName) const;
 
-    // Ë≥áÊ?Ë®àÂ??±Â?
+    // ?Xp?X??X
     FString GenerateResourcePlanReport(const FString& PlanName) const;
 };
+

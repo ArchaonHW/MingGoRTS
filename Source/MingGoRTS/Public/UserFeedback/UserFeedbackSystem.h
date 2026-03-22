@@ -207,72 +207,72 @@ class USERFEEDBACKSYSTEM_API UUserFeedbackSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UUserFeedbackSystem();
+    UUserFeedbackSystem(};
 
     /** ?ùÂ??ñÂ?È•ãÁ≥ªÁµ?*/
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    void InitializeFeedbackSystem();
+    void InitializeFeedbackSystem(};
 
     /** ?ê‰∫§?çÈ? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    FString SubmitFeedback(const FFeedbackData& FeedbackData);
+    FString SubmitFeedback(const FFeedbackData& FeedbackData};
 
     /** ?≤Â??çÈ??óË°® */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    TArray<FFeedbackData> GetFeedbackList(EFeedbackType FilterType = EFeedbackType::Other, EFeedbackStatus FilterStatus = EFeedbackStatus::New);
+    TArray<FFeedbackData> GetFeedbackList(EFeedbackType FilterType = EFeedbackType::Other, EFeedbackStatus FilterStatus = EFeedbackStatus::New};
 
     /** ?≤Â??çÈ?Ë©≥Ê? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    FFeedbackData GetFeedbackDetails(const FString& FeedbackID);
+    FFeedbackData GetFeedbackDetails(const FString& FeedbackID};
 
     /** ?¥Êñ∞?çÈ??Ä??*/
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    bool UpdateFeedbackStatus(const FString& FeedbackID, EFeedbackStatus NewStatus);
+    bool UpdateFeedbackStatus(const FString& FeedbackID, EFeedbackStatus NewStatus};
 
     /** ?ÜÈ??çÈ? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    bool AssignFeedback(const FString& FeedbackID, const FString& AssignedTo);
+    bool AssignFeedback(const FString& FeedbackID, const FString& AssignedTo};
 
     /** Ê∑ªÂ?Ë©ïË? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    bool AddComment(const FString& FeedbackID, const FString& Comment);
+    bool AddComment(const FString& FeedbackID, const FString& Comment};
 
     /** ?≤Â?Áµ±Ë??∏Ê? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    FFeedbackStatistics GetStatistics();
+    FFeedbackStatistics GetStatistics(};
 
     /** Â∞éÂá∫?çÈ??∏Ê? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    FString ExportFeedbackData();
+    FString ExportFeedbackData(};
 
     /** ?™Â??ÜÈ??çÈ? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    void AutoCategorizeFeedback();
+    void AutoCategorizeFeedback(};
 
     /** ?ºÈÄÅÈÄöÁü• */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    void SendNotification(const FString& FeedbackID, const FString& Message);
+    void SendNotification(const FString& FeedbackID, const FString& Message};
 
     /** Ê™¢Êü•?çË??çÈ? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    TArray<FString> CheckDuplicateFeedback(const FFeedbackData& FeedbackData);
+    TArray<FString> CheckDuplicateFeedback(const FFeedbackData& FeedbackData};
 
     /** ?üÊ??çÈ??±Â? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    FString GenerateFeedbackReport();
+    FString GenerateFeedbackReport(};
 
 public:
     /** ?çÈ??ê‰∫§‰∫ã‰ª∂ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFeedbackSubmitted, const FString&, FeedbackID);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFeedbackSubmitted, const FString&, FeedbackID};
 
     /** ?çÈ??Ä?ãÊõ¥?∞‰?‰ª?*/
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackStatusUpdated, const FString&, FeedbackID, EFeedbackStatus, NewStatus);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackStatusUpdated, const FString&, FeedbackID, EFeedbackStatus, NewStatus};
 
     /** ?çÈ??ÜÈ?‰∫ã‰ª∂ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackAssigned, const FString&, FeedbackID, const FString&, AssignedTo);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackAssigned, const FString&, FeedbackID, const FString&, AssignedTo};
 
     /** ?∞Â?È•ãÈÄöÁü•‰∫ã‰ª∂ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewFeedback, const FFeedbackData&, FeedbackData);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewFeedback, const FFeedbackData&, FeedbackData};
 
     UPROPERTY(BlueprintAssignable, Category = "Feedback System|Events")
     FOnFeedbackSubmitted OnFeedbackSubmitted;
@@ -288,28 +288,28 @@ public:
 
 protected:
     /** ?üÊ??çÈ?ID */
-    FString GenerateFeedbackID();
+    FString GenerateFeedbackID(};
 
     /** È©óË??çÈ??∏Ê? */
-    bool ValidateFeedbackData(const FFeedbackData& FeedbackData);
+    bool ValidateFeedbackData(const FFeedbackData& FeedbackData};
 
     /** ‰øùÂ??çÈ??∏Ê? */
-    bool SaveFeedbackData(const FFeedbackData& FeedbackData);
+    bool SaveFeedbackData(const FFeedbackData& FeedbackData};
 
     /** ?†Ë??çÈ??∏Ê? */
-    void LoadFeedbackData();
+    void LoadFeedbackData(};
 
     /** ?¥Êñ∞Áµ±Ë??∏Ê? */
-    void UpdateStatistics();
+    void UpdateStatistics(};
 
     /** ?ºÈÄÅÈÉµ‰ª∂ÈÄöÁü• */
-    void SendEmailNotification(const FString& To, const FString& Subject, const FString& Body);
+    void SendEmailNotification(const FString& To, const FString& Subject, const FString& Body};
 
     /** ?ÜÊ??çÈ??ßÂÆπ */
-    void AnalyzeFeedbackContent(FFeedbackData& FeedbackData);
+    void AnalyzeFeedbackContent(FFeedbackData& FeedbackData};
 
     /** ?™Â?Ê®ôË? */
-    void AutoTagFeedback(FFeedbackData& FeedbackData);
+    void AutoTagFeedback(FFeedbackData& FeedbackData};
 
 private:
     /** ?Ä?âÂ?È•ãÊï∏??*/
@@ -347,44 +347,44 @@ class USERFEEDBACKSYSTEM_API UFeedbackUIManager : public UObject
     GENERATED_BODY()
 
 public:
-    UFeedbackUIManager();
+    UFeedbackUIManager(};
 
     /** È°ØÁ§∫?çÈ??ê‰∫§?åÈù¢ */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void ShowFeedbackSubmitUI();
+    void ShowFeedbackSubmitUI(};
 
     /** È°ØÁ§∫?çÈ??óË°®?åÈù¢ */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void ShowFeedbackListUI();
+    void ShowFeedbackListUI(};
 
     /** È°ØÁ§∫?çÈ?Ë©≥Ê??åÈù¢ */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void ShowFeedbackDetailsUI(const FString& FeedbackID);
+    void ShowFeedbackDetailsUI(const FString& FeedbackID};
 
     /** È°ØÁ§∫Áµ±Ë??åÈù¢ */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void ShowStatisticsUI();
+    void ShowStatisticsUI(};
 
     /** ?úÈ??çÈ??åÈù¢ */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void CloseFeedbackUI();
+    void CloseFeedbackUI(};
 
     /** Ë®≠ÁΩÆ?çÈ?Á≥ªÁµ± */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void SetFeedbackSystem(UUserFeedbackSystem* InFeedbackSystem);
+    void SetFeedbackSystem(UUserFeedbackSystem* InFeedbackSystem};
 
 protected:
     /** ?µÂª∫?çÈ??ê‰∫§?åÈù¢ */
-    void CreateFeedbackSubmitUI();
+    void CreateFeedbackSubmitUI(};
 
     /** ?µÂª∫?çÈ??óË°®?åÈù¢ */
-    void CreateFeedbackListUI();
+    void CreateFeedbackListUI(};
 
     /** ?µÂª∫?çÈ?Ë©≥Ê??åÈù¢ */
-    void CreateFeedbackDetailsUI();
+    void CreateFeedbackDetailsUI(};
 
     /** ?µÂª∫Áµ±Ë??åÈù¢ */
-    void CreateStatisticsUI();
+    void CreateStatisticsUI(};
 
 private:
     /** ?çÈ?Á≥ªÁµ±ÂºïÁî® */
@@ -411,3 +411,4 @@ private:
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     TSubclassOf<class UUserWidget> StatisticsUIClass;
 };
+

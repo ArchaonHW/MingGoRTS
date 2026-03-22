@@ -10,7 +10,7 @@ class MINGGORTS_API AMingGoRTSPlayerController : public APlayerController
     GENERATED_BODY()
 
 public:
-    AMingGoRTSPlayerController();
+    AMingGoRTSPlayerController(};
 
 protected:
     virtual void BeginPlay() override;
@@ -18,29 +18,29 @@ protected:
     virtual void PlayerTick(float DeltaTime) override;
 
     // è¼¸å…¥?•ç?
-    void OnLeftMouseButtonPressed();
-    void OnLeftMouseButtonReleased();
-    void OnRightMouseButtonPressed();
-    void OnMouseScrollUp();
-    void OnMouseScrollDown();
-    void OnMoveCameraForward(float Value);
-    void OnMoveCameraRight(float Value);
+    void OnLeftMouseButtonPressed(};
+    void OnLeftMouseButtonReleased(};
+    void OnRightMouseButtonPressed(};
+    void OnMouseScrollUp(};
+    void OnMouseScrollDown(};
+    void OnMoveCameraForward(float Value};
+    void OnMoveCameraRight(float Value};
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void StartSelection();
+    void StartSelection(};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void EndSelection();
+    void EndSelection(};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void SelectUnitsInRect(FVector2D Start, FVector2D End);
+    void SelectUnitsInRect(FVector2D Start, FVector2D End};
 
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void MoveSelectedUnits(FVector Location);
+    void MoveSelectedUnits(FVector Location};
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void ZoomCamera(float Delta);
+    void ZoomCamera(float Delta};
 
 private:
     UPROPERTY()
@@ -58,3 +58,4 @@ private:
     UPROPERTY()
     class AMingGoRTSCamera* RTSCamera;
 };
+

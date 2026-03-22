@@ -10,30 +10,30 @@ class MINGGORTS_API UMingGoRTSIntroManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSIntroManager();
+    UMingGoRTSIntroManager(};
 
     // ?‹é ­?•ç•«?§åˆ¶
     UFUNCTION(BlueprintCallable, Category = "Intro")
-    void StartIntroSequence();
+    void StartIntroSequence(};
 
     UFUNCTION(BlueprintCallable, Category = "Intro")
-    void SkipIntro();
+    void SkipIntro(};
 
     UFUNCTION(BlueprintCallable, Category = "Intro")
     bool IsIntroPlaying() const { return bIsIntroPlaying; }
 
     // ?•ç•«?Žæ®µ
     UFUNCTION(BlueprintCallable, Category = "Intro")
-    void ShowTitleCard();
+    void ShowTitleCard(};
 
     UFUNCTION(BlueprintCallable, Category = "Intro")
-    void ShowHistoricalBackground();
+    void ShowHistoricalBackground(};
 
     UFUNCTION(BlueprintCallable, Category = "Intro")
-    void ShowGameTitle();
+    void ShowGameTitle(};
 
     UFUNCTION(BlueprintCallable, Category = "Intro")
-    void TransitionToMainMenu();
+    void TransitionToMainMenu(};
 
 protected:
     UPROPERTY()
@@ -52,7 +52,8 @@ protected:
     TArray<class USoundBase*> IntroSounds;
 
 private:
-    void LoadIntroAssets();
-    void PlayIntroSound(int32 StageIndex);
-    void DisplayIntroImage(int32 StageIndex);
+    void LoadIntroAssets(};
+    void PlayIntroSound(int32 StageIndex};
+    void DisplayIntroImage(int32 StageIndex};
 };
+

@@ -10,14 +10,14 @@ class MINGGORTS_API AMingGoRTSGameMode : public AGameModeBase
     GENERATED_BODY()
 
 public:
-    AMingGoRTSGameMode();
+    AMingGoRTSGameMode(};
 
 protected:
     virtual void BeginPlay() override;
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Game")
-    void SpawnInitialUnits();
+    void SpawnInitialUnits(};
 
     UFUNCTION(BlueprintCallable, Category = "Game")
     class AMingGoRTSCamera* GetRTSCamera() const { return RTSCamera; }
@@ -29,3 +29,4 @@ private:
     UPROPERTY()
     TArray<class AMingGoRTSUnit*> GameUnits;
 };
+

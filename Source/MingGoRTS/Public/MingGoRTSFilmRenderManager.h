@@ -37,9 +37,9 @@ struct FFilmPlaybackSettings
     float FadeOutDuration = 1.0f;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFilmFrameChanged, int32, CurrentFrame);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFilmPlaybackStateChanged, EFilmPlaybackState, NewState, int32, CurrentFrame);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFilmPlaybackEnded);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFilmFrameChanged, int32, CurrentFrame};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFilmPlaybackStateChanged, EFilmPlaybackState, NewState, int32, CurrentFrame};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFilmPlaybackEnded};
 
 UCLASS(BlueprintType, Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingGoRTSFilmRenderManager : public UActorComponent
@@ -47,33 +47,33 @@ class MINGGORTS_API UMingGoRTSFilmRenderManager : public UActorComponent
     GENERATED_BODY()
 
 public:
-    UMingGoRTSFilmRenderManager();
+    UMingGoRTSFilmRenderManager(};
 
     // å½±ç??­æ”¾?§åˆ¶
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void PlayFilm();
+    void PlayFilm(};
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void PauseFilm();
+    void PauseFilm(};
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void StopFilm();
+    void StopFilm(};
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void SeekToFrame(int32 FrameIndex);
+    void SeekToFrame(int32 FrameIndex};
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void SeekToTime(float TimeInSeconds);
+    void SeekToTime(float TimeInSeconds};
 
     // å½±ç??¸æ?ç®¡ç?
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void SetFilmFrames(const TArray<UTexture2D*>& Frames);
+    void SetFilmFrames(const TArray<UTexture2D*>& Frames};
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void AddFrame(UTexture2D* NewFrame);
+    void AddFrame(UTexture2D* NewFrame};
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void ClearFrames();
+    void ClearFrames(};
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     TArray<UTexture2D*> GetFilmFrames() const { return FilmFrames; }
@@ -98,20 +98,20 @@ public:
 
     // è¨­ç½®
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void SetPlaybackSettings(const FFilmPlaybackSettings& Settings);
+    void SetPlaybackSettings(const FFilmPlaybackSettings& Settings};
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     FFilmPlaybackSettings GetPlaybackSettings() const { return PlaybackSettings; }
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void SetFrameRate(float NewFrameRate);
+    void SetFrameRate(float NewFrameRate};
 
     // æ¸²æ?è¼¸å‡º
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     UTexture2D* GetCurrentFrameTexture() const;
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
-    void RenderToRenderTarget(class UTextureRenderTarget2D* RenderTarget);
+    void RenderToRenderTarget(class UTextureRenderTarget2D* RenderTarget};
 
     // å§”æ?äº‹ä»¶
     UPROPERTY(BlueprintAssignable, Category = "Film Render")
@@ -150,10 +150,11 @@ private:
     FTickerDelegate PlaybackTicker;
     FDelegateHandle PlaybackTickerHandle;
 
-    void UpdatePlayback(float DeltaTime);
-    void AdvanceToNextFrame();
-    void HandlePlaybackEnd();
-    void NotifyFrameChanged();
-    void NotifyPlaybackStateChanged(EFilmPlaybackState NewState);
-    bool OnPlaybackTick(float DeltaTime);
+    void UpdatePlayback(float DeltaTime};
+    void AdvanceToNextFrame(};
+    void HandlePlaybackEnd(};
+    void NotifyFrameChanged(};
+    void NotifyPlaybackStateChanged(EFilmPlaybackState NewState};
+    bool OnPlaybackTick(float DeltaTime};
 };
+

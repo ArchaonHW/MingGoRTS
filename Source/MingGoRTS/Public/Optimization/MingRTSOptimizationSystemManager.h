@@ -52,8 +52,8 @@ struct FOptimizationConfiguration
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnOptimizationCompleted, const FString&, ProjectName, const FOptimizationConfiguration&, Config);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPerformanceWarning, const FString&, Component, const FString&, Warning, float, Severity);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnOptimizationCompleted, const FString&, ProjectName, const FOptimizationConfiguration&, Config};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPerformanceWarning, const FString&, Component, const FString&, Warning, float, Severity};
 
 /**
  * ?™Â?Á≥ªÁµ±ÁÆ°Á???- Áµ±‰?ÁÆ°Á??Ä?âÂÑ™?ñÁ∑®Ë≠ØÁ≥ªÁµ? * ?ê‰?Á∞°Â??ÑAPI?åËá™?ïÂ?Â∑•‰?ÊµÅÁ?
@@ -64,52 +64,52 @@ class MINGGORTS_API UMingRTSOptimizationSystemManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationSystemManager();
+    UMingRTSOptimizationSystemManager(};
 
     // Á≥ªÁµ±?ùÂ???    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void InitializeOptimizationSystem();
+    void InitializeOptimizationSystem(};
 
     // Ë®≠ÁΩÆ?™Â??çÁΩÆ
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void SetOptimizationConfiguration(const FOptimizationConfiguration& Config);
+    void SetOptimizationConfiguration(const FOptimizationConfiguration& Config};
 
     // ?™Â??¥ÂÄãÈ???    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void OptimizeProject(const FString& ProjectPath);
+    void OptimizeProject(const FString& ProjectPath};
 
     // ?πÈ?Á∑®Ë≠Ø?ÖÁõÆ
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void CompileProject(const FString& ProjectPath);
+    void CompileProject(const FString& ProjectPath};
 
     // ?ßËÉΩ?ÜÊ??ÖÁõÆ
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void AnalyzeProjectPerformance(const FString& ProjectPath);
+    void AnalyzeProjectPerformance(const FString& ProjectPath};
 
     // ÁÆóÊ??™Â??ÖÁõÆ
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void OptimizeProjectAlgorithms(const FString& ProjectPath);
+    void OptimizeProjectAlgorithms(const FString& ProjectPath};
 
     // ?≤Â??™Â??±Â?
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    FString GetOptimizationReport();
+    FString GetOptimizationReport(};
 
     // ?≤Â??ßËÉΩÊ¶ÇË¶Ω
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    TMap<EProfilingType, EPerformanceLevel> GetPerformanceOverview();
+    TMap<EProfilingType, EPerformanceLevel> GetPerformanceOverview(};
 
     // ?ãÂ?ÂØ¶Ê???éß
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void StartRealTimeMonitoring();
+    void StartRealTimeMonitoring(};
 
     // ?úÊ≠¢ÂØ¶Ê???éß
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void StopRealTimeMonitoring();
+    void StopRealTimeMonitoring(};
 
     // Âø´ÈÄüÂÑ™??    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void QuickOptimize();
+    void QuickOptimize(};
 
     // Ê∑±Â∫¶?™Â?
     UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void DeepOptimize();
+    void DeepOptimize(};
 
     // ?≤Â?Á≥ªÁµ±?Ä??    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
     bool IsSystemReady() const;
@@ -148,26 +148,27 @@ protected:
 
 private:
     // ?ßÈÉ®Â∑•‰?ÊµÅÁ?
-    void InitializeComponents();
-    void SetupEventHandlers();
-    void ApplyConfigurationToComponents();
+    void InitializeComponents(};
+    void SetupEventHandlers(};
+    void ApplyConfigurationToComponents(};
     
     // ?ÖÁõÆ?ÜÊ?
-    TArray<FString> AnalyzeProjectStructure(const FString& ProjectPath);
-    TArray<FCompilationTask> CreateCompilationTasks(const TArray<FString>& SourceFiles);
-    TArray<FString> ExtractAlgorithmsFromProject(const FString& ProjectPath);
+    TArray<FString> AnalyzeProjectStructure(const FString& ProjectPath};
+    TArray<FCompilationTask> CreateCompilationTasks(const TArray<FString>& SourceFiles};
+    TArray<FString> ExtractAlgorithmsFromProject(const FString& ProjectPath};
     
     // ?™Â?Â∑•‰?ÊµÅÁ?
-    void ExecuteCompilationOptimization(const TArray<FCompilationTask>& Tasks);
-    void ExecutePerformanceAnalysis(const FString& ProjectPath);
-    void ExecuteAlgorithmOptimization(const TArray<FString>& Algorithms);
+    void ExecuteCompilationOptimization(const TArray<FCompilationTask>& Tasks};
+    void ExecutePerformanceAnalysis(const FString& ProjectPath};
+    void ExecuteAlgorithmOptimization(const TArray<FString>& Algorithms};
     
     // ?±Â??üÊ?
-    FString GenerateComprehensiveReport();
-    void UpdateOptimizationStatistics();
+    FString GenerateComprehensiveReport(};
+    void UpdateOptimizationStatistics(};
     
     // ËºîÂä©?ΩÊï∏
-    EOptimizationLevel GetOptimizationLevelFromMode(EOptimizationMode Mode);
-    TArray<EOptimizationTechnique> GetOptimizationTechniquesFromMode(EOptimizationMode Mode);
-    void LogOptimizationProgress(const FString& Message);
+    EOptimizationLevel GetOptimizationLevelFromMode(EOptimizationMode Mode};
+    TArray<EOptimizationTechnique> GetOptimizationTechniquesFromMode(EOptimizationMode Mode};
+    void LogOptimizationProgress(const FString& Message};
 };
+

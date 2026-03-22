@@ -1,5 +1,5 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// Epic X: Universe Savior System - 拯救宇宙功能延伸
+// Epic X: Universe Savior System - ?��?宇�??�能延伸
 
 #pragma once
 
@@ -8,63 +8,58 @@
 #include "MingGoRTSAIWorldSavior.h"
 #include "MingGoRTSAIUniverseSavior.generated.h"
 
-// 宇宙威脅級別 - 超越世界級別的威脅
-UENUM(BlueprintType)
+// 宇�?威�?級別 - 超�?世�?級別?��???UENUM(BlueprintType)
 enum class EUniverseThreatLevel : uint8
 {
-    None            UMETA(DisplayName = "無威脅"),
-    Stellar         UMETA(DisplayName = "恆星級"),          // 單一恆星系統受影響
-    Galactic        UMETA(DisplayName = "銀河級"),          // 整個銀河系受影響
-    Intergalactic   UMETA(DisplayName = "星系際級"),       // 多個星系受影響
-    Cosmic          UMETA(DisplayName = "宇宙級"),          // 宇宙結構受威脅
-    Multiverse      UMETA(DisplayName = "多元宇宙級"),      // 多元宇宙級別
-    Omniversal      UMETA(DisplayName = "全能宇宙級"),      // 終極威脅
+    None            UMETA(DisplayName = "?��???),
+    Stellar         UMETA(DisplayName = "?��?�?),          // ?��??��?系統?�影??    Galactic        UMETA(DisplayName = "?�河�?"),          // ?�個�?河系?�影??    Intergalactic   UMETA(DisplayName = "?�系?��?"),       // 多個�?系�?影響
+    Cosmic          UMETA(DisplayName = "宇�?�?),          // 宇�?結�??��???    Multiverse      UMETA(DisplayName = "多�?宇�?�?),      // 多�?宇�?級別
+    Omniversal      UMETA(DisplayName = "?�能宇�?�?),      // 終極威�?
     MAX             UMETA(Hidden)
 };
 
-// 宇宙威脅類型
+// 宇�?威�?類�?
 UENUM(BlueprintType)
 enum class EUniverseThreatType : uint8
 {
-    Supernova           UMETA(DisplayName = "超新星爆炸"),
-    BlackHole           UMETA(DisplayName = "黑洞擴張"),
-    GammaRayBurst       UMETA(DisplayName = "伽馬射線暴"),
-    DarkMatterAnomaly   UMETA(DisplayName = "暗物質異常"),
-    VoidExpansion       UMETA(DisplayName = "虛空擴張"),
-    RealityDistortion   UMETA(DisplayName = "現實扭曲"),
-    TimeParadox         UMETA(DisplayName = "時間悖論"),
-    DimensionalCollapse UMETA(DisplayName = "維度崩塌"),
-    AlienInvasion       UMETA(DisplayName = "外星入侵"),
-    AIApocalypse        UMETA(DisplayName = "AI末日"),
-    CosmicPlague        UMETA(DisplayName = "宇宙瘟疫"),
-    EnergyDepletion     UMETA(DisplayName = "能量枯竭"),
-    EntropyReversal     UMETA(DisplayName = "熵逆轉"),
-    QuantumInstability  UMETA(DisplayName = "量子不穩定"),
-    Singularity         UMETA(DisplayName = "奇點事件"),
+    Supernova           UMETA(DisplayName = "超新?��???),
+    BlackHole           UMETA(DisplayName = "黑�??�張"),
+    GammaRayBurst       UMETA(DisplayName = "伽馬射�???),
+    DarkMatterAnomaly   UMETA(DisplayName = "?�物質異�?),
+    VoidExpansion       UMETA(DisplayName = "?�空?�張"),
+    RealityDistortion   UMETA(DisplayName = "?�實?�曲"),
+    TimeParadox         UMETA(DisplayName = "?��??��?"),
+    DimensionalCollapse UMETA(DisplayName = "維度崩�?"),
+    AlienInvasion       UMETA(DisplayName = "外�??�侵"),
+    AIApocalypse        UMETA(DisplayName = "AI?�日"),
+    CosmicPlague        UMETA(DisplayName = "宇�??�疫"),
+    EnergyDepletion     UMETA(DisplayName = "?��??�竭"),
+    EntropyReversal     UMETA(DisplayName = "?�逆�?"),
+    QuantumInstability  UMETA(DisplayName = "?��?不穩�?),
+    Singularity         UMETA(DisplayName = "奇�?事件"),
     MAX                 UMETA(Hidden)
 };
 
-// 宇宙拯救策略
+// 宇�??��?策略
 UENUM(BlueprintType)
 enum class EUniverseSaviorStrategy : uint8
 {
-    StellarEngineering      UMETA(DisplayName = "恆星工程"),
-    WormholeManipulation    UMETA(DisplayName = "蟲洞操控"),
+    StellarEngineering      UMETA(DisplayName = "?��?工�?"),
+    WormholeManipulation    UMETA(DisplayName = "?��??�控"),
     DimensionalShielding    UMETA(DisplayName = "維度護盾"),
-    TimeManipulation        UMETA(DisplayName = "時間操控"),
-    RealityAnchoring        UMETA(DisplayName = "現實錨定"),
-    QuantumStabilization    UMETA(DisplayName = "量子穩定"),
-    CosmicDiplomacy         UMETA(DisplayName = "宇宙外交"),
-    MultiversalCooperation  UMETA(DisplayName = "多元宇宙合作"),
-    EnergyRedistribution    UMETA(DisplayName = "能量重分配"),
-    EntropyControl          UMETA(DisplayName = "熵控制"),
-    GenesisProtocol         UMETA(DisplayName = "創世協議"),
-    Emergency               UMETA(DisplayName = "緊急協議"),
+    TimeManipulation        UMETA(DisplayName = "?��??�控"),
+    RealityAnchoring        UMETA(DisplayName = "?�實?��?"),
+    QuantumStabilization    UMETA(DisplayName = "?��?穩�?"),
+    CosmicDiplomacy         UMETA(DisplayName = "宇�?外交"),
+    MultiversalCooperation  UMETA(DisplayName = "多�?宇�??��?"),
+    EnergyRedistribution    UMETA(DisplayName = "?��??��???),
+    EntropyControl          UMETA(DisplayName = "?�控??),
+    GenesisProtocol         UMETA(DisplayName = "?��??�議"),
+    Emergency               UMETA(DisplayName = "緊急�?�?),
     MAX                     UMETA(Hidden)
 };
 
-// 宇宙區域
-USTRUCT(BlueprintType)
+// 宇�??�??USTRUCT(BlueprintType)
 struct FUniverseRegion
 {
     GENERATED_BODY()
@@ -91,7 +86,7 @@ struct FUniverseRegion
     {}
 };
 
-// 宇宙威脅數據
+// 宇�?威�??��?
 USTRUCT(BlueprintType)
 struct FUniverseThreatData
 {
@@ -113,11 +108,10 @@ struct FUniverseThreatData
     FVector3d ThreatLocation;
 
     UPROPERTY(BlueprintReadOnly)
-    float ThreatRadius; // 光年
+    float ThreatRadius; // ?�年
 
     UPROPERTY(BlueprintReadOnly)
-    float TimeToImpact; // 年
-
+    float TimeToImpact; // �?
     UPROPERTY(BlueprintReadOnly)
     float Confidence;
 
@@ -128,7 +122,7 @@ struct FUniverseThreatData
     TArray<FUniverseRegion> AffectedRegions;
 
     UPROPERTY(BlueprintReadOnly)
-    float EnergyRequired; // 宇宙能量單位
+    float EnergyRequired; // 宇�??��??��?
 
     UPROPERTY(BlueprintReadOnly)
     int32 CivilizationsAtRisk;
@@ -144,7 +138,7 @@ struct FUniverseThreatData
     {}
 };
 
-// 宇宙行動計劃
+// 宇�?行�?計�?
 USTRUCT(BlueprintType)
 struct FUniverseActionPlan
 {
@@ -160,8 +154,7 @@ struct FUniverseActionPlan
     float EstimatedSuccessRate;
 
     UPROPERTY(BlueprintReadOnly)
-    float ExecutionTime; // 年
-
+    float ExecutionTime; // �?
     UPROPERTY(BlueprintReadOnly)
     float EnergyCost;
 
@@ -188,7 +181,7 @@ struct FUniverseActionPlan
     {}
 };
 
-// 宇宙資源優化
+// 宇�?資�??��?
 USTRUCT(BlueprintType)
 struct FUniverseResourceOptimization
 {
@@ -223,7 +216,7 @@ struct FUniverseResourceOptimization
     {}
 };
 
-// 文明合作數據
+// ?��??��??��?
 USTRUCT(BlueprintType)
 struct FCivilizationCooperation
 {
@@ -251,7 +244,7 @@ struct FCivilizationCooperation
     {}
 };
 
-// 宇宙拯救任務結果
+// 宇�??��?任�?結�?
 USTRUCT(BlueprintType)
 struct FUniverseMissionResult
 {
@@ -287,128 +280,127 @@ struct FUniverseMissionResult
     {}
 };
 
-// 宇宙拯救系統
+// 宇�??��?系統
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class MINGGORTS_API UMingGoRTSAIUniverseSavior : public UActorComponent
 {
     GENERATED_BODY()
 
 public:
-    // 構造函數
-    UMingGoRTSAIUniverseSavior();
+    // 構造函??    UMingGoRTSAIUniverseSavior(};
 
-    // 組件生命周期
+    // 組件?�命?��?
     virtual void BeginPlay() override;
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-    // ========== 宇宙監控系統 ==========
+    // ========== 宇�???��系統 ==========
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void StartUniverseMonitoring();
+    void StartUniverseMonitoring(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void StopUniverseMonitoring();
+    void StopUniverseMonitoring(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void ScanForCosmicThreats();
+    void ScanForCosmicThreats(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void MonitorGalacticStability();
+    void MonitorGalacticStability(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void AnalyzeMultiversalAnomalies();
+    void AnalyzeMultiversalAnomalies(};
 
-    // ========== 威脅管理 ==========
+    // ========== 威�?管�? ==========
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void DetectUniverseThreats();
-
-    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void ClassifyCosmicThreat(const FUniverseThreatData& Threat);
+    void DetectUniverseThreats(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void PredictUniversalThreats(float TimeHorizonYears);
+    void ClassifyCosmicThreat(const FUniverseThreatData& Threat};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void AssessThreatEvolution(const FUniverseThreatData& Threat);
-
-    // ========== 拯救策略 ==========
-    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void GenerateCosmicStrategy(const FUniverseThreatData& Threat);
+    void PredictUniversalThreats(float TimeHorizonYears};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void GenerateUniverseActionPlan(const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy);
+    void AssessThreatEvolution(const FUniverseThreatData& Threat};
+
+    // ========== ?��?策略 ==========
+    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
+    void GenerateCosmicStrategy(const FUniverseThreatData& Threat};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void ExecuteCosmicPlan(const FUniverseActionPlan& Plan);
+    void GenerateUniverseActionPlan(const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void CoordinateMultiversalResponse();
-
-    // ========== 資源管理 ==========
-    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void OptimizeCosmicResources();
+    void ExecuteCosmicPlan(const FUniverseActionPlan& Plan};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void AllocateGalacticResources(const FString& ResourceType, float Amount, EResourcePriority Priority);
+    void CoordinateMultiversalResponse(};
+
+    // ========== 資�?管�? ==========
+    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
+    void OptimizeCosmicResources(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void RedistributeUniversalEnergy(const TArray<FString>& CriticalRegions);
+    void AllocateGalacticResources(const FString& ResourceType, float Amount, EResourcePriority Priority};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void HarvestStarEnergy(const TArray<FUniverseRegion>& TargetStars);
-
-    // ========== 文明合作 ==========
-    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void EstablishCivilizationContact(const FString& CivilizationName);
+    void RedistributeUniversalEnergy(const TArray<FString>& CriticalRegions};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void NegotiateCoalitionAgreement(const TArray<FString>& Civilizations);
+    void HarvestStarEnergy(const TArray<FUniverseRegion>& TargetStars};
+
+    // ========== ?��??��? ==========
+    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
+    void EstablishCivilizationContact(const FString& CivilizationName};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void CoordinateInterstellarAlliance();
+    void NegotiateCoalitionAgreement(const TArray<FString>& Civilizations};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void ShareTechnologyWithAllies(EUniverseSaviorStrategy TechType);
-
-    // ========== 緊急協議 ==========
-    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void ActivateCosmicEmergencyProtocol();
+    void CoordinateInterstellarAlliance(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void DeployGalacticDefenseGrid();
+    void ShareTechnologyWithAllies(EUniverseSaviorStrategy TechType};
+
+    // ========== 緊急�?�?==========
+    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
+    void ActivateCosmicEmergencyProtocol(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void InitiateGenesisProtocol();
+    void DeployGalacticDefenseGrid(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void ExecuteRealityAnchorSequence();
-
-    // ========== 多維度操作 ==========
-    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void OpenWormholeToThreat(const FVector3d& TargetLocation);
+    void InitiateGenesisProtocol(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void StabilizeLocalDimension();
+    void ExecuteRealityAnchorSequence(};
+
+    // ========== 多維度�?�?==========
+    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
+    void OpenWormholeToThreat(const FVector3d& TargetLocation};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void CreateDimensionalShield(const FVector3d& Center, float Radius);
+    void StabilizeLocalDimension(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void ManipulateTimeField(float TimeDilationFactor);
-
-    // ========== 系統控制 ==========
-    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void ActivateUniverseSaviorMode();
+    void CreateDimensionalShield(const FVector3d& Center, float Radius};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void DeactivateUniverseSaviorMode();
+    void ManipulateTimeField(float TimeDilationFactor};
+
+    // ========== 系統?�制 ==========
+    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
+    void ActivateUniverseSaviorMode(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void ResetUniverseSaviorSystem();
+    void DeactivateUniverseSaviorMode(};
 
     UFUNCTION(BlueprintCallable, Category = "Universe Savior")
-    void UpgradeToOmniversalMode();
+    void ResetUniverseSaviorSystem(};
 
-    // ========== 狀態查詢 ==========
+    UFUNCTION(BlueprintCallable, Category = "Universe Savior")
+    void UpgradeToOmniversalMode(};
+
+    // ========== ?�?�查�?==========
     UFUNCTION(BlueprintPure, Category = "Universe Savior")
     float CalculateUniversalStability() const;
 
@@ -421,7 +413,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Universe Savior")
     EUniverseThreatLevel GetCurrentUniversalThreatLevel() const { return CurrentUniverseThreatLevel; }
 
-    // ========== 事件委託 ==========
+    // ========== 事件委�? ==========
     UPROPERTY(BlueprintAssignable, Category = "Universe Savior Events")
     FOnUniverseThreatDetected OnUniverseThreatDetected;
 
@@ -441,8 +433,7 @@ public:
     FOnCivilizationContacted OnCivilizationContacted;
 
 private:
-    // 系統狀態
-    UPROPERTY()
+    // 系統?�??    UPROPERTY()
     bool bUniverseSaviorActive;
 
     UPROPERTY()
@@ -469,7 +460,7 @@ private:
     UPROPERTY()
     float CosmicEnergyReserves;
 
-    // 數據存儲
+    // ?��?存儲
     UPROPERTY()
     TArray<FUniverseThreatData> DetectedCosmicThreats;
 
@@ -491,51 +482,51 @@ private:
     UPROPERTY()
     TArray<FString> UniversalStrategicGoals;
 
-    // 監控計時器
-    FTickerDelegate UniverseMonitoringTicker;
+    // ??��計�???    FTickerDelegate UniverseMonitoringTicker;
     FDelegateHandle UniverseMonitoringTickerHandle;
 
-    // 內部方法
-    void ProcessCosmicThreats();
-    void UpdateUniverseStatus();
-    void OptimizeCosmicResourceAllocation();
-    void AnalyzeUniversalSituation();
-    void CoordinateGalacticResponse();
-    void UpdateCosmicAIParameters();
-    void GenerateEmergencyCosmicPlans();
-    void DeployCosmicEmergencyResources();
-    void NotifyUniverseThreat(const FUniverseThreatData& Threat);
-    void NotifyCosmicPlanGenerated(const FUniverseActionPlan& Plan);
-    void NotifyGalacticResourceOptimized(const FUniverseResourceOptimization& Resource);
-    void NotifyUniverseStatusChange(EUniverseThreatLevel NewLevel, const FString& Message);
-    void NotifyCosmicMissionCompleted(const FUniverseMissionResult& Result);
-    void NotifyCivilizationContacted(const FCivilizationCooperation& Civilization);
+    // ?�部?��?
+    void ProcessCosmicThreats(};
+    void UpdateUniverseStatus(};
+    void OptimizeCosmicResourceAllocation(};
+    void AnalyzeUniversalSituation(};
+    void CoordinateGalacticResponse(};
+    void UpdateCosmicAIParameters(};
+    void GenerateEmergencyCosmicPlans(};
+    void DeployCosmicEmergencyResources(};
+    void NotifyUniverseThreat(const FUniverseThreatData& Threat};
+    void NotifyCosmicPlanGenerated(const FUniverseActionPlan& Plan};
+    void NotifyGalacticResourceOptimized(const FUniverseResourceOptimization& Resource};
+    void NotifyUniverseStatusChange(EUniverseThreatLevel NewLevel, const FString& Message};
+    void NotifyCosmicMissionCompleted(const FUniverseMissionResult& Result};
+    void NotifyCivilizationContacted(const FCivilizationCooperation& Civilization};
 
-    // 輔助函數
-    FString GenerateCosmicThreatName();
-    FString GenerateCosmicThreatDescription();
-    EUniverseSaviorStrategy GenerateRecommendedCosmicStrategy(EUniverseThreatLevel ThreatLevel);
-    float CalculateCosmicSuccessRate(const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy);
-    float EstimateCosmicExecutionTime(const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy);
-    void GenerateCosmicActionSteps(FUniverseActionPlan& Plan, const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy);
-    void CalculateCosmicRequiredResources(FUniverseActionPlan& Plan, const FUniverseThreatData& Threat);
-    void AssessCosmicPotentialRisks(FUniverseActionPlan& Plan, const FUniverseThreatData& Threat);
-    void AnalyzeCosmicResourceStatus();
-    void OptimizeCosmicAllocationStrategy();
-    void UpdateCosmicResourceStatus();
-    FString GenerateCosmicAllocationStrategy(EResourcePriority Priority);
-    float CalculateOptimalCosmicAllocation(const FString& Need);
-    void UpdateCosmicStrategyBasedOnPattern(const FString& Pattern);
-    void UpdateCosmicAIEffectiveness(float Effectiveness);
-    float CalculateCosmicGoalProgress(const FString& Goal);
-    FString GenerateCosmicStatusMessage(EUniverseThreatLevel Level);
-    bool OnUniverseMonitoringTick(float DeltaTime);
+    // 輔助?�數
+    FString GenerateCosmicThreatName(};
+    FString GenerateCosmicThreatDescription(};
+    EUniverseSaviorStrategy GenerateRecommendedCosmicStrategy(EUniverseThreatLevel ThreatLevel};
+    float CalculateCosmicSuccessRate(const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy};
+    float EstimateCosmicExecutionTime(const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy};
+    void GenerateCosmicActionSteps(FUniverseActionPlan& Plan, const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy};
+    void CalculateCosmicRequiredResources(FUniverseActionPlan& Plan, const FUniverseThreatData& Threat};
+    void AssessCosmicPotentialRisks(FUniverseActionPlan& Plan, const FUniverseThreatData& Threat};
+    void AnalyzeCosmicResourceStatus(};
+    void OptimizeCosmicAllocationStrategy(};
+    void UpdateCosmicResourceStatus(};
+    FString GenerateCosmicAllocationStrategy(EResourcePriority Priority};
+    float CalculateOptimalCosmicAllocation(const FString& Need};
+    void UpdateCosmicStrategyBasedOnPattern(const FString& Pattern};
+    void UpdateCosmicAIEffectiveness(float Effectiveness};
+    float CalculateCosmicGoalProgress(const FString& Goal};
+    FString GenerateCosmicStatusMessage(EUniverseThreatLevel Level};
+    bool OnUniverseMonitoringTick(float DeltaTime};
 };
 
-// 事件委託類型
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUniverseThreatDetected, const FUniverseThreatData&, Threat);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCosmicPlanGenerated, const FUniverseActionPlan&, Plan);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGalacticResourceOptimized, const FUniverseResourceOptimization&, Resource);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUniverseStatusChanged, EUniverseThreatLevel, NewLevel, const FString&, Message);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCosmicMissionCompleted, const FUniverseMissionResult&, Result);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCivilizationContacted, const FCivilizationCooperation&, Civilization);
+// 事件委�?類�?
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUniverseThreatDetected, const FUniverseThreatData&, Threat};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCosmicPlanGenerated, const FUniverseActionPlan&, Plan};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGalacticResourceOptimized, const FUniverseResourceOptimization&, Resource};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUniverseStatusChanged, EUniverseThreatLevel, NewLevel, const FString&, Message};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCosmicMissionCompleted, const FUniverseMissionResult&, Result};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCivilizationContacted, const FCivilizationCooperation&, Civilization};
+

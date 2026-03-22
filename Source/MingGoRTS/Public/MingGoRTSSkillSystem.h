@@ -8,31 +8,31 @@
 UENUM(BlueprintType)
 enum class ESkillCategory : uint8
 {
-    Combat         UMETA(DisplayName = "?∞È¨•?Ä??),
-    Strategy       UMETA(DisplayName = "Á≠ñÁï•?Ä??),
-    Diplomacy      UMETA(DisplayName = "Â§ñ‰∫§?Ä??),
-    Leadership     UMETA(DisplayName = "?òÂ??Ä??),
-    Intelligence   UMETA(DisplayName = "?ÖÂ†±?Ä??),
-    Economic       UMETA(DisplayName = "Á∂ìÊ??Ä??)
+    Combat, UMETA(DisplayName = "??∞´????),
+    Strategy, UMETA(DisplayName = "µ¶≤§????),
+    Diplomacy, UMETA(DisplayName = "•~•Ê????),
+    Leadership, UMETA(DisplayName = "????????),
+    Intelligence, UMETA(DisplayName = "??≥¯????),
+    Economic, UMETA(DisplayName = "∏g??????)
 };
 
 UENUM(BlueprintType)
 enum class ESkillType : uint8
 {
-    Active         UMETA(DisplayName = "‰∏ªÂ??Ä??),
-    Passive        UMETA(DisplayName = "Ë¢´Â??Ä??),
-    Toggle         UMETA(DisplayName = "?ãÈ??Ä??)
+    Active, UMETA(DisplayName = "•D??????),
+    Passive, UMETA(DisplayName = "≥Q??????),
+    Toggle, UMETA(DisplayName = "????????)
 };
 
 UENUM(BlueprintType)
 enum class ESpecializationPath : uint8
 {
-    Commander      UMETA(DisplayName = "?áÊèÆÂÆòË∑ØÂæ?),
-    Tactician      UMETA(DisplayName = "?∞Ë?ÂÆ∂Ë∑ØÂæ?),
-    Diplomat       UMETA(DisplayName = "Â§ñ‰∫§ÂÆòË∑ØÂæ?),
-    Spy            UMETA(DisplayName = "?ìË?Ë∑ØÂ?"),
-    Economist      UMETA(DisplayName = "Á∂ìÊ?ÂÆ∂Ë∑ØÂæ?),
-    Generalist     UMETA(DisplayName = "?öÊ?Ë∑ØÂ?")
+    Commander, UMETA(DisplayName = "??¥ß©x∏Ù??),
+    Tactician, UMETA(DisplayName = "????Æa∏Ù??),
+    Diplomat, UMETA(DisplayName = "•~•Ê©x∏Ù??),
+    Spy, UMETA(DisplayName = "????∏Ù??"),
+    Economist, UMETA(DisplayName = "∏g??Æa∏Ù??),
+    Generalist, UMETA(DisplayName = "????∏Ù??")
 };
 
 USTRUCT(BlueprintType)
@@ -83,11 +83,11 @@ struct FSkillEffect
 
     FSkillEffect()
     {
-        EffectType = TEXT("");
+        EffectType = TEXT(""};
         BaseValue = 0.0f;
         ScalingPerLevel = 0.0f;
-        TargetAttribute = TEXT("");
-        Description = TEXT("");
+        TargetAttribute = TEXT(""};
+        Description = TEXT(""};
     }
 };
 
@@ -147,9 +147,9 @@ struct FMingSkill
     FMingSkill()
     {
         SkillID = NAME_None;
-        SkillName = TEXT("");
-        Description = TEXT("");
-        IconPath = TEXT("");
+        SkillName = TEXT(""};
+        Description = TEXT(""};
+        IconPath = TEXT(""};
         Category = ESkillCategory::Combat;
         SkillType = ESkillType::Passive;
         SpecializationPath = ESpecializationPath::Generalist;
@@ -179,7 +179,7 @@ struct FSkillTree
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Skill Tree")
     TArray<FName> RootSkills;
 
-    // Ê≥®Ê?ÔºöTMap<TArray> ‰∏çÊîØ??UPROPERTY
+    // ™`??°GTMap<TArray> §£§‰??UPROPERTY
     TMap<FName, TArray<FName>> SkillConnections;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Skill Tree")
@@ -188,15 +188,15 @@ struct FSkillTree
     FSkillTree()
     {
         Path = ESpecializationPath::Generalist;
-        PathName = TEXT("");
-        PathDescription = TEXT("");
+        PathName = TEXT(""};
+        PathDescription = TEXT(""};
         PathColor = FLinearColor::White;
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelUp, const FName&, SkillID, int32, NewLevel);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillUnlocked, const FName&, SkillID, const FMingSkill&, SkillData);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpecializationChosen, ESpecializationPath, ChosenPath);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelUp, const FName&, SkillID, int32, NewLevel};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillUnlocked, const FName&, SkillID, const FMingSkill&, SkillData};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpecializationChosen, ESpecializationPath, ChosenPath};
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSSkillSystem : public UObject
@@ -204,9 +204,9 @@ class MINGGORTS_API UMingGoRTSSkillSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSSkillSystem();
+    UMingGoRTSSkillSystem(};
 
-    // ?Ä?ΩÁ≥ªÁµ±‰?‰ª?    UPROPERTY(BlueprintAssignable, Category = "Skill System")
+    // ????®t≤Œ????    UPROPERTY(BlueprintAssignable, Category = "Skill System")
     FOnSkillLevelUp OnSkillLevelUp;
 
     UPROPERTY(BlueprintAssignable, Category = "Skill System")
@@ -215,110 +215,111 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Skill System")
     FOnSpecializationChosen OnSpecializationChosen;
 
-    // ?ùÂ??ñÊ??ΩÁ≥ªÁµ?    UFUNCTION(BlueprintCallable, Category = "Skill System")
-    void InitializeSkillSystem();
+    // ??????????®t??    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    void InitializeSkillSystem(};
 
-    // ?≤Â??Ä?âÊ???    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // ????????????    UFUNCTION(BlueprintPure, Category = "Skill System")
     TArray<FMingSkill> GetAllSkills() const;
 
-    // ?≤Â??Ä??    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // ????????    UFUNCTION(BlueprintPure, Category = "Skill System")
     FMingSkill GetSkill(const FName& SkillID) const;
 
-    // Ëß???Ä??    UFUNCTION(BlueprintCallable, Category = "Skill System")
-    bool UnlockSkill(const FName& SkillID);
+    // ???????    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    bool UnlockSkill(const FName& SkillID};
 
-    // ?áÁ??Ä??    UFUNCTION(BlueprintCallable, Category = "Skill System")
-    bool UpgradeSkill(const FName& SkillID, int32 ExperienceAmount = 0);
+    // ????????    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    bool UpgradeSkill(const FName& SkillID, int32 ExperienceAmount = 0};
 
-    // Ê∑ªÂ??Ä?ΩÁ?È©?    UFUNCTION(BlueprintCallable, Category = "Skill System")
-    void AddSkillExperience(const FName& SkillID, int32 ExperienceAmount);
+    // ≤K??????????    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    void AddSkillExperience(const FName& SkillID, int32 ExperienceAmount};
 
-    // Ê™¢Êü•?Ä?ΩÊòØ?¶ÂèØ‰ª•Ëß£??    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // ¿À¨d????¨O??•i•H∏—??    UFUNCTION(BlueprintPure, Category = "Skill System")
     bool CanUnlockSkill(const FName& SkillID, const FMingCharacterData& CharacterData) const;
 
-    // Ê™¢Êü•?Ä?ΩÊòØ?¶ÂèØ‰ª•Â?Á¥?    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // ¿À¨d????¨O??•i•H????    UFUNCTION(BlueprintPure, Category = "Skill System")
     bool CanUpgradeSkill(const FName& SkillID) const;
 
-    // ?≤Â??Ä?ΩÊ®π
+    // ????????æ
     UFUNCTION(BlueprintPure, Category = "Skill System")
     TArray<FSkillTree> GetSkillTrees() const;
 
-    // ?∏Ê?Â∞àÁ≤æË∑ØÂ?
+    // ????±M∫Î∏Ù??
     UFUNCTION(BlueprintCallable, Category = "Skill System")
-    void ChooseSpecializationPath(ESpecializationPath Path);
+    void ChooseSpecializationPath(ESpecializationPath Path};
 
-    // ?≤Â??∂Â?Â∞àÁ≤æË∑ØÂ?
+    // ????????±M∫Î∏Ù??
     UFUNCTION(BlueprintPure, Category = "Skill System")
     ESpecializationPath GetCurrentSpecializationPath() const;
 
-    // Ë®àÁ??Ä?ΩÊ???    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // ≠p??????????    UFUNCTION(BlueprintPure, Category = "Skill System")
     float CalculateSkillEffect(const FName& SkillID, const FString& EffectType) const;
 
-    // ?≤Â?Â∑≤Ëß£?ñÊ???    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // ????§w∏—??????    UFUNCTION(BlueprintPure, Category = "Skill System")
     TArray<FMingSkill> GetUnlockedSkills() const;
 
-    // ?≤Â??ØËß£?ñÊ???    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // ??????∏—??????    UFUNCTION(BlueprintPure, Category = "Skill System")
     TArray<FMingSkill> GetAvailableSkills(const FMingCharacterData& CharacterData) const;
 
-    // ?çÁΩÆ?Ä?ΩÁ≥ªÁµ?    UFUNCTION(BlueprintCallable, Category = "Skill System")
-    void ResetSkillSystem();
+    // ??∏m????®t??    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    void ResetSkillSystem(};
 
-    // ‰øùÂ??Ä?ΩÊï∏??    UFUNCTION(BlueprintCallable, Category = "Skill System")
-    bool SaveSkillData(const FString& SaveSlotName);
+    // ´O??????º∆??    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    bool SaveSkillData(const FString& SaveSlotName};
 
-    // ËºâÂÖ•?Ä?ΩÊï∏??    UFUNCTION(BlueprintCallable, Category = "Skill System")
-    bool LoadSkillData(const FString& SaveSlotName);
+    // ∏¸§J????º∆??    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    bool LoadSkillData(const FString& SaveSlotName};
 
 protected:
-    // ?Ä?âÊ??ΩÊï∏??    UPROPERTY()
+    // ????????º∆??    UPROPERTY()
     TArray<FMingSkill> AllSkills;
 
-    // ?Ä?ΩID?∞Ê??ΩÁ??†Â?
+    // ????ID????????????
     UPROPERTY()
     TMap<FName, FMingSkill> SkillMap;
 
-    // ?Ä?ΩÊ®π?∏Ê?
+    // ????æ????
     UPROPERTY()
     TArray<FSkillTree> SkillTrees;
 
-    // ?∂Â?Â∞àÁ≤æË∑ØÂ?
+    // ????±M∫Î∏Ù??
     UPROPERTY()
     ESpecializationPath CurrentSpecializationPath;
 
-    // ?ØÁî®?Ä?ΩÈ???    UPROPERTY()
+    // ??•Œ????????    UPROPERTY()
     int32 AvailableSkillPoints;
 
-    // ?ØÂê¶Â∑≤Â?ÂßãÂ?
+    // ??ß_§w??©l??
     bool bIsInitialized;
 
-    // ?ùÂ??ñÊ??ΩÂ∫´
-    void InitializeSkillLibrary();
+    // ??????????Æw
+    void InitializeSkillLibrary(};
 
-    // ?µÂª∫?∞È¨•?Ä??    void CreateCombatSkills();
+    // ??´ÿ??∞´????    void CreateCombatSkills(};
 
-    // ?µÂª∫Á≠ñÁï•?Ä??    void CreateStrategySkills();
+    // ??´ÿµ¶≤§????    void CreateStrategySkills(};
 
-    // ?µÂª∫Â§ñ‰∫§?Ä??    void CreateDiplomacySkills();
+    // ??´ÿ•~•Ê????    void CreateDiplomacySkills(};
 
-    // ?µÂª∫?òÂ??Ä??    void CreateLeadershipSkills();
+    // ??´ÿ????????    void CreateLeadershipSkills(};
 
-    // ?µÂª∫?ÖÂ†±?Ä??    void CreateIntelligenceSkills();
+    // ??´ÿ??≥¯????    void CreateIntelligenceSkills(};
 
-    // ?µÂª∫Á∂ìÊ??Ä??    void CreateEconomicSkills();
+    // ??´ÿ∏g??????    void CreateEconomicSkills(};
 
-    // ?ùÂ??ñÊ??ΩÊ®π
-    void InitializeSkillTrees();
+    // ??????????æ
+    void InitializeSkillTrees(};
 
-    // È©óË??Ä?ΩÈ?Ê±?    bool ValidateSkillRequirements(const FSkillRequirement& Requirement, const FMingCharacterData& CharacterData) const;
+    // ≈Á??????????    bool ValidateSkillRequirements(const FSkillRequirement& Requirement, const FMingCharacterData& CharacterData) const;
 
-    // Ë®àÁ??Ä?ΩÁ?È©óÈ?Ê±?    int32 CalculateExperienceRequirement(int32 SkillLevel) const;
+    // ≠p????????≈Á????    int32 CalculateExperienceRequirement(int32 SkillLevel) const;
 
-    // ?âÁî®?Ä?ΩÊ???    void ApplySkillEffects(const FName& SkillID);
+    // ??•Œ????????    void ApplySkillEffects(const FName& SkillID};
 
-    // Ëß????é•?Ä??    void UnlockConnectedSkills(const FName& SkillID);
+    // ???????????    void UnlockConnectedSkills(const FName& SkillID};
 
-    // ?≤Â??Ä?ΩË∑ØÂæëÈ???    FLinearColor GetSpecializationPathColor(ESpecializationPath Path) const;
+    // ????????∏ÙÆ|????    FLinearColor GetSpecializationPathColor(ESpecializationPath Path) const;
 
-    // ?üÊ??Ä?ΩID
+    // ????????ID
     FName GenerateSkillID(const FString& BaseName, ESkillCategory Category) const;
 };
+

@@ -67,9 +67,9 @@ struct FCompilationTask
 
     FCompilationTask()
     {
-        TaskID = TEXT("");
-        SourceFile = TEXT("");
-        OutputFile = TEXT("");
+        TaskID = TEXT(""};
+        SourceFile = TEXT(""};
+        OutputFile = TEXT(""};
         OptimizationLevel = EOptimizationLevel::Development;
         Priority = 1.0f;
         bIsParallel = true;
@@ -141,14 +141,14 @@ struct FOptimizationResult
 
     FOptimizationResult()
     {
-        TaskID = TEXT("");
+        TaskID = TEXT(""};
         bSuccess = false;
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCompilationStarted, const FString&, TaskID, const FCompilationTask&, Task);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCompilationCompleted, const FString&, TaskID, const FOptimizationResult&, Result);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnOptimizationApplied, const FString&, TaskID, const FString&, OptimizationType, float, PerformanceGain);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCompilationStarted, const FString&, TaskID, const FCompilationTask&, Task};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCompilationCompleted, const FString&, TaskID, const FOptimizationResult&, Result};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnOptimizationApplied, const FString&, TaskID, const FString&, OptimizationType, float, PerformanceGain};
 
 /**
  * ?™Â?Á∑®Ë≠Ø?®Á≥ªÁµ?- ?πÈ?Á∑®Ë≠Ø?ÅÈô§?Ø„ÄÅÂÑ™?ñÂ??àÁ??êÂ?Á≥ªÁµ±
@@ -160,58 +160,58 @@ class MINGGORTS_API UMingRTSOptimizationCompiler : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationCompiler();
+    UMingRTSOptimizationCompiler(};
 
     // Á≥ªÁµ±?ùÂ???    UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    void InitializeOptimizationCompiler();
+    void InitializeOptimizationCompiler(};
 
     // ?πÈ?Á∑®Ë≠Ø‰ªªÂ?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    TArray<FOptimizationResult> BatchCompile(const TArray<FCompilationTask>& Tasks);
+    TArray<FOptimizationResult> BatchCompile(const TArray<FCompilationTask>& Tasks};
 
     // ‰∏¶Ë?Á∑®Ë≠Ø
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    void ParallelCompile(const TArray<FCompilationTask>& Tasks);
+    void ParallelCompile(const TArray<FCompilationTask>& Tasks};
 
     // ?∫ËÉΩ?™Â?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    FOptimizationResult OptimizeCode(const FString& SourceCode, EOptimizationType OptimizationType);
+    FOptimizationResult OptimizeCode(const FString& SourceCode, EOptimizationType OptimizationType};
 
     // ?§ÈåØ?ÜÊ?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    TArray<FString> DebugAnalyze(const FString& SourceCode, EOptimizationLevel DebugLevel);
+    TArray<FString> DebugAnalyze(const FString& SourceCode, EOptimizationLevel DebugLevel};
 
     // ?ßËÉΩ?ÜÊ?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    FOptimizationMetrics AnalyzePerformance(const FString& SourceCode);
+    FOptimizationMetrics AnalyzePerformance(const FString& SourceCode};
 
     // ‰ª?¢º?çÊ?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    FString RefactorCode(const FString& SourceCode, const TArray<FString>& RefactoringRules);
+    FString RefactorCode(const FString& SourceCode, const TArray<FString>& RefactoringRules};
 
     // ?ßÂ??™Â?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    FString OptimizeMemory(const FString& SourceCode);
+    FString OptimizeMemory(const FString& SourceCode};
 
     // ?üÂ∫¶?™Â?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    FString OptimizeSpeed(const FString& SourceCode);
+    FString OptimizeSpeed(const FString& SourceCode};
 
     // ÁÆóÊ??™Â?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    FString OptimizeAlgorithms(const FString& SourceCode);
+    FString OptimizeAlgorithms(const FString& SourceCode};
 
     // ‰æùË≥¥?ÜÊ?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    TArray<FString> AnalyzeDependencies(const TArray<FCompilationTask>& Tasks);
+    TArray<FString> AnalyzeDependencies(const TArray<FCompilationTask>& Tasks};
 
     // Á∑®Ë≠Ø?™Â?Âª∫Ë≠∞
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    TArray<FString> GetOptimizationSuggestions(const FString& SourceCode);
+    TArray<FString> GetOptimizationSuggestions(const FString& SourceCode};
 
     // Ë®≠ÁΩÆ?™Â??ÉÊï∏
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    void SetOptimizationParameters(int32 MaxThreads, float MemoryLimit, EOptimizationLevel DefaultLevel);
+    void SetOptimizationParameters(int32 MaxThreads, float MemoryLimit, EOptimizationLevel DefaultLevel};
 
     // ?≤Â?Á∑®Ë≠ØÁµ±Ë?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
@@ -219,7 +219,7 @@ public:
 
     // Ê∏ÖÁ?Á∑®Ë≠ØÁ∑©Â?
     UFUNCTION(BlueprintCallable, Category = "Optimization Compiler")
-    void ClearCompilationCache();
+    void ClearCompilationCache(};
 
     // ‰∫ã‰ª∂ÂßîÊ?
     UPROPERTY(BlueprintAssignable)
@@ -265,33 +265,34 @@ protected:
 
 private:
     // ?ßÈÉ®Á∑®Ë≠Ø?èËºØ
-    FOptimizationResult CompileTask(const FCompilationTask& Task);
-    void ProcessCompilationQueue();
-    void ApplyOptimizations(FString& SourceCode, EOptimizationType OptimizationType);
+    FOptimizationResult CompileTask(const FCompilationTask& Task};
+    void ProcessCompilationQueue(};
+    void ApplyOptimizations(FString& SourceCode, EOptimizationType OptimizationType};
     
     // ?™Â?ÁÆóÊ?
-    FString ApplyLoopOptimizations(const FString& SourceCode);
-    FString ApplyMemoryOptimizations(const FString& SourceCode);
-    FString ApplyAlgorithmOptimizations(const FString& SourceCode);
-    FString ApplyParallelOptimizations(const FString& SourceCode);
+    FString ApplyLoopOptimizations(const FString& SourceCode};
+    FString ApplyMemoryOptimizations(const FString& SourceCode};
+    FString ApplyAlgorithmOptimizations(const FString& SourceCode};
+    FString ApplyParallelOptimizations(const FString& SourceCode};
     
     // ?§ÈåØÁÆóÊ?
-    TArray<FString> PerformStaticAnalysis(const FString& SourceCode);
-    TArray<FString> PerformDynamicAnalysis(const FString& SourceCode);
-    TArray<FString> PerformMemoryLeakDetection(const FString& SourceCode);
+    TArray<FString> PerformStaticAnalysis(const FString& SourceCode};
+    TArray<FString> PerformDynamicAnalysis(const FString& SourceCode};
+    TArray<FString> PerformMemoryLeakDetection(const FString& SourceCode};
     
     // ?ßËÉΩ?ÜÊ?
-    float CalculateComplexity(const FString& SourceCode);
-    float EstimateMemoryUsage(const FString& SourceCode);
-    float EstimateExecutionTime(const FString& SourceCode);
+    float CalculateComplexity(const FString& SourceCode};
+    float EstimateMemoryUsage(const FString& SourceCode};
+    float EstimateExecutionTime(const FString& SourceCode};
     
     // ËºîÂä©?ΩÊï∏
-    void UpdateCompilationStatistics(const FString& TaskID, const FOptimizationMetrics& Metrics);
-    FString GenerateOptimizedCode(const FString& SourceCode, const TArray<FString>& Optimizations);
-    bool IsOptimizationApplicable(const FString& SourceCode, const FString& Optimization);
+    void UpdateCompilationStatistics(const FString& TaskID, const FOptimizationMetrics& Metrics};
+    FString GenerateOptimizedCode(const FString& SourceCode, const TArray<FString>& Optimizations};
+    bool IsOptimizationApplicable(const FString& SourceCode, const FString& Optimization};
     
     // ‰∏¶Ë??ïÁ?
-    void DistributeTasks(const TArray<FCompilationTask>& Tasks);
-    TArray<FCompilationTask> GetParallelizableTasks(const TArray<FCompilationTask>& Tasks);
-    void MergeCompilationResults(const TArray<FOptimizationResult>& Results);
+    void DistributeTasks(const TArray<FCompilationTask>& Tasks};
+    TArray<FCompilationTask> GetParallelizableTasks(const TArray<FCompilationTask>& Tasks};
+    void MergeCompilationResults(const TArray<FOptimizationResult>& Results};
 };
+

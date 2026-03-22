@@ -40,8 +40,8 @@ struct FFilmSequenceData
     TArray<FString> AdditionalPrompts;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFilmFrameGenerated, int32, FrameIndex);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFilmGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFilmFrameGenerated, int32, FrameIndex};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFilmGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage};
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSAIFilmGenerator : public UObject
@@ -49,48 +49,48 @@ class MINGGORTS_API UMingGoRTSAIFilmGenerator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSAIFilmGenerator();
+    UMingGoRTSAIFilmGenerator(};
 
     // ‰∏ªË?ÂΩ±Á??üÊ??üËÉΩ
     UFUNCTION(BlueprintCallable, Category = "AI Film")
-    void GenerateFilmSequence(const TArray<FFilmSequenceData>& FilmData);
+    void GenerateFilmSequence(const TArray<FFilmSequenceData>& FilmData};
 
     UFUNCTION(BlueprintCallable, Category = "AI Film")
-    void StartGeneration();
+    void StartGeneration(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Film")
-    void StopGeneration();
+    void StopGeneration(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     EFilmGenerationStatus GetGenerationStatus() const { return CurrentStatus; }
 
     // ?ÆÂ??üÊ?
     UFUNCTION(BlueprintCallable, Category = "AI Film")
-    void GenerateSingleFrame(const FString& Prompt, const FString& Style, int32 FrameIndex);
+    void GenerateSingleFrame(const FString& Prompt, const FString& Style, int32 FrameIndex};
 
     // Stable Diffusion ?¥Â?
     UFUNCTION(BlueprintCallable, Category = "AI Film")
-    void SetStableDiffusionAPI(const FString& APIEndpoint, const FString& APIKey);
+    void SetStableDiffusionAPI(const FString& APIEndpoint, const FString& APIKey};
 
     UFUNCTION(BlueprintCallable, Category = "AI Film")
-    bool TestAPIConnection();
+    bool TestAPIConnection(};
 
     // ÂΩ±Á?Â∫èÂ?ÁÆ°Á?
     UFUNCTION(BlueprintCallable, Category = "AI Film")
-    void AddFilmSequence(const FFilmSequenceData& SequenceData);
+    void AddFilmSequence(const FFilmSequenceData& SequenceData};
 
     UFUNCTION(BlueprintCallable, Category = "AI Film")
-    void ClearFilmSequences();
+    void ClearFilmSequences(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     TArray<FFilmSequenceData> GetFilmSequences() const { return FilmSequences; }
 
     // ?êË¶Ω?üËÉΩ
     UFUNCTION(BlueprintCallable, Category = "AI Film")
-    void PreviewFrame(int32 FrameIndex);
+    void PreviewFrame(int32 FrameIndex};
 
     UFUNCTION(BlueprintCallable, Category = "AI Film")
-    void PlayGeneratedFilm();
+    void PlayGeneratedFilm(};
 
     // ÂßîÊ?‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "AI Film")
@@ -121,10 +121,11 @@ protected:
     FDelegateHandle GenerationTickerHandle;
 
 private:
-    void ProcessNextFrame();
-    bool OnGenerationTick(float DeltaTime);
-    void SendStableDiffusionRequest(const FString& Prompt, int32 FrameIndex);
-    void HandleGenerationResponse(bool bSuccess, const FString& ResponseData, int32 FrameIndex);
-    FString BuildEnhancedPrompt(const FString& BasePrompt, const FString& Style);
-    void NotifyGenerationCompleted(bool bSuccess, const FString& ErrorMessage = FString());
+    void ProcessNextFrame(};
+    bool OnGenerationTick(float DeltaTime};
+    void SendStableDiffusionRequest(const FString& Prompt, int32 FrameIndex};
+    void HandleGenerationResponse(bool bSuccess, const FString& ResponseData, int32 FrameIndex};
+    FString BuildEnhancedPrompt(const FString& BasePrompt, const FString& Style};
+    void NotifyGenerationCompleted(bool bSuccess, const FString& ErrorMessage = FString()};
 };
+

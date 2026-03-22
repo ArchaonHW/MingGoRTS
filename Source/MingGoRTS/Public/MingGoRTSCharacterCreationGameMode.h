@@ -11,7 +11,7 @@ class MINGGORTS_API AMingGoRTSCharacterCreationGameMode : public AGameModeBase
     GENERATED_BODY()
 
 public:
-    AMingGoRTSCharacterCreationGameMode();
+    AMingGoRTSCharacterCreationGameMode(};
 
     virtual void BeginPlay() override;
 
@@ -20,19 +20,19 @@ public:
 
     // é¡¯ç¤ºè§’è‰²?µå»º UI
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
-    void ShowCharacterCreationUI();
+    void ShowCharacterCreationUI(};
 
     // ?±è?è§’è‰²?µå»º UI
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
-    void HideCharacterCreationUI();
+    void HideCharacterCreationUI(};
 
     // ?•ç?è§’è‰²?µå»ºå®Œæ?
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
-    void OnCharacterCreationCompleted(const FMingCharacterData& CharacterData);
+    void OnCharacterCreationCompleted(const FMingCharacterData& CharacterData};
 
     // ?•ç?è§’è‰²?µå»º?–æ?
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
-    void OnCharacterCreationCancelled();
+    void OnCharacterCreationCancelled(};
 
     // è¨­ç½®è§’è‰²?µå»º UI é¡åˆ¥
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Creation")
@@ -52,18 +52,19 @@ protected:
     TObjectPtr<class UUserWidget> CurrentUI;
 
     // ?å??–è??²å‰µå»ºç®¡?†å™¨
-    void InitializeCharacterCreationManager();
+    void InitializeCharacterCreationManager(};
 
     // ?µå»ºä¸¦é¡¯ç¤?UI
-    UUserWidget* CreateAndShowWidget(TSubclassOf<class UUserWidget> WidgetClass);
+    UUserWidget* CreateAndShowWidget(TSubclassOf<class UUserWidget> WidgetClass};
 
     // ç§»é™¤?¶å? UI
-    void RemoveCurrentUI();
+    void RemoveCurrentUI(};
 
     // ?‹å??Šæˆ²
-    void StartGameWithCharacter(const FMingCharacterData& CharacterData);
+    void StartGameWithCharacter(const FMingCharacterData& CharacterData};
 
-    // è¿”å?ä¸»è???    void ReturnToMainMenu();
+    // è¿”å?ä¸»è???    void ReturnToMainMenu(};
 
-    // ä¿å?è§’è‰²?¸æ??°é??²å¯¦ä¾?    void SaveCharacterToGameInstance(const FMingCharacterData& CharacterData);
+    // ä¿å?è§’è‰²?¸æ??°é??²å¯¦ä¾?    void SaveCharacterToGameInstance(const FMingCharacterData& CharacterData};
 };
+

@@ -5,25 +5,25 @@
 #include "MingRTSCodexSystem.generated.h"
 
 /**
- * 百科條目類型
+ * ?��?條目類�?
  */
 UENUM(BlueprintType)
 enum class ECodexEntryType : uint8
 {
-    GameBasics           UMETA(DisplayName = "遊戲基礎"),
-    FactionInfo          UMETA(DisplayName = "勢力介紹"),
-    UnitInfo             UMETA(DisplayName = "單位圖鑑"),
-    BuildingInfo         UMETA(DisplayName = "建築說明"),
-    Technology           UMETA(DisplayName = "科技樹"),
-    Historical           UMETA(DisplayName = "歷史背景"),
-    Tutorial             UMETA(DisplayName = "進階教學"),
-    Strategy             UMETA(DisplayName = "戰術策略"),
-    Achievement          UMETA(DisplayName = "成就說明"),
-    Lore                 UMETA(DisplayName = "世界觀")
+    GameBasics           UMETA(DisplayName = "?�戲?��?"),
+    FactionInfo          UMETA(DisplayName = "?��?介紹"),
+    UnitInfo             UMETA(DisplayName = "?��??��?"),
+    BuildingInfo         UMETA(DisplayName = "建�?說�?"),
+    Technology           UMETA(DisplayName = "科�?�?),
+    Historical           UMETA(DisplayName = "歷史?�景"),
+    Tutorial             UMETA(DisplayName = "?��??�學"),
+    Strategy             UMETA(DisplayName = "?��?策略"),
+    Achievement          UMETA(DisplayName = "?�就說�?"),
+    Lore                 UMETA(DisplayName = "世�?觀")
 };
 
 /**
- * 百科條目數據
+ * ?��?條目?��?
  */
 USTRUCT(BlueprintType)
 struct FCodexEntry
@@ -77,7 +77,7 @@ struct FCodexEntry
 };
 
 /**
- * 百科章節
+ * ?��?章�?
  */
 USTRUCT(BlueprintType)
 struct FCodexSection
@@ -109,7 +109,7 @@ struct FCodexSection
 };
 
 /**
- * 百科全書系統 - 遊戲內知識庫
+ * ?��??�書系統 - ?�戲?�知識庫
  */
 UCLASS(ClassGroup=(MingGoRTS), meta=(BlueprintSpawnableComponent))
 class MINGGORTS_API UMingRTSCodexSystem : public UObject
@@ -117,67 +117,62 @@ class MINGGORTS_API UMingRTSCodexSystem : public UObject
     GENERATED_BODY()
     
 public:
-    UMingRTSCodexSystem();
+    UMingRTSCodexSystem(};
     
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "Codex")
-    void InitializeCodexSystem();
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "Codex")
+    void InitializeCodexSystem(};
     
-    // 獲取所有章節
+    // ?��??�?��?節
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexSection> GetAllSections() const;
     
-    // 獲取特定類型條目
+    // ?��??��?類�?條目
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetEntriesByType(ECodexEntryType Type) const;
     
-    // 獲取單個條目
-    UFUNCTION(BlueprintCallable, Category = "Codex")
+    // ?��??�個�???    UFUNCTION(BlueprintCallable, Category = "Codex")
     bool GetEntry(FName EntryID, FCodexEntry& OutEntry) const;
     
-    // 搜索條目
+    // ?�索條目
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> SearchEntries(const FString& SearchQuery) const;
     
-    // 查看條目
+    // ?��?條目
     UFUNCTION(BlueprintCallable, Category = "Codex")
-    void ViewEntry(FName EntryID);
+    void ViewEntry(FName EntryID};
     
-    // 檢查條目是否已解鎖
-    UFUNCTION(BlueprintCallable, Category = "Codex")
+    // 檢查條目?�否已解??    UFUNCTION(BlueprintCallable, Category = "Codex")
     bool IsEntryUnlocked(FName EntryID) const;
     
-    // 解鎖條目
+    // �??條目
     UFUNCTION(BlueprintCallable, Category = "Codex")
-    void UnlockEntry(FName EntryID);
+    void UnlockEntry(FName EntryID};
     
-    // 獲取推薦條目
+    // ?��??�薦條目
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetRecommendedEntries() const;
     
-    // 獲取最近查看
-    UFUNCTION(BlueprintCallable, Category = "Codex")
+    // ?��??�近查??    UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetRecentlyViewed(int32 Count = 10) const;
     
-    // 獲取熱門條目
+    // ?��??��?條目
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetPopularEntries(int32 Count = 10) const;
     
-    // 按標籤過濾
-    UFUNCTION(BlueprintCallable, Category = "Codex")
+    // ?��?籤�?�?    UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetEntriesByTag(const FString& Tag) const;
     
-    // 獲取相關條目
+    // ?��??��?條目
     UFUNCTION(BlueprintCallable, Category = "Codex")
     TArray<FCodexEntry> GetRelatedEntries(FName EntryID) const;
     
-    // 保存/載入閱讀歷史
-    void SaveViewHistory();
-    void LoadViewHistory();
+    // 保�?/載入?��?歷史
+    void SaveViewHistory(};
+    void LoadViewHistory(};
     
-    // 事件委託
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEntryViewed, FName, EntryID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEntryUnlocked, FName, EntryID);
+    // 事件委�?
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEntryViewed, FName, EntryID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEntryUnlocked, FName, EntryID};
     
     UPROPERTY(BlueprintAssignable, Category = "Codex|Events")
     FOnEntryViewed OnEntryViewed;
@@ -195,16 +190,17 @@ private:
     UPROPERTY()
     TMap<FName, FString> ViewTimestamps; // EntryID -> LastViewedTime
     
-    void LoadCodexData();
-    void InitializeGameBasicsSection();
-    void InitializeFactionSection();
-    void InitializeUnitSection();
-    void InitializeBuildingSection();
-    void InitializeTechnologySection();
-    void InitializeHistoricalSection();
-    void InitializeStrategySection();
-    void InitializeLoreSection();
+    void LoadCodexData(};
+    void InitializeGameBasicsSection(};
+    void InitializeFactionSection(};
+    void InitializeUnitSection(};
+    void InitializeBuildingSection(};
+    void InitializeTechnologySection(};
+    void InitializeHistoricalSection(};
+    void InitializeStrategySection(};
+    void InitializeLoreSection(};
     
     FCodexEntry CreateEntry(ECodexEntryType Type, const FString& ID, const FText& Title, 
-                           const FText& Description, const TArray<FString>& Tags);
+                           const FText& Description, const TArray<FString>& Tags};
 };
+

@@ -86,15 +86,15 @@ struct FHistoricalEvent
 
     FHistoricalEvent()
     {
-        EventID = TEXT("");
-        EventName = TEXT("");
-        Description = TEXT("");
+        EventID = TEXT(""};
+        EventName = TEXT(""};
+        Description = TEXT(""};
         EventType = EHistoricalEventType::Political;
         EventImpact = EHistoricalImpact::Local;
         Significance = EHistoricalSignificance::Moderate;
-        Location = TEXT("");
+        Location = TEXT(""};
         bPlayerInfluenced = false;
-        PlayerAction = TEXT("");
+        PlayerAction = TEXT(""};
     }
 };
 
@@ -126,9 +126,9 @@ struct FHistoricalTimeline
 
     FHistoricalTimeline()
     {
-        TimelineID = TEXT("");
-        TimelineName = TEXT("");
-        CurrentEra = TEXT("");
+        TimelineID = TEXT(""};
+        TimelineName = TEXT(""};
+        CurrentEra = TEXT(""};
         CurrentYear = 1911;
     }
 };
@@ -158,16 +158,16 @@ struct FHistoricalBranch
 
     FHistoricalBranch()
     {
-        BranchID = TEXT("");
-        BranchName = TEXT("");
-        DivergencePoint = TEXT("");
+        BranchID = TEXT(""};
+        BranchName = TEXT(""};
+        DivergencePoint = TEXT(""};
         Probability = 0.0f;
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHistoricalEvent, const FHistoricalEvent&, Event, bool, bPlayerInfluenced);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimelineBranch, const FString&, BranchID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEraChange, const FString&, NewEra);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHistoricalEvent, const FHistoricalEvent&, Event, bool, bPlayerInfluenced};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimelineBranch, const FString&, BranchID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEraChange, const FString&, NewEra};
 
 /**
  * ?ïÊ?Ê≠∑Âè≤ÊºîÈÄ≤Á≥ªÁµ?- ?ïÊ??üÊ?Ê≠∑Âè≤‰∫ã‰ª∂?åÂ??ÖÁ≥ªÁµ? * ?ê‰??∫Êñº?©ÂÆ∂Ë°åÁÇ∫?ÑÂ??ãÊ≠∑?≤Ê??≤Â?Â§öÈ??ÇÈ?Á∑öÊîØ?? */
@@ -177,29 +177,29 @@ class MINGGORTS_API UMingRTSDynamicHistorySystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSDynamicHistorySystem();
+    UMingRTSDynamicHistorySystem(};
 
     // Á≥ªÁµ±?ùÂ???    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
-    void InitializeDynamicHistorySystem();
+    void InitializeDynamicHistorySystem(};
 
     // ?µÂª∫Ê≠∑Âè≤?ÇÈ?Á∑?    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
-    FHistoricalTimeline CreateTimeline(const FString& TimelineID, const FString& TimelineName, int32 StartYear);
+    FHistoricalTimeline CreateTimeline(const FString& TimelineID, const FString& TimelineName, int32 StartYear};
 
     // ?üÊ?Ê≠∑Âè≤‰∫ã‰ª∂
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
-    FHistoricalEvent GenerateHistoricalEvent(const FString& TimelineID, EHistoricalEventType EventType, const FString& Context);
+    FHistoricalEvent GenerateHistoricalEvent(const FString& TimelineID, EHistoricalEventType EventType, const FString& Context};
 
     // ?ïÁ??©ÂÆ∂Ë°åÁÇ∫ÂΩ±Èüø
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
-    void ProcessPlayerAction(const FString& PlayerID, const FString& Action, const FString& Context);
+    void ProcessPlayerAction(const FString& PlayerID, const FString& Action, const FString& Context};
 
     // ?µÂª∫Ê≠∑Âè≤?ÜÊîØ
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
-    FHistoricalBranch CreateHistoricalBranch(const FString& TimelineID, const FString& DivergenceEvent);
+    FHistoricalBranch CreateHistoricalBranch(const FString& TimelineID, const FString& DivergenceEvent};
 
     // ÊºîÈÄ≤Ê??ìÁ?
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
-    void AdvanceTimeline(const FString& TimelineID, int32 Years);
+    void AdvanceTimeline(const FString& TimelineID, int32 Years};
 
     // ?≤Â??∂Â??ÇÈ?Á∑?    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     FHistoricalTimeline GetCurrentTimeline(const FString& TimelineID) const;
@@ -226,14 +226,14 @@ public:
 
     // Ë®≠ÁΩÆÊ≠∑Âè≤?ÉÊï∏
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
-    void SetHistoricalParameters(float EventGenerationRate, float PlayerInfluenceWeight, float BranchProbability);
+    void SetHistoricalParameters(float EventGenerationRate, float PlayerInfluenceWeight, float BranchProbability};
 
     // ?≤Â?Ê≠∑Âè≤Áµ±Ë?
     UFUNCTION(BlueprintCallable, Category = "Dynamic History")
     TMap<FString, float> GetHistoricalStatistics(const FString& TimelineID) const;
 
     // ?çÁΩÆ?ÇÈ?Á∑?    UFUNCTION(BlueprintCallable, Category = "Dynamic History")
-    void ResetTimeline(const FString& TimelineID);
+    void ResetTimeline(const FString& TimelineID};
 
     // ‰∫ã‰ª∂ÂßîÊ?
     UPROPERTY(BlueprintAssignable)
@@ -279,28 +279,29 @@ protected:
 
 private:
     // ?ßÈÉ®‰∫ã‰ª∂?üÊ??èËºØ
-    FHistoricalEvent GeneratePoliticalEvent(const FString& Context);
-    FHistoricalEvent GenerateMilitaryEvent(const FString& Context);
-    FHistoricalEvent GenerateEconomicEvent(const FString& Context);
-    FHistoricalEvent GenerateCulturalEvent(const FString& Context);
-    FHistoricalEvent GenerateSocialEvent(const FString& Context);
-    FHistoricalEvent GenerateTechnologicalEvent(const FString& Context);
-    FHistoricalEvent GenerateNaturalEvent(const FString& Context);
-    FHistoricalEvent GeneratePersonalEvent(const FString& Context);
+    FHistoricalEvent GeneratePoliticalEvent(const FString& Context};
+    FHistoricalEvent GenerateMilitaryEvent(const FString& Context};
+    FHistoricalEvent GenerateEconomicEvent(const FString& Context};
+    FHistoricalEvent GenerateCulturalEvent(const FString& Context};
+    FHistoricalEvent GenerateSocialEvent(const FString& Context};
+    FHistoricalEvent GenerateTechnologicalEvent(const FString& Context};
+    FHistoricalEvent GenerateNaturalEvent(const FString& Context};
+    FHistoricalEvent GeneratePersonalEvent(const FString& Context};
     
-    // Ê≠∑Âè≤ÊºîÈÄ≤È?Ëº?    void UpdateWorldState(const FString& TimelineID, const FHistoricalEvent& Event);
-    void CheckEraProgression(const FString& TimelineID);
-    void EvaluateBranchConditions(const FString& TimelineID);
+    // Ê≠∑Âè≤ÊºîÈÄ≤È?Ëº?    void UpdateWorldState(const FString& TimelineID, const FHistoricalEvent& Event};
+    void CheckEraProgression(const FString& TimelineID};
+    void EvaluateBranchConditions(const FString& TimelineID};
     
     // ËºîÂä©?ΩÊï∏
     FString GenerateEventID() const;
     float CalculateEventProbability(const FHistoricalEvent& Event, const FString& TimelineID) const;
     FString GetCurrentEra(int32 Year) const;
     TArray<FString> GetActiveFactions(const FString& TimelineID) const;
-    void RecordHistoricalEvent(const FString& TimelineID, const FHistoricalEvent& Event);
+    void RecordHistoricalEvent(const FString& TimelineID, const FHistoricalEvent& Event};
     
     // ?áÊ??üÊ?
     FString GenerateEventNarrative(const FHistoricalEvent& Event) const;
     FString GenerateConsequenceNarrative(const TArray<FString>& Consequences) const;
     FString GenerateCharacterNarrative(const TArray<FString>& KeyFigures) const;
 };
+

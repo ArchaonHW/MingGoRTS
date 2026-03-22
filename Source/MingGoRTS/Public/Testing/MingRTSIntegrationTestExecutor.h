@@ -16,35 +16,35 @@ class MINGGORTS_API UMingRTSIntegrationTestExecutor : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSIntegrationTestExecutor();
+    UMingRTSIntegrationTestExecutor(};
 
     /** ?∑Ë?ÂÆåÊï¥?ÑÁ≥ªÁµ±È??êÊ∏¨Ë©?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    void ExecuteFullIntegrationTest();
+    void ExecuteFullIntegrationTest(};
 
     /** ?∑Ë??∫Á??ÜÊ?Ê∏¨Ë©¶È©óË? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecuteBasicIntegrationValidation();
+    bool ExecuteBasicIntegrationValidation(};
 
     /** ?∑Ë??∏Ê?ÊµÅÊ∏¨Ë©¶È?Ë≠?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecuteDataFlowValidation();
+    bool ExecuteDataFlowValidation(};
 
     /** ?∑Ë??ßËÉΩ?ÜÊ?Ê∏¨Ë©¶È©óË? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecutePerformanceIntegrationValidation();
+    bool ExecutePerformanceIntegrationValidation(};
 
     /** ?∑Ë??®Êà∂È´îÈ?Ê∏¨Ë©¶È©óË? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecuteUserExperienceValidation();
+    bool ExecuteUserExperienceValidation(};
 
     /** ?∑Ë??ºÂÆπ?ßÊ∏¨Ë©¶È?Ë≠?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecuteCompatibilityValidation();
+    bool ExecuteCompatibilityValidation(};
 
     /** ?∑Ë??ÄÁµÇÈ?Ë≠âÊ∏¨Ë©?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecuteFinalValidation();
+    bool ExecuteFinalValidation(};
 
     /** ?≤Â?Ê∏¨Ë©¶?∑Ë?ÁµêÊ? */
     UFUNCTION(BlueprintPure, Category = "Integration Test Executor")
@@ -56,17 +56,17 @@ public:
 
     /** ?çÁΩÆÊ∏¨Ë©¶?∑Ë??Ä??*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    void ResetTestExecutionState();
+    void ResetTestExecutionState(};
 
 public:
     /** Ê∏¨Ë©¶?∑Ë??ãÂ?‰∫ã‰ª∂ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTestExecutionStarted);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTestExecutionStarted};
 
     /** Ê∏¨Ë©¶?∑Ë?ÂÆåÊ?‰∫ã‰ª∂ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestExecutionCompleted, bool, bAllTestsPassed);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestExecutionCompleted, bool, bAllTestsPassed};
 
     /** Ê∏¨Ë©¶?éÊÆµÂÆåÊ?‰∫ã‰ª∂ */
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestPhaseExecutionCompleted, FString, PhaseName, bool, bPassed);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestPhaseExecutionCompleted, FString, PhaseName, bool, bPassed};
 
     UPROPERTY(BlueprintAssignable, Category = "Integration Test Executor|Events")
     FOnTestExecutionStarted OnTestExecutionStarted;
@@ -79,46 +79,46 @@ public:
 
 protected:
     /** Ë®òÈ?Ê∏¨Ë©¶ÁµêÊ? */
-    void RecordTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT(""));
+    void RecordTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
 
     /** È©óË?Á≥ªÁµ±??é• */
-    bool ValidateSystemConnections();
+    bool ValidateSystemConnections(};
 
     /** È©óË??∏Ê?Êµ?*/
-    bool ValidateDataFlow();
+    bool ValidateDataFlow(};
 
     /** È©óË??ßËÉΩ?áÊ? */
-    bool ValidatePerformanceMetrics();
+    bool ValidatePerformanceMetrics(};
 
     /** È©óË??®Êà∂È´îÈ? */
-    bool ValidateUserExperience();
+    bool ValidateUserExperience(};
 
     /** È©óË??ºÂÆπ??*/
-    bool ValidateCompatibility();
+    bool ValidateCompatibility(};
 
     /** È©óË?Á≥ªÁµ±ÂÆåÊï¥??*/
-    bool ValidateSystemIntegrity();
+    bool ValidateSystemIntegrity(};
 
     /** Ê™¢Êü•RTS?∞È¨•Á≥ªÁµ± */
-    bool CheckRTSCombatSystem();
+    bool CheckRTSCombatSystem(};
 
     /** Ê™¢Êü•Á∂ìÊ?Á≥ªÁµ± */
-    bool CheckEconomicSystem();
+    bool CheckEconomicSystem(};
 
     /** Ê™¢Êü•UI?≥È†ªÁ≥ªÁµ± */
-    bool CheckUIAudioSystem();
+    bool CheckUIAudioSystem(};
 
     /** Ê™¢Êü•?¨Âú∞?ñÁ≥ªÁµ?*/
-    bool CheckLocalizationSystem();
+    bool CheckLocalizationSystem(};
 
     /** Ê™¢Êü•?ßËÉΩÁ≥ªÁµ± */
-    bool CheckPerformanceSystem();
+    bool CheckPerformanceSystem(};
 
     /** Ê™¢Êü•?ú‰?Á≥ªÁµ± */
-    bool CheckRelationshipSystem();
+    bool CheckRelationshipSystem(};
 
     /** Ê™¢Êü•AI?ßÂÆπ?üÊ?Á≥ªÁµ± */
-    bool CheckAIContentSystem();
+    bool CheckAIContentSystem(};
 
 private:
     /** Ê∏¨Ë©¶ÁµêÊ??óË°® */
@@ -145,3 +145,4 @@ private:
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     double TestExecutionStartTime;
 };
+

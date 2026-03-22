@@ -51,12 +51,12 @@ struct FSimulationParameter
 
     FSimulationParameter()
     {
-        ParameterName = TEXT("");
+        ParameterName = TEXT(""};
         Value = 0.0f;
         MinValue = 0.0f;
         MaxValue = 100.0f;
-        Unit = TEXT("");
-        Description = TEXT("");
+        Unit = TEXT(""};
+        Description = TEXT(""};
     }
 };
 
@@ -96,7 +96,7 @@ struct FMingEventConsequence
 
     FMingEventConsequence()
     {
-        TargetParameter = TEXT("");
+        TargetParameter = TEXT(""};
         Operation = EConsequenceOperation::Add;
         ValueChange = 0.0f;
         bIsPercentage = false;
@@ -132,11 +132,11 @@ struct FSimulationEvent
 
     FSimulationEvent()
     {
-        EventID = TEXT("");
-        EventName = TEXT("");
-        Description = TEXT("");
+        EventID = TEXT(""};
+        EventName = TEXT(""};
+        Description = TEXT(""};
         TriggerProbability = 0.0f;
-        TimeDelay = TEXT("");
+        TimeDelay = TEXT(""};
     }
 };
 
@@ -195,13 +195,13 @@ struct FHistoricalSimulation
 
     FHistoricalSimulation()
     {
-        SimulationID = TEXT("");
-        Title = TEXT("");
-        Description = TEXT("");
+        SimulationID = TEXT(""};
+        Title = TEXT(""};
+        Description = TEXT(""};
         SimulationType = ESimulationType::Political;
-        HistoricalPeriod = TEXT("");
-        GeographicScope = TEXT("");
-        HistoricalBaseline = TEXT("");
+        HistoricalPeriod = TEXT(""};
+        GeographicScope = TEXT(""};
+        HistoricalBaseline = TEXT(""};
         SimulationDuration = 0.0f;
         MaxIterations = 100;
         bIsRealTime = false;
@@ -252,19 +252,19 @@ struct FSimulationResult
 
     FSimulationResult()
     {
-        ResultID = TEXT("");
-        SimulationID = TEXT("");
+        ResultID = TEXT(""};
+        SimulationID = TEXT(""};
         bSuccess = false;
         FinalScore = 0.0f;
-        OutcomeDescription = TEXT("");
+        OutcomeDescription = TEXT(""};
         HistoricalAccuracy = 0.0f;
-        PlayerImpact = TEXT("");
+        PlayerImpact = TEXT(""};
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSimulationStarted, const FString&, SimulationID, ESimulationType, Type);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSimulationEventTriggered, const FString&, SimulationID, const FString&, EventID, const FString&, EventName);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSimulationCompleted, const FString&, SimulationID, const FSimulationResult&, Result);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSimulationStarted, const FString&, SimulationID, ESimulationType, Type};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSimulationEventTriggered, const FString&, SimulationID, const FString&, EventID, const FString&, EventName};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSimulationCompleted, const FString&, SimulationID, const FSimulationResult&, Result};
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSHistoricalSimulation : public UObject
@@ -272,7 +272,7 @@ class MINGGORTS_API UMingGoRTSHistoricalSimulation : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSHistoricalSimulation();
+    UMingGoRTSHistoricalSimulation(};
 
     // Ê®°Êì¨Á≥ªÁµ±‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "Simulation System")
@@ -285,7 +285,7 @@ public:
     FOnSimulationCompleted OnSimulationCompleted;
 
     // ?ùÂ??ñÊ®°?¨Á≥ªÁµ?    UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    void InitializeSimulationSystem();
+    void InitializeSimulationSystem(};
 
     // ?≤Â??Ä?âÊ®°??    UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<FHistoricalSimulation> GetAllSimulations() const;
@@ -296,23 +296,23 @@ public:
 
     // ?ãÂ?Ê®°Êì¨
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool StartSimulation(const FString& SimulationID, const TMap<FString, float>& PlayerDecisions);
+    bool StartSimulation(const FString& SimulationID, const TMap<FString, float>& PlayerDecisions};
 
     // ?´Â?Ê®°Êì¨
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool PauseSimulation(const FString& SimulationID);
+    bool PauseSimulation(const FString& SimulationID};
 
     // ÁπºÁ?Ê®°Êì¨
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool ResumeSimulation(const FString& SimulationID);
+    bool ResumeSimulation(const FString& SimulationID};
 
     // ?úÊ≠¢Ê®°Êì¨
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool StopSimulation(const FString& SimulationID);
+    bool StopSimulation(const FString& SimulationID};
 
     // Âπ≤È?Ê®°Êì¨
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool InterveneInSimulation(const FString& SimulationID, const FString& ParameterName, float NewValue);
+    bool InterveneInSimulation(const FString& SimulationID, const FString& ParameterName, float NewValue};
 
     // ?≤Â?Ê®°Êì¨?Ä??    UFUNCTION(BlueprintPure, Category = "Simulation System")
     ESimulationPhase GetSimulationPhase(const FString& SimulationID) const;
@@ -347,11 +347,11 @@ public:
 
     // ‰øùÂ?Ê®°Êì¨?∏Ê?
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool SaveSimulationData(const FString& SaveSlotName);
+    bool SaveSimulationData(const FString& SaveSlotName};
 
     // ËºâÂÖ•Ê®°Êì¨?∏Ê?
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
-    bool LoadSimulationData(const FString& SaveSlotName);
+    bool LoadSimulationData(const FString& SaveSlotName};
 
 protected:
     // ?Ä?âÊ®°??    UPROPERTY()
@@ -389,66 +389,66 @@ protected:
     bool bIsInitialized;
 
     // ?ùÂ??ñÊ®°?¨Â∫´
-    void InitializeSimulationLibrary();
+    void InitializeSimulationLibrary(};
 
     // ?µÂª∫?øÊ≤ªÊ®°Êì¨
-    void CreatePoliticalSimulations();
+    void CreatePoliticalSimulations(};
 
     // ?µÂª∫Ëªç‰?Ê®°Êì¨
-    void CreateMilitarySimulations();
+    void CreateMilitarySimulations(};
 
     // ?µÂª∫Á∂ìÊ?Ê®°Êì¨
-    void CreateEconomicSimulations();
+    void CreateEconomicSimulations(};
 
     // ?µÂª∫Á§æÊ?Ê®°Êì¨
-    void CreateSocialSimulations();
+    void CreateSocialSimulations(};
 
     // ?µÂª∫?áÂ?Ê®°Êì¨
-    void CreateCulturalSimulations();
+    void CreateCulturalSimulations(};
 
     // ?µÂª∫?ãÈ?Ê®°Êì¨
-    void CreateInternationalSimulations();
+    void CreateInternationalSimulations(};
 
     // ?∑Ë?Ê®°Êì¨Ê≠•È?
-    void ExecuteSimulationStep(const FString& SimulationID);
+    void ExecuteSimulationStep(const FString& SimulationID};
 
     // ?ïÁ?Ê®°Êì¨‰∫ã‰ª∂
-    void ProcessSimulationEvents(const FString& SimulationID);
+    void ProcessSimulationEvents(const FString& SimulationID};
 
     // Ëß∏ÁôºÊ®°Êì¨‰∫ã‰ª∂
-    void TriggerSimulationEvent(const FString& SimulationID, const FSimulationEvent& Event);
+    void TriggerSimulationEvent(const FString& SimulationID, const FSimulationEvent& Event};
 
     // Ë®àÁ??ÉÊï∏ËÆäÂ?
-    void CalculateParameterChanges(const FString& SimulationID);
+    void CalculateParameterChanges(const FString& SimulationID};
 
     // Ê™¢Êü•?êÂ?Ê¢ù‰ª∂
-    bool CheckSuccessConditions(const FString& SimulationID);
+    bool CheckSuccessConditions(const FString& SimulationID};
 
     // Ê™¢Êü•Â§±Ê?Ê¢ù‰ª∂
-    bool CheckFailureConditions(const FString& SimulationID);
+    bool CheckFailureConditions(const FString& SimulationID};
 
     // ?üÊ?Ê®°Êì¨ÁµêÊ?
-    void GenerateSimulationResult(const FString& SimulationID);
+    void GenerateSimulationResult(const FString& SimulationID};
 
-    // Ë®àÁ?Ê≠∑Âè≤Ê∫ñÁ¢∫??    float CalculateHistoricalAccuracy(const FString& SimulationID);
+    // Ë®àÁ?Ê≠∑Âè≤Ê∫ñÁ¢∫??    float CalculateHistoricalAccuracy(const FString& SimulationID};
 
     // Ë®àÁ??©ÂÆ∂ÂΩ±Èüø
-    float CalculatePlayerImpact(const FString& SimulationID);
+    float CalculatePlayerImpact(const FString& SimulationID};
 
     // ?¥Êñ∞Ê®°Êì¨?≤Â∫¶
-    void UpdateSimulationProgress(const FString& SimulationID);
+    void UpdateSimulationProgress(const FString& SimulationID};
 
     // Ë®òÈ?Ê®°Êì¨‰∫ã‰ª∂
-    void RecordSimulationEvent(const FString& SimulationID, const FString& EventName);
+    void RecordSimulationEvent(const FString& SimulationID, const FString& EventName};
 
     // ?≤Â??ÉÊï∏??(?™Â?Âæå‰Ωø?®Âø´??
     float GetParameterValue(const FString& SimulationID, const FString& ParameterName) const;
 
     // Ë®≠ÁΩÆ?ÉÊï∏??(?™Â?ÂæåÊõ¥?∞Âø´??
-    void SetParameterValue(const FString& SimulationID, const FString& ParameterName, float Value);
+    void SetParameterValue(const FString& SimulationID, const FString& ParameterName, float Value};
 
     // ÊßãÂª∫?ÉÊï∏Âø´Â?
-    void BuildParameterCache(const FString& SimulationID);
+    void BuildParameterCache(const FString& SimulationID};
 
     // ?üÊ?Ê®°Êì¨ID
     FString GenerateSimulationID(const FString& BaseName, ESimulationType Type) const;
@@ -463,8 +463,9 @@ protected:
     float CalculateEventTriggerProbability(const FString& SimulationID, const FSimulationEvent& Event) const;
 
     // ?âÁî®‰∫ã‰ª∂ÂæåÊ?
-    void ApplyEventConsequences(const FString& SimulationID, const FSimulationEvent& Event);
+    void ApplyEventConsequences(const FString& SimulationID, const FSimulationEvent& Event};
 
     // ?üÊ?Ê®°Êì¨?±Â?
     FString GenerateSimulationReport(const FString& SimulationID) const;
 };
+

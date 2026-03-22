@@ -30,9 +30,9 @@ struct FMingGameSessionData
 
     FMingGameSessionData()
     {
-        SaveSlotName = TEXT("");
-        SessionID = TEXT("");
-        SessionStartTime = FDateTime::Now();
+        SaveSlotName = TEXT(""};
+        SessionID = TEXT(""};
+        SessionStartTime = FDateTime::Now(};
         CurrentEra = ERepublicEra::EarlyRepublic;
         CurrentYear = 1912;
     }
@@ -44,7 +44,7 @@ class MINGGORTS_API UMingGoRTSGameInstance : public UGameInstance
     GENERATED_BODY()
 
 public:
-    UMingGoRTSGameInstance();
+    UMingGoRTSGameInstance(};
 
     virtual void Init() override;
     virtual void Shutdown() override;
@@ -55,33 +55,33 @@ public:
 
     // Ë®≠ÁΩÆ?∂Â?ËßíËâ≤?∏Ê?
     UFUNCTION(BlueprintCallable, Category = "Game Session")
-    void SetCurrentCharacterData(const FMingCharacterData& CharacterData);
+    void SetCurrentCharacterData(const FMingCharacterData& CharacterData};
 
     // ?≤Â??∂Â?ËßíËâ≤?∏Ê?
     UFUNCTION(BlueprintPure, Category = "Game Session")
     FMingCharacterData GetCurrentCharacterData() const;
 
     // Ë®≠ÁΩÆÂ≠òÊ?ÊßΩÂ?Á®?    UFUNCTION(BlueprintCallable, Category = "Game Session")
-    void SetSaveSlotName(const FString& SlotName);
+    void SetSaveSlotName(const FString& SlotName};
 
     // ?≤Â?Â≠òÊ?ÊßΩÂ?Á®?    UFUNCTION(BlueprintPure, Category = "Game Session")
     FString GetSaveSlotName() const;
 
     // ?ãÂ??∞Á??äÊà≤?ÉË©±
     UFUNCTION(BlueprintCallable, Category = "Game Session")
-    void StartNewGameSession(const FMingCharacterData& CharacterData, const FString& SaveSlot);
+    void StartNewGameSession(const FMingCharacterData& CharacterData, const FString& SaveSlot};
 
     // ÁµêÊ??∂Â??äÊà≤?ÉË©±
     UFUNCTION(BlueprintCallable, Category = "Game Session")
-    void EndCurrentGameSession();
+    void EndCurrentGameSession(};
 
     // ‰øùÂ??äÊà≤?ÉË©±
     UFUNCTION(BlueprintCallable, Category = "Game Session")
-    bool SaveGameSession();
+    bool SaveGameSession(};
 
     // ËºâÂÖ•?äÊà≤?ÉË©±
     UFUNCTION(BlueprintCallable, Category = "Game Session")
-    bool LoadGameSession(const FString& SlotName);
+    bool LoadGameSession(const FString& SlotName};
 
     // Ê™¢Êü•?ØÂê¶?âÊ≠£?®ÈÄ≤Ë??ÑÊ?Ë©?    UFUNCTION(BlueprintPure, Category = "Game Session")
     bool HasActiveSession() const;
@@ -92,7 +92,7 @@ public:
 
     // Ë®≠ÁΩÆ?äÊà≤?ÇÈ?
     UFUNCTION(BlueprintCallable, Category = "Game Session")
-    void SetGameTime(ERepublicEra Era, int32 Year);
+    void SetGameTime(ERepublicEra Era, int32 Year};
 
     // ?≤Â??äÊà≤?ÇÈ?
     UFUNCTION(BlueprintPure, Category = "Game Session")
@@ -104,13 +104,14 @@ protected:
     bool bSessionActive;
 
     // ?üÊ??ÉË©± ID
-    FString GenerateSessionID();
+    FString GenerateSessionID(};
 
     // ?ÉË©±?∏Ê?Â∫èÂ???    FString SerializeSessionData() const;
 
     // ?ÉË©±?∏Ê??çÂ??óÂ?
-    bool DeserializeSessionData(const FString& SerializedData);
+    bool DeserializeSessionData(const FString& SerializedData};
 
     // Ê∏ÖÁ??ÉË©±?∏Ê?
-    void ClearSessionData();
+    void ClearSessionData(};
 };
+

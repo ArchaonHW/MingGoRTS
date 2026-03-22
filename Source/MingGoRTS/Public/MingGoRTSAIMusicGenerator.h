@@ -101,9 +101,9 @@ struct FSoundEffectParameters
     float Attenuation = 1000.0f;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMusicGenerated, class USoundWave*, GeneratedMusic);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoundEffectGenerated, class USoundWave*, GeneratedSFX);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMusicGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMusicGenerated, class USoundWave*, GeneratedMusic};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoundEffectGenerated, class USoundWave*, GeneratedSFX};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMusicGenerationCompleted, bool, bSuccess, const FString&, ErrorMessage};
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSAIMusicGenerator : public UObject
@@ -111,82 +111,82 @@ class MINGGORTS_API UMingGoRTSAIMusicGenerator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingGoRTSAIMusicGenerator();
+    UMingGoRTSAIMusicGenerator(};
 
     // ‰∏ªË??≥Ê??üÊ??üËÉΩ
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void GenerateMusic(const FMusicGenerationParameters& Parameters);
+    void GenerateMusic(const FMusicGenerationParameters& Parameters};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void GenerateSoundEffect(const FSoundEffectParameters& Parameters);
+    void GenerateSoundEffect(const FSoundEffectParameters& Parameters};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void StartMusicGeneration();
+    void StartMusicGeneration(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void StopMusicGeneration();
+    void StopMusicGeneration(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     EMusicGenerationStatus GetGenerationStatus() const { return CurrentStatus; }
 
     // AIVA API ?¥Â?
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void SetAIVAAPI(const FString& APIEndpoint, const FString& APIKey);
+    void SetAIVAAPI(const FString& APIEndpoint, const FString& APIKey};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    bool TestAIVAConnection();
+    bool TestAIVAConnection(};
 
     // ?≥Ê?Â∫´ÁÆ°??    UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void AddToMusicLibrary(USoundWave* Music, const FString& MusicName);
+    void AddToMusicLibrary(USoundWave* Music, const FString& MusicName};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    USoundWave* GetMusicFromLibrary(const FString& MusicName);
+    USoundWave* GetMusicFromLibrary(const FString& MusicName};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     TArray<FString> GetMusicLibraryNames() const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void ClearMusicLibrary();
+    void ClearMusicLibrary(};
 
     // ?≥Ê??≠Êîæ?ßÂà∂
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void PlayGeneratedMusic();
+    void PlayGeneratedMusic(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void StopMusic();
+    void StopMusic(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void PauseMusic();
+    void PauseMusic(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void SetMusicVolume(float Volume);
+    void SetMusicVolume(float Volume};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     bool IsMusicPlaying() const;
 
     // ?≥Ê??≠Êîæ
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void PlaySoundEffect(USoundWave* SoundEffect, const FVector& Location = FVector::ZeroVector);
+    void PlaySoundEffect(USoundWave* SoundEffect, const FVector& Location = FVector::ZeroVector};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void PlaySoundEffect2D(USoundWave* SoundEffect);
+    void PlaySoundEffect2D(USoundWave* SoundEffect};
 
     // ?πÈ??üÊ?
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void GenerateMusicPack(const TArray<FMusicGenerationParameters>& MusicParameters);
+    void GenerateMusicPack(const TArray<FMusicGenerationParameters>& MusicParameters};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    void GenerateSoundEffectPack(const TArray<FSoundEffectParameters>& SFXParameters);
+    void GenerateSoundEffectPack(const TArray<FSoundEffectParameters>& SFXParameters};
 
     // ?êË®≠È¢®Ê†º
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    FMusicGenerationParameters GetRepublicanEraStyle();
+    FMusicGenerationParameters GetRepublicanEraStyle(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    FMusicGenerationParameters GetBattleStyle();
+    FMusicGenerationParameters GetBattleStyle(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
-    FMusicGenerationParameters GetAmbientStyle();
+    FMusicGenerationParameters GetAmbientStyle(};
 
     // ÂßîÊ?‰∫ã‰ª∂
     UPROPERTY(BlueprintAssignable, Category = "AI Music")
@@ -228,14 +228,15 @@ protected:
     FDelegateHandle GenerationTickerHandle;
 
 private:
-    void ProcessMusicGeneration();
-    void ProcessSoundEffectGeneration();
-    bool OnGenerationTick(float DeltaTime);
-    void SendAIVARequest(const FMusicGenerationParameters& Parameters);
-    void HandleAIVAResponse(bool bSuccess, const FString& ResponseData);
-    FString BuildMusicPrompt(const FMusicGenerationParameters& Parameters);
-    FString BuildSFXPrompt(const FSoundEffectParameters& Parameters);
-    USoundWave* CreateSoundWaveFromAudioData(const TArray<uint8>& AudioData);
-    void NotifyGenerationCompleted(bool bSuccess, const FString& ErrorMessage = FString());
-    void InitializeAudioComponent();
+    void ProcessMusicGeneration(};
+    void ProcessSoundEffectGeneration(};
+    bool OnGenerationTick(float DeltaTime};
+    void SendAIVARequest(const FMusicGenerationParameters& Parameters};
+    void HandleAIVAResponse(bool bSuccess, const FString& ResponseData};
+    FString BuildMusicPrompt(const FMusicGenerationParameters& Parameters};
+    FString BuildSFXPrompt(const FSoundEffectParameters& Parameters};
+    USoundWave* CreateSoundWaveFromAudioData(const TArray<uint8>& AudioData};
+    void NotifyGenerationCompleted(bool bSuccess, const FString& ErrorMessage = FString()};
+    void InitializeAudioComponent(};
 };
+
