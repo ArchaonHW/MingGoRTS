@@ -1,53 +1,54 @@
-# MingRTSCollaborativeAINetwork 系统文档
+# MingRTSCollaborativeAINetwork 系統文檔 / MingRTSCollaborativeAINetwork System Documentation
 
-## 概述
+## 概述 / Overview
 
-MingRTSCollaborativeAINetwork 是一个多AI智能体协作系统，允许多个AI智能体协同工作、共享知识和分配任务。
+MingRTSCollaborativeAINetwork 是一個多AI智能體協作系統，允許多個AI智能體協同工作、共享知識和分配任務。
 
-## 核心功能
+MingRTSCollaborativeAINetwork is a multi-agent AI collaboration system that allows multiple AI agents to work together, share knowledge, and distribute tasks.
 
-### 1. 智能体管理
-- **智能体注册/注销**: 动态添加和移除AI智能体
-- **角色分配**: 支持11种智能体角色
-  - Commander (指挥官)
-  - Scout (侦察兵)
-  - Attacker (攻击者)
-  - Defender (防御者)
-  - Support (支援)
-  - ResourceGatherer (资源收集者)
-  - Builder (建造者)
-  - Healer (治疗者)
-  - Specialist (专家)
-  - Coordinator (协调者)
-  - Learner (学习者)
+## 核心功能 / Core Features
 
-### 2. 通信系统
-- **消息传递**: 智能体间的私有消息
-- **广播**: 向所有智能体广播消息
-- **紧急通信**: 高优先级的紧急消息机制
-- **确认机制**: 消息接收确认
+### 1. 智能體管理 / Agent Management
+- **智能體註冊/註銷**: 動態添加和移除AI智能體
+- **角色分配**: 支持11種智能體角色
 
-### 3. 任务协作
-- **任务创建**: 创建需要协作完成的任务
-- **自动分配**: 基于智能体技能和可用性自动分配任务
-- **进度追踪**: 实时跟踪任务完成进度
-- **奖励分配**: 根据贡献度分配奖励
+- **Agent Registration/Unregister**: Dynamically add and remove AI agents
+- **Role Assignment**: Support for 11 agent roles
 
-### 4. 集体知识库
-- **知识共享**: 智能体可以分享获得的知识
-- **置信度管理**: 跟踪知识的可靠程度
-- **知识查询**: 搜索和检索集体知识
-- **知识传播**: 自动传播重要知识
+角色類型 / Role Types:
+- **Commander (指揮官)**: 指揮官 / Commander - 統籌全局 / Overall command
+- **Scout (偵察兵)**: 偵察兵 / Scout - 情報收集 / Intelligence gathering
+- **Attacker (攻擊者)**: 攻擊者 / Attacker - 進攻作戰 / Offensive operations
+- **Defender (防禦者)**: 防禦者 / Defender - 防守據點 / Defensive positions
+- **Support (支援)**: 支援 / Support - 後勤支援 / Logistics support
+- **ResourceGatherer (資源收集者)**: 資源收集者 / Resource Gatherer - 資源採集 / Resource gathering
+- **Builder (建造者)**: 建造者 / Builder - 建築建造 / Construction
+- **Healer (治療者)**: 治療者 / Healer - 單位治療 / Unit healing
+- **Specialist (專家)**: 專家 / Specialist - 特殊任務 / Special operations
+- **Coordinator (協調者)**: 協調者 / Coordinator - 協調溝通 / Coordination
+- **Learner (學習者)**: 學習者 / Learner - 學習適應 / Learning adaptation
 
-### 5. 协作策略
-- **Hierarchical**: 层级式指挥
-- **Democratic**: 民主式决策
-- **Competitive**: 竞争性协作
-- **Cooperative**: 合作式协作
-- **Swarm**: 蜂群式行为
-- **MarketBased**: 基于市场机制的协作
+### 2. 通信系統 / Communication System
+- **消息傳遞**: 智能體間的私有消息 / Private messages between agents
+- **廣播**: 向所有智能體廣播消息 / Broadcast messages to all agents
+- **緊急通信**: 高優先級的緊急消息機制 / High-priority emergency messaging
+- **確認機制**: 消息接收確認 / Message reception confirmation
 
-## API 参考
+### 3. 任務協作 / Task Collaboration
+- **任務創建**: 創建需要協作完成的任務 / Create tasks requiring collaboration
+- **自動分配**: 基於智能體技能和可用性自動分配任務 / Assign tasks based on agent skills
+- **進度追踪**: 實時跟踪任務完成進度 / Real-time task completion tracking
+- **獎勵分配**: 根據貢獻度分配獎勵 / Allocate rewards based on contribution
+
+### 4. 協作策略 / Collaboration Strategies
+- **Hierarchical**: 層級式指揮 / Hierarchical command
+- **Democratic**: 民主式決策 / Democratic decision-making
+- **Competitive**: 競爭性協作 / Competitive collaboration
+- **Cooperative**: 合作式協作 / Cooperative collaboration
+- **Swarm**: 蜂群式行為 / Swarm behavior
+- **MarketBased**: 基於市場機制的協作 / Market-based collaboration
+
+## API 參考 / API Reference
 
 ### 智能体管理
 
