@@ -1,4 +1,4 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -50,8 +50,8 @@ struct FNetworkTestCase
 };
 
 /**
- * Á∂≤Áµ°Á≥ªÁµ±Ê∏¨Ë©¶Â•ó‰ª∂
- * È©óÔøΩ?Â§ö‰∫∫?ÔøΩÊà≤Á∂≤Áµ°Á≥ªÁµ±?ÔøΩÊ†∏ÂøÉÔøΩX */
+ * ∫Ùµ∏®t≤Œ¥˙∏’ÆM•Û
+ * ≈Á??¶h§H??¿∏∫Ùµ∏®t≤Œ??Æ÷§ﬂ?X */
 UCLASS()
 class MINGPERSONAL_API UMingNetworkSystemTest : public UObject
 {
@@ -60,10 +60,10 @@ class MINGPERSONAL_API UMingNetworkSystemTest : public UObject
 public:
     UMingNetworkSystemTest(};
 
-    // ?ÔøΩÔøΩXÔøΩ?ÔøΩÊ∏¨ÔøΩ?    UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool RunAllTests(};
+    // ???X???¥˙??    UFUNCTION(BlueprintCallable, Category = "Network Test")
+    bool RunAllTests();
 
-    // Ê∏¨Ë©¶ÁµêÔøΩ?
+    // ¥˙∏’µ≤??
     UFUNCTION(BlueprintPure, Category = "Network Test")
     FString GetTestResults() const { return TestResults; }
 
@@ -79,57 +79,57 @@ public:
     UFUNCTION(BlueprintPure, Category = "Network Test")
     TArray<FNetworkTestCase> GetTestCases() const { return TestCases; }
 
-    // ?ÔøΩÂà•Ê∏¨Ë©¶
+    // ??ßO¥˙∏’
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestNetworkManagerCreation(};
+    bool TestNetworkManagerCreation();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestServerCreation(};
+    bool TestServerCreation();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestClientConnection(};
+    bool TestClientConnection();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestDisconnection(};
+    bool TestDisconnection();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestReconnection(};
+    bool TestReconnection();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestPlayerManagement(};
+    bool TestPlayerManagement();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestLobbyCreation(};
+    bool TestLobbyCreation();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestLobbyJoinLeave(};
+    bool TestLobbyJoinLeave();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestReadySystem(};
+    bool TestReadySystem();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestGameStart(};
+    bool TestGameStart();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestRelationshipReplication(};
+    bool TestRelationshipReplication();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestReputationReplication(};
+    bool TestReputationReplication();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestChatSystem(};
+    bool TestChatSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestHostMigration(};
+    bool TestHostMigration();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestNetworkStats(};
+    bool TestNetworkStats();
 
     UFUNCTION(BlueprintCallable, Category = "Network Test")
-    bool TestErrorHandling(};
+    bool TestErrorHandling();
 
 private:
-    // Ê∏¨Ë©¶ÁµêÔøΩXÔøΩÔøΩ?
+    // ¥˙∏’µ≤?X???
     UPROPERTY()
     FString TestResults;
 
@@ -145,12 +145,12 @@ private:
     UPROPERTY()
     TArray<FNetworkTestCase> TestCases;
 
-    // Ê∏¨Ë©¶Âπ´Âä©?ÔøΩÊï∏
+    // ¥˙∏’¿∞ßU??º∆
     void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
     void ResetTestCounts();
     void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
 
-    // ?ÔøΩÂª∫Ê∏¨Ë©¶?ÔøΩÔøΩ?ÁÆ°ÔøΩX    UMingPersonalManager* CreateTestPersonalManager();
+    // ??´ÿ¥˙∏’????∫ﬁ?X    UMingPersonalManager* CreateTestPersonalManager();
     UMingNetworkManager* CreateTestNetworkManager();
     UMingLobbySystem* CreateTestLobbySystem();
 };

@@ -1,4 +1,4 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -108,11 +108,11 @@ struct FUserSession
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBehaviorPatternDetected, const FBehaviorPattern&, Pattern};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionCompleted, const FUserSession&, Session};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnomalyDetected, const FString&, AnomalyType, float, Severity};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnomalyDetected, const FString&, AnomalyType, float, Severity);
 
 /**
- * Ë°åÁÇ∫?ÔøΩÔøΩ?Á≥ªÁµ±
- * Ê∑±Â∫¶?ÔøΩÔøΩXÔøΩÊà∂Ë°åÁÇ∫Ê®°ÔøΩXÔøΩË∂®X */
+ * ¶Ê¨∞????®t≤Œ
+ * ≤`´◊???X?§·¶Ê¨∞º“?X?¡ÕX */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingBehaviorAnalytics : public UObject
 {
@@ -121,32 +121,32 @@ class MINGPERSONAL_API UMingBehaviorAnalytics : public UObject
 public:
     UMingBehaviorAnalytics(};
 
-    // ?ÔøΩÔøΩXÔøΩÔøΩXÔøΩÁ≥ªÔøΩ?    UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void InitializeAnalytics(};
+    // ???X??X?®t??    UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
+    void InitializeAnalytics();
 
-    // ‰∫ã‰ª∂Ë®òÔøΩ?
+    // ®∆•Û∞O??
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void RecordEvent(const FString& EventType, const FString& Context, float Value = 1.0f};
+    void RecordEvent(const FString& EventType, const FString& Context, float Value = 1.0f);
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     void RecordEventWithMetadata(const FString& EventType, const FString& Context, 
-                                const TMap<FString, FString>& Metadata, float Value = 1.0f};
+                                const TMap<FString, FString>& Metadata, float Value = 1.0f);
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void StartSession(const FString& SessionID};
+    void StartSession(const FString& SessionID);
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void EndSession(};
+    void EndSession();
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void RecordUIInteraction(const FString& WidgetType, const FString& Action, const FString& Target};
+    void RecordUIInteraction(const FString& WidgetType, const FString& Action, const FString& Target);
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void RecordGameAction(const FString& ActionType, const FString& Target, float SuccessRate};
+    void RecordGameAction(const FString& ActionType, const FString& Target, float SuccessRate);
 
-    // Ê®°ÔøΩ?Ê™¢Ê∏¨
+    // º“??¿À¥˙
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void DetectPatterns(};
+    void DetectPatterns();
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TArray<FBehaviorPattern> GetDetectedPatterns() const;
@@ -157,7 +157,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     bool HasPattern(const FString& PatternName) const;
 
-    // Ë∂®Âã¢?ÔøΩÔøΩ?
+    // ¡Õ∂’????
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TArray<float> GetEventTrend(const FString& EventType, int32 WindowSize = 10) const;
 
@@ -167,9 +167,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     float GetAverageActionInterval(const FString& EventType) const;
 
-    // ?ÔøΩÂ∏∏Ê™¢Ê∏¨
+    // ??±`¿À¥˙
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void DetectAnomalies(};
+    void DetectAnomalies();
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TArray<FString> GetAnomalies() const;
@@ -177,9 +177,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     float GetAnomalySeverity(const FString& AnomalyType) const;
 
-    // ?ÔøΩÊ∏¨?ÔøΩÔøΩ?
+    // ??¥˙????
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    FString PredictNextAction(};
+    FString PredictNextAction();
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     float PredictSessionDuration() const;
@@ -187,7 +187,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TArray<FString> PredictUserGoals() const;
 
-    // ?ÔøΩÔøΩXÔøΩÊï∏X    UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
+    // ???X?º∆X    UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TMap<FString, float> GenerateHeatmapData(const FString& DataType) const;
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
@@ -196,7 +196,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TMap<EPersonalUIType, float> GetPanelUsageHeatmap() const;
 
-    // ?ÔøΩÊà∂?ÔøΩÁæ§
+    // ??§·??∏s
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     FString GetUserSegment() const;
 
@@ -206,7 +206,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     float GetUserEngagementScore() const;
 
-    // ?ÔøΩÔøΩXÔøΩÔøΩ?
+    // ???X???
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     FString GenerateBehaviorReport() const;
 
@@ -216,7 +216,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     void ExportAnalyticsData(const FString& FilePath) const;
 
-    // ?ÔøΩ?ÔøΩÊü•ÔøΩ?    UFUNCTION(BlueprintPure, Category = "Behavior Analytics")
+    // ????¨d??    UFUNCTION(BlueprintPure, Category = "Behavior Analytics")
     bool IsRecording() const { return bIsRecording; }
 
     UFUNCTION(BlueprintPure, Category = "Behavior Analytics")
@@ -228,20 +228,20 @@ public:
     UFUNCTION(BlueprintPure, Category = "Behavior Analytics")
     TArray<FUserSession> GetSessionHistory() const { return SessionHistory; }
 
-    // Ë®≠ÁΩÆ
+    // ≥]∏m
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void SetRecordingEnabled(bool bEnabled};
+    void SetRecordingEnabled(bool bEnabled);
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void SetPatternDetectionThreshold(float Threshold};
+    void SetPatternDetectionThreshold(float Threshold);
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void SetAnomalyDetectionSensitivity(float Sensitivity};
+    void SetAnomalyDetectionSensitivity(float Sensitivity);
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
-    void ClearAllData(};
+    void ClearAllData();
 
-    // ‰∫ã‰ª∂
+    // ®∆•Û
     UPROPERTY(BlueprintAssignable, Category = "Analytics Events")
     FOnBehaviorPatternDetected OnBehaviorPatternDetected;
 
@@ -252,7 +252,7 @@ public:
     FOnAnomalyDetected OnAnomalyDetected;
 
 protected:
-    // ?ÔøΩÔøΩ?Â≠òÂÑ≤
+    // ????¶s¿x
     UPROPERTY()
     TArray<FBehaviorEvent> AllEvents;
 
@@ -265,17 +265,17 @@ protected:
     UPROPERTY()
     TMap<FString, float> EventFrequencies;
 
-    // Ê≥®ÔøΩ?ÔºöTMap<TArray> ‰∏çÊîØXUPROPERTY
+    // ™`??°GTMap<TArray> §£§‰XUPROPERTY
     TMap<FString, TArray<float>> EventTrends;
 
     UPROPERTY()
     TMap<FString, float> AnomalyScores;
 
-    // ?ÔøΩÔøΩXÔøΩË©±
+    // ???X?∏‹
     UPROPERTY()
     FUserSession CurrentSession;
 
-    // ?ÔøΩÁΩÆ
+    // ??∏m
     UPROPERTY()
     bool bIsRecording = true;
 
@@ -291,28 +291,28 @@ protected:
     UPROPERTY()
     int32 MaxSessionsInHistory = 100;
 
-    // ?ÔøΩÈÉ®?ÔøΩÊï∏
+    // ??≥°??º∆
     void ProcessEvent(const FBehaviorEvent& Event};
     void UpdateEventFrequencies(};
     void UpdateEventTrends(};
     void DetectSequentialPatterns(};
     void DetectTemporalPatterns(};
-    void DetectBehavioralAnomalies(};
+    void DetectBehavioralAnomalies();
     float CalculatePatternConfidence(const TArray<FString>& Sequence) const;
     float CalculateAnomalyScore(const FString& EventType, float Value) const;
-    void GenerateUserSegments(};
+    void GenerateUserSegments();
     FString ClassifyUserBehavior() const;
 
-    // Ê©üÂô®Â≠∏ÔøΩ?ËºîÂä©
+    // æ˜æπæ«??ª≤ßU
     TArray<float> ExtractFeatures(const TArray<FBehaviorEvent>& Events) const;
     float CalculateSimilarity(const TArray<float>& Features1, const TArray<float>& Features2) const;
     void UpdatePredictionModels(};
 
 private:
-    // ËºîÂä©?ÔøΩÊï∏
+    // ª≤ßU??º∆
     void CleanupOldData(};
     void SaveAnalyticsData(};
-    void LoadAnalyticsData(};
+    void LoadAnalyticsData();
     FString GenerateSessionID() const;
 };
 

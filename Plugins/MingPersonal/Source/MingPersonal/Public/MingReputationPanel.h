@@ -1,4 +1,4 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -53,11 +53,11 @@ struct FReputationDisplayData
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReputationSelected, const FString&, RegionID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnReputationFilterChanged, EReputationLevel, FilterLevel, bool, bActive};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnReputationFilterChanged, EReputationLevel, FilterLevel, bool, bActive);
 
 /**
- * ?ÔøΩÔøΩXÔøΩÊùøWidget
- * È°ØÁ§∫?ÔøΩÁÆ°?ÔøΩÂú∞?ÔøΩ?ÔøΩÔøΩ?‰ø°ÊÅØ
+ * ???X?™OWidget
+ * ≈„•‹??∫ﬁ??¶a??????´HÆß
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingReputationPanel : public UUserWidget
@@ -67,39 +67,39 @@ class MINGPERSONAL_API UMingReputationPanel : public UUserWidget
 public:
     UMingReputationPanel(const FObjectInitializer& ObjectInitializer};
 
-    // ?ÔøΩÔøΩX    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void InitializeReputationPanel(UMingRelationshipManager* InRelationshipManager};
+    // ???X    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
+    void InitializeReputationPanel(UMingRelationshipManager* InRelationshipManager);
 
-    // ?ÔøΩÔøΩXÔøΩÊñ∞
+    // ???X?∑s
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void UpdateReputationData(};
-
-    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void RefreshReputationList(};
+    void UpdateReputationData();
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void UpdateSelectedReputation(const FString& RegionID};
-
-    // ?ÔøΩÊøæ?ÔøΩÔøΩ?ÔøΩ?    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void FilterByReputationLevel(EReputationLevel ReputationLevel, bool bActive};
+    void RefreshReputationList();
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void SortByScore(bool bAscending = true};
+    void UpdateSelectedReputation(const FString& RegionID);
+
+    // ??¬o??????    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
+    void FilterByReputationLevel(EReputationLevel ReputationLevel, bool bActive);
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void SortByName(bool bAscending = true};
+    void SortByScore(bool bAscending = true);
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void ClearFilters(};
-
-    // ?ÔøΩÁ¥¢
-    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void SearchReputations(const FString& SearchText};
+    void SortByName(bool bAscending = true);
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void ClearSearch(};
+    void ClearFilters();
 
-    // Áµ±ÔøΩ?‰ø°ÊÅØ
+    // ??Ø¡
+    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
+    void SearchReputations(const FString& SearchText);
+
+    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
+    void ClearSearch();
+
+    // ≤Œ??´HÆß
     UFUNCTION(BlueprintPure, Category = "Reputation Panel")
     int32 GetTotalRegionCount() const;
 
@@ -115,43 +115,43 @@ public:
     UFUNCTION(BlueprintPure, Category = "Reputation Panel")
     EReputationLevel GetHighestReputationLevel() const;
 
-    // Ë©≥Á¥∞‰ø°ÊÅØ
+    // ∏‘≤”´HÆß
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void ShowReputationDetails(const FString& RegionID};
+    void ShowReputationDetails(const FString& RegionID);
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void HideReputationDetails(};
+    void HideReputationDetails();
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void ShowQuestList(const FString& RegionID};
+    void ShowQuestList(const FString& RegionID);
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void HideQuestList(};
+    void HideQuestList();
 
-    // ‰∫íÔøΩXÔøΩÔøΩ?
+    // §¨?X???
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void OnReputationClicked(const FString& RegionID};
-
-    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void OnReputationDoubleClicked(const FString& RegionID};
+    void OnReputationClicked(const FString& RegionID);
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void OnReputationRightClicked(const FString& RegionID};
+    void OnReputationDoubleClicked(const FString& RegionID);
 
-    // ‰ªªÔøΩXÔøΩÔøΩ?
+    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
+    void OnReputationRightClicked(const FString& RegionID);
+
+    // •Ù?X???
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     bool CanAcceptQuestInRegion(const FString& RegionID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     TArray<FString> GetAvailableQuestsInRegion(const FString& RegionID) const;
 
-    // Â∞éÂá∫?ÔøΩÔøΩX    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void ExportReputationData(};
+    // æ…•X???X    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
+    void ExportReputationData();
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
-    void ImportReputationData(};
+    void ImportReputationData();
 
-    // ‰∫ã‰ª∂
+    // ®∆•Û
     UPROPERTY(BlueprintAssignable, Category = "Reputation Events")
     FOnReputationSelected OnReputationSelected;
 
@@ -159,11 +159,11 @@ public:
     FOnReputationFilterChanged OnReputationFilterChanged;
 
 protected:
-    // Á≥ªÁµ±ÂºïÁî®
+    // ®t≤Œ§ﬁ•Œ
     UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
-    // ?ÔøΩÔøΩ?Â≠òÂÑ≤
+    // ????¶s¿x
     UPROPERTY(BlueprintReadOnly, Category = "Reputation Data")
     TArray<FReputationDisplayData> DisplayedReputations;
 
@@ -173,7 +173,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Reputation Data")
     FReputationDisplayData SelectedReputation;
 
-    // ?ÔøΩÊøæ?ÔøΩX    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
+    // ??¬o??X    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     TMap<EReputationLevel, bool> ActiveFilters;
 
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
@@ -182,13 +182,13 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     bool bIsFiltered = false;
 
-    // ?ÔøΩÔøΩXÔøΩX    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
+    // ???X?X    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortByScore = false;
 
     UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortAscending = true;
 
-    // UIÁµÑ‰ª∂ÂºïÁî®ÔºàÔøΩ?Ë¶ÅÂú®Blueprint‰∏≠ÔøΩ?ÂÆöÔøΩ?
+    // UI≤’•Û§ﬁ•Œ°]??≠n¶bBlueprint§§??©w??
     UPROPERTY(meta = (BindWidget))
     class UListView* ReputationListView;
 
@@ -216,30 +216,30 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UScrollBox* QuestScrollBox;
 
-    // ?ÔøΩÊì¨?ÔøΩÊï∏
+    // ??¿¿??º∆
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // ?ÔøΩÈÉ®?ÔøΩÊï∏
+    // ??≥°??º∆
     void ProcessReputationData(};
     void ApplyFilters(};
     void ApplySorting(};
     void UpdateStatistics(};
     void UpdateUI(};
-    FReputationDisplayData CreateDisplayData(const FString& RegionID, const FReputationData& ReputationData};
+    FReputationDisplayData CreateDisplayData(const FString& RegionID, const FReputationData& ReputationData);
     FLinearColor GetReputationColor(EReputationLevel ReputationLevel) const;
     FString GetReputationDescription(EReputationLevel ReputationLevel, float Score) const;
     FString GetRegionDisplayName(const FString& RegionID) const;
 
-    // ‰∫ã‰ª∂Á∂ÅÔøΩ?
+    // ®∆•Û∏j??
     void SetupEventBindings(};
-    void OnReputationDataChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason};
+    void OnReputationDataChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason);
 
 private:
-    // ËºîÂä©?ÔøΩÊï∏
+    // ª≤ßU??º∆
     bool PassesFilter(const FReputationDisplayData& ReputationData) const;
     bool PassesSearch(const FReputationDisplayData& ReputationData) const;
-    void RefreshDisplayList(};
+    void RefreshDisplayList();
     EReputationLevel CalculateReputationLevel(float Score) const;
 };
 

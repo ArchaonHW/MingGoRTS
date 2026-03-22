@@ -5,7 +5,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MingLobbySystem.generated.h"
 
 UENUM(BlueprintType)
 enum class EMingLobbyType : uint8
@@ -113,7 +112,7 @@ public:
     bool CreateLobby(const FMingLobbySettings& Settings);
 
     UFUNCTION(BlueprintCallable, Category = "Lobby System")
-    bool JoinLobby(const FString& LobbyID, const FString& Password = TEXT(""));
+    bool JoinLobby(const FString& LobbyID, const FString& Password = TEXT("")};
 
     UFUNCTION(BlueprintCallable, Category = "Lobby System")
     void LeaveLobby();
@@ -161,9 +160,9 @@ protected:
     void BroadcastLobbyUpdate();
     FMingLobbyPlayer* GetPlayerByID(int32 PlayerID);
     const FMingLobbyPlayer* GetPlayerByID(int32 PlayerID) const;
-    void AddPlayerToTeam(int32 PlayerID, int32 TeamID);
-    void RemovePlayerFromTeam(int32 PlayerID);
+    void AddPlayerToTeam(int32 PlayerID, int32 TeamID};
+    void RemovePlayerFromTeam(int32 PlayerID};
     void UpdatePlayerState(int32 PlayerID, EMingLobbyPlayerState NewState);
     bool ValidateSettings(const FMingLobbySettings& Settings) const;
-    void SendSystemMessage(const FString& Message);
-};
+    void SendSystemMessage(const FString& Message};
+);

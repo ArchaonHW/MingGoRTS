@@ -1,4 +1,4 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,25 +9,25 @@
 UENUM(BlueprintType)
 enum class EAIUserProfile : uint8
 {
-    NewPlayer,             // ?ÔøΩÁé©ÔøΩ?    CasualPlayer,          // ‰ºëÔøΩXÔøΩÂÆ∂
-    StrategicPlayer,       // Á≠ñÁï•?ÔøΩÂÆ∂
-    PowerPlayer,           // ?ÔøΩÂ∫¶?ÔøΩÂÆ∂
-    SocialPlayer,          // Á§æ‰∫§?ÔøΩÂÆ∂
-    Explorer,              // ?ÔøΩÁ¥¢X    StoryFocused,          // ?ÔøΩÔøΩ?Â∞éÔøΩ?
-    AchievementHunter      // ?ÔøΩÂ∞±?ÔøΩ‰∫∫
+    NewPlayer,             // ??™±??    CasualPlayer,          // •?X?Æa
+    StrategicPlayer,       // µ¶≤§??Æa
+    PowerPlayer,           // ??´◊??Æa
+    SocialPlayer,          // ™¿•Ê??Æa
+    Explorer,              // ??Ø¡X    StoryFocused,          // ????æ…??
+    AchievementHunter      // ??¥N??§H
 };
 
 UENUM(BlueprintType)
 enum class EUIAdaptationType : uint8
 {
-    Layout,                // ‰ΩàÔøΩXÔøΩÔøΩ?
-    ColorScheme,           // ?ÔøΩËâ≤?ÔøΩÔøΩ?
-    AnimationSpeed,        // ?ÔøΩÁï´?ÔøΩÂ∫¶
-    InformationDensity,    // ‰ø°ÊÅØÂØÜÂ∫¶
-    InteractionPattern,    // ‰∫§ÔøΩ?Ê®°ÔøΩ?
-    NotificationLevel,     // ?ÔøΩÁü•Á¥öÂà•
-    TooltipFrequency,      // ?ÔøΩÁ§∫?ÔøΩÔøΩ?
-    AutoSaveInterval       // ?ÔøΩÔøΩ?‰øùÔøΩXÔøΩÔøΩ?
+    Layout,                // ßG?X???
+    ColorScheme,           // ??¶‚????
+    AnimationSpeed,        // ??µe??´◊
+    InformationDensity,    // ´HÆß±K´◊
+    InteractionPattern,    // •Ê??º“??
+    NotificationLevel,     // ??™æØ≈ßO
+    TooltipFrequency,      // ??•‹????
+    AutoSaveInterval       // ????´O?X???
 };
 
 USTRUCT(BlueprintType)
@@ -106,10 +106,10 @@ struct FAIUIAdaptationConfig
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAIProfileUpdated, const FAIUserProfileData&, ProfileData};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUIAdaptationApplied, const FAIUIAdaptationConfig&, Adaptation};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIBehaviorAnalyzed, const FString&, BehaviorType, float, Confidence};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIBehaviorAnalyzed, const FString&, BehaviorType, float, Confidence);
 
 /**
- * AIÈ©ÖÔøΩXÔøΩUIÁÆ°ÔøΩX * ?ÔøΩÊñº?ÔøΩÊà∂Ë°åÁÇ∫?ÔøΩËÉΩË™øÊï¥UIÈ´îÔøΩ?
+ * AI≈X?X?UI∫ﬁ?X * ??©Û??§·¶Ê¨∞??Ø‡Ω’æ„UI≈È??
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingAIUIManager : public UObject
@@ -119,67 +119,67 @@ class MINGPERSONAL_API UMingAIUIManager : public UObject
 public:
     UMingAIUIManager(};
 
-    // ?ÔøΩÔøΩXÔøΩAI UIÁ≥ªÁµ±
+    // ???X?AI UI®t≤Œ
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     void InitializeAIUIManager(UMingPersonalUIManager* InUIManager, 
-                              UMingRelationshipManager* InRelationshipManager};
+                              UMingRelationshipManager* InRelationshipManager);
 
-    // ?ÔøΩÊà∂Ë°åÁÇ∫ËøΩËπ§
+    // ??§·¶Ê¨∞∞l¬‹
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void TrackUserBehavior(const FString& BehaviorType, const FString& Context, float Value = 1.0f};
-
-    UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void TrackPanelUsage(EPersonalUIType PanelType, float Duration};
+    void TrackUserBehavior(const FString& BehaviorType, const FString& Context, float Value = 1.0f);
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void TrackInteractionPattern(const FString& InteractionType, const FString& Target};
+    void TrackPanelUsage(EPersonalUIType PanelType, float Duration);
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void TrackSessionMetrics(float SessionTime, int32 ActionsPerformed};
-
-    // AI?ÔøΩÔøΩ?
-    UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void AnalyzeUserBehavior(};
+    void TrackInteractionPattern(const FString& InteractionType, const FString& Target);
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void UpdateUserProfile(};
+    void TrackSessionMetrics(float SessionTime, int32 ActionsPerformed);
+
+    // AI????
+    UFUNCTION(BlueprintCallable, Category = "AI UI")
+    void AnalyzeUserBehavior();
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    EAIUserProfile DetermineUserProfile(};
+    void UpdateUserProfile();
+
+    UFUNCTION(BlueprintCallable, Category = "AI UI")
+    EAIUserProfile DetermineUserProfile();
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     TArray<FAIUIAdaptationConfig> GenerateAdaptationRecommendations(};
 
-    // UI?ÔøΩÔøΩ?
+    // UI????
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void ApplyAdaptation(const FAIUIAdaptationConfig& Adaptation};
+    void ApplyAdaptation(const FAIUIAdaptationConfig& Adaptation);
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void ApplyAllRecommendedAdaptations(};
+    void ApplyAllRecommendedAdaptations();
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void OptimizeLayoutForProfile(};
+    void OptimizeLayoutForProfile();
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void AdjustColorScheme(};
+    void AdjustColorScheme();
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void SetAnimationSpeed(};
+    void SetAnimationSpeed();
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void AdjustInformationDensity(};
+    void AdjustInformationDensity();
 
-    // ?ÔøΩËÉΩ?ÔøΩÁ§∫
+    // ??Ø‡??•‹
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void ShowContextualHelp(const FString& Context};
-
-    UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void SuggestNextAction(};
+    void ShowContextualHelp(const FString& Context);
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void HighlightImportantFeatures(};
+    void SuggestNextAction();
 
-    // ?ÔøΩÊÄßÔøΩXÔøΩËñ¶
+    UFUNCTION(BlueprintCallable, Category = "AI UI")
+    void HighlightImportantFeatures();
+
+    // ??© ?X?¬À
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     TArray<FString> GetRecommendedQuests(};
 
@@ -189,17 +189,17 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     TArray<EPersonalUIType> GetRecommendedPanels(};
 
-    // A/BÊ∏¨Ë©¶
+    // A/B¥˙∏’
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void StartABTest(const FString& TestName, const FString& VariantA, const FString& VariantB};
+    void StartABTest(const FString& TestName, const FString& VariantA, const FString& VariantB);
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void RecordABTestResult(const FString& TestName, const FString& Variant, float Success};
+    void RecordABTestResult(const FString& TestName, const FString& Variant, float Success);
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    FString GetBestABTestVariant(const FString& TestName};
+    FString GetBestABTestVariant(const FString& TestName);
 
-    // ?ÔøΩ?ÔøΩÊü•ÔøΩ?    UFUNCTION(BlueprintPure, Category = "AI UI")
+    // ????¨d??    UFUNCTION(BlueprintPure, Category = "AI UI")
     FAIUserProfileData GetCurrentProfile() const { return CurrentProfile; }
 
     UFUNCTION(BlueprintPure, Category = "AI UI")
@@ -211,20 +211,20 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI UI")
     float GetAdaptationConfidence(EUIAdaptationType AdaptationType) const;
 
-    // Ë®≠ÁΩÆ
+    // ≥]∏m
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void SetAIEnabled(bool bEnabled};
+    void SetAIEnabled(bool bEnabled);
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void SetAdaptationSensitivity(float Sensitivity};
+    void SetAdaptationSensitivity(float Sensitivity);
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void SetLearningRate(float Rate};
+    void SetLearningRate(float Rate);
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    void ResetUserProfile(};
+    void ResetUserProfile();
 
-    // ‰∫ã‰ª∂
+    // ®∆•Û
     UPROPERTY(BlueprintAssignable, Category = "AI Events")
     FOnAIProfileUpdated OnAIProfileUpdated;
 
@@ -235,14 +235,14 @@ public:
     FOnAIBehaviorAnalyzed OnAIBehaviorAnalyzed;
 
 protected:
-    // Á≥ªÁµ±ÂºïÁî®
+    // ®t≤Œ§ﬁ•Œ
     UPROPERTY()
     TObjectPtr<UMingPersonalUIManager> UIManager;
 
     UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
-    // AI?ÔøΩÁΩÆ
+    // AI??∏m
     UPROPERTY()
     bool bAIEnabled = true;
 
@@ -255,11 +255,11 @@ protected:
     UPROPERTY()
     int32 MinDataPointsForAnalysis = 10;
 
-    // ?ÔøΩÊà∂Ê™îÔøΩ?
+    // ??§·¿…??
     UPROPERTY()
     FAIUserProfileData CurrentProfile;
 
-    // Ë°åÁÇ∫?ÔøΩÔøΩ?
+    // ¶Ê¨∞????
     UPROPERTY()
     TArray<FString> BehaviorHistory;
 
@@ -272,37 +272,37 @@ protected:
     UPROPERTY()
     TMap<FString, float> InteractionPatterns;
 
-    // ?ÔøΩÔøΩXÔøΩÁΩÆ
+    // ???X?∏m
     UPROPERTY()
     TArray<FAIUIAdaptationConfig> RecommendedAdaptations;
 
     UPROPERTY()
     TArray<FAIUIAdaptationConfig> ActiveAdaptations;
 
-    // A/BÊ∏¨Ë©¶?ÔøΩÔøΩ?
-    // Ê≥®ÔøΩ?ÔºöTMap<TMap> ‰∏çÊîØXUPROPERTY
+    // A/B¥˙∏’????
+    // ™`??°GTMap<TMap> §£§‰XUPROPERTY
     TMap<FString, TMap<FString, float>> ABTestData;
 
-    // ?ÔøΩÈÉ®?ÔøΩÊï∏
+    // ??≥°??º∆
     void ProcessBehaviorData(};
     void CalculateProfileScores(};
     void GenerateAdaptations(};
-    void ApplyAdaptationToUI(const FAIUIAdaptationConfig& Adaptation};
+    void ApplyAdaptationToUI(const FAIUIAdaptationConfig& Adaptation);
     float CalculateConfidence(const TArray<float>& DataPoints) const;
     EAIUserProfile ClassifyPlayer(const FAIUserProfileData& Profile) const;
-    void LogAdaptation(const FAIUIAdaptationConfig& Adaptation};
+    void LogAdaptation(const FAIUIAdaptationConfig& Adaptation);
 
-    // AIÁÆóÔøΩ?
+    // AI∫‚??
     float CalculateBehaviorScore(const FString& BehaviorType) const;
     TArray<float> GetBehaviorTrend(const FString& BehaviorType, int32 WindowSize) const;
     bool IsBehaviorSignificant(const FString& BehaviorType, float Threshold) const;
     void UpdateAdaptationWeights(};
 
 private:
-    // ËºîÂä©?ÔøΩÊï∏
+    // ª≤ßU??º∆
     void InitializeDefaultAdaptations(};
     void SaveProfileData(};
     void LoadProfileData(};
     void CleanupOldData(};
-};
+);
 

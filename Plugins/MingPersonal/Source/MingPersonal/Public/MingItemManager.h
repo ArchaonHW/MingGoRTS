@@ -1,170 +1,170 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingCharacterGrowthSystem.h"
 #include "MingItemManager.generated.h"
 
-// ?ï¿½ï¿½?ç¨€?ï¿½åº¦
+// ????µ}??«×
 UENUM(BlueprintType)
 enum class EMingItemRarity : uint8
 {
-    Common,            // ?ï¿½ï¿½?    Uncommon,          // ä¸å¸¸ï¿½?    Rare,              // ç¨€X    Epic,              // ?ï¿½è©©
-    Legendary           // ?ï¿½ï¿½?
+    Common,            // ????    Uncommon,          // ¤£±`??    Rare,              // µ}X    Epic,              // ??¸Ö
+    Legendary           // ????
 };
 
-// ?ï¿½ï¿½?é¡ï¿½?
+// ????Ãş??
 UENUM(BlueprintType)
 enum class EMingItemType : uint8
 {
-    Weapon,            // æ­¦å™¨
-    Armor,             // è­·ç”²
-    Accessory,         // ?ï¿½é£¾
-    Consumable,        // æ¶ˆè€—ï¿½?
-    Material,          // ?ï¿½ï¿½?
-    Blueprint,         // ?ï¿½ï¿½?
-    Currency,          // è²¨å¹£
-    Quest,             // ä»»ï¿½Xï¿½ï¿½?
-    Cosmetic           // å¤–ï¿½Xï¿½ï¿½?
+    Weapon,            // ªZ¾¹
+    Armor,             // Å@¥Ò
+    Accessory,         // ??¹¢
+    Consumable,        // ®ø¯Ó??
+    Material,          // ????
+    Blueprint,         // ????
+    Currency,          // ³f¹ô
+    Quest,             // ¥ô?X???
+    Cosmetic           // ¥~?X???
 };
 
-// è£ï¿½?æ§½ï¿½?
+// ¸Ë??¼Ñ??
 UENUM(BlueprintType)
 enum class EMingEquipSlot : uint8
 {
-    MainHand,          // ä¸»ï¿½?
-    OffHand,           // ?ï¿½ï¿½?
-    Head,              // ?ï¿½éƒ¨
-    Body,              // èº«ï¿½?
-    Hands,             // ?ï¿½éƒ¨
-    Legs,              // ?ï¿½éƒ¨
-    Feet,              // ?ï¿½éƒ¨
-    Neck,              // ?ï¿½éƒ¨
-    Ring1,             // ?ï¿½ï¿½?1
-    Ring2,             // ?ï¿½ï¿½?2
-    Trinket1,          // é£¾ç‰©1
-    Trinket2,          // é£¾ç‰©2
-    Backpack           // ?ï¿½ï¿½?
+    MainHand,          // ¥D??
+    OffHand,           // ????
+    Head,              // ??³¡
+    Body,              // ¨­??
+    Hands,             // ??³¡
+    Legs,              // ??³¡
+    Feet,              // ??³¡
+    Neck,              // ??³¡
+    Ring1,             // ????1
+    Ring2,             // ????2
+    Trinket1,          // ¹¢ª«1
+    Trinket2,          // ¹¢ª«2
+    Backpack           // ????
 };
 
-// ?ï¿½ï¿½?å¼·ï¿½?é¡ï¿½?
+// ????±j??Ãş??
 UENUM(BlueprintType)
 enum class EMingEnhancementType : uint8
 {
-    None,               // ?ï¿½å¼·X    Sharp,             // ?ï¿½åˆ©
-    Durable,           // ?ï¿½ï¿½?
-    Powerful,          // å¨ï¿½?
-    Swift,             // è¿…æ·
-    Magical,           // é­”ï¿½?
-    Blessed,           // ç¥ï¿½?
-    Cursed             // è©›ï¿½?
+    None,               // ??±jX    Sharp,             // ??§Q
+    Durable,           // ????
+    Powerful,          // «Â??
+    Swift,             // ¨³±¶
+    Magical,           // Å]??
+    Blessed,           // ¯¬??
+    Cursed             // ¶A??
 };
 
-// ?ï¿½ï¿½Xï¿½ï¿½?
+// ???X???
 USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingItemData
 {
     GENERATED_BODY()
 
-    // ?ï¿½ï¿½?ID
+    // ????ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemID;
 
-    // ?ï¿½ï¿½Xï¿½ç¨±
+    // ???X?ºÙ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemName;
 
-    // ?ï¿½ï¿½Xï¿½è¿°
+    // ???X?­z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemDescription;
 
-    // ?ï¿½ï¿½?é¡ï¿½?
+    // ????Ãş??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingItemType ItemType;
 
-    // ?ï¿½ï¿½?ç¨€?ï¿½åº¦
+    // ????µ}??«×
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingItemRarity ItemRarity;
 
-    // ?ï¿½ï¿½?ç­‰ï¿½?
+    // ????µ¥??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemLevel;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ???X???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemValue;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?
+    // ???X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ItemWeight;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 StackSize;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CurrentStack;
 
-    // ?ï¿½ï¿½?å±¬ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ????Äİ??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ItemAttributes;
 
-    // è£ï¿½?æ§½ï¿½?
+    // ¸Ë??¼Ñ??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEquipSlot EquipSlot;
 
-    // ?ï¿½å¦å·²ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??§_¤w?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsEquipped;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ???X?????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CurrentDurability;
 
-    // ?ï¿½å¤§è€ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??¤j­@????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MaxDurability;
 
-    // ?ï¿½ï¿½?å¼·ï¿½?é¡ï¿½?
+    // ????±j??Ãş??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEnhancementType EnhancementType;
 
-    // å¼·ï¿½?ç­‰ï¿½?
+    // ±j??µ¥??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EnhancementLevel;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?è·¯ï¿½?
+    // ???X???¸ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemIconPath;
 
-    // ?ï¿½ï¿½?3Dæ¨¡ï¿½?è·¯ï¿½?
+    // ????3D¼Ò??¸ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemModelPath;
 
-    // ?ï¿½ï¿½Xï¿½è³ªè·¯ï¿½?
+    // ???X?½è¸ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemMaterialPath;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?è·¯ï¿½?
+    // ???X???¸ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemEffectPath;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?è·¯ï¿½?
+    // ???X???¸ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemSoundPath;
 
-    // ?ï¿½å¦?ï¿½å”¯ä¸€?ï¿½ï¿½?
+    // ??§_??°ß¤@????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsUnique;
 
-    // ?ï¿½å¦?ï¿½ï¿½?å®šç‰©X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??§_????©wª«X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsSoulbound;
 
-    // ?ï¿½ï¿½?æ¨™ç±¤
+    // ????¼ĞÅÒ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> ItemTags;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime AcquiredTime;
 
-    // ?ï¿½ï¿½?ä¾†ï¿½?
+    // ????¨Ó??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemSource;
 
@@ -200,88 +200,88 @@ struct MINGPERSONAL_API FMingItemData
     }
 };
 
-// è£ï¿½Xï¿½ï¿½?
+// ¸Ë?X???
 USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingEquipmentData
 {
     GENERATED_BODY()
 
-    // è£ï¿½?ID
+    // ¸Ë??ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EquipmentID;
 
-    // è£ï¿½Xï¿½ç¨±
+    // ¸Ë?X?ºÙ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipmentName;
 
-    // è£ï¿½Xï¿½è¿°
+    // ¸Ë?X?­z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipmentDescription;
 
-    // è£ï¿½?é¡ï¿½?
+    // ¸Ë??Ãş??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingItemType EquipmentType;
 
-    // è£ï¿½?ç¨€?ï¿½åº¦
+    // ¸Ë??µ}??«×
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingItemRarity EquipmentRarity;
 
-    // è£ï¿½?ç­‰ï¿½?
+    // ¸Ë??µ¥??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EquipmentLevel;
 
-    // è£ï¿½?å±¬ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ¸Ë??Äİ??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> EquipmentAttributes;
 
-    // è£ï¿½?æ§½ï¿½?
+    // ¸Ë??¼Ñ??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEquipSlot EquipSlot;
 
-    // ?ï¿½å¦å·²ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??§_¤w?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsEquipped;
 
-    // è£ï¿½Xï¿½ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ¸Ë?X?????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CurrentDurability;
 
-    // ?ï¿½å¤§è€ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??¤j­@????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MaxDurability;
 
-    // è£ï¿½?å¼·ï¿½?é¡ï¿½?
+    // ¸Ë??±j??Ãş??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEnhancementType EnhancementType;
 
-    // å¼·ï¿½?ç­‰ï¿½?
+    // ±j??µ¥??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EnhancementLevel;
 
-    // è£ï¿½Xï¿½ï¿½?è·¯ï¿½?
+    // ¸Ë?X???¸ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipmentIconPath;
 
-    // è£ï¿½?3Dæ¨¡ï¿½?è·¯ï¿½?
+    // ¸Ë??3D¼Ò??¸ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipmentModelPath;
 
-    // è£ï¿½Xï¿½è³ªè·¯ï¿½?
+    // ¸Ë?X?½è¸ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipmentMaterialPath;
 
-    // è£ï¿½Xï¿½ï¿½?è·¯ï¿½?
+    // ¸Ë?X???¸ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipmentEffectPath;
 
-    // è£ï¿½Xï¿½ï¿½?è·¯ï¿½?
+    // ¸Ë?X???¸ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipmentSoundPath;
 
-    // è£ï¿½Xï¿½ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ¸Ë?X???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> EquipmentRequirements;
 
-    // è£ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ¸Ë?X??X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime AcquiredTime;
 
-    // è£ï¿½?ä¾†ï¿½?
+    // ¸Ë??¨Ó??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipmentSource;
 
@@ -311,51 +311,51 @@ struct MINGPERSONAL_API FMingEquipmentData
     }
 };
 
-// ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ–¹
+// ???X??X?¤è
 USTRUCT(BlueprintType)
 struct MINGPERSONAL_API FMingCraftingRecipe
 {
     GENERATED_BODY()
 
-    // ?ï¿½æ–¹ID
+    // ??¤èID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 RecipeID;
 
-    // ?ï¿½æ–¹?ï¿½ç¨±
+    // ??¤è??ºÙ
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString RecipeName;
 
-    // ?ï¿½æ–¹?ï¿½è¿°
+    // ??¤è??­z
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString RecipeDescription;
 
-    // ?ï¿½?ï¿½?ï¿½ï¿½?
+    // ????????
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingItemData> RequiredMaterials;
 
-    // ?ï¿½ï¿½?çµï¿½?
+    // ????µ²??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingItemData> ResultItems;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?
+    // ???X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CraftingTime;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?
+    // ???X???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float SuccessRate;
 
-    // ?ï¿½æ–¹ç¨€?ï¿½åº¦
+    // ??¤èµ}??«×
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingItemRarity RecipeRarity;
 
-    // ?ï¿½æ–¹?ï¿½æ±‚ï¿½X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??¤è??¨D?X    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> RequiredSkills;
 
-    // ?ï¿½æ–¹?ï¿½æ±‚ï¿½?ï¿½?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ??¤è??¨D????    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 RequiredLevel;
 
-    // ?ï¿½æ–¹?ï¿½ï¿½?è·¯ï¿½?
+    // ??¤è????¸ô??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString RecipeIconPath;
 
@@ -375,17 +375,17 @@ struct MINGPERSONAL_API FMingCraftingRecipe
     }
 };
 
-// ?ï¿½ï¿½?ç®¡ï¿½?äº‹ä»¶å§”ï¿½?
+// ????ºŞ??¨Æ¥ó©e??
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemAcquired, const FMingItemData&, Item, int32, Quantity};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemLost, const FMingItemData&, Item, int32, Quantity};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEquipped, const FMingEquipmentData&, Equipment, const FString&, Slot};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemUnequipped, const FMingEquipmentData&, Equipment, const FString&, Slot};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEnhanced, const FMingEquipmentData&, Equipment, EMingEnhancementType, EnhancementType};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemCrafted, const FMingCraftingRecipe&, Recipe, const TArray<FMingItemData>&, Results};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemRepaired, const FMingEquipmentData&, Equipment, float, RepairAmount};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemRepaired, const FMingEquipmentData&, Equipment, float, RepairAmount);
 
 /**
- * ?ï¿½ï¿½?ç®¡ï¿½X * è² è²¬ç®¡ï¿½Xï¿½äººè£ï¿½Xï¿½ç‰©?ï¿½ç³»ï¿½? */
+ * ????ºŞ?X * ­t³dºŞ?X?¤H¸Ë?X?ª«??¨t?? */
 UCLASS(ClassGroup = (Personal), Blueprintable, BlueprintType)
 class MINGPERSONAL_API UMingItemManager : public UObject
 {
@@ -394,100 +394,100 @@ class MINGPERSONAL_API UMingItemManager : public UObject
 public:
     UMingItemManager(};
 
-    // ?ï¿½ï¿½Xï¿½ç‰©?ï¿½ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool InitializeItemSystem(};
+    // ???X?ª«??¨t??    UFUNCTION(BlueprintCallable, Category = "Item Manager")
+    bool InitializeItemSystem();
 
-    // æ·»ï¿½Xï¿½ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool AddItemToInventory(const FMingItemData& Item, int32 Quantity = 1};
+    // ²K?X??X??X    UFUNCTION(BlueprintCallable, Category = "Item Manager")
+    bool AddItemToInventory(const FMingItemData& Item, int32 Quantity = 1);
 
-    // å¾ï¿½Xï¿½ç§»?ï¿½ç‰©X    UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool RemoveItemFromInventory(int32 ItemID, int32 Quantity = 1};
+    // ±q?X?²¾??ª«X    UFUNCTION(BlueprintCallable, Category = "Item Manager")
+    bool RemoveItemFromInventory(int32 ItemID, int32 Quantity = 1);
 
-    // è£ï¿½Xï¿½ï¿½?
+    // ¸Ë?X???
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool EquipItem(int32 ItemID, const FString& EquipSlot};
+    bool EquipItem(int32 ItemID, const FString& EquipSlot);
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?
+    // ???X???
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool UnequipItem(const FString& EquipSlot};
+    bool UnequipItem(const FString& EquipSlot);
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     TArray<FMingItemData> GetInventoryItems() const;
 
-    // ?ï¿½ï¿½?å·²ï¿½Xï¿½ç‰©X    UFUNCTION(BlueprintPure, Category = "Item Manager")
+    // ????¤w?X?ª«X    UFUNCTION(BlueprintPure, Category = "Item Manager")
     TArray<FMingEquipmentData> GetEquippedItems() const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?æ§½ï¿½Xï¿½ï¿½?
+    // ???X???¼Ñ?X???
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     FMingEquipmentData GetEquippedItem(const FString& EquipSlot) const;
 
-    // æª¢æŸ¥?ï¿½å¦?ï¿½ä»¥è£ï¿½?
+    // ÀË¬d??§_??¥H¸Ë??
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     bool CanEquipItem(int32 ItemID, const FString& EquipSlot) const;
 
-    // å¼·ï¿½Xï¿½ï¿½?
+    // ±j?X???
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool EnhanceItem(int32 ItemID, EMingEnhancementType EnhancementType};
+    bool EnhanceItem(int32 ItemID, EMingEnhancementType EnhancementType);
 
-    // ä¿®ï¿½Xï¿½ï¿½?
+    // ­×?X???
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool RepairItem(int32 ItemID, float RepairAmount = 100.0f};
+    bool RepairItem(int32 ItemID, float RepairAmount = 100.0f);
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?
+    // ???X???
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool CraftItem(int32 RecipeID};
+    bool CraftItem(int32 RecipeID);
 
-    // ?ï¿½è§£?ï¿½ï¿½?
+    // ??¸Ñ????
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool DisassembleItem(int32 ItemID};
+    bool DisassembleItem(int32 ItemID);
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     int32 GetItemCount(int32 ItemID) const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?ä¿¡æ¯
+    // ???X???«H®§
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     FMingItemData GetItemInfo(int32 ItemID) const;
 
-    // ?ï¿½ï¿½?è£ï¿½?ä¿¡æ¯
+    // ????¸Ë??«H®§
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     FMingEquipmentData GetEquipmentInfo(int32 EquipmentID) const;
 
-    // ?ï¿½ï¿½Xï¿½ç”¨?ï¿½æ–¹
+    // ???X?¥Î??¤è
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     TArray<FMingCraftingRecipe> GetAvailableRecipes() const;
 
-    // æª¢æŸ¥?ï¿½ï¿½?æ¢ä»¶
+    // ÀË¬d????±ø¥ó
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     bool CanCraftRecipe(int32 RecipeID) const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?ç¸½åƒ¹X    UFUNCTION(BlueprintPure, Category = "Item Manager")
+    // ???X???Á`»ùX    UFUNCTION(BlueprintPure, Category = "Item Manager")
     int32 GetTotalInventoryValue() const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?å®¹ï¿½?
+    // ???X???®e??
     UFUNCTION(BlueprintPure, Category = "Item Manager")
     int32 GetInventoryCapacity() const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?ä½¿ç”¨X    UFUNCTION(BlueprintPure, Category = "Item Manager")
+    // ???X???¨Ï¥ÎX    UFUNCTION(BlueprintPure, Category = "Item Manager")
     int32 GetInventoryUsed() const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    void SortInventory(EMingItemType SortBy, bool bAscending = true};
+    void SortInventory(EMingItemType SortBy, bool bAscending = true);
 
-    // ä¿ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // «O?X??X???
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool SaveItemData(};
+    bool SaveItemData();
 
-    // è¼‰å…¥?ï¿½ï¿½Xï¿½ï¿½?
+    // ¸ü¤J???X???
     UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    bool LoadItemData(};
+    bool LoadItemData();
 
-    // æ¸…é™¤?ï¿½?ï¿½ç‰©?ï¿½æ•¸X    UFUNCTION(BlueprintCallable, Category = "Item Manager")
-    void ClearAllItemData(};
+    // ²M°£????ª«??¼ÆX    UFUNCTION(BlueprintCallable, Category = "Item Manager")
+    void ClearAllItemData();
 
-    // äº‹ä»¶å§”ï¿½?
+    // ¨Æ¥ó©e??
     UPROPERTY(BlueprintAssignable)
     FOnItemAcquired OnItemAcquired;
 
@@ -510,108 +510,108 @@ public:
     FOnItemRepaired OnItemRepaired;
 
 protected:
-    // ?ï¿½ï¿½Xï¿½ï¿½?ï¿½?    UPROPERTY()
+    // ???X?????    UPROPERTY()
     TMap<int32, FMingItemData> ItemDatabase;
 
-    // è£ï¿½Xï¿½ï¿½?ï¿½?    UPROPERTY()
+    // ¸Ë?X?????    UPROPERTY()
     TMap<int32, FMingEquipmentData> EquipmentDatabase;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?
+    // ???X???
     UPROPERTY()
     TArray<FMingItemData> InventoryItems;
 
-    // å·²ï¿½Xï¿½ç‰©X    UPROPERTY()
+    // ¤w?X?ª«X    UPROPERTY()
     TMap<FString, FMingEquipmentData> EquippedItems;
 
-    // ?ï¿½ï¿½Xï¿½æ–¹?ï¿½ï¿½?ï¿½?    UPROPERTY()
+    // ???X?¤è??????    UPROPERTY()
     TMap<int32, FMingCraftingRecipe> CraftingRecipeDatabase;
 
-    // ?ï¿½ï¿½?å®¹ï¿½?
+    // ????®e??
     UPROPERTY()
     int32 InventoryCapacity;
 
-    // ?ï¿½ï¿½?ä½¿ç”¨X    UPROPERTY()
+    // ????¨Ï¥ÎX    UPROPERTY()
     int32 InventoryUsed;
 
-    // ?ï¿½å¦å·²ï¿½?å§‹ï¿½?
+    // ??§_¤w??©l??
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // è¼‰å…¥?ï¿½è¨­?ï¿½ï¿½?
+    // ¸ü¤J??³]????
     void LoadDefaultItems(};
 
-    // è¼‰å…¥?ï¿½è¨­?ï¿½æ–¹
-    void LoadDefaultRecipes(};
+    // ¸ü¤J??³]??¤è
+    void LoadDefaultRecipes();
 
-    // é©—ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // Åç?X??X???
     bool ValidateItemData(const FMingItemData& Item) const;
 
-    // é©—ï¿½?è£ï¿½Xï¿½ï¿½?
+    // Åç??¸Ë?X???
     bool ValidateEquipmentData(const FMingEquipmentData& Equipment) const;
 
-    // è¨ˆï¿½Xï¿½ï¿½?ç¸½ï¿½X    float CalculateTotalInventoryWeight() const;
+    // ­p?X???Á`?X    float CalculateTotalInventoryWeight() const;
 
-    // è¨ˆï¿½?è£ï¿½Xï¿½ï¿½?
+    // ­p??¸Ë?X???
     TMap<FString, float> CalculateEquipmentBonuses() const;
 
-    // ?ï¿½ç”¨è£ï¿½Xï¿½ï¿½?
+    // ??¥Î¸Ë?X???
     void ApplyEquipmentEffects(const FMingEquipmentData& Equipment};
 
-    // ç§»é™¤è£ï¿½Xï¿½ï¿½?
+    // ²¾°£¸Ë?X???
     void RemoveEquipmentEffects(const FMingEquipmentData& Equipment};
 
-    // ?ï¿½æ–°?ï¿½ï¿½?å®¹ï¿½?ä½¿ç”¨
-    void UpdateInventoryUsage(};
+    // ??·s????®e??¨Ï¥Î
+    void UpdateInventoryUsage();
 
-    // æª¢æŸ¥?ï¿½ï¿½?ç©ºï¿½?
+    // ÀË¬d????ªÅ??
     bool HasInventorySpace(const FMingItemData& Item, int32 Quantity) const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     FMingItemData GenerateRandomItem(EMingItemRarity Rarity, EMingItemType ItemType) const;
 
-    // è¨ˆï¿½Xï¿½ï¿½Xï¿½ï¿½?    int32 CalculateItemValue(const FMingItemData& Item) const;
+    // ­p?X??X???    int32 CalculateItemValue(const FMingItemData& Item) const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?ç¨€?ï¿½åº¦é¡è‰²
+    // ???X???µ}??«×ÃC¦â
     FLinearColor GetRarityColor(EMingItemRarity Rarity) const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½ï¿½?
+    // ???X???Ãş?X???
     FString GetItemTypeIcon(EMingItemType ItemType) const;
 
-    // ?ï¿½æ–°?ï¿½ï¿½Xï¿½ï¿½?ï¿½?    void UpdateItemDurability(int32 ItemID, float Delta};
+    // ??·s???X?????    void UpdateItemDurability(int32 ItemID, float Delta);
 
-    // æª¢æŸ¥?ï¿½ï¿½Xï¿½å¦?ï¿½ï¿½?
+    // ÀË¬d???X?§_????
     bool IsItemDamaged(int32 ItemID) const;
 
-    // ä¿®å¾©?ï¿½ï¿½Xï¿½ï¿½?
+    // ­×´_???X???
     void RepairDamagedItems(};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X???
     void AutoOrganizeInventory(};
 
-    // ?ï¿½ä½µ?ï¿½ï¿½Xï¿½ï¿½?
+    // ??¨Ö???X???
     void MergeStackableItems(};
 
-    // ?ï¿½é›¢?ï¿½ï¿½Xï¿½ï¿½?
-    void SplitItemStack(int32 ItemID, int32 SplitQuantity};
+    // ??Â÷???X???
+    void SplitItemStack(int32 ItemID, int32 SplitQuantity);
 
-    // è¨ˆï¿½Xï¿½ï¿½Xï¿½ï¿½X    float CalculateCraftingSuccessRate(int32 RecipeID) const;
+    // ­p?X??X??X    float CalculateCraftingSuccessRate(int32 RecipeID) const;
 
-    // æ¶ˆè€—ï¿½Xï¿½ï¿½X    bool ConsumeCraftingMaterials(int32 RecipeID};
+    // ®ø¯Ó?X??X    bool ConsumeCraftingMaterials(int32 RecipeID};
 
-    // æ·»ï¿½Xï¿½ï¿½?çµï¿½?
-    bool AddCraftingResults(int32 RecipeID};
+    // ²K?X???µ²??
+    bool AddCraftingResults(int32 RecipeID);
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?çµ±ï¿½?
+    // ???X???²Î??
     TMap<EMingItemType, int32> GetItemStatistics() const;
 
-    // ?ï¿½ï¿½?ç¨€?ï¿½åº¦çµ±ï¿½?
+    // ????µ}??«×²Î??
     TMap<EMingItemRarity, int32> GetRarityStatistics() const;
 
-    // ä¿ï¿½Xï¿½ï¿½?å¿«ç…§
+    // «O?X???§Ö·Ó
     void SaveItemSnapshot(};
 
-    // è¼‰å…¥?ï¿½ï¿½?å¿«ç…§
+    // ¸ü¤J????§Ö·Ó
     void LoadItemSnapshot(};
-};
+);
 

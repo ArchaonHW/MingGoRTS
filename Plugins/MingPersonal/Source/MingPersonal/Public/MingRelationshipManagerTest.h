@@ -1,12 +1,12 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingRelationshipManagerTest.generated.h"
 
 /**
- * ?ï¿½ï¿½Xï¿½è²?ï¿½ç³»çµ±æ¸¬è©¦ï¿½?è¡Œå™¨
- * ?ï¿½ï¿½? Blueprint ?ï¿½å£ä¾†ï¿½?è¡Œç³»çµ±æ¸¬ï¿½? */
+ * ???X?Án??¨t²Î´ú¸Õ??¦æ¾¹
+ * ???? Blueprint ??¤f¨Ó??¦æ¨t²Î´ú?? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingRelationshipTestRunner : public UObject
 {
@@ -14,35 +14,35 @@ class MINGPERSONAL_API UMingRelationshipTestRunner : public UObject
 
 public:
     /**
-     * ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?ä¿‚ï¿½Xï¿½ï¿½?ç³»çµ±æ¸¬è©¦
-     * ?ï¿½ï¿½Xï¿½ï¿½?èª¿è©¦?ï¿½ä½¿X     */
+     * ???X?????«Y?X???¨t²Î´ú¸Õ
+     * ???X???½Õ¸Õ??¨ÏX     */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static void RunRelationshipTests(};
+    static void RunRelationshipTests();
 
     /**
-     * ?ï¿½ï¿½Xï¿½ï¿½?æ¸¬è©¦
-     * @param TestIndex æ¸¬è©¦ç·¨ï¿½? (1-8)
+     * ???X???´ú¸Õ
+     * @param TestIndex ´ú¸Õ½s?? (1-8)
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static void RunSpecificTest(int32 TestIndex};
+    static void RunSpecificTest(int32 TestIndex);
 
     /**
-     * é©—ï¿½Xï¿½ï¿½?ç³»çµ±?ï¿½æœ¬?ï¿½èƒ½
+     * Åç?X???¨t²Î??¥»??¯à
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static bool VerifyRelationshipSystem(};
+    static bool VerifyRelationshipSystem();
 
     /**
-     * é©—ï¿½Xï¿½ï¿½?ç³»çµ±?ï¿½æœ¬?ï¿½èƒ½
+     * Åç?X???¨t²Î??¥»??¯à
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static bool VerifyReputationSystem(};
+    static bool VerifyReputationSystem();
 
     /**
-     * ?ï¿½å»ºæ¸¬è©¦?ï¿½ï¿½?
-     * ?ï¿½æ–¼å¡«ï¿½?æ¸¬è©¦?ï¿½ï¿½Xï¿½ï¿½?ä¿‚ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+     * ??«Ø´ú¸Õ????
+     * ??©ó¶ñ??´ú¸Õ???X???«Y?X??X???
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
     static void CreateTestData(};
-};
+);
 

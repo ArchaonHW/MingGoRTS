@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -228,11 +228,11 @@ struct FMingOptimizationResult
 // Delegates
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceWarning, FMingPerformanceWarning, Warning};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceMetricsUpdated, FMingPersonalPerformanceMetrics, Metrics};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOptimizationApplied, FMingOptimizationResult, Result};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPerformanceLevelChanged};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOptimizationApplied, FMingOptimizationResult, Result);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPerformanceLevelChanged);
 
 /**
- * ?ï¿½èƒ½ç®¡ï¿½X * Xï¿½ï¿½?ï¿½å„ª?ï¿½ï¿½Xï¿½æ€§èƒ½
+ * ??¯àºÞ?X * X????Àu???X?©Ê¯à
  */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingPerformanceManager : public UObject
@@ -244,17 +244,17 @@ public:
 
     // Initialize/Shutdown
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void Initialize(};
+    void Initialize();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void Shutdown(};
+    void Shutdown();
 
     // Performance monitoring
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void StartPerformanceMonitoring(};
+    void StartPerformanceMonitoring();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void StopPerformanceMonitoring(};
+    void StopPerformanceMonitoring();
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     bool IsMonitoringActive() const;
@@ -267,16 +267,16 @@ public:
 
     // Settings
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetPerformanceSettings(const FMingPerformanceSettings& NewSettings};
+    void SetPerformanceSettings(const FMingPerformanceSettings& NewSettings);
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     FMingPerformanceSettings GetPerformanceSettings() const;
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetTargetFrameRate(float TargetFPS};
+    void SetTargetFrameRate(float TargetFPS);
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetPerformanceLevel(EMingPerformanceLevel NewLevel};
+    void SetPerformanceLevel(EMingPerformanceLevel NewLevel);
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     EMingPerformanceLevel GetCurrentPerformanceLevel() const;
@@ -286,76 +286,76 @@ public:
     TArray<FMingOptimizationResult> RunAutoOptimization(};
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    FMingOptimizationResult OptimizeCategory(EMingPerformanceCategory Category};
+    FMingOptimizationResult OptimizeCategory(EMingPerformanceCategory Category);
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    bool ApplyOptimization(const FString& OptimizationName};
+    bool ApplyOptimization(const FString& OptimizationName);
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void RevertLastOptimization(};
+    void RevertLastOptimization();
 
     // Memory management
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void TriggerGarbageCollection(};
+    void TriggerGarbageCollection();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void FlushMemoryPools(};
+    void FlushMemoryPools();
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     float GetMemoryUsagePercent() const;
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetMemoryBudget(int32 MaxMemoryMB};
+    void SetMemoryBudget(int32 MaxMemoryMB);
 
     // Rendering optimization
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetViewDistanceScale(float Scale};
+    void SetViewDistanceScale(float Scale);
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetShadowQuality(float Quality};
+    void SetShadowQuality(float Quality);
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetTextureQuality(float Quality};
+    void SetTextureQuality(float Quality);
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetLODQuality(float Quality};
+    void SetLODQuality(float Quality);
 
     // Adaptive quality
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void EnableAdaptiveQuality(bool bEnable};
+    void EnableAdaptiveQuality(bool bEnable);
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     bool IsAdaptiveQualityEnabled() const;
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetAdaptiveQualityTarget(float TargetFPS};
+    void SetAdaptiveQualityTarget(float TargetFPS);
 
     // Warnings
     UFUNCTION(BlueprintPure, Category = "Performance")
     TArray<FMingPerformanceWarning> GetActiveWarnings() const;
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void ClearWarnings(};
+    void ClearWarnings();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetWarningThreshold(EMingPerformanceCategory Category, float Threshold};
+    void SetWarningThreshold(EMingPerformanceCategory Category, float Threshold);
 
     // Profiling
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void StartProfiling(const FString& ProfileName};
+    void StartProfiling(const FString& ProfileName);
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void StopProfiling(const FString& ProfileName};
+    void StopProfiling(const FString& ProfileName);
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void GetProfileReport(const FString& ProfileName, FString& OutReport) const;
 
     // Benchmarking
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void StartBenchmark(};
+    void StartBenchmark();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    FMingPersonalPerformanceMetrics StopBenchmark(};
+    FMingPersonalPerformanceMetrics StopBenchmark();
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     bool IsBenchmarking() const;
@@ -365,10 +365,10 @@ public:
     FString GetPerformanceReport() const;
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void LogPerformanceStats(};
+    void LogPerformanceStats();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void ResetPerformanceStats(};
+    void ResetPerformanceStats();
 
     // Delegates
     UPROPERTY(BlueprintAssignable, Category = "Performance Events")
@@ -425,10 +425,10 @@ private:
     void CheckPerformanceWarnings(};
     void ApplyPerformanceLevel(EMingPerformanceLevel Level};
     void AutoOptimizeIfNeeded(};
-    void RecordMetrics(};
+    void RecordMetrics();
     bool ShouldTriggerOptimization() const;
     FMingOptimizationResult RunSpecificOptimization(EMingPerformanceCategory Category, const FString& OptName};
-    void UpdateDynamicResolution(};
+    void UpdateDynamicResolution();
     float CalculateAverageFrameRate() const;
 };
 

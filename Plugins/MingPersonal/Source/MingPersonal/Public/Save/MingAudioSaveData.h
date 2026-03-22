@@ -184,13 +184,13 @@ public:
     TArray<uint8> SerializeAudioSettings(class UMingMetaSoundsSystem* AudioSystem};
 
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool DeserializeAudioSettings(const TArray<uint8>& Data, UMingMetaSoundsSystem* AudioSystem};
+    bool DeserializeAudioSettings(const TArray<uint8>& Data, UMingMetaSoundsSystem* AudioSystem);
 
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    FMingAudioSaveData ExportAudioSettings(UMingMetaSoundsSystem* AudioSystem};
+    FMingAudioSaveData ExportAudioSettings(UMingMetaSoundsSystem* AudioSystem);
 
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool ImportAudioSettings(const FMingAudioSaveData& SaveData, UMingMetaSoundsSystem* AudioSystem};
+    bool ImportAudioSettings(const FMingAudioSaveData& SaveData, UMingMetaSoundsSystem* AudioSystem);
 
     // Validation
     UFUNCTION(BlueprintPure, Category = "Audio Save")
@@ -201,10 +201,10 @@ public:
 
     // Settings Helpers
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    void ApplyDefaultSettings(UMingMetaSoundsSystem* AudioSystem};
+    void ApplyDefaultSettings(UMingMetaSoundsSystem* AudioSystem);
 
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    void ApplyRepublicEraDefaults(UMingMetaSoundsSystem* AudioSystem};
+    void ApplyRepublicEraDefaults(UMingMetaSoundsSystem* AudioSystem);
 
     UFUNCTION(BlueprintPure, Category = "Audio Save")
     bool AreSettingsEqual(const FMingAudioSaveData& DataA, const FMingAudioSaveData& DataB) const;
@@ -221,46 +221,46 @@ public:
     float GetCategoryVolume(const FMingAudioSaveData& SaveData, EMingAudioCategory Category) const;
 
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    void SetCategoryVolume(FMingAudioSaveData& SaveData, EMingAudioCategory Category, float Volume};
+    void SetCategoryVolume(FMingAudioSaveData& SaveData, EMingAudioCategory Category, float Volume);
 
     UFUNCTION(BlueprintPure, Category = "Audio Save")
     bool IsCategoryMuted(const FMingAudioSaveData& SaveData, EMingAudioCategory Category) const;
 
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    void SetCategoryMuted(FMingAudioSaveData& SaveData, EMingAudioCategory Category, bool bMuted};
+    void SetCategoryMuted(FMingAudioSaveData& SaveData, EMingAudioCategory Category, bool bMuted);
 
     // Export/Import
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool ExportToJson(const FMingAudioSaveData& SaveData, FString& OutJson};
+    bool ExportToJson(const FMingAudioSaveData& SaveData, FString& OutJson);
 
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool ImportFromJson(const FString& Json, FMingAudioSaveData& OutSaveData};
+    bool ImportFromJson(const FString& Json, FMingAudioSaveData& OutSaveData);
 
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool ExportToFile(const FMingAudioSaveData& SaveData, const FString& FilePath};
+    bool ExportToFile(const FMingAudioSaveData& SaveData, const FString& FilePath);
 
     UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool ImportFromFile(const FString& FilePath, FMingAudioSaveData& OutSaveData};
+    bool ImportFromFile(const FString& FilePath, FMingAudioSaveData& OutSaveData);
 
     // Static Defaults
     UFUNCTION(BlueprintPure, Category = "Audio Save", meta = (StaticFunction))
-    static FMingAudioSaveData GetDefaultAudioSettings(};
+    static FMingAudioSaveData GetDefaultAudioSettings();
 
     UFUNCTION(BlueprintPure, Category = "Audio Save", meta = (StaticFunction))
-    static FMingAudioSaveData GetRepublicEraAudioSettings(};
+    static FMingAudioSaveData GetRepublicEraAudioSettings();
 
 protected:
     UFUNCTION()
-    void BuildAudioSettings(UMingMetaSoundsSystem* AudioSystem, FMingAudioSaveData& OutSaveData};
+    void BuildAudioSettings(UMingMetaSoundsSystem* AudioSystem, FMingAudioSaveData& OutSaveData);
 
     UFUNCTION()
-    void ApplyAudioSettings(UMingMetaSoundsSystem* AudioSystem, const FMingAudioSaveData& SaveData};
+    void ApplyAudioSettings(UMingMetaSoundsSystem* AudioSystem, const FMingAudioSaveData& SaveData);
 
     UFUNCTION()
-    void SerializeToBinary(const FMingAudioSaveData& SaveData, TArray<uint8>& OutData};
+    void SerializeToBinary(const FMingAudioSaveData& SaveData, TArray<uint8>& OutData);
 
     UFUNCTION()
-    bool DeserializeFromBinary(const TArray<uint8>& Data, FMingAudioSaveData& OutSaveData};
+    bool DeserializeFromBinary(const TArray<uint8>& Data, FMingAudioSaveData& OutSaveData);
 
     UFUNCTION()
     EMingAudioCategory AudioCategoryFromString(const FString& CategoryName) const;

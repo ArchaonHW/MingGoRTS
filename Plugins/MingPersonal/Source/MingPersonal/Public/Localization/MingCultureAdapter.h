@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -152,8 +152,8 @@ struct FContentAdaptationRule
 };
 
 /**
- * ?ï¿½ï¿½Xï¿½ï¿½?ç³»çµ±
- * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½å®¹?ï¿½åœ°?ï¿½å·®ç•°
+ * ???X???¨t²Î
+ * ???X??X??X?®e??¦a??®t²§
  */
 UCLASS(ClassGroup = (Localization), Blueprintable)
 class MINGPERSONAL_API UMingCultureAdapter : public UObject
@@ -163,148 +163,148 @@ class MINGPERSONAL_API UMingCultureAdapter : public UObject
 public:
     UMingCultureAdapter(};
 
-    // ?ï¿½ï¿½X    void Initialize(};
-    void Shutdown(};
+    // ???X    void Initialize(};
+    void Shutdown();
 
     UFUNCTION(BlueprintPure, Category = "Culture Adapter")
     bool IsInitialized() const { return bIsInitialized; }
 
-    // === ?ï¿½ï¿½Xï¿½ï¿½?æª¢æŸ¥ ===
+    // === ???X???ÀË¬d ===
 
-    // æª¢æŸ¥?ï¿½å®¹?ï¿½å¦?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ÀË¬d??®e??§_???X??X???
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Check")
     EContentAppropriateness CheckContentAppropriateness(const FString& ContentID, const FString& RegionCode) const;
 
-    // ?ï¿½ï¿½Xï¿½å®¹?ï¿½ï¿½Xï¿½ï¿½Xï¿½åº¦
+    // ???X?®e???X??X?«×
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Check")
     ECulturalSensitivity GetContentSensitivity(const FString& ContentID) const;
 
-    // æª¢æŸ¥?ï¿½å¦?ï¿½è¦å…§å®¹é©X    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Check")
+    // ÀË¬d??§_??­n¤º®e¾AX    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Check")
     bool NeedsAdaptation(const FString& ContentID, const FString& RegionCode) const;
 
-    // === ?ï¿½å®¹?ï¿½ï¿½? ===
+    // === ??®e???? ===
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?å¾Œï¿½Xï¿½å®¹ID
+    // ???X???«á?X?®eID
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Adaptation")
     FString GetAdaptedContentID(const FString& OriginalContentID, const FString& RegionCode) const;
 
-    // ?ï¿½ç”¨?ï¿½ï¿½Xï¿½ï¿½?è¦ï¿½?
+    // ??¥Î???X???³W??
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Adaptation")
-    bool ApplyAdaptationRule(const FContentAdaptationRule& Rule};
+    bool ApplyAdaptationRule(const FContentAdaptationRule& Rule);
 
-    // ç§»é™¤?ï¿½ï¿½?è¦ï¿½?
+    // ²¾°£????³W??
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Adaptation")
-    bool RemoveAdaptationRule(const FString& RuleID};
+    bool RemoveAdaptationRule(const FString& RuleID);
 
-    // ?ï¿½ï¿½Xï¿½?ï¿½é©?ï¿½ï¿½X    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Adaptation")
+    // ???X???¾A???X    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Adaptation")
     TArray<FContentAdaptationRule> GetAllAdaptationRules() const;
 
-    // === ?ï¿½ï¿½Xï¿½å¥½ ===
+    // === ???X?¦n ===
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½å¥½
+    // ???X??X??X?¦n
     UFUNCTION(BlueprintPure, Category = "Culture Adapter|Preferences")
     FCulturalPreferences GetCulturalPreferences(const FString& RegionCode) const;
 
-    // è¨­ç½®?ï¿½ï¿½Xï¿½ï¿½Xï¿½å¥½
+    // ³]¸m???X??X?¦n
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Preferences")
-    void SetCulturalPreferences(const FString& RegionCode, const FCulturalPreferences& Preferences};
+    void SetCulturalPreferences(const FString& RegionCode, const FCulturalPreferences& Preferences);
 
-    // æª¢æŸ¥?ï¿½ï¿½Xï¿½å®¹é¡ï¿½Xï¿½å¦?ï¿½ï¿½?
+    // ÀË¬d???X?®eÃş?X?§_????
     UFUNCTION(BlueprintPure, Category = "Culture Adapter|Preferences")
     bool IsContentTypeSensitive(ECulturalContentType ContentType, const FString& RegionCode) const;
 
-    // === ç¬¦ï¿½Xï¿½ï¿½X===
+    // === ²Å?X??X===
 
-    // ?ï¿½ï¿½?é¡è‰²?ï¿½ç‰¹å®šï¿½Xï¿½ä¸­?ï¿½å«ï¿½?    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Symbols")
+    // ????ÃC¦â??¯S©w?X?¤¤??§t??    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Symbols")
     FString GetColorMeaning(const FString& Color, const FString& RegionCode) const;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ç‰¹å®šï¿½Xï¿½ä¸­?ï¿½å«ï¿½?    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Symbols")
+    // ???X??X?¯S©w?X?¤¤??§t??    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Symbols")
     FString GetNumberMeaning(int32 Number, const FString& RegionCode) const;
 
-    // æª¢æŸ¥é¡è‰²?ï¿½å¦?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ÀË¬dÃC¦â??§_???X??X???
     UFUNCTION(BlueprintPure, Category = "Culture Adapter|Symbols")
     bool IsColorAppropriate(const FString& Color, const FString& RegionCode) const;
 
-    // ?ï¿½ï¿½Xï¿½ä»£é¡è‰²å»ºè­°
+    // ???X?¥NÃC¦â«ØÄ³
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Symbols")
     TArray<FString> GetAlternativeColors(const FString& OriginalColor, const FString& RegionCode) const;
 
-    // === å®—ï¿½Xï¿½æ”¿æ²»ï¿½Xï¿½å…§ï¿½?===
+    // === ©v?X?¬Fªv?X?¤º??===
 
-    // æª¢æŸ¥?ï¿½å¦?ï¿½å«å®—ï¿½Xï¿½ï¿½Xï¿½å®¹
+    // ÀË¬d??§_??§t©v?X??X?®e
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Religion")
     bool ContainsReligiousContent(const FString& ContentID) const;
 
-    // æª¢æŸ¥?ï¿½å¦?ï¿½å«?ï¿½æ²»?ï¿½ï¿½Xï¿½å®¹
+    // ÀË¬d??§_??§t??ªv???X?®e
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Political")
     bool ContainsPoliticalContent(const FString& ContentID) const;
 
-    // ?ï¿½ï¿½Xï¿½å®¹?ï¿½æ›¿ï¿½X(?ï¿½ï¿½Xï¿½ï¿½?)
+    // ???X?®e??´À?X(???X???)
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Religion")
     FString GetSecularAlternative(const FString& ContentID) const;
 
-    // === æ­·å²?ï¿½ï¿½Xï¿½å…§ï¿½?===
+    // === ¾ú¥v???X?¤º??===
 
-    // æª¢æŸ¥æ­·å²?ï¿½å®¹?ï¿½ï¿½?ç¢ºï¿½?    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|History")
+    // ÀË¬d¾ú¥v??®e????½T??    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|History")
     bool ValidateHistoricalContent(const FString& ContentID, const FString& RegionCode) const;
 
-    // ?ï¿½ï¿½?æ­·å²?ï¿½å®¹?ï¿½ä¿®ï¿½?ï¿½ï¿½ï¿½?    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|History")
+    // ????¾ú¥v??®e??­×??????    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|History")
     TArray<FString> GetHistoricalCorrections(const FString& ContentID, const FString& RegionCode) const;
 
-    // === è¦–è¦º?ï¿½å®¹?ï¿½ï¿½? ===
+    // === µøÄ±??®e???? ===
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?è¦ºé¢¨X    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Visual")
+    // ???X??X??X??X???Ä±­·X    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Visual")
     TArray<FString> GetPreferredVisualStyles(const FString& RegionCode) const;
 
-    // æª¢æŸ¥?ï¿½ï¿½Xï¿½å®¹?ï¿½å¦?ï¿½é©
+    // ÀË¬d???X?®e??§_??¾A
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Visual")
     EContentAppropriateness CheckImageContent(const FString& ImageID, const FString& RegionCode) const;
 
-    // === ?ï¿½å®¹?ï¿½æ¿¾ ===
+    // === ??®e??Âo ===
 
-    // ?ï¿½æ¿¾?ï¿½ï¿½Xï¿½å®¹
+    // ??Âo???X?®e
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Filtering")
     TArray<FString> FilterSensitiveContent(const TArray<FString>& ContentIDs, const FString& RegionCode) const;
 
-    // ?ï¿½ï¿½Xï¿½å®¹è­¦ï¿½?ä¿¡æ¯
+    // ???X?®eÄµ??«H®§
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Filtering")
     FString GetContentWarning(const FString& ContentID, const FString& RegionCode) const;
 
-    // === ?ï¿½ï¿½?ç®¡ï¿½? ===
+    // === ????ºŞ?? ===
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // ???X??X??X???
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Data")
-    bool LoadCulturalData(const FString& FilePath};
+    bool LoadCulturalData(const FString& FilePath);
 
-    // ä¿ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    // «O?X??X??X???
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Data")
     bool SaveCulturalData(const FString& FilePath) const;
 
-    // è¨»ï¿½Xï¿½ï¿½Xï¿½å®¹ä¿¡æ¯
+    // µù?X??X?®e«H®§
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Data")
-    void RegisterCulturalContent(const FCulturalContentInfo& ContentInfo};
+    void RegisterCulturalContent(const FCulturalContentInfo& ContentInfo);
 
 private:
     bool bIsInitialized;
 
-    // ?ï¿½ï¿½Xï¿½å®¹ä¿¡æ¯å­˜å„²
+    // ???X?®e«H®§¦sÀx
     UPROPERTY()
     TMap<FString, FCulturalContentInfo> CulturalContentRegistry;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½å¥½
+    // ???X??X?¦n
     UPROPERTY()
     TMap<FString, FCulturalPreferences> RegionalPreferences;
 
-    // ?ï¿½å®¹?ï¿½ï¿½?è¦ï¿½?
+    // ??®e????³W??
     UPROPERTY()
     TArray<FContentAdaptationRule> AdaptationRules;
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?èªï¿½Xï¿½æ•¸X    void InitializeDefaultCulturalData(};
+    // ???X???»{?X?¼ÆX    void InitializeDefaultCulturalData(};
 
-    // ?ï¿½ï¿½Xï¿½è¨­?ï¿½ï¿½?è¦ï¿½?
-    void LoadPresetRules(};
+    // ???X?³]????³W??
+    void LoadPresetRules();
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?è¦ï¿½?
+    // ???X???³W??
     const FContentAdaptationRule* FindAdaptationRule(const FString& ContentID, const FString& RegionCode) const;
 };
 

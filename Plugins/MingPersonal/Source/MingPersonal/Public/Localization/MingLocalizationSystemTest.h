@@ -1,4 +1,4 @@
-Ôªø#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -49,7 +49,7 @@ class UMingCultureAdapter;
 class UMingRegionalContentManager;
 
 /**
- * ?ÔøΩÂú∞?ÔøΩÁ≥ªÁµ±Ê∏¨Ë©¶ÔøΩ?ÔøΩ? * È©óÔøΩXÔøΩÂú∞?ÔøΩÁ≥ªÁµ±ÔøΩXÔøΩÔøΩXÔøΩËÉΩ
+ * ??¶a??®t≤Œ¥˙∏’???? * ≈Á?X?¶a??®t≤Œ?X??X?Ø‡
  */
 UCLASS()
 class MINGPERSONAL_API UMingLocalizationSystemTest : public UObject
@@ -59,10 +59,10 @@ class MINGPERSONAL_API UMingLocalizationSystemTest : public UObject
 public:
     UMingLocalizationSystemTest(};
 
-    // ?ÔøΩÔøΩXÔøΩ?ÔøΩÊ∏¨ÔøΩ?    UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool RunAllTests(};
+    // ???X???¥˙??    UFUNCTION(BlueprintCallable, Category = "Localization Test")
+    bool RunAllTests();
 
-    // Ê∏¨Ë©¶ÁµêÔøΩ?
+    // ¥˙∏’µ≤??
     UFUNCTION(BlueprintPure, Category = "Localization Test")
     FString GetTestResults() const { return TestResults; }
 
@@ -78,66 +78,66 @@ public:
     UFUNCTION(BlueprintPure, Category = "Localization Test")
     TArray<FLocalizationTestCase> GetTestCases() const { return TestCases; }
 
-    // ?ÔøΩÂà•Ê∏¨Ë©¶
+    // ??ßO¥˙∏’
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestLocalizationManagerCreation(};
+    bool TestLocalizationManagerCreation();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestLanguageSwitching(};
+    bool TestLanguageSwitching();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestTextLocalization(};
+    bool TestTextLocalization();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestParameterizedText(};
+    bool TestParameterizedText();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestLanguagePackInfo(};
+    bool TestLanguagePackInfo();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestRegionSetting(};
+    bool TestRegionSetting();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestNumberFormatting(};
+    bool TestNumberFormatting();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestDateFormatting(};
+    bool TestDateFormatting();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestCurrencyFormatting(};
+    bool TestCurrencyFormatting();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestLanguageDetection(};
+    bool TestLanguageDetection();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestChineseConversion(};
+    bool TestChineseConversion();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestCulturalAdaptation(};
+    bool TestCulturalAdaptation();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestColorMeanings(};
+    bool TestColorMeanings();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestNumberMeanings(};
+    bool TestNumberMeanings();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestRegionalContentAvailability(};
+    bool TestRegionalContentAvailability();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestContentAdaptation(};
+    bool TestContentAdaptation();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestRightToLeftDetection(};
+    bool TestRightToLeftDetection();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestTranslationQuality(};
+    bool TestTranslationQuality();
 
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
-    bool TestExportImport(};
+    bool TestExportImport();
 
 private:
-    // Ê∏¨Ë©¶ÁµêÔøΩXÔøΩÔøΩ?
+    // ¥˙∏’µ≤?X???
     UPROPERTY()
     FString TestResults;
 
@@ -153,11 +153,12 @@ private:
     UPROPERTY()
     TArray<FLocalizationTestCase> TestCases;
 
-    // Ê∏¨Ë©¶Âπ´Âä©?ÔøΩÊï∏
+    // ¥˙∏’¿∞ßU??º∆
     void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
     void ResetTestCounts();
     void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
 
-    // ?ÔøΩÂª∫Ê∏¨Ë©¶?ÔøΩÔøΩ?ÁÆ°ÔøΩX    UMingLocalizationManager* CreateTestLocalizationManager();
+    // ≥–´ÿ¥˙∏’•ª¶a§∆∫ﬁ≤zæπ
+    UMingLocalizationManager* CreateTestLocalizationManager();
 };
 

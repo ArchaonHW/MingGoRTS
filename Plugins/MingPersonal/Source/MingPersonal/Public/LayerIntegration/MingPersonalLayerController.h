@@ -194,35 +194,35 @@ public:
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Personal Layer")
-    void InitializePersonalLayer(};
+    void InitializePersonalLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Personal Layer")
-    void ShutdownPersonalLayer(};
+    void ShutdownPersonalLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Personal Layer")
-    void ActivatePersonalLayer(};
+    void ActivatePersonalLayer();
 
     UFUNCTION(BlueprintCallable, Category = "Personal Layer")
-    void DeactivatePersonalLayer(};
+    void DeactivatePersonalLayer();
 
     // Character Control
     UFUNCTION(BlueprintCallable, Category = "Character Control")
-    void PossessCharacter(const FString& CharacterID};
+    void PossessCharacter(const FString& CharacterID);
 
     UFUNCTION(BlueprintCallable, Category = "Character Control")
-    void UnpossessCharacter(};
+    void UnpossessCharacter();
 
     UFUNCTION(BlueprintCallable, Category = "Character Control")
     bool GetCharacterState(const FString& CharacterID, FMingPersonalCharacterState& OutState) const;
 
     UFUNCTION(BlueprintCallable, Category = "Character Control")
-    void UpdateCharacterPosition(const FString& CharacterID, FVector NewPosition};
+    void UpdateCharacterPosition(const FString& CharacterID, FVector NewPosition);
 
     UFUNCTION(BlueprintCallable, Category = "Character Control")
-    void UpdateCharacterRotation(const FString& CharacterID, FRotator NewRotation};
+    void UpdateCharacterRotation(const FString& CharacterID, FRotator NewRotation);
 
     UFUNCTION(BlueprintCallable, Category = "Character Control")
-    void SetPersonalMode(EMingPersonalMode NewMode};
+    void SetPersonalMode(EMingPersonalMode NewMode);
 
     UFUNCTION(BlueprintPure, Category = "Character Control")
     EMingPersonalMode GetCurrentMode() const { return CurrentMode; }
@@ -232,47 +232,47 @@ public:
 
     // Movement & Interaction
     UFUNCTION(BlueprintCallable, Category = "Movement")
-    void MoveCharacter(FVector Direction, float Speed};
+    void MoveCharacter(FVector Direction, float Speed);
 
     UFUNCTION(BlueprintCallable, Category = "Movement")
-    void Sprint(bool bSprinting};
+    void Sprint(bool bSprinting);
 
     UFUNCTION(BlueprintCallable, Category = "Movement")
-    void Crouch(bool bCrouching};
+    void Crouch(bool bCrouching);
 
     UFUNCTION(BlueprintCallable, Category = "Movement")
-    void Jump(};
+    void Jump();
 
     UFUNCTION(BlueprintCallable, Category = "Interaction")
-    void InteractWithNearest(};
+    void InteractWithNearest();
 
     UFUNCTION(BlueprintCallable, Category = "Interaction")
-    void InteractWith(const FString& TargetID};
+    void InteractWith(const FString& TargetID);
 
     UFUNCTION(BlueprintCallable, Category = "Interaction")
-    void ExamineClue(const FString& ClueID};
+    void ExamineClue(const FString& ClueID);
 
     UFUNCTION(BlueprintCallable, Category = "Interaction")
-    void PickUpItem(const FString& ItemID};
+    void PickUpItem(const FString& ItemID);
 
     UFUNCTION(BlueprintCallable, Category = "Interaction")
-    void UseItem(const FString& ItemID};
+    void UseItem(const FString& ItemID);
 
     // Dialogue System
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void StartDialogue(const FString& TargetCharacterID, const FString& DialogueID};
+    void StartDialogue(const FString& TargetCharacterID, const FString& DialogueID);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void EndDialogue(};
+    void EndDialogue();
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void SelectDialogueResponse(int32 ResponseIndex};
+    void SelectDialogueResponse(int32 ResponseIndex);
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void AdvanceDialogue(};
+    void AdvanceDialogue();
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void SkipDialogueLine(};
+    void SkipDialogueLine();
 
     UFUNCTION(BlueprintPure, Category = "Dialogue")
     bool IsInDialogue() const { return bInDialogue; }
@@ -281,48 +281,48 @@ public:
     FMingDialogueContext GetCurrentDialogue() const { return CurrentDialogue; }
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    void SetDialogueCameraFocus(const FString& CharacterID};
+    void SetDialogueCameraFocus(const FString& CharacterID);
 
     // Combat System
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void EnterCombatMode(};
+    void EnterCombatMode();
 
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void ExitCombatMode(};
+    void ExitCombatMode();
 
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void Attack(};
+    void Attack();
 
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void Block(};
+    void Block();
 
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void Dodge(FVector Direction};
+    void Dodge(FVector Direction);
 
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void UseSkill(const FString& SkillID};
+    void UseSkill(const FString& SkillID);
 
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void LockOnTarget(const FString& TargetID};
+    void LockOnTarget(const FString& TargetID);
 
     UFUNCTION(BlueprintCallable, Category = "Combat")
-    void ClearLockOn(};
+    void ClearLockOn();
 
     // Investigation System
     UFUNCTION(BlueprintCallable, Category = "Investigation")
-    void StartInvestigation(const FString& InvestigationID};
+    void StartInvestigation(const FString& InvestigationID);
 
     UFUNCTION(BlueprintCallable, Category = "Investigation")
-    void EndInvestigation(};
+    void EndInvestigation();
 
     UFUNCTION(BlueprintCallable, Category = "Investigation")
-    void DiscoverClue(const FString& ClueID};
+    void DiscoverClue(const FString& ClueID);
 
     UFUNCTION(BlueprintCallable, Category = "Investigation")
-    void ExamineClueDetail(const FString& ClueID};
+    void ExamineClueDetail(const FString& ClueID);
 
     UFUNCTION(BlueprintCallable, Category = "Investigation")
-    void ConnectClues(const FString& ClueAID, const FString& ClueBID};
+    void ConnectClues(const FString& ClueAID, const FString& ClueBID);
 
     UFUNCTION(BlueprintPure, Category = "Investigation")
     TArray<FMingInvestigationClue> GetDiscoveredClues() const;
@@ -332,45 +332,45 @@ public:
 
     // Encounter System
     UFUNCTION(BlueprintCallable, Category = "Encounter")
-    void TriggerEncounter(const FMingPersonalEncounter& Encounter};
+    void TriggerEncounter(const FMingPersonalEncounter& Encounter);
 
     UFUNCTION(BlueprintCallable, Category = "Encounter")
-    void AvoidEncounter(const FString& EncounterID};
+    void AvoidEncounter(const FString& EncounterID);
 
     UFUNCTION(BlueprintCallable, Category = "Encounter")
-    void AcceptEncounter(const FString& EncounterID};
+    void AcceptEncounter(const FString& EncounterID);
 
     UFUNCTION(BlueprintCallable, Category = "Encounter")
-    void ResolveEncounter(const FString& EncounterID, bool bVictory};
+    void ResolveEncounter(const FString& EncounterID, bool bVictory);
 
     UFUNCTION(BlueprintCallable, Category = "Encounter")
-    void ConvertEncounterToTactical(const FString& EncounterID};
+    void ConvertEncounterToTactical(const FString& EncounterID);
 
     // Camera & View
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void SetCameraMode(const FString& CameraMode};
+    void SetCameraMode(const FString& CameraMode);
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void SetCameraDistance(float Distance};
+    void SetCameraDistance(float Distance);
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void SetFieldOfView(float FOV};
+    void SetFieldOfView(float FOV);
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void FocusCameraOnTarget(const FString& TargetID};
+    void FocusCameraOnTarget(const FString& TargetID);
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void ResetCameraToCharacter(};
+    void ResetCameraToCharacter();
 
     // Return to other layers
     UFUNCTION(BlueprintCallable, Category = "Layer Transition")
-    void ReturnToTactical(};
+    void ReturnToTactical();
 
     UFUNCTION(BlueprintCallable, Category = "Layer Transition")
-    void ReturnToStrategic(};
+    void ReturnToStrategic();
 
     UFUNCTION(BlueprintCallable, Category = "Layer Transition")
-    void TriggerStrategicDecisionFromPersonal(const FMingStrategicDecision& Decision};
+    void TriggerStrategicDecisionFromPersonal(const FMingStrategicDecision& Decision);
 
     // Events
     UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -435,24 +435,24 @@ protected:
     bool bIsActive = false;
 
     // Internal functions
-    void InitializeDefaultCharacters(};
-    void SetupInteractionZones(};
-    void ProcessNearbyInteractions(};
-    void UpdateCharacterStamina(float DeltaTime};
+    void InitializeDefaultCharacters();
+    void SetupInteractionZones();
+    void ProcessNearbyInteractions();
+    void UpdateCharacterStamina(float DeltaTime);
     
-    void EnterDialogueMode(const FString& DialogueID};
-    void ExitDialogueMode(};
-    void ProcessDialogueResponse(int32 ResponseIndex};
+    void EnterDialogueMode(const FString& DialogueID);
+    void ExitDialogueMode();
+    void ProcessDialogueResponse(int32 ResponseIndex);
     
-    void EnterInvestigationMode(};
-    void ExitInvestigationMode(};
-    void ScanForClues(};
+    void EnterInvestigationMode();
+    void ExitInvestigationMode();
+    void ScanForClues();
     
-    void EnterCombatModeInternal(};
-    void ExitCombatModeInternal(};
-    void ProcessCombatHit(const FString& TargetID};
+    void EnterCombatModeInternal();
+    void ExitCombatModeInternal();
+    void ProcessCombatHit(const FString& TargetID);
     
-    void NotifyModeChanged(};
-    void CheckEncounterTriggers(};
+    void NotifyModeChanged();
+    void CheckEncounterTriggers();
 };
 

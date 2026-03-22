@@ -1,11 +1,11 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingAudioSystemTest.generated.h"
 
 /**
- * ?ï¿½é »ç³»çµ±æ¸¬è©¦?ï¿½ï¿½X * æ¸¬è©¦?ï¿½é »?ï¿½ï¿½?ä¿‚ç³»çµ±ï¿½Xï¿½ï¿½Xï¿½èƒ½
+ * ??ÀW¨t²Î´ú¸Õ???X * ´ú¸Õ??ÀW????«Y¨t²Î?X??X?¯à
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingAudioSystemTest : public UObject
@@ -14,91 +14,91 @@ class MINGPERSONAL_API UMingAudioSystemTest : public UObject
 
 public:
     /**
-     * ?ï¿½ï¿½Xï¿½?ï¿½éŸ³?ï¿½ç³»çµ±æ¸¬ï¿½?     */
+     * ???X???­µ??¨t²Î´ú??     */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static void RunAllAudioTests(};
+    static void RunAllAudioTests();
 
     /**
-     * æ¸¬è©¦?ï¿½é »?ï¿½ï¿½?ç®¡ï¿½Xï¿½ï¿½?å§‹ï¿½?
+     * ´ú¸Õ??ÀW????ºŞ?X???©l??
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestAudioRelationshipManagerInitialization(};
+    static bool TestAudioRelationshipManagerInitialization();
 
     /**
-     * æ¸¬è©¦?ï¿½ï¿½?è®Šï¿½Xï¿½é »?ï¿½ï¿½?
+     * ´ú¸Õ????ÅÜ?X?ÀW????
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestRelationshipAudioFeedback(};
+    static bool TestRelationshipAudioFeedback();
 
     /**
-     * æ¸¬è©¦?ï¿½ï¿½?è®Šï¿½Xï¿½é »?ï¿½ï¿½?
+     * ´ú¸Õ????ÅÜ?X?ÀW????
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestReputationAudioFeedback(};
+    static bool TestReputationAudioFeedback();
 
     /**
-     * æ¸¬è©¦å°è©±?ï¿½é »ç³»çµ±
+     * ´ú¸Õ¹ï¸Ü??ÀW¨t²Î
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestDialogueAudioSystem(};
+    static bool TestDialogueAudioSystem();
 
     /**
-     * æ¸¬è©¦æ°‘ï¿½Xï¿½ï¿½Xï¿½é »ä¸»ï¿½?
+     * ´ú¸Õ¥Á?X??X?ÀW¥D??
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestRepublicEraThemes(};
+    static bool TestRepublicEraThemes();
 
     /**
-     * æ¸¬è©¦?ï¿½ï¿½Xï¿½é »ç³»çµ±
+     * ´ú¸Õ???X?ÀW¨t²Î
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestRegionalAudioSystem(};
+    static bool TestRegionalAudioSystem();
 
     /**
-     * æ¸¬è©¦?ï¿½é »?ï¿½ï¿½Xï¿½åˆ¶
+     * ´ú¸Õ??ÀW???X?¨î
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestAudioVolumeControl(};
+    static bool TestAudioVolumeControl();
 
     /**
-     * æ¸¬è©¦?ï¿½é »äº‹ä»¶?ï¿½èª¿
+     * ´ú¸Õ??ÀW¨Æ¥ó??½Õ
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestAudioEventCallbacks(};
+    static bool TestAudioEventCallbacks();
 
     /**
-     * å£“ï¿½?æ¸¬è©¦ - å¤§ï¿½Xï¿½é »äº‹ä»¶
+     * À£??´ú¸Õ - ¤j?X?ÀW¨Æ¥ó
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestAudioSystemStress(};
+    static bool TestAudioSystemStress();
 
     /**
-     * ?ï¿½ï¿½?æ¸¬è©¦ - å®Œæ•´?ï¿½éŸ³?ï¿½ï¿½?ä¿‚ï¿½?ï¿½?     */
+     * ????´ú¸Õ - §¹¾ã??­µ????«Y????     */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static bool TestAudioRelationshipIntegration(};
+    static bool TestAudioRelationshipIntegration();
 
     /**
-     * ?ï¿½å»ºæ¸¬è©¦?ï¿½é »?ï¿½ï¿½?
+     * ??«Ø´ú¸Õ??ÀW????
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static void CreateTestAudioData(};
+    static void CreateTestAudioData();
 
     /**
-     * æ¸…ï¿½?æ¸¬è©¦?ï¿½é »?ï¿½ï¿½?
+     * ²M??´ú¸Õ??ÀW????
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
-    static void CleanupTestAudioData(};
+    static void CleanupTestAudioData();
 
     /**
-     * é©—ï¿½Xï¿½é »ç³»çµ±?ï¿½X     */
+     * Åç?X?ÀW¨t²Î??X     */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Audio Test")
-    static bool VerifyAudioSystemHealth(};
+    static bool VerifyAudioSystemHealth();
 
     /**
-     * ?ï¿½ï¿½?æ¸¬è©¦çµï¿½Xï¿½ï¿½?
+     * ????´ú¸Õµ²?X???
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Audio Test")
-    static FString GetAudioTestReport(};
+    static FString GetAudioTestReport();
 
 private:
     static bool bTestPassed;
@@ -108,5 +108,5 @@ private:
 
     static void AddTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
     static void ResetTestResults(};
-};
+);
 

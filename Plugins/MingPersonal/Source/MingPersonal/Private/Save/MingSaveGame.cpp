@@ -30,10 +30,10 @@ void UMingSaveGame::UpgradeToCurrentVersion()
         Header.Version = EMingSaveGameVersion::Version_1_1;
     }
 
-    if (Header.Version == EMingSaveGameVersion::Version_1_1)
+    if (Header.Version == EMingSaveGameVersion::Version_1_2)
     {
-        // 從版本 2 遷移到版本 3
-        Header.Version = EMingSaveGameVersion::Version_1_2;
+        // 從版本 3 遷移到版本 4
+        Header.Version = EMingSaveGameVersion::Version_2_0;
     }
 
     // 更新到當前版本
@@ -284,4 +284,164 @@ bool UMingSaveGame::MigrateFromVersion2(const UMingSaveGame* OldSave, UMingSaveG
     NewSave->PlayerPreferences = OldSave->PlayerPreferences;
 
     return true;
+}
+
+bool UMingSaveGame::MigrateFromVersion1_2(const UMingSaveGame* OldSave, UMingSaveGame* NewSave)
+{
+    if (!OldSave || !NewSave)
+    {
+        return false;
+    }
+
+    // 遷移所有數據
+    NewSave->Header = OldSave->Header;
+    NewSave->Header.Version = EMingSaveGameVersion::Current;
+
+    NewSave->RelationshipData = OldSave->RelationshipData;
+    NewSave->ReputationData = OldSave->ReputationData;
+    NewSave->QuestData = OldSave->QuestData;
+    NewSave->AudioSettings = OldSave->AudioSettings;
+    NewSave->UISettings = OldSave->UISettings;
+    NewSave->GameStateData = OldSave->GameStateData;
+    NewSave->PlayerPreferences = OldSave->PlayerPreferences;
+
+    // 版本 2.0 新增的系統數據初始化為空
+    NewSave->FactionSystemData.Empty();
+    NewSave->DynamicHistoryData.Empty();
+    NewSave->SelfLearningData.Empty();
+    NewSave->SceneGeneratorData.Empty();
+    NewSave->AssetGeneratorData.Empty();
+    NewSave->LocalizationData.Empty();
+    NewSave->PerformanceData.Empty();
+    NewSave->UIEnhancedData.Empty();
+    NewSave->AudioEnhancedData.Empty();
+
+    return true;
+}
+
+// 新系統數據接口實現
+void UMingSaveGame::SetFactionSystemData(const TArray<uint8>& Data)
+{
+    FactionSystemData = Data;
+}
+
+TArray<uint8> UMingSaveGame::GetFactionSystemData() const
+{
+    return FactionSystemData;
+}
+
+void UMingSaveGame::SetDynamicHistoryData(const TArray<uint8>& Data)
+{
+    DynamicHistoryData = Data;
+}
+
+TArray<uint8> UMingSaveGame::GetDynamicHistoryData() const
+{
+    return DynamicHistoryData;
+}
+
+void UMingSaveGame::SetSelfLearningData(const TArray<uint8>& Data)
+{
+    SelfLearningData = Data;
+}
+
+TArray<uint8> UMingSaveGame::GetSelfLearningData() const
+{
+    return SelfLearningData;
+}
+
+void UMingSaveGame::SetSceneGeneratorData(const TArray<uint8>& Data)
+{
+    SceneGeneratorData = Data;
+}
+
+TArray<uint8> UMingSaveGame::GetSceneGeneratorData() const
+{
+    return SceneGeneratorData;
+}
+
+void UMingSaveGame::SetAssetGeneratorData(const TArray<uint8>& Data)
+{
+    AssetGeneratorData = Data;
+}
+
+TArray<uint8> UMingSaveGame::GetAssetGeneratorData() const
+{
+    return AssetGeneratorData;
+}
+
+void UMingSaveGame::SetLocalizationData(const TArray<uint8>& Data)
+{
+    LocalizationData = Data;
+}
+
+TArray<uint8> UMingSaveGame::GetLocalizationData() const
+{
+    return LocalizationData;
+}
+
+void UMingSaveGame::SetPerformanceData(const TArray<uint8>& Data)
+{
+    PerformanceData = Data;
+}
+
+TArray<uint8> UMingSaveGame::GetPerformanceData() const
+{
+    return PerformanceData;
+}
+
+void UMingSaveGame::SetUIEnhancedData(const TArray<uint8>& Data)
+{
+    UIEnhancedData = Data;
+}
+
+TArray<uint8> UMingSaveGame::GetUIEnhancedData() const
+{
+    return UIEnhancedData;
+}
+
+void UMingSaveGame::SetAudioEnhancedData(const TArray<uint8>& Data)
+{
+    AudioEnhancedData = Data;
+}
+
+TArray<uint8> UMingSaveGame::GetAudioEnhancedData() const
+{
+    return AudioEnhancedData;
+}
+
+bool UMingSaveGame::SaveAllSystemsData()
+{
+    // 這個函數將在GameMode中實現具體的系統數據收集邏輯
+    UE_LOG(LogTemp, Log, TEXT("Saving all systems data to save game"));
+    return true;
+}
+
+bool UMingSaveGame::LoadAllSystemsData()
+{
+    // 這個函數將在GameMode中實現具體的系統數據加載邏輯
+    UE_LOG(LogTemp, Log, TEXT("Loading all systems data from save game"));
+    return true;
+}
+
+bool UMingSaveGame::ValidateNewSystemsData() const
+{
+    // 驗證新系統數據的完整性
+    bool bIsValid = true;
+    
+    if (FactionSystemData.Num() > 0 && FactionSystemData.Num() < 16)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Faction system data appears incomplete"));
+        bIsValid = false;
+    }
+    
+    if (DynamicHistoryData.Num() > 0 && DynamicHistoryData.Num() < 16)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Dynamic history data appears incomplete"));
+        bIsValid = false;
+    }
+    
+    // 可以添加更多驗證邏輯
+    
+    return bIsValid;
 }

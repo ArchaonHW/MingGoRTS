@@ -28,7 +28,8 @@ enum class EPersonalDisabilityType : uint8
     MotorImpairment,      // X
     CognitiveImpairment,   // 認知X
     ColorBlindness,       // X
-    None                  // X};
+    None                  // X
+};
 
 USTRUCT(BlueprintType)
 struct FAccessibilityProfile
@@ -98,9 +99,9 @@ struct FAccessibilitySettings
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAccessibilityProfileChanged, const FAccessibilityProfile&, Profile};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAccessibilityFeatureToggled, EAccessibilityFeature, Feature, bool, bEnabled};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAccessibilityNeedDetected, EPersonalDisabilityType, DisabilityType};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAccessibilityProfileChanged, const FAccessibilityProfile&, Profile);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAccessibilityFeatureToggled, EAccessibilityFeature, Feature, bool, bEnabled);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAccessibilityNeedDetected, EPersonalDisabilityType, DisabilityType);
 
 /**
  * AIX * X檢X輔助X */
@@ -110,140 +111,140 @@ class MINGPERSONAL_API UMingAccessibilityHelper : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAccessibilityHelper(};
+    UMingAccessibilityHelper();
 
     // X    UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void InitializeAccessibility(UMingAIUIManager* InAIManager, UMingBehaviorAnalytics* InAnalytics};
+    void InitializeAccessibility(UMingAIUIManager* InAIManager, UMingBehaviorAnalytics* InAnalytics);
 
     // ?求檢?    UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void DetectAccessibilityNeeds(};
+    void DetectAccessibilityNeeds();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    EPersonalDisabilityType AnalyzeUserBehaviorForAccessibility(};
+    EPersonalDisabilityType AnalyzeUserBehaviorForAccessibility();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void MonitorInteractionPatterns(};
+    void MonitorInteractionPatterns();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    bool ShouldEnableFeature(EAccessibilityFeature Feature};
+    bool ShouldEnableFeature(EAccessibilityFeature Feature);
 
     // ?置管?
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void SetAccessibilityProfile(const FAccessibilityProfile& Profile};
+    void SetAccessibilityProfile(const FAccessibilityProfile& Profile);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     FAccessibilityProfile GetAccessibilityProfile() const { return CurrentProfile; }
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void EnableFeature(EAccessibilityFeature Feature};
+    void EnableFeature(EAccessibilityFeature Feature);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void DisableFeature(EAccessibilityFeature Feature};
+    void DisableFeature(EAccessibilityFeature Feature);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     bool IsFeatureEnabled(EAccessibilityFeature Feature) const;
 
     // UIX
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void ApplyAccessibilityToUI(};
+    void ApplyAccessibilityToUI();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void AdjustTextSize(float Scale};
+    void AdjustTextSize(float Scale);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void SetHighContrastMode(bool bEnabled};
+    void SetHighContrastMode(bool bEnabled);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void SetColorBlindMode(EPersonalDisabilityType ColorBlindType};
+    void SetColorBlindMode(EPersonalDisabilityType ColorBlindType);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void ReduceMotion(bool bReduce};
+    void ReduceMotion(bool bReduce);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void EnableKeyboardNavigation(};
+    void EnableKeyboardNavigation();
 
     // 語音X
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void StartVoiceControl(};
+    void StartVoiceControl();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void StopVoiceControl(};
+    void StopVoiceControl();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void ProcessVoiceCommand(const FString& Command};
+    void ProcessVoiceCommand(const FString& Command);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     TArray<FString> GetAvailableVoiceCommands() const;
 
     // X    UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void EnableScreenReader(};
+    void EnableScreenReader();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void DisableScreenReader(};
+    void DisableScreenReader();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void ReadElement(const FString& ElementText};
+    void ReadElement(const FString& ElementText);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void ReadUIPanel(EPersonalUIType PanelType};
+    void ReadUIPanel(EPersonalUIType PanelType);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void SetReadingSpeed(float Speed};
+    void SetReadingSpeed(float Speed);
 
     // X
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void SetupKeyboardNavigation(};
+    void SetupKeyboardNavigation();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void NavigateToElement(const FString& ElementID};
+    void NavigateToElement(const FString& ElementID);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void ActivateCurrentElement(};
+    void ActivateCurrentElement();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void SetCustomKeyBinding(const FString& Action, const FString& Key};
+    void SetCustomKeyBinding(const FString& Action, const FString& Key);
 
     // 視覺輔助
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void ShowVisualCues(};
+    void ShowVisualCues();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void HighlightInteractiveElements(};
+    void HighlightInteractiveElements();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void AddFocusIndicators(};
+    void AddFocusIndicators();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void ShowElementDescriptions(};
-
-    // X
-    UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void EnableAudioDescriptions(};
-
-    UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void PlayAudioDescription(const FString& Description};
-
-    UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void SetAudioDescriptionVolume(float Volume};
+    void ShowElementDescriptions();
 
     // X
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void AutoOptimizeForUser(};
+    void EnableAudioDescriptions();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void LearnFromUserFeedback(};
+    void PlayAudioDescription(const FString& Description);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void SuggestImprovements(};
+    void SetAudioDescriptionVolume(float Volume);
+
+    // X
+    UFUNCTION(BlueprintCallable, Category = "Accessibility")
+    void AutoOptimizeForUser();
+
+    UFUNCTION(BlueprintCallable, Category = "Accessibility")
+    void LearnFromUserFeedback();
+
+    UFUNCTION(BlueprintCallable, Category = "Accessibility")
+    void SuggestImprovements();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     TArray<EAccessibilityFeature> GetRecommendedFeatures() const;
 
     // 測試X    UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void RunAccessibilityTest(};
+    void RunAccessibilityTest();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    bool ValidateUIAccessibility(};
+    bool ValidateUIAccessibility();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     FString GenerateAccessibilityReport() const;
@@ -262,19 +263,19 @@ public:
 
     // 設置
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void SetAccessibilityEnabled(bool bEnabled};
+    void SetAccessibilityEnabled(bool bEnabled);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void SetAutoDetectionEnabled(bool bEnabled};
+    void SetAutoDetectionEnabled(bool bEnabled);
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void SaveAccessibilitySettings(};
+    void SaveAccessibilitySettings();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void LoadAccessibilitySettings(};
+    void LoadAccessibilitySettings();
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
-    void ResetToDefaults(};
+    void ResetToDefaults();
 
     // 事件
     UPROPERTY(BlueprintAssignable, Category = "Accessibility Events")
@@ -334,28 +335,27 @@ protected:
     float ReadingSpeed = 1.0f;
 
     // X
-    void AnalyzeInteractionSpeed(};
-    void AnalyzeClickAccuracy(};
-    void AnalyzeKeyboardUsage(};
-    void DetectVisualImpairment(};
-    void DetectHearingImpairment(};
-    void DetectMotorImpairment(};
-    void DetectCognitiveImpairment(};
-    void ApplyAccessibilityChanges(};
-    void UpdateUIForAccessibility(};
+    void AnalyzeInteractionSpeed();
+    void AnalyzeClickAccuracy();
+    void AnalyzeKeyboardUsage();
+    void DetectVisualImpairment();
+    void DetectHearingImpairment();
+    void DetectMotorImpairment();
+    void DetectCognitiveImpairment();
+    void ApplyAccessibilityChanges();
+    void UpdateUIForAccessibility();
     float CalculateDisabilityScore(EPersonalDisabilityType DisabilityType) const;
 
     // AI輔助
-    void TrainAccessibilityModel(};
+    void TrainAccessibilityModel();
     EPersonalDisabilityType PredictDisabilityType() const;
     TArray<EAccessibilityFeature> RecommendFeaturesForDisability(EPersonalDisabilityType DisabilityType) const;
 
 private:
     // 輔助X
-    void InitializeDefaultProfiles(};
-    void SetupEventListeners(};
-    void SaveAccessibilityData(};
-    void LoadAccessibilityData(};
+    void InitializeDefaultProfiles();
+    void SetupEventListeners();
+    void SaveAccessibilityData();
+    void LoadAccessibilityData();
     FString GetAccessibilityDataPath() const;
 };
-
