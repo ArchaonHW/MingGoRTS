@@ -20,6 +20,12 @@ void UMingGoRTSRelationshipDynamics::InitializeRelationshipDynamics()
 
     // 獲取關係網絡系統引用
     // TODO: 從遊戲實例獲取關係網絡系統
+    // Implementation Notes:
+    // - Should use GameInstance to get the global RelationshipNetwork instance
+    // - Consider lazy initialization if the system is not yet available
+    // - Add null-check and fallback behavior if network is unavailable
+    // - This dependency is required for relationship propagation and network queries
+    // Priority: High - Required for core relationship dynamics functionality
 
     bIsInitialized = true;
     UE_LOG(LogTemp, Log, TEXT("關係動態系統初始化完成"));
@@ -609,14 +615,28 @@ TMap<FString, float> UMingGoRTSRelationshipDynamics::GetDynamicsStatistics() con
 
 bool UMingGoRTSRelationshipDynamics::SaveDynamicsData(const FString& SaveSlotName)
 {
-    // TODO: 實現動態數據保存
+    // TODO: Implement relationship dynamics data persistence
+    // Implementation Requirements:
+    // - Serialize all relationship changes to save slot
+    // - Store active propagations with their current state
+    // - Save stability analyses for each network
+    // - Include dynamics statistics and event history
+    // - Use USaveGame or direct file I/O with proper versioning
+    // Priority: Medium - Required for complete game state save/load
     UE_LOG(LogTemp, Log, TEXT("保存動態數據到：%s"), *SaveSlotName);
     return true;
 }
 
 bool UMingGoRTSRelationshipDynamics::LoadDynamicsData(const FString& SaveSlotName)
 {
-    // TODO: 實現動態數據載入
+    // TODO: Implement relationship dynamics data restoration
+    // Implementation Requirements:
+    // - Deserialize relationship changes from save slot
+    // - Restore active propagations with proper timestamps
+    // - Rebuild stability analyses cache
+    // - Validate loaded data integrity
+    // - Handle version migration for older save formats
+    // Priority: Medium - Required for complete game state save/load
     UE_LOG(LogTemp, Log, TEXT("從 %s 載入動態數據"), *SaveSlotName);
     return true;
 }
@@ -738,13 +758,27 @@ void UMingGoRTSRelationshipDynamics::UpdateRelationshipStability(const FString& 
 
 void UMingGoRTSRelationshipDynamics::DetectRelationshipPatterns(const FString& NetworkID)
 {
-    // TODO: 實現關係模式檢測
+    // TODO: Implement relationship pattern detection using historical data analysis
+    // Implementation Requirements:
+    // - Analyze historical relationship changes to identify recurring patterns
+    // - Detect cyclic behaviors (e.g., seasonal friendship changes)
+    // - Identify common relationship evolution paths
+    // - Use machine learning or rule-based pattern matching
+    // - Cache detected patterns for future predictions
+    // Priority: Low - Enhancement feature for AI relationship prediction
     UE_LOG(LogTemp, Log, TEXT("檢測網絡 %s 的關係模式"), *NetworkID);
 }
 
 void UMingGoRTSRelationshipDynamics::PredictNetworkChanges(const FString& NetworkID)
 {
-    // TODO: 實現網絡變化預測
+    // TODO: Implement network change prediction using trend analysis
+    // Implementation Requirements:
+    // - Analyze relationship trends to predict future network state
+    // - Consider influence propagation effects
+    // - Factor in external events and character actions
+    // - Use time-series analysis or probabilistic models
+    // - Generate confidence scores for predictions
+    // Priority: Low - AI enhancement for strategic gameplay
     UE_LOG(LogTemp, Log, TEXT("預測網絡 %s 的變化"), *NetworkID);
 }
 
@@ -819,7 +853,14 @@ bool UMingGoRTSRelationshipDynamics::CheckRelationshipThreshold(const FString& S
 
 void UMingGoRTSRelationshipDynamics::ApplyRelationshipThreshold(const FString& SourceID, const FString& TargetID)
 {
-    // TODO: 實現關係閾值應用邏輯
+    // TODO: Implement relationship threshold application logic
+    // Implementation Requirements:
+    // - Apply special effects when relationship crosses critical thresholds
+    // - Trigger events for relationship milestones (e.g., becoming allies)
+    // - Update UI indicators for threshold status
+    // - Notify quest system of relationship changes
+    // - Consider cascading effects on connected relationships
+    // Priority: Medium - Required for complete relationship gameplay
     UE_LOG(LogTemp, Log, TEXT("應用關係閾值：%s -> %s"), *SourceID, *TargetID);
 }
 
@@ -844,13 +885,27 @@ float UMingGoRTSRelationshipDynamics::CalculateNetworkInfluence(const FString& N
 
 void UMingGoRTSRelationshipDynamics::DetectRelationshipChainReactions(const FString& NetworkID)
 {
-    // TODO: 實現關係連鎖反應檢測
+    // TODO: Implement relationship chain reaction detection
+    // Implementation Requirements:
+    // - Analyze network topology to identify vulnerable relationship chains
+    // - Detect potential cascade triggers from relationship changes
+    // - Calculate risk scores for chain reactions
+    // - Monitor threshold conditions that could initiate cascades
+    // - Alert game systems of high-risk scenarios
+    // Priority: Low - Advanced AI feature for network stability
     UE_LOG(LogTemp, Log, TEXT("檢測網絡 %s 的關係連鎖反應"), *NetworkID);
 }
 
 void UMingGoRTSRelationshipDynamics::ProcessChainReaction(const TArray<FString>& AffectedCharacters)
 {
-    // TODO: 實現連鎖反應處理
+    // TODO: Implement chain reaction processing
+    // Implementation Requirements:
+    // - Process sequential relationship updates during cascade events
+    // - Apply diminishing effects through propagation chain
+    // - Update UI in real-time during chain reaction
+    // - Log chain reaction events for analytics
+    // - Handle edge cases (loops, dead ends, extreme values)
+    // Priority: Low - Required for cascade propagation system
     UE_LOG(LogTemp, Log, TEXT("處理關係連鎖反應，影響角色數量：%d"), AffectedCharacters.Num());
 }
 
@@ -920,19 +975,40 @@ void UMingGoRTSRelationshipDynamics::CleanupExpiredPropagations()
 
 void UMingGoRTSRelationshipDynamics::UpdateStatistics()
 {
-    // TODO: 實現統計數據更新
+    // TODO: Implement dynamics statistics calculation
+    // Implementation Requirements:
+    // - Calculate aggregate metrics from relationship changes
+    // - Track change frequency and magnitude trends
+    // - Update network health indicators
+    // - Generate periodic reports for analytics
+    // - Cache statistics for performance optimization
+    // Priority: Low - Analytics and monitoring feature
     UE_LOG(LogTemp, Log, TEXT("更新關係動態統計數據"));
 }
 
 void UMingGoRTSRelationshipDynamics::RecordDynamicsEvent(const FString& EventType, const FString& Description)
 {
-    // TODO: 實現動態事件記錄
+    // TODO: Implement dynamics event recording system
+    // Implementation Requirements:
+    // - Create structured event log entries with timestamps
+    // - Store events in persistent storage for analysis
+    // - Support event querying and filtering
+    // - Maintain event history with configurable retention
+    // - Link events to save game data for replay functionality
+    // Priority: Low - Debugging and analytics feature
     UE_LOG(LogTemp, Log, TEXT("記錄動態事件：%s - %s"), *EventType, *Description);
 }
 
 void UMingGoRTSRelationshipDynamics::AnalyzeRelationshipTrends(const FString& NetworkID)
 {
-    // TODO: 實現關係趨勢分析
+    // TODO: Implement relationship trend analysis
+    // Implementation Requirements:
+    // - Analyze historical relationship data for trend patterns
+    // - Identify seasonal or cyclic relationship behaviors
+    // - Detect anomaly trends indicating system issues
+    // - Generate trend reports for game balancing
+    // - Export trend data for external analysis tools
+    // Priority: Low - Analytics feature for game balancing
     UE_LOG(LogTemp, Log, TEXT("分析網絡 %s 的關係趨勢"), *NetworkID);
 }
 
@@ -1035,7 +1111,14 @@ bool UMingGoRTSRelationshipDynamics::CheckRelationshipBalance(const FString& Net
 
 void UMingGoRTSRelationshipDynamics::RestoreRelationshipBalance(const FString& NetworkID)
 {
-    // TODO: 實現關係平衡恢復
+    // TODO: Implement relationship balance restoration
+    // Implementation Requirements:
+    // - Apply corrective actions to restore network equilibrium
+    // - Target interventions on highly polarized relationships
+    // - Trigger stabilization events for critical imbalances
+    // - Notify affected characters of balance restoration efforts
+    // - Log balance interventions for analytics
+    // Priority: Low - Advanced AI feature for network management
     UE_LOG(LogTemp, Log, TEXT("恢復網絡 %s 的關係平衡"), *NetworkID);
 }
 
@@ -1119,7 +1202,14 @@ TArray<FString> UMingGoRTSRelationshipDynamics::DetectRelationshipAnomalies(cons
 
 void UMingGoRTSRelationshipDynamics::HandleRelationshipAnomaly(const FString& SourceID, const FString& TargetID)
 {
-    // TODO: 實現關係異常處理
+    // TODO: Implement relationship anomaly handling
+    // Implementation Requirements:
+    // - Investigate and resolve detected relationship anomalies
+    // - Apply corrective measures to stabilize abnormal relationships
+    // - Generate alerts for severe anomalies requiring attention
+    // - Log anomaly handling for debugging and analytics
+    // - Consider preventive measures for future similar cases
+    // Priority: Low - Monitoring and debugging feature
     UE_LOG(LogTemp, Log, TEXT("處理關係異常：%s -> %s"), *SourceID, *TargetID);
 }
 

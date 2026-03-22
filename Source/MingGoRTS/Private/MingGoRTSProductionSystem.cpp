@@ -146,7 +146,13 @@ bool UMingGoRTSProductionSystem::StartProduction(const FString& ProductionLineID
             EResourceType ResourceType = ResourcePair.Key;
             float RequiredAmount = ResourcePair.Value;
             
-            // TODO: 檢查資源存儲是否足夠
+            // TODO: Check resource storage availability
+            // Implementation Requirements:
+            // - Query ResourceSystem for available resource quantity
+            // - Compare available quantity against RequiredAmount
+            // - Consider resource reservation for queued production
+            // - Return false if insufficient resources
+            // - Log resource shortage for debugging
         }
     }
 
@@ -452,16 +458,34 @@ bool UMingGoRTSProductionSystem::CanProduceRecipe(const FString& ProductionLineI
     // 檢查建築要求
     for (EResourceType RequiredBuilding : Recipe.RequiredBuildings)
     {
-        // TODO: 檢查生產線建築是否符合要求
+        // TODO: Validate production line building requirements
+        // Implementation Requirements:
+        // - Check if production line has required building type
+        // - Verify building is operational and not damaged
+        // - Consider building level requirements for advanced recipes
+        // - Check building ownership and permissions
+        // - Return false if building requirements not met
     }
     
     // 檢查技能要求
-    // TODO: 檢查操作員技能等級
+    // TODO: Verify operator skill level requirements
+    // Implementation Requirements:
+    // - Check assigned operator's skill level against recipe MinSkillLevel
+    // - Consider operator specialization bonuses
+    // - Verify operator is available (not busy with other tasks)
+    // - Apply skill-based efficiency modifiers
+    // - Return false if skill requirements not met
     
     // 檢查科技要求
     for (const FString& RequiredTech : Recipe.RequiredTechnologies)
     {
-        // TODO: 檢查科技是否已解鎖
+        // TODO: Verify technology is unlocked
+        // Implementation Requirements:
+        // - Query TechTree system for technology unlock status
+        // - Check for technology prerequisites if not directly unlocked
+        // - Consider technology version/compatibility
+        // - Return false if any required technology is locked
+        // - Optionally suggest alternative recipes with available tech
     }
     
     return true;
@@ -536,7 +560,14 @@ bool UMingGoRTSProductionSystem::UpgradeProductionLine(const FString& Production
 
     ProductionLine.Status = EProductionStatus::Upgrading;
     
-    // TODO: 實現升級邏輯（消耗資源、時間等）
+    // TODO: Implement upgrade logic (resource cost, time, effects)
+    // Implementation Requirements:
+    // - Calculate upgrade resource costs based on current level
+    // - Deduct resources from storage via ResourceSystem
+    // - Apply upgrade time delay before effects take place
+    // - Update production line stats (efficiency, capacity, etc.)
+    // - Broadcast upgrade completion event
+    // - Handle upgrade failure cases (insufficient resources)
     
     ProductionLine.Status = EProductionStatus::Idle;
     
@@ -624,14 +655,28 @@ void UMingGoRTSProductionSystem::UpdateProductionConfig(const FProductionSystemC
 
 bool UMingGoRTSProductionSystem::SaveProductionData(const FString& SaveSlotName)
 {
-    // TODO: 實現生產數據保存
+    // TODO: Implement production data serialization
+    // Implementation Requirements:
+    // - Serialize all production lines with their current state
+    // - Save production queues with pending recipes
+    // - Store production statistics and history
+    // - Include efficiency factors and configuration
+    // - Use USaveGame with proper versioning for compatibility
+    // Priority: Medium - Required for complete game state persistence
     UE_LOG(LogTemp, Log, TEXT("保存生產數據到：%s"), *SaveSlotName);
     return true;
 }
 
 bool UMingGoRTSProductionSystem::LoadProductionData(const FString& SaveSlotName)
 {
-    // TODO: 實現生產數據載入
+    // TODO: Implement production data deserialization
+    // Implementation Requirements:
+    // - Deserialize production lines from save data
+    // - Restore production queues with proper state
+    // - Validate loaded data integrity
+    // - Reconnect resource system references
+    // - Handle version migration for older save formats
+    // Priority: Medium - Required for complete game state restoration
     UE_LOG(LogTemp, Log, TEXT("從 %s 載入生產數據"), *SaveSlotName);
     return true;
 }
@@ -889,7 +934,14 @@ void UMingGoRTSProductionSystem::HandleProductionCompleted(const FString& Produc
     {
         for (const auto& ResourcePair : Recipe.InputResources)
         {
-            // TODO: 從資源存儲中扣除輸入資源
+            // TODO: Deduct input resources from storage
+            // Implementation Requirements:
+            // - Call ResourceSystem->RemoveResource() for each input type
+            // - Verify sufficient resources before deduction
+            // - Handle partial resource availability gracefully
+            // - Log resource consumption for analytics
+            // - Trigger resource shortage events if needed
+        }
         }
     }
     
@@ -898,7 +950,13 @@ void UMingGoRTSProductionSystem::HandleProductionCompleted(const FString& Produc
     {
         for (const auto& ResourcePair : Recipe.OutputResources)
         {
-            // TODO: 將輸出資源添加到資源存儲
+            // TODO: Add output resources to storage
+            // Implementation Requirements:
+            // - Call ResourceSystem->AddResource() for each output type
+            // - Apply quality modifiers to output quantities
+            // - Handle storage capacity limits
+            // - Trigger resource overflow warnings if needed
+            // - Log production output for analytics and reporting
         }
     }
     
