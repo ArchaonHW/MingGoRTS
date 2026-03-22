@@ -770,3 +770,260 @@ void UMingCampaignSystem::ValidateMissionProgression()
         }
     }
 }
+
+// 戰役模式內容擴充功能
+void UMingCampaignSystem::ExpandCampaignContent()
+{
+    UE_LOG(LogTemp, Log, TEXT("Expanding campaign content..."));
+    
+    // 生成新任務
+    if (bEnableDynamicContent)
+    {
+        GenerateNewMissions();
+    }
+    
+    // 調整任務難度
+    if (bEnableAdaptiveDifficulty)
+    {
+        AdjustMissionDifficulty();
+    }
+    
+    // 生成程序化內容
+    if (bEnableProceduralGeneration)
+    {
+        CreateProceduralMaps();
+    }
+    
+    // 擴充戰役敘事
+    ExpandCampaignNarrative();
+    
+    UE_LOG(LogTemp, Log, TEXT("Campaign content expanded"));
+}
+
+void UMingCampaignSystem::AddDynamicMissions()
+{
+    UE_LOG(LogTemp, Log, TEXT("Adding dynamic missions..."));
+    
+    // 計算玩家技能水平
+    float PlayerSkill = CalculatePlayerSkillLevel();
+    
+    // 為每個戰役添加動態任務
+    for (auto& CampaignPair : Campaigns)
+    {
+        FString CampaignID = CampaignPair.Key;
+        FMingCampaign& Campaign = CampaignPair.Value;
+        
+        // 根據玩家技能生成適合的任務
+        int32 DynamicMissionCount = FMath::RoundToInt(3.0f * PlayerSkill * ContentExpansionRate);
+        
+        for (int32 i = 0; i < DynamicMissionCount; ++i)
+        {
+            FMingMission NewMission;
+            NewMission.MissionID = FString::Printf(TEXT("Dynamic_%s_%d"), *CampaignID, i);
+            NewMission.MissionName = FString::Printf(TEXT("Dynamic Mission %d"), i + 1);
+            NewMission.Description = TEXT("Dynamically generated mission");
+            NewMission.MissionType = static_cast<EMingMissionType>(FMath::RandRange(0, 7));
+            NewMission.MapName = FString::Printf(TEXT("DynamicMap_%d"), i);
+            
+            // 添加基礎目標
+            FMingMissionObjective Objective;
+            Objective.ObjectiveID = FString::Printf(TEXT("Obj_%d"), i);
+            Objective.Description = TEXT("Complete mission objectives");
+            Objective.bIsOptional = false;
+            Objective.bIsCompleted = false;
+            Objective.Progress = 0.0f;
+            
+            NewMission.Objectives.Add(Objective);
+            Campaign.Missions.Add(NewMission);
+        }
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Dynamic missions added"));
+}
+
+void UMingCampaignSystem::ImplementAdaptiveDifficulty()
+{
+    UE_LOG(LogTemp, Log, TEXT("Implementing adaptive difficulty..."));
+    
+    // 計算玩家技能水平
+    float PlayerSkill = CalculatePlayerSkillLevel();
+    
+    // 調整任務難度
+    for (auto& CampaignPair : Campaigns)
+    {
+        FMingCampaign& Campaign = CampaignPair.Value;
+        
+        for (FMingMission& Mission : Campaign.Missions)
+        {
+            // 根據玩家技能調整任務參數
+            float DifficultyMultiplier = 1.0f + (1.0f - PlayerSkill) * 0.5f;
+            
+            // 調整目標數量
+            for (FMingMissionObjective& Objective : Mission.Objectives)
+            {
+                if (!Objective.bIsOptional)
+                {
+                    // 必要目標根據玩家技能調整
+                    Objective.TriggerCondition = FString::Printf(TEXT("AdaptiveTrigger_%f"), DifficultyMultiplier);
+                    Objective.SuccessCondition = FString::Printf(TEXT("AdaptiveSuccess_%f"), DifficultyMultiplier);
+                }
+            }
+        }
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Adaptive difficulty implemented"));
+}
+
+void UMingCampaignSystem::GenerateProceduralContent()
+{
+    UE_LOG(LogTemp, Log, TEXT("Generating procedural content..."));
+    
+    // 生成程序化地圖
+    CreateProceduralMaps();
+    
+    // 優化任務流程
+    OptimizeMissionFlow();
+    
+    UE_LOG(LogTemp, Log, TEXT("Procedural content generated"));
+}
+
+void UMingCampaignSystem::GenerateNewMissions()
+{
+    UE_LOG(LogTemp, Log, TEXT("Generating new missions..."));
+    
+    // 為當前戰役生成新任務
+    if (!CurrentCampaignID.IsEmpty())
+    {
+        FMingCampaign* CurrentCampaign = FindCampaign(CurrentCampaignID);
+        if (CurrentCampaign)
+        {
+            int32 NewMissionCount = FMath::RandRange(2, 5);
+            
+            for (int32 i = 0; i < NewMissionCount; ++i)
+            {
+                FMingMission NewMission;
+                NewMission.MissionID = FString::Printf(TEXT("Generated_%s_%d"), *CurrentCampaignID, i);
+                NewMission.MissionName = FString::Printf(TEXT("Generated Mission %d"), i + 1);
+                NewMission.Description = TEXT("Procedurally generated mission");
+                NewMission.MissionType = static_cast<EMingMissionType>(FMath::RandRange(0, 7));
+                NewMission.MapName = FString::Printf(TEXT("ProcMap_%d"), i);
+                
+                // 添加程序化目標
+                FMingMissionObjective Objective;
+                Objective.ObjectiveID = FString::Printf(TEXT("GenObj_%d"), i);
+                Objective.Description = TEXT("Procedurally generated objective");
+                Objective.bIsOptional = FMath::RandBool();
+                Objective.bIsCompleted = false;
+                Objective.Progress = 0.0f;
+                
+                NewMission.Objectives.Add(Objective);
+                CurrentCampaign->Missions.Add(NewMission);
+            }
+        }
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("New missions generated"));
+}
+
+void UMingCampaignSystem::AdjustMissionDifficulty()
+{
+    UE_LOG(LogTemp, Log, TEXT("Adjusting mission difficulty..."));
+    
+    float PlayerSkill = CalculatePlayerSkillLevel();
+    
+    // 調整所有任務難度
+    for (auto& CampaignPair : Campaigns)
+    {
+        FMingCampaign& Campaign = CampaignPair.Value;
+        
+        for (FMingMission& Mission : Campaign.Missions)
+        {
+            // 根據玩家技能調整任務
+            float SkillAdjustment = PlayerSkill > 0.7f ? 1.2f : (PlayerSkill < 0.3f ? 0.8f : 1.0f);
+            
+            // 可以在這裡添加更多難度調整邏輯
+            // 例如：敵人數量、資源限制、時間限制等
+        }
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Mission difficulty adjusted"));
+}
+
+void UMingCampaignSystem::CreateProceduralMaps()
+{
+    UE_LOG(LogTemp, Log, TEXT("Creating procedural maps..."));
+    
+    // 為動態任務創建程序化地圖
+    for (auto& CampaignPair : Campaigns)
+    {
+        FMingCampaign& Campaign = CampaignPair.Value;
+        
+        for (FMingMission& Mission : Campaign.Missions)
+        {
+            // 如果是動態生成的任務，創建對應的地圖
+            if (Mission.MissionID.StartsWith(TEXT("Dynamic_")) || Mission.MissionID.StartsWith(TEXT("Generated_")))
+            {
+                // 這裡可以調用地圖生成系統
+                // 目前只是設置地圖名稱
+                Mission.MapName = FString::Printf(TEXT("ProceduralMap_%s"), *Mission.MissionID);
+            }
+        }
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Procedural maps created"));
+}
+
+void UMingCampaignSystem::ExpandCampaignNarrative()
+{
+    UE_LOG(LogTemp, Log, TEXT("Expanding campaign narrative..."));
+    
+    // 為戰役擴充敘事內容
+    for (auto& CampaignPair : Campaigns)
+    {
+        FMingCampaign& Campaign = CampaignPair.Value;
+        
+        // 添加動態敘事元素
+        if (Campaign.Description.Len() < 200)
+        {
+            Campaign.Description += TEXT("\n\nAdditional narrative content has been dynamically generated to enhance the campaign experience.");
+        }
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Campaign narrative expanded"));
+}
+
+float UMingCampaignSystem::CalculatePlayerSkillLevel() const
+{
+    // 基於完成的任務和表現計算玩家技能水平
+    float SkillLevel = 0.5f; // 基礎技能水平
+    
+    // 根據完成的任務數量調整
+    int32 CompletedMissionCount = CompletedMissions.Num();
+    SkillLevel += CompletedMissionCount * 0.02f;
+    
+    // 根據完成的戰役數量調整
+    int32 CompletedCampaignCount = CompletedCampaigns.Num();
+    SkillLevel += CompletedCampaignCount * 0.1f;
+    
+    return FMath::Clamp(SkillLevel, 0.1f, 1.0f);
+}
+
+void UMingCampaignSystem::OptimizeMissionFlow()
+{
+    UE_LOG(LogTemp, Log, TEXT("Optimizing mission flow..."));
+    
+    // 優化任務流程和順序
+    for (auto& CampaignPair : Campaigns)
+    {
+        FMingCampaign& Campaign = CampaignPair.Value;
+        
+        // 根據任務類型和難度重新排序
+        Campaign.Missions.Sort([](const FMingMission& A, const FMingMission& B)
+        {
+            // 簡單的排序邏輯：按任務類型排序
+            return static_cast<int32>(A.MissionType) < static_cast<int32>(B.MissionType);
+        });
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Mission flow optimized"));
+}

@@ -9,6 +9,8 @@
 #include "Save/MingSaveGame.h"
 #include "Network/MingNetworkManager.h"
 #include "Network/MingLobbySystem.h"
+#include "Localization/MingLocalizationManager.h"
+#include "MingUniversityGuideManager.h"
 #include "MingPersonalManager.generated.h"
 
 /**
@@ -169,6 +171,43 @@ public:
     UFUNCTION(BlueprintPure, Category = "Multiplayer")
     UMingLobbySystem* GetLobbySystem() const;
 
+    // 本地化系統接口
+    UFUNCTION(BlueprintCallable, Category = "Localization")
+    void InitializeLocalizationSystem();
+
+    UFUNCTION(BlueprintCallable, Category = "Localization")
+    bool SetGameLanguage(EMingLanguage NewLanguage);
+
+    UFUNCTION(BlueprintCallable, Category = "Localization")
+    void SetGameRegion(EMingRegion NewRegion);
+
+    UFUNCTION(BlueprintPure, Category = "Localization")
+    EMingLanguage GetCurrentGameLanguage() const;
+
+    UFUNCTION(BlueprintPure, Category = "Localization")
+    EMingRegion GetCurrentGameRegion() const;
+
+    UFUNCTION(BlueprintPure, Category = "Localization")
+    FString GetLocalizedString(const FString& Key, const FString& Namespace = TEXT("Default")) const;
+
+    UFUNCTION(BlueprintCallable, Category = "Localization")
+    bool DownloadLanguagePack(EMingLanguage Language);
+
+    UFUNCTION(BlueprintPure, Category = "Localization")
+    TArray<FLanguagePackInfo> GetAvailableLanguagePacks() const;
+
+    UFUNCTION(BlueprintPure, Category = "Localization")
+    UMingLocalizationManager* GetLocalizationManager() const;
+
+    UFUNCTION(BlueprintCallable, Category = "University Guide")
+    void StartUniversityGuide();
+
+    UFUNCTION(BlueprintCallable, Category = "University Guide")
+    void StopUniversityGuide();
+
+    UFUNCTION(BlueprintCallable, Category = "University Guide")
+    UMingUniversityGuideManager* GetUniversityGuideManager() const;
+
 protected:
     void OnExperienceGained(int32 Amount);
     void OnLevelUp();
@@ -202,4 +241,12 @@ private:
     // 大廳系統
     UPROPERTY()
     TObjectPtr<UMingLobbySystem> LobbySystem;
+
+    // 本地化系統
+    UPROPERTY()
+    TObjectPtr<UMingLocalizationManager> LocalizationManager;
+
+    // 高校引導管理器
+    UPROPERTY()
+    TObjectPtr<UMingUniversityGuideManager> UniversityGuideManager;
 };

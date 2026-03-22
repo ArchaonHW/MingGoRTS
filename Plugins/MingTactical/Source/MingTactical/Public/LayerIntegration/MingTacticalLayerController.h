@@ -17,6 +17,21 @@ enum class EMingBattlePhase : uint8
 };
 
 UENUM(BlueprintType)
+enum class EMingBuildingLayerType : uint8
+{
+    Headquarters UMETA(DisplayName = "Headquarters"),
+    Barracks UMETA(DisplayName = "Barracks"),
+    Factory UMETA(DisplayName = "Factory"),
+    Armory UMETA(DisplayName = "Armory"),
+    Warehouse UMETA(DisplayName = "Warehouse"),
+    ResearchLab UMETA(DisplayName = "Research Lab"),
+    MedicalStation UMETA(DisplayName = "Medical Station"),
+    TrainingGround UMETA(DisplayName = "Training Ground"),
+    DefenseTower UMETA(DisplayName = "Defense Tower"),
+    Wall UMETA(DisplayName = "Wall")
+};
+
+UENUM(BlueprintType)
 enum class EMingUnitStance : uint8
 {
     Aggressive UMETA(DisplayName = "Aggressive"),
@@ -130,7 +145,7 @@ struct FMingGameTacticalUnit
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Unit")
     TArray<int32> GroupIDs;
 
-    FMingTacticalUnit()
+    FMingGameTacticalUnit()
         : UnitID(-1)
         , CurrentStance(EMingUnitStance::Hold)
         , Health(100)
@@ -229,13 +244,13 @@ public:
 
     // Unit Management
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
-    int32 SpawnUnit(const FMingTacticalUnit& UnitSetup);
+    int32 SpawnUnit(const FMingGameTacticalUnit& UnitSetup);
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
     void RemoveUnit(int32 UnitID);
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
-    bool GetUnit(int32 UnitID, FMingTacticalUnit& OutUnit) const;
+    bool GetUnit(int32 UnitID, FMingGameTacticalUnit& OutUnit) const;
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
     void UpdateUnitPosition(int32 UnitID, FVector NewPosition);
@@ -250,13 +265,13 @@ public:
     void DestroyUnit(int32 UnitID);
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
-    TArray<FMingTacticalUnit> GetAllUnits() const;
+    TArray<FMingGameTacticalUnit> GetAllUnits() const;
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
-    TArray<FMingTacticalUnit> GetUnitsByFaction(const FString& FactionID) const;
+    TArray<FMingGameTacticalUnit> GetUnitsByFaction(const FString& FactionID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
-    TArray<FMingTacticalUnit> GetUnitsInRadius(FVector Center, float Radius) const;
+    TArray<FMingGameTacticalUnit> GetUnitsInRadius(FVector Center, float Radius) const;
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
     int32 GetUnitCountByFaction(const FString& FactionID) const;
@@ -380,7 +395,7 @@ protected:
     TMap<FString, FMingBattleInfo> ActiveBattles;
 
     UPROPERTY()
-    TMap<int32, FMingTacticalUnit> Units;
+    TMap<int32, FMingGameTacticalUnit> Units;
 
     UPROPERTY()
     TMap<int32, FMingCommandGroup> CommandGroups;
@@ -416,7 +431,7 @@ protected:
     void NotifySelectionChanged();
     
     bool CanAttack(int32 AttackerID, int32 DefenderID) const;
-    float CalculateDamage(const FMingTacticalUnit& Attacker, const FMingTacticalUnit& Defender) const;
+    float CalculateDamage(const FMingGameTacticalUnit& Attacker, const FMingGameTacticalUnit& Defender) const;
     
     void InitializeDefaultUnits(const FString& BattleID);
     void CleanupBattle(const FString& BattleID);

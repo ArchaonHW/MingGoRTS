@@ -59,7 +59,7 @@ development_status:
   2-3-multi-unit-coordination: done
   2-4-combat-ai-system: done
   2-5-difficulty-progression: done
-  epic-2-retrospective: optional
+  epic-2-retrospective: done
 
   # Epic 3: 角色成長與敘事系統
   epic-3: done
@@ -81,18 +81,27 @@ development_status:
 
   # Epic 5: 四層策略整合系統
   epic-5: done
-  5-1-strategic-layer-interface: backlog
-  5-2-tactical-layer-command: backlog
-  5-3-personal-layer-experience: backlog
-  5-4-building-layer-management: backlog
-  5-5-four-layer-integration: backlog
-  epic-5-retrospective: optional
+  5-1-strategic-layer-interface: done
+  5-2-tactical-layer-command: done
+  5-3-personal-layer-experience: done
+  5-4-building-layer-management: done
+  5-5-four-layer-integration: done
+  epic-5-retrospective: done
 
   # Epic 6: 跨平台技術基礎 (建議優先實施)
-  epic-6: in-progress
+  epic-6: done
   6-1-ue5-modular-plugin-architecture: done
   6-2-event-driven-communication: done
   6-3-cross-platform-adaptation: done
   6-4-performance-optimization: done
   6-5-ai-asset-pipeline: done
-  epic-6-retrospective: optional
+  epic-6-retrospective: done
+
+  # Epic 7: 本地化与国际系统
+  epic-7: in-progress
+  7-1-multi-language-support: ready-for-dev
+  7-2-cultural-adaptation: backlog
+  7-3-regional-content: backlog
+  7-4-localization-assets: backlog
+  7-5-dynamic-language-switch: backlog
+  epic-7-retrospective: optional

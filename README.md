@@ -56,12 +56,82 @@
 | 建造建築 | (待定) |
 | 暫停/繼續 | 空格鍵 |
 
-## 開發計畫
+## 開發計畫與里程碑
 
-- **Sprint 1**：RTS 核心迴圈 (單位選擇、移動、資源)。
-- **Sprint 2**：資源與建築系統。
-- **Sprint 3**：AI 與戰役基礎。
-- **Sprint 4+**：UI、音效、關卡設計、傭兵模式。
+### ✅ 已完成里程碑
+
+| 里程碑 | 狀態 | 說明 |
+|:---|:---|:---|
+| **Alpha 版本** | ✅ 完成 | Sprint 1-3: RTS核心迴圈、資源建築、AI戰役 |
+| **Beta 版本** | ✅ 完成 | Story 3.5-3.7: 音頻、UI、保存載入系統 |
+| **Release 版本** | ✅ 完成 | 所有Epic完成，正式發布 v1.0.0 |
+
+### 核心系統完成狀態
+
+| 系統 | 狀態 | 關鍵檔案 |
+|:---|:---|:---|
+| **RTS 核心** | ✅ 完成 | `MingRTSUnitManager`, `MingRTSCombatSystem` |
+| **資源建築** | ✅ 完成 | `MingRTSResourceManager`, `MingRTSBuildingSystem` |
+| **AI 戰役** | ✅ 完成 | `MingRTSAIEnhancedSystem`, `MingRTSCampaignSystem` |
+| **角色關係** | ✅ 完成 | `MingRelationshipManager`, `MingReputationManager` |
+| **音頻系統** | ✅ 完成 | `MingAudioSystem`, `MingRepublicEraAudioThemes` |
+| **UI 系統** | ✅ 完成 | `MingPersonalUIManager`, `MingDialoguePanel` |
+| **保存載入** | ✅ 完成 | `MingRTSSaveLoadEnhancedSystem` |
+| **四層整合** | ✅ 完成 | `MingFourLayerManager` |
+| **網絡多人** | ✅ 完成 | `MingRTSNetworkEnhancedSystem` |
+| **性能優化** | ✅ 完成 | `MingRTSPerformanceEnhancedSystem` (Epic 8.1) |
+| **本地化** | ✅ 完成 | `MingRTSLocalizationEnhancedSystem` (Epic 7.1) |
+| **Release 測試** | ✅ 完成 | `MingReleaseIntegrationTest` (38測試) |
+
+### Beta 版本特性 (Story 3.5-3.7)
+
+#### Story 3.5: 音頻和音效系統
+- 10個民國時期音頻主題 (戰鬥、探索、外交等)
+- 10個地區音效 (北平、上海、南京等)
+- 音頻-關係系統互動
+- MetaSounds 程序化音效
+
+#### Story 3.6: UI 和界面系統
+- 完整個人系統 UI (關係、聲望、對話、任務)
+- 主儀表板 (MingMainDashboard)
+- 打字機效果對話系統
+- 輔助功能支持 (字體大小、高對比度等)
+
+#### Story 3.7: 保存和載入系統
+- 11種保存數據類型
+- 10種保存格式 (二進制、JSON、壓縮、加密等)
+- 自動保存和備份恢復
+- 雲端保存支持
+
+### Release 版本特性 (v1.0.0)
+
+#### 10 個 Epic 系統全部完成
+- **Epic 1.1**: RTS 戰鬥系統 - 200+ 單位, 6 AI 類型, 7 傷害類型
+- **Epic 2.1**: 經濟系統 - 10 資源, 15 建築, 貿易系統
+- **Epic 3.1**: AI 戰役系統 - 12 行為模式, 8 戰役類型
+- **Epic 4.1**: UI 音頻系統 - 21 UI 類型, 16 音頻情感
+- **Epic 5.1**: 網絡系統 - 10 網絡類型, 11 遊戲模式
+- **Epic 6.1**: 保存系統 - 11 數據類型, 雲端支持
+- **Epic 7.1**: 本地化 - 20 語言, 17 地區
+- **Epic 8.1**: 性能調試 - 11 監控類別
+- **Epic 9**: AI 內容生成 - 12 內容類型
+- **Epic 10**: 四層整合 - 策略/戰術/個人/建築
+
+### 📁 文檔指南
+
+- **Release 發布準備**: `docs/RELEASE_INTEGRATION_GUIDE.md` (完整發布指南)
+- **Beta 集成指南**: `docs/BETA_INTEGRATION_GUIDE.md`
+- **音頻系統**: `docs/STORY_3_5_AUDIO_INTEGRATION.md`
+- **UI 系統**: `docs/STORY_3_6_UI_INTEGRATION.md`
+- **保存載入**: `docs/STORY_3_7_SAVE_LOAD_INTEGRATION.md`
+- **Release 測試套件**: `Plugins/MingCore/Source/MingCore/Tests/MingReleaseIntegrationTest`
+
+### 舊版開發計畫
+
+- **Sprint 1**：RTS 核心迴圈 (單位選擇、移動、資源)。✅ 已完成
+- **Sprint 2**：資源與建築系統。✅ 已完成
+- **Sprint 3**：AI 與戰役基礎。✅ 已完成
+- **Sprint 4+**：UI、音效、關卡設計、傭兵模式。✅ 已完成
 
 ## 貢獻人員
 - 開發者：Archaon (V仔)

@@ -425,6 +425,19 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Enhanced System")
     TMap<FString, float> GetAIStatistics(const FString& PersonalityID) const;
 
+    // AI算法優化
+    UFUNCTION(BlueprintCallable, Category = "AI Enhanced System")
+    void OptimizeAIAlgorithms();
+
+    UFUNCTION(BlueprintCallable, Category = "AI Enhanced System")
+    void EnhanceDecisionMaking();
+
+    UFUNCTION(BlueprintCallable, Category = "AI Enhanced System")
+    void ImproveLearningEfficiency();
+
+    UFUNCTION(BlueprintCallable, Category = "AI Enhanced System")
+    void ImplementAdvancedPathfinding();
+
 public:
     // 事件委託
     UPROPERTY(BlueprintAssignable, Category = "AI Enhanced System Events")
@@ -552,6 +565,19 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Enhanced System")
     int32 MaxStrategyCount;
 
+    // 優化參數
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Enhanced System")
+    float AlgorithmEfficiency = 1.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Enhanced System")
+    float DecisionQualityBonus = 1.2f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Enhanced System")
+    bool bEnableAdvancedOptimization = true;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Enhanced System")
+    bool bEnableMachineLearning = true;
+
 private:
     // 獲取個性名稱
     FString GetPersonalityName(const FString& PersonalityID) const;
@@ -585,6 +611,15 @@ private:
 
     // 壓力管理
     void ManageStress(const FString& PersonalityID);
+
+    // 優化內部函數
+    void OptimizeAlgorithmPerformance();
+    void EnhanceDecisionQuality();
+    void ImproveLearningSpeed();
+    void ImplementAdvancedPathfinding();
+    float CalculateAlgorithmEfficiency(const FString& PersonalityID) const;
+    void OptimizeMemoryUsage();
+    void EnhancePatternRecognition();
 
     // 動機分析
     TMap<FString, float> AnalyzeMotivations(const FString& PersonalityID) const;

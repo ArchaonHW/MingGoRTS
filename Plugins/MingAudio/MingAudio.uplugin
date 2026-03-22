@@ -1,0 +1,27 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "MingAudio",
+  "Description": "Audio system plugin for MingGoRTS",
+  "Category": "Audio",
+  "CreatedBy": "Potato",
+  "CanContainContent": true,
+  "IsBetaVersion": false,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "EngineVersion": "5.7.0",
+  "Modules": [
+    {
+      "Name": "MingAudio",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "MingCore",
+      "Enabled": true
+    }
+  ]
+}

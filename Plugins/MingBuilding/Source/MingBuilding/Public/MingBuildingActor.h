@@ -17,7 +17,7 @@ enum class EMingBuildingType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingBuildingState : uint8
+enum class EMingActorBuildingState : uint8
 {
     Planned UMETA(DisplayName = "Planned"),
     Constructing UMETA(DisplayName = "Constructing"),

@@ -287,6 +287,19 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     void LoadCampaignData(const FString& JsonString);
 
+    // 戰役模式內容擴充
+    UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
+    void ExpandCampaignContent();
+
+    UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
+    void AddDynamicMissions();
+
+    UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
+    void ImplementAdaptiveDifficulty();
+
+    UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
+    void GenerateProceduralContent();
+
 protected:
     UPROPERTY()
     TMap<FString, FMingCampaign> Campaigns;
@@ -303,7 +316,20 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<UWorld> WorldContext;
 
-    // Internal functions
+    // 內容擴充參數
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Campaign Enhancement")
+    bool bEnableDynamicContent = true;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Campaign Enhancement")
+    bool bEnableProceduralGeneration = true;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Campaign Enhancement")
+    bool bEnableAdaptiveDifficulty = true;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Campaign Enhancement")
+    float ContentExpansionRate = 1.5f;
+
+    // 內部函數
     void InitializeDefaultCampaigns();
     void SetupHistoricalCampaigns();
     void SetupWhatIfCampaigns();
@@ -311,6 +337,14 @@ protected:
     void CheckMissionCompletion();
     void UnlockDependentMissions(const FString& CompletedMissionID);
     void ValidateMissionProgression();
+
+    // 內容擴充內部函數
+    void GenerateNewMissions();
+    void AdjustMissionDifficulty();
+    void CreateProceduralMaps();
+    void ExpandCampaignNarrative();
+    float CalculatePlayerSkillLevel() const;
+    void OptimizeMissionFlow();
 
     // Helpers
     FMingMission* FindMission(const FString& MissionID);
