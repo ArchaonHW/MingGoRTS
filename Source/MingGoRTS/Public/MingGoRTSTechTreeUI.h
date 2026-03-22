@@ -455,21 +455,21 @@ protected:
 
     // ?�新UI顯示
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
-    void UpdateDisplay(};
+    void UpdateDisplay();
 
     // ?��X��X�發
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
-    void OnStartResearchClicked(};
+    void OnStartResearchClicked();
 
     // ?��X��?
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
-    void OnCloseClicked(};
+    void OnCloseClicked();
 
 private:
-    // ?�建?��X�表X    UUserWidget* CreateEffectItem(const FTechEffect& Effect};
+    // ?�建?��X�表X    UUserWidget* CreateEffectItem(const FTechEffect& Effect);
 
-    // ?�建?�置條件?�表X    UUserWidget* CreatePrerequisiteItem(const FString& TechID};
+    // ?�建?�置條件?�表X    UUserWidget* CreatePrerequisiteItem(const FString& TechID);
 
-    // ?�建?�本?�表X    UUserWidget* CreateCostItem(EResourceType ResourceType, float Cost};
+    // ?�建?�本?�表X    UUserWidget* CreateCostItem(EResourceType ResourceType, float Cost);
 };
 

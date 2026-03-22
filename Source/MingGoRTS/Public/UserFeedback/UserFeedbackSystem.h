@@ -1,5 +1,5 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// ??戶????系統 - ???X??X?管X
+// ??????t - ???X??X?X
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,7 +8,7 @@
 #include "UserFeedbackSystem.generated.h"
 
 /**
- * ????類?X???
+ * ?????X???
  */
 UENUM(BlueprintType)
 enum class EFeedbackType : uint8
@@ -24,7 +24,7 @@ enum class EFeedbackType : uint8
 };
 
 /**
- * ???X???級?X */
+ * ???X????X */
 UENUM(BlueprintType)
 enum class EFeedbackPriority : uint8
 {
@@ -48,7 +48,7 @@ enum class EFeedbackStatus : uint8
 };
 
 /**
- * ???X???結??
+ * ???X?????
  */
 USTRUCT(BlueprintType)
 struct FFeedbackData
@@ -59,7 +59,7 @@ struct FFeedbackData
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString FeedbackID;
 
-    /** ????類?? */
+    /** ?????? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     EFeedbackType FeedbackType;
 
@@ -71,63 +71,63 @@ struct FFeedbackData
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     EFeedbackStatus Status;
 
-    /** 標?? */
+    /** ?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString Title;
 
-    /** ??述 */
+    /** ??z */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString Description;
 
-    /** ??現步?? */
+    /** ??{B?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString ReproductionSteps;
 
-    /** ????結?? */
+    /** ?????? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString ExpectedResult;
 
-    /** 實??結?? */
+    /** ???? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString ActualResult;
 
-    /** ??戶信息 */
+    /** ??H */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString UserInfo;
 
-    /** 系統信息 */
+    /** t峆H */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString SystemInfo;
 
-    /** ??戲??本 */
+    /** ???? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString GameVersion;
 
-    /** ??交???? */
+    /** ?????? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FDateTime SubmitTime;
 
-    /** ??新???? */
+    /** ??s???? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FDateTime LastUpdateTime;
 
-    /** ????人員 */
+    /** ????H */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     FString AssignedTo;
 
-    /** 標籤 */
+    /**  */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     TArray<FString> Tags;
 
-    /** ??件 */
+    /** ?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     TArray<FString> Attachments;
 
-    /** 評?? */
+    /** ?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     float Rating;
 
-    /** ??否已?? */
+    /** ??_w?? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Feedback")
     bool bIsRead;
 
@@ -154,30 +154,30 @@ struct FFeedbackData
 };
 
 /**
- * ????統?X???
+ * ?????X???
  */
 USTRUCT(BlueprintType)
 struct FFeedbackStatistics
 {
     GENERATED_BODY()
 
-    /** 總??饋數 */
+    /** `??X */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     int32 TotalFeedback;
 
-    /** ???X?統??*/
+    /** ???X???*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     TMap<EFeedbackType, int32> FeedbackByType;
 
-    /** ??優????統?? */
+    /** ??u?????? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     TMap<EFeedbackPriority, int32> FeedbackByPriority;
 
-    /** ???X?統??*/
+    /** ???X???*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     TMap<EFeedbackStatus, int32> FeedbackByStatus;
 
-    /** 平?X??X??? */
+    /** ?X??X??? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     float AverageResponseTime;
 
@@ -185,7 +185,7 @@ struct FFeedbackStatistics
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     float ResolutionRate;
 
-    /** ??戶滿????*/
+    /** ??廕????*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback Statistics")
     float UserSatisfaction;
 
@@ -199,7 +199,7 @@ struct FFeedbackStatistics
 };
 
 /**
- * ??戶????系統
+ * ??????t
  */
 UCLASS(BlueprintType, Blueprintable)
 class USERFEEDBACKSYSTEM_API UUserFeedbackSystem : public UObject
@@ -207,25 +207,25 @@ class USERFEEDBACKSYSTEM_API UUserFeedbackSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UUserFeedbackSystem(};
+    UUserFeedbackSystem();
 
-    /** ???X???饋系??*/
+    /** ???X???Xt??*/
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    void InitializeFeedbackSystem(};
+    void InitializeFeedbackSystem();
 
-    /** ??交???? */
+    /** ?????? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     FString SubmitFeedback(const FFeedbackData& FeedbackData};
 
-    /** ???X??X?表 */
+    /** ???X??X? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     TArray<FFeedbackData> GetFeedbackList(EFeedbackType FilterType = EFeedbackType::Other, EFeedbackStatus FilterStatus = EFeedbackStatus::New};
 
-    /** ???X???詳?? */
+    /** ???X????? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     FFeedbackData GetFeedbackDetails(const FString& FeedbackID};
 
-    /** ??新???X?X*/
+    /** ??s???X?X*/
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     bool UpdateFeedbackStatus(const FString& FeedbackID, EFeedbackStatus NewStatus};
 
@@ -233,45 +233,45 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     bool AssignFeedback(const FString& FeedbackID, const FString& AssignedTo};
 
-    /** 添??評?? */
+    /** K???? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     bool AddComment(const FString& FeedbackID, const FString& Comment};
 
-    /** ????統?X??? */
+    /** ?????X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    FFeedbackStatistics GetStatistics(};
+    FFeedbackStatistics GetStatistics();
 
-    /** 導出???X??? */
+    /** 犮X???X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    FString ExportFeedbackData(};
+    FString ExportFeedbackData();
 
     /** ???X??X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    void AutoCategorizeFeedback(};
+    void AutoCategorizeFeedback();
 
-    /** ??送通知 */
+    /** ??eq */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     void SendNotification(const FString& FeedbackID, const FString& Message};
 
-    /** 檢查???X??? */
+    /** 邠d???X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
     TArray<FString> CheckDuplicateFeedback(const FFeedbackData& FeedbackData};
 
     /** ???X??X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback System")
-    FString GenerateFeedbackReport(};
+    FString GenerateFeedbackReport();
 
 public:
-    /** ???X?交事件 */
+    /** ???X?ぁ */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFeedbackSubmitted, const FString&, FeedbackID};
 
-    /** ???X???更??????*/
+    /** ???X?????????*/
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackStatusUpdated, const FString&, FeedbackID, EFeedbackStatus, NewStatus};
 
-    /** ???X???事件 */
+    /** ???X???ぁ */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFeedbackAssigned, const FString&, FeedbackID, const FString&, AssignedTo};
 
-    /** ????饋通知事件 */
+    /** ????Xqぁ */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewFeedback, const FFeedbackData&, FeedbackData};
 
     UPROPERTY(BlueprintAssignable, Category = "Feedback System|Events")
@@ -288,47 +288,47 @@ public:
 
 protected:
     /** ???X???ID */
-    FString GenerateFeedbackID(};
+    FString GenerateFeedbackID();
 
-    /** 驗?X??X??? */
+    /** ?X??X??? */
     bool ValidateFeedbackData(const FFeedbackData& FeedbackData};
 
-    /** 保?X??X??? */
+    /** O?X??X??? */
     bool SaveFeedbackData(const FFeedbackData& FeedbackData};
 
     /** ???X??X??? */
-    void LoadFeedbackData(};
+    void LoadFeedbackData();
 
-    /** ??新統?X??? */
-    void UpdateStatistics(};
+    /** ??s?X??? */
+    void UpdateStatistics();
 
-    /** ??送郵件通知 */
+    /** ??elq */
     void SendEmailNotification(const FString& To, const FString& Subject, const FString& Body};
 
-    /** ???X??X?容 */
+    /** ???X??X?e */
     void AnalyzeFeedbackContent(FFeedbackData& FeedbackData};
 
-    /** ????標?? */
+    /** ?????? */
     void AutoTagFeedback(FFeedbackData& FeedbackData};
 
 private:
-    /** ??????饋數X*/
+    /** ??????XX*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback System", meta = (AllowPrivateAccess = "true"))
     TArray<FFeedbackData> AllFeedback;
 
-    /** 統?X??? */
+    /** ?X??? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback System", meta = (AllowPrivateAccess = "true"))
     FFeedbackStatistics Statistics;
 
-    /** 系統??否已??始?? */
+    /** t??_w??l?? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback System", meta = (AllowPrivateAccess = "true"))
     bool bInitialized;
 
-    /** ???X??X?件路?? */
+    /** ???X??X??? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback System", meta = (AllowPrivateAccess = "true"))
     FString FeedbackDataFilePath;
 
-    /** ??置設置 */
+    /** ??m]m */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback System", meta = (AllowPrivateAccess = "true"))
     bool bEnableEmailNotifications;
 
@@ -340,74 +340,74 @@ private:
 };
 
 /**
- * ????UI管?X */
+ * ????UI?X */
 UCLASS(BlueprintType, Blueprintable)
 class USERFEEDBACKSYSTEM_API UFeedbackUIManager : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UFeedbackUIManager(};
+    UFeedbackUIManager();
 
-    /** 顯示???X?交??面 */
+    /** ???X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void ShowFeedbackSubmitUI(};
+    void ShowFeedbackSubmitUI();
 
-    /** 顯示???X?表??面 */
+    /** ???X??? */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void ShowFeedbackListUI(};
+    void ShowFeedbackListUI();
 
-    /** 顯示????詳?X?面 */
+    /** ?????X? */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
     void ShowFeedbackDetailsUI(const FString& FeedbackID};
 
-    /** 顯示統?X?面 */
+    /** 亄?X? */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void ShowStatisticsUI(};
+    void ShowStatisticsUI();
 
-    /** ???X??X?面 */
+    /** ???X??X? */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
-    void CloseFeedbackUI(};
+    void CloseFeedbackUI();
 
-    /** 設置????系統 */
+    /** ]m????t */
     UFUNCTION(BlueprintCallable, Category = "Feedback UI")
     void SetFeedbackSystem(UUserFeedbackSystem* InFeedbackSystem};
 
 protected:
-    /** ??建???X?交??面 */
-    void CreateFeedbackSubmitUI(};
+    /** ?????X??? */
+    void CreateFeedbackSubmitUI();
 
-    /** ??建???X?表??面 */
-    void CreateFeedbackListUI(};
+    /** ?????X??? */
+    void CreateFeedbackListUI();
 
-    /** ??建????詳?X?面 */
-    void CreateFeedbackDetailsUI(};
+    /** ???????X? */
+    void CreateFeedbackDetailsUI();
 
-    /** ??建統?X?面 */
-    void CreateStatisticsUI(};
+    /** ??堬?X? */
+    void CreateStatisticsUI();
 
 private:
-    /** ????系統引用 */
+    /** ????t峇犍 */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UUserFeedbackSystem> FeedbackSystem;
 
-    /** ????顯示???X*/
+    /** ???????X*/
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     class UUserWidget* CurrentUI;
 
-    /** ???X?交??面 */
+    /** ???X??? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     TSubclassOf<class UUserWidget> FeedbackSubmitUIClass;
 
-    /** ???X?表??面 */
+    /** ???X??? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     TSubclassOf<class UUserWidget> FeedbackListUIClass;
 
-    /** ????詳?X?面 */
+    /** ?????X? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     TSubclassOf<class UUserWidget> FeedbackDetailsUIClass;
 
-    /** 統?X?面 */
+    /** ?X? */
     UPROPERTY(BlueprintReadOnly, Category = "Feedback UI", meta = (AllowPrivateAccess = "true"))
     TSubclassOf<class UUserWidget> StatisticsUIClass;
 };

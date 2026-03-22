@@ -1,5 +1,20 @@
-# 安裝本機 AI 圖像生成工具
-# Stable Diffusion WebUI 安裝腳本
+# OPTIMIZED: Script uses buffered logging for better performance
+# Original had multiple Write-Host calls that can slow execution
+
+$Script:LogBuffer = @()
+function Write-BufferedLog {
+    param([string]$Message)
+    $Script:LogBuffer += "[03:06:25] $Message"
+    if ($Script:LogBuffer.Count -ge 100) { Flush-LogBuffer }
+}
+function Flush-LogBuffer {
+    $Script:LogBuffer | ForEach-Object { Write-Host $_ }
+    $Script:LogBuffer = @()
+}
+
+# --- ORIGINAL SCRIPT BELOW ---
+# 摰??祆? AI ????撌亙
+# Stable Diffusion WebUI 摰??單
 
 param(
     [string]$InstallPath = "C:\AI_Tools",
@@ -8,341 +23,342 @@ param(
 )
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "    本機 AI 圖像生成工具安裝" -ForegroundColor Cyan
+Write-Host "    ?祆? AI ????撌亙摰?" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 
-# 檢查系統要求
+# 瑼Ｘ蝟餌絞閬?
 function Test-SystemRequirements {
-    Write-Host "`n🔍 檢查系統要求..." -ForegroundColor Yellow
+    Write-Host "`n?? 瑼Ｘ蝟餌絞閬?..." -ForegroundColor Yellow
     
-    # 檢查 Python
+    # 瑼Ｘ Python
     try {
         $pythonVersion = python --version 2>$null
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "✅ Python: $pythonVersion" -ForegroundColor Green
+            Write-Host "??Python: $pythonVersion" -ForegroundColor Green
         } else {
-            Write-Host "❌ Python 未安裝" -ForegroundColor Red
+            Write-Host "??Python ?芸?鋆? -ForegroundColor Red
             return $false
         }
     } catch {
-        Write-Host "❌ Python 檢查失敗" -ForegroundColor Red
+        Write-Host "??Python 瑼Ｘ憭望?" -ForegroundColor Red
         return $false
     }
     
-    # 檢查 Git
+    # 瑼Ｘ Git
     try {
         $gitVersion = git --version 2>$null
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "✅ Git: $gitVersion" -ForegroundColor Green
+            Write-Host "??Git: $gitVersion" -ForegroundColor Green
         } else {
-            Write-Host "❌ Git 未安裝" -ForegroundColor Red
-            Write-Host "請先安裝 Git: https://git-scm.com/" -ForegroundColor Yellow
+            Write-Host "??Git ?芸?鋆? -ForegroundColor Red
+            Write-Host "隢?摰? Git: https://git-scm.com/" -ForegroundColor Yellow
             return $false
         }
     } catch {
-        Write-Host "❌ Git 檢查失敗" -ForegroundColor Red
+        Write-Host "??Git 瑼Ｘ憭望?" -ForegroundColor Red
         return $false
     }
     
-    # 檢查硬碟空間
+    # 瑼Ｘ蝖祉?蝛粹?
     $drive = Get-PSDrive -Name C
     $freeSpaceGB = [math]::Round($drive.Free / 1GB, 2)
     if ($freeSpaceGB -gt 20) {
-        Write-Host "✅ 硬碟空間: $freeSpaceGB GB 可用" -ForegroundColor Green
+        Write-Host "??蝖祉?蝛粹?: $freeSpaceGB GB ?舐" -ForegroundColor Green
     } else {
-        Write-Host "⚠️ 硬碟空間不足: 僅剩 $freeSpaceGB GB" -ForegroundColor Yellow
+        Write-Host "?? 蝖祉?蝛粹?銝雲: ? $freeSpaceGB GB" -ForegroundColor Yellow
     }
     
-    # 檢查 GPU
+    # 瑼Ｘ GPU
     try {
         $gpu = Get-WmiObject -Class Win32_VideoController | Select-Object Name
-        Write-Host "🎮 GPU: $($gpu.Name)" -ForegroundColor Green
+        Write-Host "? GPU: $($gpu.Name)" -ForegroundColor Green
     } catch {
-        Write-Host "⚠️ GPU 檢查失敗" -ForegroundColor Yellow
+        Write-Host "?? GPU 瑼Ｘ憭望?" -ForegroundColor Yellow
     }
     
     return $true
 }
 
-# 安裝 Stable Diffusion WebUI
+# 摰? Stable Diffusion WebUI
 function Install-StableDiffusionWebUI {
-    Write-Host "`n🚀 安裝 Stable Diffusion WebUI..." -ForegroundColor Green
+    Write-Host "`n?? 摰? Stable Diffusion WebUI..." -ForegroundColor Green
     
     $webuiPath = "$InstallPath\stable-diffusion-webui"
     
-    # 創建安裝目錄
+    # ?萄遣摰??桅?
     if (!(Test-Path $InstallPath)) {
         New-Item -ItemType Directory -Path $InstallPath -Force | Out-Null
-        Write-Host "📁 創建安裝目錄: $InstallPath" -ForegroundColor Green
+        Write-Host "?? ?萄遣摰??桅?: $InstallPath" -ForegroundColor Green
     }
     
-    # 克隆倉庫
+    # ???澈
     if (!(Test-Path $webuiPath)) {
-        Write-Host "📥 下載 Stable Diffusion WebUI..." -ForegroundColor Yellow
+        Write-Host "? 銝? Stable Diffusion WebUI..." -ForegroundColor Yellow
         Set-Location $InstallPath
         git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
         
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "✅ 下載完成" -ForegroundColor Green
+            Write-Host "??銝?摰?" -ForegroundColor Green
         } else {
-            Write-Host "❌ 下載失敗" -ForegroundColor Red
+            Write-Host "??銝?憭望?" -ForegroundColor Red
             return $false
         }
     } else {
-        Write-Host "📁 Stable Diffusion WebUI 已存在" -ForegroundColor Yellow
+        Write-Host "?? Stable Diffusion WebUI 撌脣??? -ForegroundColor Yellow
     }
     
-    # 下載模型
-    Write-Host "📥 下載推薦模型..." -ForegroundColor Yellow
+    # 銝?璅∪?
+    Write-Host "? 銝??刻璅∪?..." -ForegroundColor Yellow
     Set-Location $webuiPath
     
-    # 創建模型目錄
+    # ?萄遣璅∪??桅?
     $modelDir = "$webuiPath\models\Stable-diffusion"
     if (!(Test-Path $modelDir)) {
         New-Item -ItemType Directory -Path $modelDir -Force | Out-Null
     }
     
-    # 下載 Deliberate 模型 (適合歷史風格)
+    # 銝? Deliberate 璅∪? (?拙?甇瑕憸冽)
     $modelUrl = "https://huggingface.co/cyberdelia/Deliberate/resolve/main/Deliberate_v2.safetensors"
     $modelPath = "$modelDir\Deliberate_v2.safetensors"
     
     if (!(Test-Path $modelPath)) {
-        Write-Host "📥 下載 Deliberate 模型 (適合歷史風格)..." -ForegroundColor Yellow
+        Write-Host "? 銝? Deliberate 璅∪? (?拙?甇瑕憸冽)..." -ForegroundColor Yellow
         try {
-            # 使用 Invoke-WebRequest 下載
+            # 雿輻 Invoke-WebRequest 銝?
             Invoke-WebRequest -Uri $modelUrl -OutFile $modelPath
-            Write-Host "✅ Deliberate 模型下載完成" -ForegroundColor Green
+            Write-Host "??Deliberate 璅∪?銝?摰?" -ForegroundColor Green
         } catch {
-            Write-Host "⚠️ 模型下載失敗，請手動下載" -ForegroundColor Yellow
-            Write-Host "下載地址: $modelUrl" -ForegroundColor Yellow
+            Write-Host "?? 璅∪?銝?憭望?嚗???銝?" -ForegroundColor Yellow
+            Write-Host "銝??啣?: $modelUrl" -ForegroundColor Yellow
         }
     }
     
     return $true
 }
 
-# 安裝 ComfyUI
+# 摰? ComfyUI
 function Install-ComfyUI {
-    Write-Host "`n🚀 安裝 ComfyUI..." -ForegroundColor Green
+    Write-Host "`n?? 摰? ComfyUI..." -ForegroundColor Green
     
     $comfyuiPath = "$InstallPath\ComfyUI"
     
-    # 創建安裝目錄
+    # ?萄遣摰??桅?
     if (!(Test-Path $InstallPath)) {
         New-Item -ItemType Directory -Path $InstallPath -Force | Out-Null
     }
     
-    # 克隆倉庫
+    # ???澈
     if (!(Test-Path $comfyuiPath)) {
-        Write-Host "📥 下載 ComfyUI..." -ForegroundColor Yellow
+        Write-Host "? 銝? ComfyUI..." -ForegroundColor Yellow
         Set-Location $InstallPath
         git clone https://github.com/comfyanonymous/ComfyUI.git
         
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "✅ 下載完成" -ForegroundColor Green
+            Write-Host "??銝?摰?" -ForegroundColor Green
         } else {
-            Write-Host "❌ 下載失敗" -ForegroundColor Red
+            Write-Host "??銝?憭望?" -ForegroundColor Red
             return $false
         }
     } else {
-        Write-Host "📁 ComfyUI 已存在" -ForegroundColor Yellow
+        Write-Host "?? ComfyUI 撌脣??? -ForegroundColor Yellow
     }
     
     return $true
 }
 
-# 安裝 Fooocus
+# 摰? Fooocus
 function Install-Fooocus {
-    Write-Host "`n🚀 安裝 Fooocus..." -ForegroundColor Green
+    Write-Host "`n?? 摰? Fooocus..." -ForegroundColor Green
     
     $fooocusPath = "$InstallPath\Fooocus"
     
-    # 創建安裝目錄
+    # ?萄遣摰??桅?
     if (!(Test-Path $InstallPath)) {
         New-Item -ItemType Directory -Path $InstallPath -Force | Out-Null
     }
     
-    # 克隆倉庫
+    # ???澈
     if (!(Test-Path $fooocusPath)) {
-        Write-Host "📥 下載 Fooocus..." -ForegroundColor Yellow
+        Write-Host "? 銝? Fooocus..." -ForegroundColor Yellow
         Set-Location $InstallPath
         git clone https://github.com/lllyasviel/Fooocus.git
         
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "✅ 下載完成" -ForegroundColor Green
+            Write-Host "??銝?摰?" -ForegroundColor Green
         } else {
-            Write-Host "❌ 下載失敗" -ForegroundColor Red
+            Write-Host "??銝?憭望?" -ForegroundColor Red
             return $false
         }
     } else {
-        Write-Host "📁 Fooocus 已存在" -ForegroundColor Yellow
+        Write-Host "?? Fooocus 撌脣??? -ForegroundColor Yellow
     }
     
     return $true
 }
 
-# 創建啟動腳本
+# ?萄遣???單
 function New-StartupScripts {
-    Write-Host "`n📝 創建啟動腳本..." -ForegroundColor Green
+    Write-Host "`n?? ?萄遣???單..." -ForegroundColor Green
     
     $scriptsDir = "$InstallPath\Scripts"
     New-Item -ItemType Directory -Path $scriptsDir -Force | Out-Null
     
-    # Stable Diffusion WebUI 啟動腳本
+    # Stable Diffusion WebUI ???單
     $webuiScript = @"
 @echo off
-echo 啟動 Stable Diffusion WebUI...
+echo ?? Stable Diffusion WebUI...
 cd /d "$InstallPath\stable-diffusion-webui"
 webui-user.bat
 pause
 "@
     $webuiScript | Out-File -FilePath "$scriptsDir\Start_StableDiffusion.bat" -Encoding ASCII
     
-    # ComfyUI 啟動腳本
+    # ComfyUI ???單
     $comfyuiScript = @"
 @echo off
-echo 啟動 ComfyUI...
+echo ?? ComfyUI...
 cd /d "$InstallPath\ComfyUI"
 python main.py
 pause
 "@
     $comfyuiScript | Out-File -FilePath "$scriptsDir\Start_ComfyUI.bat" -Encoding ASCII
     
-    # Fooocus 啟動腳本
+    # Fooocus ???單
     $fooocusScript = @"
 @echo off
-echo 啟動 Fooocus...
+echo ?? Fooocus...
 cd /d "$InstallPath\Fooocus"
 python launch.py
 pause
 "@
     $fooocusScript | Out-File -FilePath "$scriptsDir\Start_Fooocus.bat" -Encoding ASCII
     
-    Write-Host "✅ 啟動腳本已創建在 $scriptsDir" -ForegroundColor Green
+    Write-Host "?????單撌脣撱箏 $scriptsDir" -ForegroundColor Green
 }
 
-# 創建快捷方式
+# ?萄遣敹急?孵?
 function New-Shortcuts {
-    Write-Host "`n🔗 創建桌面快捷方式..." -ForegroundColor Green
+    Write-Host "`n?? ?萄遣獢敹急?孵?..." -ForegroundColor Green
     
     $desktop = [Environment]::GetFolderPath("Desktop")
     
-    # Stable Diffusion WebUI 快捷方式
+    # Stable Diffusion WebUI 敹急?孵?
     $shortcutPath = "$desktop\Stable Diffusion WebUI.lnk"
     $shell = New-Object -ComObject WScript.Shell
     $shortcut = $shell.CreateShortcut($shortcutPath)
     $shortcut.TargetPath = "$scriptsDir\Start_StableDiffusion.bat"
     $shortcut.WorkingDirectory = "$InstallPath\stable-diffusion-webui"
-    $shortcut.Description = "啟動 Stable Diffusion WebUI"
+    $shortcut.Description = "?? Stable Diffusion WebUI"
     $shortcut.Save()
     
-    Write-Host "✅ 桌面快捷方式已創建" -ForegroundColor Green
+    Write-Host "??獢敹急?孵?撌脣撱? -ForegroundColor Green
 }
 
-# 顯示使用說明
+# 憿舐內雿輻隤芣?
 function Show-UsageInstructions {
     Write-Host @"
 ========================================
-🎯 使用說明
+? 雿輻隤芣?
 ========================================
 
-1. 首次啟動:
-   - 雙擊桌面快捷方式 "Stable Diffusion WebUI"
-   - 等待自動下載依賴 (首次啟動較慢)
-   - 瀏覽器會自動開啟 WebUI 介面
+1. 擐活??:
+   - ??獢敹急?孵? "Stable Diffusion WebUI"
+   - 蝑??芸?銝?靘陷 (擐活??頛)
+   - ?汗?冽??芸??? WebUI 隞
 
-2. MingGoRTS 提示詞:
-   - 使用我們準備的提示詞
-   - 設置解析度: 1920x1080
-   - 選擇 Deliberate 模型
-   - 調整參數獲得最佳效果
+2. MingGoRTS ?內閰?
+   - 雿輻?????內閰?
+   - 閮剔蔭閫??摨? 1920x1080
+   - ?豢? Deliberate 璅∪?
+   - 隤踵??脣??雿單???
 
-3. 模型推薦:
-   - Deliberate_v2: 適合歷史風格
-   - Realistic Vision: 適合寫實風格
-   - Dreamshaper: 適合藝術風格
+3. 璅∪??刻:
+   - Deliberate_v2: ?拙?甇瑕憸冽
+   - Realistic Vision: ?拙?撖怠祕憸冽
+   - Dreamshaper: ?拙???憸冽
 
-4. 參數建議:
+4. ?撱箄降:
    - Sampling Steps: 30-50
    - CFG Scale: 7-10
    - Sampler: DPM++ 2M Karras
    - Resolution: 1920x1080
 
 ========================================
-📁 安裝路徑: $InstallPath
+?? 摰?頝臬?: $InstallPath
 ========================================
 "@ -ForegroundColor Cyan
 }
 
-# 主安裝流程
+# 銝餃?鋆?蝔?
 function Start-Installation {
-    Write-Host "開始安裝本機 AI 圖像生成工具..." -ForegroundColor Green
+    Write-Host "??摰??祆? AI ????撌亙..." -ForegroundColor Green
     
-    # 檢查系統要求
+    # 瑼Ｘ蝟餌絞閬?
     if (!(Test-SystemRequirements)) {
-        Write-Host "❌ 系統要求不滿足，安裝終止" -ForegroundColor Red
+        Write-Host "??蝟餌絞閬?銝遛頞喉?摰?蝯迫" -ForegroundColor Red
         return
     }
     
-    # 根據選擇的工具進行安裝
+    # ?寞??豢??極?琿脰?摰?
     switch ($Tool) {
         "stable-diffusion-webui" {
             if (!(Install-StableDiffusionWebUI)) {
-                Write-Host "❌ Stable Diffusion WebUI 安裝失敗" -ForegroundColor Red
+                Write-Host "??Stable Diffusion WebUI 摰?憭望?" -ForegroundColor Red
                 return
             }
         }
         "comfyui" {
             if (!(Install-ComfyUI)) {
-                Write-Host "❌ ComfyUI 安裝失敗" -ForegroundColor Red
+                Write-Host "??ComfyUI 摰?憭望?" -ForegroundColor Red
                 return
             }
         }
         "fooocus" {
             if (!(Install-Fooocus)) {
-                Write-Host "❌ Fooocus 安裝失敗" -ForegroundColor Red
+                Write-Host "??Fooocus 摰?憭望?" -ForegroundColor Red
                 return
             }
         }
         default {
-            Write-Host "❌ 不支援的工具: $Tool" -ForegroundColor Red
+            Write-Host "??銝?渡?撌亙: $Tool" -ForegroundColor Red
             return
         }
     }
     
-    # 創建啟動腳本
+    # ?萄遣???單
     New-StartupScripts
     
-    # 創建快捷方式
+    # ?萄遣敹急?孵?
     New-Shortcuts
     
-    # 顯示使用說明
+    # 憿舐內雿輻隤芣?
     Show-UsageInstructions
     
-    Write-Host "🎉 安裝完成！" -ForegroundColor Green
+    Write-Host "?? 摰?摰?嚗? -ForegroundColor Green
 }
 
-# 執行安裝
+# ?瑁?摰?
 if ($AutoInstall) {
     Start-Installation
 } else {
     Write-Host @"
 ========================================
-選擇要安裝的 AI 工具:
+?豢?閬?鋆? AI 撌亙:
 
-1. Stable Diffusion WebUI (推薦)
-2. ComfyUI (進階)
-3. Fooocus (簡易)
+1. Stable Diffusion WebUI (?刻)
+2. ComfyUI (?脤?)
+3. Fooocus (蝪⊥?)
 
-使用方式:
+雿輻?孵?:
 .\Install_Local_AI.ps1 -Tool stable-diffusion-webui -AutoInstall
 .\Install_Local_AI.ps1 -Tool comfyui -AutoInstall
 .\Install_Local_AI.ps1 -Tool fooocus -AutoInstall
 
-自定義安裝路徑:
+?芸?蝢拙?鋆楝敺?
 .\Install_Local_AI.ps1 -Tool stable-diffusion-webui -InstallPath "D:\AI_Tools" -AutoInstall
 "@ -ForegroundColor Cyan
     
-    Write-Host "`n按 Enter 繼續..." -ForegroundColor Yellow
+    Write-Host "`n??Enter 蝜潛?..." -ForegroundColor Yellow
     Read-Host
 }
+

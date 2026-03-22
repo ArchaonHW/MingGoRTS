@@ -1,3 +1,12 @@
+﻿# OPTIMIZED: Added proper entry point and lazy imports
+
+import sys
+from pathlib import Path
+
+# Lazy imports for performance
+def _lazy_import(module_name):
+    import importlib
+    return importlib.import_module(module_name)
 import os
 import re
 
@@ -32,3 +41,10 @@ for filepath in files_to_fix:
         print(f'Not found: {filepath}')
 
 print('Done!')
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)

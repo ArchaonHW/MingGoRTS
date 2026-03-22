@@ -3,18 +3,10 @@
 
 #include "RepublicEraFactions/MingRTSFactionManager.h"
 #include "RepublicEraFactions/MingRTSFactionBase.h"
-#include "RepublicEraFactions/Factions/BeiyangGovernment.h"
-#include "RepublicEraFactions/Factions/NationalistGovernment.h"
-#include "RepublicEraFactions/Factions/CommunistParty.h"
-#include "RepublicEraFactions/Factions/FengtianClique.h"
-#include "RepublicEraFactions/Factions/ZhiliClique.h"
-#include "RepublicEraFactions/Factions/AnhuiClique.h"
-#include "RepublicEraFactions/Factions/ShanxiClique.h"
-#include "RepublicEraFactions/Factions/GuangxiClique.h"
-#include "RepublicEraFactions/Factions/YunnanClique.h"
-#include "RepublicEraFactions/Factions/SichuanClique.h"
-#include "RepublicEraFactions/Factions/MaFamilyForces.h"
-#include "RepublicEraFactions/Factions/XinjiangForces.h"
+#include "RepublicEraFactions/MingRTSFactionData.h"
+#include "RepublicEraFactions/MingRTSBeiyangGovernment.h"
+#include "RepublicEraFactions/MingRTSNationalistGovernment.h"
+#include "RepublicEraFactions/MingRTSCommunistParty.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogMingRTSFactionManager, Log, All);
 

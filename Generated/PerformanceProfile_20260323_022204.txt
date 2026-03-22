@@ -1,0 +1,9 @@
+﻿=== Performance Profiling Report ===
+Session: 20260323_022204
+Start Time: 03/23/2026 02:22:05
+
+Metrics:  CPU Usage: 54%
+  Memory Usage: 2621 MB
+  Frame Time: 13 ms
+  Draw Calls: 833
+

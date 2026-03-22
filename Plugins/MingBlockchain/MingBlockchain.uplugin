@@ -1,0 +1,29 @@
+{
+    "FileVersion":  3,
+    "Version":  1,
+    "VersionName":  "1.0",
+    "FriendlyName":  "Ming Blockchain",
+    "Description":  "Blockchain integration for MingGoRTS with play-to-earn mining functionality",
+    "Category":  "Gameplay",
+    "CreatedBy":  "MingGoRTS Team",
+    "CreatedByURL":  "https://www.minggorts.com",
+    "DocsURL":  "",
+    "MarketplaceURL":  "",
+    "SupportURL":  "",
+    "CanContainContent":  true,
+    "IsBetaVersion":  false,
+    "IsExperimentalVersion":  false,
+    "Installed":  true,
+    "Modules":  [
+                    {
+                        "Name":  "MingBlockchain",
+                        "Type":  "Runtime",
+                        "LoadingPhase":  "Default",
+                        "SupportedTargetPlatforms":  [
+                                                         "Win64",
+                                                         "Android",
+                                                         "IOS"
+                                                     ]
+                    }
+                ]
+}

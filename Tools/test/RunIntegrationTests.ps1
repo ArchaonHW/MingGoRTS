@@ -4,7 +4,7 @@
 
 param(
     [string]$ProjectPath = "C:\\HW\\MingGoRTS",
-    [string]$UEEditorPath = "C:\\Program Files\\Epic Games\\UE_5.4\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    [string]$UEEditorPath = "C:\\Program Files\\Epic Games\\UE_5.7\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
     [string]$TestMap = "/Game/Maps/TestMaps/IntegrationTestMap",
     [switch]$RunAllPhases,
     [switch]$RunBasicIntegration,
@@ -44,9 +44,9 @@ function Start-IntegrationTest {
     $args = @(
         $ProjectPath + "\\MingGoRTS.uproject"
         $TestMap
-        "-ExecCmds=\"Automation RunTests MingGoRTS.Integration.$Phase\""
+        "-ExecCmds=Automation RunTests MingGoRTS.Integration.$Phase"
         "-log"
-        "-TestExit=\"Automation Test Queue Empty\""
+        "-TestExit=Automation Test Queue Empty"
         "- unattended"
         "-nopause"
         "-nosplash"
@@ -114,7 +114,7 @@ Failed: $($Results | Where-Object { -not $_.Passed } | Measure-Object | Select-O
 "@
     
     foreach ($result in $Results) {
-        $status = if ($result.Passed) { "✅ PASSED" } else { "❌ FAILED" }
+        $status = if ($result.Passed) { "??PASSED" } else { "??FAILED" }
         $report += @"
 ### $($result.Phase) - $status
 - Execution Time: $($result.ExecutionTime) seconds
@@ -214,3 +214,4 @@ if ($totalFailed -gt 0) {
 } else {
     exit 0
 }
+

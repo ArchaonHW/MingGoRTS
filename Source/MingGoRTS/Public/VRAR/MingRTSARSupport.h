@@ -1,4 +1,4 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
+﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Epic 9.1: VR/AR Support System - AR Support Component
 
 #pragma once
@@ -175,10 +175,10 @@ class MINGGORTS_API UMingRTSARSupport : public UGameInstanceSubsystem
 public:
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "AR Support")
-    void InitializeARSupport(};
+    void InitializeARSupport();
 
     UFUNCTION(BlueprintCallable, Category = "AR Support")
-    void ShutdownARSupport(};
+    void ShutdownARSupport();
 
     // Device Management
     UFUNCTION(BlueprintCallable, Category = "AR Support")
@@ -195,13 +195,13 @@ public:
     bool StartARSession(const FARSessionConfig& Config};
 
     UFUNCTION(BlueprintCallable, Category = "AR Support")
-    void StopARSession(};
+    void StopARSession();
 
     UFUNCTION(BlueprintCallable, Category = "AR Support")
-    void PauseARSession(};
+    void PauseARSession();
 
     UFUNCTION(BlueprintCallable, Category = "AR Support")
-    void ResumeARSession(};
+    void ResumeARSession();
 
     UFUNCTION(BlueprintCallable, Category = "AR Support")
     EARSessionStatus GetARSessionStatus() const { return SessionStatus; }
@@ -251,7 +251,7 @@ public:
     void SpawnGameWorldOnPlane(const FARTrackedPlane& Plane, const FVector& Offset};
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Game")
-    void AlignGameWorldToRealWorld(};
+    void AlignGameWorldToRealWorld();
 
     UFUNCTION(BlueprintCallable, Category = "AR Support|Game")
     void SetGameWorldScale(float Scale};
@@ -312,16 +312,16 @@ private:
     UPROPERTY()
     FTransform RealWorldToGameWorldTransform;
 
-    void UpdateDetectedPlanes(};
-    void UpdateContentOverlays(};
-    void UpdateLightingEstimation(};
+    void UpdateDetectedPlanes();
+    void UpdateContentOverlays();
+    void UpdateLightingEstimation();
     void UpdateSessionStatus(EARSessionStatus NewStatus};
     EARDeviceType DetectARDeviceType() const;
 };
 
 // Event delegate declarations
-declare dynamic multicast delegate FOnARSessionStarted(};
-declare dynamic multicast delegate FOnARSessionStopped(};
+declare dynamic multicast delegate FOnARSessionStarted();
+declare dynamic multicast delegate FOnARSessionStopped();
 declare dynamic multicast delegate FOnARPlaneDetected(const FARTrackedPlane& Plane};
 declare dynamic multicast delegate FOnARTrackingQualityChanged(EARTrackingQuality NewQuality};
 

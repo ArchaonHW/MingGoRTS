@@ -16,35 +16,35 @@ class MINGGORTS_API UMingRTSIntegrationTestExecutor : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSIntegrationTestExecutor(};
+    UMingRTSIntegrationTestExecutor();
 
     /** ?��?完整?�系統�X�測�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    void ExecuteFullIntegrationTest(};
+    void ExecuteFullIntegrationTest();
 
     /** ?��X��X��?測試驗�? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecuteBasicIntegrationValidation(};
+    bool ExecuteBasicIntegrationValidation();
 
     /** ?��X��?流測試�?�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecuteDataFlowValidation(};
+    bool ExecuteDataFlowValidation();
 
     /** ?��X�能?��?測試驗�? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecutePerformanceIntegrationValidation(};
+    bool ExecutePerformanceIntegrationValidation();
 
     /** ?��X�戶體�?測試驗�? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecuteUserExperienceValidation(};
+    bool ExecuteUserExperienceValidation();
 
     /** ?��X�容?�測試�?�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecuteCompatibilityValidation(};
+    bool ExecuteCompatibilityValidation();
 
     /** ?��X�終�?證測�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    bool ExecuteFinalValidation(};
+    bool ExecuteFinalValidation();
 
     /** ?��?測試?��?結�? */
     UFUNCTION(BlueprintPure, Category = "Integration Test Executor")
@@ -56,7 +56,7 @@ public:
 
     /** ?�置測試?��X�X*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
-    void ResetTestExecutionState(};
+    void ResetTestExecutionState();
 
 public:
     /** 測試?��X��?事件 */
@@ -82,43 +82,43 @@ protected:
     void RecordTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
 
     /** 驗�?系統X�� */
-    bool ValidateSystemConnections(};
+    bool ValidateSystemConnections();
 
     /** 驗�X��?�?*/
-    bool ValidateDataFlow(};
+    bool ValidateDataFlow();
 
     /** 驗�X�能?��? */
-    bool ValidatePerformanceMetrics(};
+    bool ValidatePerformanceMetrics();
 
     /** 驗�X�戶體�? */
-    bool ValidateUserExperience(};
+    bool ValidateUserExperience();
 
     /** 驗�X�容X*/
-    bool ValidateCompatibility(};
+    bool ValidateCompatibility();
 
     /** 驗�?系統完整X*/
-    bool ValidateSystemIntegrity(};
+    bool ValidateSystemIntegrity();
 
     /** 檢查RTS?�鬥系統 */
-    bool CheckRTSCombatSystem(};
+    bool CheckRTSCombatSystem();
 
     /** 檢查經�?系統 */
-    bool CheckEconomicSystem(};
+    bool CheckEconomicSystem();
 
     /** 檢查UI?�頻系統 */
-    bool CheckUIAudioSystem(};
+    bool CheckUIAudioSystem();
 
     /** 檢查?�地?�系�?*/
-    bool CheckLocalizationSystem(};
+    bool CheckLocalizationSystem();
 
     /** 檢查?�能系統 */
-    bool CheckPerformanceSystem(};
+    bool CheckPerformanceSystem();
 
     /** 檢查?��?系統 */
-    bool CheckRelationshipSystem(};
+    bool CheckRelationshipSystem();
 
     /** 檢查AI?�容?��?系統 */
-    bool CheckAIContentSystem(};
+    bool CheckAIContentSystem();
 
 private:
     /** 測試結�X�表 */

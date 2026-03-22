@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,7 +6,7 @@
 #include "MingRTSQuickStart.generated.h"
 
 /**
- * MingGoRTS ?ï¿½ï¿½?ç·¨è­¯ç³»çµ±å¿«é€Ÿï¿½X * ç«‹å³?ï¿½ï¿½?ä½¿ç”¨?ï¿½ï¿½?ç·¨è­¯ç³»çµ±?ï¿½ç¤ºï¿½? */
+ * MingGoRTS ????½sÄ¶¨t²Î§Ö³t?X * ¥ß§Y????¨Ï¥Î????½sÄ¶¨t²Î??¥Ü?? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSQuickStart : public UObject
 {
@@ -15,38 +15,37 @@ class MINGGORTS_API UMingRTSQuickStart : public UObject
 public:
     UMingRTSQuickStart(};
 
-    // ç«‹å³?ï¿½ï¿½?ä½¿ç”¨ - ä¸€?ï¿½ï¿½Xï¿½å„ª?ï¿½ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Quick Start")
+    // ¥ß§Y????¨Ï¥Î - ¤@???X?Àu??¨t??    UFUNCTION(BlueprintCallable, Category = "Quick Start")
     void StartOptimizationNow(};
 
-    // ?ï¿½ï¿½?ç³»çµ±?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Quick Start")
+    // ????¨t²Î??X    UFUNCTION(BlueprintCallable, Category = "Quick Start")
     FString GetSystemStatus(};
 
-    // å¿«é€Ÿæ€§èƒ½æª¢æŸ¥
+    // §Ö³t©Ê¯àÀË¬d
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
     void QuickPerformanceCheck(};
 
-    // ç«‹å³?ï¿½ï¿½Xï¿½ï¿½Xï¿½ç›®
+    // ¥ß§Y???X??X?¥Ø
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
     void OptimizeCurrentProject(};
 
-    // ?ï¿½ï¿½Xï¿½ï¿½?çµï¿½?
+    // ???X???µ²??
     UFUNCTION(BlueprintCallable, Category = "Quick Start")
     FString GetOptimizationResults(};
 
 protected:
-    // ?ï¿½ï¿½?ç³»çµ±ç®¡ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
+    // ????¨t²ÎºŞ?X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
-    // ç³»çµ±?ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
+    // ¨t²Î??X    UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
     bool bSystemStarted;
 
     UPROPERTY(BlueprintReadOnly, Category = "Quick Start")
     bool bOptimizationRunning;
 
 private:
-    // ?ï¿½ï¿½Xï¿½å¿«?ï¿½ï¿½X    void InitializeQuickStart(};
+    // ???X?§Ö???X    void InitializeQuickStart(};
     
-    // é¡¯ç¤ºçµï¿½?
+    // Åã¥Üµ²??
     void DisplayResults(const FString& Results};
 };
-

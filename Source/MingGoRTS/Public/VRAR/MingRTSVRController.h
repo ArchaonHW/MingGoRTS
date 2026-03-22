@@ -218,11 +218,11 @@ private:
     UPROPERTY()
     float HapticTimer = 0.0f;
 
-    void UpdateControllerState(float DeltaTime};
-    void ProcessInput(};
-    void UpdatePointerVisuals(};
-    void HandleRTSInput(};
-    void PerformLineTraceForSelection(FHitResult& OutHit};
+    void UpdateControllerState(float DeltaTime);
+    void ProcessInput();
+    void UpdatePointerVisuals();
+    void HandleRTSInput();
+    void PerformLineTraceForSelection(FHitResult& OutHit);
     
     // Cached motion controller component reference
     UPROPERTY()
@@ -230,11 +230,11 @@ private:
 };
 
 // Event delegate declarations
-declare dynamic multicast delegate FOnControllerTrackingStateChanged(bool bIsTracking};
-declare dynamic multicast delegate FOnControllerButtonPressed(EVRControllerType Controller, FName ButtonName};
-declare dynamic multicast delegate FOnControllerButtonReleased(EVRControllerType Controller, FName ButtonName};
-declare dynamic multicast delegate FOnTriggerPressed(EVRControllerType Controller};
-declare dynamic multicast delegate FOnTriggerReleased(EVRControllerType Controller};
-declare dynamic multicast delegate FOnUnitSelected(AActor* SelectedUnit};
-declare dynamic multicast delegate FOnUnitsMoved(const FVector& MoveLocation, const TArray<AActor*>& Units};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnControllerTrackingStateChanged, bool, bIsTracking);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerButtonPressed, EVRControllerType, Controller, FName, ButtonName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerButtonReleased, EVRControllerType, Controller, FName, ButtonName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerPressed, EVRControllerType, Controller);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerReleased, EVRControllerType, Controller);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitSelected, AActor*, SelectedUnit);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitsMoved, const FVector&, MoveLocation, const TArray<AActor*>&, Units);
 

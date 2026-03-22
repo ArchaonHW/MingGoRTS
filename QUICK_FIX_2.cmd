@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 echo Quick fix for common syntax errors
 
 REM Fix some critical files manually

@@ -1,18 +1,16 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Optimization/MingRTSOptimizationCompiler.h"
-#include "Optimization/MingRTSPerformanceProfiler.h"
-#include "Optimization/MingRTSAlgorithmOptimizer.h"
 #include "MingRTSOptimizationSystemManager.generated.h"
 
 UENUM(BlueprintType)
 enum class EOptimizationMode : uint8
 {
-    Development,    // ?�發模�? - 快速編譯�X��X��?
-    Testing,        // 測試模�? - 平衡?�能?�編譯速度
-    Release,        // ?��?模�? - ?�大優X    Performance     // ?�能模�? - 極致?�能?��?
+    Development, UMETA(DisplayName = "Development Mode"),
+    Testing, UMETA(DisplayName = "Testing Mode"),
+    Release, UMETA(DisplayName = "Release Mode"),
+    Performance, UMETA(DisplayName = "Performance Mode")
 };
 
 USTRUCT(BlueprintType)
@@ -20,43 +18,32 @@ struct FOptimizationConfiguration
 {
     GENERATED_BODY()
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Optimization Configuration")
     EOptimizationMode Mode;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Optimization Configuration")
     bool bEnableParallelCompilation;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Optimization Configuration")
     bool bEnablePerformanceProfiling;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bEnableAlgorithmOptimization;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Optimization Configuration")
+    bool bEnableMemoryOptimization;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 MaxCompilationThreads;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float PerformanceMonitoringInterval;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<EOptimizationTechnique> AlgorithmOptimizationTechniques;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Optimization Configuration")
+    bool bEnableNetworkOptimization;
 
     FOptimizationConfiguration()
-    {
-        Mode = EOptimizationMode::Development;
-        bEnableParallelCompilation = true;
-        bEnablePerformanceProfiling = true;
-        bEnableAlgorithmOptimization = true;
-        MaxCompilationThreads = 4;
-        PerformanceMonitoringInterval = 1.0f;
-    }
+        : Mode(EOptimizationMode::Development)
+        , bEnableParallelCompilation(false)
+        , bEnablePerformanceProfiling(false)
+        , bEnableMemoryOptimization(false)
+        , bEnableNetworkOptimization(false)
+    {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnOptimizationCompleted, const FString&, ProjectName, const FOptimizationConfiguration&, Config};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPerformanceWarning, const FString&, Component, const FString&, Warning, float, Severity};
-
 /**
- * ?��?系統管�X- 統�?管�X�?�優?�編譯系�? * ?��?簡�X�API?�自?��?工�?流�?
+ * MingGoRTS Optimization System Manager
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSOptimizationSystemManager : public UObject
@@ -64,111 +51,43 @@ class MINGGORTS_API UMingRTSOptimizationSystemManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationSystemManager(};
+    UMingRTSOptimizationSystemManager();
 
-    // 系統?��X    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void InitializeOptimizationSystem(};
+    UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
+    void InitializeOptimizationManager();
 
-    // 設置?��X�置
-    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void SetOptimizationConfiguration(const FOptimizationConfiguration& Config};
+    UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
+    void SetOptimizationMode(EOptimizationMode Mode);
 
-    // ?��X�個�X    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void OptimizeProject(const FString& ProjectPath};
+    UFUNCTION(BlueprintPure, Category = "Optimization Manager")
+    EOptimizationMode GetCurrentOptimizationMode() const;
 
-    // ?��?編譯?�目
-    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void CompileProject(const FString& ProjectPath};
+    UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
+    void ApplyOptimizationConfiguration(const FOptimizationConfiguration& Config);
 
-    // ?�能?��X�目
-    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void AnalyzeProjectPerformance(const FString& ProjectPath};
+    UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
+    void OptimizeSystemPerformance();
 
-    // 算�X��X�目
-    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void OptimizeProjectAlgorithms(const FString& ProjectPath};
-
-    // ?��X��X��?
-    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    FString GetOptimizationReport(};
-
-    // ?��X�能概覽
-    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    TMap<EProfilingType, EPerformanceLevel> GetPerformanceOverview(};
-
-    // ?��?實�X��
-    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void StartRealTimeMonitoring(};
-
-    // ?�止實�X��
-    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void StopRealTimeMonitoring(};
-
-    // 快速優X    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void QuickOptimize(};
-
-    // 深度?��?
-    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    void DeepOptimize(};
-
-    // ?��?系統?�X    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
-    bool IsSystemReady() const;
-
-    // ?��X��X�置
-    UFUNCTION(BlueprintCallable, Category = "Optimization System Manager")
+    UFUNCTION(BlueprintPure, Category = "Optimization Manager")
     FOptimizationConfiguration GetCurrentConfiguration() const;
 
-    // 事件委�?
-    UPROPERTY(BlueprintAssignable)
-    FOnOptimizationCompleted OnOptimizationCompleted;
-
-    UPROPERTY(BlueprintAssignable)
-    FOnPerformanceWarning OnPerformanceWarning;
+    UFUNCTION(BlueprintCallable, Category = "Optimization Manager")
+    void ResetToDefaults();
 
 protected:
-    // ?��?組件
-    UPROPERTY(BlueprintReadOnly, Category = "Optimization Components")
-    TObjectPtr<UMingRTSOptimizationCompiler> OptimizationCompiler;
+    UPROPERTY()
+    EOptimizationMode CurrentMode;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Optimization Components")
-    TObjectPtr<UMingRTSPerformanceProfiler> PerformanceProfiler;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Optimization Components")
-    TObjectPtr<UMingRTSAlgorithmOptimizer> AlgorithmOptimizer;
-
-    // 系統?�置
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "System Configuration")
+    UPROPERTY()
     FOptimizationConfiguration CurrentConfiguration;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "System Configuration")
-    bool bSystemInitialized;
+    UPROPERTY()
+    bool bIsOptimizing;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "System Configuration")
-    bool bRealTimeMonitoringActive;
-
-private:
-    // ?�部工�?流�?
-    void InitializeComponents(};
-    void SetupEventHandlers(};
-    void ApplyConfigurationToComponents(};
-    
-    // ?�目?��?
-    TArray<FString> AnalyzeProjectStructure(const FString& ProjectPath};
-    TArray<FCompilationTask> CreateCompilationTasks(const TArray<FString>& SourceFiles};
-    TArray<FString> ExtractAlgorithmsFromProject(const FString& ProjectPath};
-    
-    // ?��?工�?流�?
-    void ExecuteCompilationOptimization(const TArray<FCompilationTask>& Tasks};
-    void ExecutePerformanceAnalysis(const FString& ProjectPath};
-    void ExecuteAlgorithmOptimization(const TArray<FString>& Algorithms};
-    
-    // ?��X��?
-    FString GenerateComprehensiveReport(};
-    void UpdateOptimizationStatistics(};
-    
-    // 輔助?�數
-    EOptimizationLevel GetOptimizationLevelFromMode(EOptimizationMode Mode};
-    TArray<EOptimizationTechnique> GetOptimizationTechniquesFromMode(EOptimizationMode Mode};
-    void LogOptimizationProgress(const FString& Message};
+    void InitializeDefaultConfiguration();
+    void ApplyDevelopmentMode();
+    void ApplyTestingMode();
+    void ApplyReleaseMode();
+    void ApplyPerformanceMode();
+    bool ValidateConfiguration(const FOptimizationConfiguration& Config);
 };
-

@@ -157,74 +157,74 @@ class MINGMULTIPLAYER_API UMingNetworkEventSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingNetworkEventSystem();
+    UMingNetworkEventSystem(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void InitializeEventSystem(class UMingNetworkManager* NetworkManager);
+    void InitializeEventSystem(class UMingNetworkManager* NetworkManager};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void ShutdownEventSystem();
+    void ShutdownEventSystem(};
 
     // Event Registration
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    FName RegisterEventHandler(EMingNetworkEventType EventType, UObject* Handler, FName FunctionName);
+    FName RegisterEventHandler(EMingNetworkEventType EventType, UObject* Handler, FName FunctionName};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void UnregisterEventHandler(FName HandlerID);
+    void UnregisterEventHandler(FName HandlerID};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void UnregisterAllHandlers(UObject* Handler);
+    void UnregisterAllHandlers(UObject* Handler};
 
     // Event Broadcasting
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void BroadcastEvent(const FMingNetworkEvent& Event);
+    void BroadcastEvent(const FMingNetworkEvent& Event};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void SendEventToPlayer(int32 PlayerID, const FMingNetworkEvent& Event);
+    void SendEventToPlayer(int32 PlayerID, const FMingNetworkEvent& Event};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void SendEventToHost(const FMingNetworkEvent& Event);
+    void SendEventToHost(const FMingNetworkEvent& Event};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void MulticastEvent(const FMingNetworkEvent& Event);
+    void MulticastEvent(const FMingNetworkEvent& Event};
 
     // Convenience Event Creation
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void FirePlayerConnectedEvent(int32 PlayerID, const FString& PlayerName);
+    void FirePlayerConnectedEvent(int32 PlayerID, const FString& PlayerName};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void FirePlayerDisconnectedEvent(int32 PlayerID, const FString& Reason);
+    void FirePlayerDisconnectedEvent(int32 PlayerID, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void FireRelationshipChangedEvent(int32 PlayerID, FName CharacterID, float OldValue, float NewValue);
+    void FireRelationshipChangedEvent(int32 PlayerID, FName CharacterID, float OldValue, float NewValue};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void FireReputationChangedEvent(int32 PlayerID, FName RegionID, float OldValue, float NewValue);
+    void FireReputationChangedEvent(int32 PlayerID, FName RegionID, float OldValue, float NewValue};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void FireGameStateChangedEvent(const FString& NewState);
+    void FireGameStateChangedEvent(const FString& NewState};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void FireChatMessageEvent(int32 SenderID, const FString& Message, int32 Channel);
+    void FireChatMessageEvent(int32 SenderID, const FString& Message, int32 Channel};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void FireSystemMessageEvent(const FString& Message);
+    void FireSystemMessageEvent(const FString& Message};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void FireUnitEvent(EMingNetworkEventType EventType, int32 UnitID, int32 OwnerPlayerID, const FVector& Location);
+    void FireUnitEvent(EMingNetworkEventType EventType, int32 UnitID, int32 OwnerPlayerID, const FVector& Location};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void FireCombatEvent(EMingNetworkEventType EventType, int32 AttackerID, int32 DefenderID, float Damage);
+    void FireCombatEvent(EMingNetworkEventType EventType, int32 AttackerID, int32 DefenderID, float Damage};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void FireResourceEvent(EMingNetworkEventType EventType, int32 PlayerID, const FString& ResourceType, int32 Amount);
+    void FireResourceEvent(EMingNetworkEventType EventType, int32 PlayerID, const FString& ResourceType, int32 Amount};
 
     // Event Processing
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void ProcessPendingEvents();
+    void ProcessPendingEvents(};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void ClearPendingEvents();
+    void ClearPendingEvents(};
 
     UFUNCTION(BlueprintPure, Category = "Network Events")
     int32 GetPendingEventCount() const;
@@ -241,10 +241,10 @@ public:
 
     // Event History
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void EnableEventHistory(bool bEnabled);
+    void EnableEventHistory(bool bEnabled};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void ClearEventHistory();
+    void ClearEventHistory(};
 
     UFUNCTION(BlueprintPure, Category = "Network Events")
     TArray<FMingNetworkEvent> GetEventHistory(float SinceTimestamp) const;
@@ -254,10 +254,10 @@ public:
 
     // Event Rate Limiting
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    void SetEventRateLimit(EMingNetworkEventType EventType, float MaxEventsPerSecond);
+    void SetEventRateLimit(EMingNetworkEventType EventType, float MaxEventsPerSecond};
 
     UFUNCTION(BlueprintCallable, Category = "Network Events")
-    bool CheckEventRateLimit(EMingNetworkEventType EventType);
+    bool CheckEventRateLimit(EMingNetworkEventType EventType};
 
     // Event Statistics
     UFUNCTION(BlueprintPure, Category = "Network Events")
@@ -310,30 +310,30 @@ protected:
     TArray<float> EventLatencies;
 
     // Internal Functions
-    void ProcessEvent(const FMingNetworkEvent& Event);
-    void ExecuteEventHandler(const FMingNetworkEventHandler& Handler, const FMingNetworkEvent& Event);
-    void AddToHistory(const FMingNetworkEvent& Event);
-    void TrimHistory();
+    void ProcessEvent(const FMingNetworkEvent& Event};
+    void ExecuteEventHandler(const FMingNetworkEventHandler& Handler, const FMingNetworkEvent& Event};
+    void AddToHistory(const FMingNetworkEvent& Event};
+    void TrimHistory(};
 
-    FName GenerateHandlerID();
+    FName GenerateHandlerID(};
     bool ShouldProcessEvent(const FMingNetworkEvent& Event) const;
-    void SendEventOverNetwork(const FMingNetworkEvent& Event);
-    void ReceiveEventFromNetwork(const FMingNetworkEvent& Event);
+    void SendEventOverNetwork(const FMingNetworkEvent& Event};
+    void ReceiveEventFromNetwork(const FMingNetworkEvent& Event};
 
     // Network Event Handlers
     UFUNCTION()
-    void OnPlayerConnected(int32 PlayerID, const FMingPlayerNetworkInfo& PlayerInfo);
+    void OnPlayerConnected(int32 PlayerID, const FMingPlayerNetworkInfo& PlayerInfo};
 
     UFUNCTION()
-    void OnPlayerDisconnected(int32 PlayerID);
+    void OnPlayerDisconnected(int32 PlayerID};
 
     UFUNCTION()
-    void OnNetworkMessageReceived(int32 SenderID, int32 MessageType, const TArray<uint8>& Data);
+    void OnNetworkMessageReceived(int32 SenderID, int32 MessageType, const TArray<uint8>& Data};
 
 public:
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkEventFired, const FMingNetworkEvent&, Event);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNetworkEventProcessed, const FMingNetworkEvent&, Event, bool, bSuccess);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNetworkEventFired, const FMingNetworkEvent&, Event};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNetworkEventProcessed, const FMingNetworkEvent&, Event, bool, bSuccess};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnNetworkEventFired OnEventFired;
@@ -341,3 +341,4 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnNetworkEventProcessed OnEventProcessed;
 };
+

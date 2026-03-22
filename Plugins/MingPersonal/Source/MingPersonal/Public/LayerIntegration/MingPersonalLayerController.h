@@ -173,12 +173,12 @@ struct FMingInvestigationClue
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPersonalModeChanged, EMingPersonalMode, NewMode);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueStarted, const FMingDialogueContext&, Dialogue};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueEnded, const FString&, DialogueID};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueResponseSelected, int32, ResponseIndex, const FString&, ResponseText};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEncounterStarted, const FMingPersonalEncounter&, Encounter};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEncounterResolved, const FString&, EncounterID, bool, bVictory};
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnClueDiscovered, const FMingInvestigationClue&, Clue};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueStarted, const FMingDialogueContext&, Dialogue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueEnded, const FString&, DialogueID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueResponseSelected, int32, ResponseIndex, const FString&, ResponseText);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEncounterStarted, const FMingPersonalEncounter&, Encounter);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEncounterResolved, const FString&, EncounterID, bool, bVictory);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnClueDiscovered, const FMingInvestigationClue&, Clue);
 
 /**
  * Personal Layer Controller

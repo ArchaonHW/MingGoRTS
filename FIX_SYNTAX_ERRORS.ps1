@@ -122,3 +122,4 @@ foreach ($file in $headerFiles) {
 }
 
 Write-Host "Syntax error fixing completed!" -ForegroundColor Green
+

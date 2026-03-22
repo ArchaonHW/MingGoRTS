@@ -336,20 +336,20 @@ protected:
     TArray<FString> CurrentlyResearching;
 
     // Default tech tree setup
-    void SetupDefaultMilitaryTechs(};
-    void SetupDefaultEconomyTechs(};
+    void SetupDefaultMilitaryTechs();
+    void SetupDefaultEconomyTechs();
     void SetupDefaultInfrastructureTechs();
-    void SetupDefaultDefenseTechs(};
+    void SetupDefaultDefenseTechs();
 
     // Unlock application
-    void ApplyTechUnlock(const FMingTechUnlock& Unlock};
-    void UnlockBuilding(EMingBuildingType BuildingType};
-    void UnlockUnit(TSubclassOf<class AMingTacticalUnit> UnitClass};
-    void UnlockAbility(const FString& AbilityName};
+    void ApplyTechUnlock(const FMingTechUnlock& Unlock);
+    void UnlockBuilding(EMingBuildingType BuildingType);
+    void UnlockUnit(TSubclassOf<class AMingTacticalUnit> UnitClass);
+    void UnlockAbility(const FString& AbilityName);
 
     // Helpers
     void RecalculateUnlockedBuildings();
     bool HasEnoughResources(const TArray<FMingResourceCost>& Costs) const;
-    bool ConsumeResources(const TArray<FMingResourceCost>& Costs};
+    bool ConsumeResources(const TArray<FMingResourceCost>& Costs);
 };
 

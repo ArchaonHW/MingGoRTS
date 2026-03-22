@@ -121,10 +121,10 @@ class MINGGORTS_API UMingRTSVRSupport : public UGameInstanceSubsystem
 public:
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    void InitializeVRSupport(};
+    void InitializeVRSupport();
 
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    void ShutdownVRSupport(};
+    void ShutdownVRSupport();
 
     // Device Management
     UFUNCTION(BlueprintCallable, Category = "VR Support")
@@ -138,13 +138,13 @@ public:
 
     // System Control
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    bool EnableVR(};
+    bool EnableVR();
 
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    void DisableVR(};
+    void DisableVR();
 
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    bool IsVREnabled() const { return bVREnabled; }
+    bool IsVREnabled() const { return bVREnabled; };
 
     UFUNCTION(BlueprintCallable, Category = "VR Support")
     EVRSystemStatus GetVRStatus() const { return VRStatus; }
@@ -154,10 +154,10 @@ public:
     void SetTrackingSpace(EVRTrackingSpace Space};
 
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    EVRTrackingSpace GetTrackingSpace() const { return CurrentTrackingSpace; }
+    EVRTrackingSpace GetTrackingSpace() const { return CurrentTrackingSpace; };
 
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    void RecenterHMD(};
+    void RecenterHMD();
 
     // Comfort Settings
     UFUNCTION(BlueprintCallable, Category = "VR Support")
@@ -175,10 +175,10 @@ public:
 
     // UI Adaptation
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    void AdaptUIToVR(};
+    void AdaptUIToVR();
 
     UFUNCTION(BlueprintCallable, Category = "VR Support")
-    void RestoreUIFromVR(};
+    void RestoreUIFromVR();
 
     // Events
     UPROPERTY(BlueprintAssignable, Category = "VR Support|Events")
@@ -215,12 +215,12 @@ private:
 
     void OnVRDeviceConnectionChanged(bool bConnected};
     void UpdateVRStatus(EVRSystemStatus NewStatus};
-    void ApplyVROptimizationSettings(};
-    void SetupVRInputMappings(};
+    void ApplyVROptimizationSettings();
+    void SetupVRInputMappings();
 };
 
 // Event delegate declarations
 declare dynamic multicast delegate FOnVRDeviceConnected(EVRHeadsetType HeadsetType};
-declare dynamic multicast delegate FOnVRDeviceDisconnected(};
+declare dynamic multicast delegate FOnVRDeviceDisconnected();
 declare dynamic multicast delegate FOnVRStatusChanged(EVRSystemStatus OldStatus, EVRSystemStatus NewStatus};
 

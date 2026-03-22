@@ -277,3 +277,4 @@ struct FMingSyncBatch
         , CompressedSize(0)
     {}
 };
+

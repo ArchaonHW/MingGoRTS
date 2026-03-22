@@ -146,12 +146,12 @@ private:
     TArray<FNetworkTestCase> TestCases;
 
     // 測試幫助?�數
-    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
-    void ResetTestCounts(};
-    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT("")};
+    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
+    void ResetTestCounts();
+    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
 
-    // ?�建測試?��?管�X    UMingPersonalManager* CreateTestPersonalManager(};
-    UMingNetworkManager* CreateTestNetworkManager(};
-    UMingLobbySystem* CreateTestLobbySystem(};
+    // ?�建測試?��?管�X    UMingPersonalManager* CreateTestPersonalManager();
+    UMingNetworkManager* CreateTestNetworkManager();
+    UMingLobbySystem* CreateTestLobbySystem();
 };
 

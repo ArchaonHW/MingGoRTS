@@ -162,56 +162,56 @@ class MINGMULTIPLAYER_API UMingRelationshipReplication : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRelationshipReplication();
+    UMingRelationshipReplication(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void InitializeReplication(class UMingNetworkManager* NetworkManager, class UMingRelationshipManager* RelationshipManager);
+    void InitializeReplication(class UMingNetworkManager* NetworkManager, class UMingRelationshipManager* RelationshipManager};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ShutdownReplication();
+    void ShutdownReplication(};
 
     // Sync Configuration
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void SetSyncMode(EMingRelationshipSyncMode Mode);
+    void SetSyncMode(EMingRelationshipSyncMode Mode};
 
     UFUNCTION(BlueprintPure, Category = "Relationship Replication")
     EMingRelationshipSyncMode GetSyncMode() const { return CurrentSyncMode; }
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void SetSyncInterval(float IntervalSeconds);
+    void SetSyncInterval(float IntervalSeconds};
 
     UFUNCTION(BlueprintPure, Category = "Relationship Replication")
     float GetSyncInterval() const { return SyncInterval; }
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void SetProximityRadius(float Radius);
+    void SetProximityRadius(float Radius};
 
     // Manual Sync
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void RequestFullSync(int32 TargetPlayerID);
+    void RequestFullSync(int32 TargetPlayerID};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void RequestPartialSync(const TArray<FName>& CharacterIDs);
+    void RequestPartialSync(const TArray<FName>& CharacterIDs};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ForceSyncAll();
+    void ForceSyncAll(};
 
     // Server-side Operations
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ServerUpdateRelationship(int32 PlayerID, FName CharacterID, float NewValue, const FString& Reason);
+    void ServerUpdateRelationship(int32 PlayerID, FName CharacterID, float NewValue, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ServerAddRelationshipModifier(int32 PlayerID, FName CharacterID, const FString& Modifier, float Value);
+    void ServerAddRelationshipModifier(int32 PlayerID, FName CharacterID, const FString& Modifier, float Value};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ServerRemoveRelationshipModifier(int32 PlayerID, FName CharacterID, const FString& Modifier);
+    void ServerRemoveRelationshipModifier(int32 PlayerID, FName CharacterID, const FString& Modifier};
 
     // Client-side Operations
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ClientApplySyncData(const FMingRelationshipSyncResponse& SyncData);
+    void ClientApplySyncData(const FMingRelationshipSyncResponse& SyncData};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ClientApplyDelta(const FMingRelationshipSyncDelta& Delta);
+    void ClientApplyDelta(const FMingRelationshipSyncDelta& Delta};
 
     // Validation
     UFUNCTION(BlueprintPure, Category = "Relationship Replication")
@@ -222,10 +222,10 @@ public:
 
     // Conflict Resolution
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void ResolveConflict(const FMingReplicatedRelationshipData& LocalData, const FMingReplicatedRelationshipData& RemoteData);
+    void ResolveConflict(const FMingReplicatedRelationshipData& LocalData, const FMingReplicatedRelationshipData& RemoteData};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    FMingReplicatedRelationshipData MergeRelationshipData(const TArray<FMingReplicatedRelationshipData>& DataVersions);
+    FMingReplicatedRelationshipData MergeRelationshipData(const TArray<FMingReplicatedRelationshipData>& DataVersions};
 
     // Statistics
     UFUNCTION(BlueprintPure, Category = "Relationship Replication")
@@ -242,18 +242,18 @@ public:
 
     // Utilities
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void CompressSyncData(FMingRelationshipSyncResponse& SyncData);
+    void CompressSyncData(FMingRelationshipSyncResponse& SyncData};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Replication")
-    void DecompressSyncData(FMingRelationshipSyncResponse& SyncData);
+    void DecompressSyncData(FMingRelationshipSyncResponse& SyncData};
 
     UFUNCTION(BlueprintPure, Category = "Relationship Replication")
     int32 CalculateSyncDataSize(const FMingRelationshipSyncResponse& SyncData) const;
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRelationshipSynced, int32, PlayerID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSyncConflict, const FMingReplicatedRelationshipData&, Local, const FMingReplicatedRelationshipData&, Remote);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSyncError, const FString&, ErrorMessage);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRelationshipSynced, int32, PlayerID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSyncConflict, const FMingReplicatedRelationshipData&, Local, const FMingReplicatedRelationshipData&, Remote};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSyncError, const FString&, ErrorMessage};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnRelationshipSynced OnRelationshipSynced;
@@ -302,35 +302,36 @@ protected:
     TArray<float> SyncLatencies;
 
     // Internal Functions
-    void PerformFullSync();
-    void PerformDeltaSync();
-    void PerformEventDrivenSync();
-    void PerformProximitySync();
+    void PerformFullSync(};
+    void PerformDeltaSync(};
+    void PerformEventDrivenSync(};
+    void PerformProximitySync(};
     
-    void SendSyncRequest(const FMingRelationshipSyncRequest& Request);
-    void ProcessSyncResponse(const FMingRelationshipSyncResponse& Response);
+    void SendSyncRequest(const FMingRelationshipSyncRequest& Request};
+    void ProcessSyncResponse(const FMingRelationshipSyncResponse& Response};
     
-    void TrackSyncLatency(float Latency);
-    void RecordSyncOperation(bool bSuccess);
+    void TrackSyncLatency(float Latency};
+    void RecordSyncOperation(bool bSuccess};
     
     bool ShouldSyncCharacter(FName CharacterID) const;
     bool IsInProximity(FName CharacterID) const;
     
-    FMingRelationshipSyncRequest BuildSyncRequest(int32 PlayerID, bool bFullSync);
-    FMingRelationshipSyncResponse BuildSyncResponse(const FMingRelationshipSyncRequest& Request);
+    FMingRelationshipSyncRequest BuildSyncRequest(int32 PlayerID, bool bFullSync};
+    FMingRelationshipSyncResponse BuildSyncResponse(const FMingRelationshipSyncRequest& Request};
     
-    void ApplyDeltaToLocalData(const FMingRelationshipSyncDelta& Delta);
-    void BroadcastDeltaToClients(const FMingRelationshipSyncDelta& Delta);
+    void ApplyDeltaToLocalData(const FMingRelationshipSyncDelta& Delta};
+    void BroadcastDeltaToClients(const FMingRelationshipSyncDelta& Delta};
     
-    void OnNetworkTick(float DeltaTime);
-    void OnPlayerJoined(int32 PlayerID);
-    void OnPlayerLeft(int32 PlayerID);
-    void OnRelationshipChanged(FName CharacterID, float OldValue, float NewValue);
+    void OnNetworkTick(float DeltaTime};
+    void OnPlayerJoined(int32 PlayerID};
+    void OnPlayerLeft(int32 PlayerID};
+    void OnRelationshipChanged(FName CharacterID, float OldValue, float NewValue};
 
     // Serialization
-    TArray<uint8> SerializeSyncData(const FMingRelationshipSyncResponse& SyncData);
-    FMingRelationshipSyncResponse DeserializeSyncData(const TArray<uint8>& Data);
+    TArray<uint8> SerializeSyncData(const FMingRelationshipSyncResponse& SyncData};
+    FMingRelationshipSyncResponse DeserializeSyncData(const TArray<uint8>& Data};
     
-    TArray<uint8> SerializeDelta(const FMingRelationshipSyncDelta& Delta);
-    FMingRelationshipSyncDelta DeserializeDelta(const TArray<uint8>& Data);
+    TArray<uint8> SerializeDelta(const FMingRelationshipSyncDelta& Delta};
+    FMingRelationshipSyncDelta DeserializeDelta(const TArray<uint8>& Data};
 };
+

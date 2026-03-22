@@ -154,10 +154,10 @@ private:
     TArray<FLocalizationTestCase> TestCases;
 
     // 測試幫助?�數
-    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
-    void ResetTestCounts(};
-    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT("")};
+    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
+    void ResetTestCounts();
+    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
 
-    // ?�建測試?��?管�X    UMingLocalizationManager* CreateTestLocalizationManager(};
+    // ?�建測試?��?管�X    UMingLocalizationManager* CreateTestLocalizationManager();
 };
 

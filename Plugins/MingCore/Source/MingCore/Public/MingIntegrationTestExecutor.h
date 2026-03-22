@@ -101,4 +101,4 @@ protected:
 };
 
 #include "MingIntegrationTestExecutor.generated.h"
-
+};

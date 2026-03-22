@@ -92,35 +92,35 @@ class WEAKNESSFIXER_API UWeaknessFixer : public UObject
     GENERATED_BODY()
 
 public:
-    UWeaknessFixer(};
+    UWeaknessFixer();
 
     /** ?��X�修復器 */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    void InitializeFixer(};
+    void InitializeFixer();
 
     /** ?��?完整修復 */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    TArray<FFixResult> RunFullFix(};
+    TArray<FFixResult> RunFullFix();
 
     /** 修復?��?洩�? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixMemoryLeaks(};
+    FFixResult FixMemoryLeaks();
 
     /** 修復線�?安全?��? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixThreadSafety(};
+    FFixResult FixThreadSafety();
 
     /** 修復?�能?��? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixPerformanceIssues(};
+    FFixResult FixPerformanceIssues();
 
     /** 修復安全?��? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixSecurityIssues(};
+    FFixResult FixSecurityIssues();
 
     /** 修復�?��質�X��? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixCodeQuality(};
+    FFixResult FixCodeQuality();
 
     /** 修復?��X�件 */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
@@ -128,15 +128,15 @@ public:
 
     /** ?��?修復歷史 */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    TArray<FFixResult> GetFixHistory(};
+    TArray<FFixResult> GetFixHistory();
 
     /** ?��?修復?��? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FString GenerateFixReport(};
+    FString GenerateFixReport();
 
     /** 驗�?修復?��? */
     UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    bool VerifyFixes(};
+    bool VerifyFixes();
 
 public:
     /** 修復?��?事件 */

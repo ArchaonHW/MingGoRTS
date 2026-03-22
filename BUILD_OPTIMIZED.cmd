@@ -1,6 +1,7 @@
 @echo off
+chcp 65001 >nul
 echo ========================================
-echo MingGoRTS 編譯除錯優化工具
+echo MingGoRTS Build Optimization Tool
 echo ========================================
 echo.
 
@@ -8,144 +9,144 @@ set ENGINE_PATH="C:\Program Files\Epic Games\UE_5.7"
 set PROJECT_PATH="%cd%\MingGoRTS.uproject"
 set BUILD_LOG="%cd%\BuildLog.txt"
 
-echo 檢查引擎路徑...
+echo Checking engine path...
 if not exist %ENGINE_PATH% (
-    echo 錯誤: 找不到UE5引擎路徑 %ENGINE_PATH%
+    echo ERROR: UE5 engine path not found %ENGINE_PATH%
     pause
     exit /b 1
 )
 
-echo 檢查專案檔案...
+echo Checking project file...
 if not exist %PROJECT_PATH% (
-    echo 錯誤: 找不到專案檔案 %PROJECT_PATH%
+    echo ERROR: Project file not found %PROJECT_PATH%
     pause
     exit /b 1
 )
 
 echo.
-echo 步驟1: 清理中間檔案...
+echo Step 1: Cleaning intermediate files...
 if exist "Intermediate" (
-    echo 刪除Intermediate目錄...
+    echo Deleting Intermediate directory...
     rmdir /s /q "Intermediate"
 )
 
 if exist "Binaries" (
-    echo 刪除Binaries目錄...
+    echo Deleting Binaries directory...
     rmdir /s /q "Binaries"
 )
 
 echo.
-echo 步驟2: 重新生成專案檔案...
+echo Step 2: Regenerating project files...
 %ENGINE_PATH%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe -projectfiles -project=%PROJECT_PATH% -game -rocket -progress > %BUILD_LOG% 2>&1
 
 if %ERRORLEVEL% neq 0 (
-    echo 錯誤: 專案檔案生成失敗
-    echo 查看日誌: %BUILD_LOG%
+    echo ERROR: Project files generation failed
+    echo Check log: %BUILD_LOG%
     pause
     exit /b 1
 )
 
-echo 專案檔案生成成功！
+echo Project files generated successfully!
 echo.
 
-echo 步驟3: 編譯MingGoRTSEditor (Development模式)...
+echo Step 3: Compiling MingGoRTSEditor (Development mode)...
 %ENGINE_PATH%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe MingGoRTSEditor Win64 Development -project=%PROJECT_PATH% -progress >> %BUILD_LOG% 2>&1
 
 if %ERRORLEVEL% neq 0 (
-    echo 錯誤: Development編譯失敗
-    echo 查看日誌: %BUILD_LOG%
+    echo ERROR: Development build failed
+    echo Check log: %BUILD_LOG%
     echo.
-    echo 嘗試編譯Debug模式...
+    echo Trying Debug mode...
     %ENGINE_PATH%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe MingGoRTSEditor Win64 Debug -project=%PROJECT_PATH% -progress >> %BUILD_LOG% 2>&1
     
     if %ERRORLEVEL% neq 0 (
-        echo 錯誤: Debug編譯也失敗
-        echo 查看日誌: %BUILD_LOG%
+        echo ERROR: Debug build also failed
+        echo Check log: %BUILD_LOG%
         pause
         exit /b 1
     ) else (
-        echo Debug編譯成功！
+        echo Debug build successful!
     )
 ) else (
-    echo Development編譯成功！
+    echo Development build successful!
 )
 
 echo.
-echo 步驟4: 編譯插件...
-echo 編譯MingTactical插件...
+echo Step 4: Compiling plugins...
+echo Compiling MingTactical plugin...
 %ENGINE_PATH%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe MingTacticalEditor Win64 Development -project=%PROJECT_PATH% -progress >> %BUILD_LOG% 2>&1
 
-echo 編譯MingAI插件...
+echo Compiling MingAI plugin...
 %ENGINE_PATH%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe MingAIEditor Win64 Development -project=%PROJECT_PATH% -progress >> %BUILD_LOG% 2>&1
 
-echo 編譯MingCore插件...
+echo Compiling MingCore plugin...
 %ENGINE_PATH%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe MingCoreEditor Win64 Development -project=%PROJECT_PATH% -progress >> %BUILD_LOG% 2>&1
 
 echo.
-echo 步驟5: 檢查編譯結果...
+echo Step 5: Checking build results...
 if exist "Binaries\Win64\MingGoRTSEditor.exe" (
-    echo ✓ MingGoRTSEditor.exe 編譯成功
+    echo [OK] MingGoRTSEditor.exe build successful
 ) else (
-    echo ✗ MingGoRTSEditor.exe 編譯失敗
+    echo [ERROR] MingGoRTSEditor.exe build failed
 )
 
 if exist "Plugins\MingTactical\Binaries\Win64\MingTacticalEditor.dll" (
-    echo ✓ MingTacticalEditor.dll 編譯成功
+    echo [OK] MingTacticalEditor.dll build successful
 ) else (
-    echo ✗ MingTacticalEditor.dll 編譯失敗
+    echo [ERROR] MingTacticalEditor.dll build failed
 )
 
 if exist "Plugins\MingAI\Binaries\Win64\MingAIEditor.dll" (
-    echo ✓ MingAIEditor.dll 編譯成功
+    echo [OK] MingAIEditor.dll build successful
 ) else (
-    echo ✗ MingAIEditor.dll 編譯失敗
+    echo [ERROR] MingAIEditor.dll build failed
 )
 
 if exist "Plugins\MingCore\Binaries\Win64\MingCoreEditor.dll" (
-    echo ✓ MingCoreEditor.dll 編譯成功
+    echo [OK] MingCoreEditor.dll build successful
 ) else (
-    echo ✗ MingCoreEditor.dll 編譯失敗
+    echo [ERROR] MingCoreEditor.dll build failed
 )
 
 echo.
-echo 步驟6: 優化檢查...
-echo 檢查常見編譯問題...
+echo Step 6: Optimization check...
+echo Checking common build issues...
 
-REM 檢查是否有循環依賴
+REM Check for circular dependencies
 findstr /i "circular dependency" %BUILD_LOG% > nul
 if %ERRORLEVEL% equ 0 (
-    echo ⚠️  警告: 發現循環依賴問題
+    echo [WARNING] Found circular dependency issues
 )
 
-REM 檢查是否有缺少的包含檔案
+REM Check for missing include files
 findstr /i "cannot find" %BUILD_LOG% > nul
 if %ERRORLEVEL% equ 0 (
-    echo ⚠️  警告: 發現缺少的包含檔案
+    echo [WARNING] Found missing include files
 )
 
-REM 檢查是否有語法錯誤
+REM Check for syntax errors
 findstr /i "syntax error" %BUILD_LOG% > nul
 if %ERRORLEVEL% equ 0 (
-    echo ⚠️  警告: 發現語法錯誤
+    echo [WARNING] Found syntax errors
 )
 
-REM 檢查是否有連結錯誤
+REM Check for link errors
 findstr /i "link error" %BUILD_LOG% > nul
 if %ERRORLEVEL% equ 0 (
-    echo ⚠️  警告: 發現連結錯誤
+    echo [WARNING] Found link errors
 )
 
 echo.
 echo ========================================
-echo 編譯完成！
+echo Build complete!
 echo ========================================
-echo 編譯日誌: %BUILD_LOG%
+echo Build log: %BUILD_LOG%
 echo.
-echo 建議的後續步驟:
-echo 1. 檢查編譯日誌中的錯誤和警告
-echo 2. 如果有錯誤，請查看具體錯誤信息
-echo 3. 運行UE5編輯器測試載入
-echo 4. 檢查插件是否正確載入
+echo Recommended next steps:
+echo 1. Check build log for errors and warnings
+echo 2. If there are errors, check specific error messages
+echo 3. Run UE5 editor to test loading
+echo 4. Check if plugins load correctly
 echo.
 
 pause

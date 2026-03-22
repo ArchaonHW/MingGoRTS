@@ -1,6 +1,6 @@
 # MingGoRTS AI Music Generator PowerShell Script
-# 本地 AI 音樂生成腳本 - PowerShell 版本
-# 使用方式: .\generate_music.ps1 [選項]
+# ?砍 AI ?單????單 - PowerShell ?
+# 雿輻?孵?: .\generate_music.ps1 [?賊?]
 
 param(
     [string]$Preset = "",
@@ -14,7 +14,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# 顏色輸出函數
+# 憿頛詨?賣
 function Write-ColorOutput($ForegroundColor) {
     $fc = $host.UI.RawUI.ForegroundColor
     $host.UI.RawUI.ForegroundColor = $ForegroundColor
@@ -25,76 +25,76 @@ function Write-ColorOutput($ForegroundColor) {
 }
 
 function Write-Success($message) {
-    Write-ColorOutput Green "✓ $message"
+    Write-ColorOutput Green "??$message"
 }
 
 function Write-Info($message) {
-    Write-ColorOutput Cyan "ℹ $message"
+    Write-ColorOutput Cyan "??$message"
 }
 
 function Write-Warning($message) {
-    Write-ColorOutput Yellow "⚠ $message"
+    Write-ColorOutput Yellow "??$message"
 }
 
 function Write-Error($message) {
-    Write-ColorOutput Red "✗ $message"
+    Write-ColorOutput Red "??$message"
 }
 
-# 顯示標題
+# 憿舐內璅?
 Write-Output ""
-Write-ColorOutput Magenta "🎵 MingGoRTS AI Music Generator"
+Write-ColorOutput Magenta "? MingGoRTS AI Music Generator"
 Write-ColorOutput Magenta "=============================="
 Write-Output ""
 
-# 檢查 Python
-Write-Info "檢查 Python 環境..."
+# 瑼Ｘ Python
+Write-Info "瑼Ｘ Python ?啣?..."
 $pythonVersion = python --version 2>&1
 if ($LASTEXITCODE -ne 0) {
-    Write-Error "Python 未安裝或未加入 PATH"
+    Write-Error "Python ?芸?鋆??芸???PATH"
     exit 1
 }
-Write-Success "Python 版本: $pythonVersion"
+Write-Success "Python ?: $pythonVersion"
 
-# 設定路徑
+# 閮剖?頝臬?
 $ProjectRoot = $PSScriptRoot | Split-Path -Parent
 $ToolsPath = Join-Path $ProjectRoot "Tools\ai"
 $GeneratorScript = Join-Path $ToolsPath "music_generator.py"
 
-# 檢查腳本存在
+# 瑼Ｘ?單摮
 if (-not (Test-Path $GeneratorScript)) {
-    Write-Error "找不到音樂生成腳本: $GeneratorScript"
+    Write-Error "?曆??圈璅???? $GeneratorScript"
     exit 1
 }
 
-# 顯示說明
+# 憿舐內隤芣?
 if ($Help) {
-    Write-Output "使用方法:"
-    Write-Output "  .\generate_music.ps1 -Preset <風格名>     # 使用預設風格生成"
-    Write-Output "  .\generate_music.ps1 -Prompt <提示詞>     # 自定義提示詞"
-    Write-Output "  .\generate_music.ps1 -All                  # 生成所有預設"
-    Write-Output "  .\generate_music.ps1 -List                # 列出所有預設"
+    Write-Output "雿輻?寞?:"
+    Write-Output "  .\generate_music.ps1 -Preset <憸冽??     # 雿輻?身憸冽??"
+    Write-Output "  .\generate_music.ps1 -Prompt <?內閰?     # ?芸?蝢拇?蝷箄?"
+    Write-Output "  .\generate_music.ps1 -All                  # ?????閮?
+    Write-Output "  .\generate_music.ps1 -List                # ????閮?
     Write-Output ""
-    Write-Output "參數:"
-    Write-Output "  -Preset    預設風格名稱 (main_theme, battle, victory, building, menu_background)"
-    Write-Output "  -Prompt    自定義提示詞文字"
-    Write-Output "  -Duration   音樂長度秒數 (預設: 10)"
-    Write-Output "  -Output     輸出檔名 (預設: generated)"
-    Write-Output "  -All        批量生成所有預設音樂"
-    Write-Output "  -List       顯示所有可用預設"
-    Write-Output "  -Help       顯示此說明"
+    Write-Output "?:"
+    Write-Output "  -Preset    ?身憸冽?迂 (main_theme, battle, victory, building, menu_background)"
+    Write-Output "  -Prompt    ?芸?蝢拇?蝷箄???"
+    Write-Output "  -Duration   ?單??瑕漲蝘 (?身: 10)"
+    Write-Output "  -Output     頛詨瑼? (?身: generated)"
+    Write-Output "  -All        ?寥??????閮剝璅?
+    Write-Output "  -List       憿舐內???券?閮?
+    Write-Output "  -Help       憿舐內甇方牧??
     Write-Output ""
-    Write-Output "範例:"
+    Write-Output "蝭?:"
     Write-Output "  .\generate_music.ps1 -Preset main_theme"
     Write-Output "  .\generate_music.ps1 -Prompt 'Epic battle music' -Duration 30"
     Write-Output "  .\generate_music.ps1 -All"
     exit 0
 }
 
-# 切換到專案根目錄
+# ???啣?獢?桅?
 Set-Location $ProjectRoot
-Write-Info "工作目錄: $ProjectRoot"
+Write-Info "撌乩??桅?: $ProjectRoot"
 
-# 建立指令
+# 撱箇??誘
 $arguments = @()
 
 if ($List) {
@@ -116,21 +116,20 @@ elseif ($Prompt) {
     $arguments += $Output
 }
 else {
-    # 預設：顯示說明
-    Write-Output ""
-    Write-Warning "未指定生成模式，顯示使用說明..."
+    # ?身嚗＊蝷箄牧??    Write-Output ""
+    Write-Warning "?芣?摰??芋撘?憿舐內雿輻隤芣?..."
     Write-Output ""
     & $GeneratorScript @("--list")
     Write-Output ""
-    Write-Info "使用方法:"
-    Write-Output "  1. 生成單個預設: .\generate_music.ps1 -Preset main_theme"
-    Write-Output "  2. 批量生成所有: .\generate_music.ps1 -All"
-    Write-Output "  3. 自定義生成:   .\generate_music.ps1 -Prompt 'your prompt' -Duration 30"
-    Write-Output "  4. 顯示說明:     .\generate_music.ps1 -Help"
+    Write-Info "雿輻?寞?:"
+    Write-Output "  1. ???桀?閮? .\generate_music.ps1 -Preset main_theme"
+    Write-Output "  2. ?寥?????? .\generate_music.ps1 -All"
+    Write-Output "  3. ?芸?蝢拍???   .\generate_music.ps1 -Prompt 'your prompt' -Duration 30"
+    Write-Output "  4. 憿舐內隤芣?:     .\generate_music.ps1 -Help"
     Write-Output ""
     
-    # 詢問是否生成範例
-    $response = Read-Host "是否生成範例音樂 'main_theme'? (y/n)"
+    # 閰Ｗ??臬??蝭?
+    $response = Read-Host "?臬??蝭??單? 'main_theme'? (y/n)"
     if ($response -eq "y" -or $response -eq "Y") {
         $arguments += "--preset"
         $arguments += "main_theme"
@@ -139,10 +138,10 @@ else {
     }
 }
 
-# 執行生成
+# ?瑁???
 Write-Output ""
-Write-Info "開始生成音樂..."
-Write-Output "執行: python $GeneratorScript $arguments"
+Write-Info "?????單?..."
+Write-Output "?瑁?: python $GeneratorScript $arguments"
 Write-Output ""
 
 try {
@@ -150,34 +149,35 @@ try {
     
     if ($LASTEXITCODE -eq 0) {
         Write-Output ""
-        Write-Success "音樂生成完成！"
+        Write-Success "?單???摰?嚗?
         
-        # 顯示輸出位置
+        # 憿舐內頛詨雿蔭
         $OutputPath = Join-Path $ProjectRoot "Content\Audio\Generated"
         if (Test-Path $OutputPath) {
-            Write-Info "輸出位置: $OutputPath"
+            Write-Info "頛詨雿蔭: $OutputPath"
             
-            # 列出最近生成的檔案
+            # ??餈???瑼?
             $recentFiles = Get-ChildItem -Path $OutputPath -Recurse -Filter "*.wav" | 
                            Sort-Object LastWriteTime -Descending | 
                            Select-Object -First 5
             
             if ($recentFiles) {
                 Write-Output ""
-                Write-Info "最近生成的檔案:"
+                Write-Info "?餈???瑼?:"
                 $recentFiles | ForEach-Object {
                     $size = "{0:N2} MB" -f ($_.Length / 1MB)
-                    Write-Output "  • $($_.Name) ($size)"
+                    Write-Output "  ??$($_.Name) ($size)"
                 }
             }
         }
     } else {
-        Write-Error "音樂生成失敗 (Exit Code: $LASTEXITCODE)"
+        Write-Error "?單???憭望? (Exit Code: $LASTEXITCODE)"
     }
 } catch {
-    Write-Error "執行失敗: $_"
+    Write-Error "?瑁?憭望?: $_"
     exit 1
 }
 
 Write-Output ""
 Write-ColorOutput Magenta "=============================="
+

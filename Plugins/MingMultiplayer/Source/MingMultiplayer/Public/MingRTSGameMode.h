@@ -71,7 +71,7 @@ class MINGMULTIPLAYER_API AMingRTSGameMode : public AGameModeBase
     GENERATED_BODY()
 
 public:
-    AMingRTSGameMode();
+    AMingRTSGameMode(};
 
     virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
     virtual void StartPlay() override;
@@ -84,32 +84,32 @@ public:
 
     // Server Configuration
     UFUNCTION(BlueprintCallable, Category = "Server")
-    void ConfigureServer(const FMingServerConfiguration& Configuration);
+    void ConfigureServer(const FMingServerConfiguration& Configuration};
 
     UFUNCTION(BlueprintPure, Category = "Server")
     FMingServerConfiguration GetServerConfiguration() const { return ServerConfig; }
 
     UFUNCTION(BlueprintCallable, Category = "Server")
-    void SetMaxPlayers(int32 MaxPlayers);
+    void SetMaxPlayers(int32 MaxPlayers};
 
     UFUNCTION(BlueprintCallable, Category = "Server")
-    void SetServerPassword(const FString& Password);
+    void SetServerPassword(const FString& Password};
 
     UFUNCTION(BlueprintCallable, Category = "Server")
-    void EnableCheats(bool bEnabled);
+    void EnableCheats(bool bEnabled};
 
     // Player Management
     UFUNCTION(BlueprintCallable, Category = "Player Management")
-    void KickPlayer(int32 PlayerID, const FString& Reason);
+    void KickPlayer(int32 PlayerID, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "Player Management")
-    void BanPlayer(int32 PlayerID, const FString& Reason, int32 DurationMinutes);
+    void BanPlayer(int32 PlayerID, const FString& Reason, int32 DurationMinutes};
 
     UFUNCTION(BlueprintCallable, Category = "Player Management")
-    void UnbanPlayer(int32 PlayerID);
+    void UnbanPlayer(int32 PlayerID};
 
     UFUNCTION(BlueprintCallable, Category = "Player Management")
-    void TransferHost(int32 NewHostPlayerID);
+    void TransferHost(int32 NewHostPlayerID};
 
     UFUNCTION(BlueprintPure, Category = "Player Management")
     TArray<int32> GetConnectedPlayerIDs() const;
@@ -122,43 +122,43 @@ public:
 
     // Game State Management
     UFUNCTION(BlueprintCallable, Category = "Game State")
-    void PauseGame();
+    void PauseGame(};
 
     UFUNCTION(BlueprintCallable, Category = "Game State")
-    void ResumeGame();
+    void ResumeGame(};
 
     UFUNCTION(BlueprintCallable, Category = "Game State")
-    void RestartGame();
+    void RestartGame(};
 
     UFUNCTION(BlueprintCallable, Category = "Game State")
-    void ChangeMap(const FString& MapName);
+    void ChangeMap(const FString& MapName};
 
     UFUNCTION(BlueprintPure, Category = "Game State")
     bool IsGamePaused() const { return bGamePaused; }
 
     // Data Synchronization
     UFUNCTION(BlueprintCallable, Category = "Sync")
-    void BroadcastGameState();
+    void BroadcastGameState(};
 
     UFUNCTION(BlueprintCallable, Category = "Sync")
-    void SyncPlayerData(int32 PlayerID);
+    void SyncPlayerData(int32 PlayerID};
 
     UFUNCTION(BlueprintCallable, Category = "Sync")
-    void SyncAllPlayersData();
+    void SyncAllPlayersData(};
 
     // Relationship & Reputation Server Logic
     UFUNCTION(BlueprintCallable, Category = "Personal System")
-    void ServerUpdateRelationship(int32 PlayerID, FName CharacterID, float Value, const FString& Reason);
+    void ServerUpdateRelationship(int32 PlayerID, FName CharacterID, float Value, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "Personal System")
-    void ServerUpdateReputation(int32 PlayerID, FName RegionID, float Value, const FString& Reason);
+    void ServerUpdateReputation(int32 PlayerID, FName RegionID, float Value, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "Personal System")
-    void ServerCompleteQuest(int32 PlayerID, const FString& QuestID);
+    void ServerCompleteQuest(int32 PlayerID, const FString& QuestID};
 
     // RPC Validation
     UFUNCTION(BlueprintCallable, Category = "Validation")
-    bool ValidatePlayerAction(int32 PlayerID, int32 ActionType, const TArray<uint8>& ActionData);
+    bool ValidatePlayerAction(int32 PlayerID, int32 ActionType, const TArray<uint8>& ActionData};
 
     UFUNCTION(BlueprintCallable, Category = "Validation")
     bool ValidateRelationshipChange(int32 PlayerID, FName CharacterID, float NewValue) const;
@@ -211,51 +211,51 @@ protected:
     TObjectPtr<class UMingReputationReplication> ReputationReplication;
 
     // Internal Functions
-    void InitializeMultiplayerSystems();
-    void ShutdownMultiplayerSystems();
+    void InitializeMultiplayerSystems(};
+    void ShutdownMultiplayerSystems(};
     
-    void CheckIdlePlayers();
-    void UpdatePlayerActivity(int32 PlayerID);
+    void CheckIdlePlayers(};
+    void UpdatePlayerActivity(int32 PlayerID};
     
-    int32 AssignPlayerID();
-    void ReleasePlayerID(int32 PlayerID);
+    int32 AssignPlayerID(};
+    void ReleasePlayerID(int32 PlayerID};
     
-    bool AuthenticatePlayer(int32 PlayerID, const FString& AuthToken);
-    void HandlePlayerTimeout(int32 PlayerID);
+    bool AuthenticatePlayer(int32 PlayerID, const FString& AuthToken};
+    void HandlePlayerTimeout(int32 PlayerID};
     
-    void OnGamePaused();
-    void OnGameResumed();
-    void OnPlayerActivity(int32 PlayerID);
+    void OnGamePaused(};
+    void OnGameResumed(};
+    void OnPlayerActivity(int32 PlayerID};
     
-    void SaveServerState();
-    void LoadServerState();
+    void SaveServerState(};
+    void LoadServerState(};
 
     // Admin Commands
     UFUNCTION(Exec)
-    void AdminKick(const FString& PlayerName, const FString& Reason);
+    void AdminKick(const FString& PlayerName, const FString& Reason};
 
     UFUNCTION(Exec)
-    void AdminBan(const FString& PlayerName, const FString& Reason, int32 DurationMinutes);
+    void AdminBan(const FString& PlayerName, const FString& Reason, int32 DurationMinutes};
 
     UFUNCTION(Exec)
-    void AdminPause();
+    void AdminPause(};
 
     UFUNCTION(Exec)
-    void AdminUnpause();
+    void AdminUnpause(};
 
     UFUNCTION(Exec)
-    void AdminChangeMap(const FString& MapName);
+    void AdminChangeMap(const FString& MapName};
 
     UFUNCTION(Exec)
-    void AdminSetMaxPlayers(int32 MaxPlayers);
+    void AdminSetMaxPlayers(int32 MaxPlayers};
 
 public:
     // Events
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerJoined, int32, PlayerID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerLeft, int32, PlayerID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerKicked, int32, PlayerID, FString, Reason);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGamePaused);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameResumed);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerJoined, int32, PlayerID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerLeft, int32, PlayerID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerKicked, int32, PlayerID, FString, Reason};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGamePaused};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameResumed};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnPlayerJoined OnPlayerJoined;
@@ -272,3 +272,4 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnGameResumed OnGameResumed;
 };
+

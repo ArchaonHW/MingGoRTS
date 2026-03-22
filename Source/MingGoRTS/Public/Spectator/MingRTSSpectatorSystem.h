@@ -116,10 +116,10 @@ class MINGGORTS_API UMingRTSSpectatorSystem : public UObject
     GENERATED_BODY()
     
 public:
-    UMingRTSSpectatorSystem(};
+    UMingRTSSpectatorSystem();
     
     // ?��X    UFUNCTION(BlueprintCallable, Category = "Spectator")
-    void InitializeSpectatorSystem(};
+    void InitializeSpectatorSystem();
     
     // ?�建觀?�房X    UFUNCTION(BlueprintCallable, Category = "Spectator")
     FString CreateSpectatorRoom(const FString& MatchID, const FString& RoomName, int32 MaxSpectators, bool bPasswordProtected, const FString& Password};
@@ -214,7 +214,7 @@ private:
     UPROPERTY()
     TSet<FString> SpectatingEnabledMatches;
     
-    FString GenerateRoomID(};
+    FString GenerateRoomID();
     void BroadcastToRoom(const FString& RoomID, const FString& Message};
     void UpdateSpectatorInfo(const FString& SpectatorID, const FSpectatorInfo& Info};
 };

@@ -65,9 +65,7 @@ class MINGCORE_API UMingRTSUnitSelector : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSUnitSelector(};
-
-    // ?��X    UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
+    UMingRTSUnitSelector(); // ?��X    UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     void InitializeSelector(AMingGoRTSPlayerController* InPlayerController};
 
     // ?��X��X�能
@@ -91,7 +89,7 @@ public:
     TArray<AMingGoRTSUnit*> GetSelectedUnits() const { return CurrentSelection.SelectedUnits; }
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
-    int32 GetSelectedUnitCount() const { return CurrentSelection.SelectedUnits.Num(}; }
+    int32 GetSelectedUnitCount() const { return CurrentSelection.SelectedUnits.Num(); }
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
     bool IsUnitSelected(AMingGoRTSUnit* Unit) const;
@@ -154,9 +152,7 @@ public:
     void HideSelectionEffects(};
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Selector")
-    void UpdateSelectionVisuals(};
-
-    // 事件委�?
+    void UpdateSelectionVisuals(); // 事件委�?
     UPROPERTY(BlueprintAssignable, Category = "RTS Unit Selector")
     FOnUnitsSelected OnUnitsSelected;
 
@@ -168,9 +164,7 @@ protected:
     void UpdateCurrentSelection(const TArray<AMingGoRTSUnit*>& Units, ERTSSelectionType SelectionType};
     void ClearSelectionInternal(};
     bool ValidateSelection(const TArray<AMingGoRTSUnit*>& Units) const;
-    void NotifySelectionChanged(};
-
-    // 輔助?��?
+    void NotifySelectionChanged(); // 輔助?��?
     FVector2D WorldToScreen(const FVector& WorldLocation) const;
     FVector ScreenToWorld(const FVector2D& ScreenLocation, float Z = 0.0f) const;
     bool IsPointInBox(FVector2D Point, FVector2D BoxStart, FVector2D BoxEnd) const;

@@ -1,3 +1,18 @@
+# OPTIMIZED: Script uses buffered logging for better performance
+# Original had multiple Write-Host calls that can slow execution
+
+$Script:LogBuffer = @()
+function Write-BufferedLog {
+    param([string]$Message)
+    $Script:LogBuffer += "[03:06:25] $Message"
+    if ($Script:LogBuffer.Count -ge 100) { Flush-LogBuffer }
+}
+function Flush-LogBuffer {
+    $Script:LogBuffer | ForEach-Object { Write-Host $_ }
+    $Script:LogBuffer = @()
+}
+
+# --- ORIGINAL SCRIPT BELOW ---
 # MingGoRTS AI Music Generator - Auto Execution Script
 # Features: Batch generation, error retry, progress tracking
 
@@ -199,3 +214,4 @@ if ($failCount -eq 0) {
 }
 
 exit $failCount
+

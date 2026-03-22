@@ -5,12 +5,12 @@
 #include "MingMultiplayerTypes.h"
 #include "MingNetworkManager.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerConnected, int32, PlayerID, const FMingPlayerNetworkInfo&, PlayerInfo);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerDisconnected, int32, PlayerID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnConnectionStateChanged, EMingConnectionState, OldState, EMingConnectionState, NewState);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNetworkError, int32, ErrorCode, const FString&, ErrorMessage);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionCreated, const FString&, SessionID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionJoined, const FString&, SessionID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerConnected, int32, PlayerID, const FMingPlayerNetworkInfo&, PlayerInfo};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerDisconnected, int32, PlayerID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnConnectionStateChanged, EMingConnectionState, OldState, EMingConnectionState, NewState};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNetworkError, int32, ErrorCode, const FString&, ErrorMessage};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionCreated, const FString&, SessionID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionJoined, const FString&, SessionID};
 
 UCLASS(ClassGroup = (Multiplayer, Network))
 class MINGMULTIPLAYER_API UMingNetworkManager : public UGameInstanceSubsystem
@@ -18,7 +18,7 @@ class MINGMULTIPLAYER_API UMingNetworkManager : public UGameInstanceSubsystem
     GENERATED_BODY()
 
 public:
-    UMingNetworkManager();
+    UMingNetworkManager(};
 
     virtual void Initialize(FSubsystemCollectionBase& Collection) override;
     virtual void Deinitialize() override;
@@ -28,46 +28,46 @@ public:
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void InitializeNetwork();
+    void InitializeNetwork(};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void ShutdownNetwork();
+    void ShutdownNetwork(};
 
     // Connection Management
     UFUNCTION(BlueprintCallable, Category = "Network")
-    bool ConnectToServer(const FString& ServerAddress, int32 Port);
+    bool ConnectToServer(const FString& ServerAddress, int32 Port};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void Disconnect();
+    void Disconnect(};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    bool CreateSession(const FMingNetworkSessionInfo& SessionInfo);
+    bool CreateSession(const FMingNetworkSessionInfo& SessionInfo};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    bool JoinSession(const FString& SessionID, const FString& Password);
+    bool JoinSession(const FString& SessionID, const FString& Password};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void LeaveSession();
+    void LeaveSession(};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void DiscoverSessions();
+    void DiscoverSessions(};
 
     // Server Management
     UFUNCTION(BlueprintCallable, Category = "Network")
-    bool StartListenServer(int32 Port, int32 MaxPlayers);
+    bool StartListenServer(int32 Port, int32 MaxPlayers};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    bool StartDedicatedServer(int32 Port);
+    bool StartDedicatedServer(int32 Port};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void StopServer();
+    void StopServer(};
 
     // Player Management
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void RegisterPlayer(int32 PlayerID, const FMingPlayerNetworkInfo& PlayerInfo);
+    void RegisterPlayer(int32 PlayerID, const FMingPlayerNetworkInfo& PlayerInfo};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void UnregisterPlayer(int32 PlayerID);
+    void UnregisterPlayer(int32 PlayerID};
 
     UFUNCTION(BlueprintPure, Category = "Network")
     FMingPlayerNetworkInfo GetPlayerInfo(int32 PlayerID) const;
@@ -87,14 +87,14 @@ public:
     // Message Sending
     UFUNCTION(BlueprintCallable, Category = "Network")
     bool SendMessage(int32 TargetPlayerID, int32 MessageType, const TArray<uint8>& Data, 
-        EMingSyncPriority Priority = EMingSyncPriority::Normal, bool bReliable = true);
+        EMingSyncPriority Priority = EMingSyncPriority::Normal, bool bReliable = true};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
     bool BroadcastMessage(int32 MessageType, const TArray<uint8>& Data, 
-        EMingSyncPriority Priority = EMingSyncPriority::Normal);
+        EMingSyncPriority Priority = EMingSyncPriority::Normal};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    bool SendRPC(class UObject* TargetObject, const FString& FunctionName, const TArray<uint8>& Parameters);
+    bool SendRPC(class UObject* TargetObject, const FString& FunctionName, const TArray<uint8>& Parameters};
 
     // Network State
     UFUNCTION(BlueprintPure, Category = "Network")
@@ -104,7 +104,7 @@ public:
     EMingConnectionState GetConnectionState() const;
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void SetConnectionState(EMingConnectionState NewState);
+    void SetConnectionState(EMingConnectionState NewState};
 
     UFUNCTION(BlueprintPure, Category = "Network")
     FMingNetworkStats GetNetworkStats() const;
@@ -114,23 +114,23 @@ public:
     float GetPlayerPing(int32 PlayerID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void SetTickRate(int32 TickRate);
+    void SetTickRate(int32 TickRate};
 
     UFUNCTION(BlueprintPure, Category = "Network")
     int32 GetTickRate() const;
 
     // Security
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void SetServerPassword(const FString& Password);
+    void SetServerPassword(const FString& Password};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    bool AuthenticatePlayer(int32 PlayerID, const FString& AuthToken);
+    bool AuthenticatePlayer(int32 PlayerID, const FString& AuthToken};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void KickPlayer(int32 PlayerID, const FString& Reason);
+    void KickPlayer(int32 PlayerID, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "Network")
-    void BanPlayer(int32 PlayerID, int32 BanDurationMinutes, const FString& Reason);
+    void BanPlayer(int32 PlayerID, int32 BanDurationMinutes, const FString& Reason};
 
     // Events
     UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -186,21 +186,22 @@ protected:
     float NetworkUpdateInterval;
 
     // Internal Functions
-    void UpdateNetworkStats(float DeltaTime);
-    void ProcessIncomingMessages();
-    void HandlePlayerConnection(int32 PlayerID);
-    void HandlePlayerDisconnection(int32 PlayerID);
+    void UpdateNetworkStats(float DeltaTime};
+    void ProcessIncomingMessages(};
+    void HandlePlayerConnection(int32 PlayerID};
+    void HandlePlayerDisconnection(int32 PlayerID};
     bool ValidateMessage(const FMingNetworkMessage& Message) const;
-    void CompressBatch(FMingSyncBatch& Batch);
-    void DecompressBatch(FMingSyncBatch& Batch);
-    void SendHeartbeat();
-    void CheckConnectionHealth();
-    void CleanupDisconnectedPlayers();
+    void CompressBatch(FMingSyncBatch& Batch};
+    void DecompressBatch(FMingSyncBatch& Batch};
+    void SendHeartbeat(};
+    void CheckConnectionHealth(};
+    void CleanupDisconnectedPlayers(};
 
     // Delegates
     UFUNCTION()
-    void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString);
+    void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString};
 
     UFUNCTION()
-    void OnTravelFailure(UWorld* World, ETravelFailure::Type FailureType, const FString& ErrorString);
+    void OnTravelFailure(UWorld* World, ETravelFailure::Type FailureType, const FString& ErrorString};
 };
+

@@ -1,0 +1,65 @@
+[週一 2026/03/23  3:26:25.48] Starting project integration 
+[週一 2026/03/23  3:26:25.49] Verifying project structure 
+  [OK] Project structure verified 
+[週一 2026/03/23  3:26:25.59] Counting developed systems 
+  Found 128 header files 
+  Found 116 source files 
+  Found 161 system directories 
+[週一 2026/03/23  3:26:26.16] Verifying key systems 
+    [WARNING] Tutorial system not found 
+    [OK] Security system is ready 
+    [OK] Multiplayer system is ready 
+    [OK] Performance system is ready 
+[週一 2026/03/23  3:26:26.25] Checking Build.cs configuration 
+  [OK] Build.cs exists 
+[週一 2026/03/23  3:26:26.31] Generating integration report 
+  [OK] Integration report generated: C:\HW\MingGoRTS\IntegrationReport_3/23206/.md 
+[週一 2026/03/23  3:26:26.51] Verifying uproject configuration 
+  [OK] uproject file exists 
+[週一 2026/03/23  3:26:26.59] Checking plugin status 
+  Found 14 plugins 
+[週一 2026/03/23  3:26:26.91] Integration complete 
+ 
+===== Integration Summary ===== 
+Header Files: 128 
+Source Files: 116 
+Report File: C:\HW\MingGoRTS\IntegrationReport_3/23206/.md 
+============================== 
+    [OK] Achievement system is ready 
+[週一 2026/03/23  3:26:27.07] Checking Build.cs configuration 
+  [OK] Build.cs exists 
+[週一 2026/03/23  3:26:27.12] Generating integration report 
+  [OK] Integration report generated: C:\HW\MingGoRTS\IntegrationReport_3/23206/.md 
+[週一 2026/03/23  3:26:27.24] Verifying uproject configuration 
+  [OK] uproject file exists 
+[週一 2026/03/23  3:26:27.32] Checking plugin status 
+  Found 14 plugins 
+[週一 2026/03/23  3:26:27.44] Integration complete 
+ 
+===== Integration Summary ===== 
+Header Files: 128 
+Source Files: 116 
+Report File: C:\HW\MingGoRTS\IntegrationReport_3/23206/.md 
+============================== 
+    [OK] Telemetry system is ready 
+    [OK] Mod system is ready 
+    [OK] Tournament system is ready 
+    [OK] Cloud system is ready 
+    [OK] VR/AR system is ready 
+    [OK] Multiplayer system is ready 
+    [OK] Performance system is ready 
+[週一 2026/03/23  3:26:27.96] Checking Build.cs configuration 
+  [OK] Build.cs exists 
+[週一 2026/03/23  3:26:28.06] Generating integration report 
+  [OK] Integration report generated: C:\HW\MingGoRTS\IntegrationReport_3/23206/.md 
+[週一 2026/03/23  3:26:28.17] Verifying uproject configuration 
+  [OK] uproject file exists 
+[週一 2026/03/23  3:26:28.24] Checking plugin status 
+  Found 14 plugins 
+[週一 2026/03/23  3:26:28.39] Integration complete 
+ 
+===== Integration Summary ===== 
+Header Files: 128 
+Source Files: 116 
+Report File: C:\HW\MingGoRTS\IntegrationReport_3/23206/.md 
+============================== 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,89 +9,72 @@
 UENUM(BlueprintType)
 enum class EMingGameRelationshipType : uint8
 {
-    Family,         UMETA(DisplayName = "親屬?��?"),
-    Friend,         UMETA(DisplayName = "?��X��?"),
-    Mentor,         UMETA(DisplayName = "師�X��?"),
-    Rival,          UMETA(DisplayName = "對�X��?"),
-    Ally,           UMETA(DisplayName = "?��X��?"),
-    Enemy,          UMETA(DisplayName = "?�人?��?"),
-    Colleague,      UMETA(DisplayName = "?��X��?"),
-    Subordinate,    UMETA(DisplayName = "下屬?��?"),
-    Superior,       UMETA(DisplayName = "上司?��?"),
-    Neutral,        UMETA(DisplayName = "中�X��?")
+    Family, UMETA(DisplayName = "Family"),
+    Friend, UMETA(DisplayName = "Friend"),
+    Mentor, UMETA(DisplayName = "Mentor"),
+    Rival, UMETA(DisplayName = "Rival"),
+    Ally, UMETA(DisplayName = "Ally"),
+    Enemy, UMETA(DisplayName = "Enemy"),
+    Colleague, UMETA(DisplayName = "Colleague"),
+    Subordinate, UMETA(DisplayName = "Subordinate"),
+    Superior, UMETA(DisplayName = "Superior"),
+    Neutral, UMETA(DisplayName = "Neutral")
 };
 
+/**
+ * Relationship data structure
+ */
 USTRUCT(BlueprintType)
-struct FMingRelationshipNode
+struct FMingGameRelationship
 {
     GENERATED_BODY()
 
     UPROPERTY(BlueprintReadOnly, Category = "Relationship")
-    FString CharacterId;
+    FString CharacterA;
 
     UPROPERTY(BlueprintReadOnly, Category = "Relationship")
-    FString CharacterName;
+    FString CharacterB;
 
     UPROPERTY(BlueprintReadOnly, Category = "Relationship")
-    TMap<EMingGameRelationshipType, float> Relationships;
+    EMingGameRelationshipType RelationshipType;
 
     UPROPERTY(BlueprintReadOnly, Category = "Relationship")
-    float Reputation;
+    float Strength;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Relationship")
-    bool IsActive;
-
-    FMingRelationshipNode()
-    {
-        CharacterId = TEXT(""};
-        CharacterName = TEXT(""};
-        Relationships.Empty(};
-        Reputation = 0.0f;
-        IsActive = true;
-    }
+    FMingGameRelationship()
+        : CharacterA(TEXT(""))
+        , CharacterB(TEXT(""))
+        , RelationshipType(EMingGameRelationshipType::Neutral)
+        , Strength(0.0f)
+    {}
 };
 
+/**
+ * MingGoRTS Relationship Network System
+ */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSRelationshipNetwork : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingGoRTSRelationshipNetwork(};
+    UMingGoRTSRelationshipNetwork();
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Network")
-    void AddRelationshipNode(const FString& CharacterId, const FString& CharacterName};
-
-    UFUNCTION(BlueprintCallable, Category = "Relationship Network")
-    void SetRelationship(const FString& FromCharacter, const FString& ToCharacter, EMingGameRelationshipType RelationshipType, float Strength};
+    void InitializeRelationshipNetwork();
 
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
-    float GetRelationshipStrength(const FString& FromCharacter, const FString& ToCharacter, EMingGameRelationshipType RelationshipType) const;
-
-    UFUNCTION(BlueprintPure, Category = "Relationship Network")
-    TArray<FMingRelationshipNode> GetAllRelationshipNodes() const;
-
-    UFUNCTION(BlueprintPure, Category = "Relationship Network")
-    TArray<FString> GetConnectedCharacters(const FString& CharacterId) const;
+    FMingGameRelationship GetRelationship(const FString& CharacterA, const FString& CharacterB);
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Network")
-    void UpdateReputation(const FString& CharacterId, float Delta};
+    bool SetRelationship(const FString& CharacterA, const FString& CharacterB, EMingGameRelationshipType Type, float Strength);
 
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
-    float GetReputation(const FString& CharacterId) const;
-
-    UFUNCTION(BlueprintCallable, Category = "Relationship Network")
-    void RemoveCharacter(const FString& CharacterId};
-
-    UFUNCTION(BlueprintCallable, Category = "Relationship Network")
-    void ClearAllRelationships(};
+    TArray<FMingGameRelationship> GetCharacterRelationships(const FString& CharacterName);
 
 protected:
-    UPROPERTY(BlueprintReadOnly, Category = "Relationship Network")
-    TMap<FString, FMingRelationshipNode> RelationshipNodes;
+    UPROPERTY()
+    TMap<FString, FMingGameRelationship> RelationshipMap;
 
-private:
-    bool ValidateCharacterId(const FString& CharacterId) const;
-    void OnRelationshipChanged(const FString& FromCharacter, const FString& ToCharacter, EMingGameRelationshipType RelationshipType, float OldStrength, float NewStrength};
+    void InitializeDefaultRelationships();
 };
-

@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
-MingWar-RTS 功能測試腳本
-測試 Sprint 1 核心功能：單位選擇、移動、戰鬥
+MingWar-RTS ?皜祈岫?單
+皜祈岫 Sprint 1 ?詨??嚗雿?宏?擛?
 """
 
 import os
@@ -10,13 +10,13 @@ import json
 import time
 from pathlib import Path
 
-# 添加 UE5 Python API 路徑（如果可用）
+# 瘛餃? UE5 Python API 頝臬?嚗???剁?
 try:
     import unreal
     UE_AVAILABLE = True
 except ImportError:
     UE_AVAILABLE = False
-    print("警告: UE5 Python API 不可用，運行在模擬模式下")
+    print("霅血?: UE5 Python API 銝?剁????冽芋?祆芋撘?")
 
 class RTSGameTester:
     def __init__(self, project_root):
@@ -26,105 +26,105 @@ class RTSGameTester:
         self.test_results = []
         
     def load_config(self):
-        """載入地圖配置"""
+        """頛?啣??蔭"""
         if self.config_path.exists():
             with open(self.config_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
         else:
-            print(f"錯誤: 找不到配置文件 {self.config_path}")
+            print(f"?航炊: ?曆??圈?蝵格?隞?{self.config_path}")
             return {}
     
     def log_test(self, test_name, passed, details=""):
-        """記錄測試結果"""
-        status = "✅ PASS" if passed else "❌ FAIL"
+        """閮?皜祈岫蝯?"""
+        status = "??PASS" if passed else "??FAIL"
         entry = f"[{status}] {test_name}"
         if details:
-            entry += f"\n   細節: {details}"
+            entry += f"\n   蝝啁?: {details}"
         self.test_results.append(entry)
         print(entry)
     
     def test_config_validity(self):
-        """測試配置文件有效性"""
+        """皜祈岫?蔭?辣????""
         required_sections = ['map_name', 'size', 'terrain', 'game_mode', 'initial_state']
         has_all = all(section in self.config for section in required_sections)
-        self.log_test("配置完整性檢查", has_all, 
-                     f"檢查區段: {required_sections}")
+        self.log_test("?蔭摰?扳炎??, has_all, 
+                     f"瑼Ｘ?畾? {required_sections}")
         return has_all
     
     def test_map_dimensions(self):
-        """測試地圖尺寸"""
+        """皜祈岫?啣?撠箏站"""
         size = self.config.get('size', {})
         width = size.get('width', 0)
         height = size.get('height', 0)
         valid = width >= 512 and height >= 512
-        self.log_test("地圖尺寸檢查", valid, f"尺寸: {width}x{height}")
+        self.log_test("?啣?撠箏站瑼Ｘ", valid, f"撠箏站: {width}x{height}")
         return valid
     
     def test_initial_units_count(self):
-        """測試初始單位數量"""
+        """皜祈岫???桐??賊?"""
         units = self.config.get('initial_state', {}).get('units', [])
         total_units = sum(u.get('count', 0) for u in units)
-        valid = total_units >= 5  # 至少5個單位
-        self.log_test("初始單位數量", valid, f"總數: {total_units}")
+        valid = total_units >= 5  # ?喳?5?雿?
+        self.log_test("???桐??賊?", valid, f"蝮賣: {total_units}")
         return valid
     
     def test_teams_configuration(self):
-        """測試隊伍配置"""
+        """皜祈岫???蔭"""
         teams = self.config.get('game_mode', {}).get('teams', [])
         has_two_teams = len(teams) >= 2
         has_spawn_points = all('spawn_point' in team for team in teams[:2])
         valid = has_two_teams and has_spawn_points
-        self.log_test("隊伍配置檢查", valid, f"隊伍數: {len(teams)}, 出生點: {has_spawn_points}")
+        self.log_test("???蔭瑼Ｘ", valid, f"???? {len(teams)}, ?箇?暺? {has_spawn_points}")
         return valid
     
     def test_resources_configuration(self):
-        """測試資源配置"""
+        """皜祈岫鞈??蔭"""
         resources = self.config.get('initial_state', {}).get('resources', {})
         player_res = resources.get('player', {})
         required_resources = ['gold', 'coal', 'food', 'ammo']
         has_all = all(res in player_res for res in required_resources)
         valid_amounts = all(player_res.get(res, 0) >= 0 for res in required_resources)
         valid = has_all and valid_amounts
-        self.log_test("資源配置檢查", valid, f"資源類型: {list(player_res.keys())}")
+        self.log_test("鞈??蔭瑼Ｘ", valid, f"鞈?憿?: {list(player_res.keys())}")
         return valid
     
     def test_buildings_configuration(self):
-        """測試建築配置"""
+        """皜祈岫撱箇??蔭"""
         buildings = self.config.get('initial_state', {}).get('buildings', [])
         has_buildings = len(buildings) > 0
         valid_types = all('type' in b and 'position' in b for b in buildings)
         valid = has_buildings and valid_types
-        self.log_test("建築配置檢查", valid, f"建築數量: {len(buildings)}")
+        self.log_test("撱箇??蔭瑼Ｘ", valid, f"撱箇??賊?: {len(buildings)}")
         return valid
     
     def test_ui_settings(self):
-        """測試UI設置"""
+        """皜祈岫UI閮剔蔭"""
         ui = self.config.get('ui', {})
         required_settings = ['show_hud', 'show_health_bars', 'show_selection_box']
         has_all = all(setting in ui for setting in required_settings)
-        self.log_test("UI配置檢查", has_all, f"設置: {list(ui.keys())}")
+        self.log_test("UI?蔭瑼Ｘ", has_all, f"閮剔蔭: {list(ui.keys())}")
         return has_all
     
     def simulate_unit_selection(self):
-        """模擬單位選擇邏輯測試"""
+        """璅⊥?桐??豢??摩皜祈岫"""
         if not UE_AVAILABLE:
-            self.log_test("單位選擇測試 (模擬)", True, "UE5 API 不可用，跳過實際測試")
+            self.log_test("?桐??豢?皜祈岫 (璅⊥)", True, "UE5 API 銝?剁?頝喲?撖阡?皜祈岫")
             return True
             
         try:
-            # 這裡會調用 UE5 API 進行實際測試
-            # 例如: selected_units = GameplayStatics.GetAllActorsOfClass(GetWorld(), ARTSUnit)
-            # 並驗證選擇邏輯
-            self.log_test("單位選擇邏輯測試", True, "模擬測試通過")
+            # ?ㄐ?矽??UE5 API ?脰?撖阡?皜祈岫
+            # 靘?: selected_units = GameplayStatics.GetAllActorsOfClass(GetWorld(), ARTSUnit)
+            # 銝阡?霅??頛?
+            self.log_test("?桐??豢??摩皜祈岫", True, "璅⊥皜祈岫??")
             return True
         except Exception as e:
-            self.log_test("單位選擇邏輯測試", False, str(e))
+            self.log_test("?桐??豢??摩皜祈岫", False, str(e))
             return False
     
     def run_all_tests(self):
-        """執行所有測試"""
+        """?瑁???葫閰?""
         print("=" * 60)
-        print("MingWar-RTS 功能測試")
+        print("MingWar-RTS ?皜祈岫")
         print("=" * 60)
         
         tests = [
@@ -144,23 +144,23 @@ class RTSGameTester:
                 if test():
                     passed += 1
             except Exception as e:
-                self.log_test(test.__name__, False, f"異常: {e}")
+                self.log_test(test.__name__, False, f"?啣虜: {e}")
         
         print("=" * 60)
-        print(f"測試完成: {passed}/{len(tests)} 通過")
+        print(f"皜祈岫摰?: {passed}/{len(tests)} ??")
         print("=" * 60)
         
         return passed == len(tests)
     
     def generate_report(self):
-        """生成測試報告"""
+        """??皜祈岫?勗?"""
         report_path = self.project_root / "Tools" / "test" / "test_report.txt"
         with open(report_path, 'w', encoding='utf-8') as f:
-            f.write("MingWar-RTS 測試報告\n")
+            f.write("MingWar-RTS 皜祈岫?勗?\n")
             f.write("=" * 60 + "\n\n")
             for result in self.test_results:
                 f.write(result + "\n")
-        print(f"測試報告已生成: {report_path}")
+        print(f"皜祈岫?勗?撌脩??? {report_path}")
 
 def main():
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -168,10 +168,10 @@ def main():
     
     if tester.run_all_tests():
         tester.generate_report()
-        print("✅ 所有測試通過！")
+        print("????葫閰阡?嚗?)
         return 0
     else:
-        print("❌ 部分測試失敗，請檢查配置")
+        print("???典?皜祈岫憭望?嚗?瑼Ｘ?蔭")
         tester.generate_report()
         return 1
 

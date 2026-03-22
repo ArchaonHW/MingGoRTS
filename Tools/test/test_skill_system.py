@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
-MingGoRTS 技能系統測試腳本
-測試 Story 3-2: 技能發展系統
-"""
+MingGoRTS ??賜頂蝯望葫閰西??皜祈岫 Story 3-2: ??賜撅頂蝯?"""
 
 import unittest
 import json
@@ -11,11 +9,11 @@ import os
 from datetime import datetime
 from enum import Enum
 
-# 添加項目根目錄到 Python 路徑
+# 瘛餃???寧? Python 頝臬?
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 class ESkillCategory(Enum):
-    """技能類別枚舉"""
+    """??賡??交???""
     Combat = "Combat"
     Strategy = "Strategy"
     Diplomacy = "Diplomacy"
@@ -24,13 +22,13 @@ class ESkillCategory(Enum):
     Economic = "Economic"
 
 class ESkillType(Enum):
-    """技能類型枚舉"""
+    """??賡?????""
     Active = "Active"
     Passive = "Passive"
     Toggle = "Toggle"
 
 class ESpecializationPath(Enum):
-    """專精路徑枚舉"""
+    """撠移頝臬???"""
     Commander = "Commander"
     Tactician = "Tactician"
     Diplomat = "Diplomat"
@@ -39,18 +37,17 @@ class ESpecializationPath(Enum):
     Generalist = "Generalist"
 
 class TestSkillSystem(unittest.TestCase):
-    """技能系統測試類"""
+    """??賜頂蝯望葫閰阡?"""
     
     def setUp(self):
-        """測試前的設置"""
+        """皜祈岫??閮剔蔭"""
         self.skill_system = MockSkillSystem()
         self.skill_manager = MockSkillManager()
         
-        # 測試技能數據
-        self.test_skill = {
+        # 皜祈岫??賣??        self.test_skill = {
             "id": "TacticalCommand",
-            "name": "戰術指揮",
-            "description": "提升部隊指揮效率",
+            "name": "?啗??",
+            "description": "???券????",
             "category": ESkillCategory.Combat,
             "type": ESkillType.Passive,
             "specialization": ESpecializationPath.Commander,
@@ -64,9 +61,9 @@ class TestSkillSystem(unittest.TestCase):
             ]
         }
         
-        # 測試角色數據
+        # 皜祈岫閫?豢?
         self.test_character = {
-            "name": "張偉",
+            "name": "撘萄?",
             "background": "MilitaryAcademy",
             "level": 5,
             "attributes": {
@@ -79,256 +76,241 @@ class TestSkillSystem(unittest.TestCase):
         }
     
     def test_skill_initialization(self):
-        """測試技能系統初始化"""
+        """皜祈岫??賜頂蝯勗?憪?"""
         self.skill_system.initialize()
         
         self.assertTrue(self.skill_system.is_initialized)
         self.assertGreater(len(self.skill_system.all_skills), 0)
         self.assertGreater(len(self.skill_system.skill_trees), 0)
         
-        print("✅ 技能系統初始化測試通過")
+        print("????賜頂蝯勗?憪?皜祈岫??")
     
     def test_skill_unlock(self):
-        """測試技能解鎖"""
+        """皜祈岫??質圾??""
         self.skill_system.initialize()
         
-        # 測試解鎖新技能
-        success = self.skill_system.unlock_skill("TacticalCommand")
+        # 皜祈岫閫???唳???        success = self.skill_system.unlock_skill("TacticalCommand")
         self.assertTrue(success)
         
         skill = self.skill_system.get_skill("TacticalCommand")
         self.assertTrue(skill["is_unlocked"])
         self.assertEqual(skill["current_level"], 1)
         
-        print("✅ 技能解鎖測試通過")
+        print("????質圾?葫閰阡?")
     
     def test_skill_upgrade(self):
-        """測試技能升級"""
+        """皜祈岫??賢?蝝?""
         self.skill_system.initialize()
         
-        # 先解鎖技能
-        self.skill_system.unlock_skill("TacticalCommand")
+        # ?圾????        self.skill_system.unlock_skill("TacticalCommand")
         
-        # 添加經驗並升級
-        self.skill_system.add_skill_experience("TacticalCommand", 150)
+        # 瘛餃?蝬?銝血?蝝?        self.skill_system.add_skill_experience("TacticalCommand", 150)
         
         skill = self.skill_system.get_skill("TacticalCommand")
         self.assertGreater(skill["current_level"], 1)
         
-        print("✅ 技能升級測試通過")
+        print("????賢?蝝葫閰阡?")
     
     def test_skill_experience_calculation(self):
-        """測試技能經驗計算"""
+        """皜祈岫??賜?撽?蝞?""
         self.skill_system.initialize()
         
-        # 測試經驗需求計算
-        for level in range(1, 6):
+        # 皜祈岫蝬??瘙?蝞?        for level in range(1, 6):
             exp_required = self.skill_system.calculate_experience_requirement(level)
             self.assertGreater(exp_required, 0)
             self.assertGreater(exp_required, self.skill_system.calculate_experience_requirement(level - 1))
         
-        print("✅ 技能經驗計算測試通過")
+        print("????賜?撽?蝞葫閰阡?")
     
     def test_specialization_paths(self):
-        """測試專精路徑系統"""
+        """皜祈岫撠移頝臬?蝟餌絞"""
         self.skill_system.initialize()
         
-        # 測試所有專精路徑
-        for path in ESpecializationPath:
+        # 皜祈岫???蝎曇楝敺?        for path in ESpecializationPath:
             self.skill_system.choose_specialization_path(path)
             self.assertEqual(self.skill_system.current_specialization, path)
             
-            # 檢查路徑顏色
+            # 瑼Ｘ頝臬?憿
             color = self.skill_system.get_specialization_path_color(path)
             self.assertIsNotNone(color)
         
-        print("✅ 專精路徑系統測試通過")
+        print("??撠移頝臬?蝟餌絞皜祈岫??")
     
     def test_skill_effects(self):
-        """測試技能效果計算"""
+        """皜祈岫??賣???蝞?""
         self.skill_system.initialize()
         
-        # 解鎖技能並升級
+        # 閫????賭蒂??
         self.skill_system.unlock_skill("TacticalCommand")
         self.skill_system.add_skill_experience("TacticalCommand", 300)
         
-        # 計算技能效果
-        effect_value = self.skill_system.calculate_skill_effect("TacticalCommand", "LeadershipBonus")
+        # 閮???賣???        effect_value = self.skill_system.calculate_skill_effect("TacticalCommand", "LeadershipBonus")
         self.assertGreater(effect_value, 0)
         
-        print("✅ 技能效果計算測試通過")
+        print("????賣???蝞葫閰阡?")
     
     def test_skill_requirements_validation(self):
-        """測試技能需求驗證"""
+        """皜祈岫??賡?瘙?霅?""
         self.skill_system.initialize()
         
-        # 測試無需求技能
-        can_unlock = self.skill_system.can_unlock_skill("MeleeMastery", self.test_character)
+        # 皜祈岫?⊿?瘙???        can_unlock = self.skill_system.can_unlock_skill("MeleeMastery", self.test_character)
         self.assertTrue(can_unlock)
         
-        # 測試有需求技能
-        self.skill_system.unlock_skill("TacticalCommand")
+        # 皜祈岫??瘙???        self.skill_system.unlock_skill("TacticalCommand")
         can_unlock = self.skill_system.can_unlock_skill("AdvancedTactics", self.test_character)
-        # 取決於具體實現，這裡只是測試邏輯
+        # ?捱?澆擃祕?橘??ㄐ?芣皜祈岫?摩
         
-        print("✅ 技能需求驗證測試通過")
+        print("????賡?瘙?霅葫閰阡?")
     
     def test_skill_manager_integration(self):
-        """測試技能管理器整合"""
+        """皜祈岫??賜恣??游?"""
         self.skill_manager.initialize(self.skill_system, self.test_character)
         
-        # 測試經驗給予
-        self.skill_manager.grant_skill_experience("TacticalCommand", 100, "測試")
+        # 皜祈岫蝬?蝯虫?
+        self.skill_manager.grant_skill_experience("TacticalCommand", 100, "皜祈岫")
         
-        # 測試技能點給予
+        # 皜祈岫??賡?蝯虫?
         old_points = self.skill_manager.available_skill_points
-        self.skill_manager.grant_skill_points(2, "測試")
+        self.skill_manager.grant_skill_points(2, "皜祈岫")
         self.assertEqual(self.skill_manager.available_skill_points, old_points + 2)
         
-        print("✅ 技能管理器整合測試通過")
+        print("????賜恣??游?皜祈岫??")
     
     def test_combat_experience_processing(self):
-        """測試戰鬥經驗處理"""
+        """皜祈岫?圈洛蝬???"""
         self.skill_manager.initialize(self.skill_system, self.test_character)
         
-        # 測試戰鬥勝利
+        # 皜祈岫?圈洛?
         self.skill_manager.process_combat_end(True, 10, 300.0)
         
-        # 測試戰鬥失敗
+        # 皜祈岫?圈洛憭望?
         self.skill_manager.process_combat_end(False, 5, 180.0)
         
-        print("✅ 戰鬥經驗處理測試通過")
+        print("???圈洛蝬???皜祈岫??")
     
     def test_quest_completion_processing(self):
-        """測試任務完成處理"""
+        """皜祈岫隞餃?摰???"""
         self.skill_manager.initialize(self.skill_system, self.test_character)
         
-        # 測試任務完成
+        # 皜祈岫隞餃?摰?
         self.skill_manager.process_quest_completion("TestQuest", 50)
         
-        print("✅ 任務完成處理測試通過")
+        print("??隞餃?摰???皜祈岫??")
     
     def test_historical_event_processing(self):
-        """測試歷史事件處理"""
+        """皜祈岫甇瑕鈭辣??"""
         self.skill_manager.initialize(self.skill_system, self.test_character)
         
-        # 測試歷史事件
+        # 皜祈岫甇瑕鈭辣
         related_skills = ["TacticalCommand", "Leadership"]
         self.skill_manager.process_historical_event("NorthernExpedition", related_skills)
         
-        print("✅ 歷史事件處理測試通過")
+        print("??甇瑕鈭辣??皜祈岫??")
     
     def test_auto_experience_distribution(self):
-        """測試自動經驗分配"""
+        """皜祈岫?芸?蝬???"""
         self.skill_manager.initialize(self.skill_system, self.test_character)
         
-        # 解鎖一些技能
-        self.skill_system.unlock_skill("TacticalCommand")
+        # 閫??銝鈭???        self.skill_system.unlock_skill("TacticalCommand")
         self.skill_system.unlock_skill("Leadership")
         
-        # 自動分配經驗
+        # ?芸???蝬?
         self.skill_manager.auto_distribute_experience(200, ESkillCategory.Combat)
         
-        print("✅ 自動經驗分配測試通過")
+        print("???芸?蝬???皜祈岫??")
     
     def test_character_level_up_processing(self):
-        """測試角色升級處理"""
+        """皜祈岫閫????"""
         self.skill_manager.initialize(self.skill_system, self.test_character)
         
-        # 測試角色升級
+        # 皜祈岫閫??
         self.skill_manager.process_character_level_up(6)
         
-        print("✅ 角色升級處理測試通過")
+        print("??閫????皜祈岫??")
     
     def test_skill_action_validation(self):
-        """測試技能操作驗證"""
+        """皜祈岫??賣?雿?霅?""
         self.skill_manager.initialize(self.skill_system, self.test_character)
         
-        # 測試解鎖驗證
+        # 皜祈岫閫??撽?
         can_unlock = self.skill_manager.validate_skill_action("TacticalCommand", "Unlock")
         self.assertTrue(can_unlock)
         
-        # 測試升級驗證（需要先解鎖）
-        can_upgrade = self.skill_manager.validate_skill_action("TacticalCommand", "Upgrade")
-        self.assertFalse(can_upgrade)  # 未解鎖，不能升級
+        # 皜祈岫??撽?嚗?閬?閫??嚗?        can_upgrade = self.skill_manager.validate_skill_action("TacticalCommand", "Upgrade")
+        self.assertFalse(can_upgrade)  # ?芾圾??銝??
         
-        print("✅ 技能操作驗證測試通過")
+        print("????賣?雿?霅葫閰阡?")
     
     def test_skill_recommendation_system(self):
-        """測試技能推薦系統"""
+        """皜祈岫??賣?衣頂蝯?""
         self.skill_manager.initialize(self.skill_system, self.test_character)
         
-        # 獲取推薦技能
-        recommended = self.skill_manager.get_recommended_skills()
+        # ?脣??刻???        recommended = self.skill_manager.get_recommended_skills()
         self.assertIsInstance(recommended, list)
         
-        # 獲取發展建議
+        # ?脣??澆?撱箄降
         advice = self.skill_manager.get_skill_development_advice()
         self.assertIsInstance(advice, str)
         self.assertGreater(len(advice), 0)
         
-        print("✅ 技能推薦系統測試通過")
+        print("????賣?衣頂蝯望葫閰阡?")
     
     def test_skill_system_reset(self):
-        """測試技能系統重置"""
+        """皜祈岫??賜頂蝯梢?蝵?""
         self.skill_manager.initialize(self.skill_system, self.test_character)
         
-        # 解鎖一些技能
-        self.skill_system.unlock_skill("TacticalCommand")
+        # 閫??銝鈭???        self.skill_system.unlock_skill("TacticalCommand")
         self.skill_system.unlock_skill("Leadership")
         
-        # 重置系統
+        # ?蔭蝟餌絞
         success = self.skill_manager.reset_skill_system()
         self.assertTrue(success)
         
-        print("✅ 技能系統重置測試通過")
+        print("????賜頂蝯梢?蝵格葫閰阡?")
     
     def test_skill_experience_history(self):
-        """測試技能經驗歷史"""
+        """皜祈岫??賜?撽風??""
         self.skill_manager.initialize(self.skill_system, self.test_character)
         
-        # 給予一些經驗
-        self.skill_manager.grant_skill_experience("TacticalCommand", 50, "測試1")
-        self.skill_manager.grant_skill_experience("TacticalCommand", 30, "測試2")
+        # 蝯虫?銝鈭?撽?        self.skill_manager.grant_skill_experience("TacticalCommand", 50, "皜祈岫1")
+        self.skill_manager.grant_skill_experience("TacticalCommand", 30, "皜祈岫2")
         
-        # 獲取歷史
+        # ?脣?甇瑕
         history = self.skill_manager.get_skill_experience_history("TacticalCommand")
         self.assertEqual(len(history), 2)
         
-        print("✅ 技能經驗歷史測試通過")
+        print("????賜?撽風?脫葫閰阡?")
     
     def test_complete_skill_progression_flow(self):
-        """測試完整的技能發展流程"""
+        """皜祈岫摰???賜撅?蝔?""
         self.skill_manager.initialize(self.skill_system, self.test_character)
         
-        # 1. 選擇專精路徑
+        # 1. ?豢?撠移頝臬?
         self.skill_system.choose_specialization_path(ESpecializationPath.Commander)
         
-        # 2. 解鎖初始技能
-        self.skill_manager.unlock_skill("TacticalCommand")
+        # 2. 閫???????        self.skill_manager.unlock_skill("TacticalCommand")
         
-        # 3. 經過戰鬥獲得經驗
+        # 3. 蝬??圈洛?脣?蝬?
         self.skill_manager.process_combat_end(True, 15, 400.0)
         
-        # 4. 完成任務獲得經驗
+        # 4. 摰?隞餃??脣?蝬?
         self.skill_manager.process_quest_completion("BattleTest", 60)
         
-        # 5. 角色升級
+        # 5. 閫??
         self.skill_manager.process_character_level_up(6)
         
-        # 6. 檢查技能狀態
-        skill = self.skill_system.get_skill("TacticalCommand")
+        # 6. 瑼Ｘ??賜???        skill = self.skill_system.get_skill("TacticalCommand")
         self.assertGreater(skill["current_level"], 1)
         
-        # 7. 獲取發展建議
+        # 7. ?脣??澆?撱箄降
         advice = self.skill_manager.get_skill_development_advice()
         self.assertGreater(len(advice), 0)
         
-        print("✅ 完整技能發展流程測試通過")
+        print("??摰??賜撅?蝔葫閰阡?")
 
 
 class MockSkillSystem:
-    """模擬技能系統"""
+    """璅⊥??賜頂蝯?""
     
     def __init__(self):
         self.is_initialized = False
@@ -340,16 +322,16 @@ class MockSkillSystem:
         self._initialize_mock_skills()
     
     def initialize(self):
-        """初始化技能系統"""
+        """?????賜頂蝯?""
         self.is_initialized = True
         self._create_skill_trees()
     
     def _initialize_mock_skills(self):
-        """初始化模擬技能"""
+        """???芋?祆???""
         skills = [
             {
                 "id": "TacticalCommand",
-                "name": "戰術指揮",
+                "name": "?啗??",
                 "category": ESkillCategory.Combat,
                 "type": ESkillType.Passive,
                 "specialization": ESpecializationPath.Commander,
@@ -362,7 +344,7 @@ class MockSkillSystem:
             },
             {
                 "id": "Leadership",
-                "name": "領導力",
+                "name": "????,
                 "category": ESkillCategory.Leadership,
                 "type": ESkillType.Passive,
                 "specialization": ESpecializationPath.Commander,
@@ -375,7 +357,7 @@ class MockSkillSystem:
             },
             {
                 "id": "MeleeMastery",
-                "name": "近戰精通",
+                "name": "餈蝎暸?,
                 "category": ESkillCategory.Combat,
                 "type": ESkillType.Active,
                 "specialization": ESpecializationPath.Generalist,
@@ -393,22 +375,22 @@ class MockSkillSystem:
             self.skill_map[skill["id"]] = skill.copy()
     
     def _create_skill_trees(self):
-        """創建技能樹"""
+        """?萄遣??賣邦"""
         self.skill_trees = [
             {
                 "path": ESpecializationPath.Commander,
-                "name": "指揮官路徑",
+                "name": "?摰楝敺?,
                 "root_skills": ["TacticalCommand", "Leadership"]
             },
             {
                 "path": ESpecializationPath.Generalist,
-                "name": "通才路徑",
+                "name": "??頝臬?",
                 "root_skills": ["MeleeMastery"]
             }
         ]
     
     def unlock_skill(self, skill_id):
-        """解鎖技能"""
+        """閫?????""
         if skill_id in self.skill_map:
             skill = self.skill_map[skill_id]
             if not skill["is_unlocked"] and self.available_skill_points > 0:
@@ -419,7 +401,7 @@ class MockSkillSystem:
         return False
     
     def add_skill_experience(self, skill_id, amount):
-        """添加技能經驗"""
+        """瘛餃???賜?撽?""
         if skill_id in self.skill_map:
             skill = self.skill_map[skill_id]
             if skill["is_unlocked"]:
@@ -430,20 +412,20 @@ class MockSkillSystem:
                     skill["experience_to_next"] = self.calculate_experience_requirement(skill["current_level"])
     
     def get_skill(self, skill_id):
-        """獲取技能"""
+        """?脣????""
         return self.skill_map.get(skill_id, {}).copy()
     
     def calculate_experience_requirement(self, level):
-        """計算經驗需求"""
+        """閮?蝬??瘙?""
         return int(100 * (level ** 1.5))
     
     def choose_specialization_path(self, path):
-        """選擇專精路徑"""
+        """?豢?撠移頝臬?"""
         self.current_specialization = path
         self.available_skill_points += 2
     
     def get_specialization_path_color(self, path):
-        """獲取專精路徑顏色"""
+        """?脣?撠移頝臬?憿"""
         colors = {
             ESpecializationPath.Commander: (1.0, 0.2, 0.2),
             ESpecializationPath.Tactician: (0.2, 0.2, 1.0),
@@ -455,7 +437,7 @@ class MockSkillSystem:
         return colors.get(path, (1.0, 1.0, 1.0))
     
     def calculate_skill_effect(self, skill_id, effect_type):
-        """計算技能效果"""
+        """閮???賣???""
         skill = self.get_skill(skill_id)
         if not skill["is_unlocked"]:
             return 0.0
@@ -468,7 +450,7 @@ class MockSkillSystem:
         return total_effect
     
     def can_unlock_skill(self, skill_id, character_data):
-        """檢查是否可以解鎖技能"""
+        """瑼Ｘ?臬?臭誑閫?????""
         if skill_id not in self.skill_map:
             return False
         
@@ -477,7 +459,7 @@ class MockSkillSystem:
 
 
 class MockSkillManager:
-    """模擬技能管理器"""
+    """璅⊥??賜恣?"""
     
     def __init__(self):
         self.is_initialized = False
@@ -487,14 +469,14 @@ class MockSkillManager:
         self.experience_history = []
     
     def initialize(self, skill_system, character):
-        """初始化技能管理器"""
+        """?????賜恣?"""
         self.skill_system = skill_system
         self.character = character
         self.is_initialized = True
-        self.available_skill_points = 3  # 初始技能點
+        self.available_skill_points = 3  # ????賡?
     
     def grant_skill_experience(self, skill_id, amount, reason=""):
-        """給予技能經驗"""
+        """蝯虫???賜?撽?""
         if self.skill_system:
             self.skill_system.add_skill_experience(skill_id, amount)
             self.experience_history.append({
@@ -505,49 +487,48 @@ class MockSkillManager:
             })
     
     def grant_skill_points(self, points, reason=""):
-        """給予技能點"""
+        """蝯虫???賡?"""
         self.available_skill_points += points
     
     def process_combat_end(self, victory, enemy_count, duration):
-        """處理戰鬥結束"""
+        """???圈洛蝯?"""
         base_exp = int(10 * enemy_count)
         if victory:
             base_exp = int(base_exp * 1.5)
         
-        # 分配經驗給戰鬥技能
-        self.grant_skill_experience("TacticalCommand", base_exp, "戰鬥")
-        self.grant_skill_experience("MeleeMastery", int(base_exp * 0.8), "戰鬥")
+        # ??蝬?蝯行擛交???        self.grant_skill_experience("TacticalCommand", base_exp, "?圈洛")
+        self.grant_skill_experience("MeleeMastery", int(base_exp * 0.8), "?圈洛")
         
         if victory:
-            self.grant_skill_points(1, "戰鬥勝利")
+            self.grant_skill_points(1, "?圈洛?")
     
     def process_quest_completion(self, quest_id, difficulty):
-        """處理任務完成"""
+        """??隞餃?摰?"""
         base_exp = difficulty
-        self.grant_skill_experience("StrategicPlanning", base_exp, "任務")
-        self.grant_skill_points(int(difficulty / 10), "任務完成")
+        self.grant_skill_experience("StrategicPlanning", base_exp, "隞餃?")
+        self.grant_skill_points(int(difficulty / 10), "隞餃?摰?")
     
     def process_historical_event(self, event_id, related_skills):
-        """處理歷史事件"""
+        """??甇瑕鈭辣"""
         base_exp = 50
         for skill_id in related_skills:
-            self.grant_skill_experience(skill_id, base_exp, "歷史事件")
-        self.grant_skill_points(1, f"歷史事件: {event_id}")
+            self.grant_skill_experience(skill_id, base_exp, "甇瑕鈭辣")
+        self.grant_skill_points(1, f"甇瑕鈭辣: {event_id}")
     
     def auto_distribute_experience(self, total_exp, primary_category):
-        """自動分配經驗"""
-        # 簡化實現
-        self.grant_skill_experience("TacticalCommand", total_exp // 2, "自動分配")
-        self.grant_skill_experience("Leadership", total_exp // 2, "自動分配")
+        """?芸???蝬?"""
+        # 蝪∪?撖衣
+        self.grant_skill_experience("TacticalCommand", total_exp // 2, "?芸???")
+        self.grant_skill_experience("Leadership", total_exp // 2, "?芸???")
     
     def process_character_level_up(self, new_level):
-        """處理角色升級"""
-        self.grant_skill_points(2, f"升級到{new_level}級")
-        self.grant_skill_experience("TacticalCommand", 50, "升級獎勵")
-        self.grant_skill_experience("Leadership", 50, "升級獎勵")
+        """??閫??"""
+        self.grant_skill_points(2, f"???閃new_level}蝝?)
+        self.grant_skill_experience("TacticalCommand", 50, "???")
+        self.grant_skill_experience("Leadership", 50, "???")
     
     def validate_skill_action(self, skill_id, action_type):
-        """驗證技能操作"""
+        """撽???賣?雿?""
         if not self.skill_system:
             return False
         
@@ -560,12 +541,11 @@ class MockSkillManager:
         return False
     
     def get_recommended_skills(self):
-        """獲取推薦技能"""
+        """?脣??刻???""
         if not self.skill_system:
             return []
         
-        # 簡化實現，返回所有可解鎖的技能
-        recommended = []
+        # 蝪∪?撖衣嚗????閫??????        recommended = []
         for skill_id, skill in self.skill_system.skill_map.items():
             if not skill["is_unlocked"]:
                 recommended.append(skill_id)
@@ -573,20 +553,20 @@ class MockSkillManager:
         return recommended
     
     def get_skill_development_advice(self):
-        """獲取技能發展建議"""
-        advice = "技能發展建議：\n"
-        advice += f"• 你有 {self.available_skill_points} 個可用技能點\n"
+        """?脣???賜撅遣霅?""
+        advice = "??賜撅遣霅堆?\n"
+        advice += f"??雿? {self.available_skill_points} ??冽??賡?\n"
         
         unlocked_count = sum(1 for skill in self.skill_system.skill_map.values() if skill["is_unlocked"])
         if unlocked_count > 0:
-            advice += f"• 已解鎖 {unlocked_count} 個技能\n"
+            advice += f"??撌脰圾??{unlocked_count} ???穀n"
         else:
-            advice += "• 建議解鎖第一個技能\n"
+            advice += "??撱箄降閫??蝚砌????穀n"
         
         return advice
     
     def reset_skill_system(self):
-        """重置技能系統"""
+        """?蔭??賜頂蝯?""
         if self.skill_system:
             for skill in self.skill_system.skill_map.values():
                 if skill["is_unlocked"]:
@@ -599,52 +579,52 @@ class MockSkillManager:
         return True
     
     def get_skill_experience_history(self, skill_id):
-        """獲取技能經驗歷史"""
+        """?脣???賜?撽風??""
         return [entry for entry in self.experience_history if entry["skill_id"] == skill_id]
     
     def unlock_skill(self, skill_id):
-        """解鎖技能（代理方法）"""
+        """閫????踝?隞???寞?嚗?""
         if self.skill_system:
             return self.skill_system.unlock_skill(skill_id)
         return False
     
     def get_skill(self, skill_id):
-        """獲取技能（代理方法）"""
+        """?脣???踝?隞???寞?嚗?""
         if self.skill_system:
             return self.skill_system.get_skill(skill_id)
         return {}
 
 
 def run_skill_system_tests():
-    """運行技能系統測試"""
-    print("開始運行 MingGoRTS 技能系統測試...")
+    """????賜頂蝯望葫閰?""
+    print("???? MingGoRTS ??賜頂蝯望葫閰?..")
     print("=" * 60)
     
-    # 創建測試套件
+    # ?萄遣皜祈岫憟辣
     suite = unittest.TestLoader().loadTestsFromTestCase(TestSkillSystem)
     
-    # 運行測試
+    # ??皜祈岫
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
     
     print("=" * 60)
-    print(f"測試完成！")
-    print(f"運行測試數量: {result.testsRun}")
-    print(f"失敗數量: {len(result.failures)}")
-    print(f"錯誤數量: {len(result.errors)}")
+    print(f"皜祈岫摰?嚗?)
+    print(f"??皜祈岫?賊?: {result.testsRun}")
+    print(f"憭望??賊?: {len(result.failures)}")
+    print(f"?航炊?賊?: {len(result.errors)}")
     
     if result.failures:
-        print("\n失敗的測試:")
+        print("\n憭望??葫閰?")
         for test, traceback in result.failures:
             print(f"- {test}: {traceback}")
     
     if result.errors:
-        print("\n錯誤的測試:")
+        print("\n?航炊?葫閰?")
         for test, traceback in result.errors:
             print(f"- {test}: {traceback}")
     
     success_rate = (result.testsRun - len(result.failures) - len(result.errors)) / result.testsRun * 100
-    print(f"\n成功率: {success_rate:.1f}%")
+    print(f"\n???? {success_rate:.1f}%")
     
     return result.wasSuccessful()
 
@@ -652,3 +632,4 @@ def run_skill_system_tests():
 if __name__ == "__main__":
     success = run_skill_system_tests()
     sys.exit(0 if success else 1)
+

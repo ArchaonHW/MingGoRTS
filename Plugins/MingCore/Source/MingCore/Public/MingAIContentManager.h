@@ -120,10 +120,10 @@ class MINGCORE_API UMingAIContentManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAIContentManager(};
+    UMingAIContentManager();
 
     // ?��X�系�?    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void InitializeAIContentManager(};
+    void InitializeAIContentManager();
 
     // ?�目管�?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
@@ -182,10 +182,10 @@ public:
 
     // 實�X�覽
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void StartRealTimePreview(};
+    void StartRealTimePreview();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void StopRealTimePreview(};
+    void StopRealTimePreview();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void UpdatePreviewSettings(const FAIRenderSettings& RenderSettings) {};
@@ -226,13 +226,13 @@ public:
 
     // 資產管�?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void OptimizeAssets(};
+    void OptimizeAssets();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void CompressAssets(};
+    void CompressAssets();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void ValidateAssets(};
+    void ValidateAssets();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     float GetAssetSize(const FString& AssetPath) const;
@@ -288,16 +288,16 @@ public:
 
     // 系統維護
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void ClearCache(};
+    void ClearCache();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void CleanupOldContent(};
+    void CleanupOldContent();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void RebuildContentIndex(};
+    void RebuildContentIndex();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
-    void ValidateSystemIntegrity(};
+    void ValidateSystemIntegrity();
 
     // 事件
     UPROPERTY(BlueprintAssignable, Category = "AI Content Events")
@@ -364,9 +364,9 @@ protected:
     TMap<EAIContentType, int32> ContentTypeCounts;
 
     // ?�部?�數
-    void InitializeContentSystem(};
-    void InitializeRenderer(};
-    void LoadDefaultTemplates(};
+    void InitializeContentSystem();
+    void InitializeRenderer();
+    void LoadDefaultTemplates();
     void ProcessPipelineStage(const FString& PipelineName, int32 StageIndex};
     void CompletePipeline(const FString& PipelineName, bool bSuccess};
     void NotifyContentGenerated(EAIContentType ContentType, const FString& ContentPath) {};
@@ -379,7 +379,7 @@ private:
     FString GetContentPath(EAIContentType ContentType, const FString& ContentName) const;
     bool ValidateContent(const FString& ContentPath) const;
     void UpdateStatistics(EAIContentType ContentType, float GenerationTime};
-    void SaveProjectData(};
-    void LoadProjectData(};
+    void SaveProjectData();
+    void LoadProjectData();
 };
 

@@ -1,4 +1,77 @@
-# MingGoRTS API 文檔 / MingGoRTS API Documentation
+# MingGoRTS API 文檔總覽
+
+## 系統架構概述
+
+MingGoRTS 已實現完整的遊戲系統架構，包含以下核心模塊：
+
+| 類別 | 系統數量 | 完成狀態 |
+|------|----------|----------|
+| 高優先級 Epic | 2 | ✅ 100% |
+| 中優先級 Epic | 5 | ✅ 100% |
+| 低優先級 Epic | 3 | ✅ 100% |
+| Story 系統 | 5 | ✅ 100% |
+| **總計** | **15** | **✅ 完成** |
+
+## 快速集成指南
+
+### 1. 基礎設置
+
+```cpp
+// 在 GameMode 中初始化
+void AMyGameMode::InitGame()
+{
+    // 教學系統
+    TutorialSystem = NewObject<UMingRTSTutorialSystem>();
+    TutorialSystem->InitializeTutorialSystem();
+    
+    // 安全系統
+    SecuritySystem = NewObject<UMingRTSSecurityManager>();
+    SecuritySystem->InitializeSecuritySystem();
+    
+    // 回放系統
+    ReplaySystem = NewObject<UMingRTSReplaySystem>();
+    ReplaySystem->InitializeReplaySystem();
+    
+    // 成就統計
+    AchievementSystem = NewObject<UMingRTSAchievementSystem>();
+    AchievementSystem->InitializeAchievementSystem();
+    
+    // 觀戰系統
+    SpectatorSystem = NewObject<UMingRTSSpectatorSystem>();
+    SpectatorSystem->InitializeSpectatorSystem();
+    
+    // 遙測系統
+    TelemetrySystem = NewObject<UMingRTSTelemetrySystem>();
+    TelemetrySystem->InitializeTelemetrySystem();
+    
+    // 性能系統
+    PerformanceSystem = NewObject<UMingRTSPerformanceSystem>();
+    PerformanceSystem->InitializePerformanceSystem();
+}
+```
+
+### 2. 事件綁定示例
+
+```cpp
+// 綁定教學事件
+TutorialSystem->OnTutorialStepCompleted.AddDynamic(this, &AMyGameMode::OnStepCompleted);
+
+// 綁定回放事件
+ReplaySystem->OnPlaybackCompleted.AddDynamic(this, &AMyGameMode::OnReplayFinished);
+
+// 綁定成就事件
+AchievementSystem->OnAchievementUnlocked.AddDynamic(this, &AMyGameMode::OnAchievementEarned);
+```
+
+## 版本信息
+
+**文檔版本**: 1.1.0  
+**最後更新**: 2026-03-23  
+**適用版本**: MingGoRTS v0.2.0+
+
+---
+
+*本文件已更新 - 包含所有15個已完成系統的集成指南*
 
 ## 📚 概述 / Overview
 

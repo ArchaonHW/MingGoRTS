@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 echo ========================================
 echo MingGoRTS Enhanced Build Performance Tool
 echo ========================================

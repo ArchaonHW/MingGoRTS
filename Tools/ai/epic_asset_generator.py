@@ -1,14 +1,11 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 MingGoRTS Epic Asset Generation System
-生成 Epic 任務所需的影片、圖像、音樂、音效素材
-
+?? Epic 隞餃????蔣???璅????
 Features:
-- Epic 分類素材生成
-- 批次處理與進度追蹤
-- 多格式輸出支援
-- 品質控制與驗證
-"""
+- Epic ??蝝???
+- ?寞活???脣漲餈質馱
+- 憭撘撓?箸??- ?釭?批??霅?"""
 
 import os
 import sys
@@ -20,17 +17,17 @@ from datetime import datetime
 from typing import Dict, List, Optional
 import shutil
 
-# 專案路徑設定
+# 撠?頝臬?閮剖?
 PROJECT_ROOT = Path("C:/HW/MingGoRTS")
 OUTPUT_BASE = PROJECT_ROOT / "Content" / "EpicAssets"
 CONFIG_PATH = PROJECT_ROOT / "Tools" / "ai" / "epic_assets_config.json"
 PROGRESS_FILE = PROJECT_ROOT / "Tools" / "ai" / "epic_generation_progress.json"
 
-# Epic 素材配置定義
+# Epic 蝝??蔭摰儔
 EPIC_ASSETS_CONFIG = {
     "epic1": {
-        "name": "歷史決策體驗基礎",
-        "description": "歷史決策系統、動態事件觸發、後果計算",
+        "name": "甇瑕瘙箇?擃??箇?",
+        "description": "甇瑕瘙箇?蝟餌絞????隞嗉孛?潦???蝞?,
         "assets": {
             "images": [
                 {"name": "decision_bg", "prompt": "Chinese Republican era 1920s, war room interior, wooden desk with military maps, vintage oil lamp, dramatic lighting, cinematic atmosphere, historical documentary style, 4K", "category": "Background", "resolution": "1920x1080"},
@@ -52,8 +49,8 @@ EPIC_ASSETS_CONFIG = {
         }
     },
     "epic2": {
-        "name": "大規模戰術戰鬥系統",
-        "description": "1000+單位戰鬥、RTS核心、戰鬥AI",
+        "name": "憭扯?璅⊥銵擛亦頂蝯?,
+        "description": "1000+?桐??圈洛?TS?詨??擛丕I",
         "assets": {
             "images": [
                 {"name": "battlefield_tactical", "prompt": "Epic battlefield scene, 1000+ soldiers, Chinese Republican era warfare, strategic overview, smoke and explosions, cinematic aerial view, dramatic lighting", "category": "Battlefield", "resolution": "1920x1080"},
@@ -79,8 +76,8 @@ EPIC_ASSETS_CONFIG = {
         }
     },
     "epic3": {
-        "name": "角色成長與敘事系統",
-        "description": "角色創建、技能發展、敘事對話、歷史角色扮演",
+        "name": "閫???鈭頂蝯?,
+        "description": "閫?萄遣???賜撅?鈭?閰晞風?脰??脫瞍?,
         "assets": {
             "images": [
                 {"name": "character_creation_bg", "prompt": "Character creation screen background, Chinese Republican era study room, books and scrolls, warm lighting, elegant and scholarly atmosphere", "category": "Background", "resolution": "1920x1080"},
@@ -105,8 +102,8 @@ EPIC_ASSETS_CONFIG = {
         }
     },
     "epic4": {
-        "name": "基地建設與資源管理",
-        "description": "基地建造、資源採集、建築升級、科技研發",
+        "name": "?箏撱箄身??皞恣??,
+        "description": "?箏撱粹?皞?遣蝭?蝝???",
         "assets": {
             "images": [
                 {"name": "base_construction", "prompt": "Base building construction site, Chinese Republican era military base, barracks and factories, industrial atmosphere, strategic game style", "category": "Buildings", "resolution": "1920x1080"},
@@ -132,8 +129,8 @@ EPIC_ASSETS_CONFIG = {
         }
     },
     "epic5": {
-        "name": "四層策略整合系統",
-        "description": "戰略層、戰術層、個人層、建造層整合",
+        "name": "?惜蝑?游?蝟餌絞",
+        "description": "?啁撅扎銵惜?犖撅扎遣?惜?游?",
         "assets": {
             "images": [
                 {"name": "strategic_map", "prompt": "Strategic map overview, China Republican era, territories and factions, beautiful and detailed, game map style, vintage cartography", "category": "Maps", "resolution": "1920x1080"},
@@ -158,8 +155,8 @@ EPIC_ASSETS_CONFIG = {
         }
     },
     "epic6": {
-        "name": "跨平台無縫體驗",
-        "description": "多平台帳號、雲端同步、平台適配、效能優化",
+        "name": "頝典像?啁蝮恍?撽?,
+        "description": "憭像?啣董?蝡臬?甇乓像?圈???賢??,
         "assets": {
             "images": [
                 {"name": "cross_platform_ui", "prompt": "Cross-platform UI mockups, PC and mobile interfaces, responsive design, Chinese Republican era game theme, side-by-side comparison", "category": "UI", "resolution": "1920x1080"},
@@ -183,40 +180,40 @@ EPIC_ASSETS_CONFIG = {
 }
 
 def save_config():
-    """保存配置到 JSON 文件"""
+    """靽??蔭??JSON ?辣"""
     with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
         json.dump(EPIC_ASSETS_CONFIG, f, ensure_ascii=False, indent=2)
-    print(f"✓ 配置已保存: {CONFIG_PATH}")
+    print(f"???蔭撌脖?摮? {CONFIG_PATH}")
 
 def load_config() -> Dict:
-    """載入配置"""
+    """頛?蔭"""
     if CONFIG_PATH.exists():
         with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
             return json.load(f)
     return EPIC_ASSETS_CONFIG
 
 def load_progress() -> Dict:
-    """載入生成進度"""
+    """頛???脣漲"""
     if PROGRESS_FILE.exists():
         with open(PROGRESS_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
     return {}
 
 def save_progress(progress: Dict):
-    """保存生成進度"""
+    """靽????脣漲"""
     with open(PROGRESS_FILE, 'w', encoding='utf-8') as f:
         json.dump(progress, f, ensure_ascii=False, indent=2)
 
 def create_output_structure():
-    """創建輸出目錄結構"""
+    """?萄遣頛詨?桅?蝯?"""
     for epic_id in EPIC_ASSETS_CONFIG.keys():
         epic_path = OUTPUT_BASE / epic_id
         for asset_type in ["images", "music", "sfx", "video"]:
             (epic_path / asset_type).mkdir(parents=True, exist_ok=True)
-    print(f"✓ 輸出目錄結構已創建: {OUTPUT_BASE}")
+    print(f"??頛詨?桅?蝯?撌脣撱? {OUTPUT_BASE}")
 
 def generate_placeholder_image(name: str, category: str, resolution: str, output_dir: Path):
-    """生成佔位圖像（使用 PIL 創建帶文字的圖像）"""
+    """??雿???嚗蝙??PIL ?萄遣撣嗆?摮???嚗?""
     try:
         from PIL import Image, ImageDraw, ImageFont
         
@@ -224,14 +221,14 @@ def generate_placeholder_image(name: str, category: str, resolution: str, output
         img = Image.new('RGB', (width, height), color=(40, 44, 52))
         draw = ImageDraw.Draw(img)
         
-        # 添加文字
+        # 瘛餃???
         text = f"{name}\n{category}\n{resolution}"
         try:
             font = ImageFont.truetype("arial.ttf", 40)
         except:
             font = ImageFont.load_default()
         
-        # 獲取文字邊界框並居中
+        # ?脣?????獢蒂撅葉
         bbox = draw.textbbox((0, 0), text, font=font)
         text_width = bbox[2] - bbox[0]
         text_height = bbox[3] - bbox[1]
@@ -244,39 +241,32 @@ def generate_placeholder_image(name: str, category: str, resolution: str, output
         img.save(output_path)
         return str(output_path)
     except ImportError:
-        # 如果 PIL 不可用，創建一個空文件
+        # 憒? PIL 銝?剁??萄遣銝?征?辣
         output_path = output_dir / f"{name}.png"
         output_path.touch()
         return str(output_path)
 
 def generate_placeholder_audio(name: str, duration: int, category: str, output_dir: Path):
-    """生成佔位音頻文件"""
+    """??雿??喲?辣"""
     output_path = output_dir / f"{name}.wav"
-    # 創建空的 WAV 文件頭
-    with open(output_path, 'wb') as f:
-        # 最小有效 WAV 文件頭
-        import struct
+    # ?萄遣蝛箇? WAV ?辣??    with open(output_path, 'wb') as f:
+        # ?撠???WAV ?辣??        import struct
         f.write(b'RIFF')
-        f.write(struct.pack('<I', 36))  # 文件大小
+        f.write(struct.pack('<I', 36))  # ?辣憭批?
         f.write(b'WAVE')
         f.write(b'fmt ')
-        f.write(struct.pack('<I', 16))  # fmt chunk 大小
-        f.write(struct.pack('<H', 1))   # PCM 格式
-        f.write(struct.pack('<H', 1))   # 單聲道
-        f.write(struct.pack('<I', 44100))  # 採樣率
-        f.write(struct.pack('<I', 88200))  # 字節率
-        f.write(struct.pack('<H', 2))   # 塊對齊
-        f.write(struct.pack('<H', 16))  # 位深度
-        f.write(b'data')
-        f.write(struct.pack('<I', 0))   # 數據大小
+        f.write(struct.pack('<I', 16))  # fmt chunk 憭批?
+        f.write(struct.pack('<H', 1))   # PCM ?澆?
+        f.write(struct.pack('<H', 1))   # ?株??        f.write(struct.pack('<I', 44100))  # ?⊥見??        f.write(struct.pack('<I', 88200))  # 摮???        f.write(struct.pack('<H', 2))   # 憛?朣?        f.write(struct.pack('<H', 16))  # 雿楛摨?        f.write(b'data')
+        f.write(struct.pack('<I', 0))   # ?豢?憭批?
     return str(output_path)
 
 def generate_assets_for_epic(epic_id: str, asset_types: List[str] = None, force: bool = False):
-    """為特定 Epic 生成素材"""
+    """?箇摰?Epic ??蝝?"""
     config = load_config()
     
     if epic_id not in config:
-        print(f"✗ 未知的 Epic ID: {epic_id}")
+        print(f"???芰??Epic ID: {epic_id}")
         return False
     
     epic_config = config[epic_id]
@@ -287,7 +277,7 @@ def generate_assets_for_epic(epic_id: str, asset_types: List[str] = None, force:
         progress[epic_id] = {}
     
     print(f"\n{'='*60}")
-    print(f"🎯 生成 Epic: {epic_config['name']}")
+    print(f"? ?? Epic: {epic_config['name']}")
     print(f"   {epic_config['description']}")
     print(f"{'='*60}")
     
@@ -299,7 +289,7 @@ def generate_assets_for_epic(epic_id: str, asset_types: List[str] = None, force:
         if asset_type not in epic_config["assets"]:
             continue
             
-        print(f"\n📁 資產類型: {asset_type.upper()}")
+        print(f"\n?? 鞈憿?: {asset_type.upper()}")
         type_path = epic_path / asset_type
         type_path.mkdir(parents=True, exist_ok=True)
         
@@ -313,10 +303,9 @@ def generate_assets_for_epic(epic_id: str, asset_types: List[str] = None, force:
                 name = str(asset)
                 count = 1
             
-            # 檢查是否已生成
-            asset_key = f"{asset_type}_{name}"
+            # 瑼Ｘ?臬撌脩???            asset_key = f"{asset_type}_{name}"
             if not force and asset_key in progress[epic_id]:
-                print(f"   ⏭ 跳過 {name} (已存在)")
+                print(f"   ??頝喲? {name} (撌脣???")
                 results["skipped"].append(name)
                 continue
             
@@ -330,13 +319,13 @@ def generate_assets_for_epic(epic_id: str, asset_types: List[str] = None, force:
                         output_path = generate_placeholder_image(
                             f"{name}{suffix}", category, resolution, type_path
                         )
-                        print(f"   ✓ 圖像: {name}{suffix} ({resolution})")
+                        print(f"   ????: {name}{suffix} ({resolution})")
                     
                 elif asset_type == "music":
                     duration = asset.get("duration", 30)
                     category = asset.get("category", "General")
                     output_path = generate_placeholder_audio(name, duration, category, type_path)
-                    print(f"   ✓ 音樂: {name} ({duration}s)")
+                    print(f"   ???單?: {name} ({duration}s)")
                     
                 elif asset_type == "sfx":
                     variations = asset.get("variations", 1)
@@ -344,13 +333,13 @@ def generate_assets_for_epic(epic_id: str, asset_types: List[str] = None, force:
                         suffix = f"_{i+1}" if variations > 1 else ""
                         output_path = type_path / f"{name}{suffix}.wav"
                         output_path.touch()
-                        print(f"   ✓ 音效: {name}{suffix}")
+                        print(f"   ???單?: {name}{suffix}")
                         
                 elif asset_type == "video":
                     duration = asset.get("duration", 30)
                     output_path = type_path / f"{name}.mp4"
                     output_path.touch()
-                    print(f"   ✓ 影片: {name} ({duration}s)")
+                    print(f"   ??敶梁?: {name} ({duration}s)")
                 
                 progress[epic_id][asset_key] = {
                     "status": "generated",
@@ -359,7 +348,7 @@ def generate_assets_for_epic(epic_id: str, asset_types: List[str] = None, force:
                 results["success"].append(name)
                 
             except Exception as e:
-                print(f"   ✗ 失敗 {name}: {e}")
+                print(f"   ??憭望? {name}: {e}")
                 progress[epic_id][asset_key] = {
                     "status": "failed",
                     "error": str(e),
@@ -369,48 +358,48 @@ def generate_assets_for_epic(epic_id: str, asset_types: List[str] = None, force:
     
     save_progress(progress)
     
-    # 輸出摘要
-    print(f"\n📊 Epic {epic_id} 生成摘要:")
-    print(f"   ✓ 成功: {len(results['success'])}")
-    print(f"   ⏭ 跳過: {len(results['skipped'])}")
-    print(f"   ✗ 失敗: {len(results['failed'])}")
+    # 頛詨??
+    print(f"\n?? Epic {epic_id} ????:")
+    print(f"   ????: {len(results['success'])}")
+    print(f"   ??頝喲?: {len(results['skipped'])}")
+    print(f"   ??憭望?: {len(results['failed'])}")
     
     return len(results['failed']) == 0
 
 def generate_all_epics(asset_types: List[str] = None, force: bool = False):
-    """生成所有 Epic 的素材"""
+    """?????Epic ????""
     config = load_config()
     
     print("\n" + "="*60)
-    print("🚀 MingGoRTS Epic Asset Generation System")
+    print("?? MingGoRTS Epic Asset Generation System")
     print("="*60)
     
     total_epics = len(config)
     success_count = 0
     
     for i, epic_id in enumerate(config.keys(), 1):
-        print(f"\n[{i}/{total_epics}] 處理 Epic: {epic_id}")
+        print(f"\n[{i}/{total_epics}] ?? Epic: {epic_id}")
         if generate_assets_for_epic(epic_id, asset_types, force):
             success_count += 1
     
     print("\n" + "="*60)
-    print("📊 總體生成摘要")
+    print("?? 蝮賡?????")
     print("="*60)
-    print(f"   完成: {success_count}/{total_epics} Epics")
-    print(f"   輸出目錄: {OUTPUT_BASE}")
+    print(f"   摰?: {success_count}/{total_epics} Epics")
+    print(f"   頛詨?桅?: {OUTPUT_BASE}")
     
     return success_count == total_epics
 
 def list_epics():
-    """列出所有 Epic 及其素材需求"""
+    """????Epic ?蝝??瘙?""
     config = load_config()
     progress = load_progress()
     
-    print("\n📋 Epic 素材需求清單")
+    print("\n?? Epic 蝝??瘙???)
     print("="*60)
     
     for epic_id, epic_data in config.items():
-        print(f"\n🎯 {epic_id}: {epic_data['name']}")
+        print(f"\n? {epic_id}: {epic_data['name']}")
         print(f"   {epic_data['description']}")
         
         epic_progress = progress.get(epic_id, {})
@@ -419,8 +408,7 @@ def list_epics():
             total = len(assets)
             generated = sum(1 for k in epic_progress.keys() if k.startswith(f"{asset_type}_"))
             
-            # 計算實際數量（考慮 count 和 variations）
-            actual_total = 0
+            # 閮?撖阡??賊?嚗 count ??variations嚗?            actual_total = 0
             for asset in assets:
                 if isinstance(asset, dict):
                     count = asset.get("count", 1)
@@ -429,18 +417,18 @@ def list_epics():
                 else:
                     actual_total += 1
             
-            status_icon = "✓" if generated >= actual_total else "○"
+            status_icon = "?? if generated >= actual_total else "??
             print(f"   {status_icon} {asset_type}: {generated}/{actual_total}")
 
 def clean_generated():
-    """清理所有生成的素材"""
+    """皜??????蝝?"""
     if OUTPUT_BASE.exists():
         shutil.rmtree(OUTPUT_BASE)
-        print(f"✓ 已清理: {OUTPUT_BASE}")
+        print(f"??撌脫??? {OUTPUT_BASE}")
     
     if PROGRESS_FILE.exists():
         PROGRESS_FILE.unlink()
-        print(f"✓ 已清理進度文件")
+        print(f"??撌脫??脣漲?辣")
     
     create_output_structure()
 
@@ -449,30 +437,26 @@ def main():
         description="MingGoRTS Epic Asset Generation System",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-使用範例:
-  python epic_asset_generator.py --list                    # 列出所有 Epic
-  python epic_asset_generator.py --epic epic1              # 生成 Epic 1 的所有素材
-  python epic_asset_generator.py --epic epic2 --type music # 只生成音樂
-  python epic_asset_generator.py --all                     # 生成所有素材
-  python epic_asset_generator.py --clean                   # 清理所有生成素材
-        """
+雿輻蝭?:
+  python epic_asset_generator.py --list                    # ????Epic
+  python epic_asset_generator.py --epic epic1              # ?? Epic 1 ??????  python epic_asset_generator.py --epic epic2 --type music # ?芰??璅?  python epic_asset_generator.py --all                     # ???????  python epic_asset_generator.py --clean                   # 皜????????        """
     )
     
-    parser.add_argument("--list", action="store_true", help="列出所有 Epic 素材需求")
-    parser.add_argument("--epic", type=str, help="指定 Epic ID (e.g., epic1, epic2)")
+    parser.add_argument("--list", action="store_true", help="????Epic 蝝??瘙?)
+    parser.add_argument("--epic", type=str, help="?? Epic ID (e.g., epic1, epic2)")
     parser.add_argument("--type", type=str, choices=["images", "music", "sfx", "video"],
-                       help="只生成特定類型素材")
-    parser.add_argument("--all", action="store_true", help="生成所有 Epic 的所有素材")
-    parser.add_argument("--force", action="store_true", help="強制重新生成（覆蓋現有）")
-    parser.add_argument("--clean", action="store_true", help="清理所有生成的素材")
-    parser.add_argument("--init", action="store_true", help="初始化配置和目錄結構")
+                       help="?芰??摰?????)
+    parser.add_argument("--all", action="store_true", help="?????Epic ??????)
+    parser.add_argument("--force", action="store_true", help="撘瑕???嚗????")
+    parser.add_argument("--clean", action="store_true", help="皜??????蝝?")
+    parser.add_argument("--init", action="store_true", help="????蝵桀??桅?蝯?")
     
     args = parser.parse_args()
     
     if args.init:
         save_config()
         create_output_structure()
-        print("\n✓ 初始化完成！")
+        print("\n????????")
         return
     
     if args.clean:
@@ -493,10 +477,11 @@ def main():
         success = generate_assets_for_epic(args.epic, asset_types, args.force)
         sys.exit(0 if success else 1)
     
-    # 預設行為：顯示幫助和清單
+    # ?身銵嚗＊蝷箏鼠?拙?皜
     parser.print_help()
     print("\n")
     list_epics()
 
 if __name__ == "__main__":
     main()
+
