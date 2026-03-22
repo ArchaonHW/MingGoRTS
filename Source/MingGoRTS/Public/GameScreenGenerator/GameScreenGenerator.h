@@ -1,5 +1,5 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 遊戲畫面生成器 - 主界面和遊戲場景生成
+// ?�戲?�面?��???- 主�??��??�戲?�景?��?
 
 #pragma once
 
@@ -10,7 +10,7 @@
 #include "GameScreenGenerator.generated.h"
 
 /**
- * 畫面類型枚舉
+ * ?�面類�??��?
  */
 UENUM(BlueprintType)
 enum class EScreenType : uint8
@@ -28,7 +28,7 @@ enum class EScreenType : uint8
 };
 
 /**
- * 畫面風格枚舉
+ * ?�面風格?��?
  */
 UENUM(BlueprintType)
 enum class EScreenStyle : uint8
@@ -41,8 +41,7 @@ enum class EScreenStyle : uint8
 };
 
 /**
- * 畫面解析度枚舉
- */
+ * ?�面�??度�??? */
 UENUM(BlueprintType)
 enum class EScreenResolution : uint8
 {
@@ -54,22 +53,22 @@ enum class EScreenResolution : uint8
 };
 
 /**
- * 畫面生成參數
+ * ?�面?��??�數
  */
 USTRUCT(BlueprintType)
 struct FScreenGenerationParams
 {
     GENERATED_BODY()
 
-    /** 畫面類型 */
+    /** ?�面類�? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     EScreenType ScreenType;
 
-    /** 畫面風格 */
+    /** ?�面風格 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     EScreenStyle ScreenStyle;
 
-    /** 解析度 */
+    /** �??�?*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     EScreenResolution Resolution;
 
@@ -81,35 +80,35 @@ struct FScreenGenerationParams
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     int32 Height;
 
-    /** 背景顏色 */
+    /** ?�景顏色 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     FLinearColor BackgroundColor;
 
-    /** 主題顏色 */
+    /** 主�?顏色 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     FLinearColor PrimaryColor;
 
-    /** 次要顏色 */
+    /** 次�?顏色 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     FLinearColor SecondaryColor;
 
-    /** 文字顏色 */
+    /** ?��?顏色 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     FLinearColor TextColor;
 
-    /** 動畫效果 */
+    /** ?�畫?��? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     bool bEnableAnimation;
 
-    /** 粒子效果 */
+    /** 粒�??��? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     bool bEnableParticles;
 
-    /** 光影效果 */
+    /** ?�影?��? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     bool bEnableLighting;
 
-    /** 質量級別 */
+    /** 質�?級別 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Generation")
     int32 QualityLevel;
 
@@ -132,18 +131,18 @@ struct FScreenGenerationParams
 };
 
 /**
- * 畫面元素數據
+ * ?�面?��??��?
  */
 USTRUCT(BlueprintType)
 struct FScreenElement
 {
     GENERATED_BODY()
 
-    /** 元素類型 */
+    /** ?��?類�? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FString ElementType;
 
-    /** 元素名稱 */
+    /** ?��??�稱 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FString ElementName;
 
@@ -151,15 +150,15 @@ struct FScreenElement
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FVector2D Position;
 
-    /** 大小 */
+    /** 大�? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FVector2D Size;
 
-    /** 旋轉 */
+    /** ?��? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     float Rotation;
 
-    /** 透明度 */
+    /** ?��?�?*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     float Opacity;
 
@@ -167,23 +166,23 @@ struct FScreenElement
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FLinearColor Color;
 
-    /** 紋理路徑 */
+    /** 紋�?路�? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FString TexturePath;
 
-    /** 文字內容 */
+    /** ?��??�容 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     FString TextContent;
 
-    /** 字體大小 */
+    /** 字�?大�? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     int32 FontSize;
 
-    /** 是否可見 */
+    /** ?�否?��? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     bool bVisible;
 
-    /** 是否可交互 */
+    /** ?�否?�交�?*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Element")
     bool bInteractive;
 
@@ -205,26 +204,25 @@ struct FScreenElement
 };
 
 /**
- * 生成的畫面數據
- */
+ * ?��??�畫?�數?? */
 USTRUCT(BlueprintType)
 struct FGeneratedScreen
 {
     GENERATED_BODY()
 
-    /** 畫面ID */
+    /** ?�面ID */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     FString ScreenID;
 
-    /** 畫面類型 */
+    /** ?�面類�? */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     EScreenType ScreenType;
 
-    /** 畫面風格 */
+    /** ?�面風格 */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     EScreenStyle ScreenStyle;
 
-    /** 解析度 */
+    /** �??�?*/
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     EScreenResolution Resolution;
 
@@ -236,19 +234,19 @@ struct FGeneratedScreen
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     int32 Height;
 
-    /** 畫面元素 */
+    /** ?�面?��? */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     TArray<FScreenElement> Elements;
 
-    /** 紋理 */
+    /** 紋�? */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     UTexture2D* ScreenTexture;
 
-    /** 生成時間 */
+    /** ?��??��? */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     FDateTime GenerationTime;
 
-    /** 文件路徑 */
+    /** ?�件路�? */
     UPROPERTY(BlueprintReadOnly, Category = "Generated Screen")
     FString FilePath;
 
@@ -267,8 +265,7 @@ struct FGeneratedScreen
 };
 
 /**
- * 遊戲畫面生成器
- */
+ * ?�戲?�面?��??? */
 UCLASS(BlueprintType, Blueprintable)
 class GAMESCREENGENERATOR_API UGameScreenGenerator : public UObject
 {
@@ -277,94 +274,94 @@ class GAMESCREENGENERATOR_API UGameScreenGenerator : public UObject
 public:
     UGameScreenGenerator();
 
-    /** 初始化畫面生成器 */
+    /** ?��??�畫?��??�器 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     void InitializeScreenGenerator();
 
-    /** 生成畫面 */
+    /** ?��??�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateScreen(const FScreenGenerationParams& Params);
 
-    /** 生成主菜單畫面 */
+    /** ?��?主�??�畫??*/
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateMainMenu(const FScreenGenerationParams& Params);
 
-    /** 生成勢力選擇畫面 */
+    /** ?��??��??��??�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateFactionSelect(const FScreenGenerationParams& Params);
 
-    /** 生成戰略地圖畫面 */
+    /** ?��??�略?��??�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateStrategicMap(const FScreenGenerationParams& Params);
 
-    /** 生成戰鬥場景畫面 */
+    /** ?��??�鬥?�景?�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateBattleScene(const FScreenGenerationParams& Params);
 
-    /** 生成城市視圖畫面 */
+    /** ?��??��?視�??�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateCityView(const FScreenGenerationParams& Params);
 
-    /** 生成外交面板畫面 */
+    /** ?��?外交?�板?�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateDiplomacyPanel(const FScreenGenerationParams& Params);
 
-    /** 生成經濟面板畫面 */
+    /** ?��?經�??�板?�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateEconomyPanel(const FScreenGenerationParams& Params);
 
-    /** 生成研究面板畫面 */
+    /** ?��??�究?�板?�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateResearchPanel(const FScreenGenerationParams& Params);
 
-    /** 生成設置菜單畫面 */
+    /** ?��?設置?�單?�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateSettingsMenu(const FScreenGenerationParams& Params);
 
-    /** 生成載入畫面 */
+    /** ?��?載入?�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FString GenerateLoadingScreen(const FScreenGenerationParams& Params);
 
-    /** 獲取生成的畫面 */
+    /** ?��??��??�畫??*/
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     FGeneratedScreen GetGeneratedScreen(const FString& ScreenID);
 
-    /** 獲取所有生成的畫面 */
+    /** ?��??�?��??��??�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     TArray<FGeneratedScreen> GetAllGeneratedScreens();
 
-    /** 刪除生成的畫面 */
+    /** ?�除?��??�畫??*/
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     bool DeleteGeneratedScreen(const FString& ScreenID);
 
-    /** 導出畫面為圖片 */
+    /** 導出?�面?��???*/
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     bool ExportScreenAsImage(const FString& ScreenID, const FString& FilePath);
 
-    /** 預覽畫面 */
+    /** ?�覽?�面 */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     void PreviewScreen(const FString& ScreenID);
 
-    /** 應用畫面主題 */
+    /** ?�用?�面主�? */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     void ApplyScreenTheme(FScreenElement& Element, EScreenStyle Style);
 
-    /** 添加動畫效果 */
+    /** 添�??�畫?��? */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     void AddAnimationEffect(FScreenElement& Element, const FString& AnimationType);
 
-    /** 添加粒子效果 */
+    /** 添�?粒�??��? */
     UFUNCTION(BlueprintCallable, Category = "Screen Generator")
     void AddParticleEffect(FScreenElement& Element, const FString& ParticleType);
 
 public:
-    /** 畫面生成開始事件 */
+    /** ?�面?��??��?事件 */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScreenGenerationStarted, const FString&, ScreenID);
 
-    /** 畫面生成完成事件 */
+    /** ?�面?��?完�?事件 */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnScreenGenerationCompleted, const FString&, ScreenID, const FGeneratedScreen&, GeneratedScreen);
 
-    /** 畫面生成失敗事件 */
+    /** ?�面?��?失�?事件 */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnScreenGenerationFailed, const FString&, ScreenID, const FString&, ErrorMessage);
 
     UPROPERTY(BlueprintAssignable, Category = "Screen Generator|Events")
@@ -377,88 +374,88 @@ public:
     FOnScreenGenerationFailed OnScreenGenerationFailed;
 
 protected:
-    /** 創建畫面元素 */
+    /** ?�建?�面?��? */
     FScreenElement CreateScreenElement(const FString& Type, const FString& Name, const FVector2D& Position, const FVector2D& Size);
 
-    /** 設置元素樣式 */
+    /** 設置?��?�?? */
     void SetElementStyle(FScreenElement& Element, const FScreenGenerationParams& Params);
 
-    /** 渲染畫面 */
+    /** 渲�??�面 */
     UTexture2D* RenderScreen(const TArray<FScreenElement>& Elements, const FScreenGenerationParams& Params);
 
-    /** 保存畫面 */
+    /** 保�??�面 */
     bool SaveScreen(const FGeneratedScreen& Screen);
 
-    /** 加載畫面 */
+    /** ?��??�面 */
     FGeneratedScreen LoadScreen(const FString& ScreenID);
 
-    /** 生成畫面ID */
+    /** ?��??�面ID */
     FString GenerateScreenID();
 
-    /** 驗證參數 */
+    /** 驗�??�數 */
     bool ValidateParams(const FScreenGenerationParams& Params);
 
-    /** 獲取解析度設置 */
+    /** ?��?�??度設�?*/
     void GetResolutionSettings(EScreenResolution Resolution, int32& OutWidth, int32& OutHeight);
 
-    /** 應用風格主題 */
+    /** ?�用風格主�? */
     void ApplyStyleTheme(FScreenGenerationParams& Params, EScreenStyle Style);
 
 private:
-    /** 生成的畫面列表 */
+    /** ?��??�畫?��?�?*/
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     TArray<FGeneratedScreen> GeneratedScreens;
 
-    /** 系統是否已初始化 */
+    /** 系統?�否已�?始�? */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     bool bInitialized;
 
-    /** 畫面輸出目錄 */
+    /** ?�面輸出?��? */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     FString OutputDirectory;
 
-    /** 默認參數 */
+    /** 默�??�數 */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     FScreenGenerationParams DefaultParams;
 
-    /** 畫面計數器 */
+    /** ?�面計數??*/
     UPROPERTY(BlueprintReadOnly, Category = "Screen Generator", meta = (AllowPrivateAccess = "true"))
     int32 ScreenCounter;
 };
 
 /**
- * 畫面元素模板
+ * ?�面?��?模板
  */
 USTRUCT(BlueprintType)
 struct FScreenElementTemplate
 {
     GENERATED_BODY()
 
-    /** 模板名稱 */
+    /** 模板?�稱 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString TemplateName;
 
-    /** 元素類型 */
+    /** ?��?類�? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString ElementType;
 
-    /** 默認大小 */
+    /** 默�?大�? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FVector2D DefaultSize;
 
-    /** 默認顏色 */
+    /** 默�?顏色 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FLinearColor DefaultColor;
 
-    /** 默認紋理 */
+    /** 默�?紋�? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString DefaultTexture;
 
-    /** 動畫效果 */
+    /** ?�畫?��? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString AnimationEffect;
 
-    /** 粒子效果 */
+    /** 粒�??��? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screen Template")
     FString ParticleEffect;
 
@@ -475,8 +472,7 @@ struct FScreenElementTemplate
 };
 
 /**
- * 畫面模板管理器
- */
+ * ?�面模板管�??? */
 UCLASS(BlueprintType, Blueprintable)
 class GAMESCREENGENERATOR_API UScreenTemplateManager : public UObject
 {
@@ -485,46 +481,46 @@ class GAMESCREENGENERATOR_API UScreenTemplateManager : public UObject
 public:
     UScreenTemplateManager();
 
-    /** 初始化模板管理器 */
+    /** ?��??�模?�管?�器 */
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
     void InitializeTemplateManager();
 
-    /** 註冊模板 */
+    /** 註�?模板 */
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
     void RegisterTemplate(const FScreenElementTemplate& Template);
 
-    /** 獲取模板 */
+    /** ?��?模板 */
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
     FScreenElementTemplate GetTemplate(const FString& TemplateName);
 
-    /** 獲取所有模板 */
+    /** ?��??�?�模??*/
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
     TArray<FScreenElementTemplate> GetAllTemplates();
 
-    /** 從模板創建元素 */
+    /** 從模?�創建�?�?*/
     UFUNCTION(BlueprintCallable, Category = "Screen Template Manager")
     FScreenElement CreateElementFromTemplate(const FString& TemplateName, const FString& ElementName, const FVector2D& Position);
 
 protected:
-    /** 加載默認模板 */
+    /** ?��?默�?模板 */
     void LoadDefaultTemplates();
 
-    /** 保存模板 */
+    /** 保�?模板 */
     bool SaveTemplate(const FScreenElementTemplate& Template);
 
-    /** 加載模板 */
+    /** ?��?模板 */
     void LoadTemplates();
 
 private:
-    /** 模板列表 */
+    /** 模板?�表 */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Template Manager", meta = (AllowPrivateAccess = "true"))
     TArray<FScreenElementTemplate> Templates;
 
-    /** 系統是否已初始化 */
+    /** 系統?�否已�?始�? */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Template Manager", meta = (AllowPrivateAccess = "true"))
     bool bInitialized;
 
-    /** 模板文件路徑 */
+    /** 模板?�件路�? */
     UPROPERTY(BlueprintReadOnly, Category = "Screen Template Manager", meta = (AllowPrivateAccess = "true"))
     FString TemplateFilePath;
 };

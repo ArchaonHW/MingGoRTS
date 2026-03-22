@@ -49,7 +49,7 @@ class MINGGORTS_API UMingGoRTSFilmRenderManager : public UActorComponent
 public:
     UMingGoRTSFilmRenderManager();
 
-    // 影片播放控制
+    // 影�??�放?�制
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void PlayFilm();
 
@@ -65,7 +65,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void SeekToTime(float TimeInSeconds);
 
-    // 影片數據管理
+    // 影�??��?管�?
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void SetFilmFrames(const TArray<UTexture2D*>& Frames);
 
@@ -78,8 +78,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     TArray<UTexture2D*> GetFilmFrames() const { return FilmFrames; }
 
-    // 播放狀態查詢
-    UFUNCTION(BlueprintCallable, Category = "Film Render")
+    // ?�放?�?�查�?    UFUNCTION(BlueprintCallable, Category = "Film Render")
     EFilmPlaybackState GetPlaybackState() const { return CurrentPlaybackState; }
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
@@ -107,14 +106,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void SetFrameRate(float NewFrameRate);
 
-    // 渲染輸出
+    // 渲�?輸出
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     UTexture2D* GetCurrentFrameTexture() const;
 
     UFUNCTION(BlueprintCallable, Category = "Film Render")
     void RenderToRenderTarget(class UTextureRenderTarget2D* RenderTarget);
 
-    // 委托事件
+    // 委�?事件
     UPROPERTY(BlueprintAssignable, Category = "Film Render")
     FOnFilmFrameChanged OnFilmFrameChanged;
 
@@ -147,7 +146,7 @@ private:
     UPROPERTY()
     FFilmPlaybackSettings PlaybackSettings;
 
-    // 注意：非UObject類型不能用UPROPERTY
+    // 注�?：�?UObject類�?不能?�UPROPERTY
     FTickerDelegate PlaybackTicker;
     FDelegateHandle PlaybackTickerHandle;
 

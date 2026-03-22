@@ -10,10 +10,9 @@ enum class EBetaTestCategory : uint8
     AudioSystem,        // Story 3.5
     UISystem,           // Story 3.6
     SaveLoadSystem,     // Story 3.7
-    Integration,        // 系統整合
-    Performance,        // 性能測試
-    Compatibility       // 兼容性測試
-};
+    Integration,        // 系統?��?
+    Performance,        // ?�能測試
+    Compatibility       // ?�容?�測�?};
 
 UENUM(BlueprintType)
 enum class EBetaTestResult : uint8
@@ -59,9 +58,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBetaTestCompleted, const FString
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBetaTestSuiteCompleted, const TArray<FBetaTestResult>&, AllResults);
 
 /**
- * Beta版本整合測試套件
- * 測試 Story 3.5-3.7 的所有功能
- */
+ * Beta?�本?��?測試套件
+ * 測試 Story 3.5-3.7 ?��??��??? */
 UCLASS()
 class MINGPERSONAL_API UMingBetaIntegrationTest : public UGameInstanceSubsystem
 {
@@ -70,11 +68,10 @@ class MINGPERSONAL_API UMingBetaIntegrationTest : public UGameInstanceSubsystem
 public:
     UMingBetaIntegrationTest();
 
-    // 初始化測試套件
-    UFUNCTION(BlueprintCallable, Category = "Beta Test")
+    // ?��??�測試�?�?    UFUNCTION(BlueprintCallable, Category = "Beta Test")
     void InitializeTestSuite();
 
-    // ========== Story 3.5 音頻系統測試 ==========
+    // ========== Story 3.5 ?�頻系統測試 ==========
 
     UFUNCTION(BlueprintCallable, Category = "Beta Test | Audio")
     FBetaTestResult TestAudioSystemInitialization();
@@ -117,7 +114,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Beta Test | UI")
     FBetaTestResult TestAccessibilityFeatures();
 
-    // ========== Story 3.7 保存載入系統測試 ==========
+    // ========== Story 3.7 保�?載入系統測試 ==========
 
     UFUNCTION(BlueprintCallable, Category = "Beta Test | SaveLoad")
     FBetaTestResult TestSaveSystemInitialization();
@@ -140,7 +137,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Beta Test | SaveLoad")
     FBetaTestResult TestBackupAndRestore();
 
-    // ========== 整合測試 ==========
+    // ========== ?��?測試 ==========
 
     UFUNCTION(BlueprintCallable, Category = "Beta Test | Integration")
     FBetaTestResult TestAudioUIIntegration();
@@ -154,7 +151,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Beta Test | Integration")
     FBetaTestResult TestFullGameCycle();
 
-    // ========== 性能測試 ==========
+    // ========== ?�能測試 ==========
 
     UFUNCTION(BlueprintCallable, Category = "Beta Test | Performance")
     FBetaTestResult TestAudioPerformance();
@@ -168,7 +165,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Beta Test | Performance")
     FBetaTestResult TestMemoryUsage();
 
-    // ========== 批量測試 ==========
+    // ========== ?��?測試 ==========
 
     UFUNCTION(BlueprintCallable, Category = "Beta Test")
     void RunAllAudioTests();
@@ -188,7 +185,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Beta Test")
     void RunFullBetaTestSuite();
 
-    // ========== 結果管理 ==========
+    // ========== 結�?管�? ==========
 
     UFUNCTION(BlueprintPure, Category = "Beta Test")
     TArray<FBetaTestResult> GetAllResults() const { return TestResults; }
@@ -225,18 +222,18 @@ protected:
     UPROPERTY()
     bool bIsRunningTests;
 
-    // 測試輔助函數
+    // 測試輔助?�數
     void RecordResult(const FBetaTestResult& Result);
     FBetaTestResult CreateSuccessResult(const FString& TestName, EBetaTestCategory Category, const FString& Message);
     FBetaTestResult CreateFailureResult(const FString& TestName, EBetaTestCategory Category, const FString& Message);
     FBetaTestResult CreateWarningResult(const FString& TestName, EBetaTestCategory Category, const FString& Message);
     
-    // 系統引用驗證
+    // 系統引用驗�?
     bool ValidateAudioSystem();
     bool ValidateUISystem();
     bool ValidateSaveSystem();
     
-    // 測試數據準備
+    // 測試?��?準�?
     void PrepareTestData();
     void CleanupTestData();
 

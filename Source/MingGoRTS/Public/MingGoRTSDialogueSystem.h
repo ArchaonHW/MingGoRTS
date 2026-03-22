@@ -8,33 +8,33 @@
 UENUM(BlueprintType)
 enum class EDialogueType : uint8
 {
-    Conversation     UMETA(DisplayName = "普通對話"),
+    Conversation     UMETA(DisplayName = "?�通�?�?),
     HistoricalEvent   UMETA(DisplayName = "歷史事件"),
-    MilitaryBriefing  UMETA(DisplayName = "軍事簡報"),
+    MilitaryBriefing  UMETA(DisplayName = "軍�?簡報"),
     DiplomaticTalk   UMETA(DisplayName = "外交談話"),
-    PersonalStory     UMETA(DisplayName = "個人故事"),
-    QuestDialogue     UMETA(DisplayName = "任務對話")
+    PersonalStory     UMETA(DisplayName = "?�人?��?"),
+    QuestDialogue     UMETA(DisplayName = "任�?對話")
 };
 
 UENUM(BlueprintType)
 enum class EDialogueAttitude : uint8
 {
-    Friendly          UMETA(DisplayName = "友好"),
-    Neutral           UMETA(DisplayName = "中立"),
-    Suspicious        UMETA(DisplayName = "懷疑"),
-    Hostile          UMETA(DisplayName = "敵對"),
+    Friendly          UMETA(DisplayName = "?�好"),
+    Neutral           UMETA(DisplayName = "中�?"),
+    Suspicious        UMETA(DisplayName = "?��?"),
+    Hostile          UMETA(DisplayName = "?��?"),
     Respectful        UMETA(DisplayName = "尊敬"),
-    Dismissive        UMETA(DisplayName = "輕視")
+    Dismissive        UMETA(DisplayName = "輕�?")
 };
 
 UENUM(BlueprintType)
 enum class EDialogueOutcome : uint8
 {
-    None              UMETA(DisplayName = "無效果"),
-    RelationshipChange UMETA(DisplayName = "關係變化"),
-    QuestTrigger      UMETA(DisplayName = "觸發任務"),
-    InformationGain   UMETA(DisplayName = "獲得情報"),
-    SkillGain         UMETA(DisplayName = "技能提升"),
+    None              UMETA(DisplayName = "?��???),
+    RelationshipChange UMETA(DisplayName = "?��?變�?"),
+    QuestTrigger      UMETA(DisplayName = "觸發任�?"),
+    InformationGain   UMETA(DisplayName = "?��??�報"),
+    SkillGain         UMETA(DisplayName = "?�?��???),
     EventTrigger      UMETA(DisplayName = "觸發事件")
 };
 
@@ -198,95 +198,91 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Dialogue System")
     FOnDialogueCompleted OnDialogueCompleted;
 
-    // 初始化對話系統
-    UFUNCTION(BlueprintCallable, Category = "Dialogue System")
+    // ?��??��?話系�?    UFUNCTION(BlueprintCallable, Category = "Dialogue System")
     void InitializeDialogueSystem();
 
-    // 獲取所有對話
-    UFUNCTION(BlueprintPure, Category = "Dialogue System")
+    // ?��??�?��?�?    UFUNCTION(BlueprintPure, Category = "Dialogue System")
     TArray<FMingDialogue> GetAllDialogues() const;
 
-    // 獲取對話
+    // ?��?對話
     UFUNCTION(BlueprintPure, Category = "Dialogue System")
     FMingDialogue GetDialogue(const FString& DialogueID) const;
 
-    // 開始對話
+    // ?��?對話
     UFUNCTION(BlueprintCallable, Category = "Dialogue System")
     bool StartDialogue(const FString& DialogueID, const FMingCharacterData& PlayerCharacter);
 
-    // 選擇對話選項
+    // ?��?對話?��?
     UFUNCTION(BlueprintCallable, Category = "Dialogue System")
     bool SelectDialogueOption(int32 OptionIndex);
 
-    // 檢查對話是否可用
+    // 檢查對話?�否?�用
     UFUNCTION(BlueprintPure, Category = "Dialogue System")
     bool IsDialogueAvailable(const FString& DialogueID, const FMingCharacterData& PlayerCharacter) const;
 
-    // 檢查對話選項是否可用
+    // 檢查對話?��??�否?�用
     UFUNCTION(BlueprintPure, Category = "Dialogue System")
     bool IsDialogueOptionAvailable(const FString& DialogueID, int32 OptionIndex, const FMingCharacterData& PlayerCharacter) const;
 
-    // 獲取可用對話選項
+    // ?��??�用對話?��?
     UFUNCTION(BlueprintPure, Category = "Dialogue System")
     TArray<FDialogueOption> GetAvailableDialogueOptions(const FString& DialogueID, const FMingCharacterData& PlayerCharacter) const;
 
-    // 獲取角色對話
+    // ?��?角色對話
     UFUNCTION(BlueprintPure, Category = "Dialogue System")
     TArray<FMingDialogue> GetCharacterDialogues(const FString& CharacterID) const;
 
-    // 獲取歷史事件對話
+    // ?��?歷史事件對話
     UFUNCTION(BlueprintPure, Category = "Dialogue System")
     TArray<FMingDialogue> GetHistoricalEventDialogues(const FString& EventID) const;
 
-    // 獲取重要對話
+    // ?��??��?對話
     UFUNCTION(BlueprintPure, Category = "Dialogue System")
     TArray<FMingDialogue> GetImportantDialogues() const;
 
-    // 獲取對話歷史
+    // ?��?對話歷史
     UFUNCTION(BlueprintPure, Category = "Dialogue System")
     TArray<FString> GetDialogueHistory() const;
 
-    // 添加對話到歷史
-    UFUNCTION(BlueprintCallable, Category = "Dialogue System")
+    // 添�?對話?�歷??    UFUNCTION(BlueprintCallable, Category = "Dialogue System")
     void AddDialogueToHistory(const FString& DialogueID);
 
     // 清空對話歷史
     UFUNCTION(BlueprintCallable, Category = "Dialogue System")
     void ClearDialogueHistory();
 
-    // 計算對話影響
+    // 計�?對話影響
     UFUNCTION(BlueprintPure, Category = "Dialogue System")
     TArray<FDialogueOutcome> CalculateDialogueOutcomes(const FString& DialogueID, int32 OptionIndex) const;
 
-    // 應用對話結果
+    // ?�用對話結�?
     UFUNCTION(BlueprintCallable, Category = "Dialogue System")
     void ApplyDialogueOutcomes(const TArray<FDialogueOutcome>& Outcomes);
 
-    // 保存對話數據
+    // 保�?對話?��?
     UFUNCTION(BlueprintCallable, Category = "Dialogue System")
     bool SaveDialogueData(const FString& SaveSlotName);
 
-    // 載入對話數據
+    // 載入對話?��?
     UFUNCTION(BlueprintCallable, Category = "Dialogue System")
     bool LoadDialogueData(const FString& SaveSlotName);
 
 protected:
-    // 所有對話數據
-    UPROPERTY()
+    // ?�?��?話數??    UPROPERTY()
     TArray<FMingDialogue> AllDialogues;
 
-    // 對話ID到對話的映射
+    // 對話ID?��?話�??��?
     UPROPERTY()
     TMap<FString, FMingDialogue> DialogueMap;
 
-    // 角色ID到對話列表的映射 - 注意：TMap<TArray> 不支持 UPROPERTY
+    // 角色ID?��?話�?表�??��? - 注�?：TMap<TArray> 不支??UPROPERTY
     TMap<FString, TArray<FString>> CharacterDialogueMap;
 
-    // 當前對話
+    // ?��?對話
     UPROPERTY()
     FMingDialogue CurrentDialogue;
 
-    // 當前玩家角色
+    // ?��??�家角色
     UPROPERTY()
     FMingCharacterData CurrentPlayerCharacter;
 
@@ -294,66 +290,60 @@ protected:
     UPROPERTY()
     TArray<FString> DialogueHistory;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bIsInitialized;
 
-    // 初始化對話庫
+    // ?��??��?話庫
     void InitializeDialogueLibrary();
 
-    // 創建歷史人物對話
+    // ?�建歷史人物對話
     void CreateHistoricalCharacterDialogues();
 
-    // 創建軍事對話
+    // ?�建軍�?對話
     void CreateMilitaryDialogues();
 
-    // 創建外交對話
+    // ?�建外交對話
     void CreateDiplomaticDialogues();
 
-    // 創建個人故事對話
+    // ?�建?�人?��?對話
     void CreatePersonalStoryDialogues();
 
-    // 創建任務對話
+    // ?�建任�?對話
     void CreateQuestDialogues();
 
-    // 驗證對話條件
+    // 驗�?對話條件
     bool ValidateDialogueConditions(const TArray<FDialogueCondition>& Conditions, const FMingCharacterData& PlayerCharacter) const;
 
-    // 驗證單個條件
-    bool ValidateSingleCondition(const FDialogueCondition& Condition, const FMingCharacterData& PlayerCharacter) const;
+    // 驗�??�個�?�?    bool ValidateSingleCondition(const FDialogueCondition& Condition, const FMingCharacterData& PlayerCharacter) const;
 
-    // 執行對話結果
+    // ?��?對話結�?
     void ExecuteDialogueOutcomes(const TArray<FDialogueOutcome>& Outcomes);
 
-    // 更新角色關係
+    // ?�新角色?��?
     void UpdateCharacterRelationship(const FString& CharacterID, float RelationshipChange);
 
-    // 觸發任務
+    // 觸發任�?
     void TriggerQuest(const FString& QuestID);
 
-    // 給予情報
+    // 給�??�報
     void GrantInformation(const FString& InformationID);
 
-    // 提升技能
-    void ImproveSkill(const FName& SkillID, float ImprovementAmount);
+    // ?��??�??    void ImproveSkill(const FName& SkillID, float ImprovementAmount);
 
     // 觸發事件
     void TriggerEvent(const FString& EventID);
 
-    // 生成對話ID
+    // ?��?對話ID
     FString GenerateDialogueID(const FString& BaseName, const FString& CharacterID) const;
 
-    // 獲取角色關係值
-    float GetCharacterRelationship(const FString& CharacterID) const;
+    // ?��?角色?��???    float GetCharacterRelationship(const FString& CharacterID) const;
 
-    // 檢查角色是否已知
+    // 檢查角色?�否已知
     bool IsCharacterKnown(const FString& CharacterID) const;
 
-    // 獲取玩家屬性
-    float GetPlayerAttribute(const FString& AttributeName) const;
+    // ?��??�家屬�?    float GetPlayerAttribute(const FString& AttributeName) const;
 
-    // 檢查任務狀態
-    bool IsQuestCompleted(const FString& QuestID) const;
+    // 檢查任�??�??    bool IsQuestCompleted(const FString& QuestID) const;
 
-    // 檢查技能等級
-    int32 GetSkillLevel(const FName& SkillID) const;
+    // 檢查?�?��?�?    int32 GetSkillLevel(const FName& SkillID) const;
 };

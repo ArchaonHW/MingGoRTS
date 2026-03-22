@@ -6,9 +6,8 @@
 #include "MingMilitaryConsequenceCalculator.generated.h"
 
 /**
- * 軍事後果計算器
- * 專門計算決策對軍事層面的影響
- * 包含兵力變化、戰略位置、戰爭狀態等
+ * 軍�?後�?計�??? * 專�?計�?決�?對�?事層?��?影響
+ * ?�含?��?變�??�戰?��?置、戰?��??��?
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingMilitaryConsequenceCalculator : public UObject, public IMingConsequenceCalculator
@@ -16,10 +15,9 @@ class MINGCORE_API UMingMilitaryConsequenceCalculator : public UObject, public I
     GENERATED_BODY()
 
 public:
-    // 建構子
-    UMingMilitaryConsequenceCalculator();
+    // 建�?�?    UMingMilitaryConsequenceCalculator();
 
-    // 實現介面方法
+    // 實現介面?��?
     virtual void Calculate_Implementation(const FMingDecisionContext& Context, FMingConsequenceResult& Result) override;
     virtual bool CanHandle_Implementation(const FMingDecisionContext& Context) const override;
     virtual float GetWeight_Implementation() const override;
@@ -27,46 +25,43 @@ public:
     virtual FString GetCalculatorDescription_Implementation() const override;
 
 protected:
-    // 計算軍事實力變化
+    // 計�?軍�?實�?變�?
     void CalculateMilitaryStrength(const FMingDecisionContext& Context, FMingMilitaryConsequence& Strength);
 
-    // 計算戰略位置影響
+    // 計�??�略位置影響
     void CalculateStrategicPosition(const FMingDecisionContext& Context, TArray<FString>& PositionChanges);
 
-    // 計算戰爭狀態變化
-    void CalculateWarStatus(const FMingDecisionContext& Context, TArray<FString>& WarStatusChanges);
+    // 計�??�爭?�?��???    void CalculateWarStatus(const FMingDecisionContext& Context, TArray<FString>& WarStatusChanges);
 
-    // 計算軍事預算變化
+    // 計�?軍�??��?變�?
     void CalculateMilitaryBudget(const FMingDecisionContext& Context, float& BudgetChange);
 
-    // 計算士氣變化
+    // 計�?士氣變�?
     void CalculateMorale(const FMingDecisionContext& Context, float& MoraleChange);
 
-    // 民國特色計算
+    // 民�??�色計�?
     void CalculateRepublicanEraMilitary(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence);
 
-    // 北伐戰爭影響計算
+    // ?��??�爭影響計�?
     void CalculateNorthernExpeditionImpact(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence);
 
-    // 抗日戰爭影響計算
+    // ?�日?�爭影響計�?
     void CalculateAntiJapaneseWarImpact(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence);
 
-    // 軍閥混戰影響計算
+    // 軍閥混戰影響計�?
     void CalculateWarlordConflictImpact(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence);
 
-    // 軍事現代化影響計算
-    void CalculateMilitaryModernization(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence);
+    // 軍�??�代?�影?��?�?    void CalculateMilitaryModernization(const FMingDecisionContext& Context, FMingMilitaryConsequence& Consequence);
 
 private:
-    // 計算器權重
-    static constexpr float CALCULATOR_WEIGHT = 0.8f;
+    // 計�??��???    static constexpr float CALCULATOR_WEIGHT = 0.8f;
 
-    // 民國時期主要戰爭列表
+    // 民�??��?主�??�爭?�表
     static const TArray<FString> RepublicanEraWars;
 
-    // 戰略位置列表
+    // ?�略位置?�表
     static const TArray<FString> StrategicPositions;
 
-    // 軍事裝備類型
+    // 軍�?裝�?類�?
     static const TArray<FString> MilitaryEquipmentTypes;
 };

@@ -49,8 +49,7 @@ class UMingCultureAdapter;
 class UMingRegionalContentManager;
 
 /**
- * 本地化系統測試套件
- * 驗證本地化系統的核心功能
+ * ?�地?�系統測試�?�? * 驗�??�地?�系統�??��??�能
  */
 UCLASS()
 class MINGPERSONAL_API UMingLocalizationSystemTest : public UObject
@@ -60,11 +59,10 @@ class MINGPERSONAL_API UMingLocalizationSystemTest : public UObject
 public:
     UMingLocalizationSystemTest();
 
-    // 運行所有測試
-    UFUNCTION(BlueprintCallable, Category = "Localization Test")
+    // ?��??�?�測�?    UFUNCTION(BlueprintCallable, Category = "Localization Test")
     bool RunAllTests();
 
-    // 測試結果
+    // 測試結�?
     UFUNCTION(BlueprintPure, Category = "Localization Test")
     FString GetTestResults() const { return TestResults; }
 
@@ -80,7 +78,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Localization Test")
     TArray<FLocalizationTestCase> GetTestCases() const { return TestCases; }
 
-    // 個別測試
+    // ?�別測試
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
     bool TestLocalizationManagerCreation();
 
@@ -139,7 +137,7 @@ public:
     bool TestExportImport();
 
 private:
-    // 測試結果日誌
+    // 測試結�??��?
     UPROPERTY()
     FString TestResults;
 
@@ -155,11 +153,10 @@ private:
     UPROPERTY()
     TArray<FLocalizationTestCase> TestCases;
 
-    // 測試幫助函數
+    // 測試幫助?�數
     void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
     void ResetTestCounts();
     void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
 
-    // 創建測試用的管理器
-    UMingLocalizationManager* CreateTestLocalizationManager();
+    // ?�建測試?��?管�???    UMingLocalizationManager* CreateTestLocalizationManager();
 };

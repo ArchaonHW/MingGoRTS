@@ -13,98 +13,89 @@ class MINGGORTS_API UMingGoRTSTechTreeTest : public UObject
 public:
     UMingGoRTSTechTreeTest();
 
-    // 科技樹系統實例
-    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree Test")
+    // 科�?樹系統實�?    UPROPERTY(BlueprintReadOnly, Category = "Tech Tree Test")
     UMingGoRTSTechTree* TechTreeSystem;
 
-    // 初始化測試
-    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
+    // ?��??�測�?    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     void InitializeTest();
 
-    // 測試科技樹初始化
+    // 測試科�?樹�?始�?
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechTreeInitialization();
 
-    // 測試科技節點創建
-    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
+    // 測試科�?節點創�?    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechNodeCreation();
 
-    // 測試科技研發流程
+    // 測試科�??�發流�?
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechResearchFlow();
 
-    // 測試前置條件檢查
+    // 測試?�置條件檢查
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestPrerequisiteChecking();
 
-    // 測試科技效果應用
+    // 測試科�??��??�用
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechEffectApplication();
 
-    // 測試科技解鎖機制
+    // 測試科�?�??機制
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechUnlocking();
 
-    // 測試並行研發限制
+    // 測試並�??�發?�制
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestConcurrentResearchLimit();
 
-    // 測試科技樹配置
-    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
+    // 測試科�?樹�?�?    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestTechTreeConfiguration();
 
-    // 測試科技樹保存和載入
+    // 測試科�?樹�?存�?載入
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestSaveAndLoad();
 
-    // 測試民國時期特色科技
+    // 測試民�??��??�色科�?
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool TestRepublicanEraTechs();
 
-    // 運行所有測試
-    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
+    // ?��??�?�測�?    UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     bool RunAllTests();
 
-    // 獲取測試結果
+    // ?��?測試結�?
     UFUNCTION(BlueprintPure, Category = "Tech Tree Test")
     FString GetTestResults() const;
 
-    // 清理測試
+    // 清�?測試
     UFUNCTION(BlueprintCallable, Category = "Tech Tree Test")
     void CleanupTest();
 
 private:
-    // 測試結果
+    // 測試結�?
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // 測試通過數量
+    // 測試?��??��?
     int32 PassedTests;
 
-    // 測試失敗數量
+    // 測試失�??��?
     int32 FailedTests;
 
-    // 添加測試結果
+    // 添�?測試結�?
     void AddTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
 
-    // 創建測試科技節點
-    FTechNode CreateTestTechNode(const FString& TechID, const FString& TechName, ETechCategory Category);
+    // ?�建測試科�?節�?    FTechNode CreateTestTechNode(const FString& TechID, const FString& TechName, ETechCategory Category);
 
-    // 驗證科技節點數據
-    bool VerifyTechNodeData(const FTechNode& TechNode, const FString& ExpectedName, ETechCategory ExpectedCategory);
+    // 驗�?科�?節點數??    bool VerifyTechNodeData(const FTechNode& TechNode, const FString& ExpectedName, ETechCategory ExpectedCategory);
 
-    // 驗證研發狀態
-    bool VerifyResearchStatus(const FString& TechID, ETechStatus ExpectedStatus);
+    // 驗�??�發?�??    bool VerifyResearchStatus(const FString& TechID, ETechStatus ExpectedStatus);
 
-    // 獲取隨機科技ID
+    // ?��??��?科�?ID
     FString GetRandomTechID(ETechCategory Category) const;
 
-    // 重置測試計數器
-    void ResetTestCounters();
+    // ?�置測試計數??    void ResetTestCounters();
 
-    // 創建測試配置
+    // ?�建測試?�置
     FTechTreeConfig CreateTestConfig();
 
-    // 驗證配置應用
+    // 驗�??�置?�用
     bool VerifyConfigApplication(const FTechTreeConfig& ExpectedConfig);
 };

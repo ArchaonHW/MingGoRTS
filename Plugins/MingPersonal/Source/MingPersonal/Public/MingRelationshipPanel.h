@@ -47,9 +47,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRelationshipSelected, const FStri
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRelationshipFilterChanged, ERelationshipType, FilterType, bool, bActive);
 
 /**
- * 關係面板Widget
- * 顯示和管理角色關係信息
- */
+ * ?��??�板Widget
+ * 顯示?�管?��??��?係信?? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingRelationshipPanel : public UUserWidget
 {
@@ -58,11 +57,10 @@ class MINGPERSONAL_API UMingRelationshipPanel : public UUserWidget
 public:
     UMingRelationshipPanel(const FObjectInitializer& ObjectInitializer);
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void InitializeRelationshipPanel(UMingRelationshipManager* InRelationshipManager);
 
-    // 數據更新
+    // ?��??�新
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void UpdateRelationshipData();
 
@@ -72,8 +70,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void UpdateSelectedRelationship(const FString& CharacterID);
 
-    // 過濾和排序
-    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
+    // ?�濾?��?�?    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void FilterByRelationshipType(ERelationshipType RelationshipType, bool bActive);
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
@@ -85,14 +82,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void ClearFilters();
 
-    // 搜索
+    // ?�索
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void SearchRelationships(const FString& SearchText);
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void ClearSearch();
 
-    // 統計信息
+    // 統�?信息
     UFUNCTION(BlueprintPure, Category = "Relationship Panel")
     int32 GetTotalRelationshipCount() const;
 
@@ -121,7 +118,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void RemoveSharedMemory(const FString& CharacterID, const FString& Memory);
 
-    // 互動操作
+    // 互�??��?
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void OnRelationshipClicked(const FString& CharacterID);
 
@@ -131,8 +128,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void OnRelationshipRightClicked(const FString& CharacterID);
 
-    // 導出和導入
-    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
+    // 導出?��???    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void ExportRelationshipData();
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
@@ -150,7 +146,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
-    // 數據存儲
+    // ?��?存儲
     UPROPERTY(BlueprintReadOnly, Category = "Relationship Data")
     TArray<FRelationshipDisplayData> DisplayedRelationships;
 
@@ -160,8 +156,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Relationship Data")
     FRelationshipDisplayData SelectedRelationship;
 
-    // 過濾狀態
-    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
+    // ?�濾?�??    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     TMap<ERelationshipType, bool> ActiveFilters;
 
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
@@ -170,14 +165,13 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     bool bIsFiltered = false;
 
-    // 排序狀態
-    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
+    // ?��??�??    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortByValue = false;
 
     UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortAscending = true;
 
-    // UI組件引用（需要在Blueprint中綁定）
+    // UI組件引用（�?要在Blueprint中�?定�?
     UPROPERTY(meta = (BindWidget))
     class UListView* RelationshipListView;
 
@@ -199,11 +193,11 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UScrollBox* DetailsScrollBox;
 
-    // 虛擬函數
+    // ?�擬?�數
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // 內部函數
+    // ?�部?�數
     void ProcessRelationshipData();
     void ApplyFilters();
     void ApplySorting();
@@ -213,12 +207,12 @@ protected:
     FLinearColor GetRelationshipColor(ERelationshipType RelationshipType, float Value) const;
     FString GetRelationshipDescription(ERelationshipType RelationshipType, float Value) const;
 
-    // 事件綁定
+    // 事件綁�?
     void SetupEventBindings();
     void OnRelationshipDataChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason);
 
 private:
-    // 輔助函數
+    // 輔助?�數
     bool PassesFilter(const FRelationshipDisplayData& RelationshipData) const;
     bool PassesSearch(const FRelationshipDisplayData& RelationshipData) const;
     void RefreshDisplayList();

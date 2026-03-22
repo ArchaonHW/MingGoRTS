@@ -9,7 +9,7 @@ class UMingHierarchicalTickSystem;
 class UMingObjectPoolSystem;
 
 /**
- * 性能統計 | Performance Statistics
+ * ?�能統�? | Performance Statistics
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FPerformanceStats
@@ -53,15 +53,15 @@ struct MINGTACTICAL_API FPerformanceStats
 };
 
 /**
- * 戰術優化管理器 | Tactical Optimization Manager
+ * ?��??��?管�???| Tactical Optimization Manager
  * 
- * 整合和管理所有 Epic 2 的優化系統： | Integrate and manage all Epic 2 optimization systems:
- * - 空間分區系統 | Spatial Partitioning
- * - 分層 Tick 系統 | Hierarchical Tick
- * - 對象池系統 | Object Pool
- * - 性能監控 | Performance Monitoring
+ * ?��??�管?��???Epic 2 ?�優?�系統�? | Integrate and manage all Epic 2 optimization systems:
+ * - 空�??��?系統 | Spatial Partitioning
+ * - ?�層 Tick 系統 | Hierarchical Tick
+ * - 對象池系�?| Object Pool
+ * - ?�能??�� | Performance Monitoring
  * 
- * 提供統一的優化配置和監控接口 | Provide unified optimization configuration and monitoring interface
+ * ?��?統�??�優?��?置�???��?�口 | Provide unified optimization configuration and monitoring interface
  */
 UCLASS(ClassGroup = (Optimization), Blueprintable)
 class MINGTACTICAL_API UMingTacticalOptimizationManager : public UObject
@@ -72,26 +72,25 @@ public:
     UMingTacticalOptimizationManager();
 
     /**
-     * 初始化優化管理器 | Initialize Optimization Manager
-     * @param WorldBounds 世界邊界 (用於空間分區) | World bounds (for spatial partitioning)
-     * @param ExpectedUnitCount 預期單位數量 | Expected unit count
+     * ?��??�優?�管?�器 | Initialize Optimization Manager
+     * @param WorldBounds 世�??��? (?�於空�??��?) | World bounds (for spatial partitioning)
+     * @param ExpectedUnitCount ?��??��??��? | Expected unit count
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization")
     void Initialize(const FBox& WorldBounds, int32 ExpectedUnitCount = 1000);
 
     /**
-     * 关闭优化管理器
-     */
+     * ?�闭优�?管�???     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization")
     void Shutdown();
 
     /**
-     * 主 Tick 函数
+     * �?Tick ?�数
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization")
     void Tick(float DeltaTime);
 
-    // ==== 子系统访问 ====
+    // ==== 子系统访??====
 
     UFUNCTION(BlueprintPure, Category = "Tactical Optimization|Systems")
     UMingSpatialPartition* GetSpatialPartition() const { return SpatialPartition; }
@@ -102,65 +101,62 @@ public:
     UFUNCTION(BlueprintPure, Category = "Tactical Optimization|Systems")
     UMingObjectPoolSystem* GetObjectPool() const { return ObjectPool; }
 
-    // ==== 单位管理 ====
+    // ==== ?��?管�? ====
 
     /**
-     * 注册单位到所有优化系统
-     */
+     * 注�??��??��??��??�系�?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
     void RegisterUnit(class AMingTacticalUnit* Unit);
 
     /**
-     * 从所有优化系统注销单位
+     * 从�??��??�系统注?�?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
     void UnregisterUnit(class AMingTacticalUnit* Unit);
 
     /**
-     * 批量注册单位
+     * ?��?注�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
     void BatchRegisterUnits(const TArray<class AMingTacticalUnit*>& Units);
 
     /**
-     * 批量注销单位
+     * ?��?注�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
     void BatchUnregisterUnits(const TArray<class AMingTacticalUnit*>& Units);
 
     /**
-     * 更新单位位置（同步到空间分区）
-     */
+     * ?�新?��?位置（�?步到空间?�区�?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
     void UpdateUnitPosition(class AMingTacticalUnit* Unit, const FVector& NewLocation);
 
     /**
-     * 设置单位的 Tick 层级
+     * 设置?��???Tick 层级
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
     void SetUnitTickLevel(class AMingTacticalUnit* Unit, ETickLevel NewLevel);
 
     /**
-     * 提升单位到 Critical 层级（临时）
+     * ?��??��???Critical 层级（临?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
     void PromoteUnitToCritical(class AMingTacticalUnit* Unit, float DurationSeconds = 5.0f);
 
-    // ==== AI管理 ====
+    // ==== AI管�? ====
 
     /**
-     * 注册AI到优化系统
-     */
+     * 注�?AI?��??�系�?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|AI")
     void RegisterAI(class AMingCombatAI* AI);
 
     /**
-     * 从优化系统注销AI
+     * 从�??�系统注?�AI
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|AI")
     void UnregisterAI(class AMingCombatAI* AI);
 
-    // ==== 性能监控 ====
+    // ==== ?�能?�控 ====
 
     UFUNCTION(BlueprintPure, Category = "Tactical Optimization|Performance")
     FPerformanceStats GetPerformanceStats() const { return CurrentStats; }
@@ -174,53 +170,52 @@ public:
     UFUNCTION(BlueprintPure, Category = "Tactical Optimization|Performance")
     bool IsPerformanceCritical() const;
 
-    // ==== 自动优化 ====
+    // ==== ?�动优�? ====
 
     /**
-     * 启用/禁用自动优化调整
+     * ?�用/禁用?�动优�?调整
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Auto")
     void SetAutoOptimizationEnabled(bool bEnabled);
 
     /**
-     * 根据性能自动调整优化级别
+     * ?�据?�能?�动调整优�?级别
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Auto")
     void AutoAdjustOptimizationLevel();
 
-    // ==== 配置 ====
+    // ==== ?�置 ====
 
     /**
-     * 设置目标 FPS
+     * 设置?��? FPS
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
     void SetTargetFPS(float TargetFPS);
 
     /**
-     * 设置性能临界阈值（低于此值触发自动优化）
+     * 设置?�能临�??�值�?低�?此值触?�自?��??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
     void SetPerformanceCriticalThreshold(float FPS);
 
     /**
-     * 启用/禁用空间分区
+     * ?�用/禁用空间?�区
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
     void SetSpatialPartitionEnabled(bool bEnabled);
 
     /**
-     * 启用/禁用分层 Tick
+     * ?�用/禁用?��? Tick
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
     void SetHierarchicalTickEnabled(bool bEnabled);
 
     /**
-     * 启用/禁用对象池
-     */
+     * ?�用/禁用对象�?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
     void SetObjectPoolEnabled(bool bEnabled);
 
-    // ==== 调试 ====
+    // ==== 调�? ====
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Debug")
     void PrintDebugInfo();
@@ -232,14 +227,13 @@ public:
     void DrawDebugVisualization(bool bDrawSpatialGrid = true, bool bDrawTickLevels = false);
 
     /**
-     * 生成优化报告
+     * ?��?优�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Debug")
     FString GenerateOptimizationReport() const;
 
 private:
-    // 子系统
-    UPROPERTY()
+    // 子系�?    UPROPERTY()
     UMingSpatialPartition* SpatialPartition;
 
     UPROPERTY()
@@ -248,12 +242,12 @@ private:
     UPROPERTY()
     UMingObjectPoolSystem* ObjectPool;
 
-    // 性能统计
+    // ?�能统计
     FPerformanceStats CurrentStats;
     TArray<float> FPSHistory;
     int32 FPSHistoryIndex;
 
-    // 配置
+    // ?�置
     bool bIsInitialized;
     bool bAutoOptimizationEnabled;
     bool bSpatialPartitionEnabled;
@@ -262,24 +256,22 @@ private:
     float TargetFPS;
     float CriticalFPSThreshold;
 
-    // 自适应优化
-    int32 OptimizationLevel; // 0-4，越高优化越激进
-    float LastOptimizationAdjustTime;
+    // ?�适�?优�?
+    int32 OptimizationLevel; // 0-4，�?高�??��?激�?    float LastOptimizationAdjustTime;
     float OptimizationAdjustCooldown;
 
-    // 初始化子系统
+    // ?��??��?系�?
     void InitializeSubsystems(const FBox& WorldBounds, int32 ExpectedUnitCount);
     void ShutdownSubsystems();
 
-    // 更新性能统计
+    // ?�新?�能统计
     void UpdatePerformanceStats(float DeltaTime);
 
-    // 自适应优化调整
+    // ?�适�?优�?调整
     void PerformAutoOptimization(float DeltaTime);
 
-    // 调整优化级别
+    // 调整优�?级别
     void SetOptimizationLevel(int32 NewLevel);
 
-    // 根据单位数量调整池大小
-    void AdjustPoolSizeForUnitCount(int32 UnitCount);
+    // ?�据?��??��?调整池大�?    void AdjustPoolSizeForUnitCount(int32 UnitCount);
 };

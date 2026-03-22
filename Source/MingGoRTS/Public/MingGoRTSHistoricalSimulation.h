@@ -9,21 +9,21 @@
 UENUM(BlueprintType)
 enum class ESimulationType : uint8
 {
-    Political         UMETA(DisplayName = "政治模擬"),
-    Military          UMETA(DisplayName = "軍事模擬"),
-    Economic          UMETA(DisplayName = "經濟模擬"),
-    Social            UMETA(DisplayName = "社會模擬"),
-    Cultural          UMETA(DisplayName = "文化模擬"),
-    International     UMETA(DisplayName = "國際模擬")
+    Political         UMETA(DisplayName = "?�治模擬"),
+    Military          UMETA(DisplayName = "軍�?模擬"),
+    Economic          UMETA(DisplayName = "經�?模擬"),
+    Social            UMETA(DisplayName = "社�?模擬"),
+    Cultural          UMETA(DisplayName = "?��?模擬"),
+    International     UMETA(DisplayName = "?��?模擬")
 };
 
 UENUM(BlueprintType)
 enum class ESimulationPhase : uint8
 {
-    Setup             UMETA(DisplayName = "設置階段"),
-    Execution         UMETA(DisplayName = "執行階段"),
-    Analysis          UMETA(DisplayName = "分析階段"),
-    Results           UMETA(DisplayName = "結果階段")
+    Setup             UMETA(DisplayName = "設置?�段"),
+    Execution         UMETA(DisplayName = "?��??�段"),
+    Analysis          UMETA(DisplayName = "?��??�段"),
+    Results           UMETA(DisplayName = "結�??�段")
 };
 
 USTRUCT(BlueprintType)
@@ -63,12 +63,12 @@ struct FSimulationParameter
 UENUM(BlueprintType)
 enum class EConsequenceOperation : uint8
 {
-    Add         UMETA(DisplayName = "加法"),
-    Subtract    UMETA(DisplayName = "減法"),
-    Multiply    UMETA(DisplayName = "乘法"),
-    Divide      UMETA(DisplayName = "除法"),
+    Add         UMETA(DisplayName = "?��?"),
+    Subtract    UMETA(DisplayName = "減�?"),
+    Multiply    UMETA(DisplayName = "乘�?"),
+    Divide      UMETA(DisplayName = "?��?"),
     Set         UMETA(DisplayName = "設置"),
-    Reset       UMETA(DisplayName = "重置")
+    Reset       UMETA(DisplayName = "?�置")
 };
 
 USTRUCT(BlueprintType)
@@ -284,98 +284,93 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Simulation System")
     FOnSimulationCompleted OnSimulationCompleted;
 
-    // 初始化模擬系統
-    UFUNCTION(BlueprintCallable, Category = "Simulation System")
+    // ?��??�模?�系�?    UFUNCTION(BlueprintCallable, Category = "Simulation System")
     void InitializeSimulationSystem();
 
-    // 獲取所有模擬
-    UFUNCTION(BlueprintPure, Category = "Simulation System")
+    // ?��??�?�模??    UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<FHistoricalSimulation> GetAllSimulations() const;
 
-    // 獲取模擬
+    // ?��?模擬
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     FHistoricalSimulation GetSimulation(const FString& SimulationID) const;
 
-    // 開始模擬
+    // ?��?模擬
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool StartSimulation(const FString& SimulationID, const TMap<FString, float>& PlayerDecisions);
 
-    // 暫停模擬
+    // ?��?模擬
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool PauseSimulation(const FString& SimulationID);
 
-    // 繼續模擬
+    // 繼�?模擬
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool ResumeSimulation(const FString& SimulationID);
 
-    // 停止模擬
+    // ?�止模擬
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool StopSimulation(const FString& SimulationID);
 
-    // 干預模擬
+    // 干�?模擬
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool InterveneInSimulation(const FString& SimulationID, const FString& ParameterName, float NewValue);
 
-    // 獲取模擬狀態
-    UFUNCTION(BlueprintPure, Category = "Simulation System")
+    // ?��?模擬?�??    UFUNCTION(BlueprintPure, Category = "Simulation System")
     ESimulationPhase GetSimulationPhase(const FString& SimulationID) const;
 
-    // 獲取當前參數
+    // ?��??��??�數
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<FSimulationParameter> GetCurrentParameters(const FString& SimulationID) const;
 
-    // 獲取模擬進度
+    // ?��?模擬?�度
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     float GetSimulationProgress(const FString& SimulationID) const;
 
-    // 獲取模擬結果
+    // ?��?模擬結�?
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     FSimulationResult GetSimulationResult(const FString& SimulationID) const;
 
-    // 獲取模擬歷史
+    // ?��?模擬歷史
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<FString> GetSimulationHistory(const FString& SimulationID) const;
 
-    // 計算模擬預測
+    // 計�?模擬?�測
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TArray<float> PredictSimulationOutcome(const FString& SimulationID, const TMap<FString, float>& ParameterChanges) const;
 
-    // 比較模擬結果
+    // 比�?模擬結�?
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     float CompareWithHistoricalBaseline(const FString& SimulationID) const;
 
-    // 獲取模擬統計
+    // ?��?模擬統�?
     UFUNCTION(BlueprintPure, Category = "Simulation System")
     TMap<FString, float> GetSimulationStatistics(const FString& SimulationID) const;
 
-    // 保存模擬數據
+    // 保�?模擬?��?
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool SaveSimulationData(const FString& SaveSlotName);
 
-    // 載入模擬數據
+    // 載入模擬?��?
     UFUNCTION(BlueprintCallable, Category = "Simulation System")
     bool LoadSimulationData(const FString& SaveSlotName);
 
 protected:
-    // 所有模擬
-    UPROPERTY()
+    // ?�?�模??    UPROPERTY()
     TArray<FHistoricalSimulation> AllSimulations;
 
-    // 模擬ID到模擬的映射
+    // 模擬ID?�模?��??��?
     UPROPERTY()
     TMap<FString, FHistoricalSimulation> SimulationMap;
 
-    // 活動模擬狀態
-    UPROPERTY()
+    // 活�?模擬?�??    UPROPERTY()
     TMap<FString, ESimulationPhase> ActiveSimulations;
 
-    // 模擬參數 - 注意：TMap<TArray> 不支持 UPROPERTY
+    // 模擬?�數 - 注�?：TMap<TArray> 不支??UPROPERTY
     TMap<FString, TArray<FSimulationParameter>> SimulationParameters;
 
-    // 參數快取 - 注意：嵌套 TMap 不支持 UPROPERTY
+    // ?�數快�? - 注�?：�?�?TMap 不支??UPROPERTY
     TMap<FString, TMap<FString, int32>> ParameterCache;
 
-    // 模擬結果
+    // 模擬結�?
     UPROPERTY()
     TMap<FString, FSimulationResult> SimulationResults;
 
@@ -383,94 +378,93 @@ protected:
     UPROPERTY()
     TMap<FString, FStringArrayWrapper> SimulationHistories;
 
-    // 事件觸發防護 - 防止循環觸發
+    // 事件觸發?�護 - ?�止循環觸發
     UPROPERTY()
     TMap<FString, int32> EventTriggerDepth;
 
-    // 最大事件觸發深度 (防止無限循環)
+    // ?�大�?件觸?�深�?(?�止?��?循環)
     int32 MaxEventTriggerDepth = 10;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bIsInitialized;
 
-    // 初始化模擬庫
+    // ?��??�模?�庫
     void InitializeSimulationLibrary();
 
-    // 創建政治模擬
+    // ?�建?�治模擬
     void CreatePoliticalSimulations();
 
-    // 創建軍事模擬
+    // ?�建軍�?模擬
     void CreateMilitarySimulations();
 
-    // 創建經濟模擬
+    // ?�建經�?模擬
     void CreateEconomicSimulations();
 
-    // 創建社會模擬
+    // ?�建社�?模擬
     void CreateSocialSimulations();
 
-    // 創建文化模擬
+    // ?�建?��?模擬
     void CreateCulturalSimulations();
 
-    // 創建國際模擬
+    // ?�建?��?模擬
     void CreateInternationalSimulations();
 
-    // 執行模擬步驟
+    // ?��?模擬步�?
     void ExecuteSimulationStep(const FString& SimulationID);
 
-    // 處理模擬事件
+    // ?��?模擬事件
     void ProcessSimulationEvents(const FString& SimulationID);
 
     // 觸發模擬事件
     void TriggerSimulationEvent(const FString& SimulationID, const FSimulationEvent& Event);
 
-    // 計算參數變化
+    // 計�??�數變�?
     void CalculateParameterChanges(const FString& SimulationID);
 
-    // 檢查成功條件
+    // 檢查?��?條件
     bool CheckSuccessConditions(const FString& SimulationID);
 
-    // 檢查失敗條件
+    // 檢查失�?條件
     bool CheckFailureConditions(const FString& SimulationID);
 
-    // 生成模擬結果
+    // ?��?模擬結�?
     void GenerateSimulationResult(const FString& SimulationID);
 
-    // 計算歷史準確性
-    float CalculateHistoricalAccuracy(const FString& SimulationID);
+    // 計�?歷史準確??    float CalculateHistoricalAccuracy(const FString& SimulationID);
 
-    // 計算玩家影響
+    // 計�??�家影響
     float CalculatePlayerImpact(const FString& SimulationID);
 
-    // 更新模擬進度
+    // ?�新模擬?�度
     void UpdateSimulationProgress(const FString& SimulationID);
 
-    // 記錄模擬事件
+    // 記�?模擬事件
     void RecordSimulationEvent(const FString& SimulationID, const FString& EventName);
 
-    // 獲取參數值 (優化後使用快取)
+    // ?��??�數??(?��?後使?�快??
     float GetParameterValue(const FString& SimulationID, const FString& ParameterName) const;
 
-    // 設置參數值 (優化後更新快取)
+    // 設置?�數??(?��?後更?�快??
     void SetParameterValue(const FString& SimulationID, const FString& ParameterName, float Value);
 
-    // 構建參數快取
+    // 構建?�數快�?
     void BuildParameterCache(const FString& SimulationID);
 
-    // 生成模擬ID
+    // ?��?模擬ID
     FString GenerateSimulationID(const FString& BaseName, ESimulationType Type) const;
 
-    // 獲取模擬類型前綴
+    // ?��?模擬類�??�綴
     FString GetSimulationTypePrefix(ESimulationType Type) const;
 
-    // 驗證模擬參數
+    // 驗�?模擬?�數
     bool ValidateSimulationParameters(const FString& SimulationID, const TMap<FString, float>& Parameters) const;
 
-    // 計算事件觸發概率
+    // 計�?事件觸發概�?
     float CalculateEventTriggerProbability(const FString& SimulationID, const FSimulationEvent& Event) const;
 
-    // 應用事件後果
+    // ?�用事件後�?
     void ApplyEventConsequences(const FString& SimulationID, const FSimulationEvent& Event);
 
-    // 生成模擬報告
+    // ?��?模擬?��?
     FString GenerateSimulationReport(const FString& SimulationID) const;
 };

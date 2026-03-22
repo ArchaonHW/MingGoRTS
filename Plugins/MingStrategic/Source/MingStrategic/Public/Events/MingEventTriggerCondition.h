@@ -5,8 +5,7 @@
 #include "MingEventTriggerCondition.generated.h"
 
 /**
- * 條件操作符
- */
+ * 條件?��?�? */
 UENUM(BlueprintType)
 enum class EConditionOperator : uint8
 {
@@ -19,8 +18,7 @@ enum class EConditionOperator : uint8
 };
 
 /**
- * 邏輯操作符
- */
+ * ?�輯?��?�? */
 UENUM(BlueprintType)
 enum class ELogicOperator : uint8
 {
@@ -29,34 +27,31 @@ enum class ELogicOperator : uint8
 };
 
 /**
- * 單個條件定義
- */
+ * ?�個�?件�?�? */
 USTRUCT(BlueprintType)
 struct FSingleCondition
 {
     GENERATED_BODY()
     
-    // 條件名稱 (用於調試)
+    // 條件?�稱 (?�於調試)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionName;
     
-    // 目標對象 (資源類型、角色ID、遊戲狀態等)
+    // ?��?對象 (資�?類�??��??�ID?��??��??��?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString TargetKey;
     
-    // 操作符
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EConditionOperator Operator;
     
-    // 目標數值
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?��??��?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TargetValue;
     
-    // 是否為字符串比較
+    // ?�否?��?符串比�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bStringComparison;
     
-    // 字符串目標值 (如果用於字符串比較)
+    // 字符串目標�?(如�??�於字符串�?�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString StringTargetValue;
     
@@ -68,18 +63,18 @@ struct FSingleCondition
 };
 
 /**
- * 條件組 (支持複合條件)
+ * 條件�?(?��?複�?條件)
  */
 USTRUCT(BlueprintType)
 struct FConditionGroup
 {
     GENERATED_BODY()
     
-    // 組內條件列表
+    // 組內條件?�表
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FSingleCondition> Conditions;
     
-    // 組內邏輯操作符 (AND/OR)
+    // 組內?�輯?��?�?(AND/OR)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     ELogicOperator GroupOperator;
     
@@ -89,9 +84,7 @@ struct FConditionGroup
 };
 
 /**
- * 條件觸發器
- * 基於遊戲狀態條件觸發事件
- */
+ * 條件觸發?? * ?�於?�戲?�?��?件觸?��?�? */
 UCLASS()
 class MINGSTRATEGIC_API UMingStrategicEventCondition : public UMingEventTrigger
 {
@@ -100,63 +93,54 @@ class MINGSTRATEGIC_API UMingStrategicEventCondition : public UMingEventTrigger
 public:
     UMingStrategicEventCondition();
 
-    // 添加單個條件
-    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
+    // 添�??�個�?�?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void AddCondition(const FSingleCondition& Condition);
 
-    // 添加條件組
-    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
+    // 添�?條件�?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void AddConditionGroup(const FConditionGroup& Group);
 
-    // 設置全局邏輯操作符
-    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
+    // 設置?��??�輯?��?�?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void SetGlobalLogicOperator(ELogicOperator Operator);
 
-    // 更新條件值 (由遊戲系統調用)
+    // ?�新條件??(?��??�系統調??
     UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void UpdateConditionValue(const FString& Key, float Value);
 
     UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void UpdateConditionStringValue(const FString& Key, const FString& Value);
 
-    // 清除所有條件值
-    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
+    // 清除?�?��?件�?    UFUNCTION(BlueprintCallable, Category = "Condition Trigger")
     void ClearConditionValues();
 
-    // 獲取條件評估結果 (用於調試)
+    // ?��?條件評估結�? (?�於調試)
     UFUNCTION(BlueprintPure, Category = "Condition Trigger")
     bool EvaluateCondition(const FSingleCondition& Condition) const;
 
 protected:
-    // 條件組列表
-    UPROPERTY()
+    // 條件組�?�?    UPROPERTY()
     TArray<FConditionGroup> ConditionGroups;
 
-    // 全局邏輯操作符 (組與組之間)
+    // ?��??�輯?��?�?(組�?組�???
     UPROPERTY()
     ELogicOperator GlobalOperator;
 
-    // 當前條件值 (數值)
+    // ?��?條件??(?��?
     UPROPERTY()
     TMap<FString, float> NumericValues;
 
-    // 當前條件值 (字符串)
+    // ?��?條件??(字符�?
     UPROPERTY()
     TMap<FString, FString> StringValues;
 
-    // 重寫基類方法
+    // ?�寫?��??��?
     virtual bool PerformTrigger() override;
     virtual bool CheckTriggerCondition() const override;
 
-    // 評估條件組
-    bool EvaluateConditionGroup(const FConditionGroup& Group) const;
+    // 評估條件�?    bool EvaluateConditionGroup(const FConditionGroup& Group) const;
 
-    // 評估單個條件
-    bool EvaluateSingleCondition(const FSingleCondition& Condition) const;
+    // 評估?�個�?�?    bool EvaluateSingleCondition(const FSingleCondition& Condition) const;
 
-    // 數值比較
-    bool CompareValues(float Value1, float Value2, EConditionOperator Op) const;
+    // ?�值�?�?    bool CompareValues(float Value1, float Value2, EConditionOperator Op) const;
 
-    // 字符串比較
-    bool CompareStrings(const FString& Value1, const FString& Value2, EConditionOperator Op) const;
+    // 字符串�?�?    bool CompareStrings(const FString& Value1, const FString& Value2, EConditionOperator Op) const;
 };

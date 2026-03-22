@@ -102,7 +102,7 @@ struct FMingDialogueLine
     {}
 };
 
-// 注意：遞迴結構不能用 BlueprintType
+// 注�?：�?迴�?構�??�用 BlueprintType
 USTRUCT(BlueprintType)
 struct FMingPersonalDialogueNode
 {
@@ -114,7 +114,7 @@ struct FMingPersonalDialogueNode
     UPROPERTY(BlueprintReadOnly)
     FMingDialogueLine DialogueLine;
 
-    // 注意：遞迴結構不能用 UPROPERTY
+    // 注�?：�?迴�?構�??�用 UPROPERTY
     TArray<FMingDialogueNode> ChildNodes;
 
     UPROPERTY(BlueprintReadOnly)
@@ -313,8 +313,7 @@ protected:
     UPROPERTY()
     TMap<FString, int32> PlayerChoices;
 
-    // 注意：TArray 不能直接作為 TMap 的 UPROPERTY 值類型
-    // TMap<FString, TArray<FString>> HistoricalNotes;
+    // 注�?：TArray 不能?�接作為 TMap ??UPROPERTY ?��???    // TMap<FString, TArray<FString>> HistoricalNotes;
 
     UPROPERTY()
     bool bIsConversationActive;

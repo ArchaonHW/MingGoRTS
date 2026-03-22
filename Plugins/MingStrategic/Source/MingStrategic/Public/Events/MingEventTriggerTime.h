@@ -5,8 +5,7 @@
 #include "MingEventTriggerTime.generated.h"
 
 /**
- * 時間觸發器類型
- */
+ * ?��?觸發?��??? */
 UENUM(BlueprintType)
 enum class ETimeTriggerMode : uint8
 {
@@ -19,30 +18,29 @@ enum class ETimeTriggerMode : uint8
 };
 
 /**
- * 遊戲內時間結構
- */
+ * ?�戲?��??��?�? */
 USTRUCT(BlueprintType)
 struct FGameDateTime
 {
     GENERATED_BODY()
     
-    // 年 (1924開始)
+    // �?(1924?��?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 Year;
     
-    // 月 (1-12)
+    // ??(1-12)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 Month;
     
-    // 日 (1-31)
+    // ??(1-31)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 Day;
     
-    // 時 (0-23)
+    // ??(0-23)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 Hour;
     
-    // 分 (0-59)
+    // ??(0-59)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 Minute;
     
@@ -54,16 +52,14 @@ struct FGameDateTime
         , Minute(0)
     {}
     
-    // 轉換為總分鐘數 (用於比較)
+    // 轉�??�總?��???(?�於比�?)
     int64 ToTotalMinutes() const;
     
-    // 從總分鐘數轉換
-    static FGameDateTime FromTotalMinutes(int64 TotalMinutes);
+    // 從總?��??��???    static FGameDateTime FromTotalMinutes(int64 TotalMinutes);
 };
 
 /**
- * 時間觸發器
- * 基於遊戲時間觸發事件
+ * ?��?觸發?? * ?�於?�戲?��?觸發事件
  */
 UCLASS()
 class MINGSTRATEGIC_API UMingEventTriggerTime : public UMingEventTrigger
@@ -73,15 +69,15 @@ class MINGSTRATEGIC_API UMingEventTriggerTime : public UMingEventTrigger
 public:
     UMingEventTriggerTime();
 
-    // 設置絕對時間觸發 (1926年3月12日)
+    // 設置絕�??��?觸發 (1926�???2??
     UFUNCTION(BlueprintCallable, Category = "Time Trigger")
     void SetAbsoluteTime(int32 Year, int32 Month, int32 Day, int32 Hour = 0, int32 Minute = 0);
 
-    // 設置相對時間觸發 (3個月後)
+    // 設置?��??��?觸發 (3?��?�?
     UFUNCTION(BlueprintCallable, Category = "Time Trigger")
     void SetRelativeTime(int32 Months, int32 Days = 0, int32 Hours = 0);
 
-    // 設置週期性觸發 (每30天)
+    // 設置?��??�觸??(�?0�?
     UFUNCTION(BlueprintCallable, Category = "Time Trigger")
     void SetPeriodic(float PeriodInDays);
 
@@ -89,65 +85,63 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Time Trigger")
     void SetDaily(int32 Hour, int32 Minute = 0);
 
-    // 更新當前遊戲時間
+    // ?�新?��??�戲?��?
     UFUNCTION(BlueprintCallable, Category = "Time Trigger")
     void UpdateGameTime(const FGameDateTime& CurrentTime);
 
-    // 獲取目標時間
+    // ?��??��??��?
     UFUNCTION(BlueprintPure, Category = "Time Trigger")
     FGameDateTime GetTargetTime() const { return TargetTime; }
 
-    // 獲取剩餘時間 (分鐘)
+    // ?��??��??��? (?��?)
     UFUNCTION(BlueprintPure, Category = "Time Trigger")
     int32 GetRemainingMinutes() const;
 
 protected:
-    // 觸發模式
+    // 觸發模�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Time Trigger")
     ETimeTriggerMode TimeMode;
 
-    // 目標時間
+    // ?��??��?
     UPROPERTY()
     FGameDateTime TargetTime;
 
-    // 當前遊戲時間
+    // ?��??�戲?��?
     UPROPERTY()
     FGameDateTime CurrentGameTime;
 
-    // 週期 (天)
+    // ?��? (�?
     UPROPERTY()
     float PeriodDays;
 
-    // 上次觸發時間
+    // 上次觸發?��?
     UPROPERTY()
     FGameDateTime LastTriggerTime;
 
-    // 每日觸發時間 (小時:分鐘)
+    // 每日觸發?��? (小�?:?��?)
     UPROPERTY()
     int32 DailyHour;
 
     UPROPERTY()
     int32 DailyMinute;
 
-    // 是否已設置時間
-    UPROPERTY()
+    // ?�否已設置�???    UPROPERTY()
     bool bTimeSet;
 
-    // 初始化時記錄開始時間
+    // ?��??��?記�??��??��?
     UPROPERTY()
     FGameDateTime StartTime;
 
-    // 重寫基類方法
+    // ?�寫?��??��?
     virtual void Initialize() override;
     virtual bool PerformTrigger() override;
     virtual bool CheckTriggerCondition() const override;
 
-    // 檢查各種模式的觸發條件
-    bool CheckAbsoluteTime() const;
+    // 檢查?�種模�??�觸?��?�?    bool CheckAbsoluteTime() const;
     bool CheckRelativeTime() const;
     bool CheckPeriodic() const;
     bool CheckDaily() const;
 
-    // 計算目標時間 (相對模式)
+    // 計�??��??��? (?��?模�?)
     void CalculateTargetTime();
 };

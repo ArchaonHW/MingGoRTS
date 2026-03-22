@@ -5,67 +5,64 @@
 #include "MingPerformanceMonitor.generated.h"
 
 /**
- * 性能指標結構
+ * ?�能?��?結�?
  */
 USTRUCT(BlueprintType)
 struct FPerformanceMetrics
 {
     GENERATED_BODY()
 
-    // 當前FPS
+    // ?��?FPS
     UPROPERTY(BlueprintReadOnly)
     float CurrentFPS;
 
-    // 平均FPS
+    // 平�?FPS
     UPROPERTY(BlueprintReadOnly)
     float AverageFPS;
 
-    // 最低FPS
+    // ?�低FPS
     UPROPERTY(BlueprintReadOnly)
     float MinFPS;
 
-    // 最高FPS
+    // ?�高FPS
     UPROPERTY(BlueprintReadOnly)
     float MaxFPS;
 
-    // 幀時間 (毫秒)
+    // 幀?��? (毫�?)
     UPROPERTY(BlueprintReadOnly)
     float FrameTimeMs;
 
-    // 平均幀時間
+    // 平�?幀?��?
     UPROPERTY(BlueprintReadOnly)
     float AverageFrameTimeMs;
 
-    // 渲染線程時間
+    // 渲�?線�??��?
     UPROPERTY(BlueprintReadOnly)
     float RenderThreadTimeMs;
 
-    // 遊戲線程時間
+    // ?�戲線�??��?
     UPROPERTY(BlueprintReadOnly)
     float GameThreadTimeMs;
 
-    // GPU時間
+    // GPU?��?
     UPROPERTY(BlueprintReadOnly)
     float GPUTimeMs;
 
-    // 使用的記憶體 (MB)
+    // 使用?��??��? (MB)
     UPROPERTY(BlueprintReadOnly)
     float UsedMemoryMB;
 
-    // 渲染的實例數量
-    UPROPERTY(BlueprintReadOnly)
+    // 渲�??�實例數??    UPROPERTY(BlueprintReadOnly)
     int32 RenderedInstanceCount;
 
-    // 剔除的實例數量
-    UPROPERTY(BlueprintReadOnly)
+    // ?�除?�實例數??    UPROPERTY(BlueprintReadOnly)
     int32 CulledInstanceCount;
 
-    // 活躍網格數量
+    // 活�?網格?��?
     UPROPERTY(BlueprintReadOnly)
     int32 ActiveGridCellCount;
 
-    // 總網格數量
-    UPROPERTY(BlueprintReadOnly)
+    // 總網?�數??    UPROPERTY(BlueprintReadOnly)
     int32 TotalGridCellCount;
 
     FPerformanceMetrics()
@@ -87,8 +84,7 @@ struct FPerformanceMetrics
 };
 
 /**
- * 性能監控器
- * 實時監控遊戲性能指標
+ * ?�能??��?? * 實�???��?�戲?�能?��?
  */
 UCLASS(BlueprintType)
 class MINGTACTICAL_API UMingPerformanceMonitor : public UObject
@@ -101,155 +97,147 @@ public:
     virtual void BeginDestroy() override;
 
     /**
-     * 初始化性能監控
+     * ?��??�性能??��
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void Initialize();
 
     /**
-     * 關閉性能監控
+     * ?��??�能??��
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void Shutdown();
 
     /**
-     * 更新性能數據 (每幀調用)
+     * ?�新?�能?��? (每�?調用)
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void Update(float DeltaTime);
 
     /**
-     * 獲取當前性能指標
+     * ?��??��??�能?��?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     FPerformanceMetrics GetCurrentMetrics() const { return CurrentMetrics; }
 
     /**
-     * 獲取性能報告文字
+     * ?��??�能?��??��?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     FString GetPerformanceReport() const;
 
     /**
-     * 獲取簡短性能文字
+     * ?��?簡短?�能?��?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     FString GetShortPerformanceText() const;
 
     /**
-     * 是否性能達標
+     * ?�否?�能?��?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     bool IsPerformanceAcceptable() const;
 
     /**
-     * 設置目標FPS
+     * 設置?��?FPS
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void SetTargetFPS(float TargetFPS);
 
     /**
-     * 獲取目標FPS
+     * ?��??��?FPS
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     float GetTargetFPS() const { return TargetFPS; }
 
     /**
-     * 開始性能記錄
+     * ?��??�能記�?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void StartRecording();
 
     /**
-     * 停止性能記錄
+     * ?�止?�能記�?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void StopRecording();
 
     /**
-     * 獲取記錄的數據
-     */
+     * ?��?記�??�數??     */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     TArray<FPerformanceMetrics> GetRecordedData() const;
 
     /**
-     * 導出性能報告到文件
-     */
+     * 導出?�能?��??��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     bool ExportReport(const FString& FilePath) const;
 
     /**
-     * 添加自定義性能標記
+     * 添�??��?義性能標�?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
     void AddPerformanceMarker(const FString& MarkerName, float Value);
 
     /**
-     * 獲取自定義標記值
-     */
+     * ?��??��?義�?記�?     */
     UFUNCTION(BlueprintPure, Category = "Performance")
     float GetPerformanceMarker(const FString& MarkerName) const;
 
     /**
-     * 靜態獲取實例
+     * ?��??��?實�?
      */
     static UMingPerformanceMonitor* Get();
 
 protected:
-    // 當前性能指標
+    // ?��??�能?��?
     UPROPERTY()
     FPerformanceMetrics CurrentMetrics;
 
-    // 目標FPS
+    // ?��?FPS
     UPROPERTY()
     float TargetFPS;
 
-    // 是否正在記錄
+    // ?�否�?��記�?
     UPROPERTY()
     bool bIsRecording;
 
-    // 記錄的數據
-    UPROPERTY()
+    // 記�??�數??    UPROPERTY()
     TArray<FPerformanceMetrics> RecordedData;
 
-    // 最大記錄幀數
-    UPROPERTY(EditAnywhere, Category = "Performance")
+    // ?�大�??��???    UPROPERTY(EditAnywhere, Category = "Performance")
     int32 MaxRecordedFrames;
 
-    // 自定義性能標記
+    // ?��?義性能標�?
     UPROPERTY()
     TMap<FString, float> CustomMarkers;
 
-    // 單例實例
+    // ?��?實�?
     static UMingPerformanceMonitor* Instance;
 
-    // 計算FPS
+    // 計�?FPS
     void CalculateFPS(float DeltaTime);
 
-    // 更新記憶體使用
-    void UpdateMemoryUsage();
+    // ?�新記憶體使??    void UpdateMemoryUsage();
 
-    // 更新線程時間
+    // ?�新線�??��?
     void UpdateThreadTimes();
 
-    // 記錄數據點
-    void RecordDataPoint();
+    // 記�??��?�?    void RecordDataPoint();
 
-    // 獲取記憶體使用
-    float GetMemoryUsageMB() const;
+    // ?��?記憶體使??    float GetMemoryUsageMB() const;
 
-    // 獲取渲染線程時間
+    // ?��?渲�?線�??��?
     float GetRenderThreadTime() const;
 
-    // 獲取遊戲線程時間
+    // ?��??�戲線�??��?
     float GetGameThreadTime() const;
 
-    // 獲取GPU時間
+    // ?��?GPU?��?
     float GetGPUTime() const;
 
-    // 獲取渲染實例數量
+    // ?��?渲�?實�??��?
     int32 GetRenderedInstanceCount() const;
 
-    // 獲取剔除實例數量
+    // ?��??�除實�??��?
     int32 GetCulledInstanceCount() const;
 };

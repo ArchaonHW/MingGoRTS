@@ -7,32 +7,31 @@
 UENUM(BlueprintType)
 enum class ERepublicEraTheme : uint8
 {
-    BattleTheme,        // 戰爭主題
-    PeacefulTheme,      // 和平主題
-    TensionTheme,       // 緊張主題
-    VictoryTheme,       // 勝利主題
-    DefeatTheme,        // 失敗主題
-    DiplomaticTheme,    // 外交主題
-    EconomicTheme,      // 經濟主題
-    CulturalTheme,      // 文化主題
-    RevolutionaryTheme, // 革命主題
-    NostalgicTheme      // 懷舊主題
+    BattleTheme,        // ?�爭主�?
+    PeacefulTheme,      // ?�平主�?
+    TensionTheme,       // 緊張主�?
+    VictoryTheme,       // ?�利主�?
+    DefeatTheme,        // 失�?主�?
+    DiplomaticTheme,    // 外交主�?
+    EconomicTheme,      // 經�?主�?
+    CulturalTheme,      // ?��?主�?
+    RevolutionaryTheme, // ?�命主�?
+    NostalgicTheme      // ?��?主�?
 };
 
 UENUM(BlueprintType)
 enum class ERepublicEraRegion : uint8
 {
-    Beijing,            // 北京
+    Beijing,            // ?�京
     Shanghai,           // 上海
-    Nanjing,            // 南京
-    Guangzhou,          // 廣州
+    Nanjing,            // ?�京
+    Guangzhou,          // �??
     Tianjin,            // 天津
     Wuhan,              // 武漢
-    Chongqing,          // 重慶
-    Xian,               // 西安
-    Chengdu,            // 成都
-    Harbin              // 哈爾濱
-};
+    Chongqing,          // ?�慶
+    Xian,               // 西�?
+    Chengdu,            // ?�都
+    Harbin              // ?�爾�?};
 
 USTRUCT(BlueprintType)
 struct FRepublicEraAudioTheme
@@ -105,8 +104,7 @@ struct FRepublicEraRegionalAudio
 };
 
 /**
- * 民國時期音頻主題管理器
- * 管理民國時期的音頻主題和地區音效
+ * 民�??��??�頻主�?管�??? * 管�?民�??��??�音?�主題�??��??��?
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingRepublicEraAudioThemes : public UObject
@@ -116,11 +114,10 @@ class MINGPERSONAL_API UMingRepublicEraAudioThemes : public UObject
 public:
     UMingRepublicEraAudioThemes();
 
-    // 初始化民國時期音頻主題
-    UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
+    // ?��??��??��??�音?�主�?    UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void InitializeRepublicEraThemes();
 
-    // 播放主題音樂
+    // ?�放主�??��?
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void PlayTheme(ERepublicEraTheme ThemeType, float Intensity = 1.0f);
 
@@ -133,7 +130,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void FadeTheme(float TargetVolume, float FadeDuration);
 
-    // 地區音效
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void PlayRegionalAmbient(ERepublicEraRegion Region, float Intensity = 1.0f);
 
@@ -143,7 +140,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void SetRegionalAudio(ERepublicEraRegion Region);
 
-    // 主題管理
+    // 主�?管�?
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void AddTheme(const FRepublicEraAudioTheme& Theme);
 
@@ -156,14 +153,14 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Republic Era Audio")
     TArray<FRepublicEraAudioTheme> GetAllThemes() const;
 
-    // 地區管理
+    // ?��?管�?
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void AddRegionalAudio(const FRepublicEraRegionalAudio& RegionalAudio);
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Republic Era Audio")
     FRepublicEraRegionalAudio GetRegionalAudio(ERepublicEraRegion Region) const;
 
-    // 音頻設置
+    // ?�頻設置
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void SetMasterVolume(float Volume);
 
@@ -173,8 +170,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void SetRegionalVolume(float Volume);
 
-    // 狀態查詢
-    UFUNCTION(BlueprintPure, Category = "Republic Era Audio")
+    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "Republic Era Audio")
     bool IsThemePlaying() const;
 
     UFUNCTION(BlueprintPure, Category = "Republic Era Audio")
@@ -184,18 +180,18 @@ public:
     float GetMasterVolume() const { return MasterVolume; }
 
 protected:
-    // 主題數據
+    // 主�??��?
     UPROPERTY()
     TMap<ERepublicEraTheme, FRepublicEraAudioTheme> ThemeMap;
 
     UPROPERTY()
     TMap<FString, FRepublicEraAudioTheme> ThemeNameMap;
 
-    // 地區數據
+    // ?��??��?
     UPROPERTY()
     TMap<ERepublicEraRegion, FRepublicEraRegionalAudio> RegionalAudioMap;
 
-    // 音頻設置
+    // ?�頻設置
     UPROPERTY()
     float MasterVolume = 1.0f;
 
@@ -205,25 +201,23 @@ protected:
     UPROPERTY()
     float RegionalVolume = 1.0f;
 
-    // 狀態
-    UPROPERTY()
+    // ?�??    UPROPERTY()
     ERepublicEraTheme CurrentTheme = ERepublicEraTheme::PeacefulTheme;
 
     UPROPERTY()
     bool bIsThemePlaying = false;
 
-    // 內部函數
+    // ?�部?�數
     void InitializeDefaultThemes();
     void InitializeRegionalAudio();
     FString GetThemeAssetPath(ERepublicEraTheme ThemeType) const;
     FString GetRegionalAssetPath(ERepublicEraRegion Region, bool bCultural = false) const;
 
 private:
-    // 民國時期特色樂器
+    // 民�??��??�色樂器
     TArray<FString> TraditionalInstruments;
     TArray<FString> MilitaryInstruments;
     TArray<FString> UrbanInstruments;
 
-    // 初始化樂器列表
-    void InitializeInstrumentLists();
+    // ?��??��??��?�?    void InitializeInstrumentLists();
 };

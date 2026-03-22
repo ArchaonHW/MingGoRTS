@@ -175,9 +175,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRelationshipSyncFailed, FString, 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConflictDetected, int32, RelationshipID);
 
 /**
- * 關係數據網絡複製系統
- * 負責在多人遊戲中同步關係和聲望數據
- */
+ * ?��??��?網絡複製系統
+ * 負責?��?人�??�中?�步?��??�聲?�數?? */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingRelationshipReplication : public UObject
 {

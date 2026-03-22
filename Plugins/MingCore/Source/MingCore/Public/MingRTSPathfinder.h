@@ -4,37 +4,34 @@
 #include "UObject/NoExportTypes.h"
 #include "MingRTSPathfinder.generated.h"
 
-// 前向聲明
+// ?��??��?
 class AMingGoRTSUnit;
 class UMingRTSUnitManager;
 
 UENUM(BlueprintType)
 enum class ERTSPathfindingAlgorithm : uint8
 {
-    AStar,          // A*算法
-    Dijkstra,       // Dijkstra算法
-    FloydWarshall,  // Floyd-Warshall算法
-    Custom          // 自定義算法
-};
+    AStar,          // A*算�?
+    Dijkstra,       // Dijkstra算�?
+    FloydWarshall,  // Floyd-Warshall算�?
+    Custom          // ?��?義�?�?};
 
 UENUM(BlueprintType)
 enum class ERTSTerrainType : uint8
 {
-    Walkable,       // 可行走
-    Blocked,        // 阻擋
-    Difficult,      // 困難地形
-    Water,          // 水域
+    Walkable,       // ?��?�?    Blocked,        // ?��?
+    Difficult,      // ?�難?�形
+    Water,          // 水�?
     Mountain,       // 山地
-    Forest          // 森林
+    Forest          // 森�?
 };
 
 UENUM(BlueprintType)
 enum class ERTSPathfindingState : uint8
 {
-    Idle,           // 空閒
-    Calculating,    // 計算中
-    Ready,          // 就緒
-    Failed          // 失敗
+    Idle,           // 空�?
+    Calculating,    // 計�?�?    Ready,          // 就�?
+    Failed          // 失�?
 };
 
 USTRUCT(BlueprintType)
@@ -46,15 +43,14 @@ struct FRTSPathNode
     FVector Position;
 
     UPROPERTY(BlueprintReadOnly, Category = "Path Node")
-    float GCost;        // 從起點到當前節點的實際成本
+    float GCost;        // 從起點到?��?節點�?實�??�本
 
     UPROPERTY(BlueprintReadOnly, Category = "Path Node")
-    float HCost;        // 從當前節點到終點的預估成本
-
+    float HCost;        // 從當?��?點到終�??��?估�???
     UPROPERTY(BlueprintReadOnly, Category = "Path Node")
     float FCost;        // GCost + HCost
 
-    // 注意：FRTSPathNode 是指標類型，不適合 UPROPERTY
+    // 注�?：FRTSPathNode ?��?標�??��?不適??UPROPERTY
     FRTSPathNode* Parent;
 
     UPROPERTY(BlueprintReadOnly, Category = "Path Node")
@@ -102,7 +98,7 @@ struct FRTSPathRequest
     UPROPERTY(BlueprintReadOnly, Category = "Path Request")
     FVector TargetLocation;
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??��? UPROPERTY
     TObjectPtr<AMingGoRTSUnit> RequestingUnit;
 
     UPROPERTY(BlueprintReadOnly, Category = "Path Request")
@@ -166,9 +162,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPathCalculated, const FRTSPathRe
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPathfindingStateChanged, ERTSPathfindingState, NewState);
 
 /**
- * RTS路徑規劃器
- * 提供多種尋路算法和動態避障功能
- */
+ * RTS路�?規�??? * ?��?多種尋路算�??��??�避?��??? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSPathfinder : public UObject
 {
@@ -177,11 +171,10 @@ class MINGCORE_API UMingRTSPathfinder : public UObject
 public:
     UMingRTSPathfinder();
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void InitializePathfinder(UMingRTSUnitManager* InUnitManager);
 
-    // 路徑計算
+    // 路�?計�?
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void CalculatePathAsync(const FRTSPathRequest& Request);
 
@@ -191,21 +184,21 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     TArray<FVector> FindPath(FVector Start, FVector Target, ERTSPathfindingAlgorithm Algorithm = ERTSPathfindingAlgorithm::AStar);
 
-    // 路徑優化
+    // 路�??��?
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     TArray<FVector> OptimizePath(const TArray<FVector>& Path);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     TArray<FVector> SmoothPath(const TArray<FVector>& Path, int32 SmoothingIterations = 3);
 
-    // 動態避障
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     bool IsPathBlocked(const TArray<FVector>& Path);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     TArray<FVector> RecalculatePath(const TArray<FVector>& OriginalPath, FVector CurrentPosition, FVector TargetPosition);
 
-    // 地形系統
+    // ?�形系統
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void SetTerrainType(FVector Location, ERTSTerrainType TerrainType);
 
@@ -222,13 +215,13 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void CreateNavigationGrid(FVector Center, float GridSize, int32 GridResolution);
 
-    // 注意：FRTSPathNode 指標不適合 UFUNCTION BlueprintCallable
+    // 注�?：FRTSPathNode ?��?不適??UFUNCTION BlueprintCallable
     FRTSPathNode* GetNodeAtLocation(FVector Location) const;
 
-    // 注意：FRTSPathNode 指標不適合 UFUNCTION BlueprintCallable
+    // 注�?：FRTSPathNode ?��?不適??UFUNCTION BlueprintCallable
     TArray<FRTSPathNode*> GetNeighborNodes(FRTSPathNode* Node) const;
 
-    // 性能監控
+    // ?�能??��
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     float GetAverageCalculationTime() const;
 
@@ -238,14 +231,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void ClearPathCache();
 
-    // 調試功能
+    // 調試?�能
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void DrawDebugPath(const TArray<FVector>& Path, FLinearColor Color = FLinearColor::Green, float Duration = 5.0f);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Pathfinder")
     void DrawDebugGrid(FLinearColor Color = FLinearColor::White, float Duration = 10.0f);
 
-    // 事件委託
+    // 事件委�?
     UPROPERTY(BlueprintAssignable, Category = "RTS Pathfinder")
     FOnPathCalculated OnPathCalculated;
 
@@ -253,32 +246,32 @@ public:
     FOnPathfindingStateChanged OnPathfindingStateChanged;
 
 protected:
-    // 核心算法
+    // ?��?算�?
     TArray<FVector> CalculateAStarPath(FVector Start, FVector Target);
     TArray<FVector> CalculateDijkstraPath(FVector Start, FVector Target);
     TArray<FVector> CalculateFloydWarshallPath(FVector Start, FVector Target);
 
-    // 輔助方法
+    // 輔助?��?
     float CalculateHeuristic(FVector From, FVector To) const;
     float CalculateTerrainCost(FVector Location) const;
     bool IsValidLocation(FVector Location) const;
     TArray<FVector> ReconstructPath(FRTSPathNode* EndNode) const;
 
-    // 網格管理
+    // 網格管�?
     void InitializeGrid();
     void ClearGrid();
     FRTSPathNode* CreateNode(FVector Location, bool bIsWalkable = true, ERTSTerrainType TerrainType = ERTSTerrainType::Walkable);
 
-    // 異步處理
+    // ?�步?��?
     void ProcessPendingRequests();
     void CompletePathRequest(const FRTSPathRequest& Request, const FRTSPathResult& Result);
 
 protected:
-    // 核心組件
+    // ?��?組件
     UPROPERTY()
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
-    // 路徑計算
+    // 路�?計�?
     UPROPERTY()
     TArray<FRTSPathRequest> PendingRequests;
 
@@ -286,7 +279,7 @@ protected:
     TMap<FString, FRTSPathResult> PathCache;
 
     // 網格系統
-    // 注意：指標陣列不適合 UPROPERTY
+    // 注�?：�?標陣?��??��? UPROPERTY
     TArray<TArray<FRTSPathNode*>> NavigationGrid;
 
     UPROPERTY()
@@ -301,11 +294,10 @@ protected:
     UPROPERTY()
     float NodeSize;
 
-    // 狀態
-    UPROPERTY(BlueprintReadOnly, Category = "Pathfinding State")
+    // ?�??    UPROPERTY(BlueprintReadOnly, Category = "Pathfinding State")
     ERTSPathfindingState CurrentState;
 
-    // 性能統計
+    // ?�能統�?
     UPROPERTY()
     TArray<float> CalculationTimes;
 
@@ -315,7 +307,7 @@ protected:
     UPROPERTY()
     int32 CompletedRequests;
 
-    // 配置
+    // ?�置
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pathfinding Config")
     ERTSPathfindingAlgorithm DefaultAlgorithm;
 
@@ -334,7 +326,7 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pathfinding Config")
     bool bEnableDebugDrawing = false;
 
-    // 地形成本
+    // ?�形?�本
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terrain Costs")
     float WalkableCost = 1.0f;
 

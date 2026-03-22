@@ -6,8 +6,7 @@
 #include "MingPlatformManager.generated.h"
 
 /**
- * 平台管理器
- * 負責管理和協調平台適配器
+ * 平台管�??? * 負責管�??��?調平?�適?�器
  */
 UCLASS()
 class MINGCORE_API UMingPlatformManager : public UObject
@@ -17,71 +16,63 @@ class MINGCORE_API UMingPlatformManager : public UObject
 public:
     UMingPlatformManager();
 
-    // 初始化平台管理器
+    // ?��??�平?�管?�器
     UFUNCTION(BlueprintCallable, Category = "Platform")
     void Initialize();
 
-    // 關閉平台管理器
-    UFUNCTION(BlueprintCallable, Category = "Platform")
+    // ?��?平台管�???    UFUNCTION(BlueprintCallable, Category = "Platform")
     void Shutdown();
 
-    // 獲取當前平台適配器
-    UFUNCTION(BlueprintCallable, Category = "Platform")
+    // ?��??��?平台?��???    UFUNCTION(BlueprintCallable, Category = "Platform")
     TScriptInterface<IPlatformInterface> GetCurrentPlatform() const;
 
-    // 獲取當前平台類型
+    // ?��??��?平台類�?
     UFUNCTION(BlueprintCallable, Category = "Platform")
     EPlatformType GetCurrentPlatformType() const;
 
-    // 獲取當前平台能力
+    // ?��??��?平台?��?
     UFUNCTION(BlueprintCallable, Category = "Platform")
     FPlatformCapabilities GetPlatformCapabilities() const;
 
-    // 獲取屏幕DPI
+    // ?��?屏�?DPI
     UFUNCTION(BlueprintCallable, Category = "Platform")
     float GetScreenDPI() const;
 
-    // 獲取安全區域
-    UFUNCTION(BlueprintCallable, Category = "Platform")
+    // ?��?安全?�??    UFUNCTION(BlueprintCallable, Category = "Platform")
     FMargin GetSafeZone() const;
 
-    // 是否為觸控設備
-    UFUNCTION(BlueprintCallable, Category = "Platform")
+    // ?�否?�觸?�設??    UFUNCTION(BlueprintCallable, Category = "Platform")
     bool IsTouchDevice() const;
 
-    // 設置性能模式
+    // 設置?�能模�?
     UFUNCTION(BlueprintCallable, Category = "Platform")
     void SetPerformanceMode(int32 Mode);
 
-    // 獲取電池電量
+    // ?��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Platform")
     float GetBatteryLevel() const;
 
-    // 顯示平台對話框
-    UFUNCTION(BlueprintCallable, Category = "Platform")
+    // 顯示平台對話�?    UFUNCTION(BlueprintCallable, Category = "Platform")
     void ShowPlatformDialog(const FString& Title, const FString& Message);
 
-    // 分享內容
+    // ?�享?�容
     UFUNCTION(BlueprintCallable, Category = "Platform")
     void ShareContent(const FString& Content);
 
-    // 請求應用評分
+    // 請�??�用評�?
     UFUNCTION(BlueprintCallable, Category = "Platform")
     void RequestAppRating();
 
-    // 靜態獲取實例（方便全局訪問）
-    static UMingPlatformManager* Get();
+    // ?��??��?實�?（方便全局訪�?�?    static UMingPlatformManager* Get();
 
 private:
     bool bInitialized;
     
-    // 當前平台適配器
-    UPROPERTY()
+    // ?��?平台?��???    UPROPERTY()
     TObjectPtr<UObject> CurrentPlatformAdapter;
     
-    // 單例實例
+    // ?��?實�?
     static UMingPlatformManager* Instance;
     
-    // 創建平台適配器
-    void CreatePlatformAdapter();
+    // ?�建平台?��???    void CreatePlatformAdapter();
 };

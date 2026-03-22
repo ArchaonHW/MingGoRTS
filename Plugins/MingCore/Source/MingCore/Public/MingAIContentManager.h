@@ -13,17 +13,17 @@ class APlayerController;
 UENUM(BlueprintType)
 enum class EAIContentType : uint8
 {
-    Image,          // 圖像
-    Video,          // 影片
-    Music,          // 音樂
-    SoundEffect,    // 音效
-    Texture,        // 貼圖
-    Mesh,           // 模型
-    Material,       // 材質
-    Animation,      // 動畫
-    Level,          // 關卡
+    Image,          // ?��?
+    Video,          // 影�?
+    Music,          // ?��?
+    SoundEffect,    // ?��?
+    Texture,        // 貼�?
+    Mesh,           // 模�?
+    Material,       // ?�質
+    Animation,      // ?�畫
+    Level,          // ?�卡
     UI,             // UI
-    Text,           // 文本
+    Text,           // ?�本
     Voice           // 語音
 };
 
@@ -112,8 +112,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProjectCompleted, const FString&
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPipelineStageCompleted, int32, StageIndex);
 
 /**
- * AI 內容管理器
- * 統一管理AI內容生成和渲染的完整系統
+ * AI ?�容管�??? * 統�?管�?AI?�容?��??�渲?��?完整系統
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingAIContentManager : public UObject
@@ -123,11 +122,10 @@ class MINGCORE_API UMingAIContentManager : public UObject
 public:
     UMingAIContentManager();
 
-    // 初始化系統
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    // ?��??�系�?    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void InitializeAIContentManager();
 
-    // 項目管理
+    // ?�目管�?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     FString CreateAIContentProject(const FAIContentProject& Project);
 
@@ -146,7 +144,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     FAIContentProject GetCurrentProject() const { return CurrentProject; }
 
-    // 內容生成
+    // ?�容?��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     FString GenerateContent(EAIContentType ContentType, const FString& Prompt, EGenerationQuality Quality = EGenerationQuality::Standard);
 
@@ -156,7 +154,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void GenerateContentAsync(EAIContentType ContentType, const FString& Prompt);
 
-    // 內容管道
+    // ?�容管�?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     FString CreateContentPipeline(const FAIContentPipeline& Pipeline);
 
@@ -172,7 +170,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void CancelPipeline(const FString& PipelineName);
 
-    // 場景生成
+    // ?�景?��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void GenerateGameScene(const FString& SceneDescription, const FAISceneConfiguration& SceneConfig);
 
@@ -182,7 +180,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void GenerateCinematicScene(const FString& SceneDescription, float Duration);
 
-    // 實時預覽
+    // 實�??�覽
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void StartRealTimePreview();
 
@@ -195,8 +193,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     bool IsPreviewActive() const { return bPreviewActive; }
 
-    // 內容庫管理
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    // ?�容庫管??    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void AddToContentLibrary(EAIContentType ContentType, const FString& ContentPath, const FString& Description);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
@@ -208,8 +205,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void SearchContentLibrary(const FString& Query, TArray<FString>& Results);
 
-    // 模板和預設
-    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
+    // 模板?��?�?    UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void SaveContentTemplate(const FString& TemplateName, const FAIContentProject& Project);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
@@ -218,7 +214,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     TArray<FString> GetAvailableTemplates() const;
 
-    // 批量操作
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void BatchGenerateContent(const TArray<EAIContentType>& ContentTypes, const TArray<FString>& Prompts);
 
@@ -228,7 +224,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void BatchExportContent(const TArray<FString>& ContentPaths, const FString& ExportFormat);
 
-    // 資產管理
+    // 資產管�?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void OptimizeAssets();
 
@@ -244,7 +240,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     float GetTotalAssetSize() const;
 
-    // 協作功能
+    // ?��??�能
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void ShareProject(const FString& ProjectName, const FString& TargetUser);
 
@@ -254,7 +250,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void SyncProjectCloud(const FString& ProjectName);
 
-    // 版本控制
+    // ?�本?�制
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void CreateProjectVersion(const FString& ProjectName, const FString& VersionName);
 
@@ -264,7 +260,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     TArray<FString> GetProjectVersions(const FString& ProjectName) const;
 
-    // 性能監控
+    // ?�能??��
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     float GetGenerationProgress() const;
 
@@ -277,7 +273,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Manager")
     int32 GetTotalGeneratedContent() const;
 
-    // 配置管理
+    // ?�置管�?
     UFUNCTION(BlueprintCallable, Category = "AI Content Manager")
     void SetDefaultProvider(EAIModelProvider Provider);
 
@@ -321,18 +317,18 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingAIContentRenderer> AIContentRenderer;
 
-    // 項目管理
+    // ?�目管�?
     UPROPERTY()
     TMap<FString, FAIContentProject> Projects;
 
     UPROPERTY()
     FAIContentProject CurrentProject;
 
-    // 內容管道
+    // ?�容管�?
     UPROPERTY()
     TMap<FString, FAIContentPipeline> ContentPipelines;
 
-    // 內容庫 - 注意：TMap<TArray> 不支持 UPROPERTY
+    // ?�容�?- 注�?：TMap<TArray> 不支??UPROPERTY
     TMap<EAIContentType, TArray<FString>> ContentLibrary;
 
     UPROPERTY()
@@ -342,11 +338,10 @@ protected:
     UPROPERTY()
     TMap<FString, FAIContentProject> ContentTemplates;
 
-    // 版本控制 - 注意：TMap<TArray> 不支持 UPROPERTY
+    // ?�本?�制 - 注�?：TMap<TArray> 不支??UPROPERTY
     TMap<FString, TArray<FString>> ProjectVersions;
 
-    // 狀態
-    UPROPERTY()
+    // ?�??    UPROPERTY()
     bool bIsInitialized;
 
     UPROPERTY()
@@ -358,7 +353,7 @@ protected:
     UPROPERTY()
     TArray<FString> ActiveGenerations;
 
-    // 統計
+    // 統�?
     UPROPERTY()
     int32 TotalGeneratedCount;
 
@@ -368,7 +363,7 @@ protected:
     UPROPERTY()
     TMap<EAIContentType, int32> ContentTypeCounts;
 
-    // 內部函數
+    // ?�部?�數
     void InitializeContentSystem();
     void InitializeRenderer();
     void LoadDefaultTemplates();
@@ -379,7 +374,7 @@ protected:
     void NotifyPipelineStageCompleted(int32 StageIndex);
 
 private:
-    // 輔助函數
+    // 輔助?�數
     FString GenerateUniqueContentName(EAIContentType ContentType) const;
     FString GetContentPath(EAIContentType ContentType, const FString& ContentName) const;
     bool ValidateContent(const FString& ContentPath) const;

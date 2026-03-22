@@ -6,8 +6,7 @@
 #include "MingWinLossBlueprintLibrary.generated.h"
 
 /**
- * 勝負條件藍圖函數庫
- * 提供藍圖可調用的勝負條件系統功能
+ * ?��?條件?��??�數�? * ?��??��??�調?��??��?條件系統?�能
  */
 UCLASS()
 class MINGSTRATEGIC_API UMingWinLossBlueprintLibrary : public UBlueprintFunctionLibrary
@@ -16,163 +15,152 @@ class MINGSTRATEGIC_API UMingWinLossBlueprintLibrary : public UBlueprintFunction
 
 public:
     /**
-     * 獲取勝負條件系統
+     * ?��??��?條件系統
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static UMingWinLossCondition* GetWinLossConditionSystem();
 
     /**
-     * 初始化勝負條件系統
-     */
+     * ?��??��?負�?件系�?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static void InitializeWinLossConditionSystem();
 
     /**
-     * 註冊勝負條件
+     * 註�??��?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static bool RegisterWinLossCondition(const FWinLossCondition& Condition);
 
     /**
-     * 取消註冊勝負條件
+     * ?��?註�??��?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static bool UnregisterWinLossCondition(const FString& ConditionID);
 
     /**
-     * 評估勝負狀況
-     */
+     * 評估?��??��?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static FWinLossEvaluationResult EvaluateWinLoss();
 
     /**
-     * 檢查單個條件
-     */
+     * 檢查?�個�?�?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static bool CheckCondition(const FString& ConditionID);
 
     /**
-     * 獲取勝負條件
+     * ?��??��?條件
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FWinLossCondition GetWinLossCondition(const FString& ConditionID);
 
     /**
-     * 獲取所有勝負條件
-     */
+     * ?��??�?��?負�?�?     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static TArray<FWinLossCondition> GetAllWinLossConditions();
 
     /**
-     * 獲取指定類型的條件
-     */
+     * ?��??��?類�??��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static TArray<FWinLossCondition> GetConditionsByType(EWinLossConditionType ConditionType);
 
     /**
-     * 獲取關鍵條件
+     * ?��??�鍵條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static TArray<FWinLossCondition> GetCriticalConditions();
 
     /**
-     * 獲取已滿足的條件
+     * ?��?已滿足�?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static TArray<FWinLossCondition> GetSatisfiedConditions();
 
     /**
-     * 獲取未滿足的條件
+     * ?��??�滿足�?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static TArray<FWinLossCondition> GetUnsatisfiedConditions();
 
     /**
-     * 設置遊戲狀態
-     */
+     * 設置?�戲?�??     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static void SetGameState(const TMap<FString, FString>& GameState);
 
     /**
-     * 獲取遊戲狀態
-     */
+     * ?��??�戲?�??     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static TMap<FString, FString> GetGameState();
 
     /**
-     * 更新遊戲狀態值
-     */
+     * ?�新?�戲?�?��?     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static void UpdateGameStateValue(const FString& Key, const FString& Value);
 
     /**
-     * 獲取勝負統計
+     * ?��??��?統�?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FWinLossStatistics GetWinLossStatistics();
 
     /**
-     * 重置統計數據
+     * ?�置統�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static void ResetStatistics();
 
     /**
-     * 強制評估 (用於測試)
+     * 強制評估 (?�於測試)
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition")
     static FWinLossEvaluationResult ForceEvaluation();
 
     /**
-     * 獲取當前勝負結果
+     * ?��??��??��?結�?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static EWinLossResult GetCurrentResult();
 
     /**
-     * 獲取勝負分數
+     * ?��??��??�數
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static float GetWinLossScore();
 
     /**
-     * 檢查是否已結束
-     */
+     * 檢查?�否已�???     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static bool IsGameOver();
 
     /**
-     * 獲取結束原因
+     * ?��?結�??��?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FString GetGameOverReason();
 
     /**
-     * 獲取結果名稱
+     * ?��?結�??�稱
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FString GetResultName(EWinLossResult Result);
 
     /**
-     * 獲取條件類型名稱
+     * ?��?條件類�??�稱
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FString GetConditionTypeName(EWinLossConditionType ConditionType);
 
     /**
-     * 獲取優先級名稱
-     */
+     * ?��??��?級�?�?     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FString GetPriorityName(EWinLossPriority Priority);
 
     /**
-     * 獲取狀態名稱
-     */
+     * ?��??�?��?�?     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition")
     static FString GetStateName(EWinLossConditionState State);
 
     /**
-     * 創建勝負條件
+     * ?�建?��?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Creation")
     static FWinLossCondition CreateWinLossCondition(
@@ -186,7 +174,7 @@ public:
     );
 
     /**
-     * 添加條件參數
+     * 添�?條件?�數
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Creation")
     static FWinLossCondition AddConditionParameter(
@@ -199,7 +187,7 @@ public:
     );
 
     /**
-     * 設置檢查間隔
+     * 設置檢查?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Creation")
     static FWinLossCondition SetCheckInterval(
@@ -208,7 +196,7 @@ public:
     );
 
     /**
-     * 添加條件標籤
+     * 添�?條件標籤
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Creation")
     static FWinLossCondition AddConditionTag(
@@ -217,7 +205,7 @@ public:
     );
 
     /**
-     * 添加相關事件
+     * 添�??��?事件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Creation")
     static FWinLossCondition AddRelatedEvent(
@@ -226,175 +214,172 @@ public:
     );
 
     /**
-     * 批量檢查條件
+     * ?��?檢查條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Batch")
     static TArray<bool> BatchCheckConditions(const TArray<FString>& ConditionIDs);
 
     /**
-     * 批量註冊條件
+     * ?��?註�?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Batch")
     static TArray<bool> BatchRegisterConditions(const TArray<FWinLossCondition>& Conditions);
 
     /**
-     * 獲取系統狀態
-     */
+     * ?��?系統?�??     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
     static bool IsWinLossSystemInitialized();
 
     /**
-     * 獲取系統版本
+     * ?��?系統?�本
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
     static FString GetWinLossSystemVersion();
 
     /**
-     * 獲取註冊條件數量
+     * ?��?註�?條件?��?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
     static int32 GetRegisteredConditionCount();
 
     /**
-     * 獲取滿足條件數量
+     * ?��?滿足條件?��?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
     static int32 GetSatisfiedConditionCount();
 
     /**
-     * 獲取關鍵條件數量
+     * ?��??�鍵條件?��?
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
     static int32 GetCriticalConditionCount();
 
     /**
-     * 獲取條件滿足率
-     */
+     * ?��?條件滿足??     */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|System")
     static float GetConditionSatisfactionRate();
 
     /**
-     * 獲取勝負進度
+     * ?��??��??�度
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|Progress")
     static float GetVictoryProgress();
 
     /**
-     * 獲取失敗進度
+     * ?��?失�??�度
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|Progress")
     static float GetDefeatProgress();
 
     /**
-     * 獲取平局進度
+     * ?��?平�??�度
      */
     UFUNCTION(BlueprintPure, Category = "Win Loss Condition|Progress")
     static float GetDrawProgress();
 
     /**
-     * 獲取距離勝利時間
+     * ?��?距離?�利?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Prediction")
     static float GetTimeToVictory();
 
     /**
-     * 獲取距離失敗時間
+     * ?��?距離失�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Prediction")
     static float GetTimeToDefeat();
 
     /**
-     * 獲取勝利概率
+     * ?��??�利概�?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Prediction")
     static float GetVictoryProbability();
 
     /**
-     * 獲取失敗概率
+     * ?��?失�?概�?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Prediction")
     static float GetDefeatProbability();
 
     /**
-     * 獲取平局概率
+     * ?��?平�?概�?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Prediction")
     static float GetDrawProbability();
 
     /**
-     * 獲取勝負建議
+     * ?��??��?建議
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|AI")
     static TArray<FString> GetWinLossRecommendations();
 
     /**
-     * 獲取需要關注的條件
+     * ?��??�要�?注�?條件
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Analysis")
     static TArray<FString> GetCriticalConditionsToWatch();
 
     /**
-     * 獲取條件影響分析
+     * ?��?條件影響?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Analysis")
     static TMap<FString, float> GetConditionImpactAnalysis();
 
     /**
-     * 獲取遊戲狀態影響
-     */
+     * ?��??�戲?�?�影??     */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Analysis")
     static TMap<FString, float> GetGameStateImpact();
 
     /**
-     * 獲取勝負趨勢
+     * ?��??��?趨勢
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Trend")
     static TArray<EWinLossResult> GetWinLossTrend(int32 HistoryCount);
 
     /**
-     * 獲取趨勢分析
+     * ?��?趨勢?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Trend")
     static FString GetTrendAnalysis();
 
     /**
-     * 模擬勝負結果
+     * 模擬?��?結�?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Simulation")
     static TArray<EWinLossResult> SimulateWinLoss(int32 SimulationCount);
 
     /**
-     * 模擬條件變化
+     * 模擬條件變�?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Simulation")
     static TArray<FString> SimulateConditionChanges(const FString& ConditionID, const FString& NewValue);
 
     /**
-     * 導出勝負數據
+     * 導出?��??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Export")
     static bool ExportWinLossData(const FString& FilePath);
 
     /**
-     * 導入勝負數據
+     * 導入?��??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Import")
     static bool ImportWinLossData(const FString& FilePath);
 
     /**
-     * 獲取勝負報告
+     * ?��??��??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Report")
     static FString GenerateWinLossReport();
 
     /**
-     * 獲取條件詳細報告
+     * ?��?條件詳細?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Report")
     static FString GenerateConditionReport(const FString& ConditionID);
 
     /**
-     * 獲取統計報告
+     * ?��?統�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Win Loss Condition|Report")
     static FString GenerateStatisticsReport();

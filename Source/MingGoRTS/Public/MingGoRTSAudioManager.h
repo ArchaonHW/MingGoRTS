@@ -92,7 +92,7 @@ class MINGGORTS_API UMingGoRTSAudioManager : public UObject
 public:
     UMingGoRTSAudioManager();
 
-    // 音軌管理
+    // ?��?管�?
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void AddAudioTrack(const FAudioTrack& Track);
 
@@ -108,7 +108,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     bool GetAudioTrack(const FString& TrackName, FAudioTrack& OutTrack);
 
-    // 音軌控制
+    // ?��??�制
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void SetTrackVolume(const FString& TrackName, float Volume);
 
@@ -121,7 +121,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void SetTrackLoop(const FString& TrackName, bool bLoop);
 
-    // 混音功能
+    // 混音?�能
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void StartAudioMixing();
 
@@ -137,7 +137,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     FAudioMixSettings GetMixSettings() const { return MixSettings; }
 
-    // 實時混音
+    // 實�?混音
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void PlayMixedAudio();
 
@@ -150,7 +150,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     bool IsMixedAudioPlaying() const;
 
-    // 音效分類
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void PlayMusicTrack(USoundWave* Music, float Volume = 1.0f);
 
@@ -160,21 +160,21 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void PlayVoiceTrack(USoundWave* Voice, float Volume = 1.0f);
 
-    // 音頻導出
+    // ?�頻導出
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void ExportMixedAudio(const FString& FilePath);
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     USoundWave* GetMixedAudioResult() const { return MixedAudioResult; }
 
-    // 音頻分析
+    // ?�頻?��?
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     float GetAudioDuration(USoundWave* SoundWave) const;
 
     UFUNCTION(BlueprintCallable, Category = "Audio Manager")
     void AnalyzeAudio(USoundWave* SoundWave, float& OutRMS, float& OutPeak);
 
-    // 委托事件
+    // 委�?事件
     UPROPERTY(BlueprintAssignable, Category = "Audio Manager")
     FOnAudioMixCompleted OnAudioMixCompleted;
 
@@ -203,7 +203,7 @@ protected:
     UPROPERTY()
     float MixingProgress;
 
-    // 注意：非UObject類型不能用UPROPERTY
+    // 注�?：�?UObject類�?不能?�UPROPERTY
     FTickerDelegate MixingTicker;
     FDelegateHandle MixingTickerHandle;
 

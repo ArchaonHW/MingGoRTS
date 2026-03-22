@@ -51,8 +51,7 @@ struct FNetworkTestCase
 
 /**
  * 網絡系統測試套件
- * 驗證多人遊戲網絡系統的核心功能
- */
+ * 驗�?多人?�戲網絡系統?�核心�??? */
 UCLASS()
 class MINGPERSONAL_API UMingNetworkSystemTest : public UObject
 {
@@ -61,11 +60,10 @@ class MINGPERSONAL_API UMingNetworkSystemTest : public UObject
 public:
     UMingNetworkSystemTest();
 
-    // 運行所有測試
-    UFUNCTION(BlueprintCallable, Category = "Network Test")
+    // ?��??�?�測�?    UFUNCTION(BlueprintCallable, Category = "Network Test")
     bool RunAllTests();
 
-    // 測試結果
+    // 測試結�?
     UFUNCTION(BlueprintPure, Category = "Network Test")
     FString GetTestResults() const { return TestResults; }
 
@@ -81,7 +79,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Network Test")
     TArray<FNetworkTestCase> GetTestCases() const { return TestCases; }
 
-    // 個別測試
+    // ?�別測試
     UFUNCTION(BlueprintCallable, Category = "Network Test")
     bool TestNetworkManagerCreation();
 
@@ -131,7 +129,7 @@ public:
     bool TestErrorHandling();
 
 private:
-    // 測試結果日誌
+    // 測試結�??��?
     UPROPERTY()
     FString TestResults;
 
@@ -147,13 +145,12 @@ private:
     UPROPERTY()
     TArray<FNetworkTestCase> TestCases;
 
-    // 測試幫助函數
+    // 測試幫助?�數
     void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT(""));
     void ResetTestCounts();
     void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
 
-    // 創建測試用的管理器
-    UMingPersonalManager* CreateTestPersonalManager();
+    // ?�建測試?��?管�???    UMingPersonalManager* CreateTestPersonalManager();
     UMingNetworkManager* CreateTestNetworkManager();
     UMingLobbySystem* CreateTestLobbySystem();
 };

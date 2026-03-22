@@ -114,8 +114,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnContentGenerated, const FGenerate
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnContentRequested, const FString&, ContentType, const FContextualData&, Context);
 
 /**
- * 動態內容生成器
- * 基於AI和上下文生成動態UI內容
+ * ?��??�容?��??? * ?�於AI?��?下�??��??��?UI?�容
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingDynamicContentGenerator : public UObject
@@ -125,11 +124,11 @@ class MINGPERSONAL_API UMingDynamicContentGenerator : public UObject
 public:
     UMingDynamicContentGenerator();
 
-    // 初始化內容生成器
+    // ?��??�內容�??�器
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     void InitializeContentGenerator(UMingAIUIManager* InAIManager);
 
-    // 內容生成
+    // ?�容?��?
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     FGeneratedContent GenerateContent(const FString& ContentType, const FContextualData& Context);
 
@@ -151,7 +150,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     FGeneratedContent GenerateStrategicAdvice(const FContextualData& Context);
 
-    // 模板管理
+    // 模板管�?
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     void AddContentTemplate(const FDynamicContentConfig& Config);
 
@@ -164,8 +163,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     TArray<FDynamicContentConfig> GetAllTemplates() const;
 
-    // 上下文分析
-    UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
+    // 上�??��???    UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     FContextualData AnalyzeCurrentContext();
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
@@ -174,7 +172,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     float CalculateContentRelevance(const FString& ContentType, const FContextualData& Context) const;
 
-    // 內容優化
+    // ?�容?��?
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     void OptimizeContentForUser();
 
@@ -184,14 +182,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     void AdjustContentTone(FGeneratedContent& Content, EAIUserProfile UserProfile);
 
-    // 批量生成
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     TArray<FGeneratedContent> GenerateContentBatch(const TArray<FString>& ContentTypes, const FContextualData& Context);
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     void ScheduleContentGeneration(const FString& ContentType, float Delay);
 
-    // 內容緩存
+    // ?�容緩�?
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     void CacheContent(const FGeneratedContent& Content);
 
@@ -201,14 +199,13 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     void ClearContentCache();
 
-    // 本地化支持
-    UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
+    // ?�地?�支??    UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     FGeneratedContent LocalizeContent(const FGeneratedContent& Content, const FString& LanguageCode);
 
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     void AddLocalizationTemplate(const FString& ContentType, const FString& LanguageCode, const FString& Template);
 
-    // 內容評估
+    // ?�容評估
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     float EvaluateContentQuality(const FGeneratedContent& Content) const;
 
@@ -218,8 +215,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
     void RateContent(const FString& ContentID, float Rating);
 
-    // 狀態查詢
-    UFUNCTION(BlueprintPure, Category = "Dynamic Content")
+    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "Dynamic Content")
     bool IsGeneratorReady() const { return bIsInitialized; }
 
     UFUNCTION(BlueprintPure, Category = "Dynamic Content")
@@ -256,7 +252,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingAIUIManager> AIManager;
 
-    // 配置
+    // ?�置
     UPROPERTY()
     bool bIsInitialized = false;
 
@@ -272,7 +268,7 @@ protected:
     UPROPERTY()
     int32 MaxCacheSize = 1000;
 
-    // 數據存儲
+    // ?��?存儲
     UPROPERTY()
     TMap<FString, FDynamicContentConfig> ContentTemplates;
 
@@ -282,13 +278,13 @@ protected:
     UPROPERTY()
     FContextualData CurrentContext;
 
-    // 注意：TMap<TArray> 不支持 UPROPERTY
+    // 注�?：TMap<TArray> 不支??UPROPERTY
     TMap<FString, TArray<FString>> LocalizationTemplates;
 
     UPROPERTY()
     TMap<FString, float> ContentRatings;
 
-    // 內部函數
+    // ?�部?�數
     void InitializeDefaultTemplates();
     FString ProcessTemplate(const FString& Template, const TMap<FString, FString>& Variables) const;
     TMap<FString, FString> ExtractContextVariables(const FContextualData& Context) const;
@@ -296,14 +292,14 @@ protected:
     void UpdateContentStatistics(const FGeneratedContent& Content);
     bool ShouldGenerateContent(const FString& ContentType, const FContextualData& Context) const;
 
-    // AI生成輔助
+    // AI?��?輔助
     FString GenerateTextWithAI(const FString& Prompt, const TMap<FString, FString>& Context) const;
     TArray<FString> GenerateActionSuggestions(const FContextualData& Context) const;
     FString AdjustToneForProfile(const FString& Text, EAIUserProfile Profile) const;
     float CalculateSemanticRelevance(const FString& Content, const FString& Context) const;
 
 private:
-    // 輔助函數
+    // 輔助?�數
     void SaveContentData();
     void LoadContentData();
     void CleanupOldCache();

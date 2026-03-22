@@ -1,5 +1,5 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 系統集成測試階段啟動 - 基礎集成測試
+// 系統?��?測試?�段?��? - ?��??��?測試
 
 #pragma once
 
@@ -9,7 +9,7 @@
 #include "Templates/Function.h"
 #include "MingRTSIntegrationTestSuite.generated.h"
 
-/** 測試階段枚舉 */
+/** 測試?�段?��? */
 UENUM(BlueprintType)
 enum class ETestPhase : uint8
 {
@@ -23,9 +23,9 @@ enum class ETestPhase : uint8
     Completed
 };
 
-/** 測試結果枚舉 */
+/** 測試結�??��? */
 UENUM(BlueprintType)
-enum class ETestResult : uint8
+enum class EIntegrationTestResult : uint8
 {
     NotRun,
     Passed,
@@ -34,7 +34,7 @@ enum class ETestResult : uint8
     Error
 };
 
-/** 測試用例結構 */
+/** 測試?��?結�? */
 USTRUCT(BlueprintType)
 struct FTestCase
 {
@@ -47,7 +47,7 @@ struct FTestCase
     FString Description;
 
     UPROPERTY(BlueprintReadWrite, Category = "Integration Test")
-    ETestResult Result;
+    EIntegrationTestResult Result;
 
     UPROPERTY(BlueprintReadWrite, Category = "Integration Test")
     FString ErrorMessage;
@@ -65,7 +65,7 @@ struct FTestCase
     }
 };
 
-/** 測試階段結果 */
+/** 測試?�段結�? */
 USTRUCT(BlueprintType)
 struct FPhaseResult
 {
@@ -75,7 +75,7 @@ struct FPhaseResult
     ETestPhase Phase;
 
     UPROPERTY(BlueprintReadWrite, Category = "Integration Test")
-    ETestResult OverallResult;
+    EIntegrationTestResult OverallResult;
 
     UPROPERTY(BlueprintReadWrite, Category = "Integration Test")
     TArray<FTestCase> TestCases;
@@ -104,8 +104,7 @@ struct FPhaseResult
 };
 
 /**
- * 系統集成測試階段管理器
- * 負責協調和執行所有系統的集成測試
+ * 系統?��?測試?�段管�??? * 負責?�調?�執行�??�系統�??��?測試
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingRTSIntegrationTestSuite : public UObject
@@ -115,76 +114,76 @@ class MINGGORTS_API UMingRTSIntegrationTestSuite : public UObject
 public:
     UMingRTSIntegrationTestSuite();
 
-    /** 初始化集成測試套件 */
+    /** ?��??��??�測試�?�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void InitializeIntegrationTestSuite();
 
-    /** 開始完整集成測試 */
+    /** ?��?完整?��?測試 */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartFullIntegrationTest();
 
-    /** 開始基礎集成測試 */
+    /** ?��??��??��?測試 */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartBasicIntegrationTest();
 
-    /** 開始數據流測試 */
+    /** ?��??��?流測�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartDataFlowTest();
 
-    /** 開始性能集成測試 */
+    /** ?��??�能?��?測試 */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartPerformanceIntegrationTest();
 
-    /** 開始用戶體驗測試 */
+    /** ?��??�戶體�?測試 */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartUserExperienceTest();
 
-    /** 開始兼容性測試 */
+    /** ?��??�容?�測�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartCompatibilityTest();
 
-    /** 開始最終驗證測試 */
+    /** ?��??�終�?證測�?*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartFinalValidationTest();
 
-    /** 獲取當前測試階段 */
+    /** ?��??��?測試?�段 */
     UFUNCTION(BlueprintPure, Category = "Integration Test")
     ETestPhase GetCurrentTestPhase() const { return CurrentPhase; }
 
-    /** 獲取測試進度 */
+    /** ?��?測試?�度 */
     UFUNCTION(BlueprintPure, Category = "Integration Test")
     float GetTestProgress() const;
 
-    /** 獲取測試結果報告 */
+    /** ?��?測試結�??��? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     FString GenerateTestReport();
 
-    /** 獲取階段結果 */
+    /** ?��??�段結�? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     TArray<FPhaseResult> GetAllPhaseResults() const { return PhaseResults; }
 
-    /** 檢查測試是否完成 */
+    /** 檢查測試?�否完�? */
     UFUNCTION(BlueprintPure, Category = "Integration Test")
     bool IsTestCompleted() const { return CurrentPhase == ETestPhase::Completed; }
 
-    /** 重置測試狀態 */
+    /** ?�置測試?�??*/
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void ResetTestState();
 
 public:
-    /** 測試階段開始事件 */
+    /** 測試?�段?��?事件 */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestPhaseStarted, ETestPhase, Phase);
 
-    /** 測試階段完成事件 */
+    /** 測試?�段完�?事件 */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestPhaseCompleted, ETestPhase, Phase, ETestResult, Result);
 
-    /** 測試用例完成事件 */
+    /** 測試?��?完�?事件 */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnTestCaseCompleted, FString, TestCaseName, ETestResult, Result, float, ExecutionTime);
 
-    /** 完整測試完成事件 */
+    /** 完整測試完�?事件 */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFullTestCompleted, bool, bAllPassed);
 
-    /** 測試進度更新事件 */
+    /** 測試?�度?�新事件 */
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestProgressUpdated, float, Progress);
 
     UPROPERTY(BlueprintAssignable, Category = "Integration Test|Events")
@@ -203,31 +202,31 @@ public:
     FOnTestProgressUpdated OnTestProgressUpdated;
 
 protected:
-    /** 執行測試用例 */
+    /** ?��?測試?��? */
     void ExecuteTestCase(const FString& TestCaseName, TFunction<void()> TestFunction);
 
-    /** 更新測試進度 */
+    /** ?�新測試?�度 */
     void UpdateTestProgress();
 
-    /** 記錄測試結果 */
+    /** 記�?測試結�? */
     void RecordTestResult(const FString& TestCaseName, ETestResult Result, const FString& ErrorMessage = TEXT(""));
 
-    /** 完成當前階段 */
+    /** 完�??��??�段 */
     void CompleteCurrentPhase(ETestResult Result);
 
-    /** 移動到下一階段 */
+    /** 移�??��?一?�段 */
     void MoveToNextPhase();
 
 private:
-    /** 當前測試階段 */
+    /** ?��?測試?�段 */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     ETestPhase CurrentPhase;
 
-    /** 所有階段結果 */
+    /** ?�?��?段�???*/
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     TArray<FPhaseResult> PhaseResults;
 
-    /** 當前階段的測試用例 */
+    /** ?��??�段?�測試用�?*/
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     TArray<FTestCase> CurrentPhaseTestCases;
 
@@ -235,55 +234,55 @@ private:
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     int32 TotalTestCases;
 
-    /** 已完成測試用例數 */
+    /** 已�??�測試用例數 */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     int32 CompletedTestCases;
 
-    /** 測試開始時間 */
+    /** 測試?��??��? */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     double TestStartTime;
 
-    /** 當前測試用例開始時間 */
+    /** ?��?測試?��??��??��? */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     double CurrentTestCaseStartTime;
 
-    /** 是否正在運行測試 */
+    /** ?�否�?��?��?測試 */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test", meta = (AllowPrivateAccess = "true"))
     bool bIsTestRunning;
 
-    /** 初始化基礎集成測試用例 */
+    /** ?��??�基礎�??�測試用�?*/
     void InitializeBasicIntegrationTests();
 
-    /** 初始化數據流測試用例 */
+    /** ?��??�數?��?測試?��? */
     void InitializeDataFlowTests();
 
-    /** 初始化性能集成測試用例 */
+    /** ?��??�性能?��?測試?��? */
     void InitializePerformanceIntegrationTests();
 
-    /** 初始化用戶體驗測試用例 */
+    /** ?��??�用?��?驗測試用�?*/
     void InitializeUserExperienceTests();
 
-    /** 初始化兼容性測試用例 */
+    /** ?��??�兼容性測試用�?*/
     void InitializeCompatibilityTests();
 
-    /** 初始化最終驗證測試用例 */
+    /** ?��??��?終�?證測試用�?*/
     void InitializeFinalValidationTests();
 
-    /** 基礎集成測試具體實現 */
+    /** ?��??��?測試?��?實現 */
     void RunBasicIntegrationTests();
 
-    /** 數據流測試具體實現 */
+    /** ?��?流測試具體實??*/
     void RunDataFlowTests();
 
-    /** 性能集成測試具體實現 */
+    /** ?�能?��?測試?��?實現 */
     void RunPerformanceIntegrationTests();
 
-    /** 用戶體驗測試具體實現 */
+    /** ?�戶體�?測試?��?實現 */
     void RunUserExperienceTests();
 
-    /** 兼容性測試具體實現 */
+    /** ?�容?�測試具體實??*/
     void RunCompatibilityTests();
 
-    /** 最終驗證測試具體實現 */
+    /** ?�終�?證測試具體實??*/
     void RunFinalValidationTests();
 };

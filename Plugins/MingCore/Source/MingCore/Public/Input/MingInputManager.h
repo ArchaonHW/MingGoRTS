@@ -6,7 +6,7 @@
 #include "MingInputManager.generated.h"
 
 /**
- * 輸入操作類型
+ * 輸入?��?類�?
  */
 UENUM(BlueprintType)
 enum class EInputAction : uint8
@@ -28,7 +28,7 @@ enum class EInputAction : uint8
 };
 
 /**
- * 輸入手勢類型
+ * 輸入?�勢類�?
  */
 UENUM(BlueprintType)
 enum class EInputGesture : uint8
@@ -48,39 +48,36 @@ enum class EInputGesture : uint8
 };
 
 /**
- * 輸入事件結構
+ * 輸入事件結�?
  */
 USTRUCT(BlueprintType)
 struct FInputEventData
 {
     GENERATED_BODY()
     
-    // 輸入位置（屏幕座標）
+    // 輸入位置（�?幕座標�?
     UPROPERTY(BlueprintReadOnly)
     FVector2D ScreenPosition;
     
-    // 世界位置（如果有）
-    UPROPERTY(BlueprintReadOnly)
+    // 世�?位置（�??��?�?    UPROPERTY(BlueprintReadOnly)
     FVector WorldPosition;
     
-    // 輸入操作類型
+    // 輸入?��?類�?
     UPROPERTY(BlueprintReadOnly)
     EInputAction Action;
     
-    // 手勢類型（觸控）
+    // ?�勢類�?（觸?��?
     UPROPERTY(BlueprintReadOnly)
     EInputGesture Gesture;
     
-    // 觸控ID（多點觸控）
+    // 觸控ID（�?點觸?��?
     UPROPERTY(BlueprintReadOnly)
     int32 TouchId;
     
-    // 是否已處理
-    UPROPERTY(BlueprintReadOnly)
+    // ?�否已�???    UPROPERTY(BlueprintReadOnly)
     bool bHandled;
     
-    // 按鍵修飾符（Shift, Ctrl, Alt）
-    UPROPERTY(BlueprintReadOnly)
+    // ?�鍵修飾符�?Shift, Ctrl, Alt�?    UPROPERTY(BlueprintReadOnly)
     bool bShiftPressed;
     
     UPROPERTY(BlueprintReadOnly)
@@ -103,9 +100,7 @@ struct FInputEventData
 };
 
 /**
- * 輸入管理器
- * 統一管理鼠標鍵盤和觸控輸入
- */
+ * 輸入管�??? * 統�?管�?鼠�??�盤?�觸?�輸?? */
 UCLASS()
 class MINGCORE_API UMingInputManager : public UObject
 {
@@ -114,31 +109,30 @@ class MINGCORE_API UMingInputManager : public UObject
 public:
     UMingInputManager();
 
-    // 初始化輸入管理器
+    // ?��??�輸?�管?�器
     UFUNCTION(BlueprintCallable, Category = "Input")
     void Initialize();
 
-    // 關閉輸入管理器
-    UFUNCTION(BlueprintCallable, Category = "Input")
+    // ?��?輸入管�???    UFUNCTION(BlueprintCallable, Category = "Input")
     void Shutdown();
 
-    // 每幀更新
+    // 每�??�新
     UFUNCTION(BlueprintCallable, Category = "Input")
     void Tick(float DeltaTime);
 
-    // 設置當前輸入類型
+    // 設置?��?輸入類�?
     UFUNCTION(BlueprintCallable, Category = "Input")
     void SetInputType(EInputType NewInputType);
 
-    // 獲取當前輸入類型
+    // ?��??��?輸入類�?
     UFUNCTION(BlueprintCallable, Category = "Input")
     EInputType GetCurrentInputType() const { return CurrentInputType; }
 
-    // 綁定輸入操作（Blueprint可調用）
+    // 綁�?輸入?��?（Blueprint?�調?��?
     UFUNCTION(BlueprintCallable, Category = "Input")
     void BindAction(EInputAction Action, UObject* Listener, FName FunctionName);
 
-    // 解除綁定
+    // �?��綁�?
     UFUNCTION(BlueprintCallable, Category = "Input")
     void UnbindAction(EInputAction Action, UObject* Listener);
 
@@ -146,43 +140,36 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Input")
     void TriggerInputEvent(const FInputEventData& EventData);
 
-    // 判斷是否為觸控設備
-    UFUNCTION(BlueprintCallable, Category = "Input")
+    // ?�斷?�否?�觸?�設??    UFUNCTION(BlueprintCallable, Category = "Input")
     bool IsTouchInput() const;
 
-    // 獲取最後輸入位置
-    UFUNCTION(BlueprintCallable, Category = "Input")
+    // ?��??�後輸?��?�?    UFUNCTION(BlueprintCallable, Category = "Input")
     FVector2D GetLastInputPosition() const { return LastInputPosition; }
 
-    // 設置觸控縮放靈敏度
-    UFUNCTION(BlueprintCallable, Category = "Input")
+    // 設置觸控縮放?��?�?    UFUNCTION(BlueprintCallable, Category = "Input")
     void SetTouchSensitivity(float Sensitivity);
 
-    // 獲取觸控縮放靈敏度
-    UFUNCTION(BlueprintCallable, Category = "Input")
+    // ?��?觸控縮放?��?�?    UFUNCTION(BlueprintCallable, Category = "Input")
     float GetTouchSensitivity() const { return TouchSensitivity; }
 
-    // 靜態獲取實例
+    // ?��??��?實�?
     static UMingInputManager* Get();
 
 private:
     bool bInitialized;
     
-    // 當前輸入類型
+    // ?��?輸入類�?
     UPROPERTY()
     EInputType CurrentInputType;
     
-    // 最後輸入位置
-    FVector2D LastInputPosition;
+    // ?�後輸?��?�?    FVector2D LastInputPosition;
     
-    // 觸控靈敏度
-    float TouchSensitivity;
+    // 觸控?��?�?    float TouchSensitivity;
     
-    // 輸入綁定映射
+    // 輸入綁�??��?
     TMap<EInputAction, TMap<TWeakObjectPtr<UObject>, FName>> InputBindings;
     
-    // 觸控狀態追踪
-    struct FTouchState
+    // 觸控?�?�追�?    struct FTouchState
     {
         FVector2D StartPosition;
         FVector2D CurrentPosition;
@@ -192,15 +179,15 @@ private:
     
     TMap<int32, FTouchState> ActiveTouches;
     
-    // 手勢檢測參數
+    // ?�勢檢測?�數
     float TapTimeThreshold;
     float TapDistanceThreshold;
     float LongPressTimeThreshold;
     
-    // 單例實例
+    // ?��?實�?
     static UMingInputManager* Instance;
     
-    // 輸入處理函數
+    // 輸入?��??�數
     void ProcessTouchInput(float DeltaTime);
     void ProcessMouseInput(float DeltaTime);
     void DetectGestures(const FTouchState& TouchState, int32 TouchId);

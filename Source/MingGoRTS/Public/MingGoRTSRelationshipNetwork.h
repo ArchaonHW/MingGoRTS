@@ -9,46 +9,46 @@
 UENUM(BlueprintType)
 enum class EMingGameRelationshipType : uint8
 {
-    Family            UMETA(DisplayName = "家庭關係"),
-    Friend            UMETA(DisplayName = "朋友關係"),
-    Mentor            UMETA(DisplayName = "師徒關係"),
-    Rival             UMETA(DisplayName = "競爭關係"),
-    Ally              UMETA(DisplayName = "盟友關係"),
-    Enemy             UMETA(DisplayName = "敵對關係"),
-    Colleague         UMETA(DisplayName = "同事關係"),
-    Subordinate       UMETA(DisplayName = "下屬關係"),
-    Superior          UMETA(DisplayName = "上司關係"),
-    Business          UMETA(DisplayName = "商業關係"),
-    Political         UMETA(DisplayName = "政治關係"),
-    Military          UMETA(DisplayName = "軍事關係"),
-    Romantic          UMETA(DisplayName = "愛情關係"),
-    Acquaintance      UMETA(DisplayName = "熟人關係"),
-    Stranger          UMETA(DisplayName = "陌生人")
+    Family            UMETA(DisplayName = "家庭?��?"),
+    Friend            UMETA(DisplayName = "?��??��?"),
+    Mentor            UMETA(DisplayName = "師�??��?"),
+    Rival             UMETA(DisplayName = "競爭?��?"),
+    Ally              UMETA(DisplayName = "?��??��?"),
+    Enemy             UMETA(DisplayName = "?��??��?"),
+    Colleague         UMETA(DisplayName = "?��??��?"),
+    Subordinate       UMETA(DisplayName = "下屬?��?"),
+    Superior          UMETA(DisplayName = "上司?��?"),
+    Business          UMETA(DisplayName = "?�業?��?"),
+    Political         UMETA(DisplayName = "?�治?��?"),
+    Military          UMETA(DisplayName = "軍�??��?"),
+    Romantic          UMETA(DisplayName = "?��??��?"),
+    Acquaintance      UMETA(DisplayName = "?�人?��?"),
+    Stranger          UMETA(DisplayName = "?��?�?)
 };
 
 UENUM(BlueprintType)
 enum class ERelationshipStrength : uint8
 {
-    VeryWeak          UMETA(DisplayName = "非常弱"),
-    Weak              UMETA(DisplayName = "弱"),
-    Moderate          UMETA(DisplayName = "中等"),
-    Strong            UMETA(DisplayName = "強"),
-    VeryStrong        UMETA(DisplayName = "非常強")
+    VeryWeak          UMETA(DisplayName = "?�常�?),
+    Weak              UMETA(DisplayName = "�?),
+    Moderate          UMETA(DisplayName = "中�?"),
+    Strong            UMETA(DisplayName = "�?),
+    VeryStrong        UMETA(DisplayName = "?�常�?)
 };
 
 UENUM(BlueprintType)
 enum class ERelationshipStatus : uint8
 {
-    Active            UMETA(DisplayName = "活躍"),
-    Dormant           UMETA(DisplayName = "休眠"),
+    Active            UMETA(DisplayName = "活�?"),
+    Dormant           UMETA(DisplayName = "休�?"),
     Strained          UMETA(DisplayName = "緊張"),
-    Broken            UMETA(DisplayName = "破裂"),
-    Developing        UMETA(DisplayName = "發展中"),
-    Improving         UMETA(DisplayName = "改善中")
+    Broken            UMETA(DisplayName = "?��?"),
+    Developing        UMETA(DisplayName = "?��?�?),
+    Improving         UMETA(DisplayName = "?��?�?)
 };
 
 /**
- * FString 數組包裝結構 (用於 TMap<TArray> 嵌套)
+ * FString ?��??��?結�? (?�於 TMap<TArray> 嵌�?)
  */
 USTRUCT(BlueprintType)
 struct FStringArrayWrapper
@@ -302,7 +302,7 @@ class MINGGORTS_API UMingGoRTSRelationshipNetwork : public UObject
 public:
     UMingGoRTSRelationshipNetwork();
 
-    // 關係網絡事件
+    // ?��?網絡事件
     UPROPERTY(BlueprintAssignable, Category = "Relationship Network")
     FOnRelationshipChanged OnRelationshipChanged;
 
@@ -312,229 +312,211 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Relationship Network")
     FOnNetworkAnalysisComplete OnNetworkAnalysisComplete;
 
-    // 初始化關係網絡系統
-    UFUNCTION(BlueprintCallable, Category = "Relationship Network")
+    // ?��??��?係網絡系�?    UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     void InitializeRelationshipNetwork();
 
-    // 獲取所有關係網絡
-    UFUNCTION(BlueprintPure, Category = "Relationship Network")
+    // ?��??�?��?係網�?    UFUNCTION(BlueprintPure, Category = "Relationship Network")
     TArray<FRelationshipNetwork> GetAllNetworks() const;
 
-    // 獲取關係網絡
+    // ?��??��?網絡
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
     FRelationshipNetwork GetNetwork(const FString& NetworkID) const;
 
-    // 創建關係網絡
+    // ?�建?��?網絡
     UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     FString CreateNetwork(const FString& NetworkName, const TArray<FString>& CharacterIDs);
 
-    // 添加角色到網絡
-    UFUNCTION(BlueprintCallable, Category = "Relationship Network")
+    // 添�?角色?�網�?    UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     bool AddCharacterToNetwork(const FString& NetworkID, const FString& CharacterID);
 
-    // 移除角色從網絡
-    UFUNCTION(BlueprintCallable, Category = "Relationship Network")
+    // 移除角色從網�?    UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     bool RemoveCharacterFromNetwork(const FString& NetworkID, const FString& CharacterID);
 
-    // 創建關係連接
+    // ?�建?��???��
     UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     bool CreateRelationship(const FString& SourceID, const FString& TargetID, ERelationshipType Type, ERelationshipStrength Strength);
 
-    // 更新關係
+    // ?�新?��?
     UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     bool UpdateRelationship(const FString& SourceID, const FString& TargetID, float NewValue, const FString& Reason);
 
-    // 獲取關係連接
+    // ?��??��???��
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
     FRelationshipConnection GetRelationship(const FString& SourceID, const FString& TargetID) const;
 
-    // 獲取角色所有關係
-    UFUNCTION(BlueprintPure, Category = "Relationship Network")
+    // ?��?角色?�?��?�?    UFUNCTION(BlueprintPure, Category = "Relationship Network")
     TArray<FRelationshipConnection> GetCharacterRelationships(const FString& CharacterID) const;
 
-    // 獲取直接連接
+    // ?��??�接??��
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
     TArray<FString> GetDirectConnections(const FString& CharacterID) const;
 
-    // 獲取間接連接
+    // ?��??�接??��
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
     TArray<FString> GetIndirectConnections(const FString& CharacterID) const;
 
-    // 計算關係強度
+    // 計�??��?強度
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
     float CalculateRelationshipStrength(const FString& SourceID, const FString& TargetID) const;
 
-    // 應用關係影響
+    // ?�用?��?影響
     UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     bool ApplyRelationshipInfluence(const FString& SourceID, const FString& TargetID, const FString& InfluenceType, float InfluenceValue);
 
-    // 傳播關係影響
+    // ?�播?��?影響
     UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     void PropagateRelationshipInfluence(const FString& SourceID, const FString& TargetID, const FString& InfluenceType, float InfluenceValue, int32 MaxDepth);
 
-    // 分析網絡
+    // ?��?網絡
     UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     void AnalyzeNetwork(const FString& NetworkID);
 
-    // 計算網絡密度
+    // 計�?網絡密度
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
     float CalculateNetworkDensity(const FString& NetworkID) const;
 
-    // 計算網絡凝聚力
-    UFUNCTION(BlueprintPure, Category = "Relationship Network")
+    // 計�?網絡?��???    UFUNCTION(BlueprintPure, Category = "Relationship Network")
     float CalculateNetworkCohesion(const FString& NetworkID) const;
 
-    // 找到中心角色
+    // ?�到中�?角色
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
     FString FindCentralCharacter(const FString& NetworkID) const;
 
-    // 找到關鍵影響者
-    UFUNCTION(BlueprintPure, Category = "Relationship Network")
+    // ?�到?�鍵影響??    UFUNCTION(BlueprintPure, Category = "Relationship Network")
     TArray<FString> FindKeyInfluencers(const FString& NetworkID) const;
 
-    // 找到橋接角色
+    // ?�到橋接角色
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
     TArray<FString> FindBridgingCharacters(const FString& NetworkID) const;
 
-    // 計算最短路徑
-    UFUNCTION(BlueprintPure, Category = "Relationship Network")
+    // 計�??�?�路�?    UFUNCTION(BlueprintPure, Category = "Relationship Network")
     TArray<FString> FindShortestPath(const FString& SourceID, const FString& TargetID) const;
 
-    // 計算影響力
-    UFUNCTION(BlueprintPure, Category = "Relationship Network")
+    // 計�?影響??    UFUNCTION(BlueprintPure, Category = "Relationship Network")
     float CalculateInfluence(const FString& CharacterID) const;
 
-    // 獲取關係建議
+    // ?��??��?建議
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
     TArray<FString> GetRelationshipSuggestions(const FString& CharacterID) const;
 
-    // 記錄關係事件
+    // 記�??��?事件
     UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     void RecordRelationshipEvent(const FString& EventName, const TArray<FString>& InvolvedCharacters, const FString& Description);
 
-    // 獲取關係歷史
+    // ?��??��?歷史
     UFUNCTION(BlueprintPure, Category = "Relationship Network")
     TArray<FRelationshipEvent> GetRelationshipHistory(const FString& CharacterID) const;
 
-    // 保存關係數據
+    // 保�??��??��?
     UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     bool SaveRelationshipData(const FString& SaveSlotName);
 
-    // 載入關係數據
+    // 載入?��??��?
     UFUNCTION(BlueprintCallable, Category = "Relationship Network")
     bool LoadRelationshipData(const FString& SaveSlotName);
 
 protected:
-    // 所有關係網絡
-    UPROPERTY()
+    // ?�?��?係網�?    UPROPERTY()
     TArray<FRelationshipNetwork> AllNetworks;
 
-    // 網絡ID到網絡的映射
+    // 網絡ID?�網絡�??��?
     UPROPERTY()
     TMap<FString, FRelationshipNetwork> NetworkMap;
 
-    // 角色ID到網絡ID的映射
-    UPROPERTY()
+    // 角色ID?�網絡ID?��?�?    UPROPERTY()
     TMap<FString, FString> CharacterNetworkMap;
 
-    // 關係連接映射
+    // ?��???��?��?
     UPROPERTY()
     TMap<FString, FRelationshipConnection> RelationshipMap;
 
-    // 關係歷史
+    // ?��?歷史
     UPROPERTY()
     TArray<FRelationshipEvent> RelationshipHistory;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bIsInitialized;
 
-    // 初始化歷史關係網絡
-    void InitializeHistoricalNetworks();
+    // ?��??�歷?��?係網�?    void InitializeHistoricalNetworks();
 
-    // 創建國民黨網絡
-    void CreateNationalistNetwork();
+    // ?�建?��?黨網�?    void CreateNationalistNetwork();
 
-    // 創建共產黨網絡
-    void CreateCommunistNetwork();
+    // ?�建?�產黨網�?    void CreateCommunistNetwork();
 
-    // 創建軍閥網絡
+    // ?�建軍閥網絡
     void CreateWarlordNetwork();
 
-    // 創建外交網絡
+    // ?�建外交網絡
     void CreateDiplomaticNetwork();
 
-    // 創建家庭網絡
+    // ?�建家庭網絡
     void CreateFamilyNetwork();
 
-    // 創建商業網絡
+    // ?�建?�業網絡
     void CreateBusinessNetwork();
 
-    // 更新網絡分析
+    // ?�新網絡?��?
     void UpdateNetworkAnalysis(const FString& NetworkID);
 
-    // 計算直接連接
+    // 計�??�接??��
     void CalculateDirectConnections(const FString& NetworkID);
 
-    // 計算間接連接
+    // 計�??�接??��
     void CalculateIndirectConnections(const FString& NetworkID);
 
-    // 計算網絡統計
+    // 計�?網絡統�?
     void CalculateNetworkStatistics(const FString& NetworkID);
 
-    // 應用關係變化
+    // ?�用?��?變�?
     void ApplyRelationshipChange(const FString& SourceID, const FString& TargetID, float ChangeValue);
 
-    // 傳播影響到網絡
-    void PropagateInfluenceToNetwork(const FString& NetworkID, const FString& SourceID, const FString& InfluenceType, float InfluenceValue);
+    // ?�播影響?�網�?    void PropagateInfluenceToNetwork(const FString& NetworkID, const FString& SourceID, const FString& InfluenceType, float InfluenceValue);
 
-    // 生成關係ID
+    // ?��??��?ID
     FString GenerateRelationshipID(const FString& SourceID, const FString& TargetID) const;
 
-    // 生成網絡ID
+    // ?��?網絡ID
     FString GenerateNetworkID(const FString& BaseName) const;
 
-    // 驗證關係連接
+    // 驗�??��???��
     bool ValidateRelationshipConnection(const FRelationshipConnection& Connection) const;
 
-    // 計算關係權重
+    // 計�??��?權�?
     float CalculateRelationshipWeight(const FRelationshipConnection& Connection) const;
 
-    // 檢查關係衝突
+    // 檢查?��?衝�?
     bool CheckRelationshipConflict(const FString& SourceID, const FString& TargetID, ERelationshipType NewType) const;
 
-    // 解決關係衝突
+    // �?��?��?衝�?
     void ResolveRelationshipConflict(const FString& SourceID, const FString& TargetID, ERelationshipType NewType);
 
-    // 更新關係狀態
-    void UpdateRelationshipStatus(const FString& SourceID, const FString& TargetID);
+    // ?�新?��??�??    void UpdateRelationshipStatus(const FString& SourceID, const FString& TargetID);
 
-    // 計算信任度
-    float CalculateTrustLevel(const FString& SourceID, const FString& TargetID) const;
+    // 計�?信任�?    float CalculateTrustLevel(const FString& SourceID, const FString& TargetID) const;
 
-    // 計算影響度
-    float CalculateInfluenceLevel(const FString& SourceID, const FString& TargetID) const;
+    // 計�?影響�?    float CalculateInfluenceLevel(const FString& SourceID, const FString& TargetID) const;
 
-    // 獲取關係類型權重
+    // ?��??��?類�?權�?
     float GetRelationshipTypeWeight(ERelationshipType Type) const;
 
-    // 獲取關係強度權重
+    // ?��??��?強度權�?
     float GetRelationshipStrengthWeight(ERelationshipStrength Strength) const;
 
-    // 檢查關係是否對稱
+    // 檢查?��??�否對稱
     bool IsRelationshipSymmetric(ERelationshipType Type) const;
 
-    // 創建對稱關係
+    // ?�建對稱?��?
     void CreateSymmetricRelationship(const FString& SourceID, const FString& TargetID, ERelationshipType Type, ERelationshipStrength Strength);
 
-    // 記錄關係變化
+    // 記�??��?變�?
     void RecordRelationshipChange(const FString& SourceID, const FString& TargetID, const FString& ChangeType, float OldValue, float NewValue);
 
-    // 分析關係模式
+    // ?��??��?模�?
     void AnalyzeRelationshipPatterns(const FString& NetworkID);
 
-    // 預測關係發展
+    // ?�測?��??��?
     void PredictRelationshipDevelopment(const FString& SourceID, const FString& TargetID);
 
-    // 生成關係報告
+    // ?��??��??��?
     FString GenerateRelationshipReport(const FString& NetworkID) const;
 };

@@ -7,12 +7,12 @@
 UENUM(BlueprintType)
 enum class ECharacterBackground : uint8
 {
-    MilitaryAcademy     UMETA(DisplayName = "軍校出身"),
-    WarlordSon         UMETA(DisplayName = "軍閥之子"),
-    Revolutionary      UMETA(DisplayName = "革命志士"),
-    ScholarOfficial    UMETA(DisplayName = "學官轉任"),
-    Merchant           UMETA(DisplayName = "商賈從軍"),
-    CommonSoldier      UMETA(DisplayName = "普通士兵")
+    MilitaryAcademy     UMETA(DisplayName = "軍校?�身"),
+    WarlordSon         UMETA(DisplayName = "軍閥之�?"),
+    Revolutionary      UMETA(DisplayName = "?�命志士"),
+    ScholarOfficial    UMETA(DisplayName = "學�?轉任"),
+    Merchant           UMETA(DisplayName = "?��?從�?"),
+    CommonSoldier      UMETA(DisplayName = "?�通士??)
 };
 
 USTRUCT(BlueprintType)
@@ -21,19 +21,17 @@ struct FCharacterAttributes
     GENERATED_BODY()
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
-    float Leadership;      // 統帥：影響部隊指揮效率
+    float Leadership;      // 統帥：影?�部?��??��???
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
+    float Intelligence;    // ?��?：影?��??��?外交
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
-    float Intelligence;    // 智謀：影響策略和外交
+    float Courage;         // ?�武：影?�個人?�鬥?�士�?
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
+    float Charisma;        // 魅�?：影?�說?��??��?
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
-    float Courage;         // 勇武：影響個人戰鬥和士氣
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
-    float Charisma;        // 魅力：影響說服和招募
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
-    float Constitution;    // 體質：影響健康和耐力
+    float Constitution;    // 體質：影?�健康�??��?
 
     FCharacterAttributes()
     {
@@ -87,7 +85,7 @@ protected:
     virtual void BeginPlay() override;
 
 public:
-    // 角色基本信息
+    // 角色?�本信息
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
     FString CharacterName;
 
@@ -100,74 +98,65 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
     FString Biography;
 
-    // 角色屬性
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
+    // 角色屬�?    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
     FCharacterAttributes Attributes;
 
-    // 角色技能
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
+    // 角色?�??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
     TArray<FCharacterSkill> Skills;
 
-    // 角色經驗和等級
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
+    // 角色經�??��?�?    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
     int32 Experience;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
     int32 Level;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
-    float Reputation;      // 聲望值
-
-    // 初始化角色
-    UFUNCTION(BlueprintCallable, Category = "Character")
+    float Reputation;      // ?��???
+    // ?��??��???    UFUNCTION(BlueprintCallable, Category = "Character")
     void InitializeCharacter(const FString& Name, ECharacterBackground CharBackground, const FCharacterAttributes& InitialAttributes);
 
-    // 分配屬性點
+    // ?��?屬性�?
     UFUNCTION(BlueprintCallable, Category = "Character")
     void AllocateAttributePoints(float LeadershipDelta, float IntelligenceDelta, float CourageDelta, float CharismaDelta, float ConstitutionDelta);
 
-    // 添加技能
-    UFUNCTION(BlueprintCallable, Category = "Character")
+    // 添�??�??    UFUNCTION(BlueprintCallable, Category = "Character")
     void AddSkill(const FCharacterSkill& NewSkill);
 
-    // 升級技能
-    UFUNCTION(BlueprintCallable, Category = "Character")
+    // ?��??�??    UFUNCTION(BlueprintCallable, Category = "Character")
     bool UpgradeSkill(const FName& SkillID);
 
-    // 獲得經驗
+    // ?��?經�?
     UFUNCTION(BlueprintCallable, Category = "Character")
     void AddExperience(int32 ExpAmount);
 
-    // 計算等級
+    // 計�?等�?
     UFUNCTION(BlueprintCallable, Category = "Character")
     void CalculateLevel();
 
-    // 獲取屬性修正值
-    UFUNCTION(BlueprintPure, Category = "Character")
+    // ?��?屬性修�?�?    UFUNCTION(BlueprintPure, Category = "Character")
     float GetAttributeModifier(ECharacterBackground InBackground) const;
 
-    // 保存角色數據
+    // 保�?角色?��?
     UFUNCTION(BlueprintCallable, Category = "Character")
     void SaveCharacterData();
 
-    // 載入角色數據
+    // 載入角色?��?
     UFUNCTION(BlueprintCallable, Category = "Character")
     bool LoadCharacterData(const FString& SaveSlotName);
 
 protected:
-    // 屬性點總數
+    // 屬性�?總數
     UPROPERTY()
     int32 AvailableAttributePoints;
 
-    // 最大等級
-    UPROPERTY()
+    // ?�大�?�?    UPROPERTY()
     int32 MaxLevel;
 
-    // 每級所需經驗
+    // 每�??�?�經�?
     UPROPERTY()
     int32 ExperiencePerLevel;
 
-    // 內部函數
+    // ?�部?�數
     void OnLevelUp();
     void ApplyBackgroundBonuses();
 };

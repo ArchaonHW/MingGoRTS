@@ -56,8 +56,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReputationSelected, const FString
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnReputationFilterChanged, EReputationLevel, FilterLevel, bool, bActive);
 
 /**
- * 聲望面板Widget
- * 顯示和管理地區聲望信息
+ * ?��??�板Widget
+ * 顯示?�管?�地?�?��?信息
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingReputationPanel : public UUserWidget
@@ -67,11 +67,10 @@ class MINGPERSONAL_API UMingReputationPanel : public UUserWidget
 public:
     UMingReputationPanel(const FObjectInitializer& ObjectInitializer);
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     void InitializeReputationPanel(UMingRelationshipManager* InRelationshipManager);
 
-    // 數據更新
+    // ?��??�新
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     void UpdateReputationData();
 
@@ -81,8 +80,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     void UpdateSelectedReputation(const FString& RegionID);
 
-    // 過濾和排序
-    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
+    // ?�濾?��?�?    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     void FilterByReputationLevel(EReputationLevel ReputationLevel, bool bActive);
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
@@ -94,14 +92,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     void ClearFilters();
 
-    // 搜索
+    // ?�索
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     void SearchReputations(const FString& SearchText);
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     void ClearSearch();
 
-    // 統計信息
+    // 統�?信息
     UFUNCTION(BlueprintPure, Category = "Reputation Panel")
     int32 GetTotalRegionCount() const;
 
@@ -130,7 +128,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     void HideQuestList();
 
-    // 互動操作
+    // 互�??��?
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     void OnReputationClicked(const FString& RegionID);
 
@@ -140,15 +138,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     void OnReputationRightClicked(const FString& RegionID);
 
-    // 任務相關
+    // 任�??��?
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     bool CanAcceptQuestInRegion(const FString& RegionID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     TArray<FString> GetAvailableQuestsInRegion(const FString& RegionID) const;
 
-    // 導出和導入
-    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
+    // 導出?��???    UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
     void ExportReputationData();
 
     UFUNCTION(BlueprintCallable, Category = "Reputation Panel")
@@ -166,7 +163,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
-    // 數據存儲
+    // ?��?存儲
     UPROPERTY(BlueprintReadOnly, Category = "Reputation Data")
     TArray<FReputationDisplayData> DisplayedReputations;
 
@@ -176,8 +173,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Reputation Data")
     FReputationDisplayData SelectedReputation;
 
-    // 過濾狀態
-    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
+    // ?�濾?�??    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     TMap<EReputationLevel, bool> ActiveFilters;
 
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
@@ -186,14 +182,13 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     bool bIsFiltered = false;
 
-    // 排序狀態
-    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
+    // ?��??�??    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortByScore = false;
 
     UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortAscending = true;
 
-    // UI組件引用（需要在Blueprint中綁定）
+    // UI組件引用（�?要在Blueprint中�?定�?
     UPROPERTY(meta = (BindWidget))
     class UListView* ReputationListView;
 
@@ -221,11 +216,11 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UScrollBox* QuestScrollBox;
 
-    // 虛擬函數
+    // ?�擬?�數
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // 內部函數
+    // ?�部?�數
     void ProcessReputationData();
     void ApplyFilters();
     void ApplySorting();
@@ -236,12 +231,12 @@ protected:
     FString GetReputationDescription(EReputationLevel ReputationLevel, float Score) const;
     FString GetRegionDisplayName(const FString& RegionID) const;
 
-    // 事件綁定
+    // 事件綁�?
     void SetupEventBindings();
     void OnReputationDataChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason);
 
 private:
-    // 輔助函數
+    // 輔助?�數
     bool PassesFilter(const FReputationDisplayData& ReputationData) const;
     bool PassesSearch(const FReputationDisplayData& ReputationData) const;
     void RefreshDisplayList();

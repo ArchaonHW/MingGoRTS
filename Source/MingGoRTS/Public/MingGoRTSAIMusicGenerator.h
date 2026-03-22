@@ -21,26 +21,23 @@ enum class EMusicGenerationStatus : uint8
 UENUM(BlueprintType)
 enum class EMusicStyle : uint8
 {
-    Orchestral,        // 管弦樂
-    TraditionalChinese, // 中國傳統音樂
-    Military,          // 軍事音樂
-    Ambient,           // 環境音樂
-    Battle,            // 戰鬥音樂
-    Cinematic,         // 電影配樂
-    Victory,           // 勝利音樂
-    Suspense           // 懸疑音樂
+    Orchestral,        // 管弦�?    TraditionalChinese, // 中�??�統?��?
+    Military,          // 軍�??��?
+    Ambient,           // ?��??��?
+    Battle,            // ?�鬥?��?
+    Cinematic,         // ?�影?��?
+    Victory,           // ?�利?��?
+    Suspense           // ?��??��?
 };
 
 UENUM(BlueprintType)
 enum class ESoundEffectType : uint8
 {
-    Explosion,         // 爆炸
+    Explosion,         // ?�炸
     Gunshot,           // 槍聲
-    SwordClash,        // 劍擊
-    Footsteps,         // 腳步聲
-    Vehicle,           // 載具聲
-    Nature,            // 自然音效
-    Interface,         // 界面音效
+    SwordClash,        // ?��?
+    Footsteps,         // ?�步??    Vehicle,           // 載具??    Nature,            // ?�然?��?
+    Interface,         // ?�面?��?
     Voice              // 語音
 };
 
@@ -116,7 +113,7 @@ class MINGGORTS_API UMingGoRTSAIMusicGenerator : public UObject
 public:
     UMingGoRTSAIMusicGenerator();
 
-    // 主要音樂生成功能
+    // 主�??��??��??�能
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void GenerateMusic(const FMusicGenerationParameters& Parameters);
 
@@ -132,15 +129,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     EMusicGenerationStatus GetGenerationStatus() const { return CurrentStatus; }
 
-    // AIVA API 整合
+    // AIVA API ?��?
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void SetAIVAAPI(const FString& APIEndpoint, const FString& APIKey);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     bool TestAIVAConnection();
 
-    // 音樂庫管理
-    UFUNCTION(BlueprintCallable, Category = "AI Music")
+    // ?��?庫管??    UFUNCTION(BlueprintCallable, Category = "AI Music")
     void AddToMusicLibrary(USoundWave* Music, const FString& MusicName);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
@@ -152,7 +148,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void ClearMusicLibrary();
 
-    // 音樂播放控制
+    // ?��??�放?�制
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void PlayGeneratedMusic();
 
@@ -168,21 +164,21 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     bool IsMusicPlaying() const;
 
-    // 音效播放
+    // ?��??�放
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void PlaySoundEffect(USoundWave* SoundEffect, const FVector& Location = FVector::ZeroVector);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void PlaySoundEffect2D(USoundWave* SoundEffect);
 
-    // 批量生成
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void GenerateMusicPack(const TArray<FMusicGenerationParameters>& MusicParameters);
 
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     void GenerateSoundEffectPack(const TArray<FSoundEffectParameters>& SFXParameters);
 
-    // 預設風格
+    // ?�設風格
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     FMusicGenerationParameters GetRepublicanEraStyle();
 
@@ -192,7 +188,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Music")
     FMusicGenerationParameters GetAmbientStyle();
 
-    // 委托事件
+    // 委�?事件
     UPROPERTY(BlueprintAssignable, Category = "AI Music")
     FOnMusicGenerated OnMusicGenerated;
 

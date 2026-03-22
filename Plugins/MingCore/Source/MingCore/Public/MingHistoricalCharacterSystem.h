@@ -4,52 +4,47 @@
 #include "UObject/NoExportTypes.h"
 #include "MingHistoricalCharacterSystem.generated.h"
 
-// 人物類型枚舉
+// 人物類�??��?
 UENUM(BlueprintType)
 enum class EMingCharacterType : uint8
 {
-    MilitaryLeader,    // 軍事領袖
-    Politician,        // 政治家
-    Diplomat,          // 外交官
-    Businessman,       // 商人
-    Scholar,           // 學者
-    Revolutionary,     // 革命家
-    Warlord,           // 軍閥
-    ForeignAdvisor     // 外國顧問
+    MilitaryLeader,    // 軍�??��?
+    Politician,        // ?�治�?    Diplomat,          // 外交�?    Businessman,       // ?�人
+    Scholar,           // 學�?    Revolutionary,     // ?�命�?    Warlord,           // 軍閥
+    ForeignAdvisor     // 外�?顧�?
 };
 
-// 人物關係類型
+// 人物?��?類�?
 UENUM(BlueprintType)
 enum class EMingRelationshipType : uint8
 {
-    Ally,              // 同盟
-    Enemy,             // 敵對
-    Neutral,           // 中立
+    Ally,              // ?��?
+    Enemy,             // ?��?
+    Neutral,           // 中�?
     Subordinate,       // 下屬
-    Superior,          // 上級
-    Family,            // 家族
+    Superior,          // 上�?
+    Family,            // 家�?
     Mentor,            // 導師
-    Rival              // 競爭對手
+    Rival              // 競爭對�?
 };
 
-// 對話類型
+// 對話類�?
 UENUM(BlueprintType)
 enum class EMingDialogueType : uint8
 {
-    Greeting,          // 問候
-    Political,         // 政治討論
-    Military,          // 軍事商議
-    Economic,          // 經濟談判
-    Personal,          // 個人交談
-    Diplomatic,        // 外交交涉
-    Threat,            // 威脅
-    Persuasion,        // 說服
-    Request,           // 請求
-    Information        // 信息收集
+    Greeting,          // ?��?    Political,         // ?�治討�?
+    Military,          // 軍�??�議
+    Economic,          // 經�?談判
+    Personal,          // ?�人交�?
+    Diplomatic,        // 外交交�?
+    Threat,            // 威�?
+    Persuasion,        // 說�?
+    Request,           // 請�?
+    Information        // 信息?��?
 };
 
 /**
- * 政治聯盟記錄結構 (替代 TTuple)
+ * ?�治?��?記�?結�? (?�代 TTuple)
  */
 USTRUCT(BlueprintType)
 struct FMingPoliticalAlliance
@@ -68,41 +63,41 @@ struct FMingPoliticalAlliance
     {}
 };
 
-// 對話選項結構
+// 對話?��?結�?
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingDialogueOption
 {
     GENERATED_BODY()
 
-    // 選項ID
+    // ?��?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 OptionID;
 
-    // 選項文本
+    // ?��??�本
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString OptionText;
 
-    // 選項描述
+    // ?��??�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString OptionDescription;
 
-    // 選項類型
+    // ?��?類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingDialogueType DialogueType;
 
-    // 選項前置條件
+    // ?��??�置條件
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> Prerequisites;
 
-    // 選項後果
+    // ?��?後�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> Consequences;
 
-    // 關係影響
+    // ?��?影響
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, int32> RelationshipChanges;
 
-    // 解鎖的新對話
+    // �???�新對話
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> UnlockedDialogues;
 
@@ -119,8 +114,7 @@ struct FINGCORE_API FMingDialogueOption
     }
 };
 
-// 對話節點結構
-USTRUCT(BlueprintType)
+// 對話節點�?�?USTRUCT(BlueprintType)
 struct FINGCORE_API FMingDialogueNode
 {
     GENERATED_BODY()
@@ -129,19 +123,17 @@ struct FINGCORE_API FMingDialogueNode
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 NodeID;
 
-    // 節點文本
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 節點�???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString NodeText;
 
-    // 說話者
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 說話??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString SpeakerName;
 
-    // 對話類型
+    // 對話類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingDialogueType DialogueType;
 
-    // 對話選項
+    // 對話?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingDialogueOption> Options;
 
@@ -149,11 +141,11 @@ struct FINGCORE_API FMingDialogueNode
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> Conditions;
 
-    // 對話音效
+    // 對話?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DialogueSound;
 
-    // 對話動畫
+    // 對話?�畫
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DialogueAnimation;
 
@@ -170,7 +162,7 @@ struct FINGCORE_API FMingDialogueNode
     }
 };
 
-// 歷史人物數據
+// 歷史人物?��?
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingHistoricalCharacter
 {
@@ -180,56 +172,50 @@ struct FINGCORE_API FMingHistoricalCharacter
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CharacterID;
 
-    // 人物姓名
+    // 人物姓�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CharacterName;
 
-    // 人物字號
+    // 人物字�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CourtesyName;
 
-    // 人物類型
+    // 人物類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingCharacterType CharacterType;
 
-    // 人物描述
+    // 人物?�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CharacterDescription;
 
-    // 歷史背景
+    // 歷史?�景
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HistoricalBackground;
 
-    // 人物屬性
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 人物屬�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> CharacterAttributes;
 
-    // 人物技能
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 人物?�??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> Skills;
 
-    // 人物關係
+    // 人物?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, int32> Relationships;
 
-    // 當前位置
+    // ?��?位置
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CurrentLocation;
 
-    // 所屬勢力
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�屬勢??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString Faction;
 
-    // 人物狀態
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 人物?�??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CurrentStatus;
 
-    // 是否可用於對話
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�否?�用?��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bAvailableForDialogue;
 
-    // 對話樹根節點
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 對話樹根節�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 RootDialogueNode;
 
     FMingHistoricalCharacter()
@@ -251,13 +237,13 @@ struct FINGCORE_API FMingHistoricalCharacter
     }
 };
 
-// 人物互動記錄
+// 人物互�?記�?
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingCharacterInteraction
 {
     GENERATED_BODY()
 
-    // 互動ID
+    // 互�?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 InteractionID;
 
@@ -265,11 +251,11 @@ struct FINGCORE_API FMingCharacterInteraction
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CharacterID;
 
-    // 互動時間
+    // 互�??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime InteractionTime;
 
-    // 互動地點
+    // 互�??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString InteractionLocation;
 
@@ -277,19 +263,19 @@ struct FINGCORE_API FMingCharacterInteraction
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 DialogueNodeID;
 
-    // 選擇的選項ID
+    // ?��??�選?�ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ChosenOptionID;
 
-    // 互動結果
+    // 互�?結�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> InteractionResults;
 
-    // 關係變化
+    // ?��?變�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, int32> RelationshipChanges;
 
-    // 解鎖的新內容
+    // �???�新?�容
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UnlockedContent;
 
@@ -307,7 +293,7 @@ struct FINGCORE_API FMingCharacterInteraction
     }
 };
 
-// 人物事件委託
+// 人物事件委�?
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterEncountered, int32, CharacterID, const FMingHistoricalCharacter&, Character);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnDialogueStarted, int32, CharacterID, int32, NodeID, const FMingDialogueNode&, DialogueNode);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueOptionChosen, int32, CharacterID, int32, OptionID);
@@ -316,7 +302,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractionCompleted, const FMing
 
 /**
  * 歷史人物系統
- * 負責管理歷史人物的對話和互動
+ * 負責管�?歷史人物?��?話�?互�?
  */
 UCLASS(ClassGroup = (Historical), Blueprintable, BlueprintType)
 class MINGCORE_API UMingHistoricalCharacterSystem : public UObject
@@ -326,31 +312,28 @@ class MINGCORE_API UMingHistoricalCharacterSystem : public UObject
 public:
     UMingHistoricalCharacterSystem();
 
-    // 初始化人物系統
-    UFUNCTION(BlueprintCallable, Category = "Historical Character")
+    // ?��??�人?�系�?    UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool InitializeCharacterSystem();
 
-    // 註冊歷史人物
+    // 註�?歷史人物
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool RegisterHistoricalCharacter(const FMingHistoricalCharacter& Character);
 
-    // 獲取人物信息
+    // ?��?人物信息
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     FMingHistoricalCharacter GetCharacterInfo(int32 CharacterID) const;
 
-    // 獲取當前位置的人物
-    UFUNCTION(BlueprintPure, Category = "Historical Character")
+    // ?��??��?位置?�人??    UFUNCTION(BlueprintPure, Category = "Historical Character")
     TArray<int32> GetCharactersAtLocation(const FString& Location);
 
-    // 開始對話
+    // ?��?對話
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool StartDialogue(int32 CharacterID);
 
-    // 獲取對話節點
-    UFUNCTION(BlueprintPure, Category = "Historical Character")
+    // ?��?對話節�?    UFUNCTION(BlueprintPure, Category = "Historical Character")
     FMingDialogueNode GetDialogueNode(int32 NodeID) const;
 
-    // 選擇對話選項
+    // ?��?對話?��?
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool ChooseDialogueOption(int32 CharacterID, int32 NodeID, int32 OptionID);
 
@@ -358,43 +341,42 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool CheckDialogueConditions(int32 NodeID) const;
 
-    // 獲取人物關係
+    // ?��?人物?��?
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     int32 GetRelationshipValue(int32 CharacterID, const FString& TargetCharacterName) const;
 
-    // 更新人物關係
+    // ?�新人物?��?
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool UpdateRelationship(int32 CharacterID, const FString& TargetCharacterName, int32 ChangeValue);
 
-    // 獲取互動歷史
+    // ?��?互�?歷史
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     TArray<FMingCharacterInteraction> GetInteractionHistory(int32 CharacterID) const;
 
-    // 建立政治聯盟
+    // 建�??�治?��?
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool CreatePoliticalAlliance(int32 CharacterID1, int32 CharacterID2);
 
-    // 破壞政治聯盟
+    // ?��??�治?��?
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool BreakPoliticalAlliance(int32 CharacterID1, int32 CharacterID2);
 
-    // 獲取人物統計
+    // ?��?人物統�?
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     TMap<EMingCharacterType, int32> GetCharacterStatistics() const;
 
-    // 保存人物數據
+    // 保�?人物?��?
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool SaveCharacterData();
 
-    // 載入人物數據
+    // 載入人物?��?
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool LoadCharacterData();
 
-    // 清除所有人物數據
-    UFUNCTION(BlueprintCallable, Category = "Historical Character")
+    // 清除?�?�人?�數??    UFUNCTION(BlueprintCallable, Category = "Historical Character")
     void ClearAllCharacterData();
 
-    // 事件委託
+    // 事件委�?
     UPROPERTY(BlueprintAssignable)
     FOnCharacterEncountered OnCharacterEncountered;
 
@@ -411,55 +393,53 @@ public:
     FOnInteractionCompleted OnInteractionCompleted;
 
 protected:
-    // 人物數據庫
-    UPROPERTY()
+    // 人物?��?�?    UPROPERTY()
     TMap<int32, FMingHistoricalCharacter> CharacterDatabase;
 
-    // 對話節點數據庫
+    // 對話節點數?�庫
     UPROPERTY()
     TMap<int32, FMingDialogueNode> DialogueNodeDatabase;
 
-    // 互動歷史記錄
+    // 互�?歷史記�?
     UPROPERTY()
     TArray<FMingCharacterInteraction> InteractionHistory;
 
-    // 當前對話中的人物
+    // ?��?對話中�?人物
     UPROPERTY()
     TArray<int32> ActiveDialogueCharacters;
 
-    // 政治聯盟記錄 - 使用包裝結構替代 TTuple
+    // ?�治?��?記�? - 使用?��?結�??�代 TTuple
     UPROPERTY()
     TArray<FMingPoliticalAlliance> PoliticalAlliances;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // 載入預設人物數據
+    // 載入?�設人物?��?
     void LoadDefaultCharacters();
 
-    // 載入預設對話數據
+    // 載入?�設對話?��?
     void LoadDefaultDialogues();
 
-    // 驗證人物數據
+    // 驗�?人物?��?
     bool ValidateCharacterData(const FMingHistoricalCharacter& Character) const;
 
-    // 驗證對話數據
+    // 驗�?對話?��?
     bool ValidateDialogueData(const FMingDialogueNode& DialogueNode) const;
 
-    // 處理對話選項後果
+    // ?��?對話?��?後�?
     void ProcessDialogueConsequences(int32 CharacterID, int32 NodeID, int32 OptionID);
 
-    // 更新人物狀態
-    void UpdateCharacterStatus(int32 CharacterID, const FString& NewStatus);
+    // ?�新人物?�??    void UpdateCharacterStatus(int32 CharacterID, const FString& NewStatus);
 
-    // 記錄互動
+    // 記�?互�?
     void RecordInteraction(const FMingCharacterInteraction& Interaction);
 
     // 觸發人物事件
     void TriggerCharacterEvent(int32 CharacterID, const FString& EventType);
 
-    // 生成動態對話
+    // ?��??��?對話
     FMingDialogueNode GenerateDynamicDialogue(int32 CharacterID, const FString& Context) const;
 };

@@ -218,7 +218,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyCountdownChanged, int32, Sec
 
 /**
  * 大廳系統
- * 管理多人遊戲大廳的創建、加入和配置
+ * 管�?多人?�戲大廳?�創建、�??��??�置
  */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingLobbySystem : public UObject

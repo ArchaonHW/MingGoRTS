@@ -5,8 +5,7 @@
 #include "MingUISystemTest.generated.h"
 
 /**
- * UI系統測試運行器
- * 測試個人系統UI的功能和性能
+ * UI系統測試?��??? * 測試?�人系統UI?��??��??�能
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingUISystemTest : public UObject
@@ -15,55 +14,55 @@ class MINGPERSONAL_API UMingUISystemTest : public UObject
 
 public:
     /**
-     * 運行所有UI系統測試
+     * ?��??�?�UI系統測試
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static void RunAllUITests();
 
     /**
-     * 測試UI管理器初始化
+     * 測試UI管�??��?始�?
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUIManagerInitialization();
 
     /**
-     * 測試關係面板功能
+     * 測試?��??�板?�能
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestRelationshipPanelFunctionality();
 
     /**
-     * 測試聲望面板功能
+     * 測試?��??�板?�能
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestReputationPanelFunctionality();
 
     /**
-     * 測試對話面板功能
+     * 測試對話?�板?�能
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestDialoguePanelFunctionality();
 
     /**
-     * 測試任務面板功能
+     * 測試任�??�板?�能
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestQuestPanelFunctionality();
 
     /**
-     * 測試音頻面板功能
+     * 測試?�頻?�板?�能
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestAudioPanelFunctionality();
 
     /**
-     * 測試主儀表板功能
+     * 測試主�?表板?�能
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestMainDashboardFunctionality();
 
     /**
-     * 測試UI動畫系統
+     * 測試UI?�畫系統
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUIAnimationSystem();
@@ -75,92 +74,87 @@ public:
     static bool TestUIEventSystem();
 
     /**
-     * 測試UI響應性能
+     * 測試UI?��??�能
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUIPerformance();
 
     /**
-     * 測試UI數據綁定
+     * 測試UI?��?綁�?
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUIDataBinding();
 
     /**
-     * 測試UI狀態管理
-     */
+     * 測試UI?�?�管??     */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUIStateManagement();
 
     /**
-     * 測試UI主題系統
+     * 測試UI主�?系統
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUIThemeSystem();
 
     /**
-     * 測試UI本地化
-     */
+     * 測試UI?�地??     */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUILocalization();
 
     /**
-     * 測試UI可訪問性
-     */
+     * 測試UI?�訪?��?     */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUIAccessibility();
 
     /**
-     * 壓力測試 - 大量UI操作
+     * 壓�?測試 - 大�?UI?��?
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUIStressTest();
 
     /**
-     * 集成測試 - 完整的UI流程
+     * ?��?測試 - 完整?�UI流�?
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUIIntegration();
 
     /**
-     * 創建測試UI數據
+     * ?�建測試UI?��?
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static void CreateTestUIData();
 
     /**
-     * 清理測試UI數據
+     * 清�?測試UI?��?
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static void CleanupTestUIData();
 
     /**
-     * 驗證UI系統健康狀態
-     */
+     * 驗�?UI系統?�康?�??     */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "UI Test")
     static bool VerifyUISystemHealth();
 
     /**
-     * 獲取UI測試結果報告
+     * ?��?UI測試結�??��?
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "UI Test")
     static FString GetUITestReport();
 
     /**
-     * 生成UI性能報告
+     * ?��?UI?�能?��?
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "UI Test")
     static FString GenerateUIPerformanceReport();
 
     /**
-     * 測試UI用戶體驗
+     * 測試UI?�戶體�?
      */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUIUserExperience();
 
     /**
-     * 測試UI跨平台兼容性
-     */
+     * 測試UI跨平?�兼容�?     */
     UFUNCTION(BlueprintCallable, Category = "UI Test")
     static bool TestUICrossPlatformCompatibility();
 

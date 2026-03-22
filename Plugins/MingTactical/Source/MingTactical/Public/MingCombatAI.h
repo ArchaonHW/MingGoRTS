@@ -10,8 +10,7 @@ class AMingUnitController;
 class AMingMultiUnitCoordinator;
 
 /**
- * AI行為狀態
- */
+ * AI行為?�?? */
 UENUM(BlueprintType)
 enum class EAIState : uint8
 {
@@ -37,7 +36,7 @@ enum class EAIState : uint8
 };
 
 /**
- * AI決策類型
+ * AI決�?類�?
  */
 UENUM(BlueprintType)
 enum class EAIDecisionType : uint8
@@ -62,7 +61,7 @@ enum class EAIDecisionType : uint8
 };
 
 /**
- * AI戰術類型
+ * AI?��?類�?
  */
 UENUM(BlueprintType)
 enum class EAITacticalType : uint8
@@ -88,7 +87,7 @@ enum class EAITacticalType : uint8
 };
 
 /**
- * AI難度等級
+ * AI??��等�?
  */
 UENUM(BlueprintType)
 enum class EAIDifficultyLevel : uint8
@@ -106,7 +105,7 @@ enum class EAIDifficultyLevel : uint8
 };
 
 /**
- * AI學習類型
+ * AI學�?類�?
  */
 UENUM(BlueprintType)
 enum class EAILearningType : uint8
@@ -126,8 +125,7 @@ enum class EAILearningType : uint8
 };
 
 /**
- * AI決策節點
- */
+ * AI決�?節�? */
 USTRUCT(BlueprintType)
 struct FAIDecisionNode
 {
@@ -137,51 +135,44 @@ struct FAIDecisionNode
     UPROPERTY(BlueprintReadOnly)
     FString NodeID;
 
-    // 節點名稱
-    UPROPERTY(BlueprintReadOnly)
+    // 節點�?�?    UPROPERTY(BlueprintReadOnly)
     FString NodeName;
 
-    // 節點類型
-    UPROPERTY(BlueprintReadOnly)
+    // 節點�???    UPROPERTY(BlueprintReadOnly)
     EAIDecisionType DecisionType;
 
-    // 條件表達式
-    UPROPERTY(BlueprintReadOnly)
+    // 條件表�?�?    UPROPERTY(BlueprintReadOnly)
     FString ConditionExpression;
 
-    // 權重
+    // 權�?
     UPROPERTY(BlueprintReadOnly)
     float Weight;
 
-    // 優先級
-    UPROPERTY(BlueprintReadOnly)
+    // ?��?�?    UPROPERTY(BlueprintReadOnly)
     int32 Priority;
 
-    // 子節點
-    UPROPERTY(BlueprintReadOnly)
+    // 子�?�?    UPROPERTY(BlueprintReadOnly)
     TArray<FString> ChildNodes;
 
-    // 執行次數
+    // ?��?次數
     UPROPERTY(BlueprintReadOnly)
     int32 ExecutionCount;
 
-    // 成功次數
+    // ?��?次數
     UPROPERTY(BlueprintReadOnly)
     int32 SuccessCount;
 
-    // 失敗次數
+    // 失�?次數
     UPROPERTY(BlueprintReadOnly)
     int32 FailureCount;
 
-    // 最後執行時間
-    UPROPERTY(BlueprintReadOnly)
+    // ?�後執行�???    UPROPERTY(BlueprintReadOnly)
     float LastExecutionTime;
 
-    // 節點參數
-    UPROPERTY(BlueprintReadOnly)
+    // 節點�???    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> NodeParameters;
 
-    // 是否啟用
+    // ?�否?�用
     UPROPERTY(BlueprintReadOnly)
     bool bIsEnabled;
 
@@ -201,38 +192,38 @@ struct FAIDecisionNode
 };
 
 /**
- * AI戰術分析結果
+ * AI?��??��?結�?
  */
 USTRUCT(BlueprintType)
 struct FAITacticalAnalysis
 {
     GENERATED_BODY()
 
-    // 分析ID
+    // ?��?ID
     UPROPERTY(BlueprintReadOnly)
     FString AnalysisID;
 
-    // 分析時間
+    // ?��??��?
     UPROPERTY(BlueprintReadOnly)
     float AnalysisTime;
 
-    // 威脅評估
+    // 威�?評估
     UPROPERTY(BlueprintReadOnly)
     float ThreatAssessment;
 
-    // 機會評估
+    // 機�?評估
     UPROPERTY(BlueprintReadOnly)
     float OpportunityAssessment;
 
-    // 優勢評估
+    // ?�勢評估
     UPROPERTY(BlueprintReadOnly)
     float AdvantageAssessment;
 
-    // 劣勢評估
+    // ??��評估
     UPROPERTY(BlueprintReadOnly)
     float DisadvantageAssessment;
 
-    // 戰術建議
+    // ?��?建議
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> TacticalRecommendations;
 
@@ -240,23 +231,22 @@ struct FAITacticalAnalysis
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> RiskAssessments;
 
-    // 機會識別
+    // 機�?識別
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> OpportunityIdentifications;
 
-    // 敵方預測
+    // ?�方?�測
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> EnemyPredictions;
 
-    // 戰術分數
+    // ?��??�數
     UPROPERTY(BlueprintReadOnly)
     float TacticalScore;
 
-    // 置信度
-    UPROPERTY(BlueprintReadOnly)
+    // 置信�?    UPROPERTY(BlueprintReadOnly)
     float Confidence;
 
-    // 分析參數
+    // ?��??�數
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, float> AnalysisParameters;
 
@@ -273,54 +263,50 @@ struct FAITacticalAnalysis
 };
 
 /**
- * AI學習數據
+ * AI學�??��?
  */
 USTRUCT(BlueprintType)
 struct FAILearningData
 {
     GENERATED_BODY()
 
-    // 學習ID
+    // 學�?ID
     UPROPERTY(BlueprintReadOnly)
     FString LearningID;
 
-    // 學習類型
+    // 學�?類�?
     UPROPERTY(BlueprintReadOnly)
     EAILearningType LearningType;
 
-    // 輸入數據
+    // 輸入?��?
     UPROPERTY(BlueprintReadOnly)
     TArray<float> InputData;
 
-    // 輸出數據
+    // 輸出?��?
     UPROPERTY(BlueprintReadOnly)
     TArray<float> OutputData;
 
-    // 獎勵值
-    UPROPERTY(BlueprintReadOnly)
+    // ?�勵??    UPROPERTY(BlueprintReadOnly)
     float RewardValue;
 
-    // 懲罰值
-    UPROPERTY(BlueprintReadOnly)
+    // ?�罰??    UPROPERTY(BlueprintReadOnly)
     float PenaltyValue;
 
-    // 學習時間
+    // 學�??��?
     UPROPERTY(BlueprintReadOnly)
     float LearningTime;
 
-    // 學習次數
+    // 學�?次數
     UPROPERTY(BlueprintReadOnly)
     int32 LearningCount;
 
-    // 成功率
-    UPROPERTY(BlueprintReadOnly)
+    // ?��???    UPROPERTY(BlueprintReadOnly)
     float SuccessRate;
 
-    // 收斂值
-    UPROPERTY(BlueprintReadOnly)
+    // ?��???    UPROPERTY(BlueprintReadOnly)
     float ConvergenceValue;
 
-    // 學習參數
+    // 學�??�數
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, float> LearningParameters;
 
@@ -337,59 +323,54 @@ struct FAILearningData
 };
 
 /**
- * AI性能指標
+ * AI?�能?��?
  */
 USTRUCT(BlueprintType)
 struct FAIPerformanceMetrics
 {
     GENERATED_BODY()
 
-    // 決策時間
+    // 決�??��?
     UPROPERTY(BlueprintReadOnly)
     float DecisionTime;
 
-    // 反應時間
+    // ?��??��?
     UPROPERTY(BlueprintReadOnly)
     float ReactionTime;
 
-    // 成功率
-    UPROPERTY(BlueprintReadOnly)
+    // ?��???    UPROPERTY(BlueprintReadOnly)
     float SuccessRate;
 
-    // 效率指數
+    // ?��??�數
     UPROPERTY(BlueprintReadOnly)
     float EfficiencyIndex;
 
-    // 適應性指數
-    UPROPERTY(BlueprintReadOnly)
+    // ?��??��???    UPROPERTY(BlueprintReadOnly)
     float AdaptabilityIndex;
 
-    // 學習指數
+    // 學�??�數
     UPROPERTY(BlueprintReadOnly)
     float LearningIndex;
 
-    // 戰術指數
+    // ?��??�數
     UPROPERTY(BlueprintReadOnly)
     float TacticalIndex;
 
-    // 協調指數
+    // ?�調?�數
     UPROPERTY(BlueprintReadOnly)
     float CoordinationIndex;
 
-    // 創新指數
+    // ?�新?�數
     UPROPERTY(BlueprintReadOnly)
     float InnovationIndex;
 
-    // 資源使用率
-    UPROPERTY(BlueprintReadOnly)
+    // 資�?使用??    UPROPERTY(BlueprintReadOnly)
     float ResourceUsage;
 
-    // 計算複雜度
-    UPROPERTY(BlueprintReadOnly)
+    // 計�?複�?�?    UPROPERTY(BlueprintReadOnly)
     float ComputationalComplexity;
 
-    // 記憶使用量
-    UPROPERTY(BlueprintReadOnly)
+    // 記憶使用??    UPROPERTY(BlueprintReadOnly)
     float MemoryUsage;
 
     FAIPerformanceMetrics()
@@ -409,9 +390,8 @@ struct FAIPerformanceMetrics
 };
 
 /**
- * 戰鬥AI系統
- * 管理智能戰鬥決策和行為
- */
+ * ?�鬥AI系統
+ * 管�??�能?�鬥決�??��??? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGTACTICAL_API AMingCombatAI : public AActor
 {
@@ -421,74 +401,72 @@ public:
     AMingCombatAI();
 
     /**
-     * 初始化戰鬥AI系統
+     * ?��??�戰鬥AI系統
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     void InitializeCombatAI();
 
     /**
-     * 關閉戰鬥AI系統
+     * ?��??�鬥AI系統
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     void ShutdownCombatAI();
 
     /**
-     * 設置AI難度等級
+     * 設置AI??��等�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     void SetAIDifficultyLevel(EAIDifficultyLevel DifficultyLevel);
 
     /**
-     * 設置AI戰術類型
+     * 設置AI?��?類�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     void SetAITacticalType(EAITacticalType TacticalType);
 
     /**
-     * 設置AI學習類型
+     * 設置AI學�?類�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     void SetAILearningType(EAILearningType LearningType);
 
     /**
-     * 添加受控單位
+     * 添�??�控?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool AddControlledUnit(AMingTacticalUnit* Unit);
 
     /**
-     * 移除受控單位
+     * 移除?�控?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool RemoveControlledUnit(AMingTacticalUnit* Unit);
 
     /**
-     * 獲取所有受控單位
-     */
+     * ?��??�?��??�單�?     */
     UFUNCTION(BlueprintPure, Category = "Combat AI")
     TArray<AMingTacticalUnit*> GetControlledUnits() const;
 
     /**
-     * 執行AI決策
+     * ?��?AI決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteAIDecision(AMingTacticalUnit* Unit);
 
     /**
-     * 執行戰術分析
+     * ?��??��??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     FAITacticalAnalysis ExecuteTacticalAnalysis(const TArray<AMingTacticalUnit*>& Units);
 
     /**
-     * 執行AI學習
+     * ?��?AI學�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteAILearning(const FAILearningData& LearningData);
 
     /**
-     * 創建決策節點
-     */
+     * ?�建決�?節�?     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     FAIDecisionNode CreateDecisionNode(
         const FString& NodeName,
@@ -499,363 +477,346 @@ public:
     );
 
     /**
-     * 添加決策節點
-     */
+     * 添�?決�?節�?     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool AddDecisionNode(const FAIDecisionNode& Node);
 
     /**
-     * 移除決策節點
-     */
+     * 移除決�?節�?     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool RemoveDecisionNode(const FString& NodeID);
 
     /**
-     * 獲取決策節點
-     */
+     * ?��?決�?節�?     */
     UFUNCTION(BlueprintPure, Category = "Combat AI")
     FAIDecisionNode GetDecisionNode(const FString& NodeID) const;
 
     /**
-     * 獲取所有決策節點
-     */
+     * ?��??�?�決策�?�?     */
     UFUNCTION(BlueprintPure, Category = "Combat AI")
     TArray<FAIDecisionNode> GetAllDecisionNodes() const;
 
     /**
-     * 評估戰術局勢
-     */
+     * 評估?��?局??     */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     FAITacticalAnalysis EvaluateTacticalSituation(const TArray<AMingTacticalUnit*>& FriendlyUnits, const TArray<AMingTacticalUnit*>& EnemyUnits);
 
     /**
-     * 生成戰術建議
+     * ?��??��?建議
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     TArray<FString> GenerateTacticalRecommendations(const TArray<AMingTacticalUnit*>& Units);
 
     /**
-     * 預測敵方行動
+     * ?�測?�方行�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     TArray<FString> PredictEnemyActions(const TArray<AMingTacticalUnit*>& EnemyUnits);
 
     /**
-     * 計算威脅等級
+     * 計�?威�?等�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     float CalculateThreatLevel(AMingTacticalUnit* Unit, const TArray<AMingTacticalUnit*>& EnemyUnits);
 
     /**
-     * 計算機會等級
+     * 計�?機�?等�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     float CalculateOpportunityLevel(AMingTacticalUnit* Unit, const TArray<AMingTacticalUnit*>& EnemyUnits);
 
     /**
-     * 執行攻擊決策
+     * ?��??��?決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteAttackDecision(AMingTacticalUnit* Unit, AMingTacticalUnit* TargetUnit);
 
     /**
-     * 執行防禦決策
+     * ?��??�禦決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteDefenseDecision(AMingTacticalUnit* Unit, const FVector& DefensePosition);
 
     /**
-     * 執行移動決策
+     * ?��?移�?決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteMovementDecision(AMingTacticalUnit* Unit, const FVector& TargetPosition);
 
     /**
-     * 執行撤退決策
+     * ?��??�退決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteRetreatDecision(AMingTacticalUnit* Unit, const FVector& RetreatPosition);
 
     /**
-     * 執行側翼決策
+     * ?��??�翼決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteFlankDecision(AMingTacticalUnit* Unit, AMingTacticalUnit* TargetUnit);
 
     /**
-     * 執行伏擊決策
+     * ?��?伏�?決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteAmbushDecision(AMingTacticalUnit* Unit, const TArray<AMingTacticalUnit*>& TargetUnits);
 
     /**
-     * 執行支援決策
+     * ?��??�援決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteSupportDecision(AMingTacticalUnit* Unit, AMingTacticalUnit* TargetUnit);
 
     /**
-     * 執行協調決策
+     * ?��??�調決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteCoordinationDecision(const TArray<AMingTacticalUnit*>& Units, EAIDecisionType DecisionType);
 
     /**
-     * 執行學習決策
+     * ?��?學�?決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteLearningDecision(AMingTacticalUnit* Unit, const FAILearningData& LearningData);
 
     /**
-     * 執行適應決策
+     * ?��??��?決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool ExecuteAdaptationDecision(AMingTacticalUnit* Unit, const TArray<float>& AdaptationData);
 
     /**
-     * 調整AI難度
+     * 調整AI??��
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     void AdjustAIDifficulty(float PerformanceFactor);
 
     /**
-     * 獲取AI性能指標
+     * ?��?AI?�能?��?
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI")
     FAIPerformanceMetrics GetAIPerformanceMetrics() const;
 
     /**
-     * 獲取AI統計數據
+     * ?��?AI統�??��?
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI")
     TMap<FString, int32> GetAIStatistics() const;
 
     /**
-     * 獲取AI配置
+     * ?��?AI?�置
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI")
     TMap<FString, FString> GetAIConfiguration() const;
 
     /**
-     * 設置AI配置
+     * 設置AI?�置
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool SetAIConfiguration(const TMap<FString, FString>& Configuration);
 
     /**
-     * 重置AI系統
+     * ?�置AI系統
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     void ResetAISystem();
 
     /**
-     * 備份AI數據
+     * ?�份AI?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool BackupAIData(const FString& BackupPath);
 
     /**
-     * 恢復AI數據
+     * ?�復AI?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI")
     bool RestoreAIData(const FString& BackupPath);
 
 protected:
-    // 受控單位列表
+    // ?�控?��??�表
     UPROPERTY()
     TArray<AMingTacticalUnit*> ControlledUnits;
 
-    // 決策節點映射
-    UPROPERTY()
+    // 決�?節點�?�?    UPROPERTY()
     TMap<FString, FAIDecisionNode> DecisionNodes;
 
-    // 戰術分析結果
+    // ?��??��?結�?
     UPROPERTY()
     TArray<FAITacticalAnalysis> TacticalAnalyses;
 
-    // 學習數據
+    // 學�??��?
     UPROPERTY()
     TArray<FAILearningData> LearningData;
 
-    // AI統計數據
+    // AI統�??��?
     UPROPERTY()
     TMap<FString, int32> AIStatistics;
 
-    // 性能指標
+    // ?�能?��?
     UPROPERTY()
     FAIPerformanceMetrics PerformanceMetrics;
 
-    // AI配置
+    // AI?�置
     UPROPERTY()
     TMap<FString, FString> AIConfiguration;
 
-    // 單位控制器引用
-    UPROPERTY()
+    // ?��??�制?��???    UPROPERTY()
     AMingUnitController* UnitController;
 
-    // 多單位協調器引用
+    // 多單位�?調器引用
     UPROPERTY()
     AMingMultiUnitCoordinator* MultiUnitCoordinator;
 
-    // AI難度等級
+    // AI??��等�?
     UPROPERTY()
     EAIDifficultyLevel DifficultyLevel;
 
-    // AI戰術類型
+    // AI?��?類�?
     UPROPERTY()
     EAITacticalType TacticalType;
 
-    // AI學習類型
+    // AI學�?類�?
     UPROPERTY()
     EAILearningType LearningType;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bIsInitialized;
 
-    // Tick更新
+    // Tick?�新
     virtual void Tick(float DeltaTime) override;
 
-    // 執行決策樹
-    bool ExecuteDecisionTree(AMingTacticalUnit* Unit);
+    // ?��?決�?�?    bool ExecuteDecisionTree(AMingTacticalUnit* Unit);
 
-    // 執行行為樹
-    bool ExecuteBehaviorTree(AMingTacticalUnit* Unit);
+    // ?��?行為�?    bool ExecuteBehaviorTree(AMingTacticalUnit* Unit);
 
-    // 評估決策條件
+    // 評估決�?條件
     bool EvaluateDecisionCondition(const FString& Condition, AMingTacticalUnit* Unit);
 
-    // 計算決策權重
+    // 計�?決�?權�?
     float CalculateDecisionWeight(const FAIDecisionNode& Node, AMingTacticalUnit* Unit);
 
-    // 選擇最佳決策
-    FAIDecisionNode SelectBestDecision(AMingTacticalUnit* Unit);
+    // ?��??�佳決�?    FAIDecisionNode SelectBestDecision(AMingTacticalUnit* Unit);
 
-    // 執行決策節點
-    bool ExecuteDecisionNode(const FAIDecisionNode& Node, AMingTacticalUnit* Unit);
+    // ?��?決�?節�?    bool ExecuteDecisionNode(const FAIDecisionNode& Node, AMingTacticalUnit* Unit);
 
-    // 更新決策節點統計
-    void UpdateDecisionNodeStatistics(const FString& NodeID, bool bSuccess);
+    // ?�新決�?節點統�?    void UpdateDecisionNodeStatistics(const FString& NodeID, bool bSuccess);
 
-    // 計算戰術分數
+    // 計�??��??�數
     float CalculateTacticalScore(const TArray<AMingTacticalUnit*>& Units);
 
-    // 計算威脅評估
+    // 計�?威�?評估
     float CalculateThreatAssessment(const TArray<AMingTacticalUnit*>& EnemyUnits);
 
-    // 計算機會評估
+    // 計�?機�?評估
     float CalculateOpportunityAssessment(const TArray<AMingTacticalUnit*>& EnemyUnits);
 
-    // 計算優勢評估
+    // 計�??�勢評估
     float CalculateAdvantageAssessment(const TArray<AMingTacticalUnit*>& FriendlyUnits, const TArray<AMingTacticalUnit*>& EnemyUnits);
 
-    // 計算劣勢評估
+    // 計�???��評估
     float CalculateDisadvantageAssessment(const TArray<AMingTacticalUnit*>& FriendlyUnits, const TArray<AMingTacticalUnit*>& EnemyUnits);
 
-    // 生成戰術建議
+    // ?��??��?建議
     TArray<FString> GenerateTacticalRecommendationsInternal(const TArray<AMingTacticalUnit*>& Units);
 
-    // 預測敵方行動
+    // ?�測?�方行�?
     TArray<FString> PredictEnemyActionsInternal(const TArray<AMingTacticalUnit*>& EnemyUnits);
 
-    // 執行強化學習
+    // ?��?強�?學�?
     bool ExecuteReinforcementLearning(const FAILearningData& LearningData);
 
-    // 執行監督學習
+    // ?��???��學�?
     bool ExecuteSupervisedLearning(const FAILearningData& LearningData);
 
-    // 執行無監督學習
-    bool ExecuteUnsupervisedLearning(const FAILearningData& LearningData);
+    // ?��??�監??���?    bool ExecuteUnsupervisedLearning(const FAILearningData& LearningData);
 
-    // 執行進化學習
+    // ?��??��?學�?
     bool ExecuteEvolutionaryLearning(const FAILearningData& LearningData);
 
-    // 執行神經網絡學習
+    // ?��?神�?網絡學�?
     bool ExecuteNeuralLearning(const FAILearningData& LearningData);
 
-    // 執行決策樹學習
-    bool ExecuteDecisionTreeLearning(const FAILearningData& LearningData);
+    // ?��?決�?樹學�?    bool ExecuteDecisionTreeLearning(const FAILearningData& LearningData);
 
-    // 執行行為樹學習
-    bool ExecuteBehaviorTreeLearning(const FAILearningData& LearningData);
+    // ?��?行為樹學�?    bool ExecuteBehaviorTreeLearning(const FAILearningData& LearningData);
 
-    // 執行狀態機學習
+    // ?��??�?��?學�?
     bool ExecuteStateMachineLearning(const FAILearningData& LearningData);
 
-    // 執行模糊學習
+    // ?��?模�?學�?
     bool ExecuteFuzzyLearning(const FAILearningData& LearningData);
 
-    // 執行遺傳學習
+    // ?��??�傳學�?
     bool ExecuteGeneticLearning(const FAILearningData& LearningData);
 
-    // 執行群體學習
+    // ?��?群�?學�?
     bool ExecuteSwarmLearning(const FAILearningData& LearningData);
 
-    // 執行混合學習
+    // ?��?混�?學�?
     bool ExecuteHybridLearning(const FAILearningData& LearningData);
 
-    // 更新學習數據
+    // ?�新學�??��?
     void UpdateLearningData(const FAILearningData& LearningData);
 
-    // 計算學習收斂
+    // 計�?學�??��?
     float CalculateLearningConvergence();
 
-    // 優化AI性能
+    // ?��?AI?�能
     void OptimizeAIPerformance();
 
-    // 調整決策權重
+    // 調整決�?權�?
     void AdjustDecisionWeights();
 
-    // 適應戰術變化
+    // ?��??��?變�?
     void AdaptToTacticalChanges();
 
-    // 學習玩家行為
+    // 學�??�家行為
     void LearnPlayerBehavior();
 
-    // 預測玩家意圖
+    // ?�測?�家?��?
     TArray<FString> PredictPlayerIntent();
 
-    // 生成反制策略
+    // ?��??�制策略
     TArray<FString> GenerateCounterStrategies();
 
     // 評估AI表現
     float EvaluateAIPerformance();
 
-    // 更新性能指標
+    // ?�新?�能?��?
     void UpdatePerformanceMetrics();
 
-    // 記錄AI事件
+    // 記�?AI事件
     void LogAIEvent(const FString& EventType, const FString& Details);
 
-    // 生成AI報告
+    // ?��?AI?��?
     FString GenerateAIReport() const;
 
-    // 驗證AI配置
+    // 驗�?AI?�置
     bool ValidateAIConfiguration() const;
 
-    // 獲取決策描述
+    // ?��?決�??�述
     FString GetDecisionDescription(EAIDecisionType DecisionType) const;
 
-    // 獲取戰術描述
+    // ?��??��??�述
     FString GetTacticalDescription(EAITacticalType TacticalType) const;
 
-    // 獲取難度描述
+    // ?��???��?�述
     FString GetDifficultyDescription(EAIDifficultyLevel DifficultyLevel) const;
 
-    // 獲取學習描述
+    // ?��?學�??�述
     FString GetLearningDescription(EAILearningType LearningType) const;
 
-    // 計算複雜度
-    float CalculateComplexity() const;
+    // 計�?複�?�?    float CalculateComplexity() const;
 
-    // 管理記憶使用
+    // 管�?記憶使用
     void ManageMemoryUsage();
 
-    // 優化計算資源
+    // ?��?計�?資�?
     void OptimizeComputationalResources();
 
-    // 處理AI錯誤
+    // ?��?AI?�誤
     void HandleAIError(const FString& ErrorType, const FString& ErrorMessage);
 
-    // 恢復AI狀態
-    void RecoverAIState();
+    // ?�復AI?�??    void RecoverAIState();
 };

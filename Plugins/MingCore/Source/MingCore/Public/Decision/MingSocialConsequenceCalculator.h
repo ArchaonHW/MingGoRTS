@@ -6,9 +6,8 @@
 #include "MingSocialConsequenceCalculator.generated.h"
 
 /**
- * 社會後果計算器
- * 專門計算決策對社會層面的影響
- * 包含民眾支持度、社會穩定性、文化影響等
+ * 社�?後�?計�??? * 專�?計�?決�?對社?�層?��?影響
+ * ?�含民眾?��?度、社?�穩定性、�??�影?��?
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingSocialConsequenceCalculator : public UObject, public IMingConsequenceCalculator
@@ -16,10 +15,9 @@ class MINGCORE_API UMingSocialConsequenceCalculator : public UObject, public IMi
     GENERATED_BODY()
 
 public:
-    // 建構子
-    UMingSocialConsequenceCalculator();
+    // 建�?�?    UMingSocialConsequenceCalculator();
 
-    // 實現介面方法
+    // 實現介面?��?
     virtual void Calculate_Implementation(const FMingDecisionContext& Context, FMingConsequenceResult& Result) override;
     virtual bool CanHandle_Implementation(const FMingDecisionContext& Context) const override;
     virtual float GetWeight_Implementation() const override;
@@ -27,49 +25,45 @@ public:
     virtual FString GetCalculatorDescription_Implementation() const override;
 
 protected:
-    // 計算民眾支持度
-    void CalculatePublicSupport(const FMingDecisionContext& Context, FMingSocialConsequence& Support);
+    // 計�?民眾?��?�?    void CalculatePublicSupport(const FMingDecisionContext& Context, FMingSocialConsequence& Support);
 
-    // 計算社會穩定性
-    void CalculateSocialStability(const FMingDecisionContext& Context, float& StabilityChange);
+    // 計�?社�?穩�???    void CalculateSocialStability(const FMingDecisionContext& Context, float& StabilityChange);
 
-    // 計算教育水平影響
+    // 計�??�育水平影響
     void CalculateEducationLevel(const FMingDecisionContext& Context, float& EducationChange);
 
-    // 計算公共健康影響
+    // 計�??�共?�康影響
     void CalculatePublicHealth(const FMingDecisionContext& Context, float& HealthChange);
 
-    // 計算社會運動
+    // 計�?社�??��?
     void CalculateSocialMovements(const FMingDecisionContext& Context, TArray<FString>& Movements);
 
-    // 民國特色計算
+    // 民�??�色計�?
     void CalculateRepublicanEraSociety(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence);
 
-    // 新文化運動影響計算
-    void CalculateNewCultureMovement(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence);
+    // ?��??��??�影?��?�?    void CalculateNewCultureMovement(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence);
 
-    // 教育改革影響計算
+    // ?�育?�革影響計�?
     void CalculateEducationReform(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence);
 
-    // 婦女解放影響計算
+    // 婦女�?��影響計�?
     void CalculateWomenLiberation(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence);
 
-    // 城市發展影響計算
+    // ?��??��?影響計�?
     void CalculateUrbanDevelopment(const FMingDecisionContext& Context, FMingSocialConsequence& Consequence);
 
 private:
-    // 計算器權重
-    static constexpr float CALCULATOR_WEIGHT = 0.6f;
+    // 計�??��???    static constexpr float CALCULATOR_WEIGHT = 0.6f;
 
-    // 民國時期社會運動列表
+    // 民�??��?社�??��??�表
     static const TArray<FString> RepublicanEraMovements;
 
-    // 教育機構類型
+    // ?�育機�?類�?
     static const TArray<FString> EducationInstitutions;
 
-    // 主要城市列表
+    // 主�??��??�表
     static const TArray<FString> MajorCities;
 
-    // 社會階層
+    // 社�??�層
     static const TArray<FString> SocialClasses;
 };

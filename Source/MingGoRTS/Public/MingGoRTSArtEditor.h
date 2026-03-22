@@ -10,33 +10,30 @@
 UENUM(BlueprintType)
 enum class EEditingTool : uint8
 {
-    Brush,            // 畫筆
-    Eraser,           // 橡皮擦
-    Clone,            // 克隆工具
+    Brush,            // ?��?
+    Eraser,           // 橡皮??    Clone,            // ?��?工具
     Heal,             // 修復工具
-    Blur,             // 模糊工具
-    Sharpen,          // 銳化工具
+    Blur,             // 模�?工具
+    Sharpen,          // ?��?工具
     Smudge,           // 涂抹工具
     Dodge,            // 減淡工具
-    Burn,             // 加深工具
-    ColorPicker       // 顏色選擇器
-};
+    Burn,             // ?�深工具
+    ColorPicker       // 顏色?��???};
 
 UENUM(BlueprintType)
 enum class EBrushMode : uint8
 {
-    Normal,           // 正常
-    Multiply,         // 正片疊底
+    Normal,           // �?��
+    Multiply,         // �???��?
     Screen,           // 濾色
-    Overlay,          // 叠加
-    SoftLight,        // 柔光
-    HardLight,        // 強光
+    Overlay,          // ?��?
+    SoftLight,        // ?��?
+    HardLight,        // 強�?
     ColorDodge,       // 顏色減淡
-    ColorBurn,        // 顏色加深
-    Darken,           // 變暗
+    ColorBurn,        // 顏色?�深
+    Darken,           // 變�?
     Lighten,          // 變亮
-    Difference        // 差值
-};
+    Difference        // 差�?};
 
 USTRUCT(BlueprintType)
 struct FBrushSettings
@@ -107,7 +104,7 @@ class MINGGORTS_API UMingGoRTSArtEditor : public UObject
 public:
     UMingGoRTSArtEditor();
 
-    // 圖像編輯基本功能
+    // ?��?編輯?�本?�能
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void LoadImage(UTexture2D* Image);
 
@@ -133,7 +130,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     FBrushSettings GetBrushSettings() const { return BrushSettings; }
 
-    // 繪製功能
+    // 繪製?�能
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void StartStroke(const FVector2D& Position);
 
@@ -155,7 +152,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void FillArea(const FVector2D& Position, FLinearColor FillColor);
 
-    // 圖層系統
+    // ?�層系統
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void AddLayer(const FString& LayerName);
 
@@ -189,7 +186,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     FLayerInfo GetActiveLayer() const;
 
-    // 圖像調整
+    // ?��?調整
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void AdjustBrightness(float Brightness);
 
@@ -211,7 +208,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void Desaturate();
 
-    // 濾鏡效果
+    // 濾鏡?��?
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void ApplyBlurFilter(float Radius);
 
@@ -230,7 +227,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void ApplyNoiseFilter(float Strength);
 
-    // 選擇工具
+    // ?��?工具
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void SelectRectangular(const FVector2D& TopLeft, const FVector2D& BottomRight);
 
@@ -258,7 +255,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void DeleteSelection();
 
-    // 變換工具
+    // 變�?工具
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void ScaleImage(float ScaleX, float ScaleY);
 
@@ -271,7 +268,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void CropImage(const FVector2D& TopLeft, const FVector2D& BottomRight);
 
-    // 歷史記錄
+    // 歷史記�?
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void Undo();
 
@@ -287,7 +284,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Art Editor")
     void ClearHistory();
 
-    // 委托事件
+    // 委�?事件
     UPROPERTY(BlueprintAssignable, Category = "Art Editor")
     FOnArtEdited OnArtEdited;
 

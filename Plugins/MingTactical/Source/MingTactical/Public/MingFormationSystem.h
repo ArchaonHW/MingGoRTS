@@ -139,7 +139,7 @@ protected:
     FMingFormationData FormationData;
 
     // Not exposed to Blueprint as TWeakObjectPtr in TMap is not supported
-    // 注意：TMap<TWeakObjectPtr> 不被 Blueprint 支持
+    // 注�?：TMap<TWeakObjectPtr> 不被 Blueprint ?��?
     UPROPERTY()
     TMap<int32, TWeakObjectPtr<AMingTacticalUnit>> UnitSlotMap;
 

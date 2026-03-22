@@ -9,27 +9,25 @@
 UENUM(BlueprintType)
 enum class EAIUserProfile : uint8
 {
-    NewPlayer,             // 新玩家
-    CasualPlayer,          // 休閒玩家
-    StrategicPlayer,       // 策略玩家
-    PowerPlayer,           // 重度玩家
-    SocialPlayer,          // 社交玩家
-    Explorer,              // 探索者
-    StoryFocused,          // 劇情導向
-    AchievementHunter      // 成就獵人
+    NewPlayer,             // ?�玩�?    CasualPlayer,          // 休�??�家
+    StrategicPlayer,       // 策略?�家
+    PowerPlayer,           // ?�度?�家
+    SocialPlayer,          // 社交?�家
+    Explorer,              // ?�索??    StoryFocused,          // ?��?導�?
+    AchievementHunter      // ?�就?�人
 };
 
 UENUM(BlueprintType)
 enum class EUIAdaptationType : uint8
 {
-    Layout,                // 佈局適應
-    ColorScheme,           // 配色方案
-    AnimationSpeed,        // 動畫速度
+    Layout,                // 佈�??��?
+    ColorScheme,           // ?�色?��?
+    AnimationSpeed,        // ?�畫?�度
     InformationDensity,    // 信息密度
-    InteractionPattern,    // 交互模式
-    NotificationLevel,     // 通知級別
-    TooltipFrequency,      // 提示頻率
-    AutoSaveInterval       // 自動保存間隔
+    InteractionPattern,    // 交�?模�?
+    NotificationLevel,     // ?�知級別
+    TooltipFrequency,      // ?�示?��?
+    AutoSaveInterval       // ?��?保�??��?
 };
 
 USTRUCT(BlueprintType)
@@ -111,8 +109,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUIAdaptationApplied, const FAIUIA
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIBehaviorAnalyzed, const FString&, BehaviorType, float, Confidence);
 
 /**
- * AI驅動的UI管理器
- * 基於用戶行為智能調整UI體驗
+ * AI驅�??�UI管�??? * ?�於?�戶行為?�能調整UI體�?
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingAIUIManager : public UObject
@@ -122,12 +119,12 @@ class MINGPERSONAL_API UMingAIUIManager : public UObject
 public:
     UMingAIUIManager();
 
-    // 初始化AI UI系統
+    // ?��??�AI UI系統
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     void InitializeAIUIManager(UMingPersonalUIManager* InUIManager, 
                               UMingRelationshipManager* InRelationshipManager);
 
-    // 用戶行為追蹤
+    // ?�戶行為追蹤
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     void TrackUserBehavior(const FString& BehaviorType, const FString& Context, float Value = 1.0f);
 
@@ -140,7 +137,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     void TrackSessionMetrics(float SessionTime, int32 ActionsPerformed);
 
-    // AI分析
+    // AI?��?
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     void AnalyzeUserBehavior();
 
@@ -153,7 +150,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     TArray<FAIUIAdaptationConfig> GenerateAdaptationRecommendations();
 
-    // UI適應
+    // UI?��?
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     void ApplyAdaptation(const FAIUIAdaptationConfig& Adaptation);
 
@@ -172,7 +169,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     void AdjustInformationDensity();
 
-    // 智能提示
+    // ?�能?�示
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     void ShowContextualHelp(const FString& Context);
 
@@ -182,7 +179,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     void HighlightImportantFeatures();
 
-    // 個性化推薦
+    // ?�性�??�薦
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     TArray<FString> GetRecommendedQuests();
 
@@ -202,8 +199,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI UI")
     FString GetBestABTestVariant(const FString& TestName);
 
-    // 狀態查詢
-    UFUNCTION(BlueprintPure, Category = "AI UI")
+    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "AI UI")
     FAIUserProfileData GetCurrentProfile() const { return CurrentProfile; }
 
     UFUNCTION(BlueprintPure, Category = "AI UI")
@@ -246,7 +242,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
-    // AI配置
+    // AI?�置
     UPROPERTY()
     bool bAIEnabled = true;
 
@@ -259,11 +255,11 @@ protected:
     UPROPERTY()
     int32 MinDataPointsForAnalysis = 10;
 
-    // 用戶檔案
+    // ?�戶檔�?
     UPROPERTY()
     FAIUserProfileData CurrentProfile;
 
-    // 行為數據
+    // 行為?��?
     UPROPERTY()
     TArray<FString> BehaviorHistory;
 
@@ -276,18 +272,18 @@ protected:
     UPROPERTY()
     TMap<FString, float> InteractionPatterns;
 
-    // 適應配置
+    // ?��??�置
     UPROPERTY()
     TArray<FAIUIAdaptationConfig> RecommendedAdaptations;
 
     UPROPERTY()
     TArray<FAIUIAdaptationConfig> ActiveAdaptations;
 
-    // A/B測試數據
-    // 注意：TMap<TMap> 不支持 UPROPERTY
+    // A/B測試?��?
+    // 注�?：TMap<TMap> 不支??UPROPERTY
     TMap<FString, TMap<FString, float>> ABTestData;
 
-    // 內部函數
+    // ?�部?�數
     void ProcessBehaviorData();
     void CalculateProfileScores();
     void GenerateAdaptations();
@@ -296,14 +292,14 @@ protected:
     EAIUserProfile ClassifyPlayer(const FAIUserProfileData& Profile) const;
     void LogAdaptation(const FAIUIAdaptationConfig& Adaptation);
 
-    // AI算法
+    // AI算�?
     float CalculateBehaviorScore(const FString& BehaviorType) const;
     TArray<float> GetBehaviorTrend(const FString& BehaviorType, int32 WindowSize) const;
     bool IsBehaviorSignificant(const FString& BehaviorType, float Threshold) const;
     void UpdateAdaptationWeights();
 
 private:
-    // 輔助函數
+    // 輔助?�數
     void InitializeDefaultAdaptations();
     void SaveProfileData();
     void LoadProfileData();

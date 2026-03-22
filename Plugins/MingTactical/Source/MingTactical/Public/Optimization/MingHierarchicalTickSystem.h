@@ -8,22 +8,22 @@ class AMingTacticalUnit;
 class AMingCombatAI;
 
 /**
- * Tick 層級類型 | Tick Level Type
+ * Tick 層�?類�? | Tick Level Type
  */
 UENUM(BlueprintType)
 enum class ETickLevel : uint8
 {
-    Critical    UMETA(DisplayName = "Critical"),    // 每幀更新 | Every Frame (最高優先級 | Highest Priority)
-    High        UMETA(DisplayName = "High"),        // 每幀更新 | Every Frame
+    Critical    UMETA(DisplayName = "Critical"),    // 每�??�新 | Every Frame (?�高優?��? | Highest Priority)
+    High        UMETA(DisplayName = "High"),        // 每�??�新 | Every Frame
     Normal      UMETA(DisplayName = "Normal"),      // 30 FPS
     Low         UMETA(DisplayName = "Low"),         // 15 FPS
     VeryLow     UMETA(DisplayName = "Very Low"),    // 5 FPS
-    Background  UMETA(DisplayName = "Background"),   // 按需更新 | On Demand
-    Paused      UMETA(DisplayName = "Paused")       // 暫停更新 | Paused
+    Background  UMETA(DisplayName = "Background"),   // ?��??�新 | On Demand
+    Paused      UMETA(DisplayName = "Paused")       // ?��??�新 | Paused
 };
 
 /**
- * Tick 組定義 | Tick Group Definition
+ * Tick 組�?�?| Tick Group Definition
  */
 USTRUCT()
 struct MINGTACTICAL_API FTickGroup
@@ -63,14 +63,12 @@ struct MINGTACTICAL_API FTickGroup
 };
 
 /**
- * 分层 Tick 系统
+ * ?��? Tick 系�?
  * 
- * 优化大规模单位的 Tick 性能：
- * - 根据单位状态分配不同 Tick 频率
- * - 支持每帧更新的单位数量有限
- * - 自动负载均衡
+ * 优�?大�?模�?位�? Tick ?�能�? * - ?�据?��??�态�??��???Tick 频�?
+ * - ?��?每帧?�新?��?位数?��??? * - ?�动负载?�衡
  * 
- * 适用于 1000+ 单位的大规模战斗场景
+ * ?�用�?1000+ ?��??�大规模?��??�景
  */
 UCLASS(ClassGroup = (Optimization), Blueprintable)
 class MINGTACTICAL_API UMingHierarchicalTickSystem : public UObject
@@ -81,113 +79,107 @@ public:
     UMingHierarchicalTickSystem();
 
     /**
-     * 初始化系统
-     */
+     * ?��??�系�?     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void Initialize();
 
     /**
-     * 关闭系统
+     * ?�闭系�?
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void Shutdown();
 
     /**
-     * 主 Tick 函数
+     * �?Tick ?�数
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void Tick(float DeltaTime);
 
-    // ==== 单位管理 ====
+    // ==== ?��?管�? ====
 
     /**
-     * 注册单位到系统
-     */
+     * 注�??��??�系�?     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void RegisterUnit(AMingTacticalUnit* Unit, ETickLevel InitialLevel = ETickLevel::Normal);
 
     /**
-     * 注销单位
+     * 注�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void UnregisterUnit(AMingTacticalUnit* Unit);
 
     /**
-     * 设置单位的 Tick 层级
+     * 设置?��???Tick 层级
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void SetUnitTickLevel(AMingTacticalUnit* Unit, ETickLevel NewLevel);
 
     /**
-     * 获取单位的当前 Tick 层级
+     * ?��??��??��???Tick 层级
      */
     UFUNCTION(BlueprintPure, Category = "Hierarchical Tick")
     ETickLevel GetUnitTickLevel(AMingTacticalUnit* Unit) const;
 
-    // ==== AI 管理 ====
+    // ==== AI 管�? ====
 
     /**
-     * 注册 AI 控制器
-     */
+     * 注�? AI ?�制??     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void RegisterAI(AMingCombatAI* AI, ETickLevel InitialLevel = ETickLevel::Normal);
 
     /**
-     * 注销 AI 控制器
-     */
+     * 注�? AI ?�制??     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void UnregisterAI(AMingCombatAI* AI);
 
     /**
-     * 设置 AI 的 Tick 层级
+     * 设置 AI ??Tick 层级
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick")
     void SetAITickLevel(AMingCombatAI* AI, ETickLevel NewLevel);
 
-    // ==== 优先级调整 ====
+    // ==== 优�?级�???====
 
     /**
-     * 将单位提升到 Critical 层级
-     * (例如：被玩家选中的单位)
+     * 将�?位�??�到 Critical 层级
+     * (例�?：被?�家?�中?��?�?
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
     void PromoteToCritical(AMingTacticalUnit* Unit, float DurationSeconds = 5.0f);
 
     /**
-     * 将单位降级到背景层级
-     * (例如：屏幕外的单位)
+     * 将�?位�?级到?�景层级
+     * (例�?：�?幕�??��?�?
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
     void DemoteToBackground(AMingTacticalUnit* Unit);
 
     /**
-     * 根据距离相机的距离自动调整层级
-     */
+     * ?�据距离?�机?��?离自?��??��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
     void AutoAdjustLevelByDistance(AMingTacticalUnit* Unit, float DistanceToCamera);
 
     /**
-     * 根据战斗状态调整层级
-     */
+     * ?�据?��??�态�??��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Priority")
     void AdjustLevelByCombatState(AMingTacticalUnit* Unit, bool bInCombat);
 
-    // ==== 配置 ====
+    // ==== ?�置 ====
 
     /**
-     * 设置指定层级的 Tick 间隔
+     * 设置?��?层级??Tick ?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Config")
     void SetTickInterval(ETickLevel Level, float IntervalSeconds);
 
     /**
-     * 设置指定层级的每帧最大处理单位数
+     * 设置?��?层级?��?帧�?大�??��?位数
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Config")
     void SetMaxUnitsPerFrame(ETickLevel Level, int32 MaxUnits);
 
     /**
-     * 启用/禁用自动负载均衡
+     * ?�用/禁用?�动负载?�衡
      */
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Config")
     void SetAutoBalancingEnabled(bool bEnabled);
@@ -209,7 +201,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Hierarchical Tick|Stats")
     float GetCurrentFPS() const;
 
-    // ==== 调试 ====
+    // ==== 调�? ====
 
     UFUNCTION(BlueprintCallable, Category = "Hierarchical Tick|Debug")
     void PrintDebugInfo();
@@ -221,23 +213,22 @@ public:
     FString GetDebugString() const;
 
 private:
-    // Tick 组映射
-    UPROPERTY()
+    // Tick 组�?�?    UPROPERTY()
     TMap<ETickLevel, FTickGroup> TickGroups;
 
-    // 单位到层级的映射
+    // ?��??��?级�??��?
     UPROPERTY()
     TMap<TWeakObjectPtr<AMingTacticalUnit>, ETickLevel> UnitLevels;
 
-    // AI 到层级的映射
+    // AI ?��?级�??��?
     UPROPERTY()
     TMap<TWeakObjectPtr<AMingCombatAI>, ETickLevel> AILevels;
 
-    // 临时升级的单位和恢复时间
+    // 临时?�级?��?位�??��??�间
     UPROPERTY()
     TMap<TWeakObjectPtr<AMingTacticalUnit>, float> PromotedUnits;
 
-    // 配置
+    // ?�置
     bool bIsInitialized;
     bool bAutoBalancingEnabled;
 
@@ -248,31 +239,28 @@ private:
     TArray<float> TickTimeHistory;
     int32 TickHistoryIndex;
 
-    // 初始化 Tick 组
-    void InitializeTickGroups();
+    // ?��???Tick �?    void InitializeTickGroups();
 
-    // 处理临时升级
+    // 处�?临时?�级
     void ProcessPromotedUnits(float DeltaTime);
 
-    // 自动负载均衡
+    // ?�动负载?�衡
     void PerformLoadBalancing();
 
-    // 计算推荐的层级
-    ETickLevel CalculateRecommendedLevel(AMingTacticalUnit* Unit) const;
+    // 计�??��??��?�?    ETickLevel CalculateRecommendedLevel(AMingTacticalUnit* Unit) const;
 
-    // 更新统计
+    // ?�新统计
     void UpdateTickStats(float TickTimeMs);
 
-    // 清理无效引用
+    // 清�??��?引用
     void CleanupInvalidReferences();
 
-    // 获取 Tick 组的引用
+    // ?��? Tick 组�?引用
     FTickGroup* GetTickGroup(ETickLevel Level);
     const FTickGroup* GetTickGroup(ETickLevel Level) const;
 
-    // 获取层级的默认间隔
-    static float GetDefaultInterval(ETickLevel Level);
+    // ?��?层级?��?认间??    static float GetDefaultInterval(ETickLevel Level);
 
-    // 获取层级的默认每帧最大单位数
+    // ?��?层级?��?认�?帧�?大�?位数
     static int32 GetDefaultMaxUnits(ETickLevel Level);
 };

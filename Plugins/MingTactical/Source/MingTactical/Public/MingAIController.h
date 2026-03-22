@@ -125,8 +125,7 @@ public:
 
 protected:
     // AI State
-    // 控制單位 - 使用 TObjectPtr 和前置聲明
-    class AMingTacticalUnit;
+    // ?�制?��? - 使用 TObjectPtr ?��?置聲??    class AMingTacticalUnit;
     UPROPERTY(BlueprintReadWrite, Category = "AI|Control")
     TObjectPtr<AMingTacticalUnit> ControlledUnit;
 

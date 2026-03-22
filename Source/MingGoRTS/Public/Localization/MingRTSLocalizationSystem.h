@@ -13,16 +13,16 @@
 UENUM(BlueprintType)
 enum class ELanguageCode : uint8
 {
-    zh_CN     UMETA(DisplayName = "简体中文 (Simplified Chinese)"),
-    zh_TW     UMETA(DisplayName = "繁體中文 (Traditional Chinese)"),
+    zh_CN     UMETA(DisplayName = "简体中??(Simplified Chinese)"),
+    zh_TW     UMETA(DisplayName = "繁�?中�? (Traditional Chinese)"),
     en_US     UMETA(DisplayName = "English (US)"),
-    ja_JP     UMETA(DisplayName = "日本語 (Japanese)"),
-    ko_KR     UMETA(DisplayName = "한국어 (Korean)"),
+    ja_JP     UMETA(DisplayName = "?�本�?(Japanese)"),
+    ko_KR     UMETA(DisplayName = "?�국??(Korean)"),
     fr_FR     UMETA(DisplayName = "Français (French)"),
     de_DE     UMETA(DisplayName = "Deutsch (German)"),
     es_ES     UMETA(DisplayName = "Español (Spanish)"),
-    ru_RU     UMETA(DisplayName = "Русский (Russian)"),
-    ar_SA     UMETA(DisplayName = "العربية (Arabic)")
+    ru_RU     UMETA(DisplayName = "????кий (Russian)"),
+    ar_SA     UMETA(DisplayName = "ا?عرب?ة (Arabic)")
 };
 
 /**

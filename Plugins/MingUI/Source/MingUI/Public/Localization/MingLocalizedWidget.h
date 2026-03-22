@@ -38,9 +38,7 @@ enum class ELocalizationUpdateMode : uint8
 };
 
 /**
- * 本地化文本組件
- * 支持自動語言切換的文本顯示組件
- */
+ * ?�地?��??��?�? * ?��??��?語�??��??��??�顯示�?�? */
 UCLASS(ClassGroup = (Localization), Blueprintable, meta = (DisableNativeTick))
 class MINGPERSONAL_API UMingLocalizedWidget : public UUserWidget
 {
@@ -49,13 +47,12 @@ class MINGPERSONAL_API UMingLocalizedWidget : public UUserWidget
 public:
     UMingLocalizedWidget(const FObjectInitializer& ObjectInitializer);
 
-    // 初始化
-    virtual void NativeConstruct() override;
+    // ?��???    virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // === 本地化鍵設置 ===
+    // === ?�地?�鍵設置 ===
 
-    // 設置本地化鍵
+    // 設置?�地?�鍵
     UFUNCTION(BlueprintCallable, Category = "Localized Widget")
     void SetLocalizationKey(const FString& Key, const FString& Namespace = TEXT("Default"));
 
@@ -65,9 +62,9 @@ public:
     UFUNCTION(BlueprintPure, Category = "Localized Widget")
     FString GetNamespace() const { return Namespace; }
 
-    // === 參數替換 ===
+    // === ?�數?��? ===
 
-    // 設置參數
+    // 設置?�數
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Parameters")
     void SetParameter(const FString& ParamName, const FString& Value);
 
@@ -77,107 +74,101 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Parameters")
     void ClearParameters();
 
-    // === 文本更新 ===
+    // === ?�本?�新 ===
 
-    // 手動更新文本
+    // ?��??�新?�本
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Update")
     void UpdateText();
 
-    // 強制刷新
+    // 強制?�新
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Update")
     void ForceRefresh();
 
-    // === 文本處理 ===
+    // === ?�本?��? ===
 
-    // 設置文本大小寫
-    UFUNCTION(BlueprintCallable, Category = "Localized Widget|Formatting")
+    // 設置?�本大�?�?    UFUNCTION(BlueprintCallable, Category = "Localized Widget|Formatting")
     void SetTextCase(ELocalizedTextCase NewCase);
 
     UFUNCTION(BlueprintPure, Category = "Localized Widget|Formatting")
     ELocalizedTextCase GetTextCase() const { return TextCase; }
 
-    // 設置截斷選項
+    // 設置?�斷?��?
     UFUNCTION(BlueprintCallable, Category = "Localized Widget|Formatting")
     void SetTruncation(ETextTruncation TruncationType, int32 MaxLength = 100);
 
-    // === 屬性 ===
+    // === 屬�?===
 
-    // 本地化鍵
+    // ?�地?�鍵
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget", meta = (ExposeOnSpawn = true))
     FString LocalizationKey;
 
-    // 命名空間
+    // ?��?空�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget", meta = (ExposeOnSpawn = true))
     FString Namespace;
 
-    // 默認文本 (找不到本地化時顯示)
+    // 默�??�本 (?��??�本?��??�顯�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget")
     FText DefaultText;
 
-    // 更新模式
+    // ?�新模�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget")
     ELocalizationUpdateMode UpdateMode;
 
-    // 文本大小寫
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget|Formatting")
+    // ?�本大�?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget|Formatting")
     ELocalizedTextCase TextCase;
 
-    // 截斷設置
+    // ?�斷設置
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget|Formatting")
     ETextTruncation Truncation;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget|Formatting", meta = (EditCondition = "Truncation != ETextTruncation::None"))
     int32 MaxTextLength;
 
-    // 使用富文本
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget")
+    // 使用富�???    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget")
     bool bUseRichText;
 
-    // 自動換行
+    // ?��??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Localized Widget")
     bool bAutoWrapText;
 
-    // === 事件處理 ===
+    // === 事件?��? ===
 
-    // 語言改變時的回調
+    // 語�??��??��??�調
     UFUNCTION()
     void OnLanguageChanged(EMingLanguage NewLanguage);
 
-    // 獲取當前顯示的文本
-    UFUNCTION(BlueprintPure, Category = "Localized Widget")
+    // ?��??��?顯示?��???    UFUNCTION(BlueprintPure, Category = "Localized Widget")
     FText GetCurrentText() const;
 
-    // 獲取原始本地化文本 (未處理)
+    // ?��??��??�地?��???(?��???
     UFUNCTION(BlueprintPure, Category = "Localized Widget")
     FText GetRawLocalizedText() const;
 
 protected:
-    // 參數存儲
+    // ?�數存儲
     UPROPERTY()
     TMap<FString, FString> Parameters;
 
-    // 當前顯示的文本
-    UPROPERTY()
+    // ?��?顯示?��???    UPROPERTY()
     FText CurrentText;
 
-    // 綁定到本地化系統
+    // 綁�??�本?��?系統
     void BindToLocalizationSystem();
 
-    // 解除綁定
+    // �?��綁�?
     void UnbindFromLocalizationSystem();
 
-    // 應用文本處理 (大小寫、截斷等)
+    // ?�用?�本?��? (大�?寫、截?��?)
     FText ProcessText(const FText& RawText) const;
 
-    // 應用大小寫轉換
-    FText ApplyTextCase(const FText& Text) const;
+    // ?�用大�?寫�???    FText ApplyTextCase(const FText& Text) const;
 
-    // 應用截斷
+    // ?�用?�斷
     FText ApplyTruncation(const FText& Text) const;
 
-    // 參數替換
+    // ?�數?��?
     FText ReplaceParameters(const FText& Text) const;
 
-    // 獲取本地化管理器
+    // ?��??�地?�管?�器
     UMingLocalizationManager* GetLocalizationManager() const;
 };

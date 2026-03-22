@@ -188,7 +188,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Costs")
     static bool CanAffordBuilding(EMingBuildingType Type, const TMap<EMingResourceType, int32>& AvailableResources);
 
-    // å»ºç¯‰å‡ç´šç›¸é—œæ–¹æ³• | Building Upgrade Methods
+    // å»ºç??‡ç??¸é??¹æ? | Building Upgrade Methods
     UFUNCTION(BlueprintCallable, Category = "Upgrade")
     void StartUpgrade(const FString& UpgradeID);
 
@@ -237,7 +237,7 @@ protected:
 
     TMap<EMingResourceType, int32> AccumulatedResources;
 
-    // å‡ç´šç›¸é—œå±¬æ€§ | Upgrade Properties
+    // ?‡ç??¸é?å±¬æ€?| Upgrade Properties
     UPROPERTY(BlueprintReadOnly, Category = "Upgrade")
     bool bIsBeingUpgraded;
 

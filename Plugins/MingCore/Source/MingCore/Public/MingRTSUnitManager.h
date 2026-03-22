@@ -12,35 +12,27 @@ enum class ERTSUnitType : uint8
 {
     Infantry,       // 步兵
     Cavalry,        // 騎兵
-    Artillery,      // 火炮
-    Scout,          // 斥候
-    Engineer,       // 工兵
-    Medic,          // 醫療兵
-    Commander,      // 指揮官
-    Supply          // 補給單位
+    Artillery,      // ?�炮
+    Scout,          // ?��?    Engineer,       // 工兵
+    Medic,          // ?��???    Commander,      // ?�揮�?    Supply          // 補給?��?
 };
 
 UENUM(BlueprintType)
 enum class ERTSUnitState : uint8
 {
-    Idle,           // 空閒
-    Moving,         // 移動中
-    Attacking,      // 攻擊中
-    Defending,      // 防禦中
-    Retreating,     // 撤退中
-    Dead,           // 死亡
+    Idle,           // 空�?
+    Moving,         // 移�?�?    Attacking,      // ?��?�?    Defending,      // ?�禦�?    Retreating,     // ?�退�?    Dead,           // 死亡
     Building        // 建造中
 };
 
 UENUM(BlueprintType)
 enum class ERTSFormationType : uint8
 {
-    None,           // 無陣型
-    Line,           // 線形陣型
-    Column,         // 縱隊陣型
-    Wedge,          // 楔形陣型
-    Circle,         // 圓形陣型
-    Square          // 方形陣型
+    None,           // ?�陣??    Line,           // 線形???
+    Column,         // 縱�????
+    Wedge,          // 楔形???
+    Circle,         // ?�形???
+    Square          // ?�形???
 };
 
 USTRUCT(BlueprintType)
@@ -143,9 +135,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnUnitsMoved, const TArray<AMing
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitDamaged, AMingGoRTSUnit*, Unit);
 
 /**
- * RTS單位管理器
- * 管理所有RTS單位的選擇、移動、陣型和狀態
- */
+ * RTS?��?管�??? * 管�??�?�RTS?��??�選?�、移?�、陣?��??�?? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSUnitManager : public UObject
 {
@@ -154,11 +144,10 @@ class MINGCORE_API UMingRTSUnitManager : public UObject
 public:
     UMingRTSUnitManager();
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void InitializeUnitManager(AMingGoRTSPlayerController* InPlayerController);
 
-    // 單位管理
+    // ?��?管�?
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void RegisterUnit(AMingGoRTSUnit* Unit);
 
@@ -177,7 +166,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     TArray<AMingGoRTSUnit*> GetUnitsByState(ERTSUnitState State) const;
 
-    // 選擇系統
+    // ?��?系統
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void SelectUnit(AMingGoRTSUnit* Unit, bool bAddToSelection = false);
 
@@ -202,7 +191,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     bool IsUnitSelected(AMingGoRTSUnit* Unit) const;
 
-    // 移動系統
+    // 移�?系統
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void MoveUnits(const TArray<AMingGoRTSUnit*>& Units, const FVector& TargetLocation);
 
@@ -218,7 +207,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     bool IsUnitMoving(AMingGoRTSUnit* Unit) const;
 
-    // 陣型系統
+    // ???系統
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void SetFormation(ERTSFormationType FormationType);
 
@@ -231,8 +220,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void UpdateFormation();
 
-    // 狀態管理
-    UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
+    // ?�?�管??    UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void SetUnitState(AMingGoRTSUnit* Unit, ERTSUnitState NewState);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
@@ -241,7 +229,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void UpdateUnitStates(float DeltaTime);
 
-    // 戰鬥系統
+    // ?�鬥系統
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void AttackUnit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
@@ -254,7 +242,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     TArray<AMingGoRTSUnit*> GetUnitsInRange(AMingGoRTSUnit* Unit, float Range) const;
 
-    // 單位數據
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     FRTSUnitData GetUnitData(AMingGoRTSUnit* Unit) const;
 
@@ -267,7 +255,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     bool IsUnitAlive(AMingGoRTSUnit* Unit) const;
 
-    // 路徑規劃
+    // 路�?規�?
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     TArray<FVector> CalculatePath(AMingGoRTSUnit* Unit, const FVector& TargetLocation);
 
@@ -277,7 +265,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void RecalculatePaths();
 
-    // 群組控制
+    // 群�??�制
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     void CreateUnitGroup(const TArray<AMingGoRTSUnit*>& Units, const FString& GroupName);
 
@@ -287,7 +275,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Unit Manager")
     TArray<FString> GetUnitGroups() const;
 
-    // 統計信息
+    // 統�?信息
     UFUNCTION(BlueprintPure, Category = "RTS Unit Manager")
     int32 GetTotalUnitCount() const;
 
@@ -321,25 +309,24 @@ protected:
     UPROPERTY()
     TObjectPtr<AMingGoRTSPlayerController> PlayerController;
 
-    // 單位存儲
-    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
+    // ?��?存儲
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??��? UPROPERTY
     TMap<FString, AMingGoRTSUnit*> AllUnits;
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??��? UPROPERTY
     TArray<AMingGoRTSUnit*> SelectedUnits;
 
-    // 注意：TMap<TArray> 不支持 UPROPERTY
+    // 注�?：TMap<TArray> 不支??UPROPERTY
     TMap<FString, TArray<AMingGoRTSUnit*>> UnitGroups;
 
-    // 陣型數據
+    // ????��?
     UPROPERTY()
     ERTSFormationType CurrentFormation;
 
     UPROPERTY()
     FRTSFormationData CurrentFormationData;
 
-    // 狀態
-    UPROPERTY()
+    // ?�??    UPROPERTY()
     bool bIsInitialized;
 
     // 設置
@@ -352,7 +339,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "RTS Settings")
     bool bAutoFormation = true;
 
-    // 內部函數
+    // ?�部?�數
     void UpdateUnitSelection();
     void ProcessUnitMovement(float DeltaTime);
     void ProcessCombat(float DeltaTime);
@@ -362,7 +349,7 @@ protected:
     FString GenerateUnitID(ERTSUnitType UnitType) const;
 
 private:
-    // 輔助函數
+    // 輔助?�數
     void NotifyUnitSelected(AMingGoRTSUnit* Unit, bool bIsSelected);
     void NotifyUnitStateChanged(AMingGoRTSUnit* Unit, ERTSUnitState NewState);
     void NotifyUnitsMoved(const TArray<AMingGoRTSUnit*>& Units, const FVector& TargetLocation, bool bIsFormation);

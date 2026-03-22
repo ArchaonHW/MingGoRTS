@@ -4,7 +4,7 @@
 #include "UObject/NoExportTypes.h"
 #include "MingRTSCombatSystem.generated.h"
 
-// 前向聲明
+// ?��??��?
 class AMingGoRTSUnit;
 class UMingRTSUnitManager;
 
@@ -12,30 +12,30 @@ UENUM(BlueprintType)
 enum class ERTSCombatType : uint8
 {
     Melee,          // 近戰
-    Ranged,         // 遠程
-    Artillery,      // 火炮
-    Siege,          // 攻城
+    Ranged,         // ?��?
+    Artillery,      // ?�炮
+    Siege,          // ?��?
     Naval           // 海戰
 };
 
 UENUM(BlueprintType)
 enum class ERTSDamageType : uint8
 {
-    Physical,       // 物理傷害
-    Fire,           // 火焰傷害
-    Explosive,      // 爆炸傷害
-    Piercing,       // 穿刺傷害
-    Magic,          // 魔法傷害
-    Poison          // 毒素傷害
+    Physical,       // ?��??�害
+    Fire,           // ?�焰?�害
+    Explosive,      // ?�炸?�害
+    Piercing,       // 穿刺?�害
+    Magic,          // 魔�??�害
+    Poison          // 毒�??�害
 };
 
 UENUM(BlueprintType)
 enum class ERTSCombatStance : uint8
 {
-    Aggressive,     // 攻擊姿態
-    Defensive,      // 防禦姿態
-    Neutral,        // 中立姿態
-    Passive         // 被動姿態
+    Aggressive,     // ?��?姿�?
+    Defensive,      // ?�禦姿�?
+    Neutral,        // 中�?姿�?
+    Passive         // 被�?姿�?
 };
 
 USTRUCT(BlueprintType)
@@ -183,9 +183,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitKilled, AMingGoRTSUnit*, Vic
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAbilityUsed, AMingGoRTSUnit*, Unit, const FString&, AbilityName);
 
 /**
- * RTS戰鬥系統
- * 管理所有戰鬥相關的邏輯和計算
- */
+ * RTS?�鬥系統
+ * 管�??�?�戰鬥相?��??�輯?��?�? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSCombatSystem : public UObject
 {
@@ -194,22 +193,21 @@ class MINGCORE_API UMingRTSCombatSystem : public UObject
 public:
     UMingRTSCombatSystem();
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void InitializeCombatSystem(UMingRTSUnitManager* InUnitManager);
 
-    // 戰鬥統計
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // ?�鬥統�?
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     void SetUnitCombatStats(AMingGoRTSUnit* Unit, const FRTSCombatStats& CombatStats);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     FRTSCombatStats GetUnitCombatStats(AMingGoRTSUnit* Unit) const;
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     void UpdateCombatStats(AMingGoRTSUnit* Unit, float DamageMultiplier = 1.0f, float DefenseMultiplier = 1.0f);
 
-    // 戰鬥執行
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // ?�鬥?��?
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     FRTSCombatResult ExecuteCombat(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
     bool CanAttack(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
@@ -220,30 +218,30 @@ public:
 
     bool IsInCombat(AMingGoRTSUnit* Unit) const;
 
-    // 傷害計算
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // ?�害計�?
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     float CalculateDamage(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     float ApplyDamageReduction(float BaseDamage, ERTSDamageType DamageType, float DefenseRating);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     bool CheckHit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     bool CheckCritical(AMingGoRTSUnit* Attacker);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     bool CheckDodge(AMingGoRTSUnit* Target);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     bool CheckBlock(AMingGoRTSUnit* Target);
 
-    // 戰鬥姿態
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // ?�鬥姿�?
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     void SetCombatStance(AMingGoRTSUnit* Unit, ERTSCombatStance Stance);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     ERTSCombatStance GetCombatStance(AMingGoRTSUnit* Unit) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
@@ -252,46 +250,44 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     float GetStanceDefenseMultiplier(ERTSCombatStance Stance) const;
 
-    // 範圍攻擊
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 範�??��?
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     TArray<AMingGoRTSUnit*> GetUnitsInArea(const FVector& Center, float Radius, AMingGoRTSUnit* ExcludedUnit = nullptr);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     void ExecuteAreaAttack(AMingGoRTSUnit* Attacker, const FVector& Center, float Radius);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     void ExecuteLineAttack(AMingGoRTSUnit* Attacker, const FVector& Start, const FVector& End, float Width);
 
-    // 技能系統
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // ?�?�系�?    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     void AddAbility(AMingGoRTSUnit* Unit, const FRTSAbilityData& Ability);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     void RemoveAbility(AMingGoRTSUnit* Unit, const FString& AbilityName);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     bool UseAbility(AMingGoRTSUnit* Unit, const FString& AbilityName, AMingGoRTSUnit* Target = nullptr);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     TArray<FRTSAbilityData> GetUnitAbilities(AMingGoRTSUnit* Unit) const;
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     bool IsAbilityAvailable(AMingGoRTSUnit* Unit, const FString& AbilityName) const;
 
-    // 狀態效果
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // ?�?��???    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     void ApplyStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName, float Duration, float Power);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     void RemoveStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName);
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不能使用 UFUNCTION BlueprintCallable
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??�使??UFUNCTION BlueprintCallable
     bool HasStatusEffect(AMingGoRTSUnit* Unit, const FString& EffectName) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void UpdateStatusEffects(float DeltaTime);
 
-    // 戰鬥平衡調整
+    // ?�鬥平衡調整
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void BalanceCombatStats();
 
@@ -304,14 +300,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void OptimizeCombatPerformance();
 
-    // 戰鬥更新
+    // ?�鬥?�新
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void UpdateCombat(float DeltaTime);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Combat System")
     void ProcessCombatQueue();
 
-    // 戰鬥統計
+    // ?�鬥統�?
     UFUNCTION(BlueprintPure, Category = "RTS Combat System")
     int32 GetActiveCombatCount() const;
 
@@ -345,23 +341,23 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
-    // 戰鬥數據
-    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
+    // ?�鬥?��?
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??��? UPROPERTY
     TMap<AMingGoRTSUnit*, FRTSCombatStats> UnitCombatStats;
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??��? UPROPERTY
     TMap<AMingGoRTSUnit*, ERTSCombatStance> UnitCombatStances;
 
-    // 注意：TMap<TArray> 不支持 UPROPERTY
+    // 注�?：TMap<TArray> 不支??UPROPERTY
     TMap<AMingGoRTSUnit*, TArray<FRTSAbilityData>> UnitAbilities;
 
-    // 注意：TMap<TMap> 不支持 UPROPERTY
+    // 注�?：TMap<TMap> 不支??UPROPERTY
     TMap<AMingGoRTSUnit*, TMap<FString, float>> StatusEffects;
 
-    // 注意：AMingGoRTSUnit 是主專案類型，不適合 UPROPERTY
+    // 注�?：AMingGoRTSUnit ?�主專�?類�?，�??��? UPROPERTY
     TMap<AMingGoRTSUnit*, AMingGoRTSUnit*> CombatPairs;
 
-    // 戰鬥設置
+    // ?�鬥設置
     UPROPERTY(BlueprintReadWrite, Category = "Combat Settings")
     float BaseDamageMultiplier = 1.0f;
 
@@ -380,7 +376,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Combat Settings")
     bool bEnableBlocking = true;
 
-    // 平衡調整參數
+    // 平衡調整?�數
     UPROPERTY(BlueprintReadWrite, Category = "Balance Settings")
     float DifficultyMultiplier = 1.0f;
 
@@ -393,18 +389,17 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Balance Settings")
     TMap<ERTSDamageType, float> DamageTypeEffectiveness;
 
-    // 統計數據
+    // 統�??��?
     UPROPERTY()
     int32 TotalDamageDealt;
 
     UPROPERTY()
     int32 UnitsKilled;
 
-    // 狀態
-    UPROPERTY()
+    // ?�??    UPROPERTY()
     bool bIsInitialized;
 
-    // 內部函數
+    // ?�部?�數
     void ProcessCombatPair(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, float DeltaTime);
     void ApplyCombatResult(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, const FRTSCombatResult& Result);
     FString GenerateCombatResultMessage(const FRTSCombatResult& Result) const;
@@ -413,7 +408,7 @@ protected:
     void UpdateAbilityCooldowns(float DeltaTime);
 
 private:
-    // 輔助函數
+    // 輔助?�數
     void NotifyCombatStarted(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, ERTSCombatType CombatType, ERTSDamageType DamageType);
     void NotifyCombatHit(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target, const FRTSCombatResult& Result);
     void NotifyCombatMissed(AMingGoRTSUnit* Attacker, AMingGoRTSUnit* Target);

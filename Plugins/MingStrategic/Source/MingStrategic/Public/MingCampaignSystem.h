@@ -287,7 +287,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Persistence")
     void LoadCampaignData(const FString& JsonString);
 
-    // 鎴板焦妯″紡鍏у鎿村厖
+    // ?板焦妯″??у?村?
     UFUNCTION(BlueprintCallable, Category = "Campaign Enhancement")
     void ExpandCampaignContent();
 
@@ -316,7 +316,7 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<UWorld> WorldContext;
 
-    // 鍏у鎿村厖鍙冩暩
+    // ?у?村??冩暩
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Campaign Enhancement")
     bool bEnableDynamicContent = true;
 
@@ -329,7 +329,7 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Campaign Enhancement")
     float ContentExpansionRate = 1.5f;
 
-    // 鍏ч儴鍑芥暩
+    // ?ч儴?芥暩
     void InitializeDefaultCampaigns();
     void SetupHistoricalCampaigns();
     void SetupWhatIfCampaigns();
@@ -338,7 +338,7 @@ protected:
     void UnlockDependentMissions(const FString& CompletedMissionID);
     void ValidateMissionProgression();
 
-    // 鍏у鎿村厖鍏ч儴鍑芥暩
+    // ?у?村??ч儴?芥暩
     void GenerateNewMissions();
     void AdjustMissionDifficulty();
     void CreateProceduralMaps();

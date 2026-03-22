@@ -2,25 +2,26 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "MingPersonal/Public/MingLocalizationManager.h"
 #include "MingRTSLocalizationTypes.generated.h"
 
 UENUM(BlueprintType)
-enum class EMingLanguage : uint8
+enum class EMingRTSLanguage : uint8
 {
     English UMETA(DisplayName = "English"),
-    SimplifiedChinese UMETA(DisplayName = "简体中文"),
-    TraditionalChinese UMETA(DisplayName = "繁體中文"),
-    Japanese UMETA(DisplayName = "日本語"),
-    Korean UMETA(DisplayName = "한국어"),
+    SimplifiedChinese UMETA(DisplayName = "简体中??),
+    TraditionalChinese UMETA(DisplayName = "繁�?中�?"),
+    Japanese UMETA(DisplayName = "?�本�?),
+    Korean UMETA(DisplayName = "?�국??),
     French UMETA(DisplayName = "Français"),
     German UMETA(DisplayName = "Deutsch"),
     Spanish UMETA(DisplayName = "Español"),
     Italian UMETA(DisplayName = "Italiano"),
-    Russian UMETA(DisplayName = "Русский"),
-    Arabic UMETA(DisplayName = "العربية"),
+    Russian UMETA(DisplayName = "????кий"),
+    Arabic UMETA(DisplayName = "ا?عرب?ة"),
     Portuguese UMETA(DisplayName = "Português"),
-    Hindi UMETA(DisplayName = "हिन्दी"),
-    Thai UMETA(DisplayName = "ไทย"),
+    Hindi UMETA(DisplayName = "हिन�?द�?"),
+    Thai UMETA(DisplayName = "ไ�?�?),
     Vietnamese UMETA(DisplayName = "Tiếng Việt"),
     Indonesian UMETA(DisplayName = "Bahasa Indonesia"),
     Turkish UMETA(DisplayName = "Türkçe"),
@@ -31,7 +32,7 @@ enum class EMingLanguage : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMingRegion : uint8
+enum class EMingRTSRegion : uint8
 {
     Global UMETA(DisplayName = "Global"),
     Asia UMETA(DisplayName = "Asia"),
@@ -91,12 +92,12 @@ UENUM(BlueprintType)
 enum class EMingCurrencySymbol : uint8
 {
     USD UMETA(DisplayName = "$"),
-    EUR UMETA(DisplayName = "€"),
+    EUR UMETA(DisplayName = "??),
     GBP UMETA(DisplayName = "£"),
     JPY UMETA(DisplayName = "¥"),
     CNY UMETA(DisplayName = "¥"),
-    KRW UMETA(DisplayName = "₩"),
-    INR UMETA(DisplayName = "₹"),
+    KRW UMETA(DisplayName = "??),
+    INR UMETA(DisplayName = "??),
     Custom UMETA(DisplayName = "Custom"),
     Max UMETA(Hidden)
 };

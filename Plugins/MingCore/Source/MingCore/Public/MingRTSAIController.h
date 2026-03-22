@@ -11,37 +11,30 @@ class UMingRTSCombatSystem;
 UENUM(BlueprintType)
 enum class ERTSAIBehavior : uint8
 {
-    Idle,           // 空閒
-    Patrol,         // 巡邏
-    Guard,          // 守衛
-    Attack,         // 攻擊
-    Retreat,        // 撤退
+    Idle,           // 空�?
+    Patrol,         // 巡�?
+    Guard,          // 守�?
+    Attack,         // ?��?
+    Retreat,        // ?�退
     Follow,         // 跟隨
-    Gather,         // 採集
-    Build,          // 建造
-    Repair,         // 修復
-    Explore         // 探索
+    Gather,         // ?��?
+    Build,          // 建�?    Repair,         // 修復
+    Explore         // ?�索
 };
 
 UENUM(BlueprintType)
 enum class ERTSAITargetPriority : uint8
 {
-    None,           // 無目標
-    Low,            // 低優先級
-    Medium,         // 中優先級
-    High,           // 高優先級
-    Critical        // 關鍵優先級
-};
+    None,           // ?�目�?    Low,            // 低優?��?
+    Medium,         // 中優?��?
+    High,           // 高優?��?
+    Critical        // ?�鍵?��?�?};
 
 UENUM(BlueprintType)
 enum class ERTSAIState : uint8
 {
-    Thinking,       // 思考中
-    Planning,        // 計劃中
-    Executing,      // 執行中
-    Waiting,        // 等待中
-    Reacting        // 反應中
-};
+    Thinking,       // ?�考中
+    Planning,        // 計�?�?    Executing,      // ?��?�?    Waiting,        // 等�?�?    Reacting        // ?��?�?};
 
 USTRUCT(BlueprintType)
 struct FRTSAITarget
@@ -138,9 +131,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAITargetChanged, const FRTSAITar
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAIDecisionMade, const FRTSAIDecision&, Decision, ERTSAIState, AIState, float, Confidence);
 
 /**
- * RTS AI控制器
- * 管理單位的AI行為和決策
- */
+ * RTS AI?�制?? * 管�??��??�AI行為?�決�? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API AMingRTSAIController : public AAIController
 {
@@ -149,11 +140,10 @@ class MINGCORE_API AMingRTSAIController : public AAIController
 public:
     AMingRTSAIController();
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void InitializeAI(UMingRTSUnitManager* InUnitManager, UMingRTSCombatSystem* InCombatSystem);
 
-    // AI行為控制
+    // AI行為?�制
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void SetBehavior(ERTSAIBehavior NewBehavior);
 
@@ -166,7 +156,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void UpdateAI(float DeltaTime);
 
-    // 目標管理
+    // ?��?管�?
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void SetTarget(const FRTSAITarget& NewTarget);
 
@@ -182,7 +172,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void UpdateTarget();
 
-    // 感知系統
+    // ?�知系統
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void ScanForEnemies(float ScanRadius);
 
@@ -198,7 +188,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     TArray<FRTSAITarget> GetDetectedAllies() const;
 
-    // 決策系統
+    // 決�?系統
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     FRTSAIDecision MakeDecision();
 
@@ -211,7 +201,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     ERTSAITargetPriority GetTargetPriority(AActor* Target) const;
 
-    // 巡邏系統
+    // 巡�?系統
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void SetPatrolPath(const FRTSAIPatrolPath& Path);
 
@@ -227,7 +217,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     bool IsAtPatrolPoint() const;
 
-    // 戰鬥AI
+    // ?�鬥AI
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void EngageTarget(AActor* Target);
 
@@ -243,7 +233,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void FindBestAttackPosition();
 
-    // 移動AI
+    // 移�?AI
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void MoveToTarget();
 
@@ -256,8 +246,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void StopMovement();
 
-    // 狀態管理
-    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
+    // ?�?�管??    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     ERTSAIState GetAIState() const { return AIState; }
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
@@ -276,8 +265,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void SetPerceptionRange(float Value);
 
-    // AI行為改進
-    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
+    // AI行為?��?    UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void ImproveAIBehavior();
 
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
@@ -289,8 +277,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS AI Controller")
     void AdaptToPlayerBehavior();
 
-    // 調試和監控
-    UFUNCTION(BlueprintPure, Category = "RTS AI Controller")
+    // 調試?�監??    UFUNCTION(BlueprintPure, Category = "RTS AI Controller")
     FString GetCurrentBehaviorName() const;
 
     UFUNCTION(BlueprintPure, Category = "RTS AI Controller")
@@ -323,8 +310,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRTSCombatSystem> CombatSystem;
 
-    // AI狀態
-    UPROPERTY()
+    // AI?�??    UPROPERTY()
     ERTSAIBehavior CurrentBehavior;
 
     UPROPERTY()
@@ -367,8 +353,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "AI Settings")
     bool bDebugMode = false;
 
-    // AI改進參數
-    UPROPERTY(BlueprintReadWrite, Category = "AI Improvement")
+    // AI?�進�???    UPROPERTY(BlueprintReadWrite, Category = "AI Improvement")
     float LearningRate = 0.1f;
 
     UPROPERTY(BlueprintReadWrite, Category = "AI Improvement")
@@ -383,7 +368,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "AI Improvement")
     bool bEnableAdaptation = true;
 
-    // 內部變量
+    // ?�部變�?
     UPROPERTY()
     float LastDecisionTime;
 
@@ -396,8 +381,7 @@ protected:
     UPROPERTY()
     FVector LastKnownTargetLocation;
 
-    // AI學習和適應數據
-    UPROPERTY()
+    // AI學�??�適?�數??    UPROPERTY()
     TArray<FRTSAIDecision> DecisionHistory;
 
     UPROPERTY()
@@ -406,7 +390,7 @@ protected:
     UPROPERTY()
     TMap<AActor*, float> TargetThreatHistory;
 
-    // 內部函數
+    // ?�部?�數
     void ExecuteIdleBehavior(float DeltaTime);
     void ExecutePatrolBehavior(float DeltaTime);
     void ExecuteGuardBehavior(float DeltaTime);
@@ -425,8 +409,7 @@ protected:
     FRTSAITarget FindBestTarget() const;
     void LogAIDebug(const FString& Message) const;
 
-    // AI改進內部函數
-    void UpdateDecisionHistory(const FRTSAIDecision& Decision);
+    // AI?�進內?�函??    void UpdateDecisionHistory(const FRTSAIDecision& Decision);
     void AnalyzeBehaviorPatterns();
     void AdaptBehaviorBasedOnHistory();
     void OptimizeTargetSelection();
@@ -434,7 +417,7 @@ protected:
     float CalculateBehaviorSuccess(const FString& BehaviorName) const;
 
 private:
-    // 輔助函數
+    // 輔助?�數
     void NotifyBehaviorChanged(ERTSAIBehavior OldBehavior, ERTSAIBehavior NewBehavior);
     void NotifyTargetChanged(const FRTSAITarget& OldTarget, const FRTSAITarget& NewTarget);
     void NotifyDecisionMade(const FRTSAIDecision& Decision, ERTSAIState AIState, float Confidence);

@@ -7,7 +7,7 @@
 #include "MingGoRTSProductionUI.generated.h"
 
 /**
- * 生產線UI組件
+ * ?�產線UI組件
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSProductionLineWidget : public UUserWidget
@@ -17,32 +17,28 @@ class MINGGORTS_API UMingGoRTSProductionLineWidget : public UUserWidget
 public:
     UMingGoRTSProductionLineWidget();
 
-    // 設置生產線數據
-    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
+    // 設置?�產線數??    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void SetProductionLine(const FProductionLine& ProductionLine);
 
-    // 更新生產狀態
-    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
+    // ?�新?�產?�??    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void UpdateProductionStatus(EProductionStatus NewStatus);
 
-    // 更新生產進度
+    // ?�新?�產?�度
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void UpdateProductionProgress(float Progress, float TimeRemaining);
 
-    // 設置生產配方
+    // 設置?�產?�方
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void SetCurrentRecipe(const FProductionRecipe& Recipe);
 
-    // 設置是否被選中
-    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
+    // 設置?�否被選�?    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void SetIsSelected(bool bSelected);
 
-    // 獲取生產線ID
+    // ?��??�產線ID
     UFUNCTION(BlueprintPure, Category = "Production Line UI")
     FString GetProductionLineID() const;
 
-    // 獲取是否被選中
-    UFUNCTION(BlueprintPure, Category = "Production Line UI")
+    // ?��??�否被選�?    UFUNCTION(BlueprintPure, Category = "Production Line UI")
     bool IsSelected() const;
 
 protected:
@@ -86,64 +82,58 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UBorder* LineBorder;
 
-    // 當前生產線數據
-    UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
+    // ?��??�產線數??    UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
     FProductionLine CurrentProductionLine;
 
-    // 當前配方
+    // ?��??�方
     UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
     FProductionRecipe CurrentRecipe;
 
-    // 是否被選中
-    UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
+    // ?�否被選�?    UPROPERTY(BlueprintReadOnly, Category = "Production Line UI")
     bool bIsSelected;
 
-    // 初始化UI
+    // ?��??�UI
     virtual void NativeConstruct() override;
 
-    // 更新UI顯示
+    // ?�新UI顯示
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Line UI")
     void OnUpdateUI();
 
-    // 處理開始按鈕
+    // ?��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnStartClicked();
 
-    // 處理暫停按鈕
+    // ?��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnPauseClicked();
 
-    // 處理取消按鈕
+    // ?��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnCancelClicked();
 
-    // 處理升級按鈕
+    // ?��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnUpgradeClicked();
 
-    // 處理自動化按鈕
-    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
+    // ?��??��??��???    UFUNCTION(BlueprintCallable, Category = "Production Line UI")
     void OnAutomateClicked();
 
-    // 獲取狀態顏色
-    FLinearColor GetStatusColor(EProductionStatus Status) const;
+    // ?��??�?��???    FLinearColor GetStatusColor(EProductionStatus Status) const;
 
-    // 獲取優先級顏色
-    FLinearColor GetPriorityColor(EProductionPriority Priority) const;
+    // ?��??��?級�???    FLinearColor GetPriorityColor(EProductionPriority Priority) const;
 
-    // 格式化時間顯示
-    FString FormatTime(float TimeSeconds) const;
+    // ?��??��??�顯�?    FString FormatTime(float TimeSeconds) const;
 
 private:
-    // 綁定事件
+    // 綁�?事件
     void BindEvents();
 
-    // 解綁事件
+    // �??事件
     void UnbindEvents();
 };
 
 /**
- * 生產配方UI組件
+ * ?�產?�方UI組件
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSRecipeWidget : public UUserWidget
@@ -153,19 +143,17 @@ class MINGGORTS_API UMingGoRTSRecipeWidget : public UUserWidget
 public:
     UMingGoRTSRecipeWidget();
 
-    // 設置配方數據
+    // 設置?�方?��?
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void SetRecipe(const FProductionRecipe& Recipe);
 
-    // 設置是否可生產
-    UFUNCTION(BlueprintCallable, Category = "Recipe UI")
+    // 設置?�否?��???    UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void SetCanProduce(bool bCanProduce);
 
-    // 設置是否被選中
-    UFUNCTION(BlueprintCallable, Category = "Recipe UI")
+    // 設置?�否被選�?    UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void SetIsSelected(bool bSelected);
 
-    // 獲取配方ID
+    // ?��??�方ID
     UFUNCTION(BlueprintPure, Category = "Recipe UI")
     FString GetRecipeID() const;
 
@@ -201,49 +189,45 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UBorder* RecipeBorder;
 
-    // 當前配方
+    // ?��??�方
     UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
     FProductionRecipe CurrentRecipe;
 
-    // 是否可生產
-    UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
+    // ?�否?��???    UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
     bool bCanProduce;
 
-    // 是否被選中
-    UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
+    // ?�否被選�?    UPROPERTY(BlueprintReadOnly, Category = "Recipe UI")
     bool bIsSelected;
 
-    // 初始化UI
+    // ?��??�UI
     virtual void NativeConstruct() override;
 
-    // 更新UI顯示
+    // ?�新UI顯示
     UFUNCTION(BlueprintImplementableEvent, Category = "Recipe UI")
     void OnUpdateUI();
 
-    // 處理生產按鈕
+    // ?��??�產?��?
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void OnProduceClicked();
 
-    // 處理加入隊列按鈕
+    // ?��??�入?��??��?
     UFUNCTION(BlueprintCallable, Category = "Recipe UI")
     void OnQueueClicked();
 
-    // 創建資源列表項
-    UUserWidget* CreateResourceItem(EResourceType ResourceType, float Amount, bool bIsInput);
+    // ?�建資�??�表??    UUserWidget* CreateResourceItem(EResourceType ResourceType, float Amount, bool bIsInput);
 
-    // 格式化資源顯示
-    FString FormatResourceDisplay(EResourceType ResourceType, float Amount) const;
+    // ?��??��?源顯�?    FString FormatResourceDisplay(EResourceType ResourceType, float Amount) const;
 
 private:
-    // 綁定事件
+    // 綁�?事件
     void BindEvents();
 
-    // 解綁事件
+    // �??事件
     void UnbindEvents();
 };
 
 /**
- * 生產隊列UI組件
+ * ?�產?��?UI組件
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSProductionQueueWidget : public UUserWidget
@@ -253,27 +237,27 @@ class MINGGORTS_API UMingGoRTSProductionQueueWidget : public UUserWidget
 public:
     UMingGoRTSProductionQueueWidget();
 
-    // 設置生產隊列數據
+    // 設置?�產?��??��?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void SetProductionQueue(const FProductionQueue& Queue);
 
-    // 更新隊列項目
+    // ?�新?��??�目
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void UpdateQueueItem(int32 Index, const FString& RecipeID);
 
-    // 移除隊列項目
+    // 移除?��??�目
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void RemoveQueueItem(int32 Index);
 
-    // 清空隊列
+    // 清空?��?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void ClearQueue();
 
-    // 設置循環模式
+    // 設置循環模�?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void SetLooping(bool bIsLooping);
 
-    // 設置自動開始
+    // 設置?��??��?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void SetAutoStart(bool bAutoStart);
 
@@ -297,46 +281,46 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* QueueCount;
 
-    // 當前隊列
+    // ?��??��?
     UPROPERTY(BlueprintReadOnly, Category = "Production Queue UI")
     FProductionQueue CurrentQueue;
 
-    // 隊列項目Widget數組
+    // ?��??�目Widget?��?
     UPROPERTY(BlueprintReadOnly, Category = "Production Queue UI")
     TArray<class UMingGoRTSRecipeWidget*> QueueItemWidgets;
 
-    // 初始化UI
+    // ?��??�UI
     virtual void NativeConstruct() override;
 
-    // 創建隊列項目Widget
+    // ?�建?��??�目Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Queue UI")
     UMingGoRTSRecipeWidget* CreateQueueItemWidget(const FString& RecipeID);
 
-    // 處理清空隊列
+    // ?��?清空?��?
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void OnClearQueueClicked();
 
-    // 處理循環模式變更
+    // ?��?循環模�?變更
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void OnLoopingChanged(bool bIsLooping);
 
-    // 處理自動開始變更
+    // ?��??��??��?變更
     UFUNCTION(BlueprintCallable, Category = "Production Queue UI")
     void OnAutoStartChanged(bool bAutoStart);
 
-    // 更新隊列計數
+    // ?�新?��?計數
     void UpdateQueueCount();
 
 private:
-    // 綁定事件
+    // 綁�?事件
     void BindEvents();
 
-    // 解綁事件
+    // �??事件
     void UnbindEvents();
 };
 
 /**
- * 生產管理主UI組件
+ * ?�產管�?主UI組件
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSProductionManagerWidget : public UUserWidget
@@ -346,48 +330,41 @@ class MINGGORTS_API UMingGoRTSProductionManagerWidget : public UUserWidget
 public:
     UMingGoRTSProductionManagerWidget();
 
-    // 設置生產系統引用
+    // 設置?�產系統引用
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void SetProductionSystem(UMingGoRTSProductionSystem* ProductionSystem);
 
-    // 顯示指定類別的配方
-    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // 顯示?��?類別?��???    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ShowRecipeCategory(EProductionCategory Category);
 
-    // 顯示所有配方
-    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // 顯示?�?��???    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ShowAllCategories();
 
-    // 選中生產線
-    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // ?�中?�產�?    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void SelectProductionLine(const FString& ProductionLineID);
 
-    // 清除選中狀態
-    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // 清除?�中?�??    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ClearSelection();
 
-    // 創建新生產線
+    // ?�建?��??��?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void CreateNewProductionLine();
 
-    // 顯示生產統計
+    // 顯示?�產統�?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ShowProductionStatistics();
 
-    // 設置過濾器
-    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // 設置?�濾??    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void SetFilter(EProductionCategory CategoryFilter, EProductionPriority PriorityFilter);
 
-    // 清除過濾器
-    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // 清除?�濾??    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void ClearFilter();
 
-    // 獲取當前選中的生產線
+    // ?��??��??�中?��??��?
     UFUNCTION(BlueprintPure, Category = "Production Manager UI")
     FString GetSelectedProductionLineID() const;
 
-    // 獲取當前顯示的類別
-    UFUNCTION(BlueprintPure, Category = "Production Manager UI")
+    // ?��??��?顯示?��???    UFUNCTION(BlueprintPure, Category = "Production Manager UI")
     EProductionCategory GetCurrentCategory() const;
 
 protected:
@@ -419,104 +396,99 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* ActiveProductionCount;
 
-    // 生產系統引用
+    // ?�產系統引用
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     UMingGoRTSProductionSystem* ProductionSystem;
 
-    // 當前選中的生產線ID
+    // ?��??�中?��??��?ID
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     FString SelectedProductionLineID;
 
-    // 當前顯示的類別
-    UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
+    // ?��?顯示?��???    UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     EProductionCategory CurrentCategory;
 
-    // 當前過濾器
-    UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
+    // ?��??�濾??    UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     EProductionCategory CategoryFilter;
 
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     EProductionPriority PriorityFilter;
 
-    // 生產線Widget映射
+    // ?�產線Widget?��?
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     TMap<FString, UMingGoRTSProductionLineWidget*> ProductionLineWidgets;
 
-    // 配方Widget數組
+    // ?�方Widget?��?
     UPROPERTY(BlueprintReadOnly, Category = "Production Manager UI")
     TArray<UMingGoRTSRecipeWidget*> RecipeWidgets;
 
-    // 初始化UI
+    // ?��??�UI
     virtual void NativeConstruct() override;
 
-    // 創建生產線Widget
+    // ?�建?�產線Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Manager UI")
     UMingGoRTSProductionLineWidget* CreateProductionLineWidget(const FProductionLine& ProductionLine);
 
-    // 創建配方Widget
+    // ?�建?�方Widget
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Manager UI")
     UMingGoRTSRecipeWidget* CreateRecipeWidget(const FProductionRecipe& Recipe);
 
-    // 處理生產線點擊
-    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // ?��??�產線�???    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionLineClicked(const FString& ProductionLineID);
 
-    // 處理配方點擊
+    // ?��??�方點�?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnRecipeClicked(const FString& RecipeID);
 
-    // 處理生產開始
+    // ?��??�產?��?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionStarted(const FString& ProductionLineID, const FString& RecipeID);
 
-    // 處理生產進度
+    // ?��??�產?�度
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionProgress(const FString& ProductionLineID, float Progress, float TimeRemaining);
 
-    // 處理生產完成
+    // ?��??�產完�?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionCompleted(const FString& ProductionLineID, const TMap<EResourceType, float>& OutputResources);
 
-    // 處理生產失敗
+    // ?��??�產失�?
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void OnProductionFailed(const FString& ProductionLineID, const FString& ErrorMessage);
 
-    // 更新生產線列表
-    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
+    // ?�新?�產線�?�?    UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void UpdateProductionLines();
 
-    // 更新配方列表
+    // ?�新?�方?�表
     UFUNCTION(BlueprintCallable, Category = "Production Manager UI")
     void UpdateRecipeList();
 
-    // 創建類別標籤
+    // ?�建類別標籤
     void CreateCategoryTabs();
 
-    // 創建優先級過濾器
+    // ?�建?��?級�?濾器
     void CreatePriorityFilters();
 
-    // 應用過濾器
-    void ApplyFilters();
+    // ?�用?�濾??    void ApplyFilters();
 
-    // 更新統計信息
+    // ?�新統�?信息
     void UpdateStatistics();
 
 private:
-    // 綁定生產系統事件
+    // 綁�??�產系統事件
     void BindProductionSystemEvents();
 
-    // 解綁生產系統事件
+    // �???�產系統事件
     void UnbindProductionSystemEvents();
 
-    // 清理現有Widget
+    // 清�??��?Widget
     void ClearExistingWidgets();
 
-    // 獲取類別顏色
+    // ?��?類別顏色
     FLinearColor GetCategoryColor(EProductionCategory Category) const;
 };
 
 /**
- * 生產統計UI組件
+ * ?�產統�?UI組件
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSProductionStatsWidget : public UUserWidget
@@ -526,15 +498,15 @@ class MINGGORTS_API UMingGoRTSProductionStatsWidget : public UUserWidget
 public:
     UMingGoRTSProductionStatsWidget();
 
-    // 設置生產統計數據
+    // 設置?�產統�??��?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void SetProductionStatistics(const FProductionStatistics& Stats);
 
-    // 顯示詳細統計
+    // 顯示詳細統�?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void ShowDetailedStats();
 
-    // 導出統計報告
+    // 導出統�??��?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void ExportStatsReport();
 
@@ -570,43 +542,41 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UButton* CloseButton;
 
-    // 當前統計
+    // ?��?統�?
     UPROPERTY(BlueprintReadOnly, Category = "Production Stats UI")
     FProductionStatistics CurrentStats;
 
-    // 初始化UI
+    // ?��??�UI
     virtual void NativeConstruct() override;
 
-    // 創建統計項目
+    // ?�建統�??�目
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Stats UI")
     UUserWidget* CreateStatItem(const FString& Label, const FString& Value);
 
-    // 創建資源生產項目
+    // ?�建資�??�產?�目
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Stats UI")
     UUserWidget* CreateResourceStatItem(EResourceType ResourceType, float Amount);
 
-    // 創建類別生產項目
+    // ?�建類別?�產?�目
     UFUNCTION(BlueprintImplementableEvent, Category = "Production Stats UI")
     UUserWidget* CreateCategoryStatItem(EProductionCategory Category, float Amount);
 
-    // 格式化統計數據
-    FString FormatStatValue(float Value) const;
+    // ?��??�統計數??    FString FormatStatValue(float Value) const;
 
-    // 計算成功率
-    float CalculateSuccessRate() const;
+    // 計�??��???    float CalculateSuccessRate() const;
 
-    // 處理導出按鈕
+    // ?��?導出?��?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void OnExportClicked();
 
-    // 處理關閉按鈕
+    // ?��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Production Stats UI")
     void OnCloseClicked();
 
 private:
-    // 綁定事件
+    // 綁�?事件
     void BindEvents();
 
-    // 解綁事件
+    // �??事件
     void UnbindEvents();
 };

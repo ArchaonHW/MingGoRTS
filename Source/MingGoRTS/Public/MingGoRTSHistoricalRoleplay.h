@@ -10,31 +10,31 @@
 UENUM(BlueprintType)
 enum class ERoleplayType : uint8
 {
-    PoliticalDecision   UMETA(DisplayName = "政治決策"),
-    MilitaryStrategy    UMETA(DisplayName = "軍事策略"),
+    PoliticalDecision   UMETA(DisplayName = "?�治決�?"),
+    MilitaryStrategy    UMETA(DisplayName = "軍�?策略"),
     DiplomaticNegotiation UMETA(DisplayName = "外交談判"),
-    EconomicPolicy      UMETA(DisplayName = "經濟政策"),
-    SocialReform        UMETA(DisplayName = "社會改革"),
-    PersonalChoice      UMETA(DisplayName = "個人選擇")
+    EconomicPolicy      UMETA(DisplayName = "經�??��?"),
+    SocialReform        UMETA(DisplayName = "社�??�革"),
+    PersonalChoice      UMETA(DisplayName = "?�人?��?")
 };
 
 UENUM(BlueprintType)
 enum class EDecisionAlignment : uint8
 {
-    Historical          UMETA(DisplayName = "歷史一致"),
-    Alternative         UMETA(DisplayName = "替代選擇"),
-    CounterFactual      UMETA(DisplayName = "反事實"),
-    PlayerChoice        UMETA(DisplayName = "玩家選擇")
+    Historical          UMETA(DisplayName = "歷史一??),
+    Alternative         UMETA(DisplayName = "?�代?��?"),
+    CounterFactual      UMETA(DisplayName = "?��?�?),
+    PlayerChoice        UMETA(DisplayName = "?�家?��?")
 };
 
 UENUM(BlueprintType)
 enum class EDecisionImpact : uint8
 {
-    Minimal            UMETA(DisplayName = "最小影響"),
-    Local              UMETA(DisplayName = "本地影響"),
-    Regional           UMETA(DisplayName = "區域影響"),
-    National           UMETA(DisplayName = "國家影響"),
-    International      UMETA(DisplayName = "國際影響"),
+    Minimal            UMETA(DisplayName = "?�小影??),
+    Local              UMETA(DisplayName = "?�地影響"),
+    Regional           UMETA(DisplayName = "?�?�影??),
+    National           UMETA(DisplayName = "?�家影響"),
+    International      UMETA(DisplayName = "?��?影響"),
     Historical          UMETA(DisplayName = "歷史影響")
 };
 
@@ -253,7 +253,7 @@ class MINGGORTS_API UMingGoRTSHistoricalRoleplay : public UObject
 public:
     UMingGoRTSHistoricalRoleplay();
 
-    // 角色扮演事件
+    // 角色?��?事件
     UPROPERTY(BlueprintAssignable, Category = "Roleplay System")
     FOnRoleplaySessionStarted OnRoleplaySessionStarted;
 
@@ -263,161 +263,153 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Roleplay System")
     FOnRoleplaySessionEnded OnRoleplaySessionEnded;
 
-    // 初始化角色扮演系統
-    UFUNCTION(BlueprintCallable, Category = "Roleplay System")
+    // ?��??��??�扮演系�?    UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     void InitializeRoleplaySystem();
 
-    // 開始角色扮演會話
+    // ?��?角色?��??�話
     UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     FString StartRoleplaySession(const FString& CharacterID, const FMingCharacterData& PlayerCharacter);
 
-    // 結束角色扮演會話
+    // 結�?角色?��??�話
     UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     bool EndRoleplaySession(const FString& SessionID);
 
-    // 獲取當前會話
+    // ?��??��??�話
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     FRoleplaySession GetCurrentSession() const;
 
-    // 獲取可用情境
+    // ?��??�用?��?
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     TArray<FHistoricalSituation> GetAvailableSituations(const FString& CharacterID) const;
 
-    // 開始情境
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     bool StartSituation(const FString& SessionID, const FString& SituationID);
 
-    // 獲取當前情境
+    // ?��??��??��?
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     FHistoricalSituation GetCurrentSituation(const FString& SessionID) const;
 
-    // 做出決策
+    // ?�出決�?
     UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     bool MakeDecision(const FString& SessionID, int32 DecisionIndex);
 
-    // 獲取決策選項
+    // ?��?決�??��?
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     TArray<FDecisionOption> GetAvailableDecisionOptions(const FString& SessionID) const;
 
-    // 計算決策結果
+    // 計�?決�?結�?
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     TArray<FDecisionOutcome> CalculateDecisionOutcomes(const FString& SessionID, int32 DecisionIndex) const;
 
-    // 評估決策
+    // 評估決�?
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     float EvaluateDecision(const FString& SessionID, int32 DecisionIndex) const;
 
-    // 獲取歷史準確性評分
-    UFUNCTION(BlueprintPure, Category = "Roleplay System")
+    // ?��?歷史準確?��???    UFUNCTION(BlueprintPure, Category = "Roleplay System")
     float GetHistoricalAccuracyScore(const FString& SessionID) const;
 
-    // 獲取決策質量評分
+    // ?��?決�?質�?評�?
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     float GetDecisionQualityScore(const FString& SessionID) const;
 
-    // 獲取沉浸感評分
-    UFUNCTION(BlueprintPure, Category = "Roleplay System")
+    // ?��?沉浸?��???    UFUNCTION(BlueprintPure, Category = "Roleplay System")
     float GetImmersionScore(const FString& SessionID) const;
 
-    // 獲取會話歷史
+    // ?��??�話歷史
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     TArray<FString> GetSessionHistory(const FString& SessionID) const;
 
-    // 獲取角色扮演統計
+    // ?��?角色?��?統�?
     UFUNCTION(BlueprintPure, Category = "Roleplay System")
     TMap<FString, float> GetRoleplayStatistics(const FString& SessionID) const;
 
-    // 保存角色扮演數據
+    // 保�?角色?��??��?
     UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     bool SaveRoleplayData(const FString& SaveSlotName);
 
-    // 載入角色扮演數據
+    // 載入角色?��??��?
     UFUNCTION(BlueprintCallable, Category = "Roleplay System")
     bool LoadRoleplayData(const FString& SaveSlotName);
 
 protected:
-    // 所有歷史情境
-    UPROPERTY()
+    // ?�?�歷?��?�?    UPROPERTY()
     TArray<FHistoricalSituation> AllSituations;
 
-    // 情境ID到情境的映射
+    // ?��?ID?��?境�??��?
     UPROPERTY()
     TMap<FString, FHistoricalSituation> SituationMap;
 
-    // 角色ID到情境列表的映射 - 注意：TMap<TArray> 不支持 UPROPERTY
+    // 角色ID?��?境�?表�??��? - 注�?：TMap<TArray> 不支??UPROPERTY
     TMap<FString, TArray<FString>> CharacterSituationMap;
 
-    // 活動會話
+    // 活�??�話
     UPROPERTY()
     TMap<FString, FRoleplaySession> ActiveSessions;
 
-    // 當前玩家角色
+    // ?��??�家角色
     UPROPERTY()
     FMingCharacterData CurrentPlayerCharacter;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bIsInitialized;
 
-    // 初始化情境庫
+    // ?��??��?境庫
     void InitializeSituationLibrary();
 
-    // 創建政治決策情境
+    // ?�建?�治決�??��?
     void CreatePoliticalDecisionSituations();
 
-    // 創建軍事策略情境
+    // ?�建軍�?策略?��?
     void CreateMilitaryStrategySituations();
 
-    // 創建外交談判情境
+    // ?�建外交談判?��?
     void CreateDiplomaticNegotiationSituations();
 
-    // 創建經濟政策情境
+    // ?�建經�??��??��?
     void CreateEconomicPolicySituations();
 
-    // 創建社會改革情境
+    // ?�建社�??�革?��?
     void CreateSocialReformSituations();
 
-    // 創建個人選擇情境
+    // ?�建?�人?��??��?
     void CreatePersonalChoiceSituations();
 
-    // 驗證決策選項
+    // 驗�?決�??��?
     bool ValidateDecisionOption(const FDecisionOption& Option, const FString& CharacterID) const;
 
-    // 應用決策結果
+    // ?�用決�?結�?
     void ApplyDecisionOutcomes(const FString& SessionID, const TArray<FDecisionOutcome>& Outcomes);
 
-    // 更新會話評分
+    // ?�新?�話評�?
     void UpdateSessionScores(const FString& SessionID, int32 DecisionIndex);
 
-    // 計算歷史準確性
-    float CalculateHistoricalAccuracy(const FDecisionOption& Decision) const;
+    // 計�?歷史準確??    float CalculateHistoricalAccuracy(const FDecisionOption& Decision) const;
 
-    // 計算決策質量
+    // 計�?決�?質�?
     float CalculateDecisionQuality(const FDecisionOption& Decision, const FString& CharacterID) const;
 
-    // 計算沉浸感
-    float CalculateImmersionScore(const FString& SessionID) const;
+    // 計�?沉浸??    float CalculateImmersionScore(const FString& SessionID) const;
 
-    // 生成會話ID
+    // ?��??�話ID
     FString GenerateSessionID(const FString& CharacterID) const;
 
-    // 檢查情境可用性
-    bool IsSituationAvailable(const FString& SituationID, const FString& CharacterID) const;
+    // 檢查?��??�用??    bool IsSituationAvailable(const FString& SituationID, const FString& CharacterID) const;
 
-    // 獲取角色技能
-    TArray<FString> GetCharacterSkills(const FString& CharacterID) const;
+    // ?��?角色?�??    TArray<FString> GetCharacterSkills(const FString& CharacterID) const;
 
-    // 檢查決策前置條件
+    // 檢查決�??�置條件
     bool CheckDecisionPrerequisites(const FDecisionOption& Option, const FString& CharacterID) const;
 
-    // 記錄決策歷史
+    // 記�?決�?歷史
     void RecordDecisionHistory(const FString& SessionID, const FString& DecisionText);
 
-    // 更新角色關係
+    // ?�新角色?��?
     void UpdateCharacterRelationships(const FString& SessionID, const TArray<FDecisionOutcome>& Outcomes);
 
-    // 觸發後續事件
+    // 觸發後�?事件
     void TriggerFollowUpEvents(const FString& SessionID, const TArray<FDecisionOutcome>& Outcomes);
 
-    // 生成情境ID
+    // ?��??��?ID
     FString GenerateSituationID(const FString& BaseName, ERoleplayType Type) const;
 };

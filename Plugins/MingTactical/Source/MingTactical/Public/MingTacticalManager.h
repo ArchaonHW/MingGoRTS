@@ -5,8 +5,8 @@
 #include "MingTacticalManager.generated.h"
 
 /**
- * 戰術層管理器
- * 管理大規模戰鬥和單位控制
+ * ?��?層管?�器
+ * 管�?大�?模戰鬥�??��??�制
  */
 UCLASS()
 class MINGTACTICAL_API UMingTacticalManager : public UObject
@@ -22,14 +22,14 @@ public:
     void SetupEventSubscriptions();
     void CleanupEventSubscriptions();
 
-    // 單位控制接口
+    // ?��??�制?�口
     UFUNCTION(BlueprintCallable, Category = "Tactical")
     void SelectUnits(const TArray<int32>& UnitIds);
 
     UFUNCTION(BlueprintCallable, Category = "Tactical")
     void MoveUnits(const TArray<int32>& UnitIds, const FVector& TargetPosition, bool bAttackMove = false);
 
-    // 性能監控
+    // ?�能??��
     UFUNCTION(BlueprintCallable, Category = "Performance")
     int32 GetActiveUnitCount() const { return ActiveUnitCount; }
 
@@ -41,6 +41,5 @@ private:
     bool bIsInitialized;
     int32 ActiveUnitCount;
     
-    // 記憶體池預分配標記
-    bool bMemoryPoolInitialized;
+    // 記憶體�??��??��?�?    bool bMemoryPoolInitialized;
 };

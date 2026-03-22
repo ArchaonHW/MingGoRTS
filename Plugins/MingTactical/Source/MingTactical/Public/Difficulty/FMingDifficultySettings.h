@@ -5,8 +5,8 @@
 #include "FMingDifficultySettings.generated.h"
 
 /**
- * 难度参数结构
- * 存储单个难度参数的当前值和范围
+ * ?�度?�数结�?
+ * 存储?�个?�度?�数?��??�值�??�围
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingDifficultyParameter
@@ -44,15 +44,15 @@ struct MINGTACTICAL_API FMingDifficultyParameter
         , AdjustmentStep(0.1f)
     {}
 
-    /** 调整参数值，返回是否达到边界 */
+    /** 调整?�数?��?返�??�否达到边�? */
     bool AdjustValue(float Delta);
 
-    /** 设置参数值（带范围限制） */
+    /** 设置?�数?��?带�??��??��? */
     void SetValue(float NewValue);
 };
 
 /**
- * 预设难度配置结构
+ * 预设?�度?�置结�?
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingPresetDifficultyConfig
@@ -63,10 +63,10 @@ struct MINGTACTICAL_API FMingPresetDifficultyConfig
     EDifficultyLevel Level = EDifficultyLevel::Normal;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
-    FString DisplayName = TEXT("普通");
+    FString DisplayName = TEXT("?��?);
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
-    FString Description = TEXT("标准游戏难度");
+    FString Description = TEXT("?��?游�??�度");
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
     TMap<EDifficultyParameter, float> ParameterValues;
@@ -80,8 +80,7 @@ struct MINGTACTICAL_API FMingPresetDifficultyConfig
 };
 
 /**
- * 难度设置主结构
- * 管理所有难度相关的配置
+ * ?�度设置主�??? * 管�??�?�难度相?��??�置
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingDifficultySettings
@@ -118,23 +117,23 @@ public:
 
     FMingDifficultySettings();
 
-    /** 从预设配置初始化 */
+    /** 从�?设�?置�?始�? */
     void InitializeFromPreset(EDifficultyLevel Level);
 
-    /** 获取指定类型的参数 */
+    /** ?��??��?类�??��???*/
     FMingDifficultyParameter* GetParameter(EDifficultyParameter Type);
     const FMingDifficultyParameter* GetParameter(EDifficultyParameter Type) const;
 
-    /** 获取参数当前值 */
+    /** ?��??�数当�???*/
     float GetParameterValue(EDifficultyParameter Type) const;
 
-    /** 设置参数值 */
+    /** 设置?�数??*/
     void SetParameterValue(EDifficultyParameter Type, float Value);
 
-    /** 调整参数值 */
+    /** 调整?�数??*/
     bool AdjustParameter(EDifficultyParameter Type, float Delta);
 
-    /** 获取预设配置静态方法 */
+    /** ?��?预设?�置?�态方�?*/
     static FMingPresetDifficultyConfig GetPresetConfig(EDifficultyLevel Level);
     static TArray<FMingPresetDifficultyConfig> GetAllPresetConfigs();
 

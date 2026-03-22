@@ -152,8 +152,8 @@ struct FContentAdaptationRule
 };
 
 /**
- * 文化適應系統
- * 處理文化敏感內容和地區差異
+ * ?��??��?系統
+ * ?��??��??��??�容?�地?�差異
  */
 UCLASS(ClassGroup = (Localization), Blueprintable)
 class MINGPERSONAL_API UMingCultureAdapter : public UObject
@@ -163,156 +163,147 @@ class MINGPERSONAL_API UMingCultureAdapter : public UObject
 public:
     UMingCultureAdapter();
 
-    // 初始化
-    void Initialize();
+    // ?��???    void Initialize();
     void Shutdown();
 
     UFUNCTION(BlueprintPure, Category = "Culture Adapter")
     bool IsInitialized() const { return bIsInitialized; }
 
-    // === 文化適應檢查 ===
+    // === ?��??��?檢查 ===
 
-    // 檢查內容是否適合特定地區
+    // 檢查?�容?�否?��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Check")
     EContentAppropriateness CheckContentAppropriateness(const FString& ContentID, const FString& RegionCode) const;
 
-    // 獲取內容的文化敏感度
+    // ?��??�容?��??��??�度
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Check")
     ECulturalSensitivity GetContentSensitivity(const FString& ContentID) const;
 
-    // 檢查是否需要內容適應
-    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Check")
+    // 檢查?�否?�要內容適??    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Check")
     bool NeedsAdaptation(const FString& ContentID, const FString& RegionCode) const;
 
-    // === 內容適應 ===
+    // === ?�容?��? ===
 
-    // 獲取適應後的內容ID
+    // ?��??��?後�??�容ID
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Adaptation")
     FString GetAdaptedContentID(const FString& OriginalContentID, const FString& RegionCode) const;
 
-    // 應用文化適應規則
+    // ?�用?��??��?規�?
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Adaptation")
     bool ApplyAdaptationRule(const FContentAdaptationRule& Rule);
 
-    // 移除適應規則
+    // 移除?��?規�?
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Adaptation")
     bool RemoveAdaptationRule(const FString& RuleID);
 
-    // 獲取所有適應規則
-    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Adaptation")
+    // ?��??�?�適?��???    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Adaptation")
     TArray<FContentAdaptationRule> GetAllAdaptationRules() const;
 
-    // === 文化偏好 ===
+    // === ?��??�好 ===
 
-    // 獲取地區文化偏好
+    // ?��??��??��??�好
     UFUNCTION(BlueprintPure, Category = "Culture Adapter|Preferences")
     FCulturalPreferences GetCulturalPreferences(const FString& RegionCode) const;
 
-    // 設置地區文化偏好
+    // 設置?��??��??�好
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Preferences")
     void SetCulturalPreferences(const FString& RegionCode, const FCulturalPreferences& Preferences);
 
-    // 檢查特定內容類型是否敏感
+    // 檢查?��??�容類�??�否?��?
     UFUNCTION(BlueprintPure, Category = "Culture Adapter|Preferences")
     bool IsContentTypeSensitive(ECulturalContentType ContentType, const FString& RegionCode) const;
 
-    // === 符號和顏色 ===
+    // === 符�??��???===
 
-    // 獲取顏色在特定文化中的含義
-    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Symbols")
+    // ?��?顏色?�特定�??�中?�含�?    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Symbols")
     FString GetColorMeaning(const FString& Color, const FString& RegionCode) const;
 
-    // 獲取數字在特定文化中的含義
-    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Symbols")
+    // ?��??��??�特定�??�中?�含�?    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Symbols")
     FString GetNumberMeaning(int32 Number, const FString& RegionCode) const;
 
-    // 檢查顏色是否適合特定地區
+    // 檢查顏色?�否?��??��??��?
     UFUNCTION(BlueprintPure, Category = "Culture Adapter|Symbols")
     bool IsColorAppropriate(const FString& Color, const FString& RegionCode) const;
 
-    // 獲取替代顏色建議
+    // ?��??�代顏色建議
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Symbols")
     TArray<FString> GetAlternativeColors(const FString& OriginalColor, const FString& RegionCode) const;
 
-    // === 宗教和政治敏感內容 ===
+    // === 宗�??�政治�??�內�?===
 
-    // 檢查是否包含宗教敏感內容
+    // 檢查?�否?�含宗�??��??�容
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Religion")
     bool ContainsReligiousContent(const FString& ContentID) const;
 
-    // 檢查是否包含政治敏感內容
+    // 檢查?�否?�含?�治?��??�容
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Political")
     bool ContainsPoliticalContent(const FString& ContentID) const;
 
-    // 獲取內容的替代版本 (去敏感化)
+    // ?��??�容?�替�????(?��??��?)
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Religion")
     FString GetSecularAlternative(const FString& ContentID) const;
 
-    // === 歷史和文化內容 ===
+    // === 歷史?��??�內�?===
 
-    // 檢查歷史內容的準確性
-    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|History")
+    // 檢查歷史?�容?��?確�?    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|History")
     bool ValidateHistoricalContent(const FString& ContentID, const FString& RegionCode) const;
 
-    // 獲取歷史內容的修正建議
-    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|History")
+    // ?��?歷史?�容?�修�?���?    UFUNCTION(BlueprintCallable, Category = "Culture Adapter|History")
     TArray<FString> GetHistoricalCorrections(const FString& ContentID, const FString& RegionCode) const;
 
-    // === 視覺內容適應 ===
+    // === 視覺?�容?��? ===
 
-    // 獲取適合特定地區的視覺風格
-    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Visual")
+    // ?��??��??��??��??��?覺風??    UFUNCTION(BlueprintPure, Category = "Culture Adapter|Visual")
     TArray<FString> GetPreferredVisualStyles(const FString& RegionCode) const;
 
-    // 檢查圖像內容是否合適
+    // 檢查?��??�容?�否?�適
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Visual")
     EContentAppropriateness CheckImageContent(const FString& ImageID, const FString& RegionCode) const;
 
-    // === 內容過濾 ===
+    // === ?�容?�濾 ===
 
-    // 過濾敏感內容
+    // ?�濾?��??�容
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Filtering")
     TArray<FString> FilterSensitiveContent(const TArray<FString>& ContentIDs, const FString& RegionCode) const;
 
-    // 獲取內容警告信息
+    // ?��??�容警�?信息
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Filtering")
     FString GetContentWarning(const FString& ContentID, const FString& RegionCode) const;
 
-    // === 數據管理 ===
+    // === ?��?管�? ===
 
-    // 加載文化適應數據
+    // ?��??��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Data")
     bool LoadCulturalData(const FString& FilePath);
 
-    // 保存文化適應數據
+    // 保�??��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Data")
     bool SaveCulturalData(const FString& FilePath) const;
 
-    // 註冊文化內容信息
+    // 註�??��??�容信息
     UFUNCTION(BlueprintCallable, Category = "Culture Adapter|Data")
     void RegisterCulturalContent(const FCulturalContentInfo& ContentInfo);
 
 private:
     bool bIsInitialized;
 
-    // 文化內容信息存儲
+    // ?��??�容信息存儲
     UPROPERTY()
     TMap<FString, FCulturalContentInfo> CulturalContentRegistry;
 
-    // 地區文化偏好
+    // ?��??��??�好
     UPROPERTY()
     TMap<FString, FCulturalPreferences> RegionalPreferences;
 
-    // 內容適應規則
+    // ?�容?��?規�?
     UPROPERTY()
     TArray<FContentAdaptationRule> AdaptationRules;
 
-    // 初始化默認文化數據
-    void InitializeDefaultCulturalData();
+    // ?��??��?認�??�數??    void InitializeDefaultCulturalData();
 
-    // 加載預設文化規則
+    // ?��??�設?��?規�?
     void LoadPresetRules();
 
-    // 獲取適應規則
+    // ?��??��?規�?
     const FContentAdaptationRule* FindAdaptationRule(const FString& ContentID, const FString& RegionCode) const;
 };

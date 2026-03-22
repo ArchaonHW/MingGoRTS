@@ -7,14 +7,14 @@
 UENUM(BlueprintType)
 enum class ERTSResourceType : uint8
 {
-    Gold,           // 黃金
-    Wood,           // 木材
-    Stone,          // 石材
-    Iron,           // 鐵礦
-    Food,           // 糧食
-    Coal,           // 煤炭
-    Oil,            // 石油
-    Uranium,        // 鈾礦
+    Gold,           // 黃�?
+    Wood,           // ?��?
+    Stone,          // ?��?
+    Iron,           // ?�礦
+    Food,           // 糧�?
+    Coal,           // ?�炭
+    Oil,            // ?�油
+    Uranium,        // ?�礦
     Crystal,        // 水晶
     Silk            // 絲綢
 };
@@ -23,25 +23,19 @@ UENUM(BlueprintType)
 enum class ERTSResourceSource : uint8
 {
     Mine,           // 礦山
-    Forest,         // 森林
-    Quarry,         // 採石場
-    Farm,           // 農場
-    OilWell,        // 油井
-    CrystalCave,    // 水晶洞
-    SilkFarm,       // 絲綢農場
-    TradingPost     // 貿易站
-};
+    Forest,         // 森�?
+    Quarry,         // ?�石??    Farm,           // 農場
+    OilWell,        // 油�?
+    CrystalCave,    // 水晶�?    SilkFarm,       // 絲綢農場
+    TradingPost     // 貿�?�?};
 
 UENUM(BlueprintType)
 enum class ERTSResourceState : uint8
 {
-    Available,      // 可用
-    Depleted,       // 耗盡
-    Occupied,       // 被佔領
-    UnderConstruction, // 建設中
-    Damaged,        // 損壞
-    Repairing        // 修復中
-};
+    Available,      // ?�用
+    Depleted,       // ?�盡
+    Occupied,       // 被�???    UnderConstruction, // 建設�?    Damaged,        // ?��?
+    Repairing        // 修復�?};
 
 USTRUCT(BlueprintType)
 struct FRTSResourceData
@@ -186,8 +180,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnResourceDepleted, ERTSResourceTyp
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTradeCompleted, const FRTSTradeData&, TradeData, bool, bSuccess);
 
 /**
- * RTS資源管理器
- * 管理所有資源相關的邏輯
+ * RTS資�?管�??? * 管�??�?��?源相?��??�輯
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSResourceManager : public UObject
@@ -197,11 +190,10 @@ class MINGCORE_API UMingRTSResourceManager : public UObject
 public:
     UMingRTSResourceManager();
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void InitializeResourceManager();
 
-    // 資源管理
+    // 資�?管�?
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void AddResource(ERTSResourceType ResourceType, float Amount);
 
@@ -226,8 +218,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void SetResourceConsumptionRate(ERTSResourceType ResourceType, float Rate);
 
-    // 資源源管理
-    UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
+    // 資�?源管??    UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void AddResourceSource(const FRTSResourceSourceData& SourceData);
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
@@ -248,7 +239,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     bool IsResourceSourceOperational(const FString& SourceID) const;
 
-    // 資源生產
+    // 資�??�產
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void UpdateResourceProduction(float DeltaTime);
 
@@ -261,7 +252,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void OptimizeResourceAllocation();
 
-    // 資源交易
+    // 資�?交�?
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     bool ExecuteTrade(const FRTSTradeData& TradeData);
 
@@ -277,7 +268,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     float CalculateExchangeRate(ERTSResourceType OfferResource, ERTSResourceType RequestResource) const;
 
-    // 資源分配
+    // 資�??��?
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void AllocateResource(ERTSResourceType ResourceType, float Amount, const FString& Purpose);
 
@@ -290,14 +281,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     TMap<FString, float> GetAllAllocations(ERTSResourceType ResourceType) const;
 
-    // 資源預測
+    // 資�??�測
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     float PredictResourceAmount(ERTSResourceType ResourceType, float TimeInSeconds) const;
 
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     bool WillResourceDeplete(ERTSResourceType ResourceType, float TimeInSeconds) const;
 
-    // 資源管理系統優化
+    // 資�?管�?系統?��?
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void OptimizeResourceManagement();
 
@@ -313,7 +304,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     float GetTimeToDepletion(ERTSResourceType ResourceType) const;
 
-    // 資源效率
+    // 資�??��?
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     float GetResourceEfficiency(ERTSResourceType ResourceType) const;
 
@@ -323,7 +314,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void SetResourceEfficiency(ERTSResourceType ResourceType, float Efficiency);
 
-    // 統計信息
+    // 統�?信息
     UFUNCTION(BlueprintPure, Category = "RTS Resource Manager")
     int32 GetTotalResourceSourceCount() const;
 
@@ -336,7 +327,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "RTS Resource Manager")
     TArray<ERTSResourceType> GetAvailableResourceTypes() const;
 
-    // 資源事件
+    // 資�?事件
     UFUNCTION(BlueprintCallable, Category = "RTS Resource Manager")
     void OnResourceSourceDestroyed(const FString& SourceID);
 
@@ -360,7 +351,7 @@ public:
     FOnTradeCompleted OnTradeCompleted;
 
 protected:
-    // 資源數據
+    // 資�??��?
     UPROPERTY()
     TMap<ERTSResourceType, FRTSResourceData> Resources;
 
@@ -370,7 +361,7 @@ protected:
     UPROPERTY()
     TArray<FRTSTradeData> TradeOffers;
 
-    // 注意：TMap<TMap> 不支持 UPROPERTY
+    // 注�?：TMap<TMap> 不支??UPROPERTY
     TMap<ERTSResourceType, TMap<FString, float>> ResourceAllocations;
 
     UPROPERTY()
@@ -392,7 +383,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Resource Settings")
     bool bAutoAllocate = true;
 
-    // 優化參數
+    // ?��??�數
     UPROPERTY(BlueprintReadWrite, Category = "Optimization Settings")
     float OptimizationThreshold = 0.8f;
 
@@ -405,18 +396,17 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Optimization Settings")
     bool bEnableAutoBalancing = true;
 
-    // 狀態
-    UPROPERTY()
+    // ?�??    UPROPERTY()
     bool bIsInitialized;
 
-    // 內部函數
+    // ?�部?�數
     void InitializeDefaultResources();
     void InitializeResourceEfficiencies();
     void ProcessResourceSource(FRTSResourceSourceData& Source, float DeltaTime);
     void UpdateResourceState(ERTSResourceType ResourceType);
     FString GenerateResourceSourceID(ERTSResourceSource SourceType) const;
 
-    // 優化內部函數
+    // ?��??�部?�數
     void OptimizeProductionRates();
     void BalanceResourceConsumption();
     void CalculateOptimalAllocation();
@@ -429,7 +419,7 @@ protected:
     bool ValidateTrade(const FRTSTradeData& TradeData) const;
 
 private:
-    // 輔助函數
+    // 輔助?�數
     void NotifyResourceChanged(ERTSResourceType ResourceType, float NewAmount);
     void NotifyResourceSourceStateChanged(const FString& SourceID, ERTSResourceState NewState);
     void NotifyResourceDepleted(ERTSResourceType ResourceType);

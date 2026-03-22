@@ -6,8 +6,8 @@
 #include "MingEventTriggerManager.generated.h"
 
 /**
- * 觸發器管理器
- * 管理所有事件觸發器的註冊、更新和觸發
+ * 觸發?�管?�器
+ * 管�??�?��?件觸?�器?�註?�、更?��?觸發
  */
 UCLASS()
 class MINGSTRATEGIC_API UMingEventTriggerManager : public UObject
@@ -17,87 +17,81 @@ class MINGSTRATEGIC_API UMingEventTriggerManager : public UObject
 public:
     UMingEventTriggerManager();
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void Initialize();
 
-    // 關閉
+    // ?��?
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void Shutdown();
 
-    // 每幀更新
+    // 每�??�新
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void Tick(float DeltaTime);
 
-    // 註冊觸發器
-    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
+    // 註�?觸發??    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void RegisterTrigger(UMingEventTrigger* Trigger);
 
-    // 註銷觸發器
-    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
+    // 註銷觸發??    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void UnregisterTrigger(const FString& TriggerId);
 
-    // 手動觸發
+    // ?��?觸發
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     bool ManualTrigger(const FString& TriggerId);
 
-    // 獲取觸發器
-    UFUNCTION(BlueprintPure, Category = "Trigger Manager")
+    // ?��?觸發??    UFUNCTION(BlueprintPure, Category = "Trigger Manager")
     UMingEventTrigger* GetTrigger(const FString& TriggerId) const;
 
-    // 獲取所有觸發器
+    // ?��??�?�觸?�器
     UFUNCTION(BlueprintPure, Category = "Trigger Manager")
     TArray<UMingEventTrigger*> GetAllTriggers() const;
 
-    // 獲取特定類型的觸發器
+    // ?��??��?類�??�觸?�器
     UFUNCTION(BlueprintPure, Category = "Trigger Manager")
     TArray<UMingEventTrigger*> GetTriggersByType(EEventTriggerType Type) const;
 
-    // 啟用/禁用觸發器
-    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
+    // ?�用/禁用觸發??    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void SetTriggerEnabled(const FString& TriggerId, bool bEnabled);
 
-    // 重置觸發器
-    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
+    // ?�置觸發??    UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void ResetTrigger(const FString& TriggerId);
 
-    // 重置所有觸發器
+    // ?�置?�?�觸?�器
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void ResetAllTriggers();
 
-    // 暫停/恢復所有觸發器
+    // ?��?/?�復?�?�觸?�器
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager")
     void SetAllTriggersPaused(bool bPaused);
 
-    // 創建觸發器 (工廠方法)
+    // ?�建觸發??(工�??��?)
     UFUNCTION(BlueprintCallable, Category = "Trigger Manager", meta = (DeterminesOutputType = "TriggerClass"))
     UMingEventTrigger* CreateTrigger(TSubclassOf<UMingEventTrigger> TriggerClass, const FString& TriggerId, const FString& EventId);
 
-    // 全局事件委託
+    // ?��?事件委�?
     UPROPERTY(BlueprintAssignable, Category = "Trigger Manager|Events")
     FOnEventTriggered OnAnyTriggerFired;
 
-    // 靜態獲取實例
+    // ?��??��?實�?
     static UMingEventTriggerManager* Get();
 
 private:
-    // 註冊的觸發器列表
+    // 註�??�觸?�器?�表
     UPROPERTY()
     TArray<TObjectPtr<UMingEventTrigger>> Triggers;
 
-    // 觸發器ID到索引的映射
+    // 觸發?�ID?�索引�??��?
     TMap<FString, int32> TriggerIdMap;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bInitialized;
 
-    // 是否暫停
+    // ?�否?��?
     bool bPaused;
 
-    // 單例實例
+    // ?��?實�?
     static UMingEventTriggerManager* Instance;
 
-    // 內部方法
+    // ?�部?��?
     void ProcessTriggerTick(float DeltaTime);
     void OnTriggerFired(const FString& EventId);
     void CleanupInvalidTriggers();

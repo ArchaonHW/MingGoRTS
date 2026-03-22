@@ -20,49 +20,45 @@ class USoundBase;
 UENUM(BlueprintType)
 enum class ERenderQuality : uint8
 {
-    Low,        // 低質量
-    Medium,     // 中等質量
-    High,       // 高質量
-    Ultra,      // 超高質量
-    Cinematic   // 電影級質量
-};
+    Low,        // 低質??    Medium,     // 中�?質�?
+    High,       // 高質??    Ultra,      // 超�?質�?
+    Cinematic   // ?�影級質??};
 
 UENUM(BlueprintType)
 enum class ETimeOfDay : uint8
 {
-    Dawn,       // 黎明
-    Morning,    // 早晨
-    Noon,       // 正午
-    Afternoon,  // 下午
-    Dusk,       // 黃昏
-    Night,      // 夜晚
-    Midnight    // 午夜
+    Dawn,       // 黎�?
+    Morning,    // ?�晨
+    Noon,       // �??
+    Afternoon,  // 下�?
+    Dusk,       // 黃�?
+    Night,      // 夜�?
+    Midnight    // ?��?
 };
 
 UENUM(BlueprintType)
 enum class EWeatherType : uint8
 {
-    Clear,      // 晴朗
+    Clear,      // ?��?
     Cloudy,     // 多雲
-    Overcast,   // 陰天
+    Overcast,   // ?�天
     Rainy,      // 下雨
-    Stormy,     // 暴雨
+    Stormy,     // ?�雨
     Snowy,      // 下雪
-    Foggy,      // 有霧
-    Windy       // 有風
+    Foggy,      // ?�霧
+    Windy       // ?�風
 };
 
 UENUM(BlueprintType)
 enum class ESceneMood : uint8
 {
-    Peaceful,   // 平和
-    Dramatic,   // 戲劇性
-    Mysterious, // 神秘
-    Epic,       // 史詩
-    Intimate,   // 親密
+    Peaceful,   // 平�?
+    Dramatic,   // ?��???    Mysterious, // 神�?
+    Epic,       // ?�詩
+    Intimate,   // 親�?
     Tense,      // 緊張
     Joyful,     // 歡快
-    Melancholy  // 憂鬱
+    Melancholy  // ?�鬱
 };
 
 USTRUCT(BlueprintType)
@@ -217,8 +213,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSceneRendered, const FString&, S
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnVideoFrameRendered, const FString&, SceneName, int32, FrameIndex, UTexture2D*, FrameTexture);
 
 /**
- * AI 內容渲染器
- * 負責將AI生成的內容渲染到遊戲畫面
+ * AI ?�容渲�??? * 負責將AI?��??�內容渲?�到?�戲?�面
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingAIContentRenderer : public USceneComponent
@@ -228,18 +223,17 @@ class MINGCORE_API UMingAIContentRenderer : public USceneComponent
 public:
     UMingAIContentRenderer();
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void InitializeRenderer();
 
-    // 場景設置
+    // ?�景設置
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SetupScene(const FAISceneConfiguration& SceneConfig);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void UpdateSceneConfiguration(const FAISceneConfiguration& SceneConfig);
 
-    // 渲染控制
+    // 渲�??�制
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     UTexture2D* RenderSceneToTexture(const FAIRenderSettings& RenderSettings);
 
@@ -252,7 +246,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void StopRealTimeRendering();
 
-    // 光照設置
+    // ?�照設置
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SetupLighting(ETimeOfDay TimeOfDay, EWeatherType Weather);
 
@@ -265,7 +259,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SetupSkyLight(const FLinearColor& Color, float Intensity);
 
-    // 環境設置
+    // ?��?設置
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SetupFog(float Density, const FLinearColor& Color, float Height);
 
@@ -275,8 +269,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SetupWeatherEffects(EWeatherType Weather);
 
-    // 後處理
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    // 後�???    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SetupPostProcessing(const FAISceneConfiguration& SceneConfig);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
@@ -291,8 +284,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void AddDepthOfField(float FocusDistance, float FocusRange, float NearTransition, float FarTransition);
 
-    // 攝像機控制
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    // ?��?機控??    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SetupCamera(const FVector& Position, const FRotator& Rotation, float FieldOfView);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
@@ -301,8 +293,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SetCameraShake(float Intensity, float Duration);
 
-    // 材質和紋理
-    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
+    // ?�質?��???    UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void ApplyGeneratedTexture(UTexture2D* Texture, const FString& MaterialSlot);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
@@ -311,7 +302,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void UpdateMaterialParameters(const TMap<FString, float>& Parameters);
 
-    // 音頻集成
+    // ?�頻?��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void PlayGeneratedMusic(USoundBase* Music, float Volume = 1.0f);
 
@@ -321,7 +312,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SetAudioEnvironment(const FString& EnvironmentType);
 
-    // 動畫系統
+    // ?�畫系統
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void PlayGeneratedAnimation(const FString& AnimationName, float PlayRate = 1.0f);
 
@@ -331,7 +322,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SetAnimationMood(ESceneMood Mood);
 
-    // 特效系統
+    // ?��?系統
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SpawnParticleEffect(const FString& EffectName, const FVector& Location);
 
@@ -341,7 +332,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void AddScreenEffects(const TArray<FString>& EffectNames);
 
-    // 性能優化
+    // ?�能?��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void OptimizeForQuality(ERenderQuality Quality);
 
@@ -351,8 +342,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Renderer")
     void SetLODSettings(int32 MaxLOD, float LODDistance);
 
-    // 狀態查詢
-    UFUNCTION(BlueprintPure, Category = "AI Content Renderer")
+    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "AI Content Renderer")
     bool IsRendering() const;
 
     UFUNCTION(BlueprintPure, Category = "AI Content Renderer")
@@ -376,7 +366,7 @@ protected:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-    // 場景組件
+    // ?�景組件
     UPROPERTY()
     class USceneCaptureComponent2D* SceneCapture;
 
@@ -398,23 +388,22 @@ private:
     UPROPERTY()
     class UAudioComponent* AudioComponent;
 
-    // 渲染目標
+    // 渲�??��?
     UPROPERTY()
     UTextureRenderTarget2D* RenderTarget;
 
-    // 場景配置
+    // ?�景?�置
     UPROPERTY()
     FAISceneConfiguration CurrentSceneConfig;
 
     UPROPERTY()
     FAIRenderSettings CurrentRenderSettings;
 
-    // AI 內容系統引用
+    // AI ?�容系統引用
     UPROPERTY()
     TObjectPtr<UMingAIGeneratedContentSystem> AIContentSystem;
 
-    // 狀態
-    UPROPERTY()
+    // ?�??    UPROPERTY()
     bool bIsInitialized;
 
     UPROPERTY()
@@ -435,8 +424,7 @@ private:
     UPROPERTY()
     UTexture2D* LastRenderedTexture;
 
-    // 動畫和時間
-    UPROPERTY()
+    // ?�畫?��???    UPROPERTY()
     float ElapsedTime;
 
     UPROPERTY()
@@ -451,7 +439,7 @@ private:
     UPROPERTY()
     float CameraAnimationDuration;
 
-    // 內部函數
+    // ?�部?�數
     void InitializeSceneComponents();
     void SetupDefaultScene();
     void UpdateLightingForTimeOfDay(ETimeOfDay TimeOfDay);
@@ -463,7 +451,7 @@ private:
     void UpdateCameraAnimation(float DeltaTime);
     void UpdateEnvironmentalEffects(float DeltaTime);
 
-    // 輔助函數
+    // 輔助?�數
     FLinearColor GetTimeOfDayColor(ETimeOfDay TimeOfDay) const;
     FVector GetLightDirection(ETimeOfDay TimeOfDay) const;
     float GetLightIntensity(ETimeOfDay TimeOfDay, EWeatherType Weather) const;

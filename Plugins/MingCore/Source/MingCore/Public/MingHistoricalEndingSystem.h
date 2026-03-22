@@ -4,45 +4,40 @@
 #include "UObject/NoExportTypes.h"
 #include "MingHistoricalEndingSystem.generated.h"
 
-// 結局類型枚舉
+// 結�?類�??��?
 UENUM(BlueprintType)
 enum class EMingEndingType : uint8
 {
-    Victory,            // 勝利結局
-    Defeat,             // 失敗結局
-    Neutral,            // 中立結局
-    Historical,         // 歷史結局
-    Alternative,        // 替代歷史結局
-    Secret              // 隱藏結局
+    Victory,            // ?�利結�?
+    Defeat,             // 失�?結�?
+    Neutral,            // 中�?結�?
+    Historical,         // 歷史結�?
+    Alternative,        // ?�代歷史結�?
+    Secret              // ?��?結�?
 };
 
-// 結局評價級別
+// 結�?評價級別
 UENUM(BlueprintType)
 enum class EMingEndingRating : uint8
 {
-    S_Rank,             // 史詩級
-    A_Rank,             // 優秀級
-    B_Rank,             // 良好級
-    C_Rank,             // 普通級
-    D_Rank,             // 較差級
-    F_Rank              // 失敗級
-};
+    S_Rank,             // ?�詩�?    A_Rank,             // ?��?�?    B_Rank,             // ?�好�?    C_Rank,             // ?�通�?
+    D_Rank,             // 較差�?    F_Rank              // 失�?�?};
 
-// 結局類別
+// 結�?類別
 UENUM(BlueprintType)
 enum class EMingEndingCategory : uint8
 {
-    PoliticalUnity,     // 政治統一
-    MilitaryConquest,   // 軍事征服
-    EconomicProsperity, // 經濟繁榮
-    CulturalRenaissance, // 文化復興
-    SocialReform,       // 社會改革
-    NationalIndependence, // 民族獨立
-    WorldPower,         // 世界強國
-    HistoricalPreservation // 歷史保存
+    PoliticalUnity,     // ?�治統�?
+    MilitaryConquest,   // 軍�?征�?
+    EconomicProsperity, // 經�?繁榮
+    CulturalRenaissance, // ?��?復�?
+    SocialReform,       // 社�??�革
+    NationalIndependence, // 民�??��?
+    WorldPower,         // 世�?強�?
+    HistoricalPreservation // 歷史保�?
 };
 
-// 結局條件
+// 結�?條件
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingEndingCondition
 {
@@ -52,32 +47,30 @@ struct FINGCORE_API FMingEndingCondition
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ConditionID;
 
-    // 條件名稱
+    // 條件?�稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionName;
 
-    // 條件描述
+    // 條件?�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionDescription;
 
-    // 條件類型
+    // 條件類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ConditionType;
 
-    // 條件參數
+    // 條件?�數
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ConditionParameters;
 
-    // 條件權重
+    // 條件權�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ConditionWeight;
 
-    // 是否為必要條件
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�否?��?要�?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsRequired;
 
-    // 條件比較運算符
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 條件比�??��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ComparisonOperator;
 
     FMingEndingCondition()
@@ -93,73 +86,73 @@ struct FINGCORE_API FMingEndingCondition
     }
 };
 
-// 歷史結局數據
+// 歷史結�??��?
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingHistoricalEnding
 {
     GENERATED_BODY()
 
-    // 結局ID
+    // 結�?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EndingID;
 
-    // 結局名稱
+    // 結�??�稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EndingName;
 
-    // 結局描述
+    // 結�??�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EndingDescription;
 
-    // 結局詳細描述
+    // 結�?詳細?�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EndingDetails;
 
-    // 結局類型
+    // 結�?類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEndingType EndingType;
 
-    // 結局評價
+    // 結�?評價
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEndingRating EndingRating;
 
-    // 結局類別
+    // 結�?類別
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingEndingCategory EndingCategory;
 
-    // 解鎖條件列表
+    // �??條件?�表
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingEndingCondition> UnlockConditions;
 
-    // 結局觸發年份
+    // 結�?觸發年份
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 TriggerYear;
 
-    // 歷史背景說明
+    // 歷史?�景說�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HistoricalBackground;
 
-    // 結局影響
+    // 結�?影響
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> EndingConsequences;
 
-    // 結局圖片路徑
+    // 結�??��?路�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EndingImagePath;
 
-    // 結局音樂路徑
+    // 結�??��?路�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EndingMusicPath;
 
-    // 結局標籤
+    // 結�?標籤
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> EndingTags;
 
-    // 是否為隱藏結局
+    // ?�否?�隱?��?局
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsHiddenEnding;
 
-    // 結局稀有度
+    // 結�?稀?�度
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float EndingRarity;
 
@@ -184,49 +177,46 @@ struct FINGCORE_API FMingHistoricalEnding
     }
 };
 
-// 結局評分數據
+// 結�?評�??��?
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingEndingScore
 {
     GENERATED_BODY()
 
-    // 結局ID
+    // 結�?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 EndingID;
 
-    // 總體評分
+    // 總�?評�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TotalScore;
 
-    // 各類別評分
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?��??��???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> CategoryScores;
 
-    // 決策評分
+    // 決�?評�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<int32, float> DecisionScores;
 
-    // 事件評分
+    // 事件評�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<int32, float> EventScores;
 
-    // 人物關係評分
+    // 人物?��?評�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> RelationshipScores;
 
-    // 歷史準確度評分
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 歷史準確度�???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float HistoricalAccuracy;
 
-    // 創新性評分
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�新?��???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float InnovationScore;
 
-    // 道德評分
+    // ?�德評�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MoralityScore;
 
-    // 戰略評分
+    // ?�略評�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float StrategyScore;
 
@@ -245,45 +235,44 @@ struct FINGCORE_API FMingEndingScore
     }
 };
 
-// 成就數據
+// ?�就?��?
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingAchievement
 {
     GENERATED_BODY()
 
-    // 成就ID
+    // ?�就ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 AchievementID;
 
-    // 成就名稱
+    // ?�就?�稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString AchievementName;
 
-    // 成就描述
+    // ?�就?�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString AchievementDescription;
 
-    // 成就類型
+    // ?�就類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString AchievementType;
 
-    // 解鎖條件
+    // �??條件
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UnlockConditions;
 
-    // 成就圖標路徑
+    // ?�就?��?路�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString AchievementIconPath;
 
-    // 成就獎勵
+    // ?�就?�勵
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> AchievementRewards;
 
-    // 是否已解鎖
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�否已解??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsUnlocked;
 
-    // 解鎖時間
+    // �???��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime UnlockTime;
 
@@ -301,15 +290,15 @@ struct FINGCORE_API FMingAchievement
     }
 };
 
-// 結局評價委託
+// 結�?評價委�?
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEndingDetermined, const FMingHistoricalEnding&, Ending);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEndingScoreCalculated, const FMingEndingScore&, Score);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAchievementUnlocked, const FMingAchievement&, Achievement);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEndingPreview, const FMingHistoricalEnding&, Ending, float, Probability);
 
 /**
- * 歷史結局系統
- * 負責評價玩家的歷史決策路徑並確定最終結局
+ * 歷史結�?系統
+ * 負責評價?�家?�歷?�決策路徑並確�??�終�?局
  */
 UCLASS(ClassGroup = (Historical), Blueprintable, BlueprintType)
 class MINGCORE_API UMingHistoricalEndingSystem : public UObject
@@ -319,67 +308,66 @@ class MINGCORE_API UMingHistoricalEndingSystem : public UObject
 public:
     UMingHistoricalEndingSystem();
 
-    // 初始化結局系統
+    // ?��??��?局系統
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     bool InitializeEndingSystem();
 
-    // 註冊歷史結局
+    // 註�?歷史結�?
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     bool RegisterHistoricalEnding(const FMingHistoricalEnding& Ending);
 
-    // 評價玩家路徑
+    // 評價?�家路�?
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     FMingEndingScore EvaluatePlayerPath();
 
-    // 確定最終結局
+    // 確�??�終�?局
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     FMingHistoricalEnding DetermineEnding(const FMingEndingScore& PlayerScore);
 
-    // 檢查結局條件
+    // 檢查結�?條件
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     bool CheckEndingConditions(int32 EndingID);
 
-    // 獲取結局信息
+    // ?��?結�?信息
     UFUNCTION(BlueprintPure, Category = "Historical Ending")
     FMingHistoricalEnding GetEndingInfo(int32 EndingID) const;
 
-    // 獲取可用結局
+    // ?��??�用結�?
     UFUNCTION(BlueprintPure, Category = "Historical Ending")
     TArray<int32> GetAvailableEndings() const;
 
-    // 獲取結局預覽
+    // ?��?結�??�覽
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     TArray<FMingHistoricalEnding> GetEndingPreview();
 
-    // 計算結局概率
+    // 計�?結�?概�?
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     float CalculateEndingProbability(int32 EndingID);
 
-    // 解鎖成就
+    // �???�就
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     bool UnlockAchievement(int32 AchievementID);
 
-    // 獲取已解鎖成就
-    UFUNCTION(BlueprintPure, Category = "Historical Ending")
+    // ?��?已解?��?�?    UFUNCTION(BlueprintPure, Category = "Historical Ending")
     TArray<FMingAchievement> GetUnlockedAchievements() const;
 
-    // 獲取結局統計
+    // ?��?結�?統�?
     UFUNCTION(BlueprintPure, Category = "Historical Ending")
     TMap<EMingEndingType, int32> GetEndingStatistics() const;
 
-    // 保存結局數據
+    // 保�?結�??��?
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     bool SaveEndingData();
 
-    // 載入結局數據
+    // 載入結�??��?
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     bool LoadEndingData();
 
-    // 重置結局系統
+    // ?�置結�?系統
     UFUNCTION(BlueprintCallable, Category = "Historical Ending")
     void ResetEndingSystem();
 
-    // 事件委託
+    // 事件委�?
     UPROPERTY(BlueprintAssignable)
     FOnEndingDetermined OnEndingDetermined;
 
@@ -393,63 +381,59 @@ public:
     FOnEndingPreview OnEndingPreview;
 
 protected:
-    // 結局數據庫
-    UPROPERTY()
+    // 結�??��?�?    UPROPERTY()
     TMap<int32, FMingHistoricalEnding> EndingDatabase;
 
-    // 成就數據庫
-    UPROPERTY()
+    // ?�就?��?�?    UPROPERTY()
     TMap<int32, FMingAchievement> AchievementDatabase;
 
-    // 玩家結局歷史
+    // ?�家結�?歷史
     UPROPERTY()
     TArray<FMingHistoricalEnding> PlayerEndingHistory;
 
-    // 當前評分
+    // ?��?評�?
     UPROPERTY()
     FMingEndingScore CurrentScore;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // 載入預設結局
+    // 載入?�設結�?
     void LoadDefaultEndings();
 
-    // 載入預設成就
+    // 載入?�設?�就
     void LoadDefaultAchievements();
 
-    // 驗證結局數據
+    // 驗�?結�??��?
     bool ValidateEndingData(const FMingHistoricalEnding& Ending) const;
 
-    // 計算決策評分
+    // 計�?決�?評�?
     float CalculateDecisionScore();
 
-    // 計算事件評分
+    // 計�?事件評�?
     float CalculateEventScore();
 
-    // 計算關係評分
+    // 計�??��?評�?
     float CalculateRelationshipScore();
 
-    // 計算歷史準確度
-    float CalculateHistoricalAccuracy();
+    // 計�?歷史準確�?    float CalculateHistoricalAccuracy();
 
-    // 計算創新性評分
-    float CalculateInnovationScore();
+    // 計�??�新?��???    float CalculateInnovationScore();
 
-    // 計算道德評分
+    // 計�??�德評�?
     float CalculateMoralityScore();
 
-    // 計算戰略評分
+    // 計�??�略評�?
     float CalculateStrategyScore();
 
-    // 檢查成就條件
+    // 檢查?�就條件
     bool CheckAchievementConditions(int32 AchievementID);
 
-    // 生成結局描述
+    // ?��?結�??�述
     FString GenerateEndingDescription(const FMingHistoricalEnding& Ending, const FMingEndingScore& Score) const;
 
-    // 獲取結局評價
+    // ?��?結�?評價
     EMingEndingRating GetEndingRating(float Score) const;
 };

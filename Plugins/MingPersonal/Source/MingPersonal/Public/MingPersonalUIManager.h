@@ -13,25 +13,24 @@ class UMingRepublicEraAudioThemes;
 UENUM(BlueprintType)
 enum class EPersonalUIType : uint8
 {
-    RelationshipPanel,     // 關係面板
-    ReputationPanel,       // 聲望面板
-    DialoguePanel,         // 對話面板
-    QuestPanel,            // 任務面板
-    AudioPanel,            // 音頻面板
-    MainDashboard,         // 主儀表板
-    CharacterDetails,      // 角色詳情
-    RegionDetails,         // 地區詳情
+    RelationshipPanel,     // ?��??�板
+    ReputationPanel,       // ?��??�板
+    DialoguePanel,         // 對話?�板
+    QuestPanel,            // 任�??�板
+    AudioPanel,            // ?�頻?�板
+    MainDashboard,         // 主�?表板
+    CharacterDetails,      // 角色詳�?
+    RegionDetails,         // ?��?詳�?
     SystemSettings         // 系統設置
 };
 
 UENUM(BlueprintType)
 enum class EUIAnimationType : uint8
 {
-    None,                  // 無動畫
-    Fade,                  // 淡入淡出
-    Slide,                 // 滑動
+    None,                  // ?��???    Fade,                  // 淡入淡出
+    Slide,                 // 滑�?
     Scale,                 // 縮放
-    Rotate,                // 旋轉
+    Rotate,                // ?��?
     Bounce                 // 彈跳
 };
 
@@ -82,8 +81,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUIPanelClosed, EPersonalUIType, 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUIStateChanged, bool, bIsAnyPanelOpen);
 
 /**
- * 個人系統UI管理器
- * 管理所有關係、聲望、對話等UI界面
+ * ?�人系統UI管�??? * 管�??�?��?係、聲?�、�?話�?UI?�面
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingPersonalUIManager : public UObject
@@ -93,13 +91,13 @@ class MINGPERSONAL_API UMingPersonalUIManager : public UObject
 public:
     UMingPersonalUIManager();
 
-    // 初始化UI系統
+    // ?��??�UI系統
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void InitializeUIManager(UMingRelationshipManager* RelationshipManager, 
                             UMingAudioRelationshipManager* AudioManager,
                             UMingRepublicEraAudioThemes* ThemeManager);
 
-    // UI面板管理
+    // UI?�板管�?
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void OpenUIPanel(EPersonalUIType UIType);
 
@@ -118,7 +116,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void HideMainDashboard();
 
-    // Widget管理
+    // Widget管�?
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     UUserWidget* GetWidget(EPersonalUIType UIType);
 
@@ -128,7 +126,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void SetWidgetVisibility(EPersonalUIType UIType, bool bVisible);
 
-    // UI配置
+    // UI?�置
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void AddUIConfig(const FPersonalUIConfig& Config);
 
@@ -138,7 +136,7 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Personal UI")
     FPersonalUIConfig GetUIConfig(EPersonalUIType UIType);
 
-    // 動畫系統
+    // ?�畫系統
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void PlayOpenAnimation(EPersonalUIType UIType);
 
@@ -148,7 +146,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void SetAnimationSpeed(float Speed);
 
-    // 數據更新
+    // ?��??�新
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void UpdateRelationshipUI();
 
@@ -164,7 +162,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void UpdateAudioUI();
 
-    // 主儀表板
+    // 主�?表板
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void RefreshDashboard();
 
@@ -174,8 +172,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
     void ShowConfirmationDialog(const FString& Title, const FString& Message, const FString& OnConfirm);
 
-    // 狀態查詢
-    UFUNCTION(BlueprintPure, Category = "Personal UI")
+    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "Personal UI")
     bool IsAnyPanelOpen() const;
 
     UFUNCTION(BlueprintPure, Category = "Personal UI")
@@ -209,12 +206,11 @@ protected:
     UPROPERTY()
     TMap<EPersonalUIType, UUserWidget*> WidgetMap;
 
-    // UI配置
+    // UI?�置
     UPROPERTY()
     TMap<EPersonalUIType, FPersonalUIConfig> UIConfigMap;
 
-    // 狀態
-    UPROPERTY()
+    // ?�??    UPROPERTY()
     EPersonalUIType ActivePanelType = EPersonalUIType::MainDashboard;
 
     UPROPERTY()
@@ -223,7 +219,7 @@ protected:
     UPROPERTY()
     float AnimationSpeed = 1.0f;
 
-    // 內部函數
+    // ?�部?�數
     UUserWidget* CreateWidget(EPersonalUIType UIType);
     void InitializeDefaultConfigs();
     void SetupEventBindings();
@@ -232,7 +228,7 @@ protected:
     void OnDialogueStarted(const FString& CharacterID, EDialogueAudioType DialogueType);
 
 private:
-    // Widget創建輔助函數
+    // Widget?�建輔助?�數
     UUserWidget* CreateRelationshipPanel();
     UUserWidget* CreateReputationPanel();
     UUserWidget* CreateDialoguePanel();
@@ -243,7 +239,7 @@ private:
     UUserWidget* CreateRegionDetails();
     UUserWidget* CreateSystemSettings();
 
-    // 動畫輔助函數
+    // ?�畫輔助?�數
     void PlayAnimation(UUserWidget* Widget, EUIAnimationType AnimationType, float Duration);
     void StopAnimation(UUserWidget* Widget);
 };

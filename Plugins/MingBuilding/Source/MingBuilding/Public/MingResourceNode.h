@@ -8,15 +8,13 @@
 UENUM(BlueprintType)
 enum class EMingResourceNodeState : uint8
 {
-    Available     UMETA(DisplayName = "可採集"),
-    Depleted      UMETA(DisplayName = "已枯竭"),
-    Regenerating  UMETA(DisplayName = "再生中")
+    Available     UMETA(DisplayName = "?�採??),
+    Depleted      UMETA(DisplayName = "已枯�?),
+    Regenerating  UMETA(DisplayName = "?��?�?)
 };
 
 /**
- * 資源節點 - 地圖上的可採集資源
- * 如：糧食堆、礦場、燃料桶等
- */
+ * 資�?節�?- ?��?上�??�採?��?�? * 如�?糧�??�、礦?�、�??�桶�? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGBUILDING_API AMingResourceNode : public AActor
 {
@@ -25,8 +23,7 @@ class MINGBUILDING_API AMingResourceNode : public AActor
 public:
     AMingResourceNode();
 
-    // 資源屬性
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
+    // 資�?屬�?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
     EMingResourceType ResourceType;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
@@ -36,35 +33,29 @@ public:
     int32 CurrentAmount;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
-    int32 GatherAmountPerTrip; // 每次採集量
-
+    int32 GatherAmountPerTrip; // 每次?��???
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
-    float GatherTime; // 採集所需時間（秒）
-
-    // 再生設置
+    float GatherTime; // ?��??�?�?��?（�?�?
+    // ?��?設置
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regeneration")
     bool bCanRegenerate;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regeneration")
-    float RegenerationRate; // 每秒再生量
-
+    float RegenerationRate; // 每�??��???
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regeneration")
-    float RegenerationInterval; // 再生間隔
+    float RegenerationInterval; // ?��??��?
 
-    // 狀態
-    UPROPERTY(BlueprintReadOnly, Category = "State")
+    // ?�??    UPROPERTY(BlueprintReadOnly, Category = "State")
     EMingResourceNodeState NodeState;
 
     UPROPERTY(BlueprintReadOnly, Category = "State")
-    int32 CurrentGathererCount; // 當前採集者數量
-
+    int32 CurrentGathererCount; // ?��??��??�數??
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-    int32 MaxGathererCount; // 最大同時採集者數量
-
+    int32 MaxGathererCount; // ?�大�??�採?�者數??
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
 
-    // 採集接口
+    // ?��??�口
     UFUNCTION(BlueprintCallable, Category = "Gathering")
     bool CanBeGathered() const;
 
@@ -80,14 +71,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Gathering")
     float GetGatherProgress() const;
 
-    // 再生
+    // ?��?
     UFUNCTION(BlueprintCallable, Category = "Regeneration")
     void StartRegeneration();
 
     UFUNCTION(BlueprintCallable, Category = "Regeneration")
     void StopRegeneration();
 
-    // 視覺反饋
+    // 視覺?��?
     UFUNCTION(BlueprintCallable, Category = "Visual")
     void UpdateVisualState();
 
@@ -108,7 +99,7 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnResourceRegenerated OnResourceRegenerated;
 
-    // 工具函數
+    // 工具?�數
     UFUNCTION(BlueprintPure, Category = "Utility")
     FLinearColor GetResourceColor() const;
 
@@ -128,7 +119,7 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
     TObjectPtr<class UTextRenderComponent> AmountText;
 
-    // 再生計時
+    // ?��?計�?
     float TimeSinceLastRegeneration;
 
     void ProcessRegeneration(float DeltaTime);

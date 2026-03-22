@@ -5,8 +5,7 @@
 #include "AndroidPlatformAdapter.generated.h"
 
 /**
- * Android 平台適配器
- */
+ * Android 平台?��??? */
 UCLASS()
 class MINGCORE_API UAndroidPlatformAdapter : public UObject, public IPlatformInterface
 {
@@ -32,7 +31,7 @@ public:
     virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) override;
     virtual FString LoadFromPlatformStorage(const FString& Key) const override;
 
-    // Android 特定功能
+    // Android ?��??�能
     UFUNCTION(BlueprintCallable, Category = "Platform|Android")
     FString GetAndroidVersion() const;
 
@@ -49,7 +48,6 @@ private:
     bool bInitialized;
     int32 CurrentPerformanceMode;
     
-    // 安全區域緩存
-    FMargin CachedSafeZone;
+    // 安全?�?�緩�?    FMargin CachedSafeZone;
     bool bSafeZoneCached;
 };

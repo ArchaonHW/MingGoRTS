@@ -5,7 +5,7 @@
 #include "MingDecisionConsequenceCalculator.generated.h"
 
 /**
- * 決策後果類型
+ * 決�?後�?類�?
  */
 UENUM(BlueprintType)
 enum class EDecisionConsequenceType : uint8
@@ -21,7 +21,7 @@ enum class EDecisionConsequenceType : uint8
 };
 
 /**
- * 後果影響範圍
+ * 後�?影響範�?
  */
 UENUM(BlueprintType)
 enum class EConsequenceImpactScope : uint8
@@ -35,7 +35,7 @@ enum class EConsequenceImpactScope : uint8
 };
 
 /**
- * 後果嚴重程度
+ * 後�??��?程度
  */
 UENUM(BlueprintType)
 enum class EConsequenceSeverity : uint8
@@ -49,7 +49,7 @@ enum class EConsequenceSeverity : uint8
 };
 
 /**
- * 後果持續時間
+ * 後�??��??��?
  */
 UENUM(BlueprintType)
 enum class EConsequenceDuration : uint8
@@ -63,7 +63,7 @@ enum class EConsequenceDuration : uint8
 };
 
 /**
- * 後果影響類型
+ * 後�?影響類�?
  */
 UENUM(BlueprintType)
 enum class EConsequenceImpactType : uint8
@@ -76,34 +76,32 @@ enum class EConsequenceImpactType : uint8
 };
 
 /**
- * 後果參數
+ * 後�??�數
  */
 USTRUCT(BlueprintType)
 struct FConsequenceParameter
 {
     GENERATED_BODY()
 
-    // 參數名稱
+    // ?�數?�稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString ParameterName;
 
-    // 參數值
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
+    // ?�數??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString ParameterValue;
 
-    // 參數類型
+    // ?�數類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString ParameterType; // "int", "float", "bool", "string", "array"
 
-    // 是否必需
+    // ?�否必�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     bool bIsRequired;
 
-    // 默認值
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
+    // 默�???    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString DefaultValue;
 
-    // 描述
+    // ?�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
     FString Description;
 
@@ -118,46 +116,46 @@ struct FConsequenceParameter
 };
 
 /**
- * 決策後果定義
+ * 決�?後�?定義
  */
 USTRUCT(BlueprintType)
 struct FDecisionConsequence
 {
     GENERATED_BODY()
 
-    // 後果ID
+    // 後�?ID
     UPROPERTY(BlueprintReadOnly)
     FString ConsequenceID;
 
-    // 後果名稱
+    // 後�??�稱
     UPROPERTY(BlueprintReadOnly)
     FString ConsequenceName;
 
-    // 後果描述
+    // 後�??�述
     UPROPERTY(BlueprintReadOnly)
     FString ConsequenceDescription;
 
-    // 後果類型
+    // 後�?類�?
     UPROPERTY(BlueprintReadOnly)
     EDecisionConsequenceType ConsequenceType;
 
-    // 影響範圍
+    // 影響範�?
     UPROPERTY(BlueprintReadOnly)
     EConsequenceImpactScope ImpactScope;
 
-    // 嚴重程度
+    // ?��?程度
     UPROPERTY(BlueprintReadOnly)
     EConsequenceSeverity Severity;
 
-    // 持續時間
+    // ?��??��?
     UPROPERTY(BlueprintReadOnly)
     EConsequenceDuration Duration;
 
-    // 影響類型
+    // 影響類�?
     UPROPERTY(BlueprintReadOnly)
     EConsequenceImpactType ImpactType;
 
-    // 後果參數
+    // 後�??�數
     UPROPERTY(BlueprintReadOnly)
     TArray<FConsequenceParameter> Parameters;
 
@@ -165,51 +163,50 @@ struct FDecisionConsequence
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> TriggerConditions;
 
-    // 後果效果
+    // 後�??��?
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> Effects;
 
-    // 後果標籤
+    // 後�?標籤
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> ConsequenceTags;
 
-    // 相關決策ID
+    // ?��?決�?ID
     UPROPERTY(BlueprintReadOnly)
     FString RelatedDecisionID;
 
-    // 相關人物ID
+    // ?��?人物ID
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> RelatedCharacterIDs;
 
-    // 相關事件ID
+    // ?��?事件ID
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> RelatedEventIDs;
 
-    // 發生概率 (0-1)
+    // ?��?概�? (0-1)
     UPROPERTY(BlueprintReadOnly)
     float Probability;
 
-    // 延迟時間 (秒)
+    // 延�??��? (�?
     UPROPERTY(BlueprintReadOnly)
     float DelayTime;
 
-    // 冷卻時間 (秒)
+    // ?�卻?��? (�?
     UPROPERTY(BlueprintReadOnly)
     float CooldownTime;
 
-    // 是否已觸發
-    UPROPERTY(BlueprintReadOnly)
+    // ?�否已觸??    UPROPERTY(BlueprintReadOnly)
     bool bIsTriggered;
 
-    // 觸發時間
+    // 觸發?��?
     UPROPERTY(BlueprintReadOnly)
     float TriggerTime;
 
-    // 是否可逆轉
+    // ?�否?�逆�?
     UPROPERTY(BlueprintReadOnly)
     bool bIsReversible;
 
-    // 可逆轉條件
+    // ?�逆�?條件
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> ReversalConditions;
 
@@ -233,70 +230,64 @@ struct FDecisionConsequence
 };
 
 /**
- * 後果計算結果
+ * 後�?計�?結�?
  */
 USTRUCT(BlueprintType)
 struct FConsequenceCalculationResult
 {
     GENERATED_BODY()
 
-    // 是否成功計算
+    // ?�否?��?計�?
     UPROPERTY(BlueprintReadOnly)
     bool bSuccess;
 
-    // 後果ID
+    // 後�?ID
     UPROPERTY(BlueprintReadOnly)
     FString ConsequenceID;
 
-    // 計算時間
+    // 計�??��?
     UPROPERTY(BlueprintReadOnly)
     float CalculationTime;
 
-    // 計算出的後果
+    // 計�??��?後�?
     UPROPERTY(BlueprintReadOnly)
     TArray<FDecisionConsequence> CalculatedConsequences;
 
-    // 影響的遊戲狀態
-    UPROPERTY(BlueprintReadOnly)
+    // 影響?��??��???    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> AffectedGameState;
 
-    // 影響的人物
-    UPROPERTY(BlueprintReadOnly)
+    // 影響?�人??    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedCharacters;
 
-    // 影響的事件
-    UPROPERTY(BlueprintReadOnly)
+    // 影響?��?�?    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedEvents;
 
-    // 影響的資源
-    UPROPERTY(BlueprintReadOnly)
+    // 影響?��?�?    UPROPERTY(BlueprintReadOnly)
     TMap<FString, int32> AffectedResources;
 
-    // 影響的建築
-    UPROPERTY(BlueprintReadOnly)
+    // 影響?�建�?    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedBuildings;
 
-    // 影響的單位
-    UPROPERTY(BlueprintReadOnly)
+    // 影響?�單�?    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedUnits;
 
-    // 總體影響分數
+    // 總�?影響?�數
     UPROPERTY(BlueprintReadOnly)
     float OverallImpactScore;
 
-    // 正面影響分數
+    // �?��影響?�數
     UPROPERTY(BlueprintReadOnly)
     float PositiveImpactScore;
 
-    // 負面影響分數
+    // 負面影響?�數
     UPROPERTY(BlueprintReadOnly)
     float NegativeImpactScore;
 
-    // 計算詳情
+    // 計�?詳�?
     UPROPERTY(BlueprintReadOnly)
     FString CalculationDetails;
 
-    // 錯誤信息
+    // ?�誤信息
     UPROPERTY(BlueprintReadOnly)
     FString ErrorMessage;
 
@@ -313,74 +304,67 @@ struct FConsequenceCalculationResult
 };
 
 /**
- * 決策上下文
- */
+ * 決�?上�??? */
 USTRUCT(BlueprintType)
 struct FDecisionContext
 {
     GENERATED_BODY()
 
-    // 決策ID
+    // 決�?ID
     UPROPERTY(BlueprintReadOnly)
     FString DecisionID;
 
-    // 決策時間
+    // 決�??��?
     UPROPERTY(BlueprintReadOnly)
     float DecisionTime;
 
-    // 決策地點
+    // 決�??��?
     UPROPERTY(BlueprintReadOnly)
     FString DecisionLocation;
 
-    // 決策者ID
+    // 決�??�ID
     UPROPERTY(BlueprintReadOnly)
     FString DecisionMakerID;
 
-    // 決策類型
+    // 決�?類�?
     UPROPERTY(BlueprintReadOnly)
     FString DecisionType;
 
-    // 決策選項
+    // 決�??��?
     UPROPERTY(BlueprintReadOnly)
     FString DecisionOption;
 
-    // 當前遊戲狀態
-    UPROPERTY(BlueprintReadOnly)
+    // ?��??�戲?�??    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> CurrentGameState;
 
-    // 相關人物狀態
-    UPROPERTY(BlueprintReadOnly)
+    // ?��?人物?�??    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> CharacterStates;
 
-    // 相關事件狀態
-    UPROPERTY(BlueprintReadOnly)
+    // ?��?事件?�??    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> EventStates;
 
-    // 資源狀態
-    UPROPERTY(BlueprintReadOnly)
+    // 資�??�??    UPROPERTY(BlueprintReadOnly)
     TMap<FString, int32> ResourceStates;
 
-    // 建築狀態
-    UPROPERTY(BlueprintReadOnly)
+    // 建�??�??    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> BuildingStates;
 
-    // 單位狀態
-    UPROPERTY(BlueprintReadOnly)
+    // ?��??�??    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> UnitStates;
 
-    // 民國時期
+    // 民�??��?
     UPROPERTY(BlueprintReadOnly)
     FString RepublicEra;
 
-    // 當前年份
+    // ?��?年份
     UPROPERTY(BlueprintReadOnly)
     int32 CurrentYear;
 
-    // 玩家陣營
+    // ?�家???
     UPROPERTY(BlueprintReadOnly)
     FString PlayerFaction;
 
-    // 難度等級
+    // ??��等�?
     UPROPERTY(BlueprintReadOnly)
     int32 DifficultyLevel;
 
@@ -399,8 +383,7 @@ struct FDecisionContext
 };
 
 /**
- * 決策後果計算器
- * 計算決策的各種後果和影響
+ * 決�?後�?計�??? * 計�?決�??��?種�??��?影響
  */
 UCLASS(BlueprintType)
 class MINGSTRATEGIC_API UMingDecisionConsequenceCalculator : public UObject
@@ -411,252 +394,236 @@ public:
     UMingDecisionConsequenceCalculator();
 
     /**
-     * 初始化後果計算器
+     * ?��??��??��?算器
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     void Initialize();
 
     /**
-     * 關閉後果計算器
-     */
+     * ?��?後�?計�???     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     void Shutdown();
 
     /**
-     * 註冊決策後果
+     * 註�?決�?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     bool RegisterDecisionConsequence(const FDecisionConsequence& Consequence);
 
     /**
-     * 取消註冊決策後果
+     * ?��?註�?決�?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     bool UnregisterDecisionConsequence(const FString& ConsequenceID);
 
     /**
-     * 計算決策後果
+     * 計�?決�?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     FConsequenceCalculationResult CalculateDecisionConsequences(const FDecisionContext& Context);
 
     /**
-     * 獲取決策後果
+     * ?��?決�?後�?
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     FDecisionConsequence GetDecisionConsequence(const FString& ConsequenceID) const;
 
     /**
-     * 獲取所有決策後果
-     */
+     * ?��??�?�決策�???     */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetAllDecisionConsequences() const;
 
     /**
-     * 獲取指定類型的後果
-     */
+     * ?��??��?類�??��???     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesByType(EDecisionConsequenceType ConsequenceType) const;
 
     /**
-     * 獲取指定影響範圍的後果
-     */
+     * ?��??��?影響範�??��???     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesByScope(EConsequenceImpactScope ImpactScope) const;
 
     /**
-     * 獲取指定嚴重程度的後果
-     */
+     * ?��??��??��?程度?��???     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesBySeverity(EConsequenceSeverity Severity) const;
 
     /**
-     * 獲取指定影響類型的後果
-     */
+     * ?��??��?影響類�??��???     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesByImpactType(EConsequenceImpactType ImpactType) const;
 
     /**
-     * 獲取相關決策的後果
-     */
+     * ?��??��?決�??��???     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesForDecision(const FString& DecisionID) const;
 
     /**
-     * 獲取相關人物的後果
-     */
+     * ?��??��?人物?��???     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesForCharacter(const FString& CharacterID) const;
 
     /**
-     * 獲取相關事件的後果
-     */
+     * ?��??��?事件?��???     */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> GetConsequencesForEvent(const FString& EventID) const;
 
     /**
-     * 觸發後果
+     * 觸發後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     bool TriggerConsequence(const FString& ConsequenceID, const FDecisionContext& Context);
 
     /**
-     * 應用後果效果
+     * ?�用後�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     bool ApplyConsequenceEffects(const FString& ConsequenceID, const FDecisionContext& Context);
 
     /**
-     * 逆轉後果
+     * ?��?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     bool ReverseConsequence(const FString& ConsequenceID, const FDecisionContext& Context);
 
     /**
-     * 獲取後果統計
+     * ?��?後�?統�?
      */
     UFUNCTION(BlueprintPure, Category = "Decision Consequence")
     TMap<FString, int32> GetConsequenceStatistics() const;
 
     /**
-     * 獲取後果影響分析
+     * ?��?後�?影響?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TMap<FString, float> GetConsequenceImpactAnalysis(const FString& DecisionID) const;
 
     /**
-     * 預測決策後果
+     * ?�測決�?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FDecisionConsequence> PredictDecisionConsequences(const FDecisionContext& Context, int32 PredictionCount);
 
     /**
-     * 模擬決策後果
+     * 模擬決�?後�?
      */
     UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
     TArray<FConsequenceCalculationResult> SimulateDecisionConsequences(const FDecisionContext& Context, int32 SimulationCount);
 
 protected:
-    // 已註冊的決策後果
+    // 已註?��?決�?後�?
     UPROPERTY()
     TArray<FDecisionConsequence> RegisteredConsequences;
 
-    // 後果ID到後果的映射
+    // 後�?ID?��??��??��?
     UPROPERTY()
     TMap<FString, FDecisionConsequence> ConsequenceMap;
 
-    // 後果統計
+    // 後�?統�?
     UPROPERTY()
     TMap<FString, int32> ConsequenceStatistics;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bIsInitialized;
 
-    // 初始化民國歷史決策後果庫
+    // ?��??��??�歷?�決策�??�庫
     void InitializeHistoricalDecisionConsequences();
 
-    // 創建政治決策後果
+    // ?�建?�治決�?後�?
     void CreatePoliticalDecisionConsequences();
 
-    // 創建軍事決策後果
+    // ?�建軍�?決�?後�?
     void CreateMilitaryDecisionConsequences();
 
-    // 創建經濟決策後果
+    // ?�建經�?決�?後�?
     void CreateEconomicDecisionConsequences();
 
-    // 創建社會決策後果
+    // ?�建社�?決�?後�?
     void CreateSocialDecisionConsequences();
 
-    // 創建文化決策後果
+    // ?�建?��?決�?後�?
     void CreateCulturalDecisionConsequences();
 
-    // 創建外交決策後果
+    // ?�建外交決�?後�?
     void CreateDiplomaticDecisionConsequences();
 
-    // 計算即時後果
+    // 計�??��?後�?
     void CalculateImmediateConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
-    // 計算延迟後果
+    // 計�?延�?後�?
     void CalculateDelayedConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
-    // 計算累積後果
+    // 計�?累�?後�?
     void CalculateCumulativeConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
-    // 計算條件後果
+    // 計�?條件後�?
     void CalculateConditionalConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
-    // 計算隨機後果
+    // 計�??��?後�?
     void CalculateRandomConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
-    // 計算隱藏後果
+    // 計�??��?後�?
     void CalculateHiddenConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
-    // 計算永久後果
+    // 計�?永�?後�?
     void CalculatePermanentConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
-    // 計算臨時後果
+    // 計�??��?後�?
     void CalculateTemporaryConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
 
-    // 計算後果影響分數
+    // 計�?後�?影響?�數
     float CalculateConsequenceImpact(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // 計算總體影響分數
+    // 計�?總�?影響?�數
     void CalculateOverallImpact(FConsequenceCalculationResult& Result) const;
 
-    // 檢查後果條件
+    // 檢查後�?條件
     bool CheckConsequenceConditions(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // 應用後果到遊戲狀態
-    void ApplyConsequenceToGameState(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, FString>& AffectedStates) const;
+    // ?�用後�??��??��???    void ApplyConsequenceToGameState(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, FString>& AffectedStates) const;
 
-    // 應用後果到人物
-    void ApplyConsequenceToCharacters(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedCharacters) const;
+    // ?�用後�??�人??    void ApplyConsequenceToCharacters(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedCharacters) const;
 
-    // 應用後果到事件
-    void ApplyConsequenceToEvents(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedEvents) const;
+    // ?�用後�??��?�?    void ApplyConsequenceToEvents(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedEvents) const;
 
-    // 應用後果到資源
-    void ApplyConsequenceToResources(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, int32>& AffectedResources) const;
+    // ?�用後�??��?�?    void ApplyConsequenceToResources(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, int32>& AffectedResources) const;
 
-    // 應用後果到建築
-    void ApplyConsequenceToBuildings(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedBuildings) const;
+    // ?�用後�??�建�?    void ApplyConsequenceToBuildings(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedBuildings) const;
 
-    // 應用後果到單位
-    void ApplyConsequenceToUnits(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedUnits) const;
+    // ?�用後�??�單�?    void ApplyConsequenceToUnits(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedUnits) const;
 
-    // 更新後果統計
+    // ?�新後�?統�?
     void UpdateConsequenceStatistics(const FString& ConsequenceID);
 
-    // 獲取後果描述
+    // ?��?後�??�述
     FString GetConsequenceDescription(const FString& ConsequenceID) const;
 
-    // 驗證後果配置
+    // 驗�?後�??�置
     bool ValidateConsequenceConfig(const FDecisionConsequence& Consequence) const;
 
-    // 記錄後果日誌
+    // 記�?後�??��?
     void LogConsequenceEvent(const FString& ConsequenceID, const FString& Message);
 
-    // 生成後果報告
+    // ?��?後�??��?
     FString GenerateConsequenceReport(const FString& ConsequenceID, const FConsequenceCalculationResult& Result) const;
 
-    // 解析後果參數
+    // �??後�??�數
     TArray<FString> ParseConsequenceParameters(const FString& ParameterString) const;
 
-    // 計算後果概率
+    // 計�?後�?概�?
     float CalculateConsequenceProbability(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // 計算後果延迟
+    // 計�?後�?延�?
     float CalculateConsequenceDelay(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // 計算後果持續時間
+    // 計�?後�??��??��?
     float CalculateConsequenceDuration(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // 檢查後果是否可逆轉
+    // 檢查後�??�否?�逆�?
     bool IsConsequenceReversible(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
 
-    // 獲取後果優先級
-    int32 GetConsequencePriority(const FDecisionConsequence& Consequence) const;
+    // ?��?後�??��?�?    int32 GetConsequencePriority(const FDecisionConsequence& Consequence) const;
 
-    // 排序後果
+    // ?��?後�?
     void SortConsequencesByPriority(TArray<FDecisionConsequence>& Consequences) const;
 };

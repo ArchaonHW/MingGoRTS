@@ -5,7 +5,7 @@
 #include "IPlatformInterface.generated.h"
 
 /**
- * 平台類型枚舉
+ * 平台類�??��?
  */
 UENUM(BlueprintType)
 enum class EPlatformType : uint8
@@ -17,7 +17,7 @@ enum class EPlatformType : uint8
 };
 
 /**
- * 輸入類型枚舉
+ * 輸入類�??��?
  */
 UENUM(BlueprintType)
 enum class EInputType : uint8
@@ -28,43 +28,40 @@ enum class EInputType : uint8
 };
 
 /**
- * 平台能力結構
+ * 平台?��?結�?
  */
 USTRUCT(BlueprintType)
 struct FPlatformCapabilities
 {
     GENERATED_BODY()
     
-    // 是否支持多點觸控
+    // ?�否?��?多�?觸控
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsMultiTouch;
     
-    // 最大同時觸控點數
-    UPROPERTY(BlueprintReadOnly)
+    // ?�大�??�觸?��???    UPROPERTY(BlueprintReadOnly)
     int32 MaxTouchPoints;
     
-    // 是否支持物理鍵盤
+    // ?�否?��??��??�盤
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsHardwareKeyboard;
     
-    // 是否支持鼠標
+    // ?�否?��?鼠�?
     UPROPERTY(BlueprintReadOnly)
     bool bSupportsMouse;
     
-    // 默認輸入類型
+    // 默�?輸入類�?
     UPROPERTY(BlueprintReadOnly)
     EInputType DefaultInputType;
     
-    // 是否需要電池優化
-    UPROPERTY(BlueprintReadOnly)
+    // ?�否?�要電池優??    UPROPERTY(BlueprintReadOnly)
     bool bRequiresBatteryOptimization;
     
-    // 建議的最大同時單位數
+    // 建議?��?大�??�單位數
     UPROPERTY(BlueprintReadOnly)
     int32 RecommendedMaxUnits;
     
-    // 建議的畫質等級
-    UPROPERTY(BlueprintReadOnly)
+    // 建議?�畫質�?�?    UPROPERTY(BlueprintReadOnly)
     int32 RecommendedQualityLevel;
     
     FPlatformCapabilities()
@@ -80,8 +77,8 @@ struct FPlatformCapabilities
 };
 
 /**
- * 平台抽象接口
- * 定義所有平台相關功能的統一接口
+ * 平台?�象?�口
+ * 定義?�?�平?�相?��??��?統�??�口
  */
 UINTERFACE(MinimalAPI)
 class MINGCORE_API UPlatformInterface : public UInterface
@@ -96,48 +93,44 @@ class MINGCORE_API IPlatformInterface
 public:
     virtual ~IPlatformInterface() {}
     
-    // 獲取當前平台類型
+    // ?��??��?平台類�?
     virtual EPlatformType GetPlatformType() const = 0;
     
-    // 獲取平台能力
+    // ?��?平台?��?
     virtual FPlatformCapabilities GetCapabilities() const = 0;
     
-    // 初始化平台
-    virtual void Initialize() = 0;
+    // ?��??�平??    virtual void Initialize() = 0;
     
-    // 關閉平台
+    // ?��?平台
     virtual void Shutdown() = 0;
     
-    // 獲取屏幕DPI
+    // ?��?屏�?DPI
     virtual float GetScreenDPI() const = 0;
     
-    // 獲取安全區域 (用於移動端的劉海屏等)
+    // ?��?安全?�??(?�於移�?端�??�海屏�?)
     virtual FMargin GetSafeZone() const = 0;
     
-    // 檢查是否為觸控設備
-    virtual bool IsTouchDevice() const = 0;
+    // 檢查?�否?�觸?�設??    virtual bool IsTouchDevice() const = 0;
     
-    // 設置性能模式
+    // 設置?�能模�?
     virtual void SetPerformanceMode(int32 Mode) = 0;
     
-    // 獲取當前電池電量 (0-1, -1表示不支持)
+    // ?��??��??��??��? (0-1, -1表示不支??
     virtual float GetBatteryLevel() const = 0;
     
-    // 是否正在充電
+    // ?�否�?��?�電
     virtual bool IsCharging() const = 0;
     
-    // 顯示平台特定的對話框
+    // 顯示平台?��??��?話�?
     virtual void ShowPlatformDialog(const FString& Title, const FString& Message) = 0;
     
-    // 分享功能
+    // ?�享?�能
     virtual void ShareContent(const FString& Content) = 0;
     
-    // 評分請求
+    // 評�?請�?
     virtual void RequestAppRating() = 0;
     
-    // 保存數據到平台特定存儲
-    virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) = 0;
+    // 保�??��??�平?�特定�???    virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) = 0;
     
-    // 從平台特定存儲讀取數據
-    virtual FString LoadFromPlatformStorage(const FString& Key) const = 0;
+    // 從平?�特定�??��??�數??    virtual FString LoadFromPlatformStorage(const FString& Key) const = 0;
 };

@@ -4,60 +4,50 @@
 #include "UObject/NoExportTypes.h"
 #include "MingCombatAIManager.generated.h"
 
-// AI 難度等級
+// AI ??��等�?
 UENUM(BlueprintType)
 enum class EMingAIDifficulty : uint8
 {
-    Recruit,        // 新兵
-    Regular,        // 常規
-    Veteran,        // 老兵
+    Recruit,        // ?�兵
+    Regular,        // 常�?
+    Veteran,        // ?�兵
     Elite,          // 精銳
-    Legendary       // 傳奇
+    Legendary       // ?��?
 };
 
-// AI 節點結果
-UENUM(BlueprintType)
+// AI 節點�???UENUM(BlueprintType)
 enum class EMingAINodeResult : uint8
 {
-    Running,        // 運行中
-    Success,        // 成功
-    Failure         // 失敗
+    Running,        // ?��?�?    Success,        // ?��?
+    Failure         // 失�?
 };
 
-// AI 戰略偏好
+// AI ?�略?�好
 UENUM(BlueprintType)
 enum class EMingStrategicPreference : uint8
 {
-    Aggressive,     // 攻擊性
-    Defensive,      // 防禦性
-    Balanced,       // 平衡型
-    Economic,       // 經濟型
-    Diplomatic      // 外交型
-};
+    Aggressive,     // ?��???    Defensive,      // ?�禦??    Balanced,       // 平衡??    Economic,       // 經�???    Diplomatic      // 外交??};
 
-// AI 戰術風格
+// AI ?��?風格
 UENUM(BlueprintType)
 enum class EMingTacticalStyle : uint8
 {
-    DirectAssault,  // 直接攻擊
-    Flanking,       // 側翼包抄
-    Guerrilla,       // 游擊戰
-    Siege,          // 圍攻戰
-    Mobile          // 機動戰
-};
+    DirectAssault,  // ?�接?��?
+    Flanking,       // ?�翼?��?
+    Guerrilla,       // 游�???    Siege,          // ?�攻??    Mobile          // 機�???};
 
-// 軍閥類型
+// 軍閥類�?
 UENUM(BlueprintType)
 enum class EMingWarlordType : uint8
 {
-    Northeastern,    // 東北軍閥
-    Northwestern,    // 西北軍閥
-    Southwestern,    // 西南軍閥
+    Northeastern,    // ?��?軍閥
+    Northwestern,    // 西�?軍閥
+    Southwestern,    // 西�?軍閥
     Central,         // 中央軍閥
-    Independent      // 獨立軍閥
+    Independent      // ?��?軍閥
 };
 
-// AI 統計信息
+// AI 統�?信息
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingAIStatistics
 {
@@ -85,8 +75,7 @@ struct MINGTACTICAL_API FMingAIStatistics
     int32 SuccessfulDefenses;
 };
 
-// AI 上下文
-USTRUCT(BlueprintType)
+// AI 上�???USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingAIContext
 {
     GENERATED_BODY()
@@ -113,7 +102,7 @@ struct MINGTACTICAL_API FMingAIContext
     EMingAIDifficulty Difficulty;
 };
 
-// AI 難度設置
+// AI ??��設置
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingAIDifficultySettings
 {
@@ -139,8 +128,7 @@ struct MINGTACTICAL_API FMingAIDifficultySettings
 };
 
 /**
- * 戰鬥 AI 管理器
- * 負責管理所有戰鬥 AI 控制器和行為
+ * ?�鬥 AI 管�??? * 負責管�??�?�戰�?AI ?�制?��?行為
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGTACTICAL_API UMingCombatAIManager : public UObject
@@ -148,81 +136,74 @@ class MINGTACTICAL_API UMingCombatAIManager : public UObject
     GENERATED_BODY()
 
 public:
-    // 建構子
-    UMingCombatAIManager();
+    // 建�?�?    UMingCombatAIManager();
 
-    // 初始化 AI 管理器
-    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // ?��???AI 管�???    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void Initialize();
 
-    // AI 更新主循環
-    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // AI ?�新主循??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void UpdateCombatAI(float DeltaTime);
 
-    // 註冊 AI 控制器
-    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // 註�? AI ?�制??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void RegisterAIController(class AController* AIController);
 
-    // 移除 AI 控制器
-    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // 移除 AI ?�制??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void UnregisterAIController(class AController* AIController);
 
-    // 設置全局 AI 難度
+    // 設置?��? AI ??��
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void SetAIDifficulty(EMingAIDifficulty Difficulty);
 
-    // 獲取 AI 難度設置
+    // ?��? AI ??��設置
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     FMingAIDifficultySettings GetDifficultySettings(EMingAIDifficulty Difficulty) const;
 
-    // 獲取 AI 統計信息
+    // ?��? AI 統�?信息
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     FMingAIStatistics GetAIStatistics() const;
 
-    // 暫停 AI 更新
+    // ?��? AI ?�新
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void PauseAI();
 
-    // 恢復 AI 更新
+    // ?�復 AI ?�新
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void ResumeAI();
 
-    // 重置所有 AI
+    // ?�置?�??AI
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void ResetAllAI();
 
 protected:
-    // AI 控制器列表
-    TArray<TWeakObjectPtr<class AController>> AIControllers;
+    // AI ?�制?��?�?    TArray<TWeakObjectPtr<class AController>> AIControllers;
 
-    // AI 更新間隔
+    // AI ?�新?��?
     float AIUpdateInterval;
 
-    // 當前難度設置
+    // ?��???��設置
     EMingAIDifficulty CurrentDifficulty;
 
-    // 是否暫停
+    // ?�否?��?
     bool bIsPaused;
 
-    // 統計數據
+    // 統�??��?
     FMingAIStatistics AIStatistics;
 
-    // 難度設置映射
+    // ??��設置?��?
     TMap<EMingAIDifficulty, FMingAIDifficultySettings> DifficultySettings;
 
-    // 初始化難度設置
-    void InitializeDifficultySettings();
+    // ?��??�難度設�?    void InitializeDifficultySettings();
 
-    // 更新統計信息
+    // ?�新統�?信息
     void UpdateStatistics();
 
-    // 獲取 AI 更新時間
+    // ?��? AI ?�新?��?
     float GetAIUpdateTime() const;
 
 private:
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bInitialized = false;
 
-    // 累計時間
+    // 累�??��?
     float AccumulatedTime;
 };

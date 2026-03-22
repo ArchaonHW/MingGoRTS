@@ -4,98 +4,77 @@
 #include "UObject/NoExportTypes.h"
 #include "MingCharacterGrowthSystem.generated.h"
 
-// 角色職業類型
+// 角色?�業類�?
 UENUM(BlueprintType)
 enum class EMingCharacterClass : uint8
 {
-    Infantry,          // 步兵軍官
-    Cavalry,           // 騎兵軍官
-    Artillery,         // 砲兵軍官
-    Engineer,           // 工程師
-    Medic,             // 醫官
-    Scout,             // 偵察兵
-    Commander,         // 指揮官
-    Diplomat           // 外交官
-};
+    Infantry,          // 步兵軍�?
+    Cavalry,           // 騎兵軍�?
+    Artillery,         // ?�兵軍�?
+    Engineer,           // 工�?�?    Medic,             // ?��?
+    Scout,             // ?��???    Commander,         // ?�揮�?    Diplomat           // 外交�?};
 
-// 技能類型
-UENUM(BlueprintType)
+// ?�?��???UENUM(BlueprintType)
 enum class EMingSkillType : uint8
 {
-    Combat,            // 戰鬥技能
-    Leadership,         // 指揮技能
-    Strategy,          // 戰略技能
-    Diplomacy,         // 外交技能
-    Engineering,       // 工程技能
-    Medical,           // 醫療技能
-    Scouting,          // 偵察技能
-    Survival           // 生存技能
-};
+    Combat,            // ?�鬥?�??    Leadership,         // ?�揮?�??    Strategy,          // ?�略?�??    Diplomacy,         // 外交?�??    Engineering,       // 工�??�??    Medical,           // ?��??�??    Scouting,          // ?��??�??    Survival           // ?��??�??};
 
-// 經驗來源
+// 經�?來�?
 UENUM(BlueprintType)
 enum class EMingExperienceSource : uint8
 {
-    Combat,            // 戰鬥經驗
-    Mission,           // 任務經驗
-    Exploration,       // 探索經驗
-    Diplomacy,         // 外交經驗
-    Training,          // 訓練經驗
-    Achievement,       // 成就經驗
-    Story              // 故事經驗
+    Combat,            // ?�鬥經�?
+    Mission,           // 任�?經�?
+    Exploration,       // ?�索經�?
+    Diplomacy,         // 外交經�?
+    Training,          // 訓練經�?
+    Achievement,       // ?�就經�?
+    Story              // ?��?經�?
 };
 
-// 角色屬性
-USTRUCT(BlueprintType)
+// 角色屬�?USTRUCT(BlueprintType)
 struct MINGCORE_API FMingCharacterAttributes
 {
     GENERATED_BODY()
 
-    // 基礎屬性
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Strength;          // 力量
+    // ?��?屬�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Strength;          // ?��?
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Agility;           // 敏捷
+    float Agility;           // ?�捷
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Intelligence;       // 智力
+    float Intelligence;       // ?��?
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Charisma;          // 魅力
+    float Charisma;          // 魅�?
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Constitution;      // 體質
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Wisdom;            // 智慧
+    float Wisdom;            // ?�慧
 
-    // 戰鬥屬性
+    // ?�鬥屬�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float CombatSkill;        // ?�鬥?�??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float CombatSkill;        // 戰鬥技能
-
+    float Leadership;         // ?��???
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Leadership;         // 領導力
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float TacticalSense;      // 戰術感覺
+    float TacticalSense;      // ?��??�覺
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Marksmanship;       // 射擊精度
+    float Marksmanship;       // 射�?精度
 
-    // 社交屬性
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Diplomacy;         // 外交能力
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Negotiation;        // 談判技巧
+    // 社交屬�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Diplomacy;         // 外交?��?
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Intimidation;       // 威嚇能力
+    float Negotiation;        // 談判?��?
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Intimidation;       // 威�??��?
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Persuasion;        // 說服力
-
+    float Persuasion;        // 說�???
     FMingCharacterAttributes()
     {
         Strength = 50.0f;
@@ -115,70 +94,60 @@ struct MINGCORE_API FMingCharacterAttributes
     }
 };
 
-// 技能數據
-USTRUCT(BlueprintType)
+// ?�?�數??USTRUCT(BlueprintType)
 struct MINGCORE_API FMingSkillData
 {
     GENERATED_BODY()
 
-    // 技能ID
+    // ?�?�ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SkillID;
 
-    // 技能名稱
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�?��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString SkillName;
 
-    // 技能描述
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�?��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString SkillDescription;
 
-    // 技能類型
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�?��???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingSkillType SkillType;
 
-    // 當前等級
+    // ?��?等�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CurrentLevel;
 
-    // 最大等級
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�大�?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 MaxLevel;
 
-    // 當前經驗
+    // ?��?經�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CurrentExperience;
 
-    // 升級所需經驗
+    // ?��??�?�經�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ExperienceToNextLevel;
 
-    // 技能效果
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�?��???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> SkillEffects;
 
-    // 前置技能
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�置?�??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> PrerequisiteSkills;
 
-    // 解鎖條件
+    // �??條件
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UnlockConditions;
 
-    // 技能圖標路徑
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�?��?標路�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString SkillIconPath;
 
-    // 是否為主動技能
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�否?�主?��???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsActiveSkill;
 
-    // 冷卻時間
+    // ?�卻?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CooldownTime;
 
-    // 消耗資源
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 消耗�?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ResourceCost;
 
     FMingSkillData()
@@ -201,46 +170,43 @@ struct MINGCORE_API FMingSkillData
     }
 };
 
-// 角色等級數據
+// 角色等�??��?
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingCharacterLevel
 {
     GENERATED_BODY()
 
-    // 當前等級
+    // ?��?等�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CurrentLevel;
 
-    // 當前經驗
+    // ?��?經�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CurrentExperience;
 
-    // 升級所需經驗
+    // ?��??�?�經�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ExperienceToNextLevel;
 
-    // 總經驗值
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 總�?驗�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TotalExperience;
 
-    // 等級標題
+    // 等�?標�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString LevelTitle;
 
-    // 等級權限
+    // 等�?權�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> LevelPermissions;
 
-    // 等級獎勵
+    // 等�??�勵
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> LevelRewards;
 
-    // 技能點數
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�?��???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SkillPoints;
 
-    // 屬性點數
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 屬性�???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 AttributePoints;
 
     FMingCharacterLevel()
@@ -249,7 +215,7 @@ struct MINGCORE_API FMingCharacterLevel
         CurrentExperience = 0.0f;
         ExperienceToNextLevel = 100.0f;
         TotalExperience = 0.0f;
-        LevelTitle = TEXT("新兵");
+        LevelTitle = TEXT("?�兵");
         LevelPermissions.Empty();
         LevelRewards.Empty();
         SkillPoints = 0;
@@ -257,65 +223,61 @@ struct MINGCORE_API FMingCharacterLevel
     }
 };
 
-// 裝備物品數據
+// 裝�??��??��?
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingEquipmentItem
 {
     GENERATED_BODY()
 
-    // 物品ID
+    // ?��?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemID;
 
-    // 物品名稱
+    // ?��??�稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemName;
 
-    // 物品描述
+    // ?��??�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemDescription;
 
-    // 物品類型
+    // ?��?類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemType;
 
-    // 物品稀有度
+    // ?��?稀?�度
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemRarity;
 
-    // 物品等級
+    // ?��?等�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemLevel;
 
-    // 物品屬性加成
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?��?屬性�???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ItemAttributes;
 
-    // 裝備位置
+    // 裝�?位置
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EquipSlot;
 
-    // 是否已裝備
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�否已�???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsEquipped;
 
-    // 物品數量
+    // ?��??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ItemQuantity;
 
-    // 物品耐久度
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?��??��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ItemDurability;
 
-    // 最大耐久度
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�大耐�?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MaxDurability;
 
-    // 物品圖標路徑
+    // ?��??��?路�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemIconPath;
 
-    // 物品3D模型路徑
+    // ?��?3D模�?路�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemModelPath;
 
@@ -325,7 +287,7 @@ struct MINGCORE_API FMingEquipmentItem
         ItemName = TEXT("");
         ItemDescription = TEXT("");
         ItemType = TEXT("");
-        ItemRarity = TEXT("普通");
+        ItemRarity = TEXT("?��?);
         ItemLevel = 1;
         ItemAttributes.Empty();
         EquipSlot = TEXT("");
@@ -338,7 +300,7 @@ struct MINGCORE_API FMingEquipmentItem
     }
 };
 
-// 角色成長事件委託
+// 角色?�長事件委�?
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterLevelUp, int32, NewLevel, const FMingCharacterAttributes&, NewAttributes);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillLevelUp, int32, SkillID, int32, NewLevel);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnExperienceGained, EMingExperienceSource, Source, float, ExperienceAmount);
@@ -346,8 +308,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemEquipped, int32, ItemID, con
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAttributeChanged, const FString&, AttributeName, float, NewValue);
 
 /**
- * 角色成長系統
- * 負責管理角色等級、技能、經驗和裝備成長
+ * 角色?�長系統
+ * 負責管�?角色等�??��??�、�?驗�?裝�??�長
  */
 UCLASS(ClassGroup = (Character), Blueprintable, BlueprintType)
 class MINGCORE_API UMingCharacterGrowthSystem : public UObject
@@ -357,87 +319,80 @@ class MINGCORE_API UMingCharacterGrowthSystem : public UObject
 public:
     UMingCharacterGrowthSystem();
 
-    // 初始化角色成長系統
-    UFUNCTION(BlueprintCallable, Category = "Character Growth")
+    // ?��??��??��??�系�?    UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool InitializeGrowthSystem();
 
-    // 創建新角色
-    UFUNCTION(BlueprintCallable, Category = "Character Growth")
+    // ?�建?��???    UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool CreateCharacter(const FString& CharacterName, EMingCharacterClass CharacterClass);
 
-    // 獲得經驗
+    // ?��?經�?
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool GainExperience(EMingExperienceSource Source, float ExperienceAmount);
 
-    // 升級角色
+    // ?��?角色
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool LevelUpCharacter();
 
-    // 分配屬性點
+    // ?��?屬性�?
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool AllocateAttributePoint(const FString& AttributeName, int32 Points);
 
-    // 分配技能點
+    // ?��??�?��?
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool AllocateSkillPoint(int32 SkillID);
 
-    // 學習技能
-    UFUNCTION(BlueprintCallable, Category = "Character Growth")
+    // 學�??�??    UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool LearnSkill(int32 SkillID);
 
-    // 升級技能
-    UFUNCTION(BlueprintCallable, Category = "Character Growth")
+    // ?��??�??    UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool UpgradeSkill(int32 SkillID);
 
-    // 獲取角色信息
+    // ?��?角色信息
     UFUNCTION(BlueprintPure, Category = "Character Growth")
     FMingCharacterAttributes GetCharacterAttributes() const;
 
-    // 獲取角色等級
+    // ?��?角色等�?
     UFUNCTION(BlueprintPure, Category = "Character Growth")
     FMingCharacterLevel GetCharacterLevel() const;
 
-    // 獲取技能列表
-    UFUNCTION(BlueprintPure, Category = "Character Growth")
+    // ?��??�?��?�?    UFUNCTION(BlueprintPure, Category = "Character Growth")
     TArray<FMingSkillData> GetCharacterSkills() const;
 
-    // 獲取特定技能
-    UFUNCTION(BlueprintPure, Category = "Character Growth")
+    // ?��??��??�??    UFUNCTION(BlueprintPure, Category = "Character Growth")
     FMingSkillData GetSkill(int32 SkillID) const;
 
-    // 裝備物品
+    // 裝�??��?
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool EquipItem(int32 ItemID, const FString& EquipSlot);
 
-    // 卸下物品
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool UnequipItem(const FString& EquipSlot);
 
-    // 獲取裝備物品
+    // ?��?裝�??��?
     UFUNCTION(BlueprintPure, Category = "Character Growth")
     TArray<FMingEquipmentItem> GetEquippedItems() const;
 
-    // 計算戰鬥力
-    UFUNCTION(BlueprintPure, Category = "Character Growth")
+    // 計�??�鬥??    UFUNCTION(BlueprintPure, Category = "Character Growth")
     float CalculateCombatPower() const;
 
-    // 計算總體實力
+    // 計�?總�?實�?
     UFUNCTION(BlueprintPure, Category = "Character Growth")
     float CalculateOverallPower() const;
 
-    // 保存角色數據
+    // 保�?角色?��?
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool SaveCharacterData();
 
-    // 載入角色數據
+    // 載入角色?��?
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     bool LoadCharacterData();
 
-    // 重置角色
+    // ?�置角色
     UFUNCTION(BlueprintCallable, Category = "Character Growth")
     void ResetCharacter();
 
-    // 事件委託
+    // 事件委�?
     UPROPERTY(BlueprintAssignable)
     FOnCharacterLevelUp OnCharacterLevelUp;
 
@@ -454,90 +409,82 @@ public:
     FOnAttributeChanged OnAttributeChanged;
 
 protected:
-    // 角色屬性
-    UPROPERTY()
+    // 角色屬�?    UPROPERTY()
     FMingCharacterAttributes CharacterAttributes;
 
-    // 角色等級
+    // 角色等�?
     UPROPERTY()
     FMingCharacterLevel CharacterLevel;
 
-    // 技能數據庫
+    // ?�?�數?�庫
     UPROPERTY()
     TMap<int32, FMingSkillData> SkillDatabase;
 
-    // 裝備物品庫
-    UPROPERTY()
+    // 裝�??��?�?    UPROPERTY()
     TMap<FString, FMingEquipmentItem> EquippedItems;
 
-    // 背包物品
+    // ?��??��?
     UPROPERTY()
     TArray<FMingEquipmentItem> InventoryItems;
 
-    // 角色職業
+    // 角色?�業
     UPROPERTY()
     EMingCharacterClass CharacterClass;
 
-    // 角色名稱
+    // 角色?�稱
     UPROPERTY()
     FString CharacterName;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // 載入預設技能數據
-    void LoadDefaultSkills();
+    // 載入?�設?�?�數??    void LoadDefaultSkills();
 
-    // 載入預設裝備數據
+    // 載入?�設裝�??��?
     void LoadDefaultEquipment();
 
-    // 計算升級所需經驗
+    // 計�??��??�?�經�?
     float CalculateExperienceToNextLevel(int32 CurrentLevel) const;
 
-    // 計算技能升級所需經驗
+    // 計�??�?��?級�??�經�?
     float CalculateSkillExperienceToNextLevel(int32 CurrentLevel) const;
 
-    // 應用等級獎勵
+    // ?�用等�??�勵
     void ApplyLevelRewards(int32 NewLevel);
 
-    // 應用技能效果
-    void ApplySkillEffects(int32 SkillID, int32 NewLevel);
+    // ?�用?�?��???    void ApplySkillEffects(int32 SkillID, int32 NewLevel);
 
-    // 應用裝備效果
+    // ?�用裝�??��?
     void ApplyEquipmentEffects(const FMingEquipmentItem& Item);
 
-    // 移除裝備效果
+    // 移除裝�??��?
     void RemoveEquipmentEffects(const FMingEquipmentItem& Item);
 
-    // 驗證技能學習條件
-    bool CanLearnSkill(int32 SkillID) const;
+    // 驗�??�?�學習�?�?    bool CanLearnSkill(int32 SkillID) const;
 
-    // 計算屬性影響
-    float CalculateAttributeModifier(const FString& AttributeName) const;
+    // 計�?屬性影??    float CalculateAttributeModifier(const FString& AttributeName) const;
 
-    // 生成隨機裝備
+    // ?��??��?裝�?
     FMingEquipmentItem GenerateRandomEquipment(int32 ItemLevel) const;
 
-    // 更新角色戰鬥力
-    void UpdateCharacterPower();
+    // ?�新角色?�鬥??    void UpdateCharacterPower();
 
-    // 保存角色快照
+    // 保�?角色快照
     void SaveCharacterSnapshot();
 
     // 載入角色快照
     void LoadCharacterSnapshot();
 
-    // 驗證角色數據
+    // 驗�?角色?��?
     bool ValidateCharacterData() const;
 
-    // 計算技能樹
+    // 計�??�?�樹
     TArray<int32> CalculateSkillTree() const;
 
-    // 解鎖新技能
-    void UnlockNewSkills(int32 NewLevel);
+    // �???��???    void UnlockNewSkills(int32 NewLevel);
 
-    // 計算職業加成
+    // 計�??�業?��?
     TMap<FString, float> CalculateClassBonuses() const;
 };

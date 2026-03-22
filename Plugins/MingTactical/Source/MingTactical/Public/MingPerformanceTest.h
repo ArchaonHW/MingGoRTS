@@ -194,7 +194,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "State")
     TArray<FMingPerformanceMetrics> MetricsHistory;
 
-    // 注意：TArray<TWeakObjectPtr> 不被 Blueprint 支持
+    // 注�?：TArray<TWeakObjectPtr> 不被 Blueprint ?��?
     TArray<TWeakObjectPtr<class AMingTacticalUnit>> TestUnits;
 
     // Performance tracking

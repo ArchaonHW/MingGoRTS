@@ -7,7 +7,7 @@
 class AMingTacticalUnit;
 
 /**
- * 空間網格單元結構
+ * 空�?網格?��?結�?
  */
 USTRUCT()
 struct FMingComponentSpatialGridCell
@@ -18,20 +18,17 @@ struct FMingComponentSpatialGridCell
     UPROPERTY()
     FIntVector GridPosition;
 
-    // 包含的單位
-    UPROPERTY()
+    // ?�含?�單�?    UPROPERTY()
     TArray<TObjectPtr<AMingTacticalUnit>> Units;
 
-    // 活躍標記 (是否需要更新)
+    // 活�?標�? (?�否?�要更??
     UPROPERTY()
     bool bIsActive;
 
-    // 最後更新時間
-    UPROPERTY()
+    // ?�後更?��???    UPROPERTY()
     float LastUpdateTime;
 
-    // 更新優先級
-    UPROPERTY()
+    // ?�新?��?�?    UPROPERTY()
     float UpdatePriority;
 
     FSpatialGridCell()
@@ -43,8 +40,8 @@ struct FMingComponentSpatialGridCell
 };
 
 /**
- * 空間分塊組件
- * 將戰場劃分為網格，實現分塊更新和視錐剔除
+ * 空�??��?組件
+ * 將戰?��??�為網格，實?��?塊更?��?視�??�除
  */
 UCLASS(ClassGroup=(Performance), meta=(BlueprintSpawnableComponent))
 class MINGTACTICAL_API UMingSpatialPartitionComponent : public UActorComponent
@@ -59,55 +56,52 @@ public:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
     /**
-     * 註冊單位到空間分塊系統
-     */
+     * 註�??��??�空?��?塊系�?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void RegisterUnit(AMingTacticalUnit* Unit);
 
     /**
-     * 從空間分塊系統移除單位
-     */
+     * 從空?��?塊系統移?�單�?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void UnregisterUnit(AMingTacticalUnit* Unit);
 
     /**
-     * 更新單位位置 (移動到新網格)
+     * ?�新?��?位置 (移�??�新網格)
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void UpdateUnitPosition(AMingTacticalUnit* Unit);
 
     /**
-     * 獲取指定位置周圍的單位
-     */
+     * ?��??��?位置?��??�單�?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     TArray<AMingTacticalUnit*> GetUnitsInRadius(const FVector& Center, float Radius) const;
 
     /**
-     * 獲取指定網格中的單位
+     * ?��??��?網格中�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     TArray<AMingTacticalUnit*> GetUnitsInCell(const FIntVector& GridPosition) const;
 
     /**
-     * 獲取相機視錐內的網格
+     * ?��??��?視�??��?網格
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     TArray<FIntVector> GetVisibleGridCells() const;
 
     /**
-     * 設置網格大小
+     * 設置網格大�?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void SetCellSize(float NewCellSize);
 
     /**
-     * 設置更新範圍
+     * 設置?�新範�?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void SetUpdateRadius(float NewRadius);
 
     /**
-     * 獲取性能統計
+     * ?��??�能統�?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
     int32 GetTotalGridCellCount() const { return GridCells.Num(); }
@@ -119,108 +113,98 @@ public:
     int32 GetRegisteredUnitCount() const { return RegisteredUnits.Num(); }
 
     /**
-     * 獲取世界位置對應的網格坐標
-     */
+     * ?��?世�?位置對�??�網?��?�?     */
     UFUNCTION(BlueprintPure, Category = "Spatial Partition")
     FIntVector WorldToGrid(const FVector& WorldPosition) const;
 
     /**
-     * 獲取網格中心的世界位置
-     */
+     * ?��?網格中�??��??��?�?     */
     UFUNCTION(BlueprintPure, Category = "Spatial Partition")
     FVector GridToWorld(const FIntVector& GridPosition) const;
 
     /**
-     * 強制更新所有網格
-     */
+     * 強制?�新?�?�網??     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
     void ForceUpdateAllCells();
 
     /**
-     * 獲取網格調試資訊
+     * ?��?網格調試資�?
      */
     UFUNCTION(BlueprintCallable, Category = "Debug")
     void GetDebugGridInfo(TArray<FVector>& CellCenters, TArray<int32>& CellUnitCounts) const;
 
 protected:
-    // 註冊的單位
-    UPROPERTY()
+    // 註�??�單�?    UPROPERTY()
     TArray<TObjectPtr<AMingTacticalUnit>> RegisteredUnits;
 
-    // 單位到網格的映射
+    // ?��??�網?��??��?
     TMap<AMingTacticalUnit*, FIntVector> UnitToCellMap;
 
-    // 網格數據
+    // 網格?��?
     UPROPERTY()
     TMap<FIntVector, FSpatialGridCell> GridCells;
 
-    // 網格大小
+    // 網格大�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spatial Partition")
     float CellSize;
 
-    // 更新半徑
+    // ?�新?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spatial Partition")
     float UpdateRadius;
 
-    // 相機位置
+    // ?��?位置
     FVector CameraLocation;
 
-    // 相機視錐
+    // ?��?視�?
     FRotator CameraRotation;
 
-    // 更新計時器
-    float UpdateTimer;
+    // ?�新計�???    float UpdateTimer;
     
-    // 更新頻率
+    // ?�新?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance")
     float UpdateFrequency;
 
-    // 最大每幀更新網格數
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance")
+    // ?�大�?幀?�新網格??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance")
     int32 MaxCellsPerFrame;
 
-    // 當前更新索引 (用於分幀更新)
+    // ?��??�新索�? (?�於?��??�新)
     int32 CurrentUpdateIndex;
 
-    // 更新相機資訊
+    // ?�新?��?資�?
     void UpdateCameraInfo();
 
-    // 確保網格存在
+    // 確�?網格存在
     FSpatialGridCell& GetOrCreateCell(const FIntVector& GridPosition);
 
-    // 從網格移除單位
-    void RemoveUnitFromCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition);
+    // 從網?�移?�單�?    void RemoveUnitFromCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition);
 
-    // 將單位添加到網格
+    // 將單位添?�到網格
     void AddUnitToCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition);
 
-    // 更新網格活躍狀態
-    void UpdateCellActivity();
+    // ?�新網格活�??�??    void UpdateCellActivity();
 
-    // 更新活躍網格中的單位
+    // ?�新活�?網格中�??��?
     void UpdateActiveCells(float DeltaTime);
 
-    // 執行視錐剔除
+    // ?��?視�??�除
     void PerformFrustumCulling();
 
-    // 檢查網格是否在視錐內
+    // 檢查網格?�否?��??�內
     bool IsCellInFrustum(const FIntVector& CellPosition) const;
 
-    // 獲取視錐的8個角點
-    void GetFrustumCorners(TArray<FVector>& OutCorners) const;
+    // ?��?視�????��?�?    void GetFrustumCorners(TArray<FVector>& OutCorners) const;
 
-    // 計算網格的AABB
+    // 計�?網格?�AABB
     FBox GetCellBounds(const FIntVector& CellPosition) const;
 
-    // 距離優先級計算
-    float CalculateCellPriority(const FIntVector& CellPosition) const;
+    // 距離?��?級�?�?    float CalculateCellPriority(const FIntVector& CellPosition) const;
 
-    // 批量更新單位
+    // ?��??�新?��?
     void BatchUpdateUnits(const TArray<AMingTacticalUnit*>& Units, float DeltaTime);
 
-    // 休眠網格中的單位
+    // 休�?網格中�??��?
     void SleepUnitsInCell(const FIntVector& CellPosition);
 
-    // 喚醒網格中的單位
+    // ?��?網格中�??��?
     void WakeUnitsInCell(const FIntVector& CellPosition);
 };

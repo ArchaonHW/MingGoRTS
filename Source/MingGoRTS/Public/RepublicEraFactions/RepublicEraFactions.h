@@ -1,5 +1,5 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// æ°‘åœ‹å²è©©å‹¢åŠ›ç³»çµ± - å‹¢åŠ›æ•¸æ“šçµæ§‹å®šç¾©
+// æ°‘å??²è©©?¢å?ç³»çµ± - ?¢å??¸æ?çµæ?å®šç¾©
 
 #pragma once
 
@@ -9,7 +9,7 @@
 #include "RepublicEraFactions.generated.h"
 
 /**
- * å‹¢åŠ›é›£åº¦æšèˆ‰
+ * ?¢å???º¦?šè?
  */
 UENUM(BlueprintType)
 enum class EFactionDifficulty : uint8
@@ -22,7 +22,7 @@ enum class EFactionDifficulty : uint8
 };
 
 /**
- * å‹¢åŠ›é¡å‹æšèˆ‰
+ * ?¢å?é¡å??šè?
  */
 UENUM(BlueprintType)
 enum class EFactionType : uint8
@@ -35,7 +35,7 @@ enum class EFactionType : uint8
 };
 
 /**
- * å‹¢åŠ›å–®ä½é¡å‹æšèˆ‰
+ * ?¢å??®ä?é¡å??šè?
  */
 UENUM(BlueprintType)
 enum class EFactionUnitType : uint8
@@ -51,30 +51,30 @@ enum class EFactionUnitType : uint8
 };
 
 /**
- * å‹¢åŠ›ç‰¹è‰²æ©Ÿåˆ¶çµæ§‹
+ * ?¢å??¹è‰²æ©Ÿåˆ¶çµæ?
  */
 USTRUCT(BlueprintType)
 struct FFACTIONMECHANICS_API FFactionSpecialMechanic
 {
     GENERATED_BODY()
 
-    /** æ©Ÿåˆ¶åç¨± */
+    /** æ©Ÿåˆ¶?ç¨± */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Mechanic")
     FString MechanicName;
 
-    /** æ©Ÿåˆ¶æè¿° */
+    /** æ©Ÿåˆ¶?è¿° */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Mechanic")
     FString Description;
 
-    /** æ©Ÿåˆ¶é¡å‹ */
+    /** æ©Ÿåˆ¶é¡å? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Mechanic")
     FString MechanicType;
 
-    /** æ•ˆæœæ•¸å€¼ */
+    /** ?ˆæ??¸å€?*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Mechanic")
     float EffectValue;
 
-    /** æ˜¯å¦å•Ÿç”¨ */
+    /** ?¯å¦?Ÿç”¨ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Mechanic")
     bool bEnabled;
 
@@ -89,38 +89,38 @@ struct FFACTIONMECHANICS_API FFactionSpecialMechanic
 };
 
 /**
- * å‹¢åŠ›å–®ä½æ•¸æ“šçµæ§‹
+ * ?¢å??®ä??¸æ?çµæ?
  */
 USTRUCT(BlueprintType)
 struct FFACTIONMECHANICS_API FFactionUnit
 {
     GENERATED_BODY()
 
-    /** å–®ä½åç¨± */
+    /** ?®ä??ç¨± */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Unit")
     FString UnitName;
 
-    /** å–®ä½é¡å‹ */
+    /** ?®ä?é¡å? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Unit")
     EFactionUnitType UnitType;
 
-    /** å–®ä½æè¿° */
+    /** ?®ä??è¿° */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Unit")
     FString Description;
 
-    /** æ”»æ“ŠåŠ› */
+    /** ?»æ???*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Unit")
     int32 Attack;
 
-    /** é˜²ç¦¦åŠ› */
+    /** ?²ç¦¦??*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Unit")
     int32 Defense;
 
-    /** ç§»å‹•åŠ› */
+    /** ç§»å???*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Unit")
     int32 Movement;
 
-    /** å»ºé€ æˆæœ¬ */
+    /** å»ºé€ æ???*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Unit")
     int32 Cost;
 
@@ -128,11 +128,11 @@ struct FFACTIONMECHANICS_API FFactionUnit
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Unit")
     int32 Upkeep;
 
-    /** ç‰¹æ®Šèƒ½åŠ› */
+    /** ?¹æ??½å? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Unit")
     FString SpecialAbility;
 
-    /** è§£é–æ¢ä»¶ */
+    /** è§??æ¢ä»¶ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Unit")
     FString UnlockCondition;
 
@@ -152,94 +152,94 @@ struct FFACTIONMECHANICS_API FFactionUnit
 };
 
 /**
- * å‹¢åŠ›æ•¸æ“šçµæ§‹
+ * ?¢å??¸æ?çµæ?
  */
 USTRUCT(BlueprintType)
 struct FFACTIONMECHANICS_API FFactionData
 {
     GENERATED_BODY()
 
-    /** å‹¢åŠ›ID */
+    /** ?¢å?ID */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     int32 FactionID;
 
-    /** å‹¢åŠ›åç¨± */
+    /** ?¢å??ç¨± */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     FString FactionName;
 
-    /** å‹¢åŠ›é¡å‹ */
+    /** ?¢å?é¡å? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     EFactionType FactionType;
 
-    /** é›£åº¦ç­‰ç´š */
+    /** ??º¦ç­‰ç? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     EFactionDifficulty Difficulty;
 
-    /** èµ·å§‹åœ°é» */
+    /** èµ·å??°é? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     FString StartingLocation;
 
-    /** èµ·å§‹å¹´ä»½ */
+    /** èµ·å?å¹´ä»½ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     int32 StartYear;
 
-    /** é ˜è¢–åç¨± */
+    /** ?˜è??ç¨± */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     FString LeaderName;
 
-    /** å‹¢åŠ›æè¿° */
+    /** ?¢å??è¿° */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     FString Description;
 
-    /** ç‰¹è‰²æ©Ÿåˆ¶ */
+    /** ?¹è‰²æ©Ÿåˆ¶ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     TArray<FFactionSpecialMechanic> SpecialMechanics;
 
-    /** å°ˆå±¬å–®ä½ */
+    /** å°ˆå±¬?®ä? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     TArray<FFactionUnit> UniqueUnits;
 
-    /** å„ªå‹¢åˆ—è¡¨ */
+    /** ?ªå‹¢?—è¡¨ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     TArray<FString> Advantages;
 
-    /** åŠ£å‹¢åˆ—è¡¨ */
+    /** ??‹¢?—è¡¨ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     TArray<FString> Disadvantages;
 
-    /** æ¨è–¦ç©æ³• */
+    /** ?¨è–¦?©æ? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     TArray<FString> RecommendedStrategies;
 
-    /** åˆå§‹è³‡æº */
+    /** ?å?è³‡æ? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     int32 InitialResources;
 
-    /** åˆå§‹äººå£ */
+    /** ?å?äººå£ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     int32 InitialPopulation;
 
-    /** åˆå§‹è»éšŠæ•¸é‡ */
+    /** ?å?è»é??¸é? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     int32 InitialMilitary;
 
-    /** å¤–äº¤é—œä¿‚ä¿®æ­£ */
+    /** å¤–äº¤?œä?ä¿®æ­£ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     float DiplomaticModifier;
 
-    /** ç¶“æ¿Ÿç™¼å±•ä¿®æ­£ */
+    /** ç¶“æ??¼å?ä¿®æ­£ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     float EconomicModifier;
 
-    /** è»äº‹å¯¦åŠ›ä¿®æ­£ */
+    /** è»ä?å¯¦å?ä¿®æ­£ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     float MilitaryModifier;
 
-    /** ç§‘æŠ€ç™¼å±•ä¿®æ­£ */
+    /** ç§‘æ??¼å?ä¿®æ­£ */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     float TechnologyModifier;
 
-    /** æ–‡åŒ–å½±éŸ¿åŠ›ä¿®æ­£ */
+    /** ?‡å?å½±éŸ¿?›ä¿®æ­?*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     float CultureModifier;
 
@@ -265,21 +265,20 @@ struct FFACTIONMECHANICS_API FFactionData
 };
 
 /**
- * å‹¢åŠ›æ•¸æ“šè¡¨è¡Œçµæ§‹
+ * ?¢å??¸æ?è¡¨è?çµæ?
  */
 USTRUCT(BlueprintType)
 struct FFACTIONMECHANICS_API FFactionDataRow : public FTableRowBase
 {
     GENERATED_BODY()
 
-    /** å‹¢åŠ›æ•¸æ“š */
+    /** ?¢å??¸æ? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction Data")
     FFactionData FactionData;
 };
 
 /**
- * å‹¢åŠ›ç³»çµ±ç®¡ç†å™¨
- */
+ * ?¢å?ç³»çµ±ç®¡ç??? */
 UCLASS(BlueprintType, Blueprintable)
 class FFACTIONMECHANICS_API URepublicEraFactionSystem : public UObject
 {
@@ -288,70 +287,70 @@ class FFACTIONMECHANICS_API URepublicEraFactionSystem : public UObject
 public:
     URepublicEraFactionSystem();
 
-    /** åˆå§‹åŒ–å‹¢åŠ›ç³»çµ± */
+    /** ?å??–å‹¢?›ç³»çµ?*/
     UFUNCTION(BlueprintCallable, Category = "Faction System")
     void InitializeFactionSystem();
 
-    /** ç²å–æ‰€æœ‰å‹¢åŠ›æ•¸æ“š */
+    /** ?²å??€?‰å‹¢?›æ•¸??*/
     UFUNCTION(BlueprintCallable, Category = "Faction System")
     TArray<FFactionData> GetAllFactions() const;
 
-    /** ç²å–æŒ‡å®šå‹¢åŠ›æ•¸æ“š */
+    /** ?²å??‡å??¢å??¸æ? */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
     FFactionData GetFactionData(int32 FactionID) const;
 
-    /** ç²å–æŒ‡å®šå‹¢åŠ›æ•¸æ“šï¼ˆæŒ‰åç¨±ï¼‰ */
+    /** ?²å??‡å??¢å??¸æ?ï¼ˆæ??ç¨±ï¼?*/
     UFUNCTION(BlueprintCallable, Category = "Faction System")
     FFactionData GetFactionDataByName(const FString& FactionName) const;
 
-    /** ç²å–å‹¢åŠ›å–®ä½ */
+    /** ?²å??¢å??®ä? */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
     TArray<FFactionUnit> GetFactionUnits(int32 FactionID) const;
 
-    /** ç²å–å‹¢åŠ›ç‰¹è‰²æ©Ÿåˆ¶ */
+    /** ?²å??¢å??¹è‰²æ©Ÿåˆ¶ */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
     TArray<FFactionSpecialMechanic> GetFactionMechanics(int32 FactionID) const;
 
-    /** æª¢æŸ¥å‹¢åŠ›æ˜¯å¦å¯ç”¨ */
+    /** æª¢æŸ¥?¢å??¯å¦?¯ç”¨ */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
     bool IsFactionAvailable(int32 FactionID) const;
 
-    /** ç²å–å‹¢åŠ›æ•¸é‡ */
+    /** ?²å??¢å??¸é? */
     UFUNCTION(BlueprintPure, Category = "Faction System")
     int32 GetFactionCount() const;
 
-    /** å‰µå»ºå‹¢åŠ›å¯¦ä¾‹ */
+    /** ?µå»º?¢å?å¯¦ä? */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
     FFactionData CreateFactionInstance(int32 FactionID);
 
-    /** æ‡‰ç”¨å‹¢åŠ›ä¿®æ­£ */
+    /** ?‰ç”¨?¢å?ä¿®æ­£ */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
     void ApplyFactionModifiers(FFactionData& FactionData);
 
-    /** é©—è­‰å‹¢åŠ›æ•¸æ“š */
+    /** é©—è??¢å??¸æ? */
     UFUNCTION(BlueprintCallable, Category = "Faction System")
     bool ValidateFactionData(const FFactionData& FactionData) const;
 
 protected:
-    /** åŠ è¼‰å‹¢åŠ›æ•¸æ“š */
+    /** ? è??¢å??¸æ? */
     void LoadFactionData();
 
-    /** åˆå§‹åŒ–é»˜èªå‹¢åŠ› */
+    /** ?å??–é?èªå‹¢??*/
     void InitializeDefaultFactions();
 
-    /** è¨»å†Šå‹¢åŠ› */
+    /** è¨»å??¢å? */
     void RegisterFaction(const FFactionData& FactionData);
 
 private:
-    /** æ‰€æœ‰å‹¢åŠ›æ•¸æ“š */
+    /** ?€?‰å‹¢?›æ•¸??*/
     UPROPERTY(BlueprintReadOnly, Category = "Faction System", meta = (AllowPrivateAccess = "true"))
     TArray<FFactionData> AllFactions;
 
-    /** å‹¢åŠ›æ•¸æ“šè¡¨ */
+    /** ?¢å??¸æ?è¡?*/
     UPROPERTY(BlueprintReadOnly, Category = "Faction System", meta = (AllowPrivateAccess = "true"))
     UDataTable* FactionDataTable;
 
-    /** ç³»çµ±æ˜¯å¦å·²åˆå§‹åŒ– */
+    /** ç³»çµ±?¯å¦å·²å?å§‹å? */
     UPROPERTY(BlueprintReadOnly, Category = "Faction System", meta = (AllowPrivateAccess = "true"))
     bool bInitialized;
 };

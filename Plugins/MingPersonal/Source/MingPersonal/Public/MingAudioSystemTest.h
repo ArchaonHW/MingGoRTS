@@ -5,8 +5,7 @@
 #include "MingAudioSystemTest.generated.h"
 
 /**
- * 音頻系統測試運行器
- * 測試音頻與關係系統的整合功能
+ * ?�頻系統測試?��??? * 測試?�頻?��?係系統�??��??�能
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingAudioSystemTest : public UObject
@@ -15,91 +14,88 @@ class MINGPERSONAL_API UMingAudioSystemTest : public UObject
 
 public:
     /**
-     * 運行所有音頻系統測試
-     */
+     * ?��??�?�音?�系統測�?     */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static void RunAllAudioTests();
 
     /**
-     * 測試音頻關係管理器初始化
+     * 測試?�頻?��?管�??��?始�?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static bool TestAudioRelationshipManagerInitialization();
 
     /**
-     * 測試關係變化音頻反饋
+     * 測試?��?變�??�頻?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static bool TestRelationshipAudioFeedback();
 
     /**
-     * 測試聲望變化音頻反饋
+     * 測試?��?變�??�頻?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static bool TestReputationAudioFeedback();
 
     /**
-     * 測試對話音頻系統
+     * 測試對話?�頻系統
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static bool TestDialogueAudioSystem();
 
     /**
-     * 測試民國時期音頻主題
+     * 測試民�??��??�頻主�?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static bool TestRepublicEraThemes();
 
     /**
-     * 測試地區音頻系統
+     * 測試?��??�頻系統
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static bool TestRegionalAudioSystem();
 
     /**
-     * 測試音頻音量控制
+     * 測試?�頻?��??�制
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static bool TestAudioVolumeControl();
 
     /**
-     * 測試音頻事件回調
+     * 測試?�頻事件?�調
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static bool TestAudioEventCallbacks();
 
     /**
-     * 壓力測試 - 大量音頻事件
+     * 壓�?測試 - 大�??�頻事件
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static bool TestAudioSystemStress();
 
     /**
-     * 集成測試 - 完整的音頻關係流程
-     */
+     * ?��?測試 - 完整?�音?��?係�?�?     */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static bool TestAudioRelationshipIntegration();
 
     /**
-     * 創建測試音頻數據
+     * ?�建測試?�頻?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static void CreateTestAudioData();
 
     /**
-     * 清理測試音頻數據
+     * 清�?測試?�頻?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Audio Test")
     static void CleanupTestAudioData();
 
     /**
-     * 驗證音頻系統狀態
-     */
+     * 驗�??�頻系統?�??     */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Audio Test")
     static bool VerifyAudioSystemHealth();
 
     /**
-     * 獲取測試結果報告
+     * ?��?測試結�??��?
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Audio Test")
     static FString GetAudioTestReport();

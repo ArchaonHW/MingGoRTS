@@ -43,14 +43,13 @@ struct FMingTechUnlock
 };
 
 // Wrapper struct to allow TArray in TMap (UHT limitation)
-// 注意：TArray 成員的 UPROPERTY 需要類型已完整定義
+// 注�?：TArray ?�員??UPROPERTY ?�要�??�已完整定義
 USTRUCT(BlueprintType)
 struct FMingBuildingUpgradeList
 {
     GENERATED_BODY()
 
-    // 非 UPROPERTY，因為 FMingBuildingUpgrade 在此後定義
-    TArray<FMingBuildingUpgrade> Upgrades;
+    // ??UPROPERTY，�???FMingBuildingUpgrade ?�此後�?�?    TArray<FMingBuildingUpgrade> Upgrades;
 };
 
 USTRUCT(BlueprintType)
@@ -105,51 +104,51 @@ struct FMingTechNode
 };
 
 /**
- * 建築升級數據結構 | Building Upgrade Data Structure
- * 定義建築升級的屬性和成本 | Define building upgrade properties and costs
+ * 建�??��??��?結�? | Building Upgrade Data Structure
+ * 定義建�??��??�屬?��??�本 | Define building upgrade properties and costs
  */
 USTRUCT(BlueprintType)
 struct FMingBuildingUpgrade
 {
     GENERATED_BODY()
 
-    /** 升級ID | Upgrade ID */
+    /** ?��?ID | Upgrade ID */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString UpgradeID;
 
-    /** 升級名稱 | Upgrade Name */
+    /** ?��??�稱 | Upgrade Name */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString UpgradeName;
 
-    /** 升級描述 | Upgrade Description */
+    /** ?��??�述 | Upgrade Description */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FString Description;
 
-    /** 升級成本 | Upgrade Cost */
+    /** ?��??�本 | Upgrade Cost */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     TArray<FMingResourceCost> UpgradeCost;
 
-    /** 升級時間(秒) | Upgrade Time (seconds) */
+    /** ?��??��?(�? | Upgrade Time (seconds) */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float UpgradeTime;
 
-    /** 最大升級等級 | Max Upgrade Level */
+    /** ?�大�?級�?�?| Max Upgrade Level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     int32 MaxUpgradeLevel;
 
-    /** 當前等級 | Current Level */
+    /** ?��?等�? | Current Level */
     UPROPERTY(BlueprintReadOnly)
     int32 CurrentLevel;
 
-    /** 每級生命值倍率 | Health Multiplier per level (1.2 = +20%) */
+    /** 每�??�命?�倍�? | Health Multiplier per level (1.2 = +20%) */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float HealthMultiplier;
 
-    /** 每級生產效率倍率 | Production Multiplier per level */
+    /** 每�??�產?��??��? | Production Multiplier per level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float ProductionMultiplier;
 
-    /** 每級防禦倍率 | Defense Multiplier per level */
+    /** 每�??�禦?��? | Defense Multiplier per level */
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float DefenseMultiplier;
 
@@ -261,7 +260,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Upgrades")
     int32 GetUpgradeLevel(const FString& UpgradeID) const;
 
-    /** 設置默認建築升級配置 | Setup Default Building Upgrades */
+    /** 設置默�?建�??��??�置 | Setup Default Building Upgrades */
     UFUNCTION(BlueprintCallable, Category = "Upgrades")
     void SetupDefaultBuildingUpgrades();
 

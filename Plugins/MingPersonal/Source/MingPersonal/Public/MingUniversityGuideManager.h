@@ -5,25 +5,25 @@
 #include "MingUniversityGuideManager.generated.h"
 
 /**
- * 高校引導內容類型
+ * 高校引�??�容類�?
  */
 UENUM(BlueprintType)
 enum class EMingUniversityContentType : uint8
 {
-    CampusTour      UMETA(DisplayName = "校園導覽"),
-    AcademicIntro   UMETA(DisplayName = "學術介紹"),
+    CampusTour      UMETA(DisplayName = "?��?導覽"),
+    AcademicIntro   UMETA(DisplayName = "學�?介紹"),
     HistoricalGuide UMETA(DisplayName = "歷史導覽"),
-    CulturalIntro   UMETA(DisplayName = "文化介紹"),
-    GameTutorial    UMETA(DisplayName = "遊戲教程"),
-    ResearchShowcase UMETA(DisplayName = "研究成果展示"),
-    StudentLife     UMETA(DisplayName = "學生生活"),
-    FacultyIntro    UMETA(DisplayName = "師資介紹"),
-    Achievement     UMETA(DisplayName = "成就展示"),
-    InteractiveMap  UMETA(DisplayName = "互動地圖")
+    CulturalIntro   UMETA(DisplayName = "?��?介紹"),
+    GameTutorial    UMETA(DisplayName = "?�戲?��?"),
+    ResearchShowcase UMETA(DisplayName = "?�究?��?展示"),
+    StudentLife     UMETA(DisplayName = "學�??�活"),
+    FacultyIntro    UMETA(DisplayName = "師�?介紹"),
+    Achievement     UMETA(DisplayName = "?�就展示"),
+    InteractiveMap  UMETA(DisplayName = "互�??��?")
 };
 
 /**
- * 高校引導配置
+ * 高校引�??�置
  */
 USTRUCT(BlueprintType)
 struct FMingUniversityGuideConfig
@@ -75,7 +75,7 @@ struct FMingUniversityGuideConfig
 };
 
 /**
- * 高校引導內容數據
+ * 高校引�??�容?��?
  */
 USTRUCT(BlueprintType)
 struct FUniversityGuideContent
@@ -110,9 +110,7 @@ struct FUniversityGuideContent
 };
 
 /**
- * 高校引導管理器
- * 管理遊戲內的高校引導和教育內容
- */
+ * 高校引�?管�??? * 管�??�戲?��?高校引�??��??�內�? */
 UCLASS()
 class MINGPERSONAL_API UMingUniversityGuideManager : public UObject
 {
@@ -125,120 +123,116 @@ public:
     virtual void Shutdown();
 
     /**
-     * 啟動高校引導
+     * ?��?高校引�?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void StartUniversityGuide();
 
     /**
-     * 停止高校引導
+     * ?�止高校引�?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void StopUniversityGuide();
 
     /**
-     * 設置引導配置
+     * 設置引�??�置
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void SetGuideConfig(const FUniversityGuideConfig& Config);
 
     /**
-     * 獲取當前配置
+     * ?��??��??�置
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     FUniversityGuideConfig GetGuideConfig() const;
 
     /**
-     * 生成引導內容
+     * ?��?引�??�容
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     FString GenerateGuideContent(const FUniversityGuideConfig& Config);
 
     /**
-     * 顯示下一個引導內容
-     */
+     * 顯示下�??��?導內�?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void ShowNextContent();
 
     /**
-     * 顯示上一個引導內容
-     */
+     * 顯示上�??��?導內�?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void ShowPreviousContent();
 
     /**
-     * 跳轉到指定內容
-     */
+     * 跳�??��?定內�?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void JumpToContent(const FString& ContentID);
 
     /**
-     * 標記內容為已完成
+     * 標�??�容?�已完�?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void MarkContentAsCompleted(const FString& ContentID);
 
     /**
-     * 獲取所有內容
-     */
+     * ?��??�?�內�?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     TArray<FUniversityGuideContent> GetAllContents() const;
 
     /**
-     * 獲取當前內容
+     * ?��??��??�容
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     FUniversityGuideContent GetCurrentContent() const;
 
     /**
-     * 獲取完成進度
+     * ?��?完�??�度
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     float GetCompletionProgress() const;
 
     /**
-     * 播放引導音頻
+     * ?�放引�??�頻
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void PlayGuideAudio(const FString& AudioClipID);
 
     /**
-     * 停止引導音頻
+     * ?�止引�??�頻
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void StopGuideAudio();
 
     /**
-     * 設置引導音量
+     * 設置引�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void SetGuideVolume(float Volume);
 
     /**
-     * 啟用/禁用互動模式
+     * ?�用/禁用互�?模�?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void SetInteractiveMode(bool bEnabled);
 
     /**
-     * 檢查是否正在運行
+     * 檢查?�否�?��?��?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     bool IsGuideRunning() const;
 
     /**
-     * 保存引導進度
+     * 保�?引�??�度
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void SaveGuideProgress();
 
     /**
-     * 載入引導進度
+     * 載入引�??�度
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void LoadGuideProgress();
 
-    // 事件聲明
+    // 事件?��?
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGuideStarted, FString, GuideID);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGuideCompleted, FString, GuideID);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnContentChanged, FUniversityGuideContent, Content);

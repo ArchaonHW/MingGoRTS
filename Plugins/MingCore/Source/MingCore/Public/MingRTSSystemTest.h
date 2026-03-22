@@ -12,8 +12,7 @@ class UMingRTSBuildingSystem;
 class UMingRTSEconomicSystem;
 
 /**
- * RTS系統測試運行器
- * 測試所有RTS核心系統的功能和性能
+ * RTS系統測試?��??? * 測試?�?�RTS?��?系統?��??��??�能
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSSystemTest : public UObject
@@ -22,121 +21,116 @@ class MINGCORE_API UMingRTSSystemTest : public UObject
 
 public:
     /**
-     * 運行所有RTS系統測試
+     * ?��??�?�RTS系統測試
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static void RunAllRTSTests();
 
     /**
-     * 測試單位管理器
-     */
+     * 測試?��?管�???     */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestUnitManager();
 
     /**
-     * 測試戰鬥系統
+     * 測試?�鬥系統
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestCombatSystem();
 
     /**
-     * 測試AI控制器
-     */
+     * 測試AI?�制??     */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestAIController();
 
     /**
-     * 測試資源管理器
-     */
+     * 測試資�?管�???     */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestResourceManager();
 
     /**
-     * 測試建築系統
+     * 測試建�?系統
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestBuildingSystem();
 
     /**
-     * 測試經濟系統
+     * 測試經�?系統
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestEconomicSystem();
 
     /**
-     * 測試系統集成
+     * 測試系統?��?
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestSystemIntegration();
 
     /**
-     * 性能測試
+     * ?�能測試
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestPerformance();
 
     /**
-     * 壓力測試
+     * 壓�?測試
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestStressTest();
 
     /**
-     * 邊界測試
+     * ?��?測試
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestBoundaryConditions();
 
     /**
-     * 錯誤處理測試
+     * ?�誤?��?測試
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestErrorHandling();
 
     /**
-     * 創建測試數據
+     * ?�建測試?��?
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static void CreateTestData();
 
     /**
-     * 清理測試數據
+     * 清�?測試?��?
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static void CleanupTestData();
 
     /**
-     * 驗證系統健康狀態
-     */
+     * 驗�?系統?�康?�??     */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "RTS System Test")
     static bool VerifySystemHealth();
 
     /**
-     * 獲取測試報告
+     * ?��?測試?��?
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "RTS System Test")
     static FString GetTestReport();
 
     /**
-     * 生成性能報告
+     * ?��??�能?��?
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "RTS System Test")
     static FString GeneratePerformanceReport();
 
     /**
-     * 測試單位選擇和移動
-     */
+     * 測試?��??��??�移??     */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestUnitSelectionAndMovement();
 
     /**
-     * 測試陣型系統
+     * 測試???系統
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestFormationSystem();
 
     /**
-     * 測試戰鬥機制
+     * 測試?�鬥機制
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestCombatMechanics();
@@ -148,25 +142,25 @@ public:
     static bool TestAIBehavior();
 
     /**
-     * 測試資源生產
+     * 測試資�??�產
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestResourceProduction();
 
     /**
-     * 測試建築建設
+     * 測試建�?建設
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestBuildingConstruction();
 
     /**
-     * 測試經濟循環
+     * 測試經�?循環
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestEconomicCycle();
 
     /**
-     * 測試貿易系統
+     * 測試貿�?系統
      */
     UFUNCTION(BlueprintCallable, Category = "RTS System Test")
     static bool TestTradeSystem();

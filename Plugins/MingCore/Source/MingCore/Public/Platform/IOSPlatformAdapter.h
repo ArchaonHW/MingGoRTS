@@ -5,8 +5,7 @@
 #include "IOSPlatformAdapter.generated.h"
 
 /**
- * iOS 平台適配器
- */
+ * iOS 平台?��??? */
 UCLASS()
 class MINGCORE_API UIOSPlatformAdapter : public UObject, public IPlatformInterface
 {
@@ -32,7 +31,7 @@ public:
     virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) override;
     virtual FString LoadFromPlatformStorage(const FString& Key) const override;
 
-    // iOS 特定功能
+    // iOS ?��??�能
     UFUNCTION(BlueprintCallable, Category = "Platform|iOS")
     FString GetIOSVersion() const;
 
@@ -49,7 +48,6 @@ private:
     bool bInitialized;
     int32 CurrentPerformanceMode;
     
-    // 安全區域緩存
-    FMargin CachedSafeZone;
+    // 安全?�?�緩�?    FMargin CachedSafeZone;
     bool bSafeZoneCached;
 };

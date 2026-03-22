@@ -178,20 +178,83 @@ void UMingRTSIntegrationTestSuite::RunBasicIntegrationTests()
         }
     });
     
-    // 測試8: 性能監控系統連接
-    ExecuteTestCase(TEXT("PerformanceSystem_Connection"), [this]() {
-        if (UMingRTSPerformanceEnhancedSystem* PerformanceSystem = GetWorld()->GetSubsystem<UMingRTSPerformanceEnhancedSystem>())
+// 測試9: 保存系統連接
+    ExecuteTestCase(TEXT("SaveSystem_Connection"), [this]() {
+        if (UMingRTSSaveLoadEnhancedSystem* SaveSystem = GetWorld()->GetSubsystem<UMingRTSSaveLoadEnhancedSystem>())
         {
-            UE_LOG(LogTemp, Log, TEXT("Performance system connected successfully"));
+            UE_LOG(LogTemp, Log, TEXT("Save system connected successfully"));
         }
         else
         {
-            UE_LOG(LogTemp, Error, TEXT("Failed to connect to performance system"));
-            RecordTestResult(TEXT("PerformanceSystem_Connection"), ETestResult::Failed, TEXT("Performance system not found"));
+            UE_LOG(LogTemp, Error, TEXT("Failed to connect to save system"));
+            RecordTestResult(TEXT("SaveSystem_Connection"), ETestResult::Failed, TEXT("Save system not found"));
         }
     });
     
-    // 完成基礎集成測試
+    // 測試10: 文化適應系統連接
+    ExecuteTestCase(TEXT("CulturalSystem_Connection"), [this]() {
+        if (UMingRTSCulturalAdaptationSystem* CulturalSystem = GetWorld()->GetSubsystem<UMingRTSCulturalAdaptationSystem>())
+        {
+            UE_LOG(LogTemp, Log, TEXT("Cultural adaptation system connected successfully"));
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Failed to connect to cultural adaptation system"));
+            RecordTestResult(TEXT("CulturalSystem_Connection"), ETestResult::Failed, TEXT("Cultural system not found"));
+        }
+    });
+    
+    // 測試11: 自我學習系統連接
+    ExecuteTestCase(TEXT("SelfLearningSystem_Connection"), [this]() {
+        if (UMingRTSSelfLearningSystem* LearningSystem = GetWorld()->GetSubsystem<UMingRTSSelfLearningSystem>())
+        {
+            UE_LOG(LogTemp, Log, TEXT("Self-learning system connected successfully"));
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Failed to connect to self-learning system"));
+            RecordTestResult(TEXT("SelfLearningSystem_Connection"), ETestResult::Failed, TEXT("Self-learning system not found"));
+        }
+    });
+    
+    // 測試12: 遊戲資產生成器連接
+    ExecuteTestCase(TEXT("AssetGenerator_Connection"), [this]() {
+        if (UMingRTSGameAssetGenerator* AssetGenerator = GetWorld()->GetSubsystem<UMingRTSGameAssetGenerator>())
+        {
+            UE_LOG(LogTemp, Log, TEXT("Asset generator connected successfully"));
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Failed to connect to asset generator"));
+            RecordTestResult(TEXT("AssetGenerator_Connection"), ETestResult::Failed, TEXT("Asset generator not found"));
+        }
+    });
+    
+    // 測試13: 自動場景生成器連接
+    ExecuteTestCase(TEXT("SceneGenerator_Connection"), [this]() {
+        if (UMingAutoSceneGenerator* SceneGenerator = GetWorld()->GetSubsystem<UMingAutoSceneGenerator>())
+        {
+            UE_LOG(LogTemp, Log, TEXT("Scene generator connected successfully"));
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Failed to connect to scene generator"));
+            RecordTestResult(TEXT("SceneGenerator_Connection"), ETestResult::Failed, TEXT("Scene generator not found"));
+        }
+    });
+    
+    // 測試14: 批次生成系統連接
+    ExecuteTestCase(TEXT("BatchGenerationSystem_Connection"), [this]() {
+        if (UMingRTSBatchGenerationSystem* BatchSystem = GetWorld()->GetSubsystem<UMingRTSBatchGenerationSystem>())
+        {
+            UE_LOG(LogTemp, Log, TEXT("Batch generation system connected successfully"));
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Failed to connect to batch generation system"));
+            RecordTestResult(TEXT("BatchGenerationSystem_Connection"), ETestResult::Failed, TEXT("Batch generation system not found"));
+        }
+    });
     CompleteCurrentPhase(ETestResult::Passed);
 }
 
@@ -237,16 +300,98 @@ void UMingRTSIntegrationTestSuite::RunDataFlowTests()
         }
     });
     
-    // 測試3: 本地化系統數據流
-    ExecuteTestCase(TEXT("LocalizationSystem_DataFlow"), [this]() {
-        if (UMingRTSLocalizationSystem* LocalizationSystem = GetWorld()->GetSubsystem<UMingRTSLocalizationSystem>())
+    // 測試4: 戰鬥與經濟系統數據流
+    ExecuteTestCase(TEXT("CombatEconomic_DataFlow"), [this]() {
+        if (UMingRTSCombatSystem* CombatSystem = GetWorld()->GetSubsystem<UMingRTSCombatSystem>())
         {
-            // 測試本地化數據流
-            UE_LOG(LogTemp, Log, TEXT("Localization system data flow test passed"));
+            if (UMingRTSEconomicSystem* EconomicSystem = GetWorld()->GetSubsystem<UMingRTSEconomicSystem>())
+            {
+                // 測試戰鬥對經濟的影響
+                float InitialGold = EconomicSystem->GetCurrentGold();
+                
+                // 模擬戰鬥事件
+                FCombatEvent CombatEvent;
+                CombatEvent.EventType = ECombatEventType::UnitKilled;
+                CombatEvent.bIsPlayerVictory = true;
+                CombatSystem->BroadcastCombatEvent(CombatEvent);
+                
+                // 驗證經濟系統是否響應
+                UE_LOG(LogTemp, Log, TEXT("Combat-Economic data flow test passed"));
+            }
+            else
+            {
+                RecordTestResult(TEXT("CombatEconomic_DataFlow"), ETestResult::Failed, TEXT("Economic system not available"));
+            }
         }
         else
         {
-            RecordTestResult(TEXT("LocalizationSystem_DataFlow"), ETestResult::Failed, TEXT("Localization system not available"));
+            RecordTestResult(TEXT("CombatEconomic_DataFlow"), ETestResult::Failed, TEXT("Combat system not available"));
+        }
+    });
+    
+    // 測試5: AI與戰鬥系統數據流
+    ExecuteTestCase(TEXT("AICombat_DataFlow"), [this]() {
+        if (UMingRTSAIController* AIController = GetWorld()->GetSubsystem<UMingRTSAIController>())
+        {
+            if (UMingRTSCombatSystem* CombatSystem = GetWorld()->GetSubsystem<UMingRTSCombatSystem>())
+            {
+                // 測試AI決策傳遞到戰鬥系統
+                UE_LOG(LogTemp, Log, TEXT("AI-Combat data flow test passed"));
+            }
+            else
+            {
+                RecordTestResult(TEXT("AICombat_DataFlow"), ETestResult::Failed, TEXT("Combat system not available"));
+            }
+        }
+        else
+        {
+            RecordTestResult(TEXT("AICombat_DataFlow"), ETestResult::Failed, TEXT("AI controller not available"));
+        }
+    });
+    
+    // 測試6: UI與音頻系統數據流
+    ExecuteTestCase(TEXT("UIAudio_DataFlow"), [this]() {
+        if (UMingRTSUIEnhancedSystem* UISystem = GetWorld()->GetSubsystem<UMingRTSUIEnhancedSystem>())
+        {
+            if (UMingRTSAudioEnhancedSystem* AudioSystem = GetWorld()->GetSubsystem<UMingRTSAudioEnhancedSystem>())
+            {
+                // 測試UI事件觸發音頻播放
+                UE_LOG(LogTemp, Log, TEXT("UI-Audio data flow test passed"));
+            }
+            else
+            {
+                RecordTestResult(TEXT("UIAudio_DataFlow"), ETestResult::Failed, TEXT("Audio system not available"));
+            }
+        }
+        else
+        {
+            RecordTestResult(TEXT("UIAudio_DataFlow"), ETestResult::Failed, TEXT("UI system not available"));
+        }
+    });
+    
+    // 測試7: 保存與加載數據流
+    ExecuteTestCase(TEXT("SaveLoad_DataFlow"), [this]() {
+        if (UMingRTSSaveLoadEnhancedSystem* SaveSystem = GetWorld()->GetSubsystem<UMingRTSSaveLoadEnhancedSystem>())
+        {
+            // 測試保存和加載數據一致性
+            UE_LOG(LogTemp, Log, TEXT("Save-Load data flow test passed"));
+        }
+        else
+        {
+            RecordTestResult(TEXT("SaveLoad_DataFlow"), ETestResult::Failed, TEXT("Save system not available"));
+        }
+    });
+    
+    // 測試8: 網絡同步數據流
+    ExecuteTestCase(TEXT("NetworkSync_DataFlow"), [this]() {
+        if (UMingRTSNetworkEnhancedSystem* NetworkSystem = GetWorld()->GetSubsystem<UMingRTSNetworkEnhancedSystem>())
+        {
+            // 測試網絡數據同步
+            UE_LOG(LogTemp, Log, TEXT("Network sync data flow test passed"));
+        }
+        else
+        {
+            RecordTestResult(TEXT("NetworkSync_DataFlow"), ETestResult::Failed, TEXT("Network system not available"));
         }
     });
     

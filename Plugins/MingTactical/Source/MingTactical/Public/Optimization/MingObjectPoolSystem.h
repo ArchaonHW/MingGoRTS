@@ -8,20 +8,19 @@ class AMingTacticalUnit;
 class AMingCombatAI;
 
 /**
- * 池對象狀態 | Pool Object State
+ * 池�?象�???| Pool Object State
  */
 UENUM(BlueprintType)
 enum class EPoolObjectState : uint8
 {
-    Unused      UMETA(DisplayName = "Unused"),      // 未使用
-    Available   UMETA(DisplayName = "Available"),   // 可用 | Available
-    InUse       UMETA(DisplayName = "In Use"),      // 使用中 | In Use
-    Pending     UMETA(DisplayName = "Pending Return"), // 待歸還 | Pending Return
+    Unused      UMETA(DisplayName = "Unused"),      // ?�使??    Available   UMETA(DisplayName = "Available"),   // ?�用 | Available
+    InUse       UMETA(DisplayName = "In Use"),      // 使用�?| In Use
+    Pending     UMETA(DisplayName = "Pending Return"), // 待歸??| Pending Return
     Disabled    UMETA(DisplayName = "Disabled")     // 禁用 | Disabled
 };
 
 /**
- * 單位池項 | Unit Pool Item
+ * ?��?池�? | Unit Pool Item
  */
 USTRUCT()
 struct MINGTACTICAL_API FUnitPoolItem
@@ -48,7 +47,7 @@ struct MINGTACTICAL_API FUnitPoolItem
 };
 
 /**
- * AI池項 | AI Pool Item
+ * AI池�? | AI Pool Item
  */
 USTRUCT()
 struct MINGTACTICAL_API FAIPoolItem
@@ -75,14 +74,14 @@ struct MINGTACTICAL_API FAIPoolItem
 };
 
 /**
- * 對象池系統 | Object Pool System
+ * 對象池系�?| Object Pool System
  * 
- * 優化大量單位/AI的創建和銷毀性能： | Optimize creation/destruction performance:
- * - 預分配對象 | Pre-allocation
- * - 復用已銷毀的對象 | Object reuse
- * - 控制內存佔用 | Memory management
+ * ?��?大�??��?/AI?�創建�??��??�能�?| Optimize creation/destruction performance:
+ * - ?��??��?�?| Pre-allocation
+ * - 復用已銷毀?��?�?| Object reuse
+ * - ?�制?��?佔用 | Memory management
  * 
- * 適用於 1000+ 單位的大規模戰鬥場景 | Suitable for 1000+ unit scenarios
+ * ?�用??1000+ ?��??�大規模?�鬥?�景 | Suitable for 1000+ unit scenarios
  */
 UCLASS(ClassGroup = (Optimization), Blueprintable)
 class MINGTACTICAL_API UMingObjectPoolSystem : public UObject
@@ -93,108 +92,98 @@ public:
     UMingObjectPoolSystem();
 
     /**
-     * 初始化对象池
-     * @param InitialUnitPoolSize 初始单位池大小
-     * @param InitialAIPoolSize 初始AI池大小
-     * @param MaxPoolSize 最大池大小
+     * ?��??�对象�?
+     * @param InitialUnitPoolSize ?��??��?池大�?     * @param InitialAIPoolSize ?��?AI池大�?     * @param MaxPoolSize ?�大�?大�?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
     void Initialize(int32 InitialUnitPoolSize = 100, int32 InitialAIPoolSize = 20, int32 MaxPoolSize = 5000);
 
     /**
-     * 关闭对象池系统
-     */
+     * ?�闭对象池系�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
     void Shutdown();
 
     /**
-     * 预填充对象池
+     * 预填?�对象�?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
     void PrepopulatePools();
 
-    // ==== 单位池操作 ====
+    // ==== ?��?池�?�?====
 
     /**
-     * 从池获取一个单位
-     * @return 可用的单位实例，如果没有则返回 nullptr
+     * 从�??��?一个�?�?     * @return ?�用?��?位�?例�?如�?没�??��???nullptr
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
     AMingTacticalUnit* AcquireUnit(UClass* UnitClass = nullptr);
 
     /**
-     * 将单位归还到池中
+     * 将�?位�?还到池中
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
     void ReturnUnit(AMingTacticalUnit* Unit);
 
     /**
-     * 批量获取单位
+     * ?��??��??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
     TArray<AMingTacticalUnit*> AcquireUnits(int32 Count, UClass* UnitClass = nullptr);
 
     /**
-     * 批量归还单位
+     * ?��?归�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Units")
     void ReturnUnits(const TArray<AMingTacticalUnit*>& Units);
 
-    // ==== AI池操作 ====
+    // ==== AI池�?�?====
 
     /**
-     * 从池获取一个AI
+     * 从�??��?一个AI
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|AI")
     AMingCombatAI* AcquireAI(UClass* AIClass = nullptr);
 
     /**
-     * 将AI归还到池中
-     */
+     * 将AI归�??��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|AI")
     void ReturnAI(AMingCombatAI* AI);
 
-    // ==== 池管理 ====
+    // ==== 池管??====
 
     /**
-     * 扩展单位池
-     */
+     * ?��??��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void ExpandUnitPool(int32 AdditionalCount);
 
     /**
-     * 扩展AI池
-     */
+     * ?��?AI�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void ExpandAIPool(int32 AdditionalCount);
 
     /**
-     * 收缩池（删除未使用的对象）
-     */
+     * ?�缩池�??�除?�使?��?对象�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void ShrinkUnusedPools();
 
     /**
-     * 强制清理所有对象（慎用）
-     */
+     * 强制清�??�?�对象�??�用�?     */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void ForceClearAll();
 
     /**
-     * 设置最大池大小限制
+     * 设置?�大�?大�??�制
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void SetMaxPoolSize(int32 NewMaxSize);
 
     /**
-     * 设置自动扩展阈值
-     * 当可用对象低于此百分比时自动扩展
+     * 设置?�动?��??��?     * 当可?�对象�?于此?��?比时?�动?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void SetAutoExpandThreshold(float Percentage);
 
     /**
-     * 启用/禁用自动扩展
+     * ?�用/禁用?�动?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Management")
     void SetAutoExpandEnabled(bool bEnabled);
@@ -234,7 +223,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Object Pool|Stats")
     float GetAverageReuseRate() const;
 
-    // ==== 调试 ====
+    // ==== 调�? ====
 
     UFUNCTION(BlueprintCallable, Category = "Object Pool|Debug")
     void PrintDebugInfo();
@@ -249,21 +238,19 @@ public:
     void DumpPoolContents();
 
     /**
-     * Tick 更新（定期清理和检查）
+     * Tick ?�新（�??��??��?检?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Object Pool")
     void Tick(float DeltaTime);
 
 private:
-    // 单位池
-    UPROPERTY()
+    // ?��?�?    UPROPERTY()
     TArray<FUnitPoolItem> UnitPool;
 
-    // AI池
-    UPROPERTY()
+    // AI�?    UPROPERTY()
     TArray<FAIPoolItem> AIPool;
 
-    // 配置
+    // ?�置
     int32 MaxPoolSize;
     int32 InitialUnitPoolSize;
     int32 InitialAIPoolSize;
@@ -277,48 +264,42 @@ private:
     int32 TotalUnitAcquires;
     int32 TotalAIAcquires;
 
-    // 可用物件索引快取（避免線性搜尋）
+    // ?�用?�件索�?快�?（避?��??��?尋�?
     TArray<int32> AvailableUnitIndices;
     TArray<int32> AvailableAIIndices;
 
-    // 扩展冷却（防止过度扩展）
+    // ?��??�却（防止�?度扩展�?
     float LastExpandTime;
     float ExpandCooldown;
 
-    // 单位类（默认）
-    UPROPERTY()
+    // ?��?类�?默认�?    UPROPERTY()
     TSubclassOf<AMingTacticalUnit> DefaultUnitClass;
 
     UPROPERTY()
     TSubclassOf<AMingCombatAI> DefaultAIClass;
 
-    // 创建新单位
-    AMingTacticalUnit* CreateNewUnit(UClass* UnitClass);
+    // ?�建?��?�?    AMingTacticalUnit* CreateNewUnit(UClass* UnitClass);
 
-    // 创建新AI
+    // ?�建?�AI
     AMingCombatAI* CreateNewAI(UClass* AIClass);
 
-    // 重置单位状态
-    void ResetUnit(AMingTacticalUnit* Unit);
+    // ?�置?��??��?    void ResetUnit(AMingTacticalUnit* Unit);
 
-    // 重置AI状态
-    void ResetAI(AMingCombatAI* AI);
+    // ?�置AI?��?    void ResetAI(AMingCombatAI* AI);
 
-    // 真正销毁对象（归还到引擎）
+    // ?�正?�毁对象�?归�??��??��?
     void DestroyUnit(AMingTacticalUnit* Unit);
     void DestroyAI(AMingCombatAI* AI);
 
-    // 检查是否需要自动扩展
-    void CheckAutoExpand();
+    // 检?�是?��?要自?�扩�?    void CheckAutoExpand();
 
-    // 清理无效引用
+    // 清�??��?引用
     void CleanupInvalidReferences();
 
-    // 查找可用的池项
-    int32 FindAvailableUnitIndex() const;
+    // ?�找?�用?��?�?    int32 FindAvailableUnitIndex() const;
     int32 FindAvailableAIIndex() const;
 
-    // 查找指定对象的池索引
+    // ?�找?��?对象?��?索�?
     int32 FindUnitIndex(AMingTacticalUnit* Unit) const;
     int32 FindAIIndex(AMingCombatAI* AI) const;
 };

@@ -9,24 +9,20 @@
 UENUM(BlueprintType)
 enum class EQuestStatus : uint8
 {
-    Available,      // 可接取
-    Active,         // 進行中
-    Completed,      // 已完成
-    Failed,         // 失敗
-    Abandoned       // 放棄
+    Available,      // ?�接??    Active,         // ?��?�?    Completed,      // 已�???    Failed,         // 失�?
+    Abandoned       // ?��?
 };
 
 UENUM(BlueprintType)
 enum class EQuestType : uint8
 {
-    Main,           // 主線任務
-    Side,           // 支線任務
-    Daily,          // 每日任務
-    Weekly,         // 每週任務
-    Special,        // 特殊任務
-    Relationship,    // 關係任務
-    Reputation,      // 聲望任務
-    Exploration      // 探索任務
+    Main,           // 主�?任�?
+    Side,           // ?��?任�?
+    Daily,          // 每日任�?
+    Weekly,         // 每週任??    Special,        // ?��?任�?
+    Relationship,    // ?��?任�?
+    Reputation,      // ?��?任�?
+    Exploration      // ?�索任�?
 };
 
 USTRUCT(BlueprintType)
@@ -149,8 +145,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestFailed, const FString&, Ques
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestSelected, const FString&, QuestID, EQuestStatus, Status);
 
 /**
- * 任務面板Widget
- * 管理任務界面
+ * 任�??�板Widget
+ * 管�?任�??�面
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingQuestPanel : public UUserWidget
@@ -160,11 +156,10 @@ class MINGPERSONAL_API UMingQuestPanel : public UUserWidget
 public:
     UMingQuestPanel(const FObjectInitializer& ObjectInitializer);
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void InitializeQuestPanel(UMingRelationshipManager* InRelationshipManager);
 
-    // 任務管理
+    // 任�?管�?
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void AddQuest(const FQuestData& QuestData);
 
@@ -186,7 +181,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void FailQuest(const FString& QuestID);
 
-    // 任務查詢
+    // 任�??�詢
     UFUNCTION(BlueprintPure, Category = "Quest Panel")
     FQuestData GetQuest(const FString& QuestID) const;
 
@@ -205,8 +200,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Quest Panel")
     bool HasActiveQuests() const;
 
-    // 過濾和排序
-    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
+    // ?�濾?��?�?    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void FilterByStatus(EQuestStatus Status, bool bActive);
 
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
@@ -227,14 +221,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void ClearFilters();
 
-    // 搜索
+    // ?�索
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void SearchQuests(const FString& SearchText);
 
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void ClearSearch();
 
-    // 統計信息
+    // 統�?信息
     UFUNCTION(BlueprintPure, Category = "Quest Panel")
     int32 GetTotalQuestCount() const;
 
@@ -260,7 +254,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void UpdateQuestProgress(const FString& QuestID, const FString& RequirementText, float Progress);
 
-    // 互動操作
+    // 互�??��?
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void OnQuestClicked(const FString& QuestID);
 
@@ -270,8 +264,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void OnQuestRightClicked(const FString& QuestID);
 
-    // 導出和導入
-    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
+    // 導出?��???    UFUNCTION(BlueprintCallable, Category = "Quest Panel")
     void ExportQuestData();
 
     UFUNCTION(BlueprintCallable, Category = "Quest Panel")
@@ -295,7 +288,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
-    // 任務數據
+    // 任�??��?
     UPROPERTY(BlueprintReadOnly, Category = "Quest Data")
     TArray<FQuestData> AllQuests;
 
@@ -305,8 +298,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Quest Data")
     FQuestData SelectedQuest;
 
-    // 過濾狀態
-    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
+    // ?�濾?�??    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     TMap<EQuestStatus, bool> StatusFilters;
 
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
@@ -321,8 +313,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     bool bIsFiltered = false;
 
-    // 排序狀態
-    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
+    // ?��??�??    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortByDifficulty = false;
 
     UPROPERTY(BlueprintReadOnly, Category = "Sort State")
@@ -334,7 +325,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortAscending = true;
 
-    // UI組件引用（需要在Blueprint中綁定）
+    // UI組件引用（�?要在Blueprint中�?定�?
     UPROPERTY(meta = (BindWidget))
     class UListView* QuestListView;
 
@@ -359,11 +350,11 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UScrollBox* DetailsScrollBox;
 
-    // 虛擬函數
+    // ?�擬?�數
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // 內部函數
+    // ?�部?�數
     void ProcessQuestData();
     void ApplyFilters();
     void ApplySorting();
@@ -373,12 +364,12 @@ protected:
     FString GetQuestTypeDisplayName(EQuestType Type) const;
     FString GetQuestStatusDisplayName(EQuestStatus Status) const;
 
-    // 事件綁定
+    // 事件綁�?
     void SetupEventBindings();
     void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason);
 
 private:
-    // 輔助函數
+    // 輔助?�數
     bool PassesFilter(const FQuestData& QuestData) const;
     bool PassesSearch(const FQuestData& QuestData) const;
     void RefreshDisplayList();

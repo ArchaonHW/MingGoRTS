@@ -5,57 +5,49 @@
 #include "FourLayer/IMingGameLayer.h"
 #include "MingTacticalLayer.generated.h"
 
-// æˆ°è¡“å–®ä½ç‹€æ…‹
-UENUM(BlueprintType)
+// ?°è??®ä??€??UENUM(BlueprintType)
 enum class EMingStrategicTacticalUnitState : uint8
 {
     Idle,           // å¾…å‘½
-    Moving,         // ç§»å‹•ä¸­
-    Attacking,      // æ”»æ“Šä¸­
-    Defending,      // é˜²ç¦¦ä¸­
-    Retreating,     // æ’¤é€€ä¸­
-    Regrouping      // é‡çµ„ä¸­
-};
+    Moving,         // ç§»å?ä¸?    Attacking,      // ?»æ?ä¸?    Defending,      // ?²ç¦¦ä¸?    Retreating,     // ?¤é€€ä¸?    Regrouping      // ?ç?ä¸?};
 
-// æˆ°è¡“åœ°å½¢é¡å‹
+// ?°è??°å½¢é¡å?
 UENUM(BlueprintType)
 enum class EMingTacticalTerrain : uint8
 {
-    Plains,         // å¹³åŸ
+    Plains,         // å¹³å?
     Mountains,      // å±±åœ°
-    Forest,         // æ£®æ—
-    River,          // æ²³æµ
-    Urban,          // åŸå¸‚
-    Desert          // æ²™æ¼ 
+    Forest,         // æ£®æ?
+    River,          // æ²³æ?
+    Urban,          // ?å?
+    Desert          // æ²™æ?
 };
 
-// æˆ°è¡“å¤©æ°£ç‹€æ³
-UENUM(BlueprintType)
+// ?°è?å¤©æ°£?€æ³?UENUM(BlueprintType)
 enum class EMingTacticalWeather : uint8
 {
-    Clear,          // æ™´æœ—
+    Clear,          // ?´æ?
     Cloudy,         // å¤šé›²
     Rainy,          // ä¸‹é›¨
     Snowy,          // ä¸‹é›ª
-    Foggy,          // æœ‰éœ§
-    Stormy          // æš´é¢¨é›¨
-};
+    Foggy,          // ?‰éœ§
+    Stormy          // ?´é¢¨??};
 
-// æˆ°è¡“å‘½ä»¤é¡å‹
+// ?°è??½ä»¤é¡å?
 UENUM(BlueprintType)
 enum class EMingStratTacticalCommand : uint8
 {
-    Move,           // ç§»å‹•
-    Attack,         // æ”»æ“Š
-    Defend,         // é˜²ç¦¦
-    Retreat,        // æ’¤é€€
-    Hold,           // å …å®ˆ
-    Patrol,         // å·¡é‚
-    Ambush,         // ä¼æ“Š
-    Flank           // å´ç¿¼åŒ…æŠ„
+    Move,           // ç§»å?
+    Attack,         // ?»æ?
+    Defend,         // ?²ç¦¦
+    Retreat,        // ?¤é€€
+    Hold,           // ?…å?
+    Patrol,         // å·¡é?
+    Ambush,         // ä¼æ?
+    Flank           // ?´ç¿¼?…æ?
 };
 
-// æˆ°è¡“å–®ä½ä¿¡æ¯
+// ?°è??®ä?ä¿¡æ¯
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStrategicTacticalUnit
 {
@@ -92,7 +84,7 @@ struct MINGSTRATEGIC_API FMingStrategicTacticalUnit
     TArray<EMingStratTacticalCommand> AvailableCommands;
 };
 
-// æˆ°è¡“æˆ°å ´ä¿¡æ¯
+// ?°è??°å ´ä¿¡æ¯
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingTacticalBattlefield
 {
@@ -129,7 +121,7 @@ struct MINGSTRATEGIC_API FMingTacticalBattlefield
     float BattlefieldControl;
 };
 
-// æˆ°è¡“å‘½ä»¤
+// ?°è??½ä»¤
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStrategicTacticalOrder
 {
@@ -157,7 +149,7 @@ struct MINGSTRATEGIC_API FMingStrategicTacticalOrder
     FDateTime Deadline;
 };
 
-// æˆ°è¡“äº‹ä»¶
+// ?°è?äº‹ä»¶
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingTacticalEvent
 {
@@ -179,14 +171,119 @@ struct MINGSTRATEGIC_API FMingTacticalEvent
     TArray<FString> InvolvedUnits;
 
     UPROPERTY(BlueprintReadOnly)
+    FDateTime EventTime;
+};
+
+// ?°è??®ä??€??UENUM(BlueprintType)
+enum class EMingStrategicUnitState : uint8
+{
+    Idle,           // å¾…å‘½
+    Moving,         // ç§»å?ä¸?    Attacking,      // ?»æ?ä¸?    Defending,      // ?²ç¦¦ä¸?    Retreating,     // ?¤é€€ä¸?    Regrouping      // ?ç?ä¸?};
+
+// ?°è??®ä?ä¿¡æ¯
+USTRUCT(BlueprintType)
+struct MINGSTRATEGIC_API FMingStratUnit
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    class AActor* UnitActor;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString UnitID;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString UnitType;
+
+    UPROPERTY(BlueprintReadOnly)
+    EMingTacticalUnitState CurrentState;
+
+    UPROPERTY(BlueprintReadOnly)
+    FVector CurrentPosition;
+
+    UPROPERTY(BlueprintReadOnly)
+    FVector TargetPosition;
+
+    UPROPERTY(BlueprintReadOnly)
+    float Health;
+
+    UPROPERTY(BlueprintReadOnly)
+    float Morale;
+
+    UPROPERTY(BlueprintReadOnly)
+    float CombatEffectiveness;
+};
+
+// ?°è??½ä»¤
+USTRUCT(BlueprintType)
+struct MINGSTRATEGIC_API FMingStratOrder
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    FString OrderID;
+
+    UPROPERTY(BlueprintReadOnly)
+    EMingStratTacticalCommand CommandType;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString TargetUnitID;
+
+    UPROPERTY(BlueprintReadOnly)
+    FVector TargetLocation;
+
+    UPROPERTY(BlueprintReadOnly)
+    float Priority;
+};
+
+// ?°è??€??USTRUCT(BlueprintType)
+struct MINGSTRATEGIC_API FMingStratState
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    FString CurrentTactic;
+
+    UPROPERTY(BlueprintReadOnly)
+    float OverallSituation;
+
+    UPROPERTY(BlueprintReadOnly)
+    float FriendlyStrength;
+
+    UPROPERTY(BlueprintReadOnly)
+    float EnemyStrength;
+
+    UPROPERTY(BlueprintReadOnly)
+    float TerrainAdvantage;
+
+    UPROPERTY(BlueprintReadOnly)
+    float WeatherImpact;
+};
+
+// ?°è?äº‹ä»¶
+USTRUCT(BlueprintType)
+struct MINGSTRATEGIC_API FMingTacticalEvent
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    FString EventID;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString EventType;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString EventDescription;
+
+    UPROPERTY(BlueprintReadOnly)
+    float EventImpact;
 
     UPROPERTY(BlueprintReadOnly)
     FDateTime EventTime;
 };
 
 /**
- * æˆ°è¡“å±¤ç³»çµ±
- * è² è²¬æˆ°å ´æŒ‡æ®ã€éƒ¨éšŠèª¿åº¦ã€æˆ°è¡“åŸ·è¡Œç­‰
+ * ?°è?å±¤ç³»çµ? * è² è²¬?°å ´?‡æ®?éƒ¨?Šèª¿åº¦ã€æˆ°è¡“åŸ·è¡Œç?
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGSTRATEGIC_API UMingTacticalLayer : public UObject, public IMingGameLayer
@@ -194,10 +291,9 @@ class MINGSTRATEGIC_API UMingTacticalLayer : public UObject, public IMingGameLay
     GENERATED_BODY()
 
 public:
-    // å»ºæ§‹å­
-    UMingTacticalLayer();
+    // å»ºæ?å­?    UMingTacticalLayer();
 
-    // å¯¦ç¾ä»‹é¢æ–¹æ³•
+    // å¯¦ç¾ä»‹é¢?¹æ?
     virtual void InitializeLayer_Implementation() override;
     virtual void UpdateLayer_Implementation(float DeltaTime) override;
     virtual EMingLayer GetLayerType_Implementation() const override;
@@ -206,7 +302,7 @@ public:
     virtual void HandleLayerEvent_Implementation(const FMingStrategicIntegrationEvent& Event) override;
     virtual void HandleLayerDecision_Implementation(const FMingGameDecision& Decision) override;
 
-    // æˆ°å ´ç®¡ç†
+    // ?°å ´ç®¡ç?
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     void CreateBattlefield(const FString& BattlefieldID, const FVector& Center, float Radius);
 
@@ -216,7 +312,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     FMingTacticalBattlefield GetBattlefield(const FString& BattlefieldID) const;
 
-    // éƒ¨éšŠç®¡ç†
+    // ?¨é?ç®¡ç?
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     void AddTacticalUnit(class AActor* Unit, const FString& UnitID, const FString& UnitType);
 
@@ -229,7 +325,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     TArray<FMingStratTacticalUnit> GetTacticalUnits() const;
 
-    // æˆ°è¡“å‘½ä»¤
+    // ?°è??½ä»¤
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     void IssueTacticalOrder(const FMingStratTacticalOrder& Order);
 
@@ -242,7 +338,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     TArray<FMingStratTacticalOrder> GetTacticalOrders() const;
 
-    // æˆ°è¡“åˆ†æ
+    // ?°è??†æ?
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     float AnalyzeBattlefieldControl(const FString& BattlefieldID);
 
@@ -255,100 +351,93 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     TArray<FString> IdentifyTacticalOpportunities(const FString& BattlefieldID);
 
-    // ç²å–æˆ°è¡“ç‹€æ…‹
-    UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
+    // ?²å??°è??€??    UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     FMingTacticalState GetTacticalState() const;
 
-    // ç²å–æˆ°å ´åˆ—è¡¨
+    // ?²å??°å ´?—è¡¨
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     TArray<FString> GetBattlefieldList() const;
 
 protected:
-    // æˆ°è¡“ç‹€æ…‹
-    UPROPERTY(BlueprintReadOnly)
+    // ?°è??€??    UPROPERTY(BlueprintReadOnly)
     FMingTacticalState TacticalState;
 
-    // æˆ°å ´åˆ—è¡¨
+    // ?°å ´?—è¡¨
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, FMingTacticalBattlefield> Battlefields;
 
-    // æˆ°è¡“å–®ä½
+    // ?°è??®ä?
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, FMingStratTacticalUnit> TacticalUnits;
 
-    // æˆ°è¡“å‘½ä»¤
+    // ?°è??½ä»¤
     UPROPERTY(BlueprintReadOnly)
     TArray<FMingStratTacticalOrder> TacticalOrders;
 
-    // æˆ°è¡“äº‹ä»¶æ­·å²
+    // ?°è?äº‹ä»¶æ­·å²
     UPROPERTY(BlueprintReadOnly)
     TArray<FMingTacticalEvent> TacticalHistory;
 
-    // æˆ°è¡“é¢¨æ ¼
+    // ?°è?é¢¨æ ¼
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tactical|Settings")
     FString TacticalStyle;
 
-    // æ”»æ“Šæ€§ç­‰ç´š
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tactical|Settings")
+    // ?»æ??§ç?ç´?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tactical|Settings")
     float TacticalAggressiveness;
 
-    // è¬¹æ…æ€§ç­‰ç´š
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tactical|Settings")
+    // è¬¹æ??§ç?ç´?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tactical|Settings")
     float TacticalCautiousness;
 
-    // å”èª¿èƒ½åŠ›
+    // ?”èª¿?½å?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tactical|Settings")
     float CoordinationSkill;
 
-    // åˆ†ææˆ°å ´å±€å‹¢
-    void AnalyzeBattlefieldSituation(const FString& BattlefieldID);
+    // ?†æ??°å ´å±€??    void AnalyzeBattlefieldSituation(const FString& BattlefieldID);
 
-    // è©•ä¼°éƒ¨éšŠç‹€æ…‹
-    void AssessUnitStatus();
+    // è©•ä¼°?¨é??€??    void AssessUnitStatus();
 
-    // è¨ˆç®—æˆ°è¡“å„ªå‹¢
+    // è¨ˆç??°è??ªå‹¢
     float CalculateTacticalAdvantage(const FString& BattlefieldID);
 
-    // é æ¸¬æˆ°è¡“çµæœ
+    // ?æ¸¬?°è?çµæ?
     TArray<FString> PredictTacticalOutcome(const FString& BattlefieldID);
 
-    // æ°‘åœ‹ç‰¹è‰²æˆ°è¡“
+    // æ°‘å??¹è‰²?°è?
     void ApplyRepublicanEraTactics();
 
-    // è»é–¥æ··æˆ°æˆ°è¡“
+    // è»é–¥æ··æˆ°?°è?
     void ExecuteWarlordConflictTactics();
 
-    // åŒ—ä¼æˆ°è¡“
+    // ?—ä??°è?
     void ExecuteNorthernExpeditionTactics();
 
-    // æŠ—æ—¥æˆ°è¡“
+    // ?—æ—¥?°è?
     void ExecuteAntiJapaneseTactics();
 
-    // æ¸¸æ“Šæˆ°è¡“
+    // æ¸¸æ??°è?
     void ExecuteGuerrillaTactics();
 
-    // æ­£è¦æˆ°è¡“
+    // æ­???°è?
     void ExecuteConventionalTactics();
 
 private:
-    // æˆ°è¡“æ›´æ–°é–“éš”
+    // ?°è??´æ–°?“é?
     float TacticalUpdateInterval;
 
-    // ä¸Šæ¬¡æ›´æ–°æ™‚é–“
+    // ä¸Šæ¬¡?´æ–°?‚é?
     float LastTacticalUpdate;
 
-    // æˆ°å ´æ§åˆ¶é–¾å€¼
-    float BattlefieldControlThreshold;
+    // ?°å ´?§åˆ¶?¾å€?    float BattlefieldControlThreshold;
 
-    // å–®ä½å”èª¿åŠå¾‘
+    // ?®ä??”èª¿?Šå?
     float UnitCoordinationRadius;
 
-    // æˆ°è¡“å¨è„…è©•ä¼°
+    // ?°è?å¨è?è©•ä¼°
     TMap<FString, float> TacticalThreats;
 
-    // æˆ°è¡“æ©Ÿæœƒè©•ä¼°
+    // ?°è?æ©Ÿæ?è©•ä¼°
     TMap<FString, float> TacticalOpportunities;
 
-    // æˆ°è¡“å‘½ä»¤æ­·å²
+    // ?°è??½ä»¤æ­·å²
     TArray<FMingTacticalOrder> OrderHistory;
 };

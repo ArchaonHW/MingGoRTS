@@ -8,67 +8,67 @@
 UENUM(BlueprintType)
 enum class EProductionCategory : uint8
 {
-    Military           UMETA(DisplayName = "軍事生產"),
-    Civilian           UMETA(DisplayName = "民生生產"),
-    Industrial         UMETA(DisplayName = "工業生產"),
-    Agricultural       UMETA(DisplayName = "農業生產"),
-    Medical           UMETA(DisplayName = "醫療生產"),
-    Educational        UMETA(DisplayName = "教育生產"),
-    Infrastructure     UMETA(DisplayName = "基礎設施生產"),
-    Luxury            UMETA(DisplayName = "奢侈品生產"),
-    Research          UMETA(DisplayName = "科研生產"),
-    Special           UMETA(DisplayName = "特殊生產")
+    Military           UMETA(DisplayName = "軍�??�產"),
+    Civilian           UMETA(DisplayName = "民�??�產"),
+    Industrial         UMETA(DisplayName = "工業?�產"),
+    Agricultural       UMETA(DisplayName = "農業?�產"),
+    Medical           UMETA(DisplayName = "?��??�產"),
+    Educational        UMETA(DisplayName = "?�育?�產"),
+    Infrastructure     UMETA(DisplayName = "?��?設施?�產"),
+    Luxury            UMETA(DisplayName = "奢�??��???),
+    Research          UMETA(DisplayName = "科�??�產"),
+    Special           UMETA(DisplayName = "?��??�產")
 };
 
 UENUM(BlueprintType)
 enum class EProductionStatus : uint8
 {
-    Idle              UMETA(DisplayName = "空閒"),
-    Preparing         UMETA(DisplayName = "準備中"),
-    Producing         UMETA(DisplayName = "生產中"),
-    Paused            UMETA(DisplayName = "已暫停"),
-    Completed         UMETA(DisplayName = "已完成"),
-    Failed            UMETA(DisplayName = "失敗"),
-    Upgrading         UMETA(DisplayName = "升級中"),
-    Maintenance        UMETA(DisplayName = "維護中")
+    Idle              UMETA(DisplayName = "空�?"),
+    Preparing         UMETA(DisplayName = "準�?�?),
+    Producing         UMETA(DisplayName = "?�產�?),
+    Paused            UMETA(DisplayName = "已暫??),
+    Completed         UMETA(DisplayName = "已�???),
+    Failed            UMETA(DisplayName = "失�?"),
+    Upgrading         UMETA(DisplayName = "?��?�?),
+    Maintenance        UMETA(DisplayName = "維護�?)
 };
 
 UENUM(BlueprintType)
 enum class EProductionPriority : uint8
 {
-    Low               UMETA(DisplayName = "低優先級"),
-    Normal            UMETA(DisplayName = "普通優先級"),
-    High              UMETA(DisplayName = "高優先級"),
-    Critical          UMETA(DisplayName = "緊急優先級"),
-    Emergency         UMETA(DisplayName = "應急優先級")
+    Low               UMETA(DisplayName = "低優?��?"),
+    Normal            UMETA(DisplayName = "?�通優?��?"),
+    High              UMETA(DisplayName = "高優?��?"),
+    Critical          UMETA(DisplayName = "緊急優?��?"),
+    Emergency         UMETA(DisplayName = "?�急優?��?")
 };
 
 UENUM(BlueprintType)
 enum class EProductionQuality : uint8
 {
-    Poor              UMETA(DisplayName = "劣質"),
-    Normal            UMETA(DisplayName = "普通"),
-    Good              UMETA(DisplayName = "良好"),
-    Excellent         UMETA(DisplayName = "優秀"),
-    Masterpiece        UMETA(DisplayName = "精品")
+    Poor              UMETA(DisplayName = "??��"),
+    Normal            UMETA(DisplayName = "?��?),
+    Good              UMETA(DisplayName = "?�好"),
+    Excellent         UMETA(DisplayName = "?��?"),
+    Masterpiece        UMETA(DisplayName = "精�?")
 };
 
 UENUM(BlueprintType)
 enum class EProductionEfficiencyFactor : uint8
 {
-    BaseEfficiency    UMETA(DisplayName = "基礎效率"),
-    SkillBonus        UMETA(DisplayName = "技能加成"),
-    TechnologyBonus   UMETA(DisplayName = "科技加成"),
-    BuildingBonus     UMETA(DisplayName = "建築加成"),
-    ResourceQuality   UMETA(DisplayName = "資源品質"),
+    BaseEfficiency    UMETA(DisplayName = "?��??��?"),
+    SkillBonus        UMETA(DisplayName = "?�?��???),
+    TechnologyBonus   UMETA(DisplayName = "科�??��?"),
+    BuildingBonus     UMETA(DisplayName = "建�??��?"),
+    ResourceQuality   UMETA(DisplayName = "資�??�質"),
     WorkerMorale     UMETA(DisplayName = "工人士氣"),
-    Environmental     UMETA(DisplayName = "環境因素"),
-    Maintenance       UMETA(DisplayName = "維護狀態"),
-    Overclock         UMETA(DisplayName = "超頻運行")
+    Environmental     UMETA(DisplayName = "?��??��?"),
+    Maintenance       UMETA(DisplayName = "維護?�??),
+    Overclock         UMETA(DisplayName = "超頻?��?")
 };
 
 /**
- * 生產配方結構
+ * ?�產?�方結�?
  */
 USTRUCT(BlueprintType)
 struct FPRODUCTION_API FProductionRecipe
@@ -133,8 +133,7 @@ struct FPRODUCTION_API FProductionRecipe
 };
 
 /**
- * 生產線結構
- */
+ * ?�產線�?�? */
 USTRUCT(BlueprintType)
 struct FPRODUCTION_API FProductionLine
 {
@@ -203,7 +202,7 @@ struct FPRODUCTION_API FProductionLine
 };
 
 /**
- * 生產隊列結構
+ * ?�產?��?結�?
  */
 USTRUCT(BlueprintType)
 struct FPRODUCTION_API FProductionQueue
@@ -239,7 +238,7 @@ struct FPRODUCTION_API FProductionQueue
 };
 
 /**
- * 生產統計結構
+ * ?�產統�?結�?
  */
 USTRUCT(BlueprintType)
 struct FPRODUCTION_API FProductionStatistics
@@ -284,7 +283,7 @@ struct FPRODUCTION_API FProductionStatistics
 };
 
 /**
- * 生產系統配置結構
+ * ?�產系統?�置結�?
  */
 USTRUCT(BlueprintType)
 struct FPRODUCTION_API FProductionSystemConfig
@@ -323,7 +322,7 @@ struct FPRODUCTION_API FProductionSystemConfig
     }
 };
 
-// 宣告事件委託
+// �??事件委�?
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProductionStarted, const FString&, ProductionLineID, const FString&, RecipeID);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnProductionProgress, const FString&, ProductionLineID, float, Progress, float, TimeRemaining);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProductionCompleted, const FString&, ProductionLineID, const TMap<EResourceType, float>&, OutputResources);
@@ -333,7 +332,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProductionResumed, const FString
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProductionQueueChanged, const FString&, QueueID, const TArray<FString>&, RecipeQueue);
 
 /**
- * 生產製造系統主類別
+ * ?�產製造系統主類別
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingGoRTSProductionSystem : public UObject
@@ -343,7 +342,7 @@ class MINGGORTS_API UMingGoRTSProductionSystem : public UObject
 public:
     UMingGoRTSProductionSystem();
 
-    // 生產系統事件
+    // ?�產系統事件
     UPROPERTY(BlueprintAssignable, Category = "Production System")
     FOnProductionStarted OnProductionStarted;
 
@@ -365,210 +364,193 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Production System")
     FOnProductionQueueChanged OnProductionQueueChanged;
 
-    // 初始化生產系統
-    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // ?��??��??�系�?    UFUNCTION(BlueprintCallable, Category = "Production System")
     void InitializeProductionSystem();
 
-    // 獲取所有生產類別
-    UFUNCTION(BlueprintPure, Category = "Production System")
+    // ?��??�?��??��???    UFUNCTION(BlueprintPure, Category = "Production System")
     TArray<EProductionCategory> GetAllProductionCategories() const;
 
-    // 獲取指定類別的配方
-    UFUNCTION(BlueprintPure, Category = "Production System")
+    // ?��??��?類別?��???    UFUNCTION(BlueprintPure, Category = "Production System")
     TArray<FProductionRecipe> GetRecipesByCategory(EProductionCategory Category) const;
 
-    // 獲取生產配方
+    // ?��??�產?�方
     UFUNCTION(BlueprintPure, Category = "Production System")
     FProductionRecipe GetProductionRecipe(const FString& RecipeID) const;
 
-    // 創建生產線
-    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // ?�建?�產�?    UFUNCTION(BlueprintCallable, Category = "Production System")
     FString CreateProductionLine(const FString& ProductionLineName, const FString& BuildingID);
 
-    // 開始生產
+    // ?��??�產
     UFUNCTION(BlueprintCallable, Category = "Production System")
     bool StartProduction(const FString& ProductionLineID, const FString& RecipeID, EProductionPriority Priority = EProductionPriority::Normal);
 
-    // 暫停生產
+    // ?��??�產
     UFUNCTION(BlueprintCallable, Category = "Production System")
-    bool PauseProduction(const FString& ProductionLineID, const FString& Reason = TEXT("手動暫停"));
+    bool PauseProduction(const FString& ProductionLineID, const FString& Reason = TEXT("?��??��?"));
 
-    // 恢復生產
+    // ?�復?�產
     UFUNCTION(BlueprintCallable, Category = "Production System")
-    bool ResumeProduction(const FString& ProductionLineID, const FString& Reason = TEXT("手動恢復"));
+    bool ResumeProduction(const FString& ProductionLineID, const FString& Reason = TEXT("?��??�復"));
 
-    // 取消生產
+    // ?��??�產
     UFUNCTION(BlueprintCallable, Category = "Production System")
     bool CancelProduction(const FString& ProductionLineID);
 
-    // 設置生產優先級
-    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // 設置?�產?��?�?    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool SetProductionPriority(const FString& ProductionLineID, EProductionPriority Priority);
 
-    // 添加到生產隊列
-    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // 添�??��??��???    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool AddToProductionQueue(const FString& ProductionLineID, const FString& RecipeID);
 
-    // 移除從生產隊列
-    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // 移除從�??��???    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool RemoveFromProductionQueue(const FString& ProductionLineID, int32 QueueIndex);
 
-    // 清空生產隊列
+    // 清空?�產?��?
     UFUNCTION(BlueprintCallable, Category = "Production System")
     bool ClearProductionQueue(const FString& ProductionLineID);
 
-    // 獲取生產線狀態
-    UFUNCTION(BlueprintPure, Category = "Production System")
+    // ?��??�產線�???    UFUNCTION(BlueprintPure, Category = "Production System")
     FProductionLine GetProductionLine(const FString& ProductionLineID) const;
 
-    // 獲取生產隊列
+    // ?��??�產?��?
     UFUNCTION(BlueprintPure, Category = "Production System")
     FProductionQueue GetProductionQueue(const FString& ProductionLineID) const;
 
-    // 獲取所有生產線
+    // ?��??�?��??��?
     UFUNCTION(BlueprintPure, Category = "Production System")
     TArray<FProductionLine> GetAllProductionLines() const;
 
-    // 計算生產效率
+    // 計�??�產?��?
     UFUNCTION(BlueprintPure, Category = "Production System")
     float CalculateProductionEfficiency(const FString& ProductionLineID) const;
 
-    // 計算生產時間
+    // 計�??�產?��?
     UFUNCTION(BlueprintPure, Category = "Production System")
     float CalculateProductionTime(const FString& ProductionLineID, const FString& RecipeID) const;
 
-    // 檢查生產條件
+    // 檢查?�產條件
     UFUNCTION(BlueprintPure, Category = "Production System")
     bool CanProduceRecipe(const FString& ProductionLineID, const FString& RecipeID) const;
 
-    // 獲取生產統計
+    // ?��??�產統�?
     UFUNCTION(BlueprintPure, Category = "Production System")
     FProductionStatistics GetProductionStatistics() const;
 
-    // 更新生產進度
+    // ?�新?�產?�度
     UFUNCTION(BlueprintCallable, Category = "Production System")
     void UpdateProductionProgress(float DeltaTime);
 
-    // 升級生產線
-    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // ?��??�產�?    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool UpgradeProductionLine(const FString& ProductionLineID);
 
-    // 維護生產線
-    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // 維護?�產�?    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool MaintainProductionLine(const FString& ProductionLineID);
 
-    // 設置自動化
-    UFUNCTION(BlueprintCallable, Category = "Production System")
+    // 設置?��???    UFUNCTION(BlueprintCallable, Category = "Production System")
     bool SetAutomation(const FString& ProductionLineID, bool bIsAutomated);
 
-    // 獲取系統配置
+    // ?��?系統?�置
     UFUNCTION(BlueprintPure, Category = "Production System")
     FProductionSystemConfig GetProductionConfig() const;
 
-    // 更新系統配置
+    // ?�新系統?�置
     UFUNCTION(BlueprintCallable, Category = "Production System")
     void UpdateProductionConfig(const FProductionSystemConfig& NewConfig);
 
-    // 保存生產數據
+    // 保�??�產?��?
     UFUNCTION(BlueprintCallable, Category = "Production System")
     bool SaveProductionData(const FString& SaveSlotName);
 
-    // 載入生產數據
+    // 載入?�產?��?
     UFUNCTION(BlueprintCallable, Category = "Production System")
     bool LoadProductionData(const FString& SaveSlotName);
 
 protected:
-    // 生產線映射
-    UPROPERTY()
+    // ?�產線�?�?    UPROPERTY()
     TMap<FString, FProductionLine> ProductionLines;
 
-    // 生產配方映射
+    // ?�產?�方?��?
     UPROPERTY()
     TMap<FString, FProductionRecipe> ProductionRecipes;
 
-    // 生產隊列映射
+    // ?�產?��??��?
     UPROPERTY()
     TMap<FString, FProductionQueue> ProductionQueues;
 
-    // 生產統計
+    // ?�產統�?
     UPROPERTY()
     FProductionStatistics Statistics;
 
-    // 系統配置
+    // 系統?�置
     UPROPERTY()
     FProductionSystemConfig Config;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bIsInitialized;
 
-    // 初始化民國時期生產配方
-    void InitializeRepublicanEraRecipes();
+    // ?��??��??��??��??��???    void InitializeRepublicanEraRecipes();
 
-    // 創建軍事生產配方
+    // ?�建軍�??�產?�方
     void CreateMilitaryProductionRecipes();
 
-    // 創建民生生產配方
+    // ?�建民�??�產?�方
     void CreateCivilianProductionRecipes();
 
-    // 創建工業生產配方
+    // ?�建工業?�產?�方
     void CreateIndustrialProductionRecipes();
 
-    // 創建農業生產配方
+    // ?�建農業?�產?�方
     void CreateAgriculturalProductionRecipes();
 
-    // 創建醫療生產配方
+    // ?�建?��??�產?�方
     void CreateMedicalProductionRecipes();
 
-    // 創建教育生產配方
+    // ?�建?�育?�產?�方
     void CreateEducationalProductionRecipes();
 
-    // 創建基礎設施生產配方
+    // ?�建?��?設施?�產?�方
     void CreateInfrastructureProductionRecipes();
 
-    // 創建奢侈品生產配方
-    void CreateLuxuryProductionRecipes();
+    // ?�建奢�??��??��???    void CreateLuxuryProductionRecipes();
 
-    // 處理生產完成
+    // ?��??�產完�?
     void HandleProductionCompleted(const FString& ProductionLineID);
 
-    // 處理生產失敗
+    // ?��??�產失�?
     void HandleProductionFailed(const FString& ProductionLineID, const FString& ErrorMessage);
 
-    // 更新生產線狀態
-    void UpdateProductionLineStatus(const FString& ProductionLineID);
+    // ?�新?�產線�???    void UpdateProductionLineStatus(const FString& ProductionLineID);
 
-    // 處理生產隊列
+    // ?��??�產?��?
     void ProcessProductionQueue(const FString& ProductionLineID);
 
-    // 應用效率因子
+    // ?�用?��??��?
     void ApplyEfficiencyFactors(const FString& ProductionLineID);
 
-    // 計算最終效率
-    float CalculateFinalEfficiency(const FProductionLine& ProductionLine) const;
+    // 計�??�終�???    float CalculateFinalEfficiency(const FProductionLine& ProductionLine) const;
 
-    // 獲取生產類別名稱
+    // ?��??�產類別?�稱
     FString GetProductionCategoryName(EProductionCategory Category) const;
 
-    // 獲取生產狀態名稱
-    FString GetProductionStatusName(EProductionStatus Status) const;
+    // ?��??�產?�?��?�?    FString GetProductionStatusName(EProductionStatus Status) const;
 
-    // 驗證配方數據
+    // 驗�??�方?��?
     bool ValidateRecipeData(const FProductionRecipe& Recipe) const;
 
-    // 生成生產線ID
+    // ?��??�產線ID
     FString GenerateProductionLineID(const FString& BaseName) const;
 
-    // 生成配方ID
+    // ?��??�方ID
     FString GenerateRecipeID(const FString& BaseName, EProductionCategory Category) const;
 
-    // 記錄生產歷史
+    // 記�??�產歷史
     void RecordProductionHistory(const FString& Event);
 
-    // 生產歷史記錄
+    // ?�產歷史記�?
     UPROPERTY()
     TArray<FString> ProductionHistory;
 
-    // 資源系統引用
+    // 資�?系統引用
     UPROPERTY()
     class UMingGoRTSResourceSystem* ResourceSystem;
 };

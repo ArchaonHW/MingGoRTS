@@ -5,8 +5,8 @@
 #include "MingStressTestSuite.generated.h"
 
 /**
- * 壓力測試套件
- * 測試系統在極限條件下的穩定性和性能
+ * 壓�?測試套件
+ * 測試系統?�極?��?件�??�穩定性�??�能
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingStressTestSuite : public UObject
@@ -16,7 +16,7 @@ class MINGCORE_API UMingStressTestSuite : public UObject
 public:
     UMingStressTestSuite();
 
-    // ========== 長時間穩定性測試 ==========
+    // ========== ?��??�穩定性測�?==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Stability")
     void Start24HourStabilityTest();
@@ -45,7 +45,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Stability")
     bool HasMemoryLeak() const;
 
-    // ========== 大規模性能測試 ==========
+    // ========== 大�?模性能測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Performance")
     void StartMassiveUnitTest(int32 UnitCount = 10000);
@@ -74,7 +74,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Performance")
     float GetSimulationTime() const;
 
-    // ========== 並發用戶測試 ==========
+    // ========== 並發?�戶測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Concurrent")
     void StartConcurrentUserTest(int32 UserCount = 100);
@@ -100,7 +100,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Concurrent")
     float GetNetworkThroughput() const;
 
-    // ========== 資源壓力測試 ==========
+    // ========== 資�?壓�?測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test | Resource")
     void StartResourceStressTest();
@@ -132,7 +132,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Stress Test | Resource")
     int32 GetResourceAllocations() const;
 
-    // ========== 綜合壓力測試 ==========
+    // ========== 綜�?壓�?測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Stress Test")
     void RunAllStressTests();
@@ -162,8 +162,7 @@ protected:
     virtual void Tick(float DeltaTime) override;
 
 private:
-    // 測試狀態
-    UPROPERTY()
+    // 測試?�??    UPROPERTY()
     bool bStabilityTestRunning;
     
     UPROPERTY()
@@ -175,8 +174,7 @@ private:
     UPROPERTY()
     bool bResourceTestRunning;
     
-    // 穩定性測試數據
-    UPROPERTY()
+    // 穩�??�測試數??    UPROPERTY()
     float TestStartTime;
     
     UPROPERTY()
@@ -191,7 +189,7 @@ private:
     UPROPERTY()
     bool bMemoryLeakDetected;
     
-    // 性能測試數據
+    // ?�能測試?��?
     UPROPERTY()
     float AverageFPS;
     
@@ -207,7 +205,7 @@ private:
     UPROPERTY()
     float TotalFrameTime;
     
-    // 並發測試數據
+    // 並發測試?��?
     UPROPERTY()
     float AverageLatency;
     
@@ -217,7 +215,7 @@ private:
     UPROPERTY()
     float NetworkThroughput;
     
-    // 資源測試數據
+    // 資�?測試?��?
     UPROPERTY()
     float MemoryUsagePercentage;
     
@@ -227,7 +225,7 @@ private:
     UPROPERTY()
     int32 ResourceAllocations;
     
-    // 測試結果
+    // 測試結�?
     UPROPERTY()
     int32 PassedTests;
     
@@ -237,7 +235,7 @@ private:
     UPROPERTY()
     TArray<FString> TestResults;
 
-    // 內部函數
+    // ?�部?�數
     void UpdateStabilityMetrics(float DeltaTime);
     void UpdatePerformanceMetrics(float DeltaTime);
     void UpdateConcurrentMetrics(float DeltaTime);
@@ -252,7 +250,7 @@ private:
     void ResetTestResults();
     void CalculateTestStatistics();
     
-    // 壓力測試輔助
+    // 壓�?測試輔助
     void SimulateHighLoad();
     void GenerateTestLoad();
     void MonitorSystemResources();

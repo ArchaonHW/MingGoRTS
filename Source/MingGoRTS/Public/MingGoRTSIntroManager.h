@@ -12,7 +12,7 @@ class MINGGORTS_API UMingGoRTSIntroManager : public UObject
 public:
     UMingGoRTSIntroManager();
 
-    // 開頭動畫控制
+    // ?�頭?�畫?�制
     UFUNCTION(BlueprintCallable, Category = "Intro")
     void StartIntroSequence();
 
@@ -22,7 +22,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Intro")
     bool IsIntroPlaying() const { return bIsIntroPlaying; }
 
-    // 動畫階段
+    // ?�畫?�段
     UFUNCTION(BlueprintCallable, Category = "Intro")
     void ShowTitleCard();
 

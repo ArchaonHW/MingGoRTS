@@ -5,7 +5,7 @@
 #include "Decision/MingDecisionConsequenceManager.h"
 #include "MingConsequenceCache.generated.h"
 
-// 緩存條目
+// 緩�?條目
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingConsequenceCacheEntry
 {
@@ -31,8 +31,8 @@ struct MINGCORE_API FMingConsequenceCacheEntry
 };
 
 /**
- * 後果計算緩存系統
- * 提升重複決策的計算性能
+ * 後�?計�?緩�?系統
+ * ?��??��?決�??��?算性能
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingConsequenceCache : public UObject
@@ -40,62 +40,57 @@ class MINGCORE_API UMingConsequenceCache : public UObject
     GENERATED_BODY()
 
 public:
-    // 建構子
-    UMingConsequenceCache();
+    // 建�?�?    UMingConsequenceCache();
 
-    // 初始化緩存
-    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
+    // ?��??�緩�?    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
     void Initialize(int32 MaxCacheSize = 1000, float CacheExpirationHours = 24.0f);
 
-    // 獲取緩存結果
+    // ?��?緩�?結�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
     bool GetCachedResult(const FString& CacheKey, FMingConsequenceResult& OutResult);
 
-    // 緩存結果
+    // 緩�?結�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
     void CacheResult(const FString& CacheKey, const FMingConsequenceResult& Result);
 
-    // 清除過期緩存
+    // 清除?��?緩�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
     void ClearExpiredCache();
 
-    // 清除所有緩存
-    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
+    // 清除?�?�緩�?    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
     void ClearAllCache();
 
-    // 獲取緩存統計
+    // ?��?緩�?統�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
     void GetCacheStatistics(int32& TotalEntries, int32& CacheHits, int32& CacheMisses, float& HitRate);
 
-    // 生成緩存鍵
-    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
+    // ?��?緩�???    UFUNCTION(BlueprintCallable, Category = "Ming|Cache")
     FString GenerateCacheKey(const FMingDecisionContext& Context) const;
 
 protected:
-    // 緩存存儲
+    // 緩�?存儲
     TMap<FString, FMingConsequenceCacheEntry> CacheMap;
 
-    // 緩存配置
+    // 緩�??�置
     int32 MaxCacheSize;
     float CacheExpirationHours;
 
-    // 統計數據
+    // 統�??��?
     int32 CacheHits;
     int32 CacheMisses;
 
-    // 清理低權重緩存
-    void CleanupLowWeightCache();
+    // 清�?低�??�緩�?    void CleanupLowWeightCache();
 
-    // 計算緩存權重
+    // 計�?緩�?權�?
     float CalculateCacheWeight(const FMingConsequenceCacheEntry& Entry) const;
 
-    // 檢查緩存是否過期
+    // 檢查緩�??�否?��?
     bool IsCacheExpired(const FMingConsequenceCacheEntry& Entry) const;
 
-    // 更新緩存訪問統計
+    // ?�新緩�?訪�?統�?
     void UpdateCacheAccess(const FString& CacheKey);
 
 private:
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bInitialized = false;
 };

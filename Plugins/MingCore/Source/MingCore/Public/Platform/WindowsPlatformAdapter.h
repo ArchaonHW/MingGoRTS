@@ -5,8 +5,7 @@
 #include "WindowsPlatformAdapter.generated.h"
 
 /**
- * Windows 平台適配器
- */
+ * Windows 平台?��??? */
 UCLASS()
 class MINGCORE_API UWindowsPlatformAdapter : public UObject, public IPlatformInterface
 {
@@ -32,7 +31,7 @@ public:
     virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) override;
     virtual FString LoadFromPlatformStorage(const FString& Key) const override;
 
-    // Windows 特定功能
+    // Windows ?��??�能
     UFUNCTION(BlueprintCallable, Category = "Platform|Windows")
     bool IsRunningOnBattery() const;
 

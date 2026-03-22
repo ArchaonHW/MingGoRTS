@@ -132,9 +132,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMemoryOptimizationCompleted, FMin
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMemoryWarning, float, UsedPercent, float, Threshold);
 
 /**
- * 內存優化器
- * 專門負責內存管理和優化
- */
+ * ?��??��??? * 專�?負責?��?管�??�優?? */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingMemoryOptimizer : public UObject
 {

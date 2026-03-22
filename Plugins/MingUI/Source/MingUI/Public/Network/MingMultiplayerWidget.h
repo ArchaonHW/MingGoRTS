@@ -14,8 +14,8 @@ class UListView;
 class UScrollBox;
 
 /**
- * 多人遊戲UI組件
- * 提供多人遊戲連接、大廳、聊天等功能界面
+ * 多人?�戲UI組件
+ * ?��?多人?�戲??��?�大廳、�?天�??�能?�面
  */
 UCLASS(ClassGroup = (UI), Blueprintable, BlueprintType)
 class MINGUI_API UMingMultiplayerWidget : public UUserWidget
@@ -25,11 +25,10 @@ class MINGUI_API UMingMultiplayerWidget : public UUserWidget
 public:
     UMingMultiplayerWidget(const FObjectInitializer& ObjectInitializer);
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget")
     void InitializeMultiplayerWidget(UMingNetworkManager* InNetworkManager, UMingLobbySystem* InLobbySystem);
 
-    // 顯示/隱藏界面
+    // 顯示/?��??�面
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget")
     void ShowMainMenu();
 
@@ -42,7 +41,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget")
     void HideWidget();
 
-    // === 主菜單功能 ===
+    // === 主�??��???===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Main Menu")
     void OnCreateServerClicked();
@@ -56,7 +55,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Main Menu")
     void OnSettingsClicked();
 
-    // === 連接功能 ===
+    // === ??��?�能 ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Connection")
     void OnConnectClicked();
@@ -70,7 +69,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Connection")
     void UpdateConnectionStatus(const FString& Status);
 
-    // === 大廳功能 ===
+    // === 大廳?�能 ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Lobby")
     void OnLeaveLobbyClicked();
@@ -90,7 +89,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Lobby")
     void OnKickPlayerClicked(int32 PlayerID);
 
-    // === 聊天功能 ===
+    // === ?�天?�能 ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Chat")
     void OnSendMessageClicked();
@@ -101,7 +100,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Chat")
     void ClearChat();
 
-    // === 玩家列表 ===
+    // === ?�家?�表 ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Player List")
     void UpdatePlayerList();
@@ -115,7 +114,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Player List")
     void UpdatePlayerStatus(int32 PlayerID, bool bIsReady);
 
-    // === 更新界面 ===
+    // === ?�新?�面 ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Updates")
     void UpdateNetworkStatusDisplay();
@@ -129,7 +128,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Updates")
     void HideCountdown();
 
-    // === 事件處理 ===
+    // === 事件?��? ===
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget|Events")
     void OnNetworkConnected();
@@ -153,7 +152,7 @@ public:
     void OnChatMessageReceived(const FString& PlayerName, const FString& Message, bool bIsSystemMessage);
 
 protected:
-    // 綁定UI元素（在藍圖中實現）
+    // 綁�?UI?��?（在?��?中實?��?
     UFUNCTION(BlueprintImplementableEvent, Category = "Multiplayer Widget|Binding")
     void BindUIElements();
 
@@ -166,24 +165,22 @@ protected:
     // Native destruct
     virtual void NativeDestruct() override;
 
-    // 刷新顯示
+    // ?�新顯示
     UFUNCTION(BlueprintCallable, Category = "Multiplayer Widget")
     void RefreshDisplay();
 
 protected:
-    // 網絡管理器引用
-    UPROPERTY(BlueprintReadOnly, Category = "Multiplayer Widget")
+    // 網絡管�??��???    UPROPERTY(BlueprintReadOnly, Category = "Multiplayer Widget")
     TObjectPtr<UMingNetworkManager> NetworkManager;
 
     // 大廳系統引用
     UPROPERTY(BlueprintReadOnly, Category = "Multiplayer Widget")
     TObjectPtr<UMingLobbySystem> LobbySystem;
 
-    // 當前顯示狀態
-    UPROPERTY(BlueprintReadOnly, Category = "Multiplayer Widget")
+    // ?��?顯示?�??    UPROPERTY(BlueprintReadOnly, Category = "Multiplayer Widget")
     FString CurrentView;
 
-    // UI元素引用（在藍圖中設置）
+    // UI?��?引用（在?��?中設置�?
     UPROPERTY(meta = (BindWidget), Category = "Multiplayer Widget|UI Elements")
     TObjectPtr<UEditableTextBox> ServerAddressInput;
 

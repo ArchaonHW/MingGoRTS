@@ -11,31 +11,25 @@ class UMingRTSUnitManager;
 UENUM(BlueprintType)
 enum class ERTSEconomicPhase : uint8
 {
-    Growth,         // 成長期
-    Stagnation,     // 停滯期
-    Recession,      // 衰退期
-    Depression,     // 蕭條期
-    Recovery,       // 復甦期
-    Boom            // 繁榮期
-};
+    Growth,         // ?�長??    Stagnation,     // ?�滯??    Recession,      // 衰退??    Depression,     // ?��???    Recovery,       // 復甦??    Boom            // 繁榮??};
 
 UENUM(BlueprintType)
 enum class ERTSTradeRoute : uint8
 {
-    Land,           // 陸路
+    Land,           // ?�路
     Sea,            // 海路
-    Air,            // 空運
-    Rail,           // 鐵路
-    Digital         // 數字貿易
+    Air,            // 空�?
+    Rail,           // ?�路
+    Digital         // ?��?貿�?
 };
 
 UENUM(BlueprintType)
 enum class ERTSMarketCondition : uint8
 {
-    BullMarket,     // 牛市
-    BearMarket,     // 熊市
-    Stable,         // 穩定
-    Volatile        // 波動
+    BullMarket,     // ?��?
+    BearMarket,     // ?��?
+    Stable,         // 穩�?
+    Volatile        // 波�?
 };
 
 USTRUCT(BlueprintType)
@@ -209,8 +203,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourcePriceChanged, ERTSResour
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTradeRouteCompleted, const FString&, RouteID, float, Profit);
 
 /**
- * RTS經濟系統
- * 管理所有經濟相關的邏輯
+ * RTS經�?系統
+ * 管�??�?��?濟相?��??�輯
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingRTSEconomicSystem : public UObject
@@ -220,11 +214,10 @@ class MINGCORE_API UMingRTSEconomicSystem : public UObject
 public:
     UMingRTSEconomicSystem();
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void InitializeEconomicSystem(UMingRTSResourceManager* InResourceManager, UMingRTSBuildingSystem* InBuildingSystem, UMingRTSUnitManager* InUnitManager);
 
-    // 經濟數據管理
+    // 經�??��?管�?
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void UpdateEconomicData(float DeltaTime);
 
@@ -243,7 +236,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "RTS Economic System")
     ERTSMarketCondition GetMarketCondition() const { return EconomicData.MarketCondition; }
 
-    // 資源價格管理
+    // 資�??�格管�?
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void UpdateResourcePrices();
 
@@ -265,7 +258,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void UpdateResourceSupply(ERTSResourceType ResourceType, float Supply);
 
-    // 貿易路線管理
+    // 貿�?路�?管�?
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     FString CreateTradeRoute(const FString& Origin, const FString& Destination, ERTSTradeRoute RouteType);
 
@@ -287,7 +280,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void OptimizeTradeRoutes();
 
-    // 市場分析
+    // 市場?��?
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     FRTSMarketData GetMarketData(ERTSResourceType ResourceType) const;
 
@@ -306,7 +299,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     float GetMarketVolatility() const;
 
-    // 經濟指標
+    // 經�??��?
     UFUNCTION(BlueprintPure, Category = "RTS Economic System")
     float GetGDP() const { return EconomicData.GDP; }
 
@@ -331,7 +324,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "RTS Economic System")
     float GetEconomicGrowthRate() const { return EconomicData.EconomicGrowthRate; }
 
-    // 經濟政策
+    // 經�??��?
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void SetInterestRate(float Rate);
 
@@ -347,7 +340,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void RegulateMarket(ERTSResourceType ResourceType, float RegulationLevel);
 
-    // 經濟預測
+    // 經�??�測
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     float PredictGDP(float TimeInMonths) const;
 
@@ -360,7 +353,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     bool PredictRecession(float TimeInMonths) const;
 
-    // 經濟事件
+    // 經�?事件
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void TriggerEconomicEvent(const FString& EventName, float Impact);
 
@@ -373,7 +366,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void HandleFinancialCrisis(float CrisisSeverity);
 
-    // 統計信息
+    // 統�?信息
     UFUNCTION(BlueprintPure, Category = "RTS Economic System")
     int32 GetActiveTradeRouteCount() const;
 
@@ -386,7 +379,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "RTS Economic System")
     float GetMarketCapitalization() const;
 
-    // 經濟循環平衡調整
+    // 經�?循環平衡調整
     UFUNCTION(BlueprintCallable, Category = "RTS Economic System")
     void BalanceEconomicCycle();
 
@@ -423,7 +416,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRTSUnitManager> UnitManager;
 
-    // 經濟數據
+    // 經�??��?
     UPROPERTY()
     FRTSEconomicData EconomicData;
 
@@ -458,7 +451,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Economic Settings")
     bool bAutoOptimizeTrade = true;
 
-    // 平衡調整參數
+    // 平衡調整?�數
     UPROPERTY(BlueprintReadWrite, Category = "Balance Settings")
     float EconomicStabilityThreshold = 0.8f;
 
@@ -471,8 +464,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Balance Settings")
     bool bEnableAutoBalancing = true;
 
-    // 狀態
-    UPROPERTY()
+    // ?�??    UPROPERTY()
     bool bIsInitialized;
 
     UPROPERTY()
@@ -487,7 +479,7 @@ protected:
     UPROPERTY()
     float TotalTradeProfit;
 
-    // 內部函數
+    // ?�部?�數
     void InitializeEconomicData();
     void InitializeMarketData();
     void ProcessEconomicCycle(float DeltaTime);
@@ -509,7 +501,7 @@ protected:
     void ApplyEconomicPolicies(float DeltaTime);
     void HandleRandomEvents(float DeltaTime);
 
-    // 平衡調整內部函數
+    // 平衡調整?�部?�數
     void OptimizeEconomicIndicators();
     void StabilizeMarketPrices();
     void BalanceTradeFlows();
@@ -519,7 +511,7 @@ protected:
     void OptimizeResourceAllocation();
 
 private:
-    // 輔助函數
+    // 輔助?�數
     void NotifyEconomicPhaseChanged(ERTSEconomicPhase OldPhase, ERTSEconomicPhase NewPhase);
     void NotifyMarketConditionChanged(ERTSMarketCondition NewCondition);
     void NotifyResourcePriceChanged(ERTSResourceType ResourceType, float NewPrice);

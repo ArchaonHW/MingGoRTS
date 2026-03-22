@@ -1,5 +1,5 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 系統集成測試執行示例 - GameMode集成
+// 系統?��?測試?��?示�? - GameMode?��?
 
 #pragma once
 
@@ -9,8 +9,8 @@
 #include "MingRTSIntegrationTestGameMode.generated.h"
 
 /**
- * 系統集成測試GameMode
- * 用於執行系統集成測試的專用GameMode
+ * 系統?��?測試GameMode
+ * ?�於?��?系統?��?測試?��??�GameMode
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API AMingRTSIntegrationTestGameMode : public AGameModeBase
@@ -20,41 +20,41 @@ class MINGGORTS_API AMingRTSIntegrationTestGameMode : public AGameModeBase
 public:
     AMingRTSIntegrationTestGameMode();
 
-    /** GameMode開始時執行 */
+    /** GameMode?��??�執�?*/
     virtual void BeginPlay() override;
 
-    /** 啟動系統集成測試 */
+    /** ?��?系統?��?測試 */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void StartIntegrationTest();
 
-    /** 獲取測試執行器 */
+    /** ?��?測試?��???*/
     UFUNCTION(BlueprintPure, Category = "Integration Test")
     UMingRTSIntegrationTestExecutor* GetTestExecutor() const { return TestExecutor; }
 
 protected:
-    /** 測試執行器 */
+    /** 測試?��???*/
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
     TObjectPtr<UMingRTSIntegrationTestExecutor> TestExecutor;
 
-    /** 測試執行開始處理 */
+    /** 測試?��??��??��? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void OnTestExecutionStarted();
 
-    /** 測試執行完成處理 */
+    /** 測試?��?完�??��? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void OnTestExecutionCompleted(bool bAllTestsPassed);
 
-    /** 測試階段完成處理 */
+    /** 測試?�段完�??��? */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
     void OnTestPhaseCompleted(const FString& PhaseName, bool bPassed);
 
 private:
-    /** 初始化測試執行器 */
+    /** ?��??�測試執行器 */
     void InitializeTestExecutor();
 
-    /** 設置測試環境 */
+    /** 設置測試?��? */
     void SetupTestEnvironment();
 
-    /** 清理測試環境 */
+    /** 清�?測試?��? */
     void CleanupTestEnvironment();
 };

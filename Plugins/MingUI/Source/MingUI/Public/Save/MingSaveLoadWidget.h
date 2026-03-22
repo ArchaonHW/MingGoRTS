@@ -48,9 +48,8 @@ struct FSaveSlotUIInfo
 };
 
 /**
- * 保存/載入界面組件
- * 提供存檔槽列表顯示、保存、載入、刪除功能
- */
+ * 保�?/載入?�面組件
+ * ?��?存�?槽�?表顯示、�?存、�??�、刪?��??? */
 UCLASS(ClassGroup = (UI), Blueprintable)
 class MINGUI_API UMingSaveLoadWidget : public UUserWidget
 {
@@ -59,67 +58,64 @@ class MINGUI_API UMingSaveLoadWidget : public UUserWidget
 public:
     UMingSaveLoadWidget(const FObjectInitializer& ObjectInitializer);
 
-    // 初始化組件
-    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
+    // ?��??��?�?    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void InitializeSaveLoadWidget(UMingSaveGameManager* InSaveManager);
 
-    // 設置模式（保存或載入）
-    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
+    // 設置模�?（�?存�?載入�?    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void SetMode(bool bInSaveMode);
 
-    // 刷新存檔列表
+    // ?�新存�??�表
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void RefreshSaveSlotList();
 
-    // 選擇存檔槽
-    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
+    // ?��?存�?�?    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void SelectSaveSlot(int32 SlotIndex);
 
-    // 獲取當前選中的存檔槽
+    // ?��??��??�中?��?檔槽
     UFUNCTION(BlueprintPure, Category = "Save/Load UI")
     int32 GetSelectedSlotIndex() const { return SelectedSlotIndex; }
 
-    // 執行保存
+    // ?��?保�?
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ExecuteSave();
 
-    // 執行載入
+    // ?��?載入
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ExecuteLoad();
 
-    // 執行刪除
+    // ?��??�除
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ExecuteDelete();
 
-    // 設置存檔名稱
+    // 設置存�??�稱
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void SetSaveName(const FString& NewName);
 
-    // 獲取存檔名稱
+    // ?��?存�??�稱
     UFUNCTION(BlueprintPure, Category = "Save/Load UI")
     FString GetSaveName() const;
 
-    // 創建新存檔（使用第一個空槽）
+    // ?�建?��?檔�?使用第�??�空槽�?
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void CreateNewSave();
 
-    // 導出存檔
+    // 導出存�?
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ExportSelectedSave();
 
-    // 導入存檔
+    // 導入存�?
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ImportSave();
 
-    // 切換到快速保存槽
+    // ?��??�快?��?存槽
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void SelectQuickSaveSlot();
 
-    // 切換到自動保存槽
+    // ?��??�自?��?存槽
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void SelectAutoSaveSlot();
 
-    // 事件回調
+    // 事件?�調
     UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
     void OnSaveCompleted(bool bSuccess, int32 SlotIndex);
 
@@ -145,48 +141,44 @@ protected:
     // Native Destruct
     virtual void NativeDestruct() override;
 
-    // 綁定UI事件
+    // 綁�?UI事件
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void BindUIEvents();
 
-    // 更新UI狀態
-    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
+    // ?�新UI?�??    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void UpdateUIState();
 
-    // 獲取存檔槽UI信息
+    // ?��?存�?槽UI信息
     UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     FSaveSlotUIInfo GetSaveSlotUIInfo(int32 SlotIndex) const;
 
-    // 確認對話框
-    UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
+    // 確�?對話�?    UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
     void ShowConfirmDialog(const FString& Title, const FString& Message);
 
-    // 格式化時間
-    UFUNCTION(BlueprintPure, Category = "Save/Load UI")
+    // ?��??��???    UFUNCTION(BlueprintPure, Category = "Save/Load UI")
     FString FormatPlayTime(int32 TotalSeconds) const;
 
-    // 驗證輸入
+    // 驗�?輸入
     UFUNCTION(BlueprintPure, Category = "Save/Load UI")
     bool IsValidSaveName(const FString& Name) const;
 
 private:
-    // 保存管理器引用
-    UPROPERTY()
+    // 保�?管�??��???    UPROPERTY()
     TObjectPtr<UMingSaveGameManager> SaveManager;
 
-    // 當前模式
+    // ?��?模�?
     UPROPERTY()
     bool bSaveMode;
 
-    // 當前選中的存檔槽
+    // ?��??�中?��?檔槽
     UPROPERTY()
     int32 SelectedSlotIndex;
 
-    // 當前存檔名稱
+    // ?��?存�??�稱
     UPROPERTY()
     FString CurrentSaveName;
 
-    // UI 組件綁定（在藍圖中設置）
+    // UI 組件綁�?（在?��?中設置�?
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UScrollBox> SaveSlotScrollBox;
 
@@ -232,11 +224,10 @@ private:
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UTextBlock> ModeTitleText;
 
-    // 存檔槽按鈕數組
-    UPROPERTY()
+    // 存�?槽�??�數�?    UPROPERTY()
     TArray<TObjectPtr<UButton>> SaveSlotButtons;
 
-    // 按鈕點擊處理
+    // ?��?點�??��?
     UFUNCTION()
     void OnSaveButtonClicked();
 
@@ -267,11 +258,10 @@ private:
     UFUNCTION()
     void OnSaveNameTextCommitted(const FText& Text, ETextCommit::Type CommitMethod);
 
-    // 存檔槽選擇處理
-    UFUNCTION()
+    // 存�?槽選?��???    UFUNCTION()
     void OnSaveSlotButtonClicked(int32 SlotIndex);
 
-    // 保存/載入/刪除完成回調
+    // 保�?/載入/?�除完�??�調
     UFUNCTION()
     void HandleSaveCompleted(EMingSaveGameResult Result, int32 SlotIndex);
 
@@ -281,14 +271,12 @@ private:
     UFUNCTION()
     void HandleDeleteCompleted(bool bSuccess);
 
-    // 更新選中槽顯示
-    void UpdateSelectedSlotDisplay();
+    // ?�新?�中槽顯�?    void UpdateSelectedSlotDisplay();
 
-    // 創建存檔槽條目UI
+    // ?�建存�?槽�??�UI
     UFUNCTION(BlueprintImplementableEvent, Category = "Save/Load UI")
     void CreateSaveSlotEntry(int32 SlotIndex, const FSaveSlotUIInfo& SlotInfo);
 
-    // 清除存檔槽列表
-    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
+    // 清除存�?槽�?�?    UFUNCTION(BlueprintCallable, Category = "Save/Load UI")
     void ClearSaveSlotList();
 };

@@ -232,8 +232,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOptimizationApplied, const FMingO
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPerformanceLevelChanged);
 
 /**
- * 性能管理器
- * 監控和優化遊戲性能
+ * ?�能管�??? * ??��?�優?��??�性能
  */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingPerformanceManager : public UObject

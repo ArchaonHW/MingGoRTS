@@ -33,7 +33,7 @@ private:
     class UMingGoRTSIntroManager* IntroManager;
 
     UPROPERTY()
-    class UObject* IntroWidget; // 改為 UObject*
+    class UObject* IntroWidget; // ?�為 UObject*
 
     UPROPERTY()
     bool bIntroCompleted;

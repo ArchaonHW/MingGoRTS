@@ -239,8 +239,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameEnded);
 
 /**
- * 網絡管理器
- * 處理多人遊戲的網絡連接、玩家管理和數據同步
+ * 網絡管�??? * ?��?多人?�戲?�網絡�?��?�玩家管?��??��??�步
  */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingNetworkManager : public UObject

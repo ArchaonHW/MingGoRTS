@@ -8,8 +8,8 @@ class AMingTacticalUnit;
 class UMingSelectionManager;
 
 /**
- * 大規模戰鬥性能測試
- * 測試1000+單位的戰鬥性能
+ * 大�?模戰鬥性能測試
+ * 測試1000+?��??�戰鬥性能
  */
 UCLASS()
 class MINGTACTICAL_API UMingLargeScaleCombatTest : public UObject
@@ -19,27 +19,26 @@ class MINGTACTICAL_API UMingLargeScaleCombatTest : public UObject
 public:
     UMingLargeScaleCombatTest();
 
-    // 初始化測試
-    UFUNCTION(BlueprintCallable, Category = "Performance Test")
+    // ?��??�測�?    UFUNCTION(BlueprintCallable, Category = "Performance Test")
     void InitializeTest();
 
-    // 清理測試
+    // 清�?測試
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     void CleanupTest();
 
-    // 創建測試單位
+    // ?�建測試?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     void CreateTestUnits(int32 UnitCount = 1000);
 
-    // 開始性能測試
+    // ?��??�能測試
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     void StartPerformanceTest();
 
-    // 停止性能測試
+    // ?�止?�能測試
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
     void StopPerformanceTest();
 
-    // 獲取性能統計
+    // ?��??�能統�?
     UFUNCTION(BlueprintPure, Category = "Performance Test")
     float GetAverageFPS() const { return AverageFPS; }
 
@@ -52,7 +51,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Performance Test")
     int32 GetActiveUnitCount() const { return TestUnits.Num(); }
 
-    // 測試結果
+    // 測試結�?
     UFUNCTION(BlueprintPure, Category = "Performance Test")
     bool IsPerformanceTestPass() const;
 
@@ -60,44 +59,43 @@ protected:
     virtual void Tick(float DeltaTime);
 
 private:
-    // 測試單位
+    // 測試?��?
     UPROPERTY()
     TArray<TObjectPtr<AMingTacticalUnit>> TestUnits;
 
-    // 性能監控
+    // ?�能??��
     bool bIsTestRunning;
     float TestStartTime;
     float TotalFrameTime;
     int32 FrameCount;
     
-    // FPS統計
+    // FPS統�?
     float AverageFPS;
     float MinFPS;
     float MaxFPS;
     float LastFrameTime;
 
-    // 選擇管理器
-    UPROPERTY()
+    // ?��?管�???    UPROPERTY()
     TObjectPtr<UMingSelectionManager> SelectionManager;
 
-    // 創建單位
+    // ?�建?��?
     AMingTacticalUnit* CreateTestUnit(const FVector& Location, int32 TeamId, EUnitType UnitType);
 
-    // 更新性能統計
+    // ?�新?�能統�?
     void UpdatePerformanceStats(float DeltaTime);
 
-    // 重置性能統計
+    // ?�置?�能統�?
     void ResetPerformanceStats();
 
-    // 模擬單位行為
+    // 模擬?��?行為
     void SimulateUnitBehavior(float DeltaTime);
 
-    // 測試單位選擇
+    // 測試?��??��?
     void TestUnitSelection();
 
-    // 測試單位移動
+    // 測試?��?移�?
     void TestUnitMovement();
 
-    // 測試單位戰鬥
+    // 測試?��??�鬥
     void TestUnitCombat();
 };

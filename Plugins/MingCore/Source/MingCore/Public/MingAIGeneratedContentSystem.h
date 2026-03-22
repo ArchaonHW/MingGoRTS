@@ -17,18 +17,18 @@ class UAudioComponent;
 UENUM(BlueprintType)
 enum class EAIGenerationType : uint8
 {
-    Image,          // 圖像生成
-    Video,          // 影片生成  
-    Music,          // 音樂生成
-    SoundEffect,    // 音效生成
-    Texture,        // 貼圖生成
-    Mesh,           // 模型生成
-    Material,       // 材質生成
-    Animation,      // 動畫生成
-    Level,          // 關卡生成
-    UI,             // UI生成
-    Text,           // 文本生成
-    Voice           // 語音生成
+    Image,          // ?��??��?
+    Video,          // 影�??��?  
+    Music,          // ?��??��?
+    SoundEffect,    // ?��??��?
+    Texture,        // 貼�??��?
+    Mesh,           // 模�??��?
+    Material,       // ?�質?��?
+    Animation,      // ?�畫?��?
+    Level,          // ?�卡?��?
+    UI,             // UI?��?
+    Text,           // ?�本?��?
+    Voice           // 語音?��?
 };
 
 UENUM(BlueprintType)
@@ -37,22 +37,19 @@ enum class EAIModelProvider : uint8
     StableDiffusion,    // Stable Diffusion
     DALL_E,            // DALL-E
     Midjourney,        // Midjourney
-    AIVA,              // AIVA (音樂)
+    AIVA,              // AIVA (?��?)
     ElevenLabs,        // ElevenLabs (語音)
     OpenAI,            // OpenAI GPT
-    Local,             // 本地模型
-    Custom             // 自定義模型
-};
+    Local,             // ?�地模�?
+    Custom             // ?��?義模??};
 
 UENUM(BlueprintType)
 enum class EGenerationQuality : uint8
 {
-    Draft,          // 草稿質量
-    Standard,       // 標準質量
-    High,           // 高質量
-    Ultra,          // 超高質量
-    Custom          // 自定義質量
-};
+    Draft,          // ?�稿質�?
+    Standard,       // 標�?質�?
+    High,           // 高質??    Ultra,          // 超�?質�?
+    Custom          // ?��?義質??};
 
 USTRUCT(BlueprintType)
 struct FAIGenerationRequest
@@ -84,7 +81,7 @@ struct FAIGenerationRequest
     int32 Height;
 
     UPROPERTY(BlueprintReadWrite, Category = "AI Generation")
-    float Duration; // 用於音頻/視頻
+    float Duration; // ?�於?�頻/視頻
 
     UPROPERTY(BlueprintReadWrite, Category = "AI Generation")
     TMap<FString, FString> AdditionalParameters;
@@ -214,9 +211,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIGenerationProgress, const FStr
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSceneGenerated, const FString&, SceneName);
 
 /**
- * AI 內容生成系統
- * 自動生成圖像、影片、音樂、音效等素材並建立遊戲畫面
- */
+ * AI ?�容?��?系統
+ * ?��??��??��??�影?�、音樂、音?��?素�?並建立�??�畫?? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingAIGeneratedContentSystem : public UObject
 {
@@ -225,92 +221,91 @@ class MINGCORE_API UMingAIGeneratedContentSystem : public UObject
 public:
     UMingAIGeneratedContentSystem();
 
-    // 初始化系統
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
+    // ?��??�系�?    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void InitializeAIGenerationSystem();
 
-    // 圖像生成
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateImage(const FString& Prompt, const FString& NegativePrompt = TEXT(""), int32 Width = 512, int32 Height = 512, EGenerationQuality Quality = EGenerationQuality::Standard);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateImageAsync(const FAIGenerationRequest& Request);
 
-    // 影片生成
+    // 影�??��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateVideo(const FString& Prompt, float Duration = 5.0f, int32 FPS = 30, EGenerationQuality Quality = EGenerationQuality::Standard);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateVideoAsync(const FAIGenerationRequest& Request);
 
-    // 音樂生成
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateMusic(const FString& Style, float Duration = 30.0f, EGenerationQuality Quality = EGenerationQuality::Standard);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateMusicAsync(const FAIGenerationRequest& Request);
 
-    // 音效生成
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateSoundEffect(const FString& Description, float Duration = 2.0f, EGenerationQuality Quality = EGenerationQuality::Standard);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateSoundEffectAsync(const FAIGenerationRequest& Request);
 
-    // 語音生成
+    // 語音?��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateVoice(const FString& Text, const FString& VoiceID = TEXT(""), EGenerationQuality Quality = EGenerationQuality::Standard);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateVoiceAsync(const FAIGenerationRequest& Request);
 
-    // 貼圖生成
+    // 貼�??��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     UTexture2D* GenerateTexture(const FString& Description, int32 Width = 512, int32 Height = 512);
 
-    // 模型生成
+    // 模�??��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     UStaticMesh* GenerateMesh(const FString& Description, float Complexity = 0.5f);
 
-    // 材質生成
+    // ?�質?��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     UMaterialInterface* GenerateMaterial(const FString& Description, EGenerationQuality Quality = EGenerationQuality::Standard);
 
-    // 動畫生成
+    // ?�畫?��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateAnimation(const FString& Description, float Duration = 5.0f);
 
-    // 關卡生成
+    // ?�卡?��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateLevel(const FString& Description, int32 Size = 1024);
 
-    // UI生成
+    // UI?��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateUI(const FString& Description, const FString& UIType = TEXT("panel"));
 
-    // 文本生成
+    // ?�本?��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString GenerateText(const FString& Prompt, const FString& Style = TEXT("narrative"));
 
-    // 遊戲場景生成
+    // ?�戲?�景?��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void GenerateGameScene(const FAIGameSceneSetup& SceneSetup);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void GenerateGameSceneAsync(const FAIGameSceneSetup& SceneSetup);
 
-    // 場景渲染
+    // ?�景渲�?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     UTexture2D* RenderSceneToTexture(const FString& SceneName, int32 Width = 1920, int32 Height = 1080);
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     FString RenderSceneToVideo(const FString& SceneName, float Duration = 10.0f, int32 FPS = 30);
 
-    // 批量生成
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     TArray<FString> BatchGenerateAssets(const TArray<FAIGenerationRequest>& Requests);
 
-    // 資產管理
+    // 資產管�?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void SaveGeneratedAsset(const FString& RequestID, const FString& AssetPath);
 
@@ -323,8 +318,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     UStaticMesh* LoadGeneratedMesh(const FString& AssetPath);
 
-    // 狀態查詢
-    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
+    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "AI Content Generation")
     bool IsGenerationInProgress(const FString& RequestID) const;
 
     UFUNCTION(BlueprintPure, Category = "AI Content Generation")
@@ -336,7 +330,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Generation")
     TArray<FString> GetActiveRequests() const;
 
-    // 配置管理
+    // ?�置管�?
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void SetModelProvider(EAIModelProvider Provider, const FString& APIKey = TEXT(""));
 
@@ -346,7 +340,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void SetOutputDirectory(const FString& Directory);
 
-    // 預設模板
+    // ?�設模板
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void LoadGenerationPresets();
 
@@ -356,7 +350,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void SavePresetRequest(const FString& PresetName, const FAIGenerationRequest& Request);
 
-    // 性能監控
+    // ?�能??��
     UFUNCTION(BlueprintPure, Category = "AI Content Generation")
     float GetAverageGenerationTime(EAIGenerationType GenerationType) const;
 
@@ -366,8 +360,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI Content Generation")
     float GetSystemLoad() const;
 
-    // 清理和維護
-    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
+    // 清�??�維�?    UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
     void ClearCache();
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Generation")
@@ -425,21 +418,20 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "AI Generation Settings")
     float CacheExpirationTime;
 
-    // 狀態
-    UPROPERTY()
+    // ?�??    UPROPERTY()
     bool bIsInitialized;
 
     UPROPERTY()
     int32 CurrentGenerationCount;
 
-    // 統計
+    // 統�?
     UPROPERTY()
     TMap<EAIGenerationType, float> AverageGenerationTimes;
 
     UPROPERTY()
     TMap<EAIGenerationType, int32> TotalGeneratedCounts;
 
-    // 內部函數
+    // ?�部?�數
     void InitializeDefaultPresets();
     FString GenerateRequestID();
     void ProcessGenerationRequest(const FAIGenerationRequest& Request);
@@ -449,21 +441,21 @@ protected:
     void NotifyGenerationProgress(const FString& RequestID, float Progress);
     void NotifySceneGenerated(const FString& SceneName);
 
-    // 具體生成實現
+    // ?��??��?實現
     UTexture2D* GenerateImageInternal(const FAIGenerationRequest& Request);
     USoundBase* GenerateMusicInternal(const FAIGenerationRequest& Request);
     USoundBase* GenerateSoundEffectInternal(const FAIGenerationRequest& Request);
     UStaticMesh* GenerateMeshInternal(const FAIGenerationRequest& Request);
     UMaterialInterface* GenerateMaterialInternal(const FAIGenerationRequest& Request);
 
-    // 場景生成輔助
+    // ?�景?��?輔助
     void GenerateSceneLighting(const FAIGameSceneSetup& SceneSetup);
     void GenerateSceneEnvironment(const FAIGameSceneSetup& SceneSetup);
     void GenerateSceneEffects(const FAIGameSceneSetup& SceneSetup);
     void SetupSceneCamera(const FString& SceneName);
 
 private:
-    // 輔助函數
+    // 輔助?�數
     FString GetModelAPIEndpoint(EAIModelProvider Provider) const;
     FString BuildAPIRequest(const FAIGenerationRequest& Request) const;
     FAIGenerationResult ParseAPIResponse(const FString& Response, const FString& RequestID) const;

@@ -6,7 +6,7 @@
 #include "MingHistoricalEventManager.generated.h"
 
 /**
- * 民國時期階段
+ * 民�??��??�段
  */
 UENUM(BlueprintType)
 enum class ERepublicEra : uint8
@@ -18,7 +18,7 @@ enum class ERepublicEra : uint8
 };
 
 /**
- * 歷史事件類型
+ * 歷史事件類�?
  */
 UENUM(BlueprintType)
 enum class EHistoricalEventType : uint8
@@ -33,7 +33,7 @@ enum class EHistoricalEventType : uint8
 };
 
 /**
- * 事件影響範圍
+ * 事件影響範�?
  */
 UENUM(BlueprintType)
 enum class EEventImpactScope : uint8
@@ -45,7 +45,7 @@ enum class EEventImpactScope : uint8
 };
 
 /**
- * 民國歷史事件定義 (Event Manager 版本)
+ * 民�?歷史事件定義 (Event Manager ?�本)
  */
 USTRUCT(BlueprintType)
 struct FMingManagerEvent
@@ -114,8 +114,7 @@ struct FMingManagerEvent
 };
 
 /**
- * 事件觸發上下文
- */
+ * 事件觸發上�??? */
 USTRUCT(BlueprintType)
 struct FEventTriggerContext
 {
@@ -153,7 +152,7 @@ struct FEventTriggerContext
 };
 
 /**
- * 事件執行結果
+ * 事件?��?結�?
  */
 USTRUCT(BlueprintType)
 struct FEventExecutionResult
@@ -187,9 +186,7 @@ struct FEventExecutionResult
 };
 
 /**
- * 民國歷史事件管理器
- * 管理所有民國時期的歷史事件和動態觸發
- */
+ * 民�?歷史事件管�??? * 管�??�?��??��??��?歷史事件?��??�觸?? */
 UCLASS(BlueprintType)
 class MINGSTRATEGIC_API UMingHistoricalEventManager : public UObject
 {
@@ -199,25 +196,24 @@ public:
     UMingHistoricalEventManager();
 
     /**
-     * 初始化事件管理器
+     * ?��??��?件管?�器
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     void Initialize();
 
     /**
-     * 關閉事件管理器
-     */
+     * ?��?事件管�???     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     void Shutdown();
 
     /**
-     * 註冊歷史事件
+     * 註�?歷史事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     bool RegisterHistoricalEvent(const FMingManagerEvent& Event);
 
     /**
-     * 取消註冊歷史事件
+     * ?��?註�?歷史事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     bool UnregisterHistoricalEvent(const FString& EventID);
@@ -235,188 +231,174 @@ public:
     FEventExecutionResult TriggerHistoricalEvent(const FString& EventID, const FEventTriggerContext& Context);
 
     /**
-     * 獲取歷史事件
+     * ?��?歷史事件
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
     FMingManagerEvent GetHistoricalEvent(const FString& EventID) const;
 
     /**
-     * 獲取所有歷史事件
-     */
+     * ?��??�?�歷?��?�?     */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
     TArray<FMingManagerEvent> GetAllHistoricalEvents() const;
 
     /**
-     * 獲取指定時期的事件
-     */
+     * ?��??��??��??��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     TArray<FMingManagerEvent> GetEventsByEra(ERepublicEra Era) const;
 
     /**
-     * 獲取指定類型的事件
-     */
+     * ?��??��?類�??��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     TArray<FMingManagerEvent> GetEventsByType(EHistoricalEventType EventType) const;
 
     /**
-     * 獲取關鍵事件
+     * ?��??�鍵事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     TArray<FMingManagerEvent> GetCriticalEvents() const;
 
     /**
-     * 獲取可觸發事件
-     */
+     * ?��??�觸?��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     TArray<FString> GetTriggerableEvents(const FEventTriggerContext& Context) const;
 
     /**
-     * 獲取事件鏈
-     */
+     * ?��?事件??     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     TArray<FMingManagerEvent> GetEventChain(const FString& EventID) const;
 
     /**
-     * 更新遊戲上下文
-     */
+     * ?�新?�戲上�???     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     void UpdateGameContext(const FEventTriggerContext& Context);
 
     /**
-     * 獲取當前遊戲上下文
-     */
+     * ?��??��??�戲上�???     */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
     FEventTriggerContext GetCurrentGameContext() const;
 
     /**
-     * 設置遊戲時間
+     * 設置?�戲?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     void SetGameTime(float GameTime);
 
     /**
-     * 設置民國時期
+     * 設置民�??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     void SetRepublicEra(ERepublicEra Era);
 
     /**
-     * 添加玩家決策
+     * 添�??�家決�?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     void AddPlayerDecision(const FString& DecisionID, const FString& DecisionValue);
 
     /**
-     * 獲取事件統計
+     * ?��?事件統�?
      */
     UFUNCTION(BlueprintPure, Category = "Historical Events")
     TMap<FString, int32> GetEventStatistics() const;
 
     /**
-     * 重置所有事件
-     */
+     * ?�置?�?��?�?     */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     void ResetAllEvents();
 
     /**
-     * 強制觸發事件 (用於測試)
+     * 強制觸發事件 (?�於測試)
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     FEventExecutionResult ForceTriggerEvent(const FString& EventID);
 
     /**
-     * 獲取推薦事件
+     * ?��??�薦事件
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Events")
     TArray<FMingManagerEvent> GetRecommendedEvents(const FEventTriggerContext& Context) const;
 
 protected:
-    // 已註冊的歷史事件
+    // 已註?��?歷史事件
     UPROPERTY()
     TArray<FMingManagerEvent> RegisteredEvents;
 
-    // 事件ID到事件的映射
+    // 事件ID?��?件�??��?
     UPROPERTY()
     TMap<FString, FMingManagerEvent> EventMap;
 
-    // 當前遊戲上下文
-    UPROPERTY()
+    // ?��??�戲上�???    UPROPERTY()
     FEventTriggerContext CurrentContext;
 
-    // 事件統計
+    // 事件統�?
     UPROPERTY()
     TMap<FString, int32> EventStatistics;
 
-    // 已觸發的事件
+    // 已觸?��?事件
     UPROPERTY()
     TArray<FString> TriggeredEvents;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bIsInitialized;
 
-    // 初始化民國歷史事件庫
+    // ?��??��??�歷?��?件庫
     void InitializeHistoricalEventLibrary();
 
-    // 創建早期共和國事件
-    void CreateEarlyRepublicEvents();
+    // ?�建?��??��??��?�?    void CreateEarlyRepublicEvents();
 
-    // 創建南京十年事件
+    // ?�建?�京?�年事件
     void CreateNanjingDecadeEvents();
 
-    // 創建抗戰事件
+    // ?�建?�戰事件
     void CreateWarOfResistanceEvents();
 
-    // 創建內戰事件
+    // ?�建?�戰事件
     void CreateCivilWarEvents();
 
-    // 檢查時間條件
+    // 檢查?��?條件
     bool CheckTimeCondition(const FString& Condition, const FEventTriggerContext& Context) const;
 
-    // 檢查決策條件
+    // 檢查決�?條件
     bool CheckDecisionCondition(const FString& Condition, const FEventTriggerContext& Context) const;
 
-    // 檢查資源條件
+    // 檢查資�?條件
     bool CheckResourceCondition(const FString& Condition, const FEventTriggerContext& Context) const;
 
-    // 檢查建築條件
+    // 檢查建�?條件
     bool CheckBuildingCondition(const FString& Condition, const FEventTriggerContext& Context) const;
 
-    // 檢查軍事條件
+    // 檢查軍�?條件
     bool CheckMilitaryCondition(const FString& Condition, const FEventTriggerContext& Context) const;
 
     // 檢查外交條件
     bool CheckDiplomaticCondition(const FString& Condition, const FEventTriggerContext& Context) const;
 
-    // 執行事件後果
+    // ?��?事件後�?
     bool ExecuteEventConsequence(const FString& Consequence, const FString& EventID);
 
-    // 應用事件影響
+    // ?�用事件影響
     void ApplyEventImpact(const FMingManagerEvent& Event);
 
-    // 更新事件統計
+    // ?�新事件統�?
     void UpdateEventStatistics(const FString& EventID);
 
-    // 驗證事件依賴
+    // 驗�?事件依賴
     bool ValidateEventDependencies(const FString& EventID) const;
 
-    // 獲取事件影響分數
+    // ?��?事件影響?�數
     float CalculateEventImpact(const FMingManagerEvent& Event) const;
 
-    // 記錄事件日誌
+    // 記�?事件?��?
     void LogEvent(const FString& EventID, const FString& Message);
 
-    // 生成事件報告
+    // ?��?事件?��?
     FString GenerateEventReport(const FString& EventID, const FEventExecutionResult& Result) const;
 
-    // 解析條件字符串
-    TArray<FString> ParseConditionString(const FString& Condition) const;
+    // �??條件字符�?    TArray<FString> ParseConditionString(const FString& Condition) const;
 
-    // 比較數值
-    bool CompareValues(float Value1, const FString& Operator, float Value2) const;
+    // 比�??��?    bool CompareValues(float Value1, const FString& Operator, float Value2) const;
 
-    // 獲取上下文值
-    float GetContextValue(const FString& Key, const FEventTriggerContext& Context) const;
+    // ?��?上�??��?    float GetContextValue(const FString& Key, const FEventTriggerContext& Context) const;
 
-    // 設置上下文值
-    void SetContextValue(const FString& Key, float Value, FEventTriggerContext& Context);
+    // 設置上�??��?    void SetContextValue(const FString& Key, float Value, FEventTriggerContext& Context);
 };

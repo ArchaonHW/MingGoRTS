@@ -32,10 +32,9 @@ public:
     }
 
 private:
-    // 模組初始化相關
-    void RegisterEventTypes();
+    // 模�??��??�相??    void RegisterEventTypes();
     void SetupPerformanceMonitoring();
     
-    // 性能監控
+    // ?�能??��
     class FPerformanceMonitor* PerformanceMonitor;
 };

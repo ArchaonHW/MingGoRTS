@@ -10,28 +10,27 @@
 UENUM(BlueprintType)
 enum class EAudioControlType : uint8
 {
-    Master,         // 主音量
-    Relationship,  // 關係音效
-    Reputation,     // 聲望音效
-    Dialogue,       // 對話音效
-    Ambient,        // 環境音效
-    Music,          // 背景音樂
-    SFX             // 特效音效
+    Master,         // 主音??    Relationship,  // ?��??��?
+    Reputation,     // ?��??��?
+    Dialogue,       // 對話?��?
+    Ambient,        // ?��??��?
+    Music,          // ?�景?��?
+    SFX             // ?��??��?
 };
 
 UENUM(BlueprintType)
 enum class EAudioThemeType : uint8
 {
-    Battle,         // 戰爭主題
-    Peaceful,       // 和平主題
-    Tension,        // 緊張主題
-    Victory,        // 勝利主題
-    Defeat,         // 失敗主題
-    Diplomatic,     // 外交主題
-    Economic,       // 經濟主題
-    Cultural,       // 文化主題
-    Revolutionary,  // 革命主題
-    Nostalgic       // 懷舊主題
+    Battle,         // ?�爭主�?
+    Peaceful,       // ?�平主�?
+    Tension,        // 緊張主�?
+    Victory,        // ?�利主�?
+    Defeat,         // 失�?主�?
+    Diplomatic,     // 外交主�?
+    Economic,       // 經�?主�?
+    Cultural,       // ?��?主�?
+    Revolutionary,  // ?�命主�?
+    Nostalgic       // ?��?主�?
 };
 
 USTRUCT(BlueprintType)
@@ -111,8 +110,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnThemeChanged, EAudioThemeType, T
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAudioSettingsChanged, const FString&, SettingName);
 
 /**
- * 音頻面板Widget
- * 管理音頻系統控制界面
+ * ?�頻?�板Widget
+ * 管�??�頻系統?�制?�面
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingAudioPanel : public UUserWidget
@@ -122,11 +121,10 @@ class MINGPERSONAL_API UMingAudioPanel : public UUserWidget
 public:
     UMingAudioPanel(const FObjectInitializer& ObjectInitializer);
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "Audio Panel")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void InitializeAudioPanel(UMingAudioRelationshipManager* InAudioManager, UMingRepublicEraAudioThemes* InThemeManager);
 
-    // 音量控制
+    // ?��??�制
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void SetVolume(EAudioControlType ControlType, float Volume);
 
@@ -151,7 +149,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void SetSFXVolume(float Volume);
 
-    // 靜音控制
+    // ?�音?�制
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void MuteControl(EAudioControlType ControlType, bool bMuted);
 
@@ -161,7 +159,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void ToggleMute(EAudioControlType ControlType);
 
-    // 主題控制
+    // 主�??�制
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void PlayTheme(EAudioThemeType ThemeType, float Intensity = 1.0f);
 
@@ -180,7 +178,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void FadeTheme(EAudioThemeType ThemeType, float TargetVolume, float FadeDuration);
 
-    // 地區音頻
+    // ?��??�頻
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void SetRegionalAudio(ERepublicEraRegion Region);
 
@@ -193,7 +191,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void StopRegionalAudio();
 
-    // 音頻測試
+    // ?�頻測試
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void TestRelationshipAudio(ERelationshipAudioType AudioType);
 
@@ -206,7 +204,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void TestAllAudio();
 
-    // 設置管理
+    // 設置管�?
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void LoadAudioSettings();
 
@@ -219,8 +217,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void ApplyAudioProfile(const FString& ProfileName);
 
-    // 狀態查詢
-    UFUNCTION(BlueprintPure, Category = "Audio Panel")
+    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "Audio Panel")
     float GetVolume(EAudioControlType ControlType) const;
 
     UFUNCTION(BlueprintPure, Category = "Audio Panel")
@@ -235,7 +232,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Audio Panel")
     ERepublicEraRegion GetCurrentRegion() const;
 
-    // 音頻統計
+    // ?�頻統�?
     UFUNCTION(BlueprintPure, Category = "Audio Panel")
     float GetAverageVolume() const;
 
@@ -245,7 +242,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Audio Panel")
     int32 GetMutedControlCount() const;
 
-    // 互動操作
+    // 互�??��?
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void OnVolumeSliderChanged(EAudioControlType ControlType, float NewValue);
 
@@ -276,15 +273,14 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRepublicEraAudioThemes> ThemeManager;
 
-    // 音頻控制數據
+    // ?�頻?�制?��?
     UPROPERTY(BlueprintReadOnly, Category = "Audio Data")
     TArray<FAudioControlData> AudioControls;
 
     UPROPERTY(BlueprintReadOnly, Category = "Audio Data")
     TArray<FAudioThemeData> AudioThemes;
 
-    // 當前狀態
-    UPROPERTY(BlueprintReadOnly, Category = "Audio State")
+    // ?��??�??    UPROPERTY(BlueprintReadOnly, Category = "Audio State")
     EAudioThemeType CurrentThemeType;
 
     UPROPERTY(BlueprintReadOnly, Category = "Audio State")
@@ -300,7 +296,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Audio Settings")
     bool bAutoFadeOnThemeChange = true;
 
-    // UI組件引用（需要在Blueprint中綁定）
+    // UI組件引用（�?要在Blueprint中�?定�?
     UPROPERTY(meta = (BindWidget))
     class UVerticalBox* VolumeControlsContainer;
 
@@ -331,11 +327,11 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UButton* ResetButton;
 
-    // 虛擬函數
+    // ?�擬?�數
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // 內部函數
+    // ?�部?�數
     void InitializeAudioControls();
     void InitializeAudioThemes();
     void UpdateAudioUI();
@@ -350,14 +346,14 @@ protected:
     FString GetAudioThemeName(EAudioThemeType ThemeType) const;
     FString GetRegionDisplayName(ERepublicEraRegion Region) const;
 
-    // 事件綁定
+    // 事件綁�?
     void SetupEventBindings();
     void OnAudioRelationshipPlayed(ERelationshipAudioType AudioType, USoundBase* Sound);
     void OnAudioReputationPlayed(EReputationAudioType AudioType, USoundBase* Sound);
     void OnAudioDialoguePlayed(EDialogueAudioType AudioType, USoundBase* Sound);
 
 private:
-    // 輔助函數
+    // 輔助?�數
     void ApplyVolumeChange(EAudioControlType ControlType, float NewVolume);
     void ApplyMuteChange(EAudioControlType ControlType, bool bMuted);
     void ApplyThemeChange(EAudioThemeType ThemeType, bool bIsPlaying);

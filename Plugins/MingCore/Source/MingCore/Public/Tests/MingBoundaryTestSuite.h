@@ -5,9 +5,8 @@
 #include "MingBoundaryTestSuite.generated.h"
 
 /**
- * 邊界測試套件
- * 測試系統的邊界條件和極限值
- */
+ * ?��?測試套件
+ * 測試系統?��??��?件�?極�??? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingBoundaryTestSuite : public UObject
 {
@@ -16,7 +15,7 @@ class MINGCORE_API UMingBoundaryTestSuite : public UObject
 public:
     UMingBoundaryTestSuite();
 
-    // ========== 資源系統邊界測試 ==========
+    // ========== 資�?系統?��?測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Resource")
     bool TestResourceBoundaryConditions();
@@ -36,7 +35,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Resource")
     bool TestFloatingPointResources();
 
-    // ========== 單位系統邊界測試 ==========
+    // ========== ?��?系統?��?測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Unit")
     bool TestUnitBoundaryConditions();
@@ -56,7 +55,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Unit")
     bool TestInvalidUnitStates();
 
-    // ========== 建築系統邊界測試 ==========
+    // ========== 建�?系統?��?測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Building")
     bool TestBuildingBoundaryConditions();
@@ -76,7 +75,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Building")
     bool TestBuildingPositionBoundaries();
 
-    // ========== 網絡系統邊界測試 ==========
+    // ========== 網絡系統?��?測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Network")
     bool TestNetworkBoundaryConditions();
@@ -96,7 +95,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Network")
     bool TestInvalidNetworkStates();
 
-    // ========== 保存系統邊界測試 ==========
+    // ========== 保�?系統?��?測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Save")
     bool TestSaveSystemBoundaryConditions();
@@ -116,7 +115,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Boundary Test | Save")
     bool TestInvalidSaveStates();
 
-    // ========== 綜合邊界測試 ==========
+    // ========== 綜�??��?測試 ==========
     
     UFUNCTION(BlueprintCallable, Category = "Boundary Test")
     void RunAllBoundaryTests();
@@ -150,21 +149,19 @@ protected:
     TArray<FString> TestResults;
 
 private:
-    // 輔助函數
+    // 輔助?�數
     void AddTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT(""));
     void ResetTestResults();
     bool ValidateBoundaryValue(const FString& TestName, float Value, float Min, float Max);
     bool TestNumericBoundary(const FString& TestName, int32 Value, int32 Min, int32 Max);
     bool TestFloatBoundary(const FString& TestName, float Value, float Min, float Max);
     
-    // 極限值測試輔助
-    bool TestZeroValue(const FString& TestName, TFunction<void()> TestFunction);
+    // 極�??�測試�???    bool TestZeroValue(const FString& TestName, TFunction<void()> TestFunction);
     bool TestMaxValue(const FString& TestName, TFunction<void()> TestFunction);
     bool TestNegativeValue(const FString& TestName, TFunction<void()> TestFunction);
     bool TestOverflowValue(const FString& TestName, TFunction<void()> TestFunction);
     
-    // 狀態驗證輔助
-    bool ValidateSystemState(const FString& TestName);
+    // ?�?��?證�???    bool ValidateSystemState(const FString& TestName);
     bool CheckSystemIntegrity();
     bool VerifyDataConsistency();
 };

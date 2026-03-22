@@ -5,19 +5,18 @@
 #include "MingTacticalCombatSystem.h"
 #include "MingFogOfWarManager.generated.h"
 
-// 視野類型
+// 視�?類�?
 UENUM(BlueprintType)
 enum class EMingVisionType : uint8
 {
-    Normal,            // 正常視野
-    Enhanced,          // 增強視野
-    NightVision,        // 夜視
-    Thermal,           // 熱成像
-    Satellite,         // 衛星視野
-    Aerial             // 空中偵察
+    Normal,            // �?��視�?
+    Enhanced,          // 增強視�?
+    NightVision,        // 夜�?
+    Thermal,           // ?��???    Satellite,         // 衛�?視�?
+    Aerial             // 空中?��?
 };
 
-// 迷霧等級
+// 迷霧等�?
 UENUM(BlueprintType)
 enum class EMingFogLevel : uint8
 {
@@ -28,76 +27,69 @@ enum class EMingFogLevel : uint8
     Complete           // 完全迷霧
 };
 
-// 地形類型
+// ?�形類�?
 UENUM(BlueprintType)
 enum class EMingTerrainType : uint8
 {
-    Open,              // 開闊地形
-    Forest,            // 森林
+    Open,              // ?��??�形
+    Forest,            // 森�?
     Mountain,          // 山地
-    Urban,             // 城市
-    Desert,            // 沙漠
-    Water,             // 水域
+    Urban,             // ?��?
+    Desert,            // 沙�?
+    Water,             // 水�?
     Swamp,             // 沼澤
-    Snow               // 雪地
+    Snow               // ?�地
 };
 
-// 偵察狀態
-UENUM(BlueprintType)
+// ?��??�??UENUM(BlueprintType)
 enum class EMingScoutingStatus : uint8
 {
-    Idle,              // 空閒
-    Scouting,          // 偵察中
-    Observing,         // 觀察中
-    Reporting,          // 報告中
-    Hidden,            // 隱蔽
-    Detected           // 被發現
-};
+    Idle,              // 空�?
+    Scouting,          // ?��?�?    Observing,         // 觀察中
+    Reporting,          // ?��?�?    Hidden,            // ?�蔽
+    Detected           // 被發??};
 
-// 視野數據
+// 視�??��?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingVisionData
 {
     GENERATED_BODY()
 
-    // 單位ID
+    // ?��?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 UnitID;
 
-    // 視野半徑
+    // 視�??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float VisionRadius;
 
-    // 視野類型
+    // 視�?類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingVisionType VisionType;
 
-    // 視野角度
+    // 視�?角度
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float VisionAngle;
 
-    // 視野持續時間
+    // 視�??��??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float VisionDuration;
 
-    // 是否為持續視野
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�否?��?續�???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsPersistent;
 
-    // 視野更新間隔
+    // 視�??�新?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float VisionUpdateInterval;
 
-    // 可見單位列表
+    // ?��??��??�表
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> VisibleUnits;
 
-    // 已偵察區域
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 已偵察�???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FVector> ScoutedAreas;
 
-    // 最後更新時間
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�後更?��???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime LastUpdateTime;
 
     FMingVisionData()
@@ -115,46 +107,43 @@ struct MINGTACTICAL_API FMingVisionData
     }
 };
 
-// 迷霧網格數據
+// 迷霧網格?��?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingFogGridCell
 {
     GENERATED_BODY()
 
-    // 網格座標
+    // 網格座�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FIntPoint GridPosition;
 
-    // 迷霧等級
+    // 迷霧等�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingFogLevel FogLevel;
 
-    // 是否被偵察過
+    // ?�否被偵察�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsScouted;
 
-    // 偵察時間
+    // ?��??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime ScoutedTime;
 
-    // 偵察單位ID
+    // ?��??��?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ScoutingUnitID;
 
-    // 地形類型
+    // ?�形類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingTerrainType TerrainType;
 
-    // 地形遮蔽值
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�形?�蔽??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float TerrainOcclusion;
 
-    // 建築物遮蔽值
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 建�??�遮?��?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float StructureOcclusion;
 
-    // 最後可見時間
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�後可見�???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime LastVisibleTime;
 
     FMingFogGridCell()
@@ -171,54 +160,51 @@ struct MINGTACTICAL_API FMingFogGridCell
     }
 };
 
-// 偵察報告
+// ?��??��?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingScoutingReport
 {
     GENERATED_BODY()
 
-    // 報告ID
+    // ?��?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ReportID;
 
-    // 偵察單位ID
+    // ?��??��?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ScoutingUnitID;
 
-    // 偵察時間
+    // ?��??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime ScoutingTime;
 
-    // 偵察位置
+    // ?��?位置
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector ScoutingLocation;
 
-    // 偵察範圍
+    // ?��?範�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ScoutingRadius;
 
-    // 發現的單位
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�現?�單�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> DiscoveredUnits;
 
-    // 發現的建築物
+    // ?�現?�建築物
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> DiscoveredStructures;
 
-    // 地形信息
+    // ?�形信息
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, FString> TerrainInfo;
 
-    // 威脅評估
+    // 威�?評估
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ThreatAssessment;
 
-    // 報告詳細度
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?��?詳細�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ReportDetail;
 
-    // 報告可靠性
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?��??��???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ReportReliability;
 
     FMingScoutingReport()
@@ -237,7 +223,7 @@ struct MINGTACTICAL_API FMingScoutingReport
     }
 };
 
-// 戰爭迷霧事件委託
+// ?�爭迷霧事件委�?
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFogOfWarUpdated, const FVector&, Location, EMingFogLevel, NewFogLevel);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVisionUpdated, int32, UnitID, const TArray<int32>&, NewVisibleUnits);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoutingCompleted, const FMingScoutingReport&, Report);
@@ -245,8 +231,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitSpotted, int32, SpottingUnit
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitLostSight, int32, LosingUnitID, int32, LostUnitID);
 
 /**
- * 戰爭迷霧管理器
- * 負責管理戰爭迷霧、視野和偵察系統
+ * ?�爭迷霧管�??? * 負責管�??�爭迷霧?��??��??��?系統
  */
 UCLASS(ClassGroup = (Tactical), Blueprintable, BlueprintType)
 class MINGTACTICAL_API UMingFogOfWarManager : public UObject
@@ -256,79 +241,74 @@ class MINGTACTICAL_API UMingFogOfWarManager : public UObject
 public:
     UMingFogOfWarManager();
 
-    // 初始化戰爭迷霧系統
-    UFUNCTION(BlueprintCallable, Category = "Fog of War")
+    // ?��??�戰?�迷?�系�?    UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool InitializeFogOfWarSystem();
 
-    // 註冊單位視野
+    // 註�??��?視�?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool RegisterUnitVision(int32 UnitID, const FMingVisionData& VisionData);
 
-    // 更新單位視野
+    // ?�新?��?視�?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool UpdateUnitVision(int32 UnitID, const FVector& NewPosition);
 
-    // 獲取單位視野
+    // ?��??��?視�?
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     FMingVisionData GetUnitVision(int32 UnitID) const;
 
-    // 獲取可見單位
+    // ?��??��??��?
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     TArray<int32> GetVisibleUnits(int32 UnitID) const;
 
-    // 檢查單位可見性
-    UFUNCTION(BlueprintPure, Category = "Fog of War")
+    // 檢查?��??��???    UFUNCTION(BlueprintPure, Category = "Fog of War")
     bool IsUnitVisible(int32 ViewerID, int32 TargetID) const;
 
-    // 更新戰爭迷霧
+    // ?�新?�爭迷霧
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     void UpdateFogOfWar();
 
-    // 獲取迷霧等級
+    // ?��?迷霧等�?
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     EMingFogLevel GetFogLevel(const FVector& Location) const;
 
-    // 設置地形類型
+    // 設置?�形類�?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool SetTerrainType(const FVector& Location, EMingTerrainType TerrainType);
 
-    // 添加建築物遮蔽
-    UFUNCTION(BlueprintCallable, Category = "Fog of War")
+    // 添�?建�??�遮??    UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool AddStructureOcclusion(const FVector& Location, float OcclusionValue);
 
-    // 執行偵察任務
+    // ?��??��?任�?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool ExecuteScoutingMission(int32 UnitID, const FVector& TargetLocation, float Radius);
 
-    // 獲取偵察報告
+    // ?��??��??��?
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     TArray<FMingScoutingReport> GetScoutingReports() const;
 
-    // 設置偵察狀態
-    UFUNCTION(BlueprintCallable, Category = "Fog of War")
+    // 設置?��??�??    UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool SetScoutingStatus(int32 UnitID, EMingScoutingStatus Status);
 
-    // 計算視野範圍
+    // 計�?視�?範�?
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     TArray<FVector> CalculateVisionArea(int32 UnitID) const;
 
-    // 獲取迷霧網格
+    // ?��?迷霧網格
     UFUNCTION(BlueprintPure, Category = "Fog of War")
     TArray<FMingFogGridCell> GetFogGrid() const;
 
-    // 保存迷霧數據
+    // 保�?迷霧?��?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool SaveFogOfWarData();
 
-    // 載入迷霧數據
+    // 載入迷霧?��?
     UFUNCTION(BlueprintCallable, Category = "Fog of War")
     bool LoadFogOfWarData();
 
-    // 清除所有迷霧數據
-    UFUNCTION(BlueprintCallable, Category = "Fog of War")
+    // 清除?�?�迷?�數??    UFUNCTION(BlueprintCallable, Category = "Fog of War")
     void ClearAllFogOfWarData();
 
-    // 事件委託
+    // 事件委�?
     UPROPERTY(BlueprintAssignable)
     FOnFogOfWarUpdated OnFogOfWarUpdated;
 
@@ -351,27 +331,24 @@ protected:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    // 單位視野數據庫
-    UPROPERTY()
+    // ?��?視�??��?�?    UPROPERTY()
     TMap<int32, FMingVisionData> UnitVisionDatabase;
 
     // 迷霧網格
     UPROPERTY()
     TArray<FMingFogGridCell> FogGrid;
 
-    // 地形數據
+    // ?�形?��?
     UPROPERTY()
     TMap<FIntPoint, EMingTerrainType> TerrainGrid;
 
-    // 建築物遮蔽數據
-    UPROPERTY()
+    // 建�??�遮?�數??    UPROPERTY()
     TMap<FIntPoint, float> StructureOcclusionGrid;
 
-    // 偵察報告數據庫
-    UPROPERTY()
+    // ?��??��??��?�?    UPROPERTY()
     TArray<FMingScoutingReport> ScoutingReports;
 
-    // 偵察任務隊列
+    // ?��?任�??��?
     UPROPERTY()
     TArray<int32> ActiveScoutingUnits;
 
@@ -385,69 +362,62 @@ protected:
     UPROPERTY()
     float CellSize;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // 初始化迷霧網格
-    void InitializeFogGrid();
+    // ?��??�迷?�網??    void InitializeFogGrid();
 
-    // 更新單位視野
+    // ?�新?��?視�?
     void UpdateUnitVisionInternal(int32 UnitID);
 
-    // 計算視野內的網格
+    // 計�?視�??��?網格
     TArray<FIntPoint> CalculateVisibleGridCells(int32 UnitID);
 
-    // 更新迷霧網格
+    // ?�新迷霧網格
     void UpdateFogGridCell(int32 GridX, int32 GridY, EMingFogLevel NewFogLevel, bool bIsScouted, int32 ScoutingUnitID);
 
-    // 檢查地形遮蔽
+    // 檢查?�形?�蔽
     bool CheckTerrainOcclusion(const FVector& From, const FVector& To);
 
-    // 檢查建築物遮蔽
-    bool CheckStructureOcclusion(const FVector& From, const FVector& To);
+    // 檢查建�??�遮??    bool CheckStructureOcclusion(const FVector& From, const FVector& To);
 
-    // 計算視野線
-    TArray<FVector> CalculateVisionLines(int32 UnitID);
+    // 計�?視�?�?    TArray<FVector> CalculateVisionLines(int32 UnitID);
 
-    // 處理偵察任務
+    // ?��??��?任�?
     void ProcessScoutingMission(int32 UnitID, float DeltaTime);
 
-    // 生成偵察報告
+    // ?��??��??��?
     FMingScoutingReport GenerateScoutingReport(int32 UnitID, const FVector& Location, float Radius);
 
-    // 更新地形信息
+    // ?�新?�形信息
     void UpdateTerrainInfo(const FVector& Location);
 
-    // 世界座標轉換為網格座標
-    FIntPoint WorldToGrid(const FVector& WorldPosition) const;
+    // 世�?座�?轉�??�網?�座�?    FIntPoint WorldToGrid(const FVector& WorldPosition) const;
 
-    // 網格座標轉換為世界座標
-    FVector GridToWorld(const FIntPoint& GridPosition) const;
+    // 網格座�?轉�??��??�座�?    FVector GridToWorld(const FIntPoint& GridPosition) const;
 
-    // 檢查網格座標是否有效
+    // 檢查網格座�??�否?��?
     bool IsValidGridPosition(const FIntPoint& GridPosition) const;
 
-    // 獲取網格索引
+    // ?��?網格索�?
     int32 GetGridIndex(int32 GridX, int32 GridY) const;
 
-    // 計算兩點間距離
-    float CalculateDistance(const FVector& Point1, const FVector& Point2) const;
+    // 計�??��??��???    float CalculateDistance(const FVector& Point1, const FVector& Point2) const;
 
-    // 檢查視野內的單位
+    // 檢查視�??��??��?
     void CheckUnitsInVision(int32 UnitID);
 
-    // 處理單位發現/遺失
+    // ?��??��??�現/?�失
     void ProcessUnitDiscovery(int32 ViewerID, int32 DiscoveredUnitID);
     void ProcessUnitLossOfSight(int32 ViewerID, int32 LostUnitID);
 
-    // 驗證視野數據
+    // 驗�?視�??��?
     bool ValidateVisionData(const FMingVisionData& VisionData) const;
 
-    // 清除過期的偵察信息
-    void CleanExpiredScoutingInfo();
+    // 清除?��??�偵察信??    void CleanExpiredScoutingInfo();
 
-    // 更新迷霧渲染
+    // ?�新迷霧渲�?
     void UpdateFogRendering();
 };

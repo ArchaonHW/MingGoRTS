@@ -5,7 +5,7 @@
 #include "LayerIntegration/MingFourLayerTypes.h"
 #include "MingStrategicFourLayerTypes.generated.h"
 
-// 遊戲層級枚舉
+// ?�戲層�??��?
 UENUM(BlueprintType)
 enum class EMingLayer : uint8
 {
@@ -16,7 +16,7 @@ enum class EMingLayer : uint8
     Empire      UMETA(DisplayName = "Empire")
 };
 
-// 資源類型枚舉
+// 資�?類�??��?
 UENUM(BlueprintType)
 enum class EMingStrategicResourceType : uint8
 {
@@ -30,7 +30,7 @@ enum class EMingStrategicResourceType : uint8
     Influence   UMETA(DisplayName = "Influence")
 };
 
-// 遊戲事件結構
+// ?�戲事件結�?
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStrategicFourLayerEvent
 {
@@ -57,8 +57,7 @@ struct MINGSTRATEGIC_API FMingStrategicFourLayerEvent
     {}
 };
 
-// 戰略層狀態
-USTRUCT(BlueprintType)
+// ?�略層�???USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStrategicState
 {
     GENERATED_BODY()
@@ -85,8 +84,7 @@ struct MINGSTRATEGIC_API FMingStrategicState
     {}
 };
 
-// 個人層狀態
-USTRUCT(BlueprintType)
+// ?�人層�???USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingPersonalState
 {
     GENERATED_BODY()
@@ -113,8 +111,7 @@ struct MINGSTRATEGIC_API FMingPersonalState
     {}
 };
 
-// 建築層狀態
-USTRUCT(BlueprintType)
+// 建�?層�???USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingBuildingState
 {
     GENERATED_BODY()
@@ -145,8 +142,7 @@ struct MINGSTRATEGIC_API FMingBuildingState
     {}
 };
 
-// 戰術層狀態
-USTRUCT(BlueprintType)
+// ?��?層�???USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingTacticalState
 {
     GENERATED_BODY()
@@ -173,8 +169,7 @@ struct MINGSTRATEGIC_API FMingTacticalState
     {}
 };
 
-// 戰術單位狀態枚舉
-UENUM(BlueprintType)
+// ?��??��??�?��???UENUM(BlueprintType)
 enum class EMingTacticalUnitState : uint8
 {
     Idle        UMETA(DisplayName = "Idle"),
@@ -187,7 +182,7 @@ enum class EMingTacticalUnitState : uint8
     Disabled    UMETA(DisplayName = "Disabled")
 };
 
-// 戰術單位結構
+// ?��??��?結�?
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStratTacticalUnit
 {
@@ -215,7 +210,7 @@ struct MINGSTRATEGIC_API FMingStratTacticalUnit
     {}
 };
 
-// 戰術命令結構
+// ?��??�令結�?
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStratTacticalOrder
 {

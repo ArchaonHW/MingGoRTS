@@ -4,68 +4,66 @@
 #include "UObject/NoExportTypes.h"
 #include "MingDecisionImpactCalculator.generated.h"
 
-// 影響類型枚舉
+// 影響類�??��?
 UENUM(BlueprintType)
 enum class EMingImpactType : uint8
 {
     Immediate,      // 立即影響
-    ShortTerm,      // 短期影響 (1-3年)
-    MediumTerm,     // 中期影響 (3-10年)
-    LongTerm,       // 長期影響 (10年以上)
-    Permanent       // 永久影響
+    ShortTerm,      // ?��?影響 (1-3�?
+    MediumTerm,     // 中�?影響 (3-10�?
+    LongTerm,       // ?��?影響 (10年以�?
+    Permanent       // 永�?影響
 };
 
-// 影響範圍枚舉
+// 影響範�??��?
 UENUM(BlueprintType)
 enum class EMingImpactScope : uint8
 {
-    Personal,       // 個人層面
-    Regional,       // 地區層面
-    National,       // 國家層面
-    International,  // 國際層面
+    Personal,       // ?�人層面
+    Regional,       // ?��?層面
+    National,       // ?�家層面
+    International,  // ?��?層面
     Historical       // 歷史層面
 };
 
-// 影響程度枚舉
+// 影響程度?��?
 UENUM(BlueprintType)
 enum class EMingImpactMagnitude : uint8
 {
-    Minimal,        // 極小
+    Minimal,        // 極�?
     Minor,          // 輕微
-    Moderate,       // 中等
-    Significant,    // 顯著
-    Major,          // 重大
-    Catastrophic    // 災難性
-};
+    Moderate,       // 中�?
+    Significant,    // 顯�?
+    Major,          // ?�大
+    Catastrophic    // ?�難??};
 
-// 歷史路徑分支
+// 歷史路�??�支
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingHistoricalPath
 {
     GENERATED_BODY()
 
-    // 路徑ID
+    // 路�?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 PathID;
 
-    // 路徑名稱
+    // 路�??�稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString PathName;
 
-    // 路徑描述
+    // 路�??�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString PathDescription;
 
-    // 路徑標籤
+    // 路�?標籤
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> PathTags;
 
-    // 路徑權重
+    // 路�?權�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float PathWeight;
 
-    // 是否為主要路徑
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�否?�主要路�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsMainPath;
 
     FMingHistoricalPath()
@@ -79,17 +77,17 @@ struct FINGCORE_API FMingHistoricalPath
     }
 };
 
-// 決策影響詳細信息
+// 決�?影響詳細信息
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingDecisionImpactDetail
 {
     GENERATED_BODY()
 
-    // 影響類型
+    // 影響類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingImpactType ImpactType;
 
-    // 影響範圍
+    // 影響範�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingImpactScope ImpactScope;
 
@@ -97,27 +95,25 @@ struct FINGCORE_API FMingDecisionImpactDetail
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingImpactMagnitude ImpactMagnitude;
 
-    // 影響描述
+    // 影響?�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ImpactDescription;
 
-    // 影響數值
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 影響?��?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ImpactValue;
 
-    // 影響持續時間 (年)
+    // 影響?��??��? (�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 DurationYears;
 
-    // 開始時間 (決策後年數)
+    // ?��??��? (決�?後年??
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 StartYear;
 
-    // 影響的屬性
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 影響?�屬??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> AffectedAttributes;
 
-    // 歷史知識內容
+    // 歷史?��??�容
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HistoricalKnowledge;
 
@@ -135,49 +131,49 @@ struct FINGCORE_API FMingDecisionImpactDetail
     }
 };
 
-// 完整決策影響報告
+// 完整決�?影響?��?
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingDecisionImpactReport
 {
     GENERATED_BODY()
 
-    // 決策ID
+    // 決�?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 DecisionID;
 
-    // 選擇的選項ID
+    // ?��??�選?�ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ChosenOptionID;
 
-    // 計算時間
+    // 計�??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime CalculationTime;
 
-    // 總體影響評分
+    // 總�?影響評�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float OverallImpactScore;
 
-    // 歷史路徑影響
+    // 歷史路�?影響
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingHistoricalPath> AffectedPaths;
 
-    // 詳細影響列表
+    // 詳細影響?�表
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMingDecisionImpactDetail> ImpactDetails;
 
-    // 角色聲望變化
+    // 角色?��?變�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> ReputationChanges;
 
-    // 勢力範圍變化
+    // ?��?範�?變�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, int32> TerritoryChanges;
 
-    // 後續事件觸發條件更新
+    // 後�?事件觸發條件?�新
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UpdatedEventConditions;
 
-    // 教育內容摘要
+    // ?�育?�容?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString EducationalSummary;
 
@@ -196,34 +192,33 @@ struct FINGCORE_API FMingDecisionImpactReport
     }
 };
 
-// 勢力範圍數據
+// ?��?範�??��?
 USTRUCT(BlueprintType)
 struct FINGCORE_API FMingTerritoryData
 {
     GENERATED_BODY()
 
-    // 勢力名稱
+    // ?��??�稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString FactionName;
 
-    // 控制省份數量
+    // ?�制?�份?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ControlledProvinces;
 
-    // 控制城市數量
+    // ?�制?��??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 ControlledCities;
 
-    // 軍事實力指數
+    // 軍�?實�??�數
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MilitaryStrength;
 
-    // 經濟實力指數
+    // 經�?實�??�數
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float EconomicStrength;
 
-    // 民眾支持度
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 民眾?��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float PopularSupport;
 
     FMingTerritoryData()
@@ -237,13 +232,12 @@ struct FINGCORE_API FMingTerritoryData
     }
 };
 
-// 影響計算事件委託
+// 影響計�?事件委�?
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnImpactCalculated, const FMingDecisionImpactReport&, Report);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHistoricalPathChanged, const FString&, PathName, float, NewWeight);
 
 /**
- * 決策影響計算器
- * 負責計算和分析歷史決策的各種影響
+ * 決�?影響計�??? * 負責計�??��??�歷?�決策�??�種影響
  */
 UCLASS(ClassGroup = (Historical), Blueprintable, BlueprintType)
 class MINGCORE_API UMingDecisionImpactCalculator : public UObject
@@ -253,59 +247,57 @@ class MINGCORE_API UMingDecisionImpactCalculator : public UObject
 public:
     UMingDecisionImpactCalculator();
 
-    // 計算決策影響
+    // 計�?決�?影響
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
     FMingDecisionImpactReport CalculateDecisionImpact(int32 DecisionID, int32 ChosenOptionID);
 
-    // 計算歷史路徑影響
+    // 計�?歷史路�?影響
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
     TArray<FMingHistoricalPath> CalculateHistoricalPathImpact(int32 DecisionID, int32 ChosenOptionID);
 
-    // 計算角色聲望影響
+    // 計�?角色?��?影響
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
     TMap<FString, float> CalculateReputationImpact(int32 DecisionID, int32 ChosenOptionID);
 
-    // 計算勢力範圍影響
+    // 計�??��?範�?影響
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
     TMap<FString, int32> CalculateTerritoryImpact(int32 DecisionID, int32 ChosenOptionID);
 
-    // 生成教育內容
+    // ?��??�育?�容
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
     FString GenerateEducationalContent(int32 DecisionID, int32 ChosenOptionID);
 
-    // 更新事件觸發條件
+    // ?�新事件觸發條件
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
     TArray<FString> UpdateEventTriggerConditions(int32 DecisionID, int32 ChosenOptionID);
 
-    // 獲取影響評估
+    // ?��?影響評估
     UFUNCTION(BlueprintPure, Category = "Decision Impact")
     EMingImpactMagnitude GetImpactMagnitude(float ImpactValue);
 
-    // 獲取影響描述
+    // ?��?影響?�述
     UFUNCTION(BlueprintPure, Category = "Decision Impact")
     FString GetImpactDescription(EMingImpactMagnitude Magnitude);
 
-    // 模擬長期影響
+    // 模擬?��?影響
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
     TArray<FMingDecisionImpactDetail> SimulateLongTermImpact(int32 DecisionID, int32 ChosenOptionID, int32 SimulationYears);
 
-    // 比較不同選擇的影響
-    UFUNCTION(BlueprintCallable, Category = "Decision Impact")
+    // 比�?不�??��??�影??    UFUNCTION(BlueprintCallable, Category = "Decision Impact")
     TMap<int32, FMingDecisionImpactReport> CompareDecisionOptions(int32 DecisionID);
 
-    // 獲取當前歷史路徑狀態
-    UFUNCTION(BlueprintPure, Category = "Decision Impact")
+    // ?��??��?歷史路�??�??    UFUNCTION(BlueprintPure, Category = "Decision Impact")
     TArray<FMingHistoricalPath> GetCurrentHistoricalPaths();
 
-    // 計算決策權重
+    // 計�?決�?權�?
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
     float CalculateDecisionWeight(int32 DecisionID, int32 ChosenOptionID);
 
-    // 生成影響預測
+    // ?��?影響?�測
     UFUNCTION(BlueprintCallable, Category = "Decision Impact")
     FMingDecisionImpactReport GenerateImpactPrediction(int32 DecisionID, int32 OptionID);
 
-    // 事件委託
+    // 事件委�?
     UPROPERTY(BlueprintAssignable)
     FOnImpactCalculated OnImpactCalculated;
 
@@ -313,44 +305,39 @@ public:
     FOnHistoricalPathChanged OnHistoricalPathChanged;
 
 protected:
-    // 歷史路徑數據庫
-    UPROPERTY()
+    // 歷史路�??��?�?    UPROPERTY()
     TArray<FMingHistoricalPath> HistoricalPaths;
 
-    // 勢力數據
+    // ?��??��?
     UPROPERTY()
     TMap<FString, FMingTerritoryData> FactionData;
 
-    // 影響計算規則
+    // 影響計�?規�?
     UPROPERTY()
     TMap<EMingDecisionType, float> ImpactWeights;
 
-    // 歷史知識庫
-    UPROPERTY()
+    // 歷史?��?�?    UPROPERTY()
     TMap<int32, FString> HistoricalKnowledgeBase;
 
 private:
-    // 初始化歷史路徑
-    void InitializeHistoricalPaths();
+    // ?��??�歷?�路�?    void InitializeHistoricalPaths();
 
-    // 初始化勢力數據
-    void InitializeFactionData();
+    // ?��??�勢?�數??    void InitializeFactionData();
 
-    // 初始化影響權重
-    void InitializeImpactWeights();
+    // ?��??�影?��???    void InitializeImpactWeights();
 
-    // 初始化歷史知識庫
+    // ?��??�歷?�知識庫
     void InitializeHistoricalKnowledge();
 
-    // 計算影響評分
+    // 計�?影響評�?
     float CalculateImpactScore(const TArray<FMingDecisionImpactDetail>& Impacts);
 
-    // 更新歷史路徑權重
+    // ?�新歷史路�?權�?
     void UpdateHistoricalPathWeights(const FMingDecisionImpactReport& Report);
 
-    // 生成影響細節
+    // ?��?影響細�?
     TArray<FMingDecisionImpactDetail> GenerateImpactDetails(int32 DecisionID, int32 ChosenOptionID);
 
-    // 驗證影響數據
+    // 驗�?影響?��?
     bool ValidateImpactData(const FMingDecisionImpactReport& Report) const;
 };

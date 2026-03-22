@@ -5,47 +5,42 @@
 #include "FourLayer/IMingGameLayer.h"
 #include "MingBuildingLayer.generated.h"
 
-// 建築類型
+// 建�?類�?
 UENUM(BlueprintType)
 enum class EMingStratBuildingType : uint8
 {
-    Residential,     // 住宅
-    Commercial,      // 商業
+    Residential,     // 住�?
+    Commercial,      // ?�業
     Industrial,      // 工業
-    Military,        // 軍事
-    Educational,     // 教育
-    Medical,         // 醫療
-    Cultural,        // 文化
+    Military,        // 軍�?
+    Educational,     // ?�育
+    Medical,         // ?��?
+    Cultural,        // ?��?
     Agricultural,    // 農業
-    Infrastructure,   // 基礎設施
-    Government       // 政府
+    Infrastructure,   // ?��?設施
+    Government       // ?��?
 };
 
-// 建築狀態
-UENUM(BlueprintType)
+// 建�??�??UENUM(BlueprintType)
 enum class EMingBuildingState : uint8
 {
-    Planning,        // 規劃中
-    UnderConstruction, // 建設中
-    Operational,     // 運營中
-    Upgrading,       // 升級中
-    Damaged,         // 損壞
-    Destroyed,       // 摧毀
-    Abandoned        // 廢棄
+    Planning,        // 規�?�?    UnderConstruction, // 建設�?    Operational,     // ?��?�?    Upgrading,       // ?��?�?    Damaged,         // ?��?
+    Destroyed,       // ?��?
+    Abandoned        // 廢�?
 };
 
-// 建築等級
+// 建�?等�?
 UENUM(BlueprintType)
 enum class EMingBuildingLevel : uint8
 {
-    Level1,          // 等級1
-    Level2,          // 等級2
-    Level3,          // 等級3
-    Level4,          // 等級4
-    Level5           // 等級5
+    Level1,          // 等�?1
+    Level2,          // 等�?2
+    Level3,          // 等�?3
+    Level4,          // 等�?4
+    Level5           // 等�?5
 };
 
-// 建築信息
+// 建�?信息
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingBuildingInfo
 {
@@ -91,7 +86,7 @@ struct MINGSTRATEGIC_API FMingBuildingInfo
     TArray<FString> AvailableUpgrades;
 };
 
-// 建設項目
+// 建設?�目
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingConstructionProject
 {
@@ -128,7 +123,7 @@ struct MINGSTRATEGIC_API FMingConstructionProject
     FDateTime EstimatedCompletion;
 };
 
-// 建設決策
+// 建設決�?
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingBuildingDecision
 {
@@ -191,8 +186,7 @@ struct MINGSTRATEGIC_API FMingBuildingEvent
 };
 
 /**
- * 建設層系統
- * 負責基地建設、資源管理、經濟運營等
+ * 建設層系�? * 負責?�地建設?��?源管?�、�?濟�??��?
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGSTRATEGIC_API UMingBuildingLayer : public UObject, public IMingGameLayer
@@ -200,10 +194,9 @@ class MINGSTRATEGIC_API UMingBuildingLayer : public UObject, public IMingGameLay
     GENERATED_BODY()
 
 public:
-    // 建構子
-    UMingBuildingLayer();
+    // 建�?�?    UMingBuildingLayer();
 
-    // 實現介面方法
+    // 實現介面?��?
     virtual void InitializeLayer_Implementation() override;
     virtual void UpdateLayer_Implementation(float DeltaTime) override;
     virtual EMingLayer GetLayerType_Implementation() const override;
@@ -212,7 +205,7 @@ public:
     virtual void HandleLayerEvent_Implementation(const FMingGameEvent& Event) override;
     virtual void HandleLayerDecision_Implementation(const FMingGameDecision& Decision) override;
 
-    // 建築管理
+    // 建�?管�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Building")
     void ConstructBuilding(const FString& BuildingID, const FString& BuildingName, EMingBuildingType Type, const FVector& Location);
 
@@ -231,7 +224,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Building")
     TArray<FMingBuildingInfo> GetAllBuildings() const;
 
-    // 建設項目管理
+    // 建設?�目管�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Building")
     void StartConstructionProject(const FMingConstructionProject& Project);
 
@@ -244,7 +237,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Building")
     TArray<FMingConstructionProject> GetConstructionQueue() const;
 
-    // 資源管理
+    // 資�?管�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Building")
     void AllocateResources(const TMap<EMingResourceType, float>& Allocation);
 
@@ -257,7 +250,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Building")
     float GetResourceEfficiency() const;
 
-    // 建設決策
+    // 建設決�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Building")
     void MakeBuildingDecision(const FMingBuildingDecision& Decision);
 
@@ -267,7 +260,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Building")
     TArray<FMingBuildingDecision> GetBuildingDecisions() const;
 
-    // 經濟分析
+    // 經�??��?
     UFUNCTION(BlueprintCallable, Category = "Ming|Building")
     float CalculateEconomicOutput() const;
 
@@ -280,24 +273,22 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ming|Building")
     TArray<FString> AssessEconomicThreats() const;
 
-    // 獲取建設狀態
-    UFUNCTION(BlueprintCallable, Category = "Ming|Building")
+    // ?��?建設?�??    UFUNCTION(BlueprintCallable, Category = "Ming|Building")
     FMingBuildingState GetBuildingState() const;
 
 protected:
-    // 建設狀態
-    UPROPERTY(BlueprintReadOnly)
+    // 建設?�??    UPROPERTY(BlueprintReadOnly)
     FMingBuildingState BuildingState;
 
-    // 建築列表
+    // 建�??�表
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, FMingBuildingInfo> Buildings;
 
-    // 建設項目
+    // 建設?�目
     UPROPERTY(BlueprintReadOnly)
     TArray<FMingConstructionProject> ConstructionQueue;
 
-    // 建設決策
+    // 建設決�?
     UPROPERTY(BlueprintReadOnly)
     TArray<FMingBuildingDecision> BuildingDecisions;
 
@@ -309,76 +300,67 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building|Settings")
     FString BuildingStyle;
 
-    // 經濟發展策略
+    // 經�??��?策略
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building|Settings")
     FString EconomicDevelopmentStrategy;
 
-    // 基礎設施投資偏好
+    // ?��?設施?��??�好
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building|Settings")
     float InfrastructureInvestmentPreference;
 
-    // 工業化程度
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building|Settings")
+    // 工業?��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building|Settings")
     float IndustrializationLevel;
 
-    // 分析建設狀況
-    void AnalyzeConstructionStatus();
+    // ?��?建設?��?    void AnalyzeConstructionStatus();
 
-    // 評估經濟狀況
-    void AssessEconomicConditions();
+    // 評估經�??��?    void AssessEconomicConditions();
 
-    // 計算建設效率
+    // 計�?建設?��?
     float CalculateConstructionEfficiency();
 
-    // 預測建設結果
+    // ?�測建設結�?
     TArray<FString> PredictConstructionOutcome(const FMingConstructionProject& Project);
 
-    // 民國特色建設
+    // 民�??�色建設
     void ApplyRepublicanEraConstruction();
 
-    // 近代化工業建設
-    void ExecuteModernIndustrialConstruction();
+    // 近代?�工業建�?    void ExecuteModernIndustrialConstruction();
 
-    // 城市現代化建設
-    void ExecuteUrbanModernization();
+    // ?��??�代?�建�?    void ExecuteUrbanModernization();
 
-    // 交通基礎設施建設
-    void ExecuteTransportInfrastructureConstruction();
+    // 交通基礎設?�建�?    void ExecuteTransportInfrastructureConstruction();
 
-    // 教育設施建設
+    // ?�育設施建設
     void ExecuteEducationalFacilityConstruction();
 
-    // 醫療設施建設
+    // ?��?設施建設
     void ExecuteMedicalFacilityConstruction();
 
-    // 文化設施建設
+    // ?��?設施建設
     void ExecuteCulturalFacilityConstruction();
 
-    // 農業現代化建設
-    void ExecuteAgriculturalModernization();
+    // 農業?�代?�建�?    void ExecuteAgriculturalModernization();
 
 private:
-    // 建設更新間隔
+    // 建設?�新?��?
     float BuildingUpdateInterval;
 
-    // 上次更新時間
+    // 上次?�新?��?
     float LastBuildingUpdate;
 
-    // 最大建築數量
-    int32 MaxBuildingCount;
+    // ?�大建築數??    int32 MaxBuildingCount;
 
-    // 建設速度加成
+    // 建設?�度?��?
     float ConstructionSpeedBonus;
 
-    // 經濟增長率
-    float EconomicGrowthRate;
+    // 經�?增長??    float EconomicGrowthRate;
 
-    // 建設威脅評估
+    // 建設威�?評估
     TMap<FString, float> ConstructionThreats;
 
-    // 建設機會評估
+    // 建設機�?評估
     TMap<FString, float> ConstructionOpportunities;
 
-    // 建設決策歷史
+    // 建設決�?歷史
     TArray<FMingBuildingDecision> DecisionHistory;
 };

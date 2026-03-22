@@ -299,8 +299,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSaveSlotDeleted, const FString&, 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAutoSaveTriggered, const FString&, Reason);
 
 /**
- * MingGoRTS 增強保存和載入系統
- * 處理遊戲數據的保存、載入、備份、恢復等功能
+ * MingGoRTS 增強保�??��??�系�? * ?��??�戲?��??��?存、�??�、�?份、恢復�??�能
  */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = "MingRTS")
 class MINGPERSONAL_API UMingRTSSaveLoadEnhancedSystem : public UObject
@@ -310,124 +309,116 @@ class MINGPERSONAL_API UMingRTSSaveLoadEnhancedSystem : public UObject
 public:
     UMingRTSSaveLoadEnhancedSystem();
 
-    // 初始化增強保存載入系統
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ?��??��?強�?存�??�系�?    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void InitializeSaveLoadEnhancedSystem(UWorld* World);
 
-    // 更新增強保存載入系統（每幀調用）
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ?�新增強保�?載入系統（�?幀調用�?    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void UpdateSaveLoadEnhancedSystem(float DeltaTime);
 
-    // 保存遊戲數據
+    // 保�??�戲?��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FString SaveGameData(const FString& SaveName, ESaveDataType DataType, const TArray<uint8>& Data, ESaveFormat Format = ESaveFormat::Binary);
 
-    // 載入遊戲數據
+    // 載入?�戲?��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool LoadGameData(const FString& SaveID, TArray<uint8>& OutData);
 
-    // 保存到槽位
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // 保�??�槽�?    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool SaveToSlot(const FString& SlotName, const FString& Description, const FString& ThumbnailPath = TEXT(""));
 
-    // 從槽位載入
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // 從槽位�???    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool LoadFromSlot(const FString& SlotID);
 
-    // 創建保存槽位
+    // ?�建保�?槽�?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FString CreateSaveSlot(const FString& SlotName, const FString& Description, int32 MaxSaves = 10);
 
-    // 刪除保存槽位
+    // ?�除保�?槽�?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool DeleteSaveSlot(const FString& SlotID);
 
-    // 獲取保存槽位
+    // ?��?保�?槽�?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FSaveSlot GetSaveSlot(const FString& SlotID) const;
 
-    // 獲取所有保存槽位
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ?��??�?��?存槽�?    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<FSaveSlot> GetAllSaveSlots() const;
 
-    // 獲取保存數據
+    // ?��?保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FSaveGameData GetSaveGameData(const FString& SaveID) const;
 
-    // 自動保存
+    // ?��?保�?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void AutoSave(const FString& Reason = TEXT("AutoSave"));
 
-    // 設置自動保存間隔
+    // 設置?��?保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void SetAutoSaveInterval(float Interval);
 
-    // 備份保存數據
+    // ?�份保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool BackupSaveData(const FString& SaveID, const FString& BackupLocation = TEXT(""));
 
-    // 恢復備份數據
+    // ?�復?�份?��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool RestoreBackup(const FString& BackupID);
 
-    // 驗證保存數據
+    // 驗�?保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool ValidateSaveData(const FString& SaveID);
 
-    // 修復損壞的保存數據
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // 修復?��??��?存數??    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool RepairSaveData(const FString& SaveID);
 
-    // 壓縮保存數據
+    // 壓縮保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool CompressSaveData(const FString& SaveID);
 
-    // 解壓縮保存數據
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // �??縮�?存數??    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool DecompressSaveData(const FString& SaveID);
 
-    // 加密保存數據
+    // ?��?保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool EncryptSaveData(const FString& SaveID, const FString& EncryptionKey);
 
-    // 解密保存數據
+    // �??保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool DecryptSaveData(const FString& SaveID, const FString& EncryptionKey);
 
-    // 導出保存數據
+    // 導出保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool ExportSaveData(const FString& SaveID, const FString& ExportPath, ESaveFormat Format = ESaveFormat::JSON);
 
-    // 導入保存數據
+    // 導入保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool ImportSaveData(const FString& ImportPath, ESaveFormat Format = ESaveFormat::JSON);
 
-    // 獲取保存統計
+    // ?��?保�?統�?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TMap<FString, float> GetSaveStatistics() const;
 
-    // 清理舊的保存數據
+    // 清�??��?保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void CleanupOldSaveData(float MaxAge = 30.0f);
 
-    // 優化保存性能
+    // ?��?保�??�能
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void OptimizeSavePerformance();
 
-    // 設置保存優先級
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // 設置保�??��?�?    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void SetSavePriority(const FString& SaveID, ESavePriority Priority);
 
-    // 批量保存
+    // ?��?保�?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void BatchSave(const TArray<FString>& SaveIDs);
 
-    // 批量載入
+    // ?��?載入
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void BatchLoad(const TArray<FString>& SaveIDs);
 
 public:
-    // 事件委託
+    // 事件委�?
     UPROPERTY(BlueprintAssignable, Category = "Save Load Enhanced System Events")
     FOnSaveStarted OnSaveStarted;
 
@@ -456,201 +447,192 @@ public:
     FOnAutoSaveTriggered OnAutoSaveTriggered;
 
 protected:
-    // 處理保存操作
+    // ?��?保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void ProcessSaveOperations(float DeltaTime);
 
-    // 處理載入操作
+    // ?��?載入?��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void ProcessLoadOperations(float DeltaTime);
 
-    // 處理自動保存
+    // ?��??��?保�?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void ProcessAutoSave(float DeltaTime);
 
-    // 處理備份操作
+    // ?��??�份?��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void ProcessBackupOperations(float DeltaTime);
 
-    // 驗證保存完整性
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // 驗�?保�?完整??    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool ValidateSaveIntegrity(const FSaveGameData& SaveData) const;
 
-    // 計算校驗和
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // 計�??��???    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FString CalculateChecksum(const TArray<uint8>& Data) const;
 
-    // 序列化數據
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // 序�??�數??    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<uint8> SerializeData(const TMap<FString, FString>& Data, ESaveFormat Format) const;
 
-    // 反序列化數據
+    // ?��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TMap<FString, FString> DeserializeData(const TArray<uint8>& Data, ESaveFormat Format) const;
 
-    // 壓縮數據
+    // 壓縮?��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<uint8> CompressData(const TArray<uint8>& Data) const;
 
-    // 解壓縮數據
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // �??縮數??    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<uint8> DecompressData(const TArray<uint8>& Data) const;
 
-    // 加密數據
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<uint8> EncryptData(const TArray<uint8>& Data, const FString& Key) const;
 
-    // 解密數據
+    // �???��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     TArray<uint8> DecryptData(const TArray<uint8>& Data, const FString& Key) const;
 
-    // 生成縮略圖
-    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
+    // ?��?縮略??    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FString GenerateThumbnail(const FString& SlotID) const;
 
-    // 獲取保存路徑
+    // ?��?保�?路�?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     FString GetSavePath(ESaveLocation Location, const FString& FileName) const;
 
-    // 創建保存目錄
+    // ?�建保�??��?
     UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     bool CreateSaveDirectory(const FString& Path) const;
 
 protected:
-    // 當前世界引用
+    // ?��?世�?引用
     UPROPERTY()
     TObjectPtr<UWorld> CurrentWorld;
 
-    // 保存數據映射
+    // 保�??��??��?
     UPROPERTY()
     TMap<FString, FSaveGameData> SaveGameData;
 
-    // 保存槽位映射
+    // 保�?槽�??��?
     UPROPERTY()
     TMap<FString, FSaveSlot> SaveSlots;
 
-    // 保存操作映射
+    // 保�??��??��?
     UPROPERTY()
     TMap<FString, FSaveOperation> SaveOperations;
 
-    // 當前槽位ID
+    // ?��?槽�?ID
     UPROPERTY()
     FString CurrentSlotID;
 
-    // 保存更新間隔
+    // 保�??�新?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     float SaveUpdateInterval;
 
-    // 上次保存更新時間
+    // 上次保�??�新?��?
     UPROPERTY()
     float LastSaveUpdateTime;
 
-    // 自動保存間隔
+    // ?��?保�??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     float AutoSaveInterval;
 
-    // 上次自動保存時間
+    // 上次?��?保�??��?
     UPROPERTY()
     float LastAutoSaveTime;
 
-    // 最大保存數量
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
+    // ?�大�?存數??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     int32 MaxSaveCount;
 
-    // 最大槽位數量
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
+    // ?�大槽位數??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     int32 MaxSlotCount;
 
-    // 默認保存格式
+    // 默�?保�??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     ESaveFormat DefaultFormat;
 
-    // 默認保存位置
+    // 默�?保�?位置
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     ESaveLocation DefaultLocation;
 
-    // 是否啟用自動保存
+    // ?�否?�用?��?保�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     bool bAutoSaveEnabled;
 
-    // 是否啟用壓縮
+    // ?�否?�用壓縮
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     bool bCompressionEnabled;
 
-    // 是否啟用加密
+    // ?�否?�用?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Load Enhanced System")
     bool bEncryptionEnabled;
 
 private:
-    // 獲取保存數據名稱
+    // ?��?保�??��??�稱
     FString GetSaveDataName(ESaveDataType DataType) const;
 
-    // 獲取保存格式名稱
+    // ?��?保�??��??�稱
     FString GetSaveFormatName(ESaveFormat Format) const;
 
-    // 獲取保存位置名稱
+    // ?��?保�?位置?�稱
     FString GetSaveLocationName(ESaveLocation Location) const;
 
-    // 生成唯一ID
+    // ?��??��?ID
     FString GenerateUniqueID(const FString& Prefix) const;
 
-    // 驗證保存數據
+    // 驗�?保�??��?
     bool ValidateSaveData(const FSaveGameData& SaveData) const;
 
-    // 驗證保存槽位
+    // 驗�?保�?槽�?
     bool ValidateSaveSlot(const FSaveSlot& SaveSlot) const;
 
-    // 處理保存錯誤
+    // ?��?保�??�誤
     void HandleSaveError(const FString& OperationID, const FString& ErrorMessage);
 
-    // 處理載入錯誤
+    // ?��?載入?�誤
     void HandleLoadError(const FString& OperationID, const FString& ErrorMessage);
 
-    // 清理無效保存數據
+    // 清�??��?保�??��?
     void CleanupInvalidSaveData();
 
-    // 清理無效保存槽位
+    // 清�??��?保�?槽�?
     void CleanupInvalidSaveSlots();
 
-    // 獲取保存數據模板
+    // ?��?保�??��?模板
     FSaveGameData GetSaveDataTemplate() const;
 
-    // 獲取保存槽位模板
+    // ?��?保�?槽�?模板
     FSaveSlot GetSaveSlotTemplate() const;
 
-    // 獲取保存操作模板
+    // ?��?保�??��?模板
     FSaveOperation GetSaveOperationTemplate() const;
 
-    // 記錄保存統計
+    // 記�?保�?統�?
     void RecordSaveStatistics();
 
-    // 預測保存負載
+    // ?�測保�?負�?
     float PredictSaveLoad() const;
 
-    // 平衡保存負載
+    // 平衡保�?負�?
     void BalanceSaveLoad();
 
-    // 處理保存衝突
+    // ?��?保�?衝�?
     void ResolveSaveConflicts();
 
-    // 優化保存性能
+    // ?��?保�??�能
     void OptimizeSavePerformance();
 
-    // 獲取當前遊戲狀態
-    TMap<FString, FString> GetCurrentGameState() const;
+    // ?��??��??�戲?�??    TMap<FString, FString> GetCurrentGameState() const;
 
-    // 設置遊戲狀態
-    void SetGameState(const TMap<FString, FString>& GameState);
+    // 設置?�戲?�??    void SetGameState(const TMap<FString, FString>& GameState);
 
-    // 獲取當前玩家數據
+    // ?��??��??�家?��?
     TMap<FString, FString> GetCurrentPlayerData() const;
 
-    // 設置玩家數據
+    // 設置?�家?��?
     void SetPlayerData(const TMap<FString, FString>& PlayerData);
 
-    // 獲取當前世界數據
+    // ?��??��?世�??��?
     TMap<FString, FString> GetCurrentWorldData() const;
 
-    // 設置世界數據
+    // 設置世�??��?
     void SetWorldData(const TMap<FString, FString>& WorldData);
 };

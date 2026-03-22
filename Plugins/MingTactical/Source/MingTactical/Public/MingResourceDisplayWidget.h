@@ -5,7 +5,7 @@
 #include "MingResourceSystem.h"
 #include "MingResourceDisplayWidget.generated.h"
 
-// 資源項目結構
+// 資�??�目結�?
 USTRUCT(BlueprintType)
 struct FResourceDisplayItem
 {
@@ -30,9 +30,8 @@ struct FResourceDisplayItem
 };
 
 /**
- * 資源顯示 Widget
- * 顯示6種資源的數量和進度條
- */
+ * 資�?顯示 Widget
+ * 顯示6種�?源�??��??�進度�? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGTACTICAL_API UMingResourceDisplayWidget : public UUserWidget
 {
@@ -42,11 +41,11 @@ public:
     virtual void NativeConstruct() override;
     virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-    // 資源顯示容器
+    // 資�?顯示容器
     UPROPERTY(meta = (BindWidgetOptional))
     TObjectPtr<class UHorizontalBox> ResourceContainer;
 
-    // 6種資源的顯示項目
+    // 6種�?源�?顯示?�目
     UPROPERTY(BlueprintReadOnly, Category = "Resources")
     FResourceDisplayItem FoodDisplay;
 
@@ -65,7 +64,7 @@ public:
     UPROPERTY(BlueprintReadOnly, Category = "Resources")
     FResourceDisplayItem ManpowerDisplay;
 
-    // 更新函數
+    // ?�新?�數
     UFUNCTION(BlueprintCallable, Category = "Resources")
     void UpdateResourceDisplay(EMingResourceType ResourceType, int32 Amount, int32 Capacity);
 
@@ -75,7 +74,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Resources")
     void InitializeResourceDisplays();
 
-    // 視覺效果
+    // 視覺?��?
     UFUNCTION(BlueprintCallable, Category = "Visual")
     void SetResourceHighlighted(EMingResourceType ResourceType, bool bHighlighted);
 
@@ -86,21 +85,20 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<class UMingResourceSystem> ResourceSystem;
 
-    // 注意：非UObject指針不能用於UPROPERTY
+    // 注�?：�?UObject?��?不能?�於UPROPERTY
     TMap<EMingResourceType, FResourceDisplayItem*> ResourceDisplayMap;
 
-    // 初始化
-    virtual bool Initialize() override;
+    // ?��???    virtual bool Initialize() override;
     void SetupResourceDisplays();
     void BindResourceEvents();
 
-    // 輔助函數
+    // 輔助?�數
     FResourceDisplayItem* GetResourceDisplayItem(EMingResourceType ResourceType);
     void UpdateSingleResourceItem(FResourceDisplayItem* Item, EMingResourceType ResourceType, int32 Amount, int32 Capacity);
     FString GetResourceDisplayName(EMingResourceType ResourceType) const;
     FLinearColor GetResourceDisplayColor(EMingResourceType ResourceType) const;
 
-    // 事件處理
+    // 事件?��?
     UFUNCTION()
     void OnResourceChanged(EMingResourceType ResourceType, int32 NewAmount);
 
@@ -111,11 +109,10 @@ protected:
     void OnResourceInsufficient(EMingResourceType ResourceType);
 
 private:
-    // 動畫計時器
-    TMap<EMingResourceType, float> AnimationTimers;
+    // ?�畫計�???    TMap<EMingResourceType, float> AnimationTimers;
     TMap<EMingResourceType, int32> LastResourceAmounts;
     
-    // 視覺效果
+    // 視覺?��?
     void PlayResourceChangeEffect(FResourceDisplayItem* Item, int32 ChangeAmount);
     void UpdateResourceColor(FResourceDisplayItem* Item, float Percentage);
 };

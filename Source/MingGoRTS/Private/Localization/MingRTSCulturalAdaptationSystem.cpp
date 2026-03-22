@@ -381,7 +381,7 @@ void UMingRTSCulturalAdaptationSystem::LoadCulturalPreferences()
     int32 SensitivityLevel = 0;
     if (GConfig->GetInt(TEXT("Cultural"), TEXT("ContentSensitivityLevel"), SensitivityLevel, GGameIni))
     {
-        Preferences.SensitivityLevel = FMath::Clamp(SensitivityLevel, 0, 3);  // Clamp to valid range
+        Preferences.ContentSensitivityLevel = FMath::Clamp(SensitivityLevel, 0, 3);  // Clamp to valid range
     }
     
     bool bEnabled;
@@ -403,7 +403,7 @@ void UMingRTSCulturalAdaptationSystem::LoadCulturalPreferences()
     UE_LOG(LogMingRTSCultural, Log, TEXT("Loaded cultural preferences: Region=%s, Age=%d, Sensitivity=%d"),
         *GetRegionDisplayName(Preferences.PrimaryRegion),
         Preferences.UserAge,
-        Preferences.SensitivityLevel);
+        Preferences.ContentSensitivityLevel);
 }
 
 // Get region-specific holidays and cultural events for a given year
@@ -643,6 +643,18 @@ void UMingRTSCulturalAdaptationSystem::OnIPRegionDetected(const FString& Country
     
     // Broadcast detection completed
     OnRegionDetectionCompleted.Broadcast(DetectedRegion);
+}
+
+void UMingRTSCulturalAdaptationSystem::SetCulturalPreferences(const FRTSCulturalPreferences& NewPreferences)
+{
+    Preferences = NewPreferences;
+    CurrentRegion = Preferences.PrimaryRegion;
+    SaveCulturalPreferences();
+}
+
+FRTSCulturalPreferences UMingRTSCulturalAdaptationSystem::GetCulturalPreferences() const
+{
+    return Preferences;
 }
 
 // Clear all cached content and reset cache statistics

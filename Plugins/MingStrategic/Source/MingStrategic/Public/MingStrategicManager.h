@@ -7,9 +7,8 @@
 class IMingCoreEventBus;
 
 /**
- * 戰略層管理器
- * 管理全局戰略決策和外交關係
- */
+ * ?�略層管?�器
+ * 管�??��??�略決�??��?交�?�? */
 UCLASS()
 class MINGSTRATEGIC_API UMingStrategicManager : public UObject
 {
@@ -21,18 +20,17 @@ public:
     virtual void Initialize();
     virtual void Shutdown();
 
-    // 初始化事件訂閱
-    void SetupEventSubscriptions();
+    // ?��??��?件�???    void SetupEventSubscriptions();
     
-    // 清理事件訂閱
+    // 清�?事件訂閱
     void CleanupEventSubscriptions();
 
 protected:
-    // 處理戰略決策事件
+    // ?��??�略決�?事件
     UFUNCTION()
     void OnStrategicDecisionReceived(const FString& DecisionId, const FString& Choice);
 
-    // 處理外交事件
+    // ?��?外交事件
     UFUNCTION()
     void OnDiplomaticEventReceived(const FString& EventType, const FString& TargetFaction);
 

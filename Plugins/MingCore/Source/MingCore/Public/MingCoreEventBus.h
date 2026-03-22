@@ -4,38 +4,34 @@
 #include "UObject/Interface.h"
 #include "MingCoreEventBus.generated.h"
 
-// 事件優先級枚舉 (獨立定義以支援 UHT)
+// 事件?��?級�???(?��?定義以支??UHT)
 UENUM(BlueprintType)
 enum class EEventPriority : uint8
 {
-    Critical = 0,  // 單位選擇、攻擊指令
-    High = 1,      // 戰術移動、狀態變更
-    Normal = 2,    // 資源更新、UI刷新
-    Low = 3        // 統計數據、日誌記錄
-};
+    Critical = 0,  // ?��??��??�攻?��?�?    High = 1,      // ?��?移�??��??��???    Normal = 2,    // 資�??�新?�UI?�新
+    Low = 3        // 統�??��??�日誌�???};
 
 class MINGCORE_API IMingCoreEventBus
 {
 public:
     virtual ~IMingCoreEventBus() {}
     
-    // 事件發布接口
+    // 事件?��??�口
     template<typename EventType>
     static void PublishEvent(const EventType& Event);
     
-    // 事件訂閱接口
+    // 事件訂閱?�口
     template<typename EventType>
     static void Subscribe(class UObject* Listener, TFunction<void(const EventType&)> Callback);
     
-    // 事件取消訂閱
+    // 事件?��?訂閱
     template<typename EventType>
     static void Unsubscribe(class UObject* Listener);
     
-    // 批處理事件發布（性能優化）
-    static void PublishBatchEvents(const TArray<struct FMingCoreEvent>& Events);
+    // ?��??��?件發布�??�能?��?�?    static void PublishBatchEvents(const TArray<struct FMingCoreEvent>& Events);
 };
 
-// 基礎事件結構
+// ?��?事件結�?
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingCoreEvent
 {
@@ -62,7 +58,7 @@ struct MINGCORE_API FMingCoreEvent
     }
 };
 
-// 單位選擇事件
+// ?��??��?事件
 USTRUCT(BlueprintType)
 struct MINGCORE_API FUnitSelectedEvent : public FMingCoreEvent
 {
@@ -81,7 +77,7 @@ struct MINGCORE_API FUnitSelectedEvent : public FMingCoreEvent
     }
 };
 
-// 單位移動事件
+// ?��?移�?事件
 USTRUCT(BlueprintType)
 struct MINGCORE_API FUnitMovedEvent : public FMingCoreEvent
 {
@@ -103,7 +99,7 @@ struct MINGCORE_API FUnitMovedEvent : public FMingCoreEvent
     }
 };
 
-// 資源更新事件
+// 資�??�新事件
 USTRUCT(BlueprintType)
 struct MINGCORE_API FResourceUpdateEvent : public FMingCoreEvent
 {

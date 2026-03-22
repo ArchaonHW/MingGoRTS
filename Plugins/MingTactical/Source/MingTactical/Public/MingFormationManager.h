@@ -5,148 +5,131 @@
 #include "MingTacticalCombatSystem.h"
 #include "MingFormationManager.generated.h"
 
-// 編隊命令類型
+// 編�??�令類�?
 UENUM(BlueprintType)
 enum class EMingFormationCommand : uint8
 {
-    CreateFormation,    // 創建編隊
-    ChangeFormation,     // 變更編隊
-    DisbandFormation,   // 解散編隊
-    MergeFormations,     // 合併編隊
-    SplitFormation,     // 分裂編隊
-    RotateFormation,     // 旋轉編隊
-    ScaleFormation,      // 縮放編隊
-    MirrorFormation     // 鏡像編隊
+    CreateFormation,    // ?�建編�?
+    ChangeFormation,     // 變更編�?
+    DisbandFormation,   // �?��編�?
+    MergeFormations,     // ?�併編�?
+    SplitFormation,     // ?��?編�?
+    RotateFormation,     // ?��?編�?
+    ScaleFormation,      // 縮放編�?
+    MirrorFormation     // ?��?編�?
 };
 
-// 編隊狀態
-UENUM(BlueprintType)
+// 編�??�??UENUM(BlueprintType)
 enum class EMingFormationStatus : uint8
 {
-    Forming,           // 編隊中
-    Active,            // 活躍
-    Transitioning,      // 轉換中
-    Disrupted,         // 被打亂
-    Disbanded          // 已解散
-};
+    Forming,           // 編�?�?    Active,            // 活�?
+    Transitioning,      // 轉�?�?    Disrupted,         // 被�?�?    Disbanded          // 已解??};
 
-// 編隊優先級
-UENUM(BlueprintType)
+// 編�??��?�?UENUM(BlueprintType)
 enum class EMingFormationPriority : uint8
 {
-    Low,               // 低優先級
-    Normal,            // 普通優先級
-    High,              // 高優先級
-    Critical           // 關鍵優先級
-};
+    Low,               // 低優?��?
+    Normal,            // ?�通優?��?
+    High,              // 高優?��?
+    Critical           // ?�鍵?��?�?};
 
-// 編隊單位角色
+// 編�??��?角色
 UENUM(BlueprintType)
 enum class EMingUnitRole : uint8
 {
-    Leader,            // 領隊
-    Vanguard,          // 先鋒
-    Flanker,           // 側翼
-    Support,           // 支援
-    Rearguard,         // 後衛
-    Reserve,           // 預備隊
-    Artillery,         // 砲兵
-    Scout,             // 偵察
-    Medic              // 醫療兵
-};
+    Leader,            // ?��?
+    Vanguard,          // ?��?
+    Flanker,           // ?�翼
+    Support,           // ?�援
+    Rearguard,         // 後�?
+    Reserve,           // ?��???    Artillery,         // ?�兵
+    Scout,             // ?��?
+    Medic              // ?��???};
 
-// 編隊數據
+// 編�??��?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingFormationData
 {
     GENERATED_BODY()
 
-    // 編隊ID
+    // 編�?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 FormationID;
 
-    // 編隊名稱
+    // 編�??�稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString FormationName;
 
-    // 編隊類型
+    // 編�?類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingFormationType FormationType;
 
-    // 編隊狀態
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 編�??�??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingFormationStatus FormationStatus;
 
-    // 編隊優先級
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 編�??��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingFormationPriority Priority;
 
-    // 編隊中心點
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 編�?中�?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector FormationCenter;
 
-    // 編隊方向
+    // 編�??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FRotator FormationRotation;
 
-    // 編隊規模
+    // 編�?規模
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float FormationScale;
 
-    // 單位列表
+    // ?��??�表
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<int32> UnitIDs;
 
-    // 單位角色映射
+    // ?��?角色?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<int32, EMingUnitRole> UnitRoles;
 
-    // 編隊位置數組
+    // 編�?位置?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FVector> FormationPositions;
 
-    // 編隊加成
+    // 編�??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> FormationBonuses;
 
-    // 編隊減益
+    // 編�?減�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> FormationPenalties;
 
-    // 創建時間
+    // ?�建?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime CreationTime;
 
-    // 最後更新時間
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�後更?��???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FDateTime LastUpdateTime;
 
-    // 編隊指揮官ID
+    // 編�??�揮官ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CommanderID;
 
-    // 備用指揮官ID
+    // ?�用?�揮官ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 BackupCommanderID;
 
-    // 編隊經驗值
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 編�?經�???    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float FormationExperience;
 
-    // 編隊士氣
+    // 編�?士氣
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float FormationMorale;
 
-    // 編隊紀律
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 編�?紀�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float FormationDiscipline;
 
-    // 是否為靜態編隊
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�否?��??�編??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsStatic;
 
-    // 是否為自動編隊
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�否?�自?�編??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsAutoManaged;
 
     FMingFormationData()
@@ -176,37 +159,36 @@ struct MINGTACTICAL_API FMingFormationData
     }
 };
 
-// 編隊命令數據
+// 編�??�令?��?
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingFormationCommand
 {
     GENERATED_BODY()
 
-    // 命令ID
+    // ?�令ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CommandID;
 
-    // 命令類型
+    // ?�令類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingFormationCommand CommandType;
 
-    // 目標編隊ID
+    // ?��?編�?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 TargetFormationID;
 
-    // 命令參數
+    // ?�令?�數
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, FString> CommandParameters;
 
-    // 命令優先級
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�令?��?�?    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingFormationPriority Priority;
 
-    // 執行時間
+    // ?��??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ExecutionTime;
 
-    // 命令描述
+    // ?�令?�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString CommandDescription;
 
@@ -222,7 +204,7 @@ struct MINGTACTICAL_API FMingFormationCommand
     }
 };
 
-// 編隊模板
+// 編�?模板
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingFormationTemplate
 {
@@ -232,43 +214,41 @@ struct MINGTACTICAL_API FMingFormationTemplate
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 TemplateID;
 
-    // 模板名稱
+    // 模板?�稱
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString TemplateName;
 
-    // 模板描述
+    // 模板?�述
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString TemplateDescription;
 
-    // 編隊類型
+    // 編�?類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EMingFormationType FormationType;
 
-    // 推薦單位類型
+    // ?�薦?��?類�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<EMingUnitType> RecommendedUnitTypes;
 
-    // 最小單位數量
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�小單位數??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 MinUnitCount;
 
-    // 最大單位數量
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�大單位數??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 MaxUnitCount;
 
-    // 標準間距
+    // 標�??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float StandardSpacing;
 
-    // 標準深度
+    // 標�?深度
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float StandardDepth;
 
-    // 標準寬度
+    // 標�?寬度
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float StandardWidth;
 
-    // 模板加成
+    // 模板?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<FString, float> TemplateBonuses;
 
@@ -276,11 +256,10 @@ struct MINGTACTICAL_API FMingFormationTemplate
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> UsageConditions;
 
-    // 是否為歷史編隊
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // ?�否?�歷?�編??    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsHistorical;
 
-    // 歷史背景
+    // 歷史?�景
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString HistoricalBackground;
 
@@ -303,7 +282,7 @@ struct MINGTACTICAL_API FMingFormationTemplate
     }
 };
 
-// 編隊管理事件委託
+// 編�?管�?事件委�?
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFormationCreated, const FMingFormationData&, Formation);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFormationChanged, int32, FormationID, EMingFormationType, NewFormationType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFormationDisbanded, int32, FormationID, const TArray<int32>&, ReleasedUnits);
@@ -312,8 +291,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFormationUnitRemoved, int32, For
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFormationCommandExecuted, const FMingFormationCommand&, Command);
 
 /**
- * 編隊管理器
- * 負責管理戰術編隊的創建、變更和維護
+ * 編�?管�??? * 負責管�??��?編�??�創建、�??��?維護
  */
 UCLASS(ClassGroup = (Tactical), Blueprintable, BlueprintType)
 class MINGTACTICAL_API UMingFormationManager : public UObject
@@ -323,91 +301,86 @@ class MINGTACTICAL_API UMingFormationManager : public UObject
 public:
     UMingFormationManager();
 
-    // 初始化編隊管理器
+    // ?��??�編?�管?�器
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool InitializeFormationManager();
 
-    // 創建編隊
+    // ?�建編�?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     int32 CreateFormation(const TArray<int32>& UnitIDs, EMingFormationType FormationType, const FString& FormationName);
 
-    // 解散編隊
+    // �?��編�?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool DisbandFormation(int32 FormationID);
 
-    // 變更編隊類型
+    // 變更編�?類�?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool ChangeFormationType(int32 FormationID, EMingFormationType NewFormationType);
 
-    // 添加單位到編隊
-    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
+    // 添�??��??�編??    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool AddUnitToFormation(int32 FormationID, int32 UnitID, EMingUnitRole Role);
 
-    // 從編隊移除單位
-    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
+    // 從編?�移?�單�?    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool RemoveUnitFromFormation(int32 FormationID, int32 UnitID);
 
-    // 設置編隊指揮官
-    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
+    // 設置編�??�揮�?    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool SetFormationCommander(int32 FormationID, int32 CommanderID);
 
-    // 旋轉編隊
+    // ?��?編�?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool RotateFormation(int32 FormationID, const FRotator& NewRotation);
 
-    // 縮放編隊
+    // 縮放編�?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool ScaleFormation(int32 FormationID, float NewScale);
 
-    // 移動編隊
+    // 移�?編�?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool MoveFormation(int32 FormationID, const FVector& TargetLocation);
 
-    // 獲取編隊信息
+    // ?��?編�?信息
     UFUNCTION(BlueprintPure, Category = "Formation Manager")
     FMingFormationData GetFormationInfo(int32 FormationID) const;
 
-    // 獲取編隊列表
+    // ?��?編�??�表
     UFUNCTION(BlueprintPure, Category = "Formation Manager")
     TArray<int32> GetFormationList() const;
 
-    // 獲取編隊模板
+    // ?��?編�?模板
     UFUNCTION(BlueprintPure, Category = "Formation Manager")
     TArray<FMingFormationTemplate> GetFormationTemplates() const;
 
-    // 應用編隊模板
+    // ?�用編�?模板
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool ApplyFormationTemplate(int32 FormationID, int32 TemplateID);
 
-    // 獲取編隊統計
+    // ?��?編�?統�?
     UFUNCTION(BlueprintPure, Category = "Formation Manager")
     TMap<EMingFormationType, int32> GetFormationStatistics() const;
 
-    // 計算編隊效率
+    // 計�?編�??��?
     UFUNCTION(BlueprintPure, Category = "Formation Manager")
     float CalculateFormationEfficiency(int32 FormationID) const;
 
-    // 檢查編隊完整性
-    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
+    // 檢查編�?完整??    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool CheckFormationIntegrity(int32 FormationID);
 
-    // 修復編隊
+    // 修復編�?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool RepairFormation(int32 FormationID);
 
-    // 保存編隊數據
+    // 保�?編�??��?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool SaveFormationData();
 
-    // 載入編隊數據
+    // 載入編�??��?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     bool LoadFormationData();
 
-    // 清除所有編隊
-    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
+    // 清除?�?�編??    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
     void ClearAllFormations();
 
-    // 事件委託
+    // 事件委�?
     UPROPERTY(BlueprintAssignable)
     FOnFormationCreated OnFormationCreated;
 
@@ -427,63 +400,57 @@ public:
     FOnFormationCommandExecuted OnFormationCommandExecuted;
 
 protected:
-    // 編隊數據庫
-    UPROPERTY()
+    // 編�??��?�?    UPROPERTY()
     TMap<int32, FMingFormationData> FormationDatabase;
 
-    // 編隊模板數據庫
-    UPROPERTY()
+    // 編�?模板?��?�?    UPROPERTY()
     TMap<int32, FMingFormationTemplate> FormationTemplateDatabase;
 
-    // 編隊命令隊列
+    // 編�??�令?��?
     UPROPERTY()
     TArray<FMingFormationCommand> FormationCommandQueue;
 
-    // 當前活躍編隊
+    // ?��?活�?編�?
     UPROPERTY()
     TArray<int32> ActiveFormations;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     UPROPERTY()
     bool bInitialized;
 
 private:
-    // 載入預設編隊模板
+    // 載入?�設編�?模板
     void LoadDefaultFormationTemplates();
 
-    // 生成編隊位置
+    // ?��?編�?位置
     TArray<FVector> GenerateFormationPositions(EMingFormationType FormationType, int32 UnitCount, float Scale) const;
 
-    // 計算編隊加成
+    // 計�?編�??��?
     TMap<FString, float> CalculateFormationBonuses(int32 FormationID) const;
 
-    // 計算編隊減益
+    // 計�?編�?減�?
     TMap<FString, float> CalculateFormationPenalties(int32 FormationID) const;
 
-    // 更新編隊狀態
-    void UpdateFormationStatus(int32 FormationID, EMingFormationStatus NewStatus);
+    // ?�新編�??�??    void UpdateFormationStatus(int32 FormationID, EMingFormationStatus NewStatus);
 
-    // 處理編隊命令
+    // ?��?編�??�令
     void ProcessFormationCommand(const FMingFormationCommand& Command);
 
-    // 驗證編隊數據
+    // 驗�?編�??��?
     bool ValidateFormationData(const FMingFormationData& Formation) const;
 
-    // 應用編隊加成到單位
-    void ApplyFormationBonusesToUnits(int32 FormationID);
+    // ?�用編�??��??�單�?    void ApplyFormationBonusesToUnits(int32 FormationID);
 
-    // 移除編隊加成從單位
-    void RemoveFormationBonusesFromUnits(int32 FormationID);
+    // 移除編�??��?從單�?    void RemoveFormationBonusesFromUnits(int32 FormationID);
 
-    // 自動修復編隊
+    // ?��?修復編�?
     void AutoRepairFormation(int32 FormationID);
 
-    // 計算最佳編隊類型
-    EMingFormationType CalculateOptimalFormationType(const TArray<int32>& UnitIDs) const;
+    // 計�??�佳編?��???    EMingFormationType CalculateOptimalFormationType(const TArray<int32>& UnitIDs) const;
 
-    // 檢查編隊衝突
+    // 檢查編�?衝�?
     bool CheckFormationConflict(int32 FormationID1, int32 FormationID2) const;
 
-    // 解決編隊衝突
+    // �?��編�?衝�?
     void ResolveFormationConflict(int32 FormationID1, int32 FormationID2);
 };

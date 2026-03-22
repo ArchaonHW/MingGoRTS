@@ -5,26 +5,26 @@
 #include "MingEventTriggerRandom.generated.h"
 
 /**
- * 隨機觸發選項
+ * ?��?觸發?��?
  */
 USTRUCT(BlueprintType)
 struct FRandomTriggerOption
 {
     GENERATED_BODY()
     
-    // 選項ID (對應不同的事件)
+    // ?��?ID (對�?不�??��?�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString OptionEventId;
     
-    // 權重 (用於加權隨機)
+    // 權�? (?�於?��??��?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Weight;
     
-    // 最小觸發間隔 (冷卻)
+    // ?�小觸?��???(?�卻)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MinInterval;
     
-    // 上次觸發時間
+    // 上次觸發?��?
     UPROPERTY()
     float LastTriggerTime;
     
@@ -36,8 +36,7 @@ struct FRandomTriggerOption
 };
 
 /**
- * 隨機觸發器
- * 基於概率觸發事件
+ * ?��?觸發?? * ?�於概�?觸發事件
  */
 UCLASS()
 class MINGSTRATEGIC_API UMingEventTriggerRandom : public UMingEventTrigger
@@ -47,101 +46,93 @@ class MINGSTRATEGIC_API UMingEventTriggerRandom : public UMingEventTrigger
 public:
     UMingEventTriggerRandom();
 
-    // 設置基礎觸發概率 (0-1)
+    // 設置?��?觸發概�? (0-1)
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void SetBaseProbability(float Probability);
 
-    // 設置概率衰減 (每次觸發後概率降低)
+    // 設置概�?衰�? (每次觸發後�??��?�?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void SetProbabilityDecay(float DecayFactor);
 
-    // 設置最小/最大觸發間隔
-    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
+    // 設置?��??�大觸?��???    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void SetIntervalRange(float MinInterval, float MaxInterval);
 
-    // 添加加權隨機選項
+    // 添�??��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void AddWeightedOption(const FRandomTriggerOption& Option);
 
-    // 清除所有選項
-    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
+    // 清除?�?�選??    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void ClearOptions();
 
-    // 獲取當前概率
+    // ?��??��?概�?
     UFUNCTION(BlueprintPure, Category = "Random Trigger")
     float GetCurrentProbability() const { return CurrentProbability; }
 
-    // 獲取距離下次可能觸發的時間
-    UFUNCTION(BlueprintPure, Category = "Random Trigger")
+    // ?��?距離下次?�能觸發?��???    UFUNCTION(BlueprintPure, Category = "Random Trigger")
     float GetTimeToNextPossibleTrigger() const;
 
-    // 手動觸發隨機選擇 (返回選中的事件ID)
+    // ?��?觸發?��??��? (返�??�中?��?件ID)
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     FString TriggerRandomSelection();
 
-    // 重新計算概率
+    // ?�新計�?概�?
     UFUNCTION(BlueprintCallable, Category = "Random Trigger")
     void RecalculateProbability(float DeltaTime);
 
 protected:
-    // 基礎概率
+    // ?��?概�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Random Trigger")
     float BaseProbability;
 
-    // 當前概率
+    // ?��?概�?
     UPROPERTY()
     float CurrentProbability;
 
-    // 概率衰減因子 (0-1, 1表示不衰減)
+    // 概�?衰�??��? (0-1, 1表示不衰�?
     UPROPERTY()
     float ProbabilityDecay;
 
-    // 概率增長因子 (隨時間增加概率)
+    // 概�?增長?��? (?��??��??��???
     UPROPERTY()
     float ProbabilityGrowth;
 
-    // 最小觸發間隔
-    UPROPERTY()
+    // ?�小觸?��???    UPROPERTY()
     float MinTriggerInterval;
 
-    // 最大觸發間隔
-    UPROPERTY()
+    // ?�大觸?��???    UPROPERTY()
     float MaxTriggerInterval;
 
-    // 距離上次觸發的時間
-    UPROPERTY()
+    // 距離上次觸發?��???    UPROPERTY()
     float TimeSinceLastTrigger;
 
-    // 當前時間窗口內是否可觸發
+    // ?��??��?窗口?�是?�可觸發
     UPROPERTY()
     bool bCanTriggerInCurrentWindow;
 
-    // 加權隨機選項列表
+    // ?��??��??��??�表
     UPROPERTY()
     TArray<FRandomTriggerOption> WeightedOptions;
 
-    // 是否使用加權隨機
+    // ?�否使用?��??��?
     UPROPERTY()
     bool bUseWeightedOptions;
 
-    // 重寫基類方法
+    // ?�寫?��??��?
     virtual void Initialize() override;
     virtual void Tick(float DeltaTime) override;
     virtual bool PerformTrigger() override;
     virtual bool CheckTriggerCondition() const override;
 
-    // 執行隨機檢查
+    // ?��??��?檢查
     bool RollProbability() const;
 
-    // 選擇加權隨機選項
+    // ?��??��??��??��?
     FString SelectWeightedOption();
 
-    // 更新時間窗口
+    // ?�新?��?窗口
     void UpdateTriggerWindow(float DeltaTime);
 
-    // 檢查是否通過最小間隔
-    bool HasPassedMinInterval() const;
+    // 檢查?�否?��??�小�???    bool HasPassedMinInterval() const;
 
-    // 重置觸發狀態
-    virtual void Reset() override;
+    // ?�置觸發?�??    virtual void Reset() override;
 };

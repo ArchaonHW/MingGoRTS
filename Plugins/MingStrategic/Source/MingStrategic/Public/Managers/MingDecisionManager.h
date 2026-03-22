@@ -6,35 +6,33 @@
 #include "MingDecisionManager.generated.h"
 
 /**
- * 已做出的決策記錄
+ * 已�??��?決�?記�?
  */
 USTRUCT(BlueprintType)
 struct FMingDecisionRecord
 {
     GENERATED_BODY()
     
-    // 決策ID
+    // 決�?ID
     UPROPERTY(BlueprintReadOnly)
     FString DecisionId;
     
-    // 選擇的選項ID
+    // ?��??�選?�ID
     UPROPERTY(BlueprintReadOnly)
     FString SelectedOptionId;
     
-    // 決策時間
+    // 決�??��?
     UPROPERTY(BlueprintReadOnly)
     float DecisionTime;
     
-    // 遊戲內日期
-    UPROPERTY(BlueprintReadOnly)
+    // ?�戲?�日??    UPROPERTY(BlueprintReadOnly)
     FString InGameDate;
     
-    // 決策標題
+    // 決�?標�?
     UPROPERTY(BlueprintReadOnly)
     FText DecisionTitle;
     
-    // 選擇的選項文本
-    UPROPERTY(BlueprintReadOnly)
+    // ?��??�選?��???    UPROPERTY(BlueprintReadOnly)
     FText SelectedOptionTitle;
     
     FMingDecisionRecord()
@@ -46,8 +44,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDecisionTriggered, const FMingDec
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDecisionMade, const FString&, DecisionId, const FString&, SelectedOptionId);
 
 /**
- * 決策管理器
- * 管理所有歷史決策的觸發、執行和記錄
+ * 決�?管�??? * 管�??�?�歷?�決策�?觸發?�執行�?記�?
  */
 UCLASS()
 class MINGSTRATEGIC_API UMingDecisionManager : public UObject
@@ -57,87 +54,83 @@ class MINGSTRATEGIC_API UMingDecisionManager : public UObject
 public:
     UMingDecisionManager();
 
-    // 初始化
-    UFUNCTION(BlueprintCallable, Category = "Decision")
+    // ?��???    UFUNCTION(BlueprintCallable, Category = "Decision")
     void Initialize();
 
-    // 關閉
+    // ?��?
     UFUNCTION(BlueprintCallable, Category = "Decision")
     void Shutdown();
 
-    // 註冊決策
+    // 註�?決�?
     UFUNCTION(BlueprintCallable, Category = "Decision")
     void RegisterDecision(const FMingDecision& Decision);
 
-    // 手動觸發決策
+    // ?��?觸發決�?
     UFUNCTION(BlueprintCallable, Category = "Decision")
     bool TriggerDecision(const FString& DecisionId);
 
-    // 執行決策選項
+    // ?��?決�??��?
     UFUNCTION(BlueprintCallable, Category = "Decision")
     bool ExecuteDecisionOption(const FString& DecisionId, const FString& OptionId);
 
-    // 獲取當前活躍決策
+    // ?��??��?活�?決�?
     UFUNCTION(BlueprintPure, Category = "Decision")
     const TArray<FMingDecision>& GetActiveDecisions() const { return ActiveDecisions; }
 
-    // 獲取決策歷史
+    // ?��?決�?歷史
     UFUNCTION(BlueprintPure, Category = "Decision")
     const TArray<FMingDecisionRecord>& GetDecisionHistory() const { return DecisionHistory; }
 
-    // 檢查決策是否已做過
-    UFUNCTION(BlueprintPure, Category = "Decision")
+    // 檢查決�??�否已�???    UFUNCTION(BlueprintPure, Category = "Decision")
     bool HasDecisionBeenMade(const FString& DecisionId) const;
 
-    // 獲取特定決策的記錄
-    UFUNCTION(BlueprintPure, Category = "Decision")
+    // ?��??��?決�??��???    UFUNCTION(BlueprintPure, Category = "Decision")
     FMingDecisionRecord GetDecisionRecord(const FString& DecisionId) const;
 
-    // 更新遊戲時間 (用於時間觸發的決策)
+    // ?�新?�戲?��? (?�於?��?觸發?�決�?
     UFUNCTION(BlueprintCallable, Category = "Decision")
     void UpdateGameTime(float CurrentGameTime);
 
-    // 檢查條件觸發的決策
-    UFUNCTION(BlueprintCallable, Category = "Decision")
+    // 檢查條件觸發?�決�?    UFUNCTION(BlueprintCallable, Category = "Decision")
     void CheckConditionBasedDecisions();
 
-    // 事件委託
+    // 事件委�?
     UPROPERTY(BlueprintAssignable, Category = "Decision|Events")
     FOnDecisionTriggered OnDecisionTriggered;
 
     UPROPERTY(BlueprintAssignable, Category = "Decision|Events")
     FOnDecisionMade OnDecisionMade;
 
-    // 靜態獲取實例
+    // ?��??��?實�?
     static UMingDecisionManager* Get();
 
 private:
-    // 所有註冊的決策
+    // ?�?�註?��?決�?
     UPROPERTY()
     TArray<FMingDecision> RegisteredDecisions;
 
-    // 當前活躍的決策 (等待玩家選擇)
+    // ?��?活�??�決�?(等�??�家?��?)
     UPROPERTY()
     TArray<FMingDecision> ActiveDecisions;
 
-    // 決策歷史記錄
+    // 決�?歷史記�?
     UPROPERTY()
     TArray<FMingDecisionRecord> DecisionHistory;
 
-    // 已完成的決策ID集合
+    // 已�??��?決�?ID?��?
     UPROPERTY()
     TSet<FString> CompletedDecisionIds;
 
-    // 當前遊戲時間
+    // ?��??�戲?��?
     float CurrentGameTime;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bInitialized;
 
-    // 單例實例
+    // ?��?實�?
     static UMingDecisionManager* Instance;
 
-    // 內部方法
+    // ?�部?��?
     void ProcessTimeBasedDecisions();
     void ProcessEventBasedDecisions(const FString& EventName);
     bool CheckTriggerCondition(const FMingDecision& Decision) const;

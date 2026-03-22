@@ -5,19 +5,18 @@
 #include "Decision/MingDecisionConsequenceManager.h"
 #include "MingConsequenceConflictResolver.generated.h"
 
-// 後果衝突類型
+// 後�?衝�?類�?
 UENUM(BlueprintType)
 enum class EMingConsequenceConflictType : uint8
 {
     None,
-    PoliticalConflict,     // 政治後果衝突
-    MilitaryConflict,      // 軍事後果衝突
-    EconomicConflict,      // 經濟後果衝突
-    SocialConflict,        // 社會後果衝突
-    CrossDomainConflict   // 跨領域衝突
-};
+    PoliticalConflict,     // ?�治後�?衝�?
+    MilitaryConflict,      // 軍�?後�?衝�?
+    EconomicConflict,      // 經�?後�?衝�?
+    SocialConflict,        // 社�?後�?衝�?
+    CrossDomainConflict   // 跨�??��?�?};
 
-// 後果衝突
+// 後�?衝�?
 USTRUCT(BlueprintType)
 struct MINGCORE_API FMingConsequenceConflict
 {
@@ -45,98 +44,89 @@ struct MINGCORE_API FMingConsequenceConflict
     FString RecommendedResolution;
 };
 
-// 衝突解決策略
+// 衝�?�?��策略
 UENUM(BlueprintType)
 enum class EMingConflictResolutionStrategy : uint8
 {
-    PriorityBased,         // 基於優先級
-    WeightedAverage,      // 加權平均
-    DomainOverride,       // 領域覆蓋
-    Conservative,         // 保守策略
-    Aggressive,           // 激進策略
-    Manual               // 手動解決
+    PriorityBased,         // ?�於?��?�?    WeightedAverage,      // ?��?平�?
+    DomainOverride,       // ?��?覆�?
+    Conservative,         // 保�?策略
+    Aggressive,           // 激?��???    Manual               // ?��?�?��
 };
 
 /**
- * 後果衝突解決器
- * 檢測和解決多個計算器之間的後果衝突
- */
+ * 後�?衝�?�?��?? * 檢測?�解決�??��?算器之�??��??��?�? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingConsequenceConflictResolver : public UObject
 {
     GENERATED_BODY()
 
 public:
-    // 建構子
-    UMingConsequenceConflictResolver();
+    // 建�?�?    UMingConsequenceConflictResolver();
 
-    // 檢測後果衝突
+    // 檢測後�?衝�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
     bool DetectConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // 解決衝突
+    // �?��衝�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
     void ResolveConflicts(TArray<FMingConsequenceResult>& Results, EMingConflictResolutionStrategy Strategy = EMingConflictResolutionStrategy::PriorityBased);
 
-    // 解決特定衝突
+    // �?��?��?衝�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
     void ApplyConflictResolution(const FMingConsequenceConflict& Conflict, FMingConsequenceResult& Result);
 
-    // 獲取推薦解決策略
+    // ?��??�薦�?��策略
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
     EMingConflictResolutionStrategy GetRecommendedStrategy(const FMingConsequenceConflict& Conflict);
 
-    // 驗證解決結果
+    // 驗�?�?��結�?
     UFUNCTION(BlueprintCallable, Category = "Ming|Conflict")
     bool ValidateResolution(const TArray<FMingConsequenceResult>& Results);
 
 protected:
-    // 檢測政治衝突
+    // 檢測?�治衝�?
     void DetectPoliticalConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // 檢測軍事衝突
+    // 檢測軍�?衝�?
     void DetectMilitaryConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // 檢測經濟衝突
+    // 檢測經�?衝�?
     void DetectEconomicConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // 檢測社會衝突
+    // 檢測社�?衝�?
     void DetectSocialConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // 檢測跨領域衝突
-    void DetectCrossDomainConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
+    // 檢測跨�??��?�?    void DetectCrossDomainConflicts(const TArray<FMingConsequenceResult>& Results, TArray<FMingConsequenceConflict>& OutConflicts);
 
-    // 基於優先級解決
-    void ResolvePriorityBased(TArray<FMingConsequenceResult>& Results);
+    // ?�於?��?級解�?    void ResolvePriorityBased(TArray<FMingConsequenceResult>& Results);
 
-    // 加權平均解決
+    // ?��?平�?�?��
     void ResolveWeightedAverage(TArray<FMingConsequenceResult>& Results);
 
-    // 領域覆蓋解決
+    // ?��?覆�?�?��
     void ResolveDomainOverride(TArray<FMingConsequenceResult>& Results);
 
-    // 保守策略解決
+    // 保�?策略�?��
     void ResolveConservative(TArray<FMingConsequenceResult>& Results);
 
-    // 激進策略解決
-    void ResolveAggressive(TArray<FMingConsequenceResult>& Results);
+    // 激?��??�解�?    void ResolveAggressive(TArray<FMingConsequenceResult>& Results);
 
-    // 計算衝突嚴重程度
+    // 計�?衝�??��?程度
     float CalculateConflictSeverity(const FMingConsequenceConflict& Conflict);
 
-    // 生成解決選項
+    // ?��?�?��?��?
     void GenerateResolutionOptions(const FMingConsequenceConflict& Conflict, TArray<FString>& OutOptions);
 
-    // 生成推薦解決方案
+    // ?��??�薦�?��?��?
     void GenerateRecommendedResolution(const FMingConsequenceConflict& Conflict, FString& OutResolution);
 
 private:
-    // 計算器優先級映射
+    // 計�??�優?��??��?
     TMap<FString, float> CalculatorPriorities;
 
-    // 衝突檢測閾值
-    static constexpr float CONFLICT_THRESHOLD = 0.3f;
+    // 衝�?檢測?��?    static constexpr float CONFLICT_THRESHOLD = 0.3f;
 
-    // 初始化優先級
+    // ?��??�優?��?
     void InitializePriorities();
 };

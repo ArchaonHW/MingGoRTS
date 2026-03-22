@@ -6,7 +6,7 @@
 #include "MingAIAssetManager.generated.h"
 
 /**
- * 資產分類枚舉
+ * 資產?��??��?
  */
 UENUM(BlueprintType)
 enum class EAssetCategory : uint8
@@ -23,8 +23,7 @@ enum class EAssetCategory : uint8
 };
 
 /**
- * 資產元數據結構
- */
+ * 資產?�數?��?�? */
 USTRUCT(BlueprintType)
 struct FAssetMetadata
 {
@@ -34,43 +33,42 @@ struct FAssetMetadata
     UPROPERTY(BlueprintReadOnly)
     FString AssetID;
 
-    // 資產名稱
+    // 資產?�稱
     UPROPERTY(BlueprintReadOnly)
     FString AssetName;
 
-    // 資產類型
+    // 資產類�?
     UPROPERTY(BlueprintReadOnly)
     EAIAssetType AssetType;
 
-    // 資產分類
+    // 資產?��?
     UPROPERTY(BlueprintReadOnly)
     EAssetCategory Category;
 
-    // 民國時期風格
+    // 民�??��?風格
     UPROPERTY(BlueprintReadOnly)
     ERepublicEraStyle EraStyle;
 
-    // 創建時間
+    // ?�建?��?
     UPROPERTY(BlueprintReadOnly)
     FDateTime CreatedTime;
 
-    // 文件大小 (bytes)
+    // ?�件大�? (bytes)
     UPROPERTY(BlueprintReadOnly)
     int64 FileSize;
 
-    // 文件路徑
+    // ?�件路�?
     UPROPERTY(BlueprintReadOnly)
     FString FilePath;
 
-    // 縮略圖路徑
-    UPROPERTY(BlueprintReadOnly)
+    // 縮略?�路�?    UPROPERTY(BlueprintReadOnly)
     FString ThumbnailPath;
 
     // 標籤
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> Tags;
 
-    // 評分 (1-5)
+    // 評�? (1-5)
     UPROPERTY(BlueprintReadOnly)
     float Rating;
 
@@ -78,12 +76,11 @@ struct FAssetMetadata
     UPROPERTY(BlueprintReadOnly)
     int32 UsageCount;
 
-    // 是否收藏
+    // ?�否?��?
     UPROPERTY(BlueprintReadOnly)
     bool bIsFavorite;
 
-    // 自定義屬性
-    UPROPERTY(BlueprintReadOnly)
+    // ?��?義屬??    UPROPERTY(BlueprintReadOnly)
     TMap<FString, FString> CustomProperties;
 
     FAssetMetadata()
@@ -98,38 +95,34 @@ struct FAssetMetadata
 };
 
 /**
- * 資產搜索過濾器
- */
+ * 資產?�索?�濾?? */
 USTRUCT(BlueprintType)
 struct FAssetFilter
 {
     GENERATED_BODY()
 
-    // 搜索關鍵詞
-    UPROPERTY(BlueprintReadWrite)
+    // ?�索?�鍵�?    UPROPERTY(BlueprintReadWrite)
     FString SearchKeyword;
 
-    // 資產類型
+    // 資產類�?
     UPROPERTY(BlueprintReadWrite)
     TArray<EAIAssetType> AssetTypes;
 
-    // 資產分類
+    // 資產?��?
     UPROPERTY(BlueprintReadWrite)
     TArray<EAssetCategory> Categories;
 
-    // 民國時期風格
+    // 民�??��?風格
     UPROPERTY(BlueprintReadWrite)
     TArray<ERepublicEraStyle> EraStyles;
 
-    // 最小評分
-    UPROPERTY(BlueprintReadWrite)
+    // ?�小�???    UPROPERTY(BlueprintReadWrite)
     float MinRating;
 
-    // 只顯示收藏
-    UPROPERTY(BlueprintReadWrite)
+    // ?�顯示收??    UPROPERTY(BlueprintReadWrite)
     bool bFavoritesOnly;
 
-    // 只顯示已使用
+    // ?�顯示已使用
     UPROPERTY(BlueprintReadWrite)
     bool bUsedOnly;
 
@@ -141,9 +134,7 @@ struct FAssetFilter
 };
 
 /**
- * AI資產管理器
- * 管理所有AI生成的資產
- */
+ * AI資產管�??? * 管�??�?�AI?��??��??? */
 UCLASS(BlueprintType)
 class MINGCORE_API UMingAIAssetManager : public UObject
 {
@@ -153,19 +144,18 @@ public:
     UMingAIAssetManager();
 
     /**
-     * 初始化資產管理器
+     * ?��??��??�管?�器
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     void Initialize();
 
     /**
-     * 關閉資產管理器
-     */
+     * ?��?資產管�???     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     void Shutdown();
 
     /**
-     * 添加資產
+     * 添�?資產
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     bool AddAsset(const FAIAssetGenerationResult& GenerationResult);
@@ -177,43 +167,41 @@ public:
     bool RemoveAsset(const FString& AssetID);
 
     /**
-     * 獲取資產
+     * ?��?資產
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset Manager")
     FAssetMetadata GetAsset(const FString& AssetID) const;
 
     /**
-     * 搜索資產
+     * ?�索資產
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     TArray<FAssetMetadata> SearchAssets(const FAssetFilter& Filter) const;
 
     /**
-     * 獲取所有資產
-     */
+     * ?��??�?��???     */
     UFUNCTION(BlueprintPure, Category = "AI Asset Manager")
     TArray<FAssetMetadata> GetAllAssets() const;
 
     /**
-     * 獲取資產統計
+     * ?��?資產統�?
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset Manager")
     TMap<EAssetCategory, int32> GetAssetStatistics() const;
 
     /**
-     * 標記資產為收藏
-     */
+     * 標�?資產?�收??     */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     bool SetAssetFavorite(const FString& AssetID, bool bFavorite);
 
     /**
-     * 評分資產
+     * 評�?資產
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     bool RateAsset(const FString& AssetID, float Rating);
 
     /**
-     * 增加使用次數
+     * 增�?使用次數
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     bool IncrementUsage(const FString& AssetID);
@@ -225,7 +213,7 @@ public:
     bool ExportAsset(const FString& AssetID, const FString& ExportPath) const;
 
     /**
-     * 批量導出資產
+     * ?��?導出資產
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     bool ExportAssets(const TArray<FString>& AssetIDs, const FString& ExportDirectory) const;
@@ -237,72 +225,68 @@ public:
     bool ImportAsset(const FString& FilePath, EAssetCategory Category);
 
     /**
-     * 清理無效資產
+     * 清�??��?資產
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     int32 CleanupInvalidAssets();
 
     /**
-     * 獲取存儲空間使用情況
+     * ?��?存儲空�?使用?��?
      */
     UFUNCTION(BlueprintPure, Category = "AI Asset Manager")
     float GetStorageUsageMB() const;
 
     /**
-     * 獲取推薦資產
+     * ?��??�薦資產
      */
     UFUNCTION(BlueprintCallable, Category = "AI Asset Manager")
     TArray<FAssetMetadata> GetRecommendedAssets(EAssetCategory Category, int32 Count = 10) const;
 
     /**
-     * 靜態獲取實例
+     * ?��??��?實�?
      */
     static UMingAIAssetManager* Get();
 
 protected:
-    // 資產列表
+    // 資產?�表
     UPROPERTY()
     TArray<FAssetMetadata> AssetList;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bIsInitialized;
 
-    // 單例實例
+    // ?��?實�?
     static UMingAIAssetManager* Instance;
 
-    // 資產數據文件路徑
+    // 資產?��??�件路�?
     FString AssetDatabasePath;
 
-    // 資產存儲目錄
+    // 資產存儲?��?
     FString AssetStorageDirectory;
 
-    // 加載資產數據庫
-    bool LoadAssetDatabase();
+    // ?��?資產?��?�?    bool LoadAssetDatabase();
 
-    // 保存資產數據庫
-    bool SaveAssetDatabase() const;
+    // 保�?資產?��?�?    bool SaveAssetDatabase() const;
 
-    // 創建資產元數據
-    FAssetMetadata CreateAssetMetadata(const FAIAssetGenerationResult& GenerationResult);
+    // ?�建資產?�數??    FAssetMetadata CreateAssetMetadata(const FAIAssetGenerationResult& GenerationResult);
 
-    // 確定資產分類
+    // 確�?資產?��?
     EAssetCategory DetermineAssetCategory(EAIAssetType AssetType);
 
-    // 驗證資產文件
+    // 驗�?資產?�件
     bool ValidateAssetFile(const FString& FilePath) const;
 
-    // 生成縮略圖
-    FString GenerateThumbnail(const FString& AssetPath) const;
+    // ?��?縮略??    FString GenerateThumbnail(const FString& AssetPath) const;
 
-    // 獲取文件大小
+    // ?��??�件大�?
     int64 GetFileSize(const FString& FilePath) const;
 
-    // 搜索匹配檢查
+    // ?�索?��?檢查
     bool MatchesFilter(const FAssetMetadata& Asset, const FAssetFilter& Filter) const;
 
-    // 排序資產
+    // ?��?資產
     void SortAssets(TArray<FAssetMetadata>& Assets, const FString& SortBy) const;
 
-    // 建立資產目錄
+    // 建�?資產?��?
     bool CreateAssetDirectories();
 };

@@ -49,72 +49,68 @@ public:
     virtual void Init() override;
     virtual void Shutdown() override;
 
-    // 遊戲會話數據
+    // ?�戲?�話?��?
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Session")
     FMingGameSessionData GameSessionData;
 
-    // 設置當前角色數據
+    // 設置?��?角色?��?
     UFUNCTION(BlueprintCallable, Category = "Game Session")
     void SetCurrentCharacterData(const FMingCharacterData& CharacterData);
 
-    // 獲取當前角色數據
+    // ?��??��?角色?��?
     UFUNCTION(BlueprintPure, Category = "Game Session")
     FMingCharacterData GetCurrentCharacterData() const;
 
-    // 設置存檔槽名稱
-    UFUNCTION(BlueprintCallable, Category = "Game Session")
+    // 設置存�?槽�?�?    UFUNCTION(BlueprintCallable, Category = "Game Session")
     void SetSaveSlotName(const FString& SlotName);
 
-    // 獲取存檔槽名稱
-    UFUNCTION(BlueprintPure, Category = "Game Session")
+    // ?��?存�?槽�?�?    UFUNCTION(BlueprintPure, Category = "Game Session")
     FString GetSaveSlotName() const;
 
-    // 開始新的遊戲會話
+    // ?��??��??�戲?�話
     UFUNCTION(BlueprintCallable, Category = "Game Session")
     void StartNewGameSession(const FMingCharacterData& CharacterData, const FString& SaveSlot);
 
-    // 結束當前遊戲會話
+    // 結�??��??�戲?�話
     UFUNCTION(BlueprintCallable, Category = "Game Session")
     void EndCurrentGameSession();
 
-    // 保存遊戲會話
+    // 保�??�戲?�話
     UFUNCTION(BlueprintCallable, Category = "Game Session")
     bool SaveGameSession();
 
-    // 載入遊戲會話
+    // 載入?�戲?�話
     UFUNCTION(BlueprintCallable, Category = "Game Session")
     bool LoadGameSession(const FString& SlotName);
 
-    // 檢查是否有正在進行的會話
-    UFUNCTION(BlueprintPure, Category = "Game Session")
+    // 檢查?�否?�正?�進�??��?�?    UFUNCTION(BlueprintPure, Category = "Game Session")
     bool HasActiveSession() const;
 
-    // 獲取會話持續時間
+    // ?��??�話?��??��?
     UFUNCTION(BlueprintPure, Category = "Game Session")
     float GetSessionDuration() const;
 
-    // 設置遊戲時間
+    // 設置?�戲?��?
     UFUNCTION(BlueprintCallable, Category = "Game Session")
     void SetGameTime(ERepublicEra Era, int32 Year);
 
-    // 獲取遊戲時間
+    // ?��??�戲?��?
     UFUNCTION(BlueprintPure, Category = "Game Session")
     void GetGameTime(ERepublicEra& OutEra, int32& OutYear) const;
 
 protected:
-    // 會話是否活躍
+    // ?�話?�否活�?
     UPROPERTY()
     bool bSessionActive;
 
-    // 生成會話 ID
+    // ?��??�話 ID
     FString GenerateSessionID();
 
-    // 會話數據序列化
-    FString SerializeSessionData() const;
+    // ?�話?��?序�???    FString SerializeSessionData() const;
 
-    // 會話數據反序列化
+    // ?�話?��??��??��?
     bool DeserializeSessionData(const FString& SerializedData);
 
-    // 清理會話數據
+    // 清�??�話?��?
     void ClearSessionData();
 };

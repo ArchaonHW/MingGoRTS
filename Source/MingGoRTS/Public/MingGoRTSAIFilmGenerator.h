@@ -51,7 +51,7 @@ class MINGGORTS_API UMingGoRTSAIFilmGenerator : public UObject
 public:
     UMingGoRTSAIFilmGenerator();
 
-    // 主要影片生成功能
+    // 主�?影�??��??�能
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void GenerateFilmSequence(const TArray<FFilmSequenceData>& FilmData);
 
@@ -64,18 +64,18 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     EFilmGenerationStatus GetGenerationStatus() const { return CurrentStatus; }
 
-    // 單幀生成
+    // ?��??��?
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void GenerateSingleFrame(const FString& Prompt, const FString& Style, int32 FrameIndex);
 
-    // Stable Diffusion 整合
+    // Stable Diffusion ?��?
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void SetStableDiffusionAPI(const FString& APIEndpoint, const FString& APIKey);
 
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     bool TestAPIConnection();
 
-    // 影片序列管理
+    // 影�?序�?管�?
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void AddFilmSequence(const FFilmSequenceData& SequenceData);
 
@@ -85,14 +85,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     TArray<FFilmSequenceData> GetFilmSequences() const { return FilmSequences; }
 
-    // 預覽功能
+    // ?�覽?�能
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void PreviewFrame(int32 FrameIndex);
 
     UFUNCTION(BlueprintCallable, Category = "AI Film")
     void PlayGeneratedFilm();
 
-    // 委托事件
+    // 委�?事件
     UPROPERTY(BlueprintAssignable, Category = "AI Film")
     FOnFilmFrameGenerated OnFilmFrameGenerated;
 
@@ -116,7 +116,7 @@ protected:
 
     bool bIsGenerating;
 
-    // 注意：非UObject類型不能用UPROPERTY
+    // 注�?：�?UObject類�?不能?�UPROPERTY
     FTickerDelegate GenerationTicker;
     FDelegateHandle GenerationTickerHandle;
 

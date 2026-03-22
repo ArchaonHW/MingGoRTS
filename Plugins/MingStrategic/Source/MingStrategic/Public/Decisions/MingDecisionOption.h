@@ -5,47 +5,45 @@
 #include "MingStrategicDecisionOption.generated.h"
 
 /**
- * 決策選項結構
- * 定義決策的一個選項及其後果
- */
+ * 決�??��?結�?
+ * 定義決�??��??�選?��??��??? */
 USTRUCT(BlueprintType)
 struct MINGSTRATEGIC_API FMingStrategicDecisionOption
 {
     GENERATED_BODY()
     
-    // 選項ID
+    // ?��?ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FString OptionId;
     
-    // 選項標題
+    // ?��?標�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FText OptionTitle;
     
-    // 選項描述 (詳細說明)
+    // ?��??�述 (詳細說�?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FText OptionDescription;
     
-    // 選項預覽 (簡短說明顯示在按鈕上)
+    // ?��??�覽 (簡短說�?顯示?��??��?)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FText OptionPreview;
     
-    // 選項圖標
+    // ?��??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     UTexture2D* OptionIcon;
     
-    // 選項效果列表
+    // ?��??��??�表
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     TArray<FMingDecisionEffect> Effects;
     
-    // 後續決策ID (選擇此選項後觸發的下一個決策)
+    // 後�?決�?ID (?��?此選?��?觸發?��?一?�決�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FString NextDecisionId;
     
-    // 是否結束當前決策鏈
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
+    // ?�否結�??��?決�???    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     bool bEndDecisionChain;
     
-    // 選項可用性條件 (可留空表示始終可用)
+    // ?��??�用?��?�?(?��?空表示�?終可??
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Option")
     FString AvailabilityCondition;
     
@@ -54,6 +52,6 @@ struct MINGSTRATEGIC_API FMingStrategicDecisionOption
         , bEndDecisionChain(false)
     {}
     
-    // 檢查選項是否可用
+    // 檢查?��??�否?�用
     bool IsAvailable() const;
 };

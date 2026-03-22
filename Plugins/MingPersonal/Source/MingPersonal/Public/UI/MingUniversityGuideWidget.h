@@ -6,7 +6,7 @@
 #include "MingUniversityGuideWidget.generated.h"
 
 /**
- * 高校引導UI Widget
+ * 高校引�?UI Widget
  */
 UCLASS()
 class MINGPERSONAL_API UMingUniversityGuideWidget : public UUserWidget
@@ -18,42 +18,39 @@ public:
     virtual void NativeDestruct() override;
 
     /**
-     * 設置引導管理器
-     */
+     * 設置引�?管�???     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void SetGuideManager(UMingUniversityGuideManager* Manager);
 
     /**
-     * 顯示引導內容
+     * 顯示引�??�容
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void DisplayContent(const FUniversityGuideContent& Content);
 
     /**
-     * 更新進度條
-     */
+     * ?�新?�度�?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void UpdateProgressBar(float Progress);
 
     /**
-     * 顯示/隱藏導航按鈕
+     * 顯示/?��?導航?��?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void SetNavigationButtonsEnabled(bool bPreviousEnabled, bool bNextEnabled);
 
     /**
-     * 播放內容動畫
+     * ?�放?�容?�畫
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void PlayContentAnimation();
 
     /**
-     * 顯示完成對話框
-     */
+     * 顯示完�?對話�?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void ShowCompletionDialog();
 
-    // UI元素綁定（在藍圖中實現）
+    // UI?��?綁�?（在?��?中實?��?
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* TitleText;
 
@@ -75,7 +72,7 @@ public:
     UPROPERTY(meta = (BindWidget))
     class UHorizontalBox* NavigationBox;
 
-    // 按鈕事件處理
+    // ?��?事件?��?
     UFUNCTION()
     void OnPreviousButtonClicked();
 

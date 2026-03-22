@@ -273,9 +273,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProfileCompleted, const FString&,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceAlert, const FString&, AlertMessage);
 
 /**
- * MingGoRTS 增強性能優化和調試系統
- * 處理遊戲性能監控、優化、調試和分析等功能
- */
+ * MingGoRTS 增強?�能?��??�調試系�? * ?��??�戲?�能??��?�優?�、調試�??��?等�??? */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = "MingRTS")
 class MINGPERSONAL_API UMingRTSPerformanceEnhancedSystem : public UObject
 {
@@ -284,67 +282,66 @@ class MINGPERSONAL_API UMingRTSPerformanceEnhancedSystem : public UObject
 public:
     UMingRTSPerformanceEnhancedSystem();
 
-    // 初始化增強性能優化系統
+    // ?��??��?強性能?��?系統
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void InitializePerformanceEnhancedSystem(UWorld* World);
 
-    // 更新增強性能優化系統（每幀調用）
-    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
+    // ?�新增強?�能?��?系統（�?幀調用�?    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void UpdatePerformanceEnhancedSystem(float DeltaTime);
 
-    // 獲取當前性能指標
+    // ?��??��??�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FPerformanceMetrics GetCurrentMetrics() const;
 
-    // 獲取特定類別的性能指標
+    // ?��??��?類別?�性能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FPerformanceMetrics GetCategoryMetrics(EPerformanceCategory Category) const;
 
-    // 開始性能分析
+    // ?��??�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FString StartProfiling(const FString& ProfileName, EPerformanceLevel TargetLevel, EOptimizationMode Mode);
 
-    // 停止性能分析
+    // ?�止?�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool StopProfiling(const FString& ProfileID);
 
-    // 暫停性能分析
+    // ?��??�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool PauseProfiling(const FString& ProfileID);
 
-    // 恢復性能分析
+    // ?�復?�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool ResumeProfiling(const FString& ProfileID);
 
-    // 獲取性能分析結果
+    // ?��??�能?��?結�?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FPerformanceProfile GetProfile(const FString& ProfileID) const;
 
-    // 獲取所有性能分析
+    // ?��??�?�性能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TArray<FPerformanceProfile> GetAllProfiles() const;
 
-    // 自動性能優化
+    // ?��??�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void AutoOptimize(EPerformanceCategory Category, EPerformanceLevel TargetLevel);
 
-    // 批量性能優化
+    // ?��??�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void BatchOptimize(const TArray<EPerformanceCategory>& Categories, EPerformanceLevel TargetLevel);
 
-    // 手動性能優化
+    // ?��??�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ManualOptimize(EPerformanceCategory Category, const TMap<FString, FString>& Settings);
 
-    // 獲取優化建議
+    // ?��??��?建議
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TArray<FOptimizationResult> GetOptimizationSuggestions() const;
 
-    // 應用優化設置
+    // ?�用?��?設置
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool ApplyOptimizationSettings(const TMap<FString, FString>& Settings);
 
-    // 重置優化設置
+    // ?�置?��?設置
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ResetOptimizationSettings();
 
@@ -352,15 +349,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void SetDebugLevel(EDebugLevel Level);
 
-    // 獲取調試級別
+    // ?��?調試級別
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     EDebugLevel GetDebugLevel() const;
 
-    // 添加調試消息
+    // 添�?調試消息
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void AddDebugMessage(const FString& Category, const FString& Message, EDebugLevel Level, const FString& Context = TEXT(""));
 
-    // 獲取調試信息
+    // ?��?調試信息
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TArray<FDebugInfo> GetDebugInfo(const FString& Category = TEXT("")) const;
 
@@ -368,52 +365,50 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ClearDebugInfo(const FString& Category = TEXT(""));
 
-    // 導出性能數據
+    // 導出?�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool ExportPerformanceData(const FString& FilePath, const FString& ProfileID = TEXT(""));
 
-    // 導入性能數據
+    // 導入?�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool ImportPerformanceData(const FString& FilePath);
 
-    // 獲取性能統計
+    // ?��??�能統�?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TMap<FString, float> GetPerformanceStatistics() const;
 
-    // 獲取性能報告
+    // ?��??�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FString GeneratePerformanceReport(const FString& ProfileID = TEXT("")) const;
 
-    // 設置性能警告閾值
-    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
+    // 設置?�能警�??��?    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void SetPerformanceAlertThresholds(const TMap<EPerformanceCategory, float>& Thresholds);
 
-    // 獲取性能警告
+    // ?��??�能警�?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TArray<FString> GetPerformanceAlerts() const;
 
-    // 清除性能警告
+    // 清除?�能警�?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ClearPerformanceAlerts();
 
-    // 啟用/禁用性能監控
+    // ?�用/禁用?�能??��
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void SetPerformanceMonitoringEnabled(bool bEnabled);
 
-    // 獲取性能監控狀態
-    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
+    // ?��??�能??��?�??    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool IsPerformanceMonitoringEnabled() const;
 
-    // 設置監控間隔
+    // 設置??��?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void SetMonitoringInterval(float Interval);
 
-    // 獲取監控間隔
+    // ?��???��?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     float GetMonitoringInterval() const;
 
 public:
-    // 事件委託
+    // 事件委�?
     UPROPERTY(BlueprintAssignable, Category = "Performance Enhanced System Events")
     FOnPerformanceMetricsUpdated OnPerformanceMetricsUpdated;
 
@@ -433,128 +428,127 @@ public:
     FOnPerformanceAlert OnPerformanceAlert;
 
 protected:
-    // 處理性能監控
+    // ?��??�能??��
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ProcessPerformanceMonitoring(float DeltaTime);
 
-    // 處理性能分析
+    // ?��??�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ProcessProfiling(float DeltaTime);
 
-    // 處理自動優化
+    // ?��??��??��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ProcessAutoOptimization(float DeltaTime);
 
-    // 處理性能警告
+    // ?��??�能警�?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ProcessPerformanceAlerts(float DeltaTime);
 
-    // 收集性能指標
+    // ?��??�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FPerformanceMetrics CollectPerformanceMetrics() const;
 
-    // 分析性能瓶頸
+    // ?��??�能?�頸
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TArray<EPerformanceCategory> AnalyzePerformanceBottlenecks() const;
 
-    // 生成優化建議
+    // ?��??��?建議
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult GenerateOptimizationSuggestion(EPerformanceCategory Category) const;
 
-    // 應用渲染優化
+    // ?�用渲�??��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyRenderingOptimization(const TMap<FString, FString>& Settings);
 
-    // 應用物理優化
+    // ?�用?��??��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyPhysicsOptimization(const TMap<FString, FString>& Settings);
 
-    // 應用AI優化
+    // ?�用AI?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyAIOptimization(const TMap<FString, FString>& Settings);
 
-    // 應用音頻優化
+    // ?�用?�頻?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyAudioOptimization(const TMap<FString, FString>& Settings);
 
-    // 應用網絡優化
+    // ?�用網絡?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyNetworkOptimization(const TMap<FString, FString>& Settings);
 
-    // 應用UI優化
+    // ?�用UI?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyUIOptimization(const TMap<FString, FString>& Settings);
 
-    // 應用動畫優化
+    // ?�用?�畫?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyAnimationOptimization(const TMap<FString, FString>& Settings);
 
-    // 應用內存優化
+    // ?�用?��??��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyMemoryOptimization(const TMap<FString, FString>& Settings);
 
-    // 驗證優化結果
+    // 驗�??��?結�?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool ValidateOptimizationResult(const FOptimizationResult& Result) const;
 
-    // 記錄性能數據
+    // 記�??�能?��?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void RecordPerformanceData(const FPerformanceMetrics& Metrics);
 
-    // 分析性能趨勢
+    // ?��??�能趨勢
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TMap<EPerformanceCategory, float> AnalyzePerformanceTrends() const;
 
-    // 預測性能負載
+    // ?�測?�能負�?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     float PredictPerformanceLoad() const;
 
-    // 平衡性能負載
+    // 平衡?�能負�?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void BalancePerformanceLoad();
 
 protected:
-    // 當前世界引用
+    // ?��?世�?引用
     UPROPERTY()
     TObjectPtr<UWorld> CurrentWorld;
 
-    // 當前性能指標
+    // ?��??�能?��?
     UPROPERTY()
     FPerformanceMetrics CurrentMetrics;
 
-    // 性能分析映射
+    // ?�能?��??��?
     UPROPERTY()
     TMap<FString, FPerformanceProfile> PerformanceProfiles;
 
-    // 調試信息映射
+    // 調試信息?��?
     UPROPERTY()
     TArray<FDebugInfo> DebugInfo;
 
-    // 性能警告列表
+    // ?�能警�??�表
     UPROPERTY()
     TArray<FString> PerformanceAlerts;
 
-    // 性能警告閾值
-    UPROPERTY()
+    // ?�能警�??��?    UPROPERTY()
     TMap<EPerformanceCategory, float> AlertThresholds;
 
-    // 當前分析ID
+    // ?��??��?ID
     UPROPERTY()
     FString CurrentProfileID;
 
-    // 性能更新間隔
+    // ?�能?�新?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     float PerformanceUpdateInterval;
 
-    // 上次性能更新時間
+    // 上次?�能?�新?��?
     UPROPERTY()
     float LastPerformanceUpdateTime;
 
-    // 監控間隔
+    // ??��?��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     float MonitoringInterval;
 
-    // 上次監控時間
+    // 上次??��?��?
     UPROPERTY()
     float LastMonitoringTime;
 
@@ -562,102 +556,98 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     EDebugLevel DebugLevel;
 
-    // 是否啟用性能監控
+    // ?�否?�用?�能??��
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     bool bPerformanceMonitoringEnabled;
 
-    // 是否啟用自動優化
+    // ?�否?�用?��??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     bool bAutoOptimizationEnabled;
 
-    // 是否啟用性能警告
+    // ?�否?�用?�能警�?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     bool bPerformanceAlertsEnabled;
 
-    // 最大調試信息數量
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
+    // ?�大調試信?�數??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     int32 MaxDebugInfoCount;
 
-    // 最大性能分析數量
+    // ?�大性能?��??��?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     int32 MaxProfileCount;
 
 private:
-    // 獲取性能類別名稱
+    // ?��??�能類別?�稱
     FString GetPerformanceCategoryName(EPerformanceCategory Category) const;
 
-    // 獲取性能級別名稱
+    // ?��??�能級別?�稱
     FString GetPerformanceLevelName(EPerformanceLevel Level) const;
 
-    // 獲取優化模式名稱
+    // ?��??��?模�??�稱
     FString GetOptimizationModeName(EOptimizationMode Mode) const;
 
-    // 獲取調試級別名稱
+    // ?��?調試級別?�稱
     FString GetDebugLevelName(EDebugLevel Level) const;
 
-    // 生成唯一ID
+    // ?��??��?ID
     FString GenerateUniqueID(const FString& Prefix) const;
 
-    // 驗證性能指標
+    // 驗�??�能?��?
     bool ValidatePerformanceMetrics(const FPerformanceMetrics& Metrics) const;
 
-    // 驗證性能分析
+    // 驗�??�能?��?
     bool ValidatePerformanceProfile(const FPerformanceProfile& Profile) const;
 
-    // 處理性能錯誤
+    // ?��??�能?�誤
     void HandlePerformanceError(const FString& Operation, const FString& ErrorMessage);
 
-    // 清理無效性能數據
+    // 清�??��??�能?��?
     void CleanupInvalidPerformanceData();
 
-    // 獲取性能指標模板
+    // ?��??�能?��?模板
     FPerformanceMetrics GetPerformanceMetricsTemplate() const;
 
-    // 獲取性能分析模板
+    // ?��??�能?��?模板
     FPerformanceProfile GetPerformanceProfileTemplate() const;
 
-    // 獲取優化結果模板
+    // ?��??��?結�?模板
     FOptimizationResult GetOptimizationResultTemplate() const;
 
-    // 記錄性能統計
+    // 記�??�能統�?
     void RecordPerformanceStatistics();
 
-    // 處理性能瓶頸
+    // ?��??�能?�頸
     void HandlePerformanceBottlenecks();
 
-    // 優化渲染性能
+    // ?��?渲�??�能
     void OptimizeRenderingPerformance();
 
-    // 優化物理性能
+    // ?��??��??�能
     void OptimizePhysicsPerformance();
 
-    // 優化AI性能
+    // ?��?AI?�能
     void OptimizeAIPerformance();
 
-    // 優化音頻性能
+    // ?��??�頻?�能
     void OptimizeAudioPerformance();
 
-    // 優化網絡性能
+    // ?��?網絡?�能
     void OptimizeNetworkPerformance();
 
-    // 優化UI性能
+    // ?��?UI?�能
     void OptimizeUIPerformance();
 
-    // 優化動畫性能
+    // ?��??�畫?�能
     void OptimizeAnimationPerformance();
 
-    // 優化內存性能
+    // ?��??��??�能
     void OptimizeMemoryPerformance();
 
-    // 獲取默認性能設置
+    // ?��?默�??�能設置
     TMap<FString, FString> GetDefaultPerformanceSettings() const;
 
-    // 應用控制台命令
-    void ApplyConsoleCommand(const FString& Command);
+    // ?�用?�制?�命�?    void ApplyConsoleCommand(const FString& Command);
 
-    // 獲取控制台變量值
-    FString GetConsoleVariable(const FString& VariableName) const;
+    // ?��??�制?��??��?    FString GetConsoleVariable(const FString& VariableName) const;
 
-    // 設置控制台變量值
-    void SetConsoleVariable(const FString& VariableName, const FString& Value);
+    // 設置?�制?��??��?    void SetConsoleVariable(const FString& VariableName, const FString& Value);
 };

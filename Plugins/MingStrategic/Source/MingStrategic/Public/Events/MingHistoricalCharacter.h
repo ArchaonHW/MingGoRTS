@@ -5,7 +5,7 @@
 #include "MingHistoricalCharacter.generated.h"
 
 /**
- * 人物性別
+ * 人物?�別
  */
 UENUM(BlueprintType)
 enum class ECharacterGender : uint8
@@ -16,7 +16,7 @@ enum class ECharacterGender : uint8
 };
 
 /**
- * 人物職業/身份
+ * 人物?�業/身份
  */
 UENUM(BlueprintType)
 enum class ECharacterProfession : uint8
@@ -40,7 +40,7 @@ enum class ECharacterProfession : uint8
 };
 
 /**
- * 人物陣營/派系
+ * 人物???/派系
  */
 UENUM(BlueprintType)
 enum class ECharacterFaction : uint8
@@ -56,8 +56,7 @@ enum class ECharacterFaction : uint8
 };
 
 /**
- * 人物狀態
- */
+ * 人物?�?? */
 UENUM(BlueprintType)
 enum class ECharacterState : uint8
 {
@@ -72,7 +71,7 @@ enum class ECharacterState : uint8
 };
 
 /**
- * 人物關係類型
+ * 人物?��?類�?
  */
 UENUM(BlueprintType)
 enum class ECharacterRelationshipType : uint8
@@ -93,8 +92,7 @@ enum class ECharacterRelationshipType : uint8
 };
 
 /**
- * 人物技能類型
- */
+ * 人物?�?��??? */
 UENUM(BlueprintType)
 enum class ECharacterSkillType : uint8
 {
@@ -116,74 +114,73 @@ enum class ECharacterSkillType : uint8
 };
 
 /**
- * 人物屬性
- */
+ * 人物屬�? */
 USTRUCT(BlueprintType)
 struct FHistoricalCharacterAttributes
 {
     GENERATED_BODY()
 
-    // 領導力 (0-100)
+    // ?��???(0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Leadership;
 
-    // 軍事才能 (0-100)
+    // 軍�??�能 (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Military;
 
-    // 外交能力 (0-100)
+    // 外交?��? (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Diplomacy;
 
-    // 經濟才能 (0-100)
+    // 經�??�能 (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Economics;
 
-    // 智力水平 (0-100)
+    // ?��?水平 (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Intelligence;
 
-    // 魅力值 (0-100)
+    // 魅�???(0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Charisma;
 
-    // 行政能力 (0-100)
+    // 行政?��? (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Administration;
 
-    // 戰略思維 (0-100)
+    // ?�略?�維 (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Strategy;
 
-    // 演講能力 (0-100)
+    // 演�??��? (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Oratory;
 
-    // 寫作能力 (0-100)
+    // 寫�??��? (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Writing;
 
-    // 科學知識 (0-100)
+    // 科學?��? (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Science;
 
-    // 工程技術 (0-100)
+    // 工�??��?(0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Engineering;
 
-    // 醫學知識 (0-100)
+    // ?�學?��? (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Medicine;
 
-    // 藝術才能 (0-100)
+    // ?��??�能 (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     float Art;
 
-    // 經驗值 (0-1000)
+    // 經�???(0-1000)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     int32 Experience;
 
-    // 等級 (1-10)
+    // 等�? (1-10)
     UPROPERTY(BlueprintReadWrite, Category = "Character Attributes")
     int32 Level;
 
@@ -208,47 +205,41 @@ struct FHistoricalCharacterAttributes
 };
 
 /**
- * 人物技能
- */
+ * 人物?�?? */
 USTRUCT(BlueprintType)
 struct FHistoricalCharacterSkill
 {
     GENERATED_BODY()
 
-    // 技能類型
-    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
+    // ?�?��???    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     ECharacterSkillType SkillType;
 
-    // 技能名稱
-    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
+    // ?�?��?�?    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     FString SkillName;
 
-    // 技能描述
-    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
+    // ?�?��?�?    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     FString SkillDescription;
 
-    // 技能等級 (0-10)
+    // ?�?��?�?(0-10)
     UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     int32 SkillLevel;
 
-    // 技能經驗 (0-1000)
+    // ?�?��?�?(0-1000)
     UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     int32 SkillExperience;
 
-    // 是否已解鎖
-    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
+    // ?�否已解??    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     bool bIsUnlocked;
 
-    // 技能冷卻時間 (秒)
+    // ?�?�冷?��???(�?
     UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     float CooldownTime;
 
-    // 上次使用時間
+    // 上次使用?��?
     UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     float LastUsedTime;
 
-    // 技能效果
-    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
+    // ?�?��???    UPROPERTY(BlueprintReadWrite, Category = "Character Skill")
     TArray<FString> SkillEffects;
 
     FHistoricalCharacterSkill()
@@ -264,43 +255,42 @@ struct FHistoricalCharacterSkill
 };
 
 /**
- * 人物關係
+ * 人物?��?
  */
 USTRUCT(BlueprintType)
 struct FCharacterRelationship
 {
     GENERATED_BODY()
 
-    // 關係類型
+    // ?��?類�?
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     ECharacterRelationshipType RelationshipType;
 
-    // 關係對象ID
+    // ?��?對象ID
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     FString TargetCharacterID;
 
-    // 關係強度 (0-100)
+    // ?��?強度 (0-100)
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     float RelationshipStrength;
 
-    // 關係描述
+    // ?��??�述
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     FString RelationshipDescription;
 
-    // 建立時間
+    // 建�??��?
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     float EstablishedTime;
 
-    // 是否公開
+    // ?�否?��?
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     bool bIsPublic;
 
-    // 互動次數
+    // 互�?次數
     UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     int32 InteractionCount;
 
-    // 最後互動時間
-    UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
+    // ?�後�??��???    UPROPERTY(BlueprintReadWrite, Category = "Character Relationship")
     float LastInteractionTime;
 
     FCharacterRelationship()
@@ -316,38 +306,38 @@ struct FCharacterRelationship
 };
 
 /**
- * 對話選項
+ * 對話?��?
  */
 USTRUCT(BlueprintType)
 struct FDialogueOption
 {
     GENERATED_BODY()
 
-    // 選項ID
+    // ?��?ID
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     FString OptionID;
 
-    // 選項文本
+    // ?��??�本
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     FString OptionText;
 
-    // 選項描述
+    // ?��??�述
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     FString OptionDescription;
 
-    // 選項條件
+    // ?��?條件
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     TArray<FString> Conditions;
 
-    // 選項後果
+    // ?��?後�?
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     TArray<FString> Consequences;
 
-    // 選項權重
+    // ?��?權�?
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     float Weight;
 
-    // 是否可用
+    // ?�否?�用
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Option")
     bool bIsAvailable;
 
@@ -372,40 +362,39 @@ struct FDialogueEvent
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString EventID;
 
-    // 對話文本
+    // 對話?�本
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString DialogueText;
 
-    // 說話者ID
+    // 說話?�ID
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString SpeakerID;
 
-    // 聽眾ID
+    // ?�眾ID
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString AudienceID;
 
-    // 對話選項
+    // 對話?��?
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     TArray<FDialogueOption> DialogueOptions;
 
-    // 對話時間
+    // 對話?��?
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     float DialogueTime;
 
-    // 對話地點
+    // 對話?��?
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString DialogueLocation;
 
-    // 對話主題
+    // 對話主�?
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString DialogueTopic;
 
-    // 對話情緒
+    // 對話?��?
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     FString DialogueMood;
 
-    // 對話重要性
-    UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
+    // 對話?��???    UPROPERTY(BlueprintReadWrite, Category = "Dialogue Event")
     float DialogueImportance;
 
     FDialogueEvent()
@@ -422,7 +411,7 @@ struct FDialogueEvent
 };
 
 /**
- * 民國歷史人物
+ * 民�?歷史人物
  */
 USTRUCT(BlueprintType)
 struct FMingStrategicHistoricalCharacter
@@ -433,39 +422,38 @@ struct FMingStrategicHistoricalCharacter
     UPROPERTY(BlueprintReadOnly)
     FString CharacterID;
 
-    // 人物姓名
+    // 人物姓�?
     UPROPERTY(BlueprintReadOnly)
     FString CharacterName;
 
-    // 人物字號
+    // 人物字�?
     UPROPERTY(BlueprintReadOnly)
     FString CourtesyName;
 
-    // 人物英文名
-    UPROPERTY(BlueprintReadOnly)
+    // 人物?��???    UPROPERTY(BlueprintReadOnly)
     FString EnglishName;
 
-    // 人物描述
+    // 人物?�述
     UPROPERTY(BlueprintReadOnly)
     FString CharacterDescription;
 
-    // 人物肖像
+    // 人物?��?
     UPROPERTY(BlueprintReadOnly)
     FString PortraitPath;
 
-    // 性別
+    // ?�別
     UPROPERTY(BlueprintReadOnly)
     ECharacterGender Gender;
 
-    // 職業/身份
+    // ?�業/身份
     UPROPERTY(BlueprintReadOnly)
     ECharacterProfession Profession;
 
-    // 陣營/派系
+    // ???/派系
     UPROPERTY(BlueprintReadOnly)
     ECharacterFaction Faction;
 
-    // 出生年份
+    // ?��?年份
     UPROPERTY(BlueprintReadOnly)
     int32 BirthYear;
 
@@ -473,19 +461,16 @@ struct FMingStrategicHistoricalCharacter
     UPROPERTY(BlueprintReadOnly)
     int32 DeathYear;
 
-    // 人物狀態
-    UPROPERTY(BlueprintReadOnly)
+    // 人物?�??    UPROPERTY(BlueprintReadOnly)
     ECharacterState State;
 
-    // 人物屬性
-    UPROPERTY(BlueprintReadOnly)
+    // 人物屬�?    UPROPERTY(BlueprintReadOnly)
     FHistoricalCharacterAttributes Attributes;
 
-    // 人物技能
-    UPROPERTY(BlueprintReadOnly)
+    // 人物?�??    UPROPERTY(BlueprintReadOnly)
     TArray<FHistoricalCharacterSkill> Skills;
 
-    // 人物關係
+    // 人物?��?
     UPROPERTY(BlueprintReadOnly)
     TArray<FCharacterRelationship> Relationships;
 
@@ -493,51 +478,49 @@ struct FMingStrategicHistoricalCharacter
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> CharacterTags;
 
-    // 歷史事蹟
+    // 歷史事�?
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> HistoricalEvents;
 
-    // 重要成就
+    // ?��??�就
     UPROPERTY(BlueprintReadOnly)
     TArray<FString> Achievements;
 
-    // 影響力值 (0-1000)
+    // 影響?��?(0-1000)
     UPROPERTY(BlueprintReadOnly)
     float Influence;
 
-    // 聲望值 (0-1000)
+    // ?��???(0-1000)
     UPROPERTY(BlueprintReadOnly)
     float Reputation;
 
-    // 忠誠度 (0-100)
+    // 忠�?�?(0-100)
     UPROPERTY(BlueprintReadOnly)
     float Loyalty;
 
-    // 健康狀況 (0-100)
+    // ?�康?��?(0-100)
     UPROPERTY(BlueprintReadOnly)
     float Health;
 
-    // 精神狀態 (0-100)
+    // 精�??�??(0-100)
     UPROPERTY(BlueprintReadOnly)
     float Morale;
 
-    // 當前位置
+    // ?��?位置
     UPROPERTY(BlueprintReadOnly)
     FString CurrentLocation;
 
-    // 當前職位
+    // ?��??��?
     UPROPERTY(BlueprintReadOnly)
     FString CurrentPosition;
 
-    // 是否為關鍵人物
-    UPROPERTY(BlueprintReadOnly)
+    // ?�否?��??�人??    UPROPERTY(BlueprintReadOnly)
     bool bIsKeyCharacter;
 
-    // 是否可招募
-    UPROPERTY(BlueprintReadOnly)
+    // ?�否?��???    UPROPERTY(BlueprintReadOnly)
     bool bIsRecruitable;
 
-    // 招募成本
+    // ?��??�本
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, int32> RecruitmentCost;
 
@@ -567,50 +550,47 @@ struct FMingStrategicHistoricalCharacter
 };
 
 /**
- * 人物互動結果
+ * 人物互�?結�?
  */
 USTRUCT(BlueprintType)
 struct FCharacterInteractionResult
 {
     GENERATED_BODY()
 
-    // 是否成功
+    // ?�否?��?
     UPROPERTY(BlueprintReadOnly)
     bool bSuccess;
 
-    // 互動類型
+    // 互�?類�?
     UPROPERTY(BlueprintReadOnly)
     FString InteractionType;
 
-    // 互動對象ID
+    // 互�?對象ID
     UPROPERTY(BlueprintReadOnly)
     FString TargetCharacterID;
 
-    // 互動時間
+    // 互�??��?
     UPROPERTY(BlueprintReadOnly)
     float InteractionTime;
 
-    // 互動地點
+    // 互�??��?
     UPROPERTY(BlueprintReadOnly)
     FString InteractionLocation;
 
-    // 互動結果描述
+    // 互�?結�??�述
     UPROPERTY(BlueprintReadOnly)
     FString ResultDescription;
 
-    // 影響的人物屬性
-    UPROPERTY(BlueprintReadOnly)
+    // 影響?�人?�屬??    UPROPERTY(BlueprintReadOnly)
     TMap<FString, float> AffectedAttributes;
 
-    // 影響的人物關係
-    UPROPERTY(BlueprintReadOnly)
+    // 影響?�人?��?�?    UPROPERTY(BlueprintReadOnly)
     TArray<FString> AffectedRelationships;
 
-    // 獲得的經驗
-    UPROPERTY(BlueprintReadOnly)
+    // ?��??��?�?    UPROPERTY(BlueprintReadOnly)
     int32 GainedExperience;
 
-    // 互動分數
+    // 互�??�數
     UPROPERTY(BlueprintReadOnly)
     float InteractionScore;
 
@@ -627,9 +607,7 @@ struct FCharacterInteractionResult
 };
 
 /**
- * 歷史人物管理器
- * 管理所有民國歷史人物的互動和對話
- */
+ * 歷史人物管�??? * 管�??�?��??�歷?�人?��?互�??��?�? */
 UCLASS(BlueprintType)
 class MINGSTRATEGIC_API UMingHistoricalCharacterManager : public UObject
 {
@@ -639,73 +617,68 @@ public:
     UMingHistoricalCharacterManager();
 
     /**
-     * 初始化人物管理器
+     * ?��??�人?�管?�器
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     void Initialize();
 
     /**
-     * 關閉人物管理器
-     */
+     * ?��?人物管�???     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     void Shutdown();
 
     /**
-     * 註冊歷史人物
+     * 註�?歷史人物
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool RegisterHistoricalCharacter(const FMingHistoricalCharacter& Character);
 
     /**
-     * 取消註冊歷史人物
+     * ?��?註�?歷史人物
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool UnregisterHistoricalCharacter(const FString& CharacterID);
 
     /**
-     * 獲取歷史人物
+     * ?��?歷史人物
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     FMingHistoricalCharacter GetHistoricalCharacter(const FString& CharacterID) const;
 
     /**
-     * 獲取所有歷史人物
-     */
+     * ?��??�?�歷?�人??     */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetAllHistoricalCharacters() const;
 
     /**
-     * 獲取指定陣營的人物
-     */
+     * ?��??��?????�人??     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetCharactersByFaction(ECharacterFaction Faction) const;
 
     /**
-     * 獲取指定職業的人物
-     */
+     * ?��??��??�業?�人??     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetCharactersByProfession(ECharacterProfession Profession) const;
 
     /**
-     * 獲取關鍵人物
+     * ?��??�鍵人物
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetKeyCharacters() const;
 
     /**
-     * 獲取可招募人物
-     */
+     * ?��??��??�人??     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetRecruitableCharacters() const;
 
     /**
-     * 獲取活躍人物
+     * ?��?活�?人物
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetActiveCharacters() const;
 
     /**
-     * 人物互動
+     * 人物互�?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     FCharacterInteractionResult InteractWithCharacter(const FString& CharacterID, const FString& InteractionType, const FString& InteractionDetails);
@@ -717,163 +690,157 @@ public:
     FDialogueEvent StartDialogue(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic);
 
     /**
-     * 處理對話選項
+     * ?��?對話?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     FDialogueEvent ProcessDialogueOption(const FString& DialogueEventID, const FString& OptionID);
 
     /**
-     * 招募人物
+     * ?��?人物
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool RecruitCharacter(const FString& CharacterID);
 
     /**
-     * 解僱人物
+     * �?��人物
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool DismissCharacter(const FString& CharacterID);
 
     /**
-     * 提升人物技能
-     */
+     * ?��?人物?�??     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool UpgradeCharacterSkill(const FString& CharacterID, ECharacterSkillType SkillType);
 
     /**
-     * 獲取人物關係
+     * ?��?人物?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FCharacterRelationship> GetCharacterRelationships(const FString& CharacterID) const;
 
     /**
-     * 添加人物關係
+     * 添�?人物?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool AddCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, ECharacterRelationshipType RelationshipType, float Strength);
 
     /**
-     * 更新人物關係
+     * ?�新人物?��?
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     bool UpdateCharacterRelationship(const FString& CharacterID, const FString& TargetCharacterID, float NewStrength);
 
     /**
-     * 獲取人物統計
+     * ?��?人物統�?
      */
     UFUNCTION(BlueprintPure, Category = "Historical Character")
     TMap<FString, int32> GetCharacterStatistics() const;
 
     /**
-     * 獲取人物影響力排名
-     */
+     * ?��?人物影響?��???     */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetCharacterInfluenceRanking() const;
 
     /**
-     * 獲取推薦人物
+     * ?��??�薦人物
      */
     UFUNCTION(BlueprintCallable, Category = "Historical Character")
     TArray<FMingHistoricalCharacter> GetRecommendedCharacters(const FString& PlayerFaction) const;
 
 protected:
-    // 已註冊的歷史人物
+    // 已註?��?歷史人物
     UPROPERTY()
     TArray<FMingHistoricalCharacter> RegisteredCharacters;
 
-    // 人物ID到人物的映射
+    // 人物ID?�人?��??��?
     UPROPERTY()
     TMap<FString, FMingHistoricalCharacter> CharacterMap;
 
-    // 人物關係網絡 - 注意：TMap<TArray> 不支持 UPROPERTY
+    // 人物?��?網絡 - 注�?：TMap<TArray> 不支??UPROPERTY
     TMap<FString, TArray<FCharacterRelationship>> RelationshipNetwork;
 
-    // 對話事件記錄
+    // 對話事件記�?
     UPROPERTY()
     TArray<FDialogueEvent> DialogueHistory;
 
-    // 人物統計
+    // 人物統�?
     UPROPERTY()
     TMap<FString, int32> CharacterStatistics;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bIsInitialized;
 
-    // 初始化民國歷史人物庫
+    // ?��??��??�歷?�人?�庫
     void InitializeHistoricalCharacterLibrary();
 
-    // 創建政治人物
+    // ?�建?�治人物
     void CreatePoliticalCharacters();
 
-    // 創建軍事人物
+    // ?�建軍�?人物
     void CreateMilitaryCharacters();
 
-    // 創建經濟人物
+    // ?�建經�?人物
     void CreateBusinessCharacters();
 
-    // 創建學術人物
+    // ?�建學�?人物
     void CreateScholarCharacters();
 
-    // 創建革命人物
+    // ?�建?�命人物
     void CreateRevolutionaryCharacters();
 
-    // 創建外交人物
+    // ?�建外交人物
     void CreateDiplomaticCharacters();
 
-    // 創建文化人物
+    // ?�建?��?人物
     void CreateCulturalCharacters();
 
-    // 處理人物互動邏輯
+    // ?��?人物互�??�輯
     void HandleCharacterInteraction(const FString& CharacterID, const FString& InteractionType, FCharacterInteractionResult& Result);
 
-    // 處理對話邏輯
+    // ?��?對話?�輯
     void HandleDialogueLogic(const FString& SpeakerID, const FString& AudienceID, const FString& DialogueTopic, FDialogueEvent& Event);
 
-    // 計算互動分數
+    // 計�?互�??�數
     float CalculateInteractionScore(const FString& CharacterID, const FString& InteractionType) const;
 
-    // 更新人物關係
+    // ?�新人物?��?
     void UpdateCharacterRelationships(const FString& CharacterID, const FString& TargetCharacterID, const FString& InteractionType);
 
-    // 獲取人物技能等級
-    int32 GetCharacterSkillLevel(const FString& CharacterID, ECharacterSkillType SkillType) const;
+    // ?��?人物?�?��?�?    int32 GetCharacterSkillLevel(const FString& CharacterID, ECharacterSkillType SkillType) const;
 
-    // 檢查互動條件
+    // 檢查互�?條件
     bool CheckInteractionConditions(const FString& CharacterID, const FString& InteractionType) const;
 
-    // 應用互動效果
+    // ?�用互�??��?
     void ApplyInteractionEffects(const FString& CharacterID, const FString& InteractionType, FCharacterInteractionResult& Result);
 
-    // 獲取人物影響力
-    float CalculateCharacterInfluence(const FMingHistoricalCharacter& Character) const;
+    // ?��?人物影響??    float CalculateCharacterInfluence(const FMingHistoricalCharacter& Character) const;
 
-    // 獲取人物聲望
+    // ?��?人物?��?
     float CalculateCharacterReputation(const FMingHistoricalCharacter& Character) const;
 
-    // 更新人物狀態
-    void UpdateCharacterState(const FString& CharacterID, ECharacterState NewState);
+    // ?�新人物?�??    void UpdateCharacterState(const FString& CharacterID, ECharacterState NewState);
 
-    // 記錄對話事件
+    // 記�?對話事件
     void RecordDialogueEvent(const FDialogueEvent& Event);
 
-    // 獲取人物推薦分數
+    // ?��?人物?�薦?�數
     float GetCharacterRecommendationScore(const FMingHistoricalCharacter& Character, const FString& PlayerFaction) const;
 
-    // 驗證人物配置
+    // 驗�?人物?�置
     bool ValidateCharacterConfig(const FMingHistoricalCharacter& Character) const;
 
-    // 記錄人物日誌
+    // 記�?人物?��?
     void LogCharacterEvent(const FString& CharacterID, const FString& Message);
 
-    // 生成人物報告
+    // ?��?人物?��?
     FString GenerateCharacterReport(const FString& CharacterID) const;
 
-    // 獲取人物描述
+    // ?��?人物?�述
     FString GetCharacterDescription(const FString& CharacterID) const;
 
-    // 獲取人物技能描述
-    FString GetSkillDescription(ECharacterSkillType SkillType) const;
+    // ?��?人物?�?��?�?    FString GetSkillDescription(ECharacterSkillType SkillType) const;
 
-    // 獲取關係描述
+    // ?��??��??�述
     FString GetRelationshipDescription(ECharacterRelationshipType RelationshipType) const;
 };

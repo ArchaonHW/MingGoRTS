@@ -5,9 +5,8 @@
 #include "MingRelationshipManagerTest.generated.h"
 
 /**
- * 關係和聲望系統測試運行器
- * 提供 Blueprint 接口來運行系統測試
- */
+ * ?��??�聲?�系統測試�?行器
+ * ?��? Blueprint ?�口來�?行系統測�? */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingRelationshipTestRunner : public UObject
 {
@@ -15,34 +14,33 @@ class MINGPERSONAL_API UMingRelationshipTestRunner : public UObject
 
 public:
     /**
-     * 運行所有關係和聲望系統測試
-     * 在開發和調試時使用
-     */
+     * ?��??�?��?係�??��?系統測試
+     * ?��??��?調試?�使??     */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
     static void RunRelationshipTests();
 
     /**
-     * 運行特定測試
-     * @param TestIndex 測試編號 (1-8)
+     * ?��??��?測試
+     * @param TestIndex 測試編�? (1-8)
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
     static void RunSpecificTest(int32 TestIndex);
 
     /**
-     * 驗證關係系統基本功能
+     * 驗�??��?系統?�本?�能
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
     static bool VerifyRelationshipSystem();
 
     /**
-     * 驗證聲望系統基本功能
+     * 驗�??��?系統?�本?�能
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
     static bool VerifyReputationSystem();
 
     /**
-     * 創建測試數據
-     * 用於填充測試環境的關係和聲望數據
+     * ?�建測試?��?
+     * ?�於填�?測試?��??��?係�??��??��?
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
     static void CreateTestData();

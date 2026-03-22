@@ -47,50 +47,46 @@ class MINGGORTS_API UMingGoRTSCharacterCreationManager : public UObject
 public:
     UMingGoRTSCharacterCreationManager();
 
-    // 角色創建事件
+    // 角色?�建事件
     UPROPERTY(BlueprintAssignable, Category = "Character Creation")
     FOnCharacterCreated OnCharacterCreated;
 
-    // 創建角色
+    // ?�建角色
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     bool CreateCharacter(const FMingCharacterData& CharacterData);
 
-    // 驗證角色數據
+    // 驗�?角色?��?
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     bool ValidateCharacterData(const FMingCharacterData& CharacterData);
 
-    // 獲取背景描述
+    // ?��??�景?�述
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     FString GetBackgroundDescription(ECharacterBackground Background);
 
-    // 獲取推薦的初始技能
-    UFUNCTION(BlueprintPure, Category = "Character Creation")
+    // ?��??�薦?��?始�???    UFUNCTION(BlueprintPure, Category = "Character Creation")
     TArray<FCharacterSkill> GetRecommendedSkills(ECharacterBackground Background);
 
-    // 保存角色到存檔
-    UFUNCTION(BlueprintCallable, Category = "Character Creation")
+    // 保�?角色?��?�?    UFUNCTION(BlueprintCallable, Category = "Character Creation")
     bool SaveCharacterToSlot(const FMingCharacterData& CharacterData, const FString& SlotName);
 
-    // 從存檔載入角色
-    UFUNCTION(BlueprintCallable, Category = "Character Creation")
+    // 從�?檔�??��???    UFUNCTION(BlueprintCallable, Category = "Character Creation")
     bool LoadCharacterFromSlot(const FString& SlotName, FMingCharacterData& OutCharacterData);
 
-    // 檢查角色名稱是否可用
+    // 檢查角色?�稱?�否?�用
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     bool IsCharacterNameAvailable(const FString& CharacterName);
 
-    // 生成隨機角色名稱
+    // ?��??��?角色?�稱
     UFUNCTION(BlueprintPure, Category = "Character Creation")
     FString GenerateRandomCharacterName();
 
 protected:
-    // 內部驗證函數
+    // ?�部驗�??�數
     bool ValidateName(const FString& Name);
     bool ValidateAttributes(const FCharacterAttributes& Attributes);
     bool ValidateAge(int32 InAge);
 
-    // 預定義的角色名稱池
-    UPROPERTY()
+    // ?��?義�?角色?�稱�?    UPROPERTY()
     TArray<FString> MaleNames;
 
     UPROPERTY()
@@ -99,12 +95,12 @@ protected:
     UPROPERTY()
     TArray<FString> Surnames;
 
-    // 初始化名稱池
+    // ?��??��?稱�?
     void InitializeNamePools();
 
-    // 獲取隨機姓氏
+    // ?��??��?姓�?
     FString GetRandomSurname();
 
-    // 獲取隨機名字
+    // ?��??��??��?
     FString GetRandomGivenName(bool bIsMale);
 };

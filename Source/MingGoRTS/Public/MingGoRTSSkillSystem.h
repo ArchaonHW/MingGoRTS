@@ -8,31 +8,31 @@
 UENUM(BlueprintType)
 enum class ESkillCategory : uint8
 {
-    Combat         UMETA(DisplayName = "戰鬥技能"),
-    Strategy       UMETA(DisplayName = "策略技能"),
-    Diplomacy      UMETA(DisplayName = "外交技能"),
-    Leadership     UMETA(DisplayName = "領導技能"),
-    Intelligence   UMETA(DisplayName = "情報技能"),
-    Economic       UMETA(DisplayName = "經濟技能")
+    Combat         UMETA(DisplayName = "?�鬥?�??),
+    Strategy       UMETA(DisplayName = "策略?�??),
+    Diplomacy      UMETA(DisplayName = "外交?�??),
+    Leadership     UMETA(DisplayName = "?��??�??),
+    Intelligence   UMETA(DisplayName = "?�報?�??),
+    Economic       UMETA(DisplayName = "經�??�??)
 };
 
 UENUM(BlueprintType)
 enum class ESkillType : uint8
 {
-    Active         UMETA(DisplayName = "主動技能"),
-    Passive        UMETA(DisplayName = "被動技能"),
-    Toggle         UMETA(DisplayName = "開關技能")
+    Active         UMETA(DisplayName = "主�??�??),
+    Passive        UMETA(DisplayName = "被�??�??),
+    Toggle         UMETA(DisplayName = "?��??�??)
 };
 
 UENUM(BlueprintType)
 enum class ESpecializationPath : uint8
 {
-    Commander      UMETA(DisplayName = "指揮官路徑"),
-    Tactician      UMETA(DisplayName = "戰術家路徑"),
-    Diplomat       UMETA(DisplayName = "外交官路徑"),
-    Spy            UMETA(DisplayName = "間諜路徑"),
-    Economist      UMETA(DisplayName = "經濟家路徑"),
-    Generalist     UMETA(DisplayName = "通才路徑")
+    Commander      UMETA(DisplayName = "?�揮官路�?),
+    Tactician      UMETA(DisplayName = "?��?家路�?),
+    Diplomat       UMETA(DisplayName = "外交官路�?),
+    Spy            UMETA(DisplayName = "?��?路�?"),
+    Economist      UMETA(DisplayName = "經�?家路�?),
+    Generalist     UMETA(DisplayName = "?��?路�?")
 };
 
 USTRUCT(BlueprintType)
@@ -179,7 +179,7 @@ struct FSkillTree
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Skill Tree")
     TArray<FName> RootSkills;
 
-    // 注意：TMap<TArray> 不支持 UPROPERTY
+    // 注�?：TMap<TArray> 不支??UPROPERTY
     TMap<FName, TArray<FName>> SkillConnections;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Skill Tree")
@@ -206,8 +206,7 @@ class MINGGORTS_API UMingGoRTSSkillSystem : public UObject
 public:
     UMingGoRTSSkillSystem();
 
-    // 技能系統事件
-    UPROPERTY(BlueprintAssignable, Category = "Skill System")
+    // ?�?�系統�?�?    UPROPERTY(BlueprintAssignable, Category = "Skill System")
     FOnSkillLevelUp OnSkillLevelUp;
 
     UPROPERTY(BlueprintAssignable, Category = "Skill System")
@@ -216,137 +215,110 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Skill System")
     FOnSpecializationChosen OnSpecializationChosen;
 
-    // 初始化技能系統
-    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    // ?��??��??�系�?    UFUNCTION(BlueprintCallable, Category = "Skill System")
     void InitializeSkillSystem();
 
-    // 獲取所有技能
-    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // ?��??�?��???    UFUNCTION(BlueprintPure, Category = "Skill System")
     TArray<FMingSkill> GetAllSkills() const;
 
-    // 獲取技能
-    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // ?��??�??    UFUNCTION(BlueprintPure, Category = "Skill System")
     FMingSkill GetSkill(const FName& SkillID) const;
 
-    // 解鎖技能
-    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    // �???�??    UFUNCTION(BlueprintCallable, Category = "Skill System")
     bool UnlockSkill(const FName& SkillID);
 
-    // 升級技能
-    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    // ?��??�??    UFUNCTION(BlueprintCallable, Category = "Skill System")
     bool UpgradeSkill(const FName& SkillID, int32 ExperienceAmount = 0);
 
-    // 添加技能經驗
-    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    // 添�??�?��?�?    UFUNCTION(BlueprintCallable, Category = "Skill System")
     void AddSkillExperience(const FName& SkillID, int32 ExperienceAmount);
 
-    // 檢查技能是否可以解鎖
-    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // 檢查?�?�是?�可以解??    UFUNCTION(BlueprintPure, Category = "Skill System")
     bool CanUnlockSkill(const FName& SkillID, const FMingCharacterData& CharacterData) const;
 
-    // 檢查技能是否可以升級
-    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // 檢查?�?�是?�可以�?�?    UFUNCTION(BlueprintPure, Category = "Skill System")
     bool CanUpgradeSkill(const FName& SkillID) const;
 
-    // 獲取技能樹
+    // ?��??�?�樹
     UFUNCTION(BlueprintPure, Category = "Skill System")
     TArray<FSkillTree> GetSkillTrees() const;
 
-    // 選擇專精路徑
+    // ?��?專精路�?
     UFUNCTION(BlueprintCallable, Category = "Skill System")
     void ChooseSpecializationPath(ESpecializationPath Path);
 
-    // 獲取當前專精路徑
+    // ?��??��?專精路�?
     UFUNCTION(BlueprintPure, Category = "Skill System")
     ESpecializationPath GetCurrentSpecializationPath() const;
 
-    // 計算技能效果
-    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // 計�??�?��???    UFUNCTION(BlueprintPure, Category = "Skill System")
     float CalculateSkillEffect(const FName& SkillID, const FString& EffectType) const;
 
-    // 獲取已解鎖技能
-    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // ?��?已解?��???    UFUNCTION(BlueprintPure, Category = "Skill System")
     TArray<FMingSkill> GetUnlockedSkills() const;
 
-    // 獲取可解鎖技能
-    UFUNCTION(BlueprintPure, Category = "Skill System")
+    // ?��??�解?��???    UFUNCTION(BlueprintPure, Category = "Skill System")
     TArray<FMingSkill> GetAvailableSkills(const FMingCharacterData& CharacterData) const;
 
-    // 重置技能系統
-    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    // ?�置?�?�系�?    UFUNCTION(BlueprintCallable, Category = "Skill System")
     void ResetSkillSystem();
 
-    // 保存技能數據
-    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    // 保�??�?�數??    UFUNCTION(BlueprintCallable, Category = "Skill System")
     bool SaveSkillData(const FString& SaveSlotName);
 
-    // 載入技能數據
-    UFUNCTION(BlueprintCallable, Category = "Skill System")
+    // 載入?�?�數??    UFUNCTION(BlueprintCallable, Category = "Skill System")
     bool LoadSkillData(const FString& SaveSlotName);
 
 protected:
-    // 所有技能數據
-    UPROPERTY()
+    // ?�?��??�數??    UPROPERTY()
     TArray<FMingSkill> AllSkills;
 
-    // 技能ID到技能的映射
+    // ?�?�ID?��??��??��?
     UPROPERTY()
     TMap<FName, FMingSkill> SkillMap;
 
-    // 技能樹數據
+    // ?�?�樹?��?
     UPROPERTY()
     TArray<FSkillTree> SkillTrees;
 
-    // 當前專精路徑
+    // ?��?專精路�?
     UPROPERTY()
     ESpecializationPath CurrentSpecializationPath;
 
-    // 可用技能點數
-    UPROPERTY()
+    // ?�用?�?��???    UPROPERTY()
     int32 AvailableSkillPoints;
 
-    // 是否已初始化
+    // ?�否已�?始�?
     bool bIsInitialized;
 
-    // 初始化技能庫
+    // ?��??��??�庫
     void InitializeSkillLibrary();
 
-    // 創建戰鬥技能
-    void CreateCombatSkills();
+    // ?�建?�鬥?�??    void CreateCombatSkills();
 
-    // 創建策略技能
-    void CreateStrategySkills();
+    // ?�建策略?�??    void CreateStrategySkills();
 
-    // 創建外交技能
-    void CreateDiplomacySkills();
+    // ?�建外交?�??    void CreateDiplomacySkills();
 
-    // 創建領導技能
-    void CreateLeadershipSkills();
+    // ?�建?��??�??    void CreateLeadershipSkills();
 
-    // 創建情報技能
-    void CreateIntelligenceSkills();
+    // ?�建?�報?�??    void CreateIntelligenceSkills();
 
-    // 創建經濟技能
-    void CreateEconomicSkills();
+    // ?�建經�??�??    void CreateEconomicSkills();
 
-    // 初始化技能樹
+    // ?��??��??�樹
     void InitializeSkillTrees();
 
-    // 驗證技能需求
-    bool ValidateSkillRequirements(const FSkillRequirement& Requirement, const FMingCharacterData& CharacterData) const;
+    // 驗�??�?��?�?    bool ValidateSkillRequirements(const FSkillRequirement& Requirement, const FMingCharacterData& CharacterData) const;
 
-    // 計算技能經驗需求
-    int32 CalculateExperienceRequirement(int32 SkillLevel) const;
+    // 計�??�?��?驗�?�?    int32 CalculateExperienceRequirement(int32 SkillLevel) const;
 
-    // 應用技能效果
-    void ApplySkillEffects(const FName& SkillID);
+    // ?�用?�?��???    void ApplySkillEffects(const FName& SkillID);
 
-    // 解鎖連接技能
-    void UnlockConnectedSkills(const FName& SkillID);
+    // �????��?�??    void UnlockConnectedSkills(const FName& SkillID);
 
-    // 獲取技能路徑顏色
-    FLinearColor GetSpecializationPathColor(ESpecializationPath Path) const;
+    // ?��??�?�路徑�???    FLinearColor GetSpecializationPathColor(ESpecializationPath Path) const;
 
-    // 生成技能ID
+    // ?��??�?�ID
     FName GenerateSkillID(const FString& BaseName, ESkillCategory Category) const;
 };

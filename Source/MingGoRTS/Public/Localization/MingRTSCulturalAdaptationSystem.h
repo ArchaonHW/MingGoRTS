@@ -6,6 +6,8 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Containers/Map.h"
+#include "HAL/CriticalSection.h"
+#include "Misc/ScopeLock.h"
 #include "MingRTSCulturalAdaptationSystem.generated.h"
 
 /**
@@ -120,6 +122,9 @@ struct FRTSCulturalPreferences
     TArray<ECulturalRegion> SecondaryRegions;
     
     UPROPERTY(BlueprintReadWrite)
+    int32 UserAge;
+    
+    UPROPERTY(BlueprintReadWrite)
     int32 ContentSensitivityLevel;
     
     UPROPERTY(BlueprintReadWrite)
@@ -133,6 +138,7 @@ struct FRTSCulturalPreferences
     
     FRTSCulturalPreferences()
         : PrimaryRegion(ECulturalRegion::EastAsia)
+        , UserAge(18)
         , ContentSensitivityLevel(0)
         , bEnableCulturalEvents(true)
         , bPreferHistoricalAccuracy(true)
@@ -262,7 +268,7 @@ private:
     UPROPERTY()
     FRTSCulturalPreferences Preferences;
     
-    // 注意：TMap<TArray> 不支持 UPROPERTY
+    // 注�?：TMap<TArray> 不支??UPROPERTY
     TMap<FString, TArray<FCulturalVariant>> ContentVariants;
     
     /** Regional gameplay parameters cache */
@@ -316,6 +322,9 @@ private:
     
     /** Check and trim cache if it exceeds size limit */
     void CheckAndTrimCache();
+    
+    /** Update LRU order for accessed cache key */
+    void UpdateLRUOrder(const FString& CacheKey) const;
     
     /** Get appropriate variant for region */
     const FCulturalVariant* FindBestVariant(const FString& ContentKey, 

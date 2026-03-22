@@ -6,11 +6,11 @@
 #include "Difficulty/EDifficultyLevel.h"
 #include "MingDifficultyManager.generated.h"
 
-// 前向声明
+// ?��?声�?
 class UMingPlayerPerformanceTracker;
 
 /**
- * 难度变化事件
+ * ?�度?��?事件
  */
 USTRUCT(BlueprintType)
 struct FDifficultyChangedEvent
@@ -41,14 +41,10 @@ struct FDifficultyChangedEvent
 };
 
 /**
- * 难度管理器
- * 管理游戏难度配置和动态调整
- * 
- * 功能：
- * - 难度等级管理 (Easy/Normal/Hard/Expert/Custom)
- * - 动态难度调整
- * - 难度事件触发
- * - 平滑过渡算法
+ * ?�度管�??? * 管�?游�??�度?�置?�动?��??? * 
+ * ?�能�? * - ?�度等级管�? (Easy/Normal/Hard/Expert/Custom)
+ * - ?�态难度�??? * - ?�度事件触�?
+ * - 平�?过渡算�?
  */
 UCLASS()
 class MINGTACTICAL_API UMingDifficultyManager : public UObject
@@ -62,65 +58,65 @@ public:
     virtual void Shutdown();
     void Tick(float DeltaTime);
 
-    // ==== 难度等级管理 ====
+    // ==== ?�度等级管�? ====
 
-    /** 设置难度等级 */
+    /** 设置?�度等级 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty")
     void SetDifficultyLevel(EDifficultyLevel NewLevel);
 
-    /** 获取当前难度等级 */
+    /** ?��?当�??�度等级 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty")
     EDifficultyLevel GetCurrentDifficultyLevel() const;
 
-    /** 获取当前难度显示名称 */
+    /** ?��?当�??�度?�示?�称 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty")
     FString GetCurrentDifficultyDisplayName() const;
 
-    /** 获取所有可用的难度等级 */
+    /** ?��??�?�可?��??�度等级 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty")
     static TArray<EDifficultyLevel> GetAvailableDifficultyLevels();
 
-    /** 获取预设难度配置 */
+    /** ?��?预设?�度?�置 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty")
     FMingPresetDifficultyConfig GetPresetConfig(EDifficultyLevel Level) const;
 
-    // ==== 动态难度调整 ====
+    // ==== ?�态难度�???====
 
-    /** 启用/禁用动态难度调整 */
+    /** ?�用/禁用?�态难度�???*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
     void SetDynamicAdjustmentEnabled(bool bEnabled);
 
-    /** 是否启用动态调整 */
+    /** ?�否?�用?�态�???*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
     bool IsDynamicAdjustmentEnabled() const;
 
-    /** 手动触发难度评估和调整 */
+    /** ?�动触�??�度评估?��???*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
     void ForceDifficultyEvaluation();
 
-    /** 锁定难度（防止自动调整） */
+    /** ?��??�度（防止自?��??��? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
     void LockDifficulty(bool bLocked);
 
-    /** 难度是否被锁定 */
+    /** ?�度?�否被�?�?*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
     bool IsDifficultyLocked() const;
 
-    // ==== 参数调整接口 ====
+    // ==== ?�数调整?�口 ====
 
-    /** 获取参数当前值 */
+    /** ?��??�数当�???*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
     float GetParameterValue(EDifficultyParameter Parameter) const;
 
-    /** 设置参数值（适用于自定义难度） */
+    /** 设置?�数?��??�用于自定�??�度�?*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
     void SetParameterValue(EDifficultyParameter Parameter, float Value);
 
-    /** 调整参数值（带增量） */
+    /** 调整?�数?��?带�??��? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
     bool AdjustParameter(EDifficultyParameter Parameter, float Delta);
 
-    /** 获取所有参数设置 */
+    /** ?��??�?��??�设�?*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
     FMingDifficultySettings GetDifficultySettings() const;
 
@@ -128,71 +124,71 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
     void ApplyDifficultySettings(const FMingDifficultySettings& Settings);
 
-    // ==== 特定功能调整 ====
+    // ==== ?��??�能调整 ====
 
-    /** 调整AI难度 */
+    /** 调整AI?�度 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|AI")
     void AdjustAIDifficulty(float NewReactionSpeed, float NewIntelligence);
 
-    /** 获取AI难度系数 */
+    /** ?��?AI?�度系数 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|AI")
     float GetAIDifficultyMultiplier() const;
 
-    /** 调整资源生成率 */
+    /** 调整资�??��???*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Resources")
     void AdjustResourceGeneration(float NewCollectionRate, float NewConsumptionRate);
 
-    /** 获取资源收益系数 */
+    /** ?��?资�??��?系数 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Resources")
     float GetResourceMultiplier() const;
 
-    /** 调整任务目标难度 */
+    /** 调整任务?��??�度 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Missions")
     void AdjustMissionDifficulty(float NewTimeLimit, float NewObjectiveScale);
 
-    /** 获取任务难度系数 */
+    /** ?��?任务?�度系数 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Missions")
     float GetMissionDifficultyMultiplier() const;
 
-    // ==== 平滑过渡 ====
+    // ==== 平�?过渡 ====
 
-    /** 是否正在过渡中 */
+    /** ?�否�?��过渡�?*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Transition")
     bool IsTransitioning() const;
 
-    /** 获取当前过渡进度 0-1 */
+    /** ?��?当�?过渡进度 0-1 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Transition")
     float GetTransitionProgress() const;
 
-    /** 中断正在进行的过渡 */
+    /** 中断�?��进�??��?�?*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Transition")
     void AbortTransition();
 
-    // ==== 通知系统 ====
+    // ==== ?�知系�? ====
 
-    /** 设置是否通知玩家难度变化 */
+    /** 设置?�否?�知?�家?�度?��? */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Notifications")
     void SetPlayerNotificationEnabled(bool bEnabled);
 
-    /** 发送自定义难度通知 */
+    /** ?�送自定�??�度?�知 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Notifications")
     void SendDifficultyNotification(const FString& Message, float Duration = 5.0f);
 
-    // ==== 持久化 ====
+    // ==== ?��???====
 
-    /** 保存当前难度配置 */
+    /** 保�?当�??�度?�置 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Save")
     void SaveDifficultySettings();
 
-    /** 加载难度配置 */
+    /** ?�载?�度?�置 */
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Save")
     void LoadDifficultySettings();
 
-    /** 重置为默认配置 */
+    /** ?�置为�?认�?�?*/
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Save")
     void ResetToDefault();
 
-    // ==== 调试 ====
+    // ==== 调�? ====
 
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Debug")
     void PrintDebugInfo();
@@ -200,7 +196,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Difficulty|Debug")
     FString GetDebugString() const;
 
-    // ==== 事件委托 ====
+    // ==== 事件委�? ====
 
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDifficultyChanged, const FDifficultyChangedEvent&, Event);
 
@@ -208,28 +204,28 @@ public:
     FOnDifficultyChanged OnDifficultyChanged;
 
 protected:
-    /** 执行难度评估 */
+    /** ?��??�度评估 */
     void PerformDifficultyEvaluation();
 
-    /** 根据玩家表现计算建议的难度变化 */
+    /** ?�据?�家表现计�?建议?�难度�???*/
     EDifficultyChangeDirection CalculateRecommendedChange() const;
 
-    /** 执行难度调整 */
+    /** ?��??�度调整 */
     void ExecuteDifficultyAdjustment(EDifficultyChangeDirection Direction);
 
-    /** 平滑过渡更新 */
+    /** 平�?过渡?�新 */
     void UpdateTransition(float DeltaTime);
 
-    /** 完成过渡 */
+    /** 完�?过渡 */
     void CompleteTransition();
 
-    /** 触发难度变化事件 */
+    /** 触�??�度?��?事件 */
     void BroadcastDifficultyChanged(const FString& Reason);
 
-    /** 防止振荡：检查最近的调整历史 */
+    /** ?�止?�荡：�??��?近�?调整?�史 */
     bool ShouldPreventOscillation() const;
 
-    /** 订阅核心事件 */
+    /** 订�??��?事件 */
     void SetupEventSubscriptions();
     void CleanupEventSubscriptions();
 
@@ -250,6 +246,6 @@ private:
 
     TWeakObjectPtr<UMingPlayerPerformanceTracker> PerformanceTracker;
 
-    // 默认配置缓存
+    // 默认?�置缓�?
     static TMap<EDifficultyLevel, FMingPresetDifficultyConfig> CachedPresetConfigs;
 };
