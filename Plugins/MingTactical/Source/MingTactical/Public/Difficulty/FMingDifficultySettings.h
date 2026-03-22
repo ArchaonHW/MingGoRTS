@@ -14,10 +14,10 @@ struct FMingDifficultySettings : public FTableRowBase
     EDifficultyLevel Level = EDifficultyLevel::Normal;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
-    FString DisplayName = TEXT("標準");
+    FString DisplayName = TEXT("標�?"};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
-    FString Description = TEXT("標準難度設置");
+    FString Description = TEXT("標�???��設置"};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
     float EnemyHealthMultiplier = 1.0f;
@@ -58,8 +58,8 @@ struct FMingDifficultySettings : public FTableRowBase
     FMingDifficultySettings()
     {
         Level = EDifficultyLevel::Normal;
-        DisplayName = TEXT("標準");
-        Description = TEXT("標準難度設置");
+        DisplayName = TEXT("標�?"};
+        Description = TEXT("標�???��設置"};
         EnemyHealthMultiplier = 1.0f;
         EnemyDamageMultiplier = 1.0f;
         PlayerHealthMultiplier = 1.0f;
@@ -74,3 +74,4 @@ struct FMingDifficultySettings : public FTableRowBase
         EventFrequency = 1.0f;
     }
 };
+

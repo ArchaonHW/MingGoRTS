@@ -84,33 +84,33 @@ class MINGTACTICAL_API UMingSquadAI : public UObject
     GENERATED_BODY()
 
 public:
-    UMingSquadAI();
+    UMingSquadAI(};
 
     UFUNCTION(BlueprintCallable, Category = "Squad")
-    void InitializeSquad(const TArray<FMingSquadMember>& Members);
+    void InitializeSquad(const TArray<FMingSquadMember>& Members};
 
     UFUNCTION(BlueprintCallable, Category = "Squad")
-    void AddUnitToSquad(class AMingTacticalUnit* Unit, EMingSquadRole Role);
+    void AddUnitToSquad(class AMingTacticalUnit* Unit, EMingSquadRole Role};
 
     UFUNCTION(BlueprintCallable, Category = "Squad")
-    void RemoveUnitFromSquad(class AMingTacticalUnit* Unit);
+    void RemoveUnitFromSquad(class AMingTacticalUnit* Unit};
 
     UFUNCTION(BlueprintCallable, Category = "Orders")
-    void IssueSquadOrder(const FMingSquadOrder& Order);
+    void IssueSquadOrder(const FMingSquadOrder& Order};
 
     UFUNCTION(BlueprintCallable, Category = "Orders")
-    void SetTactic(EMingSquadTactic NewTactic);
+    void SetTactic(EMingSquadTactic NewTactic};
 
     UFUNCTION(BlueprintCallable, Category = "Orders")
-    void AttackTarget(AActor* Target);
+    void AttackTarget(AActor* Target};
 
     UFUNCTION(BlueprintCallable, Category = "Orders")
-    void MoveToLocation(FVector Location);
+    void MoveToLocation(FVector Location};
 
     UFUNCTION(BlueprintCallable, Category = "Orders")
-    void DefendPosition(FVector Position);
+    void DefendPosition(FVector Position};
 
-    virtual void Tick(float DeltaTime);
+    virtual void Tick(float DeltaTime};
 
 protected:
     UPROPERTY(BlueprintReadOnly, Category = "Squad")
@@ -122,7 +122,8 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "State")
     EMingSquadTactic CurrentTactic;
 
-    void ExecuteTactic();
-    void CoordinateMembers();
-    bool IsSquadCohesive();
+    void ExecuteTactic(};
+    void CoordinateMembers(};
+    bool IsSquadCohesive(};
 };
+

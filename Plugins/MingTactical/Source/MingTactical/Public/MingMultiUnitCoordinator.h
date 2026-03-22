@@ -371,18 +371,18 @@ class MINGTACTICAL_API AMingMultiUnitCoordinator : public AActor
     GENERATED_BODY()
 
 public:
-    AMingMultiUnitCoordinator();
+    AMingMultiUnitCoordinator(};
 
     /**
      * ?ùÂ??ñÂ??Æ‰??îË™ø??     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    void InitializeMultiUnitCoordinator();
+    void InitializeMultiUnitCoordinator(};
 
     /**
      * ?úÈ?Â§öÂñÆ‰ΩçÂ?Ë™øÂô®
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    void ShutdownMultiUnitCoordinator();
+    void ShutdownMultiUnitCoordinator(};
 
     /**
      * ?µÂª∫?Æ‰??ÜÁ?
@@ -393,13 +393,13 @@ public:
         EUnitGroupType GroupType,
         const TArray<AMingTacticalUnit*>& Units,
         AMingTacticalUnit* Leader = nullptr
-    );
+    };
 
     /**
      * Ëß?ï£?Æ‰??ÜÁ?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    bool DisbandUnitGroup(const FString& GroupID);
+    bool DisbandUnitGroup(const FString& GroupID};
 
     /**
      * ?≤Â??Æ‰??ÜÁ?
@@ -426,23 +426,23 @@ public:
     /**
      * Ê∑ªÂ??Æ‰??∞Â?Áµ?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    bool AddUnitToGroup(const FString& GroupID, AMingTacticalUnit* Unit);
+    bool AddUnitToGroup(const FString& GroupID, AMingTacticalUnit* Unit};
 
     /**
      * ÂæûÂ?ÁµÑÁßª?§ÂñÆ‰Ω?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    bool RemoveUnitFromGroup(const FString& GroupID, AMingTacticalUnit* Unit);
+    bool RemoveUnitFromGroup(const FString& GroupID, AMingTacticalUnit* Unit};
 
     /**
      * Ë®≠ÁΩÆ?ÜÁ??òÂ???     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    bool SetGroupLeader(const FString& GroupID, AMingTacticalUnit* Leader);
+    bool SetGroupLeader(const FString& GroupID, AMingTacticalUnit* Leader};
 
     /**
      * ?ºÂ??îË™ø?Ω‰ª§
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    FCoordinationResult IssueCoordinatedCommand(const FCoordinatedCommand& Command);
+    FCoordinationResult IssueCoordinatedCommand(const FCoordinatedCommand& Command};
 
     /**
      * ?∑Ë??îË™ø?ªÊ?
@@ -452,7 +452,7 @@ public:
         const TArray<FString>& GroupIDs,
         const TArray<AMingTacticalUnit*>& Targets,
         ECoordinationSyncType SyncType
-    );
+    };
 
     /**
      * ?∑Ë??îË™ø?≤Á¶¶
@@ -462,7 +462,7 @@ public:
         const TArray<FString>& GroupIDs,
         const TArray<FVector>& DefensePositions,
         ECoordinationSyncType SyncType
-    );
+    };
 
     /**
      * ?∑Ë??îË™øÁßªÂ?
@@ -472,7 +472,7 @@ public:
         const TArray<FString>& GroupIDs,
         const TArray<FVector>& TargetPositions,
         ECoordinationSyncType SyncType
-    );
+    };
 
     /**
      * ?∑Ë??îË™ø?§ÈÄÄ
@@ -482,7 +482,7 @@ public:
         const TArray<FString>& GroupIDs,
         const TArray<FVector>& RetreatPositions,
         ECoordinationSyncType SyncType
-    );
+    };
 
     /**
      * ?∑Ë??îË™ø?ØÊè¥
@@ -492,7 +492,7 @@ public:
         const TArray<FString>& SupportGroupIDs,
         const TArray<FString>& TargetGroupIDs,
         ECoordinationSyncType SyncType
-    );
+    };
 
     /**
      * ?∑Ë??îË™ø‰ºèÊ?
@@ -502,7 +502,7 @@ public:
         const TArray<FString>& AmbusherGroupIDs,
         const TArray<AMingTacticalUnit*>& Targets,
         ECoordinationSyncType SyncType
-    );
+    };
 
     /**
      * ?∑Ë??îË™ø?¥Áøº?ªÊ?
@@ -512,7 +512,7 @@ public:
         const TArray<FString>& FlankerGroupIDs,
         const TArray<AMingTacticalUnit*>& Targets,
         ECoordinationSyncType SyncType
-    );
+    };
 
     /**
      * ?∑Ë??îË™ø?ÖÂ?
@@ -522,7 +522,7 @@ public:
         const TArray<FString>& EncirclerGroupIDs,
         const TArray<AMingTacticalUnit*>& Targets,
         ECoordinationSyncType SyncType
-    );
+    };
 
     /**
      * ?∑Ë??îË™øÁ™ÅÁ†¥
@@ -532,13 +532,13 @@ public:
         const TArray<FString>& BreakthroughGroupIDs,
         const TArray<FVector>& BreakthroughPoints,
         ECoordinationSyncType SyncType
-    );
+    };
 
     /**
      * ?ñÊ??îË™ø?Ω‰ª§
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    bool CancelCoordinatedCommand(const FString& CommandID);
+    bool CancelCoordinatedCommand(const FString& CommandID};
 
     /**
      * ?≤Â??îË™ø?Ω‰ª§
@@ -577,29 +577,29 @@ public:
     /**
      * ?åÊ≠•?Æ‰??Ä??     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    bool SynchronizeUnitStates(const TArray<AMingTacticalUnit*>& Units);
+    bool SynchronizeUnitStates(const TArray<AMingTacticalUnit*>& Units};
 
     /**
      * Âª?í≠Ê∂àÊÅØ?∞Â?Áµ?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    bool BroadcastToGroup(const FString& GroupID, const FString& Message);
+    bool BroadcastToGroup(const FString& GroupID, const FString& Message};
 
     /**
      * ‰∏≠ÁπºÊ∂àÊÅØ?∞Â?Áµ?     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    bool RelayMessage(const FString& SourceGroupID, const FString& TargetGroupID, const FString& Message);
+    bool RelayMessage(const FString& SourceGroupID, const FString& TargetGroupID, const FString& Message};
 
     /**
      * Âª∫Á??ö‰ø°??é•
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    bool EstablishCommunication(const FString& GroupAID, const FString& GroupBID, ECommunicationProtocol Protocol);
+    bool EstablishCommunication(const FString& GroupAID, const FString& GroupBID, ECommunicationProtocol Protocol};
 
     /**
      * ?∑È??ö‰ø°??é•
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator")
-    bool DisconnectCommunication(const FString& GroupAID, const FString& GroupBID);
+    bool DisconnectCommunication(const FString& GroupAID, const FString& GroupBID};
 
     /**
      * ?≤Â??ö‰ø°Ë≥™È?
@@ -614,18 +614,18 @@ public:
      * ?©Áî®?ºÂ§ßË¶èÊ®°?Æ‰?Áæ§È?ÁßªÂ?
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Parallel")
-    void CalculateMovementPathsParallel(const TArray<AMingTacticalUnit*>& Units, const FVector& TargetLocation);
+    void CalculateMovementPathsParallel(const TArray<AMingTacticalUnit*>& Units, const FVector& TargetLocation};
 
     /**
      * ‰∏¶Ë??¥Êñ∞?Æ‰??ÜÁ??Ä??     */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Parallel")
-    void UpdateAllGroupStatusesParallel();
+    void UpdateAllGroupStatusesParallel(};
 
     /**
      * ‰∏¶Ë?È©óË??Æ‰?Á∑®È?‰ΩçÁΩÆ
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Parallel")
-    void ValidateFormationPositionsParallel(const FString& GroupID);
+    void ValidateFormationPositionsParallel(const FString& GroupID};
 
     /**
      * ?≤Â?‰∏äÊ¨°‰∏¶Ë??ïÁ??ÇÈ?
@@ -668,28 +668,28 @@ protected:
     virtual void Tick(float DeltaTime) override;
 
     // ?∑Ë??îË™ø?Ω‰ª§
-    void ExecuteCoordinatedCommand(const FCoordinatedCommand& Command);
+    void ExecuteCoordinatedCommand(const FCoordinatedCommand& Command};
 
     // ?ïÁ??åÊ≠•?∑Ë?
-    void HandleSimultaneousExecution(const FCoordinatedCommand& Command);
+    void HandleSimultaneousExecution(const FCoordinatedCommand& Command};
 
     // ?ïÁ??ÜÂ??∑Ë?
-    void HandleSequentialExecution(const FCoordinatedCommand& Command);
+    void HandleSequentialExecution(const FCoordinatedCommand& Command};
 
     // ?ïÁ?‰∫§ÈåØ?∑Ë?
-    void HandleStaggeredExecution(const FCoordinatedCommand& Command);
+    void HandleStaggeredExecution(const FCoordinatedCommand& Command};
 
     // ?ïÁ?Ê≥¢Êµ™?∑Ë?
-    void HandleWaveExecution(const FCoordinatedCommand& Command);
+    void HandleWaveExecution(const FCoordinatedCommand& Command};
 
     // ?ïÁ??éÊÆµ?∑Ë?
-    void HandlePhasedExecution(const FCoordinatedCommand& Command);
+    void HandlePhasedExecution(const FCoordinatedCommand& Command};
 
     // ?ïÁ?Ê¢ù‰ª∂?∑Ë?
-    void HandleConditionalExecution(const FCoordinatedCommand& Command);
+    void HandleConditionalExecution(const FCoordinatedCommand& Command};
 
     // ?ïÁ?‰∫ã‰ª∂È©ÖÂ??∑Ë?
-    void HandleEventDrivenExecution(const FCoordinatedCommand& Command);
+    void HandleEventDrivenExecution(const FCoordinatedCommand& Command};
 
     // Ê™¢Êü•?åÊ≠•Ê¢ù‰ª∂
     bool CheckSyncConditions(const FCoordinatedCommand& Command) const;
@@ -700,13 +700,13 @@ protected:
     // Ë®àÁ??ö‰ø°Ë≥™È?
     float CalculateCommunicationQuality(const FString& GroupAID, const FString& GroupBID) const;
 
-    // ?¥Êñ∞?ÜÁ??Ä??    void UpdateGroupStatus(const FString& GroupID);
+    // ?¥Êñ∞?ÜÁ??Ä??    void UpdateGroupStatus(const FString& GroupID};
 
     // ?¥Êñ∞?îË™øÁµ±Ë?
-    void UpdateCoordinationStatistics(const FString& CommandID, const FCoordinationResult& Result);
+    void UpdateCoordinationStatistics(const FString& CommandID, const FCoordinationResult& Result};
 
     // ?¥Êñ∞?ßËÉΩ?áÊ?
-    void UpdatePerformanceMetrics();
+    void UpdatePerformanceMetrics(};
 
     // È©óË??ÜÁ??çÁΩÆ
     bool ValidateGroupConfig(const FUnitGroup& Group) const;
@@ -727,7 +727,7 @@ protected:
     FString GetProtocolDescription(ECommunicationProtocol Protocol) const;
 
     // Ë®òÈ??îË™ø‰∫ã‰ª∂
-    void LogCoordinationEvent(const FString& EventType, const FString& Details);
+    void LogCoordinationEvent(const FString& EventType, const FString& Details};
 
     // ?üÊ??îË™ø?±Â?
     FString GenerateCoordinationReport(const FString& CommandID) const;
@@ -756,17 +756,18 @@ protected:
     float CalculateOverallCoordinationEfficiency() const;
 
     // ?ïÁ??îË™øÂ§±Ê?
-    void HandleCoordinationFailure(const FString& CommandID, const FString& FailureReason);
+    void HandleCoordinationFailure(const FString& CommandID, const FString& FailureReason};
 
     // ?ïÁ??îË™ø?êÂ?
-    void HandleCoordinationSuccess(const FString& CommandID);
+    void HandleCoordinationSuccess(const FString& CommandID};
 
     // Ê∏ÖÁ?Â∑≤Â??êÁ??îË™ø
-    void CleanupCompletedCoordinations();
+    void CleanupCompletedCoordinations(};
 
     // ?ô‰ªΩ?îË™ø?∏Ê?
-    void BackupCoordinationData();
+    void BackupCoordinationData(};
 
     // ?¢Âæ©?îË™ø?∏Ê?
-    void RestoreCoordinationData();
+    void RestoreCoordinationData(};
 };
+

@@ -63,55 +63,55 @@ class MINGTACTICAL_API UMingPerformanceTestManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingPerformanceTestManager();
+    UMingPerformanceTestManager(};
 
     /**
      * ?ãË??Ä?âÊÄßËÉΩÊ∏¨Ë©¶
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    void RunAllTests();
+    void RunAllTests(};
 
     /**
      * Ê∏¨Ë©¶1: 100?Æ‰??∫Êú¨?ßËÉΩ
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult Test100Units();
+    FPerformanceTestResult Test100Units(};
 
     /**
      * Ê∏¨Ë©¶2: 500?Æ‰?‰∏≠Á?Ë¶èÊ®°
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult Test500Units();
+    FPerformanceTestResult Test500Units(};
 
     /**
      * Ê∏¨Ë©¶3: 1000?Æ‰?Â§ßË?Ê®?(Epic 6.4?ÆÊ?)
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult Test1000Units();
+    FPerformanceTestResult Test1000Units(};
 
     /**
      * Ê∏¨Ë©¶4: 2000?Æ‰?Ê•µÈ?Ê∏¨Ë©¶
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult Test2000Units();
+    FPerformanceTestResult Test2000Units(};
 
     /**
      * Ê∏¨Ë©¶5: ÂØ¶‰??ñÊ∏≤?ìÊÄßËÉΩ
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult TestInstancedRendering();
+    FPerformanceTestResult TestInstancedRendering(};
 
     /**
      * Ê∏¨Ë©¶6: Á©∫È??ÜÂ??ßËÉΩ
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult TestSpatialPartition();
+    FPerformanceTestResult TestSpatialPartition(};
 
     /**
      * Ê∏¨Ë©¶7: LODÁ≥ªÁµ±?ßËÉΩ
      */
     UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult TestLODSystem();
+    FPerformanceTestResult TestLODSystem(};
 
     /**
      * ?≤Â??Ä?âÊ∏¨Ë©¶Á???     */
@@ -144,7 +144,7 @@ public:
     /**
      * ?úÊ??≤Â?ÂØ¶‰?
      */
-    static UMingPerformanceTestManager* Get();
+    static UMingPerformanceTestManager* Get(};
 
 private:
     // Ê∏¨Ë©¶ÁµêÊ?
@@ -155,17 +155,18 @@ private:
     static UMingPerformanceTestManager* Instance;
 
     // ?ãË??öÁî®Ê∏¨Ë©¶
-    FPerformanceTestResult RunGenericTest(const FString& TestName, int32 UnitCount, float Duration, float TargetFPS);
+    FPerformanceTestResult RunGenericTest(const FString& TestName, int32 UnitCount, float Duration, float TargetFPS};
 
     // ?µÂª∫Ê∏¨Ë©¶?Æ‰?
-    void CreateTestUnits(int32 Count);
+    void CreateTestUnits(int32 Count};
 
     // ?∑Ê?Ê∏¨Ë©¶?Æ‰?
-    void DestroyTestUnits();
+    void DestroyTestUnits(};
 
     // ?≤Â??∂Â?FPS
-    float MeasureFPS(float Duration);
+    float MeasureFPS(float Duration};
 
     // Ë®òÈ?Ê∏¨Ë©¶ÁµêÊ?
-    void RecordResult(const FPerformanceTestResult& Result);
+    void RecordResult(const FPerformanceTestResult& Result};
 };
+

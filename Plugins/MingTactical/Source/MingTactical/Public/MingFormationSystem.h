@@ -80,25 +80,25 @@ class MINGTACTICAL_API UMingFormationSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingFormationSystem();
+    UMingFormationSystem(};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void InitializeFormation(EMingFormationType Type, FVector Center, FVector Direction, int32 UnitCount);
+    void InitializeFormation(EMingFormationType Type, FVector Center, FVector Direction, int32 UnitCount};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void UpdateFormationCenter(FVector NewCenter);
+    void UpdateFormationCenter(FVector NewCenter};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void UpdateFormationDirection(FVector NewDirection);
+    void UpdateFormationDirection(FVector NewDirection};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void AssignUnitToSlot(class AMingTacticalUnit* Unit, int32 SlotIndex);
+    void AssignUnitToSlot(class AMingTacticalUnit* Unit, int32 SlotIndex};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void RemoveUnitFromFormation(class AMingTacticalUnit* Unit);
+    void RemoveUnitFromFormation(class AMingTacticalUnit* Unit};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void DisbandFormation();
+    void DisbandFormation(};
 
     UFUNCTION(BlueprintPure, Category = "Formation")
     FVector GetSlotPosition(int32 SlotIndex) const;
@@ -117,22 +117,22 @@ public:
 
     // Static formation generators
     UFUNCTION(BlueprintPure, Category = "Formation|Generators", meta = (StaticFunction = "true"))
-    static TArray<FVector> GenerateLineFormation(int32 UnitCount, float Spacing);
+    static TArray<FVector> GenerateLineFormation(int32 UnitCount, float Spacing};
 
     UFUNCTION(BlueprintPure, Category = "Formation|Generators", meta = (StaticFunction = "true"))
-    static TArray<FVector> GenerateColumnFormation(int32 UnitCount, float Spacing);
+    static TArray<FVector> GenerateColumnFormation(int32 UnitCount, float Spacing};
 
     UFUNCTION(BlueprintPure, Category = "Formation|Generators", meta = (StaticFunction = "true"))
-    static TArray<FVector> GenerateWedgeFormation(int32 UnitCount, float Spacing);
+    static TArray<FVector> GenerateWedgeFormation(int32 UnitCount, float Spacing};
 
     UFUNCTION(BlueprintPure, Category = "Formation|Generators", meta = (StaticFunction = "true"))
-    static TArray<FVector> GenerateSquareFormation(int32 UnitCount, float Spacing);
+    static TArray<FVector> GenerateSquareFormation(int32 UnitCount, float Spacing};
 
     UFUNCTION(BlueprintPure, Category = "Formation|Generators", meta = (StaticFunction = "true"))
-    static TArray<FVector> GenerateCircleFormation(int32 UnitCount, float Radius);
+    static TArray<FVector> GenerateCircleFormation(int32 UnitCount, float Radius};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void RegenerateFormation();
+    void RegenerateFormation(};
 
 protected:
     UPROPERTY(BlueprintReadOnly, Category = "Formation")
@@ -143,9 +143,10 @@ protected:
     UPROPERTY()
     TMap<int32, TWeakObjectPtr<AMingTacticalUnit>> UnitSlotMap;
 
-    void GenerateFormationSlots();
-    void UpdateSlotPositions();
+    void GenerateFormationSlots(};
+    void UpdateSlotPositions(};
     
     UFUNCTION()
-    void OnUnitDestroyed(AActor* DestroyedActor);
+    void OnUnitDestroyed(AActor* DestroyedActor};
 };
+

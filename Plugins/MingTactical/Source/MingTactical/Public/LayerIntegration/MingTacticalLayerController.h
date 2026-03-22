@@ -186,11 +186,11 @@ struct FMingCommandGroup
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBattleStarted, const FMingBattleInfo&, BattleInfo);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBattleEnded, const FMingBattleInfo&, BattleInfo);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitSelected, int32, UnitID, bool, bIsSelected);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOrderExecuted, const FMingTacticalOrder&, Order);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCasualtiesReported, int32, UnitID, int32, CasualtyCount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBattleStarted, const FMingBattleInfo&, BattleInfo};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBattleEnded, const FMingBattleInfo&, BattleInfo};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitSelected, int32, UnitID, bool, bIsSelected};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOrderExecuted, const FMingTacticalOrder&, Order};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCasualtiesReported, int32, UnitID, int32, CasualtyCount};
 
 /**
  * Tactical Layer Controller
@@ -202,39 +202,39 @@ class MINGTACTICAL_API UMingTacticalLayerController : public UObject
     GENERATED_BODY()
 
 public:
-    UMingTacticalLayerController();
+    UMingTacticalLayerController(};
 
     // Initialization
     UFUNCTION(BlueprintCallable, Category = "Tactical Layer")
-    void InitializeTacticalLayer();
+    void InitializeTacticalLayer(};
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Layer")
-    void ShutdownTacticalLayer();
+    void ShutdownTacticalLayer(};
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Layer")
-    void ActivateTacticalLayer();
+    void ActivateTacticalLayer(};
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Layer")
-    void DeactivateTacticalLayer();
+    void DeactivateTacticalLayer(};
 
     // Battle Management
     UFUNCTION(BlueprintCallable, Category = "Battle Management")
-    FString StartBattle(const FMingBattleInfo& BattleSetup);
+    FString StartBattle(const FMingBattleInfo& BattleSetup};
 
     UFUNCTION(BlueprintCallable, Category = "Battle Management")
-    void EndBattle(const FString& BattleID, bool bAttackerVictory);
+    void EndBattle(const FString& BattleID, bool bAttackerVictory};
 
     UFUNCTION(BlueprintCallable, Category = "Battle Management")
-    void AbortBattle(const FString& BattleID);
+    void AbortBattle(const FString& BattleID};
 
     UFUNCTION(BlueprintCallable, Category = "Battle Management")
     bool GetBattle(const FString& BattleID, FMingBattleInfo& OutBattle) const;
 
     UFUNCTION(BlueprintCallable, Category = "Battle Management")
-    void AdvanceBattlePhase(const FString& BattleID);
+    void AdvanceBattlePhase(const FString& BattleID};
 
     UFUNCTION(BlueprintCallable, Category = "Battle Management")
-    void SetBattlePhase(const FString& BattleID, EMingBattlePhase NewPhase);
+    void SetBattlePhase(const FString& BattleID, EMingBattlePhase NewPhase};
 
     UFUNCTION(BlueprintPure, Category = "Battle Management")
     bool IsBattleActive(const FString& BattleID) const;
@@ -244,25 +244,25 @@ public:
 
     // Unit Management
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
-    int32 SpawnUnit(const FMingGameTacticalUnit& UnitSetup);
+    int32 SpawnUnit(const FMingGameTacticalUnit& UnitSetup};
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
-    void RemoveUnit(int32 UnitID);
+    void RemoveUnit(int32 UnitID};
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
     bool GetUnit(int32 UnitID, FMingGameTacticalUnit& OutUnit) const;
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
-    void UpdateUnitPosition(int32 UnitID, FVector NewPosition);
+    void UpdateUnitPosition(int32 UnitID, FVector NewPosition};
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
-    void UpdateUnitHealth(int32 UnitID, int32 NewHealth);
+    void UpdateUnitHealth(int32 UnitID, int32 NewHealth};
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
-    void UpdateUnitMorale(int32 UnitID, int32 NewMorale);
+    void UpdateUnitMorale(int32 UnitID, int32 NewMorale};
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
-    void DestroyUnit(int32 UnitID);
+    void DestroyUnit(int32 UnitID};
 
     UFUNCTION(BlueprintCallable, Category = "Unit Management")
     TArray<FMingGameTacticalUnit> GetAllUnits() const;
@@ -281,19 +281,19 @@ public:
 
     // Unit Selection
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void SelectUnit(int32 UnitID);
+    void SelectUnit(int32 UnitID};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void DeselectUnit(int32 UnitID);
+    void DeselectUnit(int32 UnitID};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void SelectUnitsInBox(FVector2D ScreenStart, FVector2D ScreenEnd);
+    void SelectUnitsInBox(FVector2D ScreenStart, FVector2D ScreenEnd};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void SelectAllUnits(const FString& FactionID);
+    void SelectAllUnits(const FString& FactionID};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void ClearSelection();
+    void ClearSelection(};
 
     UFUNCTION(BlueprintPure, Category = "Selection")
     TArray<int32> GetSelectedUnits() const;
@@ -303,70 +303,70 @@ public:
 
     // Command Execution
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void ExecuteOrder(const FMingTacticalOrder& Order);
+    void ExecuteOrder(const FMingTacticalOrder& Order};
 
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void ExecuteOrderOnSelection(const FMingTacticalOrder& Order);
+    void ExecuteOrderOnSelection(const FMingTacticalOrder& Order};
 
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void MoveSelectedUnits(FVector TargetLocation, EMingUnitStance Stance);
+    void MoveSelectedUnits(FVector TargetLocation, EMingUnitStance Stance};
 
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void AttackTarget(int32 TargetUnitID);
+    void AttackTarget(int32 TargetUnitID};
 
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void AttackMove(FVector TargetLocation);
+    void AttackMove(FVector TargetLocation};
 
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void HoldPosition();
+    void HoldPosition(};
 
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void RetreatAllUnits(const FString& FactionID);
+    void RetreatAllUnits(const FString& FactionID};
 
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void SetUnitStance(EMingUnitStance NewStance);
+    void SetUnitStance(EMingUnitStance NewStance};
 
     UFUNCTION(BlueprintCallable, Category = "Command")
-    void StopCurrentAction();
+    void StopCurrentAction(};
 
     // Formation Management
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    int32 CreateCommandGroup(const TArray<int32>& UnitIDs, const FString& GroupName);
+    int32 CreateCommandGroup(const TArray<int32>& UnitIDs, const FString& GroupName};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void DisbandCommandGroup(int32 GroupID);
+    void DisbandCommandGroup(int32 GroupID};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void SetFormation(int32 GroupID, const FString& FormationType, float Spacing);
+    void SetFormation(int32 GroupID, const FString& FormationType, float Spacing};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
-    void RotateFormation(int32 GroupID, float AngleDegrees);
+    void RotateFormation(int32 GroupID, float AngleDegrees};
 
     UFUNCTION(BlueprintCallable, Category = "Formation")
     TArray<FMingCommandGroup> GetAllCommandGroups() const;
 
     // Camera & View
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void FocusOnUnit(int32 UnitID);
+    void FocusOnUnit(int32 UnitID};
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void FocusOnSelection();
+    void FocusOnSelection(};
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void FocusOnBattleCenter(const FString& BattleID);
+    void FocusOnBattleCenter(const FString& BattleID};
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void SetCameraHeight(float Height);
+    void SetCameraHeight(float Height};
 
     UFUNCTION(BlueprintCallable, Category = "Camera")
-    void SetCameraRotation(float Yaw, float Pitch);
+    void SetCameraRotation(float Yaw, float Pitch};
 
     // Combat Statistics
     UFUNCTION(BlueprintCallable, Category = "Combat Stats")
     float GetBattleProgress(const FString& BattleID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Combat Stats")
-    void ReportCasualties(int32 UnitID, int32 CasualtyCount);
+    void ReportCasualties(int32 UnitID, int32 CasualtyCount};
 
     UFUNCTION(BlueprintCallable, Category = "Combat Stats")
     TMap<FString, int32> GetCasualtyReport(const FString& BattleID) const;
@@ -422,17 +422,18 @@ protected:
     float CameraHeight = 2000.0f;
 
     // Internal functions
-    void ProcessBattleTick(float DeltaTime);
-    void UpdateUnitAI(float DeltaTime);
-    void CheckBattleEndConditions(const FString& BattleID);
-    void CalculateBattleOutcome(const FString& BattleID);
+    void ProcessBattleTick(float DeltaTime};
+    void UpdateUnitAI(float DeltaTime};
+    void CheckBattleEndConditions(const FString& BattleID};
+    void CalculateBattleOutcome(const FString& BattleID};
     
-    void OnUnitDestroyed(int32 UnitID);
-    void NotifySelectionChanged();
+    void OnUnitDestroyed(int32 UnitID};
+    void NotifySelectionChanged(};
     
     bool CanAttack(int32 AttackerID, int32 DefenderID) const;
     float CalculateDamage(const FMingGameTacticalUnit& Attacker, const FMingGameTacticalUnit& Defender) const;
     
-    void InitializeDefaultUnits(const FString& BattleID);
-    void CleanupBattle(const FString& BattleID);
+    void InitializeDefaultUnits(const FString& BattleID};
+    void CleanupBattle(const FString& BattleID};
 };
+

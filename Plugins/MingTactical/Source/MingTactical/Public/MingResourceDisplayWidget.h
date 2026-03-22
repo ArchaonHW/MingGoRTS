@@ -66,20 +66,20 @@ public:
 
     // ?¥Êñ∞?ΩÊï∏
     UFUNCTION(BlueprintCallable, Category = "Resources")
-    void UpdateResourceDisplay(EMingResourceType ResourceType, int32 Amount, int32 Capacity);
+    void UpdateResourceDisplay(EMingResourceType ResourceType, int32 Amount, int32 Capacity};
 
     UFUNCTION(BlueprintCallable, Category = "Resources")
-    void UpdateAllResources(const TMap<EMingResourceType, int32>& Resources, const TMap<EMingResourceType, int32>& Capacities);
+    void UpdateAllResources(const TMap<EMingResourceType, int32>& Resources, const TMap<EMingResourceType, int32>& Capacities};
 
     UFUNCTION(BlueprintCallable, Category = "Resources")
-    void InitializeResourceDisplays();
+    void InitializeResourceDisplays(};
 
     // Ë¶ñË¶∫?àÊ?
     UFUNCTION(BlueprintCallable, Category = "Visual")
-    void SetResourceHighlighted(EMingResourceType ResourceType, bool bHighlighted);
+    void SetResourceHighlighted(EMingResourceType ResourceType, bool bHighlighted};
 
     UFUNCTION(BlueprintCallable, Category = "Visual")
-    void ShowResourceChangeAnimation(EMingResourceType ResourceType, int32 ChangeAmount);
+    void ShowResourceChangeAnimation(EMingResourceType ResourceType, int32 ChangeAmount};
 
 protected:
     UPROPERTY()
@@ -89,30 +89,31 @@ protected:
     TMap<EMingResourceType, FResourceDisplayItem*> ResourceDisplayMap;
 
     // ?ùÂ???    virtual bool Initialize() override;
-    void SetupResourceDisplays();
-    void BindResourceEvents();
+    void SetupResourceDisplays(};
+    void BindResourceEvents(};
 
     // ËºîÂä©?ΩÊï∏
-    FResourceDisplayItem* GetResourceDisplayItem(EMingResourceType ResourceType);
-    void UpdateSingleResourceItem(FResourceDisplayItem* Item, EMingResourceType ResourceType, int32 Amount, int32 Capacity);
+    FResourceDisplayItem* GetResourceDisplayItem(EMingResourceType ResourceType};
+    void UpdateSingleResourceItem(FResourceDisplayItem* Item, EMingResourceType ResourceType, int32 Amount, int32 Capacity};
     FString GetResourceDisplayName(EMingResourceType ResourceType) const;
     FLinearColor GetResourceDisplayColor(EMingResourceType ResourceType) const;
 
     // ‰∫ã‰ª∂?ïÁ?
     UFUNCTION()
-    void OnResourceChanged(EMingResourceType ResourceType, int32 NewAmount);
+    void OnResourceChanged(EMingResourceType ResourceType, int32 NewAmount};
 
     UFUNCTION()
-    void OnResourceProduced(EMingResourceType ResourceType, int32 Amount);
+    void OnResourceProduced(EMingResourceType ResourceType, int32 Amount};
 
     UFUNCTION()
-    void OnResourceInsufficient(EMingResourceType ResourceType);
+    void OnResourceInsufficient(EMingResourceType ResourceType};
 
 private:
     // ?ïÁï´Ë®àÊ???    TMap<EMingResourceType, float> AnimationTimers;
     TMap<EMingResourceType, int32> LastResourceAmounts;
     
     // Ë¶ñË¶∫?àÊ?
-    void PlayResourceChangeEffect(FResourceDisplayItem* Item, int32 ChangeAmount);
-    void UpdateResourceColor(FResourceDisplayItem* Item, float Percentage);
+    void PlayResourceChangeEffect(FResourceDisplayItem* Item, int32 ChangeAmount};
+    void UpdateResourceColor(FResourceDisplayItem* Item, float Percentage};
 };
+

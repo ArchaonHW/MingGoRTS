@@ -35,7 +35,7 @@ class MINGTACTICAL_API UMingInputConfig : public UDataAsset
     GENERATED_BODY()
 
 public:
-    UMingInputConfig(const FObjectInitializer& ObjectInitializer);
+    UMingInputConfig(const FObjectInitializer& ObjectInitializer};
 
     // Core Selection Actions
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Selection")
@@ -104,3 +104,4 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings")
     TArray<FMingInputActionConfig> InputActionConfigs;
 };
+

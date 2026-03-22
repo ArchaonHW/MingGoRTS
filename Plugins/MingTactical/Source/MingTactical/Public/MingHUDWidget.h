@@ -59,28 +59,28 @@ public:
 
     // Functions
     UFUNCTION(BlueprintCallable, Category = "HUD")
-    void ShowSelectionWidget();
+    void ShowSelectionWidget(};
 
     UFUNCTION(BlueprintCallable, Category = "HUD")
-    void HideSelectionWidget();
+    void HideSelectionWidget(};
 
     UFUNCTION(BlueprintCallable, Category = "HUD")
-    void UpdateUnitInfo(class AMingTacticalUnit* Unit);
+    void UpdateUnitInfo(class AMingTacticalUnit* Unit};
 
     UFUNCTION(BlueprintCallable, Category = "HUD")
-    void ClearUnitInfo();
+    void ClearUnitInfo(};
 
     UFUNCTION(BlueprintCallable, Category = "HUD")
-    void UpdateResources(const TMap<FString, int32>& Resources);
+    void UpdateResources(const TMap<FString, int32>& Resources};
 
     UFUNCTION(BlueprintCallable, Category = "HUD")
-    void ShowCommandButtons(const TArray<FName>& AvailableCommands);
+    void ShowCommandButtons(const TArray<FName>& AvailableCommands};
 
     UFUNCTION(BlueprintCallable, Category = "HUD")
-    void HideCommandButtons();
+    void HideCommandButtons(};
 
     UFUNCTION(BlueprintCallable, Category = "Debug")
-    void UpdateDebugInfo(const FString& DebugText);
+    void UpdateDebugInfo(const FString& DebugText};
 
 protected:
     UPROPERTY()
@@ -90,6 +90,7 @@ protected:
     TWeakObjectPtr<class UMingSelectionManager> SelectionManager;
 
     virtual bool Initialize() override;
-    void SetupBindings();
-    void OnSelectionChanged(int32 UnitId);
+    void SetupBindings(};
+    void OnSelectionChanged(int32 UnitId};
 };
+

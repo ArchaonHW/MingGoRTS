@@ -93,36 +93,36 @@ class MINGTACTICAL_API UMingBaseCombatAI : public UObject
     GENERATED_BODY()
 
 public:
-    // Âª∫Ê?Â≠?    UMingBaseCombatAI();
+    // Âª∫Ê?Â≠?    UMingBaseCombatAI(};
 
     // ?ùÂ???AI
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual void Initialize(class AController* Controller);
+    virtual void Initialize(class AController* Controller};
 
     // ?¥Êñ∞ AI
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual void UpdateAI(float DeltaTime);
+    virtual void UpdateAI(float DeltaTime};
 
     // Ë£Ω‰??∞Ë?Ê±∫Á?
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual FMingTacticalDecision MakeTacticalDecision(const FMingAIContext& Context);
+    virtual FMingTacticalDecision MakeTacticalDecision(const FMingAIContext& Context};
 
     // ?∑Ë??Æ‰??Ω‰ª§
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual void ExecuteUnitCommand(class AActor* Unit, const FMingUnitCommand& Command);
+    virtual void ExecuteUnitCommand(class AActor* Unit, const FMingUnitCommand& Command};
 
     // Ë©ï‰º∞?∞Â†¥Â±Ä??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual float AssessBattlefieldSituation(const FMingAIContext& Context);
+    virtual float AssessBattlefieldSituation(const FMingAIContext& Context};
 
     // Ë®≠ÁΩÆ AI ??∫¶
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual void SetDifficulty(EMingAIDifficulty Difficulty);
+    virtual void SetDifficulty(EMingAIDifficulty Difficulty};
 
     // ?≤Â? AI ?Ä??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     FMingAIState GetAIState() const { return CurrentAIState; }
 
     // ?çÁΩÆ AI ?Ä??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    virtual void ResetAIState();
+    virtual void ResetAIState(};
 
 protected:
     // AI ?ßÂà∂??    UPROPERTY(BlueprintReadOnly)
@@ -154,31 +154,31 @@ protected:
     float CoordinationSkill;
 
     // ?ÜÊ?Â®ÅË?
-    virtual TArray<class AActor*> AnalyzeThreats(const TArray<class AActor*>& EnemyUnits);
+    virtual TArray<class AActor*> AnalyzeThreats(const TArray<class AActor*>& EnemyUnits};
 
     // Ë≠òÂà•Ê©üÊ?
-    virtual TArray<FVector> IdentifyOpportunities(const FMingAIContext& Context);
+    virtual TArray<FVector> IdentifyOpportunities(const FMingAIContext& Context};
 
-    // Ë©ï‰º∞?Æ‰??Ä??    virtual float AssessUnitStatus(class AActor* Unit);
+    // Ë©ï‰º∞?Æ‰??Ä??    virtual float AssessUnitStatus(class AActor* Unit};
 
     // Ë¶èÂ?Ê©üÂ?Ë∑ØÂ?
-    virtual TArray<FVector> PlanMovementPath(class AActor* Unit, const FVector& Destination);
+    virtual TArray<FVector> PlanMovementPath(class AActor* Unit, const FVector& Destination};
 
-    // Ë®àÁ??ªÊ??™Â?Á¥?    virtual float CalculateAttackPriority(class AActor* Target);
+    // Ë®àÁ??ªÊ??™Â?Á¥?    virtual float CalculateAttackPriority(class AActor* Target};
 
     // Ê±∫Â??ØÂê¶?§ÈÄÄ
-    virtual bool ShouldRetreat(const FMingAIContext& Context);
+    virtual bool ShouldRetreat(const FMingAIContext& Context};
 
     // Ê±∫Â??ØÂê¶?≤Á¶¶
-    virtual bool ShouldDefend(const FMingAIContext& Context);
+    virtual bool ShouldDefend(const FMingAIContext& Context};
 
     // Ê±∫Â??ØÂê¶?ªÊ?
-    virtual bool ShouldAttack(const FMingAIContext& Context);
+    virtual bool ShouldAttack(const FMingAIContext& Context};
 
     // ?¥Êñ∞Â£´Ê∞£
-    virtual void UpdateMorale(const FMingAIContext& Context);
+    virtual void UpdateMorale(const FMingAIContext& Context};
 
-    // ?¥Êñ∞?ùË???    virtual void UpdateCohesion(const TArray<class AActor*>& Units);
+    // ?¥Êñ∞?ùË???    virtual void UpdateCohesion(const TArray<class AActor*>& Units};
 
 private:
     // ?ÄÂæåÊõ¥?∞Ê???    float LastUpdateTime;
@@ -189,3 +189,4 @@ private:
     // ?∂Â?Ê±∫Á?
     FMingTacticalDecision CurrentDecision;
 };
+

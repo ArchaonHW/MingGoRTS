@@ -49,21 +49,21 @@ class MINGTACTICAL_API UMingUnitMovementComponent : public UActorComponent
     GENERATED_BODY()
 
 public:
-    UMingUnitMovementComponent();
+    UMingUnitMovementComponent(};
 
     virtual void BeginPlay() override;
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
     // ÁßªÂ??Ω‰ª§
     UFUNCTION(BlueprintCallable, Category = "Movement")
-    void MoveToLocation(const FVector& TargetLocation, bool bAttackMove = false);
+    void MoveToLocation(const FVector& TargetLocation, bool bAttackMove = false};
 
     UFUNCTION(BlueprintCallable, Category = "Movement")
-    void MoveToLocationWithFormation(const FVector& TargetLocation, const FVector& FormationOffset);
+    void MoveToLocationWithFormation(const FVector& TargetLocation, const FVector& FormationOffset};
 
     // ?úÊ≠¢ÁßªÂ?
     UFUNCTION(BlueprintCallable, Category = "Movement")
-    void StopMovement();
+    void StopMovement(};
 
     // ?ØÂê¶Ê≠?ú®ÁßªÂ?
     UFUNCTION(BlueprintPure, Category = "Movement")
@@ -75,7 +75,7 @@ public:
 
     // Ë®≠ÁΩÆÁßªÂ??üÂ∫¶
     UFUNCTION(BlueprintCallable, Category = "Movement")
-    void SetMoveSpeed(float NewSpeed);
+    void SetMoveSpeed(float NewSpeed};
 
     // Ë∑ØÂ??∏È?
     UFUNCTION(BlueprintPure, Category = "Movement")
@@ -86,10 +86,10 @@ public:
 
     // ?ãË??∏È?
     UFUNCTION(BlueprintCallable, Category = "Movement")
-    void RotateTowards(const FVector& TargetDirection, float DeltaTime);
+    void RotateTowards(const FVector& TargetDirection, float DeltaTime};
 
     UFUNCTION(BlueprintCallable, Category = "Movement")
-    void SetDesiredRotation(const FRotator& TargetRotation);
+    void SetDesiredRotation(const FRotator& TargetRotation};
 
 protected:
     // ?ÅÊ??ÖÂñÆ‰Ω?    UPROPERTY()
@@ -140,19 +140,20 @@ protected:
     class UNavigationSystemV1* NavSystem;
 
     // Ë´ãÊ?Ë∑ØÂ?
-    void RequestPath(const FVector& StartLocation, const FVector& EndLocation);
+    void RequestPath(const FVector& StartLocation, const FVector& EndLocation};
 
     // Ë∑ØÂ??•Ë©¢?ûË™ø
-    void OnPathFound(uint32 InPathRequestId, ENavigationQueryResult::Type Result, FNavPathSharedPtr Path);
+    void OnPathFound(uint32 InPathRequestId, ENavigationQueryResult::Type Result, FNavPathSharedPtr Path};
 
     // Ê≤øË?Ë∑ØÂ?ÁßªÂ?
-    void FollowPath(float DeltaTime);
+    void FollowPath(float DeltaTime};
 
     // Âπ≥Ê??ãË?
-    void SmoothRotateTowards(const FVector& Direction, float DeltaTime);
+    void SmoothRotateTowards(const FVector& Direction, float DeltaTime};
 
     // Ê™¢Êü•?ØÂê¶?∞È??ÆÊ?
     bool HasReachedTarget() const;
 
-    // ?¥Êñ∞ÁßªÂ??Ä??    void UpdateMovementState();
+    // ?¥Êñ∞ÁßªÂ??Ä??    void UpdateMovementState(};
 };
+

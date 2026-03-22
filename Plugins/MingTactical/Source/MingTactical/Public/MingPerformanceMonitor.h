@@ -92,7 +92,7 @@ class MINGTACTICAL_API UMingPerformanceMonitor : public UObject
     GENERATED_BODY()
 
 public:
-    UMingPerformanceMonitor();
+    UMingPerformanceMonitor(};
 
     virtual void BeginDestroy() override;
 
@@ -100,19 +100,19 @@ public:
      * ?å??–æ€§èƒ½??§
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void Initialize();
+    void Initialize(};
 
     /**
      * ?œé??§èƒ½??§
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void Shutdown();
+    void Shutdown(};
 
     /**
      * ?´æ–°?§èƒ½?¸æ? (æ¯å?èª¿ç”¨)
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void Update(float DeltaTime);
+    void Update(float DeltaTime};
 
     /**
      * ?²å??¶å??§èƒ½?‡æ?
@@ -142,7 +142,7 @@ public:
      * è¨­ç½®?®æ?FPS
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetTargetFPS(float TargetFPS);
+    void SetTargetFPS(float TargetFPS};
 
     /**
      * ?²å??®æ?FPS
@@ -154,13 +154,13 @@ public:
      * ?‹å??§èƒ½è¨˜é?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void StartRecording();
+    void StartRecording(};
 
     /**
      * ?œæ­¢?§èƒ½è¨˜é?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void StopRecording();
+    void StopRecording(};
 
     /**
      * ?²å?è¨˜é??„æ•¸??     */
@@ -176,7 +176,7 @@ public:
      * æ·»å??ªå?ç¾©æ€§èƒ½æ¨™è?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void AddPerformanceMarker(const FString& MarkerName, float Value);
+    void AddPerformanceMarker(const FString& MarkerName, float Value};
 
     /**
      * ?²å??ªå?ç¾©æ?è¨˜å€?     */
@@ -186,7 +186,7 @@ public:
     /**
      * ?œæ??²å?å¯¦ä?
      */
-    static UMingPerformanceMonitor* Get();
+    static UMingPerformanceMonitor* Get(};
 
 protected:
     // ?¶å??§èƒ½?‡æ?
@@ -215,14 +215,14 @@ protected:
     static UMingPerformanceMonitor* Instance;
 
     // è¨ˆç?FPS
-    void CalculateFPS(float DeltaTime);
+    void CalculateFPS(float DeltaTime};
 
-    // ?´æ–°è¨˜æ†¶é«”ä½¿??    void UpdateMemoryUsage();
+    // ?´æ–°è¨˜æ†¶é«”ä½¿??    void UpdateMemoryUsage(};
 
     // ?´æ–°ç·šç??‚é?
-    void UpdateThreadTimes();
+    void UpdateThreadTimes(};
 
-    // è¨˜é??¸æ?é»?    void RecordDataPoint();
+    // è¨˜é??¸æ?é»?    void RecordDataPoint(};
 
     // ?²å?è¨˜æ†¶é«”ä½¿??    float GetMemoryUsageMB() const;
 
@@ -241,3 +241,4 @@ protected:
     // ?²å??”é™¤å¯¦ä??¸é?
     int32 GetCulledInstanceCount() const;
 };
+

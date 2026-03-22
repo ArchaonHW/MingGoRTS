@@ -33,25 +33,25 @@ class MINGTACTICAL_API UMingSelectionManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingSelectionManager();
+    UMingSelectionManager(};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void Initialize();
+    void Initialize(};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void Shutdown();
+    void Shutdown(};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void SelectUnit(AMingTacticalUnit* Unit, bool bAdditive);
+    void SelectUnit(AMingTacticalUnit* Unit, bool bAdditive};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void SelectUnits(const TArray<AMingTacticalUnit*>& Units, bool bAdditive);
+    void SelectUnits(const TArray<AMingTacticalUnit*>& Units, bool bAdditive};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void DeselectUnit(AMingTacticalUnit* Unit);
+    void DeselectUnit(AMingTacticalUnit* Unit};
 
     UFUNCTION(BlueprintCallable, Category = "Selection")
-    void DeselectAll();
+    void DeselectAll(};
 
     UFUNCTION(BlueprintPure, Category = "Selection")
     bool IsUnitSelected(AMingTacticalUnit* Unit) const;
@@ -60,16 +60,16 @@ public:
     const TArray<AMingTacticalUnit*>& GetSelectedUnits() const { return SelectedUnits; }
 
     UFUNCTION(BlueprintPure, Category = "Selection")
-    int32 GetSelectedUnitCount() const { return SelectedUnits.Num(); }
+    int32 GetSelectedUnitCount() const { return SelectedUnits.Num(}; }
 
     UFUNCTION(BlueprintCallable, Category = "Selection Box")
-    void StartSelectionBox(const FVector2D& ScreenPosition);
+    void StartSelectionBox(const FVector2D& ScreenPosition};
 
     UFUNCTION(BlueprintCallable, Category = "Selection Box")
-    void UpdateSelectionBox(const FVector2D& ScreenPosition);
+    void UpdateSelectionBox(const FVector2D& ScreenPosition};
 
     UFUNCTION(BlueprintCallable, Category = "Selection Box")
-    void EndSelectionBox();
+    void EndSelectionBox(};
 
     UFUNCTION(BlueprintPure, Category = "Selection Box")
     bool IsSelectionBoxActive() const { return SelectionBox.bIsActive; }
@@ -78,7 +78,7 @@ public:
     FSelectionBox GetSelectionBox() const { return SelectionBox; }
 
     UFUNCTION(BlueprintPure, Category = "Selection")
-    static UMingSelectionManager* Get();
+    static UMingSelectionManager* Get(};
 
 private:
     static UMingSelectionManager* Instance;
@@ -92,7 +92,8 @@ private:
     UPROPERTY()
     bool bInitialized;
 
-    void PublishSelectionChangedEvent();
+    void PublishSelectionChangedEvent(};
     bool IsUnitInSelectionBox(AMingTacticalUnit* Unit) const;
     FVector2D GetUnitScreenPosition(AMingTacticalUnit* Unit) const;
 };
+

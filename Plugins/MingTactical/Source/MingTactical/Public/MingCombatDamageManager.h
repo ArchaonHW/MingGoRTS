@@ -109,7 +109,7 @@ struct MINGTACTICAL_API FMingDamageCalculation
         DamageType = EMingDamageType::Kinetic;
         EquipmentType = EMingEquipmentType::Rifle;
         AttackDistance = 0.0f;
-        HitLocation = TEXT("");
+        HitLocation = TEXT(""};
         ArmorValue = 0.0f;
         ArmorPenetration = 0.0f;
         CriticalChance = 0.1f;
@@ -167,8 +167,8 @@ struct MINGTACTICAL_API FMingSupplyData
         ConsumptionRate = 1.0f;
         SupplyPriority = 1;
         SupplySourceID = -1;
-        LastSupplyTime = FDateTime::Now();
-        SupplyStatus = TEXT("normal");
+        LastSupplyTime = FDateTime::Now(};
+        SupplyStatus = TEXT("normal"};
         EmergencyThreshold = 20.0f;
     }
 };
@@ -233,17 +233,17 @@ struct MINGTACTICAL_API FMingLogisticsConvoy
     FMingLogisticsConvoy()
     {
         ConvoyID = -1;
-        ConvoyName = TEXT("");
-        ConvoyType = TEXT("");
+        ConvoyName = TEXT(""};
+        ConvoyType = TEXT(""};
         CurrentPosition = FVector::ZeroVector;
         TargetPosition = FVector::ZeroVector;
-        Cargo.Empty();
+        Cargo.Empty(};
         MovementSpeed = 20.0f;
         ProtectionLevel = 1.0f;
-        DepartureTime = FDateTime::Now();
-        EstimatedArrivalTime = FDateTime::Now();
-        ConvoyStatus = TEXT("preparing");
-        EscortUnits.Empty();
+        DepartureTime = FDateTime::Now(};
+        EstimatedArrivalTime = FDateTime::Now(};
+        ConvoyStatus = TEXT("preparing"};
+        EscortUnits.Empty(};
         RiskAssessment = 0.5f;
     }
 };
@@ -309,20 +309,20 @@ struct MINGTACTICAL_API FMingDamageResult
         DamageType = EMingDamageType::Kinetic;
         bIsCriticalHit = false;
         bArmorPenetrated = false;
-        DamageLocation = TEXT("");
-        DamageCalculationDetails = TEXT("");
-        SupplyConsumption.Empty();
-        CombatTime = FDateTime::Now();
+        DamageLocation = TEXT(""};
+        DamageCalculationDetails = TEXT(""};
+        SupplyConsumption.Empty(};
+        CombatTime = FDateTime::Now(};
         CombatLocation = FVector::ZeroVector;
     }
 };
 
 // ?∞È¨•?∑ÂÆ≥‰∫ã‰ª∂ÂßîË?
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDamageCalculated, const FMingDamageResult&, DamageResult);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSupplyConsumed, int32, UnitID, const TMap<EMingSupplyType, float>&, ConsumedSupplies);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSupplyDelivered, const FMingLogisticsConvoy&, Convoy);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSupplyStatusChanged, int32, UnitID, EMingSupplyType, SupplyType, float, NewAmount);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnConvoyStatusChanged, int32, ConvoyID, FString, NewStatus);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDamageCalculated, const FMingDamageResult&, DamageResult};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSupplyConsumed, int32, UnitID, const TMap<EMingSupplyType, float>&, ConsumedSupplies};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSupplyDelivered, const FMingLogisticsConvoy&, Convoy};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSupplyStatusChanged, int32, UnitID, EMingSupplyType, SupplyType, float, NewAmount};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnConvoyStatusChanged, int32, ConvoyID, FString, NewStatus};
 
 /**
  * ?∞È¨•?∑ÂÆ≥ÁÆ°Á??? * Ë≤†Ë≤¨Ë®àÁ??üÂØ¶?ÑÊà∞È¨•ÂÇ∑ÂÆ≥Â?ÁÆ°Á?ÂæåÂã§Ë£úÁµ¶Á≥ªÁµ±
@@ -333,37 +333,37 @@ class MINGTACTICAL_API UMingCombatDamageManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingCombatDamageManager();
+    UMingCombatDamageManager(};
 
     // ?ùÂ??ñÂÇ∑ÂÆ≥Á≥ªÁµ?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    bool InitializeDamageSystem();
+    bool InitializeDamageSystem(};
 
     // Ë®àÁ??∞È¨•?∑ÂÆ≥
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    FMingDamageResult CalculateCombatDamage(const FMingDamageCalculation& DamageCalc);
+    FMingDamageResult CalculateCombatDamage(const FMingDamageCalculation& DamageCalc};
 
     // Ë®ªÂ??Æ‰?Ë£úÁµ¶
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    bool RegisterUnitSupply(int32 UnitID, const FMingSupplyData& SupplyData);
+    bool RegisterUnitSupply(int32 UnitID, const FMingSupplyData& SupplyData};
 
     // ?¥Êñ∞?Æ‰?Ë£úÁµ¶
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    bool UpdateUnitSupply(int32 UnitID, EMingSupplyType SupplyType, float Amount);
+    bool UpdateUnitSupply(int32 UnitID, EMingSupplyType SupplyType, float Amount};
 
     // ?≤Â??Æ‰?Ë£úÁµ¶
     UFUNCTION(BlueprintPure, Category = "Combat Damage")
     FMingSupplyData GetUnitSupply(int32 UnitID, EMingSupplyType SupplyType) const;
 
     // Ê∂àËÄóË?Áµ?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    bool ConsumeSupply(int32 UnitID, EMingSupplyType SupplyType, float Amount);
+    bool ConsumeSupply(int32 UnitID, EMingSupplyType SupplyType, float Amount};
 
     // ?µÂª∫ÂæåÂã§ËªäÈ?
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    int32 CreateLogisticsConvoy(const TArray<FMingSupplyData>& Cargo, const FVector& TargetLocation);
+    int32 CreateLogisticsConvoy(const TArray<FMingSupplyData>& Cargo, const FVector& TargetLocation};
 
     // Ê¥æÈÅ£ÂæåÂã§ËªäÈ?
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    bool DispatchConvoy(int32 ConvoyID);
+    bool DispatchConvoy(int32 ConvoyID};
 
     // ?≤Â?ËªäÈ?‰ø°ÊÅØ
     UFUNCTION(BlueprintPure, Category = "Combat Damage")
@@ -371,13 +371,13 @@ public:
 
     // ?¥Êñ∞ËªäÈ?‰ΩçÁΩÆ
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    bool UpdateConvoyPosition(int32 ConvoyID, const FVector& NewPosition);
+    bool UpdateConvoyPosition(int32 ConvoyID, const FVector& NewPosition};
 
     // ?≤Â?Ë£úÁµ¶?ÄÊ±?    UFUNCTION(BlueprintPure, Category = "Combat Damage")
     TArray<FMingSupplyData> GetSupplyDemands() const;
 
     // Ë®àÁ?Ë£úÁµ¶?™Â?Á¥?    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    int32 CalculateSupplyPriority(int32 UnitID, EMingSupplyType SupplyType);
+    int32 CalculateSupplyPriority(int32 UnitID, EMingSupplyType SupplyType};
 
     // ?≤Â??∑ÂÆ≥Áµ±Ë?
     UFUNCTION(BlueprintPure, Category = "Combat Damage")
@@ -385,14 +385,14 @@ public:
 
     // ‰øùÂ??∑ÂÆ≥?∏Ê?
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    bool SaveDamageData();
+    bool SaveDamageData(};
 
     // ËºâÂÖ•?∑ÂÆ≥?∏Ê?
     UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    bool LoadDamageData();
+    bool LoadDamageData(};
 
     // Ê∏ÖÈô§?Ä?âÂÇ∑ÂÆ≥Êï∏??    UFUNCTION(BlueprintCallable, Category = "Combat Damage")
-    void ClearAllDamageData();
+    void ClearAllDamageData(};
 
     // ‰∫ã‰ª∂ÂßîË?
     UPROPERTY(BlueprintAssignable)
@@ -444,7 +444,7 @@ protected:
     bool bInitialized;
 
 private:
-    // ËºâÂÖ•?êË®≠?∑ÂÆ≥Ë°?    void LoadDefaultDamageTables();
+    // ËºâÂÖ•?êË®≠?∑ÂÆ≥Ë°?    void LoadDefaultDamageTables(};
 
     // Ë®àÁ??∫Á??∑ÂÆ≥
     float CalculateBaseDamage(const FMingDamageCalculation& DamageCalc) const;
@@ -470,12 +470,12 @@ private:
     // Ë®àÁ?Ë£úÁµ¶Ê∂àËÄ?    TMap<EMingSupplyType, float> CalculateSupplyConsumption(const FMingDamageCalculation& DamageCalc) const;
 
     // ?¥Êñ∞?Æ‰??ßËÉΩ
-    void UpdateUnitPerformance(int32 UnitID, const TMap<EMingSupplyType, FMingSupplyData>& Supplies);
+    void UpdateUnitPerformance(int32 UnitID, const TMap<EMingSupplyType, FMingSupplyData>& Supplies};
 
     // ?ïÁ?ÂæåÂã§ËªäÈ?ÁßªÂ?
-    void ProcessConvoyMovement(float DeltaTime);
+    void ProcessConvoyMovement(float DeltaTime};
 
-    // Ê™¢Êü•Ë£úÁµ¶?ÄÊ±?    void CheckSupplyDemands();
+    // Ê™¢Êü•Ë£úÁµ¶?ÄÊ±?    void CheckSupplyDemands(};
 
     // Ë®àÁ?ËªäÈ?È¢®Èö™
     float CalculateConvoyRisk(const FMingLogisticsConvoy& Convoy) const;
@@ -492,10 +492,11 @@ private:
     // Ë®àÁ??∑ÂÆ≥?®‰?
     FString CalculateHitLocation(const FVector& ImpactPoint) const;
 
-    // ?ïÁ?Ë£úÁµ¶Á∑äÊÄ•Ê?Ê≥?    void HandleSupplyEmergency(int32 UnitID, EMingSupplyType SupplyType);
+    // ?ïÁ?Ë£úÁµ¶Á∑äÊÄ•Ê?Ê≥?    void HandleSupplyEmergency(int32 UnitID, EMingSupplyType SupplyType};
 
-    // ?¥Êñ∞ËªäÈ??Ä??    void UpdateConvoyStatus(int32 ConvoyID, const FString& NewStatus);
+    // ?¥Êñ∞ËªäÈ??Ä??    void UpdateConvoyStatus(int32 ConvoyID, const FString& NewStatus};
 
     // Ë®àÁ?Ë£úÁµ¶?àÁ?
     float CalculateSupplyEfficiency(int32 UnitID) const;
 };
+

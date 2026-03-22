@@ -49,7 +49,7 @@ class MINGTACTICAL_API UMingSpatialPartitionComponent : public UActorComponent
     GENERATED_BODY()
 
 public:
-    UMingSpatialPartitionComponent();
+    UMingSpatialPartitionComponent(};
 
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -58,18 +58,18 @@ public:
     /**
      * Ë®ªÂ??Æ‰??∞Á©∫?ìÂ?Â°äÁ≥ªÁµ?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void RegisterUnit(AMingTacticalUnit* Unit);
+    void RegisterUnit(AMingTacticalUnit* Unit};
 
     /**
      * ÂæûÁ©∫?ìÂ?Â°äÁ≥ªÁµ±Áßª?§ÂñÆ‰Ω?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void UnregisterUnit(AMingTacticalUnit* Unit);
+    void UnregisterUnit(AMingTacticalUnit* Unit};
 
     /**
      * ?¥Êñ∞?Æ‰?‰ΩçÁΩÆ (ÁßªÂ??∞Êñ∞Á∂≤Ê†º)
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void UpdateUnitPosition(AMingTacticalUnit* Unit);
+    void UpdateUnitPosition(AMingTacticalUnit* Unit};
 
     /**
      * ?≤Â??áÂ?‰ΩçÁΩÆ?®Â??ÑÂñÆ‰Ω?     */
@@ -92,25 +92,25 @@ public:
      * Ë®≠ÁΩÆÁ∂≤Ê†ºÂ§ßÂ?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void SetCellSize(float NewCellSize);
+    void SetCellSize(float NewCellSize};
 
     /**
      * Ë®≠ÁΩÆ?¥Êñ∞ÁØÑÂ?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void SetUpdateRadius(float NewRadius);
+    void SetUpdateRadius(float NewRadius};
 
     /**
      * ?≤Â??ßËÉΩÁµ±Ë?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
-    int32 GetTotalGridCellCount() const { return GridCells.Num(); }
+    int32 GetTotalGridCellCount() const { return GridCells.Num(}; }
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     int32 GetActiveGridCellCount() const;
 
     UFUNCTION(BlueprintPure, Category = "Performance")
-    int32 GetRegisteredUnitCount() const { return RegisteredUnits.Num(); }
+    int32 GetRegisteredUnitCount() const { return RegisteredUnits.Num(}; }
 
     /**
      * ?≤Â?‰∏ñÁ?‰ΩçÁΩÆÂ∞çÊ??ÑÁ∂≤?ºÂ?Ê®?     */
@@ -125,7 +125,7 @@ public:
     /**
      * Âº∑Âà∂?¥Êñ∞?Ä?âÁ∂≤??     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void ForceUpdateAllCells();
+    void ForceUpdateAllCells(};
 
     /**
      * ?≤Â?Á∂≤Ê†ºË™øË©¶Ë≥áË?
@@ -171,23 +171,23 @@ protected:
     int32 CurrentUpdateIndex;
 
     // ?¥Êñ∞?∏Ê?Ë≥áË?
-    void UpdateCameraInfo();
+    void UpdateCameraInfo(};
 
     // Á¢∫‰?Á∂≤Ê†ºÂ≠òÂú®
-    FSpatialGridCell& GetOrCreateCell(const FIntVector& GridPosition);
+    FSpatialGridCell& GetOrCreateCell(const FIntVector& GridPosition};
 
-    // ÂæûÁ∂≤?ºÁßª?§ÂñÆ‰Ω?    void RemoveUnitFromCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition);
+    // ÂæûÁ∂≤?ºÁßª?§ÂñÆ‰Ω?    void RemoveUnitFromCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition};
 
     // Â∞áÂñÆ‰ΩçÊ∑ª?†Âà∞Á∂≤Ê†º
-    void AddUnitToCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition);
+    void AddUnitToCell(AMingTacticalUnit* Unit, const FIntVector& CellPosition};
 
-    // ?¥Êñ∞Á∂≤Ê†ºÊ¥ªË??Ä??    void UpdateCellActivity();
+    // ?¥Êñ∞Á∂≤Ê†ºÊ¥ªË??Ä??    void UpdateCellActivity(};
 
     // ?¥Êñ∞Ê¥ªË?Á∂≤Ê†º‰∏≠Á??Æ‰?
-    void UpdateActiveCells(float DeltaTime);
+    void UpdateActiveCells(float DeltaTime};
 
     // ?∑Ë?Ë¶ñÈ??îÈô§
-    void PerformFrustumCulling();
+    void PerformFrustumCulling(};
 
     // Ê™¢Êü•Á∂≤Ê†º?ØÂê¶?®Ë??êÂÖß
     bool IsCellInFrustum(const FIntVector& CellPosition) const;
@@ -200,11 +200,12 @@ protected:
     // Ë∑ùÈõ¢?™Â?Á¥öË?ÁÆ?    float CalculateCellPriority(const FIntVector& CellPosition) const;
 
     // ?πÈ??¥Êñ∞?Æ‰?
-    void BatchUpdateUnits(const TArray<AMingTacticalUnit*>& Units, float DeltaTime);
+    void BatchUpdateUnits(const TArray<AMingTacticalUnit*>& Units, float DeltaTime};
 
     // ‰ºëÁ?Á∂≤Ê†º‰∏≠Á??Æ‰?
-    void SleepUnitsInCell(const FIntVector& CellPosition);
+    void SleepUnitsInCell(const FIntVector& CellPosition};
 
     // ?öÈ?Á∂≤Ê†º‰∏≠Á??Æ‰?
-    void WakeUnitsInCell(const FIntVector& CellPosition);
+    void WakeUnitsInCell(const FIntVector& CellPosition};
 };
+

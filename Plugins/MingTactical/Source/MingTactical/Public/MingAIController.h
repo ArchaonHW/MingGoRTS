@@ -41,7 +41,7 @@ struct FMingAICommand
         , TargetLocation(FVector::ZeroVector)
         , Priority(1.0f)
     {
-        IssueTime = FDateTime::Now();
+        IssueTime = FDateTime::Now(};
     }
 };
 
@@ -55,7 +55,7 @@ class MINGTACTICAL_API AMingAIController : public AAIController
     GENERATED_BODY()
 
 public:
-    AMingAIController(const FObjectInitializer& ObjectInitializer);
+    AMingAIController(const FObjectInitializer& ObjectInitializer};
 
     virtual void OnPossess(APawn* InPawn) override;
     virtual void OnUnPossess() override;
@@ -63,36 +63,36 @@ public:
 
     // Command Interface
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
-    void IssueMoveCommand(const FVector& TargetLocation, bool bAttackMove = false);
+    void IssueMoveCommand(const FVector& TargetLocation, bool bAttackMove = false};
 
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
-    void IssueAttackCommand(AActor* Target);
+    void IssueAttackCommand(AActor* Target};
 
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
-    void IssueStopCommand();
+    void IssueStopCommand(};
 
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
-    void IssuePatrolCommand(const FVector& PatrolPoint);
+    void IssuePatrolCommand(const FVector& PatrolPoint};
 
     UFUNCTION(BlueprintCallable, Category = "AI|Commands")
-    void IssueFollowCommand(AActor* Leader, float FollowDistance = 200.0f);
+    void IssueFollowCommand(AActor* Leader, float FollowDistance = 200.0f};
 
     // Formation System
     UFUNCTION(BlueprintCallable, Category = "AI|Formation")
-    void SetFormationPosition(const FVector& FormationOffset);
+    void SetFormationPosition(const FVector& FormationOffset};
 
     UFUNCTION(BlueprintCallable, Category = "AI|Formation")
-    void ClearFormationPosition();
+    void ClearFormationPosition(};
 
     UFUNCTION(BlueprintPure, Category = "AI|Formation")
     bool HasFormationPosition() const;
 
     // Navigation (overriding parent functions - no UFUNCTION macro needed)
-    bool MoveToLocation(const FVector& TargetLocation, float AcceptanceRadius = 50.0f);
+    bool MoveToLocation(const FVector& TargetLocation, float AcceptanceRadius = 50.0f};
 
-    bool MoveToActor(AActor* TargetActor, float AcceptanceRadius = 50.0f);
+    bool MoveToActor(AActor* TargetActor, float AcceptanceRadius = 50.0f};
 
-    void StopMovement();
+    void StopMovement(};
 
     // Combat
     UFUNCTION(BlueprintCallable, Category = "AI|Combat")
@@ -105,10 +105,10 @@ public:
     bool CanAttackTarget(AActor* Target) const;
 
     UFUNCTION(BlueprintCallable, Category = "AI|Combat")
-    void SetAttackTarget(AActor* Target);
+    void SetAttackTarget(AActor* Target};
 
     UFUNCTION(BlueprintPure, Category = "AI|Combat")
-    AActor* GetCurrentAttackTarget() const { return CurrentAttackTarget.Get(); }
+    AActor* GetCurrentAttackTarget() const { return CurrentAttackTarget.Get(}; }
 
     // State
     UFUNCTION(BlueprintPure, Category = "AI|State")
@@ -170,19 +170,19 @@ protected:
     float TimeSinceLastUpdate;
 
     // Internal functions
-    virtual void UpdateAI(float DeltaTime);
-    virtual void ProcessCurrentCommand(float DeltaTime);
-    virtual void UpdateMovement(float DeltaTime);
-    virtual void UpdateCombat(float DeltaTime);
-    virtual void UpdateFormation(float DeltaTime);
+    virtual void UpdateAI(float DeltaTime};
+    virtual void ProcessCurrentCommand(float DeltaTime};
+    virtual void UpdateMovement(float DeltaTime};
+    virtual void UpdateCombat(float DeltaTime};
+    virtual void UpdateFormation(float DeltaTime};
 
     // State handlers
-    virtual void EnterState(EMingAIState NewState);
-    virtual void ExitState(EMingAIState OldState);
+    virtual void EnterState(EMingAIState NewState};
+    virtual void ExitState(EMingAIState OldState};
 
     // Combat helpers
-    virtual void PerformAttack(AActor* Target);
-    virtual void FindNewTarget();
+    virtual void PerformAttack(AActor* Target};
+    virtual void FindNewTarget(};
 
     // Navigation helpers
     virtual bool HasReachedDestination() const;
@@ -190,10 +190,10 @@ protected:
 
     // Event handlers
     UFUNCTION()
-    void OnTargetDestroyed(AActor* DestroyedActor);
+    void OnTargetDestroyed(AActor* DestroyedActor};
 
     UFUNCTION()
-    void OnMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
+    void OnMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result};
 
 private:
     // Cached components (only declare once)
@@ -209,3 +209,4 @@ private:
     float LastAttackTime;
     float StateEnterTime;
 };
+

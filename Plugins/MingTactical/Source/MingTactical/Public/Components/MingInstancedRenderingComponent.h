@@ -55,7 +55,7 @@ class MINGTACTICAL_API UMingInstancedRenderingComponent : public UActorComponent
     GENERATED_BODY()
 
 public:
-    UMingInstancedRenderingComponent();
+    UMingInstancedRenderingComponent(};
 
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -65,24 +65,24 @@ public:
      * Ë®ªÂ??Æ‰??∞ÂØ¶‰æãÂ?Ê∏≤Ê?Á≥ªÁµ±
      */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    void RegisterUnit(AMingTacticalUnit* Unit);
+    void RegisterUnit(AMingTacticalUnit* Unit};
 
     /**
      * ÂæûÂØ¶‰æãÂ?Ê∏≤Ê?Á≥ªÁµ±ÁßªÈô§?Æ‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    void UnregisterUnit(AMingTacticalUnit* Unit);
+    void UnregisterUnit(AMingTacticalUnit* Unit};
 
     /**
      * ?¥Êñ∞?Æ‰?ËÆäÊ??©Èô£
      */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    void UpdateUnitTransform(AMingTacticalUnit* Unit, const FTransform& NewTransform);
+    void UpdateUnitTransform(AMingTacticalUnit* Unit, const FTransform& NewTransform};
 
     /**
      * ?¥Êñ∞?Æ‰??ØË???     */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    void SetUnitVisibility(AMingTacticalUnit* Unit, bool bVisible);
+    void SetUnitVisibility(AMingTacticalUnit* Unit, bool bVisible};
 
     /**
      * Ë®àÁ?LODÁ¥öÂà•
@@ -93,13 +93,13 @@ public:
     /**
      * Ë®≠ÁΩÆLODË∑ùÈõ¢?æÂÄ?     */
     UFUNCTION(BlueprintCallable, Category = "LOD")
-    void SetLODDistanceThresholds(const TArray<float>& Thresholds);
+    void SetLODDistanceThresholds(const TArray<float>& Thresholds};
 
     /**
      * ?≤Â??ßËÉΩÁµ±Ë?
      */
     UFUNCTION(BlueprintPure, Category = "Performance")
-    int32 GetRegisteredUnitCount() const { return RegisteredUnits.Num(); }
+    int32 GetRegisteredUnitCount() const { return RegisteredUnits.Num(}; }
 
     UFUNCTION(BlueprintPure, Category = "Performance")
     int32 GetVisibleInstanceCount() const { return VisibleInstanceCount; }
@@ -110,13 +110,13 @@ public:
     /**
      * Âº∑Âà∂?¥Êñ∞?Ä?âÂØ¶‰æ?     */
     UFUNCTION(BlueprintCallable, Category = "Instanced Rendering")
-    void ForceUpdateAllInstances();
+    void ForceUpdateAllInstances(};
 
     /**
      * Ë®≠ÁΩÆ?¥Êñ∞?ªÁ?
      */
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    void SetUpdateFrequency(float Frequency);
+    void SetUpdateFrequency(float Frequency};
 
 protected:
     // Ë®ªÂ??ÑÂñÆ‰Ω?    UPROPERTY()
@@ -146,26 +146,26 @@ protected:
     // ?∏Ê?‰ΩçÁΩÆ (?®ÊñºLODË®àÁ?)
     FVector CameraLocation;
 
-    // ?ùÂ??ñLOD?æÂÄ?    void InitializeLODThresholds();
+    // ?ùÂ??ñLOD?æÂÄ?    void InitializeLODThresholds(};
 
-    // ?µÂª∫?ñÁç≤?ñÊâπÊ¨?    int32 GetOrCreateBatchForUnit(AMingTacticalUnit* Unit);
+    // ?µÂª∫?ñÁç≤?ñÊâπÊ¨?    int32 GetOrCreateBatchForUnit(AMingTacticalUnit* Unit};
 
     // ?¥Êñ∞?πÊ¨°ÂØ¶‰??∏Ê?
-    void UpdateBatchInstanceData(int32 BatchIndex);
+    void UpdateBatchInstanceData(int32 BatchIndex};
 
     // ?∑Ë?LODË®àÁ?
-    void PerformLODUpdate();
+    void PerformLODUpdate(};
 
-    // ?¥Êñ∞ÂØ¶‰??ØË???    void UpdateInstanceVisibility();
+    // ?¥Êñ∞ÂØ¶‰??ØË???    void UpdateInstanceVisibility(};
 
     // ?≤Â??∏Ê?‰ΩçÁΩÆ
-    void UpdateCameraLocation();
+    void UpdateCameraLocation(};
 
     // ?πÊ¨°?à‰Ωµ (?™Â?Â∞èÊâπÊ¨?
-    void MergeSmallBatches();
+    void MergeSmallBatches(};
 
     // ?πÊ¨°?ÜÂâ≤ (?øÂ?Â§ßÊâπÊ¨?
-    void SplitLargeBatches();
+    void SplitLargeBatches(};
 
     // ?ÄÂ§ßÊâπÊ¨°Â§ßÂ∞?    UPROPERTY(EditAnywhere, Category = "Performance")
     int32 MaxBatchSize;
@@ -182,3 +182,4 @@ protected:
     UPROPERTY(EditAnywhere, Category = "Performance")
     bool bEnableDynamicBatching;
 };
+

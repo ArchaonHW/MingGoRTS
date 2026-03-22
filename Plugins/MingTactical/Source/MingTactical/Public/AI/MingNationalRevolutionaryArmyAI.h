@@ -15,7 +15,7 @@ class MINGTACTICAL_API UMingNationalRevolutionaryArmyAI : public UMingBaseCombat
     GENERATED_BODY()
 
 public:
-    // Âª∫Ê?Â≠?    UMingNationalRevolutionaryArmyAI();
+    // Âª∫Ê?Â≠?    UMingNationalRevolutionaryArmyAI(};
 
     // ?ùÂ???    virtual void Initialize(class AController* Controller) override;
 
@@ -27,31 +27,31 @@ public:
 protected:
     // ?ó‰??∞Ë??πÈ?
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void ExecuteNorthernExpeditionTactics(const FMingAIContext& Context);
+    void ExecuteNorthernExpeditionTactics(const FMingAIContext& Context};
 
     // ?øÊ≤ªÂ∑•‰?ÂΩ±Èüø
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void ApplyPoliticalWorkEffects(FMingAIState& AIState);
+    void ApplyPoliticalWorkEffects(FMingAIState& AIState};
 
     // ?áËÅØÈ°ßÂ?ÂΩ±Èüø
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void ApplySovietAdvisorInfluence(FMingTacticalDecision& Decision);
+    void ApplySovietAdvisorInfluence(FMingTacticalDecision& Decision};
 
     // ?©ÂëΩ?±Ê?ÂΩ±Èüø
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void ApplyRevolutionaryZeal(FMingAIState& AIState);
+    void ApplyRevolutionaryZeal(FMingAIState& AIState};
 
     // Áµ±‰??∞Á?Á≠ñÁï•
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void ExecuteUnitedFrontStrategy(const FMingAIContext& Context);
+    void ExecuteUnitedFrontStrategy(const FMingAIContext& Context};
 
     // Áæ§Áúæ?ïÂì°
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void MobilizeMasses(const FMingAIContext& Context);
+    void MobilizeMasses(const FMingAIContext& Context};
 
     // ?øÊ≤ªÂÆ?Ç≥?àÊ?
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    float CalculatePoliticalPropagandaEffect(const FVector& Location);
+    float CalculatePoliticalPropagandaEffect(const FVector& Location};
 
     // ?áËÅØ?¥Âä©Á®ãÂ∫¶
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
@@ -59,13 +59,13 @@ protected:
 
     // Ë®≠ÁΩÆ?áËÅØ?¥Âä©Á≠âÁ?
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void SetSovietAidLevel(float Level) { SovietAidLevel = FMath::Clamp(Level, 0.0f, 1.0f); }
+    void SetSovietAidLevel(float Level) { SovietAidLevel = FMath::Clamp(Level, 0.0f, 1.0f}; }
 
     // ?≤Â??øÊ≤ªÂßîÂì°ÂΩ±Èüø??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     float GetPoliticalCommissarInfluence() const { return PoliticalCommissarInfluence; }
 
     // Ë®≠ÁΩÆ?øÊ≤ªÂßîÂì°ÂΩ±Èüø??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
-    void SetPoliticalCommissarInfluence(float Influence) { PoliticalCommissarInfluence = FMath::Clamp(Influence, 0.0f, 1.0f); }
+    void SetPoliticalCommissarInfluence(float Influence) { PoliticalCommissarInfluence = FMath::Clamp(Influence, 0.0f, 1.0f}; }
 
 protected:
     // ?øÊ≤ªÂßîÂì°ÂΩ±Èüø??(0.0-1.0)
@@ -109,11 +109,12 @@ private:
     // ‰∏âÊ?‰∏ªÁæ©ÂΩ±Èüø??    float ThreePrinciplesInfluence;
 
     // Ë®àÁ??øÊ≤ªÂ£´Ê∞£?†Ê?
-    float CalculatePoliticalMoraleBonus();
+    float CalculatePoliticalMoraleBonus(};
 
     // Ë®àÁ?Áµ±‰??∞Á??∞Ë??†Ê?
-    float CalculateUnitedFrontBonus(const FMingAIContext& Context);
+    float CalculateUnitedFrontBonus(const FMingAIContext& Context};
 
     // Ê±∫Â??ØÂê¶?ºÂ??øÊ≤ª?ªÂã¢
-    bool ShouldLaunchPoliticalOffensive(const FMingAIContext& Context);
+    bool ShouldLaunchPoliticalOffensive(const FMingAIContext& Context};
 };
+

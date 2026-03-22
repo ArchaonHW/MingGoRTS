@@ -49,7 +49,7 @@ struct MINGTACTICAL_API FPerformanceStats
     UPROPERTY(BlueprintReadOnly)
     float MemoryUsageMB = 0.0f;
 
-    void Update(float DeltaTime);
+    void Update(float DeltaTime};
 };
 
 /**
@@ -69,7 +69,7 @@ class MINGTACTICAL_API UMingTacticalOptimizationManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingTacticalOptimizationManager();
+    UMingTacticalOptimizationManager(};
 
     /**
      * ?ùÂ??ñÂÑ™?ñÁÆ°?ÜÂô® | Initialize Optimization Manager
@@ -77,18 +77,18 @@ public:
      * @param ExpectedUnitCount ?êÊ??Æ‰??∏È? | Expected unit count
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization")
-    void Initialize(const FBox& WorldBounds, int32 ExpectedUnitCount = 1000);
+    void Initialize(const FBox& WorldBounds, int32 ExpectedUnitCount = 1000};
 
     /**
      * ?≥Èó≠‰ºòÂ?ÁÆ°Á???     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization")
-    void Shutdown();
+    void Shutdown(};
 
     /**
      * ‰∏?Tick ?ΩÊï∞
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization")
-    void Tick(float DeltaTime);
+    void Tick(float DeltaTime};
 
     // ==== Â≠êÁ≥ªÁªüËÆø??====
 
@@ -106,55 +106,55 @@ public:
     /**
      * Ê≥®Â??ï‰??∞Ê??â‰??ñÁ≥ªÁª?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void RegisterUnit(class AMingTacticalUnit* Unit);
+    void RegisterUnit(class AMingTacticalUnit* Unit};
 
     /**
      * ‰ªéÊ??â‰??ñÁ≥ªÁªüÊ≥®?Ä?ï‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void UnregisterUnit(class AMingTacticalUnit* Unit);
+    void UnregisterUnit(class AMingTacticalUnit* Unit};
 
     /**
      * ?πÈ?Ê≥®Â??ï‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void BatchRegisterUnits(const TArray<class AMingTacticalUnit*>& Units);
+    void BatchRegisterUnits(const TArray<class AMingTacticalUnit*>& Units};
 
     /**
      * ?πÈ?Ê≥®È??ï‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void BatchUnregisterUnits(const TArray<class AMingTacticalUnit*>& Units);
+    void BatchUnregisterUnits(const TArray<class AMingTacticalUnit*>& Units};
 
     /**
      * ?¥Êñ∞?ï‰?‰ΩçÁΩÆÔºàÂ?Ê≠•Âà∞Á©∫Èó¥?ÜÂå∫Ôº?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void UpdateUnitPosition(class AMingTacticalUnit* Unit, const FVector& NewLocation);
+    void UpdateUnitPosition(class AMingTacticalUnit* Unit, const FVector& NewLocation};
 
     /**
      * ËÆæÁΩÆ?ï‰???Tick Â±ÇÁ∫ß
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void SetUnitTickLevel(class AMingTacticalUnit* Unit, ETickLevel NewLevel);
+    void SetUnitTickLevel(class AMingTacticalUnit* Unit, ETickLevel NewLevel};
 
     /**
      * ?êÂ??ï‰???Critical Â±ÇÁ∫ßÔºà‰∏¥?∂Ô?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Units")
-    void PromoteUnitToCritical(class AMingTacticalUnit* Unit, float DurationSeconds = 5.0f);
+    void PromoteUnitToCritical(class AMingTacticalUnit* Unit, float DurationSeconds = 5.0f};
 
     // ==== AIÁÆ°Á? ====
 
     /**
      * Ê≥®Â?AI?∞‰??ñÁ≥ªÁª?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|AI")
-    void RegisterAI(class AMingCombatAI* AI);
+    void RegisterAI(class AMingCombatAI* AI};
 
     /**
      * ‰ªé‰??ñÁ≥ªÁªüÊ≥®?ÄAI
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|AI")
-    void UnregisterAI(class AMingCombatAI* AI);
+    void UnregisterAI(class AMingCombatAI* AI};
 
     // ==== ?ßËÉΩ?ëÊéß ====
 
@@ -176,13 +176,13 @@ public:
      * ?ØÁî®/Á¶ÅÁî®?™Âä®‰ºòÂ?Ë∞ÉÊï¥
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Auto")
-    void SetAutoOptimizationEnabled(bool bEnabled);
+    void SetAutoOptimizationEnabled(bool bEnabled};
 
     /**
      * ?πÊçÆ?ßËÉΩ?™Âä®Ë∞ÉÊï¥‰ºòÂ?Á∫ßÂà´
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Auto")
-    void AutoAdjustOptimizationLevel();
+    void AutoAdjustOptimizationLevel(};
 
     // ==== ?çÁΩÆ ====
 
@@ -190,41 +190,41 @@ public:
      * ËÆæÁΩÆ?ÆÊ? FPS
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
-    void SetTargetFPS(float TargetFPS);
+    void SetTargetFPS(float TargetFPS};
 
     /**
      * ËÆæÁΩÆ?ßËÉΩ‰∏¥Á??àÂÄºÔ?‰Ωé‰?Ê≠§ÂÄºËß¶?ëËá™?®‰??ñÔ?
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
-    void SetPerformanceCriticalThreshold(float FPS);
+    void SetPerformanceCriticalThreshold(float FPS};
 
     /**
      * ?ØÁî®/Á¶ÅÁî®Á©∫Èó¥?ÜÂå∫
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
-    void SetSpatialPartitionEnabled(bool bEnabled);
+    void SetSpatialPartitionEnabled(bool bEnabled};
 
     /**
      * ?ØÁî®/Á¶ÅÁî®?ÜÂ? Tick
      */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
-    void SetHierarchicalTickEnabled(bool bEnabled);
+    void SetHierarchicalTickEnabled(bool bEnabled};
 
     /**
      * ?ØÁî®/Á¶ÅÁî®ÂØπË±°Ê±?     */
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Config")
-    void SetObjectPoolEnabled(bool bEnabled);
+    void SetObjectPoolEnabled(bool bEnabled};
 
     // ==== Ë∞ÉË? ====
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Debug")
-    void PrintDebugInfo();
+    void PrintDebugInfo(};
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Debug")
     FString GetDebugString() const;
 
     UFUNCTION(BlueprintCallable, Category = "Tactical Optimization|Debug")
-    void DrawDebugVisualization(bool bDrawSpatialGrid = true, bool bDrawTickLevels = false);
+    void DrawDebugVisualization(bool bDrawSpatialGrid = true, bool bDrawTickLevels = false};
 
     /**
      * ?üÊ?‰ºòÂ??•Â?
@@ -261,17 +261,18 @@ private:
     float OptimizationAdjustCooldown;
 
     // ?ùÂ??ñÂ?Á≥ªÁ?
-    void InitializeSubsystems(const FBox& WorldBounds, int32 ExpectedUnitCount);
-    void ShutdownSubsystems();
+    void InitializeSubsystems(const FBox& WorldBounds, int32 ExpectedUnitCount};
+    void ShutdownSubsystems(};
 
     // ?¥Êñ∞?ßËÉΩÁªüËÆ°
-    void UpdatePerformanceStats(float DeltaTime);
+    void UpdatePerformanceStats(float DeltaTime};
 
     // ?™ÈÄÇÂ?‰ºòÂ?Ë∞ÉÊï¥
-    void PerformAutoOptimization(float DeltaTime);
+    void PerformAutoOptimization(float DeltaTime};
 
     // Ë∞ÉÊï¥‰ºòÂ?Á∫ßÂà´
-    void SetOptimizationLevel(int32 NewLevel);
+    void SetOptimizationLevel(int32 NewLevel};
 
-    // ?πÊçÆ?ï‰??∞È?Ë∞ÉÊï¥Ê±†Â§ßÂ∞?    void AdjustPoolSizeForUnitCount(int32 UnitCount);
+    // ?πÊçÆ?ï‰??∞È?Ë∞ÉÊï¥Ê±†Â§ßÂ∞?    void AdjustPoolSizeForUnitCount(int32 UnitCount};
 };
+

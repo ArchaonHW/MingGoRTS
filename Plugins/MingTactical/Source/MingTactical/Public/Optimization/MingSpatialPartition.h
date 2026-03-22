@@ -29,11 +29,11 @@ struct MINGTACTICAL_API FSpatialGridCell
     FMingSpatialGridCell() = default;
     explicit FMingSpatialGridCell(const FIntVector& InCoord) : GridCoord(InCoord) {}
 
-    void AddUnit(AMingTacticalUnit* Unit);
-    void RemoveUnit(AMingTacticalUnit* Unit);
+    void AddUnit(AMingTacticalUnit* Unit};
+    void RemoveUnit(AMingTacticalUnit* Unit};
     bool Contains(AMingTacticalUnit* Unit) const;
-    void Clear();
-    int32 GetUnitCount() const { return Units.Num(); }
+    void Clear(};
+    int32 GetUnitCount() const { return Units.Num(}; }
 };
 
 /**
@@ -53,7 +53,7 @@ struct MINGTACTICAL_API FSpatialQueryResult
     UPROPERTY(BlueprintReadOnly)
     float QueryTimeMs = 0.0f;
 
-    void AddUnit(AMingTacticalUnit* Unit);
+    void AddUnit(AMingTacticalUnit* Unit};
 };
 
 /**
@@ -73,88 +73,88 @@ class MINGTACTICAL_API UMingSpatialPartition : public UObject
     GENERATED_BODY()
 
 public:
-    UMingSpatialPartition();
+    UMingSpatialPartition(};
 
     /**
      * ?ùÂ??ñÁ©∫?¥Â??∫Á≥ªÁª?     * @param WorldBounds ‰∏ñÁ?ËæπÁ?
      * @param CellSize ÁΩëÊ†º?ïÂ?Â§ßÂ?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void Initialize(const FBox& WorldBounds, float CellSize = 1000.0f);
+    void Initialize(const FBox& WorldBounds, float CellSize = 1000.0f};
 
     /**
      * ?≥Èó≠Á≥ªÁ?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void Shutdown();
+    void Shutdown(};
 
     /**
      * Ê≥®Â??ï‰??∞Á©∫?¥Â???     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void RegisterUnit(AMingTacticalUnit* Unit);
+    void RegisterUnit(AMingTacticalUnit* Unit};
 
     /**
      * ‰ªéÁ©∫?¥Â??∫Ê≥®?Ä?ï‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void UnregisterUnit(AMingTacticalUnit* Unit);
+    void UnregisterUnit(AMingTacticalUnit* Unit};
 
     /**
      * ?¥Êñ∞?ï‰?‰ΩçÁΩÆ
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void UpdateUnitPosition(AMingTacticalUnit* Unit, const FVector& NewLocation);
+    void UpdateUnitPosition(AMingTacticalUnit* Unit, const FVector& NewLocation};
 
     /**
      * ?ÉÂõ¥?•ËØ¢ - ?∑Â??áÂ??ÉÂõ¥?ÖÁ??Ä?âÂ?‰Ω?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    FSpatialQueryResult QueryUnitsInRadius(const FVector& Center, float Radius, int32 TeamId = -1);
+    FSpatialQueryResult QueryUnitsInRadius(const FVector& Center, float Radius, int32 TeamId = -1};
 
     /**
      * Ê°ÜÊü•ËØ?- ?∑Â??áÂ??ÖÂõ¥?íÂ??ÑÊ??âÂ?‰Ω?     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    FSpatialQueryResult QueryUnitsInBox(const FBox& Box, int32 TeamId = -1);
+    FSpatialQueryResult QueryUnitsInBox(const FBox& Box, int32 TeamId = -1};
 
     /**
      * ?∑Â??ÄËøëÁ??ï‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    AMingTacticalUnit* GetNearestUnit(const FVector& Location, float MaxRadius, int32 TeamId = -1);
+    AMingTacticalUnit* GetNearestUnit(const FVector& Location, float MaxRadius, int32 TeamId = -1};
 
     /**
      * ?∑Â??ÄËøëÁ??åÊñπ?ï‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    AMingTacticalUnit* GetNearestEnemyUnit(AMingTacticalUnit* SourceUnit, float MaxRadius);
+    AMingTacticalUnit* GetNearestEnemyUnit(AMingTacticalUnit* SourceUnit, float MaxRadius};
 
     /**
      * ?∑Â??ÉÂõ¥?ÖÁ??åÊñπ?ï‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    FSpatialQueryResult GetEnemyUnitsInRadius(AMingTacticalUnit* SourceUnit, float Radius);
+    FSpatialQueryResult GetEnemyUnitsInRadius(AMingTacticalUnit* SourceUnit, float Radius};
 
     /**
      * ?∑Â??ÉÂõ¥?ÖÁ??ãÊñπ?ï‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    FSpatialQueryResult GetFriendlyUnitsInRadius(AMingTacticalUnit* SourceUnit, float Radius);
+    FSpatialQueryResult GetFriendlyUnitsInRadius(AMingTacticalUnit* SourceUnit, float Radius};
 
     /**
      * ËßÜÁ∫ø?•ËØ¢ - Ê£ÄÊµã‰∏§‰∏™‰?ÁΩÆÈó¥?ØÂê¶?âÂ?‰ΩçÈòª??     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    bool HasLineOfSight(const FVector& Start, const FVector& End, float CheckRadius = 50.0f);
+    bool HasLineOfSight(const FVector& Start, const FVector& End, float CheckRadius = 50.0f};
 
     /**
      * ?∑Â?ËßÜÁ∫ø?ÖÁ??ï‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Queries")
-    FSpatialQueryResult GetUnitsInLineOfSight(const FVector& Start, const FVector& End, float Width);
+    FSpatialQueryResult GetUnitsInLineOfSight(const FVector& Start, const FVector& End, float Width};
 
     /**
      * ?∑Â??áÂ?ÁΩëÊ†º?ïÂ??ÖÁ??ï‰?
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    TArray<AMingTacticalUnit*> GetUnitsInCell(const FIntVector& GridCoord);
+    TArray<AMingTacticalUnit*> GetUnitsInCell(const FIntVector& GridCoord};
 
     /**
      * ?∑Â??ï‰??Ä?®Á?ÁΩëÊ†º?êÊ?
@@ -176,13 +176,13 @@ public:
      * ?∑Â?Á≥ªÁ?ÁªüËÆ°‰ø°ÊÅØ
      */
     UFUNCTION(BlueprintPure, Category = "Spatial Partition|Stats")
-    int32 GetTotalCellCount() const { return GridCells.Num(); }
+    int32 GetTotalCellCount() const { return GridCells.Num(}; }
 
     UFUNCTION(BlueprintPure, Category = "Spatial Partition|Stats")
     int32 GetOccupiedCellCount() const;
 
     UFUNCTION(BlueprintPure, Category = "Spatial Partition|Stats")
-    int32 GetTotalUnitCount() const { return TrackedUnits.Num(); }
+    int32 GetTotalUnitCount() const { return TrackedUnits.Num(}; }
 
     UFUNCTION(BlueprintPure, Category = "Spatial Partition|Stats")
     float GetAverageUnitsPerCell() const;
@@ -191,35 +191,35 @@ public:
      * Ë∞ÉË?ÁªòÂà∂
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Debug")
-    void DrawDebugVisualization(bool bDrawGrid = true, bool bDrawUnits = false);
+    void DrawDebugVisualization(bool bDrawGrid = true, bool bDrawUnits = false};
 
     /**
      * È™åË?Á≥ªÁ?ÂÆåÊï¥??     */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition|Debug")
-    bool ValidateIntegrity();
+    bool ValidateIntegrity(};
 
     /**
      * Ê∏ÖÁ??†Ê?ÂºïÁî®
      */
     UFUNCTION(BlueprintCallable, Category = "Spatial Partition")
-    void CleanupInvalidReferences();
+    void CleanupInvalidReferences(};
 
     // ==== ?πÈ??ç‰? ====
 
     /**
      * ?πÈ?Ê≥®Â??ï‰?
      */
-    void BatchRegisterUnits(const TArray<AMingTacticalUnit*>& Units);
+    void BatchRegisterUnits(const TArray<AMingTacticalUnit*>& Units};
 
     /**
      * ?πÈ?Ê≥®È??ï‰?
      */
-    void BatchUnregisterUnits(const TArray<AMingTacticalUnit*>& Units);
+    void BatchUnregisterUnits(const TArray<AMingTacticalUnit*>& Units};
 
     /**
      * ?πÈ??¥Êñ∞‰ΩçÁΩÆ
      */
-    void BatchUpdatePositions(const TMap<AMingTacticalUnit*, FVector>& PositionUpdates);
+    void BatchUpdatePositions(const TMap<AMingTacticalUnit*, FVector>& PositionUpdates};
 
 private:
     // ÁΩëÊ†º?ïÂ??†Â?
@@ -243,20 +243,21 @@ private:
     int32 QueryCount;
     float TotalQueryTime;
 
-    // ?∑Â??ñÂ?Âª∫Á??ºÂ???    FSpatialGridCell* GetOrCreateCell(const FIntVector& Coord);
-    FSpatialGridCell* GetCell(const FIntVector& Coord);
+    // ?∑Â??ñÂ?Âª∫Á??ºÂ???    FSpatialGridCell* GetOrCreateCell(const FIntVector& Coord};
+    FSpatialGridCell* GetCell(const FIntVector& Coord};
 
     // ?∑Â??∏ÈÇªÁΩëÊ†º?êÊ?
-    TArray<FIntVector> GetNeighboringCells(const FIntVector& Center, int32 Radius = 1);
+    TArray<FIntVector> GetNeighboringCells(const FIntVector& Center, int32 Radius = 1};
 
-    // ?∑Â??•ËØ¢?Ä?Ä?ÑÁ??ºË???    TArray<FIntVector> GetCellsInRadius(const FVector& Center, float Radius);
-    TArray<FIntVector> GetCellsInBox(const FBox& Box);
+    // ?∑Â??•ËØ¢?Ä?Ä?ÑÁ??ºË???    TArray<FIntVector> GetCellsInRadius(const FVector& Center, float Radius};
+    TArray<FIntVector> GetCellsInBox(const FBox& Box};
 
-    // Ê∏ÖÁ?Á©∫Â???    void CleanupEmptyCells();
+    // Ê∏ÖÁ?Á©∫Â???    void CleanupEmptyCells(};
 
     // È™åË??êÊ??ØÂê¶?®Ëæπ?åÂ?
     bool IsValidGridCoord(const FIntVector& Coord) const;
 
     // ?¥Êñ∞ÁªüËÆ°
-    void RecordQueryTime(float TimeMs);
+    void RecordQueryTime(float TimeMs};
 };
+

@@ -1,12 +1,12 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Difficulty/EDifficultyLevel.h"
 #include "FMingDifficultySettings.generated.h"
 
 /**
- * ?曉漲?蝏?
- * 摮?葵?曉漲????澆??
+ * ?�度?�数结�?
+ * 存储?�个?�度?�数?��??�值�??�围
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingDifficultyParameter
@@ -44,15 +44,15 @@ struct MINGTACTICAL_API FMingDifficultyParameter
         , AdjustmentStep(0.1f)
     {}
 
-    /** 靚??潘?餈??臬颲曉颲寧? */
-    bool AdjustValue(float Delta);
+    /** 调整?�数?��?返�??�否达到边�? */
+    bool AdjustValue(float Delta};
 
-    /** 霈曄蔭??潘?撣西??湧??塚? */
-    void SetValue(float NewValue);
+    /** 设置?�数?��?带�??��??��? */
+    void SetValue(float NewValue};
 };
 
 /**
- * 憸挽?曉漲?蔭蝏?
+ * 预设?�度?�置结�?
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingPresetDifficultyConfig
@@ -63,24 +63,24 @@ struct MINGTACTICAL_API FMingPresetDifficultyConfig
     EDifficultyLevel Level = EDifficultyLevel::Normal;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
-    FString DisplayName = TEXT("?桅?);
+    FString DisplayName = TEXT("?��?};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
-    FString Description = TEXT("??皜豢??曉漲");
+    FString Description = TEXT("?��?游�??�度"};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty")
     TMap<EDifficultyParameter, float> ParameterValues;
 
     FMingPresetDifficultyConfig()
     {
-        InitializeDefaultValues();
+        InitializeDefaultValues(};
     }
 
-    void InitializeDefaultValues();
+    void InitializeDefaultValues(};
 };
 
 /**
- * ?曉漲霈曄蔭銝餌??? * 蝞∠???摨衣?喟??蔭
+ * ?�度设置主�??? * 管�??�?�难度相?��??�置
  */
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingDifficultySettings
@@ -115,28 +115,29 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Difficulty", meta = (ClampMin = "0.0", ClampMax = "1.0"))
     float OscillationPreventionThreshold = 0.3f;
 
-    FMingDifficultySettings();
+    FMingDifficultySettings(};
 
-    /** 隞?霈暸?蝵桀?憪? */
-    void InitializeFromPreset(EDifficultyLevel Level);
+    /** 从�?设�?置�?始�? */
+    void InitializeFromPreset(EDifficultyLevel Level};
 
-    /** ?瑕???蝐餃?????*/
-    FMingDifficultyParameter* GetParameter(EDifficultyParameter Type);
+    /** ?��??��?类�??��???*/
+    FMingDifficultyParameter* GetParameter(EDifficultyParameter Type};
     const FMingDifficultyParameter* GetParameter(EDifficultyParameter Type) const;
 
-    /** ?瑕??敶???*/
+    /** ?��??�数当�???*/
     float GetParameterValue(EDifficultyParameter Type) const;
 
-    /** 霈曄蔭???*/
-    void SetParameterValue(EDifficultyParameter Type, float Value);
+    /** 设置?�数??*/
+    void SetParameterValue(EDifficultyParameter Type, float Value};
 
-    /** 靚???*/
-    bool AdjustParameter(EDifficultyParameter Type, float Delta);
+    /** 调整?�数??*/
+    bool AdjustParameter(EDifficultyParameter Type, float Delta};
 
-    /** ?瑕?憸挽?蔭?瘜?*/
-    static FMingPresetDifficultyConfig GetPresetConfig(EDifficultyLevel Level);
-    static TArray<FMingPresetDifficultyConfig> GetAllPresetConfigs();
+    /** ?��?预设?�置?�态方�?*/
+    static FMingPresetDifficultyConfig GetPresetConfig(EDifficultyLevel Level};
+    static TArray<FMingPresetDifficultyConfig> GetAllPresetConfigs(};
 
 private:
-    void InitializeDefaultParameters();
+    void InitializeDefaultParameters(};
 };
+

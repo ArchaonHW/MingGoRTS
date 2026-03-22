@@ -135,20 +135,20 @@ struct MINGTACTICAL_API FMingFormationData
     FMingFormationData()
     {
         FormationID = -1;
-        FormationName = TEXT("");
+        FormationName = TEXT(""};
         FormationType = EMingFormationType::Line;
         FormationStatus = EMingFormationStatus::Forming;
         Priority = EMingFormationPriority::Normal;
         FormationCenter = FVector::ZeroVector;
         FormationRotation = FRotator::ZeroRotator;
         FormationScale = 1.0f;
-        UnitIDs.Empty();
-        UnitRoles.Empty();
-        FormationPositions.Empty();
-        FormationBonuses.Empty();
-        FormationPenalties.Empty();
-        CreationTime = FDateTime::Now();
-        LastUpdateTime = FDateTime::Now();
+        UnitIDs.Empty(};
+        UnitRoles.Empty(};
+        FormationPositions.Empty(};
+        FormationBonuses.Empty(};
+        FormationPenalties.Empty(};
+        CreationTime = FDateTime::Now(};
+        LastUpdateTime = FDateTime::Now(};
         CommanderID = -1;
         BackupCommanderID = -1;
         FormationExperience = 0.0f;
@@ -197,10 +197,10 @@ struct MINGTACTICAL_API FMingFormationCommand
         CommandID = -1;
         CommandType = EMingFormationCommand::CreateFormation;
         TargetFormationID = -1;
-        CommandParameters.Empty();
+        CommandParameters.Empty(};
         Priority = EMingFormationPriority::Normal;
         ExecutionTime = 0.0f;
-        CommandDescription = TEXT("");
+        CommandDescription = TEXT(""};
     }
 };
 
@@ -266,29 +266,29 @@ struct MINGTACTICAL_API FMingFormationTemplate
     FMingFormationTemplate()
     {
         TemplateID = -1;
-        TemplateName = TEXT("");
-        TemplateDescription = TEXT("");
+        TemplateName = TEXT(""};
+        TemplateDescription = TEXT(""};
         FormationType = EMingFormationType::Line;
-        RecommendedUnitTypes.Empty();
+        RecommendedUnitTypes.Empty(};
         MinUnitCount = 1;
         MaxUnitCount = 100;
         StandardSpacing = 100.0f;
         StandardDepth = 200.0f;
         StandardWidth = 300.0f;
-        TemplateBonuses.Empty();
-        UsageConditions.Empty();
+        TemplateBonuses.Empty(};
+        UsageConditions.Empty(};
         bIsHistorical = false;
-        HistoricalBackground = TEXT("");
+        HistoricalBackground = TEXT(""};
     }
 };
 
 // Á∑®È?ÁÆ°Á?‰∫ã‰ª∂ÂßîË?
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFormationCreated, const FMingFormationData&, Formation);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFormationChanged, int32, FormationID, EMingFormationType, NewFormationType);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFormationDisbanded, int32, FormationID, const TArray<int32>&, ReleasedUnits);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnFormationUnitAdded, int32, FormationID, int32, UnitID, EMingUnitRole, Role);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFormationUnitRemoved, int32, FormationID, int32, UnitID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFormationCommandExecuted, const FMingFormationCommand&, Command);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFormationCreated, const FMingFormationData&, Formation};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFormationChanged, int32, FormationID, EMingFormationType, NewFormationType};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFormationDisbanded, int32, FormationID, const TArray<int32>&, ReleasedUnits};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnFormationUnitAdded, int32, FormationID, int32, UnitID, EMingUnitRole, Role};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFormationUnitRemoved, int32, FormationID, int32, UnitID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFormationCommandExecuted, const FMingFormationCommand&, Command};
 
 /**
  * Á∑®È?ÁÆ°Á??? * Ë≤†Ë≤¨ÁÆ°Á??∞Ë?Á∑®È??ÑÂâµÂª∫„ÄÅË??¥Â?Á∂≠Ë≠∑
@@ -299,44 +299,44 @@ class MINGTACTICAL_API UMingFormationManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingFormationManager();
+    UMingFormationManager(};
 
     // ?ùÂ??ñÁ∑®?äÁÆ°?ÜÂô®
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool InitializeFormationManager();
+    bool InitializeFormationManager(};
 
     // ?µÂª∫Á∑®È?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    int32 CreateFormation(const TArray<int32>& UnitIDs, EMingFormationType FormationType, const FString& FormationName);
+    int32 CreateFormation(const TArray<int32>& UnitIDs, EMingFormationType FormationType, const FString& FormationName};
 
     // Ëß?ï£Á∑®È?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool DisbandFormation(int32 FormationID);
+    bool DisbandFormation(int32 FormationID};
 
     // ËÆäÊõ¥Á∑®È?È°ûÂ?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool ChangeFormationType(int32 FormationID, EMingFormationType NewFormationType);
+    bool ChangeFormationType(int32 FormationID, EMingFormationType NewFormationType};
 
     // Ê∑ªÂ??Æ‰??∞Á∑®??    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool AddUnitToFormation(int32 FormationID, int32 UnitID, EMingUnitRole Role);
+    bool AddUnitToFormation(int32 FormationID, int32 UnitID, EMingUnitRole Role};
 
     // ÂæûÁ∑®?äÁßª?§ÂñÆ‰Ω?    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool RemoveUnitFromFormation(int32 FormationID, int32 UnitID);
+    bool RemoveUnitFromFormation(int32 FormationID, int32 UnitID};
 
     // Ë®≠ÁΩÆÁ∑®È??áÊèÆÂÆ?    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool SetFormationCommander(int32 FormationID, int32 CommanderID);
+    bool SetFormationCommander(int32 FormationID, int32 CommanderID};
 
     // ?ãË?Á∑®È?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool RotateFormation(int32 FormationID, const FRotator& NewRotation);
+    bool RotateFormation(int32 FormationID, const FRotator& NewRotation};
 
     // Á∏ÆÊîæÁ∑®È?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool ScaleFormation(int32 FormationID, float NewScale);
+    bool ScaleFormation(int32 FormationID, float NewScale};
 
     // ÁßªÂ?Á∑®È?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool MoveFormation(int32 FormationID, const FVector& TargetLocation);
+    bool MoveFormation(int32 FormationID, const FVector& TargetLocation};
 
     // ?≤Â?Á∑®È?‰ø°ÊÅØ
     UFUNCTION(BlueprintPure, Category = "Formation Manager")
@@ -352,7 +352,7 @@ public:
 
     // ?âÁî®Á∑®È?Ê®°Êùø
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool ApplyFormationTemplate(int32 FormationID, int32 TemplateID);
+    bool ApplyFormationTemplate(int32 FormationID, int32 TemplateID};
 
     // ?≤Â?Á∑®È?Áµ±Ë?
     UFUNCTION(BlueprintPure, Category = "Formation Manager")
@@ -363,22 +363,22 @@ public:
     float CalculateFormationEfficiency(int32 FormationID) const;
 
     // Ê™¢Êü•Á∑®È?ÂÆåÊï¥??    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool CheckFormationIntegrity(int32 FormationID);
+    bool CheckFormationIntegrity(int32 FormationID};
 
     // ‰øÆÂæ©Á∑®È?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool RepairFormation(int32 FormationID);
+    bool RepairFormation(int32 FormationID};
 
     // ‰øùÂ?Á∑®È??∏Ê?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool SaveFormationData();
+    bool SaveFormationData(};
 
     // ËºâÂÖ•Á∑®È??∏Ê?
     UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    bool LoadFormationData();
+    bool LoadFormationData(};
 
     // Ê∏ÖÈô§?Ä?âÁ∑®??    UFUNCTION(BlueprintCallable, Category = "Formation Manager")
-    void ClearAllFormations();
+    void ClearAllFormations(};
 
     // ‰∫ã‰ª∂ÂßîË?
     UPROPERTY(BlueprintAssignable)
@@ -420,7 +420,7 @@ protected:
 
 private:
     // ËºâÂÖ•?êË®≠Á∑®È?Ê®°Êùø
-    void LoadDefaultFormationTemplates();
+    void LoadDefaultFormationTemplates(};
 
     // ?üÊ?Á∑®È?‰ΩçÁΩÆ
     TArray<FVector> GenerateFormationPositions(EMingFormationType FormationType, int32 UnitCount, float Scale) const;
@@ -431,20 +431,20 @@ private:
     // Ë®àÁ?Á∑®È?Ê∏õÁ?
     TMap<FString, float> CalculateFormationPenalties(int32 FormationID) const;
 
-    // ?¥Êñ∞Á∑®È??Ä??    void UpdateFormationStatus(int32 FormationID, EMingFormationStatus NewStatus);
+    // ?¥Êñ∞Á∑®È??Ä??    void UpdateFormationStatus(int32 FormationID, EMingFormationStatus NewStatus};
 
     // ?ïÁ?Á∑®È??Ω‰ª§
-    void ProcessFormationCommand(const FMingFormationCommand& Command);
+    void ProcessFormationCommand(const FMingFormationCommand& Command};
 
     // È©óË?Á∑®È??∏Ê?
     bool ValidateFormationData(const FMingFormationData& Formation) const;
 
-    // ?âÁî®Á∑®È??†Ê??∞ÂñÆ‰Ω?    void ApplyFormationBonusesToUnits(int32 FormationID);
+    // ?âÁî®Á∑®È??†Ê??∞ÂñÆ‰Ω?    void ApplyFormationBonusesToUnits(int32 FormationID};
 
-    // ÁßªÈô§Á∑®È??†Ê?ÂæûÂñÆ‰Ω?    void RemoveFormationBonusesFromUnits(int32 FormationID);
+    // ÁßªÈô§Á∑®È??†Ê?ÂæûÂñÆ‰Ω?    void RemoveFormationBonusesFromUnits(int32 FormationID};
 
     // ?™Â?‰øÆÂæ©Á∑®È?
-    void AutoRepairFormation(int32 FormationID);
+    void AutoRepairFormation(int32 FormationID};
 
     // Ë®àÁ??Ä‰Ω≥Á∑®?äÈ???    EMingFormationType CalculateOptimalFormationType(const TArray<int32>& UnitIDs) const;
 
@@ -452,5 +452,6 @@ private:
     bool CheckFormationConflict(int32 FormationID1, int32 FormationID2) const;
 
     // Ëß?±∫Á∑®È?Ë°ùÁ?
-    void ResolveFormationConflict(int32 FormationID1, int32 FormationID2);
+    void ResolveFormationConflict(int32 FormationID1, int32 FormationID2};
 };
+
