@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -6,7 +6,7 @@
 #include "MingUniversityGuideWidget.generated.h"
 
 /**
- * 高校引�?UI Widget
+ * 高校引�?UI Widget
  */
 UCLASS()
 class MINGPERSONAL_API UMingUniversityGuideWidget : public UUserWidget
@@ -18,39 +18,39 @@ public:
     virtual void NativeDestruct() override;
 
     /**
-     * 設置引�?管�???     */
+     * 設置引�?管�X     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void SetGuideManager(UMingUniversityGuideManager* Manager};
 
     /**
-     * 顯示引�??�容
+     * 顯示引�X�容
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void DisplayContent(const FUniversityGuideContent& Content};
 
     /**
-     * ?�新?�度�?     */
+     * ?�新?�度�?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void UpdateProgressBar(float Progress};
 
     /**
-     * 顯示/?��?導航?��?
+     * 顯示/?��?導航?��?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void SetNavigationButtonsEnabled(bool bPreviousEnabled, bool bNextEnabled};
 
     /**
-     * ?�放?�容?�畫
+     * ?�放?�容?�畫
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void PlayContentAnimation(};
 
     /**
-     * 顯示完�?對話�?     */
+     * 顯示完�?對話�?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide UI")
     void ShowCompletionDialog(};
 
-    // UI?��?綁�?（在?��?中實?��?
+    // UI?��?綁�?（在?��?中實?��?
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* TitleText;
 
@@ -72,7 +72,7 @@ public:
     UPROPERTY(meta = (BindWidget))
     class UHorizontalBox* NavigationBox;
 
-    // ?��?事件?��?
+    // ?��?事件?��?
     UFUNCTION()
     void OnPreviousButtonClicked(};
 

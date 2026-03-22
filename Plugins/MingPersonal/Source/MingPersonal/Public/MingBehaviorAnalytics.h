@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -111,8 +111,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionCompleted, const FUserSess
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnomalyDetected, const FString&, AnomalyType, float, Severity};
 
 /**
- * 行為?��?系統
- * 深度?��??�戶行為模�??�趨?? */
+ * 行為?��?系統
+ * 深度?��X�戶行為模�X�趨X */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingBehaviorAnalytics : public UObject
 {
@@ -121,10 +121,10 @@ class MINGPERSONAL_API UMingBehaviorAnalytics : public UObject
 public:
     UMingBehaviorAnalytics(};
 
-    // ?��??��??�系�?    UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
+    // ?��X��X�系�?    UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     void InitializeAnalytics(};
 
-    // 事件記�?
+    // 事件記�?
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     void RecordEvent(const FString& EventType, const FString& Context, float Value = 1.0f};
 
@@ -144,7 +144,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     void RecordGameAction(const FString& ActionType, const FString& Target, float SuccessRate};
 
-    // 模�?檢測
+    // 模�?檢測
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     void DetectPatterns(};
 
@@ -157,7 +157,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     bool HasPattern(const FString& PatternName) const;
 
-    // 趨勢?��?
+    // 趨勢?��?
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TArray<float> GetEventTrend(const FString& EventType, int32 WindowSize = 10) const;
 
@@ -167,7 +167,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     float GetAverageActionInterval(const FString& EventType) const;
 
-    // ?�常檢測
+    // ?�常檢測
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     void DetectAnomalies(};
 
@@ -177,7 +177,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     float GetAnomalySeverity(const FString& AnomalyType) const;
 
-    // ?�測?��?
+    // ?�測?��?
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     FString PredictNextAction(};
 
@@ -187,7 +187,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TArray<FString> PredictUserGoals() const;
 
-    // ?��??�數??    UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
+    // ?��X�數X    UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TMap<FString, float> GenerateHeatmapData(const FString& DataType) const;
 
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
@@ -196,7 +196,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     TMap<EPersonalUIType, float> GetPanelUsageHeatmap() const;
 
-    // ?�戶?�群
+    // ?�戶?�群
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     FString GetUserSegment() const;
 
@@ -206,7 +206,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     float GetUserEngagementScore() const;
 
-    // ?��??��?
+    // ?��X��?
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     FString GenerateBehaviorReport() const;
 
@@ -216,7 +216,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     void ExportAnalyticsData(const FString& FilePath) const;
 
-    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "Behavior Analytics")
+    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "Behavior Analytics")
     bool IsRecording() const { return bIsRecording; }
 
     UFUNCTION(BlueprintPure, Category = "Behavior Analytics")
@@ -252,7 +252,7 @@ public:
     FOnAnomalyDetected OnAnomalyDetected;
 
 protected:
-    // ?��?存儲
+    // ?��?存儲
     UPROPERTY()
     TArray<FBehaviorEvent> AllEvents;
 
@@ -265,17 +265,17 @@ protected:
     UPROPERTY()
     TMap<FString, float> EventFrequencies;
 
-    // 注�?：TMap<TArray> 不支??UPROPERTY
+    // 注�?：TMap<TArray> 不支XUPROPERTY
     TMap<FString, TArray<float>> EventTrends;
 
     UPROPERTY()
     TMap<FString, float> AnomalyScores;
 
-    // ?��??�話
+    // ?��X�話
     UPROPERTY()
     FUserSession CurrentSession;
 
-    // ?�置
+    // ?�置
     UPROPERTY()
     bool bIsRecording = true;
 
@@ -291,7 +291,7 @@ protected:
     UPROPERTY()
     int32 MaxSessionsInHistory = 100;
 
-    // ?�部?�數
+    // ?�部?�數
     void ProcessEvent(const FBehaviorEvent& Event};
     void UpdateEventFrequencies(};
     void UpdateEventTrends(};
@@ -303,13 +303,13 @@ protected:
     void GenerateUserSegments(};
     FString ClassifyUserBehavior() const;
 
-    // 機器學�?輔助
+    // 機器學�?輔助
     TArray<float> ExtractFeatures(const TArray<FBehaviorEvent>& Events) const;
     float CalculateSimilarity(const TArray<float>& Features1, const TArray<float>& Features2) const;
     void UpdatePredictionModels(};
 
 private:
-    // 輔助?�數
+    // 輔助?�數
     void CleanupOldData(};
     void SaveAnalyticsData(};
     void LoadAnalyticsData(};

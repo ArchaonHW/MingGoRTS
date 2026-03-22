@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -314,11 +314,11 @@ protected:
     UPROPERTY()
     TMap<FString, FMingHistoricalCharacter> Characters;
 
-    // �?：TMap 不能??��???TMap ??UPROPERTY ????    // TMap<FString, TMap<FString, float>> CharacterRelationships;
+    // �?：TMap 不能X��XTMap XUPROPERTY X    // TMap<FString, TMap<FString, float>> CharacterRelationships;
 
-    // �?：TArray 不能??��???TMap ??UPROPERTY ????    // TMap<FString, TArray<FString>> CharacterEffects;
+    // �?：TArray 不能X��XTMap XUPROPERTY X    // TMap<FString, TArray<FString>> CharacterEffects;
 
-    // �?：TArray 不能??��???TMap ??UPROPERTY ????    // TMap<FString, TArray<FString>> HistoricalEvents;
+    // �?：TArray 不能X��XTMap XUPROPERTY X    // TMap<FString, TArray<FString>> HistoricalEvents;
 
     UPROPERTY()
     TWeakObjectPtr<UWorld> WorldContext;

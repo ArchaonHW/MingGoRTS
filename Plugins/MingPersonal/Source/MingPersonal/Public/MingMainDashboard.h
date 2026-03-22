@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -10,10 +10,10 @@ UENUM(BlueprintType)
 enum class EDashboardTab : uint8
 {
     Overview,       // 總覽
-    Relationships,  // ?��?
-    Reputation,     // ?��?
-    Quests,         // 任�?
-    Audio,          // ?�頻
+    Relationships,  // ?��?
+    Reputation,     // ?��?
+    Quests,         // 任�?
+    Audio,          // ?�頻
     Settings        // 設置
 };
 
@@ -102,8 +102,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuickActionExecuted, const FStrin
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDashboardRefreshed, const FDashboardSummary&, Summary};
 
 /**
- * 主個人系統?�表板Widget
- * 統�?管�??�?�個人系統?�面
+ * 主個人系統?�表板Widget
+ * 統�?管�X�?�個人系統?�面
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingMainDashboard : public UUserWidget
@@ -113,10 +113,10 @@ class MINGPERSONAL_API UMingMainDashboard : public UUserWidget
 public:
     UMingMainDashboard(const FObjectInitializer& ObjectInitializer};
 
-    // ?��???    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
+    // ?��X    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void InitializeDashboard(UMingPersonalManager* InPersonalManager};
 
-    // 標籤?�管??    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
+    // 標籤?�管X    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void SwitchToTab(EDashboardTab Tab};
 
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
@@ -137,7 +137,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void ShowSettings(};
 
-    // ?��??�新
+    // ?��X�新
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void RefreshDashboard(};
 
@@ -147,7 +147,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void UpdateQuickActions(};
 
-    // 快速�?�?    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
+    // 快速�?�?    UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void ExecuteQuickAction(const FString& ActionName};
 
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
@@ -162,7 +162,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void QuickOpenDialogue(const FString& CharacterID};
 
-    // ?�知系統
+    // ?�知系統
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void ShowNotification(const FString& Message, const FString& Type = TEXT("Info")};
 
@@ -178,7 +178,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void ShowAchievementUnlocked(const FString& AchievementName, const FString& Description};
 
-    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "Main Dashboard")
+    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "Main Dashboard")
     EDashboardTab GetCurrentTab() const { return CurrentTab; }
 
     UFUNCTION(BlueprintPure, Category = "Main Dashboard")
@@ -193,7 +193,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Main Dashboard")
     int32 GetNotificationCount() const;
 
-    // 統�?信息
+    // 統�?信息
     UFUNCTION(BlueprintPure, Category = "Main Dashboard")
     float GetRelationshipProgress() const;
 
@@ -206,7 +206,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Main Dashboard")
     float GetOverallProgress() const;
 
-    // 互�??��?
+    // 互�X��?
     UFUNCTION(BlueprintCallable, Category = "Main Dashboard")
     void OnTabButtonClicked(EDashboardTab Tab};
 
@@ -234,7 +234,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingPersonalManager> PersonalManager;
 
-    // ?��??�??    UPROPERTY(BlueprintReadOnly, Category = "Dashboard State")
+    // ?��X�X    UPROPERTY(BlueprintReadOnly, Category = "Dashboard State")
     EDashboardTab CurrentTab;
 
     UPROPERTY(BlueprintReadOnly, Category = "Dashboard State")
@@ -256,7 +256,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Dashboard Settings")
     int32 MaxNotifications = 10;
 
-    // UI組件引用（�?要在Blueprint中�?定�?
+    // UI組件引用（�?要在Blueprint中�?定�?
     UPROPERTY(meta = (BindWidget))
     class UVerticalBox* TabContainer;
 
@@ -290,7 +290,7 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UButton* SettingsButton;
 
-    // 標籤?�Widget引用
+    // 標籤?�Widget引用
     UPROPERTY()
     TObjectPtr<UUserWidget> OverviewWidget;
 
@@ -309,11 +309,11 @@ protected:
     UPROPERTY()
     TObjectPtr<UUserWidget> SettingsWidget;
 
-    // ?�擬?�數
+    // ?�擬?�數
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // ?�部?�數
+    // ?�部?�數
     void InitializeTabs(};
     void InitializeQuickActions(};
     void UpdateTabUI(};
@@ -326,14 +326,14 @@ protected:
     void CreateTabButtons(};
     void CreateQuickActionButtons(};
 
-    // 事件綁�?
+    // 事件綁�?
     void SetupEventBindings(};
     void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
     void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason};
     void OnQuestCompleted(const FString& QuestID, const FString& RegionID, const FString& QuestGiverID};
 
 private:
-    // 輔助?�數
+    // 輔助?�數
     void ShowTabContent(EDashboardTab Tab};
     void HideAllTabContent(};
     void AddNotification(const FString& Message, const FString& Type};
@@ -341,6 +341,6 @@ private:
     void RefreshTimer(};
     void UpdateProgressBars(};
 
-    // 定�???    FTimerHandle RefreshTimerHandle;
+    // 定�X    FTimerHandle RefreshTimerHandle;
 };
 

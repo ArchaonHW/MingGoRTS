@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -218,7 +218,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLobbyCountdownChanged, int32, Sec
 
 /**
  * 大廳系統
- * 管�?多人?�戲大廳?�創建、�??��??�置
+ * 管�?多人?�戲大廳?�創建、�X��X�置
  */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingLobbySystem : public UObject

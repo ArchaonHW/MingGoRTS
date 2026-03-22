@@ -172,7 +172,7 @@ struct FMingInvestigationClue
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPersonalModeChanged, EMingPersonalMode, NewMode};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPersonalModeChanged, EMingPersonalMode, NewMode);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueStarted, const FMingDialogueContext&, Dialogue};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueEnded, const FString&, DialogueID};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueResponseSelected, int32, ResponseIndex, const FString&, ResponseText};

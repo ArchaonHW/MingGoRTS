@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -10,27 +10,27 @@
 UENUM(BlueprintType)
 enum class EAudioControlType : uint8
 {
-    Master,         // ä¸»éŸ³??    Relationship,  // ?œä??³æ?
-    Reputation,     // ?²æ??³æ?
-    Dialogue,       // å°è©±?³æ?
-    Ambient,        // ?°å??³æ?
-    Music,          // ?Œæ™¯?³æ?
-    SFX             // ?¹æ??³æ?
+    Master,         // ä¸»éŸ³X    Relationship,  // ?ï¿½ï¿½Xï¿½ï¿½?
+    Reputation,     // ?ï¿½ï¿½Xï¿½ï¿½?
+    Dialogue,       // å°è©±?ï¿½ï¿½?
+    Ambient,        // ?ï¿½ï¿½Xï¿½ï¿½?
+    Music,          // ?ï¿½æ™¯?ï¿½ï¿½?
+    SFX             // ?ï¿½ï¿½Xï¿½ï¿½?
 };
 
 UENUM(BlueprintType)
 enum class EAudioThemeType : uint8
 {
-    Battle,         // ?°çˆ­ä¸»é?
-    Peaceful,       // ?Œå¹³ä¸»é?
-    Tension,        // ç·Šå¼µä¸»é?
-    Victory,        // ?åˆ©ä¸»é?
-    Defeat,         // å¤±æ?ä¸»é?
-    Diplomatic,     // å¤–äº¤ä¸»é?
-    Economic,       // ç¶“æ?ä¸»é?
-    Cultural,       // ?‡å?ä¸»é?
-    Revolutionary,  // ?©å‘½ä¸»é?
-    Nostalgic       // ?·è?ä¸»é?
+    Battle,         // ?ï¿½çˆ­ä¸»ï¿½?
+    Peaceful,       // ?ï¿½å¹³ä¸»ï¿½?
+    Tension,        // ç·Šå¼µä¸»ï¿½?
+    Victory,        // ?ï¿½åˆ©ä¸»ï¿½?
+    Defeat,         // å¤±ï¿½?ä¸»ï¿½?
+    Diplomatic,     // å¤–äº¤ä¸»ï¿½?
+    Economic,       // ç¶“ï¿½?ä¸»ï¿½?
+    Cultural,       // ?ï¿½ï¿½?ä¸»ï¿½?
+    Revolutionary,  // ?ï¿½å‘½ä¸»ï¿½?
+    Nostalgic       // ?ï¿½ï¿½?ä¸»ï¿½?
 };
 
 USTRUCT(BlueprintType)
@@ -110,8 +110,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnThemeChanged, EAudioThemeType, T
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAudioSettingsChanged, const FString&, SettingName};
 
 /**
- * ?³é »?¢æ¿Widget
- * ç®¡ç??³é »ç³»çµ±?§åˆ¶?Œé¢
+ * ?ï¿½é »?ï¿½æ¿Widget
+ * ç®¡ï¿½Xï¿½é »ç³»çµ±?ï¿½åˆ¶?ï¿½é¢
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingAudioPanel : public UUserWidget
@@ -121,10 +121,10 @@ class MINGPERSONAL_API UMingAudioPanel : public UUserWidget
 public:
     UMingAudioPanel(const FObjectInitializer& ObjectInitializer};
 
-    // ?å???    UFUNCTION(BlueprintCallable, Category = "Audio Panel")
+    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void InitializeAudioPanel(UMingAudioRelationshipManager* InAudioManager, UMingRepublicEraAudioThemes* InThemeManager};
 
-    // ?³é??§åˆ¶
+    // ?ï¿½ï¿½Xï¿½åˆ¶
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void SetVolume(EAudioControlType ControlType, float Volume};
 
@@ -149,7 +149,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void SetSFXVolume(float Volume};
 
-    // ?œéŸ³?§åˆ¶
+    // ?ï¿½éŸ³?ï¿½åˆ¶
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void MuteControl(EAudioControlType ControlType, bool bMuted};
 
@@ -159,7 +159,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void ToggleMute(EAudioControlType ControlType};
 
-    // ä¸»é??§åˆ¶
+    // ä¸»ï¿½Xï¿½åˆ¶
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void PlayTheme(EAudioThemeType ThemeType, float Intensity = 1.0f};
 
@@ -178,7 +178,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void FadeTheme(EAudioThemeType ThemeType, float TargetVolume, float FadeDuration};
 
-    // ?°å??³é »
+    // ?ï¿½ï¿½Xï¿½é »
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void SetRegionalAudio(ERepublicEraRegion Region};
 
@@ -191,7 +191,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void StopRegionalAudio(};
 
-    // ?³é »æ¸¬è©¦
+    // ?ï¿½é »æ¸¬è©¦
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void TestRelationshipAudio(ERelationshipAudioType AudioType};
 
@@ -204,7 +204,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void TestAllAudio(};
 
-    // è¨­ç½®ç®¡ç?
+    // è¨­ç½®ç®¡ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void LoadAudioSettings(};
 
@@ -217,7 +217,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void ApplyAudioProfile(const FString& ProfileName};
 
-    // ?€?‹æŸ¥è©?    UFUNCTION(BlueprintPure, Category = "Audio Panel")
+    // ?ï¿½?ï¿½æŸ¥ï¿½?    UFUNCTION(BlueprintPure, Category = "Audio Panel")
     float GetVolume(EAudioControlType ControlType) const;
 
     UFUNCTION(BlueprintPure, Category = "Audio Panel")
@@ -232,7 +232,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Audio Panel")
     ERepublicEraRegion GetCurrentRegion() const;
 
-    // ?³é »çµ±è?
+    // ?ï¿½é »çµ±ï¿½?
     UFUNCTION(BlueprintPure, Category = "Audio Panel")
     float GetAverageVolume() const;
 
@@ -242,7 +242,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Audio Panel")
     int32 GetMutedControlCount() const;
 
-    // äº’å??ä?
+    // äº’ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Audio Panel")
     void OnVolumeSliderChanged(EAudioControlType ControlType, float NewValue};
 
@@ -273,14 +273,14 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRepublicEraAudioThemes> ThemeManager;
 
-    // ?³é »?§åˆ¶?¸æ?
+    // ?ï¿½é »?ï¿½åˆ¶?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Audio Data")
     TArray<FAudioControlData> AudioControls;
 
     UPROPERTY(BlueprintReadOnly, Category = "Audio Data")
     TArray<FAudioThemeData> AudioThemes;
 
-    // ?¶å??€??    UPROPERTY(BlueprintReadOnly, Category = "Audio State")
+    // ?ï¿½ï¿½Xï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Audio State")
     EAudioThemeType CurrentThemeType;
 
     UPROPERTY(BlueprintReadOnly, Category = "Audio State")
@@ -296,7 +296,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Audio Settings")
     bool bAutoFadeOnThemeChange = true;
 
-    // UIçµ„ä»¶å¼•ç”¨ï¼ˆé?è¦åœ¨Blueprintä¸­ç?å®šï?
+    // UIçµ„ä»¶å¼•ç”¨ï¼ˆï¿½?è¦åœ¨Blueprintä¸­ï¿½?å®šï¿½?
     UPROPERTY(meta = (BindWidget))
     class UVerticalBox* VolumeControlsContainer;
 
@@ -327,11 +327,11 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UButton* ResetButton;
 
-    // ?›æ“¬?½æ•¸
+    // ?ï¿½æ“¬?ï¿½æ•¸
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // ?§éƒ¨?½æ•¸
+    // ?ï¿½éƒ¨?ï¿½æ•¸
     void InitializeAudioControls(};
     void InitializeAudioThemes(};
     void UpdateAudioUI(};
@@ -346,14 +346,14 @@ protected:
     FString GetAudioThemeName(EAudioThemeType ThemeType) const;
     FString GetRegionDisplayName(ERepublicEraRegion Region) const;
 
-    // äº‹ä»¶ç¶å?
+    // äº‹ä»¶ç¶ï¿½?
     void SetupEventBindings(};
     void OnAudioRelationshipPlayed(ERelationshipAudioType AudioType, USoundBase* Sound};
     void OnAudioReputationPlayed(EReputationAudioType AudioType, USoundBase* Sound};
     void OnAudioDialoguePlayed(EDialogueAudioType AudioType, USoundBase* Sound};
 
 private:
-    // è¼”åŠ©?½æ•¸
+    // è¼”åŠ©?ï¿½æ•¸
     void ApplyVolumeChange(EAudioControlType ControlType, float NewVolume};
     void ApplyMuteChange(EAudioControlType ControlType, bool bMuted};
     void ApplyThemeChange(EAudioThemeType ThemeType, bool bIsPlaying};

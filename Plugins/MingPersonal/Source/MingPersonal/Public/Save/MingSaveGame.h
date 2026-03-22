@@ -62,7 +62,7 @@ class MINGPERSONAL_API UMingSaveGame : public USaveGame
     GENERATED_BODY()
 
 public:
-    UMingSaveGame(};
+    UMingSaveGame();
 
     // Header Information
     UPROPERTY(VisibleAnywhere, Category = "Save Info")
@@ -101,7 +101,7 @@ public:
     bool IsCompatibleVersion() const;
 
     UFUNCTION()
-    void UpgradeToCurrentVersion(};
+    void UpgradeToCurrentVersion();
 
     // Serialization helpers
     UFUNCTION()
@@ -169,10 +169,10 @@ public:
 
     // Compression
     UFUNCTION()
-    void CompressData(};
+    void CompressData();
 
     UFUNCTION()
-    void DecompressData(};
+    void DecompressData();
 
     // Encryption (optional)
     UFUNCTION()
@@ -189,7 +189,7 @@ public:
     static FString GetSaveSlotName(int32 SlotIndex};
 
     UFUNCTION(BlueprintPure, Category = "Save Game")
-    static int32 GetMaxSaveSlots(};
+    static int32 GetMaxSaveSlots();
 
     // Migration helpers
     UFUNCTION()

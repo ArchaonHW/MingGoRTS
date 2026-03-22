@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -51,7 +51,7 @@ struct FNetworkTestCase
 
 /**
  * 網絡系統測試套件
- * 驗�?多人?�戲網絡系統?�核心�??? */
+ * 驗�?多人?�戲網絡系統?�核心�X */
 UCLASS()
 class MINGPERSONAL_API UMingNetworkSystemTest : public UObject
 {
@@ -60,10 +60,10 @@ class MINGPERSONAL_API UMingNetworkSystemTest : public UObject
 public:
     UMingNetworkSystemTest(};
 
-    // ?��??�?�測�?    UFUNCTION(BlueprintCallable, Category = "Network Test")
+    // ?��X�?�測�?    UFUNCTION(BlueprintCallable, Category = "Network Test")
     bool RunAllTests(};
 
-    // 測試結�?
+    // 測試結�?
     UFUNCTION(BlueprintPure, Category = "Network Test")
     FString GetTestResults() const { return TestResults; }
 
@@ -79,7 +79,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Network Test")
     TArray<FNetworkTestCase> GetTestCases() const { return TestCases; }
 
-    // ?�別測試
+    // ?�別測試
     UFUNCTION(BlueprintCallable, Category = "Network Test")
     bool TestNetworkManagerCreation(};
 
@@ -129,7 +129,7 @@ public:
     bool TestErrorHandling(};
 
 private:
-    // 測試結�??��?
+    // 測試結�X��?
     UPROPERTY()
     FString TestResults;
 
@@ -145,12 +145,12 @@ private:
     UPROPERTY()
     TArray<FNetworkTestCase> TestCases;
 
-    // 測試幫助?�數
+    // 測試幫助?�數
     void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
     void ResetTestCounts(};
     void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT("")};
 
-    // ?�建測試?��?管�???    UMingPersonalManager* CreateTestPersonalManager(};
+    // ?�建測試?��?管�X    UMingPersonalManager* CreateTestPersonalManager(};
     UMingNetworkManager* CreateTestNetworkManager(};
     UMingLobbySystem* CreateTestLobbySystem(};
 };

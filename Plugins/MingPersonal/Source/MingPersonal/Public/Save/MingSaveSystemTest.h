@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -10,8 +10,8 @@ class UMingSaveGameManager;
 class UMingRelationshipManager;
 
 /**
- * 保�?系統測試套件
- * 驗�?保�??��??�系統�??��??�能
+ * 保�?系統測試套件
+ * 驗�?保�X��X�系統�X��X�能
  */
 UCLASS()
 class MINGPERSONAL_API UMingSaveSystemTest : public UObject
@@ -21,10 +21,10 @@ class MINGPERSONAL_API UMingSaveSystemTest : public UObject
 public:
     UMingSaveSystemTest(};
 
-    // ?��??�?�測�?    UFUNCTION(BlueprintCallable, Category = "Save System Test")
+    // ?��X�?�測�?    UFUNCTION(BlueprintCallable, Category = "Save System Test")
     bool RunAllTests(};
 
-    // 測試結�?
+    // 測試結�?
     UFUNCTION(BlueprintPure, Category = "Save System Test")
     FString GetTestResults() const { return TestResults; }
 
@@ -37,7 +37,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Save System Test")
     float GetTestPassRate() const;
 
-    // ?�別測試
+    // ?�別測試
     UFUNCTION(BlueprintCallable, Category = "Save System Test")
     bool TestSaveGameCreation(};
 
@@ -78,7 +78,7 @@ public:
     bool TestCompressionEncryption(};
 
 private:
-    // 測試結�??��?
+    // 測試結�X��?
     UPROPERTY()
     FString TestResults;
 
@@ -91,15 +91,16 @@ private:
     UPROPERTY()
     TArray<FString> ErrorMessages;
 
-    // 測試幫助?�數
-    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
-    void ResetTestCounts(};
+    // 測試幫助?�數
+    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")) {};
+    void ResetTestCounts() {};
 
-    // 清�?測試存�?
-    void CleanupTestSaves(};
+    // 清理測試存檔
+    void CleanupTestSaves() {};
 
-    // ?�建測試?��??�人管�???    UMingPersonalManager* CreateTestPersonalManager(};
+    // 創建測試個人管理器
+    UMingPersonalManager* CreateTestPersonalManager() {};
 
-    // ?�建測試?��?保�?管�???    UMingSaveGameManager* CreateTestSaveManager(};
+    // 創建測試存檔管理器
+    UMingSaveGameManager* CreateTestSaveManager() {};
 };
-

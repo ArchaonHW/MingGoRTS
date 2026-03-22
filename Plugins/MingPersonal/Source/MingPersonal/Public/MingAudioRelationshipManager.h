@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -9,36 +9,36 @@
 UENUM(BlueprintType)
 enum class ERelationshipAudioType : uint8
 {
-    RelationshipIncrease,    // ?œä??å??³æ?
-    RelationshipDecrease,    // ?œä?ä¸‹é??³æ?
-    RelationshipBreak,       // ?œä??´è??³æ?
-    NewFriendship,          // ?°å?èª¼éŸ³??    Betrayal,               // ?Œå??³æ?
-    Reconciliation,         // ?Œè§£?³æ?
-    FirstMeeting,           // ?æ¬¡è¦‹é¢?³æ?
-    Farewell                // ?Šåˆ¥?³æ?
+    RelationshipIncrease,    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    RelationshipDecrease,    // ?ï¿½ï¿½?ä¸‹ï¿½Xï¿½ï¿½?
+    RelationshipBreak,       // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    NewFriendship,          // ?ï¿½ï¿½?èª¼éŸ³X    Betrayal,               // ?ï¿½ï¿½Xï¿½ï¿½?
+    Reconciliation,         // ?ï¿½è§£?ï¿½ï¿½?
+    FirstMeeting,           // ?ï¿½æ¬¡è¦‹é¢?ï¿½ï¿½?
+    Farewell                // ?ï¿½åˆ¥?ï¿½ï¿½?
 };
 
 UENUM(BlueprintType)
 enum class EReputationAudioType : uint8
 {
-    ReputationIncrease,     // ?²æ??å??³æ?
-    ReputationDecrease,     // ?²æ?ä¸‹é??³æ?
-    NewReputationLevel,     // ?°è²?›ç?ç´šéŸ³??    LegendaryAchievement,   // ?³å??å°±?³æ?
-    RegionWelcome,          // ?°å?æ­¡è??³æ?
-    RegionHostility         // ?°å??µæ??³æ?
+    ReputationIncrease,     // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
+    ReputationDecrease,     // ?ï¿½ï¿½?ä¸‹ï¿½Xï¿½ï¿½?
+    NewReputationLevel,     // ?ï¿½è²?ï¿½ï¿½?ç´šéŸ³X    LegendaryAchievement,   // ?ï¿½ï¿½Xï¿½å°±?ï¿½ï¿½?
+    RegionWelcome,          // ?ï¿½ï¿½?æ­¡ï¿½Xï¿½ï¿½?
+    RegionHostility         // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
 };
 
 UENUM(BlueprintType)
 enum class EDialogueAudioType : uint8
 {
-    Friendly,               // ?‹å¥½å°è©±?³æ?
-    Hostile,                // ?µå?å°è©±?³æ?
-    Neutral,                // ä¸­ç?å°è©±?³æ?
-    Romantic,               // æµªæ¼«å°è©±?³æ?
-    Business,               // ?†æ¥­å°è©±?³æ?
-    Intimidation,           // å¨è?å°è©±?³æ?
-    Persuasion,             // èªªæ??³æ?
-    Request                 // è«‹æ?å°è©±?³æ?
+    Friendly,               // ?ï¿½å¥½å°è©±?ï¿½ï¿½?
+    Hostile,                // ?ï¿½ï¿½?å°è©±?ï¿½ï¿½?
+    Neutral,                // ä¸­ï¿½?å°è©±?ï¿½ï¿½?
+    Romantic,               // æµªæ¼«å°è©±?ï¿½ï¿½?
+    Business,               // ?ï¿½æ¥­å°è©±?ï¿½ï¿½?
+    Intimidation,           // å¨ï¿½?å°è©±?ï¿½ï¿½?
+    Persuasion,             // èªªï¿½Xï¿½ï¿½?
+    Request                 // è«‹ï¿½?å°è©±?ï¿½ï¿½?
 };
 
 USTRUCT(BlueprintType)
@@ -134,7 +134,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnReputationAudioPlayed, EReputati
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueAudioPlayed, EDialogueAudioType, AudioType, USoundBase*, Sound};
 
 /**
- * ?³é »?œä?ç®¡ç??? * è² è²¬?œä??Œè²?›ç³»çµ±ç??³é »?é?
+ * ?ï¿½é »?ï¿½ï¿½?ç®¡ï¿½X * è² è²¬?ï¿½ï¿½Xï¿½è²?ï¿½ç³»çµ±ï¿½Xï¿½é »?ï¿½ï¿½?
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingAudioRelationshipManager : public UObject
@@ -144,10 +144,10 @@ class MINGPERSONAL_API UMingAudioRelationshipManager : public UObject
 public:
     UMingAudioRelationshipManager(};
 
-    // ?å??–éŸ³?»ç³»çµ?    UFUNCTION(BlueprintCallable, Category = "Audio Relationship")
+    // ?ï¿½ï¿½Xï¿½éŸ³?ï¿½ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Audio Relationship")
     void InitializeAudioRelationshipSystem(UObject* MetaSoundsSystem};
 
-    // ?œä??³é »?•ç?
+    // ?ï¿½ï¿½Xï¿½é »?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Audio Relationship")
     void PlayRelationshipAudio(const FRelationshipAudioParams& Params};
 
@@ -157,7 +157,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Relationship")
     void OnRelationshipTypeChanged(const FString& CharacterID, ERelationshipType OldType, ERelationshipType NewType};
 
-    // ?²æ??³é »?•ç?
+    // ?ï¿½ï¿½Xï¿½é »?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Audio Reputation")
     void PlayReputationAudio(const FReputationAudioParams& Params};
 
@@ -167,7 +167,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Reputation")
     void OnReputationLevelChanged(const FString& RegionID, EReputationLevel OldLevel, EReputationLevel NewLevel};
 
-    // å°è©±?³é »?•ç?
+    // å°è©±?ï¿½é »?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Audio Dialogue")
     void PlayDialogueAudio(const FDialogueAudioParams& Params};
 
@@ -177,7 +177,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Dialogue")
     void OnDialogueEnded(const FString& CharacterID, bool bWasSuccessful};
 
-    // æ°‘å??‚æ?ä¸»é??³é »
+    // æ°‘ï¿½Xï¿½ï¿½?ä¸»ï¿½Xï¿½é »
     UFUNCTION(BlueprintCallable, Category = "Audio Theme")
     void PlayRepublicEraTheme(const FString& ThemeName, float Intensity = 1.0f};
 
@@ -187,7 +187,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Theme")
     void PlayCharacterTheme(const FString& CharacterID, ERelationshipType RelationshipType};
 
-    // ?³é »è¨­ç½®
+    // ?ï¿½é »è¨­ç½®
     UFUNCTION(BlueprintCallable, Category = "Audio Settings")
     void SetAudioIntensity(float Intensity};
 
@@ -200,7 +200,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio Settings")
     void SetDialogueAudioVolume(float Volume};
 
-    // ?³é »?€?‹æŸ¥è©?    UFUNCTION(BlueprintPure, Category = "Audio Status")
+    // ?ï¿½é »?ï¿½?ï¿½æŸ¥ï¿½?    UFUNCTION(BlueprintPure, Category = "Audio Status")
     bool IsAudioSystemInitialized() const { return bIsInitialized; }
 
     UFUNCTION(BlueprintPure, Category = "Audio Status")
@@ -217,11 +217,11 @@ public:
     FOnDialogueAudioPlayed OnDialogueAudioPlayed;
 
 protected:
-    // ?³é »ç³»çµ±å¼•ç”¨
+    // ?ï¿½é »ç³»çµ±å¼•ç”¨
     UPROPERTY()
     TObjectPtr<UMingMetaSoundsSystem> MetaSoundsSystem;
 
-    // ?³é »è¨­ç½®
+    // ?ï¿½é »è¨­ç½®
     UPROPERTY()
     float AudioIntensity = 1.0f;
 
@@ -234,25 +234,25 @@ protected:
     UPROPERTY()
     float DialogueAudioVolume = 1.0f;
 
-    // ?€??    UPROPERTY()
+    // ?ï¿½X    UPROPERTY()
     bool bIsInitialized = false;
 
-    // ?§éƒ¨?³é »?Ÿæ??½æ•¸
+    // ?ï¿½éƒ¨?ï¿½é »?ï¿½ï¿½Xï¿½æ•¸
     USoundBase* GenerateRelationshipAudio(const FRelationshipAudioParams& Params};
     USoundBase* GenerateReputationAudio(const FReputationAudioParams& Params};
     USoundBase* GenerateDialogueAudio(const FDialogueAudioParams& Params};
     USoundBase* GenerateRepublicEraAudio(const FString& ThemeName, float Intensity};
 
-    // ?³é »?ƒæ•¸è¨ˆç?
+    // ?ï¿½é »?ï¿½æ•¸è¨ˆï¿½?
     float CalculateRelationshipIntensity(float RelationshipChange, bool bIsSignificant) const;
     float CalculateReputationIntensity(float ReputationChange, EReputationLevel Level) const;
     float CalculateDialogueIntensity(ERelationshipType RelationshipType, float EmotionalIntensity) const;
 
-    // ?³é »?­æ”¾
+    // ?ï¿½é »?ï¿½æ”¾
     void PlayAudioAtLocation(USoundBase* Sound, FVector Location, float VolumeMultiplier = 1.0f};
     void PlayAudio2D(USoundBase* Sound, float VolumeMultiplier = 1.0f};
 
-    // æ°‘å??‚æ??³é »ä¸»é?
+    // æ°‘ï¿½Xï¿½ï¿½Xï¿½é »ä¸»ï¿½?
     UPROPERTY()
     TMap<FString, FString> RepublicEraThemes;
 
@@ -266,12 +266,12 @@ protected:
     TMap<EDialogueAudioType, FString> DialogueAudioThemes;
 
 private:
-    // ?å??–ä¸»é¡?    void InitializeRepublicEraThemes(};
+    // ?ï¿½ï¿½Xï¿½ä¸»ï¿½?    void InitializeRepublicEraThemes(};
     void InitializeRelationshipAudioThemes(};
     void InitializeReputationAudioThemes(};
     void InitializeDialogueAudioThemes(};
 
-    // ?²å??³é »ä¸»é?è·¯å?
+    // ?ï¿½ï¿½Xï¿½é »ä¸»ï¿½?è·¯ï¿½?
     FString GetRelationshipAudioPath(ERelationshipAudioType AudioType) const;
     FString GetReputationAudioPath(EReputationAudioType AudioType) const;
     FString GetDialogueAudioPath(EDialogueAudioType AudioType) const;

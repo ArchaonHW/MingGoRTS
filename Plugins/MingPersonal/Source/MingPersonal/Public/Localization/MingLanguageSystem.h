@@ -4,223 +4,147 @@
 #include "UObject/NoExportTypes.h"
 #include "MingLanguageSystem.generated.h"
 
-// Forward declarations
-class UMingLocalizationManager;
-
-// Language proficiency levels
+// 支援的語言
 UENUM(BlueprintType)
-enum class ELanguageProficiency : uint8
+enum class EMingSupportedLanguage : uint8
 {
-    Native             UMETA(DisplayName = "Native"),
-    Fluent             UMETA(DisplayName = "Fluent"),
-    Advanced           UMETA(DisplayName = "Advanced"),
-    Intermediate       UMETA(DisplayName = "Intermediate"),
-    Basic              UMETA(DisplayName = "Basic"),
-    None               UMETA(DisplayName = "None")
+    English,        // 英文
+    TraditionalChinese, // 繁體中文
+    SimplifiedChinese,  // 簡體中文
+    Japanese,       // 日文
+    Korean,         // 韓文
+    French,         // 法文
+    German,         // 德文
+    Spanish,        // 西班牙文
+    Russian         // 俄文
 };
 
-// Translation quality levels
+// 語言資料類型
 UENUM(BlueprintType)
-enum class ETranslationQuality : uint8
+enum class ELanguageDataType : uint8
 {
-    Professional       UMETA(DisplayName = "Professional"),
-    Good               UMETA(DisplayName = "Good"),
-    Acceptable         UMETA(DisplayName = "Acceptable"),
-    Machine            UMETA(DisplayName = "Machine"),
-    Draft              UMETA(DisplayName = "Draft")
+    Text,           // 文字
+    Audio,          // 音頻
+    Subtitle,       // 字幕
+    UI,             // 用戶界面
+    Tutorial        // 教程
 };
 
-// Language variant (for Chinese)
-UENUM(BlueprintType)
-enum class EChineseVariant : uint8
-{
-    Simplified         UMETA(DisplayName = "Simplified"),
-    Traditional        UMETA(DisplayName = "Traditional"),
-    Both               UMETA(DisplayName = "Both")
-};
-
-// Language pair for translation
+// 本地化資料
 USTRUCT(BlueprintType)
-struct FLanguagePair
-{
-    GENERATED_BODY()
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString SourceLanguage;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString TargetLanguage;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    ETranslationQuality Quality;
-
-    FLanguagePair()
-        : Quality(ETranslationQuality::Acceptable)
-    {}
-};
-
-// Language statistics
-USTRUCT(BlueprintType)
-struct FLanguageStats
+struct MINGPERSONAL_API FLocalizationData
 {
     GENERATED_BODY()
 
     UPROPERTY(BlueprintReadOnly)
-    FString LanguageCode;
+    FString Key;
 
     UPROPERTY(BlueprintReadOnly)
-    int32 TotalStrings;
+    TMap<EMingSupportedLanguage, FString> Translations;
 
     UPROPERTY(BlueprintReadOnly)
-    int32 TranslatedStrings;
+    ELanguageDataType DataType;
 
     UPROPERTY(BlueprintReadOnly)
-    int32 ReviewedStrings;
-
-    UPROPERTY(BlueprintReadOnly)
-    float TranslationProgress;
-
-    UPROPERTY(BlueprintReadOnly)
-    float ReviewProgress;
-
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> MissingKeys;
-
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> OutdatedKeys;
-
-    FLanguageStats()
-        : TotalStrings(0)
-        , TranslatedStrings(0)
-        , ReviewedStrings(0)
-        , TranslationProgress(0.0f)
-        , ReviewProgress(0.0f)
-    {}
+    FString Context;
 };
 
 /**
- * 語�?系統
- * 管�?多�?言?��??�翻譯�??? */
-UCLASS(ClassGroup = (Localization), Blueprintable)
+ * 語言系統
+ * 負責多語言支援和本地化
+ */
+UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingLanguageSystem : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingLanguageSystem(};
+    // 建構子
+    UMingLanguageSystem();
 
-    // ?��???    void Initialize(};
-    void Shutdown(};
+    // 初始化語言系統
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    void InitializeLanguageSystem();
 
-    UFUNCTION(BlueprintPure, Category = "Language System")
-    bool IsInitialized() const { return bIsInitialized; }
+    // 設置當前語言
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    void SetCurrentLanguage(EMingSupportedLanguage Language);
 
-    // === 語�?檢測 ===
+    // 獲取當前語言
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    EMingSupportedLanguage GetCurrentLanguage() const;
 
-    // ?��?檢測?�本語�?
-    UFUNCTION(BlueprintCallable, Category = "Language System|Detection")
-    FString DetectLanguage(const FString& Text) const;
+    // 獲取本地化文字
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    FString GetLocalizedText(const FString& Key) const;
 
-    // 檢測語�?置信�?    UFUNCTION(BlueprintCallable, Category = "Language System|Detection")
-    float GetLanguageConfidence(const FString& Text, const FString& LanguageCode) const;
+    // 獲取特定語言的文字
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    FString GetTextForLanguage(const FString& Key, EMingSupportedLanguage Language) const;
 
-    // === 翻譯?�能 ===
+    // 添加本地化資料
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    void AddLocalizationData(const FLocalizationData& Data);
 
-    // 機器翻譯 (?��?實現)
-    UFUNCTION(BlueprintCallable, Category = "Language System|Translation")
-    FString TranslateText(const FString& Text, const FString& SourceLanguage, const FString& TargetLanguage) const;
+    // 載入語言包
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    bool LoadLanguagePack(EMingSupportedLanguage Language);
 
-    // ?��?翻譯
-    UFUNCTION(BlueprintCallable, Category = "Language System|Translation")
-    TMap<FString, FString> TranslateBatch(const TArray<FString>& Texts, const FString& SourceLanguage, const FString& TargetLanguage) const;
+    // 保存語言包
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    bool SaveLanguagePack(EMingSupportedLanguage Language);
 
-    // 翻譯並替?��???    UFUNCTION(BlueprintCallable, Category = "Language System|Translation")
-    FString TranslateWithParams(const FString& Text, const TMap<FString, FString>& Params, const FString& SourceLanguage, const FString& TargetLanguage) const;
+    // 簡繁轉換
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    FString ConvertSimplifiedToTraditional(const FString& SimplifiedText) const;
 
-    // === ?�本?��? ===
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    FString ConvertTraditionalToSimplified(const FString& TraditionalText) const;
 
-    // ?��??�本字符??(?�慮亞洲語�?)
-    UFUNCTION(BlueprintPure, Category = "Language System|Text Processing")
-    int32 GetCharacterCount(const FString& Text, const FString& LanguageCode) const;
+    // 獲取支援的語言列表
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    TArray<EMingSupportedLanguage> GetSupportedLanguages() const;
 
-    // 檢查?�否?�要�?�?    UFUNCTION(BlueprintPure, Category = "Language System|Text Processing")
-    bool NeedsLineBreak(const FString& Text, float MaxWidth, float CharWidth) const;
+    // 檢查語言是否支援
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    bool IsLanguageSupported(EMingSupportedLanguage Language) const;
 
-    // ?�本?�斷
-    UFUNCTION(BlueprintPure, Category = "Language System|Text Processing")
-    FString TruncateText(const FString& Text, int32 MaxLength, const FString& Suffix = TEXT("...")) const;
+    // 獲取語言顯示名稱
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    FString GetLanguageDisplayName(EMingSupportedLanguage Language) const;
 
-    // === 中�??��??�能 ===
+    // 自動檢測系統語言
+    UFUNCTION(BlueprintCallable, Category = "Language")
+    EMingSupportedLanguage DetectSystemLanguage() const;
 
-    // 簡�?轉�?�?    UFUNCTION(BlueprintCallable, Category = "Language System|Chinese")
-    FString SimplifiedToTraditional(const FString& Text) const;
+protected:
+    // 當前語言
+    UPROPERTY(BlueprintReadOnly)
+    EMingSupportedLanguage CurrentLanguage;
 
-    // 繁�?轉簡�?    UFUNCTION(BlueprintCallable, Category = "Language System|Chinese")
-    FString TraditionalToSimplified(const FString& Text) const;
+    // 本地化資料庫
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, FLocalizationData> LocalizationDatabase;
 
-    // ?��?漢�??�音
-    UFUNCTION(BlueprintCallable, Category = "Language System|Chinese")
-    FString GetPinyin(const FString& ChineseText) const;
+    // 支援的語言列表
+    UPROPERTY(BlueprintReadOnly)
+    TArray<EMingSupportedLanguage> SupportedLanguages;
 
-    // ?��?漢�?筆畫??    UFUNCTION(BlueprintCallable, Category = "Language System|Chinese")
-    int32 GetStrokeCount(const FString& ChineseChar) const;
+    // 語言包路徑
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Language|Settings")
+    FString LanguagePackPath;
 
-    // === 語�?統�? ===
+    // 自動檢測語言
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Language|Settings")
+    bool bAutoDetectLanguage;
 
-    // 計�?翻譯統�?
-    UFUNCTION(BlueprintCallable, Category = "Language System|Stats")
-    FLanguageStats CalculateStats(const FString& LanguageCode) const;
+    // 初始化語言資料
+    void InitializeLanguageData();
 
-    // 比�??�個�?言?�本?�差??    UFUNCTION(BlueprintCallable, Category = "Language System|Stats")
-    TArray<FString> CompareLanguageVersions(const FString& LanguageCode1, const FString& LanguageCode2) const;
+    // 載入簡繁轉換對照表
+    void LoadChineseConversionTables();
 
-    // ?�找缺失?�翻�?    UFUNCTION(BlueprintCallable, Category = "Language System|Stats")
-    TArray<FString> FindMissingTranslations(const FString& BaseLanguage, const FString& TargetLanguage) const;
-
-    // === 驗�??�質??===
-
-    // 驗�?翻譯質�?
-    UFUNCTION(BlueprintCallable, Category = "Language System|Quality")
-    ETranslationQuality ValidateTranslation(const FString& SourceText, const FString& TranslatedText) const;
-
-    // 檢查翻譯一?��?    UFUNCTION(BlueprintCallable, Category = "Language System|Quality")
-    bool CheckTranslationConsistency(const FString& Key, const TArray<FString>& LanguageCodes) const;
-
-    // ?��?翻譯建議
-    UFUNCTION(BlueprintCallable, Category = "Language System|Quality")
-    TArray<FString> GetTranslationSuggestions(const FString& SourceText, const FString& TargetLanguage) const;
-
-    // === 輔助?�能 ===
-
-    // ?��?語�??�閱讀?��?
-    UFUNCTION(BlueprintPure, Category = "Language System|Utils")
-    bool IsRightToLeft(const FString& LanguageCode) const;
-
-    // ?��?語�??��?認�?�?    UFUNCTION(BlueprintPure, Category = "Language System|Utils")
-    FString GetDefaultFont(const FString& LanguageCode) const;
-
-    // ?��?語�??��?點符?�風??    UFUNCTION(BlueprintPure, Category = "Language System|Utils")
-    FString GetPunctuationStyle(const FString& LanguageCode) const;
-
-    // ?��?語�??��??��?體�?�?    UFUNCTION(BlueprintPure, Category = "Language System|Utils")
-    TArray<FString> GetSupportedFonts(const FString& LanguageCode) const;
-
-private:
-    bool bIsInitialized;
-
-    // 語�??�徵?��?
-    TMap<FString, TArray<FString>> LanguagePatterns;
-
-    // ?��?語�?模�?
-    void LoadLanguagePatterns(};
-
-    // ?��??��?言?��?
-    void InitializeLanguageData(};
-
-    // 漢�?簡�?對照�?(簡�?實現)
+    // 簡繁轉換對照表
     TMap<TCHAR, TCHAR> SimplifiedToTraditionalMap;
     TMap<TCHAR, TCHAR> TraditionalToSimplifiedMap;
-
-    // ?��?簡�?對照�?    void LoadChineseConversionTables(};
 };
-

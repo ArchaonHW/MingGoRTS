@@ -4,154 +4,117 @@
 #include "UObject/NoExportTypes.h"
 #include "MingSaveGameSystemTest.generated.h"
 
-// Test result enum
-UENUM(BlueprintType)
-enum class ESaveGameTestResult : uint8
-{
-    NotRun            UMETA(DisplayName = "Not Run"),
-    Passed            UMETA(DisplayName = "Passed"),
-    Failed            UMETA(DisplayName = "Failed"),
-    Skipped           UMETA(DisplayName = "Skipped"),
-    Error             UMETA(DisplayName = "Error")
-};
-
-// Test case structure
+// 測試結果
 USTRUCT(BlueprintType)
-struct FSaveGameTestCase
+struct MINGPERSONAL_API FTestResult
 {
     GENERATED_BODY()
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     FString TestName;
 
-    UPROPERTY()
-    FString Description;
+    UPROPERTY(BlueprintReadOnly)
+    bool bPassed;
 
-    UPROPERTY()
-    ESaveGameTestResult Result;
-
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     FString ErrorMessage;
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     float ExecutionTime;
-
-    FSaveGameTestCase()
-        : Result(ESaveGameTestResult::NotRun)
-        , ExecutionTime(0.0f)
-    {}
 };
 
-// Forward declarations
-class UMingSaveGameManager;
-class UMingSaveGame;
+// 測試類別
+UENUM(BlueprintType)
+enum class ETestCategory : uint8
+{
+    SaveLoad,       // 存取測試
+    DataIntegrity,  // 資料完整性
+    Performance,    // 效能測試
+    ErrorHandling,  // 錯誤處理
+    Compatibility   // 相容性測試
+};
 
 /**
- * 保�?系統測試套件
- * 驗�?保�?系統?�核心�??? */
-UCLASS()
+ * 存檔系統測試類
+ * 負責測試存檔系統的各種功能
+ */
+UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingSaveGameSystemTest : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingSaveGameSystemTest(};
+    // 建構子
+    UMingSaveGameSystemTest();
 
-    // ?��??�?�測�?    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool RunAllTests(};
+    // 執行所有測試
+    UFUNCTION(BlueprintCallable, Category = "Save|Test")
+    bool RunAllTests();
 
-    // 測試結�?
-    UFUNCTION(BlueprintPure, Category = "Save Game Test")
-    FString GetTestResults() const { return TestResults; }
+    // 執行特定類別測試
+    UFUNCTION(BlueprintCallable, Category = "Save|Test")
+    bool RunTestCategory(ETestCategory Category);
 
-    UFUNCTION(BlueprintPure, Category = "Save Game Test")
-    int32 GetPassedTests() const { return PassedTests; }
+    // 執行單一測試
+    UFUNCTION(BlueprintCallable, Category = "Save|Test")
+    FTestResult RunSingleTest(const FString& TestName);
 
-    UFUNCTION(BlueprintPure, Category = "Save Game Test")
-    int32 GetFailedTests() const { return FailedTests; }
+    // 獲取測試結果
+    UFUNCTION(BlueprintCallable, Category = "Save|Test")
+    TArray<FTestResult> GetTestResults() const;
 
-    UFUNCTION(BlueprintPure, Category = "Save Game Test")
-    float GetTestPassRate() const;
+    // 獲取測試統計
+    UFUNCTION(BlueprintCallable, Category = "Save|Test")
+    void GetTestStatistics(int32& TotalTests, int32& PassedTests, int32& FailedTests, float& SuccessRate) const;
 
-    UFUNCTION(BlueprintPure, Category = "Save Game Test")
-    TArray<FSaveGameTestCase> GetTestCases() const { return TestCases; }
+    // 重置測試結果
+    UFUNCTION(BlueprintCallable, Category = "Save|Test")
+    void ResetTestResults();
 
-    // ?�別測試
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestSaveGameManagerCreation(};
+protected:
+    // 測試結果列表
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FTestResult> TestResults;
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestCreateSaveGame(};
+    // 測試計數器
+    UPROPERTY(BlueprintReadOnly)
+    int32 TotalTestCount;
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestSaveToSlot(};
+    UPROPERTY(BlueprintReadOnly)
+    int32 PassedTestCount;
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestLoadFromSlot(};
+    UPROPERTY(BlueprintReadOnly)
+    int32 FailedTestCount;
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestQuickSave(};
+    // 存檔管理器實例
+    UPROPERTY(BlueprintReadOnly)
+    class UMingSaveGameManager* TestSaveManager;
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestQuickLoad(};
+    // 基礎測試方法
+    UFUNCTION(BlueprintCallable, Category = "Save|Test")
+    bool TestBasicSaveLoad();
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestDeleteSave(};
+    UFUNCTION(BlueprintCallable, Category = "Save|Test")
+    bool TestMultipleSaveSlots();
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestGetAllSlots(};
+    UFUNCTION(BlueprintCallable, Category = "Save|Test")
+    bool TestDataCorruption();
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestSaveExists(};
+    UFUNCTION(BlueprintCallable, Category = "Save|Test")
+    bool TestPerformance();
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestMostRecentSave(};
+    UFUNCTION(BlueprintCallable, Category = "Save|Test")
+    bool TestErrorHandling();
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestAutosave(};
+    // 輔助方法
+    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT(""));
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestExportSave(};
+    // 創建測試存檔管理器
+    UMingSaveGameManager* CreateTestSaveGameManager();
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestImportSave(};
+    // 清理測試資料
+    void CleanupTestData();
 
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestBackupRestore(};
-
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestCompression(};
-
-    UFUNCTION(BlueprintCallable, Category = "Save Game Test")
-    bool TestVersionCompatibility(};
-
-private:
-    // 測試結�??��?
-    UPROPERTY()
-    FString TestResults;
-
-    UPROPERTY()
-    int32 PassedTests;
-
-    UPROPERTY()
-    int32 FailedTests;
-
-    UPROPERTY()
-    TArray<FString> ErrorMessages;
-
-    UPROPERTY()
-    TArray<FSaveGameTestCase> TestCases;
-
-    // 測試幫助?�數
-    void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
-    void ResetTestCounts(};
-    void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT("")};
-
-    // ?�建測試?��?管�???    UMingSaveGameManager* CreateTestSaveGameManager(};
-
-    // 清�?測試?��?
-    void CleanupTestData(};
-
-    // ?��?測試?��?存�?�?    int32 GetTestSaveSlot() const { return 99; }
+    // 獲取測試存檔槽位
+    int32 GetTestSaveSlot() const { return 99; }
 };
-

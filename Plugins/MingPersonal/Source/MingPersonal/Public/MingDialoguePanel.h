@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -9,8 +9,8 @@
 UENUM(BlueprintType)
 enum class EDialogueState : uint8
 {
-    Idle,           // 空�?
-    Speaking,       // 說話�?    Listening,      // ?�話�?    Choosing,       // ?��?�?    Finished        // 完�?
+    Idle,           // 空�?
+    Speaking,       // 說話�?    Listening,      // ?�話�?    Choosing,       // ?��?�?    Finished        // 完�?
 };
 
 USTRUCT(BlueprintType)
@@ -94,8 +94,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueOptionSelected, int32, O
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueStateChanged, EDialogueState, NewState};
 
 /**
- * 對話?�板Widget
- * 管�?角色對話?�面
+ * 對話?�板Widget
+ * 管�?角色對話?�面
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingDialoguePanel : public UUserWidget
@@ -105,10 +105,10 @@ class MINGPERSONAL_API UMingDialoguePanel : public UUserWidget
 public:
     UMingDialoguePanel(const FObjectInitializer& ObjectInitializer};
 
-    // ?��???    UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
+    // ?��X    UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void InitializeDialoguePanel(UMingRelationshipManager* InRelationshipManager};
 
-    // 對話?�制
+    // 對話?�制
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void StartDialogue(const FString& CharacterID, const FString& DialogueText, EDialogueType DialogueType};
 
@@ -124,7 +124,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void ResumeDialogue(};
 
-    // ?��??��?
+    // ?��X��?
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void ShowDialogueOptions(const TArray<FDialoguePanelOption>& Options};
 
@@ -137,7 +137,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void OnOptionClicked(int32 OptionID};
 
-    // 對話?�容
+    // 對話?�容
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void SetDialogueText(const FString& Text};
 
@@ -150,7 +150,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void SetCharacterName(const FString& Name};
 
-    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "Dialogue Panel")
+    // ?�?�查�?    UFUNCTION(BlueprintPure, Category = "Dialogue Panel")
     bool IsDialogueActive() const;
 
     UFUNCTION(BlueprintPure, Category = "Dialogue Panel")
@@ -162,7 +162,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Dialogue Panel")
     bool AreOptionsVisible() const { return bOptionsVisible; }
 
-    // 視覺?��?
+    // 視覺?��?
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void PlayTypewriterEffect(const FString& Text, float TypingSpeed = 0.05f};
 
@@ -178,7 +178,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void SetDialogueEmotion(EDialogueType DialogueType};
 
-    // ?�頻?��?
+    // ?�頻?��?
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void PlayDialogueAudio(EDialogueType DialogueType};
 
@@ -188,7 +188,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void SetAudioVolume(float Volume};
 
-    // 歷史記�?
+    // 歷史記�?
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void AddToHistory(const FString& CharacterID, const FString& Text};
 
@@ -201,7 +201,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void ClearDialogueHistory(};
 
-    // 快捷?��?
+    // 快捷?��?
     UFUNCTION(BlueprintCallable, Category = "Dialogue Panel")
     void QuickResponse(const FString& ResponseText};
 
@@ -229,7 +229,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
-    // 對話?��?
+    // 對話?��?
     UPROPERTY(BlueprintReadOnly, Category = "Dialogue Data")
     FDialogueData CurrentDialogue;
 
@@ -239,7 +239,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Dialogue Data")
     TArray<FString> DialogueHistory;
 
-    // ?�??    UPROPERTY(BlueprintReadOnly, Category = "Dialogue State")
+    // ?�X    UPROPERTY(BlueprintReadOnly, Category = "Dialogue State")
     EDialogueState CurrentState;
 
     UPROPERTY(BlueprintReadOnly, Category = "Dialogue State")
@@ -264,7 +264,7 @@ protected:
     UPROPERTY(BlueprintReadWrite, Category = "Dialogue Settings")
     float AudioVolume = 1.0f;
 
-    // UI組件引用（�?要在Blueprint中�?定�?
+    // UI組件引用（�?要在Blueprint中�?定�?
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* CharacterNameText;
 
@@ -289,11 +289,11 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UProgressBar* TypewriterProgress;
 
-    // ?�擬?�數
+    // ?�擬?�數
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // ?�部?�數
+    // ?�部?�數
     void UpdateDialogueUI(};
     void UpdateCharacterUI(};
     void UpdateOptionsUI(};
@@ -303,22 +303,22 @@ protected:
     void ProcessTypewriterEffect(};
     void OnAutoAdvanceTimer(};
 
-    // 事件綁�?
+    // 事件綁�?
     void SetupEventBindings(};
     void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
 
 private:
-    // 輔助?�數
+    // 輔助?�數
     void CreateOptionWidgets(};
     void ClearOptionWidgets(};
     bool IsOptionAvailable(const FDialoguePanelOption& Option) const;
     void PlayTypewriterSound(};
     void StopTypewriterSound(};
 
-    // 定�???    FTimerHandle TypewriterTimer;
+    // 定�X    FTimerHandle TypewriterTimer;
     FTimerHandle AutoAdvanceTimer;
 
-    // ?��?機�???    FString TargetText;
+    // ?��?機�X    FString TargetText;
     FString CurrentText;
     int32 TypewriterIndex;
 };

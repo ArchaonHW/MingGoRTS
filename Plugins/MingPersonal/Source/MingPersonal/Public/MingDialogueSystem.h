@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -102,7 +102,7 @@ struct FMingDialogueLine
     {}
 };
 
-// 注�?：�?迴�?構�??�用 BlueprintType
+// 注�?：�?迴�?構�X�用 BlueprintType
 USTRUCT(BlueprintType)
 struct FMingPersonalDialogueNode
 {
@@ -114,7 +114,7 @@ struct FMingPersonalDialogueNode
     UPROPERTY(BlueprintReadOnly)
     FMingDialogueLine DialogueLine;
 
-    // 注�?：�?迴�?構�??�用 UPROPERTY
+    // 注�?：�?迴�?構�X�用 UPROPERTY
     TArray<FMingDialogueNode> ChildNodes;
 
     UPROPERTY(BlueprintReadOnly)
@@ -313,7 +313,7 @@ protected:
     UPROPERTY()
     TMap<FString, int32> PlayerChoices;
 
-    // 注�?：TArray 不能?�接作為 TMap ??UPROPERTY ?��???    // TMap<FString, TArray<FString>> HistoricalNotes;
+    // 注�?：TArray 不能?�接作為 TMap XUPROPERTY ?��X    // TMap<FString, TArray<FString>> HistoricalNotes;
 
     UPROPERTY()
     bool bIsConversationActive;

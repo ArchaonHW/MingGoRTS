@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -175,8 +175,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRelationshipSyncFailed, FString, 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConflictDetected, int32, RelationshipID};
 
 /**
- * ?��??��?網絡複製系統
- * 負責?��?人�??�中?�步?��??�聲?�數?? */
+ * ?��X��?網絡複製系統
+ * 負責?��?人�X�中?�步?��X�聲?�數X */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingRelationshipReplication : public UObject
 {

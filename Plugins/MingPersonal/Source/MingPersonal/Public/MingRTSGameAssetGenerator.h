@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -239,8 +239,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameAssetGenerationCompleted, co
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUniversityGuideGenerated, const FString&, GuideID, const FGeneratedGameAsset&, GuideAsset};
 
 /**
- * MingGoRTS ?Šæˆ²è³‡ç”¢?Ÿæ??? * è² è²¬?Ÿæ??Šæˆ²?€?€?„æ??‰è??¢ï??…æ‹¬?«é¢?å½±?‡ã€éŸ³æ¨‚ã€éŸ³?ˆã€å?æª”ç?
- * ä¸¦æ”¯?é??¡å?å°å…§å®¹ç??? */
+ * MingGoRTS ?ï¿½æˆ²è³‡ç”¢?ï¿½ï¿½X * è² è²¬?ï¿½ï¿½Xï¿½æˆ²?ï¿½?ï¿½?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½æ‹¬?ï¿½é¢?ï¿½å½±?ï¿½ã€éŸ³æ¨‚ã€éŸ³?ï¿½ã€ï¿½?æª”ï¿½?
+ * ä¸¦æ”¯?ï¿½ï¿½Xï¿½ï¿½?å°å…§å®¹ï¿½X */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = "MingRTS")
 class MINGPERSONAL_API UMingRTSGameAssetGenerator : public UObject
 {
@@ -249,107 +249,107 @@ class MINGPERSONAL_API UMingRTSGameAssetGenerator : public UObject
 public:
     UMingRTSGameAssetGenerator(};
 
-    // ?å??–é??²è??¢ç??å™¨
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½å™¨
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     void InitializeGameAssetGenerator(UWorld* World};
 
-    // ?Ÿæ??®å€‹é??²è???    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
+    // ?ï¿½ï¿½Xï¿½å€‹ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateGameAsset(const FGameAssetRequirement& Requirement};
 
-    // ?¹é??Ÿæ??Šæˆ²è³‡ç”¢
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æˆ²è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateGameAssetsBatch(const TArray<FGameAssetRequirement>& Requirements};
 
-    // ?Ÿæ??Šæˆ²?´æ™¯
+    // ?ï¿½ï¿½Xï¿½æˆ²?ï¿½æ™¯
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateGameScene(const FString& SceneName, const FString& Description, EQualityLevel Quality = EQualityLevel::High};
 
-    // ?Ÿæ?è§’è‰²è³‡ç”¢
+    // ?ï¿½ï¿½?è§’è‰²è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateCharacterAsset(const FString& CharacterName, const FString& Description, EQualityLevel Quality = EQualityLevel::High};
 
-    // ?Ÿæ?å»ºç?è³‡ç”¢
+    // ?ï¿½ï¿½?å»ºï¿½?è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateBuildingAsset(const FString& BuildingName, const FString& Description, EQualityLevel Quality = EQualityLevel::High};
 
-    // ?Ÿæ??°å?è³‡ç”¢
+    // ?ï¿½ï¿½Xï¿½ï¿½?è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateEnvironmentAsset(const FString& EnvironmentName, const FString& Description, EQualityLevel Quality = EQualityLevel::High};
 
-    // ?Ÿæ?UIè³‡ç”¢
+    // ?ï¿½ï¿½?UIè³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateUIAsset(const FString& UIName, const FString& Description, EQualityLevel Quality = EQualityLevel::High};
 
-    // ?Ÿæ?å½±ç?è³‡ç”¢
+    // ?ï¿½ï¿½?å½±ï¿½?è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateVideoAsset(const FString& VideoName, const FString& Description, float Duration = 60.0f};
 
-    // ?Ÿæ??³æ?è³‡ç”¢
+    // ?ï¿½ï¿½Xï¿½ï¿½?è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateMusicAsset(const FString& MusicName, const FString& Description, float Duration = 180.0f};
 
-    // ?Ÿæ??³æ?è³‡ç”¢
+    // ?ï¿½ï¿½Xï¿½ï¿½?è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateSoundEffectAsset(const FString& SoundName, const FString& Description};
 
-    // ?Ÿæ?ç´‹ç?è³‡ç”¢
+    // ?ï¿½ï¿½?ç´‹ï¿½?è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateTextureAsset(const FString& TextureName, const FString& Description, EQualityLevel Quality = EQualityLevel::High};
 
-    // ?Ÿæ?3Dæ¨¡å?è³‡ç”¢
+    // ?ï¿½ï¿½?3Dæ¨¡ï¿½?è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateModelAsset(const FString& ModelName, const FString& Description, EQualityLevel Quality = EQualityLevel::High};
 
-    // ?Ÿæ??•ç•«è³‡ç”¢
+    // ?ï¿½ï¿½Xï¿½ç•«è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateAnimationAsset(const FString& AnimationName, const FString& Description, float Duration = 5.0f};
 
-    // ?Ÿæ??™å­¸è³‡ç”¢
+    // ?ï¿½ï¿½Xï¿½å­¸è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateTutorialAsset(const FString& TutorialName, const FString& Description, bool bInteractive = true};
 
-    // ?Ÿæ?é«˜æ ¡å¼•å?è³‡ç”¢
+    // ?ï¿½ï¿½?é«˜æ ¡å¼•ï¿½?è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateUniversityGuide(const FUniversityGuideConfig& Config};
 
-    // ?²å??Ÿæ??„è???    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FGeneratedGameAsset GetGeneratedAsset(const FString& AssetID) const;
 
-    // ?²å??€?‰ç??ç?è³‡ç”¢
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½Xï¿½ï¿½?è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     TArray<FGeneratedGameAsset> GetAllGeneratedAssets() const;
 
-    // ?‰é??¥ç²?–è???    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
+    // ?ï¿½ï¿½Xï¿½ç²?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     TArray<FGeneratedGameAsset> GetAssetsByCategory(EGameAssetCategory Category) const;
 
-    // ?‰ç”¨?”ç²?–è???    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
+    // ?ï¿½ç”¨?ï¿½ç²?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     TArray<FGeneratedGameAsset> GetAssetsByPurpose(EGameAssetPurpose Purpose) const;
 
     // å°å‡ºè³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     bool ExportAsset(const FString& AssetID, const FString& ExportPath};
 
-    // ?¹é?å°å‡ºè³‡ç”¢
+    // ?ï¿½ï¿½?å°å‡ºè³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     bool ExportAssetsBatch(const TArray<FString>& AssetIDs, const FString& ExportPath};
 
-    // ?ªé™¤è³‡ç”¢
+    // ?ï¿½é™¤è³‡ç”¢
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     bool DeleteAsset(const FString& AssetID};
 
-    // æ¸…ç??€?‰è???    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
+    // æ¸…ï¿½Xï¿½?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     void ClearAllAssets(};
 
-    // ?²å?è³‡ç”¢çµ±è?
+    // ?ï¿½ï¿½?è³‡ç”¢çµ±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     TMap<EGameAssetCategory, int32> GetAssetStatistics() const;
 
-    // ?²å??Ÿæ?çµ±è?
+    // ?ï¿½ï¿½Xï¿½ï¿½?çµ±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     TMap<FString, float> GetGenerationStatistics() const;
 
 public:
-    // äº‹ä»¶å§”è?
+    // äº‹ä»¶å§”ï¿½?
     UPROPERTY(BlueprintAssignable, Category = "Game Asset Generator Events")
     FOnGameAssetGenerated OnGameAssetGenerated;
 
@@ -363,105 +363,105 @@ public:
     FOnUniversityGuideGenerated OnUniversityGuideGenerated;
 
 protected:
-    // ?•ç?è³‡ç”¢?Ÿæ?
+    // ?ï¿½ï¿½?è³‡ç”¢?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FGeneratedGameAsset ProcessAssetGeneration(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ??Šæˆ²?´æ™¯?§å®¹
+    // ?ï¿½ï¿½Xï¿½æˆ²?ï¿½æ™¯?ï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateGameSceneContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ?è§’è‰²?§å®¹
+    // ?ï¿½ï¿½?è§’è‰²?ï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateCharacterContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ?å»ºç??§å®¹
+    // ?ï¿½ï¿½?å»ºï¿½Xï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateBuildingContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ??°å??§å®¹
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateEnvironmentContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ?UI?§å®¹
+    // ?ï¿½ï¿½?UI?ï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateUIContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ?å½±ç??§å®¹
+    // ?ï¿½ï¿½?å½±ï¿½Xï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateVideoContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ??³æ??§å®¹
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateMusicContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ??³æ??§å®¹
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateSoundEffectContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ?ç´‹ç??§å®¹
+    // ?ï¿½ï¿½?ç´‹ï¿½Xï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateTextureContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ?3Dæ¨¡å??§å®¹
+    // ?ï¿½ï¿½?3Dæ¨¡ï¿½Xï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateModelContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ??•ç•«?§å®¹
+    // ?ï¿½ï¿½Xï¿½ç•«?ï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateAnimationContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ??™å­¸?§å®¹
+    // ?ï¿½ï¿½Xï¿½å­¸?ï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateTutorialContent(const FGameAssetRequirement& Requirement};
 
-    // ?Ÿæ?é«˜æ ¡å¼•å??§å®¹
+    // ?ï¿½ï¿½?é«˜æ ¡å¼•ï¿½Xï¿½å®¹
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateUniversityGuideContent(const FUniversityGuideConfig& Config};
 
-    // é©—è?è³‡ç”¢?€æ±?    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
+    // é©—ï¿½?è³‡ç”¢?ï¿½ï¿½?    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     bool ValidateAssetRequirement(const FGameAssetRequirement& Requirement) const;
 
-    // ?•ç?è³‡ç”¢å®Œæ?
+    // ?ï¿½ï¿½?è³‡ç”¢å®Œï¿½?
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     void HandleAssetCompleted(const FString& AssetID, const FGeneratedGameAsset& Asset};
 
-    // ?•ç?è³‡ç”¢?¯èª¤
+    // ?ï¿½ï¿½?è³‡ç”¢?ï¿½èª¤
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     void HandleAssetError(const FString& AssetID, const FString& ErrorMessage};
 
-    // ?´æ–°?Ÿæ??²åº¦
+    // ?ï¿½æ–°?ï¿½ï¿½Xï¿½åº¦
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     void UpdateGenerationProgress(const FString& AssetID, int32 Progress};
 
-    // ?Ÿæ??¯ä?è³‡ç”¢ID
+    // ?ï¿½ï¿½Xï¿½ï¿½?è³‡ç”¢ID
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GenerateUniqueAssetID() const;
 
-    // ?²å?è³‡ç”¢é¡åˆ¥?ç¨±
+    // ?ï¿½ï¿½?è³‡ç”¢é¡åˆ¥?ï¿½ç¨±
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GetAssetCategoryName(EGameAssetCategory Category) const;
 
-    // ?²å?è³‡ç”¢?¨é€”å?ç¨?    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
+    // ?ï¿½ï¿½?è³‡ç”¢?ï¿½é€”ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GetAssetPurposeName(EGameAssetPurpose Purpose) const;
 
-    // ?²å?é«˜æ ¡?§å®¹é¡å??ç¨±
+    // ?ï¿½ï¿½?é«˜æ ¡?ï¿½å®¹é¡ï¿½Xï¿½ç¨±
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     FString GetUniversityContentTypeName(EUniversityContentType ContentType) const;
 
-    // ?µå»ºè³‡ç”¢?ƒæ•¸??    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
+    // ?ï¿½å»ºè³‡ç”¢?ï¿½æ•¸X    UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     TMap<FString, FString> CreateAssetMetadata(const FGameAssetRequirement& Requirement) const;
 
-    // è¨ˆç??ä¼°?Ÿæ??‚é?
+    // è¨ˆï¿½Xï¿½ä¼°?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
     float CalculateEstimatedGenerationTime(const FGameAssetRequirement& Requirement) const;
 
 protected:
-    // ?¶å?ä¸–ç?å¼•ç”¨
+    // ?ï¿½ï¿½?ä¸–ï¿½?å¼•ç”¨
     UPROPERTY()
     TObjectPtr<UWorld> CurrentWorld;
 
-    // AI?§å®¹ç³»çµ±å¼•ç”¨
+    // AI?ï¿½å®¹ç³»çµ±å¼•ç”¨
     UPROPERTY()
     TObjectPtr<UMingAIGeneratedContentSystem> AIContentSystem;
 
@@ -471,14 +471,14 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingAIContentManager> ContentManager;
 
-    // ?Ÿæ??„è??¢å???    UPROPERTY()
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½X    UPROPERTY()
     TMap<FString, FGeneratedGameAsset> GeneratedAssets;
 
-    // ?¶å??Ÿæ?ä»»å?
+    // ?ï¿½ï¿½Xï¿½ï¿½?ä»»ï¿½?
     UPROPERTY()
     TMap<FString, FGameAssetRequirement> ActiveGenerations;
 
-    // ç³»çµ±?ç½®
+    // ç³»çµ±?ï¿½ç½®
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Asset Generator")
     int32 MaxConcurrentGenerations;
 
@@ -497,7 +497,7 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Asset Generator")
     TArray<FString> SupportedFormats;
 
-    // çµ±è??¸æ?
+    // çµ±ï¿½Xï¿½ï¿½?
     UPROPERTY()
     TMap<EGameAssetCategory, int32> AssetCounts;
 
@@ -511,29 +511,29 @@ protected:
     float TotalGenerationTime;
 
 private:
-    // ?•ç??¹é??Ÿæ?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     void ProcessBatchGeneration(const FString& RequestID, const TArray<FGameAssetRequirement>& Requirements};
 
-    // é©—è?è³‡ç”¢ID
+    // é©—ï¿½?è³‡ç”¢ID
     bool IsValidAssetID(const FString& AssetID) const;
 
-    // è¨˜é?è³‡ç”¢?¥è?
+    // è¨˜ï¿½?è³‡ç”¢?ï¿½ï¿½?
     void LogAssetMessage(const FString& AssetID, const FString& Message, bool bIsError = false};
 
-    // ?´æ–°çµ±è??¸æ?
+    // ?ï¿½æ–°çµ±ï¿½Xï¿½ï¿½?
     void UpdateStatistics(EGameAssetCategory Category, float GenerationTime};
 
-    // æ¸…ç??æ?è³‡ç”¢
+    // æ¸…ï¿½Xï¿½ï¿½?è³‡ç”¢
     void CleanupExpiredAssets(};
 
-    // ?™ä»½è³‡ç”¢
+    // ?ï¿½ä»½è³‡ç”¢
     void BackupAsset(const FGeneratedGameAsset& Asset};
 
-    // å£“ç¸®è³‡ç”¢?¸æ?
+    // å£“ç¸®è³‡ç”¢?ï¿½ï¿½?
     TArray<uint8> CompressAssetData(const TArray<uint8>& AssetData) const;
 
-    // è§??ç¸®è??¢æ•¸??    TArray<uint8> DecompressAssetData(const TArray<uint8>& CompressedData) const;
+    // ï¿½Xç¸®ï¿½Xï¿½æ•¸X    TArray<uint8> DecompressAssetData(const TArray<uint8>& CompressedData) const;
 
-    // ?²å?ç³»çµ±?€??    TMap<FString, FString> GetSystemStatus() const;
+    // ?ï¿½ï¿½?ç³»çµ±?ï¿½X    TMap<FString, FString> GetSystemStatus() const;
 };
 

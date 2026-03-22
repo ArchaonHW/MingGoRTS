@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -232,7 +232,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOptimizationApplied, FMingOptimiz
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPerformanceLevelChanged};
 
 /**
- * ?§èƒ½ç®¡ç??? * ??Ž§?Œå„ª?–é??²æ€§èƒ½
+ * ?ï¿½èƒ½ç®¡ï¿½X * Xï¿½ï¿½?ï¿½å„ª?ï¿½ï¿½Xï¿½æ€§èƒ½
  */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingPerformanceManager : public UObject

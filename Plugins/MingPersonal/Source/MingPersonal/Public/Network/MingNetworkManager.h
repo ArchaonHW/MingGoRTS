@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -239,7 +239,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStarted};
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameEnded};
 
 /**
- * ç¶²çµ¡ç®¡ç??? * ?•ç?å¤šäºº?Šæˆ²?„ç¶²çµ¡é€?¥?ç©å®¶ç®¡?†å??¸æ??Œæ­¥
+ * ç¶²çµ¡ç®¡ï¿½X * ?ï¿½ï¿½?å¤šäºº?ï¿½æˆ²?ï¿½ç¶²çµ¡ï¿½?ï¿½ï¿½?ï¿½ç©å®¶ç®¡?ï¿½ï¿½Xï¿½ï¿½Xï¿½æ­¥
  */
 UCLASS(ClassGroup = (MingGoRTS), meta = (BlueprintSpawnableComponent))
 class MINGPERSONAL_API UMingNetworkManager : public UObject

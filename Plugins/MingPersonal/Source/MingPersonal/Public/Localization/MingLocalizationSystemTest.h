@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -49,7 +49,7 @@ class UMingCultureAdapter;
 class UMingRegionalContentManager;
 
 /**
- * ?�地?�系統測試�?�? * 驗�??�地?�系統�??��??�能
+ * ?�地?�系統測試�?�? * 驗�X�地?�系統�X��X�能
  */
 UCLASS()
 class MINGPERSONAL_API UMingLocalizationSystemTest : public UObject
@@ -59,10 +59,10 @@ class MINGPERSONAL_API UMingLocalizationSystemTest : public UObject
 public:
     UMingLocalizationSystemTest(};
 
-    // ?��??�?�測�?    UFUNCTION(BlueprintCallable, Category = "Localization Test")
+    // ?��X�?�測�?    UFUNCTION(BlueprintCallable, Category = "Localization Test")
     bool RunAllTests(};
 
-    // 測試結�?
+    // 測試結�?
     UFUNCTION(BlueprintPure, Category = "Localization Test")
     FString GetTestResults() const { return TestResults; }
 
@@ -78,7 +78,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Localization Test")
     TArray<FLocalizationTestCase> GetTestCases() const { return TestCases; }
 
-    // ?�別測試
+    // ?�別測試
     UFUNCTION(BlueprintCallable, Category = "Localization Test")
     bool TestLocalizationManagerCreation(};
 
@@ -137,7 +137,7 @@ public:
     bool TestExportImport(};
 
 private:
-    // 測試結�??��?
+    // 測試結�X��?
     UPROPERTY()
     FString TestResults;
 
@@ -153,11 +153,11 @@ private:
     UPROPERTY()
     TArray<FLocalizationTestCase> TestCases;
 
-    // 測試幫助?�數
+    // 測試幫助?�數
     void LogTestResult(const FString& TestName, bool bPassed, const FString& Message = TEXT("")};
     void ResetTestCounts(};
     void AddTestCase(const FString& TestName, const FString& Description, bool bPassed, const FString& Error = TEXT("")};
 
-    // ?�建測試?��?管�???    UMingLocalizationManager* CreateTestLocalizationManager(};
+    // ?�建測試?��?管�X    UMingLocalizationManager* CreateTestLocalizationManager(};
 };
 

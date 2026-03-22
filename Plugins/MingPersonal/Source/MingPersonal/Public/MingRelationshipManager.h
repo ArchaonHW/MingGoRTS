@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -8,23 +8,23 @@
 UENUM(BlueprintType)
 enum class ERelationshipType : uint8
 {
-    Friend,           // ?‹å?
-    Ally,            // ?Ÿå?
-    Rival,           // ç«¶çˆ­å°æ?
-    Enemy,           // ?µäºº
+    Friend,           // ?ï¿½ï¿½?
+    Ally,            // ?ï¿½ï¿½?
+    Rival,           // ç«¶çˆ­å°ï¿½?
+    Enemy,           // ?ï¿½äºº
     Family,          // å®¶äºº
     Mentor,          // å°å¸«
-    Student,         // å­¸ç?
-    Business,        // ?†æ¥­å¤¥ä¼´
-    Romantic,        // ?€?›å?è±?    Neutral          // ä¸­ç?
+    Student,         // å­¸ï¿½?
+    Business,        // ?ï¿½æ¥­å¤¥ä¼´
+    Romantic,        // ?ï¿½?ï¿½ï¿½?ï¿½?    Neutral          // ä¸­ï¿½?
 };
 
 UENUM(BlueprintType)
 enum class EReputationLevel : uint8
 {
-    Unknown,         // ?ªçŸ¥
-    Disliked,        // è¢«å­??    Neutral,         // ä¸­ç?
-    Respected,       // ?—å???    Honored,         // ?—æ•¬??    Legendary        // ?³å?
+    Unknown,         // ?ï¿½çŸ¥
+    Disliked,        // è¢«å­X    Neutral,         // ä¸­ï¿½?
+    Respected,       // ?ï¿½ï¿½X    Honored,         // ?ï¿½æ•¬X    Legendary        // ?ï¿½ï¿½?
 };
 
 USTRUCT(BlueprintType)
@@ -112,7 +112,7 @@ struct FInteractionEffect
 };
 
 /**
- * è§’è‰²?œä??Œè²?›ç®¡?†ç³»çµ? * ç®¡ç??©å®¶?‡NPC?„é?ä¿‚ä»¥?Šåœ¨?„å€‹åœ°?€?„è²?? */
+ * è§’è‰²?ï¿½ï¿½Xï¿½è²?ï¿½ç®¡?ï¿½ç³»ï¿½? * ç®¡ï¿½Xï¿½å®¶?ï¿½NPC?ï¿½ï¿½?ä¿‚ä»¥?ï¿½åœ¨?ï¿½å€‹åœ°?ï¿½?ï¿½è²X */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingRelationshipManager : public UObject
 {
@@ -121,93 +121,93 @@ class MINGPERSONAL_API UMingRelationshipManager : public UObject
 public:
     UMingRelationshipManager(};
 
-    // ?å??–ç³»çµ?    UFUNCTION(BlueprintCallable, Category = "Relationship System")
+    // ?ï¿½ï¿½Xï¿½ç³»ï¿½?    UFUNCTION(BlueprintCallable, Category = "Relationship System")
     void InitializeRelationshipSystem(};
 
-    // ?²å??‡ç‰¹å®šè??²ç??œä?
+    // ?ï¿½ï¿½Xï¿½ç‰¹å®šï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
     FRelationshipData GetRelationship(const FString& CharacterID) const;
 
-    // ?´æ–°è§’è‰²?œä?
+    // ?ï¿½æ–°è§’è‰²?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
     void UpdateRelationship(const FString& CharacterID, float ChangeAmount, const FString& Reason};
 
-    // ?²å??°å??²æ?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
     FReputationData GetReputation(const FString& RegionID) const;
 
-    // ?´æ–°?°å??²æ?
+    // ?ï¿½æ–°?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
     void UpdateReputation(const FString& RegionID, float ChangeAmount, const FString& Reason};
 
-    // ?•ç?äº’å??ˆæ?
+    // ?ï¿½ï¿½?äº’ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
     void ProcessInteraction(const FInteractionEffect& InteractionEffect};
 
-    // æª¢æŸ¥?¯å¦?¯ä»¥?¥å??¹å?ä»»å?ï¼ˆåŸº?¼è²?›ï?
+    // æª¢æŸ¥?ï¿½å¦?ï¿½ä»¥?ï¿½ï¿½Xï¿½ï¿½?ä»»ï¿½?ï¼ˆåŸº?ï¿½è²?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
     bool CanAcceptQuest(const FString& QuestID, const FString& RegionID) const;
 
-    // ?²å?å°è©±?¸é?ï¼ˆåŸº?¼é?ä¿‚ï?
+    // ?ï¿½ï¿½?å°è©±?ï¿½ï¿½?ï¼ˆåŸº?ï¿½ï¿½?ä¿‚ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
     TArray<FString> GetDialogueOptions(const FString& CharacterID) const;
 
-    // ?²å??¹æ ¼ä¿®æ­£ï¼ˆåŸº?¼é?ä¿‚ï?
+    // ?ï¿½ï¿½Xï¿½æ ¼ä¿®æ­£ï¼ˆåŸº?ï¿½ï¿½?ä¿‚ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
     float GetPriceModifier(const FString& CharacterID) const;
 
-    // ?²å??œä?ç­‰ç?
+    // ?ï¿½ï¿½Xï¿½ï¿½?ç­‰ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
     ERelationshipType GetRelationshipLevel(const FString& CharacterID) const;
 
-    // ?²å??²æ?ç­‰ç?
+    // ?ï¿½ï¿½Xï¿½ï¿½?ç­‰ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Reputation System")
     EReputationLevel GetReputationLevel(const FString& RegionID) const;
 
-    // æ·»å??±å?è¨˜æ†¶
+    // æ·»ï¿½Xï¿½ï¿½?è¨˜æ†¶
     UFUNCTION(BlueprintCallable, Category = "Relationship System")
     void AddSharedMemory(const FString& CharacterID, const FString& Memory};
 
-    // ?²å??€?‰é?ä¿‚æ•¸??    UFUNCTION(BlueprintCallable, Category = "Relationship System")
+    // ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?ä¿‚æ•¸X    UFUNCTION(BlueprintCallable, Category = "Relationship System")
     const TMap<FString, FRelationshipData>& GetAllRelationships() const { return Relationships; }
 
-    // ?²å??€?‰è²?›æ•¸??    UFUNCTION(BlueprintCallable, Category = "Reputation System")
+    // ?ï¿½ï¿½Xï¿½?ï¿½è²?ï¿½æ•¸X    UFUNCTION(BlueprintCallable, Category = "Reputation System")
     const TMap<FString, FReputationData>& GetAllReputations() const { return Reputations; }
 
 protected:
-    // è§’è‰²?œä??¸æ?
+    // è§’è‰²?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Relationship System")
     TMap<FString, FRelationshipData> Relationships;
 
-    // ?°å??²æ??¸æ?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly, Category = "Reputation System")
     TMap<FString, FReputationData> Reputations;
 
-    // ?¶å??Šæˆ²??    UPROPERTY(BlueprintReadOnly, Category = "Relationship System")
+    // ?ï¿½ï¿½Xï¿½æˆ²X    UPROPERTY(BlueprintReadOnly, Category = "Relationship System")
     int32 CurrentGameDay;
 
-    // ?œä?è®Šå??èª¿
+    // ?ï¿½ï¿½?è®Šï¿½Xï¿½èª¿
     UFUNCTION(BlueprintImplementableEvent, Category = "Relationship System")
     void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
 
-    // ?²æ?è®Šå??èª¿
+    // ?ï¿½ï¿½?è®Šï¿½Xï¿½èª¿
     UFUNCTION(BlueprintImplementableEvent, Category = "Reputation System")
     void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason};
 
 private:
-    // è¨ˆç??œä?é¡å?
+    // è¨ˆï¿½Xï¿½ï¿½?é¡ï¿½?
     ERelationshipType CalculateRelationshipType(float RelationshipValue) const;
 
-    // è¨ˆç??²æ?ç­‰ç?
+    // è¨ˆï¿½Xï¿½ï¿½?ç­‰ï¿½?
     EReputationLevel CalculateReputationLevel(float ReputationScore) const;
 
-    // ?‰ç”¨?œä?è¡°æ?ï¼ˆé•·?‚é??¡ä??•ï?
+    // ?ï¿½ç”¨?ï¿½ï¿½?è¡°ï¿½?ï¼ˆé•·?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     void ApplyRelationshipDecay(};
 
-    // ä¿å?ç³»çµ±?¸æ?
+    // ä¿ï¿½?ç³»çµ±?ï¿½ï¿½?
     void SaveRelationshipData(};
 
-    // ? è?ç³»çµ±?¸æ?
+    // ?ï¿½ï¿½?ç³»çµ±?ï¿½ï¿½?
     void LoadRelationshipData(};
 };
 

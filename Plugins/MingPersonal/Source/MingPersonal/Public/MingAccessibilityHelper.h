@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -11,24 +11,24 @@ UENUM(BlueprintType)
 enum class EAccessibilityFeature : uint8
 {
     HighContrast,          // ?比度
-    LargeText,            // ??    ScreenReader,         // ?????    ColorBlindMode,       // ??模?
-    ReducedMotion,        // ????
-    KeyboardNavigation,   // ?????
-    VoiceControl,         // 語音???
-    VisualCues,           // 視覺??
-    AudioDescriptions,    // ????
-    SimplifiedUI          // ????
+    LargeText,            // X    ScreenReader,         // X    ColorBlindMode,       // X模?
+    ReducedMotion,        // X
+    KeyboardNavigation,   // X
+    VoiceControl,         // 語音X
+    VisualCues,           // 視覺X
+    AudioDescriptions,    // X
+    SimplifiedUI          // X
 };
 
 UENUM(BlueprintType)
 enum class EPersonalDisabilityType : uint8
 {
-    VisualImpairment,     // 視覺??
-    HearingImpairment,    // ???
-    MotorImpairment,      // ????
-    CognitiveImpairment,   // 認知??
-    ColorBlindness,       // ???
-    None                  // ???};
+    VisualImpairment,     // 視覺X
+    HearingImpairment,    // X
+    MotorImpairment,      // X
+    CognitiveImpairment,   // 認知X
+    ColorBlindness,       // X
+    None                  // X};
 
 USTRUCT(BlueprintType)
 struct FAccessibilityProfile
@@ -103,7 +103,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAccessibilityFeatureToggled, EAc
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAccessibilityNeedDetected, EPersonalDisabilityType, DisabilityType};
 
 /**
- * AI????????? * ??檢??????輔助???? */
+ * AIX * X檢X輔助X */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingAccessibilityHelper : public UObject
 {
@@ -112,7 +112,7 @@ class MINGPERSONAL_API UMingAccessibilityHelper : public UObject
 public:
     UMingAccessibilityHelper(};
 
-    // ????????    UFUNCTION(BlueprintCallable, Category = "Accessibility")
+    // X    UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void InitializeAccessibility(UMingAIUIManager* InAIManager, UMingBehaviorAnalytics* InAnalytics};
 
     // ?求檢?    UFUNCTION(BlueprintCallable, Category = "Accessibility")
@@ -143,7 +143,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     bool IsFeatureEnabled(EAccessibilityFeature Feature) const;
 
-    // UI??
+    // UIX
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void ApplyAccessibilityToUI(};
 
@@ -162,7 +162,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void EnableKeyboardNavigation(};
 
-    // 語音???
+    // 語音X
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void StartVoiceControl(};
 
@@ -175,7 +175,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     TArray<FString> GetAvailableVoiceCommands() const;
 
-    // ?????    UFUNCTION(BlueprintCallable, Category = "Accessibility")
+    // X    UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void EnableScreenReader(};
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
@@ -190,7 +190,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void SetReadingSpeed(float Speed};
 
-    // ?????
+    // X
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void SetupKeyboardNavigation(};
 
@@ -216,7 +216,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void ShowElementDescriptions(};
 
-    // ?????
+    // X
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void EnableAudioDescriptions(};
 
@@ -226,7 +226,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void SetAudioDescriptionVolume(float Volume};
 
-    // ????
+    // X
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void AutoOptimizeForUser(};
 
@@ -239,7 +239,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     TArray<EAccessibilityFeature> GetRecommendedFeatures() const;
 
-    // 測試???    UFUNCTION(BlueprintCallable, Category = "Accessibility")
+    // 測試X    UFUNCTION(BlueprintCallable, Category = "Accessibility")
     void RunAccessibilityTest(};
 
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
@@ -248,7 +248,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Accessibility")
     FString GenerateAccessibilityReport() const;
 
-    // ????    UFUNCTION(BlueprintPure, Category = "Accessibility")
+    // X    UFUNCTION(BlueprintPure, Category = "Accessibility")
     bool IsAccessibilityEnabled() const { return bAccessibilityEnabled; }
 
     UFUNCTION(BlueprintPure, Category = "Accessibility")
@@ -294,7 +294,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingBehaviorAnalytics> BehaviorAnalytics;
 
-    // ??
+    // X
     UPROPERTY()
     bool bAccessibilityEnabled = true;
 
@@ -307,7 +307,7 @@ protected:
     UPROPERTY()
     FAccessibilitySettings Settings;
 
-    // 檢測??
+    // 檢測X
     UPROPERTY()
     TMap<EPersonalDisabilityType, float> DisabilityScores;
 
@@ -320,20 +320,20 @@ protected:
     UPROPERTY()
     TArray<float> KeyboardUsageHistory;
 
-    // 語音???
+    // 語音X
     UPROPERTY()
     bool bVoiceControlEnabled = false;
 
     UPROPERTY()
     TMap<FString, FString> VoiceCommandMap;
 
-    // ?????    UPROPERTY()
+    // X    UPROPERTY()
     bool bScreenReaderEnabled = false;
 
     UPROPERTY()
     float ReadingSpeed = 1.0f;
 
-    // ?????
+    // X
     void AnalyzeInteractionSpeed(};
     void AnalyzeClickAccuracy(};
     void AnalyzeKeyboardUsage(};
@@ -351,7 +351,7 @@ protected:
     TArray<EAccessibilityFeature> RecommendFeaturesForDisability(EPersonalDisabilityType DisabilityType) const;
 
 private:
-    // 輔助???
+    // 輔助X
     void InitializeDefaultProfiles(};
     void SetupEventListeners(};
     void SaveAccessibilityData(};

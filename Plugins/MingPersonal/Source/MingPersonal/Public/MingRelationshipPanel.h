@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -47,8 +47,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRelationshipSelected, const FStri
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRelationshipFilterChanged, ERelationshipType, FilterType, bool, bActive};
 
 /**
- * ?œä??¢æ¿Widget
- * é¡¯ç¤º?Œç®¡?†è??²é?ä¿‚ä¿¡?? */
+ * ?ï¿½ï¿½Xï¿½æ¿Widget
+ * é¡¯ç¤º?ï¿½ç®¡?ï¿½ï¿½Xï¿½ï¿½?ä¿‚ä¿¡X */
 UCLASS(BlueprintType, Blueprintable)
 class MINGPERSONAL_API UMingRelationshipPanel : public UUserWidget
 {
@@ -57,10 +57,10 @@ class MINGPERSONAL_API UMingRelationshipPanel : public UUserWidget
 public:
     UMingRelationshipPanel(const FObjectInitializer& ObjectInitializer};
 
-    // ?å???    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
+    // ?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void InitializeRelationshipPanel(UMingRelationshipManager* InRelationshipManager};
 
-    // ?¸æ??´æ–°
+    // ?ï¿½ï¿½Xï¿½æ–°
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void UpdateRelationshipData(};
 
@@ -70,7 +70,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void UpdateSelectedRelationship(const FString& CharacterID};
 
-    // ?æ¿¾?Œæ?åº?    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
+    // ?ï¿½æ¿¾?ï¿½ï¿½?ï¿½?    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void FilterByRelationshipType(ERelationshipType RelationshipType, bool bActive};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
@@ -82,14 +82,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void ClearFilters(};
 
-    // ?œç´¢
+    // ?ï¿½ç´¢
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void SearchRelationships(const FString& SearchText};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void ClearSearch(};
 
-    // çµ±è?ä¿¡æ¯
+    // çµ±ï¿½?ä¿¡æ¯
     UFUNCTION(BlueprintPure, Category = "Relationship Panel")
     int32 GetTotalRelationshipCount() const;
 
@@ -118,7 +118,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void RemoveSharedMemory(const FString& CharacterID, const FString& Memory};
 
-    // äº’å??ä?
+    // äº’ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void OnRelationshipClicked(const FString& CharacterID};
 
@@ -128,7 +128,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void OnRelationshipRightClicked(const FString& CharacterID};
 
-    // å°å‡º?Œå???    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
+    // å°å‡º?ï¿½ï¿½X    UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
     void ExportRelationshipData(};
 
     UFUNCTION(BlueprintCallable, Category = "Relationship Panel")
@@ -146,7 +146,7 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
-    // ?¸æ?å­˜å„²
+    // ?ï¿½ï¿½?å­˜å„²
     UPROPERTY(BlueprintReadOnly, Category = "Relationship Data")
     TArray<FRelationshipDisplayData> DisplayedRelationships;
 
@@ -156,7 +156,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Relationship Data")
     FRelationshipDisplayData SelectedRelationship;
 
-    // ?æ¿¾?€??    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
+    // ?ï¿½æ¿¾?ï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     TMap<ERelationshipType, bool> ActiveFilters;
 
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
@@ -165,13 +165,13 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Filter State")
     bool bIsFiltered = false;
 
-    // ?’å??€??    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
+    // ?ï¿½ï¿½Xï¿½X    UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortByValue = false;
 
     UPROPERTY(BlueprintReadOnly, Category = "Sort State")
     bool bSortAscending = true;
 
-    // UIçµ„ä»¶å¼•ç”¨ï¼ˆé?è¦åœ¨Blueprintä¸­ç?å®šï?
+    // UIçµ„ä»¶å¼•ç”¨ï¼ˆï¿½?è¦åœ¨Blueprintä¸­ï¿½?å®šï¿½?
     UPROPERTY(meta = (BindWidget))
     class UListView* RelationshipListView;
 
@@ -193,11 +193,11 @@ protected:
     UPROPERTY(meta = (BindWidget))
     class UScrollBox* DetailsScrollBox;
 
-    // ?›æ“¬?½æ•¸
+    // ?ï¿½æ“¬?ï¿½æ•¸
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
 
-    // ?§éƒ¨?½æ•¸
+    // ?ï¿½éƒ¨?ï¿½æ•¸
     void ProcessRelationshipData(};
     void ApplyFilters(};
     void ApplySorting(};
@@ -207,12 +207,12 @@ protected:
     FLinearColor GetRelationshipColor(ERelationshipType RelationshipType, float Value) const;
     FString GetRelationshipDescription(ERelationshipType RelationshipType, float Value) const;
 
-    // äº‹ä»¶ç¶å?
+    // äº‹ä»¶ç¶ï¿½?
     void SetupEventBindings(};
     void OnRelationshipDataChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
 
 private:
-    // è¼”åŠ©?½æ•¸
+    // è¼”åŠ©?ï¿½æ•¸
     bool PassesFilter(const FRelationshipDisplayData& RelationshipData) const;
     bool PassesSearch(const FRelationshipDisplayData& RelationshipData) const;
     void RefreshDisplayList(};

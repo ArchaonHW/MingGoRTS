@@ -1,29 +1,29 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingUniversityGuideManager.generated.h"
 
 /**
- * é«˜æ ¡å¼•å??§å®¹é¡å?
+ * é«˜æ ¡å¼•ï¿½Xï¿½å®¹é¡ï¿½?
  */
 UENUM(BlueprintType)
 enum class EMingUniversityContentType : uint8
 {
-    CampusTour      UMETA(DisplayName = "?¡å?å°è¦½"),
-    AcademicIntro   UMETA(DisplayName = "å­¸è?ä»‹ç´¹"),
+    CampusTour      UMETA(DisplayName = "?ï¿½ï¿½?å°è¦½"),
+    AcademicIntro   UMETA(DisplayName = "å­¸ï¿½?ä»‹ç´¹"),
     HistoricalGuide UMETA(DisplayName = "æ­·å²å°è¦½"),
-    CulturalIntro   UMETA(DisplayName = "?‡å?ä»‹ç´¹"),
-    GameTutorial    UMETA(DisplayName = "?Šæˆ²?™ç?"),
-    ResearchShowcase UMETA(DisplayName = "?”ç©¶?æ?å±•ç¤º"),
-    StudentLife     UMETA(DisplayName = "å­¸ç??Ÿæ´»"),
-    FacultyIntro    UMETA(DisplayName = "å¸«è?ä»‹ç´¹"),
-    Achievement     UMETA(DisplayName = "?å°±å±•ç¤º"),
-    InteractiveMap  UMETA(DisplayName = "äº’å??°å?")
+    CulturalIntro   UMETA(DisplayName = "?ï¿½ï¿½?ä»‹ç´¹"),
+    GameTutorial    UMETA(DisplayName = "?ï¿½æˆ²?ï¿½ï¿½?"),
+    ResearchShowcase UMETA(DisplayName = "?ï¿½ç©¶?ï¿½ï¿½?å±•ç¤º"),
+    StudentLife     UMETA(DisplayName = "å­¸ï¿½Xï¿½æ´»"),
+    FacultyIntro    UMETA(DisplayName = "å¸«ï¿½?ä»‹ç´¹"),
+    Achievement     UMETA(DisplayName = "?ï¿½å°±å±•ç¤º"),
+    InteractiveMap  UMETA(DisplayName = "äº’ï¿½Xï¿½ï¿½?")
 };
 
 /**
- * é«˜æ ¡å¼•å??ç½®
+ * é«˜æ ¡å¼•ï¿½Xï¿½ç½®
  */
 USTRUCT(BlueprintType)
 struct FMingUniversityGuideConfig
@@ -75,7 +75,7 @@ struct FMingUniversityGuideConfig
 };
 
 /**
- * é«˜æ ¡å¼•å??§å®¹?¸æ?
+ * é«˜æ ¡å¼•ï¿½Xï¿½å®¹?ï¿½ï¿½?
  */
 USTRUCT(BlueprintType)
 struct FUniversityGuideContent
@@ -110,7 +110,7 @@ struct FUniversityGuideContent
 };
 
 /**
- * é«˜æ ¡å¼•å?ç®¡ç??? * ç®¡ç??Šæˆ²?§ç?é«˜æ ¡å¼•å??Œæ??²å…§å®? */
+ * é«˜æ ¡å¼•ï¿½?ç®¡ï¿½X * ç®¡ï¿½Xï¿½æˆ²?ï¿½ï¿½?é«˜æ ¡å¼•ï¿½Xï¿½ï¿½Xï¿½å…§ï¿½? */
 UCLASS()
 class MINGPERSONAL_API UMingUniversityGuideManager : public UObject
 {
@@ -123,116 +123,116 @@ public:
     virtual void Shutdown(};
 
     /**
-     * ?Ÿå?é«˜æ ¡å¼•å?
+     * ?ï¿½ï¿½?é«˜æ ¡å¼•ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void StartUniversityGuide(};
 
     /**
-     * ?œæ­¢é«˜æ ¡å¼•å?
+     * ?ï¿½æ­¢é«˜æ ¡å¼•ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void StopUniversityGuide(};
 
     /**
-     * è¨­ç½®å¼•å??ç½®
+     * è¨­ç½®å¼•ï¿½Xï¿½ç½®
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void SetGuideConfig(const FUniversityGuideConfig& Config};
 
     /**
-     * ?²å??¶å??ç½®
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ç½®
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     FUniversityGuideConfig GetGuideConfig() const;
 
     /**
-     * ?Ÿæ?å¼•å??§å®¹
+     * ?ï¿½ï¿½?å¼•ï¿½Xï¿½å®¹
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     FString GenerateGuideContent(const FUniversityGuideConfig& Config};
 
     /**
-     * é¡¯ç¤ºä¸‹ä??‹å?å°å…§å®?     */
+     * é¡¯ç¤ºä¸‹ï¿½Xï¿½ï¿½?å°å…§ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void ShowNextContent(};
 
     /**
-     * é¡¯ç¤ºä¸Šä??‹å?å°å…§å®?     */
+     * é¡¯ç¤ºä¸Šï¿½Xï¿½ï¿½?å°å…§ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void ShowPreviousContent(};
 
     /**
-     * è·³è??°æ?å®šå…§å®?     */
+     * è·³ï¿½Xï¿½ï¿½?å®šå…§ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void JumpToContent(const FString& ContentID};
 
     /**
-     * æ¨™è??§å®¹?ºå·²å®Œæ?
+     * æ¨™ï¿½Xï¿½å®¹?ï¿½å·²å®Œï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void MarkContentAsCompleted(const FString& ContentID};
 
     /**
-     * ?²å??€?‰å…§å®?     */
+     * ?ï¿½ï¿½Xï¿½?ï¿½å…§ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     TArray<FUniversityGuideContent> GetAllContents() const;
 
     /**
-     * ?²å??¶å??§å®¹
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½å®¹
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     FUniversityGuideContent GetCurrentContent() const;
 
     /**
-     * ?²å?å®Œæ??²åº¦
+     * ?ï¿½ï¿½?å®Œï¿½Xï¿½åº¦
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     float GetCompletionProgress() const;
 
     /**
-     * ?­æ”¾å¼•å??³é »
+     * ?ï¿½æ”¾å¼•ï¿½Xï¿½é »
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void PlayGuideAudio(const FString& AudioClipID};
 
     /**
-     * ?œæ­¢å¼•å??³é »
+     * ?ï¿½æ­¢å¼•ï¿½Xï¿½é »
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void StopGuideAudio(};
 
     /**
-     * è¨­ç½®å¼•å??³é?
+     * è¨­ç½®å¼•ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void SetGuideVolume(float Volume};
 
     /**
-     * ?Ÿç”¨/ç¦ç”¨äº’å?æ¨¡å?
+     * ?ï¿½ç”¨/ç¦ç”¨äº’ï¿½?æ¨¡ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void SetInteractiveMode(bool bEnabled};
 
     /**
-     * æª¢æŸ¥?¯å¦æ­?œ¨?‹è?
+     * æª¢æŸ¥?ï¿½å¦ï¿½?ï¿½ï¿½?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     bool IsGuideRunning() const;
 
     /**
-     * ä¿å?å¼•å??²åº¦
+     * ä¿ï¿½?å¼•ï¿½Xï¿½åº¦
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void SaveGuideProgress(};
 
     /**
-     * è¼‰å…¥å¼•å??²åº¦
+     * è¼‰å…¥å¼•ï¿½Xï¿½åº¦
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
     void LoadGuideProgress(};
 
-    // äº‹ä»¶?²æ?
+    // äº‹ä»¶?ï¿½ï¿½?
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGuideStarted, FString, GuideID};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGuideCompleted, FString, GuideID};
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnContentChanged, FUniversityGuideContent, Content};

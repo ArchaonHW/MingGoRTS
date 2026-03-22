@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -273,7 +273,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProfileCompleted, const FString&,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceAlert, const FString&, AlertMessage};
 
 /**
- * MingGoRTS å¢å¼·?§èƒ½?ªå??Œèª¿è©¦ç³»çµ? * ?•ç??Šæˆ²?§èƒ½??§?å„ª?–ã€èª¿è©¦å??†æ?ç­‰å??? */
+ * MingGoRTS å¢å¼·?ï¿½èƒ½?ï¿½ï¿½Xï¿½èª¿è©¦ç³»ï¿½? * ?ï¿½ï¿½Xï¿½æˆ²?ï¿½èƒ½Xï¿½ï¿½?ï¿½å„ª?ï¿½ã€èª¿è©¦ï¿½Xï¿½ï¿½?ç­‰ï¿½X */
 UCLASS(BlueprintType, Blueprintable, ClassGroup = "MingRTS")
 class MINGPERSONAL_API UMingRTSPerformanceEnhancedSystem : public UObject
 {
@@ -282,66 +282,66 @@ class MINGPERSONAL_API UMingRTSPerformanceEnhancedSystem : public UObject
 public:
     UMingRTSPerformanceEnhancedSystem(};
 
-    // ?å??–å?å¼·æ€§èƒ½?ªå?ç³»çµ±
+    // ?ï¿½ï¿½Xï¿½ï¿½?å¼·æ€§èƒ½?ï¿½ï¿½?ç³»çµ±
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void InitializePerformanceEnhancedSystem(UWorld* World};
 
-    // ?´æ–°å¢å¼·?§èƒ½?ªå?ç³»çµ±ï¼ˆæ?å¹€èª¿ç”¨ï¼?    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
+    // ?ï¿½æ–°å¢å¼·?ï¿½èƒ½?ï¿½ï¿½?ç³»çµ±ï¼ˆï¿½?å¹€èª¿ç”¨ï¿½?    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void UpdatePerformanceEnhancedSystem(float DeltaTime};
 
-    // ?²å??¶å??§èƒ½?‡æ?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FPerformanceMetrics GetCurrentMetrics() const;
 
-    // ?²å??¹å?é¡åˆ¥?„æ€§èƒ½?‡æ?
+    // ?ï¿½ï¿½Xï¿½ï¿½?é¡åˆ¥?ï¿½æ€§èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FPerformanceMetrics GetCategoryMetrics(EPerformanceCategory Category) const;
 
-    // ?‹å??§èƒ½?†æ?
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FString StartProfiling(const FString& ProfileName, EPerformanceLevel TargetLevel, EOptimizationMode Mode};
 
-    // ?œæ­¢?§èƒ½?†æ?
+    // ?ï¿½æ­¢?ï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool StopProfiling(const FString& ProfileID};
 
-    // ?«å??§èƒ½?†æ?
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool PauseProfiling(const FString& ProfileID};
 
-    // ?¢å¾©?§èƒ½?†æ?
+    // ?ï¿½å¾©?ï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool ResumeProfiling(const FString& ProfileID};
 
-    // ?²å??§èƒ½?†æ?çµæ?
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?çµï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FPerformanceProfile GetProfile(const FString& ProfileID) const;
 
-    // ?²å??€?‰æ€§èƒ½?†æ?
+    // ?ï¿½ï¿½Xï¿½?ï¿½æ€§èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TArray<FPerformanceProfile> GetAllProfiles() const;
 
-    // ?ªå??§èƒ½?ªå?
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void AutoOptimize(EPerformanceCategory Category, EPerformanceLevel TargetLevel};
 
-    // ?¹é??§èƒ½?ªå?
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void BatchOptimize(const TArray<EPerformanceCategory>& Categories, EPerformanceLevel TargetLevel};
 
-    // ?‹å??§èƒ½?ªå?
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ManualOptimize(EPerformanceCategory Category, const TMap<FString, FString>& Settings};
 
-    // ?²å??ªå?å»ºè­°
+    // ?ï¿½ï¿½Xï¿½ï¿½?å»ºè­°
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TArray<FOptimizationResult> GetOptimizationSuggestions() const;
 
-    // ?‰ç”¨?ªå?è¨­ç½®
+    // ?ï¿½ç”¨?ï¿½ï¿½?è¨­ç½®
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool ApplyOptimizationSettings(const TMap<FString, FString>& Settings};
 
-    // ?ç½®?ªå?è¨­ç½®
+    // ?ï¿½ç½®?ï¿½ï¿½?è¨­ç½®
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ResetOptimizationSettings(};
 
@@ -349,15 +349,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void SetDebugLevel(EDebugLevel Level};
 
-    // ?²å?èª¿è©¦ç´šåˆ¥
+    // ?ï¿½ï¿½?èª¿è©¦ç´šåˆ¥
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     EDebugLevel GetDebugLevel() const;
 
-    // æ·»å?èª¿è©¦æ¶ˆæ¯
+    // æ·»ï¿½?èª¿è©¦æ¶ˆæ¯
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void AddDebugMessage(const FString& Category, const FString& Message, EDebugLevel Level, const FString& Context = TEXT("")};
 
-    // ?²å?èª¿è©¦ä¿¡æ¯
+    // ?ï¿½ï¿½?èª¿è©¦ä¿¡æ¯
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TArray<FDebugInfo> GetDebugInfo(const FString& Category = TEXT("")) const;
 
@@ -365,50 +365,50 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ClearDebugInfo(const FString& Category = TEXT("")};
 
-    // å°å‡º?§èƒ½?¸æ?
+    // å°å‡º?ï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool ExportPerformanceData(const FString& FilePath, const FString& ProfileID = TEXT("")};
 
-    // å°å…¥?§èƒ½?¸æ?
+    // å°å…¥?ï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool ImportPerformanceData(const FString& FilePath};
 
-    // ?²å??§èƒ½çµ±è?
+    // ?ï¿½ï¿½Xï¿½èƒ½çµ±ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TMap<FString, float> GetPerformanceStatistics() const;
 
-    // ?²å??§èƒ½?±å?
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FString GeneratePerformanceReport(const FString& ProfileID = TEXT("")) const;
 
-    // è¨­ç½®?§èƒ½è­¦å??¾å€?    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
+    // è¨­ç½®?ï¿½èƒ½è­¦ï¿½Xï¿½ï¿½?    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void SetPerformanceAlertThresholds(const TMap<EPerformanceCategory, float>& Thresholds};
 
-    // ?²å??§èƒ½è­¦å?
+    // ?ï¿½ï¿½Xï¿½èƒ½è­¦ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TArray<FString> GetPerformanceAlerts() const;
 
-    // æ¸…é™¤?§èƒ½è­¦å?
+    // æ¸…é™¤?ï¿½èƒ½è­¦ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ClearPerformanceAlerts(};
 
-    // ?Ÿç”¨/ç¦ç”¨?§èƒ½??§
+    // ?ï¿½ç”¨/ç¦ç”¨?ï¿½èƒ½Xï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void SetPerformanceMonitoringEnabled(bool bEnabled};
 
-    // ?²å??§èƒ½??§?€??    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
+    // ?ï¿½ï¿½Xï¿½èƒ½Xï¿½ï¿½?ï¿½X    UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool IsPerformanceMonitoringEnabled() const;
 
-    // è¨­ç½®??§?“é?
+    // è¨­ç½®Xï¿½ï¿½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void SetMonitoringInterval(float Interval};
 
-    // ?²å???§?“é?
+    // ?ï¿½ï¿½Xï¿½ï¿½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     float GetMonitoringInterval() const;
 
 public:
-    // äº‹ä»¶å§”è?
+    // äº‹ä»¶å§”ï¿½?
     UPROPERTY(BlueprintAssignable, Category = "Performance Enhanced System Events")
     FOnPerformanceMetricsUpdated OnPerformanceMetricsUpdated;
 
@@ -428,127 +428,127 @@ public:
     FOnPerformanceAlert OnPerformanceAlert;
 
 protected:
-    // ?•ç??§èƒ½??§
+    // ?ï¿½ï¿½Xï¿½èƒ½Xï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ProcessPerformanceMonitoring(float DeltaTime};
 
-    // ?•ç??§èƒ½?†æ?
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ProcessProfiling(float DeltaTime};
 
-    // ?•ç??ªå??ªå?
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ProcessAutoOptimization(float DeltaTime};
 
-    // ?•ç??§èƒ½è­¦å?
+    // ?ï¿½ï¿½Xï¿½èƒ½è­¦ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void ProcessPerformanceAlerts(float DeltaTime};
 
-    // ?¶é??§èƒ½?‡æ?
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FPerformanceMetrics CollectPerformanceMetrics() const;
 
-    // ?†æ??§èƒ½?¶é ¸
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½é ¸
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TArray<EPerformanceCategory> AnalyzePerformanceBottlenecks() const;
 
-    // ?Ÿæ??ªå?å»ºè­°
+    // ?ï¿½ï¿½Xï¿½ï¿½?å»ºè­°
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult GenerateOptimizationSuggestion(EPerformanceCategory Category) const;
 
-    // ?‰ç”¨æ¸²æ??ªå?
+    // ?ï¿½ç”¨æ¸²ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyRenderingOptimization(const TMap<FString, FString>& Settings};
 
-    // ?‰ç”¨?©ç??ªå?
+    // ?ï¿½ç”¨?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyPhysicsOptimization(const TMap<FString, FString>& Settings};
 
-    // ?‰ç”¨AI?ªå?
+    // ?ï¿½ç”¨AI?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyAIOptimization(const TMap<FString, FString>& Settings};
 
-    // ?‰ç”¨?³é »?ªå?
+    // ?ï¿½ç”¨?ï¿½é »?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyAudioOptimization(const TMap<FString, FString>& Settings};
 
-    // ?‰ç”¨ç¶²çµ¡?ªå?
+    // ?ï¿½ç”¨ç¶²çµ¡?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyNetworkOptimization(const TMap<FString, FString>& Settings};
 
-    // ?‰ç”¨UI?ªå?
+    // ?ï¿½ç”¨UI?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyUIOptimization(const TMap<FString, FString>& Settings};
 
-    // ?‰ç”¨?•ç•«?ªå?
+    // ?ï¿½ç”¨?ï¿½ç•«?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyAnimationOptimization(const TMap<FString, FString>& Settings};
 
-    // ?‰ç”¨?§å??ªå?
+    // ?ï¿½ç”¨?ï¿½ï¿½Xï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     FOptimizationResult ApplyMemoryOptimization(const TMap<FString, FString>& Settings};
 
-    // é©—è??ªå?çµæ?
+    // é©—ï¿½Xï¿½ï¿½?çµï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     bool ValidateOptimizationResult(const FOptimizationResult& Result) const;
 
-    // è¨˜é??§èƒ½?¸æ?
+    // è¨˜ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void RecordPerformanceData(const FPerformanceMetrics& Metrics};
 
-    // ?†æ??§èƒ½è¶¨å‹¢
+    // ?ï¿½ï¿½Xï¿½èƒ½è¶¨å‹¢
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     TMap<EPerformanceCategory, float> AnalyzePerformanceTrends() const;
 
-    // ?æ¸¬?§èƒ½è² è?
+    // ?ï¿½æ¸¬?ï¿½èƒ½è² ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     float PredictPerformanceLoad() const;
 
-    // å¹³è¡¡?§èƒ½è² è?
+    // å¹³è¡¡?ï¿½èƒ½è² ï¿½?
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
     void BalancePerformanceLoad(};
 
 protected:
-    // ?¶å?ä¸–ç?å¼•ç”¨
+    // ?ï¿½ï¿½?ä¸–ï¿½?å¼•ç”¨
     UPROPERTY()
     TObjectPtr<UWorld> CurrentWorld;
 
-    // ?¶å??§èƒ½?‡æ?
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     UPROPERTY()
     FPerformanceMetrics CurrentMetrics;
 
-    // ?§èƒ½?†æ?? å?
+    // ?ï¿½èƒ½?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY()
     TMap<FString, FPerformanceProfile> PerformanceProfiles;
 
-    // èª¿è©¦ä¿¡æ¯? å?
+    // èª¿è©¦ä¿¡æ¯?ï¿½ï¿½?
     UPROPERTY()
     TArray<FDebugInfo> DebugInfo;
 
-    // ?§èƒ½è­¦å??—è¡¨
+    // ?ï¿½èƒ½è­¦ï¿½Xï¿½è¡¨
     UPROPERTY()
     TArray<FString> PerformanceAlerts;
 
-    // ?§èƒ½è­¦å??¾å€?    UPROPERTY()
+    // ?ï¿½èƒ½è­¦ï¿½Xï¿½ï¿½?    UPROPERTY()
     TMap<EPerformanceCategory, float> AlertThresholds;
 
-    // ?¶å??†æ?ID
+    // ?ï¿½ï¿½Xï¿½ï¿½?ID
     UPROPERTY()
     FString CurrentProfileID;
 
-    // ?§èƒ½?´æ–°?“é?
+    // ?ï¿½èƒ½?ï¿½æ–°?ï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     float PerformanceUpdateInterval;
 
-    // ä¸Šæ¬¡?§èƒ½?´æ–°?‚é?
+    // ä¸Šæ¬¡?ï¿½èƒ½?ï¿½æ–°?ï¿½ï¿½?
     UPROPERTY()
     float LastPerformanceUpdateTime;
 
-    // ??§?“é?
+    // Xï¿½ï¿½?ï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     float MonitoringInterval;
 
-    // ä¸Šæ¬¡??§?‚é?
+    // ä¸Šæ¬¡Xï¿½ï¿½?ï¿½ï¿½?
     UPROPERTY()
     float LastMonitoringTime;
 
@@ -556,99 +556,99 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     EDebugLevel DebugLevel;
 
-    // ?¯å¦?Ÿç”¨?§èƒ½??§
+    // ?ï¿½å¦?ï¿½ç”¨?ï¿½èƒ½Xï¿½ï¿½
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     bool bPerformanceMonitoringEnabled;
 
-    // ?¯å¦?Ÿç”¨?ªå??ªå?
+    // ?ï¿½å¦?ï¿½ç”¨?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     bool bAutoOptimizationEnabled;
 
-    // ?¯å¦?Ÿç”¨?§èƒ½è­¦å?
+    // ?ï¿½å¦?ï¿½ç”¨?ï¿½èƒ½è­¦ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     bool bPerformanceAlertsEnabled;
 
-    // ?€å¤§èª¿è©¦ä¿¡?¯æ•¸??    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
+    // ?ï¿½å¤§èª¿è©¦ä¿¡?ï¿½æ•¸X    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     int32 MaxDebugInfoCount;
 
-    // ?€å¤§æ€§èƒ½?†æ??¸é?
+    // ?ï¿½å¤§æ€§èƒ½?ï¿½ï¿½Xï¿½ï¿½?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Enhanced System")
     int32 MaxProfileCount;
 
 private:
-    // ?²å??§èƒ½é¡åˆ¥?ç¨±
+    // ?ï¿½ï¿½Xï¿½èƒ½é¡åˆ¥?ï¿½ç¨±
     FString GetPerformanceCategoryName(EPerformanceCategory Category) const;
 
-    // ?²å??§èƒ½ç´šåˆ¥?ç¨±
+    // ?ï¿½ï¿½Xï¿½èƒ½ç´šåˆ¥?ï¿½ç¨±
     FString GetPerformanceLevelName(EPerformanceLevel Level) const;
 
-    // ?²å??ªå?æ¨¡å??ç¨±
+    // ?ï¿½ï¿½Xï¿½ï¿½?æ¨¡ï¿½Xï¿½ç¨±
     FString GetOptimizationModeName(EOptimizationMode Mode) const;
 
-    // ?²å?èª¿è©¦ç´šåˆ¥?ç¨±
+    // ?ï¿½ï¿½?èª¿è©¦ç´šåˆ¥?ï¿½ç¨±
     FString GetDebugLevelName(EDebugLevel Level) const;
 
-    // ?Ÿæ??¯ä?ID
+    // ?ï¿½ï¿½Xï¿½ï¿½?ID
     FString GenerateUniqueID(const FString& Prefix) const;
 
-    // é©—è??§èƒ½?‡æ?
+    // é©—ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     bool ValidatePerformanceMetrics(const FPerformanceMetrics& Metrics) const;
 
-    // é©—è??§èƒ½?†æ?
+    // é©—ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     bool ValidatePerformanceProfile(const FPerformanceProfile& Profile) const;
 
-    // ?•ç??§èƒ½?¯èª¤
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½èª¤
     void HandlePerformanceError(const FString& Operation, const FString& ErrorMessage};
 
-    // æ¸…ç??¡æ??§èƒ½?¸æ?
+    // æ¸…ï¿½Xï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?
     void CleanupInvalidPerformanceData(};
 
-    // ?²å??§èƒ½?‡æ?æ¨¡æ¿
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?æ¨¡æ¿
     FPerformanceMetrics GetPerformanceMetricsTemplate() const;
 
-    // ?²å??§èƒ½?†æ?æ¨¡æ¿
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½ï¿½?æ¨¡æ¿
     FPerformanceProfile GetPerformanceProfileTemplate() const;
 
-    // ?²å??ªå?çµæ?æ¨¡æ¿
+    // ?ï¿½ï¿½Xï¿½ï¿½?çµï¿½?æ¨¡æ¿
     FOptimizationResult GetOptimizationResultTemplate() const;
 
-    // è¨˜é??§èƒ½çµ±è?
+    // è¨˜ï¿½Xï¿½èƒ½çµ±ï¿½?
     void RecordPerformanceStatistics(};
 
-    // ?•ç??§èƒ½?¶é ¸
+    // ?ï¿½ï¿½Xï¿½èƒ½?ï¿½é ¸
     void HandlePerformanceBottlenecks(};
 
-    // ?ªå?æ¸²æ??§èƒ½
+    // ?ï¿½ï¿½?æ¸²ï¿½Xï¿½èƒ½
     void OptimizeRenderingPerformance(};
 
-    // ?ªå??©ç??§èƒ½
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èƒ½
     void OptimizePhysicsPerformance(};
 
-    // ?ªå?AI?§èƒ½
+    // ?ï¿½ï¿½?AI?ï¿½èƒ½
     void OptimizeAIPerformance(};
 
-    // ?ªå??³é »?§èƒ½
+    // ?ï¿½ï¿½Xï¿½é »?ï¿½èƒ½
     void OptimizeAudioPerformance(};
 
-    // ?ªå?ç¶²çµ¡?§èƒ½
+    // ?ï¿½ï¿½?ç¶²çµ¡?ï¿½èƒ½
     void OptimizeNetworkPerformance(};
 
-    // ?ªå?UI?§èƒ½
+    // ?ï¿½ï¿½?UI?ï¿½èƒ½
     void OptimizeUIPerformance(};
 
-    // ?ªå??•ç•«?§èƒ½
+    // ?ï¿½ï¿½Xï¿½ç•«?ï¿½èƒ½
     void OptimizeAnimationPerformance(};
 
-    // ?ªå??§å??§èƒ½
+    // ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èƒ½
     void OptimizeMemoryPerformance(};
 
-    // ?²å?é»˜è??§èƒ½è¨­ç½®
+    // ?ï¿½ï¿½?é»˜ï¿½Xï¿½èƒ½è¨­ç½®
     TMap<FString, FString> GetDefaultPerformanceSettings() const;
 
-    // ?‰ç”¨?§åˆ¶?°å‘½ä»?    void ApplyConsoleCommand(const FString& Command};
+    // ?ï¿½ç”¨?ï¿½åˆ¶?ï¿½å‘½ï¿½?    void ApplyConsoleCommand(const FString& Command};
 
-    // ?²å??§åˆ¶?°è??å€?    FString GetConsoleVariable(const FString& VariableName) const;
+    // ?ï¿½ï¿½Xï¿½åˆ¶?ï¿½ï¿½Xï¿½ï¿½?    FString GetConsoleVariable(const FString& VariableName) const;
 
-    // è¨­ç½®?§åˆ¶?°è??å€?    void SetConsoleVariable(const FString& VariableName, const FString& Value};
+    // è¨­ç½®?ï¿½åˆ¶?ï¿½ï¿½Xï¿½ï¿½?    void SetConsoleVariable(const FString& VariableName, const FString& Value};
 };
 

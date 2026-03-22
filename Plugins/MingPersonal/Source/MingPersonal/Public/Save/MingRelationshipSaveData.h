@@ -187,4 +187,3 @@ protected:
     UFUNCTION()
     void AddValidationError(const FString& Error};
 };
-
