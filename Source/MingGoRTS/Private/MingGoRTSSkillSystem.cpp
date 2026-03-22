@@ -315,14 +315,28 @@ void UMingGoRTSSkillSystem::ResetSkillSystem()
 
 bool UMingGoRTSSkillSystem::SaveSkillData(const FString& SaveSlotName)
 {
-    // TODO: 實現技能數據保存
+    // TODO: Implement skill data serialization
+    // Implementation Requirements:
+    // - Serialize all unlocked skills with their current levels and experience
+    // - Save current specialization path and available skill points
+    // - Store skill trees with unlock states
+    // - Include skill usage history for analytics
+    // - Use USaveGame with proper versioning for compatibility
+    // Priority: Medium - Required for character progression persistence
     UE_LOG(LogTemp, Log, TEXT("保存技能數據到：%s"), *SaveSlotName);
     return true;
 }
 
 bool UMingGoRTSSkillSystem::LoadSkillData(const FString& SaveSlotName)
 {
-    // TODO: 實現技能數據載入
+    // TODO: Implement skill data deserialization
+    // Implementation Requirements:
+    // - Deserialize skills from save data with proper validation
+    // - Restore specialization path and skill points
+    // - Rebuild skill trees with saved unlock states
+    // - Validate loaded skill data against current skill library
+    // - Handle version migration for older save formats
+    // Priority: Medium - Required for character progression restoration
     UE_LOG(LogTemp, Log, TEXT("從 %s 載入技能數據"), *SaveSlotName);
     return true;
 }
@@ -607,13 +621,27 @@ int32 UMingGoRTSSkillSystem::CalculateExperienceRequirement(int32 SkillLevel) co
 
 void UMingGoRTSSkillSystem::ApplySkillEffects(const FName& SkillID)
 {
-    // TODO: 實現技能效果應用到角色屬性
+    // TODO: Implement skill effect application to character attributes
+    // Implementation Requirements:
+    // - Look up skill effects from SkillMap
+    // - Apply each effect to the character's relevant attributes
+    // - Handle passive vs active skill effects differently
+    // - Consider skill level scaling for effect magnitude
+    // - Broadcast attribute change events for UI updates
+    // Priority: High - Core gameplay mechanic for character progression
     UE_LOG(LogTemp, Log, TEXT("應用技能效果：%s"), *SkillID.ToString());
 }
 
 void UMingGoRTSSkillSystem::UnlockConnectedSkills(const FName& SkillID)
 {
-    // TODO: 實現連接技能的自動解鎖邏輯
+    // TODO: Implement connected skill auto-unlock logic
+    // Implementation Requirements:
+    // - Check skill tree connections for the given skill
+    // - Identify downstream skills that should auto-unlock
+    // - Verify prerequisite conditions for connected skills
+    // - Apply auto-unlock if all conditions are met
+    // - Broadcast unlock events for UI notification
+    // Priority: Low - Convenience feature for skill tree navigation
     UE_LOG(LogTemp, Log, TEXT("檢查連接技能解鎖：%s"), *SkillID.ToString());
 }
 

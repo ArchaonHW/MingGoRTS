@@ -245,7 +245,14 @@ bool UMingGoRTSTechTree::CanResearchTech(const FString& TechID) const
     // 檢查最大研發次數（對於可重複科技）
     if (Tech.bIsRepeatable)
     {
-        // TODO: 實現重複科技計數
+        // TODO: Implement repeatable tech counting
+        // Implementation Requirements:
+        // - Track number of times each repeatable tech has been researched
+        // - Check against Tech.MaxRepeatCount if specified
+        // - Consider diminishing returns for multiple researches
+        // - Update research cost scaling for subsequent researches
+        // - Store repeat count in ResearchProgress or separate tracking structure
+        // Priority: Low - Enhancement for advanced gameplay mechanics
     }
     
     return true;
@@ -491,14 +498,28 @@ void UMingGoRTSTechTree::ResetTechTree()
 
 bool UMingGoRTSTechTree::SaveTechTreeData(const FString& SaveSlotName)
 {
-    // TODO: 實現科技樹數據保存
+    // TODO: Implement tech tree data serialization
+    // Implementation Requirements:
+    // - Serialize all tech nodes with their unlock status
+    // - Save current research progress for in-progress technologies
+    // - Store completed technologies list
+    // - Include tech effects that are currently active
+    // - Use USaveGame with proper versioning for compatibility
+    // Priority: Medium - Required for complete game state persistence
     UE_LOG(LogTemp, Log, TEXT("保存科技樹數據到：%s"), *SaveSlotName);
     return true;
 }
 
 bool UMingGoRTSTechTree::LoadTechTreeData(const FString& SaveSlotName)
 {
-    // TODO: 實現科技樹數據載入
+    // TODO: Implement tech tree data deserialization
+    // Implementation Requirements:
+    // - Deserialize tech nodes from save data
+    // - Restore research progress for in-progress technologies
+    // - Reapply active tech effects to game systems
+    // - Validate loaded data against current tech tree definition
+    // - Handle version migration for older save formats
+    // Priority: Medium - Required for complete game state restoration
     UE_LOG(LogTemp, Log, TEXT("從 %s 載入科技樹數據"), *SaveSlotName);
     return true;
 }
@@ -837,7 +858,14 @@ void UMingGoRTSTechTree::CheckAndUnlockNewTechs()
 
 void UMingGoRTSTechTree::ApplySingleTechEffect(const FTechEffect& Effect)
 {
-    // TODO: 實現具體的效果應用邏輯
+    // TODO: Implement specific effect application logic
+    // Implementation Requirements:
+    // - Route effect to appropriate game system based on EffectType
+    // - Apply effect value to target (building, unit, resource, etc.)
+    // - Handle percentage vs flat value modifications
+    // - Stack with existing effects if applicable
+    // - Broadcast effect application for UI updates
+    // Priority: High - Core gameplay mechanic for tech progression
     UE_LOG(LogTemp, Log, TEXT("應用科技效果：%s，目標：%s，數值：%.2f"), 
            *StaticEnum<ETechEffectType>()->GetValueAsString(Effect.EffectType), 
            *Effect.TargetID, Effect.Value);
@@ -845,7 +873,14 @@ void UMingGoRTSTechTree::ApplySingleTechEffect(const FTechEffect& Effect)
 
 void UMingGoRTSTechTree::RemoveSingleTechEffect(const FTechEffect& Effect)
 {
-    // TODO: 實現具體的效果移除邏輯
+    // TODO: Implement specific effect removal logic
+    // Implementation Requirements:
+    // - Locate and remove previously applied effect from target
+    // - Revert modified values to pre-tech state
+    // - Handle partial removal if effect was stacked
+    // - Update dependent systems that rely on this effect
+    // - Broadcast effect removal for UI updates
+    // Priority: Medium - Required for tech reset/unlearn mechanics
     UE_LOG(LogTemp, Log, TEXT("移除科技效果：%s，目標：%s，數值：%.2f"), 
            *StaticEnum<ETechEffectType>()->GetValueAsString(Effect.EffectType), 
            *Effect.TargetID, Effect.Value);
