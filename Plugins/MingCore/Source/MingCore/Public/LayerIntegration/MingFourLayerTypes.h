@@ -92,6 +92,53 @@ struct FMingLayerState
 };
 
 USTRUCT(BlueprintType)
+struct FMingGameDecision
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
+    FString DecisionID;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
+    FString DecisionName;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
+    int32 Priority = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decision")
+    float Confidence = 1.0f;
+
+    FMingGameDecision()
+        : Priority(0)
+        , Confidence(1.0f)
+    {}
+};
+
+USTRUCT(BlueprintType)
+struct FMingLayerConflict
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conflict")
+    EMingGameLayer SourceLayer = EMingGameLayer::None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conflict")
+    EMingGameLayer TargetLayer = EMingGameLayer::None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conflict")
+    FString ConflictType;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conflict")
+    float Severity = 0.5f;
+
+    FMingLayerConflict()
+        : SourceLayer(EMingGameLayer::None)
+        , TargetLayer(EMingGameLayer::None)
+        , Severity(0.5f)
+    {}
+};
+
+USTRUCT(BlueprintType)
 struct FMingStrategicDecision
 {
     GENERATED_BODY()
