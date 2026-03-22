@@ -263,7 +263,7 @@ protected:
     // ?‹äºº?€??    UPROPERTY(BlueprintReadOnly)
     FMingPersonalState PersonalState;
 
-    // è§’è‰²?—è¡¨
+    // è§’è‰²?—è"
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, FMingCharacterStatus> Characters;
 

@@ -354,7 +354,7 @@ public:
     // ?²å??°è??€??    UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     FMingTacticalState GetTacticalState() const;
 
-    // ?²å??°å ´?—è¡¨
+    // ?²å??°å ´?—è"
     UFUNCTION(BlueprintCallable, Category = "Ming|Tactical")
     TArray<FString> GetBattlefieldList() const;
 
@@ -362,7 +362,7 @@ protected:
     // ?°è??€??    UPROPERTY(BlueprintReadOnly)
     FMingTacticalState TacticalState;
 
-    // ?°å ´?—è¡¨
+    // ?°å ´?—è"
     UPROPERTY(BlueprintReadOnly)
     TMap<FString, FMingTacticalBattlefield> Battlefields;
 

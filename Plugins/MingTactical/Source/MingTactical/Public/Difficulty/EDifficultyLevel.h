@@ -1,81 +1,81 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "EDifficultyLevel.generated.h"
 
 /**
- * ?Šæˆ²??º¦ç­‰ç??šè? | Game Difficulty Level Enum
- * å®šç¾©?›å€‹æ?æº–é›£åº¦ç?ç´šå??ªå?ç¾©é¸??| Define four standard difficulty levels and custom option
+ * ?ï¿½æˆ²??ï¿½ï¿½ç­‰ï¿½??ï¿½ï¿½? | Game Difficulty Level Enum
+ * å®šç¾©?ï¿½å€‹ï¿½?æº–é›£åº¦ï¿½?ç´šï¿½??ï¿½ï¿½?ç¾©é¸??| Define four standard difficulty levels and custom option
  */
 UENUM(BlueprintType)
 enum class EDifficultyLevel : uint8
 {
     Easy       UMETA(DisplayName = "ç°¡å–® | Easy"),    // Easy
-    Normal     UMETA(DisplayName = "?®é€?| Normal"),    // Normal
-    Hard       UMETA(DisplayName = "?°é›£ | Hard"),    // Hard
+    Normal     UMETA(DisplayName = "?ï¿½ï¿½?| Normal"),    // Normal
+    Hard       UMETA(DisplayName = "?ï¿½é›£ | Hard"),    // Hard
     Expert     UMETA(DisplayName = "å°ˆå®¶ | Expert"),    // Expert
-    Custom     UMETA(DisplayName = "?ªå?ç¾?| Custom")   // Custom
+    Custom     UMETA(DisplayName = "?ï¿½ï¿½?ï¿½?| Custom")   // Custom
 };
 
 /**
- * ??º¦ç®¡ç???| Difficulty Manager
- * ç®¡ç??Šæˆ²??º¦?ç½®?Œå??‹èª¿??| Manage game difficulty configuration and dynamic adjustment
+ * ??ï¿½ï¿½ç®¡ï¿½???| Difficulty Manager
+ * ç®¡ï¿½??ï¿½æˆ²??ï¿½ï¿½?ï¿½ç½®?ï¿½ï¿½??ï¿½èª¿??| Manage game difficulty configuration and dynamic adjustment
  * 
- * ?Ÿèƒ½ | Featuresï¼? * - ??º¦ç­‰ç?ç®¡ç? | Difficulty Level Management (Easy/Normal/Hard/Expert/Custom)
- * - ?•æ???º¦èª¿æ•´ | Dynamic Difficulty Adjustment
- * - ??º¦äº‹ä»¶è§¸ç™¼ | Difficulty Event Triggering
- * - å¹³æ??æ¸¡ç®—æ? | Smooth Transition Algorithm
+ * ?ï¿½èƒ½ | Featuresï¿½? * - ??ï¿½ï¿½ç­‰ï¿½?ç®¡ï¿½? | Difficulty Level Management (Easy/Normal/Hard/Expert/Custom)
+ * - ?ï¿½ï¿½???ï¿½ï¿½èª¿æ•´ | Dynamic Difficulty Adjustment
+ * - ??ï¿½ï¿½äº‹ä»¶è§¸ç™¼ | Difficulty Event Triggering
+ * - å¹³ï¿½??ï¿½æ¸¡ç®—ï¿½? | Smooth Transition Algorithm
  */
 /**
- * ??º¦?ƒæ•¸é¡å??šè? | Difficulty Parameter Type Enum
- * ?¨æ–¼?•æ?èª¿æ•´?·é??Šæˆ²?ƒæ•¸ | Used for dynamically adjusting specific game parameters
+ * ??ï¿½ï¿½?ï¿½æ•¸é¡ï¿½??ï¿½ï¿½? | Difficulty Parameter Type Enum
+ * ?ï¿½æ–¼?ï¿½ï¿½?èª¿æ•´?ï¿½ï¿½??ï¿½æˆ²?ï¿½æ•¸ | Used for dynamically adjusting specific game parameters
  */
 UENUM(BlueprintType)
 enum class EDifficultyParameter : uint8
 {
-    // AI ?¸é??ƒæ•¸ | AI Related Parameters
-    AIReactionSpeed      UMETA(DisplayName = "AI?æ??Ÿåº¦ | AI Reaction Speed"),  // AI Reaction Speed
-    AIIntelligence       UMETA(DisplayName = "AI?ºèƒ½ç¨‹åº¦ | AI Intelligence"),  // AI Intelligence
-    AIUnitStrength       UMETA(DisplayName = "AI?®ä?å¼·åº¦ | AI Unit Strength"),  // AI Unit Strength
+    // AI ?ï¿½ï¿½??ï¿½æ•¸ | AI Related Parameters
+    AIReactionSpeed      UMETA(DisplayName = "AI?ï¿½ï¿½??ï¿½åº¦ | AI Reaction Speed"),  // AI Reaction Speed
+    AIIntelligence       UMETA(DisplayName = "AI?ï¿½èƒ½ç¨‹åº¦ | AI Intelligence"),  // AI Intelligence
+    AIUnitStrength       UMETA(DisplayName = "AI?ï¿½ï¿½?å¼·åº¦ | AI Unit Strength"),  // AI Unit Strength
     
-    // è³‡æ??¸é??ƒæ•¸ | Resource Related Parameters
-    ResourceCollection   UMETA(DisplayName = "è³‡æ??¶é??ˆç? | Resource Collection"), // Resource Collection
-    ResourceConsumption  UMETA(DisplayName = "è³‡æ?æ¶ˆè€—ç? | Resource Consumption"),  // Resource Consumption
+    // è³‡ï¿½??ï¿½ï¿½??ï¿½æ•¸ | Resource Related Parameters
+    ResourceCollection   UMETA(DisplayName = "è³‡ï¿½??ï¿½ï¿½??ï¿½ï¿½? | Resource Collection"), // Resource Collection
+    ResourceConsumption  UMETA(DisplayName = "è³‡ï¿½?æ¶ˆè€—ï¿½? | Resource Consumption"),  // Resource Consumption
     
-    // ?°é¬¥?¸é??ƒæ•¸ | Combat Related Parameters
-    PlayerDamageTaken    UMETA(DisplayName = "?©å®¶?—åˆ°?·å®³ | Player Damage Taken"), // Player Damage Taken
-    PlayerDamageDealt    UMETA(DisplayName = "?©å®¶? æ??·å®³ | Player Damage Dealt"), // Player Damage Dealt
-    UnitHealth           UMETA(DisplayName = "?®ä??Ÿå‘½??| Unit Health"),    // Unit Health
+    // ?ï¿½é¬¥?ï¿½ï¿½??ï¿½æ•¸ | Combat Related Parameters
+    PlayerDamageTaken    UMETA(DisplayName = "?ï¿½å®¶?ï¿½åˆ°?ï¿½å®³ | Player Damage Taken"), // Player Damage Taken
+    PlayerDamageDealt    UMETA(DisplayName = "?ï¿½å®¶?ï¿½ï¿½??ï¿½å®³ | Player Damage Dealt"), // Player Damage Dealt
+    UnitHealth           UMETA(DisplayName = "?ï¿½ï¿½??ï¿½å‘½??| Unit Health"),    // Unit Health
     
-    // ä»»å??¸é??ƒæ•¸ | Mission Related Parameters
-    MissionTimeLimit     UMETA(DisplayName = "ä»»å??‚é??åˆ¶ | Mission Time Limit"), // Mission Time Limit
-    MissionObjective     UMETA(DisplayName = "ä»»å??®æ???º¦ | Mission Objective Difficulty"), // Mission Objective Difficulty
+    // ä»»ï¿½??ï¿½ï¿½??ï¿½æ•¸ | Mission Related Parameters
+    MissionTimeLimit     UMETA(DisplayName = "ä»»ï¿½??ï¿½ï¿½??ï¿½åˆ¶ | Mission Time Limit"), // Mission Time Limit
+    MissionObjective     UMETA(DisplayName = "ä»»ï¿½??ï¿½ï¿½???ï¿½ï¿½ | Mission Objective Difficulty"), // Mission Objective Difficulty
     
-    // ?²ç½°?¸é??ƒæ•¸ | Penalty Related Parameters
-    DeathPenalty         UMETA(DisplayName = "æ­»äº¡?²ç½° | Death Penalty"),     // Death Penalty
-    FailureCost          UMETA(DisplayName = "å¤±æ?ä»?ƒ¹ | Failure Cost")      // Failure Cost
+    // ?ï¿½ç½°?ï¿½ï¿½??ï¿½æ•¸ | Penalty Related Parameters
+    DeathPenalty         UMETA(DisplayName = "æ­»äº¡?ï¿½ç½° | Death Penalty"),     // Death Penalty
+    FailureCost          UMETA(DisplayName = "å¤±ï¿½?ï¿½?ï¿½ï¿½ | Failure Cost")      // Failure Cost
 };
 
 /**
- * ??º¦è®Šå?äº‹ä»¶ | Difficulty Changed Event
+ * ??ï¿½ï¿½è®Šï¿½?äº‹ä»¶ | Difficulty Changed Event
  */
 UENUM(BlueprintType)
 enum class EDifficultyChangeDirection : uint8
 {
-    Increase    UMETA(DisplayName = "å¢å??¾åº¦ | Increase Difficulty"),
-    Decrease    UMETA(DisplayName = "?ä??¾åº¦ | Decrease Difficulty"),
-    Maintain    UMETA(DisplayName = "ç»´æ?å½“å? | Maintain Current")
+    Increase    UMETA(DisplayName = "å¢ï¿½??ï¿½åº¦ | Increase Difficulty"),
+    Decrease    UMETA(DisplayName = "?ï¿½ï¿½??ï¿½åº¦ | Decrease Difficulty"),
+    Maintain    UMETA(DisplayName = "ç»´ï¿½?å½“ï¿½? | Maintain Current")
 };
 
 /**
- * ?©å®¶è¡¨ç°è¯„çº§?šä¸¾
+ * ?ï¿½å®¶è¡¨ç°è¯„çº§?ï¿½ä¸¾
  */
 UENUM(BlueprintType)
 enum class EPlayerPerformanceRating : uint8
 {
-    Excellent   UMETA(DisplayName = "ä¼˜ç?"),
-    Good        UMETA(DisplayName = "?¯å¥½"),
-    Average     UMETA(DisplayName = "ä¸€??),
+    Excellent   UMETA(DisplayName = "ä¼˜ï¿½?"),
+    Good        UMETA(DisplayName = "?ï¿½å¥½"),
+    Average     UMETA(DisplayName = "ä¸€èˆ¬"),
     Poor        UMETA(DisplayName = "è¾ƒå·®"),
-    Critical    UMETA(DisplayName = "?±æ€?)
+    Critical    UMETA(DisplayName = "å±æ€¥")
 };

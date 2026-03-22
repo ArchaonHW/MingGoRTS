@@ -1,53 +1,53 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingCombatAIManager.generated.h"
 
-// AI ??º¦ç­‰ç?
+// AI ??ï¿½ï¿½ç­‰ï¿½?
 UENUM(BlueprintType)
 enum class EMingAIDifficulty : uint8
 {
-    Recruit,        // ?°å…µ
-    Regular,        // å¸¸è?
-    Veteran,        // ?å…µ
+    Recruit,        // ?ï¿½å…µ
+    Regular,        // å¸¸ï¿½?
+    Veteran,        // ?ï¿½å…µ
     Elite,          // ç²¾éŠ³
-    Legendary       // ?³å?
+    Legendary       // ?ï¿½ï¿½?
 };
 
-// AI ç¯€é»ç???UENUM(BlueprintType)
+// AI ç¯€é»ï¿½???UENUM(BlueprintType)
 enum class EMingAINodeResult : uint8
 {
-    Running,        // ?‹è?ä¸?    Success,        // ?å?
-    Failure         // å¤±æ?
+    Running,        // ?ï¿½ï¿½?ï¿½?    Success,        // ?ï¿½ï¿½?
+    Failure         // å¤±ï¿½?
 };
 
-// AI ?°ç•¥?å¥½
+// AI ?ï¿½ç•¥?ï¿½å¥½
 UENUM(BlueprintType)
 enum class EMingStrategicPreference : uint8
 {
-    Aggressive,     // ?»æ???    Defensive,      // ?²ç¦¦??    Balanced,       // å¹³è¡¡??    Economic,       // ç¶“æ???    Diplomatic      // å¤–äº¤??};
+    Aggressive,     // ?ï¿½ï¿½???    Defensive,      // ?ï¿½ç¦¦??    Balanced,       // å¹³è¡¡??    Economic,       // ç¶“ï¿½???    Diplomatic,  // å¤–äº¤??};
 
-// AI ?°è?é¢¨æ ¼
+// AI ?ï¿½ï¿½?é¢¨æ ¼
 UENUM(BlueprintType)
 enum class EMingTacticalStyle : uint8
 {
-    DirectAssault,  // ?´æ¥?»æ?
-    Flanking,       // ?´ç¿¼?…æ?
-    Guerrilla,       // æ¸¸æ???    Siege,          // ?æ”»??    Mobile          // æ©Ÿå???};
+    DirectAssault,  // ?ï¿½æ¥?ï¿½ï¿½?
+    Flanking,       // ?ï¿½ç¿¼?ï¿½ï¿½?
+    Guerrilla,       // æ¸¸ï¿½???    Siege,          // ?ï¿½æ”»??    Mobile,  // æ©Ÿï¿½???};
 
-// è»é–¥é¡å?
+// è»é–¥é¡ï¿½?
 UENUM(BlueprintType)
 enum class EMingWarlordType : uint8
 {
-    Northeastern,    // ?±å?è»é–¥
-    Northwestern,    // è¥¿å?è»é–¥
-    Southwestern,    // è¥¿å?è»é–¥
+    Northeastern,    // ?ï¿½ï¿½?è»é–¥
+    Northwestern,    // è¥¿ï¿½?è»é–¥
+    Southwestern,    // è¥¿ï¿½?è»é–¥
     Central,         // ä¸­å¤®è»é–¥
-    Independent      // ?¨ç?è»é–¥
+    Independent      // ?ï¿½ï¿½?è»é–¥
 };
 
-// AI çµ±è?ä¿¡æ¯
+// AI çµ±ï¿½?ä¿¡æ¯
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingAIStatistics
 {
@@ -75,7 +75,7 @@ struct MINGTACTICAL_API FMingAIStatistics
     int32 SuccessfulDefenses;
 };
 
-// AI ä¸Šä???USTRUCT(BlueprintType)
+// AI ä¸Šï¿½???USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingAIContext
 {
     GENERATED_BODY()
@@ -102,7 +102,7 @@ struct MINGTACTICAL_API FMingAIContext
     EMingAIDifficulty Difficulty;
 };
 
-// AI ??º¦è¨­ç½®
+// AI ??ï¿½ï¿½è¨­ç½®
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingAIDifficultySettings
 {
@@ -128,7 +128,7 @@ struct MINGTACTICAL_API FMingAIDifficultySettings
 };
 
 /**
- * ?°é¬¥ AI ç®¡ç??? * è² è²¬ç®¡ç??€?‰æˆ°é¬?AI ?§åˆ¶?¨å?è¡Œç‚º
+ * ?ï¿½é¬¥ AI ç®¡ï¿½??? * è² è²¬ç®¡ï¿½??ï¿½?ï¿½æˆ°ï¿½?AI ?ï¿½åˆ¶?ï¿½ï¿½?è¡Œç‚º
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGTACTICAL_API UMingCombatAIManager : public UObject
@@ -136,74 +136,74 @@ class MINGTACTICAL_API UMingCombatAIManager : public UObject
     GENERATED_BODY()
 
 public:
-    // å»ºæ?å­?    UMingCombatAIManager();
+    // å»ºï¿½?ï¿½?    UMingCombatAIManager();
 
-    // ?å???AI ç®¡ç???    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // ?ï¿½ï¿½???AI ç®¡ï¿½???    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void Initialize();
 
-    // AI ?´æ–°ä¸»å¾ª??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // AI ?ï¿½æ–°ä¸»å¾ª??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void UpdateCombatAI(float DeltaTime);
 
-    // è¨»å? AI ?§åˆ¶??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // è¨»ï¿½? AI ?ï¿½åˆ¶??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void RegisterAIController(class AController* AIController);
 
-    // ç§»é™¤ AI ?§åˆ¶??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
+    // ç§»é™¤ AI ?ï¿½åˆ¶??    UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void UnregisterAIController(class AController* AIController);
 
-    // è¨­ç½®?¨å? AI ??º¦
+    // è¨­ç½®?ï¿½ï¿½? AI ??ï¿½ï¿½
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void SetAIDifficulty(EMingAIDifficulty Difficulty);
 
-    // ?²å? AI ??º¦è¨­ç½®
+    // ?ï¿½ï¿½? AI ??ï¿½ï¿½è¨­ç½®
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     FMingAIDifficultySettings GetDifficultySettings(EMingAIDifficulty Difficulty) const;
 
-    // ?²å? AI çµ±è?ä¿¡æ¯
+    // ?ï¿½ï¿½? AI çµ±ï¿½?ä¿¡æ¯
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     FMingAIStatistics GetAIStatistics() const;
 
-    // ?«å? AI ?´æ–°
+    // ?ï¿½ï¿½? AI ?ï¿½æ–°
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void PauseAI();
 
-    // ?¢å¾© AI ?´æ–°
+    // ?ï¿½å¾© AI ?ï¿½æ–°
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void ResumeAI();
 
-    // ?ç½®?€??AI
+    // ?ï¿½ç½®?ï¿½??AI
     UFUNCTION(BlueprintCallable, Category = "Ming|AI")
     void ResetAllAI();
 
 protected:
-    // AI ?§åˆ¶?¨å?è¡?    TArray<TWeakObjectPtr<class AController>> AIControllers;
+    // AI ?ï¿½åˆ¶?ï¿½ï¿½?ï¿½?    TArray<TWeakObjectPtr<class AController>> AIControllers;
 
-    // AI ?´æ–°?“é?
+    // AI ?ï¿½æ–°?ï¿½ï¿½?
     float AIUpdateInterval;
 
-    // ?¶å???º¦è¨­ç½®
+    // ?ï¿½ï¿½???ï¿½ï¿½è¨­ç½®
     EMingAIDifficulty CurrentDifficulty;
 
-    // ?¯å¦?«å?
+    // ?ï¿½å¦?ï¿½ï¿½?
     bool bIsPaused;
 
-    // çµ±è??¸æ?
+    // çµ±ï¿½??ï¿½ï¿½?
     FMingAIStatistics AIStatistics;
 
-    // ??º¦è¨­ç½®? å?
+    // ??ï¿½ï¿½è¨­ç½®?ï¿½ï¿½?
     TMap<EMingAIDifficulty, FMingAIDifficultySettings> DifficultySettings;
 
-    // ?å??–é›£åº¦è¨­ç½?    void InitializeDifficultySettings();
+    // ?ï¿½ï¿½??ï¿½é›£åº¦è¨­ï¿½?    void InitializeDifficultySettings();
 
-    // ?´æ–°çµ±è?ä¿¡æ¯
+    // ?ï¿½æ–°çµ±ï¿½?ä¿¡æ¯
     void UpdateStatistics();
 
-    // ?²å? AI ?´æ–°?‚é?
+    // ?ï¿½ï¿½? AI ?ï¿½æ–°?ï¿½ï¿½?
     float GetAIUpdateTime() const;
 
 private:
-    // ?¯å¦å·²å?å§‹å?
+    // ?ï¿½å¦å·²ï¿½?å§‹ï¿½?
     bool bInitialized = false;
 
-    // ç´¯è??‚é?
+    // ç´¯ï¿½??ï¿½ï¿½?
     float AccumulatedTime;
 };

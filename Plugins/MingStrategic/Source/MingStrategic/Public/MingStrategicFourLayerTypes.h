@@ -9,25 +9,25 @@
 UENUM(BlueprintType)
 enum class EMingLayer : uint8
 {
-    None        UMETA(DisplayName = "None"),
-    Personal    UMETA(DisplayName = "Personal"),
-    Tactical    UMETA(DisplayName = "Tactical"),
-    Strategic   UMETA(DisplayName = "Strategic"),
-    Empire      UMETA(DisplayName = "Empire")
+    None, UMETA(DisplayName = "None"),
+    Personal, UMETA(DisplayName = "Personal"),
+    Tactical, UMETA(DisplayName = "Tactical"),
+    Strategic, UMETA(DisplayName = "Strategic"),
+    Empire, UMETA(DisplayName = "Empire")
 };
 
 // Ë≥áÊ?È°ûÂ??öË?
 UENUM(BlueprintType)
 enum class EMingStrategicResourceType : uint8
 {
-    None        UMETA(DisplayName = "None"),
-    Gold        UMETA(DisplayName = "Gold"),
-    Food        UMETA(DisplayName = "Food"),
-    Wood        UMETA(DisplayName = "Wood"),
-    Stone       UMETA(DisplayName = "Stone"),
-    Iron        UMETA(DisplayName = "Iron"),
-    Population  UMETA(DisplayName = "Population"),
-    Influence   UMETA(DisplayName = "Influence")
+    None, UMETA(DisplayName = "None"),
+    Gold, UMETA(DisplayName = "Gold"),
+    Food, UMETA(DisplayName = "Food"),
+    Wood, UMETA(DisplayName = "Wood"),
+    Stone, UMETA(DisplayName = "Stone"),
+    Iron, UMETA(DisplayName = "Iron"),
+    Population, UMETA(DisplayName = "Population"),
+    Influence, UMETA(DisplayName = "Influence")
 };
 
 // ?äÊà≤‰∫ã‰ª∂ÁµêÊ?
@@ -172,14 +172,14 @@ struct MINGSTRATEGIC_API FMingTacticalState
 // ?∞Ë??Æ‰??Ä?ãÊ???UENUM(BlueprintType)
 enum class EMingTacticalUnitState : uint8
 {
-    Idle        UMETA(DisplayName = "Idle"),
-    Moving      UMETA(DisplayName = "Moving"),
-    Attacking   UMETA(DisplayName = "Attacking"),
-    Defending   UMETA(DisplayName = "Defending"),
-    Retreating  UMETA(DisplayName = "Retreating"),
-    Patrolling  UMETA(DisplayName = "Patrolling"),
-    Engaged     UMETA(DisplayName = "Engaged"),
-    Disabled    UMETA(DisplayName = "Disabled")
+    Idle, UMETA(DisplayName = "Idle"),
+    Moving, UMETA(DisplayName = "Moving"),
+    Attacking, UMETA(DisplayName = "Attacking"),
+    Defending, UMETA(DisplayName = "Defending"),
+    Retreating, UMETA(DisplayName = "Retreating"),
+    Patrolling, UMETA(DisplayName = "Patrolling"),
+    Engaged, UMETA(DisplayName = "Engaged"),
+    Disabled, UMETA(DisplayName = "Disabled")
 };
 
 // ?∞Ë??Æ‰?ÁµêÊ?
@@ -236,4 +236,5 @@ struct MINGSTRATEGIC_API FMingStratTacticalOrder
         , TargetPosition(FVector::ZeroVector)
         , Priority(1.0f)
     {}
+};
 };
