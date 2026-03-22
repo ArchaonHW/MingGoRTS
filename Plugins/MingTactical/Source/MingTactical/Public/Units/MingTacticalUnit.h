@@ -93,10 +93,10 @@ public:
     void SetSelected(bool bSelected) { bIsSelected = bSelected; }
 
     UFUNCTION(BlueprintPure, Category = "Unit")
-    EUnitState GetCurrentState() const { return CurrentState; }
+    EMingUnitState GetCurrentState() const { return CurrentState; }
 
     UFUNCTION(BlueprintCallable, Category = "Unit")
-    void SetCurrentState(EUnitState NewState) { CurrentState = NewState; }
+    void SetCurrentState(EMingUnitState NewState) { CurrentState = NewState; }
 
     UFUNCTION(BlueprintPure, Category = "Unit Stats")
     const FUnitStats& GetUnitStats() const { return UnitStats; }
@@ -139,7 +139,7 @@ protected:
     bool bIsSelected;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Unit")
-    EUnitState CurrentState;
+    EMingUnitState CurrentState;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Unit Stats")
     FUnitStats UnitStats;

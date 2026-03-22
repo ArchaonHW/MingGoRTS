@@ -8,6 +8,20 @@
 class AMingTacticalUnit;
 
 /**
+ * 單位數組包裝結構 (用於 TArray<TArray<>> 嵌套)
+ */
+USTRUCT(BlueprintType)
+struct FUnitArrayWrapper
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    TArray<AMingTacticalUnit*> Units;
+
+    FUnitArrayWrapper() {}
+};
+
+/**
  * 多單位藍圖函數庫
  * 提供藍圖可調用的多單位協調系統功能
  */
@@ -44,6 +58,16 @@ public:
         EUnitGroupType GroupType,
         const TArray<AMingTacticalUnit*>& Units,
         AMingTacticalUnit* Leader = nullptr
+    );
+
+    /**
+     * 創建單位分組 (批量)
+     */
+    UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Batch")
+    static TArray<FUnitGroup> BatchCreateGroups(
+        const TArray<FString>& GroupNames,
+        const TArray<EUnitGroupType>& GroupTypes,
+        const TArray<FUnitArrayWrapper>& UnitArrays
     );
 
     /**
@@ -331,13 +355,12 @@ public:
     /**
      * 添加依賴關係
      */
-    UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Creation")
+    UFUNCTION(Category = "Multi Unit Coordinator|Creation")
     static FCoordinatedCommand AddDependency(const FCoordinatedCommand& Command, const FString& Dependency);
 
     /**
      * 批量創建分組
      */
-    UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Batch")
     static TArray<FUnitGroup> BatchCreateGroups(
         const TArray<FString>& GroupNames,
         const TArray<EUnitGroupType>& GroupTypes,

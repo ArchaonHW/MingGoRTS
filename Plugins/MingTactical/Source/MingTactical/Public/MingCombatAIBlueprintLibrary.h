@@ -8,6 +8,20 @@
 class AMingTacticalUnit;
 
 /**
+ * 單位數組包裝結構 (用於 TArray<TArray<>> 嵌套)
+ */
+USTRUCT(BlueprintType)
+struct FCombatAIUnitArrayWrapper
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    TArray<AMingTacticalUnit*> Units;
+
+    FCombatAIUnitArrayWrapper() {}
+};
+
+/**
  * 戰鬥AI藍圖函數庫
  * 提供藍圖可調用的戰鬥AI系統功能
  */
@@ -352,11 +366,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Batch")
     static TArray<bool> BatchRemoveControlledUnits(const TArray<AMingTacticalUnit*>& Units);
 
-    /**
-     * 批量執行戰術分析
-     */
-    UFUNCTION(BlueprintCallable, Category = "Combat AI|Batch")
-    static TArray<FAITacticalAnalysis> BatchExecuteTacticalAnalysis(const TArray<TArray<AMingTacticalUnit*>>& UnitGroups);
+    // 批量執行戰術分析 - 使用 FUnitArrayWrapper 包裝結構
+    static TArray<FAITacticalAnalysis> BatchExecuteTacticalAnalysis(const TArray<FUnitArrayWrapper>& UnitGroups);
 
     /**
      * 批量執行AI學習

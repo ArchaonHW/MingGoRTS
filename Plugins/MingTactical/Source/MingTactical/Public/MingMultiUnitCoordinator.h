@@ -641,8 +641,7 @@ protected:
     UPROPERTY()
     TMap<FString, FCoordinatedCommand> CoordinatedCommands;
 
-    // 通信連接映射
-    UPROPERTY()
+    // 通信連接映射 - 注意：嵌套 TMap 不支持 UPROPERTY
     TMap<FString, TMap<FString, ECommunicationProtocol>> CommunicationConnections;
 
     // 協調統計

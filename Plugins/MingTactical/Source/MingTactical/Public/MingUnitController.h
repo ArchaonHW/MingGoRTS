@@ -456,8 +456,7 @@ protected:
     UPROPERTY()
     TMap<AMingTacticalUnit*, EMingUnitState> UnitStates;
 
-    // 單位命令隊列
-    UPROPERTY()
+    // 單位命令隊列 - 注意：TMap<TArray> 不支持 UPROPERTY
     TMap<AMingTacticalUnit*, TArray<FUnitCommand>> UnitCommandQueues;
 
     // 當前執行命令

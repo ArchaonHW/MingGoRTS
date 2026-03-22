@@ -10,7 +10,7 @@ class AMingTacticalUnit;
  * 空間網格單元結構
  */
 USTRUCT()
-struct FSpatialGridCell
+struct FMingComponentSpatialGridCell
 {
     GENERATED_BODY()
 

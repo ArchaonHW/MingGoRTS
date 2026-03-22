@@ -153,13 +153,13 @@ public:
      * 獲取單位狀態
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static EUnitState GetUnitState(AMingTacticalUnit* Unit);
+    static EMingUnitState GetUnitState(AMingTacticalUnit* Unit);
 
     /**
      * 設置單位狀態
      */
     UFUNCTION(BlueprintCallable, Category = "Unit Controller")
-    static bool SetUnitState(AMingTacticalUnit* Unit, EUnitState NewState);
+    static bool SetUnitState(AMingTacticalUnit* Unit, EMingUnitState NewState);
 
     /**
      * 獲取單位命令隊列
@@ -195,7 +195,7 @@ public:
      * 獲取狀態名稱
      */
     UFUNCTION(BlueprintPure, Category = "Unit Controller")
-    static FString GetStateName(EUnitState State);
+    static FString GetStateName(EMingUnitState State);
 
     /**
      * 獲取命令類型名稱
