@@ -44,7 +44,7 @@ struct FQuestRequirement
 
     FQuestRequirement()
     {
-        RequirementText = TEXT(""};
+        RequirementText = TEXT("");
         bIsCompleted = false;
         Progress = 0.0f;
         TargetValue = 1.0f;
@@ -67,9 +67,9 @@ struct FQuestReward
 
     FQuestReward()
     {
-        RewardType = TEXT(""};
+        RewardType = TEXT("");
         Amount = 0;
-        Description = TEXT(""};
+        Description = TEXT("");
     }
 };
 
@@ -125,13 +125,13 @@ struct FQuestData
 
     FQuestData()
     {
-        QuestID = TEXT(""};
-        QuestTitle = TEXT(""};
-        QuestDescription = TEXT(""};
+        QuestID = TEXT("");
+        QuestTitle = TEXT("");
+        QuestDescription = TEXT("");
         QuestType = EQuestType::Side;
         QuestStatus = EQuestStatus::Available;
-        RegionID = TEXT(""};
-        QuestGiverID = TEXT(""};
+        RegionID = TEXT("");
+        QuestGiverID = TEXT("");
         SuggestedLevel = 1;
         Difficulty = 1.0f;
         TimeLimit = 0.0f;
@@ -355,25 +355,25 @@ protected:
     virtual void NativeDestruct() override;
 
     // ??部??數
-    void ProcessQuestData(};
-    void ApplyFilters(};
-    void ApplySorting(};
-    void UpdateStatistics(};
+    void ProcessQuestData();
+    void ApplyFilters();
+    void ApplySorting();
+    void UpdateStatistics();
     void UpdateUI();
     FLinearColor GetQuestStatusColor(EQuestStatus Status) const;
     FString GetQuestTypeDisplayName(EQuestType Type) const;
     FString GetQuestStatusDisplayName(EQuestStatus Status) const;
 
     // 事件綁??
-    void SetupEventBindings(};
+    void SetupEventBindings();
     void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason);
 
 private:
     // 輔助??數
     bool PassesFilter(const FQuestData& QuestData) const;
     bool PassesSearch(const FQuestData& QuestData) const;
-    void RefreshDisplayList(};
-    void CheckQuestTimeLimits(};
-    void GenerateRandomQuests(};
+    void RefreshDisplayList();
+    void CheckQuestTimeLimits();
+    void GenerateRandomQuests();
 );
 

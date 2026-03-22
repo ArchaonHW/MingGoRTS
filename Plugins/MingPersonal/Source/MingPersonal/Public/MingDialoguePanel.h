@@ -35,10 +35,10 @@ struct FDialoguePanelOption
 
     FDialoguePanelOption()
     {
-        OptionText = TEXT(""};
+        OptionText = TEXT("");
         OptionID = 0;
         bIsAvailable = true;
-        RequirementText = TEXT(""};
+        RequirementText = TEXT("");
         OptionColor = FLinearColor::White;
     }
 };
@@ -77,9 +77,9 @@ struct FDialogueData
 
     FDialogueData()
     {
-        CharacterID = TEXT(""};
-        CharacterName = TEXT(""};
-        DialogueText = TEXT(""};
+        CharacterID = TEXT("");
+        CharacterName = TEXT("");
+        DialogueText = TEXT("");
         DialogueType = EDialogueAudioType::Neutral;
         RelationshipType = ERelationshipType::Neutral;
         DialogueColor = FLinearColor::White;
@@ -294,26 +294,26 @@ protected:
     virtual void NativeDestruct() override;
 
     // ??部??數
-    void UpdateDialogueUI(};
-    void UpdateCharacterUI(};
-    void UpdateOptionsUI(};
+    void UpdateDialogueUI();
+    void UpdateCharacterUI();
+    void UpdateOptionsUI();
     void SetDialogueState(EDialogueState NewState);
     FLinearColor GetDialogueColor(EDialogueType DialogueType, ERelationshipType RelationshipType) const;
     FString GetCharacterDisplayName(const FString& CharacterID) const;
-    void ProcessTypewriterEffect(};
-    void OnAutoAdvanceTimer(};
+    void ProcessTypewriterEffect();
+    void OnAutoAdvanceTimer();
 
     // 事件綁??
-    void SetupEventBindings(};
+    void SetupEventBindings();
     void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
 
 private:
     // 輔助??數
-    void CreateOptionWidgets(};
+    void CreateOptionWidgets();
     void ClearOptionWidgets();
     bool IsOptionAvailable(const FDialoguePanelOption& Option) const;
-    void PlayTypewriterSound(};
-    void StopTypewriterSound(};
+    void PlayTypewriterSound();
+    void StopTypewriterSound();
 
     // 定?X    FTimerHandle TypewriterTimer;
     FTimerHandle AutoAdvanceTimer;

@@ -28,8 +28,8 @@ struct FDynamicContentConfig
 
     FDynamicContentConfig()
     {
-        ContentType = TEXT(""};
-        Template = TEXT(""};
+        ContentType = TEXT("");
+        Template = TEXT("");
         bIsContextual = true;
         RelevanceScore = 0.0f;
     }
@@ -66,10 +66,10 @@ struct FGeneratedContent
 
     FGeneratedContent()
     {
-        ContentID = TEXT(""};
-        ContentType = TEXT(""};
-        Title = TEXT(""};
-        Body = TEXT(""};
+        ContentID = TEXT("");
+        ContentType = TEXT("");
+        Title = TEXT("");
+        Body = TEXT("");
         RelevanceScore = 0.0f;
     }
 };
@@ -102,9 +102,9 @@ struct FContextualData
 
     FContextualData()
     {
-        CurrentLocation = TEXT(""};
-        ActiveQuest = TEXT(""};
-        CurrentRelationship = TEXT(""};
+        CurrentLocation = TEXT("");
+        ActiveQuest = TEXT("");
+        CurrentRelationship = TEXT("");
         PlayerLevel = 1.0f;
         UserProfile = EAIUserProfile::NewPlayer;
     }
@@ -122,7 +122,7 @@ class MINGPERSONAL_API UMingDynamicContentGenerator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingDynamicContentGenerator(};
+    UMingDynamicContentGenerator();
 
     // ???X?內容?X?器
     UFUNCTION(BlueprintCallable, Category = "Dynamic Content")
@@ -219,10 +219,10 @@ public:
     bool IsGeneratorReady() const { return bIsInitialized; }
 
     UFUNCTION(BlueprintPure, Category = "Dynamic Content")
-    int32 GetTemplateCount() const { return ContentTemplates.Num(}; }
+    int32 GetTemplateCount() const { return ContentTemplates.Num(); }
 
     UFUNCTION(BlueprintPure, Category = "Dynamic Content")
-    int32 GetCachedContentCount() const { return ContentCache.Num(}; }
+    int32 GetCachedContentCount() const { return ContentCache.Num(); }
 
     UFUNCTION(BlueprintPure, Category = "Dynamic Content")
     FContextualData GetCurrentContext() const { return CurrentContext; }
@@ -300,8 +300,8 @@ protected:
 
 private:
     // 輔助??數
-    void SaveContentData(};
-    void LoadContentData(};
+    void SaveContentData();
+    void LoadContentData();
     void CleanupOldCache();
     FString GetCurrentLanguageCode() const;
 };

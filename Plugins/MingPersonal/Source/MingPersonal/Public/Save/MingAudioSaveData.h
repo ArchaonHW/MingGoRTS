@@ -272,3 +272,5 @@ protected:
     FMingAudioSettingsEntry CreateDefaultEntry(EMingAudioCategory Category) const;
 };
 
+#endif // MINGAUDIOSAVEDATA_H
+

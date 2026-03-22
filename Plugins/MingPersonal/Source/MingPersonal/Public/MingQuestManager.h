@@ -115,18 +115,18 @@ struct MINGPERSONAL_API FMingQuestObjective
     FMingQuestObjective()
     {
         ObjectiveID = -1;
-        ObjectiveDescription = TEXT(""};
+        ObjectiveDescription = TEXT("");
         ObjectiveType = EMingQuestObjectiveType::Kill;
         TargetCount = 0;
         CurrentProgress = 0;
-        ObjectiveParameters.Empty(};
+        ObjectiveParameters.Empty();
         bIsVisible = true;
         bIsCompleted = false;
         bIsOptional = false;
         TargetLocation = FVector::ZeroVector;
-        TargetNPC = TEXT(""};
+        TargetNPC = TEXT("");
         TimeLimit = 0.0f;
-        FailureConditions.Empty(};
+        FailureConditions.Empty();
     }
 };
 
@@ -386,7 +386,7 @@ class MINGPERSONAL_API UMingQuestManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingQuestManager(};
+    UMingQuestManager();
 
     // ???X?任??系??    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
     bool InitializeQuestSystem();
@@ -509,7 +509,7 @@ protected:
 
 private:
     // 載入??設任??
-    void LoadDefaultQuests(};
+    void LoadDefaultQuests();
 
     // 載入??設????節??    void LoadDefaultStoryNodes();
 
@@ -553,7 +553,7 @@ private:
     void UpdateQuestLog(int32 QuestID, const FString& LogEntry};
 
     // 保?X???快照
-    void SaveStorySnapshot(};
+    void SaveStorySnapshot();
 
     // 載入????快照
     void LoadStorySnapshot();
@@ -621,13 +621,13 @@ private:
     FString GetStoryPreview(int32 QuestID) const;
 
     // ???X??X?制
-    void ProcessTimeLimits(};
+    void ProcessTimeLimits();
 
     // ??新任?X?止????
-    void UpdateQuestDeadlines(};
+    void UpdateQuestDeadlines();
 
     // 檢查任?X???
-    void CheckQuestExpiration(};
+    void CheckQuestExpiration();
 
     // ???X???任??
     void HandleExpiredQuest(int32 QuestID);

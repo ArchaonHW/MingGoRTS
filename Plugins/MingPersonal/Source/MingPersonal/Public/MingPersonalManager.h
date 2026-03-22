@@ -15,24 +15,22 @@
 #include "MingPersonalManager.generated.h"
 
 /**
- * ??人層管??器
- * 管??角色??長????事系?? */
+ * ??人層�???? * �??角色???????事系?? */
 UCLASS()
 class MINGPERSONAL_API UMingPersonalManager : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingPersonalManager);
+    UMingPersonalManager();
 
-    virtual void Initialize);
-    virtual void Shutdown);
+    virtual void Initialize();
+    virtual void Shutdown();
 
-    void SetupEventSubscriptions);
+    void SetupEventSubscriptions();
     void CleanupEventSubscriptions();
 
-    // 角色??長??口
-    UFUNCTION(BlueprintCallable, Category = "Character")
+    // 角色???????    UFUNCTION(BlueprintCallable, Category = "Character")
     void AddExperience(int32 Amount);
 
     UFUNCTION(BlueprintCallable, Category = "Character")
@@ -42,7 +40,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Narrative")
     void TriggerDialogue(const FString& DialogueId);
 
-    // ???X?聲??系統接X    UFUNCTION(BlueprintCallable, Category = "Relationship")
+    // ???X????系統?�X    UFUNCTION(BlueprintCallable, Category = "Relationship")
     void UpdateCharacterRelationship(const FString& CharacterID, float ChangeAmount, const FString& Reason);
 
     UFUNCTION(BlueprintCallable, Category = "Relationship")
@@ -70,8 +68,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Relationship")
     void OnNPCInteraction(const FString& CharacterID, const FString& InteractionType);
 
-    // ??頻系統??口
-    UFUNCTION(BlueprintCallable, Category = "Audio")
+    // ???�系�????    UFUNCTION(BlueprintCallable, Category = "Audio")
     void InitializeAudioSystem(UObject* MetaSoundsSystem);
 
     UFUNCTION(BlueprintCallable, Category = "Audio")
@@ -89,8 +86,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Audio")
     void SetAudioVolume(float RelationshipVolume, float ReputationVolume, float DialogueVolume);
 
-    // AI UI系統??口
-    UFUNCTION(BlueprintCallable, Category = "AI UI")
+    // AI UI系統????    UFUNCTION(BlueprintCallable, Category = "AI UI")
     void InitializeAIUISystem();
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
@@ -103,9 +99,9 @@ public:
     void ShowContextualHelp(const FString& Context);
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    TArray<FString> GetAIRecommendations);
+    TArray<FString> GetAIRecommendations();
 
-    // 保?X??X?系統接X    UFUNCTION(BlueprintCallable, Category = "Save System")
+    // �?X??X?系統?�X    UFUNCTION(BlueprintCallable, Category = "Save System")
     void InitializeSaveSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Save System")
@@ -132,8 +128,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Save System")
     UMingSaveGameManager* GetSaveGameManager() const;
 
-    // 多人??戲系統??口
-    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
+    // 多人???�系�????    UFUNCTION(BlueprintCallable, Category = "Multiplayer")
     void InitializeMultiplayerSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Multiplayer")
@@ -169,7 +164,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Multiplayer")
     UMingLobbySystem* GetLobbySystem() const;
 
-    // ??地??系統接X    UFUNCTION(BlueprintCallable, Category = "Localization")
+    // ?????系統?�X    UFUNCTION(BlueprintCallable, Category = "Localization")
     void InitializeLocalizationSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Localization")
@@ -196,8 +191,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Localization")
     UMingLocalizationManager* GetLocalizationManager() const;
 
-    // ??能????系統??口
-    UFUNCTION(BlueprintCallable, Category = "Performance")
+    // ???????系統????    UFUNCTION(BlueprintCallable, Category = "Performance")
     void InitializePerformanceSystem();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
@@ -246,7 +240,7 @@ public:
     UMingUniversityGuideManager* GetUniversityGuideManager() const;
 
 protected:
-    void OnExperienceGained(int32 Amount};
+    void OnExperienceGained(int32 Amount);
     void OnLevelUp();
 
 private:
@@ -255,20 +249,19 @@ private:
     int32 CurrentExperience;
     int32 ExperienceToNextLevel;
 
-    // ???X?聲??管??器
-    UPROPERTY()
+    // ???X????�????    UPROPERTY()
     TObjectPtr<UMingRelationshipManager> RelationshipManager;
 
-    // ??頻????管?X    UPROPERTY()
+    // ???????�?X    UPROPERTY()
     TObjectPtr<UMingAudioRelationshipManager> AudioRelationshipManager;
 
-    // AI UI管?X    UPROPERTY()
+    // AI UI�?X    UPROPERTY()
     TObjectPtr<UMingAIUIManager> AIUIManager;
 
-    // 保?X?戲管?X    UPROPERTY()
+    // �?X??�管?X    UPROPERTY()
     TObjectPtr<UMingSaveGameManager> SaveGameManager;
 
-    // ??能????管?X    UPROPERTY()
+    // ???????�?X    UPROPERTY()
     TObjectPtr<UMingPerformanceManager> PerformanceManager;
 
     // ???X??X    UPROPERTY()
@@ -278,10 +271,10 @@ private:
     UPROPERTY()
     TObjectPtr<UMingLobbySystem> LobbySystem;
 
-    // ??地??系??    UPROPERTY()
+    // ?????�??    UPROPERTY()
     TObjectPtr<UMingLocalizationManager> LocalizationManager;
 
-    // 高校引??管?X    UPROPERTY()
+    // 高校�??�?X    UPROPERTY()
     TObjectPtr<UMingUniversityGuideManager> UniversityGuideManager;
 };
 

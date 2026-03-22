@@ -181,7 +181,7 @@ class MINGPERSONAL_API UMingCharacterSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingCharacterSystem(};
+    UMingCharacterSystem();
 
     // Character Management
     UFUNCTION(BlueprintCallable, Category = "Character")
@@ -324,10 +324,10 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Character Setup
-    void SetupRevolutionaryCharacters(};
-    void SetupMilitaryCharacters(};
-    void SetupPoliticalCharacters(};
-    void SetupCulturalCharacters(};
+    void SetupRevolutionaryCharacters();
+    void SetupMilitaryCharacters();
+    void SetupPoliticalCharacters();
+    void SetupCulturalCharacters();
 
     // Skill Management
     void ProcessSkillExperience(FMingCharacterSkill& Skill, int32 Experience);

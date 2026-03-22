@@ -139,7 +139,7 @@ class MINGPERSONAL_API UMingMemoryOptimizer : public UObject
     GENERATED_BODY()
 
 public:
-    UMingMemoryOptimizer(};
+    UMingMemoryOptimizer();
 
     // Initialize/Shutdown
     UFUNCTION(BlueprintCallable, Category = "Memory")
@@ -280,17 +280,17 @@ private:
     TMap<UObject*, FTimerHandle> AutoCleanupTimers;
 
     // Internal functions
-    void UpdateMemoryStats(};
+    void UpdateMemoryStats();
     void CheckMemoryWarnings();
     float CalculateCacheSize() const;
     void EvictLeastUsedCacheItems(float TargetSizeMB};
-    void FlushRenderResourceCache(};
-    void FlushAnimationCache(};
-    void FlushAudioCache(};
-    void FlushAICache(};
-    void FlushNetworkCache(};
-    void FlushUICache(};
+    void FlushRenderResourceCache();
+    void FlushAnimationCache();
+    void FlushAudioCache();
+    void FlushAICache();
+    void FlushNetworkCache();
+    void FlushUICache();
     void PerformGarbageCollection(bool bFullPurge};
-    void CompactAllocator(};
+    void CompactAllocator();
 );
 

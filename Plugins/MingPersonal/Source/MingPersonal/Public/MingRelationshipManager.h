@@ -49,7 +49,7 @@ struct FRelationshipData
 
     FRelationshipData()
     {
-        CharacterID = TEXT(""};
+        CharacterID = TEXT("");
         RelationshipType = ERelationshipType::Neutral;
         RelationshipValue = 0.0f;
         LastInteractionDay = 0;
@@ -75,7 +75,7 @@ struct FReputationData
 
     FReputationData()
     {
-        RegionID = TEXT(""};
+        RegionID = TEXT("");
         ReputationLevel = EReputationLevel::Unknown;
         ReputationScore = 0.0f;
     }
@@ -103,11 +103,11 @@ struct FInteractionEffect
 
     FInteractionEffect()
     {
-        CharacterID = TEXT(""};
+        CharacterID = TEXT("");
         RelationshipChange = 0.0f;
         ReputationChange = 0.0f;
-        RegionID = TEXT(""};
-        Reason = TEXT(""};
+        RegionID = TEXT("");
+        Reason = TEXT("");
     }
 };
 
@@ -119,7 +119,7 @@ class MINGPERSONAL_API UMingRelationshipManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRelationshipManager(};
+    UMingRelationshipManager();
 
     // ???X?系??    UFUNCTION(BlueprintCallable, Category = "Relationship System")
     void InitializeRelationshipSystem();
@@ -202,12 +202,12 @@ private:
     EReputationLevel CalculateReputationLevel(float ReputationScore) const;
 
     // ??用????衰??（長???X??X???
-    void ApplyRelationshipDecay(};
+    void ApplyRelationshipDecay();
 
     // 保??系統????
-    void SaveRelationshipData(};
+    void SaveRelationshipData();
 
     // ????系統????
-    void LoadRelationshipData(};
+    void LoadRelationshipData();
 );
 

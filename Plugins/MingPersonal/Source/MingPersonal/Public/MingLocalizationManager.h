@@ -132,7 +132,7 @@ class MINGPERSONAL_API UMingLocalizationManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingLocalizationManager(};
+    UMingLocalizationManager();
 
     // Initialize localization system
     UFUNCTION(BlueprintCallable, Category = "Localization")
@@ -237,10 +237,10 @@ private:
     UPROPERTY()
     TMap<EMingLanguage, bool> AvailableLanguages;
 
-    void LoadDefaultLanguagePack(};
-    void ClearLocalizedTextCache(};
-    void NotifyLanguageChanged(};
-    void NotifyRegionChanged(};
+    void LoadDefaultLanguagePack();
+    void ClearLocalizedTextCache();
+    void NotifyLanguageChanged();
+    void NotifyRegionChanged();
 };
 
 // Event delegates

@@ -107,6 +107,6 @@ private:
     static int32 TestsPassed;
 
     static void AddTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
-    static void ResetTestResults(};
+    static void ResetTestResults();
 );
 

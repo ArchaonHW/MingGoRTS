@@ -28,8 +28,8 @@ struct FBehaviorEvent
 
     FBehaviorEvent()
     {
-        EventType = TEXT(""};
-        Context = TEXT(""};
+        EventType = TEXT("");
+        Context = TEXT("");
         Timestamp = 0.0f;
         Value = 0.0f;
     }
@@ -37,7 +37,7 @@ struct FBehaviorEvent
     FBehaviorEvent(const FString& InEventType, const FString& InContext, float InValue = 1.0f)
         : EventType(InEventType), Context(InContext), Value(InValue)
     {
-        Timestamp = FDateTime::Now().ToUnixTimestamp(};
+        Timestamp = FDateTime::Now().ToUnixTimestamp();
     }
 };
 
@@ -63,7 +63,7 @@ struct FBehaviorPattern
 
     FBehaviorPattern()
     {
-        PatternName = TEXT(""};
+        PatternName = TEXT("");
         Frequency = 0.0f;
         Confidence = 0.0f;
         AverageInterval = 0.0f;
@@ -98,7 +98,7 @@ struct FUserSession
 
     FUserSession()
     {
-        SessionID = TEXT(""};
+        SessionID = TEXT("");
         StartTime = 0.0f;
         EndTime = 0.0f;
         Duration = 0.0f;
@@ -119,7 +119,7 @@ class MINGPERSONAL_API UMingBehaviorAnalytics : public UObject
     GENERATED_BODY()
 
 public:
-    UMingBehaviorAnalytics(};
+    UMingBehaviorAnalytics();
 
     // ???X??X?系??    UFUNCTION(BlueprintCallable, Category = "Behavior Analytics")
     void InitializeAnalytics();
@@ -220,7 +220,7 @@ public:
     bool IsRecording() const { return bIsRecording; }
 
     UFUNCTION(BlueprintPure, Category = "Behavior Analytics")
-    int32 GetTotalEventCount() const { return AllEvents.Num(}; }
+    int32 GetTotalEventCount() const { return AllEvents.Num(); }
 
     UFUNCTION(BlueprintPure, Category = "Behavior Analytics")
     FUserSession GetCurrentSession() const { return CurrentSession; }
@@ -293,10 +293,10 @@ protected:
 
     // ??部??數
     void ProcessEvent(const FBehaviorEvent& Event};
-    void UpdateEventFrequencies(};
-    void UpdateEventTrends(};
-    void DetectSequentialPatterns(};
-    void DetectTemporalPatterns(};
+    void UpdateEventFrequencies();
+    void UpdateEventTrends();
+    void DetectSequentialPatterns();
+    void DetectTemporalPatterns();
     void DetectBehavioralAnomalies();
     float CalculatePatternConfidence(const TArray<FString>& Sequence) const;
     float CalculateAnomalyScore(const FString& EventType, float Value) const;
@@ -306,12 +306,12 @@ protected:
     // 機器學??輔助
     TArray<float> ExtractFeatures(const TArray<FBehaviorEvent>& Events) const;
     float CalculateSimilarity(const TArray<float>& Features1, const TArray<float>& Features2) const;
-    void UpdatePredictionModels(};
+    void UpdatePredictionModels();
 
 private:
     // 輔助??數
-    void CleanupOldData(};
-    void SaveAnalyticsData(};
+    void CleanupOldData();
+    void SaveAnalyticsData();
     void LoadAnalyticsData();
     FString GenerateSessionID() const;
 };

@@ -109,7 +109,7 @@ public:
     static int32 GetKnownRegionCount();
 
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Reputation System")
-    static TArray<FString> GetAllKnownRegions(};
+    static TArray<FString> GetAllKnownRegions();
 
     // °ª?X?¸ß??¼Æ
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Relationship System")

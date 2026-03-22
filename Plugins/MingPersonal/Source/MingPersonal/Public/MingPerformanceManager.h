@@ -240,7 +240,7 @@ class MINGPERSONAL_API UMingPerformanceManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingPerformanceManager(};
+    UMingPerformanceManager();
 
     // Initialize/Shutdown
     UFUNCTION(BlueprintCallable, Category = "Performance")
@@ -283,7 +283,7 @@ public:
 
     // Optimization
     UFUNCTION(BlueprintCallable, Category = "Performance")
-    TArray<FMingOptimizationResult> RunAutoOptimization(};
+    TArray<FMingOptimizationResult> RunAutoOptimization();
 
     UFUNCTION(BlueprintCallable, Category = "Performance")
     FMingOptimizationResult OptimizeCategory(EMingPerformanceCategory Category);
@@ -421,10 +421,10 @@ private:
     TMap<EMingPerformanceCategory, float> WarningThresholds;
 
     // Internal functions
-    void UpdateMetrics(};
-    void CheckPerformanceWarnings(};
+    void UpdateMetrics();
+    void CheckPerformanceWarnings();
     void ApplyPerformanceLevel(EMingPerformanceLevel Level};
-    void AutoOptimizeIfNeeded(};
+    void AutoOptimizeIfNeeded();
     void RecordMetrics();
     bool ShouldTriggerOptimization() const;
     FMingOptimizationResult RunSpecificOptimization(EMingPerformanceCategory Category, const FString& OptName};

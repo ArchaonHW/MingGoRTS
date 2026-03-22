@@ -66,8 +66,8 @@ struct FPersonalUIConfig
     FPersonalUIConfig()
     {
         UIType = EPersonalUIType::RelationshipPanel;
-        WidgetName = TEXT(""};
-        WidgetPath = TEXT(""};
+        WidgetName = TEXT("");
+        WidgetPath = TEXT("");
         bIsVisible = false;
         bIsInteractive = true;
         OpenAnimation = EUIAnimationType::Fade;
@@ -89,7 +89,7 @@ class MINGPERSONAL_API UMingPersonalUIManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingPersonalUIManager(};
+    UMingPersonalUIManager();
 
     // ???X?UI╰参
     UFUNCTION(BlueprintCallable, Category = "Personal UI")
@@ -221,23 +221,23 @@ protected:
 
     // ??场??计
     UUserWidget* CreateWidget(EPersonalUIType UIType};
-    void InitializeDefaultConfigs(};
-    void SetupEventBindings(};
+    void InitializeDefaultConfigs();
+    void SetupEventBindings();
     void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
     void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason};
     void OnDialogueStarted(const FString& CharacterID, EDialogueAudioType DialogueType};
 
 private:
     // Widget??徊??计
-    UUserWidget* CreateRelationshipPanel(};
-    UUserWidget* CreateReputationPanel(};
-    UUserWidget* CreateDialoguePanel(};
-    UUserWidget* CreateQuestPanel(};
-    UUserWidget* CreateAudioPanel(};
-    UUserWidget* CreateMainDashboard(};
-    UUserWidget* CreateCharacterDetails(};
-    UUserWidget* CreateRegionDetails(};
-    UUserWidget* CreateSystemSettings(};
+    UUserWidget* CreateRelationshipPanel();
+    UUserWidget* CreateReputationPanel();
+    UUserWidget* CreateDialoguePanel();
+    UUserWidget* CreateQuestPanel();
+    UUserWidget* CreateAudioPanel();
+    UUserWidget* CreateMainDashboard();
+    UUserWidget* CreateCharacterDetails();
+    UUserWidget* CreateRegionDetails();
+    UUserWidget* CreateSystemSettings();
 
     // ??礶徊??计
     void PlayAnimation(UUserWidget* Widget, EUIAnimationType AnimationType, float Duration};

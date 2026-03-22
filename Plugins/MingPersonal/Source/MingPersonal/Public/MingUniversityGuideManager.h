@@ -117,9 +117,9 @@ class MINGPERSONAL_API UMingUniversityGuideManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingUniversityGuideManager(};
+    UMingUniversityGuideManager();
 
-    virtual void Initialize(};
+    virtual void Initialize();
     virtual void Shutdown();
 
     /**
@@ -230,7 +230,7 @@ public:
      * 載入引?X?度
      */
     UFUNCTION(BlueprintCallable, Category = "University Guide")
-    void LoadGuideProgress(};
+    void LoadGuideProgress();
 
     // 事件????
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGuideStarted, FString, GuideID};
@@ -269,8 +269,8 @@ private:
     UPROPERTY()
     bool bInteractiveMode;
 
-    void GenerateDefaultContents(};
-    void UpdateProgress(};
-    FString GenerateContentID(};
+    void GenerateDefaultContents();
+    void UpdateProgress();
+    FString GenerateContentID();
 );
 

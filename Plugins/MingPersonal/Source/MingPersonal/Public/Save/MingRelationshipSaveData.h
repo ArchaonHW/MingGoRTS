@@ -185,5 +185,5 @@ protected:
     void ClearValidationErrors();
 
     UFUNCTION()
-    void AddValidationError(const FString& Error};
+    void AddValidationError(const FString& Error);
 );

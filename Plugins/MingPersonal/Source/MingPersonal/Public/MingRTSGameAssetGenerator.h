@@ -110,12 +110,12 @@ struct FGameAssetRequirement
     {
         AssetCategory = EGameAssetCategory::GameScene;
         AssetPurpose = EGameAssetPurpose::Gameplay;
-        AssetName = TEXT(""};
-        Description = TEXT(""};
+        AssetName = TEXT("");
+        Description = TEXT("");
         Quality = EQualityLevel::Standard;
         Style = EArtStyle::Realistic;
-        Theme = TEXT(""};
-        Context = TEXT(""};
+        Theme = TEXT("");
+        Context = TEXT("");
         bIsUrgent = false;
         TargetPath = TEXT("/Game/GeneratedAssets/"};
     }
@@ -162,9 +162,9 @@ struct FUniversityGuideConfig
     FUniversityGuideConfig()
     {
         ContentType = EUniversityContentType::CampusTour;
-        UniversityName = TEXT(""};
-        Department = TEXT(""};
-        TargetAudience = TEXT(""};
+        UniversityName = TEXT("");
+        Department = TEXT("");
+        TargetAudience = TEXT("");
         Duration = TEXT("10 minutes"};
         Language = TEXT("Chinese"};
         CulturalContext = TEXT("Ming Dynasty"};
@@ -220,15 +220,15 @@ struct FGeneratedGameAsset
 
     FGeneratedGameAsset()
     {
-        AssetID = TEXT(""};
-        AssetName = TEXT(""};
+        AssetID = TEXT("");
+        AssetName = TEXT("");
         AssetCategory = EGameAssetCategory::Custom;
         AssetPurpose = EGameAssetPurpose::Custom;
-        AssetPath = TEXT(""};
-        Description = TEXT(""};
+        AssetPath = TEXT("");
+        Description = TEXT("");
         Quality = EQualityLevel::Standard;
         Style = EArtStyle::Realistic;
-        GeneratedAt = TEXT(""};
+        GeneratedAt = TEXT("");
         GenerationTime = 0.0f;
     }
 };
@@ -247,7 +247,7 @@ class MINGPERSONAL_API UMingRTSGameAssetGenerator : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSGameAssetGenerator(};
+    UMingRTSGameAssetGenerator();
 
     // ???X??X??X??X?器
     UFUNCTION(BlueprintCallable, Category = "Game Asset Generator")
@@ -524,7 +524,7 @@ private:
     void UpdateStatistics(EGameAssetCategory Category, float GenerationTime};
 
     // 清?X???資產
-    void CleanupExpiredAssets(};
+    void CleanupExpiredAssets();
 
     // ??份資產
     void BackupAsset(const FGeneratedGameAsset& Asset);

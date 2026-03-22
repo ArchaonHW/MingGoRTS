@@ -181,8 +181,8 @@ struct FPerformanceProfile
 
     FPerformanceProfile()
     {
-        ProfileID = TEXT(""};
-        ProfileName = TEXT(""};
+        ProfileID = TEXT("");
+        ProfileName = TEXT("");
         TargetLevel = EPerformanceLevel::Medium;
         OptimizationMode = EOptimizationMode::Automatic;
         bIsActive = false;
@@ -216,11 +216,11 @@ struct FDebugInfo
 
     FDebugInfo()
     {
-        Category = TEXT(""};
-        Message = TEXT(""};
+        Category = TEXT("");
+        Message = TEXT("");
         Level = EDebugLevel::Basic;
         Timestamp = 0.0f;
-        Context = TEXT(""};
+        Context = TEXT("");
     }
 };
 
@@ -256,12 +256,12 @@ struct FOptimizationResult
     FOptimizationResult()
     {
         Category = EPerformanceCategory::Rendering;
-        OptimizationType = TEXT(""};
+        OptimizationType = TEXT("");
         BeforeValue = 0.0f;
         AfterValue = 0.0f;
         Improvement = 0.0f;
         bSuccessful = false;
-        Description = TEXT(""};
+        Description = TEXT("");
     }
 };
 
@@ -280,7 +280,7 @@ class MINGPERSONAL_API UMingRTSPerformanceEnhancedSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSPerformanceEnhancedSystem(};
+    UMingRTSPerformanceEnhancedSystem();
 
     // ???X???強性能????系統
     UFUNCTION(BlueprintCallable, Category = "Performance Enhanced System")
@@ -613,31 +613,31 @@ private:
     FOptimizationResult GetOptimizationResultTemplate() const;
 
     // 記?X?能統??
-    void RecordPerformanceStatistics(};
+    void RecordPerformanceStatistics();
 
     // ???X?能??頸
-    void HandlePerformanceBottlenecks(};
+    void HandlePerformanceBottlenecks();
 
     // ????渲?X?能
-    void OptimizeRenderingPerformance(};
+    void OptimizeRenderingPerformance();
 
     // ???X??X?能
-    void OptimizePhysicsPerformance(};
+    void OptimizePhysicsPerformance();
 
     // ????AI??能
-    void OptimizeAIPerformance(};
+    void OptimizeAIPerformance();
 
     // ???X?頻??能
-    void OptimizeAudioPerformance(};
+    void OptimizeAudioPerformance();
 
     // ????網絡??能
-    void OptimizeNetworkPerformance(};
+    void OptimizeNetworkPerformance();
 
     // ????UI??能
-    void OptimizeUIPerformance(};
+    void OptimizeUIPerformance();
 
     // ???X?畫??能
-    void OptimizeAnimationPerformance(};
+    void OptimizeAnimationPerformance();
 
     // ???X??X?能
     void OptimizeMemoryPerformance();

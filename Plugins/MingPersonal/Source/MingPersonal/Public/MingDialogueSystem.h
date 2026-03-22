@@ -174,7 +174,7 @@ class MINGPERSONAL_API UMingDialogueSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingDialogueSystem(};
+    UMingDialogueSystem();
 
     // Conversation Management
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
@@ -325,14 +325,14 @@ protected:
     TWeakObjectPtr<UWorld> WorldContext;
 
     // Internal functions
-    void InitializeDefaultDialogues(};
-    void SetupHistoricalDialogues(};
-    void SetupTutorialDialogues(};
+    void InitializeDefaultDialogues();
+    void SetupHistoricalDialogues();
+    void SetupTutorialDialogues();
     void ProcessDialogueTriggers(const FMingDialogueLine& DialogueLine};
     void ProcessChoiceConsequences(const FMingDialogueOption& Option);
     bool CheckDialogueConditions(const TArray<FString>& Conditions) const;
-    void UpdateDialogueOptions(};
-    void AutoAdvanceDialogue(};
+    void UpdateDialogueOptions();
+    void AutoAdvanceDialogue();
 
     // Helpers
     FMingDialogueLine* FindDialogueLine(const FString& DialogueID};

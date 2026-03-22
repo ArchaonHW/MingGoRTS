@@ -100,7 +100,7 @@ struct FAIUIAdaptationConfig
         AdaptationValue = 0.0f;
         bIsEnabled = false;
         ConfidenceScore = 0.0f;
-        Reason = TEXT(""};
+        Reason = TEXT("");
     }
 };
 
@@ -117,7 +117,7 @@ class MINGPERSONAL_API UMingAIUIManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAIUIManager(};
+    UMingAIUIManager();
 
     // ???X?AI UI╰参
     UFUNCTION(BlueprintCallable, Category = "AI UI")
@@ -148,7 +148,7 @@ public:
     EAIUserProfile DetermineUserProfile();
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    TArray<FAIUIAdaptationConfig> GenerateAdaptationRecommendations(};
+    TArray<FAIUIAdaptationConfig> GenerateAdaptationRecommendations();
 
     // UI????
     UFUNCTION(BlueprintCallable, Category = "AI UI")
@@ -181,13 +181,13 @@ public:
 
     // ??┦?X?滤
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    TArray<FString> GetRecommendedQuests(};
+    TArray<FString> GetRecommendedQuests();
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    TArray<FString> GetSuggestedCharacters(};
+    TArray<FString> GetSuggestedCharacters();
 
     UFUNCTION(BlueprintCallable, Category = "AI UI")
-    TArray<EPersonalUIType> GetRecommendedPanels(};
+    TArray<EPersonalUIType> GetRecommendedPanels();
 
     // A/B代刚
     UFUNCTION(BlueprintCallable, Category = "AI UI")
@@ -284,9 +284,9 @@ protected:
     TMap<FString, TMap<FString, float>> ABTestData;
 
     // ??场??计
-    void ProcessBehaviorData(};
-    void CalculateProfileScores(};
-    void GenerateAdaptations(};
+    void ProcessBehaviorData();
+    void CalculateProfileScores();
+    void GenerateAdaptations();
     void ApplyAdaptationToUI(const FAIUIAdaptationConfig& Adaptation);
     float CalculateConfidence(const TArray<float>& DataPoints) const;
     EAIUserProfile ClassifyPlayer(const FAIUserProfileData& Profile) const;
@@ -296,13 +296,13 @@ protected:
     float CalculateBehaviorScore(const FString& BehaviorType) const;
     TArray<float> GetBehaviorTrend(const FString& BehaviorType, int32 WindowSize) const;
     bool IsBehaviorSignificant(const FString& BehaviorType, float Threshold) const;
-    void UpdateAdaptationWeights(};
+    void UpdateAdaptationWeights();
 
 private:
     // 徊??计
-    void InitializeDefaultAdaptations(};
-    void SaveProfileData(};
-    void LoadProfileData(};
-    void CleanupOldData(};
+    void InitializeDefaultAdaptations();
+    void SaveProfileData();
+    void LoadProfileData();
+    void CleanupOldData();
 );
 

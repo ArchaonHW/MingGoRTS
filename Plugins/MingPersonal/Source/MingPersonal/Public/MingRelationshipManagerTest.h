@@ -43,6 +43,6 @@ public:
      * ??©ó¶ñ??´ú¸Õ???X???«Y?X??X???
      */
     UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static void CreateTestData(};
+    static void CreateTestData();
 );
 

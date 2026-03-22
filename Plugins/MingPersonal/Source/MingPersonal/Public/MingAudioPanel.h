@@ -59,7 +59,7 @@ struct FAudioControlData
     FAudioControlData()
     {
         ControlType = EAudioControlType::Master;
-        ControlName = TEXT(""};
+        ControlName = TEXT("");
         Volume = 1.0f;
         bIsMuted = false;
         bIsEnabled = true;
@@ -96,8 +96,8 @@ struct FAudioThemeData
     FAudioThemeData()
     {
         ThemeType = EAudioThemeType::Peaceful;
-        ThemeName = TEXT(""};
-        Description = TEXT(""};
+        ThemeName = TEXT("");
+        Description = TEXT("");
         bIsPlaying = false;
         bIsAvailable = true;
         Intensity = 1.0f;
@@ -332,12 +332,12 @@ protected:
     virtual void NativeDestruct() override;
 
     // ??部??數
-    void InitializeAudioControls(};
-    void InitializeAudioThemes(};
-    void UpdateAudioUI(};
-    void UpdateVolumeUI(};
-    void UpdateThemeUI(};
-    void UpdateRegionUI(};
+    void InitializeAudioControls();
+    void InitializeAudioThemes();
+    void UpdateAudioUI();
+    void UpdateVolumeUI();
+    void UpdateThemeUI();
+    void UpdateRegionUI();
     FAudioControlData CreateAudioControlData(EAudioControlType ControlType};
     FAudioThemeData CreateAudioThemeData(EAudioThemeType ThemeType);
     FLinearColor GetAudioControlColor(EAudioControlType ControlType) const;
@@ -347,7 +347,7 @@ protected:
     FString GetRegionDisplayName(ERepublicEraRegion Region) const;
 
     // 事件綁??
-    void SetupEventBindings(};
+    void SetupEventBindings();
     void OnAudioRelationshipPlayed(ERelationshipAudioType AudioType, USoundBase* Sound};
     void OnAudioReputationPlayed(EReputationAudioType AudioType, USoundBase* Sound};
     void OnAudioDialoguePlayed(EDialogueAudioType AudioType, USoundBase* Sound};
@@ -357,9 +357,9 @@ private:
     void ApplyVolumeChange(EAudioControlType ControlType, float NewVolume};
     void ApplyMuteChange(EAudioControlType ControlType, bool bMuted};
     void ApplyThemeChange(EAudioThemeType ThemeType, bool bIsPlaying};
-    void CreateVolumeSliders(};
-    void CreateThemeButtons(};
-    void CreateRegionButtons(};
-    void UpdateControlStates(};
+    void CreateVolumeSliders();
+    void CreateThemeButtons();
+    void CreateRegionButtons();
+    void UpdateControlStates();
 );
 

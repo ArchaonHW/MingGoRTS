@@ -148,17 +148,17 @@ struct FSaveGameData
 
     FSaveGameData()
     {
-        SaveID = TEXT(""};
-        SaveName = TEXT(""};
+        SaveID = TEXT("");
+        SaveName = TEXT("");
         DataType = ESaveDataType::GameState;
         Format = ESaveFormat::Binary;
         Location = ESaveLocation::Local;
         Status = ESaveStatus::None;
-        FilePath = TEXT(""};
+        FilePath = TEXT("");
         Timestamp = 0.0f;
         Version = 1;
         Size = 0;
-        Checksum = TEXT(""};
+        Checksum = TEXT("");
         bIsCompressed = false;
         bIsEncrypted = false;
         bIsAutoSave = false;
@@ -218,15 +218,15 @@ struct FSaveSlot
 
     FSaveSlot()
     {
-        SlotID = TEXT(""};
-        SlotName = TEXT(""};
-        Description = TEXT(""};
-        ThumbnailPath = TEXT(""};
+        SlotID = TEXT("");
+        SlotName = TEXT("");
+        Description = TEXT("");
+        ThumbnailPath = TEXT("");
         PlayTime = 0.0f;
-        LevelName = TEXT(""};
-        PlayerName = TEXT(""};
+        LevelName = TEXT("");
+        PlayerName = TEXT("");
         Chapter = 0;
-        CampaignID = TEXT(""};
+        CampaignID = TEXT("");
         LastModified = 0.0f;
         bIsEmpty = true;
         bIsCorrupted = false;
@@ -275,16 +275,16 @@ struct FSaveOperation
 
     FSaveOperation()
     {
-        OperationID = TEXT(""};
-        OperationType = TEXT(""};
-        TargetID = TEXT(""};
+        OperationID = TEXT("");
+        OperationType = TEXT("");
+        TargetID = TEXT("");
         DataType = ESaveDataType::GameState;
         Priority = ESavePriority::Medium;
         StartTime = 0.0f;
         Progress = 0.0f;
         bIsCompleted = false;
         bIsFailed = false;
-        ErrorMessage = TEXT(""};
+        ErrorMessage = TEXT("");
     }
 };
 
@@ -307,7 +307,7 @@ class MINGPERSONAL_API UMingRTSSaveLoadEnhancedSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSSaveLoadEnhancedSystem(};
+    UMingRTSSaveLoadEnhancedSystem();
 
     // ???X???強??存?X?系??    UFUNCTION(BlueprintCallable, Category = "Save Load Enhanced System")
     void InitializeSaveLoadEnhancedSystem(UWorld* World);
@@ -591,7 +591,7 @@ private:
     void HandleLoadError(const FString& OperationID, const FString& ErrorMessage};
 
     // 清?X???保?X???
-    void CleanupInvalidSaveData(};
+    void CleanupInvalidSaveData();
 
     // 清?X???保??槽??
     void CleanupInvalidSaveSlots();
@@ -612,10 +612,10 @@ private:
     float PredictSaveLoad() const;
 
     // 平衡保??負??
-    void BalanceSaveLoad(};
+    void BalanceSaveLoad();
 
     // ????保??衝??
-    void ResolveSaveConflicts(};
+    void ResolveSaveConflicts();
 
     // ????保?X?能
     void OptimizeSavePerformance();

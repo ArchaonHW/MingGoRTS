@@ -39,9 +39,9 @@ struct FDashboardQuickAction
 
     FDashboardQuickAction()
     {
-        ActionName = TEXT(""};
-        ActionDescription = TEXT(""};
-        ActionIcon = TEXT(""};
+        ActionName = TEXT("");
+        ActionDescription = TEXT("");
+        ActionIcon = TEXT("");
         bIsAvailable = true;
         ActionColor = FLinearColor::White;
     }
@@ -92,8 +92,8 @@ struct FDashboardSummary
         CompletedQuests = 0;
         AverageReputation = 0.0f;
         HighestReputation = EReputationLevel::Unknown;
-        CurrentRegion = TEXT(""};
-        CurrentTheme = TEXT(""};
+        CurrentRegion = TEXT("");
+        CurrentTheme = TEXT("");
     }
 };
 
@@ -314,20 +314,20 @@ protected:
     virtual void NativeDestruct() override;
 
     // ??部??數
-    void InitializeTabs(};
-    void InitializeQuickActions(};
-    void UpdateTabUI(};
-    void UpdateNotificationUI(};
+    void InitializeTabs();
+    void InitializeQuickActions();
+    void UpdateTabUI();
+    void UpdateNotificationUI();
     void UpdateProgressBar();
     FDashboardSummary CalculateSummary() const;
     TArray<FDashboardQuickAction> GenerateQuickActions() const;
     FString GetTabDisplayName(EDashboardTab Tab) const;
     FLinearColor GetTabColor(EDashboardTab Tab) const;
-    void CreateTabButtons(};
-    void CreateQuickActionButtons(};
+    void CreateTabButtons();
+    void CreateQuickActionButtons();
 
     // 事件綁??
-    void SetupEventBindings(};
+    void SetupEventBindings();
     void OnRelationshipChanged(const FString& CharacterID, float OldValue, float NewValue, const FString& Reason};
     void OnReputationChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason};
     void OnQuestCompleted(const FString& QuestID, const FString& RegionID, const FString& QuestGiverID};
@@ -335,11 +335,11 @@ protected:
 private:
     // 輔助??數
     void ShowTabContent(EDashboardTab Tab};
-    void HideAllTabContent(};
+    void HideAllTabContent();
     void AddNotification(const FString& Message, const FString& Type};
     void RemoveNotification(int32 Index};
-    void RefreshTimer(};
-    void UpdateProgressBars(};
+    void RefreshTimer();
+    void UpdateProgressBars();
 
     // 定?X    FTimerHandle RefreshTimerHandle;
 );

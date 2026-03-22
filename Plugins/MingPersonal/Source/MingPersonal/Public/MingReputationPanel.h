@@ -40,11 +40,11 @@ struct FReputationDisplayData
 
     FReputationDisplayData()
     {
-        RegionID = TEXT(""};
-        RegionName = TEXT(""};
+        RegionID = TEXT("");
+        RegionName = TEXT("");
         ReputationLevel = EReputationLevel::Unknown;
         ReputationScore = 0.0f;
-        ReputationDescription = TEXT(""};
+        ReputationDescription = TEXT("");
         ReputationColor = FLinearColor::White;
         AvailableQuests = 0;
         CompletedQuests = 0;
@@ -221,18 +221,18 @@ protected:
     virtual void NativeDestruct() override;
 
     // ??部??數
-    void ProcessReputationData(};
-    void ApplyFilters(};
-    void ApplySorting(};
-    void UpdateStatistics(};
-    void UpdateUI(};
+    void ProcessReputationData();
+    void ApplyFilters();
+    void ApplySorting();
+    void UpdateStatistics();
+    void UpdateUI();
     FReputationDisplayData CreateDisplayData(const FString& RegionID, const FReputationData& ReputationData);
     FLinearColor GetReputationColor(EReputationLevel ReputationLevel) const;
     FString GetReputationDescription(EReputationLevel ReputationLevel, float Score) const;
     FString GetRegionDisplayName(const FString& RegionID) const;
 
     // 事件綁??
-    void SetupEventBindings(};
+    void SetupEventBindings();
     void OnReputationDataChanged(const FString& RegionID, float OldValue, float NewValue, const FString& Reason);
 
 private:

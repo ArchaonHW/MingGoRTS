@@ -142,7 +142,7 @@ class MINGPERSONAL_API UMingAudioRelationshipManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingAudioRelationshipManager(};
+    UMingAudioRelationshipManager();
 
     // ???X?音??系??    UFUNCTION(BlueprintCallable, Category = "Audio Relationship")
     void InitializeAudioRelationshipSystem(UObject* MetaSoundsSystem);
@@ -266,9 +266,9 @@ protected:
     TMap<EDialogueAudioType, FString> DialogueAudioThemes;
 
 private:
-    // ???X?主??    void InitializeRepublicEraThemes(};
-    void InitializeRelationshipAudioThemes(};
-    void InitializeReputationAudioThemes(};
+    // ???X?主??    void InitializeRepublicEraThemes();
+    void InitializeRelationshipAudioThemes();
+    void InitializeReputationAudioThemes();
     void InitializeDialogueAudioThemes();
 
     // ???X?頻主??路??

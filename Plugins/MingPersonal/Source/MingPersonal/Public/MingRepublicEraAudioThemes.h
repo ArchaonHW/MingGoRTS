@@ -62,8 +62,8 @@ struct FRepublicEraAudioTheme
     FRepublicEraAudioTheme()
     {
         ThemeType = ERepublicEraTheme::PeacefulTheme;
-        ThemeName = TEXT(""};
-        AudioAssetPath = TEXT(""};
+        ThemeName = TEXT("");
+        AudioAssetPath = TEXT("");
         BaseIntensity = 1.0f;
         Duration = 60.0f;
         bIsLooping = true;
@@ -96,9 +96,9 @@ struct FRepublicEraRegionalAudio
     FRepublicEraRegionalAudio()
     {
         Region = EPersonalRepublicEraRegion::Beijing;
-        RegionName = TEXT(""};
-        AmbientAudioPath = TEXT(""};
-        CulturalAudioPath = TEXT(""};
+        RegionName = TEXT("");
+        AmbientAudioPath = TEXT("");
+        CulturalAudioPath = TEXT("");
         CulturalIntensity = 1.0f;
     }
 };
@@ -112,7 +112,7 @@ class MINGPERSONAL_API UMingRepublicEraAudioThemes : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRepublicEraAudioThemes(};
+    UMingRepublicEraAudioThemes();
 
     // X    UFUNCTION(BlueprintCallable, Category = "Republic Era Audio")
     void InitializeRepublicEraThemes();
@@ -208,7 +208,7 @@ protected:
     bool bIsThemePlaying = false;
 
     // X
-    void InitializeDefaultThemes(};
+    void InitializeDefaultThemes();
     void InitializeRegionalAudio();
     FString GetThemeAssetPath(ERepublicEraTheme ThemeType) const;
     FString GetRegionalAssetPath(EPersonalRepublicEraRegion Region, bool bCultural = false) const;
@@ -219,6 +219,6 @@ private:
     TArray<FString> MilitaryInstruments;
     TArray<FString> UrbanInstruments;
 
-    // X    void InitializeInstrumentLists(};
+    // X    void InitializeInstrumentLists();
 );
 
