@@ -56,7 +56,7 @@ development_status:
   epic-2: in-progress
   2-1-large-scale-combat-engine: done
   2-2-unit-control-system: done
-  2-3-multi-unit-coordination: backlog
+  2-3-multi-unit-coordination: done
   2-4-combat-ai-system: backlog
   2-5-difficulty-progression: backlog
   epic-2-retrospective: optional
