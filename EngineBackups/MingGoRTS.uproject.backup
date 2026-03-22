@@ -1,0 +1,18 @@
+{
+    "FileVersion": 3,
+    "EngineAssociation": "5.7",
+    "Category": "",
+    "Description": "MingGoRTS Game Project",
+    "Modules": [
+        {
+            "Name": "MingGoRTSGame",
+            "Type": "Runtime",
+            "LoadingPhase": "Default",
+            "AdditionalDependencies": [
+                "Engine",
+                "CoreUObject",
+                "HTTP"
+            ]
+        }
+    ]
+}

@@ -1,8 +1,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Modules/ModuleManager.h"
 
-class MINGGORTS_API FMingGoRTSGameModule : public IModuleInterface
+class FMingGoRTSModule : public IModuleInterface
 {
 public:
     virtual void StartupModule() override;
