@@ -2144,3 +2144,173 @@ void AMingMultiUnitCoordinator::HandleProactiveExecution(const FCoordinatedComma
 {
     // 主動式執行已在主方法中處理
 }
+
+// ========== 並行化單位協調實現 (Parallel Processing Implementation) ==========
+
+void AMingMultiUnitCoordinator::CalculateMovementPathsParallel(const TArray<AMingTacticalUnit*>& Units, const FVector& TargetLocation)
+{
+    if (Units.Num() == 0)
+    {
+        return;
+    }
+
+    // 記錄開始時間
+    double StartTime = FPlatformTime::Seconds();
+
+    // 決定是否使用並行化 (超過 30 個單位才使用)
+    if (Units.Num() >= 30)
+    {
+        // ===== 並行處理 (ParallelFor) =====
+        ParallelFor(Units.Num(), [&](int32 Index)
+        {
+            AMingTacticalUnit* Unit = Units[Index];
+            if (Unit && Unit->IsValidLowLevel())
+            {
+                // 計算個體移動路徑 (簡化實作，實際應使用導航網格)
+                FVector UnitLocation = Unit->GetActorLocation();
+                FVector Direction = (TargetLocation - UnitLocation).GetSafeNormal();
+                float Distance = FVector::Distance(UnitLocation, TargetLocation);
+                
+                // 計算個體目標位置 (避免全部擠在同一點)
+                FVector IndividualTarget = TargetLocation + Direction * (FMath::RandRange(-200.0f, 200.0f));
+                
+                // 使用鎖保護單位移動請求
+                FScopeLock Lock(&ParallelLock);
+                if (Unit && Unit->IsValidLowLevel())
+                {
+                    // 這裡應該呼叫單位移動組件進行實際移動
+                    // Unit->MoveToLocation(IndividualTarget);
+                }
+            }
+        });
+    }
+    else
+    {
+        // ===== 串行處理 (單位數量較少時) =====
+        for (AMingTacticalUnit* Unit : Units)
+        {
+            if (Unit && Unit->IsValidLowLevel())
+            {
+                FVector UnitLocation = Unit->GetActorLocation();
+                FVector Direction = (TargetLocation - UnitLocation).GetSafeNormal();
+                FVector IndividualTarget = TargetLocation + Direction * (FMath::RandRange(-200.0f, 200.0f));
+                // Unit->MoveToLocation(IndividualTarget);
+            }
+        }
+    }
+
+    // 記錄處理時間
+    double EndTime = FPlatformTime::Seconds();
+    LastParallelProcessingTimeMs = (EndTime - StartTime) * 1000.0f;
+
+    UE_LOG(LogTemp, Log, TEXT("並行移動路徑計算完成: %d 單位, 耗時 %.2f ms"), Units.Num(), LastParallelProcessingTimeMs);
+}
+
+void AMingMultiUnitCoordinator::UpdateAllGroupStatusesParallel()
+{
+    if (UnitGroups.Num() == 0)
+    {
+        return;
+    }
+
+    // 記錄開始時間
+    double StartTime = FPlatformTime::Seconds();
+
+    // 收集所有分組 ID
+    TArray<FString> GroupIDs;
+    UnitGroups.GetKeys(GroupIDs);
+
+    // 並行更新所有分組狀態
+    ParallelFor(GroupIDs.Num(), [&](int32 Index)
+    {
+        const FString& GroupID = GroupIDs[Index];
+        
+        FUnitGroup* Group = UnitGroups.Find(GroupID);
+        if (!Group)
+        {
+            return;
+        }
+        
+        // 檢查分組狀態
+        int32 ActiveUnits = 0;
+        for (AMingTacticalUnit* Unit : Group->GroupUnits)
+        {
+            if (Unit && Unit->IsValidLowLevel())
+            {
+                ActiveUnits++;
+            }
+        }
+        
+        // 使用鎖保護狀態更新
+        FScopeLock Lock(&ParallelLock);
+        if (ActiveUnits == 0)
+        {
+            Group->bIsActive = false;
+            Group->GroupStatus = TEXT("Inactive");
+        }
+        else if (ActiveUnits < Group->GroupUnits.Num() / 2)
+        {
+            Group->GroupStatus = TEXT("Weakened");
+        }
+        else
+        {
+            Group->GroupStatus = TEXT("Active");
+        }
+        
+        Group->LastUpdateTime = FPlatformTime::Seconds();
+    });
+
+    // 記錄處理時間
+    double EndTime = FPlatformTime::Seconds();
+    LastParallelProcessingTimeMs = (EndTime - StartTime) * 1000.0f;
+
+    UE_LOG(LogTemp, Log, TEXT("並行分組狀態更新完成: %d 分組, 耗時 %.2f ms"), GroupIDs.Num(), LastParallelProcessingTimeMs);
+}
+
+void AMingMultiUnitCoordinator::ValidateFormationPositionsParallel(const FString& GroupID)
+{
+    FUnitGroup* Group = UnitGroups.Find(GroupID);
+    if (!Group || !Group->bIsActive)
+    {
+        return;
+    }
+
+    // 記錄開始時間
+    double StartTime = FPlatformTime::Seconds();
+
+    const TArray<AMingTacticalUnit*>& Units = Group->GroupUnits;
+    
+    // 並行驗證所有單位的編隊位置
+    ParallelFor(Units.Num(), [&](int32 Index)
+    {
+        AMingTacticalUnit* Unit = Units[Index];
+        if (!Unit || !Unit->IsValidLowLevel())
+        {
+            return;
+        }
+        
+        // 獲取單位當前位置
+        FVector CurrentLocation = Unit->GetActorLocation();
+        
+        // 計算預期編隊位置 (簡化實作)
+        FVector ExpectedLocation = Group->GroupCenterLocation + FVector(Index * 100.0f, 0.0f, 0.0f);
+        
+        // 檢查位置偏差
+        float Deviation = FVector::Distance(CurrentLocation, ExpectedLocation);
+        
+        // 如果偏差過大，標記需要調整
+        if (Deviation > 150.0f)
+        {
+            FScopeLock Lock(&ParallelLock);
+            // 標記單位需要重新定位
+            // Unit->SetNeedsRepositioning(true);
+        }
+    });
+
+    // 記錄處理時間
+    double EndTime = FPlatformTime::Seconds();
+    LastParallelProcessingTimeMs = (EndTime - StartTime) * 1000.0f;
+
+    UE_LOG(LogTemp, Log, TEXT("並行編隊位置驗證完成: %s, %d 單位, 耗時 %.2f ms"), 
+        *GroupID, Units.Num(), LastParallelProcessingTimeMs);
+}

@@ -289,7 +289,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAIDecisionMade, const FMingAITact
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIBehaviorChanged, int32, UnitID, EMingAIBehavior, NewBehavior);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAIThreatAssessed, const FMingAIThreatAssessment&, Threat);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAITacticalAnalysis, const FMingAITacticalAnalysis&, Analysis);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAIUnitStateChanged, int32, UnitID, EMingAIBehavior, NewBehavior, const FMingAIUnitState&, State);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAIUnitStateChanged, int32, UnitID, EMingAIBehavior, NewBehavior, const FMingAIUnitState&, State);
 
 /**
  * AI戰鬥管理器
@@ -375,6 +375,39 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI Combat Manager")
     void ClearAllAIUnits();
 
+    // ========== 並行化 AI 處理 (Parallel Processing) ==========
+    
+    /**
+     * 並行處理所有 AI 單位決策 (ParallelFor)
+     * 適用於 100+ 單位的大規模場景
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Combat Manager|Parallel")
+    void ProcessAllAIUnitsParallel(float DeltaTime);
+
+    /**
+     * 批量評估威脅 (並行化版本)
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Combat Manager|Parallel")
+    void AssessThreatsForAllUnitsParallel();
+
+    /**
+     * 批量生成戰術決策 (並行化版本)
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Combat Manager|Parallel")
+    TArray<FMingAITacticalDecision> GenerateDecisionsForAllUnitsParallel();
+
+    /**
+     * 設置並行處理閾值 (超過此數量的單位才使用並行化)
+     */
+    UFUNCTION(BlueprintCallable, Category = "AI Combat Manager|Parallel")
+    void SetParallelThreshold(int32 Threshold) { ParallelThreshold = Threshold; }
+
+    /**
+     * 獲取並行處理統計
+     */
+    UFUNCTION(BlueprintPure, Category = "AI Combat Manager|Parallel")
+    float GetLastParallelProcessingTimeMs() const { return LastParallelProcessingTimeMs; }
+
     // 事件委託
     UPROPERTY(BlueprintAssignable)
     FOnAIDecisionMade OnAIDecisionMade;
@@ -396,16 +429,14 @@ protected:
     UPROPERTY()
     TMap<int32, FMingAIUnitState> AIUnitStates;
 
-    // AI決策歷史
-    UPROPERTY()
+    // AI決策歷史 - 注意：TMap<TArray> 不支持 UPROPERTY
     TMap<int32, TArray<FMingAITacticalDecision>> AIDecisionHistory;
 
     // 玩家行為學習數據
     UPROPERTY()
     TMap<FString, float> PlayerBehaviorPatterns;
 
-    // AI策略模板
-    UPROPERTY()
+    // AI策略模板 - 注意：TMap<TArray> 不支持 UPROPERTY
     TMap<EMingAIBehavior, TArray<FMingAITacticalDecision>> AIStrategyTemplates;
 
     // 當前戰場分析
@@ -415,6 +446,15 @@ protected:
     // 是否已初始化
     UPROPERTY()
     bool bInitialized;
+
+    // 並行化設定
+    int32 ParallelThreshold = 50;  // 超過 50 個單位啟用並行化
+    float LastParallelProcessingTimeMs = 0.0f;
+    int32 LastParallelThreadCount = 0;
+
+    // 執行緒安全的決策結果快取 (並行處理時使用)
+    TArray<FMingAITacticalDecision> ParallelDecisionsCache;
+    FCriticalSection ParallelCacheLock;
 
 private:
     // 載入預設AI策略

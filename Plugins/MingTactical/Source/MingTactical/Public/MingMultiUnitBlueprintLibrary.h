@@ -248,7 +248,7 @@ public:
      * 獲取協調統計
      */
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
-    static TMap<FString, int32> GetCoordinationStatistics();
+    static TMap<FString, int32> GetCoordinationStats_BPLibrary();
 
     /**
      * 獲取協調性能指標
@@ -602,7 +602,7 @@ public:
      * 獲取協調統計
      */
     UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Statistics")
-    static TMap<FString, int32> GetCoordinationStatistics();
+    static TMap<FString, int32> GetCoordinationStats_BPLibrary();
 
     /**
      * 獲取分組統計

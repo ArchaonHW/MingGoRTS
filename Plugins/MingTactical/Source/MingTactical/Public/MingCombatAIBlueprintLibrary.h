@@ -245,7 +245,7 @@ public:
      * 獲取AI統計數據
      */
     UFUNCTION(BlueprintPure, Category = "Combat AI|Performance")
-    static TMap<FString, int32> GetAIStatistics();
+    static TMap<FString, int32> GetAIStatistics_BPLibrary();
 
     /**
      * 獲取AI配置
@@ -583,7 +583,7 @@ public:
      * 獲取AI統計
      */
     UFUNCTION(BlueprintCallable, Category = "Combat AI|Statistics")
-    static TMap<FString, int32> GetAIStatistics();
+    static TMap<FString, int32> GetAIStatistics_BPLibrary();
 
     /**
      * 獲取決策統計

@@ -49,6 +49,20 @@ enum class EMingCombatState : uint8
     Destroyed          // 被摧毀
 };
 
+/**
+ * int32 數組包裝結構 (用於 TMap<TArray> 嵌套)
+ */
+USTRUCT(BlueprintType)
+struct FInt32ArrayWrapper
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<int32> Items;
+
+    FInt32ArrayWrapper() {}
+};
+
 // 單位戰鬥屬性
 USTRUCT(BlueprintType)
 struct MINGTACTICAL_API FMingUnitCombatStats
@@ -387,12 +401,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTacticalCommandIssued, const FMin
  * 負責管理大規模單位控制和戰術戰鬥
  */
 UCLASS(ClassGroup = (Tactical), Blueprintable, BlueprintType)
-class MINGTACTICAL_API UMingTacticalCombatSystem : public AActor
+class MINGTACTICAL_API AMingTacticalCombatSystem : public AActor
 {
     GENERATED_BODY()
 
 public:
-    UMingTacticalCombatSystem();
+    AMingTacticalCombatSystem();
 
     // 初始化戰術戰鬥系統
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
@@ -408,11 +422,11 @@ public:
 
     // 獲取單位信息
     UFUNCTION(BlueprintPure, Category = "Tactical Combat")
-    FMingCombatUnit GetUnitInfo(int32 UnitID) const;
+    FMingCombatUnit GetUnitInfo_Impl(int32 UnitID) const;
 
     // 選擇單位
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
-    bool SelectUnits(const TArray<int32>& UnitIDs);
+    bool SelectUnits_Impl(const TArray<int32>& UnitIDs);
 
     // 取消選擇單位
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
@@ -452,11 +466,11 @@ public:
 
     // 獲取可見單位
     UFUNCTION(BlueprintPure, Category = "Tactical Combat")
-    TArray<int32> GetVisibleUnits(int32 ViewerUnitID) const;
+    TArray<int32> GetVisibleUnits_Impl(int32 ViewerUnitID) const;
 
     // 獲取戰鬥統計
     UFUNCTION(BlueprintPure, Category = "Tactical Combat")
-    TMap<EMingUnitType, int32> GetCombatStatistics() const;
+    TMap<EMingUnitType, int32> GetCombatStatistics_Impl() const;
 
     // 保存戰鬥數據
     UFUNCTION(BlueprintCallable, Category = "Tactical Combat")
@@ -508,7 +522,7 @@ protected:
 
     // 戰爭迷霧數據
     UPROPERTY()
-    TMap<int32, TArray<int32>> VisibilityMap;
+    TMap<int32, FInt32ArrayWrapper> VisibilityMap;
 
     // 當前編隊
     UPROPERTY()

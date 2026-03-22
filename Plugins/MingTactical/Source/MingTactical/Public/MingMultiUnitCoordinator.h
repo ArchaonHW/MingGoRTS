@@ -632,6 +632,33 @@ public:
     UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator")
     float GetCommunicationQuality(const FString& GroupAID, const FString& GroupBID) const;
 
+    // ========== 並行化單位協調 (Parallel Processing) ==========
+    
+    /**
+     * 並行計算單位移動路徑 (ParallelFor)
+     * 適用於大規模單位群體移動
+     */
+    UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Parallel")
+    void CalculateMovementPathsParallel(const TArray<AMingTacticalUnit*>& Units, const FVector& TargetLocation);
+
+    /**
+     * 並行更新單位分組狀態
+     */
+    UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Parallel")
+    void UpdateAllGroupStatusesParallel();
+
+    /**
+     * 並行驗證單位編隊位置
+     */
+    UFUNCTION(BlueprintCallable, Category = "Multi Unit Coordinator|Parallel")
+    void ValidateFormationPositionsParallel(const FString& GroupID);
+
+    /**
+     * 獲取上次並行處理時間
+     */
+    UFUNCTION(BlueprintPure, Category = "Multi Unit Coordinator|Parallel")
+    float GetLastParallelProcessingTimeMs() const { return LastParallelProcessingTimeMs; }
+
 protected:
     // 單位分組映射
     UPROPERTY()
@@ -658,6 +685,12 @@ protected:
 
     // 是否已初始化
     bool bIsInitialized;
+
+    // 並行化處理時間記錄
+    float LastParallelProcessingTimeMs = 0.0f;
+
+    // 執行緒安全鎖
+    FCriticalSection ParallelLock;
 
     // Tick更新
     virtual void Tick(float DeltaTime) override;

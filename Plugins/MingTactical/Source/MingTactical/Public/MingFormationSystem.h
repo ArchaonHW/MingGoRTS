@@ -40,7 +40,7 @@ struct FMingFormationSlot
 };
 
 USTRUCT(BlueprintType)
-struct FMingFormationData
+struct FMingFormationSystemData
 {
     GENERATED_BODY()
 
