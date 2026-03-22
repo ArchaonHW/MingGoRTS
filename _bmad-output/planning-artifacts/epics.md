@@ -4,12 +4,21 @@ workflowType: 'epics'
 lastStep: 4
 status: 'complete'
 completedAt: '2026-03-22'
+validatedAt: '2026-03-22'
 inputDocuments: [
   "c:\\HW\\MingGoRTS\\_bmad-output\\gdd.md",
   "c:\\HW\\MingGoRTS\\_bmad-output\\planning-artifacts\\architecture.md",
   "c:\\HW\\MingGoRTS\\_bmad-output\\planning-artifacts\\ux-design-specification.md"
 ]
 uxDesignRequirementsAdded: '2026-03-22'
+validationResults: {
+  frCoverage: "15/15 complete",
+  nfrCoverage: "8/8 covered via epics",
+  uxDrCoverage: "9/9 integrated",
+  storyCount: 30,
+  epicCount: 6,
+  status: "validated"
+}
 ---
 
 # MingGoRTS - Epic Breakdown

@@ -108,7 +108,7 @@ struct FMingCharacterTrait
 };
 
 USTRUCT(BlueprintType)
-struct FMingHistoricalCharacter
+struct FMingPersonalCharacter
 {
     GENERATED_BODY()
 

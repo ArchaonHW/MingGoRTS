@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "MingHistoricalEvents.h"
 #include "Events/MingEventTrigger.h"
 #include "MingHistoricalEventManager.generated.h"
 
@@ -48,7 +49,7 @@ enum class EEventImpactScope : uint8
  * 民國歷史事件定義
  */
 USTRUCT(BlueprintType)
-struct FMingHistoricalEvent
+struct FMingEventManagerEvent
 {
     GENERATED_BODY()
 
