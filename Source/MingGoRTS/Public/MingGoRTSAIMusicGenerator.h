@@ -227,10 +227,8 @@ protected:
     UPROPERTY()
     bool bIsGenerating;
 
-    UPROPERTY()
+    // Ticker delegates - not UPROPERTY as FTickerDelegate is not supported by UHT
     FTickerDelegate GenerationTicker;
-
-    UPROPERTY()
     FDelegateHandle GenerationTickerHandle;
 
 private:

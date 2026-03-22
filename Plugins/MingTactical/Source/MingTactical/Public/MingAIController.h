@@ -87,14 +87,11 @@ public:
     UFUNCTION(BlueprintPure, Category = "AI|Formation")
     bool HasFormationPosition() const;
 
-    // Navigation
-    UFUNCTION(BlueprintCallable, Category = "AI|Navigation")
+    // Navigation (overriding parent functions - no UFUNCTION macro needed)
     bool MoveToLocation(const FVector& TargetLocation, float AcceptanceRadius = 50.0f);
 
-    UFUNCTION(BlueprintCallable, Category = "AI|Navigation")
     bool MoveToActor(AActor* TargetActor, float AcceptanceRadius = 50.0f);
 
-    UFUNCTION(BlueprintCallable, Category = "AI|Navigation")
     void StopMovement();
 
     // Combat
@@ -128,8 +125,10 @@ public:
 
 protected:
     // AI State
-    UPROPERTY(BlueprintReadOnly, Category = "AI|State")
-    EMingAIState CurrentState;
+    // 控制單位 - 使用 TObjectPtr 和前置聲明
+    class AMingTacticalUnit;
+    UPROPERTY(BlueprintReadWrite, Category = "AI|Control")
+    TObjectPtr<AMingTacticalUnit> ControlledUnit;
 
     UPROPERTY(BlueprintReadOnly, Category = "AI|State")
     FMingAICommand CurrentCommand;
@@ -198,10 +197,7 @@ protected:
     void OnMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
 
 private:
-    // Cached components
-    UPROPERTY()
-    TWeakObjectPtr<class UMingTacticalUnit> ControlledUnit;
-
+    // Cached components (only declare once)
     UPROPERTY()
     TWeakObjectPtr<class UNavigationSystemV1> NavSystem;
 

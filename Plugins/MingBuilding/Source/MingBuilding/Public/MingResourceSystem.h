@@ -102,7 +102,7 @@ public:
     UPROPERTY(BlueprintReadOnly, Category = "Production")
     TArray<FMingResourceProduction> ActiveProductions;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Production")
+    // Production (not exposed to Blueprint as TWeakObjectPtr is not Blueprint-supported)
     TArray<TWeakObjectPtr<class UMingResourceProducer>> ResourceProducers;
 
     // System Functions

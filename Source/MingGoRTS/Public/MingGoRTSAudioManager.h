@@ -203,10 +203,8 @@ protected:
     UPROPERTY()
     float MixingProgress;
 
-    UPROPERTY()
+    // 注意：非UObject類型不能用UPROPERTY
     FTickerDelegate MixingTicker;
-
-    UPROPERTY()
     FDelegateHandle MixingTickerHandle;
 
 private:

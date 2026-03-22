@@ -27,7 +27,7 @@ public:
 
     // 獲取當前平台適配器
     UFUNCTION(BlueprintCallable, Category = "Platform")
-    IPlatformInterface* GetCurrentPlatform() const;
+    TScriptInterface<IPlatformInterface> GetCurrentPlatform() const;
 
     // 獲取當前平台類型
     UFUNCTION(BlueprintCallable, Category = "Platform")

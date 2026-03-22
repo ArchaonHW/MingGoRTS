@@ -1,5 +1,5 @@
 ---
-stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 inputDocuments: ["PROJECT_PLAN.md", "PROJECT_STATUS.md"]
 ---
 
@@ -1461,3 +1461,211 @@ flowchart TD
 - 漸進式披露 + 即時反饋
 - 民國風格視覺系統
 - 無障礙全功能支援
+
+## Responsive Design & Accessibility
+
+### Responsive Strategy
+
+**Desktop Strategy (Windows):**
+- **Layout:** 多欄位資訊面板，側邊導航，完整快捷鍵支援
+- **Information Density:** 高密度戰術資訊顯示，支援複雜操作
+- **Special Features:** 滑鼠精確操作，快捷鍵完整對應，多螢幕支援
+- **Resolution:** 1080p 到 4K 自動縮放，DPI 感知
+- **Input:** 鍵盤 + 滑鼠為主，支援手把
+
+**Tablet Strategy (iPad/Android Tablet):**
+- **Layout:** 觸控優化的簡化佈局，側邊可折疊面板
+- **Gestures:** 雙指縮放地圖，滑動選單，長按選單
+- **Information Density:** 中等密度，保留核心戰術資訊
+- **Special Features:** 分屏多工支援，觸控筆精確操作
+- **Input:** 觸控為主，支援外接鍵盤
+
+**Mobile Strategy (iPhone/Android) - Party Mode 改進：**
+- **核心原則：** 「智慧簡化」而非「粗暴簡化」
+- **Layout:** 底部固定導航，單欄佈局，極簡 UI
+- **AI 輔助選擇：** 玩家點擊大致區域，AI 智能選擇最相關單位
+- **自動編隊：** 系統自動將相近單位編組，減少微操
+- **簡化命令：** 使用「智能命令」而非精確操作
+- **Operation:** 長按確認防誤觸，手勢快捷操作，自動旋轉
+- **Information Density:** 極簡顯示，關鍵資訊優先，可展開詳情
+- **Special Features:** 豎屏/橫屏自動切換，震動反饋
+- **Input:** 純觸控，支援語音命令
+
+### Breakpoint Strategy
+
+**Platform-Specific Breakpoints:**
+
+| Breakpoint | Width | Platform | Layout Changes |
+|-----------|-------|----------|---------------|
+| Mobile S | 320-375px | Phone | 單欄，底部導航，極簡模式 |
+| Mobile L | 376-767px | Phone | 單欄，橫屏支援，擴展資訊 |
+| Tablet | 768-1023px | Tablet | 雙欄，側邊面板，中等密度 |
+| Desktop | 1024-1919px | Desktop | 多欄，完整資訊，快捷鍵 |
+| Desktop XL | 1920px+ | Desktop | 最大密度，多螢幕支援 |
+
+**UE5 UMG Adaptation:**
+- **DPI Scaling:** 自動偵測螢幕 DPI，動態調整 UI 尺寸
+- **Anchor System:** 使用 UMG 錨點確保相對位置一致性
+- **Dynamic Fonts:** 根據螢幕尺寸和平台調整字體大小
+- **Safe Zones:** 考慮手機瀏海、圓角螢幕的安全區域
+
+### Accessibility Strategy
+
+**WCAG Compliance: Level AA** (Industry Standard)
+
+**Color Contrast:**
+- **Normal Text:** 4.5:1 minimum (民國紅 #8B0000 vs 白色)
+- **Large Text:** 3:1 minimum
+- **High Contrast Mode:** Optional theme with enhanced contrast
+- **Color Independence:** Never rely solely on color to convey information
+
+**Keyboard Navigation:**
+- **Full Support:** All features accessible via keyboard
+- **Focus Indicators:** High-contrast focus rings (3px solid outline)
+- **Standard Shortcuts:** Ctrl+A (select all), 1-0 (squads), Space (center)
+- **Skip Links:** Jump to main content, skip repetitive navigation
+- **Logical Tab Order:** Focus moves predictably through interface
+
+**Screen Reader Support:**
+- **ARIA Labels:** All interactive elements properly labeled
+- **Role Identification:** Buttons, menus, dialogs correctly marked
+- **Live Regions:** Dynamic content changes announced (unit counts, resources)
+- **Platform Integration:** iOS VoiceOver, Android TalkBack, Windows Narrator
+- **Descriptive Text:** Meaningful descriptions, not just "button"
+
+**Touch Targets:**
+- **Minimum Size:** 44x44px touch targets (iOS HIG standard)
+- **Spacing:** 8px minimum between interactive elements
+- **Gestures:** Support standard gestures with alternatives
+- **Feedback:** Visual + haptic feedback for touch actions
+
+**Audio Assistance:**
+- **Battlefield Announcements:** Important events spoken aloud
+- **Command Confirmation:** Voice confirmation of player actions
+- **Spatial Audio:** 3D positioning for in-game events
+- **Voice Commands:** Optional voice control for accessibility
+
+### Cognitive Accessibility - Party Mode 新增
+
+**情境感知資訊顯示系統：**
+- **資訊簡化模式：** 減少同時顯示的資訊量
+- **戰術建議系統：** AI 提供決策建議（普惠功能）
+- **動態資訊優先級：**
+  - 和平時期：顯示經濟和建設資訊
+  - 戰鬥時期：聚焦戰術資訊，隱藏非緊急內容
+  - 危機時期：只顯示最關鍵的生存資訊
+
+**價值主張：**
+- 不僅幫助認知障礙玩家，也幫助新手和壓力下的玩家
+- 提升所有玩家的遊戲體驗（通用設計理念）
+
+### Color Blind Support - Party Mode 新增
+
+**多模式視覺編碼系統：**
+- **形狀編碼：**
+  - 圓形 = 友軍
+  - 三角形 = 敵軍
+  - 菱形 = 中立
+- **圖案紋理：** 不同陣營使用不同底紋
+- **文字標籤：** 可選的文字識別
+- **高對比模式：** 增強顏色區分度
+
+**技術實現：**
+- **可訪問性著色器管線：** 動態調整顏色和形狀編碼
+- **即時切換：** 不影響效能的情況下切換視覺模式
+- **電競價值：** 色盲模式在職業電競圈也很受歡迎（對比度更好）
+
+### Testing Strategy
+
+**Responsive Testing:**
+- **Real Devices:** iPhone 12/14, iPad Pro, Samsung S21/S23, Pixel 7
+- **Emulators:** UE5 built-in platform preview, Android Emulator, iOS Simulator
+- **Network Testing:** WiFi, 4G, 5G performance validation
+- **Orientation:** Portrait/landscape switching on all mobile devices
+
+**Accessibility Testing:**
+- **Automated Tools:** 
+  - WAVE Browser Extension
+  - axe DevTools
+  - Lighthouse Accessibility Audit
+  - UE5 Accessibility Plugin
+- **Screen Readers:**
+  - iOS VoiceOver
+  - Android TalkBack  
+  - Windows NVDA/JAWS
+- **Keyboard Testing:** Complete workflows without mouse/touch
+- **Color Blindness:** Deuteranopia, Protanopia, Tritanopia simulation
+
+**User Testing:**
+- **Accessibility Users:** Visual impairment, motor impairment testers
+- **Age Diversity:** Teen to senior players
+- **Experience Levels:** Novice to expert RTS players
+- **Cross-Platform:** Same users test on multiple devices
+
+### Implementation Guidelines
+
+**Responsive Development Guidelines:**
+
+```cpp
+// UMG Responsive Layout Example
+void UMyWidget::NativeOnInitialized()
+{
+    // Set anchors for responsive positioning
+    if (UCanvasPanelSlot* Slot = Cast<UCanvasPanelSlot>(MyButton->Slot))
+    {
+        Slot->SetAnchors(FAnchors(0.0f, 0.0f, 1.0f, 0.1f));
+        Slot->SetOffsets(FMargin(16, 16, 16, 16));
+    }
+}
+
+// Platform-specific adjustments
+void UMyWidget::ApplyPlatformSettings()
+{
+    if (GetPlatform() == EGamePlatform::Mobile)
+    {
+        // Increase touch target sizes
+        MyButton->SetMinDesiredSize(FVector2D(44, 44));
+        // Simplify layout
+        DetailedPanel->SetVisibility(ESlateVisibility::Collapsed);
+    }
+}
+```
+
+**Accessibility Implementation:**
+
+```cpp
+// ARIA-like accessibility support
+void UMyButton::SetAccessibilityProperties()
+{
+    SetAccessibleText(FText::FromString(TEXT("選擇單位")));
+    SetAccessibleSummary(FText::FromString(TEXT("顯示選中單位的詳細資訊")));
+    SetAccessibleBehavior(EAccessibleBehavior::Auto);
+}
+
+// Focus management
+void UMyMenu::OnWidgetFocused(UWidget* Widget)
+{
+    // Announce to screen readers
+    if (UAccessibleWidgetData* Data = Widget->GetAccessibleWidgetData())
+    {
+        Data->SetAccessibleText(FText::FromString(TEXT("已選擇") + Widget->GetName()));
+    }
+}
+```
+
+**Implementation Checklist:**
+- [ ] All interactive elements keyboard accessible
+- [ ] Color contrast meets WCAG AA standards
+- [ ] Screen reader announcements for dynamic content
+- [ ] Touch targets minimum 44x44px on mobile
+- [ ] Layout correctly adapts across all breakpoints
+- [ ] High contrast mode available
+- [ ] Focus indicators visible and clear
+- [ ] Skip navigation links implemented
+- [ ] Voice command support (optional)
+- [ ] Haptic feedback on mobile
+- [ ] Tested with real assistive technologies
+- [ ] **Party Mode 新增：** AI 輔助手機操作系統
+- [ ] **Party Mode 新增：** 情境感知資訊顯示
+- [ ] **Party Mode 新增：** 色盲支援多模式編碼
+- [ ] **Party Mode 新增：** 認知無障礙功能

@@ -112,16 +112,12 @@ protected:
     UPROPERTY()
     FString StableDiffusionAPIKey;
 
-    UPROPERTY()
     int32 CurrentFrameIndex;
 
-    UPROPERTY()
     bool bIsGenerating;
 
-    UPROPERTY()
+    // 注意：非UObject類型不能用UPROPERTY
     FTickerDelegate GenerationTicker;
-
-    UPROPERTY()
     FDelegateHandle GenerationTickerHandle;
 
 private:

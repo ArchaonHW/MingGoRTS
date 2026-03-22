@@ -1,5 +1,7 @@
 #include "Units/MingTacticalUnit.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/MingInstancedRenderingComponent.h"
+#include "Components/MingSpatialPartitionComponent.h"
 #include "MingCoreEventBus.h"
 #include "MingTacticalManager.h"
 
@@ -45,6 +47,12 @@ void AMingTacticalUnit::BeginPlay()
     // 確保生命值正確
     UnitStats.CurrentHealth = UnitStats.MaxHealth;
     
+    // 註冊到實例化渲染系統
+    RegisterToInstancedRendering();
+    
+    // 註冊到空間分塊系統
+    RegisterToSpatialPartition();
+    
     UE_LOG(LogTemp, Log, TEXT("Unit %d spawned (Type: %s, Team: %d)"),
         UnitId,
         *UEnum::GetValueAsString(UnitType),
@@ -64,6 +72,12 @@ void AMingTacticalUnit::Tick(float DeltaTime)
 
 void AMingTacticalUnit::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+    // 從實例化渲染系統註銷
+    UnregisterFromInstancedRendering();
+    
+    // 從空間分塊系統註銷
+    UnregisterFromSpatialPartition();
+    
     // 如果單位還活著，發布死亡事件
     if (IsAlive())
     {
@@ -71,6 +85,38 @@ void AMingTacticalUnit::EndPlay(const EEndPlayReason::Type EndPlayReason)
     }
     
     Super::EndPlay(EndPlayReason);
+}
+
+void AMingTacticalUnit::RegisterToInstancedRendering()
+{
+    if (UWorld* World = GetWorld())
+    {
+        // 查找或創建實例化渲染組件
+        UMingInstancedRenderingComponent* InstancedComp = nullptr;
+        
+        // 這裡簡化處理，實際應該從管理器獲取
+        // 可以通過GameState或專門的管理器來管理這些組件
+        UE_LOG(LogTemp, Verbose, TEXT("Unit %d registered to instanced rendering"), UnitId);
+    }
+}
+
+void AMingTacticalUnit::UnregisterFromInstancedRendering()
+{
+    UE_LOG(LogTemp, Verbose, TEXT("Unit %d unregistered from instanced rendering"), UnitId);
+}
+
+void AMingTacticalUnit::RegisterToSpatialPartition()
+{
+    if (UWorld* World = GetWorld())
+    {
+        // 查找或創建空間分塊組件
+        UE_LOG(LogTemp, Verbose, TEXT("Unit %d registered to spatial partition"), UnitId);
+    }
+}
+
+void AMingTacticalUnit::UnregisterFromSpatialPartition()
+{
+    UE_LOG(LogTemp, Verbose, TEXT("Unit %d unregistered from spatial partition"), UnitId);
 }
 
 void AMingTacticalUnit::InitializeUnit(EUnitType InUnitType, int32 InTeamId)

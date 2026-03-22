@@ -64,7 +64,7 @@ struct FMingTriggerCondition
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Radius;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 注意：遞迴結構不能用 UPROPERTY
     TArray<FMingTriggerCondition> SubConditions; // For Compound conditions
 
     FMingTriggerCondition()
@@ -164,8 +164,8 @@ struct FMingGameTrigger
     {}
 };
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnTriggerActivated, const FMingGameTrigger&, Trigger);
-DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnTriggerConditionMet, const FMingGameTrigger&, Trigger, const FMingTriggerCondition&, Condition);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTriggerActivated, const FMingGameTrigger&, Trigger);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTriggerConditionMet, const FMingGameTrigger&, Trigger, const FMingTriggerCondition&, Condition);
 
 /**
  * Trigger Manager for MingGoRTS

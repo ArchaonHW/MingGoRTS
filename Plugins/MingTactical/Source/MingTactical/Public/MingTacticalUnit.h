@@ -180,4 +180,12 @@ public:
 
     UFUNCTION(BlueprintPure, Category = "Unit|Info")
     bool IsInAttackRange(AActor* Target) const;
+
+    // 性能優化 - 實例化渲染
+    void RegisterToInstancedRendering();
+    void UnregisterFromInstancedRendering();
+
+    // 性能優化 - 空間分塊
+    void RegisterToSpatialPartition();
+    void UnregisterFromSpatialPartition();
 };

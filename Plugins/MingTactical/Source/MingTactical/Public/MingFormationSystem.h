@@ -138,7 +138,9 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Formation")
     FMingFormationData FormationData;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Formation")
+    // Not exposed to Blueprint as TWeakObjectPtr in TMap is not supported
+    // 注意：TMap<TWeakObjectPtr> 不被 Blueprint 支持
+    UPROPERTY()
     TMap<int32, TWeakObjectPtr<AMingTacticalUnit>> UnitSlotMap;
 
     void GenerateFormationSlots();

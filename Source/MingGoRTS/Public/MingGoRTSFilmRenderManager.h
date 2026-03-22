@@ -147,10 +147,8 @@ private:
     UPROPERTY()
     FFilmPlaybackSettings PlaybackSettings;
 
-    UPROPERTY()
+    // 注意：非UObject類型不能用UPROPERTY
     FTickerDelegate PlaybackTicker;
-
-    UPROPERTY()
     FDelegateHandle PlaybackTickerHandle;
 
     void UpdatePlayback(float DeltaTime);
