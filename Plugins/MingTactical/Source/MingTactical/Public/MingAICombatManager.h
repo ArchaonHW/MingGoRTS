@@ -75,7 +75,7 @@ struct MINGTACTICAL_API FMingAIThreatAssessment
     {
         ThreatUnitID = -1;
         ThreatLevel = 0.0f;
-        ThreatType = TEXT(""};
+        ThreatType = TEXT("");
         Distance = 0.0f;
         ThreatDirection = FVector::ZeroVector;
         ThreatDuration = 0.0f;
@@ -135,15 +135,15 @@ struct MINGTACTICAL_API FMingAITacticalDecision
     {
         DecisionID = -1;
         Objective = EMingAITacticalObjective::DestroyEnemy;
-        DecisionDescription = TEXT(""};
+        DecisionDescription = TEXT("");
         TargetUnitID = -1;
         TargetLocation = FVector::ZeroVector;
         DecisionWeight = EMingAIDecisionWeight::Medium;
         ExecutionTime = 0.0f;
-        DecisionParameters.Empty(};
-        ExpectedOutcome = TEXT(""};
+        DecisionParameters.Empty();
+        ExpectedOutcome = TEXT("");
         Confidence = 0.5f;
-        DecisionTimestamp = FDateTime::Now(};
+        DecisionTimestamp = FDateTime::Now();
     }
 };
 
