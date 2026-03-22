@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -6,7 +6,7 @@
 #include "MingBuildingBlueprintLibrary.generated.h"
 
 /**
- * å»ºç??å??½æ•¸åº? * ?ä??å??¯èª¿?¨ç?å»ºç?ç³»çµ±?Ÿèƒ½
+ * å»ºï¿½Xï¿½ï¿½Xï¿½æ•¸ï¿½? * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½èª¿?ï¿½ï¿½?å»ºï¿½?ç³»çµ±?ï¿½èƒ½
  */
 UCLASS()
 class MINGBUILDING_API UMingBuildingBlueprintLibrary : public UBlueprintFunctionLibrary
@@ -15,237 +15,238 @@ class MINGBUILDING_API UMingBuildingBlueprintLibrary : public UBlueprintFunction
 
 public:
     /**
-     * ?²å?å»ºç?ç®¡ç???     */
+     * ?ï¿½ï¿½?å»ºï¿½?ç®¡ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Building")
     static UMingBuildingManager* GetBuildingManager();
 
     /**
-     * ?å??–å»ºç¯‰ç³»çµ?     */
+     * ?ï¿½ï¿½Xï¿½å»ºç¯‰ç³»ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Building")
     static void InitializeBuildingSystem();
 
     /**
-     * ?¾ç½®å»ºç?
+     * ?ï¿½ç½®å»ºï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Construction")
     static FString PlaceBuilding(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
 
     /**
-     * ?‹å?å»ºé€?     */
+     * ?ï¿½ï¿½?å»ºï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Building|Construction")
     static bool StartConstruction(const FString& BuildingID);
 
     /**
-     * ?–æ?å»ºé€?     */
+     * ?ï¿½ï¿½?å»ºï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Building|Construction")
     static bool CancelConstruction(const FString& BuildingID);
 
     /**
-     * æ·»å??°å»º? é???     */
+     * æ·»ï¿½Xï¿½å»º?ï¿½ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Building|Construction")
     static FString AddToConstructionQueue(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
 
     /**
-     * å¾å»º? é??—ç§»??     */
+     * å¾å»º?ï¿½ï¿½Xï¿½ç§»X     */
     UFUNCTION(BlueprintCallable, Category = "Building|Construction")
     static bool RemoveFromConstructionQueue(const FString& QueueID);
 
     /**
-     * ?²å?å»ºç?
+     * ?ï¿½ï¿½?å»ºï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Building|Management")
     static AMingBuildingActor* GetBuilding(const FString& BuildingID);
 
     /**
-     * ?²å??€?‰å»ºç¯?     */
+     * ?ï¿½ï¿½Xï¿½?ï¿½å»ºï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Building|Management")
     static TArray<AMingBuildingActor*> GetAllBuildings();
 
     /**
-     * ?²å??‡å?é¡å??„å»ºç¯?     */
+     * ?ï¿½ï¿½Xï¿½ï¿½?é¡ï¿½Xï¿½å»ºï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Building|Management")
     static TArray<AMingBuildingActor*> GetBuildingsByType(EMingBuildingType BuildingType);
 
     /**
-     * ?²å?å»ºé€ é???     */
+     * ?ï¿½ï¿½?å»ºé€ ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Building|Management")
     static TArray<FBuildingQueueItem> GetConstructionQueue();
 
     /**
-     * ?²å?å»ºç?çµ±è?
+     * ?ï¿½ï¿½?å»ºï¿½?çµ±ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Building|Management")
     static FBuildingStatistics GetBuildingStatistics();
 
     /**
-     * æª¢æŸ¥?¾ç½®ä½ç½®?¯å¦?‰æ?
+     * æª¢æŸ¥?ï¿½ç½®ä½ç½®?ï¿½å¦?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Building|Placement")
-    static bool IsValidPlacementLocation(EMingBuildingType BuildingType, const FVector& Location);
+    static bool IsValidPlacementLocation(EMingBuildingType BuildingType, const FVector& Location};
 
     /**
-     * ?²å?å»ºç?ç¶²æ ¼å¤§å?
+     * ?ï¿½ï¿½?å»ºï¿½?ç¶²æ ¼å¤§ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Building|Placement")
-    static FVector GetBuildingGridSize(EMingBuildingType BuildingType);
+    static FVector GetBuildingGridSize(EMingBuildingType BuildingType};
 
     /**
-     * é¡¯ç¤ºå»ºç??¾ç½®?è¦½
+     * é¡¯ç¤ºå»ºï¿½Xï¿½ç½®?ï¿½è¦½
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Placement")
-    static void ShowPlacementPreview(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
+    static void ShowPlacementPreview(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation};
 
     /**
-     * ?±è?å»ºç??¾ç½®?è¦½
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ç½®?ï¿½è¦½
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Placement")
     static void HidePlacementPreview();
 
     /**
-     * ?†é?å·¥äºº?°å»ºç¯?     */
+     * ?ï¿½ï¿½?å·¥äºº?ï¿½å»ºï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Building|Workers")
-    static bool AssignWorker(const FString& BuildingID);
+    static bool AssignWorker(const FString& BuildingID};
 
     /**
-     * å¾å»ºç¯‰ç§»?¤å·¥äº?     */
+     * å¾å»ºç¯‰ç§»?ï¿½å·¥ï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Building|Workers")
-    static bool RemoveWorker(const FString& BuildingID);
+    static bool RemoveWorker(const FString& BuildingID};
 
     /**
-     * ?²å??¯ç”¨å·¥äºº?¸é?
+     * ?ï¿½ï¿½Xï¿½ç”¨å·¥äºº?ï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Building|Workers")
     static int32 GetAvailableWorkers();
 
     /**
-     * ?‡ç?å»ºç?
+     * ?ï¿½ï¿½?å»ºï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Maintenance")
-    static bool UpgradeBuilding(const FString& BuildingID);
+    static bool UpgradeBuilding(const FString& BuildingID};
 
     /**
-     * ?§æ?å»ºç?
+     * ?ï¿½ï¿½?å»ºï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Maintenance")
-    static bool DestroyBuilding(const FString& BuildingID);
+    static bool DestroyBuilding(const FString& BuildingID};
 
     /**
-     * ä¿®å¾©å»ºç?
+     * ä¿®å¾©å»ºï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Maintenance")
-    static bool RepairBuilding(const FString& BuildingID, int32 RepairAmount);
+    static bool RepairBuilding(const FString& BuildingID, int32 RepairAmount};
 
     /**
-     * ?²å?å»ºç?å½±éŸ¿ç¯„å??§ç?å»ºç?
+     * ?ï¿½ï¿½?å»ºï¿½?å½±éŸ¿ç¯„ï¿½Xï¿½ï¿½?å»ºï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Query")
-    static TArray<AMingBuildingActor*> GetBuildingsInRadius(const FVector& Center, float Radius);
+    static TArray<AMingBuildingActor*> GetBuildingsInRadius(const FVector& Center, float Radius};
 
     /**
-     * ?²å?å»ºç?ä¾›æ???     */
+     * ?ï¿½ï¿½?å»ºï¿½?ä¾›ï¿½X     */
     UFUNCTION(BlueprintCallable, Category = "Building|Query")
-    static TArray<AMingBuildingActor*> GetSupplyChain(const FString& BuildingID);
+    static TArray<AMingBuildingActor*> GetSupplyChain(const FString& BuildingID};
 
     /**
-     * ?²å?å»ºç??æœ¬
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½æœ¬
      */
     UFUNCTION(BlueprintPure, Category = "Building|Costs")
-    static FMingBuildingCost GetBuildingCost(EMingBuildingType BuildingType);
+    static FMingBuildingCost GetBuildingCost(EMingBuildingType BuildingType};
 
     /**
-     * æª¢æŸ¥?¯å¦?¯ä»¥å»ºé€?     */
+     * æª¢æŸ¥?ï¿½å¦?ï¿½ä»¥å»ºï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Building|Costs")
-    static bool CanAffordBuilding(EMingBuildingType BuildingType);
+    static bool CanAffordBuilding(EMingBuildingType BuildingType};
 
     /**
-     * ?²å?å»ºç??è¿°
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½è¿°
      */
     UFUNCTION(BlueprintPure, Category = "Building|Info")
-    static FString GetBuildingDescription(EMingBuildingType BuildingType);
+    static FString GetBuildingDescription(EMingBuildingType BuildingType};
 
     /**
-     * ?²å?å»ºç?é¡å??ç¨±
+     * ?ï¿½ï¿½?å»ºï¿½?é¡ï¿½Xï¿½ç¨±
      */
     UFUNCTION(BlueprintPure, Category = "Building|Info")
-    static FString GetBuildingTypeName(EMingBuildingType BuildingType);
+    static FString GetBuildingTypeName(EMingBuildingType BuildingType};
 
     /**
-     * ?²å?å»ºç??€?‹å?ç¨?     */
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½?ï¿½ï¿½?ï¿½?     */
     UFUNCTION(BlueprintPure, Category = "Building|Info")
-    static FString GetBuildingStateName(EMingBuildingState BuildingState);
+    static FString GetBuildingStateName(EMingBuildingState BuildingState};
 
     /**
-     * ?¹é?å»ºé€ å»ºç¯?     */
+     * ?ï¿½ï¿½?å»ºé€ å»ºï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Building|Batch")
-    static TArray<FString> BatchConstructBuildings(const TArray<EMingBuildingType>& BuildingTypes, const TArray<FVector>& Locations, const TArray<FRotator>& Rotations);
+    static TArray<FString> BatchConstructBuildings(const TArray<EMingBuildingType>& BuildingTypes, const TArray<FVector>& Locations, const TArray<FRotator>& Rotations};
 
     /**
-     * ?¹é??‡ç?å»ºç?
+     * ?ï¿½ï¿½Xï¿½ï¿½?å»ºï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Batch")
-    static TArray<bool> BatchUpgradeBuildings(const TArray<FString>& BuildingIDs);
+    static TArray<bool> BatchUpgradeBuildings(const TArray<FString>& BuildingIDs};
 
     /**
-     * ?¹é?ä¿®å¾©å»ºç?
+     * ?ï¿½ï¿½?ä¿®å¾©å»ºï¿½?
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Batch")
-    static TArray<bool> BatchRepairBuildings(const TArray<FString>& BuildingIDs, int32 RepairAmount);
+    static TArray<bool> BatchRepairBuildings(const TArray<FString>& BuildingIDs, int32 RepairAmount};
 
     /**
-     * ?²å?ç³»çµ±?€??     */
+     * ?ï¿½ï¿½?ç³»çµ±?ï¿½X     */
     UFUNCTION(BlueprintPure, Category = "Building|System")
     static bool IsBuildingSystemInitialized();
 
     /**
-     * ?²å?å»ºç?ç³»çµ±?ˆæœ¬
+     * ?ï¿½ï¿½?å»ºï¿½?ç³»çµ±?ï¿½æœ¬
      */
     UFUNCTION(BlueprintPure, Category = "Building|System")
     static FString GetBuildingSystemVersion();
 
     /**
-     * ?ç½®å»ºç?ç³»çµ±
+     * ?ï¿½ç½®å»ºï¿½?ç³»çµ±
      */
     UFUNCTION(BlueprintCallable, Category = "Building|System")
     static void ResetBuildingSystem();
 
     /**
-     * ?²å?å»ºç??¾ç½®å»ºè­°
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ç½®å»ºè­°
      */
     UFUNCTION(BlueprintCallable, Category = "Building|AI")
-    static FVector GetOptimalPlacementLocation(EMingBuildingType BuildingType, const FVector& ReferencePoint, float SearchRadius);
+    static FVector GetOptimalPlacementLocation(EMingBuildingType BuildingType, const FVector& ReferencePoint, float SearchRadius};
 
     /**
-     * ?ªå?å»ºé€ å»ºç¯?     */
+     * ?ï¿½ï¿½?å»ºé€ å»ºï¿½?     */
     UFUNCTION(BlueprintCallable, Category = "Building|AI")
-    static FString AutoConstructBuilding(EMingBuildingType BuildingType, const FVector& ReferencePoint);
+    static FString AutoConstructBuilding(EMingBuildingType BuildingType, const FVector& ReferencePoint};
 
     /**
-     * ?²å?å»ºç??ˆç?
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Building|Analysis")
-    static float GetBuildingEfficiency(const FString& BuildingID);
+    static float GetBuildingEfficiency(const FString& BuildingID};
 
     /**
-     * ?²å??ºåœ°ç¸½é??ˆç?
+     * ?ï¿½ï¿½Xï¿½åœ°ç¸½ï¿½Xï¿½ï¿½?
      */
     UFUNCTION(BlueprintPure, Category = "Building|Analysis")
     static float GetBaseEfficiency();
 
     /**
-     * ?²å?å»ºç?å»ºè­°
+     * ?ï¿½ï¿½?å»ºï¿½?å»ºè­°
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Analysis")
     static TArray<EMingBuildingType> GetBuildingRecommendations();
 
     /**
-     * è¨­ç½®å»ºç?ç³»çµ±?ƒæ•¸
+     * è¨­ç½®å»ºï¿½?ç³»çµ±?ï¿½æ•¸
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Configuration")
-    static void SetBuildingSystemParameters(int32 TotalWorkers, int32 MaxConcurrentConstruction);
+    static void SetBuildingSystemParameters(int32 TotalWorkers, int32 MaxConcurrentConstruction};
 
     /**
-     * ?²å?å»ºç?ç³»çµ±?ƒæ•¸
+     * ?ï¿½ï¿½?å»ºï¿½?ç³»çµ±?ï¿½æ•¸
      */
     UFUNCTION(BlueprintPure, Category = "Building|Configuration")
-    static void GetBuildingSystemParameters(int32& TotalWorkers, int32& MaxConcurrentConstruction);
+    static void GetBuildingSystemParameters(int32& TotalWorkers, int32& MaxConcurrentConstruction};
 };
+

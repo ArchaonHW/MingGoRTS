@@ -1,108 +1,108 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "MingBuildingResourceSystem.generated.h"
 
 /**
- * è³‡æ?é¡å??šè? | Resource Type Enum
- * å®šç¾©æ°‘å??‚æ??„ç¨®è³‡æ?é¡å? | Define various resource types from Republican era
+ * è³‡ï¿½?é¡ï¿½Xï¿½ï¿½? | Resource Type Enum
+ * å®šç¾©æ°‘ï¿½Xï¿½ï¿½Xï¿½ç¨®è³‡ï¿½?é¡ï¿½? | Define various resource types from Republican era
  */
 UENUM(BlueprintType)
 enum class EMingResourceType : uint8
 {
-    // ?ºç?è³‡æ? | Basic Resources
-    Wood              UMETA(DisplayName = "?¨æ? | Wood"),
-    Stone             UMETA(DisplayName = "?³é ­ | Stone"),
-    Metal             UMETA(DisplayName = "?‘å±¬ | Metal"),
+    // ?ï¿½ï¿½?è³‡ï¿½? | Basic Resources
+    Wood              UMETA(DisplayName = "?ï¿½ï¿½? | Wood"),
+    Stone             UMETA(DisplayName = "?ï¿½é ­ | Stone"),
+    Metal             UMETA(DisplayName = "?ï¿½å±¬ | Metal"),
     Food              UMETA(DisplayName = "é£Ÿç‰© | Food"),
-    Water             UMETA(DisplayName = "æ°?| Water"),
+    Water             UMETA(DisplayName = "ï¿½?| Water"),
     
-    // ç¤¦ç”¢è³‡æ? | Mineral Resources
-    Coal              UMETA(DisplayName = "?¤ç‚­ | Coal"),
-    Iron              UMETA(DisplayName = "?µç¤¦ | Iron"),
-    Copper            UMETA(DisplayName = "?…ç¤¦ | Copper"),
-    Gold              UMETA(DisplayName = "é»ƒé? | Gold"),
-    Silver            UMETA(DisplayName = "?½é? | Silver"),
+    // ç¤¦ç”¢è³‡ï¿½? | Mineral Resources
+    Coal              UMETA(DisplayName = "?ï¿½ç‚­ | Coal"),
+    Iron              UMETA(DisplayName = "?ï¿½ç¤¦ | Iron"),
+    Copper            UMETA(DisplayName = "?ï¿½ç¤¦ | Copper"),
+    Gold              UMETA(DisplayName = "é»ƒï¿½? | Gold"),
+    Silver            UMETA(DisplayName = "?ï¿½ï¿½? | Silver"),
     
-    // è¾²ç”¢??| Agricultural Products
+    // è¾²ç”¢X| Agricultural Products
     Cotton            UMETA(DisplayName = "æ£‰èŠ± | Cotton"),
     Silk              UMETA(DisplayName = "çµ²ç¶¢ | Silk"),
-    Tea               UMETA(DisplayName = "?¶è? | Tea"),
+    Tea               UMETA(DisplayName = "?ï¿½ï¿½? | Tea"),
     
-    // ?¹æ?è³‡æ? | Special Resources
-    Opium             UMETA(DisplayName = "é´‰ç? | Opium"),
-    Medicine          UMETA(DisplayName = "?¥å? | Medicine"),
+    // ?ï¿½ï¿½?è³‡ï¿½? | Special Resources
+    Opium             UMETA(DisplayName = "é´‰ï¿½? | Opium"),
+    Medicine          UMETA(DisplayName = "?ï¿½ï¿½? | Medicine"),
     
-    // è»ä?è³‡æ? | Military Resources
+    // è»ï¿½?è³‡ï¿½? | Military Resources
     Weapons           UMETA(DisplayName = "æ­¦å™¨ | Weapons"),
     Ammunition        UMETA(DisplayName = "å½ˆè—¥ | Ammunition"),
-    Uniforms          UMETA(DisplayName = "è»æ? | Uniforms"),
+    Uniforms          UMETA(DisplayName = "è»ï¿½? | Uniforms"),
     Horses            UMETA(DisplayName = "é¦¬åŒ¹ | Horses"),
-    Vehicles          UMETA(DisplayName = "è»Šè? | Vehicles"),
+    Vehicles          UMETA(DisplayName = "è»Šï¿½? | Vehicles"),
     
-    // å·¥æ¥­è³‡æ? | Industrial Resources
-    Fuel              UMETA(DisplayName = "?ƒæ? | Fuel"),
-    Rubber            UMETA(DisplayName = "æ©¡è? | Rubber"),
+    // å·¥æ¥­è³‡ï¿½? | Industrial Resources
+    Fuel              UMETA(DisplayName = "?ï¿½ï¿½? | Fuel"),
+    Rubber            UMETA(DisplayName = "æ©¡ï¿½? | Rubber"),
     Paper             UMETA(DisplayName = "ç´™å¼µ | Paper"),
     Ink               UMETA(DisplayName = "å¢¨æ°´ | Ink"),
-    Books             UMETA(DisplayName = "?¸ç? | Books"),
+    Books             UMETA(DisplayName = "?ï¿½ï¿½? | Books"),
     Tools             UMETA(DisplayName = "å·¥å…· | Tools"),
     Machinery         UMETA(DisplayName = "æ©Ÿæ¢° | Machinery"),
     
-    // ?šè?è¨­å? | Communication Equipment
-    Electronics       UMETA(DisplayName = "?»å?è¨­å? | Electronics"),
-    Radio             UMETA(DisplayName = "?¡ç???| Radio"),
-    Telephone         UMETA(DisplayName = "?»è©± | Telephone"),
-    Telegraph         UMETA(DisplayName = "?»å ±æ©?| Telegraph")
+    // ?ï¿½ï¿½?è¨­ï¿½? | Communication Equipment
+    Electronics       UMETA(DisplayName = "?ï¿½ï¿½?è¨­ï¿½? | Electronics"),
+    Radio             UMETA(DisplayName = "?ï¿½ï¿½X| Radio"),
+    Telephone         UMETA(DisplayName = "?ï¿½è©± | Telephone"),
+    Telegraph         UMETA(DisplayName = "?ï¿½å ±ï¿½?| Telegraph")
 };
 
 /**
- * è³‡æ?ç¨€?‰åº¦ | Resource Rarity
+ * è³‡ï¿½?ç¨€?ï¿½åº¦ | Resource Rarity
  */
 UENUM(BlueprintType)
 enum class EMingResourceRarity : uint8
 {
-    Common            UMETA(DisplayName = "?®é€?| Common"),
-    Uncommon          UMETA(DisplayName = "ç¨€??| Uncommon"),
-    Rare              UMETA(DisplayName = "?ç? | Rare"),
-    Epic              UMETA(DisplayName = "?²è©© | Epic"),
-    Legendary         UMETA(DisplayName = "?³èªª | Legendary")
+    Common            UMETA(DisplayName = "?ï¿½ï¿½?| Common"),
+    Uncommon          UMETA(DisplayName = "ç¨€X| Uncommon"),
+    Rare              UMETA(DisplayName = "?ï¿½ï¿½? | Rare"),
+    Epic              UMETA(DisplayName = "?ï¿½è©© | Epic"),
+    Legendary         UMETA(DisplayName = "?ï¿½èªª | Legendary")
 };
 
 /**
- * è³‡æ??è³ª | Resource Quality
+ * è³‡ï¿½Xï¿½è³ª | Resource Quality
  */
 UENUM(BlueprintType)
 enum class EMingResourceQuality : uint8
 {
-    Poor              UMETA(DisplayName = "??³ª | Poor"),
-    Normal            UMETA(DisplayName = "?®é€?| Normal"),
-    Good              UMETA(DisplayName = "?ªè‰¯ | Good"),
-    Excellent         UMETA(DisplayName = "?“è? | Excellent"),
-    Perfect           UMETA(DisplayName = "å®Œç? | Perfect")
+    Poor              UMETA(DisplayName = "Xï¿½ï¿½ | Poor"),
+    Normal            UMETA(DisplayName = "?ï¿½ï¿½?| Normal"),
+    Good              UMETA(DisplayName = "?ï¿½è‰¯ | Good"),
+    Excellent         UMETA(DisplayName = "?ï¿½ï¿½? | Excellent"),
+    Perfect           UMETA(DisplayName = "å®Œï¿½? | Perfect")
 };
 
 /**
- * ?¶é??¹æ? | Collection Method
+ * ?ï¿½ï¿½Xï¿½ï¿½? | Collection Method
  */
 UENUM(BlueprintType)
 enum class EMingCollectionMethod : uint8
 {
-    Manual            UMETA(DisplayName = "?‹å??¶é? | Manual"),
-    Automatic         UMETA(DisplayName = "?ªå??¶é? | Automatic"),
-    Production        UMETA(DisplayName = "?Ÿç”¢è£½é€?| Production"),
-    Trade             UMETA(DisplayName = "è²¿æ??²å? | Trade"),
-    Plunder           UMETA(DisplayName = "? å¥ª?²å? | Plunder"),
-    Harvest           UMETA(DisplayName = "?¡é??¶ç©« | Harvest"),
-    Mining            UMETA(DisplayName = "?‹æ¡?–æ? | Mining"),
-    Fishing           UMETA(DisplayName = "?•é? | Fishing"),
-    Hunting           UMETA(DisplayName = "?©çµ | Hunting"),
-    Foraging          UMETA(DisplayName = "?¡é?è¦“é? | Foraging")
+    Manual            UMETA(DisplayName = "?ï¿½ï¿½Xï¿½ï¿½? | Manual"),
+    Automatic         UMETA(DisplayName = "?ï¿½ï¿½Xï¿½ï¿½? | Automatic"),
+    Production        UMETA(DisplayName = "?ï¿½ç”¢è£½ï¿½?| Production"),
+    Trade             UMETA(DisplayName = "è²¿ï¿½Xï¿½ï¿½? | Trade"),
+    Plunder           UMETA(DisplayName = "?ï¿½å¥ª?ï¿½ï¿½? | Plunder"),
+    Harvest           UMETA(DisplayName = "?ï¿½ï¿½Xï¿½ç©« | Harvest"),
+    Mining            UMETA(DisplayName = "?ï¿½æ¡?ï¿½ï¿½? | Mining"),
+    Fishing           UMETA(DisplayName = "?ï¿½ï¿½? | Fishing"),
+    Hunting           UMETA(DisplayName = "?ï¿½çµ | Hunting"),
+    Foraging          UMETA(DisplayName = "?ï¿½ï¿½?è¦“ï¿½? | Foraging")
 };
 
 /**
- * è³‡æ??¸æ?çµæ? | Resource Data Structure
+ * è³‡ï¿½Xï¿½ï¿½?çµï¿½? | Resource Data Structure
  */
 USTRUCT(BlueprintType)
 struct FMingResourceData
@@ -151,7 +151,7 @@ struct FMingResourceData
         MaxQuantity = 100.0f;
         UnitWeight = 1.0f;
         UnitValue = 1.0f;
-        Description = TEXT("");
+        Description = TEXT(""};
         bIsStackable = true;
         bIsPerishable = false;
         PerishRate = 0.0f;
@@ -159,7 +159,7 @@ struct FMingResourceData
 };
 
 /**
- * è³‡æ??¶é??¸æ? | Resource Collection Data
+ * è³‡ï¿½Xï¿½ï¿½Xï¿½ï¿½? | Resource Collection Data
  */
 USTRUCT(BlueprintType)
 struct FMingResourceCollection
@@ -201,10 +201,10 @@ struct FMingResourceCollection
 
     FMingResourceCollection()
     {
-        CollectionID = TEXT("");
+        CollectionID = TEXT(""};
         ResourceType = EMingResourceType::Wood;
         CollectionMethod = EMingCollectionMethod::Manual;
-        LocationID = TEXT("");
+        LocationID = TEXT(""};
         CollectionRate = 1.0f;
         Efficiency = 1.0f;
         BaseYield = 10.0f;
@@ -216,7 +216,7 @@ struct FMingResourceCollection
 };
 
 /**
- * è³‡æ?å­˜å„²?¸æ? | Resource Storage Data
+ * è³‡ï¿½?å­˜å„²?ï¿½ï¿½? | Resource Storage Data
  */
 USTRUCT(BlueprintType)
 struct FMingResourceStorage
@@ -255,9 +255,9 @@ struct FMingResourceStorage
 
     FMingResourceStorage()
     {
-        StorageID = TEXT("");
-        StorageName = TEXT("");
-        LocationID = TEXT("");
+        StorageID = TEXT(""};
+        StorageName = TEXT(""};
+        LocationID = TEXT(""};
         MaxCapacity = 1000.0f;
         CurrentCapacity = 0.0f;
         UsedCapacity = 0.0f;
@@ -268,7 +268,7 @@ struct FMingResourceStorage
 };
 
 /**
- * è³‡æ?è½‰æ??æ–¹ | Resource Conversion Recipe
+ * è³‡ï¿½?è½‰ï¿½Xï¿½æ–¹ | Resource Conversion Recipe
  */
 USTRUCT(BlueprintType)
 struct FMingResourceConversion
@@ -298,8 +298,8 @@ struct FMingResourceConversion
 
     FMingResourceConversion()
     {
-        ConversionID = TEXT("");
-        ConversionName = TEXT("");
+        ConversionID = TEXT(""};
+        ConversionName = TEXT(""};
         ConversionTime = 1.0f;
         Efficiency = 1.0f;
         bIsAvailable = true;
@@ -307,27 +307,27 @@ struct FMingResourceConversion
 };
 
 /**
- * è³‡æ?ç³»çµ±äº‹ä»¶å§”æ´¾ | Resource System Event Delegates
+ * è³‡ï¿½?ç³»çµ±äº‹ä»¶å§”æ´¾ | Resource System Event Delegates
  */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMingResourceCollected, EMingResourceType, ResourceType, float, Quantity);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnMingResourceStored, const FString&, StorageID, EMingResourceType, ResourceType, float, Quantity);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMingResourceConverted, const FString&, ConversionID, bool, bSuccess);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMingStorageFull, const FString&, StorageID, float, Capacity);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMingResourceCollected, EMingResourceType, ResourceType, float, Quantity};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnMingResourceStored, const FString&, StorageID, EMingResourceType, ResourceType, float, Quantity};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMingResourceConverted, const FString&, ConversionID, bool, bSuccess};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnMingStorageFull, const FString&, StorageID, float, Capacity};
 
 /**
- * è³‡æ?ç®¡ç?ç³»çµ± | Resource Management System
+ * è³‡ï¿½?ç®¡ï¿½?ç³»çµ± | Resource Management System
  * 
- * ç®¡ç? MingGoRTS ?Šæˆ²ä¸­ç??€?‰è?æºæ”¶?†ã€å??²å?è½‰æ?ï¼? * - 40ç¨®æ??‹æ??Ÿè?æºé??? * - å¤šç¨®?¶é??¹å?ï¼ˆæ¡?†ã€ç??¢ã€è²¿?“ã€æ?å¥ªï?
- * - è³‡æ?å­˜å„²?Œç®¡?? * - è³‡æ?è½‰æ??Œå??? */
+ * ç®¡ï¿½? MingGoRTS ?ï¿½æˆ²ä¸­ï¿½Xï¿½?ï¿½ï¿½?æºæ”¶?ï¿½ã€ï¿½Xï¿½ï¿½?è½‰ï¿½?ï¿½? * - 40ç¨®ï¿½Xï¿½ï¿½Xï¿½ï¿½?æºï¿½X * - å¤šç¨®?ï¿½ï¿½Xï¿½ï¿½?ï¼ˆæ¡?ï¿½ã€ï¿½Xï¿½ã€è²¿?ï¿½ã€ï¿½?å¥ªï¿½?
+ * - è³‡ï¿½?å­˜å„²?ï¿½ç®¡X * - è³‡ï¿½?è½‰ï¿½Xï¿½ï¿½X */
 UCLASS(ClassGroup = (Gameplay), Blueprintable)
 class MINGBUILDING_API UMingBuildingResourceSystem : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UMingBuildingResourceSystem();
+    UMingBuildingResourceSystem(};
 
-    /** è³‡æ?ç³»çµ±äº‹ä»¶ | Resource System Events */
+    /** è³‡ï¿½?ç³»çµ±äº‹ä»¶ | Resource System Events */
     UPROPERTY(BlueprintAssignable, Category = "Resource System")
     FOnMingResourceCollected OnResourceCollected;
 
@@ -340,150 +340,151 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Resource System")
     FOnMingStorageFull OnStorageFull;
 
-    /** ?å??–è?æºç³»çµ?| Initialize Resource System */
+    /** ?ï¿½ï¿½Xï¿½ï¿½?æºç³»ï¿½?| Initialize Resource System */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    void InitializeResourceSystem();
+    void InitializeResourceSystem(};
 
-    /** ?²å??€?‰è?æºé???| Get All Resource Types */
+    /** ?ï¿½ï¿½Xï¿½?ï¿½ï¿½?æºï¿½X| Get All Resource Types */
     UFUNCTION(BlueprintPure, Category = "Resource System")
     TArray<EMingResourceType> GetAllResourceTypes() const;
 
-    /** ?²å?è³‡æ?ä¿¡æ¯ | Get Resource Info */
+    /** ?ï¿½ï¿½?è³‡ï¿½?ä¿¡æ¯ | Get Resource Info */
     UFUNCTION(BlueprintPure, Category = "Resource System")
     FMingResourceData GetResourceInfo(EMingResourceType ResourceType) const;
 
-    /** ?µå»ºè³‡æ??¶é? | Create Resource Collection */
+    /** ?ï¿½å»ºè³‡ï¿½Xï¿½ï¿½? | Create Resource Collection */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    FString CreateResourceCollection(EMingResourceType ResourceType, EMingCollectionMethod Method, const FString& LocationID);
+    FString CreateResourceCollection(EMingResourceType ResourceType, EMingCollectionMethod Method, const FString& LocationID};
 
-    /** ?‹å?è³‡æ??¶é? | Start Resource Collection */
+    /** ?ï¿½ï¿½?è³‡ï¿½Xï¿½ï¿½? | Start Resource Collection */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool StartResourceCollection(const FString& CollectionID, const FString& CollectorID);
+    bool StartResourceCollection(const FString& CollectionID, const FString& CollectorID};
 
-    /** ?œæ­¢è³‡æ??¶é? | Stop Resource Collection */
+    /** ?ï¿½æ­¢è³‡ï¿½Xï¿½ï¿½? | Stop Resource Collection */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool StopResourceCollection(const FString& CollectionID);
+    bool StopResourceCollection(const FString& CollectionID};
 
-    /** ?¶é?è³‡æ? | Collect Resource */
+    /** ?ï¿½ï¿½?è³‡ï¿½? | Collect Resource */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    float CollectResource(const FString& CollectionID);
+    float CollectResource(const FString& CollectionID};
 
-    /** ?µå»ºè³‡æ?å­˜å„² | Create Resource Storage */
+    /** ?ï¿½å»ºè³‡ï¿½?å­˜å„² | Create Resource Storage */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    FString CreateResourceStorage(const FString& StorageName, const FString& LocationID, float MaxCapacity);
+    FString CreateResourceStorage(const FString& StorageName, const FString& LocationID, float MaxCapacity};
 
-    /** å­˜å„²è³‡æ? | Store Resource */
+    /** å­˜å„²è³‡ï¿½? | Store Resource */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool StoreResource(const FString& StorageID, EMingResourceType ResourceType, float Quantity);
+    bool StoreResource(const FString& StorageID, EMingResourceType ResourceType, float Quantity};
 
-    /** ?å?è³‡æ? | Retrieve Resource */
+    /** ?ï¿½ï¿½?è³‡ï¿½? | Retrieve Resource */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    float RetrieveResource(const FString& StorageID, EMingResourceType ResourceType, float Quantity);
+    float RetrieveResource(const FString& StorageID, EMingResourceType ResourceType, float Quantity};
 
-    /** ?²å?å­˜å„²è³‡æ? | Get Stored Resource */
+    /** ?ï¿½ï¿½?å­˜å„²è³‡ï¿½? | Get Stored Resource */
     UFUNCTION(BlueprintPure, Category = "Resource System")
     FMingResourceData GetStoredResource(const FString& StorageID, EMingResourceType ResourceType) const;
 
-    /** ?²å?å­˜å„²å®¹é? | Get Storage Capacity */
+    /** ?ï¿½ï¿½?å­˜å„²å®¹ï¿½? | Get Storage Capacity */
     UFUNCTION(BlueprintPure, Category = "Resource System")
     float GetStorageCapacity(const FString& StorageID) const;
 
-    /** è½‰æ?è³‡æ? | Convert Resources */
+    /** è½‰ï¿½?è³‡ï¿½? | Convert Resources */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool ConvertResources(const FString& ConversionID);
+    bool ConvertResources(const FString& ConversionID};
 
-    /** ?µå»ºè³‡æ?è½‰æ? | Create Resource Conversion */
+    /** ?ï¿½å»ºè³‡ï¿½?è½‰ï¿½? | Create Resource Conversion */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    FString CreateResourceConversion(const FString& ConversionName, const TMap<EMingResourceType, float>& Input, const TMap<EMingResourceType, float>& Output);
+    FString CreateResourceConversion(const FString& ConversionName, const TMap<EMingResourceType, float>& Input, const TMap<EMingResourceType, float>& Output};
 
-    /** è¨ˆç??¶é??ˆç? | Calculate Collection Efficiency */
+    /** è¨ˆï¿½Xï¿½ï¿½Xï¿½ï¿½? | Calculate Collection Efficiency */
     UFUNCTION(BlueprintPure, Category = "Resource System")
     float CalculateCollectionEfficiency(const FString& CollectionID) const;
 
-    /** ?²å??¶é??€??| Get Collection Status */
+    /** ?ï¿½ï¿½Xï¿½ï¿½Xï¿½X| Get Collection Status */
     UFUNCTION(BlueprintPure, Category = "Resource System")
     FMingResourceCollection GetCollectionStatus(const FString& CollectionID) const;
 
-    /** ?²å??€?‰æ´»?•æ”¶??| Get All Active Collections */
+    /** ?ï¿½ï¿½Xï¿½?ï¿½æ´»?ï¿½æ”¶X| Get All Active Collections */
     UFUNCTION(BlueprintPure, Category = "Resource System")
     TArray<FMingResourceCollection> GetActiveCollections() const;
 
-    /** è³‡æ??‹è¼¸ | Transport Resource */
+    /** è³‡ï¿½Xï¿½è¼¸ | Transport Resource */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool TransportResource(const FString& FromStorageID, const FString& ToStorageID, EMingResourceType ResourceType, float Quantity);
+    bool TransportResource(const FString& FromStorageID, const FString& ToStorageID, EMingResourceType ResourceType, float Quantity};
 
-    /** è³‡æ?äº¤æ? | Trade Resource */
+    /** è³‡ï¿½?äº¤ï¿½? | Trade Resource */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    bool TradeResource(const FString& StorageID, EMingResourceType GiveResource, float GiveQuantity, EMingResourceType GetResource, float GetQuantity);
+    bool TradeResource(const FString& StorageID, EMingResourceType GiveResource, float GiveQuantity, EMingResourceType GetResource, float GetQuantity};
 
-    /** æª¢æŸ¥è³‡æ??…è¶³??| Check Resource Availability */
+    /** æª¢æŸ¥è³‡ï¿½Xï¿½è¶³X| Check Resource Availability */
     UFUNCTION(BlueprintPure, Category = "Resource System")
     bool CheckResourceAvailability(const FString& StorageID, EMingResourceType ResourceType, float RequiredQuantity) const;
 
-    /** ?²å?è³‡æ?ç¸½é? | Get Total Resource Quantity */
+    /** ?ï¿½ï¿½?è³‡ï¿½?ç¸½ï¿½? | Get Total Resource Quantity */
     UFUNCTION(BlueprintPure, Category = "Resource System")
     float GetTotalResourceQuantity(EMingResourceType ResourceType) const;
 
-    /** è³‡æ?è¡°æ??•ç? | Process Resource Decay */
+    /** è³‡ï¿½?è¡°ï¿½Xï¿½ï¿½? | Process Resource Decay */
     UFUNCTION(BlueprintCallable, Category = "Resource System")
-    void ProcessResourceDecay(float DeltaTime);
+    void ProcessResourceDecay(float DeltaTime};
 
 protected:
-    /** è³‡æ?ä¿¡æ¯? å? | Resource Info Map */
+    /** è³‡ï¿½?ä¿¡æ¯?ï¿½ï¿½? | Resource Info Map */
     UPROPERTY()
     TMap<EMingResourceType, FMingResourceData> ResourceInfoMap;
 
-    /** è³‡æ??¶é?? å? | Resource Collection Map */
+    /** è³‡ï¿½Xï¿½ï¿½Xï¿½ï¿½? | Resource Collection Map */
     UPROPERTY()
     TMap<FString, FMingResourceCollection> ResourceCollections;
 
-    /** è³‡æ?å­˜å„²? å? | Resource Storage Map */
+    /** è³‡ï¿½?å­˜å„²?ï¿½ï¿½? | Resource Storage Map */
     UPROPERTY()
     TMap<FString, FMingResourceStorage> ResourceStorages;
 
-    /** è³‡æ?è½‰æ?? å? | Resource Conversion Map */
+    /** è³‡ï¿½?è½‰ï¿½Xï¿½ï¿½? | Resource Conversion Map */
     UPROPERTY()
     TMap<FString, FMingResourceConversion> ResourceConversions;
 
-    /** ?¯å¦å·²å?å§‹å? | Is Initialized */
+    /** ?ï¿½å¦å·²ï¿½?å§‹ï¿½? | Is Initialized */
     bool bIsInitialized;
 
-    /** ?å??–è?æºä¿¡??| Initialize Resource Info */
-    void InitializeResourceInfo();
+    /** ?ï¿½ï¿½Xï¿½ï¿½?æºä¿¡X| Initialize Resource Info */
+    void InitializeResourceInfo(};
 
-    /** ?´æ–°?¶é??¢é? | Update Collection Yield */
-    void UpdateCollectionYield(const FString& CollectionID);
+    /** ?ï¿½æ–°?ï¿½ï¿½Xï¿½ï¿½? | Update Collection Yield */
+    void UpdateCollectionYield(const FString& CollectionID};
 
-    /** æª¢æŸ¥?¶é?æ¢ä»¶ | Check Collection Conditions */
+    /** æª¢æŸ¥?ï¿½ï¿½?æ¢ä»¶ | Check Collection Conditions */
     bool CheckCollectionConditions(const FString& CollectionID) const;
 
-    /** ?•ç??¶é?å®Œæ? | Process Collection Complete */
-    void ProcessCollectionComplete(const FString& CollectionID);
+    /** ?ï¿½ï¿½Xï¿½ï¿½?å®Œï¿½? | Process Collection Complete */
+    void ProcessCollectionComplete(const FString& CollectionID};
 
-    /** ?´æ–°å­˜å„²å®¹é? | Update Storage Capacity */
-    void UpdateStorageCapacity(const FString& StorageID);
+    /** ?ï¿½æ–°å­˜å„²å®¹ï¿½? | Update Storage Capacity */
+    void UpdateStorageCapacity(const FString& StorageID};
 
-    /** æª¢æŸ¥å­˜å„²?åˆ¶ | Check Storage Limits */
+    /** æª¢æŸ¥å­˜å„²?ï¿½åˆ¶ | Check Storage Limits */
     bool CheckStorageLimits(const FString& StorageID, EMingResourceType ResourceType, float Quantity) const;
 
-    /** ?•ç?å­˜å„²æ»¿ä? | Handle Storage Full */
-    void HandleStorageFull(const FString& StorageID);
+    /** ?ï¿½ï¿½?å­˜å„²æ»¿ï¿½? | Handle Storage Full */
+    void HandleStorageFull(const FString& StorageID};
 
-    /** æª¢æŸ¥è½‰æ?æ¢ä»¶ | Check Conversion Conditions */
+    /** æª¢æŸ¥è½‰ï¿½?æ¢ä»¶ | Check Conversion Conditions */
     bool CheckConversionConditions(const FString& ConversionID) const;
 
-    /** ?•ç?è½‰æ?å®Œæ? | Process Conversion Complete */
-    void ProcessConversionComplete(const FString& ConversionID);
+    /** ?ï¿½ï¿½?è½‰ï¿½?å®Œï¿½? | Process Conversion Complete */
+    void ProcessConversionComplete(const FString& ConversionID};
 
-    /** ?Ÿæ??¶é?ID | Generate Collection ID */
+    /** ?ï¿½ï¿½Xï¿½ï¿½?ID | Generate Collection ID */
     FString GenerateCollectionID(EMingResourceType ResourceType) const;
 
-    /** ?Ÿæ?å­˜å„²ID | Generate Storage ID */
+    /** ?ï¿½ï¿½?å­˜å„²ID | Generate Storage ID */
     FString GenerateStorageID(const FString& StorageName) const;
 
-    /** ?Ÿæ?è½‰æ?ID | Generate Conversion ID */
+    /** ?ï¿½ï¿½?è½‰ï¿½?ID | Generate Conversion ID */
     FString GenerateConversionID(const FString& ConversionName) const;
 
-    /** ?²å?è³‡æ?é¡å??ç¨± | Get Resource Type Name */
+    /** ?ï¿½ï¿½?è³‡ï¿½?é¡ï¿½Xï¿½ç¨± | Get Resource Type Name */
     FString GetResourceTypeName(EMingResourceType ResourceType) const;
 };
+

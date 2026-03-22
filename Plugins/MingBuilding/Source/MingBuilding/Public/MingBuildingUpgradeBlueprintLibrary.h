@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -7,8 +7,8 @@
 #include "MingBuildingUpgradeBlueprintLibrary.generated.h"
 
 /**
- * å»ºç??‡ç? Blueprint ?½æ•¸åº?| Building Upgrade Blueprint Library
- * ??Blueprint ?ä?å»ºç??‡ç??¸é??„å??½æ¥?? */
+ * å»ºï¿½Xï¿½ï¿½? Blueprint ?ï¿½æ•¸ï¿½?| Building Upgrade Blueprint Library
+ * XBlueprint ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½æ¥X */
 UCLASS(ClassGroup = (MingBuilding), Blueprintable)
 class MINGBUILDING_API UMingBuildingUpgradeBlueprintLibrary : public UBlueprintFunctionLibrary
 {
@@ -16,119 +16,120 @@ class MINGBUILDING_API UMingBuildingUpgradeBlueprintLibrary : public UBlueprintF
 
 public:
     /**
-     * ?²å?å»ºç??¶å??‡ç?ç­‰ç? | Get Building Current Upgrade Level
-     * @param Building ?®æ?å»ºç? | Target building
-     * @return ?¶å??‡ç?ç­‰ç? | Current upgrade level
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½Xï¿½ï¿½?ç­‰ï¿½? | Get Building Current Upgrade Level
+     * @param Building ?ï¿½ï¿½?å»ºï¿½? | Target building
+     * @return ?ï¿½ï¿½Xï¿½ï¿½?ç­‰ï¿½? | Current upgrade level
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
     static int32 GetBuildingUpgradeLevel(AMingBuildingActor* Building);
 
     /**
-     * æª¢æŸ¥å»ºç??¯å¦æ­?œ¨?‡ç? | Check if Building is Upgrading
-     * @param Building ?®æ?å»ºç? | Target building
-     * @return ?¯å¦æ­?œ¨?‡ç? | Is upgrading
+     * æª¢æŸ¥å»ºï¿½Xï¿½å¦ï¿½?ï¿½ï¿½?ï¿½ï¿½? | Check if Building is Upgrading
+     * @param Building ?ï¿½ï¿½?å»ºï¿½? | Target building
+     * @return ?ï¿½å¦ï¿½?ï¿½ï¿½?ï¿½ï¿½? | Is upgrading
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
     static bool IsBuildingUpgrading(AMingBuildingActor* Building);
 
     /**
-     * ?²å?å»ºç??‡ç??²åº¦ | Get Building Upgrade Progress
-     * @param Building ?®æ?å»ºç? | Target building
-     * @return ?‡ç??²åº¦ (0-1) | Upgrade progress
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½Xï¿½åº¦ | Get Building Upgrade Progress
+     * @param Building ?ï¿½ï¿½?å»ºï¿½? | Target building
+     * @return ?ï¿½ï¿½Xï¿½åº¦ (0-1) | Upgrade progress
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
     static float GetBuildingUpgradeProgress(AMingBuildingActor* Building);
 
     /**
-     * ?‹å?å»ºç??‡ç? | Start Building Upgrade
-     * @param Building ?®æ?å»ºç? | Target building
-     * @param UpgradeID ?‡ç?ID | Upgrade ID
-     * @return ?¯å¦?å??‹å? | Success
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½? | Start Building Upgrade
+     * @param Building ?ï¿½ï¿½?å»ºï¿½? | Target building
+     * @param UpgradeID ?ï¿½ï¿½?ID | Upgrade ID
+     * @return ?ï¿½å¦?ï¿½ï¿½Xï¿½ï¿½? | Success
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
     static bool StartBuildingUpgrade(AMingBuildingActor* Building, const FString& UpgradeID);
 
     /**
-     * ?–æ?å»ºç??‡ç? | Cancel Building Upgrade
-     * @param Building ?®æ?å»ºç? | Target building
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½? | Cancel Building Upgrade
+     * @param Building ?ï¿½ï¿½?å»ºï¿½? | Target building
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
     static void CancelBuildingUpgrade(AMingBuildingActor* Building);
 
     /**
-     * ?²å?å»ºç??¯ç”¨?‡ç??—è¡¨ | Get Available Upgrades for Building
-     * @param BuildingType å»ºç?é¡å? | Building type
-     * @param TechTree ç§‘æ?æ¨¹ç³»çµ?| Tech tree system
-     * @return ?¯ç”¨?‡ç??—è¡¨ | Available upgrades
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ç”¨?ï¿½ï¿½Xï¿½è¡¨ | Get Available Upgrades for Building
+     * @param BuildingType å»ºï¿½?é¡ï¿½? | Building type
+     * @param TechTree ç§‘ï¿½?æ¨¹ç³»ï¿½?| Tech tree system
+     * @return ?ï¿½ç”¨?ï¿½ï¿½Xï¿½è¡¨ | Available upgrades
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade")
     static TArray<FMingBuildingUpgrade> GetAvailableUpgrades(EMingBuildingType BuildingType, UMingTechTree* TechTree);
 
     /**
-     * æª¢æŸ¥?¯å¦?¯ä»¥?‡ç?å»ºç? | Check if Can Upgrade Building
-     * @param Building ?®æ?å»ºç? | Target building
-     * @param UpgradeID ?‡ç?ID | Upgrade ID
-     * @param TechTree ç§‘æ?æ¨¹ç³»çµ?| Tech tree system
-     * @param AvailableResources ?¯ç”¨è³‡æ? | Available resources
-     * @return ?¯å¦?¯ä»¥?‡ç? | Can upgrade
+     * æª¢æŸ¥?ï¿½å¦?ï¿½ä»¥?ï¿½ï¿½?å»ºï¿½? | Check if Can Upgrade Building
+     * @param Building ?ï¿½ï¿½?å»ºï¿½? | Target building
+     * @param UpgradeID ?ï¿½ï¿½?ID | Upgrade ID
+     * @param TechTree ç§‘ï¿½?æ¨¹ç³»ï¿½?| Tech tree system
+     * @param AvailableResources ?ï¿½ç”¨è³‡ï¿½? | Available resources
+     * @return ?ï¿½å¦?ï¿½ä»¥?ï¿½ï¿½? | Can upgrade
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
     static bool CanUpgradeBuilding(
         AMingBuildingActor* Building, 
         const FString& UpgradeID, 
         UMingTechTree* TechTree,
-        const TMap<EMingResourceType, int32>& AvailableResources);
+        const TMap<EMingResourceType, int32>& AvailableResources};
 
     /**
-     * ?²å??‡ç??æœ¬ | Get Upgrade Cost
-     * @param UpgradeID ?‡ç?ID | Upgrade ID
-     * @param TechTree ç§‘æ?æ¨¹ç³»çµ?| Tech tree system
-     * @return è³‡æ??æœ¬ | Resource costs
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½æœ¬ | Get Upgrade Cost
+     * @param UpgradeID ?ï¿½ï¿½?ID | Upgrade ID
+     * @param TechTree ç§‘ï¿½?æ¨¹ç³»ï¿½?| Tech tree system
+     * @return è³‡ï¿½Xï¿½æœ¬ | Resource costs
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade")
-    static TArray<FMingResourceCost> GetUpgradeCost(const FString& UpgradeID, UMingTechTree* TechTree);
+    static TArray<FMingResourceCost> GetUpgradeCost(const FString& UpgradeID, UMingTechTree* TechTree};
 
     /**
-     * ?²å??‡ç??€?€?‚é? | Get Upgrade Time
-     * @param UpgradeID ?‡ç?ID | Upgrade ID
-     * @param TechTree ç§‘æ?æ¨¹ç³»çµ?| Tech tree system
-     * @return ?€?€?‚é?(ç§? | Time in seconds
+     * ?ï¿½ï¿½Xï¿½ï¿½Xï¿½?ï¿½?ï¿½ï¿½? | Get Upgrade Time
+     * @param UpgradeID ?ï¿½ï¿½?ID | Upgrade ID
+     * @param TechTree ç§‘ï¿½?æ¨¹ç³»ï¿½?| Tech tree system
+     * @return ?ï¿½?ï¿½?ï¿½ï¿½?(ï¿½? | Time in seconds
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade")
-    static float GetUpgradeTime(const FString& UpgradeID, UMingTechTree* TechTree);
+    static float GetUpgradeTime(const FString& UpgradeID, UMingTechTree* TechTree};
 
     /**
-     * ?‰ç”¨?‡ç??ˆæ??°å»ºç¯?| Apply Upgrade Effects to Building
-     * @param Building ?®æ?å»ºç? | Target building
-     * @param UpgradeData ?‡ç??¸æ? | Upgrade data
+     * ?ï¿½ç”¨?ï¿½ï¿½Xï¿½ï¿½Xï¿½å»ºï¿½?| Apply Upgrade Effects to Building
+     * @param Building ?ï¿½ï¿½?å»ºï¿½? | Target building
+     * @param UpgradeData ?ï¿½ï¿½Xï¿½ï¿½? | Upgrade data
      */
     UFUNCTION(BlueprintCallable, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
-    static void ApplyUpgradeToBuilding(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData);
+    static void ApplyUpgradeToBuilding(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData};
 
     /**
-     * ?²å?å»ºç??‡ç?å¾Œç??Ÿå‘½??| Get Building Health After Upgrade
-     * @param Building ?®æ?å»ºç? | Target building
-     * @param UpgradeData ?‡ç??¸æ? | Upgrade data
-     * @return ?‡ç?å¾Œç??½å€?| Health after upgrade
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½?å¾Œï¿½Xï¿½å‘½X| Get Building Health After Upgrade
+     * @param Building ?ï¿½ï¿½?å»ºï¿½? | Target building
+     * @param UpgradeData ?ï¿½ï¿½Xï¿½ï¿½? | Upgrade data
+     * @return ?ï¿½ï¿½?å¾Œï¿½Xï¿½ï¿½?| Health after upgrade
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
-    static int32 GetUpgradedHealth(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData);
+    static int32 GetUpgradedHealth(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData};
 
     /**
-     * ?²å?å»ºç??‡ç?å¾Œç??Ÿç”¢?ˆç? | Get Building Production After Upgrade
-     * @param Building ?®æ?å»ºç? | Target building
-     * @param UpgradeData ?‡ç??¸æ? | Upgrade data
-     * @return ?‡ç?å¾Œç??¢æ???| Production after upgrade
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½?å¾Œï¿½Xï¿½ç”¢?ï¿½ï¿½? | Get Building Production After Upgrade
+     * @param Building ?ï¿½ï¿½?å»ºï¿½? | Target building
+     * @param UpgradeData ?ï¿½ï¿½Xï¿½ï¿½? | Upgrade data
+     * @return ?ï¿½ï¿½?å¾Œï¿½Xï¿½ï¿½X| Production after upgrade
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
-    static float GetUpgradedProduction(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData);
+    static float GetUpgradedProduction(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData};
 
     /**
-     * ?²å?å»ºç??‡ç?å¾Œç??²ç¦¦??| Get Building Defense After Upgrade
-     * @param Building ?®æ?å»ºç? | Target building
-     * @param UpgradeData ?‡ç??¸æ? | Upgrade data
-     * @return ?‡ç?å¾Œé˜²ç¦¦å€?| Defense after upgrade
+     * ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½?å¾Œï¿½Xï¿½ç¦¦X| Get Building Defense After Upgrade
+     * @param Building ?ï¿½ï¿½?å»ºï¿½? | Target building
+     * @param UpgradeData ?ï¿½ï¿½Xï¿½ï¿½? | Upgrade data
+     * @return ?ï¿½ï¿½?å¾Œé˜²ç¦¦ï¿½?| Defense after upgrade
      */
     UFUNCTION(BlueprintPure, Category = "Building|Upgrade", meta = (DefaultToSelf = "Building"))
-    static float GetUpgradedDefense(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData);
+    static float GetUpgradedDefense(AMingBuildingActor* Building, const FMingBuildingUpgrade& UpgradeData};
 };
+

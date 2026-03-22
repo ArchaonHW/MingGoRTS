@@ -11,7 +11,7 @@ class MINGBUILDING_API UMingResourceProducer : public UActorComponent
     GENERATED_BODY()
 
 public:
-    UMingResourceProducer();
+    UMingResourceProducer(};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Production")
     EMingResourceType ProducedResource;
@@ -44,19 +44,19 @@ public:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void StartProduction();
+    void StartProduction(};
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void StopProduction();
+    void StopProduction(};
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void PauseProduction();
+    void PauseProduction(};
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void ResumeProduction();
+    void ResumeProduction(};
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void SetProductionRate(float NewRate);
+    void SetProductionRate(float NewRate};
 
     UFUNCTION(BlueprintPure, Category = "Production")
     bool IsOperational() const;
@@ -65,13 +65,13 @@ public:
     float GetProductionProgress() const;
 
     UFUNCTION(BlueprintCallable, Category = "Production")
-    void UpdateProduction(float DeltaTime);
+    void UpdateProduction(float DeltaTime};
 
     // Event Delegates
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProductionTick, EMingResourceType, ResourceType, int32, Amount);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProductionStarted);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProductionStopped);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInsufficientResources);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProductionTick, EMingResourceType, ResourceType, int32, Amount};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProductionStarted};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProductionStopped};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInsufficientResources};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnProductionTick OnProductionTick;
@@ -89,10 +89,11 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<class UMingResourceSystem> ResourceSystem;
 
-    void ProduceResource();
-    bool CheckOperatingCosts();
-    void ConsumeOperatingCosts();
+    void ProduceResource(};
+    bool CheckOperatingCosts(};
+    void ConsumeOperatingCosts(};
 
     UFUNCTION()
-    void OnResourceSystemAvailable();
+    void OnResourceSystemAvailable(};
 };
+

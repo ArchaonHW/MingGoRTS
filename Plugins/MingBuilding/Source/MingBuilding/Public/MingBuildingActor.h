@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -134,10 +134,10 @@ public:
     void RemoveWorker();
 
     UFUNCTION(BlueprintCallable, Category = "Health")
-    void TakeDamage(int32 DamageAmount);
+    void TakeDamage(int32 DamageAmount};
 
     UFUNCTION(BlueprintCallable, Category = "Health")
-    void Repair(int32 RepairAmount);
+    void Repair(int32 RepairAmount};
 
     UFUNCTION(BlueprintPure, Category = "Health")
     float GetHealthPercentage() const;
@@ -157,12 +157,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Production")
     void DisableResourceProduction();
 
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConstructionStarted);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConstructionProgress, float, Progress);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConstructionCompleted);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingDamaged, int32, CurrentHealth, int32, MaxHealth);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildingDestroyed);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildingActivated);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConstructionStarted};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConstructionProgress, float, Progress};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConstructionCompleted};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingDamaged, int32, CurrentHealth, int32, MaxHealth};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildingDestroyed};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildingActivated};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnConstructionStarted OnConstructionStarted;
@@ -183,14 +183,14 @@ public:
     FOnBuildingActivated OnBuildingActivated;
 
     UFUNCTION(BlueprintPure, Category = "Costs", meta = (StaticFunction = "true"))
-    static FMingBuildingCost GetBuildingCost(EMingBuildingType Type);
+    static FMingBuildingCost GetBuildingCost(EMingBuildingType Type};
 
     UFUNCTION(BlueprintPure, Category = "Costs")
-    static bool CanAffordBuilding(EMingBuildingType Type, const TMap<EMingResourceType, int32>& AvailableResources);
+    static bool CanAffordBuilding(EMingBuildingType Type, const TMap<EMingResourceType, int32>& AvailableResources};
 
-    // å»ºç??‡ç??¸é??¹æ? | Building Upgrade Methods
+    // å»ºï¿½Xï¿½ï¿½Xï¿½ï¿½Xï¿½ï¿½? | Building Upgrade Methods
     UFUNCTION(BlueprintCallable, Category = "Upgrade")
-    void StartUpgrade(const FString& UpgradeID);
+    void StartUpgrade(const FString& UpgradeID};
 
     UFUNCTION(BlueprintCallable, Category = "Upgrade")
     void CancelUpgrade();
@@ -202,18 +202,18 @@ public:
     float GetUpgradeProgress() const { return UpgradeProgress; }
 
     UFUNCTION(BlueprintCallable, Category = "Upgrade")
-    void ApplyUpgrade(const FMingBuildingUpgrade& UpgradeData);
+    void ApplyUpgrade(const FMingBuildingUpgrade& UpgradeData};
 
     UFUNCTION(BlueprintPure, Category = "Upgrade")
     int32 GetCurrentUpgradeLevel() const { return CurrentUpgradeLevel; }
 
     UFUNCTION(BlueprintCallable, Category = "Upgrade")
-    void SetUpgradeLevel(int32 NewLevel);
+    void SetUpgradeLevel(int32 NewLevel};
 
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingUpgradeStarted, const FString&, UpgradeID);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingUpgradeProgress, float, Progress);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildingUpgradeCompleted);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildingUpgradeCancelled);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingUpgradeStarted, const FString&, UpgradeID};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingUpgradeProgress, float, Progress};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildingUpgradeCompleted};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildingUpgradeCancelled};
 
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnBuildingUpgradeStarted OnBuildingUpgradeStarted;
@@ -237,7 +237,7 @@ protected:
 
     TMap<EMingResourceType, int32> AccumulatedResources;
 
-    // ?‡ç??¸é?å±¬æ€?| Upgrade Properties
+    // ?ï¿½ï¿½Xï¿½ï¿½?å±¬ï¿½?| Upgrade Properties
     UPROPERTY(BlueprintReadOnly, Category = "Upgrade")
     bool bIsBeingUpgraded;
 
@@ -253,7 +253,8 @@ protected:
     UPROPERTY()
     float UpgradeTimeRemaining;
 
-    void UpdateUpgrade(float DeltaTime);
+    void UpdateUpgrade(float DeltaTime};
     void CompleteUpgrade();
     void OnUpgradeComplete_Internal();
 };
+

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -6,26 +6,26 @@
 #include "MingBuildingManager.generated.h"
 
 /**
- * å»ºç??¾ç½®çµæ?
+ * å»ºï¿½Xï¿½ç½®çµï¿½?
  */
 USTRUCT(BlueprintType)
 struct FBuildingPlacementResult
 {
     GENERATED_BODY()
 
-    // ?¯å¦?å?
+    // ?ï¿½å¦?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     bool bSuccess;
 
-    // ?¯èª¤ä¿¡æ¯
+    // ?ï¿½èª¤ä¿¡æ¯
     UPROPERTY(BlueprintReadOnly)
     FString ErrorMessage;
 
-    // ?¾ç½®ä½ç½®
+    // ?ï¿½ç½®ä½ç½®
     UPROPERTY(BlueprintReadOnly)
     FVector PlacementLocation;
 
-    // å»ºç?ID
+    // å»ºï¿½?ID
     UPROPERTY(BlueprintReadOnly)
     FString BuildingID;
 
@@ -37,38 +37,38 @@ struct FBuildingPlacementResult
 };
 
 /**
- * å»ºç??Šå??…ç›®
+ * å»ºï¿½Xï¿½ï¿½Xï¿½ç›®
  */
 USTRUCT(BlueprintType)
 struct FBuildingQueueItem
 {
     GENERATED_BODY()
 
-    // å»ºç?é¡å?
+    // å»ºï¿½?é¡ï¿½?
     UPROPERTY(BlueprintReadOnly)
     EMingBuildingType BuildingType;
 
-    // å»ºç?ä½ç½®
+    // å»ºï¿½?ä½ç½®
     UPROPERTY(BlueprintReadOnly)
     FVector Position;
 
-    // å»ºç??‹è?
+    // å»ºï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     FRotator Rotation;
 
-    // ?Šå?ID
+    // ?ï¿½ï¿½?ID
     UPROPERTY(BlueprintReadOnly)
     FString QueueID;
 
-    // ?è?å®Œæ??‚é?
+    // ?ï¿½ï¿½?å®Œï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     float EstimatedCompletionTime;
 
-    // ?¶å??²åº¦
+    // ?ï¿½ï¿½Xï¿½åº¦
     UPROPERTY(BlueprintReadOnly)
     float Progress;
 
-    // ?¯å¦æ­?œ¨å»ºé€?    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½å¦ï¿½?ï¿½ï¿½å»ºï¿½?    UPROPERTY(BlueprintReadOnly)
     bool bIsConstructing;
 
     FBuildingQueueItem()
@@ -82,39 +82,39 @@ struct FBuildingQueueItem
 };
 
 /**
- * å»ºç?çµ±è?ä¿¡æ¯
+ * å»ºï¿½?çµ±ï¿½?ä¿¡æ¯
  */
 USTRUCT(BlueprintType)
 struct FBuildingStatistics
 {
     GENERATED_BODY()
 
-    // ç¸½å»ºç¯‰æ•¸??    UPROPERTY(BlueprintReadOnly)
+    // ç¸½å»ºç¯‰æ•¸X    UPROPERTY(BlueprintReadOnly)
     int32 TotalBuildings;
 
-    // æ´»è?å»ºç??¸é?
+    // æ´»ï¿½?å»ºï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     int32 ActiveBuildings;
 
-    // å»ºé€ ä¸­å»ºç??¸é?
+    // å»ºé€ ä¸­å»ºï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     int32 ConstructingBuildings;
 
-    // ?å?å»ºç??¸é?
+    // ?ï¿½ï¿½?å»ºï¿½Xï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     int32 DamagedBuildings;
 
-    // ?„é??‹å»ºç¯‰æ•¸??    UPROPERTY(BlueprintReadOnly)
+    // ?ï¿½ï¿½Xï¿½å»ºç¯‰æ•¸X    UPROPERTY(BlueprintReadOnly)
     TMap<EMingBuildingType, int32> BuildingCounts;
 
-    // ç¸½å·¥äººæ•¸??    UPROPERTY(BlueprintReadOnly)
+    // ç¸½å·¥äººæ•¸X    UPROPERTY(BlueprintReadOnly)
     int32 TotalWorkers;
 
-    // ?’ç½®å·¥äºº?¸é?
+    // ?ï¿½ç½®å·¥äºº?ï¿½ï¿½?
     UPROPERTY(BlueprintReadOnly)
     int32 AvailableWorkers;
 
-    // å»ºé€ é??—é•·åº?    UPROPERTY(BlueprintReadOnly)
+    // å»ºé€ ï¿½Xï¿½é•·ï¿½?    UPROPERTY(BlueprintReadOnly)
     int32 QueueLength;
 
     FBuildingStatistics()
@@ -129,8 +129,8 @@ struct FBuildingStatistics
 };
 
 /**
- * å»ºç?å±¤ç®¡?†å™¨
- * ç®¡ç??ºåœ°å»ºè¨­?Œè?æºç??? */
+ * å»ºï¿½?å±¤ç®¡?ï¿½å™¨
+ * ç®¡ï¿½Xï¿½åœ°å»ºè¨­?ï¿½ï¿½?æºï¿½X */
 UCLASS(BlueprintType)
 class MINGBUILDING_API UMingBuildingManager : public UObject
 {
@@ -145,23 +145,23 @@ public:
     void SetupEventSubscriptions();
     void CleanupEventSubscriptions();
 
-    // === å»ºç??¾ç½®?Œå»º??===
+    // === å»ºï¿½Xï¿½ç½®?ï¿½å»ºX===
     UFUNCTION(BlueprintCallable, Category = "Building")
-    FBuildingPlacementResult PlaceBuilding(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
+    FBuildingPlacementResult PlaceBuilding(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation};
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool StartConstruction(const FString& BuildingID);
+    bool StartConstruction(const FString& BuildingID};
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool CancelConstruction(const FString& BuildingID);
+    bool CancelConstruction(const FString& BuildingID};
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    FString AddToConstructionQueue(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
+    FString AddToConstructionQueue(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation};
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool RemoveFromConstructionQueue(const FString& QueueID);
+    bool RemoveFromConstructionQueue(const FString& QueueID};
 
-    // === å»ºç?ç®¡ç? ===
+    // === å»ºï¿½?ç®¡ï¿½? ===
     UFUNCTION(BlueprintPure, Category = "Building")
     AMingBuildingActor* GetBuilding(const FString& BuildingID) const;
 
@@ -177,7 +177,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Building")
     FBuildingStatistics GetBuildingStatistics() const;
 
-    // === å»ºç??¾ç½®é©—è? ===
+    // === å»ºï¿½Xï¿½ç½®é©—ï¿½? ===
     UFUNCTION(BlueprintPure, Category = "Building")
     bool IsValidPlacementLocation(EMingBuildingType BuildingType, const FVector& Location) const;
 
@@ -185,68 +185,68 @@ public:
     FVector GetBuildingGridSize(EMingBuildingType BuildingType) const;
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    void ShowPlacementPreview(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
+    void ShowPlacementPreview(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation};
 
     UFUNCTION(BlueprintCallable, Category = "Building")
     void HidePlacementPreview();
 
-    // === å·¥äººç®¡ç? ===
+    // === å·¥äººç®¡ï¿½? ===
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool AssignWorker(const FString& BuildingID);
+    bool AssignWorker(const FString& BuildingID};
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool RemoveWorker(const FString& BuildingID);
+    bool RemoveWorker(const FString& BuildingID};
 
     UFUNCTION(BlueprintPure, Category = "Building")
     int32 GetAvailableWorkers() const;
 
-    // === å»ºç??‡ç??Œç¶­è­?===
+    // === å»ºï¿½Xï¿½ï¿½Xï¿½ç¶­ï¿½?===
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool UpgradeBuilding_Impl(const FString& BuildingID);
+    bool UpgradeBuilding_Impl(const FString& BuildingID};
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool DestroyBuilding(const FString& BuildingID);
+    bool DestroyBuilding(const FString& BuildingID};
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    bool RepairBuilding(const FString& BuildingID, int32 RepairAmount);
+    bool RepairBuilding(const FString& BuildingID, int32 RepairAmount};
 
-    // === å»ºç??¥è©¢ ===
+    // === å»ºï¿½Xï¿½è©¢ ===
     UFUNCTION(BlueprintPure, Category = "Building")
     TArray<AMingBuildingActor*> GetBuildingsInRadius(const FVector& Center, float Radius) const;
 
     UFUNCTION(BlueprintPure, Category = "Building")
     TArray<AMingBuildingActor*> GetSupplyChain(const FString& BuildingID) const;
 
-    // === ?Šç?ä»‹é¢ (?¼å®¹?? ===
+    // === ?ï¿½ï¿½?ä»‹é¢ (?ï¿½å®¹X ===
     UFUNCTION(BlueprintCallable, Category = "Building")
-    void ConstructBuilding(const FString& BuildingType, const FVector& Position);
+    void ConstructBuilding(const FString& BuildingType, const FVector& Position};
 
     UFUNCTION(BlueprintCallable, Category = "Building")
-    void UpgradeBuilding_Impl(int32 BuildingId);
+    void UpgradeBuilding_Impl(int32 BuildingId};
 
-    // === è³‡æ?ç®¡ç? ===
+    // === è³‡ï¿½?ç®¡ï¿½? ===
     UFUNCTION(BlueprintCallable, Category = "Resource")
-    void AddResource(const FString& ResourceType, int32 Amount);
+    void AddResource(const FString& ResourceType, int32 Amount};
 
     UFUNCTION(BlueprintPure, Category = "Resource")
     int32 GetResourceAmount(const FString& ResourceType) const;
 
 protected:
-    void OnBuildingConstructed(const FString& BuildingType);
-    void OnResourceUpdated(const FString& ResourceType, int32 NewAmount);
+    void OnBuildingConstructed(const FString& BuildingType};
+    void OnResourceUpdated(const FString& ResourceType, int32 NewAmount};
 
-    // === ?°å??„å…§?¨æ–¹æ³?===
-    void ProcessConstructionQueue(float DeltaTime);
+    // === ?ï¿½ï¿½Xï¿½å…§?ï¿½æ–¹ï¿½?===
+    void ProcessConstructionQueue(float DeltaTime};
     void StartNextConstruction();
     FString GenerateBuildingID();
     FString GenerateQueueID();
     bool HasEnoughResources(EMingBuildingType BuildingType) const;
-    bool ConsumeConstructionResources(EMingBuildingType BuildingType);
-    void RefundConstructionResources(EMingBuildingType BuildingType);
+    bool ConsumeConstructionResources(EMingBuildingType BuildingType};
+    void RefundConstructionResources(EMingBuildingType BuildingType};
     void UpdateBuildingStatistics();
-    void OnBuildingConstructionStarted(const FString& BuildingID);
-    void OnBuildingConstructionCompleted(const FString& BuildingID);
-    void OnBuildingDestroyed(const FString& BuildingID);
+    void OnBuildingConstructionStarted(const FString& BuildingID};
+    void OnBuildingConstructionCompleted(const FString& BuildingID};
+    void OnBuildingDestroyed(const FString& BuildingID};
     void SaveBuildingData();
     void LoadBuildingData();
     void CleanupPlacementPreview();
@@ -254,15 +254,15 @@ protected:
     bool IsTerrainSuitable(EMingBuildingType BuildingType, const FVector& Location) const;
     float CalculateBuildingEfficiency(AMingBuildingActor* Building) const;
     void UpdateSupplyChains();
-    void ProcessBuildingUpgrades(float DeltaTime);
+    void ProcessBuildingUpgrades(float DeltaTime};
 
 private:
     bool bIsInitialized;
     
-    // === ?Šç?è³‡æ?å­˜å„² (?¼å®¹?? ===
+    // === ?ï¿½ï¿½?è³‡ï¿½?å­˜å„² (?ï¿½å®¹X ===
     TMap<FString, int32> ResourceInventory;
 
-    // === ?°å??„å»ºç¯‰ç®¡?†æ•¸??===
+    // === ?ï¿½ï¿½Xï¿½å»ºç¯‰ç®¡?ï¿½æ•¸X===
     UPROPERTY()
     TArray<TObjectPtr<AMingBuildingActor>> Buildings;
 
@@ -284,3 +284,4 @@ private:
     UPROPERTY()
     TObjectPtr<class UStaticMeshComponent> PlacementPreview;
 };
+
