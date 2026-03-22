@@ -5,16 +5,16 @@
 #include "HAL/FileManager.h"
 #include "Misc/Paths.h"
 
-UMingRTSDatabaseManager* GMingRTSDatabaseManager = nullptr;
+UMingRTSDatabaseManager* UMingRTSDatabaseManager::Instance = nullptr;
 
 UMingRTSDatabaseManager* UMingRTSDatabaseManager::Get()
 {
-	if (!GMingRTSDatabaseManager)
+	if (!Instance)
 	{
-		GMingRTSDatabaseManager = NewObject<UMingRTSDatabaseManager>();
-		GMingRTSDatabaseManager->InitializeManager();
+		Instance = NewObject<UMingRTSDatabaseManager>();
+		Instance->InitializeManager();
 	}
-	return GMingRTSDatabaseManager;
+	return Instance;
 }
 
 void UMingRTSDatabaseManager::InitializeManager()
