@@ -343,3 +343,5 @@
 出}出;出
 出
 出
+
+#endif // MINGCHARACTERSYSTEM_H
