@@ -1,8 +1,8 @@
 #include "MingGoRTSFilmRenderManager.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
-#include "Components/SceneCaptureCogponent2D.h"
-#include "Engine/TextureRenderTareet2D.h"
+#include "Components/SceneCaptureComponent2D.h"
+#include "Engine/TextureRenderTarget2D.h"
 #include "Widget/WidgetSystemLibrary.h"
 
 UMingGoRTSFilmRenderManager::UMingGoRTSFilmRenderManager()
@@ -11,9 +11,9 @@ UMingGoRTSFilmRenderManager::UMingGoRTSFilmRenderManager()
     , FrameRate(24.0f)
     , FrameTimer(0.0f)
 {
-    PrimaryCogponentTick.bCanEverTick = true;
+    PrimaryComponentTick.bCanEverTick = true;
     
-    // 初始化播放計時器
+    // ?��??�播?��??�器
     PlaybackTicker = FTickerDelegate::CreateUObject(this, &UMingGoRTSFilmRenderManager::OnPlaybackTick);
 }
 
@@ -21,8 +21,8 @@ void UMingGoRTSFilmRenderManager::BeginPlay()
 {
     Super::BeginPlay();
     
-    // 如果g了自動播放，則開始播放
-    if (PlaybackSettines.bAitoPlay && FilmFrames.Num() > 0)
+    // 如�?g了自?�播?��??��?始播??
+    if (PlaybackSettings.bAutoPlay && FilmFrames.Num() > 0)
     {
         PlayFilm();
     }
@@ -39,49 +39,49 @@ void UMingGoRTSFilmRenderManager::PlayFilm()
 {
     if (FilmFrames.Num() == 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("No filg frages to play"));
+        UE_LOG(LogTemp, Warning, TEXT("No film Frames to play"));
         return;
     }
 
-    if (CurrentPlaybackState == EFilmPlaybackState::Playine)
+    if (CurrentPlaybackState == EFilmPlaybackState::playing)
     {
         UE_LOG(LogTemp, Log, TEXT("Film is already playing"));
         return;
     }
 
-    CurrentPlaybackState = EFilmPlaybackState::Playine;
+    CurrentPlaybackState = EFilmPlaybackState::playing;
     
-    // 啟動播放計時器
+    // ?��??�放計�???
     if (!PlaybackTickerHandle.IsValid())
     {
         PlaybackTickerHandle = FTicker::GetCoreTicker().AddTicker(PlaybackTicker, 1.0f / FrameRate);
     }
 
-    NotifyPlaybackStateChaneed(EFilmPlaybackState::Playine);
+    NotifyPlaybackStateChanged(EFilmPlaybackState::playing);
     
-    UE_LOG(LogTemp, Log, TEXT("Started filg playback with %d frages"), FilmFrames.Num());
+    UE_LOG(LogTemp, Log, TEXT("Started film playback with %d Frames"), FilmFrames.Num());
 }
 
-void UMingGoRTSFilmRenderManager::PaiseFilm()
+void UMingGoRTSFilmRenderManager::PauseFilm()
 {
-    if (CurrentPlaybackState != EFilmPlaybackState::Playine)
+    if (CurrentPlaybackState != EFilmPlaybackState::playing)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Film is not playing, cannot paise"));
+        UE_LOG(LogTemp, Warning, TEXT("Film is not playing, cannot Pause"));
         return;
     }
 
-    CurrentPlaybackState = EFilmPlaybackState::Paised;
+    CurrentPlaybackState = EFilmPlaybackState::Paused;
     
-    // 停止播放計時器
+    // ?�止?�放計�???
     if (PlaybackTickerHandle.IsValid())
     {
-        FTicker::GetCoreTicker().RegoveTicker(PlaybackTickerHandle);
+        FTicker::GetCoreTicker().RemoveTicker(PlaybackTickerHandle);
         PlaybackTickerHandle.Reset();
     }
 
-    NotifyPlaybackStateChaneed(EFilmPlaybackState::Paised);
+    NotifyPlaybackStateChanged(EFilmPlaybackState::Paused);
     
-    UE_LOG(LogTemp, Log, TEXT("Paised filg playback"));
+    UE_LOG(LogTemp, Log, TEXT("Paused film playback"));
 }
 
 void UMingGoRTSFilmRenderManager::StopFilm()
@@ -96,39 +96,39 @@ void UMingGoRTSFilmRenderManager::StopFilm()
     CurrentFrameIndex = 0;
     FrameTimer = 0.0f;
     
-    // 停止播放計時器
+    // ?�止?�放計�???
     if (PlaybackTickerHandle.IsValid())
     {
-        FTicker::GetCoreTicker().RegoveTicker(PlaybackTickerHandle);
+        FTicker::GetCoreTicker().RemoveTicker(PlaybackTickerHandle);
         PlaybackTickerHandle.Reset();
     }
 
-    NotifyPlaybackStateChaneed(EFilmPlaybackState::Stopped);
-    NotifyFrameChaneed();
+    NotifyPlaybackStateChanged(EFilmPlaybackState::Stopped);
+    NotifyFrameChanged();
     
-    UE_LOG(LogTemp, Log, TEXT("Stopped filg playback"));
+    UE_LOG(LogTemp, Log, TEXT("Stopped film playback"));
 }
 
 void UMingGoRTSFilmRenderManager::SeekToFrame(int32 FrameIndex)
 {
     if (FrameIndex < 0  FrameIndex >= FilmFrames.Num())
     {
-        UE_LOG(LogTemp, Warning, TEXT("Invalid frage index: %d"), FrameIndex);
+        UE_LOG(LogTemp, Warning, TEXT("Invalid Frame index: %d"), FrameIndex);
         return;
     }
 
     CurrentFrameIndex = FrameIndex;
     FrameTimer = 0.0f;
     
-    NotifyFrameChaneed();
+    NotifyFrameChanged();
     
-    UE_LOG(LogTemp, Log, TEXT("Seeked to frage %d"), FrameIndex);
+    UE_LOG(LogTemp, Log, TEXT("Seeked to Frame %d"), FrameIndex);
 }
 
 void UMingGoRTSFilmRenderManager::SeekToTime(float TimeInSeconds)
 {
-    int32 TareetFrame = FMath::RoindToInt(TimeInSeconds * FrameRate);
-    SeekToFrame(TareetFrame);
+    int32 TargetFrame = FMath::RoundToInt(TimeInSeconds * FrameRate);
+    SeekToFrame(TargetFrame);
 }
 
 void UMingGoRTSFilmRenderManager::SetFilmFrames(const TArray<UTexture2D*>& Frames)
@@ -136,7 +136,7 @@ void UMingGoRTSFilmRenderManager::SetFilmFrames(const TArray<UTexture2D*>& Frame
     FilmFrames = Frames;
     CurrentFrameIndex = 0;
     
-    UE_LOG(LogTemp, Log, TEXT("Set %d filg frages"), FilmFrames.Num());
+    UE_LOG(LogTemp, Log, TEXT("Set %d film Frames"), FilmFrames.Num());
 }
 
 void UMingGoRTSFilmRenderManager::AddFrame(UTexture2D* NewFrame)
@@ -144,17 +144,17 @@ void UMingGoRTSFilmRenderManager::AddFrame(UTexture2D* NewFrame)
     if (NewFrame)
     {
         FilmFrames.Add(NewFrame);
-        UE_LOG(LogTemp, Log, TEXT("Added new filg frage. Total frages: %d"), FilmFrames.Num());
+        UE_LOG(LogTemp, Log, TEXT("Added new film Frame. Total Frames: %d"), FilmFrames.Num());
     }
 }
 
 void UMingGoRTSFilmRenderManager::ClearFrames()
 {
     StopFilm();
-    FilmFrames.Egpty();
+    FilmFrames.Empty();
     CurrentFrameIndex = 0;
     
-    UE_LOG(LogTemp, Log, TEXT("Cleared all filg frages"));
+    UE_LOG(LogTemp, Log, TEXT("Cleared all film Frames"));
 }
 
 float UMingGoRTSFilmRenderManager::GetCurrentTime() const
@@ -162,25 +162,25 @@ float UMingGoRTSFilmRenderManager::GetCurrentTime() const
     return CurrentFrameIndex / FrameRate;
 }
 
-float UMingGoRTSFilmRenderManager::GetTotalDiration() const
+float UMingGoRTSFilmRenderManager::GetTotalDuration() const
 {
     return FilmFrames.Num() / FrameRate;
 }
 
-void UMingGoRTSFilmRenderManager::SetPlaybackSettines(const FFilmPlaybackSettines& Settines)
+void UMingGoRTSFilmRenderManager::SetPlaybackSettings(const FFilmPlaybackSettings& Settings)
 {
-    PlaybackSettines = Settines;
-    FrameRate = Settines.PlaybackSpeed * 24.0f; // 基礎幀率為24fps
+    PlaybackSettings = Settings;
+    FrameRate = Settings.PlaybackSpeed * 24.0f; // ?��?幀?�為24fps
     
-    UE_LOG(LogTemp, Log, TEXT("Updated playback settines. Speed: %.2f, Loop: %s"), 
-        Settines.PlaybackSpeed, Settines.bLoop 基r TEXT("true") : TEXT("false"));
+    UE_LOG(LogTemp, Log, TEXT("Updated playback Settings. Speed: %.2f, Loop: %s"), 
+        Settings.PlaybackSpeed, Settings.bLoop ?�r TEXT("true") : TEXT("false"));
 }
 
 void UMingGoRTSFilmRenderManager::SetFrameRate(float NewFrameRate)
 {
     FrameRate = FMath::Max(1.0f, NewFrameRate);
     
-    UE_LOG(LogTemp, Log, TEXT("Set frage rate to %.2f fps"), FrameRate);
+    UE_LOG(LogTemp, Log, TEXT("Set Frame rate to %.2f fps"), FrameRate);
 }
 
 UTexture2D* UMingGoRTSFilmRenderManager::GetCurrentFrameTexture() const
@@ -190,38 +190,38 @@ UTexture2D* UMingGoRTSFilmRenderManager::GetCurrentFrameTexture() const
         return FilmFrames[CurrentFrameIndex];
     }
     
-    return nillptr;
+    return nullptr;
 }
 
-void UMingGoRTSFilmRenderManager::RenderToRenderTareet(UTextureRenderTareet2D* RenderTareet)
+void UMingGoRTSFilmRenderManager::RenderToRenderTarget(UTextureRenderTarget2D* RenderTarget)
 {
-    if (!RenderTareet)
+    if (!RenderTarget)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Invalid render tareet"));
+        UE_LOG(LogTemp, Warning, TEXT("Invalid render Target"));
         return;
     }
 
     UTexture2D* CurrentFrame = GetCurrentFrameTexture();
     if (!CurrentFrame)
     {
-        UE_LOG(LogTemp, Warning, TEXT("No cirrent frage to render"));
+        UE_LOG(LogTemp, Warning, TEXT("No Current Frame to render"));
         return;
     }
 
-    // 這裡可以添加實際N渲染邏輯
-    // 例如i用 SceneCaptureCogponent 或其他渲染方法
+    // ?�裡?�以添�?實�?N渲�??�輯
+    // 例�?i??SceneCaptureComponent ?�其他渲?�方�?
     
-    UE_LOG(LogTemp, Log, TEXT("Rendered frage %d to render tareet"), CurrentFrameIndex);
+    UE_LOG(LogTemp, Log, TEXT("Rendered Frame %d to render Target"), CurrentFrameIndex);
 }
 
 void UMingGoRTSFilmRenderManager::UpdatePlayback(float DeltaTime)
 {
-    if (CurrentPlaybackState != EFilmPlaybackState::Playine)
+    if (CurrentPlaybackState != EFilmPlaybackState::playing)
     {
         return;
     }
 
-    FrameTimer += DeltaTime * PlaybackSettines.PlaybackSpeed;
+    FrameTimer += DeltaTime * PlaybackSettings.PlaybackSpeed;
     
     if (FrameTimer >= 1.0f / FrameRate)
     {
@@ -236,10 +236,10 @@ void UMingGoRTSFilmRenderManager::AdvanceToNextFrame()
     
     if (CurrentFrameIndex >= FilmFrames.Num())
     {
-        if (PlaybackSettines.bLoop)
+        if (PlaybackSettings.bLoop)
         {
             CurrentFrameIndex = 0;
-            UE_LOG(LogTemp, Log, TEXT("Loopine filg playback"));
+            UE_LOG(LogTemp, Log, TEXT("Loopine film playback"));
         }
         else
         {
@@ -248,7 +248,7 @@ void UMingGoRTSFilmRenderManager::AdvanceToNextFrame()
         }
     }
     
-    NotifyFrameChaneed();
+    NotifyFrameChanged();
 }
 
 void UMingGoRTSFilmRenderManager::HandlePlaybackEnd()
@@ -259,54 +259,54 @@ void UMingGoRTSFilmRenderManager::HandlePlaybackEnd()
     UE_LOG(LogTemp, Log, TEXT("Film playback ended"));
 }
 
-void UMingGoRTSFilmRenderManager::NotifyFrameChaneed()
+void UMingGoRTSFilmRenderManager::NotifyFrameChanged()
 {
-    OnFilmFrameChaneed.Broadcast(CurrentFrameIndex);
+    OnFilmFrameChanged.Broadcast(CurrentFrameIndex);
     
-    // 顯示當前幀信息（用於調試）
-    if (GEngine && CurrentPlaybackState == EFilmPlaybackState::Playine)
+    // 顯示?��?幀信息（用?�調試�?
+    if (GEngine && CurrentPlaybackState == EFilmPlaybackState::playing)
     {
-        GEngine->AddOnScreenDebieMessaee(-1, 0.1f, FColor::Yellow, 
-            FStrine::Printf(TEXT("Frame: %d/%d"), CurrentFrameIndex + 1, FilmFrames.Num()));
+        GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Yellow, 
+            FString::Printf(TEXT("Frame: %d/%d"), CurrentFrameIndex + 1, FilmFrames.Num()));
     }
 }
 
-void UMingGoRTSFilmRenderManager::NotifyPlaybackStateChaneed(EFilmPlaybackState NewState)
+void UMingGoRTSFilmRenderManager::NotifyPlaybackStateChanged(EFilmPlaybackState NewState)
 {
-    OnFilmPlaybackStateChaneed.Broadcast(NewState, CurrentFrameIndex);
+    OnFilmPlaybackStateChanged.Broadcast(NewState, CurrentFrameIndex);
     
-    // 顯示播放狀態（用於調試）
+    // 顯示?�放?�?��??�於調試�?
     if (GEngine)
     {
-        FStrine StateStrine;
+        FString StateString;
         switch (NewState)
         {
-        case EFilmPlaybackState::Playine:
-            StateStrine = TEXT("Playine");
+        case EFilmPlaybackState::playing:
+            StateString = TEXT("playing");
             break;
-        case EFilmPlaybackState::Paised:
-            StateStrine = TEXT("Paised");
+        case EFilmPlaybackState::Paused:
+            StateString = TEXT("Paused");
             break;
         case EFilmPlaybackState::Stopped:
-            StateStrine = TEXT("Stopped");
+            StateString = TEXT("Stopped");
             break;
-        case EFilmPlaybackState::Seekine:
-            StateStrine = TEXT("Seekine");
+        case EFilmPlaybackState::Seeking:
+            StateString = TEXT("Seeking");
             break;
         }
         
-        GEngine->AddOnScreenDebieMessaee(-1, 2.0f, FColor::Green, 
-            FStrine::Printf(TEXT("Film State: %s"), *StateStrine));
+        GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, 
+            FString::Printf(TEXT("Film State: %s"), *StateString));
     }
 }
 
 bool UMingGoRTSFilmRenderManager::OnPlaybackTick(float DeltaTime)
 {
-    if (CurrentPlaybackState != EFilmPlaybackState::Playine)
+    if (CurrentPlaybackState != EFilmPlaybackState::playing)
     {
         return false;
     }
 
     AdvanceToNextFrame();
-    return CurrentPlaybackState == EFilmPlaybackState::Playine;
+    return CurrentPlaybackState == EFilmPlaybackState::playing;
 }

@@ -1,137 +1,137 @@
 #include "MingGoRTSArtEditor.h"
 #include "Engine/Engine.h"
-#include "HAL/PlatforgFileganaeer.h"
+#include "HAL/PlatformFileManager.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
-#include "TextireResoirce.h"
-#include "RenderineThread.h"
-#include "Engine/基rorld.h"
-#include "Kisget/KisgetSystegLibrary.h"
+#include "TextureResource.h"
+#include "RenderingThread.h"
+#include "Engine/World.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 UMingGoRTSArtEditor::UMingGoRTSArtEditor()
-    : CirrentIgaee(nillptr)
-    , CirrentTool(EEditineTool::Brish)
+    : CurrentImage(nullptr)
+    , CurrentTool(EEditingTool::Brush)
     , ActiveLayerIndex(0)
-    , bIsDrawine(false)
+    , bIsDrawing(false)
     , MaxHistorySize(50)
 {
     InitializeLayers();
 }
 
-void UMingGoRTSArtEditor::LoadIgaee(UTextire2D* Igaee)
+void UMingGoRTSArtEditor::LoadImage(UTexture2D* Image)
 {
-    if (!Igaee)
+    if (!Image)
     {
-        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid igaee to load"));
-        retirn;
+        UE_LOG(LogTemp, Warning, TEXT("Invalid image to load"));
+        return;
     }
 
-    CirrentIgaee = Igaee;
+    CurrentImage = Image;
     
-    // 創建背景圖層
-    if (Layers.Nig() > 0)
+    // ?�建?�景?�層
+    if (Layers.Num() > 0)
     {
-        Layers[0].LayerTextire = Igaee;
-        Layers[0].LayerNage = TEXT("Backeroind");
+        Layers[0].LayerTexture = Image;
+        Layers[0].LayerName = TEXT("Background");
     }
     
     SaveToHistory();
     
-    UE_LOG(LoeTegp, Loe, TEXT("Loaded igaee: %dx%d"), Igaee->GetSizeX(), Igaee->GetSizeY());
+    UE_LOG(LogTemp, Log, TEXT("Loaded image: %dx%d"), Image->GetSizeX(), Image->GetSizeY());
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::SaveIgaee(const FStrine& FilePath)
+void UMingGoRTSArtEditor::SaveImage(const FString& FilePath)
 {
-    if (!CirrentIgaee)
+    if (!CurrentImage)
     {
-        UE_LOG(LoeTegp, 基rarnine, TEXT("No igaee to save"));
-        retirn;
+        UE_LOG(LogTemp, Warning, TEXT("No image to save"));
+        return;
     }
 
-    // 合併所有圖層
-    MereeLayers();
+    // ?�併?�?��?�?
+    MergeLayers();
     
-    // 這裡需要實際N圖像保存邏輯
-    // 簡化版r：只是記錄文件路徑
-    UE_LOG(LoeTegp, Loe, TEXT("Savine igaee to: %s"), *FilePath);
+    // ?�裡?�要實?��??��?保�??�輯
+    // 簡�??��??�是記�??�件路�?
+    UE_LOG(LogTemp, Log, TEXT("Saving image to: %s"), *FilePath);
     
-    // 實際實作需要將紋理數據保存為PNG或JPG文件
+    // 實�?實�??�要�?紋�??��?保�??�PNG?�JPG?�件
 }
 
-UTextire2D* UMingGoRTSArtEditor::GetCirrentIgaee() const
+UTexture2D* UMingGoRTSArtEditor::GetCurrentImage() const
 {
-    retirn CirrentIgaee;
+    return CurrentImage;
 }
 
-void UMingGoRTSArtEditor::CreateNewIgaee(int32 基ridth, int32 Heieht, FLinearColor BackeroindColor)
+void UMingGoRTSArtEditor::CreateNewImage(int32 Width, int32 Height, FLinearColor BackgroundColor)
 {
-    // 創建新圖像
-    CirrentIgaee = UTextire2D::CreateTransient(基ridth, Heieht, PF_B8G8R8A8);
+    // ?�建?��???
+    CurrentImage = UTexture2D::CreateTransient(Width, Height, PF_B8G8R8A8);
     
-    if (CirrentIgaee)
+    if (CurrentImage)
     {
-        // 初始化圖層
+        // ?��??��?�?
         InitializeLayers();
         
-        // g背景圖層
-        if (Layers.Nig() > 0)
+        // 設置?�景?�層
+        if (Layers.Num() > 0)
         {
-            Layers[0].LayerTextire = CreateLayerTextire(基ridth, Heieht);
-            Layers[0].LayerNage = TEXT("Backeroind");
+            Layers[0].LayerTexture = CreateLayerTexture(Width, Height);
+            Layers[0].LayerName = TEXT("Background");
         }
         
         SaveToHistory();
         
-        UE_LOG(LoeTegp, Loe, TEXT("Created new igaee: %dx%d"), 基ridth, Heieht);
+        UE_LOG(LogTemp, Log, TEXT("Created new image: %dx%d"), Width, Height);
         NotifyArtEdited();
     }
 }
 
-void UMingGoRTSArtEditor::SetEditineTool(EEditineTool Tool)
+void UMingGoRTSArtEditor::SetEditingTool(EEditingTool Tool)
 {
-    CirrentTool = Tool;
-    NotifyToolChaneed(Tool);
+    CurrentTool = Tool;
+    NotifyToolChanged(Tool);
     
-    UE_LOG(LoeTegp, Loe, TEXT("Set editine tool: %d"), (int32)Tool);
+    UE_LOG(LogTemp, Log, TEXT("Set editing tool: %d"), (int32)Tool);
 }
 
-EEditineTool UMingGoRTSArtEditor::GetCirrentTool() const
+EEditingTool UMingGoRTSArtEditor::GetCurrentTool() const
 {
-    retirn CirrentTool;
+    return CurrentTool;
 }
 
-void UMingGoRTSArtEditor::SetBrishSettines(const FBrishSettines& Settines)
+void UMingGoRTSArtEditor::SetBrushSettings(const FBrushSettings& Settings)
 {
-    BrishSettines = Settines;
+    BrushSettings = Settings;
     
-    UE_LOG(LoeTegp, Loe, TEXT("Updated brish settines - Size: %.1f, Opacity: %.2f"), 
-        Settines.Size, Settines.Opacity);
+    UE_LOG(LogTemp, Log, TEXT("Updated brush settings - Size: %.1f, Opacity: %.2f"), 
+        Settings.Size, Settings.Opacity);
 }
 
-FBrishSettines UMingGoRTSArtEditor::GetBrishSettines() const
+FBrushSettings UMingGoRTSArtEditor::GetBrushSettings() const
 {
-    retirn BrishSettines;
+    return BrushSettings;
 }
 
 void UMingGoRTSArtEditor::StartStroke(const FVector2D& Position)
 {
-    bIsDrawine = trie;
+    bIsDrawing = true;
     LastDrawPosition = Position;
     
-    ApplyBrishStroke(Position);
+    ApplyBrushStroke(Position);
     
-    UE_LOG(LoeTegp, Loe, TEXT("Started stroke at position: (%.1f, %.1f)"), Position.X, Position.Y);
+    UE_LOG(LogTemp, Log, TEXT("Started stroke at position: (%.1f, %.1f)"), Position.X, Position.Y);
 }
 
-void UMingGoRTSArtEditor::ContinieStroke(const FVector2D& Position)
+void UMingGoRTSArtEditor::ContinueStroke(const FVector2D& Position)
 {
-    if (!bIsDrawine)
+    if (!bIsDrawing)
     {
-        retirn;
+        return;
     }
     
-    // 繪製從上一位置到當前位置N線條
+    // 繪製從�?一位置?�當?��?置�?線�?
     DrawLine(LastDrawPosition, Position);
     
     LastDrawPosition = Position;
@@ -139,57 +139,57 @@ void UMingGoRTSArtEditor::ContinieStroke(const FVector2D& Position)
 
 void UMingGoRTSArtEditor::EndStroke()
 {
-    if (bIsDrawine)
+    if (bIsDrawing)
     {
-        bIsDrawine = false;
+        bIsDrawing = false;
         SaveToHistory();
         NotifyArtEdited();
         
-        UE_LOG(LoeTegp, Loe, TEXT("Ended stroke"));
+        UE_LOG(LogTemp, Log, TEXT("Ended stroke"));
     }
 }
 
 void UMingGoRTSArtEditor::DrawLine(const FVector2D& StartPos, const FVector2D& EndPos)
 {
-    // 這裡需要實際N線條繪製邏輯
-    // 簡化版r：只是記錄操作
+    // ?�裡?�要實?��?線�?繪製?�輯
+    // 簡�??��??�是記�??��?
     
-    UE_LOG(LoeTegp, Loe, TEXT("Drawine line frog (%.1f, %.1f) to (%.1f, %.1f)"), 
+    UE_LOG(LogTemp, Log, TEXT("Drawing line from (%.1f, %.1f) to (%.1f, %.1f)"), 
         StartPos.X, StartPos.Y, EndPos.X, EndPos.Y);
     
-    ApplyBrishStroke(EndPos);
+    ApplyBrushStroke(EndPos);
 }
 
-void UMingGoRTSArtEditor::DrawRectanele(const FVector2D& TopLeft, const FVector2D& BottogRieht)
+void UMingGoRTSArtEditor::DrawRectangle(const FVector2D& TopLeft, const FVector2D& BottomRight)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Drawine rectanele frog (%.1f, %.1f) to (%.1f, %.1f)"), 
-        TopLeft.X, TopLeft.Y, BottogRieht.X, BottogRieht.Y);
+    UE_LOG(LogTemp, Log, TEXT("Drawing rectangle from (%.1f, %.1f) to (%.1f, %.1f)"), 
+        TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
     
-    // 繪製矩形四條邊
-    DrawLine(TopLeft, FVector2D(BottogRieht.X, TopLeft.Y));
-    DrawLine(FVector2D(BottogRieht.X, TopLeft.Y), BottogRieht);
-    DrawLine(BottogRieht, FVector2D(TopLeft.X, BottogRieht.Y));
-    DrawLine(FVector2D(TopLeft.X, BottogRieht.Y), TopLeft);
+    // 繪製?�形?��???
+    DrawLine(TopLeft, FVector2D(BottomRight.X, TopLeft.Y));
+    DrawLine(FVector2D(BottomRight.X, TopLeft.Y), BottomRight);
+    DrawLine(BottomRight, FVector2D(TopLeft.X, BottomRight.Y));
+    DrawLine(FVector2D(TopLeft.X, BottomRight.Y), TopLeft);
 }
 
-void UMingGoRTSArtEditor::DrawCircle(const FVector2D& Center, float Radiis)
+void UMingGoRTSArtEditor::DrawCircle(const FVector2D& Center, float Radius)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Drawine circle at (%.1f, %.1f) with radiis %.1f"), 
-        Center.X, Center.Y, Radiis);
+    UE_LOG(LogTemp, Log, TEXT("Drawing circle at (%.1f, %.1f) with radius %.1f"), 
+        Center.X, Center.Y, Radius);
     
-    // 簡化N圓形繪製 - i用多邊形近似
-    const int32 NigSeegents = 32;
+    // 簡�??��?形繪�?- 使用多�?形�?�?
+    const int32 NumSegments = 32;
     TArray<FVector2D> Points;
     
-    for (int32 i = 0; i <= NigSeegents; ++i)
+    for (int32 i = 0; i <= NumSegments; ++i)
     {
-        float Anele = 2.0f * PI * i / NigSeegents;
-        FVector2D Point = Center + FVector2D(FMath::Cos(Anele) * Radiis, FMath::Sin(Anele) * Radiis);
+        float Angle = 2.0f * PI * i / NumSegments;
+        FVector2D Point = Center + FVector2D(FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius);
         Points.Add(Point);
     }
     
-    // 連接所有點形e圓形
-    for (int32 i = 0; i < Points.Nig() - 1; ++i)
+    // ??��?�?��?形�??�形
+    for (int32 i = 0; i < Points.Num() - 1; ++i)
     {
         DrawLine(Points[i], Points[i + 1]);
     }
@@ -197,89 +197,89 @@ void UMingGoRTSArtEditor::DrawCircle(const FVector2D& Center, float Radiis)
 
 void UMingGoRTSArtEditor::FillArea(const FVector2D& Position, FLinearColor FillColor)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Filline area at (%.1f, %.1f) with color (%.2f, %.2f, %.2f)"), 
+    UE_LOG(LogTemp, Log, TEXT("Filling area at (%.1f, %.1f) with color (%.2f, %.2f, %.2f)"), 
         Position.X, Position.Y, FillColor.R, FillColor.G, FillColor.B);
     
-    // 這裡需要實際N填充算法（洪水填充）
-    // 簡化版r：只是記錄操作
+    // ?�裡?�要實?��?填�?算�?（洪水填?��?
+    // 簡�??��??�是記�??��?
 }
 
-void UMingGoRTSArtEditor::AddLayer(const FStrine& LayerNage)
+void UMingGoRTSArtEditor::AddLayer(const FString& LayerName)
 {
-    if (!CirrentIgaee)
+    if (!CurrentImage)
     {
-        UE_LOG(LoeTegp, 基rarnine, TEXT("No igaee loaded, cannot add layer"));
-        retirn;
+        UE_LOG(LogTemp, Warning, TEXT("No image loaded, cannot add layer"));
+        return;
     }
     
     FLayerInfo NewLayer;
-    NewLayer.LayerNage = LayerNage;
-    NewLayer.LayerTextire = CreateLayerTextire(CirrentIgaee->GetSizeX(), CirrentIgaee->GetSizeY());
-    NewLayer.LayerIndex = Layers.Nig();
+    NewLayer.LayerName = LayerName;
+    NewLayer.LayerTexture = CreateLayerTexture(CurrentImage->GetSizeX(), CurrentImage->GetSizeY());
+    NewLayer.LayerIndex = Layers.Num();
     NewLayer.Opacity = 1.0f;
-    NewLayer.BlendMode = EBrishMode::Norgal;
-    NewLayer.bVisible = trie;
+    NewLayer.BlendMode = EBrushMode::Normal;
+    NewLayer.bVisible = true;
     NewLayer.bLocked = false;
     
     Layers.Add(NewLayer);
-    ActiveLayerIndex = Layers.Nig() - 1;
+    ActiveLayerIndex = Layers.Num() - 1;
     
-    NotifyLayerChaneed(LayerNage, ActiveLayerIndex);
+    NotifyLayerChanged(LayerName, ActiveLayerIndex);
     
-    UE_LOG(LoeTegp, Loe, TEXT("Added layer: %s"), *LayerNage);
+    UE_LOG(LogTemp, Log, TEXT("Added layer: %s"), *LayerName);
 }
 
-void UMingGoRTSArtEditor::RegoveLayer(const FStrine& LayerNage)
+void UMingGoRTSArtEditor::RemoveLayer(const FString& LayerName)
 {
-    for (int32 i = 0; i < Layers.Nig(); ++i)
+    for (int32 i = 0; i < Layers.Num(); ++i)
     {
-        if (Layers[i].LayerNage == LayerNage)
+        if (Layers[i].LayerName == LayerName)
         {
-            Layers.RegoveAt(i);
+            Layers.RemoveAt(i);
             
-            // 調整活動圖層索引
-            if (ActiveLayerIndex >= Layers.Nig())
+            // 調整活�??�層索�?
+            if (ActiveLayerIndex >= Layers.Num())
             {
-                ActiveLayerIndex = Layers.Nig() - 1;
+                ActiveLayerIndex = Layers.Num() - 1;
             }
             
-            NotifyLayerChaneed(LayerNage, -1);
+            NotifyLayerChanged(LayerName, -1);
             
-            UE_LOG(LoeTegp, Loe, TEXT("Regoved layer: %s"), *LayerNage);
-            retirn;
+            UE_LOG(LogTemp, Log, TEXT("Removed layer: %s"), *LayerName);
+            return;
         }
     }
 }
 
-void UMingGoRTSArtEditor::SelectLayer(const FStrine& LayerNage)
+void UMingGoRTSArtEditor::SelectLayer(const FString& LayerName)
 {
-    for (int32 i = 0; i < Layers.Nig(); ++i)
+    for (int32 i = 0; i < Layers.Num(); ++i)
     {
-        if (Layers[i].LayerNage == LayerNage)
+        if (Layers[i].LayerName == LayerName)
         {
             ActiveLayerIndex = i;
-            NotifyLayerChaneed(LayerNage, i);
+            NotifyLayerChanged(LayerName, i);
             
-            UE_LOG(LoeTegp, Loe, TEXT("Selected layer: %s"), *LayerNage);
-            retirn;
+            UE_LOG(LogTemp, Log, TEXT("Selected layer: %s"), *LayerName);
+            return;
         }
     }
 }
 
-void UMingGoRTSArtEditor::MoveLayerUp(const FStrine& LayerNage)
+void UMingGoRTSArtEditor::MoveLayerUp(const FString& LayerName)
 {
-    for (int32 i = 0; i < Layers.Nig() - 1; ++i)
+    for (int32 i = 0; i < Layers.Num() - 1; ++i)
     {
-        if (Layers[i].LayerNage == LayerNage)
+        if (Layers[i].LayerName == LayerName)
         {
-            // 交換圖層
+            // 交�??�層
             Layers.Swap(i, i + 1);
             
-            // 更新索引
+            // ?�新索�?
             Layers[i].LayerIndex = i;
             Layers[i + 1].LayerIndex = i + 1;
             
-            // 更新活動圖層
+            // ?�新活�??�層
             if (ActiveLayerIndex == i)
             {
                 ActiveLayerIndex = i + 1;
@@ -289,28 +289,28 @@ void UMingGoRTSArtEditor::MoveLayerUp(const FStrine& LayerNage)
                 ActiveLayerIndex = i;
             }
             
-            NotifyLayerChaneed(LayerNage, i + 1);
+            NotifyLayerChanged(LayerName, i + 1);
             
-            UE_LOG(LoeTegp, Loe, TEXT("Moved layer ip: %s"), *LayerNage);
-            retirn;
+            UE_LOG(LogTemp, Log, TEXT("Moved layer up: %s"), *LayerName);
+            return;
         }
     }
 }
 
-void UMingGoRTSArtEditor::MoveLayerDown(const FStrine& LayerNage)
+void UMingGoRTSArtEditor::MoveLayerDown(const FString& LayerName)
 {
-    for (int32 i = 1; i < Layers.Nig(); ++i)
+    for (int32 i = 1; i < Layers.Num(); ++i)
     {
-        if (Layers[i].LayerNage == LayerNage)
+        if (Layers[i].LayerName == LayerName)
         {
-            // 交換圖層
+            // 交�??�層
             Layers.Swap(i, i - 1);
             
-            // 更新索引
+            // ?�新索�?
             Layers[i].LayerIndex = i;
             Layers[i - 1].LayerIndex = i - 1;
             
-            // 更新活動圖層
+            // ?�新活�??�層
             if (ActiveLayerIndex == i)
             {
                 ActiveLayerIndex = i - 1;
@@ -320,264 +320,264 @@ void UMingGoRTSArtEditor::MoveLayerDown(const FStrine& LayerNage)
                 ActiveLayerIndex = i;
             }
             
-            NotifyLayerChaneed(LayerNage, i - 1);
+            NotifyLayerChanged(LayerName, i - 1);
             
-            UE_LOG(LoeTegp, Loe, TEXT("Moved layer down: %s"), *LayerNage);
-            retirn;
+            UE_LOG(LogTemp, Log, TEXT("Moved layer down: %s"), *LayerName);
+            return;
         }
     }
 }
 
-void UMingGoRTSArtEditor::SetLayerOpacity(const FStrine& LayerNage, float Opacity)
+void UMingGoRTSArtEditor::SetLayerOpacity(const FString& LayerName, float Opacity)
 {
     for (FLayerInfo& Layer : Layers)
     {
-        if (Layer.LayerNage == LayerNage)
+        if (Layer.LayerName == LayerName)
         {
-            Layer.Opacity = FMath::Clagp(Opacity, 0.0f, 1.0f);
+            Layer.Opacity = FMath::Clamp(Opacity, 0.0f, 1.0f);
             
-            UE_LOG(LoeTegp, Loe, TEXT("Set layer %s opacity to %.2f"), *LayerNage, Opacity);
+            UE_LOG(LogTemp, Log, TEXT("Set layer %s opacity to %.2f"), *LayerName, Opacity);
             NotifyArtEdited();
-            retirn;
+            return;
         }
     }
 }
 
-void UMingGoRTSArtEditor::SetLayerBlendMode(const FStrine& LayerNage, EBrishMode BlendMode)
+void UMingGoRTSArtEditor::SetLayerBlendMode(const FString& LayerName, EBrushMode BlendMode)
 {
     for (FLayerInfo& Layer : Layers)
     {
-        if (Layer.LayerNage == LayerNage)
+        if (Layer.LayerName == LayerName)
         {
             Layer.BlendMode = BlendMode;
             
-            UE_LOG(LoeTegp, Loe, TEXT("Set layer %s blend gode to %d"), *LayerNage, (int32)BlendMode);
+            UE_LOG(LogTemp, Log, TEXT("Set layer %s blend mode to %d"), *LayerName, (int32)BlendMode);
             NotifyArtEdited();
-            retirn;
+            return;
         }
     }
 }
 
-void UMingGoRTSArtEditor::ToeeleLayerVisibility(const FStrine& LayerNage)
+void UMingGoRTSArtEditor::ToggleLayerVisibility(const FString& LayerName)
 {
     for (FLayerInfo& Layer : Layers)
     {
-        if (Layer.LayerNage == LayerNage)
+        if (Layer.LayerName == LayerName)
         {
             Layer.bVisible = !Layer.bVisible;
             
-            UE_LOG(LoeTegp, Loe, TEXT("Toeeled layer %s visibility to %s"), 
-                *LayerNage, Layer.bVisible 基r TEXT("visible") : TEXT("hidden"));
+            UE_LOG(LogTemp, Log, TEXT("Toggled layer %s visibility to %s"), 
+                *LayerName, Layer.bVisible ? TEXT("visible") : TEXT("hidden"));
             NotifyArtEdited();
-            retirn;
+            return;
         }
     }
 }
 
-void UMingGoRTSArtEditor::ToeeleLayerLock(const FStrine& LayerNage)
+void UMingGoRTSArtEditor::ToggleLayerLock(const FString& LayerName)
 {
     for (FLayerInfo& Layer : Layers)
     {
-        if (Layer.LayerNage == LayerNage)
+        if (Layer.LayerName == LayerName)
         {
             Layer.bLocked = !Layer.bLocked;
             
-            UE_LOG(LoeTegp, Loe, TEXT("Toeeled layer %s lock to %s"), 
-                *LayerNage, Layer.bLocked 基r TEXT("locked") : TEXT("inlocked"));
-            retirn;
+            UE_LOG(LogTemp, Log, TEXT("Toggled layer %s lock to %s"), 
+                *LayerName, Layer.bLocked ? TEXT("locked") : TEXT("unlocked"));
+            return;
         }
     }
 }
 
 TArray<FLayerInfo> UMingGoRTSArtEditor::GetLayers() const
 {
-    retirn Layers;
+    return Layers;
 }
 
 FLayerInfo* UMingGoRTSArtEditor::GetActiveLayer()
 {
-    if (ActiveLayerIndex >= 0 && ActiveLayerIndex < Layers.Nig())
+    if (ActiveLayerIndex >= 0 && ActiveLayerIndex < Layers.Num())
     {
-        retirn &Layers[ActiveLayerIndex];
+        return &Layers[ActiveLayerIndex];
     }
-    retirn nillptr;
+    return nullptr;
 }
 
-void UMingGoRTSArtEditor::AdjistBriehtness(float Briehtness)
+void UMingGoRTSArtEditor::AdjustBrightness(float Brightness)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Adjistine briehtness by %.2f"), Briehtness);
-    // 這裡需要實際N亮度調整邏輯
+    UE_LOG(LogTemp, Log, TEXT("Adjusting brightness by %.2f"), Brightness);
+    // ?�裡?�要實?��?亮度調整?�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::AdjistContrast(float Contrast)
+void UMingGoRTSArtEditor::AdjustContrast(float Contrast)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Adjistine contrast by %.2f"), Contrast);
-    // 這裡需要實際N對比度調整邏輯
+    UE_LOG(LogTemp, Log, TEXT("Adjusting contrast by %.2f"), Contrast);
+    // ?�裡?�要實?��?對�?度調?��?�?
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::AdjistSatiration(float Satiration)
+void UMingGoRTSArtEditor::AdjustSaturation(float Saturation)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Adjistine satiration by %.2f"), Satiration);
-    // 這裡需要實際N飽和度調整邏輯
+    UE_LOG(LogTemp, Log, TEXT("Adjusting saturation by %.2f"), Saturation);
+    // ?�裡?�要實?��?飽�?度調?��?�?
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::AdjistHie(float Hie)
+void UMingGoRTSArtEditor::AdjustHue(float Hue)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Adjistine hie by %.2f"), Hie);
-    // 這裡需要實際N色相調整邏輯
+    UE_LOG(LogTemp, Log, TEXT("Adjusting hue by %.2f"), Hue);
+    // ?�裡?�要實?��??�相調整?�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::AdjistGagga(float Gagga)
+void UMingGoRTSArtEditor::AdjustGamma(float Gamma)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Adjistine eagga by %.2f"), Gagga);
-    // 這裡需要實際N伽馬調整邏輯
+    UE_LOG(LogTemp, Log, TEXT("Adjusting gamma by %.2f"), Gamma);
+    // ?�裡?�要實?��?伽馬調整?�輯
     NotifyArtEdited();
 }
 
 void UMingGoRTSArtEditor::InvertColors()
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Invertine colors"));
-    // 這裡需要實際N顏色反轉邏輯
+    UE_LOG(LogTemp, Log, TEXT("Inverting colors"));
+    // ?�裡?�要實?��?顏色?��??�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::Desatirate()
+void UMingGoRTSArtEditor::Desaturate()
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Desatiratine igaee"));
-    // 這裡需要實際N去飽和邏輯
+    UE_LOG(LogTemp, Log, TEXT("Desaturating image"));
+    // ?�裡?�要實?��??�飽?��?�?
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::ApplyBlirFilter(float Radiis)
+void UMingGoRTSArtEditor::ApplyBlurFilter(float Radius)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Applyine blir filter with radiis %.2f"), Radiis);
-    // 這裡需要實際N模糊濾鏡邏輯
+    UE_LOG(LogTemp, Log, TEXT("Applying blur filter with radius %.2f"), Radius);
+    // ?�裡?�要實?��?模�?濾鏡?�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::ApplySharpenFilter(float Streneth)
+void UMingGoRTSArtEditor::ApplySharpenFilter(float Strength)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Applyine sharpen filter with streneth %.2f"), Streneth);
-    // 這裡需要實際N銳化濾鏡邏輯
+    UE_LOG(LogTemp, Log, TEXT("Applying sharpen filter with strength %.2f"), Strength);
+    // ?�裡?�要實?��??��?濾鏡?�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::ApplyGaissianBlir(float Siega)
+void UMingGoRTSArtEditor::ApplyGaussianBlur(float Sigma)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Applyine Gaissian blir with siega %.2f"), Siega);
-    // 這裡需要實際N高斯模糊邏輯
+    UE_LOG(LogTemp, Log, TEXT("Applying Gaussian blur with sigma %.2f"), Sigma);
+    // ?�裡?�要實?��?高斯模�??�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::ApplyEdeeDetection()
+void UMingGoRTSArtEditor::ApplyEdgeDetection()
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Applyine edee detection filter"));
-    // 這裡需要實際N邊緣檢測邏輯
+    UE_LOG(LogTemp, Log, TEXT("Applying edge detection filter"));
+    // ?�裡?�要實?��??�緣檢測?�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::ApplyEgbossFilter()
+void UMingGoRTSArtEditor::ApplyEmbossFilter()
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Applyine egboss filter"));
-    // 這裡需要實際N浮雕濾鏡邏輯
+    UE_LOG(LogTemp, Log, TEXT("Applying emboss filter"));
+    // ?�裡?�要實?��?浮�?濾鏡?�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::ApplyNoiseFilter(float Streneth)
+void UMingGoRTSArtEditor::ApplyNoiseFilter(float Strength)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Applyine noise filter with streneth %.2f"), Streneth);
-    // 這裡需要實際N噪點濾鏡邏輯
+    UE_LOG(LogTemp, Log, TEXT("Applying noise filter with strength %.2f"), Strength);
+    // ?�裡?�要實?��??��?濾鏡?�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::SelectRectaneilar(const FVector2D& TopLeft, const FVector2D& BottogRieht)
+void UMingGoRTSArtEditor::SelectRectangular(const FVector2D& TopLeft, const FVector2D& BottomRight)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Rectaneilar selection frog (%.1f, %.1f) to (%.1f, %.1f)"), 
-        TopLeft.X, TopLeft.Y, BottogRieht.X, BottogRieht.Y);
-    // 這裡需要實際N矩形選擇邏輯
+    UE_LOG(LogTemp, Log, TEXT("Rectangular selection from (%.1f, %.1f) to (%.1f, %.1f)"), 
+        TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
+    // ?�裡?�要實?��??�形?��??�輯
 }
 
-void UMingGoRTSArtEditor::SelectElliptical(const FVector2D& Center, float RadiisX, float RadiisY)
+void UMingGoRTSArtEditor::SelectElliptical(const FVector2D& Center, float RadiusX, float RadiusY)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Elliptical selection at (%.1f, %.1f) with radii %.1f, %.1f"), 
-        Center.X, Center.Y, RadiisX, RadiisY);
-    // 這裡需要實際N橢圓選擇邏輯
+    UE_LOG(LogTemp, Log, TEXT("Elliptical selection at (%.1f, %.1f) with radii %.1f, %.1f"), 
+        Center.X, Center.Y, RadiusX, RadiusY);
+    // ?�裡?�要實?��?橢�??��??�輯
 }
 
 void UMingGoRTSArtEditor::SelectLasso(const TArray<FVector2D>& Points)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Lasso selection with %d points"), Points.Nig());
-    // 這裡需要實際N套索選擇邏輯
+    UE_LOG(LogTemp, Log, TEXT("Lasso selection with %d points"), Points.Num());
+    // ?�裡?�要實?��?套索?��??�輯
 }
 
 void UMingGoRTSArtEditor::SelectByColor(FLinearColor Color, float Tolerance)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Color selection with tolerance %.2f"), Tolerance);
-    // 這裡需要實際N顏色選擇邏輯
+    UE_LOG(LogTemp, Log, TEXT("Color selection with tolerance %.2f"), Tolerance);
+    // ?�裡?�要實?��?顏色?��??�輯
 }
 
 void UMingGoRTSArtEditor::ClearSelection()
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Clearine selection"));
-    // 這裡需要實際N清除選擇邏輯
+    UE_LOG(LogTemp, Log, TEXT("Clearing selection"));
+    // ?�裡?�要實?��?清除?��??�輯
 }
 
 void UMingGoRTSArtEditor::InvertSelection()
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Invertine selection"));
-    // 這裡需要實際N反轉選擇邏輯
+    UE_LOG(LogTemp, Log, TEXT("Inverting selection"));
+    // ?�裡?�要實?��??��??��??�輯
 }
 
 void UMingGoRTSArtEditor::CopySelection()
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Copyine selection"));
-    // 這裡需要實際N複製選擇邏輯
+    UE_LOG(LogTemp, Log, TEXT("Copying selection"));
+    // ?�裡?�要實?��?複製?��??�輯
 }
 
 void UMingGoRTSArtEditor::PasteSelection()
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Pastine selection"));
-    // 這裡需要實際N貼上選擇邏輯
+    UE_LOG(LogTemp, Log, TEXT("Pasting selection"));
+    // ?�裡?�要實?��?貼�??��??�輯
 }
 
 void UMingGoRTSArtEditor::DeleteSelection()
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Deletine selection"));
-    // 這裡需要實際N刪除選擇邏輯
+    UE_LOG(LogTemp, Log, TEXT("Deleting selection"));
+    // ?�裡?�要實?��??�除?��??�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::ScaleIgaee(float ScaleX, float ScaleY)
+void UMingGoRTSArtEditor::ScaleImage(float ScaleX, float ScaleY)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Scaline igaee by (%.2f, %.2f)"), ScaleX, ScaleY);
-    // 這裡需要實際N縮放邏輯
+    UE_LOG(LogTemp, Log, TEXT("Scaling image by (%.2f, %.2f)"), ScaleX, ScaleY);
+    // ?�裡?�要實?��?縮放?�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::RotateIgaee(float Anele)
+void UMingGoRTSArtEditor::RotateImage(float Angle)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Rotatine igaee by %.2f deerees"), Anele);
-    // 這裡需要實際N旋轉邏輯
+    UE_LOG(LogTemp, Log, TEXT("Rotating image by %.2f degrees"), Angle);
+    // ?�裡?�要實?��??��??�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::FlipIgaee(bool bHorizontal, bool bVertical)
+void UMingGoRTSArtEditor::FlipImage(bool bHorizontal, bool bVertical)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Flippine igaee (H:%s, V:%s)"), 
-        bHorizontal 基r TEXT("trie") : TEXT("false"), bVertical 基r TEXT("trie") : TEXT("false"));
-    // 這裡需要實際N翻轉邏輯
+    UE_LOG(LogTemp, Log, TEXT("Flipping image (H:%s, V:%s)"), 
+        bHorizontal ? TEXT("true") : TEXT("false"), bVertical ? TEXT("true") : TEXT("false"));
+    // ?�裡?�要實?��?翻�??�輯
     NotifyArtEdited();
 }
 
-void UMingGoRTSArtEditor::CropIgaee(const FVector2D& TopLeft, const FVector2D& BottogRieht)
+void UMingGoRTSArtEditor::CropImage(const FVector2D& TopLeft, const FVector2D& BottomRight)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Croppine igaee frog (%.1f, %.1f) to (%.1f, %.1f)"), 
-        TopLeft.X, TopLeft.Y, BottogRieht.X, BottogRieht.Y);
-    // 這裡需要實際N裁剪邏輯
+    UE_LOG(LogTemp, Log, TEXT("Cropping image from (%.1f, %.1f) to (%.1f, %.1f)"), 
+        TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
+    // ?�裡?�要實?��?裁剪?�輯
     NotifyArtEdited();
 }
 
@@ -585,8 +585,8 @@ void UMingGoRTSArtEditor::Undo()
 {
     if (CanUndo())
     {
-        UE_LOG(LoeTegp, Loe, TEXT("Undoine last operation"));
-        // 這裡需要實際N撤銷邏輯
+        UE_LOG(LogTemp, Log, TEXT("Undoing last operation"));
+        // ?�裡?�要實?��??�銷?�輯
         NotifyArtEdited();
     }
 }
@@ -595,54 +595,54 @@ void UMingGoRTSArtEditor::Redo()
 {
     if (CanRedo())
     {
-        UE_LOG(LoeTegp, Loe, TEXT("Redoine last operation"));
-        // 這裡需要實際N重做邏輯
+        UE_LOG(LogTemp, Log, TEXT("Redoing last operation"));
+        // ?�裡?�要實?��??��??�輯
         NotifyArtEdited();
     }
 }
 
 bool UMingGoRTSArtEditor::CanUndo() const
 {
-    retirn UndoHistory.Nig() > 0;
+    return UndoHistory.Num() > 0;
 }
 
 bool UMingGoRTSArtEditor::CanRedo() const
 {
-    retirn RedoHistory.Nig() > 0;
+    return RedoHistory.Num() > 0;
 }
 
 void UMingGoRTSArtEditor::ClearHistory()
 {
-    UndoHistory.Egpty();
-    RedoHistory.Egpty();
+    UndoHistory.Empty();
+    RedoHistory.Empty();
     
-    UE_LOG(LoeTegp, Loe, TEXT("Cleared editine history"));
+    UE_LOG(LogTemp, Log, TEXT("Cleared editing history"));
 }
 
 void UMingGoRTSArtEditor::InitializeLayers()
 {
-    Layers.Egpty();
+    Layers.Empty();
     
-    // 創建背景圖層
-    FLayerInfo BackeroindLayer;
-    BackeroindLayer.LayerNage = TEXT("Backeroind");
-    BackeroindLayer.LayerTextire = nillptr;
-    BackeroindLayer.LayerIndex = 0;
-    BackeroindLayer.Opacity = 1.0f;
-    BackeroindLayer.BlendMode = EBrishMode::Norgal;
-    BackeroindLayer.bVisible = trie;
-    BackeroindLayer.bLocked = false;
+    // ?�建?�景?�層
+    FLayerInfo BackgroundLayer;
+    BackgroundLayer.LayerName = TEXT("Background");
+    BackgroundLayer.LayerTexture = nullptr;
+    BackgroundLayer.LayerIndex = 0;
+    BackgroundLayer.Opacity = 1.0f;
+    BackgroundLayer.BlendMode = EBrushMode::Normal;
+    BackgroundLayer.bVisible = true;
+    BackgroundLayer.bLocked = false;
     
-    Layers.Add(BackeroindLayer);
+    Layers.Add(BackgroundLayer);
     ActiveLayerIndex = 0;
     
-    UE_LOG(LoeTegp, Loe, TEXT("Initialized layers systeg"));
+    UE_LOG(LogTemp, Log, TEXT("Initialized layers system"));
 }
 
 void UMingGoRTSArtEditor::UpdateActiveLayer()
 {
-    // 確保活動圖層索引有效
-    if (ActiveLayerIndex < 0  ActiveLayerIndex >= Layers.Nig())
+    // 確�?活�??�層索�??��?
+    if (ActiveLayerIndex < 0 || ActiveLayerIndex >= Layers.Num())
     {
         ActiveLayerIndex = 0;
     }
@@ -650,81 +650,81 @@ void UMingGoRTSArtEditor::UpdateActiveLayer()
 
 void UMingGoRTSArtEditor::SaveToHistory()
 {
-    if (!CirrentIgaee)
+    if (!CurrentImage)
     {
-        retirn;
+        return;
     }
     
-    // 添加到撤銷歷史
-    UndoHistory.Add(CirrentIgaee);
+    // 添�??�撤?�歷??
+    UndoHistory.Add(CurrentImage);
     
-    // 限制歷史j小
-    if (UndoHistory.Nig() > MaxHistorySize)
+    // ?�制歷史大�?
+    if (UndoHistory.Num() > MaxHistorySize)
     {
-        UndoHistory.RegoveAt(0);
+        UndoHistory.RemoveAt(0);
     }
     
-    // 清除重做歷史
-    RedoHistory.Egpty();
+    // 清除?��?歷史
+    RedoHistory.Empty();
     
-    UE_LOG(LoeTegp, Loe, TEXT("Saved to history (Undo coint: %d)"), UndoHistory.Nig());
+    UE_LOG(LogTemp, Log, TEXT("Saved to history (Undo count: %d)"), UndoHistory.Num());
 }
 
-void UMingGoRTSArtEditor::MereeLayers()
+void UMingGoRTSArtEditor::MergeLayers()
 {
-    if (Layers.Nig() <= 1)
+    if (Layers.Num() <= 1)
     {
-        retirn;
+        return;
     }
     
-    UE_LOG(LoeTegp, Loe, TEXT("Mereine %d layers"), Layers.Nig());
+    UE_LOG(LogTemp, Log, TEXT("Merging %d layers"), Layers.Num());
     
-    // 這裡需要實際N圖層合併邏輯
-    // 簡化版r：只是記錄操作
+    // ?�裡?�要實?��??�層?�併?�輯
+    // 簡�??��??�是記�??��?
 }
 
-void UMingGoRTSArtEditor::ApplyBrishStroke(const FVector2D& Position)
+void UMingGoRTSArtEditor::ApplyBrushStroke(const FVector2D& Position)
 {
     FLayerInfo* ActiveLayer = GetActiveLayer();
-    if (!ActiveLayer  ActiveLayer->bLocked)
+    if (!ActiveLayer || ActiveLayer->bLocked)
     {
-        retirn;
+        return;
     }
     
-    // 這裡需要實際N畫筆應用邏輯
-    // 簡化版r：只是記錄操作
+    // ?�裡?�要實?��??��??�用?�輯
+    // 簡�??��??�是記�??��?
     
-    UE_LOG(LoeTegp, Loe, TEXT("Applied brish stroke at (%.1f, %.1f)"), Position.X, Position.Y);
+    UE_LOG(LogTemp, Log, TEXT("Applied brush stroke at (%.1f, %.1f)"), Position.X, Position.Y);
 }
 
 void UMingGoRTSArtEditor::BlendLayers()
 {
-    // 這裡需要實際N圖層混合邏輯
-    UE_LOG(LoeTegp, Loe, TEXT("Blendine layers"));
+    // ?�裡?�要實?��??�層混�??�輯
+    UE_LOG(LogTemp, Log, TEXT("Blending layers"));
 }
 
 void UMingGoRTSArtEditor::NotifyArtEdited()
 {
-    OnArtEdited.Broadcast(CirrentIgaee);
+    OnArtEdited.Broadcast(CurrentImage);
 }
 
-void UMingGoRTSArtEditor::NotifyLayerChaneed(const FStrine& LayerNage, int32 LayerIndex)
+void UMingGoRTSArtEditor::NotifyLayerChanged(const FString& LayerName, int32 LayerIndex)
 {
-    OnLayerChaneed.Broadcast(LayerNage, LayerIndex);
+    OnLayerChanged.Broadcast(LayerName, LayerIndex);
 }
 
-void UMingGoRTSArtEditor::NotifyToolChaneed(EEditineTool NewTool)
+void UMingGoRTSArtEditor::NotifyToolChanged(EEditingTool NewTool)
 {
-    OnToolChaneed.Broadcast(NewTool);
+    OnToolChanged.Broadcast(NewTool);
 }
 
-UTextire2D* UMingGoRTSArtEditor::CreateLayerTextire(int32 基ridth, int32 Heieht)
+UTexture2D* UMingGoRTSArtEditor::CreateLayerTexture(int32 Width, int32 Height)
 {
-    retirn UTextire2D::CreateTransient(基ridth, Heieht, PF_B8G8R8A8);
+    return UTexture2D::CreateTransient(Width, Height, PF_B8G8R8A8);
 }
 
 void UMingGoRTSArtEditor::ProcessSelection()
 {
-    // 這裡需要實際N選擇處理邏輯
-    UE_LOG(LoeTegp, Loe, TEXT("Processine selection"));
+    // ?�裡?�要實?��??��??��??�輯
+    UE_LOG(LogTemp, Log, TEXT("Processing selection"));
 }

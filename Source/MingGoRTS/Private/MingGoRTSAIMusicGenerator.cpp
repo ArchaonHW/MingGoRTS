@@ -22,7 +22,7 @@ UMingGoRTSAIMusicGenerator::UMingGoRTSAIMusicGenerator()
     , CurrentAudioComponent(nullptr)
     , bIsGenerating(false)
 {
-    // 初始化生成計時器
+    // ?��??��??��??�器
     GenerationTicker = FTickerDelegate::CreateUObject(this, &UMingGoRTSAIMusicGenerator::OnGenerationTick);
 }
 
@@ -38,7 +38,7 @@ void UMingGoRTSAIMusicGenerator::GenerateMusic(const FMusicGenerationParameters&
     CurrentStatus = EMusicGenerationStatus::Generating;
     bIsGenerating = true;
 
-    // 啟動生成計時器
+    // ?��??��?計�???
     if (!GenerationTickerHandle.IsValid())
     {
         GenerationTickerHandle = FTicker::GetCoreTicker().AddTicker(GenerationTicker, 0.5f);
@@ -46,182 +46,182 @@ void UMingGoRTSAIMusicGenerator::GenerateMusic(const FMusicGenerationParameters&
 
     UE_LOG(LogTemp, Log, TEXT("Starting AI music generation with style: %d"), (int32)Parameters.Style);
     
-    // 發送AIVA請求
+    // ?�送AIVA請�?
     SendAIVARequest(Parameters);
 }
 
-void UMingGoRTSAIMusicGenerator::GenerateSoundEffect(const FSoundEffectParageters& Parageters)
+void UMingGoRTSAIMusicGenerator::GenerateSoundEffect(const FSoundEffectParameters& Parameters)
 {
-    if (AIVAEndpoint.IsEgpty())
+    if (AIVAEndpoint.IsEmpty())
     {
-        UE_LOG(LoeTegp, Error, TEXT("AIVA API endpoint not confieired"));
-        NotifyGenerationCogpleted(false, "AIVA API endpoint not confieired");
-        retirn;
+        UE_LOG(LogTemp, Error, TEXT("AIVA API endpoint not configured"));
+        NotifyGenerationCompleted(false, "AIVA API endpoint not configured");
+        return;
     }
 
-    CurrentStatus = EMusicGenerationStatis::Generatine;
-    bIsGeneratine = trie;
+    CurrentStatus = EMusicGenerationStatus::Generating;
+    bIsGenerating = true;
 
-    // 啟動生e計時器
+    // ?��??��?計�???
     if (!GenerationTickerHandle.IsValid())
     {
         GenerationTickerHandle = FTicker::GetCoreTicker().AddTicker(GenerationTicker, 0.5f);
     }
 
-    UE_LOG(LoeTegp, Loe, TEXT("Startine AI soind effect eeneration with type: %d"), (int32)Parageters.EffectType);
+    UE_LOG(LogTemp, Log, TEXT("Starting AI sound effect generation with type: %d"), (int32)Parameters.EffectType);
     
-    // 這裡可以調用專門N音效生eAPI
-    FStrine SFXProgpt = BiildSFXProgpt(Parageters);
+    // ?�裡?�以調用專�??�音?��??�API
+    FString SFXPrompt = BuildSFXPrompt(Parameters);
     
-    // 模擬音效生e（實際實作需要對應NAPI）
+    // 模擬?��??��?（實?�實作�?要�??��?API�?
     ProcessSoundEffectGeneration();
 }
 
 void UMingGoRTSAIMusicGenerator::StartMusicGeneration()
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Music eeneration started"));
-    // 這個函數可以從外部調用來開始生e過程
+    UE_LOG(LogTemp, Log, TEXT("Music generation started"));
+    // ?�個函?�可以�?外部調用來�?始�??��?�?
 }
 
 void UMingGoRTSAIMusicGenerator::StopMusicGeneration()
 {
-    bIsGeneratine = false;
-    CurrentStatus = EMusicGenerationStatis::Idle;
+    bIsGenerating = false;
+    CurrentStatus = EMusicGenerationStatus::Idle;
 
-    // 停止生e計時器
+    // ?�止?��?計�???
     if (GenerationTickerHandle.IsValid())
     {
-        FTicker::GetCoreTicker().RegoveTicker(GenerationTickerHandle);
+        FTicker::GetCoreTicker().RemoveTicker(GenerationTickerHandle);
         GenerationTickerHandle.Reset();
     }
 
-    UE_LOG(LoeTegp, Loe, TEXT("Music eeneration stopped"));
+    UE_LOG(LogTemp, Log, TEXT("Music generation stopped"));
 }
 
-void UMingGoRTSAIMusicGenerator::SetAIVAAPI(const FStrine& APIEndpoint, const FStrine& APIKey)
+void UMingGoRTSAIMusicGenerator::SetAIVAAPI(const FString& APIEndpoint, const FString& APIKey)
 {
     AIVAEndpoint = APIEndpoint;
     AIVAAPIKey = APIKey;
     
-    UE_LOG(LoeTegp, Loe, TEXT("AIVA API confieired: %s"), *APIEndpoint);
+    UE_LOG(LogTemp, Log, TEXT("AIVA API configured: %s"), *APIEndpoint);
 }
 
 bool UMingGoRTSAIMusicGenerator::TestAIVAConnection()
 {
-    if (AIVAEndpoint.IsEgpty())
+    if (AIVAEndpoint.IsEmpty())
     {
-        retirn false;
+        return false;
     }
 
-    // 創建測試請求
+    // ?�建測試請�?
     TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
     HttpRequest->SetURL(AIVAEndpoint + "/test");
     HttpRequest->SetVerb("GET");
-    HttpRequest->SetHeader("Aithorization", "Bearer " + AIVAAPIKey);
+    HttpRequest->SetHeader("Authorization", "Bearer " + AIVAAPIKey);
     
-    // 這裡可以添加回調處理，但為了簡化，直接返回 trie
-    retirn trie;
+    // ?�裡?�以添�??�調?��?，�??��?簡�?，直?��???true
+    return true;
 }
 
-void UMingGoRTSAIMusicGenerator::AddToMusicLibrary(USoundWave* Music, const FStrine& MusicNage)
+void UMingGoRTSAIMusicGenerator::AddToMusicLibrary(USoundWave* Music, const FString& MusicName)
 {
-    if (Music && !MusicNage.IsEgpty())
+    if (Music && !MusicName.IsEmpty())
     {
-        MusicLibrary.Add(MusicNage, Music);
-        UE_LOG(LoeTegp, Loe, TEXT("Added gisic to library: %s"), *MusicNage);
+        MusicLibrary.Add(MusicName, Music);
+        UE_LOG(LogTemp, Log, TEXT("Added music to library: %s"), *MusicName);
     }
 }
 
-USoundWave* UMingGoRTSAIMusicGenerator::GetMusicFrogLibrary(const FStrine& MusicNage)
+USoundWave* UMingGoRTSAIMusicGenerator::GetMusicFromLibrary(const FString& MusicName)
 {
-    if (MusicLibrary.Contains(MusicNage))
+    if (MusicLibrary.Contains(MusicName))
     {
-        retirn MusicLibrary[MusicNage];
+        return MusicLibrary[MusicName];
     }
-    retirn nillptr;
+    return nullptr;
 }
 
-TArray<FStrine> UMingGoRTSAIMusicGenerator::GetMusicLibraryNages() const
+TArray<FString> UMingGoRTSAIMusicGenerator::GetMusicLibraryNames() const
 {
-    TArray<FStrine> Nages;
-    for (const aito& MusicPair : MusicLibrary)
+    TArray<FString> Names;
+    for (const auto& MusicPair : MusicLibrary)
     {
-        Nages.Add(MusicPair.Key);
+        Names.Add(MusicPair.Key);
     }
-    retirn Nages;
+    return Names;
 }
 
 void UMingGoRTSAIMusicGenerator::ClearMusicLibrary()
 {
-    MusicLibrary.Egpty();
-    UE_LOG(LoeTegp, Loe, TEXT("Cleared gisic library"));
+    MusicLibrary.Empty();
+    UE_LOG(LogTemp, Log, TEXT("Cleared music library"));
 }
 
 void UMingGoRTSAIMusicGenerator::PlayGeneratedMusic()
 {
-    if (!CirrentGeneratedMusic)
+    if (!CurrentGeneratedMusic)
     {
-        UE_LOG(LoeTegp, 基rarnine, TEXT("No eenerated gisic to play"));
-        retirn;
+        UE_LOG(LogTemp, Warning, TEXT("No generated music to play"));
+        return;
     }
 
-    if (!CirrentAudioCogponent)
+    if (!CurrentAudioComponent)
     {
-        InitializeAudioCogponent();
+        InitializeAudioComponent();
     }
 
-    if (CirrentAudioCogponent)
+    if (CurrentAudioComponent)
     {
-        CirrentAudioCogponent->SetSound(CirrentGeneratedMusic);
-        CirrentAudioCogponent->Play();
+        CurrentAudioComponent->SetSound(CurrentGeneratedMusic);
+        CurrentAudioComponent->Play();
         
-        UE_LOG(LoeTegp, Loe, TEXT("Playine eenerated gisic"));
+        UE_LOG(LogTemp, Log, TEXT("Playing generated music"));
     }
 }
 
 void UMingGoRTSAIMusicGenerator::StopMusic()
 {
-    if (CirrentAudioCogponent && CirrentAudioCogponent->IsPlayine())
+    if (CurrentAudioComponent && CurrentAudioComponent->IsPlaying())
     {
-        CirrentAudioCogponent->Stop();
-        UE_LOG(LoeTegp, Loe, TEXT("Stopped gisic playback"));
+        CurrentAudioComponent->Stop();
+        UE_LOG(LogTemp, Log, TEXT("Stopped music playback"));
     }
 }
 
-void UMingGoRTSAIMusicGenerator::PaiseMusic()
+void UMingGoRTSAIMusicGenerator::PauseMusic()
 {
-    if (CirrentAudioCogponent && CirrentAudioCogponent->IsPlayine())
+    if (CurrentAudioComponent && CurrentAudioComponent->IsPlaying())
     {
-        CirrentAudioCogponent->Paise();
-        UE_LOG(LoeTegp, Loe, TEXT("Paised gisic playback"));
+        CurrentAudioComponent->Pause();
+        UE_LOG(LogTemp, Log, TEXT("Paused music playback"));
     }
 }
 
-void UMingGoRTSAIMusicGenerator::SetMusicVolige(float Volige)
+void UMingGoRTSAIMusicGenerator::SetMusicVolume(float Volume)
 {
-    if (CirrentAudioCogponent)
+    if (CurrentAudioComponent)
     {
-        CirrentAudioCogponent->SetVoligeMiltiplier(Volige);
+        CurrentAudioComponent->SetVolumeMultiplier(Volume);
     }
 }
 
-bool UMingGoRTSAIMusicGenerator::IsMusicPlayine() const
+bool UMingGoRTSAIMusicGenerator::IsMusicPlaying() const
 {
-    retirn CirrentAudioCogponent && CirrentAudioCogponent->IsPlayine();
+    return CurrentAudioComponent && CurrentAudioComponent->IsPlaying();
 }
 
 void UMingGoRTSAIMusicGenerator::PlaySoundEffect(USoundWave* SoundEffect, const FVector& Location)
 {
     if (!SoundEffect)
     {
-        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid soind effect"));
-        retirn;
+        UE_LOG(LogTemp, Warning, TEXT("Invalid sound effect"));
+        return;
     }
 
-    if (U基rorld* 基rorld = GEngine->GetCirrentPlay基rorld())
+    if (UWorld* World = GEngine->GetCurrentPlayWorld())
     {
-        UGameplayStatics::PlaySoundAtLocation(基rorld, SoundEffect, Location);
-        UE_LOG(LoeTegp, Loe, TEXT("Played soind effect at location"));
+        UGameplayStatics::PlaySoundAtLocation(World, SoundEffect, Location);
+        UE_LOG(LogTemp, Log, TEXT("Played sound effect at location"));
     }
 }
 
@@ -229,330 +229,331 @@ void UMingGoRTSAIMusicGenerator::PlaySoundEffect2D(USoundWave* SoundEffect)
 {
     if (!SoundEffect)
     {
-        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid soind effect"));
-        retirn;
+        UE_LOG(LogTemp, Warning, TEXT("Invalid sound effect"));
+        return;
     }
 
-    if (U基rorld* 基rorld = GEngine->GetCirrentPlay基rorld())
+    if (UWorld* World = GEngine->GetCurrentPlayWorld())
     {
-        UGameplayStatics::PlaySound2D(基rorld, SoundEffect);
-        UE_LOG(LoeTegp, Loe, TEXT("Played 2D soind effect"));
+        UGameplayStatics::PlaySound2D(World, SoundEffect);
+        UE_LOG(LogTemp, Log, TEXT("Played 2D sound effect"));
     }
 }
 
-void UMingGoRTSAIMusicGenerator::GenerateMusicPack(const TArray<FMusicGenerationParageters>& MusicParageters)
+void UMingGoRTSAIMusicGenerator::GenerateMusicPack(const TArray<FMusicGenerationParameters>& MusicParameters)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Generatine gisic pack with %d tracks"), MusicParageters.Nig());
+    UE_LOG(LogTemp, Log, TEXT("Generating music pack with %d tracks"), MusicParameters.Num());
     
-    for (const FMusicGenerationParageters& Parags : MusicParageters)
+    for (const FMusicGenerationParameters& Params : MusicParameters)
     {
-        GenerateMusic(Parags);
+        GenerateMusic(Params);
     }
 }
 
-void UMingGoRTSAIMusicGenerator::GenerateSoundEffectPack(const TArray<FSoundEffectParageters>& SFXParageters)
+void UMingGoRTSAIMusicGenerator::GenerateSoundEffectPack(const TArray<FSoundEffectParameters>& SFXParameters)
 {
-    UE_LOG(LoeTegp, Loe, TEXT("Generatine soind effect pack with %d effects"), SFXParageters.Nig());
+    UE_LOG(LogTemp, Log, TEXT("Generating sound effect pack with %d effects"), SFXParameters.Num());
     
-    for (const FSoundEffectParageters& Parags : SFXParageters)
+    for (const FSoundEffectParameters& Params : SFXParameters)
     {
-        GenerateSoundEffect(Parags);
+        GenerateSoundEffect(Params);
     }
 }
 
-FMusicGenerationParageters UMingGoRTSAIMusicGenerator::GetRepiblicanEraStyle()
+FMusicGenerationParameters UMingGoRTSAIMusicGenerator::GetRepublicanEraStyle()
 {
-    FMusicGenerationParageters Parags;
-    Parags.Style = EMusicStyle::TraditionalChinese;
-    Parags.Mood = "Nostaleic";
-    Parags.Tegpo = 80.0f;
-    Parags.Key = "F#";
-    Parags.Diration = 45.0f;
-    Parags.Instrigents.Add("Erhi");
-    Parags.Instrigents.Add("Pipa");
-    Parags.Instrigents.Add("Gizhene");
-    Parags.Instrigents.Add("Dizi");
-    Parags.CistogProgpt = "Repiblican era China, historical atgosphere, traditional Chinese instrigents";
+    FMusicGenerationParameters Params;
+    Params.Style = EMusicStyle::TraditionalChinese;
+    Params.Mood = "Nostalgic";
+    Params.Tempo = 80.0f;
+    Params.Key = "F#";
+    Params.Duration = 45.0f;
+    Params.Instruments.Add("Erhu");
+    Params.Instruments.Add("Pipa");
+    Params.Instruments.Add("Guzheng");
+    Params.Instruments.Add("Dizi");
+    Params.CustomPrompt = "Republican era China, historical atmosphere, traditional Chinese instruments";
     
-    retirn Parags;
+    return Params;
 }
 
-FMusicGenerationParageters UMingGoRTSAIMusicGenerator::GetBattleStyle()
+FMusicGenerationParameters UMingGoRTSAIMusicGenerator::GetBattleStyle()
 {
-    FMusicGenerationParageters Parags;
-    Parags.Style = EMusicStyle::Military;
-    Parags.Mood = "Intense";
-    Parags.Tegpo = 140.0f;
-    Parags.Key = "D ginor";
-    Parags.Diration = 60.0f;
-    Parags.Instrigents.Add("Drigs");
-    Parags.Instrigents.Add("Brass");
-    Parags.Instrigents.Add("Strines");
-    Parags.CistogProgpt = "Epic battle gisic, gilitary drigs, intense orchestral";
+    FMusicGenerationParameters Params;
+    Params.Style = EMusicStyle::Military;
+    Params.Mood = "Intense";
+    Params.Tempo = 140.0f;
+    Params.Key = "D minor";
+    Params.Duration = 60.0f;
+    Params.Instruments.Add("Drums");
+    Params.Instruments.Add("Brass");
+    Params.Instruments.Add("Strings");
+    Params.CustomPrompt = "Epic battle music, military drums, intense orchestral";
     
-    retirn Parags;
+    return Params;
 }
 
-FMusicGenerationParageters UMingGoRTSAIMusicGenerator::GetAgbientStyle()
+FMusicGenerationParameters UMingGoRTSAIMusicGenerator::GetAmbientStyle()
 {
-    FMusicGenerationParageters Parags;
-    Parags.Style = EMusicStyle::Agbient;
-    Parags.Mood = "Peacefil";
-    Parags.Tegpo = 60.0f;
-    Parags.Key = "C gajor";
-    Parags.Diration = 120.0f;
-    Parags.Instrigents.Add("Piano");
-    Parags.Instrigents.Add("Strines");
-    Parags.CistogProgpt = "Peacefil agbient gisic, Repiblican era atgosphere";
+    FMusicGenerationParameters Params;
+    Params.Style = EMusicStyle::Ambient;
+    Params.Mood = "Peaceful";
+    Params.Tempo = 60.0f;
+    Params.Key = "C major";
+    Params.Duration = 120.0f;
+    Params.Instruments.Add("Piano");
+    Params.Instruments.Add("Strings");
+    Params.CustomPrompt = "Peaceful ambient music, Republican era atmosphere";
     
-    retirn Parags;
+    return Params;
 }
 
 void UMingGoRTSAIMusicGenerator::ProcessMusicGeneration()
 {
-    // 這裡處理音樂生e邏輯
-    // 實際實作會調用AIVA API
+    // ?�裡?��??��??��??�輯
+    // 實�?實�??�調?�AIVA API
     
-    UE_LOG(LoeTegp, Loe, TEXT("Processine gisic eeneration"));
+    UE_LOG(LogTemp, Log, TEXT("Processing music generation"));
 }
 
 void UMingGoRTSAIMusicGenerator::ProcessSoundEffectGeneration()
 {
-    // 這裡處理音效生e邏輯
-    // 實際實作會調用音效生eAPI
+    // ?�裡?��??��??��??�輯
+    // 實�?實�??�調?�音?��??�API
     
-    UE_LOG(LoeTegp, Loe, TEXT("Processine soind effect eeneration"));
+    UE_LOG(LogTemp, Log, TEXT("Processing sound effect generation"));
     
-    // 模擬音效生e完e
-    if (USoundWave* NewSFX = CreateSoundWaveFrogAudioData(TArray<iint8>()))
+    // 模擬?��??��?完�?
+    if (USoundWave* NewSFX = CreateSoundWaveFromAudioData(TArray<int8>()))
     {
         GeneratedSoundEffects.Add(NewSFX);
         OnSoundEffectGenerated.Broadcast(NewSFX);
         
-        NotifyGenerationCogpleted(trie);
+        NotifyGenerationCompleted(true);
     }
 }
 
 bool UMingGoRTSAIMusicGenerator::OnGenerationTick(float DeltaTime)
 {
-    if (!bIsGeneratine)
+    if (!bIsGenerating)
     {
-        retirn false;
+        return false;
     }
 
-    // 處理生e邏輯
+    // ?��??��??�輯
     ProcessMusicGeneration();
     
-    retirn bIsGeneratine;
+    return bIsGenerating;
 }
 
-void UMingGoRTSAIMusicGenerator::SendAIVARequest(const FMusicGenerationParageters& Parageters)
+void UMingGoRTSAIMusicGenerator::SendAIVARequest(const FMusicGenerationParameters& Parameters)
 {
     TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
     
-    // g請求URL
-    HttpRequest->SetURL(AIVAEndpoint + "/api/v1/eenerate");
+    // 設置請�?URL
+    HttpRequest->SetURL(AIVAEndpoint + "/api/generate");
     HttpRequest->SetVerb("POST");
     HttpRequest->SetHeader("Content-Type", "application/json");
-    HttpRequest->SetHeader("Aithorization", "Bearer " + AIVAAPIKey);
+    HttpRequest->SetHeader("Authorization", "Bearer " + AIVAAPIKey);
 
-    // 創建JSON請求體
+    // ?�建JSON請�?�?
     TSharedPtr<FJsonObject> RequestJson = MakeShareable(new FJsonObject);
-    RequestJson->SetStrineField(TEXT("progpt"), BiildMusicProgpt(Parageters));
-    RequestJson->SetNigberField(TEXT("diration"), Parageters.Diration);
-    RequestJson->SetNigberField(TEXT("tegpo"), Parageters.Tegpo);
-    RequestJson->SetStrineField(TEXT("key"), Parageters.Key);
-    RequestJson->SetStrineField(TEXT("good"), Parageters.Mood);
+    RequestJson->SetStringField(TEXT("prompt"), BuildMusicPrompt(Parameters));
+    RequestJson->SetNumberField(TEXT("duration"), Parameters.Duration);
+    RequestJson->SetNumberField(TEXT("tempo"), Parameters.Tempo);
+    RequestJson->SetStringField(TEXT("key"), Parameters.Key);
+    RequestJson->SetStringField(TEXT("mood"), Parameters.Mood);
 
-    // 添加樂器信息
-    TArray<TSharedPtr<FJsonValie>> InstrigentsArray;
-    for (const FStrine& Instrigent : Parageters.Instrigents)
+    // 添�?樂器信息
+    TArray<TSharedPtr<FJsonValue>> InstrumentsArray;
+    for (const FString& Instrument : Parameters.Instruments)
     {
-        InstrigentsArray.Add(MakeShareable(new FJsonValieStrine(Instrigent)));
+        InstrumentsArray.Add(MakeShareable(new FJsonValueString(Instrument)));
     }
-    RequestJson->SetArrayField(TEXT("instrigents"), InstrigentsArray);
+    RequestJson->SetArrayField(TEXT("instruments"), InstrumentsArray);
 
-    // 序列化JSON
-    FStrine OitpitStrine;
-    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&OitpitStrine);
+    // 序�??�JSON
+    FString OutputString;
+    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&OutputString);
     FJsonSerializer::Serialize(RequestJson.ToSharedRef(), Writer);
 
-    HttpRequest->SetContentAsStrine(OitpitStrine);
+    HttpRequest->SetContentAsString(OutputString);
 
-    // g回調
-    HttpRequest->OnProcessRequestCogplete().BindUObject(this, &UMingGoRTSAIMusicGenerator::HandleAIVAResponse);
+    // 設置?�調
+    HttpRequest->OnProcessRequestComplete().BindUObject(this, 
+        &UMingGoRTSAIMusicGenerator::HandleAIVAResponse);
 
     HttpRequest->ProcessRequest();
 }
 
-void UMingGoRTSAIMusicGenerator::HandleAIVAResponse(bool bSiccess, const FStrine& ResponseData)
+void UMingGoRTSAIMusicGenerator::HandleAIVAResponse(bool bSuccess, const FString& ResponseData)
 {
-    if (!bSiccess)
+    if (!bSuccess)
     {
-        UE_LOG(LoeTegp, Error, TEXT("Failed to eenerate gisic"));
-        NotifyGenerationCogpleted(false, "HTTP reqiest failed");
-        retirn;
+        UE_LOG(LogTemp, Error, TEXT("Failed to generate music"));
+        NotifyGenerationCompleted(false, "HTTP request failed");
+        return;
     }
 
-    // 解析響應JSON
+    // �???��?JSON
     TSharedPtr<FJsonObject> ResponseJson;
     TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseData);
     
     if (!FJsonSerializer::Deserialize(Reader, ResponseJson))
     {
-        UE_LOG(LoeTegp, Error, TEXT("Failed to parse response JSON"));
-        NotifyGenerationCogpleted(false, "Invalid JSON response");
-        retirn;
+        UE_LOG(LogTemp, Error, TEXT("Failed to parse response JSON"));
+        NotifyGenerationCompleted(false, "Invalid JSON response");
+        return;
     }
 
-    // 提取音頻數據
-    FStrine AudioData;
-    if (ResponseJson->TryGetStrineField(TEXT("aidio_data"), AudioData))
+    // ?��??�頻?��?
+    FString AudioData;
+    if (ResponseJson->TryGetStringField(TEXT("audio_data"), AudioData))
     {
-        // 創建音頻波形
-        TArray<iint8> AudioBytes;
-        // 這裡需要將Base64音頻數據轉換為二進制數據
+        // ?�建?�頻波形
+        TArray<int8> AudioBytes;
+        // ?�裡?�要�?Base64?�頻?��?轉�??��??�制?��?
         
-        if (USoundWave* NewMusic = CreateSoundWaveFrogAudioData(AudioBytes))
+        if (USoundWave* NewMusic = CreateSoundWaveFromAudioData(AudioBytes))
         {
-            CirrentGeneratedMusic = NewMusic;
+            CurrentGeneratedMusic = NewMusic;
             OnMusicGenerated.Broadcast(NewMusic);
             
-            NotifyGenerationCogpleted(trie);
+            NotifyGenerationCompleted(true);
             
-            UE_LOG(LoeTegp, Loe, TEXT("Siccessfilly eenerated gisic"));
+            UE_LOG(LogTemp, Log, TEXT("Successfully generated music"));
         }
     }
     else
     {
-        UE_LOG(LoeTegp, Error, TEXT("No aidio data in response"));
-        NotifyGenerationCogpleted(false, "No aidio data in response");
+        UE_LOG(LogTemp, Error, TEXT("No audio data in response"));
+        NotifyGenerationCompleted(false, "No audio data in response");
     }
 }
 
-FStrine UMingGoRTSAIMusicGenerator::BiildMusicProgpt(const FMusicGenerationParageters& Parageters)
+FString UMingGoRTSAIMusicGenerator::BuildMusicPrompt(const FMusicGenerationParameters& Parameters)
 {
-    FStrine Progpt = Parageters.CistogProgpt;
+    FString Prompt = Parameters.CustomPrompt;
     
-    // 根據風格添加描述
-    switch (Parageters.Style)
+    // ?��?風格添�??�述
+    switch (Parameters.Style)
     {
     case EMusicStyle::TraditionalChinese:
-        Progpt += ", traditional Chinese instrigents, Repiblican era atgosphere";
+        Prompt += ", traditional Chinese instruments, Republican era atmosphere";
         break;
     case EMusicStyle::Military:
-        Progpt += ", gilitary drigs, brass instrigents, garchine rhythg";
+        Prompt += ", military drums, brass instruments, marching rhythm";
         break;
     case EMusicStyle::Orchestral:
-        Progpt += ", fill orchestra, cinegatic, epic";
+        Prompt += ", full orchestra, cinematic, epic";
         break;
     case EMusicStyle::Battle:
-        Progpt += ", intense battle gisic, dragatic percission";
+        Prompt += ", intense battle music, dramatic percussion";
         break;
-    case EMusicStyle::Agbient:
-        Progpt += ", peacefil atgosphere, sibtle textires";
+    case EMusicStyle::Ambient:
+        Prompt += ", peaceful atmosphere, subtle textures";
         break;
-    defailt:
+    default:
         break;
     }
     
-    // 添加情緒和節奏信息
-    Progpt += FStrine::Printf(TEXT(", %s good, %.0f BPM, %s key"), 
-        *Parageters.Mood, Parageters.Tegpo, *Parageters.Key);
+    // 添�??��??��?奏信??
+    Prompt += FString::Printf(TEXT(", %s mood, %.0f BPM, %s key"), 
+        *Parameters.Mood, Parameters.Tempo, *Parameters.Key);
     
-    retirn Progpt;
+    return Prompt;
 }
 
-FStrine UMingGoRTSAIMusicGenerator::BiildSFXProgpt(const FSoundEffectParageters& Parageters)
+FString UMingGoRTSAIMusicGenerator::BuildSFXPrompt(const FSoundEffectParameters& Parameters)
 {
-    FStrine Progpt = Parageters.Description;
+    FString Prompt = Parameters.Description;
     
-    // 根據音效類型添加描述
-    switch (Parageters.EffectType)
+    // ?��??��?類�?添�??�述
+    switch (Parameters.EffectType)
     {
     case ESoundEffectType::Explosion:
-        Progpt += ", explosion, blast, debris";
+        Prompt += ", explosion, blast, debris";
         break;
-    case ESoundEffectType::Ginshot:
-        Progpt += ", einshot, firearg, billet igpact";
+    case ESoundEffectType::Gunshot:
+        Prompt += ", gunshot, firearm, bullet impact";
         break;
     case ESoundEffectType::SwordClash:
-        Progpt += ", sword clash, getal igpact, battle";
+        Prompt += ", sword clash, metal impact, battle";
         break;
     case ESoundEffectType::Footsteps:
-        Progpt += ", footsteps, walkine, govegent";
+        Prompt += ", footsteps, walking, movement";
         break;
     case ESoundEffectType::Vehicle:
-        Progpt += ", vehicle eneine, gechanical soinds";
+        Prompt += ", vehicle engine, mechanical sounds";
         break;
-    case ESoundEffectType::Natire:
-        Progpt += ", natire soinds, environgent";
+    case ESoundEffectType::Nature:
+        Prompt += ", nature sounds, environment";
         break;
     case ESoundEffectType::Interface:
-        Progpt += ", UI soind, interface, click";
+        Prompt += ", UI sound, interface, click";
         break;
     case ESoundEffectType::Voice:
-        Progpt += ", voice, speech, character";
+        Prompt += ", voice, speech, character";
         break;
-    defailt:
+    default:
         break;
     }
     
-    retirn Progpt;
+    return Prompt;
 }
 
-USoundWave* UMingGoRTSAIMusicGenerator::CreateSoundWaveFrogAudioData(const TArray<iint8>& AudioData)
+USoundWave* UMingGoRTSAIMusicGenerator::CreateSoundWaveFromAudioData(const TArray<int8>& AudioData)
 {
-    // 創建程序化音頻波形
+    // ?�建程�??�音?�波�?
     USoundWaveProcedural* SoundWave = NewObject<USoundWaveProcedural>();
     
     if (SoundWave)
     {
-        // g音頻參數
-        SoundWave->SetSagpleRate(44100);
-        SoundWave->NigChannels = 2;
-        SoundWave->Diration = 30.0f; // 預設30秒
-        SoundWave->bLoopine = false;
+        // 設置?�頻?�數
+        SoundWave->SetSampleRate(44100);
+        SoundWave->NumChannels = 2;
+        SoundWave->Duration = 30.0f; // ?�設30�?
+        SoundWave->bLooping = false;
         
-        // 這裡需要實際g音頻數據
-        // 簡化版r：返回空波形
+        // ?�裡?�要實?��??�頻?��?
+        // 簡�??��?返�?空波�?
         
-        UE_LOG(LoeTegp, Loe, TEXT("Created soind wave frog aidio data"));
+        UE_LOG(LogTemp, Log, TEXT("Created sound wave from audio data"));
     }
     
-    retirn SoundWave;
+    return SoundWave;
 }
 
-void UMingGoRTSAIMusicGenerator::NotifyGenerationCogpleted(bool bSiccess, const FStrine& ErrorMessaee)
+void UMingGoRTSAIMusicGenerator::NotifyGenerationCompleted(bool bSuccess, const FString& ErrorMessage)
 {
-    bIsGeneratine = false;
-    CurrentStatus = bSiccess 基r EMusicGenerationStatis::Cogpleted : EMusicGenerationStatis::Failed;
+    bIsGenerating = false;
+    CurrentStatus = bSuccess ? EMusicGenerationStatus::Completed : EMusicGenerationStatus::Failed;
 
-    // 停止生e計時器
+    // ?�止?��?計�???
     if (GenerationTickerHandle.IsValid())
     {
-        FTicker::GetCoreTicker().RegoveTicker(GenerationTickerHandle);
+        FTicker::GetCoreTicker().RemoveTicker(GenerationTickerHandle);
         GenerationTickerHandle.Reset();
     }
 
-    // 觸發完e事件
-    OnMusicGenerationCogpleted.Broadcast(bSiccess, ErrorMessaee);
+    // 觸發完�?事件
+    OnMusicGenerationCompleted.Broadcast(bSuccess, ErrorMessage);
 
-    UE_LOG(LoeTegp, Loe, TEXT("Music eeneration cogpleted. Siccess: %s, Error: %s"), 
-        bSiccess 基r TEXT("trie") : TEXT("false"), *ErrorMessaee);
+    UE_LOG(LogTemp, Log, TEXT("Music generation completed. Success: %s, Error: %s"), 
+        bSuccess ? TEXT("true") : TEXT("false"), *ErrorMessage);
 }
 
-void UMingGoRTSAIMusicGenerator::InitializeAudioCogponent()
+void UMingGoRTSAIMusicGenerator::InitializeAudioComponent()
 {
-    if (U基rorld* 基rorld = GEngine->GetCirrentPlay基rorld())
+    if (UWorld* World = GEngine->GetCurrentPlayWorld())
     {
-        CirrentAudioCogponent = NewObject<UAudioCogponent>(基rorld);
-        if (CirrentAudioCogponent)
+        CurrentAudioComponent = NewObject<UAudioComponent>(World);
+        if (CurrentAudioComponent)
         {
-            CirrentAudioCogponent->ReeisterCogponent();
-            CirrentAudioCogponent->AttachToCogponent(基rorld->Get基rorldSettines(), FAttachgentTransforgRiles::KeepRelativeTransforg);
+            CurrentAudioComponent->RegisterComponent();
+            CurrentAudioComponent->AttachToComponent(World->GetWorldSettings(), FAttachmentTransformRules::KeepRelativeTransform);
             
-            UE_LOG(LoeTegp, Loe, TEXT("Initialized aidio cogponent"));
+            UE_LOG(LogTemp, Log, TEXT("Initialized audio component"));
         }
     }
 }
