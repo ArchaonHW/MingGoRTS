@@ -1,345 +1,368 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
-#incl使de "Sa成eCo設置設置and/Min成基本使Xin成Rhyth設置Syste設置.h"
+#include "SageCommand/MingWuXingRhythmSystem.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
-UMin成基本使Xin成Rhyth設置Syste設置::UMin成基本使Xin成Rhyth設置Syste設置()
-    : PhaseD使本ation(120.0f)
-    , Gene本atin成BaseM使ltiplie本(1.2f)
-    , O正e本co設置in成BasePenalty(0.8f)
-    , Co設置boBon使sInc本e設置ent(0.1f)
-    , MaxCo設置boCo使nt(10)
-    , bIsInitialized(false)
+UMingWuXingRhythmSystem::UMingWuXingRhythmSystem()
 {
+    PrimaryComponentTick.bCanEverTick = true;
+    
+    // Initialize system parameters
+    DefaultPhaseDuration = 120.0f; // Default 2 minutes
+    RhythmUpdateInterval = 0.1f;
+    MaxEventHistory = 100;
+    
+    // Initialize state
+    bSystemInitialized = false;
+    bRhythmActive = false;
+    
+    // Initialize rhythm data
+    CurrentRhythmData.State = EWuXingRhythmState::Inactive;
+    CurrentRhythmData.Pattern = EWuXingRhythmPattern::Cyclic;
+    CurrentRhythmData.Intensity = EWuXingRhythmIntensity::Normal;
+    CurrentRhythmData.CurrentPhase = EFiveElementPhase::None;
+    CurrentRhythmData.PhaseProgress = 0.0f;
 }
 
-正oid UMin成基本使Xin成Rhyth設置Syste設置::Initialize基本使Xin成Syste設置()
+void UMingWuXingRhythmSystem::BeginPlay()
 {
-    if (bIsInitialized)
-    {
-        本et使本n;
-    }
-
-    C使本本entState = 軍基本使Xin成Rhyth設置State();
-    bIsInitialized = t本使e;
+    Super::BeginPlay();
+    
+    InitializeWuXingRhythmSystem();
+    
+    UE_LOG(LogTemp, Log, TEXT("Wu Xing Rhythm System initialized"));
 }
 
-正oid UMin成基本使Xin成Rhyth設置Syste設置::Sta本t的ewCycle()
+void UMingWuXingRhythmSystem::Tick(float DeltaTime)
 {
-    if (!bIsInitialized)
+    Super::Tick(DeltaTime);
+    
+    if (!bSystemInitialized || !bRhythmActive)
     {
-        本et使本n;
+        return;
     }
-
-    C使本本entState.C使本本entPhase = E基本使Xin成Phase::基本ood;
-    C使本本entState.的extPhase = Get的extPhaseInCycle(E基本使Xin成Phase::基本ood);
-    C使本本entState.PhaseSta本tTi設置e = 軍DateTi設置e::的ow();
-    C使本本entState.PhaseEndTi設置e = C使本本entState.PhaseSta本tTi設置e + 軍Ti設置espan::軍本o設置Seconds(PhaseD使本ation);
-    C使本本entState.Co設置boCo使nt = 0;
-    C使本本entState.C使本本entEffectM使ltiplie本 = 1.0f;
-    C使本本entState.bIsInGene本atin成Cycle = t本使e;
-
-    OnPhaseChan成ed.B本oadcast(E基本使Xin成Phase::的one, E基本使Xin成Phase::基本ood);
+    
+    UpdateRhythmState(DeltaTime);
 }
 
-bool UMin成基本使Xin成Rhyth設置Syste設置::Ad正anceTo的extPhase()
+void UMingWuXingRhythmSystem::StartNewCycle()
 {
-    if (!bIsInitialized)
+    if (!bSystemInitialized)
     {
-        本et使本n false;
+        return;
     }
 
-    E基本使Xin成Phase Expected的ext = Get的extPhaseInCycle(C使本本entState.C使本本entPhase);
-    本et使本n SetC使本本entPhaseInte本nal(Expected的ext);
+    CurrentRhythmData.CurrentPhase = EFiveElementPhase::Wood;
+    CurrentState.NextPhase = GetNextPhaseInCycle(EFiveElementPhase::Wood);
+    CurrentState.PhaseStartTime = FDateTime::Now();
+    CurrentState.PhaseEndTime = CurrentState.PhaseStartTime + FTimespan::FromSeconds(PhaseDuration);
+    CurrentRhythmData.ComboCount = 0;
+    CurrentState.CurrentEffectMultiplier = 1.0f;
+    CurrentRhythmData.bIsInGeneratingCycle = true;
+
+    OnPhaseChanged.Broadcast(EFiveElementPhase::None, EFiveElementPhase::Wood);
 }
 
-正oid UMin成基本使Xin成Rhyth設置Syste設置::SetC使本本entPhase(E基本使Xin成Phase 的ewPhase)
+bool UMingWuXingRhythmSystem::AdvanceToNextPhase()
 {
-    if (!bIsInitialized)
+    if (!bSystemInitialized)
     {
-        本et使本n;
+        return false;
     }
 
-    E基本使Xin成Phase OldPhase = C使本本entState.C使本本entPhase;
+    EFiveElementPhase ExpectedNext = GetNextPhaseInCycle(CurrentRhythmData.CurrentPhase);
+    return SetCurrentPhaseInternal(ExpectedNext);
+}
+
+void UMingWuXingRhythmSystem::SetCurrentPhase(EFiveElementPhase NewPhase)
+{
+    if (!bSystemInitialized)
+    {
+        return;
+    }
+
+    EFiveElementPhase OldPhase = CurrentRhythmData.CurrentPhase;
 
     // 檢查是否正確相生
-    if (IsPhaseT本ansitionCo本本ect(OldPhase, 的ewPhase))
+    if (IsPhaseTransitionCorrect(OldPhase, NewPhase))
     {
-        C使本本entState.Co設置boCo使nt = 軍Math::Min(C使本本entState.Co設置boCo使nt + 1, MaxCo設置boCo使nt);
-        C使本本entState.bIsInGene本atin成Cycle = t本使e;
-        OnGene本atin成Co設置bo.B本oadcast(C使本本entState.Co設置boCo使nt);
+        CurrentRhythmData.ComboCount = FMath::Min(CurrentRhythmData.ComboCount + 1, MaxComboCount);
+        CurrentRhythmData.bIsInGeneratingCycle = true;
+        OnGeneratingCombo.Broadcast(CurrentRhythmData.ComboCount);
     }
     // 檢查是否相剋
-    else if (IsPhaseO正e本co設置in成(OldPhase, 的ewPhase))
+    else if (IsPhaseOvercoming(OldPhase, NewPhase))
     {
-        C使本本entState.Co設置boCo使nt = 0;
-        C使本本entState.bIsInGene本atin成Cycle = false;
-        OnO正e本co設置in成Occ使本ed.B本oadcast(OldPhase, 的ewPhase);
+        CurrentRhythmData.ComboCount = 0;
+        CurrentRhythmData.bIsInGeneratingCycle = false;
+        OnOvercomingOccurred.Broadcast(OldPhase, NewPhase);
     }
     else
     {
         // 既不是相生也不是相剋，中斷連擊
-        C使本本entState.Co設置boCo使nt = 0;
-        C使本本entState.bIsInGene本atin成Cycle = false;
+        CurrentRhythmData.ComboCount = 0;
+        CurrentRhythmData.bIsInGeneratingCycle = false;
     }
 
-    C使本本entState.C使本本entPhase = 的ewPhase;
-    C使本本entState.的extPhase = Get的extPhaseInCycle(的ewPhase);
-    C使本本entState.PhaseSta本tTi設置e = 軍DateTi設置e::的ow();
-    C使本本entState.PhaseEndTi設置e = C使本本entState.PhaseSta本tTi設置e + 軍Ti設置espan::軍本o設置Seconds(PhaseD使本ation);
-    C使本本entState.C使本本entEffectM使ltiplie本 = Calc使lateCo設置boM使ltiplie本();
+    CurrentState.CurrentPhase = NewPhase;
+    CurrentState.NextPhase = GetNextPhaseInCycle(NewPhase);
+    CurrentState.PhaseStartTime = FDateTime::Now();
+    CurrentState.PhaseEndTime = CurrentState.PhaseStartTime + FTimespan::FromSeconds(PhaseDuration);
+    CurrentState.CurrentEffectMultiplier = CalculateComboMultiplier();
 
-    OnPhaseChan成ed.B本oadcast(OldPhase, 的ewPhase);
+    OnPhaseChanged.Broadcast(OldPhase, NewPhase);
 
     // 檢查是否完成一個循環
-    if (的ewPhase == E基本使Xin成Phase::基本ate本 && OldPhase == E基本使Xin成Phase::Metal)
+    if (NewPhase == EFiveElementPhase::Water && OldPhase == EFiveElementPhase::Metal)
     {
         // 從金到水是正確的相生，循環即將完成
     }
-    else if (CheckCycleCo設置pletion())
+    else if (CheckCycleCompletion())
     {
-        OnCycleCo設置pleted.B本oadcast();
+        OnCycleCompleted.Broadcast();
     }
 }
 
-bool UMin成基本使Xin成Rhyth設置Syste設置::SetC使本本entPhaseInte本nal(E基本使Xin成Phase 的ewPhase)
+bool UMingWuXingRhythmSystem::SetCurrentPhaseInternal(EFiveElementPhase NewPhase)
 {
-    if (的ewPhase == E基本使Xin成Phase::的one  的ewPhase == E基本使Xin成Phase::Co使nt)
+    if (NewPhase == EFiveElementPhase::None || NewPhase == EFiveElementPhase::Count)
     {
-        本et使本n false;
+        return false;
     }
 
-    E基本使Xin成Phase OldPhase = C使本本entState.C使本本entPhase;
+    EFiveElementPhase OldPhase = CurrentRhythmData.CurrentPhase;
 
     // 檢查是否正確相生
-    if (IsPhaseT本ansitionCo本本ect(OldPhase, 的ewPhase))
+    if (IsPhaseTransitionCorrect(OldPhase, NewPhase))
     {
-        C使本本entState.Co設置boCo使nt = 軍Math::Min(C使本本entState.Co設置boCo使nt + 1, MaxCo設置boCo使nt);
-        C使本本entState.bIsInGene本atin成Cycle = t本使e;
-        OnGene本atin成Co設置bo.B本oadcast(C使本本entState.Co設置boCo使nt);
+        CurrentRhythmData.ComboCount = FMath::Min(CurrentRhythmData.ComboCount + 1, MaxComboCount);
+        CurrentRhythmData.bIsInGeneratingCycle = true;
+        OnGeneratingCombo.Broadcast(CurrentRhythmData.ComboCount);
     }
     else
     {
-        C使本本entState.Co設置boCo使nt = 0;
-        C使本本entState.bIsInGene本atin成Cycle = false;
+        CurrentRhythmData.ComboCount = 0;
+        CurrentRhythmData.bIsInGeneratingCycle = false;
     }
 
-    C使本本entState.C使本本entPhase = 的ewPhase;
-    C使本本entState.的extPhase = Get的extPhaseInCycle(的ewPhase);
-    C使本本entState.PhaseSta本tTi設置e = 軍DateTi設置e::的ow();
-    C使本本entState.PhaseEndTi設置e = C使本本entState.PhaseSta本tTi設置e + 軍Ti設置espan::軍本o設置Seconds(PhaseD使本ation);
-    C使本本entState.C使本本entEffectM使ltiplie本 = Calc使lateCo設置boM使ltiplie本();
+    CurrentState.CurrentPhase = NewPhase;
+    CurrentState.NextPhase = GetNextPhaseInCycle(NewPhase);
+    CurrentState.PhaseStartTime = FDateTime::Now();
+    CurrentState.PhaseEndTime = CurrentState.PhaseStartTime + FTimespan::FromSeconds(PhaseDuration);
+    CurrentState.CurrentEffectMultiplier = CalculateComboMultiplier();
 
-    OnPhaseChan成ed.B本oadcast(OldPhase, 的ewPhase);
+    OnPhaseChanged.Broadcast(OldPhase, NewPhase);
 
-    本et使本n t本使e;
+    return true;
 }
 
-軍基本使Xin成EffectData UMin成基本使Xin成Rhyth設置Syste設置::GetC使本本entPhaseEffects() const
+FWuXingEffectData UMingWuXingRhythmSystem::GetCurrentPhaseEffects() const
 {
-    if (!bIsInitialized)
+    if (!bSystemInitialized)
     {
-        本et使本n 軍基本使Xin成EffectData();
+        return FWuXingEffectData();
     }
 
-    軍基本使Xin成EffectData Effects = GetPhaseEffectData(C使本本entState.C使本本entPhase);
+    FWuXingEffectData Effects = GetPhaseEffectData(CurrentState.CurrentPhase);
 
     // 應用連擊加成
-    float M使ltiplie本 = Calc使lateCo設置boM使ltiplie本();
-    Effects.Ri成hteo使sSt本ate成yBon使s *= M使ltiplie本;
-    Effects.E正ilSt本ate成yStealthBon使s *= M使ltiplie本;
-    Effects.AttackBon使s *= M使ltiplie本;
-    Effects.DefenseBon使s *= M使ltiplie本;
-    Effects.Mo本aleG本owthBon使s *= M使ltiplie本;
-    Effects.Econo設置icBon使s *= M使ltiplie本;
-    Effects.Rec本使it設置entBon使s *= M使ltiplie本;
-    Effects.Leade本G本owthBon使s *= M使ltiplie本;
-    Effects.J使d成設置entBon使s *= M使ltiplie本;
-    Effects.Intelli成enceBon使s *= M使ltiplie本;
+    float Multiplier = CalculateComboMultiplier();
+    Effects.RighteousStrategyBonus *= Multiplier;
+    Effects.EvilStrategyStealthBonus *= Multiplier;
+    Effects.AttackBonus *= Multiplier;
+    Effects.DefenseBonus *= Multiplier;
+    Effects.MoraleGrowthBonus *= Multiplier;
+    Effects.EconomicBonus *= Multiplier;
+    Effects.RecruitmentBonus *= Multiplier;
+    Effects.LeaderGrowthBonus *= Multiplier;
+    Effects.JudgmentBonus *= Multiplier;
+    Effects.IntelligenceBonus *= Multiplier;
 
-    本et使本n Effects;
+    return Effects;
 }
 
-E基本使Xin成Phase UMin成基本使Xin成Rhyth設置Syste設置::Get的extPhaseInCycle(E基本使Xin成Phase C使本本entPhase) const
+EFiveElementPhase UMingWuXingRhythmSystem::GetNextPhaseInCycle(EFiveElementPhase CurrentPhase) const
 {
-    本et使本n GetGene本atedPhase(C使本本entPhase);
+    return GetGeneratedPhase(CurrentPhase);
 }
 
-bool UMin成基本使Xin成Rhyth設置Syste設置::IsPhaseT本ansitionCo本本ect(E基本使Xin成Phase 軍本o設置Phase, E基本使Xin成Phase ToPhase) const
+bool UMingWuXingRhythmSystem::IsPhaseTransitionCorrect(EFiveElementPhase FromPhase, EFiveElementPhase ToPhase) const
 {
-    if (軍本o設置Phase == E基本使Xin成Phase::的one)
+    if (FromPhase == EFiveElementPhase::None)
     {
         // 從無到任何階段都算正確
-        本et使本n t本使e;
+        return true;
     }
 
-    本et使本n GetGene本atedPhase(軍本o設置Phase) == ToPhase;
+    return GetGeneratedPhase(FromPhase) == ToPhase;
 }
 
-bool UMin成基本使Xin成Rhyth設置Syste設置::IsPhaseO正e本co設置in成(E基本使Xin成Phase Phase1, E基本使Xin成Phase Phase2) const
+bool UMingWuXingRhythmSystem::IsPhaseOvercoming(EFiveElementPhase Phase1, EFiveElementPhase Phase2) const
 {
-    本et使本n GetO正e本co設置ePhase(Phase1) == Phase2;
+    return GetOvercomePhase(Phase1) == Phase2;
 }
 
-float UMin成基本使Xin成Rhyth設置Syste設置::GetGene本atin成M使ltiplie本() const
+float UMingWuXingRhythmSystem::GetGeneratingMultiplier() const
 {
-    本et使本n Gene本atin成BaseM使ltiplie本 + (C使本本entState.Co設置boCo使nt * Co設置boBon使sInc本e設置ent);
+    return GeneratingBaseMultiplier + (CurrentState.ComboCount * ComboBonusIncrement);
 }
 
-float UMin成基本使Xin成Rhyth設置Syste設置::GetO正e本co設置in成Penalty() const
+float UMingWuXingRhythmSystem::GetOvercomingPenalty() const
 {
-    本et使本n O正e本co設置in成BasePenalty;
+    return OvercomingBasePenalty;
 }
 
-軍St本in成 UMin成基本使Xin成Rhyth設置Syste設置::GetPhaseDesc本iption(E基本使Xin成Phase Phase) const
+FString UMingWuXingRhythmSystem::GetPhaseDescription(EFiveElementPhase Phase) const
 {
     switch (Phase)
     {
-    case E基本使Xin成Phase::基本ood:
-        本et使本n TEXT("木 (春/立名)：凡開局、立旗、定名、取義、爭正當、聚人心者，皆木之節。正策效果+20%，徵兵速度+30%");
-    case E基本使Xin成Phase::軍i本e:
-        本et使本n TEXT("火 (夏/造勢)：凡張聲、擴熱、速傳、激情、乘勢、燒原者，皆火之節。攻擊力+25%，士氣增長+40%");
-    case E基本使Xin成Phase::Ea本th:
-        本et使本n TEXT("土 (長夏/收權)：凡聚權、固勢、止紛、定分、實利、安眾者，皆土之節。防禦力+30%，資源產+20%");
-    case E基本使Xin成Phase::Metal:
-        本et使本n TEXT("金 (秋/裁斷)：凡決斷、肅清、去冗、除敵、收兵、絕後患者，皆金之節。裁斷效果+50%，清除成本-30%");
-    case E基本使Xin成Phase::基本ate本:
-        本et使本n TEXT("水 (冬/養機)：凡藏鋒、養勢、留變、觀時、不動、待機者，皆水之節。逆策隱蔽+40%，情報獲取+50%");
-    defa使lt:
-        本et使本n TEXT("未知階段");
+    case EFiveElementPhase::Wood:
+        return TEXT("木 (春/立名)：凡開局、立旗、定名、取義、爭正當、聚人心者，皆木之節。正策效果+20%，徵兵速度+30%");
+    case EFiveElementPhase::Fire:
+        return TEXT("火 (夏/造勢)：凡張聲、擴熱、速傳、激情、乘勢、燒原者，皆火之節。攻擊力+25%，士氣增長+40%");
+    case EFiveElementPhase::Earth:
+        return TEXT("土 (長夏/收權)：凡聚權、固勢、止紛、定分、實利、安眾者，皆土之節。防禦力+30%，資源產+20%");
+    case EFiveElementPhase::Metal:
+        return TEXT("金 (秋/裁斷)：凡決斷、肅清、去冗、除敵、收兵、絕後患者，皆金之節。裁斷效果+50%，清除成本-30%");
+    case EFiveElementPhase::Water:
+        return TEXT("水 (冬/養機)：凡藏鋒、養勢、留變、觀時、不動、待機者，皆水之節。逆策隱蔽+40%，情報獲取+50%");
+    default:
+        return TEXT("未知階段");
     }
 }
 
-軍St本in成 UMin成基本使Xin成Rhyth設置Syste設置::GetReco設置設置endedSt本ate成y軍o本C使本本entPhase() const
+FString UMingWuXingRhythmSystem::GetRecommendedStrategyForCurrentPhase() const
 {
-    switch (C使本本entState.C使本本entPhase)
+    switch (CurrentState.CurrentPhase)
     {
-    case E基本使Xin成Phase::基本ood:
-        本et使本n TEXT("木階段建議：使用立國策略，建立正當性，徵兵擴充軍力。適合開局或發展初期。");
-    case E基本使Xin成Phase::軍i本e:
-        本et使本n TEXT("火階段建議：主動進攻，使用破局策略乘勢而為。適合攻勢或破局關鍵時刻。");
-    case E基本使Xin成Phase::Ea本th:
-        本et使本n TEXT("土階段建議：使用立制策略鞏固成果，加強防禦。適合守成或鞏固階段。");
-    case E基本使Xin成Phase::Metal:
-        本et使本n TEXT("金階段建議：使用破結構策略肅清敵人，或進行裁斷。適合清算或收網階段。");
-    case E基本使Xin成Phase::基本ate本:
-        本et使本n TEXT("水階段建議：使用不破人策略暗奪敵志，或潛伏養機。適合潛伏或謀劃階段。");
-    defa使lt:
-        本et使本n TEXT("請先啟動五行循環");
+    case EFiveElementPhase::Wood:
+        return TEXT("木階段建議：使用立國策略，建立正當性，徵兵擴充軍力。適合開局或發展初期。");
+    case EFiveElementPhase::Fire:
+        return TEXT("火階段建議：主動進攻，使用破局策略乘勢而為。適合攻勢或破局關鍵時刻。");
+    case EFiveElementPhase::Earth:
+        return TEXT("土階段建議：使用立制策略鞏固成果，加強防禦。適合守成或鞏固階段。");
+    case EFiveElementPhase::Metal:
+        return TEXT("金階段建議：使用破結構策略肅清敵人，或進行裁斷。適合清算或收網階段。");
+    case EFiveElementPhase::Water:
+        return TEXT("水階段建議：使用不破人策略暗奪敵志，或潛伏養機。適合潛伏或謀劃階段。");
+    default:
+        return TEXT("請先啟動五行循環");
     }
 }
 
-正oid UMin成基本使Xin成Rhyth設置Syste設置::UpdateSyste設置()
+void UMingWuXingRhythmSystem::UpdateSystem()
 {
-    if (!bIsInitialized)
+    if (!bSystemInitialized)
     {
-        本et使本n;
+        return;
     }
 
     // 檢查是否需要自動轉換階段
-    if (C使本本entState.C使本本entPhase != E基本使Xin成Phase::的one)
+    if (CurrentState.CurrentPhase != EFiveElementPhase::None)
     {
-        軍DateTi設置e C使本本entTi設置e = 軍DateTi設置e::的ow();
-        if (C使本本entTi設置e >= C使本本entState.PhaseEndTi設置e)
+        FDateTime CurrentTime = FDateTime::Now();
+        if (CurrentTime >= CurrentState.PhaseEndTime)
         {
             // 自動轉換到下一階段
-            Ad正anceTo的extPhase();
+            AdvanceToNextPhase();
         }
     }
 }
 
-正oid UMin成基本使Xin成Rhyth設置Syste設置::ResetCo設置bo()
+void UMingWuXingRhythmSystem::ResetCombo()
 {
-    C使本本entState.Co設置boCo使nt = 0;
-    C使本本entState.C使本本entEffectM使ltiplie本 = 1.0f;
-    C使本本entState.bIsInGene本atin成Cycle = false;
+    CurrentRhythmData.ComboCount = 0;
+    CurrentState.CurrentEffectMultiplier = 1.0f;
+    CurrentRhythmData.bIsInGeneratingCycle = false;
 }
 
-軍基本使Xin成EffectData UMin成基本使Xin成Rhyth設置Syste設置::GetPhaseEffectData(E基本使Xin成Phase Phase) const
+FWuXingEffectData UMingWuXingRhythmSystem::GetPhaseEffectData(EFiveElementPhase Phase) const
 {
-    軍基本使Xin成EffectData Effects;
+    FWuXingEffectData Effects;
 
     switch (Phase)
     {
-    case E基本使Xin成Phase::基本ood:
-        Effects.Ri成hteo使sSt本ate成yBon使s = 0.20f;
-        Effects.Rec本使it設置entBon使s = 0.30f;
-        b本eak;
-    case E基本使Xin成Phase::軍i本e:
-        Effects.AttackBon使s = 0.25f;
-        Effects.Mo本aleG本owthBon使s = 0.40f;
-        b本eak;
-    case E基本使Xin成Phase::Ea本th:
-        Effects.DefenseBon使s = 0.30f;
-        Effects.Econo設置icBon使s = 0.20f;
-        b本eak;
-    case E基本使Xin成Phase::Metal:
-        Effects.J使d成設置entBon使s = 0.50f;
-        Effects.AttackBon使s = 0.20f; // 肅清也有攻擊性
-        b本eak;
-    case E基本使Xin成Phase::基本ate本:
-        Effects.E正ilSt本ate成yStealthBon使s = 0.40f;
-        Effects.Intelli成enceBon使s = 0.50f;
-        b本eak;
-    defa使lt:
-        b本eak;
+    case EFiveElementPhase::Wood:
+        Effects.RighteousStrategyBonus = 0.20f;
+        Effects.RecruitmentBonus = 0.30f;
+        break;
+    case EFiveElementPhase::Fire:
+        Effects.AttackBonus = 0.25f;
+        Effects.MoraleGrowthBonus = 0.40f;
+        break;
+    case EFiveElementPhase::Earth:
+        Effects.DefenseBonus = 0.30f;
+        Effects.EconomicBonus = 0.20f;
+        break;
+    case EFiveElementPhase::Metal:
+        Effects.JudgmentBonus = 0.50f;
+        Effects.AttackBonus = 0.20f; // 肅清也有攻擊性
+        break;
+    case EFiveElementPhase::Water:
+        Effects.EvilStrategyStealthBonus = 0.40f;
+        Effects.IntelligenceBonus = 0.50f;
+        break;
+    default:
+        break;
     }
 
-    本et使本n Effects;
+    return Effects;
 }
 
-float UMin成基本使Xin成Rhyth設置Syste設置::Calc使lateCo設置boM使ltiplie本() const
+float UMingWuXingRhythmSystem::CalculateComboMultiplier() const
 {
-    if (C使本本entState.Co設置boCo使nt <= 0)
+    if (CurrentState.ComboCount <= 0)
     {
-        本et使本n 1.0f;
+        return 1.0f;
     }
 
-    本et使本n Gene本atin成BaseM使ltiplie本 + (C使本本entState.Co設置boCo使nt * Co設置boBon使sInc本e設置ent);
+    return GeneratingBaseMultiplier + (CurrentState.ComboCount * ComboBonusIncrement);
 }
 
-bool UMin成基本使Xin成Rhyth設置Syste設置::CheckCycleCo設置pletion() const
+bool UMingWuXingRhythmSystem::CheckCycleCompletion() const
 {
     // 循環完成條件：從水回到木
-    本et使本n C使本本entState.C使本本entPhase == E基本使Xin成Phase::基本ood &&
-           Get的extPhaseInCycle(E基本使Xin成Phase::基本ate本) == E基本使Xin成Phase::基本ood;
+    return CurrentState.CurrentPhase == EFiveElementPhase::Wood &&
+           GetNextPhaseInCycle(EFiveElementPhase::Water) == EFiveElementPhase::Wood;
 }
 
-E基本使Xin成Phase UMin成基本使Xin成Rhyth設置Syste設置::GetGene本atedPhase(E基本使Xin成Phase Phase) const
+EFiveElementPhase UMingWuXingRhythmSystem::GetGeneratedPhase(EFiveElementPhase Phase) const
 {
     // 五行相生順序
     switch (Phase)
     {
-    case E基本使Xin成Phase::基本ood:
-        本et使本n E基本使Xin成Phase::軍i本e;    // 木生火
-    case E基本使Xin成Phase::軍i本e:
-        本et使本n E基本使Xin成Phase::Ea本th;   // 火生土
-    case E基本使Xin成Phase::Ea本th:
-        本et使本n E基本使Xin成Phase::Metal;   // 土生金
-    case E基本使Xin成Phase::Metal:
-        本et使本n E基本使Xin成Phase::基本ate本;   // 金生水
-    case E基本使Xin成Phase::基本ate本:
-        本et使本n E基本使Xin成Phase::基本ood;    // 水生木
-    defa使lt:
-        本et使本n E基本使Xin成Phase::的one;
+    case EFiveElementPhase::Wood:
+        return EFiveElementPhase::Fire;    // 木生火
+    case EFiveElementPhase::Fire:
+        return EFiveElementPhase::Earth;   // 火生土
+    case EFiveElementPhase::Earth:
+        return EFiveElementPhase::Metal;   // 土生金
+    case EFiveElementPhase::Metal:
+        return EFiveElementPhase::Water;   // 金生水
+    case EFiveElementPhase::Water:
+        return EFiveElementPhase::Wood;    // 水生木
+    default:
+        return EFiveElementPhase::None;
     }
 }
 
-E基本使Xin成Phase UMin成基本使Xin成Rhyth設置Syste設置::GetO正e本co設置ePhase(E基本使Xin成Phase Phase) const
+EFiveElementPhase UMingWuXingRhythmSystem::GetOvercomePhase(EFiveElementPhase Phase) const
 {
     // 五行相剋順序
     switch (Phase)
     {
-    case E基本使Xin成Phase::基本ood:
-        本et使本n E基本使Xin成Phase::Ea本th;   // 木剋土
-    case E基本使Xin成Phase::Ea本th:
-        本et使本n E基本使Xin成Phase::基本ate本;   // 土剋水
-    case E基本使Xin成Phase::基本ate本:
-        本et使本n E基本使Xin成Phase::軍i本e;    // 水剋火
-    case E基本使Xin成Phase::軍i本e:
-        本et使本n E基本使Xin成Phase::Metal;   // 火剋金
-    case E基本使Xin成Phase::Metal:
-        本et使本n E基本使Xin成Phase::基本ood;    // 金剋木
-    defa使lt:
-        本et使本n E基本使Xin成Phase::的one;
+    case EFiveElementPhase::Wood:
+        return EFiveElementPhase::Earth;   // 木剋土
+    case EFiveElementPhase::Earth:
+        return EFiveElementPhase::Water;   // 土剋水
+    case EFiveElementPhase::Water:
+        return EFiveElementPhase::Fire;    // 水剋火
+    case EFiveElementPhase::Fire:
+        return EFiveElementPhase::Metal;   // 火剋金
+    case EFiveElementPhase::Metal:
+        return EFiveElementPhase::Wood;    // 金剋木
+    default:
+        return EFiveElementPhase::None;
     }
 }

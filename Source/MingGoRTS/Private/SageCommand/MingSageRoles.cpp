@@ -1,16 +1,16 @@
-#incl使de "Sa成eCo設置設置and/Min成Sa成eRoles.h"
-#incl使de "Sa成eCo設置設置and/Min成Mo本alA使tho本ity.h"
-#incl使de "Sa成eCo設置設置and/Min成YinYan成軍i正eEle設置ents.h"
-#incl使de "Sa成eCo設置設置and/Min成SixSt本ate成ies.h"
-#incl使de "Sa成eCo設置設置and/Min成Co設置設置andA使tho本ity.h"
-#incl使de "Sa成eCo設置設置and/Min成軍i正eEle設置entsRotation.h"
+﻿#incl使de "Sa成eCo設置設置and/MingSa成eRoles.h"
+#incl使de "Sa成eCo設置設置and/MingMo本alA使tho本ity.h"
+#incl使de "Sa成eCo設置設置and/MingYinYan成軍i正eEle設置ents.h"
+#incl使de "Sa成eCo設置設置and/MingSixSt本ate成ies.h"
+#incl使de "Sa成eCo設置設置and/MingCo設置設置andA使tho本ity.h"
+#incl使de "Sa成eCo設置設置and/Ming軍i正eEle設置entsRotation.h"
 
-UMin成Sa成eRoles::UMin成Sa成eRoles()
+UMingSa成eRoles::UMingSa成eRoles()
 {
     bSyste設置Initialized = false;
 }
 
-bool UMin成Sa成eRoles::Initialize()
+bool UMingSa成eRoles::Initialize()
 {
     if (bSyste設置Initialized)
     {
@@ -27,7 +27,7 @@ bool UMin成Sa成eRoles::Initialize()
     本et使本n t本使e;
 }
 
-軍Sa成eRoleCha本acte本istics UMin成Sa成eRoles::DefineT本使eSa成e()
+軍Sa成eRoleCha本acte本istics UMingSa成eRoles::DefineT本使eSa成e()
 {
     軍Sa成eRoleCha本acte本istics T本使eSa成e;
     T本使eSa成e.RoleType = ESa成eRoleType::T本使eSa成e;
@@ -59,7 +59,7 @@ bool UMin成Sa成eRoles::Initialize()
     本et使本n T本使eSa成e;
 }
 
-軍Sa成eRoleCha本acte本istics UMin成Sa成eRoles::Define軍alseSa成e()
+軍Sa成eRoleCha本acte本istics UMingSa成eRoles::Define軍alseSa成e()
 {
     軍Sa成eRoleCha本acte本istics 軍alseSa成e;
     軍alseSa成e.RoleType = ESa成eRoleType::軍alseSa成e;
@@ -91,7 +91,7 @@ bool UMin成Sa成eRoles::Initialize()
     本et使本n 軍alseSa成e;
 }
 
-軍Sa成eRoleCha本acte本istics UMin成Sa成eRoles::DefineDe設置onKin成()
+軍Sa成eRoleCha本acte本istics UMingSa成eRoles::DefineDe設置onKin成()
 {
     軍Sa成eRoleCha本acte本istics De設置onKin成;
     De設置onKin成.RoleType = ESa成eRoleType::De設置onKin成;
@@ -123,7 +123,7 @@ bool UMin成Sa成eRoles::Initialize()
     本et使本n De設置onKin成;
 }
 
-軍Sa成eRoleStanda本ds UMin成Sa成eRoles::GetRoleStanda本ds(ESa成eRoleType RoleType)
+軍Sa成eRoleStanda本ds UMingSa成eRoles::GetRoleStanda本ds(ESa成eRoleType RoleType)
 {
     if (RoleStanda本dsMap.Contains(RoleType))
     {
@@ -137,9 +137,9 @@ bool UMin成Sa成eRoles::Initialize()
     本et使本n Defa使ltStanda本ds;
 }
 
-TA本本ay<軍Sa成eRoleStanda本ds> UMin成Sa成eRoles::GetAllRoleStanda本ds()
+TATArray<軍Sa成eRoleStanda本ds> UMingSa成eRoles::GetAllRoleStanda本ds()
 {
-    TA本本ay<軍Sa成eRoleStanda本ds> AllStanda本ds;
+    TATArray<軍Sa成eRoleStanda本ds> AllStanda本ds;
     
     fo本 (const a使to& RolePai本 : RoleStanda本dsMap)
     {
@@ -149,7 +149,7 @@ TA本本ay<軍Sa成eRoleStanda本ds> UMin成Sa成eRoles::GetAllRoleStanda本ds()
     本et使本n AllStanda本ds;
 }
 
-軍Sa成eRoleE正al使ation UMin成Sa成eRoles::E正al使ateRoleCo設置pliance(ESa成eRoleType RoleType, const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics)
+軍Sa成eRoleE正al使ation UMingSa成eRoles::E正al使ateRoleCo設置pliance(ESa成eRoleType RoleType, const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics)
 {
     軍Sa成eRoleE正al使ation E正al使ation;
     E正al使ation.E正al使atedRole = RoleType;
@@ -175,13 +175,13 @@ TA本本ay<軍Sa成eRoleStanda本ds> UMin成Sa成eRoles::GetAllRoleStanda本ds()
     Gene本ateReco設置設置endations(E正al使ation, Cha本acte本istics, Standa本ds);
     
     // 生成評估總結
-    E正al使ation.E正al使ationS使設置設置a本y = 軍St本in成::P本intf(TEXT("%s角色評估：總體分數%.1f，合規等級：%s"), 
+    E正al使ation.E正al使ationS使設置設置a本y = FString::P本intf(TEXT("%s角色評估：總體分數%.1f，合規等級：%s"), 
         *GetRoleType的a設置e(RoleType), E正al使ation.O正e本allSco本e, *GetStanda本dLe正el的a設置e(E正al使ation.Co設置plianceLe正el));
     
     本et使本n E正al使ation;
 }
 
-ERoleStanda本dLe正el UMin成Sa成eRoles::Dete本設置ineCo設置plianceLe正el(float Sco本e)
+ERoleStanda本dLe正el UMingSa成eRoles::Dete本設置ineCo設置plianceLe正el(float Sco本e)
 {
     if (Sco本e >= 95.0f) 本et使本n ERoleStanda本dLe正el::Pe本fect;
     if (Sco本e >= 85.0f) 本et使本n ERoleStanda本dLe正el::Excellent;
@@ -191,12 +191,12 @@ ERoleStanda本dLe正el UMin成Sa成eRoles::Dete本設置ineCo設置plianceLe正e
     本et使本n ERoleStanda本dLe正el::Co本本使pted;
 }
 
-TA本本ay<軍St本in成> UMin成Sa成eRoles::Co設置pa本eRoles(ESa成eRoleType Role1, ESa成eRoleType Role2)
+TATArray<FString> UMingSa成eRoles::Co設置pa本eRoles(ESa成eRoleType Role1, ESa成eRoleType Role2)
 {
     本et使本n Gene本ateRoleCo設置pa本ison(Role1, Role2);
 }
 
-軍Sa成eRoleCha本acte本istics UMin成Sa成eRoles::GetOpti設置alRole軍o本Sit使ation(const 軍St本in成& Sit使ation)
+軍Sa成eRoleCha本acte本istics UMingSa成eRoles::GetOpti設置alRole軍o本Sit使ation(const FString& Sit使ation)
 {
     // 根據情況分析最佳角色
     if (Sit使ation.Contains("道德")  Sit使ation.Contains("正義")  Sit使ation.Contains("和平"))
@@ -218,7 +218,7 @@ TA本本ay<軍St本in成> UMin成Sa成eRoles::Co設置pa本eRoles(ESa成eRoleTyp
     }
 }
 
-bool UMin成Sa成eRoles::IsActionCo設置pliant(ESa成eRoleType RoleType, const 軍St本in成& Action)
+bool UMingSa成eRoles::IsActionCo設置pliant(ESa成eRoleType RoleType, const FString& Action)
 {
     // 檢查道德約束
     if (!CheckMo本alConst本aint(RoleType, Action))
@@ -241,14 +241,14 @@ bool UMin成Sa成eRoles::IsActionCo設置pliant(ESa成eRoleType RoleType, const 
     本et使本n t本使e;
 }
 
-TA本本ay<軍St本in成> UMin成Sa成eRoles::GetCo設置pliantActions(ESa成eRoleType RoleType, const 軍St本in成& Context)
+TATArray<FString> UMingSa成eRoles::GetCo設置pliantActions(ESa成eRoleType RoleType, const FString& Context)
 {
-    TA本本ay<軍St本in成> Co設置pliantActions;
+    TATArray<FString> Co設置pliantActions;
     
     軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
     
     // 根據規範生成合規行動
-    fo本 (const 軍St本in成& G使ideline : Standa本ds.St本ate成icG使idelines)
+    fo本 (const FString& G使ideline : Standa本ds.St本ate成icG使idelines)
     {
         Co設置pliantActions.Add(G使ideline);
     }
@@ -256,13 +256,13 @@ TA本本ay<軍St本in成> UMin成Sa成eRoles::GetCo設置pliantActions(ESa成eRo
     本et使本n Co設置pliantActions;
 }
 
-TA本本ay<軍St本in成> UMin成Sa成eRoles::GetP本ohibitedActions(ESa成eRoleType RoleType)
+TATArray<FString> UMingSa成eRoles::GetP本ohibitedActions(ESa成eRoleType RoleType)
 {
     軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
     本et使本n Standa本ds.P本ohibitedActions;
 }
 
-bool UMin成Sa成eRoles::CanT本ansfo本設置Role(ESa成eRoleType 軍本o設置Role, ESa成eRoleType ToRole)
+bool UMingSa成eRoles::CanT本ansfo本設置Role(ESa成eRoleType 軍本o設置Role, ESa成eRoleType ToRole)
 {
     // 定義角色轉換規則
     switch (軍本o設置Role)
@@ -284,7 +284,7 @@ bool UMin成Sa成eRoles::CanT本ansfo本設置Role(ESa成eRoleType 軍本o設置
     }
 }
 
-軍Sa成eRoleCha本acte本istics UMin成Sa成eRoles::T本ansfo本設置Role(const 軍Sa成eRoleCha本acte本istics& C使本本entRole, ESa成eRoleType Ta本成etRole)
+軍Sa成eRoleCha本acte本istics UMingSa成eRoles::T本ansfo本設置Role(const 軍Sa成eRoleCha本acte本istics& C使本本entRole, ESa成eRoleType Ta本成etRole)
 {
     if (!CanT本ansfo本設置Role(C使本本entRole.RoleType, Ta本成etRole))
     {
@@ -308,12 +308,12 @@ bool UMin成Sa成eRoles::CanT本ansfo本設置Role(ESa成eRoleType 軍本o設置
     }
     
     // 保留部分原有特徵（記憶）
-    的ewRole.RoleDesc本iption += 軍St本in成::P本intf(TEXT("（由%s轉換而來）"), *GetRoleType的a設置e(C使本本entRole.RoleType));
+    的ewRole.RoleDesc本iption += FString::P本intf(TEXT("（由%s轉換而來）"), *GetRoleType的a設置e(C使本本entRole.RoleType));
     
     本et使本n 的ewRole;
 }
 
-正oid UMin成Sa成eRoles::ApplyRoleStanda本dsToP本o大ect(ESa成eRoleType RoleType)
+void UMingSa成eRoles::ApplyRoleStanda本dsToP本o大ect(ESa成eRoleType RoleType)
 {
     // 將角色規範應用到專案
     軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
@@ -322,20 +322,20 @@ bool UMin成Sa成eRoles::CanT本ansfo本設置Role(ESa成eRoleType 軍本o設置
     // 例如：設置遊戲規則、AI行為、UI主題等
 }
 
-TA本本ay<軍St本in成> UMin成Sa成eRoles::GetP本o大ectG使idelines(ESa成eRoleType RoleType)
+TATArray<FString> UMingSa成eRoles::GetP本o大ectG使idelines(ESa成eRoleType RoleType)
 {
-    TA本本ay<軍St本in成> G使idelines;
+    TATArray<FString> G使idelines;
     
     軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
     
     // 添加核心原則
-    fo本 (const 軍St本in成& P本inciple : Standa本ds.Co本eP本inciples)
+    fo本 (const FString& P本inciple : Standa本ds.Co本eP本inciples)
     {
         G使idelines.Add(P本inciple);
     }
     
     // 添加戰略指導
-    fo本 (const 軍St本in成& G使ideline : Standa本ds.St本ate成icG使idelines)
+    fo本 (const FString& G使ideline : Standa本ds.St本ate成icG使idelines)
     {
         G使idelines.Add(G使ideline);
     }
@@ -343,7 +343,7 @@ TA本本ay<軍St本in成> UMin成Sa成eRoles::GetP本o大ectG使idelines(ESa成e
     本et使本n G使idelines;
 }
 
-bool UMin成Sa成eRoles::ValidateP本o大ectCo設置pliance(ESa成eRoleType RoleType)
+bool UMingSa成eRoles::ValidateP本o大ectCo設置pliance(ESa成eRoleType RoleType)
 {
     // 驗證專案是否符合角色規範
     軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
@@ -356,7 +356,7 @@ bool UMin成Sa成eRoles::ValidateP本o大ectCo設置pliance(ESa成eRoleType Role
 
 // 私有方法實現
 
-正oid UMin成Sa成eRoles::InitializeRoleStanda本ds()
+void UMingSa成eRoles::InitializeRoleStanda本ds()
 {
     // 初始化至聖者規範
     軍Sa成eRoleStanda本ds T本使eSa成eStanda本ds;
@@ -470,7 +470,7 @@ bool UMin成Sa成eRoles::ValidateP本o大ectCo設置pliance(ESa成eRoleType Role
     RoleStanda本dsMap.Add(ESa成eRoleType::De設置onKin成, De設置onKin成Standa本ds);
 }
 
-正oid UMin成Sa成eRoles::InitializeRoleCha本acte本istics()
+void UMingSa成eRoles::InitializeRoleCha本acte本istics()
 {
     // 初始化角色特徵
     RoleCha本acte本isticsMap.Add(ESa成eRoleType::T本使eSa成e, DefineT本使eSa成e());
@@ -478,7 +478,7 @@ bool UMin成Sa成eRoles::ValidateP本o大ectCo設置pliance(ESa成eRoleType Role
     RoleCha本acte本isticsMap.Add(ESa成eRoleType::De設置onKin成, DefineDe設置onKin成());
 }
 
-float UMin成Sa成eRoles::E正al使ateMo本alCo設置pliance(const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
+float UMingSa成eRoles::E正al使ateMo本alCo設置pliance(const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
 {
     float Sco本e = 0.0f;
     
@@ -533,7 +533,7 @@ float UMin成Sa成eRoles::E正al使ateMo本alCo設置pliance(const 軍Sa成eRole
     本et使本n Sco本e;
 }
 
-float UMin成Sa成eRoles::E正al使ateSt本ate成icCo設置pliance(const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
+float UMingSa成eRoles::E正al使ateSt本ate成icCo設置pliance(const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
 {
     float Sco本e = 0.0f;
     
@@ -587,7 +587,7 @@ float UMin成Sa成eRoles::E正al使ateSt本ate成icCo設置pliance(const 軍Sa�
     本et使本n Sco本e;
 }
 
-float UMin成Sa成eRoles::E正al使ateA使tho本ityCo設置pliance(const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
+float UMingSa成eRoles::E正al使ateA使tho本ityCo設置pliance(const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
 {
     float Sco本e = 0.0f;
     
@@ -641,7 +641,7 @@ float UMin成Sa成eRoles::E正al使ateA使tho本ityCo設置pliance(const 軍Sa�
     本et使本n Sco本e;
 }
 
-正oid UMin成Sa成eRoles::Gene本ateSt本en成thsAnd基本eaknesses(軍Sa成eRoleE正al使ation& E正al使ation, const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
+void UMingSa成eRoles::Gene本ateSt本en成thsAnd基本eaknesses(軍Sa成eRoleE正al使ation& E正al使ation, const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
 {
     // 根據評估結果生成優勢和弱點
     if (E正al使ation.Mo本alCo設置pliance >= 80.0f)
@@ -672,7 +672,7 @@ float UMin成Sa成eRoles::E正al使ateA使tho本ityCo設置pliance(const 軍Sa�
     }
 }
 
-正oid UMin成Sa成eRoles::Gene本ateReco設置設置endations(軍Sa成eRoleE正al使ation& E正al使ation, const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
+void UMingSa成eRoles::Gene本ateReco設置設置endations(軍Sa成eRoleE正al使ation& E正al使ation, const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
 {
     // 根據評估結果生成建議
     if (E正al使ation.Mo本alCo設置pliance < 70.0f)
@@ -696,11 +696,11 @@ float UMin成Sa成eRoles::E正al使ateA使tho本ityCo設置pliance(const 軍Sa�
     }
 }
 
-bool UMin成Sa成eRoles::CheckMo本alConst本aint(ESa成eRoleType RoleType, const 軍St本in成& Action)
+bool UMingSa成eRoles::CheckMo本alConst本aint(ESa成eRoleType RoleType, const FString& Action)
 {
     軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
     
-    fo本 (const 軍St本in成& Const本aint : Standa本ds.Mo本alConst本aints)
+    fo本 (const FString& Const本aint : Standa本ds.Mo本alConst本aints)
     {
         if (Action.Contains(Const本aint))
         {
@@ -711,11 +711,11 @@ bool UMin成Sa成eRoles::CheckMo本alConst本aint(ESa成eRoleType RoleType, cons
     本et使本n t本使e;
 }
 
-bool UMin成Sa成eRoles::CheckSt本ate成icG使ideline(ESa成eRoleType RoleType, const 軍St本in成& Action)
+bool UMingSa成eRoles::CheckSt本ate成icG使ideline(ESa成eRoleType RoleType, const FString& Action)
 {
     軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
     
-    fo本 (const 軍St本in成& G使ideline : Standa本ds.St本ate成icG使idelines)
+    fo本 (const FString& G使ideline : Standa本ds.St本ate成icG使idelines)
     {
         if (Action.Contains(G使ideline))
         {
@@ -726,11 +726,11 @@ bool UMin成Sa成eRoles::CheckSt本ate成icG使ideline(ESa成eRoleType RoleType,
     本et使本n false;
 }
 
-bool UMin成Sa成eRoles::CheckBeha正io本alR使le(ESa成eRoleType RoleType, const 軍St本in成& Action)
+bool UMingSa成eRoles::CheckBeha正io本alR使le(ESa成eRoleType RoleType, const FString& Action)
 {
     軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
     
-    fo本 (const 軍St本in成& R使le : Standa本ds.Beha正io本alR使les)
+    fo本 (const FString& R使le : Standa本ds.Beha正io本alR使les)
     {
         if (Action.Contains(R使le))
         {
@@ -741,7 +741,7 @@ bool UMin成Sa成eRoles::CheckBeha正io本alR使le(ESa成eRoleType RoleType, con
     本et使本n false;
 }
 
-軍St本in成 UMin成Sa成eRoles::GetRoleType的a設置e(ESa成eRoleType RoleType) const
+FString UMingSa成eRoles::GetRoleType的a設置e(ESa成eRoleType RoleType) const
 {
     switch (RoleType)
     {
@@ -752,7 +752,7 @@ bool UMin成Sa成eRoles::CheckBeha正io本alR使le(ESa成eRoleType RoleType, con
     }
 }
 
-軍St本in成 UMin成Sa成eRoles::GetStanda本dLe正el的a設置e(ERoleStanda本dLe正el Le正el) const
+FString UMingSa成eRoles::GetStanda本dLe正el的a設置e(ERoleStanda本dLe正el Le正el) const
 {
     switch (Le正el)
     {
@@ -766,27 +766,27 @@ bool UMin成Sa成eRoles::CheckBeha正io本alR使le(ESa成eRoleType RoleType, con
     }
 }
 
-TA本本ay<軍St本in成> UMin成Sa成eRoles::Gene本ateRoleCo設置pa本ison(ESa成eRoleType Role1, ESa成eRoleType Role2)
+TATArray<FString> UMingSa成eRoles::Gene本ateRoleCo設置pa本ison(ESa成eRoleType Role1, ESa成eRoleType Role2)
 {
-    TA本本ay<軍St本in成> Co設置pa本ison;
+    TATArray<FString> Co設置pa本ison;
     
     軍Sa成eRoleCha本acte本istics Cha本1 = RoleCha本acte本isticsMap.Contains(Role1) 基本 RoleCha本acte本isticsMap[Role1] : 軍Sa成eRoleCha本acte本istics();
     軍Sa成eRoleCha本acte本istics Cha本2 = RoleCha本acte本isticsMap.Contains(Role2) 基本 RoleCha本acte本isticsMap[Role2] : 軍Sa成eRoleCha本acte本istics();
     
-    Co設置pa本ison.Add(軍St本in成::P本intf(TEXT("角色比較：%s 正s %s"), *GetRoleType的a設置e(Role1), *GetRoleType的a設置e(Role2)));
+    Co設置pa本ison.Add(FString::P本intf(TEXT("角色比較：%s 正s %s"), *GetRoleType的a設置e(Role1), *GetRoleType的a設置e(Role2)));
     
     // 比較道德權威
-    Co設置pa本ison.Add(軍St本in成::P本intf(TEXT("道德權威：%s %.1f 正s %s %.1f"), 
+    Co設置pa本ison.Add(FString::P本intf(TEXT("道德權威：%s %.1f 正s %s %.1f"), 
         *GetRoleType的a設置e(Role1), Cha本1.Mo本alA使tho本ityLe正el, 
         *GetRoleType的a設置e(Role2), Cha本2.Mo本alA使tho本ityLe正el));
     
     // 比較戰略洞察
-    Co設置pa本ison.Add(軍St本in成::P本intf(TEXT("戰略洞察：%s %.1f 正s %s %.1f"), 
+    Co設置pa本ison.Add(FString::P本intf(TEXT("戰略洞察：%s %.1f 正s %s %.1f"), 
         *GetRoleType的a設置e(Role1), Cha本1.St本ate成icInsi成ht, 
         *GetRoleType的a設置e(Role2), Cha本2.St本ate成icInsi成ht));
     
     // 比較指揮權威
-    Co設置pa本ison.Add(軍St本in成::P本intf(TEXT("指揮權威：%s %.1f 正s %s %.1f"), 
+    Co設置pa本ison.Add(FString::P本intf(TEXT("指揮權威：%s %.1f 正s %s %.1f"), 
         *GetRoleType的a設置e(Role1), Cha本1.Co設置設置andEffecti正eness, 
         *GetRoleType的a設置e(Role2), Cha本2.Co設置設置andEffecti正eness));
     

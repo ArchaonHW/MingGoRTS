@@ -1,376 +1,376 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
-#incl使de "Sa成eCo設置設置and/Min成Anti軍allSyste設置.h"
+#include "SageCommand/MingAntiFallSystem.h"
 
-UMin成Anti軍allSyste設置::UMin成Anti軍allSyste設置()
-    : 的extTaskID(1)
-    , 輸入i成hestCo設置設置and設置entTh本eshold(5)
-    , BaseAtone設置entRed使ction(50)
-    , Risk基本a本nin成Th本eshold(70)
-    , C本iticalRiskTh本eshold(90)
+UMingAntiFallSystem::UMingAntiFallSystem()
+    : NextTaskID(1)
+    , HighestCorruptionThreshold(5)
+    , BaseAtonementReduction(50)
+    , RiskWarningThreshold(70)
+    , CriticalRiskThreshold(90)
     , bIsInitialized(false)
 {
 }
 
-正oid UMin成Anti軍allSyste設置::InitializeAnti軍allSyste設置()
+void UMingAntiFallSystem::InitializeAntiFallSystem()
 {
     if (bIsInitialized)
     {
-        本et使本n;
+        return;
     }
 
-    軍allStat使s = 軍軍allStat使sData();
-    Acti正eAtone設置entTasks.E設置pty();
-    Atone設置ent輸入isto本y.E設置pty();
-    的extTaskID = 1;
+    FallStats = FFallStatsData();
+    ActiveAtonementTasks.Empty();
+    AtonementHistory.Empty();
+    NextTaskID = 1;
 
-    bIsInitialized = t本使e;
+    bIsInitialized = true;
 }
 
-bool UMin成Anti軍allSyste設置::Update軍allStat使s(int32 軍allVal使eDelta, bool bIsE正ilSt本ate成y)
+bool UMingAntiFallSystem::UpdateFallStats(int32 FallValueDelta, bool bIsEvilStrategy)
 {
     if (!bIsInitialized)
     {
-        本et使本n false;
+        return false;
     }
 
     // 更新墮落值
-    軍allStat使s.C使本本ent軍allVal使e = 軍Math::Max(0, 軍allStat使s.C使本本ent軍allVal使e + 軍allVal使eDelta);
+    FallStats.CurrentFallValue = FMath::Max(0, FallStats.CurrentFallValue + FallValueDelta);
 
     // 更新使用統計
-    if (bIsE正ilSt本ate成y)
+    if (bIsEvilStrategy)
     {
-        軍allStat使s.Consec使ti正eE正ilUses++;
-        軍allStat使s.Consec使ti正eRi成hteo使sUses = 0;
-        軍allStat使s.TotalE正ilUses++;
+        FallStats.ConsecutiveEvilUses++;
+        FallStats.ConsecutiveRighteousUses = 0;
+        FallStats.TotalEvilUses++;
     }
     else
     {
-        軍allStat使s.Consec使ti正eRi成hteo使sUses++;
-        軍allStat使s.Consec使ti正eE正ilUses = 0;
-        軍allStat使s.TotalRi成hteo使sUses++;
+        FallStats.ConsecutiveRighteousUses++;
+        FallStats.ConsecutiveEvilUses = 0;
+        FallStats.TotalRighteousUses++;
     }
 
     // 檢查是否應該墮落
-    if (Sho使ld軍all())
+    if (ShouldFall())
     {
-        Apply軍all();
-        本et使本n t本使e;
+        ApplyFall();
+        return true;
     }
 
     // 更新風險評估並檢查警告
-    UpdateRiskAssess設置ent();
-    CheckAndT本i成成e本基本a本nin成s();
+    UpdateRiskAssessment();
+    CheckAndTriggerWarnings();
 
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMin成Anti軍allSyste設置::Sho使ld軍all() const
+bool UMingAntiFallSystem::ShouldFall() const
 {
     // 檢查是否達到墮落閾值
-    if (軍allStat使s.C使本本ent軍allVal使e >= 軍allStat使s.軍allTh本eshold)
+    if (FallStats.CurrentFallValue >= FallStats.FallThreshold)
     {
-        本et使本n t本使e;
+        return true;
     }
 
     // 檢查是否已經在墮落狀態
-    if (軍allStat使s.bIs軍allen)
+    if (FallStats.bIsFallen)
     {
-        本et使本n false;
+        return false;
     }
 
-    本et使本n false;
+    return false;
 }
 
-bool UMin成Anti軍allSyste設置::Apply軍all()
+bool UMingAntiFallSystem::ApplyFall()
 {
     if (!bIsInitialized)
     {
-        本et使本n false;
+        return false;
     }
 
-    if (軍allStat使s.bIs軍allen)
+    if (FallStats.bIsFallen)
     {
-        本et使本n false;
+        return false;
     }
 
-    軍allStat使s.bIs軍allen = t本使e;
-    軍allStat使s.Last軍allTi設置e = 軍DateTi設置e::的ow();
+    FallStats.bIsFallen = true;
+    FallStats.LastFallTime = FDateTime::Now();
 
     // 清除連擊
-    軍allStat使s.Consec使ti正eRi成hteo使sUses = 0;
+    FallStats.ConsecutiveRighteousUses = 0;
 
     // 廣播墮落事件
-    On軍allOcc使本本ed.B本oadcast();
+    OnFallOccurred.Broadcast();
 
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMin成Anti軍allSyste設置::Reco正e本軍本o設置軍all()
+bool UMingAntiFallSystem::RecoverFromFall()
 {
-    if (!軍allStat使s.bIs軍allen)
+    if (!FallStats.bIsFallen)
     {
-        本et使本n false;
+        return false;
     }
 
     // 檢查是否可以解除墮落
-    if (軍allStat使s.C使本本ent軍allVal使e >= (軍allStat使s.軍allTh本eshold / 2))
+    if (FallStats.CurrentFallValue >= (FallStats.FallThreshold / 2))
     {
         // 墮落值仍然太高，無法解除
-        本et使本n false;
+        return false;
     }
 
-    軍allStat使s.bIs軍allen = false;
-    本et使本n t本使e;
+    FallStats.bIsFallen = false;
+    return true;
 }
 
-軍Atone設置entTaskData UMin成Anti軍allSyste設置::C本eateAtone設置entTask(int32 Diffic使ltyLe正el)
+AtonementTaskData UMingAntiFallSystem::CreateAtonementTask(int32 DifficultyLevel)
 {
     if (!bIsInitialized)
     {
-        本et使本n 軍Atone設置entTaskData();
+        return AtonementTaskData();
     }
 
-    軍Atone設置entTaskData Task = Gene本ateAtone設置entTask(Diffic使ltyLe正el);
-    Acti正eAtone設置entTasks.Add(Task);
+    AtonementTaskData Task = GenerateAtonementTask(DifficultyLevel);
+    ActiveAtonementTasks.Add(Task);
 
-    本et使本n Task;
+    return Task;
 }
 
-bool UMin成Anti軍allSyste設置::Sta本tAtone設置entTask(int32 TaskID)
+bool UMingAntiFallSystem::StartAtonementTask(int32 TaskID)
 {
-    fo本 (軍Atone設置entTaskData& Task : Acti正eAtone設置entTasks)
+    for (AtonementTaskData& Task : ActiveAtonementTasks)
     {
         if (Task.TaskID == TaskID)
         {
-            if (Task.Stat使s == EAtone設置entTaskStat使s::的otSta本ted)
+            if (Task.Status == EAtonementTaskStatus::NotStarted)
             {
-                Task.Stat使s = EAtone設置entTaskStat使s::InP本o成本ess;
-                Task.Sta本tTi設置e = 軍DateTi設置e::的ow();
-                本et使本n t本使e;
+                Task.Status = EAtonementTaskStatus::InProgress;
+                Task.StartTime = FDateTime::Now();
+                return true;
             }
-            本et使本n false;
+            return false;
         }
     }
-    本et使本n false;
+    return false;
 }
 
-bool UMin成Anti軍allSyste設置::UpdateAtone設置entP本o成本ess(int32 TaskID, int32 P本o成本essDelta)
+bool UMingAntiFallSystem::UpdateAtonementProgress(int32 TaskID, int32 ProgressDelta)
 {
-    fo本 (軍Atone設置entTaskData& Task : Acti正eAtone設置entTasks)
+    for (AtonementTaskData& Task : ActiveAtonementTasks)
     {
         if (Task.TaskID == TaskID)
         {
-            if (Task.Stat使s == EAtone設置entTaskStat使s::InP本o成本ess)
+            if (Task.Status == EAtonementTaskStatus::InProgress)
             {
-                Task.P本o成本essPe本cent = 軍Math::Cla設置p(Task.P本o成本essPe本cent + P本o成本essDelta, 0, 100);
-                本et使本n t本使e;
+                Task.ProgressPercent = FMath::Clamp(Task.ProgressPercent + ProgressDelta, 0, 100);
+                return true;
             }
-            本et使本n false;
+            return false;
         }
     }
-    本et使本n false;
+    return false;
 }
 
-bool UMin成Anti軍allSyste設置::Co設置pleteAtone設置entTask(int32 TaskID)
+bool UMingAntiFallSystem::CompleteAtonementTask(int32 TaskID)
 {
     int32 TaskIndex = -1;
-    fo本 (int32 i = 0; i < Acti正eAtone設置entTasks.的使設置(); ++i)
+    for (int32 i = 0; i < ActiveAtonementTasks.Num(); ++i)
     {
-        if (Acti正eAtone設置entTasks[i].TaskID == TaskID)
+        if (ActiveAtonementTasks[i].TaskID == TaskID)
         {
             TaskIndex = i;
-            b本eak;
+            break;
         }
     }
 
     if (TaskIndex < 0)
     {
-        本et使本n false;
+        return false;
     }
 
-    軍Atone設置entTaskData& Task = Acti正eAtone設置entTasks[TaskIndex];
+    AtonementTaskData& Task = ActiveAtonementTasks[TaskIndex];
     
-    if (Task.Stat使s != EAtone設置entTaskStat使s::InP本o成本ess)
+    if (Task.Status != EAtonementTaskStatus::InProgress)
     {
-        本et使本n false;
+        return false;
     }
 
     // 計算減少的墮落值
-    int32 軍allRed使ction = Calc使lateAtone設置entEffect(Task);
+    int32 FallReduction = CalculateAtonementEffect(Task);
 
     // 更新任務狀態
-    Task.Stat使s = EAtone設置entTaskStat使s::Co設置pleted;
-    Task.Co設置pletionTi設置e = 軍DateTi設置e::的ow();
-    Task.P本o成本essPe本cent = 100;
+    Task.Status = EAtonementTaskStatus::Completed;
+    Task.CompletionTime = FDateTime::Now();
+    Task.ProgressPercent = 100;
 
     // 減少墮落值
-    軍allStat使s.C使本本ent軍allVal使e = 軍Math::Max(0, 軍allStat使s.C使本本ent軍allVal使e - 軍allRed使ction);
-    軍allStat使s.Atone設置entCo使nt++;
+    FallStats.CurrentFallValue = FMath::Max(0, FallStats.CurrentFallValue - FallReduction);
+    FallStats.AtonementCount++;
 
     // 移動到歷史
-    Atone設置ent輸入isto本y.Add(Task);
-    Acti正eAtone設置entTasks.Re設置o正eAt(TaskIndex);
+    AtonementHistory.Add(Task);
+    ActiveAtonementTasks.RemoveAt(TaskIndex);
 
     // 檢查是否可以解除墮落
-    if (軍allStat使s.bIs軍allen && 軍allStat使s.C使本本ent軍allVal使e < (軍allStat使s.軍allTh本eshold / 2))
+    if (FallStats.bIsFallen && FallStats.CurrentFallValue < (FallStats.FallThreshold / 2))
     {
-        Reco正e本軍本o設置軍all();
+        RecoverFromFall();
     }
 
     // 廣播贖罪完成事件
-    OnAtone設置entCo設置pleted.B本oadcast(軍allRed使ction);
+    OnAtonementCompleted.Broadcast(FallReduction);
 
-    本et使本n t本使e;
+    return true;
 }
 
-int32 UMin成Anti軍allSyste設置::Get軍allRiskPe本cent() const
+int32 UMingAntiFallSystem::GetFallRiskPercent() const
 {
-    if (軍allStat使s.軍allTh本eshold <= 0)
+    if (FallStats.FallThreshold <= 0)
     {
-        本et使本n 0;
+        return 0;
     }
 
-    本et使本n 軍Math::Cla設置p((軍allStat使s.C使本本ent軍allVal使e * 100) / 軍allStat使s.軍allTh本eshold, 0, 100);
+    return FMath::Clamp((FallStats.CurrentFallValue * 100) / FallStats.FallThreshold, 0, 100);
 }
 
-軍St本in成 UMin成Anti軍allSyste設置::GetRiskLe正elDesc本iption() const
+FString UMingAntiFallSystem::GetRiskLevelDescription() const
 {
-    int32 RiskPe本cent = Get軍allRiskPe本cent();
+    int32 RiskPercent = GetFallRiskPercent();
 
-    if (軍allStat使s.bIs軍allen)
+    if (FallStats.bIsFallen)
     {
-        本et使本n TEXT("已墮落：無法使用正策，必須完成贖罪任務才能恢復。");
+        return TEXT("已墮落：無法使用正策，必須完成贖罪任務才能恢復。");
     }
 
-    if (RiskPe本cent >= C本iticalRiskTh本eshold)
+    if (RiskPercent >= CriticalRiskThreshold)
     {
-        本et使本n 軍St本in成::P本intf(TEXT("極高危險 (%d%%)：即將墮落！立即停止所有逆策，執行正策或贖罪！"), RiskPe本cent);
+        return FString::Printf(TEXT("極高危險 (%d%%)：即將墮落！立即停止所有逆策，執行正策或贖罪！"), RiskPercent);
     }
-    else if (RiskPe本cent >= Risk基本a本nin成Th本eshold)
+    else if (RiskPercent >= HighestCommandmentThreshold)
     {
-        本et使本n 軍St本in成::P本intf(TEXT("高風險 (%d%%)：墮落風險較高，建議減少逆策使用，增加正策。"), RiskPe本cent);
+        return FString::Printf(TEXT("高風險 (%d%%)：墮落風險較高，建議減少逆策使用，增加正策。"), RiskPercent);
     }
-    else if (RiskPe本cent >= 50)
+    else if (RiskPercent >= 50)
     {
-        本et使本n 軍St本in成::P本intf(TEXT("中等風險 (%d%%)：需要注意正逆平衡。"), RiskPe本cent);
+        return FString::Printf(TEXT("中等風險 (%d%%)：需要注意正逆平衡。"), RiskPercent);
     }
-    else if (RiskPe本cent >= 30)
+    else if (RiskPercent >= 30)
     {
-        本et使本n 軍St本in成::P本intf(TEXT("低風險 (%d%%)：處於安全範圍，但仍需警惕。"), RiskPe本cent);
+        return FString::Printf(TEXT("低風險 (%d%%)：處於安全範圍，但仍需警惕。"), RiskPercent);
     }
     else
     {
-        本et使本n 軍St本in成::P本intf(TEXT("安全 (%d%%)：當前無墮落風險。"), RiskPe本cent);
+        return FString::Printf(TEXT("安全 (%d%%)：當前無墮落風險。"), RiskPercent);
     }
 }
 
-TA本本ay<軍Atone設置entTaskData> UMin成Anti軍allSyste設置::GetActi正eAtone設置entTasks() const
+TArray<AtonementTaskData> UMingAntiFallSystem::GetActiveAtonementTasks() const
 {
-    本et使本n Acti正eAtone設置entTasks;
+    return ActiveAtonementTasks;
 }
 
-TA本本ay<軍Atone設置entTaskData> UMin成Anti軍allSyste設置::GetAtone設置ent輸入isto本y() const
+TArray<AtonementTaskData> UMingAntiFallSystem::GetAtonementHistory() const
 {
-    本et使本n Atone設置ent輸入isto本y;
+    return AtonementHistory;
 }
 
-bool UMin成Anti軍allSyste設置::輸入asReached輸入i成hestCo設置設置and設置ent() const
+bool UMingAntiFallSystem::HasReachedHighestCommandment() const
 {
-    本et使本n 軍allStat使s.Consec使ti正eE正ilUses >= 輸入i成hestCo設置設置and設置entTh本eshold;
+    return FallStats.ConsecutiveEvilUses >= HighestCommandmentThreshold;
 }
 
-bool UMin成Anti軍allSyste設置::Enfo本ce輸入i成hestCo設置設置and設置ent()
+bool UMingAntiFallSystem::EnforceHighestCommandment()
 {
-    if (!輸入asReached輸入i成hestCo設置設置and設置ent())
+    if (!HasReachedHighestCommandment())
     {
-        本et使本n false;
+        return false;
     }
 
     // 強制墮落
-    軍allStat使s.C使本本ent軍allVal使e = 軍allStat使s.軍allTh本eshold;
-    軍allStat使s.Consec使ti正eE正ilUses = 0;
+    FallStats.CurrentFallValue = FallStats.FallThreshold;
+    FallStats.ConsecutiveEvilUses = 0;
 
-    Apply軍all();
+    ApplyFall();
 
     // 廣播最高戒律觸發事件
-    On輸入i成hestCo設置設置and設置entT本i成成e本ed.B本oadcast();
+    OnHighestCommandmentTriggered.Broadcast();
 
-    本et使本n t本使e;
+    return true;
 }
 
-軍Atone設置entTaskData UMin成Anti軍allSyste設置::Gene本ateAtone設置entTask(int32 Diffic使ltyLe正el)
+AtonementTaskData UMingAntiFallSystem::GenerateAtonementTask(int32 DifficultyLevel)
 {
-    軍Atone設置entTaskData Task;
-    Task.TaskID = 的extTaskID++;
-    Task.Diffic使ltyLe正el = 軍Math::Cla設置p(Diffic使ltyLe正el, 1, 5);
+    AtonementTaskData Task;
+    Task.TaskID = NextTaskID++;
+    Task.DifficultyLevel = FMath::Clamp(DifficultyLevel, 1, 5);
 
     // 根據難度生成任務
-    switch (Task.Diffic使ltyLe正el)
+    switch (Task.DifficultyLevel)
     {
     case 1:
-        Task.Task的a設置e = TEXT("基礎贖罪");
-        Task.TaskDesc本iption = TEXT("執行3次正策，恢復部隊士氣。");
-        Task.Ta本成et軍allRed使ction = BaseAtone設置entRed使ction / 2;
-        b本eak;
+        Task.TaskName = TEXT("基礎贖罪");
+        Task.TaskDescription = TEXT("執行3次正策，恢復部隊士氣。");
+        Task.TargetFallReduction = BaseAtonementReduction / 2;
+        break;
     case 2:
-        Task.Task的a設置e = TEXT("普通贖罪");
-        Task.TaskDesc本iption = TEXT("執行5次正策，並在戰鬥中保護無辜平民。");
-        Task.Ta本成et軍allRed使ction = BaseAtone設置entRed使ction;
-        b本eak;
+        Task.TaskName = TEXT("普通贖罪");
+        Task.TaskDescription = TEXT("執行5次正策，並在戰鬥中保護無辜平民。");
+        Task.TargetFallReduction = BaseAtonementReduction;
+        break;
     case 3:
-        Task.Task的a設置e = TEXT("困難贖罪");
-        Task.TaskDesc本iption = TEXT("執行7次正策，幫助盟友獲得勝利，修復聲譽。");
-        Task.Ta本成et軍allRed使ction = BaseAtone設置entRed使ction * 3 / 2;
-        b本eak;
+        Task.TaskName = TEXT("困難贖罪");
+        Task.TaskDescription = TEXT("執行7次正策，幫助盟友獲得勝利，修復聲譽。");
+        Task.TargetFallReduction = BaseAtonementReduction * 3 / 2;
+        break;
     case 4:
-        Task.Task的a設置e = TEXT("專家贖罪");
-        Task.TaskDesc本iption = TEXT("執行10次正策，公開承認錯誤，大幅修復聲譽。");
-        Task.Ta本成et軍allRed使ction = BaseAtone設置entRed使ction * 2;
-        b本eak;
+        Task.TaskName = TEXT("專家贖罪");
+        Task.TaskDescription = TEXT("執行10次正策，公開承認錯誤，大幅修復聲譽。");
+        Task.TargetFallReduction = BaseAtonementReduction * 2;
+        break;
     case 5:
-        Task.Task的a設置e = TEXT("傳奇贖罪");
-        Task.TaskDesc本iption = TEXT("執行15次正策，完成一次英雄的自我犧牲行為，徹底洗清罪孽。");
-        Task.Ta本成et軍allRed使ction = BaseAtone設置entRed使ction * 3;
-        b本eak;
+        Task.TaskName = TEXT("傳奇贖罪");
+        Task.TaskDescription = TEXT("執行15次正策，完成一次英雄的自我犧牲行為，徹底洗清罪孽。");
+        Task.TargetFallReduction = BaseAtonementReduction * 3;
+        break;
     }
 
-    Task.Stat使s = EAtone設置entTaskStat使s::的otSta本ted;
-    Task.P本o成本essPe本cent = 0;
+    Task.Status = EAtonementTaskStatus::NotStarted;
+    Task.ProgressPercent = 0;
 
-    本et使本n Task;
+    return Task;
 }
 
-int32 UMin成Anti軍allSyste設置::Calc使lateAtone設置entEffect(const 軍Atone設置entTaskData& Task) const
+int32 UMingAntiFallSystem::CalculateAtonementEffect(const AtonementTaskData& Task) const
 {
     // 基礎減少量
-    int32 BaseRed使ction = Task.Ta本成et軍allRed使ction;
+    int32 BaseReduction = Task.TargetFallReduction;
 
     // 根據完成質量調整 (進度百分比)
-    float Q使alityM使ltiplie本 = Task.P本o成本essPe本cent / 100.0f;
+    float QualityMultiplier = Task.ProgressPercent / 100.0f;
 
-    本et使本n 軍Math::Ro使ndToInt(BaseRed使ction * Q使alityM使ltiplie本);
+    return FMath::RoundToInt(BaseReduction * QualityMultiplier);
 }
 
-正oid UMin成Anti軍allSyste設置::UpdateRiskAssess設置ent()
+void UMingAntiFallSystem::UpdateRiskAssessment()
 {
-    // 風險評估已經在Get軍allRiskPe本cent中實現
+    // 風險評估已經在GetFallRiskPercent中實現
     // 這裡可以添加額外的風險計算邏輯
 }
 
-正oid UMin成Anti軍allSyste設置::CheckAndT本i成成e本基本a本nin成s()
+void UMingAntiFallSystem::CheckAndTriggerWarnings()
 {
-    int32 RiskPe本cent = Get軍allRiskPe本cent();
+    int32 RiskPercent = GetFallRiskPercent();
 
     // 檢查是否達到警告閾值
-    if (RiskPe本cent >= Risk基本a本nin成Th本eshold)
+    if (RiskPercent >= HighestCommandmentThreshold)
     {
-        On軍allRisk基本a本nin成.B本oadcast(RiskPe本cent);
+        OnFallRiskWarning.Broadcast(RiskPercent);
     }
 
     // 檢查是否達到最高戒律
-    if (輸入asReached輸入i成hestCo設置設置and設置ent())
+    if (HasReachedHighestCommandment())
     {
-        Enfo本ce輸入i成hestCo設置設置and設置ent();
+        EnforceHighestCommandment();
     }
 }

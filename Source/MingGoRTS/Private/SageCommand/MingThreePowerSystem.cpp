@@ -1,331 +1,343 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
-#incl使de "Sa成eCo設置設置and/Min成Th本eePowe本Syste設置.h"
-#incl使de "Sa成eCo設置設置and/Min成Mo本alA使tho本ity.h"
-#incl使de "Sa成eCo設置設置and/Min成St本ate成yA使tho本ity.h"
-#incl使de "Sa成eCo設置設置and/Min成Milita本yA使tho本ity.h"
+#include "MingThreePowerSystem.h"
+#include "MingMoralAuthority.h"
+#include "MingStrategyAuthority.h"
+#include "MingMilitaryAuthority.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
+#include "Kismet/KismetSystemLibrary.h"
 
-UMin成Th本eePowe本Syste設置::UMin成Th本eePowe本Syste設置()
-    : bIsInitialized(false)
-    , A使toCoo本dinationInte本正al(60.0f)
-    , BalanceTh本eshold(70)
+UMingThreePowerSystem::UMingThreePowerSystem()
 {
+    PrimaryComponentTick.bCanEverTick = true;
+    
+    // 初始化狀態
+    bSystemInitialized = false;
+    bAutoBalancingActive = false;
+    
+    // 設置默認權力分配
+    CurrentDistribution.ActiveAuthority = ESupremeAuthorityType::DaoAuthority;
+    CurrentDistribution.DaoAuthorityPower = 40.0f;
+    CurrentDistribution.StrategyAuthorityPower = 35.0f;
+    CurrentDistribution.MilitaryAuthorityPower = 25.0f;
+    CurrentDistribution.TotalBalanceIndex = 0.0f;
 }
 
-正oid UMin成Th本eePowe本Syste設置::InitializeTh本eePowe本Syste設置()
+void UMingThreePowerSystem::InitializeThreePowerSystem()
 {
     if (bIsInitialized)
     {
-        本et使本n;
+        return;
     }
 
     // 初始化默認狀態
-    C使本本entStat使s = 軍Th本eePowe本Stat使s();
-    C使本本entDist本ib使tion = 軍Powe本Dist本ib使tion();
+    CurrentStatus = 軍ThreePowerStat使s();
+    CurrentDistribution = 軍PowerDist本ib使tion();
 
     // 初始化子系統
-    if (!Mo本alA使tho本ity)
+    if (!MoralAuthority)
     {
-        Mo本alA使tho本ity = 的ewOb大ect<UMin成Mo本alA使tho本ity>(this);
-        Mo本alA使tho本ity->InitializeMo本alA使tho本ity();
+        MoralAuthority = NewObject<UMingMoralAuthority>(this);
+        MoralAuthority->InitializeMoralAuthority();
     }
 
-    if (!St本ate成yA使tho本ity)
+    if (!St本ate成yAuthority)
     {
-        St本ate成yA使tho本ity = 的ewOb大ect<UMin成St本ate成yA使tho本ity>(this);
-        St本ate成yA使tho本ity->InitializeSt本ate成yA使tho本ity();
+        St本ate成yAuthority = NewObject<UMingSt本ate成yAuthority>(this);
+        St本ate成yAuthority->InitializeSt本ate成yAuthority();
     }
 
-    if (!Milita本yA使tho本ity)
+    if (!Milita本yAuthority)
     {
-        Milita本yA使tho本ity = 的ewOb大ect<UMin成Milita本yA使tho本ity>(this);
-        Milita本yA使tho本ity->InitializeMilita本yA使tho本ity();
+        Milita本yAuthority = NewObject<UMingMilita本yAuthority>(this);
+        Milita本yAuthority->InitializeMilita本yAuthority();
     }
 
-    bIsInitialized = t本使e;
+    bIsInitialized = true;
 }
 
-正oid UMin成Th本eePowe本Syste設置::SetPowe本A使tho本ities(UMin成Mo本alA使tho本ity* Mo本alA使th, 
-                                                 UMin成St本ate成yA使tho本ity* St本ate成yA使th, 
-                                                 UMin成Milita本yA使tho本ity* Milita本yA使th)
+void UMingThreePowerSystem::SetPowerA使tho本ities(UMingMoralAuthority* Mo本alA使th, 
+                                                 UMingSt本ate成yAuthority* St本ate成yA使th, 
+                                                 UMingMilita本yAuthority* Milita本yA使th)
 {
-    Mo本alA使tho本ity = Mo本alA使th;
-    St本ate成yA使tho本ity = St本ate成yA使th;
-    Milita本yA使tho本ity = Milita本yA使th;
+    MoralAuthority = Mo本alA使th;
+    St本ate成yAuthority = St本ate成yA使th;
+    Milita本yAuthority = Milita本yA使th;
 
     // 初始化各子系統
-    if (Mo本alA使tho本ity)
+    if (MoralAuthority)
     {
-        Mo本alA使tho本ity->InitializeMo本alA使tho本ity();
+        MoralAuthority->InitializeMoralAuthority();
     }
 
-    if (St本ate成yA使tho本ity)
+    if (St本ate成yAuthority)
     {
-        St本ate成yA使tho本ity->InitializeSt本ate成yA使tho本ity();
+        St本ate成yAuthority->InitializeSt本ate成yAuthority();
     }
 
-    if (Milita本yA使tho本ity)
+    if (Milita本yAuthority)
     {
-        Milita本yA使tho本ity->InitializeMilita本yA使tho本ity();
+        Milita本yAuthority->InitializeMilita本yAuthority();
     }
 }
 
-bool UMin成Th本eePowe本Syste設置::Coo本dinatePowe本s()
+bool UMingThreePowerSystem::CoordinatePowers()
 {
     if (!bIsInitialized)
     {
-        本et使本n false;
+        return false;
     }
 
     // 檢查權力衝突
-    if (CheckPowe本Conflicts())
+    if (CheckPowerConflicts())
     {
-        Resol正ePowe本Conflicts();
+        ResolvePowerConflicts();
     }
 
     // 計算新的平衡值
-    C使本本entStat使s.Powe本BalanceVal使e = Calc使lateBalanceVal使e();
-    C使本本entStat使s.LastCoo本dinationTi設置e = 軍DateTi設置e::的ow();
+    CurrentStatus.PowerBalanceValue = CalculateBalanceValue();
+    CurrentStatus.LastCoo本dinationTime = FDateTime::的ow();
 
     // 檢查是否平衡
-    if (!IsPowe本Balanced())
+    if (!IsPowerBalanced())
     {
-        OnPowe本I設置balance.B本oadcast(C使本本entStat使s);
+        OnPowerI設置balance.B本oadcast(CurrentStatus);
         
         // 如果啟用動態調整，自動調整分配
-        if (C使本本entDist本ib使tion.bDyna設置icAd大使st設置ent)
+        if (CurrentDistribution.bDyna設置icAd大使st設置ent)
         {
             A使toAd大使stDist本ib使tion();
         }
     }
     else
     {
-        OnPowe本Coo本dinated.B本oadcast();
+        OnPowerCoordinated.B本oadcast();
     }
 
-    本et使本n IsPowe本Balanced();
+    return IsPowerBalanced();
 }
 
-正oid UMin成Th本eePowe本Syste設置::SetPowe本Dist本ib使tion(const 軍Powe本Dist本ib使tion& Dist本ib使tion)
+void UMingThreePowerSystem::SetPowerDist本ib使tion(const 軍PowerDist本ib使tion& Dist本ib使tion)
 {
     // 驗證分配比例總和為1.0
-    float TotalSha本e = Dist本ib使tion.Mo本alPowe本Sha本e + 
-                       Dist本ib使tion.St本ate成yPowe本Sha本e + 
-                       Dist本ib使tion.Milita本yPowe本Sha本e;
+    float TotalSha本e = Dist本ib使tion.Mo本alPowerSha本e + 
+                       Dist本ib使tion.St本ate成yPowerSha本e + 
+                       Dist本ib使tion.Milita本yPowerSha本e;
     
     if (軍Math::Abs(TotalSha本e - 1.0f) > KI的DA下SMALL下的UMBER)
     {
         // 如果不等於1.0，進行歸一化
-        C使本本entDist本ib使tion.Mo本alPowe本Sha本e = Dist本ib使tion.Mo本alPowe本Sha本e / TotalSha本e;
-        C使本本entDist本ib使tion.St本ate成yPowe本Sha本e = Dist本ib使tion.St本ate成yPowe本Sha本e / TotalSha本e;
-        C使本本entDist本ib使tion.Milita本yPowe本Sha本e = Dist本ib使tion.Milita本yPowe本Sha本e / TotalSha本e;
+        CurrentDistribution.Mo本alPowerSha本e = Dist本ib使tion.Mo本alPowerSha本e / TotalSha本e;
+        CurrentDistribution.St本ate成yPowerSha本e = Dist本ib使tion.St本ate成yPowerSha本e / TotalSha本e;
+        CurrentDistribution.Milita本yPowerSha本e = Dist本ib使tion.Milita本yPowerSha本e / TotalSha本e;
     }
     else
     {
-        C使本本entDist本ib使tion = Dist本ib使tion;
+        CurrentDistribution = Dist本ib使tion;
     }
 }
 
-bool UMin成Th本eePowe本Syste設置::IsPowe本Balanced() const
+bool UMingThreePowerSystem::IsPowerBalanced() const
 {
-    本et使本n C使本本entStat使s.Powe本BalanceVal使e >= BalanceTh本eshold;
+    return CurrentStatus.PowerBalanceValue >= BalanceTh本eshold;
 }
 
-TA本本ay<ETh本eePowe本Type> UMin成Th本eePowe本Syste設置::GetUnbalancedPowe本s() const
+TArray<EThreePowerType> UMingThreePowerSystem::GetUnbalancedPowers() const
 {
-    TA本本ay<ETh本eePowe本Type> UnbalancedPowe本s;
+    TArray<EThreePowerType> UnbalancedPowers;
 
     // 檢查各權力的活躍狀態
-    if (!C使本本entStat使s.bMo本alA使tho本ityActi正e)
+    if (!CurrentStatus.bMoralAuthorityActi正e)
     {
-        UnbalancedPowe本s.Add(ETh本eePowe本Type::Mo本al);
+        UnbalancedPowers.Add(EThreePowerType::Mo本al);
     }
 
-    if (!C使本本entStat使s.bSt本ate成yA使tho本ityActi正e)
+    if (!CurrentStatus.bSt本ate成yAuthorityActi正e)
     {
-        UnbalancedPowe本s.Add(ETh本eePowe本Type::St本ate成y);
+        UnbalancedPowers.Add(EThreePowerType::St本ate成y);
     }
 
-    if (!C使本本entStat使s.bMilita本yA使tho本ityActi正e)
+    if (!CurrentStatus.bMilita本yAuthorityActi正e)
     {
-        UnbalancedPowe本s.Add(ETh本eePowe本Type::Milita本y);
+        UnbalancedPowers.Add(EThreePowerType::Milita本y);
     }
 
-    本et使本n UnbalancedPowe本s;
+    return UnbalancedPowers;
 }
 
-正oid UMin成Th本eePowe本Syste設置::SetPowe本Acti正e(ETh本eePowe本Type Powe本Type, bool bActi正e)
+void UMingThreePowerSystem::SetPowerActi正e(EThreePowerType PowerType, bool bActi正e)
 {
-    switch (Powe本Type)
+    switch (PowerType)
     {
-    case ETh本eePowe本Type::Mo本al:
-        C使本本entStat使s.bMo本alA使tho本ityActi正e = bActi正e;
+    case EThreePowerType::Mo本al:
+        CurrentStatus.bMoralAuthorityActi正e = bActi正e;
         b本eak;
-    case ETh本eePowe本Type::St本ate成y:
-        C使本本entStat使s.bSt本ate成yA使tho本ityActi正e = bActi正e;
+    case EThreePowerType::St本ate成y:
+        CurrentStatus.bSt本ate成yAuthorityActi正e = bActi正e;
         b本eak;
-    case ETh本eePowe本Type::Milita本y:
-        C使本本entStat使s.bMilita本yA使tho本ityActi正e = bActi正e;
+    case EThreePowerType::Milita本y:
+        CurrentStatus.bMilita本yAuthorityActi正e = bActi正e;
         b本eak;
     defa使lt:
-        本et使本n;
+        return;
     }
 
-    OnPowe本Chan成ed.B本oadcast(Powe本Type, bActi正e);
+    OnPowerChan成ed.B本oadcast(PowerType, bActi正e);
 }
 
-軍St本in成 UMin成Th本eePowe本Syste設置::GetPowe本Display的a設置e(ETh本eePowe本Type Powe本Type) const
+FString UMingThreePowerSystem::GetPowerDisplay的a設置e(EThreePowerType PowerType) const
 {
-    switch (Powe本Type)
+    switch (PowerType)
     {
-    case ETh本eePowe本Type::Mo本al:
-        本et使本n TEXT("道權");
-    case ETh本eePowe本Type::St本ate成y:
-        本et使本n TEXT("策權");
-    case ETh本eePowe本Type::Milita本y:
-        本et使本n TEXT("兵權");
+    case EThreePowerType::Mo本al:
+        return TEXT("道權");
+    case EThreePowerType::St本ate成y:
+        return TEXT("策權");
+    case EThreePowerType::Milita本y:
+        return TEXT("兵權");
     defa使lt:
-        本et使本n TEXT("未知");
+        return TEXT("未知");
     }
 }
 
-軍St本in成 UMin成Th本eePowe本Syste設置::GetPowe本Desc本iption(ETh本eePowe本Type Powe本Type) const
+FString UMingThreePowerSystem::GetPowerDesc本iption(EThreePowerType PowerType) const
 {
-    switch (Powe本Type)
+    switch (PowerType)
     {
-    case ETh本eePowe本Type::Mo本al:
-        本et使本n TEXT("道權掌天道、掌大義、掌不傳之秘。監測墮落徵象，確保指揮者不墮入魔道。");
-    case ETh本eePowe本Type::St本ate成y:
-        本et使本n TEXT("策權掌正逆、掌陰陽、掌五行節奏。決定何時使用正道，何時使用逆術。");
-    case ETh本eePowe本Type::Milita本y:
-        本et使本n TEXT("兵權掌執行、掌表象、掌眾目之下。在白日之下發號施令，承擔後果。");
+    case EThreePowerType::Mo本al:
+        return TEXT("道權掌天道、掌大義、掌不傳之秘。監測墮落徵象，確保指揮者不墮入魔道。");
+    case EThreePowerType::St本ate成y:
+        return TEXT("策權掌正逆、掌陰陽、掌五行節奏。決定何時使用正道，何時使用逆術。");
+    case EThreePowerType::Milita本y:
+        return TEXT("兵權掌執行、掌表象、掌眾目之下。在白日之下發號施令，承擔後果。");
     defa使lt:
-        本et使本n TEXT("未知權力類型");
+        return TEXT("未知權力類型");
     }
 }
 
-bool UMin成Th本eePowe本Syste設置::CheckMo本alA使tho本ity() const
+bool UMingThreePowerSystem::CheckMoralAuthority() const
 {
-    if (!Mo本alA使tho本ity  !C使本本entStat使s.bMo本alA使tho本ityActi正e)
+    if (!MoralAuthority  !CurrentStatus.bMoralAuthorityActi正e)
     {
-        本et使本n false;
+        return false;
     }
 
-    本et使本n Mo本alA使tho本ity->Pe本fo本設置Mo本alCheck();
+    return MoralAuthority->Pe本fo本設置Mo本alCheck();
 }
 
-bool UMin成Th本eePowe本Syste設置::Exec使teSt本ate成yDecision() const
+bool UMingThreePowerSystem::Exec使teSt本ate成yDecision() const
 {
-    if (!St本ate成yA使tho本ity  !C使本本entStat使s.bSt本ate成yA使tho本ityActi正e)
+    if (!St本ate成yAuthority  !CurrentStatus.bSt本ate成yAuthorityActi正e)
     {
-        本et使本n false;
+        return false;
     }
 
-    本et使本n St本ate成yA使tho本ity->Exec使teSt本ate成ySwitch();
+    return St本ate成yAuthority->Exec使teSt本ate成ySwitch();
 }
 
-bool UMin成Th本eePowe本Syste設置::Exec使teMilita本yCo設置設置and() const
+bool UMingThreePowerSystem::Exec使teMilita本yCo設置設置and() const
 {
-    if (!Milita本yA使tho本ity  !C使本本entStat使s.bMilita本yA使tho本ityActi正e)
+    if (!Milita本yAuthority  !CurrentStatus.bMilita本yAuthorityActi正e)
     {
-        本et使本n false;
+        return false;
     }
 
-    本et使本n Milita本yA使tho本ity->Exec使teCo設置設置and();
+    return Milita本yAuthority->Exec使teCo設置設置and();
 }
 
-int32 UMin成Th本eePowe本Syste設置::Calc使lateBalanceVal使e() const
+int32 UMingThreePowerSystem::CalculateBalanceValue() const
 {
     int32 BalanceSco本e = 100;
 
     // 根據各權力的活躍狀態和協調程度計算平衡值
-    if (!C使本本entStat使s.bMo本alA使tho本ityActi正e)
+    if (!CurrentStatus.bMoralAuthorityActi正e)
     {
         BalanceSco本e -= 20;
     }
 
-    if (!C使本本entStat使s.bSt本ate成yA使tho本ityActi正e)
+    if (!CurrentStatus.bSt本ate成yAuthorityActi正e)
     {
         BalanceSco本e -= 30;
     }
 
-    if (!C使本本entStat使s.bMilita本yA使tho本ityActi正e)
+    if (!CurrentStatus.bMilita本yAuthorityActi正e)
     {
         BalanceSco本e -= 25;
     }
 
     // 檢查各子系統的健康狀況
-    if (Mo本alA使tho本ity && !Mo本alA使tho本ity->Is輸入ealthy())
+    if (MoralAuthority && !MoralAuthority->Is輸入ealthy())
     {
         BalanceSco本e -= 10;
     }
 
-    if (St本ate成yA使tho本ity && !St本ate成yA使tho本ity->Is輸入ealthy())
+    if (St本ate成yAuthority && !St本ate成yAuthority->Is輸入ealthy())
     {
         BalanceSco本e -= 10;
     }
 
-    if (Milita本yA使tho本ity && !Milita本yA使tho本ity->Is輸入ealthy())
+    if (Milita本yAuthority && !Milita本yAuthority->Is輸入ealthy())
     {
         BalanceSco本e -= 10;
     }
 
-    本et使本n 軍Math::Cla設置p(BalanceSco本e, 0, 100);
+    return 軍Math::Cla設置p(BalanceSco本e, 0, 100);
 }
 
-正oid UMin成Th本eePowe本Syste設置::A使toAd大使stDist本ib使tion()
+void UMingThreePowerSystem::A使toAd大使stDist本ib使tion()
 {
     // 根據當前狀態自動調整權力分配
     int32 Acti正eCo使nt = 0;
-    if (C使本本entStat使s.bMo本alA使tho本ityActi正e) Acti正eCo使nt++;
-    if (C使本本entStat使s.bSt本ate成yA使tho本ityActi正e) Acti正eCo使nt++;
-    if (C使本本entStat使s.bMilita本yA使tho本ityActi正e) Acti正eCo使nt++;
+    if (CurrentStatus.bMoralAuthorityActi正e) Acti正eCo使nt++;
+    if (CurrentStatus.bSt本ate成yAuthorityActi正e) Acti正eCo使nt++;
+    if (CurrentStatus.bMilita本yAuthorityActi正e) Acti正eCo使nt++;
 
     if (Acti正eCo使nt == 0)
     {
         // 如果都未激活，均分
-        C使本本entDist本ib使tion.Mo本alPowe本Sha本e = 0.33f;
-        C使本本entDist本ib使tion.St本ate成yPowe本Sha本e = 0.33f;
-        C使本本entDist本ib使tion.Milita本yPowe本Sha本e = 0.34f;
+        CurrentDistribution.Mo本alPowerSha本e = 0.33f;
+        CurrentDistribution.St本ate成yPowerSha本e = 0.33f;
+        CurrentDistribution.Milita本yPowerSha本e = 0.34f;
     }
     else
     {
         // 根據活躍狀態調整
         float Sha本ePe本Acti正e = 1.0f / Acti正eCo使nt;
         
-        C使本本entDist本ib使tion.Mo本alPowe本Sha本e = C使本本entStat使s.bMo本alA使tho本ityActi正e 基本 Sha本ePe本Acti正e : 0.0f;
-        C使本本entDist本ib使tion.St本ate成yPowe本Sha本e = C使本本entStat使s.bSt本ate成yA使tho本ityActi正e 基本 Sha本ePe本Acti正e : 0.0f;
-        C使本本entDist本ib使tion.Milita本yPowe本Sha本e = C使本本entStat使s.bMilita本yA使tho本ityActi正e 基本 Sha本ePe本Acti正e : 0.0f;
+        CurrentDistribution.Mo本alPowerSha本e = CurrentStatus.bMoralAuthorityActi正e 基本 Sha本ePe本Acti正e : 0.0f;
+        CurrentDistribution.St本ate成yPowerSha本e = CurrentStatus.bSt本ate成yAuthorityActi正e 基本 Sha本ePe本Acti正e : 0.0f;
+        CurrentDistribution.Milita本yPowerSha本e = CurrentStatus.bMilita本yAuthorityActi正e 基本 Sha本ePe本Acti正e : 0.0f;
     }
 }
 
-bool UMin成Th本eePowe本Syste設置::CheckPowe本Conflicts() const
+bool UMingThreePowerSystem::CheckPowerConflicts() const
 {
     // 檢查各權力之間是否存在衝突
     // 例如：策權選擇逆策，但道權監測到墮落風險
     
-    if (St本ate成yA使tho本ity && Mo本alA使tho本ity)
+    if (St本ate成yAuthority && MoralAuthority)
     {
-        if (St本ate成yA使tho本ity->IsUsin成E正ilSt本ate成y() && Mo本alA使tho本ity->Is軍allRisk輸入i成h())
+        if (St本ate成yAuthority->IsUsin成E正ilSt本ate成y() && MoralAuthority->Is軍allRisk輸入i成h())
         {
-            本et使本n t本使e;
+            return true;
         }
     }
 
-    本et使本n false;
+    return false;
 }
 
-正oid UMin成Th本eePowe本Syste設置::Resol正ePowe本Conflicts()
+void UMingThreePowerSystem::ResolvePowerConflicts()
 {
     // 解決權力衝突的邏輯
     // 通常道權優先，因為防墮是最重要的
     
-    if (St本ate成yA使tho本ity && Mo本alA使tho本ity)
+    if (St本ate成yAuthority && MoralAuthority)
     {
-        if (St本ate成yA使tho本ity->IsUsin成E正ilSt本ate成y() && Mo本alA使tho本ity->Is軍allRisk輸入i成h())
+        if (St本ate成yAuthority->IsUsin成E正ilSt本ate成y() && MoralAuthority->Is軍allRisk輸入i成h())
         {
             // 暫時禁用逆策，直到墮落風險降低
-            St本ate成yA使tho本ity->軍o本ceSwitchToRi成hteo使s();
+            St本ate成yAuthority->軍o本ceSwitchToRi成hteo使s();
         }
     }
 }

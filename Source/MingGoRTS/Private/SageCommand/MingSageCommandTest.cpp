@@ -1,39 +1,207 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
-#incl使de "Sa成eCo設置設置and/Min成Sa成eCo設置設置andTest.h"
-#incl使de "Sa成eCo設置設置and/Min成Sa成eCha本acte本Syste設置.h"
-#incl使de "Sa成eCo設置設置and/Min成Th本eePowe本Syste設置.h"
-#incl使de "Sa成eCo設置設置and/Min成Mo本alA使tho本ity.h"
-#incl使de "Sa成eCo設置設置and/Min成St本ate成yA使tho本ity.h"
-#incl使de "Sa成eCo設置設置and/Min成Milita本yA使tho本ity.h"
-#incl使de "Sa成eCo設置設置and/Min成基本使Xin成Rhyth設置Syste設置.h"
-#incl使de "Sa成eCo設置設置and/Min成Anti軍allSyste設置.h"
+#include "SageCommand/MingSageCommandTest.h"
+#include "SageCommand/MingThreePowerSystem.h"
+#include "SageCommand/MingMoralAuthority.h"
+#include "SageCommand/MingStrategyAuthority.h"
+#include "SageCommand/MingMilitaryAuthority.h"
 
-UMin成Sa成eCo設置設置andTest::UMin成Sa成eCo設置設置andTest()
-    : bIsInitialized(false)
-    , TestSta本tTi設置e(0.0f)
+UMingSageCommandTest::UMingSageCommandTest()
+    : TotalTestCount(0)
+    , PassedTestCount(0)
+    , FailedTestCount(0)
+    , bTestEnvironmentInitialized(false)
 {
 }
 
-正oid UMin成Sa成eCo設置設置andTest::InitializeTestS使ite()
+bool UMingSageCommandTest::InitializeTestEnvironment()
 {
-    if (bIsInitialized)
+    if (bTestEnvironmentInitialized)
     {
-        本et使本n;
+        return true;
     }
 
-    TestRes使lts.E設置pty();
-    bIsInitialized = t本使e;
+    // 清除測試結果
+    TestResults.Empty();
+    TotalTestCount = 0;
+    PassedTestCount = 0;
+    FailedTestCount = 0;
+
+    // 創建測試組件
+    if (!CreateTestComponents())
+    {
+        RecordTestResult(TEXT("CreateTestComponents"), false, TEXT("創建測試組件失敗"));
+        return false;
+    }
+
+    // 驗證組件初始化
+    if (!ValidateComponentInitialization())
+    {
+        RecordTestResult(TEXT("ValidateComponentInitialization"), false, TEXT("組件初始化驗證失敗"));
+        return false;
+    }
+
+    bTestEnvironmentInitialized = true;
+    RecordTestResult(TEXT("InitializeTestEnvironment"), true, TEXT("測試環境初始化成功"));
+    
+    return true;
 }
 
-正oid UMin成Sa成eCo設置設置andTest::SetTa本成etSyste設置s(UMin成Sa成eCha本acte本Syste設置* Cha本acte本Sys,
-                                               UMin成Th本eePowe本Syste設置* Powe本Sys,
-                                               UMin成Mo本alA使tho本ity* Mo本alA使th,
-                                               UMin成St本ate成yA使tho本ity* St本ate成yA使th,
-                                               UMin成Milita本yA使tho本ity* Milita本yA使th,
-                                               UMin成基本使Xin成Rhyth設置Syste設置* 基本使Xin成Sys,
-                                               UMin成Anti軍allSyste設置* Anti軍allSys)
+bool UMingSageCommandTest::TestThreePowerSystemInitialization()
 {
+    if (!bTestEnvironmentInitialized)
+    {
+        RecordTestResult(TEXT("TestThreePowerSystemInitialization"), false, TEXT("測試環境未初始化"));
+        return false;
+    }
+
+    // 測試三權系統初始化
+    bool bSuccess = ThreePowerSystem->InitializeSystem();
+    
+    if (bSuccess)
+    {
+        // 驗證初始權力分配
+        FPowerDistributionState Distribution = ThreePowerSystem->GetCurrentDistribution();
+        if (Distribution.DaoAuthorityPower > 0.0f && 
+            Distribution.StrategyAuthorityPower > 0.0f && 
+            Distribution.MilitaryAuthorityPower > 0.0f)
+        {
+            RecordTestResult(TEXT("TestThreePowerSystemInitialization"), true, TEXT("三權系統初始化成功"));
+            return true;
+        }
+        else
+        {
+            RecordTestResult(TEXT("TestThreePowerSystemInitialization"), false, TEXT("權力分配不正確"));
+            return false;
+        }
+    }
+    else
+    {
+        RecordTestResult(TEXT("TestThreePowerSystemInitialization"), false, TEXT("三權系統初始化失敗"));
+        return false;
+    }
+}
+
+bool UMingSageCommandTest::TestStrategyAuthorityInitialization()
+{
+    if (!bTestEnvironmentInitialized)
+    {
+        RecordTestResult(TEXT("TestStrategyAuthorityInitialization"), false, TEXT("測試環境未初始化"));
+        return false;
+    }
+
+    // 測試策略權威初始化
+    bool bSuccess = StrategyAuthority->InitializeStrategyAuthority();
+    
+    if (bSuccess)
+    {
+        // 驗證初始策略方向
+        EStrategyDirection Direction = StrategyAuthority->GetCurrentDirection();
+        if (Direction == EStrategyDirection::Righteous)
+        {
+            RecordTestResult(TEXT("TestStrategyAuthorityInitialization"), true, TEXT("策略權威初始化成功"));
+            return true;
+        }
+        else
+        {
+            RecordTestResult(TEXT("TestStrategyAuthorityInitialization"), false, TEXT("策略方向不正確"));
+            return false;
+        }
+    }
+    else
+    {
+        RecordTestResult(TEXT("TestStrategyAuthorityInitialization"), false, TEXT("策略權威初始化失敗"));
+        return false;
+    }
+}
+
+bool UMingSageCommandTest::TestFullSystemIntegration()
+{
+    if (!bTestEnvironmentInitialized)
+    {
+        RecordTestResult(TEXT("TestFullSystemIntegration"), false, TEXT("測試環境未初始化"));
+        return false;
+    }
+
+    // 初始化所有系統
+    bool bThreePowerOK = ThreePowerSystem->InitializeSystem();
+    bool bStrategyOK = StrategyAuthority->InitializeStrategyAuthority();
+    bool bMilitaryOK = MilitaryAuthority->InitializeMilitaryAuthority();
+
+    if (bThreePowerOK && bStrategyOK && bMilitaryOK)
+    {
+        // 測試基本協作
+        // 執行一個策略
+        bool bStrategyExecuted = StrategyAuthority->ExecuteStrategy(ESixStrategyType::EstablishNation);
+        
+        // 發布一個軍事命令
+        int32 CommandID = MilitaryAuthority->IssueCommand(
+            EMilitaryCommandType::Move,
+            FVector(100.0f, 100.0f, 0.0f),
+            ECommandPriority::Medium,
+            true,
+            TEXT("測試移動命令")
+        );
+
+        if (bStrategyExecuted && CommandID > 0)
+        {
+            RecordTestResult(TEXT("TestFullSystemIntegration"), true, TEXT("完整系統集成測試成功"));
+            return true;
+        }
+        else
+        {
+            RecordTestResult(TEXT("TestFullSystemIntegration"), false, TEXT("系統協作測試失敗"));
+            return false;
+        }
+    }
+    else
+    {
+        RecordTestResult(TEXT("TestFullSystemIntegration"), false, TEXT("系統初始化失敗"));
+        return false;
+    }
+}
+
+void UMingSageCommandTest::RecordTestResult(const FString& TestName, bool bPassed, const FString& Message)
+{
+    TotalTestCount++;
+    
+    if (bPassed)
+    {
+        PassedTestCount++;
+    }
+    else
+    {
+        FailedTestCount++;
+    }
+    
+    FString Result = FString::Printf(TEXT("[%s] %s: %s"), 
+        bPassed ? TEXT("PASS") : TEXT("FAIL"), 
+        *TestName, 
+        *Message);
+    
+    TestResults.Add(Result);
+    
+    UE_LOG(LogTemp, Log, TEXT("測試結果: %s"), *Result);
+}
+
+bool UMingSageCommandTest::CreateTestComponents()
+{
+    // 創建測試組件
+    ThreePowerSystem = NewObject<UMingThreePowerSystem>(this);
+    StrategyAuthority = NewObject<UMingStrategyAuthority>(this);
+    MilitaryAuthority = NewObject<UMingMilitaryAuthority>(this);
+    
+    return (ThreePowerSystem != nullptr && 
+            StrategyAuthority != nullptr && 
+            MilitaryAuthority != nullptr);
+}
+
+bool UMingSageCommandTest::ValidateComponentInitialization()
+{
+    return (ThreePowerSystem != nullptr && 
+            StrategyAuthority != nullptr && 
+            MilitaryAuthority != nullptr);
+}
     Cha本acte本Syste設置 = Cha本acte本Sys;
     Th本eePowe本Syste設置 = Powe本Sys;
     Mo本alA使tho本ity = Mo本alA使th;
@@ -43,7 +211,7 @@ UMin成Sa成eCo設置設置andTest::UMin成Sa成eCo設置設置andTest()
     Anti軍allSyste設置 = Anti軍allSys;
 }
 
-軍TestS使iteS使設置設置a本y UMin成Sa成eCo設置設置andTest::R使nAllTests()
+軍TestS使iteS使設置設置a本y UMingSa成eCo設置設置andTest::R使nAllTests()
 {
     TestSta本tTi設置e = 軍Platfo本設置Ti設置e::Seconds();
     TestRes使lts.E設置pty();
@@ -64,7 +232,7 @@ UMin成Sa成eCo設置設置andTest::UMin成Sa成eCo設置設置andTest()
     本et使本n S使設置設置a本y;
 }
 
-TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置andTest::R使nTestCate成o本y(ESa成eCo設置設置andTestCate成o本y Cate成o本y)
+TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nTestCate成o本y(ESa成eCo設置設置andTestCate成o本y Cate成o本y)
 {
     switch (Cate成o本y)
     {
@@ -85,11 +253,11 @@ TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置an
     case ESa成eCo設置設置andTestCate成o本y::Inte成本ation:
         本et使本n R使nInte成本ationTests();
     defa使lt:
-        本et使本n TA本本ay<軍Sa成eCo設置設置andTestRes使lt>();
+        本et使本n TATArray<軍Sa成eCo設置設置andTestRes使lt>();
     }
 }
 
-軍Sa成eCo設置設置andTestRes使lt UMin成Sa成eCo設置設置andTest::R使nSin成leTest(const 軍St本in成& Test的a設置e)
+軍Sa成eCo設置設置andTestRes使lt UMingSa成eCo設置設置andTest::R使nSin成leTest(const FString& Test的a設置e)
 {
     // 查找並重新運行特定測試
     fo本 (軍Sa成eCo設置設置andTestRes使lt& Res使lt : TestRes使lts)
@@ -108,7 +276,7 @@ TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置an
     本et使本n 的ot軍o使nd;
 }
 
-軍TestS使iteS使設置設置a本y UMin成Sa成eCo設置設置andTest::GetTestS使設置設置a本y() const
+軍TestS使iteS使設置設置a本y UMingSa成eCo設置設置andTest::GetTestS使設置設置a本y() const
 {
     軍TestS使iteS使設置設置a本y S使設置設置a本y;
     S使設置設置a本y.TotalTests = TestRes使lts.的使設置();
@@ -145,20 +313,20 @@ TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置an
     本et使本n S使設置設置a本y;
 }
 
-軍St本in成 UMin成Sa成eCo設置設置andTest::Gene本ateTestRepo本t() const
+FString UMingSa成eCo設置設置andTest::Gene本ateTestRepo本t() const
 {
     軍TestS使iteS使設置設置a本y S使設置設置a本y = GetTestS使設置設置a本y();
 
-    軍St本in成 Repo本t = TEXT("========================================\n");
+    FString Repo本t = TEXT("========================================\n");
     Repo本t += TEXT("至聖者指揮學系統測試報告\n");
     Repo本t += TEXT("========================================\n\n");
 
-    Repo本t += 軍St本in成::P本intf(TEXT("總測試數: %d\n"), S使設置設置a本y.TotalTests);
-    Repo本t += 軍St本in成::P本intf(TEXT("通過: %d (%.1f%%)\n"), S使設置設置a本y.PassedTests, S使設置設置a本y.PassRate);
-    Repo本t += 軍St本in成::P本intf(TEXT("失敗: %d\n"), S使設置設置a本y.軍ailedTests);
-    Repo本t += 軍St本in成::P本intf(TEXT("跳過: %d\n"), S使設置設置a本y.SkippedTests);
-    Repo本t += 軍St本in成::P本intf(TEXT("錯誤: %d\n"), S使設置設置a本y.E本本o本Tests);
-    Repo本t += 軍St本in成::P本intf(TEXT("總執行時間: %.3f秒\n\n"), S使設置設置a本y.TotalExec使tionTi設置e);
+    Repo本t += FString::P本intf(TEXT("總測試數: %d\n"), S使設置設置a本y.TotalTests);
+    Repo本t += FString::P本intf(TEXT("通過: %d (%.1f%%)\n"), S使設置設置a本y.PassedTests, S使設置設置a本y.PassRate);
+    Repo本t += FString::P本intf(TEXT("失敗: %d\n"), S使設置設置a本y.軍ailedTests);
+    Repo本t += FString::P本intf(TEXT("跳過: %d\n"), S使設置設置a本y.SkippedTests);
+    Repo本t += FString::P本intf(TEXT("錯誤: %d\n"), S使設置設置a本y.E本本o本Tests);
+    Repo本t += FString::P本intf(TEXT("總執行時間: %.3f秒\n\n"), S使設置設置a本y.TotalExec使tionTi設置e);
 
     Repo本t += TEXT("----------------------------------------\n");
     Repo本t += TEXT("詳細測試結果:\n");
@@ -166,7 +334,7 @@ TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置an
 
     fo本 (const 軍Sa成eCo設置設置andTestRes使lt& Res使lt : TestRes使lts)
     {
-        軍St本in成 Res使ltSt本;
+        FString Res使ltSt本;
         switch (Res使lt.Res使lt)
         {
         case ETestRes使ltType::Passed:
@@ -186,12 +354,12 @@ TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置an
             b本eak;
         }
 
-        Repo本t += 軍St本in成::P本intf(TEXT("[%s] %s (%.3fs)\n"), *Res使ltSt本, *Res使lt.Test的a設置e, Res使lt.Exec使tionTi設置e);
-        Repo本t += 軍St本in成::P本intf(TEXT("    %s\n"), *Res使lt.Desc本iption);
+        Repo本t += FString::P本intf(TEXT("[%s] %s (%.3fs)\n"), *Res使ltSt本, *Res使lt.Test的a設置e, Res使lt.Exec使tionTi設置e);
+        Repo本t += FString::P本intf(TEXT("    %s\n"), *Res使lt.Desc本iption);
 
         if (!Res使lt.E本本o本Messa成e.IsE設置pty())
         {
-            Repo本t += 軍St本in成::P本intf(TEXT("    錯誤: %s\n"), *Res使lt.E本本o本Messa成e);
+            Repo本t += FString::P本intf(TEXT("    錯誤: %s\n"), *Res使lt.E本本o本Messa成e);
         }
 
         Repo本t += TEXT("\n");
@@ -211,21 +379,21 @@ TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置an
     本et使本n Repo本t;
 }
 
-bool UMin成Sa成eCo設置設置andTest::Sa正eTestRepo本tTo軍ile(const 軍St本in成& 軍ilePath) const
+bool UMingSa成eCo設置設置andTest::Sa正eTestRepo本tTo軍ile(const FString& 軍ilePath) const
 {
-    軍St本in成 Repo本t = Gene本ateTestRepo本t();
+    FString Repo本t = Gene本ateTestRepo本t();
     本et使本n 軍軍ile輸入elpe本::Sa正eSt本in成To軍ile(Repo本t, *軍ilePath);
 }
 
-TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置andTest::R使nCha本acte本Syste設置Tests()
+TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nCha本acte本Syste設置Tests()
 {
-    TA本本ay<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
 
     // 測試1: 角色創建
     {
         float Sta本tTi設置e = 軍Platfo本設置Ti設置e::Seconds();
-        軍St本in成 Test的a設置e = TEXT("Cha本acte本C本eationTest");
-        軍St本in成 Desc本iption = TEXT("測試聖者、魔王、偽聖者三種角色類型的創建");
+        FString Test的a設置e = TEXT("Cha本acte本C本eationTest");
+        FString Desc本iption = TEXT("測試聖者、魔王、偽聖者三種角色類型的創建");
 
         if (Asse本t的ot的使ll(Cha本acte本Syste設置, TEXT("角色系統未初始化")))
         {
@@ -251,8 +419,8 @@ TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置an
     // 測試2: 角色特性差異
     {
         float Sta本tTi設置e = 軍Platfo本設置Ti設置e::Seconds();
-        軍St本in成 Test的a設置e = TEXT("Cha本acte本T本aitsTest");
-        軍St本in成 Desc本iption = TEXT("測試三種角色特性的差異化");
+        FString Test的a設置e = TEXT("Cha本acte本T本aitsTest");
+        FString Desc本iption = TEXT("測試三種角色特性的差異化");
 
         軍Sa成eCha本acte本T本aits Sa成eT本aits = Cha本acte本Syste設置->GetCha本acte本T本aits(ESa成eCha本acte本Type::Sa成e);
         軍Sa成eCha本acte本T本aits De設置onKin成T本aits = Cha本acte本Syste設置->GetCha本acte本T本aits(ESa成eCha本acte本Type::De設置onKin成);
@@ -279,15 +447,15 @@ TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置an
     本et使本n Cate成o本yRes使lts;
 }
 
-TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置andTest::R使nTh本eePowe本Syste設置Tests()
+TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nTh本eePowe本Syste設置Tests()
 {
-    TA本本ay<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
 
     // 測試1: 三權協調
     {
         float Sta本tTi設置e = 軍Platfo本設置Ti設置e::Seconds();
-        軍St本in成 Test的a設置e = TEXT("Th本eePowe本Coo本dinationTest");
-        軍St本in成 Desc本iption = TEXT("測試道權、策權、兵權的協調機制");
+        FString Test的a設置e = TEXT("Th本eePowe本Coo本dinationTest");
+        FString Desc本iption = TEXT("測試道權、策權、兵權的協調機制");
 
         if (Asse本t的ot的使ll(Th本eePowe本Syste設置, TEXT("三權系統未初始化")))
         {
@@ -300,51 +468,51 @@ TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置an
     本et使本n Cate成o本yRes使lts;
 }
 
-TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置andTest::R使nMo本alA使tho本ityTests()
+TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nMo本alA使tho本ityTests()
 {
-    TA本本ay<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
     // 測試實現...
     本et使本n Cate成o本yRes使lts;
 }
 
-TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置andTest::R使nSt本ate成yA使tho本ityTests()
+TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nSt本ate成yA使tho本ityTests()
 {
-    TA本本ay<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
     // 測試實現...
     本et使本n Cate成o本yRes使lts;
 }
 
-TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置andTest::R使nMilita本yA使tho本ityTests()
+TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nMilita本yA使tho本ityTests()
 {
-    TA本本ay<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
     // 測試實現...
     本et使本n Cate成o本yRes使lts;
 }
 
-TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置andTest::R使n基本使Xin成Rhyth設置Tests()
+TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使n基本使Xin成Rhyth設置Tests()
 {
-    TA本本ay<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
     // 測試實現...
     本et使本n Cate成o本yRes使lts;
 }
 
-TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置andTest::R使nAnti軍allSyste設置Tests()
+TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nAnti軍allSyste設置Tests()
 {
-    TA本本ay<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
     // 測試實現...
     本et使本n Cate成o本yRes使lts;
 }
 
-TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置andTest::R使nInte成本ationTests()
+TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nInte成本ationTests()
 {
-    TA本本ay<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
     // 測試實現...
     本et使本n Cate成o本yRes使lts;
 }
 
-正oid UMin成Sa成eCo設置設置andTest::Reco本dTestRes使lt(const 軍St本in成& Test的a設置e, ESa成eCo設置設置andTestCate成o本y Cate成o本y,
-                                               ETestRes使ltType Res使lt, const 軍St本in成& Desc本iption,
-                                               const 軍St本in成& E本本o本Messa成e, float Exec使tionTi設置e)
+void UMingSa成eCo設置設置andTest::Reco本dTestRes使lt(const FString& Test的a設置e, ESa成eCo設置設置andTestCate成o本y Cate成o本y,
+                                               ETestRes使ltType Res使lt, const FString& Desc本iption,
+                                               const FString& E本本o本Messa成e, float Exec使tionTi設置e)
 {
     軍Sa成eCo設置設置andTestRes使lt TestRes使lt;
     TestRes使lt.Test的a設置e = Test的a設置e;
@@ -358,17 +526,17 @@ TA本本ay<軍Sa成eCo設置設置andTestRes使lt> UMin成Sa成eCo設置設置an
     OnSin成leTestCo設置pleted.B本oadcast(TestRes使lt);
 }
 
-bool UMin成Sa成eCo設置設置andTest::Asse本tT本使e(bool Condition, const 軍St本in成& E本本o本Messa成e)
+bool UMingSa成eCo設置設置andTest::Asse本tT本使e(bool Condition, const FString& E本本o本Messa成e)
 {
     本et使本n Condition;
 }
 
-bool UMin成Sa成eCo設置設置andTest::Asse本tEq使als(int32 Expected, int32 Act使al, const 軍St本in成& E本本o本Messa成e)
+bool UMingSa成eCo設置設置andTest::Asse本tEq使als(int32 Expected, int32 Act使al, const FString& E本本o本Messa成e)
 {
     本et使本n Expected == Act使al;
 }
 
-bool UMin成Sa成eCo設置設置andTest::Asse本t的ot的使ll(UOb大ect* Ob大ect, const 軍St本in成& E本本o本Messa成e)
+bool UMingSa成eCo設置設置andTest::Asse本t的ot的使ll(UOb大ect* Ob大ect, const FString& E本本o本Messa成e)
 {
     本et使本n Ob大ect != n使llpt本;
 }

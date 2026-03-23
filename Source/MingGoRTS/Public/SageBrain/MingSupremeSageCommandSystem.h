@@ -12,6 +12,63 @@ class UMingSixConquestExecutor;
 class UMingTwelveStrategiesExecutor;
 
 // ============================================================================
+// 核心功能接口定義
+// ============================================================================
+
+/** 三權管理器接口 */
+UINTERFACE(BlueprintType)
+class USageAuthorityInterface : public UInterface
+{
+    GENERATED_BODY()
+};
+
+class MINGGORTS_API ISageAuthorityInterface
+{
+    GENERATED_BODY()
+
+public:
+    /** 獲取權力類型 */
+    virtual ESupremeAuthorityType GetAuthorityType() const = 0;
+    
+    /** 檢查權力是否活躍 */
+    virtual bool IsAuthorityActive() const = 0;
+    
+    /** 啟動權力 */
+    virtual void ActivateAuthority() = 0;
+    
+    /** 暫停權力 */
+    virtual void SuspendAuthority() = 0;
+    
+    /** 轉移權力 */
+    virtual bool TransferAuthority(TScriptInterface<ISageAuthorityInterface> TargetAuthority) = 0;
+};
+
+/** 五行輪轉接口 */
+UINTERFACE(BlueprintType)
+class UFiveElementRotationInterface : public UInterface
+{
+    GENERATED_BODY()
+};
+
+class MINGGORTS_API IFiveElementRotationInterface
+{
+    GENERATED_BODY()
+
+public:
+    /** 獲取當前階段 */
+    virtual EFiveElementPhase GetCurrentPhase() const = 0;
+    
+    /** 切換到下一階段 */
+    virtual bool TransitionToNextPhase() = 0;
+    
+    /** 檢查是否可以切換 */
+    virtual bool CanTransitionToPhase(EFiveElementPhase TargetPhase) const = 0;
+    
+    /** 獲取階段持續時間 */
+    virtual float GetPhaseDuration() const = 0;
+};
+
+// ============================================================================
 // 枚舉定義
 // ============================================================================
 

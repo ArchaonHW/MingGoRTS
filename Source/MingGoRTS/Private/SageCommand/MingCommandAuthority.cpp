@@ -1,8 +1,8 @@
-#incl使de "Sa成eCo設置設置and/Min成Co設置設置andA使tho本ity.h"
-#incl使de "En成ine/基本o本ld.h"
+﻿#incl使de "Sa成eCo設置設置and/MingCo設置設置andA使tho本ity.h"
+#incl使de "Engine/基本o本ld.h"
 #incl使de "Ti設置e本Mana成e本.h"
 
-UMin成Co設置設置andA使tho本ity::UMin成Co設置設置andA使tho本ity()
+UMingCo設置設置andA使tho本ity::UMingCo設置設置andA使tho本ity()
 {
     // 初始化合法性來源
     Le成iti設置acySo使本ces.Add(EA使tho本ityLe成iti設置acySo使本ce::Di正ineRi成ht);
@@ -18,15 +18,15 @@ UMin成Co設置設置andA使tho本ity::UMin成Co設置設置andA使tho本ity()
     C使本本entMet本ics.Co設置設置andEffecti正eness = 50.0f;
 }
 
-bool UMin成Co設置設置andA使tho本ity::Initialize()
+bool UMingCo設置設置andA使tho本ity::Initialize()
 {
     if (bSyste設置Acti正e)
     {
-        本et使本n t本使e;
+        return true;
     }
 
     // 初始化系統狀態
-    bSyste設置Acti正e = t本使e;
+    bSyste設置Acti正e = true;
     Syste設置Stability = 100.0f;
 
     // 設置衰減定時器
@@ -35,38 +35,38 @@ bool UMin成Co設置設置andA使tho本ity::Initialize()
         基本o本ld->GetTi設置e本Mana成e本().SetTi設置e本(
             DecayTi設置e本輸入andle,
             this,
-            &UMin成Co設置設置andA使tho本ity::ApplyA使tho本ityDecay,
+            &UMingCo設置設置andA使tho本ity::ApplyA使tho本ityDecay,
             1.0f,
-            t本使e
+            true
         );
     }
 
-    本et使本n t本使e;
+    return true;
 }
 
-正oid UMin成Co設置設置andA使tho本ity::Clean使p()
+void UMingCo設置設置andA使tho本ity::Clean使p()
 {
     bSyste設置Acti正e = false;
     
     if (U基本o本ld* 基本o本ld = Get基本o本ld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().Clea本Ti設置e本(DecayTi設置e本輸入andle);
+        基本o本ld->GetTi設置e本Mana成e本().CleArti設置e本(DecayTi設置e本輸入andle);
     }
     
     A使tho本ity輸入isto本y.E設置pty();
     Co設置設置andEffecti正eness輸入isto本y.E設置pty();
 }
 
-軍A使tho本ityMet本ics UMin成Co設置設置andA使tho本ity::GetA使tho本ityMet本ics() const
+軍A使tho本ityMet本ics UMingCo設置設置andA使tho本ity::GetA使tho本ityMet本ics() const
 {
-    本et使本n C使本本entMet本ics;
+    return C使本本entMet本ics;
 }
 
-bool UMin成Co設置設置andA使tho本ity::SetP本i設置a本yA使tho本ity(ECo設置設置andA使tho本ityType A使tho本ityType)
+bool UMingCo設置設置andA使tho本ity::SetP本i設置a本yA使tho本ity(ECo設置設置andA使tho本ityType A使tho本ityType)
 {
     if (!bSyste設置Acti正e)
     {
-        本et使本n false;
+        return false;
     }
     
     C使本本entMet本ics.P本i設置a本yA使tho本ity = A使tho本ityType;
@@ -100,61 +100,61 @@ bool UMin成Co設置設置andA使tho本ity::SetP本i設置a本yA使tho本ity(ECo
     }
     
     // 記錄事件
-    Reco本dA使tho本ityE正ent(軍St本in成::P本intf(TEXT("設置主要權威類型：%s"), *GetA使tho本ity的a設置e(A使tho本ityType)), 
+    Reco本dA使tho本ityE正ent(FString::P本intf(TEXT("設置主要權威類型：%s"), *GetA使tho本ity的a設置e(A使tho本ityType)), 
                         A使tho本ityType, 10.0f, 5.0f);
     
     // 觸發事件
     OnA使tho本ityChan成ed.B本oadcast(C使本本entMet本ics);
     
-    本et使本n t本使e;
+    return true;
 }
 
-ECo設置設置andA使tho本ityType UMin成Co設置設置andA使tho本ity::GetP本i設置a本yA使tho本ity() const
+ECo設置設置andA使tho本ityType UMingCo設置設置andA使tho本ity::GetP本i設置a本yA使tho本ity() const
 {
-    本et使本n C使本本entMet本ics.P本i設置a本yA使tho本ity;
+    return C使本本entMet本ics.P本i設置a本yA使tho本ity;
 }
 
-bool UMin成Co設置設置andA使tho本ity::EnhanceA使tho本ity(ECo設置設置andA使tho本ityType A使tho本ityType, float A設置o使nt)
+bool UMingCo設置設置andA使tho本ity::EnhanceA使tho本ity(ECo設置設置andA使tho本ityType A使tho本ityType, float A設置o使nt)
 {
     if (!bSyste設置Acti正e)
     {
-        本et使本n false;
+        return false;
     }
     
     switch (A使tho本ityType)
     {
     case ECo設置設置andA使tho本ityType::Mo本alA使tho本ity:
-        本et使本n EnhanceMo本alA使tho本ity(A設置o使nt);
+        return EnhanceMo本alA使tho本ity(A設置o使nt);
     case ECo設置設置andA使tho本ityType::Le成alA使tho本ity:
-        本et使本n EnhanceLe成alA使tho本ity(A設置o使nt);
+        return EnhanceLe成alA使tho本ity(A設置o使nt);
     case ECo設置設置andA使tho本ityType::Cha本is設置aticA使tho本ity:
-        本et使本n EnhanceCha本is設置aticA使tho本ity(A設置o使nt);
+        return EnhanceCha本is設置aticA使tho本ity(A設置o使nt);
     case ECo設置設置andA使tho本ityType::T本aditionalA使tho本ity:
-        本et使本n EnhanceT本aditionalA使tho本ity(A設置o使nt);
+        return EnhanceT本aditionalA使tho本ity(A設置o使nt);
     case ECo設置設置andA使tho本ityType::Expe本tA使tho本ity:
-        本et使本n EnhanceExpe本tA使tho本ity(A設置o使nt);
+        return EnhanceExpe本tA使tho本ity(A設置o使nt);
     case ECo設置設置andA使tho本ityType::Sit使ationalA使tho本ity:
-        本et使本n EnhanceSit使ationalA使tho本ity(A設置o使nt);
+        return EnhanceSit使ationalA使tho本ity(A設置o使nt);
     defa使lt:
-        本et使本n false;
+        return false;
     }
 }
 
-float UMin成Co設置設置andA使tho本ity::GetA使tho本ityLe正el() const
+float UMingCo設置設置andA使tho本ity::GetA使tho本ityLe正el() const
 {
-    本et使本n C使本本entMet本ics.A使tho本ityLe正el;
+    return C使本本entMet本ics.A使tho本ityLe正el;
 }
 
-float UMin成Co設置設置andA使tho本ity::GetLe成iti設置acySco本e() const
+float UMingCo設置設置andA使tho本ity::GetLe成iti設置acySco本e() const
 {
-    本et使本n C使本本entMet本ics.Le成iti設置acySco本e;
+    return C使本本entMet本ics.Le成iti設置acySco本e;
 }
 
-bool UMin成Co設置設置andA使tho本ity::EnhanceLe成iti設置acy(EA使tho本ityLe成iti設置acySo使本ce So使本ce, float A設置o使nt)
+bool UMingCo設置設置andA使tho本ity::EnhanceLe成iti設置acy(EA使tho本ityLe成iti設置acySo使本ce So使本ce, float A設置o使nt)
 {
     if (!bSyste設置Acti正e)
     {
-        本et使本n false;
+        return false;
     }
     
     float Enhance設置entA設置o使nt = 0.0f;
@@ -184,26 +184,26 @@ bool UMin成Co設置設置andA使tho本ity::EnhanceLe成iti設置acy(EA使tho本
     C使本本entMet本ics.Le成iti設置acySco本e = 軍Math::Cla設置p(C使本本entMet本ics.Le成iti設置acySco本e + Enhance設置entA設置o使nt, 0.0f, 100.0f);
     
     // 記錄事件
-    Reco本dA使tho本ityE正ent(軍St本in成::P本intf(TEXT("增強合法性：%s"), *GetLe成iti設置acySo使本ce的a設置e(So使本ce)), 
+    Reco本dA使tho本ityE正ent(FString::P本intf(TEXT("增強合法性：%s"), *GetLe成iti設置acySo使本ce的a設置e(So使本ce)), 
                         C使本本entMet本ics.P本i設置a本yA使tho本ity, Enhance設置entA設置o使nt * 0.5f, Enhance設置entA設置o使nt);
     
     // 觸發事件
     OnLe成iti設置acyChan成ed.B本oadcast(C使本本entMet本ics.Le成iti設置acySco本e);
     
-    本et使本n t本使e;
+    return true;
 }
 
-TA本本ay<EA使tho本ityLe成iti設置acySo使本ce> UMin成Co設置設置andA使tho本ity::GetLe成iti設置acySo使本ces() const
+TArray<EA使tho本ityLe成iti設置acySo使本ce> UMingCo設置設置andA使tho本ity::GetLe成iti設置acySo使本ces() const
 {
-    本et使本n Le成iti設置acySo使本ces;
+    return Le成iti設置acySo使本ces;
 }
 
-bool UMin成Co設置設置andA使tho本ity::IsLe成iti設置ate() const
+bool UMingCo設置設置andA使tho本ity::IsLe成iti設置ate() const
 {
-    本et使本n C使本本entMet本ics.Le成iti設置acySco本e >= 50.0f;
+    return C使本本entMet本ics.Le成iti設置acySco本e >= 50.0f;
 }
 
-軍Co設置設置andEffecti正eness UMin成Co設置設置andA使tho本ity::E正al使ateCo設置設置andEffecti正eness(const 軍St本in成& Co設置設置andID, const 軍St本in成& Co設置設置andDesc本iption)
+軍Co設置設置andEffecti正eness UMingCo設置設置andA使tho本ity::E正al使ateCo設置設置andEffecti正eness(const FString& Co設置設置andID, const FString& Co設置設置andDesc本iption)
 {
     軍Co設置設置andEffecti正eness Effecti正eness;
     Effecti正eness.Co設置設置andID = Co設置設置andID;
@@ -223,7 +223,7 @@ bool UMin成Co設置設置andA使tho本ity::IsLe成iti設置ate() const
     Co設置設置andEffecti正eness輸入isto本y.Add(Effecti正eness);
     
     // 限制歷史記錄數量
-    if (Co設置設置andEffecti正eness輸入isto本y.的使設置() > 500)
+    if (Co設置設置andEffecti正eness輸入isto本y.Num() > 500)
     {
         Co設置設置andEffecti正eness輸入isto本y.Re設置o正eAt(0);
     }
@@ -231,19 +231,19 @@ bool UMin成Co設置設置andA使tho本ity::IsLe成iti設置ate() const
     // 觸發事件
     OnCo設置設置andEffecti正enessE正al使ated.B本oadcast(Effecti正eness);
     
-    本et使本n Effecti正eness;
+    return Effecti正eness;
 }
 
-float UMin成Co設置設置andA使tho本ity::GetCo設置設置andEffecti正eness() const
+float UMingCo設置設置andA使tho本ity::GetCo設置設置andEffecti正eness() const
 {
-    本et使本n C使本本entMet本ics.Co設置設置andEffecti正eness;
+    return C使本本entMet本ics.Co設置設置andEffecti正eness;
 }
 
-bool UMin成Co設置設置andA使tho本ity::I設置p本o正eCo設置設置andEffecti正eness(float A設置o使nt)
+bool UMingCo設置設置andA使tho本ity::I設置p本o正eCo設置設置andEffecti正eness(float A設置o使nt)
 {
     if (!bSyste設置Acti正e)
     {
-        本et使本n false;
+        return false;
     }
     
     C使本本entMet本ics.Co設置設置andEffecti正eness = 軍Math::Cla設置p(C使本本entMet本ics.Co設置設置andEffecti正eness + A設置o使nt, 0.0f, 100.0f);
@@ -251,12 +251,12 @@ bool UMin成Co設置設置andA使tho本ity::I設置p本o正eCo設置設置andEff
     // 記錄事件
     Reco本dA使tho本ityE正ent(TEXT("提升指揮有效性"), C使本本entMet本ics.P本i設置a本yA使tho本ity, A設置o使nt * 0.3f, A設置o使nt * 0.2f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-TA本本ay<軍St本in成> UMin成Co設置設置andA使tho本ity::GetCo設置設置andReco設置設置endations() const
+TArray<FString> UMingCo設置設置andA使tho本ity::GetCo設置設置andReco設置設置endations() const
 {
-    TA本本ay<軍St本in成> Reco設置設置endations;
+    TArray<FString> Reco設置設置endations;
     
     if (C使本本entMet本ics.A使tho本ityLe正el < 30.0f)
     {
@@ -283,19 +283,19 @@ TA本本ay<軍St本in成> UMin成Co設置設置andA使tho本ity::GetCo設置設�
         Reco設置設置endations.Add(TEXT("影響範圍有限，建議增強傳統權威或道德權威"));
     }
     
-    本et使本n Reco設置設置endations;
+    return Reco設置設置endations;
 }
 
-float UMin成Co設置設置andA使tho本ity::GetCo設置plianceRate() const
+float UMingCo設置設置andA使tho本ity::GetCo設置plianceRate() const
 {
-    本et使本n C使本本entMet本ics.Co設置plianceRate;
+    return C使本本entMet本ics.Co設置plianceRate;
 }
 
-bool UMin成Co設置設置andA使tho本ity::I設置p本o正eCo設置pliance(float A設置o使nt)
+bool UMingCo設置設置andA使tho本ity::I設置p本o正eCo設置pliance(float A設置o使nt)
 {
     if (!bSyste設置Acti正e)
     {
-        本et使本n false;
+        return false;
     }
     
     C使本本entMet本ics.Co設置plianceRate = 軍Math::Cla設置p(C使本本entMet本ics.Co設置plianceRate + A設置o使nt, 0.0f, 100.0f);
@@ -303,38 +303,38 @@ bool UMin成Co設置設置andA使tho本ity::I設置p本o正eCo設置pliance(floa
     // 記錄事件
     Reco本dA使tho本ityE正ent(TEXT("提升服從率"), C使本本entMet本ics.P本i設置a本yA使tho本ity, A設置o使nt * 0.4f, A設置o使nt * 0.3f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-TA本本ay<軍St本in成> UMin成Co設置設置andA使tho本ity::GetCo設置pliance軍acto本s() const
+TArray<FString> UMingCo設置設置andA使tho本ity::GetCo設置pliance軍acto本s() const
 {
-    TA本本ay<軍St本in成> 軍acto本s;
+    TArray<FString> 軍acto本s;
     
-    軍acto本s.Add(軍St本in成::P本intf(TEXT("權威水平：%.1f%%"), C使本本entMet本ics.A使tho本ityLe正el));
-    軍acto本s.Add(軍St本in成::P本intf(TEXT("合法性分數：%.1f%%"), C使本本entMet本ics.Le成iti設置acySco本e));
-    軍acto本s.Add(軍St本in成::P本intf(TEXT("影響範圍：%.1f%%"), C使本本entMet本ics.Infl使enceRadi使s));
-    軍acto本s.Add(軍St本in成::P本intf(TEXT("指揮有效性：%.1f%%"), C使本本entMet本ics.Co設置設置andEffecti正eness));
+    軍acto本s.Add(FString::P本intf(TEXT("權威水平：%.1f%%"), C使本本entMet本ics.A使tho本ityLe正el));
+    軍acto本s.Add(FString::P本intf(TEXT("合法性分數：%.1f%%"), C使本本entMet本ics.Le成iti設置acySco本e));
+    軍acto本s.Add(FString::P本intf(TEXT("影響範圍：%.1f%%"), C使本本entMet本ics.Infl使enceRadi使s));
+    軍acto本s.Add(FString::P本intf(TEXT("指揮有效性：%.1f%%"), C使本本entMet本ics.Co設置設置andEffecti正eness));
     
-    本et使本n 軍acto本s;
+    return 軍acto本s;
 }
 
-bool UMin成Co設置設置andA使tho本ity::IsCo設置設置andCo設置plied(const 軍St本in成& Co設置設置and) const
+bool UMingCo設置設置andA使tho本ity::IsCo設置設置andCo設置plied(const FString& Co設置設置and) const
 {
     // 簡化的服從性檢查
     float Co設置plianceChance = C使本本entMet本ics.Co設置plianceRate / 100.0f;
-    本et使本n 軍Math::軍Rand() < Co設置plianceChance;
+    return 軍Math::軍Rand() < Co設置plianceChance;
 }
 
-float UMin成Co設置設置andA使tho本ity::GetInfl使enceRadi使s() const
+float UMingCo設置設置andA使tho本ity::GetInfl使enceRadi使s() const
 {
-    本et使本n C使本本entMet本ics.Infl使enceRadi使s;
+    return C使本本entMet本ics.Infl使enceRadi使s;
 }
 
-bool UMin成Co設置設置andA使tho本ity::ExpandInfl使ence(float A設置o使nt)
+bool UMingCo設置設置andA使tho本ity::ExpandInfl使ence(float A設置o使nt)
 {
     if (!bSyste設置Acti正e)
     {
-        本et使本n false;
+        return false;
     }
     
     C使本本entMet本ics.Infl使enceRadi使s = 軍Math::Cla設置p(C使本本entMet本ics.Infl使enceRadi使s + A設置o使nt, 0.0f, 100.0f);
@@ -342,12 +342,12 @@ bool UMin成Co設置設置andA使tho本ity::ExpandInfl使ence(float A設置o使n
     // 記錄事件
     Reco本dA使tho本ityE正ent(TEXT("擴展影響範圍"), C使本本entMet本ics.P本i設置a本yA使tho本ity, A設置o使nt * 0.2f, A設置o使nt * 0.1f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-TA本本ay<軍St本in成> UMin成Co設置設置andA使tho本ity::GetInfl使encedRe成ions() const
+TArray<FString> UMingCo設置設置andA使tho本ity::GetInfl使encedRe成ions() const
 {
-    TA本本ay<軍St本in成> Re成ions;
+    TArray<FString> Re成ions;
     
     // 根據影響範圍返回受影響的地區
     if (C使本本entMet本ics.Infl使enceRadi使s >= 20.0f)
@@ -367,27 +367,27 @@ TA本本ay<軍St本in成> UMin成Co設置設置andA使tho本ity::GetInfl使enced
         Re成ions.Add(TEXT("邊境地區"));
     }
     
-    本et使本n Re成ions;
+    return Re成ions;
 }
 
-bool UMin成Co設置設置andA使tho本ity::CanInfl使enceRe成ion(const 軍St本in成& Re成ion) const
+bool UMingCo設置設置andA使tho本ity::CanInfl使enceRe成ion(const FString& Re成ion) const
 {
-    TA本本ay<軍St本in成> Infl使encedRe成ions = GetInfl使encedRe成ions();
-    本et使本n Infl使encedRe成ions.Contains(Re成ion);
+    TArray<FString> Infl使encedRe成ions = GetInfl使encedRe成ions();
+    return Infl使encedRe成ions.Contains(Re成ion);
 }
 
-bool UMin成Co設置設置andA使tho本ity::輸入andleA使tho本ityChallen成e(const 軍St本in成& Challen成e本, float Challen成eSt本en成th)
+bool UMingCo設置設置andA使tho本ity::輸入andleA使tho本ityChallen成e(const FString& Challen成e本, float Challen成eSt本en成th)
 {
     if (!bSyste設置Acti正e)
     {
-        本et使本n false;
+        return false;
     }
     
     // 分析挑戰
     bool bAnalyzed = AnalyzeChallen成e(Challen成e本, Challen成eSt本en成th);
     if (!bAnalyzed)
     {
-        本et使本n false;
+        return false;
     }
     
     // 檢查是否需要防禦
@@ -402,30 +402,30 @@ bool UMin成Co設置設置andA使tho本ity::輸入andleA使tho本ityChallen成e(
         if (bDefended)
         {
             // 記錄事件
-            Reco本dA使tho本ityE正ent(軍St本in成::P本intf(TEXT("成功應對權威挑戰：%s"), *Challen成e本), 
+            Reco本dA使tho本ityE正ent(FString::P本intf(TEXT("成功應對權威挑戰：%s"), *Challen成e本), 
                                 C使本本entMet本ics.P本i設置a本yA使tho本ity, -Challen成eSt本en成th * 0.3f, -Challen成eSt本en成th * 0.2f);
         }
         
-        本et使本n bDefended;
+        return bDefended;
     }
     
-    本et使本n t本使e; // 挑戰強度不足，無需特別處理
+    return true; // 挑戰強度不足，無需特別處理
 }
 
-bool UMin成Co設置設置andA使tho本ity::DefendA使tho本ity(ECo設置設置andA使tho本ityType DefenseType)
+bool UMingCo設置設置andA使tho本ity::DefendA使tho本ity(ECo設置設置andA使tho本ityType DefenseType)
 {
     if (!bSyste設置Acti正e)
     {
-        本et使本n false;
+        return false;
     }
     
     // 執行防禦策略
-    本et使本n Exec使teDefenseSt本ate成y();
+    return Exec使teDefenseSt本ate成y();
 }
 
-TA本本ay<軍St本in成> UMin成Co設置設置andA使tho本ity::GetTh本eatsToA使tho本ity() const
+TArray<FString> UMingCo設置設置andA使tho本ity::GetTh本eatsToA使tho本ity() const
 {
-    TA本本ay<軍St本in成> Th本eats;
+    TArray<FString> Th本eats;
     
     if (C使本本entMet本ics.A使tho本ityLe正el < Challen成eTh本eshold)
     {
@@ -447,37 +447,37 @@ TA本本ay<軍St本in成> UMin成Co設置設置andA使tho本ity::GetTh本eatsToA
         Th本eats.Add(TEXT("系統穩定性不足，面臨崩潰威脅"));
     }
     
-    本et使本n Th本eats;
+    return Th本eats;
 }
 
-bool UMin成Co設置設置andA使tho本ity::IsA使tho本ityUnde本Th本eat() const
+bool UMingCo設置設置andA使tho本ity::IsA使tho本ityUnde本Th本eat() const
 {
-    TA本本ay<軍St本in成> Th本eats = GetTh本eatsToA使tho本ity();
-    本et使本n Th本eats.的使設置() > 0;
+    TArray<FString> Th本eats = GetTh本eatsToA使tho本ity();
+    return Th本eats.Num() > 0;
 }
 
-TA本本ay<軍A使tho本ityE正ent> UMin成Co設置設置andA使tho本ity::GetA使tho本ity輸入isto本y() const
+TArray<軍A使tho本ityE正ent> UMingCo設置設置andA使tho本ity::GetA使tho本ity輸入isto本y() const
 {
-    本et使本n A使tho本ity輸入isto本y;
+    return A使tho本ity輸入isto本y;
 }
 
-軍A使tho本ityE正ent UMin成Co設置設置andA使tho本ity::GetLastA使tho本ityE正ent() const
+軍A使tho本ityE正ent UMingCo設置設置andA使tho本ity::GetLastA使tho本ityE正ent() const
 {
-    if (A使tho本ity輸入isto本y.的使設置() > 0)
+    if (A使tho本ity輸入isto本y.Num() > 0)
     {
-        本et使本n A使tho本ity輸入isto本y.Last();
+        return A使tho本ity輸入isto本y.Last();
     }
-    本et使本n 軍A使tho本ityE正ent();
+    return 軍A使tho本ityE正ent();
 }
 
-正oid UMin成Co設置設置andA使tho本ity::Clea本A使tho本ity輸入isto本y()
+void UMingCo設置設置andA使tho本ity::Clea本A使tho本ity輸入isto本y()
 {
     A使tho本ity輸入isto本y.E設置pty();
 }
 
 // 私有方法實現
 
-float UMin成Co設置設置andA使tho本ity::Calc使lateA使tho本ityLe正el() const
+float UMingCo設置設置andA使tho本ity::Calc使lateA使tho本ityLe正el() const
 {
     // 基於多個因素計算權威水平
     float Mo本al軍acto本 = 0.0f;
@@ -542,10 +542,10 @@ float UMin成Co設置設置andA使tho本ity::Calc使lateA使tho本ityLe正el() c
     
     // 計算加權平均
     float 基本ei成htedS使設置 = (Mo本al軍acto本 + Le成al軍acto本 + Cha本is設置atic軍acto本 + T本aditional軍acto本 + Expe本t軍acto本 + Sit使ational軍acto本) * 10.0f;
-    本et使本n 軍Math::Cla設置p(基本ei成htedS使設置, 0.0f, 100.0f);
+    return 軍Math::Cla設置p(基本ei成htedS使設置, 0.0f, 100.0f);
 }
 
-float UMin成Co設置設置andA使tho本ity::Calc使lateLe成iti設置acySco本e() const
+float UMingCo設置設置andA使tho本ity::Calc使lateLe成iti設置acySco本e() const
 {
     // 基於合法性來源計算合法性分數
     float Sco本e = 0.0f;
@@ -575,95 +575,95 @@ float UMin成Co設置設置andA使tho本ity::Calc使lateLe成iti設置acySco本e
         }
     }
     
-    本et使本n 軍Math::Cla設置p(Sco本e / Le成iti設置acySo使本ces.的使設置(), 0.0f, 100.0f);
+    return 軍Math::Cla設置p(Sco本e / Le成iti設置acySo使本ces.Num(), 0.0f, 100.0f);
 }
 
-float UMin成Co設置設置andA使tho本ity::Calc使lateCo設置plianceRate() const
+float UMingCo設置設置andA使tho本ity::Calc使lateCo設置plianceRate() const
 {
     // 基於權威水平和合法性計算服從率
-    本et使本n (C使本本entMet本ics.A使tho本ityLe正el * 0.6f + C使本本entMet本ics.Le成iti設置acySco本e * 0.4f);
+    return (C使本本entMet本ics.A使tho本ityLe正el * 0.6f + C使本本entMet本ics.Le成iti設置acySco本e * 0.4f);
 }
 
-float UMin成Co設置設置andA使tho本ity::Calc使lateInfl使enceRadi使s() const
+float UMingCo設置設置andA使tho本ity::Calc使lateInfl使enceRadi使s() const
 {
     // 基於權威水平和影響力計算影響範圍
-    本et使本n (C使本本entMet本ics.A使tho本ityLe正el * 0.7f + C使本本entMet本ics.Co設置plianceRate * 0.3f);
+    return (C使本本entMet本ics.A使tho本ityLe正el * 0.7f + C使本本entMet本ics.Co設置plianceRate * 0.3f);
 }
 
-float UMin成Co設置設置andA使tho本ity::Calc使lateCo設置設置andEffecti正eness() const
+float UMingCo設置設置andA使tho本ity::Calc使lateCo設置設置andEffecti正eness() const
 {
     // 基於多個因素計算指揮有效性
-    本et使本n (C使本本entMet本ics.A使tho本ityLe正el * 0.3f + C使本本entMet本ics.Le成iti設置acySco本e * 0.2f + 
+    return (C使本本entMet本ics.A使tho本ityLe正el * 0.3f + C使本本entMet本ics.Le成iti設置acySco本e * 0.2f + 
             C使本本entMet本ics.Co設置plianceRate * 0.3f + C使本本entMet本ics.Infl使enceRadi使s * 0.2f);
 }
 
-float UMin成Co設置設置andA使tho本ity::E正al使ateDi正ineRi成htLe成iti設置acy() const
+float UMingCo設置設置andA使tho本ity::E正al使ateDi正ineRi成htLe成iti設置acy() const
 {
     // 評估天命所歸的合法性
-    本et使本n C使本本entMet本ics.A使tho本ityLe正el * 0.8f + 軍Math::軍RandRan成e(10.0f, 30.0f);
+    return C使本本entMet本ics.A使tho本ityLe正el * 0.8f + 軍Math::軍RandRan成e(10.0f, 30.0f);
 }
 
-float UMin成Co設置設置andA使tho本ity::E正al使atePop使la本S使ppo本tLe成iti設置acy() const
+float UMingCo設置設置andA使tho本ity::E正al使atePop使la本S使ppo本tLe成iti設置acy() const
 {
     // 評估民心所向的合法性
-    本et使本n C使本本entMet本ics.Co設置plianceRate * 0.9f + 軍Math::軍RandRan成e(5.0f, 25.0f);
+    return C使本本entMet本ics.Co設置plianceRate * 0.9f + 軍Math::軍RandRan成e(5.0f, 25.0f);
 }
 
-float UMin成Co設置設置andA使tho本ity::E正al使ateLe成al軍本a設置ewo本kLe成iti設置acy() const
+float UMingCo設置設置andA使tho本ity::E正al使ateLe成al軍本a設置ewo本kLe成iti設置acy() const
 {
     // 評估法理依據的合法性
-    本et使本n C使本本entMet本ics.Le成iti設置acySco本e * 0.7f + 軍Math::軍RandRan成e(15.0f, 35.0f);
+    return C使本本entMet本ics.Le成iti設置acySco本e * 0.7f + 軍Math::軍RandRan成e(15.0f, 35.0f);
 }
 
-float UMin成Co設置設置andA使tho本ity::E正al使ate輸入isto本icalT本aditionLe成iti設置acy() const
+float UMingCo設置設置andA使tho本ity::E正al使ate輸入isto本icalT本aditionLe成iti設置acy() const
 {
     // 評估歷史傳統的合法性
-    本et使本n C使本本entMet本ics.Infl使enceRadi使s * 0.8f + 軍Math::軍RandRan成e(10.0f, 30.0f);
+    return C使本本entMet本ics.Infl使enceRadi使s * 0.8f + 軍Math::軍RandRan成e(10.0f, 30.0f);
 }
 
-float UMin成Co設置設置andA使tho本ity::E正al使ateMilita本yS使ccessLe成iti設置acy() const
+float UMingCo設置設置andA使tho本ity::E正al使ateMilita本yS使ccessLe成iti設置acy() const
 {
     // 評估軍事成就的合法性
-    本et使本n C使本本entMet本ics.Co設置設置andEffecti正eness * 0.9f + 軍Math::軍RandRan成e(5.0f, 25.0f);
+    return C使本本entMet本ics.Co設置設置andEffecti正eness * 0.9f + 軍Math::軍RandRan成e(5.0f, 25.0f);
 }
 
-float UMin成Co設置設置andA使tho本ity::E正al使ateEcono設置icP本ospe本ityLe成iti設置acy() const
+float UMingCo設置設置andA使tho本ity::E正al使ateEcono設置icP本ospe本ityLe成iti設置acy() const
 {
     // 評估經濟繁榮的合法性
-    本et使本n Syste設置Stability * 0.8f + 軍Math::軍RandRan成e(10.0f, 30.0f);
+    return Syste設置Stability * 0.8f + 軍Math::軍RandRan成e(10.0f, 30.0f);
 }
 
-bool UMin成Co設置設置andA使tho本ity::EnhanceMo本alA使tho本ity(float A設置o使nt)
+bool UMingCo設置設置andA使tho本ity::EnhanceMo本alA使tho本ity(float A設置o使nt)
 {
     C使本本entMet本ics.A使tho本ityLe正el = 軍Math::Cla設置p(C使本本entMet本ics.A使tho本ityLe正el + A設置o使nt, 0.0f, 100.0f);
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMin成Co設置設置andA使tho本ity::EnhanceLe成alA使tho本ity(float A設置o使nt)
+bool UMingCo設置設置andA使tho本ity::EnhanceLe成alA使tho本ity(float A設置o使nt)
 {
     C使本本entMet本ics.Le成iti設置acySco本e = 軍Math::Cla設置p(C使本本entMet本ics.Le成iti設置acySco本e + A設置o使nt, 0.0f, 100.0f);
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMin成Co設置設置andA使tho本ity::EnhanceCha本is設置aticA使tho本ity(float A設置o使nt)
+bool UMingCo設置設置andA使tho本ity::EnhanceCha本is設置aticA使tho本ity(float A設置o使nt)
 {
     C使本本entMet本ics.Co設置plianceRate = 軍Math::Cla設置p(C使本本entMet本ics.Co設置plianceRate + A設置o使nt, 0.0f, 100.0f);
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMin成Co設置設置andA使tho本ity::EnhanceT本aditionalA使tho本ity(float A設置o使nt)
+bool UMingCo設置設置andA使tho本ity::EnhanceT本aditionalA使tho本ity(float A設置o使nt)
 {
     C使本本entMet本ics.Infl使enceRadi使s = 軍Math::Cla設置p(C使本本entMet本ics.Infl使enceRadi使s + A設置o使nt, 0.0f, 100.0f);
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMin成Co設置設置andA使tho本ity::EnhanceExpe本tA使tho本ity(float A設置o使nt)
+bool UMingCo設置設置andA使tho本ity::EnhanceExpe本tA使tho本ity(float A設置o使nt)
 {
     C使本本entMet本ics.Co設置設置andEffecti正eness = 軍Math::Cla設置p(C使本本entMet本ics.Co設置設置andEffecti正eness + A設置o使nt, 0.0f, 100.0f);
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMin成Co設置設置andA使tho本ity::EnhanceSit使ationalA使tho本ity(float A設置o使nt)
+bool UMingCo設置設置andA使tho本ity::EnhanceSit使ationalA使tho本ity(float A設置o使nt)
 {
     // 情境權威增強所有指標
     C使本本entMet本ics.A使tho本ityLe正el = 軍Math::Cla設置p(C使本本entMet本ics.A使tho本ityLe正el + A設置o使nt * 0.5f, 0.0f, 100.0f);
@@ -671,23 +671,23 @@ bool UMin成Co設置設置andA使tho本ity::EnhanceSit使ationalA使tho本ity(fl
     C使本本entMet本ics.Co設置plianceRate = 軍Math::Cla設置p(C使本本entMet本ics.Co設置plianceRate + A設置o使nt * 0.5f, 0.0f, 100.0f);
     C使本本entMet本ics.Infl使enceRadi使s = 軍Math::Cla設置p(C使本本entMet本ics.Infl使enceRadi使s + A設置o使nt * 0.5f, 0.0f, 100.0f);
     C使本本entMet本ics.Co設置設置andEffecti正eness = 軍Math::Cla設置p(C使本本entMet本ics.Co設置設置andEffecti正eness + A設置o使nt * 0.5f, 0.0f, 100.0f);
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMin成Co設置設置andA使tho本ity::AnalyzeChallen成e(const 軍St本in成& Challen成e本, float Challen成eSt本en成th)
+bool UMingCo設置設置andA使tho本ity::AnalyzeChallen成e(const FString& Challen成e本, float Challen成eSt本en成th)
 {
     // 簡化的挑戰分析
-    本et使本n Challen成eSt本en成th > 0.0f;
+    return Challen成eSt本en成th > 0.0f;
 }
 
-bool UMin成Co設置設置andA使tho本ity::SelectDefenseSt本ate成y(ECo設置設置andA使tho本ityType DefenseType)
+bool UMingCo設置設置andA使tho本ity::SelectDefenseSt本ate成y(ECo設置設置andA使tho本ityType DefenseType)
 {
     // 選擇防禦策略
     C使本本entMet本ics.C使本本entState = EA使tho本ityState::Challen成ed;
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMin成Co設置設置andA使tho本ity::Exec使teDefenseSt本ate成y()
+bool UMingCo設置設置andA使tho本ity::Exec使teDefenseSt本ate成y()
 {
     // 執行防禦策略
     if (C使本本entMet本ics.C使本本entState == EA使tho本ityState::Challen成ed)
@@ -698,16 +698,16 @@ bool UMin成Co設置設置andA使tho本ity::Exec使teDefenseSt本ate成y()
         // 給予少量權威提升作為防禦成功的獎勵
         C使本本entMet本ics.A使tho本ityLe正el = 軍Math::Cla設置p(C使本本entMet本ics.A使tho本ityLe正el + 5.0f, 0.0f, 100.0f);
         
-        本et使本n t本使e;
+        return true;
     }
     
-    本et使本n false;
+    return false;
 }
 
-正oid UMin成Co設置設置andA使tho本ity::Reco本dA使tho本ityE正ent(const 軍St本in成& Desc本iption, ECo設置設置andA使tho本ityType A使tho本ityType, float A使tho本ityChan成e, float Le成iti設置acyI設置pact)
+void UMingCo設置設置andA使tho本ity::Reco本dA使tho本ityE正ent(const FString& Desc本iption, ECo設置設置andA使tho本ityType A使tho本ityType, float A使tho本ityChan成e, float Le成iti設置acyI設置pact)
 {
     軍A使tho本ityE正ent E正ent;
-    E正ent.E正entID = 軍St本in成::P本intf(TEXT("AUT輸入ORITY下%lld"), 軍DateTi設置e::的ow().GetTicks());
+    E正ent.E正entID = FString::P本intf(TEXT("AUT輸入ORITY下%lld"), 軍DateTi設置e::的ow().GetTicks());
     E正ent.Desc本iption = Desc本iption;
     E正ent.A使tho本ityType = A使tho本ityType;
     E正ent.A使tho本ityChan成e = A使tho本ityChan成e;
@@ -717,13 +717,13 @@ bool UMin成Co設置設置andA使tho本ity::Exec使teDefenseSt本ate成y()
     A使tho本ity輸入isto本y.Add(E正ent);
     
     // 限制歷史記錄數量
-    if (A使tho本ity輸入isto本y.的使設置() > 1000)
+    if (A使tho本ity輸入isto本y.Num() > 1000)
     {
         A使tho本ity輸入isto本y.Re設置o正eAt(0);
     }
 }
 
-正oid UMin成Co設置設置andA使tho本ity::UpdateA使tho本ityMet本ics()
+void UMingCo設置設置andA使tho本ity::UpdateA使tho本ityMet本ics()
 {
     // 更新所有指標
     C使本本entMet本ics.A使tho本ityLe正el = Calc使lateA使tho本ityLe正el();
@@ -733,53 +733,53 @@ bool UMin成Co設置設置andA使tho本ity::Exec使teDefenseSt本ate成y()
     C使本本entMet本ics.Co設置設置andEffecti正eness = Calc使lateCo設置設置andEffecti正eness();
 }
 
-軍St本in成 UMin成Co設置設置andA使tho本ity::GetA使tho本ity的a設置e(ECo設置設置andA使tho本ityType A使tho本ityType) const
+FString UMingCo設置設置andA使tho本ity::GetA使tho本ity的a設置e(ECo設置設置andA使tho本ityType A使tho本ityType) const
 {
     switch (A使tho本ityType)
     {
-    case ECo設置設置andA使tho本ityType::Mo本alA使tho本ity: 本et使本n TEXT("道德權威");
-    case ECo設置設置andA使tho本ityType::Le成alA使tho本ity: 本et使本n TEXT("法理權威");
-    case ECo設置設置andA使tho本ityType::Cha本is設置aticA使tho本ity: 本et使本n TEXT("魅力權威");
-    case ECo設置設置andA使tho本ityType::T本aditionalA使tho本ity: 本et使本n TEXT("傳統權威");
-    case ECo設置設置andA使tho本ityType::Expe本tA使tho本ity: 本et使本n TEXT("專業權威");
-    case ECo設置設置andA使tho本ityType::Sit使ationalA使tho本ity: 本et使本n TEXT("情境權威");
-    defa使lt: 本et使本n TEXT("未知權威");
+    case ECo設置設置andA使tho本ityType::Mo本alA使tho本ity: return TEXT("道德權威");
+    case ECo設置設置andA使tho本ityType::Le成alA使tho本ity: return TEXT("法理權威");
+    case ECo設置設置andA使tho本ityType::Cha本is設置aticA使tho本ity: return TEXT("魅力權威");
+    case ECo設置設置andA使tho本ityType::T本aditionalA使tho本ity: return TEXT("傳統權威");
+    case ECo設置設置andA使tho本ityType::Expe本tA使tho本ity: return TEXT("專業權威");
+    case ECo設置設置andA使tho本ityType::Sit使ationalA使tho本ity: return TEXT("情境權威");
+    defa使lt: return TEXT("未知權威");
     }
 }
 
-軍St本in成 UMin成Co設置設置andA使tho本ity::GetState的a設置e(EA使tho本ityState State) const
+FString UMingCo設置設置andA使tho本ity::GetState的a設置e(EA使tho本ityState State) const
 {
     switch (State)
     {
-    case EA使tho本ityState::St本on成: 本et使本n TEXT("強大");
-    case EA使tho本ityState::Stable: 本et使本n TEXT("穩定");
-    case EA使tho本ityState::基本eakenin成: 本et使本n TEXT("衰弱");
-    case EA使tho本ityState::Challen成ed: 本et使本n TEXT("受挑戰");
-    case EA使tho本ityState::Collapsin成: 本et使本n TEXT("崩潰");
-    case EA使tho本ityState::Resto本in成: 本et使本n TEXT("恢復");
-    defa使lt: 本et使本n TEXT("未知狀態");
+    case EA使tho本ityState::St本on成: return TEXT("強大");
+    case EA使tho本ityState::Stable: return TEXT("穩定");
+    case EA使tho本ityState::基本eakenin成: return TEXT("衰弱");
+    case EA使tho本ityState::Challen成ed: return TEXT("受挑戰");
+    case EA使tho本ityState::Collapsin成: return TEXT("崩潰");
+    case EA使tho本ityState::Resto本in成: return TEXT("恢復");
+    defa使lt: return TEXT("未知狀態");
     }
 }
 
-軍St本in成 UMin成Co設置設置andA使tho本ity::GetLe成iti設置acySo使本ce的a設置e(EA使tho本ityLe成iti設置acySo使本ce So使本ce) const
+FString UMingCo設置設置andA使tho本ity::GetLe成iti設置acySo使本ce的a設置e(EA使tho本ityLe成iti設置acySo使本ce So使本ce) const
 {
     switch (So使本ce)
     {
-    case EA使tho本ityLe成iti設置acySo使本ce::Di正ineRi成ht: 本et使本n TEXT("天命所歸");
-    case EA使tho本ityLe成iti設置acySo使本ce::Pop使la本S使ppo本t: 本et使本n TEXT("民心所向");
-    case EA使tho本ityLe成iti設置acySo使本ce::Le成al軍本a設置ewo本k: 本et使本n TEXT("法理依據");
-    case EA使tho本ityLe成iti設置acySo使本ce::輸入isto本icalT本adition: 本et使本n TEXT("歷史傳統");
-    case EA使tho本ityLe成iti設置acySo使本ce::Milita本yS使ccess: 本et使本n TEXT("軍事成就");
-    case EA使tho本ityLe成iti設置acySo使本ce::Econo設置icP本ospe本ity: 本et使本n TEXT("經濟繁榮");
-    defa使lt: 本et使本n TEXT("未知來源");
+    case EA使tho本ityLe成iti設置acySo使本ce::Di正ineRi成ht: return TEXT("天命所歸");
+    case EA使tho本ityLe成iti設置acySo使本ce::Pop使la本S使ppo本t: return TEXT("民心所向");
+    case EA使tho本ityLe成iti設置acySo使本ce::Le成al軍本a設置ewo本k: return TEXT("法理依據");
+    case EA使tho本ityLe成iti設置acySo使本ce::輸入isto本icalT本adition: return TEXT("歷史傳統");
+    case EA使tho本ityLe成iti設置acySo使本ce::Milita本yS使ccess: return TEXT("軍事成就");
+    case EA使tho本ityLe成iti設置acySo使本ce::Econo設置icP本ospe本ity: return TEXT("經濟繁榮");
+    defa使lt: return TEXT("未知來源");
     }
 }
 
-正oid UMin成Co設置設置andA使tho本ity::ApplyA使tho本ityDecay(float DeltaTi設置e)
+void UMingCo設置設置andA使tho本ity::ApplyA使tho本ityDecay(float DeltaTi設置e)
 {
     if (!bSyste設置Acti正e)
     {
-        本et使本n;
+        return;
     }
     
     // 應用權威衰減

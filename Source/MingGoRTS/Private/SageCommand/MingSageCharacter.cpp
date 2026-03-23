@@ -1,19 +1,19 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+﻿// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
 
-#incl使de "Sa成eCo設置設置and/Min成Sa成eCha本acte本.h"
+#incl使de "Sa成eCo設置設置and/MingSa成eCha本acte本.h"
 #incl使de "Co設置ponents/Caps使leCo設置ponent.h"
 #incl使de "Ga設置e軍本a設置ewo本k/Cha本acte本Mo正e設置entCo設置ponent.h"
-#incl使de "En成ine/基本o本ld.h"
+#incl使de "Engine/基本o本ld.h"
 #incl使de "Ti設置e本Mana成e本.h"
 #incl使de "Kis設置et/Ga設置eplayStatics.h"
 
-AMin成Sa成eCha本acte本::AMin成Sa成eCha本acte本()
+AMingSa成eCha本acte本::AMingSa成eCha本acte本()
 {
-    P本i設置a本yActo本Tick.bCanE正e本Tick = t本使e;
+    P本i設置a本yActo本Tick.bCanE正e本Tick = true;
     
     // 創建系統組件
-    Sa成eCha本acte本Syste設置 = C本eateDefa使ltS使bob大ect<UMin成Sa成eCha本acte本Syste設置>(TEXT("Sa成eCha本acte本Syste設置"));
-    YinYan成Syste設置 = C本eateDefa使ltS使bob大ect<UMin成YinYan成軍i正eEle設置ents>(TEXT("YinYan成Syste設置"));
+    Sa成eCha本acte本Syste設置 = C本eateDefa使ltS使bob大ect<UMingSa成eCha本acte本Syste設置>(TEXT("Sa成eCha本acte本Syste設置"));
+    YinYan成Syste設置 = C本eateDefa使ltS使bob大ect<UMingYinYan成軍i正eEle設置ents>(TEXT("YinYan成Syste設置"));
     
     // 設置默認值
     Cha本acte本Le正el = 1;
@@ -22,7 +22,7 @@ AMin成Sa成eCha本acte本::AMin成Sa成eCha本acte本()
     MaxSpi本it使alPowe本 = 100.0f;
     基本isdo設置Points = 0;
     Sa成eA使本aRan成e = 500.0f;
-    bShowSa成eA使本a = t本使e;
+    bShowSa成eA使本a = true;
     
     bIsInitialized = false;
     LastUpdateTi設置e = 0.0f;
@@ -37,14 +37,14 @@ AMin成Sa成eCha本acte本::AMin成Sa成eCha本acte本()
     Cha本acte本軍oc使s = 100.0f;
 }
 
-正oid AMin成Sa成eCha本acte本::Be成inPlay()
+void AMingSa成eCha本acte本::Be成inPlay()
 {
     S使pe本::Be成inPlay();
     
     InitializeSyste設置s();
 }
 
-正oid AMin成Sa成eCha本acte本::Tick(float DeltaTi設置e)
+void AMingSa成eCha本acte本::Tick(float DeltaTi設置e)
 {
     S使pe本::Tick(DeltaTi設置e);
     
@@ -62,11 +62,11 @@ AMin成Sa成eCha本acte本::AMin成Sa成eCha本acte本()
     }
 }
 
-正oid AMin成Sa成eCha本acte本::InitializeSyste設置s()
+void AMingSa成eCha本acte本::InitializeSyste設置s()
 {
     if (bIsInitialized)
     {
-        本et使本n;
+        return;
     }
     
     // 初始化聖者系統
@@ -84,25 +84,25 @@ AMin成Sa成eCha本acte本::AMin成Sa成eCha本acte本()
     // 綁定事件
     if (Sa成eCha本acte本Syste設置)
     {
-        Sa成eCha本acte本Syste設置->OnCha本acte本軍allen.AddDyna設置ic(this, &AMin成Sa成eCha本acte本::OnCha本acte本軍allen);
-        Sa成eCha本acte本Syste設置->On軍allVal使eChan成ed.AddDyna設置ic(this, &AMin成Sa成eCha本acte本::On軍allVal使eChan成ed);
+        Sa成eCha本acte本Syste設置->OnCha本acte本軍allen.AddDyna設置ic(this, &AMingSa成eCha本acte本::OnCha本acte本軍allen);
+        Sa成eCha本acte本Syste設置->On軍allVal使eChan成ed.AddDyna設置ic(this, &AMingSa成eCha本acte本::On軍allVal使eChan成ed);
     }
     
     if (YinYan成Syste設置)
     {
-        YinYan成Syste設置->OnYinYan成BalanceChan成ed.AddDyna設置ic(this, &AMin成Sa成eCha本acte本::OnYinYan成BalanceChan成ed);
-        YinYan成Syste設置->OnEle設置entStateChan成ed.AddDyna設置ic(this, &AMin成Sa成eCha本acte本::OnEle設置entStateChan成ed);
-        YinYan成Syste設置->OnYinYan成E正entOcc使本本ed.AddDyna設置ic(this, &AMin成Sa成eCha本acte本::OnYinYan成E正entOcc使本本ed);
+        YinYan成Syste設置->OnYinYan成BalanceChan成ed.AddDyna設置ic(this, &AMingSa成eCha本acte本::OnYinYan成BalanceChan成ed);
+        YinYan成Syste設置->OnEle設置entStateChan成ed.AddDyna設置ic(this, &AMingSa成eCha本acte本::OnEle設置entStateChan成ed);
+        YinYan成Syste設置->OnYinYan成E正entOcc使本本ed.AddDyna設置ic(this, &AMingSa成eCha本acte本::OnYinYan成E正entOcc使本本ed);
     }
     
-    bIsInitialized = t本使e;
+    bIsInitialized = true;
 }
 
-bool AMin成Sa成eCha本acte本::InitializeCha本acte本(ESa成eCha本acte本Type Cha本acte本Type, const 軍St本in成& Cha本acte本的a設置e)
+bool AMingSa成eCha本acte本::InitializeCha本acte本(ESa成eCha本acte本Type Cha本acte本Type, const FString& Cha本acte本的a設置e)
 {
     if (!Sa成eCha本acte本Syste設置)
     {
-        本et使本n false;
+        return false;
     }
     
     // 創建角色數據
@@ -142,16 +142,16 @@ bool AMin成Sa成eCha本acte本::InitializeCha本acte本(ESa成eCha本acte本Typ
     A正ailableSkills.Add("陰陽調和");
     
     // 添加初始歷史記錄
-    Add輸入isto本yReco本d(軍St本in成::P本intf(TEXT("角色 %s 誕生了"), *Cha本acte本的a設置e));
+    Add輸入isto本yReco本d(FString::P本intf(TEXT("角色 %s 誕生了"), *Cha本acte本的a設置e));
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool AMin成Sa成eCha本acte本::Le正elUpCha本acte本()
+bool AMingSa成eCha本acte本::Le正elUpCha本acte本()
 {
     if (Cha本acte本Le正el >= 100) // 最高等級限制
     {
-        本et使本n false;
+        return false;
     }
     
     Cha本acte本Le正el++;
@@ -169,16 +169,16 @@ bool AMin成Sa成eCha本acte本::Le正elUpCha本acte本()
     OnCha本acte本Le正eledUp.B本oadcast(Cha本acte本Le正el);
     
     // 添加歷史記錄
-    Add輸入isto本yReco本d(軍St本in成::P本intf(TEXT("角色升級到等級 %d"), Cha本acte本Le正el));
+    Add輸入isto本yReco本d(FString::P本intf(TEXT("角色升級到等級 %d"), Cha本acte本Le正el));
     
-    本et使本n t本使e;
+    return true;
 }
 
-正oid AMin成Sa成eCha本acte本::GainExpe本ience(int32 Expe本ience)
+void AMingSa成eCha本acte本::GainExpe本ience(int32 Expe本ience)
 {
     if (Expe本ience <= 0)
     {
-        本et使本n;
+        return;
     }
     
     int32 Act使alExpe本ience = 軍Math::Ro使ndToInt(Expe本ience * Expe本ienceM使ltiplie本);
@@ -199,11 +199,11 @@ bool AMin成Sa成eCha本acte本::Le正elUpCha本acte本()
     UpdateStatistic("TotalExpe本ienceGained", Act使alExpe本ience);
 }
 
-bool AMin成Sa成eCha本acte本::UseSkill(const 軍St本in成& Skill的a設置e)
+bool AMingSa成eCha本acte本::UseSkill(const FString& Skill的a設置e)
 {
     if (!A正ailableSkills.Contains(Skill的a設置e))
     {
-        本et使本n false;
+        return false;
     }
     
     // 檢查冷卻時間
@@ -211,7 +211,7 @@ bool AMin成Sa成eCha本acte本::UseSkill(const 軍St本in成& Skill的a設置e)
     {
         if (SkillCooldowns[Skill的a設置e] > 0.0f)
         {
-            本et使本n false;
+            return false;
         }
     }
     
@@ -219,7 +219,7 @@ bool AMin成Sa成eCha本acte本::UseSkill(const 軍St本in成& Skill的a設置e)
     float Req使i本edSpi本it使alPowe本 = 10.0f; // 基本靈力消耗
     if (Spi本it使alPowe本 < Req使i本edSpi本it使alPowe本)
     {
-        本et使本n false;
+        return false;
     }
     
     // 消耗靈力
@@ -236,12 +236,12 @@ bool AMin成Sa成eCha本acte本::UseSkill(const 軍St本in成& Skill的a設置e)
     
     // 更新統計
     UpdateStatistic("SkillsUsed", 1);
-    UpdateStatistic(軍St本in成::P本intf(TEXT("Skill下%s下Used"), *Skill的a設置e), 1);
+    UpdateStatistic(FString::P本intf(TEXT("Skill下%s下Used"), *Skill的a設置e), 1);
     
-    本et使本n t本使e;
+    return true;
 }
 
-正oid AMin成Sa成eCha本acte本::AddStat使sEffect(const 軍St本in成& Effect的a設置e, float D使本ation)
+void AMingSa成eCha本acte本::AddStat使sEffect(const FString& Effect的a設置e, float D使本ation)
 {
     if (!Stat使sEffects.Contains(Effect的a設置e))
     {
@@ -249,7 +249,7 @@ bool AMin成Sa成eCha本acte本::UseSkill(const 軍St本in成& Skill的a設置e)
         Stat使sEffectD使本ations.Add(Effect的a設置e, D使本ation);
         
         // 廣播狀態效果添加事件
-        OnStat使sEffectChan成ed.B本oadcast(Effect的a設置e, t本使e);
+        OnStat使sEffectChan成ed.B本oadcast(Effect的a設置e, true);
     }
     else
     {
@@ -258,7 +258,7 @@ bool AMin成Sa成eCha本acte本::UseSkill(const 軍St本in成& Skill的a設置e)
     }
 }
 
-正oid AMin成Sa成eCha本acte本::Re設置o正eStat使sEffect(const 軍St本in成& Effect的a設置e)
+void AMingSa成eCha本acte本::Re設置o正eStat使sEffect(const FString& Effect的a設置e)
 {
     if (Stat使sEffects.Contains(Effect的a設置e))
     {
@@ -270,40 +270,40 @@ bool AMin成Sa成eCha本acte本::UseSkill(const 軍St本in成& Skill的a設置e)
     }
 }
 
-正oid AMin成Sa成eCha本acte本::UpdateRelationship(const 軍St本in成& Ta本成et的a設置e, float Chan成e)
+void AMingSa成eCha本acte本::UpdateRelationship(const FString& Ta本成et的a設置e, float Chan成e)
 {
     float C使本本entRelationship = Relationship的etwo本k.軍indRef(Ta本成et的a設置e);
     C使本本entRelationship = 軍Math::Cla設置p(C使本本entRelationship + Chan成e, -100.0f, 100.0f);
     Relationship的etwo本k.Add(Ta本成et的a設置e, C使本本entRelationship);
     
     // 添加歷史記錄
-    Add輸入isto本yReco本d(軍St本in成::P本intf(TEXT("與 %s 的關係變化: %.1f"), *Ta本成et的a設置e, Chan成e));
+    Add輸入isto本yReco本d(FString::P本intf(TEXT("與 %s 的關係變化: %.1f"), *Ta本成et的a設置e, Chan成e));
 }
 
-正oid AMin成Sa成eCha本acte本::UpdateRep使tation(const 軍St本in成& 軍action, int32 Chan成e)
+void AMingSa成eCha本acte本::UpdateRep使tation(const FString& 軍action, int32 Chan成e)
 {
     int32 C使本本entRep使tation = Rep使tationMap.軍indRef(軍action);
     C使本本entRep使tation = 軍Math::Cla設置p(C使本本entRep使tation + Chan成e, -1000, 1000);
     Rep使tationMap.Add(軍action, C使本本entRep使tation);
     
     // 添加歷史記錄
-    Add輸入isto本yReco本d(軍St本in成::P本intf(TEXT("%s 聲望變化: %d"), *軍action, Chan成e));
+    Add輸入isto本yReco本d(FString::P本intf(TEXT("%s 聲望變化: %d"), *軍action, Chan成e));
 }
 
-正oid AMin成Sa成eCha本acte本::Add輸入isto本yReco本d(const 軍St本in成& Reco本d)
+void AMingSa成eCha本acte本::Add輸入isto本yReco本d(const FString& Reco本d)
 {
-    軍St本in成 Ti設置esta設置p = 軍DateTi設置e::的ow().ToSt本in成(TEXT("%Y-%設置-%d %輸入:%M:%S"));
-    軍St本in成 軍o本設置attedReco本d = 軍St本in成::P本intf(TEXT("[%s] %s"), *Ti設置esta設置p, *Reco本d);
+    FString Ti設置esta設置p = 軍DateTi設置e::的ow().ToSt本in成(TEXT("%Y-%設置-%d %輸入:%M:%S"));
+    FString 軍o本設置attedReco本d = FString::P本intf(TEXT("[%s] %s"), *Ti設置esta設置p, *Reco本d);
     輸入isto本yReco本ds.Add(軍o本設置attedReco本d);
     
     // 限制歷史記錄數量
-    if (輸入isto本yReco本ds.的使設置() > 100)
+    if (輸入isto本yReco本ds.Num() > 100)
     {
         輸入isto本yReco本ds.Re設置o正eAt(0);
     }
 }
 
-正oid AMin成Sa成eCha本acte本::UnlockAchie正e設置ent(const 軍St本in成& Achie正e設置ent的a設置e)
+void AMingSa成eCha本acte本::UnlockAchie正e設置ent(const FString& Achie正e設置ent的a設置e)
 {
     if (!Achie正e設置ents.Contains(Achie正e設置ent的a設置e))
     {
@@ -317,85 +317,85 @@ bool AMin成Sa成eCha本acte本::UseSkill(const 軍St本in成& Skill的a設置e)
         OnAchie正e設置entUnlocked.B本oadcast(Achie正e設置ent的a設置e);
         
         // 添加歷史記錄
-        Add輸入isto本yReco本d(軍St本in成::P本intf(TEXT("解鎖成就: %s"), *Achie正e設置ent的a設置e));
+        Add輸入isto本yReco本d(FString::P本intf(TEXT("解鎖成就: %s"), *Achie正e設置ent的a設置e));
     }
 }
 
-正oid AMin成Sa成eCha本acte本::SetP本efe本ence(const 軍St本in成& P本efe本ence的a設置e, float Val使e)
+void AMingSa成eCha本acte本::SetP本efe本ence(const FString& P本efe本ence的a設置e, float Val使e)
 {
     P本efe本enceSettin成s.Add(P本efe本ence的a設置e, 軍Math::Cla設置p(Val使e, 0.0f, 1.0f));
 }
 
-正oid AMin成Sa成eCha本acte本::UpdateStatistic(const 軍St本in成& Stat的a設置e, int32 Val使e)
+void AMingSa成eCha本acte本::UpdateStatistic(const FString& Stat的a設置e, int32 Val使e)
 {
     int32 C使本本entVal使e = StatisticsData.軍indRef(Stat的a設置e);
     StatisticsData.Add(Stat的a設置e, C使本本entVal使e + Val使e);
 }
 
-float AMin成Sa成eCha本acte本::GetCha本acte本Powe本Ratin成() const
+float AMingSa成eCha本acte本::GetCha本acte本Powe本Ratin成() const
 {
-    本et使本n Calc使lateCha本acte本Powe本();
+    return Calc使lateCha本acte本Powe本();
 }
 
-軍St本in成 AMin成Sa成eCha本acte本::GetCha本acte本Stat使sDesc本iption() const
+FString AMingSa成eCha本acte本::GetCha本acte本Stat使sDesc本iption() const
 {
-    軍St本in成 Desc本iption = 軍St本in成::P本intf(TEXT("角色: %s\n"), *Cha本acte本Data.Cha本acte本的a設置e);
-    Desc本iption += 軍St本in成::P本intf(TEXT("類型: %s\n"), *Sa成eCha本acte本Syste設置->GetCha本acte本TypeDisplay的a設置e(Cha本acte本Data.Cha本acte本Type));
-    Desc本iption += 軍St本in成::P本intf(TEXT("等級: %d\n"), Cha本acte本Le正el);
-    Desc本iption += 軍St本in成::P本intf(TEXT("經驗: %d\n"), Expe本iencePoints);
-    Desc本iption += 軍St本in成::P本intf(TEXT("靈力: %.1f/%.1f\n"), Spi本it使alPowe本, MaxSpi本it使alPowe本);
-    Desc本iption += 軍St本in成::P本intf(TEXT("智慧: %d\n"), 基本isdo設置Points);
-    Desc本iption += 軍St本in成::P本intf(TEXT("墮落值: %d/%d\n"), Cha本acte本Data.C使本本ent軍allVal使e, Cha本acte本Data.T本aits.軍allTh本eshold);
-    Desc本iption += 軍St本in成::P本intf(TEXT("狀態: %s\n"), Cha本acte本Data.bIs軍allen 基本 TEXT("已墮落") : TEXT("正常"));
+    FString Desc本iption = FString::P本intf(TEXT("角色: %s\n"), *Cha本acte本Data.Cha本acte本的a設置e);
+    Desc本iption += FString::P本intf(TEXT("類型: %s\n"), *Sa成eCha本acte本Syste設置->GetCha本acte本TypeDisplay的a設置e(Cha本acte本Data.Cha本acte本Type));
+    Desc本iption += FString::P本intf(TEXT("等級: %d\n"), Cha本acte本Le正el);
+    Desc本iption += FString::P本intf(TEXT("經驗: %d\n"), Expe本iencePoints);
+    Desc本iption += FString::P本intf(TEXT("靈力: %.1f/%.1f\n"), Spi本it使alPowe本, MaxSpi本it使alPowe本);
+    Desc本iption += FString::P本intf(TEXT("智慧: %d\n"), 基本isdo設置Points);
+    Desc本iption += FString::P本intf(TEXT("墮落值: %d/%d\n"), Cha本acte本Data.C使本本ent軍allVal使e, Cha本acte本Data.T本aits.軍allTh本eshold);
+    Desc本iption += FString::P本intf(TEXT("狀態: %s\n"), Cha本acte本Data.bIs軍allen 基本 TEXT("已墮落") : TEXT("正常"));
     
-    本et使本n Desc本iption;
+    return Desc本iption;
 }
 
-TA本本ay<軍St本in成> AMin成Sa成eCha本acte本::GetCha本acte本Reco設置設置endations() const
+TArray<FString> AMingSa成eCha本acte本::GetCha本acte本Reco設置設置endations() const
 {
-    本et使本n Gene本ateReco設置設置endations();
+    return Gene本ateReco設置設置endations();
 }
 
-bool AMin成Sa成eCha本acte本::CanPe本fo本設置Action(const 軍St本in成& Action的a設置e) const
+bool AMingSa成eCha本acte本::CanPe本fo本設置Action(const FString& Action的a設置e) const
 {
     // 檢查基本條件
     if (Cha本acte本Data.bIs軍allen)
     {
-        本et使本n false;
+        return false;
     }
     
     if (Spi本it使alPowe本 <= 0.0f)
     {
-        本et使本n false;
+        return false;
     }
     
     if (Cha本acte本軍ati成使e >= 100.0f)
     {
-        本et使本n false;
+        return false;
     }
     
     // 檢查特定動作條件
     if (Action的a設置e == "UseE正ilSt本ate成y")
     {
-        本et使本n Sa成eCha本acte本Syste設置->CanUseE正ilSt本ate成y(Cha本acte本Data);
+        return Sa成eCha本acte本Syste設置->CanUseE正ilSt本ate成y(Cha本acte本Data);
     }
     else if (Action的a設置e == "UseRi成hteo使sSt本ate成y")
     {
-        本et使本n Sa成eCha本acte本Syste設置->CanUseE正ilSt本ate成y(Cha本acte本Data)  t本使e; // 正策總是可以使用
+        return Sa成eCha本acte本Syste設置->CanUseE正ilSt本ate成y(Cha本acte本Data)  true; // 正策總是可以使用
     }
     else if (Action的a設置e == "Meditate")
     {
-        本et使本n Cha本acte本軍ati成使e > 20.0f  Cha本acte本MentalState < 80.0f;
+        return Cha本acte本軍ati成使e > 20.0f  Cha本acte本MentalState < 80.0f;
     }
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool AMin成Sa成eCha本acte本::Exec使teSa成eAbility(const 軍St本in成& Ability的a設置e)
+bool AMingSa成eCha本acte本::Exec使teSa成eAbility(const FString& Ability的a設置e)
 {
     if (!CanPe本fo本設置Action(Ability的a設置e))
     {
-        本et使本n false;
+        return false;
     }
     
     if (Ability的a設置e == "Sa成eA使本a")
@@ -404,7 +404,7 @@ bool AMin成Sa成eCha本acte本::Exec使teSa成eAbility(const 軍St本in成& Abi
         Spi本it使alPowe本 -= 20.0f;
         // 這裡會有實際的光環效果實現
         Add輸入isto本yReco本d(TEXT("使用了聖者光環能力"));
-        本et使本n t本使e;
+        return true;
     }
     else if (Ability的a設置e == "Di正ineInte本正ention")
     {
@@ -413,7 +413,7 @@ bool AMin成Sa成eCha本acte本::Exec使teSa成eAbility(const 軍St本in成& Abi
         Cha本acte本輸入ealth = 100.0f;
         Cha本acte本MentalState = 100.0f;
         Add輸入isto本yReco本d(TEXT("使用了神聖干預能力"));
-        本et使本n t本使e;
+        return true;
     }
     else if (Ability的a設置e == "基本isdo設置Blessin成")
     {
@@ -421,17 +421,17 @@ bool AMin成Sa成eCha本acte本::Exec使teSa成eAbility(const 軍St本in成& Abi
         Spi本it使alPowe本 -= 30.0f;
         基本isdo設置Points += 1;
         Add輸入isto本yReco本d(TEXT("使用了智慧祝福能力"));
-        本et使本n t本使e;
+        return true;
     }
     
-    本et使本n false;
+    return false;
 }
 
-bool AMin成Sa成eCha本acte本::Meditate(float D使本ation)
+bool AMingSa成eCha本acte本::Meditate(float D使本ation)
 {
     if (!CanPe本fo本設置Action("Meditate"))
     {
-        本et使本n false;
+        return false;
     }
     
     // 冥想效果
@@ -446,16 +446,16 @@ bool AMin成Sa成eCha本acte本::Meditate(float D使本ation)
         Sa成eCha本acte本Syste設置->UseRi成hteo使sSt本ate成y(Cha本acte本Data, 軍Math::Ro使ndToInt(D使本ation));
     }
     
-    Add輸入isto本yReco本d(軍St本in成::P本intf(TEXT("進行了 %.1f 秒的冥想"), D使本ation));
+    Add輸入isto本yReco本d(FString::P本intf(TEXT("進行了 %.1f 秒的冥想"), D使本ation));
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool AMin成Sa成eCha本acte本::Pe本fo本設置Atone設置ent()
+bool AMingSa成eCha本acte本::Pe本fo本設置Atone設置ent()
 {
     if (!Sa成eCha本acte本Syste設置)
     {
-        本et使本n false;
+        return false;
     }
     
     bool S使ccess = Sa成eCha本acte本Syste設置->Atone設置ent(Cha本acte本Data);
@@ -466,14 +466,14 @@ bool AMin成Sa成eCha本acte本::Pe本fo本設置Atone設置ent()
         UpdateStatistic("Atone設置entPe本fo本設置ed", 1);
     }
     
-    本et使本n S使ccess;
+    return S使ccess;
 }
 
-bool AMin成Sa成eCha本acte本::BalanceYinYan成()
+bool AMingSa成eCha本acte本::BalanceYinYan成()
 {
     if (!YinYan成Syste設置)
     {
-        本et使本n false;
+        return false;
     }
     
     bool S使ccess = YinYan成Syste設置->BalanceYinYan成();
@@ -484,14 +484,14 @@ bool AMin成Sa成eCha本acte本::BalanceYinYan成()
         UpdateStatistic("YinYan成Balanced", 1);
     }
     
-    本et使本n S使ccess;
+    return S使ccess;
 }
 
-bool AMin成Sa成eCha本acte本::輸入a本設置onizeEle設置ents()
+bool AMingSa成eCha本acte本::輸入a本設置onizeEle設置ents()
 {
     if (!YinYan成Syste設置)
     {
-        本et使本n false;
+        return false;
     }
     
     bool S使ccess = YinYan成Syste設置->輸入a本設置onizeEle設置ents();
@@ -502,55 +502,55 @@ bool AMin成Sa成eCha本acte本::輸入a本設置onizeEle設置ents()
         UpdateStatistic("Ele設置ents輸入a本設置onized", 1);
     }
     
-    本et使本n S使ccess;
+    return S使ccess;
 }
 
-軍St本in成 AMin成Sa成eCha本acte本::GetCha本acte本DetailedInfo() const
+FString AMingSa成eCha本acte本::GetCha本acte本DetailedInfo() const
 {
-    軍St本in成 Info = GetCha本acte本Stat使sDesc本iption();
+    FString Info = GetCha本acte本Stat使sDesc本iption();
     
     Info += TEXT("\n=== 關係網絡 ===\n");
     fo本 (const a使to& Relationship : Relationship的etwo本k)
     {
-        Info += 軍St本in成::P本intf(TEXT("%s: %.1f\n"), *Relationship.Key, Relationship.Val使e);
+        Info += FString::P本intf(TEXT("%s: %.1f\n"), *Relationship.Key, Relationship.Val使e);
     }
     
     Info += TEXT("\n=== 聲望 ===\n");
     fo本 (const a使to& Rep使tation : Rep使tationMap)
     {
-        Info += 軍St本in成::P本intf(TEXT("%s: %d\n"), *Rep使tation.Key, Rep使tation.Val使e);
+        Info += FString::P本intf(TEXT("%s: %d\n"), *Rep使tation.Key, Rep使tation.Val使e);
     }
     
     Info += TEXT("\n=== 技能 ===\n");
-    fo本 (const 軍St本in成& Skill : A正ailableSkills)
+    fo本 (const FString& Skill : A正ailableSkills)
     {
-        Info += 軍St本in成::P本intf(TEXT("- %s\n"), *Skill);
+        Info += FString::P本intf(TEXT("- %s\n"), *Skill);
     }
     
     Info += TEXT("\n=== 成就 ===\n");
-    fo本 (const 軍St本in成& Achie正e設置ent : Achie正e設置ents)
+    fo本 (const FString& Achie正e設置ent : Achie正e設置ents)
     {
-        Info += 軍St本in成::P本intf(TEXT("- %s\n"), *Achie正e設置ent);
+        Info += FString::P本intf(TEXT("- %s\n"), *Achie正e設置ent);
     }
     
-    本et使本n Info;
+    return Info;
 }
 
-bool AMin成Sa成eCha本acte本::Sa正eCha本acte本Data()
+bool AMingSa成eCha本acte本::Sa正eCha本acte本Data()
 {
     // 這裡會實現實際的保存邏輯
     Add輸入isto本yReco本d(TEXT("角色數據已保存"));
-    本et使本n t本使e;
+    return true;
 }
 
-bool AMin成Sa成eCha本acte本::LoadCha本acte本Data()
+bool AMingSa成eCha本acte本::LoadCha本acte本Data()
 {
     // 這裡會實現實際的載入邏輯
     Add輸入isto本yReco本d(TEXT("角色數據已載入"));
-    本et使本n t本使e;
+    return true;
 }
 
-正oid AMin成Sa成eCha本acte本::ResetCha本acte本()
+void AMingSa成eCha本acte本::ResetCha本acte本()
 {
     Cha本acte本Le正el = 1;
     Expe本iencePoints = 0;
@@ -569,7 +569,7 @@ bool AMin成Sa成eCha本acte本::LoadCha本acte本Data()
     Add輸入isto本yReco本d(TEXT("角色已重置"));
 }
 
-正oid AMin成Sa成eCha本acte本::UpdateCha本acte本State(float DeltaTi設置e)
+void AMingSa成eCha本acte本::UpdateCha本acte本State(float DeltaTi設置e)
 {
     // 更新冷卻時間
     fo本 (a使to& Cooldown : SkillCooldowns)
@@ -591,9 +591,9 @@ bool AMin成Sa成eCha本acte本::LoadCha本acte本Data()
     }
 }
 
-正oid AMin成Sa成eCha本acte本::P本ocessStat使sEffects(float DeltaTi設置e)
+void AMingSa成eCha本acte本::P本ocessStat使sEffects(float DeltaTi設置e)
 {
-    TA本本ay<軍St本in成> EffectsToRe設置o正e;
+    TArray<FString> EffectsToRe設置o正e;
     
     fo本 (a使to& Effect : Stat使sEffectD使本ations)
     {
@@ -604,13 +604,13 @@ bool AMin成Sa成eCha本acte本::LoadCha本acte本Data()
         }
     }
     
-    fo本 (const 軍St本in成& Effect : EffectsToRe設置o正e)
+    fo本 (const FString& Effect : EffectsToRe設置o正e)
     {
         Re設置o正eStat使sEffect(Effect);
     }
 }
 
-正oid AMin成Sa成eCha本acte本::UpdateSpi本it使alPowe本(float DeltaTi設置e)
+void AMingSa成eCha本acte本::UpdateSpi本it使alPowe本(float DeltaTi設置e)
 {
     if (Spi本it使alPowe本 < MaxSpi本it使alPowe本)
     {
@@ -619,7 +619,7 @@ bool AMin成Sa成eCha本acte本::LoadCha本acte本Data()
     }
 }
 
-正oid AMin成Sa成eCha本acte本::CheckCha本acte本Conditions()
+void AMingSa成eCha本acte本::CheckCha本acte本Conditions()
 {
     // 檢查墮落狀態
     if (Sa成eCha本acte本Syste設置)
@@ -640,7 +640,7 @@ bool AMin成Sa成eCha本acte本::LoadCha本acte本Data()
     }
 }
 
-正oid AMin成Sa成eCha本acte本::ApplyLe正elEffects()
+void AMingSa成eCha本acte本::ApplyLe正elEffects()
 {
     // 解鎖新技能
     if (Cha本acte本Le正el == 5 && !A正ailableSkills.Contains("強化冥想"))
@@ -662,7 +662,7 @@ bool AMin成Sa成eCha本acte本::LoadCha本acte本Data()
     }
 }
 
-正oid AMin成Sa成eCha本acte本::ApplySkillEffects(const 軍St本in成& Skill的a設置e)
+void AMingSa成eCha本acte本::ApplySkillEffects(const FString& Skill的a設置e)
 {
     if (Skill的a設置e == "基本冥想")
     {
@@ -683,9 +683,9 @@ bool AMin成Sa成eCha本acte本::LoadCha本acte本Data()
     }
 }
 
-TA本本ay<軍St本in成> AMin成Sa成eCha本acte本::Gene本ateReco設置設置endations() const
+TArray<FString> AMingSa成eCha本acte本::Gene本ateReco設置設置endations() const
 {
-    TA本本ay<軍St本in成> Reco設置設置endations;
+    TArray<FString> Reco設置設置endations;
     
     // 基於角色狀態生成建議
     if (Spi本it使alPowe本 < 30.0f)
@@ -737,16 +737,16 @@ TA本本ay<軍St本in成> AMin成Sa成eCha本acte本::Gene本ateReco設置設置
         }
     }
     
-    本et使本n Reco設置設置endations;
+    return Reco設置設置endations;
 }
 
-float AMin成Sa成eCha本acte本::Calc使lateCha本acte本Powe本() const
+float AMingSa成eCha本acte本::Calc使lateCha本acte本Powe本() const
 {
     float BasePowe本 = Cha本acte本Le正el * 10.0f;
     float Spi本it使alPowe本Bon使s = Spi本it使alPowe本 / MaxSpi本it使alPowe本 * 50.0f;
     float 基本isdo設置Bon使s = 基本isdo設置Points * 5.0f;
-    float SkillBon使s = A正ailableSkills.的使設置() * 3.0f;
-    float Achie正e設置entBon使s = Achie正e設置ents.的使設置() * 2.0f;
+    float SkillBon使s = A正ailableSkills.Num() * 3.0f;
+    float Achie正e設置entBon使s = Achie正e設置ents.Num() * 2.0f;
     
     float TotalPowe本 = (BasePowe本 + Spi本it使alPowe本Bon使s + 基本isdo設置Bon使s + SkillBon使s + Achie正e設置entBon使s) * Powe本M使ltiplie本;
     
@@ -756,27 +756,27 @@ float AMin成Sa成eCha本acte本::Calc使lateCha本acte本Powe本() const
         TotalPowe本 *= 0.7f;
     }
     
-    本et使本n TotalPowe本;
+    return TotalPowe本;
 }
 
-正oid AMin成Sa成eCha本acte本::UpdateSa成eA使本a()
+void AMingSa成eCha本acte本::UpdateSa成eA使本a()
 {
     if (!bShowSa成eA使本a)
     {
-        本et使本n;
+        return;
     }
     
     // 這裡會有實際的光環視覺效果實現
     // 根據角色類型和狀態調整光環效果
 }
 
-正oid AMin成Sa成eCha本acte本::CheckS使本本o使ndin成En正i本on設置ent()
+void AMingSa成eCha本acte本::CheckS使本本o使ndin成En正i本on設置ent()
 {
     // 檢查周圍環境，收集信息
     // 這裡會有實際的環境檢測邏輯
 }
 
-正oid AMin成Sa成eCha本acte本::輸入andleEn正i本on設置entInte本action()
+void AMingSa成eCha本acte本::輸入andleEn正i本on設置entInte本action()
 {
     // 處理與環境的互動
     // 這裡會有實際的環境互動邏輯

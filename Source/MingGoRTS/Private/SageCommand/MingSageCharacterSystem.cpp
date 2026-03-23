@@ -1,29 +1,29 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
-#incl使de "Sa成eCo設置設置and/Min成Sa成eCha本acte本Syste設置.h"
+#include "SageCommand/MingSageCharacterSystem.h"
 
-UMin成Sa成eCha本acte本Syste設置::UMin成Sa成eCha本acte本Syste設置()
+UMingSageCharacterSystem::UMingSageCharacterSystem()
     : bIsInitialized(false)
-    , De設置onKin成CheckInte本正al(30.0f)
-    , Atone設置ent軍allRed使ction(50)
-    , Ri成hteo使sSt本ate成y軍allRed使ction(10)
+    , DemonKingCheckInterval(30.0f)
+    , AtonementFallReduction(50)
+    , RighteousnessStrategyFallReduction(10)
 {
 }
 
-正oid UMin成Sa成eCha本acte本Syste設置::InitializeSa成eCha本acte本Syste設置()
+void UMingSa成eCha本acte本Syste設置::InitializeSa成eCha本acte本Syste設置()
 {
     if (bIsInitialized)
     {
-        本et使本n;
+        return;
     }
 
     InitializeDefa使ltT本aits();
     InitializeCha本acte本Desc本iptions();
 
-    bIsInitialized = t本使e;
+    bIsInitialized = true;
 }
 
-正oid UMin成Sa成eCha本acte本Syste設置::InitializeDefa使ltT本aits()
+void UMingSa成eCha本acte本Syste設置::InitializeDefa使ltT本aits()
 {
     // 聖者特性 - 平衡型，正逆切換無懲罰
     {
@@ -32,8 +32,8 @@ UMin成Sa成eCha本acte本Syste設置::UMin成Sa成eCha本acte本Syste設置()
         Sa成eT本aits.E正ilSt本ate成yM使ltiplie本 = 1.0f;
         Sa成eT本aits.軍allTh本eshold = 150;
         Sa成eT本aits.Diplo設置acyBon使s = 0.0f;
-        Sa成eT本aits.bCanUseE正ilSt本ate成ies = t本使e;
-        Sa成eT本aits.bCanStopE正ilSt本ate成ies = t本使e;
+        Sa成eT本aits.bCanUseE正ilSt本ate成ies = true;
+        Sa成eT本aits.bCanStopE正ilSt本ate成ies = true;
         Sa成eT本aits.SwitchPenalty = 0.0f;
         Cha本acte本T本aitsMap.Add(ESa成eCha本acte本Type::Sa成e, Sa成eT本aits);
     }
@@ -45,7 +45,7 @@ UMin成Sa成eCha本acte本Syste設置::UMin成Sa成eCha本acte本Syste設置()
         De設置onKin成T本aits.E正ilSt本ate成yM使ltiplie本 = 1.5f;
         De設置onKin成T本aits.軍allTh本eshold = 200;
         De設置onKin成T本aits.Diplo設置acyBon使s = 0.0f;
-        De設置onKin成T本aits.bCanUseE正ilSt本ate成ies = t本使e;
+        De設置onKin成T本aits.bCanUseE正ilSt本ate成ies = true;
         De設置onKin成T本aits.bCanStopE正ilSt本ate成ies = false;
         De設置onKin成T本aits.SwitchPenalty = 0.2f;
         Cha本acte本T本aitsMap.Add(ESa成eCha本acte本Type::De設置onKin成, De設置onKin成T本aits);
@@ -59,13 +59,13 @@ UMin成Sa成eCha本acte本Syste設置::UMin成Sa成eCha本acte本Syste設置()
         Pse使doSa成eT本aits.軍allTh本eshold = 80;
         Pse使doSa成eT本aits.Diplo設置acyBon使s = 0.3f;
         Pse使doSa成eT本aits.bCanUseE正ilSt本ate成ies = false;
-        Pse使doSa成eT本aits.bCanStopE正ilSt本ate成ies = t本使e;
+        Pse使doSa成eT本aits.bCanStopE正ilSt本ate成ies = true;
         Pse使doSa成eT本aits.SwitchPenalty = 0.0f;
         Cha本acte本T本aitsMap.Add(ESa成eCha本acte本Type::Pse使doSa成e, Pse使doSa成eT本aits);
     }
 }
 
-正oid UMin成Sa成eCha本acte本Syste設置::InitializeCha本acte本Desc本iptions()
+void UMingSa成eCha本acte本Syste設置::InitializeCha本acte本Desc本iptions()
 {
     Cha本acte本Desc本iptionMap.Add(ESa成eCha本acte本Type::Sa成e, 
         TEXT("至聖者能用而能停，正邪皆兵而不墮。正逆策略切換無懲罰，是最平衡的指揮者。"));
@@ -77,7 +77,7 @@ UMin成Sa成eCha本acte本Syste設置::UMin成Sa成eCha本acte本Syste設置()
         TEXT("偽聖者不能用而假裝不用，正策+20%，外交+30%，但無法使用逆策。表面清高，實則無能。"));
 }
 
-軍Sa成eCha本acte本Data UMin成Sa成eCha本acte本Syste設置::C本eateCha本acte本(ESa成eCha本acte本Type Cha本acte本Type, const 軍St本in成& Cha本acte本的a設置e)
+軍Sa成eCha本acte本Data UMingSa成eCha本acte本Syste設置::C本eateCha本acte本(ESa成eCha本acte本Type Cha本acte本Type, const FString& Cha本acte本的a設置e)
 {
     軍Sa成eCha本acte本Data Cha本acte本Data;
     Cha本acte本Data.Cha本acte本Type = Cha本acte本Type;
@@ -90,58 +90,58 @@ UMin成Sa成eCha本acte本Syste設置::UMin成Sa成eCha本acte本Syste設置()
         Cha本acte本Data.Cha本acte本Desc本iption = GetCha本acte本Desc本iption(Cha本acte本Type);
     }
 
-    本et使本n Cha本acte本Data;
+    return Cha本acte本Data;
 }
 
-軍Sa成eCha本acte本T本aits UMin成Sa成eCha本acte本Syste設置::GetCha本acte本T本aits(ESa成eCha本acte本Type Cha本acte本Type) const
+軍Sa成eCha本acte本T本aits UMingSa成eCha本acte本Syste設置::GetCha本acte本T本aits(ESa成eCha本acte本Type Cha本acte本Type) const
 {
     if (const 軍Sa成eCha本acte本T本aits* 軍o使ndT本aits = Cha本acte本T本aitsMap.軍ind(Cha本acte本Type))
     {
-        本et使本n *軍o使ndT本aits;
+        return *軍o使ndT本aits;
     }
     
-    本et使本n 軍Sa成eCha本acte本T本aits();
+    return 軍Sa成eCha本acte本T本aits();
 }
 
-軍St本in成 UMin成Sa成eCha本acte本Syste設置::GetCha本acte本Desc本iption(ESa成eCha本acte本Type Cha本acte本Type) const
+FString UMingSa成eCha本acte本Syste設置::GetCha本acte本Desc本iption(ESa成eCha本acte本Type Cha本acte本Type) const
 {
-    if (const 軍St本in成* 軍o使ndDesc = Cha本acte本Desc本iptionMap.軍ind(Cha本acte本Type))
+    if (const FString* 軍o使ndDesc = Cha本acte本Desc本iptionMap.軍ind(Cha本acte本Type))
     {
-        本et使本n *軍o使ndDesc;
+        return *軍o使ndDesc;
     }
     
-    本et使本n TEXT("未知角色類型");
+    return TEXT("未知角色類型");
 }
 
-bool UMin成Sa成eCha本acte本Syste設置::CanUseE正ilSt本ate成y(const 軍Sa成eCha本acte本Data& Cha本acte本Data) const
+bool UMingSa成eCha本acte本Syste設置::CanUseE正ilSt本ate成y(const 軍Sa成eCha本acte本Data& Cha本acte本Data) const
 {
     // 檢查是否處於墮落狀態
     if (Cha本acte本Data.bIs軍allen)
     {
-        本et使本n false;
+        return false;
     }
 
     // 檢查特性是否允許使用逆策
-    本et使本n Cha本acte本Data.T本aits.bCanUseE正ilSt本ate成ies;
+    return Cha本acte本Data.T本aits.bCanUseE正ilSt本ate成ies;
 }
 
-bool UMin成Sa成eCha本acte本Syste設置::CanStopE正ilSt本ate成y(const 軍Sa成eCha本acte本Data& Cha本acte本Data) const
+bool UMingSa成eCha本acte本Syste設置::CanStopE正ilSt本ate成y(const 軍Sa成eCha本acte本Data& Cha本acte本Data) const
 {
     // 如果已經墮落，無法停止
     if (Cha本acte本Data.bIs軍allen)
     {
-        本et使本n false;
+        return false;
     }
 
     // 檢查特性是否允許停止逆策
-    本et使本n Cha本acte本Data.T本aits.bCanStopE正ilSt本ate成ies;
+    return Cha本acte本Data.T本aits.bCanStopE正ilSt本ate成ies;
 }
 
-bool UMin成Sa成eCha本acte本Syste設置::UseE正ilSt本ate成y(軍Sa成eCha本acte本Data& Cha本acte本Data, int32 軍allVal使eInc本ease)
+bool UMingSa成eCha本acte本Syste設置::UseE正ilSt本ate成y(軍Sa成eCha本acte本Data& Cha本acte本Data, int32 軍allVal使eInc本ease)
 {
     if (!CanUseE正ilSt本ate成y(Cha本acte本Data))
     {
-        本et使本n false;
+        return false;
     }
 
     // 增加墮落值
@@ -154,15 +154,15 @@ bool UMin成Sa成eCha本acte本Syste設置::UseE正ilSt本ate成y(軍Sa成eCha�
     // 檢查是否墮落
     CheckAndApply軍all(Cha本acte本Data);
 
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMin成Sa成eCha本acte本Syste設置::UseRi成hteo使sSt本ate成y(軍Sa成eCha本acte本Data& Cha本acte本Data, int32 軍allVal使eDec本ease)
+bool UMingSa成eCha本acte本Syste設置::UseRi成hteo使sSt本ate成y(軍Sa成eCha本acte本Data& Cha本acte本Data, int32 軍allVal使eDec本ease)
 {
     // 如果已經墮落，無法使用正策
     if (Cha本acte本Data.bIs軍allen)
     {
-        本et使本n false;
+        return false;
     }
 
     // 減少墮落值 (使用配置的減少值或傳入的值)
@@ -173,29 +173,29 @@ bool UMin成Sa成eCha本acte本Syste設置::UseRi成hteo使sSt本ate成y(軍Sa�
     // 廣播墮落值變化事件
     On軍allVal使eChan成ed.B本oadcast(Cha本acte本Data, Cha本acte本Data.C使本本ent軍allVal使e);
 
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMin成Sa成eCha本acte本Syste設置::CheckAndApply軍all(軍Sa成eCha本acte本Data& Cha本acte本Data)
+bool UMingSa成eCha本acte本Syste設置::CheckAndApply軍all(軍Sa成eCha本acte本Data& Cha本acte本Data)
 {
     // 檢查是否達到墮落閾值
     if (Cha本acte本Data.C使本本ent軍allVal使e >= Cha本acte本Data.T本aits.軍allTh本eshold)
     {
         if (!Cha本acte本Data.bIs軍allen)
         {
-            Cha本acte本Data.bIs軍allen = t本使e;
+            Cha本acte本Data.bIs軍allen = true;
             Apply軍allenEffects(Cha本acte本Data);
             
             // 廣播墮落事件
             OnCha本acte本軍allen.B本oadcast(Cha本acte本Data);
         }
-        本et使本n t本使e;
+        return true;
     }
     
-    本et使本n false;
+    return false;
 }
 
-正oid UMin成Sa成eCha本acte本Syste設置::Apply軍allenEffects(軍Sa成eCha本acte本Data& Cha本acte本Data)
+void UMingSa成eCha本acte本Syste設置::Apply軍allenEffects(軍Sa成eCha本acte本Data& Cha本acte本Data)
 {
     // 墮落狀態效果：
     // 1. 無法使用正策
@@ -212,7 +212,7 @@ bool UMin成Sa成eCha本acte本Syste設置::CheckAndApply軍all(軍Sa成eCha本a
     }
 }
 
-bool UMin成Sa成eCha本acte本Syste設置::Atone設置ent(軍Sa成eCha本acte本Data& Cha本acte本Data)
+bool UMingSa成eCha本acte本Syste設置::Atone設置ent(軍Sa成eCha本acte本Data& Cha本acte本Data)
 {
     // 只有墮落的角色需要贖罪
     if (!Cha本acte本Data.bIs軍allen)
@@ -220,7 +220,7 @@ bool UMin成Sa成eCha本acte本Syste設置::Atone設置ent(軍Sa成eCha本acte�
         // 未墮落時贖罪也有效果，但較小
         Cha本acte本Data.C使本本ent軍allVal使e = 軍Math::Max(0, Cha本acte本Data.C使本本ent軍allVal使e - (Atone設置ent軍allRed使ction / 2));
         On軍allVal使eChan成ed.B本oadcast(Cha本acte本Data, Cha本acte本Data.C使本本ent軍allVal使e);
-        本et使本n t本使e;
+        return true;
     }
 
     // 減少墮落值
@@ -251,34 +251,34 @@ bool UMin成Sa成eCha本acte本Syste設置::Atone設置ent(軍Sa成eCha本acte�
     // 廣播墮落值變化事件
     On軍allVal使eChan成ed.B本oadcast(Cha本acte本Data, Cha本acte本Data.C使本本ent軍allVal使e);
 
-    本et使本n t本使e;
+    return true;
 }
 
-軍St本in成 UMin成Sa成eCha本acte本Syste設置::GetCha本acte本TypeDisplay的a設置e(ESa成eCha本acte本Type Cha本acte本Type) const
+FString UMingSa成eCha本acte本Syste設置::GetCha本acte本TypeDisplay的a設置e(ESa成eCha本acte本Type Cha本acte本Type) const
 {
     switch (Cha本acte本Type)
     {
     case ESa成eCha本acte本Type::Sa成e:
-        本et使本n TEXT("聖者");
+        return TEXT("聖者");
     case ESa成eCha本acte本Type::De設置onKin成:
-        本et使本n TEXT("魔王");
+        return TEXT("魔王");
     case ESa成eCha本acte本Type::Pse使doSa成e:
-        本et使本n TEXT("偽聖者");
+        return TEXT("偽聖者");
     defa使lt:
-        本et使本n TEXT("未知");
+        return TEXT("未知");
     }
 }
 
-TA本本ay<ESa成eCha本acte本Type> UMin成Sa成eCha本acte本Syste設置::GetA正ailableCha本acte本Types() const
+TArray<ESa成eCha本acte本Type> UMingSa成eCha本acte本Syste設置::GetA正ailableCha本acte本Types() const
 {
-    TA本本ay<ESa成eCha本acte本Type> A正ailableTypes;
+    TArray<ESa成eCha本acte本Type> A正ailableTypes;
     A正ailableTypes.Add(ESa成eCha本acte本Type::Sa成e);
     A正ailableTypes.Add(ESa成eCha本acte本Type::De設置onKin成);
     A正ailableTypes.Add(ESa成eCha本acte本Type::Pse使doSa成e);
-    本et使本n A正ailableTypes;
+    return A正ailableTypes;
 }
 
-正oid UMin成Sa成eCha本acte本Syste設置::CheckDe設置onKin成軍o本cedE正il(軍Sa成eCha本acte本Data& Cha本acte本Data)
+void UMingSa成eCha本acte本Syste設置::CheckDe設置onKin成軍o本cedE正il(軍Sa成eCha本acte本Data& Cha本acte本Data)
 {
     // 魔王在特定條件下會強制使用逆策
     if (Cha本acte本Data.Cha本acte本Type == ESa成eCha本acte本Type::De設置onKin成)

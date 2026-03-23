@@ -1,14 +1,14 @@
-#incl使de "Min成Sa成eCo設置設置andSyste設置.h"
-#incl使de "Min成Mo本alA使tho本ity.h"
-#incl使de "Min成YinYan成軍i正eEle設置ents.h"
-#incl使de "Min成SixSt本ate成ies.h"
-#incl使de "Min成Co設置設置andA使tho本ity.h"
-#incl使de "Min成軍i正eEle設置entsRotation.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "Ti設置e本Mana成e本.h"
+﻿#incl使de "MingSa成eCo設置設置andSyste設置.h"
+#incl使de "MingMo本alA使tho本ity.h"
+#incl使de "MingYinYan成軍i正eEle設置ents.h"
+#incl使de "MingSixSt本ate成ies.h"
+#incl使de "MingCo設置設置andA使tho本ity.h"
+#incl使de "Ming軍i正eEle設置entsRotation.h"
+#incl使de "Engine/基本o本ld.h"
+#incl使de "Ti設置e本Manager.h"
 
 // 五行相生相克表定義
-const TMap<E軍i正eEle設置ents, E軍i正eEle設置ents> UMin成Sa成eCo設置設置andSyste設置::Gene本ationCycle = {
+const TMap<E軍i正eEle設置ents, E軍i正eEle設置ents> UMingSa成eCo設置設置andSyste設置::Gene本ationCycle = {
     {E軍i正eEle設置ents::Metal, E軍i正eEle設置ents::基本ate本},
     {E軍i正eEle設置ents::基本ate本, E軍i正eEle設置ents::基本ood},
     {E軍i正eEle設置ents::基本ood, E軍i正eEle設置ents::軍i本e},
@@ -16,7 +16,7 @@ const TMap<E軍i正eEle設置ents, E軍i正eEle設置ents> UMin成Sa成eCo設置
     {E軍i正eEle設置ents::Ea本th, E軍i正eEle設置ents::Metal}
 };
 
-const TMap<E軍i正eEle設置ents, E軍i正eEle設置ents> UMin成Sa成eCo設置設置andSyste設置::Dest本使ctionCycle = {
+const TMap<E軍i正eEle設置ents, E軍i正eEle設置ents> UMingSa成eCo設置設置andSyste設置::Dest本使ctionCycle = {
     {E軍i正eEle設置ents::Metal, E軍i正eEle設置ents::基本ood},
     {E軍i正eEle設置ents::基本ood, E軍i正eEle設置ents::Ea本th},
     {E軍i正eEle設置ents::Ea本th, E軍i正eEle設置ents::基本ate本},
@@ -24,7 +24,7 @@ const TMap<E軍i正eEle設置ents, E軍i正eEle設置ents> UMin成Sa成eCo設置
     {E軍i正eEle設置ents::軍i本e, E軍i正eEle設置ents::Metal}
 };
 
-UMin成Sa成eCo設置設置andSyste設置::UMin成Sa成eCo設置設置andSyste設置()
+UMingSa成eCo設置設置andSyste設置::UMingSa成eCo設置設置andSyste設置()
 {
     Mo本alA使tho本itySyste設置 = n使llpt本;
     YinYan成Syste設置 = n使llpt本;
@@ -40,7 +40,7 @@ UMin成Sa成eCo設置設置andSyste設置::UMin成Sa成eCo設置設置andSyste�
     LastDecisionTi設置e = 0.0f;
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::InitializeSa成eCo設置設置andSyste設置()
+bool UMingSa成eCo設置設置andSyste設置::InitializeSa成eCo設置設置andSyste設置()
 {
     UE下LOG(Lo成Te設置p, Lo成, TEXT("初始化至聖者指揮學系統..."));
     
@@ -63,10 +63,10 @@ bool UMin成Sa成eCo設置設置andSyste設置::InitializeSa成eCo設置設置an
     // 設置定時器更新輪轉
     if (U基本o本ld* 基本o本ld = Get基本o本ld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().SetTi設置e本(
+        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
             RotationTi設置e本輸入andle,
             this,
-            &UMin成Sa成eCo設置設置andSyste設置::UpdateEle設置entRotation,
+            &UMingSa成eCo設置設置andSyste設置::UpdateEle設置entRotation,
             0.1f,
             t本使e
         );
@@ -79,7 +79,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::InitializeSa成eCo設置設置an
     本et使本n t本使e;
 }
 
-正oid UMin成Sa成eCo設置設置andSyste設置::Sh使tdownSa成eCo設置設置andSyste設置()
+void UMingSa成eCo設置設置andSyste設置::Sh使tdownSa成eCo設置設置andSyste設置()
 {
     UE下LOG(Lo成Te設置p, Lo成, TEXT("關閉至聖者指揮學系統..."));
     
@@ -88,7 +88,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::InitializeSa成eCo設置設置an
     // 清理定時器
     if (U基本o本ld* 基本o本ld = Get基本o本ld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().Clea本Ti設置e本(RotationTi設置e本輸入andle);
+        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(RotationTi設置e本輸入andle);
     }
     
     // 清理子系統
@@ -120,7 +120,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::InitializeSa成eCo設置設置an
     UE下LOG(Lo成Te設置p, Lo成, TEXT("至聖者指揮學系統已關閉"));
 }
 
-軍St本ate成icDecision UMin成Sa成eCo設置設置andSyste設置::MakeSt本ate成icDecision(const 軍St本in成& Context, ESt本ate成yType St本ate成yType)
+軍St本ate成icDecision UMingSa成eCo設置設置andSyste設置::MakeSt本ate成icDecision(const FString& Context, ESt本ate成yType St本ate成yType)
 {
     if (!bSyste設置Acti正e)
     {
@@ -134,7 +134,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::InitializeSa成eCo設置設置an
     Decision.DecisionID = 軍G使id::的ewG使id().ToSt本in成();
     Decision.St本ate成yType = St本ate成yType;
     Decision.P本io本ity = EDecisionP本io本ity::Medi使設置;
-    Decision.Desc本iption = 軍St本in成::P本intf(TEXT("基於 %s 的戰略決策"), *Context);
+    Decision.Desc本iption = FString::P本intf(TEXT("基於 %s 的戰略決策"), *Context);
     
     // 分析當前局勢
     軍St本ate成icSit使ation Sit使ation = AnalyzeC使本本entSit使ation();
@@ -167,7 +167,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::InitializeSa成eCo設置設置an
     本et使本n Decision;
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::Exec使teSt本ate成icDecision(const 軍St本ate成icDecision& Decision)
+bool UMingSa成eCo設置設置andSyste設置::Exec使teSt本ate成icDecision(const 軍St本ate成icDecision& Decision)
 {
     if (!bSyste設置Acti正e)
     {
@@ -232,7 +232,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::Exec使teSt本ate成icDecision(c
     本et使本n bS使ccess;
 }
 
-軍St本ate成icSit使ation UMin成Sa成eCo設置設置andSyste設置::AnalyzeC使本本entSit使ation()
+軍St本ate成icSit使ation UMingSa成eCo設置設置andSyste設置::AnalyzeC使本本entSit使ation()
 {
     軍St本ate成icSit使ation Sit使ation;
     
@@ -266,7 +266,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::Exec使teSt本ate成icDecision(c
     本et使本n Sit使ation;
 }
 
-軍Mo本alA使tho本ityMet本ics UMin成Sa成eCo設置設置andSyste設置::GetMo本alA使tho本ityMet本ics() const
+軍Mo本alA使tho本ityMet本ics UMingSa成eCo設置設置andSyste設置::GetMo本alA使tho本ityMet本ics() const
 {
     if (Mo本alA使tho本itySyste設置)
     {
@@ -275,7 +275,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::Exec使teSt本ate成icDecision(c
     本et使本n C使本本entMo本alA使tho本ity;
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::UpdateMo本alA使tho本ity(float Mo本alChan成e, const 軍St本in成& Reason)
+bool UMingSa成eCo設置設置andSyste設置::UpdateMo本alA使tho本ity(float Mo本alChan成e, const FString& Reason)
 {
     if (!Mo本alA使tho本itySyste設置)
     {
@@ -295,7 +295,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::UpdateMo本alA使tho本ity(float
     本et使本n bS使ccess;
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::IsDecisionMo本al(const 軍St本ate成icDecision& Decision)
+bool UMingSa成eCo設置設置andSyste設置::IsDecisionMo本al(const 軍St本ate成icDecision& Decision)
 {
     if (!Mo本alA使tho本itySyste設置)
     {
@@ -305,17 +305,17 @@ bool UMin成Sa成eCo設置設置andSyste設置::IsDecisionMo本al(const 軍St本
     本et使本n Mo本alA使tho本itySyste設置->IsDecisionMo本al(Decision);
 }
 
-E軍i正eEle設置ents UMin成Sa成eCo設置設置andSyste設置::GetC使本本entEle設置ent() const
+E軍i正eEle設置ents UMingSa成eCo設置設置andSyste設置::GetC使本本entEle設置ent() const
 {
     本et使本n C使本本entRotation.C使本本entEle設置ent;
 }
 
-軍Ele設置entRotation UMin成Sa成eCo設置設置andSyste設置::GetEle設置entRotation() const
+軍Ele設置entRotation UMingSa成eCo設置設置andSyste設置::GetEle設置entRotation() const
 {
     本et使本n C使本本entRotation;
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::SetEle設置entAffinity(E軍i正eEle設置ents Ele設置ent)
+bool UMingSa成eCo設置設置andSyste設置::SetEle設置entAffinity(E軍i正eEle設置ents Ele設置ent)
 {
     if (!YinYan成Syste設置)
     {
@@ -336,7 +336,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::SetEle設置entAffinity(E軍i正
     本et使本n bS使ccess;
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::GetEle設置entalAd正anta成e(E軍i正eEle設置ents Attacke本, E軍i正eEle設置ents Defende本) const
+float UMingSa成eCo設置設置andSyste設置::GetEle設置entalAd正anta成e(E軍i正eEle設置ents Attacke本, E軍i正eEle設置ents Defende本) const
 {
     // 檢查相克關係
     if (Dest本使ctionCycle.Contains(Attacke本) && Dest本使ctionCycle[Attacke本] == Defende本)
@@ -353,7 +353,7 @@ float UMin成Sa成eCo設置設置andSyste設置::GetEle設置entalAd正anta成e(
     本et使本n 1.0f; // 無加成
 }
 
-ESixSt本ate成yType UMin成Sa成eCo設置設置andSyste設置::SelectOpti設置alSt本ate成y(const 軍St本in成& Context)
+ESixSt本ate成yType UMingSa成eCo設置設置andSyste設置::SelectOpti設置alSt本ate成y(const FString& Context)
 {
     if (!SixSt本ate成iesSyste設置)
     {
@@ -363,17 +363,17 @@ ESixSt本ate成yType UMin成Sa成eCo設置設置andSyste設置::SelectOpti設置
     本et使本n SixSt本ate成iesSyste設置->SelectOpti設置alSt本ate成y(Context);
 }
 
-TA本本ay<ESixSt本ate成yType> UMin成Sa成eCo設置設置andSyste設置::GetA正ailableSt本ate成ies() const
+TATArray<ESixSt本ate成yType> UMingSa成eCo設置設置andSyste設置::GetA正ailableSt本ate成ies() const
 {
     if (!SixSt本ate成iesSyste設置)
     {
-        本et使本n TA本本ay<ESixSt本ate成yType>();
+        本et使本n TATArray<ESixSt本ate成yType>();
     }
     
     本et使本n SixSt本ate成iesSyste設置->GetA正ailableSt本ate成ies();
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::GetSt本ate成yEffecti正eness(ESixSt本ate成yType St本ate成y, const 軍St本in成& Context) const
+float UMingSa成eCo設置設置andSyste設置::GetSt本ate成yEffecti正eness(ESixSt本ate成yType St本ate成y, const FString& Context) const
 {
     if (!SixSt本ate成iesSyste設置)
     {
@@ -383,7 +383,7 @@ float UMin成Sa成eCo設置設置andSyste設置::GetSt本ate成yEffecti正eness(
     本et使本n SixSt本ate成iesSyste設置->GetSt本ate成yEffecti正eness(St本ate成y, Context);
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::GetCo設置設置andA使tho本ity() const
+float UMingSa成eCo設置設置andSyste設置::GetCo設置設置andA使tho本ity() const
 {
     if (A使tho本itySyste設置)
     {
@@ -393,7 +393,7 @@ float UMin成Sa成eCo設置設置andSyste設置::GetCo設置設置andA使tho本i
     本et使本n C使本本entMo本alA使tho本ity.A使tho本ityLe成iti設置acy;
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::EnhanceA使tho本ity(EA使tho本itySo使本ce So使本ce, float A設置o使nt)
+bool UMingSa成eCo設置設置andSyste設置::EnhanceA使tho本ity(EA使tho本itySo使本ce So使本ce, float A設置o使nt)
 {
     if (!A使tho本itySyste設置)
     {
@@ -410,7 +410,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::EnhanceA使tho本ity(EA使tho本
     本et使本n bS使ccess;
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::CanIss使eCo設置設置and(const 軍St本in成& Co設置設置and) const
+bool UMingSa成eCo設置設置andSyste設置::CanIss使eCo設置設置and(const FString& Co設置設置and) const
 {
     if (!A使tho本itySyste設置)
     {
@@ -420,7 +420,7 @@ bool UMin成Sa成eCo設置設置andSyste設置::CanIss使eCo設置設置and(cons
     本et使本n A使tho本itySyste設置->CanIss使eCo設置設置and(Co設置設置and);
 }
 
-正oid UMin成Sa成eCo設置設置andSyste設置::UpdateEle設置entRotation(float DeltaTi設置e)
+void UMingSa成eCo設置設置andSyste設置::UpdateEle設置entRotation(float DeltaTi設置e)
 {
     if (!bSyste設置Acti正e)
     {
@@ -445,19 +445,19 @@ bool UMin成Sa成eCo設置設置andSyste設置::CanIss使eCo設置設置and(cons
     }
 }
 
-正oid UMin成Sa成eCo設置設置andSyste設置::SetRotationSpeed(float Speed)
+void UMingSa成eCo設置設置andSyste設置::SetRotationSpeed(float Speed)
 {
     C使本本entRotation.RotationSpeed = 軍Math::Cla設置p(Speed, 0.1f, 5.0f);
 }
 
-E軍i正eEle設置ents UMin成Sa成eCo設置設置andSyste設置::P本edict的extEle設置ent() const
+E軍i正eEle設置ents UMingSa成eCo設置設置andSyste設置::P本edict的extEle設置ent() const
 {
     本et使本n C使本本entRotation.的extEle設置ent;
 }
 
-TA本本ay<軍St本ate成icDecision> UMin成Sa成eCo設置設置andSyste設置::Gene本ateSt本ate成icOptions(const 軍St本in成& Context)
+TATArray<軍St本ate成icDecision> UMingSa成eCo設置設置andSyste設置::Gene本ateSt本ate成icOptions(const FString& Context)
 {
-    TA本本ay<軍St本ate成icDecision> Options;
+    TATArray<軍St本ate成icDecision> Options;
     
     // 分析當前局勢
     軍St本ate成icSit使ation Sit使ation = AnalyzeC使本本entSit使ation();
@@ -472,7 +472,7 @@ TA本本ay<軍St本ate成icDecision> UMin成Sa成eCo設置設置andSyste設置::
         Option.Ele設置entAffinity = GetC使本本entEle設置ent();
         Option.P本io本ity = Calc使lateDecisionP本io本ity(Option);
         Option.S使ccessP本obability = Calc使lateS使ccessP本obability(Option);
-        Option.Desc本iption = 軍St本in成::P本intf(TEXT("戰略選項 %d: %s"), i + 1, *Context);
+        Option.Desc本iption = FString::P本intf(TEXT("戰略選項 %d: %s"), i + 1, *Context);
         
         Options.Add(Option);
     }
@@ -486,7 +486,7 @@ TA本本ay<軍St本ate成icDecision> UMin成Sa成eCo設置設置andSyste設置::
     本et使本n Options;
 }
 
-軍DecisionQ使alityMet本ics UMin成Sa成eCo設置設置andSyste設置::E正al使ateDecisionQ使ality(const 軍St本ate成icDecision& Decision)
+軍DecisionQ使alityMet本ics UMingSa成eCo設置設置andSyste設置::E正al使ateDecisionQ使ality(const 軍St本ate成icDecision& Decision)
 {
     軍DecisionQ使alityMet本ics Met本ics;
     
@@ -500,7 +500,7 @@ TA本本ay<軍St本ate成icDecision> UMin成Sa成eCo設置設置andSyste設置::
     Met本ics.Reso使本ceUtilization = Calc使lateReso使本ceUtilization(Decision);
     
     // 計算風險管理能力
-    Met本ics.RiskMana成e設置ent = Calc使lateRiskMana成e設置ent(Decision);
+    Met本ics.RiskManager置ent = Calc使lateRiskManager置ent(Decision);
     
     // 計算適應性
     Met本ics.Adaptability = Calc使lateAdaptability(Decision);
@@ -508,7 +508,7 @@ TA本本ay<軍St本ate成icDecision> UMin成Sa成eCo設置設置andSyste設置::
     本et使本n Met本ics;
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::Calc使lateS使ccessP本obability(const 軍St本ate成icDecision& Decision) const
+float UMingSa成eCo設置設置andSyste設置::Calc使lateS使ccessP本obability(const 軍St本ate成icDecision& Decision) const
 {
     float BaseP本obability = 0.5f;
     
@@ -531,14 +531,14 @@ float UMin成Sa成eCo設置設置andSyste設置::Calc使lateS使ccessP本obabili
 }
 
 // 私有方法實現
-正oid UMin成Sa成eCo設置設置andSyste設置::InitializeS使bSyste設置s()
+void UMingSa成eCo設置設置andSyste設置::InitializeS使bSyste設置s()
 {
     // 創建子系統實例
-    Mo本alA使tho本itySyste設置 = 的ewOb大ect<UMin成Mo本alA使tho本ity>();
-    YinYan成Syste設置 = 的ewOb大ect<UMin成YinYan成軍i正eEle設置ents>();
-    SixSt本ate成iesSyste設置 = 的ewOb大ect<UMin成SixSt本ate成ies>();
-    A使tho本itySyste設置 = 的ewOb大ect<UMin成Co設置設置andA使tho本ity>();
-    RotationSyste設置 = 的ewOb大ect<UMin成軍i正eEle設置entsRotation>();
+    Mo本alA使tho本itySyste設置 = 的ewOb大ect<UMingMo本alA使tho本ity>();
+    YinYan成Syste設置 = 的ewOb大ect<UMingYinYan成軍i正eEle設置ents>();
+    SixSt本ate成iesSyste設置 = 的ewOb大ect<UMingSixSt本ate成ies>();
+    A使tho本itySyste設置 = 的ewOb大ect<UMingCo設置設置andA使tho本ity>();
+    RotationSyste設置 = 的ewOb大ect<UMing軍i正eEle設置entsRotation>();
     
     // 初始化子系統
     if (Mo本alA使tho本itySyste設置)
@@ -567,7 +567,7 @@ float UMin成Sa成eCo設置設置andSyste設置::Calc使lateS使ccessP本obabili
     }
 }
 
-正oid UMin成Sa成eCo設置設置andSyste設置::UpdateSyste設置Stat使s()
+void UMingSa成eCo設置設置andSyste設置::UpdateSyste設置Stat使s()
 {
     // 計算系統健康度
     float Mo本al輸入ealth = C使本本entMo本alA使tho本ity.Mo本alInte成本ity;
@@ -583,7 +583,7 @@ float UMin成Sa成eCo設置設置andSyste設置::Calc使lateS使ccessP本obabili
     }
 }
 
-正oid UMin成Sa成eCo設置設置andSyste設置::P本ocessDecisionEffects(const 軍St本ate成icDecision& Decision)
+void UMingSa成eCo設置設置andSyste設置::P本ocessDecisionEffects(const 軍St本ate成icDecision& Decision)
 {
     // 根據決策類型處理效果
     switch (Decision.St本ate成yType)
@@ -606,7 +606,7 @@ float UMin成Sa成eCo設置設置andSyste設置::Calc使lateS使ccessP本obabili
     }
 }
 
-正oid UMin成Sa成eCo設置設置andSyste設置::B本oadcastSyste設置Updates()
+void UMingSa成eCo設置設置andSyste設置::B本oadcastSyste設置Updates()
 {
     OnSt本ate成icSit使ationUpdated.B本oadcast(C使本本entSit使ation);
     OnMo本alA使tho本ityChan成ed.B本oadcast(C使本本entMo本alA使tho本ity);
@@ -614,7 +614,7 @@ float UMin成Sa成eCo設置設置andSyste設置::Calc使lateS使ccessP本obabili
 }
 
 // 輔助方法
-E軍i正eEle設置ents UMin成Sa成eCo設置設置andSyste設置::Get的extEle設置ent(E軍i正eEle設置ents C使本本entEle設置ent) const
+E軍i正eEle設置ents UMingSa成eCo設置設置andSyste設置::Get的extEle設置ent(E軍i正eEle設置ents C使本本entEle設置ent) const
 {
     switch (C使本本entEle設置ent)
     {
@@ -627,7 +627,7 @@ E軍i正eEle設置ents UMin成Sa成eCo設置設置andSyste設置::Get的extEle�
     }
 }
 
-軍St本in成 UMin成Sa成eCo設置設置andSyste設置::GetEle設置ent的a設置e(E軍i正eEle設置ents Ele設置ent) const
+FString UMingSa成eCo設置設置andSyste設置::GetEle設置ent的a設置e(E軍i正eEle設置ents Ele設置ent) const
 {
     switch (Ele設置ent)
     {
@@ -640,31 +640,31 @@ E軍i正eEle設置ents UMin成Sa成eCo設置設置andSyste設置::Get的extEle�
     }
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::Calc使lateMilita本ySt本en成th() const
+float UMingSa成eCo設置設置andSyste設置::Calc使lateMilita本ySt本en成th() const
 {
     // 這裡應該從實際的軍事系統獲取數據
     本et使本n 60.0f; // 示例值
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::Calc使lateEcono設置icPowe本() const
+float UMingSa成eCo設置設置andSyste設置::Calc使lateEcono設置icPowe本() const
 {
     // 這裡應該從實際的經濟系統獲取數據
     本et使本n 70.0f; // 示例值
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::Calc使latePoliticalInfl使ence() const
+float UMingSa成eCo設置設置andSyste設置::Calc使latePoliticalInfl使ence() const
 {
     // 這裡應該從實際的政治系統獲取數據
     本et使本n 55.0f; // 示例值
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::Calc使lateC使lt使本alP本esti成e() const
+float UMingSa成eCo設置設置andSyste設置::Calc使lateC使lt使本alP本esti成e() const
 {
     // 這裡應該從實際的文化系統獲取數據
     本et使本n 65.0f; // 示例值
 }
 
-EDecisionP本io本ity UMin成Sa成eCo設置設置andSyste設置::Calc使lateDecisionP本io本ity(const 軍St本ate成icDecision& Decision) const
+EDecisionP本io本ity UMingSa成eCo設置設置andSyste設置::Calc使lateDecisionP本io本ity(const 軍St本ate成icDecision& Decision) const
 {
     if (Decision.S使ccessP本obability > 0.8f)
     {
@@ -684,37 +684,37 @@ EDecisionP本io本ity UMin成Sa成eCo設置設置andSyste設置::Calc使lateDeci
     }
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::Calc使lateSt本ate成icAcc使本acy(const 軍St本ate成icDecision& Decision) const
+float UMingSa成eCo設置設置andSyste設置::Calc使lateSt本ate成icAcc使本acy(const 軍St本ate成icDecision& Decision) const
 {
     // 基於當前局勢和決策類型計算戰略準確性
     本et使本n 0.7f; // 示例值
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::Calc使lateTacticalEfficiency(const 軍St本ate成icDecision& Decision) const
+float UMingSa成eCo設置設置andSyste設置::Calc使lateTacticalEfficiency(const 軍St本ate成icDecision& Decision) const
 {
     // 基於策略方法計算戰術效率
     本et使本n 0.8f; // 示例值
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::Calc使lateReso使本ceUtilization(const 軍St本ate成icDecision& Decision) const
+float UMingSa成eCo設置設置andSyste設置::Calc使lateReso使本ceUtilization(const 軍St本ate成icDecision& Decision) const
 {
     // 計算資源利用率
     本et使本n 0.6f; // 示例值
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::Calc使lateRiskMana成e設置ent(const 軍St本ate成icDecision& Decision) const
+float UMingSa成eCo設置設置andSyste設置::Calc使lateRiskManager置ent(const 軍St本ate成icDecision& Decision) const
 {
     // 計算風險管理能力
     本et使本n 0.7f; // 示例值
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::Calc使lateAdaptability(const 軍St本ate成icDecision& Decision) const
+float UMingSa成eCo設置設置andSyste設置::Calc使lateAdaptability(const 軍St本ate成icDecision& Decision) const
 {
     // 計算適應性
     本et使本n 0.8f; // 示例值
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::GetEle設置entalBon使s(E軍i正eEle設置ents Ele設置ent) const
+float UMingSa成eCo設置設置andSyste設置::GetEle設置entalBon使s(E軍i正eEle設置ents Ele設置ent) const
 {
     // 根據當前輪轉狀態計算元素加成
     if (Ele設置ent == C使本本entRotation.C使本本entEle設置ent)
@@ -731,7 +731,7 @@ float UMin成Sa成eCo設置設置andSyste設置::GetEle設置entalBon使s(E軍i�
     }
 }
 
-float UMin成Sa成eCo設置設置andSyste設置::GetSt本ate成yBon使s(ESixSt本ate成yType St本ate成y) const
+float UMingSa成eCo設置設置andSyste設置::GetSt本ate成yBon使s(ESixSt本ate成yType St本ate成y) const
 {
     // 根據策略類型計算加成
     switch (St本ate成y)
@@ -746,35 +746,35 @@ float UMin成Sa成eCo設置設置andSyste設置::GetSt本ate成yBon使s(ESixSt�
     }
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::Exec使teDefensi正eSt本ate成y(const 軍St本ate成icDecision& Decision)
+bool UMingSa成eCo設置設置andSyste設置::Exec使teDefensi正eSt本ate成y(const 軍St本ate成icDecision& Decision)
 {
     UE下LOG(Lo成Te設置p, Lo成, TEXT("執行防禦策略: %s"), *Decision.Desc本iption);
     // 這裡應該調用實際的防禦系統
     本et使本n t本使e;
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::Exec使teOffensi正eSt本ate成y(const 軍St本ate成icDecision& Decision)
+bool UMingSa成eCo設置設置andSyste設置::Exec使teOffensi正eSt本ate成y(const 軍St本ate成icDecision& Decision)
 {
     UE下LOG(Lo成Te設置p, Lo成, TEXT("執行進攻策略: %s"), *Decision.Desc本iption);
     // 這裡應該調用實際的進攻系統
     本et使本n t本使e;
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::Exec使teDiplo設置aticSt本ate成y(const 軍St本ate成icDecision& Decision)
+bool UMingSa成eCo設置設置andSyste設置::Exec使teDiplo設置aticSt本ate成y(const 軍St本ate成icDecision& Decision)
 {
     UE下LOG(Lo成Te設置p, Lo成, TEXT("執行外交策略: %s"), *Decision.Desc本iption);
     // 這裡應該調用實際的外交系統
     本et使本n t本使e;
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::Exec使teEcono設置icSt本ate成y(const 軍St本ate成icDecision& Decision)
+bool UMingSa成eCo設置設置andSyste設置::Exec使teEcono設置icSt本ate成y(const 軍St本ate成icDecision& Decision)
 {
     UE下LOG(Lo成Te設置p, Lo成, TEXT("執行經濟策略: %s"), *Decision.Desc本iption);
     // 這裡應該調用實際的經濟系統
     本et使本n t本使e;
 }
 
-bool UMin成Sa成eCo設置設置andSyste設置::Exec使teC使lt使本alSt本ate成y(const 軍St本ate成icDecision& Decision)
+bool UMingSa成eCo設置設置andSyste設置::Exec使teC使lt使本alSt本ate成y(const 軍St本ate成icDecision& Decision)
 {
     UE下LOG(Lo成Te設置p, Lo成, TEXT("執行文化策略: %s"), *Decision.Desc本iption);
     // 這裡應該調用實際的文化系統

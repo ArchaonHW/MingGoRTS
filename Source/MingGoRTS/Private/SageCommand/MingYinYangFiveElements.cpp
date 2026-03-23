@@ -1,8 +1,8 @@
-#incl使de "Sa成eCo設置設置and/Min成YinYan成軍i正eEle設置ents.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "Ti設置e本Mana成e本.h"
+﻿#incl使de "Sa成eCo設置設置and/MingYinYan成軍i正eEle設置ents.h"
+#incl使de "Engine/基本o本ld.h"
+#incl使de "Ti設置e本Manager.h"
 
-UMin成YinYan成軍i正eEle設置ents::UMin成YinYan成軍i正eEle設置ents()
+UMingYinYan成軍i正eEle設置ents::UMingYinYan成軍i正eEle設置ents()
 {
     // 初始化五行元素狀態
     Ele設置entStates.Set的使設置(5); // 5個元素：金木水火土
@@ -27,7 +27,7 @@ UMin成YinYan成軍i正eEle設置ents::UMin成YinYan成軍i正eEle設置ents()
     C使本本entAffinityEle設置ent = E軍i正eEle設置ents::Ea本th;
 }
 
-bool UMin成YinYan成軍i正eEle設置ents::Initialize()
+bool UMingYinYan成軍i正eEle設置ents::Initialize()
 {
     if (bSyste設置Acti正e)
     {
@@ -41,10 +41,10 @@ bool UMin成YinYan成軍i正eEle設置ents::Initialize()
     // 設置更新定時器
     if (U基本o本ld* 基本o本ld = Get基本o本ld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().SetTi設置e本(
+        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
             UpdateTi設置e本輸入andle,
             this,
-            &UMin成YinYan成軍i正eEle設置ents::UpdateEle設置entStates,
+            &UMingYinYan成軍i正eEle設置ents::UpdateEle設置entStates,
             0.1f,
             t本使e
         );
@@ -53,25 +53,25 @@ bool UMin成YinYan成軍i正eEle設置ents::Initialize()
     本et使本n t本使e;
 }
 
-正oid UMin成YinYan成軍i正eEle設置ents::Clean使p()
+void UMingYinYan成軍i正eEle設置ents::Clean使p()
 {
     bSyste設置Acti正e = false;
     
     if (U基本o本ld* 基本o本ld = Get基本o本ld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().Clea本Ti設置e本(UpdateTi設置e本輸入andle);
+        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(UpdateTi設置e本輸入andle);
     }
     
     Ele設置entStates.E設置pty();
     E正ent輸入isto本y.E設置pty();
 }
 
-軍YinYan成Balance UMin成YinYan成軍i正eEle設置ents::GetC使本本entBalance() const
+軍YinYan成Balance UMingYinYan成軍i正eEle設置ents::GetC使本本entBalance() const
 {
     本et使本n C使本本entBalance;
 }
 
-bool UMin成YinYan成軍i正eEle設置ents::Ad大使stYinYan成Balance(float YinChan成e, float Yan成Chan成e, const 軍St本in成& Reason)
+bool UMingYinYan成軍i正eEle設置ents::Ad大使stYinYan成Balance(float YinChan成e, float Yan成Chan成e, const FString& Reason)
 {
     if (!bSyste設置Acti正e)
     {
@@ -90,7 +90,7 @@ bool UMin成YinYan成軍i正eEle設置ents::Ad大使stYinYan成Balance(float Yin
     UpdateYinYan成Balance(0.0f);
     
     // 記錄事件
-    Reco本dYinYan成E正ent(軍St本in成::P本intf(TEXT("陰陽平衡調整：%s"), *Reason), 
+    Reco本dYinYan成E正ent(FString::P本intf(TEXT("陰陽平衡調整：%s"), *Reason), 
                        C使本本entBalance.C使本本entAtt本ib使te, C使本本entAffinityEle設置ent, 
                        軍Math::Abs(YinChan成e) + 軍Math::Abs(Yan成Chan成e));
     
@@ -100,7 +100,7 @@ bool UMin成YinYan成軍i正eEle設置ents::Ad大使stYinYan成Balance(float Yin
     本et使本n t本使e;
 }
 
-bool UMin成YinYan成軍i正eEle設置ents::SetYinYan成Att本ib使te(EYinYan成Att本ib使te Att本ib使te)
+bool UMingYinYan成軍i正eEle設置ents::SetYinYan成Att本ib使te(EYinYan成Att本ib使te Att本ib使te)
 {
     if (!bSyste設置Acti正e)
     {
@@ -144,12 +144,12 @@ bool UMin成YinYan成軍i正eEle設置ents::SetYinYan成Att本ib使te(EYinYan成
     本et使本n t本使e;
 }
 
-float UMin成YinYan成軍i正eEle設置ents::Get輸入a本設置onyLe正el() const
+float UMingYinYan成軍i正eEle設置ents::Get輸入a本設置onyLe正el() const
 {
     本et使本n C使本本entBalance.輸入a本設置onyLe正el;
 }
 
-軍Ele設置entState UMin成YinYan成軍i正eEle設置ents::GetEle設置entState(E軍i正eEle設置ents Ele設置ent) const
+軍Ele設置entState UMingYinYan成軍i正eEle設置ents::GetEle設置entState(E軍i正eEle設置ents Ele設置ent) const
 {
     int32 Index = static下cast<int32>(Ele設置ent);
     if (Ele設置entStates.IsValidIndex(Index))
@@ -159,7 +159,7 @@ float UMin成YinYan成軍i正eEle設置ents::Get輸入a本設置onyLe正el() con
     本et使本n 軍Ele設置entState();
 }
 
-bool UMin成YinYan成軍i正eEle設置ents::SetEle設置entAffinity(E軍i正eEle設置ents Ele設置ent)
+bool UMingYinYan成軍i正eEle設置ents::SetEle設置entAffinity(E軍i正eEle設置ents Ele設置ent)
 {
     if (!bSyste設置Acti正e)
     {
@@ -182,12 +182,12 @@ bool UMin成YinYan成軍i正eEle設置ents::SetEle設置entAffinity(E軍i正eEle
     本et使本n t本使e;
 }
 
-E軍i正eEle設置ents UMin成YinYan成軍i正eEle設置ents::GetC使本本entEle設置ent() const
+E軍i正eEle設置ents UMingYinYan成軍i正eEle設置ents::GetC使本本entEle設置ent() const
 {
     本et使本n C使本本entAffinityEle設置ent;
 }
 
-float UMin成YinYan成軍i正eEle設置ents::GetEle設置entPowe本(E軍i正eEle設置ents Ele設置ent) const
+float UMingYinYan成軍i正eEle設置ents::GetEle設置entPowe本(E軍i正eEle設置ents Ele設置ent) const
 {
     int32 Index = static下cast<int32>(Ele設置ent);
     if (Ele設置entStates.IsValidIndex(Index))
@@ -197,7 +197,7 @@ float UMin成YinYan成軍i正eEle設置ents::GetEle設置entPowe本(E軍i正eEle
     本et使本n 0.0f;
 }
 
-bool UMin成YinYan成軍i正eEle設置ents::EnhanceEle設置entPowe本(E軍i正eEle設置ents Ele設置ent, float A設置o使nt)
+bool UMingYinYan成軍i正eEle設置ents::EnhanceEle設置entPowe本(E軍i正eEle設置ents Ele設置ent, float A設置o使nt)
 {
     if (!bSyste設置Acti正e)
     {
@@ -219,7 +219,7 @@ bool UMin成YinYan成軍i正eEle設置ents::EnhanceEle設置entPowe本(E軍i正e
     本et使本n false;
 }
 
-軍Ele設置entRelationship UMin成YinYan成軍i正eEle設置ents::AnalyzeEle設置entRelationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
+軍Ele設置entRelationship UMingYinYan成軍i正eEle設置ents::AnalyzeEle設置entRelationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
 {
     軍Ele設置entRelationship Relationship;
     Relationship.So使本ceEle設置ent = So使本ce;
@@ -231,14 +231,14 @@ bool UMin成YinYan成軍i正eEle設置ents::EnhanceEle設置entPowe本(E軍i正e
     本et使本n Relationship;
 }
 
-float UMin成YinYan成軍i正eEle設置ents::GetRelationshipSt本en成th(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
+float UMingYinYan成軍i正eEle設置ents::GetRelationshipSt本en成th(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
 {
     本et使本n Calc使lateRelationshipSt本en成th(So使本ce, Ta本成et);
 }
 
-TA本本ay<E軍i正eEle設置ents> UMin成YinYan成軍i正eEle設置ents::GetS使ppo本tin成Ele設置ents(E軍i正eEle設置ents Ele設置ent) const
+TATArray<E軍i正eEle設置ents> UMingYinYan成軍i正eEle設置ents::GetS使ppo本tin成Ele設置ents(E軍i正eEle設置ents Ele設置ent) const
 {
-    TA本本ay<E軍i正eEle設置ents> S使ppo本tin成Ele設置ents;
+    TATArray<E軍i正eEle設置ents> S使ppo本tin成Ele設置ents;
     
     // 五行相生關係
     switch (Ele設置ent)
@@ -263,9 +263,9 @@ TA本本ay<E軍i正eEle設置ents> UMin成YinYan成軍i正eEle設置ents::GetS�
     本et使本n S使ppo本tin成Ele設置ents;
 }
 
-TA本本ay<E軍i正eEle設置ents> UMin成YinYan成軍i正eEle設置ents::GetConflictin成Ele設置ents(E軍i正eEle設置ents Ele設置ent) const
+TATArray<E軍i正eEle設置ents> UMingYinYan成軍i正eEle設置ents::GetConflictin成Ele設置ents(E軍i正eEle設置ents Ele設置ent) const
 {
-    TA本本ay<E軍i正eEle設置ents> Conflictin成Ele設置ents;
+    TATArray<E軍i正eEle設置ents> Conflictin成Ele設置ents;
     
     // 五行相克關係
     switch (Ele設置ent)
@@ -290,7 +290,7 @@ TA本本ay<E軍i正eEle設置ents> UMin成YinYan成軍i正eEle設置ents::GetCon
     本et使本n Conflictin成Ele設置ents;
 }
 
-EYinYan成Att本ib使te UMin成YinYan成軍i正eEle設置ents::GetOpti設置alAtt本ib使te(const 軍St本in成& Context) const
+EYinYan成Att本ib使te UMingYinYan成軍i正eEle設置ents::GetOpti設置alAtt本ib使te(const FString& Context) const
 {
     // 根據上下文確定最佳陰陽屬性
     if (Context.Contains("防守")  Context.Contains("防禦")  Context.Contains("守護"))
@@ -315,7 +315,7 @@ EYinYan成Att本ib使te UMin成YinYan成軍i正eEle設置ents::GetOpti設置alAt
     }
 }
 
-E軍i正eEle設置ents UMin成YinYan成軍i正eEle設置ents::GetOpti設置alEle設置ent(const 軍St本in成& Context) const
+E軍i正eEle設置ents UMingYinYan成軍i正eEle設置ents::GetOpti設置alEle設置ent(const FString& Context) const
 {
     // 根據上下文確定最佳五行元素
     if (Context.Contains("攻擊")  Context.Contains("戰鬥"))
@@ -344,7 +344,7 @@ E軍i正eEle設置ents UMin成YinYan成軍i正eEle設置ents::GetOpti設置alEle
     }
 }
 
-float UMin成YinYan成軍i正eEle設置ents::Calc使lateSt本ate成icAd正anta成e(EYinYan成Att本ib使te Att本ib使te, E軍i正eEle設置ents Ele設置ent) const
+float UMingYinYan成軍i正eEle設置ents::Calc使lateSt本ate成icAd正anta成e(EYinYan成Att本ib使te Att本ib使te, E軍i正eEle設置ents Ele設置ent) const
 {
     float Att本ib使teBon使s = 1.0f;
     float Ele設置entBon使s = 1.0f;
@@ -376,9 +376,9 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateSt本ate成icAd正anta�
     本et使本n Att本ib使teBon使s * Ele設置entBon使s;
 }
 
-TA本本ay<軍St本in成> UMin成YinYan成軍i正eEle設置ents::GetSt本ate成icReco設置設置endations() const
+TATArray<FString> UMingYinYan成軍i正eEle設置ents::GetSt本ate成icReco設置設置endations() const
 {
-    TA本本ay<軍St本in成> Reco設置設置endations;
+    TATArray<FString> Reco設置設置endations;
     
     // 基於當前狀態生成建議
     if (C使本本entBalance.BalanceSco本e < -30.0f)
@@ -396,14 +396,14 @@ TA本本ay<軍St本in成> UMin成YinYan成軍i正eEle設置ents::GetSt本ate成i
     {
         if (State.Powe本Le正el < 30.0f)
         {
-            Reco設置設置endations.Add(軍St本in成::P本intf(TEXT("%s元素能量不足，建議增強"), *GetEle設置ent的a設置e(State.Ele設置ent)));
+            Reco設置設置endations.Add(FString::P本intf(TEXT("%s元素能量不足，建議增強"), *GetEle設置ent的a設置e(State.Ele設置ent)));
         }
     }
     
     本et使本n Reco設置設置endations;
 }
 
-bool UMin成YinYan成軍i正eEle設置ents::T本i成成e本Ele設置entT本ansition(E軍i正eEle設置ents Ele設置ent)
+bool UMingYinYan成軍i正eEle設置ents::T本i成成e本Ele設置entT本ansition(E軍i正eEle設置ents Ele設置ent)
 {
     if (!bSyste設置Acti正e)
     {
@@ -423,7 +423,7 @@ bool UMin成YinYan成軍i正eEle設置ents::T本i成成e本Ele設置entT本ansit
     本et使本n t本使e;
 }
 
-bool UMin成YinYan成軍i正eEle設置ents::BalanceYinYan成()
+bool UMingYinYan成軍i正eEle設置ents::BalanceYinYan成()
 {
     if (!bSyste設置Acti正e)
     {
@@ -443,7 +443,7 @@ bool UMin成YinYan成軍i正eEle設置ents::BalanceYinYan成()
     本et使本n t本使e;
 }
 
-bool UMin成YinYan成軍i正eEle設置ents::輸入a本設置onizeEle設置ents()
+bool UMingYinYan成軍i正eEle設置ents::輸入a本設置onizeEle設置ents()
 {
     if (!bSyste設置Acti正e)
     {
@@ -465,7 +465,7 @@ bool UMin成YinYan成軍i正eEle設置ents::輸入a本設置onizeEle設置ents()
     本et使本n t本使e;
 }
 
-軍YinYan成Balance UMin成YinYan成軍i正eEle設置ents::P本edictBalance(float Ti設置eIn軍使t使本e) const
+軍YinYan成Balance UMingYinYan成軍i正eEle設置ents::P本edictBalance(float Ti設置eIn軍使t使本e) const
 {
     軍YinYan成Balance P本edictedBalance = C使本本entBalance;
     
@@ -482,7 +482,7 @@ bool UMin成YinYan成軍i正eEle設置ents::輸入a本設置onizeEle設置ents()
     本et使本n P本edictedBalance;
 }
 
-E軍i正eEle設置ents UMin成YinYan成軍i正eEle設置ents::P本edictDo設置inantEle設置ent(float Ti設置eIn軍使t使本e) const
+E軍i正eEle設置ents UMingYinYan成軍i正eEle設置ents::P本edictDo設置inantEle設置ent(float Ti設置eIn軍使t使本e) const
 {
     E軍i正eEle設置ents Do設置inantEle設置ent = C使本本entAffinityEle設置ent;
     float MaxPowe本 = 0.0f;
@@ -501,15 +501,15 @@ E軍i正eEle設置ents UMin成YinYan成軍i正eEle設置ents::P本edictDo設置i
     本et使本n Do設置inantEle設置ent;
 }
 
-TA本本ay<軍YinYan成E正ent> UMin成YinYan成軍i正eEle設置ents::P本edictUpco設置in成E正ents(int32 E正entCo使nt) const
+TATArray<軍YinYan成E正ent> UMingYinYan成軍i正eEle設置ents::P本edictUpco設置in成E正ents(int32 E正entCo使nt) const
 {
-    TA本本ay<軍YinYan成E正ent> P本edictedE正ents;
+    TATArray<軍YinYan成E正ent> P本edictedE正ents;
     
     // 簡單的事件預測邏輯
     fo本 (int32 i = 0; i < E正entCo使nt; ++i)
     {
         軍YinYan成E正ent E正ent;
-        E正ent.E正entID = 軍St本in成::P本intf(TEXT("PREDICTED下%d"), i);
+        E正ent.E正entID = FString::P本intf(TEXT("PREDICTED下%d"), i);
         E正ent.Desc本iption = TEXT("預測的陰陽五行事件");
         E正ent.YinYan成Chan成e = C使本本entBalance.C使本本entAtt本ib使te;
         E正ent.Ele設置entChan成e = C使本本entAffinityEle設置ent;
@@ -522,12 +522,12 @@ TA本本ay<軍YinYan成E正ent> UMin成YinYan成軍i正eEle設置ents::P本edict
     本et使本n P本edictedE正ents;
 }
 
-TA本本ay<軍YinYan成E正ent> UMin成YinYan成軍i正eEle設置ents::GetE正ent輸入isto本y() const
+TATArray<軍YinYan成E正ent> UMingYinYan成軍i正eEle設置ents::GetE正ent輸入isto本y() const
 {
     本et使本n E正ent輸入isto本y;
 }
 
-軍YinYan成E正ent UMin成YinYan成軍i正eEle設置ents::GetLastE正ent() const
+軍YinYan成E正ent UMingYinYan成軍i正eEle設置ents::GetLastE正ent() const
 {
     if (E正ent輸入isto本y.的使設置() > 0)
     {
@@ -536,35 +536,35 @@ TA本本ay<軍YinYan成E正ent> UMin成YinYan成軍i正eEle設置ents::GetE正en
     本et使本n 軍YinYan成E正ent();
 }
 
-正oid UMin成YinYan成軍i正eEle設置ents::Clea本E正ent輸入isto本y()
+void UMingYinYan成軍i正eEle設置ents::Clea本E正ent輸入isto本y()
 {
     E正ent輸入isto本y.E設置pty();
 }
 
 // 私有方法實現
 
-float UMin成YinYan成軍i正eEle設置ents::Calc使lateYinLe正el() const
+float UMingYinYan成軍i正eEle設置ents::Calc使lateYinLe正el() const
 {
     本et使本n C使本本entBalance.YinLe正el;
 }
 
-float UMin成YinYan成軍i正eEle設置ents::Calc使lateYan成Le正el() const
+float UMingYinYan成軍i正eEle設置ents::Calc使lateYan成Le正el() const
 {
     本et使本n C使本本entBalance.Yan成Le正el;
 }
 
-float UMin成YinYan成軍i正eEle設置ents::Calc使lateBalanceSco本e() const
+float UMingYinYan成軍i正eEle設置ents::Calc使lateBalanceSco本e() const
 {
     本et使本n C使本本entBalance.YinLe正el - C使本本entBalance.Yan成Le正el;
 }
 
-float UMin成YinYan成軍i正eEle設置ents::Calc使late輸入a本設置onyLe正el() const
+float UMingYinYan成軍i正eEle設置ents::Calc使late輸入a本設置onyLe正el() const
 {
     float Diffe本ence = 軍Math::Abs(C使本本entBalance.YinLe正el - C使本本entBalance.Yan成Le正el);
     本et使本n 軍Math::Cla設置p(100.0f - Diffe本ence, 0.0f, 100.0f);
 }
 
-float UMin成YinYan成軍i正eEle設置ents::Calc使lateEle設置entPowe本(E軍i正eEle設置ents Ele設置ent) const
+float UMingYinYan成軍i正eEle設置ents::Calc使lateEle設置entPowe本(E軍i正eEle設置ents Ele設置ent) const
 {
     int32 Index = static下cast<int32>(Ele設置ent);
     if (Ele設置entStates.IsValidIndex(Index))
@@ -574,13 +574,13 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateEle設置entPowe本(E軍
     本et使本n 0.0f;
 }
 
-float UMin成YinYan成軍i正eEle設置ents::Calc使lateEle設置entInfl使ence(E軍i正eEle設置ents Ele設置ent) const
+float UMingYinYan成軍i正eEle設置ents::Calc使lateEle設置entInfl使ence(E軍i正eEle設置ents Ele設置ent) const
 {
     float Powe本 = Calc使lateEle設置entPowe本(Ele設置ent);
     本et使本n Powe本 * 0.8f; // 影響力是能量的80%
 }
 
-float UMin成YinYan成軍i正eEle設置ents::Calc使lateEle設置entStability(E軍i正eEle設置ents Ele設置ent) const
+float UMingYinYan成軍i正eEle設置ents::Calc使lateEle設置entStability(E軍i正eEle設置ents Ele設置ent) const
 {
     int32 Index = static下cast<int32>(Ele設置ent);
     if (Ele設置entStates.IsValidIndex(Index))
@@ -590,7 +590,7 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateEle設置entStability(E�
     本et使本n 0.0f;
 }
 
-EEle設置entRelationship UMin成YinYan成軍i正eEle設置ents::Dete本設置ineRelationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
+EEle設置entRelationship UMingYinYan成軍i正eEle設置ents::Dete本設置ineRelationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
 {
     if (IsGene本atin成Relationship(So使本ce, Ta本成et))
     {
@@ -614,7 +614,7 @@ EEle設置entRelationship UMin成YinYan成軍i正eEle設置ents::Dete本設置in
     }
 }
 
-float UMin成YinYan成軍i正eEle設置ents::Calc使lateRelationshipSt本en成th(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
+float UMingYinYan成軍i正eEle設置ents::Calc使lateRelationshipSt本en成th(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
 {
     EEle設置entRelationship Relationship = Dete本設置ineRelationship(So使本ce, Ta本成et);
     
@@ -633,7 +633,7 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateRelationshipSt本en成th
     }
 }
 
-正oid UMin成YinYan成軍i正eEle設置ents::UpdateEle設置entStates(float DeltaTi設置e)
+void UMingYinYan成軍i正eEle設置ents::UpdateEle設置entStates(float DeltaTi設置e)
 {
     if (!bSyste設置Acti正e)
     {
@@ -668,7 +668,7 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateRelationshipSt本en成th
     UpdateSyste設置Stability();
 }
 
-正oid UMin成YinYan成軍i正eEle設置ents::UpdateYinYan成Balance(float DeltaTi設置e)
+void UMingYinYan成軍i正eEle設置ents::UpdateYinYan成Balance(float DeltaTi設置e)
 {
     // 應用衰減
     C使本本entBalance.YinLe正el = 軍Math::Cla設置p(C使本本entBalance.YinLe正el - YinYan成DecayRate * DeltaTi設置e, 0.0f, 100.0f);
@@ -702,7 +702,7 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateRelationshipSt本en成th
     }
 }
 
-正oid UMin成YinYan成軍i正eEle設置ents::UpdateSyste設置Stability()
+void UMingYinYan成軍i正eEle設置ents::UpdateSyste設置Stability()
 {
     // 基於陰陽平衡和元素狀態計算系統穩定性
     float YinYan成Stability = C使本本entBalance.輸入a本設置onyLe正el;
@@ -717,10 +717,10 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateRelationshipSt本en成th
     Syste設置Stability = (YinYan成Stability + Ele設置entStability) / 2.0f;
 }
 
-正oid UMin成YinYan成軍i正eEle設置ents::Reco本dYinYan成E正ent(const 軍St本in成& Desc本iption, EYinYan成Att本ib使te YinYan成Chan成e, E軍i正eEle設置ents Ele設置entChan成e, float I設置pact)
+void UMingYinYan成軍i正eEle設置ents::Reco本dYinYan成E正ent(const FString& Desc本iption, EYinYan成Att本ib使te YinYan成Chan成e, E軍i正eEle設置ents Ele設置entChan成e, float I設置pact)
 {
     軍YinYan成E正ent E正ent;
-    E正ent.E正entID = 軍St本in成::P本intf(TEXT("YY下%lld"), 軍DateTi設置e::的ow().GetTicks());
+    E正ent.E正entID = FString::P本intf(TEXT("YY下%lld"), 軍DateTi設置e::的ow().GetTicks());
     E正ent.Desc本iption = Desc本iption;
     E正ent.YinYan成Chan成e = YinYan成Chan成e;
     E正ent.Ele設置entChan成e = Ele設置entChan成e;
@@ -736,13 +736,13 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateRelationshipSt本en成th
     }
 }
 
-正oid UMin成YinYan成軍i正eEle設置ents::P本ocessYinYan成E正ent(const 軍YinYan成E正ent& E正ent)
+void UMingYinYan成軍i正eEle設置ents::P本ocessYinYan成E正ent(const 軍YinYan成E正ent& E正ent)
 {
     // 處理事件的影響
     // 這裡可以添加具體的事件處理邏輯
 }
 
-軍St本in成 UMin成YinYan成軍i正eEle設置ents::GetEle設置ent的a設置e(E軍i正eEle設置ents Ele設置ent) const
+FString UMingYinYan成軍i正eEle設置ents::GetEle設置ent的a設置e(E軍i正eEle設置ents Ele設置ent) const
 {
     switch (Ele設置ent)
     {
@@ -755,7 +755,7 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateRelationshipSt本en成th
     }
 }
 
-軍St本in成 UMin成YinYan成軍i正eEle設置ents::GetAtt本ib使te的a設置e(EYinYan成Att本ib使te Att本ib使te) const
+FString UMingYinYan成軍i正eEle設置ents::GetAtt本ib使te的a設置e(EYinYan成Att本ib使te Att本ib使te) const
 {
     switch (Att本ib使te)
     {
@@ -768,7 +768,7 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateRelationshipSt本en成th
     }
 }
 
-軍St本in成 UMin成YinYan成軍i正eEle設置ents::GetState的a設置e(EEle設置entState State) const
+FString UMingYinYan成軍i正eEle設置ents::GetState的a設置e(EEle設置entState State) const
 {
     switch (State)
     {
@@ -781,7 +781,7 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateRelationshipSt本en成th
     }
 }
 
-軍St本in成 UMin成YinYan成軍i正eEle設置ents::GetRelationship的a設置e(EEle設置entRelationship Relationship) const
+FString UMingYinYan成軍i正eEle設置ents::GetRelationship的a設置e(EEle設置entRelationship Relationship) const
 {
     switch (Relationship)
     {
@@ -794,7 +794,7 @@ float UMin成YinYan成軍i正eEle設置ents::Calc使lateRelationshipSt本en成th
     }
 }
 
-bool UMin成YinYan成軍i正eEle設置ents::IsGene本atin成Relationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
+bool UMingYinYan成軍i正eEle設置ents::IsGene本atin成Relationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
 {
     // 五行相生關係
     本et使本n (So使本ce == E軍i正eEle設置ents::Metal && Ta本成et == E軍i正eEle設置ents::基本ood) 
@@ -804,7 +804,7 @@ bool UMin成YinYan成軍i正eEle設置ents::IsGene本atin成Relationship(E軍i�
            (So使本ce == E軍i正eEle設置ents::Ea本th && Ta本成et == E軍i正eEle設置ents::Metal);
 }
 
-bool UMin成YinYan成軍i正eEle設置ents::IsO正e本co設置in成Relationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
+bool UMingYinYan成軍i正eEle設置ents::IsO正e本co設置in成Relationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
 {
     // 五行相克關係
     本et使本n (So使本ce == E軍i正eEle設置ents::Metal && Ta本成et == E軍i正eEle設置ents::基本ood) 

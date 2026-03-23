@@ -1,17 +1,50 @@
 #include "MingThreeAuthoritiesManager.h"
 #include "MingSupremeSageCommandSystem.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 UMingThreeAuthoritiesManager::UMingThreeAuthoritiesManager()
     : DaoAuthorityHealth(1.0f)
     , StrategyAuthorityHealth(1.0f)
     , MilitaryAuthorityHealth(1.0f)
 {
+    PrimaryComponentTick.bCanEverTick = true;
+    
+    // 初始化三權狀態
+    AuthorityStates.Add(ESupremeAuthorityType::DaoAuthority, ECommandStatus::Suspended);
+    AuthorityStates.Add(ESupremeAuthorityType::StrategyAuthority, ECommandStatus::Suspended);
+    AuthorityStates.Add(ESupremeAuthorityType::MilitaryAuthority, ECommandStatus::Suspended);
+    
+    // 默認道權優先
+    CurrentActiveAuthority = ESupremeAuthorityType::DaoAuthority;
+    bBalancingEnabled = true;
+    BalanceCheckInterval = 5.0f;
+}
+
+void UMingThreeAuthoritiesManager::BeginPlay()
+{
+    Super::BeginPlay();
+    
+    // 啟動權力平衡檢查定時器
+    if (GetWorld())
+    {
+        GetWorld()->GetTimerManager().SetTimer(
+            BalanceCheckTimer,
+            this,
+            &UMingThreeAuthoritiesManager::CheckAuthorityBalance,
+            BalanceCheckInterval,
+            true
+        );
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("三權管理器初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("  道權健康度: %.2f"), DaoAuthorityHealth);
+    UE_LOG(LogTemp, Log, TEXT("  策權健康度: %.2f"), StrategyAuthorityHealth);
+    UE_LOG(LogTemp, Log, TEXT("  兵權健康度: %.2f"), MilitaryAuthorityHealth);
 }
 
 bool UMingThreeAuthoritiesManager::Initialize()
 {
-    UE_LOG(LogTemp, Log, TEXT("三權管理器初始化"));
-    
     // 初始化三權健康度
     DaoAuthorityHealth = 1.0f;
     StrategyAuthorityHealth = 1.0f;
@@ -20,11 +53,6 @@ bool UMingThreeAuthoritiesManager::Initialize()
     PendingOrders.Empty();
     ExecutingOrders.Empty();
     ExecutionHistory.Empty();
-    
-    UE_LOG(LogTemp, Log, TEXT("✓ 三權管理器初始化完成"));
-    UE_LOG(LogTemp, Log, TEXT("  道權健康度: %.2f"), DaoAuthorityHealth);
-    UE_LOG(LogTemp, Log, TEXT("  策權健康度: %.2f"), StrategyAuthorityHealth);
-    UE_LOG(LogTemp, Log, TEXT("  兵權健康度: %.2f"), MilitaryAuthorityHealth);
     
     return true;
 }

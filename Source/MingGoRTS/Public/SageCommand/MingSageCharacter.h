@@ -5,8 +5,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "SageConmand/MingSageCharacterSystem.h"
-#include "SageConmand/MingYinYangFiveElements.h"
+#include "SageCommand/MingSageCharacterSystem.h"
+#include "SageCommand/MingYinYangFiveElements.h"
 #include "MingSageCharacter.generated.h"
 
 /**

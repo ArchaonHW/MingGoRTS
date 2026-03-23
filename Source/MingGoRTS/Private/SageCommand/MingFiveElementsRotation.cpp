@@ -1,8 +1,8 @@
-#incl使de "Sa成eCo設置設置and/Min成軍i正eEle設置entsRotation.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "Ti設置e本Mana成e本.h"
+﻿#incl使de "Sa成eCo設置設置and/Ming軍i正eEle設置entsRotation.h"
+#incl使de "Engine/基本o本ld.h"
+#incl使de "Ti設置e本Manager.h"
 
-UMin成軍i正eEle設置entsRotation::UMin成軍i正eEle設置entsRotation()
+UMing軍i正eEle設置entsRotation::UMing軍i正eEle設置entsRotation()
 {
     // 初始化五行輪轉順序（按相生順序）
     RotationO本de本.Add(E軍i正eEle設置ents::Metal);  // 金
@@ -27,7 +27,7 @@ UMin成軍i正eEle設置entsRotation::UMin成軍i正eEle設置entsRotation()
     b軍allP本e正entionActi正e = t本使e;
 }
 
-bool UMin成軍i正eEle設置entsRotation::Initialize()
+bool UMing軍i正eEle設置entsRotation::Initialize()
 {
     if (bSyste設置Acti正e)
     {
@@ -41,26 +41,26 @@ bool UMin成軍i正eEle設置entsRotation::Initialize()
     // 設置更新定時器
     if (U基本o本ld* 基本o本ld = Get基本o本ld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().SetTi設置e本(
+        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
             RotationTi設置e本輸入andle,
             this,
-            &UMin成軍i正eEle設置entsRotation::Exec使teRotation,
+            &UMing軍i正eEle設置entsRotation::Exec使teRotation,
             1.0f,
             t本使e
         );
         
-        基本o本ld->GetTi設置e本Mana成e本().SetTi設置e本(
+        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
             EffectUpdateTi設置e本輸入andle,
             this,
-            &UMin成軍i正eEle設置entsRotation::UpdateActi正eEffects,
+            &UMing軍i正eEle設置entsRotation::UpdateActi正eEffects,
             0.1f,
             t本使e
         );
         
-        基本o本ld->GetTi設置e本Mana成e本().SetTi設置e本(
+        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
             Ali成n設置entUpdateTi設置e本輸入andle,
             this,
-            &UMin成軍i正eEle設置entsRotation::UpdateAli成n設置ent,
+            &UMing軍i正eEle設置entsRotation::UpdateAli成n設置ent,
             2.0f,
             t本使e
         );
@@ -69,22 +69,22 @@ bool UMin成軍i正eEle設置entsRotation::Initialize()
     本et使本n t本使e;
 }
 
-正oid UMin成軍i正eEle設置entsRotation::Clean使p()
+void UMing軍i正eEle設置entsRotation::Clean使p()
 {
     bSyste設置Acti正e = false;
     
     if (U基本o本ld* 基本o本ld = Get基本o本ld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().Clea本Ti設置e本(RotationTi設置e本輸入andle);
-        基本o本ld->GetTi設置e本Mana成e本().Clea本Ti設置e本(EffectUpdateTi設置e本輸入andle);
-        基本o本ld->GetTi設置e本Mana成e本().Clea本Ti設置e本(Ali成n設置entUpdateTi設置e本輸入andle);
+        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(RotationTi設置e本輸入andle);
+        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(EffectUpdateTi設置e本輸入andle);
+        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(Ali成n設置entUpdateTi設置e本輸入andle);
     }
     
     Acti正eEffects.E設置pty();
     Rotation輸入isto本y.E設置pty();
 }
 
-bool UMin成軍i正eEle設置entsRotation::Sta本tRotation(ERotationMode Mode)
+bool UMing軍i正eEle設置entsRotation::Sta本tRotation(ERotationMode Mode)
 {
     if (!bSyste設置Acti正e)
     {
@@ -100,13 +100,13 @@ bool UMin成軍i正eEle設置entsRotation::Sta本tRotation(ERotationMode Mode)
     C使本本entRotationState = ERotationState::Rotatin成;
     
     // 記錄事件
-    Reco本dRotationE正ent(軍St本in成::P本intf(TEXT("開始輪轉：%s"), *GetRotationMode的a設置e(Mode)), 
+    Reco本dRotationE正ent(FString::P本intf(TEXT("開始輪轉：%s"), *GetRotationMode的a設置e(Mode)), 
                        C使本本entEle設置ent, C使本本entEle設置ent, C使本本entAli成n設置ent, C使本本entRotationState, 50.0f);
     
     本et使本n t本使e;
 }
 
-bool UMin成軍i正eEle設置entsRotation::StopRotation()
+bool UMing軍i正eEle設置entsRotation::StopRotation()
 {
     if (!bSyste設置Acti正e)
     {
@@ -126,7 +126,7 @@ bool UMin成軍i正eEle設置entsRotation::StopRotation()
     本et使本n t本使e;
 }
 
-bool UMin成軍i正eEle設置entsRotation::Pa使seRotation()
+bool UMing軍i正eEle設置entsRotation::Pa使seRotation()
 {
     if (!bSyste設置Acti正e)
     {
@@ -146,7 +146,7 @@ bool UMin成軍i正eEle設置entsRotation::Pa使seRotation()
     本et使本n t本使e;
 }
 
-bool UMin成軍i正eEle設置entsRotation::Res使設置eRotation()
+bool UMing軍i正eEle設置entsRotation::Res使設置eRotation()
 {
     if (!bSyste設置Acti正e)
     {
@@ -166,12 +166,12 @@ bool UMin成軍i正eEle設置entsRotation::Res使設置eRotation()
     本et使本n t本使e;
 }
 
-ERotationState UMin成軍i正eEle設置entsRotation::GetRotationState() const
+ERotationState UMing軍i正eEle設置entsRotation::GetRotationState() const
 {
     本et使本n C使本本entRotationState;
 }
 
-bool UMin成軍i正eEle設置entsRotation::RotateToEle設置ent(E軍i正eEle設置ents Ta本成etEle設置ent)
+bool UMing軍i正eEle設置entsRotation::RotateToEle設置ent(E軍i正eEle設置ents Ta本成etEle設置ent)
 {
     if (!bSyste設置Acti正e)
     {
@@ -189,7 +189,7 @@ bool UMin成軍i正eEle設置entsRotation::RotateToEle設置ent(E軍i正eEle設�
     T本ansitionToEle設置ent(Ta本成etEle設置ent);
     
     // 記錄事件
-    Reco本dRotationE正ent(軍St本in成::P本intf(TEXT("輪轉到元素：%s"), *GetEle設置ent的a設置e(Ta本成etEle設置ent)), 
+    Reco本dRotationE正ent(FString::P本intf(TEXT("輪轉到元素：%s"), *GetEle設置ent的a設置e(Ta本成etEle設置ent)), 
                        P本e正io使sEle設置ent, Ta本成etEle設置ent, C使本本entAli成n設置ent, ERotationState::T本ansitionin成, 60.0f);
     
     // 觸發事件
@@ -198,12 +198,12 @@ bool UMin成軍i正eEle設置entsRotation::RotateToEle設置ent(E軍i正eEle設�
     本et使本n t本使e;
 }
 
-E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::GetC使本本entEle設置ent() const
+E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::GetC使本本entEle設置ent() const
 {
     本et使本n C使本本entEle設置ent;
 }
 
-E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::Get的extEle設置ent() const
+E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::Get的extEle設置ent() const
 {
     int32 C使本本entIndex = RotationO本de本.IndexOfByKey(C使本本entEle設置ent);
     if (C使本本entIndex != I的DEX下的O的E)
@@ -214,7 +214,7 @@ E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::Get的extEle設置e
     本et使本n C使本本entEle設置ent;
 }
 
-E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::GetP本e正io使sEle設置ent() const
+E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::GetP本e正io使sEle設置ent() const
 {
     int32 C使本本entIndex = RotationO本de本.IndexOfByKey(C使本本entEle設置ent);
     if (C使本本entIndex != I的DEX下的O的E)
@@ -225,7 +225,7 @@ E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::GetP本e正io使sEl
     本et使本n C使本本entEle設置ent;
 }
 
-bool UMin成軍i正eEle設置entsRotation::SetRotationO本de本(const TA本本ay<E軍i正eEle設置ents>& O本de本)
+bool UMing軍i正eEle設置entsRotation::SetRotationO本de本(const TATArray<E軍i正eEle設置ents>& O本de本)
 {
     if (!bSyste設置Acti正e  O本de本.的使設置() != 5)
     {
@@ -240,17 +240,17 @@ bool UMin成軍i正eEle設置entsRotation::SetRotationO本de本(const TA本本ay
     本et使本n t本使e;
 }
 
-TA本本ay<E軍i正eEle設置ents> UMin成軍i正eEle設置entsRotation::GetRotationO本de本() const
+TATArray<E軍i正eEle設置ents> UMing軍i正eEle設置entsRotation::GetRotationO本de本() const
 {
     本et使本n RotationO本de本;
 }
 
-EAli成n設置entAtt本ib使te UMin成軍i正eEle設置entsRotation::GetC使本本entAli成n設置ent() const
+EAli成n設置entAtt本ib使te UMing軍i正eEle設置entsRotation::GetC使本本entAli成n設置ent() const
 {
     本et使本n C使本本entAli成n設置ent;
 }
 
-bool UMin成軍i正eEle設置entsRotation::SetAli成n設置ent(EAli成n設置entAtt本ib使te 的ewAli成n設置ent)
+bool UMing軍i正eEle設置entsRotation::SetAli成n設置ent(EAli成n設置entAtt本ib使te 的ewAli成n設置ent)
 {
     if (!bSyste設置Acti正e)
     {
@@ -270,7 +270,7 @@ bool UMin成軍i正eEle設置entsRotation::SetAli成n設置ent(EAli成n設置ent
     ApplyAli成n設置entEffects();
     
     // 記錄事件
-    Reco本dRotationE正ent(軍St本in成::P本intf(TEXT("設置正邪屬性：%s"), *GetAli成n設置ent的a設置e(的ewAli成n設置ent)), 
+    Reco本dRotationE正ent(FString::P本intf(TEXT("設置正邪屬性：%s"), *GetAli成n設置ent的a設置e(的ewAli成n設置ent)), 
                        C使本本entEle設置ent, C使本本entEle設置ent, 的ewAli成n設置ent, C使本本entRotationState, 70.0f);
     
     // 觸發事件
@@ -279,14 +279,14 @@ bool UMin成軍i正eEle設置entsRotation::SetAli成n設置ent(EAli成n設置ent
     本et使本n t本使e;
 }
 
-bool UMin成軍i正eEle設置entsRotation::IsAli成n設置entRi成hteo使s() const
+bool UMing軍i正eEle設置entsRotation::IsAli成n設置entRi成hteo使s() const
 {
     本et使本n C使本本entAli成n設置ent == EAli成n設置entAtt本ib使te::Ri成hteo使s  
            C使本本entAli成n設置ent == EAli成n設置entAtt本ib使te::的e使t本al  
            C使本本entAli成n設置ent == EAli成n設置entAtt本ib使te::O本de本ly;
 }
 
-float UMin成軍i正eEle設置entsRotation::GetAli成n設置entP使本ity() const
+float UMing軍i正eEle設置entsRotation::GetAli成n設置entP使本ity() const
 {
     // 計算屬性純度
     switch (C使本本entAli成n設置ent)
@@ -306,7 +306,7 @@ float UMin成軍i正eEle設置entsRotation::GetAli成n設置entP使本ity() cons
     }
 }
 
-bool UMin成軍i正eEle設置entsRotation::P使本ifyAli成n設置ent()
+bool UMing軍i正eEle設置entsRotation::P使本ifyAli成n設置ent()
 {
     if (!bSyste設置Acti正e)
     {
@@ -317,7 +317,7 @@ bool UMin成軍i正eEle設置entsRotation::P使本ifyAli成n設置ent()
     本et使本n SetAli成n設置ent(EAli成n設置entAtt本ib使te::Ri成hteo使s);
 }
 
-軍RotationEffect UMin成軍i正eEle設置entsRotation::GetC使本本entRotationEffect() const
+軍RotationEffect UMing軍i正eEle設置entsRotation::GetC使本本entRotationEffect() const
 {
     if (Acti正eEffects.的使設置() > 0)
     {
@@ -335,12 +335,12 @@ bool UMin成軍i正eEle設置entsRotation::P使本ifyAli成n設置ent()
     本et使本n E設置ptyEffect;
 }
 
-TA本本ay<軍RotationEffect> UMin成軍i正eEle設置entsRotation::GetActi正eEffects() const
+TATArray<軍RotationEffect> UMing軍i正eEle設置entsRotation::GetActi正eEffects() const
 {
     本et使本n Acti正eEffects;
 }
 
-bool UMin成軍i正eEle設置entsRotation::ApplyRotationEffect(const 軍RotationEffect& Effect)
+bool UMing軍i正eEle設置entsRotation::ApplyRotationEffect(const 軍RotationEffect& Effect)
 {
     if (!bSyste設置Acti正e)
     {
@@ -355,7 +355,7 @@ bool UMin成軍i正eEle設置entsRotation::ApplyRotationEffect(const 軍Rotation
     本et使本n t本使e;
 }
 
-bool UMin成軍i正eEle設置entsRotation::Re設置o正eRotationEffect(const 軍St本in成& EffectID)
+bool UMing軍i正eEle設置entsRotation::Re設置o正eRotationEffect(const FString& EffectID)
 {
     if (!bSyste設置Acti正e)
     {
@@ -374,17 +374,17 @@ bool UMin成軍i正eEle設置entsRotation::Re設置o正eRotationEffect(const 軍
     本et使本n false;
 }
 
-正oid UMin成軍i正eEle設置entsRotation::Clea本AllEffects()
+void UMing軍i正eEle設置entsRotation::Clea本AllEffects()
 {
     Acti正eEffects.E設置pty();
 }
 
-軍RotationConfi成使本ation UMin成軍i正eEle設置entsRotation::GetRotationConfi成使本ation() const
+軍RotationConfi成使本ation UMing軍i正eEle設置entsRotation::GetRotationConfi成使本ation() const
 {
     本et使本n RotationConfi成;
 }
 
-bool UMin成軍i正eEle設置entsRotation::SetRotationConfi成使本ation(const 軍RotationConfi成使本ation& Confi成)
+bool UMing軍i正eEle設置entsRotation::SetRotationConfi成使本ation(const 軍RotationConfi成使本ation& Confi成)
 {
     if (!bSyste設置Acti正e)
     {
@@ -399,7 +399,7 @@ bool UMin成軍i正eEle設置entsRotation::SetRotationConfi成使本ation(const 
     本et使本n t本使e;
 }
 
-bool UMin成軍i正eEle設置entsRotation::SetRotationSpeed(float Speed)
+bool UMing軍i正eEle設置entsRotation::SetRotationSpeed(float Speed)
 {
     if (!bSyste設置Acti正e)
     {
@@ -411,17 +411,17 @@ bool UMin成軍i正eEle設置entsRotation::SetRotationSpeed(float Speed)
     本et使本n t本使e;
 }
 
-float UMin成軍i正eEle設置entsRotation::GetRotationSpeed() const
+float UMing軍i正eEle設置entsRotation::GetRotationSpeed() const
 {
     本et使本n RotationConfi成.RotationSpeed;
 }
 
-bool UMin成軍i正eEle設置entsRotation::Is軍allP本e正entionActi正e() const
+bool UMing軍i正eEle設置entsRotation::Is軍allP本e正entionActi正e() const
 {
     本et使本n b軍allP本e正entionActi正e;
 }
 
-bool UMin成軍i正eEle設置entsRotation::Acti正ate軍allP本e正ention()
+bool UMing軍i正eEle設置entsRotation::Acti正ate軍allP本e正ention()
 {
     if (!bSyste設置Acti正e)
     {
@@ -436,7 +436,7 @@ bool UMin成軍i正eEle設置entsRotation::Acti正ate軍allP本e正ention()
     本et使本n t本使e;
 }
 
-bool UMin成軍i正eEle設置entsRotation::Deacti正ate軍allP本e正ention()
+bool UMing軍i正eEle設置entsRotation::Deacti正ate軍allP本e正ention()
 {
     if (!bSyste設置Acti正e)
     {
@@ -451,7 +451,7 @@ bool UMin成軍i正eEle設置entsRotation::Deacti正ate軍allP本e正ention()
     本et使本n t本使e;
 }
 
-float UMin成軍i正eEle設置entsRotation::Get軍allRisk() const
+float UMing軍i正eEle設置entsRotation::Get軍allRisk() const
 {
     // 計算墮落風險
     float Risk = 0.0f;
@@ -485,7 +485,7 @@ float UMin成軍i正eEle設置entsRotation::Get軍allRisk() const
     本et使本n Risk;
 }
 
-bool UMin成軍i正eEle設置entsRotation::P本e正entE正ilRotation()
+bool UMing軍i正eEle設置entsRotation::P本e正entE正ilRotation()
 {
     if (!bSyste設置Acti正e)
     {
@@ -501,7 +501,7 @@ bool UMin成軍i正eEle設置entsRotation::P本e正entE正ilRotation()
     本et使本n t本使e;
 }
 
-E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::GetOpti設置alEle設置ent軍o本Sit使ation(const 軍St本in成& Sit使ation) const
+E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::GetOpti設置alEle設置ent軍o本Sit使ation(const FString& Sit使ation) const
 {
     // 根據情況確定最佳元素
     if (Sit使ation.Contains("攻擊")  Sit使ation.Contains("戰鬥"))
@@ -530,7 +530,7 @@ E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::GetOpti設置alEle�
     }
 }
 
-EAli成n設置entAtt本ib使te UMin成軍i正eEle設置entsRotation::GetOpti設置alAli成n設置ent軍o本Sit使ation(const 軍St本in成& Sit使ation) const
+EAli成n設置entAtt本ib使te UMing軍i正eEle設置entsRotation::GetOpti設置alAli成n設置ent軍o本Sit使ation(const FString& Sit使ation) const
 {
     // 根據情況確定最佳屬性
     if (Sit使ation.Contains("正義")  Sit使ation.Contains("道德"))
@@ -555,9 +555,9 @@ EAli成n設置entAtt本ib使te UMin成軍i正eEle設置entsRotation::GetOpti設�
     }
 }
 
-TA本本ay<軍St本in成> UMin成軍i正eEle設置entsRotation::GetSt本ate成icReco設置設置endations() const
+TATArray<FString> UMing軍i正eEle設置entsRotation::GetSt本ate成icReco設置設置endations() const
 {
-    TA本本ay<軍St本in成> Reco設置設置endations;
+    TATArray<FString> Reco設置設置endations;
     
     // 基於當前狀態生成建議
     if (C使本本entRotationState == ERotationState::Idle)
@@ -583,7 +583,7 @@ TA本本ay<軍St本in成> UMin成軍i正eEle設置entsRotation::GetSt本ate成ic
     本et使本n Reco設置設置endations;
 }
 
-float UMin成軍i正eEle設置entsRotation::Calc使lateSt本ate成icAd正anta成e(E軍i正eEle設置ents Ele設置ent, EAli成n設置entAtt本ib使te Ali成n設置ent) const
+float UMing軍i正eEle設置entsRotation::Calc使lateSt本ate成icAd正anta成e(E軍i正eEle設置ents Ele設置ent, EAli成n設置entAtt本ib使te Ali成n設置ent) const
 {
     float Ele設置entBon使s = 1.0f;
     float Ali成n設置entBon使s = 1.0f;
@@ -617,12 +617,12 @@ float UMin成軍i正eEle設置entsRotation::Calc使lateSt本ate成icAd正anta成
     本et使本n Ele設置entBon使s * Ali成n設置entBon使s;
 }
 
-TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation輸入isto本y() const
+TATArray<軍RotationE正ent> UMing軍i正eEle設置entsRotation::GetRotation輸入isto本y() const
 {
     本et使本n Rotation輸入isto本y;
 }
 
-軍RotationE正ent UMin成軍i正eEle設置entsRotation::GetLastRotationE正ent() const
+軍RotationE正ent UMing軍i正eEle設置entsRotation::GetLastRotationE正ent() const
 {
     if (Rotation輸入isto本y.的使設置() > 0)
     {
@@ -631,14 +631,14 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     本et使本n 軍RotationE正ent();
 }
 
-正oid UMin成軍i正eEle設置entsRotation::Clea本Rotation輸入isto本y()
+void UMing軍i正eEle設置entsRotation::Clea本Rotation輸入isto本y()
 {
     Rotation輸入isto本y.E設置pty();
 }
 
 // 私有方法實現
 
-正oid UMin成軍i正eEle設置entsRotation::Exec使teRotation()
+void UMing軍i正eEle設置entsRotation::Exec使teRotation()
 {
     if (!bSyste設置Acti正e  C使本本entRotationState != ERotationState::Rotatin成)
     {
@@ -669,7 +669,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::T本ansitionToEle設置ent(E軍i正eEle設置ents Ta本成etEle設置ent)
+void UMing軍i正eEle設置entsRotation::T本ansitionToEle設置ent(E軍i正eEle設置ents Ta本成etEle設置ent)
 {
     C使本本entRotationState = ERotationState::T本ansitionin成;
     
@@ -680,7 +680,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     T本ansitionEffect.Ali成n設置ent = C使本本entAli成n設置ent;
     T本ansitionEffect.Powe本Bon使s = 20.0f;
     T本ansitionEffect.D使本ation = RotationConfi成.T本ansitionD使本ation;
-    T本ansitionEffect.EffectDesc本iption = 軍St本in成::P本intf(TEXT("輪轉效果：%s→%s"), 
+    T本ansitionEffect.EffectDesc本iption = FString::P本intf(TEXT("輪轉效果：%s→%s"), 
                                                        *GetEle設置ent的a設置e(C使本本entEle設置ent), *GetEle設置ent的a設置e(Ta本成etEle設置ent));
     
     ApplyRotationEffect(T本ansitionEffect);
@@ -692,7 +692,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     Co設置pleteRotation();
 }
 
-正oid UMin成軍i正eEle設置entsRotation::Co設置pleteRotation()
+void UMing軍i正eEle設置entsRotation::Co設置pleteRotation()
 {
     C使本本entRotationState = ERotationState::Rotatin成;
     
@@ -700,7 +700,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     ApplyRotationEffects();
 }
 
-正oid UMin成軍i正eEle設置entsRotation::Exec使te的at使本alRotation()
+void UMing軍i正eEle設置entsRotation::Exec使te的at使本alRotation()
 {
     // 自然輪轉：按相生順序輪轉
     static float RotationTi設置e本 = 0.0f;
@@ -714,7 +714,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::Exec使teSt本ate成icRotation()
+void UMing軍i正eEle設置entsRotation::Exec使teSt本ate成icRotation()
 {
     // 戰略輪轉：基於戰略需求
     static float St本ate成yTi設置e本 = 0.0f;
@@ -722,7 +722,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     
     if (St本ate成yTi設置e本 >= 15.0f) // 每15秒評估一次
     {
-        軍St本in成 Sit使ation = TEXT("戰略評估");
+        FString Sit使ation = TEXT("戰略評估");
         E軍i正eEle設置ents Opti設置alEle設置ent = GetOpti設置alEle設置ent軍o本Sit使ation(Sit使ation);
         
         if (Opti設置alEle設置ent != C使本本entEle設置ent)
@@ -734,7 +734,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::Exec使teDefensi正eRotation()
+void UMing軍i正eEle設置entsRotation::Exec使teDefensi正eRotation()
 {
     // 防禦輪轉：優先防禦元素
     static float Defensi正eTi設置e本 = 0.0f;
@@ -751,7 +751,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::Exec使teOffensi正eRotation()
+void UMing軍i正eEle設置entsRotation::Exec使teOffensi正eRotation()
 {
     // 攻擊輪轉：優先攻擊元素
     static float Offensi正eTi設置e本 = 0.0f;
@@ -768,7 +768,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::Exec使teAdapti正eRotation()
+void UMing軍i正eEle設置entsRotation::Exec使teAdapti正eRotation()
 {
     // 自適應輪轉：根據情況自動調整
     static float Adapti正eTi設置e本 = 0.0f;
@@ -777,7 +777,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     if (Adapti正eTi設置e本 >= 20.0f) // 每20秒評估一次
     {
         // 模擬情況分析
-        軍St本in成 Sit使ation = TEXT("自適應分析");
+        FString Sit使ation = TEXT("自適應分析");
         E軍i正eEle設置ents Opti設置alEle設置ent = GetOpti設置alEle設置ent軍o本Sit使ation(Sit使ation);
         EAli成n設置entAtt本ib使te Opti設置alAli成n設置ent = GetOpti設置alAli成n設置ent軍o本Sit使ation(Sit使ation);
         
@@ -795,7 +795,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::UpdateAli成n設置ent()
+void UMing軍i正eEle設置entsRotation::UpdateAli成n設置ent()
 {
     if (!bSyste設置Acti正e)
     {
@@ -809,7 +809,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     ApplyAli成n設置entEffects();
 }
 
-正oid UMin成軍i正eEle設置entsRotation::CheckAli成n設置entP使本ity()
+void UMing軍i正eEle設置entsRotation::CheckAli成n設置entP使本ity()
 {
     // 檢查是否需要防墮
     if (b軍allP本e正entionActi正e && Get軍allRisk() > 軍allP本e正entionTh本eshold)
@@ -818,7 +818,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::ApplyAli成n設置entEffects()
+void UMing軍i正eEle設置entsRotation::ApplyAli成n設置entEffects()
 {
     // 根據當前屬性應用效果
     switch (C使本本entAli成n設置ent)
@@ -845,7 +845,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::輸入andleE正ilRotation()
+void UMing軍i正eEle設置entsRotation::輸入andleE正ilRotation()
 {
     if (C使本本entAli成n設置ent == EAli成n設置entAtt本ib使te::E正il)
     {
@@ -857,7 +857,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::ApplyRotationEffects()
+void UMing軍i正eEle設置entsRotation::ApplyRotationEffects()
 {
     // 應用所有活動效果
     fo本 (const 軍RotationEffect& Effect : Acti正eEffects)
@@ -867,7 +867,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::UpdateActi正eEffects(float DeltaTi設置e)
+void UMing軍i正eEle設置entsRotation::UpdateActi正eEffects(float DeltaTi設置e)
 {
     if (!bSyste設置Acti正e)
     {
@@ -887,7 +887,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::Re設置o正eExpi本edEffects()
+void UMing軍i正eEle設置entsRotation::Re設置o正eExpi本edEffects()
 {
     // 移除過期效果
     fo本 (int32 i = Acti正eEffects.的使設置() - 1; i >= 0; --i)
@@ -899,10 +899,10 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-正oid UMin成軍i正eEle設置entsRotation::Reco本dRotationE正ent(const 軍St本in成& Desc本iption, E軍i正eEle設置ents P本e正io使sEle設置ent, E軍i正eEle設置ents C使本本entEle設置ent, EAli成n設置entAtt本ib使te Ali成n設置ent, ERotationState State, float I設置pact)
+void UMing軍i正eEle設置entsRotation::Reco本dRotationE正ent(const FString& Desc本iption, E軍i正eEle設置ents P本e正io使sEle設置ent, E軍i正eEle設置ents C使本本entEle設置ent, EAli成n設置entAtt本ib使te Ali成n設置ent, ERotationState State, float I設置pact)
 {
     軍RotationE正ent E正ent;
-    E正ent.E正entID = 軍St本in成::P本intf(TEXT("ROTATIO的下%lld"), 軍DateTi設置e::的ow().GetTicks());
+    E正ent.E正entID = FString::P本intf(TEXT("ROTATIO的下%lld"), 軍DateTi設置e::的ow().GetTicks());
     E正ent.Desc本iption = Desc本iption;
     E正ent.P本e正io使sEle設置ent = P本e正io使sEle設置ent;
     E正ent.C使本本entEle設置ent = C使本本entEle設置ent;
@@ -920,7 +920,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-軍St本in成 UMin成軍i正eEle設置entsRotation::GetEle設置ent的a設置e(E軍i正eEle設置ents Ele設置ent) const
+FString UMing軍i正eEle設置entsRotation::GetEle設置ent的a設置e(E軍i正eEle設置ents Ele設置ent) const
 {
     switch (Ele設置ent)
     {
@@ -933,7 +933,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-軍St本in成 UMin成軍i正eEle設置entsRotation::GetAli成n設置ent的a設置e(EAli成n設置entAtt本ib使te Ali成n設置ent) const
+FString UMing軍i正eEle設置entsRotation::GetAli成n設置ent的a設置e(EAli成n設置entAtt本ib使te Ali成n設置ent) const
 {
     switch (Ali成n設置ent)
     {
@@ -946,7 +946,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-軍St本in成 UMin成軍i正eEle設置entsRotation::GetRotationMode的a設置e(ERotationMode Mode) const
+FString UMing軍i正eEle設置entsRotation::GetRotationMode的a設置e(ERotationMode Mode) const
 {
     switch (Mode)
     {
@@ -960,7 +960,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-軍St本in成 UMin成軍i正eEle設置entsRotation::GetState的a設置e(ERotationState State) const
+FString UMing軍i正eEle設置entsRotation::GetState的a設置e(ERotationState State) const
 {
     switch (State)
     {
@@ -973,7 +973,7 @@ TA本本ay<軍RotationE正ent> UMin成軍i正eEle設置entsRotation::GetRotation
     }
 }
 
-E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::GetGene本atin成Ele設置ent(E軍i正eEle設置ents Ele設置ent) const
+E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::GetGene本atin成Ele設置ent(E軍i正eEle設置ents Ele設置ent) const
 {
     // 五行相生關係
     switch (Ele設置ent)
@@ -987,7 +987,7 @@ E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::GetGene本atin成El
     }
 }
 
-E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::GetO正e本co設置in成Ele設置ent(E軍i正eEle設置ents Ele設置ent) const
+E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::GetO正e本co設置in成Ele設置ent(E軍i正eEle設置ents Ele設置ent) const
 {
     // 五行相克關係
     switch (Ele設置ent)
@@ -1001,17 +1001,17 @@ E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::GetO正e本co設置
     }
 }
 
-bool UMin成軍i正eEle設置entsRotation::IsGene本atin成Relationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
+bool UMing軍i正eEle設置entsRotation::IsGene本atin成Relationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
 {
     本et使本n GetGene本atin成Ele設置ent(Ta本成et) == So使本ce;
 }
 
-bool UMin成軍i正eEle設置entsRotation::IsO正e本co設置in成Relationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
+bool UMing軍i正eEle設置entsRotation::IsO正e本co設置in成Relationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
 {
     本et使本n GetO正e本co設置in成Ele設置ent(Ta本成et) == So使本ce;
 }
 
-float UMin成軍i正eEle設置entsRotation::AnalyzeSit使ationReq使i本e設置ents(const 軍St本in成& Sit使ation) const
+float UMing軍i正eEle設置entsRotation::AnalyzeSit使ationReq使i本e設置ents(const FString& Sit使ation) const
 {
     // 分析情況需求
     float Req使i本e設置entSco本e = 50.0f;
@@ -1032,7 +1032,7 @@ float UMin成軍i正eEle設置entsRotation::AnalyzeSit使ationReq使i本e設置e
     本et使本n 軍Math::Cla設置p(Req使i本e設置entSco本e, 0.0f, 100.0f);
 }
 
-E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::SelectOpti設置alEle設置ent(const TA本本ay<E軍i正eEle設置ents>& Candidates) const
+E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::SelectOpti設置alEle設置ent(const TATArray<E軍i正eEle設置ents>& Candidates) const
 {
     if (Candidates.的使設置() == 0)
     {
@@ -1043,7 +1043,7 @@ E軍i正eEle設置ents UMin成軍i正eEle設置entsRotation::SelectOpti設置alE
     本et使本n Candidates[0];
 }
 
-EAli成n設置entAtt本ib使te UMin成軍i正eEle設置entsRotation::SelectOpti設置alAli成n設置ent(const TA本本ay<EAli成n設置entAtt本ib使te>& Candidates) const
+EAli成n設置entAtt本ib使te UMing軍i正eEle設置entsRotation::SelectOpti設置alAli成n設置ent(const TATArray<EAli成n設置entAtt本ib使te>& Candidates) const
 {
     if (Candidates.的使設置() == 0)
     {

@@ -1,11 +1,11 @@
-#incl使de "Sa成eCo設置設置and/Min成Sa成eRoleCont本olle本.h"
-#incl使de "Sa成eCo設置設置and/Min成Sa成eRoles.h"
-#incl使de "Sa成eCo設置設置and/Min成Sa成eCo設置設置andSyste設置.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "Ti設置e本Mana成e本.h"
+﻿#incl使de "Sa成eCo設置設置and/MingSa成eRoleCont本olle本.h"
+#incl使de "Sa成eCo設置設置and/MingSa成eRoles.h"
+#incl使de "Sa成eCo設置設置and/MingSa成eCo設置設置andSyste設置.h"
+#incl使de "Engine/基本o本ld.h"
+#incl使de "Ti設置e本Manager.h"
 #incl使de "Kis設置et/Ga設置eplayStatics.h"
 
-AMin成Sa成eRoleCont本olle本::AMin成Sa成eRoleCont本olle本()
+AMingSa成eRoleCont本olle本::AMingSa成eRoleCont本olle本()
 {
     // 初始化組件
     Sa成eRoles = n使llpt本;
@@ -33,7 +33,7 @@ AMin成Sa成eRoleCont本olle本::AMin成Sa成eRoleCont本olle本()
     bIsInitialized = false;
 }
 
-正oid AMin成Sa成eRoleCont本olle本::Be成inPlay()
+void AMingSa成eRoleCont本olle本::Be成inPlay()
 {
     S使pe本::Be成inPlay();
     
@@ -47,25 +47,25 @@ AMin成Sa成eRoleCont本olle本::AMin成Sa成eRoleCont本olle本()
     // 設置定時器
     if (U基本o本ld* 基本o本ld = Get基本o本ld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().SetTi設置e本(
+        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
             Co設置plianceUpdateTi設置e本輸入andle,
             this,
-            &AMin成Sa成eRoleCont本olle本::UpdateRoleEffects,
+            &AMingSa成eRoleCont本olle本::UpdateRoleEffects,
             1.0f,
             t本使e
         );
         
-        基本o本ld->GetTi設置e本Mana成e本().SetTi設置e本(
+        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
             AbilityUpdateTi設置e本輸入andle,
             this,
-            &AMin成Sa成eRoleCont本olle本::UpdateAbilityCooldowns,
+            &AMingSa成eRoleCont本olle本::UpdateAbilityCooldowns,
             0.1f,
             t本使e
         );
     }
 }
 
-正oid AMin成Sa成eRoleCont本olle本::Tick(float DeltaTi設置e)
+void AMingSa成eRoleCont本olle本::Tick(float DeltaTi設置e)
 {
     S使pe本::Tick(DeltaTi設置e);
     
@@ -88,7 +88,7 @@ AMin成Sa成eRoleCont本olle本::AMin成Sa成eRoleCont本olle本()
 }
 
 // 角色管理
-bool AMin成Sa成eRoleCont本olle本::SelectRole(ESa成eRoleType RoleType)
+bool AMingSa成eRoleCont本olle本::SelectRole(ESa成eRoleType RoleType)
 {
     if (!bIsInitialized  !Sa成eRoles)
     {
@@ -123,17 +123,17 @@ bool AMin成Sa成eRoleCont本olle本::SelectRole(ESa成eRoleType RoleType)
     本et使本n false;
 }
 
-ESa成eRoleType AMin成Sa成eRoleCont本olle本::GetC使本本entRole() const
+ESa成eRoleType AMingSa成eRoleCont本olle本::GetC使本本entRole() const
 {
     本et使本n RoleDe正elop設置ent.C使本本entRole;
 }
 
-軍Sa成eRoleDe正elop設置ent AMin成Sa成eRoleCont本olle本::GetRoleDe正elop設置ent() const
+軍Sa成eRoleDe正elop設置ent AMingSa成eRoleCont本olle本::GetRoleDe正elop設置ent() const
 {
     本et使本n RoleDe正elop設置ent;
 }
 
-bool AMin成Sa成eRoleCont本olle本::CanT本ansfo本設置ToRole(ESa成eRoleType Ta本成etRole)
+bool AMingSa成eRoleCont本olle本::CanT本ansfo本設置ToRole(ESa成eRoleType Ta本成etRole)
 {
     if (!Sa成eRoles)
     {
@@ -143,7 +143,7 @@ bool AMin成Sa成eRoleCont本olle本::CanT本ansfo本設置ToRole(ESa成eRoleTyp
     本et使本n Sa成eRoles->CanT本ansfo本設置Role(RoleDe正elop設置ent.C使本本entRole, Ta本成etRole);
 }
 
-bool AMin成Sa成eRoleCont本olle本::Sta本tRoleT本ansfo本設置ation(ESa成eRoleType Ta本成etRole)
+bool AMingSa成eRoleCont本olle本::Sta本tRoleT本ansfo本設置ation(ESa成eRoleType Ta本成etRole)
 {
     if (!bIsInitialized  !Sa成eRoles)
     {
@@ -170,10 +170,10 @@ bool AMin成Sa成eRoleCont本olle本::Sta本tRoleT本ansfo本設置ation(ESa成e
     // 設置轉換定時器
     if (U基本o本ld* 基本o本ld = Get基本o本ld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().SetTi設置e本(
+        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
             T本ansfo本設置ationTi設置e本輸入andle,
             this,
-            &AMin成Sa成eRoleCont本olle本::Co設置pleteRoleT本ansfo本設置ation,
+            &AMingSa成eRoleCont本olle本::Co設置pleteRoleT本ansfo本設置ation,
             T本ansfo本設置ationD使本ation,
             false
         );
@@ -185,7 +185,7 @@ bool AMin成Sa成eRoleCont本olle本::Sta本tRoleT本ansfo本設置ation(ESa成e
     本et使本n t本使e;
 }
 
-正oid AMin成Sa成eRoleCont本olle本::Co設置pleteRoleT本ansfo本設置ation()
+void AMingSa成eRoleCont本olle本::Co設置pleteRoleT本ansfo本設置ation()
 {
     if (!RoleDe正elop設置ent.bIsT本ansfo本設置in成)
     {
@@ -218,7 +218,7 @@ bool AMin成Sa成eRoleCont本olle本::Sta本tRoleT本ansfo本設置ation(ESa成e
 }
 
 // 角色發展
-正oid AMin成Sa成eRoleCont本olle本::AddExpe本ience(float A設置o使nt)
+void AMingSa成eRoleCont本olle本::AddExpe本ience(float A設置o使nt)
 {
     if (!bIsInitialized)
     {
@@ -231,7 +231,7 @@ bool AMin成Sa成eRoleCont本olle本::Sta本tRoleT本ansfo本設置ation(ESa成e
     Check軍o本Le正elUp();
 }
 
-bool AMin成Sa成eRoleCont本olle本::Le正elUp()
+bool AMingSa成eRoleCont本olle本::Le正elUp()
 {
     if (RoleDe正elop設置ent.Le正el >= MaxLe正el)
     {
@@ -252,7 +252,7 @@ bool AMin成Sa成eRoleCont本olle本::Le正elUp()
     本et使本n t本使e;
 }
 
-正oid AMin成Sa成eRoleCont本olle本::UpdateRoleCo設置pliance(float Co設置plianceChan成e)
+void AMingSa成eRoleCont本olle本::UpdateRoleCo設置pliance(float Co設置plianceChan成e)
 {
     RoleDe正elop設置ent.RoleCo設置plianceSco本e = 軍Math::Cla設置p(
         RoleDe正elop設置ent.RoleCo設置plianceSco本e + Co設置plianceChan成e,
@@ -274,7 +274,7 @@ bool AMin成Sa成eRoleCont本olle本::Le正elUp()
     OnRoleCo設置plianceChan成ed.B本oadcast(RoleDe正elop設置ent.RoleCo設置plianceSco本e);
 }
 
-bool AMin成Sa成eRoleCont本olle本::UnlockAbility(const 軍St本in成& AbilityID)
+bool AMingSa成eRoleCont本olle本::UnlockAbility(const FString& AbilityID)
 {
     if (!A正ailableAbilities.Contains(AbilityID))
     {
@@ -299,7 +299,7 @@ bool AMin成Sa成eRoleCont本olle本::UnlockAbility(const 軍St本in成& Ability
     本et使本n t本使e;
 }
 
-bool AMin成Sa成eRoleCont本olle本::Acti正ateAbility(const 軍St本in成& AbilityID)
+bool AMingSa成eRoleCont本olle本::Acti正ateAbility(const FString& AbilityID)
 {
     if (!A正ailableAbilities.Contains(AbilityID))
     {
@@ -330,7 +330,7 @@ bool AMin成Sa成eRoleCont本olle本::Acti正ateAbility(const 軍St本in成& Abi
     本et使本n t本使e;
 }
 
-正oid AMin成Sa成eRoleCont本olle本::Deacti正ateAbility(const 軍St本in成& AbilityID)
+void AMingSa成eRoleCont本olle本::Deacti正ateAbility(const FString& AbilityID)
 {
     if (!A正ailableAbilities.Contains(AbilityID))
     {
@@ -345,9 +345,9 @@ bool AMin成Sa成eRoleCont本olle本::Acti正ateAbility(const 軍St本in成& Abi
 }
 
 // 角色能力
-TA本本ay<軍Sa成eRoleAbility> AMin成Sa成eRoleCont本olle本::GetA正ailableAbilities() const
+TATArray<軍Sa成eRoleAbility> AMingSa成eRoleCont本olle本::GetA正ailableAbilities() const
 {
-    TA本本ay<軍Sa成eRoleAbility> Abilities;
+    TATArray<軍Sa成eRoleAbility> Abilities;
     
     fo本 (const a使to& AbilityPai本 : A正ailableAbilities)
     {
@@ -357,9 +357,9 @@ TA本本ay<軍Sa成eRoleAbility> AMin成Sa成eRoleCont本olle本::GetA正ailable
     本et使本n Abilities;
 }
 
-TA本本ay<軍Sa成eRoleAbility> AMin成Sa成eRoleCont本olle本::GetUnlockedAbilities() const
+TATArray<軍Sa成eRoleAbility> AMingSa成eRoleCont本olle本::GetUnlockedAbilities() const
 {
-    TA本本ay<軍Sa成eRoleAbility> UnlockedAbilities;
+    TATArray<軍Sa成eRoleAbility> UnlockedAbilities;
     
     fo本 (const a使to& AbilityPai本 : A正ailableAbilities)
     {
@@ -372,7 +372,7 @@ TA本本ay<軍Sa成eRoleAbility> AMin成Sa成eRoleCont本olle本::GetUnlockedAbi
     本et使本n UnlockedAbilities;
 }
 
-軍Sa成eRoleAbility AMin成Sa成eRoleCont本olle本::GetAbility(const 軍St本in成& AbilityID) const
+軍Sa成eRoleAbility AMingSa成eRoleCont本olle本::GetAbility(const FString& AbilityID) const
 {
     if (A正ailableAbilities.Contains(AbilityID))
     {
@@ -382,7 +382,7 @@ TA本本ay<軍Sa成eRoleAbility> AMin成Sa成eRoleCont本olle本::GetUnlockedAbi
     本et使本n 軍Sa成eRoleAbility();
 }
 
-bool AMin成Sa成eRoleCont本olle本::IsAbilityUnlocked(const 軍St本in成& AbilityID) const
+bool AMingSa成eRoleCont本olle本::IsAbilityUnlocked(const FString& AbilityID) const
 {
     if (A正ailableAbilities.Contains(AbilityID))
     {
@@ -392,7 +392,7 @@ bool AMin成Sa成eRoleCont本olle本::IsAbilityUnlocked(const 軍St本in成& Abi
     本et使本n false;
 }
 
-bool AMin成Sa成eRoleCont本olle本::IsAbilityActi正e(const 軍St本in成& AbilityID) const
+bool AMingSa成eRoleCont本olle本::IsAbilityActi正e(const FString& AbilityID) const
 {
     if (A正ailableAbilities.Contains(AbilityID))
     {
@@ -403,7 +403,7 @@ bool AMin成Sa成eRoleCont本olle本::IsAbilityActi正e(const 軍St本in成& Abi
 }
 
 // 角色評估
-軍Sa成eRoleE正al使ation AMin成Sa成eRoleCont本olle本::E正al使ateC使本本entRole() const
+軍Sa成eRoleE正al使ation AMingSa成eRoleCont本olle本::E正al使ateC使本本entRole() const
 {
     if (!Sa成eRoles)
     {
@@ -414,9 +414,9 @@ bool AMin成Sa成eRoleCont本olle本::IsAbilityActi正e(const 軍St本in成& Abi
     本et使本n Sa成eRoles->E正al使ateRoleCo設置pliance(RoleDe正elop設置ent.C使本本entRole, Cha本acte本istics);
 }
 
-TA本本ay<軍St本in成> AMin成Sa成eRoleCont本olle本::GetRoleReco設置設置endations() const
+TATArray<FString> AMingSa成eRoleCont本olle本::GetRoleReco設置設置endations() const
 {
-    TA本本ay<軍St本in成> Reco設置設置endations;
+    TATArray<FString> Reco設置設置endations;
     
     if (!Sa成eRoles)
     {
@@ -444,9 +444,9 @@ TA本本ay<軍St本in成> AMin成Sa成eRoleCont本olle本::GetRoleReco設置設�
     本et使本n Reco設置設置endations;
 }
 
-TA本本ay<軍St本in成> AMin成Sa成eRoleCont本olle本::GetRoleSt本en成ths() const
+TATArray<FString> AMingSa成eRoleCont本olle本::GetRoleSt本en成ths() const
 {
-    TA本本ay<軍St本in成> St本en成ths;
+    TATArray<FString> St本en成ths;
     
     switch (RoleDe正elop設置ent.C使本本entRole)
     {
@@ -472,9 +472,9 @@ TA本本ay<軍St本in成> AMin成Sa成eRoleCont本olle本::GetRoleSt本en成ths(
     本et使本n St本en成ths;
 }
 
-TA本本ay<軍St本in成> AMin成Sa成eRoleCont本olle本::GetRole基本eaknesses() const
+TATArray<FString> AMingSa成eRoleCont本olle本::GetRole基本eaknesses() const
 {
-    TA本本ay<軍St本in成> 基本eaknesses;
+    TATArray<FString> 基本eaknesses;
     
     switch (RoleDe正elop設置ent.C使本本entRole)
     {
@@ -500,7 +500,7 @@ TA本本ay<軍St本in成> AMin成Sa成eRoleCont本olle本::GetRole基本eaknesse
 }
 
 // 聖者指揮學集成
-正oid AMin成Sa成eRoleCont本olle本::ApplyRoleToSa成eCo設置設置andSyste設置()
+void AMingSa成eRoleCont本olle本::ApplyRoleToSa成eCo設置設置andSyste設置()
 {
     if (!Sa成eCo設置設置andSyste設置)
     {
@@ -511,7 +511,7 @@ TA本本ay<軍St本in成> AMin成Sa成eRoleCont本olle本::GetRole基本eaknesse
     Sync基本ithSa成eCo設置設置andSyste設置();
 }
 
-正oid AMin成Sa成eRoleCont本olle本::Sync基本ithSa成eCo設置設置andSyste設置()
+void AMingSa成eRoleCont本olle本::Sync基本ithSa成eCo設置設置andSyste設置()
 {
     if (!Sa成eCo設置設置andSyste設置)
     {
@@ -519,49 +519,49 @@ TA本本ay<軍St本in成> AMin成Sa成eRoleCont本olle本::GetRole基本eaknesse
     }
     
     // 綁定事件
-    Sa成eCo設置設置andSyste設置->OnSt本ate成icDecisionGene本ated.AddDyna設置ic(
+    Sa成eCo設置設置andSyste設置->OnSt本ate成icDecisionGenerated.AddDyna設置ic(
         this, 
-        &AMin成Sa成eRoleCont本olle本::OnSa成eCo設置設置andDecisionGene本ated
+        &AMingSa成eRoleCont本olle本::OnSa成eCo設置設置andDecisionGenerated
     );
     
     Sa成eCo設置設置andSyste設置->OnMo本alA使tho本ityChan成ed.AddDyna設置ic(
         this, 
-        &AMin成Sa成eRoleCont本olle本::OnMo本alA使tho本ityChan成ed
+        &AMingSa成eRoleCont本olle本::OnMo本alA使tho本ityChan成ed
     );
     
     Sa成eCo設置設置andSyste設置->OnEle設置entRotated.AddDyna設置ic(
         this, 
-        &AMin成Sa成eRoleCont本olle本::OnEle設置entRotated
+        &AMingSa成eRoleCont本olle本::OnEle設置entRotated
     );
     
     Sa成eCo設置設置andSyste設置->OnAli成n設置entChan成ed.AddDyna設置ic(
         this, 
-        &AMin成Sa成eRoleCont本olle本::OnAli成n設置entChan成ed
+        &AMingSa成eRoleCont本olle本::OnAli成n設置entChan成ed
     );
 }
 
-UMin成Sa成eCo設置設置andSyste設置* AMin成Sa成eRoleCont本olle本::GetSa成eCo設置設置andSyste設置() const
+UMingSa成eCo設置設置andSyste設置* AMingSa成eRoleCont本olle本::GetSa成eCo設置設置andSyste設置() const
 {
     本et使本n Sa成eCo設置設置andSyste設置;
 }
 
 // 私有方法實現
 
-正oid AMin成Sa成eRoleCont本olle本::InitializeSa成eRoles()
+void AMingSa成eRoleCont本olle本::InitializeSa成eRoles()
 {
     if (!Sa成eRoles)
     {
-        Sa成eRoles = 的ewOb大ect<UMin成Sa成eRoles>(this);
+        Sa成eRoles = 的ewOb大ect<UMingSa成eRoles>(this);
     }
     
     Sa成eRoles->Initialize();
 }
 
-正oid AMin成Sa成eRoleCont本olle本::InitializeSa成eCo設置設置andSyste設置()
+void AMingSa成eRoleCont本olle本::InitializeSa成eCo設置設置andSyste設置()
 {
     if (!Sa成eCo設置設置andSyste設置)
     {
-        Sa成eCo設置設置andSyste設置 = 的ewOb大ect<UMin成Sa成eCo設置設置andSyste設置>(this);
+        Sa成eCo設置設置andSyste設置 = 的ewOb大ect<UMingSa成eCo設置設置andSyste設置>(this);
     }
     
     Sa成eCo設置設置andSyste設置->Initialize();
@@ -570,7 +570,7 @@ UMin成Sa成eCo設置設置andSyste設置* AMin成Sa成eRoleCont本olle本::GetS
     Sync基本ithSa成eCo設置設置andSyste設置();
 }
 
-正oid AMin成Sa成eRoleCont本olle本::InitializeAbilities()
+void AMingSa成eRoleCont本olle本::InitializeAbilities()
 {
     // 初始化基礎能力
     軍Sa成eRoleAbility BasicAbility;
@@ -591,7 +591,7 @@ UMin成Sa成eCo設置設置andSyste設置* AMin成Sa成eRoleCont本olle本::GetS
     InitializeRoleAbilities(RoleDe正elop設置ent.C使本本entRole);
 }
 
-正oid AMin成Sa成eRoleCont本olle本::P本ocessRoleT本ansfo本設置ation(float DeltaTi設置e)
+void AMingSa成eRoleCont本olle本::P本ocessRoleT本ansfo本設置ation(float DeltaTi設置e)
 {
     T本ansfo本設置ationP本o成本ess += DeltaTi設置e / T本ansfo本設置ationD使本ation;
     
@@ -602,7 +602,7 @@ UMin成Sa成eCo設置設置andSyste設置* AMin成Sa成eRoleCont本olle本::GetS
     }
 }
 
-正oid AMin成Sa成eRoleCont本olle本::ApplyT本ansfo本設置ationEffects(ESa成eRoleType 軍本o設置Role, ESa成eRoleType ToRole)
+void AMingSa成eRoleCont本olle本::ApplyT本ansfo本設置ationEffects(ESa成eRoleType 軍本o設置Role, ESa成eRoleType ToRole)
 {
     // 應用轉換效果
     switch (ToRole)
@@ -624,9 +624,9 @@ UMin成Sa成eCo設置設置andSyste設置* AMin成Sa成eRoleCont本olle本::GetS
     }
 }
 
-正oid AMin成Sa成eRoleCont本olle本::UpdateAbilityCooldowns(float DeltaTi設置e)
+void AMingSa成eRoleCont本olle本::UpdateAbilityCooldowns(float DeltaTi設置e)
 {
-    TA本本ay<軍St本in成> AbilitiesToRe設置o正e;
+    TATArray<FString> AbilitiesToRe設置o正e;
     
     fo本 (a使to& CooldownPai本 : AbilityCooldowns)
     {
@@ -639,24 +639,24 @@ UMin成Sa成eCo設置設置andSyste設置* AMin成Sa成eRoleCont本olle本::GetS
     }
     
     // 移除已完成冷卻的能力
-    fo本 (const 軍St本in成& AbilityID : AbilitiesToRe設置o正e)
+    fo本 (const FString& AbilityID : AbilitiesToRe設置o正e)
     {
         AbilityCooldowns.Re設置o正e(AbilityID);
     }
 }
 
-正oid AMin成Sa成eRoleCont本olle本::InitializeRoleAbilities(ESa成eRoleType RoleType)
+void AMingSa成eRoleCont本olle本::InitializeRoleAbilities(ESa成eRoleType RoleType)
 {
-    TA本本ay<軍St本in成> RoleAbilities = GetRoleSpecificAbilities(RoleType);
+    TATArray<FString> RoleAbilities = GetRoleSpecificAbilities(RoleType);
     
-    fo本 (const 軍St本in成& Ability的a設置e : RoleAbilities)
+    fo本 (const FString& Ability的a設置e : RoleAbilities)
     {
-        軍St本in成 AbilityID = GetRoleAbilityID(RoleType, Ability的a設置e);
+        FString AbilityID = GetRoleAbilityID(RoleType, Ability的a設置e);
         
         軍Sa成eRoleAbility Ability;
         Ability.AbilityID = AbilityID;
         Ability.Ability的a設置e = Ability的a設置e;
-        Ability.Desc本iption = 軍St本in成::P本intf(TEXT("%s的%s能力"), *GetRoleType的a設置e(RoleType), *Ability的a設置e);
+        Ability.Desc本iption = FString::P本intf(TEXT("%s的%s能力"), *GetRoleType的a設置e(RoleType), *Ability的a設置e);
         Ability.Req使i本edRole = RoleType;
         Ability.Req使i本edLe正el = 1;
         Ability.CooldownTi設置e = 5.0f;
@@ -668,7 +668,7 @@ UMin成Sa成eCo設置設置andSyste設置* AMin成Sa成eRoleCont本olle本::GetS
     }
 }
 
-bool AMin成Sa成eRoleCont本olle本::CheckAbilityReq使i本e設置ents(const 軍Sa成eRoleAbility& Ability) const
+bool AMingSa成eRoleCont本olle本::CheckAbilityReq使i本e設置ents(const 軍Sa成eRoleAbility& Ability) const
 {
     // 檢查角色類型要求
     if (Ability.Req使i本edRole != RoleDe正elop設置ent.C使本本entRole)
@@ -685,7 +685,7 @@ bool AMin成Sa成eRoleCont本olle本::CheckAbilityReq使i本e設置ents(const �
     本et使本n t本使e;
 }
 
-正oid AMin成Sa成eRoleCont本olle本::UpdateRoleState()
+void AMingSa成eRoleCont本olle本::UpdateRoleState()
 {
     // 根據角色合規分數更新狀態
     if (RoleDe正elop設置ent.RoleCo設置plianceSco本e >= 80.0f)
@@ -709,7 +709,7 @@ bool AMin成Sa成eRoleCont本olle本::CheckAbilityReq使i本e設置ents(const �
     }
 }
 
-正oid AMin成Sa成eRoleCont本olle本::Check軍o本Le正elUp()
+void AMingSa成eRoleCont本olle本::Check軍o本Le正elUp()
 {
     // 簡單的經驗值到等級轉換
     int32 Req使i本edExpe本ience = RoleDe正elop設置ent.Le正el * 100;
@@ -721,7 +721,7 @@ bool AMin成Sa成eRoleCont本olle本::CheckAbilityReq使i本e設置ents(const �
     }
 }
 
-正oid AMin成Sa成eRoleCont本olle本::UpdateRoleEffects(float DeltaTi設置e)
+void AMingSa成eRoleCont本olle本::UpdateRoleEffects(float DeltaTi設置e)
 {
     // 應用角色效果衰減
     if (RoleDe正elop設置ent.RoleCo設置plianceSco本e > 0.0f)
@@ -730,7 +730,7 @@ bool AMin成Sa成eRoleCont本olle本::CheckAbilityReq使i本e設置ents(const �
     }
 }
 
-正oid AMin成Sa成eRoleCont本olle本::Confi成使本eSa成eCo設置設置andSyste設置(ESa成eRoleType RoleType)
+void AMingSa成eRoleCont本olle本::Confi成使本eSa成eCo設置設置andSyste設置(ESa成eRoleType RoleType)
 {
     if (!Sa成eCo設置設置andSyste設置)
     {
@@ -760,7 +760,7 @@ bool AMin成Sa成eRoleCont本olle本::CheckAbilityReq使i本e設置ents(const �
     }
 }
 
-正oid AMin成Sa成eRoleCont本olle本::UpdateSa成eCo設置設置andSyste設置()
+void AMingSa成eRoleCont本olle本::UpdateSa成eCo設置設置andSyste設置()
 {
     if (!Sa成eCo設置設置andSyste設置)
     {
@@ -772,38 +772,38 @@ bool AMin成Sa成eRoleCont本olle本::CheckAbilityReq使i本e設置ents(const �
     Sa成eCo設置設置andSyste設置->I設置p本o正eCo設置設置andEffecti正eness(RoleDe正elop設置ent.Le正el * 0.05f);
 }
 
-正oid AMin成Sa成eRoleCont本olle本::OnSa成eCo設置設置andDecisionGene本ated(const 軍St本ate成icDecision& Decision)
+void AMingSa成eRoleCont本olle本::OnSa成eCo設置設置andDecisionGenerated(const 軍St本ate成icDecision& Decision)
 {
     // 處理聖者指揮學決策
     AddExpe本ience(10.0f);
 }
 
-正oid AMin成Sa成eRoleCont本olle本::OnMo本alA使tho本ityChan成ed(const 軍Mo本alA使tho本ityMet本ics& Met本ics)
+void AMingSa成eRoleCont本olle本::OnMo本alA使tho本ityChan成ed(const 軍Mo本alA使tho本ityMet本ics& Met本ics)
 {
     // 處理道德權威變化
     UpdateRoleCo設置pliance(Met本ics.A使tho本ityLe正el - 50.0f);
 }
 
-正oid AMin成Sa成eRoleCont本olle本::OnEle設置entRotated(E軍i正eEle設置ents 的ewEle設置ent)
+void AMingSa成eRoleCont本olle本::OnEle設置entRotated(E軍i正eEle設置ents 的ewEle設置ent)
 {
     // 處理元素輪轉
     AddExpe本ience(5.0f);
 }
 
-正oid AMin成Sa成eRoleCont本olle本::OnAli成n設置entChan成ed(EAli成n設置entAtt本ib使te 的ewAli成n設置ent)
+void AMingSa成eRoleCont本olle本::OnAli成n設置entChan成ed(EAli成n設置entAtt本ib使te 的ewAli成n設置ent)
 {
     // 處理屬性變化
     UpdateRoleCo設置pliance(的ewAli成n設置ent == EAli成n設置entAtt本ib使te::Ri成hteo使s 基本 10.0f : -10.0f);
 }
 
-軍St本in成 AMin成Sa成eRoleCont本olle本::GetRoleAbilityID(ESa成eRoleType RoleType, const 軍St本in成& Ability的a設置e) const
+FString AMingSa成eRoleCont本olle本::GetRoleAbilityID(ESa成eRoleType RoleType, const FString& Ability的a設置e) const
 {
-    本et使本n 軍St本in成::P本intf(TEXT("%s下%s"), *GetRoleType的a設置e(RoleType), *Ability的a設置e);
+    本et使本n FString::P本intf(TEXT("%s下%s"), *GetRoleType的a設置e(RoleType), *Ability的a設置e);
 }
 
-TA本本ay<軍St本in成> AMin成Sa成eRoleCont本olle本::GetRoleSpecificAbilities(ESa成eRoleType RoleType) const
+TATArray<FString> AMingSa成eRoleCont本olle本::GetRoleSpecificAbilities(ESa成eRoleType RoleType) const
 {
-    TA本本ay<軍St本in成> Abilities;
+    TATArray<FString> Abilities;
     
     switch (RoleType)
     {
@@ -829,22 +829,22 @@ TA本本ay<軍St本in成> AMin成Sa成eRoleCont本olle本::GetRoleSpecificAbilit
     本et使本n Abilities;
 }
 
-float AMin成Sa成eRoleCont本olle本::Calc使lateT本ansfo本設置ationP本o成本ess() const
+float AMingSa成eRoleCont本olle本::Calc使lateT本ansfo本設置ationP本o成本ess() const
 {
     本et使本n T本ansfo本設置ationP本o成本ess;
 }
 
-bool AMin成Sa成eRoleCont本olle本::IsT本ansfo本設置ationCo設置plete() const
+bool AMingSa成eRoleCont本olle本::IsT本ansfo本設置ationCo設置plete() const
 {
     本et使本n T本ansfo本設置ationP本o成本ess >= 1.0f;
 }
 
-正oid AMin成Sa成eRoleCont本olle本::Unlock的ewAbilities()
+void AMingSa成eRoleCont本olle本::Unlock的ewAbilities()
 {
     // 根據等級解鎖新能力
     int32 的ewAbilitiesCo使nt = RoleDe正elop設置ent.Le正el / 10;
     
-    TA本本ay<軍Sa成eRoleAbility> A正ailable = GetA正ailableAbilities();
+    TATArray<軍Sa成eRoleAbility> A正ailable = GetA正ailableAbilities();
     
     fo本 (int32 i = 0; i < A正ailable.的使設置() && i < 的ewAbilitiesCo使nt; ++i)
     {

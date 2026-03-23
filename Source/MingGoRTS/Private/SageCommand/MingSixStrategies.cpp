@@ -1,8 +1,8 @@
-#incl使de "Sa成eCo設置設置and/Min成SixSt本ate成ies.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "Ti設置e本Mana成e本.h"
+﻿#incl使de "Sa成eCo設置設置and/MingSixSt本ate成ies.h"
+#incl使de "Engine/基本o本ld.h"
+#incl使de "Ti設置e本Manager.h"
 
-UMin成SixSt本ate成ies::UMin成SixSt本ate成ies()
+UMingSixSt本ate成ies::UMingSixSt本ate成ies()
 {
     // 初始化策略狀態
     St本ate成yStates.Add(ESixSt本ate成yType::輸入ea正enSt本ate成y, ESt本ate成yState::Plannin成);
@@ -13,7 +13,7 @@ UMin成SixSt本ate成ies::UMin成SixSt本ate成ies()
     St本ate成yStates.Add(ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y, ESt本ate成yState::Plannin成);
 }
 
-bool UMin成SixSt本ate成ies::Initialize()
+bool UMingSixSt本ate成ies::Initialize()
 {
     if (bSyste設置Acti正e)
     {
@@ -27,10 +27,10 @@ bool UMin成SixSt本ate成ies::Initialize()
     // 設置執行更新定時器
     if (U基本o本ld* 基本o本ld = Get基本o本ld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().SetTi設置e本(
+        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
             Exec使tionUpdateTi設置e本,
             this,
-            &UMin成SixSt本ate成ies::UpdateSt本ate成yExec使tion,
+            &UMingSixSt本ate成ies::UpdateSt本ate成yExec使tion,
             0.1f,
             t本使e
         );
@@ -39,13 +39,13 @@ bool UMin成SixSt本ate成ies::Initialize()
     本et使本n t本使e;
 }
 
-正oid UMin成SixSt本ate成ies::Clean使p()
+void UMingSixSt本ate成ies::Clean使p()
 {
     bSyste設置Acti正e = false;
     
     if (U基本o本ld* 基本o本ld = Get基本o本ld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().Clea本Ti設置e本(Exec使tionUpdateTi設置e本);
+        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(Exec使tionUpdateTi設置e本);
     }
     
     St本ate成yStates.E設置pty();
@@ -54,7 +54,7 @@ bool UMin成SixSt本ate成ies::Initialize()
     Acti正eSt本ate成ies.E設置pty();
 }
 
-軍St本ate成yE正al使ation UMin成SixSt本ate成ies::E正al使ateSt本ate成y(ESixSt本ate成yType St本ate成yType, const 軍St本in成& Context)
+軍St本ate成yE正al使ation UMingSixSt本ate成ies::E正al使ateSt本ate成y(ESixSt本ate成yType St本ate成yType, const FString& Context)
 {
     軍St本ate成yE正al使ation E正al使ation;
     E正al使ation.St本ate成yType = St本ate成yType;
@@ -108,9 +108,9 @@ bool UMin成SixSt本ate成ies::Initialize()
     本et使本n E正al使ation;
 }
 
-TA本本ay<軍St本ate成yE正al使ation> UMin成SixSt本ate成ies::E正al使ateAllSt本ate成ies(const 軍St本in成& Context)
+TATArray<軍St本ate成yE正al使ation> UMingSixSt本ate成ies::E正al使ateAllSt本ate成ies(const FString& Context)
 {
-    TA本本ay<軍St本ate成yE正al使ation> E正al使ations;
+    TATArray<軍St本ate成yE正al使ation> E正al使ations;
     
     // 評估所有六種策略
     E正al使ations.Add(E正al使ateSt本ate成y(ESixSt本ate成yType::輸入ea正enSt本ate成y, Context));
@@ -123,9 +123,9 @@ TA本本ay<軍St本ate成yE正al使ation> UMin成SixSt本ate成ies::E正al使ate
     本et使本n E正al使ations;
 }
 
-ESixSt本ate成yType UMin成SixSt本ate成ies::GetOpti設置alSt本ate成y(const 軍St本in成& Context)
+ESixSt本ate成yType UMingSixSt本ate成ies::GetOpti設置alSt本ate成y(const FString& Context)
 {
-    TA本本ay<軍St本ate成yE正al使ation> E正al使ations = E正al使ateAllSt本ate成ies(Context);
+    TATArray<軍St本ate成yE正al使ation> E正al使ations = E正al使ateAllSt本ate成ies(Context);
     
     ESixSt本ate成yType Opti設置alSt本ate成y = ESixSt本ate成yType::輸入ea正enSt本ate成y;
     float MaxSt本ate成icVal使e = 0.0f;
@@ -142,10 +142,10 @@ ESixSt本ate成yType UMin成SixSt本ate成ies::GetOpti設置alSt本ate成y(const
     本et使本n Opti設置alSt本ate成y;
 }
 
-TA本本ay<軍St本in成> UMin成SixSt本ate成ies::GetSt本ate成yReco設置設置endations(const 軍St本in成& Context)
+TATArray<FString> UMingSixSt本ate成ies::GetSt本ate成yReco設置設置endations(const FString& Context)
 {
-    TA本本ay<軍St本in成> Reco設置設置endations;
-    TA本本ay<軍St本ate成yE正al使ation> E正al使ations = E正al使ateAllSt本ate成ies(Context);
+    TATArray<FString> Reco設置設置endations;
+    TATArray<軍St本ate成yE正al使ation> E正al使ations = E正al使ateAllSt本ate成ies(Context);
     
     // 按戰略價值排序
     E正al使ations.So本t([](const 軍St本ate成yE正al使ation& A, const 軍St本ate成yE正al使ation& B)
@@ -157,14 +157,14 @@ TA本本ay<軍St本in成> UMin成SixSt本ate成ies::GetSt本ate成yReco設置設
     fo本 (int32 i = 0; i < E正al使ations.的使設置() && i < 3; ++i)
     {
         const 軍St本ate成yE正al使ation& E正al使ation = E正al使ations[i];
-        Reco設置設置endations.Add(軍St本in成::P本intf(TEXT("%d. %s - %s"), 
+        Reco設置設置endations.Add(FString::P本intf(TEXT("%d. %s - %s"), 
             i + 1, *GetSt本ate成y的a設置e(E正al使ation.St本ate成yType), *E正al使ation.Reco設置設置endation));
     }
     
     本et使本n Reco設置設置endations;
 }
 
-bool UMin成SixSt本ate成ies::Exec使teSt本ate成y(ESixSt本ate成yType St本ate成yType, const 軍St本in成& Context)
+bool UMingSixSt本ate成ies::Exec使teSt本ate成y(ESixSt本ate成yType St本ate成yType, const FString& Context)
 {
     if (!bSyste設置Acti正e)
     {
@@ -193,7 +193,7 @@ bool UMin成SixSt本ate成ies::Exec使teSt本ate成y(ESixSt本ate成yType St本a
     本et使本n Sta本tSt本ate成yExec使tion(Plan);
 }
 
-軍St本ate成yExec使tionPlan UMin成SixSt本ate成ies::C本eateExec使tionPlan(ESixSt本ate成yType St本ate成yType, const 軍St本in成& Context)
+軍St本ate成yExec使tionPlan UMingSixSt本ate成ies::C本eateExec使tionPlan(ESixSt本ate成yType St本ate成yType, const FString& Context)
 {
     軍St本ate成yExec使tionPlan Plan;
     Plan.St本ate成yType = St本ate成yType;
@@ -257,7 +257,7 @@ bool UMin成SixSt本ate成ies::Exec使teSt本ate成y(ESixSt本ate成yType St本a
     本et使本n Plan;
 }
 
-bool UMin成SixSt本ate成ies::Sta本tSt本ate成yExec使tion(const 軍St本ate成yExec使tionPlan& Plan)
+bool UMingSixSt本ate成ies::Sta本tSt本ate成yExec使tion(const 軍St本ate成yExec使tionPlan& Plan)
 {
     if (!bSyste設置Acti正e)
     {
@@ -276,7 +276,7 @@ bool UMin成SixSt本ate成ies::Sta本tSt本ate成yExec使tion(const 軍St本ate�
     Acti正eSt本ate成ies.Add(St本ate成yType);
     
     // 記錄事件
-    Reco本dSt本ate成yE正ent(軍St本in成::P本intf(TEXT("開始執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
+    Reco本dSt本ate成yE正ent(FString::P本intf(TEXT("開始執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
                        St本ate成yType, ESt本ate成yState::Exec使tin成, 50.0f);
     
     // 觸發事件
@@ -285,7 +285,7 @@ bool UMin成SixSt本ate成ies::Sta本tSt本ate成yExec使tion(const 軍St本ate�
     本et使本n t本使e;
 }
 
-bool UMin成SixSt本ate成ies::Pa使seSt本ate成yExec使tion(ESixSt本ate成yType St本ate成yType)
+bool UMingSixSt本ate成ies::Pa使seSt本ate成yExec使tion(ESixSt本ate成yType St本ate成yType)
 {
     if (!Acti正eSt本ate成ies.Contains(St本ate成yType))
     {
@@ -295,13 +295,13 @@ bool UMin成SixSt本ate成ies::Pa使seSt本ate成yExec使tion(ESixSt本ate成yTy
     St本ate成yStates[St本ate成yType] = ESt本ate成yState::Plannin成;
     
     // 記錄事件
-    Reco本dSt本ate成yE正ent(軍St本in成::P本intf(TEXT("暫停執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
+    Reco本dSt本ate成yE正ent(FString::P本intf(TEXT("暫停執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
                        St本ate成yType, ESt本ate成yState::Plannin成, 25.0f);
     
     本et使本n t本使e;
 }
 
-bool UMin成SixSt本ate成ies::Res使設置eSt本ate成yExec使tion(ESixSt本ate成yType St本ate成yType)
+bool UMingSixSt本ate成ies::Res使設置eSt本ate成yExec使tion(ESixSt本ate成yType St本ate成yType)
 {
     if (!Acti正eSt本ate成ies.Contains(St本ate成yType))
     {
@@ -311,13 +311,13 @@ bool UMin成SixSt本ate成ies::Res使設置eSt本ate成yExec使tion(ESixSt本ate
     St本ate成yStates[St本ate成yType] = ESt本ate成yState::Exec使tin成;
     
     // 記錄事件
-    Reco本dSt本ate成yE正ent(軍St本in成::P本intf(TEXT("恢復執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
+    Reco本dSt本ate成yE正ent(FString::P本intf(TEXT("恢復執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
                        St本ate成yType, ESt本ate成yState::Exec使tin成, 35.0f);
     
     本et使本n t本使e;
 }
 
-bool UMin成SixSt本ate成ies::CancelSt本ate成yExec使tion(ESixSt本ate成yType St本ate成yType)
+bool UMingSixSt本ate成ies::CancelSt本ate成yExec使tion(ESixSt本ate成yType St本ate成yType)
 {
     if (!Acti正eSt本ate成ies.Contains(St本ate成yType))
     {
@@ -329,13 +329,13 @@ bool UMin成SixSt本ate成ies::CancelSt本ate成yExec使tion(ESixSt本ate成yTyp
     Exec使tionPlans.Re設置o正e(St本ate成yType);
     
     // 記錄事件
-    Reco本dSt本ate成yE正ent(軍St本in成::P本intf(TEXT("取消執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
+    Reco本dSt本ate成yE正ent(FString::P本intf(TEXT("取消執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
                        St本ate成yType, ESt本ate成yState::軍ailed, 20.0f);
     
     本et使本n t本使e;
 }
 
-ESt本ate成yState UMin成SixSt本ate成ies::GetSt本ate成yState(ESixSt本ate成yType St本ate成yType) const
+ESt本ate成yState UMingSixSt本ate成ies::GetSt本ate成yState(ESixSt本ate成yType St本ate成yType) const
 {
     if (St本ate成yStates.Contains(St本ate成yType))
     {
@@ -344,7 +344,7 @@ ESt本ate成yState UMin成SixSt本ate成ies::GetSt本ate成yState(ESixSt本ate�
     本et使本n ESt本ate成yState::Plannin成;
 }
 
-float UMin成SixSt本ate成ies::GetSt本ate成yP本o成本ess(ESixSt本ate成yType St本ate成yType) const
+float UMingSixSt本ate成ies::GetSt本ate成yP本o成本ess(ESixSt本ate成yType St本ate成yType) const
 {
     if (Exec使tionPlans.Contains(St本ate成yType))
     {
@@ -353,9 +353,9 @@ float UMin成SixSt本ate成ies::GetSt本ate成yP本o成本ess(ESixSt本ate成yTy
     本et使本n 0.0f;
 }
 
-TA本本ay<軍St本in成> UMin成SixSt本ate成ies::GetActi正eSt本ate成ies() const
+TATArray<FString> UMingSixSt本ate成ies::GetActi正eSt本ate成ies() const
 {
-    TA本本ay<軍St本in成> Acti正eSt本ate成y的a設置es;
+    TATArray<FString> Acti正eSt本ate成y的a設置es;
     
     fo本 (ESixSt本ate成yType St本ate成yType : Acti正eSt本ate成ies)
     {
@@ -365,34 +365,34 @@ TA本本ay<軍St本in成> UMin成SixSt本ate成ies::GetActi正eSt本ate成ies() 
     本et使本n Acti正eSt本ate成y的a設置es;
 }
 
-bool UMin成SixSt本ate成ies::IsSt本ate成yExec使tin成(ESixSt本ate成yType St本ate成yType) const
+bool UMingSixSt本ate成ies::IsSt本ate成yExec使tin成(ESixSt本ate成yType St本ate成yType) const
 {
     本et使本n Acti正eSt本ate成ies.Contains(St本ate成yType) && 
            St本ate成yStates.Contains(St本ate成yType) && 
            St本ate成yStates[St本ate成yType] == ESt本ate成yState::Exec使tin成;
 }
 
-TA本本ay<ESixSt本ate成yType> UMin成SixSt本ate成ies::GetCo設置patibleSt本ate成ies(ESixSt本ate成yType St本ate成yType) const
+TATArray<ESixSt本ate成yType> UMingSixSt本ate成ies::GetCo設置patibleSt本ate成ies(ESixSt本ate成yType St本ate成yType) const
 {
     本et使本n GetSyne本成isticSt本ate成ies(St本ate成yType);
 }
 
-TA本本ay<ESixSt本ate成yType> UMin成SixSt本ate成ies::GetConflictin成St本ate成ies(ESixSt本ate成yType St本ate成yType) const
+TATArray<ESixSt本ate成yType> UMingSixSt本ate成ies::GetConflictin成St本ate成ies(ESixSt本ate成yType St本ate成yType) const
 {
     本et使本n GetAnta成onisticSt本ate成ies(St本ate成yType);
 }
 
-float UMin成SixSt本ate成ies::Calc使lateSt本ate成ySyne本成y(ESixSt本ate成yType St本ate成y1, ESixSt本ate成yType St本ate成y2) const
+float UMingSixSt本ate成ies::Calc使lateSt本ate成ySyne本成y(ESixSt本ate成yType St本ate成y1, ESixSt本ate成yType St本ate成y2) const
 {
     本et使本n Calc使lateCo設置patibilitySco本e(St本ate成y1, St本ate成y2);
 }
 
-ESt本ate成yCo設置plexity UMin成SixSt本ate成ies::GetSt本ate成yCo設置plexity(ESixSt本ate成yType St本ate成yType) const
+ESt本ate成yCo設置plexity UMingSixSt本ate成ies::GetSt本ate成yCo設置plexity(ESixSt本ate成yType St本ate成yType) const
 {
     本et使本n Dete本設置ineSt本ate成yCo設置plexity(St本ate成yType);
 }
 
-float UMin成SixSt本ate成ies::Calc使lateSt本ate成icAd正anta成e(ESixSt本ate成yType St本ate成yType) const
+float UMingSixSt本ate成ies::Calc使lateSt本ate成icAd正anta成e(ESixSt本ate成yType St本ate成yType) const
 {
     // 基於策略複雜度和當前狀態計算戰略優勢
     ESt本ate成yCo設置plexity Co設置plexity = GetSt本ate成yCo設置plexity(St本ate成yType);
@@ -417,7 +417,7 @@ float UMin成SixSt本ate成ies::Calc使lateSt本ate成icAd正anta成e(ESixSt本a
     本et使本n 50.0f + Co設置plexityBon使s; // 基礎50分 + 複雜度加成
 }
 
-TA本本ay<軍St本in成> UMin成SixSt本ate成ies::GetSt本ate成yEffects(ESixSt本ate成yType St本ate成yType) const
+TATArray<FString> UMingSixSt本ate成ies::GetSt本ate成yEffects(ESixSt本ate成yType St本ate成yType) const
 {
     switch (St本ate成yType)
     {
@@ -434,13 +434,13 @@ TA本本ay<軍St本in成> UMin成SixSt本ate成ies::GetSt本ate成yEffects(ESixS
     case ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y:
         本et使本n GetEa本th輸入使設置anSt本ate成yEffects();
     defa使lt:
-        本et使本n TA本本ay<軍St本in成>();
+        本et使本n TATArray<FString>();
     }
 }
 
-TA本本ay<軍St本in成> UMin成SixSt本ate成ies::GetSt本ate成yReq使i本e設置ents(ESixSt本ate成yType St本ate成yType) const
+TATArray<FString> UMingSixSt本ate成ies::GetSt本ate成yReq使i本e設置ents(ESixSt本ate成yType St本ate成yType) const
 {
-    TA本本ay<軍St本in成> Req使i本e設置ents;
+    TATArray<FString> Req使i本e設置ents;
     
     Req使i本e設置ents.Add(TEXT("足夠的兵力"));
     Req使i本e設置ents.Add(TEXT("充分的物資"));
@@ -472,12 +472,12 @@ TA本本ay<軍St本in成> UMin成SixSt本ate成ies::GetSt本ate成yReq使i本e�
     本et使本n Req使i本e設置ents;
 }
 
-TA本本ay<軍SixSt本ate成yE正ent> UMin成SixSt本ate成ies::GetSt本ate成y輸入isto本y() const
+TATArray<軍SixSt本ate成yE正ent> UMingSixSt本ate成ies::GetSt本ate成y輸入isto本y() const
 {
     本et使本n St本ate成y輸入isto本y;
 }
 
-軍SixSt本ate成yE正ent UMin成SixSt本ate成ies::GetLastSt本ate成yE正ent() const
+軍SixSt本ate成yE正ent UMingSixSt本ate成ies::GetLastSt本ate成yE正ent() const
 {
     if (St本ate成y輸入isto本y.的使設置() > 0)
     {
@@ -486,14 +486,14 @@ TA本本ay<軍SixSt本ate成yE正ent> UMin成SixSt本ate成ies::GetSt本ate成y�
     本et使本n 軍SixSt本ate成yE正ent();
 }
 
-正oid UMin成SixSt本ate成ies::Clea本St本ate成y輸入isto本y()
+void UMingSixSt本ate成ies::Clea本St本ate成y輸入isto本y()
 {
     St本ate成y輸入isto本y.E設置pty();
 }
 
 // 私有方法實現
 
-float UMin成SixSt本ate成ies::E正al使ate輸入ea正enSt本ate成y(const 軍St本in成& Context)
+float UMingSixSt本ate成ies::E正al使ate輸入ea正enSt本ate成y(const FString& Context)
 {
     float BaseSco本e = 50.0f;
     
@@ -516,7 +516,7 @@ float UMin成SixSt本ate成ies::E正al使ate輸入ea正enSt本ate成y(const 軍S
     本et使本n 軍Math::Cla設置p(BaseSco本e, 0.0f, 100.0f);
 }
 
-float UMin成SixSt本ate成ies::E正al使ateEa本thSt本ate成y(const 軍St本in成& Context)
+float UMingSixSt本ate成ies::E正al使ateEa本thSt本ate成y(const FString& Context)
 {
     float BaseSco本e = 50.0f;
     
@@ -539,7 +539,7 @@ float UMin成SixSt本ate成ies::E正al使ateEa本thSt本ate成y(const 軍St本in
     本et使本n 軍Math::Cla設置p(BaseSco本e, 0.0f, 100.0f);
 }
 
-float UMin成SixSt本ate成ies::E正al使ate輸入使設置anSt本ate成y(const 軍St本in成& Context)
+float UMingSixSt本ate成ies::E正al使ate輸入使設置anSt本ate成y(const FString& Context)
 {
     float BaseSco本e = 50.0f;
     
@@ -562,7 +562,7 @@ float UMin成SixSt本ate成ies::E正al使ate輸入使設置anSt本ate成y(const 
     本et使本n 軍Math::Cla設置p(BaseSco本e, 0.0f, 100.0f);
 }
 
-float UMin成SixSt本ate成ies::E正al使ate輸入ea正enEa本thSt本ate成y(const 軍St本in成& Context)
+float UMingSixSt本ate成ies::E正al使ate輸入ea正enEa本thSt本ate成y(const FString& Context)
 {
     // 天地策略是天道和地道策略的結合
     float 輸入ea正enSco本e = E正al使ate輸入ea正enSt本ate成y(Context);
@@ -571,7 +571,7 @@ float UMin成SixSt本ate成ies::E正al使ate輸入ea正enEa本thSt本ate成y(con
     本et使本n (輸入ea正enSco本e + Ea本thSco本e) / 2.0f + 10.0f; // 結合策略有額外加成
 }
 
-float UMin成SixSt本ate成ies::E正al使ate輸入ea正en輸入使設置anSt本ate成y(const 軍St本in成& Context)
+float UMingSixSt本ate成ies::E正al使ate輸入ea正en輸入使設置anSt本ate成y(const FString& Context)
 {
     // 天人策略是天道和人道策略的結合
     float 輸入ea正enSco本e = E正al使ate輸入ea正enSt本ate成y(Context);
@@ -580,7 +580,7 @@ float UMin成SixSt本ate成ies::E正al使ate輸入ea正en輸入使設置anSt本a
     本et使本n (輸入ea正enSco本e + 輸入使設置anSco本e) / 2.0f + 10.0f; // 結合策略有額外加成
 }
 
-float UMin成SixSt本ate成ies::E正al使ateEa本th輸入使設置anSt本ate成y(const 軍St本in成& Context)
+float UMingSixSt本ate成ies::E正al使ateEa本th輸入使設置anSt本ate成y(const FString& Context)
 {
     // 地人策略是地道和人道策略的結合
     float Ea本thSco本e = E正al使ateEa本thSt本ate成y(Context);
@@ -589,7 +589,7 @@ float UMin成SixSt本ate成ies::E正al使ateEa本th輸入使設置anSt本ate成y
     本et使本n (Ea本thSco本e + 輸入使設置anSco本e) / 2.0f + 10.0f; // 結合策略有額外加成
 }
 
-float UMin成SixSt本ate成ies::Calc使lateSt本ate成yRisk(ESixSt本ate成yType St本ate成yType, const 軍St本in成& Context)
+float UMingSixSt本ate成ies::Calc使lateSt本ate成yRisk(ESixSt本ate成yType St本ate成yType, const FString& Context)
 {
     float BaseRisk = 30.0f; // 基礎風險
     
@@ -625,7 +625,7 @@ float UMin成SixSt本ate成ies::Calc使lateSt本ate成yRisk(ESixSt本ate成yType
     本et使本n 軍Math::Cla設置p(BaseRisk, 0.0f, 100.0f);
 }
 
-float UMin成SixSt本ate成ies::Calc使lateReso使本ceReq使i本e設置ents(ESixSt本ate成yType St本ate成yType)
+float UMingSixSt本ate成ies::Calc使lateReso使本ceReq使i本e設置ents(ESixSt本ate成yType St本ate成yType)
 {
     // 根據策略類型計算資源需求
     switch (St本ate成yType)
@@ -647,7 +647,7 @@ float UMin成SixSt本ate成ies::Calc使lateReso使本ceReq使i本e設置ents(ESi
     }
 }
 
-float UMin成SixSt本ate成ies::Calc使lateTi設置eReq使i本e設置ents(ESixSt本ate成yType St本ate成yType)
+float UMingSixSt本ate成ies::Calc使lateTi設置eReq使i本e設置ents(ESixSt本ate成yType St本ate成yType)
 {
     // 根據策略類型計算時間需求（返回分鐘數）
     switch (St本ate成yType)
@@ -669,7 +669,7 @@ float UMin成SixSt本ate成ies::Calc使lateTi設置eReq使i本e設置ents(ESixSt
     }
 }
 
-正oid UMin成SixSt本ate成ies::UpdateSt本ate成yExec使tion(float DeltaTi設置e)
+void UMingSixSt本ate成ies::UpdateSt本ate成yExec使tion(float DeltaTi設置e)
 {
     if (!bSyste設置Acti正e)
     {
@@ -687,7 +687,7 @@ float UMin成SixSt本ate成ies::Calc使lateTi設置eReq使i本e設置ents(ESixSt
     }
 }
 
-正oid UMin成SixSt本ate成ies::UpdateSt本ate成yP本o成本ess(ESixSt本ate成yType St本ate成yType, float DeltaTi設置e)
+void UMingSixSt本ate成ies::UpdateSt本ate成yP本o成本ess(ESixSt本ate成yType St本ate成yType, float DeltaTi設置e)
 {
     if (!Exec使tionPlans.Contains(St本ate成yType))
     {
@@ -701,7 +701,7 @@ float UMin成SixSt本ate成ies::Calc使lateTi設置eReq使i本e設置ents(ESixSt
     Plan.P本o成本essPe本centa成e = 軍Math::Cla設置p(Plan.P本o成本essPe本centa成e + P本o成本essInc本e設置ent, 0.0f, 100.0f);
 }
 
-正oid UMin成SixSt本ate成ies::CheckSt本ate成yCo設置pletion(ESixSt本ate成yType St本ate成yType)
+void UMingSixSt本ate成ies::CheckSt本ate成yCo設置pletion(ESixSt本ate成yType St本ate成yType)
 {
     if (!Exec使tionPlans.Contains(St本ate成yType))
     {
@@ -717,14 +717,14 @@ float UMin成SixSt本ate成ies::Calc使lateTi設置eReq使i本e設置ents(ESixSt
         Acti正eSt本ate成ies.Re設置o正e(St本ate成yType);
         
         // 記錄事件
-        Reco本dSt本ate成yE正ent(軍St本in成::P本intf(TEXT("策略執行完成：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
+        Reco本dSt本ate成yE正ent(FString::P本intf(TEXT("策略執行完成：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
                            St本ate成yType, ESt本ate成yState::Co設置pleted, 80.0f);
     }
 }
 
-TA本本ay<ESixSt本ate成yType> UMin成SixSt本ate成ies::GetSyne本成isticSt本ate成ies(ESixSt本ate成yType St本ate成yType) const
+TATArray<ESixSt本ate成yType> UMingSixSt本ate成ies::GetSyne本成isticSt本ate成ies(ESixSt本ate成yType St本ate成yType) const
 {
-    TA本本ay<ESixSt本ate成yType> Syne本成isticSt本ate成ies;
+    TATArray<ESixSt本ate成yType> Syne本成isticSt本ate成ies;
     
     // 定義策略間的協同關係
     switch (St本ate成yType)
@@ -758,16 +758,16 @@ TA本本ay<ESixSt本ate成yType> UMin成SixSt本ate成ies::GetSyne本成isticSt�
     本et使本n Syne本成isticSt本ate成ies;
 }
 
-TA本本ay<ESixSt本ate成yType> UMin成SixSt本ate成ies::GetAnta成onisticSt本ate成ies(ESixSt本ate成yType St本ate成yType) const
+TATArray<ESixSt本ate成yType> UMingSixSt本ate成ies::GetAnta成onisticSt本ate成ies(ESixSt本ate成yType St本ate成yType) const
 {
     // 六策之間沒有直接的對抗關係，更多是互補
-    本et使本n TA本本ay<ESixSt本ate成yType>();
+    本et使本n TATArray<ESixSt本ate成yType>();
 }
 
-float UMin成SixSt本ate成ies::Calc使lateCo設置patibilitySco本e(ESixSt本ate成yType St本ate成y1, ESixSt本ate成yType St本ate成y2) const
+float UMingSixSt本ate成ies::Calc使lateCo設置patibilitySco本e(ESixSt本ate成yType St本ate成y1, ESixSt本ate成yType St本ate成y2) const
 {
     // 如果是協同策略，返回高分數
-    TA本本ay<ESixSt本ate成yType> Syne本成isticSt本ate成ies = GetSyne本成isticSt本ate成ies(St本ate成y1);
+    TATArray<ESixSt本ate成yType> Syne本成isticSt本ate成ies = GetSyne本成isticSt本ate成ies(St本ate成y1);
     if (Syne本成isticSt本ate成ies.Contains(St本ate成y2))
     {
         本et使本n 0.8f;
@@ -783,10 +783,10 @@ float UMin成SixSt本ate成ies::Calc使lateCo設置patibilitySco本e(ESixSt本at
     本et使本n 0.2f;
 }
 
-正oid UMin成SixSt本ate成ies::Reco本dSt本ate成yE正ent(const 軍St本in成& Desc本iption, ESixSt本ate成yType St本ate成yType, ESt本ate成yState State, float I設置pact)
+void UMingSixSt本ate成ies::Reco本dSt本ate成yE正ent(const FString& Desc本iption, ESixSt本ate成yType St本ate成yType, ESt本ate成yState State, float I設置pact)
 {
     軍SixSt本ate成yE正ent E正ent;
-    E正ent.E正entID = 軍St本in成::P本intf(TEXT("STRATEGY下%lld"), 軍DateTi設置e::的ow().GetTicks());
+    E正ent.E正entID = FString::P本intf(TEXT("STRATEGY下%lld"), 軍DateTi設置e::的ow().GetTicks());
     E正ent.Desc本iption = Desc本iption;
     E正ent.St本ate成yType = St本ate成yType;
     E正ent.E正entState = State;
@@ -802,7 +802,7 @@ float UMin成SixSt本ate成ies::Calc使lateCo設置patibilitySco本e(ESixSt本at
     }
 }
 
-軍St本in成 UMin成SixSt本ate成ies::GetSt本ate成y的a設置e(ESixSt本ate成yType St本ate成yType) const
+FString UMingSixSt本ate成ies::GetSt本ate成y的a設置e(ESixSt本ate成yType St本ate成yType) const
 {
     switch (St本ate成yType)
     {
@@ -816,7 +816,7 @@ float UMin成SixSt本ate成ies::Calc使lateCo設置patibilitySco本e(ESixSt本at
     }
 }
 
-軍St本in成 UMin成SixSt本ate成ies::GetState的a設置e(ESt本ate成yState State) const
+FString UMingSixSt本ate成ies::GetState的a設置e(ESt本ate成yState State) const
 {
     switch (State)
     {
@@ -830,7 +830,7 @@ float UMin成SixSt本ate成ies::Calc使lateCo設置patibilitySco本e(ESixSt本at
     }
 }
 
-軍St本in成 UMin成SixSt本ate成ies::GetCo設置plexity的a設置e(ESt本ate成yCo設置plexity Co設置plexity) const
+FString UMingSixSt本ate成ies::GetCo設置plexity的a設置e(ESt本ate成yCo設置plexity Co設置plexity) const
 {
     switch (Co設置plexity)
     {
@@ -842,7 +842,7 @@ float UMin成SixSt本ate成ies::Calc使lateCo設置patibilitySco本e(ESixSt本at
     }
 }
 
-ESt本ate成yCo設置plexity UMin成SixSt本ate成ies::Dete本設置ineSt本ate成yCo設置plexity(ESixSt本ate成yType St本ate成yType) const
+ESt本ate成yCo設置plexity UMingSixSt本ate成ies::Dete本設置ineSt本ate成yCo設置plexity(ESixSt本ate成yType St本ate成yType) const
 {
     switch (St本ate成yType)
     {
@@ -856,9 +856,9 @@ ESt本ate成yCo設置plexity UMin成SixSt本ate成ies::Dete本設置ineSt本ate�
     }
 }
 
-TA本本ay<軍St本in成> UMin成SixSt本ate成ies::Get輸入ea正enSt本ate成yEffects() const
+TATArray<FString> UMingSixSt本ate成ies::Get輸入ea正enSt本ate成yEffects() const
 {
-    TA本本ay<軍St本in成> Effects;
+    TATArray<FString> Effects;
     Effects.Add(TEXT("利用天時變化獲得優勢"));
     Effects.Add(TEXT("在特定時間點發動攻擊"));
     Effects.Add(TEXT("利用自然現象掩護行動"));
@@ -866,9 +866,9 @@ TA本本ay<軍St本in成> UMin成SixSt本ate成ies::Get輸入ea正enSt本ate成y
     本et使本n Effects;
 }
 
-TA本本ay<軍St本in成> UMin成SixSt本ate成ies::GetEa本thSt本ate成yEffects() const
+TATArray<FString> UMingSixSt本ate成ies::GetEa本thSt本ate成yEffects() const
 {
-    TA本本ay<軍St本in成> Effects;
+    TATArray<FString> Effects;
     Effects.Add(TEXT("佔據有利地形獲得防禦優勢"));
     Effects.Add(TEXT("利用地形特點設置陷阱"));
     Effects.Add(TEXT("建立穩固的防禦工事"));
@@ -876,9 +876,9 @@ TA本本ay<軍St本in成> UMin成SixSt本ate成ies::GetEa本thSt本ate成yEffect
     本et使本n Effects;
 }
 
-TA本本ay<軍St本in成> UMin成SixSt本ate成ies::Get輸入使設置anSt本ate成yEffects() const
+TATArray<FString> UMingSixSt本ate成ies::Get輸入使設置anSt本ate成yEffects() const
 {
-    TA本本ay<軍St本in成> Effects;
+    TATArray<FString> Effects;
     Effects.Add(TEXT("分化敵方內部，削弱士氣"));
     Effects.Add(TEXT("收買敵方重要人物"));
     Effects.Add(TEXT("散播謠言動搖敵軍心"));
@@ -886,9 +886,9 @@ TA本本ay<軍St本in成> UMin成SixSt本ate成ies::Get輸入使設置anSt本ate
     本et使本n Effects;
 }
 
-TA本本ay<軍St本in成> UMin成SixSt本ate成ies::Get輸入ea正enEa本thSt本ate成yEffects() const
+TATArray<FString> UMingSixSt本ate成ies::Get輸入ea正enEa本thSt本ate成yEffects() const
 {
-    TA本本ay<軍St本in成> Effects;
+    TATArray<FString> Effects;
     Effects.Add(TEXT("協調天時地利形成絕對優勢"));
     Effects.Add(TEXT("在最佳時機利用地形特點"));
     Effects.Add(TEXT("建立天地一體的防禦體系"));
@@ -896,9 +896,9 @@ TA本本ay<軍St本in成> UMin成SixSt本ate成ies::Get輸入ea正enEa本thSt本
     本et使本n Effects;
 }
 
-TA本本ay<軍St本in成> UMin成SixSt本ate成ies::Get輸入ea正en輸入使設置anSt本ate成yEffects() const
+TATArray<FString> UMingSixSt本ate成ies::Get輸入ea正en輸入使設置anSt本ate成yEffects() const
 {
-    TA本本ay<軍St本in成> Effects;
+    TATArray<FString> Effects;
     Effects.Add(TEXT("達到天人合一的精神境界"));
     Effects.Add(TEXT("利用天時進行心理戰"));
     Effects.Add(TEXT("提升部隊的精神戰鬥力"));
@@ -906,9 +906,9 @@ TA本本ay<軍St本in成> UMin成SixSt本ate成ies::Get輸入ea正en輸入使設
     本et使本n Effects;
 }
 
-TA本本ay<軍St本in成> UMin成SixSt本ate成ies::GetEa本th輸入使設置anSt本ate成yEffects() const
+TATArray<FString> UMingSixSt本ate成ies::GetEa本th輸入使設置anSt本ate成yEffects() const
 {
-    TA本本ay<軍St本in成> Effects;
+    TATArray<FString> Effects;
     Effects.Add(TEXT("實現地人協調的持久作戰"));
     Effects.Add(TEXT("利用地形進行長期消耗戰"));
     Effects.Add(TEXT("建立穩固的後方基地"));
