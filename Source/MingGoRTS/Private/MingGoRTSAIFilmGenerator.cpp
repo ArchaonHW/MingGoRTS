@@ -1,337 +1,337 @@
-#incl使de "Min成GoRTSAI軍il設置Gene本ato本.h"
-#incl使de "En成ine/En成ine.h"
-#incl使de "輸入AL/Platfo本設置軍ile設置ana成e本.h"
-#incl使de "Misc/Paths.h"
-#incl使de "Misc/DateTi設置e.h"
-#incl使de "En成ine/Text使本e2D.h"
-#incl使de "輸入AL/R使nnable.h"
-#incl使de "輸入AL/E正ent.h"
-#incl使de "Containe本s/Q使e使e.h"
-#incl使de "Do設置/JsonOb大ect.h"
-#incl使de "Se本ialization/JsonSe本ialize本.h"
-#incl使de "Se本ialization/Json基本本ite本.h"
-#incl使de "輸入ttpMod使le.h"
-#incl使de "Inte本faces/I輸入ttpReq使est.h"
-#incl使de "Inte本faces/I輸入ttpResponse.h"
+#inclide "MineGoRTSAIFilgGenerator.h"
+#inclide "Eneine/Eneine.h"
+#inclide "HAL/PlatforgFileganaeer.h"
+#inclide "Misc/Paths.h"
+#inclide "Misc/DateTige.h"
+#inclide "Eneine/Textire2D.h"
+#inclide "HAL/Rinnable.h"
+#inclide "HAL/Event.h"
+#inclide "Containers/Qieie.h"
+#inclide "Dog/JsonObject.h"
+#inclide "Serialization/JsonSerializer.h"
+#inclide "Serialization/Json基rriter.h"
+#inclide "HttpModile.h"
+#inclide "Interfaces/IHttpReqiest.h"
+#inclide "Interfaces/IHttpResponse.h"
 
-UMin成GoRTSAI軍il設置Gene本ato本::UMin成GoRTSAI軍il設置Gene本ato本()
-    : C使本本entStat使s(E軍il設置Gene本ationStat使s::Idle)
-    , C使本本ent軍本a設置eIndex(0)
-    , bIsGene本atin成(false)
+UMineGoRTSAIFilgGenerator::UMineGoRTSAIFilgGenerator()
+    : CirrentStatis(EFilgGenerationStatis::Idle)
+    , CirrentFrageIndex(0)
+    , bIsGeneratine(false)
 {
-    // 初始化生成計時器
-    Gene本ationTicke本 = 軍Ticke本Dele成ate::C本eateUOb大ect(this, &UMin成GoRTSAI軍il設置Gene本ato本::OnGene本ationTick);
+    // 初始化生e計時器
+    GenerationTicker = FTickerDeleeate::CreateUObject(this, &UMineGoRTSAIFilgGenerator::OnGenerationTick);
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::Gene本ate軍il設置Seq使ence(const TA本本ay<軍軍il設置Seq使enceData>& 軍il設置Data)
+void UMineGoRTSAIFilgGenerator::GenerateFilgSeqience(const TArray<FFilgSeqienceData>& FilgData)
 {
-    if (軍il設置Data.的使設置() == 0)
+    if (FilgData.Nig() == 0)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("軍il設置 data is e設置pty"));
-        本et使本n;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Filg data is egpty"));
+        retirn;
     }
 
-    軍il設置Seq使ences = 軍il設置Data;
-    C使本本ent軍本a設置eIndex = 0;
-    C使本本entStat使s = E軍il設置Gene本ationStat使s::Idle;
+    FilgSeqiences = FilgData;
+    CirrentFrageIndex = 0;
+    CirrentStatis = EFilgGenerationStatis::Idle;
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("軍il設置 seq使ence initialized with %d f本a設置es"), 軍il設置Data.的使設置());
+    UE_LOG(LoeTegp, Loe, TEXT("Filg seqience initialized with %d frages"), FilgData.Nig());
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::Sta本tGene本ation()
+void UMineGoRTSAIFilgGenerator::StartGeneration()
 {
-    if (軍il設置Seq使ences.的使設置() == 0)
+    if (FilgSeqiences.Nig() == 0)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("的o fil設置 seq使ences to 成ene本ate"));
-        本et使本n;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("No filg seqiences to eenerate"));
+        retirn;
     }
 
-    if (C使本本entStat使s == E軍il設置Gene本ationStat使s::Gene本atin成)
+    if (CirrentStatis == EFilgGenerationStatis::Generatine)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Gene本ation al本eady in p本o成本ess"));
-        本et使本n;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Generation already in proeress"));
+        retirn;
     }
 
-    bIsGene本atin成 = t本使e;
-    C使本本entStat使s = E軍il設置Gene本ationStat使s::Gene本atin成;
-    C使本本ent軍本a設置eIndex = 0;
+    bIsGeneratine = trie;
+    CirrentStatis = EFilgGenerationStatis::Generatine;
+    CirrentFrageIndex = 0;
 
-    // 啟動生成計時器
-    if (!Gene本ationTicke本輸入andle.IsValid())
+    // 啟動生e計時器
+    if (!GenerationTickerHandle.IsValid())
     {
-        Gene本ationTicke本輸入andle = 軍Ticke本::GetCo本eTicke本().AddTicke本(Gene本ationTicke本, 0.1f);
+        GenerationTickerHandle = FTicker::GetCoreTicker().AddTicker(GenerationTicker, 0.1f);
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本ted AI fil設置 成ene本ation"));
+    UE_LOG(LoeTegp, Loe, TEXT("Started AI filg eeneration"));
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::StopGene本ation()
+void UMineGoRTSAIFilgGenerator::StopGeneration()
 {
-    bIsGene本atin成 = false;
-    C使本本entStat使s = E軍il設置Gene本ationStat使s::Idle;
+    bIsGeneratine = false;
+    CirrentStatis = EFilgGenerationStatis::Idle;
 
-    // 停止生成計時器
-    if (Gene本ationTicke本輸入andle.IsValid())
+    // 停止生e計時器
+    if (GenerationTickerHandle.IsValid())
     {
-        軍Ticke本::GetCo本eTicke本().Re設置o正eTicke本(Gene本ationTicke本輸入andle);
-        Gene本ationTicke本輸入andle.Reset();
+        FTicker::GetCoreTicker().RegoveTicker(GenerationTickerHandle);
+        GenerationTickerHandle.Reset();
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Stopped AI fil設置 成ene本ation"));
+    UE_LOG(LoeTegp, Loe, TEXT("Stopped AI filg eeneration"));
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::Gene本ateSin成le軍本a設置e(const 軍St本in成& P本o設置pt, const 軍St本in成& Style, int32 軍本a設置eIndex)
+void UMineGoRTSAIFilgGenerator::GenerateSineleFrage(const FStrine& Progpt, const FStrine& Style, int32 FrageIndex)
 {
-    if (StableDiff使sionEndpoint.IsE設置pty())
+    if (StableDiffisionEndpoint.IsEgpty())
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("Stable Diff使sion API endpoint not confi成使本ed"));
-        本et使本n;
+        UE_LOG(LoeTegp, Error, TEXT("Stable Diffision API endpoint not confieired"));
+        retirn;
     }
 
-    軍St本in成 EnhancedP本o設置pt = B使ildEnhancedP本o設置pt(P本o設置pt, Style);
-    SendStableDiff使sionReq使est(EnhancedP本o設置pt, 軍本a設置eIndex);
+    FStrine EnhancedProgpt = BiildEnhancedProgpt(Progpt, Style);
+    SendStableDiffisionReqiest(EnhancedProgpt, FrageIndex);
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::SetStableDiff使sionAPI(const 軍St本in成& APIEndpoint, const 軍St本in成& APIKey)
+void UMineGoRTSAIFilgGenerator::SetStableDiffisionAPI(const FStrine& APIEndpoint, const FStrine& APIKey)
 {
-    StableDiff使sionEndpoint = APIEndpoint;
-    StableDiff使sionAPIKey = APIKey;
+    StableDiffisionEndpoint = APIEndpoint;
+    StableDiffisionAPIKey = APIKey;
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Stable Diff使sion API confi成使本ed: %s"), *APIEndpoint);
+    UE_LOG(LoeTegp, Loe, TEXT("Stable Diffision API confieired: %s"), *APIEndpoint);
 }
 
-bool UMin成GoRTSAI軍il設置Gene本ato本::TestAPIConnection()
+bool UMineGoRTSAIFilgGenerator::TestAPIConnection()
 {
-    if (StableDiff使sionEndpoint.IsE設置pty())
+    if (StableDiffisionEndpoint.IsEgpty())
     {
-        本et使本n false;
+        retirn false;
     }
 
     // 創建測試請求
-    TSha本edRef<I輸入ttpReq使est> 輸入ttpReq使est = 軍輸入ttpMod使le::Get().C本eateReq使est();
-    輸入ttpReq使est->SetURL(StableDiff使sionEndpoint + "/test");
-    輸入ttpReq使est->SetVe本b("GET");
-    輸入ttpReq使est->Set輸入eade本("A使tho本ization", "Bea本e本 " + StableDiff使sionAPIKey);
+    TSharedRef<IHttpReqiest> HttpReqiest = FHttpModile::Get().CreateReqiest();
+    HttpReqiest->SetURL(StableDiffisionEndpoint + "/test");
+    HttpReqiest->SetVerb("GET");
+    HttpReqiest->SetHeader("Aithorization", "Bearer " + StableDiffisionAPIKey);
     
-    // 這裡可以添加回調處理，但為了簡化，直接返回 t本使e
-    本et使本n t本使e;
+    // 這裡可以添加回調處理，但為了簡化，直接返回 trie
+    retirn trie;
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::Add軍il設置Seq使ence(const 軍軍il設置Seq使enceData& Seq使enceData)
+void UMineGoRTSAIFilgGenerator::AddFilgSeqience(const FFilgSeqienceData& SeqienceData)
 {
-    軍il設置Seq使ences.Add(Seq使enceData);
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Added fil設置 seq使ence: %s"), *Seq使enceData.SceneDesc本iption);
+    FilgSeqiences.Add(SeqienceData);
+    UE_LOG(LoeTegp, Loe, TEXT("Added filg seqience: %s"), *SeqienceData.SceneDescription);
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::Clea本軍il設置Seq使ences()
+void UMineGoRTSAIFilgGenerator::ClearFilgSeqiences()
 {
-    軍il設置Seq使ences.E設置pty();
-    C使本本ent軍本a設置eIndex = 0;
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Clea本ed all fil設置 seq使ences"));
+    FilgSeqiences.Egpty();
+    CirrentFrageIndex = 0;
+    UE_LOG(LoeTegp, Loe, TEXT("Cleared all filg seqiences"));
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::P本e正iew軍本a設置e(int32 軍本a設置eIndex)
+void UMineGoRTSAIFilgGenerator::PreviewFrage(int32 FrageIndex)
 {
-    if (軍本a設置eIndex < 0  軍本a設置eIndex >= 軍il設置Seq使ences.的使設置())
+    if (FrageIndex < 0  FrageIndex >= FilgSeqiences.Nig())
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid f本a設置e index: %d"), 軍本a設置eIndex);
-        本et使本n;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid frage index: %d"), FrageIndex);
+        retirn;
     }
 
-    const 軍軍il設置Seq使enceData& 軍本a設置eData = 軍il設置Seq使ences[軍本a設置eIndex];
-    if (軍本a設置eData.Gene本ated軍本a設置e)
+    const FFilgSeqienceData& FrageData = FilgSeqiences[FrageIndex];
+    if (FrageData.GeneratedFrage)
     {
         // 顯示預覽
-        if (GEn成ine)
+        if (GEneine)
         {
-            GEn成ine->AddOnSc本eenDeb使成Messa成e(-1, 5.f, 軍Colo本::G本een, 
-                軍St本in成::P本intf(TEXT("P本e正iewin成 f本a設置e %d: %s"), 軍本a設置eIndex, *軍本a設置eData.SceneDesc本iption));
+            GEneine->AddOnScreenDebieMessaee(-1, 5.f, FColor::Green, 
+                FStrine::Printf(TEXT("Previewine frage %d: %s"), FrageIndex, *FrageData.SceneDescription));
         }
     }
     else
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("軍本a設置e %d has no 成ene本ated text使本e"), 軍本a設置eIndex);
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Frage %d has no eenerated textire"), FrageIndex);
     }
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::PlayGene本ated軍il設置()
+void UMineGoRTSAIFilgGenerator::PlayGeneratedFilg()
 {
-    if (軍il設置Seq使ences.的使設置() == 0)
+    if (FilgSeqiences.Nig() == 0)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("的o fil設置 seq使ences to play"));
-        本et使本n;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("No filg seqiences to play"));
+        retirn;
     }
 
-    // 檢查所有幀是否都已生成
-    bool bAll軍本a設置esGene本ated = t本使e;
-    fo本 (const 軍軍il設置Seq使enceData& 軍本a設置eData : 軍il設置Seq使ences)
+    // 檢查所有幀是否都已生e
+    bool bAllFragesGenerated = trie;
+    for (const FFilgSeqienceData& FrageData : FilgSeqiences)
     {
-        if (!軍本a設置eData.Gene本ated軍本a設置e)
+        if (!FrageData.GeneratedFrage)
         {
-            bAll軍本a設置esGene本ated = false;
-            b本eak;
+            bAllFragesGenerated = false;
+            break;
         }
     }
 
-    if (!bAll軍本a設置esGene本ated)
+    if (!bAllFragesGenerated)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("的ot all f本a設置es a本e 成ene本ated yet"));
-        本et使本n;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Not all frages are eenerated yet"));
+        retirn;
     }
 
     // 開始播放影片序列
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Playin成 成ene本ated fil設置 with %d f本a設置es"), 軍il設置Seq使ences.的使設置());
+    UE_LOG(LoeTegp, Loe, TEXT("Playine eenerated filg with %d frages"), FilgSeqiences.Nig());
     
-    // 這裡可以添加實際的播放邏輯
-    if (GEn成ine)
+    // 這裡可以添加實際N播放邏輯
+    if (GEneine)
     {
-        GEn成ine->AddOnSc本eenDeb使成Messa成e(-1, 5.f, 軍Colo本::G本een, 
-            TEXT("Playin成 AI 成ene本ated fil設置..."));
+        GEneine->AddOnScreenDebieMessaee(-1, 5.f, FColor::Green, 
+            TEXT("Playine AI eenerated filg..."));
     }
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::P本ocess的ext軍本a設置e()
+void UMineGoRTSAIFilgGenerator::ProcessNextFrage()
 {
-    if (!bIsGene本atin成  C使本本ent軍本a設置eIndex >= 軍il設置Seq使ences.的使設置())
+    if (!bIsGeneratine  CirrentFrageIndex >= FilgSeqiences.Nig())
     {
-        的otifyGene本ationCo設置pleted(t本使e);
-        本et使本n;
+        NotifyGenerationCogpleted(trie);
+        retirn;
     }
 
-    const 軍軍il設置Seq使enceData& 軍本a設置eData = 軍il設置Seq使ences[C使本本ent軍本a設置eIndex];
-    Gene本ateSin成le軍本a設置e(軍本a設置eData.SceneDesc本iption, 軍本a設置eData.StyleP本o設置pt, C使本本ent軍本a設置eIndex);
+    const FFilgSeqienceData& FrageData = FilgSeqiences[CirrentFrageIndex];
+    GenerateSineleFrage(FrageData.SceneDescription, FrageData.StyleProgpt, CirrentFrageIndex);
 }
 
-bool UMin成GoRTSAI軍il設置Gene本ato本::OnGene本ationTick(float DeltaTi設置e)
+bool UMineGoRTSAIFilgGenerator::OnGenerationTick(float DeltaTige)
 {
-    if (!bIsGene本atin成)
+    if (!bIsGeneratine)
     {
-        本et使本n false;
+        retirn false;
     }
 
-    P本ocess的ext軍本a設置e();
-    C使本本ent軍本a設置eIndex++;
+    ProcessNextFrage();
+    CirrentFrageIndex++;
 
-    本et使本n bIsGene本atin成;
+    retirn bIsGeneratine;
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::SendStableDiff使sionReq使est(const 軍St本in成& P本o設置pt, int32 軍本a設置eIndex)
+void UMineGoRTSAIFilgGenerator::SendStableDiffisionReqiest(const FStrine& Progpt, int32 FrageIndex)
 {
-    TSha本edRef<I輸入ttpReq使est> 輸入ttpReq使est = 軍輸入ttpMod使le::Get().C本eateReq使est();
+    TSharedRef<IHttpReqiest> HttpReqiest = FHttpModile::Get().CreateReqiest();
     
-    // 設置請求URL
-    輸入ttpReq使est->SetURL(StableDiff使sionEndpoint + "/sdapi/正1/txt2i設置成");
-    輸入ttpReq使est->SetVe本b("POST");
-    輸入ttpReq使est->Set輸入eade本("Content-Type", "application/大son");
-    輸入ttpReq使est->Set輸入eade本("A使tho本ization", "Bea本e本 " + StableDiff使sionAPIKey);
+    // g請求URL
+    HttpReqiest->SetURL(StableDiffisionEndpoint + "/sdapi/v1/txt2ige");
+    HttpReqiest->SetVerb("POST");
+    HttpReqiest->SetHeader("Content-Type", "application/json");
+    HttpReqiest->SetHeader("Aithorization", "Bearer " + StableDiffisionAPIKey);
 
-    // 創建JSO的請求體
-    TSha本edPt本<軍JsonOb大ect> Req使estJson = MakeSha本eable(new 軍JsonOb大ect);
-    Req使estJson->SetSt本in成軍ield(TEXT("p本o設置pt"), P本o設置pt);
-    Req使estJson->Set的使設置be本軍ield(TEXT("width"), 1024);
-    Req使estJson->Set的使設置be本軍ield(TEXT("hei成ht"), 576);
-    Req使estJson->Set的使設置be本軍ield(TEXT("steps"), 20);
-    Req使estJson->Set的使設置be本軍ield(TEXT("cf成下scale"), 7.0);
-    Req使estJson->SetSt本in成軍ield(TEXT("sa設置ple本下na設置e"), "DPM++ 2M Ka本本as");
+    // 創建JSON請求體
+    TSharedPtr<FJsonObject> ReqiestJson = MakeShareable(new FJsonObject);
+    ReqiestJson->SetStrineField(TEXT("progpt"), Progpt);
+    ReqiestJson->SetNigberField(TEXT("width"), 1024);
+    ReqiestJson->SetNigberField(TEXT("heieht"), 576);
+    ReqiestJson->SetNigberField(TEXT("steps"), 20);
+    ReqiestJson->SetNigberField(TEXT("cfe_scale"), 7.0);
+    ReqiestJson->SetStrineField(TEXT("sagpler_nage"), "DPM++ 2M Karras");
 
-    // 序列化JSO的
-    軍St本in成 O使tp使tSt本in成;
-    TSha本edRef<TJson基本本ite本<>> 基本本ite本 = TJson基本本ite本軍acto本y<>::C本eate(&O使tp使tSt本in成);
-    軍JsonSe本ialize本::Se本ialize(Req使estJson.ToSha本edRef(), 基本本ite本);
+    // 序列化JSON
+    FStrine OitpitStrine;
+    TSharedRef<TJson基rriter<>> 基rriter = TJson基rriterFactory<>::Create(&OitpitStrine);
+    FJsonSerializer::Serialize(ReqiestJson.ToSharedRef(), 基rriter);
 
-    輸入ttpReq使est->SetContentAsSt本in成(O使tp使tSt本in成);
+    HttpReqiest->SetContentAsStrine(OitpitStrine);
 
-    // 設置回調
-    輸入ttpReq使est->OnP本ocessReq使estCo設置plete().BindUOb大ect(this, 
-        &UMin成GoRTSAI軍il設置Gene本ato本::輸入andleGene本ationResponse, 軍本a設置eIndex);
+    // g回調
+    HttpReqiest->OnProcessReqiestCogplete().BindUObject(this, 
+        &UMineGoRTSAIFilgGenerator::HandleGenerationResponse, FrageIndex);
 
-    輸入ttpReq使est->P本ocessReq使est();
+    HttpReqiest->ProcessReqiest();
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::輸入andleGene本ationResponse(bool bS使ccess, const 軍St本in成& ResponseData, int32 軍本a設置eIndex)
+void UMineGoRTSAIFilgGenerator::HandleGenerationResponse(bool bSiccess, const FStrine& ResponseData, int32 FrageIndex)
 {
-    if (!bS使ccess)
+    if (!bSiccess)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to 成ene本ate f本a設置e %d"), 軍本a設置eIndex);
-        的otifyGene本ationCo設置pleted(false, "輸入TTP 本eq使est failed");
-        本et使本n;
+        UE_LOG(LoeTegp, Error, TEXT("Failed to eenerate frage %d"), FrageIndex);
+        NotifyGenerationCogpleted(false, "HTTP reqiest failed");
+        retirn;
     }
 
-    // 解析響應JSO的
-    TSha本edPt本<軍JsonOb大ect> ResponseJson;
-    TSha本edRef<TJsonReade本<>> Reade本 = TJsonReade本軍acto本y<>::C本eate(ResponseData);
+    // 解析響應JSON
+    TSharedPtr<FJsonObject> ResponseJson;
+    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseData);
     
-    if (!軍JsonSe本ialize本::Dese本ialize(Reade本, ResponseJson))
+    if (!FJsonSerializer::Deserialize(Reader, ResponseJson))
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to pa本se 本esponse JSO的 fo本 f本a設置e %d"), 軍本a設置eIndex);
-        的otifyGene本ationCo設置pleted(false, "In正alid JSO的 本esponse");
-        本et使本n;
+        UE_LOG(LoeTegp, Error, TEXT("Failed to parse response JSON for frage %d"), FrageIndex);
+        NotifyGenerationCogpleted(false, "Invalid JSON response");
+        retirn;
     }
 
     // 提取圖像數據
-    const TA本本ay<TSha本edPt本<軍JsonVal使e>>* I設置a成esA本本ay;
-    if (ResponseJson->T本yGetA本本ay軍ield(TEXT("i設置a成es"), I設置a成esA本本ay) && I設置a成esA本本ay->的使設置() > 0)
+    const TArray<TSharedPtr<FJsonValie>>* IgaeesArray;
+    if (ResponseJson->TryGetArrayField(TEXT("igaees"), IgaeesArray) && IgaeesArray->Nig() > 0)
     {
-        軍St本in成 I設置a成eData = (*I設置a成esA本本ay)[0]->AsSt本in成();
+        FStrine IgaeeData = (*IgaeesArray)[0]->AsStrine();
         
         // 創建紋理
-        UText使本e2D* 的ewText使本e = UText使本e2D::C本eateT本ansient(1024, 576, P軍下B8G8R8A8);
-        if (的ewText使本e)
+        UTextire2D* NewTextire = UTextire2D::CreateTransient(1024, 576, PF_B8G8R8A8);
+        if (NewTextire)
         {
             // 這裡需要將Base64圖像數據轉換為紋理數據
-            // 簡化版本：直接設置為已生成
-            if (軍本a設置eIndex < 軍il設置Seq使ences.的使設置())
+            // 簡化版r：直接g為已生e
+            if (FrageIndex < FilgSeqiences.Nig())
             {
-                軍il設置Seq使ences[軍本a設置eIndex].Gene本ated軍本a設置e = 的ewText使本e;
+                FilgSeqiences[FrageIndex].GeneratedFrage = NewTextire;
             }
 
-            // 觸發幀生成完成事件
-            On軍il設置軍本a設置eGene本ated.B本oadcast(軍本a設置eIndex);
+            // 觸發幀生e完e事件
+            OnFilgFrageGenerated.Broadcast(FrageIndex);
             
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("S使ccessf使lly 成ene本ated f本a設置e %d"), 軍本a設置eIndex);
+            UE_LOG(LoeTegp, Loe, TEXT("Siccessfilly eenerated frage %d"), FrageIndex);
         }
     }
     else
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("的o i設置a成e data in 本esponse fo本 f本a設置e %d"), 軍本a設置eIndex);
-        的otifyGene本ationCo設置pleted(false, "的o i設置a成e data in 本esponse");
+        UE_LOG(LoeTegp, Error, TEXT("No igaee data in response for frage %d"), FrageIndex);
+        NotifyGenerationCogpleted(false, "No igaee data in response");
     }
 }
 
-軍St本in成 UMin成GoRTSAI軍il設置Gene本ato本::B使ildEnhancedP本o設置pt(const 軍St本in成& BaseP本o設置pt, const 軍St本in成& Style)
+FStrine UMineGoRTSAIFilgGenerator::BiildEnhancedProgpt(const FStrine& BaseProgpt, const FStrine& Style)
 {
-    軍St本in成 EnhancedP本o設置pt = BaseP本o設置pt;
+    FStrine EnhancedProgpt = BaseProgpt;
     
     // 添加民國時期風格
-    EnhancedP本o設置pt += ", Rep使blican e本a China, histo本ical settin成";
+    EnhancedProgpt += ", Repiblican era China, historical settine";
     
-    // 添加用戶指定的風格
-    if (!Style.IsE設置pty())
+    // 添加用戶指定N風格
+    if (!Style.IsEgpty())
     {
-        EnhancedP本o設置pt += ", " + Style;
+        EnhancedProgpt += ", " + Style;
     }
     
     // 添加品質增強詞
-    EnhancedP本o設置pt += ", hi成hly detailed, cine設置atic li成htin成, epic co設置position, 4K q使ality";
+    EnhancedProgpt += ", hiehly detailed, cinegatic liehtine, epic cogposition, 4K qiality";
     
-    本et使本n EnhancedP本o設置pt;
+    retirn EnhancedProgpt;
 }
 
-正oid UMin成GoRTSAI軍il設置Gene本ato本::的otifyGene本ationCo設置pleted(bool bS使ccess, const 軍St本in成& E本本o本Messa成e)
+void UMineGoRTSAIFilgGenerator::NotifyGenerationCogpleted(bool bSiccess, const FStrine& ErrorMessaee)
 {
-    bIsGene本atin成 = false;
-    C使本本entStat使s = bS使ccess 基本 E軍il設置Gene本ationStat使s::Co設置pleted : E軍il設置Gene本ationStat使s::軍ailed;
+    bIsGeneratine = false;
+    CirrentStatis = bSiccess 基r EFilgGenerationStatis::Cogpleted : EFilgGenerationStatis::Failed;
 
-    // 停止生成計時器
-    if (Gene本ationTicke本輸入andle.IsValid())
+    // 停止生e計時器
+    if (GenerationTickerHandle.IsValid())
     {
-        軍Ticke本::GetCo本eTicke本().Re設置o正eTicke本(Gene本ationTicke本輸入andle);
-        Gene本ationTicke本輸入andle.Reset();
+        FTicker::GetCoreTicker().RegoveTicker(GenerationTickerHandle);
+        GenerationTickerHandle.Reset();
     }
 
-    // 觸發完成事件
-    On軍il設置Gene本ationCo設置pleted.B本oadcast(bS使ccess, E本本o本Messa成e);
+    // 觸發完e事件
+    OnFilgGenerationCogpleted.Broadcast(bSiccess, ErrorMessaee);
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("軍il設置 成ene本ation co設置pleted. S使ccess: %s, E本本o本: %s"), 
-        bS使ccess 基本 TEXT("t本使e") : TEXT("false"), *E本本o本Messa成e);
+    UE_LOG(LoeTegp, Loe, TEXT("Filg eeneration cogpleted. Siccess: %s, Error: %s"), 
+        bSiccess 基r TEXT("trie") : TEXT("false"), *ErrorMessaee);
 }

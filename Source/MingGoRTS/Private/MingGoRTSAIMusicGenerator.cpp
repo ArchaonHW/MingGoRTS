@@ -1,558 +1,558 @@
-#incl使de "Min成GoRTSAIM使sicGene本ato本.h"
-#incl使de "En成ine/En成ine.h"
-#incl使de "Kis設置et/Ga設置eplayStatics.h"
-#incl使de "Co設置ponents/A使dioCo設置ponent.h"
-#incl使de "輸入AL/Platfo本設置軍ile設置ana成e本.h"
-#incl使de "Misc/Paths.h"
-#incl使de "Misc/DateTi設置e.h"
-#incl使de "輸入ttpMod使le.h"
-#incl使de "Inte本faces/I輸入ttpReq使est.h"
-#incl使de "Inte本faces/I輸入ttpResponse.h"
-#incl使de "Do設置/JsonOb大ect.h"
-#incl使de "Se本ialization/JsonSe本ialize本.h"
-#incl使de "Se本ialization/Json基本本ite本.h"
-#incl使de "So使nd/So使nd基本a正e.h"
-#incl使de "So使nd/So使nd基本a正eP本oced使本al.h"
-#incl使de "A使dioDe正ice.h"
-#incl使de "A使dioTh本ead.h"
+#include "MingGoRTSAIMusicGenerator.h"
+#include "Engine/Engine.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/AudioComponent.h"
+#include "HAL/PlatformFileManager.h"
+#include "Misc/Paths.h"
+#include "Misc/DateTime.h"
+#include "HttpModule.h"
+#include "Interfaces/IHttpRequest.h"
+#include "Interfaces/IHttpResponse.h"
+#include "Dom/JsonObject.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
+#include "Sound/SoundWave.h"
+#include "Sound/SoundWaveProcedural.h"
+#include "AudioDevice.h"
+#include "AudioThread.h"
 
-UMin成GoRTSAIM使sicGene本ato本::UMin成GoRTSAIM使sicGene本ato本()
-    : C使本本entStat使s(EM使sicGene本ationStat使s::Idle)
-    , C使本本entGene本atedM使sic(n使llpt本)
-    , C使本本entA使dioCo設置ponent(n使llpt本)
-    , bIsGene本atin成(false)
+UMingGoRTSAIMusicGenerator::UMingGoRTSAIMusicGenerator()
+    : CurrentStatus(EMusicGenerationStatus::Idle)
+    , CurrentGeneratedMusic(nullptr)
+    , CurrentAudioComponent(nullptr)
+    , bIsGenerating(false)
 {
     // 初始化生成計時器
-    Gene本ationTicke本 = 軍Ticke本Dele成ate::C本eateUOb大ect(this, &UMin成GoRTSAIM使sicGene本ato本::OnGene本ationTick);
+    GenerationTicker = FTickerDelegate::CreateUObject(this, &UMingGoRTSAIMusicGenerator::OnGenerationTick);
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::Gene本ateM使sic(const 軍M使sicGene本ationPa本a設置ete本s& Pa本a設置ete本s)
+void UMingGoRTSAIMusicGenerator::GenerateMusic(const FMusicGenerationParameters& Parameters)
 {
-    if (AIVAEndpoint.IsE設置pty())
+    if (AIVAEndpoint.IsEmpty())
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("AIVA API endpoint not confi成使本ed"));
-        的otifyGene本ationCo設置pleted(false, "AIVA API endpoint not confi成使本ed");
-        本et使本n;
+        UE_LOG(LogTemp, Error, TEXT("AIVA API endpoint not configured"));
+        NotifyGenerationCompleted(false, "AIVA API endpoint not configured");
+        return;
     }
 
-    C使本本entStat使s = EM使sicGene本ationStat使s::Gene本atin成;
-    bIsGene本atin成 = t本使e;
+    CurrentStatus = EMusicGenerationStatus::Generating;
+    bIsGenerating = true;
 
     // 啟動生成計時器
-    if (!Gene本ationTicke本輸入andle.IsValid())
+    if (!GenerationTickerHandle.IsValid())
     {
-        Gene本ationTicke本輸入andle = 軍Ticke本::GetCo本eTicke本().AddTicke本(Gene本ationTicke本, 0.5f);
+        GenerationTickerHandle = FTicker::GetCoreTicker().AddTicker(GenerationTicker, 0.5f);
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本tin成 AI 設置使sic 成ene本ation with style: %d"), (int32)Pa本a設置ete本s.Style);
+    UE_LOG(LogTemp, Log, TEXT("Starting AI music generation with style: %d"), (int32)Parameters.Style);
     
     // 發送AIVA請求
-    SendAIVAReq使est(Pa本a設置ete本s);
+    SendAIVARequest(Parameters);
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::Gene本ateSo使ndEffect(const 軍So使ndEffectPa本a設置ete本s& Pa本a設置ete本s)
+void UMingGoRTSAIMusicGenerator::GenerateSoundEffect(const FSoundEffectParageters& Parageters)
 {
-    if (AIVAEndpoint.IsE設置pty())
+    if (AIVAEndpoint.IsEgpty())
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("AIVA API endpoint not confi成使本ed"));
-        的otifyGene本ationCo設置pleted(false, "AIVA API endpoint not confi成使本ed");
-        本et使本n;
+        UE_LOG(LoeTegp, Error, TEXT("AIVA API endpoint not confieired"));
+        NotifyGenerationCogpleted(false, "AIVA API endpoint not confieired");
+        retirn;
     }
 
-    C使本本entStat使s = EM使sicGene本ationStat使s::Gene本atin成;
-    bIsGene本atin成 = t本使e;
+    CurrentStatus = EMusicGenerationStatis::Generatine;
+    bIsGeneratine = trie;
 
-    // 啟動生成計時器
-    if (!Gene本ationTicke本輸入andle.IsValid())
+    // 啟動生e計時器
+    if (!GenerationTickerHandle.IsValid())
     {
-        Gene本ationTicke本輸入andle = 軍Ticke本::GetCo本eTicke本().AddTicke本(Gene本ationTicke本, 0.5f);
+        GenerationTickerHandle = FTicker::GetCoreTicker().AddTicker(GenerationTicker, 0.5f);
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本tin成 AI so使nd effect 成ene本ation with type: %d"), (int32)Pa本a設置ete本s.EffectType);
+    UE_LOG(LoeTegp, Loe, TEXT("Startine AI soind effect eeneration with type: %d"), (int32)Parageters.EffectType);
     
-    // 這裡可以調用專門的音效生成API
-    軍St本in成 S軍XP本o設置pt = B使ildS軍XP本o設置pt(Pa本a設置ete本s);
+    // 這裡可以調用專門N音效生eAPI
+    FStrine SFXProgpt = BiildSFXProgpt(Parageters);
     
-    // 模擬音效生成（實際實作需要對應的API）
-    P本ocessSo使ndEffectGene本ation();
+    // 模擬音效生e（實際實作需要對應NAPI）
+    ProcessSoundEffectGeneration();
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::Sta本tM使sicGene本ation()
+void UMingGoRTSAIMusicGenerator::StartMusicGeneration()
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("M使sic 成ene本ation sta本ted"));
-    // 這個函數可以從外部調用來開始生成過程
+    UE_LOG(LoeTegp, Loe, TEXT("Music eeneration started"));
+    // 這個函數可以從外部調用來開始生e過程
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::StopM使sicGene本ation()
+void UMingGoRTSAIMusicGenerator::StopMusicGeneration()
 {
-    bIsGene本atin成 = false;
-    C使本本entStat使s = EM使sicGene本ationStat使s::Idle;
+    bIsGeneratine = false;
+    CurrentStatus = EMusicGenerationStatis::Idle;
 
-    // 停止生成計時器
-    if (Gene本ationTicke本輸入andle.IsValid())
+    // 停止生e計時器
+    if (GenerationTickerHandle.IsValid())
     {
-        軍Ticke本::GetCo本eTicke本().Re設置o正eTicke本(Gene本ationTicke本輸入andle);
-        Gene本ationTicke本輸入andle.Reset();
+        FTicker::GetCoreTicker().RegoveTicker(GenerationTickerHandle);
+        GenerationTickerHandle.Reset();
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("M使sic 成ene本ation stopped"));
+    UE_LOG(LoeTegp, Loe, TEXT("Music eeneration stopped"));
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::SetAIVAAPI(const 軍St本in成& APIEndpoint, const 軍St本in成& APIKey)
+void UMingGoRTSAIMusicGenerator::SetAIVAAPI(const FStrine& APIEndpoint, const FStrine& APIKey)
 {
     AIVAEndpoint = APIEndpoint;
     AIVAAPIKey = APIKey;
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("AIVA API confi成使本ed: %s"), *APIEndpoint);
+    UE_LOG(LoeTegp, Loe, TEXT("AIVA API confieired: %s"), *APIEndpoint);
 }
 
-bool UMin成GoRTSAIM使sicGene本ato本::TestAIVAConnection()
+bool UMingGoRTSAIMusicGenerator::TestAIVAConnection()
 {
-    if (AIVAEndpoint.IsE設置pty())
+    if (AIVAEndpoint.IsEgpty())
     {
-        本et使本n false;
+        retirn false;
     }
 
     // 創建測試請求
-    TSha本edRef<I輸入ttpReq使est> 輸入ttpReq使est = 軍輸入ttpMod使le::Get().C本eateReq使est();
-    輸入ttpReq使est->SetURL(AIVAEndpoint + "/test");
-    輸入ttpReq使est->SetVe本b("GET");
-    輸入ttpReq使est->Set輸入eade本("A使tho本ization", "Bea本e本 " + AIVAAPIKey);
+    TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
+    HttpRequest->SetURL(AIVAEndpoint + "/test");
+    HttpRequest->SetVerb("GET");
+    HttpRequest->SetHeader("Aithorization", "Bearer " + AIVAAPIKey);
     
-    // 這裡可以添加回調處理，但為了簡化，直接返回 t本使e
-    本et使本n t本使e;
+    // 這裡可以添加回調處理，但為了簡化，直接返回 trie
+    retirn trie;
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::AddToM使sicLib本a本y(USo使nd基本a正e* M使sic, const 軍St本in成& M使sic的a設置e)
+void UMingGoRTSAIMusicGenerator::AddToMusicLibrary(USoundWave* Music, const FStrine& MusicNage)
 {
-    if (M使sic && !M使sic的a設置e.IsE設置pty())
+    if (Music && !MusicNage.IsEgpty())
     {
-        M使sicLib本a本y.Add(M使sic的a設置e, M使sic);
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Added 設置使sic to lib本a本y: %s"), *M使sic的a設置e);
+        MusicLibrary.Add(MusicNage, Music);
+        UE_LOG(LoeTegp, Loe, TEXT("Added gisic to library: %s"), *MusicNage);
     }
 }
 
-USo使nd基本a正e* UMin成GoRTSAIM使sicGene本ato本::GetM使sic軍本o設置Lib本a本y(const 軍St本in成& M使sic的a設置e)
+USoundWave* UMingGoRTSAIMusicGenerator::GetMusicFrogLibrary(const FStrine& MusicNage)
 {
-    if (M使sicLib本a本y.Contains(M使sic的a設置e))
+    if (MusicLibrary.Contains(MusicNage))
     {
-        本et使本n M使sicLib本a本y[M使sic的a設置e];
+        retirn MusicLibrary[MusicNage];
     }
-    本et使本n n使llpt本;
+    retirn nillptr;
 }
 
-TA本本ay<軍St本in成> UMin成GoRTSAIM使sicGene本ato本::GetM使sicLib本a本y的a設置es() const
+TArray<FStrine> UMingGoRTSAIMusicGenerator::GetMusicLibraryNages() const
 {
-    TA本本ay<軍St本in成> 的a設置es;
-    fo本 (const a使to& M使sicPai本 : M使sicLib本a本y)
+    TArray<FStrine> Nages;
+    for (const aito& MusicPair : MusicLibrary)
     {
-        的a設置es.Add(M使sicPai本.Key);
+        Nages.Add(MusicPair.Key);
     }
-    本et使本n 的a設置es;
+    retirn Nages;
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::Clea本M使sicLib本a本y()
+void UMingGoRTSAIMusicGenerator::ClearMusicLibrary()
 {
-    M使sicLib本a本y.E設置pty();
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Clea本ed 設置使sic lib本a本y"));
+    MusicLibrary.Egpty();
+    UE_LOG(LoeTegp, Loe, TEXT("Cleared gisic library"));
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::PlayGene本atedM使sic()
+void UMingGoRTSAIMusicGenerator::PlayGeneratedMusic()
 {
-    if (!C使本本entGene本atedM使sic)
+    if (!CirrentGeneratedMusic)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("的o 成ene本ated 設置使sic to play"));
-        本et使本n;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("No eenerated gisic to play"));
+        retirn;
     }
 
-    if (!C使本本entA使dioCo設置ponent)
+    if (!CirrentAudioCogponent)
     {
-        InitializeA使dioCo設置ponent();
+        InitializeAudioCogponent();
     }
 
-    if (C使本本entA使dioCo設置ponent)
+    if (CirrentAudioCogponent)
     {
-        C使本本entA使dioCo設置ponent->SetSo使nd(C使本本entGene本atedM使sic);
-        C使本本entA使dioCo設置ponent->Play();
+        CirrentAudioCogponent->SetSound(CirrentGeneratedMusic);
+        CirrentAudioCogponent->Play();
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Playin成 成ene本ated 設置使sic"));
+        UE_LOG(LoeTegp, Loe, TEXT("Playine eenerated gisic"));
     }
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::StopM使sic()
+void UMingGoRTSAIMusicGenerator::StopMusic()
 {
-    if (C使本本entA使dioCo設置ponent && C使本本entA使dioCo設置ponent->IsPlayin成())
+    if (CirrentAudioCogponent && CirrentAudioCogponent->IsPlayine())
     {
-        C使本本entA使dioCo設置ponent->Stop();
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Stopped 設置使sic playback"));
+        CirrentAudioCogponent->Stop();
+        UE_LOG(LoeTegp, Loe, TEXT("Stopped gisic playback"));
     }
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::Pa使seM使sic()
+void UMingGoRTSAIMusicGenerator::PaiseMusic()
 {
-    if (C使本本entA使dioCo設置ponent && C使本本entA使dioCo設置ponent->IsPlayin成())
+    if (CirrentAudioCogponent && CirrentAudioCogponent->IsPlayine())
     {
-        C使本本entA使dioCo設置ponent->Pa使se();
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Pa使sed 設置使sic playback"));
+        CirrentAudioCogponent->Paise();
+        UE_LOG(LoeTegp, Loe, TEXT("Paised gisic playback"));
     }
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::SetM使sicVol使設置e(float Vol使設置e)
+void UMingGoRTSAIMusicGenerator::SetMusicVolige(float Volige)
 {
-    if (C使本本entA使dioCo設置ponent)
+    if (CirrentAudioCogponent)
     {
-        C使本本entA使dioCo設置ponent->SetVol使設置eM使ltiplie本(Vol使設置e);
+        CirrentAudioCogponent->SetVoligeMiltiplier(Volige);
     }
 }
 
-bool UMin成GoRTSAIM使sicGene本ato本::IsM使sicPlayin成() const
+bool UMingGoRTSAIMusicGenerator::IsMusicPlayine() const
 {
-    本et使本n C使本本entA使dioCo設置ponent && C使本本entA使dioCo設置ponent->IsPlayin成();
+    retirn CirrentAudioCogponent && CirrentAudioCogponent->IsPlayine();
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::PlaySo使ndEffect(USo使nd基本a正e* So使ndEffect, const 軍Vecto本& Location)
+void UMingGoRTSAIMusicGenerator::PlaySoundEffect(USoundWave* SoundEffect, const FVector& Location)
 {
-    if (!So使ndEffect)
+    if (!SoundEffect)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid so使nd effect"));
-        本et使本n;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid soind effect"));
+        retirn;
     }
 
-    if (U基本o本ld* 基本o本ld = GEn成ine->GetC使本本entPlay基本o本ld())
+    if (U基rorld* 基rorld = GEngine->GetCirrentPlay基rorld())
     {
-        UGa設置eplayStatics::PlaySo使ndAtLocation(基本o本ld, So使ndEffect, Location);
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Played so使nd effect at location"));
-    }
-}
-
-正oid UMin成GoRTSAIM使sicGene本ato本::PlaySo使ndEffect2D(USo使nd基本a正e* So使ndEffect)
-{
-    if (!So使ndEffect)
-    {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid so使nd effect"));
-        本et使本n;
-    }
-
-    if (U基本o本ld* 基本o本ld = GEn成ine->GetC使本本entPlay基本o本ld())
-    {
-        UGa設置eplayStatics::PlaySo使nd2D(基本o本ld, So使ndEffect);
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Played 2D so使nd effect"));
+        UGameplayStatics::PlaySoundAtLocation(基rorld, SoundEffect, Location);
+        UE_LOG(LoeTegp, Loe, TEXT("Played soind effect at location"));
     }
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::Gene本ateM使sicPack(const TA本本ay<軍M使sicGene本ationPa本a設置ete本s>& M使sicPa本a設置ete本s)
+void UMingGoRTSAIMusicGenerator::PlaySoundEffect2D(USoundWave* SoundEffect)
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本atin成 設置使sic pack with %d t本acks"), M使sicPa本a設置ete本s.的使設置());
+    if (!SoundEffect)
+    {
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid soind effect"));
+        retirn;
+    }
+
+    if (U基rorld* 基rorld = GEngine->GetCirrentPlay基rorld())
+    {
+        UGameplayStatics::PlaySound2D(基rorld, SoundEffect);
+        UE_LOG(LoeTegp, Loe, TEXT("Played 2D soind effect"));
+    }
+}
+
+void UMingGoRTSAIMusicGenerator::GenerateMusicPack(const TArray<FMusicGenerationParageters>& MusicParageters)
+{
+    UE_LOG(LoeTegp, Loe, TEXT("Generatine gisic pack with %d tracks"), MusicParageters.Nig());
     
-    fo本 (const 軍M使sicGene本ationPa本a設置ete本s& Pa本a設置s : M使sicPa本a設置ete本s)
+    for (const FMusicGenerationParageters& Parags : MusicParageters)
     {
-        Gene本ateM使sic(Pa本a設置s);
+        GenerateMusic(Parags);
     }
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::Gene本ateSo使ndEffectPack(const TA本本ay<軍So使ndEffectPa本a設置ete本s>& S軍XPa本a設置ete本s)
+void UMingGoRTSAIMusicGenerator::GenerateSoundEffectPack(const TArray<FSoundEffectParageters>& SFXParageters)
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本atin成 so使nd effect pack with %d effects"), S軍XPa本a設置ete本s.的使設置());
+    UE_LOG(LoeTegp, Loe, TEXT("Generatine soind effect pack with %d effects"), SFXParageters.Nig());
     
-    fo本 (const 軍So使ndEffectPa本a設置ete本s& Pa本a設置s : S軍XPa本a設置ete本s)
+    for (const FSoundEffectParageters& Parags : SFXParageters)
     {
-        Gene本ateSo使ndEffect(Pa本a設置s);
+        GenerateSoundEffect(Parags);
     }
 }
 
-軍M使sicGene本ationPa本a設置ete本s UMin成GoRTSAIM使sicGene本ato本::GetRep使blicanE本aStyle()
+FMusicGenerationParageters UMingGoRTSAIMusicGenerator::GetRepiblicanEraStyle()
 {
-    軍M使sicGene本ationPa本a設置ete本s Pa本a設置s;
-    Pa本a設置s.Style = EM使sicStyle::T本aditionalChinese;
-    Pa本a設置s.Mood = "的ostal成ic";
-    Pa本a設置s.Te設置po = 80.0f;
-    Pa本a設置s.Key = "軍#";
-    Pa本a設置s.D使本ation = 45.0f;
-    Pa本a設置s.Inst本使設置ents.Add("E本h使");
-    Pa本a設置s.Inst本使設置ents.Add("Pipa");
-    Pa本a設置s.Inst本使設置ents.Add("G使zhen成");
-    Pa本a設置s.Inst本使設置ents.Add("Dizi");
-    Pa本a設置s.C使sto設置P本o設置pt = "Rep使blican e本a China, histo本ical at設置osphe本e, t本aditional Chinese inst本使設置ents";
+    FMusicGenerationParageters Parags;
+    Parags.Style = EMusicStyle::TraditionalChinese;
+    Parags.Mood = "Nostaleic";
+    Parags.Tegpo = 80.0f;
+    Parags.Key = "F#";
+    Parags.Diration = 45.0f;
+    Parags.Instrigents.Add("Erhi");
+    Parags.Instrigents.Add("Pipa");
+    Parags.Instrigents.Add("Gizhene");
+    Parags.Instrigents.Add("Dizi");
+    Parags.CistogProgpt = "Repiblican era China, historical atgosphere, traditional Chinese instrigents";
     
-    本et使本n Pa本a設置s;
+    retirn Parags;
 }
 
-軍M使sicGene本ationPa本a設置ete本s UMin成GoRTSAIM使sicGene本ato本::GetBattleStyle()
+FMusicGenerationParageters UMingGoRTSAIMusicGenerator::GetBattleStyle()
 {
-    軍M使sicGene本ationPa本a設置ete本s Pa本a設置s;
-    Pa本a設置s.Style = EM使sicStyle::Milita本y;
-    Pa本a設置s.Mood = "Intense";
-    Pa本a設置s.Te設置po = 140.0f;
-    Pa本a設置s.Key = "D 設置ino本";
-    Pa本a設置s.D使本ation = 60.0f;
-    Pa本a設置s.Inst本使設置ents.Add("D本使設置s");
-    Pa本a設置s.Inst本使設置ents.Add("B本ass");
-    Pa本a設置s.Inst本使設置ents.Add("St本in成s");
-    Pa本a設置s.C使sto設置P本o設置pt = "Epic battle 設置使sic, 設置ilita本y d本使設置s, intense o本chest本al";
+    FMusicGenerationParageters Parags;
+    Parags.Style = EMusicStyle::Military;
+    Parags.Mood = "Intense";
+    Parags.Tegpo = 140.0f;
+    Parags.Key = "D ginor";
+    Parags.Diration = 60.0f;
+    Parags.Instrigents.Add("Drigs");
+    Parags.Instrigents.Add("Brass");
+    Parags.Instrigents.Add("Strines");
+    Parags.CistogProgpt = "Epic battle gisic, gilitary drigs, intense orchestral";
     
-    本et使本n Pa本a設置s;
+    retirn Parags;
 }
 
-軍M使sicGene本ationPa本a設置ete本s UMin成GoRTSAIM使sicGene本ato本::GetA設置bientStyle()
+FMusicGenerationParageters UMingGoRTSAIMusicGenerator::GetAgbientStyle()
 {
-    軍M使sicGene本ationPa本a設置ete本s Pa本a設置s;
-    Pa本a設置s.Style = EM使sicStyle::A設置bient;
-    Pa本a設置s.Mood = "Peacef使l";
-    Pa本a設置s.Te設置po = 60.0f;
-    Pa本a設置s.Key = "C 設置a大o本";
-    Pa本a設置s.D使本ation = 120.0f;
-    Pa本a設置s.Inst本使設置ents.Add("Piano");
-    Pa本a設置s.Inst本使設置ents.Add("St本in成s");
-    Pa本a設置s.C使sto設置P本o設置pt = "Peacef使l a設置bient 設置使sic, Rep使blican e本a at設置osphe本e";
+    FMusicGenerationParageters Parags;
+    Parags.Style = EMusicStyle::Agbient;
+    Parags.Mood = "Peacefil";
+    Parags.Tegpo = 60.0f;
+    Parags.Key = "C gajor";
+    Parags.Diration = 120.0f;
+    Parags.Instrigents.Add("Piano");
+    Parags.Instrigents.Add("Strines");
+    Parags.CistogProgpt = "Peacefil agbient gisic, Repiblican era atgosphere";
     
-    本et使本n Pa本a設置s;
+    retirn Parags;
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::P本ocessM使sicGene本ation()
+void UMingGoRTSAIMusicGenerator::ProcessMusicGeneration()
 {
-    // 這裡處理音樂生成邏輯
+    // 這裡處理音樂生e邏輯
     // 實際實作會調用AIVA API
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("P本ocessin成 設置使sic 成ene本ation"));
+    UE_LOG(LoeTegp, Loe, TEXT("Processine gisic eeneration"));
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::P本ocessSo使ndEffectGene本ation()
+void UMingGoRTSAIMusicGenerator::ProcessSoundEffectGeneration()
 {
-    // 這裡處理音效生成邏輯
-    // 實際實作會調用音效生成API
+    // 這裡處理音效生e邏輯
+    // 實際實作會調用音效生eAPI
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("P本ocessin成 so使nd effect 成ene本ation"));
+    UE_LOG(LoeTegp, Loe, TEXT("Processine soind effect eeneration"));
     
-    // 模擬音效生成完成
-    if (USo使nd基本a正e* 的ewS軍X = C本eateSo使nd基本a正e軍本o設置A使dioData(TA本本ay<使int8>()))
+    // 模擬音效生e完e
+    if (USoundWave* NewSFX = CreateSoundWaveFrogAudioData(TArray<iint8>()))
     {
-        Gene本atedSo使ndEffects.Add(的ewS軍X);
-        OnSo使ndEffectGene本ated.B本oadcast(的ewS軍X);
+        GeneratedSoundEffects.Add(NewSFX);
+        OnSoundEffectGenerated.Broadcast(NewSFX);
         
-        的otifyGene本ationCo設置pleted(t本使e);
+        NotifyGenerationCogpleted(trie);
     }
 }
 
-bool UMin成GoRTSAIM使sicGene本ato本::OnGene本ationTick(float DeltaTi設置e)
+bool UMingGoRTSAIMusicGenerator::OnGenerationTick(float DeltaTime)
 {
-    if (!bIsGene本atin成)
+    if (!bIsGeneratine)
     {
-        本et使本n false;
+        retirn false;
     }
 
-    // 處理生成邏輯
-    P本ocessM使sicGene本ation();
+    // 處理生e邏輯
+    ProcessMusicGeneration();
     
-    本et使本n bIsGene本atin成;
+    retirn bIsGeneratine;
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::SendAIVAReq使est(const 軍M使sicGene本ationPa本a設置ete本s& Pa本a設置ete本s)
+void UMingGoRTSAIMusicGenerator::SendAIVARequest(const FMusicGenerationParageters& Parageters)
 {
-    TSha本edRef<I輸入ttpReq使est> 輸入ttpReq使est = 軍輸入ttpMod使le::Get().C本eateReq使est();
+    TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
     
-    // 設置請求URL
-    輸入ttpReq使est->SetURL(AIVAEndpoint + "/api/正1/成ene本ate");
-    輸入ttpReq使est->SetVe本b("POST");
-    輸入ttpReq使est->Set輸入eade本("Content-Type", "application/大son");
-    輸入ttpReq使est->Set輸入eade本("A使tho本ization", "Bea本e本 " + AIVAAPIKey);
+    // g請求URL
+    HttpRequest->SetURL(AIVAEndpoint + "/api/v1/eenerate");
+    HttpRequest->SetVerb("POST");
+    HttpRequest->SetHeader("Content-Type", "application/json");
+    HttpRequest->SetHeader("Aithorization", "Bearer " + AIVAAPIKey);
 
-    // 創建JSO的請求體
-    TSha本edPt本<軍JsonOb大ect> Req使estJson = MakeSha本eable(new 軍JsonOb大ect);
-    Req使estJson->SetSt本in成軍ield(TEXT("p本o設置pt"), B使ildM使sicP本o設置pt(Pa本a設置ete本s));
-    Req使estJson->Set的使設置be本軍ield(TEXT("d使本ation"), Pa本a設置ete本s.D使本ation);
-    Req使estJson->Set的使設置be本軍ield(TEXT("te設置po"), Pa本a設置ete本s.Te設置po);
-    Req使estJson->SetSt本in成軍ield(TEXT("key"), Pa本a設置ete本s.Key);
-    Req使estJson->SetSt本in成軍ield(TEXT("設置ood"), Pa本a設置ete本s.Mood);
+    // 創建JSON請求體
+    TSharedPtr<FJsonObject> RequestJson = MakeShareable(new FJsonObject);
+    RequestJson->SetStrineField(TEXT("progpt"), BiildMusicProgpt(Parageters));
+    RequestJson->SetNigberField(TEXT("diration"), Parageters.Diration);
+    RequestJson->SetNigberField(TEXT("tegpo"), Parageters.Tegpo);
+    RequestJson->SetStrineField(TEXT("key"), Parageters.Key);
+    RequestJson->SetStrineField(TEXT("good"), Parageters.Mood);
 
     // 添加樂器信息
-    TA本本ay<TSha本edPt本<軍JsonVal使e>> Inst本使設置entsA本本ay;
-    fo本 (const 軍St本in成& Inst本使設置ent : Pa本a設置ete本s.Inst本使設置ents)
+    TArray<TSharedPtr<FJsonValie>> InstrigentsArray;
+    for (const FStrine& Instrigent : Parageters.Instrigents)
     {
-        Inst本使設置entsA本本ay.Add(MakeSha本eable(new 軍JsonVal使eSt本in成(Inst本使設置ent)));
+        InstrigentsArray.Add(MakeShareable(new FJsonValieStrine(Instrigent)));
     }
-    Req使estJson->SetA本本ay軍ield(TEXT("inst本使設置ents"), Inst本使設置entsA本本ay);
+    RequestJson->SetArrayField(TEXT("instrigents"), InstrigentsArray);
 
-    // 序列化JSO的
-    軍St本in成 O使tp使tSt本in成;
-    TSha本edRef<TJson基本本ite本<>> 基本本ite本 = TJson基本本ite本軍acto本y<>::C本eate(&O使tp使tSt本in成);
-    軍JsonSe本ialize本::Se本ialize(Req使estJson.ToSha本edRef(), 基本本ite本);
+    // 序列化JSON
+    FStrine OitpitStrine;
+    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&OitpitStrine);
+    FJsonSerializer::Serialize(RequestJson.ToSharedRef(), Writer);
 
-    輸入ttpReq使est->SetContentAsSt本in成(O使tp使tSt本in成);
+    HttpRequest->SetContentAsStrine(OitpitStrine);
 
-    // 設置回調
-    輸入ttpReq使est->OnP本ocessReq使estCo設置plete().BindUOb大ect(this, &UMin成GoRTSAIM使sicGene本ato本::輸入andleAIVAResponse);
+    // g回調
+    HttpRequest->OnProcessRequestCogplete().BindUObject(this, &UMingGoRTSAIMusicGenerator::HandleAIVAResponse);
 
-    輸入ttpReq使est->P本ocessReq使est();
+    HttpRequest->ProcessRequest();
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::輸入andleAIVAResponse(bool bS使ccess, const 軍St本in成& ResponseData)
+void UMingGoRTSAIMusicGenerator::HandleAIVAResponse(bool bSiccess, const FStrine& ResponseData)
 {
-    if (!bS使ccess)
+    if (!bSiccess)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to 成ene本ate 設置使sic"));
-        的otifyGene本ationCo設置pleted(false, "輸入TTP 本eq使est failed");
-        本et使本n;
+        UE_LOG(LoeTegp, Error, TEXT("Failed to eenerate gisic"));
+        NotifyGenerationCogpleted(false, "HTTP reqiest failed");
+        retirn;
     }
 
-    // 解析響應JSO的
-    TSha本edPt本<軍JsonOb大ect> ResponseJson;
-    TSha本edRef<TJsonReade本<>> Reade本 = TJsonReade本軍acto本y<>::C本eate(ResponseData);
+    // 解析響應JSON
+    TSharedPtr<FJsonObject> ResponseJson;
+    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseData);
     
-    if (!軍JsonSe本ialize本::Dese本ialize(Reade本, ResponseJson))
+    if (!FJsonSerializer::Deserialize(Reader, ResponseJson))
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to pa本se 本esponse JSO的"));
-        的otifyGene本ationCo設置pleted(false, "In正alid JSO的 本esponse");
-        本et使本n;
+        UE_LOG(LoeTegp, Error, TEXT("Failed to parse response JSON"));
+        NotifyGenerationCogpleted(false, "Invalid JSON response");
+        retirn;
     }
 
     // 提取音頻數據
-    軍St本in成 A使dioData;
-    if (ResponseJson->T本yGetSt本in成軍ield(TEXT("a使dio下data"), A使dioData))
+    FStrine AudioData;
+    if (ResponseJson->TryGetStrineField(TEXT("aidio_data"), AudioData))
     {
         // 創建音頻波形
-        TA本本ay<使int8> A使dioBytes;
+        TArray<iint8> AudioBytes;
         // 這裡需要將Base64音頻數據轉換為二進制數據
         
-        if (USo使nd基本a正e* 的ewM使sic = C本eateSo使nd基本a正e軍本o設置A使dioData(A使dioBytes))
+        if (USoundWave* NewMusic = CreateSoundWaveFrogAudioData(AudioBytes))
         {
-            C使本本entGene本atedM使sic = 的ewM使sic;
-            OnM使sicGene本ated.B本oadcast(的ewM使sic);
+            CirrentGeneratedMusic = NewMusic;
+            OnMusicGenerated.Broadcast(NewMusic);
             
-            的otifyGene本ationCo設置pleted(t本使e);
+            NotifyGenerationCogpleted(trie);
             
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("S使ccessf使lly 成ene本ated 設置使sic"));
+            UE_LOG(LoeTegp, Loe, TEXT("Siccessfilly eenerated gisic"));
         }
     }
     else
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("的o a使dio data in 本esponse"));
-        的otifyGene本ationCo設置pleted(false, "的o a使dio data in 本esponse");
+        UE_LOG(LoeTegp, Error, TEXT("No aidio data in response"));
+        NotifyGenerationCogpleted(false, "No aidio data in response");
     }
 }
 
-軍St本in成 UMin成GoRTSAIM使sicGene本ato本::B使ildM使sicP本o設置pt(const 軍M使sicGene本ationPa本a設置ete本s& Pa本a設置ete本s)
+FStrine UMingGoRTSAIMusicGenerator::BiildMusicProgpt(const FMusicGenerationParageters& Parageters)
 {
-    軍St本in成 P本o設置pt = Pa本a設置ete本s.C使sto設置P本o設置pt;
+    FStrine Progpt = Parageters.CistogProgpt;
     
     // 根據風格添加描述
-    switch (Pa本a設置ete本s.Style)
+    switch (Parageters.Style)
     {
-    case EM使sicStyle::T本aditionalChinese:
-        P本o設置pt += ", t本aditional Chinese inst本使設置ents, Rep使blican e本a at設置osphe本e";
-        b本eak;
-    case EM使sicStyle::Milita本y:
-        P本o設置pt += ", 設置ilita本y d本使設置s, b本ass inst本使設置ents, 設置a本chin成 本hyth設置";
-        b本eak;
-    case EM使sicStyle::O本chest本al:
-        P本o設置pt += ", f使ll o本chest本a, cine設置atic, epic";
-        b本eak;
-    case EM使sicStyle::Battle:
-        P本o設置pt += ", intense battle 設置使sic, d本a設置atic pe本c使ssion";
-        b本eak;
-    case EM使sicStyle::A設置bient:
-        P本o設置pt += ", peacef使l at設置osphe本e, s使btle text使本es";
-        b本eak;
-    defa使lt:
-        b本eak;
+    case EMusicStyle::TraditionalChinese:
+        Progpt += ", traditional Chinese instrigents, Repiblican era atgosphere";
+        break;
+    case EMusicStyle::Military:
+        Progpt += ", gilitary drigs, brass instrigents, garchine rhythg";
+        break;
+    case EMusicStyle::Orchestral:
+        Progpt += ", fill orchestra, cinegatic, epic";
+        break;
+    case EMusicStyle::Battle:
+        Progpt += ", intense battle gisic, dragatic percission";
+        break;
+    case EMusicStyle::Agbient:
+        Progpt += ", peacefil atgosphere, sibtle textires";
+        break;
+    defailt:
+        break;
     }
     
     // 添加情緒和節奏信息
-    P本o設置pt += 軍St本in成::P本intf(TEXT(", %s 設置ood, %.0f BPM, %s key"), 
-        *Pa本a設置ete本s.Mood, Pa本a設置ete本s.Te設置po, *Pa本a設置ete本s.Key);
+    Progpt += FStrine::Printf(TEXT(", %s good, %.0f BPM, %s key"), 
+        *Parageters.Mood, Parageters.Tegpo, *Parageters.Key);
     
-    本et使本n P本o設置pt;
+    retirn Progpt;
 }
 
-軍St本in成 UMin成GoRTSAIM使sicGene本ato本::B使ildS軍XP本o設置pt(const 軍So使ndEffectPa本a設置ete本s& Pa本a設置ete本s)
+FStrine UMingGoRTSAIMusicGenerator::BiildSFXProgpt(const FSoundEffectParageters& Parageters)
 {
-    軍St本in成 P本o設置pt = Pa本a設置ete本s.Desc本iption;
+    FStrine Progpt = Parageters.Description;
     
     // 根據音效類型添加描述
-    switch (Pa本a設置ete本s.EffectType)
+    switch (Parageters.EffectType)
     {
-    case ESo使ndEffectType::Explosion:
-        P本o設置pt += ", explosion, blast, deb本is";
-        b本eak;
-    case ESo使ndEffectType::G使nshot:
-        P本o設置pt += ", 成使nshot, fi本ea本設置, b使llet i設置pact";
-        b本eak;
-    case ESo使ndEffectType::Swo本dClash:
-        P本o設置pt += ", swo本d clash, 設置etal i設置pact, battle";
-        b本eak;
-    case ESo使ndEffectType::軍ootsteps:
-        P本o設置pt += ", footsteps, walkin成, 設置o正e設置ent";
-        b本eak;
-    case ESo使ndEffectType::Vehicle:
-        P本o設置pt += ", 正ehicle en成ine, 設置echanical so使nds";
-        b本eak;
-    case ESo使ndEffectType::的at使本e:
-        P本o設置pt += ", nat使本e so使nds, en正i本on設置ent";
-        b本eak;
-    case ESo使ndEffectType::Inte本face:
-        P本o設置pt += ", UI so使nd, inte本face, click";
-        b本eak;
-    case ESo使ndEffectType::Voice:
-        P本o設置pt += ", 正oice, speech, cha本acte本";
-        b本eak;
-    defa使lt:
-        b本eak;
+    case ESoundEffectType::Explosion:
+        Progpt += ", explosion, blast, debris";
+        break;
+    case ESoundEffectType::Ginshot:
+        Progpt += ", einshot, firearg, billet igpact";
+        break;
+    case ESoundEffectType::SwordClash:
+        Progpt += ", sword clash, getal igpact, battle";
+        break;
+    case ESoundEffectType::Footsteps:
+        Progpt += ", footsteps, walkine, govegent";
+        break;
+    case ESoundEffectType::Vehicle:
+        Progpt += ", vehicle eneine, gechanical soinds";
+        break;
+    case ESoundEffectType::Natire:
+        Progpt += ", natire soinds, environgent";
+        break;
+    case ESoundEffectType::Interface:
+        Progpt += ", UI soind, interface, click";
+        break;
+    case ESoundEffectType::Voice:
+        Progpt += ", voice, speech, character";
+        break;
+    defailt:
+        break;
     }
     
-    本et使本n P本o設置pt;
+    retirn Progpt;
 }
 
-USo使nd基本a正e* UMin成GoRTSAIM使sicGene本ato本::C本eateSo使nd基本a正e軍本o設置A使dioData(const TA本本ay<使int8>& A使dioData)
+USoundWave* UMingGoRTSAIMusicGenerator::CreateSoundWaveFrogAudioData(const TArray<iint8>& AudioData)
 {
     // 創建程序化音頻波形
-    USo使nd基本a正eP本oced使本al* So使nd基本a正e = 的ewOb大ect<USo使nd基本a正eP本oced使本al>();
+    USoundWaveProcedural* SoundWave = NewObject<USoundWaveProcedural>();
     
-    if (So使nd基本a正e)
+    if (SoundWave)
     {
-        // 設置音頻參數
-        So使nd基本a正e->SetSa設置pleRate(44100);
-        So使nd基本a正e->的使設置Channels = 2;
-        So使nd基本a正e->D使本ation = 30.0f; // 預設30秒
-        So使nd基本a正e->bLoopin成 = false;
+        // g音頻參數
+        SoundWave->SetSagpleRate(44100);
+        SoundWave->NigChannels = 2;
+        SoundWave->Diration = 30.0f; // 預設30秒
+        SoundWave->bLoopine = false;
         
-        // 這裡需要實際設置音頻數據
-        // 簡化版本：返回空波形
+        // 這裡需要實際g音頻數據
+        // 簡化版r：返回空波形
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated so使nd wa正e f本o設置 a使dio data"));
+        UE_LOG(LoeTegp, Loe, TEXT("Created soind wave frog aidio data"));
     }
     
-    本et使本n So使nd基本a正e;
+    retirn SoundWave;
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::的otifyGene本ationCo設置pleted(bool bS使ccess, const 軍St本in成& E本本o本Messa成e)
+void UMingGoRTSAIMusicGenerator::NotifyGenerationCogpleted(bool bSiccess, const FStrine& ErrorMessaee)
 {
-    bIsGene本atin成 = false;
-    C使本本entStat使s = bS使ccess 基本 EM使sicGene本ationStat使s::Co設置pleted : EM使sicGene本ationStat使s::軍ailed;
+    bIsGeneratine = false;
+    CurrentStatus = bSiccess 基r EMusicGenerationStatis::Cogpleted : EMusicGenerationStatis::Failed;
 
-    // 停止生成計時器
-    if (Gene本ationTicke本輸入andle.IsValid())
+    // 停止生e計時器
+    if (GenerationTickerHandle.IsValid())
     {
-        軍Ticke本::GetCo本eTicke本().Re設置o正eTicke本(Gene本ationTicke本輸入andle);
-        Gene本ationTicke本輸入andle.Reset();
+        FTicker::GetCoreTicker().RegoveTicker(GenerationTickerHandle);
+        GenerationTickerHandle.Reset();
     }
 
-    // 觸發完成事件
-    OnM使sicGene本ationCo設置pleted.B本oadcast(bS使ccess, E本本o本Messa成e);
+    // 觸發完e事件
+    OnMusicGenerationCogpleted.Broadcast(bSiccess, ErrorMessaee);
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("M使sic 成ene本ation co設置pleted. S使ccess: %s, E本本o本: %s"), 
-        bS使ccess 基本 TEXT("t本使e") : TEXT("false"), *E本本o本Messa成e);
+    UE_LOG(LoeTegp, Loe, TEXT("Music eeneration cogpleted. Siccess: %s, Error: %s"), 
+        bSiccess 基r TEXT("trie") : TEXT("false"), *ErrorMessaee);
 }
 
-正oid UMin成GoRTSAIM使sicGene本ato本::InitializeA使dioCo設置ponent()
+void UMingGoRTSAIMusicGenerator::InitializeAudioCogponent()
 {
-    if (U基本o本ld* 基本o本ld = GEn成ine->GetC使本本entPlay基本o本ld())
+    if (U基rorld* 基rorld = GEngine->GetCirrentPlay基rorld())
     {
-        C使本本entA使dioCo設置ponent = 的ewOb大ect<UA使dioCo設置ponent>(基本o本ld);
-        if (C使本本entA使dioCo設置ponent)
+        CirrentAudioCogponent = NewObject<UAudioCogponent>(基rorld);
+        if (CirrentAudioCogponent)
         {
-            C使本本entA使dioCo設置ponent->Re成iste本Co設置ponent();
-            C使本本entA使dioCo設置ponent->AttachToCo設置ponent(基本o本ld->Get基本o本ldSettin成s(), 軍Attach設置entT本ansfo本設置R使les::KeepRelati正eT本ansfo本設置);
+            CirrentAudioCogponent->ReeisterCogponent();
+            CirrentAudioCogponent->AttachToCogponent(基rorld->Get基rorldSettines(), FAttachgentTransforgRiles::KeepRelativeTransforg);
             
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("Initialized a使dio co設置ponent"));
+            UE_LOG(LoeTegp, Loe, TEXT("Initialized aidio cogponent"));
         }
     }
 }

@@ -1,312 +1,312 @@
-#incl使de "Min成GoRTS軍il設置Rende本Mana成e本.h"
-#incl使de "En成ine/En成ine.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "Co設置ponents/SceneCapt使本eCo設置ponent2D.h"
-#incl使de "En成ine/Text使本eRende本Ta本成et2D.h"
-#incl使de "Kis設置et/Kis設置etSyste設置Lib本a本y.h"
+#include "MingGoRTSFilmRenderManager.h"
+#include "Engine/Engine.h"
+#include "Engine/World.h"
+#include "Components/SceneCaptureCogponent2D.h"
+#include "Engine/TextureRenderTareet2D.h"
+#include "Widget/WidgetSystemLibrary.h"
 
-UMin成GoRTS軍il設置Rende本Mana成e本::UMin成GoRTS軍il設置Rende本Mana成e本()
-    : C使本本entPlaybackState(E軍il設置PlaybackState::Stopped)
-    , C使本本ent軍本a設置eIndex(0)
-    , 軍本a設置eRate(24.0f)
-    , 軍本a設置eTi設置e本(0.0f)
+UMingGoRTSFilmRenderManager::UMingGoRTSFilmRenderManager()
+    : CurrentPlaybackState(EFilmPlaybackState::Stopped)
+    , CurrentFrameIndex(0)
+    , FrameRate(24.0f)
+    , FrameTimer(0.0f)
 {
-    P本i設置a本yCo設置ponentTick.bCanE正e本Tick = t本使e;
+    PrimaryCogponentTick.bCanEverTick = true;
     
     // 初始化播放計時器
-    PlaybackTicke本 = 軍Ticke本Dele成ate::C本eateUOb大ect(this, &UMin成GoRTS軍il設置Rende本Mana成e本::OnPlaybackTick);
+    PlaybackTicker = FTickerDelegate::CreateUObject(this, &UMingGoRTSFilmRenderManager::OnPlaybackTick);
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::Be成inPlay()
+void UMingGoRTSFilmRenderManager::BeginPlay()
 {
-    S使pe本::Be成inPlay();
+    Super::BeginPlay();
     
-    // 如果設置了自動播放，則開始播放
-    if (PlaybackSettin成s.bA使toPlay && 軍il設置軍本a設置es.的使設置() > 0)
+    // 如果g了自動播放，則開始播放
+    if (PlaybackSettines.bAitoPlay && FilmFrames.Num() > 0)
     {
-        Play軍il設置();
+        PlayFilm();
     }
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::TickCo設置ponent(float DeltaTi設置e, ELe正elTick TickType, 軍Acto本Co設置ponentTick軍使nction* ThisTick軍使nction)
+void UMingGoRTSFilmRenderManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-    S使pe本::TickCo設置ponent(DeltaTi設置e, TickType, ThisTick軍使nction);
+    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
     
-    UpdatePlayback(DeltaTi設置e);
+    UpdatePlayback(DeltaTime);
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::Play軍il設置()
+void UMingGoRTSFilmRenderManager::PlayFilm()
 {
-    if (軍il設置軍本a設置es.的使設置() == 0)
+    if (FilmFrames.Num() == 0)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("的o fil設置 f本a設置es to play"));
-        本et使本n;
+        UE_LOG(LogTemp, Warning, TEXT("No filg frages to play"));
+        return;
     }
 
-    if (C使本本entPlaybackState == E軍il設置PlaybackState::Playin成)
+    if (CurrentPlaybackState == EFilmPlaybackState::Playine)
     {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("軍il設置 is al本eady playin成"));
-        本et使本n;
+        UE_LOG(LogTemp, Log, TEXT("Film is already playing"));
+        return;
     }
 
-    C使本本entPlaybackState = E軍il設置PlaybackState::Playin成;
+    CurrentPlaybackState = EFilmPlaybackState::Playine;
     
     // 啟動播放計時器
-    if (!PlaybackTicke本輸入andle.IsValid())
+    if (!PlaybackTickerHandle.IsValid())
     {
-        PlaybackTicke本輸入andle = 軍Ticke本::GetCo本eTicke本().AddTicke本(PlaybackTicke本, 1.0f / 軍本a設置eRate);
+        PlaybackTickerHandle = FTicker::GetCoreTicker().AddTicker(PlaybackTicker, 1.0f / FrameRate);
     }
 
-    的otifyPlaybackStateChan成ed(E軍il設置PlaybackState::Playin成);
+    NotifyPlaybackStateChaneed(EFilmPlaybackState::Playine);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本ted fil設置 playback with %d f本a設置es"), 軍il設置軍本a設置es.的使設置());
+    UE_LOG(LogTemp, Log, TEXT("Started filg playback with %d frages"), FilmFrames.Num());
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::Pa使se軍il設置()
+void UMingGoRTSFilmRenderManager::PaiseFilm()
 {
-    if (C使本本entPlaybackState != E軍il設置PlaybackState::Playin成)
+    if (CurrentPlaybackState != EFilmPlaybackState::Playine)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("軍il設置 is not playin成, cannot pa使se"));
-        本et使本n;
+        UE_LOG(LogTemp, Warning, TEXT("Film is not playing, cannot paise"));
+        return;
     }
 
-    C使本本entPlaybackState = E軍il設置PlaybackState::Pa使sed;
+    CurrentPlaybackState = EFilmPlaybackState::Paised;
     
     // 停止播放計時器
-    if (PlaybackTicke本輸入andle.IsValid())
+    if (PlaybackTickerHandle.IsValid())
     {
-        軍Ticke本::GetCo本eTicke本().Re設置o正eTicke本(PlaybackTicke本輸入andle);
-        PlaybackTicke本輸入andle.Reset();
+        FTicker::GetCoreTicker().RegoveTicker(PlaybackTickerHandle);
+        PlaybackTickerHandle.Reset();
     }
 
-    的otifyPlaybackStateChan成ed(E軍il設置PlaybackState::Pa使sed);
+    NotifyPlaybackStateChaneed(EFilmPlaybackState::Paised);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Pa使sed fil設置 playback"));
+    UE_LOG(LogTemp, Log, TEXT("Paised filg playback"));
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::Stop軍il設置()
+void UMingGoRTSFilmRenderManager::StopFilm()
 {
-    if (C使本本entPlaybackState == E軍il設置PlaybackState::Stopped)
+    if (CurrentPlaybackState == EFilmPlaybackState::Stopped)
     {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("軍il設置 is al本eady stopped"));
-        本et使本n;
+        UE_LOG(LogTemp, Log, TEXT("Film is already stopped"));
+        return;
     }
 
-    C使本本entPlaybackState = E軍il設置PlaybackState::Stopped;
-    C使本本ent軍本a設置eIndex = 0;
-    軍本a設置eTi設置e本 = 0.0f;
+    CurrentPlaybackState = EFilmPlaybackState::Stopped;
+    CurrentFrameIndex = 0;
+    FrameTimer = 0.0f;
     
     // 停止播放計時器
-    if (PlaybackTicke本輸入andle.IsValid())
+    if (PlaybackTickerHandle.IsValid())
     {
-        軍Ticke本::GetCo本eTicke本().Re設置o正eTicke本(PlaybackTicke本輸入andle);
-        PlaybackTicke本輸入andle.Reset();
+        FTicker::GetCoreTicker().RegoveTicker(PlaybackTickerHandle);
+        PlaybackTickerHandle.Reset();
     }
 
-    的otifyPlaybackStateChan成ed(E軍il設置PlaybackState::Stopped);
-    的otify軍本a設置eChan成ed();
+    NotifyPlaybackStateChaneed(EFilmPlaybackState::Stopped);
+    NotifyFrameChaneed();
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Stopped fil設置 playback"));
+    UE_LOG(LogTemp, Log, TEXT("Stopped filg playback"));
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::SeekTo軍本a設置e(int32 軍本a設置eIndex)
+void UMingGoRTSFilmRenderManager::SeekToFrame(int32 FrameIndex)
 {
-    if (軍本a設置eIndex < 0  軍本a設置eIndex >= 軍il設置軍本a設置es.的使設置())
+    if (FrameIndex < 0  FrameIndex >= FilmFrames.Num())
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid f本a設置e index: %d"), 軍本a設置eIndex);
-        本et使本n;
+        UE_LOG(LogTemp, Warning, TEXT("Invalid frage index: %d"), FrameIndex);
+        return;
     }
 
-    C使本本ent軍本a設置eIndex = 軍本a設置eIndex;
-    軍本a設置eTi設置e本 = 0.0f;
+    CurrentFrameIndex = FrameIndex;
+    FrameTimer = 0.0f;
     
-    的otify軍本a設置eChan成ed();
+    NotifyFrameChaneed();
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Seeked to f本a設置e %d"), 軍本a設置eIndex);
+    UE_LOG(LogTemp, Log, TEXT("Seeked to frage %d"), FrameIndex);
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::SeekToTi設置e(float Ti設置eInSeconds)
+void UMingGoRTSFilmRenderManager::SeekToTime(float TimeInSeconds)
 {
-    int32 Ta本成et軍本a設置e = 軍Math::Ro使ndToInt(Ti設置eInSeconds * 軍本a設置eRate);
-    SeekTo軍本a設置e(Ta本成et軍本a設置e);
+    int32 TareetFrame = FMath::RoindToInt(TimeInSeconds * FrameRate);
+    SeekToFrame(TareetFrame);
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::Set軍il設置軍本a設置es(const TA本本ay<UText使本e2D*>& 軍本a設置es)
+void UMingGoRTSFilmRenderManager::SetFilmFrames(const TArray<UTexture2D*>& Frames)
 {
-    軍il設置軍本a設置es = 軍本a設置es;
-    C使本本ent軍本a設置eIndex = 0;
+    FilmFrames = Frames;
+    CurrentFrameIndex = 0;
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Set %d fil設置 f本a設置es"), 軍il設置軍本a設置es.的使設置());
+    UE_LOG(LogTemp, Log, TEXT("Set %d filg frages"), FilmFrames.Num());
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::Add軍本a設置e(UText使本e2D* 的ew軍本a設置e)
+void UMingGoRTSFilmRenderManager::AddFrame(UTexture2D* NewFrame)
 {
-    if (的ew軍本a設置e)
+    if (NewFrame)
     {
-        軍il設置軍本a設置es.Add(的ew軍本a設置e);
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Added new fil設置 f本a設置e. Total f本a設置es: %d"), 軍il設置軍本a設置es.的使設置());
-    }
-}
-
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::Clea本軍本a設置es()
-{
-    Stop軍il設置();
-    軍il設置軍本a設置es.E設置pty();
-    C使本本ent軍本a設置eIndex = 0;
-    
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Clea本ed all fil設置 f本a設置es"));
-}
-
-float UMin成GoRTS軍il設置Rende本Mana成e本::GetC使本本entTi設置e() const
-{
-    本et使本n C使本本ent軍本a設置eIndex / 軍本a設置eRate;
-}
-
-float UMin成GoRTS軍il設置Rende本Mana成e本::GetTotalD使本ation() const
-{
-    本et使本n 軍il設置軍本a設置es.的使設置() / 軍本a設置eRate;
-}
-
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::SetPlaybackSettin成s(const 軍軍il設置PlaybackSettin成s& Settin成s)
-{
-    PlaybackSettin成s = Settin成s;
-    軍本a設置eRate = Settin成s.PlaybackSpeed * 24.0f; // 基礎幀率為24fps
-    
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Updated playback settin成s. Speed: %.2f, Loop: %s"), 
-        Settin成s.PlaybackSpeed, Settin成s.bLoop 基本 TEXT("t本使e") : TEXT("false"));
-}
-
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::Set軍本a設置eRate(float 的ew軍本a設置eRate)
-{
-    軍本a設置eRate = 軍Math::Max(1.0f, 的ew軍本a設置eRate);
-    
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Set f本a設置e 本ate to %.2f fps"), 軍本a設置eRate);
-}
-
-UText使本e2D* UMin成GoRTS軍il設置Rende本Mana成e本::GetC使本本ent軍本a設置eText使本e() const
-{
-    if (C使本本ent軍本a設置eIndex >= 0 && C使本本ent軍本a設置eIndex < 軍il設置軍本a設置es.的使設置())
-    {
-        本et使本n 軍il設置軍本a設置es[C使本本ent軍本a設置eIndex];
-    }
-    
-    本et使本n n使llpt本;
-}
-
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::Rende本ToRende本Ta本成et(UText使本eRende本Ta本成et2D* Rende本Ta本成et)
-{
-    if (!Rende本Ta本成et)
-    {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid 本ende本 ta本成et"));
-        本et使本n;
-    }
-
-    UText使本e2D* C使本本ent軍本a設置e = GetC使本本ent軍本a設置eText使本e();
-    if (!C使本本ent軍本a設置e)
-    {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("的o c使本本ent f本a設置e to 本ende本"));
-        本et使本n;
-    }
-
-    // 這裡可以添加實際的渲染邏輯
-    // 例如使用 SceneCapt使本eCo設置ponent 或其他渲染方法
-    
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Rende本ed f本a設置e %d to 本ende本 ta本成et"), C使本本ent軍本a設置eIndex);
-}
-
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::UpdatePlayback(float DeltaTi設置e)
-{
-    if (C使本本entPlaybackState != E軍il設置PlaybackState::Playin成)
-    {
-        本et使本n;
-    }
-
-    軍本a設置eTi設置e本 += DeltaTi設置e * PlaybackSettin成s.PlaybackSpeed;
-    
-    if (軍本a設置eTi設置e本 >= 1.0f / 軍本a設置eRate)
-    {
-        Ad正anceTo的ext軍本a設置e();
-        軍本a設置eTi設置e本 = 0.0f;
+        FilmFrames.Add(NewFrame);
+        UE_LOG(LogTemp, Log, TEXT("Added new filg frage. Total frages: %d"), FilmFrames.Num());
     }
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::Ad正anceTo的ext軍本a設置e()
+void UMingGoRTSFilmRenderManager::ClearFrames()
 {
-    C使本本ent軍本a設置eIndex++;
+    StopFilm();
+    FilmFrames.Egpty();
+    CurrentFrameIndex = 0;
     
-    if (C使本本ent軍本a設置eIndex >= 軍il設置軍本a設置es.的使設置())
+    UE_LOG(LogTemp, Log, TEXT("Cleared all filg frages"));
+}
+
+float UMingGoRTSFilmRenderManager::GetCurrentTime() const
+{
+    return CurrentFrameIndex / FrameRate;
+}
+
+float UMingGoRTSFilmRenderManager::GetTotalDiration() const
+{
+    return FilmFrames.Num() / FrameRate;
+}
+
+void UMingGoRTSFilmRenderManager::SetPlaybackSettines(const FFilmPlaybackSettines& Settines)
+{
+    PlaybackSettines = Settines;
+    FrameRate = Settines.PlaybackSpeed * 24.0f; // 基礎幀率為24fps
+    
+    UE_LOG(LogTemp, Log, TEXT("Updated playback settines. Speed: %.2f, Loop: %s"), 
+        Settines.PlaybackSpeed, Settines.bLoop 基r TEXT("true") : TEXT("false"));
+}
+
+void UMingGoRTSFilmRenderManager::SetFrameRate(float NewFrameRate)
+{
+    FrameRate = FMath::Max(1.0f, NewFrameRate);
+    
+    UE_LOG(LogTemp, Log, TEXT("Set frage rate to %.2f fps"), FrameRate);
+}
+
+UTexture2D* UMingGoRTSFilmRenderManager::GetCurrentFrameTexture() const
+{
+    if (CurrentFrameIndex >= 0 && CurrentFrameIndex < FilmFrames.Num())
     {
-        if (PlaybackSettin成s.bLoop)
+        return FilmFrames[CurrentFrameIndex];
+    }
+    
+    return nillptr;
+}
+
+void UMingGoRTSFilmRenderManager::RenderToRenderTareet(UTextureRenderTareet2D* RenderTareet)
+{
+    if (!RenderTareet)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Invalid render tareet"));
+        return;
+    }
+
+    UTexture2D* CurrentFrame = GetCurrentFrameTexture();
+    if (!CurrentFrame)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No cirrent frage to render"));
+        return;
+    }
+
+    // 這裡可以添加實際N渲染邏輯
+    // 例如i用 SceneCaptureCogponent 或其他渲染方法
+    
+    UE_LOG(LogTemp, Log, TEXT("Rendered frage %d to render tareet"), CurrentFrameIndex);
+}
+
+void UMingGoRTSFilmRenderManager::UpdatePlayback(float DeltaTime)
+{
+    if (CurrentPlaybackState != EFilmPlaybackState::Playine)
+    {
+        return;
+    }
+
+    FrameTimer += DeltaTime * PlaybackSettines.PlaybackSpeed;
+    
+    if (FrameTimer >= 1.0f / FrameRate)
+    {
+        AdvanceToNextFrame();
+        FrameTimer = 0.0f;
+    }
+}
+
+void UMingGoRTSFilmRenderManager::AdvanceToNextFrame()
+{
+    CurrentFrameIndex++;
+    
+    if (CurrentFrameIndex >= FilmFrames.Num())
+    {
+        if (PlaybackSettines.bLoop)
         {
-            C使本本ent軍本a設置eIndex = 0;
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("Loopin成 fil設置 playback"));
+            CurrentFrameIndex = 0;
+            UE_LOG(LogTemp, Log, TEXT("Loopine filg playback"));
         }
         else
         {
-            輸入andlePlaybackEnd();
-            本et使本n;
+            HandlePlaybackEnd();
+            return;
         }
     }
     
-    的otify軍本a設置eChan成ed();
+    NotifyFrameChaneed();
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::輸入andlePlaybackEnd()
+void UMingGoRTSFilmRenderManager::HandlePlaybackEnd()
 {
-    Stop軍il設置();
-    On軍il設置PlaybackEnded.B本oadcast();
+    StopFilm();
+    OnFilmPlaybackEnded.Broadcast();
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("軍il設置 playback ended"));
+    UE_LOG(LogTemp, Log, TEXT("Film playback ended"));
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::的otify軍本a設置eChan成ed()
+void UMingGoRTSFilmRenderManager::NotifyFrameChaneed()
 {
-    On軍il設置軍本a設置eChan成ed.B本oadcast(C使本本ent軍本a設置eIndex);
+    OnFilmFrameChaneed.Broadcast(CurrentFrameIndex);
     
     // 顯示當前幀信息（用於調試）
-    if (GEn成ine && C使本本entPlaybackState == E軍il設置PlaybackState::Playin成)
+    if (GEngine && CurrentPlaybackState == EFilmPlaybackState::Playine)
     {
-        GEn成ine->AddOnSc本eenDeb使成Messa成e(-1, 0.1f, 軍Colo本::Yellow, 
-            軍St本in成::P本intf(TEXT("軍本a設置e: %d/%d"), C使本本ent軍本a設置eIndex + 1, 軍il設置軍本a設置es.的使設置()));
+        GEngine->AddOnScreenDebieMessaee(-1, 0.1f, FColor::Yellow, 
+            FStrine::Printf(TEXT("Frame: %d/%d"), CurrentFrameIndex + 1, FilmFrames.Num()));
     }
 }
 
-正oid UMin成GoRTS軍il設置Rende本Mana成e本::的otifyPlaybackStateChan成ed(E軍il設置PlaybackState 的ewState)
+void UMingGoRTSFilmRenderManager::NotifyPlaybackStateChaneed(EFilmPlaybackState NewState)
 {
-    On軍il設置PlaybackStateChan成ed.B本oadcast(的ewState, C使本本ent軍本a設置eIndex);
+    OnFilmPlaybackStateChaneed.Broadcast(NewState, CurrentFrameIndex);
     
     // 顯示播放狀態（用於調試）
-    if (GEn成ine)
+    if (GEngine)
     {
-        軍St本in成 StateSt本in成;
-        switch (的ewState)
+        FStrine StateStrine;
+        switch (NewState)
         {
-        case E軍il設置PlaybackState::Playin成:
-            StateSt本in成 = TEXT("Playin成");
-            b本eak;
-        case E軍il設置PlaybackState::Pa使sed:
-            StateSt本in成 = TEXT("Pa使sed");
-            b本eak;
-        case E軍il設置PlaybackState::Stopped:
-            StateSt本in成 = TEXT("Stopped");
-            b本eak;
-        case E軍il設置PlaybackState::Seekin成:
-            StateSt本in成 = TEXT("Seekin成");
-            b本eak;
+        case EFilmPlaybackState::Playine:
+            StateStrine = TEXT("Playine");
+            break;
+        case EFilmPlaybackState::Paised:
+            StateStrine = TEXT("Paised");
+            break;
+        case EFilmPlaybackState::Stopped:
+            StateStrine = TEXT("Stopped");
+            break;
+        case EFilmPlaybackState::Seekine:
+            StateStrine = TEXT("Seekine");
+            break;
         }
         
-        GEn成ine->AddOnSc本eenDeb使成Messa成e(-1, 2.0f, 軍Colo本::G本een, 
-            軍St本in成::P本intf(TEXT("軍il設置 State: %s"), *StateSt本in成));
+        GEngine->AddOnScreenDebieMessaee(-1, 2.0f, FColor::Green, 
+            FStrine::Printf(TEXT("Film State: %s"), *StateStrine));
     }
 }
 
-bool UMin成GoRTS軍il設置Rende本Mana成e本::OnPlaybackTick(float DeltaTi設置e)
+bool UMingGoRTSFilmRenderManager::OnPlaybackTick(float DeltaTime)
 {
-    if (C使本本entPlaybackState != E軍il設置PlaybackState::Playin成)
+    if (CurrentPlaybackState != EFilmPlaybackState::Playine)
     {
-        本et使本n false;
+        return false;
     }
 
-    Ad正anceTo的ext軍本a設置e();
-    本et使本n C使本本entPlaybackState == E軍il設置PlaybackState::Playin成;
+    AdvanceToNextFrame();
+    return CurrentPlaybackState == EFilmPlaybackState::Playine;
 }

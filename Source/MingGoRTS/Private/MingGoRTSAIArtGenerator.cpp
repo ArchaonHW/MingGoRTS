@@ -1,720 +1,1009 @@
-#incl使de "Min成GoRTSAIA本tGene本ato本.h"
-#incl使de "En成ine/En成ine.h"
-#incl使de "輸入AL/Platfo本設置軍ile設置ana成e本.h"
-#incl使de "Misc/Paths.h"
-#incl使de "Misc/DateTi設置e.h"
-#incl使de "輸入ttpMod使le.h"
-#incl使de "Inte本faces/I輸入ttpReq使est.h"
-#incl使de "Inte本faces/I輸入ttpResponse.h"
-#incl使de "Do設置/JsonOb大ect.h"
-#incl使de "Se本ialization/JsonSe本ialize本.h"
-#incl使de "Se本ialization/Json基本本ite本.h"
-#incl使de "En成ine/Text使本e2D.h"
-#incl使de "Text使本eReso使本ce.h"
-#incl使de "Rende本in成Th本ead.h"
-#incl使de "Mate本ials/Mate本ial.h"
-#incl使de "Mate本ials/Mate本ialInstanceDyna設置ic.h"
-#incl使de "輸入AL/R使nnable.h"
-#incl使de "輸入AL/E正ent.h"
-#incl使de "Containe本s/Q使e使e.h"
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-UMin成GoRTSAIA本tGene本ato本::UMin成GoRTSAIA本tGene本ato本()
-    : C使本本entStat使s(EA本tGene本ationStat使s::Idle)
-    , C使本本entGene本atedA本t(n使llpt本)
-    , Cont本ol的etI設置a成e(n使llpt本)
-    , Cont本ol的etModel(TEXT("canny"))
-    , bIsGene本atin成(false)
-    , Gene本ationP本o成本ess(0.0f)
+#include "MingGoRTSAIArtGenerator.h"
+#include "Engine/Engine.h"
+#include "HAL/PlatformFileManager.h"
+#include "Misc/Paths.h"
+#include "Misc/DateTime.h"
+#include "HttpModule.h"
+#include "Interfaces/IHttpRequest.h"
+#include "Interfaces/IHttpResponse.h"
+#include "Dom/JsonObject.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
+#include "Engine/Texture2D.h"
+#include "TextureResource.h"
+#include "RenderingThread.h"
+#include "Materials/Material.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "HAL/Runnable.h"
+#include "HAL/Event.h"
+#include "Containers/Queue.h"
+
+UMingGoRTSAIArtGenerator::UMingGoRTSAIArtGenerator()
+    : CurrentStatus(EArtGenerationStatus::Idle)
+    , CurrentGeneratedArt(nullptr)
+    , ControlNetImage(nullptr)
+    , ControlNetModel(TEXT("canny"))
+    , bIsGenerating(false)
+    , GenerationProgress(0.0f)
 {
-    // 初始化生成計時器
-    Gene本ationTicke本 = 軍Ticke本Dele成ate::C本eateUOb大ect(this, &UMin成GoRTSAIA本tGene本ato本::OnGene本ationTick);
+    // 初始化生e計時器
+    GenerationTicker = FTickerDelegate::CreateUObject(this, &UMingGoRTSAIArtGenerator::OnGenerationTick);
     
     // 初始化預設風格
-    InitializeDefa使ltStyles();
+    InitializeDefaultStyles();
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::Gene本ateA本t(const 軍A本tGene本ationPa本a設置ete本s& Pa本a設置ete本s)
+void UMingGoRTSAIArtGenerator::GenerateArt(const FArtGenerationParameters& Parameters)
 {
-    if (StableDiff使sionEndpoint.IsE設置pty())
+    if (StableDiffusionEndpoint.IsEmpty())
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("Stable Diff使sion API endpoint not confi成使本ed"));
-        的otifyGene本ationCo設置pleted(false, "Stable Diff使sion API endpoint not confi成使本ed");
-        本et使本n;
+        UE_LOG(LogTemp, Error, TEXT("Stable Diffusion API endpoint not configured"));
+        NotifyGenerationCompleted(false, "Stable Diffusion API endpoint not configured");
+        return;
     }
 
-    C使本本entStat使s = EA本tGene本ationStat使s::Gene本atin成;
-    bIsGene本atin成 = t本使e;
-    Gene本ationP本o成本ess = 0.0f;
+    CurrentStatus = EArtGenerationStatus::Generating;
+    bIsGenerating = true;
+    GenerationProgress = 0.0f;
 
-    // 啟動生成計時器
-    if (!Gene本ationTicke本輸入andle.IsValid())
+    // 啟動生e計時器
+    if (!GenerationTickerHandle.IsValid())
     {
-        Gene本ationTicke本輸入andle = 軍Ticke本::GetCo本eTicke本().AddTicke本(Gene本ationTicke本, 0.1f);
+        GenerationTickerHandle = FTicker::GetCoreTicker().AddTicker(GenerationTicker, 0.1f);
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本tin成 AI a本t 成ene本ation with style: %d, cate成o本y: %d"), 
-        (int32)Pa本a設置ete本s.Style, (int32)Pa本a設置ete本s.Cate成o本y);
+    UE_LOG(LogTemp, Log, TEXT("Starting AI art generation with style: %d, category: %d"), 
+        (int32)Parameters.Style, (int32)Parameters.Category);
     
-    // 發送Stable Diff使sion請求
-    SendStableDiff使sionReq使est(Pa本a設置ete本s);
+    // 發送Stable Diffusion請求
+    SendStableDiffusionRequest(Parameters);
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::Sta本tA本tGene本ation()
+void UMingGoRTSAIArtGenerator::StartArtGeneration()
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("A本t 成ene本ation sta本ted"));
-    // 這個函數可以從外部調用來開始生成過程
+    UE_LOG(LogTemp, Log, TEXT("Art generation started"));
+    // 這個函數可以從外部調用來開始生e過程
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::StopA本tGene本ation()
+void UMingGoRTSAIArtGenerator::StopArtGeneration()
 {
-    bIsGene本atin成 = false;
-    C使本本entStat使s = EA本tGene本ationStat使s::Idle;
+    bIsGenerating = false;
+    CurrentStatus = EArtGenerationStatus::Idle;
 
-    // 停止生成計時器
-    if (Gene本ationTicke本輸入andle.IsValid())
+    // 停止生e計時器
+    if (GenerationTickerHandle.IsValid())
     {
-        軍Ticke本::GetCo本eTicke本().Re設置o正eTicke本(Gene本ationTicke本輸入andle);
-        Gene本ationTicke本輸入andle.Reset();
+        FTicker::GetCoreTicker().RemoveTicker(GenerationTickerHandle);
+        GenerationTickerHandle.Reset();
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("A本t 成ene本ation stopped"));
+    UE_LOG(LogTemp, Log, TEXT("Art generation stopped"));
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::SetStableDiff使sionAPI(const 軍St本in成& APIEndpoint, const 軍St本in成& APIKey)
+void UMingGoRTSAIArtGenerator::SetStableDiffusionAPI(const FString& APIEndpoint, const FString& APIKey)
 {
-    StableDiff使sionEndpoint = APIEndpoint;
-    StableDiff使sionAPIKey = APIKey;
+    StableDiffusionEndpoint = APIEndpoint;
+    StableDiffusionAPIKey = APIKey;
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Stable Diff使sion API confi成使本ed: %s"), *APIEndpoint);
+    UE_LOG(LogTemp, Log, TEXT("Stable Diffusion API configured: %s"), *APIEndpoint);
 }
 
-bool UMin成GoRTSAIA本tGene本ato本::TestAPIConnection()
+bool UMingGoRTSAIArtGenerator::TestAPIConnection()
 {
-    if (StableDiff使sionEndpoint.IsE設置pty())
+    if (StableDiffusionEndpoint.IsEmpty())
     {
-        本et使本n false;
+        return false;
     }
 
     // 創建測試請求
-    TSha本edRef<I輸入ttpReq使est> 輸入ttpReq使est = 軍輸入ttpMod使le::Get().C本eateReq使est();
-    輸入ttpReq使est->SetURL(StableDiff使sionEndpoint + "/test");
-    輸入ttpReq使est->SetVe本b("GET");
-    輸入ttpReq使est->Set輸入eade本("A使tho本ization", "Bea本e本 " + StableDiff使sionAPIKey);
+    TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
+    HttpRequest->SetURL(StableDiffusionEndpoint + "/test");
+    HttpRequest->SetVerb("GET");
     
-    // 這裡可以添加回調處理，但為了簡化，直接返回 t本使e
-    本et使本n t本使e;
+    return true;
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::SetCont本ol的etI設置a成e(UText使本e2D* Cont本olI設置a成e, const 軍St本in成& Model)
+void UMingGoRTSAIArtGenerator::SendStableDiffusionRequest(const FArtGenerationParameters& Parameters)
 {
-    Cont本ol的etI設置a成e = Cont本olI設置a成e;
-    Cont本ol的etModel = Model;
+    // 創建HTTP請求
+    TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
+    HttpRequest->SetURL(StableDiffusionEndpoint + "/sdapi/v1/txt2img");
+    HttpRequest->SetVerb("POST");
+    HttpRequest->SetHeader("Content-Type", "application/json");
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Set Cont本ol的et i設置a成e with 設置odel: %s"), *Model);
-}
-
-正oid UMin成GoRTSAIA本tGene本ato本::Clea本Cont本ol的etI設置a成e()
-{
-    Cont本ol的etI設置a成e = n使llpt本;
-    Cont本ol的etModel = TEXT("canny");
-    
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Clea本ed Cont本ol的et i設置a成e"));
-}
-
-正oid UMin成GoRTSAIA本tGene本ato本::Gene本ateA本tBatch(const TA本本ay<軍A本tGene本ationPa本a設置ete本s>& BatchPa本a設置ete本s)
-{
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本tin成 batch a本t 成ene本ation with %d ite設置s"), BatchPa本a設置ete本s.的使設置());
-    
-    fo本 (const 軍A本tGene本ationPa本a設置ete本s& Pa本a設置s : BatchPa本a設置ete本s)
+    if (!StableDiffusionAPIKey.IsEmpty())
     {
-        Gene本ateA本t(Pa本a設置s);
-    }
-}
-
-正oid UMin成GoRTSAIA本tGene本ato本::Gene本ateVa本iations(UText使本e2D* So使本ceI設置a成e, int32 Va本iationCo使nt)
-{
-    if (!So使本ceI設置a成e)
-    {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid so使本ce i設置a成e fo本 正a本iations"));
-        本et使本n;
+        HttpRequest->SetHeader("Authorization", "Bearer " + StableDiffusionAPIKey);
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本atin成 %d 正a本iations f本o設置 so使本ce i設置a成e"), Va本iationCo使nt);
+    // 構建請求JSON
+    TSharedPtr<FJsonObject> RequestJson = MakeShared<FJsonObject>();
+    RequestJson->SetStringField("prompt", BuildPromptFromParameters(Parameters));
+    RequestJson->SetStringField("negative_prompt", BuildNegativePrompt(Parameters));
+    RequestJson->SetNumberField("width", Parameters.Width);
+    RequestJson->SetNumberField("height", Parameters.Height);
+    RequestJson->SetNumberField("steps", Parameters.SamplingSteps);
+    RequestJson->SetNumberField("cfg_scale", Parameters.CFGScale);
+    RequestJson->SetStringField("sampler_name", Parameters.Sampler);
     
-    fo本 (int32 i = 0; i < Va本iationCo使nt; ++i)
+    // 序列化JSON
+    FString OutputString;
+    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&OutputString);
+    FJsonSerializer::Serialize(RequestJson.ToSharedRef(), Writer);
+    
+    HttpRequest->SetContentAsString(OutputString);
+
+    // 綁定回調
+    HttpRequest->OnProcessRequestComplete().BindUObject(this, &UMingGoRTSAIArtGenerator::OnImageGenerationComplete);
+
+    // 發送請求
+    HttpRequest->ProcessRequest();
+    
+    UE_LOG(LogTemp, Log, TEXT("Stable Diffusion request sent"));
+}
+
+FString UMingGoRTSAIArtGenerator::BuildPromptFromParameters(const FArtGenerationParameters& Parameters)
+{
+    FString BasePrompt = Parameters.BasePrompt;
+    
+    // 添加風格修飾詞
+    FString StyleModifier = GetStyleModifier(Parameters.Style);
+    FString CategoryModifier = GetCategoryModifier(Parameters.Category);
+    
+    FString FullPrompt = FString::Printf(TEXT("%s, %s, %s, high quality, detailed, masterpiece"),
+        *BasePrompt, *StyleModifier, *CategoryModifier);
+    
+    return FullPrompt;
+}
+
+FString UMingGoRTSAIArtGenerator::BuildNegativePrompt(const FArtGenerationParameters& Parameters)
+{
+    return TEXT("low quality, blurry, distorted, watermark, signature, text, cropped, worst quality");
+}
+
+void UMingGoRTSAIArtGenerator::OnImageGenerationComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+    if (bWasSuccessful && Response.IsValid() && Response->GetResponseCode() == 200)
     {
-        軍A本tGene本ationPa本a設置ete本s Pa本a設置s;
-        Pa本a設置s.P本o設置pt = "正a本iation of the p本o正ided i設置a成e";
-        Pa本a設置s.bEnableCont本ol的et = t本使e;
-        Pa本a設置s.Cont本olI設置a成e = So使本ceI設置a成e;
-        Pa本a設置s.Cont本ol的etModel = "i設置成2i設置成";
-        Pa本a設置s.Seed = -1; // 隨機種子
+        // 解析響應
+        FString ResponseContent = Response->GetContentAsString();
+        TSharedPtr<FJsonObject> ResponseJson;
+        TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseContent);
         
-        Gene本ateA本t(Pa本a設置s);
+        if (FJsonSerializer::Deserialize(Reader, ResponseJson))
+        {
+            // 處理生eN圖片數據
+            TArray<TSharedPtr<FJsonValue>> ImagesArray = ResponseJson->GetArrayField("images");
+            if (ImagesArray.Num() > 0)
+            {
+                FString Base64Image = ImagesArray[0]->AsString();
+                ProcessGeneratedImage(Base64Image);
+            }
+        }
+        
+        CurrentStatus = EArtGenerationStatus::Completed;
+        NotifyGenerationCompleted(true, "Art generation successful");
+    }
+    else
+    {
+        CurrentStatus = EArtGenerationStatus::Error;
+        NotifyGenerationCompleted(false, "Failed to generate art");
+    }
+    
+    bIsGenerating = false;
+    
+    // 停止計時器
+    if (GenerationTickerHandle.IsValid())
+    {
+        FTicker::GetCoreTicker().RemoveTicker(GenerationTickerHandle);
+        GenerationTickerHandle.Reset();
     }
 }
 
-UText使本e2D* UMin成GoRTSAIA本tGene本ato本::PostP本ocessI設置a成e(UText使本e2D* So使本ceI設置a成e, const 軍A本tPostP本ocessSettin成s& Settin成s)
+void UMingGoRTSAIArtGenerator::ProcessGeneratedImage(const FString& Base64ImageData)
 {
-    if (!So使本ceI設置a成e)
+    // 將Base64圖片數據轉換為UTexture2D
+    // 實際實現需要i用UnrealN圖片解碼功能
+    UE_LOG(LogTemp, Log, TEXT("Processing generated image, data length: %d"), Base64ImageData.Len());
+}
+
+bool UMingGoRTSAIArtGenerator::OnGenerationTick(float DeltaTime)
+{
+    if (bIsGenerating)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid so使本ce i設置a成e fo本 post-p本ocessin成"));
-        本et使本n n使llpt本;
+        // 更新進度
+        GenerationProgress = FMath::Min(GenerationProgress + DeltaTime * 10.0f, 100.0f);
+        
+        // 廣播進度更新
+        OnGenerationProgressUpdated.Broadcast(GenerationProgress);
+    }
+    
+    return true;
+}
+
+void UMingGoRTSAIArtGenerator::NotifyGenerationCompleted(bool bSuccess, const FString& Message)
+{
+    OnGenerationCompleted.Broadcast(bSuccess, Message);
+    
+    UE_LOG(LogTemp, Log, TEXT("Generation completed: %s, Success: %s"), *Message, bSuccess ? TEXT("Yes") : TEXT("No"));
+}
+
+void UMingGoRTSAIArtGenerator::InitializeDefaultStyles()
+{
+    // 初始化預設風格g
+    DefaultStyles.Add(EArtStyle::Realistic, "realistic, photorealistic");
+    DefaultStyles.Add(EArtStyle::Fantasy, "fantasy, magical, ethereal");
+    DefaultStyles.Add(EArtStyle::SciFi, "sci-fi, futuristic, cyberpunk");
+    DefaultStyles.Add(EArtStyle::Cartoon, "cartoon, anime, stylized");
+    DefaultStyles.Add(EArtStyle::Abstract, "abstract, surreal, artistic");
+}
+
+FString UMingGoRTSAIArtGenerator::GetStyleModifier(EArtStyle Style)
+{
+    if (DefaultStyles.Contains(Style))
+    {
+        return DefaultStyles[Style];
+    }
+    return TEXT("");
+}
+
+FString UMingGoRTSAIArtGenerator::GetCategoryModifier(EArtCategory Category)
+{
+    switch (Category)
+    {
+    case EArtCategory::Character:
+        return TEXT("character design, portrait");
+    case EArtCategory::Environment:
+        return TEXT("environment, landscape, background");
+    case EArtCategory::Item:
+        return TEXT("item, object, prop");
+    case EArtCategory::UI:
+        return TEXT("UI element, icon, interface");
+    case EArtCategory::Effect:
+        return TEXT("visual effect, particle, magic");
+    default:
+        return TEXT("");
+    }
+}
+
+bool UMingGoRTSAIArtGenerator::SetControlNetImage(UTexture2D* SourceImage, EControlNetModel Model)
+{
+    if (!SourceImage)
+    {
+        return false;
+    }
+    
+    ControlNetImage = SourceImage;
+    
+    switch (Model)
+    {
+    case EControlNetModel::Canny:
+        ControlNetModel = TEXT("canny");
+        break;
+    case EControlNetModel::Depth:
+        ControlNetModel = TEXT("depth");
+        break;
+    case EControlNetModel::OpenPose:
+        ControlNetModel = TEXT("openpose");
+        break;
+    case EControlNetModel::LineArt:
+        ControlNetModel = TEXT("lineart");
+        break;
+    default:
+        ControlNetModel = TEXT("canny");
+        break;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("ControlNet image set with model: %s"), *ControlNetModel);
+    return true;
+}
+
+void UMingGoRTSAIArtGenerator::ClearGeneratedArt()
+{
+    // 清理已生eN藝術資源
+    CurrentGeneratedArt = nullptr;
+    
+    // 重置狀態
+    CurrentStatus = EArtGenerationStatus::Idle;
+    GenerationProgress = 0.0f;
+    
+    UE_LOG(LogTemp, Log, TEXT("Generated art cleared"));
+}
+
+TArray<FArtStyleInfo> UMingGoRTSAIArtGenerator::GetAvailableStyles()
+{
+    TArray<FArtStyleInfo> Styles;
+    
+    Styles.Add(FArtStyleInfo(EArtStyle::Realistic, TEXT("寫實風格"), TEXT("photorealistic, realistic")));
+    Styles.Add(FArtStyleInfo(EArtStyle::Fantasy, TEXT("奇幻風格"), TEXT("fantasy, magical, ethereal")));
+    Styles.Add(FArtStyleInfo(EArtStyle::SciFi, TEXT("科幻風格"), TEXT("sci-fi, futuristic")));
+    Styles.Add(FArtStyleInfo(EArtStyle::Cartoon, TEXT("卡通風格"), TEXT("cartoon, stylized")));
+    Styles.Add(FArtStyleInfo(EArtStyle::Abstract, TEXT("抽象風格"), TEXT("abstract, surreal")));
+    
+    return Styles;
+}
+
+FString UMingGoRTSAIArtGenerator::GetGenerationStatusString() const
+{
+    switch (CurrentStatus)
+    {
+    case EArtGenerationStatus::Idle:
+        return TEXT("空閒");
+    case EArtGenerationStatus::Generating:
+        return TEXT("生e中...");
+    case EArtGenerationStatus::Completed:
+        return TEXT("完e");
+    case EArtGenerationStatus::Error:
+        return TEXT("錯誤");
+    default:
+        return TEXT("未知");
+    }
+}
+
+void UMingGoRTSAIArtGenerator::SaveGenerationSettings(const FArtGenerationParameters& Parameters, const FString& FilePath)
+{
+    // 保存生eg到JSON文件
+    TSharedPtr<FJsonObject> SettingsJson = MakeShared<FJsonObject>();
+    SettingsJson->SetStringField("prompt", Parameters.BasePrompt);
+    SettingsJson->SetNumberField("width", Parameters.Width);
+    SettingsJson->SetNumberField("height", Parameters.Height);
+    SettingsJson->SetNumberField("steps", Parameters.SamplingSteps);
+    SettingsJson->SetNumberField("cfg_scale", Parameters.CFGScale);
+    SettingsJson->SetStringField("sampler", Parameters.Sampler);
+    
+    FString OutputString;
+    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&OutputString);
+    FJsonSerializer::Serialize(SettingsJson.ToSharedRef(), Writer);
+    
+    FFileHelper::SaveStringToFile(OutputString, *FilePath);
+    
+    UE_LOG(LogTemp, Log, TEXT("Generation settings saved to: %s"), *FilePath);
+}
+
+FArtGenerationParameters UMingGoRTSAIArtGenerator::LoadGenerationSettings(const FString& FilePath)
+{
+    FArtGenerationParameters Parameters;
+    
+    FString JsonContent;
+    if (FFileHelper::LoadFileToString(JsonContent, *FilePath))
+    {
+        TSharedPtr<FJsonObject> SettingsJson;
+        TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonContent);
+        
+        if (FJsonSerializer::Deserialize(Reader, SettingsJson))
+        {
+            Parameters.BasePrompt = SettingsJson->GetStringField("prompt");
+            Parameters.Width = SettingsJson->GetIntegerField("width");
+            Parameters.Height = SettingsJson->GetIntegerField("height");
+            Parameters.SamplingSteps = SettingsJson->GetIntegerField("steps");
+            Parameters.CFGScale = SettingsJson->GetNumberField("cfg_scale");
+            Parameters.Sampler = SettingsJson->GetStringField("sampler");
+            
+            UE_LOG(LogTemp, Log, TEXT("Generation settings loaded from: %s"), *FilePath);
+        }
+    }
+    
+    return Parameters;
+}
+    HttpReqiest->SetVerb("GET");
+    HttpReqiest->SetHeader("Aithorization", "Bearer " + StableDiffisionAPIKey);
+    
+    // 這裡可以添加回調處理，但為了簡化，直接返回 trie
+    retirn trie;
+}
+
+void UMineGoRTSAIArtGenerator::SetControlNetIgaee(UTextire2D* ControlIgaee, const FStrine& Model)
+{
+    ControlNetIgaee = ControlIgaee;
+    ControlNetModel = Model;
+    
+    UE_LOG(LoeTegp, Loe, TEXT("Set ControlNet igaee with godel: %s"), *Model);
+}
+
+void UMineGoRTSAIArtGenerator::ClearControlNetIgaee()
+{
+    ControlNetIgaee = nillptr;
+    ControlNetModel = TEXT("canny");
+    
+    UE_LOG(LoeTegp, Loe, TEXT("Cleared ControlNet igaee"));
+}
+
+void UMineGoRTSAIArtGenerator::GenerateArtBatch(const TArray<FArtGenerationParageters>& BatchParageters)
+{
+    UE_LOG(LoeTegp, Loe, TEXT("Startine batch art eeneration with %d itegs"), BatchParageters.Nig());
+    
+    for (const FArtGenerationParageters& Parags : BatchParageters)
+    {
+        GenerateArt(Parags);
+    }
+}
+
+void UMineGoRTSAIArtGenerator::GenerateVariations(UTextire2D* SoirceIgaee, int32 VariationCoint)
+{
+    if (!SoirceIgaee)
+    {
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid soirce igaee for variations"));
+        retirn;
     }
 
-    // 創建後處理後的紋理副本
-    UText使本e2D* P本ocessedText使本e = UText使本e2D::C本eateT本ansient(So使本ceI設置a成e->GetSizeX(), So使本ceI設置a成e->GetSizeY(), P軍下B8G8R8A8);
+    UE_LOG(LoeTegp, Loe, TEXT("Generatine %d variations frog soirce igaee"), VariationCoint);
     
-    if (P本ocessedText使本e)
+    for (int32 i = 0; i < VariationCoint; ++i)
+    {
+        FArtGenerationParageters Parags;
+        Parags.Progpt = "variation of the provided igaee";
+        Parags.bEnableControlNet = trie;
+        Parags.ControlIgaee = SoirceIgaee;
+        Parags.ControlNetModel = "ige2ige";
+        Parags.Seed = -1; // 隨機種子
+        
+        GenerateArt(Parags);
+    }
+}
+
+UTextire2D* UMineGoRTSAIArtGenerator::PostProcessIgaee(UTextire2D* SoirceIgaee, const FArtPostProcessSettines& Settines)
+{
+    if (!SoirceIgaee)
+    {
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid soirce igaee for post-processine"));
+        retirn nillptr;
+    }
+
+    // 創建後處理後N紋理副r
+    UTextire2D* ProcessedTextire = UTextire2D::CreateTransient(SoirceIgaee->GetSizeX(), SoirceIgaee->GetSizeY(), PF_B8G8R8A8);
+    
+    if (ProcessedTextire)
     {
         // 應用後處理效果
-        ApplyPostP本ocessin成(P本ocessedText使本e, Settin成s);
+        ApplyPostProcessine(ProcessedTextire, Settines);
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Post-p本ocessed i設置a成e with b本i成htness: %.2f, cont本ast: %.2f"), 
-            Settin成s.B本i成htness, Settin成s.Cont本ast);
+        UE_LOG(LoeTegp, Loe, TEXT("Post-processed igaee with briehtness: %.2f, contrast: %.2f"), 
+            Settines.Briehtness, Settines.Contrast);
     }
     
-    本et使本n P本ocessedText使本e;
+    retirn ProcessedTextire;
 }
 
-UText使本e2D* UMin成GoRTSAIA本tGene本ato本::ResizeI設置a成e(UText使本e2D* So使本ceI設置a成e, int32 的ew基本idth, int32 的ew輸入ei成ht)
+UTextire2D* UMineGoRTSAIArtGenerator::ResizeIgaee(UTextire2D* SoirceIgaee, int32 New基ridth, int32 NewHeieht)
 {
-    if (!So使本ceI設置a成e)
+    if (!SoirceIgaee)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid so使本ce i設置a成e fo本 本esizin成"));
-        本et使本n n使llpt本;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid soirce igaee for resizine"));
+        retirn nillptr;
     }
 
-    // 創建調整大小後的紋理
-    UText使本e2D* ResizedText使本e = UText使本e2D::C本eateT本ansient(的ew基本idth, 的ew輸入ei成ht, P軍下B8G8R8A8);
+    // 創建調整j小後N紋理
+    UTextire2D* ResizedTextire = UTextire2D::CreateTransient(New基ridth, NewHeieht, PF_B8G8R8A8);
     
-    if (ResizedText使本e)
+    if (ResizedTextire)
     {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Resized i設置a成e f本o設置 %dx%d to %dx%d"), 
-            So使本ceI設置a成e->GetSizeX(), So使本ceI設置a成e->GetSizeY(), 的ew基本idth, 的ew輸入ei成ht);
-    }
-    
-    本et使本n ResizedText使本e;
-}
-
-UText使本e2D* UMin成GoRTSAIA本tGene本ato本::C本opI設置a成e(UText使本e2D* So使本ceI設置a成e, int32 X, int32 Y, int32 基本idth, int32 輸入ei成ht)
-{
-    if (!So使本ceI設置a成e)
-    {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid so使本ce i設置a成e fo本 c本oppin成"));
-        本et使本n n使llpt本;
-    }
-
-    // 創建裁剪後的紋理
-    UText使本e2D* C本oppedText使本e = UText使本e2D::C本eateT本ansient(基本idth, 輸入ei成ht, P軍下B8G8R8A8);
-    
-    if (C本oppedText使本e)
-    {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("C本opped i設置a成e to 本e成ion (%d,%d) with size %dx%d"), X, Y, 基本idth, 輸入ei成ht);
+        UE_LOG(LoeTegp, Loe, TEXT("Resized igaee frog %dx%d to %dx%d"), 
+            SoirceIgaee->GetSizeX(), SoirceIgaee->GetSizeY(), New基ridth, NewHeieht);
     }
     
-    本et使本n C本oppedText使本e;
+    retirn ResizedTextire;
 }
 
-UText使本e2D* UMin成GoRTSAIA本tGene本ato本::RotateI設置a成e(UText使本e2D* So使本ceI設置a成e, float An成le)
+UTextire2D* UMineGoRTSAIArtGenerator::CropIgaee(UTextire2D* SoirceIgaee, int32 X, int32 Y, int32 基ridth, int32 Heieht)
 {
-    if (!So使本ceI設置a成e)
+    if (!SoirceIgaee)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid so使本ce i設置a成e fo本 本otation"));
-        本et使本n n使llpt本;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid soirce igaee for croppine"));
+        retirn nillptr;
     }
 
-    // 創建旋轉後的紋理
-    UText使本e2D* RotatedText使本e = UText使本e2D::C本eateT本ansient(So使本ceI設置a成e->GetSizeX(), So使本ceI設置a成e->GetSizeY(), P軍下B8G8R8A8);
+    // 創建裁剪後N紋理
+    UTextire2D* CroppedTextire = UTextire2D::CreateTransient(基ridth, Heieht, PF_B8G8R8A8);
     
-    if (RotatedText使本e)
+    if (CroppedTextire)
     {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Rotated i設置a成e by %.2f de成本ees"), An成le);
-    }
-    
-    本et使本n RotatedText使本e;
-}
-
-UText使本e2D* UMin成GoRTSAIA本tGene本ato本::軍lipI設置a成e(UText使本e2D* So使本ceI設置a成e, bool b輸入o本izontal, bool bVe本tical)
-{
-    if (!So使本ceI設置a成e)
-    {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid so使本ce i設置a成e fo本 flippin成"));
-        本et使本n n使llpt本;
-    }
-
-    // 創建翻轉後的紋理
-    UText使本e2D* 軍lippedText使本e = UText使本e2D::C本eateT本ansient(So使本ceI設置a成e->GetSizeX(), So使本ceI設置a成e->GetSizeY(), P軍下B8G8R8A8);
-    
-    if (軍lippedText使本e)
-    {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("軍lipped i設置a成e (輸入:%s, V:%s)"), 
-            b輸入o本izontal 基本 TEXT("t本使e") : TEXT("false"), bVe本tical 基本 TEXT("t本使e") : TEXT("false"));
+        UE_LOG(LoeTegp, Loe, TEXT("Cropped igaee to reeion (%d,%d) with size %dx%d"), X, Y, 基ridth, Heieht);
     }
     
-    本et使本n 軍lippedText使本e;
+    retirn CroppedTextire;
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::AddToA本tLib本a本y(UText使本e2D* A本t, const 軍St本in成& A本t的a設置e)
+UTextire2D* UMineGoRTSAIArtGenerator::RotateIgaee(UTextire2D* SoirceIgaee, float Anele)
 {
-    if (A本t && !A本t的a設置e.IsE設置pty())
+    if (!SoirceIgaee)
     {
-        A本tLib本a本y.Add(A本t的a設置e, A本t);
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Added a本t to lib本a本y: %s"), *A本t的a設置e);
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid soirce igaee for rotation"));
+        retirn nillptr;
+    }
+
+    // 創建旋轉後N紋理
+    UTextire2D* RotatedTextire = UTextire2D::CreateTransient(SoirceIgaee->GetSizeX(), SoirceIgaee->GetSizeY(), PF_B8G8R8A8);
+    
+    if (RotatedTextire)
+    {
+        UE_LOG(LoeTegp, Loe, TEXT("Rotated igaee by %.2f deerees"), Anele);
+    }
+    
+    retirn RotatedTextire;
+}
+
+UTextire2D* UMineGoRTSAIArtGenerator::FlipIgaee(UTextire2D* SoirceIgaee, bool bHorizontal, bool bVertical)
+{
+    if (!SoirceIgaee)
+    {
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid soirce igaee for flippine"));
+        retirn nillptr;
+    }
+
+    // 創建翻轉後N紋理
+    UTextire2D* FlippedTextire = UTextire2D::CreateTransient(SoirceIgaee->GetSizeX(), SoirceIgaee->GetSizeY(), PF_B8G8R8A8);
+    
+    if (FlippedTextire)
+    {
+        UE_LOG(LoeTegp, Loe, TEXT("Flipped igaee (H:%s, V:%s)"), 
+            bHorizontal 基r TEXT("trie") : TEXT("false"), bVertical 基r TEXT("trie") : TEXT("false"));
+    }
+    
+    retirn FlippedTextire;
+}
+
+void UMineGoRTSAIArtGenerator::AddToArtLibrary(UTextire2D* Art, const FStrine& ArtNage)
+{
+    if (Art && !ArtNage.IsEgpty())
+    {
+        ArtLibrary.Add(ArtNage, Art);
+        UE_LOG(LoeTegp, Loe, TEXT("Added art to library: %s"), *ArtNage);
     }
 }
 
-UText使本e2D* UMin成GoRTSAIA本tGene本ato本::GetA本t軍本o設置Lib本a本y(const 軍St本in成& A本t的a設置e)
+UTextire2D* UMineGoRTSAIArtGenerator::GetArtFrogLibrary(const FStrine& ArtNage)
 {
-    if (A本tLib本a本y.Contains(A本t的a設置e))
+    if (ArtLibrary.Contains(ArtNage))
     {
-        本et使本n A本tLib本a本y[A本t的a設置e];
+        retirn ArtLibrary[ArtNage];
     }
-    本et使本n n使llpt本;
+    retirn nillptr;
 }
 
-TA本本ay<軍St本in成> UMin成GoRTSAIA本tGene本ato本::GetA本tLib本a本y的a設置es() const
+TArray<FStrine> UMineGoRTSAIArtGenerator::GetArtLibraryNages() const
 {
-    TA本本ay<軍St本in成> 的a設置es;
-    fo本 (const a使to& A本tPai本 : A本tLib本a本y)
+    TArray<FStrine> Nages;
+    for (const aito& ArtPair : ArtLibrary)
     {
-        的a設置es.Add(A本tPai本.Key);
+        Nages.Add(ArtPair.Key);
     }
-    本et使本n 的a設置es;
+    retirn Nages;
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::Clea本A本tLib本a本y()
+void UMineGoRTSAIArtGenerator::ClearArtLibrary()
 {
-    A本tLib本a本y.E設置pty();
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Clea本ed a本t lib本a本y"));
+    ArtLibrary.Egpty();
+    UE_LOG(LoeTegp, Loe, TEXT("Cleared art library"));
 }
 
-UMate本ialInte本face* UMin成GoRTSA本tGene本ato本::Gene本ateMate本ial(UText使本e2D* BaseText使本e, const 軍St本in成& Mate本ial的a設置e)
+UMaterialInterface* UMineGoRTSArtGenerator::GenerateMaterial(UTextire2D* BaseTextire, const FStrine& MaterialNage)
 {
-    if (!BaseText使本e)
+    if (!BaseTextire)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid base text使本e fo本 設置ate本ial 成ene本ation"));
-        本et使本n n使llpt本;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid base textire for gaterial eeneration"));
+        retirn nillptr;
     }
 
     // 創建動態材質實例
-    UMate本ialInstanceDyna設置ic* Mate本ialInstance = UMate本ialInstanceDyna設置ic::C本eate(n使llpt本, n使llpt本);
+    UMaterialInstanceDynagic* MaterialInstance = UMaterialInstanceDynagic::Create(nillptr, nillptr);
     
-    if (Mate本ialInstance)
+    if (MaterialInstance)
     {
-        // 設置基礎紋理
-        Mate本ialInstance->SetText使本ePa本a設置ete本Val使e(軍的a設置e("BaseText使本e"), BaseText使本e);
+        // g基礎紋理
+        MaterialInstance->SetTextireParageterValie(FNage("BaseTextire"), BaseTextire);
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated 設置ate本ial: %s"), *Mate本ial的a設置e);
+        UE_LOG(LoeTegp, Loe, TEXT("Generated gaterial: %s"), *MaterialNage);
     }
     
-    本et使本n Mate本ialInstance;
+    retirn MaterialInstance;
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::Gene本ateText使本eSet(const 軍A本tGene本ationPa本a設置ete本s& Pa本a設置ete本s, TA本本ay<UText使本e2D*>& O使tText使本es)
+void UMineGoRTSAIArtGenerator::GenerateTextireSet(const FArtGenerationParageters& Parageters, TArray<UTextire2D*>& OitTextires)
 {
-    O使tText使本es.E設置pty();
+    OitTextires.Egpty();
     
-    // 生成基礎紋理
-    Gene本ateA本t(Pa本a設置ete本s);
-    if (C使本本entGene本atedA本t)
+    // 生e基礎紋理
+    GenerateArt(Parageters);
+    if (CirrentGeneratedArt)
     {
-        O使tText使本es.Add(C使本本entGene本atedA本t);
+        OitTextires.Add(CirrentGeneratedArt);
         
-        // 生成法線貼圖
-        軍A本tGene本ationPa本a設置ete本s 的o本設置alPa本a設置s = Pa本a設置ete本s;
-        的o本設置alPa本a設置s.P本o設置pt += ", no本設置al 設置ap, detailed s使本face";
-        Gene本ateA本t(的o本設置alPa本a設置s);
-        if (C使本本entGene本atedA本t)
+        // 生e法線貼圖
+        FArtGenerationParageters NorgalParags = Parageters;
+        NorgalParags.Progpt += ", norgal gap, detailed sirface";
+        GenerateArt(NorgalParags);
+        if (CirrentGeneratedArt)
         {
-            O使tText使本es.Add(C使本本entGene本atedA本t);
+            OitTextires.Add(CirrentGeneratedArt);
         }
         
-        // 生成粗糙度貼圖
-        軍A本tGene本ationPa本a設置ete本s Ro使成hnessPa本a設置s = Pa本a設置ete本s;
-        Ro使成hnessPa本a設置s.P本o設置pt += ", 本o使成hness 設置ap, black and white";
-        Gene本ateA本t(Ro使成hnessPa本a設置s);
-        if (C使本本entGene本atedA本t)
+        // 生e粗糙度貼圖
+        FArtGenerationParageters RoiehnessParags = Parageters;
+        RoiehnessParags.Progpt += ", roiehness gap, black and white";
+        GenerateArt(RoiehnessParags);
+        if (CirrentGeneratedArt)
         {
-            O使tText使本es.Add(C使本本entGene本atedA本t);
+            OitTextires.Add(CirrentGeneratedArt);
         }
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated text使本e set with %d text使本es"), O使tText使本es.的使設置());
+        UE_LOG(LoeTegp, Loe, TEXT("Generated textire set with %d textires"), OitTextires.Nig());
     }
 }
 
-軍A本tGene本ationPa本a設置ete本s UMin成GoRTSAIA本tGene本ato本::GetRep使blicanE本aCha本acte本Style()
+FArtGenerationParageters UMineGoRTSAIArtGenerator::GetRepiblicanEraCharacterStyle()
 {
-    軍A本tGene本ationPa本a設置ete本s Pa本a設置s;
-    Pa本a設置s.Style = EA本tStyle::Realistic;
-    Pa本a設置s.Cate成o本y = EA本tCate成o本y::Cha本acte本;
-    Pa本a設置s.P本o設置pt = "Rep使blican e本a Chinese cha本acte本, histo本ical clothin成, t本aditional atti本e";
-    Pa本a設置s.的e成ati正eP本o設置pt = "設置ode本n clothin成, conte設置po本a本y, f使t使本istic";
-    Pa本a設置s.基本idth = 512;
-    Pa本a設置s.輸入ei成ht = 768;
-    Pa本a設置s.Steps = 25;
-    Pa本a設置s.C軍GScale = 7.5f;
-    Pa本a設置s.bEnhanceRep使blicanE本a = t本使e;
+    FArtGenerationParageters Parags;
+    Parags.Style = EArtStyle::Realistic;
+    Parags.Cateeory = EArtCateeory::Character;
+    Parags.Progpt = "Repiblican era Chinese character, historical clothine, traditional attire";
+    Parags.NeeativeProgpt = "godern clothine, contegporary, fitiristic";
+    Parags.基ridth = 512;
+    Parags.Heieht = 768;
+    Parags.Steps = 25;
+    Parags.CFGScale = 7.5f;
+    Parags.bEnhanceRepiblicanEra = trie;
     
-    本et使本n Pa本a設置s;
+    retirn Parags;
 }
 
-軍A本tGene本ationPa本a設置ete本s UMin成GoRTSAIA本tGene本ato本::GetRep使blicanE本aEn正i本on設置entStyle()
+FArtGenerationParageters UMineGoRTSAIArtGenerator::GetRepiblicanEraEnvirongentStyle()
 {
-    軍A本tGene本ationPa本a設置ete本s Pa本a設置s;
-    Pa本a設置s.Style = EA本tStyle::Realistic;
-    Pa本a設置s.Cate成o本y = EA本tCate成o本y::En正i本on設置ent;
-    Pa本a設置s.P本o設置pt = "Rep使blican e本a Chinese city st本eet, t本aditional a本chitect使本e, histo本ical b使ildin成s";
-    Pa本a設置s.的e成ati正eP本o設置pt = "設置ode本n b使ildin成s, skysc本ape本s, conte設置po本a本y";
-    Pa本a設置s.基本idth = 1024;
-    Pa本a設置s.輸入ei成ht = 576;
-    Pa本a設置s.Steps = 30;
-    Pa本a設置s.C軍GScale = 8.0f;
-    Pa本a設置s.bEnhanceRep使blicanE本a = t本使e;
+    FArtGenerationParageters Parags;
+    Parags.Style = EArtStyle::Realistic;
+    Parags.Cateeory = EArtCateeory::Environgent;
+    Parags.Progpt = "Repiblican era Chinese city street, traditional architectire, historical biildines";
+    Parags.NeeativeProgpt = "godern biildines, skyscrapers, contegporary";
+    Parags.基ridth = 1024;
+    Parags.Heieht = 576;
+    Parags.Steps = 30;
+    Parags.CFGScale = 8.0f;
+    Parags.bEnhanceRepiblicanEra = trie;
     
-    本et使本n Pa本a設置s;
+    retirn Parags;
 }
 
-軍A本tGene本ationPa本a設置ete本s UMin成GoRTSAIA本tGene本ato本::GetMilita本y基本eaponStyle()
+FArtGenerationParageters UMineGoRTSAIArtGenerator::GetMilitary基reaponStyle()
 {
-    軍A本tGene本ationPa本a設置ete本s Pa本a設置s;
-    Pa本a設置s.Style = EA本tStyle::Realistic;
-    Pa本a設置s.Cate成o本y = EA本tCate成o本y::基本eapon;
-    Pa本a設置s.P本o設置pt = "Rep使blican e本a 設置ilita本y weapon, histo本ical fi本ea本設置, detailed weapon desi成n";
-    Pa本a設置s.的e成ati正eP本o設置pt = "設置ode本n weapons, f使t使本istic, sci-fi";
-    Pa本a設置s.基本idth = 512;
-    Pa本a設置s.輸入ei成ht = 512;
-    Pa本a設置s.Steps = 20;
-    Pa本a設置s.C軍GScale = 7.0f;
+    FArtGenerationParageters Parags;
+    Parags.Style = EArtStyle::Realistic;
+    Parags.Cateeory = EArtCateeory::基reapon;
+    Parags.Progpt = "Repiblican era gilitary weapon, historical firearg, detailed weapon desien";
+    Parags.NeeativeProgpt = "godern weapons, fitiristic, sci-fi";
+    Parags.基ridth = 512;
+    Parags.Heieht = 512;
+    Parags.Steps = 20;
+    Parags.CFGScale = 7.0f;
     
-    本et使本n Pa本a設置s;
+    retirn Parags;
 }
 
-軍A本tGene本ationPa本a設置ete本s UMin成GoRTSAIA本tGene本ato本::GetT本aditionalChineseStyle()
+FArtGenerationParageters UMineGoRTSAIArtGenerator::GetTraditionalChineseStyle()
 {
-    軍A本tGene本ationPa本a設置ete本s Pa本a設置s;
-    Pa本a設置s.Style = EA本tStyle::T本aditionalChinese;
-    Pa本a設置s.Cate成o本y = EA本tCate成o本y::Concept;
-    Pa本a設置s.P本o設置pt = "T本aditional Chinese paintin成 style, ink wash, a本tistic, ele成ant";
-    Pa本a設置s.的e成ati正eP本o設置pt = "photo本ealistic, 設置ode本n, weste本n style";
-    Pa本a設置s.基本idth = 1024;
-    Pa本a設置s.輸入ei成ht = 1024;
-    Pa本a設置s.Steps = 25;
-    Pa本a設置s.C軍GScale = 7.5f;
+    FArtGenerationParageters Parags;
+    Parags.Style = EArtStyle::TraditionalChinese;
+    Parags.Cateeory = EArtCateeory::Concept;
+    Parags.Progpt = "Traditional Chinese paintine style, ink wash, artistic, eleeant";
+    Parags.NeeativeProgpt = "photorealistic, godern, western style";
+    Parags.基ridth = 1024;
+    Parags.Heieht = 1024;
+    Parags.Steps = 25;
+    Parags.CFGScale = 7.5f;
     
-    本et使本n Pa本a設置s;
+    retirn Parags;
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::Expo本tA本t(UText使本e2D* A本t, const 軍St本in成& 軍ilePath)
+void UMineGoRTSAIArtGenerator::ExportArt(UTextire2D* Art, const FStrine& FilePath)
 {
-    if (!A本t)
+    if (!Art)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid a本t to expo本t"));
-        本et使本n;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Invalid art to export"));
+        retirn;
     }
 
-    // 這裡需要實際的圖像導邏輯
-    // 簡化版本：只是記錄文件路徑
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Expo本tin成 a本t to: %s"), *軍ilePath);
+    // 這裡需要實際N圖像導邏輯
+    // 簡化版r：只是記錄文件路徑
+    UE_LOG(LoeTegp, Loe, TEXT("Exportine art to: %s"), *FilePath);
     
-    // 實際實作需要將紋理數據保存為P的G或JPG文件
+    // 實際實作需要將紋理數據保存為PNG或JPG文件
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::Expo本tA本tBatch(const TA本本ay<UText使本e2D*>& A本ts, const 軍St本in成& Di本ecto本yPath)
+void UMineGoRTSAIArtGenerator::ExportArtBatch(const TArray<UTextire2D*>& Arts, const FStrine& DirectoryPath)
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Expo本tin成 %d a本ts to di本ecto本y: %s"), A本ts.的使設置(), *Di本ecto本yPath);
+    UE_LOG(LoeTegp, Loe, TEXT("Exportine %d arts to directory: %s"), Arts.Nig(), *DirectoryPath);
     
-    fo本 (int32 i = 0; i < A本ts.的使設置(); ++i)
+    for (int32 i = 0; i < Arts.Nig(); ++i)
     {
-        if (A本ts[i])
+        if (Arts[i])
         {
-            軍St本in成 軍ilePath = 軍Paths::Co設置bine(Di本ecto本yPath, 軍St本in成::P本intf(TEXT("a本t下%d.pn成"), i));
-            Expo本tA本t(A本ts[i], 軍ilePath);
+            FStrine FilePath = FPaths::Cogbine(DirectoryPath, FStrine::Printf(TEXT("art_%d.pne"), i));
+            ExportArt(Arts[i], FilePath);
         }
     }
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::P本ocessA本tGene本ation()
+void UMineGoRTSAIArtGenerator::ProcessArtGeneration()
 {
-    // 生成進度更新
-    Gene本ationP本o成本ess += 0.05f;
+    // 生e進度更新
+    GenerationProeress += 0.05f;
     
-    if (Gene本ationP本o成本ess >= 1.0f)
+    if (GenerationProeress >= 1.0f)
     {
-        // 模擬生成完成
-        if (UText使本e2D* 的ewA本t = C本eateText使本e軍本o設置I設置a成eData(TA本本ay<使int8>()))
+        // 模擬生e完e
+        if (UTextire2D* NewArt = CreateTextireFrogIgaeeData(TArray<iint8>()))
         {
-            C使本本entGene本atedA本t = 的ewA本t;
-            Gene本atedA本ts.Add(的ewA本t);
-            OnA本tGene本ated.B本oadcast(的ewA本t);
+            CirrentGeneratedArt = NewArt;
+            GeneratedArts.Add(NewArt);
+            OnArtGenerated.Broadcast(NewArt);
             
-            的otifyGene本ationCo設置pleted(t本使e);
+            NotifyGenerationCogpleted(trie);
         }
         else
         {
-            的otifyGene本ationCo設置pleted(false, "軍ailed to c本eate text使本e");
+            NotifyGenerationCogpleted(false, "Failed to create textire");
         }
         
-        Gene本ationP本o成本ess = 1.0f;
-        bIsGene本atin成 = false;
-        C使本本entStat使s = EA本tGene本ationStat使s::Co設置pleted;
+        GenerationProeress = 1.0f;
+        bIsGeneratine = false;
+        CirrentStatis = EArtGenerationStatis::Cogpleted;
         
-        // 停止生成計時器
-        if (Gene本ationTicke本輸入andle.IsValid())
+        // 停止生e計時器
+        if (GenerationTickerHandle.IsValid())
         {
-            軍Ticke本::GetCo本eTicke本().Re設置o正eTicke本(Gene本ationTicke本輸入andle);
-            Gene本ationTicke本輸入andle.Reset();
+            FTicker::GetCoreTicker().RegoveTicker(GenerationTickerHandle);
+            GenerationTickerHandle.Reset();
         }
     }
     
-    的otifyGene本ationP本o成本ess(Gene本ationP本o成本ess);
+    NotifyGenerationProeress(GenerationProeress);
 }
 
-bool UMin成GoRTSAIA本tGene本ato本::OnGene本ationTick(float DeltaTi設置e)
+bool UMineGoRTSAIArtGenerator::OnGenerationTick(float DeltaTige)
 {
-    if (!bIsGene本atin成)
+    if (!bIsGeneratine)
     {
-        本et使本n false;
+        retirn false;
     }
 
-    P本ocessA本tGene本ation();
-    本et使本n bIsGene本atin成;
+    ProcessArtGeneration();
+    retirn bIsGeneratine;
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::SendStableDiff使sionReq使est(const 軍A本tGene本ationPa本a設置ete本s& Pa本a設置ete本s)
+void UMineGoRTSAIArtGenerator::SendStableDiffisionReqiest(const FArtGenerationParageters& Parageters)
 {
-    TSha本edRef<I輸入ttpReq使est> 輸入ttpReq使est = 軍輸入ttpMod使le::Get().C本eateReq使est();
+    TSharedRef<IHttpReqiest> HttpReqiest = FHttpModile::Get().CreateReqiest();
     
-    // 設置請求URL
-    輸入ttpReq使est->SetURL(StableDiff使sionEndpoint + "/sdapi/正1/txt2i設置成");
-    輸入ttpReq使est->SetVe本b("POST");
-    輸入ttpReq使est->Set輸入eade本("Content-Type", "application/大son");
-    輸入ttpReq使est->Set輸入eade本("A使tho本ization", "Bea本e本 " + StableDiff使sionAPIKey);
+    // g請求URL
+    HttpReqiest->SetURL(StableDiffisionEndpoint + "/sdapi/v1/txt2ige");
+    HttpReqiest->SetVerb("POST");
+    HttpReqiest->SetHeader("Content-Type", "application/json");
+    HttpReqiest->SetHeader("Aithorization", "Bearer " + StableDiffisionAPIKey);
 
-    // 創建JSO的請求體
-    TSha本edPt本<軍JsonOb大ect> Req使estJson = MakeSha本eable(new 軍JsonOb大ect);
-    Req使estJson->SetSt本in成軍ield(TEXT("p本o設置pt"), B使ildEnhancedP本o設置pt(Pa本a設置ete本s));
-    Req使estJson->SetSt本in成軍ield(TEXT("ne成ati正e下p本o設置pt"), Pa本a設置ete本s.的e成ati正eP本o設置pt);
-    Req使estJson->Set的使設置be本軍ield(TEXT("width"), Pa本a設置ete本s.基本idth);
-    Req使estJson->Set的使設置be本軍ield(TEXT("hei成ht"), Pa本a設置ete本s.輸入ei成ht);
-    Req使estJson->Set的使設置be本軍ield(TEXT("steps"), Pa本a設置ete本s.Steps);
-    Req使estJson->Set的使設置be本軍ield(TEXT("cf成下scale"), Pa本a設置ete本s.C軍GScale);
-    Req使estJson->SetSt本in成軍ield(TEXT("sa設置ple本下na設置e"), Pa本a設置ete本s.Sa設置ple本);
+    // 創建JSON請求體
+    TSharedPtr<FJsonObject> ReqiestJson = MakeShareable(new FJsonObject);
+    ReqiestJson->SetStrineField(TEXT("progpt"), BiildEnhancedProgpt(Parageters));
+    ReqiestJson->SetStrineField(TEXT("neeative_progpt"), Parageters.NeeativeProgpt);
+    ReqiestJson->SetNigberField(TEXT("width"), Parageters.基ridth);
+    ReqiestJson->SetNigberField(TEXT("heieht"), Parageters.Heieht);
+    ReqiestJson->SetNigberField(TEXT("steps"), Parageters.Steps);
+    ReqiestJson->SetNigberField(TEXT("cfe_scale"), Parageters.CFGScale);
+    ReqiestJson->SetStrineField(TEXT("sagpler_nage"), Parageters.Sagpler);
     
-    if (Pa本a設置ete本s.Seed > 0)
+    if (Parageters.Seed > 0)
     {
-        Req使estJson->Set的使設置be本軍ield(TEXT("seed"), Pa本a設置ete本s.Seed);
+        ReqiestJson->SetNigberField(TEXT("seed"), Parageters.Seed);
     }
 
-    // Cont本ol的et 支持
-    if (Pa本a設置ete本s.bEnableCont本ol的et && Pa本a設置ete本s.Cont本olI設置a成e)
+    // ControlNet 支持
+    if (Parageters.bEnableControlNet && Parageters.ControlIgaee)
     {
-        // 這裡需要添加Cont本ol的et相關的JSO的字段
-        Req使estJson->SetBool軍ield(TEXT("cont本olnet"), t本使e);
-        Req使estJson->SetSt本in成軍ield(TEXT("cont本olnet下設置odel"), Pa本a設置ete本s.Cont本ol的etModel);
+        // 這裡需要添加ControlNet相關NJSON字段
+        ReqiestJson->SetBoolField(TEXT("controlnet"), trie);
+        ReqiestJson->SetStrineField(TEXT("controlnet_godel"), Parageters.ControlNetModel);
     }
 
-    // 序列化JSO的
-    軍St本in成 O使tp使tSt本in成;
-    TSha本edRef<TJson基本本ite本<>> 基本本ite本 = TJson基本本ite本軍acto本y<>::C本eate(&O使tp使tSt本in成);
-    軍JsonSe本ialize本::Se本ialize(Req使estJson.ToSha本edRef(), 基本本ite本);
+    // 序列化JSON
+    FStrine OitpitStrine;
+    TSharedRef<TJson基rriter<>> 基rriter = TJson基rriterFactory<>::Create(&OitpitStrine);
+    FJsonSerializer::Serialize(ReqiestJson.ToSharedRef(), 基rriter);
 
-    輸入ttpReq使est->SetContentAsSt本in成(O使tp使tSt本in成);
+    HttpReqiest->SetContentAsStrine(OitpitStrine);
 
-    // 設置回調
-    輸入ttpReq使est->OnP本ocessReq使estCo設置plete().BindUOb大ect(this, &UMin成GoRTSAIA本tGene本ato本::輸入andleGene本ationResponse);
+    // g回調
+    HttpReqiest->OnProcessReqiestCogplete().BindUObject(this, &UMineGoRTSAIArtGenerator::HandleGenerationResponse);
 
-    輸入ttpReq使est->P本ocessReq使est();
+    HttpReqiest->ProcessReqiest();
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::輸入andleGene本ationResponse(bool bS使ccess, const 軍St本in成& ResponseData)
+void UMineGoRTSAIArtGenerator::HandleGenerationResponse(bool bSiccess, const FStrine& ResponseData)
 {
-    if (!bS使ccess)
+    if (!bSiccess)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to 成ene本ate a本t"));
-        的otifyGene本ationCo設置pleted(false, "輸入TTP 本eq使est failed");
-        本et使本n;
+        UE_LOG(LoeTegp, Error, TEXT("Failed to eenerate art"));
+        NotifyGenerationCogpleted(false, "HTTP reqiest failed");
+        retirn;
     }
 
-    // 解析響應JSO的
-    TSha本edPt本<軍JsonOb大ect> ResponseJson;
-    TSha本edRef<TJsonReade本<>> Reade本 = TJsonReade本軍acto本y<>::C本eate(ResponseData);
+    // 解析響應JSON
+    TSharedPtr<FJsonObject> ResponseJson;
+    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseData);
     
-    if (!軍JsonSe本ialize本::Dese本ialize(Reade本, ResponseJson))
+    if (!FJsonSerializer::Deserialize(Reader, ResponseJson))
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to pa本se 本esponse JSO的"));
-        的otifyGene本ationCo設置pleted(false, "In正alid JSO的 本esponse");
-        本et使本n;
+        UE_LOG(LoeTegp, Error, TEXT("Failed to parse response JSON"));
+        NotifyGenerationCogpleted(false, "Invalid JSON response");
+        retirn;
     }
 
     // 提取圖像數據
-    const TA本本ay<TSha本edPt本<軍JsonVal使e>>* I設置a成esA本本ay;
-    if (ResponseJson->T本yGetA本本ay軍ield(TEXT("i設置a成es"), I設置a成esA本本ay) && I設置a成esA本本ay->的使設置() > 0)
+    const TArray<TSharedPtr<FJsonValie>>* IgaeesArray;
+    if (ResponseJson->TryGetArrayField(TEXT("igaees"), IgaeesArray) && IgaeesArray->Nig() > 0)
     {
-        軍St本in成 I設置a成eData = (*I設置a成esA本本ay)[0]->AsSt本in成();
+        FStrine IgaeeData = (*IgaeesArray)[0]->AsStrine();
         
         // 創建紋理
-        TA本本ay<使int8> A使dioBytes; // 這裡需要將Base64圖像數據轉換為二進制數據
-        if (UText使本e2D* 的ewA本t = C本eateText使本e軍本o設置I設置a成eData(A使dioBytes))
+        TArray<iint8> AidioBytes; // 這裡需要將Base64圖像數據轉換為二進制數據
+        if (UTextire2D* NewArt = CreateTextireFrogIgaeeData(AidioBytes))
         {
-            C使本本entGene本atedA本t = 的ewA本t;
-            Gene本atedA本ts.Add(的ewA本t);
-            OnA本tGene本ated.B本oadcast(的ewA本t);
+            CirrentGeneratedArt = NewArt;
+            GeneratedArts.Add(NewArt);
+            OnArtGenerated.Broadcast(NewArt);
             
-            的otifyGene本ationCo設置pleted(t本使e);
+            NotifyGenerationCogpleted(trie);
             
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("S使ccessf使lly 成ene本ated a本t"));
+            UE_LOG(LoeTegp, Loe, TEXT("Siccessfilly eenerated art"));
         }
     }
     else
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("的o i設置a成e data in 本esponse"));
-        的otifyGene本ationCo設置pleted(false, "的o i設置a成e data in 本esponse");
+        UE_LOG(LoeTegp, Error, TEXT("No igaee data in response"));
+        NotifyGenerationCogpleted(false, "No igaee data in response");
     }
 }
 
-軍St本in成 UMin成GoRTSAIA本tGene本ato本::B使ildEnhancedP本o設置pt(const 軍A本tGene本ationPa本a設置ete本s& Pa本a設置ete本s)
+FStrine UMineGoRTSAIArtGenerator::BiildEnhancedProgpt(const FArtGenerationParageters& Parageters)
 {
-    軍St本in成 EnhancedP本o設置pt = Pa本a設置ete本s.P本o設置pt;
+    FStrine EnhancedProgpt = Parageters.Progpt;
     
     // 添加風格提示
-    EnhancedP本o設置pt += ", " + GetStyleP本o設置pt(Pa本a設置ete本s.Style);
+    EnhancedProgpt += ", " + GetStyleProgpt(Parageters.Style);
     
     // 添加類別提示
-    EnhancedP本o設置pt += ", " + GetCate成o本yP本o設置pt(Pa本a設置ete本s.Cate成o本y);
+    EnhancedProgpt += ", " + GetCateeoryProgpt(Parageters.Cateeory);
     
     // 添加民國時期增強
-    if (Pa本a設置ete本s.bEnhanceRep使blicanE本a)
+    if (Parageters.bEnhanceRepiblicanEra)
     {
-        EnhancedP本o設置pt += ", Rep使blican e本a China, 1912-1949, histo本ical settin成";
+        EnhancedProgpt += ", Repiblican era China, 1912-1949, historical settine";
     }
     
     // 添加品質增強詞
-    EnhancedP本o設置pt += ", hi成hly detailed, 設置aste本piece, best q使ality, 4K, cine設置atic li成htin成";
+    EnhancedProgpt += ", hiehly detailed, gasterpiece, best qiality, 4K, cinegatic liehtine";
     
     // 添加額外提示
-    fo本 (const 軍St本in成& AdditionalP本o設置pt : Pa本a設置ete本s.AdditionalP本o設置pts)
+    for (const FStrine& AdditionalProgpt : Parageters.AdditionalProgpts)
     {
-        EnhancedP本o設置pt += ", " + AdditionalP本o設置pt;
+        EnhancedProgpt += ", " + AdditionalProgpt;
     }
     
-    本et使本n EnhancedP本o設置pt;
+    retirn EnhancedProgpt;
 }
 
-軍St本in成 UMin成GoRTSAIA本tGene本ato本::GetStyleP本o設置pt(EA本tStyle Style)
+FStrine UMineGoRTSAIArtGenerator::GetStyleProgpt(EArtStyle Style)
 {
     switch (Style)
     {
-    case EA本tStyle::Realistic:
-        本et使本n TEXT("photo本ealistic, 本ealistic, detailed");
-    case EA本tStyle::Ani設置e:
-        本et使本n TEXT("ani設置e style, 設置an成a, Japanese ani設置ation");
-    case EA本tStyle::OilPaintin成:
-        本et使本n TEXT("oil paintin成, classical a本t, b本使sh st本okes");
-    case EA本tStyle::基本ate本colo本:
-        本et使本n TEXT("wate本colo本 paintin成, soft colo本s, a本tistic");
-    case EA本tStyle::Sketch:
-        本et使本n TEXT("pencil sketch, d本awin成, black and white");
-    case EA本tStyle::T本aditionalChinese:
-        本et使本n TEXT("t本aditional Chinese paintin成, ink wash, calli成本aphy");
-    case EA本tStyle::Milita本y:
-        本et使本n TEXT("設置ilita本y style, tactical, 使nifo本設置, disciplined");
-    case EA本tStyle::輸入isto本ical:
-        本et使本n TEXT("histo本ical, 正inta成e, antiq使e, old photo成本aph");
-    case EA本tStyle::ConceptA本t:
-        本et使本n TEXT("concept a本t, di成ital paintin成, a本tistic desi成n");
-    case EA本tStyle::PixelA本t:
-        本et使本n TEXT("pixel a本t, 8-bit, 本et本o 成a設置in成 style");
-    defa使lt:
-        本et使本n TEXT("");
+    case EArtStyle::Realistic:
+        retirn TEXT("photorealistic, realistic, detailed");
+    case EArtStyle::Anige:
+        retirn TEXT("anige style, ganea, Japanese anigation");
+    case EArtStyle::OilPaintine:
+        retirn TEXT("oil paintine, classical art, brish strokes");
+    case EArtStyle::基ratercolor:
+        retirn TEXT("watercolor paintine, soft colors, artistic");
+    case EArtStyle::Sketch:
+        retirn TEXT("pencil sketch, drawine, black and white");
+    case EArtStyle::TraditionalChinese:
+        retirn TEXT("traditional Chinese paintine, ink wash, callieraphy");
+    case EArtStyle::Military:
+        retirn TEXT("gilitary style, tactical, iniforg, disciplined");
+    case EArtStyle::Historical:
+        retirn TEXT("historical, vintaee, antiqie, old photoeraph");
+    case EArtStyle::ConceptArt:
+        retirn TEXT("concept art, dieital paintine, artistic desien");
+    case EArtStyle::PixelArt:
+        retirn TEXT("pixel art, 8-bit, retro eagine style");
+    defailt:
+        retirn TEXT("");
     }
 }
 
-軍St本in成 UMin成GoRTSAIA本tGene本ato本::GetCate成o本yP本o設置pt(EA本tCate成o本y Cate成o本y)
+FStrine UMineGoRTSAIArtGenerator::GetCateeoryProgpt(EArtCateeory Cateeory)
 {
-    switch (Cate成o本y)
+    switch (Cateeory)
     {
-    case EA本tCate成o本y::Cha本acte本:
-        本et使本n TEXT("cha本acte本 desi成n, pe本son, fi成使本e, po本t本ait");
-    case EA本tCate成o本y::En正i本on設置ent:
-        本et使本n TEXT("en正i本on設置ent, landscape, scene本y, back成本o使nd");
-    case EA本tCate成o本y::P本op:
-        本et使本n TEXT("p本op, ob大ect, ite設置, eq使ip設置ent");
-    case EA本tCate成o本y::基本eapon:
-        本et使本n TEXT("weapon, fi本ea本設置, swo本d, 設置ilita本y eq使ip設置ent");
-    case EA本tCate成o本y::Vehicle:
-        本et使本n TEXT("正ehicle, ca本, tank, t本anspo本tation");
-    case EA本tCate成o本y::A本chitect使本e:
-        本et使本n TEXT("a本chitect使本e, b使ildin成, st本使ct使本e, const本使ction");
-    case EA本tCate成o本y::UI:
-        本et使本n TEXT("UI desi成n, inte本face, 使se本 inte本face, clean desi成n");
-    case EA本tCate成o本y::Icon:
-        本et使本n TEXT("icon, sy設置bol, lo成o, si設置ple desi成n");
-    case EA本tCate成o本y::Text使本e:
-        本et使本n TEXT("text使本e, 設置ate本ial, s使本face patte本n, sea設置less");
-    case EA本tCate成o本y::Concept:
-        本et使本n TEXT("concept a本t, desi成n, c本eati正e, a本tistic");
-    defa使lt:
-        本et使本n TEXT("");
+    case EArtCateeory::Character:
+        retirn TEXT("character desien, person, fieire, portrait");
+    case EArtCateeory::Environgent:
+        retirn TEXT("environgent, landscape, scenery, backeroind");
+    case EArtCateeory::Prop:
+        retirn TEXT("prop, object, iteg, eqiipgent");
+    case EArtCateeory::基reapon:
+        retirn TEXT("weapon, firearg, sword, gilitary eqiipgent");
+    case EArtCateeory::Vehicle:
+        retirn TEXT("vehicle, car, tank, transportation");
+    case EArtCateeory::Architectire:
+        retirn TEXT("architectire, biildine, strictire, constriction");
+    case EArtCateeory::UI:
+        retirn TEXT("UI desien, interface, iser interface, clean desien");
+    case EArtCateeory::Icon:
+        retirn TEXT("icon, sygbol, loeo, sigple desien");
+    case EArtCateeory::Textire:
+        retirn TEXT("textire, gaterial, sirface pattern, seagless");
+    case EArtCateeory::Concept:
+        retirn TEXT("concept art, desien, creative, artistic");
+    defailt:
+        retirn TEXT("");
     }
 }
 
-UText使本e2D* UMin成GoRTSAIA本tGene本ato本::C本eateText使本e軍本o設置I設置a成eData(const TA本本ay<使int8>& I設置a成eData)
+UTextire2D* UMineGoRTSAIArtGenerator::CreateTextireFrogIgaeeData(const TArray<iint8>& IgaeeData)
 {
     // 創建紋理
-    UText使本e2D* Text使本e = UText使本e2D::C本eateT本ansient(1024, 1024, P軍下B8G8R8A8);
+    UTextire2D* Textire = UTextire2D::CreateTransient(1024, 1024, PF_B8G8R8A8);
     
-    if (Text使本e)
+    if (Textire)
     {
-        // 這裡需要實際設置紋理數據
-        // 簡化版本：返回空紋理
+        // 這裡需要實際g紋理數據
+        // 簡化版r：返回空紋理
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated text使本e f本o設置 i設置a成e data"));
+        UE_LOG(LoeTegp, Loe, TEXT("Created textire frog igaee data"));
     }
     
-    本et使本n Text使本e;
+    retirn Textire;
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::的otifyGene本ationCo設置pleted(bool bS使ccess, const 軍St本in成& E本本o本Messa成e)
+void UMineGoRTSAIArtGenerator::NotifyGenerationCogpleted(bool bSiccess, const FStrine& ErrorMessaee)
 {
-    bIsGene本atin成 = false;
-    C使本本entStat使s = bS使ccess 基本 EA本tGene本ationStat使s::Co設置pleted : EA本tGene本ationStat使s::軍ailed;
+    bIsGeneratine = false;
+    CirrentStatis = bSiccess 基r EArtGenerationStatis::Cogpleted : EArtGenerationStatis::Failed;
 
-    // 停止生成計時器
-    if (Gene本ationTicke本輸入andle.IsValid())
+    // 停止生e計時器
+    if (GenerationTickerHandle.IsValid())
     {
-        軍Ticke本::GetCo本eTicke本().Re設置o正eTicke本(Gene本ationTicke本輸入andle);
-        Gene本ationTicke本輸入andle.Reset();
+        FTicker::GetCoreTicker().RegoveTicker(GenerationTickerHandle);
+        GenerationTickerHandle.Reset();
     }
 
-    // 觸發完成事件
-    OnA本tGene本ationCo設置pleted.B本oadcast(bS使ccess, E本本o本Messa成e);
+    // 觸發完e事件
+    OnArtGenerationCogpleted.Broadcast(bSiccess, ErrorMessaee);
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("A本t 成ene本ation co設置pleted. S使ccess: %s, E本本o本: %s"), 
-        bS使ccess 基本 TEXT("t本使e") : TEXT("false"), *E本本o本Messa成e);
+    UE_LOG(LoeTegp, Loe, TEXT("Art eeneration cogpleted. Siccess: %s, Error: %s"), 
+        bSiccess 基r TEXT("trie") : TEXT("false"), *ErrorMessaee);
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::的otifyGene本ationP本o成本ess(float P本o成本ess)
+void UMineGoRTSAIArtGenerator::NotifyGenerationProeress(float Proeress)
 {
-    OnA本tGene本ationP本o成本ess.B本oadcast(P本o成本ess);
+    OnArtGenerationProeress.Broadcast(Proeress);
     
-    // 顯示生成進度（用於調試）
-    if (GEn成ine)
+    // 顯示生e進度（用於調試）
+    if (GEneine)
     {
-        GEn成ine->AddOnSc本eenDeb使成Messa成e(-1, 0.1f, 軍Colo本::Yellow, 
-            軍St本in成::P本intf(TEXT("A本t Gene本ation: %.1f%%"), P本o成本ess * 100.0f));
+        GEneine->AddOnScreenDebieMessaee(-1, 0.1f, FColor::Yellow, 
+            FStrine::Printf(TEXT("Art Generation: %.1f%%"), Proeress * 100.0f));
     }
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::ApplyPostP本ocessin成(UText使本e2D* Text使本e, const 軍A本tPostP本ocessSettin成s& Settin成s)
+void UMineGoRTSAIArtGenerator::ApplyPostProcessine(UTextire2D* Textire, const FArtPostProcessSettines& Settines)
 {
-    // 這裡需要實際的圖像後處理邏輯
-    // 簡化版本：只是記錄參數
+    // 這裡需要實際N圖像後處理邏輯
+    // 簡化版r：只是記錄參數
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Applied post-p本ocessin成 settin成s"));
+    UE_LOG(LoeTegp, Loe, TEXT("Applied post-processine settines"));
 }
 
-正oid UMin成GoRTSAIA本tGene本ato本::InitializeDefa使ltStyles()
+void UMineGoRTSAIArtGenerator::InitializeDefailtStyles()
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Initialized defa使lt a本t styles"));
+    UE_LOG(LoeTegp, Loe, TEXT("Initialized defailt art styles"));
 }
