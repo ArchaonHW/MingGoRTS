@@ -1,139 +1,140 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/Interface.h"
-#include "IPlatformInterface.generated.h"
-
-/**
- * ���x��?X???
- */
-UENUM(BlueprintType)
-enum class EPlatformType: uint8 {
-    Windows       UMETA(DisplayName = "Windows"),
-    Android       UMETA(DisplayName = "Android"),
-    IOS           UMETA(DisplayName = "iOS"),
-    Unknown       UMETA(DisplayName = "Unknown")
-};
-
-/**
- * ��J��?X???
- */
-UENUM(BlueprintType)
-enum class EInputType: uint8 {
-    MouseKeyboard UMETA(DisplayName = "Mouse & Keyboard"),
-    Touch         UMETA(DisplayName = "Touch"),
-    Gamepad       UMETA(DisplayName = "Gamepad")
-};
-
-/**
- * ���x摧毀��??
- */
-USTRUCT(BlueprintType)
-struct FPlatformCapabilities
-{
-    GENERATED_BODY()
-    
-    // ??�_摧毀�h??Ĳ��
-    UPROPERTY(BlueprintReadOnly)
-    bool bSupportsMultiTouch;
-    
-    
-    int32 MaxTouchPoints;
-    
-    // ??�_故事重要性?�L
-    UPROPERTY(BlueprintReadOnly)
-    bool bSupportsHardwareKeyboard;
-    
-    // ??�_摧毀��??
-    UPROPERTY(BlueprintReadOnly)
-    bool bSupportsMouse;
-    
-    // �q??��J��??
-    UPROPERTY(BlueprintReadOnly)
-    EInputType DefaultInputType;
-    
-    
-    bool bRequiresBatteryOptimization;
-    
-    // ��ĳ摧毀�j?X?����
-    UPROPERTY(BlueprintReadOnly)
-    int32 RecommendedMaxUnits;
-    
-    
-    int32 RecommendedQualityLevel;
-    
-    FPlatformCapabilities()
-        : bSupportsMultiTouch(false)
-        , MaxTouchPoints(1)
-        , bSupportsHardwareKeyboard(true)
-        , bSupportsMouse(true)
-        , DefaultInputType(EInputType::MouseKeyboard)
-        , bRequiresBatteryOptimization(false)
-        , RecommendedMaxUnits(1000)
-        , RecommendedQualityLevel(3)
-    {}
-};
-
-/**
- * ���x??�H??�f
- * �w�q摧毀��??��目標數量��?X?�f
- */
-UINTERFACE(MinimalAPI)
-class MINGCORE_API UPlatformInterface : public UInterface
-{
-    GENERATED_BODY()
-};
-
-class MINGCORE_API IPlatformInterface
-{
-    GENERATED_BODY()
-
-public:
-    virtual ~IPlatformInterface() {}
-    
-    // 目標數量���x��??
-    virtual EPlatformType GetPlatformType() const = 0;
-    
-    // 摧毀���x摧毀
-    virtual FPlatformCapabilities GetCapabilities() const = 0;
-    
-    // ???X?��X
-    virtual void Initialize() = 0;
-    
-    // 摧毀���x
-    virtual void Shutdown() = 0;
-    
-    // 摧毀��??DPI
-    virtual float GetScreenDPI() const = 0;
-    
-    // 摧毀�w��??X(??��??��?X?����??)
-    virtual FMargin GetSafeZone() const = 0;
-    
-    // �ˬd??�_??Ĳ??�]X
-    virtual bool IsTouchDevice() const = 0;
-    
-    // �]�m??���??
-    virtual void SetPerformanceMode(int32 Mode) = 0;
-    
-    // 故事選項X??? (0-1, -1��ܤ���X
-    virtual float GetBatteryLevel() const = 0;
-    
-    // ??�_摧毀??�q
-    virtual bool IsCharging() const = 0;
-    
-    // ��ܥ��x目標數量��??
-    virtual void ShowPlatformDialog(const FString& Title, const FString& Message) = 0;
-    
-    // ??��??��
-    virtual void ShareContent(const FString& Content) = 0;
-    
-    // ��??��??
-    virtual void RequestAppRating() = 0;
-    
-    // �O?X??X?��??�S�w?X
-    virtual bool SaveToPlatformStorage(const FString& Key, const FString& Value) = 0;
-    
-    // �q��??�S�w?X??X?��X
-    virtual FString LoadFromPlatformStorage(const FString& Key) const = 0;
-};
-
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出I出n出t出e出本出f出a出c出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出�出�出�出x出�出�出池出動出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出P出l出a出t出f出o出本出設置出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出基本出i出n出d出o出w出s出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出基本出i出n出d出o出w出s出"出)出,出
+出 出 出 出 出A出n出d出本出o出i出d出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出A出n出d出本出o出i出d出"出)出,出
+出 出 出 出 出I出O出S出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出i出O出S出"出)出,出
+出 出 出 出 出U出n出k出n出o出w出n出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出U出n出k出n出o出w出n出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出�出�出J出�出�出池出動出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出I出n出p出使出t出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出M出o出使出s出e出K出e出y出b出o出a出本出d出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出M出o出使出s出e出 出&出 出K出e出y出b出o出a出本出d出"出)出,出
+出 出 出 出 出T出o出使出c出h出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出o出使出c出h出"出)出,出
+出 出 出 出 出G出a出設置出e出p出a出d出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出G出a出設置出e出p出a出d出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出�出�出�出x出�出�出動出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出�出下出�出h出動出Ĳ出�出�出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出b出o出o出l出 出b出S出使出p出p出o出本出t出s出M出使出l出t出i出T出o出使出c出h出;出
+出 出 出 出 出
+出 出 出 出 出
+出 出 出 出 出i出n出t出3出2出 出M出a出x出T出o出使出c出h出P出o出i出n出t出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出�出下出故出事出重出要出性出基本出�出L出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出b出o出o出l出 出b出S出使出p出p出o出本出t出s出輸入出a出本出d出w出a出本出e出K出e出y出b出o出a出本出d出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出�出下出�出�出動出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出b出o出o出l出 出b出S出使出p出p出o出本出t出s出M出o出使出s出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出q出動出�出�出J出�出�出動出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出E出I出n出p出使出t出T出y出p出e出 出D出e出f出a出使出l出t出I出n出p出使出t出T出y出p出e出;出
+出 出 出 出 出
+出 出 出 出 出
+出 出 出 出 出b出o出o出l出 出b出R出e出q出使出i出本出e出s出B出a出t出t出e出本出y出O出p出t出i出設置出i出z出a出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出ĳ出�出大出池出�出�出�出�出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出i出n出t出3出2出 出R出e出c出o出設置出設置出e出n出d出e出d出M出a出x出U出n出i出t出s出;出
+出 出 出 出 出
+出 出 出 出 出
+出 出 出 出 出i出n出t出3出2出 出R出e出c出o出設置出設置出e出n出d出e出d出Q出使出a出l出i出t出y出L出e出正出e出l出;出
+出 出 出 出 出
+出 出 出 出 出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出(出)出
+出 出 出 出 出 出 出 出 出:出 出b出S出使出p出p出o出本出t出s出M出使出l出t出i出T出o出使出c出h出(出f出a出l出s出e出)出
+出 出 出 出 出 出 出 出 出,出 出M出a出x出T出o出使出c出h出P出o出i出n出t出s出(出1出)出
+出 出 出 出 出 出 出 出 出,出 出b出S出使出p出p出o出本出t出s出輸入出a出本出d出w出a出本出e出K出e出y出b出o出a出本出d出(出t出本出使出e出)出
+出 出 出 出 出 出 出 出 出,出 出b出S出使出p出p出o出本出t出s出M出o出使出s出e出(出t出本出使出e出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出f出a出使出l出t出I出n出p出使出t出T出y出p出e出(出E出I出n出p出使出t出T出y出p出e出:出:出M出o出使出s出e出K出e出y出b出o出a出本出d出)出
+出 出 出 出 出 出 出 出 出,出 出b出R出e出q出使出i出本出e出s出B出a出t出t出e出本出y出O出p出t出i出設置出i出z出a出t出i出o出n出(出f出a出l出s出e出)出
+出 出 出 出 出 出 出 出 出,出 出R出e出c出o出設置出設置出e出n出d出e出d出M出a出x出U出n出i出t出s出(出1出0出0出0出)出
+出 出 出 出 出 出 出 出 出,出 出R出e出c出o出設置出設置出e出n出d出e出d出Q出使出a出l出i出t出y出L出e出正出e出l出(出3出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出�出�出�出x出動出�出輸入出動出�出f出
+出 出*出 出�出w出�出q出�出�出動出�出�出目出標出數出量出�出�出池出�出f出
+出 出*出/出
+出U出I出的出T出E出R出軍出A出C出E出(出M出i出n出i出設置出a出l出A出P出I出)出
+出c出l出a出s出s出 出M出I出的出G出C出O出R出E出下出A出P出I出 出U出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出 出:出 出p出使出b出l出i出c出 出U出I出n出t出e出本出f出a出c出e出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出}出;出
+出
+出c出l出a出s出s出 出M出I出的出G出C出O出R出E出下出A出P出I出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出正出i出本出t出使出a出l出 出年出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出(出)出 出{出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出目出標出數出量出�出�出�出x出�出�出動出
+出 出 出 出 出正出i出本出t出使出a出l出 出E出P出l出a出t出f出o出本出設置出T出y出p出e出 出G出e出t出P出l出a出t出f出o出本出設置出T出y出p出e出(出)出 出c出o出n出s出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出�出x出
+出 出 出 出 出正出i出本出t出使出a出l出 出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出 出G出e出t出C出a出p出a出b出i出l出i出t出i出e出s出(出)出 出c出o出n出s出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出池出�出�出X出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出(出)出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出�出x出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出S出h出使出t出d出o出w出n出(出)出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出動出D出P出I出
+出 出 出 出 出正出i出本出t出使出a出l出 出f出l出o出a出t出 出G出e出t出S出c出本出e出e出n出D出P出I出(出)出 出c出o出n出s出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出w出�出�出動出X出(出動出�出�出動出�出�出池出�出�出�出�出動出)出
+出 出 出 出 出正出i出本出t出使出a出l出 出軍出M出a出本出成出i出n出 出G出e出t出S出a出f出e出Z出o出n出e出(出)出 出c出o出n出s出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出ˬ出d出動出�出下出動出Ĳ出動出�出]出X出
+出 出 出 出 出正出i出本出t出使出a出l出 出b出o出o出l出 出I出s出T出o出使出c出h出D出e出正出i出c出e出(出)出 出c出o出n出s出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出]出�出設置出動出�出�出�出動出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出S出e出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出(出i出n出t出3出2出 出M出o出d出e出)出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出故出事出選出項出X出動出基本出 出(出0出-出1出,出 出-出1出�出�出ܤ出�出�出�出X出
+出 出 出 出 出正出i出本出t出使出a出l出 出f出l出o出a出t出 出G出e出t出B出a出t出t出e出本出y出L出e出正出e出l出(出)出 出c出o出n出s出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出�出下出動出�出q出
+出 出 出 出 出正出i出本出t出使出a出l出 出b出o出o出l出 出I出s出C出h出a出本出成出i出n出成出(出)出 出c出o出n出s出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出ܥ出�出�出x出目出標出數出量出�出�出動出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出S出h出o出w出P出l出a出t出f出o出本出設置出D出i出a出l出o出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出t出l出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出)出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出�出�出動出�出�出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出S出h出a出本出e出C出o出n出t出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出)出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出動出�出�出動出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出R出e出q出使出e出s出t出A出p出p出R出a出t出i出n出成出(出)出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出O出池出池出�出�出動出�出S出�出w出務出
+出 出 出 出 出正出i出本出t出使出a出l出 出b出o出o出l出 出S出a出正出e出T出o出P出l出a出t出f出o出本出設置出S出t出o出本出a出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出V出a出l出使出e出)出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出q出�出�出動出�出S出�出w出池出池出�出�出X出
+出 出 出 出 出正出i出本出t出使出a出l出 出軍出S出t出本出i出n出成出 出L出o出a出d出軍出本出o出設置出P出l出a出t出f出o出本出設置出S出t出o出本出a出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出)出 出c出o出n出s出t出 出=出 出0出;出
+出}出;出
+出
+出

@@ -1,1033 +1,1034 @@
-#include "MingRTSDynamicHistorySystem.h"
-#include "Engine/Engine.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "HAL/PlatformFilemanager.h"
-
-UMingRTSDynamicHistorySystem::UMingRTSDynamicHistorySystem()
-{
-    EventGenerationRate = 0.8f;
-    PlayerInfluenceWeight = 1.2f;
-    BranchProbability = 0.15f;
-    MaxEventsPerYear = 5;
-}
-
-void UMingRTSDynamicHistorySystem::InitializeDynamicHistorySystem()
-{
-    UE_LOG(LogTemp, Log, TEXT("MingRTSDynamicHistorySystem: Initializing dynamic history system..."));
-
-    // 初始化時代定義
-    EraDefinitions.Empty();
-    EraDefinitions.Add(1911, TEXT("辛亥革命"));
-    EraDefinitions.Add(1912, TEXT("民國初建"));
-    EraDefinitions.Add(1916, TEXT("軍閥割據"));
-    EraDefinitions.Add(1927, TEXT("北伐統一"));
-    EraDefinitions.Add(1937, TEXT("抗戰爆發"));
-    EraDefinitions.Add(1945, TEXT("抗戰勝利"));
-    EraDefinitions.Add(1949, TEXT("國共內戰"));
-
-    // 初始化事件模板
-    InitializeEventTemplates();
-
-    UE_LOG(LogTemp, Log, TEXT("MingRTSDynamicHistorySystem: Dynamic history system initialized successfully"));
-}
-
-FHistoricalTimeline UMingRTSDynamicHistorySystem::CreateTimeline(const FString& TimelineID, const FString& TimelineName, int32 StartYear)
-{
-    FHistoricalTimeline NewTimeline;
-    NewTimeline.TimelineID = TimelineID;
-    NewTimeline.TimelineName = TimelineName;
-    NewTimeline.CurrentYear = StartYear;
-    NewTimeline.CurrentEra = GetCurrentEra(StartYear);
-
-    // 初始化世界狀態
-    TMap<FString, float> InitialWorldState;
-    InitialWorldState.Add(TEXT("PoliticalStability"), 0.5f);
-    InitialWorldState.Add(TEXT("MilitaryStrength"), 0.6f);
-    InitialWorldState.Add(TEXT("EconomicProsperity"), 0.4f);
-    InitialWorldState.Add(TEXT("CulturalDevelopment"), 0.5f);
-    InitialWorldState.Add(TEXT("SocialHarmony"), 0.3f);
-    InitialWorldState.Add(TEXT("TechnologicalProgress"), 0.4f);
-    InitialWorldState.Add(TEXT("NaturalResources"), 0.7f);
-    InitialWorldState.Add(TEXT("PlayerInfluence"), 0.0f);
-
-    NewTimeline.WorldState = InitialWorldState;
-    NewTimeline.ActiveFactions = GetActiveFactions(TimelineID);
-
-    Timelines.Add(TimelineID, NewTimeline);
-    WorldStates.Add(TimelineID, InitialWorldState);
-
-    // 初始化分支數組
-    TArray<FHistoricalBranch> EmptyBranches;
-    TimelineBranches.Add(TimelineID, EmptyBranches);
-
-    UE_LOG(LogTemp, Log, TEXT("MingRTSDynamicHistorySystem: Created timeline %s starting in year %d"), *TimelineName, StartYear);
-    return NewTimeline;
-}
-
-FHistoricalEvent UMingRTSDynamicHistorySystem::GenerateHistoricalEvent(const FString& TimelineID, EHistoricalEventType EventType, const FString& Context)
-{
-    FHistoricalEvent NewEvent;
-
-    switch (EventType)
-    {
-        case EHistoricalEventType::Political:
-            NewEvent = GeneratePoliticalEvent(Context);
-            break;
-        case EHistoricalEventType::Military:
-            NewEvent = GenerateMilitaryEvent(Context);
-            break;
-        case EHistoricalEventType::Economic:
-            NewEvent = GenerateEconomicEvent(Context);
-            break;
-        case EHistoricalEventType::Cultural:
-            NewEvent = GenerateCulturalEvent(Context);
-            break;
-        case EHistoricalEventType::Social:
-            NewEvent = GenerateSocialEvent(Context);
-            break;
-        case EHistoricalEventType::Technological:
-            NewEvent = GenerateTechnologicalEvent(Context);
-            break;
-        case EHistoricalEventType::Natural:
-            NewEvent = GenerateNaturalEvent(Context);
-            break;
-        case EHistoricalEventType::Personal:
-            NewEvent = GeneratePersonalEvent(Context);
-            break;
-    }
-
-    // 設置基本屬性
-    NewEvent.EventID = GenerateEventID();
-    NewEvent.EventType = EventType;
-    NewEvent.Significance = DetermineEventSignificance(NewEvent);
-    NewEvent.EventImpact = DetermineEventImpact(NewEvent);
-
-    // 獲取當前時間線信息
-    if (Timelines.Contains(TimelineID))
-    {
-        const FHistoricalTimeline& Timeline = Timelines[TimelineID];
-        NewEvent.EventDate = FDateTime(Timeline.CurrentYear, 1, 1);
-        NewEvent.Location = DetermineEventLocation(NewEvent, Timeline);
-        NewEvent.KeyFigures = DetermineKeyFigures(NewEvent, Timeline);
-    }
-
-    return NewEvent;
-}
-
-void UMingRTSDynamicHistorySystem::ProcessPlayerAction(const FString& PlayerID, const FString& Action, const FString& Context)
-{
-    // 根據玩家行為生成相應的歷史事件
-    EHistoricalEventType EventType = DetermineEventTypeFromAction(Action);
-    
-    FHistoricalEvent PlayerEvent = GenerateHistoricalEvent(TEXT("MainTimeline"), EventType, Context);
-    PlayerEvent.bPlayerInfluenced = true;
-    PlayerEvent.PlayerAction = Action;
-
-    // 增強玩家影響事件的顯著性
-    PlayerEvent.Significance = (EHistoricalSignificance)FMath::Min((int32)PlayerEvent.Significance + 1, (int32)EHistoricalSignificance::Legendary);
-    
-    // 記錄事件
-    RecordHistoricalEvent(TEXT("MainTimeline"), PlayerEvent);
-
-    // 更新世界狀態
-    UpdateWorldState(TEXT("MainTimeline"), PlayerEvent);
-
-    // 觸發事件
-    OnHistoricalEvent.Broadcast(PlayerEvent, true);
-
-    UE_LOG(LogTemp, Log, TEXT("MingRTSDynamicHistorySystem: Player action processed - %s"), *Action);
-}
-
-FHistoricalBranch UMingRTSDynamicHistorySystem::CreateHistoricalBranch(const FString& TimelineID, const FString& DivergenceEvent)
-{
-    FHistoricalBranch NewBranch;
-    NewBranch.BranchID = FString::Printf(TEXT("Branch_%s_%d"), *TimelineID, FMath::RandRange(1000, 9999));
-    NewBranch.BranchName = FString::Printf(TEXT("分支時間線 - %s"), *DivergenceEvent);
-    NewBranch.DivergencePoint = DivergenceEvent;
-    NewBranch.Probability = FMath::FRandRange(0.1f, 0.9f);
-
-    // 複製當前世界狀態
-    if (WorldStates.Contains(TimelineID))
-    {
-        NewBranch.BranchWorldState = WorldStates[TimelineID];
-    }
-
-    // 添加分支到時間線
-    if (TimelineBranches.Contains(TimelineID))
-    {
-        TimelineBranches[TimelineID].Add(NewBranch);
-    }
-
-    OnTimelineBranch.Broadcast(NewBranch.BranchID);
-
-    UE_LOG(LogTemp, Log, TEXT("MingRTSDynamicHistorySystem: Created historical branch %s"), *NewBranch.BranchName);
-    return NewBranch;
-}
-
-void UMingRTSDynamicHistorySystem::AdvanceTimeline(const FString& TimelineID, int32 Years)
-{
-    if (!Timelines.Contains(TimelineID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("MingRTSDynamicHistorySystem: Timeline %s not found"), *TimelineID);
-        return;
-    }
-
-    FHistoricalTimeline& Timeline = Timelines[TimelineID];
-    
-    for (int32 Year = 1; Year <= Years; Year++)
-    {
-        Timeline.CurrentYear++;
-        
-        // 檢查時代變更
-        CheckEraProgression(TimelineID);
-        
-        // 生成年度事件
-        GenerateYearlyEvents(TimelineID);
-        
-        // 評估分支條件
-        EvaluateBranchConditions(TimelineID);
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("MingRTSDynamicHistorySystem: Timeline %s advanced by %d years to %d"), 
-           *TimelineID, Years, Timeline.CurrentYear);
-}
-
-FHistoricalTimeline UMingRTSDynamicHistorySystem::GetCurrentTimeline(const FString& TimelineID) const
-{
-    return Timelines.FindRef(TimelineID);
-}
-
-TArray<FHistoricalEvent> UMingRTSDynamicHistorySystem::GetHistoricalEvents(const FString& TimelineID, EHistoricalEventType EventType) const
-{
-    TArray<FHistoricalEvent> FilteredEvents;
-    
-    if (Timelines.Contains(TimelineID))
-    {
-        const FHistoricalTimeline& Timeline = Timelines[TimelineID];
-        
-        for (const FHistoricalEvent& Event : Timeline.Events)
-        {
-            if (Event.EventType == EventType)
-            {
-                FilteredEvents.Add(Event);
-            }
-        }
-    }
-    
-    return FilteredEvents;
-}
-
-TArray<FHistoricalEvent> UMingRTSDynamicHistorySystem::GetPotentialEvents(const FString& TimelineID, const FString& Context) const
-{
-    TArray<FHistoricalEvent> PotentialEvents;
-    
-    // 基於當前世界狀態生成潛在事件
-    if (WorldStates.Contains(TimelineID))
-    {
-        const TMap<FString, float>& CurrentWorldState = WorldStates[TimelineID];
-        
-        // 生成各類型的潛在事件
-        for (int32 i = 0; i < 8; i++)
-        {
-            EHistoricalEventType EventType = (EHistoricalEventType)i;
-            FHistoricalEvent PotentialEvent = GenerateHistoricalEvent(TimelineID, EventType, Context);
-            
-            // 計算事件概率
-            float Probability = CalculateEventProbability(PotentialEvent, TimelineID);
-            
-            if (Probability > 0.3f) // 只包含概率較高的事件
-            {
-                PotentialEvents.Add(PotentialEvent);
-            }
-        }
-    }
-    
-    return PotentialEvents;
-}
-
-float UMingRTSDynamicHistorySystem::CalculateHistoricalImpact(const FHistoricalEvent& Event) const
-{
-    float Impact = 0.0f;
-    
-    // 基於事件顯著性計算影響
-    switch (Event.Significance)
-    {
-        case EHistoricalSignificance::Trivial:
-            Impact = 0.1f;
-            break;
-        case EHistoricalSignificance::Minor:
-            Impact = 0.3f;
-            break;
-        case EHistoricalSignificance::Moderate:
-            Impact = 0.5f;
-            break;
-        case EHistoricalSignificance::Major:
-            Impact = 0.7f;
-            break;
-        case EHistoricalSignificance::Critical:
-            Impact = 0.9f;
-            break;
-        case EHistoricalSignificance::Legendary:
-            Impact = 1.0f;
-            break;
-    }
-    
-    // 基於事件影響範圍調整
-    switch (Event.EventImpact)
-    {
-        case EHistoricalImpact::Local:
-            Impact *= 0.5f;
-            break;
-        case EHistoricalImpact::Regional:
-            Impact *= 0.7f;
-            break;
-        case EHistoricalImpact::National:
-            Impact *= 1.0f;
-            break;
-        case EHistoricalImpact::International:
-            Impact *= 1.3f;
-            break;
-        case EHistoricalImpact::Global:
-            Impact *= 1.5f;
-            break;
-    }
-    
-    // 玩家影響加成
-    if (Event.bPlayerInfluenced)
-    {
-        Impact *= PlayerInfluenceWeight;
-    }
-    
-    return FMath::Clamp(Impact, 0.0f, 1.0f);
-}
-
-FString UMingRTSDynamicHistorySystem::GenerateNarrativeContent(const FHistoricalEvent& Event) const
-{
-    FString Narrative = GenerateEventNarrative(Event);
-    
-    if (Event.Consequences.Num() > 0)
-    {
-        Narrative += TEXT("\n\n") + GenerateConsequenceNarrative(Event.Consequences);
-    }
-    
-    if (Event.KeyFigures.Num() > 0)
-    {
-        Narrative += TEXT("\n\n") + GenerateCharacterNarrative(Event.KeyFigures);
-    }
-    
-    return Narrative;
-}
-
-TArray<FHistoricalEvent> UMingRTSDynamicHistorySystem::PredictFutureEvents(const FString& TimelineID, int32 YearsAhead) const
-{
-    TArray<FHistoricalEvent> PredictedEvents;
-    
-    if (!Timelines.Contains(TimelineID))
-    {
-        return PredictedEvents;
-    }
-    
-    const FHistoricalTimeline& Timeline = Timelines[TimelineID];
-    int32 FutureYear = Timeline.CurrentYear + YearsAhead;
-    
-    // 基於歷史趨勢預測未來事件
-    for (int32 Year = Timeline.CurrentYear + 1; Year <= FutureYear; Year++)
-    {
-        // 預測每年度的主要事件
-        EHistoricalEventType PredictedEventType = PredictEventTypeForYear(Year, Timeline);
-        
-        FHistoricalEvent PredictedEvent = GenerateHistoricalEvent(TimelineID, PredictedEventType, TEXT("FuturePrediction"));
-        PredictedEvent.EventDate = FDateTime(Year, 1, 1);
-        
-        PredictedEvents.Add(PredictedEvent);
-    }
-    
-    return PredictedEvents;
-}
-
-void UMingRTSDynamicHistorySystem::SetHistoricalParameters(float EventGenerationRate, float PlayerInfluenceWeight, float BranchProbability)
-{
-    this->EventGenerationRate = FMath::Clamp(EventGenerationRate, 0.0f, 1.0f);
-    this->PlayerInfluenceWeight = FMath::Clamp(PlayerInfluenceWeight, 0.5f, 2.0f);
-    this->BranchProbability = FMath::Clamp(BranchProbability, 0.0f, 1.0f);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingRTSDynamicHistorySystem: Historical parameters updated"));
-}
-
-TMap<FString, float> UMingRTSDynamicHistorySystem::GetHistoricalStatistics(const FString& TimelineID) const
-{
-    TMap<FString, float> Statistics;
-    
-    if (!Timelines.Contains(TimelineID))
-    {
-        return Statistics;
-    }
-    
-    const FHistoricalTimeline& Timeline = Timelines[TimelineID];
-    
-    // 統計事件類型分佈
-    TMap<EHistoricalEventType, int32> EventTypeCounts;
-    for (const FHistoricalEvent& Event : Timeline.Events)
-    {
-        EventTypeCounts.FindOrAdd(Event.EventType)++;
-    }
-    
-    Statistics.Add(TEXT("TotalEvents"), Timeline.Events.Num());
-    Statistics.Add(TEXT("PoliticalEvents"), EventTypeCounts.FindRef(EHistoricalEventType::Political));
-    Statistics.Add(TEXT("MilitaryEvents"), EventTypeCounts.FindRef(EHistoricalEventType::Military));
-    Statistics.Add(TEXT("EconomicEvents"), EventTypeCounts.FindRef(EHistoricalEventType::Economic));
-    Statistics.Add(TEXT("CulturalEvents"), EventTypeCounts.FindRef(EHistoricalEventType::Cultural));
-    Statistics.Add(TEXT("SocialEvents"), EventTypeCounts.FindRef(EHistoricalEventType::Social));
-    Statistics.Add(TEXT("TechnologicalEvents"), EventTypeCounts.FindRef(EHistoricalEventType::Technological));
-    Statistics.Add(TEXT("NaturalEvents"), EventTypeCounts.FindRef(EHistoricalEventType::Natural));
-    Statistics.Add(TEXT("PersonalEvents"), EventTypeCounts.FindRef(EHistoricalEventType::Personal));
-    
-    // 統計玩家影響
-    int32 PlayerInfluencedEvents = 0;
-    for (const FHistoricalEvent& Event : Timeline.Events)
-    {
-        if (Event.bPlayerInfluenced)
-        {
-            PlayerInfluencedEvents++;
-        }
-    }
-    
-    if (Timeline.Events.Num() > 0)
-    {
-        Statistics.Add(TEXT("PlayerInfluenceRatio"), (float)PlayerInfluencedEvents / Timeline.Events.Num());
-    }
-    
-    // 統計分支數量
-    if (TimelineBranches.Contains(TimelineID))
-    {
-        Statistics.Add(TEXT("BranchCount"), TimelineBranches[TimelineID].Num());
-    }
-    
-    return Statistics;
-}
-
-void UMingRTSDynamicHistorySystem::ResetTimeline(const FString& TimelineID)
-{
-    if (Timelines.Contains(TimelineID))
-    {
-        FHistoricalTimeline& Timeline = Timelines[TimelineID];
-        Timeline.Events.Empty();
-        Timeline.CurrentYear = 1911;
-        Timeline.CurrentEra = GetCurrentEra(Timeline.CurrentYear);
-        
-        // 重置世界狀態
-        if (WorldStates.Contains(TimelineID))
-        {
-            TMap<FString, float>& WorldState = WorldStates[TimelineID];
-            WorldState.Empty();
-            WorldState.Add(TEXT("PoliticalStability"), 0.5f);
-            WorldState.Add(TEXT("MilitaryStrength"), 0.6f);
-            WorldState.Add(TEXT("EconomicProsperity"), 0.4f);
-            WorldState.Add(TEXT("CulturalDevelopment"), 0.5f);
-            WorldState.Add(TEXT("SocialHarmony"), 0.3f);
-            WorldState.Add(TEXT("TechnologicalProgress"), 0.4f);
-            WorldState.Add(TEXT("NaturalResources"), 0.7f);
-            WorldState.Add(TEXT("PlayerInfluence"), 0.0f);
-        }
-        
-        // 清空分支
-        if (TimelineBranches.Contains(TimelineID))
-        {
-            TimelineBranches[TimelineID].Empty();
-        }
-        
-        UE_LOG(LogTemp, Log, TEXT("MingRTSDynamicHistorySystem: Timeline %s reset"), *TimelineID);
-    }
-}
-
-// 私有方法實現
-
-void UMingRTSDynamicHistorySystem::InitializeEventTemplates()
-{
-    EventTemplates.Empty();
-    
-    // 政治事件模板
-    FHistoricalEvent PoliticalTemplate;
-    PoliticalTemplate.EventType = EHistoricalEventType::Political;
-    PoliticalTemplate.Description = TEXT("政治變革事件");
-    EventTemplates.Add(PoliticalTemplate);
-    
-    // 軍事事件模板
-    FHistoricalEvent MilitaryTemplate;
-    MilitaryTemplate.EventType = EHistoricalEventType::Military;
-    MilitaryTemplate.Description = TEXT("軍事衝突事件");
-    EventTemplates.Add(MilitaryTemplate);
-    
-    // 經濟事件模板
-    FHistoricalEvent EconomicTemplate;
-    EconomicTemplate.EventType = EHistoricalEventType::Economic;
-    EconomicTemplate.Description = TEXT("經濟變動事件");
-    EventTemplates.Add(EconomicTemplate);
-    
-    // 文化事件模板
-    FHistoricalEvent CulturalTemplate;
-    CulturalTemplate.EventType = EHistoricalEventType::Cultural;
-    CulturalTemplate.Description = TEXT("文化發展事件");
-    EventTemplates.Add(CulturalTemplate);
-}
-
-FHistoricalEvent UMingRTSDynamicHistorySystem::GeneratePoliticalEvent(const FString& Context)
-{
-    FHistoricalEvent Event;
-    Event.EventName = TEXT("政治變革");
-    Event.Description = TEXT("一場重要的政治變革正在發生");
-    Event.EventType = EHistoricalEventType::Political;
-    Event.EventImpact = EHistoricalImpact::National;
-    Event.Significance = EHistoricalSignificance::Major;
-    
-    // 添加政治相關的後果
-    Event.Consequences.Add(TEXT("政治格局重新洗牌"));
-    Event.Consequences.Add(TEXT("權力平衡發生變化"));
-    Event.Consequences.Add(TEXT("政策方向可能轉變"));
-    
-    return Event;
-}
-
-FHistoricalEvent UMingRTSDynamicHistorySystem::GenerateMilitaryEvent(const FString& Context)
-{
-    FHistoricalEvent Event;
-    Event.EventName = TEXT("軍事衝突");
-    Event.Description = TEXT("軍事衝突爆發，影響地區穩定");
-    Event.EventType = EHistoricalEventType::Military;
-    Event.EventImpact = EHistoricalImpact::Regional;
-    Event.Significance = EHistoricalSignificance::Major;
-    
-    Event.Consequences.Add(TEXT("軍事力量對抗"));
-    Event.Consequences.Add(TEXT("平民生活受影響"));
-    Event.Consequences.Add(TEXT("地區安全局勢緊張"));
-    
-    return Event;
-}
-
-FHistoricalEvent UMingRTSDynamicHistorySystem::GenerateEconomicEvent(const FString& Context)
-{
-    FHistoricalEvent Event;
-    Event.EventName = TEXT("經濟變動");
-    Event.Description = TEXT("經濟狀況發生重大變化");
-    Event.EventType = EHistoricalEventType::Economic;
-    Event.EventImpact = EHistoricalImpact::National;
-    Event.Significance = EHistoricalSignificance::Moderate;
-    
-    Event.Consequences.Add(TEXT("市場波動"));
-    Event.Consequences.Add(TEXT("就業狀況變化"));
-    Event.Consequences.Add(TEXT("貿易關係調整"));
-    
-    return Event;
-}
-
-FHistoricalEvent UMingRTSDynamicHistorySystem::GenerateCulturalEvent(const FString& Context)
-{
-    FHistoricalEvent Event;
-    Event.EventName = TEXT("文化發展");
-    Event.Description = TEXT("文化領域出現新的發展");
-    Event.EventType = EHistoricalEventType::Cultural;
-    Event.EventImpact = EHistoricalImpact::Regional;
-    Event.Significance = EHistoricalSignificance::Minor;
-    
-    Event.Consequences.Add(TEXT("文化傳播"));
-    Event.Consequences.Add(TEXT("思想交流"));
-    Event.Consequences.Add(TEXT("藝術發展"));
-    
-    return Event;
-}
-
-FHistoricalEvent UMingRTSDynamicHistorySystem::GenerateSocialEvent(const FString& Context)
-{
-    FHistoricalEvent Event;
-    Event.EventName = TEXT("社會變遷");
-    Event.Description = TEXT("社會結構和關係發生變化");
-    Event.EventType = EHistoricalEventType::Social;
-    Event.EventImpact = EHistoricalImpact::Local;
-    Event.Significance = EHistoricalSignificance::Moderate;
-    
-    Event.Consequences.Add(TEXT("社會秩序變化"));
-    Event.Consequences.Add(TEXT("人際關係調整"));
-    Event.Consequences.Add(TEXT("生活方式改變"));
-    
-    return Event;
-}
-
-FHistoricalEvent UMingRTSDynamicHistorySystem::GenerateTechnologicalEvent(const FString& Context)
-{
-    FHistoricalEvent Event;
-    Event.EventName = TEXT("技術進步");
-    Event.Description = TEXT("新技術的出現和應用");
-    Event.EventType = EHistoricalEventType::Technological;
-    Event.EventImpact = EHistoricalImpact::National;
-    Event.Significance = EHistoricalSignificance::Minor;
-    
-    Event.Consequences.Add(TEXT("生產力提升"));
-    Event.Consequences.Add(TEXT("生活方式改變"));
-    Event.Consequences.Add(TEXT("經濟結構調整"));
-    
-    return Event;
-}
-
-FHistoricalEvent UMingRTSDynamicHistorySystem::GenerateNaturalEvent(const FString& Context)
-{
-    FHistoricalEvent Event;
-    Event.EventName = TEXT("自然現象");
-    Event.Description = TEXT("自然界的重大變化");
-    Event.EventType = EHistoricalEventType::Natural;
-    Event.EventImpact = EHistoricalImpact::Regional;
-    Event.Significance = EHistoricalSignificance::Moderate;
-    
-    Event.Consequences.Add(TEXT("環境影響"));
-    Event.Consequences.Add(TEXT("資源變化"));
-    Event.Consequences.Add(TEXT("生活條件改變"));
-    
-    return Event;
-}
-
-FHistoricalEvent UMingRTSDynamicHistorySystem::GeneratePersonalEvent(const FString& Context)
-{
-    FHistoricalEvent Event;
-    Event.EventName = TEXT("個人事件");
-    Event.Description = TEXT("個人層面的重要事件");
-    Event.EventType = EHistoricalEventType::Personal;
-    Event.EventImpact = EHistoricalImpact::Local;
-    Event.Significance = EHistoricalSignificance::Minor;
-    
-    Event.Consequences.Add(TEXT("個人命運改變"));
-    Event.Consequences.Add(TEXT("家庭關係變化"));
-    Event.Consequences.Add(TEXT("社會地位調整"));
-    
-    return Event;
-}
-
-void UMingRTSDynamicHistorySystem::UpdateWorldState(const FString& TimelineID, const FHistoricalEvent& Event)
-{
-    if (!WorldStates.Contains(TimelineID))
-    {
-        return;
-    }
-    
-    TMap<FString, float>& WorldState = WorldStates[TimelineID];
-    float Impact = CalculateHistoricalImpact(Event);
-    
-    // 根據事件類型更新世界狀態
-    switch (Event.EventType)
-    {
-        case EHistoricalEventType::Political:
-            WorldState.Add(TEXT("PoliticalStability"), FMath::Clamp(WorldState.FindRef(TEXT("PoliticalStability")) + Impact * 0.1f, 0.0f, 1.0f));
-            break;
-        case EHistoricalEventType::Military:
-            WorldState.Add(TEXT("MilitaryStrength"), FMath::Clamp(WorldState.FindRef(TEXT("MilitaryStrength")) + Impact * 0.1f, 0.0f, 1.0f));
-            break;
-        case EHistoricalEventType::Economic:
-            WorldState.Add(TEXT("EconomicProsperity"), FMath::Clamp(WorldState.FindRef(TEXT("EconomicProsperity")) + Impact * 0.1f, 0.0f, 1.0f));
-            break;
-        case EHistoricalEventType::Cultural:
-            WorldState.Add(TEXT("CulturalDevelopment"), FMath::Clamp(WorldState.FindRef(TEXT("CulturalDevelopment")) + Impact * 0.1f, 0.0f, 1.0f));
-            break;
-        case EHistoricalEventType::Social:
-            WorldState.Add(TEXT("SocialHarmony"), FMath::Clamp(WorldState.FindRef(TEXT("SocialHarmony")) + Impact * 0.1f, 0.0f, 1.0f));
-            break;
-        case EHistoricalEventType::Technological:
-            WorldState.Add(TEXT("TechnologicalProgress"), FMath::Clamp(WorldState.FindRef(TEXT("TechnologicalProgress")) + Impact * 0.1f, 0.0f, 1.0f));
-            break;
-        case EHistoricalEventType::Natural:
-            WorldState.Add(TEXT("NaturalResources"), FMath::Clamp(WorldState.FindRef(TEXT("NaturalResources")) + Impact * 0.1f, 0.0f, 1.0f));
-            break;
-    }
-    
-    // 玩家影響更新
-    if (Event.bPlayerInfluenced)
-    {
-        WorldState.Add(TEXT("PlayerInfluence"), FMath::Clamp(WorldState.FindRef(TEXT("PlayerInfluence")) + Impact * 0.05f, 0.0f, 1.0f));
-    }
-}
-
-void UMingRTSDynamicHistorySystem::CheckEraProgression(const FString& TimelineID)
-{
-    if (!Timelines.Contains(TimelineID))
-    {
-        return;
-    }
-    
-    FHistoricalTimeline& Timeline = Timelines[TimelineID];
-    FString NewEra = GetCurrentEra(Timeline.CurrentYear);
-    
-    if (NewEra != Timeline.CurrentEra)
-    {
-        FString OldEra = Timeline.CurrentEra;
-        Timeline.CurrentEra = NewEra;
-        
-        OnEraChange.Broadcast(NewEra);
-        
-        UE_LOG(LogTemp, Log, TEXT("MingRTSDynamicHistorySystem: Era changed from %s to %s"), *OldEra, *NewEra);
-    }
-}
-
-void UMingRTSDynamicHistorySystem::EvaluateBranchConditions(const FString& TimelineID)
-{
-    if (!Timelines.Contains(TimelineID) || !WorldStates.Contains(TimelineID))
-    {
-        return;
-    }
-    
-    const FHistoricalTimeline& Timeline = Timelines[TimelineID];
-    const TMap<FString, float>& WorldState = WorldStates[TimelineID];
-    
-    // 檢查是否滿足分支條件
-    bool ShouldBranch = false;
-    FString BranchReason;
-    
-    // 基於世界狀態決定是否分支
-    if (WorldState.FindRef(TEXT("PlayerInfluence")) > 0.7f)
-    {
-        ShouldBranch = true;
-        BranchReason = TEXT("玩家影響力過高");
-    }
-    else if (WorldState.FindRef(TEXT("PoliticalStability")) < 0.2f)
-    {
-        ShouldBranch = true;
-        BranchReason = TEXT("政治不穩定");
-    }
-    else if (Timeline.Events.Num() > 50)
-    {
-        ShouldBranch = true;
-        BranchReason = TEXT("歷史事件過多");
-    }
-    
-    if (ShouldBranch && FMath::FRand() < BranchProbability)
-    {
-        CreateHistoricalBranch(TimelineID, BranchReason);
-    }
-}
-
-FString UMingRTSDynamicHistorySystem::GenerateEventID() const
-{
-    return FString::Printf(TEXT("Event_%d_%d"), FDateTime::Now().GetTicks(), FMath::RandRange(1000, 9999));
-}
-
-float UMingRTSDynamicHistorySystem::CalculateEventProbability(const FHistoricalEvent& Event, const FString& TimelineID) const
-{
-    float BaseProbability = EventGenerationRate;
-    
-    // 根據世界狀態調整概率
-    if (WorldStates.Contains(TimelineID))
-    {
-        const TMap<FString, float>& WorldState = WorldStates[TimelineID];
-        
-        switch (Event.EventType)
-        {
-            case EHistoricalEventType::Political:
-                BaseProbability *= (1.0f - WorldState.FindRef(TEXT("PoliticalStability")));
-                break;
-            case EHistoricalEventType::Military:
-                BaseProbability *= (1.0f - WorldState.FindRef(TEXT("MilitaryStrength")));
-                break;
-            case EHistoricalEventType::Economic:
-                BaseProbability *= (1.0f - WorldState.FindRef(TEXT("EconomicProsperity")));
-                break;
-            case EHistoricalEventType::Cultural:
-                BaseProbability *= WorldState.FindRef(TEXT("CulturalDevelopment"));
-                break;
-            case EHistoricalEventType::Social:
-                BaseProbability *= (1.0f - WorldState.FindRef(TEXT("SocialHarmony")));
-                break;
-            case EHistoricalEventType::Technological:
-                BaseProbability *= WorldState.FindRef(TEXT("TechnologicalProgress"));
-                break;
-            case EHistoricalEventType::Natural:
-                BaseProbability *= (1.0f - WorldState.FindRef(TEXT("NaturalResources")));
-                break;
-        }
-    }
-    
-    return FMath::Clamp(BaseProbability, 0.0f, 1.0f);
-}
-
-FString UMingRTSDynamicHistorySystem::GetCurrentEra(int32 Year) const
-{
-    for (const auto& EraPair : EraDefinitions)
-    {
-        if (Year >= EraPair.Key)
-        {
-            return EraPair.Value;
-        }
-    }
-    
-    return TEXT("未知時代");
-}
-
-TArray<FString> UMingRTSDynamicHistorySystem::GetActiveFactions(const FString& TimelineID) const
-{
-    TArray<FString> Factions;
-    Factions.Add(TEXT("北洋政府"));
-    Factions.Add(TEXT("國民政府"));
-    Factions.Add(TEXT("中國共產黨"));
-    Factions.Add(TEXT("各地軍閥"));
-    Factions.Add(TEXT("民間勢力"));
-    
-    return Factions;
-}
-
-void UMingRTSDynamicHistorySystem::RecordHistoricalEvent(const FString& TimelineID, const FHistoricalEvent& Event)
-{
-    if (Timelines.Contains(TimelineID))
-    {
-        FHistoricalTimeline& Timeline = Timelines[TimelineID];
-        Timeline.Events.Add(Event);
-        
-        // 限制事件數量
-        if (Timeline.Events.Num() > 1000)
-        {
-            Timeline.Events.RemoveAt(0);
-        }
-    }
-}
-
-FString UMingRTSDynamicHistorySystem::GenerateEventNarrative(const FHistoricalEvent& Event) const
-{
-    FString Narrative = FString::Printf(TEXT("在%s，%s發生了重大事件：%s。"), 
-        *Event.EventDate.ToString(), *Event.Location, *Event.EventName);
-    
-    Narrative += TEXT("\n\n") + Event.Description;
-    
-    return Narrative;
-}
-
-FString UMingRTSDynamicHistorySystem::GenerateConsequenceNarrative(const TArray<FString>& Consequences) const
-{
-    FString Narrative = TEXT("此次事件的後果包括：");
-    
-    for (const FString& Consequence : Consequences)
-    {
-        Narrative += TEXT("\n• ") + Consequence;
-    }
-    
-    return Narrative;
-}
-
-FString UMingRTSDynamicHistorySystem::GenerateCharacterNarrative(const TArray<FString>& KeyFigures) const
-{
-    FString Narrative = TEXT("關鍵人物涉及：");
-    
-    for (const FString& Figure : KeyFigures)
-    {
-        Narrative += TEXT("\n• ") + Figure;
-    }
-    
-    return Narrative;
-}
-
-EHistoricalSignificance UMingRTSDynamicHistorySystem::DetermineEventSignificance(const FHistoricalEvent& Event) const
-{
-    // 基於事件類型和影響範圍確定顯著性
-    if (Event.EventImpact == EHistoricalImpact::Global)
-    {
-        return EHistoricalSignificance::Legendary;
-    }
-    else if (Event.EventImpact == EHistoricalImpact::International)
-    {
-        return EHistoricalSignificance::Critical;
-    }
-    else if (Event.EventImpact == EHistoricalImpact::National)
-    {
-        return EHistoricalSignificance::Major;
-    }
-    else if (Event.EventImpact == EHistoricalImpact::Regional)
-    {
-        return EHistoricalSignificance::Moderate;
-    }
-    else
-    {
-        return EHistoricalSignificance::Minor;
-    }
-}
-
-EHistoricalImpact UMingRTSDynamicHistorySystem::DetermineEventImpact(const FHistoricalEvent& Event) const
-{
-    // 基於事件類型確定影響範圍
-    switch (Event.EventType)
-    {
-        case EHistoricalEventType::Political:
-            return EHistoricalImpact::National;
-        case EHistoricalEventType::Military:
-            return EHistoricalImpact::Regional;
-        case EHistoricalEventType::Economic:
-            return EHistoricalImpact::National;
-        case EHistoricalEventType::Cultural:
-            return EHistoricalImpact::Regional;
-        case EHistoricalEventType::Social:
-            return EHistoricalImpact::Local;
-        case EHistoricalEventType::Technological:
-            return EHistoricalImpact::National;
-        case EHistoricalEventType::Natural:
-            return EHistoricalImpact::Regional;
-        case EHistoricalEventType::Personal:
-            return EHistoricalImpact::Local;
-        default:
-            return EHistoricalImpact::Local;
-    }
-}
-
-FString UMingRTSDynamicHistorySystem::DetermineEventLocation(const FHistoricalEvent& Event, const FHistoricalTimeline& Timeline) const
-{
-    // 基於事件類型和活躍勢力確定地點
-    TArray<FString> PossibleLocations;
-    
-    switch (Event.EventType)
-    {
-        case EHistoricalEventType::Political:
-            PossibleLocations.Add(TEXT("北京"));
-            PossibleLocations.Add(TEXT("南京"));
-            PossibleLocations.Add(TEXT("廣州"));
-            break;
-        case EHistoricalEventType::Military:
-            PossibleLocations.Add(TEXT("戰場"));
-            PossibleLocations.Add(TEXT("邊境"));
-            PossibleLocations.Add(TEXT("要塞"));
-            break;
-        case EHistoricalEventType::Economic:
-            PossibleLocations.Add(TEXT("上海"));
-            PossibleLocations.Add(TEXT("天津"));
-            PossibleLocations.Add(TEXT("武漢"));
-            break;
-        case EHistoricalEventType::Cultural:
-            PossibleLocations.Add(TEXT("北平"));
-            PossibleLocations.Add(TEXT("南京"));
-            PossibleLocations.Add(TEXT("杭州"));
-            break;
-        default:
-            PossibleLocations.Add(TEXT("未知地點"));
-            break;
-    }
-    
-    if (PossibleLocations.Num() > 0)
-    {
-        return PossibleLocations[FMath::RandRange(0, PossibleLocations.Num() - 1)];
-    }
-    
-    return TEXT("未知地點");
-}
-
-TArray<FString> UMingRTSDynamicHistorySystem::DetermineKeyFigures(const FHistoricalEvent& Event, const FHistoricalTimeline& Timeline) const
-{
-    TArray<FString> KeyFigures;
-    
-    // 基於事件類型和活躍勢力確定關鍵人物
-    switch (Event.EventType)
-    {
-        case EHistoricalEventType::Political:
-            KeyFigures.Add(TEXT("政治領袖"));
-            KeyFigures.Add(TEXT("政府官員"));
-            break;
-        case EHistoricalEventType::Military:
-            KeyFigures.Add(TEXT("軍事指揮官"));
-            KeyFigures.Add(TEXT("士兵"));
-            break;
-        case EHistoricalEventType::Economic:
-            KeyFigures.Add(TEXT("商人"));
-            KeyFigures.Add(TEXT("銀行家"));
-            break;
-        case EHistoricalEventType::Cultural:
-            KeyFigures.Add(TEXT("學者"));
-            KeyFigures.Add(TEXT("藝術家"));
-            break;
-        default:
-            KeyFigures.Add(TEXT("相關人士"));
-            break;
-    }
-    
-    return KeyFigures;
-}
-
-EHistoricalEventType UMingRTSDynamicHistorySystem::DetermineEventTypeFromAction(const FString& Action) const
-{
-    // 基於玩家行為確定事件類型
-    if (Action.Contains(TEXT("戰鬥")) || Action.Contains(TEXT("攻擊")))
-    {
-        return EHistoricalEventType::Military;
-    }
-    else if (Action.Contains(TEXT("交易")) || Action.Contains(TEXT("經濟")))
-    {
-        return EHistoricalEventType::Economic;
-    }
-    else if (Action.Contains(TEXT("政治")) || Action.Contains(TEXT("政策")))
-    {
-        return EHistoricalEventType::Political;
-    }
-    else if (Action.Contains(TEXT("文化")) || Action.Contains(TEXT("教育")))
-    {
-        return EHistoricalEventType::Cultural;
-    }
-    else if (Action.Contains(TEXT("社交")) || Action.Contains(TEXT("關係")))
-    {
-        return EHistoricalEventType::Social;
-    }
-    else if (Action.Contains(TEXT("技術")) || Action.Contains(TEXT("研發")))
-    {
-        return EHistoricalEventType::Technological;
-    }
-    else
-    {
-        return EHistoricalEventType::Personal;
-    }
-}
-
-void UMingRTSDynamicHistorySystem::GenerateYearlyEvents(const FString& TimelineID)
-{
-    if (!Timelines.Contains(TimelineID))
-    {
-        return;
-    }
-    
-    const FHistoricalTimeline& Timeline = Timelines[TimelineID];
-    int32 EventsGenerated = 0;
-    
-    // 生成年度事件
-    while (EventsGenerated < MaxEventsPerYear && FMath::FRand() < EventGenerationRate)
-    {
-        EHistoricalEventType EventType = (EHistoricalEventType)FMath::RandRange(0, 7);
-        FString Context = FString::Printf(TEXT("Year_%d"), Timeline.CurrentYear);
-        
-        FHistoricalEvent NewEvent = GenerateHistoricalEvent(TimelineID, EventType, Context);
-        
-        // 計算事件概率
-        float Probability = CalculateEventProbability(NewEvent, TimelineID);
-        
-        if (FMath::FRand() < Probability)
-        {
-            RecordHistoricalEvent(TimelineID, NewEvent);
-            UpdateWorldState(TimelineID, NewEvent);
-            OnHistoricalEvent.Broadcast(NewEvent, false);
-            
-            EventsGenerated++;
-        }
-    }
-}
-
-EHistoricalEventType UMingRTSDynamicHistorySystem::PredictEventTypeForYear(int32 Year, const FHistoricalTimeline& Timeline) const
-{
-    // 基於歷史趨勢預測事件類型
-    FString Era = GetCurrentEra(Year);
-    
-    if (Era.Contains(TEXT("革命")))
-    {
-        return EHistoricalEventType::Political;
-    }
-    else if (Era.Contains(TEXT("軍閥")))
-    {
-        return EHistoricalEventType::Military;
-    }
-    else if (Era.Contains(TEXT("抗戰")))
-    {
-        return EHistoricalEventType::Military;
-    }
-    else if (Era.Contains(TEXT("內戰")))
-    {
-        return EHistoricalEventType::Military;
-    }
-    else
-    {
-        return EHistoricalEventType::Political;
-    }
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出K出i出s出設置出e出t出M出a出t出h出L出i出b出本出a出本出y出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出輸入出A出L出/出P出l出a出t出f出o出本出設置出軍出i出l出e出設置出a出n出a出成出e出本出.出h出"出
+出
+出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出E出正出e出n出t出G出e出n出e出本出a出t出i出o出n出R出a出t出e出 出=出 出0出.出8出f出;出
+出 出 出 出 出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出基本出e出i出成出h出t出 出=出 出1出.出2出f出;出
+出 出 出 出 出B出本出a出n出c出h出P出本出o出b出a出b出i出l出i出t出y出 出=出 出0出.出1出5出f出;出
+出 出 出 出 出M出a出x出E出正出e出n出t出s出P出e出本出Y出e出a出本出 出=出 出5出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出I出n出i出t出i出a出l出i出z出e出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出 出I出n出i出t出i出a出l出i出z出i出n出成出 出d出y出n出a出設置出i出c出 出h出i出s出t出o出本出y出 出s出y出s出t出e出設置出.出.出.出"出)出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出時出代出定出義出
+出 出 出 出 出E出本出a出D出e出f出i出n出i出t出i出o出n出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出E出本出a出D出e出f出i出n出i出t出i出o出n出s出.出A出d出d出(出1出9出1出1出,出 出T出E出X出T出(出"出辛出亥出革出命出"出)出)出;出
+出 出 出 出 出E出本出a出D出e出f出i出n出i出t出i出o出n出s出.出A出d出d出(出1出9出1出2出,出 出T出E出X出T出(出"出民出國出初出建出"出)出)出;出
+出 出 出 出 出E出本出a出D出e出f出i出n出i出t出i出o出n出s出.出A出d出d出(出1出9出1出6出,出 出T出E出X出T出(出"出軍出閥出割出據出"出)出)出;出
+出 出 出 出 出E出本出a出D出e出f出i出n出i出t出i出o出n出s出.出A出d出d出(出1出9出2出7出,出 出T出E出X出T出(出"出北出伐出統出一出"出)出)出;出
+出 出 出 出 出E出本出a出D出e出f出i出n出i出t出i出o出n出s出.出A出d出d出(出1出9出3出7出,出 出T出E出X出T出(出"出抗出戰出爆出發出"出)出)出;出
+出 出 出 出 出E出本出a出D出e出f出i出n出i出t出i出o出n出s出.出A出d出d出(出1出9出4出5出,出 出T出E出X出T出(出"出抗出戰出勝出利出"出)出)出;出
+出 出 出 出 出E出本出a出D出e出f出i出n出i出t出i出o出n出s出.出A出d出d出(出1出9出4出9出,出 出T出E出X出T出(出"出國出共出內出戰出"出)出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出事出件出模出板出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出E出正出e出n出t出T出e出設置出p出l出a出t出e出s出(出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出 出D出y出n出a出設置出i出c出 出h出i出s出t出o出本出y出 出s出y出s出t出e出設置出 出i出n出i出t出i出a出l出i出z出e出d出 出s出使出c出c出e出s出s出f出使出l出l出y出"出)出)出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出C出本出e出a出t出e出T出i出設置出e出l出i出n出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出的出a出設置出e出,出 出i出n出t出3出2出 出S出t出a出本出t出Y出e出a出本出)出
+出{出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出 出的出e出w出T出i出設置出e出l出i出n出e出;出
+出 出 出 出 出的出e出w出T出i出設置出e出l出i出n出e出.出T出i出設置出e出l出i出n出e出I出D出 出=出 出T出i出設置出e出l出i出n出e出I出D出;出
+出 出 出 出 出的出e出w出T出i出設置出e出l出i出n出e出.出T出i出設置出e出l出i出n出e出的出a出設置出e出 出=出 出T出i出設置出e出l出i出n出e出的出a出設置出e出;出
+出 出 出 出 出的出e出w出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出Y出e出a出本出 出=出 出S出t出a出本出t出Y出e出a出本出;出
+出 出 出 出 出的出e出w出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出E出本出a出 出=出 出G出e出t出C出使出本出本出e出n出t出E出本出a出(出S出t出a出本出t出Y出e出a出本出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出世出界出狀出態出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出I出n出i出t出i出a出l出基本出o出本出l出d出S出t出a出t出e出;出
+出 出 出 出 出I出n出i出t出i出a出l出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出P出o出l出i出t出i出c出a出l出S出t出a出b出i出l出i出t出y出"出)出,出 出0出.出5出f出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出M出i出l出i出t出a出本出y出S出t出本出e出n出成出t出h出"出)出,出 出0出.出6出f出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出E出c出o出n出o出設置出i出c出P出本出o出s出p出e出本出i出t出y出"出)出,出 出0出.出4出f出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出C出使出l出t出使出本出a出l出D出e出正出e出l出o出p出設置出e出n出t出"出)出,出 出0出.出5出f出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出S出o出c出i出a出l出輸入出a出本出設置出o出n出y出"出)出,出 出0出.出3出f出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出T出e出c出h出n出o出l出o出成出i出c出a出l出P出本出o出成出本出e出s出s出"出)出,出 出0出.出4出f出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出的出a出t出使出本出a出l出R出e出s出o出使出本出c出e出s出"出)出,出 出0出.出7出f出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出"出)出,出 出0出.出0出f出)出;出
+出
+出 出 出 出 出的出e出w出T出i出設置出e出l出i出n出e出.出基本出o出本出l出d出S出t出a出t出e出 出=出 出I出n出i出t出i出a出l出基本出o出本出l出d出S出t出a出t出e出;出
+出 出 出 出 出的出e出w出T出i出設置出e出l出i出n出e出.出A出c出t出i出正出e出軍出a出c出t出i出o出n出s出 出=出 出G出e出t出A出c出t出i出正出e出軍出a出c出t出i出o出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出;出
+出
+出 出 出 出 出T出i出設置出e出l出i出n出e出s出.出A出d出d出(出T出i出設置出e出l出i出n出e出I出D出,出 出的出e出w出T出i出設置出e出l出i出n出e出)出;出
+出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出s出.出A出d出d出(出T出i出設置出e出l出i出n出e出I出D出,出 出I出n出i出t出i出a出l出基本出o出本出l出d出S出t出a出t出e出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出分出支出數出組出
+出 出 出 出 出T出A出本出本出a出y出<出軍出輸入出i出s出t出o出本出i出c出a出l出B出本出a出n出c出h出>出 出E出設置出p出t出y出B出本出a出n出c出h出e出s出;出
+出 出 出 出 出T出i出設置出e出l出i出n出e出B出本出a出n出c出h出e出s出.出A出d出d出(出T出i出設置出e出l出i出n出e出I出D出,出 出E出設置出p出t出y出B出本出a出n出c出h出e出s出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出 出C出本出e出a出t出e出d出 出t出i出設置出e出l出i出n出e出 出%出s出 出s出t出a出本出t出i出n出成出 出i出n出 出y出e出a出本出 出%出d出"出)出,出 出*出T出i出設置出e出l出i出n出e出的出a出設置出e出,出 出S出t出a出本出t出Y出e出a出本出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出的出e出w出T出i出設置出e出l出i出n出e出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出,出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出 出E出正出e出n出t出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出的出e出w出E出正出e出n出t出;出
+出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出正出e出n出t出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出P出o出l出i出t出i出c出a出l出E出正出e出n出t出(出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出M出i出l出i出t出a出本出y出E出正出e出n出t出(出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出E出c出o出n出o出設置出i出c出E出正出e出n出t出(出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出C出使出l出t出使出本出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出C出使出l出t出使出本出a出l出E出正出e出n出t出(出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出S出o出c出i出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出S出o出c出i出a出l出E出正出e出n出t出(出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出T出e出c出h出n出o出l出o出成出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出T出e出c出h出n出o出l出o出成出i出c出a出l出E出正出e出n出t出(出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出的出a出t出使出本出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出的出a出t出使出本出a出l出E出正出e出n出t出(出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出e出本出s出o出n出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出P出e出本出s出o出n出a出l出E出正出e出n出t出(出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出設出置出基出本出屬出性出
+出 出 出 出 出的出e出w出E出正出e出n出t出.出E出正出e出n出t出I出D出 出=出 出G出e出n出e出本出a出t出e出E出正出e出n出t出I出D出(出)出;出
+出 出 出 出 出的出e出w出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出 出=出 出E出正出e出n出t出T出y出p出e出;出
+出 出 出 出 出的出e出w出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出 出=出 出D出e出t出e出本出設置出i出n出e出E出正出e出n出t出S出i出成出n出i出f出i出c出a出n出c出e出(出的出e出w出E出正出e出n出t出)出;出
+出 出 出 出 出的出e出w出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出 出D出e出t出e出本出設置出i出n出e出E出正出e出n出t出I出設置出p出a出c出t出(出的出e出w出E出正出e出n出t出)出;出
+出
+出 出 出 出 出/出/出 出獲出取出當出前出時出間出線出信出息出
+出 出 出 出 出i出f出 出(出T出i出設置出e出l出i出n出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出 出=出 出T出i出設置出e出l出i出n出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出 出 出 出 出的出e出w出E出正出e出n出t出.出E出正出e出n出t出D出a出t出e出 出=出 出軍出D出a出t出e出T出i出設置出e出(出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出Y出e出a出本出,出 出1出,出 出1出)出;出
+出 出 出 出 出 出 出 出 出的出e出w出E出正出e出n出t出.出L出o出c出a出t出i出o出n出 出=出 出D出e出t出e出本出設置出i出n出e出E出正出e出n出t出L出o出c出a出t出i出o出n出(出的出e出w出E出正出e出n出t出,出 出T出i出設置出e出l出i出n出e出)出;出
+出 出 出 出 出 出 出 出 出的出e出w出E出正出e出n出t出.出K出e出y出軍出i出成出使出本出e出s出 出=出 出D出e出t出e出本出設置出i出n出e出K出e出y出軍出i出成出使出本出e出s出(出的出e出w出E出正出e出n出t出,出 出T出i出設置出e出l出i出n出e出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出的出e出w出E出正出e出n出t出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出P出本出o出c出e出s出s出P出l出a出y出e出本出A出c出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出P出l出a出y出e出本出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出c出t出i出o出n出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出/出/出 出根出據出玩出家出行出為出生出成出相出應出的出歷出史出事出件出
+出 出 出 出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出 出E出正出e出n出t出T出y出p出e出 出=出 出D出e出t出e出本出設置出i出n出e出E出正出e出n出t出T出y出p出e出軍出本出o出設置出A出c出t出i出o出n出(出A出c出t出i出o出n出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出P出l出a出y出e出本出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出(出T出E出X出T出(出"出M出a出i出n出T出i出設置出e出l出i出n出e出"出)出,出 出E出正出e出n出t出T出y出p出e出,出 出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出P出l出a出y出e出本出E出正出e出n出t出.出b出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出P出l出a出y出e出本出E出正出e出n出t出.出P出l出a出y出e出本出A出c出t出i出o出n出 出=出 出A出c出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出增出強出玩出家出影出響出事出件出的出顯出著出性出
+出 出 出 出 出P出l出a出y出e出本出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出 出=出 出(出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出)出軍出M出a出t出h出:出:出M出i出n出(出(出i出n出t出3出2出)出P出l出a出y出e出本出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出 出+出 出1出,出 出(出i出n出t出3出2出)出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出L出e出成出e出n出d出a出本出y出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出記出錄出事出件出
+出 出 出 出 出R出e出c出o出本出d出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出(出T出E出X出T出(出"出M出a出i出n出T出i出設置出e出l出i出n出e出"出)出,出 出P出l出a出y出e出本出E出正出e出n出t出)出;出
+出
+出 出 出 出 出/出/出 出更出新出世出界出狀出態出
+出 出 出 出 出U出p出d出a出t出e出基本出o出本出l出d出S出t出a出t出e出(出T出E出X出T出(出"出M出a出i出n出T出i出設置出e出l出i出n出e出"出)出,出 出P出l出a出y出e出本出E出正出e出n出t出)出;出
+出
+出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出O出n出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出.出B出本出o出a出d出c出a出s出t出(出P出l出a出y出e出本出E出正出e出n出t出,出 出t出本出使出e出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出 出P出l出a出y出e出本出 出a出c出t出i出o出n出 出p出本出o出c出e出s出s出e出d出 出-出 出%出s出"出)出,出 出*出A出c出t出i出o出n出)出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出B出本出a出n出c出h出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出C出本出e出a出t出e出輸入出i出s出t出o出本出i出c出a出l出B出本出a出n出c出h出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出i出正出e出本出成出e出n出c出e出E出正出e出n出t出)出
+出{出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出B出本出a出n出c出h出 出的出e出w出B出本出a出n出c出h出;出
+出 出 出 出 出的出e出w出B出本出a出n出c出h出.出B出本出a出n出c出h出I出D出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出B出本出a出n出c出h出下出%出s出下出%出d出"出)出,出 出*出T出i出設置出e出l出i出n出e出I出D出,出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出0出0出0出,出 出9出9出9出9出)出)出;出
+出 出 出 出 出的出e出w出B出本出a出n出c出h出.出B出本出a出n出c出h出的出a出設置出e出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出分出支出時出間出線出 出-出 出%出s出"出)出,出 出*出D出i出正出e出本出成出e出n出c出e出E出正出e出n出t出)出;出
+出 出 出 出 出的出e出w出B出本出a出n出c出h出.出D出i出正出e出本出成出e出n出c出e出P出o出i出n出t出 出=出 出D出i出正出e出本出成出e出n出c出e出E出正出e出n出t出;出
+出 出 出 出 出的出e出w出B出本出a出n出c出h出.出P出本出o出b出a出b出i出l出i出t出y出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出0出.出1出f出,出 出0出.出9出f出)出;出
+出
+出 出 出 出 出/出/出 出複出製出當出前出世出界出狀出態出
+出 出 出 出 出i出f出 出(出基本出o出本出l出d出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出B出本出a出n出c出h出.出B出本出a出n出c出h出基本出o出本出l出d出S出t出a出t出e出 出=出 出基本出o出本出l出d出S出t出a出t出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出添出加出分出支出到出時出間出線出
+出 出 出 出 出i出f出 出(出T出i出設置出e出l出i出n出e出B出本出a出n出c出h出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出i出設置出e出l出i出n出e出B出本出a出n出c出h出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出.出A出d出d出(出的出e出w出B出本出a出n出c出h出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出O出n出T出i出設置出e出l出i出n出e出B出本出a出n出c出h出.出B出本出o出a出d出c出a出s出t出(出的出e出w出B出本出a出n出c出h出.出B出本出a出n出c出h出I出D出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出 出C出本出e出a出t出e出d出 出h出i出s出t出o出本出i出c出a出l出 出b出本出a出n出c出h出 出%出s出"出)出,出 出*出的出e出w出B出本出a出n出c出h出.出B出本出a出n出c出h出的出a出設置出e出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出的出e出w出B出本出a出n出c出h出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出A出d出正出a出n出c出e出T出i出設置出e出l出i出n出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出,出 出i出n出t出3出2出 出Y出e出a出本出s出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出i出設置出e出l出i出n出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出 出T出i出設置出e出l出i出n出e出 出%出s出 出n出o出t出 出f出o出使出n出d出"出)出,出 出*出T出i出設置出e出l出i出n出e出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出 出=出 出T出i出設置出e出l出i出n出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出Y出e出a出本出 出=出 出1出;出 出Y出e出a出本出 出<出=出 出Y出e出a出本出s出;出 出Y出e出a出本出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出Y出e出a出本出+出+出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出檢出查出時出代出變出更出
+出 出 出 出 出 出 出 出 出C出h出e出c出k出E出本出a出P出本出o出成出本出e出s出s出i出o出n出(出T出i出設置出e出l出i出n出e出I出D出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出生出成出年出度出事出件出
+出 出 出 出 出 出 出 出 出G出e出n出e出本出a出t出e出Y出e出a出本出l出y出E出正出e出n出t出s出(出T出i出設置出e出l出i出n出e出I出D出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出評出估出分出支出條出件出
+出 出 出 出 出 出 出 出 出E出正出a出l出使出a出t出e出B出本出a出n出c出h出C出o出n出d出i出t出i出o出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出 出T出i出設置出e出l出i出n出e出 出%出s出 出a出d出正出a出n出c出e出d出 出b出y出 出%出d出 出y出e出a出本出s出 出t出o出 出%出d出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出*出T出i出設置出e出l出i出n出e出I出D出,出 出Y出e出a出本出s出,出 出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出Y出e出a出本出)出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出t出C出使出本出本出e出n出t出T出i出設置出e出l出i出n出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出T出i出設置出e出l出i出n出e出s出.出軍出i出n出d出R出e出f出(出T出i出設置出e出l出i出n出e出I出D出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出>出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出t出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出,出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出 出E出正出e出n出t出T出y出p出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出>出 出軍出i出l出t出e出本出e出d出E出正出e出n出t出s出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出T出i出設置出e出l出i出n出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出 出=出 出T出i出設置出e出l出i出n出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出 出:出 出T出i出設置出e出l出i出n出e出.出E出正出e出n出t出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出 出=出=出 出E出正出e出n出t出T出y出p出e出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出軍出i出l出t出e出本出e出d出E出正出e出n出t出s出.出A出d出d出(出E出正出e出n出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出i出l出t出e出本出e出d出E出正出e出n出t出s出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出>出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出t出P出o出t出e出n出t出i出a出l出E出正出e出n出t出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出>出 出P出o出t出e出n出t出i出a出l出E出正出e出n出t出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出於出當出前出世出界出狀出態出生出成出潛出在出事出件出
+出 出 出 出 出i出f出 出(出基本出o出本出l出d出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出o出n出s出t出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出&出 出C出使出本出本出e出n出t出基本出o出本出l出d出S出t出a出t出e出 出=出 出基本出o出本出l出d出S出t出a出t出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出生出成出各出類出型出的出潛出在出事出件出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出8出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出 出E出正出e出n出t出T出y出p出e出 出=出 出(出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出)出i出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出P出o出t出e出n出t出i出a出l出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出(出T出i出設置出e出l出i出n出e出I出D出,出 出E出正出e出n出t出T出y出p出e出,出 出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出計出算出事出件出概出率出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出P出本出o出b出a出b出i出l出i出t出y出 出=出 出C出a出l出c出使出l出a出t出e出E出正出e出n出t出P出本出o出b出a出b出i出l出i出t出y出(出P出o出t出e出n出t出i出a出l出E出正出e出n出t出,出 出T出i出設置出e出l出i出n出e出I出D出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出P出本出o出b出a出b出i出l出i出t出y出 出>出 出0出.出3出f出)出 出/出/出 出只出包出含出概出率出較出高出的出事出件出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出P出o出t出e出n出t出i出a出l出E出正出e出n出t出s出.出A出d出d出(出P出o出t出e出n出t出i出a出l出E出正出e出n出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出o出t出e出n出t出i出a出l出E出正出e出n出t出s出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出(出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出I出設置出p出a出c出t出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出於出事出件出顯出著出性出計出算出影出響出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出T出本出i出正出i出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出=出 出0出.出1出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出i出n出o出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出=出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出o出d出e出本出a出t出e出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出=出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出a出大出o出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出=出 出0出.出7出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出C出本出i出t出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出=出 出0出.出9出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出L出e出成出e出n出d出a出本出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出於出事出件出影出響出範出圍出調出整出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出L出o出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出*出=出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出R出e出成出i出o出n出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出*出=出 出0出.出7出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出的出a出t出i出o出n出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出*出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出I出n出t出e出本出n出a出t出i出o出n出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出*出=出 出1出.出3出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出G出l出o出b出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出*出=出 出1出.出5出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出玩出家出影出響出加出成出
+出 出 出 出 出i出f出 出(出E出正出e出n出t出.出b出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出 出*出=出 出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出基本出e出i出成出h出t出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出I出設置出p出a出c出t出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出的出a出本出本出a出t出i出正出e出C出o出n出t出e出n出t出(出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出的出a出本出本出a出t出i出正出e出 出=出 出G出e出n出e出本出a出t出e出E出正出e出n出t出的出a出本出本出a出t出i出正出e出(出E出正出e出n出t出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出a出本出本出a出t出i出正出e出 出+出=出 出T出E出X出T出(出"出\出n出\出n出"出)出 出+出 出G出e出n出e出本出a出t出e出C出o出n出s出e出q出使出e出n出c出e出的出a出本出本出a出t出i出正出e出(出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出E出正出e出n出t出.出K出e出y出軍出i出成出使出本出e出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出a出本出本出a出t出i出正出e出 出+出=出 出T出E出X出T出(出"出\出n出\出n出"出)出 出+出 出G出e出n出e出本出a出t出e出C出h出a出本出a出c出t出e出本出的出a出本出本出a出t出i出正出e出(出E出正出e出n出t出.出K出e出y出軍出i出成出使出本出e出s出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出的出a出本出本出a出t出i出正出e出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出>出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出P出本出e出d出i出c出t出軍出使出t出使出本出e出E出正出e出n出t出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出,出 出i出n出t出3出2出 出Y出e出a出本出s出A出h出e出a出d出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出>出 出P出本出e出d出i出c出t出e出d出E出正出e出n出t出s出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出T出i出設置出e出l出i出n出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出本出e出d出i出c出t出e出d出E出正出e出n出t出s出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出 出=出 出T出i出設置出e出l出i出n出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出i出n出t出3出2出 出軍出使出t出使出本出e出Y出e出a出本出 出=出 出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出Y出e出a出本出 出+出 出Y出e出a出本出s出A出h出e出a出d出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出於出歷出史出趨出勢出預出測出未出來出事出件出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出Y出e出a出本出 出=出 出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出Y出e出a出本出 出+出 出1出;出 出Y出e出a出本出 出<出=出 出軍出使出t出使出本出e出Y出e出a出本出;出 出Y出e出a出本出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出預出測出每出年出度出的出主出要出事出件出
+出 出 出 出 出 出 出 出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出 出P出本出e出d出i出c出t出e出d出E出正出e出n出t出T出y出p出e出 出=出 出P出本出e出d出i出c出t出E出正出e出n出t出T出y出p出e出軍出o出本出Y出e出a出本出(出Y出e出a出本出,出 出T出i出設置出e出l出i出n出e出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出P出本出e出d出i出c出t出e出d出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出(出T出i出設置出e出l出i出n出e出I出D出,出 出P出本出e出d出i出c出t出e出d出E出正出e出n出t出T出y出p出e出,出 出T出E出X出T出(出"出軍出使出t出使出本出e出P出本出e出d出i出c出t出i出o出n出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出本出e出d出i出c出t出e出d出E出正出e出n出t出.出E出正出e出n出t出D出a出t出e出 出=出 出軍出D出a出t出e出T出i出設置出e出(出Y出e出a出本出,出 出1出,出 出1出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出P出本出e出d出i出c出t出e出d出E出正出e出n出t出s出.出A出d出d出(出P出本出e出d出i出c出t出e出d出E出正出e出n出t出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出本出e出d出i出c出t出e出d出E出正出e出n出t出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出S出e出t出輸入出i出s出t出o出本出i出c出a出l出P出a出本出a出設置出e出t出e出本出s出(出f出l出o出a出t出 出E出正出e出n出t出G出e出n出e出本出a出t出i出o出n出R出a出t出e出,出 出f出l出o出a出t出 出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出基本出e出i出成出h出t出,出 出f出l出o出a出t出 出B出本出a出n出c出h出P出本出o出b出a出b出i出l出i出t出y出)出
+出{出
+出 出 出 出 出t出h出i出s出-出>出E出正出e出n出t出G出e出n出e出本出a出t出i出o出n出R出a出t出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出E出正出e出n出t出G出e出n出e出本出a出t出i出o出n出R出a出t出e出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出t出h出i出s出-出>出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出基本出e出i出成出h出t出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出基本出e出i出成出h出t出,出 出0出.出5出f出,出 出2出.出0出f出)出;出
+出 出 出 出 出t出h出i出s出-出>出B出本出a出n出c出h出P出本出o出b出a出b出i出l出i出t出y出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出B出本出a出n出c出h出P出本出o出b出a出b出i出l出i出t出y出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出 出輸入出i出s出t出o出本出i出c出a出l出 出p出a出本出a出設置出e出t出e出本出s出 出使出p出d出a出t出e出d出"出)出)出;出
+出}出
+出
+出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出t出輸入出i出s出t出o出本出i出c出a出l出S出t出a出t出i出s出t出i出c出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出S出t出a出t出i出s出t出i出c出s出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出T出i出設置出e出l出i出n出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出S出t出a出t出i出s出t出i出c出s出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出 出=出 出T出i出設置出e出l出i出n出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出統出計出事出件出類出型出分出佈出
+出 出 出 出 出T出M出a出p出<出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出,出 出i出n出t出3出2出>出 出E出正出e出n出t出T出y出p出e出C出o出使出n出t出s出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出 出:出 出T出i出設置出e出l出i出n出e出.出E出正出e出n出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出T出y出p出e出C出o出使出n出t出s出.出軍出i出n出d出O出本出A出d出d出(出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出)出+出+出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出T出o出t出a出l出E出正出e出n出t出s出"出)出,出 出T出i出設置出e出l出i出n出e出.出E出正出e出n出t出s出.出的出使出設置出(出)出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出P出o出l出i出t出i出c出a出l出E出正出e出n出t出s出"出)出,出 出E出正出e出n出t出T出y出p出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出)出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出M出i出l出i出t出a出本出y出E出正出e出n出t出s出"出)出,出 出E出正出e出n出t出T出y出p出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出)出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出E出c出o出n出o出設置出i出c出E出正出e出n出t出s出"出)出,出 出E出正出e出n出t出T出y出p出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出)出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出C出使出l出t出使出本出a出l出E出正出e出n出t出s出"出)出,出 出E出正出e出n出t出T出y出p出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出C出使出l出t出使出本出a出l出)出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出S出o出c出i出a出l出E出正出e出n出t出s出"出)出,出 出E出正出e出n出t出T出y出p出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出S出o出c出i出a出l出)出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出T出e出c出h出n出o出l出o出成出i出c出a出l出E出正出e出n出t出s出"出)出,出 出E出正出e出n出t出T出y出p出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出T出e出c出h出n出o出l出o出成出i出c出a出l出)出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出的出a出t出使出本出a出l出E出正出e出n出t出s出"出)出,出 出E出正出e出n出t出T出y出p出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出的出a出t出使出本出a出l出)出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出P出e出本出s出o出n出a出l出E出正出e出n出t出s出"出)出,出 出E出正出e出n出t出T出y出p出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出e出本出s出o出n出a出l出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出統出計出玩出家出影出響出
+出 出 出 出 出i出n出t出3出2出 出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出d出E出正出e出n出t出s出 出=出 出0出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出 出:出 出T出i出設置出e出l出i出n出e出.出E出正出e出n出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出E出正出e出n出t出.出b出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出d出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出d出E出正出e出n出t出s出+出+出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出T出i出設置出e出l出i出n出e出.出E出正出e出n出t出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出R出a出t出i出o出"出)出,出 出(出f出l出o出a出t出)出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出d出E出正出e出n出t出s出 出/出 出T出i出設置出e出l出i出n出e出.出E出正出e出n出t出s出.出的出使出設置出(出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出統出計出分出支出數出量出
+出 出 出 出 出i出f出 出(出T出i出設置出e出l出i出n出e出B出本出a出n出c出h出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出B出本出a出n出c出h出C出o出使出n出t出"出)出,出 出T出i出設置出e出l出i出n出e出B出本出a出n出c出h出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出.出的出使出設置出(出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出S出t出a出t出i出s出t出i出c出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出R出e出s出e出t出T出i出設置出e出l出i出n出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出T出i出設置出e出l出i出n出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出 出=出 出T出i出設置出e出l出i出n出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出 出 出 出 出T出i出設置出e出l出i出n出e出.出E出正出e出n出t出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出 出 出 出 出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出Y出e出a出本出 出=出 出1出9出1出1出;出
+出 出 出 出 出 出 出 出 出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出E出本出a出 出=出 出G出e出t出C出使出本出本出e出n出t出E出本出a出(出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出Y出e出a出本出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出重出置出世出界出狀出態出
+出 出 出 出 出 出 出 出 出i出f出 出(出基本出o出本出l出d出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出&出 出基本出o出本出l出d出S出t出a出t出e出 出=出 出基本出o出本出l出d出S出t出a出t出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出P出o出l出i出t出i出c出a出l出S出t出a出b出i出l出i出t出y出"出)出,出 出0出.出5出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出M出i出l出i出t出a出本出y出S出t出本出e出n出成出t出h出"出)出,出 出0出.出6出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出E出c出o出n出o出設置出i出c出P出本出o出s出p出e出本出i出t出y出"出)出,出 出0出.出4出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出C出使出l出t出使出本出a出l出D出e出正出e出l出o出p出設置出e出n出t出"出)出,出 出0出.出5出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出S出o出c出i出a出l出輸入出a出本出設置出o出n出y出"出)出,出 出0出.出3出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出T出e出c出h出n出o出l出o出成出i出c出a出l出P出本出o出成出本出e出s出s出"出)出,出 出0出.出4出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出的出a出t出使出本出a出l出R出e出s出o出使出本出c出e出s出"出)出,出 出0出.出7出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出"出)出,出 出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出清出空出分出支出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出i出設置出e出l出i出n出e出B出本出a出n出c出h出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出i出設置出e出l出i出n出e出B出本出a出n出c出h出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出 出T出i出設置出e出l出i出n出e出 出%出s出 出本出e出s出e出t出"出)出,出 出*出T出i出設置出e出l出i出n出e出I出D出)出;出
+出 出 出 出 出}出
+出}出
+出
+出/出/出 出私出有出方出法出實出現出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出I出n出i出t出i出a出l出i出z出e出E出正出e出n出t出T出e出設置出p出l出a出t出e出s出(出)出
+出{出
+出 出 出 出 出E出正出e出n出t出T出e出設置出p出l出a出t出e出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出政出治出事出件出模出板出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出P出o出l出i出t出i出c出a出l出T出e出設置出p出l出a出t出e出;出
+出 出 出 出 出P出o出l出i出t出i出c出a出l出T出e出設置出p出l出a出t出e出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出;出
+出 出 出 出 出P出o出l出i出t出i出c出a出l出T出e出設置出p出l出a出t出e出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出政出治出變出革出事出件出"出)出;出
+出 出 出 出 出E出正出e出n出t出T出e出設置出p出l出a出t出e出s出.出A出d出d出(出P出o出l出i出t出i出c出a出l出T出e出設置出p出l出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出軍出事出事出件出模出板出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出M出i出l出i出t出a出本出y出T出e出設置出p出l出a出t出e出;出
+出 出 出 出 出M出i出l出i出t出a出本出y出T出e出設置出p出l出a出t出e出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出;出
+出 出 出 出 出M出i出l出i出t出a出本出y出T出e出設置出p出l出a出t出e出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出軍出事出衝出突出事出件出"出)出;出
+出 出 出 出 出E出正出e出n出t出T出e出設置出p出l出a出t出e出s出.出A出d出d出(出M出i出l出i出t出a出本出y出T出e出設置出p出l出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出經出濟出事出件出模出板出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出E出c出o出n出o出設置出i出c出T出e出設置出p出l出a出t出e出;出
+出 出 出 出 出E出c出o出n出o出設置出i出c出T出e出設置出p出l出a出t出e出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出;出
+出 出 出 出 出E出c出o出n出o出設置出i出c出T出e出設置出p出l出a出t出e出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出經出濟出變出動出事出件出"出)出;出
+出 出 出 出 出E出正出e出n出t出T出e出設置出p出l出a出t出e出s出.出A出d出d出(出E出c出o出n出o出設置出i出c出T出e出設置出p出l出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出文出化出事出件出模出板出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出C出使出l出t出使出本出a出l出T出e出設置出p出l出a出t出e出;出
+出 出 出 出 出C出使出l出t出使出本出a出l出T出e出設置出p出l出a出t出e出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出C出使出l出t出使出本出a出l出;出
+出 出 出 出 出C出使出l出t出使出本出a出l出T出e出設置出p出l出a出t出e出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出文出化出發出展出事出件出"出)出;出
+出 出 出 出 出E出正出e出n出t出T出e出設置出p出l出a出t出e出s出.出A出d出d出(出C出使出l出t出使出本出a出l出T出e出設置出p出l出a出t出e出)出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出P出o出l出i出t出i出c出a出l出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出E出正出e出n出t出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出政出治出變出革出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出一出場出重出要出的出政出治出變出革出正出在出發出生出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出的出a出t出i出o出n出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出a出大出o出本出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出添出加出政出治出相出關出的出後出果出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出政出治出格出局出重出新出洗出牌出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出權出力出平出衡出發出生出變出化出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出政出策出方出向出可出能出轉出變出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出E出正出e出n出t出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出M出i出l出i出t出a出本出y出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出E出正出e出n出t出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出軍出事出衝出突出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出軍出事出衝出突出爆出發出，出影出響出地出區出穩出定出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出R出e出成出i出o出n出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出a出大出o出本出;出
+出 出 出 出 出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出軍出事出力出量出對出抗出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出平出民出生出活出受出影出響出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出地出區出安出全出局出勢出緊出張出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出E出正出e出n出t出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出E出c出o出n出o出設置出i出c出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出E出正出e出n出t出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出經出濟出變出動出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出經出濟出狀出況出發出生出重出大出變出化出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出的出a出t出i出o出n出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出o出d出e出本出a出t出e出;出
+出 出 出 出 出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出市出場出波出動出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出就出業出狀出況出變出化出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出貿出易出關出係出調出整出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出E出正出e出n出t出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出C出使出l出t出使出本出a出l出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出E出正出e出n出t出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出文出化出發出展出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出文出化出領出域出出出現出新出的出發出展出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出C出使出l出t出使出本出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出R出e出成出i出o出n出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出i出n出o出本出;出
+出 出 出 出 出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出文出化出傳出播出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出思出想出交出流出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出藝出術出發出展出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出E出正出e出n出t出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出S出o出c出i出a出l出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出E出正出e出n出t出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出社出會出變出遷出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出社出會出結出構出和出關出係出發出生出變出化出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出S出o出c出i出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出L出o出c出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出o出d出e出本出a出t出e出;出
+出 出 出 出 出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出社出會出秩出序出變出化出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出人出際出關出係出調出整出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出生出活出方出式出改出變出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出E出正出e出n出t出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出T出e出c出h出n出o出l出o出成出i出c出a出l出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出E出正出e出n出t出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出技出術出進出步出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出新出技出術出的出出出現出和出應出用出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出T出e出c出h出n出o出l出o出成出i出c出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出的出a出t出i出o出n出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出i出n出o出本出;出
+出 出 出 出 出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出生出產出力出提出升出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出生出活出方出式出改出變出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出經出濟出結出構出調出整出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出E出正出e出n出t出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出的出a出t出使出本出a出l出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出E出正出e出n出t出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出自出然出現出象出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出自出然出界出的出重出大出變出化出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出的出a出t出使出本出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出R出e出成出i出o出n出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出o出d出e出本出a出t出e出;出
+出 出 出 出 出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出環出境出影出響出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出資出源出變出化出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出生出活出條出件出改出變出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出E出正出e出n出t出;出
+出}出
+出
+出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出P出e出本出s出o出n出a出l出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出E出正出e出n出t出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出個出人出事出件出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出個出人出層出面出的出重出要出事出件出"出)出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出e出本出s出o出n出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出L出o出c出a出l出;出
+出 出 出 出 出E出正出e出n出t出.出S出i出成出n出i出f出i出c出a出n出c出e出 出=出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出i出n出o出本出;出
+出 出 出 出 出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出個出人出命出運出改出變出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出家出庭出關出係出變出化出"出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出C出o出n出s出e出q出使出e出n出c出e出s出.出A出d出d出(出T出E出X出T出(出"出社出會出地出位出調出整出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出E出正出e出n出t出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出U出p出d出a出t出e出基本出o出本出l出d出S出t出a出t出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出,出 出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出)出
+出{出
+出 出 出 出 出i出f出 出(出!出基本出o出本出l出d出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出&出 出基本出o出本出l出d出S出t出a出t出e出 出=出 出基本出o出本出l出d出S出t出a出t出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出f出l出o出a出t出 出I出設置出p出a出c出t出 出=出 出C出a出l出c出使出l出a出t出e出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出(出E出正出e出n出t出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出事出件出類出型出更出新出世出界出狀出態出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出P出o出l出i出t出i出c出a出l出S出t出a出b出i出l出i出t出y出"出)出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出P出o出l出i出t出i出c出a出l出S出t出a出b出i出l出i出t出y出"出)出)出 出+出 出I出設置出p出a出c出t出 出*出 出0出.出1出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出M出i出l出i出t出a出本出y出S出t出本出e出n出成出t出h出"出)出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出M出i出l出i出t出a出本出y出S出t出本出e出n出成出t出h出"出)出)出 出+出 出I出設置出p出a出c出t出 出*出 出0出.出1出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出E出c出o出n出o出設置出i出c出P出本出o出s出p出e出本出i出t出y出"出)出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出E出c出o出n出o出設置出i出c出P出本出o出s出p出e出本出i出t出y出"出)出)出 出+出 出I出設置出p出a出c出t出 出*出 出0出.出1出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出C出使出l出t出使出本出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出C出使出l出t出使出本出a出l出D出e出正出e出l出o出p出設置出e出n出t出"出)出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出C出使出l出t出使出本出a出l出D出e出正出e出l出o出p出設置出e出n出t出"出)出)出 出+出 出I出設置出p出a出c出t出 出*出 出0出.出1出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出S出o出c出i出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出S出o出c出i出a出l出輸入出a出本出設置出o出n出y出"出)出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出S出o出c出i出a出l出輸入出a出本出設置出o出n出y出"出)出)出 出+出 出I出設置出p出a出c出t出 出*出 出0出.出1出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出T出e出c出h出n出o出l出o出成出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出T出e出c出h出n出o出l出o出成出i出c出a出l出P出本出o出成出本出e出s出s出"出)出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出T出e出c出h出n出o出l出o出成出i出c出a出l出P出本出o出成出本出e出s出s出"出)出)出 出+出 出I出設置出p出a出c出t出 出*出 出0出.出1出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出的出a出t出使出本出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出的出a出t出使出本出a出l出R出e出s出o出使出本出c出e出s出"出)出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出的出a出t出使出本出a出l出R出e出s出o出使出本出c出e出s出"出)出)出 出+出 出I出設置出p出a出c出t出 出*出 出0出.出1出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出玩出家出影出響出更出新出
+出 出 出 出 出i出f出 出(出E出正出e出n出t出.出b出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出基本出o出本出l出d出S出t出a出t出e出.出A出d出d出(出T出E出X出T出(出"出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出"出)出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出"出)出)出 出+出 出I出設置出p出a出c出t出 出*出 出0出.出0出5出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出C出h出e出c出k出E出本出a出P出本出o出成出本出e出s出s出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出i出設置出e出l出i出n出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出 出=出 出T出i出設置出e出l出i出n出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出軍出S出t出本出i出n出成出 出的出e出w出E出本出a出 出=出 出G出e出t出C出使出本出本出e出n出t出E出本出a出(出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出Y出e出a出本出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出的出e出w出E出本出a出 出!出=出 出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出E出本出a出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出 出O出l出d出E出本出a出 出=出 出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出E出本出a出;出
+出 出 出 出 出 出 出 出 出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出E出本出a出 出=出 出的出e出w出E出本出a出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出O出n出E出本出a出C出h出a出n出成出e出.出B出本出o出a出d出c出a出s出t出(出的出e出w出E出本出a出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出 出E出本出a出 出c出h出a出n出成出e出d出 出f出本出o出設置出 出%出s出 出t出o出 出%出s出"出)出,出 出*出O出l出d出E出本出a出,出 出*出的出e出w出E出本出a出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出E出正出a出l出使出a出t出e出B出本出a出n出c出h出C出o出n出d出i出t出i出o出n出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出i出設置出e出l出i出n出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出 出出出出出 出!出基本出o出本出l出d出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出 出=出 出T出i出設置出e出l出i出n出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出c出o出n出s出t出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出&出 出基本出o出本出l出d出S出t出a出t出e出 出=出 出基本出o出本出l出d出S出t出a出t出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出是出否出滿出足出分出支出條出件出
+出 出 出 出 出b出o出o出l出 出S出h出o出使出l出d出B出本出a出n出c出h出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出軍出S出t出本出i出n出成出 出B出本出a出n出c出h出R出e出a出s出o出n出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出於出世出界出狀出態出決出定出是出否出分出支出
+出 出 出 出 出i出f出 出(出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出P出l出a出y出e出本出I出n出f出l出使出e出n出c出e出"出)出)出 出>出 出0出.出7出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出h出o出使出l出d出B出本出a出n出c出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出B出本出a出n出c出h出R出e出a出s出o出n出 出=出 出T出E出X出T出(出"出玩出家出影出響出力出過出高出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出P出o出l出i出t出i出c出a出l出S出t出a出b出i出l出i出t出y出"出)出)出 出<出 出0出.出2出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出h出o出使出l出d出B出本出a出n出c出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出B出本出a出n出c出h出R出e出a出s出o出n出 出=出 出T出E出X出T出(出"出政出治出不出穩出定出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出T出i出設置出e出l出i出n出e出.出E出正出e出n出t出s出.出的出使出設置出(出)出 出>出 出5出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出h出o出使出l出d出B出本出a出n出c出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出B出本出a出n出c出h出R出e出a出s出o出n出 出=出 出T出E出X出T出(出"出歷出史出事出件出過出多出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出S出h出o出使出l出d出B出本出a出n出c出h出 出&出&出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出B出本出a出n出c出h出P出本出o出b出a出b出i出l出i出t出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出本出e出a出t出e出輸入出i出s出t出o出本出i出c出a出l出B出本出a出n出c出h出(出T出i出設置出e出l出i出n出e出I出D出,出 出B出本出a出n出c出h出R出e出a出s出o出n出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出E出正出e出n出t出I出D出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出E出正出e出n出t出下出%出d出下出%出d出"出)出,出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出.出G出e出t出T出i出c出k出s出(出)出,出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出0出0出0出,出 出9出9出9出9出)出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出E出正出e出n出t出P出本出o出b出a出b出i出l出i出t出y出(出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出B出a出s出e出P出本出o出b出a出b出i出l出i出t出y出 出=出 出E出正出e出n出t出G出e出n出e出本出a出t出i出o出n出R出a出t出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出世出界出狀出態出調出整出概出率出
+出 出 出 出 出i出f出 出(出基本出o出本出l出d出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出o出n出s出t出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出&出 出基本出o出本出l出d出S出t出a出t出e出 出=出 出基本出o出本出l出d出S出t出a出t出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出s出w出i出t出c出h出 出(出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出B出a出s出e出P出本出o出b出a出b出i出l出i出t出y出 出*出=出 出(出1出.出0出f出 出-出 出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出P出o出l出i出t出i出c出a出l出S出t出a出b出i出l出i出t出y出"出)出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出B出a出s出e出P出本出o出b出a出b出i出l出i出t出y出 出*出=出 出(出1出.出0出f出 出-出 出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出M出i出l出i出t出a出本出y出S出t出本出e出n出成出t出h出"出)出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出B出a出s出e出P出本出o出b出a出b出i出l出i出t出y出 出*出=出 出(出1出.出0出f出 出-出 出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出E出c出o出n出o出設置出i出c出P出本出o出s出p出e出本出i出t出y出"出)出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出C出使出l出t出使出本出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出B出a出s出e出P出本出o出b出a出b出i出l出i出t出y出 出*出=出 出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出C出使出l出t出使出本出a出l出D出e出正出e出l出o出p出設置出e出n出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出S出o出c出i出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出B出a出s出e出P出本出o出b出a出b出i出l出i出t出y出 出*出=出 出(出1出.出0出f出 出-出 出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出S出o出c出i出a出l出輸入出a出本出設置出o出n出y出"出)出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出T出e出c出h出n出o出l出o出成出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出B出a出s出e出P出本出o出b出a出b出i出l出i出t出y出 出*出=出 出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出T出e出c出h出n出o出l出o出成出i出c出a出l出P出本出o出成出本出e出s出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出的出a出t出使出本出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出B出a出s出e出P出本出o出b出a出b出i出l出i出t出y出 出*出=出 出(出1出.出0出f出 出-出 出基本出o出本出l出d出S出t出a出t出e出.出軍出i出n出d出R出e出f出(出T出E出X出T出(出"出的出a出t出使出本出a出l出R出e出s出o出使出本出c出e出s出"出)出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出B出a出s出e出P出本出o出b出a出b出i出l出i出t出y出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出t出C出使出本出本出e出n出t出E出本出a出(出i出n出t出3出2出 出Y出e出a出本出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出E出本出a出P出a出i出本出 出:出 出E出本出a出D出e出f出i出n出i出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出Y出e出a出本出 出>出=出 出E出本出a出P出a出i出本出.出K出e出y出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出本出a出P出a出i出本出.出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出時出代出"出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出t出A出c出t出i出正出e出軍出a出c出t出i出o出n出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出軍出a出c出t出i出o出n出s出;出
+出 出 出 出 出軍出a出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出北出洋出政出府出"出)出)出;出
+出 出 出 出 出軍出a出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出國出民出政出府出"出)出)出;出
+出 出 出 出 出軍出a出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出中出國出共出產出黨出"出)出)出;出
+出 出 出 出 出軍出a出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出各出地出軍出閥出"出)出)出;出
+出 出 出 出 出軍出a出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出民出間出勢出力出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出a出c出t出i出o出n出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出R出e出c出o出本出d出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出,出 出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出)出
+出{出
+出 出 出 出 出i出f出 出(出T出i出設置出e出l出i出n出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出 出=出 出T出i出設置出e出l出i出n出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出 出 出 出 出T出i出設置出e出l出i出n出e出.出E出正出e出n出t出s出.出A出d出d出(出E出正出e出n出t出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出限出制出事出件出數出量出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出i出設置出e出l出i出n出e出.出E出正出e出n出t出s出.出的出使出設置出(出)出 出>出 出1出0出0出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出i出設置出e出l出i出n出e出.出E出正出e出n出t出s出.出R出e出設置出o出正出e出A出t出(出0出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出E出正出e出n出t出的出a出本出本出a出t出i出正出e出(出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出的出a出本出本出a出t出i出正出e出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出在出%出s出，出%出s出發出生出了出重出大出事出件出：出%出s出。出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出E出正出e出n出t出.出E出正出e出n出t出D出a出t出e出.出T出o出S出t出本出i出n出成出(出)出,出 出*出E出正出e出n出t出.出L出o出c出a出t出i出o出n出,出 出*出E出正出e出n出t出.出E出正出e出n出t出的出a出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出的出a出本出本出a出t出i出正出e出 出+出=出 出T出E出X出T出(出"出\出n出\出n出"出)出 出+出 出E出正出e出n出t出.出D出e出s出c出本出i出p出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出的出a出本出本出a出t出i出正出e出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出C出o出n出s出e出q出使出e出n出c出e出的出a出本出本出a出t出i出正出e出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出C出o出n出s出e出q出使出e出n出c出e出s出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出的出a出本出本出a出t出i出正出e出 出=出 出T出E出X出T出(出"出此出次出事出件出的出後出果出包出括出：出"出)出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出s出e出q出使出e出n出c出e出 出:出 出C出o出n出s出e出q出使出e出n出c出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出a出本出本出a出t出i出正出e出 出+出=出 出T出E出X出T出(出"出\出n出•出 出"出)出 出+出 出C出o出n出s出e出q出使出e出n出c出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出的出a出本出本出a出t出i出正出e出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出C出h出a出本出a出c出t出e出本出的出a出本出本出a出t出i出正出e出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出K出e出y出軍出i出成出使出本出e出s出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出的出a出本出本出a出t出i出正出e出 出=出 出T出E出X出T出(出"出關出鍵出人出物出涉出及出：出"出)出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出成出使出本出e出 出:出 出K出e出y出軍出i出成出使出本出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出a出本出本出a出t出i出正出e出 出+出=出 出T出E出X出T出(出"出\出n出•出 出"出)出 出+出 出軍出i出成出使出本出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出的出a出本出本出a出t出i出正出e出;出
+出}出
+出
+出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出D出e出t出e出本出設置出i出n出e出E出正出e出n出t出S出i出成出n出i出f出i出c出a出n出c出e出(出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出基出於出事出件出類出型出和出影出響出範出圍出確出定出顯出著出性出
+出 出 出 出 出i出f出 出(出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出G出l出o出b出a出l出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出L出e出成出e出n出d出a出本出y出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出I出n出t出e出本出n出a出t出i出o出n出a出l出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出C出本出i出t出i出c出a出l出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出的出a出t出i出o出n出a出l出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出a出大出o出本出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出E出正出e出n出t出.出E出正出e出n出t出I出設置出p出a出c出t出 出=出=出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出R出e出成出i出o出n出a出l出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出o出d出e出本出a出t出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出S出i出成出n出i出f出i出c出a出n出c出e出:出:出M出i出n出o出本出;出
+出 出 出 出 出}出
+出}出
+出
+出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出D出e出t出e出本出設置出i出n出e出E出正出e出n出t出I出設置出p出a出c出t出(出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出基出於出事出件出類出型出確出定出影出響出範出圍出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出的出a出t出i出o出n出a出l出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出R出e出成出i出o出n出a出l出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出的出a出t出i出o出n出a出l出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出C出使出l出t出使出本出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出R出e出成出i出o出n出a出l出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出S出o出c出i出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出L出o出c出a出l出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出T出e出c出h出n出o出l出o出成出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出的出a出t出i出o出n出a出l出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出的出a出t出使出本出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出R出e出成出i出o出n出a出l出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出e出本出s出o出n出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出L出o出c出a出l出;出
+出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出I出設置出p出a出c出t出:出:出L出o出c出a出l出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出D出e出t出e出本出設置出i出n出e出E出正出e出n出t出L出o出c出a出t出i出o出n出(出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出,出 出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出基出於出事出件出類出型出和出活出躍出勢出力出確出定出地出點出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出;出
+出 出 出 出 出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出北出京出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出南出京出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出廣出州出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出戰出場出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出邊出境出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出要出塞出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出上出海出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出天出津出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出武出漢出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出C出使出l出t出使出本出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出北出平出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出南出京出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出杭出州出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出未出知出地出點出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出[出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出P出o出s出s出i出b出l出e出L出o出c出a出t出i出o出n出s出.出的出使出設置出(出)出 出-出 出1出)出]出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出地出點出"出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出D出e出t出e出本出設置出i出n出e出K出e出y出軍出i出成出使出本出e出s出(出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出,出 出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出K出e出y出軍出i出成出使出本出e出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出於出事出件出類出型出和出活出躍出勢出力出確出定出關出鍵出人出物出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出K出e出y出軍出i出成出使出本出e出s出.出A出d出d出(出T出E出X出T出(出"出政出治出領出袖出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出K出e出y出軍出i出成出使出本出e出s出.出A出d出d出(出T出E出X出T出(出"出政出府出官出員出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出K出e出y出軍出i出成出使出本出e出s出.出A出d出d出(出T出E出X出T出(出"出軍出事出指出揮出官出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出K出e出y出軍出i出成出使出本出e出s出.出A出d出d出(出T出E出X出T出(出"出士出兵出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出K出e出y出軍出i出成出使出本出e出s出.出A出d出d出(出T出E出X出T出(出"出商出人出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出K出e出y出軍出i出成出使出本出e出s出.出A出d出d出(出T出E出X出T出(出"出銀出行出家出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出C出使出l出t出使出本出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出K出e出y出軍出i出成出使出本出e出s出.出A出d出d出(出T出E出X出T出(出"出學出者出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出K出e出y出軍出i出成出使出本出e出s出.出A出d出d出(出T出E出X出T出(出"出藝出術出家出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出K出e出y出軍出i出成出使出本出e出s出.出A出d出d出(出T出E出X出T出(出"出相出關出人出士出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出K出e出y出軍出i出成出使出本出e出s出;出
+出}出
+出
+出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出D出e出t出e出本出設置出i出n出e出E出正出e出n出t出T出y出p出e出軍出本出o出設置出A出c出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出c出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出基出於出玩出家出行出為出確出定出事出件出類出型出
+出 出 出 出 出i出f出 出(出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出戰出鬥出"出)出)出 出出出出出 出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出攻出擊出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出交出易出"出)出)出 出出出出出 出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出經出濟出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出政出治出"出)出)出 出出出出出 出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出政出策出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出文出化出"出)出)出 出出出出出 出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出教出育出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出C出使出l出t出使出本出a出l出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出社出交出"出)出)出 出出出出出 出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出關出係出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出S出o出c出i出a出l出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出技出術出"出)出)出 出出出出出 出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出研出發出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出T出e出c出h出n出o出l出o出成出i出c出a出l出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出e出本出s出o出n出a出l出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出Y出e出a出本出l出y出E出正出e出n出t出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出設置出e出l出i出n出e出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出i出設置出e出l出i出n出e出s出.出C出o出n出t出a出i出n出s出(出T出i出設置出e出l出i出n出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出 出=出 出T出i出設置出e出l出i出n出e出s出[出T出i出設置出e出l出i出n出e出I出D出]出;出
+出 出 出 出 出i出n出t出3出2出 出E出正出e出n出t出s出G出e出n出e出本出a出t出e出d出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出生出成出年出度出事出件出
+出 出 出 出 出w出h出i出l出e出 出(出E出正出e出n出t出s出G出e出n出e出本出a出t出e出d出 出<出 出M出a出x出E出正出e出n出t出s出P出e出本出Y出e出a出本出 出&出&出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出E出正出e出n出t出G出e出n出e出本出a出t出i出o出n出R出a出t出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出 出E出正出e出n出t出T出y出p出e出 出=出 出(出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出)出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出7出)出;出
+出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出n出t出e出x出t出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出Y出e出a出本出下出%出d出"出)出,出 出T出i出設置出e出l出i出n出e出.出C出使出本出本出e出n出t出Y出e出a出本出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出軍出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出 出的出e出w出E出正出e出n出t出 出=出 出G出e出n出e出本出a出t出e出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出(出T出i出設置出e出l出i出n出e出I出D出,出 出E出正出e出n出t出T出y出p出e出,出 出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出計出算出事出件出概出率出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出P出本出o出b出a出b出i出l出i出t出y出 出=出 出C出a出l出c出使出l出a出t出e出E出正出e出n出t出P出本出o出b出a出b出i出l出i出t出y出(出的出e出w出E出正出e出n出t出,出 出T出i出設置出e出l出i出n出e出I出D出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出P出本出o出b出a出b出i出l出i出t出y出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出c出o出本出d出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出(出T出i出設置出e出l出i出n出e出I出D出,出 出的出e出w出E出正出e出n出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出基本出o出本出l出d出S出t出a出t出e出(出T出i出設置出e出l出i出n出e出I出D出,出 出的出e出w出E出正出e出n出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出n出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出.出B出本出o出a出d出c出a出s出t出(出的出e出w出E出正出e出n出t出,出 出f出a出l出s出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出正出e出n出t出s出G出e出n出e出本出a出t出e出d出+出+出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出 出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出輸入出i出s出t出o出本出y出S出y出s出t出e出設置出:出:出P出本出e出d出i出c出t出E出正出e出n出t出T出y出p出e出軍出o出本出Y出e出a出本出(出i出n出t出3出2出 出Y出e出a出本出,出 出c出o出n出s出t出 出軍出輸入出i出s出t出o出本出i出c出a出l出T出i出設置出e出l出i出n出e出&出 出T出i出設置出e出l出i出n出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出基出於出歷出史出趨出勢出預出測出事出件出類出型出
+出 出 出 出 出軍出S出t出本出i出n出成出 出E出本出a出 出=出 出G出e出t出C出使出本出本出e出n出t出E出本出a出(出Y出e出a出本出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出E出本出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出革出命出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出E出本出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出軍出閥出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出E出本出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出抗出戰出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出E出本出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出內出戰出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出M出i出l出i出t出a出本出y出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出輸入出i出s出t出o出本出i出c出a出l出E出正出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出;出
+出 出 出 出 出}出
+出}出
+出

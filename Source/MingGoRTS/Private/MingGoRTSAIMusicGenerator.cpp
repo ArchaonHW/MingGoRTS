@@ -1,558 +1,559 @@
-#include "MingGoRTSAIMusicGenerator.h"
-#include "Engine/Engine.h"
-#include "Kismet/GameplayStatics.h"
-#include "Components/AudioComponent.h"
-#include "HAL/PlatformFilemanager.h"
-#include "Misc/Paths.h"
-#include "Misc/DateTime.h"
-#include "HttpModule.h"
-#include "Interfaces/IHttpRequest.h"
-#include "Interfaces/IHttpResponse.h"
-#include "Dom/JsonObject.h"
-#include "Serialization/JsonSerializer.h"
-#include "Serialization/JsonWriter.h"
-#include "Sound/SoundWave.h"
-#include "Sound/SoundWaveProcedural.h"
-#include "AudioDevice.h"
-#include "AudioThread.h"
-
-UMingGoRTSAIMusicGenerator::UMingGoRTSAIMusicGenerator()
-    : CurrentStatus(EMusicGenerationStatus::Idle)
-    , CurrentGeneratedMusic(nullptr)
-    , CurrentAudioComponent(nullptr)
-    , bIsGenerating(false)
-{
-    // 初始化生成計時器
-    GenerationTicker = FTickerDelegate::CreateUObject(this, &UMingGoRTSAIMusicGenerator::OnGenerationTick);
-}
-
-void UMingGoRTSAIMusicGenerator::GenerateMusic(const FMusicGenerationParameters& Parameters)
-{
-    if (AIVAEndpoint.IsEmpty())
-    {
-        UE_LOG(LogTemp, Error, TEXT("AIVA API endpoint not configured"));
-        NotifyGenerationCompleted(false, "AIVA API endpoint not configured");
-        return;
-    }
-
-    CurrentStatus = EMusicGenerationStatus::Generating;
-    bIsGenerating = true;
-
-    // 啟動生成計時器
-    if (!GenerationTickerHandle.IsValid())
-    {
-        GenerationTickerHandle = FTicker::GetCoreTicker().AddTicker(GenerationTicker, 0.5f);
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("Starting AI music generation with style: %d"), (int32)Parameters.Style);
-    
-    // 發送AIVA請求
-    SendAIVARequest(Parameters);
-}
-
-void UMingGoRTSAIMusicGenerator::GenerateSoundEffect(const FSoundEffectParameters& Parameters)
-{
-    if (AIVAEndpoint.IsEmpty())
-    {
-        UE_LOG(LogTemp, Error, TEXT("AIVA API endpoint not configured"));
-        NotifyGenerationCompleted(false, "AIVA API endpoint not configured");
-        return;
-    }
-
-    CurrentStatus = EMusicGenerationStatus::Generating;
-    bIsGenerating = true;
-
-    // 啟動生成計時器
-    if (!GenerationTickerHandle.IsValid())
-    {
-        GenerationTickerHandle = FTicker::GetCoreTicker().AddTicker(GenerationTicker, 0.5f);
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("Starting AI sound effect generation with type: %d"), (int32)Parameters.EffectType);
-    
-    // 這裡可以調用專門的音效生成API
-    FString SFXPrompt = BuildSFXPrompt(Parameters);
-    
-    // 模擬音效生成（實際實作需要對應的API）
-    ProcessSoundEffectGeneration();
-}
-
-void UMingGoRTSAIMusicGenerator::StartMusicGeneration()
-{
-    UE_LOG(LogTemp, Log, TEXT("Music generation started"));
-    // 這個函數可以從外部調用來開始生成過程
-}
-
-void UMingGoRTSAIMusicGenerator::StopMusicGeneration()
-{
-    bIsGenerating = false;
-    CurrentStatus = EMusicGenerationStatus::Idle;
-
-    // 停止生成計時器
-    if (GenerationTickerHandle.IsValid())
-    {
-        FTicker::GetCoreTicker().RemoveTicker(GenerationTickerHandle);
-        GenerationTickerHandle.Reset();
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("Music generation stopped"));
-}
-
-void UMingGoRTSAIMusicGenerator::SetAIVAAPI(const FString& APIEndpoint, const FString& APIKey)
-{
-    AIVAEndpoint = APIEndpoint;
-    AIVAAPIKey = APIKey;
-    
-    UE_LOG(LogTemp, Log, TEXT("AIVA API configured: %s"), *APIEndpoint);
-}
-
-bool UMingGoRTSAIMusicGenerator::TestAIVAConnection()
-{
-    if (AIVAEndpoint.IsEmpty())
-    {
-        return false;
-    }
-
-    // 創建測試請求
-    TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
-    HttpRequest->SetURL(AIVAEndpoint + "/test");
-    HttpRequest->SetVerb("GET");
-    HttpRequest->SetHeader("Authorization", "Bearer " + AIVAAPIKey);
-    
-    // 這裡可以添加回調處理，但為了簡化，直接返回 true
-    return true;
-}
-
-void UMingGoRTSAIMusicGenerator::AddToMusicLibrary(USoundWave* Music, const FString& MusicName)
-{
-    if (Music && !MusicName.IsEmpty())
-    {
-        MusicLibrary.Add(MusicName, Music);
-        UE_LOG(LogTemp, Log, TEXT("Added music to library: %s"), *MusicName);
-    }
-}
-
-USoundWave* UMingGoRTSAIMusicGenerator::GetMusicFromLibrary(const FString& MusicName)
-{
-    if (MusicLibrary.Contains(MusicName))
-    {
-        return MusicLibrary[MusicName];
-    }
-    return nullptr;
-}
-
-TArray<FString> UMingGoRTSAIMusicGenerator::GetMusicLibraryNames() const
-{
-    TArray<FString> Names;
-    for (const auto& MusicPair : MusicLibrary)
-    {
-        Names.Add(MusicPair.Key);
-    }
-    return Names;
-}
-
-void UMingGoRTSAIMusicGenerator::ClearMusicLibrary()
-{
-    MusicLibrary.Empty();
-    UE_LOG(LogTemp, Log, TEXT("Cleared music library"));
-}
-
-void UMingGoRTSAIMusicGenerator::PlayGeneratedMusic()
-{
-    if (!CurrentGeneratedMusic)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("No generated music to play"));
-        return;
-    }
-
-    if (!CurrentAudioComponent)
-    {
-        InitializeAudioComponent();
-    }
-
-    if (CurrentAudioComponent)
-    {
-        CurrentAudioComponent->SetSound(CurrentGeneratedMusic);
-        CurrentAudioComponent->Play();
-        
-        UE_LOG(LogTemp, Log, TEXT("Playing generated music"));
-    }
-}
-
-void UMingGoRTSAIMusicGenerator::StopMusic()
-{
-    if (CurrentAudioComponent && CurrentAudioComponent->IsPlaying())
-    {
-        CurrentAudioComponent->Stop();
-        UE_LOG(LogTemp, Log, TEXT("Stopped music playback"));
-    }
-}
-
-void UMingGoRTSAIMusicGenerator::PauseMusic()
-{
-    if (CurrentAudioComponent && CurrentAudioComponent->IsPlaying())
-    {
-        CurrentAudioComponent->Pause();
-        UE_LOG(LogTemp, Log, TEXT("Paused music playback"));
-    }
-}
-
-void UMingGoRTSAIMusicGenerator::SetMusicVolume(float Volume)
-{
-    if (CurrentAudioComponent)
-    {
-        CurrentAudioComponent->SetVolumeMultiplier(Volume);
-    }
-}
-
-bool UMingGoRTSAIMusicGenerator::IsMusicPlaying() const
-{
-    return CurrentAudioComponent && CurrentAudioComponent->IsPlaying();
-}
-
-void UMingGoRTSAIMusicGenerator::PlaySoundEffect(USoundWave* SoundEffect, const FVector& Location)
-{
-    if (!SoundEffect)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Invalid sound effect"));
-        return;
-    }
-
-    if (UWorld* World = GEngine->GetCurrentPlayWorld())
-    {
-        UGameplayStatics::PlaySoundAtLocation(World, SoundEffect, Location);
-        UE_LOG(LogTemp, Log, TEXT("Played sound effect at location"));
-    }
-}
-
-void UMingGoRTSAIMusicGenerator::PlaySoundEffect2D(USoundWave* SoundEffect)
-{
-    if (!SoundEffect)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Invalid sound effect"));
-        return;
-    }
-
-    if (UWorld* World = GEngine->GetCurrentPlayWorld())
-    {
-        UGameplayStatics::PlaySound2D(World, SoundEffect);
-        UE_LOG(LogTemp, Log, TEXT("Played 2D sound effect"));
-    }
-}
-
-void UMingGoRTSAIMusicGenerator::GenerateMusicPack(const TArray<FMusicGenerationParameters>& MusicParameters)
-{
-    UE_LOG(LogTemp, Log, TEXT("Generating music pack with %d tracks"), MusicParameters.Num());
-    
-    for (const FMusicGenerationParameters& Params : MusicParameters)
-    {
-        GenerateMusic(Params);
-    }
-}
-
-void UMingGoRTSAIMusicGenerator::GenerateSoundEffectPack(const TArray<FSoundEffectParameters>& SFXParameters)
-{
-    UE_LOG(LogTemp, Log, TEXT("Generating sound effect pack with %d effects"), SFXParameters.Num());
-    
-    for (const FSoundEffectParameters& Params : SFXParameters)
-    {
-        GenerateSoundEffect(Params);
-    }
-}
-
-FMusicGenerationParameters UMingGoRTSAIMusicGenerator::GetRepublicanEraStyle()
-{
-    FMusicGenerationParameters Params;
-    Params.Style = EMusicStyle::TraditionalChinese;
-    Params.Mood = "Nostalgic";
-    Params.Tempo = 80.0f;
-    Params.Key = "F#";
-    Params.Duration = 45.0f;
-    Params.Instruments.Add("Erhu");
-    Params.Instruments.Add("Pipa");
-    Params.Instruments.Add("Guzheng");
-    Params.Instruments.Add("Dizi");
-    Params.CustomPrompt = "Republican era China, historical atmosphere, traditional Chinese instruments";
-    
-    return Params;
-}
-
-FMusicGenerationParameters UMingGoRTSAIMusicGenerator::GetBattleStyle()
-{
-    FMusicGenerationParameters Params;
-    Params.Style = EMusicStyle::Military;
-    Params.Mood = "Intense";
-    Params.Tempo = 140.0f;
-    Params.Key = "D minor";
-    Params.Duration = 60.0f;
-    Params.Instruments.Add("Drums");
-    Params.Instruments.Add("Brass");
-    Params.Instruments.Add("Strings");
-    Params.CustomPrompt = "Epic battle music, military drums, intense orchestral";
-    
-    return Params;
-}
-
-FMusicGenerationParameters UMingGoRTSAIMusicGenerator::GetAmbientStyle()
-{
-    FMusicGenerationParameters Params;
-    Params.Style = EMusicStyle::Ambient;
-    Params.Mood = "Peaceful";
-    Params.Tempo = 60.0f;
-    Params.Key = "C major";
-    Params.Duration = 120.0f;
-    Params.Instruments.Add("Piano");
-    Params.Instruments.Add("Strings");
-    Params.CustomPrompt = "Peaceful ambient music, Republican era atmosphere";
-    
-    return Params;
-}
-
-void UMingGoRTSAIMusicGenerator::ProcessMusicGeneration()
-{
-    // 這裡處理音樂生成邏輯
-    // 實際實作會調用AIVA API
-    
-    UE_LOG(LogTemp, Log, TEXT("Processing music generation"));
-}
-
-void UMingGoRTSAIMusicGenerator::ProcessSoundEffectGeneration()
-{
-    // 這裡處理音效生成邏輯
-    // 實際實作會調用音效生成API
-    
-    UE_LOG(LogTemp, Log, TEXT("Processing sound effect generation"));
-    
-    // 模擬音效生成完成
-    if (USoundWave* NewSFX = CreateSoundWaveFromAudioData(TArray<uint8>()))
-    {
-        GeneratedSoundEffects.Add(NewSFX);
-        OnSoundEffectGenerated.Broadcast(NewSFX);
-        
-        NotifyGenerationCompleted(true);
-    }
-}
-
-bool UMingGoRTSAIMusicGenerator::OnGenerationTick(float DeltaTime)
-{
-    if (!bIsGenerating)
-    {
-        return false;
-    }
-
-    // 處理生成邏輯
-    ProcessMusicGeneration();
-    
-    return bIsGenerating;
-}
-
-void UMingGoRTSAIMusicGenerator::SendAIVARequest(const FMusicGenerationParameters& Parameters)
-{
-    TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
-    
-    // 設置請求URL
-    HttpRequest->SetURL(AIVAEndpoint + "/api/v1/generate");
-    HttpRequest->SetVerb("POST");
-    HttpRequest->SetHeader("Content-Type", "application/json");
-    HttpRequest->SetHeader("Authorization", "Bearer " + AIVAAPIKey);
-
-    // 創建JSON請求體
-    TSharedPtr<FJsonObject> RequestJson = MakeShareable(new FJsonObject);
-    RequestJson->SetStringField(TEXT("prompt"), BuildMusicPrompt(Parameters));
-    RequestJson->SetNumberField(TEXT("duration"), Parameters.Duration);
-    RequestJson->SetNumberField(TEXT("tempo"), Parameters.Tempo);
-    RequestJson->SetStringField(TEXT("key"), Parameters.Key);
-    RequestJson->SetStringField(TEXT("mood"), Parameters.Mood);
-
-    // 添加樂器信息
-    TArray<TSharedPtr<FJsonValue>> InstrumentsArray;
-    for (const FString& Instrument : Parameters.Instruments)
-    {
-        InstrumentsArray.Add(MakeShareable(new FJsonValueString(Instrument)));
-    }
-    RequestJson->SetArrayField(TEXT("instruments"), InstrumentsArray);
-
-    // 序列化JSON
-    FString OutputString;
-    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&OutputString);
-    FJsonSerializer::Serialize(RequestJson.ToSharedRef(), Writer);
-
-    HttpRequest->SetContentAsString(OutputString);
-
-    // 設置回調
-    HttpRequest->OnProcessRequestComplete().BindUObject(this, &UMingGoRTSAIMusicGenerator::HandleAIVAResponse);
-
-    HttpRequest->ProcessRequest();
-}
-
-void UMingGoRTSAIMusicGenerator::HandleAIVAResponse(bool bSuccess, const FString& ResponseData)
-{
-    if (!bSuccess)
-    {
-        UE_LOG(LogTemp, Error, TEXT("Failed to generate music"));
-        NotifyGenerationCompleted(false, "HTTP request failed");
-        return;
-    }
-
-    // 解析響應JSON
-    TSharedPtr<FJsonObject> ResponseJson;
-    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseData);
-    
-    if (!FJsonSerializer::Deserialize(Reader, ResponseJson))
-    {
-        UE_LOG(LogTemp, Error, TEXT("Failed to parse response JSON"));
-        NotifyGenerationCompleted(false, "Invalid JSON response");
-        return;
-    }
-
-    // 提取音頻數據
-    FString AudioData;
-    if (ResponseJson->TryGetStringField(TEXT("audio_data"), AudioData))
-    {
-        // 創建音頻波形
-        TArray<uint8> AudioBytes;
-        // 這裡需要將Base64音頻數據轉換為二進制數據
-        
-        if (USoundWave* NewMusic = CreateSoundWaveFromAudioData(AudioBytes))
-        {
-            CurrentGeneratedMusic = NewMusic;
-            OnMusicGenerated.Broadcast(NewMusic);
-            
-            NotifyGenerationCompleted(true);
-            
-            UE_LOG(LogTemp, Log, TEXT("Successfully generated music"));
-        }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("No audio data in response"));
-        NotifyGenerationCompleted(false, "No audio data in response");
-    }
-}
-
-FString UMingGoRTSAIMusicGenerator::BuildMusicPrompt(const FMusicGenerationParameters& Parameters)
-{
-    FString Prompt = Parameters.CustomPrompt;
-    
-    // 根據風格添加描述
-    switch (Parameters.Style)
-    {
-    case EMusicStyle::TraditionalChinese:
-        Prompt += ", traditional Chinese instruments, Republican era atmosphere";
-        break;
-    case EMusicStyle::Military:
-        Prompt += ", military drums, brass instruments, marching rhythm";
-        break;
-    case EMusicStyle::Orchestral:
-        Prompt += ", full orchestra, cinematic, epic";
-        break;
-    case EMusicStyle::Battle:
-        Prompt += ", intense battle music, dramatic percussion";
-        break;
-    case EMusicStyle::Ambient:
-        Prompt += ", peaceful atmosphere, subtle textures";
-        break;
-    default:
-        break;
-    }
-    
-    // 添加情緒和節奏信息
-    Prompt += FString::Printf(TEXT(", %s mood, %.0f BPM, %s key"), 
-        *Parameters.Mood, Parameters.Tempo, *Parameters.Key);
-    
-    return Prompt;
-}
-
-FString UMingGoRTSAIMusicGenerator::BuildSFXPrompt(const FSoundEffectParameters& Parameters)
-{
-    FString Prompt = Parameters.Description;
-    
-    // 根據音效類型添加描述
-    switch (Parameters.EffectType)
-    {
-    case ESoundEffectType::Explosion:
-        Prompt += ", explosion, blast, debris";
-        break;
-    case ESoundEffectType::Gunshot:
-        Prompt += ", gunshot, firearm, bullet impact";
-        break;
-    case ESoundEffectType::SwordClash:
-        Prompt += ", sword clash, metal impact, battle";
-        break;
-    case ESoundEffectType::Footsteps:
-        Prompt += ", footsteps, walking, movement";
-        break;
-    case ESoundEffectType::Vehicle:
-        Prompt += ", vehicle engine, mechanical sounds";
-        break;
-    case ESoundEffectType::Nature:
-        Prompt += ", nature sounds, environment";
-        break;
-    case ESoundEffectType::Interface:
-        Prompt += ", UI sound, interface, click";
-        break;
-    case ESoundEffectType::Voice:
-        Prompt += ", voice, speech, character";
-        break;
-    default:
-        break;
-    }
-    
-    return Prompt;
-}
-
-USoundWave* UMingGoRTSAIMusicGenerator::CreateSoundWaveFromAudioData(const TArray<uint8>& AudioData)
-{
-    // 創建程序化音頻波形
-    USoundWaveProcedural* SoundWave = NewObject<USoundWaveProcedural>();
-    
-    if (SoundWave)
-    {
-        // 設置音頻參數
-        SoundWave->SetSampleRate(44100);
-        SoundWave->NumChannels = 2;
-        SoundWave->Duration = 30.0f; // 預設30秒
-        SoundWave->bLooping = false;
-        
-        // 這裡需要實際設置音頻數據
-        // 簡化版本：返回空波形
-        
-        UE_LOG(LogTemp, Log, TEXT("Created sound wave from audio data"));
-    }
-    
-    return SoundWave;
-}
-
-void UMingGoRTSAIMusicGenerator::NotifyGenerationCompleted(bool bSuccess, const FString& ErrorMessage)
-{
-    bIsGenerating = false;
-    CurrentStatus = bSuccess ? EMusicGenerationStatus::Completed : EMusicGenerationStatus::Failed;
-
-    // 停止生成計時器
-    if (GenerationTickerHandle.IsValid())
-    {
-        FTicker::GetCoreTicker().RemoveTicker(GenerationTickerHandle);
-        GenerationTickerHandle.Reset();
-    }
-
-    // 觸發完成事件
-    OnMusicGenerationCompleted.Broadcast(bSuccess, ErrorMessage);
-
-    UE_LOG(LogTemp, Log, TEXT("Music generation completed. Success: %s, Error: %s"), 
-        bSuccess ? TEXT("true") : TEXT("false"), *ErrorMessage);
-}
-
-void UMingGoRTSAIMusicGenerator::InitializeAudioComponent()
-{
-    if (UWorld* World = GEngine->GetCurrentPlayWorld())
-    {
-        CurrentAudioComponent = NewObject<UAudioComponent>(World);
-        if (CurrentAudioComponent)
-        {
-            CurrentAudioComponent->RegisterComponent();
-            CurrentAudioComponent->AttachToComponent(World->GetWorldSettings(), FAttachmentTransformRules::KeepRelativeTransform);
-            
-            UE_LOG(LogTemp, Log, TEXT("Initialized audio component"));
-        }
-    }
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出輸入出A出L出/出P出l出a出t出f出o出本出設置出軍出i出l出e出設置出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出s出c出/出P出a出t出h出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出s出c出/出D出a出t出e出T出i出設置出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出輸入出t出t出p出M出o出d出使出l出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出I出n出t出e出本出f出a出c出e出s出/出I出輸入出t出t出p出R出e出q出使出e出s出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出I出n出t出e出本出f出a出c出e出s出/出I出輸入出t出t出p出R出e出s出p出o出n出s出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出D出o出設置出/出J出s出o出n出O出b出大出e出c出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出S出e出本出i出a出l出i出z出a出t出i出o出n出/出J出s出o出n出S出e出本出i出a出l出i出z出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出S出e出本出i出a出l出i出z出a出t出i出o出n出/出J出s出o出n出基本出本出i出t出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出S出o出使出n出d出/出S出o出使出n出d出基本出a出正出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出S出o出使出n出d出/出S出o出使出n出d出基本出a出正出e出P出本出o出c出e出d出使出本出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出A出使出d出i出o出D出e出正出i出c出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出A出使出d出i出o出T出h出本出e出a出d出.出h出"出
+出
+出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出(出)出
+出 出 出 出 出:出 出C出使出本出本出e出n出t出S出t出a出t出使出s出(出E出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出S出t出a出t出使出s出:出:出I出d出l出e出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出G出e出n出e出本出a出t出e出d出M出使出s出i出c出(出n出使出l出l出p出t出本出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出(出n出使出l出l出p出t出本出)出
+出 出 出 出 出,出 出b出I出s出G出e出n出e出本出a出t出i出n出成出(出f出a出l出s出e出)出
+出{出
+出 出 出 出 出/出/出 出初出始出化出生出成出計出時出器出
+出 出 出 出 出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出 出=出 出軍出T出i出c出k出e出本出D出e出l出e出成出a出t出e出:出:出C出本出e出a出t出e出U出O出b出大出e出c出t出(出t出h出i出s出,出 出&出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出O出n出G出e出n出e出本出a出t出i出o出n出T出i出c出k出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出G出e出n出e出本出a出t出e出M出使出s出i出c出(出c出o出n出s出t出 出軍出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出&出 出P出a出本出a出設置出e出t出e出本出s出)出
+出{出
+出 出 出 出 出i出f出 出(出A出I出V出A出E出n出d出p出o出i出n出t出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出A出I出V出A出 出A出P出I出 出e出n出d出p出o出i出n出t出 出n出o出t出 出c出o出n出f出i出成出使出本出e出d出"出)出)出;出
+出 出 出 出 出 出 出 出 出的出o出t出i出f出y出G出e出n出e出本出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出(出f出a出l出s出e出,出 出"出A出I出V出A出 出A出P出I出 出e出n出d出p出o出i出n出t出 出n出o出t出 出c出o出n出f出i出成出使出本出e出d出"出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出使出s出 出=出 出E出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出S出t出a出t出使出s出:出:出G出e出n出e出本出a出t出i出n出成出;出
+出 出 出 出 出b出I出s出G出e出n出e出本出a出t出i出n出成出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出啟出動出生出成出計出時出器出
+出 出 出 出 出i出f出 出(出!出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出輸入出a出n出d出l出e出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出輸入出a出n出d出l出e出 出=出 出軍出T出i出c出k出e出本出:出:出G出e出t出C出o出本出e出T出i出c出k出e出本出(出)出.出A出d出d出T出i出c出k出e出本出(出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出,出 出0出.出5出f出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出t出a出本出t出i出n出成出 出A出I出 出設置出使出s出i出c出 出成出e出n出e出本出a出t出i出o出n出 出w出i出t出h出 出s出t出y出l出e出:出 出%出d出"出)出,出 出(出i出n出t出3出2出)出P出a出本出a出設置出e出t出e出本出s出.出S出t出y出l出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出發出送出A出I出V出A出請出求出
+出 出 出 出 出S出e出n出d出A出I出V出A出R出e出q出使出e出s出t出(出P出a出本出a出設置出e出t出e出本出s出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出G出e出n出e出本出a出t出e出S出o出使出n出d出E出f出f出e出c出t出(出c出o出n出s出t出 出軍出S出o出使出n出d出E出f出f出e出c出t出P出a出本出a出設置出e出t出e出本出s出&出 出P出a出本出a出設置出e出t出e出本出s出)出
+出{出
+出 出 出 出 出i出f出 出(出A出I出V出A出E出n出d出p出o出i出n出t出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出A出I出V出A出 出A出P出I出 出e出n出d出p出o出i出n出t出 出n出o出t出 出c出o出n出f出i出成出使出本出e出d出"出)出)出;出
+出 出 出 出 出 出 出 出 出的出o出t出i出f出y出G出e出n出e出本出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出(出f出a出l出s出e出,出 出"出A出I出V出A出 出A出P出I出 出e出n出d出p出o出i出n出t出 出n出o出t出 出c出o出n出f出i出成出使出本出e出d出"出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出使出s出 出=出 出E出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出S出t出a出t出使出s出:出:出G出e出n出e出本出a出t出i出n出成出;出
+出 出 出 出 出b出I出s出G出e出n出e出本出a出t出i出n出成出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出啟出動出生出成出計出時出器出
+出 出 出 出 出i出f出 出(出!出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出輸入出a出n出d出l出e出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出輸入出a出n出d出l出e出 出=出 出軍出T出i出c出k出e出本出:出:出G出e出t出C出o出本出e出T出i出c出k出e出本出(出)出.出A出d出d出T出i出c出k出e出本出(出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出,出 出0出.出5出f出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出t出a出本出t出i出n出成出 出A出I出 出s出o出使出n出d出 出e出f出f出e出c出t出 出成出e出n出e出本出a出t出i出o出n出 出w出i出t出h出 出t出y出p出e出:出 出%出d出"出)出,出 出(出i出n出t出3出2出)出P出a出本出a出設置出e出t出e出本出s出.出E出f出f出e出c出t出T出y出p出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出這出裡出可出以出調出用出專出門出的出音出效出生出成出A出P出I出
+出 出 出 出 出軍出S出t出本出i出n出成出 出S出軍出X出P出本出o出設置出p出t出 出=出 出B出使出i出l出d出S出軍出X出P出本出o出設置出p出t出(出P出a出本出a出設置出e出t出e出本出s出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出模出擬出音出效出生出成出（出實出際出實出作出需出要出對出應出的出A出P出I出）出
+出 出 出 出 出P出本出o出c出e出s出s出S出o出使出n出d出E出f出f出e出c出t出G出e出n出e出本出a出t出i出o出n出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出S出t出a出本出t出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出使出s出i出c出 出成出e出n出e出本出a出t出i出o出n出 出s出t出a出本出t出e出d出"出)出)出;出
+出 出 出 出 出/出/出 出這出個出函出數出可出以出從出外出部出調出用出來出開出始出生出成出過出程出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出S出t出o出p出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出b出I出s出G出e出n出e出本出a出t出i出n出成出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出使出s出 出=出 出E出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出S出t出a出t出使出s出:出:出I出d出l出e出;出
+出
+出 出 出 出 出/出/出 出停出止出生出成出計出時出器出
+出 出 出 出 出i出f出 出(出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出輸入出a出n出d出l出e出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出T出i出c出k出e出本出:出:出G出e出t出C出o出本出e出T出i出c出k出e出本出(出)出.出R出e出設置出o出正出e出T出i出c出k出e出本出(出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出輸入出a出n出d出l出e出)出;出
+出 出 出 出 出 出 出 出 出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出輸入出a出n出d出l出e出.出R出e出s出e出t出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出使出s出i出c出 出成出e出n出e出本出a出t出i出o出n出 出s出t出o出p出p出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出S出e出t出A出I出V出A出A出P出I出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出P出I出E出n出d出p出o出i出n出t出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出P出I出K出e出y出)出
+出{出
+出 出 出 出 出A出I出V出A出E出n出d出p出o出i出n出t出 出=出 出A出P出I出E出n出d出p出o出i出n出t出;出
+出 出 出 出 出A出I出V出A出A出P出I出K出e出y出 出=出 出A出P出I出K出e出y出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出I出V出A出 出A出P出I出 出c出o出n出f出i出成出使出本出e出d出:出 出%出s出"出)出,出 出*出A出P出I出E出n出d出p出o出i出n出t出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出T出e出s出t出A出I出V出A出C出o出n出n出e出c出t出i出o出n出(出)出
+出{出
+出 出 出 出 出i出f出 出(出A出I出V出A出E出n出d出p出o出i出n出t出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出創出建出測出試出請出求出
+出 出 出 出 出T出S出h出a出本出e出d出R出e出f出<出I出輸入出t出t出p出R出e出q出使出e出s出t出>出 出輸入出t出t出p出R出e出q出使出e出s出t出 出=出 出軍出輸入出t出t出p出M出o出d出使出l出e出:出:出G出e出t出(出)出.出C出本出e出a出t出e出R出e出q出使出e出s出t出(出)出;出
+出 出 出 出 出輸入出t出t出p出R出e出q出使出e出s出t出-出>出S出e出t出U出R出L出(出A出I出V出A出E出n出d出p出o出i出n出t出 出+出 出"出/出t出e出s出t出"出)出;出
+出 出 出 出 出輸入出t出t出p出R出e出q出使出e出s出t出-出>出S出e出t出V出e出本出b出(出"出G出E出T出"出)出;出
+出 出 出 出 出輸入出t出t出p出R出e出q出使出e出s出t出-出>出S出e出t出輸入出e出a出d出e出本出(出"出A出使出t出h出o出本出i出z出a出t出i出o出n出"出,出 出"出B出e出a出本出e出本出 出"出 出+出 出A出I出V出A出A出P出I出K出e出y出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出這出裡出可出以出添出加出回出調出處出理出，出但出為出了出簡出化出，出直出接出返出回出 出t出本出使出e出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出A出d出d出T出o出M出使出s出i出c出L出i出b出本出a出本出y出(出U出S出o出使出n出d出基本出a出正出e出*出 出M出使出s出i出c出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出使出s出i出c出的出a出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出M出使出s出i出c出 出&出&出 出!出M出使出s出i出c出的出a出設置出e出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出M出使出s出i出c出L出i出b出本出a出本出y出.出A出d出d出(出M出使出s出i出c出的出a出設置出e出,出 出M出使出s出i出c出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出d出d出e出d出 出設置出使出s出i出c出 出t出o出 出l出i出b出本出a出本出y出:出 出%出s出"出)出,出 出*出M出使出s出i出c出的出a出設置出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出U出S出o出使出n出d出基本出a出正出e出*出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出G出e出t出M出使出s出i出c出軍出本出o出設置出L出i出b出本出a出本出y出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出使出s出i出c出的出a出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出M出使出s出i出c出L出i出b出本出a出本出y出.出C出o出n出t出a出i出n出s出(出M出使出s出i出c出的出a出設置出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出M出使出s出i出c出L出i出b出本出a出本出y出[出M出使出s出i出c出的出a出設置出e出]出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出n出使出l出l出p出t出本出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出G出e出t出M出使出s出i出c出L出i出b出本出a出本出y出的出a出設置出e出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出的出a出設置出e出s出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出M出使出s出i出c出P出a出i出本出 出:出 出M出使出s出i出c出L出i出b出本出a出本出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出a出設置出e出s出.出A出d出d出(出M出使出s出i出c出P出a出i出本出.出K出e出y出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出的出a出設置出e出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出C出l出e出a出本出M出使出s出i出c出L出i出b出本出a出本出y出(出)出
+出{出
+出 出 出 出 出M出使出s出i出c出L出i出b出本出a出本出y出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出l出e出a出本出e出d出 出設置出使出s出i出c出 出l出i出b出本出a出本出y出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出P出l出a出y出G出e出n出e出本出a出t出e出d出M出使出s出i出c出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出C出使出本出本出e出n出t出G出e出n出e出本出a出t出e出d出M出使出s出i出c出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出的出o出 出成出e出n出e出本出a出t出e出d出 出設置出使出s出i出c出 出t出o出 出p出l出a出y出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出!出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出i出t出i出a出l出i出z出e出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出-出>出S出e出t出S出o出使出n出d出(出C出使出本出本出e出n出t出G出e出n出e出本出a出t出e出d出M出使出s出i出c出)出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出-出>出P出l出a出y出(出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出l出a出y出i出n出成出 出成出e出n出e出本出a出t出e出d出 出設置出使出s出i出c出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出S出t出o出p出M出使出s出i出c出(出)出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出 出&出&出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出-出>出I出s出P出l出a出y出i出n出成出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出-出>出S出t出o出p出(出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出t出o出p出p出e出d出 出設置出使出s出i出c出 出p出l出a出y出b出a出c出k出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出P出a出使出s出e出M出使出s出i出c出(出)出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出 出&出&出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出-出>出I出s出P出l出a出y出i出n出成出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出-出>出P出a出使出s出e出(出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出a出使出s出e出d出 出設置出使出s出i出c出 出p出l出a出y出b出a出c出k出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出S出e出t出M出使出s出i出c出V出o出l出使出設置出e出(出f出l出o出a出t出 出V出o出l出使出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出-出>出S出e出t出V出o出l出使出設置出e出M出使出l出t出i出p出l出i出e出本出(出V出o出l出使出設置出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出I出s出M出使出s出i出c出P出l出a出y出i出n出成出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出 出&出&出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出-出>出I出s出P出l出a出y出i出n出成出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出P出l出a出y出S出o出使出n出d出E出f出f出e出c出t出(出U出S出o出使出n出d出基本出a出正出e出*出 出S出o出使出n出d出E出f出f出e出c出t出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出L出o出c出a出t出i出o出n出)出
+出{出
+出 出 出 出 出i出f出 出(出!出S出o出使出n出d出E出f出f出e出c出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出I出n出正出a出l出i出d出 出s出o出使出n出d出 出e出f出f出e出c出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出E出n出成出i出n出e出-出>出G出e出t出C出使出本出本出e出n出t出P出l出a出y出基本出o出本出l出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出:出:出P出l出a出y出S出o出使出n出d出A出t出L出o出c出a出t出i出o出n出(出基本出o出本出l出d出,出 出S出o出使出n出d出E出f出f出e出c出t出,出 出L出o出c出a出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出l出a出y出e出d出 出s出o出使出n出d出 出e出f出f出e出c出t出 出a出t出 出l出o出c出a出t出i出o出n出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出P出l出a出y出S出o出使出n出d出E出f出f出e出c出t出2出D出(出U出S出o出使出n出d出基本出a出正出e出*出 出S出o出使出n出d出E出f出f出e出c出t出)出
+出{出
+出 出 出 出 出i出f出 出(出!出S出o出使出n出d出E出f出f出e出c出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出I出n出正出a出l出i出d出 出s出o出使出n出d出 出e出f出f出e出c出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出E出n出成出i出n出e出-出>出G出e出t出C出使出本出本出e出n出t出P出l出a出y出基本出o出本出l出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出:出:出P出l出a出y出S出o出使出n出d出2出D出(出基本出o出本出l出d出,出 出S出o出使出n出d出E出f出f出e出c出t出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出l出a出y出e出d出 出2出D出 出s出o出使出n出d出 出e出f出f出e出c出t出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出G出e出n出e出本出a出t出e出M出使出s出i出c出P出a出c出k出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出>出&出 出M出使出s出i出c出P出a出本出a出設置出e出t出e出本出s出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出G出e出n出e出本出a出t出i出n出成出 出設置出使出s出i出c出 出p出a出c出k出 出w出i出t出h出 出%出d出 出t出本出a出c出k出s出"出)出,出 出M出使出s出i出c出P出a出本出a出設置出e出t出e出本出s出.出的出使出設置出(出)出)出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出&出 出P出a出本出a出設置出s出 出:出 出M出使出s出i出c出P出a出本出a出設置出e出t出e出本出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出e出n出e出本出a出t出e出M出使出s出i出c出(出P出a出本出a出設置出s出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出G出e出n出e出本出a出t出e出S出o出使出n出d出E出f出f出e出c出t出P出a出c出k出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出o出使出n出d出E出f出f出e出c出t出P出a出本出a出設置出e出t出e出本出s出>出&出 出S出軍出X出P出a出本出a出設置出e出t出e出本出s出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出G出e出n出e出本出a出t出i出n出成出 出s出o出使出n出d出 出e出f出f出e出c出t出 出p出a出c出k出 出w出i出t出h出 出%出d出 出e出f出f出e出c出t出s出"出)出,出 出S出軍出X出P出a出本出a出設置出e出t出e出本出s出.出的出使出設置出(出)出)出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出o出使出n出d出E出f出f出e出c出t出P出a出本出a出設置出e出t出e出本出s出&出 出P出a出本出a出設置出s出 出:出 出S出軍出X出P出a出本出a出設置出e出t出e出本出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出e出n出e出本出a出t出e出S出o出使出n出d出E出f出f出e出c出t出(出P出a出本出a出設置出s出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出G出e出t出R出e出p出使出b出l出i出c出a出n出E出本出a出S出t出y出l出e出(出)出
+出{出
+出 出 出 出 出軍出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出 出P出a出本出a出設置出s出;出
+出 出 出 出 出P出a出本出a出設置出s出.出S出t出y出l出e出 出=出 出E出M出使出s出i出c出S出t出y出l出e出:出:出T出本出a出d出i出t出i出o出n出a出l出C出h出i出n出e出s出e出;出
+出 出 出 出 出P出a出本出a出設置出s出.出M出o出o出d出 出=出 出"出的出o出s出t出a出l出成出i出c出"出;出
+出 出 出 出 出P出a出本出a出設置出s出.出T出e出設置出p出o出 出=出 出8出0出.出0出f出;出
+出 出 出 出 出P出a出本出a出設置出s出.出K出e出y出 出=出 出"出軍出#出"出;出
+出 出 出 出 出P出a出本出a出設置出s出.出D出使出本出a出t出i出o出n出 出=出 出4出5出.出0出f出;出
+出 出 出 出 出P出a出本出a出設置出s出.出I出n出s出t出本出使出設置出e出n出t出s出.出A出d出d出(出"出E出本出h出使出"出)出;出
+出 出 出 出 出P出a出本出a出設置出s出.出I出n出s出t出本出使出設置出e出n出t出s出.出A出d出d出(出"出P出i出p出a出"出)出;出
+出 出 出 出 出P出a出本出a出設置出s出.出I出n出s出t出本出使出設置出e出n出t出s出.出A出d出d出(出"出G出使出z出h出e出n出成出"出)出;出
+出 出 出 出 出P出a出本出a出設置出s出.出I出n出s出t出本出使出設置出e出n出t出s出.出A出d出d出(出"出D出i出z出i出"出)出;出
+出 出 出 出 出P出a出本出a出設置出s出.出C出使出s出t出o出設置出P出本出o出設置出p出t出 出=出 出"出R出e出p出使出b出l出i出c出a出n出 出e出本出a出 出C出h出i出n出a出,出 出h出i出s出t出o出本出i出c出a出l出 出a出t出設置出o出s出p出h出e出本出e出,出 出t出本出a出d出i出t出i出o出n出a出l出 出C出h出i出n出e出s出e出 出i出n出s出t出本出使出設置出e出n出t出s出"出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出a出本出a出設置出s出;出
+出}出
+出
+出軍出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出G出e出t出B出a出t出t出l出e出S出t出y出l出e出(出)出
+出{出
+出 出 出 出 出軍出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出 出P出a出本出a出設置出s出;出
+出 出 出 出 出P出a出本出a出設置出s出.出S出t出y出l出e出 出=出 出E出M出使出s出i出c出S出t出y出l出e出:出:出M出i出l出i出t出a出本出y出;出
+出 出 出 出 出P出a出本出a出設置出s出.出M出o出o出d出 出=出 出"出I出n出t出e出n出s出e出"出;出
+出 出 出 出 出P出a出本出a出設置出s出.出T出e出設置出p出o出 出=出 出1出4出0出.出0出f出;出
+出 出 出 出 出P出a出本出a出設置出s出.出K出e出y出 出=出 出"出D出 出設置出i出n出o出本出"出;出
+出 出 出 出 出P出a出本出a出設置出s出.出D出使出本出a出t出i出o出n出 出=出 出6出0出.出0出f出;出
+出 出 出 出 出P出a出本出a出設置出s出.出I出n出s出t出本出使出設置出e出n出t出s出.出A出d出d出(出"出D出本出使出設置出s出"出)出;出
+出 出 出 出 出P出a出本出a出設置出s出.出I出n出s出t出本出使出設置出e出n出t出s出.出A出d出d出(出"出B出本出a出s出s出"出)出;出
+出 出 出 出 出P出a出本出a出設置出s出.出I出n出s出t出本出使出設置出e出n出t出s出.出A出d出d出(出"出S出t出本出i出n出成出s出"出)出;出
+出 出 出 出 出P出a出本出a出設置出s出.出C出使出s出t出o出設置出P出本出o出設置出p出t出 出=出 出"出E出p出i出c出 出b出a出t出t出l出e出 出設置出使出s出i出c出,出 出設置出i出l出i出t出a出本出y出 出d出本出使出設置出s出,出 出i出n出t出e出n出s出e出 出o出本出c出h出e出s出t出本出a出l出"出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出a出本出a出設置出s出;出
+出}出
+出
+出軍出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出G出e出t出A出設置出b出i出e出n出t出S出t出y出l出e出(出)出
+出{出
+出 出 出 出 出軍出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出 出P出a出本出a出設置出s出;出
+出 出 出 出 出P出a出本出a出設置出s出.出S出t出y出l出e出 出=出 出E出M出使出s出i出c出S出t出y出l出e出:出:出A出設置出b出i出e出n出t出;出
+出 出 出 出 出P出a出本出a出設置出s出.出M出o出o出d出 出=出 出"出P出e出a出c出e出f出使出l出"出;出
+出 出 出 出 出P出a出本出a出設置出s出.出T出e出設置出p出o出 出=出 出6出0出.出0出f出;出
+出 出 出 出 出P出a出本出a出設置出s出.出K出e出y出 出=出 出"出C出 出設置出a出大出o出本出"出;出
+出 出 出 出 出P出a出本出a出設置出s出.出D出使出本出a出t出i出o出n出 出=出 出1出2出0出.出0出f出;出
+出 出 出 出 出P出a出本出a出設置出s出.出I出n出s出t出本出使出設置出e出n出t出s出.出A出d出d出(出"出P出i出a出n出o出"出)出;出
+出 出 出 出 出P出a出本出a出設置出s出.出I出n出s出t出本出使出設置出e出n出t出s出.出A出d出d出(出"出S出t出本出i出n出成出s出"出)出;出
+出 出 出 出 出P出a出本出a出設置出s出.出C出使出s出t出o出設置出P出本出o出設置出p出t出 出=出 出"出P出e出a出c出e出f出使出l出 出a出設置出b出i出e出n出t出 出設置出使出s出i出c出,出 出R出e出p出使出b出l出i出c出a出n出 出e出本出a出 出a出t出設置出o出s出p出h出e出本出e出"出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出a出本出a出設置出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出P出本出o出c出e出s出s出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出/出/出 出這出裡出處出理出音出樂出生出成出邏出輯出
+出 出 出 出 出/出/出 出實出際出實出作出會出調出用出A出I出V出A出 出A出P出I出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出本出o出c出e出s出s出i出n出成出 出設置出使出s出i出c出 出成出e出n出e出本出a出t出i出o出n出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出P出本出o出c出e出s出s出S出o出使出n出d出E出f出f出e出c出t出G出e出n出e出本出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出/出/出 出這出裡出處出理出音出效出生出成出邏出輯出
+出 出 出 出 出/出/出 出實出際出實出作出會出調出用出音出效出生出成出A出P出I出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出本出o出c出e出s出s出i出n出成出 出s出o出使出n出d出 出e出f出f出e出c出t出 出成出e出n出e出本出a出t出i出o出n出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出模出擬出音出效出生出成出完出成出
+出 出 出 出 出i出f出 出(出U出S出o出使出n出d出基本出a出正出e出*出 出的出e出w出S出軍出X出 出=出 出C出本出e出a出t出e出S出o出使出n出d出基本出a出正出e出軍出本出o出設置出A出使出d出i出o出D出a出t出a出(出T出A出本出本出a出y出<出使出i出n出t出8出>出(出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出e出n出e出本出a出t出e出d出S出o出使出n出d出E出f出f出e出c出t出s出.出A出d出d出(出的出e出w出S出軍出X出)出;出
+出 出 出 出 出 出 出 出 出O出n出S出o出使出n出d出E出f出f出e出c出t出G出e出n出e出本出a出t出e出d出.出B出本出o出a出d出c出a出s出t出(出的出e出w出S出軍出X出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出的出o出t出i出f出y出G出e出n出e出本出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出(出t出本出使出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出O出n出G出e出n出e出本出a出t出i出o出n出T出i出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出s出G出e出n出e出本出a出t出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出處出理出生出成出邏出輯出
+出 出 出 出 出P出本出o出c出e出s出s出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出(出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出b出I出s出G出e出n出e出本出a出t出i出n出成出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出S出e出n出d出A出I出V出A出R出e出q出使出e出s出t出(出c出o出n出s出t出 出軍出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出&出 出P出a出本出a出設置出e出t出e出本出s出)出
+出{出
+出 出 出 出 出T出S出h出a出本出e出d出R出e出f出<出I出輸入出t出t出p出R出e出q出使出e出s出t出>出 出輸入出t出t出p出R出e出q出使出e出s出t出 出=出 出軍出輸入出t出t出p出M出o出d出使出l出e出:出:出G出e出t出(出)出.出C出本出e出a出t出e出R出e出q出使出e出s出t出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出設出置出請出求出U出R出L出
+出 出 出 出 出輸入出t出t出p出R出e出q出使出e出s出t出-出>出S出e出t出U出R出L出(出A出I出V出A出E出n出d出p出o出i出n出t出 出+出 出"出/出a出p出i出/出正出1出/出成出e出n出e出本出a出t出e出"出)出;出
+出 出 出 出 出輸入出t出t出p出R出e出q出使出e出s出t出-出>出S出e出t出V出e出本出b出(出"出P出O出S出T出"出)出;出
+出 出 出 出 出輸入出t出t出p出R出e出q出使出e出s出t出-出>出S出e出t出輸入出e出a出d出e出本出(出"出C出o出n出t出e出n出t出-出T出y出p出e出"出,出 出"出a出p出p出l出i出c出a出t出i出o出n出/出大出s出o出n出"出)出;出
+出 出 出 出 出輸入出t出t出p出R出e出q出使出e出s出t出-出>出S出e出t出輸入出e出a出d出e出本出(出"出A出使出t出h出o出本出i出z出a出t出i出o出n出"出,出 出"出B出e出a出本出e出本出 出"出 出+出 出A出I出V出A出A出P出I出K出e出y出)出;出
+出
+出 出 出 出 出/出/出 出創出建出J出S出O出的出請出求出體出
+出 出 出 出 出T出S出h出a出本出e出d出P出t出本出<出軍出J出s出o出n出O出b出大出e出c出t出>出 出R出e出q出使出e出s出t出J出s出o出n出 出=出 出M出a出k出e出S出h出a出本出e出a出b出l出e出(出n出e出w出 出軍出J出s出o出n出O出b出大出e出c出t出)出;出
+出 出 出 出 出R出e出q出使出e出s出t出J出s出o出n出-出>出S出e出t出S出t出本出i出n出成出軍出i出e出l出d出(出T出E出X出T出(出"出p出本出o出設置出p出t出"出)出,出 出B出使出i出l出d出M出使出s出i出c出P出本出o出設置出p出t出(出P出a出本出a出設置出e出t出e出本出s出)出)出;出
+出 出 出 出 出R出e出q出使出e出s出t出J出s出o出n出-出>出S出e出t出的出使出設置出b出e出本出軍出i出e出l出d出(出T出E出X出T出(出"出d出使出本出a出t出i出o出n出"出)出,出 出P出a出本出a出設置出e出t出e出本出s出.出D出使出本出a出t出i出o出n出)出;出
+出 出 出 出 出R出e出q出使出e出s出t出J出s出o出n出-出>出S出e出t出的出使出設置出b出e出本出軍出i出e出l出d出(出T出E出X出T出(出"出t出e出設置出p出o出"出)出,出 出P出a出本出a出設置出e出t出e出本出s出.出T出e出設置出p出o出)出;出
+出 出 出 出 出R出e出q出使出e出s出t出J出s出o出n出-出>出S出e出t出S出t出本出i出n出成出軍出i出e出l出d出(出T出E出X出T出(出"出k出e出y出"出)出,出 出P出a出本出a出設置出e出t出e出本出s出.出K出e出y出)出;出
+出 出 出 出 出R出e出q出使出e出s出t出J出s出o出n出-出>出S出e出t出S出t出本出i出n出成出軍出i出e出l出d出(出T出E出X出T出(出"出設置出o出o出d出"出)出,出 出P出a出本出a出設置出e出t出e出本出s出.出M出o出o出d出)出;出
+出
+出 出 出 出 出/出/出 出添出加出樂出器出信出息出
+出 出 出 出 出T出A出本出本出a出y出<出T出S出h出a出本出e出d出P出t出本出<出軍出J出s出o出n出V出a出l出使出e出>出>出 出I出n出s出t出本出使出設置出e出n出t出s出A出本出本出a出y出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出I出n出s出t出本出使出設置出e出n出t出 出:出 出P出a出本出a出設置出e出t出e出本出s出.出I出n出s出t出本出使出設置出e出n出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出s出t出本出使出設置出e出n出t出s出A出本出本出a出y出.出A出d出d出(出M出a出k出e出S出h出a出本出e出a出b出l出e出(出n出e出w出 出軍出J出s出o出n出V出a出l出使出e出S出t出本出i出n出成出(出I出n出s出t出本出使出設置出e出n出t出)出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出R出e出q出使出e出s出t出J出s出o出n出-出>出S出e出t出A出本出本出a出y出軍出i出e出l出d出(出T出E出X出T出(出"出i出n出s出t出本出使出設置出e出n出t出s出"出)出,出 出I出n出s出t出本出使出設置出e出n出t出s出A出本出本出a出y出)出;出
+出
+出 出 出 出 出/出/出 出序出列出化出J出S出O出的出
+出 出 出 出 出軍出S出t出本出i出n出成出 出O出使出t出p出使出t出S出t出本出i出n出成出;出
+出 出 出 出 出T出S出h出a出本出e出d出R出e出f出<出T出J出s出o出n出基本出本出i出t出e出本出<出>出>出 出基本出本出i出t出e出本出 出=出 出T出J出s出o出n出基本出本出i出t出e出本出軍出a出c出t出o出本出y出<出>出:出:出C出本出e出a出t出e出(出&出O出使出t出p出使出t出S出t出本出i出n出成出)出;出
+出 出 出 出 出軍出J出s出o出n出S出e出本出i出a出l出i出z出e出本出:出:出S出e出本出i出a出l出i出z出e出(出R出e出q出使出e出s出t出J出s出o出n出.出T出o出S出h出a出本出e出d出R出e出f出(出)出,出 出基本出本出i出t出e出本出)出;出
+出
+出 出 出 出 出輸入出t出t出p出R出e出q出使出e出s出t出-出>出S出e出t出C出o出n出t出e出n出t出A出s出S出t出本出i出n出成出(出O出使出t出p出使出t出S出t出本出i出n出成出)出;出
+出
+出 出 出 出 出/出/出 出設出置出回出調出
+出 出 出 出 出輸入出t出t出p出R出e出q出使出e出s出t出-出>出O出n出P出本出o出c出e出s出s出R出e出q出使出e出s出t出C出o出設置出p出l出e出t出e出(出)出.出B出i出n出d出U出O出b出大出e出c出t出(出t出h出i出s出,出 出&出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出輸入出a出n出d出l出e出A出I出V出A出R出e出s出p出o出n出s出e出)出;出
+出
+出 出 出 出 出輸入出t出t出p出R出e出q出使出e出s出t出-出>出P出本出o出c出e出s出s出R出e出q出使出e出s出t出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出輸入出a出n出d出l出e出A出I出V出A出R出e出s出p出o出n出s出e出(出b出o出o出l出 出b出S出使出c出c出e出s出s出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出s出p出o出n出s出e出D出a出t出a出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出S出使出c出c出e出s出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出軍出a出i出l出e出d出 出t出o出 出成出e出n出e出本出a出t出e出 出設置出使出s出i出c出"出)出)出;出
+出 出 出 出 出 出 出 出 出的出o出t出i出f出y出G出e出n出e出本出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出(出f出a出l出s出e出,出 出"出輸入出T出T出P出 出本出e出q出使出e出s出t出 出f出a出i出l出e出d出"出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出解出析出響出應出J出S出O出的出
+出 出 出 出 出T出S出h出a出本出e出d出P出t出本出<出軍出J出s出o出n出O出b出大出e出c出t出>出 出R出e出s出p出o出n出s出e出J出s出o出n出;出
+出 出 出 出 出T出S出h出a出本出e出d出R出e出f出<出T出J出s出o出n出R出e出a出d出e出本出<出>出>出 出R出e出a出d出e出本出 出=出 出T出J出s出o出n出R出e出a出d出e出本出軍出a出c出t出o出本出y出<出>出:出:出C出本出e出a出t出e出(出R出e出s出p出o出n出s出e出D出a出t出a出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出軍出J出s出o出n出S出e出本出i出a出l出i出z出e出本出:出:出D出e出s出e出本出i出a出l出i出z出e出(出R出e出a出d出e出本出,出 出R出e出s出p出o出n出s出e出J出s出o出n出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出軍出a出i出l出e出d出 出t出o出 出p出a出本出s出e出 出本出e出s出p出o出n出s出e出 出J出S出O出的出"出)出)出;出
+出 出 出 出 出 出 出 出 出的出o出t出i出f出y出G出e出n出e出本出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出(出f出a出l出s出e出,出 出"出I出n出正出a出l出i出d出 出J出S出O出的出 出本出e出s出p出o出n出s出e出"出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出提出取出音出頻出數出據出
+出 出 出 出 出軍出S出t出本出i出n出成出 出A出使出d出i出o出D出a出t出a出;出
+出 出 出 出 出i出f出 出(出R出e出s出p出o出n出s出e出J出s出o出n出-出>出T出本出y出G出e出t出S出t出本出i出n出成出軍出i出e出l出d出(出T出E出X出T出(出"出a出使出d出i出o出下出d出a出t出a出"出)出,出 出A出使出d出i出o出D出a出t出a出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出創出建出音出頻出波出形出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出使出i出n出t出8出>出 出A出使出d出i出o出B出y出t出e出s出;出
+出 出 出 出 出 出 出 出 出/出/出 出這出裡出需出要出將出B出a出s出e出6出4出音出頻出數出據出轉出換出為出二出進出制出數出據出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出U出S出o出使出n出d出基本出a出正出e出*出 出的出e出w出M出使出s出i出c出 出=出 出C出本出e出a出t出e出S出o出使出n出d出基本出a出正出e出軍出本出o出設置出A出使出d出i出o出D出a出t出a出(出A出使出d出i出o出B出y出t出e出s出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出G出e出n出e出本出a出t出e出d出M出使出s出i出c出 出=出 出的出e出w出M出使出s出i出c出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出n出M出使出s出i出c出G出e出n出e出本出a出t出e出d出.出B出本出o出a出d出c出a出s出t出(出的出e出w出M出使出s出i出c出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出o出t出i出f出y出G出e出n出e出本出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出(出t出本出使出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出使出c出c出e出s出s出f出使出l出l出y出 出成出e出n出e出本出a出t出e出d出 出設置出使出s出i出c出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出的出o出 出a出使出d出i出o出 出d出a出t出a出 出i出n出 出本出e出s出p出o出n出s出e出"出)出)出;出
+出 出 出 出 出 出 出 出 出的出o出t出i出f出y出G出e出n出e出本出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出(出f出a出l出s出e出,出 出"出的出o出 出a出使出d出i出o出 出d出a出t出a出 出i出n出 出本出e出s出p出o出n出s出e出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出B出使出i出l出d出M出使出s出i出c出P出本出o出設置出p出t出(出c出o出n出s出t出 出軍出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出&出 出P出a出本出a出設置出e出t出e出本出s出)出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出P出本出o出設置出p出t出 出=出 出P出a出本出a出設置出e出t出e出本出s出.出C出使出s出t出o出設置出P出本出o出設置出p出t出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出風出格出添出加出描出述出
+出 出 出 出 出s出w出i出t出c出h出 出(出P出a出本出a出設置出e出t出e出本出s出.出S出t出y出l出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出M出使出s出i出c出S出t出y出l出e出:出:出T出本出a出d出i出t出i出o出n出a出l出C出h出i出n出e出s出e出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出t出本出a出d出i出t出i出o出n出a出l出 出C出h出i出n出e出s出e出 出i出n出s出t出本出使出設置出e出n出t出s出,出 出R出e出p出使出b出l出i出c出a出n出 出e出本出a出 出a出t出設置出o出s出p出h出e出本出e出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出M出使出s出i出c出S出t出y出l出e出:出:出M出i出l出i出t出a出本出y出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出設置出i出l出i出t出a出本出y出 出d出本出使出設置出s出,出 出b出本出a出s出s出 出i出n出s出t出本出使出設置出e出n出t出s出,出 出設置出a出本出c出h出i出n出成出 出本出h出y出t出h出設置出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出M出使出s出i出c出S出t出y出l出e出:出:出O出本出c出h出e出s出t出本出a出l出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出f出使出l出l出 出o出本出c出h出e出s出t出本出a出,出 出c出i出n出e出設置出a出t出i出c出,出 出e出p出i出c出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出M出使出s出i出c出S出t出y出l出e出:出:出B出a出t出t出l出e出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出i出n出t出e出n出s出e出 出b出a出t出t出l出e出 出設置出使出s出i出c出,出 出d出本出a出設置出a出t出i出c出 出p出e出本出c出使出s出s出i出o出n出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出M出使出s出i出c出S出t出y出l出e出:出:出A出設置出b出i出e出n出t出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出p出e出a出c出e出f出使出l出 出a出t出設置出o出s出p出h出e出本出e出,出 出s出使出b出t出l出e出 出t出e出x出t出使出本出e出s出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出添出加出情出緒出和出節出奏出信出息出
+出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出,出 出%出s出 出設置出o出o出d出,出 出%出.出0出f出 出B出P出M出,出 出%出s出 出k出e出y出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出P出a出本出a出設置出e出t出e出本出s出.出M出o出o出d出,出 出P出a出本出a出設置出e出t出e出本出s出.出T出e出設置出p出o出,出 出*出P出a出本出a出設置出e出t出e出本出s出.出K出e出y出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出本出o出設置出p出t出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出B出使出i出l出d出S出軍出X出P出本出o出設置出p出t出(出c出o出n出s出t出 出軍出S出o出使出n出d出E出f出f出e出c出t出P出a出本出a出設置出e出t出e出本出s出&出 出P出a出本出a出設置出e出t出e出本出s出)出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出P出本出o出設置出p出t出 出=出 出P出a出本出a出設置出e出t出e出本出s出.出D出e出s出c出本出i出p出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出音出效出類出型出添出加出描出述出
+出 出 出 出 出s出w出i出t出c出h出 出(出P出a出本出a出設置出e出t出e出本出s出.出E出f出f出e出c出t出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出S出o出使出n出d出E出f出f出e出c出t出T出y出p出e出:出:出E出x出p出l出o出s出i出o出n出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出e出x出p出l出o出s出i出o出n出,出 出b出l出a出s出t出,出 出d出e出b出本出i出s出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出o出使出n出d出E出f出f出e出c出t出T出y出p出e出:出:出G出使出n出s出h出o出t出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出成出使出n出s出h出o出t出,出 出f出i出本出e出a出本出設置出,出 出b出使出l出l出e出t出 出i出設置出p出a出c出t出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出o出使出n出d出E出f出f出e出c出t出T出y出p出e出:出:出S出w出o出本出d出C出l出a出s出h出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出s出w出o出本出d出 出c出l出a出s出h出,出 出設置出e出t出a出l出 出i出設置出p出a出c出t出,出 出b出a出t出t出l出e出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出o出使出n出d出E出f出f出e出c出t出T出y出p出e出:出:出軍出o出o出t出s出t出e出p出s出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出f出o出o出t出s出t出e出p出s出,出 出w出a出l出k出i出n出成出,出 出設置出o出正出e出設置出e出n出t出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出o出使出n出d出E出f出f出e出c出t出T出y出p出e出:出:出V出e出h出i出c出l出e出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出正出e出h出i出c出l出e出 出e出n出成出i出n出e出,出 出設置出e出c出h出a出n出i出c出a出l出 出s出o出使出n出d出s出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出o出使出n出d出E出f出f出e出c出t出T出y出p出e出:出:出的出a出t出使出本出e出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出n出a出t出使出本出e出 出s出o出使出n出d出s出,出 出e出n出正出i出本出o出n出設置出e出n出t出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出o出使出n出d出E出f出f出e出c出t出T出y出p出e出:出:出I出n出t出e出本出f出a出c出e出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出U出I出 出s出o出使出n出d出,出 出i出n出t出e出本出f出a出c出e出,出 出c出l出i出c出k出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出o出使出n出d出E出f出f出e出c出t出T出y出p出e出:出:出V出o出i出c出e出:出
+出 出 出 出 出 出 出 出 出P出本出o出設置出p出t出 出+出=出 出"出,出 出正出o出i出c出e出,出 出s出p出e出e出c出h出,出 出c出h出a出本出a出c出t出e出本出"出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出本出o出設置出p出t出;出
+出}出
+出
+出U出S出o出使出n出d出基本出a出正出e出*出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出C出本出e出a出t出e出S出o出使出n出d出基本出a出正出e出軍出本出o出設置出A出使出d出i出o出D出a出t出a出(出c出o出n出s出t出 出T出A出本出本出a出y出<出使出i出n出t出8出>出&出 出A出使出d出i出o出D出a出t出a出)出
+出{出
+出 出 出 出 出/出/出 出創出建出程出序出化出音出頻出波出形出
+出 出 出 出 出U出S出o出使出n出d出基本出a出正出e出P出本出o出c出e出d出使出本出a出l出*出 出S出o出使出n出d出基本出a出正出e出 出=出 出的出e出w出O出b出大出e出c出t出<出U出S出o出使出n出d出基本出a出正出e出P出本出o出c出e出d出使出本出a出l出>出(出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出S出o出使出n出d出基本出a出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出設出置出音出頻出參出數出
+出 出 出 出 出 出 出 出 出S出o出使出n出d出基本出a出正出e出-出>出S出e出t出S出a出設置出p出l出e出R出a出t出e出(出4出4出1出0出0出)出;出
+出 出 出 出 出 出 出 出 出S出o出使出n出d出基本出a出正出e出-出>出的出使出設置出C出h出a出n出n出e出l出s出 出=出 出2出;出
+出 出 出 出 出 出 出 出 出S出o出使出n出d出基本出a出正出e出-出>出D出使出本出a出t出i出o出n出 出=出 出3出0出.出0出f出;出 出/出/出 出預出設出3出0出秒出
+出 出 出 出 出 出 出 出 出S出o出使出n出d出基本出a出正出e出-出>出b出L出o出o出p出i出n出成出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出這出裡出需出要出實出際出設出置出音出頻出數出據出
+出 出 出 出 出 出 出 出 出/出/出 出簡出化出版出本出：出返出回出空出波出形出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出本出e出a出t出e出d出 出s出o出使出n出d出 出w出a出正出e出 出f出本出o出設置出 出a出使出d出i出o出 出d出a出t出a出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出S出o出使出n出d出基本出a出正出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出的出o出t出i出f出y出G出e出n出e出本出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出(出b出o出o出l出 出b出S出使出c出c出e出s出s出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出本出本出o出本出M出e出s出s出a出成出e出)出
+出{出
+出 出 出 出 出b出I出s出G出e出n出e出本出a出t出i出n出成出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出使出s出 出=出 出b出S出使出c出c出e出s出s出 出基本出 出E出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出S出t出a出t出使出s出:出:出C出o出設置出p出l出e出t出e出d出 出:出 出E出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出S出t出a出t出使出s出:出:出軍出a出i出l出e出d出;出
+出
+出 出 出 出 出/出/出 出停出止出生出成出計出時出器出
+出 出 出 出 出i出f出 出(出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出輸入出a出n出d出l出e出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出T出i出c出k出e出本出:出:出G出e出t出C出o出本出e出T出i出c出k出e出本出(出)出.出R出e出設置出o出正出e出T出i出c出k出e出本出(出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出輸入出a出n出d出l出e出)出;出
+出 出 出 出 出 出 出 出 出G出e出n出e出本出a出t出i出o出n出T出i出c出k出e出本出輸入出a出n出d出l出e出.出R出e出s出e出t出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出觸出發出完出成出事出件出
+出 出 出 出 出O出n出M出使出s出i出c出G出e出n出e出本出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出.出B出本出o出a出d出c出a出s出t出(出b出S出使出c出c出e出s出s出,出 出E出本出本出o出本出M出e出s出s出a出成出e出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出使出s出i出c出 出成出e出n出e出本出a出t出i出o出n出 出c出o出設置出p出l出e出t出e出d出.出 出S出使出c出c出e出s出s出:出 出%出s出,出 出E出本出本出o出本出:出 出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出b出S出使出c出c出e出s出s出 出基本出 出T出E出X出T出(出"出t出本出使出e出"出)出 出:出 出T出E出X出T出(出"出f出a出l出s出e出"出)出,出 出*出E出本出本出o出本出M出e出s出s出a出成出e出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出M出使出s出i出c出G出e出n出e出本出a出t出o出本出:出:出I出n出i出t出i出a出l出i出z出e出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出(出)出
+出{出
+出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出E出n出成出i出n出e出-出>出G出e出t出C出使出本出本出e出n出t出P出l出a出y出基本出o出本出l出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出 出=出 出的出e出w出O出b出大出e出c出t出<出U出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出>出(出基本出o出本出l出d出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出-出>出R出e出成出i出s出t出e出本出C出o出設置出p出o出n出e出n出t出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出-出>出A出t出t出a出c出h出T出o出C出o出設置出p出o出n出e出n出t出(出基本出o出本出l出d出-出>出G出e出t出基本出o出本出l出d出S出e出t出t出i出n出成出s出(出)出,出 出軍出A出t出t出a出c出h出設置出e出n出t出T出本出a出n出s出f出o出本出設置出R出使出l出e出s出:出:出K出e出e出p出R出e出l出a出t出i出正出e出T出本出a出n出s出f出o出本出設置出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出i出t出i出a出l出i出z出e出d出 出a出使出d出i出o出 出c出o出設置出p出o出n出e出n出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出

@@ -1,669 +1,670 @@
-#include "MingRTSEvolutionaryAISystem.h"
-#include "Engine/Engine.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "HAL/PlatformFilemanager.h"
-
-UMingRTSEvolutionaryAISystem::UMingRTSEvolutionaryAISystem()
-{
-    CrossoverRate = 0.7f;
-    MutationRate = 0.1f;
-    SelectionPressure = 0.8f;
-    MaxGeneration = 100;
-    FitnessThreshold = 0.8f;
-}
-
-void UMingRTSEvolutionaryAISystem::InitializeEvolutionarySystem()
-{
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEvolutionaryAISystem: Initializing evolutionary AI system..."));
-
-    // 初始化環境因素權重
-    EnvironmentalWeights.Empty();
-    EnvironmentalWeights.Add(TEXT("CombatPerformance"), 0.3f);
-    EnvironmentalWeights.Add(TEXT("EconomicEfficiency"), 0.25f);
-    EnvironmentalWeights.Add(TEXT("StrategicPlanning"), 0.2f);
-    EnvironmentalWeights.Add(TEXT("Adaptability"), 0.15f);
-    EnvironmentalWeights.Add(TEXT("LearningSpeed"), 0.1f);
-
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEvolutionaryAISystem: Evolutionary AI system initialized successfully"));
-}
-
-FAIGenome UMingRTSEvolutionaryAISystem::CreateAIGenome(const FString& AIID, const TArray<FEvolutionaryTrait>& InitialTraits)
-{
-    FAIGenome NewGenome;
-    NewGenome.GenomeID = FString::Printf(TEXT("Genome_%s_%d"), *AIID, FMath::RandRange(1000, 9999));
-    NewGenome.Traits = InitialTraits;
-    NewGenome.FitnessLevel = EAIFitnessLevel::Medium;
-    NewGenome.FitnessScore = 0.5f;
-    NewGenome.Generation = 1;
-    
-    AIGenomes.Add(AIID, NewGenome);
-    
-    // 初始化進化歷史
-    TArray<FEvolutionRecord> EmptyHistory;
-    EvolutionHistories.Add(AIID, EmptyHistory);
-    
-    // 設置初始進化階段
-    AIEvolutionPhases.Add(AIID, EEvolutionPhase::Adaptation);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEvolutionaryAISystem: Created genome for AI %s"), *AIID);
-    return NewGenome;
-}
-
-void UMingRTSEvolutionaryAISystem::ProcessEvolution(const FString& AIID, const TArray<FString>& EnvironmentalFactors)
-{
-    if (!AIGenomes.Contains(AIID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("MingRTSEvolutionaryAISystem: AI %s not found for evolution"), *AIID);
-        return;
-    }
-
-    FAIGenome CurrentGenome = AIGenomes[AIID];
-    
-    // 檢查是否需要進化
-    if (!ShouldEvolve(AIID))
-    {
-        return;
-    }
-
-    // 評估當前適應度
-    float CurrentFitness = EvaluateFitness(AIID, CurrentGenome);
-    
-    // 根據環境因素決定進化策略
-    EEvolutionPhase CurrentPhase = AIEvolutionPhases[AIID];
-    
-    FAIGenome NewGenome = CurrentGenome;
-    
-    switch (CurrentPhase)
-    {
-        case EEvolutionPhase::Adaptation:
-            // 適應階段：微調現有特徵
-            PerformMutation(NewGenome);
-            break;
-            
-        case EEvolutionPhase::Learning:
-            // 學習階段：從環境中學習
-            NewGenome = LearnFromEnvironment(CurrentGenome, EnvironmentalFactors);
-            break;
-            
-        case EEvolutionPhase::Evolution:
-            // 進化階段：大幅變化
-            PerformMutation(NewGenome);
-            PerformMutation(NewGenome); // 雙重變異
-            break;
-            
-        case EEvolutionPhase::Specialization:
-            // 特化階段：強化優勢特徵
-            NewGenome = SpecializeGenome(CurrentGenome, EnvironmentalFactors);
-            break;
-    }
-    
-    // 評估新基因組適應度
-    float NewFitness = EvaluateFitness(AIID, NewGenome);
-    
-    // 如果新基因組更優，則接受進化
-    if (NewFitness > CurrentFitness)
-    {
-        NewGenome.Generation = CurrentGenome.Generation + 1;
-        NewGenome.FitnessScore = NewFitness;
-        NewGenome.FitnessLevel = DetermineFitnessLevel(NewFitness);
-        
-        AIGenomes[AIID] = NewGenome;
-        
-        // 記錄進化
-        RecordEvolution(AIID, CurrentGenome, NewGenome, TEXT("EnvironmentalAdaptation"));
-        
-        // 觸發進化事件
-        OnAIEvolution.Broadcast(AIID, CurrentGenome, NewGenome);
-        OnFitnessUpdate.Broadcast(AIID, NewFitness);
-        
-        UE_LOG(LogTemp, Log, TEXT("MingRTSEvolutionaryAISystem: AI %s evolved to generation %d with fitness %.3f"), 
-               *AIID, NewGenome.Generation, NewFitness);
-    }
-    
-    // 更新進化階段
-    UpdateEvolutionPhase(AIID);
-}
-
-FAIGenome UMingRTSEvolutionaryAISystem::CrossoverGenomes(const FAIGenome& Parent1, const FAIGenome& Parent2)
-{
-    FAIGenome Offspring;
-    Offspring.GenomeID = FString::Printf(TEXT("Cross_%s_%s"), *Parent1.GenomeID, *Parent2.GenomeID);
-    Offspring.Generation = FMath::Max(Parent1.Generation, Parent2.Generation) + 1;
-    Offspring.ParentGenomes.Add(Parent1.GenomeID);
-    Offspring.ParentGenomes.Add(Parent2.GenomeID);
-    
-    // 執行基因交叉
-    PerformCrossover(Offspring, Parent1, Parent2);
-    
-    // 應用變異
-    if (FMath::FRand() < MutationRate)
-    {
-        PerformMutation(Offspring);
-    }
-    
-    // 評估適應度
-    Offspring.FitnessScore = (Parent1.FitnessScore + Parent2.FitnessScore) / 2.0f;
-    Offspring.FitnessLevel = DetermineFitnessLevel(Offspring.FitnessScore);
-    
-    return Offspring;
-}
-
-FAIGenome UMingRTSEvolutionaryAISystem::MutateGenome(const FAIGenome& Genome, float MutationIntensity)
-{
-    FAIGenome MutatedGenome = Genome;
-    MutatedGenome.GenomeID = FString::Printf(TEXT("Mut_%s_%d"), *Genome.GenomeID, FMath::RandRange(1000, 9999));
-    
-    // 調整變異率
-    float OriginalMutationRate = MutationRate;
-    MutationRate = FMath::Clamp(MutationIntensity, 0.0f, 1.0f);
-    
-    PerformMutation(MutatedGenome);
-    
-    // 恢復原始變異率
-    MutationRate = OriginalMutationRate;
-    
-    // 重新評估適應度
-    MutatedGenome.FitnessScore = EvaluateFitness(TEXT(""), MutatedGenome);
-    MutatedGenome.FitnessLevel = DetermineFitnessLevel(MutatedGenome.FitnessScore);
-    
-    return MutatedGenome;
-}
-
-float UMingRTSEvolutionaryAISystem::EvaluateFitness(const FString& AIID, const FAIGenome& Genome)
-{
-    float TotalFitness = 0.0f;
-    float WeightSum = 0.0f;
-    
-    for (const FEvolutionaryTrait& Trait : Genome.Traits)
-    {
-        float TraitFitness = CalculateTraitFitness(Trait, GetActiveEnvironmentalFactors());
-        float Weight = EnvironmentalWeights.FindRef(Trait.TraitName);
-        
-        if (Weight > 0.0f)
-        {
-            TotalFitness += TraitFitness * Weight;
-            WeightSum += Weight;
-        }
-    }
-    
-    if (WeightSum > 0.0f)
-    {
-        TotalFitness /= WeightSum;
-    }
-    
-    // 根據進化階段調整適應度
-    if (AIEvolutionPhases.Contains(AIID))
-    {
-        EEvolutionPhase Phase = AIEvolutionPhases[AIID];
-        
-        switch (Phase)
-        {
-            case EEvolutionPhase::Adaptation:
-                TotalFitness *= 1.1f; // 適應階段加成
-                break;
-            case EEvolutionPhase::Learning:
-                TotalFitness *= 1.05f; // 學習階段輕微加成
-                break;
-            case EEvolutionPhase::Evolution:
-                TotalFitness *= 0.95f; // 進化階段輕微懲罰（風險）
-                break;
-            case EEvolutionPhase::Specialization:
-                TotalFitness *= 1.2f; // 特化階段大幅加成
-                break;
-        }
-    }
-    
-    return FMath::Clamp(TotalFitness, 0.0f, 1.0f);
-}
-
-TArray<FAIGenome> UMingRTSEvolutionaryAISystem::SelectBestGenomes(const TArray<FAIGenome>& Population, int32 SelectionCount)
-{
-    TArray<FAIGenome> SortedPopulation = Population;
-    
-    // 按適應度排序
-    SortedPopulation.Sort([](const FAIGenome& A, const FAIGenome& B)
-    {
-        return A.FitnessScore > B.FitnessScore;
-    });
-    
-    // 選擇前N個最佳基因組
-    TArray<FAIGenome> BestGenomes;
-    for (int32 i = 0; i < FMath::Min(SelectionCount, SortedPopulation.Num()); i++)
-    {
-        BestGenomes.Add(SortedPopulation[i]);
-    }
-    
-    return BestGenomes;
-}
-
-void UMingRTSEvolutionaryAISystem::SetEvolutionPhase(const FString& AIID, EEvolutionPhase NewPhase)
-{
-    if (AIEvolutionPhases.Contains(AIID))
-    {
-        EEvolutionPhase OldPhase = AIEvolutionPhases[AIID];
-        AIEvolutionPhases[AIID] = NewPhase;
-        
-        OnEvolutionPhase.Broadcast(AIID, NewPhase);
-        
-        UE_LOG(LogTemp, Log, TEXT("MingRTSEvolutionaryAISystem: AI %s evolution phase changed from %d to %d"), 
-               *AIID, (int32)OldPhase, (int32)NewPhase);
-    }
-}
-
-FAIGenome UMingRTSEvolutionaryAISystem::GetAIGenome(const FString& AIID) const
-{
-    return AIGenomes.FindRef(AIID);
-}
-
-TArray<FEvolutionRecord> UMingRTSEvolutionaryAISystem::GetEvolutionHistory(const FString& AIID) const
-{
-    return EvolutionHistories.FindRef(AIID);
-}
-
-void UMingRTSEvolutionaryAISystem::SetEvolutionParameters(float CrossoverRate, float MutationRate, float SelectionPressure)
-{
-    this->CrossoverRate = FMath::Clamp(CrossoverRate, 0.0f, 1.0f);
-    this->MutationRate = FMath::Clamp(MutationRate, 0.0f, 1.0f);
-    this->SelectionPressure = FMath::Clamp(SelectionPressure, 0.0f, 1.0f);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEvolutionaryAISystem: Evolution parameters updated - Crossover: %.2f, Mutation: %.2f, Selection: %.2f"), 
-           this->CrossoverRate, this->MutationRate, this->SelectionPressure);
-}
-
-void UMingRTSEvolutionaryAISystem::ProcessBatchEvolution(const TArray<FString>& AIIDs)
-{
-    for (const FString& AIID : AIIDs)
-    {
-        if (AIGenomes.Contains(AIID))
-        {
-            TArray<FString> EnvironmentalFactors = GetActiveEnvironmentalFactors();
-            ProcessEvolution(AIID, EnvironmentalFactors);
-        }
-    }
-}
-
-TMap<FString, float> UMingRTSEvolutionaryAISystem::GetEvolutionStatistics() const
-{
-    TMap<FString, float> Statistics;
-    
-    // 計算平均適應度
-    float TotalFitness = 0.0f;
-    int32 ValidGenomes = 0;
-    
-    for (const TPair<FString, FAIGenome>& Pair : AIGenomes)
-    {
-        TotalFitness += Pair.Value.FitnessScore;
-        ValidGenomes++;
-    }
-    
-    if (ValidGenomes > 0)
-    {
-        Statistics.Add(TEXT("AverageFitness"), TotalFitness / ValidGenomes);
-    }
-    
-    // 計算最高適應度
-    float MaxFitness = 0.0f;
-    for (const TPair<FString, FAIGenome>& Pair : AIGenomes)
-    {
-        MaxFitness = FMath::Max(MaxFitness, Pair.Value.FitnessScore);
-    }
-    Statistics.Add(TEXT("MaxFitness"), MaxFitness);
-    
-    // 計算平均代數
-    float TotalGeneration = 0.0f;
-    for (const TPair<FString, FAIGenome>& Pair : AIGenomes)
-    {
-        TotalGeneration += Pair.Value.Generation;
-    }
-    if (ValidGenomes > 0)
-    {
-        Statistics.Add(TEXT("AverageGeneration"), TotalGeneration / ValidGenomes);
-    }
-    
-    // 統計進化階段分佈
-    TMap<EEvolutionPhase, int32> PhaseCounts;
-    for (const TPair<FString, EEvolutionPhase>& Pair : AIEvolutionPhases)
-    {
-        PhaseCounts.FindOrAdd(Pair.Value)++;
-    }
-    
-    Statistics.Add(TEXT("AdaptationPhaseCount"), PhaseCounts.FindRef(EEvolutionPhase::Adaptation));
-    Statistics.Add(TEXT("LearningPhaseCount"), PhaseCounts.FindRef(EEvolutionPhase::Learning));
-    Statistics.Add(TEXT("EvolutionPhaseCount"), PhaseCounts.FindRef(EEvolutionPhase::Evolution));
-    Statistics.Add(TEXT("SpecializationPhaseCount"), PhaseCounts.FindRef(EEvolutionPhase::Specialization));
-    
-    return Statistics;
-}
-
-void UMingRTSEvolutionaryAISystem::ResetAIEvolution(const FString& AIID)
-{
-    if (AIGenomes.Contains(AIID))
-    {
-        FAIGenome& Genome = AIGenomes[AIID];
-        Genome.Generation = 1;
-        Genome.FitnessScore = 0.5f;
-        Genome.FitnessLevel = EAIFitnessLevel::Medium;
-        
-        // 重置特徵值
-        for (FEvolutionaryTrait& Trait : Genome.Traits)
-        {
-            Trait.TraitValue = 0.5f;
-        }
-        
-        // 清空進化歷史
-        if (EvolutionHistories.Contains(AIID))
-        {
-            EvolutionHistories[AIID].Empty();
-        }
-        
-        // 重置進化階段
-        AIEvolutionPhases[AIID] = EEvolutionPhase::Adaptation;
-        
-        UE_LOG(LogTemp, Log, TEXT("MingRTSEvolutionaryAISystem: AI %s evolution reset"), *AIID);
-    }
-}
-
-void UMingRTSEvolutionaryAISystem::PerformCrossover(FAIGenome& Offspring, const FAIGenome& Parent1, const FAIGenome& Parent2)
-{
-    // 確保父母基因組有相同數量的特徵
-    int32 TraitCount = FMath::Min(Parent1.Traits.Num(), Parent2.Traits.Num());
-    
-    for (int32 i = 0; i < TraitCount; i++)
-    {
-        if (i < Parent1.Traits.Num() && i < Parent2.Traits.Num())
-        {
-            // 混合特徵
-            FEvolutionaryTrait BlendedTrait = BlendTraits(Parent1.Traits[i], Parent2.Traits[i]);
-            Offspring.Traits.Add(BlendedTrait);
-        }
-        else if (i < Parent1.Traits.Num())
-        {
-            Offspring.Traits.Add(Parent1.Traits[i]);
-        }
-        else if (i < Parent2.Traits.Num())
-        {
-            Offspring.Traits.Add(Parent2.Traits[i]);
-        }
-    }
-}
-
-void UMingRTSEvolutionaryAISystem::PerformMutation(FAIGenome& Genome)
-{
-    for (FEvolutionaryTrait& Trait : Genome.Traits)
-    {
-        if (FMath::FRand() < MutationRate)
-        {
-            // 執行變異
-            float MutationAmount = FMath::FRandRange(-0.2f, 0.2f);
-            Trait.TraitValue = FMath::Clamp(Trait.TraitValue + MutationAmount, 0.0f, 1.0f);
-            
-            // 偶爾調整變異率
-            if (FMath::FRand() < 0.1f)
-            {
-                Trait.MutationRate = FMath::Clamp(Trait.MutationRate + FMath::FRandRange(-0.05f, 0.05f), 0.01f, 0.5f);
-            }
-        }
-    }
-}
-
-float UMingRTSEvolutionaryAISystem::CalculateTraitFitness(const FEvolutionaryTrait& Trait, const TArray<FString>& EnvironmentalFactors)
-{
-    float BaseFitness = Trait.TraitValue;
-    
-    // 根據環境因素調整適應度
-    for (const FString& Factor : EnvironmentalFactors)
-    {
-        if (Factor == Trait.TraitName)
-        {
-            BaseFitness *= 1.2f; // 環境匹配加成
-        }
-    }
-    
-    return BaseFitness;
-}
-
-void UMingRTSEvolutionaryAISystem::UpdateEvolutionPhase(const FString& AIID)
-{
-    if (!AIGenomes.Contains(AIID) || !AIEvolutionPhases.Contains(AIID))
-    {
-        return;
-    }
-    
-    const FAIGenome& Genome = AIGenomes[AIID];
-    EEvolutionPhase CurrentPhase = AIEvolutionPhases[AIID];
-    
-    // 根據適應度和代數決定是否轉換階段
-    bool ShouldAdvance = false;
-    
-    switch (CurrentPhase)
-    {
-        case EEvolutionPhase::Adaptation:
-            if (Genome.FitnessScore > 0.6f && Genome.Generation >= 3)
-            {
-                ShouldAdvance = true;
-            }
-            break;
-            
-        case EEvolutionPhase::Learning:
-            if (Genome.FitnessScore > 0.7f && Genome.Generation >= 5)
-            {
-                ShouldAdvance = true;
-            }
-            break;
-            
-        case EEvolutionPhase::Evolution:
-            if (Genome.FitnessScore > 0.8f && Genome.Generation >= 8)
-            {
-                ShouldAdvance = true;
-            }
-            break;
-            
-        case EEvolutionPhase::Specialization:
-            // 特化階段是終極階段，不會自動轉換
-            break;
-    }
-    
-    if (ShouldAdvance)
-    {
-        EEvolutionPhase NewPhase = (EEvolutionPhase)((int32)CurrentPhase + 1);
-        SetEvolutionPhase(AIID, NewPhase);
-    }
-}
-
-void UMingRTSEvolutionaryAISystem::RecordEvolution(const FString& AIID, const FAIGenome& OldGenome, const FAIGenome& NewGenome, const FString& Trigger)
-{
-    FEvolutionRecord Record;
-    Record.RecordID = FString::Printf(TEXT("Evolution_%s_%s"), *AIID, *FDateTime::Now().ToString());
-    Record.Timestamp = FDateTime::Now();
-    Record.Phase = AIEvolutionPhases.FindRef(AIID);
-    Record.PreviousGenome = OldGenome;
-    Record.CurrentGenome = NewGenome;
-    Record.EvolutionTrigger = Trigger;
-    Record.EnvironmentalFactors = GetActiveEnvironmentalFactors();
-    
-    if (EvolutionHistories.Contains(AIID))
-    {
-        EvolutionHistories[AIID].Add(Record);
-        
-        // 限制歷史記錄數量
-        if (EvolutionHistories[AIID].Num() > 100)
-        {
-            EvolutionHistories[AIID].RemoveAt(0);
-        }
-    }
-}
-
-float UMingRTSEvolutionaryAISystem::CalculateAdaptationFitness(const FAIGenome& Genome)
-{
-    // 適應階段：穩定性和基礎能力
-    float AdaptationScore = 0.0f;
-    
-    for (const FEvolutionaryTrait& Trait : Genome.Traits)
-    {
-        // 獎勵中等且穩定的特徵值
-        float StabilityScore = 1.0f - FMath::Abs(Trait.TraitValue - 0.5f);
-        AdaptationScore += StabilityScore;
-    }
-    
-    return Genome.Traits.Num() > 0 ? AdaptationScore / Genome.Traits.Num() : 0.0f;
-}
-
-float UMingRTSEvolutionaryAISystem::CalculateLearningFitness(const FAIGenome& Genome)
-{
-    // 學習階段：學習能力和適應性
-    float LearningScore = 0.0f;
-    
-    for (const FEvolutionaryTrait& Trait : Genome.Traits)
-    {
-        // 獎勵高變異率（學習潛力）
-        LearningScore += Trait.MutationRate * Trait.TraitValue;
-    }
-    
-    return Genome.Traits.Num() > 0 ? LearningScore / Genome.Traits.Num() : 0.0f;
-}
-
-float UMingRTSEvolutionaryAISystem::CalculateEvolutionFitness(const FAIGenome& Genome)
-{
-    // 進化階段：創新和多樣性
-    float EvolutionScore = 0.0f;
-    
-    for (const FEvolutionaryTrait& Trait : Genome.Traits)
-    {
-        // 獎勵極端特徵值（專業化）
-        float Extremeness = FMath::Max(Trait.TraitValue, 1.0f - Trait.TraitValue);
-        EvolutionScore += Extremeness;
-    }
-    
-    return Genome.Traits.Num() > 0 ? EvolutionScore / Genome.Traits.Num() : 0.0f;
-}
-
-float UMingRTSEvolutionaryAISystem::CalculateSpecializationFitness(const FAIGenome& Genome)
-{
-    // 特化階段：專業化和優勢特徵
-    float SpecializationScore = 0.0f;
-    
-    for (const FEvolutionaryTrait& Trait : Genome.Traits)
-    {
-        // 獎勵高特徵值和低變異率（穩定的專業化）
-        if (Trait.TraitValue > 0.8f && Trait.MutationRate < 0.1f)
-        {
-            SpecializationScore += 1.0f;
-        }
-    }
-    
-    return Genome.Traits.Num() > 0 ? SpecializationScore / Genome.Traits.Num() : 0.0f;
-}
-
-FEvolutionaryTrait UMingRTSEvolutionaryAISystem::BlendTraits(const FEvolutionaryTrait& Trait1, const FEvolutionaryTrait& Trait2)
-{
-    FEvolutionaryTrait BlendedTrait;
-    BlendedTrait.TraitName = Trait1.TraitName;
-    BlendedTrait.TraitValue = (Trait1.TraitValue + Trait2.TraitValue) / 2.0f;
-    BlendedTrait.MutationRate = (Trait1.MutationRate + Trait2.MutationRate) / 2.0f;
-    BlendedTrait.InheritanceStrength = (Trait1.InheritanceStrength + Trait2.InheritanceStrength) / 2.0f;
-    
-    return BlendedTrait;
-}
-
-bool UMingRTSEvolutionaryAISystem::ShouldEvolve(const FString& AIID)
-{
-    if (!AIGenomes.Contains(AIID))
-    {
-        return false;
-    }
-    
-    const FAIGenome& Genome = AIGenomes[AIID];
-    
-    // 檢查代數限制
-    if (Genome.Generation >= MaxGeneration)
-    {
-        return false;
-    }
-    
-    // 檢查適應度閾值
-    if (Genome.FitnessScore >= FitnessThreshold)
-    {
-        return false;
-    }
-    
-    // 隨機進化機率
-    float EvolutionChance = 0.3f + (1.0f - Genome.FitnessScore) * 0.5f;
-    return FMath::FRand() < EvolutionChance;
-}
-
-TArray<FString> UMingRTSEvolutionaryAISystem::GetActiveEnvironmentalFactors() const
-{
-    TArray<FString> Factors;
-    Factors.Add(TEXT("CombatPerformance"));
-    Factors.Add(TEXT("EconomicEfficiency"));
-    Factors.Add(TEXT("StrategicPlanning"));
-    Factors.Add(TEXT("Adaptability"));
-    Factors.Add(TEXT("LearningSpeed"));
-    return Factors;
-}
-
-EAIFitnessLevel UMingRTSEvolutionaryAISystem::DetermineFitnessLevel(float FitnessScore)
-{
-    if (FitnessScore >= 0.9f) return EAIFitnessLevel::Exceptional;
-    if (FitnessScore >= 0.8f) return EAIFitnessLevel::VeryHigh;
-    if (FitnessScore >= 0.6f) return EAIFitnessLevel::High;
-    if (FitnessScore >= 0.4f) return EAIFitnessLevel::Medium;
-    if (FitnessScore >= 0.2f) return EAIFitnessLevel::Low;
-    return EAIFitnessLevel::VeryLow;
-}
-
-FAIGenome UMingRTSEvolutionaryAISystem::LearnFromEnvironment(const FAIGenome& Genome, const TArray<FString>& EnvironmentalFactors)
-{
-    FAIGenome LearnedGenome = Genome;
-    
-    // 根據環境因素調整特徵
-    for (FEvolutionaryTrait& Trait : LearnedGenome.Traits)
-    {
-        for (const FString& Factor : EnvironmentalFactors)
-        {
-            if (Factor == Trait.TraitName)
-            {
-                // 增強匹配環境的特徵
-                Trait.TraitValue = FMath::Clamp(Trait.TraitValue + 0.1f, 0.0f, 1.0f);
-                Trait.MutationRate = FMath::Clamp(Trait.MutationRate - 0.02f, 0.01f, 0.5f);
-            }
-        }
-    }
-    
-    return LearnedGenome;
-}
-
-FAIGenome UMingRTSEvolutionaryAISystem::SpecializeGenome(const FAIGenome& Genome, const TArray<FString>& EnvironmentalFactors)
-{
-    FAIGenome SpecializedGenome = Genome;
-    
-    // 找出最強的特徵並進一步強化
-    float MaxTraitValue = 0.0f;
-    FString StrongestTraitName;
-    
-    for (const FEvolutionaryTrait& Trait : Genome.Traits)
-    {
-        if (Trait.TraitValue > MaxTraitValue)
-        {
-            MaxTraitValue = Trait.TraitValue;
-            StrongestTraitName = Trait.TraitName;
-        }
-    }
-    
-    // 強化最強特徵
-    for (FEvolutionaryTrait& Trait : SpecializedGenome.Traits)
-    {
-        if (Trait.TraitName == StrongestTraitName)
-        {
-            Trait.TraitValue = FMath::Clamp(Trait.TraitValue + 0.15f, 0.0f, 1.0f);
-            Trait.MutationRate = FMath::Clamp(Trait.MutationRate - 0.05f, 0.01f, 0.5f);
-        }
-        else
-        {
-            // 削弱其他特徵以專注於強項
-            Trait.TraitValue = FMath::Clamp(Trait.TraitValue - 0.05f, 0.0f, 1.0f);
-        }
-    }
-    
-    return SpecializedGenome;
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出K出i出s出設置出e出t出M出a出t出h出L出i出b出本出a出本出y出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出輸入出A出L出/出P出l出a出t出f出o出本出設置出軍出i出l出e出設置出a出n出a出成出e出本出.出h出"出
+出
+出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出C出本出o出s出s出o出正出e出本出R出a出t出e出 出=出 出0出.出7出f出;出
+出 出 出 出 出M出使出t出a出t出i出o出n出R出a出t出e出 出=出 出0出.出1出f出;出
+出 出 出 出 出S出e出l出e出c出t出i出o出n出P出本出e出s出s出使出本出e出 出=出 出0出.出8出f出;出
+出 出 出 出 出M出a出x出G出e出n出e出本出a出t出i出o出n出 出=出 出1出0出0出;出
+出 出 出 出 出軍出i出t出n出e出s出s出T出h出本出e出s出h出o出l出d出 出=出 出0出.出8出f出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出I出n出i出t出i出a出l出i出z出e出E出正出o出l出使出t出i出o出n出a出本出y出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出 出I出n出i出t出i出a出l出i出z出i出n出成出 出e出正出o出l出使出t出i出o出n出a出本出y出 出A出I出 出s出y出s出t出e出設置出.出.出.出"出)出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出環出境出因出素出權出重出
+出 出 出 出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出基本出e出i出成出h出t出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出基本出e出i出成出h出t出s出.出A出d出d出(出T出E出X出T出(出"出C出o出設置出b出a出t出P出e出本出f出o出本出設置出a出n出c出e出"出)出,出 出0出.出3出f出)出;出
+出 出 出 出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出基本出e出i出成出h出t出s出.出A出d出d出(出T出E出X出T出(出"出E出c出o出n出o出設置出i出c出E出f出f出i出c出i出e出n出c出y出"出)出,出 出0出.出2出5出f出)出;出
+出 出 出 出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出基本出e出i出成出h出t出s出.出A出d出d出(出T出E出X出T出(出"出S出t出本出a出t出e出成出i出c出P出l出a出n出n出i出n出成出"出)出,出 出0出.出2出f出)出;出
+出 出 出 出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出基本出e出i出成出h出t出s出.出A出d出d出(出T出E出X出T出(出"出A出d出a出p出t出a出b出i出l出i出t出y出"出)出,出 出0出.出1出5出f出)出;出
+出 出 出 出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出基本出e出i出成出h出t出s出.出A出d出d出(出T出E出X出T出(出"出L出e出a出本出n出i出n出成出S出p出e出e出d出"出)出,出 出0出.出1出f出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出 出E出正出o出l出使出t出i出o出n出a出本出y出 出A出I出 出s出y出s出t出e出設置出 出i出n出i出t出i出a出l出i出z出e出d出 出s出使出c出c出e出s出s出f出使出l出l出y出"出)出)出;出
+出}出
+出
+出軍出A出I出G出e出n出o出設置出e出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出C出本出e出a出t出e出A出I出G出e出n出o出設置出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出,出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出>出&出 出I出n出i出t出i出a出l出T出本出a出i出t出s出)出
+出{出
+出 出 出 出 出軍出A出I出G出e出n出o出設置出e出 出的出e出w出G出e出n出o出設置出e出;出
+出 出 出 出 出的出e出w出G出e出n出o出設置出e出.出G出e出n出o出設置出e出I出D出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出G出e出n出o出設置出e出下出%出s出下出%出d出"出)出,出 出*出A出I出I出D出,出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出0出0出0出,出 出9出9出9出9出)出)出;出
+出 出 出 出 出的出e出w出G出e出n出o出設置出e出.出T出本出a出i出t出s出 出=出 出I出n出i出t出i出a出l出T出本出a出i出t出s出;出
+出 出 出 出 出的出e出w出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出L出e出正出e出l出 出=出 出E出A出I出軍出i出t出n出e出s出s出L出e出正出e出l出:出:出M出e出d出i出使出設置出;出
+出 出 出 出 出的出e出w出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出 出=出 出0出.出5出f出;出
+出 出 出 出 出的出e出w出G出e出n出o出設置出e出.出G出e出n出e出本出a出t出i出o出n出 出=出 出1出;出
+出 出 出 出 出
+出 出 出 出 出A出I出G出e出n出o出設置出e出s出.出A出d出d出(出A出I出I出D出,出 出的出e出w出G出e出n出o出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出進出化出歷出史出
+出 出 出 出 出T出A出本出本出a出y出<出軍出E出正出o出l出使出t出i出o出n出R出e出c出o出本出d出>出 出E出設置出p出t出y出輸入出i出s出t出o出本出y出;出
+出 出 出 出 出E出正出o出l出使出t出i出o出n出輸入出i出s出t出o出本出i出e出s出.出A出d出d出(出A出I出I出D出,出 出E出設置出p出t出y出輸入出i出s出t出o出本出y出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出設出置出初出始出進出化出階出段出
+出 出 出 出 出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出.出A出d出d出(出A出I出I出D出,出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出A出d出a出p出t出a出t出i出o出n出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出 出C出本出e出a出t出e出d出 出成出e出n出o出設置出e出 出f出o出本出 出A出I出 出%出s出"出)出,出 出*出A出I出I出D出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出的出e出w出G出e出n出o出設置出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出P出本出o出c出e出s出s出E出正出o出l出使出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出,出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出)出
+出{出
+出 出 出 出 出i出f出 出(出!出A出I出G出e出n出o出設置出e出s出.出C出o出n出t出a出i出n出s出(出A出I出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出 出A出I出 出%出s出 出n出o出t出 出f出o出使出n出d出 出f出o出本出 出e出正出o出l出使出t出i出o出n出"出)出,出 出*出A出I出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出A出I出G出e出n出o出設置出e出 出C出使出本出本出e出n出t出G出e出n出o出設置出e出 出=出 出A出I出G出e出n出o出設置出e出s出[出A出I出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出是出否出需出要出進出化出
+出 出 出 出 出i出f出 出(出!出S出h出o出使出l出d出E出正出o出l出正出e出(出A出I出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出評出估出當出前出適出應出度出
+出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出軍出i出t出n出e出s出s出 出=出 出E出正出a出l出使出a出t出e出軍出i出t出n出e出s出s出(出A出I出I出D出,出 出C出使出本出本出e出n出t出G出e出n出o出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出環出境出因出素出決出定出進出化出策出略出
+出 出 出 出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出 出C出使出本出本出e出n出t出P出h出a出s出e出 出=出 出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出[出A出I出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出軍出A出I出G出e出n出o出設置出e出 出的出e出w出G出e出n出o出設置出e出 出=出 出C出使出本出本出e出n出t出G出e出n出o出設置出e出;出
+出 出 出 出 出
+出 出 出 出 出s出w出i出t出c出h出 出(出C出使出本出本出e出n出t出P出h出a出s出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出A出d出a出p出t出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出適出應出階出段出：出微出調出現出有出特出徵出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出M出使出t出a出t出i出o出n出(出的出e出w出G出e出n出o出設置出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出L出e出a出本出n出i出n出成出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出學出習出階出段出：出從出環出境出中出學出習出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出G出e出n出o出設置出e出 出=出 出L出e出a出本出n出軍出本出o出設置出E出n出正出i出本出o出n出設置出e出n出t出(出C出使出本出本出e出n出t出G出e出n出o出設置出e出,出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出E出正出o出l出使出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出進出化出階出段出：出大出幅出變出化出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出M出使出t出a出t出i出o出n出(出的出e出w出G出e出n出o出設置出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出M出使出t出a出t出i出o出n出(出的出e出w出G出e出n出o出設置出e出)出;出 出/出/出 出雙出重出變出異出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出S出p出e出c出i出a出l出i出z出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出特出化出階出段出：出強出化出優出勢出特出徵出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出G出e出n出o出設置出e出 出=出 出S出p出e出c出i出a出l出i出z出e出G出e出n出o出設置出e出(出C出使出本出本出e出n出t出G出e出n出o出設置出e出,出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出新出基出因出組出適出應出度出
+出 出 出 出 出f出l出o出a出t出 出的出e出w出軍出i出t出n出e出s出s出 出=出 出E出正出a出l出使出a出t出e出軍出i出t出n出e出s出s出(出A出I出I出D出,出 出的出e出w出G出e出n出o出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出如出果出新出基出因出組出更出優出，出則出接出受出進出化出
+出 出 出 出 出i出f出 出(出的出e出w出軍出i出t出n出e出s出s出 出>出 出C出使出本出本出e出n出t出軍出i出t出n出e出s出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出G出e出n出o出設置出e出.出G出e出n出e出本出a出t出i出o出n出 出=出 出C出使出本出本出e出n出t出G出e出n出o出設置出e出.出G出e出n出e出本出a出t出i出o出n出 出+出 出1出;出
+出 出 出 出 出 出 出 出 出的出e出w出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出 出=出 出的出e出w出軍出i出t出n出e出s出s出;出
+出 出 出 出 出 出 出 出 出的出e出w出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出L出e出正出e出l出 出=出 出D出e出t出e出本出設置出i出n出e出軍出i出t出n出e出s出s出L出e出正出e出l出(出的出e出w出軍出i出t出n出e出s出s出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出A出I出G出e出n出o出設置出e出s出[出A出I出I出D出]出 出=出 出的出e出w出G出e出n出o出設置出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出記出錄出進出化出
+出 出 出 出 出 出 出 出 出R出e出c出o出本出d出E出正出o出l出使出t出i出o出n出(出A出I出I出D出,出 出C出使出本出本出e出n出t出G出e出n出o出設置出e出,出 出的出e出w出G出e出n出o出設置出e出,出 出T出E出X出T出(出"出E出n出正出i出本出o出n出設置出e出n出t出a出l出A出d出a出p出t出a出t出i出o出n出"出)出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出觸出發出進出化出事出件出
+出 出 出 出 出 出 出 出 出O出n出A出I出E出正出o出l出使出t出i出o出n出.出B出本出o出a出d出c出a出s出t出(出A出I出I出D出,出 出C出使出本出本出e出n出t出G出e出n出o出設置出e出,出 出的出e出w出G出e出n出o出設置出e出)出;出
+出 出 出 出 出 出 出 出 出O出n出軍出i出t出n出e出s出s出U出p出d出a出t出e出.出B出本出o出a出d出c出a出s出t出(出A出I出I出D出,出 出的出e出w出軍出i出t出n出e出s出s出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出 出A出I出 出%出s出 出e出正出o出l出正出e出d出 出t出o出 出成出e出n出e出本出a出t出i出o出n出 出%出d出 出w出i出t出h出 出f出i出t出n出e出s出s出 出%出.出3出f出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出*出A出I出I出D出,出 出的出e出w出G出e出n出o出設置出e出.出G出e出n出e出本出a出t出i出o出n出,出 出的出e出w出軍出i出t出n出e出s出s出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出進出化出階出段出
+出 出 出 出 出U出p出d出a出t出e出E出正出o出l出使出t出i出o出n出P出h出a出s出e出(出A出I出I出D出)出;出
+出}出
+出
+出軍出A出I出G出e出n出o出設置出e出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出C出本出o出s出s出o出正出e出本出G出e出n出o出設置出e出s出(出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出P出a出本出e出n出t出1出,出 出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出P出a出本出e出n出t出2出)出
+出{出
+出 出 出 出 出軍出A出I出G出e出n出o出設置出e出 出O出f出f出s出p出本出i出n出成出;出
+出 出 出 出 出O出f出f出s出p出本出i出n出成出.出G出e出n出o出設置出e出I出D出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出C出本出o出s出s出下出%出s出下出%出s出"出)出,出 出*出P出a出本出e出n出t出1出.出G出e出n出o出設置出e出I出D出,出 出*出P出a出本出e出n出t出2出.出G出e出n出o出設置出e出I出D出)出;出
+出 出 出 出 出O出f出f出s出p出本出i出n出成出.出G出e出n出e出本出a出t出i出o出n出 出=出 出軍出M出a出t出h出:出:出M出a出x出(出P出a出本出e出n出t出1出.出G出e出n出e出本出a出t出i出o出n出,出 出P出a出本出e出n出t出2出.出G出e出n出e出本出a出t出i出o出n出)出 出+出 出1出;出
+出 出 出 出 出O出f出f出s出p出本出i出n出成出.出P出a出本出e出n出t出G出e出n出o出設置出e出s出.出A出d出d出(出P出a出本出e出n出t出1出.出G出e出n出o出設置出e出I出D出)出;出
+出 出 出 出 出O出f出f出s出p出本出i出n出成出.出P出a出本出e出n出t出G出e出n出o出設置出e出s出.出A出d出d出(出P出a出本出e出n出t出2出.出G出e出n出o出設置出e出I出D出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出執出行出基出因出交出叉出
+出 出 出 出 出P出e出本出f出o出本出設置出C出本出o出s出s出o出正出e出本出(出O出f出f出s出p出本出i出n出成出,出 出P出a出本出e出n出t出1出,出 出P出a出本出e出n出t出2出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出應出用出變出異出
+出 出 出 出 出i出f出 出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出M出使出t出a出t出i出o出n出R出a出t出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出M出使出t出a出t出i出o出n出(出O出f出f出s出p出本出i出n出成出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出適出應出度出
+出 出 出 出 出O出f出f出s出p出本出i出n出成出.出軍出i出t出n出e出s出s出S出c出o出本出e出 出=出 出(出P出a出本出e出n出t出1出.出軍出i出t出n出e出s出s出S出c出o出本出e出 出+出 出P出a出本出e出n出t出2出.出軍出i出t出n出e出s出s出S出c出o出本出e出)出 出/出 出2出.出0出f出;出
+出 出 出 出 出O出f出f出s出p出本出i出n出成出.出軍出i出t出n出e出s出s出L出e出正出e出l出 出=出 出D出e出t出e出本出設置出i出n出e出軍出i出t出n出e出s出s出L出e出正出e出l出(出O出f出f出s出p出本出i出n出成出.出軍出i出t出n出e出s出s出S出c出o出本出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出O出f出f出s出p出本出i出n出成出;出
+出}出
+出
+出軍出A出I出G出e出n出o出設置出e出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出M出使出t出a出t出e出G出e出n出o出設置出e出(出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出,出 出f出l出o出a出t出 出M出使出t出a出t出i出o出n出I出n出t出e出n出s出i出t出y出)出
+出{出
+出 出 出 出 出軍出A出I出G出e出n出o出設置出e出 出M出使出t出a出t出e出d出G出e出n出o出設置出e出 出=出 出G出e出n出o出設置出e出;出
+出 出 出 出 出M出使出t出a出t出e出d出G出e出n出o出設置出e出.出G出e出n出o出設置出e出I出D出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出M出使出t出下出%出s出下出%出d出"出)出,出 出*出G出e出n出o出設置出e出.出G出e出n出o出設置出e出I出D出,出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出0出0出0出,出 出9出9出9出9出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出調出整出變出異出率出
+出 出 出 出 出f出l出o出a出t出 出O出本出i出成出i出n出a出l出M出使出t出a出t出i出o出n出R出a出t出e出 出=出 出M出使出t出a出t出i出o出n出R出a出t出e出;出
+出 出 出 出 出M出使出t出a出t出i出o出n出R出a出t出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出M出使出t出a出t出i出o出n出I出n出t出e出n出s出i出t出y出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出P出e出本出f出o出本出設置出M出使出t出a出t出i出o出n出(出M出使出t出a出t出e出d出G出e出n出o出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出恢出復出原出始出變出異出率出
+出 出 出 出 出M出使出t出a出t出i出o出n出R出a出t出e出 出=出 出O出本出i出成出i出n出a出l出M出使出t出a出t出i出o出n出R出a出t出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出重出新出評出估出適出應出度出
+出 出 出 出 出M出使出t出a出t出e出d出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出 出=出 出E出正出a出l出使出a出t出e出軍出i出t出n出e出s出s出(出T出E出X出T出(出"出"出)出,出 出M出使出t出a出t出e出d出G出e出n出o出設置出e出)出;出
+出 出 出 出 出M出使出t出a出t出e出d出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出L出e出正出e出l出 出=出 出D出e出t出e出本出設置出i出n出e出軍出i出t出n出e出s出s出L出e出正出e出l出(出M出使出t出a出t出e出d出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出M出使出t出a出t出e出d出G出e出n出o出設置出e出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出E出正出a出l出使出a出t出e出軍出i出t出n出e出s出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出,出 出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出T出o出t出a出l出軍出i出t出n出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出f出l出o出a出t出 出基本出e出i出成出h出t出S出使出設置出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出 出:出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出T出本出a出i出t出軍出i出t出n出e出s出s出 出=出 出C出a出l出c出使出l出a出t出e出T出本出a出i出t出軍出i出t出n出e出s出s出(出T出本出a出i出t出,出 出G出e出t出A出c出t出i出正出e出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出(出)出)出;出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出基本出e出i出成出h出t出 出=出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出基本出e出i出成出h出t出s出.出軍出i出n出d出R出e出f出(出T出本出a出i出t出.出T出本出a出i出t出的出a出設置出e出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出基本出e出i出成出h出t出 出>出 出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出o出t出a出l出軍出i出t出n出e出s出s出 出+出=出 出T出本出a出i出t出軍出i出t出n出e出s出s出 出*出 出基本出e出i出成出h出t出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出S出使出設置出 出+出=出 出基本出e出i出成出h出t出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出基本出e出i出成出h出t出S出使出設置出 出>出 出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出o出t出a出l出軍出i出t出n出e出s出s出 出/出=出 出基本出e出i出成出h出t出S出使出設置出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出進出化出階出段出調出整出適出應出度出
+出 出 出 出 出i出f出 出(出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出.出C出o出n出t出a出i出n出s出(出A出I出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出 出P出h出a出s出e出 出=出 出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出[出A出I出I出D出]出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出s出w出i出t出c出h出 出(出P出h出a出s出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出A出d出a出p出t出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出o出t出a出l出軍出i出t出n出e出s出s出 出*出=出 出1出.出1出f出;出 出/出/出 出適出應出階出段出加出成出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出L出e出a出本出n出i出n出成出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出o出t出a出l出軍出i出t出n出e出s出s出 出*出=出 出1出.出0出5出f出;出 出/出/出 出學出習出階出段出輕出微出加出成出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出E出正出o出l出使出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出o出t出a出l出軍出i出t出n出e出s出s出 出*出=出 出0出.出9出5出f出;出 出/出/出 出進出化出階出段出輕出微出懲出罰出（出風出險出）出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出S出p出e出c出i出a出l出i出z出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出o出t出a出l出軍出i出t出n出e出s出s出 出*出=出 出1出.出2出f出;出 出/出/出 出特出化出階出段出大出幅出加出成出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出o出t出a出l出軍出i出t出n出e出s出s出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出A出I出G出e出n出o出設置出e出>出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出S出e出l出e出c出t出B出e出s出t出G出e出n出o出設置出e出s出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出A出I出G出e出n出o出設置出e出>出&出 出P出o出p出使出l出a出t出i出o出n出,出 出i出n出t出3出2出 出S出e出l出e出c出t出i出o出n出C出o出使出n出t出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出A出I出G出e出n出o出設置出e出>出 出S出o出本出t出e出d出P出o出p出使出l出a出t出i出o出n出 出=出 出P出o出p出使出l出a出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出按出適出應出度出排出序出
+出 出 出 出 出S出o出本出t出e出d出P出o出p出使出l出a出t出i出o出n出.出S出o出本出t出(出[出]出(出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出A出,出 出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出B出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出A出.出軍出i出t出n出e出s出s出S出c出o出本出e出 出>出 出B出.出軍出i出t出n出e出s出s出S出c出o出本出e出;出
+出 出 出 出 出}出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出選出擇出前出的出個出最出佳出基出因出組出
+出 出 出 出 出T出A出本出本出a出y出<出軍出A出I出G出e出n出o出設置出e出>出 出B出e出s出t出G出e出n出o出設置出e出s出;出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出軍出M出a出t出h出:出:出M出i出n出(出S出e出l出e出c出t出i出o出n出C出o出使出n出t出,出 出S出o出本出t出e出d出P出o出p出使出l出a出t出i出o出n出.出的出使出設置出(出)出)出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出B出e出s出t出G出e出n出o出設置出e出s出.出A出d出d出(出S出o出本出t出e出d出P出o出p出使出l出a出t出i出o出n出[出i出]出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出B出e出s出t出G出e出n出o出設置出e出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出S出e出t出E出正出o出l出使出t出i出o出n出P出h出a出s出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出,出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出 出的出e出w出P出h出a出s出e出)出
+出{出
+出 出 出 出 出i出f出 出(出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出.出C出o出n出t出a出i出n出s出(出A出I出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出 出O出l出d出P出h出a出s出e出 出=出 出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出[出A出I出I出D出]出;出
+出 出 出 出 出 出 出 出 出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出[出A出I出I出D出]出 出=出 出的出e出w出P出h出a出s出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出O出n出E出正出o出l出使出t出i出o出n出P出h出a出s出e出.出B出本出o出a出d出c出a出s出t出(出A出I出I出D出,出 出的出e出w出P出h出a出s出e出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出 出A出I出 出%出s出 出e出正出o出l出使出t出i出o出n出 出p出h出a出s出e出 出c出h出a出n出成出e出d出 出f出本出o出設置出 出%出d出 出t出o出 出%出d出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出*出A出I出I出D出,出 出(出i出n出t出3出2出)出O出l出d出P出h出a出s出e出,出 出(出i出n出t出3出2出)出的出e出w出P出h出a出s出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出A出I出G出e出n出o出設置出e出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出G出e出t出A出I出G出e出n出o出設置出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出A出I出G出e出n出o出設置出e出s出.出軍出i出n出d出R出e出f出(出A出I出I出D出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出E出正出o出l出使出t出i出o出n出R出e出c出o出本出d出>出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出G出e出t出E出正出o出l出使出t出i出o出n出輸入出i出s出t出o出本出y出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出E出正出o出l出使出t出i出o出n出輸入出i出s出t出o出本出i出e出s出.出軍出i出n出d出R出e出f出(出A出I出I出D出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出S出e出t出E出正出o出l出使出t出i出o出n出P出a出本出a出設置出e出t出e出本出s出(出f出l出o出a出t出 出C出本出o出s出s出o出正出e出本出R出a出t出e出,出 出f出l出o出a出t出 出M出使出t出a出t出i出o出n出R出a出t出e出,出 出f出l出o出a出t出 出S出e出l出e出c出t出i出o出n出P出本出e出s出s出使出本出e出)出
+出{出
+出 出 出 出 出t出h出i出s出-出>出C出本出o出s出s出o出正出e出本出R出a出t出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出本出o出s出s出o出正出e出本出R出a出t出e出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出t出h出i出s出-出>出M出使出t出a出t出i出o出n出R出a出t出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出M出使出t出a出t出i出o出n出R出a出t出e出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出t出h出i出s出-出>出S出e出l出e出c出t出i出o出n出P出本出e出s出s出使出本出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出e出l出e出c出t出i出o出n出P出本出e出s出s出使出本出e出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出 出E出正出o出l出使出t出i出o出n出 出p出a出本出a出設置出e出t出e出本出s出 出使出p出d出a出t出e出d出 出-出 出C出本出o出s出s出o出正出e出本出:出 出%出.出2出f出,出 出M出使出t出a出t出i出o出n出:出 出%出.出2出f出,出 出S出e出l出e出c出t出i出o出n出:出 出%出.出2出f出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出t出h出i出s出-出>出C出本出o出s出s出o出正出e出本出R出a出t出e出,出 出t出h出i出s出-出>出M出使出t出a出t出i出o出n出R出a出t出e出,出 出t出h出i出s出-出>出S出e出l出e出c出t出i出o出n出P出本出e出s出s出使出本出e出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出P出本出o出c出e出s出s出B出a出t出c出h出E出正出o出l出使出t出i出o出n出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出A出I出I出D出s出)出
+出{出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出 出:出 出A出I出I出D出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出A出I出G出e出n出o出設置出e出s出.出C出o出n出t出a出i出n出s出(出A出I出I出D出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出 出=出 出G出e出t出A出c出t出i出正出e出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出本出o出c出e出s出s出E出正出o出l出使出t出i出o出n出(出A出I出I出D出,出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出G出e出t出E出正出o出l出使出t出i出o出n出S出t出a出t出i出s出t出i出c出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出S出t出a出t出i出s出t出i出c出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出計出算出平出均出適出應出度出
+出 出 出 出 出f出l出o出a出t出 出T出o出t出a出l出軍出i出t出n出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出i出n出t出3出2出 出V出a出l出i出d出G出e出n出o出設置出e出s出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出T出P出a出i出本出<出軍出S出t出本出i出n出成出,出 出軍出A出I出G出e出n出o出設置出e出>出&出 出P出a出i出本出 出:出 出A出I出G出e出n出o出設置出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出o出t出a出l出軍出i出t出n出e出s出s出 出+出=出 出P出a出i出本出.出V出a出l出使出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出;出
+出 出 出 出 出 出 出 出 出V出a出l出i出d出G出e出n出o出設置出e出s出+出+出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出V出a出l出i出d出G出e出n出o出設置出e出s出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出A出正出e出本出a出成出e出軍出i出t出n出e出s出s出"出)出,出 出T出o出t出a出l出軍出i出t出n出e出s出s出 出/出 出V出a出l出i出d出G出e出n出o出設置出e出s出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出計出算出最出高出適出應出度出
+出 出 出 出 出f出l出o出a出t出 出M出a出x出軍出i出t出n出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出T出P出a出i出本出<出軍出S出t出本出i出n出成出,出 出軍出A出I出G出e出n出o出設置出e出>出&出 出P出a出i出本出 出:出 出A出I出G出e出n出o出設置出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出M出a出x出軍出i出t出n出e出s出s出 出=出 出軍出M出a出t出h出:出:出M出a出x出(出M出a出x出軍出i出t出n出e出s出s出,出 出P出a出i出本出.出V出a出l出使出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出M出a出x出軍出i出t出n出e出s出s出"出)出,出 出M出a出x出軍出i出t出n出e出s出s出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出計出算出平出均出代出數出
+出 出 出 出 出f出l出o出a出t出 出T出o出t出a出l出G出e出n出e出本出a出t出i出o出n出 出=出 出0出.出0出f出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出T出P出a出i出本出<出軍出S出t出本出i出n出成出,出 出軍出A出I出G出e出n出o出設置出e出>出&出 出P出a出i出本出 出:出 出A出I出G出e出n出o出設置出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出o出t出a出l出G出e出n出e出本出a出t出i出o出n出 出+出=出 出P出a出i出本出.出V出a出l出使出e出.出G出e出n出e出本出a出t出i出o出n出;出
+出 出 出 出 出}出
+出 出 出 出 出i出f出 出(出V出a出l出i出d出G出e出n出o出設置出e出s出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出A出正出e出本出a出成出e出G出e出n出e出本出a出t出i出o出n出"出)出,出 出T出o出t出a出l出G出e出n出e出本出a出t出i出o出n出 出/出 出V出a出l出i出d出G出e出n出o出設置出e出s出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出統出計出進出化出階出段出分出佈出
+出 出 出 出 出T出M出a出p出<出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出,出 出i出n出t出3出2出>出 出P出h出a出s出e出C出o出使出n出t出s出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出T出P出a出i出本出<出軍出S出t出本出i出n出成出,出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出>出&出 出P出a出i出本出 出:出 出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出h出a出s出e出C出o出使出n出t出s出.出軍出i出n出d出O出本出A出d出d出(出P出a出i出本出.出V出a出l出使出e出)出+出+出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出A出d出a出p出t出a出t出i出o出n出P出h出a出s出e出C出o出使出n出t出"出)出,出 出P出h出a出s出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出A出d出a出p出t出a出t出i出o出n出)出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出L出e出a出本出n出i出n出成出P出h出a出s出e出C出o出使出n出t出"出)出,出 出P出h出a出s出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出L出e出a出本出n出i出n出成出)出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出E出正出o出l出使出t出i出o出n出P出h出a出s出e出C出o出使出n出t出"出)出,出 出P出h出a出s出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出E出正出o出l出使出t出i出o出n出)出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出S出p出e出c出i出a出l出i出z出a出t出i出o出n出P出h出a出s出e出C出o出使出n出t出"出)出,出 出P出h出a出s出e出C出o出使出n出t出s出.出軍出i出n出d出R出e出f出(出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出S出p出e出c出i出a出l出i出z出a出t出i出o出n出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出S出t出a出t出i出s出t出i出c出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出R出e出s出e出t出A出I出E出正出o出l出使出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出A出I出G出e出n出o出設置出e出s出.出C出o出n出t出a出i出n出s出(出A出I出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出 出=出 出A出I出G出e出n出o出設置出e出s出[出A出I出I出D出]出;出
+出 出 出 出 出 出 出 出 出G出e出n出o出設置出e出.出G出e出n出e出本出a出t出i出o出n出 出=出 出1出;出
+出 出 出 出 出 出 出 出 出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出 出=出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出L出e出正出e出l出 出=出 出E出A出I出軍出i出t出n出e出s出s出L出e出正出e出l出:出:出M出e出d出i出使出設置出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出重出置出特出徵出值出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出 出:出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出=出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出清出空出進出化出歷出史出
+出 出 出 出 出 出 出 出 出i出f出 出(出E出正出o出l出使出t出i出o出n出輸入出i出s出t出o出本出i出e出s出.出C出o出n出t出a出i出n出s出(出A出I出I出D出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出正出o出l出使出t出i出o出n出輸入出i出s出t出o出本出i出e出s出[出A出I出I出D出]出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出重出置出進出化出階出段出
+出 出 出 出 出 出 出 出 出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出[出A出I出I出D出]出 出=出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出A出d出a出p出t出a出t出i出o出n出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出 出A出I出 出%出s出 出e出正出o出l出使出t出i出o出n出 出本出e出s出e出t出"出)出,出 出*出A出I出I出D出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出P出e出本出f出o出本出設置出C出本出o出s出s出o出正出e出本出(出軍出A出I出G出e出n出o出設置出e出&出 出O出f出f出s出p出本出i出n出成出,出 出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出P出a出本出e出n出t出1出,出 出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出P出a出本出e出n出t出2出)出
+出{出
+出 出 出 出 出/出/出 出確出保出父出母出基出因出組出有出相出同出數出量出的出特出徵出
+出 出 出 出 出i出n出t出3出2出 出T出本出a出i出t出C出o出使出n出t出 出=出 出軍出M出a出t出h出:出:出M出i出n出(出P出a出本出e出n出t出1出.出T出本出a出i出t出s出.出的出使出設置出(出)出,出 出P出a出本出e出n出t出2出.出T出本出a出i出t出s出.出的出使出設置出(出)出)出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出T出本出a出i出t出C出o出使出n出t出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出i出 出<出 出P出a出本出e出n出t出1出.出T出本出a出i出t出s出.出的出使出設置出(出)出 出&出&出 出i出 出<出 出P出a出本出e出n出t出2出.出T出本出a出i出t出s出.出的出使出設置出(出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出混出合出特出徵出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出 出B出l出e出n出d出e出d出T出本出a出i出t出 出=出 出B出l出e出n出d出T出本出a出i出t出s出(出P出a出本出e出n出t出1出.出T出本出a出i出t出s出[出i出]出,出 出P出a出本出e出n出t出2出.出T出本出a出i出t出s出[出i出]出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出f出f出s出p出本出i出n出成出.出T出本出a出i出t出s出.出A出d出d出(出B出l出e出n出d出e出d出T出本出a出i出t出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出i出 出<出 出P出a出本出e出n出t出1出.出T出本出a出i出t出s出.出的出使出設置出(出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出f出f出s出p出本出i出n出成出.出T出本出a出i出t出s出.出A出d出d出(出P出a出本出e出n出t出1出.出T出本出a出i出t出s出[出i出]出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出i出 出<出 出P出a出本出e出n出t出2出.出T出本出a出i出t出s出.出的出使出設置出(出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出f出f出s出p出本出i出n出成出.出T出本出a出i出t出s出.出A出d出d出(出P出a出本出e出n出t出2出.出T出本出a出i出t出s出[出i出]出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出P出e出本出f出o出本出設置出M出使出t出a出t出i出o出n出(出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出)出
+出{出
+出 出 出 出 出f出o出本出 出(出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出 出:出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出M出使出t出a出t出i出o出n出R出a出t出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出執出行出變出異出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出M出使出t出a出t出i出o出n出A出設置出o出使出n出t出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出-出0出.出2出f出,出 出0出.出2出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出+出 出M出使出t出a出t出i出o出n出A出設置出o出使出n出t出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出偶出爾出調出整出變出異出率出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出0出.出1出f出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出i出t出.出M出使出t出a出t出i出o出n出R出a出t出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出本出a出i出t出.出M出使出t出a出t出i出o出n出R出a出t出e出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出-出0出.出0出5出f出,出 出0出.出0出5出f出)出,出 出0出.出0出1出f出,出 出0出.出5出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出T出本出a出i出t出軍出i出t出n出e出s出s出(出c出o出n出s出t出 出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出,出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出B出a出s出e出軍出i出t出n出e出s出s出 出=出 出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出環出境出因出素出調出整出適出應出度出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出a出c出t出o出本出 出:出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出軍出a出c出t出o出本出 出=出=出 出T出本出a出i出t出.出T出本出a出i出t出的出a出設置出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出B出a出s出e出軍出i出t出n出e出s出s出 出*出=出 出1出.出2出f出;出 出/出/出 出環出境出匹出配出加出成出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出B出a出s出e出軍出i出t出n出e出s出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出U出p出d出a出t出e出E出正出o出l出使出t出i出o出n出P出h出a出s出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出A出I出G出e出n出o出設置出e出s出.出C出o出n出t出a出i出n出s出(出A出I出I出D出)出 出出出出出 出!出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出.出C出o出n出t出a出i出n出s出(出A出I出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出 出=出 出A出I出G出e出n出o出設置出e出s出[出A出I出I出D出]出;出
+出 出 出 出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出 出C出使出本出本出e出n出t出P出h出a出s出e出 出=出 出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出[出A出I出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出適出應出度出和出代出數出決出定出是出否出轉出換出階出段出
+出 出 出 出 出b出o出o出l出 出S出h出o出使出l出d出A出d出正出a出n出c出e出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出
+出 出 出 出 出s出w出i出t出c出h出 出(出C出使出本出本出e出n出t出P出h出a出s出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出A出d出a出p出t出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出 出>出 出0出.出6出f出 出&出&出 出G出e出n出o出設置出e出.出G出e出n出e出本出a出t出i出o出n出 出>出=出 出3出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出h出o出使出l出d出A出d出正出a出n出c出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出L出e出a出本出n出i出n出成出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出 出>出 出0出.出7出f出 出&出&出 出G出e出n出o出設置出e出.出G出e出n出e出本出a出t出i出o出n出 出>出=出 出5出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出h出o出使出l出d出A出d出正出a出n出c出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出E出正出o出l出使出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出 出>出 出0出.出8出f出 出&出&出 出G出e出n出o出設置出e出.出G出e出n出e出本出a出t出i出o出n出 出>出=出 出8出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出h出o出使出l出d出A出d出正出a出n出c出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出:出:出S出p出e出c出i出a出l出i出z出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出特出化出階出段出是出終出極出階出段出，出不出會出自出動出轉出換出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出S出h出o出使出l出d出A出d出正出a出n出c出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出 出的出e出w出P出h出a出s出e出 出=出 出(出E出E出正出o出l出使出t出i出o出n出P出h出a出s出e出)出(出(出i出n出t出3出2出)出C出使出本出本出e出n出t出P出h出a出s出e出 出+出 出1出)出;出
+出 出 出 出 出 出 出 出 出S出e出t出E出正出o出l出使出t出i出o出n出P出h出a出s出e出(出A出I出I出D出,出 出的出e出w出P出h出a出s出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出R出e出c出o出本出d出E出正出o出l出使出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出,出 出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出O出l出d出G出e出n出o出設置出e出,出 出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出的出e出w出G出e出n出o出設置出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出本出i出成出成出e出本出)出
+出{出
+出 出 出 出 出軍出E出正出o出l出使出t出i出o出n出R出e出c出o出本出d出 出R出e出c出o出本出d出;出
+出 出 出 出 出R出e出c出o出本出d出.出R出e出c出o出本出d出I出D出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出E出正出o出l出使出t出i出o出n出下出%出s出下出%出s出"出)出,出 出*出A出I出I出D出,出 出*出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出.出T出o出S出t出本出i出n出成出(出)出)出;出
+出 出 出 出 出R出e出c出o出本出d出.出T出i出設置出e出s出t出a出設置出p出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出R出e出c出o出本出d出.出P出h出a出s出e出 出=出 出A出I出E出正出o出l出使出t出i出o出n出P出h出a出s出e出s出.出軍出i出n出d出R出e出f出(出A出I出I出D出)出;出
+出 出 出 出 出R出e出c出o出本出d出.出P出本出e出正出i出o出使出s出G出e出n出o出設置出e出 出=出 出O出l出d出G出e出n出o出設置出e出;出
+出 出 出 出 出R出e出c出o出本出d出.出C出使出本出本出e出n出t出G出e出n出o出設置出e出 出=出 出的出e出w出G出e出n出o出設置出e出;出
+出 出 出 出 出R出e出c出o出本出d出.出E出正出o出l出使出t出i出o出n出T出本出i出成出成出e出本出 出=出 出T出本出i出成出成出e出本出;出
+出 出 出 出 出R出e出c出o出本出d出.出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出 出=出 出G出e出t出A出c出t出i出正出e出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出E出正出o出l出使出t出i出o出n出輸入出i出s出t出o出本出i出e出s出.出C出o出n出t出a出i出n出s出(出A出I出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出o出l出使出t出i出o出n出輸入出i出s出t出o出本出i出e出s出[出A出I出I出D出]出.出A出d出d出(出R出e出c出o出本出d出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出限出制出歷出史出記出錄出數出量出
+出 出 出 出 出 出 出 出 出i出f出 出(出E出正出o出l出使出t出i出o出n出輸入出i出s出t出o出本出i出e出s出[出A出I出I出D出]出.出的出使出設置出(出)出 出>出 出1出0出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出正出o出l出使出t出i出o出n出輸入出i出s出t出o出本出i出e出s出[出A出I出I出D出]出.出R出e出設置出o出正出e出A出t出(出0出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出A出d出a出p出t出a出t出i出o出n出軍出i出t出n出e出s出s出(出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出)出
+出{出
+出 出 出 出 出/出/出 出適出應出階出段出：出穩出定出性出和出基出礎出能出力出
+出 出 出 出 出f出l出o出a出t出 出A出d出a出p出t出a出t出i出o出n出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出 出:出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出獎出勵出中出等出且出穩出定出的出特出徵出值出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出S出t出a出b出i出l出i出t出y出S出c出o出本出e出 出=出 出1出.出0出f出 出-出 出軍出M出a出t出h出:出:出A出b出s出(出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出-出 出0出.出5出f出)出;出
+出 出 出 出 出 出 出 出 出A出d出a出p出t出a出t出i出o出n出S出c出o出本出e出 出+出=出 出S出t出a出b出i出l出i出t出y出S出c出o出本出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出.出的出使出設置出(出)出 出>出 出0出 出基本出 出A出d出a出p出t出a出t出i出o出n出S出c出o出本出e出 出/出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出.出的出使出設置出(出)出 出:出 出0出.出0出f出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出L出e出a出本出n出i出n出成出軍出i出t出n出e出s出s出(出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出)出
+出{出
+出 出 出 出 出/出/出 出學出習出階出段出：出學出習出能出力出和出適出應出性出
+出 出 出 出 出f出l出o出a出t出 出L出e出a出本出n出i出n出成出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出 出:出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出獎出勵出高出變出異出率出（出學出習出潛出力出）出
+出 出 出 出 出 出 出 出 出L出e出a出本出n出i出n出成出S出c出o出本出e出 出+出=出 出T出本出a出i出t出.出M出使出t出a出t出i出o出n出R出a出t出e出 出*出 出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出.出的出使出設置出(出)出 出>出 出0出 出基本出 出L出e出a出本出n出i出n出成出S出c出o出本出e出 出/出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出.出的出使出設置出(出)出 出:出 出0出.出0出f出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出E出正出o出l出使出t出i出o出n出軍出i出t出n出e出s出s出(出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出)出
+出{出
+出 出 出 出 出/出/出 出進出化出階出段出：出創出新出和出多出樣出性出
+出 出 出 出 出f出l出o出a出t出 出E出正出o出l出使出t出i出o出n出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出 出:出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出獎出勵出極出端出特出徵出值出（出專出業出化出）出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出E出x出t出本出e出設置出e出n出e出s出s出 出=出 出軍出M出a出t出h出:出:出M出a出x出(出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出,出 出1出.出0出f出 出-出 出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出)出;出
+出 出 出 出 出 出 出 出 出E出正出o出l出使出t出i出o出n出S出c出o出本出e出 出+出=出 出E出x出t出本出e出設置出e出n出e出s出s出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出.出的出使出設置出(出)出 出>出 出0出 出基本出 出E出正出o出l出使出t出i出o出n出S出c出o出本出e出 出/出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出.出的出使出設置出(出)出 出:出 出0出.出0出f出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出S出p出e出c出i出a出l出i出z出a出t出i出o出n出軍出i出t出n出e出s出s出(出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出)出
+出{出
+出 出 出 出 出/出/出 出特出化出階出段出：出專出業出化出和出優出勢出特出徵出
+出 出 出 出 出f出l出o出a出t出 出S出p出e出c出i出a出l出i出z出a出t出i出o出n出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出 出:出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出獎出勵出高出特出徵出值出和出低出變出異出率出（出穩出定出的出專出業出化出）出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出>出 出0出.出8出f出 出&出&出 出T出本出a出i出t出.出M出使出t出a出t出i出o出n出R出a出t出e出 出<出 出0出.出1出f出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出p出e出c出i出a出l出i出z出a出t出i出o出n出S出c出o出本出e出 出+出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出.出的出使出設置出(出)出 出>出 出0出 出基本出 出S出p出e出c出i出a出l出i出z出a出t出i出o出n出S出c出o出本出e出 出/出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出.出的出使出設置出(出)出 出:出 出0出.出0出f出;出
+出}出
+出
+出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出B出l出e出n出d出T出本出a出i出t出s出(出c出o出n出s出t出 出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出1出,出 出c出o出n出s出t出 出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出2出)出
+出{出
+出 出 出 出 出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出 出B出l出e出n出d出e出d出T出本出a出i出t出;出
+出 出 出 出 出B出l出e出n出d出e出d出T出本出a出i出t出.出T出本出a出i出t出的出a出設置出e出 出=出 出T出本出a出i出t出1出.出T出本出a出i出t出的出a出設置出e出;出
+出 出 出 出 出B出l出e出n出d出e出d出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出=出 出(出T出本出a出i出t出1出.出T出本出a出i出t出V出a出l出使出e出 出+出 出T出本出a出i出t出2出.出T出本出a出i出t出V出a出l出使出e出)出 出/出 出2出.出0出f出;出
+出 出 出 出 出B出l出e出n出d出e出d出T出本出a出i出t出.出M出使出t出a出t出i出o出n出R出a出t出e出 出=出 出(出T出本出a出i出t出1出.出M出使出t出a出t出i出o出n出R出a出t出e出 出+出 出T出本出a出i出t出2出.出M出使出t出a出t出i出o出n出R出a出t出e出)出 出/出 出2出.出0出f出;出
+出 出 出 出 出B出l出e出n出d出e出d出T出本出a出i出t出.出I出n出h出e出本出i出t出a出n出c出e出S出t出本出e出n出成出t出h出 出=出 出(出T出本出a出i出t出1出.出I出n出h出e出本出i出t出a出n出c出e出S出t出本出e出n出成出t出h出 出+出 出T出本出a出i出t出2出.出I出n出h出e出本出i出t出a出n出c出e出S出t出本出e出n出成出t出h出)出 出/出 出2出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出B出l出e出n出d出e出d出T出本出a出i出t出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出S出h出o出使出l出d出E出正出o出l出正出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出A出I出G出e出n出o出設置出e出s出.出C出o出n出t出a出i出n出s出(出A出I出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出 出=出 出A出I出G出e出n出o出設置出e出s出[出A出I出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出代出數出限出制出
+出 出 出 出 出i出f出 出(出G出e出n出o出設置出e出.出G出e出n出e出本出a出t出i出o出n出 出>出=出 出M出a出x出G出e出n出e出本出a出t出i出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出適出應出度出閾出值出
+出 出 出 出 出i出f出 出(出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出 出>出=出 出軍出i出t出n出e出s出s出T出h出本出e出s出h出o出l出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出隨出機出進出化出機出率出
+出 出 出 出 出f出l出o出a出t出 出E出正出o出l出使出t出i出o出n出C出h出a出n出c出e出 出=出 出0出.出3出f出 出+出 出(出1出.出0出f出 出-出 出G出e出n出o出設置出e出.出軍出i出t出n出e出s出s出S出c出o出本出e出)出 出*出 出0出.出5出f出;出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出E出正出o出l出使出t出i出o出n出C出h出a出n出c出e出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出G出e出t出A出c出t出i出正出e出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出軍出a出c出t出o出本出s出;出
+出 出 出 出 出軍出a出c出t出o出本出s出.出A出d出d出(出T出E出X出T出(出"出C出o出設置出b出a出t出P出e出本出f出o出本出設置出a出n出c出e出"出)出)出;出
+出 出 出 出 出軍出a出c出t出o出本出s出.出A出d出d出(出T出E出X出T出(出"出E出c出o出n出o出設置出i出c出E出f出f出i出c出i出e出n出c出y出"出)出)出;出
+出 出 出 出 出軍出a出c出t出o出本出s出.出A出d出d出(出T出E出X出T出(出"出S出t出本出a出t出e出成出i出c出P出l出a出n出n出i出n出成出"出)出)出;出
+出 出 出 出 出軍出a出c出t出o出本出s出.出A出d出d出(出T出E出X出T出(出"出A出d出a出p出t出a出b出i出l出i出t出y出"出)出)出;出
+出 出 出 出 出軍出a出c出t出o出本出s出.出A出d出d出(出T出E出X出T出(出"出L出e出a出本出n出i出n出成出S出p出e出e出d出"出)出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出軍出a出c出t出o出本出s出;出
+出}出
+出
+出E出A出I出軍出i出t出n出e出s出s出L出e出正出e出l出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出D出e出t出e出本出設置出i出n出e出軍出i出t出n出e出s出s出L出e出正出e出l出(出f出l出o出a出t出 出軍出i出t出n出e出s出s出S出c出o出本出e出)出
+出{出
+出 出 出 出 出i出f出 出(出軍出i出t出n出e出s出s出S出c出o出本出e出 出>出=出 出0出.出9出f出)出 出本出e出t出使出本出n出 出E出A出I出軍出i出t出n出e出s出s出L出e出正出e出l出:出:出E出x出c出e出p出t出i出o出n出a出l出;出
+出 出 出 出 出i出f出 出(出軍出i出t出n出e出s出s出S出c出o出本出e出 出>出=出 出0出.出8出f出)出 出本出e出t出使出本出n出 出E出A出I出軍出i出t出n出e出s出s出L出e出正出e出l出:出:出V出e出本出y出輸入出i出成出h出;出
+出 出 出 出 出i出f出 出(出軍出i出t出n出e出s出s出S出c出o出本出e出 出>出=出 出0出.出6出f出)出 出本出e出t出使出本出n出 出E出A出I出軍出i出t出n出e出s出s出L出e出正出e出l出:出:出輸入出i出成出h出;出
+出 出 出 出 出i出f出 出(出軍出i出t出n出e出s出s出S出c出o出本出e出 出>出=出 出0出.出4出f出)出 出本出e出t出使出本出n出 出E出A出I出軍出i出t出n出e出s出s出L出e出正出e出l出:出:出M出e出d出i出使出設置出;出
+出 出 出 出 出i出f出 出(出軍出i出t出n出e出s出s出S出c出o出本出e出 出>出=出 出0出.出2出f出)出 出本出e出t出使出本出n出 出E出A出I出軍出i出t出n出e出s出s出L出e出正出e出l出:出:出L出o出w出;出
+出 出 出 出 出本出e出t出使出本出n出 出E出A出I出軍出i出t出n出e出s出s出L出e出正出e出l出:出:出V出e出本出y出L出o出w出;出
+出}出
+出
+出軍出A出I出G出e出n出o出設置出e出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出L出e出a出本出n出軍出本出o出設置出E出n出正出i出本出o出n出設置出e出n出t出(出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出,出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出)出
+出{出
+出 出 出 出 出軍出A出I出G出e出n出o出設置出e出 出L出e出a出本出n出e出d出G出e出n出o出設置出e出 出=出 出G出e出n出o出設置出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出環出境出因出素出調出整出特出徵出
+出 出 出 出 出f出o出本出 出(出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出 出:出 出L出e出a出本出n出e出d出G出e出n出o出設置出e出.出T出本出a出i出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出a出c出t出o出本出 出:出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出軍出a出c出t出o出本出 出=出=出 出T出本出a出i出t出.出T出本出a出i出t出的出a出設置出e出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出增出強出匹出配出環出境出的出特出徵出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出+出 出0出.出1出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出i出t出.出M出使出t出a出t出i出o出n出R出a出t出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出本出a出i出t出.出M出使出t出a出t出i出o出n出R出a出t出e出 出-出 出0出.出0出2出f出,出 出0出.出0出1出f出,出 出0出.出5出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出L出e出a出本出n出e出d出G出e出n出o出設置出e出;出
+出}出
+出
+出軍出A出I出G出e出n出o出設置出e出 出U出M出i出n出成出R出T出S出E出正出o出l出使出t出i出o出n出a出本出y出A出I出S出y出s出t出e出設置出:出:出S出p出e出c出i出a出l出i出z出e出G出e出n出o出設置出e出(出c出o出n出s出t出 出軍出A出I出G出e出n出o出設置出e出&出 出G出e出n出o出設置出e出,出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出)出
+出{出
+出 出 出 出 出軍出A出I出G出e出n出o出設置出e出 出S出p出e出c出i出a出l出i出z出e出d出G出e出n出o出設置出e出 出=出 出G出e出n出o出設置出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出找出出出最出強出的出特出徵出並出進出一出步出強出化出
+出 出 出 出 出f出l出o出a出t出 出M出a出x出T出本出a出i出t出V出a出l出使出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出軍出S出t出本出i出n出成出 出S出t出本出o出n出成出e出s出t出T出本出a出i出t出的出a出設置出e出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出 出:出 出G出e出n出o出設置出e出.出T出本出a出i出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出>出 出M出a出x出T出本出a出i出t出V出a出l出使出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出M出a出x出T出本出a出i出t出V出a出l出使出e出 出=出 出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出本出o出n出成出e出s出t出T出本出a出i出t出的出a出設置出e出 出=出 出T出本出a出i出t出.出T出本出a出i出t出的出a出設置出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出強出化出最出強出特出徵出
+出 出 出 出 出f出o出本出 出(出軍出E出正出o出l出使出t出i出o出n出a出本出y出T出本出a出i出t出&出 出T出本出a出i出t出 出:出 出S出p出e出c出i出a出l出i出z出e出d出G出e出n出o出設置出e出.出T出本出a出i出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出本出a出i出t出.出T出本出a出i出t出的出a出設置出e出 出=出=出 出S出t出本出o出n出成出e出s出t出T出本出a出i出t出的出a出設置出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出+出 出0出.出1出5出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出i出t出.出M出使出t出a出t出i出o出n出R出a出t出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出本出a出i出t出.出M出使出t出a出t出i出o出n出R出a出t出e出 出-出 出0出.出0出5出f出,出 出0出.出0出1出f出,出 出0出.出5出f出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出削出弱出其出他出特出徵出以出專出注出於出強出項出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出本出a出i出t出.出T出本出a出i出t出V出a出l出使出e出 出-出 出0出.出0出5出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出S出p出e出c出i出a出l出i出z出e出d出G出e出n出o出設置出e出;出
+出}出
+出

@@ -1,107 +1,113 @@
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Cultural Adaptation System - C1-1
+// Provides region-specific content adaptation and cultural preferences
+
 #pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "MingRTSCulturalAdaptationSystem.generated.h"
 
 UENUM(BlueprintType)
-enum class ECulturalRegion: uint8 {
-    EastAsia, UMETA(DisplayName = "East Asia"),
-    SoutheastAsia, UMETA(DisplayName = "Southeast Asia"),
-    SouthAsia, UMETA(DisplayName = "South Asia"),
-    MiddleEast, UMETA(DisplayName = "Middle East"),
-    WesternEurope, UMETA(DisplayName = "Western Europe"),
-    EasternEurope, UMETA(DisplayName = "Eastern Europe"),
-    NorthAmerica, UMETA(DisplayName = "North America"),
-    LatinAmerica, UMETA(DisplayName = "Latin America"),
-    Oceania, UMETA(DisplayName = "Oceania"),
-    Africa, UMETA(DisplayName = "Africa"),
-    Global, UMETA(DisplayName = "Global")
+enum class ECulturalRegion : uint8 {
+    EastAsia            UMETA(DisplayName = "東亞"),
+    SoutheastAsia       UMETA(DisplayName = "東南亞"),
+    SouthAsia           UMETA(DisplayName = "南亞"),
+    MiddleEast          UMETA(DisplayName = "中東"),
+    WesternEurope       UMETA(DisplayName = "西歐"),
+    EasternEurope       UMETA(DisplayName = "東歐"),
+    NorthAmerica        UMETA(DisplayName = "北美"),
+    LatinAmerica        UMETA(DisplayName = "拉丁美洲"),
+    Oceania             UMETA(DisplayName = "大洋洲"),
+    Africa              UMETA(DisplayName = "非洲"),
+    Global              UMETA(DisplayName = "全球")
 };
 
 UENUM(BlueprintType)
-enum class EContentVariant: uint8 {
-    Default, UMETA(DisplayName = "Default"),
-    Regional, UMETA(DisplayName = "Regional"),
-    Cultural, UMETA(DisplayName = "Cultural"),
-    Religious, UMETA(DisplayName = "Religious"),
-    Historical, UMETA(DisplayName = "Historical"),
-    Custom, UMETA(DisplayName = "Custom")
+enum class ECulturalContentVariant : uint8 {
+    Default,           UMETA(DisplayName = "Default"),
+    Regional,         UMETA(DisplayName = "Regional"),
+    Cultural,         UMETA(DisplayName = "Cultural"),
+    Religious,        UMETA(DisplayName = "Religious"),
+    InputStyle,       UMETA(DisplayName = "Input Style"),
+    Custom,           UMETA(DisplayName = "Custom")
 };
 
-// Content variant structure for regional adaptations
 USTRUCT(BlueprintType)
-struct FCulturalVariant
+struct FRegionalContentVariant
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regional Content")
     ECulturalRegion Region;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regional Content")
+    ECulturalContentVariant Variant;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regional Content")
     FString AdaptedContent;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regional Content")
     bool bEnabled;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regional Content")
     int32 MinAge;
 
-    FCulturalVariant()
+    FRegionalContentVariant()
         : Region(ECulturalRegion::Global)
+        , Variant(ECulturalContentVariant::Default)
         , AdaptedContent(TEXT(""))
         , bEnabled(true)
         , MinAge(0)
     {}
 };
 
-// Regional gameplay parameters structure
 USTRUCT(BlueprintType)
 struct FRegionalGameplayParams
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regional Gameplay")
     float DifficultyMultiplier;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regional Gameplay")
     float ResourceMultiplier;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regional Gameplay")
     float AIAggressiveness;
 
-    UPROPERTY(BlueprintReadWrite)
-    float TutorialPacing;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Regional Gameplay")
+    float TotalPacing;
 
     FRegionalGameplayParams()
         : DifficultyMultiplier(1.0f)
         , ResourceMultiplier(1.0f)
         , AIAggressiveness(1.0f)
-        , TutorialPacing(1.0f)
+        , TotalPacing(1.0f)
     {}
 };
 
-// Cultural preferences structure
 USTRUCT(BlueprintType)
 struct FRTSCulturalPreferences
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cultural Preferences")
     ECulturalRegion PrimaryRegion;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cultural Preferences")
     int32 UserAge;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cultural Preferences")
     int32 ContentSensitivityLevel;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cultural Preferences")
     bool bEnableCulturalEvents;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cultural Preferences")
     bool bPreferHistoricalAccuracy;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cultural Preferences")
     bool bEnableRegionalArtVariants;
 
     FRTSCulturalPreferences()
@@ -114,22 +120,21 @@ struct FRTSCulturalPreferences
     {}
 };
 
-// Cache statistics structure
 USTRUCT(BlueprintType)
 struct FCacheStatistics
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cache")
     int32 TotalRequests;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cache")
     int32 CacheHits;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cache")
     int32 CacheMisses;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cache")
     double HitRate;
 
     FCacheStatistics()
@@ -161,19 +166,19 @@ public:
     ECulturalRegion GetCurrentRegion() const;
 
     UFUNCTION(BlueprintCallable, Category = "Cultural Adaptation")
-    FString GetAdaptedContent(const FString& ContentKey, EContentVariant Variant);
+    FString GetAdaptedContent(const FString& ContentKey, ECulturalContentVariant Variant);
 
     UFUNCTION(BlueprintCallable, Category = "Cultural Adaptation")
     bool ApplyRegionalGameplaySettings();
 
     UFUNCTION(BlueprintPure, Category = "Cultural Adaptation")
-    FString GetAdaptedContentForCurrentRegion(const FString& ContentKey);
+    FString GetAdaptedContentForAllRegions(const FString& ContentKey) const;
 
-    UFUNCTION(BlueprintPure, Category = "Cultural Adaptation")
+    UFUNCTION(BlueprintCallable, Category = "Cultural Adaptation")
     bool IsContentAllowed(const FString& ContentKey, int32 UserAge, ECulturalRegion Region);
 
     UFUNCTION(BlueprintPure, Category = "Cultural Adaptation")
-    TArray<FCulturalVariant> GetAvailableVariants(const FString& ContentKey);
+    TArray<FRegionalContentVariant> GetAvailableVariants(const FString& ContentKey) const;
 
     UFUNCTION(BlueprintCallable, Category = "Cultural Adaptation")
     bool LoadRegionalContentPack(ECulturalRegion Region);
@@ -182,10 +187,10 @@ public:
     void UnloadRegionalContentPack(ECulturalRegion Region);
 
     UFUNCTION(BlueprintPure, Category = "Cultural Adaptation")
-    FRegionalGameplayParams GetRegionalGameplayParams(ECulturalRegion Region);
+    FRegionalGameplayParams GetRegionalGameplayParams(ECulturalRegion Region) const;
 
     UFUNCTION(BlueprintCallable, Category = "Cultural Adaptation")
-    void DetectRegionFromIP();
+    void DetectRegionByIP();
 
     UFUNCTION(BlueprintCallable, Category = "Cultural Adaptation")
     void SaveCulturalPreferences();
@@ -194,16 +199,16 @@ public:
     void LoadCulturalPreferences();
 
     UFUNCTION(BlueprintPure, Category = "Cultural Adaptation")
-    TArray<FString> GetRegionalHolidays(ECulturalRegion Region, int32 Year);
+    TArray<FString> GetRegionalHolidays(ECulturalRegion Region, int32 Year) const;
 
     UFUNCTION(BlueprintPure, Category = "Cultural Adaptation")
-    bool IsRegionalHoliday(ECulturalRegion Region);
+    bool IsRegionalHoliday(ECulturalRegion Region) const;
 
     UFUNCTION(BlueprintPure, Category = "Cultural Adaptation")
-    FString GetRegionDisplayName(ECulturalRegion Region);
+    FString GetRegionDisplayName(ECulturalRegion Region) const;
 
     UFUNCTION(BlueprintPure, Category = "Cultural Adaptation")
-    TArray<ECulturalRegion> GetAllRegions();
+    TArray<ECulturalRegion> GetAllRegions() const;
 
     UFUNCTION(BlueprintCallable, Category = "Cultural Adaptation")
     void SetCulturalPreferences(const FRTSCulturalPreferences& NewPreferences);
@@ -221,46 +226,45 @@ protected:
     UPROPERTY()
     TMap<FString, FString> AdaptedContent;
 
-    // Cache management
-    mutable int32 CacheAccessCounter;
-    mutable FCriticalSection ContentCacheLock;
-    mutable TMap<FString, FString> ContentCache;
-    mutable TArray<FString> LRUOrder;
-    mutable FCacheStatistics CacheStats;
+    UPROPERTY()
+    int32 CacheAccessCount;
+    UPROPERTY()
+    FCriticalSection ContentCacheLock;
+    UPROPERTY()
+    TMap<FString, FString> ContentCache;
+    UPROPERTY()
+    TArray<FString> LRUOrder;
+    UPROPERTY()
+    FCacheStatistics CacheStats;
 
-    // Content and regional data
-    TMap<FString, TArray<FCulturalVariant>> ContentVariants;
+    UPROPERTY()
+    TMap<FString, TArray<FRegionalContentVariant>> ContentVariants;
+    UPROPERTY()
     TMap<ECulturalRegion, FRegionalGameplayParams> RegionalParams;
+    UPROPERTY()
     TMap<ECulturalRegion, bool> LoadedContentPacks;
+    UPROPERTY()
     FRTSCulturalPreferences Preferences;
 
-    // Event delegates
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRegionChanged, ECulturalRegion, NewRegion);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRegionDetectionCompleted, ECulturalRegion, DetectedRegion);
-    
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRegionDetectionCompleted, ECulturalRegion, DetectedRegion, FString, CountryCode);
+
     UPROPERTY(BlueprintAssignable)
     FOnRegionChanged OnRegionChanged;
-    
+
     UPROPERTY(BlueprintAssignable)
     FOnRegionDetectionCompleted OnRegionDetectionCompleted;
 
     void InitializeRegionalContent();
     FString AdaptContentForRegion(const FString& Content, ECulturalRegion Region);
-
-private:
-    void InitializeDefaultContent();
-    void LoadContentVariants();
     void InitializeRegionalParams();
-    ECulturalRegion DetectRegionFromSystem() const;
-    const FCulturalVariant* FindBestVariant(const FString& ContentKey, ECulturalRegion Region) const;
-    bool CheckContentRating(const FCulturalVariant& Variant, int32 UserAge) const;
+    ECulturalRegion DetectRegionBySystem() const;
+    const FRegionalContentVariant* FindBestVariant(const FString& ContentKey, ECulturalRegion Region) const;
+    bool CheckContentRating(const FRegionalContentVariant& Variant, int32 UserAge) const;
     void OnIPRegionDetected(const FString& CountryCode);
     void UpdateLRUOrder(const FString& CacheKey) const;
     void CheckAndTrimCache();
 
-    // Helper data
+private:
     TMap<FString, FString> DefaultContent;
 };
-
-#include "MingRTSCulturalAdaptationSystem.generated.h"
-

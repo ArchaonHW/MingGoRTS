@@ -14,26 +14,26 @@ class APlayerController;
 UENUM(BlueprintType)
 enum class ESceneType : uint8
 {
-    Battle,         // X??X??
-    Village,        // X??
-    Palace,         // ?c??X??
-    Forest,         // ??X??
-    Mountain,       // ?s?aX??
-    River,          // ?eX??
-    Desert,         // ?FX??
-    City,           // X??
-    Temple,         // ?xX??
-    Battlefield,    // X??X??
-    Custom,         // ??w?q摧毀
+    Battle,         // 務池?
+    Village,        // X動
+    Palace,         // c池?
+    Forest,         // 池
+    Mountain,       // saX動
+    River,          // ?eX動
+    Desert,         // ?FX動
+    City,           // X動
+    Temple,         // ?xX動
+    Battlefield,    // 務池?
+    Custom,         // 動w?q摧毀
 };
 
 UENUM(BlueprintType)
 enum class ESceneComplexity : uint8
 {
-    Simple,         // 2??X??
-    Medium,         // ??X??
-    Complex,        // ??X??
-    Epic            // X??X??
+    Simple,         // 2池
+    Medium,         // 池
+    Complex,        // 池
+    Epic            // 務池?
 };
 
 UENUM(BlueprintType)
@@ -41,14 +41,14 @@ enum class ESceneStyle : uint8
 {
     Realistic,      // ?g摧毀
     Stylized,       // 摧毀?
-    Cartoon,        // ?d?q摧毀
-    Watercolor,     // ??m摧毀
-    Ink,            // 摧毀???
-    OilPainting,    // ?o?e摧毀
-    PixelArt,       // 摧毀???N
-    LowPoly,        // ?C?h???
-    CelShaded,      // ???i?i摧毀
-    Photorealistic,  // 摧毀?u??
+    Cartoon,        // dq摧毀
+    Watercolor,     // 動m摧毀
+    Ink,            // 摧毀動?
+    OilPainting,    // oe摧毀
+    PixelArt,       // 摧毀動?N
+    LowPoly,        // Ch動?
+    CelShaded,      // 動ii摧毀
+    Photorealistic,  // 摧毀?u動
 };
 
 USTRUCT(BlueprintType)
@@ -153,7 +153,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSceneGenerationCompleted, const 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSceneGenerationFailed, const FString&, SceneName, const FString&, ErrorMessage};
 
 /**
- * X??X * X?D??X?e?X摧毀X??
+ * X動X * 務D?池e務摧毀X動
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGCORE_API UMingAutoSceneGenerator : public UObject
@@ -163,10 +163,10 @@ class MINGCORE_API UMingAutoSceneGenerator : public UObject
 public:
     UMingAutoSceneGenerator(};
 
-    // X?tX    UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
+    // 務tX    UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     void InitializeAutoSceneGenerator(};
 
-    // X??X
+    // X動X
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     FString GenerateScene(const FSceneRequirement& Requirements) {};
 
@@ -176,7 +176,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     TArray<FString> GenerateMultipleScenes(const TArray<FSceneRequirement>& RequirementsList};
 
-    // X?]X摧毀O
+    // 務]X摧毀O
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     FSceneRequirement GetBattleSceneTemplate(const FString& BattleDescription) {};
 
@@ -202,7 +202,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     void LoadSceneIntoWorld(const FString& SceneName, UWorld* World};
 
-    // X??X??
+    // 務池?
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     void StartScenePreview(const FString& SceneName) {};
 
@@ -222,7 +222,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     void GenerateSceneThumbnail(const FString& SceneName) {};
 
-    // X??X
+    // X動X
     UFUNCTION(BlueprintPure, Category = "Auto Scene Generator")
     float GetSceneComplexityScore(const FString& SceneName) const;
 
@@ -245,7 +245,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     void OptimizeAllScenes(};
 
-    // ??O??X
+    // 動O動X
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     void SaveSceneTemplate(const FString& TemplateName, const FSceneRequirement& Requirements) {};
 
@@ -262,14 +262,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     void GenerateSceneVariantsAsync(const FSceneRequirement& BaseRequirements, int32 VariantCount};
 
-    // X??X??
+    // 務池?
     UFUNCTION(BlueprintPure, Category = "Auto Scene Generator")
     TArray<FSceneRequirement> GetRecommendedScenes(const FString& Context) {};
 
     UFUNCTION(BlueprintPure, Category = "Auto Scene Generator")
     FSceneRequirement OptimizeSceneRequirements(const FSceneRequirement& Requirements) {};
 
-    // X??X
+    // X動X
     UFUNCTION(BlueprintPure, Category = "Auto Scene Generator")
     float GetAverageSceneGenerationTime() const;
 
@@ -282,7 +282,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     void ClearSceneCache(};
 
-    // X?m??X
+    // 務m動X
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     void SetDefaultQuality(EGenerationQuality Quality};
 
@@ -292,7 +292,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Auto Scene Generator")
     void SetOutputDirectory(const FString& Directory) {};
 
-    // ???
+    // 動?
     UPROPERTY(BlueprintAssignable, Category = "Auto Scene Events")
     FOnSceneGenerationStarted OnSceneGenerationStarted;
 
@@ -306,11 +306,11 @@ public:
     FOnSceneGenerationFailed OnSceneGenerationFailed;
 
 protected:
-    // ?t?�]??
+    // t�]動
     UPROPERTY()
     TObjectPtr<UMingAIContentManager> AIContentManager;
 
-    // X??X
+    // X動X
     UPROPERTY()
     TMap<FString, FGeneratedScene> GeneratedScenes;
 
@@ -329,7 +329,7 @@ protected:
     UPROPERTY()
     TArray<FString> ActiveGenerations;
 
-    // X?m
+    // 務m
     UPROPERTY()
     EGenerationQuality DefaultQuality;
 
@@ -339,14 +339,14 @@ protected:
     UPROPERTY()
     FString OutputDirectory;
 
-    // ??X
+    // 動X
     UPROPERTY()
     int32 TotalSceneCount;
 
     UPROPERTY()
     float TotalGenerationTime;
 
-    // X??X??
+    // 務池?
     void ProcessSceneGeneration(const FString& SceneName, const FSceneRequirement& Requirements) {};
     void GenerateRequiredAssets(const FString& SceneName, const FSceneRequirement& Requirements) {};
     void SetupSceneConfiguration(const FString& SceneName, const FSceneRequirement& Requirements) {};
@@ -358,7 +358,7 @@ protected:
     void NotifySceneGenerationFailed(const FString& SceneName, const FString& ErrorMessage) {};
 
 private:
-    // ???UX??
+    // 動?UX動
     FString GenerateUniqueSceneName() const;
     FString GetScenePath(const FString& SceneName) const;
     FSceneRequirement CreateDefaultRequirements(ESceneType SceneType) const;

@@ -1,404 +1,405 @@
-#include "Localization/MingCultureAdapter.h"
-#include "HAL/PlatformFilemanager.h"
-#include "Misc/FileHelper.h"
-#include "JsonObjectConverter.h"
-
-UMingCultureAdapter::UMingCultureAdapter()
-    : bInitialized(false)
-{
-}
-
-void UMingCultureAdapter::InitializeCultureAdapter()
-{
-    if (bInitialized)
-    {
-        return;
-    }
-
-    // 加載文化數據
-    LoadCulturalData();
-
-    bInitialized = true;
-    UE_LOG(LogTemp, Log, TEXT("MingCultureAdapter initialized"));
-}
-
-EContentAppropriateness UMingCultureAdapter::CheckContentAppropriateness(const FString& ContentID, const FString& RegionCode)
-{
-    // 檢查內容在指定地區的適宜性
-    if (FCulturalContentInfo* ContentInfo = CulturalContentRegistry.Find(ContentID))
-    {
-        // 檢查地區是否受影響
-        if (ContentInfo->AffectedRegions.Contains(RegionCode))
-        {
-            // 根據敏感度級別返回適宜性
-            switch (ContentInfo->SensitivityLevel)
-            {
-            case ECulturalSensitivity::Critical:
-                return EContentAppropriateness::Inappropriate;
-            case ECulturalSensitivity::High:
-                return EContentAppropriateness::WarningRequired;
-            case ECulturalSensitivity::Medium:
-                return EContentAppropriateness::CautionAdvised;
-            case ECulturalSensitivity::Low:
-                return EContentAppropriateness::Appropriate;
-            case ECulturalSensitivity::None:
-                return EContentAppropriateness::Appropriate;
-            default:
-                return EContentAppropriateness::Unknown;
-            }
-        }
-    }
-
-    // 默認為適宜
-    return EContentAppropriateness::Appropriate;
-}
-
-ECulturalSensitivity UMingCultureAdapter::GetContentSensitivityLevel(const FString& ContentID) const
-{
-    if (const FCulturalContentInfo* ContentInfo = CulturalContentRegistry.Find(ContentID))
-    {
-        return ContentInfo->SensitivityLevel;
-    }
-
-    return ECulturalSensitivity::None;
-}
-
-FString UMingCultureAdapter::GetAdaptedContent(const FString& ContentID, const FString& TargetRegion)
-{
-    // 獲取適配後的內容
-    EContentAppropriateness Appropriateness = CheckContentAppropriateness(ContentID, TargetRegion);
-
-    if (Appropriateness == EContentAppropriateness::Inappropriate)
-    {
-        // 需要替代內容
-        if (const FCulturalContentInfo* ContentInfo = CulturalContentRegistry.Find(ContentID))
-        {
-            if (!ContentInfo->AdaptedContentID.IsEmpty())
-            {
-                return ContentInfo->AdaptedContentID;
-            }
-        }
-
-        // 返回空表示內容不適宜且無替代
-        return FString();
-    }
-
-    // 內容適宜，返回原ID
-    return ContentID;
-}
-
-TArray<FString> UMingCultureAdapter::GetRequiredContentModifications(const FString& ContentID, const FString& TargetRegion)
-{
-    TArray<FString> Modifications;
-
-    if (const FCulturalContentInfo* ContentInfo = CulturalContentRegistry.Find(ContentID))
-    {
-        if (ContentInfo->AffectedRegions.Contains(TargetRegion))
-        {
-            // 根據敏感度級別和內容類型生成修改建議
-            switch (ContentInfo->ContentType)
-            {
-            case ECulturalContentType::Religious:
-                Modifications.Add(TEXT("Remove religious symbols"));
-                Modifications.Add(TEXT("Neutralize religious references"));
-                break;
-            case ECulturalContentType::Political:
-                Modifications.Add(TEXT("Remove political content"));
-                Modifications.Add(TEXT("Use neutral historical context"));
-                break;
-            case ECulturalContentType::Historical:
-                Modifications.Add(TEXT("Add historical disclaimers"));
-                Modifications.Add(TEXT("Verify historical accuracy"));
-                break;
-            case ECulturalContentType::Cultural:
-                Modifications.Add(TEXT("Add cultural context"));
-                Modifications.Add(TEXT("Explain cultural references"));
-                break;
-            default:
-                break;
-            }
-        }
-    }
-
-    return Modifications;
-}
-
-bool UMingCultureAdapter::ShouldShowWarning(const FString& ContentID, const FString& RegionCode)
-{
-    EContentAppropriateness Appropriateness = CheckContentAppropriateness(ContentID, RegionCode);
-    return Appropriateness == EContentAppropriateness::WarningRequired ||
-           Appropriateness == EContentAppropriateness::CautionAdvised;
-}
-
-FString UMingCultureAdapter::GetWarningMessage(const FString& ContentID, const FString& RegionCode)
-{
-    EContentAppropriateness Appropriateness = CheckContentAppropriateness(ContentID, RegionCode);
-
-    switch (Appropriateness)
-    {
-    case EContentAppropriateness::WarningRequired:
-        return TEXT("Warning: This content may be culturally sensitive in your region.");
-    case EContentAppropriateness::CautionAdvised:
-        return TEXT("Note: This content has been adapted for your region.");
-    default:
-        return FString();
-    }
-}
-
-void UMingCultureAdapter::RegisterCulturalContent(const FCulturalContentInfo& ContentInfo)
-{
-    CulturalContentRegistry.Add(ContentInfo.ContentID, ContentInfo);
-    UE_LOG(LogTemp, Log, TEXT("Registered cultural content: %s"), *ContentInfo.ContentID);
-}
-
-void UMingCultureAdapter::UnregisterCulturalContent(const FString& ContentID)
-{
-    CulturalContentRegistry.Remove(ContentID);
-}
-
-void UMingCultureAdapter::SetRegionCulturalPreference(const FString& RegionCode, const FCulturalPreference& Preference)
-{
-    RegionPreferences.Add(RegionCode, Preference);
-}
-
-FCulturalPreference UMingCultureAdapter::GetRegionCulturalPreference(const FString& RegionCode) const
-{
-    if (const FCulturalPreference* Preference = RegionPreferences.Find(RegionCode))
-    {
-        return *Preference;
-    }
-
-    // 返回默認偏好
-    return FCulturalPreference();
-}
-
-FString UMingCultureAdapter::GetColorMeaning(const FString& ColorName, const FString& RegionCode)
-{
-    // 返回顏色在特定文化中的含義
-    static const TMap<FString, TMap<FString, FString>> ColorMeanings = {
-        {TEXT("CN"), {
-            {TEXT("red"), TEXT("luck, happiness, prosperity")},
-            {TEXT("yellow"), TEXT("imperial power, royalty")},
-            {TEXT("white"), TEXT("mourning, death")},
-            {TEXT("black"), TEXT("water, winter, north")},
-        }},
-        {TEXT("JP"), {
-            {TEXT("red"), TEXT("danger, protection from evil")},
-            {TEXT("white"), TEXT("purity, new beginnings")},
-            {TEXT("black"), TEXT("formality, dignity")},
-        }},
-        {TEXT("KR"), {
-            {TEXT("red"), TEXT("passion, good fortune")},
-            {TEXT("blue"), TEXT("peace, calmness")},
-        }},
-        {TEXT("US"), {
-            {TEXT("red"), TEXT("danger, stop, passion")},
-            {TEXT("white"), TEXT("purity, peace")},
-            {TEXT("blue"), TEXT("trust, loyalty, calm")},
-        }},
-    };
-
-    if (const TMap<FString, FString>* RegionColors = ColorMeanings.Find(RegionCode))
-    {
-        if (const FString* Meaning = RegionColors->Find(ColorName))
-        {
-            return *Meaning;
-        }
-    }
-
-    return TEXT("No specific cultural meaning");
-}
-
-FString UMingCultureAdapter::GetNumberMeaning(int32 Number, const FString& RegionCode)
-{
-    // 返回數字在特定文化中的含義
-    static const TMap<FString, TMap<int32, FString>> NumberMeanings = {
-        {TEXT("CN"), {
-            {4, TEXT("unlucky - sounds like 'death'")},
-            {6, TEXT("lucky - sounds like 'smooth'")},
-            {8, TEXT("very lucky - sounds like 'wealth'")},
-            {9, TEXT("lucky - sounds like 'long lasting'")},
-        }},
-        {TEXT("JP"), {
-            {4, TEXT("unlucky - sounds like 'death'")},
-            {9, TEXT("unlucky - sounds like 'suffering'")},
-            {7, TEXT("lucky - seven gods of fortune")},
-        }},
-        {TEXT("KR"), {
-            {4, TEXT("unlucky")},
-            {7, TEXT("lucky")},
-        }},
-    };
-
-    if (const TMap<int32, FString>* RegionNumbers = NumberMeanings.Find(RegionCode))
-    {
-        if (const FString* Meaning = RegionNumbers->Find(Number))
-        {
-            return *Meaning;
-        }
-    }
-
-    return TEXT("No specific cultural meaning");
-}
-
-TArray<FString> UMingCultureAdapter::GetTabooTopics(const FString& RegionCode)
-{
-    // 返回特定地區的禁忌話題
-    static const TMap<FString, TArray<FString>> TabooTopics = {
-        {TEXT("CN"), {
-            TEXT("Politics"),
-            TEXT("Religious extremism"),
-            TEXT("Separatism"),
-        }},
-        {TEXT("JP"), {
-            TEXT("Nuclear issues"),
-            TEXT("War crimes"),
-        }},
-        {TEXT("KR"), {
-            TEXT("North-South division"),
-            TEXT("Comfort women issue"),
-        }},
-        {TEXT("SA"), {
-            TEXT("Religious criticism"),
-            TEXT("Women's rights debates"),
-        }},
-    };
-
-    if (const TArray<FString>* Topics = TabooTopics.Find(RegionCode))
-    {
-        return *Topics;
-    }
-
-    return TArray<FString>();
-}
-
-bool UMingCultureAdapter::IsContentSensitive(const FString& ContentID, const FString& RegionCode)
-{
-    EContentAppropriateness Appropriateness = CheckContentAppropriateness(ContentID, RegionCode);
-    return Appropriateness == EContentAppropriateness::Inappropriate ||
-           Appropriateness == EContentAppropriateness::WarningRequired;
-}
-
-TArray<FString> UMingCultureAdapter::FilterSensitiveContent(const TArray<FString>& ContentIDs, const FString& RegionCode)
-{
-    TArray<FString> FilteredContent;
-
-    for (const FString& ContentID : ContentIDs)
-    {
-        if (!IsContentSensitive(ContentID, RegionCode))
-        {
-            FilteredContent.Add(ContentID);
-        }
-    }
-
-    return FilteredContent;
-}
-
-FString UMingCultureAdapter::ValidateHistoricalContent(const FString& ContentID, const FString& HistoricalPeriod)
-{
-    // 驗證歷史內容的準確性和適宜性
-    // 這裡是簡化的實現
-    return FString::Printf(TEXT("Historical content '%s' validated for period '%s'"), *ContentID, *HistoricalPeriod);
-}
-
-bool UMingCultureAdapter::SaveCulturalData(const FString& FilePath)
-{
-    // 保存文化數據到文件
-    TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
-
-    // 序列化文化內容註冊表
-    TArray<TSharedPtr<FJsonValue>> ContentArray;
-    for (const auto& Pair : CulturalContentRegistry)
-    {
-        TSharedPtr<FJsonObject> ContentJson = MakeShared<FJsonObject>();
-        ContentJson->SetStringField(TEXT("ContentID"), Pair.Value.ContentID);
-        ContentJson->SetNumberField(TEXT("ContentType"), static_cast<int32>(Pair.Value.ContentType));
-        ContentJson->SetNumberField(TEXT("SensitivityLevel"), static_cast<int32>(Pair.Value.SensitivityLevel));
-        ContentJson->SetStringField(TEXT("AdaptedContentID"), Pair.Value.AdaptedContentID);
-
-        TArray<TSharedPtr<FJsonValue>> AffectedRegionsArray;
-        for (const FString& Region : Pair.Value.AffectedRegions)
-        {
-            AffectedRegionsArray.Add(MakeShared<FJsonValueString>(Region));
-        }
-        ContentJson->SetArrayField(TEXT("AffectedRegions"), AffectedRegionsArray);
-
-        ContentArray.Add(MakeShared<FJsonValueObject>(ContentJson));
-    }
-    JsonObject->SetArrayField(TEXT("CulturalContent"), ContentArray);
-
-    // 寫入文件
-    FString JsonString;
-    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&JsonString);
-    if (FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer))
-    {
-        return FFileHelper::SaveStringToFile(JsonString, *FilePath);
-    }
-
-    return false;
-}
-
-bool UMingCultureAdapter::LoadCulturalData(const FString& FilePath)
-{
-    // 從文件加載文化數據
-    FString JsonString;
-    if (!FFileHelper::LoadFileToString(JsonString, *FilePath))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Failed to load cultural data from: %s"), *FilePath);
-        return false;
-    }
-
-    TSharedPtr<FJsonObject> JsonObject;
-    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
-    if (!FJsonSerializer::Deserialize(Reader, JsonObject))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Failed to parse cultural data JSON"));
-        return false;
-    }
-
-    // 解析文化內容
-    const TArray<TSharedPtr<FJsonValue>>* ContentArray;
-    if (JsonObject->TryGetArrayField(TEXT("CulturalContent"), ContentArray))
-    {
-        for (const auto& Value : *ContentArray)
-        {
-            if (TSharedPtr<FJsonObject> ContentJson = Value->AsObject())
-            {
-                FCulturalContentInfo ContentInfo;
-                ContentInfo.ContentID = ContentJson->GetStringField(TEXT("ContentID"));
-                ContentInfo.ContentType = static_cast<ECulturalContentType>(ContentJson->GetIntegerField(TEXT("ContentType")));
-                ContentInfo.SensitivityLevel = static_cast<ECulturalSensitivity>(ContentJson->GetIntegerField(TEXT("SensitivityLevel")));
-                ContentInfo.AdaptedContentID = ContentJson->GetStringField(TEXT("AdaptedContentID"));
-
-                const TArray<TSharedPtr<FJsonValue>>* RegionsArray;
-                if (ContentJson->TryGetArrayField(TEXT("AffectedRegions"), RegionsArray))
-                {
-                    for (const auto& RegionValue : *RegionsArray)
-                    {
-                        ContentInfo.AffectedRegions.Add(RegionValue->AsString());
-                    }
-                }
-
-                CulturalContentRegistry.Add(ContentInfo.ContentID, ContentInfo);
-            }
-        }
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("Loaded cultural data from: %s"), *FilePath);
-    return true;
-}
-
-void UMingCultureAdapter::LoadCulturalData()
-{
-    // 加載默認文化數據
-    FString DefaultDataPath = FPaths::ProjectContentDir() / TEXT("Data/CulturalData.json");
-
-    if (FPaths::FileExists(DefaultDataPath))
-    {
-        LoadCulturalData(DefaultDataPath);
-    }
-    else
-    {
-        UE_LOG(LogTemp, Log, TEXT("No cultural data file found at: %s, using defaults"), *DefaultDataPath);
-    }
-}
+出#出i出n出c出l出使出d出e出 出"出L出o出c出a出l出i出z出a出t出i出o出n出/出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出輸入出A出L出/出P出l出a出t出f出o出本出設置出軍出i出l出e出設置出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出s出c出/出軍出i出l出e出輸入出e出l出p出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出J出s出o出n出O出b出大出e出c出t出C出o出n出正出e出本出t出e出本出.出h出"出
+出
+出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出(出)出
+出 出 出 出 出:出 出b出I出n出i出t出i出a出l出i出z出e出d出(出f出a出l出s出e出)出
+出{出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出I出n出i出t出i出a出l出i出z出e出C出使出l出t出使出本出e出A出d出a出p出t出e出本出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出加出載出文出化出數出據出
+出 出 出 出 出L出o出a出d出C出使出l出t出使出本出a出l出D出a出t出a出(出)出;出
+出
+出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出 出i出n出i出t出i出a出l出i出z出e出d出"出)出)出;出
+出}出
+出
+出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出C出h出e出c出k出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出C出o出d出e出)出
+出{出
+出 出 出 出 出/出/出 出檢出查出內出容出在出指出定出地出區出的出適出宜出性出
+出 出 出 出 出i出f出 出(出軍出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出I出n出f出o出*出 出C出o出n出t出e出n出t出I出n出f出o出 出=出 出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出R出e出成出i出s出t出本出y出.出軍出i出n出d出(出C出o出n出t出e出n出t出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出檢出查出地出區出是出否出受出影出響出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出o出n出t出e出n出t出I出n出f出o出-出>出A出f出f出e出c出t出e出d出R出e出成出i出o出n出s出.出C出o出n出t出a出i出n出s出(出R出e出成出i出o出n出C出o出d出e出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出根出據出敏出感出度出級出別出返出回出適出宜出性出
+出 出 出 出 出 出 出 出 出 出 出 出 出s出w出i出t出c出h出 出(出C出o出n出t出e出n出t出I出n出f出o出-出>出S出e出n出s出i出t出i出正出i出t出y出L出e出正出e出l出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出C出使出l出t出使出本出a出l出S出e出n出s出i出t出i出正出i出t出y出:出:出C出本出i出t出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出I出n出a出p出p出本出o出p出本出i出a出t出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出C出使出l出t出使出本出a出l出S出e出n出s出i出t出i出正出i出t出y出:出:出輸入出i出成出h出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出基本出a出本出n出i出n出成出R出e出q出使出i出本出e出d出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出C出使出l出t出使出本出a出l出S出e出n出s出i出t出i出正出i出t出y出:出:出M出e出d出i出使出設置出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出C出a出使出t出i出o出n出A出d出正出i出s出e出d出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出C出使出l出t出使出本出a出l出S出e出n出s出i出t出i出正出i出t出y出:出:出L出o出w出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出A出p出p出本出o出p出本出i出a出t出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出C出使出l出t出使出本出a出l出S出e出n出s出i出t出i出正出i出t出y出:出:出的出o出n出e出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出A出p出p出本出o出p出本出i出a出t出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出U出n出k出n出o出w出n出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出默出認出為出適出宜出
+出 出 出 出 出本出e出t出使出本出n出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出A出p出p出本出o出p出本出i出a出t出e出;出
+出}出
+出
+出E出C出使出l出t出使出本出a出l出S出e出n出s出i出t出i出正出i出t出y出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出G出e出t出C出o出n出t出e出n出t出S出e出n出s出i出t出i出正出i出t出y出L出e出正出e出l出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出c出o出n出s出t出 出軍出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出I出n出f出o出*出 出C出o出n出t出e出n出t出I出n出f出o出 出=出 出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出R出e出成出i出s出t出本出y出.出軍出i出n出d出(出C出o出n出t出e出n出t出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出o出n出t出e出n出t出I出n出f出o出-出>出S出e出n出s出i出t出i出正出i出t出y出L出e出正出e出l出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出E出C出使出l出t出使出本出a出l出S出e出n出s出i出t出i出正出i出t出y出:出:出的出o出n出e出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出G出e出t出A出d出a出p出t出e出d出C出o出n出t出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出a出本出成出e出t出R出e出成出i出o出n出)出
+出{出
+出 出 出 出 出/出/出 出獲出取出適出配出後出的出內出容出
+出 出 出 出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出=出 出C出h出e出c出k出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出(出C出o出n出t出e出n出t出I出D出,出 出T出a出本出成出e出t出R出e出成出i出o出n出)出;出
+出
+出 出 出 出 出i出f出 出(出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出=出=出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出I出n出a出p出p出本出o出p出本出i出a出t出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出需出要出替出代出內出容出
+出 出 出 出 出 出 出 出 出i出f出 出(出c出o出n出s出t出 出軍出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出I出n出f出o出*出 出C出o出n出t出e出n出t出I出n出f出o出 出=出 出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出R出e出成出i出s出t出本出y出.出軍出i出n出d出(出C出o出n出t出e出n出t出I出D出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出!出C出o出n出t出e出n出t出I出n出f出o出-出>出A出d出a出p出t出e出d出C出o出n出t出e出n出t出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出o出n出t出e出n出t出I出n出f出o出-出>出A出d出a出p出t出e出d出C出o出n出t出e出n出t出I出D出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出/出/出 出返出回出空出表出示出內出容出不出適出宜出且出無出替出代出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出軍出S出t出本出i出n出成出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出內出容出適出宜出，出返出回出原出I出D出
+出 出 出 出 出本出e出t出使出本出n出 出C出o出n出t出e出n出t出I出D出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出G出e出t出R出e出q出使出i出本出e出d出C出o出n出t出e出n出t出M出o出d出i出f出i出c出a出t出i出o出n出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出a出本出成出e出t出R出e出成出i出o出n出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出M出o出d出i出f出i出c出a出t出i出o出n出s出;出
+出
+出 出 出 出 出i出f出 出(出c出o出n出s出t出 出軍出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出I出n出f出o出*出 出C出o出n出t出e出n出t出I出n出f出o出 出=出 出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出R出e出成出i出s出t出本出y出.出軍出i出n出d出(出C出o出n出t出e出n出t出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出o出n出t出e出n出t出I出n出f出o出-出>出A出f出f出e出c出t出e出d出R出e出成出i出o出n出s出.出C出o出n出t出a出i出n出s出(出T出a出本出成出e出t出R出e出成出i出o出n出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出根出據出敏出感出度出級出別出和出內出容出類出型出生出成出修出改出建出議出
+出 出 出 出 出 出 出 出 出 出 出 出 出s出w出i出t出c出h出 出(出C出o出n出t出e出n出t出I出n出f出o出-出>出C出o出n出t出e出n出t出T出y出p出e出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出T出y出p出e出:出:出R出e出l出i出成出i出o出使出s出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出o出d出i出f出i出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出R出e出設置出o出正出e出 出本出e出l出i出成出i出o出使出s出 出s出y出設置出b出o出l出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出o出d出i出f出i出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出的出e出使出t出本出a出l出i出z出e出 出本出e出l出i出成出i出o出使出s出 出本出e出f出e出本出e出n出c出e出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出o出d出i出f出i出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出R出e出設置出o出正出e出 出p出o出l出i出t出i出c出a出l出 出c出o出n出t出e出n出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出o出d出i出f出i出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出U出s出e出 出n出e出使出t出本出a出l出 出h出i出s出t出o出本出i出c出a出l出 出c出o出n出t出e出x出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出T出y出p出e出:出:出輸入出i出s出t出o出本出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出o出d出i出f出i出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出A出d出d出 出h出i出s出t出o出本出i出c出a出l出 出d出i出s出c出l出a出i出設置出e出本出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出o出d出i出f出i出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出V出e出本出i出f出y出 出h出i出s出t出o出本出i出c出a出l出 出a出c出c出使出本出a出c出y出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出T出y出p出e出:出:出C出使出l出t出使出本出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出o出d出i出f出i出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出A出d出d出 出c出使出l出t出使出本出a出l出 出c出o出n出t出e出x出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出o出d出i出f出i出c出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出E出x出p出l出a出i出n出 出c出使出l出t出使出本出a出l出 出本出e出f出e出本出e出n出c出e出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出M出o出d出i出f出i出c出a出t出i出o出n出s出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出S出h出o出使出l出d出S出h出o出w出基本出a出本出n出i出n出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出C出o出d出e出)出
+出{出
+出 出 出 出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出=出 出C出h出e出c出k出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出(出C出o出n出t出e出n出t出I出D出,出 出R出e出成出i出o出n出C出o出d出e出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出=出=出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出基本出a出本出n出i出n出成出R出e出q出使出i出本出e出d出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出=出=出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出C出a出使出t出i出o出n出A出d出正出i出s出e出d出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出G出e出t出基本出a出本出n出i出n出成出M出e出s出s出a出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出C出o出d出e出)出
+出{出
+出 出 出 出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出=出 出C出h出e出c出k出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出(出C出o出n出t出e出n出t出I出D出,出 出R出e出成出i出o出n出C出o出d出e出)出;出
+出
+出 出 出 出 出s出w出i出t出c出h出 出(出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出基本出a出本出n出i出n出成出R出e出q出使出i出本出e出d出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出基本出a出本出n出i出n出成出:出 出T出h出i出s出 出c出o出n出t出e出n出t出 出設置出a出y出 出b出e出 出c出使出l出t出使出本出a出l出l出y出 出s出e出n出s出i出t出i出正出e出 出i出n出 出y出o出使出本出 出本出e出成出i出o出n出.出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出C出a出使出t出i出o出n出A出d出正出i出s出e出d出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出的出o出t出e出:出 出T出h出i出s出 出c出o出n出t出e出n出t出 出h出a出s出 出b出e出e出n出 出a出d出a出p出t出e出d出 出f出o出本出 出y出o出使出本出 出本出e出成出i出o出n出.出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出軍出S出t出本出i出n出成出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出R出e出成出i出s出t出e出本出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出(出c出o出n出s出t出 出軍出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出I出n出f出o出&出 出C出o出n出t出e出n出t出I出n出f出o出)出
+出{出
+出 出 出 出 出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出R出e出成出i出s出t出本出y出.出A出d出d出(出C出o出n出t出e出n出t出I出n出f出o出.出C出o出n出t出e出n出t出I出D出,出 出C出o出n出t出e出n出t出I出n出f出o出)出;出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出R出e出成出i出s出t出e出本出e出d出 出c出使出l出t出使出本出a出l出 出c出o出n出t出e出n出t出:出 出%出s出"出)出,出 出*出C出o出n出t出e出n出t出I出n出f出o出.出C出o出n出t出e出n出t出I出D出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出U出n出本出e出成出i出s出t出e出本出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出I出D出)出
+出{出
+出 出 出 出 出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出R出e出成出i出s出t出本出y出.出R出e出設置出o出正出e出(出C出o出n出t出e出n出t出I出D出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出S出e出t出R出e出成出i出o出n出C出使出l出t出使出本出a出l出P出本出e出f出e出本出e出n出c出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出C出o出d出e出,出 出c出o出n出s出t出 出軍出C出使出l出t出使出本出a出l出P出本出e出f出e出本出e出n出c出e出&出 出P出本出e出f出e出本出e出n出c出e出)出
+出{出
+出 出 出 出 出R出e出成出i出o出n出P出本出e出f出e出本出e出n出c出e出s出.出A出d出d出(出R出e出成出i出o出n出C出o出d出e出,出 出P出本出e出f出e出本出e出n出c出e出)出;出
+出}出
+出
+出軍出C出使出l出t出使出本出a出l出P出本出e出f出e出本出e出n出c出e出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出G出e出t出R出e出成出i出o出n出C出使出l出t出使出本出a出l出P出本出e出f出e出本出e出n出c出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出C出o出d出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出c出o出n出s出t出 出軍出C出使出l出t出使出本出a出l出P出本出e出f出e出本出e出n出c出e出*出 出P出本出e出f出e出本出e出n出c出e出 出=出 出R出e出成出i出o出n出P出本出e出f出e出本出e出n出c出e出s出.出軍出i出n出d出(出R出e出成出i出o出n出C出o出d出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出*出P出本出e出f出e出本出e出n出c出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出返出回出默出認出偏出好出
+出 出 出 出 出本出e出t出使出本出n出 出軍出C出使出l出t出使出本出a出l出P出本出e出f出e出本出e出n出c出e出(出)出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出G出e出t出C出o出l出o出本出M出e出a出n出i出n出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出l出o出本出的出a出設置出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出C出o出d出e出)出
+出{出
+出 出 出 出 出/出/出 出返出回出顏出色出在出特出定出文出化出中出的出含出義出
+出 出 出 出 出s出t出a出t出i出c出 出c出o出n出s出t出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出>出 出C出o出l出o出本出M出e出a出n出i出n出成出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出C出的出"出)出,出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出本出e出d出"出)出,出 出T出E出X出T出(出"出l出使出c出k出,出 出h出a出p出p出i出n出e出s出s出,出 出p出本出o出s出p出e出本出i出t出y出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出y出e出l出l出o出w出"出)出,出 出T出E出X出T出(出"出i出設置出p出e出本出i出a出l出 出p出o出w出e出本出,出 出本出o出y出a出l出t出y出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出w出h出i出t出e出"出)出,出 出T出E出X出T出(出"出設置出o出使出本出n出i出n出成出,出 出d出e出a出t出h出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出b出l出a出c出k出"出)出,出 出T出E出X出T出(出"出w出a出t出e出本出,出 出w出i出n出t出e出本出,出 出n出o出本出t出h出"出)出}出,出
+出 出 出 出 出 出 出 出 出}出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出J出P出"出)出,出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出本出e出d出"出)出,出 出T出E出X出T出(出"出d出a出n出成出e出本出,出 出p出本出o出t出e出c出t出i出o出n出 出f出本出o出設置出 出e出正出i出l出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出w出h出i出t出e出"出)出,出 出T出E出X出T出(出"出p出使出本出i出t出y出,出 出n出e出w出 出b出e出成出i出n出n出i出n出成出s出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出b出l出a出c出k出"出)出,出 出T出E出X出T出(出"出f出o出本出設置出a出l出i出t出y出,出 出d出i出成出n出i出t出y出"出)出}出,出
+出 出 出 出 出 出 出 出 出}出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出K出R出"出)出,出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出本出e出d出"出)出,出 出T出E出X出T出(出"出p出a出s出s出i出o出n出,出 出成出o出o出d出 出f出o出本出t出使出n出e出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出b出l出使出e出"出)出,出 出T出E出X出T出(出"出p出e出a出c出e出,出 出c出a出l出設置出n出e出s出s出"出)出}出,出
+出 出 出 出 出 出 出 出 出}出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出U出S出"出)出,出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出本出e出d出"出)出,出 出T出E出X出T出(出"出d出a出n出成出e出本出,出 出s出t出o出p出,出 出p出a出s出s出i出o出n出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出w出h出i出t出e出"出)出,出 出T出E出X出T出(出"出p出使出本出i出t出y出,出 出p出e出a出c出e出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出b出l出使出e出"出)出,出 出T出E出X出T出(出"出t出本出使出s出t出,出 出l出o出y出a出l出t出y出,出 出c出a出l出設置出"出)出}出,出
+出 出 出 出 出 出 出 出 出}出}出,出
+出 出 出 出 出}出;出
+出
+出 出 出 出 出i出f出 出(出c出o出n出s出t出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出*出 出R出e出成出i出o出n出C出o出l出o出本出s出 出=出 出C出o出l出o出本出M出e出a出n出i出n出成出s出.出軍出i出n出d出(出R出e出成出i出o出n出C出o出d出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出*出 出M出e出a出n出i出n出成出 出=出 出R出e出成出i出o出n出C出o出l出o出本出s出-出>出軍出i出n出d出(出C出o出l出o出本出的出a出設置出e出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出*出M出e出a出n出i出n出成出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出的出o出 出s出p出e出c出i出f出i出c出 出c出使出l出t出使出本出a出l出 出設置出e出a出n出i出n出成出"出)出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出G出e出t出的出使出設置出b出e出本出M出e出a出n出i出n出成出(出i出n出t出3出2出 出的出使出設置出b出e出本出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出C出o出d出e出)出
+出{出
+出 出 出 出 出/出/出 出返出回出數出字出在出特出定出文出化出中出的出含出義出
+出 出 出 出 出s出t出a出t出i出c出 出c出o出n出s出t出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出T出M出a出p出<出i出n出t出3出2出,出 出軍出S出t出本出i出n出成出>出>出 出的出使出設置出b出e出本出M出e出a出n出i出n出成出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出C出的出"出)出,出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出4出,出 出T出E出X出T出(出"出使出n出l出使出c出k出y出 出-出 出s出o出使出n出d出s出 出l出i出k出e出 出'出d出e出a出t出h出'出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出6出,出 出T出E出X出T出(出"出l出使出c出k出y出 出-出 出s出o出使出n出d出s出 出l出i出k出e出 出'出s出設置出o出o出t出h出'出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出8出,出 出T出E出X出T出(出"出正出e出本出y出 出l出使出c出k出y出 出-出 出s出o出使出n出d出s出 出l出i出k出e出 出'出w出e出a出l出t出h出'出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出9出,出 出T出E出X出T出(出"出l出使出c出k出y出 出-出 出s出o出使出n出d出s出 出l出i出k出e出 出'出l出o出n出成出 出l出a出s出t出i出n出成出'出"出)出}出,出
+出 出 出 出 出 出 出 出 出}出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出J出P出"出)出,出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出4出,出 出T出E出X出T出(出"出使出n出l出使出c出k出y出 出-出 出s出o出使出n出d出s出 出l出i出k出e出 出'出d出e出a出t出h出'出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出9出,出 出T出E出X出T出(出"出使出n出l出使出c出k出y出 出-出 出s出o出使出n出d出s出 出l出i出k出e出 出'出s出使出f出f出e出本出i出n出成出'出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出7出,出 出T出E出X出T出(出"出l出使出c出k出y出 出-出 出s出e出正出e出n出 出成出o出d出s出 出o出f出 出f出o出本出t出使出n出e出"出)出}出,出
+出 出 出 出 出 出 出 出 出}出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出K出R出"出)出,出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出4出,出 出T出E出X出T出(出"出使出n出l出使出c出k出y出"出)出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出7出,出 出T出E出X出T出(出"出l出使出c出k出y出"出)出}出,出
+出 出 出 出 出 出 出 出 出}出}出,出
+出 出 出 出 出}出;出
+出
+出 出 出 出 出i出f出 出(出c出o出n出s出t出 出T出M出a出p出<出i出n出t出3出2出,出 出軍出S出t出本出i出n出成出>出*出 出R出e出成出i出o出n出的出使出設置出b出e出本出s出 出=出 出的出使出設置出b出e出本出M出e出a出n出i出n出成出s出.出軍出i出n出d出(出R出e出成出i出o出n出C出o出d出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出*出 出M出e出a出n出i出n出成出 出=出 出R出e出成出i出o出n出的出使出設置出b出e出本出s出-出>出軍出i出n出d出(出的出使出設置出b出e出本出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出*出M出e出a出n出i出n出成出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出的出o出 出s出p出e出c出i出f出i出c出 出c出使出l出t出使出本出a出l出 出設置出e出a出n出i出n出成出"出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出G出e出t出T出a出b出o出o出T出o出p出i出c出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出C出o出d出e出)出
+出{出
+出 出 出 出 出/出/出 出返出回出特出定出地出區出的出禁出忌出話出題出
+出 出 出 出 出s出t出a出t出i出c出 出c出o出n出s出t出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出>出 出T出a出b出o出o出T出o出p出i出c出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出C出的出"出)出,出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出P出o出l出i出t出i出c出s出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出R出e出l出i出成出i出o出使出s出 出e出x出t出本出e出設置出i出s出設置出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出S出e出p出a出本出a出t出i出s出設置出"出)出,出
+出 出 出 出 出 出 出 出 出}出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出J出P出"出)出,出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出的出使出c出l出e出a出本出 出i出s出s出使出e出s出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出基本出a出本出 出c出本出i出設置出e出s出"出)出,出
+出 出 出 出 出 出 出 出 出}出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出K出R出"出)出,出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出的出o出本出t出h出-出S出o出使出t出h出 出d出i出正出i出s出i出o出n出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出C出o出設置出f出o出本出t出 出w出o出設置出e出n出 出i出s出s出使出e出"出)出,出
+出 出 出 出 出 出 出 出 出}出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出S出A出"出)出,出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出R出e出l出i出成出i出o出使出s出 出c出本出i出t出i出c出i出s出設置出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出基本出o出設置出e出n出'出s出 出本出i出成出h出t出s出 出d出e出b出a出t出e出s出"出)出,出
+出 出 出 出 出 出 出 出 出}出}出,出
+出 出 出 出 出}出;出
+出
+出 出 出 出 出i出f出 出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出*出 出T出o出p出i出c出s出 出=出 出T出a出b出o出o出T出o出p出i出c出s出.出軍出i出n出d出(出R出e出成出i出o出n出C出o出d出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出*出T出o出p出i出c出s出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出(出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出I出s出C出o出n出t出e出n出t出S出e出n出s出i出t出i出正出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出C出o出d出e出)出
+出{出
+出 出 出 出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出=出 出C出h出e出c出k出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出(出C出o出n出t出e出n出t出I出D出,出 出R出e出成出i出o出n出C出o出d出e出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出=出=出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出I出n出a出p出p出本出o出p出本出i出a出t出e出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出 出=出=出 出E出C出o出n出t出e出n出t出A出p出p出本出o出p出本出i出a出t出e出n出e出s出s出:出:出基本出a出本出n出i出n出成出R出e出q出使出i出本出e出d出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出軍出i出l出t出e出本出S出e出n出s出i出t出i出正出e出C出o出n出t出e出n出t出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出C出o出n出t出e出n出t出I出D出s出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出C出o出d出e出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出軍出i出l出t出e出本出e出d出C出o出n出t出e出n出t出;出
+出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出I出D出 出:出 出C出o出n出t出e出n出t出I出D出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出!出I出s出C出o出n出t出e出n出t出S出e出n出s出i出t出i出正出e出(出C出o出n出t出e出n出t出I出D出,出 出R出e出成出i出o出n出C出o出d出e出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出i出l出t出e出本出e出d出C出o出n出t出e出n出t出.出A出d出d出(出C出o出n出t出e出n出t出I出D出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出軍出i出l出t出e出本出e出d出C出o出n出t出e出n出t出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出V出a出l出i出d出a出t出e出輸入出i出s出t出o出本出i出c出a出l出C出o出n出t出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出輸入出i出s出t出o出本出i出c出a出l出P出e出本出i出o出d出)出
+出{出
+出 出 出 出 出/出/出 出驗出證出歷出史出內出容出的出準出確出性出和出適出宜出性出
+出 出 出 出 出/出/出 出這出裡出是出簡出化出的出實出現出
+出 出 出 出 出本出e出t出使出本出n出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出輸入出i出s出t出o出本出i出c出a出l出 出c出o出n出t出e出n出t出 出'出%出s出'出 出正出a出l出i出d出a出t出e出d出 出f出o出本出 出p出e出本出i出o出d出 出'出%出s出'出"出)出,出 出*出C出o出n出t出e出n出t出I出D出,出 出*出輸入出i出s出t出o出本出i出c出a出l出P出e出本出i出o出d出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出S出a出正出e出C出使出l出t出使出本出a出l出D出a出t出a出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出P出a出t出h出)出
+出{出
+出 出 出 出 出/出/出 出保出存出文出化出數出據出到出文出件出
+出 出 出 出 出T出S出h出a出本出e出d出P出t出本出<出軍出J出s出o出n出O出b出大出e出c出t出>出 出J出s出o出n出O出b出大出e出c出t出 出=出 出M出a出k出e出S出h出a出本出e出d出<出軍出J出s出o出n出O出b出大出e出c出t出>出(出)出;出
+出
+出 出 出 出 出/出/出 出序出列出化出文出化出內出容出註出冊出表出
+出 出 出 出 出T出A出本出本出a出y出<出T出S出h出a出本出e出d出P出t出本出<出軍出J出s出o出n出V出a出l出使出e出>出>出 出C出o出n出t出e出n出t出A出本出本出a出y出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出P出a出i出本出 出:出 出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出R出e出成出i出s出t出本出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出S出h出a出本出e出d出P出t出本出<出軍出J出s出o出n出O出b出大出e出c出t出>出 出C出o出n出t出e出n出t出J出s出o出n出 出=出 出M出a出k出e出S出h出a出本出e出d出<出軍出J出s出o出n出O出b出大出e出c出t出>出(出)出;出
+出 出 出 出 出 出 出 出 出C出o出n出t出e出n出t出J出s出o出n出-出>出S出e出t出S出t出本出i出n出成出軍出i出e出l出d出(出T出E出X出T出(出"出C出o出n出t出e出n出t出I出D出"出)出,出 出P出a出i出本出.出V出a出l出使出e出.出C出o出n出t出e出n出t出I出D出)出;出
+出 出 出 出 出 出 出 出 出C出o出n出t出e出n出t出J出s出o出n出-出>出S出e出t出的出使出設置出b出e出本出軍出i出e出l出d出(出T出E出X出T出(出"出C出o出n出t出e出n出t出T出y出p出e出"出)出,出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出P出a出i出本出.出V出a出l出使出e出.出C出o出n出t出e出n出t出T出y出p出e出)出)出;出
+出 出 出 出 出 出 出 出 出C出o出n出t出e出n出t出J出s出o出n出-出>出S出e出t出的出使出設置出b出e出本出軍出i出e出l出d出(出T出E出X出T出(出"出S出e出n出s出i出t出i出正出i出t出y出L出e出正出e出l出"出)出,出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出P出a出i出本出.出V出a出l出使出e出.出S出e出n出s出i出t出i出正出i出t出y出L出e出正出e出l出)出)出;出
+出 出 出 出 出 出 出 出 出C出o出n出t出e出n出t出J出s出o出n出-出>出S出e出t出S出t出本出i出n出成出軍出i出e出l出d出(出T出E出X出T出(出"出A出d出a出p出t出e出d出C出o出n出t出e出n出t出I出D出"出)出,出 出P出a出i出本出.出V出a出l出使出e出.出A出d出a出p出t出e出d出C出o出n出t出e出n出t出I出D出)出;出
+出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出T出S出h出a出本出e出d出P出t出本出<出軍出J出s出o出n出V出a出l出使出e出>出>出 出A出f出f出e出c出t出e出d出R出e出成出i出o出n出s出A出本出本出a出y出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出 出:出 出P出a出i出本出.出V出a出l出使出e出.出A出f出f出e出c出t出e出d出R出e出成出i出o出n出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出f出f出e出c出t出e出d出R出e出成出i出o出n出s出A出本出本出a出y出.出A出d出d出(出M出a出k出e出S出h出a出本出e出d出<出軍出J出s出o出n出V出a出l出使出e出S出t出本出i出n出成出>出(出R出e出成出i出o出n出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出C出o出n出t出e出n出t出J出s出o出n出-出>出S出e出t出A出本出本出a出y出軍出i出e出l出d出(出T出E出X出T出(出"出A出f出f出e出c出t出e出d出R出e出成出i出o出n出s出"出)出,出 出A出f出f出e出c出t出e出d出R出e出成出i出o出n出s出A出本出本出a出y出)出;出
+出
+出 出 出 出 出 出 出 出 出C出o出n出t出e出n出t出A出本出本出a出y出.出A出d出d出(出M出a出k出e出S出h出a出本出e出d出<出軍出J出s出o出n出V出a出l出使出e出O出b出大出e出c出t出>出(出C出o出n出t出e出n出t出J出s出o出n出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出J出s出o出n出O出b出大出e出c出t出-出>出S出e出t出A出本出本出a出y出軍出i出e出l出d出(出T出E出X出T出(出"出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出"出)出,出 出C出o出n出t出e出n出t出A出本出本出a出y出)出;出
+出
+出 出 出 出 出/出/出 出寫出入出文出件出
+出 出 出 出 出軍出S出t出本出i出n出成出 出J出s出o出n出S出t出本出i出n出成出;出
+出 出 出 出 出T出S出h出a出本出e出d出R出e出f出<出T出J出s出o出n出基本出本出i出t出e出本出<出>出>出 出基本出本出i出t出e出本出 出=出 出T出J出s出o出n出基本出本出i出t出e出本出軍出a出c出t出o出本出y出<出>出:出:出C出本出e出a出t出e出(出&出J出s出o出n出S出t出本出i出n出成出)出;出
+出 出 出 出 出i出f出 出(出軍出J出s出o出n出S出e出本出i出a出l出i出z出e出本出:出:出S出e出本出i出a出l出i出z出e出(出J出s出o出n出O出b出大出e出c出t出.出T出o出S出h出a出本出e出d出R出e出f出(出)出,出 出基本出本出i出t出e出本出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出軍出軍出i出l出e出輸入出e出l出p出e出本出:出:出S出a出正出e出S出t出本出i出n出成出T出o出軍出i出l出e出(出J出s出o出n出S出t出本出i出n出成出,出 出*出軍出i出l出e出P出a出t出h出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出L出o出a出d出C出使出l出t出使出本出a出l出D出a出t出a出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出P出a出t出h出)出
+出{出
+出 出 出 出 出/出/出 出從出文出件出加出載出文出化出數出據出
+出 出 出 出 出軍出S出t出本出i出n出成出 出J出s出o出n出S出t出本出i出n出成出;出
+出 出 出 出 出i出f出 出(出!出軍出軍出i出l出e出輸入出e出l出p出e出本出:出:出L出o出a出d出軍出i出l出e出T出o出S出t出本出i出n出成出(出J出s出o出n出S出t出本出i出n出成出,出 出*出軍出i出l出e出P出a出t出h出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出軍出a出i出l出e出d出 出t出o出 出l出o出a出d出 出c出使出l出t出使出本出a出l出 出d出a出t出a出 出f出本出o出設置出:出 出%出s出"出)出,出 出*出軍出i出l出e出P出a出t出h出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出T出S出h出a出本出e出d出P出t出本出<出軍出J出s出o出n出O出b出大出e出c出t出>出 出J出s出o出n出O出b出大出e出c出t出;出
+出 出 出 出 出T出S出h出a出本出e出d出R出e出f出<出T出J出s出o出n出R出e出a出d出e出本出<出>出>出 出R出e出a出d出e出本出 出=出 出T出J出s出o出n出R出e出a出d出e出本出軍出a出c出t出o出本出y出<出>出:出:出C出本出e出a出t出e出(出J出s出o出n出S出t出本出i出n出成出)出;出
+出 出 出 出 出i出f出 出(出!出軍出J出s出o出n出S出e出本出i出a出l出i出z出e出本出:出:出D出e出s出e出本出i出a出l出i出z出e出(出R出e出a出d出e出本出,出 出J出s出o出n出O出b出大出e出c出t出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出軍出a出i出l出e出d出 出t出o出 出p出a出本出s出e出 出c出使出l出t出使出本出a出l出 出d出a出t出a出 出J出S出O出的出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出解出析出文出化出內出容出
+出 出 出 出 出c出o出n出s出t出 出T出A出本出本出a出y出<出T出S出h出a出本出e出d出P出t出本出<出軍出J出s出o出n出V出a出l出使出e出>出>出*出 出C出o出n出t出e出n出t出A出本出本出a出y出;出
+出 出 出 出 出i出f出 出(出J出s出o出n出O出b出大出e出c出t出-出>出T出本出y出G出e出t出A出本出本出a出y出軍出i出e出l出d出(出T出E出X出T出(出"出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出"出)出,出 出C出o出n出t出e出n出t出A出本出本出a出y出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出V出a出l出使出e出 出:出 出*出C出o出n出t出e出n出t出A出本出本出a出y出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出S出h出a出本出e出d出P出t出本出<出軍出J出s出o出n出O出b出大出e出c出t出>出 出C出o出n出t出e出n出t出J出s出o出n出 出=出 出V出a出l出使出e出-出>出A出s出O出b出大出e出c出t出(出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出軍出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出I出n出f出o出 出C出o出n出t出e出n出t出I出n出f出o出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出o出n出t出e出n出t出I出n出f出o出.出C出o出n出t出e出n出t出I出D出 出=出 出C出o出n出t出e出n出t出J出s出o出n出-出>出G出e出t出S出t出本出i出n出成出軍出i出e出l出d出(出T出E出X出T出(出"出C出o出n出t出e出n出t出I出D出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出o出n出t出e出n出t出I出n出f出o出.出C出o出n出t出e出n出t出T出y出p出e出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出E出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出T出y出p出e出>出(出C出o出n出t出e出n出t出J出s出o出n出-出>出G出e出t出I出n出t出e出成出e出本出軍出i出e出l出d出(出T出E出X出T出(出"出C出o出n出t出e出n出t出T出y出p出e出"出)出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出o出n出t出e出n出t出I出n出f出o出.出S出e出n出s出i出t出i出正出i出t出y出L出e出正出e出l出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出E出C出使出l出t出使出本出a出l出S出e出n出s出i出t出i出正出i出t出y出>出(出C出o出n出t出e出n出t出J出s出o出n出-出>出G出e出t出I出n出t出e出成出e出本出軍出i出e出l出d出(出T出E出X出T出(出"出S出e出n出s出i出t出i出正出i出t出y出L出e出正出e出l出"出)出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出o出n出t出e出n出t出I出n出f出o出.出A出d出a出p出t出e出d出C出o出n出t出e出n出t出I出D出 出=出 出C出o出n出t出e出n出t出J出s出o出n出-出>出G出e出t出S出t出本出i出n出成出軍出i出e出l出d出(出T出E出X出T出(出"出A出d出a出p出t出e出d出C出o出n出t出e出n出t出I出D出"出)出)出;出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出c出o出n出s出t出 出T出A出本出本出a出y出<出T出S出h出a出本出e出d出P出t出本出<出軍出J出s出o出n出V出a出l出使出e出>出>出*出 出R出e出成出i出o出n出s出A出本出本出a出y出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出C出o出n出t出e出n出t出J出s出o出n出-出>出T出本出y出G出e出t出A出本出本出a出y出軍出i出e出l出d出(出T出E出X出T出(出"出A出f出f出e出c出t出e出d出R出e出成出i出o出n出s出"出)出,出 出R出e出成出i出o出n出s出A出本出本出a出y出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出R出e出成出i出o出n出V出a出l出使出e出 出:出 出*出R出e出成出i出o出n出s出A出本出本出a出y出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出o出n出t出e出n出t出I出n出f出o出.出A出f出f出e出c出t出e出d出R出e出成出i出o出n出s出.出A出d出d出(出R出e出成出i出o出n出V出a出l出使出e出-出>出A出s出S出t出本出i出n出成出(出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出使出l出t出使出本出a出l出C出o出n出t出e出n出t出R出e出成出i出s出t出本出y出.出A出d出d出(出C出o出n出t出e出n出t出I出n出f出o出.出C出o出n出t出e出n出t出I出D出,出 出C出o出n出t出e出n出t出I出n出f出o出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出L出o出a出d出e出d出 出c出使出l出t出使出本出a出l出 出d出a出t出a出 出f出本出o出設置出:出 出%出s出"出)出,出 出*出軍出i出l出e出P出a出t出h出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出C出使出l出t出使出本出e出A出d出a出p出t出e出本出:出:出L出o出a出d出C出使出l出t出使出本出a出l出D出a出t出a出(出)出
+出{出
+出 出 出 出 出/出/出 出加出載出默出認出文出化出數出據出
+出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出f出a出使出l出t出D出a出t出a出P出a出t出h出 出=出 出軍出P出a出t出h出s出:出:出P出本出o出大出e出c出t出C出o出n出t出e出n出t出D出i出本出(出)出 出/出 出T出E出X出T出(出"出D出a出t出a出/出C出使出l出t出使出本出a出l出D出a出t出a出.出大出s出o出n出"出)出;出
+出
+出 出 出 出 出i出f出 出(出軍出P出a出t出h出s出:出:出軍出i出l出e出E出x出i出s出t出s出(出D出e出f出a出使出l出t出D出a出t出a出P出a出t出h出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出a出d出C出使出l出t出使出本出a出l出D出a出t出a出(出D出e出f出a出使出l出t出D出a出t出a出P出a出t出h出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出的出o出 出c出使出l出t出使出本出a出l出 出d出a出t出a出 出f出i出l出e出 出f出o出使出n出d出 出a出t出:出 出%出s出,出 出使出s出i出n出成出 出d出e出f出a出使出l出t出s出"出)出,出 出*出D出e出f出a出使出l出t出D出a出t出a出P出a出t出h出)出;出
+出 出 出 出 出}出
+出}出
+出

@@ -1,219 +1,220 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "MingStrategic.generated.h"
-
-/**
- * 12勢力類型 - 民國史詩時期主要勢力
- */
-UENUM(BlueprintType)
-enum class EFactionType: uint8 {
-    // 核心勢力 (3個)
-    BeiyangGovernment      UMETA(DisplayName = "北洋政府"),      // 北京，中央正統
-    NationalistGovernment  UMETA(DisplayName = "國民政府"),      // 南京/廣州，民族主義
-    ChineseCommunistParty  UMETA(DisplayName = "中國共產黨"),    // 延安/江西，人民戰爭
-
-    // 北方軍閥 (4個)
-    FengtianClique       UMETA(DisplayName = "奉系軍閥"),       // 瀋陽，東北工業
-    ZhiliClique          UMETA(DisplayName = "直系軍閥"),       // 保定/洛陽，中原霸主
-    AnhuiClique          UMETA(DisplayName = "皖系軍閥"),       // 天津/合肥，政治操作
-    JinClique            UMETA(DisplayName = "晉系軍閥"),       // 太原，山西模範
-
-    // 南方軍閥 (3個)
-    GuangxiClique        UMETA(DisplayName = "桂系軍閥"),       // 桂林/南寧，廣西民兵
-    YunnanClique         UMETA(DisplayName = "滇系軍閥"),       // 昆明，護國傳統
-    SichuanClique        UMETA(DisplayName = "川系軍閥"),       // 成都/重慶，防區制
-
-    // 邊疆勢力 (2個)
-    MaFamily             UMETA(DisplayName = "馬家軍"),         // 蘭州/西寧，回族騎兵
-    XinjiangFaction      UMETA(DisplayName = "新疆勢力"),       // 迪化，邊疆要塞
-
-    // 特殊
-    Invalid              UMETA(DisplayName = "無效"),
-    Count                UMETA(DisplayName = "勢力數量")  // 12
-};
-
-/**
- * 勢力難度等級
- */
-UENUM(BlueprintType)
-enum class EFactionDifficulty: uint8 {
-    Easy          UMETA(DisplayName = "容易 ★★☆☆☆"),
-    Normal        UMETA(DisplayName = "普通 ★★★☆☆"),
-    Hard          UMETA(DisplayName = "困難 ★★★★☆"),
-    VeryHard      UMETA(DisplayName = "極難 ★★★★★"),
-    Custom        UMETA(DisplayName = "自定義")
-};
-
-/**
- * 勢力特色機制類型
- */
-UENUM(BlueprintType)
-enum class EFactionSpecialMechanic: uint8 {
-    // 政治機制
-    CentralLegitimacy    UMETA(DisplayName = "中央正統"),      // 外交優勢
-    Nationalism          UMETA(DisplayName = "民族主義"),      // 現代化
-    PeoplesWar           UMETA(DisplayName = "人民戰爭"),      // 游擊戰
-    
-    // 軍事機制
-    NortheastIndustry    UMETA(DisplayName = "東北工業"),      // 騎兵優勢
-    CentralHegemony      UMETA(DisplayName = "中原霸主"),      // 兵力龐大
-    PoliticalManeuvering UMETA(DisplayName = "政治操作"),      // 日本援助
-    ShanxiModel          UMETA(DisplayName = "山西模範"),      // 防禦專精
-    GuangxiMilitia       UMETA(DisplayName = "廣西民兵"),      // 山地戰
-    DefenseOfNation      UMETA(DisplayName = "護國傳統"),      // 邊疆擴張
-    DefenseZoneSystem    UMETA(DisplayName = "防區制"),        // 內部統一
-    ReligiousUnity       UMETA(DisplayName = "宗教團結"),      // 回族騎兵
-    FrontierFortress     UMETA(DisplayName = "邊疆要塞"),      // 民族複雜
-    
-    // 經濟機制
-    IndustrialBase       UMETA(DisplayName = "工業基礎"),
-    TradeNetwork         UMETA(DisplayName = "貿易網絡"),
-    ResourceRich         UMETA(DisplayName = "資源豐富"),
-    
-    // 文化機制
-    CulturalHeritage     UMETA(DisplayName = "文化傳承"),
-    RegionalIdentity     UMETA(DisplayName = "地域認同"),
-    
-    Count
-};
-
-/**
- * 勢力關係類型
- */
-UENUM(BlueprintType)
-enum class EFactionRelationType: uint8 {
-    Ally           UMETA(DisplayName = "同盟"),
-    Friendly       UMETA(DisplayName = "友好"),
-    Neutral        UMETA(DisplayName = "中立"),
-    Hostile        UMETA(DisplayName = "敵對"),
-    War            UMETA(DisplayName = "戰爭"),
-    Vassal         UMETA(DisplayName = "附庸"),
-    Suzerain       UMETA(DisplayName = "宗主")
-};
-
-/**
- * 勢力狀態
- */
-UENUM(BlueprintType)
-enum class EFactionState: uint8 {
-    Active         UMETA(DisplayName = "活躍"),
-    Defeated       UMETA(DisplayName = "被擊敗"),
-    Absorbed       UMETA(DisplayName = "被吸收"),
-    Allied         UMETA(DisplayName = "結盟"),
-    Isolated       UMETA(DisplayName = "孤立"),
-    Expanding      UMETA(DisplayName = "擴張中"),
-    Defensive      UMETA(DisplayName = "防禦中")
-};
-
-/**
- * 起始地區
- */
-UENUM(BlueprintType)
-enum class EStartingRegion: uint8 {
-    // 華北
-    Beijing        UMETA(DisplayName = "北京"),
-    Baoding        UMETA(DisplayName = "保定"),
-    Tianjin        UMETA(DisplayName = "天津"),
-    Taiyuan        UMETA(DisplayName = "太原"),
-    
-    // 華東/華中
-    Nanjing        UMETA(DisplayName = "南京"),
-    Guangzhou      UMETA(DisplayName = "廣州"),
-    Luoyang        UMETA(DisplayName = "洛陽"),
-    Hefei          UMETA(DisplayName = "合肥"),
-    
-    // 東北
-    Shenyang       UMETA(DisplayName = "瀋陽"),
-    
-    // 華南
-    Guilin         UMETA(DisplayName = "桂林"),
-    Nanning        UMETA(DisplayName = "南寧"),
-    
-    // 西南
-    Kunming        UMETA(DisplayName = "昆明"),
-    Chengdu        UMETA(DisplayName = "成都"),
-    Chongqing      UMETA(DisplayName = "重慶"),
-    
-    // 西北
-    Lanzhou        UMETA(DisplayName = "蘭州"),
-    Xining         UMETA(DisplayName = "西寧"),
-    Dihua          UMETA(DisplayName = "迪化"),
-    
-    // 特殊
-    Yanan          UMETA(DisplayName = "延安"),
-    Jiangxi        UMETA(DisplayName = "江西"),
-    
-    Count
-};
-
-/**
- * 專屬單位類型
- */
-UENUM(BlueprintType)
-enum class EUniqueUnitType: uint8 {
-    // 北洋政府
-    BeiyangEliteInfantry    UMETA(DisplayName = "北洋精銳步兵"),
-    ZhongnanhaiGuard        UMETA(DisplayName = "中南海衛隊"),
-    
-    // 國民政府
-    WhampoaCadet            UMETA(DisplayName = "黃埔學員"),
-    NationalistGuard        UMETA(DisplayName = "國民衛隊"),
-    
-    // 中國共產黨
-    RedArmyVeteran          UMETA(DisplayName = "紅軍老兵"),
-    PeoplesGuerrilla        UMETA(DisplayName = "人民游擊隊"),
-    
-    // 奉系
-    NortheastCavalry        UMETA(DisplayName = "東北騎兵"),
-    MukdenElite             UMETA(DisplayName = "奉天精銳"),
-    
-    // 直系
-    ZhiliRegularArmy        UMETA(DisplayName = "直隸正規軍"),
-    CentralPlainWarrior     UMETA(DisplayName = "中原勇士"),
-    
-    // 皖系
-    AnhuiMilitia            UMETA(DisplayName = "皖系民兵"),
-    PoliticalGuard          UMETA(DisplayName = "政治衛隊"),
-    
-    // 晉系
-    ShanxiDefender          UMETA(DisplayName = "山西衛士"),
-    TaiyuanElite            UMETA(DisplayName = "太原精銳"),
-    
-    // 桂系
-    GuangxiWolf             UMETA(DisplayName = "廣西狼兵"),
-    MountainFighter         UMETA(DisplayName = "山地戰士"),
-    
-    // 滇系
-    YunnanIronBull          UMETA(DisplayName = "雲南鐵牛"),
-    FrontierDefender        UMETA(DisplayName = "邊疆衛士"),
-    
-    // 川系
-    SichuanWarlord          UMETA(DisplayName = "四川軍閥"),
-    BaFighter               UMETA(DisplayName = "巴國戰士"),
-    
-    // 馬家軍
-    HuiCavalry              UMETA(DisplayName = "回民騎兵"),
-    SilkRoadWarrior         UMETA(DisplayName = "絲路勇士"),
-    
-    // 新疆
-    XinjiangGuard          UMETA(DisplayName = "新疆衛隊"),
-    FrontierVeteran          UMETA(DisplayName = "邊疆老兵"),
-    
-    Count
-};
-
-/**
- * 勢力AI策略類型
- */
-UENUM(BlueprintType)
-enum class EFactionAIStrategy: uint8 {
-    AggressiveExpansion    UMETA(DisplayName = "侵略擴張"),
-    DefensiveConsolidation UMETA(DisplayName = "防禦鞏固"),
-    EconomicDevelopment  UMETA(DisplayName = "經濟發展"),
-    DiplomaticManipulation UMETA(DisplayName = "外交操控"),
-    MilitarySuperiority    UMETA(DisplayName = "軍事優勢"),
-    CulturalInfluence      UMETA(DisplayName = "文化影響"),
-    BalancedApproach       UMETA(DisplayName = "平衡策略"),
-    AdaptiveStrategy       UMETA(DisplayName = "適應性策略")
-};
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出S出t出本出a出t出e出成出i出c出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出1出2出勢出力出類出型出 出-出 出民出國出史出詩出時出期出主出要出勢出力出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出軍出a出c出t出i出o出n出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出/出/出 出核出心出勢出力出 出(出3出個出)出
+出 出 出 出 出B出e出i出y出a出n出成出G出o出正出e出本出n出設置出e出n出t出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出北出洋出政出府出"出)出,出 出 出 出 出 出 出/出/出 出北出京出，出中出央出正出統出
+出 出 出 出 出的出a出t出i出o出n出a出l出i出s出t出G出o出正出e出本出n出設置出e出n出t出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出國出民出政出府出"出)出,出 出 出 出 出 出 出/出/出 出南出京出/出廣出州出，出民出族出主出義出
+出 出 出 出 出C出h出i出n出e出s出e出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出中出國出共出產出黨出"出)出,出 出 出 出 出/出/出 出延出安出/出江出西出，出人出民出戰出爭出
+出
+出 出 出 出 出/出/出 出北出方出軍出閥出 出(出4出個出)出
+出 出 出 出 出軍出e出n出成出t出i出a出n出C出l出i出q出使出e出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出奉出系出軍出閥出"出)出,出 出 出 出 出 出 出 出/出/出 出瀋出陽出，出東出北出工出業出
+出 出 出 出 出Z出h出i出l出i出C出l出i出q出使出e出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出直出系出軍出閥出"出)出,出 出 出 出 出 出 出 出/出/出 出保出定出/出洛出陽出，出中出原出霸出主出
+出 出 出 出 出A出n出h出使出i出C出l出i出q出使出e出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出皖出系出軍出閥出"出)出,出 出 出 出 出 出 出 出/出/出 出天出津出/出合出肥出，出政出治出操出作出
+出 出 出 出 出J出i出n出C出l出i出q出使出e出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出晉出系出軍出閥出"出)出,出 出 出 出 出 出 出 出/出/出 出太出原出，出山出西出模出範出
+出
+出 出 出 出 出/出/出 出南出方出軍出閥出 出(出3出個出)出
+出 出 出 出 出G出使出a出n出成出x出i出C出l出i出q出使出e出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出桂出系出軍出閥出"出)出,出 出 出 出 出 出 出 出/出/出 出桂出林出/出南出寧出，出廣出西出民出兵出
+出 出 出 出 出Y出使出n出n出a出n出C出l出i出q出使出e出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出滇出系出軍出閥出"出)出,出 出 出 出 出 出 出 出/出/出 出昆出明出，出護出國出傳出統出
+出 出 出 出 出S出i出c出h出使出a出n出C出l出i出q出使出e出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出川出系出軍出閥出"出)出,出 出 出 出 出 出 出 出/出/出 出成出都出/出重出慶出，出防出區出制出
+出
+出 出 出 出 出/出/出 出邊出疆出勢出力出 出(出2出個出)出
+出 出 出 出 出M出a出軍出a出設置出i出l出y出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出馬出家出軍出"出)出,出 出 出 出 出 出 出 出 出 出/出/出 出蘭出州出/出西出寧出，出回出族出騎出兵出
+出 出 出 出 出X出i出n出大出i出a出n出成出軍出a出c出t出i出o出n出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出新出疆出勢出力出"出)出,出 出 出 出 出 出 出 出/出/出 出迪出化出，出邊出疆出要出塞出
+出
+出 出 出 出 出/出/出 出特出殊出
+出 出 出 出 出I出n出正出a出l出i出d出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出無出效出"出)出,出
+出 出 出 出 出C出o出使出n出t出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出勢出力出數出量出"出)出 出 出/出/出 出1出2出
+出}出;出
+出
+出/出*出*出
+出 出*出 出勢出力出難出度出等出級出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出軍出a出c出t出i出o出n出D出i出f出f出i出c出使出l出t出y出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出E出a出s出y出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出容出易出 出★出★出☆出☆出☆出"出)出,出
+出 出 出 出 出的出o出本出設置出a出l出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出普出通出 出★出★出★出☆出☆出"出)出,出
+出 出 出 出 出輸入出a出本出d出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出困出難出 出★出★出★出★出☆出"出)出,出
+出 出 出 出 出V出e出本出y出輸入出a出本出d出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出極出難出 出★出★出★出★出★出"出)出,出
+出 出 出 出 出C出使出s出t出o出設置出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出自出定出義出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出勢出力出特出色出機出制出類出型出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出軍出a出c出t出i出o出n出S出p出e出c出i出a出l出M出e出c出h出a出n出i出c出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出/出/出 出政出治出機出制出
+出 出 出 出 出C出e出n出t出本出a出l出L出e出成出i出t出i出設置出a出c出y出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出中出央出正出統出"出)出,出 出 出 出 出 出 出/出/出 出外出交出優出勢出
+出 出 出 出 出的出a出t出i出o出n出a出l出i出s出設置出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出民出族出主出義出"出)出,出 出 出 出 出 出 出/出/出 出現出代出化出
+出 出 出 出 出P出e出o出p出l出e出s出基本出a出本出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出人出民出戰出爭出"出)出,出 出 出 出 出 出 出/出/出 出游出擊出戰出
+出 出 出 出 出
+出 出 出 出 出/出/出 出軍出事出機出制出
+出 出 出 出 出的出o出本出t出h出e出a出s出t出I出n出d出使出s出t出本出y出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出東出北出工出業出"出)出,出 出 出 出 出 出 出/出/出 出騎出兵出優出勢出
+出 出 出 出 出C出e出n出t出本出a出l出輸入出e出成出e出設置出o出n出y出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出中出原出霸出主出"出)出,出 出 出 出 出 出 出/出/出 出兵出力出龐出大出
+出 出 出 出 出P出o出l出i出t出i出c出a出l出M出a出n出e出使出正出e出本出i出n出成出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出政出治出操出作出"出)出,出 出 出 出 出 出 出/出/出 出日出本出援出助出
+出 出 出 出 出S出h出a出n出x出i出M出o出d出e出l出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出山出西出模出範出"出)出,出 出 出 出 出 出 出/出/出 出防出禦出專出精出
+出 出 出 出 出G出使出a出n出成出x出i出M出i出l出i出t出i出a出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出廣出西出民出兵出"出)出,出 出 出 出 出 出 出/出/出 出山出地出戰出
+出 出 出 出 出D出e出f出e出n出s出e出O出f出的出a出t出i出o出n出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出護出國出傳出統出"出)出,出 出 出 出 出 出 出/出/出 出邊出疆出擴出張出
+出 出 出 出 出D出e出f出e出n出s出e出Z出o出n出e出S出y出s出t出e出設置出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出防出區出制出"出)出,出 出 出 出 出 出 出 出 出/出/出 出內出部出統出一出
+出 出 出 出 出R出e出l出i出成出i出o出使出s出U出n出i出t出y出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出宗出教出團出結出"出)出,出 出 出 出 出 出 出/出/出 出回出族出騎出兵出
+出 出 出 出 出軍出本出o出n出t出i出e出本出軍出o出本出t出本出e出s出s出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出邊出疆出要出塞出"出)出,出 出 出 出 出 出 出/出/出 出民出族出複出雜出
+出 出 出 出 出
+出 出 出 出 出/出/出 出經出濟出機出制出
+出 出 出 出 出I出n出d出使出s出t出本出i出a出l出B出a出s出e出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出工出業出基出礎出"出)出,出
+出 出 出 出 出T出本出a出d出e出的出e出t出w出o出本出k出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出貿出易出網出絡出"出)出,出
+出 出 出 出 出R出e出s出o出使出本出c出e出R出i出c出h出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出資出源出豐出富出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出文出化出機出制出
+出 出 出 出 出C出使出l出t出使出本出a出l出輸入出e出本出i出t出a出成出e出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出文出化出傳出承出"出)出,出
+出 出 出 出 出R出e出成出i出o出n出a出l出I出d出e出n出t出i出t出y出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出地出域出認出同出"出)出,出
+出 出 出 出 出
+出 出 出 出 出C出o出使出n出t出
+出}出;出
+出
+出/出*出*出
+出 出*出 出勢出力出關出係出類出型出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出軍出a出c出t出i出o出n出R出e出l出a出t出i出o出n出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出A出l出l出y出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出同出盟出"出)出,出
+出 出 出 出 出軍出本出i出e出n出d出l出y出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出友出好出"出)出,出
+出 出 出 出 出的出e出使出t出本出a出l出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出中出立出"出)出,出
+出 出 出 出 出輸入出o出s出t出i出l出e出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出敵出對出"出)出,出
+出 出 出 出 出基本出a出本出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出戰出爭出"出)出,出
+出 出 出 出 出V出a出s出s出a出l出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出附出庸出"出)出,出
+出 出 出 出 出S出使出z出e出本出a出i出n出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出宗出主出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出勢出力出狀出態出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出軍出a出c出t出i出o出n出S出t出a出t出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出A出c出t出i出正出e出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出活出躍出"出)出,出
+出 出 出 出 出D出e出f出e出a出t出e出d出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出被出擊出敗出"出)出,出
+出 出 出 出 出A出b出s出o出本出b出e出d出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出被出吸出收出"出)出,出
+出 出 出 出 出A出l出l出i出e出d出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出結出盟出"出)出,出
+出 出 出 出 出I出s出o出l出a出t出e出d出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出孤出立出"出)出,出
+出 出 出 出 出E出x出p出a出n出d出i出n出成出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出擴出張出中出"出)出,出
+出 出 出 出 出D出e出f出e出n出s出i出正出e出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出防出禦出中出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出起出始出地出區出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出S出t出a出本出t出i出n出成出R出e出成出i出o出n出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出/出/出 出華出北出
+出 出 出 出 出B出e出i出大出i出n出成出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出北出京出"出)出,出
+出 出 出 出 出B出a出o出d出i出n出成出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出保出定出"出)出,出
+出 出 出 出 出T出i出a出n出大出i出n出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出天出津出"出)出,出
+出 出 出 出 出T出a出i出y出使出a出n出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出太出原出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出華出東出/出華出中出
+出 出 出 出 出的出a出n出大出i出n出成出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出南出京出"出)出,出
+出 出 出 出 出G出使出a出n出成出z出h出o出使出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出廣出州出"出)出,出
+出 出 出 出 出L出使出o出y出a出n出成出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出洛出陽出"出)出,出
+出 出 出 出 出輸入出e出f出e出i出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出合出肥出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出東出北出
+出 出 出 出 出S出h出e出n出y出a出n出成出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出瀋出陽出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出華出南出
+出 出 出 出 出G出使出i出l出i出n出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出桂出林出"出)出,出
+出 出 出 出 出的出a出n出n出i出n出成出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出南出寧出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出西出南出
+出 出 出 出 出K出使出n出設置出i出n出成出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出昆出明出"出)出,出
+出 出 出 出 出C出h出e出n出成出d出使出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出成出都出"出)出,出
+出 出 出 出 出C出h出o出n出成出q出i出n出成出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出重出慶出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出西出北出
+出 出 出 出 出L出a出n出z出h出o出使出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出蘭出州出"出)出,出
+出 出 出 出 出X出i出n出i出n出成出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出西出寧出"出)出,出
+出 出 出 出 出D出i出h出使出a出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出迪出化出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出特出殊出
+出 出 出 出 出Y出a出n出a出n出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出延出安出"出)出,出
+出 出 出 出 出J出i出a出n出成出x出i出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出江出西出"出)出,出
+出 出 出 出 出
+出 出 出 出 出C出o出使出n出t出
+出}出;出
+出
+出/出*出*出
+出 出*出 出專出屬出單出位出類出型出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出U出n出i出q出使出e出U出n出i出t出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出/出/出 出北出洋出政出府出
+出 出 出 出 出B出e出i出y出a出n出成出E出l出i出t出e出I出n出f出a出n出t出本出y出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出北出洋出精出銳出步出兵出"出)出,出
+出 出 出 出 出Z出h出o出n出成出n出a出n出h出a出i出G出使出a出本出d出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出中出南出海出衛出隊出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出國出民出政出府出
+出 出 出 出 出基本出h出a出設置出p出o出a出C出a出d出e出t出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出黃出埔出學出員出"出)出,出
+出 出 出 出 出的出a出t出i出o出n出a出l出i出s出t出G出使出a出本出d出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出國出民出衛出隊出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出中出國出共出產出黨出
+出 出 出 出 出R出e出d出A出本出設置出y出V出e出t出e出本出a出n出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出紅出軍出老出兵出"出)出,出
+出 出 出 出 出P出e出o出p出l出e出s出G出使出e出本出本出i出l出l出a出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出人出民出游出擊出隊出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出奉出系出
+出 出 出 出 出的出o出本出t出h出e出a出s出t出C出a出正出a出l出本出y出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出東出北出騎出兵出"出)出,出
+出 出 出 出 出M出使出k出d出e出n出E出l出i出t出e出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出奉出天出精出銳出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出直出系出
+出 出 出 出 出Z出h出i出l出i出R出e出成出使出l出a出本出A出本出設置出y出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出直出隸出正出規出軍出"出)出,出
+出 出 出 出 出C出e出n出t出本出a出l出P出l出a出i出n出基本出a出本出本出i出o出本出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出中出原出勇出士出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出皖出系出
+出 出 出 出 出A出n出h出使出i出M出i出l出i出t出i出a出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出皖出系出民出兵出"出)出,出
+出 出 出 出 出P出o出l出i出t出i出c出a出l出G出使出a出本出d出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出政出治出衛出隊出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出晉出系出
+出 出 出 出 出S出h出a出n出x出i出D出e出f出e出n出d出e出本出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出山出西出衛出士出"出)出,出
+出 出 出 出 出T出a出i出y出使出a出n出E出l出i出t出e出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出太出原出精出銳出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出桂出系出
+出 出 出 出 出G出使出a出n出成出x出i出基本出o出l出f出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出廣出西出狼出兵出"出)出,出
+出 出 出 出 出M出o出使出n出t出a出i出n出軍出i出成出h出t出e出本出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出山出地出戰出士出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出滇出系出
+出 出 出 出 出Y出使出n出n出a出n出I出本出o出n出B出使出l出l出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出雲出南出鐵出牛出"出)出,出
+出 出 出 出 出軍出本出o出n出t出i出e出本出D出e出f出e出n出d出e出本出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出邊出疆出衛出士出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出川出系出
+出 出 出 出 出S出i出c出h出使出a出n出基本出a出本出l出o出本出d出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出四出川出軍出閥出"出)出,出
+出 出 出 出 出B出a出軍出i出成出h出t出e出本出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出巴出國出戰出士出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出馬出家出軍出
+出 出 出 出 出輸入出使出i出C出a出正出a出l出本出y出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出回出民出騎出兵出"出)出,出
+出 出 出 出 出S出i出l出k出R出o出a出d出基本出a出本出本出i出o出本出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出絲出路出勇出士出"出)出,出
+出 出 出 出 出
+出 出 出 出 出/出/出 出新出疆出
+出 出 出 出 出X出i出n出大出i出a出n出成出G出使出a出本出d出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出新出疆出衛出隊出"出)出,出
+出 出 出 出 出軍出本出o出n出t出i出e出本出V出e出t出e出本出a出n出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出邊出疆出老出兵出"出)出,出
+出 出 出 出 出
+出 出 出 出 出C出o出使出n出t出
+出}出;出
+出
+出/出*出*出
+出 出*出 出勢出力出A出I出策出略出類出型出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出軍出a出c出t出i出o出n出A出I出S出t出本出a出t出e出成出y出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出A出成出成出本出e出s出s出i出正出e出E出x出p出a出n出s出i出o出n出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出侵出略出擴出張出"出)出,出
+出 出 出 出 出D出e出f出e出n出s出i出正出e出C出o出n出s出o出l出i出d出a出t出i出o出n出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出防出禦出鞏出固出"出)出,出
+出 出 出 出 出E出c出o出n出o出設置出i出c出D出e出正出e出l出o出p出設置出e出n出t出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出經出濟出發出展出"出)出,出
+出 出 出 出 出D出i出p出l出o出設置出a出t出i出c出M出a出n出i出p出使出l出a出t出i出o出n出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出外出交出操出控出"出)出,出
+出 出 出 出 出M出i出l出i出t出a出本出y出S出使出p出e出本出i出o出本出i出t出y出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出軍出事出優出勢出"出)出,出
+出 出 出 出 出C出使出l出t出使出本出a出l出I出n出f出l出使出e出n出c出e出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出文出化出影出響出"出)出,出
+出 出 出 出 出B出a出l出a出n出c出e出d出A出p出p出本出o出a出c出h出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出平出衡出策出略出"出)出,出
+出 出 出 出 出A出d出a出p出t出i出正出e出S出t出本出a出t出e出成出y出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出適出應出性出策出略出"出)出
+出}出;出
+出

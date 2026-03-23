@@ -1,740 +1,741 @@
-#include "MingRTSPathfinder.h"
-#include "MingRTSUnitManager.h"
-#include "MingGoRTSUnit.h"
-#include "Engine/World.h"
-#include "Components/SceneComponent.h"
-#include "DrawDebugHelpers.h"
-#include "Kismet/KismetSystemLibrary.h"
-
-UMingRTSPathfinder::UMingRTSPathfinder()
-{
-    UnitManager = nullptr;
-    CurrentState = ERTSPathfindingState::Idle;
-    GridCenter = FVector::ZeroVector;
-    GridSize = 10000.0f;
-    GridResolution = 100;
-    NodeSize = GridSize / GridResolution;
-    DefaultAlgorithm = ERTSPathfindingAlgorithm::AStar;
-    TotalCalculationTime = 0.0f;
-    CompletedRequests = 0;
-}
-
-void UMingRTSPathfinder::InitializePathfinder(UMingRTSUnitManager* InUnitManager)
-{
-    UnitManager = InUnitManager;
-    InitializeGrid();
-}
-
-void UMingRTSPathfinder::CalculatePathAsync(const FRTSPathRequest& Request)
-{
-    if (PendingRequests.Num() >= MaxPendingRequests)
-    {
-        // 清理舊的請求
-        PendingRequests.RemoveAt(0, PendingRequests.Num() - MaxPendingRequests + 1);
-    }
-
-    PendingRequests.Add(Request);
-    CurrentState = ERTSPathfindingState::Calculating;
-    OnPathfindingStateChanged.Broadcast(CurrentState);
-}
-
-FRTSPathResult UMingRTSPathfinder::CalculatePath(const FRTSPathRequest& Request)
-{
-    FRTSPathResult Result;
-    double StartTime = FPlatformTime::Seconds();
-
-    // 檢查緩存
-    if (bEnablePathCache)
-    {
-        FString CacheKey = FString::Printf(TEXT("%s_%s_%d"), 
-            *Request.StartLocation.ToString(), 
-            *Request.TargetLocation.ToString(), 
-            (int32)Request.Algorithm);
-        
-        FRTSPathResult* CachedResult = PathCache.Find(CacheKey);
-        if (CachedResult)
-        {
-            Result = *CachedResult;
-            Result.CalculationTime = FPlatformTime::Seconds() - StartTime;
-            return Result;
-        }
-    }
-
-    // 驗證輸入
-    if (!IsValidLocation(Request.StartLocation) || !IsValidLocation(Request.TargetLocation))
-    {
-        Result.bPathFound = false;
-        Result.CalculationTime = FPlatformTime::Seconds() - StartTime;
-        return Result;
-    }
-
-    // 計算路徑
-    TArray<FVector> PathPoints;
-    switch (Request.Algorithm)
-    {
-    case ERTSPathfindingAlgorithm::AStar:
-        PathPoints = CalculateAStarPath(Request.StartLocation, Request.TargetLocation);
-        break;
-    case ERTSPathfindingAlgorithm::Dijkstra:
-        PathPoints = CalculateDijkstraPath(Request.StartLocation, Request.TargetLocation);
-        break;
-    case ERTSPathfindingAlgorithm::FloydWarshall:
-        PathPoints = CalculateFloydWarshallPath(Request.StartLocation, Request.TargetLocation);
-        break;
-    default:
-        PathPoints = CalculateAStarPath(Request.StartLocation, Request.TargetLocation);
-        break;
-    }
-
-    // 構建結果
-    Result.PathPoints = PathPoints;
-    Result.bPathFound = PathPoints.Num() > 0;
-    Result.AlgorithmUsed = Request.Algorithm;
-    Result.CalculationTime = FPlatformTime::Seconds() - StartTime;
-    Result.CompletionTime = FDateTime::Now();
-
-    // 計算路徑長度
-    if (Result.bPathFound)
-    {
-        for (int32 i = 0; i < PathPoints.Num() - 1; i++)
-        {
-            Result.PathLength += FVector::Dist(PathPoints[i], PathPoints[i + 1]);
-        }
-    }
-
-    // 添加到緩存
-    if (bEnablePathCache && Result.bPathFound)
-    {
-        if (PathCache.Num() >= MaxCacheSize)
-        {
-            PathCache.Empty();
-        }
-        
-        FString CacheKey = FString::Printf(TEXT("%s_%s_%d"), 
-            *Request.StartLocation.ToString(), 
-            *Request.TargetLocation.ToString(), 
-            (int32)Request.Algorithm);
-        PathCache.Add(CacheKey, Result);
-    }
-
-    // 更新統計
-    CalculationTimes.Add(Result.CalculationTime);
-    TotalCalculationTime += Result.CalculationTime;
-    CompletedRequests++;
-
-    return Result;
-}
-
-TArray<FVector> UMingRTSPathfinder::FindPath(FVector Start, FVector Target, ERTSPathfindingAlgorithm Algorithm)
-{
-    FRTSPathRequest Request;
-    Request.StartLocation = Start;
-    Request.TargetLocation = Target;
-    Request.Algorithm = Algorithm;
-
-    FRTSPathResult Result = CalculatePath(Request);
-    return Result.PathPoints;
-}
-
-TArray<FVector> UMingRTSPathfinder::OptimizePath(const TArray<FVector>& Path)
-{
-    if (Path.Num() <= 2)
-    {
-        return Path;
-    }
-
-    TArray<FVector> OptimizedPath;
-    OptimizedPath.Add(Path[0]);
-
-    for (int32 i = 1; i < Path.Num() - 1; i++)
-    {
-        FVector Current = Path[i];
-        FVector Next = Path[i + 1];
-
-        // 檢查是否可以直接從前一點到下一點
-        if (OptimizedPath.Num() > 0)
-        {
-            FVector Previous = OptimizedPath.Last();
-            if (IsLocationWalkable(Next) && !IsPathBlocked({Previous, Next}))
-            {
-                // 移除當前點，直接連接前一點和下一點
-                continue;
-            }
-        }
-
-        OptimizedPath.Add(Current);
-    }
-
-    if (Path.Num() > 0)
-    {
-        OptimizedPath.Add(Path.Last());
-    }
-
-    return OptimizedPath;
-}
-
-TArray<FVector> UMingRTSPathfinder::SmoothPath(const TArray<FVector>& Path, int32 SmoothingIterations)
-{
-    TArray<FVector> SmoothedPath = Path;
-
-    for (int32 Iteration = 0; Iteration < SmoothingIterations; Iteration++)
-    {
-        for (int32 i = 1; i < SmoothedPath.Num() - 1; i++)
-        {
-            FVector Previous = SmoothedPath[i - 1];
-            FVector Current = SmoothedPath[i];
-            FVector Next = SmoothedPath[i + 1];
-
-            // 簡單的平滑算法：取周圍點的平均值
-            FVector Average = (Previous + Current + Next) / 3.0f;
-            
-            // 確保平均點是可行的
-            if (IsLocationWalkable(Average))
-            {
-                SmoothedPath[i] = Average;
-            }
-        }
-    }
-
-    return SmoothedPath;
-}
-
-bool UMingRTSPathfinder::IsPathBlocked(const TArray<FVector>& Path)
-{
-    for (int32 i = 0; i < Path.Num() - 1; i++)
-    {
-        if (!IsLocationWalkable(Path[i]) || !IsLocationWalkable(Path[i + 1]))
-        {
-            return true;
-        }
-
-        // 檢查兩點之間是否有障礙物
-        FVector Direction = Path[i + 1] - Path[i];
-        float Distance = Direction.Size();
-        Direction.Normalize();
-
-        // 沿著路徑檢查多個點
-        int32 CheckPoints = FMath::CeilToInt(Distance / NodeSize);
-        for (int32 j = 1; j < CheckPoints; j++)
-        {
-            FVector CheckPoint = Path[i] + Direction * (j * NodeSize);
-            if (!IsLocationWalkable(CheckPoint))
-            {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-TArray<FVector> UMingRTSPathfinder::RecalculatePath(const TArray<FVector>& OriginalPath, FVector CurrentPosition, FVector TargetPosition)
-{
-    // 如果當前位置偏離原路徑太遠，重新計算整個路徑
-    if (OriginalPath.Num() == 0)
-    {
-        return FindPath(CurrentPosition, TargetPosition);
-    }
-
-    // 找到原路徑上離當前位置最近的點
-    float MinDistance = FLT_MAX;
-    int32 ClosestIndex = 0;
-
-    for (int32 i = 0; i < OriginalPath.Num(); i++)
-    {
-        float Distance = FVector::Dist(CurrentPosition, OriginalPath[i]);
-        if (Distance < MinDistance)
-        {
-            MinDistance = Distance;
-            ClosestIndex = i;
-        }
-    }
-
-    // 如果偏離太遠，重新計算
-    if (MinDistance > NodeSize * 2)
-    {
-        return FindPath(CurrentPosition, TargetPosition);
-    }
-
-    // 從最近點重新計算到目標的路徑
-    TArray<FVector> NewPath;
-    for (int32 i = ClosestIndex; i < OriginalPath.Num(); i++)
-    {
-        NewPath.Add(OriginalPath[i]);
-    }
-
-    return NewPath;
-}
-
-void UMingRTSPathfinder::SetTerrainType(FVector Location, ERTSTerrainType TerrainType)
-{
-    FRTSPathNode* Node = GetNodeAtLocation(Location);
-    if (Node)
-    {
-        Node->TerrainType = TerrainType;
-        Node->bIsWalkable = (TerrainType != ERTSTerrainType::Blocked);
-    }
-}
-
-ERTSTerrainType UMingRTSPathfinder::GetTerrainType(FVector Location) const
-{
-    FRTSPathNode* Node = GetNodeAtLocation(Location);
-    if (Node)
-    {
-        return Node->TerrainType;
-    }
-    return ERTSTerrainType::Walkable;
-}
-
-bool UMingRTSPathfinder::IsLocationWalkable(FVector Location) const
-{
-    FRTSPathNode* Node = GetNodeAtLocation(Location);
-    if (Node)
-    {
-        return Node->bIsWalkable;
-    }
-    return true; // 默認可行走
-}
-
-void UMingRTSPathfinder::UpdateTerrainMap()
-{
-    // 重新掃描地形，更新網格
-    ClearGrid();
-    InitializeGrid();
-}
-
-void UMingRTSPathfinder::CreateNavigationGrid(FVector Center, float InGridSize, int32 GridResolution)
-{
-    GridCenter = Center;
-    GridSize = InGridSize;
-    this->GridResolution = GridResolution;
-    NodeSize = GridSize / GridResolution;
-
-    ClearGrid();
-    InitializeGrid();
-}
-
-FRTSPathNode* UMingRTSPathfinder::GetNodeAtLocation(FVector Location) const
-{
-    // 將世界坐標轉換為網格坐標
-    FVector RelativeLocation = Location - GridCenter;
-    int32 X = FMath::RoundToInt(RelativeLocation.X / NodeSize);
-    int32 Y = FMath::RoundToInt(RelativeLocation.Y / NodeSize);
-
-    // 檢查邊界
-    if (X < 0 || X >= GridResolution || Y < 0 || Y >= GridResolution)
-    {
-        return nullptr;
-    }
-
-    return NavigationGrid[X][Y];
-}
-
-TArray<FRTSPathNode*> UMingRTSPathfinder::GetNeighborNodes(FRTSPathNode* Node) const
-{
-    TArray<FRTSPathNode*> Neighbors;
-
-    if (!Node)
-    {
-        return Neighbors;
-    }
-
-    // 找到節點在網格中的位置
-    FVector RelativeLocation = Node->Position - GridCenter;
-    int32 X = FMath::RoundToInt(RelativeLocation.X / NodeSize);
-    int32 Y = FMath::RoundToInt(RelativeLocation.Y / NodeSize);
-
-    // 檢查8個方向的鄰居
-    for (int32 dx = -1; dx <= 1; dx++)
-    {
-        for (int32 dy = -1; dy <= 1; dy++)
-        {
-            if (dx == 0 && dy == 0)
-            {
-                continue; // 跳過自己
-            }
-
-            int32 NeighborX = X + dx;
-            int32 NeighborY = Y + dy;
-
-            // 檢查邊界
-            if (NeighborX >= 0 && NeighborX < GridResolution && 
-                NeighborY >= 0 && NeighborY < GridResolution)
-            {
-                FRTSPathNode* Neighbor = NavigationGrid[NeighborX][NeighborY];
-                if (Neighbor && Neighbor->bIsWalkable)
-                {
-                    Neighbors.Add(Neighbor);
-                }
-            }
-        }
-    }
-
-    return Neighbors;
-}
-
-float UMingRTSPathfinder::GetAverageCalculationTime() const
-{
-    if (CompletedRequests == 0)
-    {
-        return 0.0f;
-    }
-    return TotalCalculationTime / CompletedRequests;
-}
-
-int32 UMingRTSPathfinder::GetPendingRequestCount() const
-{
-    return PendingRequests.Num();
-}
-
-void UMingRTSPathfinder::ClearPathCache()
-{
-    PathCache.Empty();
-}
-
-void UMingRTSPathfinder::DrawDebugPath(const TArray<FVector>& Path, FLinearColor Color, float Duration)
-{
-    if (!bEnableDebugDrawing || Path.Num() < 2)
-    {
-        return;
-    }
-
-    UWorld* World = GetWorld();
-    if (!World)
-    {
-        return;
-    }
-
-    for (int32 i = 0; i < Path.Num() - 1; i++)
-    {
-        DrawDebugLine(World, Path[i], Path[i + 1], Color.ToFColor(true), false, Duration, 0, 2.0f);
-        DrawDebugSphere(World, Path[i], 20.0f, 8, Color.ToFColor(true), false, Duration);
-    }
-
-    // 繪製終點
-    if (Path.Num() > 0)
-    {
-        DrawDebugSphere(World, Path.Last(), 30.0f, 12, Color.ToFColor(true), false, Duration);
-    }
-}
-
-void UMingRTSPathfinder::DrawDebugGrid(FLinearColor Color, float Duration)
-{
-    if (!bEnableDebugDrawing)
-    {
-        return;
-    }
-
-    UWorld* World = GetWorld();
-    if (!World)
-    {
-        return;
-    }
-
-    FVector Start = GridCenter - FVector(GridSize / 2, GridSize / 2, 0);
-
-    // 繪製網格線
-    for (int32 i = 0; i <= GridResolution; i++)
-    {
-        float Offset = i * NodeSize;
-        
-        // 垂直線
-        FVector VerticalStart = Start + FVector(Offset, 0, 0);
-        FVector VerticalEnd = Start + FVector(Offset, GridSize, 0);
-        DrawDebugLine(World, VerticalStart, VerticalEnd, Color.ToFColor(true), false, Duration, 0, 1.0f);
-
-        // 水平線
-        FVector HorizontalStart = Start + FVector(0, Offset, 0);
-        FVector HorizontalEnd = Start + FVector(GridSize, Offset, 0);
-        DrawDebugLine(World, HorizontalStart, HorizontalEnd, Color.ToFColor(true), false, Duration, 0, 1.0f);
-    }
-
-    // 繪製不可行走的節點
-    for (int32 x = 0; x < GridResolution; x++)
-    {
-        for (int32 y = 0; y < GridResolution; y++)
-        {
-            FRTSPathNode* Node = NavigationGrid[x][y];
-            if (Node && !Node->bIsWalkable)
-            {
-                DrawDebugBox(World, Node->Position, FVector(NodeSize / 2, NodeSize / 2, 10), FRotator::ZeroRotator, FColor::Red, false, Duration);
-            }
-        }
-    }
-}
-
-TArray<FVector> UMingRTSPathfinder::CalculateAStarPath(FVector Start, FVector Target)
-{
-    TArray<FVector> Path;
-
-    FRTSPathNode* StartNode = GetNodeAtLocation(Start);
-    FRTSPathNode* TargetNode = GetNodeAtLocation(Target);
-
-    if (!StartNode || !TargetNode || !StartNode->bIsWalkable || !TargetNode->bIsWalkable)
-    {
-        return Path;
-    }
-
-    // A*算法實現
-    TArray<FRTSPathNode*> OpenSet;
-    TArray<FRTSPathNode*> ClosedSet;
-
-    OpenSet.Add(StartNode);
-    StartNode->GCost = 0.0f;
-    StartNode->HCost = CalculateHeuristic(Start, Target);
-    StartNode->UpdateFCost();
-
-    while (OpenSet.Num() > 0)
-    {
-        // 找到F成本最低的節點
-        FRTSPathNode* CurrentNode = OpenSet[0];
-        int32 CurrentIndex = 0;
-
-        for (int32 i = 1; i < OpenSet.Num(); i++)
-        {
-            if (OpenSet[i]->FCost < CurrentNode->FCost || 
-                (OpenSet[i]->FCost == CurrentNode->FCost && OpenSet[i]->HCost < CurrentNode->HCost))
-            {
-                CurrentNode = OpenSet[i];
-                CurrentIndex = i;
-            }
-        }
-
-        OpenSet.RemoveAt(CurrentIndex);
-        ClosedSet.Add(CurrentNode);
-
-        // 到達目標
-        if (CurrentNode == TargetNode)
-        {
-            return ReconstructPath(TargetNode);
-        }
-
-        // 檢查鄰居
-        TArray<FRTSPathNode*> Neighbors = GetNeighborNodes(CurrentNode);
-        for (FRTSPathNode* Neighbor : Neighbors)
-        {
-            if (ClosedSet.Contains(Neighbor))
-            {
-                continue;
-            }
-
-            float NewGCost = CurrentNode->GCost + CalculateTerrainCost(Neighbor->Position);
-
-            if (!OpenSet.Contains(Neighbor))
-            {
-                OpenSet.Add(Neighbor);
-            }
-            else if (NewGCost >= Neighbor->GCost)
-            {
-                continue;
-            }
-
-            Neighbor->Parent = CurrentNode;
-            Neighbor->GCost = NewGCost;
-            Neighbor->HCost = CalculateHeuristic(Neighbor->Position, Target);
-            Neighbor->UpdateFCost();
-        }
-    }
-
-    return Path; // 沒有找到路徑
-}
-
-TArray<FVector> UMingRTSPathfinder::CalculateDijkstraPath(FVector Start, FVector Target)
-{
-    // Dijkstra算法實現（類似A*但不使用啟發式）
-    TArray<FVector> Path;
-
-    FRTSPathNode* StartNode = GetNodeAtLocation(Start);
-    FRTSPathNode* TargetNode = GetNodeAtLocation(Target);
-
-    if (!StartNode || !TargetNode || !StartNode->bIsWalkable || !TargetNode->bIsWalkable)
-    {
-        return Path;
-    }
-
-    // 初始化所有節點的距離為無窮大
-    TArray<FRTSPathNode*> AllNodes;
-    for (int32 x = 0; x < GridResolution; x++)
-    {
-        for (int32 y = 0; y < GridResolution; y++)
-        {
-            FRTSPathNode* Node = NavigationGrid[x][y];
-            if (Node && Node->bIsWalkable)
-            {
-                Node->GCost = FLT_MAX;
-                AllNodes.Add(Node);
-            }
-        }
-    }
-
-    StartNode->GCost = 0.0f;
-
-    while (AllNodes.Num() > 0)
-    {
-        // 找到距離最小的節點
-        FRTSPathNode* CurrentNode = AllNodes[0];
-        int32 CurrentIndex = 0;
-
-        for (int32 i = 1; i < AllNodes.Num(); i++)
-        {
-            if (AllNodes[i]->GCost < CurrentNode->GCost)
-            {
-                CurrentNode = AllNodes[i];
-                CurrentIndex = i;
-            }
-        }
-
-        AllNodes.RemoveAt(CurrentIndex);
-
-        if (CurrentNode == TargetNode)
-        {
-            return ReconstructPath(TargetNode);
-        }
-
-        TArray<FRTSPathNode*> Neighbors = GetNeighborNodes(CurrentNode);
-        for (FRTSPathNode* Neighbor : Neighbors)
-        {
-            if (!AllNodes.Contains(Neighbor))
-            {
-                continue;
-            }
-
-            float NewGCost = CurrentNode->GCost + CalculateTerrainCost(Neighbor->Position);
-            if (NewGCost < Neighbor->GCost)
-            {
-                Neighbor->Parent = CurrentNode;
-                Neighbor->GCost = NewGCost;
-            }
-        }
-    }
-
-    return Path;
-}
-
-TArray<FVector> UMingRTSPathfinder::CalculateFloydWarshallPath(FVector Start, FVector Target)
-{
-    // Floyd-Warshall算法（對於大型地圖可能較慢，但能找到最短路徑）
-    // 這裡簡化實現，實際應用中可能需要預計算
-    return CalculateAStarPath(Start, Target);
-}
-
-float UMingRTSPathfinder::CalculateHeuristic(FVector From, FVector To) const
-{
-    // 使用歐幾里得距離作為啟發式
-    return FVector::Dist(From, To);
-}
-
-float UMingRTSPathfinder::CalculateTerrainCost(FVector Location) const
-{
-    ERTSTerrainType TerrainType = GetTerrainType(Location);
-    
-    switch (TerrainType)
-    {
-    case ERTSTerrainType::Walkable:
-        return WalkableCost;
-    case ERTSTerrainType::Difficult:
-        return DifficultCost;
-    case ERTSTerrainType::Water:
-        return WaterCost;
-    case ERTSTerrainType::Mountain:
-        return MountainCost;
-    case ERTSTerrainType::Forest:
-        return ForestCost;
-    case ERTSTerrainType::Blocked:
-        return FLT_MAX;
-    default:
-        return WalkableCost;
-    }
-}
-
-bool UMingRTSPathfinder::IsValidLocation(FVector Location) const
-{
-    // 檢查位置是否在網格範圍內
-    FVector RelativeLocation = Location - GridCenter;
-    float HalfGridSize = GridSize / 2.0f;
-
-    return (FMath::Abs(RelativeLocation.X) <= HalfGridSize && 
-            FMath::Abs(RelativeLocation.Y) <= HalfGridSize);
-}
-
-TArray<FVector> UMingRTSPathfinder::ReconstructPath(FRTSPathNode* EndNode) const
-{
-    TArray<FVector> Path;
-    
-    if (!EndNode)
-    {
-        return Path;
-    }
-
-    FRTSPathNode* CurrentNode = EndNode;
-    while (CurrentNode)
-    {
-        Path.Insert(CurrentNode->Position, 0);
-        CurrentNode = CurrentNode->Parent;
-    }
-
-    return Path;
-}
-
-void UMingRTSPathfinder::InitializeGrid()
-{
-    NavigationGrid.SetNum(GridResolution);
-    for (int32 x = 0; x < GridResolution; x++)
-    {
-        NavigationGrid[x].SetNum(GridResolution);
-        for (int32 y = 0; y < GridResolution; y++)
-        {
-            FVector NodeLocation = GridCenter + FVector(
-                (x - GridResolution / 2) * NodeSize,
-                (y - GridResolution / 2) * NodeSize,
-                0
-            );
-
-            // 默認所有節點都可行走
-            NavigationGrid[x][y] = CreateNode(NodeLocation, true, ERTSTerrainType::Walkable);
-        }
-    }
-}
-
-void UMingRTSPathfinder::ClearGrid()
-{
-    for (int32 x = 0; x < NavigationGrid.Num(); x++)
-    {
-        for (int32 y = 0; y < NavigationGrid[x].Num(); y++)
-        {
-            if (NavigationGrid[x][y])
-            {
-                delete NavigationGrid[x][y];
-                NavigationGrid[x][y] = nullptr;
-            }
-        }
-        NavigationGrid[x].Empty();
-    }
-    NavigationGrid.Empty();
-}
-
-FRTSPathNode* UMingRTSPathfinder::CreateNode(FVector Location, bool bIsWalkable, ERTSTerrainType TerrainType)
-{
-    FRTSPathNode* Node = new FRTSPathNode(Location, bIsWalkable, TerrainType);
-    return Node;
-}
-
-void UMingRTSPathfinder::ProcessPendingRequests()
-{
-    while (PendingRequests.Num() > 0)
-    {
-        FRTSPathRequest Request = PendingRequests[0];
-        PendingRequests.RemoveAt(0);
-
-        FRTSPathResult Result = CalculatePath(Request);
-        CompletePathRequest(Request, Result);
-    }
-
-    CurrentState = ERTSPathfindingState::Idle;
-    OnPathfindingStateChanged.Broadcast(CurrentState);
-}
-
-void UMingRTSPathfinder::CompletePathRequest(const FRTSPathRequest& Request, const FRTSPathResult& Result)
-{
-    OnPathCalculated.Broadcast(Request, Result);
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出U出n出i出t出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出G出o出R出T出S出U出n出i出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出基本出o出本出l出d出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出S出c出e出n出e出C出o出設置出p出o出n出e出n出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出D出本出a出w出D出e出b出使出成出輸入出e出l出p出e出本出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出K出i出s出設置出e出t出S出y出s出t出e出設置出L出i出b出本出a出本出y出.出h出"出
+出
+出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出(出)出
+出{出
+出 出 出 出 出U出n出i出t出M出a出n出a出成出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出 出E出R出T出S出P出a出t出h出f出i出n出d出i出n出成出S出t出a出t出e出:出:出I出d出l出e出;出
+出 出 出 出 出G出本出i出d出C出e出n出t出e出本出 出=出 出軍出V出e出c出t出o出本出:出:出Z出e出本出o出V出e出c出t出o出本出;出
+出 出 出 出 出G出本出i出d出S出i出z出e出 出=出 出1出0出0出0出0出.出0出f出;出
+出 出 出 出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出 出=出 出1出0出0出;出
+出 出 出 出 出的出o出d出e出S出i出z出e出 出=出 出G出本出i出d出S出i出z出e出 出/出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出;出
+出 出 出 出 出D出e出f出a出使出l出t出A出l出成出o出本出i出t出h出設置出 出=出 出E出R出T出S出P出a出t出h出f出i出n出d出i出n出成出A出l出成出o出本出i出t出h出設置出:出:出A出S出t出a出本出;出
+出 出 出 出 出T出o出t出a出l出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出C出o出設置出p出l出e出t出e出d出R出e出q出使出e出s出t出s出 出=出 出0出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出I出n出i出t出i出a出l出i出z出e出P出a出t出h出f出i出n出d出e出本出(出U出M出i出n出成出R出T出S出U出n出i出t出M出a出n出a出成出e出本出*出 出I出n出U出n出i出t出M出a出n出a出成出e出本出)出
+出{出
+出 出 出 出 出U出n出i出t出M出a出n出a出成出e出本出 出=出 出I出n出U出n出i出t出M出a出n出a出成出e出本出;出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出G出本出i出d出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出a出l出c出使出l出a出t出e出P出a出t出h出A出s出y出n出c出(出c出o出n出s出t出 出軍出R出T出S出P出a出t出h出R出e出q出使出e出s出t出&出 出R出e出q出使出e出s出t出)出
+出{出
+出 出 出 出 出i出f出 出(出P出e出n出d出i出n出成出R出e出q出使出e出s出t出s出.出的出使出設置出(出)出 出>出=出 出M出a出x出P出e出n出d出i出n出成出R出e出q出使出e出s出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出清出理出舊出的出請出求出
+出 出 出 出 出 出 出 出 出P出e出n出d出i出n出成出R出e出q出使出e出s出t出s出.出R出e出設置出o出正出e出A出t出(出0出,出 出P出e出n出d出i出n出成出R出e出q出使出e出s出t出s出.出的出使出設置出(出)出 出-出 出M出a出x出P出e出n出d出i出n出成出R出e出q出使出e出s出t出s出 出+出 出1出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出P出e出n出d出i出n出成出R出e出q出使出e出s出t出s出.出A出d出d出(出R出e出q出使出e出s出t出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出 出E出R出T出S出P出a出t出h出f出i出n出d出i出n出成出S出t出a出t出e出:出:出C出a出l出c出使出l出a出t出i出n出成出;出
+出 出 出 出 出O出n出P出a出t出h出f出i出n出d出i出n出成出S出t出a出t出e出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出}出
+出
+出軍出R出T出S出P出a出t出h出R出e出s出使出l出t出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出a出l出c出使出l出a出t出e出P出a出t出h出(出c出o出n出s出t出 出軍出R出T出S出P出a出t出h出R出e出q出使出e出s出t出&出 出R出e出q出使出e出s出t出)出
+出{出
+出 出 出 出 出軍出R出T出S出P出a出t出h出R出e出s出使出l出t出 出R出e出s出使出l出t出;出
+出 出 出 出 出d出o出使出b出l出e出 出S出t出a出本出t出T出i出設置出e出 出=出 出軍出P出l出a出t出f出o出本出設置出T出i出設置出e出:出:出S出e出c出o出n出d出s出(出)出;出
+出
+出 出 出 出 出/出/出 出檢出查出緩出存出
+出 出 出 出 出i出f出 出(出b出E出n出a出b出l出e出P出a出t出h出C出a出c出h出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出 出C出a出c出h出e出K出e出y出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出%出s出下出%出s出下出%出d出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出R出e出q出使出e出s出t出.出S出t出a出本出t出L出o出c出a出t出i出o出n出.出T出o出S出t出本出i出n出成出(出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出R出e出q出使出e出s出t出.出T出a出本出成出e出t出L出o出c出a出t出i出o出n出.出T出o出S出t出本出i出n出成出(出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出(出i出n出t出3出2出)出R出e出q出使出e出s出t出.出A出l出成出o出本出i出t出h出設置出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出軍出R出T出S出P出a出t出h出R出e出s出使出l出t出*出 出C出a出c出h出e出d出R出e出s出使出l出t出 出=出 出P出a出t出h出C出a出c出h出e出.出軍出i出n出d出(出C出a出c出h出e出K出e出y出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出a出c出h出e出d出R出e出s出使出l出t出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出使出l出t出 出=出 出*出C出a出c出h出e出d出R出e出s出使出l出t出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出使出l出t出.出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出 出=出 出軍出P出l出a出t出f出o出本出設置出T出i出設置出e出:出:出S出e出c出o出n出d出s出(出)出 出-出 出S出t出a出本出t出T出i出設置出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出R出e出s出使出l出t出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出驗出證出輸出入出
+出 出 出 出 出i出f出 出(出!出I出s出V出a出l出i出d出L出o出c出a出t出i出o出n出(出R出e出q出使出e出s出t出.出S出t出a出本出t出L出o出c出a出t出i出o出n出)出 出出出出出 出!出I出s出V出a出l出i出d出L出o出c出a出t出i出o出n出(出R出e出q出使出e出s出t出.出T出a出本出成出e出t出L出o出c出a出t出i出o出n出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出s出使出l出t出.出b出P出a出t出h出軍出o出使出n出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出R出e出s出使出l出t出.出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出 出=出 出軍出P出l出a出t出f出o出本出設置出T出i出設置出e出:出:出S出e出c出o出n出d出s出(出)出 出-出 出S出t出a出本出t出T出i出設置出e出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出R出e出s出使出l出t出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出計出算出路出徑出
+出 出 出 出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出P出a出t出h出P出o出i出n出t出s出;出
+出 出 出 出 出s出w出i出t出c出h出 出(出R出e出q出使出e出s出t出.出A出l出成出o出本出i出t出h出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出R出T出S出P出a出t出h出f出i出n出d出i出n出成出A出l出成出o出本出i出t出h出設置出:出:出A出S出t出a出本出:出
+出 出 出 出 出 出 出 出 出P出a出t出h出P出o出i出n出t出s出 出=出 出C出a出l出c出使出l出a出t出e出A出S出t出a出本出P出a出t出h出(出R出e出q出使出e出s出t出.出S出t出a出本出t出L出o出c出a出t出i出o出n出,出 出R出e出q出使出e出s出t出.出T出a出本出成出e出t出L出o出c出a出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出R出T出S出P出a出t出h出f出i出n出d出i出n出成出A出l出成出o出本出i出t出h出設置出:出:出D出i出大出k出s出t出本出a出:出
+出 出 出 出 出 出 出 出 出P出a出t出h出P出o出i出n出t出s出 出=出 出C出a出l出c出使出l出a出t出e出D出i出大出k出s出t出本出a出P出a出t出h出(出R出e出q出使出e出s出t出.出S出t出a出本出t出L出o出c出a出t出i出o出n出,出 出R出e出q出使出e出s出t出.出T出a出本出成出e出t出L出o出c出a出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出R出T出S出P出a出t出h出f出i出n出d出i出n出成出A出l出成出o出本出i出t出h出設置出:出:出軍出l出o出y出d出基本出a出本出s出h出a出l出l出:出
+出 出 出 出 出 出 出 出 出P出a出t出h出P出o出i出n出t出s出 出=出 出C出a出l出c出使出l出a出t出e出軍出l出o出y出d出基本出a出本出s出h出a出l出l出P出a出t出h出(出R出e出q出使出e出s出t出.出S出t出a出本出t出L出o出c出a出t出i出o出n出,出 出R出e出q出使出e出s出t出.出T出a出本出成出e出t出L出o出c出a出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出P出a出t出h出P出o出i出n出t出s出 出=出 出C出a出l出c出使出l出a出t出e出A出S出t出a出本出P出a出t出h出(出R出e出q出使出e出s出t出.出S出t出a出本出t出L出o出c出a出t出i出o出n出,出 出R出e出q出使出e出s出t出.出T出a出本出成出e出t出L出o出c出a出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出構出建出結出果出
+出 出 出 出 出R出e出s出使出l出t出.出P出a出t出h出P出o出i出n出t出s出 出=出 出P出a出t出h出P出o出i出n出t出s出;出
+出 出 出 出 出R出e出s出使出l出t出.出b出P出a出t出h出軍出o出使出n出d出 出=出 出P出a出t出h出P出o出i出n出t出s出.出的出使出設置出(出)出 出>出 出0出;出
+出 出 出 出 出R出e出s出使出l出t出.出A出l出成出o出本出i出t出h出設置出U出s出e出d出 出=出 出R出e出q出使出e出s出t出.出A出l出成出o出本出i出t出h出設置出;出
+出 出 出 出 出R出e出s出使出l出t出.出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出 出=出 出軍出P出l出a出t出f出o出本出設置出T出i出設置出e出:出:出S出e出c出o出n出d出s出(出)出 出-出 出S出t出a出本出t出T出i出設置出e出;出
+出 出 出 出 出R出e出s出使出l出t出.出C出o出設置出p出l出e出t出i出o出n出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出
+出 出 出 出 出/出/出 出計出算出路出徑出長出度出
+出 出 出 出 出i出f出 出(出R出e出s出使出l出t出.出b出P出a出t出h出軍出o出使出n出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出P出a出t出h出P出o出i出n出t出s出.出的出使出設置出(出)出 出-出 出1出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出使出l出t出.出P出a出t出h出L出e出n出成出t出h出 出+出=出 出軍出V出e出c出t出o出本出:出:出D出i出s出t出(出P出a出t出h出P出o出i出n出t出s出[出i出]出,出 出P出a出t出h出P出o出i出n出t出s出[出i出 出+出 出1出]出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出添出加出到出緩出存出
+出 出 出 出 出i出f出 出(出b出E出n出a出b出l出e出P出a出t出h出C出a出c出h出e出 出&出&出 出R出e出s出使出l出t出.出b出P出a出t出h出軍出o出使出n出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出a出t出h出C出a出c出h出e出.出的出使出設置出(出)出 出>出=出 出M出a出x出C出a出c出h出e出S出i出z出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出C出a出c出h出e出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出 出C出a出c出h出e出K出e出y出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出%出s出下出%出s出下出%出d出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出R出e出q出使出e出s出t出.出S出t出a出本出t出L出o出c出a出t出i出o出n出.出T出o出S出t出本出i出n出成出(出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出R出e出q出使出e出s出t出.出T出a出本出成出e出t出L出o出c出a出t出i出o出n出.出T出o出S出t出本出i出n出成出(出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出(出i出n出t出3出2出)出R出e出q出使出e出s出t出.出A出l出成出o出本出i出t出h出設置出)出;出
+出 出 出 出 出 出 出 出 出P出a出t出h出C出a出c出h出e出.出A出d出d出(出C出a出c出h出e出K出e出y出,出 出R出e出s出使出l出t出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出更出新出統出計出
+出 出 出 出 出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出s出.出A出d出d出(出R出e出s出使出l出t出.出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出)出;出
+出 出 出 出 出T出o出t出a出l出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出 出+出=出 出R出e出s出使出l出t出.出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出;出
+出 出 出 出 出C出o出設置出p出l出e出t出e出d出R出e出q出使出e出s出t出s出+出+出;出
+出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出使出l出t出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出軍出i出n出d出P出a出t出h出(出軍出V出e出c出t出o出本出 出S出t出a出本出t出,出 出軍出V出e出c出t出o出本出 出T出a出本出成出e出t出,出 出E出R出T出S出P出a出t出h出f出i出n出d出i出n出成出A出l出成出o出本出i出t出h出設置出 出A出l出成出o出本出i出t出h出設置出)出
+出{出
+出 出 出 出 出軍出R出T出S出P出a出t出h出R出e出q出使出e出s出t出 出R出e出q出使出e出s出t出;出
+出 出 出 出 出R出e出q出使出e出s出t出.出S出t出a出本出t出L出o出c出a出t出i出o出n出 出=出 出S出t出a出本出t出;出
+出 出 出 出 出R出e出q出使出e出s出t出.出T出a出本出成出e出t出L出o出c出a出t出i出o出n出 出=出 出T出a出本出成出e出t出;出
+出 出 出 出 出R出e出q出使出e出s出t出.出A出l出成出o出本出i出t出h出設置出 出=出 出A出l出成出o出本出i出t出h出設置出;出
+出
+出 出 出 出 出軍出R出T出S出P出a出t出h出R出e出s出使出l出t出 出R出e出s出使出l出t出 出=出 出C出a出l出c出使出l出a出t出e出P出a出t出h出(出R出e出q出使出e出s出t出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出使出l出t出.出P出a出t出h出P出o出i出n出t出s出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出O出p出t出i出設置出i出z出e出P出a出t出h出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出&出 出P出a出t出h出)出
+出{出
+出 出 出 出 出i出f出 出(出P出a出t出h出.出的出使出設置出(出)出 出<出=出 出2出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出a出t出h出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出O出p出t出i出設置出i出z出e出d出P出a出t出h出;出
+出 出 出 出 出O出p出t出i出設置出i出z出e出d出P出a出t出h出.出A出d出d出(出P出a出t出h出[出0出]出)出;出
+出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出1出;出 出i出 出<出 出P出a出t出h出.出的出使出設置出(出)出 出-出 出1出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出C出使出本出本出e出n出t出 出=出 出P出a出t出h出[出i出]出;出
+出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出的出e出x出t出 出=出 出P出a出t出h出[出i出 出+出 出1出]出;出
+出
+出 出 出 出 出 出 出 出 出/出/出 出檢出查出是出否出可出以出直出接出從出前出一出點出到出下出一出點出
+出 出 出 出 出 出 出 出 出i出f出 出(出O出p出t出i出設置出i出z出e出d出P出a出t出h出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出P出本出e出正出i出o出使出s出 出=出 出O出p出t出i出設置出i出z出e出d出P出a出t出h出.出L出a出s出t出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出I出s出L出o出c出a出t出i出o出n出基本出a出l出k出a出b出l出e出(出的出e出x出t出)出 出&出&出 出!出I出s出P出a出t出h出B出l出o出c出k出e出d出(出{出P出本出e出正出i出o出使出s出,出 出的出e出x出t出}出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出移出除出當出前出點出，出直出接出連出接出前出一出點出和出下出一出點出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出c出o出n出t出i出n出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出O出p出t出i出設置出i出z出e出d出P出a出t出h出.出A出d出d出(出C出使出本出本出e出n出t出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出P出a出t出h出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出O出p出t出i出設置出i出z出e出d出P出a出t出h出.出A出d出d出(出P出a出t出h出.出L出a出s出t出(出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出O出p出t出i出設置出i出z出e出d出P出a出t出h出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出S出設置出o出o出t出h出P出a出t出h出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出&出 出P出a出t出h出,出 出i出n出t出3出2出 出S出設置出o出o出t出h出i出n出成出I出t出e出本出a出t出i出o出n出s出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出S出設置出o出o出t出h出e出d出P出a出t出h出 出=出 出P出a出t出h出;出
+出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出I出t出e出本出a出t出i出o出n出 出=出 出0出;出 出I出t出e出本出a出t出i出o出n出 出<出 出S出設置出o出o出t出h出i出n出成出I出t出e出本出a出t出i出o出n出s出;出 出I出t出e出本出a出t出i出o出n出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出1出;出 出i出 出<出 出S出設置出o出o出t出h出e出d出P出a出t出h出.出的出使出設置出(出)出 出-出 出1出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出P出本出e出正出i出o出使出s出 出=出 出S出設置出o出o出t出h出e出d出P出a出t出h出[出i出 出-出 出1出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出C出使出本出本出e出n出t出 出=出 出S出設置出o出o出t出h出e出d出P出a出t出h出[出i出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出的出e出x出t出 出=出 出S出設置出o出o出t出h出e出d出P出a出t出h出[出i出 出+出 出1出]出;出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出簡出單出的出平出滑出算出法出：出取出周出圍出點出的出平出均出值出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出A出正出e出本出a出成出e出 出=出 出(出P出本出e出正出i出o出使出s出 出+出 出C出使出本出本出e出n出t出 出+出 出的出e出x出t出)出 出/出 出3出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出確出保出平出均出點出是出可出行出的出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出I出s出L出o出c出a出t出i出o出n出基本出a出l出k出a出b出l出e出(出A出正出e出本出a出成出e出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出設置出o出o出t出h出e出d出P出a出t出h出[出i出]出 出=出 出A出正出e出本出a出成出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出S出設置出o出o出t出h出e出d出P出a出t出h出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出I出s出P出a出t出h出B出l出o出c出k出e出d出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出&出 出P出a出t出h出)出
+出{出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出P出a出t出h出.出的出使出設置出(出)出 出-出 出1出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出!出I出s出L出o出c出a出t出i出o出n出基本出a出l出k出a出b出l出e出(出P出a出t出h出[出i出]出)出 出出出出出 出!出I出s出L出o出c出a出t出i出o出n出基本出a出l出k出a出b出l出e出(出P出a出t出h出[出i出 出+出 出1出]出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出/出/出 出檢出查出兩出點出之出間出是出否出有出障出礙出物出
+出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出D出i出本出e出c出t出i出o出n出 出=出 出P出a出t出h出[出i出 出+出 出1出]出 出-出 出P出a出t出h出[出i出]出;出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出D出i出s出t出a出n出c出e出 出=出 出D出i出本出e出c出t出i出o出n出.出S出i出z出e出(出)出;出
+出 出 出 出 出 出 出 出 出D出i出本出e出c出t出i出o出n出.出的出o出本出設置出a出l出i出z出e出(出)出;出
+出
+出 出 出 出 出 出 出 出 出/出/出 出沿出著出路出徑出檢出查出多出個出點出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出C出h出e出c出k出P出o出i出n出t出s出 出=出 出軍出M出a出t出h出:出:出C出e出i出l出T出o出I出n出t出(出D出i出s出t出a出n出c出e出 出/出 出的出o出d出e出S出i出z出e出)出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出大出 出=出 出1出;出 出大出 出<出 出C出h出e出c出k出P出o出i出n出t出s出;出 出大出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出C出h出e出c出k出P出o出i出n出t出 出=出 出P出a出t出h出[出i出]出 出+出 出D出i出本出e出c出t出i出o出n出 出*出 出(出大出 出*出 出的出o出d出e出S出i出z出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出!出I出s出L出o出c出a出t出i出o出n出基本出a出l出k出a出b出l出e出(出C出h出e出c出k出P出o出i出n出t出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出R出e出c出a出l出c出使出l出a出t出e出P出a出t出h出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出&出 出O出本出i出成出i出n出a出l出P出a出t出h出,出 出軍出V出e出c出t出o出本出 出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出,出 出軍出V出e出c出t出o出本出 出T出a出本出成出e出t出P出o出s出i出t出i出o出n出)出
+出{出
+出 出 出 出 出/出/出 出如出果出當出前出位出置出偏出離出原出路出徑出太出遠出，出重出新出計出算出整出個出路出徑出
+出 出 出 出 出i出f出 出(出O出本出i出成出i出n出a出l出P出a出t出h出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出軍出i出n出d出P出a出t出h出(出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出,出 出T出a出本出成出e出t出P出o出s出i出t出i出o出n出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出找出到出原出路出徑出上出離出當出前出位出置出最出近出的出點出
+出 出 出 出 出f出l出o出a出t出 出M出i出n出D出i出s出t出a出n出c出e出 出=出 出軍出L出T出下出M出A出X出;出
+出 出 出 出 出i出n出t出3出2出 出C出l出o出s出e出s出t出I出n出d出e出x出 出=出 出0出;出
+出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出O出本出i出成出i出n出a出l出P出a出t出h出.出的出使出設置出(出)出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出D出i出s出t出a出n出c出e出 出=出 出軍出V出e出c出t出o出本出:出:出D出i出s出t出(出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出,出 出O出本出i出成出i出n出a出l出P出a出t出h出[出i出]出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出D出i出s出t出a出n出c出e出 出<出 出M出i出n出D出i出s出t出a出n出c出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出M出i出n出D出i出s出t出a出n出c出e出 出=出 出D出i出s出t出a出n出c出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出l出o出s出e出s出t出I出n出d出e出x出 出=出 出i出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出如出果出偏出離出太出遠出，出重出新出計出算出
+出 出 出 出 出i出f出 出(出M出i出n出D出i出s出t出a出n出c出e出 出>出 出的出o出d出e出S出i出z出e出 出*出 出2出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出軍出i出n出d出P出a出t出h出(出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出,出 出T出a出本出成出e出t出P出o出s出i出t出i出o出n出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出從出最出近出點出重出新出計出算出到出目出標出的出路出徑出
+出 出 出 出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出的出e出w出P出a出t出h出;出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出C出l出o出s出e出s出t出I出n出d出e出x出;出 出i出 出<出 出O出本出i出成出i出n出a出l出P出a出t出h出.出的出使出設置出(出)出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出P出a出t出h出.出A出d出d出(出O出本出i出成出i出n出a出l出P出a出t出h出[出i出]出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出的出e出w出P出a出t出h出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出S出e出t出T出e出本出本出a出i出n出T出y出p出e出(出軍出V出e出c出t出o出本出 出L出o出c出a出t出i出o出n出,出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出 出T出e出本出本出a出i出n出T出y出p出e出)出
+出{出
+出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出的出o出d出e出 出=出 出G出e出t出的出o出d出e出A出t出L出o出c出a出t出i出o出n出(出L出o出c出a出t出i出o出n出)出;出
+出 出 出 出 出i出f出 出(出的出o出d出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出o出d出e出-出>出T出e出本出本出a出i出n出T出y出p出e出 出=出 出T出e出本出本出a出i出n出T出y出p出e出;出
+出 出 出 出 出 出 出 出 出的出o出d出e出-出>出b出I出s出基本出a出l出k出a出b出l出e出 出=出 出(出T出e出本出本出a出i出n出T出y出p出e出 出!出=出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出:出:出B出l出o出c出k出e出d出)出;出
+出 出 出 出 出}出
+出}出
+出
+出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出G出e出t出T出e出本出本出a出i出n出T出y出p出e出(出軍出V出e出c出t出o出本出 出L出o出c出a出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出的出o出d出e出 出=出 出G出e出t出的出o出d出e出A出t出L出o出c出a出t出i出o出n出(出L出o出c出a出t出i出o出n出)出;出
+出 出 出 出 出i出f出 出(出的出o出d出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出的出o出d出e出-出>出T出e出本出本出a出i出n出T出y出p出e出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出:出:出基本出a出l出k出a出b出l出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出I出s出L出o出c出a出t出i出o出n出基本出a出l出k出a出b出l出e出(出軍出V出e出c出t出o出本出 出L出o出c出a出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出的出o出d出e出 出=出 出G出e出t出的出o出d出e出A出t出L出o出c出a出t出i出o出n出(出L出o出c出a出t出i出o出n出)出;出
+出 出 出 出 出i出f出 出(出的出o出d出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出的出o出d出e出-出>出b出I出s出基本出a出l出k出a出b出l出e出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出 出/出/出 出默出認出可出行出走出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出U出p出d出a出t出e出T出e出本出本出a出i出n出M出a出p出(出)出
+出{出
+出 出 出 出 出/出/出 出重出新出掃出描出地出形出，出更出新出網出格出
+出 出 出 出 出C出l出e出a出本出G出本出i出d出(出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出G出本出i出d出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出本出e出a出t出e出的出a出正出i出成出a出t出i出o出n出G出本出i出d出(出軍出V出e出c出t出o出本出 出C出e出n出t出e出本出,出 出f出l出o出a出t出 出I出n出G出本出i出d出S出i出z出e出,出 出i出n出t出3出2出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出)出
+出{出
+出 出 出 出 出G出本出i出d出C出e出n出t出e出本出 出=出 出C出e出n出t出e出本出;出
+出 出 出 出 出G出本出i出d出S出i出z出e出 出=出 出I出n出G出本出i出d出S出i出z出e出;出
+出 出 出 出 出t出h出i出s出-出>出G出本出i出d出R出e出s出o出l出使出t出i出o出n出 出=出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出;出
+出 出 出 出 出的出o出d出e出S出i出z出e出 出=出 出G出本出i出d出S出i出z出e出 出/出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出;出
+出
+出 出 出 出 出C出l出e出a出本出G出本出i出d出(出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出G出本出i出d出(出)出;出
+出}出
+出
+出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出G出e出t出的出o出d出e出A出t出L出o出c出a出t出i出o出n出(出軍出V出e出c出t出o出本出 出L出o出c出a出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出將出世出界出坐出標出轉出換出為出網出格出坐出標出
+出 出 出 出 出軍出V出e出c出t出o出本出 出R出e出l出a出t出i出正出e出L出o出c出a出t出i出o出n出 出=出 出L出o出c出a出t出i出o出n出 出-出 出G出本出i出d出C出e出n出t出e出本出;出
+出 出 出 出 出i出n出t出3出2出 出X出 出=出 出軍出M出a出t出h出:出:出R出o出使出n出d出T出o出I出n出t出(出R出e出l出a出t出i出正出e出L出o出c出a出t出i出o出n出.出X出 出/出 出的出o出d出e出S出i出z出e出)出;出
+出 出 出 出 出i出n出t出3出2出 出Y出 出=出 出軍出M出a出t出h出:出:出R出o出使出n出d出T出o出I出n出t出(出R出e出l出a出t出i出正出e出L出o出c出a出t出i出o出n出.出Y出 出/出 出的出o出d出e出S出i出z出e出)出;出
+出
+出 出 出 出 出/出/出 出檢出查出邊出界出
+出 出 出 出 出i出f出 出(出X出 出<出 出0出 出出出出出 出X出 出>出=出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出 出出出出出 出Y出 出<出 出0出 出出出出出 出Y出 出>出=出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出[出X出]出[出Y出]出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出R出T出S出P出a出t出h出的出o出d出e出*出>出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出G出e出t出的出e出i出成出h出b出o出本出的出o出d出e出s出(出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出的出o出d出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出R出T出S出P出a出t出h出的出o出d出e出*出>出 出的出e出i出成出h出b出o出本出s出;出
+出
+出 出 出 出 出i出f出 出(出!出的出o出d出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出的出e出i出成出h出b出o出本出s出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出找出到出節出點出在出網出格出中出的出位出置出
+出 出 出 出 出軍出V出e出c出t出o出本出 出R出e出l出a出t出i出正出e出L出o出c出a出t出i出o出n出 出=出 出的出o出d出e出-出>出P出o出s出i出t出i出o出n出 出-出 出G出本出i出d出C出e出n出t出e出本出;出
+出 出 出 出 出i出n出t出3出2出 出X出 出=出 出軍出M出a出t出h出:出:出R出o出使出n出d出T出o出I出n出t出(出R出e出l出a出t出i出正出e出L出o出c出a出t出i出o出n出.出X出 出/出 出的出o出d出e出S出i出z出e出)出;出
+出 出 出 出 出i出n出t出3出2出 出Y出 出=出 出軍出M出a出t出h出:出:出R出o出使出n出d出T出o出I出n出t出(出R出e出l出a出t出i出正出e出L出o出c出a出t出i出o出n出.出Y出 出/出 出的出o出d出e出S出i出z出e出)出;出
+出
+出 出 出 出 出/出/出 出檢出查出8出個出方出向出的出鄰出居出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出d出x出 出=出 出-出1出;出 出d出x出 出<出=出 出1出;出 出d出x出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出d出y出 出=出 出-出1出;出 出d出y出 出<出=出 出1出;出 出d出y出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出d出x出 出=出=出 出0出 出&出&出 出d出y出 出=出=出 出0出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出c出o出n出t出i出n出使出e出;出 出/出/出 出跳出過出自出己出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出n出t出3出2出 出的出e出i出成出h出b出o出本出X出 出=出 出X出 出+出 出d出x出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出n出t出3出2出 出的出e出i出成出h出b出o出本出Y出 出=出 出Y出 出+出 出d出y出;出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出檢出查出邊出界出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出的出e出i出成出h出b出o出本出X出 出>出=出 出0出 出&出&出 出的出e出i出成出h出b出o出本出X出 出<出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出 出&出&出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出的出e出i出成出h出b出o出本出Y出 出>出=出 出0出 出&出&出 出的出e出i出成出h出b出o出本出Y出 出<出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出的出e出i出成出h出b出o出本出 出=出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出[出的出e出i出成出h出b出o出本出X出]出[出的出e出i出成出h出b出o出本出Y出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出的出e出i出成出h出b出o出本出 出&出&出 出的出e出i出成出h出b出o出本出-出>出b出I出s出基本出a出l出k出a出b出l出e出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出的出e出i出成出h出b出o出本出s出.出A出d出d出(出的出e出i出成出h出b出o出本出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出的出e出i出成出h出b出o出本出s出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出G出e出t出A出正出e出本出a出成出e出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出C出o出設置出p出l出e出t出e出d出R出e出q出使出e出s出t出s出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出T出o出t出a出l出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出 出/出 出C出o出設置出p出l出e出t出e出d出R出e出q出使出e出s出t出s出;出
+出}出
+出
+出i出n出t出3出2出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出G出e出t出P出e出n出d出i出n出成出R出e出q出使出e出s出t出C出o出使出n出t出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出P出e出n出d出i出n出成出R出e出q出使出e出s出t出s出.出的出使出設置出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出l出e出a出本出P出a出t出h出C出a出c出h出e出(出)出
+出{出
+出 出 出 出 出P出a出t出h出C出a出c出h出e出.出E出設置出p出t出y出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出D出本出a出w出D出e出b出使出成出P出a出t出h出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出&出 出P出a出t出h出,出 出軍出L出i出n出e出a出本出C出o出l出o出本出 出C出o出l出o出本出,出 出f出l出o出a出t出 出D出使出本出a出t出i出o出n出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出E出n出a出b出l出e出D出e出b出使出成出D出本出a出w出i出n出成出 出出出出出 出P出a出t出h出.出的出使出設置出(出)出 出<出 出2出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出e出t出基本出o出本出l出d出(出)出;出
+出 出 出 出 出i出f出 出(出!出基本出o出本出l出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出P出a出t出h出.出的出使出設置出(出)出 出-出 出1出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出D出本出a出w出D出e出b出使出成出L出i出n出e出(出基本出o出本出l出d出,出 出P出a出t出h出[出i出]出,出 出P出a出t出h出[出i出 出+出 出1出]出,出 出C出o出l出o出本出.出T出o出軍出C出o出l出o出本出(出t出本出使出e出)出,出 出f出a出l出s出e出,出 出D出使出本出a出t出i出o出n出,出 出0出,出 出2出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出D出本出a出w出D出e出b出使出成出S出p出h出e出本出e出(出基本出o出本出l出d出,出 出P出a出t出h出[出i出]出,出 出2出0出.出0出f出,出 出8出,出 出C出o出l出o出本出.出T出o出軍出C出o出l出o出本出(出t出本出使出e出)出,出 出f出a出l出s出e出,出 出D出使出本出a出t出i出o出n出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出繪出製出終出點出
+出 出 出 出 出i出f出 出(出P出a出t出h出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出D出本出a出w出D出e出b出使出成出S出p出h出e出本出e出(出基本出o出本出l出d出,出 出P出a出t出h出.出L出a出s出t出(出)出,出 出3出0出.出0出f出,出 出1出2出,出 出C出o出l出o出本出.出T出o出軍出C出o出l出o出本出(出t出本出使出e出)出,出 出f出a出l出s出e出,出 出D出使出本出a出t出i出o出n出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出D出本出a出w出D出e出b出使出成出G出本出i出d出(出軍出L出i出n出e出a出本出C出o出l出o出本出 出C出o出l出o出本出,出 出f出l出o出a出t出 出D出使出本出a出t出i出o出n出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出E出n出a出b出l出e出D出e出b出使出成出D出本出a出w出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出e出t出基本出o出本出l出d出(出)出;出
+出 出 出 出 出i出f出 出(出!出基本出o出本出l出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出V出e出c出t出o出本出 出S出t出a出本出t出 出=出 出G出本出i出d出C出e出n出t出e出本出 出-出 出軍出V出e出c出t出o出本出(出G出本出i出d出S出i出z出e出 出/出 出2出,出 出G出本出i出d出S出i出z出e出 出/出 出2出,出 出0出)出;出
+出
+出 出 出 出 出/出/出 出繪出製出網出格出線出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出=出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出O出f出f出s出e出t出 出=出 出i出 出*出 出的出o出d出e出S出i出z出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出垂出直出線出
+出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出V出e出本出t出i出c出a出l出S出t出a出本出t出 出=出 出S出t出a出本出t出 出+出 出軍出V出e出c出t出o出本出(出O出f出f出s出e出t出,出 出0出,出 出0出)出;出
+出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出V出e出本出t出i出c出a出l出E出n出d出 出=出 出S出t出a出本出t出 出+出 出軍出V出e出c出t出o出本出(出O出f出f出s出e出t出,出 出G出本出i出d出S出i出z出e出,出 出0出)出;出
+出 出 出 出 出 出 出 出 出D出本出a出w出D出e出b出使出成出L出i出n出e出(出基本出o出本出l出d出,出 出V出e出本出t出i出c出a出l出S出t出a出本出t出,出 出V出e出本出t出i出c出a出l出E出n出d出,出 出C出o出l出o出本出.出T出o出軍出C出o出l出o出本出(出t出本出使出e出)出,出 出f出a出l出s出e出,出 出D出使出本出a出t出i出o出n出,出 出0出,出 出1出.出0出f出)出;出
+出
+出 出 出 出 出 出 出 出 出/出/出 出水出平出線出
+出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出輸入出o出本出i出z出o出n出t出a出l出S出t出a出本出t出 出=出 出S出t出a出本出t出 出+出 出軍出V出e出c出t出o出本出(出0出,出 出O出f出f出s出e出t出,出 出0出)出;出
+出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出輸入出o出本出i出z出o出n出t出a出l出E出n出d出 出=出 出S出t出a出本出t出 出+出 出軍出V出e出c出t出o出本出(出G出本出i出d出S出i出z出e出,出 出O出f出f出s出e出t出,出 出0出)出;出
+出 出 出 出 出 出 出 出 出D出本出a出w出D出e出b出使出成出L出i出n出e出(出基本出o出本出l出d出,出 出輸入出o出本出i出z出o出n出t出a出l出S出t出a出本出t出,出 出輸入出o出本出i出z出o出n出t出a出l出E出n出d出,出 出C出o出l出o出本出.出T出o出軍出C出o出l出o出本出(出t出本出使出e出)出,出 出f出a出l出s出e出,出 出D出使出本出a出t出i出o出n出,出 出0出,出 出1出.出0出f出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出繪出製出不出可出行出走出的出節出點出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出x出 出=出 出0出;出 出x出 出<出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出;出 出x出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出y出 出=出 出0出;出 出y出 出<出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出;出 出y出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出的出o出d出e出 出=出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出[出x出]出[出y出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出的出o出d出e出 出&出&出 出!出的出o出d出e出-出>出b出I出s出基本出a出l出k出a出b出l出e出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出D出本出a出w出D出e出b出使出成出B出o出x出(出基本出o出本出l出d出,出 出的出o出d出e出-出>出P出o出s出i出t出i出o出n出,出 出軍出V出e出c出t出o出本出(出的出o出d出e出S出i出z出e出 出/出 出2出,出 出的出o出d出e出S出i出z出e出 出/出 出2出,出 出1出0出)出,出 出軍出R出o出t出a出t出o出本出:出:出Z出e出本出o出R出o出t出a出t出o出本出,出 出軍出C出o出l出o出本出:出:出R出e出d出,出 出f出a出l出s出e出,出 出D出使出本出a出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出a出l出c出使出l出a出t出e出A出S出t出a出本出P出a出t出h出(出軍出V出e出c出t出o出本出 出S出t出a出本出t出,出 出軍出V出e出c出t出o出本出 出T出a出本出成出e出t出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出P出a出t出h出;出
+出
+出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出S出t出a出本出t出的出o出d出e出 出=出 出G出e出t出的出o出d出e出A出t出L出o出c出a出t出i出o出n出(出S出t出a出本出t出)出;出
+出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出T出a出本出成出e出t出的出o出d出e出 出=出 出G出e出t出的出o出d出e出A出t出L出o出c出a出t出i出o出n出(出T出a出本出成出e出t出)出;出
+出
+出 出 出 出 出i出f出 出(出!出S出t出a出本出t出的出o出d出e出 出出出出出 出!出T出a出本出成出e出t出的出o出d出e出 出出出出出 出!出S出t出a出本出t出的出o出d出e出-出>出b出I出s出基本出a出l出k出a出b出l出e出 出出出出出 出!出T出a出本出成出e出t出的出o出d出e出-出>出b出I出s出基本出a出l出k出a出b出l出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出a出t出h出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出A出*出算出法出實出現出
+出 出 出 出 出T出A出本出本出a出y出<出軍出R出T出S出P出a出t出h出的出o出d出e出*出>出 出O出p出e出n出S出e出t出;出
+出 出 出 出 出T出A出本出本出a出y出<出軍出R出T出S出P出a出t出h出的出o出d出e出*出>出 出C出l出o出s出e出d出S出e出t出;出
+出
+出 出 出 出 出O出p出e出n出S出e出t出.出A出d出d出(出S出t出a出本出t出的出o出d出e出)出;出
+出 出 出 出 出S出t出a出本出t出的出o出d出e出-出>出G出C出o出s出t出 出=出 出0出.出0出f出;出
+出 出 出 出 出S出t出a出本出t出的出o出d出e出-出>出輸入出C出o出s出t出 出=出 出C出a出l出c出使出l出a出t出e出輸入出e出使出本出i出s出t出i出c出(出S出t出a出本出t出,出 出T出a出本出成出e出t出)出;出
+出 出 出 出 出S出t出a出本出t出的出o出d出e出-出>出U出p出d出a出t出e出軍出C出o出s出t出(出)出;出
+出
+出 出 出 出 出w出h出i出l出e出 出(出O出p出e出n出S出e出t出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出找出到出軍出成出本出最出低出的出節出點出
+出 出 出 出 出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出C出使出本出本出e出n出t出的出o出d出e出 出=出 出O出p出e出n出S出e出t出[出0出]出;出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出C出使出本出本出e出n出t出I出n出d出e出x出 出=出 出0出;出
+出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出1出;出 出i出 出<出 出O出p出e出n出S出e出t出.出的出使出設置出(出)出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出O出p出e出n出S出e出t出[出i出]出-出>出軍出C出o出s出t出 出<出 出C出使出本出本出e出n出t出的出o出d出e出-出>出軍出C出o出s出t出 出出出出出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出(出O出p出e出n出S出e出t出[出i出]出-出>出軍出C出o出s出t出 出=出=出 出C出使出本出本出e出n出t出的出o出d出e出-出>出軍出C出o出s出t出 出&出&出 出O出p出e出n出S出e出t出[出i出]出-出>出輸入出C出o出s出t出 出<出 出C出使出本出本出e出n出t出的出o出d出e出-出>出輸入出C出o出s出t出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出的出o出d出e出 出=出 出O出p出e出n出S出e出t出[出i出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出I出n出d出e出x出 出=出 出i出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出O出p出e出n出S出e出t出.出R出e出設置出o出正出e出A出t出(出C出使出本出本出e出n出t出I出n出d出e出x出)出;出
+出 出 出 出 出 出 出 出 出C出l出o出s出e出d出S出e出t出.出A出d出d出(出C出使出本出本出e出n出t出的出o出d出e出)出;出
+出
+出 出 出 出 出 出 出 出 出/出/出 出到出達出目出標出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出的出o出d出e出 出=出=出 出T出a出本出成出e出t出的出o出d出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出R出e出c出o出n出s出t出本出使出c出t出P出a出t出h出(出T出a出本出成出e出t出的出o出d出e出)出;出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出/出/出 出檢出查出鄰出居出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出R出T出S出P出a出t出h出的出o出d出e出*出>出 出的出e出i出成出h出b出o出本出s出 出=出 出G出e出t出的出e出i出成出h出b出o出本出的出o出d出e出s出(出C出使出本出本出e出n出t出的出o出d出e出)出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出的出e出i出成出h出b出o出本出 出:出 出的出e出i出成出h出b出o出本出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出C出l出o出s出e出d出S出e出t出.出C出o出n出t出a出i出n出s出(出的出e出i出成出h出b出o出本出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出c出o出n出t出i出n出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出的出e出w出G出C出o出s出t出 出=出 出C出使出本出本出e出n出t出的出o出d出e出-出>出G出C出o出s出t出 出+出 出C出a出l出c出使出l出a出t出e出T出e出本出本出a出i出n出C出o出s出t出(出的出e出i出成出h出b出o出本出-出>出P出o出s出i出t出i出o出n出)出;出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出!出O出p出e出n出S出e出t出.出C出o出n出t出a出i出n出s出(出的出e出i出成出h出b出o出本出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出O出p出e出n出S出e出t出.出A出d出d出(出的出e出i出成出h出b出o出本出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出的出e出w出G出C出o出s出t出 出>出=出 出的出e出i出成出h出b出o出本出-出>出G出C出o出s出t出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出c出o出n出t出i出n出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出i出成出h出b出o出本出-出>出P出a出本出e出n出t出 出=出 出C出使出本出本出e出n出t出的出o出d出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出i出成出h出b出o出本出-出>出G出C出o出s出t出 出=出 出的出e出w出G出C出o出s出t出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出i出成出h出b出o出本出-出>出輸入出C出o出s出t出 出=出 出C出a出l出c出使出l出a出t出e出輸入出e出使出本出i出s出t出i出c出(出的出e出i出成出h出b出o出本出-出>出P出o出s出i出t出i出o出n出,出 出T出a出本出成出e出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出i出成出h出b出o出本出-出>出U出p出d出a出t出e出軍出C出o出s出t出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出P出a出t出h出;出 出/出/出 出沒出有出找出到出路出徑出
+出}出
+出
+出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出a出l出c出使出l出a出t出e出D出i出大出k出s出t出本出a出P出a出t出h出(出軍出V出e出c出t出o出本出 出S出t出a出本出t出,出 出軍出V出e出c出t出o出本出 出T出a出本出成出e出t出)出
+出{出
+出 出 出 出 出/出/出 出D出i出大出k出s出t出本出a出算出法出實出現出（出類出似出A出*出但出不出使出用出啟出發出式出）出
+出 出 出 出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出P出a出t出h出;出
+出
+出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出S出t出a出本出t出的出o出d出e出 出=出 出G出e出t出的出o出d出e出A出t出L出o出c出a出t出i出o出n出(出S出t出a出本出t出)出;出
+出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出T出a出本出成出e出t出的出o出d出e出 出=出 出G出e出t出的出o出d出e出A出t出L出o出c出a出t出i出o出n出(出T出a出本出成出e出t出)出;出
+出
+出 出 出 出 出i出f出 出(出!出S出t出a出本出t出的出o出d出e出 出出出出出 出!出T出a出本出成出e出t出的出o出d出e出 出出出出出 出!出S出t出a出本出t出的出o出d出e出-出>出b出I出s出基本出a出l出k出a出b出l出e出 出出出出出 出!出T出a出本出成出e出t出的出o出d出e出-出>出b出I出s出基本出a出l出k出a出b出l出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出a出t出h出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出所出有出節出點出的出距出離出為出無出窮出大出
+出 出 出 出 出T出A出本出本出a出y出<出軍出R出T出S出P出a出t出h出的出o出d出e出*出>出 出A出l出l出的出o出d出e出s出;出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出x出 出=出 出0出;出 出x出 出<出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出;出 出x出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出y出 出=出 出0出;出 出y出 出<出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出;出 出y出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出的出o出d出e出 出=出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出[出x出]出[出y出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出的出o出d出e出 出&出&出 出的出o出d出e出-出>出b出I出s出基本出a出l出k出a出b出l出e出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出的出o出d出e出-出>出G出C出o出s出t出 出=出 出軍出L出T出下出M出A出X出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出A出l出l出的出o出d出e出s出.出A出d出d出(出的出o出d出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出S出t出a出本出t出的出o出d出e出-出>出G出C出o出s出t出 出=出 出0出.出0出f出;出
+出
+出 出 出 出 出w出h出i出l出e出 出(出A出l出l出的出o出d出e出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出找出到出距出離出最出小出的出節出點出
+出 出 出 出 出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出C出使出本出本出e出n出t出的出o出d出e出 出=出 出A出l出l出的出o出d出e出s出[出0出]出;出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出C出使出本出本出e出n出t出I出n出d出e出x出 出=出 出0出;出
+出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出1出;出 出i出 出<出 出A出l出l出的出o出d出e出s出.出的出使出設置出(出)出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出A出l出l出的出o出d出e出s出[出i出]出-出>出G出C出o出s出t出 出<出 出C出使出本出本出e出n出t出的出o出d出e出-出>出G出C出o出s出t出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出的出o出d出e出 出=出 出A出l出l出的出o出d出e出s出[出i出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出I出n出d出e出x出 出=出 出i出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出A出l出l出的出o出d出e出s出.出R出e出設置出o出正出e出A出t出(出C出使出本出本出e出n出t出I出n出d出e出x出)出;出
+出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出的出o出d出e出 出=出=出 出T出a出本出成出e出t出的出o出d出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出R出e出c出o出n出s出t出本出使出c出t出P出a出t出h出(出T出a出本出成出e出t出的出o出d出e出)出;出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出R出T出S出P出a出t出h出的出o出d出e出*出>出 出的出e出i出成出h出b出o出本出s出 出=出 出G出e出t出的出e出i出成出h出b出o出本出的出o出d出e出s出(出C出使出本出本出e出n出t出的出o出d出e出)出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出的出e出i出成出h出b出o出本出 出:出 出的出e出i出成出h出b出o出本出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出!出A出l出l出的出o出d出e出s出.出C出o出n出t出a出i出n出s出(出的出e出i出成出h出b出o出本出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出c出o出n出t出i出n出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出的出e出w出G出C出o出s出t出 出=出 出C出使出本出本出e出n出t出的出o出d出e出-出>出G出C出o出s出t出 出+出 出C出a出l出c出使出l出a出t出e出T出e出本出本出a出i出n出C出o出s出t出(出的出e出i出成出h出b出o出本出-出>出P出o出s出i出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出的出e出w出G出C出o出s出t出 出<出 出的出e出i出成出h出b出o出本出-出>出G出C出o出s出t出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出的出e出i出成出h出b出o出本出-出>出P出a出本出e出n出t出 出=出 出C出使出本出本出e出n出t出的出o出d出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出的出e出i出成出h出b出o出本出-出>出G出C出o出s出t出 出=出 出的出e出w出G出C出o出s出t出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出P出a出t出h出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出a出l出c出使出l出a出t出e出軍出l出o出y出d出基本出a出本出s出h出a出l出l出P出a出t出h出(出軍出V出e出c出t出o出本出 出S出t出a出本出t出,出 出軍出V出e出c出t出o出本出 出T出a出本出成出e出t出)出
+出{出
+出 出 出 出 出/出/出 出軍出l出o出y出d出-出基本出a出本出s出h出a出l出l出算出法出（出對出於出大出型出地出圖出可出能出較出慢出，出但出能出找出到出最出短出路出徑出）出
+出 出 出 出 出/出/出 出這出裡出簡出化出實出現出，出實出際出應出用出中出可出能出需出要出預出計出算出
+出 出 出 出 出本出e出t出使出本出n出 出C出a出l出c出使出l出a出t出e出A出S出t出a出本出P出a出t出h出(出S出t出a出本出t出,出 出T出a出本出成出e出t出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出a出l出c出使出l出a出t出e出輸入出e出使出本出i出s出t出i出c出(出軍出V出e出c出t出o出本出 出軍出本出o出設置出,出 出軍出V出e出c出t出o出本出 出T出o出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出使出用出歐出幾出里出得出距出離出作出為出啟出發出式出
+出 出 出 出 出本出e出t出使出本出n出 出軍出V出e出c出t出o出本出:出:出D出i出s出t出(出軍出本出o出設置出,出 出T出o出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出a出l出c出使出l出a出t出e出T出e出本出本出a出i出n出C出o出s出t出(出軍出V出e出c出t出o出本出 出L出o出c出a出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出 出T出e出本出本出a出i出n出T出y出p出e出 出=出 出G出e出t出T出e出本出本出a出i出n出T出y出p出e出(出L出o出c出a出t出i出o出n出)出;出
+出 出 出 出 出
+出 出 出 出 出s出w出i出t出c出h出 出(出T出e出本出本出a出i出n出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出:出:出基本出a出l出k出a出b出l出e出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出基本出a出l出k出a出b出l出e出C出o出s出t出;出
+出 出 出 出 出c出a出s出e出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出:出:出D出i出f出f出i出c出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出D出i出f出f出i出c出使出l出t出C出o出s出t出;出
+出 出 出 出 出c出a出s出e出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出:出:出基本出a出t出e出本出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出基本出a出t出e出本出C出o出s出t出;出
+出 出 出 出 出c出a出s出e出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出:出:出M出o出使出n出t出a出i出n出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出M出o出使出n出t出a出i出n出C出o出s出t出;出
+出 出 出 出 出c出a出s出e出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出:出:出軍出o出本出e出s出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出軍出o出本出e出s出t出C出o出s出t出;出
+出 出 出 出 出c出a出s出e出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出:出:出B出l出o出c出k出e出d出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出軍出L出T出下出M出A出X出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出基本出a出l出k出a出b出l出e出C出o出s出t出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出I出s出V出a出l出i出d出L出o出c出a出t出i出o出n出(出軍出V出e出c出t出o出本出 出L出o出c出a出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出檢出查出位出置出是出否出在出網出格出範出圍出內出
+出 出 出 出 出軍出V出e出c出t出o出本出 出R出e出l出a出t出i出正出e出L出o出c出a出t出i出o出n出 出=出 出L出o出c出a出t出i出o出n出 出-出 出G出本出i出d出C出e出n出t出e出本出;出
+出 出 出 出 出f出l出o出a出t出 出輸入出a出l出f出G出本出i出d出S出i出z出e出 出=出 出G出本出i出d出S出i出z出e出 出/出 出2出.出0出f出;出
+出
+出 出 出 出 出本出e出t出使出本出n出 出(出軍出M出a出t出h出:出:出A出b出s出(出R出e出l出a出t出i出正出e出L出o出c出a出t出i出o出n出.出X出)出 出<出=出 出輸入出a出l出f出G出本出i出d出S出i出z出e出 出&出&出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出a出t出h出:出:出A出b出s出(出R出e出l出a出t出i出正出e出L出o出c出a出t出i出o出n出.出Y出)出 出<出=出 出輸入出a出l出f出G出本出i出d出S出i出z出e出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出R出e出c出o出n出s出t出本出使出c出t出P出a出t出h出(出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出E出n出d出的出o出d出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出P出a出t出h出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出E出n出d出的出o出d出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出a出t出h出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出C出使出本出本出e出n出t出的出o出d出e出 出=出 出E出n出d出的出o出d出e出;出
+出 出 出 出 出w出h出i出l出e出 出(出C出使出本出本出e出n出t出的出o出d出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出a出t出h出.出I出n出s出e出本出t出(出C出使出本出本出e出n出t出的出o出d出e出-出>出P出o出s出i出t出i出o出n出,出 出0出)出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出的出o出d出e出 出=出 出C出使出本出本出e出n出t出的出o出d出e出-出>出P出a出本出e出n出t出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出P出a出t出h出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出I出n出i出t出i出a出l出i出z出e出G出本出i出d出(出)出
+出{出
+出 出 出 出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出.出S出e出t出的出使出設置出(出G出本出i出d出R出e出s出o出l出使出t出i出o出n出)出;出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出x出 出=出 出0出;出 出x出 出<出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出;出 出x出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出[出x出]出.出S出e出t出的出使出設置出(出G出本出i出d出R出e出s出o出l出使出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出y出 出=出 出0出;出 出y出 出<出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出;出 出y出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出的出o出d出e出L出o出c出a出t出i出o出n出 出=出 出G出本出i出d出C出e出n出t出e出本出 出+出 出軍出V出e出c出t出o出本出(出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出(出x出 出-出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出 出/出 出2出)出 出*出 出的出o出d出e出S出i出z出e出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出(出y出 出-出 出G出本出i出d出R出e出s出o出l出使出t出i出o出n出 出/出 出2出)出 出*出 出的出o出d出e出S出i出z出e出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出0出
+出 出 出 出 出 出 出 出 出 出 出 出 出)出;出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出默出認出所出有出節出點出都出可出行出走出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出[出x出]出[出y出]出 出=出 出C出本出e出a出t出e出的出o出d出e出(出的出o出d出e出L出o出c出a出t出i出o出n出,出 出t出本出使出e出,出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出:出:出基本出a出l出k出a出b出l出e出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出l出e出a出本出G出本出i出d出(出)出
+出{出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出x出 出=出 出0出;出 出x出 出<出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出.出的出使出設置出(出)出;出 出x出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出y出 出=出 出0出;出 出y出 出<出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出[出x出]出.出的出使出設置出(出)出;出 出y出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出的出a出正出i出成出a出t出i出o出n出G出本出i出d出[出x出]出[出y出]出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出d出e出l出e出t出e出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出[出x出]出[出y出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出[出x出]出[出y出]出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出[出x出]出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出的出a出正出i出成出a出t出i出o出n出G出本出i出d出.出E出設置出p出t出y出(出)出;出
+出}出
+出
+出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出本出e出a出t出e出的出o出d出e出(出軍出V出e出c出t出o出本出 出L出o出c出a出t出i出o出n出,出 出b出o出o出l出 出b出I出s出基本出a出l出k出a出b出l出e出,出 出E出R出T出S出T出e出本出本出a出i出n出T出y出p出e出 出T出e出本出本出a出i出n出T出y出p出e出)出
+出{出
+出 出 出 出 出軍出R出T出S出P出a出t出h出的出o出d出e出*出 出的出o出d出e出 出=出 出n出e出w出 出軍出R出T出S出P出a出t出h出的出o出d出e出(出L出o出c出a出t出i出o出n出,出 出b出I出s出基本出a出l出k出a出b出l出e出,出 出T出e出本出本出a出i出n出T出y出p出e出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出的出o出d出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出P出本出o出c出e出s出s出P出e出n出d出i出n出成出R出e出q出使出e出s出t出s出(出)出
+出{出
+出 出 出 出 出w出h出i出l出e出 出(出P出e出n出d出i出n出成出R出e出q出使出e出s出t出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出R出T出S出P出a出t出h出R出e出q出使出e出s出t出 出R出e出q出使出e出s出t出 出=出 出P出e出n出d出i出n出成出R出e出q出使出e出s出t出s出[出0出]出;出
+出 出 出 出 出 出 出 出 出P出e出n出d出i出n出成出R出e出q出使出e出s出t出s出.出R出e出設置出o出正出e出A出t出(出0出)出;出
+出
+出 出 出 出 出 出 出 出 出軍出R出T出S出P出a出t出h出R出e出s出使出l出t出 出R出e出s出使出l出t出 出=出 出C出a出l出c出使出l出a出t出e出P出a出t出h出(出R出e出q出使出e出s出t出)出;出
+出 出 出 出 出 出 出 出 出C出o出設置出p出l出e出t出e出P出a出t出h出R出e出q出使出e出s出t出(出R出e出q出使出e出s出t出,出 出R出e出s出使出l出t出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出 出E出R出T出S出P出a出t出h出f出i出n出d出i出n出成出S出t出a出t出e出:出:出I出d出l出e出;出
+出 出 出 出 出O出n出P出a出t出h出f出i出n出d出i出n出成出S出t出a出t出e出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出P出a出t出h出f出i出n出d出e出本出:出:出C出o出設置出p出l出e出t出e出P出a出t出h出R出e出q出使出e出s出t出(出c出o出n出s出t出 出軍出R出T出S出P出a出t出h出R出e出q出使出e出s出t出&出 出R出e出q出使出e出s出t出,出 出c出o出n出s出t出 出軍出R出T出S出P出a出t出h出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出
+出{出
+出 出 出 出 出O出n出P出a出t出h出C出a出l出c出使出l出a出t出e出d出.出B出本出o出a出d出c出a出s出t出(出R出e出q出使出e出s出t出,出 出R出e出s出使出l出t出)出;出
+出}出
+出

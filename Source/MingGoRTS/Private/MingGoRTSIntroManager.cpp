@@ -1,190 +1,191 @@
-#include "MingGoRTSIntroManager.h"
-#include "Engine/Engine.h"
-#include "Kismet/GameplayStatics.h"
-#include "Components/AudioComponent.h"
-#include "TimerManager.h"
-
-UMingGoRTSIntroManager::UMingGoRTSIntroManager()
-{
-    bIsIntroPlaying = false;
-    IntroTimer = 0.0f;
-    CurrentIntroStage = 0;
-}
-
-void UMingGoRTSIntroManager::StartIntroSequence()
-{
-    if (bIsIntroPlaying)
-    {
-        return;
-    }
-
-    bIsIntroPlaying = true;
-    CurrentIntroStage = 0;
-    IntroTimer = 0.0f;
-
-    // 載入動畫資源
-    LoadIntroAssets();
-
-    // 開始第一階段
-    ShowTitleCard();
-
-    UE_LOG(LogTemp, Log, TEXT("MingGoRTS Intro Sequence Started"));
-}
-
-void UMingGoRTSIntroManager::SkipIntro()
-{
-    if (!bIsIntroPlaying)
-    {
-        return;
-    }
-
-    bIsIntroPlaying = false;
-    CurrentIntroStage = 0;
-    IntroTimer = 0.0f;
-
-    // 直接跳到主選單
-    TransitionToMainMenu();
-
-    UE_LOG(LogTemp, Log, TEXT("Intro Sequence Skipped"));
-}
-
-void UMingGoRTSIntroManager::ShowTitleCard()
-{
-    if (!bIsIntroPlaying)
-    {
-        return;
-    }
-
-    CurrentIntroStage = 1;
-    IntroTimer = 0.0f;
-
-    // 顯示標題卡片
-    DisplayIntroImage(0);
-    PlayIntroSound(0);
-
-    // 設置計時器
-    if (UWorld* World = GEngine->GetCurrentPlayWorld())
-    {
-        FTimerHandle TimerHandle;
-        World->GetTimerManager().SetTimer(TimerHandle, this, &UMingGoRTSIntroManager::ShowHistoricalBackground, 3.0f, false);
-    }
-}
-
-void UMingGoRTSIntroManager::ShowHistoricalBackground()
-{
-    if (!bIsIntroPlaying)
-    {
-        return;
-    }
-
-    CurrentIntroStage = 2;
-    IntroTimer = 0.0f;
-
-    // 顯示歷史背景
-    DisplayIntroImage(1);
-    PlayIntroSound(1);
-
-    // 設置計時器
-    if (UWorld* World = GEngine->GetCurrentPlayWorld())
-    {
-        FTimerHandle TimerHandle;
-        World->GetTimerManager().SetTimer(TimerHandle, this, &UMingGoRTSIntroManager::ShowGameTitle, 5.0f, false);
-    }
-}
-
-void UMingGoRTSIntroManager::ShowGameTitle()
-{
-    if (!bIsIntroPlaying)
-    {
-        return;
-    }
-
-    CurrentIntroStage = 3;
-    IntroTimer = 0.0f;
-
-    // 顯示遊戲標題
-    DisplayIntroImage(2);
-    PlayIntroSound(2);
-
-    // 設置計時器
-    if (UWorld* World = GEngine->GetCurrentPlayWorld())
-    {
-        FTimerHandle TimerHandle;
-        World->GetTimerManager().SetTimer(TimerHandle, this, &UMingGoRTSIntroManager::TransitionToMainMenu, 4.0f, false);
-    }
-}
-
-void UMingGoRTSIntroManager::TransitionToMainMenu()
-{
-    bIsIntroPlaying = false;
-    CurrentIntroStage = 0;
-    IntroTimer = 0.0f;
-
-    // 載入主選單
-    if (UWorld* World = GEngine->GetCurrentPlayWorld())
-    {
-        UGameplayStatics::OpenLevel(World, TEXT("MainMenuLevel"), true);
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("Intro Sequence Completed - Transitioning to Main Menu"));
-}
-
-void UMingGoRTSIntroManager::LoadIntroAssets()
-{
-    // 這裡應該載入實際的資源
-    // 為了演示，我們使用靜態引用
-    
-    // 載入紋理
-    static ConstructorHelpers::FObjectFinder<UTexture2D> TitleTexture(TEXT("/Game/Intro/Textures/T_TitleCard"));
-    if (TitleTexture.Succeeded())
-    {
-        IntroTextures.Add(TitleTexture.Object);
-    }
-
-    static ConstructorHelpers::FObjectFinder<UTexture2D> HistoryTexture(TEXT("/Game/Intro/Textures/T_HistoricalBackground"));
-    if (HistoryTexture.Succeeded())
-    {
-        IntroTextures.Add(HistoryTexture.Object);
-    }
-
-    static ConstructorHelpers::FObjectFinder<UTexture2D> GameTitleTexture(TEXT("/Game/Intro/Textures/T_GameTitle"));
-    if (GameTitleTexture.Succeeded())
-    {
-        IntroTextures.Add(GameTitleTexture.Object);
-    }
-
-    // 載入音效
-    static ConstructorHelpers::FObjectFinder<USoundBase> IntroMusic(TEXT("/Game/Intro/Audio/M_IntroMusic"));
-    if (IntroMusic.Succeeded())
-    {
-        IntroSounds.Add(IntroMusic.Object);
-    }
-}
-
-void UMingGoRTSIntroManager::PlayIntroSound(int32 StageIndex)
-{
-    if (StageIndex >= 0 && StageIndex < IntroSounds.Num())
-    {
-        if (USoundBase* Sound = IntroSounds[StageIndex])
-        {
-            if (UWorld* World = GEngine->GetCurrentPlayWorld())
-            {
-                // 播放音效
-                UGameplayStatics::PlaySound2D(World, Sound, 1.0f);
-            }
-        }
-    }
-}
-
-void UMingGoRTSIntroManager::DisplayIntroImage(int32 StageIndex)
-{
-    if (StageIndex >= 0 && StageIndex < IntroTextures.Num())
-    {
-        if (UTexture2D* Texture = IntroTextures[StageIndex])
-        {
-            // 這裡應該顯示紋理到 UI
-            // 為了演示，我們只是記錄
-            UE_LOG(LogTemp, Log, TEXT("Displaying Intro Image Stage %d"), StageIndex);
-        }
-    }
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出A出使出d出i出o出C出o出設置出p出o出n出e出n出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出T出i出設置出e出本出M出a出n出a出成出e出本出.出h出"出
+出
+出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出(出)出
+出{出
+出 出 出 出 出b出I出s出I出n出t出本出o出P出l出a出y出i出n出成出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出I出n出t出本出o出T出i出設置出e出本出 出=出 出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出I出n出t出本出o出S出t出a出成出e出 出=出 出0出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出S出t出a出本出t出I出n出t出本出o出S出e出q出使出e出n出c出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出I出s出I出n出t出本出o出P出l出a出y出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出I出s出I出n出t出本出o出P出l出a出y出i出n出成出 出=出 出t出本出使出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出I出n出t出本出o出S出t出a出成出e出 出=出 出0出;出
+出 出 出 出 出I出n出t出本出o出T出i出設置出e出本出 出=出 出0出.出0出f出;出
+出
+出 出 出 出 出/出/出 出載出入出動出畫出資出源出
+出 出 出 出 出L出o出a出d出I出n出t出本出o出A出s出s出e出t出s出(出)出;出
+出
+出 出 出 出 出/出/出 出開出始出第出一出階出段出
+出 出 出 出 出S出h出o出w出T出i出t出l出e出C出a出本出d出(出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出G出o出R出T出S出 出I出n出t出本出o出 出S出e出q出使出e出n出c出e出 出S出t出a出本出t出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出S出k出i出p出I出n出t出本出o出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出s出I出n出t出本出o出P出l出a出y出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出I出s出I出n出t出本出o出P出l出a出y出i出n出成出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出I出n出t出本出o出S出t出a出成出e出 出=出 出0出;出
+出 出 出 出 出I出n出t出本出o出T出i出設置出e出本出 出=出 出0出.出0出f出;出
+出
+出 出 出 出 出/出/出 出直出接出跳出到出主出選出單出
+出 出 出 出 出T出本出a出n出s出i出t出i出o出n出T出o出M出a出i出n出M出e出n出使出(出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出t出本出o出 出S出e出q出使出e出n出c出e出 出S出k出i出p出p出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出S出h出o出w出T出i出t出l出e出C出a出本出d出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出s出I出n出t出本出o出P出l出a出y出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出C出使出本出本出e出n出t出I出n出t出本出o出S出t出a出成出e出 出=出 出1出;出
+出 出 出 出 出I出n出t出本出o出T出i出設置出e出本出 出=出 出0出.出0出f出;出
+出
+出 出 出 出 出/出/出 出顯出示出標出題出卡出片出
+出 出 出 出 出D出i出s出p出l出a出y出I出n出t出本出o出I出設置出a出成出e出(出0出)出;出
+出 出 出 出 出P出l出a出y出I出n出t出本出o出S出o出使出n出d出(出0出)出;出
+出
+出 出 出 出 出/出/出 出設出置出計出時出器出
+出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出E出n出成出i出n出e出-出>出G出e出t出C出使出本出本出e出n出t出P出l出a出y出基本出o出本出l出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出T出i出設置出e出本出輸入出a出n出d出l出e出 出T出i出設置出e出本出輸入出a出n出d出l出e出;出
+出 出 出 出 出 出 出 出 出基本出o出本出l出d出-出>出G出e出t出T出i出設置出e出本出M出a出n出a出成出e出本出(出)出.出S出e出t出T出i出設置出e出本出(出T出i出設置出e出本出輸入出a出n出d出l出e出,出 出t出h出i出s出,出 出&出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出S出h出o出w出輸入出i出s出t出o出本出i出c出a出l出B出a出c出k出成出本出o出使出n出d出,出 出3出.出0出f出,出 出f出a出l出s出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出S出h出o出w出輸入出i出s出t出o出本出i出c出a出l出B出a出c出k出成出本出o出使出n出d出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出s出I出n出t出本出o出P出l出a出y出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出C出使出本出本出e出n出t出I出n出t出本出o出S出t出a出成出e出 出=出 出2出;出
+出 出 出 出 出I出n出t出本出o出T出i出設置出e出本出 出=出 出0出.出0出f出;出
+出
+出 出 出 出 出/出/出 出顯出示出歷出史出背出景出
+出 出 出 出 出D出i出s出p出l出a出y出I出n出t出本出o出I出設置出a出成出e出(出1出)出;出
+出 出 出 出 出P出l出a出y出I出n出t出本出o出S出o出使出n出d出(出1出)出;出
+出
+出 出 出 出 出/出/出 出設出置出計出時出器出
+出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出E出n出成出i出n出e出-出>出G出e出t出C出使出本出本出e出n出t出P出l出a出y出基本出o出本出l出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出T出i出設置出e出本出輸入出a出n出d出l出e出 出T出i出設置出e出本出輸入出a出n出d出l出e出;出
+出 出 出 出 出 出 出 出 出基本出o出本出l出d出-出>出G出e出t出T出i出設置出e出本出M出a出n出a出成出e出本出(出)出.出S出e出t出T出i出設置出e出本出(出T出i出設置出e出本出輸入出a出n出d出l出e出,出 出t出h出i出s出,出 出&出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出S出h出o出w出G出a出設置出e出T出i出t出l出e出,出 出5出.出0出f出,出 出f出a出l出s出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出S出h出o出w出G出a出設置出e出T出i出t出l出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出s出I出n出t出本出o出P出l出a出y出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出C出使出本出本出e出n出t出I出n出t出本出o出S出t出a出成出e出 出=出 出3出;出
+出 出 出 出 出I出n出t出本出o出T出i出設置出e出本出 出=出 出0出.出0出f出;出
+出
+出 出 出 出 出/出/出 出顯出示出遊出戲出標出題出
+出 出 出 出 出D出i出s出p出l出a出y出I出n出t出本出o出I出設置出a出成出e出(出2出)出;出
+出 出 出 出 出P出l出a出y出I出n出t出本出o出S出o出使出n出d出(出2出)出;出
+出
+出 出 出 出 出/出/出 出設出置出計出時出器出
+出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出E出n出成出i出n出e出-出>出G出e出t出C出使出本出本出e出n出t出P出l出a出y出基本出o出本出l出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出T出i出設置出e出本出輸入出a出n出d出l出e出 出T出i出設置出e出本出輸入出a出n出d出l出e出;出
+出 出 出 出 出 出 出 出 出基本出o出本出l出d出-出>出G出e出t出T出i出設置出e出本出M出a出n出a出成出e出本出(出)出.出S出e出t出T出i出設置出e出本出(出T出i出設置出e出本出輸入出a出n出d出l出e出,出 出t出h出i出s出,出 出&出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出T出本出a出n出s出i出t出i出o出n出T出o出M出a出i出n出M出e出n出使出,出 出4出.出0出f出,出 出f出a出l出s出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出T出本出a出n出s出i出t出i出o出n出T出o出M出a出i出n出M出e出n出使出(出)出
+出{出
+出 出 出 出 出b出I出s出I出n出t出本出o出P出l出a出y出i出n出成出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出I出n出t出本出o出S出t出a出成出e出 出=出 出0出;出
+出 出 出 出 出I出n出t出本出o出T出i出設置出e出本出 出=出 出0出.出0出f出;出
+出
+出 出 出 出 出/出/出 出載出入出主出選出單出
+出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出E出n出成出i出n出e出-出>出G出e出t出C出使出本出本出e出n出t出P出l出a出y出基本出o出本出l出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出:出:出O出p出e出n出L出e出正出e出l出(出基本出o出本出l出d出,出 出T出E出X出T出(出"出M出a出i出n出M出e出n出使出L出e出正出e出l出"出)出,出 出t出本出使出e出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出t出本出o出 出S出e出q出使出e出n出c出e出 出C出o出設置出p出l出e出t出e出d出 出-出 出T出本出a出n出s出i出t出i出o出n出i出n出成出 出t出o出 出M出a出i出n出 出M出e出n出使出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出L出o出a出d出I出n出t出本出o出A出s出s出e出t出s出(出)出
+出{出
+出 出 出 出 出/出/出 出這出裡出應出該出載出入出實出際出的出資出源出
+出 出 出 出 出/出/出 出為出了出演出示出，出我出們出使出用出靜出態出引出用出
+出 出 出 出 出
+出 出 出 出 出/出/出 出載出入出紋出理出
+出 出 出 出 出s出t出a出t出i出c出 出C出o出n出s出t出本出使出c出t出o出本出輸入出e出l出p出e出本出s出:出:出軍出O出b出大出e出c出t出軍出i出n出d出e出本出<出U出T出e出x出t出使出本出e出2出D出>出 出T出i出t出l出e出T出e出x出t出使出本出e出(出T出E出X出T出(出"出/出G出a出設置出e出/出I出n出t出本出o出/出T出e出x出t出使出本出e出s出/出T出下出T出i出t出l出e出C出a出本出d出"出)出)出;出
+出 出 出 出 出i出f出 出(出T出i出t出l出e出T出e出x出t出使出本出e出.出S出使出c出c出e出e出d出e出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出t出本出o出T出e出x出t出使出本出e出s出.出A出d出d出(出T出i出t出l出e出T出e出x出t出使出本出e出.出O出b出大出e出c出t出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出s出t出a出t出i出c出 出C出o出n出s出t出本出使出c出t出o出本出輸入出e出l出p出e出本出s出:出:出軍出O出b出大出e出c出t出軍出i出n出d出e出本出<出U出T出e出x出t出使出本出e出2出D出>出 出輸入出i出s出t出o出本出y出T出e出x出t出使出本出e出(出T出E出X出T出(出"出/出G出a出設置出e出/出I出n出t出本出o出/出T出e出x出t出使出本出e出s出/出T出下出輸入出i出s出t出o出本出i出c出a出l出B出a出c出k出成出本出o出使出n出d出"出)出)出;出
+出 出 出 出 出i出f出 出(出輸入出i出s出t出o出本出y出T出e出x出t出使出本出e出.出S出使出c出c出e出e出d出e出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出t出本出o出T出e出x出t出使出本出e出s出.出A出d出d出(出輸入出i出s出t出o出本出y出T出e出x出t出使出本出e出.出O出b出大出e出c出t出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出s出t出a出t出i出c出 出C出o出n出s出t出本出使出c出t出o出本出輸入出e出l出p出e出本出s出:出:出軍出O出b出大出e出c出t出軍出i出n出d出e出本出<出U出T出e出x出t出使出本出e出2出D出>出 出G出a出設置出e出T出i出t出l出e出T出e出x出t出使出本出e出(出T出E出X出T出(出"出/出G出a出設置出e出/出I出n出t出本出o出/出T出e出x出t出使出本出e出s出/出T出下出G出a出設置出e出T出i出t出l出e出"出)出)出;出
+出 出 出 出 出i出f出 出(出G出a出設置出e出T出i出t出l出e出T出e出x出t出使出本出e出.出S出使出c出c出e出e出d出e出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出t出本出o出T出e出x出t出使出本出e出s出.出A出d出d出(出G出a出設置出e出T出i出t出l出e出T出e出x出t出使出本出e出.出O出b出大出e出c出t出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出載出入出音出效出
+出 出 出 出 出s出t出a出t出i出c出 出C出o出n出s出t出本出使出c出t出o出本出輸入出e出l出p出e出本出s出:出:出軍出O出b出大出e出c出t出軍出i出n出d出e出本出<出U出S出o出使出n出d出B出a出s出e出>出 出I出n出t出本出o出M出使出s出i出c出(出T出E出X出T出(出"出/出G出a出設置出e出/出I出n出t出本出o出/出A出使出d出i出o出/出M出下出I出n出t出本出o出M出使出s出i出c出"出)出)出;出
+出 出 出 出 出i出f出 出(出I出n出t出本出o出M出使出s出i出c出.出S出使出c出c出e出e出d出e出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出t出本出o出S出o出使出n出d出s出.出A出d出d出(出I出n出t出本出o出M出使出s出i出c出.出O出b出大出e出c出t出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出P出l出a出y出I出n出t出本出o出S出o出使出n出d出(出i出n出t出3出2出 出S出t出a出成出e出I出n出d出e出x出)出
+出{出
+出 出 出 出 出i出f出 出(出S出t出a出成出e出I出n出d出e出x出 出>出=出 出0出 出&出&出 出S出t出a出成出e出I出n出d出e出x出 出<出 出I出n出t出本出o出S出o出使出n出d出s出.出的出使出設置出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出U出S出o出使出n出d出B出a出s出e出*出 出S出o出使出n出d出 出=出 出I出n出t出本出o出S出o出使出n出d出s出[出S出t出a出成出e出I出n出d出e出x出]出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出E出n出成出i出n出e出-出>出G出e出t出C出使出本出本出e出n出t出P出l出a出y出基本出o出本出l出d出(出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出播出放出音出效出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出:出:出P出l出a出y出S出o出使出n出d出2出D出(出基本出o出本出l出d出,出 出S出o出使出n出d出,出 出1出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出:出:出D出i出s出p出l出a出y出I出n出t出本出o出I出設置出a出成出e出(出i出n出t出3出2出 出S出t出a出成出e出I出n出d出e出x出)出
+出{出
+出 出 出 出 出i出f出 出(出S出t出a出成出e出I出n出d出e出x出 出>出=出 出0出 出&出&出 出S出t出a出成出e出I出n出d出e出x出 出<出 出I出n出t出本出o出T出e出x出t出使出本出e出s出.出的出使出設置出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出U出T出e出x出t出使出本出e出2出D出*出 出T出e出x出t出使出本出e出 出=出 出I出n出t出本出o出T出e出x出t出使出本出e出s出[出S出t出a出成出e出I出n出d出e出x出]出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出這出裡出應出該出顯出示出紋出理出到出 出U出I出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出為出了出演出示出，出我出們出只出是出記出錄出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出D出i出s出p出l出a出y出i出n出成出 出I出n出t出本出o出 出I出設置出a出成出e出 出S出t出a出成出e出 出%出d出"出)出,出 出S出t出a出成出e出I出n出d出e出x出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出

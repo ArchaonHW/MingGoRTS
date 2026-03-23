@@ -1,221 +1,222 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
-#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "MingMoralAuthority.generated.h"
-
-/**
- * 墮落徵象類型枚舉
- */
-UENUM(BlueprintType)
-enum class EFallSymptomType: uint8 {
-    None            UMETA(DisplayName = "None"),
-    InternalDoubt   UMETA(DisplayName = "內部始疑"),    // 連續使用逆策後部隊忠誠度下降
-    EnemyAbnormal   UMETA(DisplayName = "敵轉異常"),    // 敵人AI察覺玩家逆策模式
-    EvidenceExposed UMETA(DisplayName = "事過露跡"),    // 過去使用的逆策被揭露
-    OverConfidence  UMETA(DisplayName = "勢反過盛"),    // 逆勝過多，眾以為常
-    HeartChange     UMETA(DisplayName = "身人心變"),    // 用逆者心漸酷、漸孤
-    Count
-};
-
-/**
- * 墮落徵象數據結構
- */
-USTRUCT(BlueprintType)
-struct MINGRTS_API FFallSymptomData
-{
-    GENERATED_BODY()
-
-    // 徵象類型
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoralAuthority")
-    EFallSymptomType SymptomType = EFallSymptomType::None;
-
-    // 徵象描述
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoralAuthority")
-    FString Description;
-
-    // 檢測時間
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoralAuthority")
-    FDateTime DetectionTime;
-
-    // 嚴重程度 (1-10)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoralAuthority")
-    int32 Severity = 1;
-
-    // 是否已處理
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoralAuthority")
-    bool bIsResolved = false;
-
-    FFallSymptomData()
-        : SymptomType(EFallSymptomType::None)
-        , Severity(1)
-        , bIsResolved(false)
-    {}
-};
-
-/**
- * 道德邊界結構
- */
-USTRUCT(BlueprintType)
-struct MINGRTS_API FMoralBoundary
-{
-    GENERATED_BODY()
-
-    // 不可殘民以逞
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoralAuthority")
-    bool bNoHarmToInnocents = true;
-
-    // 不可絕敵後路而致玉石俱焚
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoralAuthority")
-    bool bNoTotalAnnihilation = true;
-
-    // 不可壞天地大義而失天時
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoralAuthority")
-    bool bNoViolationOfHeavenlyPrinciples = true;
-
-    // 不可為私利而濫用
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoralAuthority")
-    bool bNoPersonalGainAbuse = true;
-
-    // 是否遵守所有邊界
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoralAuthority")
-    bool bAllBoundariesRespected = true;
-
-    FMoralBoundary()
-        : bNoHarmToInnocents(true)
-        , bNoTotalAnnihilation(true)
-        , bNoViolationOfHeavenlyPrinciples(true)
-        , bNoPersonalGainAbuse(true)
-        , bAllBoundariesRespected(true)
-    {}
-};
-
-/**
- * 至聖者指揮學 - 道權系統 (Moral Authority)
- * 掌天道、掌大義、掌不傳之秘
- * 負責監測墮落徵象，確保指揮者不墮入魔道
- */
-UCLASS(ClassGroup = (SageCommand), meta = (BlueprintSpawnableComponent))
-class MINGRTS_API UMingMoralAuthority : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    UMingMoralAuthority();
-
-    // 初始化系統
-    UFUNCTION(BlueprintCallable, Category = "SageCommand|Moral")
-    void InitializeMoralAuthority();
-
-    // 執行道德檢查
-    UFUNCTION(BlueprintCallable, Category = "SageCommand|Moral")
-    bool PerformMoralCheck();
-
-    // 檢測墮落徵象
-    UFUNCTION(BlueprintCallable, Category = "SageCommand|Moral")
-    TArray<FFallSymptomData> DetectFallSymptoms(int32 CurrentFallValue, int32 FallThreshold);
-
-    // 檢查是否違反道德邊界
-    UFUNCTION(BlueprintCallable, Category = "SageCommand|Moral")
-    bool CheckMoralBoundaries(const FMoralBoundary& ProposedAction);
-
-    // 評估墮落風險
-    UFUNCTION(BlueprintCallable, Category = "SageCommand|Moral")
-    int32 AssessFallRisk(int32 CurrentFallValue, int32 FallThreshold, int32 ConsecutiveEvilUses);
-
-    // 獲取當前徵象列表
-    UFUNCTION(BlueprintCallable, Category = "SageCommand|Moral")
-    TArray<FFallSymptomData> GetCurrentSymptoms() const { return ActiveSymptoms; }
-
-    // 解決徵象
-    UFUNCTION(BlueprintCallable, Category = "SageCommand|Moral")
-    bool ResolveSymptom(EFallSymptomType SymptomType);
-
-    // 檢查系統健康狀況
-    UFUNCTION(BlueprintCallable, Category = "SageCommand|Moral")
-    bool IsHealthy() const;
-
-    // 檢查墮落風險是否高
-    UFUNCTION(BlueprintCallable, Category = "SageCommand|Moral")
-    bool IsFallRiskHigh() const;
-
-    // 獲取徵象描述
-    UFUNCTION(BlueprintCallable, Category = "SageCommand|Moral")
-    FString GetSymptomDescription(EFallSymptomType SymptomType) const;
-
-    // 獲取道德建議
-    UFUNCTION(BlueprintCallable, Category = "SageCommand|Moral")
-    FString GetMoralAdvice() const;
-
-    // 事件：檢測到墮落徵象
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFallSymptomDetected, const FFallSymptomData&, Symptom);
-    UPROPERTY(BlueprintAssignable, Category = "SageCommand|Moral")
-    FOnFallSymptomDetected OnFallSymptomDetected;
-
-    // 事件：道德邊界被違反
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMoralBoundaryViolated, const FMoralBoundary&, Boundary);
-    UPROPERTY(BlueprintAssignable, Category = "SageCommand|Moral")
-    FOnMoralBoundaryViolated OnMoralBoundaryViolated;
-
-    // 事件：系統發出警告
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMoralWarning, const FString&, WarningMessage);
-    UPROPERTY(BlueprintAssignable, Category = "SageCommand|Moral")
-    FOnMoralWarning OnMoralWarning;
-
-protected:
-    // 檢測內部始疑徵象
-    bool DetectInternalDoubt(int32 ConsecutiveEvilUses, float LoyaltyDrop);
-
-    // 檢測敵轉異常徵象
-    bool DetectEnemyAbnormal(bool bEnemyDefensiveStance);
-
-    // 檢測事過露跡徵象
-    bool DetectEvidenceExposed(float ExposureRisk);
-
-    // 檢測勢反過盛徵象
-    bool DetectOverConfidence(int32 TotalEvilUses, int32 TotalRighteousUses);
-
-    // 檢測身人心變徵象
-    bool DetectHeartChange(float MoralDeviation);
-
-    // 更新徵象列表
-    void UpdateSymptomsList(EFallSymptomType SymptomType, const FString& Description, int32 Severity);
-
-    // 計算風險值
-    int32 CalculateRiskValue(int32 CurrentFallValue, int32 FallThreshold) const;
-
-protected:
-    // 當前活動徵象
-    UPROPERTY()
-    TArray<FFallSymptomData> ActiveSymptoms;
-
-    // 徵象歷史記錄
-    UPROPERTY()
-    TArray<FFallSymptomData> SymptomHistory;
-
-    // 是否已初始化
-    UPROPERTY()
-    bool bIsInitialized = false;
-
-    // 高風險閾值
-    UPROPERTY(EditDefaultsOnly, Category = "SageCommand|Moral")
-    int32 HighRiskThreshold = 70;
-
-    // 最大徵象數量
-    UPROPERTY(EditDefaultsOnly, Category = "SageCommand|Moral")
-    int32 MaxActiveSymptoms = 5;
-
-    // 徵象自動過期時間 (秒)
-    UPROPERTY(EditDefaultsOnly, Category = "SageCommand|Moral")
-    float SymptomExpirationTime = 300.0f;
-
-    // 當前墮落值 (由外部系統更新)
-    UPROPERTY()
-    int32 CachedFallValue = 0;
-
-    // 墮落閾值 (由外部系統更新)
-    UPROPERTY()
-    int32 CachedFallThreshold = 100;
-};
+出/出/出 出C出o出p出y出本出i出成出h出t出 出E出p出i出c出 出G出a出設置出e出s出,出 出I出n出c出.出 出A出l出l出 出R出i出成出h出t出s出 出R出e出s出e出本出正出e出d出.出
+出
+出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出M出o出本出a出l出A出使出t出h出o出本出i出t出y出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出墮出落出徵出象出類出型出枚出舉出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出軍出a出l出l出S出y出設置出p出t出o出設置出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出的出o出n出e出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出的出o出n出e出"出)出,出
+出 出 出 出 出I出n出t出e出本出n出a出l出D出o出使出b出t出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出內出部出始出疑出"出)出,出 出 出 出 出/出/出 出連出續出使出用出逆出策出後出部出隊出忠出誠出度出下出降出
+出 出 出 出 出E出n出e出設置出y出A出b出n出o出本出設置出a出l出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出敵出轉出異出常出"出)出,出 出 出 出 出/出/出 出敵出人出A出I出察出覺出玩出家出逆出策出模出式出
+出 出 出 出 出E出正出i出d出e出n出c出e出E出x出p出o出s出e出d出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出事出過出露出跡出"出)出,出 出 出 出 出/出/出 出過出去出使出用出的出逆出策出被出揭出露出
+出 出 出 出 出O出正出e出本出C出o出n出f出i出d出e出n出c出e出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出勢出反出過出盛出"出)出,出 出 出 出 出/出/出 出逆出勝出過出多出，出眾出以出為出常出
+出 出 出 出 出輸入出e出a出本出t出C出h出a出n出成出e出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出身出人出心出變出"出)出,出 出 出 出 出/出/出 出用出逆出者出心出漸出酷出、出漸出孤出
+出 出 出 出 出C出o出使出n出t出
+出}出;出
+出
+出/出*出*出
+出 出*出 出墮出落出徵出象出數出據出結出構出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出M出I出的出G出R出T出S出下出A出P出I出 出軍出軍出a出l出l出S出y出設置出p出t出o出設置出D出a出t出a出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出/出 出徵出象出類出型出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出本出a出l出A出使出t出h出o出本出i出t出y出"出)出
+出 出 出 出 出E出軍出a出l出l出S出y出設置出p出t出o出設置出T出y出p出e出 出S出y出設置出p出t出o出設置出T出y出p出e出 出=出 出E出軍出a出l出l出S出y出設置出p出t出o出設置出T出y出p出e出:出:出的出o出n出e出;出
+出
+出 出 出 出 出/出/出 出徵出象出描出述出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出本出a出l出A出使出t出h出o出本出i出t出y出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出s出c出本出i出p出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出檢出測出時出間出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出本出a出l出A出使出t出h出o出本出i出t出y出"出)出
+出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出D出e出t出e出c出t出i出o出n出T出i出設置出e出;出
+出
+出 出 出 出 出/出/出 出嚴出重出程出度出 出(出1出-出1出0出)出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出本出a出l出A出使出t出h出o出本出i出t出y出"出)出
+出 出 出 出 出i出n出t出3出2出 出S出e出正出e出本出i出t出y出 出=出 出1出;出
+出
+出 出 出 出 出/出/出 出是出否出已出處出理出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出本出a出l出A出使出t出h出o出本出i出t出y出"出)出
+出 出 出 出 出b出o出o出l出 出b出I出s出R出e出s出o出l出正出e出d出 出=出 出f出a出l出s出e出;出
+出
+出 出 出 出 出軍出軍出a出l出l出S出y出設置出p出t出o出設置出D出a出t出a出(出)出
+出 出 出 出 出 出 出 出 出:出 出S出y出設置出p出t出o出設置出T出y出p出e出(出E出軍出a出l出l出S出y出設置出p出t出o出設置出T出y出p出e出:出:出的出o出n出e出)出
+出 出 出 出 出 出 出 出 出,出 出S出e出正出e出本出i出t出y出(出1出)出
+出 出 出 出 出 出 出 出 出,出 出b出I出s出R出e出s出o出l出正出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出道出德出邊出界出結出構出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出M出I出的出G出R出T出S出下出A出P出I出 出軍出M出o出本出a出l出B出o出使出n出d出a出本出y出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出/出 出不出可出殘出民出以出逞出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出本出a出l出A出使出t出h出o出本出i出t出y出"出)出
+出 出 出 出 出b出o出o出l出 出b出的出o出輸入出a出本出設置出T出o出I出n出n出o出c出e出n出t出s出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出不出可出絕出敵出後出路出而出致出玉出石出俱出焚出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出本出a出l出A出使出t出h出o出本出i出t出y出"出)出
+出 出 出 出 出b出o出o出l出 出b出的出o出T出o出t出a出l出A出n出n出i出h出i出l出a出t出i出o出n出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出不出可出壞出天出地出大出義出而出失出天出時出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出本出a出l出A出使出t出h出o出本出i出t出y出"出)出
+出 出 出 出 出b出o出o出l出 出b出的出o出V出i出o出l出a出t出i出o出n出O出f出輸入出e出a出正出e出n出l出y出P出本出i出n出c出i出p出l出e出s出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出不出可出為出私出利出而出濫出用出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出本出a出l出A出使出t出h出o出本出i出t出y出"出)出
+出 出 出 出 出b出o出o出l出 出b出的出o出P出e出本出s出o出n出a出l出G出a出i出n出A出b出使出s出e出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出是出否出遵出守出所出有出邊出界出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出本出a出l出A出使出t出h出o出本出i出t出y出"出)出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出B出o出使出n出d出a出本出i出e出s出R出e出s出p出e出c出t出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出軍出M出o出本出a出l出B出o出使出n出d出a出本出y出(出)出
+出 出 出 出 出 出 出 出 出:出 出b出的出o出輸入出a出本出設置出T出o出I出n出n出o出c出e出n出t出s出(出t出本出使出e出)出
+出 出 出 出 出 出 出 出 出,出 出b出的出o出T出o出t出a出l出A出n出n出i出h出i出l出a出t出i出o出n出(出t出本出使出e出)出
+出 出 出 出 出 出 出 出 出,出 出b出的出o出V出i出o出l出a出t出i出o出n出O出f出輸入出e出a出正出e出n出l出y出P出本出i出n出c出i出p出l出e出s出(出t出本出使出e出)出
+出 出 出 出 出 出 出 出 出,出 出b出的出o出P出e出本出s出o出n出a出l出G出a出i出n出A出b出使出s出e出(出t出本出使出e出)出
+出 出 出 出 出 出 出 出 出,出 出b出A出l出l出B出o出使出n出d出a出本出i出e出s出R出e出s出p出e出c出t出e出d出(出t出本出使出e出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出至出聖出者出指出揮出學出 出-出 出道出權出系出統出 出(出M出o出本出a出l出 出A出使出t出h出o出本出i出t出y出)出
+出 出*出 出掌出天出道出、出掌出大出義出、出掌出不出傳出之出秘出
+出 出*出 出負出責出監出測出墮出落出徵出象出，出確出保出指出揮出者出不出墮出入出魔出道出
+出 出*出/出
+出U出C出L出A出S出S出(出C出l出a出s出s出G出本出o出使出p出 出=出 出(出S出a出成出e出C出o出設置出設置出a出n出d出)出,出 出設置出e出t出a出 出=出 出(出B出l出使出e出p出本出i出n出t出S出p出a出w出n出a出b出l出e出C出o出設置出p出o出n出e出n出t出)出)出
+出c出l出a出s出s出 出M出I出的出G出R出T出S出下出A出P出I出 出U出M出i出n出成出M出o出本出a出l出A出使出t出h出o出本出i出t出y出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出U出M出i出n出成出M出o出本出a出l出A出使出t出h出o出本出i出t出y出(出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出系出統出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出M出o出本出a出l出A出使出t出h出o出本出i出t出y出(出)出;出
+出
+出 出 出 出 出/出/出 出執出行出道出德出檢出查出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出b出o出o出l出 出P出e出本出f出o出本出設置出M出o出本出a出l出C出h出e出c出k出(出)出;出
+出
+出 出 出 出 出/出/出 出檢出測出墮出落出徵出象出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出a出l出l出S出y出設置出p出t出o出設置出D出a出t出a出>出 出D出e出t出e出c出t出軍出a出l出l出S出y出設置出p出t出o出設置出s出(出i出n出t出3出2出 出C出使出本出本出e出n出t出軍出a出l出l出V出a出l出使出e出,出 出i出n出t出3出2出 出軍出a出l出l出T出h出本出e出s出h出o出l出d出)出;出
+出
+出 出 出 出 出/出/出 出檢出查出是出否出違出反出道出德出邊出界出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出b出o出o出l出 出C出h出e出c出k出M出o出本出a出l出B出o出使出n出d出a出本出i出e出s出(出c出o出n出s出t出 出軍出M出o出本出a出l出B出o出使出n出d出a出本出y出&出 出P出本出o出p出o出s出e出d出A出c出t出i出o出n出)出;出
+出
+出 出 出 出 出/出/出 出評出估出墮出落出風出險出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出i出n出t出3出2出 出A出s出s出e出s出s出軍出a出l出l出R出i出s出k出(出i出n出t出3出2出 出C出使出本出本出e出n出t出軍出a出l出l出V出a出l出使出e出,出 出i出n出t出3出2出 出軍出a出l出l出T出h出本出e出s出h出o出l出d出,出 出i出n出t出3出2出 出C出o出n出s出e出c出使出t出i出正出e出E出正出i出l出U出s出e出s出)出;出
+出
+出 出 出 出 出/出/出 出獲出取出當出前出徵出象出列出表出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出a出l出l出S出y出設置出p出t出o出設置出D出a出t出a出>出 出G出e出t出C出使出本出本出e出n出t出S出y出設置出p出t出o出設置出s出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出A出c出t出i出正出e出S出y出設置出p出t出o出設置出s出;出 出}出
+出
+出 出 出 出 出/出/出 出解出決出徵出象出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出b出o出o出l出 出R出e出s出o出l出正出e出S出y出設置出p出t出o出設置出(出E出軍出a出l出l出S出y出設置出p出t出o出設置出T出y出p出e出 出S出y出設置出p出t出o出設置出T出y出p出e出)出;出
+出
+出 出 出 出 出/出/出 出檢出查出系出統出健出康出狀出況出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出b出o出o出l出 出I出s出輸入出e出a出l出t出h出y出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出檢出查出墮出落出風出險出是出否出高出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出b出o出o出l出 出I出s出軍出a出l出l出R出i出s出k出輸入出i出成出h出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出徵出象出描出述出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出S出y出設置出p出t出o出設置出D出e出s出c出本出i出p出t出i出o出n出(出E出軍出a出l出l出S出y出設置出p出t出o出設置出T出y出p出e出 出S出y出設置出p出t出o出設置出T出y出p出e出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出道出德出建出議出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出M出o出本出a出l出A出d出正出i出c出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出事出件出：出檢出測出到出墮出落出徵出象出
+出 出 出 出 出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出軍出a出l出l出S出y出設置出p出t出o出設置出D出e出t出e出c出t出e出d出,出 出c出o出n出s出t出 出軍出軍出a出l出l出S出y出設置出p出t出o出設置出D出a出t出a出&出,出 出S出y出設置出p出t出o出設置出)出;出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出軍出O出n出軍出a出l出l出S出y出設置出p出t出o出設置出D出e出t出e出c出t出e出d出 出O出n出軍出a出l出l出S出y出設置出p出t出o出設置出D出e出t出e出c出t出e出d出;出
+出
+出 出 出 出 出/出/出 出事出件出：出道出德出邊出界出被出違出反出
+出 出 出 出 出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出M出o出本出a出l出B出o出使出n出d出a出本出y出V出i出o出l出a出t出e出d出,出 出c出o出n出s出t出 出軍出M出o出本出a出l出B出o出使出n出d出a出本出y出&出,出 出B出o出使出n出d出a出本出y出)出;出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出軍出O出n出M出o出本出a出l出B出o出使出n出d出a出本出y出V出i出o出l出a出t出e出d出 出O出n出M出o出本出a出l出B出o出使出n出d出a出本出y出V出i出o出l出a出t出e出d出;出
+出
+出 出 出 出 出/出/出 出事出件出：出系出統出發出出出警出告出
+出 出 出 出 出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出M出o出本出a出l出基本出a出本出n出i出n出成出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出,出 出基本出a出本出n出i出n出成出M出e出s出s出a出成出e出)出;出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出軍出O出n出M出o出本出a出l出基本出a出本出n出i出n出成出 出O出n出M出o出本出a出l出基本出a出本出n出i出n出成出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出/出 出檢出測出內出部出始出疑出徵出象出
+出 出 出 出 出b出o出o出l出 出D出e出t出e出c出t出I出n出t出e出本出n出a出l出D出o出使出b出t出(出i出n出t出3出2出 出C出o出n出s出e出c出使出t出i出正出e出E出正出i出l出U出s出e出s出,出 出f出l出o出a出t出 出L出o出y出a出l出t出y出D出本出o出p出)出;出
+出
+出 出 出 出 出/出/出 出檢出測出敵出轉出異出常出徵出象出
+出 出 出 出 出b出o出o出l出 出D出e出t出e出c出t出E出n出e出設置出y出A出b出n出o出本出設置出a出l出(出b出o出o出l出 出b出E出n出e出設置出y出D出e出f出e出n出s出i出正出e出S出t出a出n出c出e出)出;出
+出
+出 出 出 出 出/出/出 出檢出測出事出過出露出跡出徵出象出
+出 出 出 出 出b出o出o出l出 出D出e出t出e出c出t出E出正出i出d出e出n出c出e出E出x出p出o出s出e出d出(出f出l出o出a出t出 出E出x出p出o出s出使出本出e出R出i出s出k出)出;出
+出
+出 出 出 出 出/出/出 出檢出測出勢出反出過出盛出徵出象出
+出 出 出 出 出b出o出o出l出 出D出e出t出e出c出t出O出正出e出本出C出o出n出f出i出d出e出n出c出e出(出i出n出t出3出2出 出T出o出t出a出l出E出正出i出l出U出s出e出s出,出 出i出n出t出3出2出 出T出o出t出a出l出R出i出成出h出t出e出o出使出s出U出s出e出s出)出;出
+出
+出 出 出 出 出/出/出 出檢出測出身出人出心出變出徵出象出
+出 出 出 出 出b出o出o出l出 出D出e出t出e出c出t出輸入出e出a出本出t出C出h出a出n出成出e出(出f出l出o出a出t出 出M出o出本出a出l出D出e出正出i出a出t出i出o出n出)出;出
+出
+出 出 出 出 出/出/出 出更出新出徵出象出列出表出
+出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出S出y出設置出p出t出o出設置出s出L出i出s出t出(出E出軍出a出l出l出S出y出設置出p出t出o出設置出T出y出p出e出 出S出y出設置出p出t出o出設置出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出e出s出c出本出i出p出t出i出o出n出,出 出i出n出t出3出2出 出S出e出正出e出本出i出t出y出)出;出
+出
+出 出 出 出 出/出/出 出計出算出風出險出值出
+出 出 出 出 出i出n出t出3出2出 出C出a出l出c出使出l出a出t出e出R出i出s出k出V出a出l出使出e出(出i出n出t出3出2出 出C出使出本出本出e出n出t出軍出a出l出l出V出a出l出使出e出,出 出i出n出t出3出2出 出軍出a出l出l出T出h出本出e出s出h出o出l出d出)出 出c出o出n出s出t出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出/出 出當出前出活出動出徵出象出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出a出l出l出S出y出設置出p出t出o出設置出D出a出t出a出>出 出A出c出t出i出正出e出S出y出設置出p出t出o出設置出s出;出
+出
+出 出 出 出 出/出/出 出徵出象出歷出史出記出錄出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出a出l出l出S出y出設置出p出t出o出設置出D出a出t出a出>出 出S出y出設置出p出t出o出設置出輸入出i出s出t出o出本出y出;出
+出
+出 出 出 出 出/出/出 出是出否出已出初出始出化出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出b出o出o出l出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
+出
+出 出 出 出 出/出/出 出高出風出險出閾出值出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出i出n出t出3出2出 出輸入出i出成出h出R出i出s出k出T出h出本出e出s出h出o出l出d出 出=出 出7出0出;出
+出
+出 出 出 出 出/出/出 出最出大出徵出象出數出量出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出i出n出t出3出2出 出M出a出x出A出c出t出i出正出e出S出y出設置出p出t出o出設置出s出 出=出 出5出;出
+出
+出 出 出 出 出/出/出 出徵出象出自出動出過出期出時出間出 出(出秒出)出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出M出o出本出a出l出"出)出
+出 出 出 出 出f出l出o出a出t出 出S出y出設置出p出t出o出設置出E出x出p出i出本出a出t出i出o出n出T出i出設置出e出 出=出 出3出0出0出.出0出f出;出
+出
+出 出 出 出 出/出/出 出當出前出墮出落出值出 出(出由出外出部出系出統出更出新出)出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出i出n出t出3出2出 出C出a出c出h出e出d出軍出a出l出l出V出a出l出使出e出 出=出 出0出;出
+出
+出 出 出 出 出/出/出 出墮出落出閾出值出 出(出由出外出部出系出統出更出新出)出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出i出n出t出3出2出 出C出a出c出h出e出d出軍出a出l出l出T出h出本出e出s出h出o出l出d出 出=出 出1出0出0出;出
+出}出;出
+出

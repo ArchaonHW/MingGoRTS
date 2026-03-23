@@ -85,17 +85,17 @@ function Invoke-AssetGeneration {
 function Invoke-MusicGeneration {
     Write-Log "开始生成音乐素材..." "INFO" "MUSIC"
     
-    $MusicScript = "$AIScriptsPath\auto_generate.ps1"
+    $MusicScript = "$AIScriptsPath\auto_generate_clean.ps1"
     if (!(Test-Path $MusicScript)) {
         Write-Log "音乐生成脚本未找到: $MusicScript" "ERROR" "MUSIC"
         return @()
     }
     
     try {
-        # 执行音乐生成脚本（简化参数）
-        $Arguments = @()
-        if ($Silent) { $Arguments += "-Silent" }
-        if ($MaxRetries -ne 3) { $Arguments += "-MaxRetries"; $Arguments += $MaxRetries }
+        # 执行音乐生成脚本（使用哈希表传递参数）
+        $Arguments = @{}
+        if ($Silent) { $Arguments['Silent'] = $true }
+        if ($MaxRetries -ne 3) { $Arguments['MaxRetries'] = $MaxRetries }
         
         & $MusicScript @Arguments 2>&1 | Out-Null
         $ExitCode = $LASTEXITCODE
@@ -126,7 +126,7 @@ function Invoke-MusicGeneration {
 function Invoke-ArtGeneration {
     Write-Log "开始生成美术素材 ($Faction)..." "INFO" "ART"
     
-    $ArtScript = "$AIScriptsPath\epic_assets_generate.ps1"
+    $ArtScript = "$AIScriptsPath\epic_assets_generate_clean.ps1"
     if (!(Test-Path $ArtScript)) {
         Write-Log "美术生成脚本未找到: $ArtScript" "ERROR" "ART"
         return @()
@@ -136,9 +136,9 @@ function Invoke-ArtGeneration {
         # 设置环境变量指定势力
         $env:MING_FACTION = $Faction
         
-        # 执行美术生成（简化参数）
-        $Arguments = @("-All")
-        if ($MaxRetries -ne 3) { $Arguments += "-MaxRetries"; $Arguments += $MaxRetries }
+        # 执行美术生成（使用哈希表传递参数）
+        $Arguments = @{'All' = $true}
+        if ($MaxRetries -ne 3) { $Arguments['MaxRetries'] = $MaxRetries }
         
         & $ArtScript @Arguments 2>&1 | Out-Null
         $ExitCode = $LASTEXITCODE

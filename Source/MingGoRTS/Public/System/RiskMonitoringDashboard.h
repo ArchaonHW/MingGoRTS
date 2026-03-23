@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -7,32 +7,32 @@
 
 UENUM(BlueprintType)
 enum class ERiskLevel: uint8 {
-    Critical    UMETA(DisplayName = "Critical"),
-    High        UMETA(DisplayName = "High"),
-    Medium      UMETA(DisplayName = "Medium"),
-    Low         UMETA(DisplayName = "Low"),
-    Minimal     UMETA(DisplayName = "Minimal")
+    Critical            UMETA(DisplayName = "Critical"),
+    High                UMETA(DisplayName = "High"),
+    Medium              UMETA(DisplayName = "Medium"),
+    Low                 UMETA(DisplayName = "Low"),
+    Minimal             UMETA(DisplayName = "Minimal")
 };
 
 UENUM(BlueprintType)
 enum class ERiskCategory: uint8 {
-    Technical   UMETA(DisplayName = "Technical"),
-    Schedule    UMETA(DisplayName = "Schedule"),
-    Budget      UMETA(DisplayName = "Budget"),
-    Quality     UMETA(DisplayName = "Quality"),
-    Resource    UMETA(DisplayName = "Resource"),
-    External    UMETA(DisplayName = "External"),
-    Security    UMETA(DisplayName = "Security"),
-    Performance UMETA(DisplayName = "Performance")
+    Technical           UMETA(DisplayName = "Technical"),
+    Schedule            UMETA(DisplayName = "Schedule"),
+    Budget              UMETA(DisplayName = "Budget"),
+    Quality             UMETA(DisplayName = "Quality"),
+    Resource            UMETA(DisplayName = "Resource"),
+    External            UMETA(DisplayName = "External"),
+    Security            UMETA(DisplayName = "Security"),
+    Performance         UMETA(DisplayName = "Performance")
 };
 
 UENUM(BlueprintType)
 enum class ERiskStatus: uint8 {
-    Active      UMETA(DisplayName = "Active"),
-    Mitigated   UMETA(DisplayName = "Mitigated"),
-    Accepted    UMETA(DisplayName = "Accepted"),
-    Transferred UMETA(DisplayName = "Transferred"),
-    Closed      UMETA(DisplayName = "Closed")
+    Active              UMETA(DisplayName = "Active"),
+    Mitigated            UMETA(DisplayName = "Mitigated"),
+    Accepted            UMETA(DisplayName = "Accepted"),
+    Transferred          UMETA(DisplayName = "Transferred"),
+    Closed              UMETA(DisplayName = "Closed")
 };
 
 USTRUCT(BlueprintType)
@@ -65,19 +65,13 @@ struct FRiskItem
     float Impact;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Risk Item")
-    float RiskScore;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Risk Item")
     FString MitigationStrategy;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Risk Item")
     FString Owner;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Risk Item")
-    FDateTime IdentifiedDate;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Risk Item")
-    FDateTime LastUpdated;
+    FDateTime DateIdentified;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Risk Item")
     TArray<FString> RelatedTasks;
@@ -162,179 +156,182 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRiskMetricsUpdated, const FRiskMe
  * 提供實時風險評估、監控和預警功能
  */
 UCLASS(BlueprintType, Blueprintable)
-class MINGCORE_API URiskMonitoringDashboard : public UObject
+class MINGRTS_API URiskMonitoringDashboard : public UObject
 {
     GENERATED_BODY()
 
 public:
     URiskMonitoringDashboard();
 
-    // 初始化風險監控儀表板
+    /// 初始化風險監控儀表板
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     void InitializeDashboard();
 
-    // 添加風險項目
+    /// 添加風險項目
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     bool AddRiskItem(const FRiskItem& RiskItem);
 
-    // 更新風險項目
+    /// 更新風險項目
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     bool UpdateRiskItem(const FString& RiskID, const FRiskItem& UpdatedRisk);
 
-    // 刪除風險項目
+    /// 刪除風險項目
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     bool RemoveRiskItem(const FString& RiskID);
 
-    // 獲取風險項目
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    /// 獲取風險項目
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
     FRiskItem GetRiskItem(const FString& RiskID) const;
 
-    // 獲取所有風險項目
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    /// 獲取所有風險項目
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
     TArray<FRiskItem> GetAllRiskItems() const;
 
-    // 按類別獲取風險項目
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    /// 按類別獲取風險項目
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
     TArray<FRiskItem> GetRisksByCategory(ERiskCategory Category) const;
 
-    // 按級別獲取風險項目
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    /// 按級別獲取風險項目
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
     TArray<FRiskItem> GetRisksByLevel(ERiskLevel Level) const;
 
-    // 按狀態獲取風險項目
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    /// 按狀態獲取風險項目
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
     TArray<FRiskItem> GetRisksByStatus(ERiskStatus Status) const;
 
-    // 計算風險指標
+    /// 計算風險指標
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     FRiskMetrics CalculateRiskMetrics();
 
-    // 獲取當前風險指標
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    /// 獲取當前風險指標
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
     FRiskMetrics GetCurrentRiskMetrics() const { return CurrentMetrics; }
 
-    // 創建風險預警
+    /// 創建風險預警
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     void CreateRiskAlert(const FString& RiskID, const FString& AlertMessage, ERiskLevel Severity);
 
-    // 獲取風險預警
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    /// 獲取風險預警
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
     TArray<FRiskAlert> GetRiskAlerts(bool bUnreadOnly = false) const;
 
-    // 標記預警為已讀
+    /// 標記預警為已讀
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     void MarkAlertAsRead(const FString& AlertID);
 
-    // 清除預警
+    /// 清除預警
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     void ClearAlert(const FString& AlertID);
 
-    // 清除所有預警
+    /// 清除所有預警
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     void ClearAllAlerts();
 
-    // 自動風險評估
+    /// 自動風險評估
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
-    void PerformAutomaticRiskAssessment();
+    void PerformAutomatedRiskAssessment();
 
-    // 生成風險報告
+    /// 生成風險報告
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     FString GenerateRiskReport() const;
 
-    // 獲取風險趨勢分析
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    /// 獲取風險趨勢分析
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
     TArray<float> GetRiskTrendAnalysis(int32 Days = 30) const;
 
-    // 獲取高風險項目
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    /// 獲取高風險項目
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
     TArray<FRiskItem> GetHighRiskItems() const;
 
-    // 獲取需要立即關注的風險
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    /// 獲取關鍵風險
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
     TArray<FRiskItem> GetCriticalRisks() const;
 
-    // 設置風險閾值
+    /// 設置風險閾值
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     void SetRiskThreshold(ERiskLevel Level, float Threshold);
 
-    // 獲取風險閾值
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    /// 獲取風險閾值
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
     float GetRiskThreshold(ERiskLevel Level) const;
 
-    // 導出風險數據
+    /// 導出風險數據
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     bool ExportRiskData(const FString& FilePath) const;
 
-    // 導入風險數據
+    /// 導入風險數據
     UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
     bool ImportRiskData(const FString& FilePath);
 
-    // 事件
-    UPROPERTY(BlueprintAssignable, Category = "Risk Monitoring Dashboard")
-    FOnRiskAdded OnRiskAdded;
+    /// 刷新儀表板
+    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    void RefreshDashboard();
 
-    UPROPERTY(BlueprintAssignable, Category = "Risk Monitoring Dashboard")
-    FOnRiskUpdated OnRiskUpdated;
+    /// 獲取儀表板摘要
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
+    FString GetDashboardSummary() const;
 
-    UPROPERTY(BlueprintAssignable, Category = "Risk Monitoring Dashboard")
-    FOnRiskAlert OnRiskAlert;
+    /// 設置自動刷新間隔
+    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    void SetAutoRefreshInterval(float IntervalSeconds);
 
-    UPROPERTY(BlueprintAssignable, Category = "Risk Monitoring Dashboard")
-    FOnRiskMetricsUpdated OnRiskMetricsUpdated;
+    /// 啟用/禁用自動刷新
+    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
+    void SetAutoRefreshEnabled(bool bEnabled);
+
+    /// 獲取風險熱力圖數據
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
+    TMap<ERiskCategory, float> GetRiskHeatmapData() const;
+
+    /// 獲取風險評分
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
+    float CalculateRiskScore(const FRiskItem& Risk) const;
+
+    /// 獲取整體風險評分
+    UFUNCTION(BlueprintPure, Category = "Risk Monitoring Dashboard")
+    float GetOverallRiskScore() const;
 
 protected:
-    // 初始化默認風險項目
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
-    void InitializeDefaultRisks();
-
-    // 計算風險評分
-    float CalculateRiskScore(float Probability, float Impact) const;
-
-    // 檢查風險閾值
-    UFUNCTION(BlueprintCallable, Category = "Risk Monitoring Dashboard")
-    void CheckRiskThresholds();
-
-    // 更新風險趨勢
-    void UpdateRiskTrend();
-
-    // 生成預警消息
-    FString GenerateAlertMessage(const FRiskItem& RiskItem) const;
-
-    // 驗證風險項目
-    bool ValidateRiskItem(const FRiskItem& RiskItem) const;
-
-public:
-    // 風險項目列表
-    UPROPERTY(BlueprintReadOnly, Category = "Risk Monitoring Dashboard")
+    UPROPERTY()
     TArray<FRiskItem> RiskItems;
 
-    // 風險預警列表
-    UPROPERTY(BlueprintReadOnly, Category = "Risk Monitoring Dashboard")
+    UPROPERTY()
     TArray<FRiskAlert> RiskAlerts;
 
-    // 當前風險指標
-    UPROPERTY(BlueprintReadOnly, Category = "Risk Monitoring Dashboard")
+    UPROPERTY()
     FRiskMetrics CurrentMetrics;
 
-    // 風險閾值
-    UPROPERTY(BlueprintReadOnly, Category = "Risk Monitoring Dashboard")
+    UPROPERTY()
     TMap<ERiskLevel, float> RiskThresholds;
 
-    // 風險趨勢數據
-    UPROPERTY(BlueprintReadOnly, Category = "Risk Monitoring Dashboard")
-    TArray<float> RiskTrendData;
+    UPROPERTY()
+    bool bAutoRefreshEnabled;
 
-    // 自動評估間隔（秒）
-    UPROPERTY(BlueprintReadOnly, Category = "Risk Monitoring Dashboard")
-    float AutoAssessmentInterval;
+    UPROPERTY()
+    float AutoRefreshInterval;
 
-    // 最後評估時間
-    UPROPERTY(BlueprintReadOnly, Category = "Risk Monitoring Dashboard")
-    FDateTime LastAssessmentTime;
+    UPROPERTY()
+    FDateTime LastRefreshTime;
 
-    // 是否啟用自動評估
-    UPROPERTY(BlueprintReadOnly, Category = "Risk Monitoring Dashboard")
-    bool bAutoAssessmentEnabled;
+    // Events
+    UPROPERTY(BlueprintAssignable, Category = "Risk Dashboard Events")
+    FOnRiskAdded OnRiskAdded;
+
+    UPROPERTY(BlueprintAssignable, Category = "Risk Dashboard Events")
+    FOnRiskUpdated OnRiskUpdated;
+
+    UPROPERTY(BlueprintAssignable, Category = "Risk Dashboard Events")
+    FOnRiskAlert OnRiskAlert;
+
+    UPROPERTY(BlueprintAssignable, Category = "Risk Dashboard Events")
+    FOnRiskMetricsUpdated OnRiskMetricsUpdated;
 
 private:
+    void UpdateMetrics();
+    void CheckForAlerts();
+    void ScheduleAutoRefresh();
+    void GenerateAutomaticAlerts();
+    float CalculateCategoryRiskScore(ERiskCategory Category) const;
+    ERiskLevel DetermineRiskLevel(float Score) const;
+    void NotifyRiskLevelChange(const FRiskItem& Risk, ERiskLevel OldLevel);
 };

@@ -1,148 +1,149 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "MingLanguageSystem.generated.h"
-
-// 支援的語言
-UENUM(BlueprintType)
-enum class EMingSupportedLanguage: uint8 {
-    English,        // 英文
-    TraditionalChinese, // 繁體中文
-    SimplifiedChinese,  // 簡體中文
-    Japanese,       // 日文
-    Korean,         // 韓文
-    French,         // 法文
-    German,         // 德文
-    Spanish,        // 西班牙文
-    Russian         // 俄文
-};
-
-// 語言資料類型
-UENUM(BlueprintType)
-enum class ELanguageDataType: uint8 {
-    Text,           // 文字
-    Audio,          // 音頻
-    Subtitle,       // 字幕
-    UI,             // 用戶界面
-    Tutorial        // 教程
-};
-
-// 本地化資料
-USTRUCT(BlueprintType)
-struct MINGPERSONAL_API FLocalizationData
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadOnly)
-    FString Key;
-
-    UPROPERTY(BlueprintReadOnly)
-    TMap<EMingSupportedLanguage, FString> Translations;
-
-    UPROPERTY(BlueprintReadOnly)
-    ELanguageDataType DataType;
-
-    UPROPERTY(BlueprintReadOnly)
-    FString Context;
-};
-
-/**
- * 語言系統
- * 負責多語言支援和本地化
- */
-UCLASS(BlueprintType, Blueprintable)
-class MINGPERSONAL_API UMingLanguageSystem : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    // 建構子
-    UMingLanguageSystem();
-
-    // 初始化語言系統
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    void InitializeLanguageSystem();
-
-    // 設置當前語言
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    void SetCurrentLanguage(EMingSupportedLanguage Language);
-
-    // 獲取當前語言
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    EMingSupportedLanguage GetCurrentLanguage() const;
-
-    // 獲取本地化文字
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    FString GetLocalizedText(const FString& Key) const;
-
-    // 獲取特定語言的文字
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    FString GetTextForLanguage(const FString& Key, EMingSupportedLanguage Language) const;
-
-    // 添加本地化資料
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    void AddLocalizationData(const FLocalizationData& Data);
-
-    // 載入語言包
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    bool LoadLanguagePack(EMingSupportedLanguage Language);
-
-    // 保存語言包
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    bool SaveLanguagePack(EMingSupportedLanguage Language);
-
-    // 簡繁轉換
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    FString ConvertSimplifiedToTraditional(const FString& SimplifiedText) const;
-
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    FString ConvertTraditionalToSimplified(const FString& TraditionalText) const;
-
-    // 獲取支援的語言列表
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    TArray<EMingSupportedLanguage> GetSupportedLanguages() const;
-
-    // 檢查語言是否支援
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    bool IsLanguageSupported(EMingSupportedLanguage Language) const;
-
-    // 獲取語言顯示名稱
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    FString GetLanguageDisplayName(EMingSupportedLanguage Language) const;
-
-    // 自動檢測系統語言
-    UFUNCTION(BlueprintCallable, Category = "Language")
-    EMingSupportedLanguage DetectSystemLanguage() const;
-
-protected:
-    // 當前語言
-    UPROPERTY(BlueprintReadOnly)
-    EMingSupportedLanguage CurrentLanguage;
-
-    // 本地化資料庫
-    UPROPERTY(BlueprintReadOnly)
-    TMap<FString, FLocalizationData> LocalizationDatabase;
-
-    // 支援的語言列表
-    UPROPERTY(BlueprintReadOnly)
-    TArray<EMingSupportedLanguage> SupportedLanguages;
-
-    // 語言包路徑
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Language|Settings")
-    FString LanguagePackPath;
-
-    // 自動檢測語言
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Language|Settings")
-    bool bAutoDetectLanguage;
-
-    // 初始化語言資料
-    void InitializeLanguageData();
-
-    // 載入簡繁轉換對照表
-    void LoadChineseConversionTables();
-
-    // 簡繁轉換對照表
-    TMap<TCHAR, TCHAR> SimplifiedToTraditionalMap;
-    TMap<TCHAR, TCHAR> TraditionalToSimplifiedMap;
-};
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出L出a出n出成出使出a出成出e出S出y出s出t出e出設置出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出/出 出支出援出的出語出言出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出E出n出成出l出i出s出h出,出 出 出 出 出 出 出 出 出/出/出 出英出文出
+出 出 出 出 出T出本出a出d出i出t出i出o出n出a出l出C出h出i出n出e出s出e出,出 出/出/出 出繁出體出中出文出
+出 出 出 出 出S出i出設置出p出l出i出f出i出e出d出C出h出i出n出e出s出e出,出 出 出/出/出 出簡出體出中出文出
+出 出 出 出 出J出a出p出a出n出e出s出e出,出 出 出 出 出 出 出 出/出/出 出日出文出
+出 出 出 出 出K出o出本出e出a出n出,出 出 出 出 出 出 出 出 出 出/出/出 出韓出文出
+出 出 出 出 出軍出本出e出n出c出h出,出 出 出 出 出 出 出 出 出 出/出/出 出法出文出
+出 出 出 出 出G出e出本出設置出a出n出,出 出 出 出 出 出 出 出 出 出/出/出 出德出文出
+出 出 出 出 出S出p出a出n出i出s出h出,出 出 出 出 出 出 出 出 出/出/出 出西出班出牙出文出
+出 出 出 出 出R出使出s出s出i出a出n出 出 出 出 出 出 出 出 出 出/出/出 出俄出文出
+出}出;出
+出
+出/出/出 出語出言出資出料出類出型出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出L出a出n出成出使出a出成出e出D出a出t出a出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出T出e出x出t出,出 出 出 出 出 出 出 出 出 出 出 出/出/出 出文出字出
+出 出 出 出 出A出使出d出i出o出,出 出 出 出 出 出 出 出 出 出 出/出/出 出音出頻出
+出 出 出 出 出S出使出b出t出i出t出l出e出,出 出 出 出 出 出 出 出/出/出 出字出幕出
+出 出 出 出 出U出I出,出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出用出戶出界出面出
+出 出 出 出 出T出使出t出o出本出i出a出l出 出 出 出 出 出 出 出 出/出/出 出教出程出
+出}出;出
+出
+出/出/出 出本出地出化出資出料出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出M出I出的出G出P出E出R出S出O出的出A出L出下出A出P出I出 出軍出L出o出c出a出l出i出z出a出t出i出o出n出D出a出t出a出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出K出e出y出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出M出a出p出<出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出,出 出軍出S出t出本出i出n出成出>出 出T出本出a出n出s出l出a出t出i出o出n出s出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出E出L出a出n出成出使出a出成出e出D出a出t出a出T出y出p出e出 出D出a出t出a出T出y出p出e出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出n出t出e出x出t出;出
+出}出;出
+出
+出/出*出*出
+出 出*出 出語出言出系出統出
+出 出*出 出負出責出多出語出言出支出援出和出本出地出化出
+出 出*出/出
+出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
+出c出l出a出s出s出 出M出I出的出G出P出E出R出S出O出的出A出L出下出A出P出I出 出U出M出i出n出成出L出a出n出成出使出a出成出e出S出y出s出t出e出設置出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出/出/出 出建出構出子出
+出 出 出 出 出U出M出i出n出成出L出a出n出成出使出a出成出e出S出y出s出t出e出設置出(出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出語出言出系出統出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出L出a出n出成出使出a出成出e出S出y出s出t出e出設置出(出)出;出
+出
+出 出 出 出 出/出/出 出設出置出當出前出語出言出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出C出使出本出本出e出n出t出L出a出n出成出使出a出成出e出(出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出 出L出a出n出成出使出a出成出e出)出;出
+出
+出 出 出 出 出/出/出 出獲出取出當出前出語出言出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出 出G出e出t出C出使出本出本出e出n出t出L出a出n出成出使出a出成出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出本出地出化出文出字出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出L出o出c出a出l出i出z出e出d出T出e出x出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出特出定出語出言出的出文出字出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出T出e出x出t出軍出o出本出L出a出n出成出使出a出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出,出 出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出 出L出a出n出成出使出a出成出e出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出添出加出本出地出化出資出料出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出正出o出i出d出 出A出d出d出L出o出c出a出l出i出z出a出t出i出o出n出D出a出t出a出(出c出o出n出s出t出 出軍出L出o出c出a出l出i出z出a出t出i出o出n出D出a出t出a出&出 出D出a出t出a出)出;出
+出
+出 出 出 出 出/出/出 出載出入出語出言出包出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出b出o出o出l出 出L出o出a出d出L出a出n出成出使出a出成出e出P出a出c出k出(出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出 出L出a出n出成出使出a出成出e出)出;出
+出
+出 出 出 出 出/出/出 出保出存出語出言出包出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出b出o出o出l出 出S出a出正出e出L出a出n出成出使出a出成出e出P出a出c出k出(出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出 出L出a出n出成出使出a出成出e出)出;出
+出
+出 出 出 出 出/出/出 出簡出繁出轉出換出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出n出正出e出本出t出S出i出設置出p出l出i出f出i出e出d出T出o出T出本出a出d出i出t出i出o出n出a出l出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出i出設置出p出l出i出f出i出e出d出T出e出x出t出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出n出正出e出本出t出T出本出a出d出i出t出i出o出n出a出l出T出o出S出i出設置出p出l出i出f出i出e出d出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出本出a出d出i出t出i出o出n出a出l出T出e出x出t出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出支出援出的出語出言出列出表出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出>出 出G出e出t出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出s出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出檢出查出語出言出是出否出支出援出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出b出o出o出l出 出I出s出L出a出n出成出使出a出成出e出S出使出p出p出o出本出t出e出d出(出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出 出L出a出n出成出使出a出成出e出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出語出言出顯出示出名出稱出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出L出a出n出成出使出a出成出e出D出i出s出p出l出a出y出的出a出設置出e出(出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出 出L出a出n出成出使出a出成出e出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出自出動出檢出測出系出統出語出言出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出"出)出
+出 出 出 出 出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出 出D出e出t出e出c出t出S出y出s出t出e出設置出L出a出n出成出使出a出成出e出(出)出 出c出o出n出s出t出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出/出 出當出前出語出言出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出 出C出使出本出本出e出n出t出L出a出n出成出使出a出成出e出;出
+出
+出 出 出 出 出/出/出 出本出地出化出資出料出庫出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出L出o出c出a出l出i出z出a出t出i出o出n出D出a出t出a出>出 出L出o出c出a出l出i出z出a出t出i出o出n出D出a出t出a出b出a出s出e出;出
+出
+出 出 出 出 出/出/出 出支出援出的出語出言出列出表出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出E出M出i出n出成出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出>出 出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出s出;出
+出
+出 出 出 出 出/出/出 出語出言出包出路出徑出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出出出S出e出t出t出i出n出成出s出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出L出a出n出成出使出a出成出e出P出a出c出k出P出a出t出h出;出
+出
+出 出 出 出 出/出/出 出自出動出檢出測出語出言出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出L出a出n出成出使出a出成出e出出出S出e出t出t出i出n出成出s出"出)出
+出 出 出 出 出b出o出o出l出 出b出A出使出t出o出D出e出t出e出c出t出L出a出n出成出使出a出成出e出;出
+出
+出 出 出 出 出/出/出 出初出始出化出語出言出資出料出
+出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出L出a出n出成出使出a出成出e出D出a出t出a出(出)出;出
+出
+出 出 出 出 出/出/出 出載出入出簡出繁出轉出換出對出照出表出
+出 出 出 出 出正出o出i出d出 出L出o出a出d出C出h出i出n出e出s出e出C出o出n出正出e出本出s出i出o出n出T出a出b出l出e出s出(出)出;出
+出
+出 出 出 出 出/出/出 出簡出繁出轉出換出對出照出表出
+出 出 出 出 出T出M出a出p出<出T出C出輸入出A出R出,出 出T出C出輸入出A出R出>出 出S出i出設置出p出l出i出f出i出e出d出T出o出T出本出a出d出i出t出i出o出n出a出l出M出a出p出;出
+出 出 出 出 出T出M出a出p出<出T出C出輸入出A出R出,出 出T出C出輸入出A出R出>出 出T出本出a出d出i出t出i出o出n出a出l出T出o出S出i出設置出p出l出i出f出i出e出d出M出a出p出;出
+出}出;出
+出

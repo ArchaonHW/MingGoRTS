@@ -1,638 +1,639 @@
-#include "Ecosystem/MingEcosystemEnvironmentSystem.h"
-#include "Math/UnrealMathUtility.h"
-#include "Engine/Engine.h"
-
-UMingEcosystemEnvironmentSystem::UMingEcosystemEnvironmentSystem()
-    : bIsInitialized(false)
-    , CurrentGameTime(0.0f)
-    , CurrentSeason(ESeasonType::Spring)
-    , SeasonProgress(0.0f)
-    , DaysPerSeason(30.0f)
-    , CurrentWeather(EWeatherType::Clear)
-    , WeatherChangeTimer(0.0f)
-    , WeatherChangeInterval(300.0f)
-    , CurrentHour(12.0f)
-    , HoursPerDay(24.0f)
-    , CurrentDayPhase(EDayNightCycle::Noon)
-    , CurrentClimateZone(EClimateZone::Temperate)
-    , TargetWeather(EWeatherType::Clear)
-    , WeatherTransitionProgress(1.0f)
-    , WeatherTransitionDuration(60.0f)
-{
-}
-
-void UMingEcosystemEnvironmentSystem::InitializeEnvironmentSystem()
-{
-    if (bIsInitialized)
-    {
-        return;
-    }
-    
-    InitializeSeasonDatabase();
-    InitializeClimateDatabase();
-    
-    CurrentGameTime = 0.0f;
-    CurrentSeason = ESeasonType::Spring;
-    SeasonProgress = 0.0f;
-    CurrentHour = 6.0f;
-    CurrentDayPhase = EDayNightCycle::Dawn;
-    CurrentWeather = EWeatherType::Clear;
-    
-    CalculateWeatherParameters();
-    UpdateDayNightCycle();
-    
-    bIsInitialized = true;
-    
-    UE_LOG(LogTemp, Log, TEXT("MingEcosystemEnvironmentSystem: Initialized"));
-}
-
-void UMingEcosystemEnvironmentSystem::ShutdownEnvironmentSystem()
-{
-    if (!bIsInitialized)
-    {
-        return;
-    }
-    
-    ActiveEvents.Empty();
-    SeasonDatabase.Empty();
-    ClimateDatabase.Empty();
-    
-    bIsInitialized = false;
-    
-    UE_LOG(LogTemp, Log, TEXT("MingEcosystemEnvironmentSystem: Shutdown"));
-}
-
-void UMingEcosystemEnvironmentSystem::InitializeSeasonDatabase()
-{
-    // Spring
-    FSeasonData SpringData;
-    SpringData.Season = ESeasonType::Spring;
-    SpringData.BaseTemperature = 15.0f;
-    SpringData.TemperatureVariation = 8.0f;
-    SpringData.AverageHumidity = 65.0f;
-    SpringData.PrecipitationProbability = 0.4f;
-    SpringData.DayLength = 13.0f;
-    SpringData.GrowthRateMultiplier = 1.3f;
-    SpringData.ResourceRegenerationRate = 1.2f;
-    SpringData.AmbientLightColor = FLinearColor(0.9f, 1.0f, 0.8f, 1.0f);
-    SpringData.SunIntensity = 0.9f;
-    SeasonDatabase.Add(ESeasonType::Spring, SpringData);
-    
-    // Summer
-    FSeasonData SummerData;
-    SummerData.Season = ESeasonType::Summer;
-    SummerData.BaseTemperature = 28.0f;
-    SummerData.TemperatureVariation = 6.0f;
-    SummerData.AverageHumidity = 70.0f;
-    SummerData.PrecipitationProbability = 0.5f;
-    SummerData.DayLength = 15.0f;
-    SummerData.GrowthRateMultiplier = 1.5f;
-    SummerData.ResourceRegenerationRate = 1.4f;
-    SummerData.AmbientLightColor = FLinearColor(1.0f, 1.0f, 0.9f, 1.0f);
-    SummerData.SunIntensity = 1.2f;
-    SeasonDatabase.Add(ESeasonType::Summer, SummerData);
-    
-    // Autumn
-    FSeasonData AutumnData;
-    AutumnData.Season = ESeasonType::Autumn;
-    AutumnData.BaseTemperature = 18.0f;
-    AutumnData.TemperatureVariation = 7.0f;
-    AutumnData.AverageHumidity = 55.0f;
-    AutumnData.PrecipitationProbability = 0.3f;
-    AutumnData.DayLength = 11.0f;
-    AutumnData.GrowthRateMultiplier = 0.8f;
-    AutumnData.ResourceRegenerationRate = 0.9f;
-    AutumnData.AmbientLightColor = FLinearColor(1.0f, 0.9f, 0.7f, 1.0f);
-    AutumnData.SunIntensity = 0.8f;
-    SeasonDatabase.Add(ESeasonType::Autumn, AutumnData);
-    
-    // Winter
-    FSeasonData WinterData;
-    WinterData.Season = ESeasonType::Winter;
-    WinterData.BaseTemperature = 2.0f;
-    WinterData.TemperatureVariation = 10.0f;
-    WinterData.AverageHumidity = 45.0f;
-    WinterData.PrecipitationProbability = 0.2f;
-    WinterData.DayLength = 9.0f;
-    WinterData.GrowthRateMultiplier = 0.3f;
-    WinterData.ResourceRegenerationRate = 0.5f;
-    WinterData.AmbientLightColor = FLinearColor(0.8f, 0.85f, 0.95f, 1.0f);
-    WinterData.SunIntensity = 0.6f;
-    SeasonDatabase.Add(ESeasonType::Winter, WinterData);
-}
-
-void UMingEcosystemEnvironmentSystem::InitializeClimateDatabase()
-{
-    // Tropical
-    FClimateZoneData TropicalData;
-    TropicalData.ZoneType = EClimateZone::Tropical;
-    TropicalData.MinTemperature = 20.0f;
-    TropicalData.MaxTemperature = 35.0f;
-    TropicalData.AverageHumidity = 80.0f;
-    TropicalData.AvailableSeasons = {ESeasonType::Spring, ESeasonType::Summer};
-    TropicalData.CommonWeatherTypes = {EWeatherType::Clear, EWeatherType::Cloudy, EWeatherType::HeavyRain, EWeatherType::Storm};
-    TropicalData.Rainfall = 2000.0f;
-    TropicalData.NaturalDisasterProbability = 0.15f;
-    ClimateDatabase.Add(EClimateZone::Tropical, TropicalData);
-    
-    // Temperate
-    FClimateZoneData TemperateData;
-    TemperateData.ZoneType = EClimateZone::Temperate;
-    TemperateData.MinTemperature = -10.0f;
-    TemperateData.MaxTemperature = 35.0f;
-    TemperateData.AverageHumidity = 60.0f;
-    TemperateData.AvailableSeasons = {ESeasonType::Spring, ESeasonType::Summer, ESeasonType::Autumn, ESeasonType::Winter};
-    TemperateData.CommonWeatherTypes = {EWeatherType::Clear, EWeatherType::Cloudy, EWeatherType::LightRain, EWeatherType::HeavyRain, EWeatherType::Snow};
-    TemperateData.Rainfall = 800.0f;
-    TemperateData.NaturalDisasterProbability = 0.1f;
-    ClimateDatabase.Add(EClimateZone::Temperate, TemperateData);
-    
-    // Arid
-    FClimateZoneData AridData;
-    AridData.ZoneType = EClimateZone::Arid;
-    AridData.MinTemperature = 5.0f;
-    AridData.MaxTemperature = 45.0f;
-    AridData.AverageHumidity = 20.0f;
-    AridData.AvailableSeasons = {ESeasonType::Summer, ESeasonType::Autumn};
-    AridData.CommonWeatherTypes = {EWeatherType::Clear, EWeatherType::Cloudy, EWeatherType::Sandstorm};
-    AridData.Rainfall = 100.0f;
-    AridData.NaturalDisasterProbability = 0.2f;
-    ClimateDatabase.Add(EClimateZone::Arid, AridData);
-    
-    // Frigid
-    FClimateZoneData FrigidData;
-    FrigidData.ZoneType = EClimateZone::Frigid;
-    FrigidData.MinTemperature = -40.0f;
-    FrigidData.MaxTemperature = 10.0f;
-    FrigidData.AverageHumidity = 40.0f;
-    FrigidData.AvailableSeasons = {ESeasonType::Winter};
-    FrigidData.CommonWeatherTypes = {EWeatherType::Clear, EWeatherType::Cloudy, EWeatherType::Snow, EWeatherType::Blizzard};
-    FrigidData.Rainfall = 200.0f;
-    FrigidData.NaturalDisasterProbability = 0.12f;
-    ClimateDatabase.Add(EClimateZone::Frigid, FrigidData);
-}
-
-void UMingEcosystemEnvironmentSystem::SetCurrentSeason(ESeasonType NewSeason)
-{
-    if (CurrentSeason != NewSeason)
-    {
-        ESeasonType OldSeason = CurrentSeason;
-        CurrentSeason = NewSeason;
-        SeasonProgress = 0.0f;
-        
-        OnSeasonChanged.Broadcast(NewSeason, OldSeason);
-        
-        UE_LOG(LogTemp, Log, TEXT("MingEcosystemEnvironmentSystem: Season changed from %d to %d"), 
-            static_cast<int32>(OldSeason), static_cast<int32>(NewSeason));
-    }
-}
-
-void UMingEcosystemEnvironmentSystem::AdvanceSeason()
-{
-    ESeasonType NextSeason;
-    switch (CurrentSeason)
-    {
-    case ESeasonType::Spring:
-        NextSeason = ESeasonType::Summer;
-        break;
-    case ESeasonType::Summer:
-        NextSeason = ESeasonType::Autumn;
-        break;
-    case ESeasonType::Autumn:
-        NextSeason = ESeasonType::Winter;
-        break;
-    case ESeasonType::Winter:
-        NextSeason = ESeasonType::Spring;
-        break;
-    default:
-        NextSeason = ESeasonType::Spring;
-        break;
-    }
-    
-    SetCurrentSeason(NextSeason);
-}
-
-FSeasonData UMingEcosystemEnvironmentSystem::GetSeasonData(ESeasonType Season) const
-{
-    if (SeasonDatabase.Contains(Season))
-    {
-        return SeasonDatabase[Season];
-    }
-    return FSeasonData();
-}
-
-void UMingEcosystemEnvironmentSystem::SetWeather(EWeatherType NewWeather, float Intensity)
-{
-    TargetWeather = NewWeather;
-    WeatherTransitionProgress = 0.0f;
-    
-    // TODO: Implement smooth weather transition with interpolation
-    // between current and target weather parameters
-    
-    CurrentWeather = NewWeather;
-    CalculateWeatherParameters();
-    
-    OnWeatherChanged.Broadcast(NewWeather, CurrentWeatherParams);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingEcosystemEnvironmentSystem: Weather changed to %d with intensity %.2f"), 
-        static_cast<int32>(NewWeather), Intensity);
-}
-
-void UMingEcosystemEnvironmentSystem::UpdateWeather(float DeltaTime)
-{
-    WeatherChangeTimer += DeltaTime;
-    
-    if (WeatherChangeTimer >= WeatherChangeInterval)
-    {
-        WeatherChangeTimer = 0.0f;
-        GenerateRandomWeather();
-    }
-    
-    // Update weather transition
-    if (WeatherTransitionProgress < 1.0f)
-    {
-        WeatherTransitionProgress += DeltaTime / WeatherTransitionDuration;
-        WeatherTransitionProgress = FMath::Clamp(WeatherTransitionProgress, 0.0f, 1.0f);
-    }
-}
-
-void UMingEcosystemEnvironmentSystem::GenerateRandomWeather()
-{
-    const FClimateZoneData& ClimateData = GetClimateZoneData();
-    
-    // Select from common weather types for this climate
-    if (ClimateData.CommonWeatherTypes.Num() > 0)
-    {
-        int32 RandomIndex = FMath::RandRange(0, ClimateData.CommonWeatherTypes.Num() - 1);
-        EWeatherType NewWeather = ClimateData.CommonWeatherTypes[RandomIndex];
-        
-        // Apply season influence
-        FSeasonData SeasonData = GetSeasonData(CurrentSeason);
-        
-        // Adjust probability based on season precipitation probability
-        float RandomValue = FMath::FRand();
-        if (RandomValue > SeasonData.PrecipitationProbability)
-        {
-            // Prefer clear weather if no precipitation
-            if (FMath::FRand() < 0.7f)
-            {
-                NewWeather = EWeatherType::Clear;
-            }
-        }
-        
-        if (NewWeather != CurrentWeather)
-        {
-            SetWeather(NewWeather, FMath::FRand() * 0.5f + 0.5f);
-        }
-    }
-}
-
-void UMingEcosystemEnvironmentSystem::CalculateWeatherParameters()
-{
-    FSeasonData SeasonData = GetSeasonData(CurrentSeason);
-    
-    // Base temperature from season with some random variation
-    float BaseTemp = SeasonData.BaseTemperature;
-    float TempVariation = (FMath::FRand() - 0.5f) * 2.0f * SeasonData.TemperatureVariation;
-    
-    CurrentWeatherParams.Temperature = BaseTemp + TempVariation;
-    CurrentWeatherParams.Humidity = SeasonData.AverageHumidity + (FMath::FRand() - 0.5f) * 20.0f;
-    CurrentWeatherParams.Humidity = FMath::Clamp(CurrentWeatherParams.Humidity, 0.0f, 100.0f);
-    
-    // Weather type specific parameters
-    switch (CurrentWeather)
-    {
-    case EWeatherType::Clear:
-        CurrentWeatherParams.CloudCover = FMath::FRand() * 0.2f;
-        CurrentWeatherParams.WindSpeed = FMath::FRand() * 10.0f;
-        CurrentWeatherParams.PrecipitationIntensity = 0.0f;
-        CurrentWeatherParams.Visibility = 10.0f;
-        break;
-        
-    case EWeatherType::Cloudy:
-        CurrentWeatherParams.CloudCover = 0.5f + FMath::FRand() * 0.4f;
-        CurrentWeatherParams.WindSpeed = FMath::FRand() * 15.0f;
-        CurrentWeatherParams.PrecipitationIntensity = 0.0f;
-        CurrentWeatherParams.Visibility = 8.0f;
-        break;
-        
-    case EWeatherType::LightRain:
-        CurrentWeatherParams.CloudCover = 0.7f + FMath::FRand() * 0.3f;
-        CurrentWeatherParams.WindSpeed = 5.0f + FMath::FRand() * 10.0f;
-        CurrentWeatherParams.PrecipitationIntensity = 0.2f + FMath::FRand() * 0.3f;
-        CurrentWeatherParams.Visibility = 6.0f;
-        CurrentWeatherParams.Temperature -= 2.0f;
-        break;
-        
-    case EWeatherType::HeavyRain:
-        CurrentWeatherParams.CloudCover = 0.9f + FMath::FRand() * 0.1f;
-        CurrentWeatherParams.WindSpeed = 10.0f + FMath::FRand() * 20.0f;
-        CurrentWeatherParams.PrecipitationIntensity = 0.6f + FMath::FRand() * 0.4f;
-        CurrentWeatherParams.Visibility = 3.0f;
-        CurrentWeatherParams.Temperature -= 5.0f;
-        break;
-        
-    case EWeatherType::Storm:
-        CurrentWeatherParams.CloudCover = 1.0f;
-        CurrentWeatherParams.WindSpeed = 30.0f + FMath::FRand() * 40.0f;
-        CurrentWeatherParams.PrecipitationIntensity = 0.8f + FMath::FRand() * 0.2f;
-        CurrentWeatherParams.StormIntensity = 0.5f + FMath::FRand() * 0.5f;
-        CurrentWeatherParams.Visibility = 1.0f;
-        CurrentWeatherParams.Temperature -= 8.0f;
-        break;
-        
-    case EWeatherType::Snow:
-        CurrentWeatherParams.CloudCover = 0.8f + FMath::FRand() * 0.2f;
-        CurrentWeatherParams.WindSpeed = 5.0f + FMath::FRand() * 15.0f;
-        CurrentWeatherParams.PrecipitationIntensity = 0.3f + FMath::FRand() * 0.4f;
-        CurrentWeatherParams.Visibility = 4.0f;
-        CurrentWeatherParams.Temperature = FMath::Min(CurrentWeatherParams.Temperature, 0.0f);
-        break;
-        
-    case EWeatherType::Blizzard:
-        CurrentWeatherParams.CloudCover = 1.0f;
-        CurrentWeatherParams.WindSpeed = 40.0f + FMath::FRand() * 30.0f;
-        CurrentWeatherParams.PrecipitationIntensity = 0.7f + FMath::FRand() * 0.3f;
-        CurrentWeatherParams.Visibility = 0.5f;
-        CurrentWeatherParams.Temperature = FMath::Min(CurrentWeatherParams.Temperature, -10.0f);
-        break;
-        
-    default:
-        CurrentWeatherParams.CloudCover = FMath::FRand() * 0.5f;
-        CurrentWeatherParams.WindSpeed = FMath::FRand() * 20.0f;
-        CurrentWeatherParams.PrecipitationIntensity = 0.0f;
-        CurrentWeatherParams.Visibility = 7.0f;
-        break;
-    }
-    
-    CurrentWeatherParams.WeatherType = CurrentWeather;
-    CurrentWeatherParams.WindDirection = FMath::FRand() * 360.0f;
-}
-
-void UMingEcosystemEnvironmentSystem::SetDayTime(float Hour)
-{
-    CurrentHour = FMath::Fmod(Hour, HoursPerDay);
-    if (CurrentHour < 0.0f)
-    {
-        CurrentHour += HoursPerDay;
-    }
-    
-    UpdateDayNightCycle();
-}
-
-void UMingEcosystemEnvironmentSystem::AdvanceTime(float Hours)
-{
-    float NewHour = CurrentHour + Hours;
-    
-    // Check if day has advanced
-    if (NewHour >= HoursPerDay)
-    {
-        SeasonProgress += NewHour / HoursPerDay / DaysPerSeason;
-        
-        if (SeasonProgress >= 1.0f)
-        {
-            AdvanceSeason();
-        }
-    }
-    
-    SetDayTime(NewHour);
-}
-
-EDayNightCycle UMingEcosystemEnvironmentSystem::GetCurrentDayPhase() const
-{
-    return CurrentDayPhase;
-}
-
-FDayNightData UMingEcosystemEnvironmentSystem::GetDayNightData() const
-{
-    FDayNightData Data;
-    Data.CurrentPhase = CurrentDayPhase;
-    Data.DayProgress = CurrentHour / HoursPerDay;
-    Data.SunElevation = CalculateSunIntensity();
-    Data.SunAzimuth = CurrentHour / HoursPerDay * 360.0f;
-    Data.SkyColor = CalculateSkyColor();
-    
-    // Calculate light intensity based on time of day
-    float NoonDistance = FMath::Abs(CurrentHour - 12.0f) / 12.0f;
-    Data.LightIntensity = 1.0f - FMath::Clamp(NoonDistance, 0.0f, 1.0f);
-    
-    // Adjust for season
-    FSeasonData SeasonData = GetSeasonData(CurrentSeason);
-    Data.LightIntensity *= SeasonData.SunIntensity;
-    
-    Data.AmbientColor = SeasonData.AmbientLightColor * Data.LightIntensity;
-    
-    return Data;
-}
-
-void UMingEcosystemEnvironmentSystem::UpdateDayNightCycle()
-{
-    EDayNightCycle NewPhase;
-    
-    if (CurrentHour >= 5.0f && CurrentHour < 7.0f)
-    {
-        NewPhase = EDayNightCycle::Dawn;
-    }
-    else if (CurrentHour >= 7.0f && CurrentHour < 11.0f)
-    {
-        NewPhase = EDayNightCycle::Morning;
-    }
-    else if (CurrentHour >= 11.0f && CurrentHour < 13.0f)
-    {
-        NewPhase = EDayNightCycle::Noon;
-    }
-    else if (CurrentHour >= 13.0f && CurrentHour < 17.0f)
-    {
-        NewPhase = EDayNightCycle::Afternoon;
-    }
-    else if (CurrentHour >= 17.0f && CurrentHour < 19.0f)
-    {
-        NewPhase = EDayNightCycle::Dusk;
-    }
-    else if (CurrentHour >= 19.0f && CurrentHour < 22.0f)
-    {
-        NewPhase = EDayNightCycle::Evening;
-    }
-    else if (CurrentHour >= 22.0f || CurrentHour < 1.0f)
-    {
-        NewPhase = EDayNightCycle::Night;
-    }
-    else
-    {
-        NewPhase = EDayNightCycle::Midnight;
-    }
-    
-    if (NewPhase != CurrentDayPhase)
-    {
-        CurrentDayPhase = NewPhase;
-        OnDayNightCycleChanged.Broadcast(CurrentDayPhase);
-    }
-}
-
-void UMingEcosystemEnvironmentSystem::SetClimateZone(EClimateZone Zone)
-{
-    CurrentClimateZone = Zone;
-    
-    UE_LOG(LogTemp, Log, TEXT("MingEcosystemEnvironmentSystem: Climate zone changed to %d"), 
-        static_cast<int32>(Zone));
-}
-
-FClimateZoneData UMingEcosystemEnvironmentSystem::GetClimateZoneData() const
-{
-    if (ClimateDatabase.Contains(CurrentClimateZone))
-    {
-        return ClimateDatabase[CurrentClimateZone];
-    }
-    return FClimateZoneData();
-}
-
-float UMingEcosystemEnvironmentSystem::GetTemperatureEffectOnGrowth() const
-{
-    float OptimalTemp = 20.0f;
-    float CurrentTemp = CurrentWeatherParams.Temperature;
-    float TempDiff = FMath::Abs(CurrentTemp - OptimalTemp);
-    
-    // Growth rate decreases as temperature moves away from optimal
-    float Effect = 1.0f - FMath::Clamp(TempDiff / 30.0f, 0.0f, 1.0f);
-    
-    // Apply season multiplier
-    FSeasonData SeasonData = GetSeasonData(CurrentSeason);
-    Effect *= SeasonData.GrowthRateMultiplier;
-    
-    return Effect;
-}
-
-float UMingEcosystemEnvironmentSystem::GetWeatherEffectOnVisibility() const
-{
-    return CurrentWeatherParams.Visibility / 10.0f;
-}
-
-float UMingEcosystemEnvironmentSystem::GetWeatherEffectOnMovement() const
-{
-    float Effect = 1.0f;
-    
-    // Movement is reduced in bad weather
-    switch (CurrentWeather)
-    {
-    case EWeatherType::Clear:
-        Effect = 1.0f;
-        break;
-    case EWeatherType::Cloudy:
-        Effect = 0.95f;
-        break;
-    case EWeatherType::LightRain:
-        Effect = 0.85f;
-        break;
-    case EWeatherType::HeavyRain:
-        Effect = 0.7f;
-        break;
-    case EWeatherType::Storm:
-        Effect = 0.5f;
-        break;
-    case EWeatherType::Snow:
-        Effect = 0.6f;
-        break;
-    case EWeatherType::Blizzard:
-        Effect = 0.3f;
-        break;
-    case EWeatherType::Fog:
-        Effect = 0.75f;
-        break;
-    default:
-        Effect = 0.8f;
-        break;
-    }
-    
-    return Effect;
-}
-
-void UMingEcosystemEnvironmentSystem::TriggerEnvironmentEvent(const FString& EventType, const FVector& Location, float Intensity)
-{
-    FEnvironmentEvent NewEvent;
-    NewEvent.EventID = FGuid::NewGuid().ToString();
-    NewEvent.EventType = EventType;
-    NewEvent.Timestamp = CurrentGameTime;
-    NewEvent.Location = Location;
-    NewEvent.Intensity = Intensity;
-    NewEvent.Duration = 300.0f; // Default 5 minutes
-    
-    ActiveEvents.Add(NewEvent);
-    
-    OnEnvironmentEvent.Broadcast(NewEvent);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingEcosystemEnvironmentSystem: Environment event triggered - %s at %s"), 
-        *EventType, *Location.ToString());
-}
-
-void UMingEcosystemEnvironmentSystem::ProcessEnvironmentEvents(float DeltaTime)
-{
-    // Remove expired events
-    for (int32 i = ActiveEvents.Num() - 1; i >= 0; --i)
-    {
-        float EventAge = CurrentGameTime - ActiveEvents[i].Timestamp;
-        if (EventAge >= ActiveEvents[i].Duration)
-        {
-            ActiveEvents.RemoveAt(i);
-        }
-    }
-}
-
-void UMingEcosystemEnvironmentSystem::Tick(float DeltaTime)
-{
-    if (!bIsInitialized)
-    {
-        return;
-    }
-    
-    CurrentGameTime += DeltaTime;
-    
-    // Update day/night cycle (assuming 1 real second = 1 game minute)
-    AdvanceTime(DeltaTime / 60.0f);
-    
-    // Update weather
-    UpdateWeather(DeltaTime);
-    
-    // Process active events
-    ProcessEnvironmentEvents(DeltaTime);
-}
-
-FLinearColor UMingEcosystemEnvironmentSystem::CalculateSkyColor() const
-{
-    FLinearColor BaseSkyColor(0.5f, 0.7f, 1.0f, 1.0f);
-    
-    // Adjust based on time of day
-    float DayBrightness = 1.0f;
-    if (CurrentHour < 6.0f || CurrentHour > 18.0f)
-    {
-        DayBrightness = 0.2f;
-    }
-    else if (CurrentHour < 8.0f)
-    {
-        DayBrightness = 0.5f + (CurrentHour - 6.0f) * 0.25f;
-    }
-    else if (CurrentHour > 16.0f)
-    {
-        DayBrightness = 1.0f - (CurrentHour - 16.0f) * 0.25f;
-    }
-    
-    // Adjust for weather
-    float CloudFactor = 1.0f - (CurrentWeatherParams.CloudCover * 0.5f);
-    
-    return BaseSkyColor * DayBrightness * CloudFactor;
-}
-
-float UMingEcosystemEnvironmentSystem::CalculateSunIntensity() const
-{
-    // Sun intensity peaks at noon
-    float NoonDistance = FMath::Abs(CurrentHour - 12.0f);
-    float Intensity = 1.0f - FMath::Clamp(NoonDistance / 12.0f, 0.0f, 1.0f);
-    
-    // Season adjustment
-    FSeasonData SeasonData = GetSeasonData(CurrentSeason);
-    Intensity *= SeasonData.SunIntensity;
-    
-    // Weather adjustment
-    Intensity *= (1.0f - CurrentWeatherParams.CloudCover * 0.7f);
-    
-    return Intensity;
-}
+出#出i出n出c出l出使出d出e出 出"出E出c出o出s出y出s出t出e出設置出/出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出a出t出h出/出U出n出本出e出a出l出M出a出t出h出U出t出i出l出i出t出y出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
+出
+出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出(出)出
+出 出 出 出 出:出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出(出0出.出0出f出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出S出e出a出s出o出n出(出E出S出e出a出s出o出n出T出y出p出e出:出:出S出p出本出i出n出成出)出
+出 出 出 出 出,出 出S出e出a出s出o出n出P出本出o出成出本出e出s出s出(出0出.出0出f出)出
+出 出 出 出 出,出 出D出a出y出s出P出e出本出S出e出a出s出o出n出(出3出0出.出0出f出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出(出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出e出a出本出)出
+出 出 出 出 出,出 出基本出e出a出t出h出e出本出C出h出a出n出成出e出T出i出設置出e出本出(出0出.出0出f出)出
+出 出 出 出 出,出 出基本出e出a出t出h出e出本出C出h出a出n出成出e出I出n出t出e出本出正出a出l出(出3出0出0出.出0出f出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出輸入出o出使出本出(出1出2出.出0出f出)出
+出 出 出 出 出,出 出輸入出o出使出本出s出P出e出本出D出a出y出(出2出4出.出0出f出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出D出a出y出P出h出a出s出e出(出E出D出a出y出的出i出成出h出t出C出y出c出l出e出:出:出的出o出o出n出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出C出l出i出設置出a出t出e出Z出o出n出e出(出E出C出l出i出設置出a出t出e出Z出o出n出e出:出:出T出e出設置出p出e出本出a出t出e出)出
+出 出 出 出 出,出 出T出a出本出成出e出t出基本出e出a出t出h出e出本出(出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出e出a出本出)出
+出 出 出 出 出,出 出基本出e出a出t出h出e出本出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出(出1出.出0出f出)出
+出 出 出 出 出,出 出基本出e出a出t出h出e出本出T出本出a出n出s出i出t出i出o出n出D出使出本出a出t出i出o出n出(出6出0出.出0出f出)出
+出{出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出I出n出i出t出i出a出l出i出z出e出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出I出s出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出S出e出a出s出o出n出D出a出t出a出b出a出s出e出(出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出C出l出i出設置出a出t出e出D出a出t出a出b出a出s出e出(出)出;出
+出 出 出 出 出
+出 出 出 出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出e出a出s出o出n出 出=出 出E出S出e出a出s出o出n出T出y出p出e出:出:出S出p出本出i出n出成出;出
+出 出 出 出 出S出e出a出s出o出n出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出輸入出o出使出本出 出=出 出6出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出D出a出y出P出h出a出s出e出 出=出 出E出D出a出y出的出i出成出h出t出C出y出c出l出e出:出:出D出a出w出n出;出
+出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出 出=出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出e出a出本出;出
+出 出 出 出 出
+出 出 出 出 出C出a出l出c出使出l出a出t出e出基本出e出a出t出h出e出本出P出a出本出a出設置出e出t出e出本出s出(出)出;出
+出 出 出 出 出U出p出d出a出t出e出D出a出y出的出i出成出h出t出C出y出c出l出e出(出)出;出
+出 出 出 出 出
+出 出 出 出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出 出I出n出i出t出i出a出l出i出z出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出S出h出使出t出d出o出w出n出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出s出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出A出c出t出i出正出e出E出正出e出n出t出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出S出e出a出s出o出n出D出a出t出a出b出a出s出e出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出C出l出i出設置出a出t出e出D出a出t出a出b出a出s出e出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出 出S出h出使出t出d出o出w出n出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出I出n出i出t出i出a出l出i出z出e出S出e出a出s出o出n出D出a出t出a出b出a出s出e出(出)出
+出{出
+出 出 出 出 出/出/出 出S出p出本出i出n出成出
+出 出 出 出 出軍出S出e出a出s出o出n出D出a出t出a出 出S出p出本出i出n出成出D出a出t出a出;出
+出 出 出 出 出S出p出本出i出n出成出D出a出t出a出.出S出e出a出s出o出n出 出=出 出E出S出e出a出s出o出n出T出y出p出e出:出:出S出p出本出i出n出成出;出
+出 出 出 出 出S出p出本出i出n出成出D出a出t出a出.出B出a出s出e出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出1出5出.出0出f出;出
+出 出 出 出 出S出p出本出i出n出成出D出a出t出a出.出T出e出設置出p出e出本出a出t出使出本出e出V出a出本出i出a出t出i出o出n出 出=出 出8出.出0出f出;出
+出 出 出 出 出S出p出本出i出n出成出D出a出t出a出.出A出正出e出本出a出成出e出輸入出使出設置出i出d出i出t出y出 出=出 出6出5出.出0出f出;出
+出 出 出 出 出S出p出本出i出n出成出D出a出t出a出.出P出本出e出c出i出p出i出t出a出t出i出o出n出P出本出o出b出a出b出i出l出i出t出y出 出=出 出0出.出4出f出;出
+出 出 出 出 出S出p出本出i出n出成出D出a出t出a出.出D出a出y出L出e出n出成出t出h出 出=出 出1出3出.出0出f出;出
+出 出 出 出 出S出p出本出i出n出成出D出a出t出a出.出G出本出o出w出t出h出R出a出t出e出M出使出l出t出i出p出l出i出e出本出 出=出 出1出.出3出f出;出
+出 出 出 出 出S出p出本出i出n出成出D出a出t出a出.出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出i出o出n出R出a出t出e出 出=出 出1出.出2出f出;出
+出 出 出 出 出S出p出本出i出n出成出D出a出t出a出.出A出設置出b出i出e出n出t出L出i出成出h出t出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出0出.出9出f出,出 出1出.出0出f出,出 出0出.出8出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出S出p出本出i出n出成出D出a出t出a出.出S出使出n出I出n出t出e出n出s出i出t出y出 出=出 出0出.出9出f出;出
+出 出 出 出 出S出e出a出s出o出n出D出a出t出a出b出a出s出e出.出A出d出d出(出E出S出e出a出s出o出n出T出y出p出e出:出:出S出p出本出i出n出成出,出 出S出p出本出i出n出成出D出a出t出a出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出S出使出設置出設置出e出本出
+出 出 出 出 出軍出S出e出a出s出o出n出D出a出t出a出 出S出使出設置出設置出e出本出D出a出t出a出;出
+出 出 出 出 出S出使出設置出設置出e出本出D出a出t出a出.出S出e出a出s出o出n出 出=出 出E出S出e出a出s出o出n出T出y出p出e出:出:出S出使出設置出設置出e出本出;出
+出 出 出 出 出S出使出設置出設置出e出本出D出a出t出a出.出B出a出s出e出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出2出8出.出0出f出;出
+出 出 出 出 出S出使出設置出設置出e出本出D出a出t出a出.出T出e出設置出p出e出本出a出t出使出本出e出V出a出本出i出a出t出i出o出n出 出=出 出6出.出0出f出;出
+出 出 出 出 出S出使出設置出設置出e出本出D出a出t出a出.出A出正出e出本出a出成出e出輸入出使出設置出i出d出i出t出y出 出=出 出7出0出.出0出f出;出
+出 出 出 出 出S出使出設置出設置出e出本出D出a出t出a出.出P出本出e出c出i出p出i出t出a出t出i出o出n出P出本出o出b出a出b出i出l出i出t出y出 出=出 出0出.出5出f出;出
+出 出 出 出 出S出使出設置出設置出e出本出D出a出t出a出.出D出a出y出L出e出n出成出t出h出 出=出 出1出5出.出0出f出;出
+出 出 出 出 出S出使出設置出設置出e出本出D出a出t出a出.出G出本出o出w出t出h出R出a出t出e出M出使出l出t出i出p出l出i出e出本出 出=出 出1出.出5出f出;出
+出 出 出 出 出S出使出設置出設置出e出本出D出a出t出a出.出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出i出o出n出R出a出t出e出 出=出 出1出.出4出f出;出
+出 出 出 出 出S出使出設置出設置出e出本出D出a出t出a出.出A出設置出b出i出e出n出t出L出i出成出h出t出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出1出.出0出f出,出 出1出.出0出f出,出 出0出.出9出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出S出使出設置出設置出e出本出D出a出t出a出.出S出使出n出I出n出t出e出n出s出i出t出y出 出=出 出1出.出2出f出;出
+出 出 出 出 出S出e出a出s出o出n出D出a出t出a出b出a出s出e出.出A出d出d出(出E出S出e出a出s出o出n出T出y出p出e出:出:出S出使出設置出設置出e出本出,出 出S出使出設置出設置出e出本出D出a出t出a出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出A出使出t出使出設置出n出
+出 出 出 出 出軍出S出e出a出s出o出n出D出a出t出a出 出A出使出t出使出設置出n出D出a出t出a出;出
+出 出 出 出 出A出使出t出使出設置出n出D出a出t出a出.出S出e出a出s出o出n出 出=出 出E出S出e出a出s出o出n出T出y出p出e出:出:出A出使出t出使出設置出n出;出
+出 出 出 出 出A出使出t出使出設置出n出D出a出t出a出.出B出a出s出e出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出1出8出.出0出f出;出
+出 出 出 出 出A出使出t出使出設置出n出D出a出t出a出.出T出e出設置出p出e出本出a出t出使出本出e出V出a出本出i出a出t出i出o出n出 出=出 出7出.出0出f出;出
+出 出 出 出 出A出使出t出使出設置出n出D出a出t出a出.出A出正出e出本出a出成出e出輸入出使出設置出i出d出i出t出y出 出=出 出5出5出.出0出f出;出
+出 出 出 出 出A出使出t出使出設置出n出D出a出t出a出.出P出本出e出c出i出p出i出t出a出t出i出o出n出P出本出o出b出a出b出i出l出i出t出y出 出=出 出0出.出3出f出;出
+出 出 出 出 出A出使出t出使出設置出n出D出a出t出a出.出D出a出y出L出e出n出成出t出h出 出=出 出1出1出.出0出f出;出
+出 出 出 出 出A出使出t出使出設置出n出D出a出t出a出.出G出本出o出w出t出h出R出a出t出e出M出使出l出t出i出p出l出i出e出本出 出=出 出0出.出8出f出;出
+出 出 出 出 出A出使出t出使出設置出n出D出a出t出a出.出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出i出o出n出R出a出t出e出 出=出 出0出.出9出f出;出
+出 出 出 出 出A出使出t出使出設置出n出D出a出t出a出.出A出設置出b出i出e出n出t出L出i出成出h出t出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出1出.出0出f出,出 出0出.出9出f出,出 出0出.出7出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出A出使出t出使出設置出n出D出a出t出a出.出S出使出n出I出n出t出e出n出s出i出t出y出 出=出 出0出.出8出f出;出
+出 出 出 出 出S出e出a出s出o出n出D出a出t出a出b出a出s出e出.出A出d出d出(出E出S出e出a出s出o出n出T出y出p出e出:出:出A出使出t出使出設置出n出,出 出A出使出t出使出設置出n出D出a出t出a出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出i出n出t出e出本出
+出 出 出 出 出軍出S出e出a出s出o出n出D出a出t出a出 出基本出i出n出t出e出本出D出a出t出a出;出
+出 出 出 出 出基本出i出n出t出e出本出D出a出t出a出.出S出e出a出s出o出n出 出=出 出E出S出e出a出s出o出n出T出y出p出e出:出:出基本出i出n出t出e出本出;出
+出 出 出 出 出基本出i出n出t出e出本出D出a出t出a出.出B出a出s出e出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出2出.出0出f出;出
+出 出 出 出 出基本出i出n出t出e出本出D出a出t出a出.出T出e出設置出p出e出本出a出t出使出本出e出V出a出本出i出a出t出i出o出n出 出=出 出1出0出.出0出f出;出
+出 出 出 出 出基本出i出n出t出e出本出D出a出t出a出.出A出正出e出本出a出成出e出輸入出使出設置出i出d出i出t出y出 出=出 出4出5出.出0出f出;出
+出 出 出 出 出基本出i出n出t出e出本出D出a出t出a出.出P出本出e出c出i出p出i出t出a出t出i出o出n出P出本出o出b出a出b出i出l出i出t出y出 出=出 出0出.出2出f出;出
+出 出 出 出 出基本出i出n出t出e出本出D出a出t出a出.出D出a出y出L出e出n出成出t出h出 出=出 出9出.出0出f出;出
+出 出 出 出 出基本出i出n出t出e出本出D出a出t出a出.出G出本出o出w出t出h出R出a出t出e出M出使出l出t出i出p出l出i出e出本出 出=出 出0出.出3出f出;出
+出 出 出 出 出基本出i出n出t出e出本出D出a出t出a出.出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出i出o出n出R出a出t出e出 出=出 出0出.出5出f出;出
+出 出 出 出 出基本出i出n出t出e出本出D出a出t出a出.出A出設置出b出i出e出n出t出L出i出成出h出t出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出0出.出8出f出,出 出0出.出8出5出f出,出 出0出.出9出5出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出基本出i出n出t出e出本出D出a出t出a出.出S出使出n出I出n出t出e出n出s出i出t出y出 出=出 出0出.出6出f出;出
+出 出 出 出 出S出e出a出s出o出n出D出a出t出a出b出a出s出e出.出A出d出d出(出E出S出e出a出s出o出n出T出y出p出e出:出:出基本出i出n出t出e出本出,出 出基本出i出n出t出e出本出D出a出t出a出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出I出n出i出t出i出a出l出i出z出e出C出l出i出設置出a出t出e出D出a出t出a出b出a出s出e出(出)出
+出{出
+出 出 出 出 出/出/出 出T出本出o出p出i出c出a出l出
+出 出 出 出 出軍出C出l出i出設置出a出t出e出Z出o出n出e出D出a出t出a出 出T出本出o出p出i出c出a出l出D出a出t出a出;出
+出 出 出 出 出T出本出o出p出i出c出a出l出D出a出t出a出.出Z出o出n出e出T出y出p出e出 出=出 出E出C出l出i出設置出a出t出e出Z出o出n出e出:出:出T出本出o出p出i出c出a出l出;出
+出 出 出 出 出T出本出o出p出i出c出a出l出D出a出t出a出.出M出i出n出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出2出0出.出0出f出;出
+出 出 出 出 出T出本出o出p出i出c出a出l出D出a出t出a出.出M出a出x出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出3出5出.出0出f出;出
+出 出 出 出 出T出本出o出p出i出c出a出l出D出a出t出a出.出A出正出e出本出a出成出e出輸入出使出設置出i出d出i出t出y出 出=出 出8出0出.出0出f出;出
+出 出 出 出 出T出本出o出p出i出c出a出l出D出a出t出a出.出A出正出a出i出l出a出b出l出e出S出e出a出s出o出n出s出 出=出 出{出E出S出e出a出s出o出n出T出y出p出e出:出:出S出p出本出i出n出成出,出 出E出S出e出a出s出o出n出T出y出p出e出:出:出S出使出設置出設置出e出本出}出;出
+出 出 出 出 出T出本出o出p出i出c出a出l出D出a出t出a出.出C出o出設置出設置出o出n出基本出e出a出t出h出e出本出T出y出p出e出s出 出=出 出{出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出e出a出本出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出o出使出d出y出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出輸入出e出a出正出y出R出a出i出n出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出S出t出o出本出設置出}出;出
+出 出 出 出 出T出本出o出p出i出c出a出l出D出a出t出a出.出R出a出i出n出f出a出l出l出 出=出 出2出0出0出0出.出0出f出;出
+出 出 出 出 出T出本出o出p出i出c出a出l出D出a出t出a出.出的出a出t出使出本出a出l出D出i出s出a出s出t出e出本出P出本出o出b出a出b出i出l出i出t出y出 出=出 出0出.出1出5出f出;出
+出 出 出 出 出C出l出i出設置出a出t出e出D出a出t出a出b出a出s出e出.出A出d出d出(出E出C出l出i出設置出a出t出e出Z出o出n出e出:出:出T出本出o出p出i出c出a出l出,出 出T出本出o出p出i出c出a出l出D出a出t出a出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出T出e出設置出p出e出本出a出t出e出
+出 出 出 出 出軍出C出l出i出設置出a出t出e出Z出o出n出e出D出a出t出a出 出T出e出設置出p出e出本出a出t出e出D出a出t出a出;出
+出 出 出 出 出T出e出設置出p出e出本出a出t出e出D出a出t出a出.出Z出o出n出e出T出y出p出e出 出=出 出E出C出l出i出設置出a出t出e出Z出o出n出e出:出:出T出e出設置出p出e出本出a出t出e出;出
+出 出 出 出 出T出e出設置出p出e出本出a出t出e出D出a出t出a出.出M出i出n出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出-出1出0出.出0出f出;出
+出 出 出 出 出T出e出設置出p出e出本出a出t出e出D出a出t出a出.出M出a出x出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出3出5出.出0出f出;出
+出 出 出 出 出T出e出設置出p出e出本出a出t出e出D出a出t出a出.出A出正出e出本出a出成出e出輸入出使出設置出i出d出i出t出y出 出=出 出6出0出.出0出f出;出
+出 出 出 出 出T出e出設置出p出e出本出a出t出e出D出a出t出a出.出A出正出a出i出l出a出b出l出e出S出e出a出s出o出n出s出 出=出 出{出E出S出e出a出s出o出n出T出y出p出e出:出:出S出p出本出i出n出成出,出 出E出S出e出a出s出o出n出T出y出p出e出:出:出S出使出設置出設置出e出本出,出 出E出S出e出a出s出o出n出T出y出p出e出:出:出A出使出t出使出設置出n出,出 出E出S出e出a出s出o出n出T出y出p出e出:出:出基本出i出n出t出e出本出}出;出
+出 出 出 出 出T出e出設置出p出e出本出a出t出e出D出a出t出a出.出C出o出設置出設置出o出n出基本出e出a出t出h出e出本出T出y出p出e出s出 出=出 出{出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出e出a出本出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出o出使出d出y出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出L出i出成出h出t出R出a出i出n出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出輸入出e出a出正出y出R出a出i出n出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出S出n出o出w出}出;出
+出 出 出 出 出T出e出設置出p出e出本出a出t出e出D出a出t出a出.出R出a出i出n出f出a出l出l出 出=出 出8出0出0出.出0出f出;出
+出 出 出 出 出T出e出設置出p出e出本出a出t出e出D出a出t出a出.出的出a出t出使出本出a出l出D出i出s出a出s出t出e出本出P出本出o出b出a出b出i出l出i出t出y出 出=出 出0出.出1出f出;出
+出 出 出 出 出C出l出i出設置出a出t出e出D出a出t出a出b出a出s出e出.出A出d出d出(出E出C出l出i出設置出a出t出e出Z出o出n出e出:出:出T出e出設置出p出e出本出a出t出e出,出 出T出e出設置出p出e出本出a出t出e出D出a出t出a出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出A出本出i出d出
+出 出 出 出 出軍出C出l出i出設置出a出t出e出Z出o出n出e出D出a出t出a出 出A出本出i出d出D出a出t出a出;出
+出 出 出 出 出A出本出i出d出D出a出t出a出.出Z出o出n出e出T出y出p出e出 出=出 出E出C出l出i出設置出a出t出e出Z出o出n出e出:出:出A出本出i出d出;出
+出 出 出 出 出A出本出i出d出D出a出t出a出.出M出i出n出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出5出.出0出f出;出
+出 出 出 出 出A出本出i出d出D出a出t出a出.出M出a出x出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出4出5出.出0出f出;出
+出 出 出 出 出A出本出i出d出D出a出t出a出.出A出正出e出本出a出成出e出輸入出使出設置出i出d出i出t出y出 出=出 出2出0出.出0出f出;出
+出 出 出 出 出A出本出i出d出D出a出t出a出.出A出正出a出i出l出a出b出l出e出S出e出a出s出o出n出s出 出=出 出{出E出S出e出a出s出o出n出T出y出p出e出:出:出S出使出設置出設置出e出本出,出 出E出S出e出a出s出o出n出T出y出p出e出:出:出A出使出t出使出設置出n出}出;出
+出 出 出 出 出A出本出i出d出D出a出t出a出.出C出o出設置出設置出o出n出基本出e出a出t出h出e出本出T出y出p出e出s出 出=出 出{出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出e出a出本出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出o出使出d出y出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出S出a出n出d出s出t出o出本出設置出}出;出
+出 出 出 出 出A出本出i出d出D出a出t出a出.出R出a出i出n出f出a出l出l出 出=出 出1出0出0出.出0出f出;出
+出 出 出 出 出A出本出i出d出D出a出t出a出.出的出a出t出使出本出a出l出D出i出s出a出s出t出e出本出P出本出o出b出a出b出i出l出i出t出y出 出=出 出0出.出2出f出;出
+出 出 出 出 出C出l出i出設置出a出t出e出D出a出t出a出b出a出s出e出.出A出d出d出(出E出C出l出i出設置出a出t出e出Z出o出n出e出:出:出A出本出i出d出,出 出A出本出i出d出D出a出t出a出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出軍出本出i出成出i出d出
+出 出 出 出 出軍出C出l出i出設置出a出t出e出Z出o出n出e出D出a出t出a出 出軍出本出i出成出i出d出D出a出t出a出;出
+出 出 出 出 出軍出本出i出成出i出d出D出a出t出a出.出Z出o出n出e出T出y出p出e出 出=出 出E出C出l出i出設置出a出t出e出Z出o出n出e出:出:出軍出本出i出成出i出d出;出
+出 出 出 出 出軍出本出i出成出i出d出D出a出t出a出.出M出i出n出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出-出4出0出.出0出f出;出
+出 出 出 出 出軍出本出i出成出i出d出D出a出t出a出.出M出a出x出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出1出0出.出0出f出;出
+出 出 出 出 出軍出本出i出成出i出d出D出a出t出a出.出A出正出e出本出a出成出e出輸入出使出設置出i出d出i出t出y出 出=出 出4出0出.出0出f出;出
+出 出 出 出 出軍出本出i出成出i出d出D出a出t出a出.出A出正出a出i出l出a出b出l出e出S出e出a出s出o出n出s出 出=出 出{出E出S出e出a出s出o出n出T出y出p出e出:出:出基本出i出n出t出e出本出}出;出
+出 出 出 出 出軍出本出i出成出i出d出D出a出t出a出.出C出o出設置出設置出o出n出基本出e出a出t出h出e出本出T出y出p出e出s出 出=出 出{出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出e出a出本出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出o出使出d出y出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出S出n出o出w出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出B出l出i出z出z出a出本出d出}出;出
+出 出 出 出 出軍出本出i出成出i出d出D出a出t出a出.出R出a出i出n出f出a出l出l出 出=出 出2出0出0出.出0出f出;出
+出 出 出 出 出軍出本出i出成出i出d出D出a出t出a出.出的出a出t出使出本出a出l出D出i出s出a出s出t出e出本出P出本出o出b出a出b出i出l出i出t出y出 出=出 出0出.出1出2出f出;出
+出 出 出 出 出C出l出i出設置出a出t出e出D出a出t出a出b出a出s出e出.出A出d出d出(出E出C出l出i出設置出a出t出e出Z出o出n出e出:出:出軍出本出i出成出i出d出,出 出軍出本出i出成出i出d出D出a出t出a出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出S出e出t出C出使出本出本出e出n出t出S出e出a出s出o出n出(出E出S出e出a出s出o出n出T出y出p出e出 出的出e出w出S出e出a出s出o出n出)出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出S出e出a出s出o出n出 出!出=出 出的出e出w出S出e出a出s出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出S出e出a出s出o出n出T出y出p出e出 出O出l出d出S出e出a出s出o出n出 出=出 出C出使出本出本出e出n出t出S出e出a出s出o出n出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出S出e出a出s出o出n出 出=出 出的出e出w出S出e出a出s出o出n出;出
+出 出 出 出 出 出 出 出 出S出e出a出s出o出n出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出O出n出S出e出a出s出o出n出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出的出e出w出S出e出a出s出o出n出,出 出O出l出d出S出e出a出s出o出n出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出 出S出e出a出s出o出n出 出c出h出a出n出成出e出d出 出f出本出o出設置出 出%出d出 出t出o出 出%出d出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出O出l出d出S出e出a出s出o出n出)出,出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出的出e出w出S出e出a出s出o出n出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出A出d出正出a出n出c出e出S出e出a出s出o出n出(出)出
+出{出
+出 出 出 出 出E出S出e出a出s出o出n出T出y出p出e出 出的出e出x出t出S出e出a出s出o出n出;出
+出 出 出 出 出s出w出i出t出c出h出 出(出C出使出本出本出e出n出t出S出e出a出s出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出S出e出a出s出o出n出T出y出p出e出:出:出S出p出本出i出n出成出:出
+出 出 出 出 出 出 出 出 出的出e出x出t出S出e出a出s出o出n出 出=出 出E出S出e出a出s出o出n出T出y出p出e出:出:出S出使出設置出設置出e出本出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出e出a出s出o出n出T出y出p出e出:出:出S出使出設置出設置出e出本出:出
+出 出 出 出 出 出 出 出 出的出e出x出t出S出e出a出s出o出n出 出=出 出E出S出e出a出s出o出n出T出y出p出e出:出:出A出使出t出使出設置出n出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出e出a出s出o出n出T出y出p出e出:出:出A出使出t出使出設置出n出:出
+出 出 出 出 出 出 出 出 出的出e出x出t出S出e出a出s出o出n出 出=出 出E出S出e出a出s出o出n出T出y出p出e出:出:出基本出i出n出t出e出本出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出e出a出s出o出n出T出y出p出e出:出:出基本出i出n出t出e出本出:出
+出 出 出 出 出 出 出 出 出的出e出x出t出S出e出a出s出o出n出 出=出 出E出S出e出a出s出o出n出T出y出p出e出:出:出S出p出本出i出n出成出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出的出e出x出t出S出e出a出s出o出n出 出=出 出E出S出e出a出s出o出n出T出y出p出e出:出:出S出p出本出i出n出成出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出S出e出t出C出使出本出本出e出n出t出S出e出a出s出o出n出(出的出e出x出t出S出e出a出s出o出n出)出;出
+出}出
+出
+出軍出S出e出a出s出o出n出D出a出t出a出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出G出e出t出S出e出a出s出o出n出D出a出t出a出(出E出S出e出a出s出o出n出T出y出p出e出 出S出e出a出s出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出S出e出a出s出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出S出e出a出s出o出n出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出S出e出a出s出o出n出D出a出t出a出b出a出s出e出[出S出e出a出s出o出n出]出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出軍出S出e出a出s出o出n出D出a出t出a出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出S出e出t出基本出e出a出t出h出e出本出(出E出基本出e出a出t出h出e出本出T出y出p出e出 出的出e出w出基本出e出a出t出h出e出本出,出 出f出l出o出a出t出 出I出n出t出e出n出s出i出t出y出)出
+出{出
+出 出 出 出 出T出a出本出成出e出t出基本出e出a出t出h出e出本出 出=出 出的出e出w出基本出e出a出t出h出e出本出;出
+出 出 出 出 出基本出e出a出t出h出e出本出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出T出O出D出O出:出 出I出設置出p出l出e出設置出e出n出t出 出s出設置出o出o出t出h出 出w出e出a出t出h出e出本出 出t出本出a出n出s出i出t出i出o出n出 出w出i出t出h出 出i出n出t出e出本出p出o出l出a出t出i出o出n出
+出 出 出 出 出/出/出 出b出e出t出w出e出e出n出 出c出使出本出本出e出n出t出 出a出n出d出 出t出a出本出成出e出t出 出w出e出a出t出h出e出本出 出p出a出本出a出設置出e出t出e出本出s出
+出 出 出 出 出
+出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出 出=出 出的出e出w出基本出e出a出t出h出e出本出;出
+出 出 出 出 出C出a出l出c出使出l出a出t出e出基本出e出a出t出h出e出本出P出a出本出a出設置出e出t出e出本出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出O出n出基本出e出a出t出h出e出本出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出的出e出w出基本出e出a出t出h出e出本出,出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出 出基本出e出a出t出h出e出本出 出c出h出a出n出成出e出d出 出t出o出 出%出d出 出w出i出t出h出 出i出n出t出e出n出s出i出t出y出 出%出.出2出f出"出)出,出 出
+出 出 出 出 出 出 出 出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出的出e出w出基本出e出a出t出h出e出本出)出,出 出I出n出t出e出n出s出i出t出y出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出U出p出d出a出t出e出基本出e出a出t出h出e出本出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出基本出e出a出t出h出e出本出C出h出a出n出成出e出T出i出設置出e出本出 出+出=出 出D出e出l出t出a出T出i出設置出e出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出基本出e出a出t出h出e出本出C出h出a出n出成出e出T出i出設置出e出本出 出>出=出 出基本出e出a出t出h出e出本出C出h出a出n出成出e出I出n出t出e出本出正出a出l出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出基本出e出a出t出h出e出本出C出h出a出n出成出e出T出i出設置出e出本出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出G出e出n出e出本出a出t出e出R出a出n出d出o出設置出基本出e出a出t出h出e出本出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出U出p出d出a出t出e出 出w出e出a出t出h出e出本出 出t出本出a出n出s出i出t出i出o出n出
+出 出 出 出 出i出f出 出(出基本出e出a出t出h出e出本出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出 出<出 出1出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出基本出e出a出t出h出e出本出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出 出+出=出 出D出e出l出t出a出T出i出設置出e出 出/出 出基本出e出a出t出h出e出本出T出本出a出n出s出i出t出i出o出n出D出使出本出a出t出i出o出n出;出
+出 出 出 出 出 出 出 出 出基本出e出a出t出h出e出本出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出基本出e出a出t出h出e出本出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出G出e出n出e出本出a出t出e出R出a出n出d出o出設置出基本出e出a出t出h出e出本出(出)出
+出{出
+出 出 出 出 出c出o出n出s出t出 出軍出C出l出i出設置出a出t出e出Z出o出n出e出D出a出t出a出&出 出C出l出i出設置出a出t出e出D出a出t出a出 出=出 出G出e出t出C出l出i出設置出a出t出e出Z出o出n出e出D出a出t出a出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出S出e出l出e出c出t出 出f出本出o出設置出 出c出o出設置出設置出o出n出 出w出e出a出t出h出e出本出 出t出y出p出e出s出 出f出o出本出 出t出h出i出s出 出c出l出i出設置出a出t出e出
+出 出 出 出 出i出f出 出(出C出l出i出設置出a出t出e出D出a出t出a出.出C出o出設置出設置出o出n出基本出e出a出t出h出e出本出T出y出p出e出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出R出a出n出d出o出設置出I出n出d出e出x出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出C出l出i出設置出a出t出e出D出a出t出a出.出C出o出設置出設置出o出n出基本出e出a出t出h出e出本出T出y出p出e出s出.出的出使出設置出(出)出 出-出 出1出)出;出
+出 出 出 出 出 出 出 出 出E出基本出e出a出t出h出e出本出T出y出p出e出 出的出e出w出基本出e出a出t出h出e出本出 出=出 出C出l出i出設置出a出t出e出D出a出t出a出.出C出o出設置出設置出o出n出基本出e出a出t出h出e出本出T出y出p出e出s出[出R出a出n出d出o出設置出I出n出d出e出x出]出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出A出p出p出l出y出 出s出e出a出s出o出n出 出i出n出f出l出使出e出n出c出e出
+出 出 出 出 出 出 出 出 出軍出S出e出a出s出o出n出D出a出t出a出 出S出e出a出s出o出n出D出a出t出a出 出=出 出G出e出t出S出e出a出s出o出n出D出a出t出a出(出C出使出本出本出e出n出t出S出e出a出s出o出n出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出A出d出大出使出s出t出 出p出本出o出b出a出b出i出l出i出t出y出 出b出a出s出e出d出 出o出n出 出s出e出a出s出o出n出 出p出本出e出c出i出p出i出t出a出t出i出o出n出 出p出本出o出b出a出b出i出l出i出t出y出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出R出a出n出d出o出設置出V出a出l出使出e出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出R出a出n出d出o出設置出V出a出l出使出e出 出>出 出S出e出a出s出o出n出D出a出t出a出.出P出本出e出c出i出p出i出t出a出t出i出o出n出P出本出o出b出a出b出i出l出i出t出y出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出P出本出e出f出e出本出 出c出l出e出a出本出 出w出e出a出t出h出e出本出 出i出f出 出n出o出 出p出本出e出c出i出p出i出t出a出t出i出o出n出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出0出.出7出f出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出基本出e出a出t出h出e出本出 出=出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出e出a出本出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出的出e出w出基本出e出a出t出h出e出本出 出!出=出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出e出t出基本出e出a出t出h出e出本出(出的出e出w出基本出e出a出t出h出e出本出,出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出5出f出 出+出 出0出.出5出f出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出基本出e出a出t出h出e出本出P出a出本出a出設置出e出t出e出本出s出(出)出
+出{出
+出 出 出 出 出軍出S出e出a出s出o出n出D出a出t出a出 出S出e出a出s出o出n出D出a出t出a出 出=出 出G出e出t出S出e出a出s出o出n出D出a出t出a出(出C出使出本出本出e出n出t出S出e出a出s出o出n出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出B出a出s出e出 出t出e出設置出p出e出本出a出t出使出本出e出 出f出本出o出設置出 出s出e出a出s出o出n出 出w出i出t出h出 出s出o出設置出e出 出本出a出n出d出o出設置出 出正出a出本出i出a出t出i出o出n出
+出 出 出 出 出f出l出o出a出t出 出B出a出s出e出T出e出設置出p出 出=出 出S出e出a出s出o出n出D出a出t出a出.出B出a出s出e出T出e出設置出p出e出本出a出t出使出本出e出;出
+出 出 出 出 出f出l出o出a出t出 出T出e出設置出p出V出a出本出i出a出t出i出o出n出 出=出 出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出-出 出0出.出5出f出)出 出*出 出2出.出0出f出 出*出 出S出e出a出s出o出n出D出a出t出a出.出T出e出設置出p出e出本出a出t出使出本出e出V出a出本出i出a出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出B出a出s出e出T出e出設置出p出 出+出 出T出e出設置出p出V出a出本出i出a出t出i出o出n出;出
+出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出輸入出使出設置出i出d出i出t出y出 出=出 出S出e出a出s出o出n出D出a出t出a出.出A出正出e出本出a出成出e出輸入出使出設置出i出d出i出t出y出 出+出 出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出-出 出0出.出5出f出)出 出*出 出2出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出輸入出使出設置出i出d出i出t出y出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出輸入出使出設置出i出d出i出t出y出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出e出a出t出h出e出本出 出t出y出p出e出 出s出p出e出c出i出f出i出c出 出p出a出本出a出設置出e出t出e出本出s出
+出 出 出 出 出s出w出i出t出c出h出 出(出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出e出a出本出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出C出l出o出使出d出C出o出正出e出本出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出基本出i出n出d出S出p出e出e出d出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出P出本出e出c出i出p出i出t出a出t出i出o出n出I出n出t出e出n出s出i出t出y出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出V出i出s出i出b出i出l出i出t出y出 出=出 出1出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出o出使出d出y出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出C出l出o出使出d出C出o出正出e出本出 出=出 出0出.出5出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出4出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出基本出i出n出d出S出p出e出e出d出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出5出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出P出本出e出c出i出p出i出t出a出t出i出o出n出I出n出t出e出n出s出i出t出y出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出V出i出s出i出b出i出l出i出t出y出 出=出 出8出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出L出i出成出h出t出R出a出i出n出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出C出l出o出使出d出C出o出正出e出本出 出=出 出0出.出7出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出基本出i出n出d出S出p出e出e出d出 出=出 出5出.出0出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出P出本出e出c出i出p出i出t出a出t出i出o出n出I出n出t出e出n出s出i出t出y出 出=出 出0出.出2出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出V出i出s出i出b出i出l出i出t出y出 出=出 出6出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出T出e出設置出p出e出本出a出t出使出本出e出 出-出=出 出2出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出輸入出e出a出正出y出R出a出i出n出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出C出l出o出使出d出C出o出正出e出本出 出=出 出0出.出9出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出1出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出基本出i出n出d出S出p出e出e出d出 出=出 出1出0出.出0出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出2出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出P出本出e出c出i出p出i出t出a出t出i出o出n出I出n出t出e出n出s出i出t出y出 出=出 出0出.出6出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出4出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出V出i出s出i出b出i出l出i出t出y出 出=出 出3出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出T出e出設置出p出e出本出a出t出使出本出e出 出-出=出 出5出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出S出t出o出本出設置出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出C出l出o出使出d出C出o出正出e出本出 出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出基本出i出n出d出S出p出e出e出d出 出=出 出3出0出.出0出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出4出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出P出本出e出c出i出p出i出t出a出t出i出o出n出I出n出t出e出n出s出i出t出y出 出=出 出0出.出8出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出S出t出o出本出設置出I出n出t出e出n出s出i出t出y出 出=出 出0出.出5出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出V出i出s出i出b出i出l出i出t出y出 出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出T出e出設置出p出e出本出a出t出使出本出e出 出-出=出 出8出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出S出n出o出w出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出C出l出o出使出d出C出o出正出e出本出 出=出 出0出.出8出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出基本出i出n出d出S出p出e出e出d出 出=出 出5出.出0出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出5出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出P出本出e出c出i出p出i出t出a出t出i出o出n出I出n出t出e出n出s出i出t出y出 出=出 出0出.出3出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出4出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出V出i出s出i出b出i出l出i出t出y出 出=出 出4出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出軍出M出a出t出h出:出:出M出i出n出(出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出T出e出設置出p出e出本出a出t出使出本出e出,出 出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出B出l出i出z出z出a出本出d出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出C出l出o出使出d出C出o出正出e出本出 出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出基本出i出n出d出S出p出e出e出d出 出=出 出4出0出.出0出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出3出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出P出本出e出c出i出p出i出t出a出t出i出o出n出I出n出t出e出n出s出i出t出y出 出=出 出0出.出7出f出 出+出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出V出i出s出i出b出i出l出i出t出y出 出=出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出軍出M出a出t出h出:出:出M出i出n出(出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出T出e出設置出p出e出本出a出t出使出本出e出,出 出-出1出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出C出l出o出使出d出C出o出正出e出本出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出基本出i出n出d出S出p出e出e出d出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出2出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出P出本出e出c出i出p出i出t出a出t出i出o出n出I出n出t出e出n出s出i出t出y出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出V出i出s出i出b出i出l出i出t出y出 出=出 出7出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出基本出e出a出t出h出e出本出T出y出p出e出 出=出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出;出
+出 出 出 出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出基本出i出n出d出D出i出本出e出c出t出i出o出n出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出3出6出0出.出0出f出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出S出e出t出D出a出y出T出i出設置出e出(出f出l出o出a出t出 出輸入出o出使出本出)出
+出{出
+出 出 出 出 出C出使出本出本出e出n出t出輸入出o出使出本出 出=出 出軍出M出a出t出h出:出:出軍出設置出o出d出(出輸入出o出使出本出,出 出輸入出o出使出本出s出P出e出本出D出a出y出)出;出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出<出 出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出輸入出o出使出本出 出+出=出 出輸入出o出使出本出s出P出e出本出D出a出y出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出U出p出d出a出t出e出D出a出y出的出i出成出h出t出C出y出c出l出e出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出A出d出正出a出n出c出e出T出i出設置出e出(出f出l出o出a出t出 出輸入出o出使出本出s出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出的出e出w出輸入出o出使出本出 出=出 出C出使出本出本出e出n出t出輸入出o出使出本出 出+出 出輸入出o出使出本出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出C出h出e出c出k出 出i出f出 出d出a出y出 出h出a出s出 出a出d出正出a出n出c出e出d出
+出 出 出 出 出i出f出 出(出的出e出w出輸入出o出使出本出 出>出=出 出輸入出o出使出本出s出P出e出本出D出a出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出e出a出s出o出n出P出本出o出成出本出e出s出s出 出+出=出 出的出e出w出輸入出o出使出本出 出/出 出輸入出o出使出本出s出P出e出本出D出a出y出 出/出 出D出a出y出s出P出e出本出S出e出a出s出o出n出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出S出e出a出s出o出n出P出本出o出成出本出e出s出s出 出>出=出 出1出.出0出f出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出d出正出a出n出c出e出S出e出a出s出o出n出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出S出e出t出D出a出y出T出i出設置出e出(出的出e出w出輸入出o出使出本出)出;出
+出}出
+出
+出E出D出a出y出的出i出成出h出t出C出y出c出l出e出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出G出e出t出C出使出本出本出e出n出t出D出a出y出P出h出a出s出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出D出a出y出P出h出a出s出e出;出
+出}出
+出
+出軍出D出a出y出的出i出成出h出t出D出a出t出a出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出G出e出t出D出a出y出的出i出成出h出t出D出a出t出a出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出D出a出y出的出i出成出h出t出D出a出t出a出 出D出a出t出a出;出
+出 出 出 出 出D出a出t出a出.出C出使出本出本出e出n出t出P出h出a出s出e出 出=出 出C出使出本出本出e出n出t出D出a出y出P出h出a出s出e出;出
+出 出 出 出 出D出a出t出a出.出D出a出y出P出本出o出成出本出e出s出s出 出=出 出C出使出本出本出e出n出t出輸入出o出使出本出 出/出 出輸入出o出使出本出s出P出e出本出D出a出y出;出
+出 出 出 出 出D出a出t出a出.出S出使出n出E出l出e出正出a出t出i出o出n出 出=出 出C出a出l出c出使出l出a出t出e出S出使出n出I出n出t出e出n出s出i出t出y出(出)出;出
+出 出 出 出 出D出a出t出a出.出S出使出n出A出z出i出設置出使出t出h出 出=出 出C出使出本出本出e出n出t出輸入出o出使出本出 出/出 出輸入出o出使出本出s出P出e出本出D出a出y出 出*出 出3出6出0出.出0出f出;出
+出 出 出 出 出D出a出t出a出.出S出k出y出C出o出l出o出本出 出=出 出C出a出l出c出使出l出a出t出e出S出k出y出C出o出l出o出本出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出C出a出l出c出使出l出a出t出e出 出l出i出成出h出t出 出i出n出t出e出n出s出i出t出y出 出b出a出s出e出d出 出o出n出 出t出i出設置出e出 出o出f出 出d出a出y出
+出 出 出 出 出f出l出o出a出t出 出的出o出o出n出D出i出s出t出a出n出c出e出 出=出 出軍出M出a出t出h出:出:出A出b出s出(出C出使出本出本出e出n出t出輸入出o出使出本出 出-出 出1出2出.出0出f出)出 出/出 出1出2出.出0出f出;出
+出 出 出 出 出D出a出t出a出.出L出i出成出h出t出I出n出t出e出n出s出i出t出y出 出=出 出1出.出0出f出 出-出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出的出o出o出n出D出i出s出t出a出n出c出e出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出A出d出大出使出s出t出 出f出o出本出 出s出e出a出s出o出n出
+出 出 出 出 出軍出S出e出a出s出o出n出D出a出t出a出 出S出e出a出s出o出n出D出a出t出a出 出=出 出G出e出t出S出e出a出s出o出n出D出a出t出a出(出C出使出本出本出e出n出t出S出e出a出s出o出n出)出;出
+出 出 出 出 出D出a出t出a出.出L出i出成出h出t出I出n出t出e出n出s出i出t出y出 出*出=出 出S出e出a出s出o出n出D出a出t出a出.出S出使出n出I出n出t出e出n出s出i出t出y出;出
+出 出 出 出 出
+出 出 出 出 出D出a出t出a出.出A出設置出b出i出e出n出t出C出o出l出o出本出 出=出 出S出e出a出s出o出n出D出a出t出a出.出A出設置出b出i出e出n出t出L出i出成出h出t出C出o出l出o出本出 出*出 出D出a出t出a出.出L出i出成出h出t出I出n出t出e出n出s出i出t出y出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出D出a出t出a出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出U出p出d出a出t出e出D出a出y出的出i出成出h出t出C出y出c出l出e出(出)出
+出{出
+出 出 出 出 出E出D出a出y出的出i出成出h出t出C出y出c出l出e出 出的出e出w出P出h出a出s出e出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出>出=出 出5出.出0出f出 出&出&出 出C出使出本出本出e出n出t出輸入出o出使出本出 出<出 出7出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出P出h出a出s出e出 出=出 出E出D出a出y出的出i出成出h出t出C出y出c出l出e出:出:出D出a出w出n出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出>出=出 出7出.出0出f出 出&出&出 出C出使出本出本出e出n出t出輸入出o出使出本出 出<出 出1出1出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出P出h出a出s出e出 出=出 出E出D出a出y出的出i出成出h出t出C出y出c出l出e出:出:出M出o出本出n出i出n出成出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出>出=出 出1出1出.出0出f出 出&出&出 出C出使出本出本出e出n出t出輸入出o出使出本出 出<出 出1出3出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出P出h出a出s出e出 出=出 出E出D出a出y出的出i出成出h出t出C出y出c出l出e出:出:出的出o出o出n出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出>出=出 出1出3出.出0出f出 出&出&出 出C出使出本出本出e出n出t出輸入出o出使出本出 出<出 出1出7出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出P出h出a出s出e出 出=出 出E出D出a出y出的出i出成出h出t出C出y出c出l出e出:出:出A出f出t出e出本出n出o出o出n出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出>出=出 出1出7出.出0出f出 出&出&出 出C出使出本出本出e出n出t出輸入出o出使出本出 出<出 出1出9出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出P出h出a出s出e出 出=出 出E出D出a出y出的出i出成出h出t出C出y出c出l出e出:出:出D出使出s出k出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出>出=出 出1出9出.出0出f出 出&出&出 出C出使出本出本出e出n出t出輸入出o出使出本出 出<出 出2出2出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出P出h出a出s出e出 出=出 出E出D出a出y出的出i出成出h出t出C出y出c出l出e出:出:出E出正出e出n出i出n出成出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出>出=出 出2出2出.出0出f出 出出出出出 出C出使出本出本出e出n出t出輸入出o出使出本出 出<出 出1出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出P出h出a出s出e出 出=出 出E出D出a出y出的出i出成出h出t出C出y出c出l出e出:出:出的出i出成出h出t出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出P出h出a出s出e出 出=出 出E出D出a出y出的出i出成出h出t出C出y出c出l出e出:出:出M出i出d出n出i出成出h出t出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出的出e出w出P出h出a出s出e出 出!出=出 出C出使出本出本出e出n出t出D出a出y出P出h出a出s出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出D出a出y出P出h出a出s出e出 出=出 出的出e出w出P出h出a出s出e出;出
+出 出 出 出 出 出 出 出 出O出n出D出a出y出的出i出成出h出t出C出y出c出l出e出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出C出使出本出本出e出n出t出D出a出y出P出h出a出s出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出S出e出t出C出l出i出設置出a出t出e出Z出o出n出e出(出E出C出l出i出設置出a出t出e出Z出o出n出e出 出Z出o出n出e出)出
+出{出
+出 出 出 出 出C出使出本出本出e出n出t出C出l出i出設置出a出t出e出Z出o出n出e出 出=出 出Z出o出n出e出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出 出C出l出i出設置出a出t出e出 出z出o出n出e出 出c出h出a出n出成出e出d出 出t出o出 出%出d出"出)出,出 出
+出 出 出 出 出 出 出 出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出Z出o出n出e出)出)出;出
+出}出
+出
+出軍出C出l出i出設置出a出t出e出Z出o出n出e出D出a出t出a出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出G出e出t出C出l出i出設置出a出t出e出Z出o出n出e出D出a出t出a出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出C出l出i出設置出a出t出e出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出C出使出本出本出e出n出t出C出l出i出設置出a出t出e出Z出o出n出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出l出i出設置出a出t出e出D出a出t出a出b出a出s出e出[出C出使出本出本出e出n出t出C出l出i出設置出a出t出e出Z出o出n出e出]出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出軍出C出l出i出設置出a出t出e出Z出o出n出e出D出a出t出a出(出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出G出e出t出T出e出設置出p出e出本出a出t出使出本出e出E出f出f出e出c出t出O出n出G出本出o出w出t出h出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出O出p出t出i出設置出a出l出T出e出設置出p出 出=出 出2出0出.出0出f出;出
+出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出T出e出設置出p出 出=出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出T出e出設置出p出e出本出a出t出使出本出e出;出
+出 出 出 出 出f出l出o出a出t出 出T出e出設置出p出D出i出f出f出 出=出 出軍出M出a出t出h出:出:出A出b出s出(出C出使出本出本出e出n出t出T出e出設置出p出 出-出 出O出p出t出i出設置出a出l出T出e出設置出p出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出G出本出o出w出t出h出 出本出a出t出e出 出d出e出c出本出e出a出s出e出s出 出a出s出 出t出e出設置出p出e出本出a出t出使出本出e出 出設置出o出正出e出s出 出a出w出a出y出 出f出本出o出設置出 出o出p出t出i出設置出a出l出
+出 出 出 出 出f出l出o出a出t出 出E出f出f出e出c出t出 出=出 出1出.出0出f出 出-出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出e出設置出p出D出i出f出f出 出/出 出3出0出.出0出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出A出p出p出l出y出 出s出e出a出s出o出n出 出設置出使出l出t出i出p出l出i出e出本出
+出 出 出 出 出軍出S出e出a出s出o出n出D出a出t出a出 出S出e出a出s出o出n出D出a出t出a出 出=出 出G出e出t出S出e出a出s出o出n出D出a出t出a出(出C出使出本出本出e出n出t出S出e出a出s出o出n出)出;出
+出 出 出 出 出E出f出f出e出c出t出 出*出=出 出S出e出a出s出o出n出D出a出t出a出.出G出本出o出w出t出h出R出a出t出e出M出使出l出t出i出p出l出i出e出本出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出E出f出f出e出c出t出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出G出e出t出基本出e出a出t出h出e出本出E出f出f出e出c出t出O出n出V出i出s出i出b出i出l出i出t出y出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出V出i出s出i出b出i出l出i出t出y出 出/出 出1出0出.出0出f出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出G出e出t出基本出e出a出t出h出e出本出E出f出f出e出c出t出O出n出M出o出正出e出設置出e出n出t出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出E出f出f出e出c出t出 出=出 出1出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出M出o出正出e出設置出e出n出t出 出i出s出 出本出e出d出使出c出e出d出 出i出n出 出b出a出d出 出w出e出a出t出h出e出本出
+出 出 出 出 出s出w出i出t出c出h出 出(出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出e出a出本出:出
+出 出 出 出 出 出 出 出 出E出f出f出e出c出t出 出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出o出使出d出y出:出
+出 出 出 出 出 出 出 出 出E出f出f出e出c出t出 出=出 出0出.出9出5出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出L出i出成出h出t出R出a出i出n出:出
+出 出 出 出 出 出 出 出 出E出f出f出e出c出t出 出=出 出0出.出8出5出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出輸入出e出a出正出y出R出a出i出n出:出
+出 出 出 出 出 出 出 出 出E出f出f出e出c出t出 出=出 出0出.出7出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出S出t出o出本出設置出:出
+出 出 出 出 出 出 出 出 出E出f出f出e出c出t出 出=出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出S出n出o出w出:出
+出 出 出 出 出 出 出 出 出E出f出f出e出c出t出 出=出 出0出.出6出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出B出l出i出z出z出a出本出d出:出
+出 出 出 出 出 出 出 出 出E出f出f出e出c出t出 出=出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出軍出o出成出:出
+出 出 出 出 出 出 出 出 出E出f出f出e出c出t出 出=出 出0出.出7出5出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出E出f出f出e出c出t出 出=出 出0出.出8出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出E出f出f出e出c出t出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出T出本出i出成出成出e出本出E出n出正出i出本出o出n出設置出e出n出t出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出T出y出p出e出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出L出o出c出a出t出i出o出n出,出 出f出l出o出a出t出 出I出n出t出e出n出s出i出t出y出)出
+出{出
+出 出 出 出 出軍出E出n出正出i出本出o出n出設置出e出n出t出E出正出e出n出t出 出的出e出w出E出正出e出n出t出;出
+出 出 出 出 出的出e出w出E出正出e出n出t出.出E出正出e出n出t出I出D出 出=出 出軍出G出使出i出d出:出:出的出e出w出G出使出i出d出(出)出.出T出o出S出t出本出i出n出成出(出)出;出
+出 出 出 出 出的出e出w出E出正出e出n出t出.出E出正出e出n出t出T出y出p出e出 出=出 出E出正出e出n出t出T出y出p出e出;出
+出 出 出 出 出的出e出w出E出正出e出n出t出.出T出i出設置出e出s出t出a出設置出p出 出=出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出;出
+出 出 出 出 出的出e出w出E出正出e出n出t出.出L出o出c出a出t出i出o出n出 出=出 出L出o出c出a出t出i出o出n出;出
+出 出 出 出 出的出e出w出E出正出e出n出t出.出I出n出t出e出n出s出i出t出y出 出=出 出I出n出t出e出n出s出i出t出y出;出
+出 出 出 出 出的出e出w出E出正出e出n出t出.出D出使出本出a出t出i出o出n出 出=出 出3出0出0出.出0出f出;出 出/出/出 出D出e出f出a出使出l出t出 出5出 出設置出i出n出使出t出e出s出
+出 出 出 出 出
+出 出 出 出 出A出c出t出i出正出e出E出正出e出n出t出s出.出A出d出d出(出的出e出w出E出正出e出n出t出)出;出
+出 出 出 出 出
+出 出 出 出 出O出n出E出n出正出i出本出o出n出設置出e出n出t出E出正出e出n出t出.出B出本出o出a出d出c出a出s出t出(出的出e出w出E出正出e出n出t出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出 出E出n出正出i出本出o出n出設置出e出n出t出 出e出正出e出n出t出 出t出本出i出成出成出e出本出e出d出 出-出 出%出s出 出a出t出 出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出E出正出e出n出t出T出y出p出e出,出 出*出L出o出c出a出t出i出o出n出.出T出o出S出t出本出i出n出成出(出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出P出本出o出c出e出s出s出E出n出正出i出本出o出n出設置出e出n出t出E出正出e出n出t出s出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出/出/出 出R出e出設置出o出正出e出 出e出x出p出i出本出e出d出 出e出正出e出n出t出s出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出A出c出t出i出正出e出E出正出e出n出t出s出.出的出使出設置出(出)出 出-出 出1出;出 出i出 出>出=出 出0出;出 出-出-出i出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出E出正出e出n出t出A出成出e出 出=出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出 出-出 出A出c出t出i出正出e出E出正出e出n出t出s出[出i出]出.出T出i出設置出e出s出t出a出設置出p出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出E出正出e出n出t出A出成出e出 出>出=出 出A出c出t出i出正出e出E出正出e出n出t出s出[出i出]出.出D出使出本出a出t出i出o出n出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出c出t出i出正出e出E出正出e出n出t出s出.出R出e出設置出o出正出e出A出t出(出i出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出T出i出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出s出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出 出+出=出 出D出e出l出t出a出T出i出設置出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出U出p出d出a出t出e出 出d出a出y出/出n出i出成出h出t出 出c出y出c出l出e出 出(出a出s出s出使出設置出i出n出成出 出1出 出本出e出a出l出 出s出e出c出o出n出d出 出=出 出1出 出成出a出設置出e出 出設置出i出n出使出t出e出)出
+出 出 出 出 出A出d出正出a出n出c出e出T出i出設置出e出(出D出e出l出t出a出T出i出設置出e出 出/出 出6出0出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出U出p出d出a出t出e出 出w出e出a出t出h出e出本出
+出 出 出 出 出U出p出d出a出t出e出基本出e出a出t出h出e出本出(出D出e出l出t出a出T出i出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出P出本出o出c出e出s出s出 出a出c出t出i出正出e出 出e出正出e出n出t出s出
+出 出 出 出 出P出本出o出c出e出s出s出E出n出正出i出本出o出n出設置出e出n出t出E出正出e出n出t出s出(出D出e出l出t出a出T出i出設置出e出)出;出
+出}出
+出
+出軍出L出i出n出e出a出本出C出o出l出o出本出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出S出k出y出C出o出l出o出本出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出L出i出n出e出a出本出C出o出l出o出本出 出B出a出s出e出S出k出y出C出o出l出o出本出(出0出.出5出f出,出 出0出.出7出f出,出 出1出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出A出d出大出使出s出t出 出b出a出s出e出d出 出o出n出 出t出i出設置出e出 出o出f出 出d出a出y出
+出 出 出 出 出f出l出o出a出t出 出D出a出y出B出本出i出成出h出t出n出e出s出s出 出=出 出1出.出0出f出;出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出<出 出6出.出0出f出 出出出出出 出C出使出本出本出e出n出t出輸入出o出使出本出 出>出 出1出8出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出D出a出y出B出本出i出成出h出t出n出e出s出s出 出=出 出0出.出2出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出<出 出8出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出D出a出y出B出本出i出成出h出t出n出e出s出s出 出=出 出0出.出5出f出 出+出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出-出 出6出.出0出f出)出 出*出 出0出.出2出5出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出>出 出1出6出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出D出a出y出B出本出i出成出h出t出n出e出s出s出 出=出 出1出.出0出f出 出-出 出(出C出使出本出本出e出n出t出輸入出o出使出本出 出-出 出1出6出.出0出f出)出 出*出 出0出.出2出5出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出A出d出大出使出s出t出 出f出o出本出 出w出e出a出t出h出e出本出
+出 出 出 出 出f出l出o出a出t出 出C出l出o出使出d出軍出a出c出t出o出本出 出=出 出1出.出0出f出 出-出 出(出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出C出l出o出使出d出C出o出正出e出本出 出*出 出0出.出5出f出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出B出a出s出e出S出k出y出C出o出l出o出本出 出*出 出D出a出y出B出本出i出成出h出t出n出e出s出s出 出*出 出C出l出o出使出d出軍出a出c出t出o出本出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出E出c出o出s出y出s出t出e出設置出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出S出使出n出I出n出t出e出n出s出i出t出y出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出S出使出n出 出i出n出t出e出n出s出i出t出y出 出p出e出a出k出s出 出a出t出 出n出o出o出n出
+出 出 出 出 出f出l出o出a出t出 出的出o出o出n出D出i出s出t出a出n出c出e出 出=出 出軍出M出a出t出h出:出:出A出b出s出(出C出使出本出本出e出n出t出輸入出o出使出本出 出-出 出1出2出.出0出f出)出;出
+出 出 出 出 出f出l出o出a出t出 出I出n出t出e出n出s出i出t出y出 出=出 出1出.出0出f出 出-出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出的出o出o出n出D出i出s出t出a出n出c出e出 出/出 出1出2出.出0出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出S出e出a出s出o出n出 出a出d出大出使出s出t出設置出e出n出t出
+出 出 出 出 出軍出S出e出a出s出o出n出D出a出t出a出 出S出e出a出s出o出n出D出a出t出a出 出=出 出G出e出t出S出e出a出s出o出n出D出a出t出a出(出C出使出本出本出e出n出t出S出e出a出s出o出n出)出;出
+出 出 出 出 出I出n出t出e出n出s出i出t出y出 出*出=出 出S出e出a出s出o出n出D出a出t出a出.出S出使出n出I出n出t出e出n出s出i出t出y出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出e出a出t出h出e出本出 出a出d出大出使出s出t出設置出e出n出t出
+出 出 出 出 出I出n出t出e出n出s出i出t出y出 出*出=出 出(出1出.出0出f出 出-出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出P出a出本出a出設置出s出.出C出l出o出使出d出C出o出正出e出本出 出*出 出0出.出7出f出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出I出n出t出e出n出s出i出t出y出;出
+出}出
+出

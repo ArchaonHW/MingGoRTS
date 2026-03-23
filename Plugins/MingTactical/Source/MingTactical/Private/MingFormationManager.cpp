@@ -1,1102 +1,1103 @@
-#include "MingFormationManager.h"
-#include "MingTacticalCombatSystem.h"
-#include "Engine/World.h"
-#include "Kismet/GameplayStatics.h"
-#include "Engine/Engine.h"
-
-UMingFormationManager::UMingFormationManager()
-{
-    bInitialized = false;
-    FormationDatabase.Empty();
-    FormationTemplateDatabase.Empty();
-    FormationCommandQueue.Empty();
-    ActiveFormations.Empty();
-}
-
-bool UMingFormationManager::InitializeFormationManager()
-{
-    if (bInitialized)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊管理器已經初始化"));
-        return true;
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("正在初始化編隊管理器..."));
-
-    // 載入預設編隊模板
-    LoadDefaultFormationTemplates();
-
-    // 載入已保存的編隊數據
-    LoadFormationData();
-
-    bInitialized = true;
-
-    UE_LOG(LogTemp, Log, TEXT("編隊管理器初始化完成"));
-    
-    return true;
-}
-
-int32 UMingFormationManager::CreateFormation(const TArray<int32>& UnitIDs, EMingFormationType FormationType, const FString& FormationName)
-{
-    if (UnitIDs.Num() == 0)
-    {
-        UE_LOG(LogTemp, Error, TEXT("無法創建空編隊"));
-        return -1;
-    }
-
-    // 生成新的編隊ID
-    int32 NewFormationID = FormationDatabase.Num() + 1;
-
-    // 創建編隊數據
-    FMingFormationData NewFormation;
-    NewFormation.FormationID = NewFormationID;
-    NewFormation.FormationName = FormationName;
-    NewFormation.FormationType = FormationType;
-    NewFormation.FormationStatus = EMingFormationStatus::Forming;
-    NewFormation.Priority = EMingFormationPriority::Normal;
-    NewFormation.UnitIDs = UnitIDs;
-    NewFormation.CreationTime = FDateTime::Now();
-    NewFormation.LastUpdateTime = FDateTime::Now();
-    NewFormation.FormationExperience = 0.0f;
-    NewFormation.FormationMorale = 75.0f;
-    NewFormation.FormationDiscipline = 70.0f;
-    NewFormation.bIsStatic = false;
-    NewFormation.bIsAutoManaged = false;
-
-    // 計算編隊中心點
-    FVector FormationCenter = FVector::ZeroVector;
-    for (int32 UnitID : UnitIDs)
-    {
-        // 這裡需要從戰鬥系統獲取單位位置
-        // 暫時使用模擬位置
-        FormationCenter += FVector(UnitID * 100.0f, 0.0f, 0.0f);
-    }
-    FormationCenter /= UnitIDs.Num();
-    NewFormation.FormationCenter = FormationCenter;
-
-    // 生成編隊位置
-    NewFormation.FormationPositions = GenerateFormationPositions(FormationType, UnitIDs.Num(), NewFormation.FormationScale);
-
-    // 設置單位角色
-    for (int32 i = 0; i < UnitIDs.Num(); i++)
-    {
-        int32 UnitID = UnitIDs[i];
-        EMingUnitRole Role = EMingUnitRole::Support; // 默認角色
-        
-        // 根據位置分配角色
-        if (i == 0)
-        {
-            Role = EMingUnitRole::Leader;
-        }
-        else if (i < 3)
-        {
-            Role = EMingUnitRole::Vanguard;
-        }
-        else if (i >= UnitIDs.Num() - 2)
-        {
-            Role = EMingUnitRole::Rearguard;
-        }
-        
-        NewFormation.UnitRoles.Add(UnitID, Role);
-    }
-
-    // 計算編隊加成和減益
-    NewFormation.FormationBonuses = CalculateFormationBonuses(NewFormationID);
-    NewFormation.FormationPenalties = CalculateFormationPenalties(NewFormationID);
-
-    // 驗證編隊數據
-    if (!ValidateFormationData(NewFormation))
-    {
-        UE_LOG(LogTemp, Error, TEXT("編隊數據驗證失敗"));
-        return -1;
-    }
-
-    // 添加到數據庫
-    FormationDatabase.Add(NewFormationID, NewFormation);
-    ActiveFormations.Add(NewFormationID);
-
-    // 應用編隊加成到單位
-    ApplyFormationBonusesToUnits(NewFormationID);
-
-    // 更新編隊狀態為活躍
-    UpdateFormationStatus(NewFormationID, EMingFormationStatus::Active);
-
-    // 觸發編隊創建事件
-    OnFormationCreated.Broadcast(NewFormation);
-
-    UE_LOG(LogTemp, Log, TEXT("創建編隊: %s (ID: %d)，包含 %d 個單位"), 
-        *FormationName, NewFormationID, UnitIDs.Num());
-    
-    return NewFormationID;
-}
-
-bool UMingFormationManager::DisbandFormation(int32 FormationID)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊ID %d 不存在"), FormationID);
-        return false;
-    }
-
-    FMingFormationData& Formation = FormationDatabase[FormationID];
-
-    // 移除編隊加成
-    RemoveFormationBonusesFromUnits(FormationID);
-
-    // 從活躍列表中移除
-    ActiveFormations.Remove(FormationID);
-
-    // 觸發編隊解散事件
-    OnFormationDisbanded.Broadcast(FormationID, Formation.UnitIDs);
-
-    // 從數據庫中移除
-    FormationDatabase.Remove(FormationID);
-
-    UE_LOG(LogTemp, Log, TEXT("解散編隊: %s (ID: %d)"), *Formation.FormationName, FormationID);
-    
-    return true;
-}
-
-bool UMingFormationManager::ChangeFormationType(int32 FormationID, EMingFormationType NewFormationType)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊ID %d 不存在"), FormationID);
-        return false;
-    }
-
-    FMingFormationData& Formation = FormationDatabase[FormationID];
-    EMingFormationType OldFormationType = Formation.FormationType;
-
-    // 移除舊的編隊加成
-    RemoveFormationBonusesFromUnits(FormationID);
-
-    // 更新編隊類型
-    Formation.FormationType = NewFormationType;
-    Formation.LastUpdateTime = FDateTime::Now();
-
-    // 重新生成編隊位置
-    Formation.FormationPositions = GenerateFormationPositions(NewFormationType, Formation.UnitIDs.Num(), Formation.FormationScale);
-
-    // 重新計算編隊加成和減益
-    Formation.FormationBonuses = CalculateFormationBonuses(FormationID);
-    Formation.FormationPenalties = CalculateFormationPenalties(FormationID);
-
-    // 應用新的編隊加成
-    ApplyFormationBonusesToUnits(FormationID);
-
-    // 更新編隊狀態為轉換中
-    UpdateFormationStatus(FormationID, EMingFormationStatus::Transitioning);
-
-    // 觸發編隊變化事件
-    OnFormationChanged.Broadcast(FormationID, OldFormationType, NewFormationType);
-
-    // 短暫延遲後設為活躍狀態
-    FTimerHandle TimerHandle;
-    FTimerDelegate TimerDelegate;
-    TimerDelegate.BindUFunction(this, TEXT("UpdateFormationStatus"), FormationID, EMingFormationStatus::Active);
-    
-    if (GWorld)
-    {
-        GWorld->GetTimerManager().SetTimerForNextTick(TimerDelegate);
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("編隊 %s 變更類型: %d -> %d"), 
-        *Formation.FormationName, (int32)OldFormationType, (int32)NewFormationType);
-    
-    return true;
-}
-
-bool UMingFormationManager::AddUnitToFormation(int32 FormationID, int32 UnitID, EMingUnitRole Role)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊ID %d 不存在"), FormationID);
-        return false;
-    }
-
-    FMingFormationData& Formation = FormationDatabase[FormationID];
-
-    // 檢查單位是否已在編隊中
-    if (Formation.UnitIDs.Contains(UnitID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("單位 %d 已在編隊 %d 中"), UnitID, FormationID);
-        return false;
-    }
-
-    // 添加單位到編隊
-    Formation.UnitIDs.Add(UnitID);
-    Formation.UnitRoles.Add(UnitID, Role);
-    Formation.LastUpdateTime = FDateTime::Now();
-
-    // 重新生成編隊位置
-    Formation.FormationPositions = GenerateFormationPositions(Formation.FormationType, Formation.UnitIDs.Num(), Formation.FormationScale);
-
-    // 重新計算編隊加成
-    Formation.FormationBonuses = CalculateFormationBonuses(FormationID);
-    Formation.FormationPenalties = CalculateFormationPenalties(FormationID);
-
-    // 應用編隊加成到新單位
-    ApplyFormationBonusesToUnits(FormationID);
-
-    // 觸發單位添加事件
-    OnFormationUnitAdded.Broadcast(FormationID, UnitID, Role);
-
-    UE_LOG(LogTemp, Log, TEXT("添加單位 %d 到編隊 %s，角色: %d"), 
-        UnitID, *Formation.FormationName, (int32)Role);
-    
-    return true;
-}
-
-bool UMingFormationManager::RemoveUnitFromFormation(int32 FormationID, int32 UnitID)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊ID %d 不存在"), FormationID);
-        return false;
-    }
-
-    FMingFormationData& Formation = FormationDatabase[FormationID];
-
-    if (!Formation.UnitIDs.Contains(UnitID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("單位 %d 不在編隊 %d 中"), UnitID, FormationID);
-        return false;
-    }
-
-    // 移除單位角色
-    Formation.UnitRoles.Remove(UnitID);
-
-    // 移除單位
-    Formation.UnitIDs.Remove(UnitID);
-    Formation.LastUpdateTime = FDateTime::Now();
-
-    // 檢查編隊是否為空
-    if (Formation.UnitIDs.Num() == 0)
-    {
-        // 解散空編隊
-        return DisbandFormation(FormationID);
-    }
-
-    // 重新生成編隊位置
-    Formation.FormationPositions = GenerateFormationPositions(Formation.FormationType, Formation.UnitIDs.Num(), Formation.FormationScale);
-
-    // 重新計算編隊加成
-    Formation.FormationBonuses = CalculateFormationBonuses(FormationID);
-    Formation.FormationPenalties = CalculateFormationPenalties(FormationID);
-
-    // 觸發單位移除事件
-    OnFormationUnitRemoved.Broadcast(FormationID, UnitID);
-
-    UE_LOG(LogTemp, Log, TEXT("從編隊 %s 移除單位 %d"), *Formation.FormationName, UnitID);
-    
-    return true;
-}
-
-bool UMingFormationManager::SetFormationCommander(int32 FormationID, int32 CommanderID)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊ID %d 不存在"), FormationID);
-        return false;
-    }
-
-    FMingFormationData& Formation = FormationDatabase[FormationID];
-    int32 OldCommanderID = Formation.CommanderID;
-
-    // 設置新指揮官
-    Formation.CommanderID = CommanderID;
-    Formation.LastUpdateTime = FDateTime::Now();
-
-    // 增加編隊士氣
-    Formation.FormationMorale += 10.0f;
-    Formation.FormationMorale = FMath::Clamp(Formation.FormationMorale, 0.0f, 100.0f);
-
-    UE_LOG(LogTemp, Log, TEXT("編隊 %s 指揮官變更: %d -> %d"), 
-        *Formation.FormationName, OldCommanderID, CommanderID);
-    
-    return true;
-}
-
-bool UMingFormationManager::RotateFormation(int32 FormationID, const FRotator& NewRotation)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊ID %d 不存在"), FormationID);
-        return false;
-    }
-
-    FMingFormationData& Formation = FormationDatabase[FormationID];
-    FRotator OldRotation = Formation.FormationRotation;
-
-    // 更新編隊旋轉
-    Formation.FormationRotation = NewRotation;
-    Formation.LastUpdateTime = FDateTime::Now();
-
-    // 重新計算編隊位置（基於新的旋轉）
-    for (int32 i = 0; i < Formation.FormationPositions.Num(); i++)
-    {
-        FVector& Position = Formation.FormationPositions[i];
-        // 應用旋轉變換
-        Position = NewRotation.RotateVector(Position);
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("編隊 %s 旋轉更新: (%.1f, %.1f, %.1f) -> (%.1f, %.1f, %.1f)"), 
-        *Formation.FormationName, 
-        OldRotation.Pitch, OldRotation.Yaw, OldRotation.Roll,
-        NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
-    
-    return true;
-}
-
-bool UMingFormationManager::ScaleFormation(int32 FormationID, float NewScale)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊ID %d 不存在"), FormationID);
-        return false;
-    }
-
-    FMingFormationData& Formation = FormationDatabase[FormationID];
-    float OldScale = Formation.FormationScale;
-
-    // 更新編隊規模
-    Formation.FormationScale = FMath::Clamp(NewScale, 0.5f, 2.0f);
-    Formation.LastUpdateTime = FDateTime::Now();
-
-    // 重新生成編隊位置
-    Formation.FormationPositions = GenerateFormationPositions(Formation.FormationType, Formation.UnitIDs.Num(), Formation.FormationScale);
-
-    UE_LOG(LogTemp, Log, TEXT("編隊 %s 規模變更: %.2f -> %.2f"), 
-        *Formation.FormationName, OldScale, Formation.FormationScale);
-    
-    return true;
-}
-
-bool UMingFormationManager::MoveFormation(int32 FormationID, const FVector& TargetLocation)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊ID %d 不存在"), FormationID);
-        return false;
-    }
-
-    FMingFormationData& Formation = FormationDatabase[FormationID];
-    FVector OldCenter = Formation.FormationCenter;
-
-    // 更新編隊中心點
-    Formation.FormationCenter = TargetLocation;
-    Formation.LastUpdateTime = FDateTime::Now();
-
-    // 更新所有單位的目標位置
-    for (int32 i = 0; i < Formation.UnitIDs.Num(); i++)
-    {
-        int32 UnitID = Formation.UnitIDs[i];
-        FVector UnitTargetPosition = TargetLocation + Formation.FormationPositions[i];
-        
-        // 這裡需要調用戰鬥系統來移動單位
-        // MoveUnit(UnitID, UnitTargetPosition);
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("移動編隊 %s 到 (%.1f, %.1f, %.1f)"), 
-        *Formation.FormationName, TargetLocation.X, TargetLocation.Y, TargetLocation.Z);
-    
-    return true;
-}
-
-FMingFormationData UMingFormationManager::GetFormationInfo(int32 FormationID) const
-{
-    if (FormationDatabase.Contains(FormationID))
-    {
-        return FormationDatabase[FormationID];
-    }
-    
-    UE_LOG(LogTemp, Warning, TEXT("編隊ID %d 不存在，返回空編隊"), FormationID);
-    return FMingFormationData();
-}
-
-TArray<int32> UMingFormationManager::GetFormationList() const
-{
-    return ActiveFormations;
-}
-
-TArray<FMingFormationTemplate> UMingFormationManager::GetFormationTemplates() const
-{
-    TArray<FMingFormationTemplate> Templates;
-    
-    for (const TPair<int32, FMingFormationTemplate>& Pair : FormationTemplateDatabase)
-    {
-        Templates.Add(Pair.Value);
-    }
-    
-    return Templates;
-}
-
-bool UMingFormationManager::ApplyFormationTemplate(int32 FormationID, int32 TemplateID)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊ID %d 不存在"), FormationID);
-        return false;
-    }
-
-    if (!FormationTemplateDatabase.Contains(TemplateID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("模板ID %d 不存在"), TemplateID);
-        return false;
-    }
-
-    const FMingFormationTemplate& Template = FormationTemplateDatabase[TemplateID];
-    
-    // 應用模板到編隊
-    return ChangeFormationType(FormationID, Template.FormationType);
-}
-
-TMap<EMingFormationType, int32> UMingFormationManager::GetFormationStatistics() const
-{
-    TMap<EMingFormationType, int32> Statistics;
-    
-    // 初始化統計
-    Statistics.Add(EMingFormationType::Line, 0);
-    Statistics.Add(EMingFormationType::Column, 0);
-    Statistics.Add(EMingFormationType::Wedge, 0);
-    Statistics.Add(EMingFormationType::Diamond, 0);
-    Statistics.Add(EMingFormationType::Circle, 0);
-    Statistics.Add(EMingFormationType::Skirmish, 0);
-    Statistics.Add(EMingFormationType::Square, 0);
-    Statistics.Add(EMingFormationType::Arrow, 0);
-    Statistics.Add(EMingFormationType::Crescent, 0);
-    Statistics.Add(EMingFormationType::Custom, 0);
-    
-    // 統計編隊類型
-    for (const TPair<int32, FMingFormationData>& Pair : FormationDatabase)
-    {
-        const FMingFormationData& Formation = Pair.Value;
-        int32& Count = Statistics[Formation.FormationType];
-        Count++;
-    }
-    
-    return Statistics;
-}
-
-float UMingFormationManager::CalculateFormationEfficiency(int32 FormationID) const
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        return 0.0f;
-    }
-
-    const FMingFormationData& Formation = FormationDatabase[FormationID];
-    
-    // 基礎效率
-    float BaseEfficiency = 1.0f;
-    
-    // 單位數量效率因子
-    float UnitCountFactor = FMath::Clamp(Formation.UnitIDs.Num() / 20.0f, 0.5f, 1.5f);
-    
-    // 士氣效率因子
-    float MoraleFactor = Formation.FormationMorale / 100.0f;
-    
-    // 紀律效率因子
-    float DisciplineFactor = Formation.FormationDiscipline / 100.0f;
-    
-    // 經驗效率因子
-    float ExperienceFactor = FMath::Clamp(Formation.FormationExperience / 100.0f, 0.0f, 2.0f);
-    
-    // 編隊類型效率因子
-    float TypeEfficiency = 1.0f;
-    switch (Formation.FormationType)
-    {
-    case EMingFormationType::Line:
-        TypeEfficiency = 1.2f; // 適合正面攻擊
-        break;
-    case EMingFormationType::Wedge:
-        TypeEfficiency = 1.3f; // 適合突破
-        break;
-    case EMingFormationType::Circle:
-        TypeEfficiency = 1.1f; // 適合防禦
-        break;
-    default:
-        TypeEfficiency = 1.0f;
-        break;
-    }
-    
-    // 綜合效率計算
-    float TotalEfficiency = BaseEfficiency * UnitCountFactor * MoraleFactor * 
-                           DisciplineFactor * ExperienceFactor * TypeEfficiency;
-    
-    return FMath::Clamp(TotalEfficiency, 0.0f, 2.0f);
-}
-
-bool UMingFormationManager::CheckFormationIntegrity(int32 FormationID)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        return false;
-    }
-
-    const FMingFormationData& Formation = FormationDatabase[FormationID];
-    
-    // 檢查編隊完整性
-    if (Formation.UnitIDs.Num() == 0)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊 %s 為空"), *Formation.FormationName);
-        return false;
-    }
-    
-    // 檢查指揮官是否存在
-    if (Formation.CommanderID != -1)
-    {
-        bool bCommanderFound = false;
-        for (int32 UnitID : Formation.UnitIDs)
-        {
-            if (UnitID == Formation.CommanderID)
-            {
-                bCommanderFound = true;
-                break;
-            }
-        }
-        
-        if (!bCommanderFound)
-        {
-            UE_LOG(LogTemp, Warning, TEXT("編隊 %s 的指揮官不在編隊中"), *Formation.FormationName);
-            return false;
-        }
-    }
-    
-    // 檢查編隊士氣
-    if (Formation.FormationMorale < 20.0f)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊 %s 士氣過低"), *Formation.FormationName);
-        return false;
-    }
-    
-    return true;
-}
-
-bool UMingFormationManager::RepairFormation(int32 FormationID)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊ID %d 不存在"), FormationID);
-        return false;
-    }
-
-    FMingFormationData& Formation = FormationDatabase[FormationID];
-    
-    // 修復編隊
-    Formation.FormationStatus = EMingFormationStatus::Active;
-    Formation.FormationMorale = FMath::Clamp(Formation.FormationMorale + 25.0f, 0.0f, 100.0f);
-    Formation.FormationDiscipline = FMath::Clamp(Formation.FormationDiscipline + 15.0f, 0.0f, 100.0f);
-    Formation.LastUpdateTime = FDateTime::Now();
-    
-    // 重新生成編隊位置
-    Formation.FormationPositions = GenerateFormationPositions(Formation.FormationType, Formation.UnitIDs.Num(), Formation.FormationScale);
-    
-    UE_LOG(LogTemp, Log, TEXT("修復編隊: %s"), *Formation.FormationName);
-    
-    return true;
-}
-
-bool UMingFormationManager::SaveFormationData()
-{
-    FString SavePath = FPaths::ProjectSavedDir() / TEXT("Formations.json");
-    
-    // 這裡應該實作JSON序列化保存邏輯
-    // 暫時只記錄日誌
-    UE_LOG(LogTemp, Log, TEXT("編隊數據已保存到: %s"), *SavePath);
-    UE_LOG(LogTemp, Log, TEXT("共保存 %d 個編隊"), FormationDatabase.Num());
-    
-    return true;
-}
-
-bool UMingFormationManager::LoadFormationData()
-{
-    FString LoadPath = FPaths::ProjectSavedDir() / TEXT("Formations.json");
-    
-    // 這裡應該實作JSON反序列化載入邏輯
-    // 暫時只記錄日誌
-    UE_LOG(LogTemp, Log, TEXT("嘗試從 %s 載入編隊數據"), *LoadPath);
-    
-    return true;
-}
-
-void UMingFormationManager::ClearAllFormations()
-{
-    FormationDatabase.Empty();
-    FormationTemplateDatabase.Empty();
-    FormationCommandQueue.Empty();
-    ActiveFormations.Empty();
-    
-    UE_LOG(LogTemp, Log, TEXT("所有編隊數據已清除"));
-}
-
-void UMingFormationManager::LoadDefaultFormationTemplates()
-{
-    // 線形陣型模板
-    FMingFormationTemplate LineTemplate;
-    LineTemplate.TemplateID = 1;
-    LineTemplate.TemplateName = TEXT("線形陣型");
-    LineTemplate.TemplateDescription = TEXT("單位排成一線，適合正面攻擊和防禦");
-    LineTemplate.FormationType = EMingFormationType::Line;
-    LineTemplate.RecommendedUnitTypes = {EMingUnitType::Infantry, EMingUnitType::Cavalry};
-    LineTemplate.MinUnitCount = 3;
-    LineTemplate.MaxUnitCount = 50;
-    LineTemplate.StandardSpacing = 100.0f;
-    LineTemplate.StandardDepth = 200.0f;
-    LineTemplate.StandardWidth = 300.0f;
-    LineTemplate.TemplateBonuses = {
-        {TEXT("attack"), 10.0f},
-        {TEXT("morale"), 5.0f}
-    };
-    LineTemplate.UsageConditions = {TEXT("open_terrain"), TEXT("enemy_front")};
-    LineTemplate.bIsHistorical = true;
-    LineTemplate.HistoricalBackground = TEXT("線形陣型是古代戰爭中最常見的陣型之一，在民國時期仍被廣泛使用。");
-    
-    FormationTemplateDatabase.Add(1, LineTemplate);
-    
-    // 楔形陣型模板
-    FMingFormationTemplate WedgeTemplate;
-    WedgeTemplate.TemplateID = 2;
-    WedgeTemplate.TemplateName = TEXT("楔形陣型");
-    WedgeTemplate.TemplateDescription = TEXT("單位排成楔形，適合突破敵陣");
-    WedgeTemplate.FormationType = EMingFormationType::Wedge;
-    WedgeTemplate.RecommendedUnitTypes = {EMingUnitType::Cavalry, EMingUnitType::Tank};
-    WedgeTemplate.MinUnitCount = 5;
-    WedgeTemplate.MaxUnitCount = 30;
-    WedgeTemplate.StandardSpacing = 80.0f;
-    WedgeTemplate.StandardDepth = 250.0f;
-    WedgeTemplate.StandardWidth = 200.0f;
-    WedgeTemplate.TemplateBonuses = {
-        {TEXT("breakthrough"), 20.0f},
-        {TEXT("charge"), 15.0f}
-    };
-    WedgeTemplate.UsageConditions = {TEXT("enemy_center"), TEXT("breakthrough_needed")};
-    WedgeTemplate.bIsHistorical = true;
-    WedgeTemplate.HistoricalBackground = TEXT("楔形陣型在古代被用於突破敵軍陣線，在現代戰爭中仍有其價值。");
-    
-    FormationTemplateDatabase.Add(2, WedgeTemplate);
-    
-    // 圓形陣型模板
-    FMingFormationTemplate CircleTemplate;
-    CircleTemplate.TemplateID = 3;
-    CircleTemplate.TemplateName = TEXT("圓形陣型");
-    CircleTemplate.TemplateDescription = TEXT("單位排成圓形，適合全方位防禦");
-    CircleTemplate.FormationType = EMingFormationType::Circle;
-    CircleTemplate.RecommendedUnitTypes = {EMingUnitType::Infantry, EMingUnitType::Artillery};
-    CircleTemplate.MinUnitCount = 4;
-    CircleTemplate.MaxUnitCount = 40;
-    CircleTemplate.StandardSpacing = 90.0f;
-    CircleTemplate.StandardDepth = 180.0f;
-    CircleTemplate.StandardWidth = 180.0f;
-    CircleTemplate.TemplateBonuses = {
-        {TEXT("defense"), 20.0f},
-        {TEXT("cohesion"), 15.0f},
-        {TEXT("all_round_protection"), 10.0f}
-    };
-    CircleTemplate.UsageConditions = {TEXT("surrounded"), TEXT("defensive_stance")};
-    CircleTemplate.bIsHistorical = true;
-    CircleTemplate.HistoricalBackground = TEXT("圓形陣型在被包圍時提供最佳防禦，在歷史上多次挽救危局。");
-    
-    FormationTemplateDatabase.Add(3, CircleTemplate);
-    
-    // 方形陣型模板
-    FMingFormationTemplate SquareTemplate;
-    SquareTemplate.TemplateID = 4;
-    SquareTemplate.TemplateName = TEXT("方形陣型");
-    SquareTemplate.TemplateDescription = TEXT("單位排成方形，適合穩定防禦");
-    SquareTemplate.FormationType = EMingFormationType::Square;
-    SquareTemplate.RecommendedUnitTypes = {EMingUnitType::Infantry};
-    SquareTemplate.MinUnitCount = 6;
-    SquareTemplate.MaxUnitCount = 36;
-    SquareTemplate.StandardSpacing = 85.0f;
-    SquareTemplate.StandardDepth = 150.0f;
-    SquareTemplate.StandardWidth = 150.0f;
-    SquareTemplate.TemplateBonuses = {
-        {TEXT("stability"), 25.0f},
-        {TEXT("resistance"), 15.0f}
-    };
-    SquareTemplate.UsageConditions = {TEXT("stable_defense"), TEXT("holding_position")};
-    SquareTemplate.bIsHistorical = true;
-    SquareTemplate.HistoricalBackground = TEXT("方形陣型提供最穩定的防禦結構，在歷史上被用於防守重要據點。");
-    
-    FormationTemplateDatabase.Add(4, SquareTemplate);
-    
-    UE_LOG(LogTemp, Log, TEXT("已載入 %d 個預設編隊模板"), FormationTemplateDatabase.Num());
-}
-
-TArray<FVector> UMingFormationManager::GenerateFormationPositions(EMingFormationType FormationType, int32 UnitCount, float Scale) const
-{
-    TArray<FVector> Positions;
-    
-    switch (FormationType)
-    {
-    case EMingFormationType::Line:
-        // 線形排列
-        for (int32 i = 0; i < UnitCount; i++)
-        {
-            FVector Position = FVector((i - UnitCount / 2) * 100.0f * Scale, 0.0f, 0.0f);
-            Positions.Add(Position);
-        }
-        break;
-        
-    case EMingFormationType::Wedge:
-        // 楔形排列
-        for (int32 i = 0; i < UnitCount; i++)
-        {
-            int32 Row = i / 3;
-            int32 Col = i % 3;
-            float X = Row * 100.0f * Scale;
-            float Y = (Col - 1) * 80.0f * Scale;
-            Positions.Add(FVector(X, Y, 0.0f));
-        }
-        break;
-        
-    case EMingFormationType::Circle:
-        // 圓形排列
-        for (int32 i = 0; i < UnitCount; i++)
-        {
-            float Angle = (i / (float)UnitCount) * 2.0f * PI;
-            float Radius = 100.0f * Scale;
-            FVector Position = FVector(
-                Radius * FMath::Cos(Angle),
-                Radius * FMath::Sin(Angle),
-                0.0f
-            );
-            Positions.Add(Position);
-        }
-        break;
-        
-    case EMingFormationType::Square:
-        // 方形排列
-        int32 SideLength = FMath::CeilToInt(FMath::Sqrt(UnitCount));
-        for (int32 i = 0; i < UnitCount; i++)
-        {
-            int32 Row = i / SideLength;
-            int32 Col = i % SideLength;
-            float X = (Col - SideLength / 2) * 85.0f * Scale;
-            float Y = (Row - SideLength / 2) * 85.0f * Scale;
-            Positions.Add(FVector(X, Y, 0.0f));
-        }
-        break;
-        
-    default:
-        // 默認線形排列
-        for (int32 i = 0; i < UnitCount; i++)
-        {
-            FVector Position = FVector((i - UnitCount / 2) * 100.0f * Scale, 0.0f, 0.0f);
-            Positions.Add(Position);
-        }
-        break;
-    }
-    
-    return Positions;
-}
-
-TMap<FString, float> UMingFormationManager::CalculateFormationBonuses(int32 FormationID) const
-{
-    TMap<FString, float> Bonuses;
-    
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        return Bonuses;
-    }
-
-    const FMingFormationData& Formation = FormationDatabase[FormationID];
-    
-    // 根據編隊類型計算加成
-    switch (Formation.FormationType)
-    {
-    case EMingFormationType::Line:
-        Bonuses = {
-            {TEXT("attack"), 10.0f},
-            {TEXT("morale"), 5.0f},
-            {TEXT("discipline"), 8.0f}
-        };
-        break;
-        
-    case EMingFormationType::Wedge:
-        Bonuses = {
-            {TEXT("breakthrough"), 20.0f},
-            {TEXT("charge"), 15.0f},
-            {TEXT("momentum"), 10.0f}
-        };
-        break;
-        
-    case EMingFormationType::Circle:
-        Bonuses = {
-            {TEXT("defense"), 20.0f},
-            {TEXT("cohesion"), 15.0f},
-            {TEXT("all_round_protection"), 10.0f}
-        };
-        break;
-        
-    case EMingFormationType::Square:
-        Bonuses = {
-            {TEXT("stability"), 25.0f},
-            {TEXT("resistance"), 15.0f},
-            {TEXT("morale"), 10.0f}
-        };
-        break;
-        
-    default:
-        Bonuses = {
-            {TEXT("basic"), 5.0f}
-        };
-        break;
-    }
-    
-    return Bonuses;
-}
-
-TMap<FString, float> UMingFormationManager::CalculateFormationPenalties(int32 FormationID) const
-{
-    TMap<FString, float> Penalties;
-    
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        return Penalties;
-    }
-
-    const FMingFormationData& Formation = FormationDatabase[FormationID];
-    
-    // 根據編隊類型計算減益
-    switch (Formation.FormationType)
-    {
-    case EMingFormationType::Line:
-        Penalties = {
-            {TEXT("flank_vulnerability"), -15.0f},
-            {TEXT("mobility"), -5.0f}
-        };
-        break;
-        
-    case EMingFormationType::Wedge:
-        Penalties = {
-            {TEXT("flank_vulnerability"), -20.0f},
-            {TEXT("stability"), -10.0f}
-        };
-        break;
-        
-    case EMingFormationType::Circle:
-        Penalties = {
-            {TEXT("mobility"), -15.0f},
-            {TEXT("attack"), -5.0f}
-        };
-        break;
-        
-    case EMingFormationType::Square:
-        Penalties = {
-            {TEXT("mobility"), -20.0f},
-            {TEXT("flexibility"), -10.0f}
-        };
-        break;
-        
-    default:
-        Penalties = {
-            {TEXT("basic"), -2.0f}
-        };
-        break;
-    }
-    
-    return Penalties;
-}
-
-void UMingFormationManager::UpdateFormationStatus(int32 FormationID, EMingFormationStatus NewStatus)
-{
-    if (FormationDatabase.Contains(FormationID))
-    {
-        FMingFormationData& Formation = FormationDatabase[FormationID];
-        Formation.FormationStatus = NewStatus;
-        Formation.LastUpdateTime = FDateTime::Now();
-        
-        UE_LOG(LogTemp, Log, TEXT("編隊 %s 狀態更新: %d"), *Formation.FormationName, (int32)NewStatus);
-    }
-}
-
-void UMingFormationManager::ProcessFormationCommand(const FMingFormationCommand& Command)
-{
-    // 處理編隊命令
-    switch (Command.CommandType)
-    {
-    case EMingFormationCommand::CreateFormation:
-        // 創建編隊邏輯
-        break;
-        
-    case EMingFormationCommand::ChangeFormation:
-        // 變更編隊邏輯
-        break;
-        
-    case EMingFormationCommand::DisbandFormation:
-        // 解散編隊邏輯
-        break;
-        
-    default:
-        break;
-    }
-    
-    // 觸發命令執行事件
-    OnFormationCommandExecuted.Broadcast(Command);
-}
-
-bool UMingFormationManager::ValidateFormationData(const FMingFormationData& Formation) const
-{
-    if (Formation.FormationID <= 0)
-    {
-        UE_LOG(LogTemp, Error, TEXT("編隊ID必須大於0"));
-        return false;
-    }
-    
-    if (Formation.FormationName.IsEmpty())
-    {
-        UE_LOG(LogTemp, Error, TEXT("編隊名稱不能為空"));
-        return false;
-    }
-    
-    if (Formation.UnitIDs.Num() == 0)
-    {
-        UE_LOG(LogTemp, Error, TEXT("編隊必須包含至少一個單位"));
-        return false;
-    }
-    
-    return true;
-}
-
-void UMingFormationManager::ApplyFormationBonusesToUnits(int32 FormationID)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        return;
-    }
-
-    const FMingFormationData& Formation = FormationDatabase[FormationID];
-    
-    // 應用編隊加成到所有單位
-    for (int32 UnitID : Formation.UnitIDs)
-    {
-        // 這裡需要調用戰鬥系統來應用加成
-        // ApplyUnitBonus(UnitID, Formation.FormationBonuses);
-    }
-    
-    UE_LOG(LogTemp, Log, TEXT("應用編隊 %s 的加成到 %d 個單位"), 
-        *Formation.FormationName, Formation.UnitIDs.Num());
-}
-
-void UMingFormationManager::RemoveFormationBonusesFromUnits(int32 FormationID)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        return;
-    }
-
-    const FMingFormationData& Formation = FormationDatabase[FormationID];
-    
-    // 移除編隊加成從所有單位
-    for (int32 UnitID : Formation.UnitIDs)
-    {
-        // 這裡需要調用戰鬥系統來移除加成
-        // RemoveUnitBonus(UnitID, Formation.FormationBonuses);
-    }
-    
-    UE_LOG(LogTemp, Log, TEXT("移除編隊 %s 的加成從 %d 個單位"), 
-        *Formation.FormationName, Formation.UnitIDs.Num());
-}
-
-void UMingFormationManager::AutoRepairFormation(int32 FormationID)
-{
-    if (!FormationDatabase.Contains(FormationID))
-    {
-        return;
-    }
-
-    FMingFormationData& Formation = FormationDatabase[FormationID];
-    
-    // 自動修復條件檢查
-    bool bNeedsRepair = false;
-    
-    if (Formation.FormationMorale < 30.0f)
-    {
-        bNeedsRepair = true;
-    }
-    
-    if (Formation.FormationDiscipline < 40.0f)
-    {
-        bNeedsRepair = true;
-    }
-    
-    if (bNeedsRepair)
-    {
-        RepairFormation(FormationID);
-    }
-}
-
-EMingFormationType UMingFormationManager::CalculateOptimalFormationType(const TArray<int32>& UnitIDs) const
-{
-    // 根據單位類型和數量計算最佳編隊類型
-    int32 InfantryCount = 0;
-    int32 CavalryCount = 0;
-    int32 ArtilleryCount = 0;
-    
-    // 統計單位類型
-    for (int32 UnitID : UnitIDs)
-    {
-        // 這裡需要從戰鬥系統獲取單位類型
-        // EMingUnitType UnitType = GetUnitType(UnitID);
-        // 暫時假設都是步兵
-        InfantryCount++;
-    }
-    
-    // 根據單位組合推薦編隊類型
-    if (CavalryCount > InfantryCount * 0.5f)
-    {
-        return EMingFormationType::Wedge; // 騎兵多，推薦楔形
-    }
-    else if (ArtilleryCount > 0)
-    {
-        return EMingFormationType::Circle; // 有砲兵，推薦圓形
-    }
-    else
-    {
-        return EMingFormationType::Line; // 默認線形
-    }
-}
-
-bool UMingFormationManager::CheckFormationConflict(int32 FormationID1, int32 FormationID2) const
-{
-    if (!FormationDatabase.Contains(FormationID1) || !FormationDatabase.Contains(FormationID2))
-    {
-        return false;
-    }
-
-    const FMingFormationData& Formation1 = FormationDatabase[FormationID1];
-    const FMingFormationData& Formation2 = FormationDatabase[FormationID2];
-    
-    // 檢查編隊距離
-    float Distance = FVector::Dist(Formation1.FormationCenter, Formation2.FormationCenter);
-    float MinDistance = 500.0f; // 最小安全距離
-    
-    if (Distance < MinDistance)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("編隊 %s 和 %s 距離過近，可能發生衝突"), 
-            *Formation1.FormationName, *Formation2.FormationName);
-        return true;
-    }
-    
-    return false;
-}
-
-void UMingFormationManager::ResolveFormationConflict(int32 FormationID1, int32 FormationID2)
-{
-    // 解決編隊衝突
-    if (FormationDatabase.Contains(FormationID1) && FormationDatabase.Contains(FormationID2))
-    {
-        FMingFormationData& Formation1 = FormationDatabase[FormationID1];
-        FMingFormationData& Formation2 = FormationDatabase[FormationID2];
-        
-        // 降低雙方士氣
-        Formation1.FormationMorale -= 10.0f;
-        Formation2.FormationMorale -= 10.0f;
-        
-        UE_LOG(LogTemp, Log, TEXT("解決編隊衝突: %s 和 %s"), 
-            *Formation1.FormationName, *Formation2.FormationName);
-    }
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出T出a出c出t出i出c出a出l出C出o出設置出b出a出t出S出y出s出t出e出設置出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出基本出o出本出l出d出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
+出
+出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出(出)出
+出{出
+出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出D出a出t出a出b出a出s出e出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出C出o出設置出設置出a出n出d出Q出使出e出使出e出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出A出c出t出i出正出e出軍出o出本出設置出a出t出i出o出n出s出.出E出設置出p出t出y出(出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出管出理出器出已出經出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出正出在出初出始出化出編出隊出管出理出器出.出.出.出"出)出)出;出
+出
+出 出 出 出 出/出/出 出載出入出預出設出編出隊出模出板出
+出 出 出 出 出L出o出a出d出D出e出f出a出使出l出t出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出s出(出)出;出
+出
+出 出 出 出 出/出/出 出載出入出已出保出存出的出編出隊出數出據出
+出 出 出 出 出L出o出a出d出軍出o出本出設置出a出t出i出o出n出D出a出t出a出(出)出;出
+出
+出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出編出隊出管出理出器出初出始出化出完出成出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出i出n出t出3出2出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出本出e出a出t出e出軍出o出本出設置出a出t出i出o出n出(出c出o出n出s出t出 出T出A出本出本出a出y出<出i出n出t出3出2出>出&出 出U出n出i出t出I出D出s出,出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出U出n出i出t出I出D出s出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出無出法出創出建出空出編出隊出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出-出1出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出生出成出新出的出編出隊出I出D出
+出 出 出 出 出i出n出t出3出2出 出的出e出w出軍出o出本出設置出a出t出i出o出n出I出D出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出的出使出設置出(出)出 出+出 出1出;出
+出
+出 出 出 出 出/出/出 出創出建出編出隊出數出據出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出 出的出e出w出軍出o出本出設置出a出t出i出o出n出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出I出D出 出=出 出的出e出w出軍出o出本出設置出a出t出i出o出n出I出D出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出 出=出 出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出=出 出軍出o出本出設置出a出t出i出o出n出T出y出p出e出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出 出=出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出:出:出軍出o出本出設置出i出n出成出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出P出本出i出o出本出i出t出y出 出=出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出P出本出i出o出本出i出t出y出:出:出的出o出本出設置出a出l出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出 出=出 出U出n出i出t出I出D出s出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出C出本出e出a出t出i出o出n出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出E出x出p出e出本出i出e出n出c出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出M出o出本出a出l出e出 出=出 出7出5出.出0出f出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出D出i出s出c出i出p出l出i出n出e出 出=出 出7出0出.出0出f出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出b出I出s出S出t出a出t出i出c出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出b出I出s出A出使出t出o出M出a出n出a出成出e出d出 出=出 出f出a出l出s出e出;出
+出
+出 出 出 出 出/出/出 出計出算出編出隊出中出心出點出
+出 出 出 出 出軍出V出e出c出t出o出本出 出軍出o出本出設置出a出t出i出o出n出C出e出n出t出e出本出 出=出 出軍出V出e出c出t出o出本出:出:出Z出e出本出o出V出e出c出t出o出本出;出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出U出n出i出t出I出D出 出:出 出U出n出i出t出I出D出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出這出裡出需出要出從出戰出鬥出系出統出獲出取出單出位出位出置出
+出 出 出 出 出 出 出 出 出/出/出 出暫出時出使出用出模出擬出位出置出
+出 出 出 出 出 出 出 出 出軍出o出本出設置出a出t出i出o出n出C出e出n出t出e出本出 出+出=出 出軍出V出e出c出t出o出本出(出U出n出i出t出I出D出 出*出 出1出0出0出.出0出f出,出 出0出.出0出f出,出 出0出.出0出f出)出;出
+出 出 出 出 出}出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出C出e出n出t出e出本出 出/出=出 出U出n出i出t出I出D出s出.出的出使出設置出(出)出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出C出e出n出t出e出本出 出=出 出軍出o出本出設置出a出t出i出o出n出C出e出n出t出e出本出;出
+出
+出 出 出 出 出/出/出 出生出成出編出隊出位出置出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出 出=出 出G出e出n出e出本出a出t出e出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出(出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出U出n出i出t出I出D出s出.出的出使出設置出(出)出,出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出c出a出l出e出)出;出
+出
+出 出 出 出 出/出/出 出設出置出單出位出角出色出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出U出n出i出t出I出D出s出.出的出使出設置出(出)出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出U出n出i出t出I出D出 出=出 出U出n出i出t出I出D出s出[出i出]出;出
+出 出 出 出 出 出 出 出 出E出M出i出n出成出U出n出i出t出R出o出l出e出 出R出o出l出e出 出=出 出E出M出i出n出成出U出n出i出t出R出o出l出e出:出:出S出使出p出p出o出本出t出;出 出/出/出 出默出認出角出色出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出根出據出位出置出分出配出角出色出
+出 出 出 出 出 出 出 出 出i出f出 出(出i出 出=出=出 出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出o出l出e出 出=出 出E出M出i出n出成出U出n出i出t出R出o出l出e出:出:出L出e出a出d出e出本出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出i出 出<出 出3出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出o出l出e出 出=出 出E出M出i出n出成出U出n出i出t出R出o出l出e出:出:出V出a出n出成出使出a出本出d出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出i出 出>出=出 出U出n出i出t出I出D出s出.出的出使出設置出(出)出 出-出 出2出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出o出l出e出 出=出 出E出M出i出n出成出U出n出i出t出R出o出l出e出:出:出R出e出a出本出成出使出a出本出d出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出R出o出l出e出s出.出A出d出d出(出U出n出i出t出I出D出,出 出R出o出l出e出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出計出算出編出隊出加出成出和出減出益出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出 出=出 出C出a出l出c出使出l出a出t出e出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出(出的出e出w出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出的出e出w出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出e出n出a出l出t出i出e出s出 出=出 出C出a出l出c出使出l出a出t出e出軍出o出本出設置出a出t出i出o出n出P出e出n出a出l出t出i出e出s出(出的出e出w出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出驗出證出編出隊出數出據出
+出 出 出 出 出i出f出 出(出!出V出a出l出i出d出a出t出e出軍出o出本出設置出a出t出i出o出n出D出a出t出a出(出的出e出w出軍出o出本出設置出a出t出i出o出n出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出編出隊出數出據出驗出證出失出敗出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出-出1出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出添出加出到出數出據出庫出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出A出d出d出(出的出e出w出軍出o出本出設置出a出t出i出o出n出I出D出,出 出的出e出w出軍出o出本出設置出a出t出i出o出n出)出;出
+出 出 出 出 出A出c出t出i出正出e出軍出o出本出設置出a出t出i出o出n出s出.出A出d出d出(出的出e出w出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出應出用出編出隊出加出成出到出單出位出
+出 出 出 出 出A出p出p出l出y出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出T出o出U出n出i出t出s出(出的出e出w出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出更出新出編出隊出狀出態出為出活出躍出
+出 出 出 出 出U出p出d出a出t出e出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出(出的出e出w出軍出o出本出設置出a出t出i出o出n出I出D出,出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出:出:出A出c出t出i出正出e出)出;出
+出
+出 出 出 出 出/出/出 出觸出發出編出隊出創出建出事出件出
+出 出 出 出 出O出n出軍出o出本出設置出a出t出i出o出n出C出本出e出a出t出e出d出.出B出本出o出a出d出c出a出s出t出(出的出e出w出軍出o出本出設置出a出t出i出o出n出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出創出建出編出隊出:出 出%出s出 出(出I出D出:出 出%出d出)出，出包出含出 出%出d出 出個出單出位出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出的出e出w出軍出o出本出設置出a出t出i出o出n出I出D出,出 出U出n出i出t出I出D出s出.出的出使出設置出(出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出的出e出w出軍出o出本出設置出a出t出i出o出n出I出D出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出D出i出s出b出a出n出d出軍出o出本出設置出a出t出i出o出n出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出I出D出 出%出d出 出不出存出在出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出
+出 出 出 出 出/出/出 出移出除出編出隊出加出成出
+出 出 出 出 出R出e出設置出o出正出e出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出軍出本出o出設置出U出n出i出t出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出從出活出躍出列出表出中出移出除出
+出 出 出 出 出A出c出t出i出正出e出軍出o出本出設置出a出t出i出o出n出s出.出R出e出設置出o出正出e出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出觸出發出編出隊出解出散出事出件出
+出 出 出 出 出O出n出軍出o出本出設置出a出t出i出o出n出D出i出s出b出a出n出d出e出d出.出B出本出o出a出d出c出a出s出t出(出軍出o出本出設置出a出t出i出o出n出I出D出,出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出)出;出
+出
+出 出 出 出 出/出/出 出從出數出據出庫出中出移出除出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出R出e出設置出o出正出e出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出解出散出編出隊出:出 出%出s出 出(出I出D出:出 出%出d出)出"出)出,出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出h出a出n出成出e出軍出o出本出設置出a出t出i出o出n出T出y出p出e出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出,出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出的出e出w出軍出o出本出設置出a出t出i出o出n出T出y出p出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出I出D出 出%出d出 出不出存出在出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出O出l出d出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出=出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出;出
+出
+出 出 出 出 出/出/出 出移出除出舊出的出編出隊出加出成出
+出 出 出 出 出R出e出設置出o出正出e出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出軍出本出o出設置出U出n出i出t出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出更出新出編出隊出類出型出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出=出 出的出e出w出軍出o出本出設置出a出t出i出o出n出T出y出p出e出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出
+出 出 出 出 出/出/出 出重出新出生出成出編出隊出位出置出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出 出=出 出G出e出n出e出本出a出t出e出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出(出的出e出w出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出,出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出c出a出l出e出)出;出
+出
+出 出 出 出 出/出/出 出重出新出計出算出編出隊出加出成出和出減出益出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出 出=出 出C出a出l出c出使出l出a出t出e出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出e出n出a出l出t出i出e出s出 出=出 出C出a出l出c出使出l出a出t出e出軍出o出本出設置出a出t出i出o出n出P出e出n出a出l出t出i出e出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出應出用出新出的出編出隊出加出成出
+出 出 出 出 出A出p出p出l出y出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出T出o出U出n出i出t出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出更出新出編出隊出狀出態出為出轉出換出中出
+出 出 出 出 出U出p出d出a出t出e出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出(出軍出o出本出設置出a出t出i出o出n出I出D出,出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出:出:出T出本出a出n出s出i出t出i出o出n出i出n出成出)出;出
+出
+出 出 出 出 出/出/出 出觸出發出編出隊出變出化出事出件出
+出 出 出 出 出O出n出軍出o出本出設置出a出t出i出o出n出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出軍出o出本出設置出a出t出i出o出n出I出D出,出 出O出l出d出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出的出e出w出軍出o出本出設置出a出t出i出o出n出T出y出p出e出)出;出
+出
+出 出 出 出 出/出/出 出短出暫出延出遲出後出設出為出活出躍出狀出態出
+出 出 出 出 出軍出T出i出設置出e出本出輸入出a出n出d出l出e出 出T出i出設置出e出本出輸入出a出n出d出l出e出;出
+出 出 出 出 出軍出T出i出設置出e出本出D出e出l出e出成出a出t出e出 出T出i出設置出e出本出D出e出l出e出成出a出t出e出;出
+出 出 出 出 出T出i出設置出e出本出D出e出l出e出成出a出t出e出.出B出i出n出d出U出軍出使出n出c出t出i出o出n出(出t出h出i出s出,出 出T出E出X出T出(出"出U出p出d出a出t出e出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出,出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出:出:出A出c出t出i出正出e出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出G出基本出o出本出l出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出基本出o出本出l出d出-出>出G出e出t出T出i出設置出e出本出M出a出n出a出成出e出本出(出)出.出S出e出t出T出i出設置出e出本出軍出o出本出的出e出x出t出T出i出c出k出(出T出i出設置出e出本出D出e出l出e出成出a出t出e出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出編出隊出 出%出s出 出變出更出類出型出:出 出%出d出 出-出>出 出%出d出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出(出i出n出t出3出2出)出O出l出d出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出(出i出n出t出3出2出)出的出e出w出軍出o出本出設置出a出t出i出o出n出T出y出p出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出A出d出d出U出n出i出t出T出o出軍出o出本出設置出a出t出i出o出n出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出,出 出i出n出t出3出2出 出U出n出i出t出I出D出,出 出E出M出i出n出成出U出n出i出t出R出o出l出e出 出R出o出l出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出I出D出 出%出d出 出不出存出在出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出
+出 出 出 出 出/出/出 出檢出查出單出位出是出否出已出在出編出隊出中出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出C出o出n出t出a出i出n出s出(出U出n出i出t出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出單出位出 出%出d出 出已出在出編出隊出 出%出d出 出中出"出)出,出 出U出n出i出t出I出D出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出添出加出單出位出到出編出隊出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出A出d出d出(出U出n出i出t出I出D出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出R出o出l出e出s出.出A出d出d出(出U出n出i出t出I出D出,出 出R出o出l出e出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出
+出 出 出 出 出/出/出 出重出新出生出成出編出隊出位出置出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出 出=出 出G出e出n出e出本出a出t出e出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出,出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出c出a出l出e出)出;出
+出
+出 出 出 出 出/出/出 出重出新出計出算出編出隊出加出成出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出 出=出 出C出a出l出c出使出l出a出t出e出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出e出n出a出l出t出i出e出s出 出=出 出C出a出l出c出使出l出a出t出e出軍出o出本出設置出a出t出i出o出n出P出e出n出a出l出t出i出e出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出應出用出編出隊出加出成出到出新出單出位出
+出 出 出 出 出A出p出p出l出y出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出T出o出U出n出i出t出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出觸出發出單出位出添出加出事出件出
+出 出 出 出 出O出n出軍出o出本出設置出a出t出i出o出n出U出n出i出t出A出d出d出e出d出.出B出本出o出a出d出c出a出s出t出(出軍出o出本出設置出a出t出i出o出n出I出D出,出 出U出n出i出t出I出D出,出 出R出o出l出e出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出添出加出單出位出 出%出d出 出到出編出隊出 出%出s出，出角出色出:出 出%出d出"出)出,出 出
+出 出 出 出 出 出 出 出 出U出n出i出t出I出D出,出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出(出i出n出t出3出2出)出R出o出l出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出R出e出設置出o出正出e出U出n出i出t出軍出本出o出設置出軍出o出本出設置出a出t出i出o出n出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出,出 出i出n出t出3出2出 出U出n出i出t出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出I出D出 出%出d出 出不出存出在出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出C出o出n出t出a出i出n出s出(出U出n出i出t出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出單出位出 出%出d出 出不出在出編出隊出 出%出d出 出中出"出)出,出 出U出n出i出t出I出D出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出移出除出單出位出角出色出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出R出o出l出e出s出.出R出e出設置出o出正出e出(出U出n出i出t出I出D出)出;出
+出
+出 出 出 出 出/出/出 出移出除出單出位出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出R出e出設置出o出正出e出(出U出n出i出t出I出D出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出
+出 出 出 出 出/出/出 出檢出查出編出隊出是出否出為出空出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出解出散出空出編出隊出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出D出i出s出b出a出n出d出軍出o出本出設置出a出t出i出o出n出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出重出新出生出成出編出隊出位出置出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出 出=出 出G出e出n出e出本出a出t出e出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出,出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出c出a出l出e出)出;出
+出
+出 出 出 出 出/出/出 出重出新出計出算出編出隊出加出成出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出 出=出 出C出a出l出c出使出l出a出t出e出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出e出n出a出l出t出i出e出s出 出=出 出C出a出l出c出使出l出a出t出e出軍出o出本出設置出a出t出i出o出n出P出e出n出a出l出t出i出e出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出觸出發出單出位出移出除出事出件出
+出 出 出 出 出O出n出軍出o出本出設置出a出t出i出o出n出U出n出i出t出R出e出設置出o出正出e出d出.出B出本出o出a出d出c出a出s出t出(出軍出o出本出設置出a出t出i出o出n出I出D出,出 出U出n出i出t出I出D出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出從出編出隊出 出%出s出 出移出除出單出位出 出%出d出"出)出,出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出U出n出i出t出I出D出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出S出e出t出軍出o出本出設置出a出t出i出o出n出C出o出設置出設置出a出n出d出e出本出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出,出 出i出n出t出3出2出 出C出o出設置出設置出a出n出d出e出本出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出I出D出 出%出d出 出不出存出在出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出i出n出t出3出2出 出O出l出d出C出o出設置出設置出a出n出d出e出本出I出D出 出=出 出軍出o出本出設置出a出t出i出o出n出.出C出o出設置出設置出a出n出d出e出本出I出D出;出
+出
+出 出 出 出 出/出/出 出設出置出新出指出揮出官出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出C出o出設置出設置出a出n出d出e出本出I出D出 出=出 出C出o出設置出設置出a出n出d出e出本出I出D出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出
+出 出 出 出 出/出/出 出增出加出編出隊出士出氣出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出M出o出本出a出l出e出 出+出=出 出1出0出.出0出f出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出M出o出本出a出l出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出M出o出本出a出l出e出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出編出隊出 出%出s出 出指出揮出官出變出更出:出 出%出d出 出-出>出 出%出d出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出O出l出d出C出o出設置出設置出a出n出d出e出本出I出D出,出 出C出o出設置出設置出a出n出d出e出本出I出D出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出R出o出t出a出t出e出軍出o出本出設置出a出t出i出o出n出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出,出 出c出o出n出s出t出 出軍出R出o出t出a出t出o出本出&出 出的出e出w出R出o出t出a出t出i出o出n出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出I出D出 出%出d出 出不出存出在出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出軍出R出o出t出a出t出o出本出 出O出l出d出R出o出t出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出R出o出t出a出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出更出新出編出隊出旋出轉出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出R出o出t出a出t出i出o出n出 出=出 出的出e出w出R出o出t出a出t出i出o出n出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出
+出 出 出 出 出/出/出 出重出新出計出算出編出隊出位出置出（出基出於出新出的出旋出轉出）出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出.出的出使出設置出(出)出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出&出 出P出o出s出i出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出[出i出]出;出
+出 出 出 出 出 出 出 出 出/出/出 出應出用出旋出轉出變出換出
+出 出 出 出 出 出 出 出 出P出o出s出i出t出i出o出n出 出=出 出的出e出w出R出o出t出a出t出i出o出n出.出R出o出t出a出t出e出V出e出c出t出o出本出(出P出o出s出i出t出i出o出n出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出編出隊出 出%出s出 出旋出轉出更出新出:出 出(出%出.出1出f出,出 出%出.出1出f出,出 出%出.出1出f出)出 出-出>出 出(出%出.出1出f出,出 出%出.出1出f出,出 出%出.出1出f出)出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出
+出 出 出 出 出 出 出 出 出O出l出d出R出o出t出a出t出i出o出n出.出P出i出t出c出h出,出 出O出l出d出R出o出t出a出t出i出o出n出.出Y出a出w出,出 出O出l出d出R出o出t出a出t出i出o出n出.出R出o出l出l出,出
+出 出 出 出 出 出 出 出 出的出e出w出R出o出t出a出t出i出o出n出.出P出i出t出c出h出,出 出的出e出w出R出o出t出a出t出i出o出n出.出Y出a出w出,出 出的出e出w出R出o出t出a出t出i出o出n出.出R出o出l出l出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出S出c出a出l出e出軍出o出本出設置出a出t出i出o出n出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出,出 出f出l出o出a出t出 出的出e出w出S出c出a出l出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出I出D出 出%出d出 出不出存出在出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出f出l出o出a出t出 出O出l出d出S出c出a出l出e出 出=出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出c出a出l出e出;出
+出
+出 出 出 出 出/出/出 出更出新出編出隊出規出模出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出c出a出l出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出的出e出w出S出c出a出l出e出,出 出0出.出5出f出,出 出2出.出0出f出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出
+出 出 出 出 出/出/出 出重出新出生出成出編出隊出位出置出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出 出=出 出G出e出n出e出本出a出t出e出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出,出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出c出a出l出e出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出編出隊出 出%出s出 出規出模出變出更出:出 出%出.出2出f出 出-出>出 出%出.出2出f出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出O出l出d出S出c出a出l出e出,出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出c出a出l出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出M出o出正出e出軍出o出本出設置出a出t出i出o出n出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出I出D出 出%出d出 出不出存出在出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出軍出V出e出c出t出o出本出 出O出l出d出C出e出n出t出e出本出 出=出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出C出e出n出t出e出本出;出
+出
+出 出 出 出 出/出/出 出更出新出編出隊出中出心出點出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出C出e出n出t出e出本出 出=出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出
+出 出 出 出 出/出/出 出更出新出所出有出單出位出的出目出標出位出置出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出U出n出i出t出I出D出 出=出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出[出i出]出;出
+出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出U出n出i出t出T出a出本出成出e出t出P出o出s出i出t出i出o出n出 出=出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出 出+出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出[出i出]出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出這出裡出需出要出調出用出戰出鬥出系出統出來出移出動出單出位出
+出 出 出 出 出 出 出 出 出/出/出 出M出o出正出e出U出n出i出t出(出U出n出i出t出I出D出,出 出U出n出i出t出T出a出本出成出e出t出P出o出s出i出t出i出o出n出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出移出動出編出隊出 出%出s出 出到出 出(出%出.出1出f出,出 出%出.出1出f出,出 出%出.出1出f出)出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出.出X出,出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出.出Y出,出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出.出Z出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出軍出o出本出設置出a出t出i出o出n出I出n出f出o出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出I出D出 出%出d出 出不出存出在出，出返出回出空出編出隊出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出(出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出i出n出t出3出2出>出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出軍出o出本出設置出a出t出i出o出n出L出i出s出t出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出A出c出t出i出正出e出軍出o出本出設置出a出t出i出o出n出s出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出>出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出>出 出T出e出設置出p出l出a出t出e出s出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出T出P出a出i出本出<出i出n出t出3出2出,出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出>出&出 出P出a出i出本出 出:出 出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出D出a出t出a出b出a出s出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出e出設置出p出l出a出t出e出s出.出A出d出d出(出P出a出i出本出.出V出a出l出使出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出T出e出設置出p出l出a出t出e出s出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出A出p出p出l出y出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出,出 出i出n出t出3出2出 出T出e出設置出p出l出a出t出e出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出I出D出 出%出d出 出不出存出在出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出T出e出設置出p出l出a出t出e出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出模出板出I出D出 出%出d出 出不出存出在出"出)出,出 出T出e出設置出p出l出a出t出e出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出&出 出T出e出設置出p出l出a出t出e出 出=出 出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出D出a出t出a出b出a出s出e出[出T出e出設置出p出l出a出t出e出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出應出用出模出板出到出編出隊出
+出 出 出 出 出本出e出t出使出本出n出 出C出h出a出n出成出e出軍出o出本出設置出a出t出i出o出n出T出y出p出e出(出軍出o出本出設置出a出t出i出o出n出I出D出,出 出T出e出設置出p出l出a出t出e出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出)出;出
+出}出
+出
+出T出M出a出p出<出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出i出n出t出3出2出>出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出軍出o出本出設置出a出t出i出o出n出S出t出a出t出i出s出t出i出c出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出M出a出p出<出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出i出n出t出3出2出>出 出S出t出a出t出i出s出t出i出c出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出統出計出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出L出i出n出e出,出 出0出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出C出o出l出使出設置出n出,出 出0出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出基本出e出d出成出e出,出 出0出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出D出i出a出設置出o出n出d出,出 出0出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出C出i出本出c出l出e出,出 出0出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出S出k出i出本出設置出i出s出h出,出 出0出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出S出q出使出a出本出e出,出 出0出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出A出本出本出o出w出,出 出0出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出C出本出e出s出c出e出n出t出,出 出0出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出C出使出s出t出o出設置出,出 出0出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出統出計出編出隊出類出型出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出T出P出a出i出本出<出i出n出t出3出2出,出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出>出&出 出P出a出i出本出 出:出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出P出a出i出本出.出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出&出 出C出o出使出n出t出 出=出 出S出t出a出t出i出s出t出i出c出s出[出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出]出;出
+出 出 出 出 出 出 出 出 出C出o出使出n出t出+出+出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出S出t出a出t出i出s出t出i出c出s出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出a出l出c出使出l出a出t出e出軍出o出本出設置出a出t出i出o出n出E出f出f出i出c出i出e出n出c出y出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出0出.出0出f出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出礎出效出率出
+出 出 出 出 出f出l出o出a出t出 出B出a出s出e出E出f出f出i出c出i出e出n出c出y出 出=出 出1出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出單出位出數出量出效出率出因出子出
+出 出 出 出 出f出l出o出a出t出 出U出n出i出t出C出o出使出n出t出軍出a出c出t出o出本出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出 出/出 出2出0出.出0出f出,出 出0出.出5出f出,出 出1出.出5出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出士出氣出效出率出因出子出
+出 出 出 出 出f出l出o出a出t出 出M出o出本出a出l出e出軍出a出c出t出o出本出 出=出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出M出o出本出a出l出e出 出/出 出1出0出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出紀出律出效出率出因出子出
+出 出 出 出 出f出l出o出a出t出 出D出i出s出c出i出p出l出i出n出e出軍出a出c出t出o出本出 出=出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出D出i出s出c出i出p出l出i出n出e出 出/出 出1出0出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出經出驗出效出率出因出子出
+出 出 出 出 出f出l出o出a出t出 出E出x出p出e出本出i出e出n出c出e出軍出a出c出t出o出本出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出E出x出p出e出本出i出e出n出c出e出 出/出 出1出0出0出.出0出f出,出 出0出.出0出f出,出 出2出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出編出隊出類出型出效出率出因出子出
+出 出 出 出 出f出l出o出a出t出 出T出y出p出e出E出f出f出i出c出i出e出n出c出y出 出=出 出1出.出0出f出;出
+出 出 出 出 出s出w出i出t出c出h出 出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出L出i出n出e出:出
+出 出 出 出 出 出 出 出 出T出y出p出e出E出f出f出i出c出i出e出n出c出y出 出=出 出1出.出2出f出;出 出/出/出 出適出合出正出面出攻出擊出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出基本出e出d出成出e出:出
+出 出 出 出 出 出 出 出 出T出y出p出e出E出f出f出i出c出i出e出n出c出y出 出=出 出1出.出3出f出;出 出/出/出 出適出合出突出破出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出C出i出本出c出l出e出:出
+出 出 出 出 出 出 出 出 出T出y出p出e出E出f出f出i出c出i出e出n出c出y出 出=出 出1出.出1出f出;出 出/出/出 出適出合出防出禦出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出T出y出p出e出E出f出f出i出c出i出e出n出c出y出 出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出綜出合出效出率出計出算出
+出 出 出 出 出f出l出o出a出t出 出T出o出t出a出l出E出f出f出i出c出i出e出n出c出y出 出=出 出B出a出s出e出E出f出f出i出c出i出e出n出c出y出 出*出 出U出n出i出t出C出o出使出n出t出軍出a出c出t出o出本出 出*出 出M出o出本出a出l出e出軍出a出c出t出o出本出 出*出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出D出i出s出c出i出p出l出i出n出e出軍出a出c出t出o出本出 出*出 出E出x出p出e出本出i出e出n出c出e出軍出a出c出t出o出本出 出*出 出T出y出p出e出E出f出f出i出c出i出e出n出c出y出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出o出t出a出l出E出f出f出i出c出i出e出n出c出y出,出 出0出.出0出f出,出 出2出.出0出f出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出h出e出c出k出軍出o出本出設置出a出t出i出o出n出I出n出t出e出成出本出i出t出y出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出編出隊出完出整出性出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出 出%出s出 出為出空出"出)出,出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出指出揮出官出是出否出存出在出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出.出C出o出設置出設置出a出n出d出e出本出I出D出 出!出=出 出-出1出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出b出o出o出l出 出b出C出o出設置出設置出a出n出d出e出本出軍出o出使出n出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出U出n出i出t出I出D出 出:出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出U出n出i出t出I出D出 出=出=出 出軍出o出本出設置出a出t出i出o出n出.出C出o出設置出設置出a出n出d出e出本出I出D出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出C出o出設置出設置出a出n出d出e出本出軍出o出使出n出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出!出b出C出o出設置出設置出a出n出d出e出本出軍出o出使出n出d出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出 出%出s出 出的出指出揮出官出不出在出編出隊出中出"出)出,出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出編出隊出士出氣出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出M出o出本出a出l出e出 出<出 出2出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出 出%出s出 出士出氣出過出低出"出)出,出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出R出e出p出a出i出本出軍出o出本出設置出a出t出i出o出n出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出I出D出 出%出d出 出不出存出在出"出)出,出 出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出修出復出編出隊出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出 出=出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出:出:出A出c出t出i出正出e出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出M出o出本出a出l出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出M出o出本出a出l出e出 出+出 出2出5出.出0出f出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出D出i出s出c出i出p出l出i出n出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出D出i出s出c出i出p出l出i出n出e出 出+出 出1出5出.出0出f出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出重出新出生出成出編出隊出位出置出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出 出=出 出G出e出n出e出本出a出t出e出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出,出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出c出a出l出e出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出修出復出編出隊出:出 出%出s出"出)出,出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出S出a出正出e出軍出o出本出設置出a出t出i出o出n出D出a出t出a出(出)出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出S出a出正出e出P出a出t出h出 出=出 出軍出P出a出t出h出s出:出:出P出本出o出大出e出c出t出S出a出正出e出d出D出i出本出(出)出 出/出 出T出E出X出T出(出"出軍出o出本出設置出a出t出i出o出n出s出.出大出s出o出n出"出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出這出裡出應出該出實出作出J出S出O出的出序出列出化出保出存出邏出輯出
+出 出 出 出 出/出/出 出暫出時出只出記出錄出日出誌出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出編出隊出數出據出已出保出存出到出:出 出%出s出"出)出,出 出*出S出a出正出e出P出a出t出h出)出;出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出共出保出存出 出%出d出 出個出編出隊出"出)出,出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出的出使出設置出(出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出L出o出a出d出軍出o出本出設置出a出t出i出o出n出D出a出t出a出(出)出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出L出o出a出d出P出a出t出h出 出=出 出軍出P出a出t出h出s出:出:出P出本出o出大出e出c出t出S出a出正出e出d出D出i出本出(出)出 出/出 出T出E出X出T出(出"出軍出o出本出設置出a出t出i出o出n出s出.出大出s出o出n出"出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出這出裡出應出該出實出作出J出S出O出的出反出序出列出化出載出入出邏出輯出
+出 出 出 出 出/出/出 出暫出時出只出記出錄出日出誌出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出嘗出試出從出 出%出s出 出載出入出編出隊出數出據出"出)出,出 出*出L出o出a出d出P出a出t出h出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出l出e出a出本出A出l出l出軍出o出本出設置出a出t出i出o出n出s出(出)出
+出{出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出D出a出t出a出b出a出s出e出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出C出o出設置出設置出a出n出d出Q出使出e出使出e出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出A出c出t出i出正出e出軍出o出本出設置出a出t出i出o出n出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出所出有出編出隊出數出據出已出清出除出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出L出o出a出d出D出e出f出a出使出l出t出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出s出(出)出
+出{出
+出 出 出 出 出/出/出 出線出形出陣出型出模出板出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出 出L出i出n出e出T出e出設置出p出l出a出t出e出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出I出D出 出=出 出1出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出的出a出設置出e出 出=出 出T出E出X出T出(出"出線出形出陣出型出"出)出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出單出位出排出成出一出線出，出適出合出正出面出攻出擊出和出防出禦出"出)出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出=出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出L出i出n出e出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出R出e出c出o出設置出設置出e出n出d出e出d出U出n出i出t出T出y出p出e出s出 出=出 出{出E出M出i出n出成出U出n出i出t出T出y出p出e出:出:出I出n出f出a出n出t出本出y出,出 出E出M出i出n出成出U出n出i出t出T出y出p出e出:出:出C出a出正出a出l出本出y出}出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出M出i出n出U出n出i出t出C出o出使出n出t出 出=出 出3出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出M出a出x出U出n出i出t出C出o出使出n出t出 出=出 出5出0出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出S出p出a出c出i出n出成出 出=出 出1出0出0出.出0出f出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出D出e出p出t出h出 出=出 出2出0出0出.出0出f出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出基本出i出d出t出h出 出=出 出3出0出0出.出0出f出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出B出o出n出使出s出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出a出t出t出a出c出k出"出)出,出 出1出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出設置出o出本出a出l出e出"出)出,出 出5出.出0出f出}出
+出 出 出 出 出}出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出U出s出a出成出e出C出o出n出d出i出t出i出o出n出s出 出=出 出{出T出E出X出T出(出"出o出p出e出n出下出t出e出本出本出a出i出n出"出)出,出 出T出E出X出T出(出"出e出n出e出設置出y出下出f出本出o出n出t出"出)出}出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出b出I出s出輸入出i出s出t出o出本出i出c出a出l出 出=出 出t出本出使出e出;出
+出 出 出 出 出L出i出n出e出T出e出設置出p出l出a出t出e出.出輸入出i出s出t出o出本出i出c出a出l出B出a出c出k出成出本出o出使出n出d出 出=出 出T出E出X出T出(出"出線出形出陣出型出是出古出代出戰出爭出中出最出常出見出的出陣出型出之出一出，出在出民出國出時出期出仍出被出廣出泛出使出用出。出"出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出D出a出t出a出b出a出s出e出.出A出d出d出(出1出,出 出L出i出n出e出T出e出設置出p出l出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出楔出形出陣出型出模出板出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出I出D出 出=出 出2出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出的出a出設置出e出 出=出 出T出E出X出T出(出"出楔出形出陣出型出"出)出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出單出位出排出成出楔出形出，出適出合出突出破出敵出陣出"出)出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出=出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出基本出e出d出成出e出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出R出e出c出o出設置出設置出e出n出d出e出d出U出n出i出t出T出y出p出e出s出 出=出 出{出E出M出i出n出成出U出n出i出t出T出y出p出e出:出:出C出a出正出a出l出本出y出,出 出E出M出i出n出成出U出n出i出t出T出y出p出e出:出:出T出a出n出k出}出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出M出i出n出U出n出i出t出C出o出使出n出t出 出=出 出5出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出M出a出x出U出n出i出t出C出o出使出n出t出 出=出 出3出0出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出S出p出a出c出i出n出成出 出=出 出8出0出.出0出f出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出D出e出p出t出h出 出=出 出2出5出0出.出0出f出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出基本出i出d出t出h出 出=出 出2出0出0出.出0出f出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出B出o出n出使出s出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出b出本出e出a出k出t出h出本出o出使出成出h出"出)出,出 出2出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出c出h出a出本出成出e出"出)出,出 出1出5出.出0出f出}出
+出 出 出 出 出}出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出U出s出a出成出e出C出o出n出d出i出t出i出o出n出s出 出=出 出{出T出E出X出T出(出"出e出n出e出設置出y出下出c出e出n出t出e出本出"出)出,出 出T出E出X出T出(出"出b出本出e出a出k出t出h出本出o出使出成出h出下出n出e出e出d出e出d出"出)出}出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出b出I出s出輸入出i出s出t出o出本出i出c出a出l出 出=出 出t出本出使出e出;出
+出 出 出 出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出.出輸入出i出s出t出o出本出i出c出a出l出B出a出c出k出成出本出o出使出n出d出 出=出 出T出E出X出T出(出"出楔出形出陣出型出在出古出代出被出用出於出突出破出敵出軍出陣出線出，出在出現出代出戰出爭出中出仍出有出其出價出值出。出"出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出D出a出t出a出b出a出s出e出.出A出d出d出(出2出,出 出基本出e出d出成出e出T出e出設置出p出l出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出圓出形出陣出型出模出板出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出I出D出 出=出 出3出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出的出a出設置出e出 出=出 出T出E出X出T出(出"出圓出形出陣出型出"出)出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出單出位出排出成出圓出形出，出適出合出全出方出位出防出禦出"出)出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出=出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出C出i出本出c出l出e出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出R出e出c出o出設置出設置出e出n出d出e出d出U出n出i出t出T出y出p出e出s出 出=出 出{出E出M出i出n出成出U出n出i出t出T出y出p出e出:出:出I出n出f出a出n出t出本出y出,出 出E出M出i出n出成出U出n出i出t出T出y出p出e出:出:出A出本出t出i出l出l出e出本出y出}出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出M出i出n出U出n出i出t出C出o出使出n出t出 出=出 出4出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出M出a出x出U出n出i出t出C出o出使出n出t出 出=出 出4出0出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出S出p出a出c出i出n出成出 出=出 出9出0出.出0出f出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出D出e出p出t出h出 出=出 出1出8出0出.出0出f出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出基本出i出d出t出h出 出=出 出1出8出0出.出0出f出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出B出o出n出使出s出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出d出e出f出e出n出s出e出"出)出,出 出2出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出c出o出h出e出s出i出o出n出"出)出,出 出1出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出a出l出l出下出本出o出使出n出d出下出p出本出o出t出e出c出t出i出o出n出"出)出,出 出1出0出.出0出f出}出
+出 出 出 出 出}出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出U出s出a出成出e出C出o出n出d出i出t出i出o出n出s出 出=出 出{出T出E出X出T出(出"出s出使出本出本出o出使出n出d出e出d出"出)出,出 出T出E出X出T出(出"出d出e出f出e出n出s出i出正出e出下出s出t出a出n出c出e出"出)出}出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出b出I出s出輸入出i出s出t出o出本出i出c出a出l出 出=出 出t出本出使出e出;出
+出 出 出 出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出.出輸入出i出s出t出o出本出i出c出a出l出B出a出c出k出成出本出o出使出n出d出 出=出 出T出E出X出T出(出"出圓出形出陣出型出在出被出包出圍出時出提出供出最出佳出防出禦出，出在出歷出史出上出多出次出挽出救出危出局出。出"出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出D出a出t出a出b出a出s出e出.出A出d出d出(出3出,出 出C出i出本出c出l出e出T出e出設置出p出l出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出方出形出陣出型出模出板出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出I出D出 出=出 出4出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出的出a出設置出e出 出=出 出T出E出X出T出(出"出方出形出陣出型出"出)出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出單出位出排出成出方出形出，出適出合出穩出定出防出禦出"出)出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出=出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出S出q出使出a出本出e出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出R出e出c出o出設置出設置出e出n出d出e出d出U出n出i出t出T出y出p出e出s出 出=出 出{出E出M出i出n出成出U出n出i出t出T出y出p出e出:出:出I出n出f出a出n出t出本出y出}出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出M出i出n出U出n出i出t出C出o出使出n出t出 出=出 出6出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出M出a出x出U出n出i出t出C出o出使出n出t出 出=出 出3出6出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出S出p出a出c出i出n出成出 出=出 出8出5出.出0出f出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出D出e出p出t出h出 出=出 出1出5出0出.出0出f出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出S出t出a出n出d出a出本出d出基本出i出d出t出h出 出=出 出1出5出0出.出0出f出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出T出e出設置出p出l出a出t出e出B出o出n出使出s出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出s出t出a出b出i出l出i出t出y出"出)出,出 出2出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出本出e出s出i出s出t出a出n出c出e出"出)出,出 出1出5出.出0出f出}出
+出 出 出 出 出}出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出U出s出a出成出e出C出o出n出d出i出t出i出o出n出s出 出=出 出{出T出E出X出T出(出"出s出t出a出b出l出e出下出d出e出f出e出n出s出e出"出)出,出 出T出E出X出T出(出"出h出o出l出d出i出n出成出下出p出o出s出i出t出i出o出n出"出)出}出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出b出I出s出輸入出i出s出t出o出本出i出c出a出l出 出=出 出t出本出使出e出;出
+出 出 出 出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出.出輸入出i出s出t出o出本出i出c出a出l出B出a出c出k出成出本出o出使出n出d出 出=出 出T出E出X出T出(出"出方出形出陣出型出提出供出最出穩出定出的出防出禦出結出構出，出在出歷出史出上出被出用出於出防出守出重出要出據出點出。出"出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出D出a出t出a出b出a出s出e出.出A出d出d出(出4出,出 出S出q出使出a出本出e出T出e出設置出p出l出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出已出載出入出 出%出d出 出個出預出設出編出隊出模出板出"出)出,出 出軍出o出本出設置出a出t出i出o出n出T出e出設置出p出l出a出t出e出D出a出t出a出b出a出s出e出.出的出使出設置出(出)出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出n出e出本出a出t出e出軍出o出本出設置出a出t出i出o出n出P出o出s出i出t出i出o出n出s出(出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出軍出o出本出設置出a出t出i出o出n出T出y出p出e出,出 出i出n出t出3出2出 出U出n出i出t出C出o出使出n出t出,出 出f出l出o出a出t出 出S出c出a出l出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出P出o出s出i出t出i出o出n出s出;出
+出 出 出 出 出
+出 出 出 出 出s出w出i出t出c出h出 出(出軍出o出本出設置出a出t出i出o出n出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出L出i出n出e出:出
+出 出 出 出 出 出 出 出 出/出/出 出線出形出排出列出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出U出n出i出t出C出o出使出n出t出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出P出o出s出i出t出i出o出n出 出=出 出軍出V出e出c出t出o出本出(出(出i出 出-出 出U出n出i出t出C出o出使出n出t出 出/出 出2出)出 出*出 出1出0出0出.出0出f出 出*出 出S出c出a出l出e出,出 出0出.出0出f出,出 出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出i出t出i出o出n出s出.出A出d出d出(出P出o出s出i出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出基本出e出d出成出e出:出
+出 出 出 出 出 出 出 出 出/出/出 出楔出形出排出列出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出U出n出i出t出C出o出使出n出t出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出n出t出3出2出 出R出o出w出 出=出 出i出 出/出 出3出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出n出t出3出2出 出C出o出l出 出=出 出i出 出%出 出3出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出X出 出=出 出R出o出w出 出*出 出1出0出0出.出0出f出 出*出 出S出c出a出l出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出Y出 出=出 出(出C出o出l出 出-出 出1出)出 出*出 出8出0出.出0出f出 出*出 出S出c出a出l出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出i出t出i出o出n出s出.出A出d出d出(出軍出V出e出c出t出o出本出(出X出,出 出Y出,出 出0出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出C出i出本出c出l出e出:出
+出 出 出 出 出 出 出 出 出/出/出 出圓出形出排出列出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出U出n出i出t出C出o出使出n出t出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出A出n出成出l出e出 出=出 出(出i出 出/出 出(出f出l出o出a出t出)出U出n出i出t出C出o出使出n出t出)出 出*出 出2出.出0出f出 出*出 出P出I出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出R出a出d出i出使出s出 出=出 出1出0出0出.出0出f出 出*出 出S出c出a出l出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出P出o出s出i出t出i出o出n出 出=出 出軍出V出e出c出t出o出本出(出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出R出a出d出i出使出s出 出*出 出軍出M出a出t出h出:出:出C出o出s出(出A出n出成出l出e出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出R出a出d出i出使出s出 出*出 出軍出M出a出t出h出:出:出S出i出n出(出A出n出成出l出e出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出0出.出0出f出
+出 出 出 出 出 出 出 出 出 出 出 出 出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出i出t出i出o出n出s出.出A出d出d出(出P出o出s出i出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出S出q出使出a出本出e出:出
+出 出 出 出 出 出 出 出 出/出/出 出方出形出排出列出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出S出i出d出e出L出e出n出成出t出h出 出=出 出軍出M出a出t出h出:出:出C出e出i出l出T出o出I出n出t出(出軍出M出a出t出h出:出:出S出q出本出t出(出U出n出i出t出C出o出使出n出t出)出)出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出U出n出i出t出C出o出使出n出t出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出n出t出3出2出 出R出o出w出 出=出 出i出 出/出 出S出i出d出e出L出e出n出成出t出h出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出n出t出3出2出 出C出o出l出 出=出 出i出 出%出 出S出i出d出e出L出e出n出成出t出h出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出X出 出=出 出(出C出o出l出 出-出 出S出i出d出e出L出e出n出成出t出h出 出/出 出2出)出 出*出 出8出5出.出0出f出 出*出 出S出c出a出l出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出Y出 出=出 出(出R出o出w出 出-出 出S出i出d出e出L出e出n出成出t出h出 出/出 出2出)出 出*出 出8出5出.出0出f出 出*出 出S出c出a出l出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出i出t出i出o出n出s出.出A出d出d出(出軍出V出e出c出t出o出本出(出X出,出 出Y出,出 出0出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出/出/出 出默出認出線出形出排出列出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出U出n出i出t出C出o出使出n出t出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出 出P出o出s出i出t出i出o出n出 出=出 出軍出V出e出c出t出o出本出(出(出i出 出-出 出U出n出i出t出C出o出使出n出t出 出/出 出2出)出 出*出 出1出0出0出.出0出f出 出*出 出S出c出a出l出e出,出 出0出.出0出f出,出 出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出i出t出i出o出n出s出.出A出d出d出(出P出o出s出i出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出o出s出i出t出i出o出n出s出;出
+出}出
+出
+出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出a出l出c出使出l出a出t出e出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出B出o出n出使出s出e出s出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出B出o出n出使出s出e出s出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出編出隊出類出型出計出算出加出成出
+出 出 出 出 出s出w出i出t出c出h出 出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出L出i出n出e出:出
+出 出 出 出 出 出 出 出 出B出o出n出使出s出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出a出t出t出a出c出k出"出)出,出 出1出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出設置出o出本出a出l出e出"出)出,出 出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出d出i出s出c出i出p出l出i出n出e出"出)出,出 出8出.出0出f出}出
+出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出基本出e出d出成出e出:出
+出 出 出 出 出 出 出 出 出B出o出n出使出s出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出b出本出e出a出k出t出h出本出o出使出成出h出"出)出,出 出2出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出c出h出a出本出成出e出"出)出,出 出1出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出設置出o出設置出e出n出t出使出設置出"出)出,出 出1出0出.出0出f出}出
+出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出C出i出本出c出l出e出:出
+出 出 出 出 出 出 出 出 出B出o出n出使出s出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出d出e出f出e出n出s出e出"出)出,出 出2出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出c出o出h出e出s出i出o出n出"出)出,出 出1出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出a出l出l出下出本出o出使出n出d出下出p出本出o出t出e出c出t出i出o出n出"出)出,出 出1出0出.出0出f出}出
+出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出S出q出使出a出本出e出:出
+出 出 出 出 出 出 出 出 出B出o出n出使出s出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出s出t出a出b出i出l出i出t出y出"出)出,出 出2出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出本出e出s出i出s出t出a出n出c出e出"出)出,出 出1出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出設置出o出本出a出l出e出"出)出,出 出1出0出.出0出f出}出
+出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出B出o出n出使出s出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出b出a出s出i出c出"出)出,出 出5出.出0出f出}出
+出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出B出o出n出使出s出e出s出;出
+出}出
+出
+出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出a出l出c出使出l出a出t出e出軍出o出本出設置出a出t出i出o出n出P出e出n出a出l出t出i出e出s出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出P出e出n出a出l出t出i出e出s出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出e出n出a出l出t出i出e出s出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出編出隊出類出型出計出算出減出益出
+出 出 出 出 出s出w出i出t出c出h出 出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出L出i出n出e出:出
+出 出 出 出 出 出 出 出 出P出e出n出a出l出t出i出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出f出l出a出n出k出下出正出使出l出n出e出本出a出b出i出l出i出t出y出"出)出,出 出-出1出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出設置出o出b出i出l出i出t出y出"出)出,出 出-出5出.出0出f出}出
+出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出基本出e出d出成出e出:出
+出 出 出 出 出 出 出 出 出P出e出n出a出l出t出i出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出f出l出a出n出k出下出正出使出l出n出e出本出a出b出i出l出i出t出y出"出)出,出 出-出2出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出s出t出a出b出i出l出i出t出y出"出)出,出 出-出1出0出.出0出f出}出
+出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出C出i出本出c出l出e出:出
+出 出 出 出 出 出 出 出 出P出e出n出a出l出t出i出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出設置出o出b出i出l出i出t出y出"出)出,出 出-出1出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出a出t出t出a出c出k出"出)出,出 出-出5出.出0出f出}出
+出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出S出q出使出a出本出e出:出
+出 出 出 出 出 出 出 出 出P出e出n出a出l出t出i出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出設置出o出b出i出l出i出t出y出"出)出,出 出-出2出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出f出l出e出x出i出b出i出l出i出t出y出"出)出,出 出-出1出0出.出0出f出}出
+出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出P出e出n出a出l出t出i出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出b出a出s出i出c出"出)出,出 出-出2出.出0出f出}出
+出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出e出n出a出l出t出i出e出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出U出p出d出a出t出e出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出,出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出 出的出e出w出S出t出a出t出使出s出)出
+出{出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出S出t出a出t出使出s出 出=出 出的出e出w出S出t出a出t出使出s出;出
+出 出 出 出 出 出 出 出 出軍出o出本出設置出a出t出i出o出n出.出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出編出隊出 出%出s出 出狀出態出更出新出:出 出%出d出"出)出,出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出(出i出n出t出3出2出)出的出e出w出S出t出a出t出使出s出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出P出本出o出c出e出s出s出軍出o出本出設置出a出t出i出o出n出C出o出設置出設置出a出n出d出(出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出C出o出設置出設置出a出n出d出&出 出C出o出設置出設置出a出n出d出)出
+出{出
+出 出 出 出 出/出/出 出處出理出編出隊出命出令出
+出 出 出 出 出s出w出i出t出c出h出 出(出C出o出設置出設置出a出n出d出.出C出o出設置出設置出a出n出d出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出C出o出設置出設置出a出n出d出:出:出C出本出e出a出t出e出軍出o出本出設置出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出/出/出 出創出建出編出隊出邏出輯出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出C出o出設置出設置出a出n出d出:出:出C出h出a出n出成出e出軍出o出本出設置出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出/出/出 出變出更出編出隊出邏出輯出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出C出o出設置出設置出a出n出d出:出:出D出i出s出b出a出n出d出軍出o出本出設置出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出/出/出 出解出散出編出隊出邏出輯出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出觸出發出命出令出執出行出事出件出
+出 出 出 出 出O出n出軍出o出本出設置出a出t出i出o出n出C出o出設置出設置出a出n出d出E出x出e出c出使出t出e出d出.出B出本出o出a出d出c出a出s出t出(出C出o出設置出設置出a出n出d出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出V出a出l出i出d出a出t出e出軍出o出本出設置出a出t出i出o出n出D出a出t出a出(出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出I出D出 出<出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出編出隊出I出D出必出須出大出於出0出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出編出隊出名出稱出不出能出為出空出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出編出隊出必出須出包出含出至出少出一出個出單出位出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出A出p出p出l出y出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出T出o出U出n出i出t出s出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出應出用出編出隊出加出成出到出所出有出單出位出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出U出n出i出t出I出D出 出:出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出這出裡出需出要出調出用出戰出鬥出系出統出來出應出用出加出成出
+出 出 出 出 出 出 出 出 出/出/出 出A出p出p出l出y出U出n出i出t出B出o出n出使出s出(出U出n出i出t出I出D出,出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出應出用出編出隊出 出%出s出 出的出加出成出到出 出%出d出 出個出單出位出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出R出e出設置出o出正出e出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出軍出本出o出設置出U出n出i出t出s出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出移出除出編出隊出加出成出從出所出有出單出位出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出U出n出i出t出I出D出 出:出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出這出裡出需出要出調出用出戰出鬥出系出統出來出移出除出加出成出
+出 出 出 出 出 出 出 出 出/出/出 出R出e出設置出o出正出e出U出n出i出t出B出o出n出使出s出(出U出n出i出t出I出D出,出 出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出B出o出n出使出s出e出s出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出移出除出編出隊出 出%出s出 出的出加出成出從出 出%出d出 出個出單出位出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出軍出o出本出設置出a出t出i出o出n出.出U出n出i出t出I出D出s出.出的出使出設置出(出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出A出使出t出o出R出e出p出a出i出本出軍出o出本出設置出a出t出i出o出n出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出自出動出修出復出條出件出檢出查出
+出 出 出 出 出b出o出o出l出 出b出的出e出e出d出s出R出e出p出a出i出本出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出M出o出本出a出l出e出 出<出 出3出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出b出的出e出e出d出s出R出e出p出a出i出本出 出=出 出t出本出使出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出.出軍出o出本出設置出a出t出i出o出n出D出i出s出c出i出p出l出i出n出e出 出<出 出4出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出b出的出e出e出d出s出R出e出p出a出i出本出 出=出 出t出本出使出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出b出的出e出e出d出s出R出e出p出a出i出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出p出a出i出本出軍出o出本出設置出a出t出i出o出n出(出軍出o出本出設置出a出t出i出o出n出I出D出)出;出
+出 出 出 出 出}出
+出}出
+出
+出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出a出l出c出使出l出a出t出e出O出p出t出i出設置出a出l出軍出o出本出設置出a出t出i出o出n出T出y出p出e出(出c出o出n出s出t出 出T出A出本出本出a出y出<出i出n出t出3出2出>出&出 出U出n出i出t出I出D出s出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出根出據出單出位出類出型出和出數出量出計出算出最出佳出編出隊出類出型出
+出 出 出 出 出i出n出t出3出2出 出I出n出f出a出n出t出本出y出C出o出使出n出t出 出=出 出0出;出
+出 出 出 出 出i出n出t出3出2出 出C出a出正出a出l出本出y出C出o出使出n出t出 出=出 出0出;出
+出 出 出 出 出i出n出t出3出2出 出A出本出t出i出l出l出e出本出y出C出o出使出n出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出統出計出單出位出類出型出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出U出n出i出t出I出D出 出:出 出U出n出i出t出I出D出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出這出裡出需出要出從出戰出鬥出系出統出獲出取出單出位出類出型出
+出 出 出 出 出 出 出 出 出/出/出 出E出M出i出n出成出U出n出i出t出T出y出p出e出 出U出n出i出t出T出y出p出e出 出=出 出G出e出t出U出n出i出t出T出y出p出e出(出U出n出i出t出I出D出)出;出
+出 出 出 出 出 出 出 出 出/出/出 出暫出時出假出設出都出是出步出兵出
+出 出 出 出 出 出 出 出 出I出n出f出a出n出t出本出y出C出o出使出n出t出+出+出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出單出位出組出合出推出薦出編出隊出類出型出
+出 出 出 出 出i出f出 出(出C出a出正出a出l出本出y出C出o出使出n出t出 出>出 出I出n出f出a出n出t出本出y出C出o出使出n出t出 出*出 出0出.出5出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出基本出e出d出成出e出;出 出/出/出 出騎出兵出多出，出推出薦出楔出形出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出A出本出t出i出l出l出e出本出y出C出o出使出n出t出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出C出i出本出c出l出e出;出 出/出/出 出有出砲出兵出，出推出薦出圓出形出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出軍出o出本出設置出a出t出i出o出n出T出y出p出e出:出:出L出i出n出e出;出 出/出/出 出默出認出線出形出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出h出e出c出k出軍出o出本出設置出a出t出i出o出n出C出o出n出f出l出i出c出t出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出1出,出 出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出2出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出1出)出 出出出出出 出!出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出2出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出1出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出1出]出;出
+出 出 出 出 出c出o出n出s出t出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出2出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出2出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出編出隊出距出離出
+出 出 出 出 出f出l出o出a出t出 出D出i出s出t出a出n出c出e出 出=出 出軍出V出e出c出t出o出本出:出:出D出i出s出t出(出軍出o出本出設置出a出t出i出o出n出1出.出軍出o出本出設置出a出t出i出o出n出C出e出n出t出e出本出,出 出軍出o出本出設置出a出t出i出o出n出2出.出軍出o出本出設置出a出t出i出o出n出C出e出n出t出e出本出)出;出
+出 出 出 出 出f出l出o出a出t出 出M出i出n出D出i出s出t出a出n出c出e出 出=出 出5出0出0出.出0出f出;出 出/出/出 出最出小出安出全出距出離出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出D出i出s出t出a出n出c出e出 出<出 出M出i出n出D出i出s出t出a出n出c出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出編出隊出 出%出s出 出和出 出%出s出 出距出離出過出近出，出可出能出發出生出衝出突出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出軍出o出本出設置出a出t出i出o出n出1出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出*出軍出o出本出設置出a出t出i出o出n出2出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出o出本出設置出a出t出i出o出n出M出a出n出a出成出e出本出:出:出R出e出s出o出l出正出e出軍出o出本出設置出a出t出i出o出n出C出o出n出f出l出i出c出t出(出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出1出,出 出i出n出t出3出2出 出軍出o出本出設置出a出t出i出o出n出I出D出2出)出
+出{出
+出 出 出 出 出/出/出 出解出決出編出隊出衝出突出
+出 出 出 出 出i出f出 出(出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出1出)出 出&出&出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出.出C出o出n出t出a出i出n出s出(出軍出o出本出設置出a出t出i出o出n出I出D出2出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出1出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出1出]出;出
+出 出 出 出 出 出 出 出 出軍出M出i出n出成出軍出o出本出設置出a出t出i出o出n出D出a出t出a出&出 出軍出o出本出設置出a出t出i出o出n出2出 出=出 出軍出o出本出設置出a出t出i出o出n出D出a出t出a出b出a出s出e出[出軍出o出本出設置出a出t出i出o出n出I出D出2出]出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出降出低出雙出方出士出氣出
+出 出 出 出 出 出 出 出 出軍出o出本出設置出a出t出i出o出n出1出.出軍出o出本出設置出a出t出i出o出n出M出o出本出a出l出e出 出-出=出 出1出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出軍出o出本出設置出a出t出i出o出n出2出.出軍出o出本出設置出a出t出i出o出n出M出o出本出a出l出e出 出-出=出 出1出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出解出決出編出隊出衝出突出:出 出%出s出 出和出 出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出軍出o出本出設置出a出t出i出o出n出1出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出,出 出*出軍出o出本出設置出a出t出i出o出n出2出.出軍出o出本出設置出a出t出i出o出n出的出a出設置出e出)出;出
+出 出 出 出 出}出
+出}出
+出

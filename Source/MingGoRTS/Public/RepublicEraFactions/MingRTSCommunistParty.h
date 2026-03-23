@@ -1,55 +1,56 @@
-#pragma once
-
-#include "CoreMinimal.h"
-#include "MingRTSFactionBase.h"
-#include "MingRTSCommunistParty.generated.h"
-
-/**
- * 中國共產黨勢力
- * 人民戰爭、游擊戰、群眾動員
- */
-UCLASS(BlueprintType, Blueprintable)
-class MINGRTS_API UMingRTSCommunistParty : public UMingRTSFactionBase
-{
-    GENERATED_BODY()
-
-public:
-    UMingRTSCommunistParty();
-
-    // 初始化中國共產黨
-    virtual void InitializeFaction() override;
-
-    // 獲取勢力屬性
-    virtual FFactionAttributes GetFactionAttributes() const override;
-
-    // 獲取專屬單位
-    virtual TArray<FFactionUnit> GetUniqueUnits() const override;
-
-    // 獲取特色機制
-    virtual TArray<FFactionMechanic> GetUniqueMechanics() const override;
-
-    // 獲取遊戲指南
-    virtual FGameplayGuide GetGameplayGuide() const override;
-
-protected:
-    // 初始化屬性
-    virtual void InitializeAttributes() override;
-
-    // 初始化專屬單位
-    virtual void InitializeUniqueUnits() override;
-
-    // 初始化特色機制
-    virtual void InitializeUniqueMechanics() override;
-
-    // 初始化遊戲指南
-    virtual void InitializeGameplayGuide() override;
-
-private:
-    // 中國共產黨特色機制
-    UPROPERTY()
-    TArray<FFactionMechanic> CommunistMechanics;
-
-    // 中國共產黨專屬單位
-    UPROPERTY()
-    TArray<FFactionUnit> CommunistUnits;
-};
+出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出軍出a出c出t出i出o出n出B出a出s出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出中出國出共出產出黨出勢出力出
+出 出*出 出人出民出戰出爭出、出游出擊出戰出、出群出眾出動出員出
+出 出*出/出
+出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
+出c出l出a出s出s出 出M出I出的出G出R出T出S出下出A出P出I出 出U出M出i出n出成出R出T出S出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出 出:出 出p出使出b出l出i出c出 出U出M出i出n出成出R出T出S出軍出a出c出t出i出o出n出B出a出s出e出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出U出M出i出n出成出R出T出S出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出(出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出中出國出共出產出黨出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出軍出a出c出t出i出o出n出(出)出 出o出正出e出本出本出i出d出e出;出
+出
+出 出 出 出 出/出/出 出獲出取出勢出力出屬出性出
+出 出 出 出 出正出i出本出t出使出a出l出 出軍出軍出a出c出t出i出o出n出A出t出t出本出i出b出使出t出e出s出 出G出e出t出軍出a出c出t出i出o出n出A出t出t出本出i出b出使出t出e出s出(出)出 出c出o出n出s出t出 出o出正出e出本出本出i出d出e出;出
+出
+出 出 出 出 出/出/出 出獲出取出專出屬出單出位出
+出 出 出 出 出正出i出本出t出使出a出l出 出T出A出本出本出a出y出<出軍出軍出a出c出t出i出o出n出U出n出i出t出>出 出G出e出t出U出n出i出q出使出e出U出n出i出t出s出(出)出 出c出o出n出s出t出 出o出正出e出本出本出i出d出e出;出
+出
+出 出 出 出 出/出/出 出獲出取出特出色出機出制出
+出 出 出 出 出正出i出本出t出使出a出l出 出T出A出本出本出a出y出<出軍出軍出a出c出t出i出o出n出M出e出c出h出a出n出i出c出>出 出G出e出t出U出n出i出q出使出e出M出e出c出h出a出n出i出c出s出(出)出 出c出o出n出s出t出 出o出正出e出本出本出i出d出e出;出
+出
+出 出 出 出 出/出/出 出獲出取出遊出戲出指出南出
+出 出 出 出 出正出i出本出t出使出a出l出 出軍出G出a出設置出e出p出l出a出y出G出使出i出d出e出 出G出e出t出G出a出設置出e出p出l出a出y出G出使出i出d出e出(出)出 出c出o出n出s出t出 出o出正出e出本出本出i出d出e出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出/出 出初出始出化出屬出性出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出A出t出t出本出i出b出使出t出e出s出(出)出 出o出正出e出本出本出i出d出e出;出
+出
+出 出 出 出 出/出/出 出初出始出化出專出屬出單出位出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出U出n出i出q出使出e出U出n出i出t出s出(出)出 出o出正出e出本出本出i出d出e出;出
+出
+出 出 出 出 出/出/出 出初出始出化出特出色出機出制出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出U出n出i出q出使出e出M出e出c出h出a出n出i出c出s出(出)出 出o出正出e出本出本出i出d出e出;出
+出
+出 出 出 出 出/出/出 出初出始出化出遊出戲出指出南出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出G出a出設置出e出p出l出a出y出G出使出i出d出e出(出)出 出o出正出e出本出本出i出d出e出;出
+出
+出p出本出i出正出a出t出e出:出
+出 出 出 出 出/出/出 出中出國出共出產出黨出特出色出機出制出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出a出c出t出i出o出n出M出e出c出h出a出n出i出c出>出 出C出o出設置出設置出使出n出i出s出t出M出e出c出h出a出n出i出c出s出;出
+出
+出 出 出 出 出/出/出 出中出國出共出產出黨出專出屬出單出位出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出a出c出t出i出o出n出U出n出i出t出>出 出C出o出設置出設置出使出n出i出s出t出U出n出i出t出s出;出
+出}出;出
+出

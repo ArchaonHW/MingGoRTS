@@ -1,62 +1,63 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "MingDecisionEffect.generated.h"
-
-/**
- * 決�X��?類�?
- */
-UENUM(BlueprintType)
-enum class EDecisionEffectType: uint8 {
-    ResourceChange      UMETA(DisplayName = "Resource Change"),
-    FactionRelation     UMETA(DisplayName = "Faction Relation"),
-    CharacterAttribute  UMETA(DisplayName = "Character Attribute"),
-    UnlockContent       UMETA(DisplayName = "Unlock Content"),
-    TriggerEvent        UMETA(DisplayName = "Trigger Event"),
-    Custom              UMETA(DisplayName = "Custom")
-};
-
-/**
- * 決�X��?結�?
- * 定義?��X�個決策選?��X��X */
-USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FMingDecisionEffect
-{
-    GENERATED_BODY()
-    
-    // ?��?ID
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
-    FString EffectId;
-    
-    // ?��?類�?
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
-    EDecisionEffectType EffectType;
-    
-    // ?��?對象 (資�?類�X��X�ID�?
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
-    FString TargetKey;
-    
-    // ?��X��?(�?��為增�?，�X�為減�?)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
-    float EffectValue;
-    
-    // ?��X��? (0?�永�?
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
-    float Duration;
-    
-    // ?��X�述
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
-    FText EffectDescription;
-    
-    // ?�否立即?��?
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
-    bool bImmediate;
-    
-    FMingDecisionEffect()
-        : EffectType(EDecisionEffectType::Custom)
-        , EffectValue(0.0f)
-        , Duration(0.0f)
-        , bImmediate(true)
-    {}
-};
-
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出D出e出c出i出s出i出o出n出E出f出f出e出c出t出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出決出�出X出�出�出基本出類出�出基本出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出D出e出c出i出s出i出o出n出E出f出f出e出c出t出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出R出e出s出o出使出本出c出e出C出h出a出n出成出e出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出R出e出s出o出使出本出c出e出 出C出h出a出n出成出e出"出)出,出
+出 出 出 出 出軍出a出c出t出i出o出n出R出e出l出a出t出i出o出n出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出軍出a出c出t出i出o出n出 出R出e出l出a出t出i出o出n出"出)出,出
+出 出 出 出 出C出h出a出本出a出c出t出e出本出A出t出t出本出i出b出使出t出e出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出C出h出a出本出a出c出t出e出本出 出A出t出t出本出i出b出使出t出e出"出)出,出
+出 出 出 出 出U出n出l出o出c出k出C出o出n出t出e出n出t出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出U出n出l出o出c出k出 出C出o出n出t出e出n出t出"出)出,出
+出 出 出 出 出T出本出i出成出成出e出本出E出正出e出n出t出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出本出i出成出成出e出本出 出E出正出e出n出t出"出)出,出
+出 出 出 出 出C出使出s出t出o出設置出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出C出使出s出t出o出設置出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出決出�出X出�出�出基本出結出�出基本出
+出 出*出 出定出義出基本出�出�出X出�出個出決出策出選出基本出�出�出X出�出�出X出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出E出f出f出e出c出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出�出�出基本出I出D出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出E出f出f出e出c出t出I出d出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出�出�出基本出類出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
+出 出 出 出 出E出D出e出c出i出s出i出o出n出E出f出f出e出c出t出T出y出p出e出 出E出f出f出e出c出t出T出y出p出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出�出�出基本出對出象出 出(出資出�出基本出類出�出X出�出�出X出�出I出D出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出T出a出本出成出e出t出K出e出y出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出�出�出X出�出�出基本出(出�出基本出�出�出為出增出�出基本出，出�出X出�出為出減出�出基本出)出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
+出 出 出 出 出f出l出o出a出t出 出E出f出f出e出c出t出V出a出l出使出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出�出�出X出�出�出基本出 出(出0出基本出�出永出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
+出 出 出 出 出f出l出o出a出t出 出D出使出本出a出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出�出�出X出�出述出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
+出 出 出 出 出軍出T出e出x出t出 出E出f出f出e出c出t出D出e出s出c出本出i出p出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出�出否出立出即出基本出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
+出 出 出 出 出b出o出o出l出 出b出I出設置出設置出e出d出i出a出t出e出;出
+出 出 出 出 出
+出 出 出 出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出E出f出f出e出c出t出(出)出
+出 出 出 出 出 出 出 出 出:出 出E出f出f出e出c出t出T出y出p出e出(出E出D出e出c出i出s出i出o出n出E出f出f出e出c出t出T出y出p出e出:出:出C出使出s出t出o出設置出)出
+出 出 出 出 出 出 出 出 出,出 出E出f出f出e出c出t出V出a出l出使出e出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出D出使出本出a出t出i出o出n出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出b出I出設置出設置出e出d出i出a出t出e出(出t出本出使出e出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出

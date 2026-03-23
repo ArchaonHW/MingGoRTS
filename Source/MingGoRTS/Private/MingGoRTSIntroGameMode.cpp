@@ -1,106 +1,107 @@
-#include "MingGoRTSIntroGameMode.h"
-#include "MingGoRTSIntroManager.h"
-#include "Kismet/GameplayStatics.h"
-#include "TimerManager.h"
-
-AMingGoRTSIntroGameMode::AMingGoRTSIntroGameMode()
-{
-    // 設置遊戲模式屬性
-    bIntroCompleted = false;
-    IntroManager = nullptr;
-    IntroWidget = nullptr;
-
-    // 禁用玩家控制器
-    DefaultPawnClass = nullptr;
-    PlayerControllerClass = nullptr;
-    GameStateClass = nullptr;
-}
-
-void AMingGoRTSIntroGameMode::BeginPlay()
-{
-    Super::BeginPlay();
-
-    // 設置開頭動畫系統
-    SetupIntroManager();
-
-    // 延遲開始動畫，確保所有組件都已初始化
-    if (UWorld* World = GetWorld())
-    {
-        FTimerHandle TimerHandle;
-        World->GetTimerManager().SetTimer(TimerHandle, this, &AMingGoRTSIntroGameMode::StartIntroSequence, 1.0f, false);
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("MingGoRTS Intro GameMode Started"));
-}
-
-void AMingGoRTSIntroGameMode::StartIntroSequence()
-{
-    if (IntroManager)
-    {
-        IntroManager->StartIntroSequence();
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("Intro Sequence Started"));
-}
-
-void AMingGoRTSIntroGameMode::SkipIntro()
-{
-    if (IntroManager)
-    {
-        IntroManager->SkipIntro();
-    }
-
-    HandleIntroCompleted();
-
-    UE_LOG(LogTemp, Log, TEXT("Intro Sequence Skipped"));
-}
-
-void AMingGoRTSIntroGameMode::LoadMainMenu()
-{
-    // 載入主選單關卡
-    UGameplayStatics::OpenLevel(this, TEXT("MainMenuLevel"), true);
-
-    UE_LOG(LogTemp, Log, TEXT("Loading Main Menu"));
-}
-
-void AMingGoRTSIntroGameMode::LoadFirstLevel()
-{
-    // 載入第一個遊戲關卡
-    UGameplayStatics::OpenLevel(this, TEXT("FirstGameLevel"), true);
-
-    UE_LOG(LogTemp, Log, TEXT("Loading First Game Level"));
-}
-
-void AMingGoRTSIntroGameMode::SetupIntroManager()
-{
-    // 創建開頭動畫管理器
-    IntroManager = NewObject<UMingGoRTSIntroManager>(this);
-    if (IntroManager)
-    {
-        IntroManager->AddToRoot();
-        UE_LOG(LogTemp, Log, TEXT("Intro Manager Created"));
-    }
-}
-
-void AMingGoRTSIntroGameMode::SetupIntroWidget()
-{
-    // 暫時移除 Widget 設置，將在藍圖中實現
-    UE_LOG(LogTemp, Log, TEXT("Intro Widget setup deferred to Blueprint"));
-}
-
-void AMingGoRTSIntroGameMode::HandleIntroCompleted()
-{
-    bIntroCompleted = true;
-
-    // 清理開頭動畫資源
-    if (IntroManager)
-    {
-        IntroManager->RemoveFromRoot();
-        IntroManager = nullptr;
-    }
-
-    // 載入主選單
-    LoadMainMenu();
-
-    UE_LOG(LogTemp, Log, TEXT("Intro Sequence Completed"));
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出T出i出設置出e出本出M出a出n出a出成出e出本出.出h出"出
+出
+出A出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出:出:出A出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出(出)出
+出{出
+出 出 出 出 出/出/出 出設出置出遊出戲出模出式出屬出性出
+出 出 出 出 出b出I出n出t出本出o出C出o出設置出p出l出e出t出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出I出n出t出本出o出M出a出n出a出成出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出I出n出t出本出o出基本出i出d出成出e出t出 出=出 出n出使出l出l出p出t出本出;出
+出
+出 出 出 出 出/出/出 出禁出用出玩出家出控出制出器出
+出 出 出 出 出D出e出f出a出使出l出t出P出a出w出n出C出l出a出s出s出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出P出l出a出y出e出本出C出o出n出t出本出o出l出l出e出本出C出l出a出s出s出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出G出a出設置出e出S出t出a出t出e出C出l出a出s出s出 出=出 出n出使出l出l出p出t出本出;出
+出}出
+出
+出正出o出i出d出 出A出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出:出:出B出e出成出i出n出P出l出a出y出(出)出
+出{出
+出 出 出 出 出S出使出p出e出本出:出:出B出e出成出i出n出P出l出a出y出(出)出;出
+出
+出 出 出 出 出/出/出 出設出置出開出頭出動出畫出系出統出
+出 出 出 出 出S出e出t出使出p出I出n出t出本出o出M出a出n出a出成出e出本出(出)出;出
+出
+出 出 出 出 出/出/出 出延出遲出開出始出動出畫出，出確出保出所出有出組出件出都出已出初出始出化出
+出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出e出t出基本出o出本出l出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出T出i出設置出e出本出輸入出a出n出d出l出e出 出T出i出設置出e出本出輸入出a出n出d出l出e出;出
+出 出 出 出 出 出 出 出 出基本出o出本出l出d出-出>出G出e出t出T出i出設置出e出本出M出a出n出a出成出e出本出(出)出.出S出e出t出T出i出設置出e出本出(出T出i出設置出e出本出輸入出a出n出d出l出e出,出 出t出h出i出s出,出 出&出A出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出:出:出S出t出a出本出t出I出n出t出本出o出S出e出q出使出e出n出c出e出,出 出1出.出0出f出,出 出f出a出l出s出e出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出G出o出R出T出S出 出I出n出t出本出o出 出G出a出設置出e出M出o出d出e出 出S出t出a出本出t出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出A出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出:出:出S出t出a出本出t出I出n出t出本出o出S出e出q出使出e出n出c出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出I出n出t出本出o出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出t出本出o出M出a出n出a出成出e出本出-出>出S出t出a出本出t出I出n出t出本出o出S出e出q出使出e出n出c出e出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出t出本出o出 出S出e出q出使出e出n出c出e出 出S出t出a出本出t出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出A出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出:出:出S出k出i出p出I出n出t出本出o出(出)出
+出{出
+出 出 出 出 出i出f出 出(出I出n出t出本出o出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出t出本出o出M出a出n出a出成出e出本出-出>出S出k出i出p出I出n出t出本出o出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出輸入出a出n出d出l出e出I出n出t出本出o出C出o出設置出p出l出e出t出e出d出(出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出t出本出o出 出S出e出q出使出e出n出c出e出 出S出k出i出p出p出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出A出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出:出:出L出o出a出d出M出a出i出n出M出e出n出使出(出)出
+出{出
+出 出 出 出 出/出/出 出載出入出主出選出單出關出卡出
+出 出 出 出 出U出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出:出:出O出p出e出n出L出e出正出e出l出(出t出h出i出s出,出 出T出E出X出T出(出"出M出a出i出n出M出e出n出使出L出e出正出e出l出"出)出,出 出t出本出使出e出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出L出o出a出d出i出n出成出 出M出a出i出n出 出M出e出n出使出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出A出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出:出:出L出o出a出d出軍出i出本出s出t出L出e出正出e出l出(出)出
+出{出
+出 出 出 出 出/出/出 出載出入出第出一出個出遊出戲出關出卡出
+出 出 出 出 出U出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出:出:出O出p出e出n出L出e出正出e出l出(出t出h出i出s出,出 出T出E出X出T出(出"出軍出i出本出s出t出G出a出設置出e出L出e出正出e出l出"出)出,出 出t出本出使出e出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出L出o出a出d出i出n出成出 出軍出i出本出s出t出 出G出a出設置出e出 出L出e出正出e出l出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出A出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出:出:出S出e出t出使出p出I出n出t出本出o出M出a出n出a出成出e出本出(出)出
+出{出
+出 出 出 出 出/出/出 出創出建出開出頭出動出畫出管出理出器出
+出 出 出 出 出I出n出t出本出o出M出a出n出a出成出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出G出o出R出T出S出I出n出t出本出o出M出a出n出a出成出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出i出f出 出(出I出n出t出本出o出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出t出本出o出M出a出n出a出成出e出本出-出>出A出d出d出T出o出R出o出o出t出(出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出t出本出o出 出M出a出n出a出成出e出本出 出C出本出e出a出t出e出d出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出A出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出:出:出S出e出t出使出p出I出n出t出本出o出基本出i出d出成出e出t出(出)出
+出{出
+出 出 出 出 出/出/出 出暫出時出移出除出 出基本出i出d出成出e出t出 出設出置出，出將出在出藍出圖出中出實出現出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出t出本出o出 出基本出i出d出成出e出t出 出s出e出t出使出p出 出d出e出f出e出本出本出e出d出 出t出o出 出B出l出使出e出p出本出i出n出t出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出A出M出i出n出成出G出o出R出T出S出I出n出t出本出o出G出a出設置出e出M出o出d出e出:出:出輸入出a出n出d出l出e出I出n出t出本出o出C出o出設置出p出l出e出t出e出d出(出)出
+出{出
+出 出 出 出 出b出I出n出t出本出o出C出o出設置出p出l出e出t出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出清出理出開出頭出動出畫出資出源出
+出 出 出 出 出i出f出 出(出I出n出t出本出o出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出t出本出o出M出a出n出a出成出e出本出-出>出R出e出設置出o出正出e出軍出本出o出設置出R出o出o出t出(出)出;出
+出 出 出 出 出 出 出 出 出I出n出t出本出o出M出a出n出a出成出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出載出入出主出選出單出
+出 出 出 出 出L出o出a出d出M出a出i出n出M出e出n出使出(出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出t出本出o出 出S出e出q出使出e出n出c出e出 出C出o出設置出p出l出e出t出e出d出"出)出)出;出
+出}出
+出

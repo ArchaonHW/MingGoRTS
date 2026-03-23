@@ -1,5 +1,6 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Risk Trend Analysis System Implementation - B2-4
+// Provides risk trend analysis and forecasting
 
 #include "Risk/MingRiskTrendAnalysis.h"
 #include "Engine/Engine.h"
@@ -15,822 +16,576 @@ UMingRiskTrendAnalysis::UMingRiskTrendAnalysis()
 void UMingRiskTrendAnalysis::InitializeTrendAnalysis(const FTrendAnalysisConfig& Config)
 {
     this->Config = Config;
-
-    UE_LOG(LogRiskTrend, Log, TEXT("Risk Trend Analysis initialized"));
-    UE_LOG(LogRiskTrend, Log, TEXT("Analysis period: %s, Model: %s"),
-        *UEnum::GetValueAsString(Config.DefaultPeriod),
-        *UEnum::GetValueAsString(Config.DefaultModel));
-
-    // Initialize historical data containers for all risk categories
-    for (int32 i = 0; i <= static_cast<int32>(ERiskCategory::DataIntegrity); ++i)
+    
+    // Initialize trend data for all risk categories
+    InitializeTrendData();
+    
+    // Start trend monitoring if enabled
+    if (Config.bEnableTrendMonitoring)
     {
-        ERiskCategory Category = static_cast<ERiskCategory>(i);
-        HistoricalData.Add(Category, TArray<FTimeSeriesData>());
-        CategoryModels.Add(Category, Config.DefaultModel);
-        PreviousDirections.Add(Category, ETrendDirection::Stable);
+        StartTrendMonitoring();
     }
-
-    if (Config.bEnableAutoAnalysis)
-    {
-        StartAutoAnalysis();
-    }
+    
+    UE_LOG(LogRiskTrend, Log, TEXT("Risk Trend Analysis initialized with analysis period: %s"), 
+        *UEnum::GetValueAsString(Config.AnalysisPeriod));
 }
 
 void UMingRiskTrendAnalysis::ShutdownTrendAnalysis()
 {
-    StopAutoAnalysis();
+    StopTrendMonitoring();
     UE_LOG(LogRiskTrend, Log, TEXT("Risk Trend Analysis shutdown"));
 }
 
-void UMingRiskTrendAnalysis::AddDataPoint(ERiskCategory Category, uint32 Timestamp, float Value, const FString& Label)
+void UMingRiskTrendAnalysis::AddRiskDataPoint(ERiskCategory Category, float Value, const FDateTime& Timestamp)
 {
-    if (!HistoricalData.Contains(Category))
-    {
-        HistoricalData.Add(Category, TArray<FTimeSeriesData>());
-    }
-
-    FTimeSeriesData DataPoint;
-    DataPoint.Timestamp = Timestamp;
+    FRiskTrendData& TrendData = RiskTrendData[Category];
+    
+    // Add new data point
+    FRiskDataPoint DataPoint;
     DataPoint.Value = Value;
-    DataPoint.Label = Label;
-
-    HistoricalData[Category].Add(DataPoint);
-
-    // Trim if needed
-    if (Config.bStoreHistoricalData)
-    {
-        TrimHistoricalDataIfNeeded();
-    }
-
-    UE_LOG(LogRiskTrend, VeryVerbose, TEXT("Added data point for %s: %.2f at %d"),
-        *UEnum::GetValueAsString(Category), Value, Timestamp);
+    DataPoint.Timestamp = Timestamp;
+    DataPoint.Category = Category;
+    
+    TrendData.DataPoints.Add(DataPoint);
+    
+    // Remove old data points based on retention policy
+    CleanupOldDataPoints(TrendData);
+    
+    // Update trend analysis
+    UpdateTrendAnalysis(Category);
+    
+    // Broadcast event
+    OnRiskDataPointAdded.Broadcast(Category, DataPoint);
+    
+    UE_LOG(LogRiskTrend, Verbose, TEXT("Added risk data point for category %s: %.2f"), 
+        *UEnum::GetValueAsString(Category), Value);
 }
 
-FRiskTrend UMingRiskTrendAnalysis::AnalyzeTrend(ERiskCategory Category, EAnalysisPeriod Period)
+FRiskTrend UMingRiskTrendAnalysis::AnalyzeRiskTrend(ERiskCategory Category, EForecastModel Model, EAnalysisPeriod Period)
 {
     FRiskTrend Trend;
     Trend.Category = Category;
-
-    if (!HistoricalData.Contains(Category) || HistoricalData[Category].Num() < Config.MinDataPoints)
+    Trend.AnalysisPeriod = Period;
+    Trend.ForecastModel = Model;
+    Trend.LastUpdated = FDateTime::Now();
+    
+    // Get data points for the specified period
+    TArray<FRiskDataPoint> DataPoints = GetDataPointsForPeriod(Category, Period);
+    
+    if (DataPoints.Num() < 2)
     {
-        Trend.TrendDescription = TEXT("Insufficient data for trend analysis");
         Trend.Direction = ETrendDirection::Stable;
+        Trend.Confidence = 0.0f;
+        Trend.ErrorMessage = TEXT("Insufficient data for trend analysis");
         return Trend;
     }
-
-    const TArray<FTimeSeriesData>& Data = HistoricalData[Category];
-
-    uint32 PeriodDuration = GetPeriodDuration(Period);
-    uint32 CurrentTime = FPlatformTime::Seconds();
-    uint32 PeriodStartTime = CurrentTime - PeriodDuration;
-
-    // Filter data for the specified period
-    TArray<FTimeSeriesData> PeriodData;
-    for (const auto& Point : Data)
+    
+    // Perform trend analysis based on model
+    switch (Model)
     {
-        if (Point.Timestamp >= PeriodStartTime)
-        {
-            PeriodData.Add(Point);
-        }
+        case EForecastModel::Linear:
+            PerformLinearRegression(DataPoints, Trend);
+            break;
+        case EForecastModel::Exponential:
+            PerformExponentialSmoothing(DataPoints, Trend);
+            break;
+        case EForecastModel::MovingAverage:
+            PerformMovingAverage(DataPoints, Trend);
+            break;
+        case EForecastModel::TrendAnalysis:
+            PerformTrendAnalysis(DataPoints, Trend);
+            break;
+        case EForecastModel::Seasonal:
+            PerformSeasonalDecomposition(DataPoints, Trend);
+            break;
+        case EForecastModel::MachineLearning:
+            PerformMLPrediction(DataPoints, Trend);
+            break;
     }
-
-    if (PeriodData.Num() < Config.MinDataPoints)
-    {
-        PeriodData = Data;
-        if (PeriodData.Num() > 100)
-        {
-            PeriodData = TArray<FTimeSeriesData>(PeriodData.GetData() + PeriodData.Num() - 100, 100);
-        }
-    }
-
-    // Calculate statistics
-    Trend.DataPoints = PeriodData.Num();
-    Trend.CurrentValue = PeriodData.Last().Value;
-    Trend.PreviousValue = PeriodData.Num() > 1 ? PeriodData[PeriodData.Num() - 2].Value : Trend.CurrentValue;
-
-    float Sum = 0.0f;
-    Trend.MinValue = PeriodData[0].Value;
-    Trend.MaxValue = PeriodData[0].Value;
-
-    for (const auto& Point : PeriodData)
-    {
-        Sum += Point.Value;
-        Trend.MinValue = FMath::Min(Trend.MinValue, Point.Value);
-        Trend.MaxValue = FMath::Max(Trend.MaxValue, Point.Value);
-    }
-
-    Trend.AverageValue = Sum / PeriodData.Num();
-    Trend.Volatility = CalculateVolatility(PeriodData);
-
+    
     // Calculate trend direction
-    float Slope = CalculateTrendSlope(PeriodData);
-    float PreviousSlope = 0.0f;
-
-    if (PreviousDirections.Contains(Category))
-    {
-        ETrendDirection PrevDir = PreviousDirections[Category];
-        PreviousSlope = (PrevDir == ETrendDirection::Improving || PrevDir == ETrendDirection::Accelerating) ? 1.0f : -1.0f;
-    }
-
-    Trend.Direction = DetermineTrendDirection(Slope, PreviousSlope, Trend.Volatility);
-    Trend.ChangeRate = Slope;
-    Trend.TrendColor = GetTrendColor(Trend.Direction);
-
-    // Generate description
-    Trend.TrendDescription = GenerateTrendDescription(Trend);
-
-    // Store current trend
-    CurrentTrends.Add(Category, Trend);
-    PreviousDirections.Add(Category, Trend.Direction);
-
-    // Notify if significant trend change
-    if (Trend.Direction == ETrendDirection::Degrading || Trend.Direction == ETrendDirection::Accelerating)
-    {
-        if (Trend.CurrentValue > 60.0f)
-        {
-            NotifyCriticalTrend(Trend);
-        }
-    }
-
-    NotifyTrendDetected(Trend);
-
-    UE_LOG(LogRiskTrend, Verbose, TEXT("Trend analyzed for %s: %s (change rate: %.2f)"),
-        *UEnum::GetValueAsString(Category),
-        *UEnum::GetValueAsString(Trend.Direction),
-        Trend.ChangeRate);
-
+    CalculateTrendDirection(Trend);
+    
+    // Generate forecast
+    GenerateForecast(Trend);
+    
     return Trend;
 }
 
-TArray<FRiskTrend> UMingRiskTrendAnalysis::AnalyzeAllTrends(EAnalysisPeriod Period)
+TArray<FRiskTrend> UMingRiskTrendAnalysis::AnalyzeAllRiskTrends(EForecastModel Model, EAnalysisPeriod Period)
 {
-    TArray<FRiskTrend> Results;
-
-    for (const auto& Pair : HistoricalData)
+    TArray<FRiskTrend> Trends;
+    
+    for (int32 i = 0; i < static_cast<int32>(ERiskCategory::DataIntegrity) + 1; ++i)
     {
-        if (Pair.Value.Num() >= Config.MinDataPoints)
-        {
-            Results.Add(AnalyzeTrend(Pair.Key, Period));
-        }
+        ERiskCategory Category = static_cast<ERiskCategory>(i);
+        FRiskTrend Trend = AnalyzeRiskTrend(Category, Model, Period);
+        Trends.Add(Trend);
     }
-
-    return Results;
+    
+    return Trends;
 }
 
-FRiskForecast UMingRiskTrendAnalysis::GenerateForecast(ERiskCategory Category, float HoursAhead)
+FRiskForecast UMingRiskTrendAnalysis::GenerateRiskForecast(ERiskCategory Category, EForecastModel Model, int32 ForecastHorizon)
 {
     FRiskForecast Forecast;
     Forecast.Category = Category;
-    Forecast.PredictionTime = FPlatformTime::Seconds() + HoursAhead * 3600;
-
-    if (!HistoricalData.Contains(Category) || HistoricalData[Category].Num() < Config.MinDataPoints)
+    Forecast.ForecastModel = Model;
+    Forecast.ForecastHorizon = ForecastHorizon;
+    Forecast.GeneratedAt = FDateTime::Now();
+    
+    // Get historical data
+    TArray<FRiskDataPoint> DataPoints = RiskTrendData[Category].DataPoints;
+    
+    if (DataPoints.Num() < 5)
     {
-        Forecast.ForecastRationale = TEXT("Insufficient data for forecasting");
+        Forecast.ErrorMessage = TEXT("Insufficient data for forecasting");
+        Forecast.Confidence = 0.0f;
         return Forecast;
     }
-
-    const TArray<FTimeSeriesData>& Data = HistoricalData[Category];
-
-    // Use appropriate model
-    EForecastModel Model = Config.DefaultModel;
-    if (CategoryModels.Contains(Category))
-    {
-        Model = CategoryModels[Category];
-    }
-
-    float PredictedValue = 0.0f;
-
+    
+    // Generate forecast based on model
     switch (Model)
     {
-    case EForecastModel::MovingAverage:
-        PredictedValue = CalculateMovingAverage(Data, 10);
-        break;
-    case EForecastModel::Exponential:
-        PredictedValue = CalculateExponentialSmoothing(Data, 0.3f);
-        break;
-    case EForecastModel::Linear:
-        PredictedValue = CalculateLinearRegression(Data, Forecast.PredictionTime);
-        break;
-    case EForecastModel::TrendAnalysis:
-        {
-            FRiskTrend Trend = AnalyzeTrend(Category, EAnalysisPeriod::OneDay);
-            PredictedValue = Trend.CurrentValue + Trend.ChangeRate * HoursAhead;
-        }
-        break;
-    default:
-        PredictedValue = Data.Last().Value;
-        break;
+        case EForecastModel::Linear:
+            GenerateLinearForecast(DataPoints, Forecast);
+            break;
+        case EForecastModel::Exponential:
+            GenerateExponentialForecast(DataPoints, Forecast);
+            break;
+        case EForecastModel::MovingAverage:
+            GenerateMovingAverageForecast(DataPoints, Forecast);
+            break;
+        case EForecastModel::TrendAnalysis:
+            GenerateTrendBasedForecast(DataPoints, Forecast);
+            break;
+        case EForecastModel::Seasonal:
+            GenerateSeasonalForecast(DataPoints, Forecast);
+            break;
+        case EForecastModel::MachineLearning:
+            GenerateMLForecast(DataPoints, Forecast);
+            break;
     }
-
-    Forecast.PredictedValue = FMath::Clamp(PredictedValue, 0.0f, 100.0f);
-
-    // Determine risk level based on predicted value
-    if (Forecast.PredictedValue >= 80.0f)
-    {
-        Forecast.PredictedLevel = ERiskLevel::Critical;
-    }
-    else if (Forecast.PredictedValue >= 60.0f)
-    {
-        Forecast.PredictedLevel = ERiskLevel::High;
-    }
-    else if (Forecast.PredictedValue >= 40.0f)
-    {
-        Forecast.PredictedLevel = ERiskLevel::Medium;
-    }
-    else if (Forecast.PredictedValue >= 20.0f)
-    {
-        Forecast.PredictedLevel = ERiskLevel::Low;
-    }
-    else
-    {
-        Forecast.PredictedLevel = ERiskLevel::None;
-    }
-
-    // Calculate confidence
-    Forecast.ConfidenceScore = CalculateConfidenceScore(Data.Num(), 0.0f);
-    Forecast.ConfidenceInterval = 10.0f * (1.0f - Forecast.ConfidenceScore / 100.0f);
-    Forecast.ConfidenceRange = CalculateConfidenceRange(Forecast.PredictedValue, Forecast.ConfidenceScore);
-
-    // Generate rationale
-    GenerateForecastRationale(Forecast, CurrentTrends.Contains(Category) ? CurrentTrends[Category] : FRiskTrend());
-
-    // Identify contributing factors
-    IdentifyContributingFactors(Forecast, Category);
-
-    // Generate suggestions
-    Forecast.SuggestedActions = GenerateSuggestedActions(Forecast);
-
-    OnForecastGenerated.Broadcast(Forecast);
-
-    UE_LOG(LogRiskTrend, Log, TEXT("Forecast for %s (%.1f hours): %.1f%% (confidence: %.1f%%)"),
-        *UEnum::GetValueAsString(Category), HoursAhead, Forecast.PredictedValue, Forecast.ConfidenceScore);
-
+    
+    // Calculate confidence intervals
+    CalculateConfidenceIntervals(Forecast);
+    
     return Forecast;
 }
 
-TArray<FRiskForecast> UMingRiskTrendAnalysis::GenerateForecastsForAllCategories(float HoursAhead)
+TArray<FRiskDataPoint> UMingRiskTrendAnalysis::GetDataPointsForPeriod(ERiskCategory Category, EAnalysisPeriod Period)
 {
-    TArray<FRiskForecast> Results;
-
-    for (const auto& Pair : HistoricalData)
+    TArray<FRiskDataPoint> FilteredPoints;
+    
+    FDateTime CutoffTime = GetCutoffTimeForPeriod(Period);
+    
+    for (const FRiskDataPoint& Point : RiskTrendData[Category].DataPoints)
     {
-        if (Pair.Value.Num() >= Config.MinDataPoints)
+        if (Point.Timestamp >= CutoffTime)
         {
-            Results.Add(GenerateForecast(Pair.Key, HoursAhead));
+            FilteredPoints.Add(Point);
         }
     }
-
-    return Results;
+    
+    return FilteredPoints;
 }
 
-TArray<FTimeSeriesData> UMingRiskTrendAnalysis::GetTimeSeriesData(ERiskCategory Category, uint32 StartTime, uint32 EndTime)
+FRiskTrendStatistics UMingRiskTrendAnalysis::GetTrendStatistics(ERiskCategory Category, EAnalysisPeriod Period)
 {
-    TArray<FTimeSeriesData> Result;
-
-    if (HistoricalData.Contains(Category))
+    FRiskTrendStatistics Stats;
+    Stats.Category = Category;
+    Stats.Period = Period;
+    Stats.CalculatedAt = FDateTime::Now();
+    
+    TArray<FRiskDataPoint> DataPoints = GetDataPointsForPeriod(Category, Period);
+    
+    if (DataPoints.Num() == 0)
     {
-        for (const auto& Point : HistoricalData[Category])
-        {
-            if (Point.Timestamp >= StartTime && Point.Timestamp <= EndTime)
-            {
-                Result.Add(Point);
-            }
-        }
+        return Stats;
     }
-
-    return Result;
-}
-
-void UMingRiskTrendAnalysis::SetForecastModel(ERiskCategory Category, EForecastModel Model)
-{
-    CategoryModels.Add(Category, Model);
-    UE_LOG(LogRiskTrend, Log, TEXT("Set forecast model for %s to %s"),
-        *UEnum::GetValueAsString(Category), *UEnum::GetValueAsString(Model));
-}
-
-TArray<FRiskCorrelation> UMingRiskTrendAnalysis::AnalyzeCorrelations()
-{
-    TArray<FRiskCorrelation> Correlations;
-
-    // Calculate correlations between all category pairs
-    for (const auto& PairA : HistoricalData)
-    {
-        for (const auto& PairB : HistoricalData)
-        {
-            if (PairA.Key != PairB.Key)
-            {
-                float Correlation = CalculateCorrelation(PairA.Key, PairB.Key);
-
-                if (FMath::Abs(Correlation) > 0.3f) // Only significant correlations
-                {
-                    FRiskCorrelation RiskCorr;
-                    RiskCorr.SourceCategory = PairA.Key;
-                    RiskCorr.TargetCategory = PairB.Key;
-                    RiskCorr.CorrelationCoefficient = Correlation;
-                    RiskCorr.bIsPositiveCorrelation = Correlation > 0;
-                    RiskCorr.RelationshipDescription = FString::Printf(TEXT("Correlation: %.2f"), Correlation);
-
-                    Correlations.Add(RiskCorr);
-                }
-            }
-        }
-    }
-
-    return Correlations;
-}
-
-float UMingRiskTrendAnalysis::CalculateCorrelation(ERiskCategory CategoryA, ERiskCategory CategoryB)
-{
-    if (!HistoricalData.Contains(CategoryA) || !HistoricalData.Contains(CategoryB))
-    {
-        return 0.0f;
-    }
-
-    const TArray<FTimeSeriesData>& DataA = HistoricalData[CategoryA];
-    const TArray<FTimeSeriesData>& DataB = HistoricalData[CategoryB];
-
-    // Simple correlation calculation
-    if (DataA.Num() < 2 || DataB.Num() < 2)
-    {
-        return 0.0f;
-    }
-
-    float MeanA = 0.0f, MeanB = 0.0f;
-    for (const auto& Point : DataA) MeanA += Point.Value;
-    for (const auto& Point : DataB) MeanB += Point.Value;
-    MeanA /= DataA.Num();
-    MeanB /= DataB.Num();
-
-    float Numerator = 0.0f;
-    float DenomA = 0.0f;
-    float DenomB = 0.0f;
-
-    int32 MinCount = FMath::Min(DataA.Num(), DataB.Num());
-    for (int32 i = 0; i < MinCount; ++i)
-    {
-        float DiffA = DataA[i].Value - MeanA;
-        float DiffB = DataB[i].Value - MeanB;
-
-        Numerator += DiffA * DiffB;
-        DenomA += DiffA * DiffA;
-        DenomB += DiffB * DiffB;
-    }
-
-    float Denominator = FMath::Sqrt(DenomA * DenomB);
-    if (Denominator < 0.001f) return 0.0f;
-
-    return FMath::Clamp(Numerator / Denominator, -1.0f, 1.0f);
-}
-
-void UMingRiskTrendAnalysis::ExportTrendData(const FString& FilePath)
-{
-    UE_LOG(LogRiskTrend, Log, TEXT("Exporting trend data to: %s"), *FilePath);
-
-    FString JsonData = TEXT("{\n");
-    JsonData += TEXT("  \"categories\": [\n");
-
-    int32 CatIndex = 0;
-    for (const auto& Pair : HistoricalData)
-    {
-        JsonData += TEXT("    {\n");
-        JsonData += TEXT("      \"category\": \"") + UEnum::GetValueAsString(Pair.Key) + TEXT("\",\n");
-        JsonData += TEXT("      \"data_points\": [\n");
-
-        for (int32 i = 0; i < Pair.Value.Num(); ++i)
-        {
-            const auto& Point = Pair.Value[i];
-            JsonData += FString::Printf(TEXT("        {\"time\": %d, \"value\": %.2f}"),
-                Point.Timestamp, Point.Value);
-            JsonData += (i < Pair.Value.Num() - 1) ? TEXT(",\n") : TEXT("\n");
-        }
-
-        JsonData += TEXT("      ]\n");
-        JsonData += TEXT("    }") + FString(CatIndex < HistoricalData.Num() - 1 ? "," : "") + TEXT("\n");
-        CatIndex++;
-    }
-
-    JsonData += TEXT("  ]\n");
-    JsonData += TEXT("}\n");
-
-    FFileHelper::SaveStringToFile(JsonData, *FilePath);
-}
-
-void UMingRiskTrendAnalysis::ImportTrendData(const FString& FilePath)
-{
-    UE_LOG(LogRiskTrend, Log, TEXT("Importing trend data from: %s"), *FilePath);
-    // Implementation would parse JSON and populate HistoricalData
-}
-
-void UMingRiskTrendAnalysis::ClearHistoricalData()
-{
-    for (auto& Pair : HistoricalData)
-    {
-        Pair.Value.Empty();
-    }
-    CurrentTrends.Empty();
-    UE_LOG(LogRiskTrend, Log, TEXT("Historical data cleared"));
-}
-
-void UMingRiskTrendAnalysis::ClearCategoryData(ERiskCategory Category)
-{
-    if (HistoricalData.Contains(Category))
-    {
-        HistoricalData[Category].Empty();
-        CurrentTrends.Remove(Category);
-        UE_LOG(LogRiskTrend, Log, TEXT("Data cleared for category: %s"), *UEnum::GetValueAsString(Category));
-    }
-}
-
-void UMingRiskTrendAnalysis::StartAutoAnalysis()
-{
-    if (Config.bEnableAutoAnalysis && GEngine && GEngine->GetCurrentWorldContext())
-    {
-        GEngine->GetCurrentWorldContext()->World()->GetTimerManager().SetTimer(
-            AnalysisTimer,
-            this,
-            &UMingRiskTrendAnalysis::PerformAutoAnalysis,
-            Config.AnalysisInterval,
-            true
-        );
-
-        UE_LOG(LogRiskTrend, Log, TEXT("Auto-analysis started (interval: %.1f seconds)"), Config.AnalysisInterval);
-    }
-}
-
-void UMingRiskTrendAnalysis::StopAutoAnalysis()
-{
-    if (GEngine && GEngine->GetCurrentWorldContext())
-    {
-        GEngine->GetCurrentWorldContext()->World()->GetTimerManager().ClearTimer(AnalysisTimer);
-    }
-
-    UE_LOG(LogRiskTrend, Log, TEXT("Auto-analysis stopped"));
-}
-
-void UMingRiskTrendAnalysis::GenerateTrendReport()
-{
-    UE_LOG(LogRiskTrend, Log, TEXT("=== Risk Trend Analysis Report ==="));
-
-    for (const auto& Pair : CurrentTrends)
-    {
-        const FRiskTrend& Trend = Pair.Value;
-        UE_LOG(LogRiskTrend, Log, TEXT("%s: %s (%.1f -> %.1f, rate: %.2f)"),
-            *UEnum::GetValueAsString(Trend.Category),
-            *UEnum::GetValueAsString(Trend.Direction),
-            Trend.PreviousValue,
-            Trend.CurrentValue,
-            Trend.ChangeRate);
-    }
-}
-
-int32 UMingRiskTrendAnalysis::GetDataPointCount(ERiskCategory Category) const
-{
-    if (HistoricalData.Contains(Category))
-    {
-        return HistoricalData[Category].Num();
-    }
-    return 0;
-}
-
-bool UMingRiskTrendAnalysis::IsAutoAnalysisActive() const
-{
-    return Config.bEnableAutoAnalysis;
-}
-
-void UMingRiskTrendAnalysis::ScheduleAutoAnalysis()
-{
-    // Timer is set in StartAutoAnalysis
-}
-
-void UMingRiskTrendAnalysis::CancelAutoAnalysis()
-{
-    StopAutoAnalysis();
-}
-
-void UMingRiskTrendAnalysis::PerformAutoAnalysis()
-{
-    for (const auto& Pair : HistoricalData)
-    {
-        if (Pair.Value.Num() >= Config.MinDataPoints)
-        {
-            AnalyzeTrend(Pair.Key, Config.DefaultPeriod);
-        }
-    }
-
-    DetectTrendChanges();
-}
-
-float UMingRiskTrendAnalysis::CalculateMovingAverage(const TArray<FTimeSeriesData>& Data, int32 WindowSize)
-{
-    if (Data.Num() < WindowSize) return 0.0f;
-
+    
+    // Calculate basic statistics
     float Sum = 0.0f;
-    for (int32 i = Data.Num() - WindowSize; i < Data.Num(); ++i)
+    float MinValue = DataPoints[0].Value;
+    float MaxValue = DataPoints[0].Value;
+    
+    for (const FRiskDataPoint& Point : DataPoints)
     {
-        Sum += Data[i].Value;
+        Sum += Point.Value;
+        MinValue = FMath::Min(MinValue, Point.Value);
+        MaxValue = FMath::Max(MaxValue, Point.Value);
     }
-    return Sum / WindowSize;
+    
+    Stats.MeanValue = Sum / DataPoints.Num();
+    Stats.MinValue = MinValue;
+    Stats.MaxValue = MaxValue;
+    Stats.DataPointCount = DataPoints.Num();
+    
+    // Calculate standard deviation
+    float Variance = 0.0f;
+    for (const FRiskDataPoint& Point : DataPoints)
+    {
+        Variance += FMath::Square(Point.Value - Stats.MeanValue);
+    }
+    Variance /= DataPoints.Num();
+    Stats.StandardDeviation = FMath::Sqrt(Variance);
+    
+    // Calculate trend direction
+    if (DataPoints.Num() >= 2)
+    {
+        float FirstValue = DataPoints[0].Value;
+        float LastValue = DataPoints.Last().Value;
+        float Change = LastValue - FirstValue;
+        
+        if (FMath::Abs(Change) < 0.01f)
+        {
+            Stats.TrendDirection = ETrendDirection::Stable;
+        }
+        else if (Change > 0)
+        {
+            Stats.TrendDirection = (Change > 0.1f) ? ETrendDirection::Accelerating : ETrendDirection::Improving;
+        }
+        else
+        {
+            Stats.TrendDirection = (Change < -0.1f) ? ETrendDirection::Decelerating : ETrendDirection::Degrading;
+        }
+        
+        Stats.PercentChange = (FirstValue != 0.0f) ? (Change / FirstValue) * 100.0f : 0.0f;
+    }
+    
+    return Stats;
 }
 
-float UMingRiskTrendAnalysis::CalculateExponentialSmoothing(const TArray<FTimeSeriesData>& Data, float Alpha)
+void UMingRiskTrendAnalysis::SetAnalysisPeriod(EAnalysisPeriod Period)
 {
-    if (Data.Num() == 0) return 0.0f;
-
-    float Smoothed = Data[0].Value;
-    for (int32 i = 1; i < Data.Num(); ++i)
-    {
-        Smoothed = Alpha * Data[i].Value + (1.0f - Alpha) * Smoothed;
-    }
-    return Smoothed;
+    Config.AnalysisPeriod = Period;
+    UE_LOG(LogRiskTrend, Log, TEXT("Analysis period changed to: %s"), *UEnum::GetValueAsString(Period));
 }
 
-float UMingRiskTrendAnalysis::CalculateLinearRegression(const TArray<FTimeSeriesData>& Data, uint32 TargetTime)
+void UMingRiskTrendAnalysis::SetForecastModel(EForecastModel Model)
 {
-    if (Data.Num() < 2) return 0.0f;
-
-    float SumX = 0.0f, SumY = 0.0f, SumXY = 0.0f, SumXX = 0.0f;
-    int32 N = Data.Num();
-
-    for (const auto& Point : Data)
-    {
-        float X = static_cast<float>(Point.Timestamp);
-        SumX += X;
-        SumY += Point.Value;
-        SumXY += X * Point.Value;
-        SumXX += X * X;
-    }
-
-    float Denominator = N * SumXX - SumX * SumX;
-    if (FMath::Abs(Denominator) < 0.001f) return Data.Last().Value;
-
-    float Slope = (N * SumXY - SumX * SumY) / Denominator;
-    float Intercept = (SumY - Slope * SumX) / N;
-
-    return Slope * TargetTime + Intercept;
+    Config.DefaultForecastModel = Model;
+    UE_LOG(LogRiskTrend, Log, TEXT("Default forecast model changed to: %s"), *UEnum::GetValueAsString(Model));
 }
 
-float UMingRiskTrendAnalysis::CalculateTrendSlope(const TArray<FTimeSeriesData>& Data)
+void UMingRiskTrendAnalysis::StartTrendMonitoring()
 {
-    if (Data.Num() < 2) return 0.0f;
+    if (GEngine && GEngine->GetWorldFromContextObject(this))
+    {
+        GEngine->GetWorldFromContextObject(this)->GetTimerManager().SetTimer(
+            MonitoringTimer,
+            this,
+            &UMingRiskTrendAnalysis::PerformMonitoringCycle,
+            Config.MonitoringInterval,
+            true);
 
-    // Simple linear regression for slope
-    int32 N = Data.Num();
-    float SumX = 0.0f, SumY = 0.0f, SumXY = 0.0f, SumXX = 0.0f;
+        UE_LOG(LogRiskTrend, Log, TEXT("Trend monitoring started (interval: %.1f s)"), 
+            Config.MonitoringInterval);
+    }
+}
 
+void UMingRiskTrendAnalysis::StopTrendMonitoring()
+{
+    if (GEngine && GEngine->GetWorldFromContextObject(this))
+    {
+        GEngine->GetWorldFromContextObject(this)->GetTimerManager().ClearTimer(MonitoringTimer);
+    }
+    
+    UE_LOG(LogRiskTrend, Log, TEXT("Trend monitoring stopped"));
+}
+
+void UMingRiskTrendAnalysis::ExportTrendAnalysis(const FString& FilePath) const
+{
+    UE_LOG(LogRiskTrend, Log, TEXT("Exporting trend analysis to: %s"), *FilePath);
+    
+    FString Report = TEXT("MingGoRTS Risk Trend Analysis Report\n");
+    Report += TEXT("=====================================\n\n");
+    Report += FString::Printf(TEXT("Export Time: %s\n"), *FDateTime::Now().ToString());
+    Report += FString::Printf(TEXT("Analysis Period: %s\n"), *UEnum::GetValueAsString(Config.AnalysisPeriod));
+    Report += FString::Printf(TEXT("Default Model: %s\n\n"), *UEnum::GetValueAsString(Config.DefaultForecastModel));
+    
+    Report += TEXT("Risk Category Trends:\n");
+    Report += TEXT("---------------------\n");
+    
+    for (int32 i = 0; i < static_cast<int32>(ERiskCategory::DataIntegrity) + 1; ++i)
+    {
+        ERiskCategory Category = static_cast<ERiskCategory>(i);
+        FRiskTrendStatistics Stats = GetTrendStatistics(Category, Config.AnalysisPeriod);
+        
+        Report += FString::Printf(TEXT("- %s:\n"), *UEnum::GetValueAsString(Category));
+        Report += FString::Printf(TEXT("  Mean: %.2f\n"), Stats.MeanValue);
+        Report += FString::Printf(TEXT("  Range: %.2f - %.2f\n"), Stats.MinValue, Stats.MaxValue);
+        Report += FString::Printf(TEXT("  Trend: %s (%.1f%% change)\n"), 
+            *UEnum::GetValueAsString(Stats.TrendDirection), Stats.PercentChange);
+        Report += FString::Printf(TEXT("  Data Points: %d\n\n"), Stats.DataPointCount);
+    }
+    
+    // In a real implementation, you would save this to a file
+    UE_LOG(LogRiskTrend, Log, TEXT("Report generated:\n%s"), *Report);
+}
+
+// Private helper functions
+
+void UMingRiskTrendAnalysis::InitializeTrendData()
+{
+    for (int32 i = 0; i < static_cast<int32>(ERiskCategory::DataIntegrity) + 1; ++i)
+    {
+        ERiskCategory Category = static_cast<ERiskCategory>(i);
+        RiskTrendData.Add(Category, FRiskTrendData());
+    }
+}
+
+void UMingRiskTrendAnalysis::CleanupOldDataPoints(FRiskTrendData& TrendData)
+{
+    FDateTime CutoffTime = GetCutoffTimeForPeriod(Config.AnalysisPeriod);
+    
+    TrendData.DataPoints.RemoveAll([&](const FRiskDataPoint& Point) {
+        return Point.Timestamp < CutoffTime;
+    });
+}
+
+void UMingRiskTrendAnalysis::UpdateTrendAnalysis(ERiskCategory Category)
+{
+    // Update trend statistics
+    FRiskTrendStatistics Stats = GetTrendStatistics(Category, Config.AnalysisPeriod);
+    RiskTrendData[Category].LatestStatistics = Stats;
+    
+    // Broadcast update
+    OnTrendAnalysisUpdated.Broadcast(Category, Stats);
+}
+
+FDateTime UMingRiskTrendAnalysis::GetCutoffTimeForPeriod(EAnalysisPeriod Period)
+{
+    FDateTime Now = FDateTime::Now();
+    
+    switch (Period)
+    {
+        case EAnalysisPeriod::OneHour:
+            return Now - FTimespan::FromHours(1);
+        case EAnalysisPeriod::SixHours:
+            return Now - FTimespan::FromHours(6);
+        case EAnalysisPeriod::OneDay:
+            return Now - FTimespan::FromDays(1);
+        case EAnalysisPeriod::OneWeek:
+            return Now - FTimespan::FromDays(7);
+        case EAnalysisPeriod::OneMonth:
+            return Now - FTimespan::FromDays(30);
+        case EAnalysisPeriod::Custom:
+            return Now - FTimespan::FromDays(7); // Default to 7 days for custom
+    }
+    
+    return Now - FTimespan::FromDays(1);
+}
+
+void UMingRiskTrendAnalysis::PerformLinearRegression(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
+{
+    if (DataPoints.Num() < 2) return;
+    
+    // Simple linear regression implementation
+    float SumX = 0.0f, SumY = 0.0f, SumXY = 0.0f, SumX2 = 0.0f;
+    int32 N = DataPoints.Num();
+    
     for (int32 i = 0; i < N; ++i)
     {
         float X = static_cast<float>(i);
+        float Y = DataPoints[i].Value;
+        
         SumX += X;
-        SumY += Data[i].Value;
-        SumXY += X * Data[i].Value;
-        SumXX += X * X;
+        SumY += Y;
+        SumXY += X * Y;
+        SumX2 += X * X;
     }
-
-    float Denominator = N * SumXX - SumX * SumX;
-    if (FMath::Abs(Denominator) < 0.001f) return 0.0f;
-
-    return (N * SumXY - SumX * SumY) / Denominator;
+    
+    float Slope = (N * SumXY - SumX * SumY) / (N * SumX2 - SumX * SumX);
+    float Intercept = (SumY - Slope * SumX) / N;
+    
+    Trend.Slope = Slope;
+    Trend.Intercept = Intercept;
+    Trend.Confidence = CalculateRegressionConfidence(DataPoints, Slope, Intercept);
 }
 
-float UMingRiskTrendAnalysis::CalculateVolatility(const TArray<FTimeSeriesData>& Data)
+void UMingRiskTrendAnalysis::PerformExponentialSmoothing(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
 {
-    if (Data.Num() < 2) return 0.0f;
-
-    float Mean = 0.0f;
-    for (const auto& Point : Data)
+    // Simple exponential smoothing implementation
+    float Alpha = 0.3f; // Smoothing factor
+    float SmoothedValue = DataPoints[0].Value;
+    
+    for (int32 i = 1; i < DataPoints.Num(); ++i)
     {
-        Mean += Point.Value;
+        SmoothedValue = Alpha * DataPoints[i].Value + (1.0f - Alpha) * SmoothedValue;
     }
-    Mean /= Data.Num();
-
-    float Variance = 0.0f;
-    for (const auto& Point : Data)
-    {
-        Variance += FMath::Pow(Point.Value - Mean, 2.0f);
-    }
-    Variance /= Data.Num();
-
-    return FMath::Sqrt(Variance);
+    
+    Trend.SmoothedValue = SmoothedValue;
+    Trend.Confidence = 0.7f; // Placeholder confidence
 }
 
-ETrendDirection UMingRiskTrendAnalysis::DetermineTrendDirection(float CurrentSlope, float PreviousSlope, float Volatility)
+void UMingRiskTrendAnalysis::PerformMovingAverage(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
 {
-    float AbsSlope = FMath::Abs(CurrentSlope);
-    float Threshold = Config.TrendChangeThreshold;
-
-    if (AbsSlope < Threshold)
+    // Simple moving average implementation
+    int32 WindowSize = FMath::Min(5, DataPoints.Num());
+    float Sum = 0.0f;
+    
+    for (int32 i = DataPoints.Num() - WindowSize; i < DataPoints.Num(); ++i)
     {
-        return ETrendDirection::Stable;
+        Sum += DataPoints[i].Value;
     }
+    
+    Trend.MovingAverage = Sum / WindowSize;
+    Trend.Confidence = 0.6f; // Placeholder confidence
+}
 
-    if (Volatility > Threshold * 3)
+void UMingRiskTrendAnalysis::PerformTrendAnalysis(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
+{
+    // Simple trend analysis based on first and last values
+    if (DataPoints.Num() < 2) return;
+    
+    float FirstValue = DataPoints[0].Value;
+    float LastValue = DataPoints.Last().Value;
+    float Change = LastValue - FirstValue;
+    
+    Trend.TrendValue = Change;
+    Trend.Confidence = 0.8f;
+}
+
+void UMingRiskTrendAnalysis::PerformSeasonalDecomposition(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
+{
+    // Placeholder for seasonal decomposition
+    // In a real implementation, this would use more sophisticated algorithms
+    Trend.SeasonalComponent = 0.0f;
+    Trend.TrendComponent = DataPoints.Last().Value;
+    Trend.Confidence = 0.5f;
+}
+
+void UMingRiskTrendAnalysis::PerformMLPrediction(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
+{
+    // Placeholder for machine learning prediction
+    // In a real implementation, this would use trained ML models
+    Trend.MLPrediction = DataPoints.Last().Value;
+    Trend.Confidence = 0.9f;
+}
+
+void UMingRiskTrendAnalysis::CalculateTrendDirection(FRiskTrend& Trend)
+{
+    if (FMath::Abs(Trend.Slope) < 0.01f)
     {
-        return ETrendDirection::Volatile;
+        Trend.Direction = ETrendDirection::Stable;
     }
-
-    bool IsImproving = CurrentSlope < 0; // Assuming lower risk values are better
-
-    if (IsImproving)
+    else if (Trend.Slope > 0)
     {
-        if (FMath::Abs(CurrentSlope) > FMath::Abs(PreviousSlope) * 1.5f)
-        {
-            return ETrendDirection::Accelerating;
-        }
-        return ETrendDirection::Improving;
+        Trend.Direction = (Trend.Slope > 0.1f) ? ETrendDirection::Accelerating : ETrendDirection::Improving;
     }
     else
     {
-        if (FMath::Abs(CurrentSlope) > FMath::Abs(PreviousSlope) * 1.5f)
-        {
-            return ETrendDirection::Accelerating;
-        }
-        return ETrendDirection::Degrading;
+        Trend.Direction = (Trend.Slope < -0.1f) ? ETrendDirection::Decelerating : ETrendDirection::Degrading;
     }
 }
 
-FLinearColor UMingRiskTrendAnalysis::GetTrendColor(ETrendDirection Direction)
+void UMingRiskTrendAnalysis::GenerateForecast(FRiskTrend& Trend)
 {
-    switch (Direction)
+    // Generate simple forecast based on trend
+    int32 ForecastPoints = 10;
+    
+    for (int32 i = 1; i <= ForecastPoints; ++i)
     {
-    case ETrendDirection::Stable:
-        return FLinearColor(0.5f, 0.5f, 0.5f); // Gray
-    case ETrendDirection::Improving:
-        return FLinearColor(0.0f, 1.0f, 0.0f); // Green
-    case ETrendDirection::Degrading:
-        return FLinearColor(1.0f, 0.0f, 0.0f); // Red
-    case ETrendDirection::Volatile:
-        return FLinearColor(1.0f, 1.0f, 0.0f); // Yellow
-    case ETrendDirection::Accelerating:
-        return FLinearColor(1.0f, 0.5f, 0.0f); // Orange
-    case ETrendDirection::Decelerating:
-        return FLinearColor(0.0f, 1.0f, 1.0f); // Cyan
-    default:
-        return FLinearColor::Gray;
+        float ForecastValue = Trend.Intercept + Trend.Slope * (DataPoints.Num() + i);
+        FDateTime ForecastTime = FDateTime::Now() + FTimespan::FromHours(i);
+        
+        FRiskForecastPoint Point;
+        Point.Value = ForecastValue;
+        Point.Timestamp = ForecastTime;
+        Point.Confidence = Trend.Confidence;
+        
+        Trend.ForecastPoints.Add(Point);
     }
 }
 
-void UMingRiskTrendAnalysis::DetectTrendChanges()
+void UMingRiskTrendAnalysis::GenerateLinearForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
 {
-    for (const auto& Pair : CurrentTrends)
+    // Linear forecast implementation
+    // Similar to linear regression but extended for future predictions
+}
+
+void UMingRiskTrendAnalysis::GenerateExponentialForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
+{
+    // Exponential forecast implementation
+}
+
+void UMingRiskTrendAnalysis::GenerateMovingAverageForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
+{
+    // Moving average forecast implementation
+}
+
+void UMingRiskTrendAnalysis::GenerateTrendBasedForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
+{
+    // Trend-based forecast implementation
+}
+
+void UMingRiskTrendAnalysis::GenerateSeasonalForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
+{
+    // Seasonal forecast implementation
+}
+
+void UMingRiskTrendAnalysis::GenerateMLForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
+{
+    // Machine learning forecast implementation
+}
+
+void UMingRiskTrendAnalysis::CalculateConfidenceIntervals(FRiskForecast& Forecast)
+{
+    // Calculate confidence intervals for forecast points
+    for (FRiskForecastPoint& Point : Forecast.ForecastPoints)
     {
-        ERiskCategory Category = Pair.Key;
-        const FRiskTrend& CurrentTrend = Pair.Value;
-
-        if (PreviousDirections.Contains(Category))
-        {
-            ETrendDirection PreviousDirection = PreviousDirections[Category];
-
-            if (PreviousDirection != CurrentTrend.Direction)
-            {
-                OnTrendDirectionChanged.Broadcast(CurrentTrend);
-                UE_LOG(LogRiskTrend, Log, TEXT("Trend direction changed for %s: %s -> %s"),
-                    *UEnum::GetValueAsString(Category),
-                    *UEnum::GetValueAsString(PreviousDirection),
-                    *UEnum::GetValueAsString(CurrentTrend.Direction));
-            }
-        }
+        float Margin = Point.Value * 0.1f; // 10% margin of error
+        Point.LowerBound = Point.Value - Margin;
+        Point.UpperBound = Point.Value + Margin;
     }
 }
 
-void UMingRiskTrendAnalysis::TrimHistoricalDataIfNeeded()
+float UMingRiskTrendAnalysis::CalculateRegressionConfidence(const TArray<FRiskDataPoint>& DataPoints, float Slope, float Intercept)
 {
-    for (auto& Pair : HistoricalData)
+    // Calculate R-squared for confidence
+    float SumSquaredTotal = 0.0f;
+    float SumSquaredResidual = 0.0f;
+    float MeanY = 0.0f;
+    
+    // Calculate mean
+    for (const FRiskDataPoint& Point : DataPoints)
     {
-        if (Pair.Value.Num() > Config.MaxHistoricalPoints)
-        {
-            int32 RemoveCount = Pair.Value.Num() - Config.MaxHistoricalPoints;
-            Pair.Value.RemoveAt(0, RemoveCount);
-        }
+        MeanY += Point.Value;
     }
-}
-
-void UMingRiskTrendAnalysis::StoreCurrentTrends()
-{
-    // Trends are stored in CurrentTrends map
-}
-
-FString UMingRiskTrendAnalysis::GenerateTrendDescription(const FRiskTrend& Trend)
-{
-    FString DirectionStr = UEnum::GetValueAsString(Trend.Direction);
-    FString ChangeStr = FString::Printf(TEXT("%.1f%%"), FMath::Abs(Trend.ChangeRate));
-
-    return FString::Printf(TEXT("%s trend detected with %s change rate (volatility: %.1f)"),
-        *DirectionStr, *ChangeStr, Trend.Volatility);
-}
-
-float UMingRiskTrendAnalysis::CalculateConfidenceScore(int32 DataPoints, float Volatility)
-{
-    float BaseConfidence = FMath::Clamp(static_cast<float>(DataPoints) / 100.0f * 100.0f, 0.0f, 100.0f);
-    float VolatilityPenalty = FMath::Clamp(Volatility / 10.0f, 0.0f, 30.0f);
-
-    return FMath::Clamp(BaseConfidence - VolatilityPenalty, 50.0f, 95.0f);
-}
-
-TArray<float> UMingRiskTrendAnalysis::CalculateConfidenceRange(float PredictedValue, float ConfidenceScore)
-{
-    float Range = (1.0f - ConfidenceScore / 100.0f) * 20.0f;
-    return { FMath::Max(0.0f, PredictedValue - Range), FMath::Min(100.0f, PredictedValue + Range) };
-}
-
-void UMingRiskTrendAnalysis::GenerateForecastRationale(FRiskForecast& Forecast, const FRiskTrend& Trend)
-{
-    Forecast.ForecastRationale = FString::Printf(TEXT("Based on %s trend with %.1f%% confidence. "),
-        *UEnum::GetValueAsString(Trend.Direction), Forecast.ConfidenceScore);
-
-    Forecast.ForecastRationale += FString::Printf(TEXT("Current trajectory suggests %.1f%% risk level."),
-        Forecast.PredictedValue);
-}
-
-void UMingRiskTrendAnalysis::IdentifyContributingFactors(FRiskForecast& Forecast, ERiskCategory Category)
-{
-    // Add factors that contribute to the forecast
-    if (CurrentTrends.Contains(Category))
+    MeanY /= DataPoints.Num();
+    
+    // Calculate sums
+    for (int32 i = 0; i < DataPoints.Num(); ++i)
     {
-        const FRiskTrend& Trend = CurrentTrends[Category];
-        if (Trend.Volatility > 10.0f)
-        {
-            Forecast.ContributingFactors.Add(TEXT("High volatility"));
-        }
-        if (Trend.ChangeRate > 5.0f)
-        {
-            Forecast.ContributingFactors.Add(TEXT("Rapid value changes"));
-        }
-        if (Trend.DataPoints < 50)
-        {
-            Forecast.ContributingFactors.Add(TEXT("Limited data points"));
-        }
+        float X = static_cast<float>(i);
+        float Y = DataPoints[i].Value;
+        float PredictedY = Intercept + Slope * X;
+        
+        SumSquaredTotal += FMath::Square(Y - MeanY);
+        SumSquaredResidual += FMath::Square(Y - PredictedY);
     }
-}
-
-TArray<FString> UMingRiskTrendAnalysis::GenerateSuggestedActions(const FRiskForecast& Forecast)
-{
-    TArray<FString> Actions;
-
-    switch (Forecast.PredictedLevel)
+    
+    // R-squared calculation
+    if (SumSquaredTotal > 0.0f)
     {
-    case ERiskLevel::Critical:
-        Actions.Add(TEXT("Immediate risk mitigation required"));
-        Actions.Add(TEXT("Escalate to management"));
-        Actions.Add(TEXT("Implement emergency procedures"));
-        break;
-    case ERiskLevel::High:
-        Actions.Add(TEXT("Schedule preventive maintenance"));
-        Actions.Add(TEXT("Increase monitoring frequency"));
-        Actions.Add(TEXT("Prepare contingency plans"));
-        break;
-    case ERiskLevel::Medium:
-        Actions.Add(TEXT("Review current practices"));
-        Actions.Add(TEXT("Schedule routine check"));
-        break;
-    default:
-        Actions.Add(TEXT("Continue normal operations"));
-        Actions.Add(TEXT("Schedule regular review"));
-        break;
+        return 1.0f - (SumSquaredResidual / SumSquaredTotal);
     }
-
-    return Actions;
+    
+    return 0.0f;
 }
 
-void UMingRiskTrendAnalysis::NotifyTrendDetected(const FRiskTrend& Trend)
+void UMingRiskTrendAnalysis::PerformMonitoringCycle()
 {
-    OnTrendDetected.Broadcast(Trend);
-}
-
-void UMingRiskTrendAnalysis::NotifyCriticalTrend(const FRiskTrend& Trend)
-{
-    OnCriticalTrendDetected.Broadcast(Trend);
-    UE_LOG(LogRiskTrend, Warning, TEXT("CRITICAL TREND detected for %s: %s at %.1f%%"),
-        *UEnum::GetValueAsString(Trend.Category),
-        *UEnum::GetValueAsString(Trend.Direction),
-        Trend.CurrentValue);
-}
-
-uint32 UMingRiskTrendAnalysis::GetPeriodDuration(EAnalysisPeriod Period)
-{
-    switch (Period)
+    // In a real implementation, this would collect actual risk data
+    // For now, we'll generate sample data
+    
+    for (int32 i = 0; i < static_cast<int32>(ERiskCategory::DataIntegrity) + 1; ++i)
     {
-    case EAnalysisPeriod::OneHour:
-        return 3600;
-    case EAnalysisPeriod::SixHours:
-        return 21600;
-    case EAnalysisPeriod::OneDay:
-        return 86400;
-    case EAnalysisPeriod::OneWeek:
-        return 604800;
-    case EAnalysisPeriod::OneMonth:
-        return 2592000;
-    default:
-        return 86400;
+        ERiskCategory Category = static_cast<ERiskCategory>(i);
+        
+        // Generate sample data point
+        float SampleValue = FMath::RandRange(0.0f, 100.0f);
+        AddRiskDataPoint(Category, SampleValue, FDateTime::Now());
     }
-}
-
-static UMingRiskTrendAnalysis* UMingRiskTrendAnalysis::Get(UObject* WorldContextObject)
-{
-    static UMingRiskTrendAnalysis* Instance = nullptr;
-    if (!Instance)
-    {
-        Instance = NewObject<UMingRiskTrendAnalysis>();
-        Instance->AddToRoot();
-    }
-    return Instance;
 }

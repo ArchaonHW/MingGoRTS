@@ -1,391 +1,392 @@
-#include "MyOneClickGameMode.h"
-#include "Engine/Engine.h"
-#include "Kismet/GameplayStatics.h"
-#include "GameFramework/HUD.h"
-#include "Components/TextRenderComponent.h"
-
-AMyOneClickGameMode::AMyOneClickGameMode()
-{
-    bAutoLaunchOnBeginPlay = true;
-    bShowPerformanceInfo = true;
-    bAutoPerformanceCheck = true;
-    PerformanceCheckInterval = 60.0f; // 60秒檢查一次
-    bEnableNotifications = true;
-    
-    LastPerformanceCheck = 0.0f;
-    LastDisplayUpdate = 0.0f;
-    bPerformanceDisplayActive = false;
-    bSystemInitialized = false;
-}
-
-void AMyOneClickGameMode::BeginPlay()
-{
-    Super::BeginPlay();
-    
-    UE_LOG(LogTemp, Log, TEXT("🎮 MingGoRTS 一鍵啟動遊戲模式開始"));
-    
-    // 初始化一鍵系統
-    InitializeOneClickSystem();
-    
-    // 自動啟動優化系統
-    if (bAutoLaunchOnBeginPlay)
-    {
-        LaunchOptimizationSystem();
-    }
-    
-    // 設置自動性能檢查
-    if (bAutoPerformanceCheck)
-    {
-        SetupAutoPerformanceCheck();
-    }
-    
-    // 顯示啟動信息
-    if (bEnableNotifications)
-    {
-        SendPerformanceNotification();
-    }
-    
-    bSystemInitialized = true;
-    
-    UE_LOG(LogTemp, Log, TEXT("✅ 一鍵啟動遊戲模式初始化完成"));
-}
-
-void AMyOneClickGameMode::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-    
-    if (!bSystemInitialized)
-    {
-        return;
-    }
-    
-    // 自動性能檢查
-    if (bAutoPerformanceCheck && OneClickLauncher.IsValid())
-    {
-        LastPerformanceCheck += DeltaTime;
-        if (LastPerformanceCheck >= PerformanceCheckInterval)
-        {
-            LastPerformanceCheck = 0.0f;
-            
-            float Health = OneClickLauncher->GetSystemHealth();
-            if (Health < 0.6f)
-            {
-                UE_LOG(LogTemp, Warning, TEXT("⚠️ 系統健康度較低 (%.1f%%)，執行性能檢查"), Health * 100.0f);
-                OneClickPerformanceCheck();
-            }
-        }
-    }
-    
-    // 更新性能顯示
-    if (bShowPerformanceInfo && bPerformanceDisplayActive)
-    {
-        LastDisplayUpdate += DeltaTime;
-        if (LastDisplayUpdate >= 1.0f) // 每秒更新一次
-        {
-            LastDisplayUpdate = 0.0f;
-            UpdatePerformanceDisplay();
-        }
-    }
-    
-    // 處理性能警告
-    HandlePerformanceWarnings();
-}
-
-void AMyOneClickGameMode::LaunchOptimizationSystem()
-{
-    UE_LOG(LogTemp, Log, TEXT("🚀 一鍵啟動優化系統..."));
-    
-    if (OneClickLauncher.IsValid())
-    {
-        UE_LOG(LogTemp, Warning, TEXT("優化系統已經啟動"));
-        return;
-    }
-    
-    // 使用靜態方法一鍵啟動
-    OneClickLauncher = UMingRTSOneClickLauncher::LaunchOptimizationSystem();
-    
-    if (OneClickLauncher.IsValid())
-    {
-        UE_LOG(LogTemp, Log, TEXT("✅ 一鍵啟動成功！"));
-        
-        // 發送通知
-        if (bEnableNotifications)
-        {
-            SendPerformanceNotification();
-        }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("❌ 一鍵啟動失敗"));
-    }
-}
-
-void AMyOneClickGameMode::SmartLaunchSystem()
-{
-    UE_LOG(LogTemp, Log, TEXT("🎯 智能啟動系統..."));
-    
-    if (!OneClickLauncher.IsValid())
-    {
-        OneClickLauncher = NewObject<UMingRTSOneClickLauncher>();
-    }
-    
-    OneClickLauncher->SmartLaunch();
-    
-    UE_LOG(LogTemp, Log, TEXT("✅ 智能啟動完成！"));
-}
-
-void AMyOneClickGameMode::ExtremeLaunchSystem()
-{
-    UE_LOG(LogTemp, Log, TEXT("🔥 極致啟動系統..."));
-    
-    if (!OneClickLauncher.IsValid())
-    {
-        OneClickLauncher = NewObject<UMingRTSOneClickLauncher>();
-    }
-    
-    OneClickLauncher->ExtremeLaunch();
-    
-    UE_LOG(LogTemp, Log, TEXT("✅ 極致啟動完成！"));
-}
-
-FString AMyOneClickGameMode::GetSystemStatus()
-{
-    if (!OneClickLauncher.IsValid())
-    {
-        return TEXT("❌ 優化系統未啟動");
-    }
-    
-    return OneClickLauncher->GetLaunchStatus();
-}
-
-FString AMyOneClickGameMode::GetPerformanceReport()
-{
-    if (!OneClickLauncher.IsValid())
-    {
-        return TEXT("❌ 優化系統未啟動");
-    }
-    
-    return OneClickLauncher->GetPerformanceReport();
-}
-
-void AMyOneClickGameMode::RestartOptimizationSystem()
-{
-    UE_LOG(LogTemp, Log, TEXT("🔄 重新啟動優化系統..."));
-    
-    if (OneClickLauncher.IsValid())
-    {
-        OneClickLauncher->RestartSystem();
-        UE_LOG(LogTemp, Log, TEXT("✅ 系統重新啟動完成"));
-    }
-    else
-    {
-        LaunchOptimizationSystem();
-    }
-}
-
-void AMyOneClickGameMode::OneClickPerformanceCheck()
-{
-    UE_LOG(LogTemp, Log, TEXT("🎯 執行一鍵性能檢查..."));
-    
-    if (!OneClickLauncher.IsValid())
-    {
-        UE_LOG(LogTemp, Error, TEXT("❌ 優化系統未啟動"));
-        return;
-    }
-    
-    OneClickLauncher->OneClickPerformanceCheck();
-    
-    // 發送檢查結果通知
-    if (bEnableNotifications)
-    {
-        SendPerformanceNotification();
-    }
-}
-
-void AMyOneClickGameMode::StopOptimizationSystem()
-{
-    UE_LOG(LogTemp, Log, TEXT("⏹️ 停止優化系統..."));
-    
-    if (OneClickLauncher.IsValid())
-    {
-        OneClickLauncher->StopSystem();
-        UE_LOG(LogTemp, Log, TEXT("✅ 優化系統已停止"));
-    }
-}
-
-float AMyOneClickGameMode::GetSystemHealth()
-{
-    if (!OneClickLauncher.IsValid())
-    {
-        return 0.0f;
-    }
-    
-    return OneClickLauncher->GetSystemHealth();
-}
-
-void AMyOneClickGameMode::TogglePerformanceDisplay()
-{
-    bPerformanceDisplayActive = !bPerformanceDisplayActive;
-    
-    UE_LOG(LogTemp, Log, TEXT("🎨 性能顯示 %s"), bPerformanceDisplayActive ? TEXT("已開啟") : TEXT("已關閉"));
-    
-    if (bPerformanceDisplayActive)
-    {
-        UpdatePerformanceDisplay();
-    }
-}
-
-void AMyOneClickGameMode::SendPerformanceNotification()
-{
-    if (!OneClickLauncher.IsValid())
-    {
-        return;
-    }
-    
-    float Health = OneClickLauncher->GetSystemHealth();
-    FString HealthStatus = TEXT("未知");
-    
-    if (Health >= 0.8f)
-    {
-        HealthStatus = TEXT("🟢 優秀");
-    }
-    else if (Health >= 0.6f)
-    {
-        HealthStatus = TEXT("🟡 良好");
-    }
-    else if (Health >= 0.4f)
-    {
-        HealthStatus = TEXT("🟠 一般");
-    }
-    else
-    {
-        HealthStatus = TEXT("🔴 較差");
-    }
-    
-    FString Notification = FString::Printf(TEXT("🚀 MingGoRTS 優化系統\n💚 系統健康度: %.1f%% %s"), 
-                                           Health * 100.0f, *HealthStatus);
-    
-    // 在屏幕上顯示通知
-    if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
-    {
-        // 這裡可以添加UI通知或屏幕打印
-        UE_LOG(LogTemp, Log, TEXT("📱 通知: %s"), *Notification);
-    }
-}
-
-// 私有方法實現
-
-void AMyOneClickGameMode::InitializeOneClickSystem()
-{
-    UE_LOG(LogTemp, Log, TEXT("初始化一鍵系統..."));
-    
-    // 一鍵啟動器將在需要時創建
-    // 這樣可以確保系統按需啟動，節省資源
-}
-
-void AMyOneClickGameMode::SetupAutoPerformanceCheck()
-{
-    UE_LOG(LogTemp, Log, TEXT("設置自動性能檢查，間隔: %.1f秒"), PerformanceCheckInterval);
-    LastPerformanceCheck = 0.0f;
-}
-
-void AMyOneClickGameMode::HandlePerformanceWarnings()
-{
-    if (!OneClickLauncher.IsValid())
-    {
-        return;
-    }
-    
-    float Health = OneClickLauncher->GetSystemHealth();
-    
-    // 如果健康度過低，發送警告
-    if (Health < 0.3f && bEnableNotifications)
-    {
-        static float LastWarningTime = 0.0f;
-        static float WarningInterval = 30.0f; // 30秒警告一次
-        
-        if (GetWorld()->GetTimeSeconds() - LastWarningTime > WarningInterval)
-        {
-            LastWarningTime = GetWorld()->GetTimeSeconds();
-            
-            UE_LOG(LogTemp, Error, TEXT("🚨 系統健康度嚴重不足 (%.1f%%)，建議立即優化！"), Health * 100.0f);
-            
-            // 可以在這裡添加屏幕警告或UI通知
-            FString WarningMessage = FString::Printf(TEXT("🚨 警告：系統健康度 %.1f%%，建議優化"), Health * 100.0f);
-            
-            if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
-            {
-                // 顯示警告消息
-                PC->ClientMessage(WarningMessage);
-            }
-        }
-    }
-}
-
-void AMyOneClickGameMode::UpdatePerformanceDisplay()
-{
-    if (!OneClickLauncher.IsValid() || !bPerformanceDisplayActive)
-    {
-        return;
-    }
-    
-    FString Status = OneClickLauncher->GetLaunchStatus();
-    
-    // 這裡可以添加在屏幕上顯示性能信息的邏輯
-    // 例如：更新HUD、創建UI元素等
-    
-    // 為了演示，我們只打印到日誌
-    static int32 LogCounter = 0;
-    LogCounter++;
-    
-    if (LogCounter % 60 == 0) // 每60秒打印一次完整狀態
-    {
-        UE_LOG(LogTemp, Log, TEXT("📊 性能狀態更新:\n%s"), *Status);
-    }
-}
-
-// Blueprint可調用的輔助方法
-
-UFUNCTION(BlueprintCallable, Category = "One Click Game Mode")
-void AMyOneClickGameMode::SetAutoLaunch(bool bEnabled)
-{
-    bAutoLaunchOnBeginPlay = bEnabled;
-    UE_LOG(LogTemp, Log, TEXT("設置自動啟動: %s"), bEnabled ? TEXT("啟用") : TEXT("禁用"));
-}
-
-UFUNCTION(BlueprintCallable, Category = "One Click Game Mode")
-void AMyOneClickGameMode::SetPerformanceCheckInterval(float Interval)
-{
-    PerformanceCheckInterval = FMath::Max(10.0f, Interval);
-    UE_LOG(LogTemp, Log, TEXT("設置性能檢查間隔: %.1f秒"), PerformanceCheckInterval);
-}
-
-UFUNCTION(BlueprintCallable, Category = "One Click Game Mode")
-void AMyOneClickGameMode::SetNotificationsEnabled(bool bEnabled)
-{
-    bEnableNotifications = bEnabled;
-    UE_LOG(LogTemp, Log, TEXT("設置通知: %s"), bEnabled ? TEXT("啟用") : TEXT("禁用"));
-}
-
-UFUNCTION(BlueprintCallable, Category = "One Click Game Mode")
-bool AMyOneClickGameMode::IsSystemHealthy() const
-{
-    if (!OneClickLauncher.IsValid())
-    {
-        return false;
-    }
-    
-    return OneClickLauncher->GetSystemHealth() >= 0.6f;
-}
-
-UFUNCTION(BlueprintCallable, Category = "One Click Game Mode")
-FString GetOptimizationMode() const
-{
-    if (!OneClickLauncher.IsValid())
-    {
-        return TEXT("未啟動");
-    }
-    
-    // 這裡可以從啟動器獲取當前模式信息
-    return TEXT("運行中");
-}
+出#出i出n出c出l出使出d出e出 出"出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出G出a出設置出e出軍出本出a出設置出e出w出o出本出k出/出輸入出U出D出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出T出e出x出t出R出e出n出d出e出本出C出o出設置出p出o出n出e出n出t出.出h出"出
+出
+出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出(出)出
+出{出
+出 出 出 出 出b出A出使出t出o出L出a出使出n出c出h出O出n出B出e出成出i出n出P出l出a出y出 出=出 出t出本出使出e出;出
+出 出 出 出 出b出S出h出o出w出P出e出本出f出o出本出設置出a出n出c出e出I出n出f出o出 出=出 出t出本出使出e出;出
+出 出 出 出 出b出A出使出t出o出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出 出=出 出t出本出使出e出;出
+出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出I出n出t出e出本出正出a出l出 出=出 出6出0出.出0出f出;出 出/出/出 出6出0出秒出檢出查出一出次出
+出 出 出 出 出b出E出n出a出b出l出e出的出o出t出i出f出i出c出a出t出i出o出n出s出 出=出 出t出本出使出e出;出
+出 出 出 出 出
+出 出 出 出 出L出a出s出t出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出 出=出 出0出.出0出f出;出
+出 出 出 出 出L出a出s出t出D出i出s出p出l出a出y出U出p出d出a出t出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出b出P出e出本出f出o出本出設置出a出n出c出e出D出i出s出p出l出a出y出A出c出t出i出正出e出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出b出S出y出s出t出e出設置出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出B出e出成出i出n出P出l出a出y出(出)出
+出{出
+出 出 出 出 出S出使出p出e出本出:出:出B出e出成出i出n出P出l出a出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出🎮出 出M出i出n出成出G出o出R出T出S出 出一出鍵出啟出動出遊出戲出模出式出開出始出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出一出鍵出系出統出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出O出n出e出C出l出i出c出k出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出自出動出啟出動出優出化出系出統出
+出 出 出 出 出i出f出 出(出b出A出使出t出o出L出a出使出n出c出h出O出n出B出e出成出i出n出P出l出a出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出a出使出n出c出h出O出p出t出i出設置出i出z出a出t出i出o出n出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出設出置出自出動出性出能出檢出查出
+出 出 出 出 出i出f出 出(出b出A出使出t出o出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出e出t出使出p出A出使出t出o出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出顯出示出啟出動出信出息出
+出 出 出 出 出i出f出 出(出b出E出n出a出b出l出e出的出o出t出i出f出i出c出a出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出e出n出d出P出e出本出f出o出本出設置出a出n出c出e出的出o出t出i出f出i出c出a出t出i出o出n出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出b出S出y出s出t出e出設置出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出✅出 出一出鍵出啟出動出遊出戲出模出式出初出始出化出完出成出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出T出i出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出S出使出p出e出本出:出:出T出i出c出k出(出D出e出l出t出a出T出i出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出b出S出y出s出t出e出設置出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出自出動出性出能出檢出查出
+出 出 出 出 出i出f出 出(出b出A出使出t出o出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出 出&出&出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出a出s出t出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出 出+出=出 出D出e出l出t出a出T出i出設置出e出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出L出a出s出t出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出 出>出=出 出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出I出n出t出e出本出正出a出l出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出L出a出s出t出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出輸入出e出a出l出t出h出 出=出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出G出e出t出S出y出s出t出e出設置出輸入出e出a出l出t出h出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出輸入出e出a出l出t出h出 出<出 出0出.出6出f出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出⚠出️出 出系出統出健出康出度出較出低出 出(出%出.出1出f出%出%出)出，出執出行出性出能出檢出查出"出)出,出 出輸入出e出a出l出t出h出 出*出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出O出n出e出C出l出i出c出k出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出性出能出顯出示出
+出 出 出 出 出i出f出 出(出b出S出h出o出w出P出e出本出f出o出本出設置出a出n出c出e出I出n出f出o出 出&出&出 出b出P出e出本出f出o出本出設置出a出n出c出e出D出i出s出p出l出a出y出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出a出s出t出D出i出s出p出l出a出y出U出p出d出a出t出e出 出+出=出 出D出e出l出t出a出T出i出設置出e出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出L出a出s出t出D出i出s出p出l出a出y出U出p出d出a出t出e出 出>出=出 出1出.出0出f出)出 出/出/出 出每出秒出更出新出一出次出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出L出a出s出t出D出i出s出p出l出a出y出U出p出d出a出t出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出P出e出本出f出o出本出設置出a出n出c出e出D出i出s出p出l出a出y出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出處出理出性出能出警出告出
+出 出 出 出 出輸入出a出n出d出l出e出P出e出本出f出o出本出設置出a出n出c出e出基本出a出本出n出i出n出成出s出(出)出;出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出L出a出使出n出c出h出O出p出t出i出設置出i出z出a出t出i出o出n出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出🚀出 出一出鍵出啟出動出優出化出系出統出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出優出化出系出統出已出經出啟出動出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出使出用出靜出態出方出法出一出鍵出啟出動出
+出 出 出 出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出 出=出 出U出M出i出n出成出R出T出S出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出:出:出L出a出使出n出c出h出O出p出t出i出設置出i出z出a出t出i出o出n出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出✅出 出一出鍵出啟出動出成出功出！出"出)出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出發出送出通出知出
+出 出 出 出 出 出 出 出 出i出f出 出(出b出E出n出a出b出l出e出的出o出t出i出f出i出c出a出t出i出o出n出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出e出n出d出P出e出本出f出o出本出設置出a出n出c出e出的出o出t出i出f出i出c出a出t出i出o出n出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出❌出 出一出鍵出啟出動出失出敗出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出S出設置出a出本出t出L出a出使出n出c出h出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出🎯出 出智出能出啟出動出系出統出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出R出T出S出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出>出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出S出設置出a出本出t出L出a出使出n出c出h出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出✅出 出智出能出啟出動出完出成出！出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出E出x出t出本出e出設置出e出L出a出使出n出c出h出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出🔥出 出極出致出啟出動出系出統出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出R出T出S出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出>出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出E出x出t出本出e出設置出e出L出a出使出n出c出h出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出✅出 出極出致出啟出動出完出成出！出"出)出)出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出G出e出t出S出y出s出t出e出設置出S出t出a出t出使出s出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出❌出 出優出化出系出統出未出啟出動出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出G出e出t出L出a出使出n出c出h出S出t出a出t出使出s出(出)出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出G出e出t出P出e出本出f出o出本出設置出a出n出c出e出R出e出p出o出本出t出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出❌出 出優出化出系出統出未出啟出動出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出G出e出t出P出e出本出f出o出本出設置出a出n出c出e出R出e出p出o出本出t出(出)出;出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出R出e出s出t出a出本出t出O出p出t出i出設置出i出z出a出t出i出o出n出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出🔄出 出重出新出啟出動出優出化出系出統出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出R出e出s出t出a出本出t出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出✅出 出系出統出重出新出啟出動出完出成出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出a出使出n出c出h出O出p出t出i出設置出i出z出a出t出i出o出n出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出O出n出e出C出l出i出c出k出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出🎯出 出執出行出一出鍵出性出能出檢出查出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出❌出 出優出化出系出統出未出啟出動出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出O出n出e出C出l出i出c出k出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出發出送出檢出查出結出果出通出知出
+出 出 出 出 出i出f出 出(出b出E出n出a出b出l出e出的出o出t出i出f出i出c出a出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出e出n出d出P出e出本出f出o出本出設置出a出n出c出e出的出o出t出i出f出i出c出a出t出i出o出n出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出S出t出o出p出O出p出t出i出設置出i出z出a出t出i出o出n出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出⏹出️出 出停出止出優出化出系出統出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出S出t出o出p出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出✅出 出優出化出系出統出已出停出止出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出G出e出t出S出y出s出t出e出設置出輸入出e出a出l出t出h出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出G出e出t出S出y出s出t出e出設置出輸入出e出a出l出t出h出(出)出;出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出T出o出成出成出l出e出P出e出本出f出o出本出設置出a出n出c出e出D出i出s出p出l出a出y出(出)出
+出{出
+出 出 出 出 出b出P出e出本出f出o出本出設置出a出n出c出e出D出i出s出p出l出a出y出A出c出t出i出正出e出 出=出 出!出b出P出e出本出f出o出本出設置出a出n出c出e出D出i出s出p出l出a出y出A出c出t出i出正出e出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出🎨出 出性出能出顯出示出 出%出s出"出)出,出 出b出P出e出本出f出o出本出設置出a出n出c出e出D出i出s出p出l出a出y出A出c出t出i出正出e出 出基本出 出T出E出X出T出(出"出已出開出啟出"出)出 出:出 出T出E出X出T出(出"出已出關出閉出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出b出P出e出本出f出o出本出設置出a出n出c出e出D出i出s出p出l出a出y出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出p出d出a出t出e出P出e出本出f出o出本出設置出a出n出c出e出D出i出s出p出l出a出y出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出S出e出n出d出P出e出本出f出o出本出設置出a出n出c出e出的出o出t出i出f出i出c出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出f出l出o出a出t出 出輸入出e出a出l出t出h出 出=出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出G出e出t出S出y出s出t出e出設置出輸入出e出a出l出t出h出(出)出;出
+出 出 出 出 出軍出S出t出本出i出n出成出 出輸入出e出a出l出t出h出S出t出a出t出使出s出 出=出 出T出E出X出T出(出"出未出知出"出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出輸入出e出a出l出t出h出 出>出=出 出0出.出8出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出輸入出e出a出l出t出h出S出t出a出t出使出s出 出=出 出T出E出X出T出(出"出🟢出 出優出秀出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出輸入出e出a出l出t出h出 出>出=出 出0出.出6出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出輸入出e出a出l出t出h出S出t出a出t出使出s出 出=出 出T出E出X出T出(出"出🟡出 出良出好出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出輸入出e出a出l出t出h出 出>出=出 出0出.出4出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出輸入出e出a出l出t出h出S出t出a出t出使出s出 出=出 出T出E出X出T出(出"出🟠出 出一出般出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出輸入出e出a出l出t出h出S出t出a出t出使出s出 出=出 出T出E出X出T出(出"出🔴出 出較出差出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出軍出S出t出本出i出n出成出 出的出o出t出i出f出i出c出a出t出i出o出n出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出🚀出 出M出i出n出成出G出o出R出T出S出 出優出化出系出統出\出n出💚出 出系出統出健出康出度出:出 出%出.出1出f出%出%出 出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出輸入出e出a出l出t出h出 出*出 出1出0出0出.出0出f出,出 出*出輸入出e出a出l出t出h出S出t出a出t出使出s出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出在出屏出幕出上出顯出示出通出知出
+出 出 出 出 出i出f出 出(出A出P出l出a出y出e出本出C出o出n出t出本出o出l出l出e出本出*出 出P出C出 出=出 出G出e出t出基本出o出本出l出d出(出)出-出>出G出e出t出軍出i出本出s出t出P出l出a出y出e出本出C出o出n出t出本出o出l出l出e出本出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出這出裡出可出以出添出加出U出I出通出知出或出屏出幕出打出印出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出📱出 出通出知出:出 出%出s出"出)出,出 出*出的出o出t出i出f出i出c出a出t出i出o出n出)出;出
+出 出 出 出 出}出
+出}出
+出
+出/出/出 出私出有出方出法出實出現出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出I出n出i出t出i出a出l出i出z出e出O出n出e出C出l出i出c出k出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出初出始出化出一出鍵出系出統出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出一出鍵出啟出動出器出將出在出需出要出時出創出建出
+出 出 出 出 出/出/出 出這出樣出可出以出確出保出系出統出按出需出啟出動出，出節出省出資出源出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出S出e出t出使出p出A出使出t出o出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出設出置出自出動出性出能出檢出查出，出間出隔出:出 出%出.出1出f出秒出"出)出,出 出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出I出n出t出e出本出正出a出l出)出;出
+出 出 出 出 出L出a出s出t出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出 出=出 出0出.出0出f出;出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出輸入出a出n出d出l出e出P出e出本出f出o出本出設置出a出n出c出e出基本出a出本出n出i出n出成出s出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出f出l出o出a出t出 出輸入出e出a出l出t出h出 出=出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出G出e出t出S出y出s出t出e出設置出輸入出e出a出l出t出h出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出如出果出健出康出度出過出低出，出發出送出警出告出
+出 出 出 出 出i出f出 出(出輸入出e出a出l出t出h出 出<出 出0出.出3出f出 出&出&出 出b出E出n出a出b出l出e出的出o出t出i出f出i出c出a出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出s出t出a出t出i出c出 出f出l出o出a出t出 出L出a出s出t出基本出a出本出n出i出n出成出T出i出設置出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出s出t出a出t出i出c出 出f出l出o出a出t出 出基本出a出本出n出i出n出成出I出n出t出e出本出正出a出l出 出=出 出3出0出.出0出f出;出 出/出/出 出3出0出秒出警出告出一出次出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出G出e出t出基本出o出本出l出d出(出)出-出>出G出e出t出T出i出設置出e出S出e出c出o出n出d出s出(出)出 出-出 出L出a出s出t出基本出a出本出n出i出n出成出T出i出設置出e出 出>出 出基本出a出本出n出i出n出成出I出n出t出e出本出正出a出l出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出L出a出s出t出基本出a出本出n出i出n出成出T出i出設置出e出 出=出 出G出e出t出基本出o出本出l出d出(出)出-出>出G出e出t出T出i出設置出e出S出e出c出o出n出d出s出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出🚨出 出系出統出健出康出度出嚴出重出不出足出 出(出%出.出1出f出%出%出)出，出建出議出立出即出優出化出！出"出)出,出 出輸入出e出a出l出t出h出 出*出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出可出以出在出這出裡出添出加出屏出幕出警出告出或出U出I出通出知出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出 出基本出a出本出n出i出n出成出M出e出s出s出a出成出e出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出🚨出 出警出告出：出系出統出健出康出度出 出%出.出1出f出%出%出，出建出議出優出化出"出)出,出 出輸入出e出a出l出t出h出 出*出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出A出P出l出a出y出e出本出C出o出n出t出本出o出l出l出e出本出*出 出P出C出 出=出 出G出e出t出基本出o出本出l出d出(出)出-出>出G出e出t出軍出i出本出s出t出P出l出a出y出e出本出C出o出n出t出本出o出l出l出e出本出(出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出顯出示出警出告出消出息出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出P出C出-出>出C出l出i出e出n出t出M出e出s出s出a出成出e出(出基本出a出本出n出i出n出成出M出e出s出s出a出成出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出U出p出d出a出t出e出P出e出本出f出o出本出設置出a出n出c出e出D出i出s出p出l出a出y出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出 出出出出出 出!出b出P出e出本出f出o出本出設置出a出n出c出e出D出i出s出p出l出a出y出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出軍出S出t出本出i出n出成出 出S出t出a出t出使出s出 出=出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出G出e出t出L出a出使出n出c出h出S出t出a出t出使出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出這出裡出可出以出添出加出在出屏出幕出上出顯出示出性出能出信出息出的出邏出輯出
+出 出 出 出 出/出/出 出例出如出：出更出新出輸入出U出D出、出創出建出U出I出元出素出等出
+出 出 出 出 出
+出 出 出 出 出/出/出 出為出了出演出示出，出我出們出只出打出印出到出日出誌出
+出 出 出 出 出s出t出a出t出i出c出 出i出n出t出3出2出 出L出o出成出C出o出使出n出t出e出本出 出=出 出0出;出
+出 出 出 出 出L出o出成出C出o出使出n出t出e出本出+出+出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出L出o出成出C出o出使出n出t出e出本出 出%出 出6出0出 出=出=出 出0出)出 出/出/出 出每出6出0出秒出打出印出一出次出完出整出狀出態出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出📊出 出性出能出狀出態出更出新出:出\出n出%出s出"出)出,出 出*出S出t出a出t出使出s出)出;出
+出 出 出 出 出}出
+出}出
+出
+出/出/出 出B出l出使出e出p出本出i出n出t出可出調出用出的出輔出助出方出法出
+出
+出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出O出n出e出 出C出l出i出c出k出 出G出a出設置出e出 出M出o出d出e出"出)出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出S出e出t出A出使出t出o出L出a出使出n出c出h出(出b出o出o出l出 出b出E出n出a出b出l出e出d出)出
+出{出
+出 出 出 出 出b出A出使出t出o出L出a出使出n出c出h出O出n出B出e出成出i出n出P出l出a出y出 出=出 出b出E出n出a出b出l出e出d出;出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出設出置出自出動出啟出動出:出 出%出s出"出)出,出 出b出E出n出a出b出l出e出d出 出基本出 出T出E出X出T出(出"出啟出用出"出)出 出:出 出T出E出X出T出(出"出禁出用出"出)出)出;出
+出}出
+出
+出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出O出n出e出 出C出l出i出c出k出 出G出a出設置出e出 出M出o出d出e出"出)出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出S出e出t出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出I出n出t出e出本出正出a出l出(出f出l出o出a出t出 出I出n出t出e出本出正出a出l出)出
+出{出
+出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出I出n出t出e出本出正出a出l出 出=出 出軍出M出a出t出h出:出:出M出a出x出(出1出0出.出0出f出,出 出I出n出t出e出本出正出a出l出)出;出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出設出置出性出能出檢出查出間出隔出:出 出%出.出1出f出秒出"出)出,出 出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出I出n出t出e出本出正出a出l出)出;出
+出}出
+出
+出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出O出n出e出 出C出l出i出c出k出 出G出a出設置出e出 出M出o出d出e出"出)出
+出正出o出i出d出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出S出e出t出的出o出t出i出f出i出c出a出t出i出o出n出s出E出n出a出b出l出e出d出(出b出o出o出l出 出b出E出n出a出b出l出e出d出)出
+出{出
+出 出 出 出 出b出E出n出a出b出l出e出的出o出t出i出f出i出c出a出t出i出o出n出s出 出=出 出b出E出n出a出b出l出e出d出;出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出設出置出通出知出:出 出%出s出"出)出,出 出b出E出n出a出b出l出e出d出 出基本出 出T出E出X出T出(出"出啟出用出"出)出 出:出 出T出E出X出T出(出"出禁出用出"出)出)出;出
+出}出
+出
+出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出O出n出e出 出C出l出i出c出k出 出G出a出設置出e出 出M出o出d出e出"出)出
+出b出o出o出l出 出A出M出y出O出n出e出C出l出i出c出k出G出a出設置出e出M出o出d出e出:出:出I出s出S出y出s出t出e出設置出輸入出e出a出l出t出h出y出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出!出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出-出>出G出e出t出S出y出s出t出e出設置出輸入出e出a出l出t出h出(出)出 出>出=出 出0出.出6出f出;出
+出}出
+出
+出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出O出n出e出 出C出l出i出c出k出 出G出a出設置出e出 出M出o出d出e出"出)出
+出軍出S出t出本出i出n出成出 出G出e出t出O出p出t出i出設置出i出z出a出t出i出o出n出M出o出d出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出!出O出n出e出C出l出i出c出k出L出a出使出n出c出h出e出本出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出啟出動出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出這出裡出可出以出從出啟出動出器出獲出取出當出前出模出式出信出息出
+出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出運出行出中出"出)出;出
+出}出
+出

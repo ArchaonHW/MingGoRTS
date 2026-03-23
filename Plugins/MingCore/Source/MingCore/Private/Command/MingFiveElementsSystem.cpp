@@ -1,382 +1,383 @@
-#include "MingFiveElementsSystem.h"
-#include "Engine/World.h"
-
-UMingFiveElementsSystem::UMingFiveElementsSystem()
-{
-    RotationSpeed = 1.0f;
-    TransitionThreshold = 80.0f;
-    RhythmThreshold = 0.5f;
-}
-
-void UMingFiveElementsSystem::InitializeFiveElementsSystem()
-{
-    UE_LOG(LogTemp, Log, TEXT("初始化五行系統..."));
-
-    // 初始化五行狀態
-    CurrentState = FFiveElementsState();
-    CurrentState.CurrentPhase = EFiveElementsPhase::Wood;
-    CurrentState.NextPhase = EFiveElementsPhase::Fire;
-    CurrentState.PhaseProgress = 0.0f;
-    CurrentState.TransitionThreshold = TransitionThreshold;
-    CurrentState.bIsTransitioning = false;
-    CurrentState.CycleCount = 0.0f;
-
-    // 初始化五行節奏
-    CurrentRhythm = FFiveElementsRhythm();
-    CurrentRhythm.WoodRhythm = 1.0f;
-    CurrentRhythm.FireRhythm = 1.0f;
-    CurrentRhythm.EarthRhythm = 1.0f;
-    CurrentRhythm.MetalRhythm = 1.0f;
-    CurrentRhythm.WaterRhythm = 1.0f;
-    CurrentRhythm.OverallRhythm = 1.0f;
-    CurrentRhythm.bIsHarmonious = true;
-
-    // 初始化階段策略
-    InitializePhaseStrategies();
-
-    UE_LOG(LogTemp, Log, TEXT("五行系統初始化完成"));
-}
-
-FFiveElementsState UMingFiveElementsSystem::ExecuteRotation()
-{
-    // 更新當前階段進度
-    CurrentState.PhaseProgress += RotationSpeed;
-
-    // 檢查是否可以轉換
-    if (CanTransitionToNext())
-    {
-        ExecutePhaseTransition();
-    }
-
-    // 更新節奏
-    UpdateRhythm();
-
-    return CurrentState;
-}
-
-TArray<FFiveElementsStrategy> UMingFiveElementsSystem::GetCurrentPhaseStrategies()
-{
-    if (PhaseStrategies.Contains(CurrentState.CurrentPhase))
-    {
-        return PhaseStrategies[CurrentState.CurrentPhase];
-    }
-
-    return TArray<FFiveElementsStrategy>();
-}
-
-EFiveElementsRelation UMingFiveElementsSystem::CheckElementsRelation(EFiveElementsPhase Element1, EFiveElementsPhase Element2)
-{
-    // 五行相生關係
-    if ((Element1 == EFiveElementsPhase::Wood && Element2 == EFiveElementsPhase::Fire) ||
-        (Element1 == EFiveElementsPhase::Fire && Element2 == EFiveElementsPhase::Earth) ||
-        (Element1 == EFiveElementsPhase::Earth && Element2 == EFiveElementsPhase::Metal) ||
-        (Element1 == EFiveElementsPhase::Metal && Element2 == EFiveElementsPhase::Water) ||
-        (Element1 == EFiveElementsPhase::Water && Element2 == EFiveElementsPhase::Wood))
-    {
-        return EFiveElementsRelation::Generating;
-    }
-
-    // 五行相剋關係
-    if ((Element1 == EFiveElementsPhase::Wood && Element2 == EFiveElementsPhase::Earth) ||
-        (Element1 == EFiveElementsPhase::Fire && Element2 == EFiveElementsPhase::Metal) ||
-        (Element1 == EFiveElementsPhase::Earth && Element2 == EFiveElementsPhase::Water) ||
-        (Element1 == EFiveElementsPhase::Metal && Element2 == EFiveElementsPhase::Wood) ||
-        (Element1 == EFiveElementsPhase::Water && Element2 == EFiveElementsPhase::Fire))
-    {
-        return EFiveElementsRelation::Overcoming;
-    }
-
-    // 五行相侮關係（反向相剋）
-    if ((Element1 == EFiveElementsPhase::Earth && Element2 == EFiveElementsPhase::Wood) ||
-        (Element1 == EFiveElementsPhase::Metal && Element2 == EFiveElementsPhase::Fire) ||
-        (Element1 == EFiveElementsPhase::Water && Element2 == EFiveElementsPhase::Earth) ||
-        (Element1 == EFiveElementsPhase::Wood && Element2 == EFiveElementsPhase::Metal) ||
-        (Element1 == EFiveElementsPhase::Fire && Element2 == EFiveElementsPhase::Water))
-    {
-        return EFiveElementsRelation::Insulting;
-    }
-
-    // 扶助關係
-    return EFiveElementsRelation::Supporting;
-}
-
-FFiveElementsRhythm UMingFiveElementsSystem::CalculateRhythm()
-{
-    // 計算各階段節奏
-    CurrentRhythm.WoodRhythm = CalculatePhaseEfficiency(EFiveElementsPhase::Wood);
-    CurrentRhythm.FireRhythm = CalculatePhaseEfficiency(EFiveElementsPhase::Fire);
-    CurrentRhythm.EarthRhythm = CalculatePhaseEfficiency(EFiveElementsPhase::Earth);
-    CurrentRhythm.MetalRhythm = CalculatePhaseEfficiency(EFiveElementsPhase::Metal);
-    CurrentRhythm.WaterRhythm = CalculatePhaseEfficiency(EFiveElementsPhase::Water);
-
-    // 計算整體節奏
-    CurrentRhythm.OverallRhythm = (CurrentRhythm.WoodRhythm + CurrentRhythm.FireRhythm + 
-                                   CurrentRhythm.EarthRhythm + CurrentRhythm.MetalRhythm + 
-                                   CurrentRhythm.WaterRhythm) / 5.0f;
-
-    // 檢查和諧性
-    float Variance = FMath::Pow(CurrentRhythm.WoodRhythm - CurrentRhythm.OverallRhythm, 2) +
-                     FMath::Pow(CurrentRhythm.FireRhythm - CurrentRhythm.OverallRhythm, 2) +
-                     FMath::Pow(CurrentRhythm.EarthRhythm - CurrentRhythm.OverallRhythm, 2) +
-                     FMath::Pow(CurrentRhythm.MetalRhythm - CurrentRhythm.OverallRhythm, 2) +
-                     FMath::Pow(CurrentRhythm.WaterRhythm - CurrentRhythm.OverallRhythm, 2);
-
-    CurrentRhythm.bIsHarmonious = (Variance < RhythmThreshold);
-
-    return CurrentRhythm;
-}
-
-bool UMingFiveElementsSystem::CanTransitionToNext()
-{
-    // 檢查轉換條件
-    if (CurrentState.PhaseProgress < CurrentState.TransitionThreshold)
-    {
-        return false;
-    }
-
-    // 檢查轉換是否有效
-    return IsTransitionValid(CurrentState.CurrentPhase, CurrentState.NextPhase);
-}
-
-bool UMingFiveElementsSystem::ExecutePhaseTransition()
-{
-    // 記錄當前階段
-    CurrentState.CompletedPhases.Add(CurrentState.CurrentPhase);
-
-    // 執行轉換
-    EFiveElementsPhase PreviousPhase = CurrentState.CurrentPhase;
-    CurrentState.CurrentPhase = CurrentState.NextPhase;
-    CurrentState.NextPhase = GetRecommendedNextPhase();
-    CurrentState.PhaseProgress = 0.0f;
-    CurrentState.bIsTransitioning = true;
-
-    // 更新循環計數
-    if (CurrentState.CurrentPhase == EFiveElementsPhase::Wood)
-    {
-        CurrentState.CycleCount++;
-    }
-
-    // 記錄轉換
-    RecordPhaseTransition(PreviousPhase, CurrentState.CurrentPhase);
-
-    UE_LOG(LogTemp, Log, TEXT("五行階段轉換：%s -> %s"), 
-        *GetPhaseName(PreviousPhase), *GetPhaseName(CurrentState.CurrentPhase));
-
-    return true;
-}
-
-EFiveElementsPhase UMingFiveElementsSystem::GetRecommendedNextPhase()
-{
-    // 按照相生順序推薦下一階段
-    switch (CurrentState.CurrentPhase)
-    {
-    case EFiveElementsPhase::Wood:
-        return EFiveElementsPhase::Fire;
-    case EFiveElementsPhase::Fire:
-        return EFiveElementsPhase::Earth;
-    case EFiveElementsPhase::Earth:
-        return EFiveElementsPhase::Metal;
-    case EFiveElementsPhase::Metal:
-        return EFiveElementsPhase::Water;
-    case EFiveElementsPhase::Water:
-        return EFiveElementsPhase::Wood;
-    default:
-        return EFiveElementsPhase::Wood;
-    }
-}
-
-bool UMingFiveElementsSystem::IsElementsOrderDisrupted()
-{
-    // 檢查五行秩序是否被破壞
-    // 主要檢查節奏和諧性和轉換有效性
-    if (!CurrentRhythm.bIsHarmonious)
-    {
-        return true;
-    }
-
-    // 檢查是否有錯誤的轉換
-    if (!IsTransitionValid(CurrentState.CurrentPhase, CurrentState.NextPhase))
-    {
-        return true;
-    }
-
-    return false;
-}
-
-bool UMingFiveElementsSystem::RestoreElementsOrder()
-{
-    // 修復五行秩序
-    if (!IsElementsOrderDisrupted())
-    {
-        return true; // 秩序正常
-    }
-
-    // 重置到木階段
-    CurrentState.CurrentPhase = EFiveElementsPhase::Wood;
-    CurrentState.NextPhase = EFiveElementsPhase::Fire;
-    CurrentState.PhaseProgress = 0.0f;
-    CurrentState.bIsTransitioning = false;
-
-    // 重新計算節奏
-    UpdateRhythm();
-
-    UE_LOG(LogTemp, Log, TEXT("五行秩序已修復"));
-    return true;
-}
-
-FString UMingFiveElementsSystem::GetPhaseName(EFiveElementsPhase Phase)
-{
-    switch (Phase)
-    {
-    case EFiveElementsPhase::Wood:
-        return TEXT("木");
-    case EFiveElementsPhase::Fire:
-        return TEXT("火");
-    case EFiveElementsPhase::Earth:
-        return TEXT("土");
-    case EFiveElementsPhase::Metal:
-        return TEXT("金");
-    case EFiveElementsPhase::Water:
-        return TEXT("水");
-    default:
-        return TEXT("未知");
-    }
-}
-
-FString UMingFiveElementsSystem::GetPhaseDescription(EFiveElementsPhase Phase)
-{
-    switch (Phase)
-    {
-    case EFiveElementsPhase::Wood:
-        return TEXT("木：立名與正當性，開局、立旗、定名、取義、爭正當、聚人心");
-    case EFiveElementsPhase::Fire:
-        return TEXT("火：造勢與加速，張聲、擴熱、速傳、激情、乘勢、燒原");
-    case EFiveElementsPhase::Earth:
-        return TEXT("土：收權與止亂，聚權、固勢、止紛、定分、實利、安眾");
-    case EFiveElementsPhase::Metal:
-        return TEXT("金：裁斷與清除，決斷、肅清、去冗、除敵、收兵、絕後患");
-    case EFiveElementsPhase::Water:
-        return TEXT("水：留白與不動，藏鋒、養勢、留變、觀時、不動、待機");
-    default:
-        return TEXT("未知階段");
-    }
-}
-
-void UMingFiveElementsSystem::InitializePhaseStrategies()
-{
-    PhaseStrategies.Empty();
-
-    // 木階段策略
-    TArray<FFiveElementsStrategy> WoodStrategies;
-    FFiveElementsStrategy WoodStrategy;
-    WoodStrategy.TargetPhase = EFiveElementsPhase::Wood;
-    WoodStrategy.StrategyName = TEXT("立國");
-    WoodStrategy.Description = TEXT("立大義、立旗幟、立共同之志");
-    WoodStrategy.ExecutionTime = 10.0f;
-    WoodStrategy.SuccessRate = 85.0f;
-    WoodStrategy.bIsAvailable = true;
-    WoodStrategies.Add(WoodStrategy);
-    PhaseStrategies.Add(EFiveElementsPhase::Wood, WoodStrategies);
-
-    // 火階段策略
-    TArray<FFiveElementsStrategy> FireStrategies;
-    FFiveElementsStrategy FireStrategy;
-    FireStrategy.TargetPhase = EFiveElementsPhase::Fire;
-    FireStrategy.StrategyName = TEXT("造勢");
-    FireStrategy.Description = TEXT("張聲、擴熱、速傳、激情、乘勢");
-    FireStrategy.ExecutionTime = 5.0f;
-    FireStrategy.SuccessRate = 75.0f;
-    FireStrategy.bIsAvailable = true;
-    FireStrategies.Add(FireStrategy);
-    PhaseStrategies.Add(EFiveElementsPhase::Fire, FireStrategies);
-
-    // 土階段策略
-    TArray<FFiveElementsStrategy> EarthStrategies;
-    FFiveElementsStrategy EarthStrategy;
-    EarthStrategy.TargetPhase = EFiveElementsPhase::Earth;
-    EarthStrategy.StrategyName = TEXT("收權");
-    EarthStrategy.Description = TEXT("聚權、固勢、止紛、定分、實利");
-    EarthStrategy.ExecutionTime = 15.0f;
-    EarthStrategy.SuccessRate = 90.0f;
-    EarthStrategy.bIsAvailable = true;
-    EarthStrategies.Add(EarthStrategy);
-    PhaseStrategies.Add(EFiveElementsPhase::Earth, EarthStrategies);
-
-    // 金階段策略
-    TArray<FFiveElementsStrategy> MetalStrategies;
-    FFiveElementsStrategy MetalStrategy;
-    MetalStrategy.TargetPhase = EFiveElementsPhase::Metal;
-    MetalStrategy.StrategyName = TEXT("裁斷");
-    MetalStrategy.Description = TEXT("決斷、肅清、去冗、除敵、收兵");
-    MetalStrategy.ExecutionTime = 8.0f;
-    MetalStrategy.SuccessRate = 80.0f;
-    MetalStrategy.bIsAvailable = true;
-    MetalStrategies.Add(MetalStrategy);
-    PhaseStrategies.Add(EFiveElementsPhase::Metal, MetalStrategies);
-
-    // 水階段策略
-    TArray<FFiveElementsStrategy> WaterStrategies;
-    FFiveElementsStrategy WaterStrategy;
-    WaterStrategy.TargetPhase = EFiveElementsPhase::Water;
-    WaterStrategy.StrategyName = TEXT("留白");
-    WaterStrategy.Description = TEXT("藏鋒、養勢、留變、觀時、不動");
-    WaterStrategy.ExecutionTime = 20.0f;
-    WaterStrategy.SuccessRate = 95.0f;
-    WaterStrategy.bIsAvailable = true;
-    WaterStrategies.Add(WaterStrategy);
-    PhaseStrategies.Add(EFiveElementsPhase::Water, WaterStrategies);
-}
-
-void UMingFiveElementsSystem::UpdateRhythm()
-{
-    CalculateRhythm();
-}
-
-bool UMingFiveElementsSystem::IsTransitionValid(EFiveElementsPhase From, EFiveElementsPhase To)
-{
-    // 檢查轉換是否遵循相生順序
-    EFiveElementsRelation Relation = CheckElementsRelation(From, To);
-    return (Relation == EFiveElementsRelation::Generating);
-}
-
-void UMingFiveElementsSystem::RecordPhaseTransition(EFiveElementsPhase From, EFiveElementsPhase To)
-{
-    // 記錄階段轉換歷史
-    UE_LOG(LogTemp, Log, TEXT("記錄五行轉換：%s -> %s"), 
-        *GetPhaseName(From), *GetPhaseName(To));
-}
-
-float UMingFiveElementsSystem::CalculatePhaseEfficiency(EFiveElementsPhase Phase)
-{
-    // 計算階段效率
-    // 基於當前階段進度和歷史表現
-    float BaseEfficiency = 1.0f;
-
-    // 根據階段調整效率
-    switch (Phase)
-    {
-    case EFiveElementsPhase::Wood:
-        BaseEfficiency = 0.8f; // 木階段較慢但穩定
-        break;
-    case EFiveElementsPhase::Fire:
-        BaseEfficiency = 1.2f; // 火階段快速但風險高
-        break;
-    case EFiveElementsPhase::Earth:
-        BaseEfficiency = 1.0f; // 土階段平衡
-        break;
-    case EFiveElementsPhase::Metal:
-        BaseEfficiency = 0.9f; // 金階段精確但耗時
-        break;
-    case EFiveElementsPhase::Water:
-        BaseEfficiency = 0.7f; // 水階段緩慢但安全
-        break;
-    }
-
-    // 根據當前進度調整
-    if (Phase == CurrentState.CurrentPhase)
-    {
-        BaseEfficiency *= (1.0f + CurrentState.PhaseProgress / 100.0f);
-    }
-
-    return BaseEfficiency;
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出基本出o出本出l出d出.出h出"出
+出
+出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出R出o出t出a出t出i出o出n出S出p出e出e出d出 出=出 出1出.出0出f出;出
+出 出 出 出 出T出本出a出n出s出i出t出i出o出n出T出h出本出e出s出h出o出l出d出 出=出 出8出0出.出0出f出;出
+出 出 出 出 出R出h出y出t出h出設置出T出h出本出e出s出h出o出l出d出 出=出 出0出.出5出f出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出I出n出i出t出i出a出l出i出z出e出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出初出始出化出五出行出系出統出.出.出.出"出)出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出五出行出狀出態出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出 出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出a出t出e出(出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出的出e出x出t出P出h出a出s出e出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出P出h出a出s出e出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出T出本出a出n出s出i出t出i出o出n出T出h出本出e出s出h出o出l出d出 出=出 出T出本出a出n出s出i出t出i出o出n出T出h出本出e出s出h出o出l出d出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出b出I出s出T出本出a出n出s出i出t出i出o出n出i出n出成出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出C出y出c出l出e出C出o出使出n出t出 出=出 出0出.出0出f出;出
+出
+出 出 出 出 出/出/出 出初出始出化出五出行出節出奏出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出 出=出 出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出R出h出y出t出h出設置出(出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出基本出o出o出d出R出h出y出t出h出設置出 出=出 出1出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出軍出i出本出e出R出h出y出t出h出設置出 出=出 出1出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出E出a出本出t出h出R出h出y出t出h出設置出 出=出 出1出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出M出e出t出a出l出R出h出y出t出h出設置出 出=出 出1出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出基本出a出t出e出本出R出h出y出t出h出設置出 出=出 出1出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出O出正出e出本出a出l出l出R出h出y出t出h出設置出 出=出 出1出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出b出I出s出輸入出a出本出設置出o出n出i出o出使出s出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出初出始出化出階出段出策出略出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出P出h出a出s出e出S出t出本出a出t出e出成出i出e出s出(出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出五出行出系出統出初出始出化出完出成出"出)出)出;出
+出}出
+出
+出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出a出t出e出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出E出x出e出c出使出t出e出R出o出t出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出/出/出 出更出新出當出前出階出段出進出度出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出P出h出a出s出e出P出本出o出成出本出e出s出s出 出+出=出 出R出o出t出a出t出i出o出n出S出p出e出e出d出;出
+出
+出 出 出 出 出/出/出 出檢出查出是出否出可出以出轉出換出
+出 出 出 出 出i出f出 出(出C出a出n出T出本出a出n出s出i出t出i出o出n出T出o出的出e出x出t出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出x出e出c出使出t出e出P出h出a出s出e出T出本出a出n出s出i出t出i出o出n出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出更出新出節出奏出
+出 出 出 出 出U出p出d出a出t出e出R出h出y出t出h出設置出(出)出;出
+出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出S出t出a出t出e出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出>出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出G出e出t出C出使出本出本出e出n出t出P出h出a出s出e出S出t出本出a出t出e出成出i出e出s出(出)出
+出{出
+出 出 出 出 出i出f出 出(出P出h出a出s出e出S出t出本出a出t出e出成出i出e出s出.出C出o出n出t出a出i出n出s出(出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出h出a出s出e出S出t出本出a出t出e出成出i出e出s出[出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出]出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出T出A出本出本出a出y出<出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出>出(出)出;出
+出}出
+出
+出E出軍出i出正出e出E出l出e出設置出e出n出t出s出R出e出l出a出t出i出o出n出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出C出h出e出c出k出E出l出e出設置出e出n出t出s出R出e出l出a出t出i出o出n出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出 出E出l出e出設置出e出n出t出1出,出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出 出E出l出e出設置出e出n出t出2出)出
+出{出
+出 出 出 出 出/出/出 出五出行出相出生出關出係出
+出 出 出 出 出i出f出 出(出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出R出e出l出a出t出i出o出n出:出:出G出e出n出e出本出a出t出i出n出成出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出五出行出相出剋出關出係出
+出 出 出 出 出i出f出 出(出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出R出e出l出a出t出i出o出n出:出:出O出正出e出本出c出o出設置出i出n出成出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出五出行出相出侮出關出係出（出反出向出相出剋出）出
+出 出 出 出 出i出f出 出(出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出l出e出設置出e出n出t出1出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出 出&出&出 出E出l出e出設置出e出n出t出2出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出R出e出l出a出t出i出o出n出:出:出I出n出s出使出l出t出i出n出成出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出扶出助出關出係出
+出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出R出e出l出a出t出i出o出n出:出:出S出使出p出p出o出本出t出i出n出成出;出
+出}出
+出
+出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出R出h出y出t出h出設置出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出R出h出y出t出h出設置出(出)出
+出{出
+出 出 出 出 出/出/出 出計出算出各出階出段出節出奏出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出基本出o出o出d出R出h出y出t出h出設置出 出=出 出C出a出l出c出使出l出a出t出e出P出h出a出s出e出E出f出f出i出c出i出e出n出c出y出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出軍出i出本出e出R出h出y出t出h出設置出 出=出 出C出a出l出c出使出l出a出t出e出P出h出a出s出e出E出f出f出i出c出i出e出n出c出y出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出E出a出本出t出h出R出h出y出t出h出設置出 出=出 出C出a出l出c出使出l出a出t出e出P出h出a出s出e出E出f出f出i出c出i出e出n出c出y出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出M出e出t出a出l出R出h出y出t出h出設置出 出=出 出C出a出l出c出使出l出a出t出e出P出h出a出s出e出E出f出f出i出c出i出e出n出c出y出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出基本出a出t出e出本出R出h出y出t出h出設置出 出=出 出C出a出l出c出使出l出a出t出e出P出h出a出s出e出E出f出f出i出c出i出e出n出c出y出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出)出;出
+出
+出 出 出 出 出/出/出 出計出算出整出體出節出奏出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出O出正出e出本出a出l出l出R出h出y出t出h出設置出 出=出 出(出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出基本出o出o出d出R出h出y出t出h出設置出 出+出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出軍出i出本出e出R出h出y出t出h出設置出 出+出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出E出a出本出t出h出R出h出y出t出h出設置出 出+出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出M出e出t出a出l出R出h出y出t出h出設置出 出+出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出基本出a出t出e出本出R出h出y出t出h出設置出)出 出/出 出5出.出0出f出;出
+出
+出 出 出 出 出/出/出 出檢出查出和出諧出性出
+出 出 出 出 出f出l出o出a出t出 出V出a出本出i出a出n出c出e出 出=出 出軍出M出a出t出h出:出:出P出o出w出(出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出基本出o出o出d出R出h出y出t出h出設置出 出-出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出O出正出e出本出a出l出l出R出h出y出t出h出設置出,出 出2出)出 出+出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出a出t出h出:出:出P出o出w出(出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出軍出i出本出e出R出h出y出t出h出設置出 出-出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出O出正出e出本出a出l出l出R出h出y出t出h出設置出,出 出2出)出 出+出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出a出t出h出:出:出P出o出w出(出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出E出a出本出t出h出R出h出y出t出h出設置出 出-出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出O出正出e出本出a出l出l出R出h出y出t出h出設置出,出 出2出)出 出+出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出a出t出h出:出:出P出o出w出(出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出M出e出t出a出l出R出h出y出t出h出設置出 出-出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出O出正出e出本出a出l出l出R出h出y出t出h出設置出,出 出2出)出 出+出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出a出t出h出:出:出P出o出w出(出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出基本出a出t出e出本出R出h出y出t出h出設置出 出-出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出O出正出e出本出a出l出l出R出h出y出t出h出設置出,出 出2出)出;出
+出
+出 出 出 出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出b出I出s出輸入出a出本出設置出o出n出i出o出使出s出 出=出 出(出V出a出本出i出a出n出c出e出 出<出 出R出h出y出t出h出設置出T出h出本出e出s出h出o出l出d出)出;出
+出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出R出h出y出t出h出設置出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出C出a出n出T出本出a出n出s出i出t出i出o出n出T出o出的出e出x出t出(出)出
+出{出
+出 出 出 出 出/出/出 出檢出查出轉出換出條出件出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出S出t出a出t出e出.出P出h出a出s出e出P出本出o出成出本出e出s出s出 出<出 出C出使出本出本出e出n出t出S出t出a出t出e出.出T出本出a出n出s出i出t出i出o出n出T出h出本出e出s出h出o出l出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出檢出查出轉出換出是出否出有出效出
+出 出 出 出 出本出e出t出使出本出n出 出I出s出T出本出a出n出s出i出t出i出o出n出V出a出l出i出d出(出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出,出 出C出使出本出本出e出n出t出S出t出a出t出e出.出的出e出x出t出P出h出a出s出e出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出E出x出e出c出使出t出e出P出h出a出s出e出T出本出a出n出s出i出t出i出o出n出(出)出
+出{出
+出 出 出 出 出/出/出 出記出錄出當出前出階出段出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出C出o出設置出p出l出e出t出e出d出P出h出a出s出e出s出.出A出d出d出(出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出)出;出
+出
+出 出 出 出 出/出/出 出執出行出轉出換出
+出 出 出 出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出 出P出本出e出正出i出o出使出s出P出h出a出s出e出 出=出 出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出 出=出 出C出使出本出本出e出n出t出S出t出a出t出e出.出的出e出x出t出P出h出a出s出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出的出e出x出t出P出h出a出s出e出 出=出 出G出e出t出R出e出c出o出設置出設置出e出n出d出e出d出的出e出x出t出P出h出a出s出e出(出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出P出h出a出s出e出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出b出I出s出T出本出a出n出s出i出t出i出o出n出i出n出成出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出更出新出循出環出計出數出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出C出y出c出l出e出C出o出使出n出t出+出+出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出記出錄出轉出換出
+出 出 出 出 出R出e出c出o出本出d出P出h出a出s出e出T出本出a出n出s出i出t出i出o出n出(出P出本出e出正出i出o出使出s出P出h出a出s出e出,出 出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出五出行出階出段出轉出換出：出%出s出 出-出>出 出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出G出e出t出P出h出a出s出e出的出a出設置出e出(出P出本出e出正出i出o出使出s出P出h出a出s出e出)出,出 出*出G出e出t出P出h出a出s出e出的出a出設置出e出(出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出)出)出;出
+出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出G出e出t出R出e出c出o出設置出設置出e出n出d出e出d出的出e出x出t出P出h出a出s出e出(出)出
+出{出
+出 出 出 出 出/出/出 出按出照出相出生出順出序出推出薦出下出一出階出段出
+出 出 出 出 出s出w出i出t出c出h出 出(出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出I出s出E出l出e出設置出e出n出t出s出O出本出d出e出本出D出i出s出本出使出p出t出e出d出(出)出
+出{出
+出 出 出 出 出/出/出 出檢出查出五出行出秩出序出是出否出被出破出壞出
+出 出 出 出 出/出/出 出主出要出檢出查出節出奏出和出諧出性出和出轉出換出有出效出性出
+出 出 出 出 出i出f出 出(出!出C出使出本出本出e出n出t出R出h出y出t出h出設置出.出b出I出s出輸入出a出本出設置出o出n出i出o出使出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出檢出查出是出否出有出錯出誤出的出轉出換出
+出 出 出 出 出i出f出 出(出!出I出s出T出本出a出n出s出i出t出i出o出n出V出a出l出i出d出(出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出,出 出C出使出本出本出e出n出t出S出t出a出t出e出.出的出e出x出t出P出h出a出s出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出R出e出s出t出o出本出e出E出l出e出設置出e出n出t出s出O出本出d出e出本出(出)出
+出{出
+出 出 出 出 出/出/出 出修出復出五出行出秩出序出
+出 出 出 出 出i出f出 出(出!出I出s出E出l出e出設置出e出n出t出s出O出本出d出e出本出D出i出s出本出使出p出t出e出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出 出/出/出 出秩出序出正出常出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出重出置出到出木出階出段出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出的出e出x出t出P出h出a出s出e出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出P出h出a出s出e出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出b出I出s出T出本出a出n出s出i出t出i出o出n出i出n出成出 出=出 出f出a出l出s出e出;出
+出
+出 出 出 出 出/出/出 出重出新出計出算出節出奏出
+出 出 出 出 出U出p出d出a出t出e出R出h出y出t出h出設置出(出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出五出行出秩出序出已出修出復出"出)出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出G出e出t出P出h出a出s出e出的出a出設置出e出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出 出P出h出a出s出e出)出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出P出h出a出s出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出木出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出火出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出土出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出金出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出水出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出G出e出t出P出h出a出s出e出D出e出s出c出本出i出p出t出i出o出n出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出 出P出h出a出s出e出)出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出P出h出a出s出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出木出：出立出名出與出正出當出性出，出開出局出、出立出旗出、出定出名出、出取出義出、出爭出正出當出、出聚出人出心出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出火出：出造出勢出與出加出速出，出張出聲出、出擴出熱出、出速出傳出、出激出情出、出乘出勢出、出燒出原出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出土出：出收出權出與出止出亂出，出聚出權出、出固出勢出、出止出紛出、出定出分出、出實出利出、出安出眾出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出金出：出裁出斷出與出清出除出，出決出斷出、出肅出清出、出去出冗出、出除出敵出、出收出兵出、出絕出後出患出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出水出：出留出白出與出不出動出，出藏出鋒出、出養出勢出、出留出變出、出觀出時出、出不出動出、出待出機出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出階出段出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出I出n出i出t出i出a出l出i出z出e出P出h出a出s出e出S出t出本出a出t出e出成出i出e出s出(出)出
+出{出
+出 出 出 出 出P出h出a出s出e出S出t出本出a出t出e出成出i出e出s出.出E出設置出p出t出y出(出)出;出
+出
+出 出 出 出 出/出/出 出木出階出段出策出略出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出>出 出基本出o出o出d出S出t出本出a出t出e出成出i出e出s出;出
+出 出 出 出 出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出 出基本出o出o出d出S出t出本出a出t出e出成出y出;出
+出 出 出 出 出基本出o出o出d出S出t出本出a出t出e出成出y出.出T出a出本出成出e出t出P出h出a出s出e出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出;出
+出 出 出 出 出基本出o出o出d出S出t出本出a出t出e出成出y出.出S出t出本出a出t出e出成出y出的出a出設置出e出 出=出 出T出E出X出T出(出"出立出國出"出)出;出
+出 出 出 出 出基本出o出o出d出S出t出本出a出t出e出成出y出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出立出大出義出、出立出旗出幟出、出立出共出同出之出志出"出)出;出
+出 出 出 出 出基本出o出o出d出S出t出本出a出t出e出成出y出.出E出x出e出c出使出t出i出o出n出T出i出設置出e出 出=出 出1出0出.出0出f出;出
+出 出 出 出 出基本出o出o出d出S出t出本出a出t出e出成出y出.出S出使出c出c出e出s出s出R出a出t出e出 出=出 出8出5出.出0出f出;出
+出 出 出 出 出基本出o出o出d出S出t出本出a出t出e出成出y出.出b出I出s出A出正出a出i出l出a出b出l出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出基本出o出o出d出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出基本出o出o出d出S出t出本出a出t出e出成出y出)出;出
+出 出 出 出 出P出h出a出s出e出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出,出 出基本出o出o出d出S出t出本出a出t出e出成出i出e出s出)出;出
+出
+出 出 出 出 出/出/出 出火出階出段出策出略出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出>出 出軍出i出本出e出S出t出本出a出t出e出成出i出e出s出;出
+出 出 出 出 出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出 出軍出i出本出e出S出t出本出a出t出e出成出y出;出
+出 出 出 出 出軍出i出本出e出S出t出本出a出t出e出成出y出.出T出a出本出成出e出t出P出h出a出s出e出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出;出
+出 出 出 出 出軍出i出本出e出S出t出本出a出t出e出成出y出.出S出t出本出a出t出e出成出y出的出a出設置出e出 出=出 出T出E出X出T出(出"出造出勢出"出)出;出
+出 出 出 出 出軍出i出本出e出S出t出本出a出t出e出成出y出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出張出聲出、出擴出熱出、出速出傳出、出激出情出、出乘出勢出"出)出;出
+出 出 出 出 出軍出i出本出e出S出t出本出a出t出e出成出y出.出E出x出e出c出使出t出i出o出n出T出i出設置出e出 出=出 出5出.出0出f出;出
+出 出 出 出 出軍出i出本出e出S出t出本出a出t出e出成出y出.出S出使出c出c出e出s出s出R出a出t出e出 出=出 出7出5出.出0出f出;出
+出 出 出 出 出軍出i出本出e出S出t出本出a出t出e出成出y出.出b出I出s出A出正出a出i出l出a出b出l出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出軍出i出本出e出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出軍出i出本出e出S出t出本出a出t出e出成出y出)出;出
+出 出 出 出 出P出h出a出s出e出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出,出 出軍出i出本出e出S出t出本出a出t出e出成出i出e出s出)出;出
+出
+出 出 出 出 出/出/出 出土出階出段出策出略出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出>出 出E出a出本出t出h出S出t出本出a出t出e出成出i出e出s出;出
+出 出 出 出 出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出 出E出a出本出t出h出S出t出本出a出t出e出成出y出;出
+出 出 出 出 出E出a出本出t出h出S出t出本出a出t出e出成出y出.出T出a出本出成出e出t出P出h出a出s出e出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出;出
+出 出 出 出 出E出a出本出t出h出S出t出本出a出t出e出成出y出.出S出t出本出a出t出e出成出y出的出a出設置出e出 出=出 出T出E出X出T出(出"出收出權出"出)出;出
+出 出 出 出 出E出a出本出t出h出S出t出本出a出t出e出成出y出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出聚出權出、出固出勢出、出止出紛出、出定出分出、出實出利出"出)出;出
+出 出 出 出 出E出a出本出t出h出S出t出本出a出t出e出成出y出.出E出x出e出c出使出t出i出o出n出T出i出設置出e出 出=出 出1出5出.出0出f出;出
+出 出 出 出 出E出a出本出t出h出S出t出本出a出t出e出成出y出.出S出使出c出c出e出s出s出R出a出t出e出 出=出 出9出0出.出0出f出;出
+出 出 出 出 出E出a出本出t出h出S出t出本出a出t出e出成出y出.出b出I出s出A出正出a出i出l出a出b出l出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出E出a出本出t出h出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出E出a出本出t出h出S出t出本出a出t出e出成出y出)出;出
+出 出 出 出 出P出h出a出s出e出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出,出 出E出a出本出t出h出S出t出本出a出t出e出成出i出e出s出)出;出
+出
+出 出 出 出 出/出/出 出金出階出段出策出略出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出>出 出M出e出t出a出l出S出t出本出a出t出e出成出i出e出s出;出
+出 出 出 出 出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出 出M出e出t出a出l出S出t出本出a出t出e出成出y出;出
+出 出 出 出 出M出e出t出a出l出S出t出本出a出t出e出成出y出.出T出a出本出成出e出t出P出h出a出s出e出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出;出
+出 出 出 出 出M出e出t出a出l出S出t出本出a出t出e出成出y出.出S出t出本出a出t出e出成出y出的出a出設置出e出 出=出 出T出E出X出T出(出"出裁出斷出"出)出;出
+出 出 出 出 出M出e出t出a出l出S出t出本出a出t出e出成出y出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出決出斷出、出肅出清出、出去出冗出、出除出敵出、出收出兵出"出)出;出
+出 出 出 出 出M出e出t出a出l出S出t出本出a出t出e出成出y出.出E出x出e出c出使出t出i出o出n出T出i出設置出e出 出=出 出8出.出0出f出;出
+出 出 出 出 出M出e出t出a出l出S出t出本出a出t出e出成出y出.出S出使出c出c出e出s出s出R出a出t出e出 出=出 出8出0出.出0出f出;出
+出 出 出 出 出M出e出t出a出l出S出t出本出a出t出e出成出y出.出b出I出s出A出正出a出i出l出a出b出l出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出M出e出t出a出l出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出M出e出t出a出l出S出t出本出a出t出e出成出y出)出;出
+出 出 出 出 出P出h出a出s出e出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出,出 出M出e出t出a出l出S出t出本出a出t出e出成出i出e出s出)出;出
+出
+出 出 出 出 出/出/出 出水出階出段出策出略出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出>出 出基本出a出t出e出本出S出t出本出a出t出e出成出i出e出s出;出
+出 出 出 出 出軍出軍出i出正出e出E出l出e出設置出e出n出t出s出S出t出本出a出t出e出成出y出 出基本出a出t出e出本出S出t出本出a出t出e出成出y出;出
+出 出 出 出 出基本出a出t出e出本出S出t出本出a出t出e出成出y出.出T出a出本出成出e出t出P出h出a出s出e出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出;出
+出 出 出 出 出基本出a出t出e出本出S出t出本出a出t出e出成出y出.出S出t出本出a出t出e出成出y出的出a出設置出e出 出=出 出T出E出X出T出(出"出留出白出"出)出;出
+出 出 出 出 出基本出a出t出e出本出S出t出本出a出t出e出成出y出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出藏出鋒出、出養出勢出、出留出變出、出觀出時出、出不出動出"出)出;出
+出 出 出 出 出基本出a出t出e出本出S出t出本出a出t出e出成出y出.出E出x出e出c出使出t出i出o出n出T出i出設置出e出 出=出 出2出0出.出0出f出;出
+出 出 出 出 出基本出a出t出e出本出S出t出本出a出t出e出成出y出.出S出使出c出c出e出s出s出R出a出t出e出 出=出 出9出5出.出0出f出;出
+出 出 出 出 出基本出a出t出e出本出S出t出本出a出t出e出成出y出.出b出I出s出A出正出a出i出l出a出b出l出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出基本出a出t出e出本出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出基本出a出t出e出本出S出t出本出a出t出e出成出y出)出;出
+出 出 出 出 出P出h出a出s出e出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出,出 出基本出a出t出e出本出S出t出本出a出t出e出成出i出e出s出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出U出p出d出a出t出e出R出h出y出t出h出設置出(出)出
+出{出
+出 出 出 出 出C出a出l出c出使出l出a出t出e出R出h出y出t出h出設置出(出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出I出s出T出本出a出n出s出i出t出i出o出n出V出a出l出i出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出 出軍出本出o出設置出,出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出 出T出o出)出
+出{出
+出 出 出 出 出/出/出 出檢出查出轉出換出是出否出遵出循出相出生出順出序出
+出 出 出 出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出R出e出l出a出t出i出o出n出 出R出e出l出a出t出i出o出n出 出=出 出C出h出e出c出k出E出l出e出設置出e出n出t出s出R出e出l出a出t出i出o出n出(出軍出本出o出設置出,出 出T出o出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出(出R出e出l出a出t出i出o出n出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出R出e出l出a出t出i出o出n出:出:出G出e出n出e出本出a出t出i出n出成出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出R出e出c出o出本出d出P出h出a出s出e出T出本出a出n出s出i出t出i出o出n出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出 出軍出本出o出設置出,出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出 出T出o出)出
+出{出
+出 出 出 出 出/出/出 出記出錄出階出段出轉出換出歷出史出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出記出錄出五出行出轉出換出：出%出s出 出-出>出 出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出G出e出t出P出h出a出s出e出的出a出設置出e出(出軍出本出o出設置出)出,出 出*出G出e出t出P出h出a出s出e出的出a出設置出e出(出T出o出)出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出S出y出s出t出e出設置出:出:出C出a出l出c出使出l出a出t出e出P出h出a出s出e出E出f出f出i出c出i出e出n出c出y出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出 出P出h出a出s出e出)出
+出{出
+出 出 出 出 出/出/出 出計出算出階出段出效出率出
+出 出 出 出 出/出/出 出基出於出當出前出階出段出進出度出和出歷出史出表出現出
+出 出 出 出 出f出l出o出a出t出 出B出a出s出e出E出f出f出i出c出i出e出n出c出y出 出=出 出1出.出0出f出;出
+出
+出 出 出 出 出/出/出 出根出據出階出段出調出整出效出率出
+出 出 出 出 出s出w出i出t出c出h出 出(出P出h出a出s出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出o出o出d出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出E出f出f出i出c出i出e出n出c出y出 出=出 出0出.出8出f出;出 出/出/出 出木出階出段出較出慢出但出穩出定出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出軍出i出本出e出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出E出f出f出i出c出i出e出n出c出y出 出=出 出1出.出2出f出;出 出/出/出 出火出階出段出快出速出但出風出險出高出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出E出a出本出t出h出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出E出f出f出i出c出i出e出n出c出y出 出=出 出1出.出0出f出;出 出/出/出 出土出階出段出平出衡出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出M出e出t出a出l出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出E出f出f出i出c出i出e出n出c出y出 出=出 出0出.出9出f出;出 出/出/出 出金出階出段出精出確出但出耗出時出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出P出h出a出s出e出:出:出基本出a出t出e出本出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出E出f出f出i出c出i出e出n出c出y出 出=出 出0出.出7出f出;出 出/出/出 出水出階出段出緩出慢出但出安出全出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出根出據出當出前出進出度出調出整出
+出 出 出 出 出i出f出 出(出P出h出a出s出e出 出=出=出 出C出使出本出本出e出n出t出S出t出a出t出e出.出C出使出本出本出e出n出t出P出h出a出s出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出B出a出s出e出E出f出f出i出c出i出e出n出c出y出 出*出=出 出(出1出.出0出f出 出+出 出C出使出本出本出e出n出t出S出t出a出t出e出.出P出h出a出s出e出P出本出o出成出本出e出s出s出 出/出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出B出a出s出e出E出f出f出i出c出i出e出n出c出y出;出
+出}出
+出

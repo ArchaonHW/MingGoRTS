@@ -1,197 +1,198 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "Platform\IPlatformInterface.h"
-#include "MingInputManager.generated.h"
-
-/**
- * ��J摧毀��??
- */
-UENUM(BlueprintType)
-enum class EInputAction: uint8 {
-    Select            UMETA(DisplayName = "Select"),
-    Move              UMETA(DisplayName = "Move"),
-    Attack            UMETA(DisplayName = "Attack"),
-    Build             UMETA(DisplayName = "Build"),
-    Cancel            UMETA(DisplayName = "Cancel"),
-    ZoomIn            UMETA(DisplayName = "Zoom In"),
-    ZoomOut           UMETA(DisplayName = "Zoom Out"),
-    PanCamera         UMETA(DisplayName = "Pan Camera"),
-    OpenMenu          UMETA(DisplayName = "Open Menu"),
-    QuickSave         UMETA(DisplayName = "Quick Save"),
-    QuickLoad         UMETA(DisplayName = "Quick Load"),
-    UnitSelectAll     UMETA(DisplayName = "Select All Units"),
-    UnitFormation     UMETA(DisplayName = "Formation"),
-    None              UMETA(DisplayName = "None")
-};
-
-/**
- * ��J??����??
- */
-UENUM(BlueprintType)
-enum class EInputGesture: uint8 {
-    None              UMETA(DisplayName = "None"),
-    Tap               UMETA(DisplayName = "Tap"),
-    DoubleTap         UMETA(DisplayName = "Double Tap"),
-    LongPress         UMETA(DisplayName = "Long Press"),
-    Pinch             UMETA(DisplayName = "Pinch"),
-    Spread            UMETA(DisplayName = "Spread"),
-    Pan               UMETA(DisplayName = "Pan"),
-    SwipeLeft         UMETA(DisplayName = "Swipe Left"),
-    SwipeRight        UMETA(DisplayName = "Swipe Right"),
-    SwipeUp           UMETA(DisplayName = "Swipe Up"),
-    SwipeDown         UMETA(DisplayName = "Swipe Down"),
-    Rotate            UMETA(DisplayName = "Rotate")
-};
-
-/**
- * ��J�ƥ�??
- */
-USTRUCT(BlueprintType)
-struct FInputEventData
-{
-    GENERATED_BODY()
-    
-    // ��J��m�]??���y��??
-    UPROPERTY(BlueprintReadOnly)
-    FVector2D ScreenPosition;
-    
-    
-    FVector WorldPosition;
-    
-    // ��J摧毀��??
-    UPROPERTY(BlueprintReadOnly)
-    EInputAction Action;
-    
-    // ??����??�]Ĳ摧毀
-    UPROPERTY(BlueprintReadOnly)
-    EInputGesture Gesture;
-    
-    // Ĳ��ID�]??�IĲ摧毀
-    UPROPERTY(BlueprintReadOnly)
-    int32 TouchId;
-    
-    
-    bool bHandled;
-    
-    
-    bool bShiftPressed;
-    
-    UPROPERTY(BlueprintReadOnly)
-    bool bCtrlPressed;
-    
-    UPROPERTY(BlueprintReadOnly)
-    bool bAltPressed;
-    
-    FInputEventData()
-        : ScreenPosition(FVector2D::ZeroVector)
-        , WorldPosition(FVector::ZeroVector)
-        , Action(EInputAction::None)
-        , Gesture(EInputGesture::None)
-        , TouchId(0)
-        , bHandled(false)
-        , bShiftPressed(false)
-        , bCtrlPressed(false)
-        , bAltPressed(false)
-    {}
-};
-
-/**
- * ��J��?X * ��??��??��?X?�L??Ĳ??��X */
-UCLASS()
-class MINGCORE_API UMingInputManager : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    UMingInputManager();
-
-    // ???X?��??��??��
-    UFUNCTION(BlueprintCallable, Category = "Input")
-    void Initialize();
-
-    
-    void Shutdown();
-
-    // �C?X?�s
-    UFUNCTION(BlueprintCallable, Category = "Input")
-    void Tick(float DeltaTime);
-
-    // �]�m摧毀��J��??
-    UFUNCTION(BlueprintCallable, Category = "Input")
-    void SetInputType(EInputType NewInputType);
-
-    // 目標數量��J��??
-    UFUNCTION(BlueprintCallable, Category = "Input")
-    EInputType GetCurrentInputType() const { return CurrentInputType; }
-
-    // �j??��J摧毀�]Blueprint??��摧毀
-    UFUNCTION(BlueprintCallable, Category = "Input")
-    void BindAction(EInputAction Action, UObject* Listener, FName FunctionName);
-
-    // 摧毀�j??
-    UFUNCTION(BlueprintCallable, Category = "Input")
-    void UnbindAction(EInputAction Action, UObject* Listener);
-
-    // Ĳ�o��J�ƥ�
-    UFUNCTION(BlueprintCallable, Category = "Input")
-    void TriggerInputEvent(const FInputEventData& EventData);
-
-    
-    bool IsTouchInput() const;
-
-    
-    FVector2D GetLastInputPosition() const { return LastInputPosition; }
-
-    
-    void SetTouchSensitivity(float Sensitivity);
-
-    
-    float GetTouchSensitivity() const { return TouchSensitivity; }
-
-    // 目標數量��??
-    static UMingInputManager* Get();
-
-private:
-    bool bInitialized;
-    
-    // 摧毀��J��??
-    UPROPERTY()
-    EInputType CurrentInputType;
-    
-    // ??���摧毀??
-    FVector2D LastInputPosition;
-    
-    // Ĳ��摧毀??
-    float TouchSensitivity;
-    
-    // ��J�j?X???
-    TMap<EInputAction, TMap<TWeakObjectPtr<UObject>, FName>> InputBindings;
-    
-    // Ĳ��摧毀�l??
-    struct FTouchState
-    {
-        FVector2D StartPosition;
-        FVector2D CurrentPosition;
-        float StartTime;
-        bool bIsActive;
-    };
-    
-    TMap<int32, FTouchState> ActiveTouches;
-    
-    // ??���˴�??��
-    float TapTimeThreshold;
-    float TapDistanceThreshold;
-    float LongPressTimeThreshold;
-    
-    // 摧毀��??
-    static UMingInputManager* Instance;
-    
-    // ��J???X?��
-    void ProcessTouchInput(float DeltaTime);
-    void ProcessMouseInput(float DeltaTime);
-    void DetectGestures(const FTouchState& TouchState, int32 TouchId);
-    void ExecuteInputBinding(EInputAction Action, const FInputEventData& EventData);
-};
-
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出\出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出�出�出J出�出�出動出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出I出n出p出使出t出A出c出t出i出o出n出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出S出e出l出e出c出t出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出S出e出l出e出c出t出"出)出,出
+出 出 出 出 出M出o出正出e出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出M出o出正出e出"出)出,出
+出 出 出 出 出A出t出t出a出c出k出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出A出t出t出a出c出k出"出)出,出
+出 出 出 出 出B出使出i出l出d出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出B出使出i出l出d出"出)出,出
+出 出 出 出 出C出a出n出c出e出l出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出C出a出n出c出e出l出"出)出,出
+出 出 出 出 出Z出o出o出設置出I出n出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出Z出o出o出設置出 出I出n出"出)出,出
+出 出 出 出 出Z出o出o出設置出O出使出t出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出Z出o出o出設置出 出O出使出t出"出)出,出
+出 出 出 出 出P出a出n出C出a出設置出e出本出a出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出P出a出n出 出C出a出設置出e出本出a出"出)出,出
+出 出 出 出 出O出p出e出n出M出e出n出使出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出O出p出e出n出 出M出e出n出使出"出)出,出
+出 出 出 出 出Q出使出i出c出k出S出a出正出e出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出Q出使出i出c出k出 出S出a出正出e出"出)出,出
+出 出 出 出 出Q出使出i出c出k出L出o出a出d出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出Q出使出i出c出k出 出L出o出a出d出"出)出,出
+出 出 出 出 出U出n出i出t出S出e出l出e出c出t出A出l出l出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出S出e出l出e出c出t出 出A出l出l出 出U出n出i出t出s出"出)出,出
+出 出 出 出 出U出n出i出t出軍出o出本出設置出a出t出i出o出n出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出軍出o出本出設置出a出t出i出o出n出"出)出,出
+出 出 出 出 出的出o出n出e出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出的出o出n出e出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出�出�出J出動出�出�出�出�出動出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出I出n出p出使出t出G出e出s出t出使出本出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出的出o出n出e出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出的出o出n出e出"出)出,出
+出 出 出 出 出T出a出p出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出a出p出"出)出,出
+出 出 出 出 出D出o出使出b出l出e出T出a出p出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出D出o出使出b出l出e出 出T出a出p出"出)出,出
+出 出 出 出 出L出o出n出成出P出本出e出s出s出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出L出o出n出成出 出P出本出e出s出s出"出)出,出
+出 出 出 出 出P出i出n出c出h出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出P出i出n出c出h出"出)出,出
+出 出 出 出 出S出p出本出e出a出d出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出S出p出本出e出a出d出"出)出,出
+出 出 出 出 出P出a出n出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出P出a出n出"出)出,出
+出 出 出 出 出S出w出i出p出e出L出e出f出t出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出S出w出i出p出e出 出L出e出f出t出"出)出,出
+出 出 出 出 出S出w出i出p出e出R出i出成出h出t出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出S出w出i出p出e出 出R出i出成出h出t出"出)出,出
+出 出 出 出 出S出w出i出p出e出U出p出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出S出w出i出p出e出 出U出p出"出)出,出
+出 出 出 出 出S出w出i出p出e出D出o出w出n出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出S出w出i出p出e出 出D出o出w出n出"出)出,出
+出 出 出 出 出R出o出t出a出t出e出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出R出o出t出a出t出e出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出�出�出J出�出基礎出�出動出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出I出n出p出使出t出E出正出e出n出t出D出a出t出a出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出J出�出�出設置出�出]出動出�出�出�出y出�出�出動出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出V出e出c出t出o出本出2出D出 出S出c出本出e出e出n出P出o出s出i出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出
+出 出 出 出 出軍出V出e出c出t出o出本出 出基本出o出本出l出d出P出o出s出i出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出J出�出�出動出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出E出I出n出p出使出t出A出c出t出i出o出n出 出A出c出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出�出�出�出�出動出�出]出Ĳ出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出E出I出n出p出使出t出G出e出s出t出使出本出e出 出G出e出s出t出使出本出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出Ĳ出�出�出I出D出�出]出動出�出I出Ĳ出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出i出n出t出3出2出 出T出o出使出c出h出I出d出;出
+出 出 出 出 出
+出 出 出 出 出
+出 出 出 出 出b出o出o出l出 出b出輸入出a出n出d出l出e出d出;出
+出 出 出 出 出
+出 出 出 出 出
+出 出 出 出 出b出o出o出l出 出b出S出h出i出f出t出P出本出e出s出s出e出d出;出
+出 出 出 出 出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出b出o出o出l出 出b出C出t出本出l出P出本出e出s出s出e出d出;出
+出 出 出 出 出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出b出o出o出l出 出b出A出l出t出P出本出e出s出s出e出d出;出
+出 出 出 出 出
+出 出 出 出 出軍出I出n出p出使出t出E出正出e出n出t出D出a出t出a出(出)出
+出 出 出 出 出 出 出 出 出:出 出S出c出本出e出e出n出P出o出s出i出t出i出o出n出(出軍出V出e出c出t出o出本出2出D出:出:出Z出e出本出o出V出e出c出t出o出本出)出
+出 出 出 出 出 出 出 出 出,出 出基本出o出本出l出d出P出o出s出i出t出i出o出n出(出軍出V出e出c出t出o出本出:出:出Z出e出本出o出V出e出c出t出o出本出)出
+出 出 出 出 出 出 出 出 出,出 出A出c出t出i出o出n出(出E出I出n出p出使出t出A出c出t出i出o出n出:出:出的出o出n出e出)出
+出 出 出 出 出 出 出 出 出,出 出G出e出s出t出使出本出e出(出E出I出n出p出使出t出G出e出s出t出使出本出e出:出:出的出o出n出e出)出
+出 出 出 出 出 出 出 出 出,出 出T出o出使出c出h出I出d出(出0出)出
+出 出 出 出 出 出 出 出 出,出 出b出輸入出a出n出d出l出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出 出 出 出 出,出 出b出S出h出i出f出t出P出本出e出s出s出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出 出 出 出 出,出 出b出C出t出本出l出P出本出e出s出s出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出 出 出 出 出,出 出b出A出l出t出P出本出e出s出s出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出�出�出J出�出�出務出 出*出 出�出�出動出�出�出動出�出�出池出�出L出動出Ĳ出動出�出�出X出 出*出/出
+出U出C出L出A出S出S出(出)出
+出c出l出a出s出s出 出M出I出的出G出C出O出R出E出下出A出P出I出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出(出)出;出
+出
+出 出 出 出 出/出/出 出動出池出�出�出動出�出�出動出�出�出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出p出使出t出"出)出
+出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出
+出 出 出 出 出
+出 出 出 出 出正出o出i出d出 出S出h出使出t出d出o出w出n出(出)出;出
+出
+出 出 出 出 出/出/出 出�出C出池出�出s出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出p出使出t出"出)出
+出 出 出 出 出正出o出i出d出 出T出i出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
+出
+出 出 出 出 出/出/出 出�出]出�出設置出�出�出J出�出�出動出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出p出使出t出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出I出n出p出使出t出T出y出p出e出(出E出I出n出p出使出t出T出y出p出e出 出的出e出w出I出n出p出使出t出T出y出p出e出)出;出
+出
+出 出 出 出 出/出/出 出目出標出數出量出�出�出J出�出�出動出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出p出使出t出"出)出
+出 出 出 出 出E出I出n出p出使出t出T出y出p出e出 出G出e出t出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出;出 出}出
+出
+出 出 出 出 出/出/出 出�出大出動出�出�出J出�出]出B出l出使出e出p出本出i出n出t出動出�出�出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出p出使出t出"出)出
+出 出 出 出 出正出o出i出d出 出B出i出n出d出A出c出t出i出o出n出(出E出I出n出p出使出t出A出c出t出i出o出n出 出A出c出t出i出o出n出,出 出U出O出b出大出e出c出t出*出 出L出i出s出t出e出n出e出本出,出 出軍出的出a出設置出e出 出軍出使出n出c出t出i出o出n出的出a出設置出e出)出;出
+出
+出 出 出 出 出/出/出 出�出大出動出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出p出使出t出"出)出
+出 出 出 出 出正出o出i出d出 出U出n出b出i出n出d出A出c出t出i出o出n出(出E出I出n出p出使出t出A出c出t出i出o出n出 出A出c出t出i出o出n出,出 出U出O出b出大出e出c出t出*出 出L出i出s出t出e出n出e出本出)出;出
+出
+出 出 出 出 出/出/出 出Ĳ出�出o出�出�出J出�出基礎出�出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出p出使出t出"出)出
+出 出 出 出 出正出o出i出d出 出T出本出i出成出成出e出本出I出n出p出使出t出E出正出e出n出t出(出c出o出n出s出t出 出軍出I出n出p出使出t出E出正出e出n出t出D出a出t出a出&出 出E出正出e出n出t出D出a出t出a出)出;出
+出
+出 出 出 出 出
+出 出 出 出 出b出o出o出l出 出I出s出T出o出使出c出h出I出n出p出使出t出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出
+出 出 出 出 出軍出V出e出c出t出o出本出2出D出 出G出e出t出L出a出s出t出I出n出p出使出t出P出o出s出i出t出i出o出n出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出L出a出s出t出I出n出p出使出t出P出o出s出i出t出i出o出n出;出 出}出
+出
+出 出 出 出 出
+出 出 出 出 出正出o出i出d出 出S出e出t出T出o出使出c出h出S出e出n出s出i出t出i出正出i出t出y出(出f出l出o出a出t出 出S出e出n出s出i出t出i出正出i出t出y出)出;出
+出
+出 出 出 出 出
+出 出 出 出 出f出l出o出a出t出 出G出e出t出T出o出使出c出h出S出e出n出s出i出t出i出正出i出t出y出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出T出o出使出c出h出S出e出n出s出i出t出i出正出i出t出y出;出 出}出
+出
+出 出 出 出 出/出/出 出目出標出數出量出�出�出動出
+出 出 出 出 出s出t出a出t出i出c出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出*出 出G出e出t出(出)出;出
+出
+出p出本出i出正出a出t出e出:出
+出 出 出 出 出b出o出o出l出 出b出I出n出i出t出i出a出l出i出z出e出d出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出J出�出�出動出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出E出I出n出p出使出t出T出y出p出e出 出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出�出�出�出動出
+出 出 出 出 出軍出V出e出c出t出o出本出2出D出 出L出a出s出t出I出n出p出使出t出P出o出s出i出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出Ĳ出�出�出動出
+出 出 出 出 出f出l出o出a出t出 出T出o出使出c出h出S出e出n出s出i出t出i出正出i出t出y出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出J出�出大出池出動出
+出 出 出 出 出T出M出a出p出<出E出I出n出p出使出t出A出c出t出i出o出n出,出 出T出M出a出p出<出T出基本出e出a出k出O出b出大出e出c出t出P出t出本出<出U出O出b出大出e出c出t出>出,出 出軍出的出a出設置出e出>出>出 出I出n出p出使出t出B出i出n出d出i出n出成出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出Ĳ出�出�出�出l出動出
+出 出 出 出 出s出t出本出使出c出t出 出軍出T出o出使出c出h出S出t出a出t出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出2出D出 出S出t出a出本出t出P出o出s出i出t出i出o出n出;出
+出 出 出 出 出 出 出 出 出軍出V出e出c出t出o出本出2出D出 出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出;出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出S出t出a出本出t出T出i出設置出e出;出
+出 出 出 出 出 出 出 出 出b出o出o出l出 出b出I出s出A出c出t出i出正出e出;出
+出 出 出 出 出}出;出
+出 出 出 出 出
+出 出 出 出 出T出M出a出p出<出i出n出t出3出2出,出 出軍出T出o出使出c出h出S出t出a出t出e出>出 出A出c出t出i出正出e出T出o出使出c出h出e出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出�出�出�出˴出�出動出�出�出
+出 出 出 出 出f出l出o出a出t出 出T出a出p出T出i出設置出e出T出h出本出e出s出h出o出l出d出;出
+出 出 出 出 出f出l出o出a出t出 出T出a出p出D出i出s出t出a出n出c出e出T出h出本出e出s出h出o出l出d出;出
+出 出 出 出 出f出l出o出a出t出 出L出o出n出成出P出本出e出s出s出T出i出設置出e出T出h出本出e出s出h出o出l出d出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出動出
+出 出 出 出 出s出t出a出t出i出c出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出*出 出I出n出s出t出a出n出c出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出J出動出池出�出�出
+出 出 出 出 出正出o出i出d出 出P出本出o出c出e出s出s出T出o出使出c出h出I出n出p出使出t出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
+出 出 出 出 出正出o出i出d出 出P出本出o出c出e出s出s出M出o出使出s出e出I出n出p出使出t出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
+出 出 出 出 出正出o出i出d出 出D出e出t出e出c出t出G出e出s出t出使出本出e出s出(出c出o出n出s出t出 出軍出T出o出使出c出h出S出t出a出t出e出&出 出T出o出使出c出h出S出t出a出t出e出,出 出i出n出t出3出2出 出T出o出使出c出h出I出d出)出;出
+出 出 出 出 出正出o出i出d出 出E出x出e出c出使出t出e出I出n出p出使出t出B出i出n出d出i出n出成出(出E出I出n出p出使出t出A出c出t出i出o出n出 出A出c出t出i出o出n出,出 出c出o出n出s出t出 出軍出I出n出p出使出t出E出正出e出n出t出D出a出t出a出&出 出E出正出e出n出t出D出a出t出a出)出;出
+出}出;出
+出
+出

@@ -1,5 +1,6 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Auto-Alert Mechanism System Implementation - B2-3
+// Provides automated risk detection and alerting
 
 #include "Risk/MingRiskAlertSystem.h"
 #include "Engine/Engine.h"
@@ -18,193 +19,113 @@ UMingRiskAlertSystem::UMingRiskAlertSystem()
 
 void UMingRiskAlertSystem::InitializeAlertSystem()
 {
-    UE_LOG(LogRiskAlert, Log, TEXT("Risk Alert System initialized"));
-    StartAlertMonitoring();
+    // Initialize default alert rules
+    InitializeDefaultRules();
+    
+    // Start monitoring if enabled
+    if (bEnableMonitoring)
+    {
+        StartMonitoring();
+    }
+    
+    UE_LOG(LogRiskAlert, Log, TEXT("Risk Alert System initialized with %d rules"), 
+        AlertRules.Num());
 }
 
 void UMingRiskAlertSystem::ShutdownAlertSystem()
 {
-    StopAlertMonitoring();
-    ActiveAlerts.Empty();
-    AlertHistory.Empty();
+    StopMonitoring();
     UE_LOG(LogRiskAlert, Log, TEXT("Risk Alert System shutdown"));
 }
 
-void UMingRiskAlertSystem::RegisterAlertRule(const FAlertRule& Rule)
-{
-    AlertRules.Add(Rule.RuleID, Rule);
-    UE_LOG(LogRiskAlert, Log, TEXT("Registered alert rule: %s (%s)"),
-        *Rule.RuleName, *Rule.RuleID.ToString());
-}
-
-void UMingRiskAlertSystem::UnregisterAlertRule(FName RuleID)
-{
-    AlertRules.Remove(RuleID);
-    UE_LOG(LogRiskAlert, Log, TEXT("Unregistered alert rule: %s"), *RuleID.ToString());
-}
-
-void UMingRiskAlertSystem::EnableAlertRule(FName RuleID, bool bEnabled)
-{
-    if (bEnabled)
-    {
-        DisabledRules.Remove(RuleID);
-        UE_LOG(LogRiskAlert, Log, TEXT("Enabled alert rule: %s"), *RuleID.ToString());
-    }
-    else
-    {
-        DisabledRules.Add(RuleID);
-        UE_LOG(LogRiskAlert, Log, TEXT("Disabled alert rule: %s"), *RuleID.ToString());
-    }
-}
-
-void UMingRiskAlertSystem::TriggerAlert(const FRiskAlert& Alert)
-{
-    FRiskAlert NewAlert = Alert;
-    if (NewAlert.AlertID.IsNone())
-    {
-        NewAlert.AlertID = GenerateAlertID();
-    }
-    NewAlert.Timestamp = FPlatformTime::Seconds();
-    NewAlert.Status = EAlertStatus::New;
-
-    ActiveAlerts.Add(NewAlert);
-    AlertHistory.Add(NewAlert);
-
-    // Notify channels
-    NotifyChannels(NewAlert);
-
-    // Auto-escalate if configured
-    if (AlertRules.Contains(NewAlert.RuleID))
-    {
-        const FAlertRule& Rule = AlertRules[NewAlert.RuleID];
-        if (Rule.bAutoEscalate && Rule.bRequireAcknowledgment)
-        {
-            // Escalation will be handled by timer
-        }
-    }
-
-    OnAlertTriggered.Broadcast(NewAlert);
-
-    UE_LOG(LogRiskAlert, Warning, TEXT("Alert triggered: [%s] %s - %s"),
-        *UEnum::GetValueAsString(NewAlert.Type),
-        *NewAlert.Title,
-        *NewAlert.Message);
-}
-
-void UMingRiskAlertSystem::TriggerCustomAlert(const FString& Title, const FString& Message,
-    EAlertType Type, EAlertPriority Priority)
+void UMingRiskAlertSystem::CreateAlert(const FString& Title, const FString& Message, 
+    EAlertType Type, EAlertPriority Priority, ERiskCategory Category)
 {
     FRiskAlert Alert;
-    Alert.AlertID = GenerateAlertID();
-    Alert.Type = Type;
-    Alert.Priority = Priority;
+    Alert.AlertID = FGuid::NewGuid().ToString();
     Alert.Title = Title;
     Alert.Message = Message;
-    Alert.Category = ERiskCategory::General;
-    Alert.RiskLevel = Priority >= EAlertPriority::High ? ERiskLevel::High : ERiskLevel::Medium;
-
-    TriggerAlert(Alert);
+    Alert.Type = Type;
+    Alert.Priority = Priority;
+    Alert.Category = Category;
+    Alert.Status = EAlertStatus::New;
+    Alert.Timestamp = FDateTime::Now();
+    
+    // Apply alert rules
+    ApplyAlertRules(Alert);
+    
+    // Store alert
+    ActiveAlerts.Add(Alert);
+    AlertHistory.Add(Alert);
+    
+    // Send notifications
+    SendAlertNotifications(Alert);
+    
+    // Broadcast event
+    OnAlertCreated.Broadcast(Alert);
+    
+    UE_LOG(LogRiskAlert, Log, TEXT("Alert created: %s [%s]"), *Title, *UEnum::GetValueAsString(Type));
 }
 
-void UMingRiskAlertSystem::AcknowledgeAlert(FName AlertID, const FString& AcknowledgedBy)
+void UMingRiskAlertSystem::CreateThresholdAlert(const FName& MetricName, float CurrentValue, 
+    float Threshold, ERiskCategory Category)
+{
+    FString Title = FString::Printf(TEXT("Threshold Exceeded: %s"), *MetricName.ToString());
+    FString Message = FString::Printf(TEXT("Metric '%s' has exceeded threshold: %.2f > %.2f"), 
+        *MetricName.ToString(), CurrentValue, Threshold);
+    
+    EAlertType AlertType = (CurrentValue >= Threshold * 1.5f) ? EAlertType::Critical : EAlertType::Warning;
+    EAlertPriority Priority = (CurrentValue >= Threshold * 1.5f) ? EAlertPriority::Highest : EAlertPriority::High;
+    
+    CreateAlert(Title, Message, AlertType, Priority, Category);
+}
+
+void UMingRiskAlertSystem::AcknowledgeAlert(const FString& AlertID)
 {
     for (auto& Alert : ActiveAlerts)
     {
         if (Alert.AlertID == AlertID)
         {
             Alert.Status = EAlertStatus::Acknowledged;
-            Alert.AcknowledgedTime = FPlatformTime::Seconds();
-            Alert.AcknowledgedBy = AcknowledgedBy;
-
-            OnAlertAcknowledged.Broadcast(Alert);
-
-            UE_LOG(LogRiskAlert, Log, TEXT("Alert acknowledged by %s: %s"),
-                *AcknowledgedBy, *AlertID.ToString());
-            return;
+            OnAlertStatusChanged.Broadcast(Alert);
+            break;
         }
     }
 }
 
-void UMingRiskAlertSystem::ResolveAlert(FName AlertID, const FString& ResolvedBy)
+void UMingRiskAlertSystem::ResolveAlert(const FString& AlertID, const FString& Resolution)
 {
-    for (int32 i = ActiveAlerts.Num() - 1; i >= 0; --i)
+    for (int32 i = 0; i < ActiveAlerts.Num(); ++i)
     {
         if (ActiveAlerts[i].AlertID == AlertID)
         {
-            FRiskAlert Alert = ActiveAlerts[i];
-            Alert.Status = EAlertStatus::Resolved;
-            Alert.ResolvedTime = FPlatformTime::Seconds();
-            Alert.ResolvedBy = ResolvedBy;
-
-            // Move to history
+            ActiveAlerts[i].Status = EAlertStatus::Resolved;
+            ActiveAlerts[i].Resolution = Resolution;
+            ActiveAlerts[i].ResolvedTime = FDateTime::Now();
+            
+            OnAlertStatusChanged.Broadcast(ActiveAlerts[i]);
             ActiveAlerts.RemoveAt(i);
-
-            // Update in history
-            for (auto& HistAlert : AlertHistory)
-            {
-                if (HistAlert.AlertID == AlertID)
-                {
-                    HistAlert = Alert;
-                    break;
-                }
-            }
-
-            OnAlertResolved.Broadcast(Alert);
-
-            UE_LOG(LogRiskAlert, Log, TEXT("Alert resolved by %s: %s"),
-                *ResolvedBy, *AlertID.ToString());
-            return;
+            break;
         }
     }
 }
 
-void UMingRiskAlertSystem::DismissAlert(FName AlertID)
-{
-    for (int32 i = ActiveAlerts.Num() - 1; i >= 0; --i)
-    {
-        if (ActiveAlerts[i].AlertID == AlertID)
-        {
-            FRiskAlert Alert = ActiveAlerts[i];
-            Alert.Status = EAlertStatus::Dismissed;
-
-            ActiveAlerts.RemoveAt(i);
-            OnAlertDismissed.Broadcast(Alert);
-
-            UE_LOG(LogRiskAlert, Log, TEXT("Alert dismissed: %s"), *AlertID.ToString());
-            return;
-        }
-    }
-}
-
-void UMingRiskAlertSystem::EscalateAlert(FName AlertID)
+void UMingRiskAlertSystem::EscalateAlert(const FString& AlertID, EAlertPriority NewPriority)
 {
     for (auto& Alert : ActiveAlerts)
     {
         if (Alert.AlertID == AlertID)
         {
+            Alert.Priority = NewPriority;
             Alert.Status = EAlertStatus::Escalated;
-
-            // Increase priority
-            if (Alert.Priority < EAlertPriority::Critical)
-            {
-                Alert.Priority = static_cast<EAlertPriority>(static_cast<int32>(Alert.Priority) + 1);
-            }
-
-            // Re-notify with higher priority
-            NotifyChannels(Alert);
-            OnAlertEscalated.Broadcast(Alert);
-
-            UE_LOG(LogRiskAlert, Warning, TEXT("Alert escalated: %s"), *AlertID.ToString());
-            return;
+            
+            // Send escalation notifications
+            SendEscalationNotifications(Alert);
+            
+            OnAlertStatusChanged.Broadcast(Alert);
+            break;
         }
     }
-}
-
-void UMingRiskAlertSystem::CheckRiskLevelsAndTriggerAlerts()
-{
-    // This would integrate with the risk dashboard to check current metrics
-    // and trigger alerts based on configured rules
-    UE_LOG(LogRiskAlert, Verbose, TEXT("Checking risk levels for alert conditions"));
 }
 
 TArray<FRiskAlert> UMingRiskAlertSystem::GetActiveAlerts() const
@@ -212,464 +133,412 @@ TArray<FRiskAlert> UMingRiskAlertSystem::GetActiveAlerts() const
     return ActiveAlerts;
 }
 
-TArray<FRiskAlert> UMingRiskAlertSystem::GetAlertHistory(const FAlertFilter& Filter) const
+TArray<FRiskAlert> UMingRiskAlertSystem::GetAlertsByType(EAlertType Type) const
 {
-    TArray<FRiskAlert> Result;
-
-    for (const auto& Alert : AlertHistory)
-    {
-        // Apply filters
-        if (Filter.Types.Num() > 0 && !Filter.Types.Contains(Alert.Type))
-        {
-            continue;
-        }
-
-        if (Filter.Priorities.Num() > 0 && !Filter.Priorities.Contains(Alert.Priority))
-        {
-            continue;
-        }
-
-        if (Filter.Statuses.Num() > 0 && !Filter.Statuses.Contains(Alert.Status))
-        {
-            continue;
-        }
-
-        if (Filter.Categories.Num() > 0 && !Filter.Categories.Contains(Alert.Category))
-        {
-            continue;
-        }
-
-        if (Filter.TimeRangeStart > 0 && Alert.Timestamp < Filter.TimeRangeStart)
-        {
-            continue;
-        }
-
-        if (Filter.TimeRangeEnd > 0 && Alert.Timestamp > Filter.TimeRangeEnd)
-        {
-            continue;
-        }
-
-        if (!Filter.SearchText.IsEmpty())
-        {
-            if (!Alert.Title.Contains(Filter.SearchText) && !Alert.Message.Contains(Filter.SearchText))
-            {
-                continue;
-            }
-        }
-
-        if (!Filter.bShowAcknowledged && Alert.Status == EAlertStatus::Acknowledged)
-        {
-            continue;
-        }
-
-        if (!Filter.bShowResolved && Alert.Status == EAlertStatus::Resolved)
-        {
-            continue;
-        }
-
-        Result.Add(Alert);
-    }
-
-    return Result;
-}
-
-FRiskAlert UMingRiskAlertSystem::GetAlert(FName AlertID) const
-{
-    for (const auto& Alert : ActiveAlerts)
-    {
-        if (Alert.AlertID == AlertID)
-        {
-            return Alert;
-        }
-    }
-
-    for (const auto& Alert : AlertHistory)
-    {
-        if (Alert.AlertID == AlertID)
-        {
-            return Alert;
-        }
-    }
-
-    return FRiskAlert();
-}
-
-int32 UMingRiskAlertSystem::GetActiveAlertCount() const
-{
-    return ActiveAlerts.Num();
-}
-
-int32 UMingRiskAlertSystem::GetActiveAlertCountByType(EAlertType Type) const
-{
-    int32 Count = 0;
+    TArray<FRiskAlert> TypeAlerts;
     for (const auto& Alert : ActiveAlerts)
     {
         if (Alert.Type == Type)
         {
-            Count++;
+            TypeAlerts.Add(Alert);
         }
     }
-    return Count;
+    return TypeAlerts;
 }
 
-int32 UMingRiskAlertSystem::GetActiveAlertCountByPriority(EAlertPriority Priority) const
+TArray<FRiskAlert> UMingRiskAlertSystem::GetAlertsByPriority(EAlertPriority Priority) const
 {
-    int32 Count = 0;
+    TArray<FRiskAlert> PriorityAlerts;
     for (const auto& Alert : ActiveAlerts)
     {
         if (Alert.Priority == Priority)
         {
-            Count++;
+            PriorityAlerts.Add(Alert);
         }
     }
-    return Count;
+    return PriorityAlerts;
+}
+
+TArray<FRiskAlert> UMingRiskAlertSystem::GetAlertsByCategory(ERiskCategory Category) const
+{
+    TArray<FRiskAlert> CategoryAlerts;
+    for (const auto& Alert : ActiveAlerts)
+    {
+        if (Alert.Category == Category)
+        {
+            CategoryAlerts.Add(Alert);
+        }
+    }
+    return CategoryAlerts;
+}
+
+void UMingRiskAlertSystem::AddAlertRule(const FAlertRule& Rule)
+{
+    AlertRules.Add(Rule);
+    UE_LOG(LogRiskAlert, Log, TEXT("Alert rule added: %s"), *Rule.RuleName.ToString());
+}
+
+void UMingRiskAlertSystem::RemoveAlertRule(const FName& RuleName)
+{
+    AlertRules.RemoveAll([&](const FAlertRule& Rule) {
+        return Rule.RuleName == RuleName;
+    });
+    
+    UE_LOG(LogRiskAlert, Log, TEXT("Alert rule removed: %s"), *RuleName.ToString());
+}
+
+void UMingRiskAlertSystem::EnableNotificationChannel(ENotificationChannel Channel)
+{
+    if (!EnabledChannels.Contains(Channel))
+    {
+        EnabledChannels.Add(Channel);
+        UE_LOG(LogRiskAlert, Log, TEXT("Notification channel enabled: %s"), *UEnum::GetValueAsString(Channel));
+    }
+}
+
+void UMingRiskAlertSystem::DisableNotificationChannel(ENotificationChannel Channel)
+{
+    EnabledChannels.Remove(Channel);
+    UE_LOG(LogRiskAlert, Log, TEXT("Notification channel disabled: %s"), *UEnum::GetValueAsString(Channel));
+}
+
+void UMingRiskAlertSystem::StartMonitoring()
+{
+    if (GEngine && GEngine->GetWorldFromContextObject(this))
+    {
+        GEngine->GetWorldFromContextObject(this)->GetTimerManager().SetTimer(
+            MonitoringTimer,
+            this,
+            &UMingRiskAlertSystem::PerformMonitoringCycle,
+            MonitoringInterval,
+            true);
+
+        UE_LOG(LogRiskAlert, Log, TEXT("Alert monitoring started (interval: %.1f s)"), 
+            MonitoringInterval);
+    }
+}
+
+void UMingRiskAlertSystem::StopMonitoring()
+{
+    if (GEngine && GEngine->GetWorldFromContextObject(this))
+    {
+        GEngine->GetWorldFromContextObject(this)->GetTimerManager().ClearTimer(MonitoringTimer);
+    }
+    
+    UE_LOG(LogRiskAlert, Log, TEXT("Alert monitoring stopped"));
+}
+
+void UMingRiskAlertSystem::SetMonitoringInterval(float Interval)
+{
+    MonitoringInterval = Interval;
+    
+    // Restart monitoring with new interval
+    if (bEnableMonitoring)
+    {
+        StopMonitoring();
+        StartMonitoring();
+    }
 }
 
 FAlertStatistics UMingRiskAlertSystem::GetAlertStatistics() const
 {
     FAlertStatistics Stats;
-
-    Stats.TotalAlerts = AlertHistory.Num();
-    Stats.ActiveAlerts = ActiveAlerts.Num();
-
+    
+    // Count alerts by type
     for (const auto& Alert : AlertHistory)
     {
-        Stats.AlertsByType.FindOrAdd(Alert.Type)++;
-        Stats.AlertsByCategory.FindOrAdd(Alert.Category)++;
-
-        if (Alert.Status == EAlertStatus::Resolved)
+        switch (Alert.Type)
         {
-            Stats.ResolvedAlerts++;
+            case EAlertType::Info: Stats.InfoCount++; break;
+            case EAlertType::Warning: Stats.WarningCount++; break;
+            case EAlertType::Critical: Stats.CriticalCount++; break;
+            case EAlertType::Emergency: Stats.EmergencyCount++; break;
+            case EAlertType::Notification: Stats.NotificationCount++; break;
+            case EAlertType::Maintenance: Stats.MaintenanceCount++; break;
+            case EAlertType::Security: Stats.SecurityCount++; break;
+            case EAlertType::Stability: Stats.StabilityCount++; break;
         }
-
-        if (Alert.Type == EAlertType::Critical)
+        
+        Stats.TotalAlerts++;
+        
+        // Calculate resolution time
+        if (Alert.Status == EAlertStatus::Resolved && Alert.ResolvedTime != FDateTime::MinValue())
         {
-            Stats.CriticalAlerts++;
-        }
-        else if (Alert.Type == EAlertType::Warning)
-        {
-            Stats.WarningAlerts++;
+            FTimespan ResolutionTime = Alert.ResolvedTime - Alert.Timestamp;
+            Stats.AverageResolutionTime += ResolutionTime.GetTotalSeconds();
+            Stats.ResolvedCount++;
         }
     }
-
+    
     // Calculate average resolution time
-    float TotalResolutionTime = 0.0f;
-    int32 ResolvedCount = 0;
-    for (const auto& Alert : AlertHistory)
+    if (Stats.ResolvedCount > 0)
     {
-        if (Alert.Status == EAlertStatus::Resolved && Alert.ResolvedTime > Alert.Timestamp)
-        {
-            TotalResolutionTime += (Alert.ResolvedTime - Alert.Timestamp) / 60.0f; // minutes
-            ResolvedCount++;
-        }
+        Stats.AverageResolutionTime /= Stats.ResolvedCount;
     }
-
-    Stats.AverageResolutionTime = ResolvedCount > 0 ? TotalResolutionTime / ResolvedCount : 0.0f;
-    Stats.ResponseRate = Stats.TotalAlerts > 0 ? (static_cast<float>(Stats.ResolvedAlerts) / Stats.TotalAlerts) : 0.0f;
-
+    
+    // Calculate active alert count
+    Stats.ActiveAlertCount = ActiveAlerts.Num();
+    
     return Stats;
 }
 
-void UMingRiskAlertSystem::SetNotificationChannelEnabled(ENotificationChannel Channel, bool bEnabled)
+void UMingRiskAlertSystem::ClearAllAlerts()
 {
-    if (bEnabled)
-    {
-        EnabledChannels.Add(Channel);
-    }
-    else
-    {
-        EnabledChannels.Remove(Channel);
-    }
-
-    UE_LOG(LogRiskAlert, Log, TEXT("Notification channel %s: %s"),
-        *UEnum::GetValueAsString(Channel),
-        bEnabled ? TEXT("Enabled") : TEXT("Disabled"));
+    int32 ClearedCount = ActiveAlerts.Num();
+    ActiveAlerts.Empty();
+    
+    UE_LOG(LogRiskAlert, Log, TEXT("Cleared %d active alerts"), ClearedCount);
+    OnAllAlertsCleared.Broadcast();
 }
 
-void UMingRiskAlertSystem::SendNotificationToChannel(ENotificationChannel Channel, const FString& Message)
+void UMingRiskAlertSystem::ExportAlertHistory(const FString& FilePath) const
 {
-    if (!EnabledChannels.Contains(Channel))
+    UE_LOG(LogRiskAlert, Log, TEXT("Exporting alert history to: %s"), *FilePath);
+    
+    FString Report = TEXT("MingGoRTS Alert History Report\n");
+    Report += TEXT("===============================\n\n");
+    Report += FString::Printf(TEXT("Export Time: %s\n"), *FDateTime::Now().ToString());
+    Report += FString::Printf(TEXT("Total Alerts: %d\n"), AlertHistory.Num());
+    Report += FString::Printf(TEXT("Active Alerts: %d\n\n"), ActiveAlerts.Num());
+    
+    Report += TEXT("Alert Statistics:\n");
+    Report += TEXT("-----------------\n");
+    
+    FAlertStatistics Stats = GetAlertStatistics();
+    Report += FString::Printf(TEXT("- Total: %d\n"), Stats.TotalAlerts);
+    Report += FString::Printf(TEXT("- Info: %d\n"), Stats.InfoCount);
+    Report += FString::Printf(TEXT("- Warning: %d\n"), Stats.WarningCount);
+    Report += FString::Printf(TEXT("- Critical: %d\n"), Stats.CriticalCount);
+    Report += FString::Printf(TEXT("- Emergency: %d\n"), Stats.EmergencyCount);
+    Report += FString::Printf(TEXT("- Resolved: %d\n"), Stats.ResolvedCount);
+    Report += FString::Printf(TEXT("- Average Resolution Time: %.1f seconds\n\n"), Stats.AverageResolutionTime);
+    
+    Report += TEXT("Recent Alerts:\n");
+    Report += TEXT("-------------\n");
+    
+    int32 RecentCount = FMath::Min(50, AlertHistory.Num());
+    for (int32 i = AlertHistory.Num() - RecentCount; i < AlertHistory.Num(); ++i)
     {
-        return;
+        const FRiskAlert& Alert = AlertHistory[i];
+        Report += FString::Printf(TEXT("- [%s] %s: %s\n"), 
+            *Alert.Timestamp.ToString(),
+            *Alert.Title,
+            *Alert.Message);
     }
-
-    switch (Channel)
-    {
-    case ENotificationChannel::InGame:
-        ShowInGameNotification(FRiskAlert());
-        break;
-    case ENotificationChannel::Log:
-        LogAlert(FRiskAlert());
-        break;
-    case ENotificationChannel::Sound:
-        PlayAlertSound(EAlertPriority::Normal);
-        break;
-    default:
-        UE_LOG(LogRiskAlert, Log, TEXT("[%s] %s"), *UEnum::GetValueAsString(Channel), *Message);
-        break;
-    }
+    
+    // In a real implementation, you would save this to a file
+    UE_LOG(LogRiskAlert, Log, TEXT("Report generated:\n%s"), *Report);
 }
 
-void UMingRiskAlertSystem::ExportAlertsToFile(const FString& FilePath)
+// Private helper functions
+
+void UMingRiskAlertSystem::InitializeDefaultRules()
 {
-    UE_LOG(LogRiskAlert, Log, TEXT("Exporting alerts to: %s"), *FilePath);
-
-    FString JsonData = TEXT("[\n");
-
-    for (int32 i = 0; i < AlertHistory.Num(); ++i)
-    {
-        const auto& Alert = AlertHistory[i];
-        JsonData += TEXT("  {\n");
-        JsonData += TEXT("    \"id\": \"") + Alert.AlertID.ToString() + TEXT("\",\n");
-        JsonData += TEXT("    \"type\": \"") + UEnum::GetValueAsString(Alert.Type) + TEXT("\",\n");
-        JsonData += TEXT("    \"priority\": \"") + UEnum::GetValueAsString(Alert.Priority) + TEXT("\",\n");
-        JsonData += TEXT("    \"status\": \"") + UEnum::GetValueAsString(Alert.Status) + TEXT("\",\n");
-        JsonData += TEXT("    \"title\": \"") + Alert.Title + TEXT("\",\n");
-        JsonData += TEXT("    \"message\": \"") + Alert.Message + TEXT("\"\n");
-        JsonData += TEXT("  }") + FString(i < AlertHistory.Num() - 1 ? "," : "") + TEXT("\n");
-    }
-
-    JsonData += TEXT("]\n");
-
-    FFileHelper::SaveStringToFile(JsonData, *FilePath);
+    // Default CPU usage rule
+    FAlertRule CPURule;
+    CPURule.RuleName = TEXT("HighCPUUsage");
+    CPURule.MetricName = TEXT("CPUUsage");
+    CPURule.Threshold = 80.0f;
+    CPURule.CriticalThreshold = 95.0f;
+    CPURule.AlertType = EAlertType::Warning;
+    CPURule.Priority = EAlertPriority::High;
+    CPURule.Category = ERiskCategory::Performance;
+    CPURule.bEnabled = true;
+    AlertRules.Add(CPURule);
+    
+    // Default memory usage rule
+    FAlertRule MemoryRule;
+    MemoryRule.RuleName = TEXT("HighMemoryUsage");
+    MemoryRule.MetricName = TEXT("MemoryUsage");
+    MemoryRule.Threshold = 85.0f;
+    MemoryRule.CriticalThreshold = 98.0f;
+    MemoryRule.AlertType = EAlertType::Warning;
+    MemoryRule.Priority = EAlertPriority::High;
+    MemoryRule.Category = ERiskCategory::Performance;
+    MemoryRule.bEnabled = true;
+    AlertRules.Add(MemoryRule);
+    
+    // Default error rate rule
+    FAlertRule ErrorRule;
+    ErrorRule.RuleName = TEXT("HighErrorRate");
+    ErrorRule.MetricName = TEXT("ErrorRate");
+    ErrorRule.Threshold = 2.0f;
+    ErrorRule.CriticalThreshold = 5.0f;
+    ErrorRule.AlertType = EAlertType::Critical;
+    ErrorRule.Priority = EAlertPriority::Highest;
+    ErrorRule.Category = ERiskCategory::Stability;
+    ErrorRule.bEnabled = true;
+    AlertRules.Add(ErrorRule);
 }
 
-void UMingRiskAlertSystem::CleanupOldAlerts(int32 MaxAgeHours)
+void UMingRiskAlertSystem::ApplyAlertRules(FRiskAlert& Alert)
 {
-    uint32 CurrentTime = FPlatformTime::Seconds();
-    uint32 MaxAgeSeconds = MaxAgeHours * 3600;
-
-    for (int32 i = AlertHistory.Num() - 1; i >= 0; --i)
+    for (const FAlertRule& Rule : AlertRules)
     {
-        if (CurrentTime - AlertHistory[i].Timestamp > MaxAgeSeconds)
+        if (Rule.bEnabled && Rule.RuleName == Alert.Title)
         {
-            AlertHistory.RemoveAt(i);
-        }
-    }
-
-    UE_LOG(LogRiskAlert, Log, TEXT("Cleaned up alerts older than %d hours"), MaxAgeHours);
-}
-
-void UMingRiskAlertSystem::ScheduleAlertDigest(float IntervalHours)
-{
-    if (GEngine && GEngine->GetCurrentWorldContext())
-    {
-        GEngine->GetCurrentWorldContext()->World()->GetTimerManager().SetTimer(
-            DigestTimer,
-            this,
-            &UMingRiskAlertSystem::GenerateAlertDigest,
-            IntervalHours * 3600.0f,
-            true
-        );
-
-        UE_LOG(LogRiskAlert, Log, TEXT("Scheduled alert digest every %.1f hours"), IntervalHours);
-    }
-}
-
-void UMingRiskAlertSystem::CancelScheduledDigest()
-{
-    if (GEngine && GEngine->GetCurrentWorldContext())
-    {
-        GEngine->GetCurrentWorldContext()->World()->GetTimerManager().ClearTimer(DigestTimer);
-    }
-}
-
-void UMingRiskAlertSystem::StartAlertMonitoring()
-{
-    if (GEngine && GEngine->GetCurrentWorldContext())
-    {
-        GEngine->GetCurrentWorldContext()->World()->GetTimerManager().SetTimer(
-            AlertCheckTimer,
-            this,
-            &UMingRiskAlertSystem::ProcessAlertRules,
-            10.0f,
-            true
-        );
-
-        UE_LOG(LogRiskAlert, Log, TEXT("Alert monitoring started"));
-    }
-}
-
-void UMingRiskAlertSystem::StopAlertMonitoring()
-{
-    if (GEngine && GEngine->GetCurrentWorldContext())
-    {
-        GEngine->GetCurrentWorldContext()->World()->GetTimerManager().ClearTimer(AlertCheckTimer);
-    }
-}
-
-void UMingRiskAlertSystem::ProcessAlertRules()
-{
-    // Process configured alert rules
-    for (const auto& Pair : AlertRules)
-    {
-        const FAlertRule& Rule = Pair.Value;
-
-        if (DisabledRules.Contains(Rule.RuleID))
-        {
-            continue;
-        }
-
-        // Check cooldown
-        if (IsRuleOnCooldown(Rule.RuleID))
-        {
-            continue;
-        }
-
-        // Alert rule processing would integrate with risk metrics
-        // For now, this is a placeholder
-    }
-
-    // Check for alerts requiring escalation
-    for (auto& Alert : ActiveAlerts)
-    {
-        if (Alert.Status == EAlertStatus::New && AlertRules.Contains(Alert.RuleID))
-        {
-            const FAlertRule& Rule = AlertRules[Alert.RuleID];
-            if (Rule.bRequireAcknowledgment && Rule.bAutoEscalate)
+            // Apply rule modifications
+            if (Rule.AlertType != EAlertType::Info)
             {
-                uint32 ElapsedTime = FPlatformTime::Seconds() - Alert.Timestamp;
-                if (ElapsedTime > Rule.EscalationDelay)
-                {
-                    AutoEscalateIfNeeded(Alert);
-                }
+                Alert.Type = Rule.AlertType;
+            }
+            if (Rule.Priority != EAlertPriority::Normal)
+            {
+                Alert.Priority = Rule.Priority;
+            }
+            Alert.Category = Rule.Category;
+            break;
+        }
+    }
+}
+
+void UMingRiskAlertSystem::SendAlertNotifications(const FRiskAlert& Alert)
+{
+    for (ENotificationChannel Channel : EnabledChannels)
+    {
+        switch (Channel)
+        {
+            case ENotificationChannel::InGame:
+                SendInGameNotification(Alert);
+                break;
+            case ENotificationChannel::Dashboard:
+                SendDashboardNotification(Alert);
+                break;
+            case ENotificationChannel::Log:
+                SendLogNotification(Alert);
+                break;
+            case ENotificationChannel::Email:
+                SendEmailNotification(Alert);
+                break;
+            case ENotificationChannel::Push:
+                SendPushNotification(Alert);
+                break;
+        }
+    }
+}
+
+void UMingRiskAlertSystem::SendInGameNotification(const FRiskAlert& Alert)
+{
+    // In a real implementation, this would display an in-game notification
+    UE_LOG(LogRiskAlert, Log, TEXT("In-game notification: %s"), *Alert.Title);
+}
+
+void UMingRiskAlertSystem::SendDashboardNotification(const FRiskAlert& Alert)
+{
+    // In a real implementation, this would update the dashboard
+    UE_LOG(LogRiskAlert, Log, TEXT("Dashboard notification: %s"), *Alert.Title);
+}
+
+void UMingRiskAlertSystem::SendLogNotification(const FRiskAlert& Alert)
+{
+    // Log the alert with appropriate severity
+    switch (Alert.Priority)
+    {
+        case EAlertPriority::Highest:
+        case EAlertPriority::Critical:
+            UE_LOG(LogRiskAlert, Error, TEXT("[%s] %s: %s"), 
+                *UEnum::GetValueAsString(Alert.Type), *Alert.Title, *Alert.Message);
+            break;
+        case EAlertPriority::High:
+            UE_LOG(LogRiskAlert, Warning, TEXT("[%s] %s: %s"), 
+                *UEnum::GetValueAsString(Alert.Type), *Alert.Title, *Alert.Message);
+            break;
+        default:
+            UE_LOG(LogRiskAlert, Log, TEXT("[%s] %s: %s"), 
+                *UEnum::GetValueAsString(Alert.Type), *Alert.Title, *Alert.Message);
+            break;
+    }
+}
+
+void UMingRiskAlertSystem::SendEmailNotification(const FRiskAlert& Alert)
+{
+    // In a real implementation, this would send an email
+    UE_LOG(LogRiskAlert, Log, TEXT("Email notification: %s"), *Alert.Title);
+}
+
+void UMingRiskAlertSystem::SendPushNotification(const FRiskAlert& Alert)
+{
+    // In a real implementation, this would send a push notification
+    UE_LOG(LogRiskAlert, Log, TEXT("Push notification: %s"), *Alert.Title);
+}
+
+void UMingRiskAlertSystem::SendEscalationNotifications(const FRiskAlert& Alert)
+{
+    // Send special notifications for escalated alerts
+    UE_LOG(LogRiskAlert, Warning, TEXT("ALERT ESCALATED: %s [%s]"), 
+        *Alert.Title, *UEnum::GetValueAsString(Alert.Priority));
+}
+
+void UMingRiskAlertSystem::PerformMonitoringCycle()
+{
+    // Check all alert rules
+    for (const FAlertRule& Rule : AlertRules)
+    {
+        if (Rule.bEnabled)
+        {
+            CheckAlertRule(Rule);
+        }
+    }
+    
+    // Clean up old alerts
+    CleanupOldAlerts();
+}
+
+void UMingRiskAlertSystem::CheckAlertRule(const FAlertRule& Rule)
+{
+    // In a real implementation, this would query actual metric values
+    // For now, we'll use placeholder logic
+    float CurrentValue = 0.0f;
+    
+    if (Rule.MetricName == TEXT("CPUUsage"))
+    {
+        CurrentValue = FMath::RandRange(20.0f, 90.0f);
+    }
+    else if (Rule.MetricName == TEXT("MemoryUsage"))
+    {
+        CurrentValue = FMath::RandRange(30.0f, 95.0f);
+    }
+    else if (Rule.MetricName == TEXT("ErrorRate"))
+    {
+        CurrentValue = FMath::RandRange(0.0f, 6.0f);
+    }
+    
+    // Check if threshold is exceeded
+    if (CurrentValue >= Rule.Threshold)
+    {
+        // Check if we already have an active alert for this rule
+        bool bHasActiveAlert = false;
+        for (const FRiskAlert& Alert : ActiveAlerts)
+        {
+            if (Alert.Title == Rule.RuleName)
+            {
+                bHasActiveAlert = true;
+                break;
             }
         }
-    }
-}
-
-bool UMingRiskAlertSystem::ShouldTriggerAlert(const FAlertRule& Rule, const FRiskMetric& Metric)
-{
-    return Metric.RiskLevel >= Rule.TriggerLevel;
-}
-
-bool UMingRiskAlertSystem::IsRuleOnCooldown(FName RuleID)
-{
-    if (!LastAlertTimes.Contains(RuleID))
-    {
-        return false;
-    }
-
-    uint32 CurrentTime = FPlatformTime::Seconds();
-    uint32 LastTime = LastAlertTimes[RuleID];
-
-    const FAlertRule& Rule = AlertRules[RuleID];
-    return (CurrentTime - LastTime) < Rule.CooldownDuration;
-}
-
-void UMingRiskAlertSystem::UpdateCooldown(FName RuleID)
-{
-    LastAlertTimes.Add(RuleID, FPlatformTime::Seconds());
-}
-
-FRiskAlert UMingRiskAlertSystem::CreateAlertFromRule(const FAlertRule& Rule, const FRiskMetric& Metric)
-{
-    FRiskAlert Alert;
-    Alert.AlertID = GenerateAlertID();
-    Alert.RuleID = Rule.RuleID;
-    Alert.Type = Rule.AlertType;
-    Alert.Priority = Rule.Priority;
-    Alert.Category = Rule.MonitoredCategory;
-    Alert.RiskLevel = Metric.RiskLevel;
-
-    // Format message from template
-    Alert.Title = Rule.RuleName;
-    Alert.Message = Rule.AlertTemplate;
-    Alert.Message.ReplaceInline(TEXT("{metric}"), *Metric.Description);
-    Alert.Message.ReplaceInline(TEXT("{value}"), *FString::Printf(TEXT("%.1f"), Metric.CurrentValue));
-    Alert.Message.ReplaceInline(TEXT("{level}"), *UEnum::GetValueAsString(Metric.RiskLevel));
-
-    return Alert;
-}
-
-FName UMingRiskAlertSystem::GenerateAlertID()
-{
-    return FName(*FString::Printf(TEXT("ALT-%d-%d"), static_cast<int32>(FPlatformTime::Seconds()), FMath::RandRange(1000, 9999)));
-}
-
-void UMingRiskAlertSystem::NotifyChannels(const FRiskAlert& Alert)
-{
-    if (EnabledChannels.Contains(ENotificationChannel::InGame))
-    {
-        ShowInGameNotification(Alert);
-    }
-
-    if (EnabledChannels.Contains(ENotificationChannel::Dashboard))
-    {
-        // Dashboard notification
-    }
-
-    if (EnabledChannels.Contains(ENotificationChannel::Log))
-    {
-        LogAlert(Alert);
-    }
-
-    if (EnabledChannels.Contains(ENotificationChannel::Sound))
-    {
-        PlayAlertSound(Alert.Priority);
-    }
-}
-
-void UMingRiskAlertSystem::ShowInGameNotification(const FRiskAlert& Alert)
-{
-    // Would integrate with UI system to show in-game notification
-    UE_LOG(LogRiskAlert, Verbose, TEXT("In-game notification: [%s] %s"),
-        *Alert.Title, *Alert.Message);
-}
-
-void UMingRiskAlertSystem::LogAlert(const FRiskAlert& Alert)
-{
-    UE_LOG(LogRiskAlert, Log, TEXT("[ALERT-%s] %s: %s"),
-        *UEnum::GetValueAsString(Alert.Type),
-        *Alert.Title,
-        *Alert.Message);
-}
-
-void UMingRiskAlertSystem::PlayAlertSound(EAlertPriority Priority)
-{
-    // Would play appropriate alert sound based on priority
-    UE_LOG(LogRiskAlert, Verbose, TEXT("Playing alert sound for priority: %s"),
-        *UEnum::GetValueAsString(Priority));
-}
-
-void UMingRiskAlertSystem::UpdateAlertStatistics()
-{
-    // Statistics are calculated on-demand
-}
-
-void UMingRiskAlertSystem::AutoEscalateIfNeeded(FRiskAlert& Alert)
-{
-    uint32 CurrentTime = FPlatformTime::Seconds();
-    uint32 ElapsedSeconds = CurrentTime - Alert.Timestamp;
-
-    if (AlertRules.Contains(Alert.RuleID))
-    {
-        const FAlertRule& Rule = AlertRules[Alert.RuleID];
-        if (ElapsedSeconds > Rule.EscalationDelay && Alert.Status == EAlertStatus::New)
+        
+        // Create new alert if none exists
+        if (!bHasActiveAlert)
         {
-            EscalateAlert(Alert.AlertID);
+            EAlertType AlertType = (CurrentValue >= Rule.CriticalThreshold) ? 
+                EAlertType::Critical : Rule.AlertType;
+            EAlertPriority Priority = (CurrentValue >= Rule.CriticalThreshold) ? 
+                EAlertPriority::Highest : Rule.Priority;
+            
+            CreateAlert(Rule.RuleName.ToString(), 
+                FString::Printf(TEXT("Metric '%s' has exceeded threshold: %.2f"), 
+                    *Rule.MetricName.ToString(), CurrentValue),
+                AlertType, Priority, Rule.Category);
         }
     }
 }
 
-void UMingRiskAlertSystem::GenerateAlertDigest()
+void UMingRiskAlertSystem::CleanupOldAlerts()
 {
-    FAlertStatistics Stats = GetAlertStatistics();
-
-    UE_LOG(LogRiskAlert, Log, TEXT("=== Alert Digest ==="));
-    UE_LOG(LogRiskAlert, Log, TEXT("Total Alerts: %d"), Stats.TotalAlerts);
-    UE_LOG(LogRiskAlert, Log, TEXT("Active Alerts: %d"), Stats.ActiveAlerts);
-    UE_LOG(LogRiskAlert, Log, TEXT("Critical: %d, Warning: %d"), Stats.CriticalAlerts, Stats.WarningAlerts);
-    UE_LOG(LogRiskAlert, Log, TEXT("Response Rate: %.1f%%"), Stats.ResponseRate * 100.0f);
-}
-
-static UMingRiskAlertSystem* UMingRiskAlertSystem::Get(UObject* WorldContextObject)
-{
-    static UMingRiskAlertSystem* Instance = nullptr;
-    if (!Instance)
-    {
-        Instance = NewObject<UMingRiskAlertSystem>();
-        Instance->AddToRoot();
-    }
-    return Instance;
+    // Remove alerts older than the retention period
+    FDateTime CutoffTime = FDateTime::Now() - FTimespan::FromDays(AlertRetentionDays);
+    
+    AlertHistory.RemoveAll([&](const FRiskAlert& Alert) {
+        return Alert.Timestamp < CutoffTime;
+    });
 }

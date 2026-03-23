@@ -1,724 +1,725 @@
-#include "MingDecisionImpactCalculator.h"
-#include "MingHistoricalDecisionManager.h"
-#include "Engine/World.h"
-#include "Kismet/GameplayStatics.h"
-#include "Misc/DateTime.h"
-
-UMingDecisionImpactCalculator::UMingDecisionImpactCalculator()
-{
-    HistoricalPaths.Empty();
-    FactionData.Empty();
-    ImpactWeights.Empty();
-    HistoricalKnowledgeBase.Empty();
-}
-
-FMingDecisionImpactReport UMingDecisionImpactCalculator::CalculateDecisionImpact(int32 DecisionID, int32 ChosenOptionID)
-{
-    FMingDecisionImpactReport Report;
-    Report.DecisionID = DecisionID;
-    Report.ChosenOptionID = ChosenOptionID;
-    Report.CalculationTime = FDateTime::Now();
-
-    UE_LOG(LogTemp, Log, TEXT("開始計算決策影響: 決策ID %d, 選項 %d"), DecisionID, ChosenOptionID);
-
-    // 初始化數據
-    InitializeHistoricalPaths();
-    InitializeFactionData();
-    InitializeImpactWeights();
-    InitializeHistoricalKnowledge();
-
-    // 計算各種影響
-    Report.AffectedPaths = CalculateHistoricalPathImpact(DecisionID, ChosenOptionID);
-    Report.ReputationChanges = CalculateReputationImpact(DecisionID, ChosenOptionID);
-    Report.TerritoryChanges = CalculateTerritoryImpact(DecisionID, ChosenOptionID);
-    Report.UpdatedEventConditions = UpdateEventTriggerConditions(DecisionID, ChosenOptionID);
-    Report.EducationalSummary = GenerateEducationalContent(DecisionID, ChosenOptionID);
-
-    // 生成詳細影響
-    Report.ImpactDetails = GenerateImpactDetails(DecisionID, ChosenOptionID);
-
-    // 計算總體影響評分
-    Report.OverallImpactScore = CalculateImpactScore(Report.ImpactDetails);
-
-    // 更新歷史路徑權重
-    UpdateHistoricalPathWeights(Report);
-
-    // 觸發事件
-    OnImpactCalculated.Broadcast(Report);
-
-    UE_LOG(LogTemp, Log, TEXT("決策影響計算完成，總體評分: %.2f"), Report.OverallImpactScore);
-
-    return Report;
-}
-
-TArray<FMingHistoricalPath> UMingDecisionImpactCalculator::CalculateHistoricalPathImpact(int32 DecisionID, int32 ChosenOptionID)
-{
-    TArray<FMingHistoricalPath> AffectedPaths;
-
-    // 根據決策ID和選項ID計算歷史路徑影響
-    if (DecisionID == 1) // 選擇效忠對象決策
-    {
-        if (ChosenOptionID == 1) // 效忠直系
-        {
-            // 創建直系勝利路徑
-            FMingHistoricalPath Path1;
-            Path1.PathID = 101;
-            Path1.PathName = TEXT("直系統一之路");
-            Path1.PathDescription = TEXT("吳佩孚領導的直系軍閥最終統一中國，建立穩定的中央政府");
-            Path1.PathTags = {TEXT("統一"), TEXT("穩定"), TEXT("中央集權")};
-            Path1.PathWeight = 0.7f;
-            Path1.bIsMainPath = true;
-            AffectedPaths.Add(Path1);
-
-            // 創建軍事政變路徑
-            FMingHistoricalPath Path2;
-            Path2.PathID = 102;
-            Path2.PathName = TEXT("軍事政變之路");
-            Path2.PathDescription = TEXT("直系內部發生軍事政變，導致政局不穩");
-            Path2.PathTags = {TEXT("政變"), TEXT("混亂"), TEXT("分裂")};
-            Path2.PathWeight = 0.3f;
-            Path2.bIsMainPath = false;
-            AffectedPaths.Add(Path2);
-        }
-        else if (ChosenOptionID == 2) // 效忠皖系
-        {
-            // 創建皖系復興路徑
-            FMingHistoricalPath Path1;
-            Path1.PathID = 201;
-            Path1.PathName = TEXT("皖系復興之路");
-            Path1.PathDescription = TEXT("段祺瑞領導的皖系軍閥重新崛起，實現政治改革");
-            Path1.PathTags = {TEXT("改革"), TEXT("復興"), TEXT("民主")};
-            Path1.PathWeight = 0.6f;
-            Path1.bIsMainPath = true;
-            AffectedPaths.Add(Path1);
-
-            // 創建外國干涉路徑
-            FMingHistoricalPath Path2;
-            Path2.PathID = 202;
-            Path2.PathName = TEXT("外國干涉之路");
-            Path2.PathDescription = TEXT("外國勢力利用皖系內部分歧，加強對中國的控制");
-            Path2.PathTags = {TEXT("干涉"), TEXT("殖民地"), TEXT("屈辱")};
-            Path2.PathWeight = 0.4f;
-            Path2.bIsMainPath = false;
-            AffectedPaths.Add(Path2);
-        }
-        else if (ChosenOptionID == 3) // 保持中立
-        {
-            // 創建地方割據路徑
-            FMingHistoricalPath Path1;
-            Path1.PathID = 301;
-            Path1.PathName = TEXT("地方割據之路");
-            Path1.PathDescription = TEXT("各地方軍閥各自為政，中國進入長期分裂狀態");
-            Path1.PathTags = {TEXT("分裂"), TEXT("割據"), TEXT("混戰")};
-            Path1.PathWeight = 0.8f;
-            Path1.bIsMainPath = true;
-            AffectedPaths.Add(Path1);
-
-            // 創和平發展路徑
-            FMingHistoricalPath Path2;
-            Path2.PathID = 302;
-            Path2.PathName = TEXT("和平發展之路");
-            Path2.PathDescription = TEXT("各派系達成和平協議，共同發展經濟");
-            Path2.PathTags = {TEXT("和平"), TEXT("發展"), TEXT("合作")};
-            Path2.PathWeight = 0.2f;
-            Path2.bIsMainPath = false;
-            AffectedPaths.Add(Path2);
-        }
-    }
-    else if (DecisionID == 2) // 經濟發展政策決策
-    {
-        if (ChosenOptionID == 4) // 發展工業
-        {
-            // 創建工業強國路徑
-            FMingHistoricalPath Path1;
-            Path1.PathID = 401;
-            Path1.PathName = TEXT("工業強國之路");
-            Path1.PathDescription = TEXT("重工業發展帶動軍事現代化，中國成為地區強國");
-            Path1.PathTags = {TEXT("工業化"), TEXT("強國"), TEXT("現代化")};
-            Path1.PathWeight = 0.6f;
-            Path1.bIsMainPath = true;
-            AffectedPaths.Add(Path1);
-        }
-        else if (ChosenOptionID == 5) // 發展農業
-        {
-            // 創建農業大國路徑
-            FMingHistoricalPath Path1;
-            Path1.PathID = 501;
-            Path1.PathName = TEXT("農業大國之路");
-            Path1.PathDescription = TEXT("農業發展帶來社會穩定，為工業化奠定基礎");
-            Path1.PathTags = {TEXT("農業"), TEXT("穩定"), TEXT("基礎")};
-            Path1.PathWeight = 0.7f;
-            Path1.bIsMainPath = true;
-            AffectedPaths.Add(Path1);
-        }
-    }
-
-    return AffectedPaths;
-}
-
-TMap<FString, float> UMingDecisionImpactCalculator::CalculateReputationImpact(int32 DecisionID, int32 ChosenOptionID)
-{
-    TMap<FString, float> ReputationChanges;
-
-    if (DecisionID == 1) // 選擇效忠對象決策
-    {
-        if (ChosenOptionID == 1) // 效忠直系
-        {
-            ReputationChanges = {
-                {TEXT("軍事聲望"), 25.0f},
-                {TEXT("政治聲望"), 20.0f},
-                {TEXT("民眾聲望"), 10.0f},
-                {TEXT("國際聲望"), 15.0f}
-            };
-        }
-        else if (ChosenOptionID == 2) // 效忠皖系
-        {
-            ReputationChanges = {
-                {TEXT("軍事聲望"), 15.0f},
-                {TEXT("政治聲望"), 18.0f},
-                {TEXT("民眾聲望"), 8.0f},
-                {TEXT("國際聲望"), 12.0f}
-            };
-        }
-        else if (ChosenOptionID == 3) // 保持中立
-        {
-            ReputationChanges = {
-                {TEXT("軍事聲望"), -5.0f},
-                {TEXT("政治聲望"), -8.0f},
-                {TEXT("民眾聲望"), 20.0f},
-                {TEXT("國際聲望"), 5.0f}
-            };
-        }
-    }
-    else if (DecisionID == 2) // 經濟發展政策決策
-    {
-        if (ChosenOptionID == 4) // 發展工業
-        {
-            ReputationChanges = {
-                {TEXT("經濟聲望"), 30.0f},
-                {TEXT("軍事聲望"), 20.0f},
-                {TEXT("民眾聲望"), -10.0f},
-                {TEXT("國際聲望"), 25.0f}
-            };
-        }
-        else if (ChosenOptionID == 5) // 發展農業
-        {
-            ReputationChanges = {
-                {TEXT("經濟聲望"), 20.0f},
-                {TEXT("軍事聲望"), 5.0f},
-                {TEXT("民眾聲望"), 25.0f},
-                {TEXT("國際聲望"), 10.0f}
-            };
-        }
-    }
-
-    return ReputationChanges;
-}
-
-TMap<FString, int32> UMingDecisionImpactCalculator::CalculateTerritoryImpact(int32 DecisionID, int32 ChosenOptionID)
-{
-    TMap<FString, int32> TerritoryChanges;
-
-    if (DecisionID == 1) // 選擇效忠對象決策
-    {
-        if (ChosenOptionID == 1) // 效忠直系
-        {
-            TerritoryChanges = {
-                {TEXT("直系控制區"), 5},
-                {TEXT("皖系控制區"), -3},
-                {TEXT("奉系控制區"), -2}
-            };
-        }
-        else if (ChosenOptionID == 2) // 效忠皖系
-        {
-            TerritoryChanges = {
-                {TEXT("皖系控制區"), 4},
-                {TEXT("直系控制區"), -2},
-                {TEXT("奉系控制區"), -2}
-            };
-        }
-        else if (ChosenOptionID == 3) // 保持中立
-        {
-            TerritoryChanges = {
-                {TEXT("個人控制區"), 3},
-                {TEXT("直系控制區"), -1},
-                {TEXT("皖系控制區"), -1},
-                {TEXT("奉系控制區"), -1}
-            };
-        }
-    }
-
-    return TerritoryChanges;
-}
-
-FString UMingDecisionImpactCalculator::GenerateEducationalContent(int32 DecisionID, int32 ChosenOptionID)
-{
-    FString EducationalContent;
-
-    if (DecisionID == 1) // 選擇效忠對象決策
-    {
-        EducationalContent = TEXT("1920年的軍閥選擇是中國近代史的重要轉折點。直系軍閥以吳佩孚為首，控制華北地區；皖系軍閥以段祺瑞為首，影響力主要在華中；奉系軍閥以張作霖為首，統治東北。您的選擇不僅影響個人前途，更關係到中國的統一與分裂。歷史告訴我們，軍閥混戰最終導致國力衰弱，為外國侵略提供了機會。");
-    }
-    else if (DecisionID == 2) // 經濟發展政策決策
-    {
-        EducationalContent = TEXT("1920年代的中國面臨工業化與傳統農業的選擇。重工業發展雖然能快速提升國力，但需要大量資源且可能加劇社會矛盾；農業發展雖然進程較慢，但能保障民生穩定。歷史上的工業化國家都經歷了痛苦的轉型期，而成功的農業改革則為長期發展奠定了基礎。");
-    }
-
-    return EducationalContent;
-}
-
-TArray<FString> UMingDecisionImpactCalculator::UpdateEventTriggerConditions(int32 DecisionID, int32 ChosenOptionID)
-{
-    TArray<FString> UpdatedConditions;
-
-    if (DecisionID == 1) // 選擇效忠對象決策
-    {
-        if (ChosenOptionID == 1) // 效忠直系
-        {
-            UpdatedConditions.Add(TEXT("觸發直皖戰爭事件"));
-            UpdatedConditions.Add(TEXT("解鎖華北地區決策"));
-            UpdatedConditions.Add(TEXT("增加軍事衝突概率"));
-        }
-        else if (ChosenOptionID == 2) // 效忠皖系
-        {
-            UpdatedConditions.Add(TEXT("觸發皖系復興事件"));
-            UpdatedConditions.Add(TEXT("解鎖華中地區決策"));
-            UpdatedConditions.Add(TEXT("增加外交事件概率"));
-        }
-        else if (ChosenOptionID == 3) // 保持中立
-        {
-            UpdatedConditions.Add(TEXT("觸發地方割據事件"));
-            UpdatedConditions.Add(TEXT("解鎖獨立發展決策"));
-            UpdatedConditions.Add(TEXT("增加經濟發展機會"));
-        }
-    }
-    else if (DecisionID == 2) // 經濟發展政策決策
-    {
-        if (ChosenOptionID == 4) // 發展工業
-        {
-            UpdatedConditions.Add(TEXT("觸發工業化事件"));
-            UpdatedConditions.Add(TEXT("解鎖軍事現代化決策"));
-            UpdatedConditions.Add(TEXT("增加技術引進機會"));
-        }
-        else if (ChosenOptionID == 5) // 發展農業
-        {
-            UpdatedConditions.Add(TEXT("觸發農業改革事件"));
-            UpdatedConditions.Add(TEXT("解鎖社會福利決策"));
-            UpdatedConditions.Add(TEXT("增加民生改善機會"));
-        }
-    }
-
-    return UpdatedConditions;
-}
-
-EMingImpactMagnitude UMingDecisionImpactCalculator::GetImpactMagnitude(float ImpactValue)
-{
-    if (ImpactValue >= 40.0f)
-    {
-        return EMingImpactMagnitude::Catastrophic;
-    }
-    else if (ImpactValue >= 30.0f)
-    {
-        return EMingImpactMagnitude::Major;
-    }
-    else if (ImpactValue >= 20.0f)
-    {
-        return EMingImpactMagnitude::Significant;
-    }
-    else if (ImpactValue >= 10.0f)
-    {
-        return EMingImpactMagnitude::Moderate;
-    }
-    else if (ImpactValue >= 5.0f)
-    {
-        return EMingImpactMagnitude::Minor;
-    }
-    else
-    {
-        return EMingImpactMagnitude::Minimal;
-    }
-}
-
-FString UMingDecisionImpactCalculator::GetImpactDescription(EMingImpactMagnitude Magnitude)
-{
-    switch (Magnitude)
-    {
-    case EMingImpactMagnitude::Minimal:
-        return TEXT("極小影響");
-    case EMingImpactMagnitude::Minor:
-        return TEXT("輕微影響");
-    case EMingImpactMagnitude::Moderate:
-        return TEXT("中等影響");
-    case EMingImpactMagnitude::Significant:
-        return TEXT("顯著影響");
-    case EMingImpactMagnitude::Major:
-        return TEXT("重大影響");
-    case EMingImpactMagnitude::Catastrophic:
-        return TEXT("災難性影響");
-    default:
-        return TEXT("未知影響");
-    }
-}
-
-TArray<FMingDecisionImpactDetail> UMingDecisionImpactCalculator::SimulateLongTermImpact(int32 DecisionID, int32 ChosenOptionID, int32 SimulationYears)
-{
-    TArray<FMingDecisionImpactDetail> LongTermImpacts;
-
-    // 模擬長期影響
-    for (int32 Year = 1; Year <= SimulationYears; Year++)
-    {
-        FMingDecisionImpactDetail Impact;
-        Impact.StartYear = Year;
-        Impact.DurationYears = SimulationYears - Year + 1;
-
-        if (DecisionID == 1 && ChosenOptionID == 1) // 效忠直系的長期影響
-        {
-            if (Year <= 3)
-            {
-                Impact.ImpactType = EMingImpactType::ShortTerm;
-                Impact.ImpactScope = EMingImpactScope::Regional;
-                Impact.ImpactMagnitude = EMingImpactMagnitude::Significant;
-                Impact.ImpactDescription = TEXT("直系軍事實力快速增長");
-                Impact.ImpactValue = 25.0f;
-            }
-            else if (Year <= 10)
-            {
-                Impact.ImpactType = EMingImpactType::MediumTerm;
-                Impact.ImpactScope = EMingImpactScope::National;
-                Impact.ImpactMagnitude = EMingImpactMagnitude::Major;
-                Impact.ImpactDescription = TEXT("直系逐漸統一全國");
-                Impact.ImpactValue = 35.0f;
-            }
-            else
-            {
-                Impact.ImpactType = EMingImpactType::LongTerm;
-                Impact.ImpactScope = EMingImpactScope::Historical;
-                Impact.ImpactMagnitude = EMingImpactMagnitude::Catastrophic;
-                Impact.ImpactDescription = TEXT("建立中央集權政府");
-                Impact.ImpactValue = 45.0f;
-            }
-        }
-
-        LongTermImpacts.Add(Impact);
-    }
-
-    return LongTermImpacts;
-}
-
-TMap<int32, FMingDecisionImpactReport> UMingDecisionImpactCalculator::CompareDecisionOptions(int32 DecisionID)
-{
-    TMap<int32, FMingDecisionImpactReport> ComparisonResults;
-
-    // 這裡應該從決策管理器獲取所有可用選項
-    // 暫時使用硬編碼的選項ID
-    TArray<int32> OptionIDs = {1, 2, 3}; // 假設有三個選項
-
-    for (int32 OptionID : OptionIDs)
-    {
-        FMingDecisionImpactReport Report = CalculateDecisionImpact(DecisionID, OptionID);
-        ComparisonResults.Add(OptionID, Report);
-    }
-
-    return ComparisonResults;
-}
-
-TArray<FMingHistoricalPath> UMingDecisionImpactCalculator::GetCurrentHistoricalPaths()
-{
-    return HistoricalPaths;
-}
-
-float UMingDecisionImpactCalculator::CalculateDecisionWeight(int32 DecisionID, int32 ChosenOptionID)
-{
-    float Weight = 1.0f;
-
-    // 根據決策類型和選項特性計算權重
-    if (DecisionID == 1) // 關鍵政治決策
-    {
-        Weight *= 1.5f;
-    }
-    else if (DecisionID == 2) // 重要經濟決策
-    {
-        Weight *= 1.2f;
-    }
-
-    // 根據選項影響調整權重
-    FMingDecisionImpactReport Report = CalculateDecisionImpact(DecisionID, ChosenOptionID);
-    Weight *= Report.OverallImpactScore / 100.0f;
-
-    return FMath::Clamp(Weight, 0.1f, 2.0f);
-}
-
-FMingDecisionImpactReport UMingDecisionImpactCalculator::GenerateImpactPrediction(int32 DecisionID, int32 OptionID)
-{
-    // 生成影響預測（與實際計算相同，但標記為預測）
-    FMingDecisionImpactReport Prediction = CalculateDecisionImpact(DecisionID, OptionID);
-    
-    // 添加預測標記
-    Prediction.EducationalSummary = TEXT("[預測] ") + Prediction.EducationalSummary;
-    
-    return Prediction;
-}
-
-void UMingDecisionImpactCalculator::InitializeHistoricalPaths()
-{
-    if (HistoricalPaths.Num() > 0)
-    {
-        return; // 已經初始化
-    }
-
-    // 初始化主要歷史路徑
-    FMingHistoricalPath Path1;
-    Path1.PathID = 1;
-    Path1.PathName = TEXT("統一之路");
-    Path1.PathDescription = TEXT("中國實現統一，建立強大的中央政府");
-    Path1.PathTags = {TEXT("統一"), TEXT("強國"), TEXT("穩定")};
-    Path1.PathWeight = 0.3f;
-    Path1.bIsMainPath = true;
-    HistoricalPaths.Add(Path1);
-
-    FMingHistoricalPath Path2;
-    Path2.PathID = 2;
-    Path2.PathName = TEXT("分裂之路");
-    Path2.PathDescription = TEXT("中國持續分裂，軍閥混戰");
-    Path2.PathTags = {TEXT("分裂"), TEXT("混戰"), TEXT("衰弱")};
-    Path2.PathWeight = 0.4f;
-    Path2.bIsMainPath = true;
-    HistoricalPaths.Add(Path2);
-
-    FMingHistoricalPath Path3;
-    Path3.PathID = 3;
-    Path3.PathName = TEXT("改革之路");
-    Path3.PathDescription = TEXT("通過政治改革實現現代化");
-    Path3.PathTags = {TEXT("改革"), TEXT("現代化"), TEXT("民主")};
-    Path3.PathWeight = 0.2f;
-    Path3.bIsMainPath = false;
-    HistoricalPaths.Add(Path3);
-
-    FMingHistoricalPath Path4;
-    Path4.PathID = 4;
-    Path4.PathName = TEXT("殖民之路");
-    Path4.PathDescription = TEXT("外國勢力控制中國，淪為半殖民地");
-    Path4.PathTags = {TEXT("殖民"), TEXT("屈辱"), TEXT("依賴")};
-    Path4.PathWeight = 0.1f;
-    Path4.bIsMainPath = false;
-    HistoricalPaths.Add(Path4);
-}
-
-void UMingDecisionImpactCalculator::InitializeFactionData()
-{
-    if (FactionData.Num() > 0)
-    {
-        return; // 已經初始化
-    }
-
-    // 初始化主要軍閥勢力
-    FMingTerritoryData Zhili;
-    Zhili.FactionName = TEXT("直系");
-    Zhili.ControlledProvinces = 8;
-    Zhili.ControlledCities = 45;
-    Zhili.MilitaryStrength = 75.0f;
-    Zhili.EconomicStrength = 65.0f;
-    Zhili.PopularSupport = 60.0f;
-    FactionData.Add(TEXT("直系"), Zhili);
-
-    FMingTerritoryData Wanxi;
-    Wanxi.FactionName = TEXT("皖系");
-    Wanxi.ControlledProvinces = 5;
-    Wanxi.ControlledCities = 28;
-    Wanxi.MilitaryStrength = 60.0f;
-    Wanxi.EconomicStrength = 55.0f;
-    Wanxi.PopularSupport = 45.0f;
-    FactionData.Add(TEXT("皖系"), Wanxi);
-
-    FMingTerritoryData Fengxi;
-    Fengxi.FactionName = TEXT("奉系");
-    Fengxi.ControlledProvinces = 6;
-    Fengxi.ControlledCities = 32;
-    Fengxi.MilitaryStrength = 70.0f;
-    Fengxi.EconomicStrength = 50.0f;
-    Fengxi.PopularSupport = 55.0f;
-    FactionData.Add(TEXT("奉系"), Fengxi);
-}
-
-void UMingDecisionImpactCalculator::InitializeImpactWeights()
-{
-    if (ImpactWeights.Num() > 0)
-    {
-        return; // 已經初始化
-    }
-
-    ImpactWeights = {
-        {EMingDecisionType::Political, 1.5f},
-        {EMingDecisionType::Military, 1.3f},
-        {EMingDecisionType::Economic, 1.2f},
-        {EMingDecisionType::Diplomatic, 1.1f},
-        {EMingDecisionType::Personal, 0.8f}
-    };
-}
-
-void UMingDecisionImpactCalculator::InitializeHistoricalKnowledge()
-{
-    if (HistoricalKnowledgeBase.Num() > 0)
-    {
-        return; // 已經初始化
-    }
-
-    HistoricalKnowledgeBase = {
-        {1, TEXT("1920年直皖戰爭是北洋政府內部的重要衝突，標誌著直系軍閥的崛起。")},
-        {2, TEXT("1920年代的中國經濟政策決定了後來的工業化道路。")},
-        {3, TEXT("軍閥時期的政治選擇直接影響了中國的統一進程。")}
-    };
-}
-
-float UMingDecisionImpactCalculator::CalculateImpactScore(const TArray<FMingDecisionImpactDetail>& Impacts)
-{
-    float TotalScore = 0.0f;
-
-    for (const FMingDecisionImpactDetail& Impact : Impacts)
-    {
-        float Weight = 1.0f;
-
-        // 根據影響類型調整權重
-        switch (Impact.ImpactType)
-        {
-        case EMingImpactType::Permanent:
-            Weight *= 2.0f;
-            break;
-        case EMingImpactType::LongTerm:
-            Weight *= 1.5f;
-            break;
-        case EMingImpactType::MediumTerm:
-            Weight *= 1.2f;
-            break;
-        case EMingImpactType::ShortTerm:
-            Weight *= 1.0f;
-            break;
-        case EMingImpactType::Immediate:
-            Weight *= 0.8f;
-            break;
-        }
-
-        // 根據影響範圍調整權重
-        switch (Impact.ImpactScope)
-        {
-        case EMingImpactScope::Historical:
-            Weight *= 2.0f;
-            break;
-        case EMingImpactScope::International:
-            Weight *= 1.8f;
-            break;
-        case EMingImpactScope::National:
-            Weight *= 1.5f;
-            break;
-        case EMingImpactScope::Regional:
-            Weight *= 1.2f;
-            break;
-        case EMingImpactScope::Personal:
-            Weight *= 1.0f;
-            break;
-        }
-
-        // 根據影響程度調整權重
-        float MagnitudeWeight = 1.0f;
-        switch (Impact.ImpactMagnitude)
-        {
-        case EMingImpactMagnitude::Catastrophic:
-            MagnitudeWeight = 3.0f;
-            break;
-        case EMingImpactMagnitude::Major:
-            MagnitudeWeight = 2.5f;
-            break;
-        case EMingImpactMagnitude::Significant:
-            MagnitudeWeight = 2.0f;
-            break;
-        case EMingImpactMagnitude::Moderate:
-            MagnitudeWeight = 1.5f;
-            break;
-        case EMingImpactMagnitude::Minor:
-            MagnitudeWeight = 1.0f;
-            break;
-        case EMingImpactMagnitude::Minimal:
-            MagnitudeWeight = 0.5f;
-            break;
-        }
-
-        TotalScore += FMath::Abs(Impact.ImpactValue) * Weight * MagnitudeWeight;
-    }
-
-    return FMath::Clamp(TotalScore, 0.0f, 100.0f);
-}
-
-void UMingDecisionImpactCalculator::UpdateHistoricalPathWeights(const FMingDecisionImpactReport& Report)
-{
-    for (const FMingHistoricalPath& AffectedPath : Report.AffectedPaths)
-    {
-        // 更新對應歷史路徑的權重
-        for (FMingHistoricalPath& Path : HistoricalPaths)
-        {
-            if (Path.PathID == AffectedPath.PathID)
-            {
-                float OldWeight = Path.PathWeight;
-                Path.PathWeight = FMath::Clamp(AffectedPath.PathWeight, 0.0f, 1.0f);
-                
-                if (FMath::Abs(OldWeight - Path.PathWeight) > 0.01f)
-                {
-                    OnHistoricalPathChanged.Broadcast(Path.PathName, Path.PathWeight);
-                }
-                break;
-            }
-        }
-    }
-}
-
-TArray<FMingDecisionImpactDetail> UMingDecisionImpactCalculator::GenerateImpactDetails(int32 DecisionID, int32 ChosenOptionID)
-{
-    TArray<FMingDecisionImpactDetail> Details;
-
-    // 生成詳細影響信息
-    FMingDecisionImpactDetail Detail1;
-    Detail1.ImpactType = EMingImpactType::Immediate;
-    Detail1.ImpactScope = EMingImpactScope::Personal;
-    Detail1.ImpactMagnitude = EMingImpactMagnitude::Significant;
-    Detail1.ImpactDescription = TEXT("個人聲望和地位立即受到影響");
-    Detail1.ImpactValue = 15.0f;
-    Detail1.DurationYears = 1;
-    Detail1.StartYear = 0;
-    Detail1.AffectedAttributes = {TEXT("聲望"), TEXT("地位")};
-    Detail1.HistoricalKnowledge = HistoricalKnowledgeBase.FindRef(DecisionID);
-    Details.Add(Detail1);
-
-    FMingDecisionImpactDetail Detail2;
-    Detail2.ImpactType = EMingImpactType::ShortTerm;
-    Detail2.ImpactScope = EMingImpactScope::Regional;
-    Detail2.ImpactMagnitude = EMingImpactMagnitude::Moderate;
-    Detail2.ImpactDescription = TEXT("地區政治格局發生變化");
-    Detail2.ImpactValue = 20.0f;
-    Detail2.DurationYears = 3;
-    Detail2.StartYear = 1;
-    Detail2.AffectedAttributes = {TEXT("控制區"), TEXT("影響力")};
-    Details.Add(Detail2);
-
-    return Details;
-}
-
-bool UMingDecisionImpactCalculator::ValidateImpactData(const FMingDecisionImpactReport& Report) const
-{
-    if (Report.DecisionID <= 0)
-    {
-        UE_LOG(LogTemp, Error, TEXT("決策ID必須大於0"));
-        return false;
-    }
-
-    if (Report.ChosenOptionID <= 0)
-    {
-        UE_LOG(LogTemp, Error, TEXT("選項ID必須大於0"));
-        return false;
-    }
-
-    if (Report.ImpactDetails.Num() == 0)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("決策影響沒有詳細信息"));
-    }
-
-    return true;
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出D出e出c出i出s出i出o出n出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出基本出o出本出l出d出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出s出c出/出D出a出t出e出T出i出設置出e出.出h出"出
+出
+出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出(出)出
+出{出
+出 出 出 出 出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出軍出a出c出t出i出o出n出D出a出t出a出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出I出設置出p出a出c出t出基本出e出i出成出h出t出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出輸入出i出s出t出o出本出i出c出a出l出K出n出o出w出l出e出d出成出e出B出a出s出e出.出E出設置出p出t出y出(出)出;出
+出}出
+出
+出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出R出e出p出o出本出t出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出C出a出l出c出使出l出a出t出e出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出(出i出n出t出3出2出 出D出e出c出i出s出i出o出n出I出D出,出 出i出n出t出3出2出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出R出e出p出o出本出t出 出R出e出p出o出本出t出;出
+出 出 出 出 出R出e出p出o出本出t出.出D出e出c出i出s出i出o出n出I出D出 出=出 出D出e出c出i出s出i出o出n出I出D出;出
+出 出 出 出 出R出e出p出o出本出t出.出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出;出
+出 出 出 出 出R出e出p出o出本出t出.出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出開出始出計出算出決出策出影出響出:出 出決出策出I出D出 出%出d出,出 出選出項出 出%出d出"出)出,出 出D出e出c出i出s出i出o出n出I出D出,出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出數出據出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出s出(出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出軍出a出c出t出i出o出n出D出a出t出a出(出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出I出設置出p出a出c出t出基本出e出i出成出h出t出s出(出)出;出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出輸入出i出s出t出o出本出i出c出a出l出K出n出o出w出l出e出d出成出e出(出)出;出
+出
+出 出 出 出 出/出/出 出計出算出各出種出影出響出
+出 出 出 出 出R出e出p出o出本出t出.出A出f出f出e出c出t出e出d出P出a出t出h出s出 出=出 出C出a出l出c出使出l出a出t出e出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出I出設置出p出a出c出t出(出D出e出c出i出s出i出o出n出I出D出,出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出;出
+出 出 出 出 出R出e出p出o出本出t出.出R出e出p出使出t出a出t出i出o出n出C出h出a出n出成出e出s出 出=出 出C出a出l出c出使出l出a出t出e出R出e出p出使出t出a出t出i出o出n出I出設置出p出a出c出t出(出D出e出c出i出s出i出o出n出I出D出,出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出;出
+出 出 出 出 出R出e出p出o出本出t出.出T出e出本出本出i出t出o出本出y出C出h出a出n出成出e出s出 出=出 出C出a出l出c出使出l出a出t出e出T出e出本出本出i出t出o出本出y出I出設置出p出a出c出t出(出D出e出c出i出s出i出o出n出I出D出,出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出;出
+出 出 出 出 出R出e出p出o出本出t出.出U出p出d出a出t出e出d出E出正出e出n出t出C出o出n出d出i出t出i出o出n出s出 出=出 出U出p出d出a出t出e出E出正出e出n出t出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出s出(出D出e出c出i出s出i出o出n出I出D出,出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出;出
+出 出 出 出 出R出e出p出o出本出t出.出E出d出使出c出a出t出i出o出n出a出l出S出使出設置出設置出a出本出y出 出=出 出G出e出n出e出本出a出t出e出E出d出使出c出a出t出i出o出n出a出l出C出o出n出t出e出n出t出(出D出e出c出i出s出i出o出n出I出D出,出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出生出成出詳出細出影出響出
+出 出 出 出 出R出e出p出o出本出t出.出I出設置出p出a出c出t出D出e出t出a出i出l出s出 出=出 出G出e出n出e出本出a出t出e出I出設置出p出a出c出t出D出e出t出a出i出l出s出(出D出e出c出i出s出i出o出n出I出D出,出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出;出
+出
+出 出 出 出 出/出/出 出計出算出總出體出影出響出評出分出
+出 出 出 出 出R出e出p出o出本出t出.出O出正出e出本出a出l出l出I出設置出p出a出c出t出S出c出o出本出e出 出=出 出C出a出l出c出使出l出a出t出e出I出設置出p出a出c出t出S出c出o出本出e出(出R出e出p出o出本出t出.出I出設置出p出a出c出t出D出e出t出a出i出l出s出)出;出
+出
+出 出 出 出 出/出/出 出更出新出歷出史出路出徑出權出重出
+出 出 出 出 出U出p出d出a出t出e出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出基本出e出i出成出h出t出s出(出R出e出p出o出本出t出)出;出
+出
+出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出O出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出e出d出.出B出本出o出a出d出c出a出s出t出(出R出e出p出o出本出t出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出決出策出影出響出計出算出完出成出，出總出體出評出分出:出 出%出.出2出f出"出)出,出 出R出e出p出o出本出t出.出O出正出e出本出a出l出l出I出設置出p出a出c出t出S出c出o出本出e出)出;出
+出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出p出o出本出t出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出>出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出C出a出l出c出使出l出a出t出e出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出I出設置出p出a出c出t出(出i出n出t出3出2出 出D出e出c出i出s出i出o出n出I出D出,出 出i出n出t出3出2出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出>出 出A出f出f出e出c出t出e出d出P出a出t出h出s出;出
+出
+出 出 出 出 出/出/出 出根出據出決出策出I出D出和出選出項出I出D出計出算出歷出史出路出徑出影出響出
+出 出 出 出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出1出)出 出/出/出 出選出擇出效出忠出對出象出決出策出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出1出)出 出/出/出 出效出忠出直出系出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出創出建出直出系出勝出利出路出徑出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出1出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出I出D出 出=出 出1出0出1出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出直出系出統出一出之出路出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出吳出佩出孚出領出導出的出直出系出軍出閥出最出終出統出一出中出國出，出建出立出穩出定出的出中出央出政出府出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出統出一出"出)出,出 出T出E出X出T出(出"出穩出定出"出)出,出 出T出E出X出T出(出"出中出央出集出權出"出)出}出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出7出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出f出f出e出c出t出e出d出P出a出t出h出s出.出A出d出d出(出P出a出t出h出1出)出;出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出創出建出軍出事出政出變出路出徑出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出2出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出I出D出 出=出 出1出0出2出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出軍出事出政出變出之出路出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出直出系出內出部出發出生出軍出事出政出變出，出導出致出政出局出不出穩出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出政出變出"出)出,出 出T出E出X出T出(出"出混出亂出"出)出,出 出T出E出X出T出(出"出分出裂出"出)出}出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出f出f出e出c出t出e出d出P出a出t出h出s出.出A出d出d出(出P出a出t出h出2出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出2出)出 出/出/出 出效出忠出皖出系出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出創出建出皖出系出復出興出路出徑出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出1出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出I出D出 出=出 出2出0出1出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出皖出系出復出興出之出路出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出段出祺出瑞出領出導出的出皖出系出軍出閥出重出新出崛出起出，出實出現出政出治出改出革出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出改出革出"出)出,出 出T出E出X出T出(出"出復出興出"出)出,出 出T出E出X出T出(出"出民出主出"出)出}出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出6出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出f出f出e出c出t出e出d出P出a出t出h出s出.出A出d出d出(出P出a出t出h出1出)出;出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出創出建出外出國出干出涉出路出徑出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出2出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出I出D出 出=出 出2出0出2出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出外出國出干出涉出之出路出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出外出國出勢出力出利出用出皖出系出內出部出分出歧出，出加出強出對出中出國出的出控出制出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出干出涉出"出)出,出 出T出E出X出T出(出"出殖出民出地出"出)出,出 出T出E出X出T出(出"出屈出辱出"出)出}出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出4出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出f出f出e出c出t出e出d出P出a出t出h出s出.出A出d出d出(出P出a出t出h出2出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出3出)出 出/出/出 出保出持出中出立出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出創出建出地出方出割出據出路出徑出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出1出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出I出D出 出=出 出3出0出1出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出地出方出割出據出之出路出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出各出地出方出軍出閥出各出自出為出政出，出中出國出進出入出長出期出分出裂出狀出態出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出分出裂出"出)出,出 出T出E出X出T出(出"出割出據出"出)出,出 出T出E出X出T出(出"出混出戰出"出)出}出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出8出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出f出f出e出c出t出e出d出P出a出t出h出s出.出A出d出d出(出P出a出t出h出1出)出;出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出創出和出平出發出展出路出徑出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出2出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出I出D出 出=出 出3出0出2出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出和出平出發出展出之出路出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出各出派出系出達出成出和出平出協出議出，出共出同出發出展出經出濟出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出和出平出"出)出,出 出T出E出X出T出(出"出發出展出"出)出,出 出T出E出X出T出(出"出合出作出"出)出}出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出2出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出f出f出e出c出t出e出d出P出a出t出h出s出.出A出d出d出(出P出a出t出h出2出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出2出)出 出/出/出 出經出濟出發出展出政出策出決出策出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出4出)出 出/出/出 出發出展出工出業出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出創出建出工出業出強出國出路出徑出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出1出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出I出D出 出=出 出4出0出1出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出工出業出強出國出之出路出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出重出工出業出發出展出帶出動出軍出事出現出代出化出，出中出國出成出為出地出區出強出國出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出工出業出化出"出)出,出 出T出E出X出T出(出"出強出國出"出)出,出 出T出E出X出T出(出"出現出代出化出"出)出}出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出6出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出f出f出e出c出t出e出d出P出a出t出h出s出.出A出d出d出(出P出a出t出h出1出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出5出)出 出/出/出 出發出展出農出業出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出創出建出農出業出大出國出路出徑出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出1出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出I出D出 出=出 出5出0出1出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出農出業出大出國出之出路出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出農出業出發出展出帶出來出社出會出穩出定出，出為出工出業出化出奠出定出基出礎出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出農出業出"出)出,出 出T出E出X出T出(出"出穩出定出"出)出,出 出T出E出X出T出(出"出基出礎出"出)出}出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出7出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出1出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出f出f出e出c出t出e出d出P出a出t出h出s出.出A出d出d出(出P出a出t出h出1出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出A出f出f出e出c出t出e出d出P出a出t出h出s出;出
+出}出
+出
+出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出C出a出l出c出使出l出a出t出e出R出e出p出使出t出a出t出i出o出n出I出設置出p出a出c出t出(出i出n出t出3出2出 出D出e出c出i出s出i出o出n出I出D出,出 出i出n出t出3出2出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出R出e出p出使出t出a出t出i出o出n出C出h出a出n出成出e出s出;出
+出
+出 出 出 出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出1出)出 出/出/出 出選出擇出效出忠出對出象出決出策出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出1出)出 出/出/出 出效出忠出直出系出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出p出使出t出a出t出i出o出n出C出h出a出n出成出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出軍出事出聲出望出"出)出,出 出2出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出政出治出聲出望出"出)出,出 出2出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出民出眾出聲出望出"出)出,出 出1出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出國出際出聲出望出"出)出,出 出1出5出.出0出f出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出2出)出 出/出/出 出效出忠出皖出系出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出p出使出t出a出t出i出o出n出C出h出a出n出成出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出軍出事出聲出望出"出)出,出 出1出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出政出治出聲出望出"出)出,出 出1出8出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出民出眾出聲出望出"出)出,出 出8出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出國出際出聲出望出"出)出,出 出1出2出.出0出f出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出3出)出 出/出/出 出保出持出中出立出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出p出使出t出a出t出i出o出n出C出h出a出n出成出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出軍出事出聲出望出"出)出,出 出-出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出政出治出聲出望出"出)出,出 出-出8出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出民出眾出聲出望出"出)出,出 出2出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出國出際出聲出望出"出)出,出 出5出.出0出f出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出2出)出 出/出/出 出經出濟出發出展出政出策出決出策出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出4出)出 出/出/出 出發出展出工出業出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出p出使出t出a出t出i出o出n出C出h出a出n出成出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出經出濟出聲出望出"出)出,出 出3出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出軍出事出聲出望出"出)出,出 出2出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出民出眾出聲出望出"出)出,出 出-出1出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出國出際出聲出望出"出)出,出 出2出5出.出0出f出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出5出)出 出/出/出 出發出展出農出業出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出p出使出t出a出t出i出o出n出C出h出a出n出成出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出經出濟出聲出望出"出)出,出 出2出0出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出軍出事出聲出望出"出)出,出 出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出民出眾出聲出望出"出)出,出 出2出5出.出0出f出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出國出際出聲出望出"出)出,出 出1出0出.出0出f出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出p出使出t出a出t出i出o出n出C出h出a出n出成出e出s出;出
+出}出
+出
+出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出i出n出t出3出2出>出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出C出a出l出c出使出l出a出t出e出T出e出本出本出i出t出o出本出y出I出設置出p出a出c出t出(出i出n出t出3出2出 出D出e出c出i出s出i出o出n出I出D出,出 出i出n出t出3出2出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出i出n出t出3出2出>出 出T出e出本出本出i出t出o出本出y出C出h出a出n出成出e出s出;出
+出
+出 出 出 出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出1出)出 出/出/出 出選出擇出效出忠出對出象出決出策出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出1出)出 出/出/出 出效出忠出直出系出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出e出本出本出i出t出o出本出y出C出h出a出n出成出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出直出系出控出制出區出"出)出,出 出5出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出皖出系出控出制出區出"出)出,出 出-出3出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出奉出系出控出制出區出"出)出,出 出-出2出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出2出)出 出/出/出 出效出忠出皖出系出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出e出本出本出i出t出o出本出y出C出h出a出n出成出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出皖出系出控出制出區出"出)出,出 出4出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出直出系出控出制出區出"出)出,出 出-出2出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出奉出系出控出制出區出"出)出,出 出-出2出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出3出)出 出/出/出 出保出持出中出立出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出e出本出本出i出t出o出本出y出C出h出a出n出成出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出個出人出控出制出區出"出)出,出 出3出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出直出系出控出制出區出"出)出,出 出-出1出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出皖出系出控出制出區出"出)出,出 出-出1出}出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出T出E出X出T出(出"出奉出系出控出制出區出"出)出,出 出-出1出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出T出e出本出本出i出t出o出本出y出C出h出a出n出成出e出s出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出G出e出n出e出本出a出t出e出E出d出使出c出a出t出i出o出n出a出l出C出o出n出t出e出n出t出(出i出n出t出3出2出 出D出e出c出i出s出i出o出n出I出D出,出 出i出n出t出3出2出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出E出d出使出c出a出t出i出o出n出a出l出C出o出n出t出e出n出t出;出
+出
+出 出 出 出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出1出)出 出/出/出 出選出擇出效出忠出對出象出決出策出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出d出使出c出a出t出i出o出n出a出l出C出o出n出t出e出n出t出 出=出 出T出E出X出T出(出"出1出9出2出0出年出的出軍出閥出選出擇出是出中出國出近出代出史出的出重出要出轉出折出點出。出直出系出軍出閥出以出吳出佩出孚出為出首出，出控出制出華出北出地出區出；出皖出系出軍出閥出以出段出祺出瑞出為出首出，出影出響出力出主出要出在出華出中出；出奉出系出軍出閥出以出張出作出霖出為出首出，出統出治出東出北出。出您出的出選出擇出不出僅出影出響出個出人出前出途出，出更出關出係出到出中出國出的出統出一出與出分出裂出。出歷出史出告出訴出我出們出，出軍出閥出混出戰出最出終出導出致出國出力出衰出弱出，出為出外出國出侵出略出提出供出了出機出會出。出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出2出)出 出/出/出 出經出濟出發出展出政出策出決出策出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出d出使出c出a出t出i出o出n出a出l出C出o出n出t出e出n出t出 出=出 出T出E出X出T出(出"出1出9出2出0出年出代出的出中出國出面出臨出工出業出化出與出傳出統出農出業出的出選出擇出。出重出工出業出發出展出雖出然出能出快出速出提出升出國出力出，出但出需出要出大出量出資出源出且出可出能出加出劇出社出會出矛出盾出；出農出業出發出展出雖出然出進出程出較出慢出，出但出能出保出障出民出生出穩出定出。出歷出史出上出的出工出業出化出國出家出都出經出歷出了出痛出苦出的出轉出型出期出，出而出成出功出的出農出業出改出革出則出為出長出期出發出展出奠出定出了出基出礎出。出"出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出E出d出使出c出a出t出i出o出n出a出l出C出o出n出t出e出n出t出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出U出p出d出a出t出e出E出正出e出n出t出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出s出(出i出n出t出3出2出 出D出e出c出i出s出i出o出n出I出D出,出 出i出n出t出3出2出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出;出
+出
+出 出 出 出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出1出)出 出/出/出 出選出擇出效出忠出對出象出決出策出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出1出)出 出/出/出 出效出忠出直出系出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出觸出發出直出皖出戰出爭出事出件出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出解出鎖出華出北出地出區出決出策出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出增出加出軍出事出衝出突出概出率出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出2出)出 出/出/出 出效出忠出皖出系出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出觸出發出皖出系出復出興出事出件出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出解出鎖出華出中出地出區出決出策出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出增出加出外出交出事出件出概出率出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出3出)出 出/出/出 出保出持出中出立出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出觸出發出地出方出割出據出事出件出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出解出鎖出獨出立出發出展出決出策出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出增出加出經出濟出發出展出機出會出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出2出)出 出/出/出 出經出濟出發出展出政出策出決出策出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出4出)出 出/出/出 出發出展出工出業出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出觸出發出工出業出化出事出件出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出解出鎖出軍出事出現出代出化出決出策出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出增出加出技出術出引出進出機出會出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出5出)出 出/出/出 出發出展出農出業出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出觸出發出農出業出改出革出事出件出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出解出鎖出社出會出福出利出決出策出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出增出加出民出生出改出善出機出會出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出U出p出d出a出t出e出d出C出o出n出d出i出t出i出o出n出s出;出
+出}出
+出
+出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出G出e出t出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出(出f出l出o出a出t出 出I出設置出p出a出c出t出V出a出l出使出e出)出
+出{出
+出 出 出 出 出i出f出 出(出I出設置出p出a出c出t出V出a出l出使出e出 出>出=出 出4出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出C出a出t出a出s出t出本出o出p出h出i出c出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出I出設置出p出a出c出t出V出a出l出使出e出 出>出=出 出3出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出a出大出o出本出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出I出設置出p出a出c出t出V出a出l出使出e出 出>出=出 出2出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出S出i出成出n出i出f出i出c出a出n出t出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出I出設置出p出a出c出t出V出a出l出使出e出 出>出=出 出1出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出o出d出e出本出a出t出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出I出設置出p出a出c出t出V出a出l出使出e出 出>出=出 出5出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出i出n出o出本出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出i出n出i出設置出a出l出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出G出e出t出I出設置出p出a出c出t出D出e出s出c出本出i出p出t出i出o出n出(出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出 出M出a出成出n出i出t出使出d出e出)出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出M出a出成出n出i出t出使出d出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出i出n出i出設置出a出l出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出極出小出影出響出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出i出n出o出本出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出輕出微出影出響出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出o出d出e出本出a出t出e出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出中出等出影出響出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出S出i出成出n出i出f出i出c出a出n出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出顯出著出影出響出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出a出大出o出本出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出重出大出影出響出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出C出a出t出a出s出t出本出o出p出h出i出c出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出災出難出性出影出響出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出影出響出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出T出A出本出本出a出y出<出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出D出e出t出a出i出l出>出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出S出i出設置出使出l出a出t出e出L出o出n出成出T出e出本出設置出I出設置出p出a出c出t出(出i出n出t出3出2出 出D出e出c出i出s出i出o出n出I出D出,出 出i出n出t出3出2出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出,出 出i出n出t出3出2出 出S出i出設置出使出l出a出t出i出o出n出Y出e出a出本出s出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出D出e出t出a出i出l出>出 出L出o出n出成出T出e出本出設置出I出設置出p出a出c出t出s出;出
+出
+出 出 出 出 出/出/出 出模出擬出長出期出影出響出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出Y出e出a出本出 出=出 出1出;出 出Y出e出a出本出 出<出=出 出S出i出設置出使出l出a出t出i出o出n出Y出e出a出本出s出;出 出Y出e出a出本出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出D出e出t出a出i出l出 出I出設置出p出a出c出t出;出
+出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出S出t出a出本出t出Y出e出a出本出 出=出 出Y出e出a出本出;出
+出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出D出使出本出a出t出i出o出n出Y出e出a出本出s出 出=出 出S出i出設置出使出l出a出t出i出o出n出Y出e出a出本出s出 出-出 出Y出e出a出本出 出+出 出1出;出
+出
+出 出 出 出 出 出 出 出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出1出 出&出&出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出=出=出 出1出)出 出/出/出 出效出忠出直出系出的出長出期出影出響出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出Y出e出a出本出 出<出=出 出3出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出T出y出p出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出T出y出p出e出:出:出S出h出o出本出t出T出e出本出設置出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出S出c出o出p出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出S出c出o出p出e出:出:出R出e出成出i出o出n出a出l出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出S出i出成出n出i出f出i出c出a出n出t出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出直出系出軍出事出實出力出快出速出增出長出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出V出a出l出使出e出 出=出 出2出5出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出Y出e出a出本出 出<出=出 出1出0出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出T出y出p出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出T出y出p出e出:出:出M出e出d出i出使出設置出T出e出本出設置出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出S出c出o出p出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出S出c出o出p出e出:出:出的出a出t出i出o出n出a出l出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出a出大出o出本出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出直出系出逐出漸出統出一出全出國出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出V出a出l出使出e出 出=出 出3出5出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出T出y出p出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出T出y出p出e出:出:出L出o出n出成出T出e出本出設置出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出S出c出o出p出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出S出c出o出p出e出:出:出輸入出i出s出t出o出本出i出c出a出l出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出C出a出t出a出s出t出本出o出p出h出i出c出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出建出立出中出央出集出權出政出府出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出I出設置出p出a出c出t出.出I出設置出p出a出c出t出V出a出l出使出e出 出=出 出4出5出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出L出o出n出成出T出e出本出設置出I出設置出p出a出c出t出s出.出A出d出d出(出I出設置出p出a出c出t出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出L出o出n出成出T出e出本出設置出I出設置出p出a出c出t出s出;出
+出}出
+出
+出T出M出a出p出<出i出n出t出3出2出,出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出R出e出p出o出本出t出>出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出C出o出設置出p出a出本出e出D出e出c出i出s出i出o出n出O出p出t出i出o出n出s出(出i出n出t出3出2出 出D出e出c出i出s出i出o出n出I出D出)出
+出{出
+出 出 出 出 出T出M出a出p出<出i出n出t出3出2出,出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出R出e出p出o出本出t出>出 出C出o出設置出p出a出本出i出s出o出n出R出e出s出使出l出t出s出;出
+出
+出 出 出 出 出/出/出 出這出裡出應出該出從出決出策出管出理出器出獲出取出所出有出可出用出選出項出
+出 出 出 出 出/出/出 出暫出時出使出用出硬出編出碼出的出選出項出I出D出
+出 出 出 出 出T出A出本出本出a出y出<出i出n出t出3出2出>出 出O出p出t出i出o出n出I出D出s出 出=出 出{出1出,出 出2出,出 出3出}出;出 出/出/出 出假出設出有出三出個出選出項出
+出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出O出p出t出i出o出n出I出D出 出:出 出O出p出t出i出o出n出I出D出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出R出e出p出o出本出t出 出R出e出p出o出本出t出 出=出 出C出a出l出c出使出l出a出t出e出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出(出D出e出c出i出s出i出o出n出I出D出,出 出O出p出t出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出C出o出設置出p出a出本出i出s出o出n出R出e出s出使出l出t出s出.出A出d出d出(出O出p出t出i出o出n出I出D出,出 出R出e出p出o出本出t出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出C出o出設置出p出a出本出i出s出o出n出R出e出s出使出l出t出s出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出>出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出G出e出t出C出使出本出本出e出n出t出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出s出(出)出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出s出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出C出a出l出c出使出l出a出t出e出D出e出c出i出s出i出o出n出基本出e出i出成出h出t出(出i出n出t出3出2出 出D出e出c出i出s出i出o出n出I出D出,出 出i出n出t出3出2出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出基本出e出i出成出h出t出 出=出 出1出.出0出f出;出
+出
+出 出 出 出 出/出/出 出根出據出決出策出類出型出和出選出項出特出性出計出算出權出重出
+出 出 出 出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出1出)出 出/出/出 出關出鍵出政出治出決出策出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出1出.出5出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出D出e出c出i出s出i出o出n出I出D出 出=出=出 出2出)出 出/出/出 出重出要出經出濟出決出策出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出1出.出2出f出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出根出據出選出項出影出響出調出整出權出重出
+出 出 出 出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出R出e出p出o出本出t出 出R出e出p出o出本出t出 出=出 出C出a出l出c出使出l出a出t出e出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出(出D出e出c出i出s出i出o出n出I出D出,出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出;出
+出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出R出e出p出o出本出t出.出O出正出e出本出a出l出l出I出設置出p出a出c出t出S出c出o出本出e出 出/出 出1出0出0出.出0出f出;出
+出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出基本出e出i出成出h出t出,出 出0出.出1出f出,出 出2出.出0出f出)出;出
+出}出
+出
+出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出R出e出p出o出本出t出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出G出e出n出e出本出a出t出e出I出設置出p出a出c出t出P出本出e出d出i出c出t出i出o出n出(出i出n出t出3出2出 出D出e出c出i出s出i出o出n出I出D出,出 出i出n出t出3出2出 出O出p出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出/出/出 出生出成出影出響出預出測出（出與出實出際出計出算出相出同出，出但出標出記出為出預出測出）出
+出 出 出 出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出R出e出p出o出本出t出 出P出本出e出d出i出c出t出i出o出n出 出=出 出C出a出l出c出使出l出a出t出e出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出(出D出e出c出i出s出i出o出n出I出D出,出 出O出p出t出i出o出n出I出D出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出添出加出預出測出標出記出
+出 出 出 出 出P出本出e出d出i出c出t出i出o出n出.出E出d出使出c出a出t出i出o出n出a出l出S出使出設置出設置出a出本出y出 出=出 出T出E出X出T出(出"出[出預出測出]出 出"出)出 出+出 出P出本出e出d出i出c出t出i出o出n出.出E出d出使出c出a出t出i出o出n出a出l出S出使出設置出設置出a出本出y出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出本出e出d出i出c出t出i出o出n出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出I出n出i出t出i出a出l出i出z出e出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出s出(出)出
+出{出
+出 出 出 出 出i出f出 出(出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出 出/出/出 出已出經出初出始出化出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出主出要出歷出史出路出徑出
+出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出1出;出
+出 出 出 出 出P出a出t出h出1出.出P出a出t出h出I出D出 出=出 出1出;出
+出 出 出 出 出P出a出t出h出1出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出統出一出之出路出"出)出;出
+出 出 出 出 出P出a出t出h出1出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出中出國出實出現出統出一出，出建出立出強出大出的出中出央出政出府出"出)出;出
+出 出 出 出 出P出a出t出h出1出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出統出一出"出)出,出 出T出E出X出T出(出"出強出國出"出)出,出 出T出E出X出T出(出"出穩出定出"出)出}出;出
+出 出 出 出 出P出a出t出h出1出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出3出f出;出
+出 出 出 出 出P出a出t出h出1出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出s出.出A出d出d出(出P出a出t出h出1出)出;出
+出
+出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出2出;出
+出 出 出 出 出P出a出t出h出2出.出P出a出t出h出I出D出 出=出 出2出;出
+出 出 出 出 出P出a出t出h出2出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出分出裂出之出路出"出)出;出
+出 出 出 出 出P出a出t出h出2出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出中出國出持出續出分出裂出，出軍出閥出混出戰出"出)出;出
+出 出 出 出 出P出a出t出h出2出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出分出裂出"出)出,出 出T出E出X出T出(出"出混出戰出"出)出,出 出T出E出X出T出(出"出衰出弱出"出)出}出;出
+出 出 出 出 出P出a出t出h出2出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出4出f出;出
+出 出 出 出 出P出a出t出h出2出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出s出.出A出d出d出(出P出a出t出h出2出)出;出
+出
+出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出3出;出
+出 出 出 出 出P出a出t出h出3出.出P出a出t出h出I出D出 出=出 出3出;出
+出 出 出 出 出P出a出t出h出3出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出改出革出之出路出"出)出;出
+出 出 出 出 出P出a出t出h出3出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出通出過出政出治出改出革出實出現出現出代出化出"出)出;出
+出 出 出 出 出P出a出t出h出3出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出改出革出"出)出,出 出T出E出X出T出(出"出現出代出化出"出)出,出 出T出E出X出T出(出"出民出主出"出)出}出;出
+出 出 出 出 出P出a出t出h出3出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出2出f出;出
+出 出 出 出 出P出a出t出h出3出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出s出.出A出d出d出(出P出a出t出h出3出)出;出
+出
+出 出 出 出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出 出P出a出t出h出4出;出
+出 出 出 出 出P出a出t出h出4出.出P出a出t出h出I出D出 出=出 出4出;出
+出 出 出 出 出P出a出t出h出4出.出P出a出t出h出的出a出設置出e出 出=出 出T出E出X出T出(出"出殖出民出之出路出"出)出;出
+出 出 出 出 出P出a出t出h出4出.出P出a出t出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出外出國出勢出力出控出制出中出國出，出淪出為出半出殖出民出地出"出)出;出
+出 出 出 出 出P出a出t出h出4出.出P出a出t出h出T出a出成出s出 出=出 出{出T出E出X出T出(出"出殖出民出"出)出,出 出T出E出X出T出(出"出屈出辱出"出)出,出 出T出E出X出T出(出"出依出賴出"出)出}出;出
+出 出 出 出 出P出a出t出h出4出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出0出.出1出f出;出
+出 出 出 出 出P出a出t出h出4出.出b出I出s出M出a出i出n出P出a出t出h出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出s出.出A出d出d出(出P出a出t出h出4出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出I出n出i出t出i出a出l出i出z出e出軍出a出c出t出i出o出n出D出a出t出a出(出)出
+出{出
+出 出 出 出 出i出f出 出(出軍出a出c出t出i出o出n出D出a出t出a出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出 出/出/出 出已出經出初出始出化出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出主出要出軍出閥出勢出力出
+出 出 出 出 出軍出M出i出n出成出T出e出本出本出i出t出o出本出y出D出a出t出a出 出Z出h出i出l出i出;出
+出 出 出 出 出Z出h出i出l出i出.出軍出a出c出t出i出o出n出的出a出設置出e出 出=出 出T出E出X出T出(出"出直出系出"出)出;出
+出 出 出 出 出Z出h出i出l出i出.出C出o出n出t出本出o出l出l出e出d出P出本出o出正出i出n出c出e出s出 出=出 出8出;出
+出 出 出 出 出Z出h出i出l出i出.出C出o出n出t出本出o出l出l出e出d出C出i出t出i出e出s出 出=出 出4出5出;出
+出 出 出 出 出Z出h出i出l出i出.出M出i出l出i出t出a出本出y出S出t出本出e出n出成出t出h出 出=出 出7出5出.出0出f出;出
+出 出 出 出 出Z出h出i出l出i出.出E出c出o出n出o出設置出i出c出S出t出本出e出n出成出t出h出 出=出 出6出5出.出0出f出;出
+出 出 出 出 出Z出h出i出l出i出.出P出o出p出使出l出a出本出S出使出p出p出o出本出t出 出=出 出6出0出.出0出f出;出
+出 出 出 出 出軍出a出c出t出i出o出n出D出a出t出a出.出A出d出d出(出T出E出X出T出(出"出直出系出"出)出,出 出Z出h出i出l出i出)出;出
+出
+出 出 出 出 出軍出M出i出n出成出T出e出本出本出i出t出o出本出y出D出a出t出a出 出基本出a出n出x出i出;出
+出 出 出 出 出基本出a出n出x出i出.出軍出a出c出t出i出o出n出的出a出設置出e出 出=出 出T出E出X出T出(出"出皖出系出"出)出;出
+出 出 出 出 出基本出a出n出x出i出.出C出o出n出t出本出o出l出l出e出d出P出本出o出正出i出n出c出e出s出 出=出 出5出;出
+出 出 出 出 出基本出a出n出x出i出.出C出o出n出t出本出o出l出l出e出d出C出i出t出i出e出s出 出=出 出2出8出;出
+出 出 出 出 出基本出a出n出x出i出.出M出i出l出i出t出a出本出y出S出t出本出e出n出成出t出h出 出=出 出6出0出.出0出f出;出
+出 出 出 出 出基本出a出n出x出i出.出E出c出o出n出o出設置出i出c出S出t出本出e出n出成出t出h出 出=出 出5出5出.出0出f出;出
+出 出 出 出 出基本出a出n出x出i出.出P出o出p出使出l出a出本出S出使出p出p出o出本出t出 出=出 出4出5出.出0出f出;出
+出 出 出 出 出軍出a出c出t出i出o出n出D出a出t出a出.出A出d出d出(出T出E出X出T出(出"出皖出系出"出)出,出 出基本出a出n出x出i出)出;出
+出
+出 出 出 出 出軍出M出i出n出成出T出e出本出本出i出t出o出本出y出D出a出t出a出 出軍出e出n出成出x出i出;出
+出 出 出 出 出軍出e出n出成出x出i出.出軍出a出c出t出i出o出n出的出a出設置出e出 出=出 出T出E出X出T出(出"出奉出系出"出)出;出
+出 出 出 出 出軍出e出n出成出x出i出.出C出o出n出t出本出o出l出l出e出d出P出本出o出正出i出n出c出e出s出 出=出 出6出;出
+出 出 出 出 出軍出e出n出成出x出i出.出C出o出n出t出本出o出l出l出e出d出C出i出t出i出e出s出 出=出 出3出2出;出
+出 出 出 出 出軍出e出n出成出x出i出.出M出i出l出i出t出a出本出y出S出t出本出e出n出成出t出h出 出=出 出7出0出.出0出f出;出
+出 出 出 出 出軍出e出n出成出x出i出.出E出c出o出n出o出設置出i出c出S出t出本出e出n出成出t出h出 出=出 出5出0出.出0出f出;出
+出 出 出 出 出軍出e出n出成出x出i出.出P出o出p出使出l出a出本出S出使出p出p出o出本出t出 出=出 出5出5出.出0出f出;出
+出 出 出 出 出軍出a出c出t出i出o出n出D出a出t出a出.出A出d出d出(出T出E出X出T出(出"出奉出系出"出)出,出 出軍出e出n出成出x出i出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出I出n出i出t出i出a出l出i出z出e出I出設置出p出a出c出t出基本出e出i出成出h出t出s出(出)出
+出{出
+出 出 出 出 出i出f出 出(出I出設置出p出a出c出t出基本出e出i出成出h出t出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出 出/出/出 出已出經出初出始出化出
+出 出 出 出 出}出
+出
+出 出 出 出 出I出設置出p出a出c出t出基本出e出i出成出h出t出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出{出E出M出i出n出成出D出e出c出i出s出i出o出n出T出y出p出e出:出:出P出o出l出i出t出i出c出a出l出,出 出1出.出5出f出}出,出
+出 出 出 出 出 出 出 出 出{出E出M出i出n出成出D出e出c出i出s出i出o出n出T出y出p出e出:出:出M出i出l出i出t出a出本出y出,出 出1出.出3出f出}出,出
+出 出 出 出 出 出 出 出 出{出E出M出i出n出成出D出e出c出i出s出i出o出n出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出,出 出1出.出2出f出}出,出
+出 出 出 出 出 出 出 出 出{出E出M出i出n出成出D出e出c出i出s出i出o出n出T出y出p出e出:出:出D出i出p出l出o出設置出a出t出i出c出,出 出1出.出1出f出}出,出
+出 出 出 出 出 出 出 出 出{出E出M出i出n出成出D出e出c出i出s出i出o出n出T出y出p出e出:出:出P出e出本出s出o出n出a出l出,出 出0出.出8出f出}出
+出 出 出 出 出}出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出I出n出i出t出i出a出l出i出z出e出輸入出i出s出t出o出本出i出c出a出l出K出n出o出w出l出e出d出成出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出輸入出i出s出t出o出本出i出c出a出l出K出n出o出w出l出e出d出成出e出B出a出s出e出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出 出/出/出 出已出經出初出始出化出
+出 出 出 出 出}出
+出
+出 出 出 出 出輸入出i出s出t出o出本出i出c出a出l出K出n出o出w出l出e出d出成出e出B出a出s出e出 出=出 出{出
+出 出 出 出 出 出 出 出 出{出1出,出 出T出E出X出T出(出"出1出9出2出0出年出直出皖出戰出爭出是出北出洋出政出府出內出部出的出重出要出衝出突出，出標出誌出著出直出系出軍出閥出的出崛出起出。出"出)出}出,出
+出 出 出 出 出 出 出 出 出{出2出,出 出T出E出X出T出(出"出1出9出2出0出年出代出的出中出國出經出濟出政出策出決出定出了出後出來出的出工出業出化出道出路出。出"出)出}出,出
+出 出 出 出 出 出 出 出 出{出3出,出 出T出E出X出T出(出"出軍出閥出時出期出的出政出治出選出擇出直出接出影出響出了出中出國出的出統出一出進出程出。出"出)出}出
+出 出 出 出 出}出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出C出a出l出c出使出l出a出t出e出I出設置出p出a出c出t出S出c出o出本出e出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出D出e出t出a出i出l出>出&出 出I出設置出p出a出c出t出s出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出T出o出t出a出l出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出D出e出t出a出i出l出&出 出I出設置出p出a出c出t出 出:出 出I出設置出p出a出c出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出基本出e出i出成出h出t出 出=出 出1出.出0出f出;出
+出
+出 出 出 出 出 出 出 出 出/出/出 出根出據出影出響出類出型出調出整出權出重出
+出 出 出 出 出 出 出 出 出s出w出i出t出c出h出 出(出I出設置出p出a出c出t出.出I出設置出p出a出c出t出T出y出p出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出T出y出p出e出:出:出P出e出本出設置出a出n出e出n出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出2出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出T出y出p出e出:出:出L出o出n出成出T出e出本出設置出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出1出.出5出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出T出y出p出e出:出:出M出e出d出i出使出設置出T出e出本出設置出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出1出.出2出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出T出y出p出e出:出:出S出h出o出本出t出T出e出本出設置出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出T出y出p出e出:出:出I出設置出設置出e出d出i出a出t出e出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出0出.出8出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出/出/出 出根出據出影出響出範出圍出調出整出權出重出
+出 出 出 出 出 出 出 出 出s出w出i出t出c出h出 出(出I出設置出p出a出c出t出.出I出設置出p出a出c出t出S出c出o出p出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出S出c出o出p出e出:出:出輸入出i出s出t出o出本出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出2出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出S出c出o出p出e出:出:出I出n出t出e出本出n出a出t出i出o出n出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出1出.出8出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出S出c出o出p出e出:出:出的出a出t出i出o出n出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出1出.出5出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出S出c出o出p出e出:出:出R出e出成出i出o出n出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出1出.出2出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出S出c出o出p出e出:出:出P出e出本出s出o出n出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出基本出e出i出成出h出t出 出*出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出/出/出 出根出據出影出響出程出度出調出整出權出重出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出M出a出成出n出i出t出使出d出e出基本出e出i出成出h出t出 出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出s出w出i出t出c出h出 出(出I出設置出p出a出c出t出.出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出C出a出t出a出s出t出本出o出p出h出i出c出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出M出a出成出n出i出t出使出d出e出基本出e出i出成出h出t出 出=出 出3出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出a出大出o出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出M出a出成出n出i出t出使出d出e出基本出e出i出成出h出t出 出=出 出2出.出5出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出S出i出成出n出i出f出i出c出a出n出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出M出a出成出n出i出t出使出d出e出基本出e出i出成出h出t出 出=出 出2出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出o出d出e出本出a出t出e出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出M出a出成出n出i出t出使出d出e出基本出e出i出成出h出t出 出=出 出1出.出5出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出i出n出o出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出M出a出成出n出i出t出使出d出e出基本出e出i出成出h出t出 出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出i出n出i出設置出a出l出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出M出a出成出n出i出t出使出d出e出基本出e出i出成出h出t出 出=出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出T出o出t出a出l出S出c出o出本出e出 出+出=出 出軍出M出a出t出h出:出:出A出b出s出(出I出設置出p出a出c出t出.出I出設置出p出a出c出t出V出a出l出使出e出)出 出*出 出基本出e出i出成出h出t出 出*出 出M出a出成出n出i出t出使出d出e出基本出e出i出成出h出t出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出o出t出a出l出S出c出o出本出e出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出U出p出d出a出t出e出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出基本出e出i出成出h出t出s出(出c出o出n出s出t出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出R出e出p出o出本出t出&出 出R出e出p出o出本出t出)出
+出{出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出&出 出A出f出f出e出c出t出e出d出P出a出t出h出 出:出 出R出e出p出o出本出t出.出A出f出f出e出c出t出e出d出P出a出t出h出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出更出新出對出應出歷出史出路出徑出的出權出重出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出軍出M出i出n出成出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出&出 出P出a出t出h出 出:出 出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出P出a出t出h出.出P出a出t出h出I出D出 出=出=出 出A出f出f出e出c出t出e出d出P出a出t出h出.出P出a出t出h出I出D出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出O出l出d出基本出e出i出成出h出t出 出=出 出P出a出t出h出.出P出a出t出h出基本出e出i出成出h出t出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出P出a出t出h出.出P出a出t出h出基本出e出i出成出h出t出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出A出f出f出e出c出t出e出d出P出a出t出h出.出P出a出t出h出基本出e出i出成出h出t出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出軍出M出a出t出h出:出:出A出b出s出(出O出l出d出基本出e出i出成出h出t出 出-出 出P出a出t出h出.出P出a出t出h出基本出e出i出成出h出t出)出 出>出 出0出.出0出1出f出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出O出n出輸入出i出s出t出o出本出i出c出a出l出P出a出t出h出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出P出a出t出h出.出P出a出t出h出的出a出設置出e出,出 出P出a出t出h出.出P出a出t出h出基本出e出i出成出h出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出T出A出本出本出a出y出<出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出D出e出t出a出i出l出>出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出G出e出n出e出本出a出t出e出I出設置出p出a出c出t出D出e出t出a出i出l出s出(出i出n出t出3出2出 出D出e出c出i出s出i出o出n出I出D出,出 出i出n出t出3出2出 出C出h出o出s出e出n出O出p出t出i出o出n出I出D出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出D出e出t出a出i出l出>出 出D出e出t出a出i出l出s出;出
+出
+出 出 出 出 出/出/出 出生出成出詳出細出影出響出信出息出
+出 出 出 出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出D出e出t出a出i出l出 出D出e出t出a出i出l出1出;出
+出 出 出 出 出D出e出t出a出i出l出1出.出I出設置出p出a出c出t出T出y出p出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出T出y出p出e出:出:出I出設置出設置出e出d出i出a出t出e出;出
+出 出 出 出 出D出e出t出a出i出l出1出.出I出設置出p出a出c出t出S出c出o出p出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出S出c出o出p出e出:出:出P出e出本出s出o出n出a出l出;出
+出 出 出 出 出D出e出t出a出i出l出1出.出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出S出i出成出n出i出f出i出c出a出n出t出;出
+出 出 出 出 出D出e出t出a出i出l出1出.出I出設置出p出a出c出t出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出個出人出聲出望出和出地出位出立出即出受出到出影出響出"出)出;出
+出 出 出 出 出D出e出t出a出i出l出1出.出I出設置出p出a出c出t出V出a出l出使出e出 出=出 出1出5出.出0出f出;出
+出 出 出 出 出D出e出t出a出i出l出1出.出D出使出本出a出t出i出o出n出Y出e出a出本出s出 出=出 出1出;出
+出 出 出 出 出D出e出t出a出i出l出1出.出S出t出a出本出t出Y出e出a出本出 出=出 出0出;出
+出 出 出 出 出D出e出t出a出i出l出1出.出A出f出f出e出c出t出e出d出A出t出t出本出i出b出使出t出e出s出 出=出 出{出T出E出X出T出(出"出聲出望出"出)出,出 出T出E出X出T出(出"出地出位出"出)出}出;出
+出 出 出 出 出D出e出t出a出i出l出1出.出輸入出i出s出t出o出本出i出c出a出l出K出n出o出w出l出e出d出成出e出 出=出 出輸入出i出s出t出o出本出i出c出a出l出K出n出o出w出l出e出d出成出e出B出a出s出e出.出軍出i出n出d出R出e出f出(出D出e出c出i出s出i出o出n出I出D出)出;出
+出 出 出 出 出D出e出t出a出i出l出s出.出A出d出d出(出D出e出t出a出i出l出1出)出;出
+出
+出 出 出 出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出D出e出t出a出i出l出 出D出e出t出a出i出l出2出;出
+出 出 出 出 出D出e出t出a出i出l出2出.出I出設置出p出a出c出t出T出y出p出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出T出y出p出e出:出:出S出h出o出本出t出T出e出本出設置出;出
+出 出 出 出 出D出e出t出a出i出l出2出.出I出設置出p出a出c出t出S出c出o出p出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出S出c出o出p出e出:出:出R出e出成出i出o出n出a出l出;出
+出 出 出 出 出D出e出t出a出i出l出2出.出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出 出=出 出E出M出i出n出成出I出設置出p出a出c出t出M出a出成出n出i出t出使出d出e出:出:出M出o出d出e出本出a出t出e出;出
+出 出 出 出 出D出e出t出a出i出l出2出.出I出設置出p出a出c出t出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出地出區出政出治出格出局出發出生出變出化出"出)出;出
+出 出 出 出 出D出e出t出a出i出l出2出.出I出設置出p出a出c出t出V出a出l出使出e出 出=出 出2出0出.出0出f出;出
+出 出 出 出 出D出e出t出a出i出l出2出.出D出使出本出a出t出i出o出n出Y出e出a出本出s出 出=出 出3出;出
+出 出 出 出 出D出e出t出a出i出l出2出.出S出t出a出本出t出Y出e出a出本出 出=出 出1出;出
+出 出 出 出 出D出e出t出a出i出l出2出.出A出f出f出e出c出t出e出d出A出t出t出本出i出b出使出t出e出s出 出=出 出{出T出E出X出T出(出"出控出制出區出"出)出,出 出T出E出X出T出(出"出影出響出力出"出)出}出;出
+出 出 出 出 出D出e出t出a出i出l出s出.出A出d出d出(出D出e出t出a出i出l出2出)出;出
+出
+出 出 出 出 出本出e出t出使出本出n出 出D出e出t出a出i出l出s出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出C出a出l出c出使出l出a出t出o出本出:出:出V出a出l出i出d出a出t出e出I出設置出p出a出c出t出D出a出t出a出(出c出o出n出s出t出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出I出設置出p出a出c出t出R出e出p出o出本出t出&出 出R出e出p出o出本出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出R出e出p出o出本出t出.出D出e出c出i出s出i出o出n出I出D出 出<出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出決出策出I出D出必出須出大出於出0出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出R出e出p出o出本出t出.出C出h出o出s出e出n出O出p出t出i出o出n出I出D出 出<出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出選出項出I出D出必出須出大出於出0出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出R出e出p出o出本出t出.出I出設置出p出a出c出t出D出e出t出a出i出l出s出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出決出策出影出響出沒出有出詳出細出信出息出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出

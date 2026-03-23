@@ -1,252 +1,253 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
-#include "MingBuildingManager.h"
-#include "MingBuildingBlueprintLibrary.generated.h"
-
-/**
- * 建�X��X�數�? * ?��X��X�調?��?建�?系統?�能
- */
-UCLASS()
-class MINGBUILDING_API UMingBuildingBlueprintLibrary : public UBlueprintFunctionLibrary
-{
-    GENERATED_BODY()
-
-public:
-    /**
-     * ?��?建�?管�X     */
-    UFUNCTION(BlueprintPure, Category = "Building")
-    static UMingBuildingManager* GetBuildingManager();
-
-    /**
-     * ?��X�建築系�?     */
-    UFUNCTION(BlueprintCallable, Category = "Building")
-    static void InitializeBuildingSystem();
-
-    /**
-     * ?�置建�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Construction")
-    static FString PlaceBuilding(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
-
-    /**
-     * ?��?建�?     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Construction")
-    static bool StartConstruction(const FString& BuildingID);
-
-    /**
-     * ?��?建�?     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Construction")
-    static bool CancelConstruction(const FString& BuildingID);
-
-    /**
-     * 添�X�建?��X     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Construction")
-    static FString AddToConstructionQueue(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
-
-    /**
-     * 從建?��X�移X     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Construction")
-    static bool RemoveFromConstructionQueue(const FString& QueueID);
-
-    /**
-     * ?��?建�?
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|Management")
-    static AMingBuildingActor* GetBuilding(const FString& BuildingID);
-
-    /**
-     * ?��X�?�建�?     */
-    UFUNCTION(BlueprintPure, Category = "Building|Management")
-    static TArray<AMingBuildingActor*> GetAllBuildings();
-
-    /**
-     * ?��X��?類�X�建�?     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Management")
-    static TArray<AMingBuildingActor*> GetBuildingsByType(EMingBuildingType BuildingType);
-
-    /**
-     * ?��?建造�X     */
-    UFUNCTION(BlueprintPure, Category = "Building|Management")
-    static TArray<FBuildingQueueItem> GetConstructionQueue();
-
-    /**
-     * ?��?建�?統�?
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|Management")
-    static FBuildingStatistics GetBuildingStatistics();
-
-    /**
-     * 檢查?�置位置?�否?��?
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|Placement")
-    static bool IsValidPlacementLocation(EMingBuildingType BuildingType, const FVector& Location);
-
-    /**
-     * ?��?建�?網格大�?
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|Placement")
-    static FVector GetBuildingGridSize(EMingBuildingType BuildingType);
-
-    /**
-     * 顯示建�X�置?�覽
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Placement")
-    static void ShowPlacementPreview(EMingBuildingType BuildingType, const FVector& Location, const FRotator& Rotation);
-
-    /**
-     * ?��?建�X�置?�覽
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Placement")
-    static void HidePlacementPreview();
-
-    /**
-     * ?��?工人?�建�?     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Workers")
-    static bool AssignWorker(const FString& BuildingID);
-
-    /**
-     * 從建築移?�工�?     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Workers")
-    static bool RemoveWorker(const FString& BuildingID);
-
-    /**
-     * ?��X�用工人?��?
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|Workers")
-    static int32 GetAvailableWorkers();
-
-    /**
-     * ?��?建�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Maintenance")
-    static bool UpgradeBuilding(const FString& BuildingID);
-
-    /**
-     * ?��?建�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Maintenance")
-    static bool DestroyBuilding(const FString& BuildingID);
-
-    /**
-     * 修復建�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Maintenance")
-    static bool RepairBuilding(const FString& BuildingID, int32 RepairAmount);
-
-    /**
-     * ?��?建�?影響範�X��?建�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Query")
-    static TArray<AMingBuildingActor*> GetBuildingsInRadius(const FVector& Center, float Radius);
-
-    /**
-     * ?��?建�?供�X     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Query")
-    static TArray<AMingBuildingActor*> GetSupplyChain(const FString& BuildingID);
-
-    /**
-     * ?��?建�X�本
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|Costs")
-    static FMingBuildingCost GetBuildingCost(EMingBuildingType BuildingType);
-
-    /**
-     * 檢查?�否?�以建�?     */
-    UFUNCTION(BlueprintPure, Category = "Building|Costs")
-    static bool CanAffordBuilding(EMingBuildingType BuildingType);
-
-    /**
-     * ?��?建�X�述
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|Info")
-    static FString GetBuildingDescription(EMingBuildingType BuildingType);
-
-    /**
-     * ?��?建�?類�X�稱
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|Info")
-    static FString GetBuildingTypeName(EMingBuildingType BuildingType);
-
-    /**
-     * ?��?建�X�?��?�?     */
-    UFUNCTION(BlueprintPure, Category = "Building|Info")
-    static FString GetBuildingStateName(EMingBuildingState BuildingState);
-
-    /**
-     * ?��?建造建�?     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Batch")
-    static TArray<FString> BatchConstructBuildings(const TArray<EMingBuildingType>& BuildingTypes, const TArray<FVector>& Locations, const TArray<FRotator>& Rotations);
-
-    /**
-     * ?��X��?建�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Batch")
-    static TArray<bool> BatchUpgradeBuildings(const TArray<FString>& BuildingIDs);
-
-    /**
-     * ?��?修復建�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Batch")
-    static TArray<bool> BatchRepairBuildings(const TArray<FString>& BuildingIDs, int32 RepairAmount);
-
-    /**
-     * ?��?系統?�X     */
-    UFUNCTION(BlueprintPure, Category = "Building|System")
-    static bool IsBuildingSystemInitialized();
-
-    /**
-     * ?��?建�?系統?�本
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|System")
-    static FString GetBuildingSystemVersion();
-
-    /**
-     * ?�置建�?系統
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|System")
-    static void ResetBuildingSystem();
-
-    /**
-     * ?��?建�X�置建議
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|AI")
-    static FVector GetOptimalPlacementLocation(EMingBuildingType BuildingType, const FVector& ReferencePoint, float SearchRadius);
-
-    /**
-     * ?��?建造建�?     */
-    UFUNCTION(BlueprintCallable, Category = "Building|AI")
-    static FString AutoConstructBuilding(EMingBuildingType BuildingType, const FVector& ReferencePoint);
-
-    /**
-     * ?��?建�X��?
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|Analysis")
-    static float GetBuildingEfficiency(const FString& BuildingID);
-
-    /**
-     * ?��X�地總�X��?
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|Analysis")
-    static float GetBaseEfficiency();
-
-    /**
-     * ?��?建�?建議
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Analysis")
-    static TArray<EMingBuildingType> GetBuildingRecommendations();
-
-    /**
-     * 設置建�?系統?�數
-     */
-    UFUNCTION(BlueprintCallable, Category = "Building|Configuration")
-    static void SetBuildingSystemParameters(int32 TotalWorkers, int32 MaxConcurrentConstruction);
-
-    /**
-     * ?��?建�?系統?�數
-     */
-    UFUNCTION(BlueprintPure, Category = "Building|Configuration")
-    static void GetBuildingSystemParameters(int32& TotalWorkers, int32& MaxConcurrentConstruction);
-};
-
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出B出l出使出e出p出本出i出n出t出軍出使出n出c出t出i出o出n出L出i出b出本出a出本出y出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出B出使出i出l出d出i出n出成出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出B出使出i出l出d出i出n出成出B出l出使出e出p出本出i出n出t出L出i出b出本出a出本出y出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出建出�出X出�出�出X出�出數出�出基本出 出*出 出基本出�出�出X出�出�出X出�出調出基本出�出�出基本出建出�出基本出系出統出基本出�出能出
+出 出*出/出
+出U出C出L出A出S出S出(出)出
+出c出l出a出s出s出 出M出I出的出G出B出U出I出L出D出I出的出G出下出A出P出I出 出U出M出i出n出成出B出使出i出l出d出i出n出成出B出l出使出e出p出本出i出n出t出L出i出b出本出a出本出y出 出:出 出p出使出b出l出i出c出 出U出B出l出使出e出p出本出i出n出t出軍出使出n出c出t出i出o出n出L出i出b出本出a出本出y出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出管出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出U出M出i出n出成出B出使出i出l出d出i出n出成出M出a出n出a出成出e出本出*出 出G出e出t出B出使出i出l出d出i出n出成出M出a出n出a出成出e出本出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出建出築出系出�出基本出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出B出使出i出l出d出i出n出成出S出y出s出t出e出設置出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出置出建出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出C出o出n出s出t出本出使出c出t出i出o出n出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出軍出S出t出本出i出n出成出 出P出l出a出c出e出B出使出i出l出d出i出n出成出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出L出o出c出a出t出i出o出n出,出 出c出o出n出s出t出 出軍出R出o出t出a出t出o出本出&出 出R出o出t出a出t出i出o出n出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出C出o出n出s出t出本出使出c出t出i出o出n出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出S出t出a出本出t出C出o出n出s出t出本出使出c出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出使出i出l出d出i出n出成出I出D出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出C出o出n出s出t出本出使出c出t出i出o出n出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出C出a出n出c出e出l出C出o出n出s出t出本出使出c出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出使出i出l出d出i出n出成出I出D出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出添出�出X出�出建出基本出�出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出C出o出n出s出t出本出使出c出t出i出o出n出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出軍出S出t出本出i出n出成出 出A出d出d出T出o出C出o出n出s出t出本出使出c出t出i出o出n出Q出使出e出使出e出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出L出o出c出a出t出i出o出n出,出 出c出o出n出s出t出 出軍出R出o出t出a出t出o出本出&出 出R出o出t出a出t出i出o出n出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出從出建出基本出�出�出X出�出移出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出C出o出n出s出t出本出使出c出t出i出o出n出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出R出e出設置出o出正出e出軍出本出o出設置出C出o出n出s出t出本出使出c出t出i出o出n出Q出使出e出使出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出Q出使出e出使出e出I出D出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出M出a出n出a出成出e出設置出e出n出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出A出M出i出n出成出B出使出i出l出d出i出n出成出A出c出t出o出本出*出 出G出e出t出B出使出i出l出d出i出n出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出使出i出l出d出i出n出成出I出D出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出基本出�出建出�出基本出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出M出a出n出a出成出e出設置出e出n出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出T出A出本出本出a出y出<出A出M出i出n出成出B出使出i出l出d出i出n出成出A出c出t出o出本出*出>出 出G出e出t出A出l出l出B出使出i出l出d出i出n出成出s出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出�出基本出類出�出X出�出建出�出基本出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出M出a出n出a出成出e出設置出e出n出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出T出A出本出本出a出y出<出A出M出i出n出成出B出使出i出l出d出i出n出成出A出c出t出o出本出*出>出 出G出e出t出B出使出i出l出d出i出n出成出s出B出y出T出y出p出e出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出造出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出M出a出n出a出成出e出設置出e出n出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出T出A出本出本出a出y出<出軍出B出使出i出l出d出i出n出成出Q出使出e出使出e出I出t出e出設置出>出 出G出e出t出C出o出n出s出t出本出使出c出t出i出o出n出Q出使出e出使出e出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出統出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出M出a出n出a出成出e出設置出e出n出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出軍出B出使出i出l出d出i出n出成出S出t出a出t出i出s出t出i出c出s出 出G出e出t出B出使出i出l出d出i出n出成出S出t出a出t出i出s出t出i出c出s出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出檢出查出基本出�出置出位出置出基本出�出否出基本出�出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出P出l出a出c出e出設置出e出n出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出I出s出V出a出l出i出d出P出l出a出c出e出設置出e出n出t出L出o出c出a出t出i出o出n出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出L出o出c出a出t出i出o出n出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出網出格出大出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出P出l出a出c出e出設置出e出n出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出軍出V出e出c出t出o出本出 出G出e出t出B出使出i出l出d出i出n出成出G出本出i出d出S出i出z出e出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出顯出示出建出�出X出�出置出基本出�出覽出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出P出l出a出c出e出設置出e出n出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出S出h出o出w出P出l出a出c出e出設置出e出n出t出P出本出e出正出i出e出w出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出L出o出c出a出t出i出o出n出,出 出c出o出n出s出t出 出軍出R出o出t出a出t出o出本出&出 出R出o出t出a出t出i出o出n出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出X出�出置出基本出�出覽出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出P出l出a出c出e出設置出e出n出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出輸入出i出d出e出P出l出a出c出e出設置出e出n出t出P出本出e出正出i出e出w出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出工出人出基本出�出建出�出基本出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出基本出o出本出k出e出本出s出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出A出s出s出i出成出n出基本出o出本出k出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出使出i出l出d出i出n出成出I出D出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出從出建出築出移出基本出�出工出�出基本出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出基本出o出本出k出e出本出s出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出R出e出設置出o出正出e出基本出o出本出k出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出使出i出l出d出i出n出成出I出D出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出用出工出人出基本出�出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出基本出o出本出k出e出本出s出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出i出n出t出3出2出 出G出e出t出A出正出a出i出l出a出b出l出e出基本出o出本出k出e出本出s出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出M出a出i出n出t出e出n出a出n出c出e出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出U出p出成出本出a出d出e出B出使出i出l出d出i出n出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出使出i出l出d出i出n出成出I出D出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出M出a出i出n出t出e出n出a出n出c出e出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出D出e出s出t出本出o出y出B出使出i出l出d出i出n出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出使出i出l出d出i出n出成出I出D出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出修出復出建出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出M出a出i出n出t出e出n出a出n出c出e出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出R出e出p出a出i出本出B出使出i出l出d出i出n出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出使出i出l出d出i出n出成出I出D出,出 出i出n出t出3出2出 出R出e出p出a出i出本出A出設置出o出使出n出t出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出影出響出範出�出X出�出�出基本出建出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出Q出使出e出本出y出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出T出A出本出本出a出y出<出A出M出i出n出成出B出使出i出l出d出i出n出成出A出c出t出o出本出*出>出 出G出e出t出B出使出i出l出d出i出n出成出s出I出n出R出a出d出i出使出s出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出C出e出n出t出e出本出,出 出f出l出o出a出t出 出R出a出d出i出使出s出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出供出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出Q出使出e出本出y出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出T出A出本出本出a出y出<出A出M出i出n出成出B出使出i出l出d出i出n出成出A出c出t出o出本出*出>出 出G出e出t出S出使出p出p出l出y出C出h出a出i出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出使出i出l出d出i出n出成出I出D出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出X出�出本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出C出o出s出t出s出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出軍出M出i出n出成出B出使出i出l出d出i出n出成出C出o出s出t出 出G出e出t出B出使出i出l出d出i出n出成出C出o出s出t出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出檢出查出基本出�出否出基本出�出以出建出�出基本出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出C出o出s出t出s出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出C出a出n出A出f出f出o出本出d出B出使出i出l出d出i出n出成出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出X出�出述出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出I出n出f出o出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出軍出S出t出本出i出n出成出 出G出e出t出B出使出i出l出d出i出n出成出D出e出s出c出本出i出p出t出i出o出n出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出類出�出X出�出稱出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出I出n出f出o出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出軍出S出t出本出i出n出成出 出G出e出t出B出使出i出l出d出i出n出成出T出y出p出e出的出a出設置出e出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出X出�出基本出�出�出基本出�出基本出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出I出n出f出o出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出軍出S出t出本出i出n出成出 出G出e出t出B出使出i出l出d出i出n出成出S出t出a出t出e出的出a出設置出e出(出E出M出i出n出成出B出使出i出l出d出i出n出成出S出t出a出t出e出 出B出使出i出l出d出i出n出成出S出t出a出t出e出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出造出建出�出基本出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出B出a出t出c出h出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出B出a出t出c出h出C出o出n出s出t出本出使出c出t出B出使出i出l出d出i出n出成出s出(出c出o出n出s出t出 出T出A出本出本出a出y出<出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出>出&出 出B出使出i出l出d出i出n出成出T出y出p出e出s出,出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出&出 出L出o出c出a出t出i出o出n出s出,出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出R出o出t出a出t出o出本出>出&出 出R出o出t出a出t出i出o出n出s出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出�出基本出建出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出B出a出t出c出h出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出T出A出本出本出a出y出<出b出o出o出l出>出 出B出a出t出c出h出U出p出成出本出a出d出e出B出使出i出l出d出i出n出成出s出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出B出使出i出l出d出i出n出成出I出D出s出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出修出復出建出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出B出a出t出c出h出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出T出A出本出本出a出y出<出b出o出o出l出>出 出B出a出t出c出h出R出e出p出a出i出本出B出使出i出l出d出i出n出成出s出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出B出使出i出l出d出i出n出成出I出D出s出,出 出i出n出t出3出2出 出R出e出p出a出i出本出A出設置出o出使出n出t出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出系出統出基本出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出S出y出s出t出e出設置出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出I出s出B出使出i出l出d出i出n出成出S出y出s出t出e出設置出I出n出i出t出i出a出l出i出z出e出d出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出系出統出基本出�出本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出S出y出s出t出e出設置出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出軍出S出t出本出i出n出成出 出G出e出t出B出使出i出l出d出i出n出成出S出y出s出t出e出設置出V出e出本出s出i出o出n出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出置出建出�出基本出系出統出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出S出y出s出t出e出設置出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出R出e出s出e出t出B出使出i出l出d出i出n出成出S出y出s出t出e出設置出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出X出�出置出建出議出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出A出I出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出軍出V出e出c出t出o出本出 出G出e出t出O出p出t出i出設置出a出l出P出l出a出c出e出設置出e出n出t出L出o出c出a出t出i出o出n出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出R出e出f出e出本出e出n出c出e出P出o出i出n出t出,出 出f出l出o出a出t出 出S出e出a出本出c出h出R出a出d出i出使出s出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出造出建出�出基本出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出A出I出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出軍出S出t出本出i出n出成出 出A出使出t出o出C出o出n出s出t出本出使出c出t出B出使出i出l出d出i出n出成出(出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出 出B出使出i出l出d出i出n出成出T出y出p出e出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出R出e出f出e出本出e出n出c出e出P出o出i出n出t出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出X出�出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出A出n出a出l出y出s出i出s出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出f出l出o出a出t出 出G出e出t出B出使出i出l出d出i出n出成出E出f出f出i出c出i出e出n出c出y出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出使出i出l出d出i出n出成出I出D出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出地出總出�出X出�出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出A出n出a出l出y出s出i出s出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出f出l出o出a出t出 出G出e出t出B出a出s出e出E出f出f出i出c出i出e出n出c出y出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出建出議出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出A出n出a出l出y出s出i出s出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出T出A出本出本出a出y出<出E出M出i出n出成出B出使出i出l出d出i出n出成出T出y出p出e出>出 出G出e出t出B出使出i出l出d出i出n出成出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出設出置出建出�出基本出系出統出基本出�出數出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出C出o出n出f出i出成出使出本出a出t出i出o出n出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出S出e出t出B出使出i出l出d出i出n出成出S出y出s出t出e出設置出P出a出本出a出設置出e出t出e出本出s出(出i出n出t出3出2出 出T出o出t出a出l出基本出o出本出k出e出本出s出,出 出i出n出t出3出2出 出M出a出x出C出o出n出c出使出本出本出e出n出t出C出o出n出s出t出本出使出c出t出i出o出n出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出建出�出基本出系出統出基本出�出數出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出B出使出i出l出d出i出n出成出出出C出o出n出f出i出成出使出本出a出t出i出o出n出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出G出e出t出B出使出i出l出d出i出n出成出S出y出s出t出e出設置出P出a出本出a出設置出e出t出e出本出s出(出i出n出t出3出2出&出 出T出o出t出a出l出基本出o出本出k出e出本出s出,出 出i出n出t出3出2出&出 出M出a出x出C出o出n出c出使出本出本出e出n出t出C出o出n出s出t出本出使出c出t出i出o出n出)出;出
+出}出;出
+出
+出

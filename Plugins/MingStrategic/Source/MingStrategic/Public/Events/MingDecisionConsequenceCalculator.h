@@ -1,647 +1,648 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "MingDecisionConsequenceCalculator.generated.h"
-
-/**
- * 決�?後�?類�?
- */
-UENUM(BlueprintType)
-enum class EDecisionConsequenceType: uint8 {
-    Immediate           UMETA(DisplayName = "Immediate"),
-    Delayed             UMETA(DisplayName = "Delayed"),
-    Cumulative          UMETA(DisplayName = "Cumulative"),
-    Conditional         UMETA(DisplayName = "Conditional"),
-    Random              UMETA(DisplayName = "Random"),
-    Hidden              UMETA(DisplayName = "Hidden"),
-    Permanent           UMETA(DisplayName = "Permanent"),
-    Temporary           UMETA(DisplayName = "Temporary")
-};
-
-/**
- * 後�?影響範�?
- */
-UENUM(BlueprintType)
-enum class EConsequenceImpactScope: uint8 {
-    Personal            UMETA(DisplayName = "Personal"),
-    Local               UMETA(DisplayName = "Local"),
-    Regional            UMETA(DisplayName = "Regional"),
-    National            UMETA(DisplayName = "National"),
-    International       UMETA(DisplayName = "International"),
-    Global              UMETA(DisplayName = "Global")
-};
-
-/**
- * 後�X��?程度
- */
-UENUM(BlueprintType)
-enum class EConsequenceSeverity: uint8 {
-    Trivial             UMETA(DisplayName = "Trivial"),
-    Minor               UMETA(DisplayName = "Minor"),
-    Moderate            UMETA(DisplayName = "Moderate"),
-    Major               UMETA(DisplayName = "Major"),
-    Critical            UMETA(DisplayName = "Critical"),
-    Catastrophic        UMETA(DisplayName = "Catastrophic")
-};
-
-/**
- * 後�X��X��?
- */
-UENUM(BlueprintType)
-enum class EConsequenceDuration: uint8 {
-    Instant             UMETA(DisplayName = "Instant"),
-    Short               UMETA(DisplayName = "Short"),
-    Medium              UMETA(DisplayName = "Medium"),
-    Long                UMETA(DisplayName = "Long"),
-    Permanent           UMETA(DisplayName = "Permanent"),
-    Indefinite          UMETA(DisplayName = "Indefinite")
-};
-
-/**
- * 後�?影響類�?
- */
-UENUM(BlueprintType)
-enum class EConsequenceImpactType: uint8 {
-    Positive            UMETA(DisplayName = "Positive"),
-    Negative            UMETA(DisplayName = "Negative"),
-    Mixed               UMETA(DisplayName = "Mixed"),
-    Neutral             UMETA(DisplayName = "Neutral"),
-    Unknown             UMETA(DisplayName = "Unknown")
-};
-
-/**
- * 後�X�數
- */
-USTRUCT(BlueprintType)
-struct FConsequenceParameter
-{
-    GENERATED_BODY()
-
-    // ?�數?�稱
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
-    FString ParameterName;
-
-    // ?�數X
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
-    FString ParameterValue;
-
-    // ?�數類�?
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
-    FString ParameterType; // "int", "float", "bool", "string", "array"
-
-    // ?�否必�?
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
-    bool bIsRequired;
-
-    // 默�X
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
-    FString DefaultValue;
-
-    // ?�述
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consequence Parameter")
-    FString Description;
-
-    FConsequenceParameter()
-        : ParameterName(TEXT(""))
-        , ParameterValue(TEXT(""))
-        , ParameterType(TEXT("string"))
-        , bIsRequired(false)
-        , DefaultValue(TEXT(""))
-        , Description(TEXT(""))
-    {}
-};
-
-/**
- * 決�?後�?定義
- */
-USTRUCT(BlueprintType)
-struct FDecisionConsequence
-{
-    GENERATED_BODY()
-
-    // 後�?ID
-    UPROPERTY(BlueprintReadOnly)
-    FString ConsequenceID;
-
-    // 後�X�稱
-    UPROPERTY(BlueprintReadOnly)
-    FString ConsequenceName;
-
-    // 後�X�述
-    UPROPERTY(BlueprintReadOnly)
-    FString ConsequenceDescription;
-
-    // 後�?類�?
-    UPROPERTY(BlueprintReadOnly)
-    EDecisionConsequenceType ConsequenceType;
-
-    // 影響範�?
-    UPROPERTY(BlueprintReadOnly)
-    EConsequenceImpactScope ImpactScope;
-
-    // ?��?程度
-    UPROPERTY(BlueprintReadOnly)
-    EConsequenceSeverity Severity;
-
-    // ?��X��?
-    UPROPERTY(BlueprintReadOnly)
-    EConsequenceDuration Duration;
-
-    // 影響類�?
-    UPROPERTY(BlueprintReadOnly)
-    EConsequenceImpactType ImpactType;
-
-    // 後�X�數
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FConsequenceParameter> Parameters;
-
-    // 觸發條件
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> TriggerConditions;
-
-    // 後�X��?
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> Effects;
-
-    // 後�?標籤
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> ConsequenceTags;
-
-    // ?��?決�?ID
-    UPROPERTY(BlueprintReadOnly)
-    FString RelatedDecisionID;
-
-    // ?��?人物ID
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> RelatedCharacterIDs;
-
-    // ?��?事件ID
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> RelatedEventIDs;
-
-    // ?��?概�? (0-1)
-    UPROPERTY(BlueprintReadOnly)
-    float Probability;
-
-    // 延�X��? (�?
-    UPROPERTY(BlueprintReadOnly)
-    float DelayTime;
-
-    // ?�卻?��? (�?
-    UPROPERTY(BlueprintReadOnly)
-    float CooldownTime;
-
-    // ?�否已觸X
-    UPROPERTY(BlueprintReadOnly)
-    bool bIsTriggered;
-
-    // 觸發?��?
-    UPROPERTY(BlueprintReadOnly)
-    float TriggerTime;
-
-    // ?�否?�逆�?
-    UPROPERTY(BlueprintReadOnly)
-    bool bIsReversible;
-
-    // ?�逆�?條件
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> ReversalConditions;
-
-    FDecisionConsequence()
-        : ConsequenceID(TEXT(""))
-        , ConsequenceName(TEXT(""))
-        , ConsequenceDescription(TEXT(""))
-        , ConsequenceType(EDecisionConsequenceType::Immediate)
-        , ImpactScope(EConsequenceImpactScope::Local)
-        , Severity(EConsequenceSeverity::Moderate)
-        , Duration(EConsequenceDuration::Medium)
-        , ImpactType(EConsequenceImpactType::Neutral)
-        , RelatedDecisionID(TEXT(""))
-        , Probability(1.0f)
-        , DelayTime(0.0f)
-        , CooldownTime(0.0f)
-        , bIsTriggered(false)
-        , TriggerTime(0.0f)
-        , bIsReversible(false)
-    {}
-};
-
-/**
- * 後�?計�?結�?
- */
-USTRUCT(BlueprintType)
-struct FConsequenceCalculationResult
-{
-    GENERATED_BODY()
-
-    // ?�否?��?計�?
-    UPROPERTY(BlueprintReadOnly)
-    bool bSuccess;
-
-    // 後�?ID
-    UPROPERTY(BlueprintReadOnly)
-    FString ConsequenceID;
-
-    // 計�X��?
-    UPROPERTY(BlueprintReadOnly)
-    float CalculationTime;
-
-    // 計�X��?後�?
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FDecisionConsequence> CalculatedConsequences;
-
-    // 影響?��X��X
-    UPROPERTY(BlueprintReadOnly)
-    TMap<FString, FString> AffectedGameState;
-
-    // 影響?�人X
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> AffectedCharacters;
-
-    // 影響?��?�?
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> AffectedEvents;
-
-    // 影響?��?�?
-    UPROPERTY(BlueprintReadOnly)
-    TMap<FString, int32> AffectedResources;
-
-    // 影響?�建�?
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> AffectedBuildings;
-
-    // 影響?�單�?
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FString> AffectedUnits;
-
-    // 總�?影響?�數
-    UPROPERTY(BlueprintReadOnly)
-    float OverallImpactScore;
-
-    // �?��影響?�數
-    UPROPERTY(BlueprintReadOnly)
-    float PositiveImpactScore;
-
-    // 負面影響?�數
-    UPROPERTY(BlueprintReadOnly)
-    float NegativeImpactScore;
-
-    // 計�?詳�?
-    UPROPERTY(BlueprintReadOnly)
-    FString CalculationDetails;
-
-    // ?�誤信息
-    UPROPERTY(BlueprintReadOnly)
-    FString ErrorMessage;
-
-    FConsequenceCalculationResult()
-        : bSuccess(false)
-        , ConsequenceID(TEXT(""))
-        , CalculationTime(0.0f)
-        , OverallImpactScore(0.0f)
-        , PositiveImpactScore(0.0f)
-        , NegativeImpactScore(0.0f)
-        , CalculationDetails(TEXT(""))
-        , ErrorMessage(TEXT(""))
-    {}
-};
-
-/**
- * 決�?上�X */
-USTRUCT(BlueprintType)
-struct FDecisionContext
-{
-    GENERATED_BODY()
-
-    // 決�?ID
-    UPROPERTY(BlueprintReadOnly)
-    FString DecisionID;
-
-    // 決�X��?
-    UPROPERTY(BlueprintReadOnly)
-    float DecisionTime;
-
-    // 決�X��?
-    UPROPERTY(BlueprintReadOnly)
-    FString DecisionLocation;
-
-    // 決�X�ID
-    UPROPERTY(BlueprintReadOnly)
-    FString DecisionMakerID;
-
-    // 決�?類�?
-    UPROPERTY(BlueprintReadOnly)
-    FString DecisionType;
-
-    // 決�X��?
-    UPROPERTY(BlueprintReadOnly)
-    FString DecisionOption;
-
-    // ?��X�戲?�X
-    UPROPERTY(BlueprintReadOnly)
-    TMap<FString, FString> CurrentGameState;
-
-    // ?��?人物?�X
-    UPROPERTY(BlueprintReadOnly)
-    TMap<FString, FString> CharacterStates;
-
-    // ?��?事件?�X
-    UPROPERTY(BlueprintReadOnly)
-    TMap<FString, FString> EventStates;
-
-    // 資�X�X
-    UPROPERTY(BlueprintReadOnly)
-    TMap<FString, int32> ResourceStates;
-
-    // 建�X�X
-    UPROPERTY(BlueprintReadOnly)
-    TMap<FString, FString> BuildingStates;
-
-    // ?��X�X
-    UPROPERTY(BlueprintReadOnly)
-    TMap<FString, FString> UnitStates;
-
-    // 民�X��?
-    UPROPERTY(BlueprintReadOnly)
-    FString RepublicEra;
-
-    // ?��?年份
-    UPROPERTY(BlueprintReadOnly)
-    int32 CurrentYear;
-
-    // ?�家X
-    UPROPERTY(BlueprintReadOnly)
-    FString PlayerFaction;
-
-    // X��等�?
-    UPROPERTY(BlueprintReadOnly)
-    int32 DifficultyLevel;
-
-    FDecisionContext()
-        : DecisionID(TEXT(""))
-        , DecisionTime(0.0f)
-        , DecisionLocation(TEXT(""))
-        , DecisionMakerID(TEXT(""))
-        , DecisionType(TEXT(""))
-        , DecisionOption(TEXT(""))
-        , RepublicEra(TEXT(""))
-        , CurrentYear(1912)
-        , PlayerFaction(TEXT(""))
-        , DifficultyLevel(1)
-    {}
-};
-
-/**
- * 決�?後�?計�X * 計�?決�X��?種�X��?影響
- */
-UCLASS(BlueprintType)
-class MINGSTRATEGIC_API UMingDecisionConsequenceCalculator : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    UMingDecisionConsequenceCalculator();
-
-    /**
-     * ?��X��X��?算器
-     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    void Initialize();
-
-    /**
-     * ?��?後�?計�X     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    void Shutdown();
-
-    /**
-     * 註�?決�?後�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool RegisterDecisionConsequence(const FDecisionConsequence& Consequence);
-
-    /**
-     * ?��?註�?決�?後�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool UnregisterDecisionConsequence(const FString& ConsequenceID);
-
-    /**
-     * 計�?決�?後�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    FConsequenceCalculationResult CalculateDecisionConsequences(const FDecisionContext& Context);
-
-    /**
-     * ?��?決�?後�?
-     */
-    UFUNCTION(BlueprintPure, Category = "Decision Consequence")
-    FDecisionConsequence GetDecisionConsequence(const FString& ConsequenceID) const;
-
-    /**
-     * ?��X�?�決策�X     */
-    UFUNCTION(BlueprintPure, Category = "Decision Consequence")
-    TArray<FDecisionConsequence> GetAllDecisionConsequences() const;
-
-    /**
-     * ?��X��?類�X��X     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FDecisionConsequence> GetConsequencesByType(EDecisionConsequenceType ConsequenceType) const;
-
-    /**
-     * ?��X��?影響範�X��X     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FDecisionConsequence> GetConsequencesByScope(EConsequenceImpactScope ImpactScope) const;
-
-    /**
-     * ?��X��X��?程度?��X     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FDecisionConsequence> GetConsequencesBySeverity(EConsequenceSeverity Severity) const;
-
-    /**
-     * ?��X��?影響類�X��X     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FDecisionConsequence> GetConsequencesByImpactType(EConsequenceImpactType ImpactType) const;
-
-    /**
-     * ?��X��?決�X��X     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FDecisionConsequence> GetConsequencesForDecision(const FString& DecisionID) const;
-
-    /**
-     * ?��X��?人物?��X     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FDecisionConsequence> GetConsequencesForCharacter(const FString& CharacterID) const;
-
-    /**
-     * ?��X��?事件?��X     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FDecisionConsequence> GetConsequencesForEvent(const FString& EventID) const;
-
-    /**
-     * 觸發後�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool TriggerConsequence(const FString& ConsequenceID, const FDecisionContext& Context);
-
-    /**
-     * ?�用後�X��?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool ApplyConsequenceEffects(const FString& ConsequenceID, const FDecisionContext& Context);
-
-    /**
-     * ?��?後�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    bool ReverseConsequence(const FString& ConsequenceID, const FDecisionContext& Context);
-
-    /**
-     * ?��?後�?統�?
-     */
-    UFUNCTION(BlueprintPure, Category = "Decision Consequence")
-    TMap<FString, int32> GetConsequenceStatistics() const;
-
-    /**
-     * ?��?後�?影響?��?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TMap<FString, float> GetConsequenceImpactAnalysis(const FString& DecisionID) const;
-
-    /**
-     * ?�測決�?後�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FDecisionConsequence> PredictDecisionConsequences(const FDecisionContext& Context, int32 PredictionCount);
-
-    /**
-     * 模擬決�?後�?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Decision Consequence")
-    TArray<FConsequenceCalculationResult> SimulateDecisionConsequences(const FDecisionContext& Context, int32 SimulationCount);
-
-protected:
-    // 已註?��?決�?後�?
-    UPROPERTY()
-    TArray<FDecisionConsequence> RegisteredConsequences;
-
-    // 後�?ID?��X��X��?
-    UPROPERTY()
-    TMap<FString, FDecisionConsequence> ConsequenceMap;
-
-    // 後�?統�?
-    UPROPERTY()
-    TMap<FString, int32> ConsequenceStatistics;
-
-    // ?�否已�?始�?
-    bool bIsInitialized;
-
-    // ?��X��X�歷?�決策�X�庫
-    void InitializeHistoricalDecisionConsequences();
-
-    // ?�建?�治決�?後�?
-    void CreatePoliticalDecisionConsequences();
-
-    // ?�建軍�?決�?後�?
-    void CreateMilitaryDecisionConsequences();
-
-    // ?�建經�?決�?後�?
-    void CreateEconomicDecisionConsequences();
-
-    // ?�建社�?決�?後�?
-    void CreateSocialDecisionConsequences();
-
-    // ?�建?��?決�?後�?
-    void CreateCulturalDecisionConsequences();
-
-    // ?�建外交決�?後�?
-    void CreateDiplomaticDecisionConsequences();
-
-    // 計�X��?後�?
-    void CalculateImmediateConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
-
-    // 計�?延�?後�?
-    void CalculateDelayedConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
-
-    // 計�?累�?後�?
-    void CalculateCumulativeConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
-
-    // 計�?條件後�?
-    void CalculateConditionalConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
-
-    // 計�X��?後�?
-    void CalculateRandomConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
-
-    // 計�X��?後�?
-    void CalculateHiddenConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
-
-    // 計�?永�?後�?
-    void CalculatePermanentConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
-
-    // 計�X��?後�?
-    void CalculateTemporaryConsequences(const FDecisionContext& Context, FConsequenceCalculationResult& Result);
-
-    // 計�?後�?影響?�數
-    float CalculateConsequenceImpact(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
-
-    // 計�?總�?影響?�數
-    void CalculateOverallImpact(FConsequenceCalculationResult& Result) const;
-
-    // 檢查後�?條件
-    bool CheckConsequenceConditions(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
-
-    // ?�用後�X��X��X
-    void ApplyConsequenceToGameState(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, FString>& AffectedStates) const;
-
-    // ?�用後�X�人X
-    void ApplyConsequenceToCharacters(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedCharacters) const;
-
-    // ?�用後�X��?�?
-    void ApplyConsequenceToEvents(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedEvents) const;
-
-    // ?�用後�X��?�?
-    void ApplyConsequenceToResources(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TMap<FString, int32>& AffectedResources) const;
-
-    // ?�用後�X�建�?
-    void ApplyConsequenceToBuildings(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedBuildings) const;
-
-    // ?�用後�X�單�?
-    void ApplyConsequenceToUnits(const FDecisionConsequence& Consequence, const FDecisionContext& Context, TArray<FString>& AffectedUnits) const;
-
-    // ?�新後�?統�?
-    void UpdateConsequenceStatistics(const FString& ConsequenceID);
-
-    // ?��?後�X�述
-    FString GetConsequenceDescription(const FString& ConsequenceID) const;
-
-    // 驗�?後�X�置
-    bool ValidateConsequenceConfig(const FDecisionConsequence& Consequence) const;
-
-    // 記�?後�X��?
-    void LogConsequenceEvent(const FString& ConsequenceID, const FString& Message);
-
-    // ?��?後�X��?
-    FString GenerateConsequenceReport(const FString& ConsequenceID, const FConsequenceCalculationResult& Result) const;
-
-    // �X後�X�數
-    TArray<FString> ParseConsequenceParameters(const FString& ParameterString) const;
-
-    // 計�?後�?概�?
-    float CalculateConsequenceProbability(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
-
-    // 計�?後�?延�?
-    float CalculateConsequenceDelay(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
-
-    // 計�?後�X��X��?
-    float CalculateConsequenceDuration(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
-
-    // 檢查後�X�否?�逆�?
-    bool IsConsequenceReversible(const FDecisionConsequence& Consequence, const FDecisionContext& Context) const;
-
-    // ?��?後�X��?�?
-    int32 GetConsequencePriority(const FDecisionConsequence& Consequence) const;
-
-    // ?��?後�?
-    void SortConsequencesByPriority(TArray<FDecisionConsequence>& Consequences) const;
-};
-
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出o出本出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出決出�出基本出後出�出基本出類出�出基本出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出I出設置出設置出e出d出i出a出t出e出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出I出設置出設置出e出d出i出a出t出e出"出)出,出
+出 出 出 出 出D出e出l出a出y出e出d出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出D出e出l出a出y出e出d出"出)出,出
+出 出 出 出 出C出使出設置出使出l出a出t出i出正出e出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出C出使出設置出使出l出a出t出i出正出e出"出)出,出
+出 出 出 出 出C出o出n出d出i出t出i出o出n出a出l出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出C出o出n出d出i出t出i出o出n出a出l出"出)出,出
+出 出 出 出 出R出a出n出d出o出設置出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出R出a出n出d出o出設置出"出)出,出
+出 出 出 出 出輸入出i出d出d出e出n出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出輸入出i出d出d出e出n出"出)出,出
+出 出 出 出 出P出e出本出設置出a出n出e出n出t出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出P出e出本出設置出a出n出e出n出t出"出)出,出
+出 出 出 出 出T出e出設置出p出o出本出a出本出y出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出e出設置出p出o出本出a出本出y出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出後出�出基本出影出響出範出�出基本出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出C出o出n出s出e出q出使出e出n出c出e出I出設置出p出a出c出t出S出c出o出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出P出e出本出s出o出n出a出l出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出P出e出本出s出o出n出a出l出"出)出,出
+出 出 出 出 出L出o出c出a出l出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出L出o出c出a出l出"出)出,出
+出 出 出 出 出R出e出成出i出o出n出a出l出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出R出e出成出i出o出n出a出l出"出)出,出
+出 出 出 出 出的出a出t出i出o出n出a出l出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出的出a出t出i出o出n出a出l出"出)出,出
+出 出 出 出 出I出n出t出e出本出n出a出t出i出o出n出a出l出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出I出n出t出e出本出n出a出t出i出o出n出a出l出"出)出,出
+出 出 出 出 出G出l出o出b出a出l出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出G出l出o出b出a出l出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出後出�出X出�出�出基本出程出度出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出C出o出n出s出e出q出使出e出n出c出e出S出e出正出e出本出i出t出y出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出T出本出i出正出i出a出l出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出本出i出正出i出a出l出"出)出,出
+出 出 出 出 出M出i出n出o出本出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出M出i出n出o出本出"出)出,出
+出 出 出 出 出M出o出d出e出本出a出t出e出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出M出o出d出e出本出a出t出e出"出)出,出
+出 出 出 出 出M出a出大出o出本出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出M出a出大出o出本出"出)出,出
+出 出 出 出 出C出本出i出t出i出c出a出l出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出C出本出i出t出i出c出a出l出"出)出,出
+出 出 出 出 出C出a出t出a出s出t出本出o出p出h出i出c出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出C出a出t出a出s出t出本出o出p出h出i出c出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出後出�出X出�出�出X出�出�出基本出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出C出o出n出s出e出q出使出e出n出c出e出D出使出本出a出t出i出o出n出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出I出n出s出t出a出n出t出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出I出n出s出t出a出n出t出"出)出,出
+出 出 出 出 出S出h出o出本出t出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出S出h出o出本出t出"出)出,出
+出 出 出 出 出M出e出d出i出使出設置出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出M出e出d出i出使出設置出"出)出,出
+出 出 出 出 出L出o出n出成出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出L出o出n出成出"出)出,出
+出 出 出 出 出P出e出本出設置出a出n出e出n出t出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出P出e出本出設置出a出n出e出n出t出"出)出,出
+出 出 出 出 出I出n出d出e出f出i出n出i出t出e出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出I出n出d出e出f出i出n出i出t出e出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出後出�出基本出影出響出類出�出基本出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出C出o出n出s出e出q出使出e出n出c出e出I出設置出p出a出c出t出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出P出o出s出i出t出i出正出e出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出P出o出s出i出t出i出正出e出"出)出,出
+出 出 出 出 出的出e出成出a出t出i出正出e出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出的出e出成出a出t出i出正出e出"出)出,出
+出 出 出 出 出M出i出x出e出d出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出M出i出x出e出d出"出)出,出
+出 出 出 出 出的出e出使出t出本出a出l出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出的出e出使出t出本出a出l出"出)出,出
+出 出 出 出 出U出n出k出n出o出w出n出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出U出n出k出n出o出w出n出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出後出�出X出�出數出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出C出o出n出s出e出q出使出e出n出c出e出P出a出本出a出設置出e出t出e出本出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出/出 出基本出�出數出基本出�出稱出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出n出s出e出q出使出e出n出c出e出 出P出a出本出a出設置出e出t出e出本出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出P出a出本出a出設置出e出t出e出本出的出a出設置出e出;出
+出
+出 出 出 出 出/出/出 出基本出�出數出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出n出s出e出q出使出e出n出c出e出 出P出a出本出a出設置出e出t出e出本出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出P出a出本出a出設置出e出t出e出本出V出a出l出使出e出;出
+出
+出 出 出 出 出/出/出 出基本出�出數出類出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出n出s出e出q出使出e出n出c出e出 出P出a出本出a出設置出e出t出e出本出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出P出a出本出a出設置出e出t出e出本出T出y出p出e出;出 出/出/出 出"出i出n出t出"出,出 出"出f出l出o出a出t出"出,出 出"出b出o出o出l出"出,出 出"出s出t出本出i出n出成出"出,出 出"出a出本出本出a出y出"出
+出
+出 出 出 出 出/出/出 出基本出�出否出必出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出n出s出e出q出使出e出n出c出e出 出P出a出本出a出設置出e出t出e出本出"出)出
+出 出 出 出 出b出o出o出l出 出b出I出s出R出e出q出使出i出本出e出d出;出
+出
+出 出 出 出 出/出/出 出默出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出n出s出e出q出使出e出n出c出e出 出P出a出本出a出設置出e出t出e出本出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出f出a出使出l出t出V出a出l出使出e出;出
+出
+出 出 出 出 出/出/出 出基本出�出述出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出n出s出e出q出使出e出n出c出e出 出P出a出本出a出設置出e出t出e出本出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出s出c出本出i出p出t出i出o出n出;出
+出
+出 出 出 出 出軍出C出o出n出s出e出q出使出e出n出c出e出P出a出本出a出設置出e出t出e出本出(出)出
+出 出 出 出 出 出 出 出 出:出 出P出a出本出a出設置出e出t出e出本出的出a出設置出e出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出P出a出本出a出設置出e出t出e出本出V出a出l出使出e出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出P出a出本出a出設置出e出t出e出本出T出y出p出e出(出T出E出X出T出(出"出s出t出本出i出n出成出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出b出I出s出R出e出q出使出i出本出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出f出a出使出l出t出V出a出l出使出e出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出s出c出本出i出p出t出i出o出n出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出決出�出基本出後出�出基本出定出義出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出/出 出後出�出基本出I出D出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出n出s出e出q出使出e出n出c出e出I出D出;出
+出
+出 出 出 出 出/出/出 出後出�出X出�出稱出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出n出s出e出q出使出e出n出c出e出的出a出設置出e出;出
+出
+出 出 出 出 出/出/出 出後出�出X出�出述出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出n出s出e出q出使出e出n出c出e出D出e出s出c出本出i出p出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出後出�出基本出類出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出E出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出T出y出p出e出 出C出o出n出s出e出q出使出e出n出c出e出T出y出p出e出;出
+出
+出 出 出 出 出/出/出 出影出響出範出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出E出C出o出n出s出e出q出使出e出n出c出e出I出設置出p出a出c出t出S出c出o出p出e出 出I出設置出p出a出c出t出S出c出o出p出e出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出程出度出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出E出C出o出n出s出e出q出使出e出n出c出e出S出e出正出e出本出i出t出y出 出S出e出正出e出本出i出t出y出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出X出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出E出C出o出n出s出e出q出使出e出n出c出e出D出使出本出a出t出i出o出n出 出D出使出本出a出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出影出響出類出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出E出C出o出n出s出e出q出使出e出n出c出e出I出設置出p出a出c出t出T出y出p出e出 出I出設置出p出a出c出t出T出y出p出e出;出
+出
+出 出 出 出 出/出/出 出後出�出X出�出數出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出C出o出n出s出e出q出使出e出n出c出e出P出a出本出a出設置出e出t出e出本出>出 出P出a出本出a出設置出e出t出e出本出s出;出
+出
+出 出 出 出 出/出/出 出觸出發出條出件出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出s出;出
+出
+出 出 出 出 出/出/出 出後出�出X出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出E出f出f出e出c出t出s出;出
+出
+出 出 出 出 出/出/出 出後出�出基本出標出籤出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出C出o出n出s出e出q出使出e出n出c出e出T出a出成出s出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出決出�出基本出I出D出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出l出a出t出e出d出D出e出c出i出s出i出o出n出I出D出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出人出物出I出D出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出e出l出a出t出e出d出C出h出a出本出a出c出t出e出本出I出D出s出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出事出件出I出D出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出e出l出a出t出e出d出E出正出e出n出t出I出D出s出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出概出�出基本出 出(出0出-出1出)出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出P出本出o出b出a出b出i出l出i出t出y出;出
+出
+出 出 出 出 出/出/出 出延出�出X出�出�出基本出 出(出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出D出e出l出a出y出T出i出設置出e出;出
+出
+出 出 出 出 出/出/出 出基本出�出卻出基本出�出�出基本出 出(出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出C出o出o出l出d出o出w出n出T出i出設置出e出;出
+出
+出 出 出 出 出/出/出 出基本出�出否出已出觸出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出b出o出o出l出 出b出I出s出T出本出i出成出成出e出本出e出d出;出
+出
+出 出 出 出 出/出/出 出觸出發出基本出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出T出本出i出成出成出e出本出T出i出設置出e出;出
+出
+出 出 出 出 出/出/出 出基本出�出否出基本出�出逆出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出b出o出o出l出 出b出I出s出R出e出正出e出本出s出i出b出l出e出;出
+出
+出 出 出 出 出/出/出 出基本出�出逆出�出基本出條出件出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出e出正出e出本出s出a出l出C出o出n出d出i出t出i出o出n出s出;出
+出
+出 出 出 出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出(出)出
+出 出 出 出 出 出 出 出 出:出 出C出o出n出s出e出q出使出e出n出c出e出I出D出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出C出o出n出s出e出q出使出e出n出c出e出的出a出設置出e出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出C出o出n出s出e出q出使出e出n出c出e出D出e出s出c出本出i出p出t出i出o出n出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出C出o出n出s出e出q出使出e出n出c出e出T出y出p出e出(出E出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出T出y出p出e出:出:出I出設置出設置出e出d出i出a出t出e出)出
+出 出 出 出 出 出 出 出 出,出 出I出設置出p出a出c出t出S出c出o出p出e出(出E出C出o出n出s出e出q出使出e出n出c出e出I出設置出p出a出c出t出S出c出o出p出e出:出:出L出o出c出a出l出)出
+出 出 出 出 出 出 出 出 出,出 出S出e出正出e出本出i出t出y出(出E出C出o出n出s出e出q出使出e出n出c出e出S出e出正出e出本出i出t出y出:出:出M出o出d出e出本出a出t出e出)出
+出 出 出 出 出 出 出 出 出,出 出D出使出本出a出t出i出o出n出(出E出C出o出n出s出e出q出使出e出n出c出e出D出使出本出a出t出i出o出n出:出:出M出e出d出i出使出設置出)出
+出 出 出 出 出 出 出 出 出,出 出I出設置出p出a出c出t出T出y出p出e出(出E出C出o出n出s出e出q出使出e出n出c出e出I出設置出p出a出c出t出T出y出p出e出:出:出的出e出使出t出本出a出l出)出
+出 出 出 出 出 出 出 出 出,出 出R出e出l出a出t出e出d出D出e出c出i出s出i出o出n出I出D出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出P出本出o出b出a出b出i出l出i出t出y出(出1出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出l出a出y出T出i出設置出e出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出C出o出o出l出d出o出w出n出T出i出設置出e出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出b出I出s出T出本出i出成出成出e出本出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出 出 出 出 出,出 出T出本出i出成出成出e出本出T出i出設置出e出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出b出I出s出R出e出正出e出本出s出i出b出l出e出(出f出a出l出s出e出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出後出�出基本出計出�出基本出結出�出基本出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出/出 出基本出�出否出基本出�出�出基本出計出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出b出o出o出l出 出b出S出使出c出c出e出s出s出;出
+出
+出 出 出 出 出/出/出 出後出�出基本出I出D出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出n出s出e出q出使出e出n出c出e出I出D出;出
+出
+出 出 出 出 出/出/出 出計出�出X出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出;出
+出
+出 出 出 出 出/出/出 出計出�出X出�出�出基本出後出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出C出a出l出c出使出l出a出t出e出d出C出o出n出s出e出q出使出e出n出c出e出s出;出
+出
+出 出 出 出 出/出/出 出影出響出基本出�出�出X出�出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出 出A出f出f出e出c出t出e出d出G出a出設置出e出S出t出a出t出e出;出
+出
+出 出 出 出 出/出/出 出影出響出基本出�出人出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出f出f出e出c出t出e出d出C出h出a出本出a出c出t出e出本出s出;出
+出
+出 出 出 出 出/出/出 出影出響出基本出�出�出基本出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出f出f出e出c出t出e出d出E出正出e出n出t出s出;出
+出
+出 出 出 出 出/出/出 出影出響出基本出�出�出基本出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出i出n出t出3出2出>出 出A出f出f出e出c出t出e出d出R出e出s出o出使出本出c出e出s出;出
+出
+出 出 出 出 出/出/出 出影出響出基本出�出建出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出f出f出e出c出t出e出d出B出使出i出l出d出i出n出成出s出;出
+出
+出 出 出 出 出/出/出 出影出響出基本出�出單出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出f出f出e出c出t出e出d出U出n出i出t出s出;出
+出
+出 出 出 出 出/出/出 出總出�出基本出影出響出基本出�出數出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出O出正出e出本出a出l出l出I出設置出p出a出c出t出S出c出o出本出e出;出
+出
+出 出 出 出 出/出/出 出�出基本出�出�出影出響出基本出�出數出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出P出o出s出i出t出i出正出e出I出設置出p出a出c出t出S出c出o出本出e出;出
+出
+出 出 出 出 出/出/出 出負出面出影出響出基本出�出數出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出的出e出成出a出t出i出正出e出I出設置出p出a出c出t出S出c出o出本出e出;出
+出
+出 出 出 出 出/出/出 出計出�出基本出詳出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出C出a出l出c出使出l出a出t出i出o出n出D出e出t出a出i出l出s出;出
+出
+出 出 出 出 出/出/出 出基本出�出誤出信出息出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出E出本出本出o出本出M出e出s出s出a出成出e出;出
+出
+出 出 出 出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出(出)出
+出 出 出 出 出 出 出 出 出:出 出b出S出使出c出c出e出s出s出(出f出a出l出s出e出)出
+出 出 出 出 出 出 出 出 出,出 出C出o出n出s出e出q出使出e出n出c出e出I出D出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出C出a出l出c出使出l出a出t出i出o出n出T出i出設置出e出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出O出正出e出本出a出l出l出I出設置出p出a出c出t出S出c出o出本出e出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出P出o出s出i出t出i出正出e出I出設置出p出a出c出t出S出c出o出本出e出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出的出e出成出a出t出i出正出e出I出設置出p出a出c出t出S出c出o出本出e出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出C出a出l出c出使出l出a出t出i出o出n出D出e出t出a出i出l出s出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出E出本出本出o出本出M出e出s出s出a出成出e出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出決出�出基本出上出�出X出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出/出 出決出�出基本出I出D出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出c出i出s出i出o出n出I出D出;出
+出
+出 出 出 出 出/出/出 出決出�出X出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出D出e出c出i出s出i出o出n出T出i出設置出e出;出
+出
+出 出 出 出 出/出/出 出決出�出X出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出c出i出s出i出o出n出L出o出c出a出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出決出�出X出�出I出D出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出c出i出s出i出o出n出M出a出k出e出本出I出D出;出
+出
+出 出 出 出 出/出/出 出決出�出基本出類出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出c出i出s出i出o出n出T出y出p出e出;出
+出
+出 出 出 出 出/出/出 出決出�出X出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出c出i出s出i出o出n出O出p出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出X出�出戲出基本出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出 出C出使出本出本出e出n出t出G出a出設置出e出S出t出a出t出e出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出人出物出基本出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出 出C出h出a出本出a出c出t出e出本出S出t出a出t出e出s出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出事出件出基本出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出 出E出正出e出n出t出S出t出a出t出e出s出;出
+出
+出 出 出 出 出/出/出 出資出�出X出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出i出n出t出3出2出>出 出R出e出s出o出使出本出c出e出S出t出a出t出e出s出;出
+出
+出 出 出 出 出/出/出 出建出�出X出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出 出B出使出i出l出d出i出n出成出S出t出a出t出e出s出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出X出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出 出U出n出i出t出S出t出a出t出e出s出;出
+出
+出 出 出 出 出/出/出 出民出�出X出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出p出使出b出l出i出c出E出本出a出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出年出份出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出i出n出t出3出2出 出C出使出本出本出e出n出t出Y出e出a出本出;出
+出
+出 出 出 出 出/出/出 出基本出�出家出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出P出l出a出y出e出本出軍出a出c出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出X出�出�出等出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出i出n出t出3出2出 出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出;出
+出
+出 出 出 出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出(出)出
+出 出 出 出 出 出 出 出 出:出 出D出e出c出i出s出i出o出n出I出D出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出c出i出s出i出o出n出T出i出設置出e出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出c出i出s出i出o出n出L出o出c出a出t出i出o出n出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出c出i出s出i出o出n出M出a出k出e出本出I出D出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出c出i出s出i出o出n出T出y出p出e出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出c出i出s出i出o出n出O出p出t出i出o出n出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出R出e出p出使出b出l出i出c出E出本出a出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出C出使出本出本出e出n出t出Y出e出a出本出(出1出9出1出2出)出
+出 出 出 出 出 出 出 出 出,出 出P出l出a出y出e出本出軍出a出c出t出i出o出n出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出(出1出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出決出�出基本出後出�出基本出計出�出X出 出*出 出計出�出基本出決出�出X出�出�出基本出種出�出X出�出�出基本出影出響出
+出 出*出/出
+出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出c出l出a出s出s出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出U出M出i出n出成出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出o出本出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出U出M出i出n出成出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出o出本出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出�出X出�出�出基本出算出器出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出後出�出基本出計出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出正出o出i出d出 出S出h出使出t出d出o出w出n出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出註出�出基本出決出�出基本出後出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出b出o出o出l出 出R出e出成出i出s出t出e出本出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出註出�出基本出決出�出基本出後出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出b出o出o出l出 出U出n出本出e出成出i出s出t出e出本出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出s出e出q出使出e出n出c出e出I出D出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出計出�出基本出決出�出基本出後出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出 出C出a出l出c出使出l出a出t出e出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出決出�出基本出後出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出 出G出e出t出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出s出e出q出使出e出n出c出e出I出D出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出基本出�出決出策出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出G出e出t出A出l出l出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出�出基本出類出�出X出�出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出G出e出t出C出o出n出s出e出q出使出e出n出c出e出s出B出y出T出y出p出e出(出E出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出T出y出p出e出 出C出o出n出s出e出q出使出e出n出c出e出T出y出p出e出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出�出基本出影出響出範出�出X出�出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出G出e出t出C出o出n出s出e出q出使出e出n出c出e出s出B出y出S出c出o出p出e出(出E出C出o出n出s出e出q出使出e出n出c出e出I出設置出p出a出c出t出S出c出o出p出e出 出I出設置出p出a出c出t出S出c出o出p出e出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出�出X出�出�出基本出程出度出基本出�出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出G出e出t出C出o出n出s出e出q出使出e出n出c出e出s出B出y出S出e出正出e出本出i出t出y出(出E出C出o出n出s出e出q出使出e出n出c出e出S出e出正出e出本出i出t出y出 出S出e出正出e出本出i出t出y出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出�出基本出影出響出類出�出X出�出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出G出e出t出C出o出n出s出e出q出使出e出n出c出e出s出B出y出I出設置出p出a出c出t出T出y出p出e出(出E出C出o出n出s出e出q出使出e出n出c出e出I出設置出p出a出c出t出T出y出p出e出 出I出設置出p出a出c出t出T出y出p出e出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出�出基本出決出�出X出�出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出G出e出t出C出o出n出s出e出q出使出e出n出c出e出s出軍出o出本出D出e出c出i出s出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出e出c出i出s出i出o出n出I出D出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出�出基本出人出物出基本出�出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出G出e出t出C出o出n出s出e出q出使出e出n出c出e出s出軍出o出本出C出h出a出本出a出c出t出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出h出a出本出a出c出t出e出本出I出D出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出X出�出�出基本出事出件出基本出�出�出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出G出e出t出C出o出n出s出e出q出使出e出n出c出e出s出軍出o出本出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出觸出發出後出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出b出o出o出l出 出T出本出i出成出成出e出本出C出o出n出s出e出q出使出e出n出c出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出s出e出q出使出e出n出c出e出I出D出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出用出後出�出X出�出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出b出o出o出l出 出A出p出p出l出y出C出o出n出s出e出q出使出e出n出c出e出E出f出f出e出c出t出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出s出e出q出使出e出n出c出e出I出D出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出後出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出b出o出o出l出 出R出e出正出e出本出s出e出C出o出n出s出e出q出使出e出n出c出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出s出e出q出使出e出n出c出e出I出D出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出後出�出基本出統出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出i出n出t出3出2出>出 出G出e出t出C出o出n出s出e出q出使出e出n出c出e出S出t出a出t出i出s出t出i出c出s出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出�出基本出後出�出基本出影出響出基本出�出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出G出e出t出C出o出n出s出e出q出使出e出n出c出e出I出設置出p出a出c出t出A出n出a出l出y出s出i出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出e出c出i出s出i出o出n出I出D出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出�出測出決出�出基本出後出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出P出本出e出d出i出c出t出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出i出n出t出3出2出 出P出本出e出d出i出c出t出i出o出n出C出o出使出n出t出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出模出擬出決出�出基本出後出�出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出e出c出i出s出i出o出n出 出C出o出n出s出e出q出使出e出n出c出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出>出 出S出i出設置出使出l出a出t出e出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出i出n出t出3出2出 出S出i出設置出使出l出a出t出i出o出n出C出o出使出n出t出)出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出/出 出已出註出基本出�出�出基本出決出�出基本出後出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出R出e出成出i出s出t出e出本出e出d出C出o出n出s出e出q出使出e出n出c出e出s出;出
+出
+出 出 出 出 出/出/出 出後出�出基本出I出D出基本出�出�出X出�出�出X出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出 出C出o出n出s出e出q出使出e出n出c出e出M出a出p出;出
+出
+出 出 出 出 出/出/出 出後出�出基本出統出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出i出n出t出3出2出>出 出C出o出n出s出e出q出使出e出n出c出e出S出t出a出t出i出s出t出i出c出s出;出
+出
+出 出 出 出 出/出/出 出基本出�出否出已出�出基本出始出�出基本出
+出 出 出 出 出b出o出o出l出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出X出�出�出X出�出歷出基本出�出決出策出�出X出�出庫出
+出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出輸入出i出s出t出o出本出i出c出a出l出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出)出;出
+出
+出 出 出 出 出/出/出 出基本出�出建出基本出�出治出決出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出本出e出a出t出e出P出o出l出i出t出i出c出a出l出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出)出;出
+出
+出 出 出 出 出/出/出 出基本出�出建出軍出�出基本出決出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出本出e出a出t出e出M出i出l出i出t出a出本出y出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出)出;出
+出
+出 出 出 出 出/出/出 出基本出�出建出經出�出基本出決出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出本出e出a出t出e出E出c出o出n出o出設置出i出c出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出)出;出
+出
+出 出 出 出 出/出/出 出基本出�出建出社出�出基本出決出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出本出e出a出t出e出S出o出c出i出a出l出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出)出;出
+出
+出 出 出 出 出/出/出 出基本出�出建出基本出�出�出基本出決出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出本出e出a出t出e出C出使出l出t出使出本出a出l出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出)出;出
+出
+出 出 出 出 出/出/出 出基本出�出建出外出交出決出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出本出e出a出t出e出D出i出p出l出o出設置出a出t出i出c出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出)出;出
+出
+出 出 出 出 出/出/出 出計出�出X出�出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出a出l出c出使出l出a出t出e出I出設置出設置出e出d出i出a出t出e出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
+出
+出 出 出 出 出/出/出 出計出�出基本出延出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出a出l出c出使出l出a出t出e出D出e出l出a出y出e出d出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
+出
+出 出 出 出 出/出/出 出計出�出基本出累出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出a出l出c出使出l出a出t出e出C出使出設置出使出l出a出t出i出正出e出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
+出
+出 出 出 出 出/出/出 出計出�出基本出條出件出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出a出l出c出使出l出a出t出e出C出o出n出d出i出t出i出o出n出a出l出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
+出
+出 出 出 出 出/出/出 出計出�出X出�出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出a出l出c出使出l出a出t出e出R出a出n出d出o出設置出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
+出
+出 出 出 出 出/出/出 出計出�出X出�出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出a出l出c出使出l出a出t出e出輸入出i出d出d出e出n出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
+出
+出 出 出 出 出/出/出 出計出�出基本出永出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出a出l出c出使出l出a出t出e出P出e出本出設置出a出n出e出n出t出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
+出
+出 出 出 出 出/出/出 出計出�出X出�出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出C出a出l出c出使出l出a出t出e出T出e出設置出p出o出本出a出本出y出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
+出
+出 出 出 出 出/出/出 出計出�出基本出後出�出基本出影出響出基本出�出數出
+出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出C出o出n出s出e出q出使出e出n出c出e出I出設置出p出a出c出t出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出計出�出基本出總出�出基本出影出響出基本出�出數出
+出 出 出 出 出正出o出i出d出 出C出a出l出c出使出l出a出t出e出O出正出e出本出a出l出l出I出設置出p出a出c出t出(出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出檢出查出後出�出基本出條出件出
+出 出 出 出 出b出o出o出l出 出C出h出e出c出k出C出o出n出s出e出q出使出e出n出c出e出C出o出n出d出i出t出i出o出n出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出用出後出�出X出�出�出X出�出�出X出
+出 出 出 出 出正出o出i出d出 出A出p出p出l出y出C出o出n出s出e出q出使出e出n出c出e出T出o出G出a出設置出e出S出t出a出t出e出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出&出 出A出f出f出e出c出t出e出d出S出t出a出t出e出s出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出用出後出�出X出�出人出X出
+出 出 出 出 出正出o出i出d出 出A出p出p出l出y出C出o出n出s出e出q出使出e出n出c出e出T出o出C出h出a出本出a出c出t出e出本出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出A出f出f出e出c出t出e出d出C出h出a出本出a出c出t出e出本出s出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出用出後出�出X出�出�出基本出�出基本出
+出 出 出 出 出正出o出i出d出 出A出p出p出l出y出C出o出n出s出e出q出使出e出n出c出e出T出o出E出正出e出n出t出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出A出f出f出e出c出t出e出d出E出正出e出n出t出s出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出用出後出�出X出�出�出基本出�出基本出
+出 出 出 出 出正出o出i出d出 出A出p出p出l出y出C出o出n出s出e出q出使出e出n出c出e出T出o出R出e出s出o出使出本出c出e出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出i出n出t出3出2出>出&出 出A出f出f出e出c出t出e出d出R出e出s出o出使出本出c出e出s出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出用出後出�出X出�出建出�出基本出
+出 出 出 出 出正出o出i出d出 出A出p出p出l出y出C出o出n出s出e出q出使出e出n出c出e出T出o出B出使出i出l出d出i出n出成出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出A出f出f出e出c出t出e出d出B出使出i出l出d出i出n出成出s出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出用出後出�出X出�出單出�出基本出
+出 出 出 出 出正出o出i出d出 出A出p出p出l出y出C出o出n出s出e出q出使出e出n出c出e出T出o出U出n出i出t出s出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出,出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出A出f出f出e出c出t出e出d出U出n出i出t出s出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出新出後出�出基本出統出�出基本出
+出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出C出o出n出s出e出q出使出e出n出c出e出S出t出a出t出i出s出t出i出c出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出s出e出q出使出e出n出c出e出I出D出)出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出後出�出X出�出述出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出C出o出n出s出e出q出使出e出n出c出e出D出e出s出c出本出i出p出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出s出e出q出使出e出n出c出e出I出D出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出驗出�出基本出後出�出X出�出置出
+出 出 出 出 出b出o出o出l出 出V出a出l出i出d出a出t出e出C出o出n出s出e出q出使出e出n出c出e出C出o出n出f出i出成出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出記出�出基本出後出�出X出�出�出基本出
+出 出 出 出 出正出o出i出d出 出L出o出成出C出o出n出s出e出q出使出e出n出c出e出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出s出e出q出使出e出n出c出e出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出)出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出後出�出X出�出�出基本出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出n出e出本出a出t出e出C出o出n出s出e出q出使出e出n出c出e出R出e出p出o出本出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出s出e出q出使出e出n出c出e出I出D出,出 出c出o出n出s出t出 出軍出C出o出n出s出e出q出使出e出n出c出e出C出a出l出c出使出l出a出t出i出o出n出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出�出X出後出�出X出�出數出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出P出a出本出s出e出C出o出n出s出e出q出使出e出n出c出e出P出a出本出a出設置出e出t出e出本出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出P出a出本出a出設置出e出t出e出本出S出t出本出i出n出成出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出計出�出基本出後出�出基本出概出�出基本出
+出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出C出o出n出s出e出q出使出e出n出c出e出P出本出o出b出a出b出i出l出i出t出y出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出計出�出基本出後出�出基本出延出�出基本出
+出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出C出o出n出s出e出q出使出e出n出c出e出D出e出l出a出y出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出計出�出基本出後出�出X出�出�出X出�出�出基本出
+出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出C出o出n出s出e出q出使出e出n出c出e出D出使出本出a出t出i出o出n出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出檢出查出後出�出X出�出否出基本出�出逆出�出基本出
+出 出 出 出 出b出o出o出l出 出I出s出C出o出n出s出e出q出使出e出n出c出e出R出e出正出e出本出s出i出b出l出e出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出,出 出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出t出e出x出t出&出 出C出o出n出t出e出x出t出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出後出�出X出�出�出基本出�出基本出
+出 出 出 出 出i出n出t出3出2出 出G出e出t出C出o出n出s出e出q出使出e出n出c出e出P出本出i出o出本出i出t出y出(出c出o出n出s出t出 出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出&出 出C出o出n出s出e出q出使出e出n出c出e出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出後出�出基本出
+出 出 出 出 出正出o出i出d出 出S出o出本出t出C出o出n出s出e出q出使出e出n出c出e出s出B出y出P出本出i出o出本出i出t出y出(出T出A出本出本出a出y出<出軍出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出>出&出 出C出o出n出s出e出q出使出e出n出c出e出s出)出 出c出o出n出s出t出;出
+出}出;出
+出
+出

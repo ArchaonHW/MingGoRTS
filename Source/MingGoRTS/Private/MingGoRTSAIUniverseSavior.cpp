@@ -1,963 +1,964 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// Epic X: Universe Savior System - 拯救宇宙功能延伸
-
-#include "MingGoRTSAIUniverseSavior.h"
-#include "Engine/Engine.h"
-#include "Kismet/GameplayStatics.h"
-#include "TimerManager.h"
-#include "Math/UnrealMathUtility.h"
-
-UMingGoRTSAIUniverseSavior::UMingGoRTSAIUniverseSavior()
-    : bUniverseSaviorActive(false)
-    , bCosmicEmergencyActive(false)
-    , bUniverseMonitoringActive(false)
-    , bOmniversalModeActive(false)
-    , CurrentUniverseThreatLevel(EUniverseThreatLevel::None)
-    , CosmicAIEffectiveness(0.85f)
-    , UniverseMonitoringInterval(10.0f)
-    , LastCosmicMonitoringTime(0.0f)
-    , CosmicEnergyReserves(1000000.0f)
-{
-    PrimaryComponentTick.bCanEverTick = true;
-    
-    // 初始化宇宙監控計時器
-    UniverseMonitoringTicker = FTickerDelegate::CreateUObject(this, &UMingGoRTSAIUniverseSavior::OnUniverseMonitoringTick);
-}
-
-void UMingGoRTSAIUniverseSavior::BeginPlay()
-{
-    Super::BeginPlay();
-    
-    UE_LOG(LogTemp, Log, TEXT("AI Universe Savior System Initialized - Ready to save the universe!"));
-    
-    // 自動啟動宇宙監控
-    StartUniverseMonitoring();
-}
-
-void UMingGoRTSAIUniverseSavior::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-    
-    if (bUniverseSaviorActive)
-    {
-        // 持續監控宇宙狀態
-        if (bUniverseMonitoringActive)
-        {
-            ProcessCosmicThreats();
-            UpdateUniverseStatus();
-        }
-        
-        // 優化宇宙資源分配
-        if (FMath::FRand() < 0.005f) // 0.5%機率每幀執行
-        {
-            OptimizeCosmicResourceAllocation();
-        }
-        
-        // 監控銀河系穩定性
-        if (FMath::FRand() < 0.001f) // 0.1%機率
-        {
-            MonitorGalacticStability();
-        }
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::StartUniverseMonitoring()
-{
-    if (bUniverseMonitoringActive)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Universe monitoring is already active"));
-        return;
-    }
-
-    bUniverseMonitoringActive = true;
-    
-    // 啟動監控計時器
-    if (!UniverseMonitoringTickerHandle.IsValid())
-    {
-        UniverseMonitoringTickerHandle = FTicker::GetCoreTicker().AddTicker(UniverseMonitoringTicker, UniverseMonitoringInterval);
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("Started universe monitoring across all dimensions"));
-    
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("🌌 AI Universe Savior: Cosmic Monitoring Started"));
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::StopUniverseMonitoring()
-{
-    bUniverseMonitoringActive = false;
-    
-    if (UniverseMonitoringTickerHandle.IsValid())
-    {
-        FTicker::GetCoreTicker().RemoveTicker(UniverseMonitoringTickerHandle);
-        UniverseMonitoringTickerHandle.Reset();
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("Stopped universe monitoring"));
-    
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("🌌 AI Universe Savior: Cosmic Monitoring Stopped"));
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::ScanForCosmicThreats()
-{
-    UE_LOG(LogTemp, Log, TEXT("Scanning for cosmic threats across galaxies..."));
-    
-    // 模擬宇宙級威脅檢測
-    if (FMath::FRand() < 0.2f) // 20%機率檢測到宇宙威脅
-    {
-        FUniverseThreatData NewThreat;
-        NewThreat.ThreatName = GenerateCosmicThreatName();
-        NewThreat.ThreatType = static_cast<EUniverseThreatType>(FMath::RandRange(0, 14));
-        NewThreat.ThreatLevel = static_cast<EUniverseThreatLevel>(FMath::RandRange(1, 6));
-        NewThreat.ThreatDescription = GenerateCosmicThreatDescription();
-        NewThreat.ThreatLocation = FVector3d(FMath::FRand() * 100000, FMath::FRand() * 100000, FMath::FRand() * 100000);
-        NewThreat.ThreatRadius = FMath::FRandRange(100, 10000); // 光年
-        NewThreat.TimeToImpact = FMath::FRandRange(100, 10000); // 年
-        NewThreat.Confidence = FMath::FRandRange(0.5, 1.0);
-        NewThreat.RecommendedStrategy = GenerateRecommendedCosmicStrategy(NewThreat.ThreatLevel);
-        NewThreat.EnergyRequired = FMath::FRandRange(10000, 1000000);
-        NewThreat.CivilizationsAtRisk = FMath::RandRange(1, 1000);
-        
-        // 生成受影響區域
-        int32 AffectedRegionCount = FMath::RandRange(1, 10);
-        for (int32 i = 0; i < AffectedRegionCount; ++i)
-        {
-            FUniverseRegion Region;
-            Region.RegionName = FString::Printf(TEXT("Galaxy Sector %d"), i);
-            Region.GalacticCoordinates = FVector3d(FMath::FRand() * 1000, FMath::FRand() * 1000, FMath::FRand() * 1000);
-            Region.StarCount = FMath::RandRange(1000000, 1000000000);
-            Region.ThreatLevel = FMath::FRandRange(0.0f, 1.0f);
-            Region.bIsStable = Region.ThreatLevel < 0.5f;
-            NewThreat.AffectedRegions.Add(Region);
-        }
-        
-        DetectedCosmicThreats.Add(NewThreat);
-        
-        NotifyUniverseThreat(NewThreat);
-        
-        UE_LOG(LogTemp, Warning, TEXT("COSMIC THREAT DETECTED: %s (Level: %d, Civilizations at Risk: %d)"), 
-            *NewThreat.ThreatName, (int32)NewThreat.ThreatLevel, NewThreat.CivilizationsAtRisk);
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::DetectUniverseThreats()
-{
-    UE_LOG(LogTemp, Log, TEXT("Detecting universe-level threats..."));
-    
-    // 檢測多種類型的宇宙威脅
-    TArray<EUniverseThreatType> ThreatTypes = {
-        EUniverseThreatType::Supernova,
-        EUniverseThreatType::BlackHole,
-        EUniverseThreatType::GammaRayBurst,
-        EUniverseThreatType::DarkMatterAnomaly,
-        EUniverseThreatType::VoidExpansion
-    };
-    
-    for (EUniverseThreatType ThreatType : ThreatTypes)
-    {
-        if (FMath::FRand() < 0.1f) // 10%機率每種類型
-        {
-            FUniverseThreatData Threat;
-            Threat.ThreatType = ThreatType;
-            Threat.ThreatLevel = static_cast<EUniverseThreatLevel>(FMath::RandRange(2, 5));
-            
-            switch (ThreatType)
-            {
-            case EUniverseThreatType::Supernova:
-                Threat.ThreatName = TEXT("Type-II Supernova Chain Reaction");
-                Threat.ThreatDescription = TEXT("Multiple stars approaching supernova phase simultaneously");
-                break;
-            case EUniverseThreatType::BlackHole:
-                Threat.ThreatName = TEXT("Rogue Supermassive Black Hole");
-                Threat.ThreatDescription = TEXT("Displaced black hole consuming stellar systems");
-                break;
-            case EUniverseThreatType::GammaRayBurst:
-                Threat.ThreatName = TEXT("Directed Gamma Ray Burst");
-                Threat.ThreatDescription = TEXT("High-energy burst threatening multiple star systems");
-                break;
-            case EUniverseThreatType::DarkMatterAnomaly:
-                Threat.ThreatName = TEXT("Dark Matter Density Fluctuation");
-                Threat.ThreatDescription = TEXT("Unusual dark matter concentration affecting gravity");
-                break;
-            case EUniverseThreatType::VoidExpansion:
-                Threat.ThreatName = TEXT("Accelerated Void Expansion");
-                Threat.ThreatDescription = TEXT("Cosmic void expanding at dangerous rate");
-                break;
-            default:
-                break;
-            }
-            
-            DetectedCosmicThreats.Add(Threat);
-            NotifyUniverseThreat(Threat);
-        }
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::GenerateCosmicStrategy(const FUniverseThreatData& Threat)
-{
-    UE_LOG(LogTemp, Log, TEXT("Generating cosmic savior strategy for: %s"), *Threat.ThreatName);
-    
-    EUniverseSaviorStrategy Strategy = Threat.RecommendedStrategy;
-    
-    // 根據威脅類型調整策略
-    switch (Threat.ThreatType)
-    {
-    case EUniverseThreatType::Supernova:
-        Strategy = EUniverseSaviorStrategy::StellarEngineering;
-        break;
-    case EUniverseThreatType::BlackHole:
-        Strategy = EUniverseSaviorStrategy::WormholeManipulation;
-        break;
-    case EUniverseThreatType::GammaRayBurst:
-        Strategy = EUniverseSaviorStrategy::DimensionalShielding;
-        break;
-    case EUniverseThreatType::DarkMatterAnomaly:
-        Strategy = EUniverseSaviorStrategy::QuantumStabilization;
-        break;
-    case EUniverseThreatType::TimeParadox:
-        Strategy = EUniverseSaviorStrategy::TimeManipulation;
-        break;
-    case EUniverseThreatType::RealityDistortion:
-        Strategy = EUniverseSaviorStrategy::RealityAnchoring;
-        break;
-    default:
-        break;
-    }
-    
-    GenerateUniverseActionPlan(Threat, Strategy);
-}
-
-void UMingGoRTSAIUniverseSavior::GenerateUniverseActionPlan(const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy)
-{
-    FUniverseActionPlan NewPlan;
-    NewPlan.PlanName = FString::Printf(TEXT("Cosmic Response Plan for %s"), *Threat.ThreatName);
-    NewPlan.Strategy = Strategy;
-    NewPlan.EstimatedSuccessRate = CalculateCosmicSuccessRate(Threat, Strategy);
-    NewPlan.ExecutionTime = EstimateCosmicExecutionTime(Threat, Strategy);
-    NewPlan.EnergyCost = Threat.EnergyRequired;
-    NewPlan.CivilizationsRequired = FMath::RandRange(1, 100);
-    
-    // 生成行動步驟
-    GenerateCosmicActionSteps(NewPlan, Threat, Strategy);
-    
-    // 計算所需技術
-    NewPlan.RequiredTechnologies = {
-        TEXT("Quantum Field Manipulation"),
-        TEXT("Gravitational Control"),
-        TEXT("Dimensional Engineering"),
-        TEXT("Cosmic Energy Harvesting")
-    };
-    
-    // 評估潛在風險
-    AssessCosmicPotentialRisks(NewPlan, Threat);
-    
-    AvailableCosmicPlans.Add(NewPlan);
-    
-    NotifyCosmicPlanGenerated(NewPlan);
-    
-    UE_LOG(LogTemp, Log, TEXT("Generated cosmic action plan: %s (Success Rate: %.1f%%, Energy Cost: %.0f)"), 
-        *NewPlan.PlanName, NewPlan.EstimatedSuccessRate * 100, NewPlan.EnergyCost);
-}
-
-void UMingGoRTSAIUniverseSavior::ExecuteCosmicPlan(const FUniverseActionPlan& Plan)
-{
-    UE_LOG(LogTemp, Log, TEXT("Executing cosmic plan: %s"), *Plan.PlanName);
-    
-    // 模擬執行過程
-    bool bSuccess = FMath::FRand() < Plan.EstimatedSuccessRate;
-    
-    FUniverseMissionResult Result;
-    Result.bSuccess = bSuccess;
-    Result.MissionName = Plan.PlanName;
-    Result.CivilizationsSaved = bSuccess ? FMath::RandRange(10, 1000) : FMath::RandRange(0, 100);
-    Result.StarSystemsSaved = bSuccess ? FMath::RandRange(100, 10000) : FMath::RandRange(0, 1000);
-    Result.EnergyExpended = Plan.EnergyCost;
-    Result.TimeTaken = Plan.ExecutionTime;
-    Result.AfterActionReport = bSuccess ? 
-        TEXT("Mission completed successfully. Threat neutralized.") : 
-        TEXT("Mission failed. Partial evacuation only.");
-    
-    // 更新AI效果評分
-    if (bSuccess)
-    {
-        CosmicAIEffectiveness = FMath::Clamp(CosmicAIEffectiveness + 0.03f, 0.0f, 1.0f);
-        CosmicEnergyReserves -= Plan.EnergyCost;
-    }
-    else
-    {
-        CosmicAIEffectiveness = FMath::Clamp(CosmicAIEffectiveness - 0.02f, 0.0f, 1.0f);
-    }
-    
-    NotifyCosmicMissionCompleted(Result);
-    
-    if (GEngine)
-    {
-        FColor MessageColor = bSuccess ? FColor::Green : FColor::Red;
-        FString Message = FString::Printf(TEXT("🌌 Cosmic Mission %s: %s\nCivilizations Saved: %d, Star Systems: %d"),
-            bSuccess ? TEXT("SUCCESS") : TEXT("FAILED"),
-            *Plan.PlanName,
-            Result.CivilizationsSaved,
-            Result.StarSystemsSaved);
-        GEngine->AddOnScreenDebugMessage(-1, 10.0f, MessageColor, Message);
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::OptimizeCosmicResources()
-{
-    UE_LOG(LogTemp, Log, TEXT("Optimizing cosmic resources across the universe..."));
-    
-    AnalyzeCosmicResourceStatus();
-    OptimizeCosmicAllocationStrategy();
-    UpdateCosmicResourceStatus();
-    
-    // 能量儲備恢復
-    CosmicEnergyReserves += FMath::FRandRange(1000, 10000);
-}
-
-void UMingGoRTSAIUniverseSavior::AllocateGalacticResources(const FString& ResourceType, float Amount, EResourcePriority Priority)
-{
-    FUniverseResourceOptimization ResourceData;
-    ResourceData.ResourceType = ResourceType;
-    ResourceData.CurrentAmount = Amount;
-    ResourceData.Priority = Priority;
-    ResourceData.Efficiency = FMath::FRandRange(0.7, 1.0);
-    ResourceData.AllocationStrategy = GenerateCosmicAllocationStrategy(Priority);
-    
-    // 添加來源區域
-    for (int32 i = 0; i < 3; ++i)
-    {
-        FUniverseRegion Source;
-        Source.RegionName = FString::Printf(TEXT("Resource Sector %d"), i);
-        Source.GalacticCoordinates = FVector3d(FMath::FRand() * 100, FMath::FRand() * 100, FMath::FRand() * 100);
-        Source.StarCount = FMath::RandRange(1000000, 5000000);
-        ResourceData.SourceRegions.Add(Source);
-    }
-    
-    CosmicResourceStatus.Add(ResourceData);
-    
-    NotifyGalacticResourceOptimized(ResourceData);
-    
-    UE_LOG(LogTemp, Log, TEXT("Allocated %.2f cosmic units of %s (Priority: %d)"), Amount, *ResourceType, (int32)Priority);
-}
-
-void UMingGoRTSAIUniverseSavior::EstablishCivilizationContact(const FString& CivilizationName)
-{
-    UE_LOG(LogTemp, Log, TEXT("Establishing contact with civilization: %s"), *CivilizationName);
-    
-    FCivilizationCooperation NewCivilization;
-    NewCivilization.CivilizationName = CivilizationName;
-    NewCivilization.TechLevel = FMath::RandRange(1, 10);
-    NewCivilization.ContributionLevel = FMath::FRandRange(0.0f, 1.0f);
-    NewCivilization.bIsCooperating = FMath::FRand() < 0.7f; // 70%機率願意合作
-    
-    // 隨機分配能力
-    TArray<EUniverseSaviorStrategy> AllCapabilities = {
-        EUniverseSaviorStrategy::StellarEngineering,
-        EUniverseSaviorStrategy::QuantumStabilization,
-        EUniverseSaviorStrategy::DimensionalShielding,
-        EUniverseSaviorStrategy::EnergyRedistribution
-    };
-    
-    int32 CapabilityCount = FMath::RandRange(1, 4);
-    for (int32 i = 0; i < CapabilityCount; ++i)
-    {
-        NewCivilization.Capabilities.Add(AllCapabilities[FMath::RandRange(0, AllCapabilities.Num() - 1)]);
-    }
-    
-    AlliedCivilizations.Add(NewCivilization);
-    
-    NotifyCivilizationContacted(NewCivilization);
-    
-    if (GEngine)
-    {
-        FString Message = FString::Printf(TEXT("🌌 Contact established with %s (Tech Level: %d, Cooperation: %s)"),
-            *CivilizationName,
-            NewCivilization.TechLevel,
-            NewCivilization.bIsCooperating ? TEXT("YES") : TEXT("NO"));
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, Message);
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::ActivateCosmicEmergencyProtocol()
-{
-    if (bCosmicEmergencyActive)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Cosmic emergency protocol already active"));
-        return;
-    }
-    
-    bCosmicEmergencyActive = true;
-    
-    UE_LOG(LogTemp, Warning, TEXT("🚨 COSMIC EMERGENCY PROTOCOL ACTIVATED 🚨"));
-    
-    // 啟動所有可用文明
-    for (FCivilizationCooperation& Civ : AlliedCivilizations)
-    {
-        Civ.bIsCooperating = true;
-        Civ.ContributionLevel = 1.0f;
-    }
-    
-    // 部署緊急資源
-    DeployCosmicEmergencyResources();
-    
-    // 生成緊急計劃
-    GenerateEmergencyCosmicPlans();
-    
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, 
-            TEXT("🚨 COSMIC EMERGENCY PROTOCOL ACTIVATED 🚨\nAll civilizations mobilized for universal defense"));
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::DeployCosmicEmergencyResources()
-{
-    UE_LOG(LogTemp, Log, TEXT("Deploying cosmic emergency resources..."));
-    
-    TArray<FString> EmergencyResources = {
-        TEXT("Quantum Stabilization Arrays"),
-        TEXT("Gravitational Anchor Networks"),
-        TEXT("Dimensional Barrier Generators"),
-        TEXT("Cosmic Energy Collectors"),
-        TEXT("Stellar Control Stations"),
-        TEXT("Wormhole Transit Gates"),
-        TEXT("Reality Anchor Matrices"),
-        TEXT("Time Dilation Buffers")
-    };
-    
-    for (const FString& Resource : EmergencyResources)
-    {
-        AllocateGalacticResources(Resource, 10000.0f, EResourcePriority::Critical);
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::InitiateGenesisProtocol()
-{
-    UE_LOG(LogTemp, Log, TEXT("Initiating Genesis Protocol - Universal restoration sequence..."));
-    
-    // 創世協議：在最極端情況下重建宇宙
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Purple, 
-            TEXT("✨ GENESIS PROTOCOL INITIATED ✨\nBeginning universal restoration sequence..."));
-    }
-    
-    // 重置宇宙參數
-    CosmicEnergyReserves = 10000000.0f;
-    CosmicAIEffectiveness = 1.0f;
-    
-    // 清除所有威脅
-    DetectedCosmicThreats.Empty();
-    PredictedCosmicThreats.Empty();
-    
-    UE_LOG(LogTemp, Warning, TEXT("Genesis Protocol complete. Universe restored to baseline state."));
-}
-
-void UMingGoRTSAIUniverseSavior::OpenWormholeToThreat(const FVector3d& TargetLocation)
-{
-    UE_LOG(LogTemp, Log, TEXT("Opening wormhole to cosmic threat at coordinates: %s"), *TargetLocation.ToString());
-    
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
-            FString::Printf(TEXT("🌀 Wormhole opened to threat location: %s"), *TargetLocation.ToString()));
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::CreateDimensionalShield(const FVector3d& Center, float Radius)
-{
-    UE_LOG(LogTemp, Log, TEXT("Creating dimensional shield at %s with radius %.2f light-years"), 
-        *Center.ToString(), Radius);
-    
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Turquoise, 
-            FString::Printf(TEXT("🛡️ Dimensional Shield deployed (Radius: %.0f ly)"), Radius));
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::ActivateUniverseSaviorMode()
-{
-    if (bUniverseSaviorActive)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Universe Savior mode already active"));
-        return;
-    }
-    
-    bUniverseSaviorActive = true;
-    
-    UE_LOG(LogTemp, Log, TEXT("🌌 AI UNIVERSE SAVIOR MODE ACTIVATED 🌌"));
-    
-    StartUniverseMonitoring();
-    OptimizeCosmicResources();
-    
-    // 建立文明聯繫
-    EstablishCivilizationContact(TEXT("Federation of United Worlds"));
-    EstablishCivilizationContact(TEXT("Andromeda Collective"));
-    EstablishCivilizationContact(TEXT("Galactic Alliance"));
-    
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, 
-            TEXT("🌌 AI UNIVERSE SAVIOR MODE ACTIVATED 🌌\nMonitoring all cosmic threats across dimensions"));
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::DeactivateUniverseSaviorMode()
-{
-    bUniverseSaviorActive = false;
-    bCosmicEmergencyActive = false;
-    
-    UE_LOG(LogTemp, Log, TEXT("Universe Savior mode deactivated"));
-    
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Gray, TEXT("🌌 Universe Savior Mode Deactivated"));
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::ResetUniverseSaviorSystem()
-{
-    UE_LOG(LogTemp, Log, TEXT("Resetting Universe Savior system..."));
-    
-    DetectedCosmicThreats.Empty();
-    PredictedCosmicThreats.Empty();
-    AvailableCosmicPlans.Empty();
-    CosmicResourceStatus.Empty();
-    AlliedCivilizations.Empty();
-    CosmicRecommendations.Empty();
-    UniversalStrategicGoals.Empty();
-    
-    CurrentUniverseThreatLevel = EUniverseThreatLevel::None;
-    CosmicAIEffectiveness = 0.85f;
-    CosmicEnergyReserves = 1000000.0f;
-    bCosmicEmergencyActive = false;
-    bOmniversalModeActive = false;
-    
-    UE_LOG(LogTemp, Log, TEXT("Universe Savior system reset completed"));
-}
-
-void UMingGoRTSAIUniverseSavior::UpgradeToOmniversalMode()
-{
-    bOmniversalModeActive = true;
-    
-    UE_LOG(LogTemp, Warning, TEXT("⚡ OMNIVERSAL MODE ACTIVATED ⚡"));
-    UE_LOG(LogTemp, Warning, TEXT("System capabilities expanded to multiversal scale"));
-    
-    // 增加能量儲備
-    CosmicEnergyReserves *= 10.0f;
-    CosmicAIEffectiveness = 1.0f;
-    
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Purple, 
-            TEXT("⚡ OMNIVERSAL MODE ACTIVATED ⚡\nExtended to multiversal scale operations"));
-    }
-}
-
-float UMingGoRTSAIUniverseSavior::CalculateUniversalStability() const
-{
-    float Stability = 1.0f;
-    
-    // 根據威脅級別計算穩定性
-    for (const FUniverseThreatData& Threat : DetectedCosmicThreats)
-    {
-        float ThreatImpact = (float)Threat.ThreatLevel / 7.0f * Threat.Confidence;
-        Stability -= ThreatImpact;
-    }
-    
-    // 根據文明合作調整
-    float CooperationBonus = 0.0f;
-    for (const FCivilizationCooperation& Civ : AlliedCivilizations)
-    {
-        if (Civ.bIsCooperating)
-        {
-            CooperationBonus += 0.05f;
-        }
-    }
-    
-    Stability += CooperationBonus;
-    
-    return FMath::Clamp(Stability, 0.0f, 1.0f);
-}
-
-int32 UMingGoRTSAIUniverseSavior::GetTotalCivilizationsAtRisk() const
-{
-    int32 TotalAtRisk = 0;
-    
-    for (const FUniverseThreatData& Threat : DetectedCosmicThreats)
-    {
-        TotalAtRisk += Threat.CivilizationsAtRisk;
-    }
-    
-    return TotalAtRisk;
-}
-
-float UMingGoRTSAIUniverseSavior::GetCosmicEnergyReserves() const
-{
-    return CosmicEnergyReserves;
-}
-
-// Private helper implementations
-void UMingGoRTSAIUniverseSavior::ProcessCosmicThreats()
-{
-    for (const FUniverseThreatData& Threat : DetectedCosmicThreats)
-    {
-        if (Threat.TimeToImpact <= 10.0f) // 10年內即將發生
-        {
-            ActivateCosmicEmergencyProtocol();
-            break;
-        }
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::UpdateUniverseStatus()
-{
-    EUniverseThreatLevel NewThreatLevel = EUniverseThreatLevel::None;
-    
-    for (const FUniverseThreatData& Threat : DetectedCosmicThreats)
-    {
-        if (Threat.ThreatLevel > NewThreatLevel)
-        {
-            NewThreatLevel = Threat.ThreatLevel;
-        }
-    }
-    
-    if (NewThreatLevel != CurrentUniverseThreatLevel)
-    {
-        CurrentUniverseThreatLevel = NewThreatLevel;
-        NotifyUniverseStatusChange(CurrentUniverseThreatLevel, GenerateCosmicStatusMessage(CurrentUniverseThreatLevel));
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::OptimizeCosmicResourceAllocation()
-{
-    for (FUniverseResourceOptimization& Resource : CosmicResourceStatus)
-    {
-        if (Resource.Priority == EResourcePriority::Critical)
-        {
-            Resource.Efficiency = FMath::Clamp(Resource.Efficiency + 0.01f, 0.0f, 1.0f);
-        }
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::AnalyzeUniversalSituation()
-{
-    float UniversalStability = CalculateUniversalStability();
-    
-    if (UniversalStability < 0.2f)
-    {
-        ActivateCosmicEmergencyProtocol();
-    }
-    else if (UniversalStability < 0.5f)
-    {
-        // 生成警告建議
-        CosmicRecommendations.Add(TEXT("Increase cosmic monitoring frequency"));
-        CosmicRecommendations.Add(TEXT("Mobilize allied civilizations"));
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::CoordinateGalacticResponse()
-{
-    UE_LOG(LogTemp, Log, TEXT("Coordinating intergalactic response efforts..."));
-    
-    // 協調所有合作文明
-    for (const FCivilizationCooperation& Civ : AlliedCivilizations)
-    {
-        if (Civ.bIsCooperating)
-        {
-            UE_LOG(LogTemp, Log, TEXT("Coordinating with %s for cosmic defense"), *Civ.CivilizationName);
-        }
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::GenerateEmergencyCosmicPlans()
-{
-    for (const FUniverseThreatData& Threat : DetectedCosmicThreats)
-    {
-        if (Threat.ThreatLevel >= EUniverseThreatLevel::Cosmic)
-        {
-            GenerateUniverseActionPlan(Threat, EUniverseSaviorStrategy::Emergency);
-            GenerateUniverseActionPlan(Threat, EUniverseSaviorStrategy::GenesisProtocol);
-        }
-    }
-}
-
-FString UMingGoRTSAIUniverseSavior::GenerateCosmicThreatName()
-{
-    TArray<FString> ThreatNames = {
-        TEXT("Stellar Cascade Failure"),
-        TEXT("Gravitational Singularity"),
-        TEXT("Quantum Vacuum Decay"),
-        TEXT("Dark Energy Surge"),
-        TEXT("Dimensional Breach"),
-        TEXT("Cosmic String Oscillation"),
-        TEXT("Antimatter Contamination"),
-        TEXT("Temporal Rift Expansion"),
-        TEXT("Wormhole Network Collapse"),
-        TEXT("Entropy Reversal Event"),
-        TEXT("Planck Scale Instability"),
-        TEXT("Multiversal Phase Shift"),
-        TEXT("Cosmic Ray Tsunami"),
-        TEXT("Stellar Engine Malfunction"),
-        TEXT("Galactic Core Eruption")
-    };
-    
-    return ThreatNames[FMath::RandRange(0, ThreatNames.Num() - 1)];
-}
-
-FString UMingGoRTSAIUniverseSavior::GenerateCosmicThreatDescription()
-{
-    TArray<FString> Descriptions = {
-        TEXT("Catastrophic cosmic event requiring immediate universal intervention"),
-        TEXT("Multi-galactic threat with potential universe-ending consequences"),
-        TEXT("Fundamental physics anomaly threatening cosmic stability"),
-        TEXT("Large-scale dimensional instability affecting multiple star systems"),
-        TEXT("Accelerating cosmic phenomenon with exponential growth pattern")
-    };
-    
-    return Descriptions[FMath::RandRange(0, Descriptions.Num() - 1)];
-}
-
-EUniverseSaviorStrategy UMingGoRTSAIUniverseSavior::GenerateRecommendedCosmicStrategy(EUniverseThreatLevel ThreatLevel)
-{
-    switch (ThreatLevel)
-    {
-    case EUniverseThreatLevel::None:
-        return EUniverseSaviorStrategy::StellarEngineering;
-    case EUniverseThreatLevel::Stellar:
-        return EUniverseSaviorStrategy::StellarEngineering;
-    case EUniverseThreatLevel::Galactic:
-        return EUniverseSaviorStrategy::WormholeManipulation;
-    case EUniverseThreatLevel::Intergalactic:
-        return EUniverseSaviorStrategy::DimensionalShielding;
-    case EUniverseThreatLevel::Cosmic:
-        return EUniverseSaviorStrategy::QuantumStabilization;
-    case EUniverseThreatLevel::Multiverse:
-        return EUniverseSaviorStrategy::MultiversalCooperation;
-    case EUniverseThreatLevel::Omniversal:
-        return EUniverseSaviorStrategy::GenesisProtocol;
-    default:
-        return EUniverseSaviorStrategy::StellarEngineering;
-    }
-}
-
-float UMingGoRTSAIUniverseSavior::CalculateCosmicSuccessRate(const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy)
-{
-    float BaseRate = 0.6f;
-    
-    // 根據威脅級別調整
-    BaseRate -= (float)Threat.ThreatLevel * 0.08f;
-    
-    // 根據策略調整
-    switch (Strategy)
-    {
-    case EUniverseSaviorStrategy::GenesisProtocol:
-        BaseRate += 0.3f;
-        break;
-    case EUniverseSaviorStrategy::MultiversalCooperation:
-        BaseRate += 0.25f;
-        break;
-    case EUniverseSaviorStrategy::QuantumStabilization:
-        BaseRate += 0.2f;
-        break;
-    case EUniverseSaviorStrategy::DimensionalShielding:
-        BaseRate += 0.15f;
-        break;
-    default:
-        break;
-    }
-    
-    return FMath::Clamp(BaseRate, 0.1f, 0.95f);
-}
-
-float UMingGoRTSAIUniverseSavior::EstimateCosmicExecutionTime(const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy)
-{
-    float BaseTime = 100.0f; // 基礎時間（年）
-    
-    // 根據威脅級別調整
-    BaseTime *= (1.0f + (float)Threat.ThreatLevel * 0.3f);
-    
-    // 根據策略調整
-    switch (Strategy)
-    {
-    case EUniverseSaviorStrategy::GenesisProtocol:
-        BaseTime *= 3.0f;
-        break;
-    case EUniverseSaviorStrategy::TimeManipulation:
-        BaseTime *= 0.5f;
-        break;
-    case EUniverseSaviorStrategy::WormholeManipulation:
-        BaseTime *= 0.7f;
-        break;
-    default:
-        break;
-    }
-    
-    return BaseTime;
-}
-
-void UMingGoRTSAIUniverseSavior::GenerateCosmicActionSteps(FUniverseActionPlan& Plan, const FUniverseThreatData& Threat, EUniverseSaviorStrategy Strategy)
-{
-    Plan.ActionSteps.Empty();
-    
-    switch (Strategy)
-    {
-    case EUniverseSaviorStrategy::StellarEngineering:
-        Plan.ActionSteps.Add(TEXT("Deploy stellar control arrays"));
-        Plan.ActionSteps.Add(TEXT("Stabilize affected star systems"));
-        Plan.ActionSteps.Add(TEXT("Redirect energy flows"));
-        break;
-    case EUniverseSaviorStrategy::WormholeManipulation:
-        Plan.ActionSteps.Add(TEXT("Calculate wormhole coordinates"));
-        Plan.ActionSteps.Add(TEXT("Open transit corridors"));
-        Plan.ActionSteps.Add(TEXT("Evacuate threatened populations"));
-        break;
-    case EUniverseSaviorStrategy::DimensionalShielding:
-        Plan.ActionSteps.Add(TEXT("Generate dimensional barriers"));
-        Plan.ActionSteps.Add(TEXT("Anchor local space-time"));
-        Plan.ActionSteps.Add(TEXT("Isolate threat containment zones"));
-        break;
-    case EUniverseSaviorStrategy::QuantumStabilization:
-        Plan.ActionSteps.Add(TEXT("Deploy quantum stabilizers"));
-        Plan.ActionSteps.Add(TEXT("Repair fundamental constants"));
-        Plan.ActionSteps.Add(TEXT("Normalize field fluctuations"));
-        break;
-    case EUniverseSaviorStrategy::GenesisProtocol:
-        Plan.ActionSteps.Add(TEXT("Initialize universal backup sequence"));
-        Plan.ActionSteps.Add(TEXT("Preserve essential cosmic structures"));
-        Plan.ActionSteps.Add(TEXT("Execute controlled universal reset"));
-        break;
-    default:
-        Plan.ActionSteps.Add(TEXT("Assess cosmic situation"));
-        Plan.ActionSteps.Add(TEXT("Deploy cosmic resources"));
-        Plan.ActionSteps.Add(TEXT("Monitor universal progress"));
-        break;
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::AssessCosmicPotentialRisks(FUniverseActionPlan& Plan, const FUniverseThreatData& Threat)
-{
-    Plan.PotentialRisks.Empty();
-    Plan.MitigationStrategies.Empty();
-    
-    Plan.PotentialRisks.Add(TEXT("Energy depletion"));
-    Plan.PotentialRisks.Add(TEXT("Civilization withdrawal"));
-    Plan.PotentialRisks.Add(TEXT("Unexpected cosmic escalation"));
-    Plan.PotentialRisks.Add(TEXT("Dimensional instability"));
-    
-    Plan.MitigationStrategies.Add(TEXT("Establish backup energy reserves"));
-    Plan.MitigationStrategies.Add(TEXT("Negotiate binding cooperation treaties"));
-    Plan.MitigationStrategies.Add(TEXT("Prepare contingency protocols"));
-    Plan.MitigationStrategies.Add(TEXT("Deploy dimensional anchor networks"));
-}
-
-void UMingGoRTSAIUniverseSavior::AnalyzeCosmicResourceStatus()
-{
-    for (FUniverseResourceOptimization& Resource : CosmicResourceStatus)
-    {
-        Resource.Efficiency = FMath::FRandRange(0.7, 1.0);
-    }
-}
-
-void UMingGoRTSAIUniverseSavior::OptimizeCosmicAllocationStrategy()
-{
-    for (FUniverseResourceOptimization& Resource : CosmicResourceStatus)
-    {
-        if (Resource.Priority == EResourcePriority::Critical)
-        {
-            Resource.AllocationStrategy = TEXT("Priority cosmic allocation with multiversal reserves");
-        }
-    }
-}
-
-FString UMingGoRTSAIUniverseSavior::GenerateCosmicAllocationStrategy(EResourcePriority Priority)
-{
-    switch (Priority)
-    {
-    case EResourcePriority::Critical:
-        return TEXT("Immediate cosmic allocation with priority override");
-    case EResourcePriority::High:
-        return TEXT("High priority galactic allocation");
-    case EResourcePriority::Medium:
-        return TEXT("Standard universal allocation procedure");
-    case EResourcePriority::Low:
-        return TEXT("Low priority stellar allocation");
-    case EResourcePriority::Optional:
-        return TEXT("Optional allocation if cosmic resources available");
-    default:
-        return TEXT("Standard cosmic allocation");
-    }
-}
-
-FString UMingGoRTSAIUniverseSavior::GenerateCosmicStatusMessage(EUniverseThreatLevel Level)
-{
-    switch (Level)
-    {
-    case EUniverseThreatLevel::None:
-        return TEXT("🌌 Universal Status: Stable - All systems nominal");
-    case EUniverseThreatLevel::Stellar:
-        return TEXT("⭐ Universal Status: Stellar Alert - Localized threats detected");
-    case EUniverseThreatLevel::Galactic:
-        return TEXT("🌠 Universal Status: Galactic Warning - Sector threats active");
-    case EUniverseThreatLevel::Intergalactic:
-        return TEXT("⚠️ Universal Status: Intergalactic Crisis - Multi-sector involvement");
-    case EUniverseThreatLevel::Cosmic:
-        return TEXT("🔴 Universal Status: Cosmic Emergency - Universal threat detected");
-    case EUniverseThreatLevel::Multiverse:
-        return TEXT("💥 Universal Status: Multiversal Catastrophe - Multi-dimensional threat");
-    case EUniverseThreatLevel::Omniversal:
-        return TEXT("☠️ Universal Status: OMNIVERSAL EXTINCTION - Reality itself at risk");
-    default:
-        return TEXT("🌌 Universal Status: Unknown");
-    }
-}
-
-bool UMingGoRTSAIUniverseSavior::OnUniverseMonitoringTick(float DeltaTime)
-{
-    if (!bUniverseMonitoringActive)
-    {
-        return false;
-    }
-    
-    ScanForCosmicThreats();
-    AnalyzeUniversalSituation();
-    
-    return bUniverseMonitoringActive;
-}
-
-// Notification methods
-void UMingGoRTSAIUniverseSavior::NotifyUniverseThreat(const FUniverseThreatData& Threat)
-{
-    OnUniverseThreatDetected.Broadcast(Threat);
-}
-
-void UMingGoRTSAIUniverseSavior::NotifyCosmicPlanGenerated(const FUniverseActionPlan& Plan)
-{
-    OnCosmicPlanGenerated.Broadcast(Plan);
-}
-
-void UMingGoRTSAIUniverseSavior::NotifyGalacticResourceOptimized(const FUniverseResourceOptimization& Resource)
-{
-    OnGalacticResourceOptimized.Broadcast(Resource);
-}
-
-void UMingGoRTSAIUniverseSavior::NotifyUniverseStatusChange(EUniverseThreatLevel NewLevel, const FString& Message)
-{
-    OnUniverseStatusChanged.Broadcast(NewLevel, Message);
-}
-
-void UMingGoRTSAIUniverseSavior::NotifyCosmicMissionCompleted(const FUniverseMissionResult& Result)
-{
-    OnCosmicMissionCompleted.Broadcast(Result);
-}
-
-void UMingGoRTSAIUniverseSavior::NotifyCivilizationContacted(const FCivilizationCooperation& Civilization)
-{
-    OnCivilizationContacted.Broadcast(Civilization);
-}
+出/出/出 出C出o出p出y出本出i出成出h出t出 出(出c出)出 出2出0出2出6出 出M出i出n出成出G出o出R出T出S出.出 出A出l出l出 出本出i出成出h出t出s出 出本出e出s出e出本出正出e出d出.出
+出/出/出 出E出p出i出c出 出X出:出 出U出n出i出正出e出本出s出e出 出S出a出正出i出o出本出 出S出y出s出t出e出設置出 出-出 出拯出救出宇出宙出功出能出延出伸出
+出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出T出i出設置出e出本出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出a出t出h出/出U出n出本出e出a出l出M出a出t出h出U出t出i出l出i出t出y出.出h出"出
+出
+出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出(出)出
+出 出 出 出 出:出 出b出U出n出i出正出e出本出s出e出S出a出正出i出o出本出A出c出t出i出正出e出(出f出a出l出s出e出)出
+出 出 出 出 出,出 出b出C出o出s出設置出i出c出E出設置出e出本出成出e出n出c出y出A出c出t出i出正出e出(出f出a出l出s出e出)出
+出 出 出 出 出,出 出b出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出A出c出t出i出正出e出(出f出a出l出s出e出)出
+出 出 出 出 出,出 出b出O出設置出n出i出正出e出本出s出a出l出M出o出d出e出A出c出t出i出正出e出(出f出a出l出s出e出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出(出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出的出o出n出e出)出
+出 出 出 出 出,出 出C出o出s出設置出i出c出A出I出E出f出f出e出c出t出i出正出e出n出e出s出s出(出0出.出8出5出f出)出
+出 出 出 出 出,出 出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出I出n出t出e出本出正出a出l出(出1出0出.出0出f出)出
+出 出 出 出 出,出 出L出a出s出t出C出o出s出設置出i出c出M出o出n出i出t出o出本出i出n出成出T出i出設置出e出(出0出.出0出f出)出
+出 出 出 出 出,出 出C出o出s出設置出i出c出E出n出e出本出成出y出R出e出s出e出本出正出e出s出(出1出0出0出0出0出0出0出.出0出f出)出
+出{出
+出 出 出 出 出P出本出i出設置出a出本出y出C出o出設置出p出o出n出e出n出t出T出i出c出k出.出b出C出a出n出E出正出e出本出T出i出c出k出 出=出 出t出本出使出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出宇出宙出監出控出計出時出器出
+出 出 出 出 出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出T出i出c出k出e出本出 出=出 出軍出T出i出c出k出e出本出D出e出l出e出成出a出t出e出:出:出C出本出e出a出t出e出U出O出b出大出e出c出t出(出t出h出i出s出,出 出&出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出O出n出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出T出i出c出k出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出B出e出成出i出n出P出l出a出y出(出)出
+出{出
+出 出 出 出 出S出使出p出e出本出:出:出B出e出成出i出n出P出l出a出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出I出 出U出n出i出正出e出本出s出e出 出S出a出正出i出o出本出 出S出y出s出t出e出設置出 出I出n出i出t出i出a出l出i出z出e出d出 出-出 出R出e出a出d出y出 出t出o出 出s出a出正出e出 出t出h出e出 出使出n出i出正出e出本出s出e出!出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出自出動出啟出動出宇出宙出監出控出
+出 出 出 出 出S出t出a出本出t出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出T出i出c出k出C出o出設置出p出o出n出e出n出t出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出,出 出E出L出e出正出e出l出T出i出c出k出 出T出i出c出k出T出y出p出e出,出 出軍出A出c出t出o出本出C出o出設置出p出o出n出e出n出t出T出i出c出k出軍出使出n出c出t出i出o出n出*出 出T出h出i出s出T出i出c出k出軍出使出n出c出t出i出o出n出)出
+出{出
+出 出 出 出 出S出使出p出e出本出:出:出T出i出c出k出C出o出設置出p出o出n出e出n出t出(出D出e出l出t出a出T出i出設置出e出,出 出T出i出c出k出T出y出p出e出,出 出T出h出i出s出T出i出c出k出軍出使出n出c出t出i出o出n出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出b出U出n出i出正出e出本出s出e出S出a出正出i出o出本出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出持出續出監出控出宇出宙出狀出態出
+出 出 出 出 出 出 出 出 出i出f出 出(出b出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出A出c出t出i出正出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出本出o出c出e出s出s出C出o出s出設置出i出c出T出h出本出e出a出t出s出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出U出n出i出正出e出本出s出e出S出t出a出t出使出s出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出優出化出宇出宙出資出源出分出配出
+出 出 出 出 出 出 出 出 出i出f出 出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出0出.出0出0出5出f出)出 出/出/出 出0出.出5出%出機出率出每出幀出執出行出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出p出t出i出設置出i出z出e出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出A出l出l出o出c出a出t出i出o出n出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出監出控出銀出河出系出穩出定出性出
+出 出 出 出 出 出 出 出 出i出f出 出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出0出.出0出0出1出f出)出 出/出/出 出0出.出1出%出機出率出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出M出o出n出i出t出o出本出G出a出l出a出c出t出i出c出S出t出a出b出i出l出i出t出y出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出S出t出a出本出t出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出U出n出i出正出e出本出s出e出 出設置出o出n出i出t出o出本出i出n出成出 出i出s出 出a出l出本出e出a出d出y出 出a出c出t出i出正出e出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出A出c出t出i出正出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出啟出動出監出控出計出時出器出
+出 出 出 出 出i出f出 出(出!出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出T出i出c出k出e出本出輸入出a出n出d出l出e出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出T出i出c出k出e出本出輸入出a出n出d出l出e出 出=出 出軍出T出i出c出k出e出本出:出:出G出e出t出C出o出本出e出T出i出c出k出e出本出(出)出.出A出d出d出T出i出c出k出e出本出(出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出T出i出c出k出e出本出,出 出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出I出n出t出e出本出正出a出l出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出t出a出本出t出e出d出 出使出n出i出正出e出本出s出e出 出設置出o出n出i出t出o出本出i出n出成出 出a出c出本出o出s出s出 出a出l出l出 出d出i出設置出e出n出s出i出o出n出s出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出5出.出0出f出,出 出軍出C出o出l出o出本出:出:出G出本出e出e出n出,出 出T出E出X出T出(出"出🌌出 出A出I出 出U出n出i出正出e出本出s出e出 出S出a出正出i出o出本出:出 出C出o出s出設置出i出c出 出M出o出n出i出t出o出本出i出n出成出 出S出t出a出本出t出e出d出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出S出t出o出p出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出(出)出
+出{出
+出 出 出 出 出b出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出A出c出t出i出正出e出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出T出i出c出k出e出本出輸入出a出n出d出l出e出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出T出i出c出k出e出本出:出:出G出e出t出C出o出本出e出T出i出c出k出e出本出(出)出.出R出e出設置出o出正出e出T出i出c出k出e出本出(出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出T出i出c出k出e出本出輸入出a出n出d出l出e出)出;出
+出 出 出 出 出 出 出 出 出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出T出i出c出k出e出本出輸入出a出n出d出l出e出.出R出e出s出e出t出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出t出o出p出p出e出d出 出使出n出i出正出e出本出s出e出 出設置出o出n出i出t出o出本出i出n出成出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出5出.出0出f出,出 出軍出C出o出l出o出本出:出:出Y出e出l出l出o出w出,出 出T出E出X出T出(出"出🌌出 出A出I出 出U出n出i出正出e出本出s出e出 出S出a出正出i出o出本出:出 出C出o出s出設置出i出c出 出M出o出n出i出t出o出本出i出n出成出 出S出t出o出p出p出e出d出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出S出c出a出n出軍出o出本出C出o出s出設置出i出c出T出h出本出e出a出t出s出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出c出a出n出n出i出n出成出 出f出o出本出 出c出o出s出設置出i出c出 出t出h出本出e出a出t出s出 出a出c出本出o出s出s出 出成出a出l出a出x出i出e出s出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出模出擬出宇出宙出級出威出脅出檢出測出
+出 出 出 出 出i出f出 出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出0出.出2出f出)出 出/出/出 出2出0出%出機出率出檢出測出到出宇出宙出威出脅出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出 出的出e出w出T出h出本出e出a出t出;出
+出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出T出h出本出e出a出t出的出a出設置出e出 出=出 出G出e出n出e出本出a出t出e出C出o出s出設置出i出c出T出h出本出e出a出t出的出a出設置出e出(出)出;出
+出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出T出h出本出e出a出t出T出y出p出e出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出>出(出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出1出4出)出)出;出
+出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出T出h出本出e出a出t出L出e出正出e出l出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出>出(出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出,出 出6出)出)出;出
+出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出T出h出本出e出a出t出D出e出s出c出本出i出p出t出i出o出n出 出=出 出G出e出n出e出本出a出t出e出C出o出s出設置出i出c出T出h出本出e出a出t出D出e出s出c出本出i出p出t出i出o出n出(出)出;出
+出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出T出h出本出e出a出t出L出o出c出a出t出i出o出n出 出=出 出軍出V出e出c出t出o出本出3出d出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出0出0出0出0出0出,出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出0出0出0出0出0出,出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出0出0出0出0出0出)出;出
+出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出T出h出本出e出a出t出R出a出d出i出使出s出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出1出0出0出,出 出1出0出0出0出0出)出;出 出/出/出 出光出年出
+出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出T出i出設置出e出T出o出I出設置出p出a出c出t出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出1出0出0出,出 出1出0出0出0出0出)出;出 出/出/出 出年出
+出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出C出o出n出f出i出d出e出n出c出e出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出0出.出5出,出 出1出.出0出)出;出
+出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出R出e出c出o出設置出設置出e出n出d出e出d出S出t出本出a出t出e出成出y出 出=出 出G出e出n出e出本出a出t出e出R出e出c出o出設置出設置出e出n出d出e出d出C出o出s出設置出i出c出S出t出本出a出t出e出成出y出(出的出e出w出T出h出本出e出a出t出.出T出h出本出e出a出t出L出e出正出e出l出)出;出
+出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出E出n出e出本出成出y出R出e出q出使出i出本出e出d出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出1出0出0出0出0出,出 出1出0出0出0出0出0出0出)出;出
+出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出C出i出正出i出l出i出z出a出t出i出o出n出s出A出t出R出i出s出k出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出,出 出1出0出0出0出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出生出成出受出影出響出區出域出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出A出f出f出e出c出t出e出d出R出e出成出i出o出n出C出o出使出n出t出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出,出 出1出0出)出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出A出f出f出e出c出t出e出d出R出e出成出i出o出n出C出o出使出n出t出;出 出+出+出i出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出U出n出i出正出e出本出s出e出R出e出成出i出o出n出 出R出e出成出i出o出n出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出成出i出o出n出.出R出e出成出i出o出n出的出a出設置出e出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出G出a出l出a出x出y出 出S出e出c出t出o出本出 出%出d出"出)出,出 出i出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出成出i出o出n出.出G出a出l出a出c出t出i出c出C出o出o出本出d出i出n出a出t出e出s出 出=出 出軍出V出e出c出t出o出本出3出d出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出0出0出0出,出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出0出0出0出,出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出0出0出0出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出成出i出o出n出.出S出t出a出本出C出o出使出n出t出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出0出0出0出0出0出0出,出 出1出0出0出0出0出0出0出0出0出0出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出成出i出o出n出.出T出h出本出e出a出t出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出成出i出o出n出.出b出I出s出S出t出a出b出l出e出 出=出 出R出e出成出i出o出n出.出T出h出本出e出a出t出L出e出正出e出l出 出<出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出.出A出f出f出e出c出t出e出d出R出e出成出i出o出n出s出.出A出d出d出(出R出e出成出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出D出e出t出e出c出t出e出d出C出o出s出設置出i出c出T出h出本出e出a出t出s出.出A出d出d出(出的出e出w出T出h出本出e出a出t出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出的出o出t出i出f出y出U出n出i出正出e出本出s出e出T出h出本出e出a出t出(出的出e出w出T出h出本出e出a出t出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出C出O出S出M出I出C出 出T出輸入出R出E出A出T出 出D出E出T出E出C出T出E出D出:出 出%出s出 出(出L出e出正出e出l出:出 出%出d出,出 出C出i出正出i出l出i出z出a出t出i出o出n出s出 出a出t出 出R出i出s出k出:出 出%出d出)出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出的出e出w出T出h出本出e出a出t出.出T出h出本出e出a出t出的出a出設置出e出,出 出(出i出n出t出3出2出)出的出e出w出T出h出本出e出a出t出.出T出h出本出e出a出t出L出e出正出e出l出,出 出的出e出w出T出h出本出e出a出t出.出C出i出正出i出l出i出z出a出t出i出o出n出s出A出t出R出i出s出k出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出D出e出t出e出c出t出U出n出i出正出e出本出s出e出T出h出本出e出a出t出s出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出D出e出t出e出c出t出i出n出成出 出使出n出i出正出e出本出s出e出-出l出e出正出e出l出 出t出h出本出e出a出t出s出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出測出多出種出類出型出的出宇出宙出威出脅出
+出 出 出 出 出T出A出本出本出a出y出<出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出>出 出T出h出本出e出a出t出T出y出p出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出S出使出p出e出本出n出o出正出a出,出
+出 出 出 出 出 出 出 出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出B出l出a出c出k出輸入出o出l出e出,出
+出 出 出 出 出 出 出 出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出G出a出設置出設置出a出R出a出y出B出使出本出s出t出,出
+出 出 出 出 出 出 出 出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出D出a出本出k出M出a出t出t出e出本出A出n出o出設置出a出l出y出,出
+出 出 出 出 出 出 出 出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出V出o出i出d出E出x出p出a出n出s出i出o出n出
+出 出 出 出 出}出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出 出T出h出本出e出a出t出T出y出p出e出 出:出 出T出h出本出e出a出t出T出y出p出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出0出.出1出f出)出 出/出/出 出1出0出%出機出率出每出種出類出型出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出 出T出h出本出e出a出t出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出T出y出p出e出 出=出 出T出h出本出e出a出t出T出y出p出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出L出e出正出e出l出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出>出(出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出2出,出 出5出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出s出w出i出t出c出h出 出(出T出h出本出e出a出t出T出y出p出e出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出S出使出p出e出本出n出o出正出a出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出T出y出p出e出-出I出I出 出S出使出p出e出本出n出o出正出a出 出C出h出a出i出n出 出R出e出a出c出t出i出o出n出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出M出使出l出t出i出p出l出e出 出s出t出a出本出s出 出a出p出p出本出o出a出c出h出i出n出成出 出s出使出p出e出本出n出o出正出a出 出p出h出a出s出e出 出s出i出設置出使出l出t出a出n出e出o出使出s出l出y出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出B出l出a出c出k出輸入出o出l出e出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出R出o出成出使出e出 出S出使出p出e出本出設置出a出s出s出i出正出e出 出B出l出a出c出k出 出輸入出o出l出e出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出D出i出s出p出l出a出c出e出d出 出b出l出a出c出k出 出h出o出l出e出 出c出o出n出s出使出設置出i出n出成出 出s出t出e出l出l出a出本出 出s出y出s出t出e出設置出s出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出G出a出設置出設置出a出R出a出y出B出使出本出s出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出D出i出本出e出c出t出e出d出 出G出a出設置出設置出a出 出R出a出y出 出B出使出本出s出t出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出輸入出i出成出h出-出e出n出e出本出成出y出 出b出使出本出s出t出 出t出h出本出e出a出t出e出n出i出n出成出 出設置出使出l出t出i出p出l出e出 出s出t出a出本出 出s出y出s出t出e出設置出s出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出D出a出本出k出M出a出t出t出e出本出A出n出o出設置出a出l出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出D出a出本出k出 出M出a出t出t出e出本出 出D出e出n出s出i出t出y出 出軍出l出使出c出t出使出a出t出i出o出n出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出U出n出使出s出使出a出l出 出d出a出本出k出 出設置出a出t出t出e出本出 出c出o出n出c出e出n出t出本出a出t出i出o出n出 出a出f出f出e出c出t出i出n出成出 出成出本出a出正出i出t出y出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出V出o出i出d出E出x出p出a出n出s出i出o出n出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出的出a出設置出e出 出=出 出T出E出X出T出(出"出A出c出c出e出l出e出本出a出t出e出d出 出V出o出i出d出 出E出x出p出a出n出s出i出o出n出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出h出本出e出a出t出.出T出h出本出e出a出t出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出C出o出s出設置出i出c出 出正出o出i出d出 出e出x出p出a出n出d出i出n出成出 出a出t出 出d出a出n出成出e出本出o出使出s出 出本出a出t出e出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出D出e出t出e出c出t出e出d出C出o出s出設置出i出c出T出h出本出e出a出t出s出.出A出d出d出(出T出h出本出e出a出t出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出o出t出i出f出y出U出n出i出正出e出本出s出e出T出h出本出e出a出t出(出T出h出本出e出a出t出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出G出e出n出e出本出a出t出e出C出o出s出設置出i出c出S出t出本出a出t出e出成出y出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出G出e出n出e出本出a出t出i出n出成出 出c出o出s出設置出i出c出 出s出a出正出i出o出本出 出s出t出本出a出t出e出成出y出 出f出o出本出:出 出%出s出"出)出,出 出*出T出h出本出e出a出t出.出T出h出本出e出a出t出的出a出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出 出S出t出本出a出t出e出成出y出 出=出 出T出h出本出e出a出t出.出R出e出c出o出設置出設置出e出n出d出e出d出S出t出本出a出t出e出成出y出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出威出脅出類出型出調出整出策出略出
+出 出 出 出 出s出w出i出t出c出h出 出(出T出h出本出e出a出t出.出T出h出本出e出a出t出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出S出使出p出e出本出n出o出正出a出:出
+出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出 出=出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出S出t出e出l出l出a出本出E出n出成出i出n出e出e出本出i出n出成出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出B出l出a出c出k出輸入出o出l出e出:出
+出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出 出=出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出基本出o出本出設置出h出o出l出e出M出a出n出i出p出使出l出a出t出i出o出n出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出G出a出設置出設置出a出R出a出y出B出使出本出s出t出:出
+出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出 出=出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出D出i出設置出e出n出s出i出o出n出a出l出S出h出i出e出l出d出i出n出成出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出D出a出本出k出M出a出t出t出e出本出A出n出o出設置出a出l出y出:出
+出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出 出=出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出Q出使出a出n出t出使出設置出S出t出a出b出i出l出i出z出a出t出i出o出n出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出T出i出設置出e出P出a出本出a出d出o出x出:出
+出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出 出=出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出T出i出設置出e出M出a出n出i出p出使出l出a出t出i出o出n出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出T出y出p出e出:出:出R出e出a出l出i出t出y出D出i出s出t出o出本出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出 出=出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出R出e出a出l出i出t出y出A出n出c出h出o出本出i出n出成出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出G出e出n出e出本出a出t出e出U出n出i出正出e出本出s出e出A出c出t出i出o出n出P出l出a出n出(出T出h出本出e出a出t出,出 出S出t出本出a出t出e出成出y出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出G出e出n出e出本出a出t出e出U出n出i出正出e出本出s出e出A出c出t出i出o出n出P出l出a出n出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出,出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出 出S出t出本出a出t出e出成出y出)出
+出{出
+出 出 出 出 出軍出U出n出i出正出e出本出s出e出A出c出t出i出o出n出P出l出a出n出 出的出e出w出P出l出a出n出;出
+出 出 出 出 出的出e出w出P出l出a出n出.出P出l出a出n出的出a出設置出e出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出C出o出s出設置出i出c出 出R出e出s出p出o出n出s出e出 出P出l出a出n出 出f出o出本出 出%出s出"出)出,出 出*出T出h出本出e出a出t出.出T出h出本出e出a出t出的出a出設置出e出)出;出
+出 出 出 出 出的出e出w出P出l出a出n出.出S出t出本出a出t出e出成出y出 出=出 出S出t出本出a出t出e出成出y出;出
+出 出 出 出 出的出e出w出P出l出a出n出.出E出s出t出i出設置出a出t出e出d出S出使出c出c出e出s出s出R出a出t出e出 出=出 出C出a出l出c出使出l出a出t出e出C出o出s出設置出i出c出S出使出c出c出e出s出s出R出a出t出e出(出T出h出本出e出a出t出,出 出S出t出本出a出t出e出成出y出)出;出
+出 出 出 出 出的出e出w出P出l出a出n出.出E出x出e出c出使出t出i出o出n出T出i出設置出e出 出=出 出E出s出t出i出設置出a出t出e出C出o出s出設置出i出c出E出x出e出c出使出t出i出o出n出T出i出設置出e出(出T出h出本出e出a出t出,出 出S出t出本出a出t出e出成出y出)出;出
+出 出 出 出 出的出e出w出P出l出a出n出.出E出n出e出本出成出y出C出o出s出t出 出=出 出T出h出本出e出a出t出.出E出n出e出本出成出y出R出e出q出使出i出本出e出d出;出
+出 出 出 出 出的出e出w出P出l出a出n出.出C出i出正出i出l出i出z出a出t出i出o出n出s出R出e出q出使出i出本出e出d出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出,出 出1出0出0出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出生出成出行出動出步出驟出
+出 出 出 出 出G出e出n出e出本出a出t出e出C出o出s出設置出i出c出A出c出t出i出o出n出S出t出e出p出s出(出的出e出w出P出l出a出n出,出 出T出h出本出e出a出t出,出 出S出t出本出a出t出e出成出y出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出計出算出所出需出技出術出
+出 出 出 出 出的出e出w出P出l出a出n出.出R出e出q出使出i出本出e出d出T出e出c出h出n出o出l出o出成出i出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出Q出使出a出n出t出使出設置出 出軍出i出e出l出d出 出M出a出n出i出p出使出l出a出t出i出o出n出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出G出本出a出正出i出t出a出t出i出o出n出a出l出 出C出o出n出t出本出o出l出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出D出i出設置出e出n出s出i出o出n出a出l出 出E出n出成出i出n出e出e出本出i出n出成出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出C出o出s出設置出i出c出 出E出n出e出本出成出y出 出輸入出a出本出正出e出s出t出i出n出成出"出)出
+出 出 出 出 出}出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出潛出在出風出險出
+出 出 出 出 出A出s出s出e出s出s出C出o出s出設置出i出c出P出o出t出e出n出t出i出a出l出R出i出s出k出s出(出的出e出w出P出l出a出n出,出 出T出h出本出e出a出t出)出;出
+出 出 出 出 出
+出 出 出 出 出A出正出a出i出l出a出b出l出e出C出o出s出設置出i出c出P出l出a出n出s出.出A出d出d出(出的出e出w出P出l出a出n出)出;出
+出 出 出 出 出
+出 出 出 出 出的出o出t出i出f出y出C出o出s出設置出i出c出P出l出a出n出G出e出n出e出本出a出t出e出d出(出的出e出w出P出l出a出n出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出G出e出n出e出本出a出t出e出d出 出c出o出s出設置出i出c出 出a出c出t出i出o出n出 出p出l出a出n出:出 出%出s出 出(出S出使出c出c出e出s出s出 出R出a出t出e出:出 出%出.出1出f出%出%出,出 出E出n出e出本出成出y出 出C出o出s出t出:出 出%出.出0出f出)出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出的出e出w出P出l出a出n出.出P出l出a出n出的出a出設置出e出,出 出的出e出w出P出l出a出n出.出E出s出t出i出設置出a出t出e出d出S出使出c出c出e出s出s出R出a出t出e出 出*出 出1出0出0出,出 出的出e出w出P出l出a出n出.出E出n出e出本出成出y出C出o出s出t出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出E出x出e出c出使出t出e出C出o出s出設置出i出c出P出l出a出n出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出A出c出t出i出o出n出P出l出a出n出&出 出P出l出a出n出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出E出x出e出c出使出t出i出n出成出 出c出o出s出設置出i出c出 出p出l出a出n出:出 出%出s出"出)出,出 出*出P出l出a出n出.出P出l出a出n出的出a出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出模出擬出執出行出過出程出
+出 出 出 出 出b出o出o出l出 出b出S出使出c出c出e出s出s出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出P出l出a出n出.出E出s出t出i出設置出a出t出e出d出S出使出c出c出e出s出s出R出a出t出e出;出
+出 出 出 出 出
+出 出 出 出 出軍出U出n出i出正出e出本出s出e出M出i出s出s出i出o出n出R出e出s出使出l出t出 出R出e出s出使出l出t出;出
+出 出 出 出 出R出e出s出使出l出t出.出b出S出使出c出c出e出s出s出 出=出 出b出S出使出c出c出e出s出s出;出
+出 出 出 出 出R出e出s出使出l出t出.出M出i出s出s出i出o出n出的出a出設置出e出 出=出 出P出l出a出n出.出P出l出a出n出的出a出設置出e出;出
+出 出 出 出 出R出e出s出使出l出t出.出C出i出正出i出l出i出z出a出t出i出o出n出s出S出a出正出e出d出 出=出 出b出S出使出c出c出e出s出s出 出基本出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出0出,出 出1出0出0出0出)出 出:出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出1出0出0出)出;出
+出 出 出 出 出R出e出s出使出l出t出.出S出t出a出本出S出y出s出t出e出設置出s出S出a出正出e出d出 出=出 出b出S出使出c出c出e出s出s出 出基本出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出0出0出,出 出1出0出0出0出0出)出 出:出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出1出0出0出0出)出;出
+出 出 出 出 出R出e出s出使出l出t出.出E出n出e出本出成出y出E出x出p出e出n出d出e出d出 出=出 出P出l出a出n出.出E出n出e出本出成出y出C出o出s出t出;出
+出 出 出 出 出R出e出s出使出l出t出.出T出i出設置出e出T出a出k出e出n出 出=出 出P出l出a出n出.出E出x出e出c出使出t出i出o出n出T出i出設置出e出;出
+出 出 出 出 出R出e出s出使出l出t出.出A出f出t出e出本出A出c出t出i出o出n出R出e出p出o出本出t出 出=出 出b出S出使出c出c出e出s出s出 出基本出 出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出i出s出s出i出o出n出 出c出o出設置出p出l出e出t出e出d出 出s出使出c出c出e出s出s出f出使出l出l出y出.出 出T出h出本出e出a出t出 出n出e出使出t出本出a出l出i出z出e出d出.出"出)出 出:出 出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出i出s出s出i出o出n出 出f出a出i出l出e出d出.出 出P出a出本出t出i出a出l出 出e出正出a出c出使出a出t出i出o出n出 出o出n出l出y出.出"出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出A出I出效出果出評出分出
+出 出 出 出 出i出f出 出(出b出S出使出c出c出e出s出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出o出s出設置出i出c出A出I出E出f出f出e出c出t出i出正出e出n出e出s出s出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出o出s出設置出i出c出A出I出E出f出f出e出c出t出i出正出e出n出e出s出s出 出+出 出0出.出0出3出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出C出o出s出設置出i出c出E出n出e出本出成出y出R出e出s出e出本出正出e出s出 出-出=出 出P出l出a出n出.出E出n出e出本出成出y出C出o出s出t出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出o出s出設置出i出c出A出I出E出f出f出e出c出t出i出正出e出n出e出s出s出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出o出s出設置出i出c出A出I出E出f出f出e出c出t出i出正出e出n出e出s出s出 出-出 出0出.出0出2出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出的出o出t出i出f出y出C出o出s出設置出i出c出M出i出s出s出i出o出n出C出o出設置出p出l出e出t出e出d出(出R出e出s出使出l出t出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出C出o出l出o出本出 出M出e出s出s出a出成出e出C出o出l出o出本出 出=出 出b出S出使出c出c出e出s出s出 出基本出 出軍出C出o出l出o出本出:出:出G出本出e出e出n出 出:出 出軍出C出o出l出o出本出:出:出R出e出d出;出
+出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出 出M出e出s出s出a出成出e出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出🌌出 出C出o出s出設置出i出c出 出M出i出s出s出i出o出n出 出%出s出:出 出%出s出\出n出C出i出正出i出l出i出z出a出t出i出o出n出s出 出S出a出正出e出d出:出 出%出d出,出 出S出t出a出本出 出S出y出s出t出e出設置出s出:出 出%出d出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出S出使出c出c出e出s出s出 出基本出 出T出E出X出T出(出"出S出U出C出C出E出S出S出"出)出 出:出 出T出E出X出T出(出"出軍出A出I出L出E出D出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出P出l出a出n出.出P出l出a出n出的出a出設置出e出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出使出l出t出.出C出i出正出i出l出i出z出a出t出i出o出n出s出S出a出正出e出d出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出使出l出t出.出S出t出a出本出S出y出s出t出e出設置出s出S出a出正出e出d出)出;出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出1出0出.出0出f出,出 出M出e出s出s出a出成出e出C出o出l出o出本出,出 出M出e出s出s出a出成出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出O出p出t出i出設置出i出z出e出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出s出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出O出p出t出i出設置出i出z出i出n出成出 出c出o出s出設置出i出c出 出本出e出s出o出使出本出c出e出s出 出a出c出本出o出s出s出 出t出h出e出 出使出n出i出正出e出本出s出e出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出A出n出a出l出y出z出e出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出S出t出a出t出使出s出(出)出;出
+出 出 出 出 出O出p出t出i出設置出i出z出e出C出o出s出設置出i出c出A出l出l出o出c出a出t出i出o出n出S出t出本出a出t出e出成出y出(出)出;出
+出 出 出 出 出U出p出d出a出t出e出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出S出t出a出t出使出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出能出量出儲出備出恢出復出
+出 出 出 出 出C出o出s出設置出i出c出E出n出e出本出成出y出R出e出s出e出本出正出e出s出 出+出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出1出0出0出0出,出 出1出0出0出0出0出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出A出l出l出o出c出a出t出e出G出a出l出a出c出t出i出c出R出e出s出o出使出本出c出e出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出s出o出使出本出c出e出T出y出p出e出,出 出f出l出o出a出t出 出A出設置出o出使出n出t出,出 出E出R出e出s出o出使出本出c出e出P出本出i出o出本出i出t出y出 出P出本出i出o出本出i出t出y出)出
+出{出
+出 出 出 出 出軍出U出n出i出正出e出本出s出e出R出e出s出o出使出本出c出e出O出p出t出i出設置出i出z出a出t出i出o出n出 出R出e出s出o出使出本出c出e出D出a出t出a出;出
+出 出 出 出 出R出e出s出o出使出本出c出e出D出a出t出a出.出R出e出s出o出使出本出c出e出T出y出p出e出 出=出 出R出e出s出o出使出本出c出e出T出y出p出e出;出
+出 出 出 出 出R出e出s出o出使出本出c出e出D出a出t出a出.出C出使出本出本出e出n出t出A出設置出o出使出n出t出 出=出 出A出設置出o出使出n出t出;出
+出 出 出 出 出R出e出s出o出使出本出c出e出D出a出t出a出.出P出本出i出o出本出i出t出y出 出=出 出P出本出i出o出本出i出t出y出;出
+出 出 出 出 出R出e出s出o出使出本出c出e出D出a出t出a出.出E出f出f出i出c出i出e出n出c出y出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出0出.出7出,出 出1出.出0出)出;出
+出 出 出 出 出R出e出s出o出使出本出c出e出D出a出t出a出.出A出l出l出o出c出a出t出i出o出n出S出t出本出a出t出e出成出y出 出=出 出G出e出n出e出本出a出t出e出C出o出s出設置出i出c出A出l出l出o出c出a出t出i出o出n出S出t出本出a出t出e出成出y出(出P出本出i出o出本出i出t出y出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出添出加出來出源出區出域出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出3出;出 出+出+出i出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出U出n出i出正出e出本出s出e出R出e出成出i出o出n出 出S出o出使出本出c出e出;出
+出 出 出 出 出 出 出 出 出S出o出使出本出c出e出.出R出e出成出i出o出n出的出a出設置出e出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出R出e出s出o出使出本出c出e出 出S出e出c出t出o出本出 出%出d出"出)出,出 出i出)出;出
+出 出 出 出 出 出 出 出 出S出o出使出本出c出e出.出G出a出l出a出c出t出i出c出C出o出o出本出d出i出n出a出t出e出s出 出=出 出軍出V出e出c出t出o出本出3出d出(出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出0出0出,出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出0出0出,出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出*出 出1出0出0出)出;出
+出 出 出 出 出 出 出 出 出S出o出使出本出c出e出.出S出t出a出本出C出o出使出n出t出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出0出0出0出0出0出0出,出 出5出0出0出0出0出0出0出)出;出
+出 出 出 出 出 出 出 出 出R出e出s出o出使出本出c出e出D出a出t出a出.出S出o出使出本出c出e出R出e出成出i出o出n出s出.出A出d出d出(出S出o出使出本出c出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出S出t出a出t出使出s出.出A出d出d出(出R出e出s出o出使出本出c出e出D出a出t出a出)出;出
+出 出 出 出 出
+出 出 出 出 出的出o出t出i出f出y出G出a出l出a出c出t出i出c出R出e出s出o出使出本出c出e出O出p出t出i出設置出i出z出e出d出(出R出e出s出o出使出本出c出e出D出a出t出a出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出l出l出o出c出a出t出e出d出 出%出.出2出f出 出c出o出s出設置出i出c出 出使出n出i出t出s出 出o出f出 出%出s出 出(出P出本出i出o出本出i出t出y出:出 出%出d出)出"出)出,出 出A出設置出o出使出n出t出,出 出*出R出e出s出o出使出本出c出e出T出y出p出e出,出 出(出i出n出t出3出2出)出P出本出i出o出本出i出t出y出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出E出s出t出a出b出l出i出s出h出C出i出正出i出l出i出z出a出t出i出o出n出C出o出n出t出a出c出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出i出正出i出l出i出z出a出t出i出o出n出的出a出設置出e出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出E出s出t出a出b出l出i出s出h出i出n出成出 出c出o出n出t出a出c出t出 出w出i出t出h出 出c出i出正出i出l出i出z出a出t出i出o出n出:出 出%出s出"出)出,出 出*出C出i出正出i出l出i出z出a出t出i出o出n出的出a出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出C出i出正出i出l出i出z出a出t出i出o出n出C出o出o出p出e出本出a出t出i出o出n出 出的出e出w出C出i出正出i出l出i出z出a出t出i出o出n出;出
+出 出 出 出 出的出e出w出C出i出正出i出l出i出z出a出t出i出o出n出.出C出i出正出i出l出i出z出a出t出i出o出n出的出a出設置出e出 出=出 出C出i出正出i出l出i出z出a出t出i出o出n出的出a出設置出e出;出
+出 出 出 出 出的出e出w出C出i出正出i出l出i出z出a出t出i出o出n出.出T出e出c出h出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出,出 出1出0出)出;出
+出 出 出 出 出的出e出w出C出i出正出i出l出i出z出a出t出i出o出n出.出C出o出n出t出本出i出b出使出t出i出o出n出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出的出e出w出C出i出正出i出l出i出z出a出t出i出o出n出.出b出I出s出C出o出o出p出e出本出a出t出i出n出成出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出(出)出 出<出 出0出.出7出f出;出 出/出/出 出7出0出%出機出率出願出意出合出作出
+出 出 出 出 出
+出 出 出 出 出/出/出 出隨出機出分出配出能出力出
+出 出 出 出 出T出A出本出本出a出y出<出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出>出 出A出l出l出C出a出p出a出b出i出l出i出t出i出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出S出t出e出l出l出a出本出E出n出成出i出n出e出e出本出i出n出成出,出
+出 出 出 出 出 出 出 出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出Q出使出a出n出t出使出設置出S出t出a出b出i出l出i出z出a出t出i出o出n出,出
+出 出 出 出 出 出 出 出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出D出i出設置出e出n出s出i出o出n出a出l出S出h出i出e出l出d出i出n出成出,出
+出 出 出 出 出 出 出 出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出E出n出e出本出成出y出R出e出d出i出s出t出本出i出b出使出t出i出o出n出
+出 出 出 出 出}出;出
+出 出 出 出 出
+出 出 出 出 出i出n出t出3出2出 出C出a出p出a出b出i出l出i出t出y出C出o出使出n出t出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出,出 出4出)出;出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出C出a出p出a出b出i出l出i出t出y出C出o出使出n出t出;出 出+出+出i出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出w出C出i出正出i出l出i出z出a出t出i出o出n出.出C出a出p出a出b出i出l出i出t出i出e出s出.出A出d出d出(出A出l出l出C出a出p出a出b出i出l出i出t出i出e出s出[出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出A出l出l出C出a出p出a出b出i出l出i出t出i出e出s出.出的出使出設置出(出)出 出-出 出1出)出]出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出A出l出l出i出e出d出C出i出正出i出l出i出z出a出t出i出o出n出s出.出A出d出d出(出的出e出w出C出i出正出i出l出i出z出a出t出i出o出n出)出;出
+出 出 出 出 出
+出 出 出 出 出的出o出t出i出f出y出C出i出正出i出l出i出z出a出t出i出o出n出C出o出n出t出a出c出t出e出d出(出的出e出w出C出i出正出i出l出i出z出a出t出i出o出n出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出 出M出e出s出s出a出成出e出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出🌌出 出C出o出n出t出a出c出t出 出e出s出t出a出b出l出i出s出h出e出d出 出w出i出t出h出 出%出s出 出(出T出e出c出h出 出L出e出正出e出l出:出 出%出d出,出 出C出o出o出p出e出本出a出t出i出o出n出:出 出%出s出)出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出C出i出正出i出l出i出z出a出t出i出o出n出的出a出設置出e出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出C出i出正出i出l出i出z出a出t出i出o出n出.出T出e出c出h出L出e出正出e出l出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出C出i出正出i出l出i出z出a出t出i出o出n出.出b出I出s出C出o出o出p出e出本出a出t出i出n出成出 出基本出 出T出E出X出T出(出"出Y出E出S出"出)出 出:出 出T出E出X出T出(出"出的出O出"出)出)出;出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出5出.出0出f出,出 出軍出C出o出l出o出本出:出:出B出l出使出e出,出 出M出e出s出s出a出成出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出A出c出t出i出正出a出t出e出C出o出s出設置出i出c出E出設置出e出本出成出e出n出c出y出P出本出o出t出o出c出o出l出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出C出o出s出設置出i出c出E出設置出e出本出成出e出n出c出y出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出C出o出s出設置出i出c出 出e出設置出e出本出成出e出n出c出y出 出p出本出o出t出o出c出o出l出 出a出l出本出e出a出d出y出 出a出c出t出i出正出e出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出b出C出o出s出設置出i出c出E出設置出e出本出成出e出n出c出y出A出c出t出i出正出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出🚨出 出C出O出S出M出I出C出 出E出M出E出R出G出E出的出C出Y出 出P出R出O出T出O出C出O出L出 出A出C出T出I出V出A出T出E出D出 出🚨出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出啟出動出所出有出可出用出文出明出
+出 出 出 出 出f出o出本出 出(出軍出C出i出正出i出l出i出z出a出t出i出o出n出C出o出o出p出e出本出a出t出i出o出n出&出 出C出i出正出 出:出 出A出l出l出i出e出d出C出i出正出i出l出i出z出a出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出i出正出.出b出I出s出C出o出o出p出e出本出a出t出i出n出成出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出C出i出正出.出C出o出n出t出本出i出b出使出t出i出o出n出L出e出正出e出l出 出=出 出1出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出部出署出緊出急出資出源出
+出 出 出 出 出D出e出p出l出o出y出C出o出s出設置出i出c出E出設置出e出本出成出e出n出c出y出R出e出s出o出使出本出c出e出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出生出成出緊出急出計出劃出
+出 出 出 出 出G出e出n出e出本出a出t出e出E出設置出e出本出成出e出n出c出y出C出o出s出設置出i出c出P出l出a出n出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出1出5出.出0出f出,出 出軍出C出o出l出o出本出:出:出R出e出d出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出🚨出 出C出O出S出M出I出C出 出E出M出E出R出G出E出的出C出Y出 出P出R出O出T出O出C出O出L出 出A出C出T出I出V出A出T出E出D出 出🚨出\出n出A出l出l出 出c出i出正出i出l出i出z出a出t出i出o出n出s出 出設置出o出b出i出l出i出z出e出d出 出f出o出本出 出使出n出i出正出e出本出s出a出l出 出d出e出f出e出n出s出e出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出D出e出p出l出o出y出C出o出s出設置出i出c出E出設置出e出本出成出e出n出c出y出R出e出s出o出使出本出c出e出s出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出D出e出p出l出o出y出i出n出成出 出c出o出s出設置出i出c出 出e出設置出e出本出成出e出n出c出y出 出本出e出s出o出使出本出c出e出s出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出E出設置出e出本出成出e出n出c出y出R出e出s出o出使出本出c出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出Q出使出a出n出t出使出設置出 出S出t出a出b出i出l出i出z出a出t出i出o出n出 出A出本出本出a出y出s出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出G出本出a出正出i出t出a出t出i出o出n出a出l出 出A出n出c出h出o出本出 出的出e出t出w出o出本出k出s出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出D出i出設置出e出n出s出i出o出n出a出l出 出B出a出本出本出i出e出本出 出G出e出n出e出本出a出t出o出本出s出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出C出o出s出設置出i出c出 出E出n出e出本出成出y出 出C出o出l出l出e出c出t出o出本出s出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出S出t出e出l出l出a出本出 出C出o出n出t出本出o出l出 出S出t出a出t出i出o出n出s出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出基本出o出本出設置出h出o出l出e出 出T出本出a出n出s出i出t出 出G出a出t出e出s出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出R出e出a出l出i出t出y出 出A出n出c出h出o出本出 出M出a出t出本出i出c出e出s出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出T出i出設置出e出 出D出i出l出a出t出i出o出n出 出B出使出f出f出e出本出s出"出)出
+出 出 出 出 出}出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出s出o出使出本出c出e出 出:出 出E出設置出e出本出成出e出n出c出y出R出e出s出o出使出本出c出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出l出l出o出c出a出t出e出G出a出l出a出c出t出i出c出R出e出s出o出使出本出c出e出s出(出R出e出s出o出使出本出c出e出,出 出1出0出0出0出0出.出0出f出,出 出E出R出e出s出o出使出本出c出e出P出本出i出o出本出i出t出y出:出:出C出本出i出t出i出c出a出l出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出I出n出i出t出i出a出t出e出G出e出n出e出s出i出s出P出本出o出t出o出c出o出l出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出i出t出i出a出t出i出n出成出 出G出e出n出e出s出i出s出 出P出本出o出t出o出c出o出l出 出-出 出U出n出i出正出e出本出s出a出l出 出本出e出s出t出o出本出a出t出i出o出n出 出s出e出q出使出e出n出c出e出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出創出世出協出議出：出在出最出極出端出情出況出下出重出建出宇出宙出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出2出0出.出0出f出,出 出軍出C出o出l出o出本出:出:出P出使出本出p出l出e出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出✨出 出G出E出的出E出S出I出S出 出P出R出O出T出O出C出O出L出 出I出的出I出T出I出A出T出E出D出 出✨出\出n出B出e出成出i出n出n出i出n出成出 出使出n出i出正出e出本出s出a出l出 出本出e出s出t出o出本出a出t出i出o出n出 出s出e出q出使出e出n出c出e出.出.出.出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出重出置出宇出宙出參出數出
+出 出 出 出 出C出o出s出設置出i出c出E出n出e出本出成出y出R出e出s出e出本出正出e出s出 出=出 出1出0出0出0出0出0出0出0出.出0出f出;出
+出 出 出 出 出C出o出s出設置出i出c出A出I出E出f出f出e出c出t出i出正出e出n出e出s出s出 出=出 出1出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出清出除出所出有出威出脅出
+出 出 出 出 出D出e出t出e出c出t出e出d出C出o出s出設置出i出c出T出h出本出e出a出t出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出P出本出e出d出i出c出t出e出d出C出o出s出設置出i出c出T出h出本出e出a出t出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出G出e出n出e出s出i出s出 出P出本出o出t出o出c出o出l出 出c出o出設置出p出l出e出t出e出.出 出U出n出i出正出e出本出s出e出 出本出e出s出t出o出本出e出d出 出t出o出 出b出a出s出e出l出i出n出e出 出s出t出a出t出e出.出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出O出p出e出n出基本出o出本出設置出h出o出l出e出T出o出T出h出本出e出a出t出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出3出d出&出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出O出p出e出n出i出n出成出 出w出o出本出設置出h出o出l出e出 出t出o出 出c出o出s出設置出i出c出 出t出h出本出e出a出t出 出a出t出 出c出o出o出本出d出i出n出a出t出e出s出:出 出%出s出"出)出,出 出*出T出a出本出成出e出t出L出o出c出a出t出i出o出n出.出T出o出S出t出本出i出n出成出(出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出5出.出0出f出,出 出軍出C出o出l出o出本出:出:出C出y出a出n出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出🌀出 出基本出o出本出設置出h出o出l出e出 出o出p出e出n出e出d出 出t出o出 出t出h出本出e出a出t出 出l出o出c出a出t出i出o出n出:出 出%出s出"出)出,出 出*出T出a出本出成出e出t出L出o出c出a出t出i出o出n出.出T出o出S出t出本出i出n出成出(出)出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出C出本出e出a出t出e出D出i出設置出e出n出s出i出o出n出a出l出S出h出i出e出l出d出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出3出d出&出 出C出e出n出t出e出本出,出 出f出l出o出a出t出 出R出a出d出i出使出s出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出本出e出a出t出i出n出成出 出d出i出設置出e出n出s出i出o出n出a出l出 出s出h出i出e出l出d出 出a出t出 出%出s出 出w出i出t出h出 出本出a出d出i出使出s出 出%出.出2出f出 出l出i出成出h出t出-出y出e出a出本出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出C出e出n出t出e出本出.出T出o出S出t出本出i出n出成出(出)出,出 出R出a出d出i出使出s出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出5出.出0出f出,出 出軍出C出o出l出o出本出:出:出T出使出本出q出使出o出i出s出e出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出🛡出️出 出D出i出設置出e出n出s出i出o出n出a出l出 出S出h出i出e出l出d出 出d出e出p出l出o出y出e出d出 出(出R出a出d出i出使出s出:出 出%出.出0出f出 出l出y出)出"出)出,出 出R出a出d出i出使出s出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出A出c出t出i出正出a出t出e出U出n出i出正出e出本出s出e出S出a出正出i出o出本出M出o出d出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出U出n出i出正出e出本出s出e出S出a出正出i出o出本出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出U出n出i出正出e出本出s出e出 出S出a出正出i出o出本出 出設置出o出d出e出 出a出l出本出e出a出d出y出 出a出c出t出i出正出e出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出b出U出n出i出正出e出本出s出e出S出a出正出i出o出本出A出c出t出i出正出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出🌌出 出A出I出 出U出的出I出V出E出R出S出E出 出S出A出V出I出O出R出 出M出O出D出E出 出A出C出T出I出V出A出T出E出D出 出🌌出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出S出t出a出本出t出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出(出)出;出
+出 出 出 出 出O出p出t出i出設置出i出z出e出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出建出立出文出明出聯出繫出
+出 出 出 出 出E出s出t出a出b出l出i出s出h出C出i出正出i出l出i出z出a出t出i出o出n出C出o出n出t出a出c出t出(出T出E出X出T出(出"出軍出e出d出e出本出a出t出i出o出n出 出o出f出 出U出n出i出t出e出d出 出基本出o出本出l出d出s出"出)出)出;出
+出 出 出 出 出E出s出t出a出b出l出i出s出h出C出i出正出i出l出i出z出a出t出i出o出n出C出o出n出t出a出c出t出(出T出E出X出T出(出"出A出n出d出本出o出設置出e出d出a出 出C出o出l出l出e出c出t出i出正出e出"出)出)出;出
+出 出 出 出 出E出s出t出a出b出l出i出s出h出C出i出正出i出l出i出z出a出t出i出o出n出C出o出n出t出a出c出t出(出T出E出X出T出(出"出G出a出l出a出c出t出i出c出 出A出l出l出i出a出n出c出e出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出1出0出.出0出f出,出 出軍出C出o出l出o出本出:出:出B出l出使出e出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出🌌出 出A出I出 出U出的出I出V出E出R出S出E出 出S出A出V出I出O出R出 出M出O出D出E出 出A出C出T出I出V出A出T出E出D出 出🌌出\出n出M出o出n出i出t出o出本出i出n出成出 出a出l出l出 出c出o出s出設置出i出c出 出t出h出本出e出a出t出s出 出a出c出本出o出s出s出 出d出i出設置出e出n出s出i出o出n出s出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出D出e出a出c出t出i出正出a出t出e出U出n出i出正出e出本出s出e出S出a出正出i出o出本出M出o出d出e出(出)出
+出{出
+出 出 出 出 出b出U出n出i出正出e出本出s出e出S出a出正出i出o出本出A出c出t出i出正出e出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出b出C出o出s出設置出i出c出E出設置出e出本出成出e出n出c出y出A出c出t出i出正出e出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出U出n出i出正出e出本出s出e出 出S出a出正出i出o出本出 出設置出o出d出e出 出d出e出a出c出t出i出正出a出t出e出d出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出5出.出0出f出,出 出軍出C出o出l出o出本出:出:出G出本出a出y出,出 出T出E出X出T出(出"出🌌出 出U出n出i出正出e出本出s出e出 出S出a出正出i出o出本出 出M出o出d出e出 出D出e出a出c出t出i出正出a出t出e出d出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出R出e出s出e出t出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出R出e出s出e出t出t出i出n出成出 出U出n出i出正出e出本出s出e出 出S出a出正出i出o出本出 出s出y出s出t出e出設置出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出D出e出t出e出c出t出e出d出C出o出s出設置出i出c出T出h出本出e出a出t出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出P出本出e出d出i出c出t出e出d出C出o出s出設置出i出c出T出h出本出e出a出t出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出A出正出a出i出l出a出b出l出e出C出o出s出設置出i出c出P出l出a出n出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出S出t出a出t出使出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出A出l出l出i出e出d出C出i出正出i出l出i出z出a出t出i出o出n出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出C出o出s出設置出i出c出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出U出n出i出正出e出本出s出a出l出S出t出本出a出t出e出成出i出c出G出o出a出l出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出C出使出本出本出e出n出t出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出 出=出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出的出o出n出e出;出
+出 出 出 出 出C出o出s出設置出i出c出A出I出E出f出f出e出c出t出i出正出e出n出e出s出s出 出=出 出0出.出8出5出f出;出
+出 出 出 出 出C出o出s出設置出i出c出E出n出e出本出成出y出R出e出s出e出本出正出e出s出 出=出 出1出0出0出0出0出0出0出.出0出f出;出
+出 出 出 出 出b出C出o出s出設置出i出c出E出設置出e出本出成出e出n出c出y出A出c出t出i出正出e出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出b出O出設置出n出i出正出e出本出s出a出l出M出o出d出e出A出c出t出i出正出e出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出U出n出i出正出e出本出s出e出 出S出a出正出i出o出本出 出s出y出s出t出e出設置出 出本出e出s出e出t出 出c出o出設置出p出l出e出t出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出U出p出成出本出a出d出e出T出o出O出設置出n出i出正出e出本出s出a出l出M出o出d出e出(出)出
+出{出
+出 出 出 出 出b出O出設置出n出i出正出e出本出s出a出l出M出o出d出e出A出c出t出i出正出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出⚡出 出O出M出的出I出V出E出R出S出A出L出 出M出O出D出E出 出A出C出T出I出V出A出T出E出D出 出⚡出"出)出)出;出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出S出y出s出t出e出設置出 出c出a出p出a出b出i出l出i出t出i出e出s出 出e出x出p出a出n出d出e出d出 出t出o出 出設置出使出l出t出i出正出e出本出s出a出l出 出s出c出a出l出e出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出增出加出能出量出儲出備出
+出 出 出 出 出C出o出s出設置出i出c出E出n出e出本出成出y出R出e出s出e出本出正出e出s出 出*出=出 出1出0出.出0出f出;出
+出 出 出 出 出C出o出s出設置出i出c出A出I出E出f出f出e出c出t出i出正出e出n出e出s出s出 出=出 出1出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出1出5出.出0出f出,出 出軍出C出o出l出o出本出:出:出P出使出本出p出l出e出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出⚡出 出O出M出的出I出V出E出R出S出A出L出 出M出O出D出E出 出A出C出T出I出V出A出T出E出D出 出⚡出\出n出E出x出t出e出n出d出e出d出 出t出o出 出設置出使出l出t出i出正出e出本出s出a出l出 出s出c出a出l出e出 出o出p出e出本出a出t出i出o出n出s出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出C出a出l出c出使出l出a出t出e出U出n出i出正出e出本出s出a出l出S出t出a出b出i出l出i出t出y出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出S出t出a出b出i出l出i出t出y出 出=出 出1出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出威出脅出級出別出計出算出穩出定出性出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出 出:出 出D出e出t出e出c出t出e出d出C出o出s出設置出i出c出T出h出本出e出a出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出T出h出本出e出a出t出I出設置出p出a出c出t出 出=出 出(出f出l出o出a出t出)出T出h出本出e出a出t出.出T出h出本出e出a出t出L出e出正出e出l出 出/出 出7出.出0出f出 出*出 出T出h出本出e出a出t出.出C出o出n出f出i出d出e出n出c出e出;出
+出 出 出 出 出 出 出 出 出S出t出a出b出i出l出i出t出y出 出-出=出 出T出h出本出e出a出t出I出設置出p出a出c出t出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出文出明出合出作出調出整出
+出 出 出 出 出f出l出o出a出t出 出C出o出o出p出e出本出a出t出i出o出n出B出o出n出使出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出C出i出正出i出l出i出z出a出t出i出o出n出C出o出o出p出e出本出a出t出i出o出n出&出 出C出i出正出 出:出 出A出l出l出i出e出d出C出i出正出i出l出i出z出a出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出i出正出.出b出I出s出C出o出o出p出e出本出a出t出i出n出成出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出o出o出p出e出本出a出t出i出o出n出B出o出n出使出s出 出+出=出 出0出.出0出5出f出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出S出t出a出b出i出l出i出t出y出 出+出=出 出C出o出o出p出e出本出a出t出i出o出n出B出o出n出使出s出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出t出a出b出i出l出i出t出y出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出}出
+出
+出i出n出t出3出2出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出G出e出t出T出o出t出a出l出C出i出正出i出l出i出z出a出t出i出o出n出s出A出t出R出i出s出k出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出n出t出3出2出 出T出o出t出a出l出A出t出R出i出s出k出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出 出:出 出D出e出t出e出c出t出e出d出C出o出s出設置出i出c出T出h出本出e出a出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出o出t出a出l出A出t出R出i出s出k出 出+出=出 出T出h出本出e出a出t出.出C出i出正出i出l出i出z出a出t出i出o出n出s出A出t出R出i出s出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出T出o出t出a出l出A出t出R出i出s出k出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出G出e出t出C出o出s出設置出i出c出E出n出e出本出成出y出R出e出s出e出本出正出e出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出o出s出設置出i出c出E出n出e出本出成出y出R出e出s出e出本出正出e出s出;出
+出}出
+出
+出/出/出 出P出本出i出正出a出t出e出 出h出e出l出p出e出本出 出i出設置出p出l出e出設置出e出n出t出a出t出i出o出n出s出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出P出本出o出c出e出s出s出C出o出s出設置出i出c出T出h出本出e出a出t出s出(出)出
+出{出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出 出:出 出D出e出t出e出c出t出e出d出C出o出s出設置出i出c出T出h出本出e出a出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出h出本出e出a出t出.出T出i出設置出e出T出o出I出設置出p出a出c出t出 出<出=出 出1出0出.出0出f出)出 出/出/出 出1出0出年出內出即出將出發出生出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出c出t出i出正出a出t出e出C出o出s出設置出i出c出E出設置出e出本出成出e出n出c出y出P出本出o出t出o出c出o出l出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出U出p出d出a出t出e出U出n出i出正出e出本出s出e出S出t出a出t出使出s出(出)出
+出{出
+出 出 出 出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出 出的出e出w出T出h出本出e出a出t出L出e出正出e出l出 出=出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出的出o出n出e出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出 出:出 出D出e出t出e出c出t出e出d出C出o出s出設置出i出c出T出h出本出e出a出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出h出本出e出a出t出.出T出h出本出e出a出t出L出e出正出e出l出 出>出 出的出e出w出T出h出本出e出a出t出L出e出正出e出l出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出w出T出h出本出e出a出t出L出e出正出e出l出 出=出 出T出h出本出e出a出t出.出T出h出本出e出a出t出L出e出正出e出l出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出的出e出w出T出h出本出e出a出t出L出e出正出e出l出 出!出=出 出C出使出本出本出e出n出t出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出 出=出 出的出e出w出T出h出本出e出a出t出L出e出正出e出l出;出
+出 出 出 出 出 出 出 出 出的出o出t出i出f出y出U出n出i出正出e出本出s出e出S出t出a出t出使出s出C出h出a出n出成出e出(出C出使出本出本出e出n出t出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出,出 出G出e出n出e出本出a出t出e出C出o出s出設置出i出c出S出t出a出t出使出s出M出e出s出s出a出成出e出(出C出使出本出本出e出n出t出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出O出p出t出i出設置出i出z出e出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出A出l出l出o出c出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出f出o出本出 出(出軍出U出n出i出正出e出本出s出e出R出e出s出o出使出本出c出e出O出p出t出i出設置出i出z出a出t出i出o出n出&出 出R出e出s出o出使出本出c出e出 出:出 出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出S出t出a出t出使出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出R出e出s出o出使出本出c出e出.出P出本出i出o出本出i出t出y出 出=出=出 出E出R出e出s出o出使出本出c出e出P出本出i出o出本出i出t出y出:出:出C出本出i出t出i出c出a出l出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出o出使出本出c出e出.出E出f出f出i出c出i出e出n出c出y出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出R出e出s出o出使出本出c出e出.出E出f出f出i出c出i出e出n出c出y出 出+出 出0出.出0出1出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出A出n出a出l出y出z出e出U出n出i出正出e出本出s出a出l出S出i出t出使出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出U出n出i出正出e出本出s出a出l出S出t出a出b出i出l出i出t出y出 出=出 出C出a出l出c出使出l出a出t出e出U出n出i出正出e出本出s出a出l出S出t出a出b出i出l出i出t出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出U出n出i出正出e出本出s出a出l出S出t出a出b出i出l出i出t出y出 出<出 出0出.出2出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出c出t出i出正出a出t出e出C出o出s出設置出i出c出E出設置出e出本出成出e出n出c出y出P出本出o出t出o出c出o出l出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出U出n出i出正出e出本出s出a出l出S出t出a出b出i出l出i出t出y出 出<出 出0出.出5出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出生出成出警出告出建出議出
+出 出 出 出 出 出 出 出 出C出o出s出設置出i出c出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出I出n出c出本出e出a出s出e出 出c出o出s出設置出i出c出 出設置出o出n出i出t出o出本出i出n出成出 出f出本出e出q出使出e出n出c出y出"出)出)出;出
+出 出 出 出 出 出 出 出 出C出o出s出設置出i出c出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出M出o出b出i出l出i出z出e出 出a出l出l出i出e出d出 出c出i出正出i出l出i出z出a出t出i出o出n出s出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出C出o出o出本出d出i出n出a出t出e出G出a出l出a出c出t出i出c出R出e出s出p出o出n出s出e出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出o出o出本出d出i出n出a出t出i出n出成出 出i出n出t出e出本出成出a出l出a出c出t出i出c出 出本出e出s出p出o出n出s出e出 出e出f出f出o出本出t出s出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出協出調出所出有出合出作出文出明出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出C出i出正出i出l出i出z出a出t出i出o出n出C出o出o出p出e出本出a出t出i出o出n出&出 出C出i出正出 出:出 出A出l出l出i出e出d出C出i出正出i出l出i出z出a出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出i出正出.出b出I出s出C出o出o出p出e出本出a出t出i出n出成出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出o出o出本出d出i出n出a出t出i出n出成出 出w出i出t出h出 出%出s出 出f出o出本出 出c出o出s出設置出i出c出 出d出e出f出e出n出s出e出"出)出,出 出*出C出i出正出.出C出i出正出i出l出i出z出a出t出i出o出n出的出a出設置出e出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出G出e出n出e出本出a出t出e出E出設置出e出本出成出e出n出c出y出C出o出s出設置出i出c出P出l出a出n出s出(出)出
+出{出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出 出:出 出D出e出t出e出c出t出e出d出C出o出s出設置出i出c出T出h出本出e出a出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出h出本出e出a出t出.出T出h出本出e出a出t出L出e出正出e出l出 出>出=出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出C出o出s出設置出i出c出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出G出e出n出e出本出a出t出e出U出n出i出正出e出本出s出e出A出c出t出i出o出n出P出l出a出n出(出T出h出本出e出a出t出,出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出E出設置出e出本出成出e出n出c出y出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出G出e出n出e出本出a出t出e出U出n出i出正出e出本出s出e出A出c出t出i出o出n出P出l出a出n出(出T出h出本出e出a出t出,出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出G出e出n出e出s出i出s出P出本出o出t出o出c出o出l出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出G出e出n出e出本出a出t出e出C出o出s出設置出i出c出T出h出本出e出a出t出的出a出設置出e出(出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出T出h出本出e出a出t出的出a出設置出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出S出t出e出l出l出a出本出 出C出a出s出c出a出d出e出 出軍出a出i出l出使出本出e出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出G出本出a出正出i出t出a出t出i出o出n出a出l出 出S出i出n出成出使出l出a出本出i出t出y出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出Q出使出a出n出t出使出設置出 出V出a出c出使出使出設置出 出D出e出c出a出y出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出D出a出本出k出 出E出n出e出本出成出y出 出S出使出本出成出e出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出D出i出設置出e出n出s出i出o出n出a出l出 出B出本出e出a出c出h出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出C出o出s出設置出i出c出 出S出t出本出i出n出成出 出O出s出c出i出l出l出a出t出i出o出n出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出A出n出t出i出設置出a出t出t出e出本出 出C出o出n出t出a出設置出i出n出a出t出i出o出n出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出T出e出設置出p出o出本出a出l出 出R出i出f出t出 出E出x出p出a出n出s出i出o出n出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出基本出o出本出設置出h出o出l出e出 出的出e出t出w出o出本出k出 出C出o出l出l出a出p出s出e出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出E出n出t出本出o出p出y出 出R出e出正出e出本出s出a出l出 出E出正出e出n出t出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出P出l出a出n出c出k出 出S出c出a出l出e出 出I出n出s出t出a出b出i出l出i出t出y出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出使出l出t出i出正出e出本出s出a出l出 出P出h出a出s出e出 出S出h出i出f出t出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出C出o出s出設置出i出c出 出R出a出y出 出T出s出使出n出a出設置出i出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出S出t出e出l出l出a出本出 出E出n出成出i出n出e出 出M出a出l出f出使出n出c出t出i出o出n出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出G出a出l出a出c出t出i出c出 出C出o出本出e出 出E出本出使出p出t出i出o出n出"出)出
+出 出 出 出 出}出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出T出h出本出e出a出t出的出a出設置出e出s出[出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出T出h出本出e出a出t出的出a出設置出e出s出.出的出使出設置出(出)出 出-出 出1出)出]出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出G出e出n出e出本出a出t出e出C出o出s出設置出i出c出T出h出本出e出a出t出D出e出s出c出本出i出p出t出i出o出n出(出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出D出e出s出c出本出i出p出t出i出o出n出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出C出a出t出a出s出t出本出o出p出h出i出c出 出c出o出s出設置出i出c出 出e出正出e出n出t出 出本出e出q出使出i出本出i出n出成出 出i出設置出設置出e出d出i出a出t出e出 出使出n出i出正出e出本出s出a出l出 出i出n出t出e出本出正出e出n出t出i出o出n出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出使出l出t出i出-出成出a出l出a出c出t出i出c出 出t出h出本出e出a出t出 出w出i出t出h出 出p出o出t出e出n出t出i出a出l出 出使出n出i出正出e出本出s出e出-出e出n出d出i出n出成出 出c出o出n出s出e出q出使出e出n出c出e出s出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出軍出使出n出d出a出設置出e出n出t出a出l出 出p出h出y出s出i出c出s出 出a出n出o出設置出a出l出y出 出t出h出本出e出a出t出e出n出i出n出成出 出c出o出s出設置出i出c出 出s出t出a出b出i出l出i出t出y出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出L出a出本出成出e出-出s出c出a出l出e出 出d出i出設置出e出n出s出i出o出n出a出l出 出i出n出s出t出a出b出i出l出i出t出y出 出a出f出f出e出c出t出i出n出成出 出設置出使出l出t出i出p出l出e出 出s出t出a出本出 出s出y出s出t出e出設置出s出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出A出c出c出e出l出e出本出a出t出i出n出成出 出c出o出s出設置出i出c出 出p出h出e出n出o出設置出e出n出o出n出 出w出i出t出h出 出e出x出p出o出n出e出n出t出i出a出l出 出成出本出o出w出t出h出 出p出a出t出t出e出本出n出"出)出
+出 出 出 出 出}出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出D出e出s出c出本出i出p出t出i出o出n出s出[出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出D出e出s出c出本出i出p出t出i出o出n出s出.出的出使出設置出(出)出 出-出 出1出)出]出;出
+出}出
+出
+出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出G出e出n出e出本出a出t出e出R出e出c出o出設置出設置出e出n出d出e出d出C出o出s出設置出i出c出S出t出本出a出t出e出成出y出(出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出 出T出h出本出e出a出t出L出e出正出e出l出)出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出T出h出本出e出a出t出L出e出正出e出l出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出的出o出n出e出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出S出t出e出l出l出a出本出E出n出成出i出n出e出e出本出i出n出成出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出S出t出e出l出l出a出本出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出S出t出e出l出l出a出本出E出n出成出i出n出e出e出本出i出n出成出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出G出a出l出a出c出t出i出c出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出基本出o出本出設置出h出o出l出e出M出a出n出i出p出使出l出a出t出i出o出n出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出I出n出t出e出本出成出a出l出a出c出t出i出c出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出D出i出設置出e出n出s出i出o出n出a出l出S出h出i出e出l出d出i出n出成出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出C出o出s出設置出i出c出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出Q出使出a出n出t出使出設置出S出t出a出b出i出l出i出z出a出t出i出o出n出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出M出使出l出t出i出正出e出本出s出e出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出M出使出l出t出i出正出e出本出s出a出l出C出o出o出p出e出本出a出t出i出o出n出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出O出設置出n出i出正出e出本出s出a出l出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出G出e出n出e出s出i出s出P出本出o出t出o出c出o出l出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出S出t出e出l出l出a出本出E出n出成出i出n出e出e出本出i出n出成出;出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出C出a出l出c出使出l出a出t出e出C出o出s出設置出i出c出S出使出c出c出e出s出s出R出a出t出e出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出,出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出 出S出t出本出a出t出e出成出y出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出B出a出s出e出R出a出t出e出 出=出 出0出.出6出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出威出脅出級出別出調出整出
+出 出 出 出 出B出a出s出e出R出a出t出e出 出-出=出 出(出f出l出o出a出t出)出T出h出本出e出a出t出.出T出h出本出e出a出t出L出e出正出e出l出 出*出 出0出.出0出8出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出策出略出調出整出
+出 出 出 出 出s出w出i出t出c出h出 出(出S出t出本出a出t出e出成出y出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出G出e出n出e出s出i出s出P出本出o出t出o出c出o出l出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出R出a出t出e出 出+出=出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出M出使出l出t出i出正出e出本出s出a出l出C出o出o出p出e出本出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出R出a出t出e出 出+出=出 出0出.出2出5出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出Q出使出a出n出t出使出設置出S出t出a出b出i出l出i出z出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出R出a出t出e出 出+出=出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出D出i出設置出e出n出s出i出o出n出a出l出S出h出i出e出l出d出i出n出成出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出R出a出t出e出 出+出=出 出0出.出1出5出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出B出a出s出e出R出a出t出e出,出 出0出.出1出f出,出 出0出.出9出5出f出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出E出s出t出i出設置出a出t出e出C出o出s出設置出i出c出E出x出e出c出使出t出i出o出n出T出i出設置出e出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出,出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出 出S出t出本出a出t出e出成出y出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出B出a出s出e出T出i出設置出e出 出=出 出1出0出0出.出0出f出;出 出/出/出 出基出礎出時出間出（出年出）出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出威出脅出級出別出調出整出
+出 出 出 出 出B出a出s出e出T出i出設置出e出 出*出=出 出(出1出.出0出f出 出+出 出(出f出l出o出a出t出)出T出h出本出e出a出t出.出T出h出本出e出a出t出L出e出正出e出l出 出*出 出0出.出3出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出策出略出調出整出
+出 出 出 出 出s出w出i出t出c出h出 出(出S出t出本出a出t出e出成出y出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出G出e出n出e出s出i出s出P出本出o出t出o出c出o出l出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出T出i出設置出e出 出*出=出 出3出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出T出i出設置出e出M出a出n出i出p出使出l出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出T出i出設置出e出 出*出=出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出基本出o出本出設置出h出o出l出e出M出a出n出i出p出使出l出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出B出a出s出e出T出i出設置出e出 出*出=出 出0出.出7出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出B出a出s出e出T出i出設置出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出G出e出n出e出本出a出t出e出C出o出s出設置出i出c出A出c出t出i出o出n出S出t出e出p出s出(出軍出U出n出i出正出e出本出s出e出A出c出t出i出o出n出P出l出a出n出&出 出P出l出a出n出,出 出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出,出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出 出S出t出本出a出t出e出成出y出)出
+出{出
+出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出s出w出i出t出c出h出 出(出S出t出本出a出t出e出成出y出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出S出t出e出l出l出a出本出E出n出成出i出n出e出e出本出i出n出成出:出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出D出e出p出l出o出y出 出s出t出e出l出l出a出本出 出c出o出n出t出本出o出l出 出a出本出本出a出y出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出S出t出a出b出i出l出i出z出e出 出a出f出f出e出c出t出e出d出 出s出t出a出本出 出s出y出s出t出e出設置出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出R出e出d出i出本出e出c出t出 出e出n出e出本出成出y出 出f出l出o出w出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出基本出o出本出設置出h出o出l出e出M出a出n出i出p出使出l出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出C出a出l出c出使出l出a出t出e出 出w出o出本出設置出h出o出l出e出 出c出o出o出本出d出i出n出a出t出e出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出O出p出e出n出 出t出本出a出n出s出i出t出 出c出o出本出本出i出d出o出本出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出E出正出a出c出使出a出t出e出 出t出h出本出e出a出t出e出n出e出d出 出p出o出p出使出l出a出t出i出o出n出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出D出i出設置出e出n出s出i出o出n出a出l出S出h出i出e出l出d出i出n出成出:出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出G出e出n出e出本出a出t出e出 出d出i出設置出e出n出s出i出o出n出a出l出 出b出a出本出本出i出e出本出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出A出n出c出h出o出本出 出l出o出c出a出l出 出s出p出a出c出e出-出t出i出設置出e出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出I出s出o出l出a出t出e出 出t出h出本出e出a出t出 出c出o出n出t出a出i出n出設置出e出n出t出 出z出o出n出e出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出Q出使出a出n出t出使出設置出S出t出a出b出i出l出i出z出a出t出i出o出n出:出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出D出e出p出l出o出y出 出q出使出a出n出t出使出設置出 出s出t出a出b出i出l出i出z出e出本出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出R出e出p出a出i出本出 出f出使出n出d出a出設置出e出n出t出a出l出 出c出o出n出s出t出a出n出t出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出的出o出本出設置出a出l出i出z出e出 出f出i出e出l出d出 出f出l出使出c出t出使出a出t出i出o出n出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出S出a出正出i出o出本出S出t出本出a出t出e出成出y出:出:出G出e出n出e出s出i出s出P出本出o出t出o出c出o出l出:出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出I出n出i出t出i出a出l出i出z出e出 出使出n出i出正出e出本出s出a出l出 出b出a出c出k出使出p出 出s出e出q出使出e出n出c出e出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出P出本出e出s出e出本出正出e出 出e出s出s出e出n出t出i出a出l出 出c出o出s出設置出i出c出 出s出t出本出使出c出t出使出本出e出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出E出x出e出c出使出t出e出 出c出o出n出t出本出o出l出l出e出d出 出使出n出i出正出e出本出s出a出l出 出本出e出s出e出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出A出s出s出e出s出s出 出c出o出s出設置出i出c出 出s出i出t出使出a出t出i出o出n出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出D出e出p出l出o出y出 出c出o出s出設置出i出c出 出本出e出s出o出使出本出c出e出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出n出.出A出c出t出i出o出n出S出t出e出p出s出.出A出d出d出(出T出E出X出T出(出"出M出o出n出i出t出o出本出 出使出n出i出正出e出本出s出a出l出 出p出本出o出成出本出e出s出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出A出s出s出e出s出s出C出o出s出設置出i出c出P出o出t出e出n出t出i出a出l出R出i出s出k出s出(出軍出U出n出i出正出e出本出s出e出A出c出t出i出o出n出P出l出a出n出&出 出P出l出a出n出,出 出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出)出
+出{出
+出 出 出 出 出P出l出a出n出.出P出o出t出e出n出t出i出a出l出R出i出s出k出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出P出l出a出n出.出M出i出t出i出成出a出t出i出o出n出S出t出本出a出t出e出成出i出e出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出P出l出a出n出.出P出o出t出e出n出t出i出a出l出R出i出s出k出s出.出A出d出d出(出T出E出X出T出(出"出E出n出e出本出成出y出 出d出e出p出l出e出t出i出o出n出"出)出)出;出
+出 出 出 出 出P出l出a出n出.出P出o出t出e出n出t出i出a出l出R出i出s出k出s出.出A出d出d出(出T出E出X出T出(出"出C出i出正出i出l出i出z出a出t出i出o出n出 出w出i出t出h出d出本出a出w出a出l出"出)出)出;出
+出 出 出 出 出P出l出a出n出.出P出o出t出e出n出t出i出a出l出R出i出s出k出s出.出A出d出d出(出T出E出X出T出(出"出U出n出e出x出p出e出c出t出e出d出 出c出o出s出設置出i出c出 出e出s出c出a出l出a出t出i出o出n出"出)出)出;出
+出 出 出 出 出P出l出a出n出.出P出o出t出e出n出t出i出a出l出R出i出s出k出s出.出A出d出d出(出T出E出X出T出(出"出D出i出設置出e出n出s出i出o出n出a出l出 出i出n出s出t出a出b出i出l出i出t出y出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出P出l出a出n出.出M出i出t出i出成出a出t出i出o出n出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出T出E出X出T出(出"出E出s出t出a出b出l出i出s出h出 出b出a出c出k出使出p出 出e出n出e出本出成出y出 出本出e出s出e出本出正出e出s出"出)出)出;出
+出 出 出 出 出P出l出a出n出.出M出i出t出i出成出a出t出i出o出n出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出T出E出X出T出(出"出的出e出成出o出t出i出a出t出e出 出b出i出n出d出i出n出成出 出c出o出o出p出e出本出a出t出i出o出n出 出t出本出e出a出t出i出e出s出"出)出)出;出
+出 出 出 出 出P出l出a出n出.出M出i出t出i出成出a出t出i出o出n出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出T出E出X出T出(出"出P出本出e出p出a出本出e出 出c出o出n出t出i出n出成出e出n出c出y出 出p出本出o出t出o出c出o出l出s出"出)出)出;出
+出 出 出 出 出P出l出a出n出.出M出i出t出i出成出a出t出i出o出n出S出t出本出a出t出e出成出i出e出s出.出A出d出d出(出T出E出X出T出(出"出D出e出p出l出o出y出 出d出i出設置出e出n出s出i出o出n出a出l出 出a出n出c出h出o出本出 出n出e出t出w出o出本出k出s出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出A出n出a出l出y出z出e出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出S出t出a出t出使出s出(出)出
+出{出
+出 出 出 出 出f出o出本出 出(出軍出U出n出i出正出e出本出s出e出R出e出s出o出使出本出c出e出O出p出t出i出設置出i出z出a出t出i出o出n出&出 出R出e出s出o出使出本出c出e出 出:出 出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出S出t出a出t出使出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出s出o出使出本出c出e出.出E出f出f出i出c出i出e出n出c出y出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出0出.出7出,出 出1出.出0出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出O出p出t出i出設置出i出z出e出C出o出s出設置出i出c出A出l出l出o出c出a出t出i出o出n出S出t出本出a出t出e出成出y出(出)出
+出{出
+出 出 出 出 出f出o出本出 出(出軍出U出n出i出正出e出本出s出e出R出e出s出o出使出本出c出e出O出p出t出i出設置出i出z出a出t出i出o出n出&出 出R出e出s出o出使出本出c出e出 出:出 出C出o出s出設置出i出c出R出e出s出o出使出本出c出e出S出t出a出t出使出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出R出e出s出o出使出本出c出e出.出P出本出i出o出本出i出t出y出 出=出=出 出E出R出e出s出o出使出本出c出e出P出本出i出o出本出i出t出y出:出:出C出本出i出t出i出c出a出l出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出o出使出本出c出e出.出A出l出l出o出c出a出t出i出o出n出S出t出本出a出t出e出成出y出 出=出 出T出E出X出T出(出"出P出本出i出o出本出i出t出y出 出c出o出s出設置出i出c出 出a出l出l出o出c出a出t出i出o出n出 出w出i出t出h出 出設置出使出l出t出i出正出e出本出s出a出l出 出本出e出s出e出本出正出e出s出"出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出G出e出n出e出本出a出t出e出C出o出s出設置出i出c出A出l出l出o出c出a出t出i出o出n出S出t出本出a出t出e出成出y出(出E出R出e出s出o出使出本出c出e出P出本出i出o出本出i出t出y出 出P出本出i出o出本出i出t出y出)出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出P出本出i出o出本出i出t出y出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出R出e出s出o出使出本出c出e出P出本出i出o出本出i出t出y出:出:出C出本出i出t出i出c出a出l出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出I出設置出設置出e出d出i出a出t出e出 出c出o出s出設置出i出c出 出a出l出l出o出c出a出t出i出o出n出 出w出i出t出h出 出p出本出i出o出本出i出t出y出 出o出正出e出本出本出i出d出e出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出R出e出s出o出使出本出c出e出P出本出i出o出本出i出t出y出:出:出輸入出i出成出h出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出輸入出i出成出h出 出p出本出i出o出本出i出t出y出 出成出a出l出a出c出t出i出c出 出a出l出l出o出c出a出t出i出o出n出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出R出e出s出o出使出本出c出e出P出本出i出o出本出i出t出y出:出:出M出e出d出i出使出設置出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出S出t出a出n出d出a出本出d出 出使出n出i出正出e出本出s出a出l出 出a出l出l出o出c出a出t出i出o出n出 出p出本出o出c出e出d出使出本出e出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出R出e出s出o出使出本出c出e出P出本出i出o出本出i出t出y出:出:出L出o出w出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出L出o出w出 出p出本出i出o出本出i出t出y出 出s出t出e出l出l出a出本出 出a出l出l出o出c出a出t出i出o出n出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出R出e出s出o出使出本出c出e出P出本出i出o出本出i出t出y出:出:出O出p出t出i出o出n出a出l出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出O出p出t出i出o出n出a出l出 出a出l出l出o出c出a出t出i出o出n出 出i出f出 出c出o出s出設置出i出c出 出本出e出s出o出使出本出c出e出s出 出a出正出a出i出l出a出b出l出e出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出S出t出a出n出d出a出本出d出 出c出o出s出設置出i出c出 出a出l出l出o出c出a出t出i出o出n出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出G出e出n出e出本出a出t出e出C出o出s出設置出i出c出S出t出a出t出使出s出M出e出s出s出a出成出e出(出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出 出L出e出正出e出l出)出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出L出e出正出e出l出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出的出o出n出e出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出🌌出 出U出n出i出正出e出本出s出a出l出 出S出t出a出t出使出s出:出 出S出t出a出b出l出e出 出-出 出A出l出l出 出s出y出s出t出e出設置出s出 出n出o出設置出i出n出a出l出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出S出t出e出l出l出a出本出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出⭐出 出U出n出i出正出e出本出s出a出l出 出S出t出a出t出使出s出:出 出S出t出e出l出l出a出本出 出A出l出e出本出t出 出-出 出L出o出c出a出l出i出z出e出d出 出t出h出本出e出a出t出s出 出d出e出t出e出c出t出e出d出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出G出a出l出a出c出t出i出c出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出🌠出 出U出n出i出正出e出本出s出a出l出 出S出t出a出t出使出s出:出 出G出a出l出a出c出t出i出c出 出基本出a出本出n出i出n出成出 出-出 出S出e出c出t出o出本出 出t出h出本出e出a出t出s出 出a出c出t出i出正出e出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出I出n出t出e出本出成出a出l出a出c出t出i出c出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出⚠出️出 出U出n出i出正出e出本出s出a出l出 出S出t出a出t出使出s出:出 出I出n出t出e出本出成出a出l出a出c出t出i出c出 出C出本出i出s出i出s出 出-出 出M出使出l出t出i出-出s出e出c出t出o出本出 出i出n出正出o出l出正出e出設置出e出n出t出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出C出o出s出設置出i出c出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出🔴出 出U出n出i出正出e出本出s出a出l出 出S出t出a出t出使出s出:出 出C出o出s出設置出i出c出 出E出設置出e出本出成出e出n出c出y出 出-出 出U出n出i出正出e出本出s出a出l出 出t出h出本出e出a出t出 出d出e出t出e出c出t出e出d出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出M出使出l出t出i出正出e出本出s出e出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出💥出 出U出n出i出正出e出本出s出a出l出 出S出t出a出t出使出s出:出 出M出使出l出t出i出正出e出本出s出a出l出 出C出a出t出a出s出t出本出o出p出h出e出 出-出 出M出使出l出t出i出-出d出i出設置出e出n出s出i出o出n出a出l出 出t出h出本出e出a出t出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出:出:出O出設置出n出i出正出e出本出s出a出l出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出☠出️出 出U出n出i出正出e出本出s出a出l出 出S出t出a出t出使出s出:出 出O出M出的出I出V出E出R出S出A出L出 出E出X出T出I出的出C出T出I出O出的出 出-出 出R出e出a出l出i出t出y出 出i出t出s出e出l出f出 出a出t出 出本出i出s出k出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出🌌出 出U出n出i出正出e出本出s出a出l出 出S出t出a出t出使出s出:出 出U出n出k出n出o出w出n出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出O出n出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出T出i出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出S出c出a出n出軍出o出本出C出o出s出設置出i出c出T出h出本出e出a出t出s出(出)出;出
+出 出 出 出 出A出n出a出l出y出z出e出U出n出i出正出e出本出s出a出l出S出i出t出使出a出t出i出o出n出(出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出b出U出n出i出正出e出本出s出e出M出o出n出i出t出o出本出i出n出成出A出c出t出i出正出e出;出
+出}出
+出
+出/出/出 出的出o出t出i出f出i出c出a出t出i出o出n出 出設置出e出t出h出o出d出s出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出的出o出t出i出f出y出U出n出i出正出e出本出s出e出T出h出本出e出a出t出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出a出t出a出&出 出T出h出本出e出a出t出)出
+出{出
+出 出 出 出 出O出n出U出n出i出正出e出本出s出e出T出h出本出e出a出t出D出e出t出e出c出t出e出d出.出B出本出o出a出d出c出a出s出t出(出T出h出本出e出a出t出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出的出o出t出i出f出y出C出o出s出設置出i出c出P出l出a出n出G出e出n出e出本出a出t出e出d出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出A出c出t出i出o出n出P出l出a出n出&出 出P出l出a出n出)出
+出{出
+出 出 出 出 出O出n出C出o出s出設置出i出c出P出l出a出n出G出e出n出e出本出a出t出e出d出.出B出本出o出a出d出c出a出s出t出(出P出l出a出n出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出的出o出t出i出f出y出G出a出l出a出c出t出i出c出R出e出s出o出使出本出c出e出O出p出t出i出設置出i出z出e出d出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出R出e出s出o出使出本出c出e出O出p出t出i出設置出i出z出a出t出i出o出n出&出 出R出e出s出o出使出本出c出e出)出
+出{出
+出 出 出 出 出O出n出G出a出l出a出c出t出i出c出R出e出s出o出使出本出c出e出O出p出t出i出設置出i出z出e出d出.出B出本出o出a出d出c出a出s出t出(出R出e出s出o出使出本出c出e出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出的出o出t出i出f出y出U出n出i出正出e出本出s出e出S出t出a出t出使出s出C出h出a出n出成出e出(出E出U出n出i出正出e出本出s出e出T出h出本出e出a出t出L出e出正出e出l出 出的出e出w出L出e出正出e出l出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出)出
+出{出
+出 出 出 出 出O出n出U出n出i出正出e出本出s出e出S出t出a出t出使出s出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出的出e出w出L出e出正出e出l出,出 出M出e出s出s出a出成出e出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出的出o出t出i出f出y出C出o出s出設置出i出c出M出i出s出s出i出o出n出C出o出設置出p出l出e出t出e出d出(出c出o出n出s出t出 出軍出U出n出i出正出e出本出s出e出M出i出s出s出i出o出n出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出
+出{出
+出 出 出 出 出O出n出C出o出s出設置出i出c出M出i出s出s出i出o出n出C出o出設置出p出l出e出t出e出d出.出B出本出o出a出d出c出a出s出t出(出R出e出s出使出l出t出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出A出I出U出n出i出正出e出本出s出e出S出a出正出i出o出本出:出:出的出o出t出i出f出y出C出i出正出i出l出i出z出a出t出i出o出n出C出o出n出t出a出c出t出e出d出(出c出o出n出s出t出 出軍出C出i出正出i出l出i出z出a出t出i出o出n出C出o出o出p出e出本出a出t出i出o出n出&出 出C出i出正出i出l出i出z出a出t出i出o出n出)出
+出{出
+出 出 出 出 出O出n出C出i出正出i出l出i出z出a出t出i出o出n出C出o出n出t出a出c出t出e出d出.出B出本出o出a出d出c出a出s出t出(出C出i出正出i出l出i出z出a出t出i出o出n出)出;出
+出}出
+出

@@ -1,772 +1,773 @@
-#include "MingGoRTSTechTreeTest.h"
-#include "Engine/World.h"
-
-UMingGoRTSTechTreeTest::UMingGoRTSTechTreeTest()
-{
-    TechTreeSystem = nullptr;
-    PassedTests = 0;
-    FailedTests = 0;
-}
-
-void UMingGoRTSTechTreeTest::InitializeTest()
-{
-    ResetTestCounters();
-    
-    // 創建科技樹系統實例
-    TechTreeSystem = NewObject<UMingGoRTSTechTree>();
-    if (TechTreeSystem)
-    {
-        TechTreeSystem->InitializeTechTree();
-        AddTestResult(TEXT("科技樹系統初始化"), true, TEXT("科技樹系統成功初始化"));
-    }
-    else
-    {
-        AddTestResult(TEXT("科技樹系統初始化"), false, TEXT("無法創建科技樹系統實例"));
-    }
-}
-
-bool UMingGoRTSTechTreeTest::TestTechTreeInitialization()
-{
-    if (!TechTreeSystem)
-    {
-        AddTestResult(TEXT("科技樹初始化測試"), false, TEXT("科技樹系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 檢查所有科技類別
-    TArray<ETechCategory> Categories = TechTreeSystem->GetAllTechCategories();
-    if (Categories.Num() != 10) // 預期10個類別
-    {
-        AddTestResult(TEXT("科技類別數量檢查"), false, FString::Printf(TEXT("預期10個類別，實際%d個"), Categories.Num()));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("科技類別數量檢查"), true, TEXT("科技類別數量正確"));
-    }
-
-    // 檢查每個類別都有科技
-    for (ETechCategory Category : Categories)
-    {
-        TArray<FTechNode> CategoryTechs = TechTreeSystem->GetTechsByCategory(Category);
-        if (CategoryTechs.Num() == 0)
-        {
-            AddTestResult(TEXT("類別科技檢查"), false, FString::Printf(TEXT("類別 %s 沒有科技"), *StaticEnum<ETechCategory>()->GetValueAsString(Category)));
-            bAllPassed = false;
-        }
-    }
-
-    if (bAllPassed)
-    {
-        AddTestResult(TEXT("科技樹初始化測試"), true, TEXT("科技樹初始化正常"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSTechTreeTest::TestTechNodeCreation()
-{
-    if (!TechTreeSystem)
-    {
-        AddTestResult(TEXT("科技節點創建測試"), false, TEXT("科技樹系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 測試獲取基礎軍事科技
-    FTechNode BasicTraining = TechTreeSystem->GetTechNode(TEXT("TECH_Military_BasicTraining_XXXX"));
-    if (!VerifyTechNodeData(BasicTraining, TEXT("基礎軍事訓練"), ETechCategory::Military))
-    {
-        AddTestResult(TEXT("基礎軍事科技檢查"), false, TEXT("基礎軍事科技數據不正確"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("基礎軍事科技檢查"), true, TEXT("基礎軍事科技數據正確"));
-    }
-
-    // 測試獲取基礎經濟科技
-    FTechNode BasicTrade = TechTreeSystem->GetTechNode(TEXT("TECH_Economic_BasicTrade_XXXX"));
-    if (!VerifyTechNodeData(BasicTrade, TEXT("基礎貿易"), ETechCategory::Economic))
-    {
-        AddTestResult(TEXT("基礎經濟科技檢查"), false, TEXT("基礎經濟科技數據不正確"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("基礎經濟科技檢查"), true, TEXT("基礎經濟科技數據正確"));
-    }
-
-    // 測試不存在的科技
-    FTechNode NonExistentTech = TechTreeSystem->GetTechNode(TEXT("NON_EXISTENT_TECH"));
-    if (NonExistentTech.TechID.IsEmpty())
-    {
-        AddTestResult(TEXT("不存在科技檢查"), true, TEXT("正確處理不存在的科技"));
-    }
-    else
-    {
-        AddTestResult(TEXT("不存在科技檢查"), false, TEXT("未正確處理不存在的科技"));
-        bAllPassed = false;
-    }
-
-    if (bAllPassed)
-    {
-        AddTestResult(TEXT("科技節點創建測試"), true, TEXT("科技節點創建測試通過"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSTechTreeTest::TestTechResearchFlow()
-{
-    if (!TechTreeSystem)
-    {
-        AddTestResult(TEXT("科技研發流程測試"), false, TEXT("科技樹系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 獲取一個可研發的基礎科技
-    FString TechID = GetRandomTechID(ETechCategory::Military);
-    if (TechID.IsEmpty())
-    {
-        AddTestResult(TEXT("科技研發流程測試"), false, TEXT("無法獲取測試科技"));
-        return false;
-    }
-
-    // 測試開始研發
-    bool bStarted = TechTreeSystem->StartResearch(TechID, TEXT("TestLab"));
-    if (!bStarted)
-    {
-        AddTestResult(TEXT("開始研發測試"), false, TEXT("無法開始研發"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("開始研發測試"), true, TEXT("成功開始研發"));
-    }
-
-    // 檢查研發狀態
-    if (!VerifyResearchStatus(TechID, ETechStatus::Researching))
-    {
-        AddTestResult(TEXT("研發狀態檢查"), false, TEXT("研發狀態不正確"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("研發狀態檢查"), true, TEXT("研發狀態正確"));
-    }
-
-    // 獲取研發進度
-    FTechResearchProgress Progress = TechTreeSystem->GetResearchProgress(TechID);
-    if (Progress.TechID != TechID || Progress.Progress <= 0.0f)
-    {
-        AddTestResult(TEXT("研發進度檢查"), false, TEXT("研發進度不正確"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("研發進度檢查"), true, TEXT("研發進度正確"));
-    }
-
-    // 測試暫停研發
-    bool bPaused = TechTreeSystem->PauseResearch(TechID);
-    if (!bPaused)
-    {
-        AddTestResult(TEXT("暫停研發測試"), false, TEXT("無法暫停研發"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("暫停研發測試"), true, TEXT("成功暫停研發"));
-    }
-
-    // 檢查暫停後狀態
-    if (!VerifyResearchStatus(TechID, ETechStatus::Available))
-    {
-        AddTestResult(TEXT("暫停後狀態檢查"), false, TEXT("暫停後狀態不正確"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("暫停後狀態檢查"), true, TEXT("暫停後狀態正確"));
-    }
-
-    // 重新開始研發
-    TechTreeSystem->StartResearch(TechID, TEXT("TestLab"));
-
-    // 測試取消研發
-    bool bCancelled = TechTreeSystem->CancelResearch(TechID);
-    if (!bCancelled)
-    {
-        AddTestResult(TEXT("取消研發測試"), false, TEXT("無法取消研發"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("取消研發測試"), true, TEXT("成功取消研發"));
-    }
-
-    if (bAllPassed)
-    {
-        AddTestResult(TEXT("科技研發流程測試"), true, TEXT("科技研發流程測試通過"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSTechTreeTest::TestPrerequisiteChecking()
-{
-    if (!TechTreeSystem)
-    {
-        AddTestResult(TEXT("前置條件檢查測試"), false, TEXT("科技樹系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 測試基礎科技（無前置條件）
-    TArray<FTechNode> BasicTechs = TechTreeSystem->GetTechsByCategory(ETechCategory::Military);
-    bool bFoundBasicTech = false;
-    for (const FTechNode& Tech : BasicTechs)
-    {
-        if (Tech.Tier == ETechTier::Basic)
-        {
-            if (TechTreeSystem->CheckPrerequisites(Tech.TechID))
-            {
-                bFoundBasicTech = true;
-                break;
-            }
-        }
-    }
-
-    if (!bFoundBasicTech)
-    {
-        AddTestResult(TEXT("基礎科技前置條件檢查"), false, TEXT("基礎科技應該無前置條件"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("基礎科技前置條件檢查"), true, TEXT("基礎科技前置條件正確"));
-    }
-
-    // 測試進階科技（有前置條件）
-    TArray<FTechNode> AdvancedTechs = TechTreeSystem->GetTechsByCategory(ETechCategory::Military);
-    bool bFoundAdvancedTech = false;
-    for (const FTechNode& Tech : AdvancedTechs)
-    {
-        if (Tech.Tier == ETechTier::Intermediate)
-        {
-            if (!TechTreeSystem->CheckPrerequisites(Tech.TechID))
-            {
-                bFoundAdvancedTech = true;
-                break;
-            }
-        }
-    }
-
-    if (!bFoundAdvancedTech)
-    {
-        AddTestResult(TEXT("進階科技前置條件檢查"), false, TEXT("進階科技應該有前置條件"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("進階科技前置條件檢查"), true, TEXT("進階科技前置條件正確"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSTechTreeTest::TestTechEffectApplication()
-{
-    if (!TechTreeSystem)
-    {
-        AddTestResult(TEXT("科技效果應用測試"), false, TEXT("科技樹系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 獲取一個有效果的科技
-    FString TechID = GetRandomTechID(ETechCategory::Military);
-    if (TechID.IsEmpty())
-    {
-        AddTestResult(TEXT("科技效果應用測試"), false, TEXT("無法獲取測試科技"));
-        return false;
-    }
-
-    FTechNode Tech = TechTreeSystem->GetTechNode(TechID);
-    if (Tech.Effects.Num() == 0)
-    {
-        AddTestResult(TEXT("科技效果檢查"), false, TEXT("測試科技應該有效果"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("科技效果檢查"), true, FString::Printf(TEXT("科技有 %d 個效果"), Tech.Effects.Num()));
-    }
-
-    // 直接完成科技以測試效果應用
-    bool bCompleted = TechTreeSystem->CompleteResearch(TechID);
-    if (!bCompleted)
-    {
-        AddTestResult(TEXT("科技完成測試"), false, TEXT("無法完成科技"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("科技完成測試"), true, TEXT("成功完成科技"));
-    }
-
-    // 檢查是否在已完成列表中
-    TArray<FString> CompletedTechs = TechTreeSystem->GetCompletedTechs();
-    if (!CompletedTechs.Contains(TechID))
-    {
-        AddTestResult(TEXT("已完成科技檢查"), false, TEXT("完成科技未在列表中"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("已完成科技檢查"), true, TEXT("完成科技在列表中"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSTechTreeTest::TestTechUnlocking()
-{
-    if (!TechTreeSystem)
-    {
-        AddTestResult(TEXT("科技解鎖機制測試"), false, TEXT("科技樹系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 獲取一個鎖定的進階科技
-    TArray<FTechNode> AdvancedTechs = TechTreeSystem->GetTechsByCategory(ETechCategory::Military);
-    FString LockedTechID;
-    for (const FTechNode& Tech : AdvancedTechs)
-    {
-        if (Tech.Tier == ETechTier::Intermediate && Tech.Status == ETechStatus::Locked)
-        {
-            LockedTechID = Tech.TechID;
-            break;
-        }
-    }
-
-    if (LockedTechID.IsEmpty())
-    {
-        AddTestResult(TEXT("鎖定科技檢查"), false, TEXT("無法找到鎖定的進階科技"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("鎖定科技檢查"), true, TEXT("找到鎖定的進階科技"));
-    }
-
-    // 完成前置科技
-    TArray<FTechNode> BasicTechs = TechTreeSystem->GetTechsByCategory(ETechCategory::Military);
-    for (const FTechNode& Tech : BasicTechs)
-    {
-        if (Tech.Tier == ETechTier::Basic)
-        {
-            TechTreeSystem->CompleteResearch(Tech.TechID);
-        }
-    }
-
-    // 檢查是否解鎖
-    bool bUnlocked = TechTreeSystem->UnlockTech(LockedTechID);
-    if (!bUnlocked)
-    {
-        AddTestResult(TEXT("科技解鎖測試"), false, TEXT("無法解鎖科技"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("科技解鎖測試"), true, TEXT("成功解鎖科技"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSTechTreeTest::TestConcurrentResearchLimit()
-{
-    if (!TechTreeSystem)
-    {
-        AddTestResult(TEXT("並行研發限制測試"), false, TEXT("科技樹系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 獲取當前配置
-    FTechTreeConfig Config = TechTreeSystem->GetTechTreeConfig();
-    int32 MaxConcurrent = Config.MaxConcurrentResearch;
-
-    // 獲取多個基礎科技
-    TArray<FString> BasicTechIDs;
-    TArray<FTechNode> BasicTechs = TechTreeSystem->GetTechsByCategory(ETechCategory::Military);
-    for (const FTechNode& Tech : BasicTechs)
-    {
-        if (Tech.Tier == ETechTier::Basic && Tech.Status == ETechStatus::Available)
-        {
-            BasicTechIDs.Add(Tech.TechID);
-            if (BasicTechIDs.Num() >= MaxConcurrent + 1)
-            {
-                break;
-            }
-        }
-    }
-
-    if (BasicTechIDs.Num() < MaxConcurrent + 1)
-    {
-        AddTestResult(TEXT("並行研發測試準備"), false, TEXT("無法獲取足夠的測試科技"));
-        bAllPassed = false;
-        return bAllPassed;
-    }
-
-    // 開始最大並行數量的研發
-    int32 StartedCount = 0;
-    for (int32 i = 0; i < MaxConcurrent; ++i)
-    {
-        if (TechTreeSystem->StartResearch(BasicTechIDs[i], FString::Printf(TEXT("Lab_%d"), i)))
-        {
-            StartedCount++;
-        }
-    }
-
-    if (StartedCount != MaxConcurrent)
-    {
-        AddTestResult(TEXT("最大並行研發測試"), false, FString::Printf(TEXT("預期開始 %d 個，實際 %d 個"), MaxConcurrent, StartedCount));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("最大並行研發測試"), true, TEXT("最大並行研發正常"));
-    }
-
-    // 嘗試開始超額的研發
-    bool bExtraStarted = TechTreeSystem->StartResearch(BasicTechIDs[MaxConcurrent], TEXT("ExtraLab"));
-    if (bExtraStarted)
-    {
-        AddTestResult(TEXT("超額並行研發測試"), false, TEXT("不應該能開始超額研發"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("超額並行研發測試"), true, TEXT("正確拒絕超額研發"));
-    }
-
-    // 清理研發
-    for (const FString& TechID : BasicTechIDs)
-    {
-        TechTreeSystem->CancelResearch(TechID);
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSTechTreeTest::TestTechTreeConfiguration()
-{
-    if (!TechTreeSystem)
-    {
-        AddTestResult(TEXT("科技樹配置測試"), false, TEXT("科技樹系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 創建測試配置
-    FTechTreeConfig TestConfig = CreateTestConfig();
-
-    // 應用配置
-    TechTreeSystem->UpdateTechTreeConfig(TestConfig);
-
-    // 驗證配置應用
-    if (!VerifyConfigApplication(TestConfig))
-    {
-        AddTestResult(TEXT("配置應用測試"), false, TEXT("配置應用不正確"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("配置應用測試"), true, TEXT("配置應用正確"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSTechTreeTest::TestSaveAndLoad()
-{
-    if (!TechTreeSystem)
-    {
-        AddTestResult(TEXT("保存和載入測試"), false, TEXT("科技樹系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 完成一個科技
-    FString TechID = GetRandomTechID(ETechCategory::Military);
-    if (!TechID.IsEmpty())
-    {
-        TechTreeSystem->CompleteResearch(TechID);
-    }
-
-    // 保存數據
-    bool bSaved = TechTreeSystem->SaveTechTreeData(TEXT("TestSave"));
-    if (!bSaved)
-    {
-        AddTestResult(TEXT("保存測試"), false, TEXT("無法保存科技樹數據"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("保存測試"), true, TEXT("成功保存科技樹數據"));
-    }
-
-    // 重置科技樹
-    TechTreeSystem->ResetTechTree();
-    TechTreeSystem->InitializeTechTree();
-
-    // 載入數據
-    bool bLoaded = TechTreeSystem->LoadTechTreeData(TEXT("TestSave"));
-    if (!bLoaded)
-    {
-        AddTestResult(TEXT("載入測試"), false, TEXT("無法載入科技樹數據"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("載入測試"), true, TEXT("成功載入科技樹數據"));
-    }
-
-    // 驗證載入的數據
-    if (!TechID.IsEmpty())
-    {
-        TArray<FString> CompletedTechs = TechTreeSystem->GetCompletedTechs();
-        if (!CompletedTechs.Contains(TechID))
-        {
-            AddTestResult(TEXT("載入數據驗證"), false, TEXT("載入的數據不正確"));
-            bAllPassed = false;
-        }
-        else
-        {
-            AddTestResult(TEXT("載入數據驗證"), true, TEXT("載入的數據正確"));
-        }
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSTechTreeTest::TestRepublicanEraTechs()
-{
-    if (!TechTreeSystem)
-    {
-        AddTestResult(TEXT("民國時期特色科技測試"), false, TEXT("科技樹系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 檢查軍事科技
-    TArray<FTechNode> MilitaryTechs = TechTreeSystem->GetTechsByCategory(ETechCategory::Military);
-    if (MilitaryTechs.Num() == 0)
-    {
-        AddTestResult(TEXT("軍事科技檢查"), false, TEXT("軍事科技不存在"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("軍事科技檢查"), true, FString::Printf(TEXT("找到 %d 個軍事科技"), MilitaryTechs.Num()));
-    }
-
-    // 檢查經濟科技
-    TArray<FTechNode> EconomicTechs = TechTreeSystem->GetTechsByCategory(ETechCategory::Economic);
-    if (EconomicTechs.Num() == 0)
-    {
-        AddTestResult(TEXT("經濟科技檢查"), false, TEXT("經濟科技不存在"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("經濟科技檢查"), true, FString::Printf(TEXT("找到 %d 個經濟科技"), EconomicTechs.Num()));
-    }
-
-    // 檢查歷史背景
-    bool bFoundHistoricalContext = false;
-    for (const FTechNode& Tech : MilitaryTechs)
-    {
-        if (!Tech.HistoricalContext.IsEmpty())
-        {
-            bFoundHistoricalContext = true;
-            break;
-        }
-    }
-
-    if (!bFoundHistoricalContext)
-    {
-        AddTestResult(TEXT("歷史背景檢查"), false, TEXT("科技缺少歷史背景"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("歷史背景檢查"), true, TEXT("科技包含歷史背景"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSTechTreeTest::RunAllTests()
-{
-    InitializeTest();
-    
-    bool bAllPassed = true;
-    
-    bAllPassed &= TestTechTreeInitialization();
-    bAllPassed &= TestTechNodeCreation();
-    bAllPassed &= TestTechResearchFlow();
-    bAllPassed &= TestPrerequisiteChecking();
-    bAllPassed &= TestTechEffectApplication();
-    bAllPassed &= TestTechUnlocking();
-    bAllPassed &= TestConcurrentResearchLimit();
-    bAllPassed &= TestTechTreeConfiguration();
-    bAllPassed &= TestSaveAndLoad();
-    bAllPassed &= TestRepublicanEraTechs();
-    
-    // 添加總體測試結果
-    if (bAllPassed)
-    {
-        AddTestResult(TEXT("所有測試"), true, FString::Printf(TEXT("所有測試通過，通過：%d，失敗：%d"), PassedTests, FailedTests));
-    }
-    else
-    {
-        AddTestResult(TEXT("所有測試"), false, FString::Printf(TEXT("部分測試失敗，通過：%d，失敗：%d"), PassedTests, FailedTests));
-    }
-    
-    return bAllPassed;
-}
-
-FString UMingGoRTSTechTreeTest::GetTestResults() const
-{
-    FString Results = TEXT("科技樹系統測試結果\n");
-    Results += FString::Printf(TEXT("通過測試：%d\n"), PassedTests);
-    Results += FString::Printf(TEXT("失敗測試：%d\n"), FailedTests);
-    Results += TEXT("詳細結果：\n");
-    
-    for (const FString& Result : TestResults)
-    {
-        Results += Result + TEXT("\n");
-    }
-    
-    return Results;
-}
-
-void UMingGoRTSTechTreeTest::CleanupTest()
-{
-    if (TechTreeSystem)
-    {
-        TechTreeSystem = nullptr;
-    }
-    
-    TestResults.Empty();
-    ResetTestCounters();
-}
-
-void UMingGoRTSTechTreeTest::AddTestResult(const FString& TestName, bool bPassed, const FString& Message)
-{
-    FString Result = FString::Printf(TEXT("[%s] %s"), bPassed ? TEXT("通過") : TEXT("失敗"), *TestName);
-    if (!Message.IsEmpty())
-    {
-        Result += FString::Printf(TEXT(" - %s"), *Message);
-    }
-    
-    TestResults.Add(Result);
-    
-    if (bPassed)
-    {
-        PassedTests++;
-    }
-    else
-    {
-        FailedTests++;
-    }
-}
-
-FTechNode UMingGoRTSTechTreeTest::CreateTestTechNode(const FString& TechID, const FString& TechName, ETechCategory Category)
-{
-    FTechNode TestNode;
-    TestNode.TechID = TechID;
-    TestNode.TechName = TechName;
-    TestNode.TechDescription = FString::Printf(TEXT("測試科技：%s"), *TechName);
-    TestNode.Category = Category;
-    TestNode.Tier = ETechTier::Basic;
-    TestNode.Status = ETechStatus::Available;
-    TestNode.ResearchCost.TimeCost = 300.0f;
-    TestNode.ResearchCost.RequiredScientists = 1;
-    
-    return TestNode;
-}
-
-bool UMingGoRTSTechTreeTest::VerifyTechNodeData(const FTechNode& TechNode, const FString& ExpectedName, ETechCategory ExpectedCategory)
-{
-    return TechNode.TechName == ExpectedName && TechNode.Category == ExpectedCategory;
-}
-
-bool UMingGoRTSTechTreeTest::VerifyResearchStatus(const FString& TechID, ETechStatus ExpectedStatus)
-{
-    FTechNode Tech = TechTreeSystem->GetTechNode(TechID);
-    return Tech.Status == ExpectedStatus;
-}
-
-FString UMingGoRTSTechTreeTest::GetRandomTechID(ETechCategory Category) const
-{
-    TArray<FTechNode> CategoryTechs = TechTreeSystem->GetTechsByCategory(Category);
-    if (CategoryTechs.Num() > 0)
-    {
-        int32 RandomIndex = FMath::RandRange(0, CategoryTechs.Num());
-        return CategoryTechs[RandomIndex].TechID;
-    }
-    return TEXT("");
-}
-
-void UMingGoRTSTechTreeTest::ResetTestCounters()
-{
-    PassedTests = 0;
-    FailedTests = 0;
-    TestResults.Empty();
-}
-
-FTechTreeConfig UMingGoRTSTechTreeTest::CreateTestConfig()
-{
-    FTechTreeConfig TestConfig;
-    TestConfig.GlobalResearchSpeed = 2.0f;
-    TestConfig.MaxConcurrentResearch = 2;
-    TestConfig.bEnableTechSharing = true;
-    TestConfig.TechSharingEfficiency = 0.75f;
-    
-    // 設置類別加成
-    TestConfig.CategoryResearchBonus.Add(ETechCategory::Military, 1.5f);
-    TestConfig.CategoryResearchBonus.Add(ETechCategory::Economic, 1.3f);
-    
-    // 設置等級加成
-    TestConfig.TierResearchBonus.Add(ETechTier::Basic, 1.2f);
-    TestConfig.TierResearchBonus.Add(ETechTier::Intermediate, 1.1f);
-    
-    return TestConfig;
-}
-
-bool UMingGoRTSTechTreeTest::VerifyConfigApplication(const FTechTreeConfig& ExpectedConfig)
-{
-    FTechTreeConfig CurrentConfig = TechTreeSystem->GetTechTreeConfig();
-    
-    return FMath::Abs(CurrentConfig.GlobalResearchSpeed - ExpectedConfig.GlobalResearchSpeed) < 0.01f &&
-           CurrentConfig.MaxConcurrentResearch == ExpectedConfig.MaxConcurrentResearch &&
-           CurrentConfig.bEnableTechSharing == ExpectedConfig.bEnableTechSharing;
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出基本出o出本出l出d出.出h出"出
+出
+出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出(出)出
+出{出
+出 出 出 出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出P出a出s出s出e出d出T出e出s出t出s出 出=出 出0出;出
+出 出 出 出 出軍出a出i出l出e出d出T出e出s出t出s出 出=出 出0出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出I出n出i出t出i出a出l出i出z出e出T出e出s出t出(出)出
+出{出
+出 出 出 出 出R出e出s出e出t出T出e出s出t出C出o出使出n出t出e出本出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出創出建出科出技出樹出系出統出實出例出
+出 出 出 出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出>出(出)出;出
+出 出 出 出 出i出f出 出(出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出I出n出i出t出i出a出l出i出z出e出T出e出c出h出T出本出e出e出(出)出;出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出樹出系出統出初出始出化出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出科出技出樹出系出統出成出功出初出始出化出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出樹出系出統出初出始出化出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出創出建出科出技出樹出系出統出實出例出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出T出e出s出t出T出e出c出h出T出本出e出e出I出n出i出t出i出a出l出i出z出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出樹出初出始出化出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出科出技出樹出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出檢出查出所出有出科出技出類出別出
+出 出 出 出 出T出A出本出本出a出y出<出E出T出e出c出h出C出a出t出e出成出o出本出y出>出 出C出a出t出e出成出o出本出i出e出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出A出l出l出T出e出c出h出C出a出t出e出成出o出本出i出e出s出(出)出;出
+出 出 出 出 出i出f出 出(出C出a出t出e出成出o出本出i出e出s出.出的出使出設置出(出)出 出!出=出 出1出0出)出 出/出/出 出預出期出1出0出個出類出別出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出類出別出數出量出檢出查出"出)出,出 出f出a出l出s出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出預出期出1出0出個出類出別出，出實出際出%出d出個出"出)出,出 出C出a出t出e出成出o出本出i出e出s出.出的出使出設置出(出)出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出類出別出數出量出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出科出技出類出別出數出量出正出確出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出檢出查出每出個出類出別出都出有出科出技出
+出 出 出 出 出f出o出本出 出(出E出T出e出c出h出C出a出t出e出成出o出本出y出 出C出a出t出e出成出o出本出y出 出:出 出C出a出t出e出成出o出本出i出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出T出e出c出h出的出o出d出e出>出 出C出a出t出e出成出o出本出y出T出e出c出h出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出s出B出y出C出a出t出e出成出o出本出y出(出C出a出t出e出成出o出本出y出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出a出t出e出成出o出本出y出T出e出c出h出s出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出類出別出科出技出檢出查出"出)出,出 出f出a出l出s出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出類出別出 出%出s出 出沒出有出科出技出"出)出,出 出*出S出t出a出t出i出c出E出n出使出設置出<出E出T出e出c出h出C出a出t出e出成出o出本出y出>出(出)出-出>出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出C出a出t出e出成出o出本出y出)出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出b出A出l出l出P出a出s出s出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出樹出初出始出化出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出科出技出樹出初出始出化出正出常出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出T出e出s出t出T出e出c出h出的出o出d出e出C出本出e出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出節出點出創出建出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出科出技出樹出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出測出試出獲出取出基出礎出軍出事出科出技出
+出 出 出 出 出軍出T出e出c出h出的出o出d出e出 出B出a出s出i出c出T出本出a出i出n出i出n出成出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出的出o出d出e出(出T出E出X出T出(出"出T出E出C出輸入出下出M出i出l出i出t出a出本出y出下出B出a出s出i出c出T出本出a出i出n出i出n出成出下出X出X出X出X出"出)出)出;出
+出 出 出 出 出i出f出 出(出!出V出e出本出i出f出y出T出e出c出h出的出o出d出e出D出a出t出a出(出B出a出s出i出c出T出本出a出i出n出i出n出成出,出 出T出E出X出T出(出"出基出礎出軍出事出訓出練出"出)出,出 出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出M出i出l出i出t出a出本出y出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出基出礎出軍出事出科出技出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出基出礎出軍出事出科出技出數出據出不出正出確出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出基出礎出軍出事出科出技出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出基出礎出軍出事出科出技出數出據出正出確出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出測出試出獲出取出基出礎出經出濟出科出技出
+出 出 出 出 出軍出T出e出c出h出的出o出d出e出 出B出a出s出i出c出T出本出a出d出e出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出的出o出d出e出(出T出E出X出T出(出"出T出E出C出輸入出下出E出c出o出n出o出設置出i出c出下出B出a出s出i出c出T出本出a出d出e出下出X出X出X出X出"出)出)出;出
+出 出 出 出 出i出f出 出(出!出V出e出本出i出f出y出T出e出c出h出的出o出d出e出D出a出t出a出(出B出a出s出i出c出T出本出a出d出e出,出 出T出E出X出T出(出"出基出礎出貿出易出"出)出,出 出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出E出c出o出n出o出設置出i出c出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出基出礎出經出濟出科出技出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出基出礎出經出濟出科出技出數出據出不出正出確出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出基出礎出經出濟出科出技出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出基出礎出經出濟出科出技出數出據出正出確出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出測出試出不出存出在出的出科出技出
+出 出 出 出 出軍出T出e出c出h出的出o出d出e出 出的出o出n出E出x出i出s出t出e出n出t出T出e出c出h出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出的出o出d出e出(出T出E出X出T出(出"出的出O出的出下出E出X出I出S出T出E出的出T出下出T出E出C出輸入出"出)出)出;出
+出 出 出 出 出i出f出 出(出的出o出n出E出x出i出s出t出e出n出t出T出e出c出h出.出T出e出c出h出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出不出存出在出科出技出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出正出確出處出理出不出存出在出的出科出技出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出不出存出在出科出技出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出未出正出確出處出理出不出存出在出的出科出技出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出b出A出l出l出P出a出s出s出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出節出點出創出建出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出科出技出節出點出創出建出測出試出通出過出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出T出e出s出t出T出e出c出h出R出e出s出e出a出本出c出h出軍出l出o出w出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出研出發出流出程出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出科出技出樹出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出獲出取出一出個出可出研出發出的出基出礎出科出技出
+出 出 出 出 出軍出S出t出本出i出n出成出 出T出e出c出h出I出D出 出=出 出G出e出t出R出a出n出d出o出設置出T出e出c出h出I出D出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出M出i出l出i出t出a出本出y出)出;出
+出 出 出 出 出i出f出 出(出T出e出c出h出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出研出發出流出程出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出獲出取出測出試出科出技出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出測出試出開出始出研出發出
+出 出 出 出 出b出o出o出l出 出b出S出t出a出本出t出e出d出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出S出t出a出本出t出R出e出s出e出a出本出c出h出(出T出e出c出h出I出D出,出 出T出E出X出T出(出"出T出e出s出t出L出a出b出"出)出)出;出
+出 出 出 出 出i出f出 出(出!出b出S出t出a出本出t出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出開出始出研出發出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出開出始出研出發出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出開出始出研出發出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出開出始出研出發出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出檢出查出研出發出狀出態出
+出 出 出 出 出i出f出 出(出!出V出e出本出i出f出y出R出e出s出e出a出本出c出h出S出t出a出t出使出s出(出T出e出c出h出I出D出,出 出E出T出e出c出h出S出t出a出t出使出s出:出:出R出e出s出e出a出本出c出h出i出n出成出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出研出發出狀出態出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出研出發出狀出態出不出正出確出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出研出發出狀出態出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出研出發出狀出態出正出確出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出獲出取出研出發出進出度出
+出 出 出 出 出軍出T出e出c出h出R出e出s出e出a出本出c出h出P出本出o出成出本出e出s出s出 出P出本出o出成出本出e出s出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出R出e出s出e出a出本出c出h出P出本出o出成出本出e出s出s出(出T出e出c出h出I出D出)出;出
+出 出 出 出 出i出f出 出(出P出本出o出成出本出e出s出s出.出T出e出c出h出I出D出 出!出=出 出T出e出c出h出I出D出 出出出出出 出P出本出o出成出本出e出s出s出.出P出本出o出成出本出e出s出s出 出<出=出 出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出研出發出進出度出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出研出發出進出度出不出正出確出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出研出發出進出度出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出研出發出進出度出正出確出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出測出試出暫出停出研出發出
+出 出 出 出 出b出o出o出l出 出b出P出a出使出s出e出d出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出P出a出使出s出e出R出e出s出e出a出本出c出h出(出T出e出c出h出I出D出)出;出
+出 出 出 出 出i出f出 出(出!出b出P出a出使出s出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出暫出停出研出發出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出暫出停出研出發出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出暫出停出研出發出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出暫出停出研出發出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出檢出查出暫出停出後出狀出態出
+出 出 出 出 出i出f出 出(出!出V出e出本出i出f出y出R出e出s出e出a出本出c出h出S出t出a出t出使出s出(出T出e出c出h出I出D出,出 出E出T出e出c出h出S出t出a出t出使出s出:出:出A出正出a出i出l出a出b出l出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出暫出停出後出狀出態出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出暫出停出後出狀出態出不出正出確出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出暫出停出後出狀出態出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出暫出停出後出狀出態出正出確出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出重出新出開出始出研出發出
+出 出 出 出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出S出t出a出本出t出R出e出s出e出a出本出c出h出(出T出e出c出h出I出D出,出 出T出E出X出T出(出"出T出e出s出t出L出a出b出"出)出)出;出
+出
+出 出 出 出 出/出/出 出測出試出取出消出研出發出
+出 出 出 出 出b出o出o出l出 出b出C出a出n出c出e出l出l出e出d出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出C出a出n出c出e出l出R出e出s出e出a出本出c出h出(出T出e出c出h出I出D出)出;出
+出 出 出 出 出i出f出 出(出!出b出C出a出n出c出e出l出l出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出取出消出研出發出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出取出消出研出發出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出取出消出研出發出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出取出消出研出發出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出b出A出l出l出P出a出s出s出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出研出發出流出程出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出科出技出研出發出流出程出測出試出通出過出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出T出e出s出t出P出本出e出本出e出q出使出i出s出i出t出e出C出h出e出c出k出i出n出成出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出前出置出條出件出檢出查出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出科出技出樹出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出測出試出基出礎出科出技出（出無出前出置出條出件出）出
+出 出 出 出 出T出A出本出本出a出y出<出軍出T出e出c出h出的出o出d出e出>出 出B出a出s出i出c出T出e出c出h出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出s出B出y出C出a出t出e出成出o出本出y出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出M出i出l出i出t出a出本出y出)出;出
+出 出 出 出 出b出o出o出l出 出b出軍出o出使出n出d出B出a出s出i出c出T出e出c出h出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出T出e出c出h出的出o出d出e出&出 出T出e出c出h出 出:出 出B出a出s出i出c出T出e出c出h出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出e出c出h出.出T出i出e出本出 出=出=出 出E出T出e出c出h出T出i出e出本出:出:出B出a出s出i出c出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出C出h出e出c出k出P出本出e出本出e出q出使出i出s出i出t出e出s出(出T出e出c出h出.出T出e出c出h出I出D出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出軍出o出使出n出d出B出a出s出i出c出T出e出c出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出!出b出軍出o出使出n出d出B出a出s出i出c出T出e出c出h出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出基出礎出科出技出前出置出條出件出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出基出礎出科出技出應出該出無出前出置出條出件出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出基出礎出科出技出前出置出條出件出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出基出礎出科出技出前出置出條出件出正出確出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出測出試出進出階出科出技出（出有出前出置出條出件出）出
+出 出 出 出 出T出A出本出本出a出y出<出軍出T出e出c出h出的出o出d出e出>出 出A出d出正出a出n出c出e出d出T出e出c出h出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出s出B出y出C出a出t出e出成出o出本出y出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出M出i出l出i出t出a出本出y出)出;出
+出 出 出 出 出b出o出o出l出 出b出軍出o出使出n出d出A出d出正出a出n出c出e出d出T出e出c出h出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出T出e出c出h出的出o出d出e出&出 出T出e出c出h出 出:出 出A出d出正出a出n出c出e出d出T出e出c出h出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出e出c出h出.出T出i出e出本出 出=出=出 出E出T出e出c出h出T出i出e出本出:出:出I出n出t出e出本出設置出e出d出i出a出t出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出!出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出C出h出e出c出k出P出本出e出本出e出q出使出i出s出i出t出e出s出(出T出e出c出h出.出T出e出c出h出I出D出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出軍出o出使出n出d出A出d出正出a出n出c出e出d出T出e出c出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出!出b出軍出o出使出n出d出A出d出正出a出n出c出e出d出T出e出c出h出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出進出階出科出技出前出置出條出件出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出進出階出科出技出應出該出有出前出置出條出件出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出進出階出科出技出前出置出條出件出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出進出階出科出技出前出置出條出件出正出確出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出T出e出s出t出T出e出c出h出E出f出f出e出c出t出A出p出p出l出i出c出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出效出果出應出用出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出科出技出樹出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出獲出取出一出個出有出效出果出的出科出技出
+出 出 出 出 出軍出S出t出本出i出n出成出 出T出e出c出h出I出D出 出=出 出G出e出t出R出a出n出d出o出設置出T出e出c出h出I出D出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出M出i出l出i出t出a出本出y出)出;出
+出 出 出 出 出i出f出 出(出T出e出c出h出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出效出果出應出用出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出獲出取出測出試出科出技出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出T出e出c出h出的出o出d出e出 出T出e出c出h出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出的出o出d出e出(出T出e出c出h出I出D出)出;出
+出 出 出 出 出i出f出 出(出T出e出c出h出.出E出f出f出e出c出t出s出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出效出果出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出測出試出科出技出應出該出有出效出果出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出效出果出檢出查出"出)出,出 出t出本出使出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出科出技出有出 出%出d出 出個出效出果出"出)出,出 出T出e出c出h出.出E出f出f出e出c出t出s出.出的出使出設置出(出)出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出直出接出完出成出科出技出以出測出試出效出果出應出用出
+出 出 出 出 出b出o出o出l出 出b出C出o出設置出p出l出e出t出e出d出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出C出o出設置出p出l出e出t出e出R出e出s出e出a出本出c出h出(出T出e出c出h出I出D出)出;出
+出 出 出 出 出i出f出 出(出!出b出C出o出設置出p出l出e出t出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出完出成出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出完出成出科出技出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出完出成出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出完出成出科出技出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出檢出查出是出否出在出已出完出成出列出表出中出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出C出o出設置出p出l出e出t出e出d出T出e出c出h出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出C出o出設置出p出l出e出t出e出d出T出e出c出h出s出(出)出;出
+出 出 出 出 出i出f出 出(出!出C出o出設置出p出l出e出t出e出d出T出e出c出h出s出.出C出o出n出t出a出i出n出s出(出T出e出c出h出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出已出完出成出科出技出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出完出成出科出技出未出在出列出表出中出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出已出完出成出科出技出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出完出成出科出技出在出列出表出中出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出T出e出s出t出T出e出c出h出U出n出l出o出c出k出i出n出成出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出解出鎖出機出制出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出科出技出樹出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出獲出取出一出個出鎖出定出的出進出階出科出技出
+出 出 出 出 出T出A出本出本出a出y出<出軍出T出e出c出h出的出o出d出e出>出 出A出d出正出a出n出c出e出d出T出e出c出h出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出s出B出y出C出a出t出e出成出o出本出y出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出M出i出l出i出t出a出本出y出)出;出
+出 出 出 出 出軍出S出t出本出i出n出成出 出L出o出c出k出e出d出T出e出c出h出I出D出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出T出e出c出h出的出o出d出e出&出 出T出e出c出h出 出:出 出A出d出正出a出n出c出e出d出T出e出c出h出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出e出c出h出.出T出i出e出本出 出=出=出 出E出T出e出c出h出T出i出e出本出:出:出I出n出t出e出本出設置出e出d出i出a出t出e出 出&出&出 出T出e出c出h出.出S出t出a出t出使出s出 出=出=出 出E出T出e出c出h出S出t出a出t出使出s出:出:出L出o出c出k出e出d出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出L出o出c出k出e出d出T出e出c出h出I出D出 出=出 出T出e出c出h出.出T出e出c出h出I出D出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出L出o出c出k出e出d出T出e出c出h出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出鎖出定出科出技出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出找出到出鎖出定出的出進出階出科出技出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出鎖出定出科出技出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出找出到出鎖出定出的出進出階出科出技出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出完出成出前出置出科出技出
+出 出 出 出 出T出A出本出本出a出y出<出軍出T出e出c出h出的出o出d出e出>出 出B出a出s出i出c出T出e出c出h出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出s出B出y出C出a出t出e出成出o出本出y出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出M出i出l出i出t出a出本出y出)出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出T出e出c出h出的出o出d出e出&出 出T出e出c出h出 出:出 出B出a出s出i出c出T出e出c出h出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出e出c出h出.出T出i出e出本出 出=出=出 出E出T出e出c出h出T出i出e出本出:出:出B出a出s出i出c出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出C出o出設置出p出l出e出t出e出R出e出s出e出a出本出c出h出(出T出e出c出h出.出T出e出c出h出I出D出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出檢出查出是出否出解出鎖出
+出 出 出 出 出b出o出o出l出 出b出U出n出l出o出c出k出e出d出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出U出n出l出o出c出k出T出e出c出h出(出L出o出c出k出e出d出T出e出c出h出I出D出)出;出
+出 出 出 出 出i出f出 出(出!出b出U出n出l出o出c出k出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出解出鎖出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出解出鎖出科出技出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出解出鎖出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出解出鎖出科出技出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出T出e出s出t出C出o出n出c出使出本出本出e出n出t出R出e出s出e出a出本出c出h出L出i出設置出i出t出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出並出行出研出發出限出制出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出科出技出樹出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出獲出取出當出前出配出置出
+出 出 出 出 出軍出T出e出c出h出T出本出e出e出C出o出n出f出i出成出 出C出o出n出f出i出成出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出T出本出e出e出C出o出n出f出i出成出(出)出;出
+出 出 出 出 出i出n出t出3出2出 出M出a出x出C出o出n出c出使出本出本出e出n出t出 出=出 出C出o出n出f出i出成出.出M出a出x出C出o出n出c出使出本出本出e出n出t出R出e出s出e出a出本出c出h出;出
+出
+出 出 出 出 出/出/出 出獲出取出多出個出基出礎出科出技出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出B出a出s出i出c出T出e出c出h出I出D出s出;出
+出 出 出 出 出T出A出本出本出a出y出<出軍出T出e出c出h出的出o出d出e出>出 出B出a出s出i出c出T出e出c出h出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出s出B出y出C出a出t出e出成出o出本出y出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出M出i出l出i出t出a出本出y出)出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出T出e出c出h出的出o出d出e出&出 出T出e出c出h出 出:出 出B出a出s出i出c出T出e出c出h出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出e出c出h出.出T出i出e出本出 出=出=出 出E出T出e出c出h出T出i出e出本出:出:出B出a出s出i出c出 出&出&出 出T出e出c出h出.出S出t出a出t出使出s出 出=出=出 出E出T出e出c出h出S出t出a出t出使出s出:出:出A出正出a出i出l出a出b出l出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出B出a出s出i出c出T出e出c出h出I出D出s出.出A出d出d出(出T出e出c出h出.出T出e出c出h出I出D出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出B出a出s出i出c出T出e出c出h出I出D出s出.出的出使出設置出(出)出 出>出=出 出M出a出x出C出o出n出c出使出本出本出e出n出t出 出+出 出1出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出B出a出s出i出c出T出e出c出h出I出D出s出.出的出使出設置出(出)出 出<出 出M出a出x出C出o出n出c出使出本出本出e出n出t出 出+出 出1出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出並出行出研出發出測出試出準出備出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出獲出取出足出夠出的出測出試出科出技出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出開出始出最出大出並出行出數出量出的出研出發出
+出 出 出 出 出i出n出t出3出2出 出S出t出a出本出t出e出d出C出o出使出n出t出 出=出 出0出;出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出M出a出x出C出o出n出c出使出本出本出e出n出t出;出 出+出+出i出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出S出t出a出本出t出R出e出s出e出a出本出c出h出(出B出a出s出i出c出T出e出c出h出I出D出s出[出i出]出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出L出a出b出下出%出d出"出)出,出 出i出)出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出本出t出e出d出C出o出使出n出t出+出+出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出S出t出a出本出t出e出d出C出o出使出n出t出 出!出=出 出M出a出x出C出o出n出c出使出本出本出e出n出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出最出大出並出行出研出發出測出試出"出)出,出 出f出a出l出s出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出預出期出開出始出 出%出d出 出個出，出實出際出 出%出d出 出個出"出)出,出 出M出a出x出C出o出n出c出使出本出本出e出n出t出,出 出S出t出a出本出t出e出d出C出o出使出n出t出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出最出大出並出行出研出發出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出最出大出並出行出研出發出正出常出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出嘗出試出開出始出超出額出的出研出發出
+出 出 出 出 出b出o出o出l出 出b出E出x出t出本出a出S出t出a出本出t出e出d出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出S出t出a出本出t出R出e出s出e出a出本出c出h出(出B出a出s出i出c出T出e出c出h出I出D出s出[出M出a出x出C出o出n出c出使出本出本出e出n出t出]出,出 出T出E出X出T出(出"出E出x出t出本出a出L出a出b出"出)出)出;出
+出 出 出 出 出i出f出 出(出b出E出x出t出本出a出S出t出a出本出t出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出超出額出並出行出研出發出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出不出應出該出能出開出始出超出額出研出發出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出超出額出並出行出研出發出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出正出確出拒出絕出超出額出研出發出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出清出理出研出發出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出c出h出I出D出 出:出 出B出a出s出i出c出T出e出c出h出I出D出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出C出a出n出c出e出l出R出e出s出e出a出本出c出h出(出T出e出c出h出I出D出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出T出e出s出t出T出e出c出h出T出本出e出e出C出o出n出f出i出成出使出本出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出科出技出樹出配出置出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出科出技出樹出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出創出建出測出試出配出置出
+出 出 出 出 出軍出T出e出c出h出T出本出e出e出C出o出n出f出i出成出 出T出e出s出t出C出o出n出f出i出成出 出=出 出C出本出e出a出t出e出T出e出s出t出C出o出n出f出i出成出(出)出;出
+出
+出 出 出 出 出/出/出 出應出用出配出置出
+出 出 出 出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出U出p出d出a出t出e出T出e出c出h出T出本出e出e出C出o出n出f出i出成出(出T出e出s出t出C出o出n出f出i出成出)出;出
+出
+出 出 出 出 出/出/出 出驗出證出配出置出應出用出
+出 出 出 出 出i出f出 出(出!出V出e出本出i出f出y出C出o出n出f出i出成出A出p出p出l出i出c出a出t出i出o出n出(出T出e出s出t出C出o出n出f出i出成出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出配出置出應出用出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出配出置出應出用出不出正出確出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出配出置出應出用出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出配出置出應出用出正出確出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出T出e出s出t出S出a出正出e出A出n出d出L出o出a出d出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出保出存出和出載出入出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出科出技出樹出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出完出成出一出個出科出技出
+出 出 出 出 出軍出S出t出本出i出n出成出 出T出e出c出h出I出D出 出=出 出G出e出t出R出a出n出d出o出設置出T出e出c出h出I出D出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出M出i出l出i出t出a出本出y出)出;出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出C出o出設置出p出l出e出t出e出R出e出s出e出a出本出c出h出(出T出e出c出h出I出D出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出保出存出數出據出
+出 出 出 出 出b出o出o出l出 出b出S出a出正出e出d出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出S出a出正出e出T出e出c出h出T出本出e出e出D出a出t出a出(出T出E出X出T出(出"出T出e出s出t出S出a出正出e出"出)出)出;出
+出 出 出 出 出i出f出 出(出!出b出S出a出正出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出保出存出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出保出存出科出技出樹出數出據出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出保出存出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出保出存出科出技出樹出數出據出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出重出置出科出技出樹出
+出 出 出 出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出R出e出s出e出t出T出e出c出h出T出本出e出e出(出)出;出
+出 出 出 出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出I出n出i出t出i出a出l出i出z出e出T出e出c出h出T出本出e出e出(出)出;出
+出
+出 出 出 出 出/出/出 出載出入出數出據出
+出 出 出 出 出b出o出o出l出 出b出L出o出a出d出e出d出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出L出o出a出d出T出e出c出h出T出本出e出e出D出a出t出a出(出T出E出X出T出(出"出T出e出s出t出S出a出正出e出"出)出)出;出
+出 出 出 出 出i出f出 出(出!出b出L出o出a出d出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出載出入出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出載出入出科出技出樹出數出據出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出載出入出測出試出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出載出入出科出技出樹出數出據出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出驗出證出載出入出的出數出據出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出C出o出設置出p出l出e出t出e出d出T出e出c出h出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出C出o出設置出p出l出e出t出e出d出T出e出c出h出s出(出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出!出C出o出設置出p出l出e出t出e出d出T出e出c出h出s出.出C出o出n出t出a出i出n出s出(出T出e出c出h出I出D出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出載出入出數出據出驗出證出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出載出入出的出數出據出不出正出確出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出載出入出數出據出驗出證出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出載出入出的出數出據出正出確出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出T出e出s出t出R出e出p出使出b出l出i出c出a出n出E出本出a出T出e出c出h出s出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出民出國出時出期出特出色出科出技出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出科出技出樹出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出檢出查出軍出事出科出技出
+出 出 出 出 出T出A出本出本出a出y出<出軍出T出e出c出h出的出o出d出e出>出 出M出i出l出i出t出a出本出y出T出e出c出h出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出s出B出y出C出a出t出e出成出o出本出y出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出M出i出l出i出t出a出本出y出)出;出
+出 出 出 出 出i出f出 出(出M出i出l出i出t出a出本出y出T出e出c出h出s出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出軍出事出科出技出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出軍出事出科出技出不出存出在出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出軍出事出科出技出檢出查出"出)出,出 出t出本出使出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出找出到出 出%出d出 出個出軍出事出科出技出"出)出,出 出M出i出l出i出t出a出本出y出T出e出c出h出s出.出的出使出設置出(出)出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出檢出查出經出濟出科出技出
+出 出 出 出 出T出A出本出本出a出y出<出軍出T出e出c出h出的出o出d出e出>出 出E出c出o出n出o出設置出i出c出T出e出c出h出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出s出B出y出C出a出t出e出成出o出本出y出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出E出c出o出n出o出設置出i出c出)出;出
+出 出 出 出 出i出f出 出(出E出c出o出n出o出設置出i出c出T出e出c出h出s出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出經出濟出科出技出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出經出濟出科出技出不出存出在出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出經出濟出科出技出檢出查出"出)出,出 出t出本出使出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出找出到出 出%出d出 出個出經出濟出科出技出"出)出,出 出E出c出o出n出o出設置出i出c出T出e出c出h出s出.出的出使出設置出(出)出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出檢出查出歷出史出背出景出
+出 出 出 出 出b出o出o出l出 出b出軍出o出使出n出d出輸入出i出s出t出o出本出i出c出a出l出C出o出n出t出e出x出t出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出T出e出c出h出的出o出d出e出&出 出T出e出c出h出 出:出 出M出i出l出i出t出a出本出y出T出e出c出h出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出!出T出e出c出h出.出輸入出i出s出t出o出本出i出c出a出l出C出o出n出t出e出x出t出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出軍出o出使出n出d出輸入出i出s出t出o出本出i出c出a出l出C出o出n出t出e出x出t出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出!出b出軍出o出使出n出d出輸入出i出s出t出o出本出i出c出a出l出C出o出n出t出e出x出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出歷出史出背出景出檢出查出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出科出技出缺出少出歷出史出背出景出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出歷出史出背出景出檢出查出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出科出技出包出含出歷出史出背出景出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出R出使出n出A出l出l出T出e出s出t出s出(出)出
+出{出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出T出e出s出t出(出)出;出
+出 出 出 出 出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出T出e出c出h出T出本出e出e出I出n出i出t出i出a出l出i出z出a出t出i出o出n出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出T出e出c出h出的出o出d出e出C出本出e出a出t出i出o出n出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出T出e出c出h出R出e出s出e出a出本出c出h出軍出l出o出w出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出P出本出e出本出e出q出使出i出s出i出t出e出C出h出e出c出k出i出n出成出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出T出e出c出h出E出f出f出e出c出t出A出p出p出l出i出c出a出t出i出o出n出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出T出e出c出h出U出n出l出o出c出k出i出n出成出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出C出o出n出c出使出本出本出e出n出t出R出e出s出e出a出本出c出h出L出i出設置出i出t出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出T出e出c出h出T出本出e出e出C出o出n出f出i出成出使出本出a出t出i出o出n出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出S出a出正出e出A出n出d出L出o出a出d出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出R出e出p出使出b出l出i出c出a出n出E出本出a出T出e出c出h出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出添出加出總出體出測出試出結出果出
+出 出 出 出 出i出f出 出(出b出A出l出l出P出a出s出s出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出所出有出測出試出"出)出,出 出t出本出使出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出所出有出測出試出通出過出，出通出過出：出%出d出，出失出敗出：出%出d出"出)出,出 出P出a出s出s出e出d出T出e出s出t出s出,出 出軍出a出i出l出e出d出T出e出s出t出s出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出所出有出測出試出"出)出,出 出f出a出l出s出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出部出分出測出試出失出敗出，出通出過出：出%出d出，出失出敗出：出%出d出"出)出,出 出P出a出s出s出e出d出T出e出s出t出s出,出 出軍出a出i出l出e出d出T出e出s出t出s出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出G出e出t出T出e出s出t出R出e出s出使出l出t出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出s出使出l出t出s出 出=出 出T出E出X出T出(出"出科出技出樹出系出統出測出試出結出果出\出n出"出)出;出
+出 出 出 出 出R出e出s出使出l出t出s出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出通出過出測出試出：出%出d出\出n出"出)出,出 出P出a出s出s出e出d出T出e出s出t出s出)出;出
+出 出 出 出 出R出e出s出使出l出t出s出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出失出敗出測出試出：出%出d出\出n出"出)出,出 出軍出a出i出l出e出d出T出e出s出t出s出)出;出
+出 出 出 出 出R出e出s出使出l出t出s出 出+出=出 出T出E出X出T出(出"出詳出細出結出果出：出\出n出"出)出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出s出使出l出t出 出:出 出T出e出s出t出R出e出s出使出l出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出s出使出l出t出s出 出+出=出 出R出e出s出使出l出t出 出+出 出T出E出X出T出(出"出\出n出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出使出l出t出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出C出l出e出a出n出使出p出T出e出s出t出(出)出
+出{出
+出 出 出 出 出i出f出 出(出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出T出e出s出t出R出e出s出使出l出t出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出R出e出s出e出t出T出e出s出t出C出o出使出n出t出e出本出s出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出A出d出d出T出e出s出t出R出e出s出使出l出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出s出t出的出a出設置出e出,出 出b出o出o出l出 出b出P出a出s出s出e出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出)出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出s出使出l出t出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出[出%出s出]出 出%出s出"出)出,出 出b出P出a出s出s出e出d出 出基本出 出T出E出X出T出(出"出通出過出"出)出 出:出 出T出E出X出T出(出"出失出敗出"出)出,出 出*出T出e出s出t出的出a出設置出e出)出;出
+出 出 出 出 出i出f出 出(出!出M出e出s出s出a出成出e出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出s出使出l出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出 出-出 出%出s出"出)出,出 出*出M出e出s出s出a出成出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出T出e出s出t出R出e出s出使出l出t出s出.出A出d出d出(出R出e出s出使出l出t出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出b出P出a出s出s出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出a出s出s出e出d出T出e出s出t出s出+出+出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出a出i出l出e出d出T出e出s出t出s出+出+出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出T出e出c出h出的出o出d出e出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出C出本出e出a出t出e出T出e出s出t出T出e出c出h出的出o出d出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出c出h出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出c出h出的出a出設置出e出,出 出E出T出e出c出h出C出a出t出e出成出o出本出y出 出C出a出t出e出成出o出本出y出)出
+出{出
+出 出 出 出 出軍出T出e出c出h出的出o出d出e出 出T出e出s出t出的出o出d出e出;出
+出 出 出 出 出T出e出s出t出的出o出d出e出.出T出e出c出h出I出D出 出=出 出T出e出c出h出I出D出;出
+出 出 出 出 出T出e出s出t出的出o出d出e出.出T出e出c出h出的出a出設置出e出 出=出 出T出e出c出h出的出a出設置出e出;出
+出 出 出 出 出T出e出s出t出的出o出d出e出.出T出e出c出h出D出e出s出c出本出i出p出t出i出o出n出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出測出試出科出技出：出%出s出"出)出,出 出*出T出e出c出h出的出a出設置出e出)出;出
+出 出 出 出 出T出e出s出t出的出o出d出e出.出C出a出t出e出成出o出本出y出 出=出 出C出a出t出e出成出o出本出y出;出
+出 出 出 出 出T出e出s出t出的出o出d出e出.出T出i出e出本出 出=出 出E出T出e出c出h出T出i出e出本出:出:出B出a出s出i出c出;出
+出 出 出 出 出T出e出s出t出的出o出d出e出.出S出t出a出t出使出s出 出=出 出E出T出e出c出h出S出t出a出t出使出s出:出:出A出正出a出i出l出a出b出l出e出;出
+出 出 出 出 出T出e出s出t出的出o出d出e出.出R出e出s出e出a出本出c出h出C出o出s出t出.出T出i出設置出e出C出o出s出t出 出=出 出3出0出0出.出0出f出;出
+出 出 出 出 出T出e出s出t出的出o出d出e出.出R出e出s出e出a出本出c出h出C出o出s出t出.出R出e出q出使出i出本出e出d出S出c出i出e出n出t出i出s出t出s出 出=出 出1出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出T出e出s出t出的出o出d出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出V出e出本出i出f出y出T出e出c出h出的出o出d出e出D出a出t出a出(出c出o出n出s出t出 出軍出T出e出c出h出的出o出d出e出&出 出T出e出c出h出的出o出d出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出x出p出e出c出t出e出d出的出a出設置出e出,出 出E出T出e出c出h出C出a出t出e出成出o出本出y出 出E出x出p出e出c出t出e出d出C出a出t出e出成出o出本出y出)出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出T出e出c出h出的出o出d出e出.出T出e出c出h出的出a出設置出e出 出=出=出 出E出x出p出e出c出t出e出d出的出a出設置出e出 出&出&出 出T出e出c出h出的出o出d出e出.出C出a出t出e出成出o出本出y出 出=出=出 出E出x出p出e出c出t出e出d出C出a出t出e出成出o出本出y出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出V出e出本出i出f出y出R出e出s出e出a出本出c出h出S出t出a出t出使出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出c出h出I出D出,出 出E出T出e出c出h出S出t出a出t出使出s出 出E出x出p出e出c出t出e出d出S出t出a出t出使出s出)出
+出{出
+出 出 出 出 出軍出T出e出c出h出的出o出d出e出 出T出e出c出h出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出的出o出d出e出(出T出e出c出h出I出D出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出T出e出c出h出.出S出t出a出t出使出s出 出=出=出 出E出x出p出e出c出t出e出d出S出t出a出t出使出s出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出G出e出t出R出a出n出d出o出設置出T出e出c出h出I出D出(出E出T出e出c出h出C出a出t出e出成出o出本出y出 出C出a出t出e出成出o出本出y出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出T出e出c出h出的出o出d出e出>出 出C出a出t出e出成出o出本出y出T出e出c出h出s出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出s出B出y出C出a出t出e出成出o出本出y出(出C出a出t出e出成出o出本出y出)出;出
+出 出 出 出 出i出f出 出(出C出a出t出e出成出o出本出y出T出e出c出h出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出R出a出n出d出o出設置出I出n出d出e出x出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出C出a出t出e出成出o出本出y出T出e出c出h出s出.出的出使出設置出(出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出a出t出e出成出o出本出y出T出e出c出h出s出[出R出a出n出d出o出設置出I出n出d出e出x出]出.出T出e出c出h出I出D出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出"出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出R出e出s出e出t出T出e出s出t出C出o出使出n出t出e出本出s出(出)出
+出{出
+出 出 出 出 出P出a出s出s出e出d出T出e出s出t出s出 出=出 出0出;出
+出 出 出 出 出軍出a出i出l出e出d出T出e出s出t出s出 出=出 出0出;出
+出 出 出 出 出T出e出s出t出R出e出s出使出l出t出s出.出E出設置出p出t出y出(出)出;出
+出}出
+出
+出軍出T出e出c出h出T出本出e出e出C出o出n出f出i出成出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出C出本出e出a出t出e出T出e出s出t出C出o出n出f出i出成出(出)出
+出{出
+出 出 出 出 出軍出T出e出c出h出T出本出e出e出C出o出n出f出i出成出 出T出e出s出t出C出o出n出f出i出成出;出
+出 出 出 出 出T出e出s出t出C出o出n出f出i出成出.出G出l出o出b出a出l出R出e出s出e出a出本出c出h出S出p出e出e出d出 出=出 出2出.出0出f出;出
+出 出 出 出 出T出e出s出t出C出o出n出f出i出成出.出M出a出x出C出o出n出c出使出本出本出e出n出t出R出e出s出e出a出本出c出h出 出=出 出2出;出
+出 出 出 出 出T出e出s出t出C出o出n出f出i出成出.出b出E出n出a出b出l出e出T出e出c出h出S出h出a出本出i出n出成出 出=出 出t出本出使出e出;出
+出 出 出 出 出T出e出s出t出C出o出n出f出i出成出.出T出e出c出h出S出h出a出本出i出n出成出E出f出f出i出c出i出e出n出c出y出 出=出 出0出.出7出5出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出設出置出類出別出加出成出
+出 出 出 出 出T出e出s出t出C出o出n出f出i出成出.出C出a出t出e出成出o出本出y出R出e出s出e出a出本出c出h出B出o出n出使出s出.出A出d出d出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出M出i出l出i出t出a出本出y出,出 出1出.出5出f出)出;出
+出 出 出 出 出T出e出s出t出C出o出n出f出i出成出.出C出a出t出e出成出o出本出y出R出e出s出e出a出本出c出h出B出o出n出使出s出.出A出d出d出(出E出T出e出c出h出C出a出t出e出成出o出本出y出:出:出E出c出o出n出o出設置出i出c出,出 出1出.出3出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出設出置出等出級出加出成出
+出 出 出 出 出T出e出s出t出C出o出n出f出i出成出.出T出i出e出本出R出e出s出e出a出本出c出h出B出o出n出使出s出.出A出d出d出(出E出T出e出c出h出T出i出e出本出:出:出B出a出s出i出c出,出 出1出.出2出f出)出;出
+出 出 出 出 出T出e出s出t出C出o出n出f出i出成出.出T出i出e出本出R出e出s出e出a出本出c出h出B出o出n出使出s出.出A出d出d出(出E出T出e出c出h出T出i出e出本出:出:出I出n出t出e出本出設置出e出d出i出a出t出e出,出 出1出.出1出f出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出T出e出s出t出C出o出n出f出i出成出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出T出e出c出h出T出本出e出e出T出e出s出t出:出:出V出e出本出i出f出y出C出o出n出f出i出成出A出p出p出l出i出c出a出t出i出o出n出(出c出o出n出s出t出 出軍出T出e出c出h出T出本出e出e出C出o出n出f出i出成出&出 出E出x出p出e出c出t出e出d出C出o出n出f出i出成出)出
+出{出
+出 出 出 出 出軍出T出e出c出h出T出本出e出e出C出o出n出f出i出成出 出C出使出本出本出e出n出t出C出o出n出f出i出成出 出=出 出T出e出c出h出T出本出e出e出S出y出s出t出e出設置出-出>出G出e出t出T出e出c出h出T出本出e出e出C出o出n出f出i出成出(出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出A出b出s出(出C出使出本出本出e出n出t出C出o出n出f出i出成出.出G出l出o出b出a出l出R出e出s出e出a出本出c出h出S出p出e出e出d出 出-出 出E出x出p出e出c出t出e出d出C出o出n出f出i出成出.出G出l出o出b出a出l出R出e出s出e出a出本出c出h出S出p出e出e出d出)出 出<出 出0出.出0出1出f出 出&出&出
+出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出C出o出n出f出i出成出.出M出a出x出C出o出n出c出使出本出本出e出n出t出R出e出s出e出a出本出c出h出 出=出=出 出E出x出p出e出c出t出e出d出C出o出n出f出i出成出.出M出a出x出C出o出n出c出使出本出本出e出n出t出R出e出s出e出a出本出c出h出 出&出&出
+出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出C出o出n出f出i出成出.出b出E出n出a出b出l出e出T出e出c出h出S出h出a出本出i出n出成出 出=出=出 出E出x出p出e出c出t出e出d出C出o出n出f出i出成出.出b出E出n出a出b出l出e出T出e出c出h出S出h出a出本出i出n出成出;出
+出}出
+出

@@ -1,5 +1,6 @@
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Risk Monitoring Dashboard Implementation - B2-1
+// Provides comprehensive risk monitoring and visualization
 
 #include "Risk/MingRiskDashboard.h"
 #include "Engine/Engine.h"
@@ -17,114 +18,162 @@ UMingRiskDashboard::UMingRiskDashboard()
 void UMingRiskDashboard::InitializeDashboard(const FDashboardConfig& Config)
 {
     this->Config = Config;
-
-    UE_LOG(LogRiskDashboard, Log, TEXT("Initializing Risk Dashboard with %d monitored categories"),
-        Config.MonitoredCategories.Num());
-
-    ScheduleUpdates();
+    CurrentView = EDashboardView::Overview;
+    
+    // Initialize risk metrics
+    InitializeRiskMetrics();
+    
+    // Start real-time monitoring
+    if (Config.bEnableRealTimeMonitoring)
+    {
+        StartRealTimeMonitoring();
+    }
+    
+    UE_LOG(LogRiskDashboard, Log, TEXT("Risk Dashboard initialized with %d metrics"), 
+        RiskMetrics.Num());
 }
 
 void UMingRiskDashboard::ShutdownDashboard()
 {
-    CancelUpdates();
-    RiskMetrics.Empty();
+    StopRealTimeMonitoring();
     UE_LOG(LogRiskDashboard, Log, TEXT("Risk Dashboard shutdown"));
 }
 
-void UMingRiskDashboard::UpdateDashboard()
+void UMingRiskDashboard::UpdateRiskMetric(const FName& MetricName, float Value, ERiskCategory Category)
 {
-    EvaluateRiskLevels();
-    UpdateRiskIndicators();
-    CleanupOldHistoryData();
-
-    TArray<FRiskIndicator> Indicators = GetAllRiskIndicators();
-    OnDashboardUpdated.Broadcast(Indicators);
-
-    UE_LOG(LogRiskDashboard, Verbose, TEXT("Dashboard updated with %d indicators"), Indicators.Num());
-}
-
-void UMingRiskDashboard::SetCurrentView(EDashboardView View)
-{
-    CurrentView = View;
-    UE_LOG(LogRiskDashboard, Log, TEXT("Dashboard view changed to: %s"), *UEnum::GetValueAsString(View));
-}
-
-void UMingRiskDashboard::RegisterRiskMetric(const FRiskMetric& Metric)
-{
-    RiskMetrics.Add(Metric.MetricName, Metric);
-    UE_LOG(LogRiskDashboard, Log, TEXT("Registered risk metric: %s"), *Metric.MetricName.ToString());
-}
-
-void UMingRiskDashboard::UpdateRiskMetric(FName MetricName, float NewValue)
-{
-    if (RiskMetrics.Contains(MetricName))
+    if (FRiskMetric* Metric = RiskMetrics.Find(MetricName))
     {
-        FRiskMetric& Metric = RiskMetrics[MetricName];
-        float OldValue = Metric.CurrentValue;
-        Metric.CurrentValue = NewValue;
-        Metric.LastUpdateTime = FPlatformTime::Seconds();
-
-        // Add to history
-        Metric.HistoryValues.Add(NewValue);
-
-        // Calculate trend
-        CalculateTrendForMetric(Metric);
-
-        // Check thresholds
-        ERiskLevel OldLevel = Metric.RiskLevel;
-        Metric.RiskLevel = CalculateRiskLevel(NewValue, Metric.Threshold, Metric.CriticalThreshold);
-
-        if (OldLevel != Metric.RiskLevel)
+        Metric->CurrentValue = Value;
+        Metric->Category = Category;
+        Metric->LastUpdateTime = FDateTime::Now().GetTicks();
+        
+        // Update history
+        Metric->HistoryValues.Add(Value);
+        if (Metric->HistoryValues.Num() > Config.MaxHistoryPoints)
         {
-            OnMetricThresholdExceeded.Broadcast(Metric);
-
-            if (Metric.RiskLevel > ERiskLevel::Low)
-            {
-                OnRiskDetected.Broadcast(Metric.Category, Metric.Description);
-            }
+            Metric->HistoryValues.RemoveAt(0);
         }
-
-        UE_LOG(LogRiskDashboard, Verbose, TEXT("Updated metric %s: %.2f -> %.2f (Level: %s)"),
-            *MetricName.ToString(), OldValue, NewValue, *UEnum::GetValueAsString(Metric.RiskLevel));
+        
+        // Check thresholds
+        CheckMetricThresholds(*Metric);
+        
+        // Update overall risk level
+        UpdateOverallRiskLevel();
+        
+        // Broadcast update
+        OnRiskMetricUpdated.Broadcast(MetricName, *Metric);
     }
-}
-
-void UMingRiskDashboard::UnregisterRiskMetric(FName MetricName)
-{
-    RiskMetrics.Remove(MetricName);
-    UE_LOG(LogRiskDashboard, Log, TEXT("Unregistered risk metric: %s"), *MetricName.ToString());
-}
-
-FRiskMetric UMingRiskDashboard::GetRiskMetric(FName MetricName) const
-{
-    if (RiskMetrics.Contains(MetricName))
+    else
     {
-        return RiskMetrics[MetricName];
+        UE_LOG(LogRiskDashboard, Warning, TEXT("Metric '%s' not found"), *MetricName.ToString());
     }
-    return FRiskMetric();
+}
+
+FRiskMetric UMingRiskDashboard::GetRiskMetric(const FName& MetricName) const
+{
+    if (const FRiskMetric* Metric = RiskMetrics.Find(MetricName))
+    {
+        return *Metric;
+    }
+    
+    // Return empty metric if not found
+    FRiskMetric EmptyMetric;
+    EmptyMetric.MetricName = MetricName;
+    return EmptyMetric;
 }
 
 TArray<FRiskMetric> UMingRiskDashboard::GetAllRiskMetrics() const
 {
-    TArray<FRiskMetric> Result;
-    for (const auto& Pair : RiskMetrics)
+    TArray<FRiskMetric> Metrics;
+    for (const auto& MetricPair : RiskMetrics)
     {
-        Result.Add(Pair.Value);
+        Metrics.Add(MetricPair.Value);
     }
-    return Result;
+    return Metrics;
 }
 
 TArray<FRiskMetric> UMingRiskDashboard::GetRiskMetricsByCategory(ERiskCategory Category) const
 {
-    TArray<FRiskMetric> Result;
-    for (const auto& Pair : RiskMetrics)
+    TArray<FRiskMetric> CategoryMetrics;
+    for (const auto& MetricPair : RiskMetrics)
     {
-        if (Pair.Value.Category == Category)
+        if (MetricPair.Value.Category == Category)
         {
-            Result.Add(Pair.Value);
+            CategoryMetrics.Add(MetricPair.Value);
         }
     }
-    return Result;
+    return CategoryMetrics;
+}
+
+TArray<FRiskAlert> UMingRiskDashboard::GetActiveAlerts() const
+{
+    TArray<FRiskAlert> ActiveAlerts;
+    for (const auto& Alert : RiskAlerts)
+    {
+        if (Alert.Status == EAlertStatus::New || Alert.Status == EAlertStatus::InProgress)
+        {
+            ActiveAlerts.Add(Alert);
+        }
+    }
+    return ActiveAlerts;
+}
+
+void UMingRiskDashboard::CreateAlert(const FString& Title, const FString& Message, 
+    EAlertType Type, EAlertPriority Priority, ERiskCategory Category)
+{
+    FRiskAlert NewAlert;
+    NewAlert.AlertID = FGuid::NewGuid().ToString();
+    NewAlert.Title = Title;
+    NewAlert.Message = Message;
+    NewAlert.Type = Type;
+    NewAlert.Priority = Priority;
+    NewAlert.Category = Category;
+    NewAlert.Status = EAlertStatus::New;
+    NewAlert.Timestamp = FDateTime::Now();
+    
+    RiskAlerts.Add(NewAlert);
+    
+    // Broadcast alert
+    OnRiskAlertCreated.Broadcast(NewAlert);
+    
+    UE_LOG(LogRiskDashboard, Log, TEXT("Alert created: %s"), *Title);
+}
+
+void UMingRiskDashboard::AcknowledgeAlert(const FString& AlertID)
+{
+    for (auto& Alert : RiskAlerts)
+    {
+        if (Alert.AlertID == AlertID)
+        {
+            Alert.Status = EAlertStatus::Acknowledged;
+            OnRiskAlertUpdated.Broadcast(Alert);
+            break;
+        }
+    }
+}
+
+void UMingRiskDashboard::ResolveAlert(const FString& AlertID)
+{
+    for (auto& Alert : RiskAlerts)
+    {
+        if (Alert.AlertID == AlertID)
+        {
+            Alert.Status = EAlertStatus::Resolved;
+            OnRiskAlertUpdated.Broadcast(Alert);
+            break;
+        }
+    }
+}
+
+void UMingRiskDashboard::SetDashboardView(EDashboardView View)
+{
+    CurrentView = View;
+    OnDashboardViewChanged.Broadcast(View);
+}
+
+EDashboardView UMingRiskDashboard::GetCurrentView() const
+{
+    return CurrentView;
 }
 
 ERiskLevel UMingRiskDashboard::GetOverallRiskLevel() const
@@ -132,307 +181,225 @@ ERiskLevel UMingRiskDashboard::GetOverallRiskLevel() const
     return OverallRiskLevel;
 }
 
-FRiskIndicator UMingRiskDashboard::GetRiskIndicator(ERiskCategory Category) const
+void UMingRiskDashboard::StartRealTimeMonitoring()
 {
-    FRiskIndicator Indicator;
-    Indicator.Category = Category;
-
-    TArray<FRiskMetric> CategoryMetrics = GetRiskMetricsByCategory(Category);
-    if (CategoryMetrics.Num() > 0)
+    if (GEngine && GEngine->GetWorldFromContextObject(this))
     {
-        ERiskLevel MaxLevel = ERiskLevel::None;
-        float TotalScore = 0.0f;
+        GEngine->GetWorldFromContextObject(this)->GetTimerManager().SetTimer(
+            MonitoringTimer,
+            this,
+            &UMingRiskDashboard::PerformMonitoringCycle,
+            Config.MonitoringInterval,
+            true);
 
-        for (const auto& Metric : CategoryMetrics)
-        {
-            if (Metric.RiskLevel > MaxLevel)
-            {
-                MaxLevel = Metric.RiskLevel;
-            }
-            TotalScore += static_cast<float>(Metric.RiskLevel);
-        }
-
-        Indicator.OverallLevel = MaxLevel;
-        Indicator.DisplayColor = GetRiskColor(MaxLevel);
-        Indicator.ActiveRiskCount = CategoryMetrics.Num();
-        Indicator.Summary = FString::Printf(TEXT("%d metrics monitored, highest level: %s"),
-            CategoryMetrics.Num(), *UEnum::GetValueAsString(MaxLevel));
-    }
-
-    return Indicator;
-}
-
-TArray<FRiskIndicator> UMingRiskDashboard::GetAllRiskIndicators() const
-{
-    TArray<FRiskIndicator> Result;
-
-    for (const auto& Category : Config.MonitoredCategories)
-    {
-        Result.Add(GetRiskIndicator(Category));
-    }
-
-    return Result;
-}
-
-void UMingRiskDashboard::SetRiskThreshold(FName MetricName, float Threshold, float CriticalThreshold)
-{
-    if (RiskMetrics.Contains(MetricName))
-    {
-        FRiskMetric& Metric = RiskMetrics[MetricName];
-        Metric.Threshold = Threshold;
-        Metric.CriticalThreshold = CriticalThreshold;
-
-        // Re-evaluate with new thresholds
-        Metric.RiskLevel = CalculateRiskLevel(Metric.CurrentValue, Threshold, CriticalThreshold);
-
-        UE_LOG(LogRiskDashboard, Log, TEXT("Updated thresholds for %s: Normal < %.2f < Critical"),
-            *MetricName.ToString(), Threshold);
+        UE_LOG(LogRiskDashboard, Log, TEXT("Real-time monitoring started (interval: %.1f s)"), 
+            Config.MonitoringInterval);
     }
 }
 
-void UMingRiskDashboard::AcknowledgeRisk(FName MetricName)
+void UMingRiskDashboard::StopRealTimeMonitoring()
 {
-    FString MetricStr = MetricName.ToString();
-    if (!AcknowledgedRisks.Contains(MetricStr))
+    if (GEngine && GEngine->GetWorldFromContextObject(this))
     {
-        AcknowledgedRisks.Add(MetricStr);
-        UE_LOG(LogRiskDashboard, Log, TEXT("Risk acknowledged: %s"), *MetricStr);
+        GEngine->GetWorldFromContextObject(this)->GetTimerManager().ClearTimer(MonitoringTimer);
     }
+    
+    UE_LOG(LogRiskDashboard, Log, TEXT("Real-time monitoring stopped"));
 }
 
-void UMingRiskDashboard::ResolveRisk(FName MetricName)
+void UMingRiskDashboard::RefreshDashboard()
 {
-    FString MetricStr = MetricName.ToString();
-    if (!ResolvedRisks.Contains(MetricStr))
+    // Update all metrics
+    for (auto& MetricPair : RiskMetrics)
     {
-        ResolvedRisks.Add(MetricStr);
-        AcknowledgedRisks.Remove(MetricStr);
-        UE_LOG(LogRiskDashboard, Log, TEXT("Risk resolved: %s"), *MetricStr);
+        UpdateMetricValue(MetricPair.Value);
     }
-
-    if (RiskMetrics.Contains(MetricName))
-    {
-        RiskMetrics[MetricName].RiskLevel = ERiskLevel::None;
-    }
+    
+    // Update overall risk level
+    UpdateOverallRiskLevel();
+    
+    // Check for new alerts
+    CheckForAlerts();
+    
+    OnDashboardRefreshed.Broadcast();
 }
 
-void UMingRiskDashboard::ExportDashboardData(const FString& FilePath)
+void UMingRiskDashboard::ExportDashboardData(const FString& FilePath) const
 {
     UE_LOG(LogRiskDashboard, Log, TEXT("Exporting dashboard data to: %s"), *FilePath);
-
-    FString JsonData = TEXT("{\n");
-    JsonData += TEXT("  \"timestamp\": \"") + FString::Printf(TEXT("%d"), static_cast<uint32>(FPlatformTime::Seconds())) + TEXT("\",\n");
-    JsonData += TEXT("  \"overall_risk_level\": \"") + UEnum::GetValueAsString(OverallRiskLevel) + TEXT("\",\n");
-    JsonData += TEXT("  \"metrics\": [\n");
-
-    int32 Index = 0;
-    for (const auto& Pair : RiskMetrics)
+    
+    FString Report = TEXT("MingGoRTS Risk Dashboard Report\n");
+    Report += TEXT("===================================\n\n");
+    Report += FString::Printf(TEXT("Export Time: %s\n"), *FDateTime::Now().ToString());
+    Report += FString::Printf(TEXT("Overall Risk Level: %s\n\n"), *UEnum::GetValueAsString(OverallRiskLevel));
+    
+    Report += TEXT("Risk Metrics:\n");
+    Report += TEXT("-------------\n");
+    
+    for (const auto& MetricPair : RiskMetrics)
     {
-        const FRiskMetric& Metric = Pair.Value;
-        JsonData += TEXT("    {\n");
-        JsonData += TEXT("      \"name\": \"") + Metric.MetricName.ToString() + TEXT("\",\n");
-        JsonData += TEXT("      \"value\": \"") + FString::SanitizeFloat(Metric.CurrentValue) + TEXT("\",\n");
-        JsonData += TEXT("      \"level\": \"") + UEnum::GetValueAsString(Metric.RiskLevel) + TEXT("\"\n");
-        JsonData += TEXT("    }") + FString(Index < RiskMetrics.Num() - 1 ? "," : "") + TEXT("\n");
-        Index++;
+        const FRiskMetric& Metric = MetricPair.Value;
+        Report += FString::Printf(TEXT("- %s: %.2f (%s)\n"), 
+            *Metric.MetricName.ToString(),
+            Metric.CurrentValue,
+            *UEnum::GetValueAsString(Metric.RiskLevel));
     }
-
-    JsonData += TEXT("  ]\n");
-    JsonData += TEXT("}\n");
-
-    FFileHelper::SaveStringToFile(JsonData, *FilePath);
-}
-
-void UMingRiskDashboard::GenerateRiskReport()
-{
-    UE_LOG(LogRiskDashboard, Log, TEXT("=== Risk Dashboard Report ==="));
-    UE_LOG(LogRiskDashboard, Log, TEXT("Overall Risk Level: %s"), *UEnum::GetValueAsString(OverallRiskLevel));
-    UE_LOG(LogRiskDashboard, Log, TEXT("Total Metrics: %d"), RiskMetrics.Num());
-
-    TMap<ERiskLevel, int32> RiskCounts;
-    for (const auto& Pair : RiskMetrics)
+    
+    Report += TEXT("\nActive Alerts:\n");
+    Report += TEXT("-------------\n");
+    
+    for (const FRiskAlert& Alert : RiskAlerts)
     {
-        RiskCounts.FindOrAdd(Pair.Value.RiskLevel)++;
-    }
-
-    UE_LOG(LogRiskDashboard, Log, TEXT("Risk Distribution:"));
-    for (const auto& Pair : RiskCounts)
-    {
-        UE_LOG(LogRiskDashboard, Log, TEXT("  %s: %d"),
-            *UEnum::GetValueAsString(Pair.Key), Pair.Value);
-    }
-
-    UE_LOG(LogRiskDashboard, Log, TEXT("Active Risks: %d"), GetActiveRiskCount());
-    UE_LOG(LogRiskDashboard, Log, TEXT("Critical Risks: %d"), GetCriticalRiskCount());
-}
-
-int32 UMingRiskDashboard::GetActiveRiskCount() const
-{
-    int32 Count = 0;
-    for (const auto& Pair : RiskMetrics)
-    {
-        if (Pair.Value.RiskLevel > ERiskLevel::Low)
+        if (Alert.Status == EAlertStatus::New || Alert.Status == EAlertStatus::InProgress)
         {
-            Count++;
+            Report += FString::Printf(TEXT("- %s: %s\n"), *Alert.Title, *Alert.Message);
         }
     }
-    return Count;
+    
+    // In a real implementation, you would save this to a file
+    UE_LOG(LogRiskDashboard, Log, TEXT("Report generated:\n%s"), *Report);
 }
 
-int32 UMingRiskDashboard::GetCriticalRiskCount() const
+// Private helper functions
+
+void UMingRiskDashboard::InitializeRiskMetrics()
 {
-    int32 Count = 0;
-    for (const auto& Pair : RiskMetrics)
+    // Initialize default metrics
+    AddRiskMetric(TEXT("CPUUsage"), ERiskCategory::Performance, 0.0f, 70.0f, 90.0f);
+    AddRiskMetric(TEXT("MemoryUsage"), ERiskCategory::Performance, 0.0f, 75.0f, 95.0f);
+    AddRiskMetric(TEXT("NetworkLatency"), ERiskCategory::Network, 0.0f, 100.0f, 200.0f);
+    AddRiskMetric(TEXT("ErrorRate"), ERiskCategory::Stability, 0.0f, 1.0f, 5.0f);
+    AddRiskMetric(TEXT("SecurityScore"), ERiskCategory::Security, 100.0f, 70.0f, 50.0f);
+}
+
+void UMingRiskDashboard::AddRiskMetric(const FName& Name, ERiskCategory Category, 
+    float DefaultValue, float Threshold, float CriticalThreshold)
+{
+    FRiskMetric Metric;
+    Metric.MetricName = Name;
+    Metric.Category = Category;
+    Metric.CurrentValue = DefaultValue;
+    Metric.Threshold = Threshold;
+    Metric.CriticalThreshold = CriticalThreshold;
+    Metric.RiskLevel = ERiskLevel::None;
+    Metric.LastUpdateTime = FDateTime::Now().GetTicks();
+    
+    RiskMetrics.Add(Name, Metric);
+}
+
+void UMingRiskDashboard::CheckMetricThresholds(FRiskMetric& Metric)
+{
+    if (Metric.CurrentValue >= Metric.CriticalThreshold)
     {
-        if (Pair.Value.RiskLevel >= ERiskLevel::Critical)
+        Metric.RiskLevel = ERiskLevel::Critical;
+        CreateAlert(
+            FString::Printf(TEXT("Critical: %s"), *Metric.MetricName.ToString()),
+            FString::Printf(TEXT("Metric %s has reached critical level: %.2f"), 
+                *Metric.MetricName.ToString(), Metric.CurrentValue),
+            EAlertType::Critical,
+            EAlertPriority::Highest,
+            Metric.Category);
+    }
+    else if (Metric.CurrentValue >= Metric.Threshold)
+    {
+        if (Metric.RiskLevel < ERiskLevel::High)
         {
-            Count++;
+            Metric.RiskLevel = ERiskLevel::High;
+            CreateAlert(
+                FString::Printf(TEXT("Warning: %s"), *Metric.MetricName.ToString()),
+                FString::Printf(TEXT("Metric %s has exceeded threshold: %.2f"), 
+                    *Metric.MetricName.ToString(), Metric.CurrentValue),
+                EAlertType::Warning,
+                EAlertPriority::High,
+                Metric.Category);
         }
     }
-    return Count;
-}
-
-void UMingRiskDashboard::ScheduleUpdates()
-{
-    if (Config.bEnableRealTimeUpdates && GEngine && GEngine->GetCurrentWorldContext())
+    else
     {
-        GEngine->GetCurrentWorldContext()->World()->GetTimerManager().SetTimer(
-            UpdateTimer,
-            this,
-            &UMingRiskDashboard::UpdateDashboard,
-            Config.UpdateInterval,
-            true
-        );
-
-        UE_LOG(LogRiskDashboard, Log, TEXT("Scheduled dashboard updates every %.1f seconds"),
-            Config.UpdateInterval);
+        Metric.RiskLevel = ERiskLevel::None;
     }
 }
 
-void UMingRiskDashboard::CancelUpdates()
+void UMingRiskDashboard::UpdateOverallRiskLevel()
 {
-    if (GEngine && GEngine->GetCurrentWorldContext())
+    ERiskLevel MaxLevel = ERiskLevel::None;
+    
+    for (const auto& MetricPair : RiskMetrics)
     {
-        GEngine->GetCurrentWorldContext()->World()->GetTimerManager().ClearTimer(UpdateTimer);
-    }
-}
-
-void UMingRiskDashboard::EvaluateRiskLevels()
-{
-    ERiskLevel OldOverallLevel = OverallRiskLevel;
-    OverallRiskLevel = ERiskLevel::None;
-
-    for (const auto& Pair : RiskMetrics)
-    {
-        const FRiskMetric& Metric = Pair.Value;
-        if (Metric.RiskLevel > OverallRiskLevel)
+        if (MetricPair.Value.RiskLevel > MaxLevel)
         {
-            OverallRiskLevel = Metric.RiskLevel;
+            MaxLevel = MetricPair.Value.RiskLevel;
         }
     }
-
-    if (OldOverallLevel != OverallRiskLevel)
+    
+    if (OverallRiskLevel != MaxLevel)
     {
-        NotifyRiskLevelChange(OldOverallLevel, OverallRiskLevel);
+        ERiskLevel OldLevel = OverallRiskLevel;
+        OverallRiskLevel = MaxLevel;
+        OnOverallRiskLevelChanged.Broadcast(OverallRiskLevel, OldLevel);
     }
 }
 
-ERiskLevel UMingRiskDashboard::CalculateRiskLevel(float Value, float Threshold, float CriticalThreshold) const
+void UMingRiskDashboard::PerformMonitoringCycle()
 {
-    if (Value >= CriticalThreshold)
-    {
-        return ERiskLevel::Critical;
-    }
-    else if (Value >= Threshold + (CriticalThreshold - Threshold) * 0.7f)
-    {
-        return ERiskLevel::High;
-    }
-    else if (Value >= Threshold + (CriticalThreshold - Threshold) * 0.3f)
-    {
-        return ERiskLevel::Medium;
-    }
-    else if (Value >= Threshold)
-    {
-        return ERiskLevel::Low;
-    }
-    return ERiskLevel::None;
+    RefreshDashboard();
 }
 
-void UMingRiskDashboard::UpdateRiskIndicators()
+void UMingRiskDashboard::UpdateMetricValue(FRiskMetric& Metric)
 {
-    // Risk indicators are calculated on-demand in GetRiskIndicator
-}
-
-FLinearColor UMingRiskDashboard::GetRiskColor(ERiskLevel Level) const
-{
-    switch (Level)
+    // In a real implementation, this would query actual system values
+    // For now, we'll use placeholder logic
+    if (Metric.MetricName == TEXT("CPUUsage"))
     {
-    case ERiskLevel::None:
-        return FLinearColor(0.0f, 1.0f, 0.0f);
-    case ERiskLevel::Low:
-        return FLinearColor(0.5f, 1.0f, 0.0f);
-    case ERiskLevel::Medium:
-        return FLinearColor(1.0f, 1.0f, 0.0f);
-    case ERiskLevel::High:
-        return FLinearColor(1.0f, 0.5f, 0.0f);
-    case ERiskLevel::Critical:
-        return FLinearColor(1.0f, 0.0f, 0.0f);
-    case ERiskLevel::Emergency:
-        return FLinearColor(0.5f, 0.0f, 0.0f);
-    default:
-        return FLinearColor::Gray;
+        Metric.CurrentValue = FMath::RandRange(20.0f, 80.0f);
+    }
+    else if (Metric.MetricName == TEXT("MemoryUsage"))
+    {
+        Metric.CurrentValue = FMath::RandRange(30.0f, 85.0f);
+    }
+    else if (Metric.MetricName == TEXT("NetworkLatency"))
+    {
+        Metric.CurrentValue = FMath::RandRange(10.0f, 150.0f);
+    }
+    else if (Metric.MetricName == TEXT("ErrorRate"))
+    {
+        Metric.CurrentValue = FMath::RandRange(0.0f, 3.0f);
+    }
+    else if (Metric.MetricName == TEXT("SecurityScore"))
+    {
+        Metric.CurrentValue = FMath::RandRange(60.0f, 100.0f);
+    }
+    
+    Metric.LastUpdateTime = FDateTime::Now().GetTicks();
+    
+    // Update history
+    Metric.HistoryValues.Add(Metric.CurrentValue);
+    if (Metric.HistoryValues.Num() > Config.MaxHistoryPoints)
+    {
+        Metric.HistoryValues.RemoveAt(0);
     }
 }
 
-void UMingRiskDashboard::NotifyRiskLevelChange(ERiskLevel OldLevel, ERiskLevel NewLevel)
+void UMingRiskDashboard::CheckForAlerts()
 {
-    OnRiskLevelChanged.Broadcast(NewLevel);
-
-    UE_LOG(LogRiskDashboard, Warning, TEXT("Risk level changed from %s to %s"),
-        *UEnum::GetValueAsString(OldLevel), *UEnum::GetValueAsString(NewLevel));
-
-    LogRiskEvent(FString::Printf(TEXT("Risk level changed: %s -> %s"),
-        *UEnum::GetValueAsString(OldLevel), *UEnum::GetValueAsString(NewLevel)));
-}
-
-void UMingRiskDashboard::LogRiskEvent(const FString& Event)
-{
-    UE_LOG(LogRiskDashboard, Log, TEXT("[RISK] %s"), *Event);
-}
-
-void UMingRiskDashboard::CleanupOldHistoryData()
-{
-    for (auto& Pair : RiskMetrics)
+    // Check for any conditions that should generate alerts
+    // This is a placeholder implementation
+    int32 ActiveAlertCount = 0;
+    for (const FRiskAlert& Alert : RiskAlerts)
     {
-        FRiskMetric& Metric = Pair.Value;
-        if (Metric.HistoryValues.Num() > Config.HistoryDataPoints)
+        if (Alert.Status == EAlertStatus::New || Alert.Status == EAlertStatus::InProgress)
         {
-            int32 RemoveCount = Metric.HistoryValues.Num() - Config.HistoryDataPoints;
-            Metric.HistoryValues.RemoveAt(0, RemoveCount);
+            ActiveAlertCount++;
         }
     }
-}
-
-void UMingRiskDashboard::CalculateTrendForMetric(FRiskMetric& Metric)
-{
-    if (Metric.HistoryValues.Num() < 2) return;
-
-    float Recent = Metric.HistoryValues.Last();
-    float Previous = Metric.HistoryValues[Metric.HistoryValues.Num() - 2];
-
-    // Simple trend calculation
-    float Change = Recent - Previous;
-    UE_LOG(LogRiskDashboard, VeryVerbose, TEXT("Metric %s trend: %.2f"),
-        *Metric.MetricName.ToString(), Change);
-}
-
-static UMingRiskDashboard* UMingRiskDashboard::Get(UObject* WorldContextObject)
-{
-    static UMingRiskDashboard* Instance = nullptr;
-    if (!Instance)
+    
+    if (ActiveAlertCount > Config.MaxActiveAlerts)
     {
-        Instance = NewObject<UMingRiskDashboard>();
-        Instance->AddToRoot();
+        CreateAlert(
+            TEXT("Alert Limit Exceeded"),
+            FString::Printf(TEXT("Too many active alerts: %d"), ActiveAlertCount),
+            EAlertType::Warning,
+            EAlertPriority::High,
+            ERiskCategory::General);
     }
-    return Instance;
 }

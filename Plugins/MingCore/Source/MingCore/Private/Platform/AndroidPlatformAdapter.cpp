@@ -1,221 +1,222 @@
-#include "Platform/AndroidPlatformAdapter.h"
-
-#if PLATFORM_ANDROID
-#include "Android/AndroidJNI.h"
-#include "Android/AndroidApplication.h"
-#endif
-
-UAndroidPlatformAdapter::UAndroidPlatformAdapter()
-    : bInitialized(false)
-    , CurrentPerformanceMode(1) // Android 默認平衡模式
-    , bSafeZoneCached(false)
-{
-}
-
-EPlatformType UAndroidPlatformAdapter::GetPlatformType() const
-{
-    return EPlatformType::Android;
-}
-
-FPlatformCapabilities UAndroidPlatformAdapter::GetCapabilities() const
-{
-    FPlatformCapabilities Capabilities;
-    Capabilities.bSupportsMultiTouch = true;
-    Capabilities.MaxTouchPoints = 10;
-    Capabilities.bSupportsHardwareKeyboard = false; // 大部分 Android 設備沒有物理鍵盤
-    Capabilities.bSupportsMouse = false; // 默認不支持
-    Capabilities.DefaultInputType = EInputType::Touch;
-    Capabilities.bRequiresBatteryOptimization = true;
-    Capabilities.RecommendedMaxUnits = 500; // 移動端減少單位數
-    Capabilities.RecommendedQualityLevel = 2; // 移動端中等畫質
-    
-    return Capabilities;
-}
-
-void UAndroidPlatformAdapter::Initialize()
-{
-    if (bInitialized)
-    {
-        return;
-    }
-    
-    UE_LOG(LogTemp, Log, TEXT("Android Platform Adapter initialized"));
-    UE_LOG(LogTemp, Log, TEXT("Android Version: %s"), *GetAndroidVersion());
-    
-    // 初始化安全區域
-    CachedSafeZone = FMargin(0, 0, 0, 0);
-    bSafeZoneCached = false;
-    
-    bInitialized = true;
-}
-
-void UAndroidPlatformAdapter::Shutdown()
-{
-    if (!bInitialized)
-    {
-        return;
-    }
-    
-    UE_LOG(LogTemp, Log, TEXT("Android Platform Adapter shutdown"));
-    bInitialized = false;
-}
-
-float UAndroidPlatformAdapter::GetScreenDPI() const
-{
-    // Android DPI 變化範圍很大，通常在 160-640 之間
-    // 這裡返回一個估計值，實際應該從 Java 層獲取
-    return 320.0f;
-}
-
-FMargin UAndroidPlatformAdapter::GetSafeZone() const
-{
-    if (!bSafeZoneCached)
-    {
-        // TODO: 從 Java 層獲取安全區域（劉海屏、圓角等）
-        // 這裡使用默認值
-        CachedSafeZone = FMargin(0, 40, 0, 0); // 頂部預留 40 像素給狀態欄
-        bSafeZoneCached = true;
-    }
-    
-    return CachedSafeZone;
-}
-
-bool UAndroidPlatformAdapter::IsTouchDevice() const
-{
-    return true;
-}
-
-void UAndroidPlatformAdapter::SetPerformanceMode(int32 Mode)
-{
-    CurrentPerformanceMode = Mode;
-    
-#if PLATFORM_ANDROID
-    // 調用 Java 方法設置性能模式
-    if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
-    {
-        // 這裡可以調用 Android 的 setPerformanceMode API
-        UE_LOG(LogTemp, Log, TEXT("Setting Android performance mode: %d"), Mode);
-    }
-#endif
-    
-    switch (Mode)
-    {
-    case 0: // 省電模式
-        UE_LOG(LogTemp, Log, TEXT("Android Performance Mode: Power Saving"));
-        break;
-    case 1: // 平衡模式
-        UE_LOG(LogTemp, Log, TEXT("Android Performance Mode: Balanced"));
-        break;
-    case 2: // 性能模式
-        UE_LOG(LogTemp, Log, TEXT("Android Performance Mode: Performance"));
-        break;
-    default:
-        break;
-    }
-}
-
-float UAndroidPlatformAdapter::GetBatteryLevel() const
-{
-#if PLATFORM_ANDROID
-    // 通過 JNI 調用 Android 電池 API
-    // 返回 0.0 到 1.0 的電量百分比
-    if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
-    {
-        // TODO: 實現 JNI 調用獲取電量
-        return 0.75f; // 暫時返回 75%
-    }
-#endif
-    return -1.0f;
-}
-
-bool UAndroidPlatformAdapter::IsCharging() const
-{
-#if PLATFORM_ANDROID
-    // 通過 JNI 檢查充電狀態
-#endif
-    return false;
-}
-
-void UAndroidPlatformAdapter::ShowPlatformDialog(const FString& Title, const FString& Message)
-{
-#if PLATFORM_ANDROID
-    if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
-    {
-        // 調用 Java 顯示 AlertDialog
-        UE_LOG(LogTemp, Log, TEXT("Showing Android dialog: %s"), *Title);
-    }
-#endif
-}
-
-void UAndroidPlatformAdapter::ShareContent(const FString& Content)
-{
-#if PLATFORM_ANDROID
-    if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
-    {
-        // 調用 Android 分享 Intent
-        UE_LOG(LogTemp, Log, TEXT("Sharing content on Android: %s"), *Content);
-    }
-#endif
-}
-
-void UAndroidPlatformAdapter::RequestAppRating()
-{
-#if PLATFORM_ANDROID
-    // 打開 Google Play 評價頁面
-    UE_LOG(LogTemp, Log, TEXT("Requesting app rating on Android"));
-    // TODO: 啟動 Play Store 評價 Intent
-#endif
-}
-
-bool UAndroidPlatformAdapter::SaveToPlatformStorage(const FString& Key, const FString& Value)
-{
-#if PLATFORM_ANDROID
-    // 使用 Android SharedPreferences
-    UE_LOG(LogTemp, Log, TEXT("Saving to Android storage: %s"), *Key);
-    return true; // 暫時返回成功
-#endif
-    return false;
-}
-
-FString UAndroidPlatformAdapter::LoadFromPlatformStorage(const FString& Key) const
-{
-#if PLATFORM_ANDROID
-    UE_LOG(LogTemp, Log, TEXT("Loading from Android storage: %s"), *Key);
-    return TEXT(""); // 暫時返回空
-#endif
-    return FString();
-}
-
-FString UAndroidPlatformAdapter::GetAndroidVersion() const
-{
-    return TEXT("Android API Level: Unknown");
-}
-
-bool UAndroidPlatformAdapter::IsTablet() const
-{
-    // 根據屏幕尺寸判斷是否為平板
-    // 平板通常屏幕更大，DPI 更低
-    return false; // 暫時返回 false
-}
-
-void UAndroidPlatformAdapter::ShowToast(const FString& Message, int32 Duration)
-{
-#if PLATFORM_ANDROID
-    if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
-    {
-        // 調用 Java Toast API
-        UE_LOG(LogTemp, Log, TEXT("Showing Android toast: %s (duration: %d)"), *Message, Duration);
-    }
-#endif
-}
-
-void UAndroidPlatformAdapter::Vibrate(int32 Duration)
-{
-#if PLATFORM_ANDROID
-    if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
-    {
-        // 調用 Android Vibrator API
-        UE_LOG(LogTemp, Log, TEXT("Android vibrate: %d ms"), Duration);
-    }
-#endif
-}
+出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出/出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出.出h出"出
+出
+出#出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出#出i出n出c出l出使出d出e出 出"出A出n出d出本出o出i出d出/出A出n出d出本出o出i出d出J出的出I出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出A出n出d出本出o出i出d出/出A出n出d出本出o出i出d出A出p出p出l出i出c出a出t出i出o出n出.出h出"出
+出#出e出n出d出i出f出
+出
+出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出(出)出
+出 出 出 出 出:出 出b出I出n出i出t出i出a出l出i出z出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出(出1出)出 出/出/出 出A出n出d出本出o出i出d出 出默出認出平出衡出模出式出
+出 出 出 出 出,出 出b出S出a出f出e出Z出o出n出e出C出a出c出h出e出d出(出f出a出l出s出e出)出
+出{出
+出}出
+出
+出E出P出l出a出t出f出o出本出設置出T出y出p出e出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出P出l出a出t出f出o出本出設置出T出y出p出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出E出P出l出a出t出f出o出本出設置出T出y出p出e出:出:出A出n出d出本出o出i出d出;出
+出}出
+出
+出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出C出a出p出a出b出i出l出i出t出i出e出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出 出C出a出p出a出b出i出l出i出t出i出e出s出;出
+出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出b出S出使出p出p出o出本出t出s出M出使出l出t出i出T出o出使出c出h出 出=出 出t出本出使出e出;出
+出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出M出a出x出T出o出使出c出h出P出o出i出n出t出s出 出=出 出1出0出;出
+出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出b出S出使出p出p出o出本出t出s出輸入出a出本出d出w出a出本出e出K出e出y出b出o出a出本出d出 出=出 出f出a出l出s出e出;出 出/出/出 出大出部出分出 出A出n出d出本出o出i出d出 出設出備出沒出有出物出理出鍵出盤出
+出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出b出S出使出p出p出o出本出t出s出M出o出使出s出e出 出=出 出f出a出l出s出e出;出 出/出/出 出默出認出不出支出持出
+出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出D出e出f出a出使出l出t出I出n出p出使出t出T出y出p出e出 出=出 出E出I出n出p出使出t出T出y出p出e出:出:出T出o出使出c出h出;出
+出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出b出R出e出q出使出i出本出e出s出B出a出t出t出e出本出y出O出p出t出i出設置出i出z出a出t出i出o出n出 出=出 出t出本出使出e出;出
+出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出R出e出c出o出設置出設置出e出n出d出e出d出M出a出x出U出n出i出t出s出 出=出 出5出0出0出;出 出/出/出 出移出動出端出減出少出單出位出數出
+出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出R出e出c出o出設置出設置出e出n出d出e出d出Q出使出a出l出i出t出y出L出e出正出e出l出 出=出 出2出;出 出/出/出 出移出動出端出中出等出畫出質出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出C出a出p出a出b出i出l出i出t出i出e出s出;出
+出}出
+出
+出正出o出i出d出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出I出n出i出t出i出a出l出i出z出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出n出d出本出o出i出d出 出P出l出a出t出f出o出本出設置出 出A出d出a出p出t出e出本出 出i出n出i出t出i出a出l出i出z出e出d出"出)出)出;出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出n出d出本出o出i出d出 出V出e出本出s出i出o出n出:出 出%出s出"出)出,出 出*出G出e出t出A出n出d出本出o出i出d出V出e出本出s出i出o出n出(出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出安出全出區出域出
+出 出 出 出 出C出a出c出h出e出d出S出a出f出e出Z出o出n出e出 出=出 出軍出M出a出本出成出i出n出(出0出,出 出0出,出 出0出,出 出0出)出;出
+出 出 出 出 出b出S出a出f出e出Z出o出n出e出C出a出c出h出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出
+出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
+出}出
+出
+出正出o出i出d出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出S出h出使出t出d出o出w出n出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出n出d出本出o出i出d出 出P出l出a出t出f出o出本出設置出 出A出d出a出p出t出e出本出 出s出h出使出t出d出o出w出n出"出)出)出;出
+出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
+出}出
+出
+出f出l出o出a出t出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出S出c出本出e出e出n出D出P出I出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出A出n出d出本出o出i出d出 出D出P出I出 出變出化出範出圍出很出大出，出通出常出在出 出1出6出0出-出6出4出0出 出之出間出
+出 出 出 出 出/出/出 出這出裡出返出回出一出個出估出計出值出，出實出際出應出該出從出 出J出a出正出a出 出層出獲出取出
+出 出 出 出 出本出e出t出使出本出n出 出3出2出0出.出0出f出;出
+出}出
+出
+出軍出M出a出本出成出i出n出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出S出a出f出e出Z出o出n出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出!出b出S出a出f出e出Z出o出n出e出C出a出c出h出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出T出O出D出O出:出 出從出 出J出a出正出a出 出層出獲出取出安出全出區出域出（出劉出海出屏出、出圓出角出等出）出
+出 出 出 出 出 出 出 出 出/出/出 出這出裡出使出用出默出認出值出
+出 出 出 出 出 出 出 出 出C出a出c出h出e出d出S出a出f出e出Z出o出n出e出 出=出 出軍出M出a出本出成出i出n出(出0出,出 出4出0出,出 出0出,出 出0出)出;出 出/出/出 出頂出部出預出留出 出4出0出 出像出素出給出狀出態出欄出
+出 出 出 出 出 出 出 出 出b出S出a出f出e出Z出o出n出e出C出a出c出h出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出C出a出c出h出e出d出S出a出f出e出Z出o出n出e出;出
+出}出
+出
+出b出o出o出l出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出I出s出T出o出使出c出h出D出e出正出i出c出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出正出o出i出d出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出S出e出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出(出i出n出t出3出2出 出M出o出d出e出)出
+出{出
+出 出 出 出 出C出使出本出本出e出n出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出 出=出 出M出o出d出e出;出
+出 出 出 出 出
+出#出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出 出 出 出 出/出/出 出調出用出 出J出a出正出a出 出方出法出設出置出性出能出模出式出
+出 出 出 出 出i出f出 出(出J出的出I出E出n出正出*出 出E出n出正出 出=出 出軍出A出n出d出本出o出i出d出A出p出p出l出i出c出a出t出i出o出n出:出:出G出e出t出J出a出正出a出E出n出正出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出這出裡出可出以出調出用出 出A出n出d出本出o出i出d出 出的出 出s出e出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出 出A出P出I出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出e出t出t出i出n出成出 出A出n出d出本出o出i出d出 出p出e出本出f出o出本出設置出a出n出c出e出 出設置出o出d出e出:出 出%出d出"出)出,出 出M出o出d出e出)出;出
+出 出 出 出 出}出
+出#出e出n出d出i出f出
+出 出 出 出 出
+出 出 出 出 出s出w出i出t出c出h出 出(出M出o出d出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出0出:出 出/出/出 出省出電出模出式出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出n出d出本出o出i出d出 出P出e出本出f出o出本出設置出a出n出c出e出 出M出o出d出e出:出 出P出o出w出e出本出 出S出a出正出i出n出成出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出1出:出 出/出/出 出平出衡出模出式出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出n出d出本出o出i出d出 出P出e出本出f出o出本出設置出a出n出c出e出 出M出o出d出e出:出 出B出a出l出a出n出c出e出d出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出2出:出 出/出/出 出性出能出模出式出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出n出d出本出o出i出d出 出P出e出本出f出o出本出設置出a出n出c出e出 出M出o出d出e出:出 出P出e出本出f出o出本出設置出a出n出c出e出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出B出a出t出t出e出本出y出L出e出正出e出l出(出)出 出c出o出n出s出t出
+出{出
+出#出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出 出 出 出 出/出/出 出通出過出 出J出的出I出 出調出用出 出A出n出d出本出o出i出d出 出電出池出 出A出P出I出
+出 出 出 出 出/出/出 出返出回出 出0出.出0出 出到出 出1出.出0出 出的出電出量出百出分出比出
+出 出 出 出 出i出f出 出(出J出的出I出E出n出正出*出 出E出n出正出 出=出 出軍出A出n出d出本出o出i出d出A出p出p出l出i出c出a出t出i出o出n出:出:出G出e出t出J出a出正出a出E出n出正出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出T出O出D出O出:出 出實出現出 出J出的出I出 出調出用出獲出取出電出量出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出0出.出7出5出f出;出 出/出/出 出暫出時出返出回出 出7出5出%出
+出 出 出 出 出}出
+出#出e出n出d出i出f出
+出 出 出 出 出本出e出t出使出本出n出 出-出1出.出0出f出;出
+出}出
+出
+出b出o出o出l出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出I出s出C出h出a出本出成出i出n出成出(出)出 出c出o出n出s出t出
+出{出
+出#出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出 出 出 出 出/出/出 出通出過出 出J出的出I出 出檢出查出充出電出狀出態出
+出#出e出n出d出i出f出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出正出o出i出d出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出S出h出o出w出P出l出a出t出f出o出本出設置出D出i出a出l出o出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出t出l出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出)出
+出{出
+出#出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出 出 出 出 出i出f出 出(出J出的出I出E出n出正出*出 出E出n出正出 出=出 出軍出A出n出d出本出o出i出d出A出p出p出l出i出c出a出t出i出o出n出:出:出G出e出t出J出a出正出a出E出n出正出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出調出用出 出J出a出正出a出 出顯出示出 出A出l出e出本出t出D出i出a出l出o出成出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出h出o出w出i出n出成出 出A出n出d出本出o出i出d出 出d出i出a出l出o出成出:出 出%出s出"出)出,出 出*出T出i出t出l出e出)出;出
+出 出 出 出 出}出
+出#出e出n出d出i出f出
+出}出
+出
+出正出o出i出d出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出S出h出a出本出e出C出o出n出t出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出)出
+出{出
+出#出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出 出 出 出 出i出f出 出(出J出的出I出E出n出正出*出 出E出n出正出 出=出 出軍出A出n出d出本出o出i出d出A出p出p出l出i出c出a出t出i出o出n出:出:出G出e出t出J出a出正出a出E出n出正出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出調出用出 出A出n出d出本出o出i出d出 出分出享出 出I出n出t出e出n出t出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出h出a出本出i出n出成出 出c出o出n出t出e出n出t出 出o出n出 出A出n出d出本出o出i出d出:出 出%出s出"出)出,出 出*出C出o出n出t出e出n出t出)出;出
+出 出 出 出 出}出
+出#出e出n出d出i出f出
+出}出
+出
+出正出o出i出d出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出R出e出q出使出e出s出t出A出p出p出R出a出t出i出n出成出(出)出
+出{出
+出#出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出 出 出 出 出/出/出 出打出開出 出G出o出o出成出l出e出 出P出l出a出y出 出評出價出頁出面出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出R出e出q出使出e出s出t出i出n出成出 出a出p出p出 出本出a出t出i出n出成出 出o出n出 出A出n出d出本出o出i出d出"出)出)出;出
+出 出 出 出 出/出/出 出T出O出D出O出:出 出啟出動出 出P出l出a出y出 出S出t出o出本出e出 出評出價出 出I出n出t出e出n出t出
+出#出e出n出d出i出f出
+出}出
+出
+出b出o出o出l出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出S出a出正出e出T出o出P出l出a出t出f出o出本出設置出S出t出o出本出a出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出V出a出l出使出e出)出
+出{出
+出#出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出 出 出 出 出/出/出 出使出用出 出A出n出d出本出o出i出d出 出S出h出a出本出e出d出P出本出e出f出e出本出e出n出c出e出s出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出a出正出i出n出成出 出t出o出 出A出n出d出本出o出i出d出 出s出t出o出本出a出成出e出:出 出%出s出"出)出,出 出*出K出e出y出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出 出/出/出 出暫出時出返出回出成出功出
+出#出e出n出d出i出f出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出L出o出a出d出軍出本出o出設置出P出l出a出t出f出o出本出設置出S出t出o出本出a出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出)出 出c出o出n出s出t出
+出{出
+出#出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出L出o出a出d出i出n出成出 出f出本出o出設置出 出A出n出d出本出o出i出d出 出s出t出o出本出a出成出e出:出 出%出s出"出)出,出 出*出K出e出y出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出"出)出;出 出/出/出 出暫出時出返出回出空出
+出#出e出n出d出i出f出
+出 出 出 出 出本出e出t出使出本出n出 出軍出S出t出本出i出n出成出(出)出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出A出n出d出本出o出i出d出V出e出本出s出i出o出n出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出A出n出d出本出o出i出d出 出A出P出I出 出L出e出正出e出l出:出 出U出n出k出n出o出w出n出"出)出;出
+出}出
+出
+出b出o出o出l出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出I出s出T出a出b出l出e出t出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出根出據出屏出幕出尺出寸出判出斷出是出否出為出平出板出
+出 出 出 出 出/出/出 出平出板出通出常出屏出幕出更出大出，出D出P出I出 出更出低出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出 出/出/出 出暫出時出返出回出 出f出a出l出s出e出
+出}出
+出
+出正出o出i出d出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出S出h出o出w出T出o出a出s出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出,出 出i出n出t出3出2出 出D出使出本出a出t出i出o出n出)出
+出{出
+出#出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出 出 出 出 出i出f出 出(出J出的出I出E出n出正出*出 出E出n出正出 出=出 出軍出A出n出d出本出o出i出d出A出p出p出l出i出c出a出t出i出o出n出:出:出G出e出t出J出a出正出a出E出n出正出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出調出用出 出J出a出正出a出 出T出o出a出s出t出 出A出P出I出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出h出o出w出i出n出成出 出A出n出d出本出o出i出d出 出t出o出a出s出t出:出 出%出s出 出(出d出使出本出a出t出i出o出n出:出 出%出d出)出"出)出,出 出*出M出e出s出s出a出成出e出,出 出D出使出本出a出t出i出o出n出)出;出
+出 出 出 出 出}出
+出#出e出n出d出i出f出
+出}出
+出
+出正出o出i出d出 出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出V出i出b出本出a出t出e出(出i出n出t出3出2出 出D出使出本出a出t出i出o出n出)出
+出{出
+出#出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出 出 出 出 出i出f出 出(出J出的出I出E出n出正出*出 出E出n出正出 出=出 出軍出A出n出d出本出o出i出d出A出p出p出l出i出c出a出t出i出o出n出:出:出G出e出t出J出a出正出a出E出n出正出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出調出用出 出A出n出d出本出o出i出d出 出V出i出b出本出a出t出o出本出 出A出P出I出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出n出d出本出o出i出d出 出正出i出b出本出a出t出e出:出 出%出d出 出設置出s出"出)出,出 出D出使出本出a出t出i出o出n出)出;出
+出 出 出 出 出}出
+出#出e出n出d出i出f出
+出}出
+出

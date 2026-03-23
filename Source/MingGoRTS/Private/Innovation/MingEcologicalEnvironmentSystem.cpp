@@ -1,857 +1,990 @@
 #include "Innovation/MingEcologicalEnvironmentSystem.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
-#include "Misc/DateTime.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Math/UnrealMathUtility.h"
+#include "Misc/DateTime.h"
 
 UMingEcologicalEnvironmentSystem::UMingEcologicalEnvironmentSystem()
 {
     SimulationSpeed = 1.0f;
-    SeasonDuration = 90.0f;
-    WeatherChangeProbability = 0.1f;
-    BiodiversityThreshold = 0.7f;
-    EcosystemHealthThreshold = 50.0f;
-    bEnableSeasonalChanges = true;
-    bEnableWeatherSimulation = true;
+    SeasonDuration = 90.0f; // 90 days per season
+    bEnableWeatherSystem = true;
+    bEnableClimateChange = true;
     bEnableResourceRegeneration = true;
-    
-    bIsInitialized = false;
-    ActiveEcosystemCount = 0;
-    GlobalBiodiversityIndex = 0.0f;
-    GlobalEcologicalBalance = EEcologicalBalance::Stable;
-    
-    LastSimulationTime = 0.0f;
-    TotalEventsTriggered = 0;
-    TotalEcosystemsCreated = 0;
-    TotalResourcesRegenerated = 0.0f;
+    bEnableEcosystemBalance = true;
+    CurrentSeason = ESeason::Spring;
+    CurrentWeather = EWeatherType::Sunny;
+    Temperature = 20.0f;
+    Humidity = 50.0f;
+    Precipitation = 0.0f;
+    WindSpeed = 5.0f;
 }
 
-bool UMingEcologicalEnvironmentSystem::InitializeEcologicalSystem()
+void UMingEcologicalEnvironmentSystem::InitializeEnvironmentSystem()
 {
-    if (bIsInitialized)
-    {
-        return true;
-    }
+    // Initialize system state
+    bSystemInitialized = true;
+    LastUpdateTime = FDateTime::Now();
     
-    // 初始化統計數據
-    SystemStats.Empty();
-    SystemStats.Add(TEXT("ActiveEcosystems"), 0.0f);
-    SystemStats.Add(TEXT("GlobalBiodiversity"), 0.0f);
-    SystemStats.Add(TEXT("ActiveEvents"), 0.0f);
-    SystemStats.Add(TEXT("TotalResources"), 0.0f);
-    SystemStats.Add(TEXT("AverageHealth"), 100.0f);
-    SystemStats.Add(TEXT("SimulationSpeed"), SimulationSpeed);
+    // Clear existing data
+    Ecosystems.Empty();
+    EnvironmentalZones.Empty();
+    Resources.Empty();
+    ClimateData.Empty();
     
-    bIsInitialized = true;
+    // Create default ecosystem
+    CreateDefaultEcosystem();
     
-    // 設置定時器
-    if (UWorld* World = GetWorld())
-    {
-        World->GetTimerManager().SetTimer(
-            SimulationTimerHandle,
-            this,
-            &UMingEcologicalEnvironmentSystem::UpdateEnvironmentalFactors,
-            1.0f,
-            true
-        );
-        
-        World->GetTimerManager().SetTimer(
-            EventProcessingTimerHandle,
-            this,
-            &UMingEcologicalEnvironmentSystem::ProcessEcologicalEvents,
-            0.5f,
-            true
-        );
-        
-        World->GetTimerManager().SetTimer(
-            ResourceRegenerationTimerHandle,
-            [this]()
-            {
-                for (const auto& EcosystemPair : Ecosystems)
-                {
-                    ProcessResourceRegeneration(EcosystemPair.Key, 1.0f);
-                }
-            },
-            2.0f,
-            true
-        );
-        
-        World->GetTimerManager().SetTimer(
-            StatisticsUpdateTimerHandle,
-            this,
-            &UMingEcologicalEnvironmentSystem::UpdateGlobalStatistics,
-            5.0f,
-            true
-        );
-    }
+    // Initialize climate system
+    InitializeClimateSystem();
     
-    return true;
+    UE_LOG(LogTemp, Log, TEXT("Ecological Environment System initialized"));
 }
 
-FString UMingEcologicalEnvironmentSystem::CreateEcosystem(EEcosystemType EcosystemType, const FString& EcosystemName, const FVector& Location, float Area)
+void UMingEcologicalEnvironmentSystem::ShutdownEnvironmentSystem()
 {
-    if (!bIsInitialized)
-    {
-        return FString();
-    }
+    bSystemInitialized = false;
     
-    if (!ValidateEcosystemCreation(EcosystemType, EcosystemName, Location, Area))
-    {
-        return FString();
-    }
+    // Clear all data
+    Ecosystems.Empty();
+    EnvironmentalZones.Empty();
+    Resources.Empty();
+    ClimateData.Empty();
     
-    FString EcosystemID = GenerateUniqueEcosystemID();
-    FEcosystemData Ecosystem = CreateDefaultEcosystemData(EcosystemID, EcosystemType, EcosystemName, Location, Area);
-    
-    Ecosystems.Add(EcosystemID, Ecosystem);
-    ActiveEcosystemCount++;
-    TotalEcosystemsCreated++;
-    
-    // 初始化資源數據
-    if (bEnableResourceRegeneration)
-    {
-        FResourceRegenerationData WaterResource;
-        WaterResource.ResourceID = GenerateUniqueResourceID();
-        WaterResource.ResourceType = TEXT("Water");
-        WaterResource.ResourceName = TEXT("Fresh Water");
-        WaterResource.CurrentAmount = 1000.0f;
-        WaterResource.MaxCapacity = 2000.0f;
-        WaterResource.RegenerationRate = 10.0f;
-        WaterResource.ConsumptionRate = 5.0f;
-        WaterResource.RegenerationEfficiency = 1.0f;
-        
-        ResourceData.Add(WaterResource.ResourceID, WaterResource);
-    }
-    
-    // 更新統計
-    SystemStats[TEXT("ActiveEcosystems")] = static_cast<float>(ActiveEcosystemCount);
-    
-    // 觸發事件
-    OnEcosystemCreated.Broadcast(Ecosystem);
-    
-    return EcosystemID;
+    UE_LOG(LogTemp, Log, TEXT("Ecological Environment System shutdown"));
 }
 
-bool UMingEcologicalEnvironmentSystem::UpdateEnvironmentalFactor(const FString& EcosystemID, EEnvironmentalFactor FactorType, float NewValue)
+void UMingEcologicalEnvironmentSystem::CreateEcosystem(const FEcosystem& Ecosystem)
 {
-    if (!Ecosystems.Contains(EcosystemID))
+    // Validate ecosystem
+    FEcosystem ValidatedEcosystem = Ecosystem;
+    ValidateEcosystem(ValidatedEcosystem);
+    
+    // Add ecosystem with unique ID
+    if (ValidatedEcosystem.EcosystemID.IsEmpty())
     {
-        return false;
+        ValidatedEcosystem.EcosystemID = FString::Printf(TEXT("Ecosystem_%d"), Ecosystems.Num());
     }
     
-    if (!ValidateEnvironmentalFactorUpdate(EcosystemID, FactorType, NewValue))
-    {
-        return false;
-    }
+    Ecosystems.Add(ValidatedEcosystem.EcosystemID, ValidatedEcosystem);
     
-    FEcosystemData& Ecosystem = Ecosystems[EcosystemID];
-    FEnvironmentalFactorData& Factor = Ecosystem.EnvironmentalFactors[FactorType];
+    // Create environmental zones for this ecosystem
+    CreateEnvironmentalZones(ValidatedEcosystem);
     
-    Factor.CurrentValue = FMath::Clamp(NewValue, Factor.MinValue, Factor.MaxValue);
-    Factor.LastUpdateTime = FDateTime::Now();
-    
-    // 檢查是否為關鍵狀態
-    Factor.bIsCritical = FMath::Abs(Factor.CurrentValue - Factor.OptimalValue) > (Factor.MaxValue - Factor.MinValue) * 0.3f;
-    
-    // 觸發事件
-    OnEnvironmentalFactorChanged.Broadcast(Factor);
-    
-    return true;
+    UE_LOG(LogTemp, Log, TEXT("Created ecosystem: %s"), *ValidatedEcosystem.EcosystemID);
 }
 
-bool UMingEcologicalEnvironmentSystem::SimulateEnvironmentalChange(const FString& EcosystemID, float DeltaTime)
+void UMingEcologicalEnvironmentSystem::RemoveEcosystem(const FString& EcosystemID)
 {
-    if (!Ecosystems.Contains(EcosystemID))
+    if (Ecosystems.Contains(EcosystemID))
     {
-        return false;
-    }
-    
-    FEcosystemData& Ecosystem = Ecosystems[EcosystemID];
-    
-    // 模擬環境因子的自然變化
-    for (auto& FactorPair : Ecosystem.EnvironmentalFactors)
-    {
-        FEnvironmentalFactorData& Factor = FactorPair.Value;
+        // Remove associated environmental zones
+        EnvironmentalZones.RemoveAll([&](const FEnvironmentalZone& Zone) {
+            return Zone.EcosystemID == EcosystemID;
+        });
         
-        // 添加隨機波動
-        float RandomChange = FMath::RandRange(-1.0f, 1.0f) * Factor.ChangeRate * DeltaTime * SimulationSpeed;
-        float NewValue = Factor.CurrentValue + RandomChange;
+        // Remove ecosystem
+        Ecosystems.Remove(EcosystemID);
         
-        // 應用季節性影響
-        if (bEnableSeasonalChanges)
-        {
-            float SeasonalEffect = CalculateSeasonalEffect(Factor.FactorType, Ecosystem.CurrentSeason);
-            NewValue += SeasonalEffect * DeltaTime * SimulationSpeed;
-        }
-        
-        UpdateEnvironmentalFactor(EcosystemID, Factor.FactorType, NewValue);
-    }
-    
-    // 更新季節和天氣
-    if (bEnableSeasonalChanges)
-    {
-        UpdateSeasonAndWeather(EcosystemID, DeltaTime);
-    }
-    
-    // 處理資源再生
-    if (bEnableResourceRegeneration)
-    {
-        ProcessResourceRegeneration(EcosystemID, DeltaTime);
-    }
-    
-    // 計算生態平衡
-    EEcologicalBalance NewBalance = CalculateEcologicalBalance(EcosystemID);
-    if (NewBalance != Ecosystem.BalanceState)
-    {
-        Ecosystem.BalanceState = NewBalance;
-        OnEcosystemBalanceChanged.Broadcast(Ecosystem);
-    }
-    
-    return true;
-}
-
-FString UMingEcologicalEnvironmentSystem::TriggerEcologicalEvent(const FString& EcosystemID, const FString& EventType, float Severity)
-{
-    if (!Ecosystems.Contains(EcosystemID))
-    {
-        return FString();
-    }
-    
-    FString EventID = GenerateUniqueEventID();
-    FEcologicalEvent Event = CreateDefaultEventData(EventID, EventType, EcosystemID, Severity);
-    
-    Event.bIsActive = true;
-    Event.StartTime = FDateTime::Now();
-    Event.EndTime = Event.StartTime + FTimespan::FromSeconds(Event.Duration);
-    
-    ActiveEvents.Add(Event);
-    TotalEventsTriggered++;
-    
-    // 應用事件效果
-    ApplyEventEffects(EcosystemID, Event);
-    
-    // 更新統計
-    SystemStats[TEXT("ActiveEvents")] = static_cast<float>(ActiveEvents.Num());
-    
-    // 觸發事件
-    OnEcologicalEventOccurred.Broadcast(Event);
-    
-    return EventID;
-}
-
-FEcologicalImpactAssessment UMingEcologicalEnvironmentSystem::AssessEcologicalImpact(const FString& SourceType, const FString& TargetEcosystemID, const TMap<EEnvironmentalFactor, float>& Impacts)
-{
-    FEcologicalImpactAssessment Assessment;
-    Assessment.AssessmentID = GenerateUniqueEventID();
-    Assessment.SourceType = SourceType;
-    Assessment.SourceDescription = FString::Printf(TEXT("Impact assessment for %s"), *SourceType);
-    Assessment.TargetEcosystemID = TargetEcosystemID;
-    Assessment.FactorImpacts = Impacts;
-    Assessment.AssessmentTime = FDateTime::Now();
-    
-    if (Ecosystems.Contains(TargetEcosystemID))
-    {
-        const FEcosystemData& Ecosystem = Ecosystems[TargetEcosystemID];
-        
-        // 計算物種影響
-        for (const auto& SpeciesPair : Ecosystem.SpeciesPopulation)
-        {
-            float Impact = 0.0f;
-            for (const auto& ImpactPair : Impacts)
-            {
-                Impact += FMath::Abs(ImpactPair.Value);
-            }
-            Assessment.SpeciesImpacts.Add(SpeciesPair.Key, Impact);
-        }
-        
-        // 計算總體影響
-        for (const auto& ImpactPair : Impacts)
-        {
-            Assessment.OverallImpact += FMath::Abs(ImpactPair.Value);
-        }
-        
-        // 計算恢復時間
-        Assessment.RecoveryTime = Assessment.OverallImpact * 10.0f;
-        
-        // 確定風險等級
-        if (Assessment.OverallImpact < 10.0f)
-        {
-            Assessment.RiskLevel = TEXT("Low");
-        }
-        else if (Assessment.OverallImpact < 30.0f)
-        {
-            Assessment.RiskLevel = TEXT("Medium");
-        }
-        else
-        {
-            Assessment.RiskLevel = TEXT("High");
-        }
-        
-        // 生成緩解策略
-        Assessment.MitigationStrategies.Add(TEXT("Reduce pollution sources"));
-        Assessment.MitigationStrategies.Add(TEXT("Restore natural habitats"));
-        Assessment.MitigationStrategies.Add(TEXT("Implement conservation measures"));
-        
-        // 生成建議行動
-        Assessment.RecommendedActions.Add(TEXT("Monitor environmental factors closely"));
-        Assessment.RecommendedActions.Add(TEXT("Implement emergency response plan"));
-        Assessment.RecommendedActions.Add(TEXT("Engage local community in conservation"));
-    }
-    
-    return Assessment;
-}
-
-bool UMingEcologicalEnvironmentSystem::ProcessResourceRegeneration(const FString& EcosystemID, float DeltaTime)
-{
-    if (!Ecosystems.Contains(EcosystemID))
-    {
-        return false;
-    }
-    
-    const FEcosystemData& Ecosystem = Ecosystems[EcosystemID];
-    
-    for (auto& ResourcePair : ResourceData)
-    {
-        FResourceRegenerationData& Resource = ResourcePair.Value;
-        
-        if (!Resource.bIsRegenerating)
-        {
-            continue;
-        }
-        
-        // 計算再生量
-        float RegenerationAmount = Resource.RegenerationRate * DeltaTime * SimulationSpeed * Resource.RegenerationEfficiency;
-        
-        // 檢查環境因子要求
-        bool bRequirementsMet = true;
-        for (const auto& RequirementPair : Resource.FactorRequirements)
-        {
-            FString FactorName = RequirementPair.Key;
-            float RequiredValue = RequirementPair.Value;
-            
-            // 簡化的因子檢查
-            if (Ecosystem.EnvironmentalFactors.Num() > 0)
-            {
-                const FEnvironmentalFactorData& Factor = Ecosystem.EnvironmentalFactors[EEnvironmentalFactor::Temperature];
-                if (FMath::Abs(Factor.CurrentValue - RequiredValue) > 10.0f)
-                {
-                    bRequirementsMet = false;
-                    break;
-                }
-            }
-        }
-        
-        if (bRequirementsMet)
-        {
-            Resource.CurrentAmount = FMath::Clamp(
-                Resource.CurrentAmount + RegenerationAmount,
-                0.0f,
-                Resource.MaxCapacity
-            );
-            
-            TotalResourcesRegenerated += RegenerationAmount;
-            
-            // 觸發事件
-            OnResourceRegenerated.Broadcast(Resource.ResourceID, RegenerationAmount);
-        }
-    }
-    
-    return true;
-}
-
-bool UMingEcologicalEnvironmentSystem::UpdateSeasonAndWeather(const FString& EcosystemID, float DeltaTime)
-{
-    if (!Ecosystems.Contains(EcosystemID))
-    {
-        return false;
-    }
-    
-    FEcosystemData& Ecosystem = Ecosystems[EcosystemID];
-    
-    // 更新季節（簡化實現）
-    static float SeasonAccumulator = 0.0f;
-    SeasonAccumulator += DeltaTime * SimulationSpeed;
-    
-    if (SeasonAccumulator >= SeasonDuration)
-    {
-        SeasonAccumulator = 0.0f;
-        ESeason NewSeason = CalculateNextSeason(Ecosystem.CurrentSeason);
-        
-        if (NewSeason != Ecosystem.CurrentSeason)
-        {
-            Ecosystem.CurrentSeason = NewSeason;
-            ApplySeasonalEffects(EcosystemID, NewSeason);
-            OnSeasonChanged.Broadcast(NewSeason);
-        }
-    }
-    
-    // 更新天氣
-    if (bEnableWeatherSimulation && FMath::RandRange(0.0f, 1.0f) < WeatherChangeProbability * DeltaTime)
-    {
-        EWeatherType NewWeather = CalculateWeather(Ecosystem.CurrentSeason, Ecosystem.EnvironmentalFactors);
-        
-        if (NewWeather != Ecosystem.CurrentWeather)
-        {
-            Ecosystem.CurrentWeather = NewWeather;
-            ApplyWeatherEffects(EcosystemID, NewWeather);
-            OnWeatherChanged.Broadcast(NewWeather);
-        }
-    }
-    
-    return true;
-}
-
-EEcologicalBalance UMingEcologicalEnvironmentSystem::CalculateEcologicalBalance(const FString& EcosystemID)
-{
-    if (!Ecosystems.Contains(EcosystemID))
-    {
-        return EEcologicalBalance::Collapsed;
-    }
-    
-    const FEcosystemData& Ecosystem = Ecosystems[EcosystemID];
-    
-    // 計算生態系統健康度
-    float HealthScore = CalculateEcosystemHealth(Ecosystem);
-    
-    // 計算生物多樣性指數
-    float BiodiversityScore = CalculateBiodiversityIndex(EcosystemID);
-    
-    // 計算綜合平衡分數
-    float BalanceScore = (HealthScore + BiodiversityScore * 100.0f) / 2.0f;
-    
-    // 確定平衡狀態
-    if (BalanceScore >= 90.0f)
-    {
-        return EEcologicalBalance::Perfect;
-    }
-    else if (BalanceScore >= 75.0f)
-    {
-        return EEcologicalBalance::Good;
-    }
-    else if (BalanceScore >= 60.0f)
-    {
-        return EEcologicalBalance::Stable;
-    }
-    else if (BalanceScore >= 40.0f)
-    {
-        return EEcologicalBalance::Unstable;
-    }
-    else if (BalanceScore >= 20.0f)
-    {
-        return EEcologicalBalance::Degraded;
-    }
-    else
-    {
-        return EEcologicalBalance::Collapsed;
+        UE_LOG(LogTemp, Log, TEXT("Removed ecosystem: %s"), *EcosystemID);
     }
 }
 
-FEcosystemData UMingEcologicalEnvironmentSystem::GetEcosystemData(const FString& EcosystemID) const
+FEcosystem UMingEcologicalEnvironmentSystem::GetEcosystem(const FString& EcosystemID) const
 {
     if (Ecosystems.Contains(EcosystemID))
     {
         return Ecosystems[EcosystemID];
     }
     
-    return FEcosystemData();
+    return FEcosystem();
 }
 
-TMap<FString, float> UMingEcologicalEnvironmentSystem::GetSystemStatistics() const
+TArray<FEcosystem> UMingEcologicalEnvironmentSystem::GetAllEcosystems() const
 {
-    return SystemStats;
-}
-
-// 私有方法實現
-FString UMingEcologicalEnvironmentSystem::GenerateUniqueEcosystemID() const
-{
-    return FString::Printf(TEXT("Ecosystem_%s_%d"), *FDateTime::Now().ToString(), FMath::RandRange(1000, 9999));
-}
-
-FString UMingEcologicalEnvironmentSystem::GenerateUniqueEventID() const
-{
-    return FString::Printf(TEXT("Event_%s_%d"), *FDateTime::Now().ToString(), FMath::RandRange(1000, 9999));
-}
-
-FString UMingEcologicalEnvironmentSystem::GenerateUniqueResourceID() const
-{
-    return FString::Printf(TEXT("Resource_%s_%d"), *FDateTime::Now().ToString(), FMath::RandRange(1000, 9999));
-}
-
-FEnvironmentalFactorData UMingEcologicalEnvironmentSystem::CreateDefaultFactorData(EEnvironmentalFactor FactorType, EEcosystemType EcosystemType)
-{
-    FEnvironmentalFactorData Factor;
-    Factor.FactorType = FactorType;
-    Factor.LastUpdateTime = FDateTime::Now();
-    Factor.ChangeRate = 1.0f;
-    Factor.ImpactWeight = 1.0f;
-    Factor.bIsCritical = false;
-    
-    // 根據因子類型設置默認值
-    switch (FactorType)
-    {
-    case EEnvironmentalFactor::Temperature:
-        Factor.CurrentValue = 20.0f;
-        Factor.OptimalValue = 22.0f;
-        Factor.MinValue = -10.0f;
-        Factor.MaxValue = 45.0f;
-        break;
-    case EEnvironmentalFactor::Humidity:
-        Factor.CurrentValue = 60.0f;
-        Factor.OptimalValue = 65.0f;
-        Factor.MinValue = 0.0f;
-        Factor.MaxValue = 100.0f;
-        break;
-    case EEnvironmentalFactor::Precipitation:
-        Factor.CurrentValue = 50.0f;
-        Factor.OptimalValue = 60.0f;
-        Factor.MinValue = 0.0f;
-        Factor.MaxValue = 200.0f;
-        break;
-    case EEnvironmentalFactor::Sunlight:
-        Factor.CurrentValue = 70.0f;
-        Factor.OptimalValue = 75.0f;
-        Factor.MinValue = 0.0f;
-        Factor.MaxValue = 100.0f;
-        break;
-    case EEnvironmentalFactor::SoilQuality:
-        Factor.CurrentValue = 80.0f;
-        Factor.OptimalValue = 85.0f;
-        Factor.MinValue = 0.0f;
-        Factor.MaxValue = 100.0f;
-        break;
-    case EEnvironmentalFactor::Biodiversity:
-        Factor.CurrentValue = 70.0f;
-        Factor.OptimalValue = 80.0f;
-        Factor.MinValue = 0.0f;
-        Factor.MaxValue = 100.0f;
-        break;
-    default:
-        Factor.CurrentValue = 50.0f;
-        Factor.OptimalValue = 50.0f;
-        Factor.MinValue = 0.0f;
-        Factor.MaxValue = 100.0f;
-        break;
-    }
-    
-    return Factor;
-}
-
-FEcosystemData UMingEcologicalEnvironmentSystem::CreateDefaultEcosystemData(const FString& EcosystemID, EEcosystemType EcosystemType, const FString& EcosystemName, const FVector& Location, float Area)
-{
-    FEcosystemData Ecosystem;
-    Ecosystem.EcosystemID = EcosystemID;
-    Ecosystem.EcosystemType = EcosystemType;
-    Ecosystem.EcosystemName = EcosystemName;
-    Ecosystem.Description = FString::Printf(TEXT("%s ecosystem"), *EcosystemName);
-    Ecosystem.Location = Location;
-    Ecosystem.Area = Area;
-    Ecosystem.BalanceState = EEcologicalBalance::Stable;
-    Ecosystem.BiodiversityIndex = 0.7f;
-    Ecosystem.EcosystemHealth = 100.0f;
-    Ecosystem.CurrentSeason = ESeason::Spring;
-    Ecosystem.CurrentWeather = EWeatherType::Clear;
-    Ecosystem.CreationTime = FDateTime::Now();
-    Ecosystem.LastUpdateTime = FDateTime::Now();
-    
-    // 初始化環境因子
-    for (int32 i = 0; i <= static_cast<int32>(EEnvironmentalFactor::VegetationDensity); ++i)
-    {
-        EEnvironmentalFactor FactorType = static_cast<EEnvironmentalFactor>(i);
-        Ecosystem.EnvironmentalFactors.Add(FactorType, CreateDefaultFactorData(FactorType, EcosystemType));
-    }
-    
-    // 添加默認物種
-    Ecosystem.NativeSpecies.Add(TEXT("Oak Tree"));
-    Ecosystem.NativeSpecies.Add(TEXT("Pine Tree"));
-    Ecosystem.NativeSpecies.Add(TEXT("Deer"));
-    Ecosystem.NativeSpecies.Add(TEXT("Rabbit"));
-    Ecosystem.NativeSpecies.Add(TEXT("Bird"));
-    
-    // 設置物種數量
-    for (const FString& Species : Ecosystem.NativeSpecies)
-    {
-        Ecosystem.SpeciesPopulation.Add(Species, FMath::RandRange(50, 200));
-    }
-    
-    return Ecosystem;
-}
-
-FEcologicalEvent UMingEcologicalEnvironmentSystem::CreateDefaultEventData(const FString& EventID, const FString& EventType, const FString& EcosystemID, float Severity)
-{
-    FEcologicalEvent Event;
-    Event.EventID = EventID;
-    Event.EventType = EventType;
-    Event.EventName = FString::Printf(TEXT("%s Event"), *EventType);
-    Event.Description = FString::Printf(TEXT("A %s event occurred in the ecosystem"), *EventType);
-    Event.AffectedEcosystemID = EcosystemID;
-    Event.Severity = Severity;
-    Event.Duration = Severity * 60.0f; // 嚴重程度影響持續時間
-    Event.bIsActive = true;
-    Event.bIsRecurring = false;
-    
-    return Event;
-}
-
-void UMingEcologicalEnvironmentSystem::UpdateEnvironmentalFactors(const FString& EcosystemID, float DeltaTime)
-{
-    SimulateEnvironmentalChange(EcosystemID, DeltaTime);
-}
-
-void UMingEcologicalEnvironmentSystem::ProcessEcologicalEvents(float DeltaTime)
-{
-    FDateTime CurrentTime = FDateTime::Now();
-    
-    for (int32 i = ActiveEvents.Num() - 1; i >= 0; i--)
-    {
-        FEcologicalEvent& Event = ActiveEvents[i];
-        
-        if (CurrentTime >= Event.EndTime)
-        {
-            Event.bIsActive = false;
-            ActiveEvents.RemoveAt(i);
-        }
-    }
-    
-    // 更新統計
-    SystemStats[TEXT("ActiveEvents")] = static_cast<float>(ActiveEvents.Num());
-}
-
-void UMingEcologicalEnvironmentSystem::UpdateGlobalStatistics()
-{
-    // 計算全局生物多樣性指數
-    float TotalBiodiversity = 0.0f;
-    float TotalHealth = 0.0f;
+    TArray<FEcosystem> AllEcosystems;
     
     for (const auto& EcosystemPair : Ecosystems)
     {
-        const FEcosystemData& Ecosystem = EcosystemPair.Value;
-        TotalBiodiversity += Ecosystem.BiodiversityIndex;
-        TotalHealth += Ecosystem.EcosystemHealth;
+        AllEcosystems.Add(EcosystemPair.Value);
     }
     
-    if (Ecosystems.Num() > 0)
-    {
-        GlobalBiodiversityIndex = TotalBiodiversity / Ecosystems.Num();
-        SystemStats[TEXT("GlobalBiodiversity")] = GlobalBiodiversityIndex;
-        SystemStats[TEXT("AverageHealth")] = TotalHealth / Ecosystems.Num();
-    }
-    
-    SystemStats[TEXT("TotalResources")] = TotalResourcesRegenerated;
+    return AllEcosystems;
 }
 
-ESeason UMingEcologicalEnvironmentSystem::CalculateNextSeason(ESeason CurrentSeason)
+void UMingEcologicalEnvironmentSystem::CreateEnvironmentalZones(const FEcosystem& Ecosystem)
 {
-    switch (CurrentSeason)
-    {
-    case ESeason::Spring:
-        return ESeason::Summer;
-    case ESeason::Summer:
-        return ESeason::Autumn;
-    case ESeason::Autumn:
-        return ESeason::Winter;
-    case ESeason::Winter:
-        return ESeason::Spring;
-    default:
-        return ESeason::Spring;
-    }
-}
-
-EWeatherType UMingEcologicalEnvironmentSystem::CalculateWeather(ESeason CurrentSeason, const TMap<EEnvironmentalFactor, FEnvironmentalFactorData>& Factors)
-{
-    // 簡化的天氣計算
-    float Random = FMath::RandRange(0.0f, 1.0f);
+    // Create zones based on ecosystem type
+    TArray<EZoneType> ZoneTypes = GetZoneTypesForEcosystem(Ecosystem.Type);
     
-    if (CurrentSeason == ESeason::Winter)
+    for (EZoneType ZoneType : ZoneTypes)
     {
-        return Random < 0.6f ? EWeatherType::Snowy : EWeatherType::Cloudy;
-    }
-    else if (CurrentSeason == ESeason::Summer)
-    {
-        return Random < 0.7f ? EWeatherType::Clear : EWeatherType::Cloudy;
-    }
-    else
-    {
-        return Random < 0.5f ? EWeatherType::Clear : EWeatherType::Cloudy;
-    }
-}
-
-float UMingEcologicalEnvironmentSystem::CalculateEcosystemHealth(const FEcosystemData& Ecosystem) const
-{
-    float HealthScore = 0.0f;
-    int32 FactorCount = 0;
-    
-    for (const auto& FactorPair : Ecosystem.EnvironmentalFactors)
-    {
-        const FEnvironmentalFactorData& Factor = FactorPair.Value;
-        float Deviation = FMath::Abs(Factor.CurrentValue - Factor.OptimalValue);
-        float MaxDeviation = Factor.MaxValue - Factor.MinValue;
-        float FactorHealth = 1.0f - (Deviation / MaxDeviation);
+        FEnvironmentalZone Zone;
+        Zone.ZoneID = FString::Printf(TEXT("%s_Zone_%d"), *Ecosystem.EcosystemID, EnvironmentalZones.Num());
+        Zone.EcosystemID = Ecosystem.EcosystemID;
+        Zone.Type = ZoneType;
+        Zone.Size = FMath::RandRange(100, 1000); // Random size in square kilometers
+        Zone.Temperature = CalculateZoneTemperature(ZoneType);
+        Zone.Humidity = CalculateZoneHumidity(ZoneType);
+        Zone.Fertility = CalculateZoneFertility(ZoneType);
+        Zone.Biodiversity = CalculateZoneBiodiversity(ZoneType);
+        Zone.ResourceDensity = CalculateZoneResourceDensity(ZoneType);
         
-        HealthScore += FactorHealth;
-        FactorCount++;
+        EnvironmentalZones.Add(Zone);
     }
-    
-    return FactorCount > 0 ? (HealthScore / FactorCount) * 100.0f : 0.0f;
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateSpeciesDiversity(const FEcosystemData& Ecosystem) const
+void UMingEcologicalEnvironmentSystem::UpdateEnvironmentalConditions(float DeltaTime)
 {
-    if (Ecosystem.SpeciesPopulation.Num() == 0)
-    {
-        return 0.0f;
-    }
-    
-    int32 TotalPopulation = 0;
-    for (const auto& SpeciesPair : Ecosystem.SpeciesPopulation)
-    {
-        TotalPopulation += SpeciesPair.Value;
-    }
-    
-    if (TotalPopulation == 0)
-    {
-        return 0.0f;
-    }
-    
-    float DiversityIndex = 0.0f;
-    for (const auto& SpeciesPair : Ecosystem.SpeciesPopulation)
-    {
-        float Proportion = static_cast<float>(SpeciesPair.Value) / TotalPopulation;
-        DiversityIndex -= Proportion * FMath::Loge(Proportion);
-    }
-    
-    return DiversityIndex;
-}
-
-void UMingEcologicalEnvironmentSystem::ApplySeasonalEffects(const FString& EcosystemID, ESeason NewSeason)
-{
-    if (!Ecosystems.Contains(EcosystemID))
+    if (!bSystemInitialized)
     {
         return;
     }
     
-    FEcosystemData& Ecosystem = Ecosystems[EcosystemID];
+    // Update weather
+    UpdateWeather(DeltaTime);
     
-    // 根據季節調整環境因子
-    switch (NewSeason)
+    // Update season
+    UpdateSeason(DeltaTime);
+    
+    // Update climate
+    if (bEnableClimateChange)
     {
-    case ESeason::Spring:
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Temperature, 18.0f);
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Precipitation, 70.0f);
-        break;
-    case ESeason::Summer:
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Temperature, 28.0f);
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Sunlight, 85.0f);
-        break;
-    case ESeason::Autumn:
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Temperature, 15.0f);
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Precipitation, 40.0f);
-        break;
-    case ESeason::Winter:
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Temperature, 5.0f);
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Precipitation, 20.0f);
-        break;
+        UpdateClimate(DeltaTime);
     }
+    
+    // Update ecosystem conditions
+    UpdateEcosystemConditions(DeltaTime);
+    
+    // Update resource regeneration
+    if (bEnableResourceRegeneration)
+    {
+        UpdateResourceRegeneration(DeltaTime);
+    }
+    
+    // Update ecosystem balance
+    if (bEnableEcosystemBalance)
+    {
+        UpdateEcosystemBalance(DeltaTime);
+    }
+    
+    LastUpdateTime = FDateTime::Now();
 }
 
-void UMingEcologicalEnvironmentSystem::ApplyWeatherEffects(const FString& EcosystemID, EWeatherType NewWeather)
+void UMingEcologicalEnvironmentSystem::SetWeather(EWeatherType NewWeather)
 {
-    if (!Ecosystems.Contains(EcosystemID))
-    {
-        return;
-    }
+    CurrentWeather = NewWeather;
     
-    FEcosystemData& Ecosystem = Ecosystems[EcosystemID];
-    
-    // 根據天氣調整環境因子
+    // Update environmental parameters based on weather
     switch (NewWeather)
     {
-    case EWeatherType::Rainy:
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Humidity, 85.0f);
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Precipitation, 80.0f);
-        break;
-    case EWeatherType::Stormy:
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::WindSpeed, 25.0f);
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Precipitation, 90.0f);
-        break;
-    case EWeatherType::Snowy:
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Temperature, -2.0f);
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Precipitation, 30.0f);
-        break;
-    case EWeatherType::Clear:
-        UpdateEnvironmentalFactor(EcosystemID, EEnvironmentalFactor::Sunlight, 90.0f);
-        break;
+        case EWeatherType::Sunny:
+            Temperature += 2.0f;
+            Humidity -= 10.0f;
+            Precipitation = 0.0f;
+            break;
+        case EWeatherType::Cloudy:
+            Temperature -= 1.0f;
+            Humidity += 5.0f;
+            Precipitation = 0.0f;
+            break;
+        case EWeatherType::Rainy:
+            Temperature -= 3.0f;
+            Humidity += 20.0f;
+            Precipitation = FMath::RandRange(5.0f, 25.0f);
+            break;
+        case EWeatherType::Stormy:
+            Temperature -= 5.0f;
+            Humidity += 15.0f;
+            Precipitation = FMath::RandRange(20.0f, 50.0f);
+            WindSpeed += 15.0f;
+            break;
+        case EWeatherType::Snowy:
+            Temperature -= 8.0f;
+            Humidity += 10.0f;
+            Precipitation = FMath::RandRange(2.0f, 15.0f);
+            break;
+        case EWeatherType::Foggy:
+            Temperature -= 2.0f;
+            Humidity += 25.0f;
+            Precipitation = 0.0f;
+            WindSpeed -= 5.0f;
+            break;
+    }
+    
+    // Clamp values
+    Temperature = FMath::Clamp(Temperature, -30.0f, 50.0f);
+    Humidity = FMath::Clamp(Humidity, 0.0f, 100.0f);
+    WindSpeed = FMath::Clamp(WindSpeed, 0.0f, 100.0f);
+    
+    // Broadcast weather change
+    OnWeatherChanged.Broadcast(CurrentWeather);
+    
+    UE_LOG(LogTemp, Log, TEXT("Weather changed to: %s"), *UEnum::GetValueAsString(NewWeather));
+}
+
+void UMingEcologicalEnvironmentSystem::SetSeason(ESeason NewSeason)
+{
+    CurrentSeason = NewSeason;
+    
+    // Update environmental parameters based on season
+    switch (NewSeason)
+    {
+        case ESeason::Spring:
+            Temperature = 15.0f;
+            Humidity = 60.0f;
+            Precipitation = 10.0f;
+            break;
+        case ESeason::Summer:
+            Temperature = 28.0f;
+            Humidity = 40.0f;
+            Precipitation = 5.0f;
+            break;
+        case ESeason::Autumn:
+            Temperature = 12.0f;
+            Humidity = 65.0f;
+            Precipitation = 15.0f;
+            break;
+        case ESeason::Winter:
+            Temperature = -2.0f;
+            Humidity = 50.0f;
+            Precipitation = 8.0f;
+            break;
+    }
+    
+    // Broadcast season change
+    OnSeasonChanged.Broadcast(CurrentSeason);
+    
+    UE_LOG(LogTemp, Log, TEXT("Season changed to: %s"), *UEnum::GetValueAsString(NewSeason));
+}
+
+void UMingEcologicalEnvironmentSystem::AddEnvironmentalResource(const FEnvironmentalResource& Resource)
+{
+    // Validate resource
+    FEnvironmentalResource ValidatedResource = Resource;
+    ValidateResource(ValidatedResource);
+    
+    // Add resource with unique ID
+    if (ValidatedResource.ResourceID.IsEmpty())
+    {
+        ValidatedResource.ResourceID = FString::Printf(TEXT("Resource_%d"), Resources.Num());
+    }
+    
+    Resources.Add(ValidatedResource.ResourceID, ValidatedResource);
+    
+    UE_LOG(LogTemp, Log, TEXT("Added environmental resource: %s"), *ValidatedResource.ResourceID);
+}
+
+void UMingEcologicalEnvironmentSystem::RemoveResource(const FString& ResourceID)
+{
+    if (Resources.Contains(ResourceID))
+    {
+        Resources.Remove(ResourceID);
+        UE_LOG(LogTemp, Log, TEXT("Removed environmental resource: %s"), *ResourceID);
     }
 }
 
-void UMingEcologicalEnvironmentSystem::ApplyEventEffects(const FString& EcosystemID, const FEcologicalEvent& Event)
+FEnvironmentalResource UMingEcologicalEnvironmentSystem::GetResource(const FString& ResourceID) const
+{
+    if (Resources.Contains(ResourceID))
+    {
+        return Resources[ResourceID];
+    }
+    
+    return FEnvironmentalResource();
+}
+
+TArray<FEnvironmentalResource> UMingEcologicalEnvironmentSystem::GetResourcesInZone(const FString& ZoneID) const
+{
+    TArray<FEnvironmentalResource> ZoneResources;
+    
+    for (const auto& ResourcePair : Resources)
+    {
+        const FEnvironmentalResource& Resource = ResourcePair.Value;
+        
+        if (Resource.ZoneID == ZoneID)
+        {
+            ZoneResources.Add(Resource);
+        }
+    }
+    
+    return ZoneResources;
+}
+
+void UMingEcologicalEnvironmentSystem::SimulateClimateChange(float DeltaTime)
+{
+    if (!bEnableClimateChange)
+    {
+        return;
+    }
+    
+    // Simulate gradual climate change
+    float ClimateChangeRate = 0.001f; // Very slow change
+    
+    // Global warming effect
+    Temperature += ClimateChangeRate * DeltaTime;
+    
+    // Increased extreme weather events
+    if (FMath::FRand() < 0.001f) // Small chance of extreme weather
+    {
+        EWeatherType ExtremeWeather = GetExtremeWeatherType();
+        SetWeather(ExtremeWeather);
+    }
+    
+    // Update climate data
+    UpdateClimateData();
+    
+    UE_LOG(LogTemp, VeryVerbose, TEXT("Climate change simulation: Temperature = %.2f"), Temperature);
+}
+
+void UMingEcologicalEnvironmentSystem::ProcessEnvironmentalEvent(const FEnvironmentalEvent& Event)
+{
+    // Apply event effects
+    for (const auto& EffectPair : Event.ZoneEffects)
+    {
+        const FString& ZoneID = EffectPair.Key;
+        const FEnvironmentalEffect& Effect = EffectPair.Value;
+        
+        ApplyEnvironmentalEffect(ZoneID, Effect);
+    }
+    
+    // Apply resource effects
+    for (const auto& ResourceEffect : Event.ResourceEffects)
+    {
+        if (Resources.Contains(ResourceEffect.ResourceID))
+        {
+            FEnvironmentalResource& Resource = Resources[ResourceEffect.ResourceID];
+            Resource.Quantity *= ResourceEffect.QuantityMultiplier;
+            Resource.Quality *= ResourceEffect.QualityMultiplier;
+            
+            // Clamp values
+            Resource.Quantity = FMath::Max(0.0f, Resource.Quantity);
+            Resource.Quality = FMath::Clamp(Resource.Quality, 0.0f, 1.0f);
+        }
+    }
+    
+    // Broadcast event
+    OnEnvironmentalEventOccurred.Broadcast(Event);
+    
+    UE_LOG(LogTemp, Log, TEXT("Processed environmental event: %s"), *Event.EventID);
+}
+
+FEnvironmentalMetrics UMingEcologicalEnvironmentSystem::GetEnvironmentalMetrics() const
+{
+    FEnvironmentalMetrics Metrics;
+    
+    // Calculate overall metrics
+    Metrics.TotalEcosystems = Ecosystems.Num();
+    Metrics.TotalZones = EnvironmentalZones.Num();
+    Metrics.TotalResources = Resources.Num();
+    Metrics.AverageTemperature = CalculateAverageTemperature();
+    Metrics.AverageHumidity = CalculateAverageHumidity();
+    Metrics.TotalBiodiversity = CalculateTotalBiodiversity();
+    Metrics.EcosystemHealth = CalculateEcosystemHealth();
+    metrics.ClimateStability = CalculateClimateStability();
+    metrics.ResourceSustainability = CalculateResourceSustainability();
+    
+    return Metrics;
+}
+
+void UMingEcologicalEnvironmentSystem::RestoreEcosystem(const FString& EcosystemID)
+{
+    if (Ecosystems.Contains(EcosystemID))
+    {
+        FEcosystem& Ecosystem = Ecosystems[EcosystemID];
+        
+        // Reset ecosystem health
+        Ecosystem.Health = 1.0f;
+        Ecosystem.Balance = 1.0f;
+        
+        // Restore resources in this ecosystem
+        for (auto& ResourcePair : Resources)
+        {
+            FEnvironmentalResource& Resource = ResourcePair.Value;
+            
+            // Find zones belonging to this ecosystem
+            for (const FEnvironmentalZone& Zone : EnvironmentalZones)
+            {
+                if (Zone.EcosystemID == EcosystemID && Resource.ZoneID == Zone.ZoneID)
+                {
+                    // Restore resource to original quantity
+                    Resource.Quantity = Resource.OriginalQuantity;
+                    Resource.Quality = 1.0f;
+                    break;
+                }
+            }
+        }
+        
+        UE_LOG(LogTemp, Log, TEXT("Restored ecosystem: %s"), *EcosystemID);
+    }
+}
+
+void UMingEcologicalEnvironmentSystem::BalanceEcosystem(const FString& EcosystemID)
+{
+    if (Ecosystems.Contains(EcosystemID))
+    {
+        FEcosystem& Ecosystem = Ecosystems[EcosystemID];
+        
+        // Calculate current balance
+        float CurrentBalance = CalculateEcosystemBalance(EcosystemID);
+        
+        // Apply balancing measures
+        if (CurrentBalance < 0.5f)
+        {
+            // Ecosystem is unbalanced, apply corrective measures
+            ApplyBalancingMeasures(EcosystemID);
+        }
+        
+        Ecosystem.Balance = FMath::Clamp(CurrentBalance, 0.0f, 1.0f);
+        
+        UE_LOG(LogTemp, Log, TEXT("Balanced ecosystem: %s (Balance: %.2f)"), *EcosystemID, Ecosystem.Balance);
+    }
+}
+
+// Private helper functions
+
+void UMingEcologicalEnvironmentSystem::CreateDefaultEcosystem()
+{
+    FEcosystem DefaultEcosystem;
+    DefaultEcosystem.EcosystemID = TEXT("DefaultEcosystem");
+    DefaultEcosystem.Name = TEXT("Default Ecosystem");
+    DefaultEcosystem.Type = EEcosystemType::Forest;
+    DefaultEcosystem.Health = 1.0f;
+    DefaultEcosystem.Balance = 1.0f;
+    DefaultEcosystem.Biodiversity = 0.8f;
+    DefaultEcosystem.Resilience = 0.7f;
+    
+    Ecosystems.Add(DefaultEcosystem.EcosystemID, DefaultEcosystem);
+    
+    // Create zones for default ecosystem
+    CreateEnvironmentalZones(DefaultEcosystem);
+}
+
+void UMingEcologicalEnvironmentSystem::InitializeClimateSystem()
+{
+    // Initialize climate data
+    FClimateData InitialData;
+    InitialData.Timestamp = FDateTime::Now();
+    InitialData.Temperature = Temperature;
+    InitialData.Humidity = Humidity;
+    InitialData.Precipitation = Precipitation;
+    InitialData.WindSpeed = WindSpeed;
+    InitialData.Season = CurrentSeason;
+    InitialData.Weather = CurrentWeather;
+    
+    ClimateData.Add(InitialData);
+}
+
+void UMingEcologicalEnvironmentSystem::ValidateEcosystem(FEcosystem& Ecosystem)
+{
+    // Clamp values
+    Ecosystem.Health = FMath::Clamp(Ecosystem.Health, 0.0f, 1.0f);
+    Ecosystem.Balance = FMath::Clamp(Ecosystem.Balance, 0.0f, 1.0f);
+    Ecosystem.Biodiversity = FMath::Clamp(Ecosystem.Biodiversity, 0.0f, 1.0f);
+    Ecosystem.Resilience = FMath::Clamp(Ecosystem.Resilience, 0.0f, 1.0f);
+}
+
+void UMingEcologicalEnvironmentSystem::ValidateResource(FEnvironmentalResource& Resource)
+{
+    // Clamp values
+    Resource.Quantity = FMath::Max(0.0f, Resource.Quantity);
+    Resource.Quality = FMath::Clamp(Resource.Quality, 0.0f, 1.0f);
+    Resource.RegenerationRate = FMath::Max(0.0f, Resource.RegenerationRate);
+}
+
+TArray<EZoneType> UMingEcologicalEnvironmentSystem::GetZoneTypesForEcosystem(EEcosystemType EcosystemType) const
+{
+    TArray<EZoneType> ZoneTypes;
+    
+    switch (EcosystemType)
+    {
+        case EEcosystemType::Forest:
+            ZoneTypes = {EZoneType::Forest, EZoneType::Grassland, EZoneType::Wetland};
+            break;
+        case EEcosystemType::Desert:
+            ZoneTypes = {EZoneType::Desert, EZoneType::Mountain};
+            break;
+        case EEcosystemType::Ocean:
+            ZoneTypes = {EZoneType::Ocean, EZoneType::Coastal};
+            break;
+        case EEcosystemType::Grassland:
+            ZoneTypes = {EZoneType::Grassland, EZoneType::Wetland};
+            break;
+        case EEcosystemType::Tundra:
+            ZoneTypes = {EZoneType::Tundra, EZoneType::Mountain};
+            break;
+        case EEcosystemType::Urban:
+            ZoneTypes = {EZoneType::Urban, EZoneType::Industrial};
+            break;
+        default:
+            ZoneTypes = {EZoneType::Forest};
+            break;
+    }
+    
+    return ZoneTypes;
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateZoneTemperature(EZoneType ZoneType) const
+{
+    switch (ZoneType)
+    {
+        case EZoneType::Forest: return 18.0f;
+        case EZoneType::Desert: return 35.0f;
+        case EZoneType::Ocean: return 22.0f;
+        case EZoneType::Grassland: return 20.0f;
+        case EZoneType::Mountain: return 10.0f;
+        case EZoneType::Wetland: return 25.0f;
+        case EZoneType::Tundra: return -5.0f;
+        case EZoneType::Urban: return 24.0f;
+        case EZoneType::Industrial: return 26.0f;
+        case EZoneType::Coastal: return 21.0f;
+        default: return 20.0f;
+    }
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateZoneHumidity(EZoneType ZoneType) const
+{
+    switch (ZoneType)
+    {
+        case EZoneType::Forest: return 70.0f;
+        case EZoneType::Desert: return 15.0f;
+        case EZoneType::Ocean: return 85.0f;
+        case EZoneType::Grassland: return 45.0f;
+        case EZoneType::Mountain: return 55.0f;
+        case EZoneType::Wetland: return 90.0f;
+        case EZoneType::Tundra: return 40.0f;
+        case EZoneType::Urban: return 50.0f;
+        case EZoneType::Industrial: return 35.0f;
+        case EZoneType::Coastal: return 75.0f;
+        default: return 50.0f;
+    }
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateZoneFertility(EZoneType ZoneType) const
+{
+    switch (ZoneType)
+    {
+        case EZoneType::Forest: return 0.8f;
+        case EZoneType::Desert: return 0.1f;
+        case EZoneType::Ocean: return 0.3f;
+        case EZoneType::Grassland: return 0.7f;
+        case EZoneType::Mountain: return 0.2f;
+        case EZoneType::Wetland: return 0.9f;
+        case EZoneType::Tundra: return 0.1f;
+        case EZoneType::Urban: return 0.4f;
+        case EZoneType::Industrial: return 0.2f;
+        case EZoneType::Coastal: return 0.6f;
+        default: return 0.5f;
+    }
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateZoneBiodiversity(EZoneType ZoneType) const
+{
+    switch (ZoneType)
+    {
+        case EZoneType::Forest: return 0.9f;
+        case EZoneType::Desert: return 0.3f;
+        case EZoneType::Ocean: return 0.8f;
+        case EZoneType::Grassland: return 0.6f;
+        case EZoneType::Mountain: return 0.5f;
+        case EZoneType::Wetland: return 0.8f;
+        case EZoneType::Tundra: return 0.2f;
+        case EZoneType::Urban: return 0.1f;
+        case EZoneType::Industrial: return 0.05f;
+        case EZoneType::Coastal: return 0.7f;
+        default: return 0.5f;
+    }
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateZoneResourceDensity(EZoneType ZoneType) const
+{
+    switch (ZoneType)
+    {
+        case EZoneType::Forest: return 0.7f;
+        case EZoneType::Desert: return 0.2f;
+        case EZoneType::Ocean: return 0.4f;
+        case EZoneType::Grassland: return 0.6f;
+        case EZoneType::Mountain: return 0.3f;
+        case EZoneType::Wetland: return 0.5f;
+        case EZoneType::Tundra: return 0.1f;
+        case EZoneType::Urban: return 0.8f;
+        case EZoneType::Industrial: return 0.9f;
+        case EZoneType::Coastal: return 0.6f;
+        default: return 0.5f;
+    }
+}
+
+void UMingEcologicalEnvironmentSystem::UpdateWeather(float DeltaTime)
+{
+    if (!bEnableWeatherSystem)
+    {
+        return;
+    }
+    
+    // Random weather changes
+    if (FMath::FRand() < 0.01f) // 1% chance per tick
+    {
+        TArray<EWeatherType> PossibleWeather = {
+            EWeatherType::Sunny, EWeatherType::Cloudy, EWeatherType::Rainy,
+            EWeatherType::Stormy, EWeatherType::Snowy, EWeatherType::Foggy
+        };
+        
+        EWeatherType NewWeather = PossibleWeather[FMath::RandRange(0, PossibleWeather.Num() - 1)];
+        SetWeather(NewWeather);
+    }
+    
+    // Gradual weather changes
+    Temperature += FMath::RandRange(-0.1f, 0.1f) * DeltaTime;
+    Humidity += FMath::RandRange(-0.5f, 0.5f) * DeltaTime;
+    WindSpeed += FMath::RandRange(-0.2f, 0.2f) * DeltaTime;
+    
+    // Clamp values
+    Temperature = FMath::Clamp(Temperature, -30.0f, 50.0f);
+    Humidity = FMath::Clamp(Humidity, 0.0f, 100.0f);
+    WindSpeed = FMath::Clamp(WindSpeed, 0.0f, 100.0f);
+}
+
+void UMingEcologicalEnvironmentSystem::UpdateSeason(float DeltaTime)
+{
+    static float SeasonTimer = 0.0f;
+    SeasonTimer += DeltaTime * SimulationSpeed;
+    
+    if (SeasonTimer >= SeasonDuration)
+    {
+        // Change to next season
+        int32 CurrentSeasonValue = static_cast<int32>(CurrentSeason);
+        CurrentSeasonValue = (CurrentSeasonValue + 1) % 4;
+        CurrentSeason = static_cast<ESeason>(CurrentSeasonValue);
+        
+        SetSeason(CurrentSeason);
+        SeasonTimer = 0.0f;
+    }
+}
+
+void UMingEcologicalEnvironmentSystem::UpdateClimate(float DeltaTime)
+{
+    // Update climate data
+    FClimateData NewData;
+    NewData.Timestamp = FDateTime::Now();
+    NewData.Temperature = Temperature;
+    NewData.Humidity = Humidity;
+    NewData.Precipitation = Precipitation;
+    NewData.WindSpeed = WindSpeed;
+    NewData.Season = CurrentSeason;
+    NewData.Weather = CurrentWeather;
+    
+    ClimateData.Add(NewData);
+    
+    // Limit climate data history
+    if (ClimateData.Num() > 1000)
+    {
+        ClimateData.RemoveAt(0);
+    }
+}
+
+void UMingEcologicalEnvironmentSystem::UpdateEcosystemConditions(float DeltaTime)
+{
+    for (auto& EcosystemPair : Ecosystems)
+    {
+        FEcosystem& Ecosystem = EcosystemPair.Value;
+        
+        // Natural ecosystem changes
+        Ecosystem.Health += FMath::RandRange(-0.001f, 0.001f) * DeltaTime;
+        Ecosystem.Balance += FMath::RandRange(-0.001f, 0.001f) * DeltaTime;
+        
+        // Clamp values
+        Ecosystem.Health = FMath::Clamp(Ecosystem.Health, 0.0f, 1.0f);
+        Ecosystem.Balance = FMath::Clamp(Ecosystem.Balance, 0.0f, 1.0f);
+        
+        // Apply environmental effects
+        ApplyEnvironmentalEffectsToEcosystem(Ecosystem);
+    }
+}
+
+void UMingEcologicalEnvironmentSystem::UpdateResourceRegeneration(float DeltaTime)
+{
+    for (auto& ResourcePair : Resources)
+    {
+        FEnvironmentalResource& Resource = ResourcePair.Value;
+        
+        // Regenerate resources
+        if (Resource.Quantity < Resource.OriginalQuantity)
+        {
+            Resource.Quantity += Resource.RegenerationRate * DeltaTime;
+            Resource.Quantity = FMath::Min(Resource.Quantity, Resource.OriginalQuantity);
+        }
+        
+        // Quality changes
+        Resource.Quality += FMath::RandRange(-0.0001f, 0.0001f) * DeltaTime;
+        Resource.Quality = FMath::Clamp(Resource.Quality, 0.0f, 1.0f);
+    }
+}
+
+void UMingEcologicalEnvironmentSystem::UpdateEcosystemBalance(float DeltaTime)
+{
+    for (auto& EcosystemPair : Ecosystems)
+    {
+        const FString& EcosystemID = EcosystemPair.Key;
+        float CurrentBalance = CalculateEcosystemBalance(EcosystemID);
+        
+        // Auto-balance if needed
+        if (CurrentBalance < 0.3f)
+        {
+            ApplyBalancingMeasures(EcosystemID);
+        }
+    }
+}
+
+void UMingEcologicalEnvironmentSystem::ApplyEnvironmentalEffectsToEcosystem(FEcosystem& Ecosystem)
+{
+    // Apply weather effects
+    switch (CurrentWeather)
+    {
+        case EWeatherType::Stormy:
+            Ecosystem.Health -= 0.01f;
+            Ecosystem.Balance -= 0.02f;
+            break;
+        case EWeatherType::Sunny:
+            Ecosystem.Health += 0.005f;
+            break;
+        case EWeatherType::Rainy:
+            Ecosystem.Health += 0.01f;
+            Ecosystem.Balance += 0.005f;
+            break;
+    }
+    
+    // Apply seasonal effects
+    switch (CurrentSeason)
+    {
+        case ESeason::Spring:
+            Ecosystem.Health += 0.01f;
+            Ecosystem.Balance += 0.005f;
+            break;
+        case ESeason::Winter:
+            Ecosystem.Health -= 0.005f;
+            break;
+    }
+}
+
+void UMingEcologicalEnvironmentSystem::ApplyEnvironmentalEffect(const FString& ZoneID, const FEnvironmentalEffect& Effect)
+{
+    // Find and update zone
+    for (FEnvironmentalZone& Zone : EnvironmentalZones)
+    {
+        if (Zone.ZoneID == ZoneID)
+        {
+            Zone.Temperature += Effect.TemperatureChange;
+            Zone.Humidity += Effect.HumidityChange;
+            Zone.Fertility += Effect.FertilityChange;
+            Zone.Biodiversity += Effect.BiodiversityChange;
+            Zone.ResourceDensity += Effect.ResourceDensityChange;
+            
+            // Clamp values
+            Zone.Temperature = FMath::Clamp(Zone.Temperature, -50.0f, 60.0f);
+            Zone.Humidity = FMath::Clamp(Zone.Humidity, 0.0f, 100.0f);
+            Zone.Fertility = FMath::Clamp(Zone.Fertility, 0.0f, 1.0f);
+            Zone.Biodiversity = FMath::Clamp(Zone.Biodiversity, 0.0f, 1.0f);
+            Zone.ResourceDensity = FMath::Clamp(Zone.ResourceDensity, 0.0f, 1.0f);
+            
+            break;
+        }
+    }
+}
+
+EWeatherType UMingEcologicalEnvironmentSystem::GetExtremeWeatherType() const
+{
+    TArray<EWeatherType> ExtremeWeather = {
+        EWeatherType::Stormy, EWeatherType::Snowy
+    };
+    
+    return ExtremeWeather[FMath::RandRange(0, ExtremeWeather.Num() - 1)];
+}
+
+void UMingEcologicalEnvironmentSystem::UpdateClimateData()
+{
+    // Climate data is updated in UpdateClimate function
+    // This function can be used for additional climate analysis
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateAverageTemperature() const
+{
+    if (EnvironmentalZones.Num() == 0)
+    {
+        return Temperature;
+    }
+    
+    float TotalTemperature = 0.0f;
+    for (const FEnvironmentalZone& Zone : EnvironmentalZones)
+    {
+        TotalTemperature += Zone.Temperature;
+    }
+    
+    return TotalTemperature / EnvironmentalZones.Num();
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateAverageHumidity() const
+{
+    if (EnvironmentalZones.Num() == 0)
+    {
+        return Humidity;
+    }
+    
+    float TotalHumidity = 0.0f;
+    for (const FEnvironmentalZone& Zone : EnvironmentalZones)
+    {
+        TotalHumidity += Zone.Humidity;
+    }
+    
+    return TotalHumidity / EnvironmentalZones.Num();
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateTotalBiodiversity() const
+{
+    float TotalBiodiversity = 0.0f;
+    
+    for (const FEnvironmentalZone& Zone : EnvironmentalZones)
+    {
+        TotalBiodiversity += Zone.Biodiversity * Zone.Size;
+    }
+    
+    return TotalBiodiversity;
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateEcosystemHealth() const
+{
+    if (Ecosystems.Num() == 0)
+    {
+        return 0.0f;
+    }
+    
+    float TotalHealth = 0.0f;
+    for (const auto& EcosystemPair : Ecosystems)
+    {
+        TotalHealth += EcosystemPair.Value.Health;
+    }
+    
+    return TotalHealth / Ecosystems.Num();
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateClimateStability() const
+{
+    if (ClimateData.Num() < 2)
+    {
+        return 1.0f;
+    }
+    
+    // Calculate temperature variance
+    float TotalVariance = 0.0f;
+    float MeanTemperature = 0.0f;
+    
+    for (const FClimateData& Data : ClimateData)
+    {
+        MeanTemperature += Data.Temperature;
+    }
+    
+    MeanTemperature /= ClimateData.Num();
+    
+    for (const FClimateData& Data : ClimateData)
+    {
+        TotalVariance += FMath::Square(Data.Temperature - MeanTemperature);
+    }
+    
+    float Variance = TotalVariance / ClimateData.Num();
+    
+    // Convert variance to stability (lower variance = higher stability)
+    float Stability = 1.0f - FMath::Clamp(Variance / 100.0f, 0.0f, 1.0f);
+    
+    return Stability;
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateResourceSustainability() const
+{
+    if (Resources.Num() == 0)
+    {
+        return 1.0f;
+    }
+    
+    float TotalSustainability = 0.0f;
+    
+    for (const auto& ResourcePair : Resources)
+    {
+        const FEnvironmentalResource& Resource = ResourcePair.Value;
+        
+        // Calculate sustainability based on current vs original quantity
+        float ResourceSustainability = Resource.Quantity / Resource.OriginalQuantity;
+        ResourceSustainability *= Resource.Quality; // Factor in quality
+        
+        TotalSustainability += ResourceSustainability;
+    }
+    
+    return TotalSustainability / Resources.Num();
+}
+
+float UMingEcologicalEnvironmentSystem::CalculateEcosystemBalance(const FString& EcosystemID) const
+{
+    if (!Ecosystems.Contains(EcosystemID))
+    {
+        return 0.0f;
+    }
+    
+    const FEcosystem& Ecosystem = Ecosystems[EcosystemID];
+    
+    // Calculate balance based on multiple factors
+    float HealthFactor = Ecosystem.Health;
+    float BiodiversityFactor = Ecosystem.Biodiversity;
+    float ResilienceFactor = Ecosystem.Resilience;
+    
+    // Check zone balance
+    float ZoneBalance = 0.0f;
+    int32 ZoneCount = 0;
+    
+    for (const FEnvironmentalZone& Zone : EnvironmentalZones)
+    {
+        if (Zone.EcosystemID == EcosystemID)
+        {
+            ZoneBalance += (Zone.Fertility + Zone.Biodiversity + Zone.ResourceDensity) / 3.0f;
+            ZoneCount++;
+        }
+    }
+    
+    if (ZoneCount > 0)
+    {
+        ZoneBalance /= ZoneCount;
+    }
+    
+    return (HealthFactor + BiodiversityFactor + ResilienceFactor + ZoneBalance) / 4.0f;
+}
+
+void UMingEcologicalEnvironmentSystem::ApplyBalancingMeasures(const FString& EcosystemID)
 {
     if (!Ecosystems.Contains(EcosystemID))
     {
         return;
     }
     
-    FEcosystemData& Ecosystem = Ecosystems[EcosystemID];
+    FEcosystem& Ecosystem = Ecosystems[EcosystemID];
     
-    // 應用事件的環境影響
-    for (const auto& ImpactPair : Event.EnvironmentalImpacts)
+    // Restore health
+    Ecosystem.Health = FMath::Min(Ecosystem.Health + 0.1f, 1.0f);
+    
+    // Improve balance
+    Ecosystem.Balance = FMath::Min(Ecosystem.Balance + 0.05f, 1.0f);
+    
+    // Boost resource regeneration in affected zones
+    for (auto& ResourcePair : Resources)
     {
-        EEnvironmentalFactor FactorType = ImpactPair.Key;
-        float Impact = ImpactPair.Value * Event.Severity;
+        FEnvironmentalResource& Resource = ResourcePair.Value;
         
-        if (Ecosystem.EnvironmentalFactors.Contains(FactorType))
+        for (const FEnvironmentalZone& Zone : EnvironmentalZones)
         {
-            float CurrentValue = Ecosystem.EnvironmentalFactors[FactorType].CurrentValue;
-            UpdateEnvironmentalFactor(EcosystemID, FactorType, CurrentValue + Impact);
+            if (Zone.EcosystemID == EcosystemID && Resource.ZoneID == Zone.ZoneID)
+            {
+                Resource.RegenerationRate *= 1.5f; // Boost regeneration
+                break;
+            }
         }
     }
     
-    // 影響物種數量
-    for (const FString& Species : Event.AffectedSpecies)
-    {
-        if (Ecosystem.SpeciesPopulation.Contains(Species))
-        {
-            int32 CurrentPopulation = Ecosystem.SpeciesPopulation[Species];
-            int32 NewPopulation = FMath::Max(0, 
-                static_cast<int32>(CurrentPopulation * (1.0f - Event.Severity * 0.1f)));
-            Ecosystem.SpeciesPopulation[Species] = NewPopulation;
-        }
-    }
-}
-
-bool UMingEcologicalEnvironmentSystem::ValidateEcosystemCreation(EEcosystemType EcosystemType, const FString& EcosystemName, const FVector& Location, float Area) const
-{
-    return !EcosystemName.IsEmpty() && Area > 0.0f;
-}
-
-bool UMingEcologicalEnvironmentSystem::ValidateEnvironmentalFactorUpdate(const FString& EcosystemID, EEnvironmentalFactor FactorType, float NewValue) const
-{
-    return Ecosystems.Contains(EcosystemID);
-}
-
-float UMingEcologicalEnvironmentSystem::CalculateSeasonalEffect(EEnvironmentalFactor FactorType, ESeason Season) const
-{
-    // 簡化的季節性影響計算
-    switch (FactorType)
-    {
-    case EEnvironmentalFactor::Temperature:
-        switch (Season)
-        {
-        case ESeason::Spring: return 0.1f;
-        case ESeason::Summer: return 0.2f;
-        case ESeason::Autumn: return -0.1f;
-        case ESeason::Winter: return -0.2f;
-        }
-        break;
-    case EEnvironmentalFactor::Precipitation:
-        switch (Season)
-        {
-        case ESeason::Spring: return 0.3f;
-        case ESeason::Summer: return -0.1f;
-        case ESeason::Autumn: return 0.1f;
-        case ESeason::Winter: return -0.2f;
-        }
-        break;
-    }
-    
-    return 0.0f;
+    UE_LOG(LogTemp, Log, TEXT("Applied balancing measures to ecosystem: %s"), *EcosystemID);
 }

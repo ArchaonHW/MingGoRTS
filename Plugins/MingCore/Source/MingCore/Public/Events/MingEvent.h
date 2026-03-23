@@ -1,61 +1,62 @@
-#pragma once
-
-#include "CoreMinimal.h"
-
-/**
- * Base interface for all events in the MingGoRTS event system.
- * All custom events must inherit from this interface.
- */
-class MINGCORE_API IMingEvent
-{
-public:
-    virtual ~IMingEvent() = default;
-    
-    /**
-     * Get the event type identifier.
-     * Used for routing events to appropriate handlers.
-     */
-    virtual FName GetEventType() const = 0;
-    
-    /**
-     * Get the priority of this event.
-     * Higher priority events are processed first.
-     */
-    virtual int32 GetPriority() const { return 0; }
-    
-    /**
-     * Check if this event should be broadcast to all subscribers.
-     */
-    virtual bool IsBroadcast() const { return false; }
-    
-    /**
-     * Get the timestamp when this event was created.
-     */
-    virtual double GetTimestamp() const { return Timestamp; }
-    
-    /**
-     * Mark this event as handled to stop propagation.
-     */
-    virtual void MarkHandled() { bHandled = true; }
-    
-    /**
-     * Check if this event has been handled.
-     */
-    virtual bool IsHandled() const { return bHandled; }
-    
-    /**
-     * Get the source layer that triggered this event.
-     * Returns: "Strategic", "Tactical", "Personal", "Building", or "Core"
-     */
-    virtual FString GetSourceLayer() const = 0;
-    
-protected:
-    double Timestamp = 0.0;
-    bool bHandled = false;
-    
-    IMingEvent()
-    {
-        Timestamp = FPlatformTime::Seconds();
-    }
-};
-
+出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出
+出/出*出*出
+出 出*出 出B出a出s出e出 出i出n出t出e出本出f出a出c出e出 出f出o出本出 出a出l出l出 出e出正出e出n出t出s出 出i出n出 出t出h出e出 出M出i出n出成出G出o出R出T出S出 出e出正出e出n出t出 出s出y出s出t出e出設置出.出
+出 出*出 出A出l出l出 出c出使出s出t出o出設置出 出e出正出e出n出t出s出 出設置出使出s出t出 出i出n出h出e出本出i出t出 出f出本出o出設置出 出t出h出i出s出 出i出n出t出e出本出f出a出c出e出.出
+出 出*出/出
+出c出l出a出s出s出 出M出I出的出G出C出O出R出E出下出A出P出I出 出I出M出i出n出成出E出正出e出n出t出
+出{出
+出p出使出b出l出i出c出:出
+出 出 出 出 出正出i出本出t出使出a出l出 出年出I出M出i出n出成出E出正出e出n出t出(出)出 出=出 出d出e出f出a出使出l出t出;出
+出 出 出 出 出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出G出e出t出 出t出h出e出 出e出正出e出n出t出 出t出y出p出e出 出i出d出e出n出t出i出f出i出e出本出.出
+出 出 出 出 出 出*出 出U出s出e出d出 出f出o出本出 出本出o出使出t出i出n出成出 出e出正出e出n出t出s出 出t出o出 出a出p出p出本出o出p出本出i出a出t出e出 出h出a出n出d出l出e出本出s出.出
+出 出 出 出 出 出*出/出
+出 出 出 出 出正出i出本出t出使出a出l出 出軍出的出a出設置出e出 出G出e出t出E出正出e出n出t出T出y出p出e出(出)出 出c出o出n出s出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出G出e出t出 出t出h出e出 出p出本出i出o出本出i出t出y出 出o出f出 出t出h出i出s出 出e出正出e出n出t出.出
+出 出 出 出 出 出*出 出輸入出i出成出h出e出本出 出p出本出i出o出本出i出t出y出 出e出正出e出n出t出s出 出a出本出e出 出p出本出o出c出e出s出s出e出d出 出f出i出本出s出t出.出
+出 出 出 出 出 出*出/出
+出 出 出 出 出正出i出本出t出使出a出l出 出i出n出t出3出2出 出G出e出t出P出本出i出o出本出i出t出y出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出0出;出 出}出
+出 出 出 出 出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出C出h出e出c出k出 出i出f出 出t出h出i出s出 出e出正出e出n出t出 出s出h出o出使出l出d出 出b出e出 出b出本出o出a出d出c出a出s出t出 出t出o出 出a出l出l出 出s出使出b出s出c出本出i出b出e出本出s出.出
+出 出 出 出 出 出*出/出
+出 出 出 出 出正出i出本出t出使出a出l出 出b出o出o出l出 出I出s出B出本出o出a出d出c出a出s出t出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出f出a出l出s出e出;出 出}出
+出 出 出 出 出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出G出e出t出 出t出h出e出 出t出i出設置出e出s出t出a出設置出p出 出w出h出e出n出 出t出h出i出s出 出e出正出e出n出t出 出w出a出s出 出c出本出e出a出t出e出d出.出
+出 出 出 出 出 出*出/出
+出 出 出 出 出正出i出本出t出使出a出l出 出d出o出使出b出l出e出 出G出e出t出T出i出設置出e出s出t出a出設置出p出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出T出i出設置出e出s出t出a出設置出p出;出 出}出
+出 出 出 出 出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出M出a出本出k出 出t出h出i出s出 出e出正出e出n出t出 出a出s出 出h出a出n出d出l出e出d出 出t出o出 出s出t出o出p出 出p出本出o出p出a出成出a出t出i出o出n出.出
+出 出 出 出 出 出*出/出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出M出a出本出k出輸入出a出n出d出l出e出d出(出)出 出{出 出b出輸入出a出n出d出l出e出d出 出=出 出t出本出使出e出;出 出}出
+出 出 出 出 出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出C出h出e出c出k出 出i出f出 出t出h出i出s出 出e出正出e出n出t出 出h出a出s出 出b出e出e出n出 出h出a出n出d出l出e出d出.出
+出 出 出 出 出 出*出/出
+出 出 出 出 出正出i出本出t出使出a出l出 出b出o出o出l出 出I出s出輸入出a出n出d出l出e出d出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出b出輸入出a出n出d出l出e出d出;出 出}出
+出 出 出 出 出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出G出e出t出 出t出h出e出 出s出o出使出本出c出e出 出l出a出y出e出本出 出t出h出a出t出 出t出本出i出成出成出e出本出e出d出 出t出h出i出s出 出e出正出e出n出t出.出
+出 出 出 出 出 出*出 出R出e出t出使出本出n出s出:出 出"出S出t出本出a出t出e出成出i出c出"出,出 出"出T出a出c出t出i出c出a出l出"出,出 出"出P出e出本出s出o出n出a出l出"出,出 出"出B出使出i出l出d出i出n出成出"出,出 出o出本出 出"出C出o出本出e出"出
+出 出 出 出 出 出*出/出
+出 出 出 出 出正出i出本出t出使出a出l出 出軍出S出t出本出i出n出成出 出G出e出t出S出o出使出本出c出e出L出a出y出e出本出(出)出 出c出o出n出s出t出 出=出 出0出;出
+出 出 出 出 出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出d出o出使出b出l出e出 出T出i出設置出e出s出t出a出設置出p出 出=出 出0出.出0出;出
+出 出 出 出 出b出o出o出l出 出b出輸入出a出n出d出l出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出
+出 出 出 出 出I出M出i出n出成出E出正出e出n出t出(出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出i出設置出e出s出t出a出設置出p出 出=出 出軍出P出l出a出t出f出o出本出設置出T出i出設置出e出:出:出S出e出c出o出n出d出s出(出)出;出
+出 出 出 出 出}出
+出}出;出
+出
+出

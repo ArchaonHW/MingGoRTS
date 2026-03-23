@@ -1,172 +1,173 @@
-#include "Events/MingEventTrigger.h"
-
-UMingEventTrigger::UMingEventTrigger()
-    : TriggerType(EEventTriggerType::Base)
-    , CurrentState(EEventTriggerState::Inactive)
-    , bEnabled(true)
-    , Priority(0)
-    , bOneShot(false)
-    , CooldownTime(0.0f)
-    , MaxTriggerCount(-1)
-    , CurrentCooldown(0.0f)
-    , TriggerCount(0)
-{
-}
-
-void UMingEventTrigger::Initialize()
-{
-    CurrentState = EEventTriggerState::Active;
-    CurrentCooldown = 0.0f;
-    TriggerCount = 0;
-    
-    UE_LOG(LogTemp, Verbose, TEXT("EventTrigger %s initialized"), *TriggerId);
-}
-
-void UMingEventTrigger::Shutdown()
-{
-    CurrentState = EEventTriggerState::Inactive;
-    OnTriggered.Clear();
-    
-    UE_LOG(LogTemp, Verbose, TEXT("EventTrigger %s shutdown"), *TriggerId);
-}
-
-void UMingEventTrigger::Tick(float DeltaTime)
-{
-    if (!bEnabled || CurrentState == EEventTriggerState::Inactive)
-    {
-        return;
-    }
-    
-    // 更新冷卻
-    UpdateCooldown(DeltaTime);
-    
-    // 檢查是否可以觸發
-    if (CurrentState == EEventTriggerState::Active)
-    {
-        if (CheckTriggerCondition())
-        {
-            Trigger();
-        }
-    }
-}
-
-bool UMingEventTrigger::CanTrigger() const
-{
-    if (!bEnabled)
-    {
-        return false;
-    }
-    
-    if (CurrentState == EEventTriggerState::Cooldown && CurrentCooldown > 0)
-    {
-        return false;
-    }
-    
-    if (MaxTriggerCount >= 0 && TriggerCount >= MaxTriggerCount)
-    {
-        return false;
-    }
-    
-    return CurrentState == EEventTriggerState::Active || 
-           CurrentState == EEventTriggerState::Cooldown;
-}
-
-bool UMingEventTrigger::Trigger()
-{
-    if (!CanTrigger())
-    {
-        return false;
-    }
-    
-    // 執行內部觸發邏輯
-    if (!PerformTrigger())
-    {
-        return false;
-    }
-    
-    // 更新狀態
-    TriggerCount++;
-    
-    if (bOneShot)
-    {
-        SetState(EEventTriggerState::Triggered);
-    }
-    else if (CooldownTime > 0)
-    {
-        CurrentCooldown = CooldownTime;
-        SetState(EEventTriggerState::Cooldown);
-    }
-    
-    // 發布事件
-    OnTriggered.Broadcast(EventId);
-    
-    UE_LOG(LogTemp, Log, TEXT("EventTrigger %s triggered event %s (count: %d)"),
-        *TriggerId, *EventId, TriggerCount);
-    
-    return true;
-}
-
-void UMingEventTrigger::Reset()
-{
-    CurrentState = bEnabled ? EEventTriggerState::Active : EEventTriggerState::Inactive;
-    CurrentCooldown = 0.0f;
-    TriggerCount = 0;
-    
-    UE_LOG(LogTemp, Verbose, TEXT("EventTrigger %s reset"), *TriggerId);
-}
-
-void UMingEventTrigger::SetEnabled(bool bInEnabled)
-{
-    bEnabled = bInEnabled;
-    
-    if (!bEnabled)
-    {
-        SetState(EEventTriggerState::Inactive);
-    }
-    else if (CurrentState == EEventTriggerState::Inactive)
-    {
-        SetState(EEventTriggerState::Active);
-    }
-}
-
-void UMingEventTrigger::UpdateCooldown(float DeltaTime)
-{
-    if (CurrentState == EEventTriggerState::Cooldown && CurrentCooldown > 0)
-    {
-        CurrentCooldown -= DeltaTime;
-        
-        if (CurrentCooldown <= 0)
-        {
-            CurrentCooldown = 0;
-            SetState(EEventTriggerState::Active);
-            
-            UE_LOG(LogTemp, Verbose, TEXT("EventTrigger %s cooldown finished"), *TriggerId);
-        }
-    }
-}
-
-void UMingEventTrigger::SetState(EEventTriggerState NewState)
-{
-    if (CurrentState != NewState)
-    {
-        EEventTriggerState OldState = CurrentState;
-        CurrentState = NewState;
-        
-        UE_LOG(LogTemp, Verbose, TEXT("EventTrigger %s state: %s -> %s"),
-            *TriggerId,
-            *UEnum::GetValueAsString(OldState),
-            *UEnum::GetValueAsString(NewState));
-    }
-}
-
-bool UMingEventTrigger::PerformTrigger()
-{
-    // 基類默認返回成功，子類應該重寫此方法
-    return true;
-}
-
-bool UMingEventTrigger::CheckTriggerCondition() const
-{
-    // 基類默認返回 false，子類應該重寫此方法
-    return false;
-}
+出#出i出n出c出l出使出d出e出 出"出E出正出e出n出t出s出/出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出.出h出"出
+出
+出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出(出)出
+出 出 出 出 出:出 出T出本出i出成出成出e出本出T出y出p出e出(出E出E出正出e出n出t出T出本出i出成出成出e出本出T出y出p出e出:出:出B出a出s出e出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出S出t出a出t出e出(出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出I出n出a出c出t出i出正出e出)出
+出 出 出 出 出,出 出b出E出n出a出b出l出e出d出(出t出本出使出e出)出
+出 出 出 出 出,出 出P出本出i出o出本出i出t出y出(出0出)出
+出 出 出 出 出,出 出b出O出n出e出S出h出o出t出(出f出a出l出s出e出)出
+出 出 出 出 出,出 出C出o出o出l出d出o出w出n出T出i出設置出e出(出0出.出0出f出)出
+出 出 出 出 出,出 出M出a出x出T出本出i出成出成出e出本出C出o出使出n出t出(出-出1出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出C出o出o出l出d出o出w出n出(出0出.出0出f出)出
+出 出 出 出 出,出 出T出本出i出成出成出e出本出C出o出使出n出t出(出0出)出
+出{出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出(出)出
+出{出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出A出c出t出i出正出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出C出o出o出l出d出o出w出n出 出=出 出0出.出0出f出;出
+出 出 出 出 出T出本出i出成出成出e出本出C出o出使出n出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出E出正出e出n出t出T出本出i出成出成出e出本出 出%出s出 出i出n出i出t出i出a出l出i出z出e出d出"出)出,出 出*出T出本出i出成出成出e出本出I出d出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出S出h出使出t出d出o出w出n出(出)出
+出{出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出I出n出a出c出t出i出正出e出;出
+出 出 出 出 出O出n出T出本出i出成出成出e出本出e出d出.出C出l出e出a出本出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出E出正出e出n出t出T出本出i出成出成出e出本出 出%出s出 出s出h出使出t出d出o出w出n出"出)出,出 出*出T出本出i出成出成出e出本出I出d出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出T出i出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出E出n出a出b出l出e出d出 出出出出出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出=出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出I出n出a出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出冷出卻出
+出 出 出 出 出U出p出d出a出t出e出C出o出o出l出d出o出w出n出(出D出e出l出t出a出T出i出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出是出否出可出以出觸出發出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出S出t出a出t出e出 出=出=出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出h出e出c出k出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出(出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出本出i出成出成出e出本出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出C出a出n出T出本出i出成出成出e出本出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出!出b出E出n出a出b出l出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出S出t出a出t出e出 出=出=出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出C出o出o出l出d出o出w出n出 出&出&出 出C出使出本出本出e出n出t出C出o出o出l出d出o出w出n出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出M出a出x出T出本出i出成出成出e出本出C出o出使出n出t出 出>出=出 出0出 出&出&出 出T出本出i出成出成出e出本出C出o出使出n出t出 出>出=出 出M出a出x出T出本出i出成出成出e出本出C出o出使出n出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出=出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出A出c出t出i出正出e出 出出出出出 出
+出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出=出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出C出o出o出l出d出o出w出n出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出T出本出i出成出成出e出本出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出C出a出n出T出本出i出成出成出e出本出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出執出行出內出部出觸出發出邏出輯出
+出 出 出 出 出i出f出 出(出!出P出e出本出f出o出本出設置出T出本出i出成出成出e出本出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出狀出態出
+出 出 出 出 出T出本出i出成出成出e出本出C出o出使出n出t出+出+出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出b出O出n出e出S出h出o出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出e出t出S出t出a出t出e出(出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出T出本出i出成出成出e出本出e出d出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出o出o出l出d出o出w出n出T出i出設置出e出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出C出o出o出l出d出o出w出n出 出=出 出C出o出o出l出d出o出w出n出T出i出設置出e出;出
+出 出 出 出 出 出 出 出 出S出e出t出S出t出a出t出e出(出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出C出o出o出l出d出o出w出n出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出發出布出事出件出
+出 出 出 出 出O出n出T出本出i出成出成出e出本出e出d出.出B出本出o出a出d出c出a出s出t出(出E出正出e出n出t出I出d出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出E出正出e出n出t出T出本出i出成出成出e出本出 出%出s出 出t出本出i出成出成出e出本出e出d出 出e出正出e出n出t出 出%出s出 出(出c出o出使出n出t出:出 出%出d出)出"出)出,出
+出 出 出 出 出 出 出 出 出*出T出本出i出成出成出e出本出I出d出,出 出*出E出正出e出n出t出I出d出,出 出T出本出i出成出成出e出本出C出o出使出n出t出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出R出e出s出e出t出(出)出
+出{出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出 出b出E出n出a出b出l出e出d出 出基本出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出A出c出t出i出正出e出 出:出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出I出n出a出c出t出i出正出e出;出
+出 出 出 出 出C出使出本出本出e出n出t出C出o出o出l出d出o出w出n出 出=出 出0出.出0出f出;出
+出 出 出 出 出T出本出i出成出成出e出本出C出o出使出n出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出E出正出e出n出t出T出本出i出成出成出e出本出 出%出s出 出本出e出s出e出t出"出)出,出 出*出T出本出i出成出成出e出本出I出d出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出S出e出t出E出n出a出b出l出e出d出(出b出o出o出l出 出b出I出n出E出n出a出b出l出e出d出)出
+出{出
+出 出 出 出 出b出E出n出a出b出l出e出d出 出=出 出b出I出n出E出n出a出b出l出e出d出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出b出E出n出a出b出l出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出e出t出S出t出a出t出e出(出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出I出n出a出c出t出i出正出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出使出本出本出e出n出t出S出t出a出t出e出 出=出=出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出I出n出a出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出e出t出S出t出a出t出e出(出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出A出c出t出i出正出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出U出p出d出a出t出e出C出o出o出l出d出o出w出n出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出S出t出a出t出e出 出=出=出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出C出o出o出l出d出o出w出n出 出&出&出 出C出使出本出本出e出n出t出C出o出o出l出d出o出w出n出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出C出o出o出l出d出o出w出n出 出-出=出 出D出e出l出t出a出T出i出設置出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出C出o出o出l出d出o出w出n出 出<出=出 出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出C出o出o出l出d出o出w出n出 出=出 出0出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出e出t出S出t出a出t出e出(出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出:出:出A出c出t出i出正出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出E出正出e出n出t出T出本出i出成出成出e出本出 出%出s出 出c出o出o出l出d出o出w出n出 出f出i出n出i出s出h出e出d出"出)出,出 出*出T出本出i出成出成出e出本出I出d出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出S出e出t出S出t出a出t出e出(出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出 出的出e出w出S出t出a出t出e出)出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出S出t出a出t出e出 出!出=出 出的出e出w出S出t出a出t出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出E出正出e出n出t出T出本出i出成出成出e出本出S出t出a出t出e出 出O出l出d出S出t出a出t出e出 出=出 出C出使出本出本出e出n出t出S出t出a出t出e出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出 出的出e出w出S出t出a出t出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出E出正出e出n出t出T出本出i出成出成出e出本出 出%出s出 出s出t出a出t出e出:出 出%出s出 出-出>出 出%出s出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出T出本出i出成出成出e出本出I出d出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出O出l出d出S出t出a出t出e出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出的出e出w出S出t出a出t出e出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出P出e出本出f出o出本出設置出T出本出i出成出成出e出本出(出)出
+出{出
+出 出 出 出 出/出/出 出基出類出默出認出返出回出成出功出，出子出類出應出該出重出寫出此出方出法出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出:出:出C出h出e出c出k出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出基出類出默出認出返出回出 出f出a出l出s出e出，出子出類出應出該出重出寫出此出方出法出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出

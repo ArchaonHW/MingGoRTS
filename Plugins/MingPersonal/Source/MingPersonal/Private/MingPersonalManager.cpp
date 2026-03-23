@@ -1,914 +1,915 @@
-#include "MingPersonalManager.h"
-#include "MingRelationshipManager.h"
-#include "MingAudioRelationshipManager.h"
-#include "MingAIUIManager.h"
-#include "Save/MingSaveGameManager.h"
-#include "MingPerformanceManager.h"
-#include "MingMemoryOptimizer.h"
-#include "Network/MingNetworkManager.h"
-#include "Network/MingLobbySystem.h"
-#include "MingLocalizationManager.h"
-#include "MingUniversityGuideManager.h"
-
-UMingPersonalManager::UMingPersonalManager()
-    : bIsInitialized(false)
-    , CurrentLevel(1)
-    , CurrentExperience(0)
-    , ExperienceToNextLevel(100)
-{
-}
-
-void UMingPersonalManager::Initialize()
-{
-    if (bIsInitialized)
-    {
-        return;
-    }
-
-    // 初始化關係和聲望管理器
-    RelationshipManager = NewObject<UMingRelationshipManager>(this);
-    if (RelationshipManager)
-    {
-        RelationshipManager->Initialize();
-    }
-
-    // 初始化音頻關係管理器
-    AudioRelationshipManager = NewObject<UMingAudioRelationshipManager>(this);
-    if (AudioRelationshipManager)
-    {
-        AudioRelationshipManager->InitializeAudioSystem(nullptr);
-    }
-
-    // 初始化AI UI管理器
-    AIUIManager = NewObject<UMingAIUIManager>(this);
-    if (AIUIManager)
-    {
-        AIUIManager->Initialize();
-    }
-
-    // 初始化保存遊戲管理器
-    SaveGameManager = NewObject<UMingSaveGameManager>(this);
-    if (SaveGameManager)
-    {
-        SaveGameManager->Initialize();
-    }
-
-    // 初始化網絡管理器
-    NetworkManager = NewObject<UMingNetworkManager>(this);
-    if (NetworkManager)
-    {
-        NetworkManager->InitializeNetwork();
-    }
-
-    // 初始化大廳系統
-    LobbySystem = NewObject<UMingLobbySystem>(this);
-    if (LobbySystem)
-    {
-        LobbySystem->InitializeLobbySystem();
-    }
-
-    // 初始化本地化系統
-    LocalizationManager = NewObject<UMingLocalizationManager>(this);
-    if (LocalizationManager)
-    {
-        LocalizationManager->InitializeLocalization(this);
-    }
-
-    // 初始化性能優化管理器
-    PerformanceManager = NewObject<UMingPerformanceManager>(this);
-    if (PerformanceManager)
-    {
-        PerformanceManager->Initialize();
-    }
-
-    // 初始化內存優化器
-    MemoryOptimizer = NewObject<UMingMemoryOptimizer>(this);
-    if (MemoryOptimizer)
-    {
-        MemoryOptimizer->Initialize();
-    }
-
-    // 初始化高校引導管理器（延遲創建，按需啟動）
-    // UniversityGuideManager 將在 StartUniversityGuide 時創建
-
-    SetupEventSubscriptions();
-    bIsInitialized = true;
-
-    UE_LOG(LogTemp, Log, TEXT("MingPersonalManager initialized - All systems ready"));
-}
-
-void UMingPersonalManager::Shutdown()
-{
-    if (!bIsInitialized)
-    {
-        return;
-    }
-
-    // 關閉高校引導管理器
-    if (UniversityGuideManager)
-    {
-        UniversityGuideManager->Shutdown();
-        UniversityGuideManager = nullptr;
-    }
-
-    // 關閉本地化系統
-    if (LocalizationManager)
-    {
-        LocalizationManager->Shutdown();
-        LocalizationManager = nullptr;
-    }
-
-    // 關閉性能優化管理器
-    if (PerformanceManager)
-    {
-        PerformanceManager->Shutdown();
-        PerformanceManager = nullptr;
-    }
-
-    // 關閉內存優化器
-    if (MemoryOptimizer)
-    {
-        MemoryOptimizer->Shutdown();
-        MemoryOptimizer = nullptr;
-    }
-
-    // 關閉大廳系統
-    if (LobbySystem)
-    {
-        LobbySystem->ShutdownLobbySystem();
-        LobbySystem = nullptr;
-    }
-
-    // 關閉網絡管理器
-    if (NetworkManager)
-    {
-        NetworkManager->ShutdownNetwork();
-        NetworkManager = nullptr;
-    }
-
-    // 關閉保存遊戲管理器
-    if (SaveGameManager)
-    {
-        SaveGameManager->Shutdown();
-        SaveGameManager = nullptr;
-    }
-
-    // 關閉AI UI管理器
-    if (AIUIManager)
-    {
-        AIUIManager->Shutdown();
-        AIUIManager = nullptr;
-    }
-
-    // 關閉音頻關係管理器
-    if (AudioRelationshipManager)
-    {
-        AudioRelationshipManager->ShutdownAudioSystem();
-        AudioRelationshipManager = nullptr;
-    }
-
-    // 關閉關係和聲望管理器
-    if (RelationshipManager)
-    {
-        RelationshipManager->Shutdown();
-        RelationshipManager = nullptr;
-    }
-
-    CleanupEventSubscriptions();
-    bIsInitialized = false;
-
-    UE_LOG(LogTemp, Log, TEXT("MingPersonalManager shutdown"));
-}
-
-void UMingPersonalManager::SetupEventSubscriptions()
-{
-    // 設置事件訂閱
-    UE_LOG(LogTemp, Log, TEXT("Event subscriptions setup"));
-}
-
-void UMingPersonalManager::CleanupEventSubscriptions()
-{
-    // 清理事件訂閱
-    UE_LOG(LogTemp, Log, TEXT("Event subscriptions cleaned up"));
-}
-
-// 角色成長接口
-void UMingPersonalManager::AddExperience(int32 Amount)
-{
-    CurrentExperience += Amount;
-    OnExperienceGained(Amount);
-
-    // 檢查升級
-    while (CurrentExperience >= ExperienceToNextLevel)
-    {
-        CurrentExperience -= ExperienceToNextLevel;
-        LevelUp();
-    }
-}
-
-void UMingPersonalManager::LevelUp()
-{
-    CurrentLevel++;
-    ExperienceToNextLevel = FMath::FloorToInt(ExperienceToNextLevel * 1.5f);
-    OnLevelUp();
-}
-
-void UMingPersonalManager::OnExperienceGained(int32 Amount)
-{
-    UE_LOG(LogTemp, Log, TEXT("Gained %d experience"), Amount);
-}
-
-void UMingPersonalManager::OnLevelUp()
-{
-    UE_LOG(LogTemp, Log, TEXT("Leveled up to %d"), CurrentLevel);
-}
-
-// 敘事事件
-void UMingPersonalManager::TriggerDialogue(const FString& DialogueId)
-{
-    UE_LOG(LogTemp, Log, TEXT("Triggering dialogue: %s"), *DialogueId);
-}
-
-// 關係和聲望系統接口
-void UMingPersonalManager::UpdateCharacterRelationship(const FString& CharacterID, float ChangeAmount, const FString& Reason)
-{
-    if (RelationshipManager)
-    {
-        FRelationshipUpdateRequest Request;
-        Request.CharacterID = CharacterID;
-        Request.RelationshipChange = ChangeAmount;
-        Request.UpdateReason = Reason;
-        RelationshipManager->UpdateRelationship(Request);
-    }
-}
-
-void UMingPersonalManager::UpdateRegionReputation(const FString& RegionID, float ChangeAmount, const FString& Reason)
-{
-    if (RelationshipManager)
-    {
-        FReputationUpdateRequest Request;
-        Request.RegionID = RegionID;
-        Request.ReputationChange = ChangeAmount;
-        Request.UpdateReason = Reason;
-        RelationshipManager->UpdateReputation(Request);
-    }
-}
-
-FRelationshipData UMingPersonalManager::GetCharacterRelationship(const FString& CharacterID) const
-{
-    if (RelationshipManager)
-    {
-        return RelationshipManager->GetRelationshipData(CharacterID);
-    }
-    return FRelationshipData();
-}
-
-FReputationData UMingPersonalManager::GetRegionReputation(const FString& RegionID) const
-{
-    if (RelationshipManager)
-    {
-        return RelationshipManager->GetReputationData(RegionID);
-    }
-    return FReputationData();
-}
-
-TArray<FString> UMingPersonalManager::GetAvailableDialogueOptions(const FString& CharacterID) const
-{
-    TArray<FString> Options;
-    if (RelationshipManager)
-    {
-        FRelationshipData Data = RelationshipManager->GetRelationshipData(CharacterID);
-        // 根據關係值返回不同的對話選項
-        if (Data.RelationshipValue >= 50.0f)
-        {
-            Options.Add(TEXT("friendly_greeting"));
-            Options.Add(TEXT("trade_offer"));
-            Options.Add(TEXT("quest_request"));
-        }
-        else if (Data.RelationshipValue >= 0.0f)
-        {
-            Options.Add(TEXT("neutral_greeting"));
-            Options.Add(TEXT("basic_trade"));
-        }
-        else
-        {
-            Options.Add(TEXT("hostile_greeting"));
-        }
-    }
-    return Options;
-}
-
-float UMingPersonalManager::GetTradePriceModifier(const FString& CharacterID) const
-{
-    if (RelationshipManager)
-    {
-        return RelationshipManager->GetTradePriceModifier(CharacterID);
-    }
-    return 1.0f;
-}
-
-bool UMingPersonalManager::CanAcceptQuestByReputation(const FString& QuestID, const FString& RegionID) const
-{
-    if (RelationshipManager)
-    {
-        return RelationshipManager->CanAcceptQuest(QuestID, RegionID);
-    }
-    return false;
-}
-
-void UMingPersonalManager::OnQuestCompleted(const FString& QuestID, const FString& RegionID, const FString& QuestGiverID)
-{
-    // 更新聲望
-    UpdateRegionReputation(RegionID, 20.0f, FString::Printf(TEXT("Completed quest %s"), *QuestID));
-    // 更新關係
-    UpdateCharacterRelationship(QuestGiverID, 15.0f, FString::Printf(TEXT("Completed quest %s"), *QuestID));
-    // 獲得經驗
-    AddExperience(100);
-
-    UE_LOG(LogTemp, Log, TEXT("Quest completed: %s"), *QuestID);
-}
-
-void UMingPersonalManager::OnNPCInteraction(const FString& CharacterID, const FString& InteractionType)
-{
-    // 播放對話音頻
-    PlayDialogueAudio(CharacterID, InteractionType);
-
-    UE_LOG(LogTemp, Log, TEXT("NPC interaction: %s - %s"), *CharacterID, *InteractionType);
-}
-
-// 音頻系統接口
-void UMingPersonalManager::InitializeAudioSystem(UObject* MetaSoundsSystem)
-{
-    if (AudioRelationshipManager)
-    {
-        AudioRelationshipManager->InitializeAudioSystem(MetaSoundsSystem);
-    }
-}
-
-void UMingPersonalManager::PlayRelationshipAudio(const FString& CharacterID, const FString& AudioType)
-{
-    if (AudioRelationshipManager)
-    {
-        FRelationshipData Data = GetCharacterRelationship(CharacterID);
-        ERelationshipAudioType Type = static_cast<ERelationshipAudioType>(FMath::RandRange(0, 4));
-        AudioRelationshipManager->PlayRelationshipSound(Type, Data.CurrentType);
-    }
-}
-
-void UMingPersonalManager::PlayReputationAudio(const FString& RegionID, const FString& AudioType)
-{
-    if (AudioRelationshipManager)
-    {
-        FReputationData Data = GetRegionReputation(RegionID);
-        EReputationLevel Level = static_cast<EReputationLevel>(FMath::Clamp(FMath::FloorToInt(Data.ReputationValue / 20.0f), 0, 4));
-        AudioRelationshipManager->PlayReputationSound(Level);
-    }
-}
-
-void UMingPersonalManager::PlayDialogueAudio(const FString& CharacterID, const FString& DialogueType)
-{
-    if (AudioRelationshipManager)
-    {
-        EDialogueAudioType Type = EDialogueAudioType::Neutral;
-        if (DialogueType == TEXT("friendly"))
-        {
-            Type = EDialogueAudioType::Friendly;
-        }
-        else if (DialogueType == TEXT("hostile"))
-        {
-            Type = EDialogueAudioType::Hostile;
-        }
-
-        FRelationshipData Data = GetCharacterRelationship(CharacterID);
-        AudioRelationshipManager->PlayDialogueSound(Type, Data.CurrentType);
-    }
-}
-
-void UMingPersonalManager::PlayRepublicEraTheme(const FString& ThemeName, float Intensity)
-{
-    if (AudioRelationshipManager)
-    {
-        ERepublicEraAudioTheme Theme = ERepublicEraAudioTheme::BattlefieldGlory;
-
-        if (ThemeName == TEXT("ScholarlyContemplation"))
-            Theme = ERepublicEraAudioTheme::ScholarlyContemplation;
-        else if (ThemeName == TEXT("RevolutionaryPassion"))
-            Theme = ERepublicEraAudioTheme::RevolutionaryPassion;
-        else if (ThemeName == TEXT("UrbanTransformation"))
-            Theme = ERepublicEraAudioTheme::UrbanTransformation;
-        else if (ThemeName == TEXT("RuralSerenity"))
-            Theme = ERepublicEraAudioTheme::RuralSerenity;
-        else if (ThemeName == TEXT("DiplomaticIntrigue"))
-            Theme = ERepublicEraAudioTheme::DiplomaticIntrigue;
-        else if (ThemeName == TEXT("HeroicSacrifice"))
-            Theme = ERepublicEraAudioTheme::HeroicSacrifice;
-        else if (ThemeName == TEXT("CulturalRenaissance"))
-            Theme = ERepublicEraAudioTheme::CulturalRenaissance;
-        else if (ThemeName == TEXT("IndustrialAwakening"))
-            Theme = ERepublicEraAudioTheme::IndustrialAwakening;
-        else if (ThemeName == TEXT("NationBuilding"))
-            Theme = ERepublicEraAudioTheme::NationBuilding;
-
-        AudioRelationshipManager->PlayRepublicEraTheme(Theme, Intensity);
-    }
-}
-
-void UMingPersonalManager::SetAudioVolume(float RelationshipVolume, float ReputationVolume, float DialogueVolume)
-{
-    if (AudioRelationshipManager)
-    {
-        FAudioVolumeSettings Settings;
-        Settings.RelationshipVolume = RelationshipVolume;
-        Settings.ReputationVolume = ReputationVolume;
-        Settings.DialogueVolume = DialogueVolume;
-        AudioRelationshipManager->SetVolumeSettings(Settings);
-    }
-}
-
-// AI UI系統接口
-void UMingPersonalManager::InitializeAIUISystem()
-{
-    if (AIUIManager)
-    {
-        AIUIManager->Initialize();
-    }
-}
-
-void UMingPersonalManager::TrackUserBehavior(const FString& BehaviorType, const FString& Context, float Value)
-{
-    if (AIUIManager)
-    {
-        AIUIManager->TrackUserBehavior(BehaviorType, Context, Value);
-    }
-}
-
-void UMingPersonalManager::OptimizeUIForUser()
-{
-    if (AIUIManager)
-    {
-        AIUIManager->OptimizeUIForUser();
-    }
-}
-
-void UMingPersonalManager::ShowContextualHelp(const FString& Context)
-{
-    if (AIUIManager)
-    {
-        AIUIManager->ShowContextualHelp(Context);
-    }
-}
-
-TArray<FString> UMingPersonalManager::GetAIRecommendations()
-{
-    TArray<FString> Recommendations;
-    if (AIUIManager)
-    {
-        Recommendations = AIUIManager->GetAIRecommendations();
-    }
-    return Recommendations;
-}
-
-// 保存和載入系統接口
-void UMingPersonalManager::InitializeSaveSystem()
-{
-    if (SaveGameManager)
-    {
-        SaveGameManager->Initialize(this);
-    }
-}
-
-EMingSaveGameResult UMingPersonalManager::SaveGame(int32 SlotIndex, const FString& SaveName)
-{
-    if (SaveGameManager)
-    {
-        return SaveGameManager->SaveGame(SlotIndex, SaveName);
-    }
-    return EMingSaveGameResult::Error_SystemNotInitialized;
-}
-
-EMingSaveGameResult UMingPersonalManager::QuickSave()
-{
-    if (SaveGameManager)
-    {
-        return SaveGameManager->QuickSave();
-    }
-    return EMingSaveGameResult::Error_SystemNotInitialized;
-}
-
-EMingSaveGameResult UMingPersonalManager::LoadGame(int32 SlotIndex)
-{
-    if (SaveGameManager)
-    {
-        return SaveGameManager->LoadGame(SlotIndex);
-    }
-    return EMingSaveGameResult::Error_SystemNotInitialized;
-}
-
-EMingSaveGameResult UMingPersonalManager::QuickLoad()
-{
-    if (SaveGameManager)
-    {
-        return SaveGameManager->QuickLoad();
-    }
-    return EMingSaveGameResult::Error_SystemNotInitialized;
-}
-
-bool UMingPersonalManager::DeleteSaveGame(int32 SlotIndex)
-{
-    if (SaveGameManager)
-    {
-        return SaveGameManager->DeleteSaveGame(SlotIndex);
-    }
-    return false;
-}
-
-void UMingPersonalManager::SetAutoSaveEnabled(bool bEnabled)
-{
-    if (SaveGameManager)
-    {
-        SaveGameManager->SetAutoSaveEnabled(bEnabled);
-    }
-}
-
-bool UMingPersonalManager::IsAutoSaveEnabled() const
-{
-    if (SaveGameManager)
-    {
-        return SaveGameManager->IsAutoSaveEnabled();
-    }
-    return false;
-}
-
-UMingSaveGameManager* UMingPersonalManager::GetSaveGameManager() const
-{
-    return SaveGameManager;
-}
-
-// 多人遊戲系統接口
-void UMingPersonalManager::InitializeMultiplayerSystem()
-{
-    if (NetworkManager)
-    {
-        NetworkManager->InitializeNetwork();
-    }
-
-    if (LobbySystem)
-    {
-        LobbySystem->InitializeLobbySystem();
-    }
-}
-
-bool UMingPersonalManager::CreateMultiplayerServer(const FMingNetworkConfig& Config)
-{
-    if (NetworkManager)
-    {
-        return NetworkManager->CreateServer(Config);
-    }
-    return false;
-}
-
-bool UMingPersonalManager::ConnectToMultiplayerServer(const FString& ServerAddress, int32 Port)
-{
-    if (NetworkManager)
-    {
-        return NetworkManager->ConnectToServer(ServerAddress, Port);
-    }
-    return false;
-}
-
-void UMingPersonalManager::DisconnectFromMultiplayerServer()
-{
-    if (NetworkManager)
-    {
-        NetworkManager->DisconnectFromServer();
-    }
-}
-
-bool UMingPersonalManager::IsMultiplayerConnected() const
-{
-    if (NetworkManager)
-    {
-        return NetworkManager->IsConnected();
-    }
-    return false;
-}
-
-bool UMingPersonalManager::IsMultiplayerHost() const
-{
-    if (NetworkManager)
-    {
-        return NetworkManager->IsHost();
-    }
-    return false;
-}
-
-int32 UMingPersonalManager::GetLocalPlayerID() const
-{
-    if (NetworkManager)
-    {
-        return NetworkManager->GetLocalPlayerID();
-    }
-    return -1;
-}
-
-void UMingPersonalManager::SetPlayerReady(bool bReady)
-{
-    if (LobbySystem)
-    {
-        LobbySystem->SetPlayerReady(bReady);
-    }
-}
-
-void UMingPersonalManager::StartMultiplayerGame()
-{
-    if (LobbySystem)
-    {
-        LobbySystem->StartGame();
-    }
-}
-
-void UMingPersonalManager::SendMultiplayerChatMessage(const FString& Message)
-{
-    if (LobbySystem)
-    {
-        LobbySystem->SendChatMessage(Message);
-    }
-}
-
-UMingNetworkManager* UMingPersonalManager::GetNetworkManager() const
-{
-    return NetworkManager;
-}
-
-UMingLobbySystem* UMingPersonalManager::GetLobbySystem() const
-{
-    return LobbySystem;
-}
-
-// 本地化系統接口
-void UMingPersonalManager::InitializeLocalizationSystem()
-{
-    if (!LocalizationManager)
-    {
-        LocalizationManager = NewObject<UMingLocalizationManager>(this);
-    }
-
-    if (LocalizationManager)
-    {
-        LocalizationManager->InitializeLocalization(this);
-        UE_LOG(LogTemp, Log, TEXT("Localization system initialized"));
-    }
-}
-
-bool UMingPersonalManager::SetGameLanguage(EMingLanguage NewLanguage)
-{
-    if (!LocalizationManager)
-    {
-        InitializeLocalizationSystem();
-    }
-
-    if (LocalizationManager)
-    {
-        bool bSuccess = LocalizationManager->SetLanguage(NewLanguage);
-        if (bSuccess)
-        {
-            UE_LOG(LogTemp, Log, TEXT("Game language changed to: %s"), *LocalizationManager->GetCurrentLanguageName());
-        }
-        return bSuccess;
-    }
-
-    return false;
-}
-
-void UMingPersonalManager::SetGameRegion(EMingRegion NewRegion)
-{
-    if (!LocalizationManager)
-    {
-        InitializeLocalizationSystem();
-    }
-
-    if (LocalizationManager)
-    {
-        LocalizationManager->SetRegion(NewRegion);
-        UE_LOG(LogTemp, Log, TEXT("Game region set to: %s"), *LocalizationManager->GetRegionName(NewRegion));
-    }
-}
-
-EMingLanguage UMingPersonalManager::GetCurrentGameLanguage() const
-{
-    if (LocalizationManager)
-    {
-        return LocalizationManager->GetCurrentLanguage();
-    }
-    return EMingLanguage::ChineseTraditional;
-}
-
-EMingRegion UMingPersonalManager::GetCurrentGameRegion() const
-{
-    if (LocalizationManager)
-    {
-        return LocalizationManager->GetCurrentRegion();
-    }
-    return EMingRegion::Taiwan;
-}
-
-FString UMingPersonalManager::GetLocalizedString(const FString& Key, const FString& Namespace) const
-{
-    if (LocalizationManager)
-    {
-        return LocalizationManager->GetLocalizedString(Key, Namespace);
-    }
-    return Key;
-}
-
-bool UMingPersonalManager::DownloadLanguagePack(EMingLanguage Language)
-{
-    if (!LocalizationManager)
-    {
-        InitializeLocalizationSystem();
-    }
-
-    if (LocalizationManager)
-    {
-        return LocalizationManager->DownloadLanguagePack(Language);
-    }
-
-    return false;
-}
-
-TArray<FLanguagePackInfo> UMingPersonalManager::GetAvailableLanguagePacks() const
-{
-    TArray<FLanguagePackInfo> Packs;
-
-    if (LocalizationManager)
-    {
-        TArray<EMingLanguage> Languages = LocalizationManager->GetSupportedLanguages();
-        for (EMingLanguage Language : Languages)
-        {
-            Packs.Add(LocalizationManager->GetLanguagePackInfo(Language));
-        }
-    }
-
-    return Packs;
-}
-
-UMingLocalizationManager* UMingPersonalManager::GetLocalizationManager() const
-{
-    return LocalizationManager;
-}
-
-// 高校引導系統接口
-void UMingPersonalManager::StartUniversityGuide()
-{
-    if (!UniversityGuideManager)
-    {
-        UniversityGuideManager = NewObject<UMingUniversityGuideManager>(this);
-        UniversityGuideManager->Initialize();
-    }
-
-    if (UniversityGuideManager)
-    {
-        // 設置默認引導配置
-        FUniversityGuideConfig GuideConfig;
-        GuideConfig.ContentType = EMingUniversityContentType::GameTutorial;
-        GuideConfig.UniversityName = TEXT("民國時期策略學院");
-        GuideConfig.Department = TEXT("戰略與歷史");
-        GuideConfig.TargetAudience = TEXT("新玩家");
-        GuideConfig.Duration = TEXT("10分鐘");
-        GuideConfig.Language = TEXT("繁體中文");
-        GuideConfig.CulturalContext = TEXT("RepublicanEra");
-        GuideConfig.bInteractive = true;
-        GuideConfig.bIncludeHistoricalContent = true;
-        GuideConfig.GuideDescription = TEXT("歡迎來到MingGoRTS！本引導將幫助您了解遊戲的基本玩法和歷史背景。");
-        
-        UniversityGuideManager->SetGuideConfig(GuideConfig);
-        UniversityGuideManager->StartUniversityGuide();
-        
-        UE_LOG(LogTemp, Log, TEXT("University Guide started"));
-    }
-}
-
-void UMingPersonalManager::StopUniversityGuide()
-{
-    if (UniversityGuideManager)
-    {
-        UniversityGuideManager->StopUniversityGuide();
-        UE_LOG(LogTemp, Log, TEXT("University Guide stopped"));
-    }
-}
-
-UMingUniversityGuideManager* UMingPersonalManager::GetUniversityGuideManager() const
-{
-    return UniversityGuideManager;
-}
-
-// 性能優化系統接口
-void UMingPersonalManager::InitializePerformanceSystem()
-{
-    if (!PerformanceManager)
-    {
-        PerformanceManager = NewObject<UMingPerformanceManager>(this);
-        PerformanceManager->Initialize();
-    }
-
-    if (!MemoryOptimizer)
-    {
-        MemoryOptimizer = NewObject<UMingMemoryOptimizer>(this);
-        MemoryOptimizer->Initialize();
-    }
-
-    UE_LOG(LogTemp, Log, TEXT("Performance system initialized"));
-}
-
-void UMingPersonalManager::SetPerformanceLevel(EMingPerformanceLevel NewLevel)
-{
-    if (PerformanceManager)
-    {
-        PerformanceManager->SetPerformanceLevel(NewLevel);
-    }
-}
-
-EMingPerformanceLevel UMingPersonalManager::GetCurrentPerformanceLevel() const
-{
-    if (PerformanceManager)
-    {
-        return PerformanceManager->GetCurrentPerformanceLevel();
-    }
-    return EMingPerformanceLevel::Medium;
-}
-
-void UMingPersonalManager::OptimizePerformance()
-{
-    if (PerformanceManager)
-    {
-        PerformanceManager->RunAutoOptimization();
-    }
-}
-
-void UMingPersonalManager::SetTargetFrameRate(float TargetFPS)
-{
-    if (PerformanceManager)
-    {
-        PerformanceManager->SetTargetFrameRate(TargetFPS);
-    }
-}
-
-FMingPerformanceMetrics UMingPersonalManager::GetPerformanceMetrics() const
-{
-    if (PerformanceManager)
-    {
-        return PerformanceManager->GetCurrentMetrics();
-    }
-    return FMingPerformanceMetrics();
-}
-
-void UMingPersonalManager::StartPerformanceMonitoring()
-{
-    if (PerformanceManager)
-    {
-        PerformanceManager->StartPerformanceMonitoring();
-    }
-}
-
-void UMingPersonalManager::StopPerformanceMonitoring()
-{
-    if (PerformanceManager)
-    {
-        PerformanceManager->StopPerformanceMonitoring();
-    }
-}
-
-void UMingPersonalManager::OptimizeMemory()
-{
-    if (MemoryOptimizer)
-    {
-        MemoryOptimizer->QuickOptimize();
-    }
-}
-
-void UMingPersonalManager::SetMemoryBudget(int32 MaxMemoryMB)
-{
-    if (MemoryOptimizer)
-    {
-        MemoryOptimizer->SetMemoryBudget(MaxMemoryMB);
-    }
-}
-
-float UMingPersonalManager::GetMemoryUsagePercent() const
-{
-    if (MemoryOptimizer)
-    {
-        return MemoryOptimizer->GetMemoryUsagePercent();
-    }
-    return 0.0f;
-}
-
-UMingPerformanceManager* UMingPersonalManager::GetPerformanceManager() const
-{
-    return PerformanceManager;
-}
-
-UMingMemoryOptimizer* UMingPersonalManager::GetMemoryOptimizer() const
-{
-    return MemoryOptimizer;
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出A出I出U出I出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出S出a出正出e出/出M出i出n出成出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出的出e出t出w出o出本出k出/出M出i出n出成出的出e出t出w出o出本出k出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出的出e出t出w出o出本出k出/出M出i出n出成出L出o出b出b出y出S出y出s出t出e出設置出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出.出h出"出
+出
+出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出(出)出
+出 出 出 出 出:出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出L出e出正出e出l出(出1出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出E出x出p出e出本出i出e出n出c出e出(出0出)出
+出 出 出 出 出,出 出E出x出p出e出本出i出e出n出c出e出T出o出的出e出x出t出L出e出正出e出l出(出1出0出0出)出
+出{出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出I出s出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出關出係出和出聲出望出管出理出器出
+出 出 出 出 出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出i出f出 出(出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出音出頻出關出係出管出理出器出
+出 出 出 出 出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出i出f出 出(出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出A出使出d出i出o出S出y出s出t出e出設置出(出n出使出l出l出p出t出本出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出A出I出 出U出I出管出理出器出
+出 出 出 出 出A出I出U出I出M出a出n出a出成出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出A出I出U出I出M出a出n出a出成出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出i出f出 出(出A出I出U出I出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出I出U出I出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出保出存出遊出戲出管出理出器出
+出 出 出 出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出i出f出 出(出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出網出絡出管出理出器出
+出 出 出 出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出的出e出t出w出o出本出k出M出a出n出a出成出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出i出f出 出(出的出e出t出w出o出本出k出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出的出e出t出w出o出本出k出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出大出廳出系出統出
+出 出 出 出 出L出o出b出b出y出S出y出s出t出e出設置出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出L出o出b出b出y出S出y出s出t出e出設置出>出(出t出h出i出s出)出;出
+出 出 出 出 出i出f出 出(出L出o出b出b出y出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出b出b出y出S出y出s出t出e出設置出-出>出I出n出i出t出i出a出l出i出z出e出L出o出b出b出y出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出本出地出化出系出統出
+出 出 出 出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出i出f出 出(出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出L出o出c出a出l出i出z出a出t出i出o出n出(出t出h出i出s出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出性出能出優出化出管出理出器出
+出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出i出f出 出(出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出內出存出優出化出器出
+出 出 出 出 出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出i出f出 出(出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出-出>出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出高出校出引出導出管出理出器出（出延出遲出創出建出，出按出需出啟出動出）出
+出 出 出 出 出/出/出 出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出 出將出在出 出S出t出a出本出t出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出 出時出創出建出
+出
+出 出 出 出 出S出e出t出使出p出E出正出e出n出t出S出使出b出s出c出本出i出p出t出i出o出n出s出(出)出;出
+出 出 出 出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出 出i出n出i出t出i出a出l出i出z出e出d出 出-出 出A出l出l出 出s出y出s出t出e出設置出s出 出本出e出a出d出y出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出h出使出t出d出o出w出n出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出s出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出關出閉出高出校出引出導出管出理出器出
+出 出 出 出 出i出f出 出(出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出-出>出S出h出使出t出d出o出w出n出(出)出;出
+出 出 出 出 出 出 出 出 出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出關出閉出本出地出化出系出統出
+出 出 出 出 出i出f出 出(出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出S出h出使出t出d出o出w出n出(出)出;出
+出 出 出 出 出 出 出 出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出關出閉出性出能出優出化出管出理出器出
+出 出 出 出 出i出f出 出(出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出-出>出S出h出使出t出d出o出w出n出(出)出;出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出關出閉出內出存出優出化出器出
+出 出 出 出 出i出f出 出(出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出-出>出S出h出使出t出d出o出w出n出(出)出;出
+出 出 出 出 出 出 出 出 出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出關出閉出大出廳出系出統出
+出 出 出 出 出i出f出 出(出L出o出b出b出y出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出b出b出y出S出y出s出t出e出設置出-出>出S出h出使出t出d出o出w出n出L出o出b出b出y出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出 出 出 出 出L出o出b出b出y出S出y出s出t出e出設置出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出關出閉出網出絡出管出理出器出
+出 出 出 出 出i出f出 出(出的出e出t出w出o出本出k出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出-出>出S出h出使出t出d出o出w出n出的出e出t出w出o出本出k出(出)出;出
+出 出 出 出 出 出 出 出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出關出閉出保出存出遊出戲出管出理出器出
+出 出 出 出 出i出f出 出(出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出-出>出S出h出使出t出d出o出w出n出(出)出;出
+出 出 出 出 出 出 出 出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出關出閉出A出I出 出U出I出管出理出器出
+出 出 出 出 出i出f出 出(出A出I出U出I出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出I出U出I出M出a出n出a出成出e出本出-出>出S出h出使出t出d出o出w出n出(出)出;出
+出 出 出 出 出 出 出 出 出A出I出U出I出M出a出n出a出成出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出關出閉出音出頻出關出係出管出理出器出
+出 出 出 出 出i出f出 出(出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出S出h出使出t出d出o出w出n出A出使出d出i出o出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出 出 出 出 出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出關出閉出關出係出和出聲出望出管出理出器出
+出 出 出 出 出i出f出 出(出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出S出h出使出t出d出o出w出n出(出)出;出
+出 出 出 出 出 出 出 出 出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出C出l出e出a出n出使出p出E出正出e出n出t出S出使出b出s出c出本出i出p出t出i出o出n出s出(出)出;出
+出 出 出 出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出 出s出h出使出t出d出o出w出n出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出e出t出使出p出E出正出e出n出t出S出使出b出s出c出本出i出p出t出i出o出n出s出(出)出
+出{出
+出 出 出 出 出/出/出 出設出置出事出件出訂出閱出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出E出正出e出n出t出 出s出使出b出s出c出本出i出p出t出i出o出n出s出 出s出e出t出使出p出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出C出l出e出a出n出使出p出E出正出e出n出t出S出使出b出s出c出本出i出p出t出i出o出n出s出(出)出
+出{出
+出 出 出 出 出/出/出 出清出理出事出件出訂出閱出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出E出正出e出n出t出 出s出使出b出s出c出本出i出p出t出i出o出n出s出 出c出l出e出a出n出e出d出 出使出p出"出)出)出;出
+出}出
+出
+出/出/出 出角出色出成出長出接出口出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出A出d出d出E出x出p出e出本出i出e出n出c出e出(出i出n出t出3出2出 出A出設置出o出使出n出t出)出
+出{出
+出 出 出 出 出C出使出本出本出e出n出t出E出x出p出e出本出i出e出n出c出e出 出+出=出 出A出設置出o出使出n出t出;出
+出 出 出 出 出O出n出E出x出p出e出本出i出e出n出c出e出G出a出i出n出e出d出(出A出設置出o出使出n出t出)出;出
+出
+出 出 出 出 出/出/出 出檢出查出升出級出
+出 出 出 出 出w出h出i出l出e出 出(出C出使出本出本出e出n出t出E出x出p出e出本出i出e出n出c出e出 出>出=出 出E出x出p出e出本出i出e出n出c出e出T出o出的出e出x出t出L出e出正出e出l出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出E出x出p出e出本出i出e出n出c出e出 出-出=出 出E出x出p出e出本出i出e出n出c出e出T出o出的出e出x出t出L出e出正出e出l出;出
+出 出 出 出 出 出 出 出 出L出e出正出e出l出U出p出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出L出e出正出e出l出U出p出(出)出
+出{出
+出 出 出 出 出C出使出本出本出e出n出t出L出e出正出e出l出+出+出;出
+出 出 出 出 出E出x出p出e出本出i出e出n出c出e出T出o出的出e出x出t出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出軍出l出o出o出本出T出o出I出n出t出(出E出x出p出e出本出i出e出n出c出e出T出o出的出e出x出t出L出e出正出e出l出 出*出 出1出.出5出f出)出;出
+出 出 出 出 出O出n出L出e出正出e出l出U出p出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出O出n出E出x出p出e出本出i出e出n出c出e出G出a出i出n出e出d出(出i出n出t出3出2出 出A出設置出o出使出n出t出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出G出a出i出n出e出d出 出%出d出 出e出x出p出e出本出i出e出n出c出e出"出)出,出 出A出設置出o出使出n出t出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出O出n出L出e出正出e出l出U出p出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出L出e出正出e出l出e出d出 出使出p出 出t出o出 出%出d出"出)出,出 出C出使出本出本出e出n出t出L出e出正出e出l出)出;出
+出}出
+出
+出/出/出 出敘出事出事出件出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出T出本出i出成出成出e出本出D出i出a出l出o出成出使出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出i出a出l出o出成出使出e出I出d出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出T出本出i出成出成出e出本出i出n出成出 出d出i出a出l出o出成出使出e出:出 出%出s出"出)出,出 出*出D出i出a出l出o出成出使出e出I出d出)出;出
+出}出
+出
+出/出/出 出關出係出和出聲出望出系出統出接出口出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出U出p出d出a出t出e出C出h出a出本出a出c出t出e出本出R出e出l出a出t出i出o出n出s出h出i出p出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出h出a出本出a出c出t出e出本出I出D出,出 出f出l出o出a出t出 出C出h出a出n出成出e出A出設置出o出使出n出t出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出a出s出o出n出)出
+出{出
+出 出 出 出 出i出f出 出(出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出R出e出l出a出t出i出o出n出s出h出i出p出U出p出d出a出t出e出R出e出q出使出e出s出t出 出R出e出q出使出e出s出t出;出
+出 出 出 出 出 出 出 出 出R出e出q出使出e出s出t出.出C出h出a出本出a出c出t出e出本出I出D出 出=出 出C出h出a出本出a出c出t出e出本出I出D出;出
+出 出 出 出 出 出 出 出 出R出e出q出使出e出s出t出.出R出e出l出a出t出i出o出n出s出h出i出p出C出h出a出n出成出e出 出=出 出C出h出a出n出成出e出A出設置出o出使出n出t出;出
+出 出 出 出 出 出 出 出 出R出e出q出使出e出s出t出.出U出p出d出a出t出e出R出e出a出s出o出n出 出=出 出R出e出a出s出o出n出;出
+出 出 出 出 出 出 出 出 出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出U出p出d出a出t出e出R出e出l出a出t出i出o出n出s出h出i出p出(出R出e出q出使出e出s出t出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出U出p出d出a出t出e出R出e出成出i出o出n出R出e出p出使出t出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出I出D出,出 出f出l出o出a出t出 出C出h出a出n出成出e出A出設置出o出使出n出t出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出a出s出o出n出)出
+出{出
+出 出 出 出 出i出f出 出(出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出R出e出p出使出t出a出t出i出o出n出U出p出d出a出t出e出R出e出q出使出e出s出t出 出R出e出q出使出e出s出t出;出
+出 出 出 出 出 出 出 出 出R出e出q出使出e出s出t出.出R出e出成出i出o出n出I出D出 出=出 出R出e出成出i出o出n出I出D出;出
+出 出 出 出 出 出 出 出 出R出e出q出使出e出s出t出.出R出e出p出使出t出a出t出i出o出n出C出h出a出n出成出e出 出=出 出C出h出a出n出成出e出A出設置出o出使出n出t出;出
+出 出 出 出 出 出 出 出 出R出e出q出使出e出s出t出.出U出p出d出a出t出e出R出e出a出s出o出n出 出=出 出R出e出a出s出o出n出;出
+出 出 出 出 出 出 出 出 出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出U出p出d出a出t出e出R出e出p出使出t出a出t出i出o出n出(出R出e出q出使出e出s出t出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出R出e出l出a出t出i出o出n出s出h出i出p出D出a出t出a出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出C出h出a出本出a出c出t出e出本出R出e出l出a出t出i出o出n出s出h出i出p出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出h出a出本出a出c出t出e出本出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出G出e出t出R出e出l出a出t出i出o出n出s出h出i出p出D出a出t出a出(出C出h出a出本出a出c出t出e出本出I出D出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出軍出R出e出l出a出t出i出o出n出s出h出i出p出D出a出t出a出(出)出;出
+出}出
+出
+出軍出R出e出p出使出t出a出t出i出o出n出D出a出t出a出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出R出e出成出i出o出n出R出e出p出使出t出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出G出e出t出R出e出p出使出t出a出t出i出o出n出D出a出t出a出(出R出e出成出i出o出n出I出D出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出軍出R出e出p出使出t出a出t出i出o出n出D出a出t出a出(出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出A出正出a出i出l出a出b出l出e出D出i出a出l出o出成出使出e出O出p出t出i出o出n出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出h出a出本出a出c出t出e出本出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出O出p出t出i出o出n出s出;出
+出 出 出 出 出i出f出 出(出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出R出e出l出a出t出i出o出n出s出h出i出p出D出a出t出a出 出D出a出t出a出 出=出 出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出G出e出t出R出e出l出a出t出i出o出n出s出h出i出p出D出a出t出a出(出C出h出a出本出a出c出t出e出本出I出D出)出;出
+出 出 出 出 出 出 出 出 出/出/出 出根出據出關出係出值出返出回出不出同出的出對出話出選出項出
+出 出 出 出 出 出 出 出 出i出f出 出(出D出a出t出a出.出R出e出l出a出t出i出o出n出s出h出i出p出V出a出l出使出e出 出>出=出 出5出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出p出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出f出本出i出e出n出d出l出y出下出成出本出e出e出t出i出n出成出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出p出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出t出本出a出d出e出下出o出f出f出e出本出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出p出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出q出使出e出s出t出下出本出e出q出使出e出s出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出D出a出t出a出.出R出e出l出a出t出i出o出n出s出h出i出p出V出a出l出使出e出 出>出=出 出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出p出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出n出e出使出t出本出a出l出下出成出本出e出e出t出i出n出成出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出p出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出b出a出s出i出c出下出t出本出a出d出e出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出O出p出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出h出o出s出t出i出l出e出下出成出本出e出e出t出i出n出成出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出O出p出t出i出o出n出s出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出T出本出a出d出e出P出本出i出c出e出M出o出d出i出f出i出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出h出a出本出a出c出t出e出本出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出G出e出t出T出本出a出d出e出P出本出i出c出e出M出o出d出i出f出i出e出本出(出C出h出a出本出a出c出t出e出本出I出D出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出1出.出0出f出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出C出a出n出A出c出c出e出p出t出Q出使出e出s出t出B出y出R出e出p出使出t出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出Q出使出e出s出t出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出C出a出n出A出c出c出e出p出t出Q出使出e出s出t出(出Q出使出e出s出t出I出D出,出 出R出e出成出i出o出n出I出D出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出O出n出Q出使出e出s出t出C出o出設置出p出l出e出t出e出d出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出Q出使出e出s出t出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出Q出使出e出s出t出G出i出正出e出本出I出D出)出
+出{出
+出 出 出 出 出/出/出 出更出新出聲出望出
+出 出 出 出 出U出p出d出a出t出e出R出e出成出i出o出n出R出e出p出使出t出a出t出i出o出n出(出R出e出成出i出o出n出I出D出,出 出2出0出.出0出f出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出C出o出設置出p出l出e出t出e出d出 出q出使出e出s出t出 出%出s出"出)出,出 出*出Q出使出e出s出t出I出D出)出)出;出
+出 出 出 出 出/出/出 出更出新出關出係出
+出 出 出 出 出U出p出d出a出t出e出C出h出a出本出a出c出t出e出本出R出e出l出a出t出i出o出n出s出h出i出p出(出Q出使出e出s出t出G出i出正出e出本出I出D出,出 出1出5出.出0出f出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出C出o出設置出p出l出e出t出e出d出 出q出使出e出s出t出 出%出s出"出)出,出 出*出Q出使出e出s出t出I出D出)出)出;出
+出 出 出 出 出/出/出 出獲出得出經出驗出
+出 出 出 出 出A出d出d出E出x出p出e出本出i出e出n出c出e出(出1出0出0出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出Q出使出e出s出t出 出c出o出設置出p出l出e出t出e出d出:出 出%出s出"出)出,出 出*出Q出使出e出s出t出I出D出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出O出n出的出P出C出I出n出t出e出本出a出c出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出h出a出本出a出c出t出e出本出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出I出n出t出e出本出a出c出t出i出o出n出T出y出p出e出)出
+出{出
+出 出 出 出 出/出/出 出播出放出對出話出音出頻出
+出 出 出 出 出P出l出a出y出D出i出a出l出o出成出使出e出A出使出d出i出o出(出C出h出a出本出a出c出t出e出本出I出D出,出 出I出n出t出e出本出a出c出t出i出o出n出T出y出p出e出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出的出P出C出 出i出n出t出e出本出a出c出t出i出o出n出:出 出%出s出 出-出 出%出s出"出)出,出 出*出C出h出a出本出a出c出t出e出本出I出D出,出 出*出I出n出t出e出本出a出c出t出i出o出n出T出y出p出e出)出;出
+出}出
+出
+出/出/出 出音出頻出系出統出接出口出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出A出使出d出i出o出S出y出s出t出e出設置出(出U出O出b出大出e出c出t出*出 出M出e出t出a出S出o出使出n出d出s出S出y出s出t出e出設置出)出
+出{出
+出 出 出 出 出i出f出 出(出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出A出使出d出i出o出S出y出s出t出e出設置出(出M出e出t出a出S出o出使出n出d出s出S出y出s出t出e出設置出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出P出l出a出y出R出e出l出a出t出i出o出n出s出h出i出p出A出使出d出i出o出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出h出a出本出a出c出t出e出本出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出使出d出i出o出T出y出p出e出)出
+出{出
+出 出 出 出 出i出f出 出(出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出R出e出l出a出t出i出o出n出s出h出i出p出D出a出t出a出 出D出a出t出a出 出=出 出G出e出t出C出h出a出本出a出c出t出e出本出R出e出l出a出t出i出o出n出s出h出i出p出(出C出h出a出本出a出c出t出e出本出I出D出)出;出
+出 出 出 出 出 出 出 出 出E出R出e出l出a出t出i出o出n出s出h出i出p出A出使出d出i出o出T出y出p出e出 出T出y出p出e出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出E出R出e出l出a出t出i出o出n出s出h出i出p出A出使出d出i出o出T出y出p出e出>出(出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出4出)出)出;出
+出 出 出 出 出 出 出 出 出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出P出l出a出y出R出e出l出a出t出i出o出n出s出h出i出p出S出o出使出n出d出(出T出y出p出e出,出 出D出a出t出a出.出C出使出本出本出e出n出t出T出y出p出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出P出l出a出y出R出e出p出使出t出a出t出i出o出n出A出使出d出i出o出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出成出i出o出n出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出使出d出i出o出T出y出p出e出)出
+出{出
+出 出 出 出 出i出f出 出(出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出R出e出p出使出t出a出t出i出o出n出D出a出t出a出 出D出a出t出a出 出=出 出G出e出t出R出e出成出i出o出n出R出e出p出使出t出a出t出i出o出n出(出R出e出成出i出o出n出I出D出)出;出
+出 出 出 出 出 出 出 出 出E出R出e出p出使出t出a出t出i出o出n出L出e出正出e出l出 出L出e出正出e出l出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出E出R出e出p出使出t出a出t出i出o出n出L出e出正出e出l出>出(出軍出M出a出t出h出:出:出C出l出a出設置出p出(出軍出M出a出t出h出:出:出軍出l出o出o出本出T出o出I出n出t出(出D出a出t出a出.出R出e出p出使出t出a出t出i出o出n出V出a出l出使出e出 出/出 出2出0出.出0出f出)出,出 出0出,出 出4出)出)出;出
+出 出 出 出 出 出 出 出 出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出P出l出a出y出R出e出p出使出t出a出t出i出o出n出S出o出使出n出d出(出L出e出正出e出l出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出P出l出a出y出D出i出a出l出o出成出使出e出A出使出d出i出o出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出h出a出本出a出c出t出e出本出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出i出a出l出o出成出使出e出T出y出p出e出)出
+出{出
+出 出 出 出 出i出f出 出(出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出D出i出a出l出o出成出使出e出A出使出d出i出o出T出y出p出e出 出T出y出p出e出 出=出 出E出D出i出a出l出o出成出使出e出A出使出d出i出o出T出y出p出e出:出:出的出e出使出t出本出a出l出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出D出i出a出l出o出成出使出e出T出y出p出e出 出=出=出 出T出E出X出T出(出"出f出本出i出e出n出d出l出y出"出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出y出p出e出 出=出 出E出D出i出a出l出o出成出使出e出A出使出d出i出o出T出y出p出e出:出:出軍出本出i出e出n出d出l出y出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出D出i出a出l出o出成出使出e出T出y出p出e出 出=出=出 出T出E出X出T出(出"出h出o出s出t出i出l出e出"出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出y出p出e出 出=出 出E出D出i出a出l出o出成出使出e出A出使出d出i出o出T出y出p出e出:出:出輸入出o出s出t出i出l出e出;出
+出 出 出 出 出 出 出 出 出}出
+出
+出 出 出 出 出 出 出 出 出軍出R出e出l出a出t出i出o出n出s出h出i出p出D出a出t出a出 出D出a出t出a出 出=出 出G出e出t出C出h出a出本出a出c出t出e出本出R出e出l出a出t出i出o出n出s出h出i出p出(出C出h出a出本出a出c出t出e出本出I出D出)出;出
+出 出 出 出 出 出 出 出 出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出P出l出a出y出D出i出a出l出o出成出使出e出S出o出使出n出d出(出T出y出p出e出,出 出D出a出t出a出.出C出使出本出本出e出n出t出T出y出p出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出P出l出a出y出R出e出p出使出b出l出i出c出E出本出a出T出h出e出設置出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出h出e出設置出e出的出a出設置出e出,出 出f出l出o出a出t出 出I出n出t出e出n出s出i出t出y出)出
+出{出
+出 出 出 出 出i出f出 出(出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出R出e出p出使出b出l出i出c出E出本出a出A出使出d出i出o出T出h出e出設置出e出 出T出h出e出設置出e出 出=出 出E出R出e出p出使出b出l出i出c出E出本出a出A出使出d出i出o出T出h出e出設置出e出:出:出B出a出t出t出l出e出f出i出e出l出d出G出l出o出本出y出;出
+出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出h出e出設置出e出的出a出設置出e出 出=出=出 出T出E出X出T出(出"出S出c出h出o出l出a出本出l出y出C出o出n出t出e出設置出p出l出a出t出i出o出n出"出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出h出e出設置出e出 出=出 出E出R出e出p出使出b出l出i出c出E出本出a出A出使出d出i出o出T出h出e出設置出e出:出:出S出c出h出o出l出a出本出l出y出C出o出n出t出e出設置出p出l出a出t出i出o出n出;出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出T出h出e出設置出e出的出a出設置出e出 出=出=出 出T出E出X出T出(出"出R出e出正出o出l出使出t出i出o出n出a出本出y出P出a出s出s出i出o出n出"出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出h出e出設置出e出 出=出 出E出R出e出p出使出b出l出i出c出E出本出a出A出使出d出i出o出T出h出e出設置出e出:出:出R出e出正出o出l出使出t出i出o出n出a出本出y出P出a出s出s出i出o出n出;出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出T出h出e出設置出e出的出a出設置出e出 出=出=出 出T出E出X出T出(出"出U出本出b出a出n出T出本出a出n出s出f出o出本出設置出a出t出i出o出n出"出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出h出e出設置出e出 出=出 出E出R出e出p出使出b出l出i出c出E出本出a出A出使出d出i出o出T出h出e出設置出e出:出:出U出本出b出a出n出T出本出a出n出s出f出o出本出設置出a出t出i出o出n出;出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出T出h出e出設置出e出的出a出設置出e出 出=出=出 出T出E出X出T出(出"出R出使出本出a出l出S出e出本出e出n出i出t出y出"出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出h出e出設置出e出 出=出 出E出R出e出p出使出b出l出i出c出E出本出a出A出使出d出i出o出T出h出e出設置出e出:出:出R出使出本出a出l出S出e出本出e出n出i出t出y出;出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出T出h出e出設置出e出的出a出設置出e出 出=出=出 出T出E出X出T出(出"出D出i出p出l出o出設置出a出t出i出c出I出n出t出本出i出成出使出e出"出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出h出e出設置出e出 出=出 出E出R出e出p出使出b出l出i出c出E出本出a出A出使出d出i出o出T出h出e出設置出e出:出:出D出i出p出l出o出設置出a出t出i出c出I出n出t出本出i出成出使出e出;出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出T出h出e出設置出e出的出a出設置出e出 出=出=出 出T出E出X出T出(出"出輸入出e出本出o出i出c出S出a出c出本出i出f出i出c出e出"出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出h出e出設置出e出 出=出 出E出R出e出p出使出b出l出i出c出E出本出a出A出使出d出i出o出T出h出e出設置出e出:出:出輸入出e出本出o出i出c出S出a出c出本出i出f出i出c出e出;出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出T出h出e出設置出e出的出a出設置出e出 出=出=出 出T出E出X出T出(出"出C出使出l出t出使出本出a出l出R出e出n出a出i出s出s出a出n出c出e出"出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出h出e出設置出e出 出=出 出E出R出e出p出使出b出l出i出c出E出本出a出A出使出d出i出o出T出h出e出設置出e出:出:出C出使出l出t出使出本出a出l出R出e出n出a出i出s出s出a出n出c出e出;出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出T出h出e出設置出e出的出a出設置出e出 出=出=出 出T出E出X出T出(出"出I出n出d出使出s出t出本出i出a出l出A出w出a出k出e出n出i出n出成出"出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出h出e出設置出e出 出=出 出E出R出e出p出使出b出l出i出c出E出本出a出A出使出d出i出o出T出h出e出設置出e出:出:出I出n出d出使出s出t出本出i出a出l出A出w出a出k出e出n出i出n出成出;出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出T出h出e出設置出e出的出a出設置出e出 出=出=出 出T出E出X出T出(出"出的出a出t出i出o出n出B出使出i出l出d出i出n出成出"出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出h出e出設置出e出 出=出 出E出R出e出p出使出b出l出i出c出E出本出a出A出使出d出i出o出T出h出e出設置出e出:出:出的出a出t出i出o出n出B出使出i出l出d出i出n出成出;出
+出
+出 出 出 出 出 出 出 出 出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出P出l出a出y出R出e出p出使出b出l出i出c出E出本出a出T出h出e出設置出e出(出T出h出e出設置出e出,出 出I出n出t出e出n出s出i出t出y出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出e出t出A出使出d出i出o出V出o出l出使出設置出e出(出f出l出o出a出t出 出R出e出l出a出t出i出o出n出s出h出i出p出V出o出l出使出設置出e出,出 出f出l出o出a出t出 出R出e出p出使出t出a出t出i出o出n出V出o出l出使出設置出e出,出 出f出l出o出a出t出 出D出i出a出l出o出成出使出e出V出o出l出使出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出A出使出d出i出o出V出o出l出使出設置出e出S出e出t出t出i出n出成出s出 出S出e出t出t出i出n出成出s出;出
+出 出 出 出 出 出 出 出 出S出e出t出t出i出n出成出s出.出R出e出l出a出t出i出o出n出s出h出i出p出V出o出l出使出設置出e出 出=出 出R出e出l出a出t出i出o出n出s出h出i出p出V出o出l出使出設置出e出;出
+出 出 出 出 出 出 出 出 出S出e出t出t出i出n出成出s出.出R出e出p出使出t出a出t出i出o出n出V出o出l出使出設置出e出 出=出 出R出e出p出使出t出a出t出i出o出n出V出o出l出使出設置出e出;出
+出 出 出 出 出 出 出 出 出S出e出t出t出i出n出成出s出.出D出i出a出l出o出成出使出e出V出o出l出使出設置出e出 出=出 出D出i出a出l出o出成出使出e出V出o出l出使出設置出e出;出
+出 出 出 出 出 出 出 出 出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出-出>出S出e出t出V出o出l出使出設置出e出S出e出t出t出i出n出成出s出(出S出e出t出t出i出n出成出s出)出;出
+出 出 出 出 出}出
+出}出
+出
+出/出/出 出A出I出 出U出I出系出統出接出口出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出A出I出U出I出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出i出f出 出(出A出I出U出I出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出I出U出I出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出T出本出a出c出k出U出s出e出本出B出e出h出a出正出i出o出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出e出h出a出正出i出o出本出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出,出 出f出l出o出a出t出 出V出a出l出使出e出)出
+出{出
+出 出 出 出 出i出f出 出(出A出I出U出I出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出I出U出I出M出a出n出a出成出e出本出-出>出T出本出a出c出k出U出s出e出本出B出e出h出a出正出i出o出本出(出B出e出h出a出正出i出o出本出T出y出p出e出,出 出C出o出n出t出e出x出t出,出 出V出a出l出使出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出O出p出t出i出設置出i出z出e出U出I出軍出o出本出U出s出e出本出(出)出
+出{出
+出 出 出 出 出i出f出 出(出A出I出U出I出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出I出U出I出M出a出n出a出成出e出本出-出>出O出p出t出i出設置出i出z出e出U出I出軍出o出本出U出s出e出本出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出h出o出w出C出o出n出t出e出x出t出使出a出l出輸入出e出l出p出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出i出f出 出(出A出I出U出I出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出I出U出I出M出a出n出a出成出e出本出-出>出S出h出o出w出C出o出n出t出e出x出t出使出a出l出輸入出e出l出p出(出C出o出n出t出e出x出t出)出;出
+出 出 出 出 出}出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出A出I出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出;出
+出 出 出 出 出i出f出 出(出A出I出U出I出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出 出=出 出A出I出U出I出M出a出n出a出成出e出本出-出>出G出e出t出A出I出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出;出
+出}出
+出
+出/出/出 出保出存出和出載出入出系出統出接出口出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出S出a出正出e出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出i出f出 出(出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出(出t出h出i出s出)出;出
+出 出 出 出 出}出
+出}出
+出
+出E出M出i出n出成出S出a出正出e出G出a出設置出e出R出e出s出使出l出t出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出a出正出e出G出a出設置出e出(出i出n出t出3出2出 出S出l出o出t出I出n出d出e出x出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出a出正出e出的出a出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出-出>出S出a出正出e出G出a出設置出e出(出S出l出o出t出I出n出d出e出x出,出 出S出a出正出e出的出a出設置出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出S出a出正出e出G出a出設置出e出R出e出s出使出l出t出:出:出E出本出本出o出本出下出S出y出s出t出e出設置出的出o出t出I出n出i出t出i出a出l出i出z出e出d出;出
+出}出
+出
+出E出M出i出n出成出S出a出正出e出G出a出設置出e出R出e出s出使出l出t出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出Q出使出i出c出k出S出a出正出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出-出>出Q出使出i出c出k出S出a出正出e出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出S出a出正出e出G出a出設置出e出R出e出s出使出l出t出:出:出E出本出本出o出本出下出S出y出s出t出e出設置出的出o出t出I出n出i出t出i出a出l出i出z出e出d出;出
+出}出
+出
+出E出M出i出n出成出S出a出正出e出G出a出設置出e出R出e出s出使出l出t出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出L出o出a出d出G出a出設置出e出(出i出n出t出3出2出 出S出l出o出t出I出n出d出e出x出)出
+出{出
+出 出 出 出 出i出f出 出(出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出-出>出L出o出a出d出G出a出設置出e出(出S出l出o出t出I出n出d出e出x出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出S出a出正出e出G出a出設置出e出R出e出s出使出l出t出:出:出E出本出本出o出本出下出S出y出s出t出e出設置出的出o出t出I出n出i出t出i出a出l出i出z出e出d出;出
+出}出
+出
+出E出M出i出n出成出S出a出正出e出G出a出設置出e出R出e出s出使出l出t出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出Q出使出i出c出k出L出o出a出d出(出)出
+出{出
+出 出 出 出 出i出f出 出(出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出-出>出Q出使出i出c出k出L出o出a出d出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出S出a出正出e出G出a出設置出e出R出e出s出使出l出t出:出:出E出本出本出o出本出下出S出y出s出t出e出設置出的出o出t出I出n出i出t出i出a出l出i出z出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出D出e出l出e出t出e出S出a出正出e出G出a出設置出e出(出i出n出t出3出2出 出S出l出o出t出I出n出d出e出x出)出
+出{出
+出 出 出 出 出i出f出 出(出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出-出>出D出e出l出e出t出e出S出a出正出e出G出a出設置出e出(出S出l出o出t出I出n出d出e出x出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出e出t出A出使出t出o出S出a出正出e出E出n出a出b出l出e出d出(出b出o出o出l出 出b出E出n出a出b出l出e出d出)出
+出{出
+出 出 出 出 出i出f出 出(出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出-出>出S出e出t出A出使出t出o出S出a出正出e出E出n出a出b出l出e出d出(出b出E出n出a出b出l出e出d出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出I出s出A出使出t出o出S出a出正出e出E出n出a出b出l出e出d出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出-出>出I出s出A出使出t出o出S出a出正出e出E出n出a出b出l出e出d出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出U出M出i出n出成出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出*出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出;出
+出}出
+出
+出/出/出 出多出人出遊出戲出系出統出接出口出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出M出使出l出t出i出p出l出a出y出e出本出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出i出f出 出(出的出e出t出w出o出本出k出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出的出e出t出w出o出本出k出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出L出o出b出b出y出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出b出b出y出S出y出s出t出e出設置出-出>出I出n出i出t出i出a出l出i出z出e出L出o出b出b出y出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出C出本出e出a出t出e出M出使出l出t出i出p出l出a出y出e出本出S出e出本出正出e出本出(出c出o出n出s出t出 出軍出M出i出n出成出的出e出t出w出o出本出k出C出o出n出f出i出成出&出 出C出o出n出f出i出成出)出
+出{出
+出 出 出 出 出i出f出 出(出的出e出t出w出o出本出k出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出-出>出C出本出e出a出t出e出S出e出本出正出e出本出(出C出o出n出f出i出成出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出C出o出n出n出e出c出t出T出o出M出使出l出t出i出p出l出a出y出e出本出S出e出本出正出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出e出本出A出d出d出本出e出s出s出,出 出i出n出t出3出2出 出P出o出本出t出)出
+出{出
+出 出 出 出 出i出f出 出(出的出e出t出w出o出本出k出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出-出>出C出o出n出n出e出c出t出T出o出S出e出本出正出e出本出(出S出e出本出正出e出本出A出d出d出本出e出s出s出,出 出P出o出本出t出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出D出i出s出c出o出n出n出e出c出t出軍出本出o出設置出M出使出l出t出i出p出l出a出y出e出本出S出e出本出正出e出本出(出)出
+出{出
+出 出 出 出 出i出f出 出(出的出e出t出w出o出本出k出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出-出>出D出i出s出c出o出n出n出e出c出t出軍出本出o出設置出S出e出本出正出e出本出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出I出s出M出使出l出t出i出p出l出a出y出e出本出C出o出n出n出e出c出t出e出d出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出的出e出t出w出o出本出k出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出-出>出I出s出C出o出n出n出e出c出t出e出d出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出I出s出M出使出l出t出i出p出l出a出y出e出本出輸入出o出s出t出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出的出e出t出w出o出本出k出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出-出>出I出s出輸入出o出s出t出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出i出n出t出3出2出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出L出o出c出a出l出P出l出a出y出e出本出I出D出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出的出e出t出w出o出本出k出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出-出>出G出e出t出L出o出c出a出l出P出l出a出y出e出本出I出D出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出-出1出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出e出t出P出l出a出y出e出本出R出e出a出d出y出(出b出o出o出l出 出b出R出e出a出d出y出)出
+出{出
+出 出 出 出 出i出f出 出(出L出o出b出b出y出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出b出b出y出S出y出s出t出e出設置出-出>出S出e出t出P出l出a出y出e出本出R出e出a出d出y出(出b出R出e出a出d出y出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出t出a出本出t出M出使出l出t出i出p出l出a出y出e出本出G出a出設置出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出L出o出b出b出y出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出b出b出y出S出y出s出t出e出設置出-出>出S出t出a出本出t出G出a出設置出e出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出e出n出d出M出使出l出t出i出p出l出a出y出e出本出C出h出a出t出M出e出s出s出a出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出)出
+出{出
+出 出 出 出 出i出f出 出(出L出o出b出b出y出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出b出b出y出S出y出s出t出e出設置出-出>出S出e出n出d出C出h出a出t出M出e出s出s出a出成出e出(出M出e出s出s出a出成出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出U出M出i出n出成出的出e出t出w出o出本出k出M出a出n出a出成出e出本出*出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出的出e出t出w出o出本出k出M出a出n出a出成出e出本出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出的出e出t出w出o出本出k出M出a出n出a出成出e出本出;出
+出}出
+出
+出U出M出i出n出成出L出o出b出b出y出S出y出s出t出e出設置出*出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出L出o出b出b出y出S出y出s出t出e出設置出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出L出o出b出b出y出S出y出s出t出e出設置出;出
+出}出
+出
+出/出/出 出本出地出化出系出統出接出口出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出L出o出c出a出l出i出z出a出t出i出o出n出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出L出o出c出a出l出i出z出a出t出i出o出n出(出t出h出i出s出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出L出o出c出a出l出i出z出a出t出i出o出n出 出s出y出s出t出e出設置出 出i出n出i出t出i出a出l出i出z出e出d出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出e出t出G出a出設置出e出L出a出n出成出使出a出成出e出(出E出M出i出n出成出L出a出n出成出使出a出成出e出 出的出e出w出L出a出n出成出使出a出成出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出i出t出i出a出l出i出z出e出L出o出c出a出l出i出z出a出t出i出o出n出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出b出o出o出l出 出b出S出使出c出c出e出s出s出 出=出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出S出e出t出L出a出n出成出使出a出成出e出(出的出e出w出L出a出n出成出使出a出成出e出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出b出S出使出c出c出e出s出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出G出a出設置出e出 出l出a出n出成出使出a出成出e出 出c出h出a出n出成出e出d出 出t出o出:出 出%出s出"出)出,出 出*出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出C出使出本出本出e出n出t出L出a出n出成出使出a出成出e出的出a出設置出e出(出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出b出S出使出c出c出e出s出s出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出e出t出G出a出設置出e出R出e出成出i出o出n出(出E出M出i出n出成出R出e出成出i出o出n出 出的出e出w出R出e出成出i出o出n出)出
+出{出
+出 出 出 出 出i出f出 出(出!出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出i出t出i出a出l出i出z出e出L出o出c出a出l出i出z出a出t出i出o出n出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出S出e出t出R出e出成出i出o出n出(出的出e出w出R出e出成出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出G出a出設置出e出 出本出e出成出i出o出n出 出s出e出t出 出t出o出:出 出%出s出"出)出,出 出*出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出R出e出成出i出o出n出的出a出設置出e出(出的出e出w出R出e出成出i出o出n出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出E出M出i出n出成出L出a出n出成出使出a出成出e出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出C出使出本出本出e出n出t出G出a出設置出e出L出a出n出成出使出a出成出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出C出使出本出本出e出n出t出L出a出n出成出使出a出成出e出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出L出a出n出成出使出a出成出e出:出:出C出h出i出n出e出s出e出T出本出a出d出i出t出i出o出n出a出l出;出
+出}出
+出
+出E出M出i出n出成出R出e出成出i出o出n出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出C出使出本出本出e出n出t出G出a出設置出e出R出e出成出i出o出n出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出C出使出本出本出e出n出t出R出e出成出i出o出n出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出R出e出成出i出o出n出:出:出T出a出i出w出a出n出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出L出o出c出a出l出i出z出e出d出S出t出本出i出n出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出的出a出設置出e出s出p出a出c出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出L出o出c出a出l出i出z出e出d出S出t出本出i出n出成出(出K出e出y出,出 出的出a出設置出e出s出p出a出c出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出K出e出y出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出D出o出w出n出l出o出a出d出L出a出n出成出使出a出成出e出P出a出c出k出(出E出M出i出n出成出L出a出n出成出使出a出成出e出 出L出a出n出成出使出a出成出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出n出i出t出i出a出l出i出z出e出L出o出c出a出l出i出z出a出t出i出o出n出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出D出o出w出n出l出o出a出d出L出a出n出成出使出a出成出e出P出a出c出k出(出L出a出n出成出使出a出成出e出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出L出a出n出成出使出a出成出e出P出a出c出k出I出n出f出o出>出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出A出正出a出i出l出a出b出l出e出L出a出n出成出使出a出成出e出P出a出c出k出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出L出a出n出成出使出a出成出e出P出a出c出k出I出n出f出o出>出 出P出a出c出k出s出;出
+出
+出 出 出 出 出i出f出 出(出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出E出M出i出n出成出L出a出n出成出使出a出成出e出>出 出L出a出n出成出使出a出成出e出s出 出=出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出S出使出p出p出o出本出t出e出d出L出a出n出成出使出a出成出e出s出(出)出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出E出M出i出n出成出L出a出n出成出使出a出成出e出 出L出a出n出成出使出a出成出e出 出:出 出L出a出n出成出使出a出成出e出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出c出k出s出.出A出d出d出(出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出L出a出n出成出使出a出成出e出P出a出c出k出I出n出f出o出(出L出a出n出成出使出a出成出e出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出P出a出c出k出s出;出
+出}出
+出
+出U出M出i出n出成出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出*出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出L出o出c出a出l出i出z出a出t出i出o出n出M出a出n出a出成出e出本出;出
+出}出
+出
+出/出/出 出高出校出引出導出系出統出接出口出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出t出a出本出t出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出 出 出 出 出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出設出置出默出認出引出導出配出置出
+出 出 出 出 出 出 出 出 出軍出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出C出o出n出f出i出成出 出G出使出i出d出e出C出o出n出f出i出成出;出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出C出o出n出f出i出成出.出C出o出n出t出e出n出t出T出y出p出e出 出=出 出E出M出i出n出成出U出n出i出正出e出本出s出i出t出y出C出o出n出t出e出n出t出T出y出p出e出:出:出G出a出設置出e出T出使出t出o出本出i出a出l出;出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出C出o出n出f出i出成出.出U出n出i出正出e出本出s出i出t出y出的出a出設置出e出 出=出 出T出E出X出T出(出"出民出國出時出期出策出略出學出院出"出)出;出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出C出o出n出f出i出成出.出D出e出p出a出本出t出設置出e出n出t出 出=出 出T出E出X出T出(出"出戰出略出與出歷出史出"出)出;出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出C出o出n出f出i出成出.出T出a出本出成出e出t出A出使出d出i出e出n出c出e出 出=出 出T出E出X出T出(出"出新出玩出家出"出)出;出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出C出o出n出f出i出成出.出D出使出本出a出t出i出o出n出 出=出 出T出E出X出T出(出"出1出0出分出鐘出"出)出;出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出C出o出n出f出i出成出.出L出a出n出成出使出a出成出e出 出=出 出T出E出X出T出(出"出繁出體出中出文出"出)出;出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出C出o出n出f出i出成出.出C出使出l出t出使出本出a出l出C出o出n出t出e出x出t出 出=出 出T出E出X出T出(出"出R出e出p出使出b出l出i出c出a出n出E出本出a出"出)出;出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出C出o出n出f出i出成出.出b出I出n出t出e出本出a出c出t出i出正出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出C出o出n出f出i出成出.出b出I出n出c出l出使出d出e出輸入出i出s出t出o出本出i出c出a出l出C出o出n出t出e出n出t出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出C出o出n出f出i出成出.出G出使出i出d出e出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出歡出迎出來出到出M出i出n出成出G出o出R出T出S出！出本出引出導出將出幫出助出您出了出解出遊出戲出的出基出本出玩出法出和出歷出史出背出景出。出"出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出-出>出S出e出t出G出使出i出d出e出C出o出n出f出i出成出(出G出使出i出d出e出C出o出n出f出i出成出)出;出
+出 出 出 出 出 出 出 出 出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出-出>出S出t出a出本出t出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出(出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出U出n出i出正出e出本出s出i出t出y出 出G出使出i出d出e出 出s出t出a出本出t出e出d出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出t出o出p出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出-出>出S出t出o出p出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出(出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出U出n出i出正出e出本出s出i出t出y出 出G出使出i出d出e出 出s出t出o出p出p出e出d出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出U出M出i出n出成出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出*出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出U出n出i出正出e出本出s出i出t出y出G出使出i出d出e出M出a出n出a出成出e出本出;出
+出}出
+出
+出/出/出 出性出能出優出化出系出統出接出口出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出P出e出本出f出o出本出設置出a出n出c出e出S出y出s出t出e出設置出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出-出>出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出!出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出 出 出 出 出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出-出>出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出e出本出f出o出本出設置出a出n出c出e出 出s出y出s出t出e出設置出 出i出n出i出t出i出a出l出i出z出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出e出t出P出e出本出f出o出本出設置出a出n出c出e出L出e出正出e出l出(出E出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出L出e出正出e出l出 出的出e出w出L出e出正出e出l出)出
+出{出
+出 出 出 出 出i出f出 出(出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出-出>出S出e出t出P出e出本出f出o出本出設置出a出n出c出e出L出e出正出e出l出(出的出e出w出L出e出正出e出l出)出;出
+出 出 出 出 出}出
+出}出
+出
+出E出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出L出e出正出e出l出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出C出使出本出本出e出n出t出P出e出本出f出o出本出設置出a出n出c出e出L出e出正出e出l出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出-出>出G出e出t出C出使出本出本出e出n出t出P出e出本出f出o出本出設置出a出n出c出e出L出e出正出e出l出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出E出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出L出e出正出e出l出:出:出M出e出d出i出使出設置出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出O出p出t出i出設置出i出z出e出P出e出本出f出o出本出設置出a出n出c出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出-出>出R出使出n出A出使出t出o出O出p出t出i出設置出i出z出a出t出i出o出n出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出e出t出T出a出本出成出e出t出軍出本出a出設置出e出R出a出t出e出(出f出l出o出a出t出 出T出a出本出成出e出t出軍出P出S出)出
+出{出
+出 出 出 出 出i出f出 出(出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出-出>出S出e出t出T出a出本出成出e出t出軍出本出a出設置出e出R出a出t出e出(出T出a出本出成出e出t出軍出P出S出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出M出e出t出本出i出c出s出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出P出e出本出f出o出本出設置出a出n出c出e出M出e出t出本出i出c出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出-出>出G出e出t出C出使出本出本出e出n出t出M出e出t出本出i出c出s出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出M出e出t出本出i出c出s出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出t出a出本出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出i出n出成出(出)出
+出{出
+出 出 出 出 出i出f出 出(出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出-出>出S出t出a出本出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出i出n出成出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出t出o出p出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出i出n出成出(出)出
+出{出
+出 出 出 出 出i出f出 出(出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出-出>出S出t出o出p出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出i出n出成出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出O出p出t出i出設置出i出z出e出M出e出設置出o出本出y出(出)出
+出{出
+出 出 出 出 出i出f出 出(出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出-出>出Q出使出i出c出k出O出p出t出i出設置出i出z出e出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出S出e出t出M出e出設置出o出本出y出B出使出d出成出e出t出(出i出n出t出3出2出 出M出a出x出M出e出設置出o出本出y出M出B出)出
+出{出
+出 出 出 出 出i出f出 出(出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出-出>出S出e出t出M出e出設置出o出本出y出B出使出d出成出e出t出(出M出a出x出M出e出設置出o出本出y出M出B出)出;出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出M出e出設置出o出本出y出U出s出a出成出e出P出e出本出c出e出n出t出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出-出>出G出e出t出M出e出設置出o出本出y出U出s出a出成出e出P出e出本出c出e出n出t出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出0出.出0出f出;出
+出}出
+出
+出U出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出*出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出P出e出本出f出o出本出設置出a出n出c出e出M出a出n出a出成出e出本出;出
+出}出
+出
+出U出M出i出n出成出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出*出 出U出M出i出n出成出P出e出本出s出o出n出a出l出M出a出n出a出成出e出本出:出:出G出e出t出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出M出e出設置出o出本出y出O出p出t出i出設置出i出z出e出本出;出
+出}出
+出

@@ -1,48 +1,49 @@
-#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "MingRelationshipManagerTest.generated.h"
-
-/**
- * ???X?聲??系統測試??行器
- * 摧毀 Blueprint ??口來??行系統測?? */
-UCLASS(BlueprintType, Blueprintable)
-class MINGPERSONAL_API UMingRelationshipTestRunner : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    /**
-     * 目標數量??係?X???系統測試
-     * 目標數量調試??使X     */
-    UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static void RunRelationshipTests();
-
-    /**
-     * 目標數量測試
-     * @param TestIndex 測試編?? (1-8)
-     */
-    UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static void RunSpecificTest(int32 TestIndex);
-
-    /**
-     * 驗?X???系統??本??能
-     */
-    UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static bool VerifyRelationshipSystem();
-
-    /**
-     * 驗?X???系統??本??能
-     */
-    UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static bool VerifyReputationSystem();
-
-    /**
-     * ??建測試摧毀
-     * ??於填??測試目標數量係?X??X???
-     */
-    UFUNCTION(BlueprintCallable, Category = "Relationship Test")
-    static void CreateTestData();
-};
-
+出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出T出e出s出t出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出動出池出聲出動出系出統出測出試出動出行出器出
+出 出*出 出 出B出l出使出e出p出本出i出n出t出 出動出口出來出動出行出系出統出測出動出 出*出/出
+出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
+出c出l出a出s出s出 出M出I出的出G出P出E出R出S出O出的出A出L出下出A出P出I出 出U出M出i出n出成出R出e出l出a出t出i出o出n出s出h出i出p出T出e出s出t出R出使出n出n出e出本出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出目出標出數出量出動出係出池出動出系出統出測出試出
+出 出 出 出 出 出*出 出目出標出數出量出調出試出動出使出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出l出a出t出i出o出n出s出h出i出p出 出T出e出s出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出R出使出n出R出e出l出a出t出i出o出n出s出h出i出p出T出e出s出t出s出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出目出標出數出量出測出試出
+出 出 出 出 出 出*出 出@出p出a出本出a出設置出 出T出e出s出t出I出n出d出e出x出 出測出試出編出動出 出(出1出-出8出)出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出l出a出t出i出o出n出s出h出i出p出 出T出e出s出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出R出使出n出S出p出e出c出i出f出i出c出T出e出s出t出(出i出n出t出3出2出 出T出e出s出t出I出n出d出e出x出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出驗出池出動出系出統出動出本出動出能出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出l出a出t出i出o出n出s出h出i出p出 出T出e出s出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出V出e出本出i出f出y出R出e出l出a出t出i出o出n出s出h出i出p出S出y出s出t出e出設置出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出驗出池出動出系出統出動出本出動出能出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出l出a出t出i出o出n出s出h出i出p出 出T出e出s出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出V出e出本出i出f出y出R出e出p出使出t出a出t出i出o出n出S出y出s出t出e出設置出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出動出建出測出試出
+出 出 出 出 出 出*出 出動出於出填出動出測出試出目出標出數出量出係出池出池出動出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出l出a出t出i出o出n出s出h出i出p出 出T出e出s出t出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出C出本出e出a出t出e出T出e出s出t出D出a出t出a出(出)出;出
+出}出;出
+出
+出

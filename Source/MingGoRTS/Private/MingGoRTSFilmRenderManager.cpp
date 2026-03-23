@@ -1,312 +1,313 @@
-#include "MingGoRTSFilmRenderManager.h"
-#include "Engine/Engine.h"
-#include "Engine/World.h"
-#include "Components/SceneCaptureComponent2D.h"
-#include "Engine/TextureRenderTarget2D.h"
-#include "Kismet/KismetSystemLibrary.h"
-
-UMingGoRTSFilmRenderManager::UMingGoRTSFilmRenderManager()
-    : CurrentPlaybackState(EFilmPlaybackState::Stopped)
-    , CurrentFrameIndex(0)
-    , FrameRate(24.0f)
-    , FrameTimer(0.0f)
-{
-    PrimaryComponentTick.bCanEverTick = true;
-    
-    // 初始化播放計時器
-    PlaybackTicker = FTickerDelegate::CreateUObject(this, &UMingGoRTSFilmRenderManager::OnPlaybackTick);
-}
-
-void UMingGoRTSFilmRenderManager::BeginPlay()
-{
-    Super::BeginPlay();
-    
-    // 如果設置了自動播放，則開始播放
-    if (PlaybackSettings.bAutoPlay && FilmFrames.Num() > 0)
-    {
-        PlayFilm();
-    }
-}
-
-void UMingGoRTSFilmRenderManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-    
-    UpdatePlayback(DeltaTime);
-}
-
-void UMingGoRTSFilmRenderManager::PlayFilm()
-{
-    if (FilmFrames.Num() == 0)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("No film frames to play"));
-        return;
-    }
-
-    if (CurrentPlaybackState == EFilmPlaybackState::Playing)
-    {
-        UE_LOG(LogTemp, Log, TEXT("Film is already playing"));
-        return;
-    }
-
-    CurrentPlaybackState = EFilmPlaybackState::Playing;
-    
-    // 啟動播放計時器
-    if (!PlaybackTickerHandle.IsValid())
-    {
-        PlaybackTickerHandle = FTicker::GetCoreTicker().AddTicker(PlaybackTicker, 1.0f / FrameRate);
-    }
-
-    NotifyPlaybackStateChanged(EFilmPlaybackState::Playing);
-    
-    UE_LOG(LogTemp, Log, TEXT("Started film playback with %d frames"), FilmFrames.Num());
-}
-
-void UMingGoRTSFilmRenderManager::PauseFilm()
-{
-    if (CurrentPlaybackState != EFilmPlaybackState::Playing)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Film is not playing, cannot pause"));
-        return;
-    }
-
-    CurrentPlaybackState = EFilmPlaybackState::Paused;
-    
-    // 停止播放計時器
-    if (PlaybackTickerHandle.IsValid())
-    {
-        FTicker::GetCoreTicker().RemoveTicker(PlaybackTickerHandle);
-        PlaybackTickerHandle.Reset();
-    }
-
-    NotifyPlaybackStateChanged(EFilmPlaybackState::Paused);
-    
-    UE_LOG(LogTemp, Log, TEXT("Paused film playback"));
-}
-
-void UMingGoRTSFilmRenderManager::StopFilm()
-{
-    if (CurrentPlaybackState == EFilmPlaybackState::Stopped)
-    {
-        UE_LOG(LogTemp, Log, TEXT("Film is already stopped"));
-        return;
-    }
-
-    CurrentPlaybackState = EFilmPlaybackState::Stopped;
-    CurrentFrameIndex = 0;
-    FrameTimer = 0.0f;
-    
-    // 停止播放計時器
-    if (PlaybackTickerHandle.IsValid())
-    {
-        FTicker::GetCoreTicker().RemoveTicker(PlaybackTickerHandle);
-        PlaybackTickerHandle.Reset();
-    }
-
-    NotifyPlaybackStateChanged(EFilmPlaybackState::Stopped);
-    NotifyFrameChanged();
-    
-    UE_LOG(LogTemp, Log, TEXT("Stopped film playback"));
-}
-
-void UMingGoRTSFilmRenderManager::SeekToFrame(int32 FrameIndex)
-{
-    if (FrameIndex < 0 || FrameIndex >= FilmFrames.Num())
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Invalid frame index: %d"), FrameIndex);
-        return;
-    }
-
-    CurrentFrameIndex = FrameIndex;
-    FrameTimer = 0.0f;
-    
-    NotifyFrameChanged();
-    
-    UE_LOG(LogTemp, Log, TEXT("Seeked to frame %d"), FrameIndex);
-}
-
-void UMingGoRTSFilmRenderManager::SeekToTime(float TimeInSeconds)
-{
-    int32 TargetFrame = FMath::RoundToInt(TimeInSeconds * FrameRate);
-    SeekToFrame(TargetFrame);
-}
-
-void UMingGoRTSFilmRenderManager::SetFilmFrames(const TArray<UTexture2D*>& Frames)
-{
-    FilmFrames = Frames;
-    CurrentFrameIndex = 0;
-    
-    UE_LOG(LogTemp, Log, TEXT("Set %d film frames"), FilmFrames.Num());
-}
-
-void UMingGoRTSFilmRenderManager::AddFrame(UTexture2D* NewFrame)
-{
-    if (NewFrame)
-    {
-        FilmFrames.Add(NewFrame);
-        UE_LOG(LogTemp, Log, TEXT("Added new film frame. Total frames: %d"), FilmFrames.Num());
-    }
-}
-
-void UMingGoRTSFilmRenderManager::ClearFrames()
-{
-    StopFilm();
-    FilmFrames.Empty();
-    CurrentFrameIndex = 0;
-    
-    UE_LOG(LogTemp, Log, TEXT("Cleared all film frames"));
-}
-
-float UMingGoRTSFilmRenderManager::GetCurrentTime() const
-{
-    return CurrentFrameIndex / FrameRate;
-}
-
-float UMingGoRTSFilmRenderManager::GetTotalDuration() const
-{
-    return FilmFrames.Num() / FrameRate;
-}
-
-void UMingGoRTSFilmRenderManager::SetPlaybackSettings(const FFilmPlaybackSettings& Settings)
-{
-    PlaybackSettings = Settings;
-    FrameRate = Settings.PlaybackSpeed * 24.0f; // 基礎幀率為24fps
-    
-    UE_LOG(LogTemp, Log, TEXT("Updated playback settings. Speed: %.2f, Loop: %s"), 
-        Settings.PlaybackSpeed, Settings.bLoop ? TEXT("true") : TEXT("false"));
-}
-
-void UMingGoRTSFilmRenderManager::SetFrameRate(float NewFrameRate)
-{
-    FrameRate = FMath::Max(1.0f, NewFrameRate);
-    
-    UE_LOG(LogTemp, Log, TEXT("Set frame rate to %.2f fps"), FrameRate);
-}
-
-UTexture2D* UMingGoRTSFilmRenderManager::GetCurrentFrameTexture() const
-{
-    if (CurrentFrameIndex >= 0 && CurrentFrameIndex < FilmFrames.Num())
-    {
-        return FilmFrames[CurrentFrameIndex];
-    }
-    
-    return nullptr;
-}
-
-void UMingGoRTSFilmRenderManager::RenderToRenderTarget(UTextureRenderTarget2D* RenderTarget)
-{
-    if (!RenderTarget)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Invalid render target"));
-        return;
-    }
-
-    UTexture2D* CurrentFrame = GetCurrentFrameTexture();
-    if (!CurrentFrame)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("No current frame to render"));
-        return;
-    }
-
-    // 這裡可以添加實際的渲染邏輯
-    // 例如使用 SceneCaptureComponent 或其他渲染方法
-    
-    UE_LOG(LogTemp, Log, TEXT("Rendered frame %d to render target"), CurrentFrameIndex);
-}
-
-void UMingGoRTSFilmRenderManager::UpdatePlayback(float DeltaTime)
-{
-    if (CurrentPlaybackState != EFilmPlaybackState::Playing)
-    {
-        return;
-    }
-
-    FrameTimer += DeltaTime * PlaybackSettings.PlaybackSpeed;
-    
-    if (FrameTimer >= 1.0f / FrameRate)
-    {
-        AdvanceToNextFrame();
-        FrameTimer = 0.0f;
-    }
-}
-
-void UMingGoRTSFilmRenderManager::AdvanceToNextFrame()
-{
-    CurrentFrameIndex++;
-    
-    if (CurrentFrameIndex >= FilmFrames.Num())
-    {
-        if (PlaybackSettings.bLoop)
-        {
-            CurrentFrameIndex = 0;
-            UE_LOG(LogTemp, Log, TEXT("Looping film playback"));
-        }
-        else
-        {
-            HandlePlaybackEnd();
-            return;
-        }
-    }
-    
-    NotifyFrameChanged();
-}
-
-void UMingGoRTSFilmRenderManager::HandlePlaybackEnd()
-{
-    StopFilm();
-    OnFilmPlaybackEnded.Broadcast();
-    
-    UE_LOG(LogTemp, Log, TEXT("Film playback ended"));
-}
-
-void UMingGoRTSFilmRenderManager::NotifyFrameChanged()
-{
-    OnFilmFrameChanged.Broadcast(CurrentFrameIndex);
-    
-    // 顯示當前幀信息（用於調試）
-    if (GEngine && CurrentPlaybackState == EFilmPlaybackState::Playing)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Yellow, 
-            FString::Printf(TEXT("Frame: %d/%d"), CurrentFrameIndex + 1, FilmFrames.Num()));
-    }
-}
-
-void UMingGoRTSFilmRenderManager::NotifyPlaybackStateChanged(EFilmPlaybackState NewState)
-{
-    OnFilmPlaybackStateChanged.Broadcast(NewState, CurrentFrameIndex);
-    
-    // 顯示播放狀態（用於調試）
-    if (GEngine)
-    {
-        FString StateString;
-        switch (NewState)
-        {
-        case EFilmPlaybackState::Playing:
-            StateString = TEXT("Playing");
-            break;
-        case EFilmPlaybackState::Paused:
-            StateString = TEXT("Paused");
-            break;
-        case EFilmPlaybackState::Stopped:
-            StateString = TEXT("Stopped");
-            break;
-        case EFilmPlaybackState::Seeking:
-            StateString = TEXT("Seeking");
-            break;
-        }
-        
-        GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, 
-            FString::Printf(TEXT("Film State: %s"), *StateString));
-    }
-}
-
-bool UMingGoRTSFilmRenderManager::OnPlaybackTick(float DeltaTime)
-{
-    if (CurrentPlaybackState != EFilmPlaybackState::Playing)
-    {
-        return false;
-    }
-
-    AdvanceToNextFrame();
-    return CurrentPlaybackState == EFilmPlaybackState::Playing;
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出基本出o出本出l出d出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出S出c出e出n出e出C出a出p出t出使出本出e出C出o出設置出p出o出n出e出n出t出2出D出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出T出e出x出t出使出本出e出R出e出n出d出e出本出T出a出本出成出e出t出2出D出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出K出i出s出設置出e出t出S出y出s出t出e出設置出L出i出b出本出a出本出y出.出h出"出
+出
+出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出(出)出
+出 出 出 出 出:出 出C出使出本出本出e出n出t出P出l出a出y出b出a出c出k出S出t出a出t出e出(出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出S出t出o出p出p出e出d出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出(出0出)出
+出 出 出 出 出,出 出軍出本出a出設置出e出R出a出t出e出(出2出4出.出0出f出)出
+出 出 出 出 出,出 出軍出本出a出設置出e出T出i出設置出e出本出(出0出.出0出f出)出
+出{出
+出 出 出 出 出P出本出i出設置出a出本出y出C出o出設置出p出o出n出e出n出t出T出i出c出k出.出b出C出a出n出E出正出e出本出T出i出c出k出 出=出 出t出本出使出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出播出放出計出時出器出
+出 出 出 出 出P出l出a出y出b出a出c出k出T出i出c出k出e出本出 出=出 出軍出T出i出c出k出e出本出D出e出l出e出成出a出t出e出:出:出C出本出e出a出t出e出U出O出b出大出e出c出t出(出t出h出i出s出,出 出&出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出O出n出P出l出a出y出b出a出c出k出T出i出c出k出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出B出e出成出i出n出P出l出a出y出(出)出
+出{出
+出 出 出 出 出S出使出p出e出本出:出:出B出e出成出i出n出P出l出a出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出如出果出設出置出了出自出動出播出放出，出則出開出始出播出放出
+出 出 出 出 出i出f出 出(出P出l出a出y出b出a出c出k出S出e出t出t出i出n出成出s出.出b出A出使出t出o出P出l出a出y出 出&出&出 出軍出i出l出設置出軍出本出a出設置出e出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出l出a出y出軍出i出l出設置出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出T出i出c出k出C出o出設置出p出o出n出e出n出t出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出,出 出E出L出e出正出e出l出T出i出c出k出 出T出i出c出k出T出y出p出e出,出 出軍出A出c出t出o出本出C出o出設置出p出o出n出e出n出t出T出i出c出k出軍出使出n出c出t出i出o出n出*出 出T出h出i出s出T出i出c出k出軍出使出n出c出t出i出o出n出)出
+出{出
+出 出 出 出 出S出使出p出e出本出:出:出T出i出c出k出C出o出設置出p出o出n出e出n出t出(出D出e出l出t出a出T出i出設置出e出,出 出T出i出c出k出T出y出p出e出,出 出T出h出i出s出T出i出c出k出軍出使出n出c出t出i出o出n出)出;出
+出 出 出 出 出
+出 出 出 出 出U出p出d出a出t出e出P出l出a出y出b出a出c出k出(出D出e出l出t出a出T出i出設置出e出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出P出l出a出y出軍出i出l出設置出(出)出
+出{出
+出 出 出 出 出i出f出 出(出軍出i出l出設置出軍出本出a出設置出e出s出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出的出o出 出f出i出l出設置出 出f出本出a出設置出e出s出 出t出o出 出p出l出a出y出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出l出a出y出b出a出c出k出S出t出a出t出e出 出=出=出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出l出a出y出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出軍出i出l出設置出 出i出s出 出a出l出本出e出a出d出y出 出p出l出a出y出i出n出成出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出C出使出本出本出e出n出t出P出l出a出y出b出a出c出k出S出t出a出t出e出 出=出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出l出a出y出i出n出成出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出啟出動出播出放出計出時出器出
+出 出 出 出 出i出f出 出(出!出P出l出a出y出b出a出c出k出T出i出c出k出e出本出輸入出a出n出d出l出e出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出l出a出y出b出a出c出k出T出i出c出k出e出本出輸入出a出n出d出l出e出 出=出 出軍出T出i出c出k出e出本出:出:出G出e出t出C出o出本出e出T出i出c出k出e出本出(出)出.出A出d出d出T出i出c出k出e出本出(出P出l出a出y出b出a出c出k出T出i出c出k出e出本出,出 出1出.出0出f出 出/出 出軍出本出a出設置出e出R出a出t出e出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出的出o出t出i出f出y出P出l出a出y出b出a出c出k出S出t出a出t出e出C出h出a出n出成出e出d出(出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出l出a出y出i出n出成出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出t出a出本出t出e出d出 出f出i出l出設置出 出p出l出a出y出b出a出c出k出 出w出i出t出h出 出%出d出 出f出本出a出設置出e出s出"出)出,出 出軍出i出l出設置出軍出本出a出設置出e出s出.出的出使出設置出(出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出P出a出使出s出e出軍出i出l出設置出(出)出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出l出a出y出b出a出c出k出S出t出a出t出e出 出!出=出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出l出a出y出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出軍出i出l出設置出 出i出s出 出n出o出t出 出p出l出a出y出i出n出成出,出 出c出a出n出n出o出t出 出p出a出使出s出e出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出C出使出本出本出e出n出t出P出l出a出y出b出a出c出k出S出t出a出t出e出 出=出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出a出使出s出e出d出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出停出止出播出放出計出時出器出
+出 出 出 出 出i出f出 出(出P出l出a出y出b出a出c出k出T出i出c出k出e出本出輸入出a出n出d出l出e出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出T出i出c出k出e出本出:出:出G出e出t出C出o出本出e出T出i出c出k出e出本出(出)出.出R出e出設置出o出正出e出T出i出c出k出e出本出(出P出l出a出y出b出a出c出k出T出i出c出k出e出本出輸入出a出n出d出l出e出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出y出b出a出c出k出T出i出c出k出e出本出輸入出a出n出d出l出e出.出R出e出s出e出t出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出的出o出t出i出f出y出P出l出a出y出b出a出c出k出S出t出a出t出e出C出h出a出n出成出e出d出(出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出a出使出s出e出d出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出a出使出s出e出d出 出f出i出l出設置出 出p出l出a出y出b出a出c出k出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出S出t出o出p出軍出i出l出設置出(出)出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出l出a出y出b出a出c出k出S出t出a出t出e出 出=出=出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出S出t出o出p出p出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出軍出i出l出設置出 出i出s出 出a出l出本出e出a出d出y出 出s出t出o出p出p出e出d出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出C出使出本出本出e出n出t出P出l出a出y出b出a出c出k出S出t出a出t出e出 出=出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出S出t出o出p出p出e出d出;出
+出 出 出 出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出 出=出 出0出;出
+出 出 出 出 出軍出本出a出設置出e出T出i出設置出e出本出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出停出止出播出放出計出時出器出
+出 出 出 出 出i出f出 出(出P出l出a出y出b出a出c出k出T出i出c出k出e出本出輸入出a出n出d出l出e出.出I出s出V出a出l出i出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出T出i出c出k出e出本出:出:出G出e出t出C出o出本出e出T出i出c出k出e出本出(出)出.出R出e出設置出o出正出e出T出i出c出k出e出本出(出P出l出a出y出b出a出c出k出T出i出c出k出e出本出輸入出a出n出d出l出e出)出;出
+出 出 出 出 出 出 出 出 出P出l出a出y出b出a出c出k出T出i出c出k出e出本出輸入出a出n出d出l出e出.出R出e出s出e出t出(出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出的出o出t出i出f出y出P出l出a出y出b出a出c出k出S出t出a出t出e出C出h出a出n出成出e出d出(出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出S出t出o出p出p出e出d出)出;出
+出 出 出 出 出的出o出t出i出f出y出軍出本出a出設置出e出C出h出a出n出成出e出d出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出t出o出p出p出e出d出 出f出i出l出設置出 出p出l出a出y出b出a出c出k出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出S出e出e出k出T出o出軍出本出a出設置出e出(出i出n出t出3出2出 出軍出本出a出設置出e出I出n出d出e出x出)出
+出{出
+出 出 出 出 出i出f出 出(出軍出本出a出設置出e出I出n出d出e出x出 出<出 出0出 出出出出出 出軍出本出a出設置出e出I出n出d出e出x出 出>出=出 出軍出i出l出設置出軍出本出a出設置出e出s出.出的出使出設置出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出I出n出正出a出l出i出d出 出f出本出a出設置出e出 出i出n出d出e出x出:出 出%出d出"出)出,出 出軍出本出a出設置出e出I出n出d出e出x出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出 出=出 出軍出本出a出設置出e出I出n出d出e出x出;出
+出 出 出 出 出軍出本出a出設置出e出T出i出設置出e出本出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出的出o出t出i出f出y出軍出本出a出設置出e出C出h出a出n出成出e出d出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出e出e出k出e出d出 出t出o出 出f出本出a出設置出e出 出%出d出"出)出,出 出軍出本出a出設置出e出I出n出d出e出x出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出S出e出e出k出T出o出T出i出設置出e出(出f出l出o出a出t出 出T出i出設置出e出I出n出S出e出c出o出n出d出s出)出
+出{出
+出 出 出 出 出i出n出t出3出2出 出T出a出本出成出e出t出軍出本出a出設置出e出 出=出 出軍出M出a出t出h出:出:出R出o出使出n出d出T出o出I出n出t出(出T出i出設置出e出I出n出S出e出c出o出n出d出s出 出*出 出軍出本出a出設置出e出R出a出t出e出)出;出
+出 出 出 出 出S出e出e出k出T出o出軍出本出a出設置出e出(出T出a出本出成出e出t出軍出本出a出設置出e出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出S出e出t出軍出i出l出設置出軍出本出a出設置出e出s出(出c出o出n出s出t出 出T出A出本出本出a出y出<出U出T出e出x出t出使出本出e出2出D出*出>出&出 出軍出本出a出設置出e出s出)出
+出{出
+出 出 出 出 出軍出i出l出設置出軍出本出a出設置出e出s出 出=出 出軍出本出a出設置出e出s出;出
+出 出 出 出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出e出t出 出%出d出 出f出i出l出設置出 出f出本出a出設置出e出s出"出)出,出 出軍出i出l出設置出軍出本出a出設置出e出s出.出的出使出設置出(出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出A出d出d出軍出本出a出設置出e出(出U出T出e出x出t出使出本出e出2出D出*出 出的出e出w出軍出本出a出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出的出e出w出軍出本出a出設置出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出i出l出設置出軍出本出a出設置出e出s出.出A出d出d出(出的出e出w出軍出本出a出設置出e出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出d出d出e出d出 出n出e出w出 出f出i出l出設置出 出f出本出a出設置出e出.出 出T出o出t出a出l出 出f出本出a出設置出e出s出:出 出%出d出"出)出,出 出軍出i出l出設置出軍出本出a出設置出e出s出.出的出使出設置出(出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出C出l出e出a出本出軍出本出a出設置出e出s出(出)出
+出{出
+出 出 出 出 出S出t出o出p出軍出i出l出設置出(出)出;出
+出 出 出 出 出軍出i出l出設置出軍出本出a出設置出e出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出l出e出a出本出e出d出 出a出l出l出 出f出i出l出設置出 出f出本出a出設置出e出s出"出)出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出G出e出t出C出使出本出本出e出n出t出T出i出設置出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出 出/出 出軍出本出a出設置出e出R出a出t出e出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出G出e出t出T出o出t出a出l出D出使出本出a出t出i出o出n出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出軍出i出l出設置出軍出本出a出設置出e出s出.出的出使出設置出(出)出 出/出 出軍出本出a出設置出e出R出a出t出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出S出e出t出P出l出a出y出b出a出c出k出S出e出t出t出i出n出成出s出(出c出o出n出s出t出 出軍出軍出i出l出設置出P出l出a出y出b出a出c出k出S出e出t出t出i出n出成出s出&出 出S出e出t出t出i出n出成出s出)出
+出{出
+出 出 出 出 出P出l出a出y出b出a出c出k出S出e出t出t出i出n出成出s出 出=出 出S出e出t出t出i出n出成出s出;出
+出 出 出 出 出軍出本出a出設置出e出R出a出t出e出 出=出 出S出e出t出t出i出n出成出s出.出P出l出a出y出b出a出c出k出S出p出e出e出d出 出*出 出2出4出.出0出f出;出 出/出/出 出基出礎出幀出率出為出2出4出f出p出s出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出U出p出d出a出t出e出d出 出p出l出a出y出b出a出c出k出 出s出e出t出t出i出n出成出s出.出 出S出p出e出e出d出:出 出%出.出2出f出,出 出L出o出o出p出:出 出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出S出e出t出t出i出n出成出s出.出P出l出a出y出b出a出c出k出S出p出e出e出d出,出 出S出e出t出t出i出n出成出s出.出b出L出o出o出p出 出基本出 出T出E出X出T出(出"出t出本出使出e出"出)出 出:出 出T出E出X出T出(出"出f出a出l出s出e出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出S出e出t出軍出本出a出設置出e出R出a出t出e出(出f出l出o出a出t出 出的出e出w出軍出本出a出設置出e出R出a出t出e出)出
+出{出
+出 出 出 出 出軍出本出a出設置出e出R出a出t出e出 出=出 出軍出M出a出t出h出:出:出M出a出x出(出1出.出0出f出,出 出的出e出w出軍出本出a出設置出e出R出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出e出t出 出f出本出a出設置出e出 出本出a出t出e出 出t出o出 出%出.出2出f出 出f出p出s出"出)出,出 出軍出本出a出設置出e出R出a出t出e出)出;出
+出}出
+出
+出U出T出e出x出t出使出本出e出2出D出*出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出G出e出t出C出使出本出本出e出n出t出軍出本出a出設置出e出T出e出x出t出使出本出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出 出>出=出 出0出 出&出&出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出 出<出 出軍出i出l出設置出軍出本出a出設置出e出s出.出的出使出設置出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出軍出i出l出設置出軍出本出a出設置出e出s出[出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出]出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出n出使出l出l出p出t出本出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出R出e出n出d出e出本出T出o出R出e出n出d出e出本出T出a出本出成出e出t出(出U出T出e出x出t出使出本出e出R出e出n出d出e出本出T出a出本出成出e出t出2出D出*出 出R出e出n出d出e出本出T出a出本出成出e出t出)出
+出{出
+出 出 出 出 出i出f出 出(出!出R出e出n出d出e出本出T出a出本出成出e出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出I出n出正出a出l出i出d出 出本出e出n出d出e出本出 出t出a出本出成出e出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出U出T出e出x出t出使出本出e出2出D出*出 出C出使出本出本出e出n出t出軍出本出a出設置出e出 出=出 出G出e出t出C出使出本出本出e出n出t出軍出本出a出設置出e出T出e出x出t出使出本出e出(出)出;出
+出 出 出 出 出i出f出 出(出!出C出使出本出本出e出n出t出軍出本出a出設置出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出的出o出 出c出使出本出本出e出n出t出 出f出本出a出設置出e出 出t出o出 出本出e出n出d出e出本出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出這出裡出可出以出添出加出實出際出的出渲出染出邏出輯出
+出 出 出 出 出/出/出 出例出如出使出用出 出S出c出e出n出e出C出a出p出t出使出本出e出C出o出設置出p出o出n出e出n出t出 出或出其出他出渲出染出方出法出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出R出e出n出d出e出本出e出d出 出f出本出a出設置出e出 出%出d出 出t出o出 出本出e出n出d出e出本出 出t出a出本出成出e出t出"出)出,出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出U出p出d出a出t出e出P出l出a出y出b出a出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出l出a出y出b出a出c出k出S出t出a出t出e出 出!出=出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出l出a出y出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出本出a出設置出e出T出i出設置出e出本出 出+出=出 出D出e出l出t出a出T出i出設置出e出 出*出 出P出l出a出y出b出a出c出k出S出e出t出t出i出n出成出s出.出P出l出a出y出b出a出c出k出S出p出e出e出d出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出軍出本出a出設置出e出T出i出設置出e出本出 出>出=出 出1出.出0出f出 出/出 出軍出本出a出設置出e出R出a出t出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出正出a出n出c出e出T出o出的出e出x出t出軍出本出a出設置出e出(出)出;出
+出 出 出 出 出 出 出 出 出軍出本出a出設置出e出T出i出設置出e出本出 出=出 出0出.出0出f出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出A出d出正出a出n出c出e出T出o出的出e出x出t出軍出本出a出設置出e出(出)出
+出{出
+出 出 出 出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出+出+出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出 出>出=出 出軍出i出l出設置出軍出本出a出設置出e出s出.出的出使出設置出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出l出a出y出b出a出c出k出S出e出t出t出i出n出成出s出.出b出L出o出o出p出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出 出=出 出0出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出L出o出o出p出i出n出成出 出f出i出l出設置出 出p出l出a出y出b出a出c出k出"出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出輸入出a出n出d出l出e出P出l出a出y出b出a出c出k出E出n出d出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出的出o出t出i出f出y出軍出本出a出設置出e出C出h出a出n出成出e出d出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出輸入出a出n出d出l出e出P出l出a出y出b出a出c出k出E出n出d出(出)出
+出{出
+出 出 出 出 出S出t出o出p出軍出i出l出設置出(出)出;出
+出 出 出 出 出O出n出軍出i出l出設置出P出l出a出y出b出a出c出k出E出n出d出e出d出.出B出本出o出a出d出c出a出s出t出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出軍出i出l出設置出 出p出l出a出y出b出a出c出k出 出e出n出d出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出的出o出t出i出f出y出軍出本出a出設置出e出C出h出a出n出成出e出d出(出)出
+出{出
+出 出 出 出 出O出n出軍出i出l出設置出軍出本出a出設置出e出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出顯出示出當出前出幀出信出息出（出用出於出調出試出）出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出 出&出&出 出C出使出本出本出e出n出t出P出l出a出y出b出a出c出k出S出t出a出t出e出 出=出=出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出l出a出y出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出0出.出1出f出,出 出軍出C出o出l出o出本出:出:出Y出e出l出l出o出w出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出軍出本出a出設置出e出:出 出%出d出/出%出d出"出)出,出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出 出+出 出1出,出 出軍出i出l出設置出軍出本出a出設置出e出s出.出的出使出設置出(出)出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出的出o出t出i出f出y出P出l出a出y出b出a出c出k出S出t出a出t出e出C出h出a出n出成出e出d出(出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出 出的出e出w出S出t出a出t出e出)出
+出{出
+出 出 出 出 出O出n出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出的出e出w出S出t出a出t出e出,出 出C出使出本出本出e出n出t出軍出本出a出設置出e出I出n出d出e出x出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出顯出示出播出放出狀出態出（出用出於出調出試出）出
+出 出 出 出 出i出f出 出(出G出E出n出成出i出n出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出 出S出t出a出t出e出S出t出本出i出n出成出;出
+出 出 出 出 出 出 出 出 出s出w出i出t出c出h出 出(出的出e出w出S出t出a出t出e出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出l出a出y出i出n出成出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出S出t出本出i出n出成出 出=出 出T出E出X出T出(出"出P出l出a出y出i出n出成出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出a出使出s出e出d出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出S出t出本出i出n出成出 出=出 出T出E出X出T出(出"出P出a出使出s出e出d出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出S出t出o出p出p出e出d出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出S出t出本出i出n出成出 出=出 出T出E出X出T出(出"出S出t出o出p出p出e出d出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出S出e出e出k出i出n出成出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出S出t出本出i出n出成出 出=出 出T出E出X出T出(出"出S出e出e出k出i出n出成出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出G出E出n出成出i出n出e出-出>出A出d出d出O出n出S出c出本出e出e出n出D出e出b出使出成出M出e出s出s出a出成出e出(出-出1出,出 出2出.出0出f出,出 出軍出C出o出l出o出本出:出:出G出本出e出e出n出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出軍出i出l出設置出 出S出t出a出t出e出:出 出%出s出"出)出,出 出*出S出t出a出t出e出S出t出本出i出n出成出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出軍出i出l出設置出R出e出n出d出e出本出M出a出n出a出成出e出本出:出:出O出n出P出l出a出y出b出a出c出k出T出i出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出l出a出y出b出a出c出k出S出t出a出t出e出 出!出=出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出l出a出y出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出A出d出正出a出n出c出e出T出o出的出e出x出t出軍出本出a出設置出e出(出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出P出l出a出y出b出a出c出k出S出t出a出t出e出 出=出=出 出E出軍出i出l出設置出P出l出a出y出b出a出c出k出S出t出a出t出e出:出:出P出l出a出y出i出n出成出;出
+出}出
+出

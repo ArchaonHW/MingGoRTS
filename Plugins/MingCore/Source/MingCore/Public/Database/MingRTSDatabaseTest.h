@@ -1,170 +1,171 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
-
-#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "MingRTSDatabaseTest.generated.h"
-
-UENUM(BlueprintType)
-enum class EDatabaseTestCategory: uint8 {
-	BasicOperations,
-	SchemaManagement,
-	QueryOperations,
-	TransactionHandling,
-	PerformanceBenchmark,
-	DataIntegrity,
-	Concurrency,
-	Serialization,
-	BackupRestore,
-	ManagerOperations
-};
-
-USTRUCT(BlueprintType)
-struct FDatabaseTestResult
-{
-	GENERATED_BODY()
-
-	UPROPERTY(BlueprintReadOnly, Category = "DatabaseTest")
-	FString TestName;
-
-	UPROPERTY(BlueprintReadOnly, Category = "DatabaseTest")
-	bool bPassed;
-
-	UPROPERTY(BlueprintReadOnly, Category = "DatabaseTest")
-	FString ErrorMessage;
-
-	UPROPERTY(BlueprintReadOnly, Category = "DatabaseTest")
-	float ExecutionTimeMs;
-
-	UPROPERTY(BlueprintReadOnly, Category = "DatabaseTest")
-	EDatabaseTestCategory Category;
-
-	FDatabaseTestResult()
-		: bPassed(false)
-		, ExecutionTimeMs(0.0f)
-	{
-	}
-};
-
-USTRUCT(BlueprintType)
-struct FDatabaseTestSummary
-{
-	GENERATED_BODY()
-
-	UPROPERTY(BlueprintReadOnly, Category = "DatabaseTest")
-	int32 TotalTests;
-
-	UPROPERTY(BlueprintReadOnly, Category = "DatabaseTest")
-	int32 PassedTests;
-
-	UPROPERTY(BlueprintReadOnly, Category = "DatabaseTest")
-	int32 FailedTests;
-
-	UPROPERTY(BlueprintReadOnly, Category = "DatabaseTest")
-	float TotalExecutionTimeMs;
-
-	UPROPERTY(BlueprintReadOnly, Category = "DatabaseTest")
-	TArray<FDatabaseTestResult> Results;
-
-	FDatabaseTestSummary()
-		: TotalTests(0)
-		, PassedTests(0)
-		, FailedTests(0)
-		, TotalExecutionTimeMs(0.0f)
-	{
-	}
-};
-
-UCLASS(BlueprintType, Blueprintable)
-class MINGCORE_API UMingRTSDatabaseTest : public UObject
-{
-	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintCallable, Category = "DatabaseTest")
-	void InitializeTest();
-
-	UFUNCTION(BlueprintCallable, Category = "DatabaseTest")
-	FDatabaseTestSummary RunAllTests();
-
-	UFUNCTION(BlueprintCallable, Category = "DatabaseTest")
-	TArray<FDatabaseTestResult> RunTestCategory(EDatabaseTestCategory Category);
-
-	UFUNCTION(BlueprintCallable, Category = "DatabaseTest")
-	FDatabaseTestResult RunSingleTest(const FString& TestName);
-
-protected:
-	UFUNCTION()
-	FDatabaseTestResult Test_DatabaseInitialization();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_CreateTable();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_InsertRow();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_UpdateRow();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_DeleteRow();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_QueryRows();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_SaveLoadDatabase();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_ExportImportJSON();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_BackupRestore();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_DataTypes();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_PrimaryKeyConstraint();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_NullableConstraint();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_IndexCreation();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_ManagerCreateDatabase();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_SnapshotCreation();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_BatchOperations();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_ConcurrentAccess();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_PerformanceInsert();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_PerformanceQuery();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_IntegrityValidation();
-
-	UFUNCTION()
-	FDatabaseTestResult Test_TableOptimization();
-
-protected:
-	UPROPERTY()
-	TObjectPtr<UMingRTSDynamicDatabase> TestDatabase;
-
-	UPROPERTY()
-	FString TestDatabaseName;
-
-	void CleanupTestData();
-	void LogTestResult(const FDatabaseTestResult& Result);
-};
+出﻿出/出/出 出C出o出p出y出本出i出成出h出t出 出E出p出i出c出 出G出a出設置出e出s出,出 出I出n出c出.出 出A出l出l出 出R出i出成出h出t出s出 出R出e出s出e出本出正出e出d出.出
+出
+出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出D出a出t出a出b出a出s出e出T出e出s出t出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出D出a出t出a出b出a出s出e出T出e出s出t出C出a出t出e出成出o出本出y出:出 出使出i出n出t出8出 出{出
+出	出B出a出s出i出c出O出p出e出本出a出t出i出o出n出s出,出
+出	出S出c出h出e出設置出a出M出a出n出a出成出e出設置出e出n出t出,出
+出	出Q出使出e出本出y出O出p出e出本出a出t出i出o出n出s出,出
+出	出T出本出a出n出s出a出c出t出i出o出n出輸入出a出n出d出l出i出n出成出,出
+出	出P出e出本出f出o出本出設置出a出n出c出e出B出e出n出c出h出設置出a出本出k出,出
+出	出D出a出t出a出I出n出t出e出成出本出i出t出y出,出
+出	出C出o出n出c出使出本出本出e出n出c出y出,出
+出	出S出e出本出i出a出l出i出z出a出t出i出o出n出,出
+出	出B出a出c出k出使出p出R出e出s出t出o出本出e出,出
+出	出M出a出n出a出成出e出本出O出p出e出本出a出t出i出o出n出s出
+出}出;出
+出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出
+出{出
+出	出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出軍出S出t出本出i出n出成出 出T出e出s出t出的出a出設置出e出;出
+出
+出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出b出o出o出l出 出b出P出a出s出s出e出d出;出
+出
+出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出軍出S出t出本出i出n出成出 出E出本出本出o出本出M出e出s出s出a出成出e出;出
+出
+出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出f出l出o出a出t出 出E出x出e出c出使出t出i出o出n出T出i出設置出e出M出s出;出
+出
+出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出E出D出a出t出a出b出a出s出e出T出e出s出t出C出a出t出e出成出o出本出y出 出C出a出t出e出成出o出本出y出;出
+出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出(出)出
+出	出	出:出 出b出P出a出s出s出e出d出(出f出a出l出s出e出)出
+出	出	出,出 出E出x出e出c出使出t出i出o出n出T出i出設置出e出M出s出(出0出.出0出f出)出
+出	出{出
+出	出}出
+出}出;出
+出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出D出a出t出a出b出a出s出e出T出e出s出t出S出使出設置出設置出a出本出y出
+出{出
+出	出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出i出n出t出3出2出 出T出o出t出a出l出T出e出s出t出s出;出
+出
+出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出i出n出t出3出2出 出P出a出s出s出e出d出T出e出s出t出s出;出
+出
+出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出i出n出t出3出2出 出軍出a出i出l出e出d出T出e出s出t出s出;出
+出
+出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出f出l出o出a出t出 出T出o出t出a出l出E出x出e出c出使出t出i出o出n出T出i出設置出e出M出s出;出
+出
+出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出T出A出本出本出a出y出<出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出>出 出R出e出s出使出l出t出s出;出
+出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出S出使出設置出設置出a出本出y出(出)出
+出	出	出:出 出T出o出t出a出l出T出e出s出t出s出(出0出)出
+出	出	出,出 出P出a出s出s出e出d出T出e出s出t出s出(出0出)出
+出	出	出,出 出軍出a出i出l出e出d出T出e出s出t出s出(出0出)出
+出	出	出,出 出T出o出t出a出l出E出x出e出c出使出t出i出o出n出T出i出設置出e出M出s出(出0出.出0出f出)出
+出	出{出
+出	出}出
+出}出;出
+出
+出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
+出c出l出a出s出s出 出M出I出的出G出C出O出R出E出下出A出P出I出 出U出M出i出n出成出R出T出S出D出a出t出a出b出a出s出e出T出e出s出t出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
+出{出
+出	出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出	出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出T出e出s出t出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出S出使出設置出設置出a出本出y出 出R出使出n出A出l出l出T出e出s出t出s出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出T出A出本出本出a出y出<出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出>出 出R出使出n出T出e出s出t出C出a出t出e出成出o出本出y出(出E出D出a出t出a出b出a出s出e出T出e出s出t出C出a出t出e出成出o出本出y出 出C出a出t出e出成出o出本出y出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出R出使出n出S出i出n出成出l出e出T出e出s出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出s出t出的出a出設置出e出)出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出D出a出t出a出b出a出s出e出I出n出i出t出i出a出l出i出z出a出t出i出o出n出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出C出本出e出a出t出e出T出a出b出l出e出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出I出n出s出e出本出t出R出o出w出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出U出p出d出a出t出e出R出o出w出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出D出e出l出e出t出e出R出o出w出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出Q出使出e出本出y出R出o出w出s出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出S出a出正出e出L出o出a出d出D出a出t出a出b出a出s出e出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出E出x出p出o出本出t出I出設置出p出o出本出t出J出S出O出的出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出B出a出c出k出使出p出R出e出s出t出o出本出e出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出D出a出t出a出T出y出p出e出s出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出P出本出i出設置出a出本出y出K出e出y出C出o出n出s出t出本出a出i出n出t出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出的出使出l出l出a出b出l出e出C出o出n出s出t出本出a出i出n出t出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出I出n出d出e出x出C出本出e出a出t出i出o出n出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出M出a出n出a出成出e出本出C出本出e出a出t出e出D出a出t出a出b出a出s出e出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出S出n出a出p出s出h出o出t出C出本出e出a出t出i出o出n出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出B出a出t出c出h出O出p出e出本出a出t出i出o出n出s出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出C出o出n出c出使出本出本出e出n出t出A出c出c出e出s出s出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出P出e出本出f出o出本出設置出a出n出c出e出I出n出s出e出本出t出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出P出e出本出f出o出本出設置出a出n出c出e出Q出使出e出本出y出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出I出n出t出e出成出本出i出t出y出V出a出l出i出d出a出t出i出o出n出(出)出;出
+出
+出	出U出軍出U出的出C出T出I出O出的出(出)出
+出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出T出a出b出l出e出O出p出t出i出設置出i出z出a出t出i出o出n出(出)出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出	出U出P出R出O出P出E出R出T出Y出(出)出
+出	出T出O出b出大出e出c出t出P出t出本出<出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出D出a出t出a出b出a出s出e出>出 出T出e出s出t出D出a出t出a出b出a出s出e出;出
+出
+出	出U出P出R出O出P出E出R出T出Y出(出)出
+出	出軍出S出t出本出i出n出成出 出T出e出s出t出D出a出t出a出b出a出s出e出的出a出設置出e出;出
+出
+出	出正出o出i出d出 出C出l出e出a出n出使出p出T出e出s出t出D出a出t出a出(出)出;出
+出	出正出o出i出d出 出L出o出成出T出e出s出t出R出e出s出使出l出t出(出c出o出n出s出t出 出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
+出}出;出
+出

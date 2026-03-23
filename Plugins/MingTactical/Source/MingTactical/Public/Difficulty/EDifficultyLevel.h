@@ -1,78 +1,79 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "EDifficultyLevel.generated.h"
-
-/**
- * X��X��X | Game Difficulty Level Enum
- * �w�qX��X������X��X�q��X| Define four standard difficulty levels and custom option
- */
-UENUM(BlueprintType)
-enum class EDifficultyLevel: uint8 {
-    Easy       UMETA(DisplayName = "²�� | Easy"),    // Easy
-    Normal     UMETA(DisplayName = "X| Normal"),    // Normal
-    Hard       UMETA(DisplayName = "X�� | Hard"),    // Hard
-    Expert     UMETA(DisplayName = "�M�a | Expert"),    // Expert
-    Custom     UMETA(DisplayName = "X| Custom")   // Custom
-};
-
-/**
- * X��X| Difficulty Manager
- * ��X��X�mX��X| Manage game difficulty configuration and dynamic adjustment
- * 
- * X�� | FeaturesX * - X��X��X | Difficulty Level Management (Easy/Normal/Hard/Expert/Custom)
- * - X�վ� | Dynamic Difficulty Adjustment
- * - X�ƥ�Ĳ�o | Difficulty Event Triggering
- * - ��X���X | Smooth Transition Algorithm
- */
-/**
- * X����X | Difficulty Parameter Type Enum
- * X��X�վ�X��X�� | Used for dynamically adjusting specific game parameters
- */
-UENUM(BlueprintType)
-enum class EDifficultyParameter: uint8 {
-    // AI X�� | AI Related Parameters
-    AIReactionSpeed      UMETA(DisplayName = "AIX�� | AI Reaction Speed"),  // AI Reaction Speed
-    AIIntelligence       UMETA(DisplayName = "AIX��{�� | AI Intelligence"),  // AI Intelligence
-    AIUnitStrength       UMETA(DisplayName = "AIX�j�� | AI Unit Strength"),  // AI Unit Strength
-    
-    // ��X�� | Resource Related Parameters
-    ResourceCollection   UMETA(DisplayName = "��X | Resource Collection"), // Resource Collection
-    ResourceConsumption  UMETA(DisplayName = "��X����X | Resource Consumption"),  // Resource Consumption
-    
-    // X��X�� | Combat Related Parameters
-    PlayerDamageTaken    UMETA(DisplayName = "X�aX��X�` | Player Damage Taken"), // Player Damage Taken
-    PlayerDamageDealt    UMETA(DisplayName = "X�aX�` | Player Damage Dealt"), // Player Damage Dealt
-    UnitHealth           UMETA(DisplayName = "X�RX| Unit Health"),    // Unit Health
-    
-    // ��X�� | Mission Related Parameters
-    MissionTimeLimit     UMETA(DisplayName = "��X�� | Mission Time Limit"), // Mission Time Limit
-    MissionObjective     UMETA(DisplayName = "��X | Mission Objective Difficulty"), // Mission Objective Difficulty
-    
-    // X�@X�� | Penalty Related Parameters
-    DeathPenalty         UMETA(DisplayName = "���`X�@ | Death Penalty"),     // Death Penalty
-    FailureCost          UMETA(DisplayName = "��X | Failure Cost")      // Failure Cost
-};
-
-/**
- * X��X�ƥ� | Difficulty Changed Event
- */
-UENUM(BlueprintType)
-enum class EDifficultyChangeDirection: uint8 {
-    Increase    UMETA(DisplayName = "�WX�� | Increase Difficulty"),
-    Decrease    UMETA(DisplayName = "X�� | Decrease Difficulty"),
-    Maintain    UMETA(DisplayName = "X | Maintain Current")
-};
-
-/**
- * X�a��X
- */
-UENUM(BlueprintType)
-enum class EPlayerPerformanceRating: uint8 {
-    Excellent   UMETA(DisplayName = "ɬX"),
-    Good        UMETA(DisplayName = "X�n"),
-    Average     UMETA(DisplayName = "�@��"),
-    Poor        UMETA(DisplayName = "?�t"),
-    Critical    UMETA(DisplayName = "�M��")
-};
-
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出X出�出�出X出�出�出X出 出出出 出G出a出設置出e出 出D出i出f出f出i出c出使出l出t出y出 出L出e出正出e出l出 出E出n出使出設置出
+出 出*出 出�出w出�出q出X出�出�出X出�出�出�出�出�出�出X出�出�出X出�出q出�出�出X出出出 出D出e出f出i出n出e出 出f出o出使出本出 出s出t出a出n出d出a出本出d出 出d出i出f出f出i出c出使出l出t出y出 出l出e出正出e出l出s出 出a出n出d出 出c出使出s出t出o出設置出 出o出p出t出i出o出n出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出E出a出s出y出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出"出)出,出 出 出 出 出/出/出 出E出a出s出y出
+出 出 出 出 出的出o出本出設置出a出l出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出出出 出的出o出本出設置出a出l出"出)出,出 出 出 出 出/出/出 出的出o出本出設置出a出l出
+出 出 出 出 出輸入出a出本出d出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出�出 出出出 出輸入出a出本出d出"出)出,出 出 出 出 出/出/出 出輸入出a出本出d出
+出 出 出 出 出E出x出p出e出本出t出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出M出�出a出 出出出 出E出x出p出e出本出t出"出)出,出 出 出 出 出/出/出 出E出x出p出e出本出t出
+出 出 出 出 出C出使出s出t出o出設置出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出出出 出C出使出s出t出o出設置出"出)出 出 出 出/出/出 出C出使出s出t出o出設置出
+出}出;出
+出
+出/出*出*出
+出 出*出 出X出�出�出X出出出 出D出i出f出f出i出c出使出l出t出y出 出M出a出n出a出成出e出本出
+出 出*出 出�出�出X出�出�出X出�出設置出X出�出�出X出出出 出M出a出n出a出成出e出 出成出a出設置出e出 出d出i出f出f出i出c出使出l出t出y出 出c出o出n出f出i出成出使出本出a出t出i出o出n出 出a出n出d出 出d出y出n出a出設置出i出c出 出a出d出大出使出s出t出設置出e出n出t出
+出 出*出 出
+出 出*出 出X出�出�出 出出出 出軍出e出a出t出使出本出e出s出X出 出*出 出-出 出X出�出�出X出�出�出X出 出出出 出D出i出f出f出i出c出使出l出t出y出 出L出e出正出e出l出 出M出a出n出a出成出e出設置出e出n出t出 出(出E出a出s出y出/出的出o出本出設置出a出l出/出輸入出a出本出d出/出E出x出p出e出本出t出/出C出使出s出t出o出設置出)出
+出 出*出 出-出 出X出�出վ出�出 出出出 出D出y出n出a出設置出i出c出 出D出i出f出f出i出c出使出l出t出y出 出A出d出大出使出s出t出設置出e出n出t出
+出 出*出 出-出 出X出�出基礎出�出Ĳ出�出o出 出出出 出D出i出f出f出i出c出使出l出t出y出 出E出正出e出n出t出 出T出本出i出成出成出e出本出i出n出成出
+出 出*出 出-出 出�出�出X出�出�出�出X出 出出出 出S出設置出o出o出t出h出 出T出本出a出n出s出i出t出i出o出n出 出A出l出成出o出本出i出t出h出設置出
+出 出*出/出
+出/出*出*出
+出 出*出 出X出�出�出�出�出X出 出出出 出D出i出f出f出i出c出使出l出t出y出 出P出a出本出a出設置出e出t出e出本出 出T出y出p出e出 出E出n出使出設置出
+出 出*出 出X出�出�出X出�出վ出�出X出�出�出X出�出�出 出出出 出U出s出e出d出 出f出o出本出 出d出y出n出a出設置出i出c出a出l出l出y出 出a出d出大出使出s出t出i出n出成出 出s出p出e出c出i出f出i出c出 出成出a出設置出e出 出p出a出本出a出設置出e出t出e出本出s出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出D出i出f出f出i出c出使出l出t出y出P出a出本出a出設置出e出t出e出本出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出/出/出 出A出I出 出X出�出�出 出出出 出A出I出 出R出e出l出a出t出e出d出 出P出a出本出a出設置出e出t出e出本出s出
+出 出 出 出 出A出I出R出e出a出c出t出i出o出n出S出p出e出e出d出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出A出I出X出�出�出 出出出 出A出I出 出R出e出a出c出t出i出o出n出 出S出p出e出e出d出"出)出,出 出 出/出/出 出A出I出 出R出e出a出c出t出i出o出n出 出S出p出e出e出d出
+出 出 出 出 出A出I出I出n出t出e出l出l出i出成出e出n出c出e出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出A出I出X出�出�出{出�出�出 出出出 出A出I出 出I出n出t出e出l出l出i出成出e出n出c出e出"出)出,出 出 出/出/出 出A出I出 出I出n出t出e出l出l出i出成出e出n出c出e出
+出 出 出 出 出A出I出U出n出i出t出S出t出本出e出n出成出t出h出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出A出I出X出�出大出�出�出 出出出 出A出I出 出U出n出i出t出 出S出t出本出e出n出成出t出h出"出)出,出 出 出/出/出 出A出I出 出U出n出i出t出 出S出t出本出e出n出成出t出h出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出X出�出�出 出出出 出R出e出s出o出使出本出c出e出 出R出e出l出a出t出e出d出 出P出a出本出a出設置出e出t出e出本出s出
+出 出 出 出 出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出X出 出出出 出R出e出s出o出使出本出c出e出 出C出o出l出l出e出c出t出i出o出n出"出)出,出 出/出/出 出R出e出s出o出使出本出c出e出 出C出o出l出l出e出c出t出i出o出n出
+出 出 出 出 出R出e出s出o出使出本出c出e出C出o出n出s出使出設置出p出t出i出o出n出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出X出�出�出�出�出X出 出出出 出R出e出s出o出使出本出c出e出 出C出o出n出s出使出設置出p出t出i出o出n出"出)出,出 出 出/出/出 出R出e出s出o出使出本出c出e出 出C出o出n出s出使出設置出p出t出i出o出n出
+出 出 出 出 出
+出 出 出 出 出/出/出 出X出�出�出X出�出�出 出出出 出C出o出設置出b出a出t出 出R出e出l出a出t出e出d出 出P出a出本出a出設置出e出t出e出本出s出
+出 出 出 出 出P出l出a出y出e出本出D出a出設置出a出成出e出T出a出k出e出n出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出a出X出�出�出X出�出軍事出 出出出 出P出l出a出y出e出本出 出D出a出設置出a出成出e出 出T出a出k出e出n出"出)出,出 出/出/出 出P出l出a出y出e出本出 出D出a出設置出a出成出e出 出T出a出k出e出n出
+出 出 出 出 出P出l出a出y出e出本出D出a出設置出a出成出e出D出e出a出l出t出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出a出X出�出軍事出 出出出 出P出l出a出y出e出本出 出D出a出設置出a出成出e出 出D出e出a出l出t出"出)出,出 出/出/出 出P出l出a出y出e出本出 出D出a出設置出a出成出e出 出D出e出a出l出t出
+出 出 出 出 出U出n出i出t出輸入出e出a出l出t出h出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出R出X出出出 出U出n出i出t出 出輸入出e出a出l出t出h出"出)出,出 出 出 出 出/出/出 出U出n出i出t出 出輸入出e出a出l出t出h出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出X出�出�出 出出出 出M出i出s出s出i出o出n出 出R出e出l出a出t出e出d出 出P出a出本出a出設置出e出t出e出本出s出
+出 出 出 出 出M出i出s出s出i出o出n出T出i出設置出e出L出i出設置出i出t出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出X出�出�出 出出出 出M出i出s出s出i出o出n出 出T出i出設置出e出 出L出i出設置出i出t出"出)出,出 出/出/出 出M出i出s出s出i出o出n出 出T出i出設置出e出 出L出i出設置出i出t出
+出 出 出 出 出M出i出s出s出i出o出n出O出b出大出e出c出t出i出正出e出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出X出 出出出 出M出i出s出s出i出o出n出 出O出b出大出e出c出t出i出正出e出 出D出i出f出f出i出c出使出l出t出y出"出)出,出 出/出/出 出M出i出s出s出i出o出n出 出O出b出大出e出c出t出i出正出e出 出D出i出f出f出i出c出使出l出t出y出
+出 出 出 出 出
+出 出 出 出 出/出/出 出X出�出@出X出�出�出 出出出 出P出e出n出a出l出t出y出 出R出e出l出a出t出e出d出 出P出a出本出a出設置出e出t出e出本出s出
+出 出 出 出 出D出e出a出t出h出P出e出n出a出l出t出y出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出�出軍事出X出�出@出 出出出 出D出e出a出t出h出 出P出e出n出a出l出t出y出"出)出,出 出 出 出 出 出/出/出 出D出e出a出t出h出 出P出e出n出a出l出t出y出
+出 出 出 出 出軍出a出i出l出使出本出e出C出o出s出t出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出X出 出出出 出軍出a出i出l出使出本出e出 出C出o出s出t出"出)出 出 出 出 出 出 出/出/出 出軍出a出i出l出使出本出e出 出C出o出s出t出
+出}出;出
+出
+出/出*出*出
+出 出*出 出X出�出�出X出�出基礎出�出 出出出 出D出i出f出f出i出c出使出l出t出y出 出C出h出a出n出成出e出d出 出E出正出e出n出t出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出D出i出f出f出i出c出使出l出t出y出C出h出a出n出成出e出D出i出本出e出c出t出i出o出n出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出I出n出c出本出e出a出s出e出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出基本出X出�出�出 出出出 出I出n出c出本出e出a出s出e出 出D出i出f出f出i出c出使出l出t出y出"出)出,出
+出 出 出 出 出D出e出c出本出e出a出s出e出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出�出 出出出 出D出e出c出本出e出a出s出e出 出D出i出f出f出i出c出使出l出t出y出"出)出,出
+出 出 出 出 出M出a出i出n出t出a出i出n出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出 出出出 出M出a出i出n出t出a出i出n出 出C出使出本出本出e出n出t出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出X出�出a出�出�出X出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出P出l出a出y出e出本出P出e出本出f出o出本出設置出a出n出c出e出R出a出t出i出n出成出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出E出x出c出e出l出l出e出n出t出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出ɬ出X出"出)出,出
+出 出 出 出 出G出o出o出d出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出n出"出)出,出
+出 出 出 出 出A出正出e出本出a出成出e出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出@出�出�出"出)出,出
+出 出 出 出 出P出o出o出本出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出基本出�出t出"出)出,出
+出 出 出 出 出C出本出i出t出i出c出a出l出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出M出�出�出"出)出
+出}出;出
+出
+出

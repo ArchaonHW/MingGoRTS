@@ -1,322 +1,323 @@
-#include "MingHUDWidget.h"
-#include "MingSelectionWidget.h"
-#include "MingTacticalUnit.h"
-#include "MingRTSPlayerController.h"
-#include "MingSelectionManager.h"
-#include "MingResourceDisplayWidget.h"
-#include "MingBuilding/Source/MingBuilding/Public/MingResourceSystem.h"
-#include "Components/TextBlock.h"
-#include "Components/Border.h"
-#include "Components/ProgressBar.h"
-#include "Components/HorizontalBox.h"
-#include "Components/UniformGridPanel.h"
-#include "Components/Image.h"
-#include "Components/Button.h"
-
-void UMingHUDWidget::NativeConstruct()
-{
-    Super::NativeConstruct();
-    
-    bShowDebugInfo = false;
-    
-    // 獲取玩家控制器
-    if (UWorld* World = GetWorld())
-    {
-        OwningController = Cast<AMingRTSPlayerController>(World->GetFirstPlayerController());
-        if (OwningController)
-        {
-            SelectionManager = OwningController->GetSelectionManager();
-            SetupBindings();
-        }
-    }
-    
-    // 初始化資源顯示 Widget
-    if (ResourceDisplayWidget)
-    {
-        ResourceDisplayWidget->InitializeResourceDisplays();
-    }
-    
-    // 初始化UI狀態
-    HideSelectionWidget();
-    ClearUnitInfo();
-    HideCommandButtons();
-    
-    UE_LOG(LogTemp, Log, TEXT("MingHUDWidget constructed"));
-}
-
-void UMingHUDWidget::NativeDestruct()
-{
-    Super::NativeDestruct();
-    
-    UE_LOG(LogTemp, Log, TEXT("MingHUDWidget destructed"));
-}
-
-void UMingHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
-{
-    Super::NativeTick(MyGeometry, InDeltaTime);
-    
-    // 更新單位信息
-    if (SelectionManager && SelectionManager->GetSelectedUnitCount() == 1)
-    {
-        // 直接使用選擇管理器的單位數組（O(1) 而不是 O(N)）
-        const TArray<AMingTacticalUnit*>& SelectedUnits = SelectionManager->GetSelectedUnits();
-        if (SelectedUnits.Num() > 0 && SelectedUnits[0])
-        {
-            UpdateUnitInfo(SelectedUnits[0]);
-        }
-    }
-    else if (SelectionManager && SelectionManager->GetSelectedUnitCount() == 0)
-    {
-        ClearUnitInfo();
-    }
-    
-    // 更新除錯信息
-    if (bShowDebugInfo && DebugInfoText)
-    {
-        FString DebugString = FString::Printf(
-            TEXT("Units: %d | Selected: %d | FPS: %.1f"),
-            SelectionManager ? SelectionManager->GetSelectedUnitCount() : 0,
-            SelectionManager ? SelectionManager->GetSelectedUnitCount() : 0,
-            1.0f / InDeltaTime
-        );
-        UpdateDebugInfo(DebugString);
-    }
-}
-
-bool UMingHUDWidget::Initialize()
-{
-    bool bSuccess = Super::Initialize();
-    
-    return bSuccess;
-}
-
-void UMingHUDWidget::SetupBindings()
-{
-    if (!SelectionManager)
-    {
-        return;
-    }
-    
-    // 綁定選擇事件
-    SelectionManager->OnUnitSelected.AddDynamic(this, &UMingHUDWidget::OnSelectionChanged);
-    SelectionManager->OnUnitDeselected.AddDynamic(this, &UMingHUDWidget::OnSelectionChanged);
-}
-
-void UMingHUDWidget::OnSelectionChanged(int32 UnitId)
-{
-    // 更新UI顯示
-    if (SelectionManager)
-    {
-        int32 SelectedCount = SelectionManager->GetSelectedUnitCount();
-        
-        if (SelectedCount == 0)
-        {
-            ClearUnitInfo();
-            HideCommandButtons();
-        }
-        else if (SelectedCount == 1)
-        {
-            // 直接使用選擇管理器的單位數組（O(1) 而不是 O(N)）
-            const TArray<AMingTacticalUnit*>& SelectedUnits = SelectionManager->GetSelectedUnits();
-            if (SelectedUnits.Num() > 0 && SelectedUnits[0])
-            {
-                UpdateUnitInfo(SelectedUnits[0]);
-            }
-            ShowCommandButtons({FName("Move"), FName("Attack"), FName("Stop")});
-        }
-        else
-        {
-            // 多個單位選中
-            ClearUnitInfo();
-            ShowCommandButtons({FName("Move"), FName("Attack"), FName("Stop"), FName("Hold")});
-        }
-    }
-}
-
-void UMingHUDWidget::ShowSelectionWidget()
-{
-    if (SelectionWidget)
-    {
-        SelectionWidget->SetVisibility(ESlateVisibility::Visible);
-    }
-}
-
-void UMingHUDWidget::HideSelectionWidget()
-{
-    if (SelectionWidget)
-    {
-        SelectionWidget->SetVisibility(ESlateVisibility::Hidden);
-    }
-}
-
-void UMingHUDWidget::UpdateUnitInfo(AMingTacticalUnit* Unit)
-{
-    if (!Unit)
-    {
-        ClearUnitInfo();
-        return;
-    }
-    
-    // 更新單位名稱
-    if (UnitNameText)
-    {
-        UnitNameText->SetText(FText::FromString(Unit->UnitName));
-    }
-    
-    // 更新生命值
-    if (HealthBar)
-    {
-        float HealthPercent = Unit->GetHealthPercentage();
-        HealthBar->SetPercent(HealthPercent);
-        
-        // 根據生命值改變顏色
-        FLinearColor HealthColor;
-        if (HealthPercent > 0.5f)
-        {
-            HealthColor = FLinearColor::Green;
-        }
-        else if (HealthPercent > 0.25f)
-        {
-            HealthColor = FLinearColor::Yellow;
-        }
-        else
-        {
-            HealthColor = FLinearColor::Red;
-        }
-        
-        HealthBar->SetFillColorAndOpacity(HealthColor);
-    }
-    
-    // 顯示單位信息面板
-    if (UnitInfoPanel)
-    {
-        UnitInfoPanel->SetVisibility(ESlateVisibility::Visible);
-    }
-}
-
-void UMingHUDWidget::ClearUnitInfo()
-{
-    if (UnitNameText)
-    {
-        UnitNameText->SetText(FText::FromString(TEXT("")));
-    }
-    
-    if (HealthBar)
-    {
-        HealthBar->SetPercent(0.0f);
-    }
-    
-    if (UnitInfoPanel)
-    {
-        UnitInfoPanel->SetVisibility(ESlateVisibility::Hidden);
-    }
-}
-
-void UMingHUDWidget::UpdateResources(const TMap<FString, int32>& Resources)
-{
-    // 如果有專門的資源顯示 Widget，使用它
-    if (ResourceDisplayWidget)
-    {
-        // 轉換資源格式
-        TMap<EMingResourceType, int32> TypedResources;
-        TMap<EMingResourceType, int32> Capacities;
-        
-        // 這裡需要根據實際資源系統來獲取正確的數據
-        // 暫時使用默認值
-        TypedResources.Add(EMingResourceType::Food, Resources.FindRef("糧食"));
-        TypedResources.Add(EMingResourceType::Money, Resources.FindRef("資金"));
-        TypedResources.Add(EMingResourceType::Materials, Resources.FindRef("原材料"));
-        TypedResources.Add(EMingResourceType::Fuel, Resources.FindRef("燃料"));
-        TypedResources.Add(EMingResourceType::Ammo, Resources.FindRef("彈藥"));
-        TypedResources.Add(EMingResourceType::Manpower, Resources.FindRef("人力"));
-        
-        // 設置容量（暫時使用固定值）
-        Capacities.Add(EMingResourceType::Food, 1000);
-        Capacities.Add(EMingResourceType::Money, 50000);
-        Capacities.Add(EMingResourceType::Materials, 2000);
-        Capacities.Add(EMingResourceType::Fuel, 1000);
-        Capacities.Add(EMingResourceType::Ammo, 500);
-        Capacities.Add(EMingResourceType::Manpower, 500);
-        
-        ResourceDisplayWidget->UpdateAllResources(TypedResources, Capacities);
-        return;
-    }
-    
-    // 後備方案：使用簡單的文字顯示
-    if (!ResourceText)
-    {
-        return;
-    }
-    
-    FString ResourceString;
-    for (const auto& Pair : Resources)
-    {
-        if (!ResourceString.IsEmpty())
-        {
-            ResourceString += TEXT(" | ");
-        }
-        ResourceString += FString::Printf(TEXT("%s: %d"), *Pair.Key, Pair.Value);
-    }
-    
-    ResourceText->SetText(FText::FromString(ResourceString));
-}
-
-void UMingHUDWidget::ShowCommandButtons(const TArray<FName>& AvailableCommands)
-{
-    if (!CommandButtonsContainer)
-    {
-        return;
-    }
-    
-    CommandButtonsContainer->ClearChildren();
-    CommandButtonsContainer->SetVisibility(ESlateVisibility::Visible);
-    
-    int32 Column = 0;
-    int32 Row = 0;
-    
-    for (const FName& Command : AvailableCommands)
-    {
-        // 創建命令按鈝
-        UButton* CommandButton = NewObject<UButton>(CommandButtonsContainer);
-        
-        // 設置按鈕文字
-        UTextBlock* ButtonText = NewObject<UTextBlock>(CommandButton);
-        ButtonText->SetText(FText::FromName(Command));
-        CommandButton->AddChild(ButtonText);
-        
-        // 添加到容器
-        UUniformGridSlot* GridSlot = Cast<UUniformGridSlot>(CommandButtonsContainer->AddChild(CommandButton));
-        if (GridSlot)
-        {
-            GridSlot->SetColumn(Column);
-            GridSlot->SetRow(Row);
-        }
-        
-        // 綁定點擊事件
-        CommandButton->OnClicked.AddDynamic(this, &UMingHUDWidget::OnSelectionChanged);
-        
-        Column++;
-        if (Column >= 4) // 每行4個按鈕
-        {
-            Column = 0;
-            Row++;
-        }
-    }
-}
-
-void UMingHUDWidget::HideCommandButtons()
-{
-    if (CommandButtonsContainer)
-    {
-        CommandButtonsContainer->ClearChildren();
-        CommandButtonsContainer->SetVisibility(ESlateVisibility::Hidden);
-    }
-}
-
-void UMingHUDWidget::UpdateDebugInfo(const FString& DebugText)
-{
-    if (DebugInfoText)
-    {
-        DebugInfoText->SetText(FText::FromString(DebugText));
-    }
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出P出l出a出y出e出本出C出o出n出t出本出o出l出l出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出e出s出o出使出本出c出e出D出i出s出p出l出a出y出基本出i出d出成出e出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出B出使出i出l出d出i出n出成出/出S出o出使出本出c出e出/出M出i出n出成出B出使出i出l出d出i出n出成出/出P出使出b出l出i出c出/出M出i出n出成出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出T出e出x出t出B出l出o出c出k出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出B出o出本出d出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出P出本出o出成出本出e出s出s出B出a出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出輸入出o出本出i出z出o出n出t出a出l出B出o出x出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出U出n出i出f出o出本出設置出G出本出i出d出P出a出n出e出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出I出設置出a出成出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出B出使出t出t出o出n出.出h出"出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出的出a出t出i出正出e出C出o出n出s出t出本出使出c出t出(出)出
+出{出
+出 出 出 出 出S出使出p出e出本出:出:出的出a出t出i出正出e出C出o出n出s出t出本出使出c出t出(出)出;出
+出 出 出 出 出
+出 出 出 出 出b出S出h出o出w出D出e出b出使出成出I出n出f出o出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出獲出取出玩出家出控出制出器出
+出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出e出t出基本出o出本出l出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出O出w出n出i出n出成出C出o出n出t出本出o出l出l出e出本出 出=出 出C出a出s出t出<出A出M出i出n出成出R出T出S出P出l出a出y出e出本出C出o出n出t出本出o出l出l出e出本出>出(出基本出o出本出l出d出-出>出G出e出t出軍出i出本出s出t出P出l出a出y出e出本出C出o出n出t出本出o出l出l出e出本出(出)出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出O出w出n出i出n出成出C出o出n出t出本出o出l出l出e出本出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出 出=出 出O出w出n出i出n出成出C出o出n出t出本出o出l出l出e出本出-出>出G出e出t出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出e出t出使出p出B出i出n出d出i出n出成出s出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出資出源出顯出示出 出基本出i出d出成出e出t出
+出 出 出 出 出i出f出 出(出R出e出s出o出使出本出c出e出D出i出s出p出l出a出y出基本出i出d出成出e出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出s出o出使出本出c出e出D出i出s出p出l出a出y出基本出i出d出成出e出t出-出>出I出n出i出t出i出a出l出i出z出e出R出e出s出o出使出本出c出e出D出i出s出p出l出a出y出s出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出U出I出狀出態出
+出 出 出 出 出輸入出i出d出e出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出(出)出;出
+出 出 出 出 出C出l出e出a出本出U出n出i出t出I出n出f出o出(出)出;出
+出 出 出 出 出輸入出i出d出e出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出 出c出o出n出s出t出本出使出c出t出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出的出a出t出i出正出e出D出e出s出t出本出使出c出t出(出)出
+出{出
+出 出 出 出 出S出使出p出e出本出:出:出的出a出t出i出正出e出D出e出s出t出本出使出c出t出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出 出d出e出s出t出本出使出c出t出e出d出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出的出a出t出i出正出e出T出i出c出k出(出c出o出n出s出t出 出軍出G出e出o出設置出e出t出本出y出&出 出M出y出G出e出o出設置出e出t出本出y出,出 出f出l出o出a出t出 出I出n出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出S出使出p出e出本出:出:出的出a出t出i出正出e出T出i出c出k出(出M出y出G出e出o出設置出e出t出本出y出,出 出I出n出D出e出l出t出a出T出i出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出單出位出信出息出
+出 出 出 出 出i出f出 出(出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出 出&出&出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出S出e出l出e出c出t出e出d出U出n出i出t出C出o出使出n出t出(出)出 出=出=出 出1出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出直出接出使出用出選出擇出管出理出器出的出單出位出數出組出（出O出(出1出)出 出而出不出是出 出O出(出的出)出）出
+出 出 出 出 出 出 出 出 出c出o出n出s出t出 出T出A出本出本出a出y出<出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出*出>出&出 出S出e出l出e出c出t出e出d出U出n出i出t出s出 出=出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出S出e出l出e出c出t出e出d出U出n出i出t出s出(出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出S出e出l出e出c出t出e出d出U出n出i出t出s出.出的出使出設置出(出)出 出>出 出0出 出&出&出 出S出e出l出e出c出t出e出d出U出n出i出t出s出[出0出]出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出U出n出i出t出I出n出f出o出(出S出e出l出e出c出t出e出d出U出n出i出t出s出[出0出]出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出 出&出&出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出S出e出l出e出c出t出e出d出U出n出i出t出C出o出使出n出t出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出l出e出a出本出U出n出i出t出I出n出f出o出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出除出錯出信出息出
+出 出 出 出 出i出f出 出(出b出S出h出o出w出D出e出b出使出成出I出n出f出o出 出&出&出 出D出e出b出使出成出I出n出f出o出T出e出x出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出b出使出成出S出t出本出i出n出成出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出E出X出T出(出"出U出n出i出t出s出:出 出%出d出 出出出 出S出e出l出e出c出t出e出d出:出 出%出d出 出出出 出軍出P出S出:出 出%出.出1出f出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出 出基本出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出S出e出l出e出c出t出e出d出U出n出i出t出C出o出使出n出t出(出)出 出:出 出0出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出 出基本出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出S出e出l出e出c出t出e出d出U出n出i出t出C出o出使出n出t出(出)出 出:出 出0出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出1出.出0出f出 出/出 出I出n出D出e出l出t出a出T出i出設置出e出
+出 出 出 出 出 出 出 出 出)出;出
+出 出 出 出 出 出 出 出 出U出p出d出a出t出e出D出e出b出使出成出I出n出f出o出(出D出e出b出使出成出S出t出本出i出n出成出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出I出n出i出t出i出a出l出i出z出e出(出)出
+出{出
+出 出 出 出 出b出o出o出l出 出b出S出使出c出c出e出s出s出 出=出 出S出使出p出e出本出:出:出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出b出S出使出c出c出e出s出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出S出e出t出使出p出B出i出n出d出i出n出成出s出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出綁出定出選出擇出事出件出
+出 出 出 出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出-出>出O出n出U出n出i出t出S出e出l出e出c出t出e出d出.出A出d出d出D出y出n出a出設置出i出c出(出t出h出i出s出,出 出&出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出O出n出S出e出l出e出c出t出i出o出n出C出h出a出n出成出e出d出)出;出
+出 出 出 出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出-出>出O出n出U出n出i出t出D出e出s出e出l出e出c出t出e出d出.出A出d出d出D出y出n出a出設置出i出c出(出t出h出i出s出,出 出&出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出O出n出S出e出l出e出c出t出i出o出n出C出h出a出n出成出e出d出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出O出n出S出e出l出e出c出t出i出o出n出C出h出a出n出成出e出d出(出i出n出t出3出2出 出U出n出i出t出I出d出)出
+出{出
+出 出 出 出 出/出/出 出更出新出U出I出顯出示出
+出 出 出 出 出i出f出 出(出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出S出e出l出e出c出t出e出d出C出o出使出n出t出 出=出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出S出e出l出e出c出t出e出d出U出n出i出t出C出o出使出n出t出(出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出S出e出l出e出c出t出e出d出C出o出使出n出t出 出=出=出 出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出l出e出a出本出U出n出i出t出I出n出f出o出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出輸入出i出d出e出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出S出e出l出e出c出t出e出d出C出o出使出n出t出 出=出=出 出1出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出直出接出使出用出選出擇出管出理出器出的出單出位出數出組出（出O出(出1出)出 出而出不出是出 出O出(出的出)出）出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出o出n出s出t出 出T出A出本出本出a出y出<出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出*出>出&出 出S出e出l出e出c出t出e出d出U出n出i出t出s出 出=出 出S出e出l出e出c出t出i出o出n出M出a出n出a出成出e出本出-出>出G出e出t出S出e出l出e出c出t出e出d出U出n出i出t出s出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出S出e出l出e出c出t出e出d出U出n出i出t出s出.出的出使出設置出(出)出 出>出 出0出 出&出&出 出S出e出l出e出c出t出e出d出U出n出i出t出s出[出0出]出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出U出n出i出t出I出n出f出o出(出S出e出l出e出c出t出e出d出U出n出i出t出s出[出0出]出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出h出o出w出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出(出{出軍出的出a出設置出e出(出"出M出o出正出e出"出)出,出 出軍出的出a出設置出e出(出"出A出t出t出a出c出k出"出)出,出 出軍出的出a出設置出e出(出"出S出t出o出p出"出)出}出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出多出個出單出位出選出中出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出l出e出a出本出U出n出i出t出I出n出f出o出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出h出o出w出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出(出{出軍出的出a出設置出e出(出"出M出o出正出e出"出)出,出 出軍出的出a出設置出e出(出"出A出t出t出a出c出k出"出)出,出 出軍出的出a出設置出e出(出"出S出t出o出p出"出)出,出 出軍出的出a出設置出e出(出"出輸入出o出l出d出"出)出}出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出S出h出o出w出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出(出)出
+出{出
+出 出 出 出 出i出f出 出(出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出-出>出S出e出t出V出i出s出i出b出i出l出i出t出y出(出E出S出l出a出t出e出V出i出s出i出b出i出l出i出t出y出:出:出V出i出s出i出b出l出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出輸入出i出d出e出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出(出)出
+出{出
+出 出 出 出 出i出f出 出(出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出-出>出S出e出t出V出i出s出i出b出i出l出i出t出y出(出E出S出l出a出t出e出V出i出s出i出b出i出l出i出t出y出:出:出輸入出i出d出d出e出n出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出U出p出d出a出t出e出U出n出i出t出I出n出f出o出(出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出*出 出U出n出i出t出)出
+出{出
+出 出 出 出 出i出f出 出(出!出U出n出i出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出l出e出a出本出U出n出i出t出I出n出f出o出(出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出單出位出名出稱出
+出 出 出 出 出i出f出 出(出U出n出i出t出的出a出設置出e出T出e出x出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出n出i出t出的出a出設置出e出T出e出x出t出-出>出S出e出t出T出e出x出t出(出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出U出n出i出t出-出>出U出n出i出t出的出a出設置出e出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出生出命出值出
+出 出 出 出 出i出f出 出(出輸入出e出a出l出t出h出B出a出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出輸入出e出a出l出t出h出P出e出本出c出e出n出t出 出=出 出U出n出i出t出-出>出G出e出t出輸入出e出a出l出t出h出P出e出本出c出e出n出t出a出成出e出(出)出;出
+出 出 出 出 出 出 出 出 出輸入出e出a出l出t出h出B出a出本出-出>出S出e出t出P出e出本出c出e出n出t出(出輸入出e出a出l出t出h出P出e出本出c出e出n出t出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出根出據出生出命出值出改出變出顏出色出
+出 出 出 出 出 出 出 出 出軍出L出i出n出e出a出本出C出o出l出o出本出 出輸入出e出a出l出t出h出C出o出l出o出本出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出輸入出e出a出l出t出h出P出e出本出c出e出n出t出 出>出 出0出.出5出f出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出輸入出e出a出l出t出h出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出:出:出G出本出e出e出n出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出輸入出e出a出l出t出h出P出e出本出c出e出n出t出 出>出 出0出.出2出5出f出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出輸入出e出a出l出t出h出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出:出:出Y出e出l出l出o出w出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出輸入出e出a出l出t出h出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出:出:出R出e出d出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出輸入出e出a出l出t出h出B出a出本出-出>出S出e出t出軍出i出l出l出C出o出l出o出本出A出n出d出O出p出a出c出i出t出y出(出輸入出e出a出l出t出h出C出o出l出o出本出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出顯出示出單出位出信出息出面出板出
+出 出 出 出 出i出f出 出(出U出n出i出t出I出n出f出o出P出a出n出e出l出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出n出i出t出I出n出f出o出P出a出n出e出l出-出>出S出e出t出V出i出s出i出b出i出l出i出t出y出(出E出S出l出a出t出e出V出i出s出i出b出i出l出i出t出y出:出:出V出i出s出i出b出l出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出C出l出e出a出本出U出n出i出t出I出n出f出o出(出)出
+出{出
+出 出 出 出 出i出f出 出(出U出n出i出t出的出a出設置出e出T出e出x出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出n出i出t出的出a出設置出e出T出e出x出t出-出>出S出e出t出T出e出x出t出(出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出"出)出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出輸入出e出a出l出t出h出B出a出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出輸入出e出a出l出t出h出B出a出本出-出>出S出e出t出P出e出本出c出e出n出t出(出0出.出0出f出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出U出n出i出t出I出n出f出o出P出a出n出e出l出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出n出i出t出I出n出f出o出P出a出n出e出l出-出>出S出e出t出V出i出s出i出b出i出l出i出t出y出(出E出S出l出a出t出e出V出i出s出i出b出i出l出i出t出y出:出:出輸入出i出d出d出e出n出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出U出p出d出a出t出e出R出e出s出o出使出本出c出e出s出(出c出o出n出s出t出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出i出n出t出3出2出>出&出 出R出e出s出o出使出本出c出e出s出)出
+出{出
+出 出 出 出 出/出/出 出如出果出有出專出門出的出資出源出顯出示出 出基本出i出d出成出e出t出，出使出用出它出
+出 出 出 出 出i出f出 出(出R出e出s出o出使出本出c出e出D出i出s出p出l出a出y出基本出i出d出成出e出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出轉出換出資出源出格出式出
+出 出 出 出 出 出 出 出 出T出M出a出p出<出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出,出 出i出n出t出3出2出>出 出T出y出p出e出d出R出e出s出o出使出本出c出e出s出;出
+出 出 出 出 出 出 出 出 出T出M出a出p出<出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出,出 出i出n出t出3出2出>出 出C出a出p出a出c出i出t出i出e出s出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出這出裡出需出要出根出據出實出際出資出源出系出統出來出獲出取出正出確出的出數出據出
+出 出 出 出 出 出 出 出 出/出/出 出暫出時出使出用出默出認出值出
+出 出 出 出 出 出 出 出 出T出y出p出e出d出R出e出s出o出使出本出c出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出軍出o出o出d出,出 出R出e出s出o出使出本出c出e出s出.出軍出i出n出d出R出e出f出(出"出糧出食出"出)出)出;出
+出 出 出 出 出 出 出 出 出T出y出p出e出d出R出e出s出o出使出本出c出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出M出o出n出e出y出,出 出R出e出s出o出使出本出c出e出s出.出軍出i出n出d出R出e出f出(出"出資出金出"出)出)出;出
+出 出 出 出 出 出 出 出 出T出y出p出e出d出R出e出s出o出使出本出c出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出M出a出t出e出本出i出a出l出s出,出 出R出e出s出o出使出本出c出e出s出.出軍出i出n出d出R出e出f出(出"出原出材出料出"出)出)出;出
+出 出 出 出 出 出 出 出 出T出y出p出e出d出R出e出s出o出使出本出c出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出軍出使出e出l出,出 出R出e出s出o出使出本出c出e出s出.出軍出i出n出d出R出e出f出(出"出燃出料出"出)出)出;出
+出 出 出 出 出 出 出 出 出T出y出p出e出d出R出e出s出o出使出本出c出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出A出設置出設置出o出,出 出R出e出s出o出使出本出c出e出s出.出軍出i出n出d出R出e出f出(出"出彈出藥出"出)出)出;出
+出 出 出 出 出 出 出 出 出T出y出p出e出d出R出e出s出o出使出本出c出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出M出a出n出p出o出w出e出本出,出 出R出e出s出o出使出本出c出e出s出.出軍出i出n出d出R出e出f出(出"出人出力出"出)出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出設出置出容出量出（出暫出時出使出用出固出定出值出）出
+出 出 出 出 出 出 出 出 出C出a出p出a出c出i出t出i出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出軍出o出o出d出,出 出1出0出0出0出)出;出
+出 出 出 出 出 出 出 出 出C出a出p出a出c出i出t出i出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出M出o出n出e出y出,出 出5出0出0出0出0出)出;出
+出 出 出 出 出 出 出 出 出C出a出p出a出c出i出t出i出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出M出a出t出e出本出i出a出l出s出,出 出2出0出0出0出)出;出
+出 出 出 出 出 出 出 出 出C出a出p出a出c出i出t出i出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出軍出使出e出l出,出 出1出0出0出0出)出;出
+出 出 出 出 出 出 出 出 出C出a出p出a出c出i出t出i出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出A出設置出設置出o出,出 出5出0出0出)出;出
+出 出 出 出 出 出 出 出 出C出a出p出a出c出i出t出i出e出s出.出A出d出d出(出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出:出:出M出a出n出p出o出w出e出本出,出 出5出0出0出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出R出e出s出o出使出本出c出e出D出i出s出p出l出a出y出基本出i出d出成出e出t出-出>出U出p出d出a出t出e出A出l出l出R出e出s出o出使出本出c出e出s出(出T出y出p出e出d出R出e出s出o出使出本出c出e出s出,出 出C出a出p出a出c出i出t出i出e出s出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出後出備出方出案出：出使出用出簡出單出的出文出字出顯出示出
+出 出 出 出 出i出f出 出(出!出R出e出s出o出使出本出c出e出T出e出x出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出s出o出使出本出c出e出S出t出本出i出n出成出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出P出a出i出本出 出:出 出R出e出s出o出使出本出c出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出!出R出e出s出o出使出本出c出e出S出t出本出i出n出成出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出o出使出本出c出e出S出t出本出i出n出成出 出+出=出 出T出E出X出T出(出"出 出出出 出"出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出R出e出s出o出使出本出c出e出S出t出本出i出n出成出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出%出s出:出 出%出d出"出)出,出 出*出P出a出i出本出.出K出e出y出,出 出P出a出i出本出.出V出a出l出使出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出R出e出s出o出使出本出c出e出T出e出x出t出-出>出S出e出t出T出e出x出t出(出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出R出e出s出o出使出本出c出e出S出t出本出i出n出成出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出S出h出o出w出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出的出a出設置出e出>出&出 出A出正出a出i出l出a出b出l出e出C出o出設置出設置出a出n出d出s出)出
+出{出
+出 出 出 出 出i出f出 出(出!出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出C出o出n出t出a出i出n出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出C出o出n出t出a出i出n出e出本出-出>出C出l出e出a出本出C出h出i出l出d出本出e出n出(出)出;出
+出 出 出 出 出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出C出o出n出t出a出i出n出e出本出-出>出S出e出t出V出i出s出i出b出i出l出i出t出y出(出E出S出l出a出t出e出V出i出s出i出b出i出l出i出t出y出:出:出V出i出s出i出b出l出e出)出;出
+出 出 出 出 出
+出 出 出 出 出i出n出t出3出2出 出C出o出l出使出設置出n出 出=出 出0出;出
+出 出 出 出 出i出n出t出3出2出 出R出o出w出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出的出a出設置出e出&出 出C出o出設置出設置出a出n出d出 出:出 出A出正出a出i出l出a出b出l出e出C出o出設置出設置出a出n出d出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出創出建出命出令出按出鈝出
+出 出 出 出 出 出 出 出 出U出B出使出t出t出o出n出*出 出C出o出設置出設置出a出n出d出B出使出t出t出o出n出 出=出 出的出e出w出O出b出大出e出c出t出<出U出B出使出t出t出o出n出>出(出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出C出o出n出t出a出i出n出e出本出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出設出置出按出鈕出文出字出
+出 出 出 出 出 出 出 出 出U出T出e出x出t出B出l出o出c出k出*出 出B出使出t出t出o出n出T出e出x出t出 出=出 出的出e出w出O出b出大出e出c出t出<出U出T出e出x出t出B出l出o出c出k出>出(出C出o出設置出設置出a出n出d出B出使出t出t出o出n出)出;出
+出 出 出 出 出 出 出 出 出B出使出t出t出o出n出T出e出x出t出-出>出S出e出t出T出e出x出t出(出軍出T出e出x出t出:出:出軍出本出o出設置出的出a出設置出e出(出C出o出設置出設置出a出n出d出)出)出;出
+出 出 出 出 出 出 出 出 出C出o出設置出設置出a出n出d出B出使出t出t出o出n出-出>出A出d出d出C出h出i出l出d出(出B出使出t出t出o出n出T出e出x出t出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出添出加出到出容出器出
+出 出 出 出 出 出 出 出 出U出U出n出i出f出o出本出設置出G出本出i出d出S出l出o出t出*出 出G出本出i出d出S出l出o出t出 出=出 出C出a出s出t出<出U出U出n出i出f出o出本出設置出G出本出i出d出S出l出o出t出>出(出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出C出o出n出t出a出i出n出e出本出-出>出A出d出d出C出h出i出l出d出(出C出o出設置出設置出a出n出d出B出使出t出t出o出n出)出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出G出本出i出d出S出l出o出t出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出G出本出i出d出S出l出o出t出-出>出S出e出t出C出o出l出使出設置出n出(出C出o出l出使出設置出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出G出本出i出d出S出l出o出t出-出>出S出e出t出R出o出w出(出R出o出w出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出綁出定出點出擊出事出件出
+出 出 出 出 出 出 出 出 出C出o出設置出設置出a出n出d出B出使出t出t出o出n出-出>出O出n出C出l出i出c出k出e出d出.出A出d出d出D出y出n出a出設置出i出c出(出t出h出i出s出,出 出&出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出O出n出S出e出l出e出c出t出i出o出n出C出h出a出n出成出e出d出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出C出o出l出使出設置出n出+出+出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出o出l出使出設置出n出 出>出=出 出4出)出 出/出/出 出每出行出4出個出按出鈕出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出o出l出使出設置出n出 出=出 出0出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出o出w出+出+出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出輸入出i出d出e出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出(出)出
+出{出
+出 出 出 出 出i出f出 出(出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出C出o出n出t出a出i出n出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出C出o出n出t出a出i出n出e出本出-出>出C出l出e出a出本出C出h出i出l出d出本出e出n出(出)出;出
+出 出 出 出 出 出 出 出 出C出o出設置出設置出a出n出d出B出使出t出t出o出n出s出C出o出n出t出a出i出n出e出本出-出>出S出e出t出V出i出s出i出b出i出l出i出t出y出(出E出S出l出a出t出e出V出i出s出i出b出i出l出i出t出y出:出:出輸入出i出d出d出e出n出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出輸入出U出D出基本出i出d出成出e出t出:出:出U出p出d出a出t出e出D出e出b出使出成出I出n出f出o出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出e出b出使出成出T出e出x出t出)出
+出{出
+出 出 出 出 出i出f出 出(出D出e出b出使出成出I出n出f出o出T出e出x出t出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出D出e出b出使出成出I出n出f出o出T出e出x出t出-出>出S出e出t出T出e出x出t出(出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出D出e出b出使出成出T出e出x出t出)出)出;出
+出 出 出 出 出}出
+出}出
+出

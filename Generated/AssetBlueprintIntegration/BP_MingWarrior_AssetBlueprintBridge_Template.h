@@ -1,7 +1,7 @@
 ﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Auto-generated Asset-Blueprint Bridge: BP_MingWarrior
 // Generated: 03/23/2026 02:58:27
-// 蝝????誨蝣潮???- 鞈撘????摰頂蝯?
+// 蝝動動誨蝣潮動?- 鞈撘?動?摰頂蝯?
 #pragma once
 
 #include "CoreMinimal.h"
@@ -42,19 +42,19 @@ class MINGGORTS_API UAssetBlueprintBridge : public UActorComponent
 public:
     UAssetBlueprintBridge();
 
-    UFUNCTION(BlueprintCallable, Category = "Asset Blueprint Integration | 鞈???")
+    UFUNCTION(BlueprintCallable, Category = "Asset Blueprint Integration | 鞈?動")
     void InitializeAssetReferences(const FString& BlueprintName);
     
-    UFUNCTION(BlueprintCallable, Category = "Asset Blueprint Integration | 鞈???")
+    UFUNCTION(BlueprintCallable, Category = "Asset Blueprint Integration | 鞈?動")
     void LoadAssetsAsync();
     
-    UFUNCTION(BlueprintCallable, Category = "Asset Blueprint Integration | 鞈???")
+    UFUNCTION(BlueprintCallable, Category = "Asset Blueprint Integration | 鞈?動")
     bool IsAssetLoaded(const FString& AssetName) const;
     
-    UFUNCTION(BlueprintCallable, Category = "Asset Blueprint Integration | 鞈???")
+    UFUNCTION(BlueprintCallable, Category = "Asset Blueprint Integration | 鞈?動")
     UObject* GetLoadedAsset(const FString& AssetName);
     
-    UFUNCTION(BlueprintCallable, Category = "Asset Blueprint Integration | 鞈???")
+    UFUNCTION(BlueprintCallable, Category = "Asset Blueprint Integration | 鞈?動")
     void BindAssetToBlueprint(UObject* Asset, const FString& BlueprintPropertyName);
 
     // Asset reference configuration

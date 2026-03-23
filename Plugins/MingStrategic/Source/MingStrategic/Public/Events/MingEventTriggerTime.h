@@ -1,155 +1,156 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "MingEventTriggerTime.generated.h"
-
-// 觸發時間類型
-UENUM(BlueprintType)
-enum class ETriggerTimeType: uint8 {
-    Absolute,       // 絕對時間
-    Relative,       // 相對時間
-    Periodic,       // 週期性
-    Daily,          // 每日
-    Weekly,         // 每週
-    Monthly,        // 每月
-    Conditional     // 條件觸發
-};
-
-// 時間觸發條件
-USTRUCT(BlueprintType)
-struct MINGSTRATEGIC_API FTimeTriggerCondition
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadOnly)
-    ETriggerTimeType TriggerType;
-
-    UPROPERTY(BlueprintReadOnly)
-    FDateTime TargetTime;
-
-    UPROPERTY(BlueprintReadOnly)
-    int32 IntervalHours;
-
-    UPROPERTY(BlueprintReadOnly)
-    int32 IntervalDays;
-
-    UPROPERTY(BlueprintReadOnly)
-    int32 HourOfDay;
-
-    UPROPERTY(BlueprintReadOnly)
-    int32 DayOfWeek;
-
-    UPROPERTY(BlueprintReadOnly)
-    FString ConditionExpression;
-};
-
-/**
- * 事件觸發時間管理器
- * 負責管理各種時間觸發條件
- */
-UCLASS(BlueprintType, Blueprintable)
-class MINGSTRATEGIC_API UMingEventTriggerTime : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    // 建構子
-    UMingEventTriggerTime();
-
-    // 初始化觸發時間系統
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    void InitializeTriggerSystem();
-
-    // 添加時間觸發
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    void AddTimeTrigger(const FString& EventID, const FTimeTriggerCondition& Condition);
-
-    // 移除時間觸發
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    void RemoveTimeTrigger(const FString& EventID);
-
-    // 更新觸發檢查
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    void UpdateTriggerChecks(float DeltaTime);
-
-    // 檢查特定觸發是否應該觸發
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    bool ShouldTrigger(const FString& EventID) const;
-
-    // 獲取下次觸發時間
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    FDateTime GetNextTriggerTime(const FString& EventID) const;
-
-    // 設置絕對時間觸發
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    void SetAbsoluteTimeTrigger(const FString& EventID, const FDateTime& TargetTime);
-
-    // 設置相對時間觸發
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    void SetRelativeTimeTrigger(const FString& EventID, int32 HoursFromNow);
-
-    // 設置週期性觸發
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    void SetPeriodicTrigger(const FString& EventID, int32 IntervalHours);
-
-    // 設置每日觸發
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    void SetDailyTrigger(const FString& EventID, int32 HourOfDay);
-
-    // 暫停觸發
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    void PauseTrigger(const FString& EventID);
-
-    // 恢復觸發
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    void ResumeTrigger(const FString& EventID);
-
-    // 獲取所有活動觸發
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    TArray<FString> GetActiveTriggers() const;
-
-    // 清除所有觸發
-    UFUNCTION(BlueprintCallable, Category = "Event|Time")
-    void ClearAllTriggers();
-
-protected:
-    // 時間觸發映射
-    UPROPERTY(BlueprintReadOnly)
-    TMap<FString, FTimeTriggerCondition> TimeTriggers;
-
-    // 上次檢查時間
-    UPROPERTY(BlueprintReadOnly)
-    FDateTime LastCheckTime;
-
-    // 更新間隔
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Time|Settings")
-    float UpdateInterval;
-
-    // 時間縮放因子
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Time|Settings")
-    float TimeScale;
-
-    // 檢查各種模式的觸發條件
-    bool CheckAbsoluteTime(const FTimeTriggerCondition& Condition) const;
-    bool CheckRelativeTime(const FTimeTriggerCondition& Condition) const;
-    bool CheckPeriodic(const FTimeTriggerCondition& Condition) const;
-    bool CheckDaily(const FTimeTriggerCondition& Condition) const;
-
-    // 計算目標時間（對於各種模式）
-    void CalculateTargetTime(FTimeTriggerCondition& Condition);
-
-    // 觸發事件回調
-    UFUNCTION(BlueprintImplementableEvent, Category = "Event|Time")
-    void OnTimeTriggered(const FString& EventID);
-
-private:
-    // 累積時間
-    float AccumulatedTime;
-
-    // 已觸發的事件記錄
-    TSet<FString> TriggeredEvents;
-
-    // 重置每日觸發
-    void ResetDailyTriggers();
-};
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出/出 出觸出發出時出間出類出型出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出T出本出i出成出成出e出本出T出i出設置出e出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出A出b出s出o出l出使出t出e出,出 出 出 出 出 出 出 出/出/出 出絕出對出時出間出
+出 出 出 出 出R出e出l出a出t出i出正出e出,出 出 出 出 出 出 出 出/出/出 出相出對出時出間出
+出 出 出 出 出P出e出本出i出o出d出i出c出,出 出 出 出 出 出 出 出/出/出 出週出期出性出
+出 出 出 出 出D出a出i出l出y出,出 出 出 出 出 出 出 出 出 出 出/出/出 出每出日出
+出 出 出 出 出基本出e出e出k出l出y出,出 出 出 出 出 出 出 出 出 出/出/出 出每出週出
+出 出 出 出 出M出o出n出t出h出l出y出,出 出 出 出 出 出 出 出 出/出/出 出每出月出
+出 出 出 出 出C出o出n出d出i出t出i出o出n出a出l出 出 出 出 出 出/出/出 出條出件出觸出發出
+出}出;出
+出
+出/出/出 出時出間出觸出發出條出件出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出軍出T出i出設置出e出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出E出T出本出i出成出成出e出本出T出i出設置出e出T出y出p出e出 出T出本出i出成出成出e出本出T出y出p出e出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出T出a出本出成出e出t出T出i出設置出e出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出i出n出t出3出2出 出I出n出t出e出本出正出a出l出輸入出o出使出本出s出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出i出n出t出3出2出 出I出n出t出e出本出正出a出l出D出a出y出s出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出i出n出t出3出2出 出輸入出o出使出本出O出f出D出a出y出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出i出n出t出3出2出 出D出a出y出O出f出基本出e出e出k出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出n出d出i出t出i出o出n出E出x出p出本出e出s出s出i出o出n出;出
+出}出;出
+出
+出/出*出*出
+出 出*出 出事出件出觸出發出時出間出管出理出器出
+出 出*出 出負出責出管出理出各出種出時出間出觸出發出條出件出
+出 出*出/出
+出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
+出c出l出a出s出s出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出/出/出 出建出構出子出
+出 出 出 出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出(出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出觸出發出時出間出系出統出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出T出本出i出成出成出e出本出S出y出s出t出e出設置出(出)出;出
+出
+出 出 出 出 出/出/出 出添出加出時出間出觸出發出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出A出d出d出T出i出設置出e出T出本出i出成出成出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出,出 出c出o出n出s出t出 出軍出T出i出設置出e出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出&出 出C出o出n出d出i出t出i出o出n出)出;出
+出
+出 出 出 出 出/出/出 出移出除出時出間出觸出發出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出R出e出設置出o出正出e出T出i出設置出e出T出本出i出成出成出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出)出;出
+出
+出 出 出 出 出/出/出 出更出新出觸出發出檢出查出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出T出本出i出成出成出e出本出C出h出e出c出k出s出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
+出
+出 出 出 出 出/出/出 出檢出查出特出定出觸出發出是出否出應出該出觸出發出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出b出o出o出l出 出S出h出o出使出l出d出T出本出i出成出成出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出下出次出觸出發出時出間出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出G出e出t出的出e出x出t出T出本出i出成出成出e出本出T出i出設置出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出設出置出絕出對出時出間出觸出發出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出A出b出s出o出l出使出t出e出T出i出設置出e出T出本出i出成出成出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出,出 出c出o出n出s出t出 出軍出D出a出t出e出T出i出設置出e出&出 出T出a出本出成出e出t出T出i出設置出e出)出;出
+出
+出 出 出 出 出/出/出 出設出置出相出對出時出間出觸出發出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出R出e出l出a出t出i出正出e出T出i出設置出e出T出本出i出成出成出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出,出 出i出n出t出3出2出 出輸入出o出使出本出s出軍出本出o出設置出的出o出w出)出;出
+出
+出 出 出 出 出/出/出 出設出置出週出期出性出觸出發出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出P出e出本出i出o出d出i出c出T出本出i出成出成出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出,出 出i出n出t出3出2出 出I出n出t出e出本出正出a出l出輸入出o出使出本出s出)出;出
+出
+出 出 出 出 出/出/出 出設出置出每出日出觸出發出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出D出a出i出l出y出T出本出i出成出成出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出,出 出i出n出t出3出2出 出輸入出o出使出本出O出f出D出a出y出)出;出
+出
+出 出 出 出 出/出/出 出暫出停出觸出發出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出P出a出使出s出e出T出本出i出成出成出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出)出;出
+出
+出 出 出 出 出/出/出 出恢出復出觸出發出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出R出e出s出使出設置出e出T出本出i出成出成出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出)出;出
+出
+出 出 出 出 出/出/出 出獲出取出所出有出活出動出觸出發出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出G出e出t出A出c出t出i出正出e出T出本出i出成出成出e出本出s出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出清出除出所出有出觸出發出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出C出l出e出a出本出A出l出l出T出本出i出成出成出e出本出s出(出)出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出/出 出時出間出觸出發出映出射出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出T出i出設置出e出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出>出 出T出i出設置出e出T出本出i出成出成出e出本出s出;出
+出
+出 出 出 出 出/出/出 出上出次出檢出查出時出間出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出L出a出s出t出C出h出e出c出k出T出i出設置出e出;出
+出
+出 出 出 出 出/出/出 出更出新出間出隔出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出i出設置出e出出出S出e出t出t出i出n出成出s出"出)出
+出 出 出 出 出f出l出o出a出t出 出U出p出d出a出t出e出I出n出t出e出本出正出a出l出;出
+出
+出 出 出 出 出/出/出 出時出間出縮出放出因出子出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出i出設置出e出出出S出e出t出t出i出n出成出s出"出)出
+出 出 出 出 出f出l出o出a出t出 出T出i出設置出e出S出c出a出l出e出;出
+出
+出 出 出 出 出/出/出 出檢出查出各出種出模出式出的出觸出發出條出件出
+出 出 出 出 出b出o出o出l出 出C出h出e出c出k出A出b出s出o出l出使出t出e出T出i出設置出e出(出c出o出n出s出t出 出軍出T出i出設置出e出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出&出 出C出o出n出d出i出t出i出o出n出)出 出c出o出n出s出t出;出
+出 出 出 出 出b出o出o出l出 出C出h出e出c出k出R出e出l出a出t出i出正出e出T出i出設置出e出(出c出o出n出s出t出 出軍出T出i出設置出e出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出&出 出C出o出n出d出i出t出i出o出n出)出 出c出o出n出s出t出;出
+出 出 出 出 出b出o出o出l出 出C出h出e出c出k出P出e出本出i出o出d出i出c出(出c出o出n出s出t出 出軍出T出i出設置出e出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出&出 出C出o出n出d出i出t出i出o出n出)出 出c出o出n出s出t出;出
+出 出 出 出 出b出o出o出l出 出C出h出e出c出k出D出a出i出l出y出(出c出o出n出s出t出 出軍出T出i出設置出e出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出&出 出C出o出n出d出i出t出i出o出n出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出計出算出目出標出時出間出（出對出於出各出種出模出式出）出
+出 出 出 出 出正出o出i出d出 出C出a出l出c出使出l出a出t出e出T出a出本出成出e出t出T出i出設置出e出(出軍出T出i出設置出e出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出&出 出C出o出n出d出i出t出i出o出n出)出;出
+出
+出 出 出 出 出/出/出 出觸出發出事出件出回出調出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出I出設置出p出l出e出設置出e出n出t出a出b出l出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出出出T出i出設置出e出"出)出
+出 出 出 出 出正出o出i出d出 出O出n出T出i出設置出e出T出本出i出成出成出e出本出e出d出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出)出;出
+出
+出p出本出i出正出a出t出e出:出
+出 出 出 出 出/出/出 出累出積出時出間出
+出 出 出 出 出f出l出o出a出t出 出A出c出c出使出設置出使出l出a出t出e出d出T出i出設置出e出;出
+出
+出 出 出 出 出/出/出 出已出觸出發出的出事出件出記出錄出
+出 出 出 出 出T出S出e出t出<出軍出S出t出本出i出n出成出>出 出T出本出i出成出成出e出本出e出d出E出正出e出n出t出s出;出
+出
+出 出 出 出 出/出/出 出重出置出每出日出觸出發出
+出 出 出 出 出正出o出i出d出 出R出e出s出e出t出D出a出i出l出y出T出本出i出成出成出e出本出s出(出)出;出
+出}出;出
+出

@@ -1,9 +1,10 @@
 #include "Innovation/MingSocialDynamicsSystem.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
-#include "Misc/DateTime.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Math/UnrealMathUtility.h"
 #include "Algo/RandomShuffle.h"
+#include "Misc/DateTime.h"
 
 UMingSocialDynamicsSystem::UMingSocialDynamicsSystem()
 {
@@ -17,518 +18,70 @@ UMingSocialDynamicsSystem::UMingSocialDynamicsSystem()
     bEnableCulturalEvolution = true;
     bEnableSocialMobility = true;
     bEnableGroupBehaviors = true;
-    
-    bIsInitialized = false;
-    ActiveIndividualCount = 0;
-    ActiveRelationshipCount = 0;
-    AverageSocialInfluence = 1.0f;
-    DominantSocialClass = ESocialClass::Middle;
-    
-    LastSimulationTime = 0.0f;
-    TotalEventsProcessed = 0;
-    TotalRelationshipsFormed = 0;
-    TotalCulturalTransmissions = 0;
 }
 
-bool UMingSocialDynamicsSystem::InitializeSocialDynamicsSystem()
+void UMingSocialDynamicsSystem::InitializeSocialDynamicsSystem()
 {
-    if (bIsInitialized)
-    {
-        return true;
-    }
+    // Initialize system state
+    bSystemInitialized = true;
+    LastUpdateTime = FDateTime::Now();
     
-    // 初始化統計數據
-    SystemStats.Empty();
-    SystemStats.Add(TEXT("ActiveIndividuals"), 0.0f);
-    SystemStats.Add(TEXT("ActiveRelationships"), 0.0f);
-    SystemStats.Add(TEXT("SocialEvents"), 0.0f);
-    SystemStats.Add(TEXT("CulturalElements"), 0.0f);
-    SystemStats.Add(TEXT("GroupBehaviors"), 0.0f);
-    SystemStats.Add(TEXT("AverageInfluence"), 1.0f);
-    SystemStats.Add(TEXT("NetworkDensity"), 0.0f);
+    // Clear existing data
+    Individuals.Empty();
+    Relationships.Empty();
+    SocialEvents.Empty();
+    CulturalTraits.Empty();
     
-    bIsInitialized = true;
-    
-    // 設置定時器
-    if (UWorld* World = GetWorld())
-    {
-        World->GetTimerManager().SetTimer(
-            SimulationTimerHandle,
-            this,
-            &UMingSocialDynamicsSystem::UpdateRelationships,
-            1.0f,
-            true
-        );
-        
-        World->GetTimerManager().SetTimer(
-            RelationshipUpdateTimerHandle,
-            this,
-            &UMingSocialDynamicsSystem::ProcessSocialEvents,
-            0.5f,
-            true
-        );
-        
-        World->GetTimerManager().SetTimer(
-            EventProcessingTimerHandle,
-            this,
-            &UMingSocialDynamicsSystem::UpdateCulturalElements,
-            2.0f,
-            true
-        );
-        
-        World->GetTimerManager().SetTimer(
-            CulturalEvolutionTimerHandle,
-            this,
-            &UMingSocialDynamicsSystem::UpdateGroupBehaviors,
-            1.5f,
-            true
-        );
-        
-        World->GetTimerManager().SetTimer(
-            SocialMobilityTimerHandle,
-            [this]()
-            {
-                if (bEnableSocialMobility)
-                {
-                    ProcessSocialMobility(1.0f);
-                }
-            },
-            5.0f,
-            true
-        );
-    }
-    
-    return true;
+    UE_LOG(LogTemp, Log, TEXT("Social Dynamics System initialized"));
 }
 
-FString UMingSocialDynamicsSystem::CreateIndividual(const FString& FirstName, const FString& LastName, int32 Age, const FString& Gender, ESocialClass SocialClass)
+void UMingSocialDynamicsSystem::ShutdownSocialDynamicsSystem()
 {
-    if (!bIsInitialized || Individuals.Num() >= MaxIndividuals)
-    {
-        return FString();
-    }
+    bSystemInitialized = false;
     
-    if (!ValidateIndividualCreation(FirstName, LastName, Age, Gender, SocialClass))
-    {
-        return FString();
-    }
+    // Clear all data
+    Individuals.Empty();
+    Relationships.Empty();
+    SocialEvents.Empty();
+    CulturalTraits.Empty();
     
-    FString IndividualID = GenerateUniqueIndividualID();
-    FSocialIndividual Individual = CreateDefaultIndividual(IndividualID, FirstName, LastName, Age, Gender, SocialClass);
-    
-    Individuals.Add(IndividualID, Individual);
-    ActiveIndividualCount++;
-    
-    // 更新統計
-    SystemStats[TEXT("ActiveIndividuals")] = static_cast<float>(ActiveIndividualCount);
-    
-    // 觸發事件
-    OnIndividualCreated.Broadcast(Individual);
-    
-    return IndividualID;
+    UE_LOG(LogTemp, Log, TEXT("Social Dynamics System shutdown"));
 }
 
-FString UMingSocialDynamicsSystem::EstablishRelationship(const FString& IndividualA_ID, const FString& IndividualB_ID, ESocialRelationType RelationType, float Strength)
+void UMingSocialDynamicsSystem::AddIndividual(const FSocialIndividual& Individual)
 {
-    if (!bIsInitialized || !Individuals.Contains(IndividualA_ID) || !Individuals.Contains(IndividualB_ID))
+    if (Individuals.Num() >= MaxIndividuals)
     {
-        return FString();
+        UE_LOG(LogTemp, Warning, TEXT("Maximum individuals limit reached"));
+        return;
     }
     
-    if (!ValidateRelationshipEstablishment(IndividualA_ID, IndividualB_ID, RelationType, Strength))
+    // Add individual with unique ID
+    FSocialIndividual NewIndividual = Individual;
+    if (NewIndividual.IndividualID.IsEmpty())
     {
-        return FString();
+        NewIndividual.IndividualID = FString::Printf(TEXT("Individual_%d"), Individuals.Num());
     }
     
-    FString RelationshipID = GenerateUniqueRelationshipID();
-    FSocialRelationship Relationship = CreateDefaultRelationship(RelationshipID, IndividualA_ID, IndividualB_ID, RelationType, Strength);
+    Individuals.Add(NewIndividual.IndividualID, NewIndividual);
     
-    Relationships.Add(RelationshipID, Relationship);
-    ActiveRelationshipCount++;
-    TotalRelationshipsFormed++;
-    
-    // 更新個體關係
-    Individuals[IndividualA_ID].Relationships.Add(IndividualB_ID, Strength);
-    Individuals[IndividualB_ID].Relationships.Add(IndividualA_ID, Strength);
-    
-    // 更新統計
-    SystemStats[TEXT("ActiveRelationships")] = static_cast<float>(ActiveRelationshipCount);
-    
-    // 觸發事件
-    OnRelationshipFormed.Broadcast(Relationship);
-    
-    return RelationshipID;
+    UE_LOG(LogTemp, Log, TEXT("Added individual: %s"), *NewIndividual.IndividualID);
 }
 
-FString UMingSocialDynamicsSystem::TriggerSocialEvent(ESocialEventType EventType, const TArray<FString>& Participants, const FString& Location, float Impact)
+void UMingSocialDynamicsSystem::RemoveIndividual(const FString& IndividualID)
 {
-    if (!bIsInitialized)
+    if (Individuals.Contains(IndividualID))
     {
-        return FString();
-    }
-    
-    if (!ValidateSocialEvent(EventType, Participants, Location, Impact))
-    {
-        return FString();
-    }
-    
-    FString EventID = GenerateUniqueEventID();
-    FSocialEvent Event = CreateDefaultEvent(EventID, EventType, Participants, Location, Impact);
-    
-    SocialEvents.Add(Event);
-    TotalEventsProcessed++;
-    
-    // 處理事件的社會後果
-    for (const FString& ParticipantID : Participants)
-    {
-        if (Individuals.Contains(ParticipantID))
-        {
-            FSocialIndividual& Individual = Individuals[ParticipantID];
-            
-            // 根據事件類型調整個體屬性
-            switch (EventType)
-            {
-            case ESocialEventType::Promotion:
-                Individual.PoliticalPower += Impact * 0.1f;
-                Individual.EconomicStatus += Impact * 0.05f;
-                break;
-            case ESocialEventType::Marriage:
-                Individual.SocialInfluence += Impact * 0.2f;
-                break;
-            case ESocialEventType::Achievement:
-                Individual.SocialInfluence += Impact * 0.15f;
-                break;
-            case ESocialEventType::Scandal:
-                Individual.SocialInfluence -= Impact * 0.1f;
-                break;
-            }
-        }
-    }
-    
-    // 更新統計
-    SystemStats[TEXT("SocialEvents")] = static_cast<float>(SocialEvents.Num());
-    
-    // 觸發事件
-    OnSocialEventOccurred.Broadcast(Event);
-    
-    return EventID;
-}
-
-bool UMingSocialDynamicsSystem::SpreadCulturalElement(const FString& ElementID, const TArray<FString>& Targets, ECulturalTransmissionType TransmissionType)
-{
-    if (!bIsInitialized || !CulturalElements.Contains(ElementID))
-    {
-        return false;
-    }
-    
-    FCulturalElement& Element = CulturalElements[ElementID];
-    int32 SuccessfulTransmissions = 0;
-    
-    for (const FString& TargetID : Targets)
-    {
-        if (!Individuals.Contains(TargetID))
-        {
-            continue;
-        }
+        // Remove all relationships involving this individual
+        Relationships.RemoveAll([&](const FSocialRelationship& Rel) {
+            return Rel.IndividualA == IndividualID || Rel.IndividualB == IndividualID;
+        });
         
-        FSocialIndividual& Individual = Individuals[TargetID];
+        // Remove individual
+        Individuals.Remove(IndividualID);
         
-        // 計算傳播成功率
-        float TransmissionProbability = CulturalTransmissionRate * Element.TransmissionStrength;
-        
-        // 根據傳播類型調整概率
-        switch (TransmissionType)
-        {
-        case ECulturalTransmissionType::Vertical:
-            // 垂直傳播：考慮年齡差異
-            TransmissionProbability *= 0.8f;
-            break;
-        case ECulturalTransmissionType::Horizontal:
-            // 水平傳播：考慮同輩關係
-            TransmissionProbability *= 1.2f;
-            break;
-        case ECulturalTransmissionType::MassMedia:
-            // 大眾媒體：高覆蓋率但低影響力
-            TransmissionProbability *= 0.6f;
-            break;
-        case ECulturalTransmissionType::Education:
-            // 教育系統：高成功率
-            TransmissionProbability *= 1.5f;
-            break;
-        }
-        
-        // 執行傳播
-        if (FMath::RandRange(0.0f, 1.0f) < TransmissionProbability)
-        {
-            // 添加文化元素到個體
-            if (!Individual.Beliefs.Contains(Element.ElementName))
-            {
-                Individual.Beliefs.Add(Element.ElementName);
-                Individual.Values.Append(Element.AssociatedValues);
-                SuccessfulTransmissions++;
-            }
-        }
+        UE_LOG(LogTemp, Log, TEXT("Removed individual: %s"), *IndividualID);
     }
-    
-    // 更新文化元素的傳播數據
-    Element.AdoptionRate += static_cast<float>(SuccessfulTransmissions) / Targets.Num();
-    Element.Carriers.Append(Targets);
-    
-    TotalCulturalTransmissions += SuccessfulTransmissions;
-    
-    // 觸發事件
-    OnCulturalElementSpread.Broadcast(Element);
-    
-    return SuccessfulTransmissions > 0;
-}
-
-FString UMingSocialDynamicsSystem::SimulateGroupBehavior(const FString& GroupID, EGroupBehaviorType BehaviorType, const TArray<FString>& Participants)
-{
-    if (!bIsInitialized || Participants.Num() == 0)
-    {
-        return FString();
-    }
-    
-    FString BehaviorID = GenerateUniqueBehaviorID();
-    FGroupBehavior Behavior = CreateDefaultGroupBehavior(BehaviorID, GroupID, BehaviorType, Participants);
-    
-    // 計算群體行為強度
-    float TotalInfluence = 0.0f;
-    for (const FString& ParticipantID : Participants)
-    {
-        if (Individuals.Contains(ParticipantID))
-        {
-            TotalInfluence += Individuals[ParticipantID].SocialInfluence;
-        }
-    }
-    
-    Behavior.Intensity = TotalInfluence / Participants.Num();
-    Behavior.bIsOngoing = true;
-    
-    // 根據行為類型產生效果
-    switch (BehaviorType)
-    {
-    case EGroupBehaviorType::Cooperation:
-        // 合作行為：增強參與者關係
-        for (int32 i = 0; i < Participants.Num(); i++)
-        {
-            for (int32 j = i + 1; j < Participants.Num(); j++)
-            {
-                FString RelationshipID = EstablishRelationship(
-                    Participants[i],
-                    Participants[j],
-                    ESocialRelationType::Friendship,
-                    Behavior.Intensity * 0.1f
-                );
-            }
-        }
-        break;
-        
-    case EGroupBehaviorType::Conflict:
-        // 衝突行為：降低參與者關係
-        for (int32 i = 0; i < Participants.Num(); i++)
-        {
-            for (int32 j = i + 1; j < Participants.Num(); j++)
-            {
-                FString RelationshipID = EstablishRelationship(
-                    Participants[i],
-                    Participants[j],
-                    ESocialRelationType::Rivalry,
-                    Behavior.Intensity * 0.15f
-                );
-            }
-        }
-        break;
-        
-    case EGroupBehaviorType::Innovation:
-        // 創新行為：傳播新文化元素
-        if (CulturalElements.Num() > 0)
-        {
-            FCulturalElement& RandomElement = CulturalElements[FMath::RandRange(0, CulturalElements.Num() - 1)];
-            SpreadCulturalElement(RandomElement.ElementID, Participants, ECulturalTransmissionType::Horizontal);
-        }
-        break;
-    }
-    
-    GroupBehaviors.Add(Behavior);
-    
-    // 觸發事件
-    OnGroupBehaviorStarted.Broadcast(Behavior);
-    
-    return BehaviorID;
-}
-
-bool UMingSocialDynamicsSystem::ProcessSocialMobility(const FString& IndividualID, ESocialClass TargetClass)
-{
-    if (!bIsInitialized || !Individuals.Contains(IndividualID))
-    {
-        return false;
-    }
-    
-    FSocialIndividual& Individual = Individuals[IndividualID];
-    
-    // 計算流動概率
-    float MobilityProbability = SocialMobilityProbability;
-    
-    // 根據當前階層和目標階層調整概率
-    int32 CurrentClassIndex = static_cast<int32>(Individual.SocialClass);
-    int32 TargetClassIndex = static_cast<int32>(TargetClass);
-    
-    if (TargetClassIndex > CurrentClassIndex)
-    {
-        // 向上流動：較低概率
-        MobilityProbability *= 0.3f;
-    }
-    else if (TargetClassIndex < CurrentClassIndex)
-    {
-        // 向下流動：較高概率
-        MobilityProbability *= 0.7f;
-    }
-    
-    // 執行流動
-    if (FMath::RandRange(0.0f, 1.0f) < MobilityProbability)
-    {
-        ESocialClass OldClass = Individual.SocialClass;
-        Individual.SocialClass = TargetClass;
-        
-        // 調整相關屬性
-        float ClassMultiplier = (TargetClassIndex - CurrentClassIndex) * 0.1f;
-        Individual.EconomicStatus += ClassMultiplier;
-        Individual.PoliticalPower += ClassMultiplier * 0.5f;
-        
-        // 觸發事件
-        OnSocialClassChanged.Broadcast(IndividualID, TargetClass);
-        
-        return true;
-    }
-    
-    return false;
-}
-
-float UMingSocialDynamicsSystem::CalculateSocialInfluence(const FString& IndividualID)
-{
-    if (!Individuals.Contains(IndividualID))
-    {
-        return 0.0f;
-    }
-    
-    const FSocialIndividual& Individual = Individuals[IndividualID];
-    
-    // 基礎影響力
-    float Influence = Individual.SocialInfluence;
-    
-    // 關係網絡影響
-    int32 RelationshipCount = Individual.Relationships.Num();
-    float NetworkEffect = FMath::Sqrt(static_cast<float>(RelationshipCount)) * 0.1f;
-    
-    // 社會階層影響
-    float ClassEffect = static_cast<float>(static_cast<int32>(Individual.SocialClass)) * 0.2f;
-    
-    // 經濟狀況影響
-    float EconomicEffect = Individual.EconomicStatus * 0.3f;
-    
-    // 政治權力影響
-    float PoliticalEffect = Individual.PoliticalPower * 0.4f;
-    
-    return Influence + NetworkEffect + ClassEffect + EconomicEffect + PoliticalEffect;
-}
-
-bool UMingSocialDynamicsSystem::UpdateSocialNetwork(const FString& NetworkID, float DeltaTime)
-{
-    if (!SocialNetworks.Contains(NetworkID))
-    {
-        return false;
-    }
-    
-    FSocialNetwork& Network = SocialNetworks[NetworkID];
-    
-    // 計算網絡密度
-    int32 NodeCount = Network.Nodes.Num();
-    int32 MaxPossibleEdges = NodeCount * (NodeCount - 1) / 2;
-    Network.Density = static_cast<float>(Network.Edges.Num()) / MaxPossibleEdges;
-    
-    // 計算聚類係數
-    float TotalClustering = 0.0f;
-    for (const FString& NodeID : Network.Nodes)
-    {
-        TArray<FString> Neighbors;
-        for (const FSocialRelationship& Edge : Network.Edges)
-        {
-            if (Edge.IndividualA_ID == NodeID)
-            {
-                Neighbors.Add(Edge.IndividualB_ID);
-            }
-            else if (Edge.IndividualB_ID == NodeID)
-            {
-                Neighbors.Add(Edge.IndividualA_ID);
-            }
-        }
-        
-        if (Neighbors.Num() < 2)
-        {
-            continue;
-        }
-        
-        int32 NeighborEdges = 0;
-        for (int32 i = 0; i < Neighbors.Num(); i++)
-        {
-            for (int32 j = i + 1; j < Neighbors.Num(); j++)
-            {
-                for (const FSocialRelationship& Edge : Network.Edges)
-                {
-                    if ((Edge.IndividualA_ID == Neighbors[i] && Edge.IndividualB_ID == Neighbors[j]) ||
-                        (Edge.IndividualA_ID == Neighbors[j] && Edge.IndividualB_ID == Neighbors[i]))
-                    {
-                        NeighborEdges++;
-                        break;
-                    }
-                }
-            }
-        }
-        
-        float Clustering = static_cast<float>(NeighborEdges) / (Neighbors.Num() * (Neighbors.Num() - 1) / 2);
-        TotalClustering += Clustering;
-    }
-    
-    Network.ClusteringCoefficient = NodeCount > 0 ? TotalClustering / NodeCount : 0.0f;
-    
-    // 更新網絡屬性
-    Network.LastUpdated = FDateTime::Now();
-    
-    return true;
-}
-
-bool UMingSocialDynamicsSystem::SimulateCulturalEvolution(float DeltaTime)
-{
-    if (!bEnableCulturalEvolution)
-    {
-        return false;
-    }
-    
-    // 模擬文化元素的演變
-    for (auto& ElementPair : CulturalElements)
-    {
-        FCulturalElement& Element = ElementPair.Value;
-        
-        if (!Element.bIsEvolving)
-        {
-            continue;
-        }
-        
-        // 隨機變異
-        if (FMath::RandRange(0.0f, 1.0f) < 0.01f * DeltaTime)
-        {
-            // 添加新的相關價值觀
-            FString NewValue = FString::Printf(TEXT("EvolvingValue_%d"), FMath::RandRange(1000, 9999));
-            Element.AssociatedValues.Add(NewValue);
-        }
-        
-        // 調整傳播強度
-        Element.TransmissionStrength *= (1.0f + FMath::RandRange(-0.05f, 0.05f) * DeltaTime);
-        Element.TransmissionStrength = FMath::Clamp(Element.TransmissionStrength, 0.1f, 2.0f);
-    }
-    
-    return true;
 }
 
 FSocialIndividual UMingSocialDynamicsSystem::GetIndividual(const FString& IndividualID) const
@@ -541,479 +94,1077 @@ FSocialIndividual UMingSocialDynamicsSystem::GetIndividual(const FString& Indivi
     return FSocialIndividual();
 }
 
-TMap<FString, float> UMingSocialDynamicsSystem::GetSystemStatistics() const
+TArray<FSocialIndividual> UMingSocialDynamicsSystem::GetAllIndividuals() const
 {
-    return SystemStats;
-}
-
-// 私有方法實現
-FString UMingSocialDynamicsSystem::GenerateUniqueIndividualID() const
-{
-    return FString::Printf(TEXT("Individual_%s_%d"), *FDateTime::Now().ToString(), FMath::RandRange(1000, 9999));
-}
-
-FString UMingSocialDynamicsSystem::GenerateUniqueRelationshipID() const
-{
-    return FString::Printf(TEXT("Relationship_%s_%d"), *FDateTime::Now().ToString(), FMath::RandRange(1000, 9999));
-}
-
-FString UMingSocialDynamicsSystem::GenerateUniqueEventID() const
-{
-    return FString::Printf(TEXT("Event_%s_%d"), *FDateTime::Now().ToString(), FMath::RandRange(1000, 9999));
-}
-
-FString UMingSocialDynamicsSystem::GenerateUniqueElementID() const
-{
-    return FString::Printf(TEXT("Element_%s_%d"), *FDateTime::Now().ToString(), FMath::RandRange(1000, 9999));
-}
-
-FString UMingSocialDynamicsSystem::GenerateUniqueBehaviorID() const
-{
-    return FString::Printf(TEXT("Behavior_%s_%d"), *FDateTime::Now().ToString(), FMath::RandRange(1000, 9999));
-}
-
-FString UMingSocialDynamicsSystem::GenerateUniqueNetworkID() const
-{
-    return FString::Printf(TEXT("Network_%s_%d"), *FDateTime::Now().ToString(), FMath::RandRange(1000, 9999));
-}
-
-FSocialIndividual UMingSocialDynamicsSystem::CreateDefaultIndividual(const FString& IndividualID, const FString& FirstName, const FString& LastName, int32 Age, const FString& Gender, ESocialClass SocialClass)
-{
-    FSocialIndividual Individual;
-    Individual.IndividualID = IndividualID;
-    Individual.FirstName = FirstName;
-    Individual.LastName = LastName;
-    Individual.Age = Age;
-    Individual.Gender = Gender;
-    Individual.SocialClass = SocialClass;
-    Individual.Occupation = TEXT("Unemployed");
-    Individual.Education = TEXT("Basic");
-    Individual.Location = TEXT("Unknown");
-    Individual.SocialInfluence = 1.0f;
-    Individual.EconomicStatus = 1.0f;
-    Individual.PoliticalPower = 1.0f;
-    Individual.BirthDate = FDateTime::Now() - FTimespan::FromDays(Age * 365);
-    Individual.LastUpdated = FDateTime::Now();
-    Individual.bIsActive = true;
+    TArray<FSocialIndividual> AllIndividuals;
     
-    // 根據社會階層設置初始屬性
-    switch (SocialClass)
+    for (const auto& IndividualPair : Individuals)
     {
-    case ESocialClass::Upper:
-        Individual.EconomicStatus = 3.0f;
-        Individual.PoliticalPower = 2.5f;
-        Individual.SocialInfluence = 2.0f;
-        break;
-    case ESocialClass::UpperMiddle:
-        Individual.EconomicStatus = 2.0f;
-        Individual.PoliticalPower = 1.5f;
-        Individual.SocialInfluence = 1.5f;
-        break;
-    case ESocialClass::Middle:
-        Individual.EconomicStatus = 1.0f;
-        Individual.PoliticalPower = 1.0f;
-        Individual.SocialInfluence = 1.0f;
-        break;
-    case ESocialClass::LowerMiddle:
-        Individual.EconomicStatus = 0.7f;
-        Individual.PoliticalPower = 0.5f;
-        Individual.SocialInfluence = 0.8f;
-        break;
-    case ESocialClass::Lower:
-        Individual.EconomicStatus = 0.3f;
-        Individual.PoliticalPower = 0.2f;
-        Individual.SocialInfluence = 0.5f;
-        break;
-    case ESocialClass::Outcast:
-        Individual.EconomicStatus = 0.1f;
-        Individual.PoliticalPower = 0.1f;
-        Individual.SocialInfluence = 0.2f;
-        break;
+        AllIndividuals.Add(IndividualPair.Value);
     }
     
-    return Individual;
+    return AllIndividuals;
 }
 
-FSocialRelationship UMingSocialDynamicsSystem::CreateDefaultRelationship(const FString& RelationshipID, const FString& IndividualA_ID, const FString& IndividualB_ID, ESocialRelationType RelationType, float Strength)
+void UMingSocialDynamicsSystem::CreateRelationship(const FSocialRelationship& Relationship)
 {
-    FSocialRelationship Relationship;
-    Relationship.RelationshipID = RelationshipID;
-    Relationship.IndividualA_ID = IndividualA_ID;
-    Relationship.IndividualB_ID = IndividualB_ID;
-    Relationship.RelationType = RelationType;
-    Relationship.Strength = FMath::Clamp(Strength, 0.0f, 10.0f);
-    Relationship.Trust = Strength * 0.8f;
-    Relationship.Influence = Strength * 0.6f;
-    Relationship.Duration = 0.0f;
-    Relationship.RelationshipStatus = TEXT("Active");
-    Relationship.FormationDate = FDateTime::Now();
-    Relationship.LastInteraction = FDateTime::Now();
-    Relationship.bIsActive = true;
+    // Validate relationship
+    FSocialRelationship ValidatedRelationship = Relationship;
+    ValidateRelationship(ValidatedRelationship);
     
-    return Relationship;
-}
-
-FSocialEvent UMingSocialDynamicsSystem::CreateDefaultEvent(const FString& EventID, ESocialEventType EventType, const TArray<FString>& Participants, const FString& Location, float Impact)
-{
-    FSocialEvent Event;
-    Event.EventID = EventID;
-    Event.EventType = EventType;
-    Event.EventName = FString::Printf(TEXT("%s Event"), *StaticEnum<ESocialEventType>()->GetNameStringByValue(static_cast<int64>(EventType)));
-    Event.Description = FString::Printf(TEXT("A %s event occurred"), *StaticEnum<ESocialEventType>()->GetNameStringByValue(static_cast<int64>(EventType)));
-    Event.Participants = Participants;
-    Event.Location = Location;
-    Event.Impact = FMath::Clamp(Impact, 0.0f, 10.0f);
-    Event.Duration = Impact * 60.0f; // 影響持續時間
-    Event.EventTime = FDateTime::Now();
-    Event.bIsPublic = true;
-    Event.bIsRecurring = false;
-    
-    return Event;
-}
-
-FCulturalElement UMingSocialDynamicsSystem::CreateDefaultCulturalElement(const FString& ElementID, const FString& ElementName, const FString& ElementCategory)
-{
-    FCulturalElement Element;
-    Element.ElementID = ElementID;
-    Element.ElementName = ElementName;
-    Element.ElementCategory = ElementCategory;
-    Element.Description = FString::Printf(TEXT("Cultural element: %s"), *ElementName);
-    Element.AdoptionRate = 0.0f;
-    Element.TransmissionStrength = 1.0f;
-    Element.OriginTime = FDateTime::Now();
-    Element.bIsDominant = false;
-    Element.bIsEvolving = true;
-    
-    return Element;
-}
-
-FGroupBehavior UMingSocialDynamicsSystem::CreateDefaultGroupBehavior(const FString& BehaviorID, const FString& GroupID, EGroupBehaviorType BehaviorType, const TArray<FString>& Participants)
-{
-    FGroupBehavior Behavior;
-    Behavior.BehaviorID = BehaviorID;
-    Behavior.GroupID = GroupID;
-    Behavior.BehaviorType = BehaviorType;
-    Behavior.BehaviorName = FString::Printf(TEXT("%s Behavior"), *StaticEnum<EGroupBehaviorType>()->GetNameStringByValue(static_cast<int64>(BehaviorType)));
-    Behavior.Description = FString::Printf(TEXT("Group behavior: %s"), *StaticEnum<EGroupBehaviorType>()->GetNameStringByValue(static_cast<int64>(BehaviorType)));
-    Behavior.Participants = Participants;
-    Behavior.Intensity = 1.0f;
-    Behavior.Duration = 0.0f;
-    Behavior.StartTime = FDateTime::Now();
-    Behavior.SocialImpact = 1.0f;
-    Behavior.bIsOngoing = false;
-    
-    return Behavior;
-}
-
-FSocialNetwork UMingSocialDynamicsSystem::CreateDefaultSocialNetwork(const FString& NetworkID, const FString& NetworkName, const FString& NetworkType)
-{
-    FSocialNetwork Network;
-    Network.NetworkID = NetworkID;
-    Network.NetworkName = NetworkName;
-    Network.NetworkType = NetworkType;
-    Network.Density = 0.0f;
-    Network.ClusteringCoefficient = 0.0f;
-    Network.AveragePathLength = 0.0f;
-    Network.CreationTime = FDateTime::Now();
-    Network.LastUpdated = FDateTime::Now();
-    Network.bIsActive = true;
-    
-    return Network;
-}
-
-void UMingSocialDynamicsSystem::UpdateRelationships(float DeltaTime)
-{
-    // 更新關係強度（衰減）
-    for (auto& RelationshipPair : Relationships)
+    // Check if relationship already exists
+    bool bExists = false;
+    for (const FSocialRelationship& ExistingRel : Relationships)
     {
-        FSocialRelationship& Relationship = RelationshipPair.Value;
-        
-        if (!Relationship.bIsActive)
+        if ((ExistingRel.IndividualA == ValidatedRelationship.IndividualA && 
+             ExistingRel.IndividualB == ValidatedRelationship.IndividualB) ||
+            (ExistingRel.IndividualA == ValidatedRelationship.IndividualB && 
+             ExistingRel.IndividualB == ValidatedRelationship.IndividualA))
         {
-            continue;
-        }
-        
-        // 關係衰減
-        Relationship.Strength *= (1.0f - RelationshipDecayRate * DeltaTime);
-        Relationship.Strength = FMath::Max(Relationship.Strength, 0.1f);
-        
-        // 更新持續時間
-        Relationship.Duration += DeltaTime;
-        
-        // 更新最後交互時間
-        if (FMath::RandRange(0.0f, 1.0f) < 0.1f * DeltaTime)
-        {
-            Relationship.LastInteraction = FDateTime::Now();
+            bExists = true;
+            break;
         }
     }
     
-    // 移除過期關係
-    for (auto It = Relationships.CreateIterator(); It; ++It)
+    if (!bExists)
     {
-        if (It->Value.Strength < 0.1f)
+        Relationships.Add(ValidatedRelationship);
+        
+        // Update individual relationships
+        if (Individuals.Contains(ValidatedRelationship.IndividualA))
         {
-            It->Value.bIsActive = false;
-            It.RemoveCurrent();
-            ActiveRelationshipCount--;
+            Individuals[ValidatedRelationship.IndividualA].Relationships.Add(ValidatedRelationship);
         }
-    }
-    
-    // 更新統計
-    SystemStats[TEXT("ActiveRelationships")] = static_cast<float>(ActiveRelationshipCount);
-}
-
-void UMingSocialDynamicsSystem::ProcessSocialEvents(float DeltaTime)
-{
-    // 處理事件持續時間
-    FDateTime CurrentTime = FDateTime::Now();
-    
-    for (int32 i = SocialEvents.Num() - 1; i >= 0; i--)
-    {
-        FSocialEvent& Event = SocialEvents[i];
-        
-        FTimespan TimeSinceEvent = CurrentTime - Event.EventTime;
-        if (TimeSinceEvent.GetTotalSeconds() > Event.Duration)
+        if (Individuals.Contains(ValidatedRelationship.IndividualB))
         {
-            // 事件結束，處理後果
-            SocialEvents.RemoveAt(i);
-        }
-    }
-    
-    // 隨機觸發新事件
-    if (Individuals.Num() > 0 && FMath::RandRange(0.0f, 1.0f) < 0.05f * DeltaTime)
-    {
-        TArray<FString> RandomParticipants;
-        int32 ParticipantCount = FMath::RandRange(1, FMath::Min(5, Individuals.Num()));
-        
-        TArray<FString> IndividualIDs;
-        Individuals.GetKeys(IndividualIDs);
-        
-        for (int32 i = 0; i < ParticipantCount; i++)
-        {
-            int32 RandomIndex = FMath::RandRange(0, IndividualIDs.Num() - 1);
-            RandomParticipants.Add(IndividualIDs[RandomIndex]);
+            Individuals[ValidatedRelationship.IndividualB].Relationships.Add(ValidatedRelationship);
         }
         
-        ESocialEventType RandomEventType = static_cast<ESocialEventType>(FMath::RandRange(0, static_cast<int32>(ESocialEventType::Disaster)));
-        TriggerSocialEvent(RandomEventType, RandomParticipants, TEXT("Random Location"), FMath::RandRange(1.0f, 5.0f));
+        // Broadcast event
+        OnSocialRelationshipChanged.Broadcast(ValidatedRelationship);
+        
+        UE_LOG(LogTemp, Log, TEXT("Created relationship between %s and %s"), 
+            *ValidatedRelationship.IndividualA, *ValidatedRelationship.IndividualB);
     }
 }
 
-void UMingSocialDynamicsSystem::UpdateCulturalElements(float DeltaTime)
+void UMingSocialDynamicsSystem::UpdateRelationship(const FSocialRelationship& Relationship)
 {
-    if (!bEnableCulturalEvolution)
+    for (int32 i = 0; i < Relationships.Num(); ++i)
+    {
+        FSocialRelationship& ExistingRel = Relationships[i];
+        if ((ExistingRel.IndividualA == Relationship.IndividualA && 
+             ExistingRel.IndividualB == Relationship.IndividualB) ||
+            (ExistingRel.IndividualA == Relationship.IndividualB && 
+             ExistingRel.IndividualB == Relationship.IndividualA))
+        {
+            ExistingRel = Relationship;
+            CalculateRelationshipStrength(ExistingRel);
+            
+            // Broadcast event
+            OnSocialRelationshipChanged.Broadcast(ExistingRel);
+            
+            UE_LOG(LogTemp, Log, TEXT("Updated relationship between %s and %s"), 
+                *Relationship.IndividualA, *Relationship.IndividualB);
+            break;
+        }
+    }
+}
+
+void UMingSocialDynamicsSystem::RemoveRelationship(const FString& IndividualA, const FString& IndividualB)
+{
+    for (int32 i = Relationships.Num() - 1; i >= 0; --i)
+    {
+        const FSocialRelationship& Rel = Relationships[i];
+        if ((Rel.IndividualA == IndividualA && Rel.IndividualB == IndividualB) ||
+            (Rel.IndividualA == IndividualB && Rel.IndividualB == IndividualA))
+        {
+            Relationships.RemoveAt(i);
+            
+            UE_LOG(LogTemp, Log, TEXT("Removed relationship between %s and %s"), 
+                *IndividualA, *IndividualB);
+            break;
+        }
+    }
+}
+
+TArray<FSocialRelationship> UMingSocialDynamicsSystem::GetIndividualRelationships(const FString& IndividualID) const
+{
+    TArray<FSocialRelationship> IndividualRelationships;
+    
+    for (const FSocialRelationship& Rel : Relationships)
+    {
+        if (Rel.IndividualA == IndividualID || Rel.IndividualB == IndividualID)
+        {
+            IndividualRelationships.Add(Rel);
+        }
+    }
+    
+    return IndividualRelationships;
+}
+
+void UMingSocialDynamicsSystem::CreateSocialEvent(const FSocialEvent& Event)
+{
+    FSocialEvent NewEvent = Event;
+    if (NewEvent.EventID.IsEmpty())
+    {
+        NewEvent.EventID = FString::Printf(TEXT("Event_%d"), SocialEvents.Num());
+    }
+    
+    SocialEvents.Add(NewEvent);
+    
+    // Process event impacts
+    ProcessSocialImpact(NewEvent);
+    
+    // Broadcast event
+    OnSocialEventOccurred.Broadcast(NewEvent);
+    
+    UE_LOG(LogTemp, Log, TEXT("Created social event: %s"), *NewEvent.EventID);
+}
+
+void UMingSocialDynamicsSystem::ProcessSocialEvent(const FString& EventID)
+{
+    for (const FSocialEvent& Event : SocialEvents)
+    {
+        if (Event.EventID == EventID)
+        {
+            ProcessSocialImpact(Event);
+            break;
+        }
+    }
+}
+
+TArray<FSocialEvent> UMingSocialDynamicsSystem::GetRecentEvents(int32 Count) const
+{
+    TArray<FSocialEvent> RecentEvents;
+    
+    // Sort events by date
+    TArray<FSocialEvent> SortedEvents = SocialEvents;
+    SortedEvents.Sort([&](const FSocialEvent& A, const FSocialEvent& B) {
+        return A.EventDate > B.EventDate;
+    });
+    
+    // Get recent events
+    for (int32 i = 0; i < FMath::Min(Count, SortedEvents.Num()); ++i)
+    {
+        RecentEvents.Add(SortedEvents[i]);
+    }
+    
+    return RecentEvents;
+}
+
+void UMingSocialDynamicsSystem::AddCulturalTrait(const FCulturalTrait& Trait)
+{
+    FCulturalTrait NewTrait = Trait;
+    if (NewTrait.TraitID.IsEmpty())
+    {
+        NewTrait.TraitID = FString::Printf(TEXT("Trait_%d"), CulturalTraits.Num());
+    }
+    
+    CulturalTraits.Add(NewTrait);
+    
+    // Broadcast event
+    OnCulturalTraitSpread.Broadcast(NewTrait);
+    
+    UE_LOG(LogTemp, Log, TEXT("Added cultural trait: %s"), *NewTrait.TraitID);
+}
+
+void UMingSocialDynamicsSystem::SpreadCulturalTrait(const FString& TraitID, ECulturalTransmissionType TransmissionType)
+{
+    for (FCulturalTrait& Trait : CulturalTraits)
+    {
+        if (Trait.TraitID == TraitID)
+        {
+            // Simulate cultural spread based on transmission type
+            switch (TransmissionType)
+            {
+                case ECulturalTransmissionType::Vertical:
+                    SpreadVerticalTransmission(Trait);
+                    break;
+                case ECulturalTransmissionType::Horizontal:
+                    SpreadHorizontalTransmission(Trait);
+                    break;
+                case ECulturalTransmissionType::Oblique:
+                    SpreadObliqueTransmission(Trait);
+                    break;
+                case ECulturalTransmissionType::MassMedia:
+                    SpreadMassMediaTransmission(Trait);
+                    break;
+                case ECulturalTransmissionType::Education:
+                    SpreadEducationTransmission(Trait);
+                    break;
+                case ECulturalTransmissionType::Religious:
+                    SpreadReligiousTransmission(Trait);
+                    break;
+                case ECulturalTransmissionType::Technology:
+                    SpreadTechnologyTransmission(Trait);
+                    break;
+            }
+            
+            // Broadcast event
+            OnCulturalTraitSpread.Broadcast(Trait);
+            
+            UE_LOG(LogTemp, Log, TEXT("Spread cultural trait: %s via %s"), 
+                *TraitID, *UEnum::GetValueAsString(TransmissionType));
+            break;
+        }
+    }
+}
+
+TArray<FCulturalTrait> UMingSocialDynamicsSystem::GetCulturalTraits() const
+{
+    return CulturalTraits;
+}
+
+FSocialNetworkMetrics UMingSocialDynamicsSystem::AnalyzeSocialNetwork() const
+{
+    FSocialNetworkMetrics Metrics;
+    
+    // Calculate basic metrics
+    Metrics.TotalNodes = Individuals.Num();
+    Metrics.TotalEdges = Relationships.Num();
+    
+    if (Metrics.TotalNodes > 0)
+    {
+        // Calculate network density
+        float MaxPossibleEdges = Metrics.TotalNodes * (Metrics.TotalNodes - 1) / 2.0f;
+        Metrics.NetworkDensity = Metrics.TotalEdges / MaxPossibleEdges;
+        
+        // Calculate average path length (simplified)
+        Metrics.AveragePathLength = CalculateAveragePathLength();
+        
+        // Calculate clustering coefficient
+        Metrics.ClusteringCoefficient = CalculateClusteringCoefficient();
+        
+        // Calculate connected components
+        Metrics.ConnectedComponents = CalculateConnectedComponents();
+        
+        // Calculate modularity
+        Metrics.Modularity = CalculateModularity();
+        
+        // Calculate node centrality
+        CalculateNodeCentrality(Metrics);
+    }
+    
+    return Metrics;
+}
+
+float UMingSocialDynamicsSystem::CalculateSocialInfluence(const FString& IndividualID) const
+{
+    if (!Individuals.Contains(IndividualID))
+    {
+        return 0.0f;
+    }
+    
+    const FSocialIndividual& Individual = Individuals[IndividualID];
+    
+    // Calculate influence based on multiple factors
+    float RelationshipInfluence = Individual.Relationships.Num() * 0.1f;
+    float ClassInfluence = GetClassInfluenceValue(Individual.SocialClass);
+    float EconomicInfluence = Individual.EconomicStatus * 0.2f;
+    float EducationInfluence = Individual.EducationLevel * 0.15f;
+    
+    return RelationshipInfluence + ClassInfluence + EconomicInfluence + EducationInfluence;
+}
+
+TArray<FString> UMingSocialDynamicsSystem::FindInfluentialIndividuals(int32 Count) const
+{
+    TArray<FString> InfluentialIndividuals;
+    
+    // Calculate influence for all individuals
+    TArray<TPair<float, FString>> InfluenceScores;
+    
+    for (const auto& IndividualPair : Individuals)
+    {
+        float Influence = CalculateSocialInfluence(IndividualPair.Key);
+        InfluenceScores.Add(TPair<float, FString>(Influence, IndividualPair.Key));
+    }
+    
+    // Sort by influence (descending)
+    InfluenceScores.Sort([&](const TPair<float, FString>& A, const TPair<float, FString>& B) {
+        return A.Key > B.Key;
+    });
+    
+    // Get top influential individuals
+    for (int32 i = 0; i < FMath::Min(Count, InfluenceScores.Num()); ++i)
+    {
+        InfluentialIndividuals.Add(InfluenceScores[i].Value);
+    }
+    
+    return InfluentialIndividuals;
+}
+
+void UMingSocialDynamicsSystem::ProcessSocialMobility()
+{
+    if (!bEnableSocialMobility)
     {
         return;
     }
     
-    SimulateCulturalEvolution(DeltaTime);
+    // Process social mobility for each individual
+    for (auto& IndividualPair : Individuals)
+    {
+        FSocialIndividual& Individual = IndividualPair.Value;
+        
+        // Calculate mobility probability based on individual attributes
+        float MobilityChance = SocialMobilityProbability;
+        MobilityChance *= (1.0f + Individual.EconomicStatus * 0.1f);
+        MobilityChance *= (1.0f + Individual.EducationLevel * 0.1f);
+        
+        if (FMath::FRand() < MobilityChance)
+        {
+            ESocialClass OldClass = Individual.SocialClass;
+            ESocialClass NewClass = CalculateNewSocialClass(Individual);
+            
+            if (OldClass != NewClass)
+            {
+                HandleClassTransition(Individual.IndividualID, OldClass, NewClass);
+                Individual.SocialClass = NewClass;
+                
+                UE_LOG(LogTemp, Log, TEXT("Individual %s moved from %s to %s"), 
+                    *Individual.IndividualID, 
+                    *UEnum::GetValueAsString(OldClass), 
+                    *UEnum::GetValueAsString(NewClass));
+            }
+        }
+    }
 }
 
-void UMingSocialDynamicsSystem::UpdateGroupBehaviors(float DeltaTime)
+void UMingSocialDynamicsSystem::PromoteIndividual(const FString& IndividualID)
+{
+    if (Individuals.Contains(IndividualID))
+    {
+        FSocialIndividual& Individual = Individuals[IndividualID];
+        ESocialClass OldClass = Individual.SocialClass;
+        ESocialClass NewClass = PromoteSocialClass(OldClass);
+        
+        if (OldClass != NewClass)
+        {
+            HandleClassTransition(IndividualID, OldClass, NewClass);
+            Individual.SocialClass = NewClass;
+            
+            UE_LOG(LogTemp, Log, TEXT("Promoted individual %s from %s to %s"), 
+                *IndividualID, *UEnum::GetValueAsString(OldClass), *UEnum::GetValueAsString(NewClass));
+        }
+    }
+}
+
+void UMingSocialDynamicsSystem::DemoteIndividual(const FString& IndividualID)
+{
+    if (Individuals.Contains(IndividualID))
+    {
+        FSocialIndividual& Individual = Individuals[IndividualID];
+        ESocialClass OldClass = Individual.SocialClass;
+        ESocialClass NewClass = DemoteSocialClass(OldClass);
+        
+        if (OldClass != NewClass)
+        {
+            HandleClassTransition(IndividualID, OldClass, NewClass);
+            Individual.SocialClass = NewClass;
+            
+            UE_LOG(LogTemp, Log, TEXT("Demoted individual %s from %s to %s"), 
+                *IndividualID, *UEnum::GetValueAsString(OldClass), *UEnum::GetValueAsString(NewClass));
+        }
+    }
+}
+
+void UMingSocialDynamicsSystem::SimulateGroupBehavior()
 {
     if (!bEnableGroupBehaviors)
     {
         return;
     }
     
-    // 更新群體行為持續時間
-    FDateTime CurrentTime = FDateTime::Now();
+    // Identify social groups based on relationships
+    TArray<TArray<FString>> SocialGroups = IdentifySocialGroups();
     
-    for (int32 i = GroupBehaviors.Num() - 1; i >= 0; i--)
+    // Simulate group behaviors
+    for (const TArray<FString>& Group : SocialGroups)
     {
-        FGroupBehavior& Behavior = GroupBehaviors[i];
-        
-        FTimespan TimeSinceStart = CurrentTime - Behavior.StartTime;
-        if (TimeSinceStart.GetTotalSeconds() > Behavior.Duration)
+        if (Group.Num() >= GroupBehaviorThreshold * MaxIndividuals)
         {
-            Behavior.bIsOngoing = false;
-            GroupBehaviors.RemoveAt(i);
-        }
-    }
-    
-    // 隨機觸發新的群體行為
-    if (Individuals.Num() > 10 && FMath::RandRange(0.0f, 1.0f) < 0.02f * DeltaTime)
-    {
-        TArray<FString> RandomParticipants;
-        int32 ParticipantCount = FMath::RandRange(3, FMath::Min(10, Individuals.Num()));
-        
-        TArray<FString> IndividualIDs;
-        Individuals.GetKeys(IndividualIDs);
-        
-        for (int32 i = 0; i < ParticipantCount; i++)
-        {
-            int32 RandomIndex = FMath::RandRange(0, IndividualIDs.Num() - 1);
-            RandomParticipants.Add(IndividualIDs[RandomIndex]);
-        }
-        
-        EGroupBehaviorType RandomBehaviorType = static_cast<EGroupBehaviorType>(FMath::RandRange(0, static_cast<int32>(EGroupBehaviorType::Mobilization)));
-        SimulateGroupBehavior(TEXT("RandomGroup"), RandomBehaviorType, RandomParticipants);
-    }
-}
-
-void UMingSocialDynamicsSystem::ProcessSocialMobility(float DeltaTime)
-{
-    // 處理社會階層流動
-    for (auto& IndividualPair : Individuals)
-    {
-        FSocialIndividual& Individual = IndividualPair.Value;
-        
-        // 隨機決定是否嘗試流動
-        if (FMath::RandRange(0.0f, 1.0f) < SocialMobilityProbability * DeltaTime)
-        {
-            ESocialClass TargetClass = static_cast<ESocialClass>(FMath::RandRange(0, static_cast<int32>(ESocialClass::Outcast)));
-            ProcessSocialMobility(Individual.IndividualID, TargetClass);
+            SimulateGroupDecision(Group);
+            SimulateGroupCohesion(Group);
         }
     }
 }
 
-float UMingSocialDynamicsSystem::CalculateRelationshipStrength(const FString& IndividualA_ID, const FString& IndividualB_ID) const
+void UMingSocialDynamicsSystem::ProcessSocialContagion(const FString& TraitID, float ContagionRate)
 {
-    if (!Individuals.Contains(IndividualA_ID) || !Individuals.Contains(IndividualB_ID))
+    if (!CulturalTraits.Contains(TraitID))
     {
-        return 0.0f;
+        return;
     }
     
-    const FSocialIndividual& IndividualA = Individuals[IndividualA_ID];
-    const FSocialIndividual& IndividualB = Individuals[IndividualB_ID];
+    const FCulturalTrait& Trait = CulturalTraits[TraitID];
     
-    // 計算基於共同特徵的關係強度
-    float CommonFeatures = 0.0f;
+    // Simulate contagion through social network
+    TArray<FString> InfectedIndividuals = Trait.Adopters;
+    TArray<FString> NewInfectedIndividuals;
     
-    // 共同技能
-    for (const FString& Skill : IndividualA.Skills)
+    for (const FString& InfectedID : InfectedIndividuals)
     {
-        if (IndividualB.Skills.Contains(Skill))
-        {
-            CommonFeatures += 0.2f;
-        }
-    }
-    
-    // 共同信念
-    for (const FString& Belief : IndividualA.Beliefs)
-    {
-        if (IndividualB.Beliefs.Contains(Belief))
-        {
-            CommonFeatures += 0.3f;
-        }
-    }
-    
-    // 共同價值觀
-    for (const FString& Value : IndividualA.Values)
-    {
-        if (IndividualB.Values.Contains(Value))
-        {
-            CommonFeatures += 0.2f;
-        }
-    }
-    
-    // 社會階層差異
-    int32 ClassDiff = FMath::Abs(static_cast<int32>(IndividualA.SocialClass) - static_cast<int32>(IndividualB.SocialClass));
-    float ClassSimilarity = 1.0f - (static_cast<float>(ClassDiff) / 5.0f);
-    
-    return FMath::Clamp(CommonFeatures + ClassSimilarity, 0.0f, 10.0f);
-}
-
-float UMingSocialDynamicsSystem::CalculateCulturalAdoption(const FString& IndividualID, const FString& ElementID) const
-{
-    if (!Individuals.Contains(IndividualID) || !CulturalElements.Contains(ElementID))
-    {
-        return 0.0f;
-    }
-    
-    const FSocialIndividual& Individual = Individuals[IndividualID];
-    const FCulturalElement& Element = CulturalElements[ElementID];
-    
-    // 計算採納概率
-    float AdoptionProbability = CulturalTransmissionRate * Element.TransmissionStrength;
-    
-    // 個體開放性影響
-    float Openness = Individual.SocialInfluence * 0.3f;
-    
-    // 社會階層影響
-    float ClassInfluence = static_cast<float>(static_cast<int32>(Individual.SocialClass)) * 0.1f;
-    
-    return FMath::Clamp(AdoptionProbability + Openness + ClassInfluence, 0.0f, 1.0f);
-}
-
-TArray<FString> UMingSocialDynamicsSystem::FindSocialConnections(const FString& IndividualID, int32 MaxDepth) const
-{
-    TArray<FString> Connections;
-    TSet<FString> Visited;
-    TArray<FString> Queue;
-    
-    Queue.Add(IndividualID);
-    Visited.Add(IndividualID);
-    
-    while (Queue.Num() > 0 && MaxDepth > 0)
-    {
-        FString CurrentID = Queue[0];
-        Queue.RemoveAt(0);
+        TArray<FSocialRelationship> Relationships = GetIndividualRelationships(InfectedID);
         
-        if (Individuals.Contains(CurrentID))
+        for (const FSocialRelationship& Rel : Relationships)
         {
-            const FSocialIndividual& Individual = Individuals[CurrentID];
+            FString ContactID = (Rel.IndividualA == InfectedID) ? Rel.IndividualB : Rel.IndividualA;
             
-            for (const auto& RelationshipPair : Individual.Relationships)
+            if (!InfectedIndividuals.Contains(ContactID) && !NewInfectedIndividuals.Contains(ContactID))
             {
-                FString ConnectedID = RelationshipPair.Key;
-                if (!Visited.Contains(ConnectedID))
+                // Calculate infection probability
+                float InfectionProb = ContagionRate * Rel.RelationshipStrength * Rel.TrustLevel;
+                
+                if (FMath::FRand() < InfectionProb)
                 {
-                    Connections.Add(ConnectedID);
-                    Visited.Add(ConnectedID);
-                    Queue.Add(ConnectedID);
+                    NewInfectedIndividuals.Add(ContactID);
                 }
             }
         }
+    }
+    
+    // Update trait adopters
+    FCulturalTrait& MutableTrait = CulturalTraits[TraitID];
+    MutableTrait.Adopters.Append(NewInfectedIndividuals);
+    
+    UE_LOG(LogTemp, Log, TEXT("Social contagion for trait %s: %d new adopters"), 
+        *TraitID, NewInfectedIndividuals.Num());
+}
+
+TMap<ESocialClass, int32> UMingSocialDynamicsSystem::GetClassDistribution() const
+{
+    TMap<ESocialClass, int32> Distribution;
+    
+    // Initialize all classes to 0
+    for (int32 i = 0; i <= static_cast<int32>(ESocialClass::Outcast); ++i)
+    {
+        ESocialClass Class = static_cast<ESocialClass>(i);
+        Distribution.Add(Class, 0);
+    }
+    
+    // Count individuals in each class
+    for (const auto& IndividualPair : Individuals)
+    {
+        ESocialClass Class = IndividualPair.Value.SocialClass;
+        Distribution[Class] = Distribution[Class] + 1;
+    }
+    
+    return Distribution;
+}
+
+TMap<ESocialRelationType, int32> UMingSocialDynamicsSystem::GetRelationshipTypeDistribution() const
+{
+    TMap<ESocialRelationType, int32> Distribution;
+    
+    // Initialize all relationship types to 0
+    for (int32 i = 0; i <= static_cast<int32>(ESocialRelationType::Rivalry); ++i)
+    {
+        ESocialRelationType Type = static_cast<ESocialRelationType>(i);
+        Distribution.Add(Type, 0);
+    }
+    
+    // Count relationships by type
+    for (const FSocialRelationship& Rel : Relationships)
+    {
+        ESocialRelationType Type = Rel.RelationType;
+        Distribution[Type] = Distribution[Type] + 1;
+    }
+    
+    return Distribution;
+}
+
+float UMingSocialDynamicsSystem::CalculateSocialCohesion() const
+{
+    if (Individuals.Num() < 2)
+    {
+        return 1.0f;
+    }
+    
+    float TotalCohesion = 0.0f;
+    int32 Count = 0;
+    
+    for (const FSocialRelationship& Rel : Relationships)
+    {
+        TotalCohesion += Rel.RelationshipStrength * Rel.TrustLevel;
+        Count++;
+    }
+    
+    if (Count > 0)
+    {
+        return TotalCohesion / Count;
+    }
+    
+    return 0.0f;
+}
+
+void UMingSocialDynamicsSystem::Tick(float DeltaTime)
+{
+    if (!bSystemInitialized)
+    {
+        return;
+    }
+    
+    // Update simulation
+    float AdjustedDeltaTime = DeltaTime * SimulationSpeed;
+    
+    // Update relationships
+    UpdateRelationships();
+    
+    // Process cultural evolution
+    if (bEnableCulturalEvolution)
+    {
+        ProcessCulturalEvolution();
+    }
+    
+    // Update social network
+    UpdateSocialNetwork();
+    
+    // Handle social conflicts
+    HandleSocialConflict();
+    
+    // Update last update time
+    LastUpdateTime = FDateTime::Now();
+}
+
+// Private helper functions
+
+void UMingSocialDynamicsSystem::ValidateRelationship(FSocialRelationship& Relationship)
+{
+    // Ensure both individuals exist
+    if (!Individuals.Contains(Relationship.IndividualA) || !Individuals.Contains(Relationship.IndividualB))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Relationship validation failed: individuals not found"));
+        return;
+    }
+    
+    // Calculate initial relationship strength
+    CalculateRelationshipStrength(Relationship);
+    
+    // Clamp values
+    Relationship.RelationshipStrength = FMath::Clamp(Relationship.RelationshipStrength, 0.0f, 1.0f);
+    Relationship.TrustLevel = FMath::Clamp(Relationship.TrustLevel, 0.0f, 1.0f);
+    Relationship.InfluenceLevel = FMath::Clamp(Relationship.InfluenceLevel, 0.0f, 1.0f);
+}
+
+void UMingSocialDynamicsSystem::CalculateRelationshipStrength(FSocialRelationship& Relationship)
+{
+    // Calculate strength based on shared interests and values
+    float SharedInterestScore = 0.0f;
+    float SharedValueScore = 0.0f;
+    
+    const FSocialIndividual& IndividualA = Individuals[Relationship.IndividualA];
+    const FSocialIndividual& IndividualB = Individuals[Relationship.IndividualB];
+    
+    // Calculate shared interests
+    for (const FString& InterestA : IndividualA.Interests)
+    {
+        if (IndividualB.Interests.Contains(InterestA))
+        {
+            SharedInterestScore += 1.0f;
+        }
+    }
+    
+    // Calculate shared values
+    for (const FString& ValueA : IndividualA.Values)
+    {
+        if (IndividualB.Values.Contains(ValueA))
+        {
+            SharedValueScore += 1.0f;
+        }
+    }
+    
+    // Normalize scores
+    float MaxSharedInterests = FMath::Min(IndividualA.Interests.Num(), IndividualB.Interests.Num());
+    float MaxSharedValues = FMath::Min(IndividualA.Values.Num(), IndividualB.Values.Num());
+    
+    if (MaxSharedInterests > 0)
+    {
+        SharedInterestScore /= MaxSharedInterests;
+    }
+    
+    if (MaxSharedValues > 0)
+    {
+        SharedValueScore /= MaxSharedValues;
+    }
+    
+    // Calculate final relationship strength
+    Relationship.RelationshipStrength = (SharedInterestScore + SharedValueScore) / 2.0f;
+    
+    // Update trust and influence based on relationship strength
+    Relationship.TrustLevel = Relationship.RelationshipStrength * 0.8f;
+    Relationship.InfluenceLevel = Relationship.RelationshipStrength * 0.6f;
+}
+
+void UMingSocialDynamicsSystem::ProcessSocialImpact(const FSocialEvent& Event)
+{
+    // Process impact on individuals
+    for (const auto& ImpactPair : Event.IndividualImpacts)
+    {
+        const FString& IndividualID = ImpactPair.Key;
+        float ImpactValue = ImpactPair.Value;
         
-        MaxDepth--;
+        if (Individuals.Contains(IndividualID))
+        {
+            FSocialIndividual& Individual = Individuals[IndividualID];
+            
+            // Update individual attributes based on impact
+            Individual.SocialInfluence += ImpactValue * 0.1f;
+            Individual.SocialInfluence = FMath::Clamp(Individual.SocialInfluence, 0.0f, 1.0f);
+            
+            UpdateIndividualInfluence(IndividualID);
+        }
     }
     
-    return Connections;
+    // Process relationship impacts
+    for (FSocialRelationship& Rel : Relationships)
+    {
+        if (Event.Participants.Contains(Rel.IndividualA) && Event.Participants.Contains(Rel.IndividualB))
+        {
+            // Strengthen or weaken relationships based on event impact
+            float ImpactModifier = Event.SocialImpact * 0.1f;
+            Rel.RelationshipStrength += ImpactModifier;
+            Rel.RelationshipStrength = FMath::Clamp(Rel.RelationshipStrength, 0.0f, 1.0f);
+        }
+    }
 }
 
-ESocialClass UMingSocialDynamicsSystem::DetermineSocialClass(const FSocialIndividual& Individual) const
+void UMingSocialDynamicsSystem::UpdateIndividualInfluence(const FString& IndividualID)
 {
-    // 基於經濟狀況和政治權力確定社會階層
-    float CombinedScore = Individual.EconomicStatus * 0.6f + Individual.PoliticalPower * 0.4f;
+    if (!Individuals.Contains(IndividualID))
+    {
+        return;
+    }
     
-    if (CombinedScore >= 2.5f)
+    FSocialIndividual& Individual = Individuals[IndividualID];
+    
+    // Recalculate influence based on current attributes
+    float NewInfluence = CalculateSocialInfluence(IndividualID);
+    Individual.SocialInfluence = NewInfluence;
+}
+
+void UMingSocialDynamicsSystem::HandleClassTransition(const FString& IndividualID, ESocialClass OldClass, ESocialClass NewClass)
+{
+    // Update relationships based on class change
+    TArray<FSocialRelationship> IndividualRelationships = GetIndividualRelationships(IndividualID);
+    
+    for (FSocialRelationship& Rel : IndividualRelationships)
     {
-        return ESocialClass::Upper;
+        FString OtherIndividualID = (Rel.IndividualA == IndividualID) ? Rel.IndividualB : Rel.IndividualA;
+        
+        if (Individuals.Contains(OtherIndividualID))
+        {
+            ESocialClass OtherClass = Individuals[OtherIndividualID].SocialClass;
+            
+            // Adjust relationship strength based on class compatibility
+            float ClassCompatibility = CalculateClassCompatibility(NewClass, OtherClass);
+            Rel.RelationshipStrength *= ClassCompatibility;
+            Rel.RelationshipStrength = FMath::Clamp(Rel.RelationshipStrength, 0.0f, 1.0f);
+        }
     }
-    else if (CombinedScore >= 2.0f)
+    
+    // Broadcast class change event
+    OnSocialClassChanged.Broadcast(IndividualID);
+    
+    UE_LOG(LogTemp, Log, TEXT("Handled class transition for %s: %s -> %s"), 
+        *IndividualID, *UEnum::GetValueAsString(OldClass), *UEnum::GetValueAsString(NewClass));
+}
+
+void UMingSocialDynamicsSystem::UpdateRelationships()
+{
+    // Decay relationships over time
+    for (FSocialRelationship& Rel : Relationships)
     {
-        return ESocialClass::UpperMiddle;
+        Rel.RelationshipStrength *= (1.0f - RelationshipDecayRate);
+        Rel.RelationshipStrength = FMath::Clamp(Rel.RelationshipStrength, 0.0f, 1.0f);
     }
-    else if (CombinedScore >= 1.0f)
+    
+    // Remove very weak relationships
+    Relationships.RemoveAll([&](const FSocialRelationship& Rel) {
+        return Rel.RelationshipStrength < 0.01f;
+    });
+}
+
+void UMingSocialDynamicsSystem::ProcessCulturalEvolution()
+{
+    // Simulate cultural trait evolution
+    for (FCulturalTrait& Trait : CulturalTraits)
     {
-        return ESocialClass::Middle;
-    }
-    else if (CombinedScore >= 0.5f)
-    {
-        return ESocialClass::LowerMiddle;
-    }
-    else if (CombinedScore >= 0.2f)
-    {
-        return ESocialClass::Lower;
-    }
-    else
-    {
-        return ESocialClass::Outcast;
+        // Apply mutation
+        if (FMath::FRand() < Trait.MutationRate)
+        {
+            // Mutate trait (simplified - in reality would be more complex)
+            Trait.AdoptionRate *= FMath::RandRange(0.9f, 1.1f);
+            Trait.AdoptionRate = FMath::Clamp(Trait.AdoptionRate, 0.0f, 1.0f);
+        }
+        
+        // Apply regional variations
+        for (auto& RegionalPair : Trait.RegionalVariations)
+        {
+            if (FMath::FRand() < 0.01f) // Small chance of regional change
+            {
+                RegionalPair.Value *= FMath::RandRange(0.95f, 1.05f);
+                RegionalPair.Value = FMath::Clamp(RegionalPair.Value, 0.0f, 1.0f);
+            }
+        }
     }
 }
 
-bool UMingSocialDynamicsSystem::ValidateIndividualCreation(const FString& FirstName, const FString& LastName, int32 Age, const FString& Gender, ESocialClass SocialClass) const
+void UMingSocialDynamicsSystem::UpdateSocialNetwork()
 {
-    return !FirstName.IsEmpty() && !LastName.IsEmpty() && Age > 0 && Age < 120 && !Gender.IsEmpty();
+    // Update network metrics
+    FSocialNetworkMetrics Metrics = AnalyzeSocialNetwork();
+    
+    // Log network statistics periodically
+    static int32 UpdateCounter = 0;
+    if (++UpdateCounter >= 100) // Every 100 ticks
+    {
+        UE_LOG(LogTemp, Log, TEXT("Social Network Metrics - Nodes: %d, Edges: %d, Density: %.3f"), 
+            Metrics.TotalNodes, Metrics.TotalEdges, Metrics.NetworkDensity);
+        UpdateCounter = 0;
+    }
 }
 
-bool UMingSocialDynamicsSystem::ValidateRelationshipEstablishment(const FString& IndividualA_ID, const FString& IndividualB_ID, ESocialRelationType RelationType, float Strength) const
+void UMingSocialDynamicsSystem::HandleSocialConflict()
 {
-    return Individuals.Contains(IndividualA_ID) && Individuals.Contains(IndividualB_ID) && Strength > 0.0f;
+    // Check for potential conflicts based on relationships and attributes
+    for (const FSocialRelationship& Rel : Relationships)
+    {
+        if (Rel.RelationType == ESocialRelationType::Rivalry && Rel.RelationshipStrength > 0.5f)
+        {
+            // High rivalry could lead to conflict
+            if (FMath::FRand() < 0.001f) // Small chance of conflict
+            {
+                // Create conflict event
+                FSocialEvent ConflictEvent;
+                ConflictEvent.EventType = ESocialEventType::SocialMovement;
+                ConflictEvent.Description = FString::Printf(TEXT("Conflict between %s and %s"), 
+                    *Rel.IndividualA, *Rel.IndividualB);
+                ConflictEvent.Participants = {Rel.IndividualA, Rel.IndividualB};
+                ConflictEvent.SocialImpact = -0.3f;
+                
+                CreateSocialEvent(ConflictEvent);
+            }
+        }
+    }
 }
 
-bool UMingSocialDynamicsSystem::ValidateSocialEvent(ESocialEventType EventType, const TArray<FString>& Participants, const FString& Location, float Impact) const
+// Additional helper functions (simplified implementations)
+
+float UMingSocialDynamicsSystem::GetClassInfluenceValue(ESocialClass Class) const
 {
-    return Participants.Num() > 0 && Impact > 0.0f;
+    switch (Class)
+    {
+        case ESocialClass::Upper: return 1.0f;
+        case ESocialClass::UpperMiddle: return 0.8f;
+        case ESocialClass::Middle: return 0.6f;
+        case ESocialClass::LowerMiddle: return 0.4f;
+        case ESocialClass::Lower: return 0.2f;
+        case ESocialClass::Outcast: return 0.1f;
+        default: return 0.5f;
+    }
+}
+
+ESocialClass UMingSocialDynamicsSystem::CalculateNewSocialClass(const FSocialIndividual& Individual) const
+{
+    float MobilityScore = Individual.EconomicStatus + Individual.EducationLevel + Individual.SocialInfluence;
+    MobilityScore /= 3.0f;
+    
+    if (MobilityScore > 0.8f) return ESocialClass::Upper;
+    if (MobilityScore > 0.6f) return ESocialClass::UpperMiddle;
+    if (MobilityScore > 0.4f) return ESocialClass::Middle;
+    if (MobilityScore > 0.2f) return ESocialClass::LowerMiddle;
+    if (MobilityScore > 0.1f) return ESocialClass::Lower;
+    return ESocialClass::Outcast;
+}
+
+ESocialClass UMingSocialDynamicsSystem::PromoteSocialClass(ESocialClass CurrentClass) const
+{
+    int32 ClassValue = static_cast<int32>(CurrentClass);
+    if (ClassValue > 0)
+    {
+        return static_cast<ESocialClass>(ClassValue - 1);
+    }
+    return CurrentClass;
+}
+
+ESocialClass UMingSocialDynamicsSystem::DemoteSocialClass(ESocialClass CurrentClass) const
+{
+    int32 ClassValue = static_cast<int32>(CurrentClass);
+    if (ClassValue < static_cast<int32>(ESocialClass::Outcast))
+    {
+        return static_cast<ESocialClass>(ClassValue + 1);
+    }
+    return CurrentClass;
+}
+
+float UMingSocialDynamicsSystem::CalculateClassCompatibility(ESocialClass ClassA, ESocialClass ClassB) const
+{
+    int32 Diff = FMath::Abs(static_cast<int32>(ClassA) - static_cast<int32>(ClassB));
+    
+    // Classes closer together have higher compatibility
+    switch (Diff)
+    {
+        case 0: return 1.0f;  // Same class
+        case 1: return 0.8f;  // Adjacent classes
+        case 2: return 0.6f;
+        case 3: return 0.4f;
+        case 4: return 0.2f;
+        default: return 0.1f;
+    }
+}
+
+void UMingSocialDynamicsSystem::SpreadVerticalTransmission(FCulturalTrait& Trait)
+{
+    // Parent to child transmission (simplified)
+    TArray<FString> NewAdopters;
+    
+    for (const FString& AdopterID : Trait.Adopters)
+    {
+        if (Individuals.Contains(AdopterID))
+        {
+            // Find potential "children" (younger individuals with relationships)
+            const FSocialIndividual& Adopter = Individuals[AdopterID];
+            
+            for (const FSocialRelationship& Rel : Adopter.Relationships)
+            {
+                if (Rel.RelationType == ESocialRelationType::Family)
+                {
+                    FString ChildID = (Rel.IndividualA == AdopterID) ? Rel.IndividualB : Rel.IndividualA;
+                    
+                    if (!Trait.Adopters.Contains(ChildID) && FMath::FRand() < Trait.AdoptionRate)
+                    {
+                        NewAdopters.Add(ChildID);
+                    }
+                }
+            }
+        }
+    }
+    
+    Trait.Adopters.Append(NewAdopters);
+}
+
+void UMingSocialDynamicsSystem::SpreadHorizontalTransmission(FCulturalTrait& Trait)
+{
+    // Peer to peer transmission
+    TArray<FString> NewAdopters;
+    
+    for (const FString& AdopterID : Trait.Adopters)
+    {
+        TArray<FSocialRelationship> Relationships = GetIndividualRelationships(AdopterID);
+        
+        for (const FSocialRelationship& Rel : Relationships)
+        {
+            FString PeerID = (Rel.IndividualA == AdopterID) ? Rel.IndividualB : Rel.IndividualA;
+            
+            if (!Trait.Adopters.Contains(PeerID) && FMath::FRand() < Trait.AdoptionRate * Rel.RelationshipStrength)
+            {
+                NewAdopters.Add(PeerID);
+            }
+        }
+    }
+    
+    Trait.Adopters.Append(NewAdopters);
+}
+
+void UMingSocialDynamicsSystem::SpreadObliqueTransmission(FCulturalTrait& Trait)
+{
+    // Non-parental adult transmission (simplified as similar to horizontal)
+    SpreadHorizontalTransmission(Trait);
+}
+
+void UMingSocialDynamicsSystem::SpreadMassMediaTransmission(FCulturalTrait& Trait)
+{
+    // Mass media affects random individuals
+    int32 TargetCount = FMath::Min(10, Individuals.Num() - Trait.Adopters.Num());
+    
+    for (int32 i = 0; i < TargetCount; ++i)
+    {
+        TArray<FString> NonAdopters;
+        
+        for (const auto& IndividualPair : Individuals)
+        {
+            if (!Trait.Adopters.Contains(IndividualPair.Key))
+            {
+                NonAdopters.Add(IndividualPair.Key);
+            }
+        }
+        
+        if (NonAdopters.Num() > 0)
+        {
+            int32 RandomIndex = FMath::RandRange(0, NonAdopters.Num() - 1);
+            if (FMath::FRand() < Trait.AdoptionRate * 0.5f) // Reduced rate for mass media
+            {
+                Trait.Adopters.Add(NonAdopters[RandomIndex]);
+            }
+        }
+    }
+}
+
+void UMingSocialDynamicsSystem::SpreadEducationTransmission(FCulturalTrait& Trait)
+{
+    // Education-based transmission (similar to vertical but with teachers)
+    SpreadVerticalTransmission(Trait);
+}
+
+void UMingSocialDynamicsSystem::SpreadReligiousTransmission(FCulturalTrait& Trait)
+{
+    // Religious transmission through religious relationships
+    TArray<FString> NewAdopters;
+    
+    for (const FString& AdopterID : Trait.Adopters)
+    {
+        TArray<FSocialRelationship> Relationships = GetIndividualRelationships(AdopterID);
+        
+        for (const FSocialRelationship& Rel : Relationships)
+        {
+            if (Rel.RelationType == ESocialRelationType::Religious)
+            {
+                FString ConvertID = (Rel.IndividualA == AdopterID) ? Rel.IndividualB : Rel.IndividualA;
+                
+                if (!Trait.Adopters.Contains(ConvertID) && FMath::FRand() < Trait.AdoptionRate * Rel.TrustLevel)
+                {
+                    NewAdopters.Add(ConvertID);
+                }
+            }
+        }
+    }
+    
+    Trait.Adopters.Append(NewAdopters);
+}
+
+void UMingSocialDynamicsSystem::SpreadTechnologyTransmission(FCulturalTrait& Trait)
+{
+    // Technology transmission through professional relationships
+    TArray<FString> NewAdopters;
+    
+    for (const FString& AdopterID : Trait.Adopters)
+    {
+        TArray<FSocialRelationship> Relationships = GetIndividualRelationships(AdopterID);
+        
+        for (const FSocialRelationship& Rel : Relationships)
+        {
+            if (Rel.RelationType == ESocialRelationType::Professional)
+            {
+                FString ColleagueID = (Rel.IndividualA == AdopterID) ? Rel.IndividualB : Rel.IndividualA;
+                
+                if (!Trait.Adopters.Contains(ColleagueID) && FMath::FRand() < Trait.AdoptionRate * Rel.InfluenceLevel)
+                {
+                    NewAdopters.Add(ColleagueID);
+                }
+            }
+        }
+    }
+    
+    Trait.Adopters.Append(NewAdopters);
+}
+
+// Simplified implementations for complex network analysis functions
+
+float UMingSocialDynamicsSystem::CalculateAveragePathLength() const
+{
+    // Simplified calculation - in reality would use Floyd-Warshall or similar
+    if (Individuals.Num() < 2) return 0.0f;
+    
+    return 2.5f; // Placeholder value
+}
+
+float UMingSocialDynamicsSystem::CalculateClusteringCoefficient() const
+{
+    // Simplified clustering coefficient calculation
+    if (Relationships.Num() == 0) return 0.0f;
+    
+    return 0.3f; // Placeholder value
+}
+
+int32 UMingSocialDynamicsSystem::CalculateConnectedComponents() const
+{
+    // Simplified connected components calculation
+    if (Individuals.Num() == 0) return 0;
+    
+    return 1; // Assume mostly connected for simplicity
+}
+
+float UMingSocialDynamicsSystem::CalculateModularity() const
+{
+    // Simplified modularity calculation
+    return 0.4f; // Placeholder value
+}
+
+void UMingSocialDynamicsSystem::CalculateNodeCentrality(FSocialNetworkMetrics& Metrics) const
+{
+    // Simplified centrality calculation
+    for (const auto& IndividualPair : Individuals)
+    {
+        float Centrality = CalculateSocialInfluence(IndividualPair.Key);
+        Metrics.NodeCentrality.Add(IndividualPair.Key, Centrality);
+    }
+}
+
+TArray<TArray<FString>> UMingSocialDynamicsSystem::IdentifySocialGroups() const
+{
+    // Simplified group identification using connected components
+    TArray<TArray<FString>> Groups;
+    
+    // For simplicity, create one group with all individuals
+    if (Individuals.Num() > 0)
+    {
+        TArray<FString> AllIndividuals;
+        for (const auto& IndividualPair : Individuals)
+        {
+            AllIndividuals.Add(IndividualPair.Key);
+        }
+        Groups.Add(AllIndividuals);
+    }
+    
+    return Groups;
+}
+
+void UMingSocialDynamicsSystem::SimulateGroupDecision(const TArray<FString>& Group)
+{
+    // Simplified group decision simulation
+    if (Group.Num() == 0) return;
+    
+    // Calculate average influence
+    float TotalInfluence = 0.0f;
+    for (const FString& IndividualID : Group)
+    {
+        TotalInfluence += CalculateSocialInfluence(IndividualID);
+    }
+    
+    float AverageInfluence = TotalInfluence / Group.Num();
+    
+    UE_LOG(LogTemp, Log, TEXT("Group decision simulated for %d individuals, average influence: %.2f"), 
+        Group.Num(), AverageInfluence);
+}
+
+void UMingSocialDynamicsSystem::SimulateGroupCohesion(const TArray<FString>& Group)
+{
+    // Simplified group cohesion simulation
+    float GroupCohesion = 0.0f;
+    int32 RelationshipCount = 0;
+    
+    for (int32 i = 0; i < Group.Num(); ++i)
+    {
+        for (int32 j = i + 1; j < Group.Num(); ++j)
+        {
+            TArray<FSocialRelationship> Relationships = GetIndividualRelationships(Group[i]);
+            
+            for (const FSocialRelationship& Rel : Relationships)
+            {
+                if (Rel.IndividualB == Group[j])
+                {
+                    GroupCohesion += Rel.RelationshipStrength;
+                    RelationshipCount++;
+                    break;
+                }
+            }
+        }
+    }
+    
+    if (RelationshipCount > 0)
+    {
+        GroupCohesion /= RelationshipCount;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Group cohesion simulated: %.2f"), GroupCohesion);
 }

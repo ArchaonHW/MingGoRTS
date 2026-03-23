@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Risk Monitoring Dashboard - B2-1
 // Provides comprehensive risk monitoring and visualization
 
@@ -21,26 +21,26 @@ enum class ERiskLevel: uint8 {
 
 UENUM(BlueprintType)
 enum class ERiskCategory: uint8 {
-    General = 0, UMETA(DisplayName = "General"),
-    Performance, UMETA(DisplayName = "Performance"),
-    Security, UMETA(DisplayName = "Security"),
-    Stability, UMETA(DisplayName = "Stability"),
-    Compatibility, UMETA(DisplayName = "Compatibility"),
-    Resource, UMETA(DisplayName = "Resource"),
-    Network, UMETA(DisplayName = "Network"),
-    AI, UMETA(DisplayName = "AI System"),
-    PlayerExperience, UMETA(DisplayName = "Player Experience"),
+    General = 0 UMETA(DisplayName = "General"),
+    Performance UMETA(DisplayName = "Performance"),
+    Security UMETA(DisplayName = "Security"),
+    Stability UMETA(DisplayName = "Stability"),
+    Compatibility UMETA(DisplayName = "Compatibility"),
+    Resource UMETA(DisplayName = "Resource"),
+    Network UMETA(DisplayName = "Network"),
+    AI UMETA(DisplayName = "AI Systems"),
+    PlayerExperience UMETA(DisplayName = "Player Experience"),
     DataIntegrity UMETA(DisplayName = "Data Integrity")
 };
 
 UENUM(BlueprintType)
 enum class EDashboardView: uint8 {
-    Overview = 0, UMETA(DisplayName = "Overview"),
-    Performance, UMETA(DisplayName = "Performance"),
-    Security, UMETA(DisplayName = "Security"),
-    AI, UMETA(DisplayName = "AI Systems"),
-    Network, UMETA(DisplayName = "Network"),
-    Player, UMETA(DisplayName = "Player Stats"),
+    Overview = 0 UMETA(DisplayName = "Overview"),
+    Performance UMETA(DisplayName = "Performance"),
+    Security UMETA(DisplayName = "Security"),
+    AI UMETA(DisplayName = "AI Systems"),
+    Network UMETA(DisplayName = "Network"),
+    Player UMETA(DisplayName = "Player Stats"),
     Custom UMETA(DisplayName = "Custom")
 };
 
@@ -71,15 +71,15 @@ struct FRiskMetric
     FString Description;
 
     UPROPERTY()
-    uint32 LastUpdateTime;
+    int32 LastUpdateTime;
 
     UPROPERTY()
     TArray<float> HistoryValues;
 
     FRiskMetric()
         : CurrentValue(0.0f)
-        , Threshold(50.0f)
-        , CriticalThreshold(80.0f)
+        , Threshold(0.0f)
+        , CriticalThreshold(0.0f)
         , RiskLevel(ERiskLevel::None)
         , Category(ERiskCategory::General)
         , LastUpdateTime(0)
@@ -87,80 +87,46 @@ struct FRiskMetric
 };
 
 USTRUCT(BlueprintType)
-struct FRiskIndicator
+struct FRiskAlert
 {
     GENERATED_BODY()
+
+    UPROPERTY()
+    FString AlertID;
+
+    UPROPERTY()
+    FString Title;
+
+    UPROPERTY()
+    FString Description;
+
+    UPROPERTY()
+    ERiskLevel Level;
 
     UPROPERTY()
     ERiskCategory Category;
 
     UPROPERTY()
-    ERiskLevel OverallLevel;
+    FDateTime Timestamp;
 
     UPROPERTY()
-    int32 ActiveRiskCount;
+    bool bIsAcknowledged;
 
     UPROPERTY()
-    int32 ResolvedRiskCount;
+    FString RecommendedAction;
 
-    UPROPERTY()
-    FString Summary;
-
-    UPROPERTY()
-    FLinearColor DisplayColor;
-
-    FRiskIndicator()
-        : Category(ERiskCategory::General)
-        , OverallLevel(ERiskLevel::None)
-        , ActiveRiskCount(0)
-        , ResolvedRiskCount(0)
-        , DisplayColor(FLinearColor::Green)
+    FRiskAlert()
+        : Level(ERiskLevel::None)
+        , Category(ERiskCategory::General)
+        , bIsAcknowledged(false)
     {}
 };
 
-USTRUCT(BlueprintType)
-struct FDashboardConfig
-{
-    GENERATED_BODY()
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dashboard")
-    EDashboardView DefaultView;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dashboard")
-    float UpdateInterval;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dashboard")
-    bool bEnableRealTimeUpdates;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dashboard")
-    bool bShowHistoryGraphs;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dashboard")
-    int32 HistoryDataPoints;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dashboard")
-    bool bEnableAlertNotifications;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dashboard")
-    TArray<ERiskCategory> MonitoredCategories;
-
-    FDashboardConfig()
-        : DefaultView(EDashboardView::Overview)
-        , UpdateInterval(1.0f)
-        , bEnableRealTimeUpdates(true)
-        , bShowHistoryGraphs(true)
-        , HistoryDataPoints(100)
-        , bEnableAlertNotifications(true)
-    {}
-};
-
-
-
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRiskLevelChanged, ERiskLevel, NewLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRiskAlertTriggered, FRiskAlert, Alert);
 
 /**
- * Risk Monitoring Dashboard
- * Provides comprehensive risk monitoring and visualization
+ * Risk Dashboard System
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGRTS_API UMingRiskDashboard : public UObject
@@ -169,103 +135,70 @@ class MINGRTS_API UMingRiskDashboard : public UObject
 
 public:
     UMingRiskDashboard();
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void InitializeDashboard(const FDashboardConfig& Config);
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void ShutdownDashboard();
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void UpdateDashboard();
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void SetCurrentView(EDashboardView View);
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void RegisterRiskMetric(const FRiskMetric& Metric);
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void UpdateRiskMetric(FName MetricName, float NewValue);
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void UnregisterRiskMetric(FName MetricName);
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    FRiskMetric GetRiskMetric(FName MetricName) const;
 
     UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    TArray<FRiskMetric> GetAllRiskMetrics() const;
+    void InitializeDashboard();
 
     UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    TArray<FRiskMetric> GetRiskMetricsByCategory(ERiskCategory Category) const;
+    void UpdateRiskMetrics();
 
     UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
     ERiskLevel GetOverallRiskLevel() const;
 
     UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    FRiskIndicator GetRiskIndicator(ERiskCategory Category) const;
+    TArray<FRiskMetric> GetRiskMetricsByCategory(ERiskCategory Category) const;
 
     UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    TArray<FRiskIndicator> GetAllRiskIndicators() const;
+    void AddRiskMetric(const FRiskMetric& Metric);
 
     UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void SetRiskThreshold(FName MetricName, float Threshold, float CriticalThreshold);
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void AcknowledgeRisk(FName MetricName);
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void ResolveRisk(FName MetricName);
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void ExportDashboardData(const FString& FilePath);
-    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
-    void GenerateRiskReport();
-    UFUNCTION(BlueprintPure, Category = "Risk Dashboard")
-    EDashboardView GetCurrentView() const { return CurrentView; }
+    void UpdateRiskMetric(const FName& MetricName, float NewValue);
 
-    UFUNCTION(BlueprintPure, Category = "Risk Dashboard")
-    int32 GetActiveRiskCount() const;
+    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
+    void RemoveRiskMetric(const FName& MetricName);
 
-    UFUNCTION(BlueprintPure, Category = "Risk Dashboard")
-    int32 GetCriticalRiskCount() const;
+    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
+    TArray<FRiskAlert> GetActiveAlerts() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
+    void AcknowledgeAlert(const FString& AlertID);
+
+    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
+    void SetDashboardView(EDashboardView View);
 
     UFUNCTION(BlueprintPure, Category = "Risk Dashboard")
-    bool IsRealTimeUpdatesEnabled() const { return Config.bEnableRealTimeUpdates; }
+    EDashboardView GetCurrentView() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Risk Dashboard")
+    void ExportRiskReport(const FString& FilePath);
 
     UPROPERTY(BlueprintAssignable, Category = "Risk Dashboard Events")
     FOnRiskLevelChanged OnRiskLevelChanged;
 
     UPROPERTY(BlueprintAssignable, Category = "Risk Dashboard Events")
-    FOnDashboardUpdated OnDashboardUpdated;
-
-    UPROPERTY(BlueprintAssignable, Category = "Risk Dashboard Events")
-    FOnRiskDetected OnRiskDetected;
-
-    UPROPERTY(BlueprintAssignable, Category = "Risk Dashboard Events")
-    FOnMetricThresholdExceeded OnMetricThresholdExceeded;
+    FOnRiskAlertTriggered OnRiskAlertTriggered;
 
 protected:
     UPROPERTY()
-    FDashboardConfig Config;
+    bool bIsInitialized;
 
     UPROPERTY()
-    TMap<FName, FRiskMetric> RiskMetrics;
+    ERiskLevel CurrentOverallRisk;
 
     UPROPERTY()
     EDashboardView CurrentView;
 
     UPROPERTY()
-    ERiskLevel OverallRiskLevel;
+    TArray<FRiskMetric> RiskMetrics;
 
     UPROPERTY()
-    FTimerHandle UpdateTimer;
+    TArray<FRiskAlert> ActiveAlerts;
 
     UPROPERTY()
-    TArray<FString> AcknowledgedRisks;
+    TMap<ERiskCategory, ERiskLevel> CategoryRiskLevels;
 
-    UPROPERTY()
-    TArray<FString> ResolvedRisks;
-
-    void ScheduleUpdates();
-    void CancelUpdates();
     void EvaluateRiskLevels();
-    ERiskLevel CalculateRiskLevel(float Value, float Threshold, float CriticalThreshold) const;
-    void UpdateRiskIndicators();
-    FLinearColor GetRiskColor(ERiskLevel Level) const;
-    void NotifyRiskLevelChange(ERiskLevel OldLevel, ERiskLevel NewLevel);
-    void LogRiskEvent(const FString& Event);
-    void CleanupOldHistoryData();
-    void CalculateTrendForMetric(FRiskMetric& Metric);
-    static UMingRiskDashboard* Get(UObject* WorldContextObject);
+    void GenerateAlert(const FRiskMetric& Metric);
+    void ClearResolvedAlerts();
+    FString GenerateAlertID() const;
 };

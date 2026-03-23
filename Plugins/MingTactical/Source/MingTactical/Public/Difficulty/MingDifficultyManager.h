@@ -1,252 +1,253 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "Difficulty/FMingDifficultySettings.h"
-#include "Difficulty/EDifficultyLevel.h"
-#include "MingDifficultyManager.generated.h"
-
-// 摧毀???
-class UMingPlayerPerformanceTracker;
-
-/**
- * ??��摧毀�ƥ�
- */
-USTRUCT(BlueprintType)
-struct FDifficultyChangedEvent
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadOnly, Category = "Event")
-    EDifficultyLevel OldLevel;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Event")
-    EDifficultyLevel NewLevel;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Event")
-    float OldSkillIndex;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Event")
-    float NewSkillIndex;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Event")
-    FString Reason;
-
-    FDifficultyChangedEvent()
-        : OldLevel(EDifficultyLevel::Normal)
-        , NewLevel(EDifficultyLevel::Normal)
-        , OldSkillIndex(50.0f)
-        , NewSkillIndex(50.0f)
-    {}
-};
-
-/**
- * ??�׺�?X * ��??��?X?��??�m摧毀??X * 
- * ??��?? * - ??�׵�?��?? (Easy/Normal/Hard/Expert/Custom)
- * - 摧毀��?X * - ??�רƥ��D??
- * - ��???���??
- */
-UCLASS()
-class MINGTACTICAL_API UMingDifficultyManager : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    UMingDifficultyManager();
-
-    virtual void Initialize();
-    virtual void Shutdown();
-    void Tick(float DeltaTime);
-
-    // ==== ??�׵�?��?? ====
-
-    /** ?�m??�׵�? */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty")
-    void SetDifficultyLevel(EDifficultyLevel NewLevel);
-
-    /** 摧毀??X?�׵�? */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty")
-    EDifficultyLevel GetCurrentDifficultyLevel() const;
-
-    /** 摧毀??X?��??��??? */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty")
-    FString GetCurrentDifficultyDisplayName() const;
-
-    /** 目標數量�i???X?�׵�? */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty")
-    static TArray<EDifficultyLevel> GetAvailableDifficultyLevels();
-
-    /** 摧毀摧毀��??�m */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty")
-    FMingPresetDifficultyConfig GetPresetConfig(EDifficultyLevel Level) const;
-
-    // ==== 摧毀��?X====
-
-    /** ??��/�T��摧毀��?X*/
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
-    void SetDynamicAdjustmentEnabled(bool bEnabled);
-
-    /** ??�_??��摧毀X*/
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
-    bool IsDynamicAdjustmentEnabled() const;
-
-    /** ???�D?X?��?��???X*/
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
-    void ForceDifficultyEvaluation();
-
-    /** ???X?�ס]�����目標數量 */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
-    void LockDifficulty(bool bLocked);
-
-    /** ??��??�_�Q摧毀*/
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Dynamic")
-    bool IsDifficultyLocked() const;
-
-    // ==== 摧毀��??�f ====
-
-    /** 目標數量?X*/
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
-    float GetParameterValue(EDifficultyParameter Parameter) const;
-
-    /** ?�m摧毀??X?�Τ_�۩w?X?��??*/
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
-    void SetParameterValue(EDifficultyParameter Parameter, float Value);
-
-    /** ?��摧毀??目標數量 */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
-    bool AdjustParameter(EDifficultyParameter Parameter, float Delta);
-
-    /** 目標數量?X摧毀*/
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
-    FMingDifficultySettings GetDifficultySettings() const;
-
-    /** ?�Χ���?�m */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Parameters")
-    void ApplyDifficultySettings(const FMingDifficultySettings& Settings);
-
-    // ==== ???X?��?�� ====
-
-    /** ?��AI??�� */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|AI")
-    void AdjustAIDifficulty(float NewReactionSpeed, float NewIntelligence);
-
-    /** 摧毀AI??�רt? */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|AI")
-    float GetAIDifficultyMultiplier() const;
-
-    /** ?��??X??X*/
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Resources")
-    void AdjustResourceGeneration(float NewCollectionRate, float NewConsumptionRate);
-
-    /** ???目標數量�t? */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Resources")
-    float GetResourceMultiplier() const;
-
-    /** ?���摧毀X?�� */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Missions")
-    void AdjustMissionDifficulty(float NewTimeLimit, float NewObjectiveScale);
-
-    /** 摧毀��???�רt? */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Missions")
-    float GetMissionDifficultyMultiplier() const;
-
-    // ==== ��???�� ====
-
-    /** ??�_摧毀?��??*/
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Transition")
-    bool IsTransitioning() const;
-
-    /** 摧毀摧毀��?�� 0-1 */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Transition")
-    float GetTransitionProgress() const;
-
-    /** ��摧毀目標數量??*/
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Transition")
-    void AbortTransition();
-
-    // ==== ??���t?? ====
-
-    /** ?�m??�_??��??�a??��摧毀 */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Notifications")
-    void SetPlayerNotificationEnabled(bool bEnabled);
-
-    /** ??�e�۩w?X?��??�� */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Notifications")
-    void SendDifficultyNotification(const FString& Message, float Duration = 5.0f);
-
-    // ==== ???X====
-
-    /** �O摧毀X?��??�m */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Save")
-    void SaveDifficultySettings();
-
-    /** 摧毀?��??�m */
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Save")
-    void LoadDifficultySettings();
-
-    /** ??�m摧毀摧毀*/
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Save")
-    void ResetToDefault();
-
-    // ==== ??? ====
-
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Debug")
-    void PrintDebugInfo();
-
-    UFUNCTION(BlueprintCallable, Category = "Difficulty|Debug")
-    FString GetDebugString() const;
-
-    // ==== �ƥ�e?? ====
-
-    
-
-    UPROPERTY(BlueprintAssignable, Category = "Difficulty|Events")
-    FOnDifficultyChanged OnDifficultyChanged;
-
-protected:
-    /** ???X?��?�� */
-    void PerformDifficultyEvaluation();
-
-    /** ??�u??�a��摧毀��摧毀��?X*/
-    EDifficultyChangeDirection CalculateRecommendedChange() const;
-
-    /** ???X?��?�� */
-    void ExecuteDifficultyAdjustment(EDifficultyChangeDirection Direction);
-
-    /** ��???��??�s */
-    void UpdateTransition(float DeltaTime);
-
-    /** ��???�� */
-    void CompleteTransition();
-
-    /** �D?X?��摧毀�ƥ� */
-    void BroadcastDifficultyChanged(const FString& Reason);
-
-    /** ??��???�G?X???��???��??�v */
-    bool ShouldPreventOscillation() const;
-
-    /** ??X???�ƥ� */
-    void SetupEventSubscriptions();
-    void CleanupEventSubscriptions();
-
-private:
-    bool bIsInitialized;
-    bool bIsLocked;
-    bool bIsTransitioning;
-
-    FMingDifficultySettings CurrentSettings;
-    FMingDifficultySettings TargetSettings;
-    FMingDifficultySettings TransitionStartSettings;
-
-    float TransitionProgress;
-    float TimeSinceLastEvaluation;
-
-    TArray<FDifficultyChangedEvent> AdjustmentHistory;
-    int32 MaxHistorySize;
-
-    TWeakObjectPtr<UMingPlayerPerformanceTracker> PerformanceTracker;
-
-    // �q???�m???
-    static TMap<EDifficultyLevel, FMingPresetDifficultyConfig> CachedPresetConfigs;
-};
-
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出D出i出f出f出i出c出使出l出t出y出/出軍出M出i出n出成出D出i出f出f出i出c出使出l出t出y出S出e出t出t出i出n出成出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出D出i出f出f出i出c出使出l出t出y出/出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出D出i出f出f出i出c出使出l出t出y出M出a出n出a出成出e出本出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出/出 出動出基本出
+出c出l出a出s出s出 出U出M出i出n出成出P出l出a出y出e出本出P出e出本出f出o出本出設置出a出n出c出e出T出本出a出c出k出e出本出;出
+出
+出/出*出*出
+出 出*出 出動出�出�出�出基礎出�出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出D出i出f出f出i出c出使出l出t出y出C出h出a出n出成出e出d出E出正出e出n出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出"出)出
+出 出 出 出 出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出 出O出l出d出L出e出正出e出l出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出"出)出
+出 出 出 出 出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出 出的出e出w出L出e出正出e出l出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出"出)出
+出 出 出 出 出f出l出o出a出t出 出O出l出d出S出k出i出l出l出I出n出d出e出x出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出"出)出
+出 出 出 出 出f出l出o出a出t出 出的出e出w出S出k出i出l出l出I出n出d出e出x出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出正出e出n出t出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出a出s出o出n出;出
+出
+出 出 出 出 出軍出D出i出f出f出i出c出使出l出t出y出C出h出a出n出成出e出d出E出正出e出n出t出(出)出
+出 出 出 出 出 出 出 出 出:出 出O出l出d出L出e出正出e出l出(出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出:出:出的出o出本出設置出a出l出)出
+出 出 出 出 出 出 出 出 出,出 出的出e出w出L出e出正出e出l出(出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出:出:出的出o出本出設置出a出l出)出
+出 出 出 出 出 出 出 出 出,出 出O出l出d出S出k出i出l出l出I出n出d出e出x出(出5出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出的出e出w出S出k出i出l出l出I出n出d出e出x出(出5出0出.出0出f出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出動出�出׺出�出務出 出*出 出�出�出動出�出�出池出�出�出動出�出設置出動出X出 出*出 出
+出 出*出 出動出�出�出動出 出*出 出-出 出動出�出׵出�出基本出�出�出動出 出(出E出a出s出y出/出的出o出本出設置出a出l出/出輸入出a出本出d出/出E出x出p出e出本出t出/出C出使出s出t出o出設置出)出
+出 出*出 出-出 出�出�出務出 出*出 出-出 出動出�出ר出基礎出�出�出D出動出
+出 出*出 出-出 出�出�出動出基本出�出�出�出動出
+出 出*出/出
+出U出C出L出A出S出S出(出)出
+出c出l出a出s出s出 出M出I出的出G出T出A出C出T出I出C出A出L出下出A出P出I出 出U出M出i出n出成出D出i出f出f出i出c出使出l出t出y出M出a出n出a出成出e出本出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出U出M出i出n出成出D出i出f出f出i出c出使出l出t出y出M出a出n出a出成出e出本出(出)出;出
+出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出S出h出使出t出d出o出w出n出(出)出;出
+出 出 出 出 出正出o出i出d出 出T出i出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
+出
+出 出 出 出 出/出/出 出=出=出=出=出 出動出�出׵出�出基本出�出�出動出 出=出=出=出=出
+出
+出 出 出 出 出/出*出*出 出基本出�出設置出動出�出׵出�出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出(出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出 出的出e出w出L出e出正出e出l出)出;出
+出
+出 出 出 出 出/出*出*出 出基本出池出�出׵出�出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出"出)出
+出 出 出 出 出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出 出G出e出t出C出使出本出本出e出n出t出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出 出基本出池出�出�出動出�出�出動出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出C出使出本出本出e出n出t出D出i出f出f出i出c出使出l出t出y出D出i出s出p出l出a出y出的出a出設置出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出 出目出標出數出量出�出i出動出池出�出׵出�出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出"出)出
+出 出 出 出 出s出t出a出t出i出c出 出T出A出本出本出a出y出<出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出>出 出G出e出t出A出正出a出i出l出a出b出l出e出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出s出(出)出;出
+出
+出 出 出 出 出/出*出*出 出�出�出動出�出設置出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出"出)出
+出 出 出 出 出軍出M出i出n出成出P出本出e出s出e出t出D出i出f出f出i出c出使出l出t出y出C出o出n出f出i出成出 出G出e出t出P出本出e出s出e出t出C出o出n出f出i出成出(出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出 出L出e出正出e出l出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出=出=出=出=出 出�出�出務出=出=出=出=出
+出
+出 出 出 出 出/出*出*出 出動出�出�出/出�出T出�出�出�出�出務出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出D出y出n出a出設置出i出c出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出D出y出n出a出設置出i出c出A出d出大出使出s出t出設置出e出n出t出E出n出a出b出l出e出d出(出b出o出o出l出 出b出E出n出a出b出l出e出d出)出;出
+出
+出 出 出 出 出/出*出*出 出動出�出下出動出�出�出X出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出D出y出n出a出設置出i出c出"出)出
+出 出 出 出 出b出o出o出l出 出I出s出D出y出n出a出設置出i出c出A出d出大出使出s出t出設置出e出n出t出E出n出a出b出l出e出d出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出 出動出基本出�出D出池出�出�出基本出�出�出動出務出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出D出y出n出a出設置出i出c出"出)出
+出 出 出 出 出正出o出i出d出 出軍出o出本出c出e出D出i出f出f出i出c出使出l出t出y出E出正出a出l出使出a出t出i出o出n出(出)出;出
+出
+出 出 出 出 出/出*出*出 出動出池出�出ס出]出�出�出�出�出�出目出標出數出量出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出D出y出n出a出設置出i出c出"出)出
+出 出 出 出 出正出o出i出d出 出L出o出c出k出D出i出f出f出i出c出使出l出t出y出(出b出o出o出l出 出b出L出o出c出k出e出d出)出;出
+出
+出 出 出 出 出/出*出*出 出動出�出�出動出�出下出�出Q出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出D出y出n出a出設置出i出c出"出)出
+出 出 出 出 出b出o出o出l出 出I出s出D出i出f出f出i出c出使出l出t出y出L出o出c出k出e出d出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出=出=出=出=出 出�出�出動出�出f出 出=出=出=出=出
+出
+出 出 出 出 出/出*出*出 出目出標出數出量出務出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出P出a出本出a出設置出e出t出e出本出s出"出)出
+出 出 出 出 出f出l出o出a出t出 出G出e出t出P出a出本出a出設置出e出t出e出本出V出a出l出使出e出(出E出D出i出f出f出i出c出使出l出t出y出P出a出本出a出設置出e出t出e出本出 出P出a出本出a出設置出e出t出e出本出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出設置出基本出池出�出Τ出下出�出۩出w出池出�出�出動出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出P出a出本出a出設置出e出t出e出本出s出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出P出a出本出a出設置出e出t出e出本出V出a出l出使出e出(出E出D出i出f出f出i出c出使出l出t出y出P出a出本出a出設置出e出t出e出本出 出P出a出本出a出設置出e出t出e出本出,出 出f出l出o出a出t出 出V出a出l出使出e出)出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出�出動出目出標出數出量出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出P出a出本出a出設置出e出t出e出本出s出"出)出
+出 出 出 出 出b出o出o出l出 出A出d出大出使出s出t出P出a出本出a出設置出e出t出e出本出(出E出D出i出f出f出i出c出使出l出t出y出P出a出本出a出設置出e出t出e出本出 出P出a出本出a出設置出e出t出e出本出,出 出f出l出o出a出t出 出D出e出l出t出a出)出;出
+出
+出 出 出 出 出/出*出*出 出目出標出數出量出務出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出P出a出本出a出設置出e出t出e出本出s出"出)出
+出 出 出 出 出軍出M出i出n出成出D出i出f出f出i出c出使出l出t出y出S出e出t出t出i出n出成出s出 出G出e出t出D出i出f出f出i出c出使出l出t出y出S出e出t出t出i出n出成出s出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出Χ出�出�出�出基本出�出設置出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出P出a出本出a出設置出e出t出e出本出s出"出)出
+出 出 出 出 出正出o出i出d出 出A出p出p出l出y出D出i出f出f出i出c出使出l出t出y出S出e出t出t出i出n出成出s出(出c出o出n出s出t出 出軍出M出i出n出成出D出i出f出f出i出c出使出l出t出y出S出e出t出t出i出n出成出s出&出 出S出e出t出t出i出n出成出s出)出;出
+出
+出 出 出 出 出/出/出 出=出=出=出=出 出動出池出�出�出基本出�出�出 出=出=出=出=出
+出
+出 出 出 出 出/出*出*出 出基本出�出�出A出I出動出�出�出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出A出I出"出)出
+出 出 出 出 出正出o出i出d出 出A出d出大出使出s出t出A出I出D出i出f出f出i出c出使出l出t出y出(出f出l出o出a出t出 出的出e出w出R出e出a出c出t出i出o出n出S出p出e出e出d出,出 出f出l出o出a出t出 出的出e出w出I出n出t出e出l出l出i出成出e出n出c出e出)出;出
+出
+出 出 出 出 出/出*出*出 出A出I出動出�出ר出t出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出A出I出"出)出
+出 出 出 出 出f出l出o出a出t出 出G出e出t出A出I出D出i出f出f出i出c出使出l出t出y出M出使出l出t出i出p出l出i出e出本出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出�出基本出池出務出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出R出e出s出o出使出本出c出e出s出"出)出
+出 出 出 出 出正出o出i出d出 出A出d出大出使出s出t出R出e出s出o出使出本出c出e出G出e出n出e出本出a出t出i出o出n出(出f出l出o出a出t出 出的出e出w出C出o出l出l出e出c出t出i出o出n出R出a出t出e出,出 出f出l出o出a出t出 出的出e出w出C出o出n出s出使出設置出p出t出i出o出n出R出a出t出e出)出;出
+出
+出 出 出 出 出/出*出*出 出動出基本出目出標出數出量出�出t出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出R出e出s出o出使出本出c出e出s出"出)出
+出 出 出 出 出f出l出o出a出t出 出G出e出t出R出e出s出o出使出本出c出e出M出使出l出t出i出p出l出i出e出本出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出�出�出務出�出�出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出M出i出s出s出i出o出n出s出"出)出
+出 出 出 出 出正出o出i出d出 出A出d出大出使出s出t出M出i出s出s出i出o出n出D出i出f出f出i出c出使出l出t出y出(出f出l出o出a出t出 出的出e出w出T出i出設置出e出L出i出設置出i出t出,出 出f出l出o出a出t出 出的出e出w出O出b出大出e出c出t出i出正出e出S出c出a出l出e出)出;出
+出
+出 出 出 出 出/出*出*出 出�出�出動出基本出�出ר出t出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出M出i出s出s出i出o出n出s出"出)出
+出 出 出 出 出f出l出o出a出t出 出G出e出t出M出i出s出s出i出o出n出D出i出f出f出i出c出使出l出t出y出M出使出l出t出i出p出l出i出e出本出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出=出=出=出=出 出�出�出動出基本出�出�出 出=出=出=出=出
+出
+出 出 出 出 出/出*出*出 出動出�出下出基本出�出�出動出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出T出本出a出n出s出i出t出i出o出n出"出)出
+出 出 出 出 出b出o出o出l出 出I出s出T出本出a出n出s出i出t出i出o出n出i出n出成出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出 出�出�出基本出�出�出 出0出-出1出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出T出本出a出n出s出i出t出i出o出n出"出)出
+出 出 出 出 出f出l出o出a出t出 出G出e出t出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出 出�出�出目出標出數出量出動出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出T出本出a出n出s出i出t出i出o出n出"出)出
+出 出 出 出 出正出o出i出d出 出A出b出o出本出t出T出本出a出n出s出i出t出i出o出n出(出)出;出
+出
+出 出 出 出 出/出/出 出=出=出=出=出 出動出�出�出�出t出動出 出=出=出=出=出
+出
+出 出 出 出 出/出*出*出 出基本出�出設置出動出�出下出動出�出�出動出�出a出動出�出�出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出的出o出t出i出f出i出c出a出t出i出o出n出s出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出P出l出a出y出e出本出的出o出t出i出f出i出c出a出t出i出o出n出E出n出a出b出l出e出d出(出b出o出o出l出 出b出E出n出a出b出l出e出d出)出;出
+出
+出 出 出 出 出/出*出*出 出動出�出e出�出۩出w出池出�出�出動出�出�出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出的出o出t出i出f出i出c出a出t出i出o出n出s出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出n出d出D出i出f出f出i出c出使出l出t出y出的出o出t出i出f出i出c出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出,出 出f出l出o出a出t出 出D出使出本出a出t出i出o出n出 出=出 出5出.出0出f出)出;出
+出
+出 出 出 出 出/出/出 出=出=出=出=出 出動出務出=出=出=出=出
+出
+出 出 出 出 出/出*出*出 出�出O出務出�出�出動出�出設置出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出S出a出正出e出"出)出
+出 出 出 出 出正出o出i出d出 出S出a出正出e出D出i出f出f出i出c出使出l出t出y出S出e出t出t出i出n出成出s出(出)出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出�出動出�出設置出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出S出a出正出e出"出)出
+出 出 出 出 出正出o出i出d出 出L出o出a出d出D出i出f出f出i出c出使出l出t出y出S出e出t出t出i出n出成出s出(出)出;出
+出
+出 出 出 出 出/出*出*出 出動出�出設置出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出S出a出正出e出"出)出
+出 出 出 出 出正出o出i出d出 出R出e出s出e出t出T出o出D出e出f出a出使出l出t出(出)出;出
+出
+出 出 出 出 出/出/出 出=出=出=出=出 出動出基本出 出=出=出=出=出
+出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出D出e出b出使出成出"出)出
+出 出 出 出 出正出o出i出d出 出P出本出i出n出t出D出e出b出使出成出I出n出f出o出(出)出;出
+出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出D出e出b出使出成出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出D出e出b出使出成出S出t出本出i出n出成出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出=出=出=出=出 出�出基礎出�出e出動出 出=出=出=出=出
+出
+出 出 出 出 出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出i出f出f出i出c出使出l出t出y出出出E出正出e出n出t出s出"出)出
+出 出 出 出 出軍出O出n出D出i出f出f出i出c出使出l出t出y出C出h出a出n出成出e出d出 出O出n出D出i出f出f出i出c出使出l出t出y出C出h出a出n出成出e出d出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出*出*出 出動出池出�出�出基本出�出�出 出*出/出
+出 出 出 出 出正出o出i出d出 出P出e出本出f出o出本出設置出D出i出f出f出i出c出使出l出t出y出E出正出a出l出使出a出t出i出o出n出(出)出;出
+出
+出 出 出 出 出/出*出*出 出動出�出使出動出�出a出�出�出�出�出�出�出務出*出/出
+出 出 出 出 出E出D出i出f出f出i出c出使出l出t出y出C出h出a出n出成出e出D出i出本出e出c出t出i出o出n出 出C出a出l出c出使出l出a出t出e出R出e出c出o出設置出設置出e出n出d出e出d出C出h出a出n出成出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出 出動出池出�出�出基本出�出�出 出*出/出
+出 出 出 出 出正出o出i出d出 出E出x出e出c出使出t出e出D出i出f出f出i出c出使出l出t出y出A出d出大出使出s出t出設置出e出n出t出(出E出D出i出f出f出i出c出使出l出t出y出C出h出a出n出成出e出D出i出本出e出c出t出i出o出n出 出D出i出本出e出c出t出i出o出n出)出;出
+出
+出 出 出 出 出/出*出*出 出�出�出動出基本出�出�出動出�出s出 出*出/出
+出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出T出本出a出n出s出i出t出i出o出n出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
+出
+出 出 出 出 出/出*出*出 出�出�出動出基本出�出�出 出*出/出
+出 出 出 出 出正出o出i出d出 出C出o出設置出p出l出e出t出e出T出本出a出n出s出i出t出i出o出n出(出)出;出
+出
+出 出 出 出 出/出*出*出 出�出D出池出�出�出�出基礎出�出 出*出/出
+出 出 出 出 出正出o出i出d出 出B出本出o出a出d出c出a出s出t出D出i出f出f出i出c出使出l出t出y出C出h出a出n出成出e出d出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出a出s出o出n出)出;出
+出
+出 出 出 出 出/出*出*出 出動出�出�出動出基本出�出G出池出動出�出�出動出基本出�出�出動出�出正出 出*出/出
+出 出 出 出 出b出o出o出l出 出S出h出o出使出l出d出P出本出e出正出e出n出t出O出s出c出i出l出l出a出t出i出o出n出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出 出基本出池出動出�出基礎出�出 出*出/出
+出 出 出 出 出正出o出i出d出 出S出e出t出使出p出E出正出e出n出t出S出使出b出s出c出本出i出p出t出i出o出n出s出(出)出;出
+出 出 出 出 出正出o出i出d出 出C出l出e出a出n出使出p出E出正出e出n出t出S出使出b出s出c出本出i出p出t出i出o出n出s出(出)出;出
+出
+出p出本出i出正出a出t出e出:出
+出 出 出 出 出b出o出o出l出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出;出
+出 出 出 出 出b出o出o出l出 出b出I出s出L出o出c出k出e出d出;出
+出 出 出 出 出b出o出o出l出 出b出I出s出T出本出a出n出s出i出t出i出o出n出i出n出成出;出
+出
+出 出 出 出 出軍出M出i出n出成出D出i出f出f出i出c出使出l出t出y出S出e出t出t出i出n出成出s出 出C出使出本出本出e出n出t出S出e出t出t出i出n出成出s出;出
+出 出 出 出 出軍出M出i出n出成出D出i出f出f出i出c出使出l出t出y出S出e出t出t出i出n出成出s出 出T出a出本出成出e出t出S出e出t出t出i出n出成出s出;出
+出 出 出 出 出軍出M出i出n出成出D出i出f出f出i出c出使出l出t出y出S出e出t出t出i出n出成出s出 出T出本出a出n出s出i出t出i出o出n出S出t出a出本出t出S出e出t出t出i出n出成出s出;出
+出
+出 出 出 出 出f出l出o出a出t出 出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出;出
+出 出 出 出 出f出l出o出a出t出 出T出i出設置出e出S出i出n出c出e出L出a出s出t出E出正出a出l出使出a出t出i出o出n出;出
+出
+出 出 出 出 出T出A出本出本出a出y出<出軍出D出i出f出f出i出c出使出l出t出y出C出h出a出n出成出e出d出E出正出e出n出t出>出 出A出d出大出使出s出t出設置出e出n出t出輸入出i出s出t出o出本出y出;出
+出 出 出 出 出i出n出t出3出2出 出M出a出x出輸入出i出s出t出o出本出y出S出i出z出e出;出
+出
+出 出 出 出 出T出基本出e出a出k出O出b出大出e出c出t出P出t出本出<出U出M出i出n出成出P出l出a出y出e出本出P出e出本出f出o出本出設置出a出n出c出e出T出本出a出c出k出e出本出>出 出P出e出本出f出o出本出設置出a出n出c出e出T出本出a出c出k出e出本出;出
+出
+出 出 出 出 出/出/出 出�出q出動出基本出�出設置出動出基本出
+出 出 出 出 出s出t出a出t出i出c出 出T出M出a出p出<出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出,出 出軍出M出i出n出成出P出本出e出s出e出t出D出i出f出f出i出c出使出l出t出y出C出o出n出f出i出成出>出 出C出a出c出h出e出d出P出本出e出s出e出t出C出o出n出f出i出成出s出;出
+出}出;出
+出
+出

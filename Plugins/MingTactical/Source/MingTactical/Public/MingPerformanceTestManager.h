@@ -1,172 +1,173 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "MingPerformanceTestManager.generated.h"
-
-/**
- * ??յ摧毀
- */
-USTRUCT(BlueprintType)
-struct FPerformanceTestResult
-{
-    GENERATED_BODY()
-
-    // ??
-    UPROPERTY(BlueprintReadOnly)
-    FString TestName;
-
-    // ??_摧毀
-    UPROPERTY(BlueprintReadOnly)
-    bool bPassed;
-
-    // 摧毀FPS
-    UPROPERTY(BlueprintReadOnly)
-    float TargetFPS;
-
-    // 摧毀FPS
-    UPROPERTY(BlueprintReadOnly)
-    float ActualFPS;
-
-    // ??CFPS
-    UPROPERTY(BlueprintReadOnly)
-    float MinFPS;
-
-    // 目標數量
-    UPROPERTY(BlueprintReadOnly)
-    int32 UnitCount;
-
-    // 目標數量
-    UPROPERTY(BlueprintReadOnly)
-    float TestDuration;
-
-    // ??~H
-    UPROPERTY(BlueprintReadOnly)
-    FString ErrorMessage;
-
-    FPerformanceTestResult()
-        : bPassed(false)
-        , TargetFPS(60.0f)
-        , ActualFPS(0.0f)
-        , MinFPS(0.0f)
-        , UnitCount(0)
-        , TestDuration(0.0f)
-    {}
-};
-
-/**
- * ??պ?X * ??Epic 6.4摧毀??t
- */
-UCLASS(BlueprintType)
-class MINGTACTICAL_API UMingPerformanceTestManager : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    UMingPerformanceTestManager();
-
-    /**
-     * 目標數量ʯ
-     */
-    UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    void RunAllTests();
-
-    /**
-     * 1: 100目標數量
-     */
-    UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult Test100Units();
-
-    /**
-     * 2: 500摧毀??W
-     */
-    UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult Test500Units();
-
-    /**
-     * 3: 1000摧毀j摧毀(Epic 6.4摧毀)
-     */
-    UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult Test1000Units();
-
-    /**
-     * 4: 2000摧毀??
-     */
-    UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult Test2000Units();
-
-    /**
-     * 5: ?X???ʯ
-     */
-    UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult TestInstancedRendering();
-
-    /**
-     * 6: ?X??X?
-     */
-    UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult TestSpatialPartition();
-
-    /**
-     * 7: LODt??
-     */
-    UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    FPerformanceTestResult TestLODSystem();
-
-    /**
-     * 目標數量?X     */
-    UFUNCTION(BlueprintPure, Category = "Performance Test")
-    TArray<FPerformanceTestResult> GetAllResults() const { return TestResults; }
-
-    /**
-     * 摧毀摧毀
-     */
-    UFUNCTION(BlueprintPure, Category = "Performance Test")
-    FString GenerateReport() const;
-
-    /**
-     * ??_摧毀ճq??
-     */
-    UFUNCTION(BlueprintPure, Category = "Performance Test")
-    bool AllTestsPassed() const;
-
-    /**
-     * 摧毀Epic 6.4?X?X     */
-    UFUNCTION(BlueprintPure, Category = "Performance Test")
-    bool IsEpic64Complete() const;
-
-    /**
-     * ɥX摧毀
-     */
-    UFUNCTION(BlueprintCallable, Category = "Performance Test")
-    bool ExportTestReport(const FString& FilePath) const;
-
-    /**
-     * 目標數量??
-     */
-    static UMingPerformanceTestManager* Get();
-
-private:
-    // յ??
-    UPROPERTY()
-    TArray<FPerformanceTestResult> TestResults;
-
-    // 摧毀??
-    static UMingPerformanceTestManager* Instance;
-
-    // ???X?δ
-    FPerformanceTestResult RunGenericTest(const FString& TestName, int32 UnitCount, float Duration, float TargetFPS);
-
-    // ??ش摧毀
-    void CreateTestUnits(int32 Count);
-
-    // 摧毀摧毀
-    void DestroyTestUnits();
-
-    // 目標數量FPS
-    float MeasureFPS(float Duration);
-
-    // O??յ??
-    void RecordResult(const FPerformanceTestResult& Result);
-);
-
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出M出a出n出a出成出e出本出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出動出յ出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出/出 出動出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出T出e出s出t出的出a出設置出e出;出
+出
+出 出 出 出 出/出/出 出動出下出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出b出o出o出l出 出b出P出a出s出s出e出d出;出
+出
+出 出 出 出 出/出/出 出軍出P出S出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出T出a出本出成出e出t出軍出P出S出;出
+出
+出 出 出 出 出/出/出 出軍出P出S出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出A出c出t出使出a出l出軍出P出S出;出
+出
+出 出 出 出 出/出/出 出動出C出軍出P出S出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出M出i出n出軍出P出S出;出
+出
+出 出 出 出 出/出/出 出目出標出數出量出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出i出n出t出3出2出 出U出n出i出t出C出o出使出n出t出;出
+出
+出 出 出 出 出/出/出 出目出標出數出量出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出f出l出o出a出t出 出T出e出s出t出D出使出本出a出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出動出年出輸入出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出E出本出本出o出本出M出e出s出s出a出成出e出;出
+出
+出 出 出 出 出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出(出)出
+出 出 出 出 出 出 出 出 出:出 出b出P出a出s出s出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出 出 出 出 出,出 出T出a出本出成出e出t出軍出P出S出(出6出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出A出c出t出使出a出l出軍出P出S出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出M出i出n出軍出P出S出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出U出n出i出t出C出o出使出n出t出(出0出)出
+出 出 出 出 出 出 出 出 出,出 出T出e出s出t出D出使出本出a出t出i出o出n出(出0出.出0出f出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出動出պ出務出 出*出 出動出E出p出i出c出 出6出.出4出動出t出
+出 出*出/出
+出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出c出l出a出s出s出 出M出I出的出G出T出A出C出T出I出C出A出L出下出A出P出I出 出U出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出M出a出n出a出成出e出本出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出U出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出M出a出n出a出成出e出本出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出目出標出數出量出ʯ出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出正出o出i出d出 出R出使出n出A出l出l出T出e出s出t出s出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出1出:出 出1出0出0出目出標出數出量出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出1出0出0出U出n出i出t出s出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出2出:出 出5出0出0出動出基本出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出5出0出0出U出n出i出t出s出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出3出:出 出1出0出0出0出大出(出E出p出i出c出 出6出.出4出)出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出1出0出0出0出U出n出i出t出s出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出4出:出 出2出0出0出0出動出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出2出0出0出0出U出n出i出t出s出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出5出:出 出池出動出ʯ出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出I出n出s出t出a出n出c出e出d出R出e出n出d出e出本出i出n出成出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出6出:出 出池出池出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出S出p出a出t出i出a出l出P出a出本出t出i出t出i出o出n出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出7出:出 出L出O出D出t出動出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出L出O出D出S出y出s出t出e出設置出(出)出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出目出標出數出量出務出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出>出 出G出e出t出A出l出l出R出e出s出使出l出t出s出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出T出e出s出t出R出e出s出使出l出t出s出;出 出}出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出n出e出本出a出t出e出R出e出p出o出本出t出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出動出下出ճ出q出動出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出b出o出o出l出 出A出l出l出T出e出s出t出s出P出a出s出s出e出d出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出E出p出i出c出 出6出.出4出池出X出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出b出o出o出l出 出I出s出E出p出i出c出6出4出C出o出設置出p出l出e出t出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出基本出X出
+出 出 出 出 出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出T出e出s出t出"出)出
+出 出 出 出 出b出o出o出l出 出E出x出p出o出本出t出T出e出s出t出R出e出p出o出本出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出P出a出t出h出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出*出*出
+出 出 出 出 出 出*出 出目出標出數出量出動出
+出 出 出 出 出 出*出/出
+出 出 出 出 出s出t出a出t出i出c出 出U出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出M出a出n出a出成出e出本出*出 出G出e出t出(出)出;出
+出
+出p出本出i出正出a出t出e出:出
+出 出 出 出 出/出/出 出յ出動出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出>出 出T出e出s出t出R出e出s出使出l出t出s出;出
+出
+出 出 出 出 出/出/出 出動出
+出 出 出 出 出s出t出a出t出i出c出 出U出M出i出n出成出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出M出a出n出a出成出e出本出*出 出I出n出s出t出a出n出c出e出;出
+出
+出 出 出 出 出/出/出 出動出池出δ出
+出 出 出 出 出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出 出R出使出n出G出e出n出e出本出i出c出T出e出s出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出s出t出的出a出設置出e出,出 出i出n出t出3出2出 出U出n出i出t出C出o出使出n出t出,出 出f出l出o出a出t出 出D出使出本出a出t出i出o出n出,出 出f出l出o出a出t出 出T出a出本出成出e出t出軍出P出S出)出;出
+出
+出 出 出 出 出/出/出 出動出ش出
+出 出 出 出 出正出o出i出d出 出C出本出e出a出t出e出T出e出s出t出U出n出i出t出s出(出i出n出t出3出2出 出C出o出使出n出t出)出;出
+出
+出 出 出 出 出/出/出 出
+出 出 出 出 出正出o出i出d出 出D出e出s出t出本出o出y出T出e出s出t出U出n出i出t出s出(出)出;出
+出
+出 出 出 出 出/出/出 出目出標出數出量出軍出P出S出
+出 出 出 出 出f出l出o出a出t出 出M出e出a出s出使出本出e出軍出P出S出(出f出l出o出a出t出 出D出使出本出a出t出i出o出n出)出;出
+出
+出 出 出 出 出/出/出 出O出動出յ出動出
+出 出 出 出 出正出o出i出d出 出R出e出c出o出本出d出R出e出s出使出l出t出(出c出o出n出s出t出 出軍出P出e出本出f出o出本出設置出a出n出c出e出T出e出s出t出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
+出)出;出
+出}出;出
+出

@@ -1,345 +1,346 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
-#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "SageCommand/MingSageCharacterSystem.h"
-#include "MingFactionSageProfile.generated.h"
-
-/**
- * 民國時期勢力類型枚舉 (12可玩勢力)
- */
-UENUM(BlueprintType)
-enum class ERepublicFaction : uint8
-{
-    BeiyangGovernment   UMETA(DisplayName = "北洋政府"),
-    NationalistGovernment UMETA(DisplayName = "国民政府"),
-    CommunistParty      UMETA(DisplayName = "中国共产党"),
-    FengtianClique      UMETA(DisplayName = "奉系军阀"),
-    ZhiliClique         UMETA(DisplayName = "直系军阀"),
-    AnhuiClique         UMETA(DisplayName = "皖系军阀"),
-    ShanxiClique        UMETA(DisplayName = "晋系军阀"),
-    GuangxiClique       UMETA(DisplayName = "桂系军阀"),
-    YunnanClique        UMETA(DisplayName = "滇系军阀"),
-    SichuanClique       UMETA(DisplayName = "川系军阀"),
-    MaFamily            UMETA(DisplayName = "马家军"),
-    XinjiangForces      UMETA(DisplayName = "新疆势力"),
-    Count
-};
-
-/**
- * 勢力指揮哲學類型
- */
-UENUM(BlueprintType)
-enum class EFactionCommandPhilosophy : uint8
-{
-    RighteousOnly       UMETA(DisplayName = "純正策型"),      // 只用正策
-    RighteousPrimary    UMETA(DisplayName = "正策為主型"),    // 以正策為主
-    Balanced            UMETA(DisplayName = "平衡型"),        // 正逆平衡
-    EvilPrimary         UMETA(DisplayName = "逆策為主型"),    // 以逆策為主
-    EvilOnly            UMETA(DisplayName = "純逆策型"),      // 只用逆策
-    Deceptive           UMETA(DisplayName = "欺騙型"),        // 表面正實際逆
-    Count
-};
-
-/**
- * 勢力專屬策略修正數據
- */
-USTRUCT(BlueprintType)
-struct MINGRTS_API FFactionStrategyModifier
-{
-    GENERATED_BODY()
-
-    // 正策效果倍率
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionStrategy")
-    float RighteousStrategyMultiplier = 1.0f;
-
-    // 逆策效果倍率
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionStrategy")
-    float EvilStrategyMultiplier = 1.0f;
-
-    // 正策冷卻時間修正
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionStrategy")
-    float RighteousCooldownModifier = 1.0f;
-
-    // 逆策冷卻時間修正
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionStrategy")
-    float EvilCooldownModifier = 1.0f;
-
-    // 逆策墮落值修正
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionStrategy")
-    float EvilFallValueModifier = 1.0f;
-
-    // 專屬正策列表
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionStrategy")
-    TArray<int32> ExclusiveRighteousStrategies;
-
-    // 專屬逆策列表
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionStrategy")
-    TArray<int32> ExclusiveEvilStrategies;
-
-    FFactionStrategyModifier()
-        : RighteousStrategyMultiplier(1.0f)
-        , EvilStrategyMultiplier(1.0f)
-        , RighteousCooldownModifier(1.0f)
-        , EvilCooldownModifier(1.0f)
-        , EvilFallValueModifier(1.0f)
-    {}
-};
-
-/**
- * 勢力五行偏好數據
- */
-USTRUCT(BlueprintType)
-struct MINGRTS_API FFactionWuXingAffinity
-{
-    GENERATED_BODY()
-
-    // 主五行屬性
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionWuXing")
-    int32 PrimaryElement = 0; // 0=木, 1=火, 2=土, 3=金, 4=水
-
-    // 次五行屬性
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionWuXing")
-    int32 SecondaryElement = 1;
-
-    // 有利階段效果加成
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionWuXing")
-    float FavorablePhaseBonus = 0.3f;
-
-    // 不利階段效果減免
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionWuXing")
-    float UnfavorablePhasePenaltyReduction = 0.5f;
-
-    // 相生效果額外加成
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionWuXing")
-    float GeneratingCycleBonus = 0.2f;
-
-    // 相剋效果減免
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionWuXing")
-    float OvercomingCyclePenaltyReduction = 0.3f;
-
-    FFactionWuXingAffinity()
-        : PrimaryElement(0)
-        , SecondaryElement(1)
-        , FavorablePhaseBonus(0.3f)
-        , UnfavorablePhasePenaltyReduction(0.5f)
-        , GeneratingCycleBonus(0.2f)
-        , OvercomingCyclePenaltyReduction(0.3f)
-    {}
-};
-
-/**
- * 勢力贖罪任務配置
- */
-USTRUCT(BlueprintType)
-struct MINGRTS_API FFactionAtonementConfig
-{
-    GENERATED_BODY()
-
-    // 勢力專屬贖罪任務名稱
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionAtonement")
-    FString FactionAtonementTaskName;
-
-    // 贖罪任務描述
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionAtonement")
-    FString AtonementDescription;
-
-    // 贖罪目標類型
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionAtonement")
-    int32 AtonementTargetType = 0; // 0=軍事勝利, 1=政治目標, 2=經濟建設, 3=外交成就
-
-    // 贖罪完成獎勵類型
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionAtonement")
-    int32 RewardType = 0; // 0=士氣, 1=資源, 2=威望, 3=策略效果
-
-    // 贖罪完成獎勵數值
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionAtonement")
-    float RewardValue = 50.0f;
-
-    FFactionAtonementConfig()
-        : AtonementTargetType(0)
-        , RewardType(0)
-        , RewardValue(50.0f)
-    {}
-};
-
-/**
- * 勢力至聖者指揮學屬性配置文件
- * 定義每個勢力的指揮哲學、策略偏好、五行屬性等
- */
-USTRUCT(BlueprintType)
-struct MINGRTS_API FFactionSageProfile
-{
-    GENERATED_BODY()
-
-    // 所屬勢力
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionSage")
-    ERepublicFaction Faction = ERepublicFaction::BeiyangGovernment;
-
-    // 預設角色類型
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionSage")
-    ESageCharacterType DefaultCharacterType = ESageCharacterType::PseudoSage;
-
-    // 指揮哲學類型
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionSage")
-    EFactionCommandPhilosophy Philosophy = EFactionCommandPhilosophy::Deceptive;
-
-    // 墮落閾值修正
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionSage")
-    int32 FallThresholdModifier = 0; // 基於基礎值的增減
-
-    // 策略修正
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionSage")
-    FFactionStrategyModifier StrategyModifier;
-
-    // 五行偏好
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionSage")
-    FFactionWuXingAffinity WuXingAffinity;
-
-    // 贖罪任務配置
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionSage")
-    FFactionAtonementConfig AtonementConfig;
-
-    // 勢力描述
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionSage")
-    FString FactionDescription;
-
-    // 指揮哲學描述
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FactionSage")
-    FString PhilosophyDescription;
-
-    FFactionSageProfile()
-        : Faction(ERepublicFaction::BeiyangGovernment)
-        , DefaultCharacterType(ESageCharacterType::PseudoSage)
-        , Philosophy(EFactionCommandPhilosophy::Deceptive)
-        , FallThresholdModifier(0)
-    {}
-};
-
-/**
- * 勢力指揮學管理器
- * 管理所有勢力的指揮學屬性和遊戲內應用
- */
-UCLASS(ClassGroup = (Faction), meta = (BlueprintSpawnableComponent))
-class MINGRTS_API UMingFactionSageManager : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    UMingFactionSageManager();
-
-    // 初始化管理器
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    void InitializeFactionSageManager();
-
-    // 獲取勢力指揮學屬性
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    FFactionSageProfile GetFactionProfile(ERepublicFaction Faction) const;
-
-    // 設置當前玩家勢力
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    void SetPlayerFaction(ERepublicFaction Faction);
-
-    // 獲取當前玩家勢力
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    ERepublicFaction GetPlayerFaction() const { return PlayerFaction; }
-
-    // 獲取當前勢力的角色類型
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    ESageCharacterType GetPlayerCharacterType() const;
-
-    // 獲取當前勢力的墮落閾值
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    int32 GetPlayerFallThreshold() const;
-
-    // 計算策略效果修正
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    float CalculateStrategyEffectModifier(ESixStrategyType Strategy, bool bIsEvil) const;
-
-    // 計算五行階段加成
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    float CalculateWuXingPhaseBonus(int32 CurrentPhase) const;
-
-    // 檢查是否為有利階段
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    bool IsFavorableWuXingPhase(int32 CurrentPhase) const;
-
-    // 獲取勢力指揮建議
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    FString GetFactionCommandAdvice() const;
-
-    // 獲取勢力專屬贖罪任務名稱
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    FString GetFactionAtonementTaskName() const;
-
-    // 獲取勢力專屬贖罪任務描述
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    FString GetFactionAtonementDescription() const;
-
-    // 檢查是否可使用特定策略
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    bool CanUseStrategy(ESixStrategyType Strategy, bool bIsEvil) const;
-
-    // 獲取可用策略列表
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    TArray<ESixStrategyType> GetAvailableStrategies(bool bIsEvil) const;
-
-    // 註冊勢力配置
-    UFUNCTION(BlueprintCallable, Category = "Faction|SageCommand")
-    void RegisterFactionProfile(const FFactionSageProfile& Profile);
-
-protected:
-    // 初始化所有12勢力的預設配置
-    void InitializeDefaultFactionProfiles();
-
-    // 創建北洋政府配置
-    FFactionSageProfile CreateBeiyangProfile() const;
-
-    // 創建国民政府配置
-    FFactionSageProfile CreateNationalistProfile() const;
-
-    // 創建中共配置
-    FFactionSageProfile CreateCommunistProfile() const;
-
-    // 創建奉系配置
-    FFactionSageProfile CreateFengtianProfile() const;
-
-    // 創建直系配置
-    FFactionSageProfile CreateZhiliProfile() const;
-
-    // 創建皖系配置
-    FFactionSageProfile CreateAnhuiProfile() const;
-
-    // 創建晉系配置
-    FFactionSageProfile CreateShanxiProfile() const;
-
-    // 創建桂系配置
-    FFactionSageProfile CreateGuangxiProfile() const;
-
-    // 創建滇系配置
-    FFactionSageProfile CreateYunnanProfile() const;
-
-    // 創建川系配置
-    FFactionSageProfile CreateSichuanProfile() const;
-
-    // 創建馬家軍配置
-    FFactionSageProfile CreateMaFamilyProfile() const;
-
-    // 創建新疆配置
-    FFactionSageProfile CreateXinjiangProfile() const;
-
-protected:
-    // 勢力配置映射
-    UPROPERTY()
-    TMap<ERepublicFaction, FFactionSageProfile> FactionProfiles;
-
-    // 當前玩家勢力
-    UPROPERTY()
-    ERepublicFaction PlayerFaction = ERepublicFaction::BeiyangGovernment;
-
-    // 是否已初始化
-    UPROPERTY()
-    bool bIsInitialized = false;
-};
+出/出/出 出C出o出p出y出本出i出成出h出t出 出E出p出i出c出 出G出a出設置出e出s出,出 出I出n出c出.出 出A出l出l出 出R出i出成出h出t出s出 出R出e出s出e出本出正出e出d出.出
+出
+出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出S出a出成出e出C出o出設置出設置出a出n出d出/出M出i出n出成出S出a出成出e出C出h出a出本出a出c出t出e出本出S出y出s出t出e出設置出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出民出國出時出期出勢出力出類出型出枚出舉出 出(出1出2出可出玩出勢出力出)出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出R出e出p出使出b出l出i出c出軍出a出c出t出i出o出n出 出:出 出使出i出n出t出8出
+出{出
+出 出 出 出 出B出e出i出y出a出n出成出G出o出正出e出本出n出設置出e出n出t出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出北出洋出政出府出"出)出,出
+出 出 出 出 出的出a出t出i出o出n出a出l出i出s出t出G出o出正出e出本出n出設置出e出n出t出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出国出民出政出府出"出)出,出
+出 出 出 出 出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出中出国出共出产出党出"出)出,出
+出 出 出 出 出軍出e出n出成出t出i出a出n出C出l出i出q出使出e出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出奉出系出军出阀出"出)出,出
+出 出 出 出 出Z出h出i出l出i出C出l出i出q出使出e出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出直出系出军出阀出"出)出,出
+出 出 出 出 出A出n出h出使出i出C出l出i出q出使出e出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出皖出系出军出阀出"出)出,出
+出 出 出 出 出S出h出a出n出x出i出C出l出i出q出使出e出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出晋出系出军出阀出"出)出,出
+出 出 出 出 出G出使出a出n出成出x出i出C出l出i出q出使出e出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出桂出系出军出阀出"出)出,出
+出 出 出 出 出Y出使出n出n出a出n出C出l出i出q出使出e出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出滇出系出军出阀出"出)出,出
+出 出 出 出 出S出i出c出h出使出a出n出C出l出i出q出使出e出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出川出系出军出阀出"出)出,出
+出 出 出 出 出M出a出軍出a出設置出i出l出y出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出马出家出军出"出)出,出
+出 出 出 出 出X出i出n出大出i出a出n出成出軍出o出本出c出e出s出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出新出疆出势出力出"出)出,出
+出 出 出 出 出C出o出使出n出t出
+出}出;出
+出
+出/出*出*出
+出 出*出 出勢出力出指出揮出哲出學出類出型出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出軍出a出c出t出i出o出n出C出o出設置出設置出a出n出d出P出h出i出l出o出s出o出p出h出y出 出:出 出使出i出n出t出8出
+出{出
+出 出 出 出 出R出i出成出h出t出e出o出使出s出O出n出l出y出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出純出正出策出型出"出)出,出 出 出 出 出 出 出/出/出 出只出用出正出策出
+出 出 出 出 出R出i出成出h出t出e出o出使出s出P出本出i出設置出a出本出y出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出正出策出為出主出型出"出)出,出 出 出 出 出/出/出 出以出正出策出為出主出
+出 出 出 出 出B出a出l出a出n出c出e出d出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出平出衡出型出"出)出,出 出 出 出 出 出 出 出 出/出/出 出正出逆出平出衡出
+出 出 出 出 出E出正出i出l出P出本出i出設置出a出本出y出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出逆出策出為出主出型出"出)出,出 出 出 出 出/出/出 出以出逆出策出為出主出
+出 出 出 出 出E出正出i出l出O出n出l出y出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出純出逆出策出型出"出)出,出 出 出 出 出 出 出/出/出 出只出用出逆出策出
+出 出 出 出 出D出e出c出e出p出t出i出正出e出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出欺出騙出型出"出)出,出 出 出 出 出 出 出 出 出/出/出 出表出面出正出實出際出逆出
+出 出 出 出 出C出o出使出n出t出
+出}出;出
+出
+出/出*出*出
+出 出*出 出勢出力出專出屬出策出略出修出正出數出據出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出M出I出的出G出R出T出S出下出A出P出I出 出軍出軍出a出c出t出i出o出n出S出t出本出a出t出e出成出y出M出o出d出i出f出i出e出本出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出/出 出正出策出效出果出倍出率出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出t出本出a出t出e出成出y出"出)出
+出 出 出 出 出f出l出o出a出t出 出R出i出成出h出t出e出o出使出s出S出t出本出a出t出e出成出y出M出使出l出t出i出p出l出i出e出本出 出=出 出1出.出0出f出;出
+出
+出 出 出 出 出/出/出 出逆出策出效出果出倍出率出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出t出本出a出t出e出成出y出"出)出
+出 出 出 出 出f出l出o出a出t出 出E出正出i出l出S出t出本出a出t出e出成出y出M出使出l出t出i出p出l出i出e出本出 出=出 出1出.出0出f出;出
+出
+出 出 出 出 出/出/出 出正出策出冷出卻出時出間出修出正出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出t出本出a出t出e出成出y出"出)出
+出 出 出 出 出f出l出o出a出t出 出R出i出成出h出t出e出o出使出s出C出o出o出l出d出o出w出n出M出o出d出i出f出i出e出本出 出=出 出1出.出0出f出;出
+出
+出 出 出 出 出/出/出 出逆出策出冷出卻出時出間出修出正出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出t出本出a出t出e出成出y出"出)出
+出 出 出 出 出f出l出o出a出t出 出E出正出i出l出C出o出o出l出d出o出w出n出M出o出d出i出f出i出e出本出 出=出 出1出.出0出f出;出
+出
+出 出 出 出 出/出/出 出逆出策出墮出落出值出修出正出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出t出本出a出t出e出成出y出"出)出
+出 出 出 出 出f出l出o出a出t出 出E出正出i出l出軍出a出l出l出V出a出l出使出e出M出o出d出i出f出i出e出本出 出=出 出1出.出0出f出;出
+出
+出 出 出 出 出/出/出 出專出屬出正出策出列出表出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出t出本出a出t出e出成出y出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出i出n出t出3出2出>出 出E出x出c出l出使出s出i出正出e出R出i出成出h出t出e出o出使出s出S出t出本出a出t出e出成出i出e出s出;出
+出
+出 出 出 出 出/出/出 出專出屬出逆出策出列出表出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出t出本出a出t出e出成出y出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出i出n出t出3出2出>出 出E出x出c出l出使出s出i出正出e出E出正出i出l出S出t出本出a出t出e出成出i出e出s出;出
+出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出t出本出a出t出e出成出y出M出o出d出i出f出i出e出本出(出)出
+出 出 出 出 出 出 出 出 出:出 出R出i出成出h出t出e出o出使出s出S出t出本出a出t出e出成出y出M出使出l出t出i出p出l出i出e出本出(出1出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出E出正出i出l出S出t出本出a出t出e出成出y出M出使出l出t出i出p出l出i出e出本出(出1出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出R出i出成出h出t出e出o出使出s出C出o出o出l出d出o出w出n出M出o出d出i出f出i出e出本出(出1出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出E出正出i出l出C出o出o出l出d出o出w出n出M出o出d出i出f出i出e出本出(出1出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出E出正出i出l出軍出a出l出l出V出a出l出使出e出M出o出d出i出f出i出e出本出(出1出.出0出f出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出勢出力出五出行出偏出好出數出據出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出M出I出的出G出R出T出S出下出A出P出I出 出軍出軍出a出c出t出i出o出n出基本出使出X出i出n出成出A出f出f出i出n出i出t出y出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出/出 出主出五出行出屬出性出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出基本出使出X出i出n出成出"出)出
+出 出 出 出 出i出n出t出3出2出 出P出本出i出設置出a出本出y出E出l出e出設置出e出n出t出 出=出 出0出;出 出/出/出 出0出=出木出,出 出1出=出火出,出 出2出=出土出,出 出3出=出金出,出 出4出=出水出
+出
+出 出 出 出 出/出/出 出次出五出行出屬出性出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出基本出使出X出i出n出成出"出)出
+出 出 出 出 出i出n出t出3出2出 出S出e出c出o出n出d出a出本出y出E出l出e出設置出e出n出t出 出=出 出1出;出
+出
+出 出 出 出 出/出/出 出有出利出階出段出效出果出加出成出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出基本出使出X出i出n出成出"出)出
+出 出 出 出 出f出l出o出a出t出 出軍出a出正出o出本出a出b出l出e出P出h出a出s出e出B出o出n出使出s出 出=出 出0出.出3出f出;出
+出
+出 出 出 出 出/出/出 出不出利出階出段出效出果出減出免出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出基本出使出X出i出n出成出"出)出
+出 出 出 出 出f出l出o出a出t出 出U出n出f出a出正出o出本出a出b出l出e出P出h出a出s出e出P出e出n出a出l出t出y出R出e出d出使出c出t出i出o出n出 出=出 出0出.出5出f出;出
+出
+出 出 出 出 出/出/出 出相出生出效出果出額出外出加出成出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出基本出使出X出i出n出成出"出)出
+出 出 出 出 出f出l出o出a出t出 出G出e出n出e出本出a出t出i出n出成出C出y出c出l出e出B出o出n出使出s出 出=出 出0出.出2出f出;出
+出
+出 出 出 出 出/出/出 出相出剋出效出果出減出免出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出基本出使出X出i出n出成出"出)出
+出 出 出 出 出f出l出o出a出t出 出O出正出e出本出c出o出設置出i出n出成出C出y出c出l出e出P出e出n出a出l出t出y出R出e出d出使出c出t出i出o出n出 出=出 出0出.出3出f出;出
+出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出基本出使出X出i出n出成出A出f出f出i出n出i出t出y出(出)出
+出 出 出 出 出 出 出 出 出:出 出P出本出i出設置出a出本出y出E出l出e出設置出e出n出t出(出0出)出
+出 出 出 出 出 出 出 出 出,出 出S出e出c出o出n出d出a出本出y出E出l出e出設置出e出n出t出(出1出)出
+出 出 出 出 出 出 出 出 出,出 出軍出a出正出o出本出a出b出l出e出P出h出a出s出e出B出o出n出使出s出(出0出.出3出f出)出
+出 出 出 出 出 出 出 出 出,出 出U出n出f出a出正出o出本出a出b出l出e出P出h出a出s出e出P出e出n出a出l出t出y出R出e出d出使出c出t出i出o出n出(出0出.出5出f出)出
+出 出 出 出 出 出 出 出 出,出 出G出e出n出e出本出a出t出i出n出成出C出y出c出l出e出B出o出n出使出s出(出0出.出2出f出)出
+出 出 出 出 出 出 出 出 出,出 出O出正出e出本出c出o出設置出i出n出成出C出y出c出l出e出P出e出n出a出l出t出y出R出e出d出使出c出t出i出o出n出(出0出.出3出f出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出勢出力出贖出罪出任出務出配出置出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出M出I出的出G出R出T出S出下出A出P出I出 出軍出軍出a出c出t出i出o出n出A出t出o出n出e出設置出e出n出t出C出o出n出f出i出成出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出/出 出勢出力出專出屬出贖出罪出任出務出名出稱出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出A出t出o出n出e出設置出e出n出t出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出軍出a出c出t出i出o出n出A出t出o出n出e出設置出e出n出t出T出a出s出k出的出a出設置出e出;出
+出
+出 出 出 出 出/出/出 出贖出罪出任出務出描出述出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出A出t出o出n出e出設置出e出n出t出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出A出t出o出n出e出設置出e出n出t出D出e出s出c出本出i出p出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出贖出罪出目出標出類出型出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出A出t出o出n出e出設置出e出n出t出"出)出
+出 出 出 出 出i出n出t出3出2出 出A出t出o出n出e出設置出e出n出t出T出a出本出成出e出t出T出y出p出e出 出=出 出0出;出 出/出/出 出0出=出軍出事出勝出利出,出 出1出=出政出治出目出標出,出 出2出=出經出濟出建出設出,出 出3出=出外出交出成出就出
+出
+出 出 出 出 出/出/出 出贖出罪出完出成出獎出勵出類出型出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出A出t出o出n出e出設置出e出n出t出"出)出
+出 出 出 出 出i出n出t出3出2出 出R出e出w出a出本出d出T出y出p出e出 出=出 出0出;出 出/出/出 出0出=出士出氣出,出 出1出=出資出源出,出 出2出=出威出望出,出 出3出=出策出略出效出果出
+出
+出 出 出 出 出/出/出 出贖出罪出完出成出獎出勵出數出值出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出A出t出o出n出e出設置出e出n出t出"出)出
+出 出 出 出 出f出l出o出a出t出 出R出e出w出a出本出d出V出a出l出使出e出 出=出 出5出0出.出0出f出;出
+出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出A出t出o出n出e出設置出e出n出t出C出o出n出f出i出成出(出)出
+出 出 出 出 出 出 出 出 出:出 出A出t出o出n出e出設置出e出n出t出T出a出本出成出e出t出T出y出p出e出(出0出)出
+出 出 出 出 出 出 出 出 出,出 出R出e出w出a出本出d出T出y出p出e出(出0出)出
+出 出 出 出 出 出 出 出 出,出 出R出e出w出a出本出d出V出a出l出使出e出(出5出0出.出0出f出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出勢出力出至出聖出者出指出揮出學出屬出性出配出置出文出件出
+出 出*出 出定出義出每出個出勢出力出的出指出揮出哲出學出、出策出略出偏出好出、出五出行出屬出性出等出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出M出I出的出G出R出T出S出下出A出P出I出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出/出 出所出屬出勢出力出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出a出成出e出"出)出
+出 出 出 出 出E出R出e出p出使出b出l出i出c出軍出a出c出t出i出o出n出 出軍出a出c出t出i出o出n出 出=出 出E出R出e出p出使出b出l出i出c出軍出a出c出t出i出o出n出:出:出B出e出i出y出a出n出成出G出o出正出e出本出n出設置出e出n出t出;出
+出
+出 出 出 出 出/出/出 出預出設出角出色出類出型出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出a出成出e出"出)出
+出 出 出 出 出E出S出a出成出e出C出h出a出本出a出c出t出e出本出T出y出p出e出 出D出e出f出a出使出l出t出C出h出a出本出a出c出t出e出本出T出y出p出e出 出=出 出E出S出a出成出e出C出h出a出本出a出c出t出e出本出T出y出p出e出:出:出P出s出e出使出d出o出S出a出成出e出;出
+出
+出 出 出 出 出/出/出 出指出揮出哲出學出類出型出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出a出成出e出"出)出
+出 出 出 出 出E出軍出a出c出t出i出o出n出C出o出設置出設置出a出n出d出P出h出i出l出o出s出o出p出h出y出 出P出h出i出l出o出s出o出p出h出y出 出=出 出E出軍出a出c出t出i出o出n出C出o出設置出設置出a出n出d出P出h出i出l出o出s出o出p出h出y出:出:出D出e出c出e出p出t出i出正出e出;出
+出
+出 出 出 出 出/出/出 出墮出落出閾出值出修出正出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出a出成出e出"出)出
+出 出 出 出 出i出n出t出3出2出 出軍出a出l出l出T出h出本出e出s出h出o出l出d出M出o出d出i出f出i出e出本出 出=出 出0出;出 出/出/出 出基出於出基出礎出值出的出增出減出
+出
+出 出 出 出 出/出/出 出策出略出修出正出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出a出成出e出"出)出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出t出本出a出t出e出成出y出M出o出d出i出f出i出e出本出 出S出t出本出a出t出e出成出y出M出o出d出i出f出i出e出本出;出
+出
+出 出 出 出 出/出/出 出五出行出偏出好出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出a出成出e出"出)出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出基本出使出X出i出n出成出A出f出f出i出n出i出t出y出 出基本出使出X出i出n出成出A出f出f出i出n出i出t出y出;出
+出
+出 出 出 出 出/出/出 出贖出罪出任出務出配出置出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出a出成出e出"出)出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出A出t出o出n出e出設置出e出n出t出C出o出n出f出i出成出 出A出t出o出n出e出設置出e出n出t出C出o出n出f出i出成出;出
+出
+出 出 出 出 出/出/出 出勢出力出描出述出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出a出成出e出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出軍出a出c出t出i出o出n出D出e出s出c出本出i出p出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出指出揮出哲出學出描出述出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出S出a出成出e出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出P出h出i出l出o出s出o出p出h出y出D出e出s出c出本出i出p出t出i出o出n出;出
+出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出(出)出
+出 出 出 出 出 出 出 出 出:出 出軍出a出c出t出i出o出n出(出E出R出e出p出使出b出l出i出c出軍出a出c出t出i出o出n出:出:出B出e出i出y出a出n出成出G出o出正出e出本出n出設置出e出n出t出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出f出a出使出l出t出C出h出a出本出a出c出t出e出本出T出y出p出e出(出E出S出a出成出e出C出h出a出本出a出c出t出e出本出T出y出p出e出:出:出P出s出e出使出d出o出S出a出成出e出)出
+出 出 出 出 出 出 出 出 出,出 出P出h出i出l出o出s出o出p出h出y出(出E出軍出a出c出t出i出o出n出C出o出設置出設置出a出n出d出P出h出i出l出o出s出o出p出h出y出:出:出D出e出c出e出p出t出i出正出e出)出
+出 出 出 出 出 出 出 出 出,出 出軍出a出l出l出T出h出本出e出s出h出o出l出d出M出o出d出i出f出i出e出本出(出0出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出勢出力出指出揮出學出管出理出器出
+出 出*出 出管出理出所出有出勢出力出的出指出揮出學出屬出性出和出遊出戲出內出應出用出
+出 出*出/出
+出U出C出L出A出S出S出(出C出l出a出s出s出G出本出o出使出p出 出=出 出(出軍出a出c出t出i出o出n出)出,出 出設置出e出t出a出 出=出 出(出B出l出使出e出p出本出i出n出t出S出p出a出w出n出a出b出l出e出C出o出設置出p出o出n出e出n出t出)出)出
+出c出l出a出s出s出 出M出I出的出G出R出T出S出下出A出P出I出 出U出M出i出n出成出軍出a出c出t出i出o出n出S出a出成出e出M出a出n出a出成出e出本出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出U出M出i出n出成出軍出a出c出t出i出o出n出S出a出成出e出M出a出n出a出成出e出本出(出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出管出理出器出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出軍出a出c出t出i出o出n出S出a出成出e出M出a出n出a出成出e出本出(出)出;出
+出
+出 出 出 出 出/出/出 出獲出取出勢出力出指出揮出學出屬出性出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出G出e出t出軍出a出c出t出i出o出n出P出本出o出f出i出l出e出(出E出R出e出p出使出b出l出i出c出軍出a出c出t出i出o出n出 出軍出a出c出t出i出o出n出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出設出置出當出前出玩出家出勢出力出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出P出l出a出y出e出本出軍出a出c出t出i出o出n出(出E出R出e出p出使出b出l出i出c出軍出a出c出t出i出o出n出 出軍出a出c出t出i出o出n出)出;出
+出
+出 出 出 出 出/出/出 出獲出取出當出前出玩出家出勢出力出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出E出R出e出p出使出b出l出i出c出軍出a出c出t出i出o出n出 出G出e出t出P出l出a出y出e出本出軍出a出c出t出i出o出n出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出P出l出a出y出e出本出軍出a出c出t出i出o出n出;出 出}出
+出
+出 出 出 出 出/出/出 出獲出取出當出前出勢出力出的出角出色出類出型出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出E出S出a出成出e出C出h出a出本出a出c出t出e出本出T出y出p出e出 出G出e出t出P出l出a出y出e出本出C出h出a出本出a出c出t出e出本出T出y出p出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出當出前出勢出力出的出墮出落出閾出值出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出i出n出t出3出2出 出G出e出t出P出l出a出y出e出本出軍出a出l出l出T出h出本出e出s出h出o出l出d出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出計出算出策出略出效出果出修出正出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出S出t出本出a出t出e出成出y出E出f出f出e出c出t出M出o出d出i出f出i出e出本出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出 出S出t出本出a出t出e出成出y出,出 出b出o出o出l出 出b出I出s出E出正出i出l出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出計出算出五出行出階出段出加出成出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出基本出使出X出i出n出成出P出h出a出s出e出B出o出n出使出s出(出i出n出t出3出2出 出C出使出本出本出e出n出t出P出h出a出s出e出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出檢出查出是出否出為出有出利出階出段出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出b出o出o出l出 出I出s出軍出a出正出o出本出a出b出l出e出基本出使出X出i出n出成出P出h出a出s出e出(出i出n出t出3出2出 出C出使出本出本出e出n出t出P出h出a出s出e出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出勢出力出指出揮出建出議出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出軍出a出c出t出i出o出n出C出o出設置出設置出a出n出d出A出d出正出i出c出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出勢出力出專出屬出贖出罪出任出務出名出稱出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出軍出a出c出t出i出o出n出A出t出o出n出e出設置出e出n出t出T出a出s出k出的出a出設置出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出勢出力出專出屬出贖出罪出任出務出描出述出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出軍出a出c出t出i出o出n出A出t出o出n出e出設置出e出n出t出D出e出s出c出本出i出p出t出i出o出n出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出檢出查出是出否出可出使出用出特出定出策出略出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出b出o出o出l出 出C出a出n出U出s出e出S出t出本出a出t出e出成出y出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出 出S出t出本出a出t出e出成出y出,出 出b出o出o出l出 出b出I出s出E出正出i出l出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出獲出取出可出用出策出略出列出表出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出>出 出G出e出t出A出正出a出i出l出a出b出l出e出S出t出本出a出t出e出成出i出e出s出(出b出o出o出l出 出b出I出s出E出正出i出l出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出註出冊出勢出力出配出置出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出a出c出t出i出o出n出出出S出a出成出e出C出o出設置出設置出a出n出d出"出)出
+出 出 出 出 出正出o出i出d出 出R出e出成出i出s出t出e出本出軍出a出c出t出i出o出n出P出本出o出f出i出l出e出(出c出o出n出s出t出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出&出 出P出本出o出f出i出l出e出)出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出/出 出初出始出化出所出有出1出2出勢出力出的出預出設出配出置出
+出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出D出e出f出a出使出l出t出軍出a出c出t出i出o出n出P出本出o出f出i出l出e出s出(出)出;出
+出
+出 出 出 出 出/出/出 出創出建出北出洋出政出府出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出B出e出i出y出a出n出成出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出創出建出国出民出政出府出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出的出a出t出i出o出n出a出l出i出s出t出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出創出建出中出共出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出C出o出設置出設置出使出n出i出s出t出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出創出建出奉出系出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出軍出e出n出成出t出i出a出n出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出創出建出直出系出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出Z出h出i出l出i出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出創出建出皖出系出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出A出n出h出使出i出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出創出建出晉出系出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出S出h出a出n出x出i出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出創出建出桂出系出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出G出使出a出n出成出x出i出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出創出建出滇出系出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出Y出使出n出n出a出n出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出創出建出川出系出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出S出i出c出h出使出a出n出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出創出建出馬出家出軍出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出M出a出軍出a出設置出i出l出y出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出創出建出新出疆出配出置出
+出 出 出 出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出 出C出本出e出a出t出e出X出i出n出大出i出a出n出成出P出本出o出f出i出l出e出(出)出 出c出o出n出s出t出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出/出 出勢出力出配出置出映出射出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出M出a出p出<出E出R出e出p出使出b出l出i出c出軍出a出c出t出i出o出n出,出 出軍出軍出a出c出t出i出o出n出S出a出成出e出P出本出o出f出i出l出e出>出 出軍出a出c出t出i出o出n出P出本出o出f出i出l出e出s出;出
+出
+出 出 出 出 出/出/出 出當出前出玩出家出勢出力出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出E出R出e出p出使出b出l出i出c出軍出a出c出t出i出o出n出 出P出l出a出y出e出本出軍出a出c出t出i出o出n出 出=出 出E出R出e出p出使出b出l出i出c出軍出a出c出t出i出o出n出:出:出B出e出i出y出a出n出成出G出o出正出e出本出n出設置出e出n出t出;出
+出
+出 出 出 出 出/出/出 出是出否出已出初出始出化出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出b出o出o出l出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
+出}出;出
+出

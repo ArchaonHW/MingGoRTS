@@ -1,202 +1,203 @@
-#include "Platform/MingPlatformManager.h"
-#include "Platform/WindowsPlatformAdapter.h"
-#include "Platform/AndroidPlatformAdapter.h"
-#include "Platform/IOSPlatformAdapter.h"
-
-// 靜態實例初始化
-UMingPlatformManager* UMingPlatformManager::Instance = nullptr;
-
-UMingPlatformManager::UMingPlatformManager()
-    : bInitialized(false)
-    , CurrentPlatformAdapter(nullptr)
-{
-}
-
-void UMingPlatformManager::Initialize()
-{
-    if (bInitialized)
-    {
-        return;
-    }
-    
-    // 創建平台適配器
-    CreatePlatformAdapter();
-    
-    // 初始化平台適配器
-    if (CurrentPlatformAdapter)
-    {
-        IPlatformInterface* Platform = Cast<IPlatformInterface>(CurrentPlatformAdapter);
-        if (Platform)
-        {
-            Platform->Initialize();
-            
-            FPlatformCapabilities Capabilities = Platform->GetCapabilities();
-            UE_LOG(LogTemp, Log, TEXT("Platform initialized: %s"), 
-                *UEnum::GetValueAsString(Platform->GetPlatformType()));
-            UE_LOG(LogTemp, Log, TEXT("Default input: %s, Max units: %d"),
-                *UEnum::GetValueAsString(Capabilities.DefaultInputType),
-                Capabilities.RecommendedMaxUnits);
-        }
-    }
-    
-    Instance = this;
-    bInitialized = true;
-}
-
-void UMingPlatformManager::Shutdown()
-{
-    if (!bInitialized)
-    {
-        return;
-    }
-    
-    if (CurrentPlatformAdapter)
-    {
-        IPlatformInterface* Platform = Cast<IPlatformInterface>(CurrentPlatformAdapter);
-        if (Platform)
-        {
-            Platform->Shutdown();
-        }
-    }
-    
-    CurrentPlatformAdapter = nullptr;
-    Instance = nullptr;
-    bInitialized = false;
-    
-    UE_LOG(LogTemp, Log, TEXT("PlatformManager shutdown"));
-}
-
-void UMingPlatformManager::CreatePlatformAdapter()
-{
-    // 根據當前平台創建對應的適配器
-    #if PLATFORM_WINDOWS
-    {
-        CurrentPlatformAdapter = NewObject<UWindowsPlatformAdapter>(this);
-        UE_LOG(LogTemp, Log, TEXT("Created Windows platform adapter"));
-    }
-    #elif PLATFORM_ANDROID
-    {
-        CurrentPlatformAdapter = NewObject<UAndroidPlatformAdapter>(this);
-        UE_LOG(LogTemp, Log, TEXT("Created Android platform adapter"));
-    }
-    #elif PLATFORM_IOS
-    {
-        CurrentPlatformAdapter = NewObject<UIOSPlatformAdapter>(this);
-        UE_LOG(LogTemp, Log, TEXT("Created iOS platform adapter"));
-    }
-    #else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Unsupported platform!"));
-    }
-    #endif
-}
-
-IPlatformInterface* UMingPlatformManager::GetCurrentPlatform() const
-{
-    if (CurrentPlatformAdapter)
-    {
-        return Cast<IPlatformInterface>(CurrentPlatformAdapter);
-    }
-    return nullptr;
-}
-
-EPlatformType UMingPlatformManager::GetCurrentPlatformType() const
-{
-    IPlatformInterface* Platform = GetCurrentPlatform();
-    if (Platform)
-    {
-        return Platform->GetPlatformType();
-    }
-    return EPlatformType::Unknown;
-}
-
-FPlatformCapabilities UMingPlatformManager::GetPlatformCapabilities() const
-{
-    IPlatformInterface* Platform = GetCurrentPlatform();
-    if (Platform)
-    {
-        return Platform->GetCapabilities();
-    }
-    return FPlatformCapabilities();
-}
-
-float UMingPlatformManager::GetScreenDPI() const
-{
-    IPlatformInterface* Platform = GetCurrentPlatform();
-    if (Platform)
-    {
-        return Platform->GetScreenDPI();
-    }
-    return 96.0f; // 默認 Windows DPI
-}
-
-FMargin UMingPlatformManager::GetSafeZone() const
-{
-    IPlatformInterface* Platform = GetCurrentPlatform();
-    if (Platform)
-    {
-        return Platform->GetSafeZone();
-    }
-    return FMargin(0, 0, 0, 0);
-}
-
-bool UMingPlatformManager::IsTouchDevice() const
-{
-    IPlatformInterface* Platform = GetCurrentPlatform();
-    if (Platform)
-    {
-        return Platform->IsTouchDevice();
-    }
-    return false;
-}
-
-void UMingPlatformManager::SetPerformanceMode(int32 Mode)
-{
-    IPlatformInterface* Platform = GetCurrentPlatform();
-    if (Platform)
-    {
-        Platform->SetPerformanceMode(Mode);
-    }
-}
-
-float UMingPlatformManager::GetBatteryLevel() const
-{
-    IPlatformInterface* Platform = GetCurrentPlatform();
-    if (Platform)
-    {
-        return Platform->GetBatteryLevel();
-    }
-    return -1.0f;
-}
-
-void UMingPlatformManager::ShowPlatformDialog(const FString& Title, const FString& Message)
-{
-    IPlatformInterface* Platform = GetCurrentPlatform();
-    if (Platform)
-    {
-        Platform->ShowPlatformDialog(Title, Message);
-    }
-}
-
-void UMingPlatformManager::ShareContent(const FString& Content)
-{
-    IPlatformInterface* Platform = GetCurrentPlatform();
-    if (Platform)
-    {
-        Platform->ShareContent(Content);
-    }
-}
-
-void UMingPlatformManager::RequestAppRating()
-{
-    IPlatformInterface* Platform = GetCurrentPlatform();
-    if (Platform)
-    {
-        Platform->RequestAppRating();
-    }
-}
-
-UMingPlatformManager* UMingPlatformManager::Get()
-{
-    return Instance;
-}
+出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出/出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出/出基本出i出n出d出o出w出s出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出/出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出/出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出.出h出"出
+出
+出/出/出 出靜出態出實出例出初出始出化出
+出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出*出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出I出n出s出t出a出n出c出e出 出=出 出n出使出l出l出p出t出本出;出
+出
+出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出(出)出
+出 出 出 出 出:出 出b出I出n出i出t出i出a出l出i出z出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出,出 出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出(出n出使出l出l出p出t出本出)出
+出{出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出創出建出平出台出適出配出器出
+出 出 出 出 出C出本出e出a出t出e出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出平出台出適出配出器出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出C出a出s出t出<出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出>出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出I出n出i出t出i出a出l出i出z出e出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出 出C出a出p出a出b出i出l出i出t出i出e出s出 出=出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出C出a出p出a出b出i出l出i出t出i出e出s出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出l出a出t出f出o出本出設置出 出i出n出i出t出i出a出l出i出z出e出d出:出 出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出P出l出a出t出f出o出本出設置出-出>出G出e出t出P出l出a出t出f出o出本出設置出T出y出p出e出(出)出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出D出e出f出a出使出l出t出 出i出n出p出使出t出:出 出%出s出,出 出M出a出x出 出使出n出i出t出s出:出 出%出d出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出C出a出p出a出b出i出l出i出t出i出e出s出.出D出e出f出a出使出l出t出I出n出p出使出t出T出y出p出e出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出R出e出c出o出設置出設置出e出n出d出e出d出M出a出x出U出n出i出t出s出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出I出n出s出t出a出n出c出e出 出=出 出t出h出i出s出;出
+出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出S出h出使出t出d出o出w出n出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出C出a出s出t出<出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出>出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出S出h出使出t出d出o出w出n出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出I出n出s出t出a出n出c出e出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出 出s出h出使出t出d出o出w出n出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出C出本出e出a出t出e出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出(出)出
+出{出
+出 出 出 出 出/出/出 出根出據出當出前出平出台出創出建出對出應出的出適出配出器出
+出 出 出 出 出#出i出f出 出P出L出A出T出軍出O出R出M出下出基本出I出的出D出O出基本出S出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出基本出i出n出d出o出w出s出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出本出e出a出t出e出d出 出基本出i出n出d出o出w出s出 出p出l出a出t出f出o出本出設置出 出a出d出a出p出t出e出本出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出#出e出l出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出本出e出a出t出e出d出 出A出n出d出本出o出i出d出 出p出l出a出t出f出o出本出設置出 出a出d出a出p出t出e出本出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出#出e出l出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出>出(出t出h出i出s出)出;出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出本出e出a出t出e出d出 出i出O出S出 出p出l出a出t出f出o出本出設置出 出a出d出a出p出t出e出本出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出#出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出U出n出s出使出p出p出o出本出t出e出d出 出p出l出a出t出f出o出本出設置出!出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出#出e出n出d出i出f出
+出}出
+出
+出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出a出s出t出<出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出>出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出n出使出l出l出p出t出本出;出
+出}出
+出
+出E出P出l出a出t出f出o出本出設置出T出y出p出e出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出T出y出p出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
+出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出P出l出a出t出f出o出本出設置出T出y出p出e出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出E出P出l出a出t出f出o出本出設置出T出y出p出e出:出:出U出n出k出n出o出w出n出;出
+出}出
+出
+出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
+出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出C出a出p出a出b出i出l出i出t出i出e出s出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出(出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出S出c出本出e出e出n出D出P出I出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
+出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出S出c出本出e出e出n出D出P出I出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出9出6出.出0出f出;出 出/出/出 出默出認出 出基本出i出n出d出o出w出s出 出D出P出I出
+出}出
+出
+出軍出M出a出本出成出i出n出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出S出a出f出e出Z出o出n出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
+出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出S出a出f出e出Z出o出n出e出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出本出成出i出n出(出0出,出 出0出,出 出0出,出 出0出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出I出s出T出o出使出c出h出D出e出正出i出c出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
+出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出I出s出T出o出使出c出h出D出e出正出i出c出e出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出S出e出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出(出i出n出t出3出2出 出M出o出d出e出)出
+出{出
+出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
+出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出S出e出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出(出M出o出d出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出B出a出t出t出e出本出y出L出e出正出e出l出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
+出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出B出a出t出t出e出本出y出L出e出正出e出l出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出-出1出.出0出f出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出S出h出o出w出P出l出a出t出f出o出本出設置出D出i出a出l出o出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出t出l出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出)出
+出{出
+出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
+出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出S出h出o出w出P出l出a出t出f出o出本出設置出D出i出a出l出o出成出(出T出i出t出l出e出,出 出M出e出s出s出a出成出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出S出h出a出本出e出C出o出n出t出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出)出
+出{出
+出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
+出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出S出h出a出本出e出C出o出n出t出e出n出t出(出C出o出n出t出e出n出t出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出R出e出q出使出e出s出t出A出p出p出R出a出t出i出n出成出(出)出
+出{出
+出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
+出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出R出e出q出使出e出s出t出A出p出p出R出a出t出i出n出成出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出*出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出(出)出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出I出n出s出t出a出n出c出e出;出
+出}出
+出

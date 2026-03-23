@@ -1,163 +1,164 @@
-﻿#pragma once
-
-#include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
-#include "AI/Navigation/NavigationTypes.h"
-#include "MingUnitMovementComponent.generated.h"
-
-/**
- * ��?X?�O��??
- */
-USTRUCT(BlueprintType)
-struct FMoveCommand
-{
-    GENERATED_BODY()
-    
-    // 摧毀��m
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FVector TargetLocation;
-    
-    // ??�_摧毀��??
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bAttackMove;
-    
-    // ??�_�ϥ�??��
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bUseFormation;
-    
-    // ??�Τ�??��m
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FVector FormationOffset;
-    
-    FMoveCommand()
-        : TargetLocation(FVector::ZeroVector)
-        , bAttackMove(false)
-        , bUseFormation(true)
-        , FormationOffset(FVector::ZeroVector)
-    {}
-};
-
-class AMingTacticalUnit;
-
-/**
- * 摧毀��??�ե�
- * 故事重要性?��摧毀��??��??�ɯ�
- */
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class MINGTACTICAL_API UMingUnitMovementComponent : public UActorComponent
-{
-    GENERATED_BODY()
-
-public:
-    UMingUnitMovementComponent();
-
-    virtual void BeginPlay() override;
-    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-    // ��?X?�O
-    UFUNCTION(BlueprintCallable, Category = "Movement")
-    void MoveToLocation(const FVector& TargetLocation, bool bAttackMove = false);
-
-    UFUNCTION(BlueprintCallable, Category = "Movement")
-    void MoveToLocationWithFormation(const FVector& TargetLocation, const FVector& FormationOffset);
-
-    // ??�??
-    UFUNCTION(BlueprintCallable, Category = "Movement")
-    void StopMovement();
-
-    // ??�_摧毀��??
-    UFUNCTION(BlueprintPure, Category = "Movement")
-    bool IsMoving() const { return bIsMoving; }
-
-    // 故事重要性?��
-    UFUNCTION(BlueprintPure, Category = "Movement")
-    float GetCurrentSpeed() const;
-
-    // �]�m��?X?��
-    UFUNCTION(BlueprintCallable, Category = "Movement")
-    void SetMoveSpeed(float NewSpeed);
-
-    // ��?X???
-    UFUNCTION(BlueprintPure, Category = "Movement")
-    bool HasValidPath() const { return CurrentPathPoints.Num() > 0; }
-
-    UFUNCTION(BlueprintPure, Category = "Movement")
-    FVector GetCurrentTargetLocation() const;
-
-    // 目標數量
-    UFUNCTION(BlueprintCallable, Category = "Movement")
-    void RotateTowards(const FVector& TargetDirection, float DeltaTime);
-
-    UFUNCTION(BlueprintCallable, Category = "Movement")
-    void SetDesiredRotation(const FRotator& TargetRotation);
-
-protected:
-    // ???X?��??
-    UPROPERTY()
-    TObjectPtr<AMingTacticalUnit> OwnerUnit;
-
-    // 摧毀��?X?X
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
-    bool bIsMoving;
-
-    // ��?X?��
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-    float MoveSpeed;
-
-    // ???X?��
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-    float RotationSpeed;
-
-    // ??��Z�� (故事選項X?�HX
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-    float AcceptanceRadius;
-
-    // 摧毀��摧毀
-    UPROPERTY()
-    TArray<FVector> CurrentPathPoints;
-
-    // 摧毀��??��??
-    UPROPERTY()
-    int32 CurrentPathIndex;
-
-    // 目標數量��m
-    UPROPERTY()
-    FVector CurrentTargetLocation;
-
-    // 目標數量
-    UPROPERTY()
-    FRotator DesiredRotation;
-
-    // ??�_摧毀��??
-    UPROPERTY()
-    bool bIsAttackMove;
-
-    // ??��??��
-    UPROPERTY()
-    FVector FormationOffset;
-
-    // ��??��??ID
-    uint32 PathRequestId;
-
-    // �ɯ�t�Τޥ�
-    class UNavigationSystemV1* NavSystem;
-
-    // ��??��??
-    void RequestPath(const FVector& StartLocation, const FVector& EndLocation);
-
-    // ��?X?��??��
-    void OnPathFound(uint32 InPathRequestId, ENavigationQueryResult::Type Result, FNavPathSharedPtr Path);
-
-    // �u??��??��??
-    void FollowPath(float DeltaTime);
-
-    // ��?X???
-    void SmoothRotateTowards(const FVector& Direction, float DeltaTime);
-
-    // �ˬd??�_目標數量
-    bool HasReachedTarget() const;
-
-    // ??�s��?X?X
-    void UpdateMovementState();
-};
-
+出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出A出c出t出o出本出C出o出設置出p出o出n出e出n出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出A出I出/出的出a出正出i出成出a出t出i出o出n出/出的出a出正出i出成出a出t出i出o出n出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出U出n出i出t出M出o出正出e出設置出e出n出t出C出o出設置出p出o出n出e出n出t出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出�出�出池出�出O出�出�出動出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出M出o出正出e出C出o出設置出設置出a出n出d出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出 出 出 出 出
+出 出 出 出 出/出/出 出�出�出設置出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
+出 出 出 出 出軍出V出e出c出t出o出本出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出�出下出�出�出動出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
+出 出 出 出 出b出o出o出l出 出b出A出t出t出a出c出k出M出o出正出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出�出下出�出ϥ出�出動出�出�出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
+出 出 出 出 出b出o出o出l出 出b出U出s出e出軍出o出本出設置出a出t出i出o出n出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出動出�出Τ出�出動出�出�出設置出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
+出 出 出 出 出軍出V出e出c出t出o出本出 出軍出o出本出設置出a出t出i出o出n出O出f出f出s出e出t出;出
+出 出 出 出 出
+出 出 出 出 出軍出M出o出正出e出C出o出設置出設置出a出n出d出(出)出
+出 出 出 出 出 出 出 出 出:出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出(出軍出V出e出c出t出o出本出:出:出Z出e出本出o出V出e出c出t出o出本出)出
+出 出 出 出 出 出 出 出 出,出 出b出A出t出t出a出c出k出M出o出正出e出(出f出a出l出s出e出)出
+出 出 出 出 出 出 出 出 出,出 出b出U出s出e出軍出o出本出設置出a出t出i出o出n出(出t出本出使出e出)出
+出 出 出 出 出 出 出 出 出,出 出軍出o出本出設置出a出t出i出o出n出O出f出f出s出e出t出(出軍出V出e出c出t出o出本出:出:出Z出e出本出o出V出e出c出t出o出本出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出c出l出a出s出s出 出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出;出
+出
+出/出*出*出
+出 出*出 出�出�出動出�出ե出�出
+出 出*出 出故出事出重出要出性出基本出�出�出�出�出動出�出�出動出�出ɯ出�出
+出 出*出/出
+出U出C出L出A出S出S出(出C出l出a出s出s出G出本出o出使出p出=出(出C出使出s出t出o出設置出)出,出 出設置出e出t出a出=出(出B出l出使出e出p出本出i出n出t出S出p出a出w出n出a出b出l出e出C出o出設置出p出o出n出e出n出t出)出)出
+出c出l出a出s出s出 出M出I出的出G出T出A出C出T出I出C出A出L出下出A出P出I出 出U出M出i出n出成出U出n出i出t出M出o出正出e出設置出e出n出t出C出o出設置出p出o出n出e出n出t出 出:出 出p出使出b出l出i出c出 出U出A出c出t出o出本出C出o出設置出p出o出n出e出n出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出U出M出i出n出成出U出n出i出t出M出o出正出e出設置出e出n出t出C出o出設置出p出o出n出e出n出t出(出)出;出
+出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出B出e出成出i出n出P出l出a出y出(出)出 出o出正出e出本出本出i出d出e出;出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出T出i出c出k出C出o出設置出p出o出n出e出n出t出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出,出 出E出L出e出正出e出l出T出i出c出k出 出T出i出c出k出T出y出p出e出,出 出軍出A出c出t出o出本出C出o出設置出p出o出n出e出n出t出T出i出c出k出軍出使出n出c出t出i出o出n出*出 出T出h出i出s出T出i出c出k出軍出使出n出c出t出i出o出n出)出 出o出正出e出本出本出i出d出e出;出
+出
+出 出 出 出 出/出/出 出�出�出池出�出O出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出正出o出i出d出 出M出o出正出e出T出o出L出o出c出a出t出i出o出n出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出,出 出b出o出o出l出 出b出A出t出t出a出c出k出M出o出正出e出 出=出 出f出a出l出s出e出)出;出
+出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出正出o出i出d出 出M出o出正出e出T出o出L出o出c出a出t出i出o出n出基本出i出t出h出軍出o出本出設置出a出t出i出o出n出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出軍出o出本出設置出a出t出i出o出n出O出f出f出s出e出t出)出;出
+出
+出 出 出 出 出/出/出 出動出�出出動出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出正出o出i出d出 出S出t出o出p出M出o出正出e出設置出e出n出t出(出)出;出
+出
+出 出 出 出 出/出/出 出動出�出下出�出�出動出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出b出o出o出l出 出I出s出M出o出正出i出n出成出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出b出I出s出M出o出正出i出n出成出;出 出}出
+出
+出 出 出 出 出/出/出 出故出事出重出要出性出基本出�出�出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出f出l出o出a出t出 出G出e出t出C出使出本出本出e出n出t出S出p出e出e出d出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出�出]出�出設置出�出�出池出�出�出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出M出o出正出e出S出p出e出e出d出(出f出l出o出a出t出 出的出e出w出S出p出e出e出d出)出;出
+出
+出 出 出 出 出/出/出 出�出�出池出動出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出b出o出o出l出 出輸入出a出s出V出a出l出i出d出P出a出t出h出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出P出a出t出h出P出o出i出n出t出s出.出的出使出設置出(出)出 出>出 出0出;出 出}出
+出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出軍出V出e出c出t出o出本出 出G出e出t出C出使出本出本出e出n出t出T出a出本出成出e出t出L出o出c出a出t出i出o出n出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出目出標出數出量出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出正出o出i出d出 出R出o出t出a出t出e出T出o出w出a出本出d出s出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出T出a出本出成出e出t出D出i出本出e出c出t出i出o出n出,出 出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
+出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出D出e出s出i出本出e出d出R出o出t出a出t出i出o出n出(出c出o出n出s出t出 出軍出R出o出t出a出t出o出本出&出 出T出a出本出成出e出t出R出o出t出a出t出i出o出n出)出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出/出 出動出池出�出�出動出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出O出b出大出e出c出t出P出t出本出<出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出>出 出O出w出n出e出本出U出n出i出t出;出
+出
+出 出 出 出 出/出/出 出�出�出池出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出V出i出s出i出b出l出e出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出b出o出o出l出 出b出I出s出M出o出正出i出n出成出;出
+出
+出 出 出 出 出/出/出 出�出�出池出�出�出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出f出l出o出a出t出 出M出o出正出e出S出p出e出e出d出;出
+出
+出 出 出 出 出/出/出 出動出池出�出�出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出f出l出o出a出t出 出R出o出t出a出t出i出o出n出S出p出e出e出d出;出
+出
+出 出 出 出 出/出/出 出動出�出�出Z出�出�出 出(出故出事出選出項出務出�出輸入出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出o出正出e出設置出e出n出t出"出)出
+出 出 出 出 出f出l出o出a出t出 出A出c出c出e出p出t出a出n出c出e出R出a出d出i出使出s出;出
+出
+出 出 出 出 出/出/出 出�出�出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出V出e出c出t出o出本出>出 出C出使出本出本出e出n出t出P出a出t出h出P出o出i出n出t出s出;出
+出
+出 出 出 出 出/出/出 出�出�出動出�出�出動出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出i出n出t出3出2出 出C出使出本出本出e出n出t出P出a出t出h出I出n出d出e出x出;出
+出
+出 出 出 出 出/出/出 出目出標出數出量出�出�出設置出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出軍出V出e出c出t出o出本出 出C出使出本出本出e出n出t出T出a出本出成出e出t出L出o出c出a出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出目出標出數出量出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出軍出R出o出t出a出t出o出本出 出D出e出s出i出本出e出d出R出o出t出a出t出i出o出n出;出
+出
+出 出 出 出 出/出/出 出動出�出下出�出�出動出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出b出o出o出l出 出b出I出s出A出t出t出a出c出k出M出o出正出e出;出
+出
+出 出 出 出 出/出/出 出動出�出�出動出�出�出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出軍出V出e出c出t出o出本出 出軍出o出本出設置出a出t出i出o出n出O出f出f出s出e出t出;出
+出
+出 出 出 出 出/出/出 出�出�出動出�出�出動出I出D出
+出 出 出 出 出使出i出n出t出3出2出 出P出a出t出h出R出e出q出使出e出s出t出I出d出;出
+出
+出 出 出 出 出/出/出 出�出ɯ出�出t出�出Τ出ޥ出�出
+出 出 出 出 出c出l出a出s出s出 出U出的出a出正出i出成出a出t出i出o出n出S出y出s出t出e出設置出V出1出*出 出的出a出正出S出y出s出t出e出設置出;出
+出
+出 出 出 出 出/出/出 出�出�出動出�出�出動出
+出 出 出 出 出正出o出i出d出 出R出e出q出使出e出s出t出P出a出t出h出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出S出t出a出本出t出L出o出c出a出t出i出o出n出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出E出n出d出L出o出c出a出t出i出o出n出)出;出
+出
+出 出 出 出 出/出/出 出�出�出池出�出�出動出�出�出
+出 出 出 出 出正出o出i出d出 出O出n出P出a出t出h出軍出o出使出n出d出(出使出i出n出t出3出2出 出I出n出P出a出t出h出R出e出q出使出e出s出t出I出d出,出 出E出的出a出正出i出成出a出t出i出o出n出Q出使出e出本出y出R出e出s出使出l出t出:出:出T出y出p出e出 出R出e出s出使出l出t出,出 出軍出的出a出正出P出a出t出h出S出h出a出本出e出d出P出t出本出 出P出a出t出h出)出;出
+出
+出 出 出 出 出/出/出 出�出使出動出�出�出動出�出�出動出
+出 出 出 出 出正出o出i出d出 出軍出o出l出l出o出w出P出a出t出h出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
+出
+出 出 出 出 出/出/出 出�出�出池出動出
+出 出 出 出 出正出o出i出d出 出S出設置出o出o出t出h出R出o出t出a出t出e出T出o出w出a出本出d出s出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出D出i出本出e出c出t出i出o出n出,出 出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
+出
+出 出 出 出 出/出/出 出�出ˬ出d出動出�出下出目出標出數出量出
+出 出 出 出 出b出o出o出l出 出輸入出a出s出R出e出a出c出h出e出d出T出a出本出成出e出t出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出動出�出s出�出�出池出X出
+出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出M出o出正出e出設置出e出n出t出S出t出a出t出e出(出)出;出
+出}出;出
+出
+出

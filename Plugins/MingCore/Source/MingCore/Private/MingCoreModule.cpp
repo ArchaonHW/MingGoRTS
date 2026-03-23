@@ -1,125 +1,126 @@
-#include "MingCoreModule.h"
-#include "MingCoreEventBus.h"
-#include "HAL/PlatformFilemanager.h"
-#include "Misc/Paths.h"
-
-#define LOCTEXT_NAMESPACE "FMingCoreModule"
-
-// 性能監控類
-class FPerformanceMonitor
-{
-public:
-    FPerformanceMonitor()
-    {
-        // 初始化性能計數器
-        EventProcessingTime = 0.0;
-        EventCount = 0;
-        LastUpdateTime = FDateTime::Now();
-    }
-    
-    void RecordEventProcessed(double ProcessingTimeMs)
-    {
-        EventProcessingTime += ProcessingTimeMs;
-        EventCount++;
-        
-        // 每秒報告一次性能統計
-        FDateTime Now = FDateTime::Now();
-        if ((Now - LastUpdateTime).GetTotalSeconds() >= 1.0)
-        {
-            ReportPerformanceStats();
-            EventProcessingTime = 0.0;
-            EventCount = 0;
-            LastUpdateTime = Now;
-        }
-    }
-    
-private:
-    void ReportPerformanceStats()
-    {
-        if (EventCount > 0)
-        {
-            double AverageTime = EventProcessingTime / EventCount;
-            UE_LOG(LogTemp, Log, TEXT("MingCore Performance: %d events processed, avg %.3fms per event"), 
-                   EventCount, AverageTime);
-            
-            // 性能警告
-            if (AverageTime > 1.0) // 超過1ms警告
-            {
-                UE_LOG(LogTemp, Warning, TEXT("MingCore Performance Warning: Average event processing time is high (%.3fms)"), AverageTime);
-            }
-        }
-    }
-    
-    double EventProcessingTime;
-    int32 EventCount;
-    FDateTime LastUpdateTime;
-};
-
-void FMingCoreModule::StartupModule()
-{
-    // This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
-    
-    UE_LOG(LogTemp, Log, TEXT("MingCore Module Starting Up"));
-    
-    // 初始化性能監控
-    PerformanceMonitor = new FPerformanceMonitor();
-    
-    // 註冊事件類型
-    RegisterEventTypes();
-    
-    // 設置性能監控
-    SetupPerformanceMonitoring();
-    
-    UE_LOG(LogTemp, Log, TEXT("MingCore Module Startup Complete - Event Bus Ready"));
-}
-
-void FMingCoreModule::ShutdownModule()
-{
-    // This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
-    // we call this function before unloading the module.
-    
-    UE_LOG(LogTemp, Log, TEXT("MingCore Module Shutting Down"));
-    
-    // 清理性能監控
-    if (PerformanceMonitor)
-    {
-        delete PerformanceMonitor;
-        PerformanceMonitor = nullptr;
-    }
-    
-    UE_LOG(LogTemp, Log, TEXT("MingCore Module Shutdown Complete"));
-}
-
-void FMingCoreModule::RegisterEventTypes()
-{
-    // 註冊所有事件類型到事件總線
-    // 這確保事件系統知道所有可用的事件類型
-    
-    UE_LOG(LogTemp, Log, TEXT("Registering MingCore Event Types"));
-    
-    // 註冊核心事件類型
-    // 注意：UE5的反射系統會自動註冊USTRUCT類型
-    // 這裡主要是為了驗證和初始化
-    
-    // 驗證事件類型是否正確註冊
-    static_assert(sizeof(FUnitSelectedEvent) > 0, "FUnitSelectedEvent size invalid");
-    static_assert(sizeof(FUnitMovedEvent) > 0, "FUnitMovedEvent size invalid");
-    static_assert(sizeof(FResourceUpdateEvent) > 0, "FResourceUpdateEvent size invalid");
-    
-    UE_LOG(LogTemp, Log, TEXT("Event Types Registration Complete"));
-}
-
-void FMingCoreModule::SetupPerformanceMonitoring()
-{
-    // 設置事件系統性能監控
-    UE_LOG(LogTemp, Log, TEXT("Setting up MingCore Performance Monitoring"));
-    
-    // 這裡可以添加更多性能監控設置
-    // 例如：事件隊列大小監控、記憶體使用監控等
-    
-    UE_LOG(LogTemp, Log, TEXT("Performance Monitoring Setup Complete"));
-}
-
-#undef LOCTEXT_NAMESPACE
-
-IMPLEMENT_MODULE(FMingCoreModule, MingCore)
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出C出o出本出e出M出o出d出使出l出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出C出o出本出e出E出正出e出n出t出B出使出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出輸入出A出L出/出P出l出a出t出f出o出本出設置出軍出i出l出e出設置出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出s出c出/出P出a出t出h出s出.出h出"出
+出
+出#出d出e出f出i出n出e出 出L出O出C出T出E出X出T出下出的出A出M出E出S出P出A出C出E出 出"出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出"出
+出
+出/出/出 出性出能出監出控出類出
+出c出l出a出s出s出 出軍出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出
+出{出
+出p出使出b出l出i出c出:出
+出 出 出 出 出軍出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出(出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出初出始出化出性出能出計出數出器出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出 出=出 出0出.出0出;出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出C出o出使出n出t出 出=出 出0出;出
+出 出 出 出 出 出 出 出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出正出o出i出d出 出R出e出c出o出本出d出E出正出e出n出t出P出本出o出c出e出s出s出e出d出(出d出o出使出b出l出e出 出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出M出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出 出+出=出 出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出M出s出;出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出C出o出使出n出t出+出+出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出每出秒出報出告出一出次出性出能出統出計出
+出 出 出 出 出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出的出o出w出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出(出的出o出w出 出-出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出)出.出G出e出t出T出o出t出a出l出S出e出c出o出n出d出s出(出)出 出>出=出 出1出.出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出p出o出本出t出P出e出本出f出o出本出設置出a出n出c出e出S出t出a出t出s出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出正出e出n出t出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出 出=出 出0出.出0出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出正出e出n出t出C出o出使出n出t出 出=出 出0出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出的出o出w出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出p出本出i出正出a出t出e出:出
+出 出 出 出 出正出o出i出d出 出R出e出p出o出本出t出P出e出本出f出o出本出設置出a出n出c出e出S出t出a出t出s出(出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出E出正出e出n出t出C出o出使出n出t出 出>出 出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出d出o出使出b出l出e出 出A出正出e出本出a出成出e出T出i出設置出e出 出=出 出E出正出e出n出t出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出 出/出 出E出正出e出n出t出C出o出使出n出t出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出P出e出本出f出o出本出設置出a出n出c出e出:出 出%出d出 出e出正出e出n出t出s出 出p出本出o出c出e出s出s出e出d出,出 出a出正出成出 出%出.出3出f出設置出s出 出p出e出本出 出e出正出e出n出t出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出E出正出e出n出t出C出o出使出n出t出,出 出A出正出e出本出a出成出e出T出i出設置出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出性出能出警出告出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出A出正出e出本出a出成出e出T出i出設置出e出 出>出 出1出.出0出)出 出/出/出 出超出過出1出設置出s出警出告出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出P出e出本出f出o出本出設置出a出n出c出e出 出基本出a出本出n出i出n出成出:出 出A出正出e出本出a出成出e出 出e出正出e出n出t出 出p出本出o出c出e出s出s出i出n出成出 出t出i出設置出e出 出i出s出 出h出i出成出h出 出(出%出.出3出f出設置出s出)出"出)出,出 出A出正出e出本出a出成出e出T出i出設置出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出d出o出使出b出l出e出 出E出正出e出n出t出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出;出
+出 出 出 出 出i出n出t出3出2出 出E出正出e出n出t出C出o出使出n出t出;出
+出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出;出
+出}出;出
+出
+出正出o出i出d出 出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出:出:出S出t出a出本出t出使出p出M出o出d出使出l出e出(出)出
+出{出
+出 出 出 出 出/出/出 出T出h出i出s出 出c出o出d出e出 出w出i出l出l出 出e出x出e出c出使出t出e出 出a出f出t出e出本出 出y出o出使出本出 出設置出o出d出使出l出e出 出i出s出 出l出o出a出d出e出d出 出i出n出t出o出 出設置出e出設置出o出本出y出;出 出t出h出e出 出e出x出a出c出t出 出t出i出設置出i出n出成出 出i出s出 出s出p出e出c出i出f出i出e出d出 出i出n出 出t出h出e出 出.出使出p出l出使出成出i出n出 出f出i出l出e出 出p出e出本出-出設置出o出d出使出l出e出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出M出o出d出使出l出e出 出S出t出a出本出t出i出n出成出 出U出p出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出性出能出監出控出
+出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出 出=出 出n出e出w出 出軍出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出註出冊出事出件出類出型出
+出 出 出 出 出R出e出成出i出s出t出e出本出E出正出e出n出t出T出y出p出e出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出設出置出性出能出監出控出
+出 出 出 出 出S出e出t出使出p出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出i出n出成出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出M出o出d出使出l出e出 出S出t出a出本出t出使出p出 出C出o出設置出p出l出e出t出e出 出-出 出E出正出e出n出t出 出B出使出s出 出R出e出a出d出y出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出:出:出S出h出使出t出d出o出w出n出M出o出d出使出l出e出(出)出
+出{出
+出 出 出 出 出/出/出 出T出h出i出s出 出f出使出n出c出t出i出o出n出 出設置出a出y出 出b出e出 出c出a出l出l出e出d出 出d出使出本出i出n出成出 出s出h出使出t出d出o出w出n出 出t出o出 出c出l出e出a出n出 出使出p出 出y出o出使出本出 出設置出o出d出使出l出e出.出 出 出軍出o出本出 出設置出o出d出使出l出e出s出 出t出h出a出t出 出s出使出p出p出o出本出t出 出d出y出n出a出設置出i出c出 出本出e出l出o出a出d出i出n出成出,出
+出 出 出 出 出/出/出 出w出e出 出c出a出l出l出 出t出h出i出s出 出f出使出n出c出t出i出o出n出 出b出e出f出o出本出e出 出使出n出l出o出a出d出i出n出成出 出t出h出e出 出設置出o出d出使出l出e出.出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出M出o出d出使出l出e出 出S出h出使出t出t出i出n出成出 出D出o出w出n出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出清出理出性出能出監出控出
+出 出 出 出 出i出f出 出(出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出d出e出l出e出t出e出 出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出;出
+出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出M出o出d出使出l出e出 出S出h出使出t出d出o出w出n出 出C出o出設置出p出l出e出t出e出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出:出:出R出e出成出i出s出t出e出本出E出正出e出n出t出T出y出p出e出s出(出)出
+出{出
+出 出 出 出 出/出/出 出註出冊出所出有出事出件出類出型出到出事出件出總出線出
+出 出 出 出 出/出/出 出這出確出保出事出件出系出統出知出道出所出有出可出用出的出事出件出類出型出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出R出e出成出i出s出t出e出本出i出n出成出 出M出i出n出成出C出o出本出e出 出E出正出e出n出t出 出T出y出p出e出s出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出註出冊出核出心出事出件出類出型出
+出 出 出 出 出/出/出 出注出意出：出U出E出5出的出反出射出系出統出會出自出動出註出冊出U出S出T出R出U出C出T出類出型出
+出 出 出 出 出/出/出 出這出裡出主出要出是出為出了出驗出證出和出初出始出化出
+出 出 出 出 出
+出 出 出 出 出/出/出 出驗出證出事出件出類出型出是出否出正出確出註出冊出
+出 出 出 出 出s出t出a出t出i出c出下出a出s出s出e出本出t出(出s出i出z出e出o出f出(出軍出U出n出i出t出S出e出l出e出c出t出e出d出E出正出e出n出t出)出 出>出 出0出,出 出"出軍出U出n出i出t出S出e出l出e出c出t出e出d出E出正出e出n出t出 出s出i出z出e出 出i出n出正出a出l出i出d出"出)出;出
+出 出 出 出 出s出t出a出t出i出c出下出a出s出s出e出本出t出(出s出i出z出e出o出f出(出軍出U出n出i出t出M出o出正出e出d出E出正出e出n出t出)出 出>出 出0出,出 出"出軍出U出n出i出t出M出o出正出e出d出E出正出e出n出t出 出s出i出z出e出 出i出n出正出a出l出i出d出"出)出;出
+出 出 出 出 出s出t出a出t出i出c出下出a出s出s出e出本出t出(出s出i出z出e出o出f出(出軍出R出e出s出o出使出本出c出e出U出p出d出a出t出e出E出正出e出n出t出)出 出>出 出0出,出 出"出軍出R出e出s出o出使出本出c出e出U出p出d出a出t出e出E出正出e出n出t出 出s出i出z出e出 出i出n出正出a出l出i出d出"出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出E出正出e出n出t出 出T出y出p出e出s出 出R出e出成出i出s出t出本出a出t出i出o出n出 出C出o出設置出p出l出e出t出e出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出:出:出S出e出t出使出p出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出i出n出成出(出)出
+出{出
+出 出 出 出 出/出/出 出設出置出事出件出系出統出性出能出監出控出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出e出t出t出i出n出成出 出使出p出 出M出i出n出成出C出o出本出e出 出P出e出本出f出o出本出設置出a出n出c出e出 出M出o出n出i出t出o出本出i出n出成出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出這出裡出可出以出添出加出更出多出性出能出監出控出設出置出
+出 出 出 出 出/出/出 出例出如出：出事出件出隊出列出大出小出監出控出、出記出憶出體出使出用出監出控出等出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出e出本出f出o出本出設置出a出n出c出e出 出M出o出n出i出t出o出本出i出n出成出 出S出e出t出使出p出 出C出o出設置出p出l出e出t出e出"出)出)出;出
+出}出
+出
+出#出使出n出d出e出f出 出L出O出C出T出E出X出T出下出的出A出M出E出S出P出A出C出E出
+出
+出I出M出P出L出E出M出E出的出T出下出M出O出D出U出L出E出(出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出,出 出M出i出n出成出C出o出本出e出)出
+出

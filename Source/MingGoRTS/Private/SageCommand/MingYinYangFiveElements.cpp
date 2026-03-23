@@ -1,815 +1,816 @@
-#include "SageCommand/MingYinYangFiveElements.h"
-#include "Engine/World.h"
-#include "TimerManager.h"
-
-UMingYinYangFiveElements::UMingYinYangFiveElements()
-{
-    // 初始化五行元素狀態
-    ElementStates.SetNum(5); // 5個元素：金木水火土
-    for (int32 i = 0; i < ElementStates.Num(); ++i)
-    {
-        FElementState& State = ElementStates[i];
-        State.Element = static_cast<EFiveElements>(i);
-        State.State = EElementState::Dormant;
-        State.PowerLevel = 50.0f;
-        State.Influence = 0.0f;
-        State.Stability = 50.0f;
-        State.TransitionProgress = 0.0f;
-    }
-    
-    // 初始化陰陽平衡
-    CurrentBalance.YinLevel = 50.0f;
-    CurrentBalance.YangLevel = 50.0f;
-    CurrentBalance.BalanceScore = 0.0f;
-    CurrentBalance.HarmonyLevel = 50.0f;
-    
-    // 設置默認親和元素
-    CurrentAffinityElement = EFiveElements::Earth;
-}
-
-bool UMingYinYangFiveElements::Initialize()
-{
-    if (bSystemActive)
-    {
-        return true;
-    }
-
-    // 初始化系統狀態
-    bSystemActive = true;
-    SystemStability = 100.0f;
-
-    // 設置更新定時器
-    if (UWorld* World = GetWorld())
-    {
-        World->GetTimerManager().SetTimer(
-            UpdateTimerHandle,
-            this,
-            &UMingYinYangFiveElements::UpdateElementStates,
-            0.1f,
-            true
-        );
-    }
-
-    return true;
-}
-
-void UMingYinYangFiveElements::Cleanup()
-{
-    bSystemActive = false;
-    
-    if (UWorld* World = GetWorld())
-    {
-        World->GetTimerManager().ClearTimer(UpdateTimerHandle);
-    }
-    
-    ElementStates.Empty();
-    EventHistory.Empty();
-}
-
-FYinYangBalance UMingYinYangFiveElements::GetCurrentBalance() const
-{
-    return CurrentBalance;
-}
-
-bool UMingYinYangFiveElements::AdjustYinYangBalance(float YinChange, float YangChange, const FString& Reason)
-{
-    if (!bSystemActive)
-    {
-        return false;
-    }
-    
-    // 調整陰陽水平
-    CurrentBalance.YinLevel = FMath::Clamp(CurrentBalance.YinLevel + YinChange, 0.0f, 100.0f);
-    CurrentBalance.YangLevel = FMath::Clamp(CurrentBalance.YangLevel + YangChange, 0.0f, 100.0f);
-    
-    // 重新計算平衡分數
-    CurrentBalance.BalanceScore = CalculateBalanceScore();
-    CurrentBalance.HarmonyLevel = CalculateHarmonyLevel();
-    
-    // 更新陰陽屬性
-    UpdateYinYangBalance(0.0f);
-    
-    // 記錄事件
-    RecordYinYangEvent(FString::Printf(TEXT("陰陽平衡調整：%s"), *Reason), 
-                       CurrentBalance.CurrentAttribute, CurrentAffinityElement, 
-                       FMath::Abs(YinChange) + FMath::Abs(YangChange));
-    
-    // 觸發事件
-    OnYinYangBalanceChanged.Broadcast(CurrentBalance);
-    
-    return true;
-}
-
-bool UMingYinYangFiveElements::SetYinYangAttribute(EYinYangAttribute Attribute)
-{
-    if (!bSystemActive)
-    {
-        return false;
-    }
-    
-    CurrentBalance.CurrentAttribute = Attribute;
-    
-    // 根據屬性調整陰陽水平
-    switch (Attribute)
-    {
-    case EYinYangAttribute::PureYin:
-        CurrentBalance.YinLevel = 80.0f;
-        CurrentBalance.YangLevel = 20.0f;
-        break;
-    case EYinYangAttribute::YangInYin:
-        CurrentBalance.YinLevel = 65.0f;
-        CurrentBalance.YangLevel = 35.0f;
-        break;
-    case EYinYangAttribute::BalancedYinYang:
-        CurrentBalance.YinLevel = 50.0f;
-        CurrentBalance.YangLevel = 50.0f;
-        break;
-    case EYinYangAttribute::YinInYang:
-        CurrentBalance.YinLevel = 35.0f;
-        CurrentBalance.YangLevel = 65.0f;
-        break;
-    case EYinYangAttribute::PureYang:
-        CurrentBalance.YinLevel = 20.0f;
-        CurrentBalance.YangLevel = 80.0f;
-        break;
-    }
-    
-    // 重新計算平衡分數
-    CurrentBalance.BalanceScore = CalculateBalanceScore();
-    CurrentBalance.HarmonyLevel = CalculateHarmonyLevel();
-    
-    // 觸發事件
-    OnYinYangBalanceChanged.Broadcast(CurrentBalance);
-    
-    return true;
-}
-
-float UMingYinYangFiveElements::GetHarmonyLevel() const
-{
-    return CurrentBalance.HarmonyLevel;
-}
-
-FElementState UMingYinYangFiveElements::GetElementState(EFiveElements Element) const
-{
-    int32 Index = static_cast<int32>(Element);
-    if (ElementStates.IsValidIndex(Index))
-    {
-        return ElementStates[Index];
-    }
-    return FElementState();
-}
-
-bool UMingYinYangFiveElements::SetElementAffinity(EFiveElements Element)
-{
-    if (!bSystemActive)
-    {
-        return false;
-    }
-    
-    CurrentAffinityElement = Element;
-    
-    // 增強親和元素的能量
-    int32 Index = static_cast<int32>(Element);
-    if (ElementStates.IsValidIndex(Index))
-    {
-        ElementStates[Index].PowerLevel = FMath::Clamp(ElementStates[Index].PowerLevel + 20.0f, 0.0f, 100.0f);
-        ElementStates[Index].Influence = CalculateElementInfluence(Element);
-        
-        // 觸發事件
-        OnElementStateChanged.Broadcast(ElementStates[Index]);
-    }
-    
-    return true;
-}
-
-EFiveElements UMingYinYangFiveElements::GetCurrentElement() const
-{
-    return CurrentAffinityElement;
-}
-
-float UMingYinYangFiveElements::GetElementPower(EFiveElements Element) const
-{
-    int32 Index = static_cast<int32>(Element);
-    if (ElementStates.IsValidIndex(Index))
-    {
-        return ElementStates[Index].PowerLevel;
-    }
-    return 0.0f;
-}
-
-bool UMingYinYangFiveElements::EnhanceElementPower(EFiveElements Element, float Amount)
-{
-    if (!bSystemActive)
-    {
-        return false;
-    }
-    
-    int32 Index = static_cast<int32>(Element);
-    if (ElementStates.IsValidIndex(Index))
-    {
-        ElementStates[Index].PowerLevel = FMath::Clamp(ElementStates[Index].PowerLevel + Amount, 0.0f, 100.0f);
-        ElementStates[Index].Influence = CalculateElementInfluence(Element);
-        
-        // 觸發事件
-        OnElementStateChanged.Broadcast(ElementStates[Index]);
-        
-        return true;
-    }
-    
-    return false;
-}
-
-FElementRelationship UMingYinYangFiveElements::AnalyzeElementRelationship(EFiveElements Source, EFiveElements Target) const
-{
-    FElementRelationship Relationship;
-    Relationship.SourceElement = Source;
-    Relationship.TargetElement = Target;
-    Relationship.RelationshipType = DetermineRelationship(Source, Target);
-    Relationship.Strength = CalculateRelationshipStrength(Source, Target);
-    Relationship.Effectiveness = Relationship.Strength;
-    
-    return Relationship;
-}
-
-float UMingYinYangFiveElements::GetRelationshipStrength(EFiveElements Source, EFiveElements Target) const
-{
-    return CalculateRelationshipStrength(Source, Target);
-}
-
-TArray<EFiveElements> UMingYinYangFiveElements::GetSupportingElements(EFiveElements Element) const
-{
-    TArray<EFiveElements> SupportingElements;
-    
-    // 五行相生關係
-    switch (Element)
-    {
-    case EFiveElements::Metal:
-        SupportingElements.Add(EFiveElements::Earth); // 土生金
-        break;
-    case EFiveElements::Wood:
-        SupportingElements.Add(EFiveElements::Water); // 水生木
-        break;
-    case EFiveElements::Water:
-        SupportingElements.Add(EFiveElements::Metal); // 金生水
-        break;
-    case EFiveElements::Fire:
-        SupportingElements.Add(EFiveElements::Wood); // 木生火
-        break;
-    case EFiveElements::Earth:
-        SupportingElements.Add(EFiveElements::Fire); // 火生土
-        break;
-    }
-    
-    return SupportingElements;
-}
-
-TArray<EFiveElements> UMingYinYangFiveElements::GetConflictingElements(EFiveElements Element) const
-{
-    TArray<EFiveElements> ConflictingElements;
-    
-    // 五行相克關係
-    switch (Element)
-    {
-    case EFiveElements::Metal:
-        ConflictingElements.Add(EFiveElements::Wood); // 金克木
-        break;
-    case EFiveElements::Wood:
-        ConflictingElements.Add(EFiveElements::Earth); // 木克土
-        break;
-    case EFiveElements::Water:
-        ConflictingElements.Add(EFiveElements::Fire); // 水克火
-        break;
-    case EFiveElements::Fire:
-        ConflictingElements.Add(EFiveElements::Metal); // 火克金
-        break;
-    case EFiveElements::Earth:
-        ConflictingElements.Add(EFiveElements::Water); // 土克水
-        break;
-    }
-    
-    return ConflictingElements;
-}
-
-EYinYangAttribute UMingYinYangFiveElements::GetOptimalAttribute(const FString& Context) const
-{
-    // 根據上下文確定最佳陰陽屬性
-    if (Context.Contains("防守") || Context.Contains("防禦") || Context.Contains("守護"))
-    {
-        return EYinYangAttribute::PureYin;
-    }
-    else if (Context.Contains("攻擊") || Context.Contains("進攻") || Context.Contains("戰鬥"))
-    {
-        return EYinYangAttribute::PureYang;
-    }
-    else if (Context.Contains("平衡") || Context.Contains("穩定"))
-    {
-        return EYinYangAttribute::BalancedYinYang;
-    }
-    else if (Context.Contains("策略") || Context.Contains("計謀"))
-    {
-        return EYinYangAttribute::YinInYang;
-    }
-    else
-    {
-        return EYinYangAttribute::BalancedYinYang;
-    }
-}
-
-EFiveElements UMingYinYangFiveElements::GetOptimalElement(const FString& Context) const
-{
-    // 根據上下文確定最佳五行元素
-    if (Context.Contains("攻擊") || Context.Contains("戰鬥"))
-    {
-        return EFiveElements::Fire; // 火主攻擊
-    }
-    else if (Context.Contains("防禦") || Context.Contains("守護"))
-    {
-        return EFiveElements::Earth; // 土主防禦
-    }
-    else if (Context.Contains("移動") || Context.Contains("速度"))
-    {
-        return EFiveElements::Water; // 水主流動
-    }
-    else if (Context.Contains("建設") || Context.Contains("成長"))
-    {
-        return EFiveElements::Wood; // 木主成長
-    }
-    else if (Context.Contains("堅固") || Context.Contains("防護"))
-    {
-        return EFiveElements::Metal; // 金主堅固
-    }
-    else
-    {
-        return CurrentAffinityElement;
-    }
-}
-
-float UMingYinYangFiveElements::CalculateStrategicAdvantage(EYinYangAttribute Attribute, EFiveElements Element) const
-{
-    float AttributeBonus = 1.0f;
-    float ElementBonus = 1.0f;
-    
-    // 計算陰陽屬性加成
-    switch (Attribute)
-    {
-    case EYinYangAttribute::PureYin:
-        AttributeBonus = 1.2f; // 防禦加成
-        break;
-    case EYinYangAttribute::PureYang:
-        AttributeBonus = 1.3f; // 攻擊加成
-        break;
-    case EYinYangAttribute::BalancedYinYang:
-        AttributeBonus = 1.1f; // 平衡加成
-        break;
-    default:
-        AttributeBonus = 1.0f;
-        break;
-    }
-    
-    // 計算五行元素加成
-    int32 Index = static_cast<int32>(Element);
-    if (ElementStates.IsValidIndex(Index))
-    {
-        ElementBonus = 1.0f + (ElementStates[Index].PowerLevel / 100.0f);
-    }
-    
-    return AttributeBonus * ElementBonus;
-}
-
-TArray<FString> UMingYinYangFiveElements::GetStrategicRecommendations() const
-{
-    TArray<FString> Recommendations;
-    
-    // 基於當前狀態生成建議
-    if (CurrentBalance.BalanceScore < -30.0f)
-    {
-        Recommendations.Add(TEXT("陰陽失衡，建議進行平衡調整"));
-    }
-    
-    if (CurrentBalance.HarmonyLevel < 50.0f)
-    {
-        Recommendations.Add(TEXT("和諧度不足，建議增強陰陽協調"));
-    }
-    
-    // 檢查元素狀態
-    for (const FElementState& State : ElementStates)
-    {
-        if (State.PowerLevel < 30.0f)
-        {
-            Recommendations.Add(FString::Printf(TEXT("%s元素能量不足，建議增強"), *GetElementName(State.Element)));
-        }
-    }
-    
-    return Recommendations;
-}
-
-bool UMingYinYangFiveElements::TriggerElementTransition(EFiveElements Element)
-{
-    if (!bSystemActive)
-    {
-        return false;
-    }
-    
-    int32 Index = static_cast<int32>(Element);
-    if (!ElementStates.IsValidIndex(Index))
-    {
-        return false;
-    }
-    
-    // 設置為轉換狀態
-    ElementStates[Index].State = EElementState::Transitioning;
-    ElementStates[Index].TransitionProgress = 0.0f;
-    
-    return true;
-}
-
-bool UMingYinYangFiveElements::BalanceYinYang()
-{
-    if (!bSystemActive)
-    {
-        return false;
-    }
-    
-    // 設置為平衡狀態
-    CurrentBalance.YinLevel = 50.0f;
-    CurrentBalance.YangLevel = 50.0f;
-    CurrentBalance.CurrentAttribute = EYinYangAttribute::BalancedYinYang;
-    CurrentBalance.BalanceScore = 0.0f;
-    CurrentBalance.HarmonyLevel = 100.0f;
-    
-    // 觸發事件
-    OnYinYangBalanceChanged.Broadcast(CurrentBalance);
-    
-    return true;
-}
-
-bool UMingYinYangFiveElements::HarmonizeElements()
-{
-    if (!bSystemActive)
-    {
-        return false;
-    }
-    
-    // 平衡所有元素能量
-    for (FElementState& State : ElementStates)
-    {
-        State.PowerLevel = 50.0f;
-        State.Stability = 100.0f;
-        State.Influence = CalculateElementInfluence(State.Element);
-        State.State = EElementState::Peak;
-        
-        // 觸發事件
-        OnElementStateChanged.Broadcast(State);
-    }
-    
-    return true;
-}
-
-FYinYangBalance UMingYinYangFiveElements::PredictBalance(float TimeInFuture) const
-{
-    FYinYangBalance PredictedBalance = CurrentBalance;
-    
-    // 簡單的預測邏輯：基於當前衰減率預測未來狀態
-    float DecayAmount = YinYangDecayRate * TimeInFuture;
-    PredictedBalance.YinLevel = FMath::Clamp(PredictedBalance.YinLevel - DecayAmount, 0.0f, 100.0f);
-    PredictedBalance.YangLevel = FMath::Clamp(PredictedBalance.YangLevel - DecayAmount, 0.0f, 100.0f);
-    
-    // 重新計算平衡分數
-    float Difference = PredictedBalance.YinLevel - PredictedBalance.YangLevel;
-    PredictedBalance.BalanceScore = Difference;
-    PredictedBalance.HarmonyLevel = 100.0f - FMath::Abs(Difference);
-    
-    return PredictedBalance;
-}
-
-EFiveElements UMingYinYangFiveElements::PredictDominantElement(float TimeInFuture) const
-{
-    EFiveElements DominantElement = CurrentAffinityElement;
-    float MaxPower = 0.0f;
-    
-    // 預測未來最強元素
-    for (const FElementState& State : ElementStates)
-    {
-        float PredictedPower = State.PowerLevel - (ElementDecayRate * TimeInFuture);
-        if (PredictedPower > MaxPower)
-        {
-            MaxPower = PredictedPower;
-            DominantElement = State.Element;
-        }
-    }
-    
-    return DominantElement;
-}
-
-TArray<FYinYangEvent> UMingYinYangFiveElements::PredictUpcomingEvents(int32 EventCount) const
-{
-    TArray<FYinYangEvent> PredictedEvents;
-    
-    // 簡單的事件預測邏輯
-    for (int32 i = 0; i < EventCount; ++i)
-    {
-        FYinYangEvent Event;
-        Event.EventID = FString::Printf(TEXT("PREDICTED_%d"), i);
-        Event.Description = TEXT("預測的陰陽五行事件");
-        Event.YinYangChange = CurrentBalance.CurrentAttribute;
-        Event.ElementChange = CurrentAffinityElement;
-        Event.ImpactLevel = FMath::FRandRange(20.0f, 80.0f);
-        Event.Timestamp = FDateTime::Now() + FTimespan::FromHours(i + 1);
-        
-        PredictedEvents.Add(Event);
-    }
-    
-    return PredictedEvents;
-}
-
-TArray<FYinYangEvent> UMingYinYangFiveElements::GetEventHistory() const
-{
-    return EventHistory;
-}
-
-FYinYangEvent UMingYinYangFiveElements::GetLastEvent() const
-{
-    if (EventHistory.Num() > 0)
-    {
-        return EventHistory.Last();
-    }
-    return FYinYangEvent();
-}
-
-void UMingYinYangFiveElements::ClearEventHistory()
-{
-    EventHistory.Empty();
-}
-
-// 私有方法實現
-
-float UMingYinYangFiveElements::CalculateYinLevel() const
-{
-    return CurrentBalance.YinLevel;
-}
-
-float UMingYinYangFiveElements::CalculateYangLevel() const
-{
-    return CurrentBalance.YangLevel;
-}
-
-float UMingYinYangFiveElements::CalculateBalanceScore() const
-{
-    return CurrentBalance.YinLevel - CurrentBalance.YangLevel;
-}
-
-float UMingYinYangFiveElements::CalculateHarmonyLevel() const
-{
-    float Difference = FMath::Abs(CurrentBalance.YinLevel - CurrentBalance.YangLevel);
-    return FMath::Clamp(100.0f - Difference, 0.0f, 100.0f);
-}
-
-float UMingYinYangFiveElements::CalculateElementPower(EFiveElements Element) const
-{
-    int32 Index = static_cast<int32>(Element);
-    if (ElementStates.IsValidIndex(Index))
-    {
-        return ElementStates[Index].PowerLevel;
-    }
-    return 0.0f;
-}
-
-float UMingYinYangFiveElements::CalculateElementInfluence(EFiveElements Element) const
-{
-    float Power = CalculateElementPower(Element);
-    return Power * 0.8f; // 影響力是能量的80%
-}
-
-float UMingYinYangFiveElements::CalculateElementStability(EFiveElements Element) const
-{
-    int32 Index = static_cast<int32>(Element);
-    if (ElementStates.IsValidIndex(Index))
-    {
-        return ElementStates[Index].Stability;
-    }
-    return 0.0f;
-}
-
-EElementRelationship UMingYinYangFiveElements::DetermineRelationship(EFiveElements Source, EFiveElements Target) const
-{
-    if (IsGeneratingRelationship(Source, Target))
-    {
-        return EElementRelationship::Generating;
-    }
-    else if (IsOvercomingRelationship(Source, Target))
-    {
-        return EElementRelationship::Overcoming;
-    }
-    else if (IsGeneratingRelationship(Target, Source))
-    {
-        return EElementRelationship::Supporting;
-    }
-    else if (IsOvercomingRelationship(Target, Source))
-    {
-        return EElementRelationship::Insulting;
-    }
-    else
-    {
-        return EElementRelationship::Neutral;
-    }
-}
-
-float UMingYinYangFiveElements::CalculateRelationshipStrength(EFiveElements Source, EFiveElements Target) const
-{
-    EElementRelationship Relationship = DetermineRelationship(Source, Target);
-    
-    switch (Relationship)
-    {
-    case EElementRelationship::Generating:
-        return 1.5f;
-    case EElementRelationship::Overcoming:
-        return 1.2f;
-    case EElementRelationship::Supporting:
-        return 1.3f;
-    case EElementRelationship::Insulting:
-        return 0.8f;
-    default:
-        return 1.0f;
-    }
-}
-
-void UMingYinYangFiveElements::UpdateElementStates(float DeltaTime)
-{
-    if (!bSystemActive)
-    {
-        return;
-    }
-    
-    // 更新元素狀態
-    for (FElementState& State : ElementStates)
-    {
-        // 應用衰減
-        State.PowerLevel = FMath::Clamp(State.PowerLevel - ElementDecayRate * DeltaTime, 0.0f, 100.0f);
-        
-        // 更新影響力
-        State.Influence = CalculateElementInfluence(State.Element);
-        
-        // 處理轉換狀態
-        if (State.State == EElementState::Transitioning)
-        {
-            State.TransitionProgress += TransitionSpeed * DeltaTime;
-            if (State.TransitionProgress >= 1.0f)
-            {
-                State.State = EElementState::Peak;
-                State.TransitionProgress = 0.0f;
-            }
-        }
-    }
-    
-    // 更新陰陽平衡
-    UpdateYinYangBalance(DeltaTime);
-    
-    // 更新系統穩定性
-    UpdateSystemStability();
-}
-
-void UMingYinYangFiveElements::UpdateYinYangBalance(float DeltaTime)
-{
-    // 應用衰減
-    CurrentBalance.YinLevel = FMath::Clamp(CurrentBalance.YinLevel - YinYangDecayRate * DeltaTime, 0.0f, 100.0f);
-    CurrentBalance.YangLevel = FMath::Clamp(CurrentBalance.YangLevel - YinYangDecayRate * DeltaTime, 0.0f, 100.0f);
-    
-    // 重新計算分數
-    CurrentBalance.BalanceScore = CalculateBalanceScore();
-    CurrentBalance.HarmonyLevel = CalculateHarmonyLevel();
-    
-    // 更新屬性
-    float Difference = CurrentBalance.YinLevel - CurrentBalance.YangLevel;
-    if (Difference > 30.0f)
-    {
-        CurrentBalance.CurrentAttribute = EYinYangAttribute::PureYin;
-    }
-    else if (Difference > 10.0f)
-    {
-        CurrentBalance.CurrentAttribute = EYinYangAttribute::YangInYin;
-    }
-    else if (Difference > -10.0f)
-    {
-        CurrentBalance.CurrentAttribute = EYinYangAttribute::BalancedYinYang;
-    }
-    else if (Difference > -30.0f)
-    {
-        CurrentBalance.CurrentAttribute = EYinYangAttribute::YinInYang;
-    }
-    else
-    {
-        CurrentBalance.CurrentAttribute = EYinYangAttribute::PureYang;
-    }
-}
-
-void UMingYinYangFiveElements::UpdateSystemStability()
-{
-    // 基於陰陽平衡和元素狀態計算系統穩定性
-    float YinYangStability = CurrentBalance.HarmonyLevel;
-    
-    float ElementStability = 0.0f;
-    for (const FElementState& State : ElementStates)
-    {
-        ElementStability += State.Stability;
-    }
-    ElementStability /= ElementStates.Num();
-    
-    SystemStability = (YinYangStability + ElementStability) / 2.0f;
-}
-
-void UMingYinYangFiveElements::RecordYinYangEvent(const FString& Description, EYinYangAttribute YinYangChange, EFiveElements ElementChange, float Impact)
-{
-    FYinYangEvent Event;
-    Event.EventID = FString::Printf(TEXT("YY_%lld"), FDateTime::Now().GetTicks());
-    Event.Description = Description;
-    Event.YinYangChange = YinYangChange;
-    Event.ElementChange = ElementChange;
-    Event.ImpactLevel = Impact;
-    Event.Timestamp = FDateTime::Now();
-    
-    EventHistory.Add(Event);
-    
-    // 限制歷史記錄數量
-    if (EventHistory.Num() > 1000)
-    {
-        EventHistory.RemoveAt(0);
-    }
-}
-
-void UMingYinYangFiveElements::ProcessYinYangEvent(const FYinYangEvent& Event)
-{
-    // 處理事件的影響
-    // 這裡可以添加具體的事件處理邏輯
-}
-
-FString UMingYinYangFiveElements::GetElementName(EFiveElements Element) const
-{
-    switch (Element)
-    {
-    case EFiveElements::Metal: return TEXT("金");
-    case EFiveElements::Wood: return TEXT("木");
-    case EFiveElements::Water: return TEXT("水");
-    case EFiveElements::Fire: return TEXT("火");
-    case EFiveElements::Earth: return TEXT("土");
-    default: return TEXT("未知");
-    }
-}
-
-FString UMingYinYangFiveElements::GetAttributeName(EYinYangAttribute Attribute) const
-{
-    switch (Attribute)
-    {
-    case EYinYangAttribute::PureYin: return TEXT("純陰");
-    case EYinYangAttribute::YangInYin: return TEXT("陰中陽");
-    case EYinYangAttribute::BalancedYinYang: return TEXT("陰陽平衡");
-    case EYinYangAttribute::YinInYang: return TEXT("陽中陰");
-    case EYinYangAttribute::PureYang: return TEXT("純陽");
-    default: return TEXT("未知");
-    }
-}
-
-FString UMingYinYangFiveElements::GetStateName(EElementState State) const
-{
-    switch (State)
-    {
-    case EElementState::Dormant: return TEXT("潛伏");
-    case EElementState::Rising: return TEXT("上升");
-    case EElementState::Peak: return TEXT("巔峰");
-    case EElementState::Declining: return TEXT("衰退");
-    case EElementState::Transitioning: return TEXT("轉換");
-    default: return TEXT("未知");
-    }
-}
-
-FString UMingYinYangFiveElements::GetRelationshipName(EElementRelationship Relationship) const
-{
-    switch (Relationship)
-    {
-    case EElementRelationship::Generating: return TEXT("相生");
-    case EElementRelationship::Overcoming: return TEXT("相克");
-    case EElementRelationship::Insulting: return TEXT("相侮");
-    case EElementRelationship::Supporting: return TEXT("支持");
-    case EElementRelationship::Neutral: return TEXT("中性");
-    default: return TEXT("未知");
-    }
-}
-
-bool UMingYinYangFiveElements::IsGeneratingRelationship(EFiveElements Source, EFiveElements Target) const
-{
-    // 五行相生關係
-    return (Source == EFiveElements::Metal && Target == EFiveElements::Wood) ||
-           (Source == EFiveElements::Wood && Target == EFiveElements::Fire) ||
-           (Source == EFiveElements::Water && Target == EFiveElements::Wood) ||
-           (Source == EFiveElements::Fire && Target == EFiveElements::Earth) ||
-           (Source == EFiveElements::Earth && Target == EFiveElements::Metal);
-}
-
-bool UMingYinYangFiveElements::IsOvercomingRelationship(EFiveElements Source, EFiveElements Target) const
-{
-    // 五行相克關係
-    return (Source == EFiveElements::Metal && Target == EFiveElements::Wood) ||
-           (Source == EFiveElements::Wood && Target == EFiveElements::Earth) ||
-           (Source == EFiveElements::Water && Target == EFiveElements::Fire) ||
-           (Source == EFiveElements::Fire && Target == EFiveElements::Metal) ||
-           (Source == EFiveElements::Earth && Target == EFiveElements::Water);
-}
+出#出i出n出c出l出使出d出e出 出"出S出a出成出e出C出o出設置出設置出a出n出d出/出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出基本出o出本出l出d出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出T出i出設置出e出本出M出a出n出a出成出e出本出.出h出"出
+出
+出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出(出)出
+出{出
+出 出 出 出 出/出/出 出初出始出化出五出行出元出素出狀出態出
+出 出 出 出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出S出e出t出的出使出設置出(出5出)出;出 出/出/出 出5出個出元出素出：出金出木出水出火出土出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出的出使出設置出(出)出;出 出+出+出i出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出E出l出e出設置出e出n出t出S出t出a出t出e出&出 出S出t出a出t出e出 出=出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出i出]出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出E出l出e出設置出e出n出t出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出E出軍出i出正出e出E出l出e出設置出e出n出t出s出>出(出i出)出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出S出t出a出t出e出 出=出 出E出E出l出e出設置出e出n出t出S出t出a出t出e出:出:出D出o出本出設置出a出n出t出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出P出o出w出e出本出L出e出正出e出l出 出=出 出5出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出I出n出f出l出使出e出n出c出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出S出t出a出b出i出l出i出t出y出 出=出 出5出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出陰出陽出平出衡出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出=出 出5出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出=出 出5出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出B出a出l出a出n出c出e出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出=出 出5出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出設出置出默出認出親出和出元出素出
+出 出 出 出 出C出使出本出本出e出n出t出A出f出f出i出n出i出t出y出E出l出e出設置出e出n出t出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出I出n出i出t出i出a出l出i出z出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出S出y出s出t出e出設置出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出系出統出狀出態出
+出 出 出 出 出b出S出y出s出t出e出設置出A出c出t出i出正出e出 出=出 出t出本出使出e出;出
+出 出 出 出 出S出y出s出t出e出設置出S出t出a出b出i出l出i出t出y出 出=出 出1出0出0出.出0出f出;出
+出
+出 出 出 出 出/出/出 出設出置出更出新出定出時出器出
+出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出e出t出基本出o出本出l出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出基本出o出本出l出d出-出>出G出e出t出T出i出設置出e出本出M出a出n出a出成出e出本出(出)出.出S出e出t出T出i出設置出e出本出(出
+出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出T出i出設置出e出本出輸入出a出n出d出l出e出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出t出h出i出s出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出&出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出U出p出d出a出t出e出E出l出e出設置出e出n出t出S出t出a出t出e出s出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出0出.出1出f出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出t出本出使出e出
+出 出 出 出 出 出 出 出 出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出C出l出e出a出n出使出p出(出)出
+出{出
+出 出 出 出 出b出S出y出s出t出e出設置出A出c出t出i出正出e出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出U出基本出o出本出l出d出*出 出基本出o出本出l出d出 出=出 出G出e出t出基本出o出本出l出d出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出基本出o出本出l出d出-出>出G出e出t出T出i出設置出e出本出M出a出n出a出成出e出本出(出)出.出C出l出e出a出本出T出i出設置出e出本出(出U出p出d出a出t出e出T出i出設置出e出本出輸入出a出n出d出l出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出E出正出e出n出t出輸入出i出s出t出o出本出y出.出E出設置出p出t出y出(出)出;出
+出}出
+出
+出軍出Y出i出n出Y出a出n出成出B出a出l出a出n出c出e出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出C出使出本出本出e出n出t出B出a出l出a出n出c出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出A出d出大出使出s出t出Y出i出n出Y出a出n出成出B出a出l出a出n出c出e出(出f出l出o出a出t出 出Y出i出n出C出h出a出n出成出e出,出 出f出l出o出a出t出 出Y出a出n出成出C出h出a出n出成出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出a出s出o出n出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出S出y出s出t出e出設置出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出調出整出陰出陽出水出平出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出+出 出Y出i出n出C出h出a出n出成出e出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出+出 出Y出a出n出成出C出h出a出n出成出e出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出重出新出計出算出平出衡出分出數出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出B出a出l出a出n出c出e出S出c出o出本出e出 出=出 出C出a出l出c出使出l出a出t出e出B出a出l出a出n出c出e出S出c出o出本出e出(出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出=出 出C出a出l出c出使出l出a出t出e出輸入出a出本出設置出o出n出y出L出e出正出e出l出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出陰出陽出屬出性出
+出 出 出 出 出U出p出d出a出t出e出Y出i出n出Y出a出n出成出B出a出l出a出n出c出e出(出0出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出記出錄出事出件出
+出 出 出 出 出R出e出c出o出本出d出Y出i出n出Y出a出n出成出E出正出e出n出t出(出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出陰出陽出平出衡出調出整出：出%出s出"出)出,出 出*出R出e出a出s出o出n出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出C出使出本出本出e出n出t出A出t出t出本出i出b出使出t出e出,出 出C出使出本出本出e出n出t出A出f出f出i出n出i出t出y出E出l出e出設置出e出n出t出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出軍出M出a出t出h出:出:出A出b出s出(出Y出i出n出C出h出a出n出成出e出)出 出+出 出軍出M出a出t出h出:出:出A出b出s出(出Y出a出n出成出C出h出a出n出成出e出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出O出n出Y出i出n出Y出a出n出成出B出a出l出a出n出c出e出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出C出使出本出本出e出n出t出B出a出l出a出n出c出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出S出e出t出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出(出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出 出A出t出t出本出i出b出使出t出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出S出y出s出t出e出設置出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出C出使出本出本出e出n出t出A出t出t出本出i出b出使出t出e出 出=出 出A出t出t出本出i出b出使出t出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出屬出性出調出整出陰出陽出水出平出
+出 出 出 出 出s出w出i出t出c出h出 出(出A出t出t出本出i出b出使出t出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出P出使出本出e出Y出i出n出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出=出 出8出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出=出 出2出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出Y出a出n出成出I出n出Y出i出n出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出=出 出6出5出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出=出 出3出5出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出B出a出l出a出n出c出e出d出Y出i出n出Y出a出n出成出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出=出 出5出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出=出 出5出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出Y出i出n出I出n出Y出a出n出成出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出=出 出3出5出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出=出 出6出5出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出P出使出本出e出Y出a出n出成出:出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出=出 出2出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出=出 出8出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出重出新出計出算出平出衡出分出數出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出B出a出l出a出n出c出e出S出c出o出本出e出 出=出 出C出a出l出c出使出l出a出t出e出B出a出l出a出n出c出e出S出c出o出本出e出(出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出=出 出C出a出l出c出使出l出a出t出e出輸入出a出本出設置出o出n出y出L出e出正出e出l出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出O出n出Y出i出n出Y出a出n出成出B出a出l出a出n出c出e出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出C出使出本出本出e出n出t出B出a出l出a出n出c出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出輸入出a出本出設置出o出n出y出L出e出正出e出l出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出;出
+出}出
+出
+出軍出E出l出e出設置出e出n出t出S出t出a出t出e出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出E出l出e出設置出e出n出t出S出t出a出t出e出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出n出t出3出2出 出I出n出d出e出x出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出i出f出 出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出I出s出V出a出l出i出d出I出n出d出e出x出(出I出n出d出e出x出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出軍出E出l出e出設置出e出n出t出S出t出a出t出e出(出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出S出e出t出E出l出e出設置出e出n出t出A出f出f出i出n出i出t出y出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出S出y出s出t出e出設置出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出C出使出本出本出e出n出t出A出f出f出i出n出i出t出y出E出l出e出設置出e出n出t出 出=出 出E出l出e出設置出e出n出t出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出增出強出親出和出元出素出的出能出量出
+出 出 出 出 出i出n出t出3出2出 出I出n出d出e出x出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出i出f出 出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出I出s出V出a出l出i出d出I出n出d出e出x出(出I出n出d出e出x出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出P出o出w出e出本出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出P出o出w出e出本出L出e出正出e出l出 出+出 出2出0出.出0出f出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出I出n出f出l出使出e出n出c出e出 出=出 出C出a出l出c出使出l出a出t出e出E出l出e出設置出e出n出t出I出n出f出l出使出e出n出c出e出(出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出 出 出 出 出O出n出E出l出e出設置出e出n出t出S出t出a出t出e出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出C出使出本出本出e出n出t出E出l出e出設置出e出n出t出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出A出f出f出i出n出i出t出y出E出l出e出設置出e出n出t出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出E出l出e出設置出e出n出t出P出o出w出e出本出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出n出t出3出2出 出I出n出d出e出x出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出i出f出 出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出I出s出V出a出l出i出d出I出n出d出e出x出(出I出n出d出e出x出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出P出o出w出e出本出L出e出正出e出l出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出0出.出0出f出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出n出h出a出n出c出e出E出l出e出設置出e出n出t出P出o出w出e出本出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出,出 出f出l出o出a出t出 出A出設置出o出使出n出t出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出S出y出s出t出e出設置出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出n出t出3出2出 出I出n出d出e出x出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出i出f出 出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出I出s出V出a出l出i出d出I出n出d出e出x出(出I出n出d出e出x出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出P出o出w出e出本出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出P出o出w出e出本出L出e出正出e出l出 出+出 出A出設置出o出使出n出t出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出I出n出f出l出使出e出n出c出e出 出=出 出C出a出l出c出使出l出a出t出e出E出l出e出設置出e出n出t出I出n出f出l出使出e出n出c出e出(出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出 出 出 出 出O出n出E出l出e出設置出e出n出t出S出t出a出t出e出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出軍出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出A出n出a出l出y出z出e出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出S出o出使出本出c出e出,出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出T出a出本出成出e出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出 出R出e出l出a出t出i出o出n出s出h出i出p出;出
+出 出 出 出 出R出e出l出a出t出i出o出n出s出h出i出p出.出S出o出使出本出c出e出E出l出e出設置出e出n出t出 出=出 出S出o出使出本出c出e出;出
+出 出 出 出 出R出e出l出a出t出i出o出n出s出h出i出p出.出T出a出本出成出e出t出E出l出e出設置出e出n出t出 出=出 出T出a出本出成出e出t出;出
+出 出 出 出 出R出e出l出a出t出i出o出n出s出h出i出p出.出R出e出l出a出t出i出o出n出s出h出i出p出T出y出p出e出 出=出 出D出e出t出e出本出設置出i出n出e出R出e出l出a出t出i出o出n出s出h出i出p出(出S出o出使出本出c出e出,出 出T出a出本出成出e出t出)出;出
+出 出 出 出 出R出e出l出a出t出i出o出n出s出h出i出p出.出S出t出本出e出n出成出t出h出 出=出 出C出a出l出c出使出l出a出t出e出R出e出l出a出t出i出o出n出s出h出i出p出S出t出本出e出n出成出t出h出(出S出o出使出本出c出e出,出 出T出a出本出成出e出t出)出;出
+出 出 出 出 出R出e出l出a出t出i出o出n出s出h出i出p出.出E出f出f出e出c出t出i出正出e出n出e出s出s出 出=出 出R出e出l出a出t出i出o出n出s出h出i出p出.出S出t出本出e出n出成出t出h出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出l出a出t出i出o出n出s出h出i出p出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出R出e出l出a出t出i出o出n出s出h出i出p出S出t出本出e出n出成出t出h出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出S出o出使出本出c出e出,出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出T出a出本出成出e出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出a出l出c出使出l出a出t出e出R出e出l出a出t出i出o出n出s出h出i出p出S出t出本出e出n出成出t出h出(出S出o出使出本出c出e出,出 出T出a出本出成出e出t出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出E出軍出i出正出e出E出l出e出設置出e出n出t出s出>出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出S出使出p出p出o出本出t出i出n出成出E出l出e出設置出e出n出t出s出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出E出軍出i出正出e出E出l出e出設置出e出n出t出s出>出 出S出使出p出p出o出本出t出i出n出成出E出l出e出設置出e出n出t出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出五出行出相出生出關出係出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出l出e出設置出e出n出t出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出M出e出t出a出l出:出
+出 出 出 出 出 出 出 出 出S出使出p出p出o出本出t出i出n出成出E出l出e出設置出e出n出t出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出)出;出 出/出/出 出土出生出金出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出o出o出d出:出
+出 出 出 出 出 出 出 出 出S出使出p出p出o出本出t出i出n出成出E出l出e出設置出e出n出t出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出a出t出e出本出)出;出 出/出/出 出水出生出木出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出a出t出e出本出:出
+出 出 出 出 出 出 出 出 出S出使出p出p出o出本出t出i出n出成出E出l出e出設置出e出n出t出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出M出e出t出a出l出)出;出 出/出/出 出金出生出水出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出軍出i出本出e出:出
+出 出 出 出 出 出 出 出 出S出使出p出p出o出本出t出i出n出成出E出l出e出設置出e出n出t出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出o出o出d出)出;出 出/出/出 出木出生出火出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出:出
+出 出 出 出 出 出 出 出 出S出使出p出p出o出本出t出i出n出成出E出l出e出設置出e出n出t出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出軍出i出本出e出)出;出 出/出/出 出火出生出土出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出S出使出p出p出o出本出t出i出n出成出E出l出e出設置出e出n出t出s出;出
+出}出
+出
+出T出A出本出本出a出y出<出E出軍出i出正出e出E出l出e出設置出e出n出t出s出>出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出C出o出n出f出l出i出c出t出i出n出成出E出l出e出設置出e出n出t出s出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出E出軍出i出正出e出E出l出e出設置出e出n出t出s出>出 出C出o出n出f出l出i出c出t出i出n出成出E出l出e出設置出e出n出t出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出五出行出相出克出關出係出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出l出e出設置出e出n出t出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出M出e出t出a出l出:出
+出 出 出 出 出 出 出 出 出C出o出n出f出l出i出c出t出i出n出成出E出l出e出設置出e出n出t出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出o出o出d出)出;出 出/出/出 出金出克出木出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出o出o出d出:出
+出 出 出 出 出 出 出 出 出C出o出n出f出l出i出c出t出i出n出成出E出l出e出設置出e出n出t出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出)出;出 出/出/出 出木出克出土出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出a出t出e出本出:出
+出 出 出 出 出 出 出 出 出C出o出n出f出l出i出c出t出i出n出成出E出l出e出設置出e出n出t出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出軍出i出本出e出)出;出 出/出/出 出水出克出火出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出軍出i出本出e出:出
+出 出 出 出 出 出 出 出 出C出o出n出f出l出i出c出t出i出n出成出E出l出e出設置出e出n出t出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出M出e出t出a出l出)出;出 出/出/出 出火出克出金出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出:出
+出 出 出 出 出 出 出 出 出C出o出n出f出l出i出c出t出i出n出成出E出l出e出設置出e出n出t出s出.出A出d出d出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出a出t出e出本出)出;出 出/出/出 出土出克出水出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出C出o出n出f出l出i出c出t出i出n出成出E出l出e出設置出e出n出t出s出;出
+出}出
+出
+出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出O出p出t出i出設置出a出l出A出t出t出本出i出b出使出t出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出根出據出上出下出文出確出定出最出佳出陰出陽出屬出性出
+出 出 出 出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出防出守出"出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出防出禦出"出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出守出護出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出P出使出本出e出Y出i出n出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出攻出擊出"出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出進出攻出"出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出戰出鬥出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出P出使出本出e出Y出a出n出成出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出平出衡出"出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出穩出定出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出B出a出l出a出n出c出e出d出Y出i出n出Y出a出n出成出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出策出略出"出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出計出謀出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出Y出i出n出I出n出Y出a出n出成出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出B出a出l出a出n出c出e出d出Y出i出n出Y出a出n出成出;出
+出 出 出 出 出}出
+出}出
+出
+出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出O出p出t出i出設置出a出l出E出l出e出設置出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出根出據出上出下出文出確出定出最出佳出五出行出元出素出
+出 出 出 出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出攻出擊出"出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出戰出鬥出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出軍出i出本出e出;出 出/出/出 出火出主出攻出擊出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出防出禦出"出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出守出護出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出;出 出/出/出 出土出主出防出禦出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出移出動出"出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出速出度出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出a出t出e出本出;出 出/出/出 出水出主出流出動出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出建出設出"出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出成出長出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出o出o出d出;出 出/出/出 出木出主出成出長出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出堅出固出"出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出"出防出護出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出M出e出t出a出l出;出 出/出/出 出金出主出堅出固出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出A出f出f出i出n出i出t出y出E出l出e出設置出e出n出t出;出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出C出a出l出c出使出l出a出t出e出S出t出本出a出t出e出成出i出c出A出d出正出a出n出t出a出成出e出(出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出 出A出t出t出本出i出b出使出t出e出,出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出A出t出t出本出i出b出使出t出e出B出o出n出使出s出 出=出 出1出.出0出f出;出
+出 出 出 出 出f出l出o出a出t出 出E出l出e出設置出e出n出t出B出o出n出使出s出 出=出 出1出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出計出算出陰出陽出屬出性出加出成出
+出 出 出 出 出s出w出i出t出c出h出 出(出A出t出t出本出i出b出使出t出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出P出使出本出e出Y出i出n出:出
+出 出 出 出 出 出 出 出 出A出t出t出本出i出b出使出t出e出B出o出n出使出s出 出=出 出1出.出2出f出;出 出/出/出 出防出禦出加出成出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出P出使出本出e出Y出a出n出成出:出
+出 出 出 出 出 出 出 出 出A出t出t出本出i出b出使出t出e出B出o出n出使出s出 出=出 出1出.出3出f出;出 出/出/出 出攻出擊出加出成出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出B出a出l出a出n出c出e出d出Y出i出n出Y出a出n出成出:出
+出 出 出 出 出 出 出 出 出A出t出t出本出i出b出使出t出e出B出o出n出使出s出 出=出 出1出.出1出f出;出 出/出/出 出平出衡出加出成出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出A出t出t出本出i出b出使出t出e出B出o出n出使出s出 出=出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出計出算出五出行出元出素出加出成出
+出 出 出 出 出i出n出t出3出2出 出I出n出d出e出x出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出i出f出 出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出I出s出V出a出l出i出d出I出n出d出e出x出(出I出n出d出e出x出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出l出e出設置出e出n出t出B出o出n出使出s出 出=出 出1出.出0出f出 出+出 出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出P出o出w出e出本出L出e出正出e出l出 出/出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出A出t出t出本出i出b出使出t出e出B出o出n出使出s出 出*出 出E出l出e出設置出e出n出t出B出o出n出使出s出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出S出t出本出a出t出e出成出i出c出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出於出當出前出狀出態出生出成出建出議出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出B出a出l出a出n出c出e出S出c出o出本出e出 出<出 出-出3出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出陰出陽出失出衡出，出建出議出進出行出平出衡出調出整出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出<出 出5出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出和出諧出度出不出足出，出建出議出增出強出陰出陽出協出調出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出元出素出狀出態出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出l出e出設置出e出n出t出S出t出a出t出e出&出 出S出t出a出t出e出 出:出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出S出t出a出t出e出.出P出o出w出e出本出L出e出正出e出l出 出<出 出3出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出%出s出元出素出能出量出不出足出，出建出議出增出強出"出)出,出 出*出G出e出t出E出l出e出設置出e出n出t出的出a出設置出e出(出S出t出a出t出e出.出E出l出e出設置出e出n出t出)出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出T出本出i出成出成出e出本出E出l出e出設置出e出n出t出T出本出a出n出s出i出t出i出o出n出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出S出y出s出t出e出設置出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出n出t出3出2出 出I出n出d出e出x出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出i出f出 出(出!出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出I出s出V出a出l出i出d出I出n出d出e出x出(出I出n出d出e出x出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出設出置出為出轉出換出狀出態出
+出 出 出 出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出S出t出a出t出e出 出=出 出E出E出l出e出設置出e出n出t出S出t出a出t出e出:出:出T出本出a出n出s出i出t出i出o出n出i出n出成出;出
+出 出 出 出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出B出a出l出a出n出c出e出Y出i出n出Y出a出n出成出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出S出y出s出t出e出設置出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出設出置出為出平出衡出狀出態出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出=出 出5出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出=出 出5出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出C出使出本出本出e出n出t出A出t出t出本出i出b出使出t出e出 出=出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出B出a出l出a出n出c出e出d出Y出i出n出Y出a出n出成出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出B出a出l出a出n出c出e出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出=出 出1出0出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出O出n出Y出i出n出Y出a出n出成出B出a出l出a出n出c出e出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出C出使出本出本出e出n出t出B出a出l出a出n出c出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出輸入出a出本出設置出o出n出i出z出e出E出l出e出設置出e出n出t出s出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出S出y出s出t出e出設置出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出平出衡出所出有出元出素出能出量出
+出 出 出 出 出f出o出本出 出(出軍出E出l出e出設置出e出n出t出S出t出a出t出e出&出 出S出t出a出t出e出 出:出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出P出o出w出e出本出L出e出正出e出l出 出=出 出5出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出S出t出a出b出i出l出i出t出y出 出=出 出1出0出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出I出n出f出l出使出e出n出c出e出 出=出 出C出a出l出c出使出l出a出t出e出E出l出e出設置出e出n出t出I出n出f出l出使出e出n出c出e出(出S出t出a出t出e出.出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出S出t出a出t出e出 出=出 出E出E出l出e出設置出e出n出t出S出t出a出t出e出:出:出P出e出a出k出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出 出 出 出 出O出n出E出l出e出設置出e出n出t出S出t出a出t出e出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出S出t出a出t出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出軍出Y出i出n出Y出a出n出成出B出a出l出a出n出c出e出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出P出本出e出d出i出c出t出B出a出l出a出n出c出e出(出f出l出o出a出t出 出T出i出設置出e出I出n出軍出使出t出使出本出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出Y出i出n出Y出a出n出成出B出a出l出a出n出c出e出 出P出本出e出d出i出c出t出e出d出B出a出l出a出n出c出e出 出=出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出簡出單出的出預出測出邏出輯出：出基出於出當出前出衰出減出率出預出測出未出來出狀出態出
+出 出 出 出 出f出l出o出a出t出 出D出e出c出a出y出A出設置出o出使出n出t出 出=出 出Y出i出n出Y出a出n出成出D出e出c出a出y出R出a出t出e出 出*出 出T出i出設置出e出I出n出軍出使出t出使出本出e出;出
+出 出 出 出 出P出本出e出d出i出c出t出e出d出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出P出本出e出d出i出c出t出e出d出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出-出 出D出e出c出a出y出A出設置出o出使出n出t出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出P出本出e出d出i出c出t出e出d出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出P出本出e出d出i出c出t出e出d出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出-出 出D出e出c出a出y出A出設置出o出使出n出t出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出重出新出計出算出平出衡出分出數出
+出 出 出 出 出f出l出o出a出t出 出D出i出f出f出e出本出e出n出c出e出 出=出 出P出本出e出d出i出c出t出e出d出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出-出 出P出本出e出d出i出c出t出e出d出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出;出
+出 出 出 出 出P出本出e出d出i出c出t出e出d出B出a出l出a出n出c出e出.出B出a出l出a出n出c出e出S出c出o出本出e出 出=出 出D出i出f出f出e出本出e出n出c出e出;出
+出 出 出 出 出P出本出e出d出i出c出t出e出d出B出a出l出a出n出c出e出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出=出 出1出0出0出.出0出f出 出-出 出軍出M出a出t出h出:出:出A出b出s出(出D出i出f出f出e出本出e出n出c出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出本出e出d出i出c出t出e出d出B出a出l出a出n出c出e出;出
+出}出
+出
+出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出P出本出e出d出i出c出t出D出o出設置出i出n出a出n出t出E出l出e出設置出e出n出t出(出f出l出o出a出t出 出T出i出設置出e出I出n出軍出使出t出使出本出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出D出o出設置出i出n出a出n出t出E出l出e出設置出e出n出t出 出=出 出C出使出本出本出e出n出t出A出f出f出i出n出i出t出y出E出l出e出設置出e出n出t出;出
+出 出 出 出 出f出l出o出a出t出 出M出a出x出P出o出w出e出本出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出預出測出未出來出最出強出元出素出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出l出e出設置出e出n出t出S出t出a出t出e出&出 出S出t出a出t出e出 出:出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出P出本出e出d出i出c出t出e出d出P出o出w出e出本出 出=出 出S出t出a出t出e出.出P出o出w出e出本出L出e出正出e出l出 出-出 出(出E出l出e出設置出e出n出t出D出e出c出a出y出R出a出t出e出 出*出 出T出i出設置出e出I出n出軍出使出t出使出本出e出)出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出本出e出d出i出c出t出e出d出P出o出w出e出本出 出>出 出M出a出x出P出o出w出e出本出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出M出a出x出P出o出w出e出本出 出=出 出P出本出e出d出i出c出t出e出d出P出o出w出e出本出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出D出o出設置出i出n出a出n出t出E出l出e出設置出e出n出t出 出=出 出S出t出a出t出e出.出E出l出e出設置出e出n出t出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出D出o出設置出i出n出a出n出t出E出l出e出設置出e出n出t出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出Y出i出n出Y出a出n出成出E出正出e出n出t出>出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出P出本出e出d出i出c出t出U出p出c出o出設置出i出n出成出E出正出e出n出t出s出(出i出n出t出3出2出 出E出正出e出n出t出C出o出使出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出Y出i出n出Y出a出n出成出E出正出e出n出t出>出 出P出本出e出d出i出c出t出e出d出E出正出e出n出t出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出簡出單出的出事出件出預出測出邏出輯出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出E出正出e出n出t出C出o出使出n出t出;出 出+出+出i出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出Y出i出n出Y出a出n出成出E出正出e出n出t出 出E出正出e出n出t出;出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出I出D出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出P出R出E出D出I出C出T出E出D出下出%出d出"出)出,出 出i出)出;出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出預出測出的出陰出陽出五出行出事出件出"出)出;出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出.出Y出i出n出Y出a出n出成出C出h出a出n出成出e出 出=出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出C出使出本出本出e出n出t出A出t出t出本出i出b出使出t出e出;出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出.出E出l出e出設置出e出n出t出C出h出a出n出成出e出 出=出 出C出使出本出本出e出n出t出A出f出f出i出n出i出t出y出E出l出e出設置出e出n出t出;出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出.出I出設置出p出a出c出t出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出軍出R出a出n出d出R出a出n出成出e出(出2出0出.出0出f出,出 出8出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出.出T出i出設置出e出s出t出a出設置出p出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出 出+出 出軍出T出i出設置出e出s出p出a出n出:出:出軍出本出o出設置出輸入出o出使出本出s出(出i出 出+出 出1出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出P出本出e出d出i出c出t出e出d出E出正出e出n出t出s出.出A出d出d出(出E出正出e出n出t出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出本出e出d出i出c出t出e出d出E出正出e出n出t出s出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出Y出i出n出Y出a出n出成出E出正出e出n出t出>出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出E出正出e出n出t出輸入出i出s出t出o出本出y出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出E出正出e出n出t出輸入出i出s出t出o出本出y出;出
+出}出
+出
+出軍出Y出i出n出Y出a出n出成出E出正出e出n出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出L出a出s出t出E出正出e出n出t出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出E出正出e出n出t出輸入出i出s出t出o出本出y出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出正出e出n出t出輸入出i出s出t出o出本出y出.出L出a出s出t出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出軍出Y出i出n出Y出a出n出成出E出正出e出n出t出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出C出l出e出a出本出E出正出e出n出t出輸入出i出s出t出o出本出y出(出)出
+出{出
+出 出 出 出 出E出正出e出n出t出輸入出i出s出t出o出本出y出.出E出設置出p出t出y出(出)出;出
+出}出
+出
+出/出/出 出私出有出方出法出實出現出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出C出a出l出c出使出l出a出t出e出Y出i出n出L出e出正出e出l出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出C出a出l出c出使出l出a出t出e出Y出a出n出成出L出e出正出e出l出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出C出a出l出c出使出l出a出t出e出B出a出l出a出n出c出e出S出c出o出本出e出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出-出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出C出a出l出c出使出l出a出t出e出輸入出a出本出設置出o出n出y出L出e出正出e出l出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出D出i出f出f出e出本出e出n出c出e出 出=出 出軍出M出a出t出h出:出:出A出b出s出(出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出-出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出1出0出0出.出0出f出 出-出 出D出i出f出f出e出本出e出n出c出e出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出C出a出l出c出使出l出a出t出e出E出l出e出設置出e出n出t出P出o出w出e出本出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出n出t出3出2出 出I出n出d出e出x出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出i出f出 出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出I出s出V出a出l出i出d出I出n出d出e出x出(出I出n出d出e出x出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出P出o出w出e出本出L出e出正出e出l出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出0出.出0出f出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出C出a出l出c出使出l出a出t出e出E出l出e出設置出e出n出t出I出n出f出l出使出e出n出c出e出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出P出o出w出e出本出 出=出 出C出a出l出c出使出l出a出t出e出E出l出e出設置出e出n出t出P出o出w出e出本出(出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出P出o出w出e出本出 出*出 出0出.出8出f出;出 出/出/出 出影出響出力出是出能出量出的出8出0出%出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出C出a出l出c出使出l出a出t出e出E出l出e出設置出e出n出t出S出t出a出b出i出l出i出t出y出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出n出t出3出2出 出I出n出d出e出x出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出i出f出 出(出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出I出s出V出a出l出i出d出I出n出d出e出x出(出I出n出d出e出x出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出[出I出n出d出e出x出]出.出S出t出a出b出i出l出i出t出y出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出0出.出0出f出;出
+出}出
+出
+出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出D出e出t出e出本出設置出i出n出e出R出e出l出a出t出i出o出n出s出h出i出p出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出S出o出使出本出c出e出,出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出T出a出本出成出e出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出I出s出G出e出n出e出本出a出t出i出n出成出R出e出l出a出t出i出o出n出s出h出i出p出(出S出o出使出本出c出e出,出 出T出a出本出成出e出t出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出G出e出n出e出本出a出t出i出n出成出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出I出s出O出正出e出本出c出o出設置出i出n出成出R出e出l出a出t出i出o出n出s出h出i出p出(出S出o出使出本出c出e出,出 出T出a出本出成出e出t出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出O出正出e出本出c出o出設置出i出n出成出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出I出s出G出e出n出e出本出a出t出i出n出成出R出e出l出a出t出i出o出n出s出h出i出p出(出T出a出本出成出e出t出,出 出S出o出使出本出c出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出S出使出p出p出o出本出t出i出n出成出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出I出s出O出正出e出本出c出o出設置出i出n出成出R出e出l出a出t出i出o出n出s出h出i出p出(出T出a出本出成出e出t出,出 出S出o出使出本出c出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出I出n出s出使出l出t出i出n出成出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出的出e出使出t出本出a出l出;出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出C出a出l出c出使出l出a出t出e出R出e出l出a出t出i出o出n出s出h出i出p出S出t出本出e出n出成出t出h出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出S出o出使出本出c出e出,出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出T出a出本出成出e出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出 出R出e出l出a出t出i出o出n出s出h出i出p出 出=出 出D出e出t出e出本出設置出i出n出e出R出e出l出a出t出i出o出n出s出h出i出p出(出S出o出使出本出c出e出,出 出T出a出本出成出e出t出)出;出
+出 出 出 出 出
+出 出 出 出 出s出w出i出t出c出h出 出(出R出e出l出a出t出i出o出n出s出h出i出p出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出G出e出n出e出本出a出t出i出n出成出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出1出.出5出f出;出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出O出正出e出本出c出o出設置出i出n出成出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出1出.出2出f出;出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出S出使出p出p出o出本出t出i出n出成出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出1出.出3出f出;出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出I出n出s出使出l出t出i出n出成出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出0出.出8出f出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出1出.出0出f出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出U出p出d出a出t出e出E出l出e出設置出e出n出t出S出t出a出t出e出s出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出S出y出s出t出e出設置出A出c出t出i出正出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出元出素出狀出態出
+出 出 出 出 出f出o出本出 出(出軍出E出l出e出設置出e出n出t出S出t出a出t出e出&出 出S出t出a出t出e出 出:出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出應出用出衰出減出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出P出o出w出e出本出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出t出a出t出e出.出P出o出w出e出本出L出e出正出e出l出 出-出 出E出l出e出設置出e出n出t出D出e出c出a出y出R出a出t出e出 出*出 出D出e出l出t出a出T出i出設置出e出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出更出新出影出響出力出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出I出n出f出l出使出e出n出c出e出 出=出 出C出a出l出c出使出l出a出t出e出E出l出e出設置出e出n出t出I出n出f出l出使出e出n出c出e出(出S出t出a出t出e出.出E出l出e出設置出e出n出t出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出處出理出轉出換出狀出態出
+出 出 出 出 出 出 出 出 出i出f出 出(出S出t出a出t出e出.出S出t出a出t出e出 出=出=出 出E出E出l出e出設置出e出n出t出S出t出a出t出e出:出:出T出本出a出n出s出i出t出i出o出n出i出n出成出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出.出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出 出+出=出 出T出本出a出n出s出i出t出i出o出n出S出p出e出e出d出 出*出 出D出e出l出t出a出T出i出設置出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出S出t出a出t出e出.出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出 出>出=出 出1出.出0出f出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出.出S出t出a出t出e出 出=出 出E出E出l出e出設置出e出n出t出S出t出a出t出e出:出:出P出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出.出T出本出a出n出s出i出t出i出o出n出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出陰出陽出平出衡出
+出 出 出 出 出U出p出d出a出t出e出Y出i出n出Y出a出n出成出B出a出l出a出n出c出e出(出D出e出l出t出a出T出i出設置出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出系出統出穩出定出性出
+出 出 出 出 出U出p出d出a出t出e出S出y出s出t出e出設置出S出t出a出b出i出l出i出t出y出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出U出p出d出a出t出e出Y出i出n出Y出a出n出成出B出a出l出a出n出c出e出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出/出/出 出應出用出衰出減出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出-出 出Y出i出n出Y出a出n出成出D出e出c出a出y出R出a出t出e出 出*出 出D出e出l出t出a出T出i出設置出e出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出 出-出 出Y出i出n出Y出a出n出成出D出e出c出a出y出R出a出t出e出 出*出 出D出e出l出t出a出T出i出設置出e出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出重出新出計出算出分出數出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出B出a出l出a出n出c出e出S出c出o出本出e出 出=出 出C出a出l出c出使出l出a出t出e出B出a出l出a出n出c出e出S出c出o出本出e出(出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出=出 出C出a出l出c出使出l出a出t出e出輸入出a出本出設置出o出n出y出L出e出正出e出l出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出屬出性出
+出 出 出 出 出f出l出o出a出t出 出D出i出f出f出e出本出e出n出c出e出 出=出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出i出n出L出e出正出e出l出 出-出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出Y出a出n出成出L出e出正出e出l出;出
+出 出 出 出 出i出f出 出(出D出i出f出f出e出本出e出n出c出e出 出>出 出3出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出C出使出本出本出e出n出t出A出t出t出本出i出b出使出t出e出 出=出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出P出使出本出e出Y出i出n出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出D出i出f出f出e出本出e出n出c出e出 出>出 出1出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出C出使出本出本出e出n出t出A出t出t出本出i出b出使出t出e出 出=出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出Y出a出n出成出I出n出Y出i出n出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出D出i出f出f出e出本出e出n出c出e出 出>出 出-出1出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出C出使出本出本出e出n出t出A出t出t出本出i出b出使出t出e出 出=出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出B出a出l出a出n出c出e出d出Y出i出n出Y出a出n出成出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出D出i出f出f出e出本出e出n出c出e出 出>出 出-出3出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出C出使出本出本出e出n出t出A出t出t出本出i出b出使出t出e出 出=出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出Y出i出n出I出n出Y出a出n出成出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出C出使出本出本出e出n出t出A出t出t出本出i出b出使出t出e出 出=出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出P出使出本出e出Y出a出n出成出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出U出p出d出a出t出e出S出y出s出t出e出設置出S出t出a出b出i出l出i出t出y出(出)出
+出{出
+出 出 出 出 出/出/出 出基出於出陰出陽出平出衡出和出元出素出狀出態出計出算出系出統出穩出定出性出
+出 出 出 出 出f出l出o出a出t出 出Y出i出n出Y出a出n出成出S出t出a出b出i出l出i出t出y出 出=出 出C出使出本出本出e出n出t出B出a出l出a出n出c出e出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出;出
+出 出 出 出 出
+出 出 出 出 出f出l出o出a出t出 出E出l出e出設置出e出n出t出S出t出a出b出i出l出i出t出y出 出=出 出0出.出0出f出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出l出e出設置出e出n出t出S出t出a出t出e出&出 出S出t出a出t出e出 出:出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出l出e出設置出e出n出t出S出t出a出b出i出l出i出t出y出 出+出=出 出S出t出a出t出e出.出S出t出a出b出i出l出i出t出y出;出
+出 出 出 出 出}出
+出 出 出 出 出E出l出e出設置出e出n出t出S出t出a出b出i出l出i出t出y出 出/出=出 出E出l出e出設置出e出n出t出S出t出a出t出e出s出.出的出使出設置出(出)出;出
+出 出 出 出 出
+出 出 出 出 出S出y出s出t出e出設置出S出t出a出b出i出l出i出t出y出 出=出 出(出Y出i出n出Y出a出n出成出S出t出a出b出i出l出i出t出y出 出+出 出E出l出e出設置出e出n出t出S出t出a出b出i出l出i出t出y出)出 出/出 出2出.出0出f出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出R出e出c出o出本出d出Y出i出n出Y出a出n出成出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出e出s出c出本出i出p出t出i出o出n出,出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出 出Y出i出n出Y出a出n出成出C出h出a出n出成出e出,出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出C出h出a出n出成出e出,出 出f出l出o出a出t出 出I出設置出p出a出c出t出)出
+出{出
+出 出 出 出 出軍出Y出i出n出Y出a出n出成出E出正出e出n出t出 出E出正出e出n出t出;出
+出 出 出 出 出E出正出e出n出t出.出E出正出e出n出t出I出D出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出Y出Y出下出%出l出l出d出"出)出,出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出.出G出e出t出T出i出c出k出s出(出)出)出;出
+出 出 出 出 出E出正出e出n出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出D出e出s出c出本出i出p出t出i出o出n出;出
+出 出 出 出 出E出正出e出n出t出.出Y出i出n出Y出a出n出成出C出h出a出n出成出e出 出=出 出Y出i出n出Y出a出n出成出C出h出a出n出成出e出;出
+出 出 出 出 出E出正出e出n出t出.出E出l出e出設置出e出n出t出C出h出a出n出成出e出 出=出 出E出l出e出設置出e出n出t出C出h出a出n出成出e出;出
+出 出 出 出 出E出正出e出n出t出.出I出設置出p出a出c出t出L出e出正出e出l出 出=出 出I出設置出p出a出c出t出;出
+出 出 出 出 出E出正出e出n出t出.出T出i出設置出e出s出t出a出設置出p出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出
+出 出 出 出 出E出正出e出n出t出輸入出i出s出t出o出本出y出.出A出d出d出(出E出正出e出n出t出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出限出制出歷出史出記出錄出數出量出
+出 出 出 出 出i出f出 出(出E出正出e出n出t出輸入出i出s出t出o出本出y出.出的出使出設置出(出)出 出>出 出1出0出0出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出e出n出t出輸入出i出s出t出o出本出y出.出R出e出設置出o出正出e出A出t出(出0出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出P出本出o出c出e出s出s出Y出i出n出Y出a出n出成出E出正出e出n出t出(出c出o出n出s出t出 出軍出Y出i出n出Y出a出n出成出E出正出e出n出t出&出 出E出正出e出n出t出)出
+出{出
+出 出 出 出 出/出/出 出處出理出事出件出的出影出響出
+出 出 出 出 出/出/出 出這出裡出可出以出添出加出具出體出的出事出件出處出理出邏出輯出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出E出l出e出設置出e出n出t出的出a出設置出e出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出E出l出e出設置出e出n出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出l出e出設置出e出n出t出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出M出e出t出a出l出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出金出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出o出o出d出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出木出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出a出t出e出本出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出水出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出軍出i出本出e出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出火出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出土出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出A出t出t出本出i出b出使出t出e出的出a出設置出e出(出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出 出A出t出t出本出i出b出使出t出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出A出t出t出本出i出b出使出t出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出P出使出本出e出Y出i出n出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出純出陰出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出Y出a出n出成出I出n出Y出i出n出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出陰出中出陽出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出B出a出l出a出n出c出e出d出Y出i出n出Y出a出n出成出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出陰出陽出平出衡出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出Y出i出n出I出n出Y出a出n出成出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出陽出中出陰出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出P出使出本出e出Y出a出n出成出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出純出陽出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出S出t出a出t出e出的出a出設置出e出(出E出E出l出e出設置出e出n出t出S出t出a出t出e出 出S出t出a出t出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出S出t出a出t出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出S出t出a出t出e出:出:出D出o出本出設置出a出n出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出潛出伏出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出S出t出a出t出e出:出:出R出i出s出i出n出成出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出上出升出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出S出t出a出t出e出:出:出P出e出a出k出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出巔出峰出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出S出t出a出t出e出:出:出D出e出c出l出i出n出i出n出成出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出衰出退出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出S出t出a出t出e出:出:出T出本出a出n出s出i出t出i出o出n出i出n出成出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出轉出換出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出G出e出t出R出e出l出a出t出i出o出n出s出h出i出p出的出a出設置出e出(出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出 出R出e出l出a出t出i出o出n出s出h出i出p出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出R出e出l出a出t出i出o出n出s出h出i出p出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出G出e出n出e出本出a出t出i出n出成出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出相出生出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出O出正出e出本出c出o出設置出i出n出成出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出相出克出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出I出n出s出使出l出t出i出n出成出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出相出侮出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出S出使出p出p出o出本出t出i出n出成出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出支出持出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出E出l出e出設置出e出n出t出R出e出l出a出t出i出o出n出s出h出i出p出:出:出的出e出使出t出本出a出l出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出中出性出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出I出s出G出e出n出e出本出a出t出i出n出成出R出e出l出a出t出i出o出n出s出h出i出p出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出S出o出使出本出c出e出,出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出T出a出本出成出e出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出五出行出相出生出關出係出
+出 出 出 出 出本出e出t出使出本出n出 出(出S出o出使出本出c出e出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出M出e出t出a出l出 出&出&出 出T出a出本出成出e出t出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出o出o出d出)出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出(出S出o出使出本出c出e出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出o出o出d出 出&出&出 出T出a出本出成出e出t出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出軍出i出本出e出)出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出(出S出o出使出本出c出e出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出a出t出e出本出 出&出&出 出T出a出本出成出e出t出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出o出o出d出)出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出(出S出o出使出本出c出e出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出軍出i出本出e出 出&出&出 出T出a出本出成出e出t出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出)出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出(出S出o出使出本出c出e出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出 出&出&出 出T出a出本出成出e出t出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出M出e出t出a出l出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出I出s出O出正出e出本出c出o出設置出i出n出成出R出e出l出a出t出i出o出n出s出h出i出p出(出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出S出o出使出本出c出e出,出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出 出T出a出本出成出e出t出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出五出行出相出克出關出係出
+出 出 出 出 出本出e出t出使出本出n出 出(出S出o出使出本出c出e出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出M出e出t出a出l出 出&出&出 出T出a出本出成出e出t出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出o出o出d出)出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出(出S出o出使出本出c出e出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出o出o出d出 出&出&出 出T出a出本出成出e出t出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出)出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出(出S出o出使出本出c出e出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出a出t出e出本出 出&出&出 出T出a出本出成出e出t出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出軍出i出本出e出)出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出(出S出o出使出本出c出e出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出軍出i出本出e出 出&出&出 出T出a出本出成出e出t出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出M出e出t出a出l出)出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出(出S出o出使出本出c出e出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出 出&出&出 出T出a出本出成出e出t出 出=出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出a出t出e出本出)出;出
+出}出
+出

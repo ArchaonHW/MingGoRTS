@@ -1,3 +1,7 @@
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// Process Manager - Operating System Core
+// Provides process management, scheduling, and resource allocation
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -5,30 +9,28 @@
 #include "HAL/CriticalSection.h"
 #include "Containers/Queue.h"
 #include "Containers/Map.h"
-#include "Kernel/MingRTSKernel.h"
+#include "MingRTSProcessManager.generated.h"
 
-// 進程調度算法
+// Scheduling algorithms
 UENUM(BlueprintType)
-enum class ESchedulingAlgorithm : uint8
-{
-    FIFO,           // 先進先出
-    Priority,       // 優先級調度
-    RoundRobin,     // 輪轉調度
-    SJF,            // 最短作業優先
-    MLFQ            // 多級反饋隊列
+enum class ESchedulingAlgorithm: uint8 {
+    FIFO            UMETA(DisplayName = "First In First Out"),
+    Priority        UMETA(DisplayName = "Priority Scheduling"),
+    RoundRobin      UMETA(DisplayName = "Round Robin"),
+    SJF             UMETA(DisplayName = "Shortest Job First"),
+    MLFQ            UMETA(DisplayName = "Multi-Level Feedback Queue")
 };
 
-// 調度器狀態
+// Scheduler states
 UENUM(BlueprintType)
-enum class ESchedulerState : uint8
-{
-    Idle,           // 空閒
-    Running,        // 運行中
-    Paused,         // 暫停
-    Error           // 錯誤
+enum class ESchedulerState: uint8 {
+    Idle            UMETA(DisplayName = "Idle"),
+    Running         UMETA(DisplayName = "Running"),
+    Paused          UMETA(DisplayName = "Paused"),
+    Error           UMETA(DisplayName = "Error")
 };
 
-// 進程隊列節點
+// Process queue node
 USTRUCT(BlueprintType)
 struct FProcessQueueNode
 {
@@ -50,51 +52,62 @@ struct FProcessQueueNode
     int32 TimeSlice;
 
     FProcessQueueNode()
-    {
-        Priority = 0;
-        ArrivalTime = 0.0f;
-        BurstTime = 0.0f;
-        TimeSlice = 100; // 默認時間片100ms
-    }
+        : Priority(0)
+        , ArrivalTime(0.0f)
+        , BurstTime(0.0f)
+        , TimeSlice(100)  // Default time slice 100ms
+    {}
 };
 
-// 調度統計
+// Process control block
 USTRUCT(BlueprintType)
-struct FSchedulingStatistics
+struct FProcessControlBlock
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly, Category = "Scheduling Stats")
-    int32 TotalProcessesScheduled;
+    UPROPERTY(BlueprintReadOnly, Category = "Process")
+    FString ProcessID;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Scheduling Stats")
-    float AverageWaitingTime;
+    UPROPERTY(BlueprintReadOnly, Category = "Process")
+    FString ProcessName;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Scheduling Stats")
-    float AverageTurnaroundTime;
+    UPROPERTY(BlueprintReadOnly, Category = "Process")
+    int32 Priority;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Scheduling Stats")
-    float CPUUtilization;
+    UPROPERTY(BlueprintReadOnly, Category = "Process")
+    ESchedulerState State;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Scheduling Stats")
-    int32 ContextSwitches;
+    UPROPERTY(BlueprintReadOnly, Category = "Process")
+    float CPUUsage;
 
-    FSchedulingStatistics()
-    {
-        TotalProcessesScheduled = 0;
-        AverageWaitingTime = 0.0f;
-        AverageTurnaroundTime = 0.0f;
-        CPUUtilization = 0.0f;
-        ContextSwitches = 0;
-    }
+    UPROPERTY(BlueprintReadOnly, Category = "Process")
+    float MemoryUsage;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Process")
+    int32 ThreadCount;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Process")
+    FDateTime StartTime;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Process")
+    float ExecutionTime;
+
+    FProcessControlBlock()
+        : Priority(0)
+        , State(ESchedulerState::Idle)
+        , CPUUsage(0.0f)
+        , MemoryUsage(0.0f)
+        , ThreadCount(1)
+        , ExecutionTime(0.0f)
+    {}
 };
 
-// 進程調度事件委託
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProcessScheduled, const FString&, ProcessID, ESchedulingAlgorithm, Algorithm);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProcessCreated, FString, ProcessID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProcessTerminated, FString, ProcessID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProcessStateChanged, FString, ProcessID, ESchedulerState, NewState);
 
 /**
- * 進程管理器
- * 負責進程創建、調度、終止和資源管理
+ * RTS Process Manager - Operating System Core Component
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGRTS_API UMingRTSProcessManager : public UObject
@@ -104,19 +117,14 @@ class MINGRTS_API UMingRTSProcessManager : public UObject
 public:
     UMingRTSProcessManager();
 
-    // 初始化和控制
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    bool InitializeProcessManager(UMingRTSKernel* InKernel);
+    void InitializeProcessManager();
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
     void ShutdownProcessManager();
 
-    UFUNCTION(BlueprintPure, Category = "Process Manager")
-    ESchedulerState GetSchedulerState() const { return SchedulerState; }
-
-    // 進程管理
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    FString CreateProcess(const FString& ProcessName, int32 Priority = 0, float BurstTime = 1000.0f);
+    FString CreateProcess(const FString& ProcessName, int32 Priority = 0);
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
     bool TerminateProcess(const FString& ProcessID);
@@ -128,110 +136,67 @@ public:
     bool ResumeProcess(const FString& ProcessID);
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    bool ChangeProcessPriority(const FString& ProcessID, int32 NewPriority);
+    void SetProcessPriority(const FString& ProcessID, int32 NewPriority);
 
-    // 調度控制
+    UFUNCTION(BlueprintCallable, Category = "Process Manager")
+    int32 GetProcessPriority(const FString& ProcessID) const;
+
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
     void SetSchedulingAlgorithm(ESchedulingAlgorithm Algorithm);
 
-    UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    void SetTimeSlice(int32 TimeSliceMs);
-
-    UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    void StartScheduling();
+    UFUNCTION(BlueprintPure, Category = "Process Manager")
+    ESchedulingAlgorithm GetSchedulingAlgorithm() const;
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    void StopScheduling();
+    void UpdateScheduler(float DeltaTime);
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    void PauseScheduling();
+    TArray<FProcessControlBlock> GetActiveProcesses() const;
 
-    // 進程查詢
-    UFUNCTION(BlueprintPure, Category = "Process Manager")
-    TArray<FString> GetReadyProcesses() const;
-
-    UFUNCTION(BlueprintPure, Category = "Process Manager")
-    FString GetCurrentRunningProcess() const { return CurrentRunningProcess; }
+    UFUNCTION(BlueprintCallable, Category = "Process Manager")
+    FProcessControlBlock GetProcessInfo(const FString& ProcessID) const;
 
     UFUNCTION(BlueprintPure, Category = "Process Manager")
-    TArray<FProcessInfo> GetAllProcesses() const;
+    int32 GetActiveProcessCount() const;
 
     UFUNCTION(BlueprintPure, Category = "Process Manager")
-    FSchedulingStatistics GetSchedulingStatistics() const { return Statistics; }
+    bool IsProcessRunning(const FString& ProcessID) const;
 
-    // 事件
     UPROPERTY(BlueprintAssignable, Category = "Process Manager Events")
-    FOnProcessScheduled OnProcessScheduled;
+    FOnProcessCreated OnProcessCreated;
+
+    UPROPERTY(BlueprintAssignable, Category = "Process Manager Events")
+    FOnProcessTerminated OnProcessTerminated;
+
+    UPROPERTY(BlueprintAssignable, Category = "Process Manager Events")
+    FOnProcessStateChanged OnProcessStateChanged;
 
 protected:
-    // 內核引用
     UPROPERTY()
-    TObjectPtr<UMingRTSKernel> Kernel;
+    bool bIsInitialized;
 
-    // 調度器狀態
+    UPROPERTY()
+    ESchedulingAlgorithm CurrentAlgorithm;
+
     UPROPERTY()
     ESchedulerState SchedulerState;
 
-    // 調度算法
     UPROPERTY()
-    ESchedulingAlgorithm SchedulingAlgorithm;
+    TArray<FProcessControlBlock> ProcessTable;
 
-    // 時間片
     UPROPERTY()
-    int32 TimeSlice;
+    TArray<FProcessQueueNode> ReadyQueue;
 
-    // 當前運行的進程
     UPROPERTY()
-    FString CurrentRunningProcess;
+    FString CurrentProcessID;
 
-    // 就緒隊列
-    UPROPERTY()
-    TQueue<FProcessQueueNode> ReadyQueue;
+    float TimeQuantum;
+    float CurrentTimeSlice;
 
-    // 等待隊列
-    UPROPERTY()
-    TMap<FString, FProcessQueueNode> WaitingProcesses;
-
-    // 進程信息映射
-    UPROPERTY()
-    TMap<FString, FProcessQueueNode> ProcessNodes;
-
-    // 調度統計
-    UPROPERTY()
-    FSchedulingStatistics Statistics;
-
-    // 同步機制
-    mutable FCriticalSection QueueCriticalSection;
-    mutable FCriticalSection StatisticsCriticalSection;
-
-    // 內部方法
-    void ScheduleNextProcess();
-    void PerformContextSwitch(const FString& NewProcessID);
-    void UpdateStatistics();
-    void ProcessTimeSlice();
-
-    // 調度算法實現
-    FString ScheduleFIFO();
-    FString SchedulePriority();
-    FString ScheduleRoundRobin();
-    FString ScheduleSJF();
-    FString ScheduleMLFQ();
-
-    // 輔助方法
-    bool IsProcessReady(const FString& ProcessID) const;
-    bool IsProcessWaiting(const FString& ProcessID) const;
-    void AddToReadyQueue(const FProcessQueueNode& ProcessNode);
-    void AddToWaitingQueue(const FString& ProcessID, const FProcessQueueNode& ProcessNode);
-    void RemoveFromQueue(const FString& ProcessID);
-    float CalculateWaitingTime(const FString& ProcessID) const;
-    float CalculateTurnaroundTime(const FString& ProcessID) const;
-
-private:
-    // 初始化方法
-    bool InitializeScheduler();
-    void ResetStatistics();
-
-    // 清理方法
-    void CleanupQueues();
-    void CleanupStatistics();
+    void InitializeScheduler();
+    void ScheduleProcesses();
+    void ContextSwitch(const FString& NextProcessID);
+    void UpdateProcessStates(float DeltaTime);
+    FString GenerateProcessID() const;
+    int32 FindProcessIndex(const FString& ProcessID) const;
 };

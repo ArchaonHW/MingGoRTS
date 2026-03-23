@@ -1,1136 +1,1137 @@
-#include "MingRTSEmotionalAIEngine.h"
-#include "Engine/Engine.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "HAL/PlatformFilemanager.h"
-
-UMingRTSEmotionalAIEngine::UMingRTSEmotionalAIEngine()
-{
-    EmotionalDecayRate = 0.1f;
-    EmotionalInfluenceRadius = 500.0f;
-    EmotionalContagionRate = 0.3f;
-    MaxEmotionalHistory = 100;
-}
-
-void UMingRTSEmotionalAIEngine::InitializeEmotionalEngine()
-{
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEmotionalAIEngine: Initializing emotional AI engine..."));
-
-    // 初始化情感回應模板
-    InitializeResponseTemplates();
-
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEmotionalAIEngine: Emotional AI engine initialized successfully"));
-}
-
-FEmotionalProfile UMingRTSEmotionalAIEngine::CreateEmotionalProfile(const FString& ProfileID, const FString& ProfileName)
-{
-    FEmotionalProfile NewProfile;
-    NewProfile.ProfileID = ProfileID;
-    NewProfile.ProfileName = ProfileName;
-    
-    // 設置默認基礎情感
-    NewProfile.BaseEmotions.Add(EEmotionType::Calm, 0.8f);
-    NewProfile.BaseEmotions.Add(EEmotionType::Contentment, 0.6f);
-    NewProfile.BaseEmotions.Add(EEmotionType::Trust, 0.5f);
-    NewProfile.BaseEmotions.Add(EEmotionType::Joy, 0.4f);
-    
-    // 設置偏好和避免的情感
-    NewProfile.PreferredEmotions.Add(EEmotionType::Joy);
-    NewProfile.PreferredEmotions.Add(EEmotionType::Contentment);
-    NewProfile.PreferredEmotions.Add(EEmotionType::Trust);
-    
-    NewProfile.AvoidedEmotions.Add(EEmotionType::Fear);
-    NewProfile.AvoidedEmotions.Add(EEmotionType::Anger);
-    NewProfile.AvoidedEmotions.Add(EEmotionType::Sadness);
-    
-    EmotionalProfiles.Add(ProfileID, NewProfile);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEmotionalAIEngine: Created emotional profile %s"), *ProfileName);
-    return NewProfile;
-}
-
-FEmotionalState UMingRTSEmotionalAIEngine::AnalyzePlayerEmotion(const FString& PlayerID, const TArray<FString>& InputData)
-{
-    FEmotionalState PlayerState;
-    
-    // 分析各種輸入數據的情感
-    for (const FString& Data : InputData)
-    {
-        // 分析文本情感
-        for (int32 i = 0; i < 15; i++)
-        {
-            EEmotionType Emotion = (EEmotionType)i;
-            float TextScore = AnalyzeTextEmotion(Data, Emotion);
-            float CurrentEmotion = PlayerState.Emotions.FindRef(Emotion);
-            PlayerState.Emotions.Add(Emotion, FMath::Clamp(CurrentEmotion + TextScore * 0.1f, 0.0f, 1.0f));
-        }
-        
-        // 分析行為情感
-        TArray<FString> Behaviors = ExtractBehaviorsFromData(Data);
-        for (int32 i = 0; i < 15; i++)
-        {
-            EEmotionType Emotion = (EEmotionType)i;
-            float BehaviorScore = AnalyzeBehaviorEmotion(Behaviors, Emotion);
-            float CurrentEmotion = PlayerState.Emotions.FindRef(Emotion);
-            PlayerState.Emotions.Add(Emotion, FMath::Clamp(CurrentEmotion + BehaviorScore * 0.15f, 0.0f, 1.0f));
-        }
-        
-        // 分析上下文情感
-        FString Context = ExtractContextFromData(Data);
-        for (int32 i = 0; i < 15; i++)
-        {
-            EEmotionType Emotion = (EEmotionType)i;
-            float ContextScore = AnalyzeContextEmotion(Context, Emotion);
-            float CurrentEmotion = PlayerState.Emotions.FindRef(Emotion);
-            PlayerState.Emotions.Add(Emotion, FMath::Clamp(CurrentEmotion + ContextScore * 0.05f, 0.0f, 1.0f));
-        }
-    }
-    
-    // 更新情感狀態
-    UpdateDominantEmotion(PlayerState);
-    CalculateOverallIntensity(PlayerState);
-    PlayerState.LastUpdated = FDateTime::Now();
-    
-    // 保存情感狀態
-    EmotionalStates.Add(PlayerID, PlayerState);
-    RecordEmotionalState(PlayerID, PlayerState);
-    
-    // 觸發情感變化事件
-    OnEmotionChanged.Broadcast(PlayerID, PlayerState);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEmotionalAIEngine: Analyzed emotion for player %s - Dominant: %s"), 
-           *PlayerID, *GetEmotionName(PlayerState.DominantEmotion));
-    
-    return PlayerState;
-}
-
-void UMingRTSEmotionalAIEngine::UpdateEmotionalState(const FString& EntityID, const FEmotionalTrigger& Trigger)
-{
-    if (!EmotionalStates.Contains(EntityID))
-    {
-        // 創建新的情感狀態
-        FEmotionalState NewState;
-        EmotionalStates.Add(EntityID, NewState);
-    }
-    
-    FEmotionalState& CurrentState = EmotionalStates[EntityID];
-    FEmotionalState PreviousState = CurrentState;
-    
-    // 處理情感觸發器
-    ProcessEmotionalTrigger(EntityID, Trigger);
-    
-    // 更新情感狀態
-    UpdateDominantEmotion(CurrentState);
-    CalculateOverallIntensity(CurrentState);
-    CurrentState.LastUpdated = FDateTime::Now();
-    
-    // 記錄情感狀態
-    RecordEmotionalState(EntityID, CurrentState);
-    
-    // 觸發事件
-    OnEmotionChanged.Broadcast(EntityID, CurrentState);
-    OnEmotionalTrigger.Broadcast(EntityID, Trigger, CurrentState);
-    
-    // 處理情感傳播
-    ProcessEmotionalContagion(EntityID);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEmotionalAIEngine: Updated emotional state for %s with trigger %s"), 
-           *EntityID, *Trigger.TriggerName);
-}
-
-FEmotionalResponse UMingRTSEmotionalAIEngine::GenerateEmotionalResponse(const FString& EntityID, const FEmotionalState& CurrentState)
-{
-    FEmotionalResponse Response;
-    
-    // 基於主導情感生成回應
-    switch (CurrentState.DominantEmotion)
-    {
-        case EEmotionType::Joy:
-            Response = GenerateJoyResponse(CurrentState);
-            break;
-        case EEmotionType::Sadness:
-            Response = GenerateSadnessResponse(CurrentState);
-            break;
-        case EEmotionType::Anger:
-            Response = GenerateAngerResponse(CurrentState);
-            break;
-        case EEmotionType::Fear:
-            Response = GenerateFearResponse(CurrentState);
-            break;
-        case EEmotionType::Surprise:
-            Response = GenerateSurpriseResponse(CurrentState);
-            break;
-        case EEmotionType::Love:
-            Response = GenerateLoveResponse(CurrentState);
-            break;
-        case EEmotionType::Calm:
-            Response = GenerateCalmResponse(CurrentState);
-            break;
-        default:
-            Response = GenerateNeutralResponse(CurrentState);
-            break;
-    }
-    
-    Response.ResponseID = FString::Printf(TEXT("Response_%s_%d"), *EntityID, FMath::RandRange(1000, 9999));
-    Response.ResponseIntensity = (float)CurrentState.OverallIntensity / 5.0f;
-    
-    // 觸發回應事件
-    OnEmotionalResponse.Broadcast(EntityID, Response);
-    
-    return Response;
-}
-
-void UMingRTSEmotionalAIEngine::SetEmotionalTrigger(const FString& EntityID, const FEmotionalTrigger& Trigger)
-{
-    if (!EmotionalTriggers.Contains(EntityID))
-    {
-        TArray<FEmotionalTrigger> EmptyTriggers;
-        EmotionalTriggers.Add(EntityID, EmptyTriggers);
-    }
-    
-    EmotionalTriggers[EntityID].Add(Trigger);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEmotionalAIEngine: Set emotional trigger %s for entity %s"), 
-           *Trigger.TriggerName, *EntityID);
-}
-
-FEmotionalState UMingRTSEmotionalAIEngine::GetEmotionalState(const FString& EntityID) const
-{
-    return EmotionalStates.FindRef(EntityID);
-}
-
-float UMingRTSEmotionalAIEngine::CalculateEmotionalSimilarity(const FEmotionalState& State1, const FEmotionalState& State2) const
-{
-    float Similarity = 0.0f;
-    int32 ComparedEmotions = 0;
-    
-    // 計算各種情感的相似度
-    for (int32 i = 0; i < 15; i++)
-    {
-        EEmotionType Emotion = (EEmotionType)i;
-        float Emotion1 = State1.Emotions.FindRef(Emotion);
-        float Emotion2 = State2.Emotions.FindRef(Emotion);
-        
-        // 使用歐幾里得距離計算相似度
-        float Distance = FMath::Abs(Emotion1 - Emotion2);
-        float EmotionSimilarity = 1.0f - Distance;
-        
-        Similarity += EmotionSimilarity * GetEmotionWeight(Emotion);
-        ComparedEmotions++;
-    }
-    
-    if (ComparedEmotions > 0)
-    {
-        Similarity /= ComparedEmotions;
-    }
-    
-    return FMath::Clamp(Similarity, 0.0f, 1.0f);
-}
-
-FEmotionalState UMingRTSEmotionalAIEngine::PredictEmotionalChange(const FString& EntityID, const TArray<FEmotionalTrigger>& PotentialTriggers) const
-{
-    FEmotionalState PredictedState = GetEmotionalState(EntityID);
-    
-    // 模擬潛在觸發器的影響
-    for (const FEmotionalTrigger& Trigger : PotentialTriggers)
-    {
-        float CurrentEmotion = PredictedState.Emotions.FindRef(Trigger.TargetEmotion);
-        float NewEmotion = FMath::Clamp(CurrentEmotion + Trigger.TriggerStrength * 0.2f, 0.0f, 1.0f);
-        PredictedState.Emotions.Add(Trigger.TargetEmotion, NewEmotion);
-    }
-    
-    // 更新預測狀態
-    UpdateDominantEmotion(PredictedState);
-    CalculateOverallIntensity(PredictedState);
-    
-    return PredictedState;
-}
-
-void UMingRTSEmotionalAIEngine::AdjustAIBehavior(const FString& AIID, const FEmotionalState& EmotionalState)
-{
-    // 基於情感狀態調整AI行為參數
-    float AggressionLevel = 0.5f;
-    float CooperationLevel = 0.5f;
-    float RiskTaking = 0.5f;
-    float CommunicationLevel = 0.5f;
-    
-    // 根據主導情感調整行為
-    switch (EmotionalState.DominantEmotion)
-    {
-        case EEmotionType::Joy:
-            CooperationLevel = 0.8f;
-            CommunicationLevel = 0.7f;
-            RiskTaking = 0.6f;
-            break;
-        case EEmotionType::Anger:
-            AggressionLevel = 0.9f;
-            CooperationLevel = 0.2f;
-            RiskTaking = 0.8f;
-            break;
-        case EEmotionType::Fear:
-            AggressionLevel = 0.1f;
-            RiskTaking = 0.2f;
-            CooperationLevel = 0.6f;
-            break;
-        case EEmotionType::Love:
-            CooperationLevel = 0.9f;
-            CommunicationLevel = 0.8f;
-            AggressionLevel = 0.1f;
-            break;
-        case EEmotionType::Calm:
-            // 保持平衡
-            break;
-        default:
-            // 根據情感強度調整
-            if (EmotionalState.OverallIntensity >= EEmotionIntensity::High)
-            {
-                RiskTaking = 0.7f;
-                AggressionLevel = 0.6f;
-            }
-            break;
-    }
-    
-    // 應用行為調整（這裡需要與實際的AI系統集成）
-    ApplyAIBehaviorAdjustments(AIID, AggressionLevel, CooperationLevel, RiskTaking, CommunicationLevel);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEmotionalAIEngine: Adjusted AI behavior for %s based on emotional state"), *AIID);
-}
-
-void UMingRTSEmotionalAIEngine::LearnEmotionalPatterns(const FString& PlayerID, const TArray<FEmotionalState>& HistoricalStates)
-{
-    if (HistoricalStates.Num() < 2)
-    {
-        return;
-    }
-    
-    // 分析情感模式
-    TMap<EEmotionType, float> EmotionFrequency;
-    TMap<EEmotionType, float> EmotionVariability;
-    
-    // 計算情感頻率和變異性
-    for (int32 i = 0; i < 15; i++)
-    {
-        EEmotionType Emotion = (EEmotionType)i;
-        float Sum = 0.0f;
-        float Variance = 0.0f;
-        int32 Count = 0;
-        
-        for (const FEmotionalState& State : HistoricalStates)
-        {
-            float EmotionValue = State.Emotions.FindRef(Emotion);
-            Sum += EmotionValue;
-            Count++;
-        }
-        
-        if (Count > 0)
-        {
-            float Mean = Sum / Count;
-            EmotionFrequency.Add(Emotion, Mean);
-            
-            // 計算變異性
-            for (const FEmotionalState& State : HistoricalStates)
-            {
-                float EmotionValue = State.Emotions.FindRef(Emotion);
-                Variance += FMath::Square(EmotionValue - Mean);
-            }
-            
-            if (Count > 1)
-            {
-                Variance /= (Count - 1);
-            }
-            
-            EmotionVariability.Add(Emotion, Variance);
-        }
-    }
-    
-    // 更新玩家情感檔案
-    UpdatePlayerEmotionalProfile(PlayerID, EmotionFrequency, EmotionVariability);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEmotionalAIEngine: Learned emotional patterns for player %s"), *PlayerID);
-}
-
-TMap<FString, float> UMingRTSEmotionalAIEngine::GetEmotionalStatistics(const FString& EntityID) const
-{
-    TMap<FString, float> Statistics;
-    
-    if (!EmotionalStates.Contains(EntityID))
-    {
-        return Statistics;
-    }
-    
-    const FEmotionalState& State = EmotionalStates[EntityID];
-    
-    // 基本統計
-    Statistics.Add(TEXT("DominantEmotion"), (float)State.DominantEmotion);
-    Statistics.Add(TEXT("OverallIntensity"), (float)State.OverallIntensity);
-    Statistics.Add(TEXT("EmotionalStability"), State.EmotionalStability);
-    
-    // 情感分佈統計
-    float PositiveEmotions = 0.0f;
-    float NegativeEmotions = 0.0f;
-    float NeutralEmotions = 0.0f;
-    
-    for (const auto& EmotionPair : State.Emotions)
-    {
-        EEmotionType Emotion = EmotionPair.Key;
-        float Value = EmotionPair.Value;
-        
-        if (IsPositiveEmotion(Emotion))
-        {
-            PositiveEmotions += Value;
-        }
-        else if (IsNegativeEmotion(Emotion))
-        {
-            NegativeEmotions += Value;
-        }
-        else
-        {
-            NeutralEmotions += Value;
-        }
-    }
-    
-    Statistics.Add(TEXT("PositiveEmotions"), PositiveEmotions);
-    Statistics.Add(TEXT("NegativeEmotions"), NegativeEmotions);
-    Statistics.Add(TEXT("NeutralEmotions"), NeutralEmotions);
-    
-    // 歷史統計
-    if (EmotionalHistory.Contains(EntityID))
-    {
-        const TArray<FEmotionalState>& History = EmotionalHistory[EntityID];
-        Statistics.Add(TEXT("HistoryLength"), History.Num());
-        
-        // 計算情感變化趨勢
-        if (History.Num() >= 2)
-        {
-            const FEmotionalState& LastState = History[History.Num() - 1];
-            const FEmotionalState& PreviousState = History[History.Num() - 2];
-            
-            float ChangeRate = CalculateEmotionalSimilarity(LastState, PreviousState);
-            Statistics.Add(TEXT("ChangeRate"), 1.0f - ChangeRate);
-        }
-    }
-    
-    return Statistics;
-}
-
-void UMingRTSEmotionalAIEngine::ResetEmotionalState(const FString& EntityID)
-{
-    if (EmotionalStates.Contains(EntityID))
-    {
-        FEmotionalState& State = EmotionalStates[EntityID];
-        
-        // 重置為中性狀態
-        for (int32 i = 0; i < 15; i++)
-        {
-            State.Emotions.Add((EEmotionType)i, 0.5f);
-        }
-        
-        State.DominantEmotion = EEmotionType::Calm;
-        State.OverallIntensity = EEmotionIntensity::Medium;
-        State.EmotionalStability = 0.5f;
-        State.LastUpdated = FDateTime::Now();
-        
-        UE_LOG(LogTemp, Log, TEXT("MingRTSEmotionalAIEngine: Reset emotional state for entity %s"), *EntityID);
-    }
-}
-
-// 私有方法實現
-
-void UMingRTSEmotionalAIEngine::InitializeResponseTemplates()
-{
-    ResponseTemplates.Empty();
-    
-    // 喜悅回應模板
-    FEmotionalResponse JoyResponse;
-    JoyResponse.ResponseEmotion = EEmotionType::Joy;
-    JoyResponse.ResponseText = TEXT("太棒了！我感到非常開心！");
-    JoyResponse.AudioResponse = TEXT("joy_sound.wav");
-    JoyResponse.VisualResponse = TEXT("happy_animation");
-    ResponseTemplates.Add(JoyResponse);
-    
-    // 憤怒回應模板
-    FEmotionalResponse AngerResponse;
-    AngerResponse.ResponseEmotion = EEmotionType::Anger;
-    AngerResponse.ResponseText = TEXT("這讓我很生氣！");
-    AngerResponse.AudioResponse = TEXT("anger_sound.wav");
-    AngerResponse.VisualResponse = TEXT("angry_animation");
-    ResponseTemplates.Add(AngerResponse);
-    
-    // 恐懼回應模板
-    FEmotionalResponse FearResponse;
-    FearResponse.ResponseEmotion = EEmotionType::Fear;
-    FearResponse.ResponseText = TEXT("我感到害怕...");
-    FearResponse.AudioResponse = TEXT("fear_sound.wav");
-    FearResponse.VisualResponse = TEXT("fear_animation");
-    ResponseTemplates.Add(FearResponse);
-    
-    // 平靜回應模板
-    FEmotionalResponse CalmResponse;
-    CalmResponse.ResponseEmotion = EEmotionType::Calm;
-    CalmResponse.ResponseText = TEXT("一切都很好，保持平靜。");
-    CalmResponse.AudioResponse = TEXT("calm_sound.wav");
-    CalmResponse.VisualResponse = TEXT("calm_animation");
-    ResponseTemplates.Add(CalmResponse);
-}
-
-void UMingRTSEmotionalAIEngine::ProcessEmotionalTrigger(const FString& EntityID, const FEmotionalTrigger& Trigger)
-{
-    if (!EmotionalStates.Contains(EntityID))
-    {
-        return;
-    }
-    
-    FEmotionalState& State = EmotionalStates[EntityID];
-    
-    // 應用觸發器效果
-    float CurrentEmotion = State.Emotions.FindRef(Trigger.TargetEmotion);
-    float NewEmotion = FMath::Clamp(CurrentEmotion + Trigger.TriggerStrength, 0.0f, 1.0f);
-    State.Emotions.Add(Trigger.TargetEmotion, NewEmotion);
-    
-    // 調整相關情感
-    AdjustRelatedEmotions(State, Trigger.TargetEmotion, Trigger.TriggerStrength);
-    
-    // 更新情感穩定性
-    State.EmotionalStability = FMath::Clamp(State.EmotionalStability - Trigger.TriggerStrength * 0.1f, 0.0f, 1.0f);
-}
-
-void UMingRTSEmotionalAIEngine::ApplyEmotionalDecay(const FString& EntityID, float DeltaTime)
-{
-    if (!EmotionalStates.Contains(EntityID))
-    {
-        return;
-    }
-    
-    FEmotionalState& State = EmotionalStates[EntityID];
-    
-    // 應用情感衰減
-    for (auto& EmotionPair : State.Emotions)
-    {
-        float CurrentValue = EmotionPair.Value;
-        float DecayAmount = EmotionalDecayRate * DeltaTime;
-        
-        // 向中性值衰減
-        if (CurrentValue > 0.5f)
-        {
-            EmotionPair.Value = FMath::Clamp(CurrentValue - DecayAmount, 0.5f, 1.0f);
-        }
-        else
-        {
-            EmotionPair.Value = FMath::Clamp(CurrentValue + DecayAmount, 0.0f, 0.5f);
-        }
-    }
-    
-    // 恢復情感穩定性
-    State.EmotionalStability = FMath::Clamp(State.EmotionalStability + DeltaTime * 0.05f, 0.0f, 1.0f);
-}
-
-void UMingRTSEmotionalAIEngine::UpdateDominantEmotion(FEmotionalState& State)
-{
-    float MaxEmotion = 0.0f;
-    EEmotionType DominantEmotion = EEmotionType::Calm;
-    
-    // 找出最強烈的情感
-    for (const auto& EmotionPair : State.Emotions)
-    {
-        if (EmotionPair.Value > MaxEmotion)
-        {
-            MaxEmotion = EmotionPair.Value;
-            DominantEmotion = EmotionPair.Key;
-        }
-    }
-    
-    State.DominantEmotion = DominantEmotion;
-}
-
-void UMingRTSEmotionalAIEngine::CalculateOverallIntensity(FEmotionalState& State)
-{
-    float TotalIntensity = 0.0f;
-    int32 EmotionCount = 0;
-    
-    // 計算總體強度
-    for (const auto& EmotionPair : State.Emotions)
-    {
-        // 計算與中性值的偏差
-        float Deviation = FMath::Abs(EmotionPair.Value - 0.5f);
-        TotalIntensity += Deviation;
-        EmotionCount++;
-    }
-    
-    if (EmotionCount > 0)
-    {
-        TotalIntensity /= EmotionCount;
-        TotalIntensity *= 2.0f; // 將範圍調整到 0-1
-    }
-    
-    // 確定強度等級
-    if (TotalIntensity < 0.2f)
-    {
-        State.OverallIntensity = EEmotionIntensity::VeryLow;
-    }
-    else if (TotalIntensity < 0.4f)
-    {
-        State.OverallIntensity = EEmotionIntensity::Low;
-    }
-    else if (TotalIntensity < 0.6f)
-    {
-        State.OverallIntensity = EEmotionIntensity::Medium;
-    }
-    else if (TotalIntensity < 0.8f)
-    {
-        State.OverallIntensity = EEmotionIntensity::High;
-    }
-    else if (TotalIntensity < 0.9f)
-    {
-        State.OverallIntensity = EEmotionIntensity::VeryHigh;
-    }
-    else
-    {
-        State.OverallIntensity = EEmotionIntensity::Extreme;
-    }
-}
-
-float UMingRTSEmotionalAIEngine::AnalyzeTextEmotion(const FString& Text, EEmotionType TargetEmotion) const
-{
-    float Score = 0.0f;
-    
-    // 基於關鍵詞分析情感
-    TArray<FString> PositiveKeywords = {TEXT("好"), TEXT("棒"), TEXT("喜歡"), TEXT("開心"), TEXT("快樂")};
-    TArray<FString> NegativeKeywords = {TEXT("壞"), TEXT("糟糕"), TEXT("討厭"), TEXT("生氣"), TEXT("悲傷")};
-    TArray<FString> FearKeywords = {TEXT("害怕"), TEXT("恐懼"), TEXT("擔心"), TEXT("緊張"), TEXT("不安")};
-    TArray<FString> AngerKeywords = {TEXT("憤怒"), TEXT("生氣"), TEXT("煩"), TEXT("火大"), TEXT("氣")};
-    
-    switch (TargetEmotion)
-    {
-        case EEmotionType::Joy:
-            for (const FString& Keyword : PositiveKeywords)
-            {
-                if (Text.Contains(Keyword))
-                {
-                    Score += 0.2f;
-                }
-            }
-            break;
-            
-        case EEmotionType::Sadness:
-            for (const FString& Keyword : NegativeKeywords)
-            {
-                if (Text.Contains(Keyword))
-                {
-                    Score += 0.2f;
-                }
-            }
-            break;
-            
-        case EEmotionType::Fear:
-            for (const FString& Keyword : FearKeywords)
-            {
-                if (Text.Contains(Keyword))
-                {
-                    Score += 0.2f;
-                }
-            }
-            break;
-            
-        case EEmotionType::Anger:
-            for (const FString& Keyword : AngerKeywords)
-            {
-                if (Text.Contains(Keyword))
-                {
-                    Score += 0.2f;
-                }
-            }
-            break;
-            
-        default:
-            // 對於其他情感，使用更複雜的分析
-            Score = AnalyzeComplexEmotion(Text, TargetEmotion);
-            break;
-    }
-    
-    return FMath::Clamp(Score, 0.0f, 1.0f);
-}
-
-float UMingRTSEmotionalAIEngine::AnalyzeBehaviorEmotion(const TArray<FString>& Behaviors, EEmotionType TargetEmotion) const
-{
-    float Score = 0.0f;
-    
-    // 基於行為模式分析情感
-    for (const FString& Behavior : Behaviors)
-    {
-        if (Behavior.Contains(TEXT("攻擊")) || Behavior.Contains(TEXT("戰鬥")))
-        {
-            if (TargetEmotion == EEmotionType::Anger)
-            {
-                Score += 0.3f;
-            }
-            else if (TargetEmotion == EEmotionType::Fear)
-            {
-                Score += 0.1f;
-            }
-        }
-        else if (Behavior.Contains(TEXT("逃跑")) || Behavior.Contains(TEXT("躲避")))
-        {
-            if (TargetEmotion == EEmotionType::Fear)
-            {
-                Score += 0.4f;
-            }
-        }
-        else if (Behavior.Contains(TEXT("幫助")) || Behavior.Contains(TEXT("合作")))
-        {
-            if (TargetEmotion == EEmotionType::Love || TargetEmotion == EEmotionType::Trust)
-            {
-                Score += 0.3f;
-            }
-        }
-        else if (Behavior.Contains(TEXT("慶祝")) || Behavior.Contains(TEXT("歡呼")))
-        {
-            if (TargetEmotion == EEmotionType::Joy)
-            {
-                Score += 0.4f;
-            }
-        }
-    }
-    
-    return FMath::Clamp(Score, 0.0f, 1.0f);
-}
-
-float UMingRTSEmotionalAIEngine::AnalyzeContextEmotion(const FString& Context, EEmotionType TargetEmotion) const
-{
-    float Score = 0.0f;
-    
-    // 基於上下文分析情感
-    if (Context.Contains(TEXT("戰爭")) || Context.Contains(TEXT("衝突")))
-    {
-        if (TargetEmotion == EEmotionType::Fear || TargetEmotion == EEmotionType::Anger)
-        {
-            Score += 0.2f;
-        }
-    }
-    else if (Context.Contains(TEXT("和平")) || Context.Contains(TEXT("安寧")))
-    {
-        if (TargetEmotion == EEmotionType::Calm || TargetEmotion == EEmotionType::Contentment)
-        {
-            Score += 0.2f;
-        }
-    }
-    else if (Context.Contains(TEXT("勝利")) || Context.Contains(TEXT("成功")))
-    {
-        if (TargetEmotion == EEmotionType::Joy || TargetEmotion == EEmotionType::Excitement)
-        {
-            Score += 0.3f;
-        }
-    }
-    else if (Context.Contains(TEXT("失敗")) || Context.Contains(TEXT("失敗")))
-    {
-        if (TargetEmotion == EEmotionType::Sadness || TargetEmotion == EEmotionType::Disappointment)
-        {
-            Score += 0.3f;
-        }
-    }
-    
-    return FMath::Clamp(Score, 0.0f, 1.0f);
-}
-
-FEmotionalResponse UMingRTSEmotionalAIEngine::GenerateJoyResponse(const FEmotionalState& State) const
-{
-    FEmotionalResponse Response;
-    Response.ResponseEmotion = EEmotionType::Joy;
-    Response.ResponseText = TEXT("太棒了！我感到非常開心和興奮！");
-    Response.AudioResponse = TEXT("joyful_laughter.wav");
-    Response.VisualResponse = TEXT("happy_jump");
-    Response.ResponseActions.Add(TEXT("celebrate"));
-    Response.ResponseActions.Add(TEXT("share_happiness"));
-    
-    return Response;
-}
-
-FEmotionalResponse UMingRTSEmotionalAIEngine::GenerateSadnessResponse(const FEmotionalState& State) const
-{
-    FEmotionalResponse Response;
-    Response.ResponseEmotion = EEmotionType::Sadness;
-    Response.ResponseText = TEXT("我感到有些悲傷...");
-    Response.AudioResponse = TEXT("soft_cry.wav");
-    Response.VisualResponse = TEXT("sad_posture");
-    Response.ResponseActions.Add(TEXT("seek_comfort"));
-    Response.ResponseActions.Add(TEXT("reflect"));
-    
-    return Response;
-}
-
-FEmotionalResponse UMingRTSEmotionalAIEngine::GenerateAngerResponse(const FEmotionalState& State) const
-{
-    FEmotionalResponse Response;
-    Response.ResponseEmotion = EEmotionType::Anger;
-    Response.ResponseText = TEXT("這讓我很生氣！");
-    Response.AudioResponse = TEXT("angry_voice.wav");
-    Response.VisualResponse = TEXT("angry_gesture");
-    Response.ResponseActions.Add(TEXT("confront"));
-    Response.ResponseActions.Add(TEXT("express_frustration"));
-    
-    return Response;
-}
-
-FEmotionalResponse UMingRTSEmotionalAIEngine::GenerateFearResponse(const FEmotionalState& State) const
-{
-    FEmotionalResponse Response;
-    Response.ResponseEmotion = EEmotionType::Fear;
-    Response.ResponseText = TEXT("我感到害怕和不安...");
-    Response.AudioResponse = TEXT("fearful_whimper.wav");
-    Response.VisualResponse = TEXT("trembling");
-    Response.ResponseActions.Add(TEXT("retreat"));
-    Response.ResponseActions.Add(TEXT("seek_protection"));
-    
-    return Response;
-}
-
-FEmotionalResponse UMingRTSEmotionalAIEngine::GenerateSurpriseResponse(const FEmotionalState& State) const
-{
-    FEmotionalResponse Response;
-    Response.ResponseEmotion = EEmotionType::Surprise;
-    Response.ResponseText = TEXT("哇！這真是出乎意料！");
-    Response.AudioResponse = TEXT("surprised_gas.wav");
-    Response.VisualResponse = TEXT("wide_eyes");
-    Response.ResponseActions.Add(TEXT("investigate"));
-    Response.ResponseActions.Add(TEXT("question"));
-    
-    return Response;
-}
-
-FEmotionalResponse UMingRTSEmotionalAIEngine::GenerateLoveResponse(const FEmotionalState& State) const
-{
-    FEmotionalResponse Response;
-    Response.ResponseEmotion = EEmotionType::Love;
-    Response.ResponseText = TEXT("我感到充滿愛意和溫暖！");
-    Response.AudioResponse = TEXT("gentle_voice.wav");
-    Response.VisualResponse = TEXT("warm_smile");
-    Response.ResponseActions.Add(TEXT("embrace"));
-    Response.ResponseActions.Add(TEXT("care"));
-    
-    return Response;
-}
-
-FEmotionalResponse UMingRTSEmotionalAIEngine::GenerateCalmResponse(const FEmotionalState& State) const
-{
-    FEmotionalResponse Response;
-    Response.ResponseEmotion = EEmotionType::Calm;
-    Response.ResponseText = TEXT("一切都很好，我感到平靜和安寧。");
-    Response.AudioResponse = TEXT("peaceful_breath.wav");
-    Response.VisualResponse = TEXT("relaxed_posture");
-    Response.ResponseActions.Add(TEXT("meditate"));
-    Response.ResponseActions.Add(TEXT("observe"));
-    
-    return Response;
-}
-
-FEmotionalResponse UMingRTSEmotionalAIEngine::GenerateNeutralResponse(const FEmotionalState& State) const
-{
-    FEmotionalResponse Response;
-    Response.ResponseEmotion = EEmotionType::Calm;
-    Response.ResponseText = TEXT("我感覺還不錯。");
-    Response.AudioResponse = TEXT("neutral_voice.wav");
-    Response.VisualResponse = TEXT("neutral_expression");
-    Response.ResponseActions.Add(TEXT("wait"));
-    Response.ResponseActions.Add(TEXT("observe"));
-    
-    return Response;
-}
-
-FString UMingRTSEmotionalAIEngine::GetEmotionName(EEmotionType Emotion) const
-{
-    switch (Emotion)
-    {
-        case EEmotionType::Joy: return TEXT("喜悅");
-        case EEmotionType::Sadness: return TEXT("悲傷");
-        case EEmotionType::Anger: return TEXT("憤怒");
-        case EEmotionType::Fear: return TEXT("恐懼");
-        case EEmotionType::Surprise: return TEXT("驚訝");
-        case EEmotionType::Disgust: return TEXT("厭惡");
-        case EEmotionType::Trust: return TEXT("信任");
-        case EEmotionType::Anticipation: return TEXT("期待");
-        case EEmotionType::Love: return TEXT("愛");
-        case EEmotionType::Optimism: return TEXT("樂觀");
-        case EEmotionType::Pessimism: return TEXT("悲觀");
-        case EEmotionType::Anxiety: return TEXT("焦慮");
-        case EEmotionType::Calm: return TEXT("平靜");
-        case EEmotionType::Excitement: return TEXT("興奮");
-        case EEmotionType::Contentment: return TEXT("滿足");
-        default: return TEXT("未知");
-    }
-}
-
-float UMingRTSEmotionalAIEngine::GetEmotionWeight(EEmotionType Emotion) const
-{
-    // 不同情感的權重
-    switch (Emotion)
-    {
-        case EEmotionType::Joy: return 1.0f;
-        case EEmotionType::Sadness: return 0.9f;
-        case EEmotionType::Anger: return 0.8f;
-        case EEmotionType::Fear: return 0.7f;
-        case EEmotionType::Love: return 1.0f;
-        case EEmotionType::Calm: return 0.6f;
-        default: return 0.5f;
-    }
-}
-
-bool UMingRTSEmotionalAIEngine::IsEmotionCompatible(EEmotionType Emotion1, EEmotionType Emotion2) const
-{
-    // 檢查情感兼容性
-    if (IsPositiveEmotion(Emotion1) && IsPositiveEmotion(Emotion2))
-    {
-        return true;
-    }
-    if (IsNegativeEmotion(Emotion1) && IsNegativeEmotion(Emotion2))
-    {
-        return true;
-    }
-    
-    // 特殊兼容性
-    if ((Emotion1 == EEmotionType::Love && Emotion2 == EEmotionType::Trust) ||
-        (Emotion1 == EEmotionType::Trust && Emotion2 == EEmotionType::Love))
-    {
-        return true;
-    }
-    
-    return false;
-}
-
-void UMingRTSEmotionalAIEngine::RecordEmotionalState(const FString& EntityID, const FEmotionalState& State)
-{
-    if (!EmotionalHistory.Contains(EntityID))
-    {
-        TArray<FEmotionalState> EmptyHistory;
-        EmotionalHistory.Add(EntityID, EmptyHistory);
-    }
-    
-    TArray<FEmotionalState>& History = EmotionalHistory[EntityID];
-    History.Add(State);
-    
-    // 限制歷史記錄數量
-    if (History.Num() > MaxEmotionalHistory)
-    {
-        History.RemoveAt(0);
-    }
-}
-
-void UMingRTSEmotionalAIEngine::ProcessEmotionalContagion(const FString& EntityID)
-{
-    if (!EmotionalStates.Contains(EntityID))
-    {
-        return;
-    }
-    
-    const FEmotionalState& SourceState = EmotionalStates[EntityID];
-    TArray<FString> NearbyEntities = GetNearbyEntities(EntityID);
-    
-    for (const FString& NearbyEntity : NearbyEntities)
-    {
-        if (EmotionalStates.Contains(NearbyEntity))
-        {
-            TransferEmotion(EntityID, NearbyEntity, EmotionalContagionRate);
-        }
-    }
-}
-
-TArray<FString> UMingRTSEmotionalAIEngine::GetNearbyEntities(const FString& EntityID) const
-{
-    TArray<FString> NearbyEntities;
-    
-    // 這裡需要與實際的遊戲世界系統集成
-    // 暫時返回所有實體
-    for (const auto& StatePair : EmotionalStates)
-    {
-        if (StatePair.Key != EntityID)
-        {
-            NearbyEntities.Add(StatePair.Key);
-        }
-    }
-    
-    return NearbyEntities;
-}
-
-void UMingRTSEmotionalAIEngine::TransferEmotion(const FString& FromEntity, const FString& ToEntity, float TransferAmount)
-{
-    if (!EmotionalStates.Contains(FromEntity) || !EmotionalStates.Contains(ToEntity))
-    {
-        return;
-    }
-    
-    const FEmotionalState& SourceState = EmotionalStates[FromEntity];
-    FEmotionalState& TargetState = EmotionalStates[ToEntity];
-    
-    // 傳輸主導情感
-    float SourceEmotion = SourceState.Emotions.FindRef(SourceState.DominantEmotion);
-    float TargetEmotion = TargetState.Emotions.FindRef(SourceState.DominantEmotion);
-    
-    float TransferAmount = (SourceEmotion - TargetEmotion) * TransferAmount * 0.1f;
-    float NewEmotion = FMath::Clamp(TargetEmotion + TransferAmount, 0.0f, 1.0f);
-    
-    TargetState.Emotions.Add(SourceState.DominantEmotion, NewEmotion);
-    
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEmotionalAIEngine: Transferred emotion from %s to %s"), *FromEntity, *ToEntity);
-}
-
-bool UMingRTSEmotionalAIEngine::IsPositiveEmotion(EEmotionType Emotion) const
-{
-    return Emotion == EEmotionType::Joy || 
-           Emotion == EEmotionType::Love || 
-           Emotion == EEmotionType::Trust || 
-           Emotion == EEmotionType::Optimism || 
-           Emotion == EEmotionType::Contentment;
-}
-
-bool UMingRTSEmotionalAIEngine::IsNegativeEmotion(EEmotionType Emotion) const
-{
-    return Emotion == EEmotionType::Sadness || 
-           Emotion == EEmotionType::Anger || 
-           Emotion == EEmotionType::Fear || 
-           Emotion == EEmotionType::Disgust || 
-           Emotion == EEmotionType::Pessimism || 
-           Emotion == EEmotionType::Anxiety;
-}
-
-void UMingRTSEmotionalAIEngine::AdjustRelatedEmotions(FEmotionalState& State, EEmotionType TriggerEmotion, float TriggerStrength)
-{
-    // 調整相關情感
-    switch (TriggerEmotion)
-    {
-        case EEmotionType::Joy:
-            // 喜悅會增加樂觀和愛
-            State.Emotions.Add(EEmotionType::Optimism, FMath::Clamp(State.Emotions.FindRef(EEmotionType::Optimism) + TriggerStrength * 0.3f, 0.0f, 1.0f));
-            State.Emotions.Add(EEmotionType::Love, FMath::Clamp(State.Emotions.FindRef(EEmotionType::Love) + TriggerStrength * 0.2f, 0.0f, 1.0f));
-            break;
-            
-        case EEmotionType::Anger:
-            // 憤怒會增加厭惡和悲觀
-            State.Emotions.Add(EEmotionType::Disgust, FMath::Clamp(State.Emotions.FindRef(EEmotionType::Disgust) + TriggerStrength * 0.3f, 0.0f, 1.0f));
-            State.Emotions.Add(EEmotionType::Pessimism, FMath::Clamp(State.Emotions.FindRef(EEmotionType::Pessimism) + TriggerStrength * 0.2f, 0.0f, 1.0f));
-            break;
-            
-        case EEmotionType::Fear:
-            // 恐懼會增加焦慮
-            State.Emotions.Add(EEmotionType::Anxiety, FMath::Clamp(State.Emotions.FindRef(EEmotionType::Anxiety) + TriggerStrength * 0.4f, 0.0f, 1.0f));
-            break;
-            
-        case EEmotionType::Love:
-            // 愛會增加信任和喜悅
-            State.Emotions.Add(EEmotionType::Trust, FMath::Clamp(State.Emotions.FindRef(EEmotionType::Trust) + TriggerStrength * 0.3f, 0.0f, 1.0f));
-            State.Emotions.Add(EEmotionType::Joy, FMath::Clamp(State.Emotions.FindRef(EEmotionType::Joy) + TriggerStrength * 0.2f, 0.0f, 1.0f));
-            break;
-            
-        default:
-            break;
-    }
-}
-
-void UMingRTSEmotionalAIEngine::ApplyAIBehaviorAdjustments(const FString& AIID, float AggressionLevel, float CooperationLevel, float RiskTaking, float CommunicationLevel)
-{
-    // 這裡需要與實際的AI系統集成
-    // 暫時只記錄日誌
-    UE_LOG(LogTemp, Log, TEXT("MingRTSEmotionalAIEngine: AI %s behavior adjustments - Aggression: %.2f, Cooperation: %.2f, Risk: %.2f, Communication: %.2f"), 
-           *AIID, AggressionLevel, CooperationLevel, RiskTaking, CommunicationLevel);
-}
-
-void UMingRTSEmotionalAIEngine::UpdatePlayerEmotionalProfile(const FString& PlayerID, const TMap<EEmotionType, float>& EmotionFrequency, const TMap<EEmotionType, float>& EmotionVariability)
-{
-    // 更新玩家情感檔案
-    if (EmotionalProfiles.Contains(PlayerID))
-    {
-        FEmotionalProfile& Profile = EmotionalProfiles[PlayerID];
-        
-        // 更新基礎情感
-        Profile.BaseEmotions = EmotionFrequency;
-        
-        // 調整情感敏感性和波動性
-        float TotalVariability = 0.0f;
-        for (const auto& VariancePair : EmotionVariability)
-        {
-            TotalVariability += VariancePair.Value;
-        }
-        
-        if (EmotionVariability.Num() > 0)
-        {
-            Profile.EmotionalVolatility = TotalVariability / EmotionVariability.Num();
-        }
-        
-        // 更新偏好和避免的情感
-        UpdateEmotionPreferences(Profile, EmotionFrequency);
-    }
-}
-
-void UMingRTSEmotionalAIEngine::UpdateEmotionPreferences(FEmotionalProfile& Profile, const TMap<EEmotionType, float>& EmotionFrequency)
-{
-    Profile.PreferredEmotions.Empty();
-    Profile.AvoidedEmotions.Empty();
-    
-    // 根據情感頻率確定偏好
-    for (const auto& EmotionPair : EmotionFrequency)
-    {
-        if (EmotionPair.Value > 0.7f)
-        {
-            Profile.PreferredEmotions.Add(EmotionPair.Key);
-        }
-        else if (EmotionPair.Value < 0.3f)
-        {
-            Profile.AvoidedEmotions.Add(EmotionPair.Key);
-        }
-    }
-}
-
-TArray<FString> UMingRTSEmotionalAIEngine::ExtractBehaviorsFromData(const FString& Data) const
-{
-    TArray<FString> Behaviors;
-    
-    // 從數據中提取行為信息
-    if (Data.Contains(TEXT("移動")))
-    {
-        Behaviors.Add(TEXT("移動"));
-    }
-    if (Data.Contains(TEXT("攻擊")))
-    {
-        Behaviors.Add(TEXT("攻擊"));
-    }
-    if (Data.Contains(TEXT("防禦")))
-    {
-        Behaviors.Add(TEXT("防禦"));
-    }
-    if (Data.Contains(TEXT("合作")))
-    {
-        Behaviors.Add(TEXT("合作"));
-    }
-    
-    return Behaviors;
-}
-
-FString UMingRTSEmotionalAIEngine::ExtractContextFromData(const FString& Data) const
-{
-    // 從數據中提取上下文信息
-    if (Data.Contains(TEXT("戰鬥")))
-    {
-        return TEXT("戰鬥");
-    }
-    else if (Data.Contains(TEXT("和平")))
-    {
-        return TEXT("和平");
-    }
-    else if (Data.Contains(TEXT("交易")))
-    {
-        return TEXT("交易");
-    }
-    else if (Data.Contains(TEXT("探索")))
-    {
-        return TEXT("探索");
-    }
-    
-    return TEXT("一般");
-}
-
-float UMingRTSEmotionalAIEngine::AnalyzeComplexEmotion(const FString& Text, EEmotionType TargetEmotion) const
-{
-    // 對於複雜情感，使用更細緻的分析
-    float Score = 0.0f;
-    
-    // 這裡可以實現更複雜的自然語言處理
-    // 暫時使用簡單的關鍵詞匹配
-    
-    return FMath::Clamp(Score, 0.0f, 1.0f);
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出K出i出s出設置出e出t出M出a出t出h出L出i出b出本出a出本出y出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出輸入出A出L出/出P出l出a出t出f出o出本出設置出軍出i出l出e出設置出a出n出a出成出e出本出.出h出"出
+出
+出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出(出)出
+出{出
+出 出 出 出 出E出設置出o出t出i出o出n出a出l出D出e出c出a出y出R出a出t出e出 出=出 出0出.出1出f出;出
+出 出 出 出 出E出設置出o出t出i出o出n出a出l出I出n出f出l出使出e出n出c出e出R出a出d出i出使出s出 出=出 出5出0出0出.出0出f出;出
+出 出 出 出 出E出設置出o出t出i出o出n出a出l出C出o出n出t出a出成出i出o出n出R出a出t出e出 出=出 出0出.出3出f出;出
+出 出 出 出 出M出a出x出E出設置出o出t出i出o出n出a出l出輸入出i出s出t出o出本出y出 出=出 出1出0出0出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出I出n出i出t出i出a出l出i出z出e出E出設置出o出t出i出o出n出a出l出E出n出成出i出n出e出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出 出I出n出i出t出i出a出l出i出z出i出n出成出 出e出設置出o出t出i出o出n出a出l出 出A出I出 出e出n出成出i出n出e出.出.出.出"出)出)出;出
+出
+出 出 出 出 出/出/出 出初出始出化出情出感出回出應出模出板出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出R出e出s出p出o出n出s出e出T出e出設置出p出l出a出t出e出s出(出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出 出E出設置出o出t出i出o出n出a出l出 出A出I出 出e出n出成出i出n出e出 出i出n出i出t出i出a出l出i出z出e出d出 出s出使出c出c出e出s出s出f出使出l出l出y出"出)出)出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出P出本出o出f出i出l出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出C出本出e出a出t出e出E出設置出o出t出i出o出n出a出l出P出本出o出f出i出l出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出P出本出o出f出i出l出e出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出P出本出o出f出i出l出e出的出a出設置出e出)出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出P出本出o出f出i出l出e出 出的出e出w出P出本出o出f出i出l出e出;出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出P出本出o出f出i出l出e出I出D出 出=出 出P出本出o出f出i出l出e出I出D出;出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出P出本出o出f出i出l出e出的出a出設置出e出 出=出 出P出本出o出f出i出l出e出的出a出設置出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出設出置出默出認出基出礎出情出感出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出B出a出s出e出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出a出l出設置出,出 出0出.出8出f出)出;出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出B出a出s出e出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出o出n出t出e出n出t出設置出e出n出t出,出 出0出.出6出f出)出;出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出B出a出s出e出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出T出本出使出s出t出,出 出0出.出5出f出)出;出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出B出a出s出e出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出,出 出0出.出4出f出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出設出置出偏出好出和出避出免出的出情出感出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出P出本出e出f出e出本出本出e出d出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出)出;出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出P出本出e出f出e出本出本出e出d出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出o出n出t出e出n出t出設置出e出n出t出)出;出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出P出本出e出f出e出本出本出e出d出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出T出本出使出s出t出)出;出
+出 出 出 出 出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出A出正出o出i出d出e出d出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出)出;出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出A出正出o出i出d出e出d出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出)出;出
+出 出 出 出 出的出e出w出P出本出o出f出i出l出e出.出A出正出o出i出d出e出d出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出S出a出d出n出e出s出s出)出;出
+出 出 出 出 出
+出 出 出 出 出E出設置出o出t出i出o出n出a出l出P出本出o出f出i出l出e出s出.出A出d出d出(出P出本出o出f出i出l出e出I出D出,出 出的出e出w出P出本出o出f出i出l出e出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出 出C出本出e出a出t出e出d出 出e出設置出o出t出i出o出n出a出l出 出p出本出o出f出i出l出e出 出%出s出"出)出,出 出*出P出本出o出f出i出l出e出的出a出設置出e出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出的出e出w出P出本出o出f出i出l出e出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出A出n出a出l出y出z出e出P出l出a出y出e出本出E出設置出o出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出P出l出a出y出e出本出I出D出,出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出I出n出p出使出t出D出a出t出a出)出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出 出P出l出a出y出e出本出S出t出a出t出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出分出析出各出種出輸出入出數出據出的出情出感出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出a出t出a出 出:出 出I出n出p出使出t出D出a出t出a出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出分出析出文出本出情出感出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出1出5出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出 出=出 出(出E出E出設置出o出t出i出o出n出T出y出p出e出)出i出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出T出e出x出t出S出c出o出本出e出 出=出 出A出n出a出l出y出z出e出T出e出x出t出E出設置出o出t出i出o出n出(出D出a出t出a出,出 出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出E出設置出o出t出i出o出n出 出=出 出P出l出a出y出e出本出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出l出a出y出e出本出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出設置出o出t出i出o出n出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出E出設置出o出t出i出o出n出 出+出 出T出e出x出t出S出c出o出本出e出 出*出 出0出.出1出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出分出析出行出為出情出感出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出B出e出h出a出正出i出o出本出s出 出=出 出E出x出t出本出a出c出t出B出e出h出a出正出i出o出本出s出軍出本出o出設置出D出a出t出a出(出D出a出t出a出)出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出1出5出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出 出=出 出(出E出E出設置出o出t出i出o出n出T出y出p出e出)出i出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出B出e出h出a出正出i出o出本出S出c出o出本出e出 出=出 出A出n出a出l出y出z出e出B出e出h出a出正出i出o出本出E出設置出o出t出i出o出n出(出B出e出h出a出正出i出o出本出s出,出 出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出E出設置出o出t出i出o出n出 出=出 出P出l出a出y出e出本出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出l出a出y出e出本出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出設置出o出t出i出o出n出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出E出設置出o出t出i出o出n出 出+出 出B出e出h出a出正出i出o出本出S出c出o出本出e出 出*出 出0出.出1出5出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出分出析出上出下出文出情出感出
+出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出n出t出e出x出t出 出=出 出E出x出t出本出a出c出t出C出o出n出t出e出x出t出軍出本出o出設置出D出a出t出a出(出D出a出t出a出)出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出1出5出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出 出=出 出(出E出E出設置出o出t出i出o出n出T出y出p出e出)出i出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出C出o出n出t出e出x出t出S出c出o出本出e出 出=出 出A出n出a出l出y出z出e出C出o出n出t出e出x出t出E出設置出o出t出i出o出n出(出C出o出n出t出e出x出t出,出 出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出E出設置出o出t出i出o出n出 出=出 出P出l出a出y出e出本出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出l出a出y出e出本出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出設置出o出t出i出o出n出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出E出設置出o出t出i出o出n出 出+出 出C出o出n出t出e出x出t出S出c出o出本出e出 出*出 出0出.出0出5出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出情出感出狀出態出
+出 出 出 出 出U出p出d出a出t出e出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出(出P出l出a出y出e出本出S出t出a出t出e出)出;出
+出 出 出 出 出C出a出l出c出使出l出a出t出e出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出(出P出l出a出y出e出本出S出t出a出t出e出)出;出
+出 出 出 出 出P出l出a出y出e出本出S出t出a出t出e出.出L出a出s出t出U出p出d出a出t出e出d出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出保出存出情出感出狀出態出
+出 出 出 出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出A出d出d出(出P出l出a出y出e出本出I出D出,出 出P出l出a出y出e出本出S出t出a出t出e出)出;出
+出 出 出 出 出R出e出c出o出本出d出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出(出P出l出a出y出e出本出I出D出,出 出P出l出a出y出e出本出S出t出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出觸出發出情出感出變出化出事出件出
+出 出 出 出 出O出n出E出設置出o出t出i出o出n出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出P出l出a出y出e出本出I出D出,出 出P出l出a出y出e出本出S出t出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出 出A出n出a出l出y出z出e出d出 出e出設置出o出t出i出o出n出 出f出o出本出 出p出l出a出y出e出本出 出%出s出 出-出 出D出o出設置出i出n出a出n出t出:出 出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出*出P出l出a出y出e出本出I出D出,出 出*出G出e出t出E出設置出o出t出i出o出n出的出a出設置出e出(出P出l出a出y出e出本出S出t出a出t出e出.出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出l出a出y出e出本出S出t出a出t出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出U出p出d出a出t出e出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出,出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出&出 出T出本出i出成出成出e出本出)出
+出{出
+出 出 出 出 出i出f出 出(出!出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出E出n出t出i出t出y出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出創出建出新出的出情出感出狀出態出
+出 出 出 出 出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出 出的出e出w出S出t出a出t出e出;出
+出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出A出d出d出(出E出n出t出i出t出y出I出D出,出 出的出e出w出S出t出a出t出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出C出使出本出本出e出n出t出S出t出a出t出e出 出=出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出[出E出n出t出i出t出y出I出D出]出;出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出 出P出本出e出正出i出o出使出s出S出t出a出t出e出 出=出 出C出使出本出本出e出n出t出S出t出a出t出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出處出理出情出感出觸出發出器出
+出 出 出 出 出P出本出o出c出e出s出s出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出(出E出n出t出i出t出y出I出D出,出 出T出本出i出成出成出e出本出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出情出感出狀出態出
+出 出 出 出 出U出p出d出a出t出e出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出C出a出l出c出使出l出a出t出e出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出C出使出本出本出e出n出t出S出t出a出t出e出.出L出a出s出t出U出p出d出a出t出e出d出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出記出錄出情出感出狀出態出
+出 出 出 出 出R出e出c出o出本出d出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出(出E出n出t出i出t出y出I出D出,出 出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出O出n出E出設置出o出t出i出o出n出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出E出n出t出i出t出y出I出D出,出 出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出O出n出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出.出B出本出o出a出d出c出a出s出t出(出E出n出t出i出t出y出I出D出,出 出T出本出i出成出成出e出本出,出 出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出處出理出情出感出傳出播出
+出 出 出 出 出P出本出o出c出e出s出s出E出設置出o出t出i出o出n出a出l出C出o出n出t出a出成出i出o出n出(出E出n出t出i出t出y出I出D出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出 出U出p出d出a出t出e出d出 出e出設置出o出t出i出o出n出a出l出 出s出t出a出t出e出 出f出o出本出 出%出s出 出w出i出t出h出 出t出本出i出成出成出e出本出 出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出*出E出n出t出i出t出y出I出D出,出 出*出T出本出i出成出成出e出本出.出T出本出i出成出成出e出本出的出a出設置出e出)出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出n出e出本出a出t出e出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出,出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出C出使出本出本出e出n出t出S出t出a出t出e出)出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出於出主出導出情出感出生出成出回出應出
+出 出 出 出 出s出w出i出t出c出h出 出(出C出使出本出本出e出n出t出S出t出a出t出e出.出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出p出o出n出s出e出 出=出 出G出e出n出e出本出a出t出e出J出o出y出R出e出s出p出o出n出s出e出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出S出a出d出n出e出s出s出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出p出o出n出s出e出 出=出 出G出e出n出e出本出a出t出e出S出a出d出n出e出s出s出R出e出s出p出o出n出s出e出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出p出o出n出s出e出 出=出 出G出e出n出e出本出a出t出e出A出n出成出e出本出R出e出s出p出o出n出s出e出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出p出o出n出s出e出 出=出 出G出e出n出e出本出a出t出e出軍出e出a出本出R出e出s出p出o出n出s出e出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出S出使出本出p出本出i出s出e出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出p出o出n出s出e出 出=出 出G出e出n出e出本出a出t出e出S出使出本出p出本出i出s出e出R出e出s出p出o出n出s出e出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出p出o出n出s出e出 出=出 出G出e出n出e出本出a出t出e出L出o出正出e出R出e出s出p出o出n出s出e出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出a出l出設置出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出p出o出n出s出e出 出=出 出G出e出n出e出本出a出t出e出C出a出l出設置出R出e出s出p出o出n出s出e出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出s出p出o出n出s出e出 出=出 出G出e出n出e出本出a出t出e出的出e出使出t出本出a出l出R出e出s出p出o出n出s出e出(出C出使出本出本出e出n出t出S出t出a出t出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出I出D出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出R出e出s出p出o出n出s出e出下出%出s出下出%出d出"出)出,出 出*出E出n出t出i出t出y出I出D出,出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出0出0出0出,出 出9出9出9出9出)出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出I出n出t出e出n出s出i出t出y出 出=出 出(出f出l出o出a出t出)出C出使出本出本出e出n出t出S出t出a出t出e出.出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出 出/出 出5出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出觸出發出回出應出事出件出
+出 出 出 出 出O出n出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出.出B出本出o出a出d出c出a出s出t出(出E出n出t出i出t出y出I出D出,出 出R出e出s出p出o出n出s出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出p出o出n出s出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出S出e出t出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出,出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出&出 出T出本出i出成出成出e出本出)出
+出{出
+出 出 出 出 出i出f出 出(出!出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出s出.出C出o出n出t出a出i出n出s出(出E出n出t出i出t出y出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出>出 出E出設置出p出t出y出T出本出i出成出成出e出本出s出;出
+出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出s出.出A出d出d出(出E出n出t出i出t出y出I出D出,出 出E出設置出p出t出y出T出本出i出成出成出e出本出s出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出s出[出E出n出t出i出t出y出I出D出]出.出A出d出d出(出T出本出i出成出成出e出本出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出 出S出e出t出 出e出設置出o出t出i出o出n出a出l出 出t出本出i出成出成出e出本出 出%出s出 出f出o出本出 出e出n出t出i出t出y出 出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出*出T出本出i出成出成出e出本出.出T出本出i出成出成出e出本出的出a出設置出e出,出 出*出E出n出t出i出t出y出I出D出)出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出t出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出軍出i出n出d出R出e出f出(出E出n出t出i出t出y出I出D出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出C出a出l出c出使出l出a出t出e出E出設置出o出t出i出o出n出a出l出S出i出設置出i出l出a出本出i出t出y出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出1出,出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出2出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出S出i出設置出i出l出a出本出i出t出y出 出=出 出0出.出0出f出;出
+出 出 出 出 出i出n出t出3出2出 出C出o出設置出p出a出本出e出d出E出設置出o出t出i出o出n出s出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出計出算出各出種出情出感出的出相出似出度出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出1出5出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出 出=出 出(出E出E出設置出o出t出i出o出n出T出y出p出e出)出i出;出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出E出設置出o出t出i出o出n出1出 出=出 出S出t出a出t出e出1出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出E出設置出o出t出i出o出n出2出 出=出 出S出t出a出t出e出2出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出使出用出歐出幾出里出得出距出離出計出算出相出似出度出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出D出i出s出t出a出n出c出e出 出=出 出軍出M出a出t出h出:出:出A出b出s出(出E出設置出o出t出i出o出n出1出 出-出 出E出設置出o出t出i出o出n出2出)出;出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出E出設置出o出t出i出o出n出S出i出設置出i出l出a出本出i出t出y出 出=出 出1出.出0出f出 出-出 出D出i出s出t出a出n出c出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出S出i出設置出i出l出a出本出i出t出y出 出+出=出 出E出設置出o出t出i出o出n出S出i出設置出i出l出a出本出i出t出y出 出*出 出G出e出t出E出設置出o出t出i出o出n出基本出e出i出成出h出t出(出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出C出o出設置出p出a出本出e出d出E出設置出o出t出i出o出n出s出+出+出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出C出o出設置出p出a出本出e出d出E出設置出o出t出i出o出n出s出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出i出設置出i出l出a出本出i出t出y出 出/出=出 出C出o出設置出p出a出本出e出d出E出設置出o出t出i出o出n出s出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出i出設置出i出l出a出本出i出t出y出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出P出本出e出d出i出c出t出E出設置出o出t出i出o出n出a出l出C出h出a出n出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出,出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出>出&出 出P出o出t出e出n出t出i出a出l出T出本出i出成出成出e出本出s出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出 出P出本出e出d出i出c出t出e出d出S出t出a出t出e出 出=出 出G出e出t出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出(出E出n出t出i出t出y出I出D出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出模出擬出潛出在出觸出發出器出的出影出響出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出&出 出T出本出i出成出成出e出本出 出:出 出P出o出t出e出n出t出i出a出l出T出本出i出成出成出e出本出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出E出設置出o出t出i出o出n出 出=出 出P出本出e出d出i出c出t出e出d出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出T出本出i出成出成出e出本出.出T出a出本出成出e出t出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出的出e出w出E出設置出o出t出i出o出n出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出E出設置出o出t出i出o出n出 出+出 出T出本出i出成出成出e出本出.出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出 出*出 出0出.出2出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出P出本出e出d出i出c出t出e出d出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出T出本出i出成出成出e出本出.出T出a出本出成出e出t出E出設置出o出t出i出o出n出,出 出的出e出w出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出預出測出狀出態出
+出 出 出 出 出U出p出d出a出t出e出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出(出P出本出e出d出i出c出t出e出d出S出t出a出t出e出)出;出
+出 出 出 出 出C出a出l出c出使出l出a出t出e出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出(出P出本出e出d出i出c出t出e出d出S出t出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出P出本出e出d出i出c出t出e出d出S出t出a出t出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出A出d出大出使出s出t出A出I出B出e出h出a出正出i出o出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出,出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出)出
+出{出
+出 出 出 出 出/出/出 出基出於出情出感出狀出態出調出整出A出I出行出為出參出數出
+出 出 出 出 出f出l出o出a出t出 出A出成出成出本出e出s出s出i出o出n出L出e出正出e出l出 出=出 出0出.出5出f出;出
+出 出 出 出 出f出l出o出a出t出 出C出o出o出p出e出本出a出t出i出o出n出L出e出正出e出l出 出=出 出0出.出5出f出;出
+出 出 出 出 出f出l出o出a出t出 出R出i出s出k出T出a出k出i出n出成出 出=出 出0出.出5出f出;出
+出 出 出 出 出f出l出o出a出t出 出C出o出設置出設置出使出n出i出c出a出t出i出o出n出L出e出正出e出l出 出=出 出0出.出5出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出主出導出情出感出調出整出行出為出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出.出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出o出o出p出e出本出a出t出i出o出n出L出e出正出e出l出 出=出 出0出.出8出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出o出設置出設置出使出n出i出c出a出t出i出o出n出L出e出正出e出l出 出=出 出0出.出7出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出i出s出k出T出a出k出i出n出成出 出=出 出0出.出6出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出成出成出本出e出s出s出i出o出n出L出e出正出e出l出 出=出 出0出.出9出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出o出o出p出e出本出a出t出i出o出n出L出e出正出e出l出 出=出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出i出s出k出T出a出k出i出n出成出 出=出 出0出.出8出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出成出成出本出e出s出s出i出o出n出L出e出正出e出l出 出=出 出0出.出1出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出i出s出k出T出a出k出i出n出成出 出=出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出o出o出p出e出本出a出t出i出o出n出L出e出正出e出l出 出=出 出0出.出6出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出o出o出p出e出本出a出t出i出o出n出L出e出正出e出l出 出=出 出0出.出9出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出o出設置出設置出使出n出i出c出a出t出i出o出n出L出e出正出e出l出 出=出 出0出.出8出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出A出成出成出本出e出s出s出i出o出n出L出e出正出e出l出 出=出 出0出.出1出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出a出l出設置出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出保出持出平出衡出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出根出據出情出感出強出度出調出整出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出.出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出 出>出=出 出E出E出設置出o出t出i出o出n出I出n出t出e出n出s出i出t出y出:出:出輸入出i出成出h出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出R出i出s出k出T出a出k出i出n出成出 出=出 出0出.出7出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出A出成出成出本出e出s出s出i出o出n出L出e出正出e出l出 出=出 出0出.出6出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出應出用出行出為出調出整出（出這出裡出需出要出與出實出際出的出A出I出系出統出集出成出）出
+出 出 出 出 出A出p出p出l出y出A出I出B出e出h出a出正出i出o出本出A出d出大出使出s出t出設置出e出n出t出s出(出A出I出I出D出,出 出A出成出成出本出e出s出s出i出o出n出L出e出正出e出l出,出 出C出o出o出p出e出本出a出t出i出o出n出L出e出正出e出l出,出 出R出i出s出k出T出a出k出i出n出成出,出 出C出o出設置出設置出使出n出i出c出a出t出i出o出n出L出e出正出e出l出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出 出A出d出大出使出s出t出e出d出 出A出I出 出b出e出h出a出正出i出o出本出 出f出o出本出 出%出s出 出b出a出s出e出d出 出o出n出 出e出設置出o出t出i出o出n出a出l出 出s出t出a出t出e出"出)出,出 出*出A出I出I出D出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出L出e出a出本出n出E出設置出o出t出i出o出n出a出l出P出a出t出t出e出本出n出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出P出l出a出y出e出本出I出D出,出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出>出&出 出輸入出i出s出t出o出本出i出c出a出l出S出t出a出t出e出s出)出
+出{出
+出 出 出 出 出i出f出 出(出輸入出i出s出t出o出本出i出c出a出l出S出t出a出t出e出s出.出的出使出設置出(出)出 出<出 出2出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出分出析出情出感出模出式出
+出 出 出 出 出T出M出a出p出<出E出E出設置出o出t出i出o出n出T出y出p出e出,出 出f出l出o出a出t出>出 出E出設置出o出t出i出o出n出軍出本出e出q出使出e出n出c出y出;出
+出 出 出 出 出T出M出a出p出<出E出E出設置出o出t出i出o出n出T出y出p出e出,出 出f出l出o出a出t出>出 出E出設置出o出t出i出o出n出V出a出本出i出a出b出i出l出i出t出y出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出計出算出情出感出頻出率出和出變出異出性出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出1出5出;出 出i出+出+出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出 出=出 出(出E出E出設置出o出t出i出o出n出T出y出p出e出)出i出;出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出S出使出設置出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出V出a出本出i出a出n出c出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出C出o出使出n出t出 出=出 出0出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出 出:出 出輸入出i出s出t出o出本出i出c出a出l出S出t出a出t出e出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出E出設置出o出t出i出o出n出V出a出l出使出e出 出=出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出使出設置出 出+出=出 出E出設置出o出t出i出o出n出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出C出o出使出n出t出+出+出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出o出使出n出t出 出>出 出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出M出e出a出n出 出=出 出S出使出設置出 出/出 出C出o出使出n出t出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出軍出本出e出q出使出e出n出c出y出.出A出d出d出(出E出設置出o出t出i出o出n出,出 出M出e出a出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出計出算出變出異出性出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出 出:出 出輸入出i出s出t出o出本出i出c出a出l出S出t出a出t出e出s出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出E出設置出o出t出i出o出n出V出a出l出使出e出 出=出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出V出a出本出i出a出n出c出e出 出+出=出 出軍出M出a出t出h出:出:出S出q出使出a出本出e出(出E出設置出o出t出i出o出n出V出a出l出使出e出 出-出 出M出e出a出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出C出o出使出n出t出 出>出 出1出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出V出a出本出i出a出n出c出e出 出/出=出 出(出C出o出使出n出t出 出-出 出1出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出V出a出本出i出a出b出i出l出i出t出y出.出A出d出d出(出E出設置出o出t出i出o出n出,出 出V出a出本出i出a出n出c出e出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出玩出家出情出感出檔出案出
+出 出 出 出 出U出p出d出a出t出e出P出l出a出y出e出本出E出設置出o出t出i出o出n出a出l出P出本出o出f出i出l出e出(出P出l出a出y出e出本出I出D出,出 出E出設置出o出t出i出o出n出軍出本出e出q出使出e出n出c出y出,出 出E出設置出o出t出i出o出n出V出a出本出i出a出b出i出l出i出t出y出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出 出L出e出a出本出n出e出d出 出e出設置出o出t出i出o出n出a出l出 出p出a出t出t出e出本出n出s出 出f出o出本出 出p出l出a出y出e出本出 出%出s出"出)出,出 出*出P出l出a出y出e出本出I出D出)出;出
+出}出
+出
+出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出t出E出設置出o出t出i出o出n出a出l出S出t出a出t出i出s出t出i出c出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出S出t出a出t出i出s出t出i出c出s出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出E出n出t出i出t出y出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出S出t出a出t出i出s出t出i出c出s出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出 出=出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出[出E出n出t出i出t出y出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出本出統出計出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出"出)出,出 出(出f出l出o出a出t出)出S出t出a出t出e出.出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出"出)出,出 出(出f出l出o出a出t出)出S出t出a出t出e出.出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出E出設置出o出t出i出o出n出a出l出S出t出a出b出i出l出i出t出y出"出)出,出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出a出l出S出t出a出b出i出l出i出t出y出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出情出感出分出佈出統出計出
+出 出 出 出 出f出l出o出a出t出 出P出o出s出i出t出i出正出e出E出設置出o出t出i出o出n出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出f出l出o出a出t出 出的出e出成出a出t出i出正出e出E出設置出o出t出i出o出n出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出f出l出o出a出t出 出的出e出使出t出本出a出l出E出設置出o出t出i出o出n出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出E出設置出o出t出i出o出n出P出a出i出本出 出:出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出 出=出 出E出設置出o出t出i出o出n出P出a出i出本出.出K出e出y出;出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出V出a出l出使出e出 出=出 出E出設置出o出t出i出o出n出P出a出i出本出.出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出I出s出P出o出s出i出t出i出正出e出E出設置出o出t出i出o出n出(出E出設置出o出t出i出o出n出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出o出s出i出t出i出正出e出E出設置出o出t出i出o出n出s出 出+出=出 出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出I出s出的出e出成出a出t出i出正出e出E出設置出o出t出i出o出n出(出E出設置出o出t出i出o出n出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出成出a出t出i出正出e出E出設置出o出t出i出o出n出s出 出+出=出 出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出使出t出本出a出l出E出設置出o出t出i出o出n出s出 出+出=出 出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出P出o出s出i出t出i出正出e出E出設置出o出t出i出o出n出s出"出)出,出 出P出o出s出i出t出i出正出e出E出設置出o出t出i出o出n出s出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出的出e出成出a出t出i出正出e出E出設置出o出t出i出o出n出s出"出)出,出 出的出e出成出a出t出i出正出e出E出設置出o出t出i出o出n出s出)出;出
+出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出的出e出使出t出本出a出l出E出設置出o出t出i出o出n出s出"出)出,出 出的出e出使出t出本出a出l出E出設置出o出t出i出o出n出s出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出歷出史出統出計出
+出 出 出 出 出i出f出 出(出E出設置出o出t出i出o出n出a出l出輸入出i出s出t出o出本出y出.出C出o出n出t出a出i出n出s出(出E出n出t出i出t出y出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出>出&出 出輸入出i出s出t出o出本出y出 出=出 出E出設置出o出t出i出o出n出a出l出輸入出i出s出t出o出本出y出[出E出n出t出i出t出y出I出D出]出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出輸入出i出s出t出o出本出y出L出e出n出成出t出h出"出)出,出 出輸入出i出s出t出o出本出y出.出的出使出設置出(出)出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出計出算出情出感出變出化出趨出勢出
+出 出 出 出 出 出 出 出 出i出f出 出(出輸入出i出s出t出o出本出y出.出的出使出設置出(出)出 出>出=出 出2出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出L出a出s出t出S出t出a出t出e出 出=出 出輸入出i出s出t出o出本出y出[出輸入出i出s出t出o出本出y出.出的出使出設置出(出)出 出-出 出1出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出P出本出e出正出i出o出使出s出S出t出a出t出e出 出=出 出輸入出i出s出t出o出本出y出[出輸入出i出s出t出o出本出y出.出的出使出設置出(出)出 出-出 出2出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出C出h出a出n出成出e出R出a出t出e出 出=出 出C出a出l出c出使出l出a出t出e出E出設置出o出t出i出o出n出a出l出S出i出設置出i出l出a出本出i出t出y出(出L出a出s出t出S出t出a出t出e出,出 出P出本出e出正出i出o出使出s出S出t出a出t出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出i出s出t出i出c出s出.出A出d出d出(出T出E出X出T出(出"出C出h出a出n出成出e出R出a出t出e出"出)出,出 出1出.出0出f出 出-出 出C出h出a出n出成出e出R出a出t出e出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出S出t出a出t出i出s出t出i出c出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出R出e出s出e出t出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出E出n出t出i出t出y出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出 出=出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出[出E出n出t出i出t出y出I出D出]出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出重出置出為出中出性出狀出態出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出1出5出;出 出i出+出+出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出(出E出E出設置出o出t出i出o出n出T出y出p出e出)出i出,出 出0出.出5出f出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出a出l出設置出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出 出=出 出E出E出設置出o出t出i出o出n出I出n出t出e出n出s出i出t出y出:出:出M出e出d出i出使出設置出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出a出l出S出t出a出b出i出l出i出t出y出 出=出 出0出.出5出f出;出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出L出a出s出t出U出p出d出a出t出e出d出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出 出R出e出s出e出t出 出e出設置出o出t出i出o出n出a出l出 出s出t出a出t出e出 出f出o出本出 出e出n出t出i出t出y出 出%出s出"出)出,出 出*出E出n出t出i出t出y出I出D出)出;出
+出 出 出 出 出}出
+出}出
+出
+出/出/出 出私出有出方出法出實出現出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出I出n出i出t出i出a出l出i出z出e出R出e出s出p出o出n出s出e出T出e出設置出p出l出a出t出e出s出(出)出
+出{出
+出 出 出 出 出R出e出s出p出o出n出s出e出T出e出設置出p出l出a出t出e出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出喜出悅出回出應出模出板出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出J出o出y出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出J出o出y出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出;出
+出 出 出 出 出J出o出y出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出太出棒出了出！出我出感出到出非出常出開出心出！出"出)出;出
+出 出 出 出 出J出o出y出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出大出o出y出下出s出o出使出n出d出.出w出a出正出"出)出;出
+出 出 出 出 出J出o出y出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出h出a出p出p出y出下出a出n出i出設置出a出t出i出o出n出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出T出e出設置出p出l出a出t出e出s出.出A出d出d出(出J出o出y出R出e出s出p出o出n出s出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出憤出怒出回出應出模出板出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出A出n出成出e出本出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出A出n出成出e出本出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出;出
+出 出 出 出 出A出n出成出e出本出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出這出讓出我出很出生出氣出！出"出)出;出
+出 出 出 出 出A出n出成出e出本出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出a出n出成出e出本出下出s出o出使出n出d出.出w出a出正出"出)出;出
+出 出 出 出 出A出n出成出e出本出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出a出n出成出本出y出下出a出n出i出設置出a出t出i出o出n出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出T出e出設置出p出l出a出t出e出s出.出A出d出d出(出A出n出成出e出本出R出e出s出p出o出n出s出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出恐出懼出回出應出模出板出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出軍出e出a出本出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出軍出e出a出本出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出;出
+出 出 出 出 出軍出e出a出本出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出我出感出到出害出怕出.出.出.出"出)出;出
+出 出 出 出 出軍出e出a出本出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出f出e出a出本出下出s出o出使出n出d出.出w出a出正出"出)出;出
+出 出 出 出 出軍出e出a出本出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出f出e出a出本出下出a出n出i出設置出a出t出i出o出n出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出T出e出設置出p出l出a出t出e出s出.出A出d出d出(出軍出e出a出本出R出e出s出p出o出n出s出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出平出靜出回出應出模出板出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出C出a出l出設置出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出C出a出l出設置出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出a出l出設置出;出
+出 出 出 出 出C出a出l出設置出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出一出切出都出很出好出，出保出持出平出靜出。出"出)出;出
+出 出 出 出 出C出a出l出設置出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出c出a出l出設置出下出s出o出使出n出d出.出w出a出正出"出)出;出
+出 出 出 出 出C出a出l出設置出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出c出a出l出設置出下出a出n出i出設置出a出t出i出o出n出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出T出e出設置出p出l出a出t出e出s出.出A出d出d出(出C出a出l出設置出R出e出s出p出o出n出s出e出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出P出本出o出c出e出s出s出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出,出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出T出本出i出成出成出e出本出&出 出T出本出i出成出成出e出本出)出
+出{出
+出 出 出 出 出i出f出 出(出!出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出E出n出t出i出t出y出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出 出=出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出[出E出n出t出i出t出y出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出應出用出觸出發出器出效出果出
+出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出E出設置出o出t出i出o出n出 出=出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出T出本出i出成出成出e出本出.出T出a出本出成出e出t出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出f出l出o出a出t出 出的出e出w出E出設置出o出t出i出o出n出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出E出設置出o出t出i出o出n出 出+出 出T出本出i出成出成出e出本出.出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出T出本出i出成出成出e出本出.出T出a出本出成出e出t出E出設置出o出t出i出o出n出,出 出的出e出w出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出調出整出相出關出情出感出
+出 出 出 出 出A出d出大出使出s出t出R出e出l出a出t出e出d出E出設置出o出t出i出o出n出s出(出S出t出a出t出e出,出 出T出本出i出成出成出e出本出.出T出a出本出成出e出t出E出設置出o出t出i出o出n出,出 出T出本出i出成出成出e出本出.出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出更出新出情出感出穩出定出性出
+出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出a出l出S出t出a出b出i出l出i出t出y出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出t出a出t出e出.出E出設置出o出t出i出o出n出a出l出S出t出a出b出i出l出i出t出y出 出-出 出T出本出i出成出成出e出本出.出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出 出*出 出0出.出1出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出A出p出p出l出y出E出設置出o出t出i出o出n出a出l出D出e出c出a出y出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出,出 出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出E出n出t出i出t出y出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出 出=出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出[出E出n出t出i出t出y出I出D出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出應出用出情出感出衰出減出
+出 出 出 出 出f出o出本出 出(出a出使出t出o出&出 出E出設置出o出t出i出o出n出P出a出i出本出 出:出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出V出a出l出使出e出 出=出 出E出設置出o出t出i出o出n出P出a出i出本出.出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出D出e出c出a出y出A出設置出o出使出n出t出 出=出 出E出設置出o出t出i出o出n出a出l出D出e出c出a出y出R出a出t出e出 出*出 出D出e出l出t出a出T出i出設置出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出向出中出性出值出衰出減出
+出 出 出 出 出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出V出a出l出使出e出 出>出 出0出.出5出f出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出P出a出i出本出.出V出a出l出使出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出V出a出l出使出e出 出-出 出D出e出c出a出y出A出設置出o出使出n出t出,出 出0出.出5出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出P出a出i出本出.出V出a出l出使出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出C出使出本出本出e出n出t出V出a出l出使出e出 出+出 出D出e出c出a出y出A出設置出o出使出n出t出,出 出0出.出0出f出,出 出0出.出5出f出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出恢出復出情出感出穩出定出性出
+出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出a出l出S出t出a出b出i出l出i出t出y出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出t出a出t出e出.出E出設置出o出t出i出o出n出a出l出S出t出a出b出i出l出i出t出y出 出+出 出D出e出l出t出a出T出i出設置出e出 出*出 出0出.出0出5出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出U出p出d出a出t出e出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出(出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出M出a出x出E出設置出o出t出i出o出n出 出=出 出0出.出0出f出;出
+出 出 出 出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出a出l出設置出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出找出出出最出強出烈出的出情出感出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出E出設置出o出t出i出o出n出P出a出i出本出 出:出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出E出設置出o出t出i出o出n出P出a出i出本出.出V出a出l出使出e出 出>出 出M出a出x出E出設置出o出t出i出o出n出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出M出a出x出E出設置出o出t出i出o出n出 出=出 出E出設置出o出t出i出o出n出P出a出i出本出.出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出 出=出 出E出設置出o出t出i出o出n出P出a出i出本出.出K出e出y出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出S出t出a出t出e出.出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出 出=出 出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出C出a出l出c出使出l出a出t出e出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出(出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出T出o出t出a出l出I出n出t出e出n出s出i出t出y出 出=出 出0出.出0出f出;出
+出 出 出 出 出i出n出t出3出2出 出E出設置出o出t出i出o出n出C出o出使出n出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出計出算出總出體出強出度出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出E出設置出o出t出i出o出n出P出a出i出本出 出:出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出計出算出與出中出性出值出的出偏出差出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出D出e出正出i出a出t出i出o出n出 出=出 出軍出M出a出t出h出:出:出A出b出s出(出E出設置出o出t出i出o出n出P出a出i出本出.出V出a出l出使出e出 出-出 出0出.出5出f出)出;出
+出 出 出 出 出 出 出 出 出T出o出t出a出l出I出n出t出e出n出s出i出t出y出 出+出=出 出D出e出正出i出a出t出i出o出n出;出
+出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出C出o出使出n出t出+出+出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出E出設置出o出t出i出o出n出C出o出使出n出t出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出o出t出a出l出I出n出t出e出n出s出i出t出y出 出/出=出 出E出設置出o出t出i出o出n出C出o出使出n出t出;出
+出 出 出 出 出 出 出 出 出T出o出t出a出l出I出n出t出e出n出s出i出t出y出 出*出=出 出2出.出0出f出;出 出/出/出 出將出範出圍出調出整出到出 出0出-出1出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出確出定出強出度出等出級出
+出 出 出 出 出i出f出 出(出T出o出t出a出l出I出n出t出e出n出s出i出t出y出 出<出 出0出.出2出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出 出=出 出E出E出設置出o出t出i出o出n出I出n出t出e出n出s出i出t出y出:出:出V出e出本出y出L出o出w出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出T出o出t出a出l出I出n出t出e出n出s出i出t出y出 出<出 出0出.出4出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出 出=出 出E出E出設置出o出t出i出o出n出I出n出t出e出n出s出i出t出y出:出:出L出o出w出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出T出o出t出a出l出I出n出t出e出n出s出i出t出y出 出<出 出0出.出6出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出 出=出 出E出E出設置出o出t出i出o出n出I出n出t出e出n出s出i出t出y出:出:出M出e出d出i出使出設置出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出T出o出t出a出l出I出n出t出e出n出s出i出t出y出 出<出 出0出.出8出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出 出=出 出E出E出設置出o出t出i出o出n出I出n出t出e出n出s出i出t出y出:出:出輸入出i出成出h出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出T出o出t出a出l出I出n出t出e出n出s出i出t出y出 出<出 出0出.出9出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出 出=出 出E出E出設置出o出t出i出o出n出I出n出t出e出n出s出i出t出y出:出:出V出e出本出y出輸入出i出成出h出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出t出a出t出e出.出O出正出e出本出a出l出l出I出n出t出e出n出s出i出t出y出 出=出 出E出E出設置出o出t出i出o出n出I出n出t出e出n出s出i出t出y出:出:出E出x出t出本出e出設置出e出;出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出A出n出a出l出y出z出e出T出e出x出t出E出設置出o出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出x出t出,出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出於出關出鍵出詞出分出析出情出感出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出P出o出s出i出t出i出正出e出K出e出y出w出o出本出d出s出 出=出 出{出T出E出X出T出(出"出好出"出)出,出 出T出E出X出T出(出"出棒出"出)出,出 出T出E出X出T出(出"出喜出歡出"出)出,出 出T出E出X出T出(出"出開出心出"出)出,出 出T出E出X出T出(出"出快出樂出"出)出}出;出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出的出e出成出a出t出i出正出e出K出e出y出w出o出本出d出s出 出=出 出{出T出E出X出T出(出"出壞出"出)出,出 出T出E出X出T出(出"出糟出糕出"出)出,出 出T出E出X出T出(出"出討出厭出"出)出,出 出T出E出X出T出(出"出生出氣出"出)出,出 出T出E出X出T出(出"出悲出傷出"出)出}出;出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出軍出e出a出本出K出e出y出w出o出本出d出s出 出=出 出{出T出E出X出T出(出"出害出怕出"出)出,出 出T出E出X出T出(出"出恐出懼出"出)出,出 出T出E出X出T出(出"出擔出心出"出)出,出 出T出E出X出T出(出"出緊出張出"出)出,出 出T出E出X出T出(出"出不出安出"出)出}出;出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出n出成出e出本出K出e出y出w出o出本出d出s出 出=出 出{出T出E出X出T出(出"出憤出怒出"出)出,出 出T出E出X出T出(出"出生出氣出"出)出,出 出T出E出X出T出(出"出煩出"出)出,出 出T出E出X出T出(出"出火出大出"出)出,出 出T出E出X出T出(出"出氣出"出)出}出;出
+出 出 出 出 出
+出 出 出 出 出s出w出i出t出c出h出 出(出T出a出本出成出e出t出E出設置出o出t出i出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出w出o出本出d出 出:出 出P出o出s出i出t出i出正出e出K出e出y出w出o出本出d出s出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出e出x出t出.出C出o出n出t出a出i出n出s出(出K出e出y出w出o出本出d出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出S出a出d出n出e出s出s出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出w出o出本出d出 出:出 出的出e出成出a出t出i出正出e出K出e出y出w出o出本出d出s出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出e出x出t出.出C出o出n出t出a出i出n出s出(出K出e出y出w出o出本出d出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出w出o出本出d出 出:出 出軍出e出a出本出K出e出y出w出o出本出d出s出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出e出x出t出.出C出o出n出t出a出i出n出s出(出K出e出y出w出o出本出d出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出w出o出本出d出 出:出 出A出n出成出e出本出K出e出y出w出o出本出d出s出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出e出x出t出.出C出o出n出t出a出i出n出s出(出K出e出y出w出o出本出d出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出對出於出其出他出情出感出，出使出用出更出複出雜出的出分出析出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出=出 出A出n出a出l出y出z出e出C出o出設置出p出l出e出x出E出設置出o出t出i出o出n出(出T出e出x出t出,出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出c出o出本出e出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出A出n出a出l出y出z出e出B出e出h出a出正出i出o出本出E出設置出o出t出i出o出n出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出B出e出h出a出正出i出o出本出s出,出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出於出行出為出模出式出分出析出情出感出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出B出e出h出a出正出i出o出本出 出:出 出B出e出h出a出正出i出o出本出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出B出e出h出a出正出i出o出本出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出攻出擊出"出)出)出 出出出出出 出B出e出h出a出正出i出o出本出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出戰出鬥出"出)出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出1出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出B出e出h出a出正出i出o出本出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出逃出跑出"出)出)出 出出出出出 出B出e出h出a出正出i出o出本出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出躲出避出"出)出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出4出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出B出e出h出a出正出i出o出本出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出幫出助出"出)出)出 出出出出出 出B出e出h出a出正出i出o出本出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出合出作出"出)出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出 出出出出出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出T出本出使出s出t出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出B出e出h出a出正出i出o出本出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出慶出祝出"出)出)出 出出出出出 出B出e出h出a出正出i出o出本出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出歡出呼出"出)出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出4出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出c出o出本出e出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出A出n出a出l出y出z出e出C出o出n出t出e出x出t出E出設置出o出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出,出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出l出o出a出t出 出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出於出上出下出文出分出析出情出感出
+出 出 出 出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出戰出爭出"出)出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出衝出突出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出 出出出出出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出和出平出"出)出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出安出寧出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出a出l出設置出 出出出出出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出o出n出t出e出n出t出設置出e出n出t出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出2出f出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出勝出利出"出)出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出成出功出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出 出出出出出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出E出x出c出i出t出e出設置出e出n出t出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出失出敗出"出)出)出 出出出出出 出C出o出n出t出e出x出t出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出失出敗出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出S出a出d出n出e出s出s出 出出出出出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出D出i出s出a出p出p出o出i出n出t出設置出e出n出t出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出c出o出本出e出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出n出e出本出a出t出e出J出o出y出R出e出s出p出o出n出s出e出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出太出棒出了出！出我出感出到出非出常出開出心出和出興出奮出！出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出大出o出y出f出使出l出下出l出a出使出成出h出t出e出本出.出w出a出正出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出h出a出p出p出y出下出大出使出設置出p出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出c出e出l出e出b出本出a出t出e出"出)出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出s出h出a出本出e出下出h出a出p出p出i出n出e出s出s出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出p出o出n出s出e出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出n出e出本出a出t出e出S出a出d出n出e出s出s出R出e出s出p出o出n出s出e出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出S出a出d出n出e出s出s出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出我出感出到出有出些出悲出傷出.出.出.出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出s出o出f出t出下出c出本出y出.出w出a出正出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出s出a出d出下出p出o出s出t出使出本出e出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出s出e出e出k出下出c出o出設置出f出o出本出t出"出)出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出本出e出f出l出e出c出t出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出p出o出n出s出e出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出n出e出本出a出t出e出A出n出成出e出本出R出e出s出p出o出n出s出e出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出這出讓出我出很出生出氣出！出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出a出n出成出本出y出下出正出o出i出c出e出.出w出a出正出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出a出n出成出本出y出下出成出e出s出t出使出本出e出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出c出o出n出f出本出o出n出t出"出)出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出e出x出p出本出e出s出s出下出f出本出使出s出t出本出a出t出i出o出n出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出p出o出n出s出e出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出n出e出本出a出t出e出軍出e出a出本出R出e出s出p出o出n出s出e出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出我出感出到出害出怕出和出不出安出.出.出.出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出f出e出a出本出f出使出l出下出w出h出i出設置出p出e出本出.出w出a出正出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出t出本出e出設置出b出l出i出n出成出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出本出e出t出本出e出a出t出"出)出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出s出e出e出k出下出p出本出o出t出e出c出t出i出o出n出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出p出o出n出s出e出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出n出e出本出a出t出e出S出使出本出p出本出i出s出e出R出e出s出p出o出n出s出e出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出S出使出本出p出本出i出s出e出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出哇出！出這出真出是出出出乎出意出料出！出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出s出使出本出p出本出i出s出e出d出下出成出a出s出.出w出a出正出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出w出i出d出e出下出e出y出e出s出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出i出n出正出e出s出t出i出成出a出t出e出"出)出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出q出使出e出s出t出i出o出n出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出p出o出n出s出e出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出n出e出本出a出t出e出L出o出正出e出R出e出s出p出o出n出s出e出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出我出感出到出充出滿出愛出意出和出溫出暖出！出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出成出e出n出t出l出e出下出正出o出i出c出e出.出w出a出正出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出w出a出本出設置出下出s出設置出i出l出e出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出e出設置出b出本出a出c出e出"出)出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出c出a出本出e出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出p出o出n出s出e出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出n出e出本出a出t出e出C出a出l出設置出R出e出s出p出o出n出s出e出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出a出l出設置出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出一出切出都出很出好出，出我出感出到出平出靜出和出安出寧出。出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出p出e出a出c出e出f出使出l出下出b出本出e出a出t出h出.出w出a出正出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出本出e出l出a出x出e出d出下出p出o出s出t出使出本出e出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出設置出e出d出i出t出a出t出e出"出)出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出o出b出s出e出本出正出e出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出p出o出n出s出e出;出
+出}出
+出
+出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出n出e出本出a出t出e出的出e出使出t出本出a出l出R出e出s出p出o出n出s出e出(出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出R出e出s出p出o出n出s出e出 出R出e出s出p出o出n出s出e出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出E出設置出o出t出i出o出n出 出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出a出l出設置出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出T出e出x出t出 出=出 出T出E出X出T出(出"出我出感出覺出還出不出錯出。出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出A出使出d出i出o出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出n出e出使出t出本出a出l出下出正出o出i出c出e出.出w出a出正出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出V出i出s出使出a出l出R出e出s出p出o出n出s出e出 出=出 出T出E出X出T出(出"出n出e出使出t出本出a出l出下出e出x出p出本出e出s出s出i出o出n出"出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出w出a出i出t出"出)出)出;出
+出 出 出 出 出R出e出s出p出o出n出s出e出.出R出e出s出p出o出n出s出e出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出o出b出s出e出本出正出e出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出p出o出n出s出e出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出t出E出設置出o出t出i出o出n出的出a出設置出e出(出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出設置出o出t出i出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出喜出悅出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出S出a出d出n出e出s出s出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出悲出傷出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出憤出怒出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出恐出懼出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出S出使出本出p出本出i出s出e出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出驚出訝出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出D出i出s出成出使出s出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出厭出惡出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出T出本出使出s出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出信出任出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出t出i出c出i出p出a出t出i出o出n出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出期出待出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出愛出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出O出p出t出i出設置出i出s出設置出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出樂出觀出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出P出e出s出s出i出設置出i出s出設置出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出悲出觀出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出x出i出e出t出y出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出焦出慮出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出a出l出設置出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出平出靜出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出E出x出c出i出t出e出設置出e出n出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出興出奮出"出)出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出o出n出t出e出n出t出設置出e出n出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出滿出足出"出)出;出
+出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出t出E出設置出o出t出i出o出n出基本出e出i出成出h出t出(出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出不出同出情出感出的出權出重出
+出 出 出 出 出s出w出i出t出c出h出 出(出E出設置出o出t出i出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出:出 出本出e出t出使出本出n出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出S出a出d出n出e出s出s出:出 出本出e出t出使出本出n出 出0出.出9出f出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出:出 出本出e出t出使出本出n出 出0出.出8出f出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出:出 出本出e出t出使出本出n出 出0出.出7出f出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出:出 出本出e出t出使出本出n出 出1出.出0出f出;出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出a出l出設置出:出 出本出e出t出使出本出n出 出0出.出6出f出;出
+出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出 出本出e出t出使出本出n出 出0出.出5出f出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出I出s出E出設置出o出t出i出o出n出C出o出設置出p出a出t出i出b出l出e出(出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出1出,出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出2出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出檢出查出情出感出兼出容出性出
+出 出 出 出 出i出f出 出(出I出s出P出o出s出i出t出i出正出e出E出設置出o出t出i出o出n出(出E出設置出o出t出i出o出n出1出)出 出&出&出 出I出s出P出o出s出i出t出i出正出e出E出設置出o出t出i出o出n出(出E出設置出o出t出i出o出n出2出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出 出 出 出 出i出f出 出(出I出s出的出e出成出a出t出i出正出e出E出設置出o出t出i出o出n出(出E出設置出o出t出i出o出n出1出)出 出&出&出 出I出s出的出e出成出a出t出i出正出e出E出設置出o出t出i出o出n出(出E出設置出o出t出i出o出n出2出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出特出殊出兼出容出性出
+出 出 出 出 出i出f出 出(出(出E出設置出o出t出i出o出n出1出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出 出&出&出 出E出設置出o出t出i出o出n出2出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出T出本出使出s出t出)出 出出出出出
+出 出 出 出 出 出 出 出 出(出E出設置出o出t出i出o出n出1出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出T出本出使出s出t出 出&出&出 出E出設置出o出t出i出o出n出2出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出R出e出c出o出本出d出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出,出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出E出設置出o出t出i出o出n出a出l出輸入出i出s出t出o出本出y出.出C出o出n出t出a出i出n出s出(出E出n出t出i出t出y出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出>出 出E出設置出p出t出y出輸入出i出s出t出o出本出y出;出
+出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出a出l出輸入出i出s出t出o出本出y出.出A出d出d出(出E出n出t出i出t出y出I出D出,出 出E出設置出p出t出y出輸入出i出s出t出o出本出y出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出T出A出本出本出a出y出<出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出>出&出 出輸入出i出s出t出o出本出y出 出=出 出E出設置出o出t出i出o出n出a出l出輸入出i出s出t出o出本出y出[出E出n出t出i出t出y出I出D出]出;出
+出 出 出 出 出輸入出i出s出t出o出本出y出.出A出d出d出(出S出t出a出t出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出限出制出歷出史出記出錄出數出量出
+出 出 出 出 出i出f出 出(出輸入出i出s出t出o出本出y出.出的出使出設置出(出)出 出>出 出M出a出x出E出設置出o出t出i出o出n出a出l出輸入出i出s出t出o出本出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出輸入出i出s出t出o出本出y出.出R出e出設置出o出正出e出A出t出(出0出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出P出本出o出c出e出s出s出E出設置出o出t出i出o出n出a出l出C出o出n出t出a出成出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出)出
+出{出
+出 出 出 出 出i出f出 出(出!出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出E出n出t出i出t出y出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出o出使出本出c出e出S出t出a出t出e出 出=出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出[出E出n出t出i出t出y出I出D出]出;出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出的出e出a出本出b出y出E出n出t出i出t出i出e出s出 出=出 出G出e出t出的出e出a出本出b出y出E出n出t出i出t出i出e出s出(出E出n出t出i出t出y出I出D出)出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出的出e出a出本出b出y出E出n出t出i出t出y出 出:出 出的出e出a出本出b出y出E出n出t出i出t出i出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出的出e出a出本出b出y出E出n出t出i出t出y出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出n出s出f出e出本出E出設置出o出t出i出o出n出(出E出n出t出i出t出y出I出D出,出 出的出e出a出本出b出y出E出n出t出i出t出y出,出 出E出設置出o出t出i出o出n出a出l出C出o出n出t出a出成出i出o出n出R出a出t出e出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出G出e出t出的出e出a出本出b出y出E出n出t出i出t出i出e出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出n出t出i出t出y出I出D出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出的出e出a出本出b出y出E出n出t出i出t出i出e出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出這出裡出需出要出與出實出際出的出遊出戲出世出界出系出統出集出成出
+出 出 出 出 出/出/出 出暫出時出返出回出所出有出實出體出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出S出t出a出t出e出P出a出i出本出 出:出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出S出t出a出t出e出P出a出i出本出.出K出e出y出 出!出=出 出E出n出t出i出t出y出I出D出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出的出e出a出本出b出y出E出n出t出i出t出i出e出s出.出A出d出d出(出S出t出a出t出e出P出a出i出本出.出K出e出y出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出的出e出a出本出b出y出E出n出t出i出t出i出e出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出T出本出a出n出s出f出e出本出E出設置出o出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出本出o出設置出E出n出t出i出t出y出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出o出E出n出t出i出t出y出,出 出f出l出o出a出t出 出T出本出a出n出s出f出e出本出A出設置出o出使出n出t出)出
+出{出
+出 出 出 出 出i出f出 出(出!出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出軍出本出o出設置出E出n出t出i出t出y出)出 出出出出出 出!出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出.出C出o出n出t出a出i出n出s出(出T出o出E出n出t出i出t出y出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出c出o出n出s出t出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出o出使出本出c出e出S出t出a出t出e出 出=出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出[出軍出本出o出設置出E出n出t出i出t出y出]出;出
+出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出T出a出本出成出e出t出S出t出a出t出e出 出=出 出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出s出[出T出o出E出n出t出i出t出y出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出傳出輸出主出導出情出感出
+出 出 出 出 出f出l出o出a出t出 出S出o出使出本出c出e出E出設置出o出t出i出o出n出 出=出 出S出o出使出本出c出e出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出S出o出使出本出c出e出S出t出a出t出e出.出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出f出l出o出a出t出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出=出 出T出a出本出成出e出t出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出S出o出使出本出c出e出S出t出a出t出e出.出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出
+出 出 出 出 出f出l出o出a出t出 出T出本出a出n出s出f出e出本出A出設置出o出使出n出t出 出=出 出(出S出o出使出本出c出e出E出設置出o出t出i出o出n出 出-出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出)出 出*出 出T出本出a出n出s出f出e出本出A出設置出o出使出n出t出 出*出 出0出.出1出f出;出
+出 出 出 出 出f出l出o出a出t出 出的出e出w出E出設置出o出t出i出o出n出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出T出a出本出成出e出t出E出設置出o出t出i出o出n出 出+出 出T出本出a出n出s出f出e出本出A出設置出o出使出n出t出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出 出 出 出 出
+出 出 出 出 出T出a出本出成出e出t出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出S出o出使出本出c出e出S出t出a出t出e出.出D出o出設置出i出n出a出n出t出E出設置出o出t出i出o出n出,出 出的出e出w出E出設置出o出t出i出o出n出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出 出T出本出a出n出s出f出e出本出本出e出d出 出e出設置出o出t出i出o出n出 出f出本出o出設置出 出%出s出 出t出o出 出%出s出"出)出,出 出*出軍出本出o出設置出E出n出t出i出t出y出,出 出*出T出o出E出n出t出i出t出y出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出I出s出P出o出s出i出t出i出正出e出E出設置出o出t出i出o出n出(出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出 出出出出出 出
+出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出 出出出出出 出
+出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出T出本出使出s出t出 出出出出出 出
+出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出O出p出t出i出設置出i出s出設置出 出出出出出 出
+出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出C出o出n出t出e出n出t出設置出e出n出t出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出I出s出的出e出成出a出t出i出正出e出E出設置出o出t出i出o出n出(出E出E出設置出o出t出i出o出n出T出y出p出e出 出E出設置出o出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出S出a出d出n出e出s出s出 出出出出出 出
+出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出 出出出出出 出
+出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出 出出出出出 出
+出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出D出i出s出成出使出s出t出 出出出出出 出
+出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出P出e出s出s出i出設置出i出s出設置出 出出出出出 出
+出 出 出 出 出 出 出 出 出 出 出 出E出設置出o出t出i出o出n出 出=出=出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出x出i出e出t出y出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出A出d出大出使出s出t出R出e出l出a出t出e出d出E出設置出o出t出i出o出n出s出(出軍出E出設置出o出t出i出o出n出a出l出S出t出a出t出e出&出 出S出t出a出t出e出,出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出T出本出i出成出成出e出本出E出設置出o出t出i出o出n出,出 出f出l出o出a出t出 出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出)出
+出{出
+出 出 出 出 出/出/出 出調出整出相出關出情出感出
+出 出 出 出 出s出w出i出t出c出h出 出(出T出本出i出成出成出e出本出E出設置出o出t出i出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出喜出悅出會出增出加出樂出觀出和出愛出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出O出p出t出i出設置出i出s出設置出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出O出p出t出i出設置出i出s出設置出)出 出+出 出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出 出*出 出0出.出3出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出)出 出+出 出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出 出*出 出0出.出2出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出成出e出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出憤出怒出會出增出加出厭出惡出和出悲出觀出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出D出i出s出成出使出s出t出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出D出i出s出成出使出s出t出)出 出+出 出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出 出*出 出0出.出3出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出P出e出s出s出i出設置出i出s出設置出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出P出e出s出s出i出設置出i出s出設置出)出 出+出 出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出 出*出 出0出.出2出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出軍出e出a出本出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出恐出懼出會出增出加出焦出慮出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出x出i出e出t出y出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出A出n出x出i出e出t出y出)出 出+出 出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出 出*出 出0出.出4出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出c出a出s出e出 出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出L出o出正出e出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出愛出會出增出加出信出任出和出喜出悅出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出T出本出使出s出t出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出T出本出使出s出t出)出 出+出 出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出 出*出 出0出.出3出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出,出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出t出a出t出e出.出E出設置出o出t出i出o出n出s出.出軍出i出n出d出R出e出f出(出E出E出設置出o出t出i出o出n出T出y出p出e出:出:出J出o出y出)出 出+出 出T出本出i出成出成出e出本出S出t出本出e出n出成出t出h出 出*出 出0出.出2出f出,出 出0出.出0出f出,出 出1出.出0出f出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出A出p出p出l出y出A出I出B出e出h出a出正出i出o出本出A出d出大出使出s出t出設置出e出n出t出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出I出I出D出,出 出f出l出o出a出t出 出A出成出成出本出e出s出s出i出o出n出L出e出正出e出l出,出 出f出l出o出a出t出 出C出o出o出p出e出本出a出t出i出o出n出L出e出正出e出l出,出 出f出l出o出a出t出 出R出i出s出k出T出a出k出i出n出成出,出 出f出l出o出a出t出 出C出o出設置出設置出使出n出i出c出a出t出i出o出n出L出e出正出e出l出)出
+出{出
+出 出 出 出 出/出/出 出這出裡出需出要出與出實出際出的出A出I出系出統出集出成出
+出 出 出 出 出/出/出 出暫出時出只出記出錄出日出誌出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出 出A出I出 出%出s出 出b出e出h出a出正出i出o出本出 出a出d出大出使出s出t出設置出e出n出t出s出 出-出 出A出成出成出本出e出s出s出i出o出n出:出 出%出.出2出f出,出 出C出o出o出p出e出本出a出t出i出o出n出:出 出%出.出2出f出,出 出R出i出s出k出:出 出%出.出2出f出,出 出C出o出設置出設置出使出n出i出c出a出t出i出o出n出:出 出%出.出2出f出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出*出A出I出I出D出,出 出A出成出成出本出e出s出s出i出o出n出L出e出正出e出l出,出 出C出o出o出p出e出本出a出t出i出o出n出L出e出正出e出l出,出 出R出i出s出k出T出a出k出i出n出成出,出 出C出o出設置出設置出使出n出i出c出a出t出i出o出n出L出e出正出e出l出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出U出p出d出a出t出e出P出l出a出y出e出本出E出設置出o出t出i出o出n出a出l出P出本出o出f出i出l出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出P出l出a出y出e出本出I出D出,出 出c出o出n出s出t出 出T出M出a出p出<出E出E出設置出o出t出i出o出n出T出y出p出e出,出 出f出l出o出a出t出>出&出 出E出設置出o出t出i出o出n出軍出本出e出q出使出e出n出c出y出,出 出c出o出n出s出t出 出T出M出a出p出<出E出E出設置出o出t出i出o出n出T出y出p出e出,出 出f出l出o出a出t出>出&出 出E出設置出o出t出i出o出n出V出a出本出i出a出b出i出l出i出t出y出)出
+出{出
+出 出 出 出 出/出/出 出更出新出玩出家出情出感出檔出案出
+出 出 出 出 出i出f出 出(出E出設置出o出t出i出o出n出a出l出P出本出o出f出i出l出e出s出.出C出o出n出t出a出i出n出s出(出P出l出a出y出e出本出I出D出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出E出設置出o出t出i出o出n出a出l出P出本出o出f出i出l出e出&出 出P出本出o出f出i出l出e出 出=出 出E出設置出o出t出i出o出n出a出l出P出本出o出f出i出l出e出s出[出P出l出a出y出e出本出I出D出]出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出更出新出基出礎出情出感出
+出 出 出 出 出 出 出 出 出P出本出o出f出i出l出e出.出B出a出s出e出E出設置出o出t出i出o出n出s出 出=出 出E出設置出o出t出i出o出n出軍出本出e出q出使出e出n出c出y出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出調出整出情出感出敏出感出性出和出波出動出性出
+出 出 出 出 出 出 出 出 出f出l出o出a出t出 出T出o出t出a出l出V出a出本出i出a出b出i出l出i出t出y出 出=出 出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出V出a出本出i出a出n出c出e出P出a出i出本出 出:出 出E出設置出o出t出i出o出n出V出a出本出i出a出b出i出l出i出t出y出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出o出t出a出l出V出a出本出i出a出b出i出l出i出t出y出 出+出=出 出V出a出本出i出a出n出c出e出P出a出i出本出.出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出E出設置出o出t出i出o出n出V出a出本出i出a出b出i出l出i出t出y出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出本出o出f出i出l出e出.出E出設置出o出t出i出o出n出a出l出V出o出l出a出t出i出l出i出t出y出 出=出 出T出o出t出a出l出V出a出本出i出a出b出i出l出i出t出y出 出/出 出E出設置出o出t出i出o出n出V出a出本出i出a出b出i出l出i出t出y出.出的出使出設置出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出更出新出偏出好出和出避出免出的出情出感出
+出 出 出 出 出 出 出 出 出U出p出d出a出t出e出E出設置出o出t出i出o出n出P出本出e出f出e出本出e出n出c出e出s出(出P出本出o出f出i出l出e出,出 出E出設置出o出t出i出o出n出軍出本出e出q出使出e出n出c出y出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出U出p出d出a出t出e出E出設置出o出t出i出o出n出P出本出e出f出e出本出e出n出c出e出s出(出軍出E出設置出o出t出i出o出n出a出l出P出本出o出f出i出l出e出&出 出P出本出o出f出i出l出e出,出 出c出o出n出s出t出 出T出M出a出p出<出E出E出設置出o出t出i出o出n出T出y出p出e出,出 出f出l出o出a出t出>出&出 出E出設置出o出t出i出o出n出軍出本出e出q出使出e出n出c出y出)出
+出{出
+出 出 出 出 出P出本出o出f出i出l出e出.出P出本出e出f出e出本出本出e出d出E出設置出o出t出i出o出n出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出P出本出o出f出i出l出e出.出A出正出o出i出d出e出d出E出設置出o出t出i出o出n出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出情出感出頻出率出確出定出偏出好出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出E出設置出o出t出i出o出n出P出a出i出本出 出:出 出E出設置出o出t出i出o出n出軍出本出e出q出使出e出n出c出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出E出設置出o出t出i出o出n出P出a出i出本出.出V出a出l出使出e出 出>出 出0出.出7出f出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出本出o出f出i出l出e出.出P出本出e出f出e出本出本出e出d出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出設置出o出t出i出o出n出P出a出i出本出.出K出e出y出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出E出設置出o出t出i出o出n出P出a出i出本出.出V出a出l出使出e出 出<出 出0出.出3出f出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出本出o出f出i出l出e出.出A出正出o出i出d出e出d出E出設置出o出t出i出o出n出s出.出A出d出d出(出E出設置出o出t出i出o出n出P出a出i出本出.出K出e出y出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出E出x出t出本出a出c出t出B出e出h出a出正出i出o出本出s出軍出本出o出設置出D出a出t出a出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出a出t出a出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出B出e出h出a出正出i出o出本出s出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出從出數出據出中出提出取出行出為出信出息出
+出 出 出 出 出i出f出 出(出D出a出t出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出移出動出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出B出e出h出a出正出i出o出本出s出.出A出d出d出(出T出E出X出T出(出"出移出動出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出i出f出 出(出D出a出t出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出攻出擊出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出B出e出h出a出正出i出o出本出s出.出A出d出d出(出T出E出X出T出(出"出攻出擊出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出i出f出 出(出D出a出t出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出防出禦出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出B出e出h出a出正出i出o出本出s出.出A出d出d出(出T出E出X出T出(出"出防出禦出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出i出f出 出(出D出a出t出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出合出作出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出B出e出h出a出正出i出o出本出s出.出A出d出d出(出T出E出X出T出(出"出合出作出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出B出e出h出a出正出i出o出本出s出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出E出x出t出本出a出c出t出C出o出n出t出e出x出t出軍出本出o出設置出D出a出t出a出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出a出t出a出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出從出數出據出中出提出取出上出下出文出信出息出
+出 出 出 出 出i出f出 出(出D出a出t出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出戰出鬥出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出戰出鬥出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出D出a出t出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出和出平出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出和出平出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出D出a出t出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出交出易出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出交出易出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出D出a出t出a出.出C出o出n出t出a出i出n出s出(出T出E出X出T出(出"出探出索出"出)出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出探出索出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出一出般出"出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出E出設置出o出t出i出o出n出a出l出A出I出E出n出成出i出n出e出:出:出A出n出a出l出y出z出e出C出o出設置出p出l出e出x出E出設置出o出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出x出t出,出 出E出E出設置出o出t出i出o出n出T出y出p出e出 出T出a出本出成出e出t出E出設置出o出t出i出o出n出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出/出/出 出對出於出複出雜出情出感出，出使出用出更出細出緻出的出分出析出
+出 出 出 出 出f出l出o出a出t出 出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出這出裡出可出以出實出現出更出複出雜出的出自出然出語出言出處出理出
+出 出 出 出 出/出/出 出暫出時出使出用出簡出單出的出關出鍵出詞出匹出配出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出c出o出本出e出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
+出}出
+出

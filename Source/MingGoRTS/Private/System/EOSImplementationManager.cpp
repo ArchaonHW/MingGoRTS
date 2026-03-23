@@ -1,488 +1,489 @@
-#include "EOSImplementationManager.h"
-#include "Engine/Engine.h"
-#include "HAL/PlatformFilemanager.h"
-
-UEOSImplementationManager::UEOSImplementationManager()
-    : CurrentPhase(EOSImplementationPhase::Planning)
-    , OverallProgress(0.0f)
-{
-}
-
-void UEOSImplementationManager::InitializeImplementationManager()
-{
-    UE_LOG(LogTemp, Log, TEXT("Initializing EOS Implementation Manager"));
-    
-    // 初始化階段信息
-    InitializePhaseInfos();
-    
-    // 記錄實施開始時間
-    ImplementationStartTime = FDateTime::Now();
-    
-    // 計算初始進度
-    UpdateOverallProgress();
-    
-    UE_LOG(LogTemp, Log, TEXT("EOS Implementation Manager initialized successfully"));
-}
-
-void UEOSImplementationManager::InitializePhaseInfos()
-{
-    PhaseInfos.Empty();
-    
-    // 階段一：基礎內核開發 (4週)
-    FEOSPhaseInfo KernelPhase;
-    KernelPhase.Phase = EOSImplementationPhase::Kernel;
-    KernelPhase.PhaseName = TEXT("基礎內核開發");
-    KernelPhase.Description = TEXT("開發作業系統核心組件，包括內核、進程管理、內存管理和文件系統");
-    KernelPhase.DurationWeeks = 4;
-    KernelPhase.Status = EOSImplementationStatus::NotStarted;
-    KernelPhase.OverallProgress = 0.0f;
-    
-    // 內核開發任務
-    FEOSPhaseTask KernelTask1;
-    KernelTask1.TaskName = TEXT("內核框架設計");
-    KernelTask1.Description = TEXT("設計作業系統內核架構和核心接口");
-    KernelTask1.EstimatedDays = 5;
-    KernelTask1.Status = EOSImplementationStatus::NotStarted;
-    KernelTask1.AssignedDeveloper = TEXT("核心開發團隊");
-    KernelTask1.ProgressPercentage = 0.0f;
-    
-    FEOSPhaseTask KernelTask2;
-    KernelTask2.TaskName = TEXT("進程管理器實現");
-    KernelTask2.Description = TEXT("實現進程創建、調度和終止功能");
-    KernelTask2.EstimatedDays = 8;
-    KernelTask2.Status = EOSImplementationStatus::NotStarted;
-    KernelTask2.AssignedDeveloper = TEXT("系統開發團隊");
-    KernelTask2.ProgressPercentage = 0.0f;
-    KernelTask2.Dependencies.Add(TEXT("內核框架設計"));
-    
-    FEOSPhaseTask KernelTask3;
-    KernelTask3.TaskName = TEXT("內存管理器實現");
-    KernelTask3.Description = TEXT("實現內存分配、回收和優化功能");
-    KernelTask3.EstimatedDays = 7;
-    KernelTask3.Status = EOSImplementationStatus::NotStarted;
-    KernelTask3.AssignedDeveloper = TEXT("系統開發團隊");
-    KernelTask3.ProgressPercentage = 0.0f;
-    KernelTask3.Dependencies.Add(TEXT("內核框架設計"));
-    
-    KernelPhase.Tasks.Add(KernelTask1);
-    KernelPhase.Tasks.Add(KernelTask2);
-    KernelPhase.Tasks.Add(KernelTask3);
-    
-    // 階段二：系統服務框架 (3週)
-    FEOSPhaseInfo ServicesPhase;
-    ServicesPhase.Phase = EOSImplementationPhase::Services;
-    ServicesPhase.PhaseName = TEXT("系統服務框架");
-    ServicesPhase.Description = TEXT("將現有管理器轉換為系統服務，建立服務管理機制");
-    ServicesPhase.DurationWeeks = 3;
-    ServicesPhase.Status = EOSImplementationStatus::NotStarted;
-    ServicesPhase.OverallProgress = 0.0f;
-    
-    // 系統服務任務
-    FEOSPhaseTask ServiceTask1;
-    ServiceTask1.TaskName = TEXT("服務管理器開發");
-    ServiceTask1.Description = TEXT("開發系統服務註冊、發現和管理機制");
-    ServiceTask1.EstimatedDays = 6;
-    ServiceTask1.Status = EOSImplementationStatus::NotStarted;
-    ServiceTask1.AssignedDeveloper = TEXT("架構團隊");
-    ServiceTask1.ProgressPercentage = 0.0f;
-    
-    FEOSPhaseTask ServiceTask2;
-    ServiceTask2.TaskName = TEXT("現有系統服務化");
-    ServiceTask2.Description = TEXT("將50+現有管理器轉換為系統服務");
-    ServiceTask2.EstimatedDays = 9;
-    ServiceTask2.Status = EOSImplementationStatus::NotStarted;
-    ServiceTask2.AssignedDeveloper = TEXT("系統團隊");
-    ServiceTask2.ProgressPercentage = 0.0f;
-    ServiceTask2.Dependencies.Add(TEXT("服務管理器開發"));
-    
-    ServicesPhase.Tasks.Add(ServiceTask1);
-    ServicesPhase.Tasks.Add(ServiceTask2);
-    
-    // 階段三：高級功能開發 (3週)
-    FEOSPhaseInfo AdvancedPhase;
-    AdvancedPhase.Phase = EOSImplementationPhase::Advanced;
-    AdvancedPhase.PhaseName = TEXT("高級功能開發");
-    AdvancedPhase.Description = TEXT("實現安全系統、網絡系統和用戶界面系統");
-    AdvancedPhase.DurationWeeks = 3;
-    AdvancedPhase.Status = EOSImplementationStatus::NotStarted;
-    AdvancedPhase.OverallProgress = 0.0f;
-    
-    // 高級功能任務
-    FEOSPhaseTask AdvancedTask1;
-    AdvancedTask1.TaskName = TEXT("安全系統實現");
-    AdvancedTask1.Description = TEXT("實現進程隔離、權限管理和安全策略");
-    AdvancedTask1.EstimatedDays = 8;
-    AdvancedTask1.Status = EOSImplementationStatus::NotStarted;
-    AdvancedTask1.AssignedDeveloper = TEXT("安全團隊");
-    AdvancedTask1.ProgressPercentage = 0.0f;
-    
-    FEOSPhaseTask AdvancedTask2;
-    AdvancedTask2.TaskName = TEXT("網絡系統開發");
-    AdvancedTask2.Description = TEXT("實現進程間通信和網絡協議支持");
-    AdvancedTask2.EstimatedDays = 7;
-    AdvancedTask2.Status = EOSImplementationStatus::NotStarted;
-    AdvancedTask2.AssignedDeveloper = TEXT("網絡團隊");
-    AdvancedTask2.ProgressPercentage = 0.0f;
-    
-    AdvancedPhase.Tasks.Add(AdvancedTask1);
-    AdvancedPhase.Tasks.Add(AdvancedTask2);
-    
-    // 階段四：優化和集成 (2週)
-    FEOSPhaseInfo IntegrationPhase;
-    IntegrationPhase.Phase = EOSImplementationPhase::Integration;
-    IntegrationPhase.PhaseName = TEXT("優化和集成");
-    IntegrationPhase.Description = TEXT("性能優化、集成測試和文檔編寫");
-    IntegrationPhase.DurationWeeks = 2;
-    IntegrationPhase.Status = EOSImplementationStatus::NotStarted;
-    IntegrationPhase.OverallProgress = 0.0f;
-    
-    // 集成任務
-    FEOSPhaseTask IntegrationTask1;
-    IntegrationTask1.TaskName = TEXT("性能優化");
-    IntegrationTask1.Description = TEXT("優化系統性能，確保開銷<5%");
-    IntegrationTask1.EstimatedDays = 5;
-    IntegrationTask1.Status = EOSImplementationStatus::NotStarted;
-    IntegrationTask1.AssignedDeveloper = TEXT("性能團隊");
-    IntegrationTask1.ProgressPercentage = 0.0f;
-    
-    FEOSPhaseTask IntegrationTask2;
-    IntegrationTask2.TaskName = TEXT("集成測試");
-    IntegrationTask2.Description = TEXT("全面測試系統集成和兼容性");
-    IntegrationTask2.EstimatedDays = 5;
-    IntegrationTask2.Status = EOSImplementationStatus::NotStarted;
-    IntegrationTask2.AssignedDeveloper = TEXT("測試團隊");
-    IntegrationTask2.ProgressPercentage = 0.0f;
-    
-    IntegrationPhase.Tasks.Add(IntegrationTask1);
-    IntegrationPhase.Tasks.Add(IntegrationTask2);
-    
-    // 添加所有階段
-    PhaseInfos.Add(EOSImplementationPhase::Planning, FEOSPhaseInfo{EOSImplementationPhase::Planning, TEXT("Planning"), TEXT("規劃和準備階段"), 0, TArray<FEOSPhaseTask>(), 0.0f, EOSImplementationStatus::Completed});
-    PhaseInfos.Add(EOSImplementationPhase::Kernel, KernelPhase);
-    PhaseInfos.Add(EOSImplementationPhase::Services, ServicesPhase);
-    PhaseInfos.Add(EOSImplementationPhase::Advanced, AdvancedPhase);
-    PhaseInfos.Add(EOSImplementationPhase::Integration, IntegrationPhase);
-    PhaseInfos.Add(EOSImplementationPhase::Complete, FEOSPhaseInfo{EOSImplementationPhase::Complete, TEXT("Complete"), TEXT("實施完成"), 0, TArray<FEOSPhaseTask>(), 100.0f, EOSImplementationStatus::NotStarted});
-}
-
-void UEOSImplementationManager::SetCurrentPhase(EOSImplementationPhase NewPhase)
-{
-    if (CurrentPhase != NewPhase && CanStartPhase(NewPhase))
-    {
-        EOSImplementationPhase OldPhase = CurrentPhase;
-        CurrentPhase = NewPhase;
-        
-        // 更新階段狀態
-        if (PhaseInfos.Contains(NewPhase))
-        {
-            FEOSPhaseInfo& PhaseInfo = PhaseInfos[NewPhase];
-            PhaseInfo.Status = EOSImplementationStatus::InProgress;
-            PhaseInfo.StartDate = FDateTime::Now();
-        }
-        
-        UE_LOG(LogTemp, Log, TEXT("EOS Implementation phase changed from %d to %d"), (int32)OldPhase, (int32)NewPhase);
-        
-        // 觸發事件
-        OnPhaseStatusChanged.Broadcast(NewPhase);
-    }
-}
-
-FEOSPhaseInfo UEOSImplementationManager::GetPhaseInfo(EOSImplementationPhase Phase) const
-{
-    if (PhaseInfos.Contains(Phase))
-    {
-        return PhaseInfos[Phase];
-    }
-    return FEOSPhaseInfo();
-}
-
-TArray<FEOSPhaseInfo> UEOSImplementationManager::GetAllPhasesInfo() const
-{
-    TArray<FEOSPhaseInfo> AllPhases;
-    
-    for (const auto& PhasePair : PhaseInfos)
-    {
-        AllPhases.Add(PhasePair.Value);
-    }
-    
-    return AllPhases;
-}
-
-void UEOSImplementationManager::UpdateTaskStatus(EOSImplementationPhase Phase, const FString& TaskName, EOSImplementationStatus Status)
-{
-    if (PhaseInfos.Contains(Phase))
-    {
-        FEOSPhaseInfo& PhaseInfo = PhaseInfos[Phase];
-        
-        for (FEOSPhaseTask& Task : PhaseInfo.Tasks)
-        {
-            if (Task.TaskName == TaskName)
-            {
-                Task.Status = Status;
-                
-                if (Status == EOSImplementationStatus::InProgress && Task.StartDate == FDateTime::MinValue())
-                {
-                    Task.StartDate = FDateTime::Now();
-                }
-                else if (Status == EOSImplementationStatus::Completed)
-                {
-                    Task.EndDate = FDateTime::Now();
-                    Task.ProgressPercentage = 100.0f;
-                }
-                
-                // 更新階段進度
-                PhaseInfo.OverallProgress = CalculatePhaseProgress(PhaseInfo);
-                UpdateOverallProgress();
-                
-                // 觸發事件
-                OnTaskUpdated.Broadcast(Phase, TaskName);
-                OnPhaseProgressUpdated.Broadcast(Phase);
-                
-                break;
-            }
-        }
-    }
-}
-
-void UEOSImplementationManager::UpdateTaskProgress(EOSImplementationPhase Phase, const FString& TaskName, float Progress)
-{
-    if (PhaseInfos.Contains(Phase))
-    {
-        FEOSPhaseInfo& PhaseInfo = PhaseInfos[Phase];
-        
-        for (FEOSPhaseTask& Task : PhaseInfo.Tasks)
-        {
-            if (Task.TaskName == TaskName)
-            {
-                Task.ProgressPercentage = FMath::Clamp(Progress, 0.0f, 100.0f);
-                
-                // 更新階段進度
-                PhaseInfo.OverallProgress = CalculatePhaseProgress(PhaseInfo);
-                UpdateOverallProgress();
-                
-                // 觸發事件
-                OnTaskUpdated.Broadcast(Phase, TaskName);
-                OnPhaseProgressUpdated.Broadcast(Phase);
-                
-                break;
-            }
-        }
-    }
-}
-
-float UEOSImplementationManager::GetOverallProgress() const
-{
-    return OverallProgress;
-}
-
-float UEOSImplementationManager::GetPhaseProgress(EOSImplementationPhase Phase) const
-{
-    if (PhaseInfos.Contains(Phase))
-    {
-        return PhaseInfos[Phase].OverallProgress;
-    }
-    return 0.0f;
-}
-
-bool UEOSImplementationManager::CanStartPhase(EOSImplementationPhase Phase) const
-{
-    if (Phase == EOSImplementationPhase::Planning)
-    {
-        return true; // 規劃階段總是可以開始的
-    }
-    
-    if (!PhaseInfos.Contains(Phase))
-    {
-        return false;
-    }
-    
-    const FEOSPhaseInfo& PhaseInfo = PhaseInfos[Phase];
-    
-    // 檢查所有依賴的任務是否完成
-    for (const FEOSPhaseTask& Task : PhaseInfo.Tasks)
-    {
-        if (!ValidateTaskDependencies(Task))
-        {
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-bool UEOSImplementationManager::StartPhase(EOSImplementationPhase Phase)
-{
-    if (CanStartPhase(Phase))
-    {
-        SetCurrentPhase(Phase);
-        return true;
-    }
-    
-    UE_LOG(LogTemp, Warning, TEXT("Cannot start phase %d - dependencies not met"), (int32)Phase);
-    return false;
-}
-
-void UEOSImplementationManager::CompletePhase(EOSImplementationPhase Phase)
-{
-    if (PhaseInfos.Contains(Phase))
-    {
-        FEOSPhaseInfo& PhaseInfo = PhaseInfos[Phase];
-        PhaseInfo.Status = EOSImplementationStatus::Completed;
-        PhaseInfo.OverallProgress = 100.0f;
-        PhaseInfo.EndDate = FDateTime::Now();
-        
-        UpdateOverallProgress();
-        
-        UE_LOG(LogTemp, Log, TEXT("Phase %d completed successfully"), (int32)Phase);
-        OnPhaseStatusChanged.Broadcast(Phase);
-    }
-}
-
-TArray<FString> UEOSImplementationManager::GetRiskAssessment() const
-{
-    TArray<FString> Risks;
-    
-    Risks.Add(TEXT("技術複雜度風險：作業系統開發涉及底層系統編程，技術門檻高"));
-    Risks.Add(TEXT("性能影響風險：虛擬化可能影響遊戲性能，需要仔細優化"));
-    Risks.Add(TEXT("兼容性風險：與現有UE5系統的集成可能遇到兼容性問題"));
-    Risks.Add(TEXT("時間壓力風險：12週時間緊張，可能影響開發質量"));
-    Risks.Add(TEXT("團隊協作風險：8人團隊需要高效協作，溝通成本高"));
-    
-    return Risks;
-}
-
-TArray<FString> UEOSImplementationManager::GetRecommendations() const
-{
-    TArray<FString> Recommendations;
-    
-    Recommendations.Add(TEXT("採用模組化設計，降低系統複雜度"));
-    Recommendations.Add(TEXT("建立完善的測試框架，確保系統穩定性"));
-    Recommendations.Add(TEXT("實施持續集成，及早發現和解決問題"));
-    Recommendations.Add(TEXT("優先開發核心功能，確保基礎功能穩定"));
-    Recommendations.Add(TEXT("建立詳細的文檔，便於團隊協作和知識傳承"));
-    Recommendations.Add(TEXT("定期進行性能測試，監控系統開銷"));
-    Recommendations.Add(TEXT("建立風險監控機制，及時識別和應對風險"));
-    
-    return Recommendations;
-}
-
-FString UEOSImplementationManager::GenerateImplementationReport() const
-{
-    FString Report;
-    Report += TEXT("=== MingGoRTS 內建作業系統實施報告 ===\n\n");
-    
-    // 基本信息
-    FTimespan ElapsedTime = FDateTime::Now() - ImplementationStartTime;
-    Report += FString::Printf(TEXT("實施開始時間: %s\n"), *ImplementationStartTime.ToString());
-    Report += FString::Printf(TEXT("已用時間: %s\n"), *ElapsedTime.ToString());
-    Report += FString::Printf(TEXT("當前階段: %s\n"), *GetPhaseInfo(CurrentPhase).PhaseName);
-    Report += FString::Printf(TEXT("整體進度: %.1f%%\n\n"), OverallProgress);
-    
-    // 階段詳情
-    Report += TEXT("=== 階段詳情 ===\n");
-    for (const auto& PhasePair : PhaseInfos)
-    {
-        const FEOSPhaseInfo& PhaseInfo = PhasePair.Value;
-        Report += FString::Printf(TEXT("\n%s (%d週)\n"), *PhaseInfo.PhaseName, PhaseInfo.DurationWeeks);
-        Report += FString::Printf(TEXT("狀態: %s\n"), *UEnum::GetDisplayValueAsText(PhaseInfo.Status).ToString());
-        Report += FString::Printf(TEXT("進度: %.1f%%\n"), PhaseInfo.OverallProgress);
-        
-        if (PhaseInfo.Tasks.Num() > 0)
-        {
-            Report += TEXT("任務:\n");
-            for (const FEOSPhaseTask& Task : PhaseInfo.Tasks)
-            {
-                Report += FString::Printf(TEXT("  - %s (%s) - %.1f%%\n"), 
-                    *Task.TaskName, 
-                    *Task.AssignedDeveloper, 
-                    Task.ProgressPercentage);
-            }
-        }
-    }
-    
-    // 風險評估
-    Report += TEXT("\n=== 風險評估 ===\n");
-    TArray<FString> Risks = GetRiskAssessment();
-    for (int32 i = 0; i < Risks.Num(); ++i)
-    {
-        Report += FString::Printf(TEXT("%d. %s\n"), i + 1, *Risks[i]);
-    }
-    
-    // 建議
-    Report += TEXT("\n=== 建議 ===\n");
-    TArray<FString> Recommendations = GetRecommendations();
-    for (int32 i = 0; i < Recommendations.Num(); ++i)
-    {
-        Report += FString::Printf(TEXT("%d. %s\n"), i + 1, *Recommendations[i]);
-    }
-    
-    return Report;
-}
-
-float UEOSImplementationManager::CalculatePhaseProgress(const FEOSPhaseInfo& PhaseInfo) const
-{
-    if (PhaseInfo.Tasks.Num() == 0)
-    {
-        return PhaseInfo.OverallProgress;
-    }
-    
-    float TotalProgress = 0.0f;
-    for (const FEOSPhaseTask& Task : PhaseInfo.Tasks)
-    {
-        TotalProgress += Task.ProgressPercentage;
-    }
-    
-    return TotalProgress / PhaseInfo.Tasks.Num();
-}
-
-bool UEOSImplementationManager::ValidateTaskDependencies(const FEOSPhaseTask& Task) const
-{
-    for (const FString& Dependency : Task.Dependencies)
-    {
-        bool DependencyFound = false;
-        bool DependencyCompleted = false;
-        
-        // 在所有階段中查找依賴任務
-        for (const auto& PhasePair : PhaseInfos)
-        {
-            for (const FEOSPhaseTask& OtherTask : PhasePair.Value.Tasks)
-            {
-                if (OtherTask.TaskName == Dependency)
-                {
-                    DependencyFound = true;
-                    if (OtherTask.Status == EOSImplementationStatus::Completed)
-                    {
-                        DependencyCompleted = true;
-                    }
-                    break;
-                }
-            }
-            if (DependencyFound) break;
-        }
-        
-        if (!DependencyFound || !DependencyCompleted)
-        {
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-void UEOSImplementationManager::UpdateOverallProgress()
-{
-    float TotalProgress = 0.0f;
-    int32 TotalDuration = 0;
-    
-    for (const auto& PhasePair : PhaseInfos)
-    {
-        const FEOSPhaseInfo& PhaseInfo = PhasePair.Value;
-        if (PhaseInfo.DurationWeeks > 0)
-        {
-            TotalProgress += PhaseInfo.OverallProgress * PhaseInfo.DurationWeeks;
-            TotalDuration += PhaseInfo.DurationWeeks;
-        }
-    }
-    
-    OverallProgress = TotalDuration > 0 ? (TotalProgress / TotalDuration) : 0.0f;
-}
+出#出i出n出c出l出使出d出e出 出"出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出輸入出A出L出/出P出l出a出t出f出o出本出設置出軍出i出l出e出設置出a出n出a出成出e出本出.出h出"出
+出
+出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出(出)出
+出 出 出 出 出:出 出C出使出本出本出e出n出t出P出h出a出s出e出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出P出l出a出n出n出i出n出成出)出
+出 出 出 出 出,出 出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出(出0出.出0出f出)出
+出{出
+出}出
+出
+出正出o出i出d出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出i出t出i出a出l出i出z出i出n出成出 出E出O出S出 出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出 出M出a出n出a出成出e出本出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出階出段出信出息出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出P出h出a出s出e出I出n出f出o出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出記出錄出實出施出開出始出時出間出
+出 出 出 出 出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出本出t出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出計出算出初出始出進出度出
+出 出 出 出 出U出p出d出a出t出e出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出E出O出S出 出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出 出M出a出n出a出成出e出本出 出i出n出i出t出i出a出l出i出z出e出d出 出s出使出c出c出e出s出s出f出使出l出l出y出"出)出)出;出
+出}出
+出
+出正出o出i出d出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出P出h出a出s出e出I出n出f出o出s出(出)出
+出{出
+出 出 出 出 出P出h出a出s出e出I出n出f出o出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出階出段出一出：出基出礎出內出核出開出發出 出(出4出週出)出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出 出K出e出本出n出e出l出P出h出a出s出e出;出
+出 出 出 出 出K出e出本出n出e出l出P出h出a出s出e出.出P出h出a出s出e出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出K出e出本出n出e出l出;出
+出 出 出 出 出K出e出本出n出e出l出P出h出a出s出e出.出P出h出a出s出e出的出a出設置出e出 出=出 出T出E出X出T出(出"出基出礎出內出核出開出發出"出)出;出
+出 出 出 出 出K出e出本出n出e出l出P出h出a出s出e出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出開出發出作出業出系出統出核出心出組出件出，出包出括出內出核出、出進出程出管出理出、出內出存出管出理出和出文出件出系出統出"出)出;出
+出 出 出 出 出K出e出本出n出e出l出P出h出a出s出e出.出D出使出本出a出t出i出o出n出基本出e出e出k出s出 出=出 出4出;出
+出 出 出 出 出K出e出本出n出e出l出P出h出a出s出e出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出K出e出本出n出e出l出P出h出a出s出e出.出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出內出核出開出發出任出務出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出 出K出e出本出n出e出l出T出a出s出k出1出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出1出.出T出a出s出k出的出a出設置出e出 出=出 出T出E出X出T出(出"出內出核出框出架出設出計出"出)出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出1出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出設出計出作出業出系出統出內出核出架出構出和出核出心出接出口出"出)出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出1出.出E出s出t出i出設置出a出t出e出d出D出a出y出s出 出=出 出5出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出1出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出1出.出A出s出s出i出成出n出e出d出D出e出正出e出l出o出p出e出本出 出=出 出T出E出X出T出(出"出核出心出開出發出團出隊出"出)出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出1出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出 出K出e出本出n出e出l出T出a出s出k出2出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出2出.出T出a出s出k出的出a出設置出e出 出=出 出T出E出X出T出(出"出進出程出管出理出器出實出現出"出)出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出2出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出實出現出進出程出創出建出、出調出度出和出終出止出功出能出"出)出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出2出.出E出s出t出i出設置出a出t出e出d出D出a出y出s出 出=出 出8出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出2出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出2出.出A出s出s出i出成出n出e出d出D出e出正出e出l出o出p出e出本出 出=出 出T出E出X出T出(出"出系出統出開出發出團出隊出"出)出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出2出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出2出.出D出e出p出e出n出d出e出n出c出i出e出s出.出A出d出d出(出T出E出X出T出(出"出內出核出框出架出設出計出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出 出K出e出本出n出e出l出T出a出s出k出3出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出3出.出T出a出s出k出的出a出設置出e出 出=出 出T出E出X出T出(出"出內出存出管出理出器出實出現出"出)出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出3出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出實出現出內出存出分出配出、出回出收出和出優出化出功出能出"出)出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出3出.出E出s出t出i出設置出a出t出e出d出D出a出y出s出 出=出 出7出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出3出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出3出.出A出s出s出i出成出n出e出d出D出e出正出e出l出o出p出e出本出 出=出 出T出E出X出T出(出"出系出統出開出發出團出隊出"出)出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出3出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出K出e出本出n出e出l出T出a出s出k出3出.出D出e出p出e出n出d出e出n出c出i出e出s出.出A出d出d出(出T出E出X出T出(出"出內出核出框出架出設出計出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出K出e出本出n出e出l出P出h出a出s出e出.出T出a出s出k出s出.出A出d出d出(出K出e出本出n出e出l出T出a出s出k出1出)出;出
+出 出 出 出 出K出e出本出n出e出l出P出h出a出s出e出.出T出a出s出k出s出.出A出d出d出(出K出e出本出n出e出l出T出a出s出k出2出)出;出
+出 出 出 出 出K出e出本出n出e出l出P出h出a出s出e出.出T出a出s出k出s出.出A出d出d出(出K出e出本出n出e出l出T出a出s出k出3出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出階出段出二出：出系出統出服出務出框出架出 出(出3出週出)出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出 出S出e出本出正出i出c出e出s出P出h出a出s出e出;出
+出 出 出 出 出S出e出本出正出i出c出e出s出P出h出a出s出e出.出P出h出a出s出e出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出S出e出本出正出i出c出e出s出;出
+出 出 出 出 出S出e出本出正出i出c出e出s出P出h出a出s出e出.出P出h出a出s出e出的出a出設置出e出 出=出 出T出E出X出T出(出"出系出統出服出務出框出架出"出)出;出
+出 出 出 出 出S出e出本出正出i出c出e出s出P出h出a出s出e出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出將出現出有出管出理出器出轉出換出為出系出統出服出務出，出建出立出服出務出管出理出機出制出"出)出;出
+出 出 出 出 出S出e出本出正出i出c出e出s出P出h出a出s出e出.出D出使出本出a出t出i出o出n出基本出e出e出k出s出 出=出 出3出;出
+出 出 出 出 出S出e出本出正出i出c出e出s出P出h出a出s出e出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出S出e出本出正出i出c出e出s出P出h出a出s出e出.出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出系出統出服出務出任出務出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出 出S出e出本出正出i出c出e出T出a出s出k出1出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出1出.出T出a出s出k出的出a出設置出e出 出=出 出T出E出X出T出(出"出服出務出管出理出器出開出發出"出)出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出1出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出開出發出系出統出服出務出註出冊出、出發出現出和出管出理出機出制出"出)出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出1出.出E出s出t出i出設置出a出t出e出d出D出a出y出s出 出=出 出6出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出1出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出1出.出A出s出s出i出成出n出e出d出D出e出正出e出l出o出p出e出本出 出=出 出T出E出X出T出(出"出架出構出團出隊出"出)出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出1出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出 出S出e出本出正出i出c出e出T出a出s出k出2出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出2出.出T出a出s出k出的出a出設置出e出 出=出 出T出E出X出T出(出"出現出有出系出統出服出務出化出"出)出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出2出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出將出5出0出+出現出有出管出理出器出轉出換出為出系出統出服出務出"出)出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出2出.出E出s出t出i出設置出a出t出e出d出D出a出y出s出 出=出 出9出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出2出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出2出.出A出s出s出i出成出n出e出d出D出e出正出e出l出o出p出e出本出 出=出 出T出E出X出T出(出"出系出統出團出隊出"出)出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出2出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出S出e出本出正出i出c出e出T出a出s出k出2出.出D出e出p出e出n出d出e出n出c出i出e出s出.出A出d出d出(出T出E出X出T出(出"出服出務出管出理出器出開出發出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出S出e出本出正出i出c出e出s出P出h出a出s出e出.出T出a出s出k出s出.出A出d出d出(出S出e出本出正出i出c出e出T出a出s出k出1出)出;出
+出 出 出 出 出S出e出本出正出i出c出e出s出P出h出a出s出e出.出T出a出s出k出s出.出A出d出d出(出S出e出本出正出i出c出e出T出a出s出k出2出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出階出段出三出：出高出級出功出能出開出發出 出(出3出週出)出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出 出A出d出正出a出n出c出e出d出P出h出a出s出e出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出P出h出a出s出e出.出P出h出a出s出e出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出A出d出正出a出n出c出e出d出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出P出h出a出s出e出.出P出h出a出s出e出的出a出設置出e出 出=出 出T出E出X出T出(出"出高出級出功出能出開出發出"出)出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出P出h出a出s出e出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出實出現出安出全出系出統出、出網出絡出系出統出和出用出戶出界出面出系出統出"出)出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出P出h出a出s出e出.出D出使出本出a出t出i出o出n出基本出e出e出k出s出 出=出 出3出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出P出h出a出s出e出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出P出h出a出s出e出.出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出高出級出功出能出任出務出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出 出A出d出正出a出n出c出e出d出T出a出s出k出1出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出1出.出T出a出s出k出的出a出設置出e出 出=出 出T出E出X出T出(出"出安出全出系出統出實出現出"出)出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出1出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出實出現出進出程出隔出離出、出權出限出管出理出和出安出全出策出略出"出)出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出1出.出E出s出t出i出設置出a出t出e出d出D出a出y出s出 出=出 出8出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出1出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出1出.出A出s出s出i出成出n出e出d出D出e出正出e出l出o出p出e出本出 出=出 出T出E出X出T出(出"出安出全出團出隊出"出)出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出1出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出 出A出d出正出a出n出c出e出d出T出a出s出k出2出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出2出.出T出a出s出k出的出a出設置出e出 出=出 出T出E出X出T出(出"出網出絡出系出統出開出發出"出)出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出2出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出實出現出進出程出間出通出信出和出網出絡出協出議出支出持出"出)出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出2出.出E出s出t出i出設置出a出t出e出d出D出a出y出s出 出=出 出7出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出2出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出2出.出A出s出s出i出成出n出e出d出D出e出正出e出l出o出p出e出本出 出=出 出T出E出X出T出(出"出網出絡出團出隊出"出)出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出T出a出s出k出2出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出A出d出正出a出n出c出e出d出P出h出a出s出e出.出T出a出s出k出s出.出A出d出d出(出A出d出正出a出n出c出e出d出T出a出s出k出1出)出;出
+出 出 出 出 出A出d出正出a出n出c出e出d出P出h出a出s出e出.出T出a出s出k出s出.出A出d出d出(出A出d出正出a出n出c出e出d出T出a出s出k出2出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出階出段出四出：出優出化出和出集出成出 出(出2出週出)出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出 出I出n出t出e出成出本出a出t出i出o出n出P出h出a出s出e出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出P出h出a出s出e出.出P出h出a出s出e出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出I出n出t出e出成出本出a出t出i出o出n出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出P出h出a出s出e出.出P出h出a出s出e出的出a出設置出e出 出=出 出T出E出X出T出(出"出優出化出和出集出成出"出)出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出P出h出a出s出e出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出性出能出優出化出、出集出成出測出試出和出文出檔出編出寫出"出)出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出P出h出a出s出e出.出D出使出本出a出t出i出o出n出基本出e出e出k出s出 出=出 出2出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出P出h出a出s出e出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出P出h出a出s出e出.出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出集出成出任出務出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出1出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出1出.出T出a出s出k出的出a出設置出e出 出=出 出T出E出X出T出(出"出性出能出優出化出"出)出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出1出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出優出化出系出統出性出能出，出確出保出開出銷出<出5出%出"出)出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出1出.出E出s出t出i出設置出a出t出e出d出D出a出y出s出 出=出 出5出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出1出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出1出.出A出s出s出i出成出n出e出d出D出e出正出e出l出o出p出e出本出 出=出 出T出E出X出T出(出"出性出能出團出隊出"出)出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出1出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出2出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出2出.出T出a出s出k出的出a出設置出e出 出=出 出T出E出X出T出(出"出集出成出測出試出"出)出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出2出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出全出面出測出試出系出統出集出成出和出兼出容出性出"出)出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出2出.出E出s出t出i出設置出a出t出e出d出D出a出y出s出 出=出 出5出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出2出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出2出.出A出s出s出i出成出n出e出d出D出e出正出e出l出o出p出e出本出 出=出 出T出E出X出T出(出"出測出試出團出隊出"出)出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出2出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出P出h出a出s出e出.出T出a出s出k出s出.出A出d出d出(出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出1出)出;出
+出 出 出 出 出I出n出t出e出成出本出a出t出i出o出n出P出h出a出s出e出.出T出a出s出k出s出.出A出d出d出(出I出n出t出e出成出本出a出t出i出o出n出T出a出s出k出2出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出添出加出所出有出階出段出
+出 出 出 出 出P出h出a出s出e出I出n出f出o出s出.出A出d出d出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出P出l出a出n出n出i出n出成出,出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出{出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出P出l出a出n出n出i出n出成出,出 出T出E出X出T出(出"出P出l出a出n出n出i出n出成出"出)出,出 出T出E出X出T出(出"出規出劃出和出準出備出階出段出"出)出,出 出0出,出 出T出A出本出本出a出y出<出軍出E出O出S出P出h出a出s出e出T出a出s出k出>出(出)出,出 出0出.出0出f出,出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出C出o出設置出p出l出e出t出e出d出}出)出;出
+出 出 出 出 出P出h出a出s出e出I出n出f出o出s出.出A出d出d出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出K出e出本出n出e出l出,出 出K出e出本出n出e出l出P出h出a出s出e出)出;出
+出 出 出 出 出P出h出a出s出e出I出n出f出o出s出.出A出d出d出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出S出e出本出正出i出c出e出s出,出 出S出e出本出正出i出c出e出s出P出h出a出s出e出)出;出
+出 出 出 出 出P出h出a出s出e出I出n出f出o出s出.出A出d出d出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出A出d出正出a出n出c出e出d出,出 出A出d出正出a出n出c出e出d出P出h出a出s出e出)出;出
+出 出 出 出 出P出h出a出s出e出I出n出f出o出s出.出A出d出d出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出I出n出t出e出成出本出a出t出i出o出n出,出 出I出n出t出e出成出本出a出t出i出o出n出P出h出a出s出e出)出;出
+出 出 出 出 出P出h出a出s出e出I出n出f出o出s出.出A出d出d出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出C出o出設置出p出l出e出t出e出,出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出{出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出C出o出設置出p出l出e出t出e出,出 出T出E出X出T出(出"出C出o出設置出p出l出e出t出e出"出)出,出 出T出E出X出T出(出"出實出施出完出成出"出)出,出 出0出,出 出T出A出本出本出a出y出<出軍出E出O出S出P出h出a出s出e出T出a出s出k出>出(出)出,出 出1出0出0出.出0出f出,出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出的出o出t出S出t出a出本出t出e出d出}出)出;出
+出}出
+出
+出正出o出i出d出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出S出e出t出C出使出本出本出e出n出t出P出h出a出s出e出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出 出的出e出w出P出h出a出s出e出)出
+出{出
+出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出h出a出s出e出 出!出=出 出的出e出w出P出h出a出s出e出 出&出&出 出C出a出n出S出t出a出本出t出P出h出a出s出e出(出的出e出w出P出h出a出s出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出 出O出l出d出P出h出a出s出e出 出=出 出C出使出本出本出e出n出t出P出h出a出s出e出;出
+出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出P出h出a出s出e出 出=出 出的出e出w出P出h出a出s出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出更出新出階出段出狀出態出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出h出a出s出e出I出n出f出o出s出.出C出o出n出t出a出i出n出s出(出的出e出w出P出h出a出s出e出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出&出 出P出h出a出s出e出I出n出f出o出 出=出 出P出h出a出s出e出I出n出f出o出s出[出的出e出w出P出h出a出s出e出]出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出h出a出s出e出I出n出f出o出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出I出n出P出本出o出成出本出e出s出s出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出h出a出s出e出I出n出f出o出.出S出t出a出本出t出D出a出t出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出E出O出S出 出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出 出p出h出a出s出e出 出c出h出a出n出成出e出d出 出f出本出o出設置出 出%出d出 出t出o出 出%出d出"出)出,出 出(出i出n出t出3出2出)出O出l出d出P出h出a出s出e出,出 出(出i出n出t出3出2出)出的出e出w出P出h出a出s出e出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出 出 出 出 出O出n出P出h出a出s出e出S出t出a出t出使出s出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出的出e出w出P出h出a出s出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出E出O出S出P出h出a出s出e出I出n出f出o出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出P出h出a出s出e出I出n出f出o出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出 出P出h出a出s出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出P出h出a出s出e出I出n出f出o出s出.出C出o出n出t出a出i出n出s出(出P出h出a出s出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出h出a出s出e出I出n出f出o出s出[出P出h出a出s出e出]出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出(出)出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出E出O出S出P出h出a出s出e出I出n出f出o出>出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出A出l出l出P出h出a出s出e出s出I出n出f出o出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出E出O出S出P出h出a出s出e出I出n出f出o出>出 出A出l出l出P出h出a出s出e出s出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出P出h出a出s出e出P出a出i出本出 出:出 出P出h出a出s出e出I出n出f出o出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出l出l出P出h出a出s出e出s出.出A出d出d出(出P出h出a出s出e出P出a出i出本出.出V出a出l出使出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出A出l出l出P出h出a出s出e出s出;出
+出}出
+出
+出正出o出i出d出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出U出p出d出a出t出e出T出a出s出k出S出t出a出t出使出s出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出 出P出h出a出s出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出a出s出k出的出a出設置出e出,出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出 出S出t出a出t出使出s出)出
+出{出
+出 出 出 出 出i出f出 出(出P出h出a出s出e出I出n出f出o出s出.出C出o出n出t出a出i出n出s出(出P出h出a出s出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出&出 出P出h出a出s出e出I出n出f出o出 出=出 出P出h出a出s出e出I出n出f出o出s出[出P出h出a出s出e出]出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出軍出E出O出S出P出h出a出s出e出T出a出s出k出&出 出T出a出s出k出 出:出 出P出h出a出s出e出I出n出f出o出.出T出a出s出k出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出a出s出k出.出T出a出s出k出的出a出設置出e出 出=出=出 出T出a出s出k出的出a出設置出e出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出a出s出k出.出S出t出a出t出使出s出 出=出 出S出t出a出t出使出s出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出S出t出a出t出使出s出 出=出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出I出n出P出本出o出成出本出e出s出s出 出&出&出 出T出a出s出k出.出S出t出a出本出t出D出a出t出e出 出=出=出 出軍出D出a出t出e出T出i出設置出e出:出:出M出i出n出V出a出l出使出e出(出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出a出s出k出.出S出t出a出本出t出D出a出t出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出e出l出s出e出 出i出f出 出(出S出t出a出t出使出s出 出=出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出C出o出設置出p出l出e出t出e出d出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出a出s出k出.出E出n出d出D出a出t出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出a出s出k出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出 出=出 出1出0出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出更出新出階出段出進出度出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出P出h出a出s出e出I出n出f出o出.出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出 出=出 出C出a出l出c出使出l出a出t出e出P出h出a出s出e出P出本出o出成出本出e出s出s出(出P出h出a出s出e出I出n出f出o出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出O出n出T出a出s出k出U出p出d出a出t出e出d出.出B出本出o出a出d出c出a出s出t出(出P出h出a出s出e出,出 出T出a出s出k出的出a出設置出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出O出n出P出h出a出s出e出P出本出o出成出本出e出s出s出U出p出d出a出t出e出d出.出B出本出o出a出d出c出a出s出t出(出P出h出a出s出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出U出p出d出a出t出e出T出a出s出k出P出本出o出成出本出e出s出s出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出 出P出h出a出s出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出a出s出k出的出a出設置出e出,出 出f出l出o出a出t出 出P出本出o出成出本出e出s出s出)出
+出{出
+出 出 出 出 出i出f出 出(出P出h出a出s出e出I出n出f出o出s出.出C出o出n出t出a出i出n出s出(出P出h出a出s出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出&出 出P出h出a出s出e出I出n出f出o出 出=出 出P出h出a出s出e出I出n出f出o出s出[出P出h出a出s出e出]出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出軍出E出O出S出P出h出a出s出e出T出a出s出k出&出 出T出a出s出k出 出:出 出P出h出a出s出e出I出n出f出o出.出T出a出s出k出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出a出s出k出.出T出a出s出k出的出a出設置出e出 出=出=出 出T出a出s出k出的出a出設置出e出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出a出s出k出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出P出本出o出成出本出e出s出s出,出 出0出.出0出f出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出更出新出階出段出進出度出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出P出h出a出s出e出I出n出f出o出.出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出 出=出 出C出a出l出c出使出l出a出t出e出P出h出a出s出e出P出本出o出成出本出e出s出s出(出P出h出a出s出e出I出n出f出o出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出p出d出a出t出e出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出(出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出觸出發出事出件出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出O出n出T出a出s出k出U出p出d出a出t出e出d出.出B出本出o出a出d出c出a出s出t出(出P出h出a出s出e出,出 出T出a出s出k出的出a出設置出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出O出n出P出h出a出s出e出P出本出o出成出本出e出s出s出U出p出d出a出t出e出d出.出B出本出o出a出d出c出a出s出t出(出P出h出a出s出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出
+出f出l出o出a出t出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出;出
+出}出
+出
+出f出l出o出a出t出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出P出h出a出s出e出P出本出o出成出本出e出s出s出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出 出P出h出a出s出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出P出h出a出s出e出I出n出f出o出s出.出C出o出n出t出a出i出n出s出(出P出h出a出s出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出h出a出s出e出I出n出f出o出s出[出P出h出a出s出e出]出.出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出0出.出0出f出;出
+出}出
+出
+出b出o出o出l出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出a出n出S出t出a出本出t出P出h出a出s出e出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出 出P出h出a出s出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出P出h出a出s出e出 出=出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出:出:出P出l出a出n出n出i出n出成出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出 出/出/出 出規出劃出階出段出總出是出可出以出開出始出的出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出!出P出h出a出s出e出I出n出f出o出s出.出C出o出n出t出a出i出n出s出(出P出h出a出s出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出c出o出n出s出t出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出&出 出P出h出a出s出e出I出n出f出o出 出=出 出P出h出a出s出e出I出n出f出o出s出[出P出h出a出s出e出]出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出所出有出依出賴出的出任出務出是出否出完出成出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出&出 出T出a出s出k出 出:出 出P出h出a出s出e出I出n出f出o出.出T出a出s出k出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出!出V出a出l出i出d出a出t出e出T出a出s出k出D出e出p出e出n出d出e出n出c出i出e出s出(出T出a出s出k出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出S出t出a出本出t出P出h出a出s出e出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出 出P出h出a出s出e出)出
+出{出
+出 出 出 出 出i出f出 出(出C出a出n出S出t出a出本出t出P出h出a出s出e出(出P出h出a出s出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出e出t出C出使出本出本出e出n出t出P出h出a出s出e出(出P出h出a出s出e出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出C出a出n出n出o出t出 出s出t出a出本出t出 出p出h出a出s出e出 出%出d出 出-出 出d出e出p出e出n出d出e出n出c出i出e出s出 出n出o出t出 出設置出e出t出"出)出,出 出(出i出n出t出3出2出)出P出h出a出s出e出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出正出o出i出d出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出o出設置出p出l出e出t出e出P出h出a出s出e出(出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出P出h出a出s出e出 出P出h出a出s出e出)出
+出{出
+出 出 出 出 出i出f出 出(出P出h出a出s出e出I出n出f出o出s出.出C出o出n出t出a出i出n出s出(出P出h出a出s出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出&出 出P出h出a出s出e出I出n出f出o出 出=出 出P出h出a出s出e出I出n出f出o出s出[出P出h出a出s出e出]出;出
+出 出 出 出 出 出 出 出 出P出h出a出s出e出I出n出f出o出.出S出t出a出t出使出s出 出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出C出o出設置出p出l出e出t出e出d出;出
+出 出 出 出 出 出 出 出 出P出h出a出s出e出I出n出f出o出.出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出 出=出 出1出0出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出P出h出a出s出e出I出n出f出o出.出E出n出d出D出a出t出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出p出d出a出t出e出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出(出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出h出a出s出e出 出%出d出 出c出o出設置出p出l出e出t出e出d出 出s出使出c出c出e出s出s出f出使出l出l出y出"出)出,出 出(出i出n出t出3出2出)出P出h出a出s出e出)出;出
+出 出 出 出 出 出 出 出 出O出n出P出h出a出s出e出S出t出a出t出使出s出C出h出a出n出成出e出d出.出B出本出o出a出d出c出a出s出t出(出P出h出a出s出e出)出;出
+出 出 出 出 出}出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出R出i出s出k出A出s出s出e出s出s出設置出e出n出t出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出i出s出k出s出;出
+出 出 出 出 出
+出 出 出 出 出R出i出s出k出s出.出A出d出d出(出T出E出X出T出(出"出技出術出複出雜出度出風出險出：出作出業出系出統出開出發出涉出及出底出層出系出統出編出程出，出技出術出門出檻出高出"出)出)出;出
+出 出 出 出 出R出i出s出k出s出.出A出d出d出(出T出E出X出T出(出"出性出能出影出響出風出險出：出虛出擬出化出可出能出影出響出遊出戲出性出能出，出需出要出仔出細出優出化出"出)出)出;出
+出 出 出 出 出R出i出s出k出s出.出A出d出d出(出T出E出X出T出(出"出兼出容出性出風出險出：出與出現出有出U出E出5出系出統出的出集出成出可出能出遇出到出兼出容出性出問出題出"出)出)出;出
+出 出 出 出 出R出i出s出k出s出.出A出d出d出(出T出E出X出T出(出"出時出間出壓出力出風出險出：出1出2出週出時出間出緊出張出，出可出能出影出響出開出發出質出量出"出)出)出;出
+出 出 出 出 出R出i出s出k出s出.出A出d出d出(出T出E出X出T出(出"出團出隊出協出作出風出險出：出8出人出團出隊出需出要出高出效出協出作出，出溝出通出成出本出高出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出i出s出k出s出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出;出
+出 出 出 出 出
+出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出採出用出模出組出化出設出計出，出降出低出系出統出複出雜出度出"出)出)出;出
+出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出建出立出完出善出的出測出試出框出架出，出確出保出系出統出穩出定出性出"出)出)出;出
+出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出實出施出持出續出集出成出，出及出早出發出現出和出解出決出問出題出"出)出)出;出
+出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出優出先出開出發出核出心出功出能出，出確出保出基出礎出功出能出穩出定出"出)出)出;出
+出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出建出立出詳出細出的出文出檔出，出便出於出團出隊出協出作出和出知出識出傳出承出"出)出)出;出
+出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出定出期出進出行出性出能出測出試出，出監出控出系出統出開出銷出"出)出)出;出
+出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出建出立出風出險出監出控出機出制出，出及出時出識出別出和出應出對出風出險出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出n出e出本出a出t出e出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出R出e出p出o出本出t出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出p出o出本出t出;出
+出 出 出 出 出R出e出p出o出本出t出 出+出=出 出T出E出X出T出(出"出=出=出=出 出M出i出n出成出G出o出R出T出S出 出內出建出作出業出系出統出實出施出報出告出 出=出=出=出\出n出\出n出"出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基出本出信出息出
+出 出 出 出 出軍出T出i出設置出e出s出p出a出n出 出E出l出a出p出s出e出d出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出 出-出 出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出本出t出T出i出設置出e出;出
+出 出 出 出 出R出e出p出o出本出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出實出施出開出始出時出間出:出 出%出s出\出n出"出)出,出 出*出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出本出t出T出i出設置出e出.出T出o出S出t出本出i出n出成出(出)出)出;出
+出 出 出 出 出R出e出p出o出本出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出已出用出時出間出:出 出%出s出\出n出"出)出,出 出*出E出l出a出p出s出e出d出T出i出設置出e出.出T出o出S出t出本出i出n出成出(出)出)出;出
+出 出 出 出 出R出e出p出o出本出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出當出前出階出段出:出 出%出s出\出n出"出)出,出 出*出G出e出t出P出h出a出s出e出I出n出f出o出(出C出使出本出本出e出n出t出P出h出a出s出e出)出.出P出h出a出s出e出的出a出設置出e出)出;出
+出 出 出 出 出R出e出p出o出本出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出整出體出進出度出:出 出%出.出1出f出%出%出\出n出\出n出"出)出,出 出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出階出段出詳出情出
+出 出 出 出 出R出e出p出o出本出t出 出+出=出 出T出E出X出T出(出"出=出=出=出 出階出段出詳出情出 出=出=出=出\出n出"出)出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出P出h出a出s出e出P出a出i出本出 出:出 出P出h出a出s出e出I出n出f出o出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出o出n出s出t出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出&出 出P出h出a出s出e出I出n出f出o出 出=出 出P出h出a出s出e出P出a出i出本出.出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出R出e出p出o出本出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出\出n出%出s出 出(出%出d出週出)出\出n出"出)出,出 出*出P出h出a出s出e出I出n出f出o出.出P出h出a出s出e出的出a出設置出e出,出 出P出h出a出s出e出I出n出f出o出.出D出使出本出a出t出i出o出n出基本出e出e出k出s出)出;出
+出 出 出 出 出 出 出 出 出R出e出p出o出本出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出狀出態出:出 出%出s出\出n出"出)出,出 出*出U出E出n出使出設置出:出:出G出e出t出D出i出s出p出l出a出y出V出a出l出使出e出A出s出T出e出x出t出(出P出h出a出s出e出I出n出f出o出.出S出t出a出t出使出s出)出.出T出o出S出t出本出i出n出成出(出)出)出;出
+出 出 出 出 出 出 出 出 出R出e出p出o出本出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出進出度出:出 出%出.出1出f出%出%出\出n出"出)出,出 出P出h出a出s出e出I出n出f出o出.出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出h出a出s出e出I出n出f出o出.出T出a出s出k出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出R出e出p出o出本出t出 出+出=出 出T出E出X出T出(出"出任出務出:出\出n出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出&出 出T出a出s出k出 出:出 出P出h出a出s出e出I出n出f出o出.出T出a出s出k出s出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出R出e出p出o出本出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出 出 出-出 出%出s出 出(出%出s出)出 出-出 出%出.出1出f出%出%出\出n出"出)出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出*出T出a出s出k出.出T出a出s出k出的出a出設置出e出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出*出T出a出s出k出.出A出s出s出i出成出n出e出d出D出e出正出e出l出o出p出e出本出,出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出a出s出k出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出風出險出評出估出
+出 出 出 出 出R出e出p出o出本出t出 出+出=出 出T出E出X出T出(出"出\出n出=出=出=出 出風出險出評出估出 出=出=出=出\出n出"出)出;出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出i出s出k出s出 出=出 出G出e出t出R出i出s出k出A出s出s出e出s出s出設置出e出n出t出(出)出;出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出R出i出s出k出s出.出的出使出設置出(出)出;出 出+出+出i出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出p出o出本出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出%出d出.出 出%出s出\出n出"出)出,出 出i出 出+出 出1出,出 出*出R出i出s出k出s出[出i出]出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出建出議出
+出 出 出 出 出R出e出p出o出本出t出 出+出=出 出T出E出X出T出(出"出\出n出=出=出=出 出建出議出 出=出=出=出\出n出"出)出;出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出 出=出 出G出e出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出)出;出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出的出使出設置出(出)出;出 出+出+出i出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出p出o出本出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出%出d出.出 出%出s出\出n出"出)出,出 出i出 出+出 出1出,出 出*出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出[出i出]出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出p出o出本出t出;出
+出}出
+出
+出f出l出o出a出t出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出a出l出c出使出l出a出t出e出P出h出a出s出e出P出本出o出成出本出e出s出s出(出c出o出n出s出t出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出&出 出P出h出a出s出e出I出n出f出o出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出i出f出 出(出P出h出a出s出e出I出n出f出o出.出T出a出s出k出s出.出的出使出設置出(出)出 出=出=出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出h出a出s出e出I出n出f出o出.出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出f出l出o出a出t出 出T出o出t出a出l出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出&出 出T出a出s出k出 出:出 出P出h出a出s出e出I出n出f出o出.出T出a出s出k出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出o出t出a出l出P出本出o出成出本出e出s出s出 出+出=出 出T出a出s出k出.出P出本出o出成出本出e出s出s出P出e出本出c出e出n出t出a出成出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出T出o出t出a出l出P出本出o出成出本出e出s出s出 出/出 出P出h出a出s出e出I出n出f出o出.出T出a出s出k出s出.出的出使出設置出(出)出;出
+出}出
+出
+出b出o出o出l出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出V出a出l出i出d出a出t出e出T出a出s出k出D出e出p出e出n出d出e出n出c出i出e出s出(出c出o出n出s出t出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出&出 出T出a出s出k出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出e出p出e出n出d出e出n出c出y出 出:出 出T出a出s出k出.出D出e出p出e出n出d出e出n出c出i出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出b出o出o出l出 出D出e出p出e出n出d出e出n出c出y出軍出o出使出n出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出b出o出o出l出 出D出e出p出e出n出d出e出n出c出y出C出o出設置出p出l出e出t出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出/出/出 出在出所出有出階出段出中出查出找出依出賴出任出務出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出P出h出a出s出e出P出a出i出本出 出:出 出P出h出a出s出e出I出n出f出o出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出E出O出S出P出h出a出s出e出T出a出s出k出&出 出O出t出h出e出本出T出a出s出k出 出:出 出P出h出a出s出e出P出a出i出本出.出V出a出l出使出e出.出T出a出s出k出s出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出O出t出h出e出本出T出a出s出k出.出T出a出s出k出的出a出設置出e出 出=出=出 出D出e出p出e出n出d出e出n出c出y出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出D出e出p出e出n出d出e出n出c出y出軍出o出使出n出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出O出t出h出e出本出T出a出s出k出.出S出t出a出t出使出s出 出=出=出 出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出S出t出a出t出使出s出:出:出C出o出設置出p出l出e出t出e出d出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出D出e出p出e出n出d出e出n出c出y出C出o出設置出p出l出e出t出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出D出e出p出e出n出d出e出n出c出y出軍出o出使出n出d出)出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出i出f出 出(出!出D出e出p出e出n出d出e出n出c出y出軍出o出使出n出d出 出出出出出 出!出D出e出p出e出n出d出e出n出c出y出C出o出設置出p出l出e出t出e出d出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出正出o出i出d出 出U出E出O出S出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出M出a出n出a出成出e出本出:出:出U出p出d出a出t出e出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出(出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出T出o出t出a出l出P出本出o出成出本出e出s出s出 出=出 出0出.出0出f出;出
+出 出 出 出 出i出n出t出3出2出 出T出o出t出a出l出D出使出本出a出t出i出o出n出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出P出h出a出s出e出P出a出i出本出 出:出 出P出h出a出s出e出I出n出f出o出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出c出o出n出s出t出 出軍出E出O出S出P出h出a出s出e出I出n出f出o出&出 出P出h出a出s出e出I出n出f出o出 出=出 出P出h出a出s出e出P出a出i出本出.出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出h出a出s出e出I出n出f出o出.出D出使出本出a出t出i出o出n出基本出e出e出k出s出 出>出 出0出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出o出t出a出l出P出本出o出成出本出e出s出s出 出+出=出 出P出h出a出s出e出I出n出f出o出.出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出 出*出 出P出h出a出s出e出I出n出f出o出.出D出使出本出a出t出i出o出n出基本出e出e出k出s出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出T出o出t出a出l出D出使出本出a出t出i出o出n出 出+出=出 出P出h出a出s出e出I出n出f出o出.出D出使出本出a出t出i出o出n出基本出e出e出k出s出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出O出正出e出本出a出l出l出P出本出o出成出本出e出s出s出 出=出 出T出o出t出a出l出D出使出本出a出t出i出o出n出 出>出 出0出 出基本出 出(出T出o出t出a出l出P出本出o出成出本出e出s出s出 出/出 出T出o出t出a出l出D出使出本出a出t出i出o出n出)出 出:出 出0出.出0出f出;出
+出}出
+出

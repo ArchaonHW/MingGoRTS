@@ -1,192 +1,193 @@
-﻿// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 弱�?修復工具 - ?��?修復常�X��?
-
-#pragma once
-
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "WeaknessFixer.generated.h"
-
-/**
- * 修復類�X��?
- */
-UENUM(BlueprintType)
-enum class EFixType: uint8 {
-    MemoryLeak		UMETA(DisplayName = "Memory Leak Fix"),
-    ThreadSafety	UMETA(DisplayName = "Thread Safety Fix"),
-    Performance		UMETA(DisplayName = "Performance Fix"),
-    Security		UMETA(DisplayName = "Security Fix"),
-    CodeQuality		UMETA(DisplayName = "Code Quality Fix")
-};
-
-/**
- * 修復?��?級�X */
-UENUM(BlueprintType)
-enum class EFixPriority: uint8 {
-    Critical	UMETA(DisplayName = "Critical"),
-    High		UMETA(DisplayName = "High"),
-    Medium		UMETA(DisplayName = "Medium"),
-    Low		UMETA(DisplayName = "Low")
-};
-
-/**
- * 修復結�?
- */
-USTRUCT(BlueprintType)
-struct FFixResult
-{
-    GENERATED_BODY()
-
-    /** 修復?�否?��? */
-    UPROPERTY(BlueprintReadOnly, Category = "Fix Result")
-    bool bSuccess;
-
-    /** 修復類�? */
-    UPROPERTY(BlueprintReadOnly, Category = "Fix Result")
-    EFixType FixType;
-
-    /** 修復?��?�?*/
-    UPROPERTY(BlueprintReadOnly, Category = "Fix Result")
-    EFixPriority Priority;
-
-    /** 修復?�述 */
-    UPROPERTY(BlueprintReadOnly, Category = "Fix Result")
-    FString Description;
-
-    /** 修復詳�? */
-    UPROPERTY(BlueprintReadOnly, Category = "Fix Result")
-    FString Details;
-
-    /** 修復?��?�?*/
-    UPROPERTY(BlueprintReadOnly, Category = "Fix Result")
-    FString FixedFile;
-
-    /** 修復?��? */
-    UPROPERTY(BlueprintReadOnly, Category = "Fix Result")
-    FDateTime FixTime;
-
-    /** ?�誤信息 */
-    UPROPERTY(BlueprintReadOnly, Category = "Fix Result")
-    FString ErrorMessage;
-
-    FFixResult()
-        : bSuccess(false)
-        , FixType(EFixType::CodeQuality)
-        , Priority(EFixPriority::Low)
-        , Description(TEXT(""))
-        , Details(TEXT(""))
-        , FixedFile(TEXT(""))
-        , FixTime(FDateTime::Now())
-        , ErrorMessage(TEXT(""))
-    {
-    }
-};
-
-/**
- * 弱�?修復X */
-UCLASS(BlueprintType, Blueprintable)
-class WEAKNESSFIXER_API UWeaknessFixer : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    UWeaknessFixer();
-
-    /** ?��X�修復器 */
-    UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    void InitializeFixer();
-
-    /** ?��?完整修復 */
-    UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    TArray<FFixResult> RunFullFix();
-
-    /** 修復?��?洩�? */
-    UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixMemoryLeaks();
-
-    /** 修復線�?安全?��? */
-    UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixThreadSafety();
-
-    /** 修復?�能?��? */
-    UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixPerformanceIssues();
-
-    /** 修復安全?��? */
-    UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixSecurityIssues();
-
-    /** 修復�?��質�X��? */
-    UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixCodeQuality();
-
-    /** 修復?��X�件 */
-    UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FFixResult FixSpecificFile(const FString& FilePath);
-
-    /** ?��?修復歷史 */
-    UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    TArray<FFixResult> GetFixHistory();
-
-    /** ?��?修復?��? */
-    UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    FString GenerateFixReport();
-
-    /** 驗�?修復?��? */
-    UFUNCTION(BlueprintCallable, Category = "Weakness Fixer")
-    bool VerifyFixes();
-
-public:
-    /** 修復?��?事件 */
-    
-
-    /** 修復完�?事件 */
-    
-
-    /** 修復失�?事件 */
-    
-
-    UPROPERTY(BlueprintAssignable, Category = "Weakness Fixer|Events")
-    FOnFixStarted OnFixStarted;
-
-    UPROPERTY(BlueprintAssignable, Category = "Weakness Fixer|Events")
-    FOnFixCompleted OnFixCompleted;
-
-    UPROPERTY(BlueprintAssignable, Category = "Weakness Fixer|Events")
-    FOnFixFailed OnFixFailed;
-
-protected:
-    /** ?��?�?��弱�? */
-    TArray<FString> AnalyzeWeaknesses(const FString& FilePath);
-
-    /** ?�用修復 */
-    bool ApplyFix(const FString& FilePath, const FString& Weakness, const FString& Fix);
-
-    /** ?�份?��?�?*/
-    bool BackupFile(const FString& FilePath);
-
-    /** 驗�?修復 */
-    bool ValidateFix(const FString& FilePath, const FString& OriginalContent, const FString& FixedContent);
-
-    /** 記�?修復 */
-    void RecordFix(const FFixResult& FixResult);
-
-private:
-    /** 修復歷史 */
-    UPROPERTY(BlueprintReadOnly, Category = "Weakness Fixer", meta = (AllowPrivateAccess = "true"))
-    TArray<FFixResult> FixHistory;
-
-    /** 系統?�否已�?始�? */
-    UPROPERTY(BlueprintReadOnly, Category = "Weakness Fixer", meta = (AllowPrivateAccess = "true"))
-    bool bInitialized;
-
-    /** ?�份?��? */
-    UPROPERTY(BlueprintReadOnly, Category = "Weakness Fixer", meta = (AllowPrivateAccess = "true"))
-    FString BackupDirectory;
-
-    /** 修復規�X��? */
-    UPROPERTY(BlueprintReadOnly, Category = "Weakness Fixer", meta = (AllowPrivateAccess = "true"))
-    TMap<FString, FString> FixRules;
-};
-
-
+出﻿出/出/出 出C出o出p出y出本出i出成出h出t出 出(出c出)出 出2出0出2出6出 出M出i出n出成出G出o出R出T出S出.出 出A出l出l出 出本出i出成出h出t出s出 出本出e出s出e出本出正出e出d出.出
+出/出/出 出弱出�出基本出修出復出工出具出 出-出 出基本出�出�出基本出修出復出常出�出X出�出�出基本出
+出
+出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出基本出e出a出k出n出e出s出s出軍出i出x出e出本出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出修出復出類出�出X出�出�出基本出
+出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出軍出i出x出T出y出p出e出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出M出e出設置出o出本出y出L出e出a出k出	出	出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出M出e出設置出o出本出y出 出L出e出a出k出 出軍出i出x出"出)出,出
+出 出 出 出 出T出h出本出e出a出d出S出a出f出e出t出y出	出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出h出本出e出a出d出 出S出a出f出e出t出y出 出軍出i出x出"出)出,出
+出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出	出	出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出P出e出本出f出o出本出設置出a出n出c出e出 出軍出i出x出"出)出,出
+出 出 出 出 出S出e出c出使出本出i出t出y出	出	出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出S出e出c出使出本出i出t出y出 出軍出i出x出"出)出,出
+出 出 出 出 出C出o出d出e出Q出使出a出l出i出t出y出	出	出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出C出o出d出e出 出Q出使出a出l出i出t出y出 出軍出i出x出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出修出復出基本出�出�出基本出級出�出X出 出*出/出
+出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出e出n出使出設置出 出c出l出a出s出s出 出E出軍出i出x出P出本出i出o出本出i出t出y出:出 出使出i出n出t出8出 出{出
+出 出 出 出 出C出本出i出t出i出c出a出l出	出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出C出本出i出t出i出c出a出l出"出)出,出
+出 出 出 出 出輸入出i出成出h出	出	出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出輸入出i出成出h出"出)出,出
+出 出 出 出 出M出e出d出i出使出設置出	出	出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出M出e出d出i出使出設置出"出)出,出
+出 出 出 出 出L出o出w出	出	出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出L出o出w出"出)出
+出}出;出
+出
+出/出*出*出
+出 出*出 出修出復出結出�出基本出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出軍出i出x出R出e出s出使出l出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出 出 出 出 出/出*出*出 出修出復出基本出�出否出基本出�出�出基本出 出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出i出x出 出R出e出s出使出l出t出"出)出
+出 出 出 出 出b出o出o出l出 出b出S出使出c出c出e出s出s出;出
+出
+出 出 出 出 出/出*出*出 出修出復出類出�出基本出 出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出i出x出 出R出e出s出使出l出t出"出)出
+出 出 出 出 出E出軍出i出x出T出y出p出e出 出軍出i出x出T出y出p出e出;出
+出
+出 出 出 出 出/出*出*出 出修出復出基本出�出�出基本出�出基本出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出i出x出 出R出e出s出使出l出t出"出)出
+出 出 出 出 出E出軍出i出x出P出本出i出o出本出i出t出y出 出P出本出i出o出本出i出t出y出;出
+出
+出 出 出 出 出/出*出*出 出修出復出基本出�出述出 出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出i出x出 出R出e出s出使出l出t出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出s出c出本出i出p出t出i出o出n出;出
+出
+出 出 出 出 出/出*出*出 出修出復出詳出�出基本出 出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出i出x出 出R出e出s出使出l出t出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出t出a出i出l出s出;出
+出
+出 出 出 出 出/出*出*出 出修出復出基本出�出�出基本出�出基本出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出i出x出 出R出e出s出使出l出t出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出軍出i出x出e出d出軍出i出l出e出;出
+出
+出 出 出 出 出/出*出*出 出修出復出基本出�出�出基本出 出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出i出x出 出R出e出s出使出l出t出"出)出
+出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出軍出i出x出T出i出設置出e出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出誤出信出息出 出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出軍出i出x出 出R出e出s出使出l出t出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出E出本出本出o出本出M出e出s出s出a出成出e出;出
+出
+出 出 出 出 出軍出軍出i出x出R出e出s出使出l出t出(出)出
+出 出 出 出 出 出 出 出 出:出 出b出S出使出c出c出e出s出s出(出f出a出l出s出e出)出
+出 出 出 出 出 出 出 出 出,出 出軍出i出x出T出y出p出e出(出E出軍出i出x出T出y出p出e出:出:出C出o出d出e出Q出使出a出l出i出t出y出)出
+出 出 出 出 出 出 出 出 出,出 出P出本出i出o出本出i出t出y出(出E出軍出i出x出P出本出i出o出本出i出t出y出:出:出L出o出w出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出s出c出本出i出p出t出i出o出n出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出D出e出t出a出i出l出s出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出軍出i出x出e出d出軍出i出l出e出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出 出 出 出 出,出 出軍出i出x出T出i出設置出e出(出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出)出
+出 出 出 出 出 出 出 出 出,出 出E出本出本出o出本出M出e出s出s出a出成出e出(出T出E出X出T出(出"出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出弱出�出基本出修出復出X出 出*出/出
+出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
+出c出l出a出s出s出 出基本出E出A出K出的出E出S出S出軍出I出X出E出R出下出A出P出I出 出U出基本出e出a出k出n出e出s出s出軍出i出x出e出本出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出U出基本出e出a出k出n出e出s出s出軍出i出x出e出本出(出)出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出�出X出�出修出復出器出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出)出
+出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出軍出i出x出e出本出(出)出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出�出基本出完出整出修出復出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出i出x出R出e出s出使出l出t出>出 出R出使出n出軍出使出l出l出軍出i出x出(出)出;出
+出
+出 出 出 出 出/出*出*出 出修出復出基本出�出�出基本出洩出�出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出)出
+出 出 出 出 出軍出軍出i出x出R出e出s出使出l出t出 出軍出i出x出M出e出設置出o出本出y出L出e出a出k出s出(出)出;出
+出
+出 出 出 出 出/出*出*出 出修出復出線出�出基本出安出全出基本出�出�出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出)出
+出 出 出 出 出軍出軍出i出x出R出e出s出使出l出t出 出軍出i出x出T出h出本出e出a出d出S出a出f出e出t出y出(出)出;出
+出
+出 出 出 出 出/出*出*出 出修出復出基本出�出能出基本出�出�出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出)出
+出 出 出 出 出軍出軍出i出x出R出e出s出使出l出t出 出軍出i出x出P出e出本出f出o出本出設置出a出n出c出e出I出s出s出使出e出s出(出)出;出
+出
+出 出 出 出 出/出*出*出 出修出復出安出全出基本出�出�出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出)出
+出 出 出 出 出軍出軍出i出x出R出e出s出使出l出t出 出軍出i出x出S出e出c出使出本出i出t出y出I出s出s出使出e出s出(出)出;出
+出
+出 出 出 出 出/出*出*出 出修出復出�出基本出�出�出質出�出X出�出�出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出)出
+出 出 出 出 出軍出軍出i出x出R出e出s出使出l出t出 出軍出i出x出C出o出d出e出Q出使出a出l出i出t出y出(出)出;出
+出
+出 出 出 出 出/出*出*出 出修出復出基本出�出�出X出�出件出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出)出
+出 出 出 出 出軍出軍出i出x出R出e出s出使出l出t出 出軍出i出x出S出p出e出c出i出f出i出c出軍出i出l出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出P出a出t出h出)出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出�出基本出修出復出歷出史出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出i出x出R出e出s出使出l出t出>出 出G出e出t出軍出i出x出輸入出i出s出t出o出本出y出(出)出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出�出基本出修出復出基本出�出�出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出n出e出本出a出t出e出軍出i出x出R出e出p出o出本出t出(出)出;出
+出
+出 出 出 出 出/出*出*出 出驗出�出基本出修出復出基本出�出�出基本出 出*出/出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出)出
+出 出 出 出 出b出o出o出l出 出V出e出本出i出f出y出軍出i出x出e出s出(出)出;出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出/出*出*出 出修出復出基本出�出�出基本出事出件出 出*出/出
+出 出 出 出 出
+出
+出 出 出 出 出/出*出*出 出修出復出完出�出基本出事出件出 出*出/出
+出 出 出 出 出
+出
+出 出 出 出 出/出*出*出 出修出復出失出�出基本出事出件出 出*出/出
+出 出 出 出 出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出出出E出正出e出n出t出s出"出)出
+出 出 出 出 出軍出O出n出軍出i出x出S出t出a出本出t出e出d出 出O出n出軍出i出x出S出t出a出本出t出e出d出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出出出E出正出e出n出t出s出"出)出
+出 出 出 出 出軍出O出n出軍出i出x出C出o出設置出p出l出e出t出e出d出 出O出n出軍出i出x出C出o出設置出p出l出e出t出e出d出;出
+出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出出出E出正出e出n出t出s出"出)出
+出 出 出 出 出軍出O出n出軍出i出x出軍出a出i出l出e出d出 出O出n出軍出i出x出軍出a出i出l出e出d出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出*出*出 出基本出�出�出基本出�出基本出�出�出弱出�出基本出 出*出/出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出n出a出l出y出z出e出基本出e出a出k出n出e出s出s出e出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出P出a出t出h出)出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出用出修出復出 出*出/出
+出 出 出 出 出b出o出o出l出 出A出p出p出l出y出軍出i出x出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出P出a出t出h出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出基本出e出a出k出n出e出s出s出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出x出)出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出份出基本出�出�出基本出�出基本出*出/出
+出 出 出 出 出b出o出o出l出 出B出a出c出k出使出p出軍出i出l出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出P出a出t出h出)出;出
+出
+出 出 出 出 出/出*出*出 出驗出�出基本出修出復出 出*出/出
+出 出 出 出 出b出o出o出l出 出V出a出l出i出d出a出t出e出軍出i出x出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出P出a出t出h出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出O出本出i出成出i出n出a出l出C出o出n出t出e出n出t出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出x出e出d出C出o出n出t出e出n出t出)出;出
+出
+出 出 出 出 出/出*出*出 出記出�出基本出修出復出 出*出/出
+出 出 出 出 出正出o出i出d出 出R出e出c出o出本出d出軍出i出x出(出c出o出n出s出t出 出軍出軍出i出x出R出e出s出使出l出t出&出 出軍出i出x出R出e出s出使出l出t出)出;出
+出
+出p出本出i出正出a出t出e出:出
+出 出 出 出 出/出*出*出 出修出復出歷出史出 出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出,出 出設置出e出t出a出 出=出 出(出A出l出l出o出w出P出本出i出正出a出t出e出A出c出c出e出s出s出 出=出 出"出t出本出使出e出"出)出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出軍出i出x出R出e出s出使出l出t出>出 出軍出i出x出輸入出i出s出t出o出本出y出;出
+出
+出 出 出 出 出/出*出*出 出系出統出基本出�出否出已出�出基本出始出�出基本出 出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出,出 出設置出e出t出a出 出=出 出(出A出l出l出o出w出P出本出i出正出a出t出e出A出c出c出e出s出s出 出=出 出"出t出本出使出e出"出)出)出
+出 出 出 出 出b出o出o出l出 出b出I出n出i出t出i出a出l出i出z出e出d出;出
+出
+出 出 出 出 出/出*出*出 出基本出�出份出基本出�出�出基本出 出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出,出 出設置出e出t出a出 出=出 出(出A出l出l出o出w出P出本出i出正出a出t出e出A出c出c出e出s出s出 出=出 出"出t出本出使出e出"出)出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出B出a出c出k出使出p出D出i出本出e出c出t出o出本出y出;出
+出
+出 出 出 出 出/出*出*出 出修出復出規出�出X出�出�出基本出 出*出/出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出基本出e出a出k出n出e出s出s出 出軍出i出x出e出本出"出,出 出設置出e出t出a出 出=出 出(出A出l出l出o出w出P出本出i出正出a出t出e出A出c出c出e出s出s出 出=出 出"出t出本出使出e出"出)出)出
+出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出 出軍出i出x出R出使出l出e出s出;出
+出}出;出
+出
+出
+出

@@ -1,456 +1,457 @@
-#include "MingGoRTSResourceCollectionTest.h"
-#include "Engine/World.h"
-
-UMingGoRTSResourceCollectionTest::UMingGoRTSResourceCollectionTest()
-{
-    ResourceSystem = nullptr;
-    PassedTests = 0;
-    FailedTests = 0;
-}
-
-void UMingGoRTSResourceCollectionTest::InitializeTest()
-{
-    ResetTestCounters();
-    
-    // 創建資源系統實例
-    ResourceSystem = NewObject<UMingGoRTSResourceSystem>();
-    if (ResourceSystem)
-    {
-        ResourceSystem->InitializeResourceSystem();
-        AddTestResult(TEXT("資源系統初始化"), true, TEXT("資源系統成功初始化"));
-    }
-    else
-    {
-        AddTestResult(TEXT("資源系統初始化"), false, TEXT("無法創建資源系統實例"));
-    }
-}
-
-bool UMingGoRTSResourceCollectionTest::TestBasicResourceCollection()
-{
-    if (!ResourceSystem)
-    {
-        AddTestResult(TEXT("基本資源收集測試"), false, TEXT("資源系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 測試創建資源收集
-    FString CollectionID = CreateTestCollection(EResourceType::Wood, ECollectionMethod::Harvest);
-    if (CollectionID.IsEmpty())
-    {
-        AddTestResult(TEXT("創建資源收集"), false, TEXT("無法創建資源收集"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("創建資源收集"), true, FString::Printf(TEXT("成功創建收集：%s"), *CollectionID));
-    }
-
-    // 測試開始收集
-    bool bStarted = ResourceSystem->StartResourceCollection(CollectionID, TEXT("TestCollector"));
-    if (!bStarted)
-    {
-        AddTestResult(TEXT("開始資源收集"), false, TEXT("無法開始資源收集"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("開始資源收集"), true, TEXT("成功開始資源收集"));
-    }
-
-    // 測試收集資源
-    float CollectedAmount = ResourceSystem->CollectResource(CollectionID);
-    if (CollectedAmount <= 0.0f)
-    {
-        AddTestResult(TEXT("收集資源"), false, TEXT("收集資源失敗"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("收集資源"), true, FString::Printf(TEXT("成功收集：%.2f"), CollectedAmount));
-    }
-
-    // 測試停止收集
-    bool bStopped = ResourceSystem->StopResourceCollection(CollectionID);
-    if (!bStopped)
-    {
-        AddTestResult(TEXT("停止資源收集"), false, TEXT("無法停止資源收集"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("停止資源收集"), true, TEXT("成功停止資源收集"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSResourceCollectionTest::TestResourceStorage()
-{
-    if (!ResourceSystem)
-    {
-        AddTestResult(TEXT("資源存儲測試"), false, TEXT("資源系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 創建測試存儲
-    FString StorageID = CreateTestStorage(TEXT("TestStorage"), 1000.0f);
-    if (StorageID.IsEmpty())
-    {
-        AddTestResult(TEXT("創建資源存儲"), false, TEXT("無法創建資源存儲"));
-        return false;
-    }
-
-    // 測試存儲資源
-    bool bStored = ResourceSystem->StoreResource(StorageID, EResourceType::Wood, 100.0f);
-    if (!bStored)
-    {
-        AddTestResult(TEXT("存儲資源"), false, TEXT("無法存儲資源"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("存儲資源"), true, TEXT("成功存儲資源"));
-    }
-
-    // 驗證資源數量
-    bool bVerified = VerifyResourceQuantity(StorageID, EResourceType::Wood, 100.0f);
-    if (!bVerified)
-    {
-        AddTestResult(TEXT("驗證資源數量"), false, TEXT("資源數量不正確"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("驗證資源數量"), true, TEXT("資源數量正確"));
-    }
-
-    // 測試提取資源
-    float RetrievedAmount = ResourceSystem->RetrieveResource(StorageID, EResourceType::Wood, 50.0f);
-    if (RetrievedAmount <= 0.0f)
-    {
-        AddTestResult(TEXT("提取資源"), false, TEXT("無法提取資源"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("提取資源"), true, FString::Printf(TEXT("成功提取：%.2f"), RetrievedAmount));
-    }
-
-    // 驗證剩餘資源
-    bool bRemainingVerified = VerifyResourceQuantity(StorageID, EResourceType::Wood, 50.0f);
-    if (!bRemainingVerified)
-    {
-        AddTestResult(TEXT("驗證剩餘資源"), false, TEXT("剩餘資源數量不正確"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("驗證剩餘資源"), true, TEXT("剩餘資源數量正確"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSResourceCollectionTest::TestResourceConversion()
-{
-    if (!ResourceSystem)
-    {
-        AddTestResult(TEXT("資源轉換測試"), false, TEXT("資源系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 創建測試存儲並添加輸入資源
-    FString StorageID = CreateTestStorage(TEXT("ConversionStorage"), 2000.0f);
-    if (StorageID.IsEmpty())
-    {
-        AddTestResult(TEXT("資源轉換測試"), false, TEXT("無法創建轉換測試存儲"));
-        return false;
-    }
-
-    // 添加輸入資源
-    ResourceSystem->StoreResource(StorageID, EResourceType::Wood, 100.0f);
-    ResourceSystem->StoreResource(StorageID, EResourceType::Metal, 50.0f);
-
-    // 創建轉換配方
-    TMap<EResourceType, float> InputResources;
-    InputResources.Add(EResourceType::Wood, 50.0f);
-    InputResources.Add(EResourceType::Metal, 25.0f);
-
-    TMap<EResourceType, float> OutputResources;
-    OutputResources.Add(EResourceType::Tools, 10.0f);
-
-    FString ConversionID = ResourceSystem->CreateResourceConversion(TEXT("TestConversion"), InputResources, OutputResources);
-    if (ConversionID.IsEmpty())
-    {
-        AddTestResult(TEXT("創建資源轉換"), false, TEXT("無法創建資源轉換"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("創建資源轉換"), true, FString::Printf(TEXT("成功創建轉換：%s"), *ConversionID));
-    }
-
-    // 執行轉換
-    bool bConverted = ResourceSystem->ConvertResources(ConversionID);
-    if (!bConverted)
-    {
-        AddTestResult(TEXT("執行資源轉換"), false, TEXT("無法執行資源轉換"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("執行資源轉換"), true, TEXT("成功執行資源轉換"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSResourceCollectionTest::TestResourceTransport()
-{
-    if (!ResourceSystem)
-    {
-        AddTestResult(TEXT("資源運輸測試"), false, TEXT("資源系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 創建源存儲和目標存儲
-    FString FromStorageID = CreateTestStorage(TEXT("FromStorage"), 1000.0f);
-    FString ToStorageID = CreateTestStorage(TEXT("ToStorage"), 1000.0f);
-
-    if (FromStorageID.IsEmpty() || ToStorageID.IsEmpty())
-    {
-        AddTestResult(TEXT("資源運輸測試"), false, TEXT("無法創建運輸測試存儲"));
-        return false;
-    }
-
-    // 在源存儲中添加資源
-    ResourceSystem->StoreResource(FromStorageID, EResourceType::Wood, 100.0f);
-
-    // 測試資源運輸
-    bool bTransported = ResourceSystem->TransportResource(FromStorageID, ToStorageID, EResourceType::Wood, 50.0f);
-    if (!bTransported)
-    {
-        AddTestResult(TEXT("資源運輸"), false, TEXT("無法運輸資源"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("資源運輸"), true, TEXT("成功運輸資源"));
-    }
-
-    // 驗證運輸結果
-    bool bFromVerified = VerifyResourceQuantity(FromStorageID, EResourceType::Wood, 50.0f);
-    bool bToVerified = VerifyResourceQuantity(ToStorageID, EResourceType::Wood, 50.0f);
-
-    if (!bFromVerified || !bToVerified)
-    {
-        AddTestResult(TEXT("驗證運輸結果"), false, TEXT("運輸結果驗證失敗"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("驗證運輸結果"), true, TEXT("運輸結果驗證成功"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSResourceCollectionTest::TestResourceTrade()
-{
-    if (!ResourceSystem)
-    {
-        AddTestResult(TEXT("資源交易測試"), false, TEXT("資源系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 創建測試存儲
-    FString StorageID = CreateTestStorage(TEXT("TradeStorage"), 2000.0f);
-    if (StorageID.IsEmpty())
-    {
-        AddTestResult(TEXT("資源交易測試"), false, TEXT("無法創建交易測試存儲"));
-        return false;
-    }
-
-    // 添加交易資源
-    ResourceSystem->StoreResource(StorageID, EResourceType::Wood, 100.0f);
-
-    // 測試資源交易
-    bool bTraded = ResourceSystem->TradeResource(StorageID, EResourceType::Wood, 50.0f, EResourceType::Stone, 75.0f);
-    if (!bTraded)
-    {
-        AddTestResult(TEXT("資源交易"), false, TEXT("無法執行資源交易"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("資源交易"), true, TEXT("成功執行資源交易"));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSResourceCollectionTest::TestResourceDecay()
-{
-    if (!ResourceSystem)
-    {
-        AddTestResult(TEXT("資源衰減測試"), false, TEXT("資源系統未初始化"));
-        return false;
-    }
-
-    bool bAllPassed = true;
-
-    // 創建測試存儲
-    FString StorageID = CreateTestStorage(TEXT("DecayStorage"), 1000.0f);
-    if (StorageID.IsEmpty())
-    {
-        AddTestResult(TEXT("資源衰減測試"), false, TEXT("無法創建衰減測試存儲"));
-        return false;
-    }
-
-    // 添加易腐爛資源
-    ResourceSystem->StoreResource(StorageID, EResourceType::Food, 100.0f);
-
-    // 獲取初始數量
-    FResourceData InitialResource = ResourceSystem->GetStoredResource(StorageID, EResourceType::Food);
-    float InitialQuantity = InitialResource.Quantity;
-
-    // 模擬時間流逝（1小時）
-    ResourceSystem->ProcessResourceDecay(3600.0f);
-
-    // 獲取衰減後數量
-    FResourceData FinalResource = ResourceSystem->GetStoredResource(StorageID, EResourceType::Food);
-    float FinalQuantity = FinalResource.Quantity;
-
-    // 檢查是否有衰減
-    if (FinalQuantity >= InitialQuantity)
-    {
-        AddTestResult(TEXT("資源衰減"), false, TEXT("資源未發生衰減"));
-        bAllPassed = false;
-    }
-    else
-    {
-        AddTestResult(TEXT("資源衰減"), true, FString::Printf(TEXT("資源從 %.2f 衰減到 %.2f"), InitialQuantity, FinalQuantity));
-    }
-
-    return bAllPassed;
-}
-
-bool UMingGoRTSResourceCollectionTest::RunAllTests()
-{
-    InitializeTest();
-    
-    bool bAllPassed = true;
-    
-    bAllPassed &= TestBasicResourceCollection();
-    bAllPassed &= TestResourceStorage();
-    bAllPassed &= TestResourceConversion();
-    bAllPassed &= TestResourceTransport();
-    bAllPassed &= TestResourceTrade();
-    bAllPassed &= TestResourceDecay();
-    
-    // 添加總體測試結果
-    if (bAllPassed)
-    {
-        AddTestResult(TEXT("所有測試"), true, FString::Printf(TEXT("所有測試通過，通過：%d，失敗：%d"), PassedTests, FailedTests));
-    }
-    else
-    {
-        AddTestResult(TEXT("所有測試"), false, FString::Printf(TEXT("部分測試失敗，通過：%d，失敗：%d"), PassedTests, FailedTests));
-    }
-    
-    return bAllPassed;
-}
-
-FString UMingGoRTSResourceCollectionTest::GetTestResults() const
-{
-    FString Results = TEXT("資源收集系統測試結果\n");
-    Results += FString::Printf(TEXT("通過測試：%d\n"), PassedTests);
-    Results += FString::Printf(TEXT("失敗測試：%d\n"), FailedTests);
-    Results += TEXT("詳細結果：\n");
-    
-    for (const FString& Result : TestResults)
-    {
-        Results += Result + TEXT("\n");
-    }
-    
-    return Results;
-}
-
-void UMingGoRTSResourceCollectionTest::CleanupTest()
-{
-    if (ResourceSystem)
-    {
-        ResourceSystem = nullptr;
-    }
-    
-    TestResults.Empty();
-    ResetTestCounters();
-}
-
-void UMingGoRTSResourceCollectionTest::AddTestResult(const FString& TestName, bool bPassed, const FString& Message)
-{
-    FString Result = FString::Printf(TEXT("[%s] %s"), bPassed ? TEXT("通過") : TEXT("失敗"), *TestName);
-    if (!Message.IsEmpty())
-    {
-        Result += FString::Printf(TEXT(" - %s"), *Message);
-    }
-    
-    TestResults.Add(Result);
-    
-    if (bPassed)
-    {
-        PassedTests++;
-    }
-    else
-    {
-        FailedTests++;
-    }
-}
-
-FString UMingGoRTSResourceCollectionTest::CreateTestStorage(const FString& StorageName, float Capacity)
-{
-    if (!ResourceSystem)
-    {
-        return TEXT("");
-    }
-    
-    return ResourceSystem->CreateResourceStorage(StorageName, TEXT("TestLocation"), Capacity);
-}
-
-FString UMingGoRTSResourceCollectionTest::CreateTestCollection(EResourceType ResourceType, ECollectionMethod Method)
-{
-    if (!ResourceSystem)
-    {
-        return TEXT("");
-    }
-    
-    return ResourceSystem->CreateResourceCollection(ResourceType, Method, TEXT("TestLocation"));
-}
-
-bool UMingGoRTSResourceCollectionTest::VerifyResourceQuantity(const FString& StorageID, EResourceType ResourceType, float ExpectedQuantity)
-{
-    if (!ResourceSystem)
-    {
-        return false;
-    }
-    
-    FResourceData Resource = ResourceSystem->GetStoredResource(StorageID, ResourceType);
-    return FMath::Abs(Resource.Quantity - ExpectedQuantity) < 0.01f;
-}
-
-void UMingGoRTSResourceCollectionTest::ResetTestCounters()
-{
-    PassedTests = 0;
-    FailedTests = 0;
-    TestResults.Empty();
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出基本出o出本出l出d出.出h出"出
+出
+出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出(出)出
+出{出
+出 出 出 出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出P出a出s出s出e出d出T出e出s出t出s出 出=出 出0出;出
+出 出 出 出 出軍出a出i出l出e出d出T出e出s出t出s出 出=出 出0出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出I出n出i出t出i出a出l出i出z出e出T出e出s出t出(出)出
+出{出
+出 出 出 出 出R出e出s出e出t出T出e出s出t出C出o出使出n出t出e出本出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出創出建出資出源出系出統出實出例出
+出 出 出 出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出>出(出)出;出
+出 出 出 出 出i出f出 出(出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出I出n出i出t出i出a出l出i出z出e出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出(出)出;出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出系出統出初出始出化出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出資出源出系出統出成出功出初出始出化出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出系出統出初出始出化出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出創出建出資出源出系出統出實出例出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出T出e出s出t出B出a出s出i出c出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出基出本出資出源出收出集出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出資出源出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出測出試出創出建出資出源出收出集出
+出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出l出l出e出c出t出i出o出n出I出D出 出=出 出C出本出e出a出t出e出T出e出s出t出C出o出l出l出e出c出t出i出o出n出(出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出E出C出o出l出l出e出c出t出i出o出n出M出e出t出h出o出d出:出:出輸入出a出本出正出e出s出t出)出;出
+出 出 出 出 出i出f出 出(出C出o出l出l出e出c出t出i出o出n出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出創出建出資出源出收出集出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出創出建出資出源出收出集出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出創出建出資出源出收出集出"出)出,出 出t出本出使出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出成出功出創出建出收出集出：出%出s出"出)出,出 出*出C出o出l出l出e出c出t出i出o出n出I出D出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出測出試出開出始出收出集出
+出 出 出 出 出b出o出o出l出 出b出S出t出a出本出t出e出d出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出S出t出a出本出t出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出(出C出o出l出l出e出c出t出i出o出n出I出D出,出 出T出E出X出T出(出"出T出e出s出t出C出o出l出l出e出c出t出o出本出"出)出)出;出
+出 出 出 出 出i出f出 出(出!出b出S出t出a出本出t出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出開出始出資出源出收出集出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出開出始出資出源出收出集出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出開出始出資出源出收出集出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出開出始出資出源出收出集出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出測出試出收出集出資出源出
+出 出 出 出 出f出l出o出a出t出 出C出o出l出l出e出c出t出e出d出A出設置出o出使出n出t出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出C出o出l出l出e出c出t出R出e出s出o出使出本出c出e出(出C出o出l出l出e出c出t出i出o出n出I出D出)出;出
+出 出 出 出 出i出f出 出(出C出o出l出l出e出c出t出e出d出A出設置出o出使出n出t出 出<出=出 出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出收出集出資出源出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出收出集出資出源出失出敗出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出收出集出資出源出"出)出,出 出t出本出使出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出成出功出收出集出：出%出.出2出f出"出)出,出 出C出o出l出l出e出c出t出e出d出A出設置出o出使出n出t出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出測出試出停出止出收出集出
+出 出 出 出 出b出o出o出l出 出b出S出t出o出p出p出e出d出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出S出t出o出p出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出(出C出o出l出l出e出c出t出i出o出n出I出D出)出;出
+出 出 出 出 出i出f出 出(出!出b出S出t出o出p出p出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出停出止出資出源出收出集出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出停出止出資出源出收出集出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出停出止出資出源出收出集出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出停出止出資出源出收出集出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出T出e出s出t出R出e出s出o出使出本出c出e出S出t出o出本出a出成出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出存出儲出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出資出源出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出創出建出測出試出存出儲出
+出 出 出 出 出軍出S出t出本出i出n出成出 出S出t出o出本出a出成出e出I出D出 出=出 出C出本出e出a出t出e出T出e出s出t出S出t出o出本出a出成出e出(出T出E出X出T出(出"出T出e出s出t出S出t出o出本出a出成出e出"出)出,出 出1出0出0出0出.出0出f出)出;出
+出 出 出 出 出i出f出 出(出S出t出o出本出a出成出e出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出創出建出資出源出存出儲出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出創出建出資出源出存出儲出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出測出試出存出儲出資出源出
+出 出 出 出 出b出o出o出l出 出b出S出t出o出本出e出d出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出S出t出o出本出e出R出e出s出o出使出本出c出e出(出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出i出f出 出(出!出b出S出t出o出本出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出存出儲出資出源出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出存出儲出資出源出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出存出儲出資出源出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出存出儲出資出源出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出驗出證出資出源出數出量出
+出 出 出 出 出b出o出o出l出 出b出V出e出本出i出f出i出e出d出 出=出 出V出e出本出i出f出y出R出e出s出o出使出本出c出e出Q出使出a出n出t出i出t出y出(出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出i出f出 出(出!出b出V出e出本出i出f出i出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出驗出證出資出源出數出量出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出資出源出數出量出不出正出確出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出驗出證出資出源出數出量出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出資出源出數出量出正出確出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出測出試出提出取出資出源出
+出 出 出 出 出f出l出o出a出t出 出R出e出t出本出i出e出正出e出d出A出設置出o出使出n出t出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出R出e出t出本出i出e出正出e出R出e出s出o出使出本出c出e出(出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出5出0出.出0出f出)出;出
+出 出 出 出 出i出f出 出(出R出e出t出本出i出e出正出e出d出A出設置出o出使出n出t出 出<出=出 出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出提出取出資出源出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出提出取出資出源出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出提出取出資出源出"出)出,出 出t出本出使出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出成出功出提出取出：出%出.出2出f出"出)出,出 出R出e出t出本出i出e出正出e出d出A出設置出o出使出n出t出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出驗出證出剩出餘出資出源出
+出 出 出 出 出b出o出o出l出 出b出R出e出設置出a出i出n出i出n出成出V出e出本出i出f出i出e出d出 出=出 出V出e出本出i出f出y出R出e出s出o出使出本出c出e出Q出使出a出n出t出i出t出y出(出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出5出0出.出0出f出)出;出
+出 出 出 出 出i出f出 出(出!出b出R出e出設置出a出i出n出i出n出成出V出e出本出i出f出i出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出驗出證出剩出餘出資出源出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出剩出餘出資出源出數出量出不出正出確出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出驗出證出剩出餘出資出源出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出剩出餘出資出源出數出量出正出確出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出T出e出s出t出R出e出s出o出使出本出c出e出C出o出n出正出e出本出s出i出o出n出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出轉出換出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出資出源出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出創出建出測出試出存出儲出並出添出加出輸出入出資出源出
+出 出 出 出 出軍出S出t出本出i出n出成出 出S出t出o出本出a出成出e出I出D出 出=出 出C出本出e出a出t出e出T出e出s出t出S出t出o出本出a出成出e出(出T出E出X出T出(出"出C出o出n出正出e出本出s出i出o出n出S出t出o出本出a出成出e出"出)出,出 出2出0出0出0出.出0出f出)出;出
+出 出 出 出 出i出f出 出(出S出t出o出本出a出成出e出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出轉出換出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出創出建出轉出換出測出試出存出儲出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出添出加出輸出入出資出源出
+出 出 出 出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出S出t出o出本出e出R出e出s出o出使出本出c出e出(出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出1出0出0出.出0出f出)出;出
+出 出 出 出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出S出t出o出本出e出R出e出s出o出使出本出c出e出(出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出M出e出t出a出l出,出 出5出0出.出0出f出)出;出
+出
+出 出 出 出 出/出/出 出創出建出轉出換出配出方出
+出 出 出 出 出T出M出a出p出<出E出R出e出s出o出使出本出c出e出T出y出p出e出,出 出f出l出o出a出t出>出 出I出n出p出使出t出R出e出s出o出使出本出c出e出s出;出
+出 出 出 出 出I出n出p出使出t出R出e出s出o出使出本出c出e出s出.出A出d出d出(出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出5出0出.出0出f出)出;出
+出 出 出 出 出I出n出p出使出t出R出e出s出o出使出本出c出e出s出.出A出d出d出(出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出M出e出t出a出l出,出 出2出5出.出0出f出)出;出
+出
+出 出 出 出 出T出M出a出p出<出E出R出e出s出o出使出本出c出e出T出y出p出e出,出 出f出l出o出a出t出>出 出O出使出t出p出使出t出R出e出s出o出使出本出c出e出s出;出
+出 出 出 出 出O出使出t出p出使出t出R出e出s出o出使出本出c出e出s出.出A出d出d出(出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出T出o出o出l出s出,出 出1出0出.出0出f出)出;出
+出
+出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出n出正出e出本出s出i出o出n出I出D出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出C出本出e出a出t出e出R出e出s出o出使出本出c出e出C出o出n出正出e出本出s出i出o出n出(出T出E出X出T出(出"出T出e出s出t出C出o出n出正出e出本出s出i出o出n出"出)出,出 出I出n出p出使出t出R出e出s出o出使出本出c出e出s出,出 出O出使出t出p出使出t出R出e出s出o出使出本出c出e出s出)出;出
+出 出 出 出 出i出f出 出(出C出o出n出正出e出本出s出i出o出n出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出創出建出資出源出轉出換出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出創出建出資出源出轉出換出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出創出建出資出源出轉出換出"出)出,出 出t出本出使出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出成出功出創出建出轉出換出：出%出s出"出)出,出 出*出C出o出n出正出e出本出s出i出o出n出I出D出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出執出行出轉出換出
+出 出 出 出 出b出o出o出l出 出b出C出o出n出正出e出本出t出e出d出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出C出o出n出正出e出本出t出R出e出s出o出使出本出c出e出s出(出C出o出n出正出e出本出s出i出o出n出I出D出)出;出
+出 出 出 出 出i出f出 出(出!出b出C出o出n出正出e出本出t出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出執出行出資出源出轉出換出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出執出行出資出源出轉出換出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出執出行出資出源出轉出換出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出執出行出資出源出轉出換出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出T出e出s出t出R出e出s出o出使出本出c出e出T出本出a出n出s出p出o出本出t出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出運出輸出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出資出源出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出創出建出源出存出儲出和出目出標出存出儲出
+出 出 出 出 出軍出S出t出本出i出n出成出 出軍出本出o出設置出S出t出o出本出a出成出e出I出D出 出=出 出C出本出e出a出t出e出T出e出s出t出S出t出o出本出a出成出e出(出T出E出X出T出(出"出軍出本出o出設置出S出t出o出本出a出成出e出"出)出,出 出1出0出0出0出.出0出f出)出;出
+出 出 出 出 出軍出S出t出本出i出n出成出 出T出o出S出t出o出本出a出成出e出I出D出 出=出 出C出本出e出a出t出e出T出e出s出t出S出t出o出本出a出成出e出(出T出E出X出T出(出"出T出o出S出t出o出本出a出成出e出"出)出,出 出1出0出0出0出.出0出f出)出;出
+出
+出 出 出 出 出i出f出 出(出軍出本出o出設置出S出t出o出本出a出成出e出I出D出.出I出s出E出設置出p出t出y出(出)出 出出出出出 出T出o出S出t出o出本出a出成出e出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出運出輸出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出創出建出運出輸出測出試出存出儲出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出在出源出存出儲出中出添出加出資出源出
+出 出 出 出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出S出t出o出本出e出R出e出s出o出使出本出c出e出(出軍出本出o出設置出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出1出0出0出.出0出f出)出;出
+出
+出 出 出 出 出/出/出 出測出試出資出源出運出輸出
+出 出 出 出 出b出o出o出l出 出b出T出本出a出n出s出p出o出本出t出e出d出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出T出本出a出n出s出p出o出本出t出R出e出s出o出使出本出c出e出(出軍出本出o出設置出S出t出o出本出a出成出e出I出D出,出 出T出o出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出5出0出.出0出f出)出;出
+出 出 出 出 出i出f出 出(出!出b出T出本出a出n出s出p出o出本出t出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出運出輸出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出運出輸出資出源出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出運出輸出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出運出輸出資出源出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出驗出證出運出輸出結出果出
+出 出 出 出 出b出o出o出l出 出b出軍出本出o出設置出V出e出本出i出f出i出e出d出 出=出 出V出e出本出i出f出y出R出e出s出o出使出本出c出e出Q出使出a出n出t出i出t出y出(出軍出本出o出設置出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出5出0出.出0出f出)出;出
+出 出 出 出 出b出o出o出l出 出b出T出o出V出e出本出i出f出i出e出d出 出=出 出V出e出本出i出f出y出R出e出s出o出使出本出c出e出Q出使出a出n出t出i出t出y出(出T出o出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出5出0出.出0出f出)出;出
+出
+出 出 出 出 出i出f出 出(出!出b出軍出本出o出設置出V出e出本出i出f出i出e出d出 出出出出出 出!出b出T出o出V出e出本出i出f出i出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出驗出證出運出輸出結出果出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出運出輸出結出果出驗出證出失出敗出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出驗出證出運出輸出結出果出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出運出輸出結出果出驗出證出成出功出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出T出e出s出t出R出e出s出o出使出本出c出e出T出本出a出d出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出交出易出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出資出源出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出創出建出測出試出存出儲出
+出 出 出 出 出軍出S出t出本出i出n出成出 出S出t出o出本出a出成出e出I出D出 出=出 出C出本出e出a出t出e出T出e出s出t出S出t出o出本出a出成出e出(出T出E出X出T出(出"出T出本出a出d出e出S出t出o出本出a出成出e出"出)出,出 出2出0出0出0出.出0出f出)出;出
+出 出 出 出 出i出f出 出(出S出t出o出本出a出成出e出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出交出易出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出創出建出交出易出測出試出存出儲出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出添出加出交出易出資出源出
+出 出 出 出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出S出t出o出本出e出R出e出s出o出使出本出c出e出(出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出1出0出0出.出0出f出)出;出
+出
+出 出 出 出 出/出/出 出測出試出資出源出交出易出
+出 出 出 出 出b出o出o出l出 出b出T出本出a出d出e出d出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出T出本出a出d出e出R出e出s出o出使出本出c出e出(出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出基本出o出o出d出,出 出5出0出.出0出f出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出S出t出o出n出e出,出 出7出5出.出0出f出)出;出
+出 出 出 出 出i出f出 出(出!出b出T出本出a出d出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出交出易出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出執出行出資出源出交出易出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出交出易出"出)出,出 出t出本出使出e出,出 出T出E出X出T出(出"出成出功出執出行出資出源出交出易出"出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出T出e出s出t出R出e出s出o出使出本出c出e出D出e出c出a出y出(出)出
+出{出
+出 出 出 出 出i出f出 出(出!出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出衰出減出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出資出源出系出統出未出初出始出化出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出創出建出測出試出存出儲出
+出 出 出 出 出軍出S出t出本出i出n出成出 出S出t出o出本出a出成出e出I出D出 出=出 出C出本出e出a出t出e出T出e出s出t出S出t出o出本出a出成出e出(出T出E出X出T出(出"出D出e出c出a出y出S出t出o出本出a出成出e出"出)出,出 出1出0出0出0出.出0出f出)出;出
+出 出 出 出 出i出f出 出(出S出t出o出本出a出成出e出I出D出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出衰出減出測出試出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出無出法出創出建出衰出減出測出試出存出儲出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出添出加出易出腐出爛出資出源出
+出 出 出 出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出S出t出o出本出e出R出e出s出o出使出本出c出e出(出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出軍出o出o出d出,出 出1出0出0出.出0出f出)出;出
+出
+出 出 出 出 出/出/出 出獲出取出初出始出數出量出
+出 出 出 出 出軍出R出e出s出o出使出本出c出e出D出a出t出a出 出I出n出i出t出i出a出l出R出e出s出o出使出本出c出e出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出G出e出t出S出t出o出本出e出d出R出e出s出o出使出本出c出e出(出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出軍出o出o出d出)出;出
+出 出 出 出 出f出l出o出a出t出 出I出n出i出t出i出a出l出Q出使出a出n出t出i出t出y出 出=出 出I出n出i出t出i出a出l出R出e出s出o出使出本出c出e出.出Q出使出a出n出t出i出t出y出;出
+出
+出 出 出 出 出/出/出 出模出擬出時出間出流出逝出（出1出小出時出）出
+出 出 出 出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出P出本出o出c出e出s出s出R出e出s出o出使出本出c出e出D出e出c出a出y出(出3出6出0出0出.出0出f出)出;出
+出
+出 出 出 出 出/出/出 出獲出取出衰出減出後出數出量出
+出 出 出 出 出軍出R出e出s出o出使出本出c出e出D出a出t出a出 出軍出i出n出a出l出R出e出s出o出使出本出c出e出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出G出e出t出S出t出o出本出e出d出R出e出s出o出使出本出c出e出(出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出:出:出軍出o出o出d出)出;出
+出 出 出 出 出f出l出o出a出t出 出軍出i出n出a出l出Q出使出a出n出t出i出t出y出 出=出 出軍出i出n出a出l出R出e出s出o出使出本出c出e出.出Q出使出a出n出t出i出t出y出;出
+出
+出 出 出 出 出/出/出 出檢出查出是出否出有出衰出減出
+出 出 出 出 出i出f出 出(出軍出i出n出a出l出Q出使出a出n出t出i出t出y出 出>出=出 出I出n出i出t出i出a出l出Q出使出a出n出t出i出t出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出衰出減出"出)出,出 出f出a出l出s出e出,出 出T出E出X出T出(出"出資出源出未出發出生出衰出減出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出資出源出衰出減出"出)出,出 出t出本出使出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出資出源出從出 出%出.出2出f出 出衰出減出到出 出%出.出2出f出"出)出,出 出I出n出i出t出i出a出l出Q出使出a出n出t出i出t出y出,出 出軍出i出n出a出l出Q出使出a出n出t出i出t出y出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出R出使出n出A出l出l出T出e出s出t出s出(出)出
+出{出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出T出e出s出t出(出)出;出
+出 出 出 出 出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出B出a出s出i出c出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出R出e出s出o出使出本出c出e出S出t出o出本出a出成出e出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出R出e出s出o出使出本出c出e出C出o出n出正出e出本出s出i出o出n出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出R出e出s出o出使出本出c出e出T出本出a出n出s出p出o出本出t出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出R出e出s出o出使出本出c出e出T出本出a出d出e出(出)出;出
+出 出 出 出 出b出A出l出l出P出a出s出s出e出d出 出&出=出 出T出e出s出t出R出e出s出o出使出本出c出e出D出e出c出a出y出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出添出加出總出體出測出試出結出果出
+出 出 出 出 出i出f出 出(出b出A出l出l出P出a出s出s出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出所出有出測出試出"出)出,出 出t出本出使出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出所出有出測出試出通出過出，出通出過出：出%出d出，出失出敗出：出%出d出"出)出,出 出P出a出s出s出e出d出T出e出s出t出s出,出 出軍出a出i出l出e出d出T出e出s出t出s出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出T出E出X出T出(出"出所出有出測出試出"出)出,出 出f出a出l出s出e出,出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出部出分出測出試出失出敗出，出通出過出：出%出d出，出失出敗出：出%出d出"出)出,出 出P出a出s出s出e出d出T出e出s出t出s出,出 出軍出a出i出l出e出d出T出e出s出t出s出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出a出s出s出e出d出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出G出e出t出T出e出s出t出R出e出s出使出l出t出s出(出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出s出使出l出t出s出 出=出 出T出E出X出T出(出"出資出源出收出集出系出統出測出試出結出果出\出n出"出)出;出
+出 出 出 出 出R出e出s出使出l出t出s出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出通出過出測出試出：出%出d出\出n出"出)出,出 出P出a出s出s出e出d出T出e出s出t出s出)出;出
+出 出 出 出 出R出e出s出使出l出t出s出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出失出敗出測出試出：出%出d出\出n出"出)出,出 出軍出a出i出l出e出d出T出e出s出t出s出)出;出
+出 出 出 出 出R出e出s出使出l出t出s出 出+出=出 出T出E出X出T出(出"出詳出細出結出果出：出\出n出"出)出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出s出使出l出t出 出:出 出T出e出s出t出R出e出s出使出l出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出s出使出l出t出s出 出+出=出 出R出e出s出使出l出t出 出+出 出T出E出X出T出(出"出\出n出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出使出l出t出s出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出C出l出e出a出n出使出p出T出e出s出t出(出)出
+出{出
+出 出 出 出 出i出f出 出(出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出 出=出 出n出使出l出l出p出t出本出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出T出e出s出t出R出e出s出使出l出t出s出.出E出設置出p出t出y出(出)出;出
+出 出 出 出 出R出e出s出e出t出T出e出s出t出C出o出使出n出t出e出本出s出(出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出A出d出d出T出e出s出t出R出e出s出使出l出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出s出t出的出a出設置出e出,出 出b出o出o出l出 出b出P出a出s出s出e出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出)出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出s出使出l出t出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出[出%出s出]出 出%出s出"出)出,出 出b出P出a出s出s出e出d出 出基本出 出T出E出X出T出(出"出通出過出"出)出 出:出 出T出E出X出T出(出"出失出敗出"出)出,出 出*出T出e出s出t出的出a出設置出e出)出;出
+出 出 出 出 出i出f出 出(出!出M出e出s出s出a出成出e出.出I出s出E出設置出p出t出y出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出e出s出使出l出t出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出 出-出 出%出s出"出)出,出 出*出M出e出s出s出a出成出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出T出e出s出t出R出e出s出使出l出t出s出.出A出d出d出(出R出e出s出使出l出t出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出b出P出a出s出s出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出P出a出s出s出e出d出T出e出s出t出s出+出+出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出軍出a出i出l出e出d出T出e出s出t出s出+出+出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出C出本出e出a出t出e出T出e出s出t出S出t出o出本出a出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出t出o出本出a出成出e出的出a出設置出e出,出 出f出l出o出a出t出 出C出a出p出a出c出i出t出y出)出
+出{出
+出 出 出 出 出i出f出 出(出!出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出C出本出e出a出t出e出R出e出s出o出使出本出c出e出S出t出o出本出a出成出e出(出S出t出o出本出a出成出e出的出a出設置出e出,出 出T出E出X出T出(出"出T出e出s出t出L出o出c出a出t出i出o出n出"出)出,出 出C出a出p出a出c出i出t出y出)出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出C出本出e出a出t出e出T出e出s出t出C出o出l出l出e出c出t出i出o出n出(出E出R出e出s出o出使出本出c出e出T出y出p出e出 出R出e出s出o出使出本出c出e出T出y出p出e出,出 出E出C出o出l出l出e出c出t出i出o出n出M出e出t出h出o出d出 出M出e出t出h出o出d出)出
+出{出
+出 出 出 出 出i出f出 出(出!出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出"出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出C出本出e出a出t出e出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出(出R出e出s出o出使出本出c出e出T出y出p出e出,出 出M出e出t出h出o出d出,出 出T出E出X出T出(出"出T出e出s出t出L出o出c出a出t出i出o出n出"出)出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出V出e出本出i出f出y出R出e出s出o出使出本出c出e出Q出使出a出n出t出i出t出y出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出t出o出本出a出成出e出I出D出,出 出E出R出e出s出o出使出本出c出e出T出y出p出e出 出R出e出s出o出使出本出c出e出T出y出p出e出,出 出f出l出o出a出t出 出E出x出p出e出c出t出e出d出Q出使出a出n出t出i出t出y出)出
+出{出
+出 出 出 出 出i出f出 出(出!出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出軍出R出e出s出o出使出本出c出e出D出a出t出a出 出R出e出s出o出使出本出c出e出 出=出 出R出e出s出o出使出本出c出e出S出y出s出t出e出設置出-出>出G出e出t出S出t出o出本出e出d出R出e出s出o出使出本出c出e出(出S出t出o出本出a出成出e出I出D出,出 出R出e出s出o出使出本出c出e出T出y出p出e出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出t出h出:出:出A出b出s出(出R出e出s出o出使出本出c出e出.出Q出使出a出n出t出i出t出y出 出-出 出E出x出p出e出c出t出e出d出Q出使出a出n出t出i出t出y出)出 出<出 出0出.出0出1出f出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出T出e出s出t出:出:出R出e出s出e出t出T出e出s出t出C出o出使出n出t出e出本出s出(出)出
+出{出
+出 出 出 出 出P出a出s出s出e出d出T出e出s出t出s出 出=出 出0出;出
+出 出 出 出 出軍出a出i出l出e出d出T出e出s出t出s出 出=出 出0出;出
+出 出 出 出 出T出e出s出t出R出e出s出使出l出t出s出.出E出設置出p出t出y出(出)出;出
+出}出
+出

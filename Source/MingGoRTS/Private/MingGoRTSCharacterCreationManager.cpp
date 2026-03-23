@@ -1,192 +1,193 @@
-#include "MingGoRTSCharacterCreationManager.h"
-#include "Kismet/GameplayStatics.h"
-#include "Engine/World.h"
-
-UMingGoRTSCharacterCreationManager::UMingGoRTSCharacterCreationManager()
-{
-    InitializeNamePools();
-}
-
-bool UMingGoRTSCharacterCreationManager::CreateCharacter(const FMingCharacterData& CharacterData)
-{
-    if (!ValidateCharacterData(CharacterData))
-    {
-        UE_LOG(LogTemp, Error, TEXT("角色數據驗證失敗"));
-        return false;
-    }
-
-    // 廣播角色創建事件
-    OnCharacterCreated.Broadcast(CharacterData);
-
-    UE_LOG(LogTemp, Log, TEXT("成功創建角色：%s"), *CharacterData.CharacterName);
-    return true;
-}
-
-bool UMingGoRTSCharacterCreationManager::ValidateCharacterData(const FMingCharacterData& CharacterData)
-{
-    return ValidateName(CharacterData.CharacterName) &&
-           ValidateAttributes(CharacterData.Attributes) &&
-           ValidateAge(CharacterData.Age);
-}
-
-FString UMingGoRTSCharacterCreationManager::GetBackgroundDescription(ECharacterBackground Background)
-{
-    switch (Background)
-    {
-    case ECharacterBackground::MilitaryAcademy:
-        return TEXT("畢業於黃埔軍校，接受現代軍事教育，具備良好的戰術素養。統帥屬性獲得額外加成。");
-    case ECharacterBackground::WarlordSon:
-        return TEXT("出身軍閥世家，從小耳濡目染軍事事務，擁有豐厚的人脈資源。魅力屬性獲得額外加成。");
-    case ECharacterBackground::Revolutionary:
-        return TEXT("懷揣革命理想，為國家前途奮鬥的熱血青年。勇武屬性獲得額外加成。");
-    case ECharacterBackground::ScholarOfficial:
-        return TEXT("棄文從武的讀書人，以智謀和策略見長。智謀屬性獲得額外加成。");
-    case ECharacterBackground::Merchant:
-        return TEXT("富商從軍，善於理財和後勤管理。體質屬性獲得額外加成。");
-    case ECharacterBackground::CommonSoldier:
-        return TEXT("從基層士兵一步步成長起來，經驗豐富，深得士兵擁戴。所有屬性獲得小幅加成。");
-    default:
-        return TEXT("未知背景");
-    }
-}
-
-TArray<FCharacterSkill> UMingGoRTSCharacterCreationManager::GetRecommendedSkills(ECharacterBackground Background)
-{
-    TArray<FCharacterSkill> RecommendedSkills;
-
-    switch (Background)
-    {
-    case ECharacterBackground::MilitaryAcademy:
-        RecommendedSkills.Add(FCharacterSkill{ FName("TacticalCommand"), TEXT("戰術指揮"), TEXT("提升部隊指揮效率"), 2, 5 });
-        RecommendedSkills.Add(FCharacterSkill{ FName("MilitaryTheory"), TEXT("軍事理論"), TEXT("增強戰略規劃能力"), 1, 5 });
-        break;
-    case ECharacterBackground::WarlordSon:
-        RecommendedSkills.Add(FCharacterSkill{ FName("Diplomacy"), TEXT("外交手腕"), TEXT("提升談判和聯盟能力"), 2, 5 });
-        RecommendedSkills.Add(FCharacterSkill{ FName("ResourceManagement"), TEXT("資源管理"), TEXT("提升經濟運營效率"), 1, 5 });
-        break;
-    case ECharacterBackground::Revolutionary:
-        RecommendedSkills.Add(FCharacterSkill{ FName("Inspiration"), TEXT("鼓舞人心"), TEXT("提升部隊士氣"), 2, 5 });
-        RecommendedSkills.Add(FCharacterSkill{ FName("GuerrillaWarfare"), TEXT("游擊戰術"), TEXT("提升非對稱戰鬥能力"), 1, 5 });
-        break;
-    case ECharacterBackground::ScholarOfficial:
-        RecommendedSkills.Add(FCharacterSkill{ FName("Strategy"), TEXT("戰略規劃"), TEXT("提升長期戰略思維"), 2, 5 });
-        RecommendedSkills.Add(FCharacterSkill{ FName("IntelligenceAnalysis"), TEXT("情報分析"), TEXT("提升情報處理能力"), 1, 5 });
-        break;
-    case ECharacterBackground::Merchant:
-        RecommendedSkills.Add(FCharacterSkill{ FName("Logistics"), TEXT("後勤管理"), TEXT("提升補給線效率"), 2, 5 });
-        RecommendedSkills.Add(FCharacterSkill{ FName("Trade"), TEXT("貿易技巧"), TEXT("提升商業收益"), 1, 5 });
-        break;
-    case ECharacterBackground::CommonSoldier:
-        RecommendedSkills.Add(FCharacterSkill{ FName("CombatExperience"), TEXT("戰鬥經驗"), TEXT("提升個人戰鬥能力"), 2, 5 });
-        RecommendedSkills.Add(FCharacterSkill{ FName("MoraleBoost"), TEXT("士氣提升"), TEXT("增強部隊凝聚力"), 1, 5 });
-        break;
-    }
-
-    return RecommendedSkills;
-}
-
-bool UMingGoRTSCharacterCreationManager::SaveCharacterToSlot(const FMingCharacterData& CharacterData, const FString& SlotName)
-{
-    // TODO: 實現實際的存檔邏輯
-    UE_LOG(LogTemp, Log, TEXT("保存角色 %s 到存檔槽 %s"), *CharacterData.CharacterName, *SlotName);
-    return true;
-}
-
-bool UMingGoRTSCharacterCreationManager::LoadCharacterFromSlot(const FString& SlotName, FMingCharacterData& OutCharacterData)
-{
-    // TODO: 實現實際的載入邏輯
-    UE_LOG(LogTemp, Log, TEXT("從存檔槽 %s 載入角色數據"), *SlotName);
-    return true;
-}
-
-bool UMingGoRTSCharacterCreationManager::IsCharacterNameAvailable(const FString& CharacterName)
-{
-    // TODO: 檢查名稱是否已被使用
-    return !CharacterName.IsEmpty() && CharacterName.Len() >= 2 && CharacterName.Len() <= 20;
-}
-
-FString UMingGoRTSCharacterCreationManager::GenerateRandomCharacterName()
-{
-    FString Surname = GetRandomSurname();
-    FString GivenName = GetRandomGivenName(true); // 默認生成男性名字
-    return Surname + GivenName;
-}
-
-bool UMingGoRTSCharacterCreationManager::ValidateName(const FString& Name)
-{
-    if (Name.IsEmpty() || Name.Len() < 2 || Name.Len() > 20)
-    {
-        return false;
-    }
-
-    // 檢查是否包含非法字符
-    for (TCHAR Char : Name)
-    {
-        if (!FChar::IsAlpha(Char) && Char != TEXT(' '))
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool UMingGoRTSCharacterCreationManager::ValidateAttributes(const FCharacterAttributes& Attributes)
-{
-    return Attributes.Leadership >= 0 && Attributes.Leadership <= 100 &&
-           Attributes.Intelligence >= 0 && Attributes.Intelligence <= 100 &&
-           Attributes.Courage >= 0 && Attributes.Courage <= 100 &&
-           Attributes.Charisma >= 0 && Attributes.Charisma <= 100 &&
-           Attributes.Constitution >= 0 && Attributes.Constitution <= 100;
-}
-
-bool UMingGoRTSCharacterCreationManager::ValidateAge(int32 InAge)
-{
-    return InAge >= 18 && InAge <= 65;
-}
-
-void UMingGoRTSCharacterCreationManager::InitializeNamePools()
-{
-    // 常見中文姓氏
-    Surnames = {
-        TEXT("張"), TEXT("王"), TEXT("李"), TEXT("趙"), TEXT("劉"), TEXT("陳"), TEXT("楊"), TEXT("黃"),
-        TEXT("周"), TEXT("吳"), TEXT("徐"), TEXT("孫"), TEXT("馬"), TEXT("朱"), TEXT("胡"), TEXT("郭"),
-        TEXT("何"), TEXT("林"), TEXT("羅"), TEXT("高"), TEXT("梁"), TEXT("鄭"), TEXT("謝"), TEXT("唐")
-    };
-
-    // 男性名字
-    MaleNames = {
-        TEXT("偉"), TEXT("強"), TEXT("磊"), TEXT("洋"), TEXT("勇"), TEXT("軍"), TEXT("傑"), TEXT("濤"),
-        TEXT("超"), TEXT("明"), TEXT("輝"), TEXT("鵬"), TEXT("華"), TEXT("平"), TEXT("建"), TEXT("國"),
-        TEXT("志"), TEXT("中"), TEXT("文"), TEXT("新"), TEXT("德"), TEXT("海"), TEXT("龍"), TEXT("雲")
-    };
-
-    // 女性名字
-    FemaleNames = {
-        TEXT("靜"), TEXT("慧"), TEXT("美"), TEXT("麗"), TEXT("華"), TEXT("敏"), TEXT("芳"), TEXT("燕"),
-        TEXT("玲"), TEXT("紅"), TEXT("梅"), TEXT("婷"), TEXT("雪"), TEXT("琳"), TEXT("萍"), TEXT("娟"),
-        TEXT("霞"), TEXT("穎"), TEXT("潔"), TEXT("倩"), TEXT("琪"), TEXT("瑤"), TEXT("薇"), TEXT("丹")
-    };
-}
-
-FString UMingGoRTSCharacterCreationManager::GetRandomSurname()
-{
-    if (Surnames.Num() > 0)
-    {
-        int32 Index = FMath::RandRange(0, Surnames.Num() - 1);
-        return Surnames[Index];
-    }
-    return TEXT("李");
-}
-
-FString UMingGoRTSCharacterCreationManager::GetRandomGivenName(bool bIsMale)
-{
-    const TArray<FString>& NamePool = bIsMale ? MaleNames : FemaleNames;
-    
-    if (NamePool.Num() > 0)
-    {
-        int32 Index = FMath::RandRange(0, NamePool.Num() - 1);
-        return NamePool[Index];
-    }
-    return bIsMale ? TEXT("偉") : TEXT("靜");
-}
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出基本出o出本出l出d出.出h出"出
+出
+出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出(出)出
+出{出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出的出a出設置出e出P出o出o出l出s出(出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出C出本出e出a出t出e出C出h出a出本出a出c出t出e出本出(出c出o出n出s出t出 出軍出M出i出n出成出C出h出a出本出a出c出t出e出本出D出a出t出a出&出 出C出h出a出本出a出c出t出e出本出D出a出t出a出)出
+出{出
+出 出 出 出 出i出f出 出(出!出V出a出l出i出d出a出t出e出C出h出a出本出a出c出t出e出本出D出a出t出a出(出C出h出a出本出a出c出t出e出本出D出a出t出a出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出角出色出數出據出驗出證出失出敗出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出廣出播出角出色出創出建出事出件出
+出 出 出 出 出O出n出C出h出a出本出a出c出t出e出本出C出本出e出a出t出e出d出.出B出本出o出a出d出c出a出s出t出(出C出h出a出本出a出c出t出e出本出D出a出t出a出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出成出功出創出建出角出色出：出%出s出"出)出,出 出*出C出h出a出本出a出c出t出e出本出D出a出t出a出.出C出h出a出本出a出c出t出e出本出的出a出設置出e出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出V出a出l出i出d出a出t出e出C出h出a出本出a出c出t出e出本出D出a出t出a出(出c出o出n出s出t出 出軍出M出i出n出成出C出h出a出本出a出c出t出e出本出D出a出t出a出&出 出C出h出a出本出a出c出t出e出本出D出a出t出a出)出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出V出a出l出i出d出a出t出e出的出a出設置出e出(出C出h出a出本出a出c出t出e出本出D出a出t出a出.出C出h出a出本出a出c出t出e出本出的出a出設置出e出)出 出&出&出
+出 出 出 出 出 出 出 出 出 出 出 出V出a出l出i出d出a出t出e出A出t出t出本出i出b出使出t出e出s出(出C出h出a出本出a出c出t出e出本出D出a出t出a出.出A出t出t出本出i出b出使出t出e出s出)出 出&出&出
+出 出 出 出 出 出 出 出 出 出 出 出V出a出l出i出d出a出t出e出A出成出e出(出C出h出a出本出a出c出t出e出本出D出a出t出a出.出A出成出e出)出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出B出a出c出k出成出本出o出使出n出d出D出e出s出c出本出i出p出t出i出o出n出(出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出 出B出a出c出k出成出本出o出使出n出d出)出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出B出a出c出k出成出本出o出使出n出d出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出M出i出l出i出t出a出本出y出A出c出a出d出e出設置出y出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出畢出業出於出黃出埔出軍出校出，出接出受出現出代出軍出事出教出育出，出具出備出良出好出的出戰出術出素出養出。出統出帥出屬出性出獲出得出額出外出加出成出。出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出基本出a出本出l出o出本出d出S出o出n出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出出出身出軍出閥出世出家出，出從出小出耳出濡出目出染出軍出事出事出務出，出擁出有出豐出厚出的出人出脈出資出源出。出魅出力出屬出性出獲出得出額出外出加出成出。出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出R出e出正出o出l出使出t出i出o出n出a出本出y出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出懷出揣出革出命出理出想出，出為出國出家出前出途出奮出鬥出的出熱出血出青出年出。出勇出武出屬出性出獲出得出額出外出加出成出。出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出S出c出h出o出l出a出本出O出f出f出i出c出i出a出l出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出棄出文出從出武出的出讀出書出人出，出以出智出謀出和出策出略出見出長出。出智出謀出屬出性出獲出得出額出外出加出成出。出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出M出e出本出c出h出a出n出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出富出商出從出軍出，出善出於出理出財出和出後出勤出管出理出。出體出質出屬出性出獲出得出額出外出加出成出。出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出C出o出設置出設置出o出n出S出o出l出d出i出e出本出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出從出基出層出士出兵出一出步出步出成出長出起出來出，出經出驗出豐出富出，出深出得出士出兵出擁出戴出。出所出有出屬出性出獲出得出小出幅出加出成出。出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出背出景出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出T出A出本出本出a出y出<出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出>出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出(出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出 出B出a出c出k出成出本出o出使出n出d出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出>出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出;出
+出
+出 出 出 出 出s出w出i出t出c出h出 出(出B出a出c出k出成出本出o出使出n出d出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出M出i出l出i出t出a出本出y出A出c出a出d出e出設置出y出:出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出T出a出c出t出i出c出a出l出C出o出設置出設置出a出n出d出"出)出,出 出T出E出X出T出(出"出戰出術出指出揮出"出)出,出 出T出E出X出T出(出"出提出升出部出隊出指出揮出效出率出"出)出,出 出2出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出M出i出l出i出t出a出本出y出T出h出e出o出本出y出"出)出,出 出T出E出X出T出(出"出軍出事出理出論出"出)出,出 出T出E出X出T出(出"出增出強出戰出略出規出劃出能出力出"出)出,出 出1出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出基本出a出本出l出o出本出d出S出o出n出:出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出D出i出p出l出o出設置出a出c出y出"出)出,出 出T出E出X出T出(出"出外出交出手出腕出"出)出,出 出T出E出X出T出(出"出提出升出談出判出和出聯出盟出能出力出"出)出,出 出2出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出R出e出s出o出使出本出c出e出M出a出n出a出成出e出設置出e出n出t出"出)出,出 出T出E出X出T出(出"出資出源出管出理出"出)出,出 出T出E出X出T出(出"出提出升出經出濟出運出營出效出率出"出)出,出 出1出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出R出e出正出o出l出使出t出i出o出n出a出本出y出:出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出I出n出s出p出i出本出a出t出i出o出n出"出)出,出 出T出E出X出T出(出"出鼓出舞出人出心出"出)出,出 出T出E出X出T出(出"出提出升出部出隊出士出氣出"出)出,出 出2出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出G出使出e出本出本出i出l出l出a出基本出a出本出f出a出本出e出"出)出,出 出T出E出X出T出(出"出游出擊出戰出術出"出)出,出 出T出E出X出T出(出"出提出升出非出對出稱出戰出鬥出能出力出"出)出,出 出1出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出S出c出h出o出l出a出本出O出f出f出i出c出i出a出l出:出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出S出t出本出a出t出e出成出y出"出)出,出 出T出E出X出T出(出"出戰出略出規出劃出"出)出,出 出T出E出X出T出(出"出提出升出長出期出戰出略出思出維出"出)出,出 出2出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出I出n出t出e出l出l出i出成出e出n出c出e出A出n出a出l出y出s出i出s出"出)出,出 出T出E出X出T出(出"出情出報出分出析出"出)出,出 出T出E出X出T出(出"出提出升出情出報出處出理出能出力出"出)出,出 出1出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出M出e出本出c出h出a出n出t出:出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出L出o出成出i出s出t出i出c出s出"出)出,出 出T出E出X出T出(出"出後出勤出管出理出"出)出,出 出T出E出X出T出(出"出提出升出補出給出線出效出率出"出)出,出 出2出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出T出本出a出d出e出"出)出,出 出T出E出X出T出(出"出貿出易出技出巧出"出)出,出 出T出E出X出T出(出"出提出升出商出業出收出益出"出)出,出 出1出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出C出h出a出本出a出c出t出e出本出B出a出c出k出成出本出o出使出n出d出:出:出C出o出設置出設置出o出n出S出o出l出d出i出e出本出:出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出C出o出設置出b出a出t出E出x出p出e出本出i出e出n出c出e出"出)出,出 出T出E出X出T出(出"出戰出鬥出經出驗出"出)出,出 出T出E出X出T出(出"出提出升出個出人出戰出鬥出能出力出"出)出,出 出2出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出.出A出d出d出(出軍出C出h出a出本出a出c出t出e出本出S出k出i出l出l出{出 出軍出的出a出設置出e出(出"出M出o出本出a出l出e出B出o出o出s出t出"出)出,出 出T出E出X出T出(出"出士出氣出提出升出"出)出,出 出T出E出X出T出(出"出增出強出部出隊出凝出聚出力出"出)出,出 出1出,出 出5出 出}出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出R出e出c出o出設置出設置出e出n出d出e出d出S出k出i出l出l出s出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出S出a出正出e出C出h出a出本出a出c出t出e出本出T出o出S出l出o出t出(出c出o出n出s出t出 出軍出M出i出n出成出C出h出a出本出a出c出t出e出本出D出a出t出a出&出 出C出h出a出本出a出c出t出e出本出D出a出t出a出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出l出o出t出的出a出設置出e出)出
+出{出
+出 出 出 出 出/出/出 出T出O出D出O出:出 出實出現出實出際出的出存出檔出邏出輯出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出保出存出角出色出 出%出s出 出到出存出檔出槽出 出%出s出"出)出,出 出*出C出h出a出本出a出c出t出e出本出D出a出t出a出.出C出h出a出本出a出c出t出e出本出的出a出設置出e出,出 出*出S出l出o出t出的出a出設置出e出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出L出o出a出d出C出h出a出本出a出c出t出e出本出軍出本出o出設置出S出l出o出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出l出o出t出的出a出設置出e出,出 出軍出M出i出n出成出C出h出a出本出a出c出t出e出本出D出a出t出a出&出 出O出使出t出C出h出a出本出a出c出t出e出本出D出a出t出a出)出
+出{出
+出 出 出 出 出/出/出 出T出O出D出O出:出 出實出現出實出際出的出載出入出邏出輯出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出從出存出檔出槽出 出%出s出 出載出入出角出色出數出據出"出)出,出 出*出S出l出o出t出的出a出設置出e出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出I出s出C出h出a出本出a出c出t出e出本出的出a出設置出e出A出正出a出i出l出a出b出l出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出h出a出本出a出c出t出e出本出的出a出設置出e出)出
+出{出
+出 出 出 出 出/出/出 出T出O出D出O出:出 出檢出查出名出稱出是出否出已出被出使出用出
+出 出 出 出 出本出e出t出使出本出n出 出!出C出h出a出本出a出c出t出e出本出的出a出設置出e出.出I出s出E出設置出p出t出y出(出)出 出&出&出 出C出h出a出本出a出c出t出e出本出的出a出設置出e出.出L出e出n出(出)出 出>出=出 出2出 出&出&出 出C出h出a出本出a出c出t出e出本出的出a出設置出e出.出L出e出n出(出)出 出<出=出 出2出0出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出n出e出本出a出t出e出R出a出n出d出o出設置出C出h出a出本出a出c出t出e出本出的出a出設置出e出(出)出
+出{出
+出 出 出 出 出軍出S出t出本出i出n出成出 出S出使出本出n出a出設置出e出 出=出 出G出e出t出R出a出n出d出o出設置出S出使出本出n出a出設置出e出(出)出;出
+出 出 出 出 出軍出S出t出本出i出n出成出 出G出i出正出e出n出的出a出設置出e出 出=出 出G出e出t出R出a出n出d出o出設置出G出i出正出e出n出的出a出設置出e出(出t出本出使出e出)出;出 出/出/出 出默出認出生出成出男出性出名出字出
+出 出 出 出 出本出e出t出使出本出n出 出S出使出本出n出a出設置出e出 出+出 出G出i出正出e出n出的出a出設置出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出V出a出l出i出d出a出t出e出的出a出設置出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出的出a出設置出e出)出
+出{出
+出 出 出 出 出i出f出 出(出的出a出設置出e出.出I出s出E出設置出p出t出y出(出)出 出出出出出 出的出a出設置出e出.出L出e出n出(出)出 出<出 出2出 出出出出出 出的出a出設置出e出.出L出e出n出(出)出 出>出 出2出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出檢出查出是出否出包出含出非出法出字出符出
+出 出 出 出 出f出o出本出 出(出T出C出輸入出A出R出 出C出h出a出本出 出:出 出的出a出設置出e出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出!出軍出C出h出a出本出:出:出I出s出A出l出p出h出a出(出C出h出a出本出)出 出&出&出 出C出h出a出本出 出!出=出 出T出E出X出T出(出'出 出'出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出V出a出l出i出d出a出t出e出A出t出t出本出i出b出使出t出e出s出(出c出o出n出s出t出 出軍出C出h出a出本出a出c出t出e出本出A出t出t出本出i出b出使出t出e出s出&出 出A出t出t出本出i出b出使出t出e出s出)出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出A出t出t出本出i出b出使出t出e出s出.出L出e出a出d出e出本出s出h出i出p出 出>出=出 出0出 出&出&出 出A出t出t出本出i出b出使出t出e出s出.出L出e出a出d出e出本出s出h出i出p出 出<出=出 出1出0出0出 出&出&出
+出 出 出 出 出 出 出 出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出I出n出t出e出l出l出i出成出e出n出c出e出 出>出=出 出0出 出&出&出 出A出t出t出本出i出b出使出t出e出s出.出I出n出t出e出l出l出i出成出e出n出c出e出 出<出=出 出1出0出0出 出&出&出
+出 出 出 出 出 出 出 出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出C出o出使出本出a出成出e出 出>出=出 出0出 出&出&出 出A出t出t出本出i出b出使出t出e出s出.出C出o出使出本出a出成出e出 出<出=出 出1出0出0出 出&出&出
+出 出 出 出 出 出 出 出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出C出h出a出本出i出s出設置出a出 出>出=出 出0出 出&出&出 出A出t出t出本出i出b出使出t出e出s出.出C出h出a出本出i出s出設置出a出 出<出=出 出1出0出0出 出&出&出
+出 出 出 出 出 出 出 出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出C出o出n出s出t出i出t出使出t出i出o出n出 出>出=出 出0出 出&出&出 出A出t出t出本出i出b出使出t出e出s出.出C出o出n出s出t出i出t出使出t出i出o出n出 出<出=出 出1出0出0出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出V出a出l出i出d出a出t出e出A出成出e出(出i出n出t出3出2出 出I出n出A出成出e出)出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出I出n出A出成出e出 出>出=出 出1出8出 出&出&出 出I出n出A出成出e出 出<出=出 出6出5出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出的出a出設置出e出P出o出o出l出s出(出)出
+出{出
+出 出 出 出 出/出/出 出常出見出中出文出姓出氏出
+出 出 出 出 出S出使出本出n出a出設置出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出張出"出)出,出 出T出E出X出T出(出"出王出"出)出,出 出T出E出X出T出(出"出李出"出)出,出 出T出E出X出T出(出"出趙出"出)出,出 出T出E出X出T出(出"出劉出"出)出,出 出T出E出X出T出(出"出陳出"出)出,出 出T出E出X出T出(出"出楊出"出)出,出 出T出E出X出T出(出"出黃出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出周出"出)出,出 出T出E出X出T出(出"出吳出"出)出,出 出T出E出X出T出(出"出徐出"出)出,出 出T出E出X出T出(出"出孫出"出)出,出 出T出E出X出T出(出"出馬出"出)出,出 出T出E出X出T出(出"出朱出"出)出,出 出T出E出X出T出(出"出胡出"出)出,出 出T出E出X出T出(出"出郭出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出何出"出)出,出 出T出E出X出T出(出"出林出"出)出,出 出T出E出X出T出(出"出羅出"出)出,出 出T出E出X出T出(出"出高出"出)出,出 出T出E出X出T出(出"出梁出"出)出,出 出T出E出X出T出(出"出鄭出"出)出,出 出T出E出X出T出(出"出謝出"出)出,出 出T出E出X出T出(出"出唐出"出)出
+出 出 出 出 出}出;出
+出
+出 出 出 出 出/出/出 出男出性出名出字出
+出 出 出 出 出M出a出l出e出的出a出設置出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出偉出"出)出,出 出T出E出X出T出(出"出強出"出)出,出 出T出E出X出T出(出"出磊出"出)出,出 出T出E出X出T出(出"出洋出"出)出,出 出T出E出X出T出(出"出勇出"出)出,出 出T出E出X出T出(出"出軍出"出)出,出 出T出E出X出T出(出"出傑出"出)出,出 出T出E出X出T出(出"出濤出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出超出"出)出,出 出T出E出X出T出(出"出明出"出)出,出 出T出E出X出T出(出"出輝出"出)出,出 出T出E出X出T出(出"出鵬出"出)出,出 出T出E出X出T出(出"出華出"出)出,出 出T出E出X出T出(出"出平出"出)出,出 出T出E出X出T出(出"出建出"出)出,出 出T出E出X出T出(出"出國出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出志出"出)出,出 出T出E出X出T出(出"出中出"出)出,出 出T出E出X出T出(出"出文出"出)出,出 出T出E出X出T出(出"出新出"出)出,出 出T出E出X出T出(出"出德出"出)出,出 出T出E出X出T出(出"出海出"出)出,出 出T出E出X出T出(出"出龍出"出)出,出 出T出E出X出T出(出"出雲出"出)出
+出 出 出 出 出}出;出
+出
+出 出 出 出 出/出/出 出女出性出名出字出
+出 出 出 出 出軍出e出設置出a出l出e出的出a出設置出e出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出靜出"出)出,出 出T出E出X出T出(出"出慧出"出)出,出 出T出E出X出T出(出"出美出"出)出,出 出T出E出X出T出(出"出麗出"出)出,出 出T出E出X出T出(出"出華出"出)出,出 出T出E出X出T出(出"出敏出"出)出,出 出T出E出X出T出(出"出芳出"出)出,出 出T出E出X出T出(出"出燕出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出玲出"出)出,出 出T出E出X出T出(出"出紅出"出)出,出 出T出E出X出T出(出"出梅出"出)出,出 出T出E出X出T出(出"出婷出"出)出,出 出T出E出X出T出(出"出雪出"出)出,出 出T出E出X出T出(出"出琳出"出)出,出 出T出E出X出T出(出"出萍出"出)出,出 出T出E出X出T出(出"出娟出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出霞出"出)出,出 出T出E出X出T出(出"出穎出"出)出,出 出T出E出X出T出(出"出潔出"出)出,出 出T出E出X出T出(出"出倩出"出)出,出 出T出E出X出T出(出"出琪出"出)出,出 出T出E出X出T出(出"出瑤出"出)出,出 出T出E出X出T出(出"出薇出"出)出,出 出T出E出X出T出(出"出丹出"出)出
+出 出 出 出 出}出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出R出a出n出d出o出設置出S出使出本出n出a出設置出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出S出使出本出n出a出設置出e出s出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出I出n出d出e出x出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出S出使出本出n出a出設置出e出s出.出的出使出設置出(出)出 出-出 出1出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出S出使出本出n出a出設置出e出s出[出I出n出d出e出x出]出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出李出"出)出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出G出o出R出T出S出C出h出a出本出a出c出t出e出本出C出本出e出a出t出i出o出n出M出a出n出a出成出e出本出:出:出G出e出t出R出a出n出d出o出設置出G出i出正出e出n出的出a出設置出e出(出b出o出o出l出 出b出I出s出M出a出l出e出)出
+出{出
+出 出 出 出 出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出&出 出的出a出設置出e出P出o出o出l出 出=出 出b出I出s出M出a出l出e出 出基本出 出M出a出l出e出的出a出設置出e出s出 出:出 出軍出e出設置出a出l出e出的出a出設置出e出s出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出的出a出設置出e出P出o出o出l出.出的出使出設置出(出)出 出>出 出0出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出n出t出3出2出 出I出n出d出e出x出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出的出a出設置出e出P出o出o出l出.出的出使出設置出(出)出 出-出 出1出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出的出a出設置出e出P出o出o出l出[出I出n出d出e出x出]出;出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出b出I出s出M出a出l出e出 出基本出 出T出E出X出T出(出"出偉出"出)出 出:出 出T出E出X出T出(出"出靜出"出)出;出
+出}出
+出

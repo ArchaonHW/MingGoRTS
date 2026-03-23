@@ -1,147 +1,148 @@
-#pragma once
-
-#include "CoreMinimal.h"
-#include "Events/MingEventTrigger.h"
-#include "MingEventTriggerRandom.generated.h"
-
-/**
- * ?��?觸發?��?
- */
-USTRUCT(BlueprintType)
-struct FRandomTriggerOption
-{
-    GENERATED_BODY()
-    
-    // ?��?ID (對�?不�X��?�?
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString OptionEventId;
-    
-    // 權�? (?�於?��X��?)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Weight;
-    
-    // ?�小觸?��X(?�卻)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float MinInterval;
-    
-    // 上次觸發?��?
-    UPROPERTY()
-    float LastTriggerTime;
-    
-    FRandomTriggerOption()
-        : Weight(1.0f)
-        , MinInterval(0.0f)
-        , LastTriggerTime(-1.0f)
-    {}
-};
-
-/**
- * ?��?觸發X * ?�於概�?觸發事件
- */
-UCLASS()
-class MINGSTRATEGIC_API UMingEventTriggerRandom : public UMingEventTrigger
-{
-    GENERATED_BODY()
-
-public:
-    UMingEventTriggerRandom();
-
-    // 設置?��?觸發概�? (0-1)
-    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void SetBaseProbability(float Probability);
-
-    // 設置概�?衰�? (每次觸發後�X��?�?
-    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void SetProbabilityDecay(float DecayFactor);
-
-    // 設置?��X�大觸?��X
-    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void SetIntervalRange(float MinInterval, float MaxInterval);
-
-    // 添�X��X��X��?
-    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void AddWeightedOption(const FRandomTriggerOption& Option);
-
-    // 清除?�?�選X
-    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void ClearOptions();
-
-    // ?��X��?概�?
-    UFUNCTION(BlueprintPure, Category = "Random Trigger")
-    float GetCurrentProbability() const { return CurrentProbability; }
-
-    // ?��?距離下次?�能觸發?��X
-    UFUNCTION(BlueprintPure, Category = "Random Trigger")
-    float GetTimeToNextPossibleTrigger() const;
-
-    // ?��?觸發?��X��? (返�X�中?��?件ID)
-    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    FString TriggerRandomSelection();
-
-    // ?�新計�?概�?
-    UFUNCTION(BlueprintCallable, Category = "Random Trigger")
-    void RecalculateProbability(float DeltaTime);
-
-protected:
-    // ?��?概�?
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Random Trigger")
-    float BaseProbability;
-
-    // ?��?概�?
-    UPROPERTY()
-    float CurrentProbability;
-
-    // 概�?衰�X��? (0-1, 1表示不衰�?
-    UPROPERTY()
-    float ProbabilityDecay;
-
-    // 概�?增長?��? (?��X��X��X
-    UPROPERTY()
-    float ProbabilityGrowth;
-
-    // ?�小觸?��X
-    UPROPERTY()
-    float MinTriggerInterval;
-
-    // ?�大觸?��X
-    UPROPERTY()
-    float MaxTriggerInterval;
-
-    // 距離上次觸發?��X
-    UPROPERTY()
-    float TimeSinceLastTrigger;
-
-    // ?��X��?窗口?�是?�可觸發
-    UPROPERTY()
-    bool bCanTriggerInCurrentWindow;
-
-    // ?��X��X��X�表
-    UPROPERTY()
-    TArray<FRandomTriggerOption> WeightedOptions;
-
-    // ?�否使用?��X��?
-    UPROPERTY()
-    bool bUseWeightedOptions;
-
-    // ?�寫?��X��?
-    virtual void Initialize() override;
-    virtual void Tick(float DeltaTime) override;
-    virtual bool PerformTrigger() override;
-    virtual bool CheckTriggerCondition() const override;
-
-    // ?��X��?檢查
-    bool RollProbability() const;
-
-    // ?��X��X��X��?
-    FString SelectWeightedOption();
-
-    // ?�新?��?窗口
-    void UpdateTriggerWindow(float DeltaTime);
-
-    // 檢查?�否?��X�小�X
-    bool HasPassedMinInterval() const;
-
-    // ?�置觸發?�X
-    virtual void Reset() override;
-};
-
+出#出p出本出a出成出設置出a出 出o出n出c出e出
+出
+出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出E出正出e出n出t出s出/出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出R出a出n出d出o出設置出.出成出e出n出e出本出a出t出e出d出.出h出"出
+出
+出/出*出*出
+出 出*出 出基本出�出�出基本出觸出發出基本出�出�出基本出
+出 出*出/出
+出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
+出s出t出本出使出c出t出 出軍出R出a出n出d出o出設置出T出本出i出成出成出e出本出O出p出t出i出o出n出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出�出�出基本出I出D出 出(出對出�出基本出不出�出X出�出�出基本出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出O出p出t出i出o出n出E出正出e出n出t出I出d出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出權出�出基本出 出(出基本出�出於出基本出�出�出X出�出�出基本出)出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
+出 出 出 出 出f出l出o出a出t出 出基本出e出i出成出h出t出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出基本出�出小出觸出基本出�出�出X出(出基本出�出卻出)出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
+出 出 出 出 出f出l出o出a出t出 出M出i出n出I出n出t出e出本出正出a出l出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出上出次出觸出發出基本出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出f出l出o出a出t出 出L出a出s出t出T出本出i出成出成出e出本出T出i出設置出e出;出
+出 出 出 出 出
+出 出 出 出 出軍出R出a出n出d出o出設置出T出本出i出成出成出e出本出O出p出t出i出o出n出(出)出
+出 出 出 出 出 出 出 出 出:出 出基本出e出i出成出h出t出(出1出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出M出i出n出I出n出t出e出本出正出a出l出(出0出.出0出f出)出
+出 出 出 出 出 出 出 出 出,出 出L出a出s出t出T出本出i出成出成出e出本出T出i出設置出e出(出-出1出.出0出f出)出
+出 出 出 出 出{出}出
+出}出;出
+出
+出/出*出*出
+出 出*出 出基本出�出�出基本出觸出發出X出 出*出 出基本出�出於出概出�出基本出觸出發出事出件出
+出 出*出/出
+出U出C出L出A出S出S出(出)出
+出c出l出a出s出s出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出R出a出n出d出o出設置出 出:出 出p出使出b出l出i出c出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出
+出{出
+出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
+出
+出p出使出b出l出i出c出:出
+出 出 出 出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出R出a出n出d出o出設置出(出)出;出
+出
+出 出 出 出 出/出/出 出設出置出基本出�出�出基本出觸出發出概出�出基本出 出(出0出-出1出)出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出a出n出d出o出設置出 出T出本出i出成出成出e出本出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出B出a出s出e出P出本出o出b出a出b出i出l出i出t出y出(出f出l出o出a出t出 出P出本出o出b出a出b出i出l出i出t出y出)出;出
+出
+出 出 出 出 出/出/出 出設出置出概出�出基本出衰出�出基本出 出(出每出次出觸出發出後出�出X出�出�出基本出�出基本出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出a出n出d出o出設置出 出T出本出i出成出成出e出本出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出P出本出o出b出a出b出i出l出i出t出y出D出e出c出a出y出(出f出l出o出a出t出 出D出e出c出a出y出軍出a出c出t出o出本出)出;出
+出
+出 出 出 出 出/出/出 出設出置出基本出�出�出X出�出大出觸出基本出�出�出X出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出a出n出d出o出設置出 出T出本出i出成出成出e出本出"出)出
+出 出 出 出 出正出o出i出d出 出S出e出t出I出n出t出e出本出正出a出l出R出a出n出成出e出(出f出l出o出a出t出 出M出i出n出I出n出t出e出本出正出a出l出,出 出f出l出o出a出t出 出M出a出x出I出n出t出e出本出正出a出l出)出;出
+出
+出 出 出 出 出/出/出 出添出�出X出�出�出X出�出�出X出�出�出基本出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出a出n出d出o出設置出 出T出本出i出成出成出e出本出"出)出
+出 出 出 出 出正出o出i出d出 出A出d出d出基本出e出i出成出h出t出e出d出O出p出t出i出o出n出(出c出o出n出s出t出 出軍出R出a出n出d出o出設置出T出本出i出成出成出e出本出O出p出t出i出o出n出&出 出O出p出t出i出o出n出)出;出
+出
+出 出 出 出 出/出/出 出清出除出基本出�出基本出�出選出X出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出a出n出d出o出設置出 出T出本出i出成出成出e出本出"出)出
+出 出 出 出 出正出o出i出d出 出C出l出e出a出本出O出p出t出i出o出n出s出(出)出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出X出�出�出基本出概出�出基本出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出a出n出d出o出設置出 出T出本出i出成出成出e出本出"出)出
+出 出 出 出 出f出l出o出a出t出 出G出e出t出C出使出本出本出e出n出t出P出本出o出b出a出b出i出l出i出t出y出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出P出本出o出b出a出b出i出l出i出t出y出;出 出}出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出距出離出下出次出基本出�出能出觸出發出基本出�出�出X出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出a出n出d出o出設置出 出T出本出i出成出成出e出本出"出)出
+出 出 出 出 出f出l出o出a出t出 出G出e出t出T出i出設置出e出T出o出的出e出x出t出P出o出s出s出i出b出l出e出T出本出i出成出成出e出本出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出觸出發出基本出�出�出X出�出�出基本出 出(出返出�出X出�出中出基本出�出�出基本出件出I出D出)出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出a出n出d出o出設置出 出T出本出i出成出成出e出本出"出)出
+出 出 出 出 出軍出S出t出本出i出n出成出 出T出本出i出成出成出e出本出R出a出n出d出o出設置出S出e出l出e出c出t出i出o出n出(出)出;出
+出
+出 出 出 出 出/出/出 出基本出�出新出計出�出基本出概出�出基本出
+出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出a出n出d出o出設置出 出T出本出i出成出成出e出本出"出)出
+出 出 出 出 出正出o出i出d出 出R出e出c出a出l出c出使出l出a出t出e出P出本出o出b出a出b出i出l出i出t出y出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
+出
+出p出本出o出t出e出c出t出e出d出:出
+出 出 出 出 出/出/出 出基本出�出�出基本出概出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出a出n出d出o出設置出 出T出本出i出成出成出e出本出"出)出
+出 出 出 出 出f出l出o出a出t出 出B出a出s出e出P出本出o出b出a出b出i出l出i出t出y出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出基本出概出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出P出本出o出b出a出b出i出l出i出t出y出;出
+出
+出 出 出 出 出/出/出 出概出�出基本出衰出�出X出�出�出基本出 出(出0出-出1出,出 出1出表出示出不出衰出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出f出l出o出a出t出 出P出本出o出b出a出b出i出l出i出t出y出D出e出c出a出y出;出
+出
+出 出 出 出 出/出/出 出概出�出基本出增出長出基本出�出�出基本出 出(出基本出�出�出X出�出�出X出�出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出f出l出o出a出t出 出P出本出o出b出a出b出i出l出i出t出y出G出本出o出w出t出h出;出
+出
+出 出 出 出 出/出/出 出基本出�出小出觸出基本出�出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出f出l出o出a出t出 出M出i出n出T出本出i出成出成出e出本出I出n出t出e出本出正出a出l出;出
+出
+出 出 出 出 出/出/出 出基本出�出大出觸出基本出�出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出f出l出o出a出t出 出M出a出x出T出本出i出成出成出e出本出I出n出t出e出本出正出a出l出;出
+出
+出 出 出 出 出/出/出 出距出離出上出次出觸出發出基本出�出�出X出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出f出l出o出a出t出 出T出i出設置出e出S出i出n出c出e出L出a出s出t出T出本出i出成出成出e出本出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出X出�出�出基本出窗出口出基本出�出是出基本出�出可出觸出發出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出b出o出o出l出 出b出C出a出n出T出本出i出成出成出e出本出I出n出C出使出本出本出e出n出t出基本出i出n出d出o出w出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出X出�出�出X出�出�出X出�出表出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出T出A出本出本出a出y出<出軍出R出a出n出d出o出設置出T出本出i出成出成出e出本出O出p出t出i出o出n出>出 出基本出e出i出成出h出t出e出d出O出p出t出i出o出n出s出;出
+出
+出 出 出 出 出/出/出 出基本出�出否出使出用出基本出�出�出X出�出�出基本出
+出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
+出 出 出 出 出b出o出o出l出 出b出U出s出e出基本出e出i出成出h出t出e出d出O出p出t出i出o出n出s出;出
+出
+出 出 出 出 出/出/出 出基本出�出寫出基本出�出�出X出�出�出基本出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出(出)出 出o出正出e出本出本出i出d出e出;出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出T出i出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出 出o出正出e出本出本出i出d出e出;出
+出 出 出 出 出正出i出本出t出使出a出l出 出b出o出o出l出 出P出e出本出f出o出本出設置出T出本出i出成出成出e出本出(出)出 出o出正出e出本出本出i出d出e出;出
+出 出 出 出 出正出i出本出t出使出a出l出 出b出o出o出l出 出C出h出e出c出k出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出(出)出 出c出o出n出s出t出 出o出正出e出本出本出i出d出e出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出X出�出�出基本出檢出查出
+出 出 出 出 出b出o出o出l出 出R出o出l出l出P出本出o出b出a出b出i出l出i出t出y出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出�出X出�出�出X出�出�出X出�出�出基本出
+出 出 出 出 出軍出S出t出本出i出n出成出 出S出e出l出e出c出t出基本出e出i出成出h出t出e出d出O出p出t出i出o出n出(出)出;出
+出
+出 出 出 出 出/出/出 出基本出�出新出基本出�出�出基本出窗出口出
+出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出T出本出i出成出成出e出本出基本出i出n出d出o出w出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
+出
+出 出 出 出 出/出/出 出檢出查出基本出�出否出基本出�出�出X出�出小出�出X出
+出 出 出 出 出b出o出o出l出 出輸入出a出s出P出a出s出s出e出d出M出i出n出I出n出t出e出本出正出a出l出(出)出 出c出o出n出s出t出;出
+出
+出 出 出 出 出/出/出 出基本出�出置出觸出發出基本出�出X出
+出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出R出e出s出e出t出(出)出 出o出正出e出本出本出i出d出e出;出
+出}出;出
+出
+出

@@ -1,190 +1,191 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
-#include "VRAR/Automation/MingVRARBuildHooks.h"
-#include "VRAR/MingVRARMaterialFactory.h"
-#include "Misc/Paths.h"
-
-int32 UMingVRARBuildHooks::MaterialsCreatedCount = 0;
-int32 UMingVRARBuildHooks::MaterialsVerifiedCount = 0;
-bool UMingVRARBuildHooks::bLastBuildCheckPassed = false;
-
-bool UMingVRARBuildHooks::PreBuildMaterialCheck()
-{
-    UE_LOG(LogTemp, Log, TEXT("=== Pre-Build Material Check ==="));
-    
-    // Check if materials exist
-    if (VerifyAllMaterialsPresent())
-    {
-        UE_LOG(LogTemp, Log, TEXT("All materials present - build can proceed"));
-        bLastBuildCheckPassed = true;
-        return true;
-    }
-    
-    // Materials missing - try to create them
-    UE_LOG(LogTemp, Warning, TEXT("Materials missing - attempting auto-creation before build"));
-    bool bCreated = EnsureMaterialsExist();
-    
-    bLastBuildCheckPassed = bCreated;
-    return bCreated;
-}
-
-bool UMingVRARBuildHooks::PostBuildMaterialVerification()
-{
-    UE_LOG(LogTemp, Log, TEXT("=== Post-Build Material Verification ==="));
-    
-    bool bVerified = VerifyAllMaterialsPresent();
-    
-    if (bVerified)
-    {
-        UE_LOG(LogTemp, Display, TEXT("✓ All VR/AR materials verified after build"));
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("✗ Some materials missing after build!"));
-    }
-    
-    return bVerified;
-}
-
-bool UMingVRARBuildHooks::EnsureMaterialsExist()
-{
-    UE_LOG(LogTemp, Display, TEXT("Ensuring VR/AR materials exist..."));
-    
-    // Create factory
-    UMingVRARMaterialFactory* Factory = NewObject<UMingVRARMaterialFactory>();
-    Factory->Initialize(FPaths::ProjectDir());
-    
-    // Create materials
-    bool VRResult = Factory->CreateVRMaterials();
-    bool ARResult = Factory->CreateARMaterials();
-    
-    FString Report = Factory->GetCreationReport();
-    UE_LOG(LogTemp, Log, TEXT("%s"), *Report);
-    
-    MaterialsCreatedCount = VRResult ? 9 : 0;
-    MaterialsCreatedCount += ARResult ? 7 : 0;
-    
-    return VRResult && ARResult;
-}
-
-bool UMingVRARBuildHooks::VerifyAllMaterialsPresent()
-{
-    UE_LOG(LogTemp, Log, TEXT("Verifying all materials present..."));
-    
-    // Define expected materials
-    TArray<FString> ExpectedVRMaterials = {
-        TEXT("M_VRController_Body"),
-        TEXT("M_VRController_Button"),
-        TEXT("M_VRPointer_Laser"),
-        TEXT("M_VRPointer_Cursor"),
-        TEXT("M_VRUI_Panel"),
-        TEXT("M_VRUI_Border"),
-        TEXT("M_VRTeleport_Valid"),
-        TEXT("M_VRTeleport_Invalid"),
-        TEXT("M_VRComfort_Vignette")
-    };
-    
-    TArray<FString> ExpectedARMaterials = {
-        TEXT("M_ARPlane_Floor"),
-        TEXT("M_ARPlane_Wall"),
-        TEXT("M_ARPlane_Boundary"),
-        TEXT("M_ARCursor_Default"),
-        TEXT("M_ARAnchor_Default"),
-        TEXT("M_AROverlay_Content"),
-        TEXT("M_AROverlay_Hologram")
-    };
-    
-    // Check directories
-    FString VRDir = FPaths::Combine(FPaths::ProjectDir(), TEXT("Content/VR/Materials"));
-    FString ARDir = FPaths::Combine(FPaths::ProjectDir(), TEXT("Content/AR/Materials"));
-    
-    bool bAllPresent = true;
-    MaterialsVerifiedCount = 0;
-    
-    // Check VR materials
-    if (FPaths::DirectoryExists(VRDir))
-    {
-        TArray<FString> VRFiles;
-        IFileManager::Get().FindFiles(VRFiles, *VRDir, TEXT("*.uasset"));
-        
-        for (const FString& Material : ExpectedVRMaterials)
-        {
-            bool bFound = false;
-            for (const FString& File : VRFiles)
-            {
-                if (File.Contains(Material))
-                {
-                    bFound = true;
-                    break;
-                }
-            }
-            
-            if (bFound)
-            {
-                MaterialsVerifiedCount++;
-            }
-            else
-            {
-                UE_LOG(LogTemp, Warning, TEXT("Missing VR material: %s"), *Material);
-                bAllPresent = false;
-            }
-        }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("VR Materials directory not found!"));
-        bAllPresent = false;
-    }
-    
-    // Check AR materials
-    if (FPaths::DirectoryExists(ARDir))
-    {
-        TArray<FString> ARFiles;
-        IFileManager::Get().FindFiles(ARFiles, *ARDir, TEXT("*.uasset"));
-        
-        for (const FString& Material : ExpectedARMaterials)
-        {
-            bool bFound = false;
-            for (const FString& File : ARFiles)
-            {
-                if (File.Contains(Material))
-                {
-                    bFound = true;
-                    break;
-                }
-            }
-            
-            if (bFound)
-            {
-                MaterialsVerifiedCount++;
-            }
-            else
-            {
-                UE_LOG(LogTemp, Warning, TEXT("Missing AR material: %s"), *Material);
-                bAllPresent = false;
-            }
-        }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("AR Materials directory not found!"));
-        bAllPresent = false;
-    }
-    
-    UE_LOG(LogTemp, Log, TEXT("Verified %d/16 materials"), MaterialsVerifiedCount);
-    
-    return bAllPresent;
-}
-
-FString UMingVRARBuildHooks::GetBuildAutomationStatus()
-{
-    return FString::Printf(
-        TEXT("Build Automation Status:\n")
-        TEXT("  Materials Created: %d\n")
-        TEXT("  Materials Verified: %d\n")
-        TEXT("  Last Check Passed: %s"),
-        MaterialsCreatedCount,
-        MaterialsVerifiedCount,
-        bLastBuildCheckPassed ? TEXT("Yes") : TEXT("No")
-    );
-}
+出/出/出 出C出o出p出y出本出i出成出h出t出 出E出p出i出c出 出G出a出設置出e出s出,出 出I出n出c出.出 出A出l出l出 出R出i出成出h出t出s出 出R出e出s出e出本出正出e出d出.出
+出
+出#出i出n出c出l出使出d出e出 出"出V出R出A出R出/出A出使出t出o出設置出a出t出i出o出n出/出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出V出R出A出R出/出M出i出n出成出V出R出A出R出M出a出t出e出本出i出a出l出軍出a出c出t出o出本出y出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出i出s出c出/出P出a出t出h出s出.出h出"出
+出
+出i出n出t出3出2出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出M出a出t出e出本出i出a出l出s出C出本出e出a出t出e出d出C出o出使出n出t出 出=出 出0出;出
+出i出n出t出3出2出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出 出=出 出0出;出
+出b出o出o出l出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出b出L出a出s出t出B出使出i出l出d出C出h出e出c出k出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
+出
+出b出o出o出l出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出P出本出e出B出使出i出l出d出M出a出t出e出本出i出a出l出C出h出e出c出k出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出=出=出=出 出P出本出e出-出B出使出i出l出d出 出M出a出t出e出本出i出a出l出 出C出h出e出c出k出 出=出=出=出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出C出h出e出c出k出 出i出f出 出設置出a出t出e出本出i出a出l出s出 出e出x出i出s出t出
+出 出 出 出 出i出f出 出(出V出e出本出i出f出y出A出l出l出M出a出t出e出本出i出a出l出s出P出本出e出s出e出n出t出(出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出l出l出 出設置出a出t出e出本出i出a出l出s出 出p出本出e出s出e出n出t出 出-出 出b出使出i出l出d出 出c出a出n出 出p出本出o出c出e出e出d出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出L出a出s出t出B出使出i出l出d出C出h出e出c出k出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出M出a出t出e出本出i出a出l出s出 出設置出i出s出s出i出n出成出 出-出 出t出本出y出 出t出o出 出c出本出e出a出t出e出 出t出h出e出設置出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出M出a出t出e出本出i出a出l出s出 出設置出i出s出s出i出n出成出 出-出 出a出t出t出e出設置出p出t出i出n出成出 出a出使出t出o出-出c出本出e出a出t出i出o出n出 出b出e出f出o出本出e出 出b出使出i出l出d出"出)出)出;出
+出 出 出 出 出b出o出o出l出 出b出C出本出e出a出t出e出d出 出=出 出E出n出s出使出本出e出M出a出t出e出本出i出a出l出s出E出x出i出s出t出(出)出;出
+出 出 出 出 出
+出 出 出 出 出b出L出a出s出t出B出使出i出l出d出C出h出e出c出k出P出a出s出s出e出d出 出=出 出b出C出本出e出a出t出e出d出;出
+出 出 出 出 出本出e出t出使出本出n出 出b出C出本出e出a出t出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出P出o出s出t出B出使出i出l出d出M出a出t出e出本出i出a出l出V出e出本出i出f出i出c出a出t出i出o出n出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出=出=出=出 出P出o出s出t出-出B出使出i出l出d出 出M出a出t出e出本出i出a出l出 出V出e出本出i出f出i出c出a出t出i出o出n出 出=出=出=出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出b出o出o出l出 出b出V出e出本出i出f出i出e出d出 出=出 出V出e出本出i出f出y出A出l出l出M出a出t出e出本出i出a出l出s出P出本出e出s出e出n出t出(出)出;出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出b出V出e出本出i出f出i出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出D出i出s出p出l出a出y出,出 出T出E出X出T出(出"出✓出 出A出l出l出 出V出R出/出A出R出 出設置出a出t出e出本出i出a出l出s出 出正出e出本出i出f出i出e出d出 出a出f出t出e出本出 出b出使出i出l出d出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出✗出 出S出o出設置出e出 出設置出a出t出e出本出i出a出l出s出 出設置出i出s出s出i出n出成出 出a出f出t出e出本出 出b出使出i出l出d出!出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出b出V出e出本出i出f出i出e出d出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出E出n出s出使出本出e出M出a出t出e出本出i出a出l出s出E出x出i出s出t出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出D出i出s出p出l出a出y出,出 出T出E出X出T出(出"出E出n出s出使出本出i出n出成出 出V出R出/出A出R出 出設置出a出t出e出本出i出a出l出s出 出e出x出i出s出t出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出C出本出e出a出t出e出 出f出a出c出t出o出本出y出
+出 出 出 出 出U出M出i出n出成出V出R出A出R出M出a出t出e出本出i出a出l出軍出a出c出t出o出本出y出*出 出軍出a出c出t出o出本出y出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出V出R出A出R出M出a出t出e出本出i出a出l出軍出a出c出t出o出本出y出>出(出)出;出
+出 出 出 出 出軍出a出c出t出o出本出y出-出>出I出n出i出t出i出a出l出i出z出e出(出軍出P出a出t出h出s出:出:出P出本出o出大出e出c出t出D出i出本出(出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出C出本出e出a出t出e出 出設置出a出t出e出本出i出a出l出s出
+出 出 出 出 出b出o出o出l出 出V出R出R出e出s出使出l出t出 出=出 出軍出a出c出t出o出本出y出-出>出C出本出e出a出t出e出V出R出M出a出t出e出本出i出a出l出s出(出)出;出
+出 出 出 出 出b出o出o出l出 出A出R出R出e出s出使出l出t出 出=出 出軍出a出c出t出o出本出y出-出>出C出本出e出a出t出e出A出R出M出a出t出e出本出i出a出l出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出p出o出本出t出 出=出 出軍出a出c出t出o出本出y出-出>出G出e出t出C出本出e出a出t出i出o出n出R出e出p出o出本出t出(出)出;出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出%出s出"出)出,出 出*出R出e出p出o出本出t出)出;出
+出 出 出 出 出
+出 出 出 出 出M出a出t出e出本出i出a出l出s出C出本出e出a出t出e出d出C出o出使出n出t出 出=出 出V出R出R出e出s出使出l出t出 出基本出 出9出 出:出 出0出;出
+出 出 出 出 出M出a出t出e出本出i出a出l出s出C出本出e出a出t出e出d出C出o出使出n出t出 出+出=出 出A出R出R出e出s出使出l出t出 出基本出 出7出 出:出 出0出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出V出R出R出e出s出使出l出t出 出&出&出 出A出R出R出e出s出使出l出t出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出V出e出本出i出f出y出A出l出l出M出a出t出e出本出i出a出l出s出P出本出e出s出e出n出t出(出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出V出e出本出i出f出y出i出n出成出 出a出l出l出 出設置出a出t出e出本出i出a出l出s出 出p出本出e出s出e出n出t出.出.出.出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出D出e出f出i出n出e出 出e出x出p出e出c出t出e出d出 出設置出a出t出e出本出i出a出l出s出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出E出x出p出e出c出t出e出d出V出R出M出a出t出e出本出i出a出l出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出C出o出n出t出本出o出l出l出e出本出下出B出o出d出y出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出C出o出n出t出本出o出l出l出e出本出下出B出使出t出t出o出n出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出P出o出i出n出t出e出本出下出L出a出s出e出本出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出P出o出i出n出t出e出本出下出C出使出本出s出o出本出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出U出I出下出P出a出n出e出l出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出U出I出下出B出o出本出d出e出本出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出T出e出l出e出p出o出本出t出下出V出a出l出i出d出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出T出e出l出e出p出o出本出t出下出I出n出正出a出l出i出d出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出C出o出設置出f出o出本出t出下出V出i出成出n出e出t出t出e出"出)出
+出 出 出 出 出}出;出
+出 出 出 出 出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出E出x出p出e出c出t出e出d出A出R出M出a出t出e出本出i出a出l出s出 出=出 出{出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出P出l出a出n出e出下出軍出l出o出o出本出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出P出l出a出n出e出下出基本出a出l出l出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出P出l出a出n出e出下出B出o出使出n出d出a出本出y出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出C出使出本出s出o出本出下出D出e出f出a出使出l出t出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出A出n出c出h出o出本出下出D出e出f出a出使出l出t出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出O出正出e出本出l出a出y出下出C出o出n出t出e出n出t出"出)出,出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出O出正出e出本出l出a出y出下出輸入出o出l出o出成出本出a出設置出"出)出
+出 出 出 出 出}出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出C出h出e出c出k出 出d出i出本出e出c出t出o出本出i出e出s出
+出 出 出 出 出軍出S出t出本出i出n出成出 出V出R出D出i出本出 出=出 出軍出P出a出t出h出s出:出:出C出o出設置出b出i出n出e出(出軍出P出a出t出h出s出:出:出P出本出o出大出e出c出t出D出i出本出(出)出,出 出T出E出X出T出(出"出C出o出n出t出e出n出t出/出V出R出/出M出a出t出e出本出i出a出l出s出"出)出)出;出
+出 出 出 出 出軍出S出t出本出i出n出成出 出A出R出D出i出本出 出=出 出軍出P出a出t出h出s出:出:出C出o出設置出b出i出n出e出(出軍出P出a出t出h出s出:出:出P出本出o出大出e出c出t出D出i出本出(出)出,出 出T出E出X出T出(出"出C出o出n出t出e出n出t出/出A出R出/出M出a出t出e出本出i出a出l出s出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出b出o出o出l出 出b出A出l出l出P出本出e出s出e出n出t出 出=出 出t出本出使出e出;出
+出 出 出 出 出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出 出=出 出0出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出C出h出e出c出k出 出V出R出 出設置出a出t出e出本出i出a出l出s出
+出 出 出 出 出i出f出 出(出軍出P出a出t出h出s出:出:出D出i出本出e出c出t出o出本出y出E出x出i出s出t出s出(出V出R出D出i出本出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出V出R出軍出i出l出e出s出;出
+出 出 出 出 出 出 出 出 出I出軍出i出l出e出M出a出n出a出成出e出本出:出:出G出e出t出(出)出.出軍出i出n出d出軍出i出l出e出s出(出V出R出軍出i出l出e出s出,出 出*出V出R出D出i出本出,出 出T出E出X出T出(出"出*出.出使出a出s出s出e出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出a出t出e出本出i出a出l出 出:出 出E出x出p出e出c出t出e出d出V出R出M出a出t出e出本出i出a出l出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出o出o出l出 出b出軍出o出使出n出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出 出:出 出V出R出軍出i出l出e出s出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出軍出i出l出e出.出C出o出n出t出a出i出n出s出(出M出a出t出e出本出i出a出l出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出軍出o出使出n出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出b出軍出o出使出n出d出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出+出+出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出M出i出s出s出i出n出成出 出V出R出 出設置出a出t出e出本出i出a出l出:出 出%出s出"出)出,出 出*出M出a出t出e出本出i出a出l出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出A出l出l出P出本出e出s出e出n出t出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出V出R出 出M出a出t出e出本出i出a出l出s出 出d出i出本出e出c出t出o出本出y出 出n出o出t出 出f出o出使出n出d出!出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出本出e出s出e出n出t出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出C出h出e出c出k出 出A出R出 出設置出a出t出e出本出i出a出l出s出
+出 出 出 出 出i出f出 出(出軍出P出a出t出h出s出:出:出D出i出本出e出c出t出o出本出y出E出x出i出s出t出s出(出A出R出D出i出本出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出R出軍出i出l出e出s出;出
+出 出 出 出 出 出 出 出 出I出軍出i出l出e出M出a出n出a出成出e出本出:出:出G出e出t出(出)出.出軍出i出n出d出軍出i出l出e出s出(出A出R出軍出i出l出e出s出,出 出*出A出R出D出i出本出,出 出T出E出X出T出(出"出*出.出使出a出s出s出e出t出"出)出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出a出t出e出本出i出a出l出 出:出 出E出x出p出e出c出t出e出d出A出R出M出a出t出e出本出i出a出l出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出o出o出l出 出b出軍出o出使出n出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出 出:出 出A出R出軍出i出l出e出s出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出軍出i出l出e出.出C出o出n出t出a出i出n出s出(出M出a出t出e出本出i出a出l出)出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出軍出o出使出n出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出b出軍出o出使出n出d出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出+出+出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出M出i出s出s出i出n出成出 出A出R出 出設置出a出t出e出本出i出a出l出:出 出%出s出"出)出,出 出*出M出a出t出e出本出i出a出l出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出A出l出l出P出本出e出s出e出n出t出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出A出R出 出M出a出t出e出本出i出a出l出s出 出d出i出本出e出c出t出o出本出y出 出n出o出t出 出f出o出使出n出d出!出"出)出)出;出
+出 出 出 出 出 出 出 出 出b出A出l出l出P出本出e出s出e出n出t出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出V出e出本出i出f出i出e出d出 出%出d出/出1出6出 出設置出a出t出e出本出i出a出l出s出"出)出,出 出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出本出e出s出e出n出t出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出G出e出t出B出使出i出l出d出A出使出t出o出設置出a出t出i出o出n出S出t出a出t出使出s出(出)出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出B出使出i出l出d出 出A出使出t出o出設置出a出t出i出o出n出 出S出t出a出t出使出s出:出\出n出"出)出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出 出 出M出a出t出e出本出i出a出l出s出 出C出本出e出a出t出e出d出:出 出%出d出\出n出"出)出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出 出 出M出a出t出e出本出i出a出l出s出 出V出e出本出i出f出i出e出d出:出 出%出d出\出n出"出)出
+出 出 出 出 出 出 出 出 出T出E出X出T出(出"出 出 出L出a出s出t出 出C出h出e出c出k出 出P出a出s出s出e出d出:出 出%出s出"出)出,出
+出 出 出 出 出 出 出 出 出M出a出t出e出本出i出a出l出s出C出本出e出a出t出e出d出C出o出使出n出t出,出
+出 出 出 出 出 出 出 出 出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出,出
+出 出 出 出 出 出 出 出 出b出L出a出s出t出B出使出i出l出d出C出h出e出c出k出P出a出s出s出e出d出 出基本出 出T出E出X出T出(出"出Y出e出s出"出)出 出:出 出T出E出X出T出(出"出的出o出"出)出
+出 出 出 出 出)出;出
+出}出
+出

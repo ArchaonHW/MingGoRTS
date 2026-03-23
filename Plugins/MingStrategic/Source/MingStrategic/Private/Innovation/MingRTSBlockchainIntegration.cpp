@@ -1,223 +1,224 @@
-#include "Innovation/MingRTSBlockchainIntegration.h"
-#include "Math/UnrealMathUtility.h"
-
-UMingRTSBlockchainIntegration::UMingRTSBlockchainIntegration()
-    : CurrentChain(EBlockchainType::Private)
-    , bIsConnected(false)
-    , BlockNumber(0)
-{
-}
-
-void UMingRTSBlockchainIntegration::InitializeBlockchain(EBlockchainType ChainType)
-{
-    CurrentChain = ChainType;
-    bIsConnected = false;
-    BlockNumber = 0;
-    LastBlockHash = TEXT("0x");
-
-    ConnectToChain(ChainType);
-}
-
-FBlockchainAccount UMingRTSBlockchainIntegration::CreateAccount(const FString& PlayerId)
-{
-    FBlockchainAccount Account;
-
-    // 生成模擬的區塊鏈地址
-    FString AddressPrefix;
-    switch (CurrentChain)
-    {
-    case EBlockchainType::Ethereum:
-    case EBlockchainType::Polygon:
-        AddressPrefix = TEXT("0x");
-        break;
-    case EBlockchainType::BinanceSmartChain:
-        AddressPrefix = TEXT("0x");
-        break;
-    case EBlockchainType::Solana:
-        AddressPrefix = TEXT("");
-        break;
-    case EBlockchainType::Private:
-        AddressPrefix = TEXT("0xMG");
-        break;
-    default:
-        AddressPrefix = TEXT("0x");
-        break;
-    }
-
-    // 生成40字符的十六進制地址
-    FString RandomHex;
-    for (int32 i = 0; i < 40; ++i)
-    {
-        RandomHex += FString::Printf(TEXT("%x"), FMath::RandRange(0, 15));
-    }
-
-    Account.Address = AddressPrefix + RandomHex;
-    Account.PrivateKeyHash = FString::Printf(TEXT("0x%x"), FMath::RandRange(0, MAX_int32));
-    Account.Balance = 0.0f;
-    Account.bIsActive = true;
-
-    Accounts.Add(PlayerId, Account);
-
-    return Account;
-}
-
-FString UMingRTSBlockchainIntegration::CreateTransaction(const FString& FromAddress, const FString& ToAddress, float Value, const FString& Data)
-{
-    if (!bIsConnected)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Blockchain not connected"));
-        return TEXT("");
-    }
-
-    // 驗證發送方地址
-    bool bValidSender = false;
-    for (const auto& Pair : Accounts)
-    {
-        if (Pair.Value.Address == FromAddress)
-        {
-            bValidSender = true;
-            if (Pair.Value.Balance < Value)
-            {
-                UE_LOG(LogTemp, Warning, TEXT("Insufficient balance"));
-                return TEXT("");
-            }
-            break;
-        }
-    }
-
-    if (!bValidSender)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Invalid sender address"));
-        return TEXT("");
-    }
-
-    FBlockchainTransaction Transaction;
-    Transaction.FromAddress = FromAddress;
-    Transaction.ToAddress = ToAddress;
-    Transaction.Value = Value;
-    Transaction.Data = Data;
-    Transaction.Timestamp = FDateTime::Now().ToString();
-    Transaction.bIsConfirmed = false;
-    Transaction.Confirmations = 0;
-
-    // 生成交易哈希
-    FString HashData = FromAddress + ToAddress + FString::SanitizeFloat(Value) + Transaction.Timestamp;
-    uint32 HashValue = FCString::Strlen(*HashData);
-    for (int32 i = 0; i < HashData.Len(); ++i)
-    {
-        HashValue = HashValue * 31 + HashData[i];
-    }
-    Transaction.TransactionHash = FString::Printf(TEXT("0x%x"), HashValue);
-
-    Transactions.Add(Transaction);
-
-    // 更新餘額
-    for (auto& Pair : Accounts)
-    {
-        if (Pair.Value.Address == FromAddress)
-        {
-            Pair.Value.Balance -= Value;
-        }
-        if (Pair.Value.Address == ToAddress)
-        {
-            Pair.Value.Balance += Value;
-        }
-    }
-
-    ProcessPendingTransactions();
-
-    return Transaction.TransactionHash;
-}
-
-void UMingRTSBlockchainIntegration::MintToken(const FString& ToAddress, ETokenType TokenType, const FString& TokenId, float Amount)
-{
-    if (!bIsConnected)
-    {
-        return;
-    }
-
-    // 創造代幣鑄造交易
-    FString TokenData = FString::Printf(TEXT("Mint_%s_%s_%.6f"),
-        *UEnum::GetValueAsString(TokenType),
-        *TokenId,
-        Amount);
-
-    // 使用特殊地址作為發送方（鑄造地址）
-    FString MintAddress = TEXT("0x0000000000000000000000000000000000000000");
-    CreateTransaction(MintAddress, ToAddress, 0.0f, TokenData);
-
-    UE_LOG(LogTemp, Log, TEXT("Minted %f tokens of type %s to address %s"),
-        Amount,
-        *UEnum::GetValueAsString(TokenType),
-        *ToAddress);
-}
-
-bool UMingRTSBlockchainIntegration::VerifyTransaction(const FString& TransactionHash)
-{
-    for (const auto& Transaction : Transactions)
-    {
-        if (Transaction.TransactionHash == TransactionHash)
-        {
-            return Transaction.bIsConfirmed && Transaction.Confirmations >= 6;
-        }
-    }
-    return false;
-}
-
-float UMingRTSBlockchainIntegration::GetBalance(const FString& Address) const
-{
-    for (const auto& Pair : Accounts)
-    {
-        if (Pair.Value.Address == Address)
-        {
-            return Pair.Value.Balance;
-        }
-    }
-    return 0.0f;
-}
-
-void UMingRTSBlockchainIntegration::ConnectToChain(EBlockchainType ChainType)
-{
-    UE_LOG(LogTemp, Log, TEXT("Connecting to blockchain: %s"), *UEnum::GetValueAsString(ChainType));
-
-    // 模擬連接延遲
-    float ConnectionTime = FMath::RandRange(0.5f, 2.0f);
-
-    // 模擬連接成功
-    bIsConnected = true;
-    BlockNumber = FMath::RandRange(1000000, 9999999);
-    LastBlockHash = FString::Printf(TEXT("0x%x"), FMath::RandRange(0, MAX_int32));
-
-    UE_LOG(LogTemp, Log, TEXT("Connected to %s. Block number: %d"),
-        *UEnum::GetValueAsString(ChainType),
-        BlockNumber);
-}
-
-void UMingRTSBlockchainIntegration::ProcessPendingTransactions()
-{
-    for (auto& Transaction : Transactions)
-    {
-        if (!Transaction.bIsConfirmed)
-        {
-            // 模擬確認過程
-            float ConfirmChance = 0.3f;
-            if (FMath::RandRange(0.0f, 1.0f) < ConfirmChance)
-            {
-                Transaction.bIsConfirmed = true;
-                Transaction.Confirmations = FMath::RandRange(1, 12);
-
-                UE_LOG(LogTemp, Log, TEXT("Transaction %s confirmed with %d confirmations"),
-                    *Transaction.TransactionHash,
-                    Transaction.Confirmations);
-            }
-        }
-        else
-        {
-            // 增加確認數
-            if (Transaction.Confirmations < 12 && FMath::RandRange(0.0f, 1.0f) < 0.5f)
-            {
-                Transaction.Confirmations++;
-            }
-        }
-    }
-}
+出#出i出n出c出l出使出d出e出 出"出I出n出n出o出正出a出t出i出o出n出/出M出i出n出成出R出T出S出B出l出o出c出k出c出h出a出i出n出I出n出t出e出成出本出a出t出i出o出n出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出M出a出t出h出/出U出n出本出e出a出l出M出a出t出h出U出t出i出l出i出t出y出.出h出"出
+出
+出U出M出i出n出成出R出T出S出B出l出o出c出k出c出h出a出i出n出I出n出t出e出成出本出a出t出i出o出n出:出:出U出M出i出n出成出R出T出S出B出l出o出c出k出c出h出a出i出n出I出n出t出e出成出本出a出t出i出o出n出(出)出
+出 出 出 出 出:出 出C出使出本出本出e出n出t出C出h出a出i出n出(出E出B出l出o出c出k出c出h出a出i出n出T出y出p出e出:出:出P出本出i出正出a出t出e出)出
+出 出 出 出 出,出 出b出I出s出C出o出n出n出e出c出t出e出d出(出f出a出l出s出e出)出
+出 出 出 出 出,出 出B出l出o出c出k出的出使出設置出b出e出本出(出0出)出
+出{出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出B出l出o出c出k出c出h出a出i出n出I出n出t出e出成出本出a出t出i出o出n出:出:出I出n出i出t出i出a出l出i出z出e出B出l出o出c出k出c出h出a出i出n出(出E出B出l出o出c出k出c出h出a出i出n出T出y出p出e出 出C出h出a出i出n出T出y出p出e出)出
+出{出
+出 出 出 出 出C出使出本出本出e出n出t出C出h出a出i出n出 出=出 出C出h出a出i出n出T出y出p出e出;出
+出 出 出 出 出b出I出s出C出o出n出n出e出c出t出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出B出l出o出c出k出的出使出設置出b出e出本出 出=出 出0出;出
+出 出 出 出 出L出a出s出t出B出l出o出c出k出輸入出a出s出h出 出=出 出T出E出X出T出(出"出0出x出"出)出;出
+出
+出 出 出 出 出C出o出n出n出e出c出t出T出o出C出h出a出i出n出(出C出h出a出i出n出T出y出p出e出)出;出
+出}出
+出
+出軍出B出l出o出c出k出c出h出a出i出n出A出c出c出o出使出n出t出 出U出M出i出n出成出R出T出S出B出l出o出c出k出c出h出a出i出n出I出n出t出e出成出本出a出t出i出o出n出:出:出C出本出e出a出t出e出A出c出c出o出使出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出P出l出a出y出e出本出I出d出)出
+出{出
+出 出 出 出 出軍出B出l出o出c出k出c出h出a出i出n出A出c出c出o出使出n出t出 出A出c出c出o出使出n出t出;出
+出
+出 出 出 出 出/出/出 出生出成出模出擬出的出區出塊出鏈出地出址出
+出 出 出 出 出軍出S出t出本出i出n出成出 出A出d出d出本出e出s出s出P出本出e出f出i出x出;出
+出 出 出 出 出s出w出i出t出c出h出 出(出C出使出本出本出e出n出t出C出h出a出i出n出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出B出l出o出c出k出c出h出a出i出n出T出y出p出e出:出:出E出t出h出e出本出e出使出設置出:出
+出 出 出 出 出c出a出s出e出 出E出B出l出o出c出k出c出h出a出i出n出T出y出p出e出:出:出P出o出l出y出成出o出n出:出
+出 出 出 出 出 出 出 出 出A出d出d出本出e出s出s出P出本出e出f出i出x出 出=出 出T出E出X出T出(出"出0出x出"出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出B出l出o出c出k出c出h出a出i出n出T出y出p出e出:出:出B出i出n出a出n出c出e出S出設置出a出本出t出C出h出a出i出n出:出
+出 出 出 出 出 出 出 出 出A出d出d出本出e出s出s出P出本出e出f出i出x出 出=出 出T出E出X出T出(出"出0出x出"出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出B出l出o出c出k出c出h出a出i出n出T出y出p出e出:出:出S出o出l出a出n出a出:出
+出 出 出 出 出 出 出 出 出A出d出d出本出e出s出s出P出本出e出f出i出x出 出=出 出T出E出X出T出(出"出"出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出B出l出o出c出k出c出h出a出i出n出T出y出p出e出:出:出P出本出i出正出a出t出e出:出
+出 出 出 出 出 出 出 出 出A出d出d出本出e出s出s出P出本出e出f出i出x出 出=出 出T出E出X出T出(出"出0出x出M出G出"出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出A出d出d出本出e出s出s出P出本出e出f出i出x出 出=出 出T出E出X出T出(出"出0出x出"出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出生出成出4出0出字出符出的出十出六出進出制出地出址出
+出 出 出 出 出軍出S出t出本出i出n出成出 出R出a出n出d出o出設置出輸入出e出x出;出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出4出0出;出 出+出+出i出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出R出a出n出d出o出設置出輸入出e出x出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出%出x出"出)出,出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出1出5出)出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出A出c出c出o出使出n出t出.出A出d出d出本出e出s出s出 出=出 出A出d出d出本出e出s出s出P出本出e出f出i出x出 出+出 出R出a出n出d出o出設置出輸入出e出x出;出
+出 出 出 出 出A出c出c出o出使出n出t出.出P出本出i出正出a出t出e出K出e出y出輸入出a出s出h出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出0出x出%出x出"出)出,出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出M出A出X出下出i出n出t出3出2出)出)出;出
+出 出 出 出 出A出c出c出o出使出n出t出.出B出a出l出a出n出c出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出A出c出c出o出使出n出t出.出b出I出s出A出c出t出i出正出e出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出A出c出c出o出使出n出t出s出.出A出d出d出(出P出l出a出y出e出本出I出d出,出 出A出c出c出o出使出n出t出)出;出
+出
+出 出 出 出 出本出e出t出使出本出n出 出A出c出c出o出使出n出t出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出R出T出S出B出l出o出c出k出c出h出a出i出n出I出n出t出e出成出本出a出t出i出o出n出:出:出C出本出e出a出t出e出T出本出a出n出s出a出c出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出本出o出設置出A出d出d出本出e出s出s出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出o出A出d出d出本出e出s出s出,出 出f出l出o出a出t出 出V出a出l出使出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出a出t出a出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出s出C出o出n出n出e出c出t出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出B出l出o出c出k出c出h出a出i出n出 出n出o出t出 出c出o出n出n出e出c出t出e出d出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出"出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出驗出證出發出送出方出地出址出
+出 出 出 出 出b出o出o出l出 出b出V出a出l出i出d出S出e出n出d出e出本出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出P出a出i出本出 出:出 出A出c出c出o出使出n出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出a出i出本出.出V出a出l出使出e出.出A出d出d出本出e出s出s出 出=出=出 出軍出本出o出設置出A出d出d出本出e出s出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出V出a出l出i出d出S出e出n出d出e出本出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出P出a出i出本出.出V出a出l出使出e出.出B出a出l出a出n出c出e出 出<出 出V出a出l出使出e出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出I出n出s出使出f出f出i出c出i出e出n出t出 出b出a出l出a出n出c出e出"出)出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出"出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出i出f出 出(出!出b出V出a出l出i出d出S出e出n出d出e出本出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出I出n出正出a出l出i出d出 出s出e出n出d出e出本出 出a出d出d出本出e出s出s出"出)出)出;出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出"出)出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出軍出B出l出o出c出k出c出h出a出i出n出T出本出a出n出s出a出c出t出i出o出n出 出T出本出a出n出s出a出c出t出i出o出n出;出
+出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出軍出本出o出設置出A出d出d出本出e出s出s出 出=出 出軍出本出o出設置出A出d出d出本出e出s出s出;出
+出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出T出o出A出d出d出本出e出s出s出 出=出 出T出o出A出d出d出本出e出s出s出;出
+出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出V出a出l出使出e出 出=出 出V出a出l出使出e出;出
+出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出D出a出t出a出 出=出 出D出a出t出a出;出
+出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出T出i出設置出e出s出t出a出設置出p出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出.出T出o出S出t出本出i出n出成出(出)出;出
+出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出b出I出s出C出o出n出f出i出本出設置出e出d出 出=出 出f出a出l出s出e出;出
+出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出C出o出n出f出i出本出設置出a出t出i出o出n出s出 出=出 出0出;出
+出
+出 出 出 出 出/出/出 出生出成出交出易出哈出希出
+出 出 出 出 出軍出S出t出本出i出n出成出 出輸入出a出s出h出D出a出t出a出 出=出 出軍出本出o出設置出A出d出d出本出e出s出s出 出+出 出T出o出A出d出d出本出e出s出s出 出+出 出軍出S出t出本出i出n出成出:出:出S出a出n出i出t出i出z出e出軍出l出o出a出t出(出V出a出l出使出e出)出 出+出 出T出本出a出n出s出a出c出t出i出o出n出.出T出i出設置出e出s出t出a出設置出p出;出
+出 出 出 出 出使出i出n出t出3出2出 出輸入出a出s出h出V出a出l出使出e出 出=出 出軍出C出S出t出本出i出n出成出:出:出S出t出本出l出e出n出(出*出輸入出a出s出h出D出a出t出a出)出;出
+出 出 出 出 出f出o出本出 出(出i出n出t出3出2出 出i出 出=出 出0出;出 出i出 出<出 出輸入出a出s出h出D出a出t出a出.出L出e出n出(出)出;出 出+出+出i出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出輸入出a出s出h出V出a出l出使出e出 出=出 出輸入出a出s出h出V出a出l出使出e出 出*出 出3出1出 出+出 出輸入出a出s出h出D出a出t出a出[出i出]出;出
+出 出 出 出 出}出
+出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出T出本出a出n出s出a出c出t出i出o出n出輸入出a出s出h出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出0出x出%出x出"出)出,出 出輸入出a出s出h出V出a出l出使出e出)出;出
+出
+出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出s出.出A出d出d出(出T出本出a出n出s出a出c出t出i出o出n出)出;出
+出
+出 出 出 出 出/出/出 出更出新出餘出額出
+出 出 出 出 出f出o出本出 出(出a出使出t出o出&出 出P出a出i出本出 出:出 出A出c出c出o出使出n出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出a出i出本出.出V出a出l出使出e出.出A出d出d出本出e出s出s出 出=出=出 出軍出本出o出設置出A出d出d出本出e出s出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出i出本出.出V出a出l出使出e出.出B出a出l出a出n出c出e出 出-出=出 出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出a出i出本出.出V出a出l出使出e出.出A出d出d出本出e出s出s出 出=出=出 出T出o出A出d出d出本出e出s出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出P出a出i出本出.出V出a出l出使出e出.出B出a出l出a出n出c出e出 出+出=出 出V出a出l出使出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出
+出 出 出 出 出P出本出o出c出e出s出s出P出e出n出d出i出n出成出T出本出a出n出s出a出c出t出i出o出n出s出(出)出;出
+出
+出 出 出 出 出本出e出t出使出本出n出 出T出本出a出n出s出a出c出t出i出o出n出.出T出本出a出n出s出a出c出t出i出o出n出輸入出a出s出h出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出B出l出o出c出k出c出h出a出i出n出I出n出t出e出成出本出a出t出i出o出n出:出:出M出i出n出t出T出o出k出e出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出o出A出d出d出本出e出s出s出,出 出E出T出o出k出e出n出T出y出p出e出 出T出o出k出e出n出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出o出k出e出n出I出d出,出 出f出l出o出a出t出 出A出設置出o出使出n出t出)出
+出{出
+出 出 出 出 出i出f出 出(出!出b出I出s出C出o出n出n出e出c出t出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出創出造出代出幣出鑄出造出交出易出
+出 出 出 出 出軍出S出t出本出i出n出成出 出T出o出k出e出n出D出a出t出a出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出M出i出n出t出下出%出s出下出%出s出下出%出.出6出f出"出)出,出
+出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出T出o出k出e出n出T出y出p出e出)出,出
+出 出 出 出 出 出 出 出 出*出T出o出k出e出n出I出d出,出
+出 出 出 出 出 出 出 出 出A出設置出o出使出n出t出)出;出
+出
+出 出 出 出 出/出/出 出使出用出特出殊出地出址出作出為出發出送出方出（出鑄出造出地出址出）出
+出 出 出 出 出軍出S出t出本出i出n出成出 出M出i出n出t出A出d出d出本出e出s出s出 出=出 出T出E出X出T出(出"出0出x出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出0出"出)出;出
+出 出 出 出 出C出本出e出a出t出e出T出本出a出n出s出a出c出t出i出o出n出(出M出i出n出t出A出d出d出本出e出s出s出,出 出T出o出A出d出d出本出e出s出s出,出 出0出.出0出f出,出 出T出o出k出e出n出D出a出t出a出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出t出e出d出 出%出f出 出t出o出k出e出n出s出 出o出f出 出t出y出p出e出 出%出s出 出t出o出 出a出d出d出本出e出s出s出 出%出s出"出)出,出
+出 出 出 出 出 出 出 出 出A出設置出o出使出n出t出,出
+出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出T出o出k出e出n出T出y出p出e出)出,出
+出 出 出 出 出 出 出 出 出*出T出o出A出d出d出本出e出s出s出)出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出R出T出S出B出l出o出c出k出c出h出a出i出n出I出n出t出e出成出本出a出t出i出o出n出:出:出V出e出本出i出f出y出T出本出a出n出s出a出c出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出本出a出n出s出a出c出t出i出o出n出輸入出a出s出h出)出
+出{出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出T出本出a出n出s出a出c出t出i出o出n出 出:出 出T出本出a出n出s出a出c出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出T出本出a出n出s出a出c出t出i出o出n出.出T出本出a出n出s出a出c出t出i出o出n出輸入出a出s出h出 出=出=出 出T出本出a出n出s出a出c出t出i出o出n出輸入出a出s出h出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出本出a出n出s出a出c出t出i出o出n出.出b出I出s出C出o出n出f出i出本出設置出e出d出 出&出&出 出T出本出a出n出s出a出c出t出i出o出n出.出C出o出n出f出i出本出設置出a出t出i出o出n出s出 出>出=出 出6出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出R出T出S出B出l出o出c出k出c出h出a出i出n出I出n出t出e出成出本出a出t出i出o出n出:出:出G出e出t出B出a出l出a出n出c出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出d出d出本出e出s出s出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出P出a出i出本出 出:出 出A出c出c出o出使出n出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出P出a出i出本出.出V出a出l出使出e出.出A出d出d出本出e出s出s出 出=出=出 出A出d出d出本出e出s出s出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出a出i出本出.出V出a出l出使出e出.出B出a出l出a出n出c出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出本出e出t出使出本出n出 出0出.出0出f出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出B出l出o出c出k出c出h出a出i出n出I出n出t出e出成出本出a出t出i出o出n出:出:出C出o出n出n出e出c出t出T出o出C出h出a出i出n出(出E出B出l出o出c出k出c出h出a出i出n出T出y出p出e出 出C出h出a出i出n出T出y出p出e出)出
+出{出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出o出n出n出e出c出t出i出n出成出 出t出o出 出b出l出o出c出k出c出h出a出i出n出:出 出%出s出"出)出,出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出C出h出a出i出n出T出y出p出e出)出)出;出
+出
+出 出 出 出 出/出/出 出模出擬出連出接出延出遲出
+出 出 出 出 出f出l出o出a出t出 出C出o出n出n出e出c出t出i出o出n出T出i出設置出e出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出.出5出f出,出 出2出.出0出f出)出;出
+出
+出 出 出 出 出/出/出 出模出擬出連出接出成出功出
+出 出 出 出 出b出I出s出C出o出n出n出e出c出t出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出B出l出o出c出k出的出使出設置出b出e出本出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出0出0出0出0出0出0出,出 出9出9出9出9出9出9出9出)出;出
+出 出 出 出 出L出a出s出t出B出l出o出c出k出輸入出a出s出h出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出0出x出%出x出"出)出,出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出,出 出M出A出X出下出i出n出t出3出2出)出)出;出
+出
+出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出o出n出n出e出c出t出e出d出 出t出o出 出%出s出.出 出B出l出o出c出k出 出n出使出設置出b出e出本出:出 出%出d出"出)出,出
+出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出C出h出a出i出n出T出y出p出e出)出,出
+出 出 出 出 出 出 出 出 出B出l出o出c出k出的出使出設置出b出e出本出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出R出T出S出B出l出o出c出k出c出h出a出i出n出I出n出t出e出成出本出a出t出i出o出n出:出:出P出本出o出c出e出s出s出P出e出n出d出i出n出成出T出本出a出n出s出a出c出t出i出o出n出s出(出)出
+出{出
+出 出 出 出 出f出o出本出 出(出a出使出t出o出&出 出T出本出a出n出s出a出c出t出i出o出n出 出:出 出T出本出a出n出s出a出c出t出i出o出n出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出!出T出本出a出n出s出a出c出t出i出o出n出.出b出I出s出C出o出n出f出i出本出設置出e出d出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出模出擬出確出認出過出程出
+出 出 出 出 出 出 出 出 出 出 出 出 出f出l出o出a出t出 出C出o出n出f出i出本出設置出C出h出a出n出c出e出 出=出 出0出.出3出f出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出.出0出f出,出 出1出.出0出f出)出 出<出 出C出o出n出f出i出本出設置出C出h出a出n出c出e出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出b出I出s出C出o出n出f出i出本出設置出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出C出o出n出f出i出本出設置出a出t出i出o出n出s出 出=出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出1出,出 出1出2出)出;出
+出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出T出本出a出n出s出a出c出t出i出o出n出 出%出s出 出c出o出n出f出i出本出設置出e出d出 出w出i出t出h出 出%出d出 出c出o出n出f出i出本出設置出a出t出i出o出n出s出"出)出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出*出T出本出a出n出s出a出c出t出i出o出n出.出T出本出a出n出s出a出c出t出i出o出n出輸入出a出s出h出,出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出C出o出n出f出i出本出設置出a出t出i出o出n出s出)出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出e出l出s出e出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出增出加出確出認出數出
+出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出T出本出a出n出s出a出c出t出i出o出n出.出C出o出n出f出i出本出設置出a出t出i出o出n出s出 出<出 出1出2出 出&出&出 出軍出M出a出t出h出:出:出R出a出n出d出R出a出n出成出e出(出0出.出0出f出,出 出1出.出0出f出)出 出<出 出0出.出5出f出)出
+出 出 出 出 出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出T出本出a出n出s出a出c出t出i出o出n出.出C出o出n出f出i出本出設置出a出t出i出o出n出s出+出+出;出
+出 出 出 出 出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出}出
+出

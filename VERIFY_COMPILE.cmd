@@ -4,12 +4,12 @@ echo ========================================
 echo MingGoRTS 文化适应系统 - 编译验证
 echo ========================================
 echo.
-echo 引擎版本: UE 5.4
+echo 引擎版本: UE 5.7
 echo 目标模块: MingGoRTS (包含 CulturalAdaptationSystem)
 echo 编译模式: Development
 echo.
 
-set UBT=C:\Program Files\Epic Games\UE_5.4\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe
+set UBT=C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe
 set PROJECT=C:\HW\MingGoRTS\MingGoRTS.uproject
 set LOG=C:\HW\MingGoRTS\Logs\Compile_Verification_2026_03_23.log
 

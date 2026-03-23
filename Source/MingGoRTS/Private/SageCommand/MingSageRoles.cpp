@@ -1,794 +1,795 @@
-#include "SageCommand/MingSageRoles.h"
-#include "SageCommand/MingMoralAuthority.h"
-#include "SageCommand/MingYinYangFiveElements.h"
-#include "SageCommand/MingSixStrategies.h"
-#include "SageCommand/MingCommandAuthority.h"
-#include "SageCommand/MingFiveElementsRotation.h"
-
-UMingSageRoles::UMingSageRoles()
-{
-    bSystemInitialized = false;
-}
-
-bool UMingSageRoles::Initialize()
-{
-    if (bSystemInitialized)
-    {
-        return true;
-    }
-
-    // 初始化角色規範
-    InitializeRoleStandards();
-    
-    // 初始化角色特徵
-    InitializeRoleCharacteristics();
-
-    bSystemInitialized = true;
-    return true;
-}
-
-FSageRoleCharacteristics UMingSageRoles::DefineTrueSage()
-{
-    FSageRoleCharacteristics TrueSage;
-    TrueSage.RoleType = ESageRoleType::TrueSage;
-    TrueSage.RoleName = TEXT("至聖者");
-    TrueSage.RoleDescription = TEXT("完美體現聖者指揮學的至高境界，道德與智慧的化身");
-    TrueSage.StandardLevel = ERoleStandardLevel::Perfect;
-
-    // 道德權威特徵 - 完美道德
-    TrueSage.MoralAuthorityLevel = 100.0f;
-    TrueSage.LegitimacyScore = 100.0f;
-    TrueSage.bHasFallPrevention = true;
-
-    // 陰陽五行特徵 - 完美平衡
-    TrueSage.PrimaryAttribute = EYinYangAttribute::BalancedYinYang;
-    TrueSage.PrimaryElement = EFiveElements::Earth;
-    TrueSage.HarmonyLevel = 100.0f;
-    TrueSage.bUsesEvilRotation = false;
-
-    // 六策特徵 - 大師級洞察
-    TrueSage.PreferredStrategy = ESixStrategyType::HeavenEarthHumanStrategy;
-    TrueSage.MaxComplexity = EStrategyComplexity::Master;
-    TrueSage.StrategicInsight = 100.0f;
-
-    // 指揮權力特徵 - 道德權威為主
-    TrueSage.PrimaryAuthority = ECommandAuthorityType::MoralAuthority;
-    TrueSage.CommandEffectiveness = 100.0f;
-    TrueSage.InfluenceRadius = 100.0f;
-
-    return TrueSage;
-}
-
-FSageRoleCharacteristics UMingSageRoles::DefineFalseSage()
-{
-    FSageRoleCharacteristics FalseSage;
-    FalseSage.RoleType = ESageRoleType::FalseSage;
-    FalseSage.RoleName = TEXT("偽聖者");
-    FalseSage.RoleDescription = TEXT("表面聖者，內心邪惡；以道德之名行邪惡之實");
-    FalseSage.StandardLevel = ERoleStandardLevel::Corrupted;
-
-    // 道德權威特徵 - 虛假道德
-    FalseSage.MoralAuthorityLevel = 30.0f;  // 表面高，實際低
-    FalseSage.LegitimacyScore = 60.0f;     // 依靠欺騙維持
-    FalseSage.bHasFallPrevention = false;   // 無防墮機制
-
-    // 陰陽五行特徵 - 表面平衡，實則陰盛
-    FalseSage.PrimaryAttribute = EYinYangAttribute::Evil;  // 內心邪惡
-    FalseSage.PrimaryElement = EFiveElements::Water;        // 陰性元素
-    FalseSage.HarmonyLevel = 25.0f;                       // 假和諧
-    FalseSage.bUsesEvilRotation = true;                    // 使用邪惡輪轉
-
-    // 六策特徵 - 善於陰謀
-    FalseSage.PreferredStrategy = ESixStrategyType::HumanStrategy;  // 善用人心
-    FalseSage.MaxComplexity = EStrategyComplexity::Complex;        // 複雜但不達大師
-    FalseSage.StrategicInsight = 70.0f;                          // 有洞察但有限
-
-    // 指揮權力特徵 - 依靠魅力和欺騙
-    FalseSage.PrimaryAuthority = ECommandAuthorityType::CharismaticAuthority;
-    FalseSage.CommandEffectiveness = 60.0f;  // 表面有效，實則有限
-    FalseSage.InfluenceRadius = 80.0f;       // 影響範圍較大但不穩定
-
-    return FalseSage;
-}
-
-FSageRoleCharacteristics UMingSageRoles::DefineDemonKing()
-{
-    FSageRoleCharacteristics DemonKing;
-    DemonKing.RoleType = ESageRoleType::DemonKing;
-    DemonKing.RoleName = TEXT("魔王");
-    DemonKing.RoleDescription = TEXT("公開邪惡，追求絕對權力；以暴力和恐懼統治");
-    DemonKing.StandardLevel = ERoleStandardLevel::Corrupted;
-
-    // 道德權威特徵 - 完全邪惡
-    DemonKing.MoralAuthorityLevel = 0.0f;      // 無道德權威
-    DemonKing.LegitimacyScore = 10.0f;         // 僅靠暴力維持
-    DemonKing.bHasFallPrevention = false;       // 無防墮機制
-
-    // 陰陽五行特徵 - 純邪惡
-    DemonKing.PrimaryAttribute = EAlignmentAttribute::Evil;  // 純邪惡
-    DemonKing.PrimaryElement = EFiveElements::Fire;         // 火主攻擊
-    DemonKing.HarmonyLevel = 0.0f;                        // 完全不和諧
-    DemonKing.bUsesEvilRotation = true;                   // 使用邪惡輪轉
-
-    // 六策特徵 - 專注攻擊
-    DemonKing.PreferredStrategy = ESixStrategyType::HeavenStrategy;  // 天道暴力
-    DemonKing.MaxComplexity = EStrategyComplexity::Moderate;         // 簡單直接
-    DemonKing.StrategicInsight = 40.0f;                            // 有限洞察
-
-    // 指揮權力特徵 - 純粹暴力
-    DemonKing.PrimaryAuthority = ECommandAuthorityType::SituationalAuthority;  // 情境權威
-    DemonKing.CommandEffectiveness = 80.0f;  // 高效但殘酷
-    DemonKing.InfluenceRadius = 90.0f;       // 廣泛影響但基於恐懼
-
-    return DemonKing;
-}
-
-FSageRoleStandards UMingSageRoles::GetRoleStandards(ESageRoleType RoleType)
-{
-    if (RoleStandardsMap.Contains(RoleType))
-    {
-        return RoleStandardsMap[RoleType];
-    }
-    
-    // 返回默認規範
-    FSageRoleStandards DefaultStandards;
-    DefaultStandards.RoleType = RoleType;
-    DefaultStandards.StandardName = TEXT("未定義規範");
-    return DefaultStandards;
-}
-
-TArray<FSageRoleStandards> UMingSageRoles::GetAllRoleStandards()
-{
-    TArray<FSageRoleStandards> AllStandards;
-    
-    for (const auto& RolePair : RoleStandardsMap)
-    {
-        AllStandards.Add(RolePair.Value);
-    }
-    
-    return AllStandards;
-}
-
-FSageRoleEvaluation UMingSageRoles::EvaluateRoleCompliance(ESageRoleType RoleType, const FSageRoleCharacteristics& Characteristics)
-{
-    FSageRoleEvaluation Evaluation;
-    Evaluation.EvaluatedRole = RoleType;
-    
-    // 獲取角色規範
-    FSageRoleStandards Standards = GetRoleStandards(RoleType);
-    
-    // 評估各項合規性
-    Evaluation.MoralCompliance = EvaluateMoralCompliance(Characteristics, Standards);
-    Evaluation.StrategicCompliance = EvaluateStrategicCompliance(Characteristics, Standards);
-    Evaluation.AuthorityCompliance = EvaluateAuthorityCompliance(Characteristics, Standards);
-    
-    // 計算總體分數
-    Evaluation.OverallScore = (Evaluation.MoralCompliance + Evaluation.StrategicCompliance + Evaluation.AuthorityCompliance) / 3.0f;
-    
-    // 確定合規等級
-    Evaluation.ComplianceLevel = DetermineComplianceLevel(Evaluation.OverallScore);
-    
-    // 生成優勢和弱點
-    GenerateStrengthsAndWeaknesses(Evaluation, Characteristics, Standards);
-    
-    // 生成建議
-    GenerateRecommendations(Evaluation, Characteristics, Standards);
-    
-    // 生成評估總結
-    Evaluation.EvaluationSummary = FString::Printf(TEXT("%s角色評估：總體分數%.1f，合規等級：%s"), 
-        *GetRoleTypeName(RoleType), Evaluation.OverallScore, *GetStandardLevelName(Evaluation.ComplianceLevel));
-    
-    return Evaluation;
-}
-
-ERoleStandardLevel UMingSageRoles::DetermineComplianceLevel(float Score)
-{
-    if (Score >= 95.0f) return ERoleStandardLevel::Perfect;
-    if (Score >= 85.0f) return ERoleStandardLevel::Excellent;
-    if (Score >= 70.0f) return ERoleStandardLevel::Good;
-    if (Score >= 50.0f) return ERoleStandardLevel::Average;
-    if (Score >= 30.0f) return ERoleStandardLevel::Poor;
-    return ERoleStandardLevel::Corrupted;
-}
-
-TArray<FString> UMingSageRoles::CompareRoles(ESageRoleType Role1, ESageRoleType Role2)
-{
-    return GenerateRoleComparison(Role1, Role2);
-}
-
-FSageRoleCharacteristics UMingSageRoles::GetOptimalRoleForSituation(const FString& Situation)
-{
-    // 根據情況分析最佳角色
-    if (Situation.Contains("道德") || Situation.Contains("正義") || Situation.Contains("和平"))
-    {
-        return DefineTrueSage();
-    }
-    else if (Situation.Contains("欺騙") || Situation.Contains("陰謀") || Situation.Contains("權術"))
-    {
-        return DefineFalseSage();
-    }
-    else if (Situation.Contains("戰爭") || Situation.Contains("暴力") || Situation.Contains("征服"))
-    {
-        return DefineDemonKing();
-    }
-    else
-    {
-        // 默認情況下返回至聖者
-        return DefineTrueSage();
-    }
-}
-
-bool UMingSageRoles::IsActionCompliant(ESageRoleType RoleType, const FString& Action)
-{
-    // 檢查道德約束
-    if (!CheckMoralConstraint(RoleType, Action))
-    {
-        return false;
-    }
-    
-    // 檢查戰略指導
-    if (!CheckStrategicGuideline(RoleType, Action))
-    {
-        return false;
-    }
-    
-    // 檢查行為規則
-    if (!CheckBehavioralRule(RoleType, Action))
-    {
-        return false;
-    }
-    
-    return true;
-}
-
-TArray<FString> UMingSageRoles::GetCompliantActions(ESageRoleType RoleType, const FString& Context)
-{
-    TArray<FString> CompliantActions;
-    
-    FSageRoleStandards Standards = GetRoleStandards(RoleType);
-    
-    // 根據規範生成合規行動
-    for (const FString& Guideline : Standards.StrategicGuidelines)
-    {
-        CompliantActions.Add(Guideline);
-    }
-    
-    return CompliantActions;
-}
-
-TArray<FString> UMingSageRoles::GetProhibitedActions(ESageRoleType RoleType)
-{
-    FSageRoleStandards Standards = GetRoleStandards(RoleType);
-    return Standards.ProhibitedActions;
-}
-
-bool UMingSageRoles::CanTransformRole(ESageRoleType FromRole, ESageRoleType ToRole)
-{
-    // 定義角色轉換規則
-    switch (FromRole)
-    {
-    case ESageRoleType::TrueSage:
-        // 至聖者可以轉換為任何角色（但通常不會）
-        return true;
-        
-    case ESageRoleType::FalseSage:
-        // 偽聖者可以轉換為魔王（完全墮落）或至聖者（悔悟）
-        return (ToRole == ESageRoleType::DemonKing || ToRole == ESageRoleType::TrueSage);
-        
-    case ESageRoleType::DemonKing:
-        // 魔王很難轉換，但可以轉換為偽偽聖者（偽裝）
-        return ToRole == ESageRoleType::FalseSage;
-        
-    default:
-        return false;
-    }
-}
-
-FSageRoleCharacteristics UMingSageRoles::TransformRole(const FSageRoleCharacteristics& CurrentRole, ESageRoleType TargetRole)
-{
-    if (!CanTransformRole(CurrentRole.RoleType, TargetRole))
-    {
-        return CurrentRole; // 無法轉換，返回原角色
-    }
-    
-    // 創建新角色特徵
-    FSageRoleCharacteristics NewRole;
-    
-    switch (TargetRole)
-    {
-    case ESageRoleType::TrueSage:
-        NewRole = DefineTrueSage();
-        break;
-    case ESageRoleType::FalseSage:
-        NewRole = DefineFalseSage();
-        break;
-    case ESageRoleType::DemonKing:
-        NewRole = DefineDemonKing();
-        break;
-    }
-    
-    // 保留部分原有特徵（記憶）
-    NewRole.RoleDescription += FString::Printf(TEXT("（由%s轉換而來）"), *GetRoleTypeName(CurrentRole.RoleType));
-    
-    return NewRole;
-}
-
-void UMingSageRoles::ApplyRoleStandardsToProject(ESageRoleType RoleType)
-{
-    // 將角色規範應用到專案
-    FSageRoleStandards Standards = GetRoleStandards(RoleType);
-    
-    // 這裡可以添加具體的專案應用邏輯
-    // 例如：設置遊戲規則、AI行為、UI主題等
-}
-
-TArray<FString> UMingSageRoles::GetProjectGuidelines(ESageRoleType RoleType)
-{
-    TArray<FString> Guidelines;
-    
-    FSageRoleStandards Standards = GetRoleStandards(RoleType);
-    
-    // 添加核心原則
-    for (const FString& Principle : Standards.CorePrinciples)
-    {
-        Guidelines.Add(Principle);
-    }
-    
-    // 添加戰略指導
-    for (const FString& Guideline : Standards.StrategicGuidelines)
-    {
-        Guidelines.Add(Guideline);
-    }
-    
-    return Guidelines;
-}
-
-bool UMingSageRoles::ValidateProjectCompliance(ESageRoleType RoleType)
-{
-    // 驗證專案是否符合角色規範
-    FSageRoleStandards Standards = GetRoleStandards(RoleType);
-    
-    // 這裡可以添加具體的驗證邏輯
-    // 例如：檢查遊戲內容、AI行為、系統設置等
-    
-    return true; // 簡化實現
-}
-
-// 私有方法實現
-
-void UMingSageRoles::InitializeRoleStandards()
-{
-    // 初始化至聖者規範
-    FSageRoleStandards TrueSageStandards;
-    TrueSageStandards.RoleType = ESageRoleType::TrueSage;
-    TrueSageStandards.StandardName = TEXT("至聖者規範");
-    
-    TrueSageStandards.CorePrinciples.Add(TEXT("道德至上，以德服人"));
-    TrueSageStandards.CorePrinciples.Add(TEXT("陰陽平衡，五行和諧"));
-    TrueSageStandards.CorePrinciples.Add(TEXT("智慧決策，洞察天機"));
-    TrueSageStandards.CorePrinciples.Add(TEXT("仁愛眾生，保護無辜"));
-    
-    TrueSageStandards.BehavioralRules.Add(TEXT("永不傷害無辜者"));
-    TrueSageStandards.BehavioralRules.Add(TEXT("堅守道德底線"));
-    TrueSageStandards.BehavioralRules.Add(TEXT("追求長遠和諧"));
-    TrueSageStandards.BehavioralRules.Add(TEXT("以智慧解決衝突"));
-    
-    TrueSageStandards.StrategicGuidelines.Add(TEXT("運用天地人三策"));
-    TrueSageStandards.StrategicGuidelines.Add(TEXT("保持陰陽動態平衡"));
-    TrueSageStandards.StrategicGuidelines.Add(TEXT("善用五行相生相克"));
-    TrueSageStandards.StrategicGuidelines.Add(TEXT("注重長遠戰略規劃"));
-    
-    TrueSageStandards.MoralConstraints.Add(TEXT("絕不使用邪惡手段"));
-    TrueSageStandards.MoralConstraints.Add(TEXT("避免玉石俱焚"));
-    TrueSageStandards.MoralConstraints.Add(TEXT("尊重生命價值"));
-    TrueSageStandards.MoralConstraints.Add(TEXT("維護正義秩序"));
-    
-    TrueSageStandards.DecisionCriteria.Add(TEXT("是否符合道德"));
-    TrueSageStandards.DecisionCriteria.Add(TEXT("是否促進和諧"));
-    TrueSageStandards.DecisionCriteria.Add(TEXT("是否長遠有益"));
-    TrueSageStandards.DecisionCriteria.Add(TEXT("是否保護無辜"));
-    
-    TrueSageStandards.ProhibitedActions.Add(TEXT("屠殺無辜"));
-    TrueSageStandards.ProhibitedActions.Add(TEXT("使用禁術"));
-    TrueSageStandards.ProhibitedActions.Add(TEXT("背叛信任"));
-    TrueSageStandards.ProhibitedActions.Add(TEXT("追求絕對權力"));
-    
-    RoleStandardsMap.Add(ESageRoleType::TrueSage, TrueSageStandards);
-    
-    // 初始化偽聖者規範
-    FSageRoleStandards FalseSageStandards;
-    FalseSageStandards.RoleType = ESageRoleType::FalseSage;
-    FalseSageStandards.StandardName = TEXT("偽聖者規範");
-    
-    FalseSageStandards.CorePrinciples.Add(TEXT("表面道德，內心邪惡"));
-    FalseSageStandards.CorePrinciples.Add(TEXT("善於偽裝，欺騙大眾"));
-    FalseSageStandards.CorePrinciples.Add(TEXT("利用道德謀取私利"));
-    FalseSageStandards.CorePrinciples.Add(TEXT("暗中破壞秩序"));
-    
-    FalseSageStandards.BehavioralRules.Add(TEXT("偽裝善良"));
-    FalseSageStandards.BehavioralRules.Add(TEXT("暗中陰謀"));
-    FalseSageStandards.BehavioralRules.Add(TEXT("利用他人弱點"));
-    FalseSageStandards.BehavioralRules.Add(TEXT("避免暴露真實意圖"));
-    
-    FalseSageStandards.StrategicGuidelines.Add(TEXT("善用人心策略"));
-    FalseSageStandards.StrategicGuidelines.Add(TEXT("製造內部分裂"));
-    FalseSageStandards.StrategicGuidelines.Add(TEXT("利用道德綁架"));
-    FalseSageStandards.StrategicGuidelines.Add(TEXT("暗中削弱敵人"));
-    
-    FalseSageStandards.MoralConstraints.Add(TEXT("避免公開邪惡"));
-    FalseSageStandards.MoralConstraints.Add(TEXT("維護表面形象"));
-    FalseSageStandards.MoralConstraints.Add(TEXT("避免直接傷害無辜"));
-    FalseSageStandards.MoralConstraints.Add(TEXT("保持偽裝一致性"));
-    
-    FalseSageStandards.DecisionCriteria.Add(TEXT("是否有利於私利"));
-    FalseSageStandards.DecisionCriteria.Add(TEXT("是否能夠偽裝"));
-    FalseSageStandards.DecisionCriteria.Add(TEXT("是否避免暴露"));
-    FalseSageStandards.DecisionCriteria.Add(TEXT("是否長遠有利"));
-    
-    FalseSageStandards.ProhibitedActions.Add(TEXT("公開邪惡行為"));
-    FalseSageStandards.ProhibitedActions.Add(TEXT("暴露真實意圖"));
-    FalseSageStandards.ProhibitedActions.Add(TEXT("直接傷害盟友"));
-    FalseSageStandards.ProhibitedActions.Add(TEXT("破壞自身形象"));
-    
-    RoleStandardsMap.Add(ESageRoleType::FalseSage, FalseSageStandards);
-    
-    // 初始化魔王規範
-    FSageRoleStandards DemonKingStandards;
-    DemonKingStandards.RoleType = ESageRoleType::DemonKing;
-    DemonKingStandards.StandardName = TEXT("魔王規範");
-    
-    DemonKingStandards.CorePrinciples.Add(TEXT("力量至上，弱肉強食"));
-    DemonKingStandards.CorePrinciples.Add(TEXT("絕對權力，無所顧忌"));
-    DemonKingStandards.CorePrinciples.Add(TEXT("恐懼統治，暴力解決"));
-    DemonKingStandards.CorePrinciples.Add(TEXT("征服一切，毀滅反對者"));
-    
-    DemonKingStandards.BehavioralRules.Add(TEXT("使用暴力"));
-    DemonKingStandards.BehavioralRules.Add(TEXT("製造恐懼"));
-    DemonKingStandards.BehavioralRules.Add(TEXT("無視道德"));
-    DemonKingStandards.BehavioralRules.Add(TEXT("追求絕對控制"));
-    
-    DemonKingStandards.StrategicGuidelines.Add(TEXT("直接攻擊"));
-    DemonKingStandards.StrategicGuidelines.Add(TEXT("製造混亂"));
-    DemonKingStandards.StrategicGuidelines.Add(TEXT("利用恐懼"));
-    DemonKingStandards.StrategicGuidelines.Add(TEXT("快速征服"));
-    
-    DemonKingStandards.MoralConstraints.Add(TEXT("無道德約束"));
-    DemonKingStandards.MoralConstraints.Add(TEXT("無限制手段"));
-    DemonKingStandards.MoralConstraints.Add(TEXT("無禁忌行動"));
-    DemonKingStandards.MoralConstraints.Add(TEXT("無後顧之憂"));
-    
-    DemonKingStandards.DecisionCriteria.Add(TEXT("是否增加權力"));
-    DemonKingStandards.DecisionCriteria.Add(TEXT("是否製造恐懼"));
-    DemonKingStandards.DecisionCriteria.Add(TEXT("是否快速有效"));
-    DemonKingStandards.DecisionCriteria.Add(TEXT("是否絕對控制"));
-    
-    DemonKingStandards.ProhibitedActions.Add(TEXT("示弱"));
-    DemonKingStandards.ProhibitedActions.Add(TEXT("仁慈"));
-    DemonKingStandards.ProhibitedActions.Add(TEXT("妥協"));
-    DemonKingStandards.ProhibitedActions.Add(TEXT("退讓"));
-    
-    RoleStandardsMap.Add(ESageRoleType::DemonKing, DemonKingStandards);
-}
-
-void UMingSageRoles::InitializeRoleCharacteristics()
-{
-    // 初始化角色特徵
-    RoleCharacteristicsMap.Add(ESageRoleType::TrueSage, DefineTrueSage());
-    RoleCharacteristicsMap.Add(ESageRoleType::FalseSage, DefineFalseSage());
-    RoleCharacteristicsMap.Add(ESageRoleType::DemonKing, DefineDemonKing());
-}
-
-float UMingSageRoles::EvaluateMoralCompliance(const FSageRoleCharacteristics& Characteristics, const FSageRoleStandards& Standards)
-{
-    float Score = 0.0f;
-    
-    // 評估道德權威
-    if (Characteristics.MoralAuthorityLevel >= 80.0f)
-    {
-        Score += 30.0f;
-    }
-    else if (Characteristics.MoralAuthorityLevel >= 50.0f)
-    {
-        Score += 20.0f;
-    }
-    else
-    {
-        Score += 10.0f;
-    }
-    
-    // 評估防墮機制
-    if (Characteristics.bHasFallPrevention)
-    {
-        Score += 20.0f;
-    }
-    else
-    {
-        Score += 0.0f;
-    }
-    
-    // 評估陰陽平衡
-    if (Characteristics.HarmonyLevel >= 80.0f)
-    {
-        Score += 30.0f;
-    }
-    else if (Characteristics.HarmonyLevel >= 50.0f)
-    {
-        Score += 20.0f;
-    }
-    else
-    {
-        Score += 10.0f;
-    }
-    
-    // 評估邪惡輪轉
-    if (!Characteristics.bUsesEvilRotation)
-    {
-        Score += 20.0f;
-    }
-    else
-    {
-        Score += 0.0f;
-    }
-    
-    return Score;
-}
-
-float UMingSageRoles::EvaluateStrategicCompliance(const FSageRoleCharacteristics& Characteristics, const FSageRoleStandards& Standards)
-{
-    float Score = 0.0f;
-    
-    // 評估戰略洞察
-    if (Characteristics.StrategicInsight >= 80.0f)
-    {
-        Score += 40.0f;
-    }
-    else if (Characteristics.StrategicInsight >= 50.0f)
-    {
-        Score += 25.0f;
-    }
-    else
-    {
-        Score += 10.0f;
-    }
-    
-    // 評估策略複雜度
-    switch (Characteristics.MaxComplexity)
-    {
-    case EStrategyComplexity::Master:
-        Score += 30.0f;
-        break;
-    case EStrategyComplexity::Complex:
-        Score += 20.0f;
-        break;
-    case EStrategyComplexity::Moderate:
-        Score += 10.0f;
-        break;
-    case EStrategyComplexity::Simple:
-        Score += 5.0f;
-        break;
-    }
-    
-    // 評估策略偏好
-    if (Characteristics.PreferredStrategy == ESixStrategyType::HeavenEarthHumanStrategy)
-    {
-        Score += 30.0f;
-    }
-    else if (Characteristics.PreferredStrategy == ESixStrategyType::HeavenEarthStrategy ||
-             Characteristics.PreferredStrategy == ESixStrategyType::HeavenHumanStrategy ||
-             Characteristics.PreferredStrategy == ESixStrategyType::EarthHumanStrategy)
-    {
-        Score += 20.0f;
-    }
-    else
-    {
-        Score += 10.0f;
-    }
-    
-    return Score;
-}
-
-float UMingSageRoles::EvaluateAuthorityCompliance(const FSageRoleCharacteristics& Characteristics, const FSageRoleStandards& Standards)
-{
-    float Score = 0.0f;
-    
-    // 評估指揮權威類型
-    if (Characteristics.PrimaryAuthority == ECommandAuthorityType::MoralAuthority)
-    {
-        Score += 40.0f;
-    }
-    else if (Characteristics.PrimaryAuthority == ECommandAuthorityType::LegalAuthority ||
-             Characteristics.PrimaryAuthority == ECommandAuthorityType::TraditionalAuthority)
-    {
-        Score += 30.0f;
-    }
-    else if (Characteristics.PrimaryAuthority == ECommandAuthorityType::CharismaticAuthority)
-    {
-        Score += 20.0f;
-    }
-    else
-    {
-        Score += 10.0f;
-    }
-    
-    // 評估指揮有效性
-    if (Characteristics.CommandEffectiveness >= 80.0f)
-    {
-        Score += 30.0f;
-    }
-    else if (Characteristics.CommandEffectiveness >= 50.0f)
-    {
-        Score += 20.0f;
-    }
-    else
-    {
-        Score += 10.0f;
-    }
-    
-    // 評估影響範圍
-    if (Characteristics.InfluenceRadius >= 80.0f)
-    {
-        Score += 30.0f;
-    }
-    else if (Characteristics.InfluenceRadius >= 50.0f)
-    {
-        Score += 20.0f;
-    }
-    else
-    {
-        Score += 10.0f;
-    }
-    
-    return Score;
-}
-
-void UMingSageRoles::GenerateStrengthsAndWeaknesses(FSageRoleEvaluation& Evaluation, const FSageRoleCharacteristics& Characteristics, const FSageRoleStandards& Standards)
-{
-    // 根據評估結果生成優勢和弱點
-    if (Evaluation.MoralCompliance >= 80.0f)
-    {
-        Evaluation.Strengths.Add(TEXT("道德權威強大"));
-    }
-    else if (Evaluation.MoralCompliance < 50.0f)
-    {
-        Evaluation.Weaknesses.Add(TEXT("道德權威不足"));
-    }
-    
-    if (Evaluation.StrategicCompliance >= 80.0f)
-    {
-        Evaluation.Strengths.Add(TEXT("戰略洞察深刻"));
-    }
-    else if (Evaluation.StrategicCompliance < 50.0f)
-    {
-        Evaluation.Weaknesses.Add(TEXT("戰略能力有限"));
-    }
-    
-    if (Evaluation.AuthorityCompliance >= 80.0f)
-    {
-        Evaluation.Strengths.Add(TEXT("指揮權威穩固"));
-    }
-    else if (Evaluation.AuthorityCompliance < 50.0f)
-    {
-        Evaluation.Weaknesses.Add(TEXT("指揮權威薄弱"));
-    }
-}
-
-void UMingSageRoles::GenerateRecommendations(FSageRoleEvaluation& Evaluation, const FSageRoleCharacteristics& Characteristics, const FSageRoleStandards& Standards)
-{
-    // 根據評估結果生成建議
-    if (Evaluation.MoralCompliance < 70.0f)
-    {
-        Evaluation.Recommendations.Add(TEXT("建議加強道德權威建設"));
-    }
-    
-    if (Evaluation.StrategicCompliance < 70.0f)
-    {
-        Evaluation.Recommendations.Add(TEXT("建議提升戰略洞察力"));
-    }
-    
-    if (Evaluation.AuthorityCompliance < 70.0f)
-    {
-        Evaluation.Recommendations.Add(TEXT("建議增強指揮權威"));
-    }
-    
-    if (Evaluation.OverallScore < 50.0f)
-    {
-        Evaluation.Recommendations.Add(TEXT("建議全面重新評估角色定位"));
-    }
-}
-
-bool UMingSageRoles::CheckMoralConstraint(ESageRoleType RoleType, const FString& Action)
-{
-    FSageRoleStandards Standards = GetRoleStandards(RoleType);
-    
-    for (const FString& Constraint : Standards.MoralConstraints)
-    {
-        if (Action.Contains(Constraint))
-        {
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-bool UMingSageRoles::CheckStrategicGuideline(ESageRoleType RoleType, const FString& Action)
-{
-    FSageRoleStandards Standards = GetRoleStandards(RoleType);
-    
-    for (const FString& Guideline : Standards.StrategicGuidelines)
-    {
-        if (Action.Contains(Guideline))
-        {
-            return true;
-        }
-    }
-    
-    return false;
-}
-
-bool UMingSageRoles::CheckBehavioralRule(ESageRoleType RoleType, const FString& Action)
-{
-    FSageRoleStandards Standards = GetRoleStandards(RoleType);
-    
-    for (const FString& Rule : Standards.BehavioralRules)
-    {
-        if (Action.Contains(Rule))
-        {
-            return true;
-        }
-    }
-    
-    return false;
-}
-
-FString UMingSageRoles::GetRoleTypeName(ESageRoleType RoleType) const
-{
-    switch (RoleType)
-    {
-    case ESageRoleType::TrueSage: return TEXT("至聖者");
-    case ESageRoleType::FalseSage: return TEXT("偽聖者");
-    case ESageRoleType::DemonKing: return TEXT("魔王");
-    default: return TEXT("未知角色");
-    }
-}
-
-FString UMingSageRoles::GetStandardLevelName(ERoleStandardLevel Level) const
-{
-    switch (Level)
-    {
-    case ERoleStandardLevel::Perfect: return TEXT("完美級");
-    case ERoleStandardLevel::Excellent: return TEXT("優秀級");
-    case ERoleStandardLevel::Good: return TEXT("良好級");
-    case ERoleStandardLevel::Average: return TEXT("平均級");
-    case ERoleStandardLevel::Poor: return TEXT("較差級");
-    case ERoleStandardLevel::Corrupted: return TEXT("墮落級");
-    default: return TEXT("未知等級");
-    }
-}
-
-TArray<FString> UMingSageRoles::GenerateRoleComparison(ESageRoleType Role1, ESageRoleType Role2)
-{
-    TArray<FString> Comparison;
-    
-    FSageRoleCharacteristics Char1 = RoleCharacteristicsMap.Contains(Role1) ? RoleCharacteristicsMap[Role1] : FSageRoleCharacteristics();
-    FSageRoleCharacteristics Char2 = RoleCharacteristicsMap.Contains(Role2) ? RoleCharacteristicsMap[Role2] : FSageRoleCharacteristics();
-    
-    Comparison.Add(FString::Printf(TEXT("角色比較：%s vs %s"), *GetRoleTypeName(Role1), *GetRoleTypeName(Role2)));
-    
-    // 比較道德權威
-    Comparison.Add(FString::Printf(TEXT("道德權威：%s %.1f vs %s %.1f"), 
-        *GetRoleTypeName(Role1), Char1.MoralAuthorityLevel, 
-        *GetRoleTypeName(Role2), Char2.MoralAuthorityLevel));
-    
-    // 比較戰略洞察
-    Comparison.Add(FString::Printf(TEXT("戰略洞察：%s %.1f vs %s %.1f"), 
-        *GetRoleTypeName(Role1), Char1.StrategicInsight, 
-        *GetRoleTypeName(Role2), Char2.StrategicInsight));
-    
-    // 比較指揮權威
-    Comparison.Add(FString::Printf(TEXT("指揮權威：%s %.1f vs %s %.1f"), 
-        *GetRoleTypeName(Role1), Char1.CommandEffectiveness, 
-        *GetRoleTypeName(Role2), Char2.CommandEffectiveness));
-    
-    return Comparison;
-}
+出#出i出n出c出l出使出d出e出 出"出S出a出成出e出C出o出設置出設置出a出n出d出/出M出i出n出成出S出a出成出e出R出o出l出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出S出a出成出e出C出o出設置出設置出a出n出d出/出M出i出n出成出M出o出本出a出l出A出使出t出h出o出本出i出t出y出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出S出a出成出e出C出o出設置出設置出a出n出d出/出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出S出a出成出e出C出o出設置出設置出a出n出d出/出M出i出n出成出S出i出x出S出t出本出a出t出e出成出i出e出s出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出S出a出成出e出C出o出設置出設置出a出n出d出/出M出i出n出成出C出o出設置出設置出a出n出d出A出使出t出h出o出本出i出t出y出.出h出"出
+出#出i出n出c出l出使出d出e出 出"出S出a出成出e出C出o出設置出設置出a出n出d出/出M出i出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出R出o出t出a出t出i出o出n出.出h出"出
+出
+出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出U出M出i出n出成出S出a出成出e出R出o出l出e出s出(出)出
+出{出
+出 出 出 出 出b出S出y出s出t出e出設置出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出I出n出i出t出i出a出l出i出z出e出(出)出
+出{出
+出 出 出 出 出i出f出 出(出b出S出y出s出t出e出設置出I出n出i出t出i出a出l出i出z出e出d出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出}出
+出
+出 出 出 出 出/出/出 出初出始出化出角出色出規出範出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出R出o出l出e出S出t出a出n出d出a出本出d出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出角出色出特出徵出
+出 出 出 出 出I出n出i出t出i出a出l出i出z出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出(出)出;出
+出
+出 出 出 出 出b出S出y出s出t出e出設置出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出D出e出f出i出n出e出T出本出使出e出S出a出成出e出(出)出
+出{出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出 出T出本出使出e出S出a出成出e出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出R出o出l出e出T出y出p出e出 出=出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出T出本出使出e出S出a出成出e出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出R出o出l出e出的出a出設置出e出 出=出 出T出E出X出T出(出"出至出聖出者出"出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出R出o出l出e出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出完出美出體出現出聖出者出指出揮出學出的出至出高出境出界出，出道出德出與出智出慧出的出化出身出"出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出S出t出a出n出d出a出本出d出L出e出正出e出l出 出=出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出P出e出本出f出e出c出t出;出
+出
+出 出 出 出 出/出/出 出道出德出權出威出特出徵出 出-出 出完出美出道出德出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出M出o出本出a出l出A出使出t出h出o出本出i出t出y出L出e出正出e出l出 出=出 出1出0出0出.出0出f出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出L出e出成出i出t出i出設置出a出c出y出S出c出o出本出e出 出=出 出1出0出0出.出0出f出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出b出輸入出a出s出軍出a出l出l出P出本出e出正出e出n出t出i出o出n出 出=出 出t出本出使出e出;出
+出
+出 出 出 出 出/出/出 出陰出陽出五出行出特出徵出 出-出 出完出美出平出衡出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出P出本出i出設置出a出本出y出A出t出t出本出i出b出使出t出e出 出=出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出B出a出l出a出n出c出e出d出Y出i出n出Y出a出n出成出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出P出本出i出設置出a出本出y出E出l出e出設置出e出n出t出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出E出a出本出t出h出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出=出 出1出0出0出.出0出f出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出b出U出s出e出s出E出正出i出l出R出o出t出a出t出i出o出n出 出=出 出f出a出l出s出e出;出
+出
+出 出 出 出 出/出/出 出六出策出特出徵出 出-出 出大出師出級出洞出察出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出P出本出e出f出e出本出本出e出d出S出t出本出a出t出e出成出y出 出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出輸入出e出a出正出e出n出E出a出本出t出h出輸入出使出設置出a出n出S出t出本出a出t出e出成出y出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出M出a出x出C出o出設置出p出l出e出x出i出t出y出 出=出 出E出S出t出本出a出t出e出成出y出C出o出設置出p出l出e出x出i出t出y出:出:出M出a出s出t出e出本出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出S出t出本出a出t出e出成出i出c出I出n出s出i出成出h出t出 出=出 出1出0出0出.出0出f出;出
+出
+出 出 出 出 出/出/出 出指出揮出權出力出特出徵出 出-出 出道出德出權出威出為出主出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出P出本出i出設置出a出本出y出A出使出t出h出o出本出i出t出y出 出=出 出E出C出o出設置出設置出a出n出d出A出使出t出h出o出本出i出t出y出T出y出p出e出:出:出M出o出本出a出l出A出使出t出h出o出本出i出t出y出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出C出o出設置出設置出a出n出d出E出f出f出e出c出t出i出正出e出n出e出s出s出 出=出 出1出0出0出.出0出f出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出.出I出n出f出l出使出e出n出c出e出R出a出d出i出使出s出 出=出 出1出0出0出.出0出f出;出
+出
+出 出 出 出 出本出e出t出使出本出n出 出T出本出使出e出S出a出成出e出;出
+出}出
+出
+出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出D出e出f出i出n出e出軍出a出l出s出e出S出a出成出e出(出)出
+出{出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出 出軍出a出l出s出e出S出a出成出e出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出R出o出l出e出T出y出p出e出 出=出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出軍出a出l出s出e出S出a出成出e出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出R出o出l出e出的出a出設置出e出 出=出 出T出E出X出T出(出"出偽出聖出者出"出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出R出o出l出e出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出表出面出聖出者出，出內出心出邪出惡出；出以出道出德出之出名出行出邪出惡出之出實出"出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出S出t出a出n出d出a出本出d出L出e出正出e出l出 出=出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出C出o出本出本出使出p出t出e出d出;出
+出
+出 出 出 出 出/出/出 出道出德出權出威出特出徵出 出-出 出虛出假出道出德出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出M出o出本出a出l出A出使出t出h出o出本出i出t出y出L出e出正出e出l出 出=出 出3出0出.出0出f出;出 出 出/出/出 出表出面出高出，出實出際出低出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出L出e出成出i出t出i出設置出a出c出y出S出c出o出本出e出 出=出 出6出0出.出0出f出;出 出 出 出 出 出/出/出 出依出靠出欺出騙出維出持出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出b出輸入出a出s出軍出a出l出l出P出本出e出正出e出n出t出i出o出n出 出=出 出f出a出l出s出e出;出 出 出 出/出/出 出無出防出墮出機出制出
+出
+出 出 出 出 出/出/出 出陰出陽出五出行出特出徵出 出-出 出表出面出平出衡出，出實出則出陰出盛出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出P出本出i出設置出a出本出y出A出t出t出本出i出b出使出t出e出 出=出 出E出Y出i出n出Y出a出n出成出A出t出t出本出i出b出使出t出e出:出:出E出正出i出l出;出 出 出/出/出 出內出心出邪出惡出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出P出本出i出設置出a出本出y出E出l出e出設置出e出n出t出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出基本出a出t出e出本出;出 出 出 出 出 出 出 出 出/出/出 出陰出性出元出素出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出=出 出2出5出.出0出f出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出假出和出諧出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出b出U出s出e出s出E出正出i出l出R出o出t出a出t出i出o出n出 出=出 出t出本出使出e出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出使出用出邪出惡出輪出轉出
+出
+出 出 出 出 出/出/出 出六出策出特出徵出 出-出 出善出於出陰出謀出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出P出本出e出f出e出本出本出e出d出S出t出本出a出t出e出成出y出 出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出輸入出使出設置出a出n出S出t出本出a出t出e出成出y出;出 出 出/出/出 出善出用出人出心出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出M出a出x出C出o出設置出p出l出e出x出i出t出y出 出=出 出E出S出t出本出a出t出e出成出y出C出o出設置出p出l出e出x出i出t出y出:出:出C出o出設置出p出l出e出x出;出 出 出 出 出 出 出 出 出/出/出 出複出雜出但出不出達出大出師出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出S出t出本出a出t出e出成出i出c出I出n出s出i出成出h出t出 出=出 出7出0出.出0出f出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出有出洞出察出但出有出限出
+出
+出 出 出 出 出/出/出 出指出揮出權出力出特出徵出 出-出 出依出靠出魅出力出和出欺出騙出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出P出本出i出設置出a出本出y出A出使出t出h出o出本出i出t出y出 出=出 出E出C出o出設置出設置出a出n出d出A出使出t出h出o出本出i出t出y出T出y出p出e出:出:出C出h出a出本出i出s出設置出a出t出i出c出A出使出t出h出o出本出i出t出y出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出C出o出設置出設置出a出n出d出E出f出f出e出c出t出i出正出e出n出e出s出s出 出=出 出6出0出.出0出f出;出 出 出/出/出 出表出面出有出效出，出實出則出有出限出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出.出I出n出f出l出使出e出n出c出e出R出a出d出i出使出s出 出=出 出8出0出.出0出f出;出 出 出 出 出 出 出 出/出/出 出影出響出範出圍出較出大出但出不出穩出定出
+出
+出 出 出 出 出本出e出t出使出本出n出 出軍出a出l出s出e出S出a出成出e出;出
+出}出
+出
+出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出D出e出f出i出n出e出D出e出設置出o出n出K出i出n出成出(出)出
+出{出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出 出D出e出設置出o出n出K出i出n出成出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出R出o出l出e出T出y出p出e出 出=出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出D出e出設置出o出n出K出i出n出成出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出R出o出l出e出的出a出設置出e出 出=出 出T出E出X出T出(出"出魔出王出"出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出R出o出l出e出D出e出s出c出本出i出p出t出i出o出n出 出=出 出T出E出X出T出(出"出公出開出邪出惡出，出追出求出絕出對出權出力出；出以出暴出力出和出恐出懼出統出治出"出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出S出t出a出n出d出a出本出d出L出e出正出e出l出 出=出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出C出o出本出本出使出p出t出e出d出;出
+出
+出 出 出 出 出/出/出 出道出德出權出威出特出徵出 出-出 出完出全出邪出惡出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出M出o出本出a出l出A出使出t出h出o出本出i出t出y出L出e出正出e出l出 出=出 出0出.出0出f出;出 出 出 出 出 出 出/出/出 出無出道出德出權出威出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出L出e出成出i出t出i出設置出a出c出y出S出c出o出本出e出 出=出 出1出0出.出0出f出;出 出 出 出 出 出 出 出 出 出/出/出 出僅出靠出暴出力出維出持出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出b出輸入出a出s出軍出a出l出l出P出本出e出正出e出n出t出i出o出n出 出=出 出f出a出l出s出e出;出 出 出 出 出 出 出 出/出/出 出無出防出墮出機出制出
+出
+出 出 出 出 出/出/出 出陰出陽出五出行出特出徵出 出-出 出純出邪出惡出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出P出本出i出設置出a出本出y出A出t出t出本出i出b出使出t出e出 出=出 出E出A出l出i出成出n出設置出e出n出t出A出t出t出本出i出b出使出t出e出:出:出E出正出i出l出;出 出 出/出/出 出純出邪出惡出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出P出本出i出設置出a出本出y出E出l出e出設置出e出n出t出 出=出 出E出軍出i出正出e出E出l出e出設置出e出n出t出s出:出:出軍出i出本出e出;出 出 出 出 出 出 出 出 出 出/出/出 出火出主出攻出擊出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出=出 出0出.出0出f出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出完出全出不出和出諧出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出b出U出s出e出s出E出正出i出l出R出o出t出a出t出i出o出n出 出=出 出t出本出使出e出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出使出用出邪出惡出輪出轉出
+出
+出 出 出 出 出/出/出 出六出策出特出徵出 出-出 出專出注出攻出擊出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出P出本出e出f出e出本出本出e出d出S出t出本出a出t出e出成出y出 出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出輸入出e出a出正出e出n出S出t出本出a出t出e出成出y出;出 出 出/出/出 出天出道出暴出力出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出M出a出x出C出o出設置出p出l出e出x出i出t出y出 出=出 出E出S出t出本出a出t出e出成出y出C出o出設置出p出l出e出x出i出t出y出:出:出M出o出d出e出本出a出t出e出;出 出 出 出 出 出 出 出 出 出/出/出 出簡出單出直出接出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出S出t出本出a出t出e出成出i出c出I出n出s出i出成出h出t出 出=出 出4出0出.出0出f出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出有出限出洞出察出
+出
+出 出 出 出 出/出/出 出指出揮出權出力出特出徵出 出-出 出純出粹出暴出力出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出P出本出i出設置出a出本出y出A出使出t出h出o出本出i出t出y出 出=出 出E出C出o出設置出設置出a出n出d出A出使出t出h出o出本出i出t出y出T出y出p出e出:出:出S出i出t出使出a出t出i出o出n出a出l出A出使出t出h出o出本出i出t出y出;出 出 出/出/出 出情出境出權出威出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出C出o出設置出設置出a出n出d出E出f出f出e出c出t出i出正出e出n出e出s出s出 出=出 出8出0出.出0出f出;出 出 出/出/出 出高出效出但出殘出酷出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出.出I出n出f出l出使出e出n出c出e出R出a出d出i出使出s出 出=出 出9出0出.出0出f出;出 出 出 出 出 出 出 出/出/出 出廣出泛出影出響出但出基出於出恐出懼出
+出
+出 出 出 出 出本出e出t出使出本出n出 出D出e出設置出o出n出K出i出n出成出;出
+出}出
+出
+出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出G出e出t出R出o出l出e出S出t出a出n出d出a出本出d出s出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出)出
+出{出
+出 出 出 出 出i出f出 出(出R出o出l出e出S出t出a出n出d出a出本出d出s出M出a出p出.出C出o出n出t出a出i出n出s出(出R出o出l出e出T出y出p出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出R出o出l出e出S出t出a出n出d出a出本出d出s出M出a出p出[出R出o出l出e出T出y出p出e出]出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出返出回出默出認出規出範出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出D出e出f出a出使出l出t出S出t出a出n出d出a出本出d出s出;出
+出 出 出 出 出D出e出f出a出使出l出t出S出t出a出n出d出a出本出d出s出.出R出o出l出e出T出y出p出e出 出=出 出R出o出l出e出T出y出p出e出;出
+出 出 出 出 出D出e出f出a出使出l出t出S出t出a出n出d出a出本出d出s出.出S出t出a出n出d出a出本出d出的出a出設置出e出 出=出 出T出E出X出T出(出"出未出定出義出規出範出"出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出D出e出f出a出使出l出t出S出t出a出n出d出a出本出d出s出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出>出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出G出e出t出A出l出l出R出o出l出e出S出t出a出n出d出a出本出d出s出(出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出>出 出A出l出l出S出t出a出n出d出a出本出d出s出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出R出o出l出e出P出a出i出本出 出:出 出R出o出l出e出S出t出a出n出d出a出本出d出s出M出a出p出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出A出l出l出S出t出a出n出d出a出本出d出s出.出A出d出d出(出R出o出l出e出P出a出i出本出.出V出a出l出使出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出A出l出l出S出t出a出n出d出a出本出d出s出;出
+出}出
+出
+出軍出S出a出成出e出R出o出l出e出E出正出a出l出使出a出t出i出o出n出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出E出正出a出l出使出a出t出e出R出o出l出e出C出o出設置出p出l出i出a出n出c出e出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出&出 出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出)出
+出{出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出E出正出a出l出使出a出t出i出o出n出 出E出正出a出l出使出a出t出i出o出n出;出
+出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出E出正出a出l出使出a出t出e出d出R出o出l出e出 出=出 出R出o出l出e出T出y出p出e出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出獲出取出角出色出規出範出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出S出t出a出n出d出a出本出d出s出 出=出 出G出e出t出R出o出l出e出S出t出a出n出d出a出本出d出s出(出R出o出l出e出T出y出p出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出各出項出合出規出性出
+出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出M出o出本出a出l出C出o出設置出p出l出i出a出n出c出e出 出=出 出E出正出a出l出使出a出t出e出M出o出本出a出l出C出o出設置出p出l出i出a出n出c出e出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出,出 出S出t出a出n出d出a出本出d出s出)出;出
+出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出S出t出本出a出t出e出成出i出c出C出o出設置出p出l出i出a出n出c出e出 出=出 出E出正出a出l出使出a出t出e出S出t出本出a出t出e出成出i出c出C出o出設置出p出l出i出a出n出c出e出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出,出 出S出t出a出n出d出a出本出d出s出)出;出
+出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出A出使出t出h出o出本出i出t出y出C出o出設置出p出l出i出a出n出c出e出 出=出 出E出正出a出l出使出a出t出e出A出使出t出h出o出本出i出t出y出C出o出設置出p出l出i出a出n出c出e出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出,出 出S出t出a出n出d出a出本出d出s出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出計出算出總出體出分出數出
+出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出O出正出e出本出a出l出l出S出c出o出本出e出 出=出 出(出E出正出a出l出使出a出t出i出o出n出.出M出o出本出a出l出C出o出設置出p出l出i出a出n出c出e出 出+出 出E出正出a出l出使出a出t出i出o出n出.出S出t出本出a出t出e出成出i出c出C出o出設置出p出l出i出a出n出c出e出 出+出 出E出正出a出l出使出a出t出i出o出n出.出A出使出t出h出o出本出i出t出y出C出o出設置出p出l出i出a出n出c出e出)出 出/出 出3出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出確出定出合出規出等出級出
+出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出C出o出設置出p出l出i出a出n出c出e出L出e出正出e出l出 出=出 出D出e出t出e出本出設置出i出n出e出C出o出設置出p出l出i出a出n出c出e出L出e出正出e出l出(出E出正出a出l出使出a出t出i出o出n出.出O出正出e出本出a出l出l出S出c出o出本出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出生出成出優出勢出和出弱出點出
+出 出 出 出 出G出e出n出e出本出a出t出e出S出t出本出e出n出成出t出h出s出A出n出d出基本出e出a出k出n出e出s出s出e出s出(出E出正出a出l出使出a出t出i出o出n出,出 出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出,出 出S出t出a出n出d出a出本出d出s出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出生出成出建出議出
+出 出 出 出 出G出e出n出e出本出a出t出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出E出正出a出l出使出a出t出i出o出n出,出 出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出,出 出S出t出a出n出d出a出本出d出s出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出生出成出評出估出總出結出
+出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出E出正出a出l出使出a出t出i出o出n出S出使出設置出設置出a出本出y出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出%出s出角出色出評出估出：出總出體出分出數出%出.出1出f出，出合出規出等出級出：出%出s出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出G出e出t出R出o出l出e出T出y出p出e出的出a出設置出e出(出R出o出l出e出T出y出p出e出)出,出 出E出正出a出l出使出a出t出i出o出n出.出O出正出e出本出a出l出l出S出c出o出本出e出,出 出*出G出e出t出S出t出a出n出d出a出本出d出L出e出正出e出l出的出a出設置出e出(出E出正出a出l出使出a出t出i出o出n出.出C出o出設置出p出l出i出a出n出c出e出L出e出正出e出l出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出E出正出a出l出使出a出t出i出o出n出;出
+出}出
+出
+出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出D出e出t出e出本出設置出i出n出e出C出o出設置出p出l出i出a出n出c出e出L出e出正出e出l出(出f出l出o出a出t出 出S出c出o出本出e出)出
+出{出
+出 出 出 出 出i出f出 出(出S出c出o出本出e出 出>出=出 出9出5出.出0出f出)出 出本出e出t出使出本出n出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出P出e出本出f出e出c出t出;出
+出 出 出 出 出i出f出 出(出S出c出o出本出e出 出>出=出 出8出5出.出0出f出)出 出本出e出t出使出本出n出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出E出x出c出e出l出l出e出n出t出;出
+出 出 出 出 出i出f出 出(出S出c出o出本出e出 出>出=出 出7出0出.出0出f出)出 出本出e出t出使出本出n出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出G出o出o出d出;出
+出 出 出 出 出i出f出 出(出S出c出o出本出e出 出>出=出 出5出0出.出0出f出)出 出本出e出t出使出本出n出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出A出正出e出本出a出成出e出;出
+出 出 出 出 出i出f出 出(出S出c出o出本出e出 出>出=出 出3出0出.出0出f出)出 出本出e出t出使出本出n出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出P出o出o出本出;出
+出 出 出 出 出本出e出t出使出本出n出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出C出o出本出本出使出p出t出e出d出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出C出o出設置出p出a出本出e出R出o出l出e出s出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出1出,出 出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出2出)出
+出{出
+出 出 出 出 出本出e出t出使出本出n出 出G出e出n出e出本出a出t出e出R出o出l出e出C出o出設置出p出a出本出i出s出o出n出(出R出o出l出e出1出,出 出R出o出l出e出2出)出;出
+出}出
+出
+出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出G出e出t出O出p出t出i出設置出a出l出R出o出l出e出軍出o出本出S出i出t出使出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出i出t出使出a出t出i出o出n出)出
+出{出
+出 出 出 出 出/出/出 出根出據出情出況出分出析出最出佳出角出色出
+出 出 出 出 出i出f出 出(出S出i出t出使出a出t出i出o出n出.出C出o出n出t出a出i出n出s出(出"出道出德出"出)出 出出出出出 出S出i出t出使出a出t出i出o出n出.出C出o出n出t出a出i出n出s出(出"出正出義出"出)出 出出出出出 出S出i出t出使出a出t出i出o出n出.出C出o出n出t出a出i出n出s出(出"出和出平出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出D出e出f出i出n出e出T出本出使出e出S出a出成出e出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出S出i出t出使出a出t出i出o出n出.出C出o出n出t出a出i出n出s出(出"出欺出騙出"出)出 出出出出出 出S出i出t出使出a出t出i出o出n出.出C出o出n出t出a出i出n出s出(出"出陰出謀出"出)出 出出出出出 出S出i出t出使出a出t出i出o出n出.出C出o出n出t出a出i出n出s出(出"出權出術出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出D出e出f出i出n出e出軍出a出l出s出e出S出a出成出e出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出S出i出t出使出a出t出i出o出n出.出C出o出n出t出a出i出n出s出(出"出戰出爭出"出)出 出出出出出 出S出i出t出使出a出t出i出o出n出.出C出o出n出t出a出i出n出s出(出"出暴出力出"出)出 出出出出出 出S出i出t出使出a出t出i出o出n出.出C出o出n出t出a出i出n出s出(出"出征出服出"出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出D出e出f出i出n出e出D出e出設置出o出n出K出i出n出成出(出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出/出/出 出默出認出情出況出下出返出回出至出聖出者出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出D出e出f出i出n出e出T出本出使出e出S出a出成出e出(出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出I出s出A出c出t出i出o出n出C出o出設置出p出l出i出a出n出t出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出c出t出i出o出n出)出
+出{出
+出 出 出 出 出/出/出 出檢出查出道出德出約出束出
+出 出 出 出 出i出f出 出(出!出C出h出e出c出k出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出(出R出o出l出e出T出y出p出e出,出 出A出c出t出i出o出n出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出戰出略出指出導出
+出 出 出 出 出i出f出 出(出!出C出h出e出c出k出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出(出R出o出l出e出T出y出p出e出,出 出A出c出t出i出o出n出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出檢出查出行出為出規出則出
+出 出 出 出 出i出f出 出(出!出C出h出e出c出k出B出e出h出a出正出i出o出本出a出l出R出使出l出e出(出R出o出l出e出T出y出p出e出,出 出A出c出t出i出o出n出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出G出e出t出C出o出設置出p出l出i出a出n出t出A出c出t出i出o出n出s出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出C出o出設置出p出l出i出a出n出t出A出c出t出i出o出n出s出;出
+出 出 出 出 出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出S出t出a出n出d出a出本出d出s出 出=出 出G出e出t出R出o出l出e出S出t出a出n出d出a出本出d出s出(出R出o出l出e出T出y出p出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出根出據出規出範出生出成出合出規出行出動出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出G出使出i出d出e出l出i出n出e出 出:出 出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出C出o出設置出p出l出i出a出n出t出A出c出t出i出o出n出s出.出A出d出d出(出G出使出i出d出e出l出i出n出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出C出o出設置出p出l出i出a出n出t出A出c出t出i出o出n出s出;出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出G出e出t出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出)出
+出{出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出S出t出a出n出d出a出本出d出s出 出=出 出G出e出t出R出o出l出e出S出t出a出n出d出a出本出d出s出(出R出o出l出e出T出y出p出e出)出;出
+出 出 出 出 出本出e出t出使出本出n出 出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出C出a出n出T出本出a出n出s出f出o出本出設置出R出o出l出e出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出軍出本出o出設置出R出o出l出e出,出 出E出S出a出成出e出R出o出l出e出T出y出p出e出 出T出o出R出o出l出e出)出
+出{出
+出 出 出 出 出/出/出 出定出義出角出色出轉出換出規出則出
+出 出 出 出 出s出w出i出t出c出h出 出(出軍出本出o出設置出R出o出l出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出T出本出使出e出S出a出成出e出:出
+出 出 出 出 出 出 出 出 出/出/出 出至出聖出者出可出以出轉出換出為出任出何出角出色出（出但出通出常出不出會出）出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出軍出a出l出s出e出S出a出成出e出:出
+出 出 出 出 出 出 出 出 出/出/出 出偽出聖出者出可出以出轉出換出為出魔出王出（出完出全出墮出落出）出或出至出聖出者出（出悔出悟出）出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出(出T出o出R出o出l出e出 出=出=出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出D出e出設置出o出n出K出i出n出成出 出出出出出 出T出o出R出o出l出e出 出=出=出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出T出本出使出e出S出a出成出e出)出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出c出a出s出e出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出D出e出設置出o出n出K出i出n出成出:出
+出 出 出 出 出 出 出 出 出/出/出 出魔出王出很出難出轉出換出，出但出可出以出轉出換出為出偽出偽出聖出者出（出偽出裝出）出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出o出R出o出l出e出 出=出=出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出軍出a出l出s出e出S出a出成出e出;出
+出 出 出 出 出 出 出 出 出
+出 出 出 出 出d出e出f出a出使出l出t出:出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出T出本出a出n出s出f出o出本出設置出R出o出l出e出(出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出&出 出C出使出本出本出e出n出t出R出o出l出e出,出 出E出S出a出成出e出R出o出l出e出T出y出p出e出 出T出a出本出成出e出t出R出o出l出e出)出
+出{出
+出 出 出 出 出i出f出 出(出!出C出a出n出T出本出a出n出s出f出o出本出設置出R出o出l出e出(出C出使出本出本出e出n出t出R出o出l出e出.出R出o出l出e出T出y出p出e出,出 出T出a出本出成出e出t出R出o出l出e出)出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出R出o出l出e出;出 出/出/出 出無出法出轉出換出，出返出回出原出角出色出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出創出建出新出角出色出特出徵出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出 出的出e出w出R出o出l出e出;出
+出 出 出 出 出
+出 出 出 出 出s出w出i出t出c出h出 出(出T出a出本出成出e出t出R出o出l出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出T出本出使出e出S出a出成出e出:出
+出 出 出 出 出 出 出 出 出的出e出w出R出o出l出e出 出=出 出D出e出f出i出n出e出T出本出使出e出S出a出成出e出(出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出軍出a出l出s出e出S出a出成出e出:出
+出 出 出 出 出 出 出 出 出的出e出w出R出o出l出e出 出=出 出D出e出f出i出n出e出軍出a出l出s出e出S出a出成出e出(出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出D出e出設置出o出n出K出i出n出成出:出
+出 出 出 出 出 出 出 出 出的出e出w出R出o出l出e出 出=出 出D出e出f出i出n出e出D出e出設置出o出n出K出i出n出成出(出)出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出保出留出部出分出原出有出特出徵出（出記出憶出）出
+出 出 出 出 出的出e出w出R出o出l出e出.出R出o出l出e出D出e出s出c出本出i出p出t出i出o出n出 出+出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出（出由出%出s出轉出換出而出來出）出"出)出,出 出*出G出e出t出R出o出l出e出T出y出p出e出的出a出設置出e出(出C出使出本出本出e出n出t出R出o出l出e出.出R出o出l出e出T出y出p出e出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出的出e出w出R出o出l出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出A出p出p出l出y出R出o出l出e出S出t出a出n出d出a出本出d出s出T出o出P出本出o出大出e出c出t出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出)出
+出{出
+出 出 出 出 出/出/出 出將出角出色出規出範出應出用出到出專出案出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出S出t出a出n出d出a出本出d出s出 出=出 出G出e出t出R出o出l出e出S出t出a出n出d出a出本出d出s出(出R出o出l出e出T出y出p出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出這出裡出可出以出添出加出具出體出的出專出案出應出用出邏出輯出
+出 出 出 出 出/出/出 出例出如出：出設出置出遊出戲出規出則出、出A出I出行出為出、出U出I出主出題出等出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出G出e出t出P出本出o出大出e出c出t出G出使出i出d出e出l出i出n出e出s出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出G出使出i出d出e出l出i出n出e出s出;出
+出 出 出 出 出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出S出t出a出n出d出a出本出d出s出 出=出 出G出e出t出R出o出l出e出S出t出a出n出d出a出本出d出s出(出R出o出l出e出T出y出p出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出添出加出核出心出原出則出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出P出本出i出n出c出i出p出l出e出 出:出 出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出P出本出i出n出c出i出p出l出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出添出加出戰出略出指出導出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出G出使出i出d出e出l出i出n出e出 出:出 出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出G出使出i出d出e出l出i出n出e出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出G出使出i出d出e出l出i出n出e出s出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出V出a出l出i出d出a出t出e出P出本出o出大出e出c出t出C出o出設置出p出l出i出a出n出c出e出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出)出
+出{出
+出 出 出 出 出/出/出 出驗出證出專出案出是出否出符出合出角出色出規出範出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出S出t出a出n出d出a出本出d出s出 出=出 出G出e出t出R出o出l出e出S出t出a出n出d出a出本出d出s出(出R出o出l出e出T出y出p出e出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出這出裡出可出以出添出加出具出體出的出驗出證出邏出輯出
+出 出 出 出 出/出/出 出例出如出：出檢出查出遊出戲出內出容出、出A出I出行出為出、出系出統出設出置出等出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出 出/出/出 出簡出化出實出現出
+出}出
+出
+出/出/出 出私出有出方出法出實出現出
+出
+出正出o出i出d出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出I出n出i出t出i出a出l出i出z出e出R出o出l出e出S出t出a出n出d出a出本出d出s出(出)出
+出{出
+出 出 出 出 出/出/出 出初出始出化出至出聖出者出規出範出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出R出o出l出e出T出y出p出e出 出=出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出T出本出使出e出S出a出成出e出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出S出t出a出n出d出a出本出d出的出a出設置出e出 出=出 出T出E出X出T出(出"出至出聖出者出規出範出"出)出;出
+出 出 出 出 出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出道出德出至出上出，出以出德出服出人出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出陰出陽出平出衡出，出五出行出和出諧出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出智出慧出決出策出，出洞出察出天出機出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出仁出愛出眾出生出，出保出護出無出辜出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出永出不出傷出害出無出辜出者出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出堅出守出道出德出底出線出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出追出求出長出遠出和出諧出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出以出智出慧出解出決出衝出突出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出運出用出天出地出人出三出策出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出保出持出陰出陽出動出態出平出衡出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出善出用出五出行出相出生出相出克出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出注出重出長出遠出戰出略出規出劃出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出絕出不出使出用出邪出惡出手出段出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出避出免出玉出石出俱出焚出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出尊出重出生出命出價出值出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出維出護出正出義出秩出序出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出符出合出道出德出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出促出進出和出諧出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出長出遠出有出益出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出保出護出無出辜出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出屠出殺出無出辜出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出使出用出禁出術出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出背出叛出信出任出"出)出)出;出
+出 出 出 出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出追出求出絕出對出權出力出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出R出o出l出e出S出t出a出n出d出a出本出d出s出M出a出p出.出A出d出d出(出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出T出本出使出e出S出a出成出e出,出 出T出本出使出e出S出a出成出e出S出t出a出n出d出a出本出d出s出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出偽出聖出者出規出範出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出R出o出l出e出T出y出p出e出 出=出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出軍出a出l出s出e出S出a出成出e出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出S出t出a出n出d出a出本出d出的出a出設置出e出 出=出 出T出E出X出T出(出"出偽出聖出者出規出範出"出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出表出面出道出德出，出內出心出邪出惡出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出善出於出偽出裝出，出欺出騙出大出眾出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出利出用出道出德出謀出取出私出利出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出暗出中出破出壞出秩出序出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出偽出裝出善出良出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出暗出中出陰出謀出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出利出用出他出人出弱出點出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出避出免出暴出露出真出實出意出圖出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出善出用出人出心出策出略出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出製出造出內出部出分出裂出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出利出用出道出德出綁出架出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出暗出中出削出弱出敵出人出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出避出免出公出開出邪出惡出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出維出護出表出面出形出象出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出避出免出直出接出傷出害出無出辜出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出保出持出偽出裝出一出致出性出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出有出利出於出私出利出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出能出夠出偽出裝出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出避出免出暴出露出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出長出遠出有出利出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出公出開出邪出惡出行出為出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出暴出露出真出實出意出圖出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出直出接出傷出害出盟出友出"出)出)出;出
+出 出 出 出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出破出壞出自出身出形出象出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出R出o出l出e出S出t出a出n出d出a出本出d出s出M出a出p出.出A出d出d出(出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出軍出a出l出s出e出S出a出成出e出,出 出軍出a出l出s出e出S出a出成出e出S出t出a出n出d出a出本出d出s出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出初出始出化出魔出王出規出範出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出R出o出l出e出T出y出p出e出 出=出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出D出e出設置出o出n出K出i出n出成出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出S出t出a出n出d出a出本出d出的出a出設置出e出 出=出 出T出E出X出T出(出"出魔出王出規出範出"出)出;出
+出 出 出 出 出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出力出量出至出上出，出弱出肉出強出食出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出絕出對出權出力出，出無出所出顧出忌出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出恐出懼出統出治出，出暴出力出解出決出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出C出o出本出e出P出本出i出n出c出i出p出l出e出s出.出A出d出d出(出T出E出X出T出(出"出征出服出一出切出，出毀出滅出反出對出者出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出使出用出暴出力出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出製出造出恐出懼出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出無出視出道出德出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出.出A出d出d出(出T出E出X出T出(出"出追出求出絕出對出控出制出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出直出接出攻出擊出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出製出造出混出亂出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出利出用出恐出懼出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出.出A出d出d出(出T出E出X出T出(出"出快出速出征出服出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出無出道出德出約出束出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出無出限出制出手出段出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出無出禁出忌出行出動出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出.出A出d出d出(出T出E出X出T出(出"出無出後出顧出之出憂出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出增出加出權出力出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出製出造出恐出懼出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出快出速出有出效出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出D出e出c出i出s出i出o出n出C出本出i出t出e出本出i出a出.出A出d出d出(出T出E出X出T出(出"出是出否出絕出對出控出制出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出示出弱出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出仁出慈出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出妥出協出"出)出)出;出
+出 出 出 出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出.出P出本出o出h出i出b出i出t出e出d出A出c出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出退出讓出"出)出)出;出
+出 出 出 出 出
+出 出 出 出 出R出o出l出e出S出t出a出n出d出a出本出d出s出M出a出p出.出A出d出d出(出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出D出e出設置出o出n出K出i出n出成出,出 出D出e出設置出o出n出K出i出n出成出S出t出a出n出d出a出本出d出s出)出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出I出n出i出t出i出a出l出i出z出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出(出)出
+出{出
+出 出 出 出 出/出/出 出初出始出化出角出色出特出徵出
+出 出 出 出 出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出M出a出p出.出A出d出d出(出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出T出本出使出e出S出a出成出e出,出 出D出e出f出i出n出e出T出本出使出e出S出a出成出e出(出)出)出;出
+出 出 出 出 出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出M出a出p出.出A出d出d出(出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出軍出a出l出s出e出S出a出成出e出,出 出D出e出f出i出n出e出軍出a出l出s出e出S出a出成出e出(出)出)出;出
+出 出 出 出 出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出M出a出p出.出A出d出d出(出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出D出e出設置出o出n出K出i出n出成出,出 出D出e出f出i出n出e出D出e出設置出o出n出K出i出n出成出(出)出)出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出E出正出a出l出使出a出t出e出M出o出本出a出l出C出o出設置出p出l出i出a出n出c出e出(出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出&出 出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出,出 出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出&出 出S出t出a出n出d出a出本出d出s出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出道出德出權出威出
+出 出 出 出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出M出o出本出a出l出A出使出t出h出o出本出i出t出y出L出e出正出e出l出 出>出=出 出8出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出3出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出M出o出本出a出l出A出使出t出h出o出本出i出t出y出L出e出正出e出l出 出>出=出 出5出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出2出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出1出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出防出墮出機出制出
+出 出 出 出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出b出輸入出a出s出軍出a出l出l出P出本出e出正出e出n出t出i出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出2出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出陰出陽出平出衡出
+出 出 出 出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出>出=出 出8出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出3出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出輸入出a出本出設置出o出n出y出L出e出正出e出l出 出>出=出 出5出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出2出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出1出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出邪出惡出輪出轉出
+出 出 出 出 出i出f出 出(出!出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出b出U出s出e出s出E出正出i出l出R出o出t出a出t出i出o出n出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出2出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出S出c出o出本出e出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出E出正出a出l出使出a出t出e出S出t出本出a出t出e出成出i出c出C出o出設置出p出l出i出a出n出c出e出(出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出&出 出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出,出 出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出&出 出S出t出a出n出d出a出本出d出s出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出戰出略出洞出察出
+出 出 出 出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出S出t出本出a出t出e出成出i出c出I出n出s出i出成出h出t出 出>出=出 出8出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出4出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出S出t出本出a出t出e出成出i出c出I出n出s出i出成出h出t出 出>出=出 出5出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出2出5出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出1出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出策出略出複出雜出度出
+出 出 出 出 出s出w出i出t出c出h出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出M出a出x出C出o出設置出p出l出e出x出i出t出y出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出S出t出本出a出t出e出成出y出C出o出設置出p出l出e出x出i出t出y出:出:出M出a出s出t出e出本出:出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出3出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出t出本出a出t出e出成出y出C出o出設置出p出l出e出x出i出t出y出:出:出C出o出設置出p出l出e出x出:出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出2出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出t出本出a出t出e出成出y出C出o出設置出p出l出e出x出i出t出y出:出:出M出o出d出e出本出a出t出e出:出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出1出0出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出c出a出s出e出 出E出S出t出本出a出t出e出成出y出C出o出設置出p出l出e出x出i出t出y出:出:出S出i出設置出p出l出e出:出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出5出.出0出f出;出
+出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出策出略出偏出好出
+出 出 出 出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出P出本出e出f出e出本出本出e出d出S出t出本出a出t出e出成出y出 出=出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出輸入出e出a出正出e出n出E出a出本出t出h出輸入出使出設置出a出n出S出t出本出a出t出e出成出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出3出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出P出本出e出f出e出本出本出e出d出S出t出本出a出t出e出成出y出 出=出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出輸入出e出a出正出e出n出E出a出本出t出h出S出t出本出a出t出e出成出y出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出P出本出e出f出e出本出本出e出d出S出t出本出a出t出e出成出y出 出=出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出輸入出e出a出正出e出n出輸入出使出設置出a出n出S出t出本出a出t出e出成出y出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出P出本出e出f出e出本出本出e出d出S出t出本出a出t出e出成出y出 出=出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出a出本出t出h出輸入出使出設置出a出n出S出t出本出a出t出e出成出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出2出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出1出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出S出c出o出本出e出;出
+出}出
+出
+出f出l出o出a出t出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出E出正出a出l出使出a出t出e出A出使出t出h出o出本出i出t出y出C出o出設置出p出l出i出a出n出c出e出(出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出&出 出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出,出 出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出&出 出S出t出a出n出d出a出本出d出s出)出
+出{出
+出 出 出 出 出f出l出o出a出t出 出S出c出o出本出e出 出=出 出0出.出0出f出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出指出揮出權出威出類出型出
+出 出 出 出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出P出本出i出設置出a出本出y出A出使出t出h出o出本出i出t出y出 出=出=出 出E出C出o出設置出設置出a出n出d出A出使出t出h出o出本出i出t出y出T出y出p出e出:出:出M出o出本出a出l出A出使出t出h出o出本出i出t出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出4出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出P出本出i出設置出a出本出y出A出使出t出h出o出本出i出t出y出 出=出=出 出E出C出o出設置出設置出a出n出d出A出使出t出h出o出本出i出t出y出T出y出p出e出:出:出L出e出成出a出l出A出使出t出h出o出本出i出t出y出 出出出出出
+出 出 出 出 出 出 出 出 出 出 出 出 出 出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出P出本出i出設置出a出本出y出A出使出t出h出o出本出i出t出y出 出=出=出 出E出C出o出設置出設置出a出n出d出A出使出t出h出o出本出i出t出y出T出y出p出e出:出:出T出本出a出d出i出t出i出o出n出a出l出A出使出t出h出o出本出i出t出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出3出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出P出本出i出設置出a出本出y出A出使出t出h出o出本出i出t出y出 出=出=出 出E出C出o出設置出設置出a出n出d出A出使出t出h出o出本出i出t出y出T出y出p出e出:出:出C出h出a出本出i出s出設置出a出t出i出c出A出使出t出h出o出本出i出t出y出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出2出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出1出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出指出揮出有出效出性出
+出 出 出 出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出C出o出設置出設置出a出n出d出E出f出f出e出c出t出i出正出e出n出e出s出s出 出>出=出 出8出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出3出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出C出o出設置出設置出a出n出d出E出f出f出e出c出t出i出正出e出n出e出s出s出 出>出=出 出5出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出2出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出1出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出/出/出 出評出估出影出響出範出圍出
+出 出 出 出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出I出n出f出l出使出e出n出c出e出R出a出d出i出使出s出 出>出=出 出8出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出3出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出.出I出n出f出l出使出e出n出c出e出R出a出d出i出使出s出 出>出=出 出5出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出2出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出S出c出o出本出e出 出+出=出 出1出0出.出0出f出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出S出c出o出本出e出;出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出G出e出n出e出本出a出t出e出S出t出本出e出n出成出t出h出s出A出n出d出基本出e出a出k出n出e出s出s出e出s出(出軍出S出a出成出e出R出o出l出e出E出正出a出l出使出a出t出i出o出n出&出 出E出正出a出l出使出a出t出i出o出n出,出 出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出&出 出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出,出 出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出&出 出S出t出a出n出d出a出本出d出s出)出
+出{出
+出 出 出 出 出/出/出 出根出據出評出估出結出果出生出成出優出勢出和出弱出點出
+出 出 出 出 出i出f出 出(出E出正出a出l出使出a出t出i出o出n出.出M出o出本出a出l出C出o出設置出p出l出i出a出n出c出e出 出>出=出 出8出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出S出t出本出e出n出成出t出h出s出.出A出d出d出(出T出E出X出T出(出"出道出德出權出威出強出大出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出E出正出a出l出使出a出t出i出o出n出.出M出o出本出a出l出C出o出設置出p出l出i出a出n出c出e出 出<出 出5出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出基本出e出a出k出n出e出s出s出e出s出.出A出d出d出(出T出E出X出T出(出"出道出德出權出威出不出足出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出E出正出a出l出使出a出t出i出o出n出.出S出t出本出a出t出e出成出i出c出C出o出設置出p出l出i出a出n出c出e出 出>出=出 出8出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出S出t出本出e出n出成出t出h出s出.出A出d出d出(出T出E出X出T出(出"出戰出略出洞出察出深出刻出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出E出正出a出l出使出a出t出i出o出n出.出S出t出本出a出t出e出成出i出c出C出o出設置出p出l出i出a出n出c出e出 出<出 出5出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出基本出e出a出k出n出e出s出s出e出s出.出A出d出d出(出T出E出X出T出(出"出戰出略出能出力出有出限出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出E出正出a出l出使出a出t出i出o出n出.出A出使出t出h出o出本出i出t出y出C出o出設置出p出l出i出a出n出c出e出 出>出=出 出8出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出S出t出本出e出n出成出t出h出s出.出A出d出d出(出T出E出X出T出(出"出指出揮出權出威出穩出固出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出e出l出s出e出 出i出f出 出(出E出正出a出l出使出a出t出i出o出n出.出A出使出t出h出o出本出i出t出y出C出o出設置出p出l出i出a出n出c出e出 出<出 出5出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出基本出e出a出k出n出e出s出s出e出s出.出A出d出d出(出T出E出X出T出(出"出指出揮出權出威出薄出弱出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出正出o出i出d出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出G出e出n出e出本出a出t出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出軍出S出a出成出e出R出o出l出e出E出正出a出l出使出a出t出i出o出n出&出 出E出正出a出l出使出a出t出i出o出n出,出 出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出&出 出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出,出 出c出o出n出s出t出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出&出 出S出t出a出n出d出a出本出d出s出)出
+出{出
+出 出 出 出 出/出/出 出根出據出評出估出結出果出生出成出建出議出
+出 出 出 出 出i出f出 出(出E出正出a出l出使出a出t出i出o出n出.出M出o出本出a出l出C出o出設置出p出l出i出a出n出c出e出 出<出 出7出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出建出議出加出強出道出德出權出威出建出設出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出E出正出a出l出使出a出t出i出o出n出.出S出t出本出a出t出e出成出i出c出C出o出設置出p出l出i出a出n出c出e出 出<出 出7出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出建出議出提出升出戰出略出洞出察出力出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出E出正出a出l出使出a出t出i出o出n出.出A出使出t出h出o出本出i出t出y出C出o出設置出p出l出i出a出n出c出e出 出<出 出7出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出建出議出增出強出指出揮出權出威出"出)出)出;出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出i出f出 出(出E出正出a出l出使出a出t出i出o出n出.出O出正出e出本出a出l出l出S出c出o出本出e出 出<出 出5出0出.出0出f出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出E出正出a出l出使出a出t出i出o出n出.出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出T出E出X出T出(出"出建出議出全出面出重出新出評出估出角出色出定出位出"出)出)出;出
+出 出 出 出 出}出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出C出h出e出c出k出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出c出t出i出o出n出)出
+出{出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出S出t出a出n出d出a出本出d出s出 出=出 出G出e出t出R出o出l出e出S出t出a出n出d出a出本出d出s出(出R出o出l出e出T出y出p出e出)出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出s出t出本出a出i出n出t出 出:出 出S出t出a出n出d出a出本出d出s出.出M出o出本出a出l出C出o出n出s出t出本出a出i出n出t出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出C出o出n出s出t出本出a出i出n出t出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出C出h出e出c出k出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出c出t出i出o出n出)出
+出{出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出S出t出a出n出d出a出本出d出s出 出=出 出G出e出t出R出o出l出e出S出t出a出n出d出a出本出d出s出(出R出o出l出e出T出y出p出e出)出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出G出使出i出d出e出l出i出n出e出 出:出 出S出t出a出n出d出a出本出d出s出.出S出t出本出a出t出e出成出i出c出G出使出i出d出e出l出i出n出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出G出使出i出d出e出l出i出n出e出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出b出o出o出l出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出C出h出e出c出k出B出e出h出a出正出i出o出本出a出l出R出使出l出e出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出c出t出i出o出n出)出
+出{出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出S出t出a出n出d出a出本出d出s出 出S出t出a出n出d出a出本出d出s出 出=出 出G出e出t出R出o出l出e出S出t出a出n出d出a出本出d出s出(出R出o出l出e出T出y出p出e出)出;出
+出 出 出 出 出
+出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出使出l出e出 出:出 出S出t出a出n出d出a出本出d出s出.出B出e出h出a出正出i出o出本出a出l出R出使出l出e出s出)出
+出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出i出f出 出(出A出c出t出i出o出n出.出C出o出n出t出a出i出n出s出(出R出使出l出e出)出)出
+出 出 出 出 出 出 出 出 出{出
+出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
+出 出 出 出 出 出 出 出 出}出
+出 出 出 出 出}出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出G出e出t出R出o出l出e出T出y出p出e出的出a出設置出e出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出T出y出p出e出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出R出o出l出e出T出y出p出e出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出T出本出使出e出S出a出成出e出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出至出聖出者出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出軍出a出l出s出e出S出a出成出e出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出偽出聖出者出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出S出a出成出e出R出o出l出e出T出y出p出e出:出:出D出e出設置出o出n出K出i出n出成出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出魔出王出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出角出色出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出軍出S出t出本出i出n出成出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出G出e出t出S出t出a出n出d出a出本出d出L出e出正出e出l出的出a出設置出e出(出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出 出L出e出正出e出l出)出 出c出o出n出s出t出
+出{出
+出 出 出 出 出s出w出i出t出c出h出 出(出L出e出正出e出l出)出
+出 出 出 出 出{出
+出 出 出 出 出c出a出s出e出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出P出e出本出f出e出c出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出完出美出級出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出E出x出c出e出l出l出e出n出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出優出秀出級出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出G出o出o出d出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出良出好出級出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出A出正出e出本出a出成出e出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出平出均出級出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出P出o出o出本出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出較出差出級出"出)出;出
+出 出 出 出 出c出a出s出e出 出E出R出o出l出e出S出t出a出n出d出a出本出d出L出e出正出e出l出:出:出C出o出本出本出使出p出t出e出d出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出墮出落出級出"出)出;出
+出 出 出 出 出d出e出f出a出使出l出t出:出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出等出級出"出)出;出
+出 出 出 出 出}出
+出}出
+出
+出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出U出M出i出n出成出S出a出成出e出R出o出l出e出s出:出:出G出e出n出e出本出a出t出e出R出o出l出e出C出o出設置出p出a出本出i出s出o出n出(出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出1出,出 出E出S出a出成出e出R出o出l出e出T出y出p出e出 出R出o出l出e出2出)出
+出{出
+出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出C出o出設置出p出a出本出i出s出o出n出;出
+出 出 出 出 出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出 出C出h出a出本出1出 出=出 出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出M出a出p出.出C出o出n出t出a出i出n出s出(出R出o出l出e出1出)出 出基本出 出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出M出a出p出[出R出o出l出e出1出]出 出:出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出(出)出;出
+出 出 出 出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出 出C出h出a出本出2出 出=出 出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出M出a出p出.出C出o出n出t出a出i出n出s出(出R出o出l出e出2出)出 出基本出 出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出M出a出p出[出R出o出l出e出2出]出 出:出 出軍出S出a出成出e出R出o出l出e出C出h出a出本出a出c出t出e出本出i出s出t出i出c出s出(出)出;出
+出 出 出 出 出
+出 出 出 出 出C出o出設置出p出a出本出i出s出o出n出.出A出d出d出(出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出角出色出比出較出：出%出s出 出正出s出 出%出s出"出)出,出 出*出G出e出t出R出o出l出e出T出y出p出e出的出a出設置出e出(出R出o出l出e出1出)出,出 出*出G出e出t出R出o出l出e出T出y出p出e出的出a出設置出e出(出R出o出l出e出2出)出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出比出較出道出德出權出威出
+出 出 出 出 出C出o出設置出p出a出本出i出s出o出n出.出A出d出d出(出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出道出德出權出威出：出%出s出 出%出.出1出f出 出正出s出 出%出s出 出%出.出1出f出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出G出e出t出R出o出l出e出T出y出p出e出的出a出設置出e出(出R出o出l出e出1出)出,出 出C出h出a出本出1出.出M出o出本出a出l出A出使出t出h出o出本出i出t出y出L出e出正出e出l出,出 出
+出 出 出 出 出 出 出 出 出*出G出e出t出R出o出l出e出T出y出p出e出的出a出設置出e出(出R出o出l出e出2出)出,出 出C出h出a出本出2出.出M出o出本出a出l出A出使出t出h出o出本出i出t出y出L出e出正出e出l出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出比出較出戰出略出洞出察出
+出 出 出 出 出C出o出設置出p出a出本出i出s出o出n出.出A出d出d出(出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出戰出略出洞出察出：出%出s出 出%出.出1出f出 出正出s出 出%出s出 出%出.出1出f出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出G出e出t出R出o出l出e出T出y出p出e出的出a出設置出e出(出R出o出l出e出1出)出,出 出C出h出a出本出1出.出S出t出本出a出t出e出成出i出c出I出n出s出i出成出h出t出,出 出
+出 出 出 出 出 出 出 出 出*出G出e出t出R出o出l出e出T出y出p出e出的出a出設置出e出(出R出o出l出e出2出)出,出 出C出h出a出本出2出.出S出t出本出a出t出e出成出i出c出I出n出s出i出成出h出t出)出)出;出
+出 出 出 出 出
+出 出 出 出 出/出/出 出比出較出指出揮出權出威出
+出 出 出 出 出C出o出設置出p出a出本出i出s出o出n出.出A出d出d出(出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出指出揮出權出威出：出%出s出 出%出.出1出f出 出正出s出 出%出s出 出%出.出1出f出"出)出,出 出
+出 出 出 出 出 出 出 出 出*出G出e出t出R出o出l出e出T出y出p出e出的出a出設置出e出(出R出o出l出e出1出)出,出 出C出h出a出本出1出.出C出o出設置出設置出a出n出d出E出f出f出e出c出t出i出正出e出n出e出s出s出,出 出
+出 出 出 出 出 出 出 出 出*出G出e出t出R出o出l出e出T出y出p出e出的出a出設置出e出(出R出o出l出e出2出)出,出 出C出h出a出本出2出.出C出o出設置出設置出a出n出d出E出f出f出e出c出t出i出正出e出n出e出s出s出)出)出;出
+出 出 出 出 出
+出 出 出 出 出本出e出t出使出本出n出 出C出o出設置出p出a出本出i出s出o出n出;出
+出}出
+出
