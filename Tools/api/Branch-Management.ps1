@@ -21,8 +21,24 @@ function Get-CurrentBranch {
 
 # Check working directory status
 function Test-WorkingDirectory {
-    $status = git status --porcelain
-    return ($status -eq "")
+    try {
+        $result = & git status --porcelain
+        if ($LASTEXITCODE -ne 0) {
+            return $false
+        }
+        # Check if result is empty or null (git returns array)
+        if ($null -eq $result) {
+            return $true
+        }
+        # If result is an array, check if it's empty
+        if ($result -is [Array]) {
+            return $result.Count -eq 0
+        }
+        # If result is a string, check if it's empty
+        return $result.Trim() -eq ""
+    } catch {
+        return $false
+    }
 }
 
 # Run pre-merge checks
