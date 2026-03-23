@@ -121,7 +121,7 @@ function Start-CodeReview {
 }
 
 # 檢查單個文件
-function Review-SingleFile {
+function Test-SingleFile {
     param([string]$FilePath)
     
     $Issues = @()
@@ -168,7 +168,7 @@ function Review-SingleFile {
 }
 
 # 檢查語法問題
-function Check-SyntaxIssues {
+function Test-SyntaxIssues {
     param([string]$FilePath, [string]$Line, [int]$LineNumber)
     
     $Issues = @()
@@ -195,7 +195,7 @@ function Check-SyntaxIssues {
 }
 
 # 檢查代碼風格問題
-function Check-StyleIssues {
+function Test-StyleIssues {
     param([string]$FilePath, [string]$Line, [int]$LineNumber)
     
     $Issues = @()
@@ -243,13 +243,13 @@ function Check-StyleIssues {
 }
 
 # 檢查性能問題
-function Check-PerformanceIssues {
+function Test-PerformanceIssues {
     param([string]$FilePath, [string]$Line, [int]$LineNumber)
     
     $Issues = @()
     
     # 檢查低效的字符串操作
-    if ($Line -match "\.Append\(" -or $Line -match "\+=.*\"") {
+    if ($Line -match "\.Append\(" -or $Line -match "\+=.*") {
         $Issues += @{
             File = $FilePath
             Line = $LineNumber
@@ -262,7 +262,7 @@ function Check-PerformanceIssues {
     }
     
     # 檢查可能的內存洩漏
-    if ($Line -match "new\s+\w+" -and $Line -not-match "delete") {
+    if ($Line -match "new\s+\w+" -and $Line -notmatch "delete") {
         $Issues += @{
             File = $FilePath
             Line = $LineNumber
@@ -278,13 +278,13 @@ function Check-PerformanceIssues {
 }
 
 # 檢查安全問題
-function Check-SecurityIssues {
+function Test-SecurityIssues {
     param([string]$FilePath, [string]$Line, [int]$LineNumber)
     
     $Issues = @()
     
     # 檢查硬編碼密碼
-    if ($Line -match "(?i)(password|pwd|pass)\s*=\s*[\"'][^\"']+[\"']") {
+    if ($Line -match "password\s*=\s*" -or $Line -match "pwd\s*=\s*" -or $Line -match "pass\s*=\s*") {
         $Issues += @{
             File = $FilePath
             Line = $LineNumber
@@ -313,7 +313,7 @@ function Check-SecurityIssues {
 }
 
 # 檢查文檔問題
-function Check-DocumentationIssues {
+function Test-DocumentationIssues {
     param([string]$FilePath, [string]$Line, [int]$LineNumber)
     
     $Issues = @()
@@ -404,7 +404,7 @@ function Start-AutoFix {
 }
 
 # 修復單個問題
-function Fix-Issue {
+function Repair-Issue {
     param($Issue)
     
     $FilePath = $Issue.File

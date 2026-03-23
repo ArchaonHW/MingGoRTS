@@ -41,7 +41,7 @@ function Start-IntegrationTest {
     Write-Log "Starting Integration Test - Phase: $Phase" "INFO"
     
     # Build command arguments for UE automated testing
-    $args = @(
+    $arguments = @(
         $ProjectPath + "\\MingGoRTS.uproject"
         $TestMap
         "-ExecCmds=Automation RunTests MingGoRTS.Integration.$Phase"
@@ -54,12 +54,12 @@ function Start-IntegrationTest {
     )
     
     if ($TestFlags) {
-        $args += $TestFlags
+        $arguments += $TestFlags
     }
     
     try {
-        Write-Log "Executing: $UEEditorPath $args" "DEBUG"
-        $process = Start-Process -FilePath $UEEditorPath -ArgumentList $args -Wait -PassThru -NoNewWindow
+        Write-Log "Executing: $UEEditorPath $arguments" "DEBUG"
+        $process = Start-Process -FilePath $UEEditorPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
         
         if ($process.ExitCode -eq 0) {
             Write-Log "Phase $Phase completed successfully" "SUCCESS"

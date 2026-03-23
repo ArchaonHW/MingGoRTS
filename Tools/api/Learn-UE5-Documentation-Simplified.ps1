@@ -120,7 +120,7 @@ function New-UE5DocumentationFetcher {
     return $Fetcher
 }
 
-function Fetch-Documentation {
+function Get-Documentation {
     param(
         [object]$Fetcher,
         [string]$Section
@@ -133,7 +133,7 @@ function Fetch-Documentation {
         return ""
     }
     
-    $SectionInfo = $Fetcher.DocumentationIndex[$Section]
+    Write-Log "Section: $($Fetcher.DocumentationIndex[$Section].Title)" "DEBUG"
     $CacheFile = "$($Fetcher.CachePath)\$Section.json"
     
     # Check cache first
@@ -151,7 +151,7 @@ function Fetch-Documentation {
     Write-Log "模拟从Epic Games获取文档: $Section" "INFO"
     
     # Generate mock documentation content based on section
-    $Content = Generate-MockDocumentation -Section $Section
+    $Content = New-MockDocumentation -Section $Section
     
     # Cache the content
     Set-Content -Path $CacheFile -Value $Content -Encoding UTF8
@@ -160,7 +160,7 @@ function Fetch-Documentation {
     return $Content
 }
 
-function Generate-MockDocumentation {
+function New-MockDocumentation {
     param([string]$Section)
     
     $Templates = @{
@@ -230,10 +230,10 @@ function Initialize-KnowledgeProcessor {
     param([object]$Processor)
     
     Write-Log "初始化知识处理器..." "INFO"
-    Load-ExistingKnowledge -Processor $Processor
+    Import-ExistingKnowledge -Processor $Processor
 }
 
-function Load-ExistingKnowledge {
+function Import-ExistingKnowledge {
     param([object]$Processor)
     
     Write-Log "加载现有知识库..." "INFO"
@@ -262,7 +262,7 @@ function Load-ExistingKnowledge {
     Write-Log "已加载 $($Processor.LearnedConcepts.Count) 个知识概念" "INFO"
 }
 
-function Process-Documentation {
+function Update-Documentation {
     param(
         [object]$Processor,
         [string]$Section,
@@ -273,9 +273,9 @@ function Process-Documentation {
     
     try {
         $DocData = $Content | ConvertFrom-Json
-        Extract-APIPatterns -Processor $Processor -DocData $DocData
-        Identify-BestPractices -Processor $Processor -DocData $DocData
-        Generate-LearningExamples -Processor $Processor -DocData $DocData
+        Find-APIPatterns -Processor $Processor -DocData $DocData
+        Find-BestPractices -Processor $Processor -DocData $DocData
+        New-LearningExamples -Processor $Processor -DocData $DocData
         Update-KnowledgeBase -Processor $Processor -DocData $DocData
         
         Write-Log "文档处理完成: $Section" "SUCCESS"
@@ -284,7 +284,7 @@ function Process-Documentation {
     }
 }
 
-function Extract-APIPatterns {
+function Find-APIPatterns {
     param(
         [object]$Processor,
         [object]$DocData
@@ -297,7 +297,7 @@ function Extract-APIPatterns {
             $Pattern = @{
                 "Name" = $API
                 "Section" = $DocData.Section
-                "Usage" = Generate-UsageExample -APIName $API
+                "Usage" = New-UsageExample -APIName $API
                 "Context" = $DocData.Title
                 "LearnedAt" = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
             }
@@ -307,7 +307,7 @@ function Extract-APIPatterns {
     }
 }
 
-function Generate-UsageExample {
+function New-UsageExample {
     param([string]$APIName)
     
     $Examples = @{
@@ -338,7 +338,7 @@ function Generate-UsageExample {
     return $Examples[$APIName] ?? "// Usage example for $APIName"
 }
 
-function Identify-BestPractices {
+function Find-BestPractices {
     param(
         [object]$Processor,
         [object]$DocData
@@ -380,7 +380,7 @@ function Identify-BestPractices {
     }
 }
 
-function Generate-LearningExamples {
+function New-LearningExamples {
     param(
         [object]$Processor,
         [object]$DocData
@@ -415,7 +415,7 @@ function Generate-LearningExamples {
     Write-Log "生成示例文件: $ExamplePath" "SUCCESS"
 }
 
-function Generate-Explanation {
+function New-Explanation {
     param([string]$APIName)
     
     $Explanations = @{
@@ -456,7 +456,7 @@ function Update-KnowledgeBase {
     
     # Update classes knowledge
     $ClassesPath = "$($Processor.KnowledgeBasePath)\Classes\knowledge.json"
-    $ClassesKnowledge = Load-KnowledgeFile -FilePath $ClassesPath
+    $ClassesKnowledge = Import-KnowledgeFile -FilePath $ClassesPath
     
     if ($DocData.APIs) {
         foreach ($API in $DocData.APIs) {
@@ -464,8 +464,8 @@ function Update-KnowledgeBase {
                 "Name" = $API
                 "Type" = "Class"
                 "Section" = $DocData.Section
-                "Description" = Generate-Explanation -APIName $API
-                "Usage" = Generate-UsageExample -APIName $API
+                "Description" = New-Explanation -APIName $API
+                "Usage" = New-UsageExample -APIName $API
                 "LearnedAt" = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
             }
             $ClassesKnowledge.Concepts += $Concept
@@ -476,7 +476,7 @@ function Update-KnowledgeBase {
     
     # Update patterns knowledge
     $PatternsPath = "$($Processor.KnowledgeBasePath)\Patterns\knowledge.json"
-    $PatternsKnowledge = Load-KnowledgeFile -FilePath $PatternsPath
+    $PatternsKnowledge = Import-KnowledgeFile -FilePath $PatternsPath
     
     foreach ($Pattern in $Processor.APIPatterns.Values) {
         $Concept = @{
@@ -496,7 +496,7 @@ function Update-KnowledgeBase {
     Write-Log "知识库更新完成" "SUCCESS"
 }
 
-function Load-KnowledgeFile {
+function Import-KnowledgeFile {
     param([string]$FilePath)
     
     if (Test-Path $FilePath) {
@@ -564,22 +564,22 @@ function Start-Learning {
     
     switch ($LearningMode) {
         "Quick" {
-            Quick-Learning -Orchestrator $Orchestrator
+            Start-QuickLearning -Orchestrator $Orchestrator
         }
         "Comprehensive" {
-            Comprehensive-Learning -Orchestrator $Orchestrator
+            Start-ComprehensiveLearning -Orchestrator $Orchestrator
         }
         "Targeted" {
-            Targeted-Learning -Orchestrator $Orchestrator
+            Start-TargetedLearning -Orchestrator $Orchestrator
         }
         default {
             Write-Log "未知的学习模式: $LearningMode" "WARNING"
-            Comprehensive-Learning -Orchestrator $Orchestrator
+            Start-ComprehensiveLearning -Orchestrator $Orchestrator
         }
     }
 }
 
-function Quick-Learning {
+function Start-QuickLearning {
     param([object]$Orchestrator)
     
     Write-Log "快速学习模式 - 核心概念" "INFO"
@@ -588,14 +588,14 @@ function Quick-Learning {
     
     foreach ($Section in $CoreSections) {
         Write-Log "学习核心部分: $Section" "INFO"
-        $Content = Fetch-Documentation -Fetcher $Orchestrator.DocumentationFetcher -Section $Section
-        Process-Documentation -Processor $Orchestrator.KnowledgeProcessor -Section $Section -Content $Content
+        $Content = Get-Documentation -Fetcher $Orchestrator.DocumentationFetcher -Section $Section
+        Update-Documentation -Processor $Orchestrator.KnowledgeProcessor -Section $Section -Content $Content
     }
     
-    Generate-QuickReport -Orchestrator $Orchestrator
+    New-QuickReport -Orchestrator $Orchestrator
 }
 
-function Comprehensive-Learning {
+function Start-ComprehensiveLearning {
     param([object]$Orchestrator)
     
     Write-Log "全面学习模式 - 所有文档" "INFO"
@@ -604,8 +604,8 @@ function Comprehensive-Learning {
     
     foreach ($Section in $AllSections) {
         Write-Log "学习部分: $Section" "INFO"
-        $Content = Fetch-Documentation -Fetcher $Orchestrator.DocumentationFetcher -Section $Section
-        Process-Documentation -Processor $Orchestrator.KnowledgeProcessor -Section $Section -Content $Content
+        $Content = Get-Documentation -Fetcher $Orchestrator.DocumentationFetcher -Section $Section
+        Update-Documentation -Processor $Orchestrator.KnowledgeProcessor -Section $Section -Content $Content
         
         if ($Interactive) {
             Write-Host "按Enter继续学习下一部分..." -ForegroundColor Yellow
@@ -613,10 +613,10 @@ function Comprehensive-Learning {
         }
     }
     
-    Generate-ComprehensiveReport -Orchestrator $Orchestrator
+    New-ComprehensiveReport -Orchestrator $Orchestrator
 }
 
-function Targeted-Learning {
+function Start-TargetedLearning {
     param([object]$Orchestrator)
     
     Write-Log "定向学习模式 - 高优先级内容" "INFO"
@@ -625,14 +625,14 @@ function Targeted-Learning {
     
     foreach ($Section in $HighPrioritySections) {
         Write-Log "学习高优先级部分: $Section" "INFO"
-        $Content = Fetch-Documentation -Fetcher $Orchestrator.DocumentationFetcher -Section $Section
-        Process-Documentation -Processor $Orchestrator.KnowledgeProcessor -Section $Section -Content $Content
+        $Content = Get-Documentation -Fetcher $Orchestrator.DocumentationFetcher -Section $Section
+        Update-Documentation -Processor $Orchestrator.KnowledgeProcessor -Section $Section -Content $Content
     }
     
-    Generate-TargetedReport -Orchestrator $Orchestrator
+    New-TargetedReport -Orchestrator $Orchestrator
 }
 
-function Generate-QuickReport {
+function New-QuickReport {
     param([object]$Orchestrator)
     
     Write-Log "生成快速学习报告..." "INFO"
@@ -670,7 +670,7 @@ $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
     Write-Log "快速学习报告已生成: $ReportPath" "SUCCESS"
 }
 
-function Generate-ComprehensiveReport {
+function New-ComprehensiveReport {
     param([object]$Orchestrator)
     
     Write-Log "生成全面学习报告..." "INFO"
@@ -719,7 +719,7 @@ $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
     Write-Log "全面学习报告已生成: $ReportPath" "SUCCESS"
 }
 
-function Generate-TargetedReport {
+function New-TargetedReport {
     param([object]$Orchestrator)
     
     Write-Log "生成定向学习报告..." "INFO"
