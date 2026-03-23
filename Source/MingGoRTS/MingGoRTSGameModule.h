@@ -1,17 +1,18 @@
-出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出o出d出使出l出e出s出/出M出o出d出使出l出e出M出a出n出a出成出e出本出.出h出"出
-出
-出/出*出*出
-出 出*出 出M出i出n出成出G出o出R出T出S出 出成出a出設置出e出 出設置出o出d出使出l出e出
-出 出*出/出
-出c出l出a出s出s出 出軍出M出i出n出成出G出o出R出T出S出G出a出設置出e出M出o出d出使出l出e出 出:出 出p出使出b出l出i出c出 出I出M出o出d出使出l出e出I出n出t出e出本出f出a出c出e出
-出{出
-出p出使出b出l出i出c出:出
-出 出 出 出 出/出*出*出 出I出M出o出d出使出l出e出I出n出t出e出本出f出a出c出e出 出i出設置出p出l出e出設置出e出n出t出a出t出i出o出n出 出*出/出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出S出t出a出本出t出使出p出M出o出d出使出l出e出(出)出 出o出正出e出本出本出i出d出e出;出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出S出h出使出t出d出o出w出n出M出o出d出使出l出e出(出)出 出o出正出e出本出本出i出d出e出;出
-出}出;出
-出
-出
+#pragma once
+
+#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "Mod使les/Mod使leMana成e本.h"
+
+/**
+ * Min成GoRTS 成a設置e 設置od使le
+ */
+class 軍Min成GoRTSGa設置eMod使le : p使blic IMod使leInte本face
+{
+p使blic:
+    /** IMod使leInte本face i設置ple設置entation */
+    正i本t使al 正oid Sta本t使pMod使le() o正e本本ide;
+    正i本t使al 正oid Sh使tdownMod使le() o正e本本ide;
+};
+

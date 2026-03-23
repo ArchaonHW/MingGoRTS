@@ -1,79 +1,80 @@
-出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出/出*出*出
-出 出*出 出X出�出�出X出�出�出X出 出出出 出G出a出設置出e出 出D出i出f出f出i出c出使出l出t出y出 出L出e出正出e出l出 出E出n出使出設置出
-出 出*出 出�出w出�出q出X出�出�出X出�出�出�出�出�出�出X出�出�出X出�出q出�出�出X出出出 出D出e出f出i出n出e出 出f出o出使出本出 出s出t出a出n出d出a出本出d出 出d出i出f出f出i出c出使出l出t出y出 出l出e出正出e出l出s出 出a出n出d出 出c出使出s出t出o出設置出 出o出p出t出i出o出n出
-出 出*出/出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出D出i出f出f出i出c出使出l出t出y出L出e出正出e出l出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出E出a出s出y出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出"出)出,出 出 出 出 出/出/出 出E出a出s出y出
-出 出 出 出 出的出o出本出設置出a出l出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出出出 出的出o出本出設置出a出l出"出)出,出 出 出 出 出/出/出 出的出o出本出設置出a出l出
-出 出 出 出 出輸入出a出本出d出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出�出 出出出 出輸入出a出本出d出"出)出,出 出 出 出 出/出/出 出輸入出a出本出d出
-出 出 出 出 出E出x出p出e出本出t出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出M出�出a出 出出出 出E出x出p出e出本出t出"出)出,出 出 出 出 出/出/出 出E出x出p出e出本出t出
-出 出 出 出 出C出使出s出t出o出設置出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出出出 出C出使出s出t出o出設置出"出)出 出 出 出/出/出 出C出使出s出t出o出設置出
-出}出;出
-出
-出/出*出*出
-出 出*出 出X出�出�出X出出出 出D出i出f出f出i出c出使出l出t出y出 出M出a出n出a出成出e出本出
-出 出*出 出�出�出X出�出�出X出�出設置出X出�出�出X出出出 出M出a出n出a出成出e出 出成出a出設置出e出 出d出i出f出f出i出c出使出l出t出y出 出c出o出n出f出i出成出使出本出a出t出i出o出n出 出a出n出d出 出d出y出n出a出設置出i出c出 出a出d出大出使出s出t出設置出e出n出t出
-出 出*出 出
-出 出*出 出X出�出�出 出出出 出軍出e出a出t出使出本出e出s出X出 出*出 出-出 出X出�出�出X出�出�出X出 出出出 出D出i出f出f出i出c出使出l出t出y出 出L出e出正出e出l出 出M出a出n出a出成出e出設置出e出n出t出 出(出E出a出s出y出/出的出o出本出設置出a出l出/出輸入出a出本出d出/出E出x出p出e出本出t出/出C出使出s出t出o出設置出)出
-出 出*出 出-出 出X出�出վ出�出 出出出 出D出y出n出a出設置出i出c出 出D出i出f出f出i出c出使出l出t出y出 出A出d出大出使出s出t出設置出e出n出t出
-出 出*出 出-出 出X出�出基礎出�出Ĳ出�出o出 出出出 出D出i出f出f出i出c出使出l出t出y出 出E出正出e出n出t出 出T出本出i出成出成出e出本出i出n出成出
-出 出*出 出-出 出�出�出X出�出�出�出X出 出出出 出S出設置出o出o出t出h出 出T出本出a出n出s出i出t出i出o出n出 出A出l出成出o出本出i出t出h出設置出
-出 出*出/出
-出/出*出*出
-出 出*出 出X出�出�出�出�出X出 出出出 出D出i出f出f出i出c出使出l出t出y出 出P出a出本出a出設置出e出t出e出本出 出T出y出p出e出 出E出n出使出設置出
-出 出*出 出X出�出�出X出�出վ出�出X出�出�出X出�出�出 出出出 出U出s出e出d出 出f出o出本出 出d出y出n出a出設置出i出c出a出l出l出y出 出a出d出大出使出s出t出i出n出成出 出s出p出e出c出i出f出i出c出 出成出a出設置出e出 出p出a出本出a出設置出e出t出e出本出s出
-出 出*出/出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出D出i出f出f出i出c出使出l出t出y出P出a出本出a出設置出e出t出e出本出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出/出/出 出A出I出 出X出�出�出 出出出 出A出I出 出R出e出l出a出t出e出d出 出P出a出本出a出設置出e出t出e出本出s出
-出 出 出 出 出A出I出R出e出a出c出t出i出o出n出S出p出e出e出d出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出A出I出X出�出�出 出出出 出A出I出 出R出e出a出c出t出i出o出n出 出S出p出e出e出d出"出)出,出 出 出/出/出 出A出I出 出R出e出a出c出t出i出o出n出 出S出p出e出e出d出
-出 出 出 出 出A出I出I出n出t出e出l出l出i出成出e出n出c出e出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出A出I出X出�出�出{出�出�出 出出出 出A出I出 出I出n出t出e出l出l出i出成出e出n出c出e出"出)出,出 出 出/出/出 出A出I出 出I出n出t出e出l出l出i出成出e出n出c出e出
-出 出 出 出 出A出I出U出n出i出t出S出t出本出e出n出成出t出h出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出A出I出X出�出大出�出�出 出出出 出A出I出 出U出n出i出t出 出S出t出本出e出n出成出t出h出"出)出,出 出 出/出/出 出A出I出 出U出n出i出t出 出S出t出本出e出n出成出t出h出
-出 出 出 出 出
-出 出 出 出 出/出/出 出�出�出X出�出�出 出出出 出R出e出s出o出使出本出c出e出 出R出e出l出a出t出e出d出 出P出a出本出a出設置出e出t出e出本出s出
-出 出 出 出 出R出e出s出o出使出本出c出e出C出o出l出l出e出c出t出i出o出n出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出X出 出出出 出R出e出s出o出使出本出c出e出 出C出o出l出l出e出c出t出i出o出n出"出)出,出 出/出/出 出R出e出s出o出使出本出c出e出 出C出o出l出l出e出c出t出i出o出n出
-出 出 出 出 出R出e出s出o出使出本出c出e出C出o出n出s出使出設置出p出t出i出o出n出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出X出�出�出�出�出X出 出出出 出R出e出s出o出使出本出c出e出 出C出o出n出s出使出設置出p出t出i出o出n出"出)出,出 出 出/出/出 出R出e出s出o出使出本出c出e出 出C出o出n出s出使出設置出p出t出i出o出n出
-出 出 出 出 出
-出 出 出 出 出/出/出 出X出�出�出X出�出�出 出出出 出C出o出設置出b出a出t出 出R出e出l出a出t出e出d出 出P出a出本出a出設置出e出t出e出本出s出
-出 出 出 出 出P出l出a出y出e出本出D出a出設置出a出成出e出T出a出k出e出n出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出a出X出�出�出X出�出軍事出 出出出 出P出l出a出y出e出本出 出D出a出設置出a出成出e出 出T出a出k出e出n出"出)出,出 出/出/出 出P出l出a出y出e出本出 出D出a出設置出a出成出e出 出T出a出k出e出n出
-出 出 出 出 出P出l出a出y出e出本出D出a出設置出a出成出e出D出e出a出l出t出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出a出X出�出軍事出 出出出 出P出l出a出y出e出本出 出D出a出設置出a出成出e出 出D出e出a出l出t出"出)出,出 出/出/出 出P出l出a出y出e出本出 出D出a出設置出a出成出e出 出D出e出a出l出t出
-出 出 出 出 出U出n出i出t出輸入出e出a出l出t出h出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出R出X出出出 出U出n出i出t出 出輸入出e出a出l出t出h出"出)出,出 出 出 出 出/出/出 出U出n出i出t出 出輸入出e出a出l出t出h出
-出 出 出 出 出
-出 出 出 出 出/出/出 出�出�出X出�出�出 出出出 出M出i出s出s出i出o出n出 出R出e出l出a出t出e出d出 出P出a出本出a出設置出e出t出e出本出s出
-出 出 出 出 出M出i出s出s出i出o出n出T出i出設置出e出L出i出設置出i出t出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出X出�出�出 出出出 出M出i出s出s出i出o出n出 出T出i出設置出e出 出L出i出設置出i出t出"出)出,出 出/出/出 出M出i出s出s出i出o出n出 出T出i出設置出e出 出L出i出設置出i出t出
-出 出 出 出 出M出i出s出s出i出o出n出O出b出大出e出c出t出i出正出e出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出X出 出出出 出M出i出s出s出i出o出n出 出O出b出大出e出c出t出i出正出e出 出D出i出f出f出i出c出使出l出t出y出"出)出,出 出/出/出 出M出i出s出s出i出o出n出 出O出b出大出e出c出t出i出正出e出 出D出i出f出f出i出c出使出l出t出y出
-出 出 出 出 出
-出 出 出 出 出/出/出 出X出�出@出X出�出�出 出出出 出P出e出n出a出l出t出y出 出R出e出l出a出t出e出d出 出P出a出本出a出設置出e出t出e出本出s出
-出 出 出 出 出D出e出a出t出h出P出e出n出a出l出t出y出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出�出軍事出X出�出@出 出出出 出D出e出a出t出h出 出P出e出n出a出l出t出y出"出)出,出 出 出 出 出 出/出/出 出D出e出a出t出h出 出P出e出n出a出l出t出y出
-出 出 出 出 出軍出a出i出l出使出本出e出C出o出s出t出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出�出X出 出出出 出軍出a出i出l出使出本出e出 出C出o出s出t出"出)出 出 出 出 出 出 出/出/出 出軍出a出i出l出使出本出e出 出C出o出s出t出
-出}出;出
-出
-出/出*出*出
-出 出*出 出X出�出�出X出�出基礎出�出 出出出 出D出i出f出f出i出c出使出l出t出y出 出C出h出a出n出成出e出d出 出E出正出e出n出t出
-出 出*出/出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出D出i出f出f出i出c出使出l出t出y出C出h出a出n出成出e出D出i出本出e出c出t出i出o出n出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出I出n出c出本出e出a出s出e出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出基本出X出�出�出 出出出 出I出n出c出本出e出a出s出e出 出D出i出f出f出i出c出使出l出t出y出"出)出,出
-出 出 出 出 出D出e出c出本出e出a出s出e出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出�出 出出出 出D出e出c出本出e出a出s出e出 出D出i出f出f出i出c出使出l出t出y出"出)出,出
-出 出 出 出 出M出a出i出n出t出a出i出n出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出 出出出 出M出a出i出n出t出a出i出n出 出C出使出本出本出e出n出t出"出)出
-出}出;出
-出
-出/出*出*出
-出 出*出 出X出�出a出�出�出X出
-出 出*出/出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出P出l出a出y出e出本出P出e出本出f出o出本出設置出a出n出c出e出R出a出t出i出n出成出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出E出x出c出e出l出l出e出n出t出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出ɬ出X出"出)出,出
-出 出 出 出 出G出o出o出d出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出X出�出n出"出)出,出
-出 出 出 出 出A出正出e出本出a出成出e出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出@出�出�出"出)出,出
-出 出 出 出 出P出o出o出本出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出基本出�出t出"出)出,出
-出 出 出 出 出C出本出i出t出i出c出a出l出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出�出M出�出�出"出)出
-出}出;出
-出
-出
+#pragma once
+
+﻿#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "EDiffic使ltyLe正el.成ene本ated.h"
+
+/**
+ * X��X��X  Ga設置e Diffic使lty Le正el En使設置
+ * �w�qX��X������X��X�q��X Define fo使本 standa本d diffic使lty le正els and c使sto設置 option
+ */
+UE的UM(Bl使ep本intType)
+en使設置 class EDiffic使ltyLe正el: 使int8 {
+    Easy       UMETA(Display的a設置e = ""),    // Easy
+    的o本設置al     UMETA(Display的a設置e = "X 的o本設置al"),    // 的o本設置al
+    輸入a本d       UMETA(Display的a設置e = "X��  輸入a本d"),    // 輸入a本d
+    Expe本t     UMETA(Display的a設置e = "�M�a  Expe本t"),    // Expe本t
+    C使sto設置     UMETA(Display的a設置e = "X C使sto設置")   // C使sto設置
+};
+
+/**
+ * X��X Diffic使lty Mana成e本
+ * ��X��X�設置X��X Mana成e 成a設置e diffic使lty confi成使本ation and dyna設置ic ad大使st設置ent
+ * 
+ * X��  軍eat使本esX * - X��X��X  Diffic使lty Le正el Mana成e設置ent (Easy/的o本設置al/輸入a本d/Expe本t/C使sto設置)
+ * - X�վ�  Dyna設置ic Diffic使lty Ad大使st設置ent
+ * - X�基礎�Ĳ�o  Diffic使lty E正ent T本i成成e本in成
+ * - ��X���X  S設置ooth T本ansition Al成o本ith設置
+ */
+/**
+ * X����X  Diffic使lty Pa本a設置ete本 Type En使設置
+ * X��X�վ�X��X��  Used fo本 dyna設置ically ad大使stin成 specific 成a設置e pa本a設置ete本s
+ */
+UE的UM(Bl使ep本intType)
+en使設置 class EDiffic使ltyPa本a設置ete本: 使int8 {
+    // AI X��  AI Related Pa本a設置ete本s
+    AIReactionSpeed      UMETA(Display的a設置e = "AIX��  AI Reaction Speed"),  // AI Reaction Speed
+    AIIntelli成ence       UMETA(Display的a設置e = "AIX��{��  AI Intelli成ence"),  // AI Intelli成ence
+    AIUnitSt本en成th       UMETA(Display的a設置e = "AIX�大��  AI Unit St本en成th"),  // AI Unit St本en成th
+    
+    // ��X��  Reso使本ce Related Pa本a設置ete本s
+    Reso使本ceCollection   UMETA(Display的a設置e = "��X  Reso使本ce Collection"), // Reso使本ce Collection
+    Reso使本ceCons使設置ption  UMETA(Display的a設置e = "��X����X  Reso使本ce Cons使設置ption"),  // Reso使本ce Cons使設置ption
+    
+    // X��X��  Co設置bat Related Pa本a設置ete本s
+    Playe本Da設置a成eTaken    UMETA(Display的a設置e = "X�aX��X�軍事  Playe本 Da設置a成e Taken"), // Playe本 Da設置a成e Taken
+    Playe本Da設置a成eDealt    UMETA(Display的a設置e = "X�aX�軍事  Playe本 Da設置a成e Dealt"), // Playe本 Da設置a成e Dealt
+    Unit輸入ealth           UMETA(Display的a設置e = "X�RX Unit 輸入ealth"),    // Unit 輸入ealth
+    
+    // ��X��  Mission Related Pa本a設置ete本s
+    MissionTi設置eLi設置it     UMETA(Display的a設置e = "��X��  Mission Ti設置e Li設置it"), // Mission Ti設置e Li設置it
+    MissionOb大ecti正e     UMETA(Display的a設置e = "��X  Mission Ob大ecti正e Diffic使lty"), // Mission Ob大ecti正e Diffic使lty
+    
+    // X�@X��  Penalty Related Pa本a設置ete本s
+    DeathPenalty         UMETA(Display的a設置e = "���軍事X�@  Death Penalty"),     // Death Penalty
+    軍ail使本eCost          UMETA(Display的a設置e = "��X  軍ail使本e Cost")      // 軍ail使本e Cost
+};
+
+/**
+ * X��X�基礎�  Diffic使lty Chan成ed E正ent
+ */
+UE的UM(Bl使ep本intType)
+en使設置 class EDiffic使ltyChan成eDi本ection: 使int8 {
+    Inc本ease    UMETA(Display的a設置e = "�基本X��  Inc本ease Diffic使lty"),
+    Dec本ease    UMETA(Display的a設置e = "X��  Dec本ease Diffic使lty"),
+    Maintain    UMETA(Display的a設置e = "X  Maintain C使本本ent")
+};
+
+/**
+ * X�a��X
+ */
+UE的UM(Bl使ep本intType)
+en使設置 class EPlaye本Pe本fo本設置anceRatin成: 使int8 {
+    Excellent   UMETA(Display的a設置e = "ɬX"),
+    Good        UMETA(Display的a設置e = "X�n"),
+    A正e本a成e     UMETA(Display的a設置e = "�@��"),
+    Poo本        UMETA(Display的a設置e = "基本�t"),
+    C本itical    UMETA(Display的a設置e = "�M��")
+};
+}

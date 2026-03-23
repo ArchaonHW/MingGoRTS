@@ -1,259 +1,258 @@
-出#出i出n出c出l出使出d出e出 出"出I出n出p出使出t出/出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出/出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出K出i出s出設置出e出t出/出G出a出設置出e出p出l出a出y出S出t出a出t出i出c出s出.出h出"出
-出
-出/出/出 出靜出態出實出例出初出始出化出
-出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出*出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出I出n出s出t出a出n出c出e出 出=出 出n出使出l出l出p出t出本出;出
-出
-出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出(出)出
-出 出 出 出 出:出 出b出I出n出i出t出i出a出l出i出z出e出d出(出f出a出l出s出e出)出
-出 出 出 出 出,出 出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出(出E出I出n出p出使出t出T出y出p出e出:出:出M出o出使出s出e出K出e出y出b出o出a出本出d出)出
-出 出 出 出 出,出 出L出a出s出t出I出n出p出使出t出P出o出s出i出t出i出o出n出(出軍出V出e出c出t出o出本出2出D出:出:出Z出e出本出o出V出e出c出t出o出本出)出
-出 出 出 出 出,出 出T出o出使出c出h出S出e出n出s出i出t出i出正出i出t出y出(出1出.出0出f出)出
-出 出 出 出 出,出 出T出a出p出T出i出設置出e出T出h出本出e出s出h出o出l出d出(出0出.出2出f出)出
-出 出 出 出 出,出 出T出a出p出D出i出s出t出a出n出c出e出T出h出本出e出s出h出o出l出d出(出2出0出.出0出f出)出
-出 出 出 出 出,出 出L出o出n出成出P出本出e出s出s出T出i出設置出e出T出h出本出e出s出h出o出l出d出(出0出.出5出f出)出
-出{出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出(出)出
-出{出
-出 出 出 出 出i出f出 出(出b出I出n出i出t出i出a出l出i出z出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出根出據出平出台出設出置出默出認出輸出入出類出型出
-出 出 出 出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出*出 出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出 出=出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出(出)出;出
-出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出 出C出a出p出a出b出i出l出i出t出i出e出s出 出=出 出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出-出>出G出e出t出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出(出)出;出
-出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出 出=出 出C出a出p出a出b出i出l出i出t出i出e出s出.出D出e出f出a出使出l出t出I出n出p出使出t出T出y出p出e出;出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出p出使出t出M出a出n出a出成出e出本出 出i出n出i出t出i出a出l出i出z出e出d出 出w出i出t出h出 出i出n出p出使出t出 出t出y出p出e出:出 出%出s出"出)出,出
-出 出 出 出 出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出)出)出;出
-出 出 出 出 出}出
-出 出 出 出 出e出l出s出e出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出 出n出o出t出 出a出正出a出i出l出a出b出l出e出,出 出使出s出i出n出成出 出d出e出f出a出使出l出t出 出M出o出使出s出e出&出K出e出y出b出o出a出本出d出"出)出)出;出
-出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出 出=出 出E出I出n出p出使出t出T出y出p出e出:出:出M出o出使出s出e出K出e出y出b出o出a出本出d出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出初出始出化出觸出控出狀出態出
-出 出 出 出 出A出c出t出i出正出e出T出o出使出c出h出e出s出.出E出設置出p出t出y出(出)出;出
-出 出 出 出 出
-出 出 出 出 出I出n出s出t出a出n出c出e出 出=出 出t出h出i出s出;出
-出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出S出h出使出t出d出o出w出n出(出)出
-出{出
-出 出 出 出 出i出f出 出(出!出b出I出n出i出t出i出a出l出i出z出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出清出理出輸出入出綁出定出
-出 出 出 出 出I出n出p出使出t出B出i出n出d出i出n出成出s出.出E出設置出p出t出y出(出)出;出
-出 出 出 出 出A出c出t出i出正出e出T出o出使出c出h出e出s出.出E出設置出p出t出y出(出)出;出
-出 出 出 出 出
-出 出 出 出 出I出n出s出t出a出n出c出e出 出=出 出n出使出l出l出p出t出本出;出
-出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出p出使出t出M出a出n出a出成出e出本出 出s出h出使出t出d出o出w出n出"出)出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出T出i出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
-出{出
-出 出 出 出 出i出f出 出(出!出b出I出n出i出t出i出a出l出i出z出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出根出據出輸出入出類出型出處出理出輸出入出
-出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出 出=出=出 出E出I出n出p出使出t出T出y出p出e出:出:出T出o出使出c出h出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出P出本出o出c出e出s出s出T出o出使出c出h出I出n出p出使出t出(出D出e出l出t出a出T出i出設置出e出)出;出
-出 出 出 出 出}出
-出 出 出 出 出e出l出s出e出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出P出本出o出c出e出s出s出M出o出使出s出e出I出n出p出使出t出(出D出e出l出t出a出T出i出設置出e出)出;出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出S出e出t出I出n出p出使出t出T出y出p出e出(出E出I出n出p出使出t出T出y出p出e出 出的出e出w出I出n出p出使出t出T出y出p出e出)出
-出{出
-出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出 出!出=出 出的出e出w出I出n出p出使出t出T出y出p出e出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出 出=出 出的出e出w出I出n出p出使出t出T出y出p出e出;出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出I出n出p出使出t出 出t出y出p出e出 出c出h出a出n出成出e出d出 出t出o出:出 出%出s出"出)出,出
-出 出 出 出 出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出)出)出;出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出B出i出n出d出A出c出t出i出o出n出(出E出I出n出p出使出t出A出c出t出i出o出n出 出A出c出t出i出o出n出,出 出U出O出b出大出e出c出t出*出 出L出i出s出t出e出n出e出本出,出 出軍出的出a出設置出e出 出軍出使出n出c出t出i出o出n出的出a出設置出e出)出
-出{出
-出 出 出 出 出i出f出 出(出!出L出i出s出t出e出n出e出本出 出出出出出 出軍出使出n出c出t出i出o出n出的出a出設置出e出.出I出s出的出o出n出e出(出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出添出加出到出綁出定出映出射出
-出 出 出 出 出i出f出 出(出!出I出n出p出使出t出B出i出n出d出i出n出成出s出.出C出o出n出t出a出i出n出s出(出A出c出t出i出o出n出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出I出n出p出使出t出B出i出n出d出i出n出成出s出.出A出d出d出(出A出c出t出i出o出n出,出 出T出M出a出p出<出T出基本出e出a出k出O出b出大出e出c出t出P出t出本出<出U出O出b出大出e出c出t出>出,出 出軍出的出a出設置出e出>出(出)出)出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出I出n出p出使出t出B出i出n出d出i出n出成出s出[出A出c出t出i出o出n出]出.出A出d出d出(出L出i出s出t出e出n出e出本出,出 出軍出使出n出c出t出i出o出n出的出a出設置出e出)出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出B出o出使出n出d出 出a出c出t出i出o出n出 出%出s出 出t出o出 出%出s出:出:出%出s出"出)出,出
-出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出A出c出t出i出o出n出)出,出
-出 出 出 出 出 出 出 出 出*出L出i出s出t出e出n出e出本出-出>出G出e出t出的出a出設置出e出(出)出,出
-出 出 出 出 出 出 出 出 出*出軍出使出n出c出t出i出o出n出的出a出設置出e出.出T出o出S出t出本出i出n出成出(出)出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出U出n出b出i出n出d出A出c出t出i出o出n出(出E出I出n出p出使出t出A出c出t出i出o出n出 出A出c出t出i出o出n出,出 出U出O出b出大出e出c出t出*出 出L出i出s出t出e出n出e出本出)出
-出{出
-出 出 出 出 出i出f出 出(出!出L出i出s出t出e出n出e出本出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出i出f出 出(出I出n出p出使出t出B出i出n出d出i出n出成出s出.出C出o出n出t出a出i出n出s出(出A出c出t出i出o出n出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出I出n出p出使出t出B出i出n出d出i出n出成出s出[出A出c出t出i出o出n出]出.出R出e出設置出o出正出e出(出L出i出s出t出e出n出e出本出)出;出
-出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出U出n出b出o出使出n出d出 出a出c出t出i出o出n出 出%出s出 出f出本出o出設置出 出%出s出"出)出,出
-出 出 出 出 出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出A出c出t出i出o出n出)出,出
-出 出 出 出 出 出 出 出 出 出 出 出 出*出L出i出s出t出e出n出e出本出-出>出G出e出t出的出a出設置出e出(出)出)出;出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出T出本出i出成出成出e出本出I出n出p出使出t出E出正出e出n出t出(出c出o出n出s出t出 出軍出I出n出p出使出t出E出正出e出n出t出D出a出t出a出&出 出E出正出e出n出t出D出a出t出a出)出
-出{出
-出 出 出 出 出i出f出 出(出E出正出e出n出t出D出a出t出a出.出b出輸入出a出n出d出l出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出更出新出最出後出輸出入出位出置出
-出 出 出 出 出L出a出s出t出I出n出p出使出t出P出o出s出i出t出i出o出n出 出=出 出E出正出e出n出t出D出a出t出a出.出S出c出本出e出e出n出P出o出s出i出t出i出o出n出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出執出行出綁出定出的出回出調出
-出 出 出 出 出E出x出e出c出使出t出e出I出n出p出使出t出B出i出n出d出i出n出成出(出E出正出e出n出t出D出a出t出a出.出A出c出t出i出o出n出,出 出E出正出e出n出t出D出a出t出a出)出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出I出n出p出使出t出 出e出正出e出n出t出 出t出本出i出成出成出e出本出e出d出:出 出%出s出 出a出t出 出(出%出f出,出 出%出f出)出"出)出,出
-出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出E出正出e出n出t出D出a出t出a出.出A出c出t出i出o出n出)出,出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出D出a出t出a出.出S出c出本出e出e出n出P出o出s出i出t出i出o出n出.出X出,出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出D出a出t出a出.出S出c出本出e出e出n出P出o出s出i出t出i出o出n出.出Y出)出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出I出s出T出o出使出c出h出I出n出p出使出t出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出I出n出p出使出t出T出y出p出e出 出=出=出 出E出I出n出p出使出t出T出y出p出e出:出:出T出o出使出c出h出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出S出e出t出T出o出使出c出h出S出e出n出s出i出t出i出正出i出t出y出(出f出l出o出a出t出 出S出e出n出s出i出t出i出正出i出t出y出)出
-出{出
-出 出 出 出 出T出o出使出c出h出S出e出n出s出i出t出i出正出i出t出y出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出S出e出n出s出i出t出i出正出i出t出y出,出 出0出.出1出f出,出 出3出.出0出f出)出;出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出T出o出使出c出h出 出s出e出n出s出i出t出i出正出i出t出y出 出s出e出t出 出t出o出:出 出%出f出"出)出,出 出T出o出使出c出h出S出e出n出s出i出t出i出正出i出t出y出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出P出本出o出c出e出s出s出T出o出使出c出h出I出n出p出使出t出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
-出{出
-出 出 出 出 出/出/出 出這出裡出應出該出從出引出擎出獲出取出觸出控出輸出入出
-出 出 出 出 出/出/出 出暫出時出使出用出模出擬出邏出輯出
-出 出 出 出 出
-出 出 出 出 出/出/出 出檢出測出手出勢出
-出 出 出 出 出f出o出本出 出(出a出使出t出o出&出 出T出o出使出c出h出P出a出i出本出 出:出 出A出c出t出i出正出e出T出o出使出c出h出e出s出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出D出e出t出e出c出t出G出e出s出t出使出本出e出s出(出T出o出使出c出h出P出a出i出本出.出V出a出l出使出e出,出 出T出o出使出c出h出P出a出i出本出.出K出e出y出)出;出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出P出本出o出c出e出s出s出M出o出使出s出e出I出n出p出使出t出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出
-出{出
-出 出 出 出 出/出/出 出鼠出標出輸出入出通出常出通出過出 出P出l出a出y出e出本出C出o出n出t出本出o出l出l出e出本出 出的出 出I出n出p出使出t出C出o出設置出p出o出n出e出n出t出 出處出理出
-出 出 出 出 出/出/出 出這出裡出可出以出添出加出額出外出的出鼠出標出手出勢出檢出測出（出如出框出選出）出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出D出e出t出e出c出t出G出e出s出t出使出本出e出s出(出c出o出n出s出t出 出軍出T出o出使出c出h出S出t出a出t出e出&出 出T出o出使出c出h出S出t出a出t出e出,出 出i出n出t出3出2出 出T出o出使出c出h出I出d出)出
-出{出
-出 出 出 出 出i出f出 出(出!出T出o出使出c出h出S出t出a出t出e出.出b出I出s出A出c出t出i出正出e出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出計出算出觸出控出時出間出和出移出動出距出離出
-出 出 出 出 出f出l出o出a出t出 出T出o出使出c出h出D出使出本出a出t出i出o出n出 出=出 出軍出P出l出a出t出f出o出本出設置出T出i出設置出e出:出:出S出e出c出o出n出d出s出(出)出 出-出 出T出o出使出c出h出S出t出a出t出e出.出S出t出a出本出t出T出i出設置出e出;出
-出 出 出 出 出f出l出o出a出t出 出M出o出正出e出D出i出s出t出a出n出c出e出 出=出 出軍出V出e出c出t出o出本出2出D出:出:出D出i出s出t出a出n出c出e出(出T出o出使出c出h出S出t出a出t出e出.出S出t出a出本出t出P出o出s出i出t出i出o出n出,出 出T出o出使出c出h出S出t出a出t出e出.出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出檢出測出點出擊出 出(出短出時出間出 出+出 出小出移出動出)出
-出 出 出 出 出i出f出 出(出T出o出使出c出h出D出使出本出a出t出i出o出n出 出<出 出T出a出p出T出i出設置出e出T出h出本出e出s出h出o出l出d出 出&出&出 出M出o出正出e出D出i出s出t出a出n出c出e出 出<出 出T出a出p出D出i出s出t出a出n出c出e出T出h出本出e出s出h出o出l出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出I出n出p出使出t出E出正出e出n出t出D出a出t出a出 出E出正出e出n出t出D出a出t出a出;出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出D出a出t出a出.出S出c出本出e出e出n出P出o出s出i出t出i出o出n出 出=出 出T出o出使出c出h出S出t出a出t出e出.出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出;出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出D出a出t出a出.出A出c出t出i出o出n出 出=出 出E出I出n出p出使出t出A出c出t出i出o出n出:出:出S出e出l出e出c出t出;出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出D出a出t出a出.出G出e出s出t出使出本出e出 出=出 出E出I出n出p出使出t出G出e出s出t出使出本出e出:出:出T出a出p出;出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出D出a出t出a出.出T出o出使出c出h出I出d出 出=出 出T出o出使出c出h出I出d出;出
-出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出T出本出i出成出成出e出本出I出n出p出使出t出E出正出e出n出t出(出E出正出e出n出t出D出a出t出a出)出;出
-出 出 出 出 出}出
-出 出 出 出 出/出/出 出檢出測出長出按出
-出 出 出 出 出e出l出s出e出 出i出f出 出(出T出o出使出c出h出D出使出本出a出t出i出o出n出 出>出=出 出L出o出n出成出P出本出e出s出s出T出i出設置出e出T出h出本出e出s出h出o出l出d出 出&出&出 出M出o出正出e出D出i出s出t出a出n出c出e出 出<出 出T出a出p出D出i出s出t出a出n出c出e出T出h出本出e出s出h出o出l出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出I出n出p出使出t出E出正出e出n出t出D出a出t出a出 出E出正出e出n出t出D出a出t出a出;出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出D出a出t出a出.出S出c出本出e出e出n出P出o出s出i出t出i出o出n出 出=出 出T出o出使出c出h出S出t出a出t出e出.出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出;出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出D出a出t出a出.出A出c出t出i出o出n出 出=出 出E出I出n出p出使出t出A出c出t出i出o出n出:出:出O出p出e出n出M出e出n出使出;出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出D出a出t出a出.出G出e出s出t出使出本出e出 出=出 出E出I出n出p出使出t出G出e出s出t出使出本出e出:出:出L出o出n出成出P出本出e出s出s出;出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出D出a出t出a出.出T出o出使出c出h出I出d出 出=出 出T出o出使出c出h出I出d出;出
-出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出T出本出i出成出成出e出本出I出n出p出使出t出E出正出e出n出t出(出E出正出e出n出t出D出a出t出a出)出;出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出E出x出e出c出使出t出e出I出n出p出使出t出B出i出n出d出i出n出成出(出E出I出n出p出使出t出A出c出t出i出o出n出 出A出c出t出i出o出n出,出 出c出o出n出s出t出 出軍出I出n出p出使出t出E出正出e出n出t出D出a出t出a出&出 出E出正出e出n出t出D出a出t出a出)出
-出{出
-出 出 出 出 出i出f出 出(出!出I出n出p出使出t出B出i出n出d出i出n出成出s出.出C出o出n出t出a出i出n出s出(出A出c出t出i出o出n出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出a出使出t出o出&出 出B出i出n出d出i出n出成出s出 出=出 出I出n出p出使出t出B出i出n出d出i出n出成出s出[出A出c出t出i出o出n出]出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出執出行出所出有出綁出定出的出回出調出
-出 出 出 出 出f出o出本出 出(出a出使出t出o出 出I出t出 出=出 出B出i出n出d出i出n出成出s出.出C出本出e出a出t出e出I出t出e出本出a出t出o出本出(出)出;出 出I出t出;出 出+出+出I出t出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出i出f出 出(出I出t出-出>出K出e出y出.出I出s出V出a出l出i出d出(出)出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出U出O出b出大出e出c出t出*出 出L出i出s出t出e出n出e出本出 出=出 出I出t出-出>出K出e出y出.出G出e出t出(出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出軍出的出a出設置出e出 出軍出使出n出c出t出i出o出n出的出a出設置出e出 出=出 出I出t出-出>出V出a出l出使出e出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出通出過出反出射出調出用出函出數出
-出 出 出 出 出 出 出 出 出 出 出 出 出U出軍出使出n出c出t出i出o出n出*出 出軍出使出n出c出t出i出o出n出 出=出 出L出i出s出t出e出n出e出本出-出>出軍出i出n出d出軍出使出n出c出t出i出o出n出(出軍出使出n出c出t出i出o出n出的出a出設置出e出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出軍出使出n出c出t出i出o出n出)出
-出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出準出備出參出數出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出s出t出本出使出c出t出 出軍出I出n出p出使出t出C出a出l出l出b出a出c出k出P出a出本出a出設置出s出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出軍出I出n出p出使出t出E出正出e出n出t出D出a出t出a出 出E出正出e出n出t出D出a出t出a出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出軍出I出n出p出使出t出C出a出l出l出b出a出c出k出P出a出本出a出設置出s出 出P出a出本出a出設置出s出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出P出a出本出a出設置出s出.出E出正出e出n出t出D出a出t出a出 出=出 出E出正出e出n出t出D出a出t出a出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出L出i出s出t出e出n出e出本出-出>出P出本出o出c出e出s出s出E出正出e出n出t出(出軍出使出n出c出t出i出o出n出,出 出&出P出a出本出a出設置出s出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出e出l出s出e出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出移出除出無出效出的出綁出定出
-出 出 出 出 出 出 出 出 出 出 出 出 出I出t出.出R出e出設置出o出正出e出C出使出本出本出e出n出t出(出)出;出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出}出
-出
-出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出*出 出U出M出i出n出成出I出n出p出使出t出M出a出n出a出成出e出本出:出:出G出e出t出(出)出
-出{出
-出 出 出 出 出本出e出t出使出本出n出 出I出n出s出t出a出n出c出e出;出
-出}出
-出
+#incl使de "Inp使t/Min成Inp使tMana成e本.h"
+#incl使de "Platfo本設置/Min成Platfo本設置Mana成e本.h"
+#incl使de "Kis設置et/Ga設置eplayStatics.h"
+
+// 靜態實例初始化
+UMin成Inp使tMana成e本* UMin成Inp使tMana成e本::Instance = n使llpt本;
+
+UMin成Inp使tMana成e本::UMin成Inp使tMana成e本()
+    : bInitialized(false)
+    , C使本本entInp使tType(EInp使tType::Mo使seKeyboa本d)
+    , LastInp使tPosition(軍Vecto本2D::Ze本oVecto本)
+    , To使chSensiti正ity(1.0f)
+    , TapTi設置eTh本eshold(0.2f)
+    , TapDistanceTh本eshold(20.0f)
+    , Lon成P本essTi設置eTh本eshold(0.5f)
+{
+}
+
+正oid UMin成Inp使tMana成e本::Initialize()
+{
+    if (bInitialized)
+    {
+        本et使本n;
+    }
+    
+    // 根據平台設置默認輸入類型
+    UMin成Platfo本設置Mana成e本* Platfo本設置Mana成e本 = UMin成Platfo本設置Mana成e本::Get();
+    if (Platfo本設置Mana成e本)
+    {
+        軍Platfo本設置Capabilities Capabilities = Platfo本設置Mana成e本->GetPlatfo本設置Capabilities();
+        C使本本entInp使tType = Capabilities.Defa使ltInp使tType;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Inp使tMana成e本 initialized with inp使t type: %s"),
+            *UEn使設置::GetVal使eAsSt本in成(C使本本entInp使tType));
+    }
+    else
+    {
+        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Platfo本設置Mana成e本 not a正ailable, 使sin成 defa使lt Mo使se&Keyboa本d"));
+        C使本本entInp使tType = EInp使tType::Mo使seKeyboa本d;
+    }
+    
+    // 初始化觸控狀態
+    Acti正eTo使ches.E設置pty();
+    
+    Instance = this;
+    bInitialized = t本使e;
+}
+
+正oid UMin成Inp使tMana成e本::Sh使tdown()
+{
+    if (!bInitialized)
+    {
+        本et使本n;
+    }
+    
+    // 清理輸入綁定
+    Inp使tBindin成s.E設置pty();
+    Acti正eTo使ches.E設置pty();
+    
+    Instance = n使llpt本;
+    bInitialized = false;
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Inp使tMana成e本 sh使tdown"));
+}
+
+正oid UMin成Inp使tMana成e本::Tick(float DeltaTi設置e)
+{
+    if (!bInitialized)
+    {
+        本et使本n;
+    }
+    
+    // 根據輸入類型處理輸入
+    if (C使本本entInp使tType == EInp使tType::To使ch)
+    {
+        P本ocessTo使chInp使t(DeltaTi設置e);
+    }
+    else
+    {
+        P本ocessMo使seInp使t(DeltaTi設置e);
+    }
+}
+
+正oid UMin成Inp使tMana成e本::SetInp使tType(EInp使tType 的ewInp使tType)
+{
+    if (C使本本entInp使tType != 的ewInp使tType)
+    {
+        C使本本entInp使tType = 的ewInp使tType;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Inp使t type chan成ed to: %s"),
+            *UEn使設置::GetVal使eAsSt本in成(C使本本entInp使tType));
+    }
+}
+
+正oid UMin成Inp使tMana成e本::BindAction(EInp使tAction Action, UOb大ect* Listene本, 軍的a設置e 軍使nction的a設置e)
+{
+    if (!Listene本  軍使nction的a設置e.Is的one())
+    {
+        本et使本n;
+    }
+    
+    // 添加到綁定映射
+    if (!Inp使tBindin成s.Contains(Action))
+    {
+        Inp使tBindin成s.Add(Action, TMap<T基本eakOb大ectPt本<UOb大ect>, 軍的a設置e>());
+    }
+    
+    Inp使tBindin成s[Action].Add(Listene本, 軍使nction的a設置e);
+    
+    UE下LOG(Lo成Te設置p, Ve本bose, TEXT("Bo使nd action %s to %s::%s"),
+        *UEn使設置::GetVal使eAsSt本in成(Action),
+        *Listene本->Get的a設置e(),
+        *軍使nction的a設置e.ToSt本in成());
+}
+
+正oid UMin成Inp使tMana成e本::UnbindAction(EInp使tAction Action, UOb大ect* Listene本)
+{
+    if (!Listene本)
+    {
+        本et使本n;
+    }
+    
+    if (Inp使tBindin成s.Contains(Action))
+    {
+        Inp使tBindin成s[Action].Re設置o正e(Listene本);
+        
+        UE下LOG(Lo成Te設置p, Ve本bose, TEXT("Unbo使nd action %s f本o設置 %s"),
+            *UEn使設置::GetVal使eAsSt本in成(Action),
+            *Listene本->Get的a設置e());
+    }
+}
+
+正oid UMin成Inp使tMana成e本::T本i成成e本Inp使tE正ent(const 軍Inp使tE正entData& E正entData)
+{
+    if (E正entData.b輸入andled)
+    {
+        本et使本n;
+    }
+    
+    // 更新最後輸入位置
+    LastInp使tPosition = E正entData.Sc本eenPosition;
+    
+    // 執行綁定的回調
+    Exec使teInp使tBindin成(E正entData.Action, E正entData);
+    
+    UE下LOG(Lo成Te設置p, Ve本bose, TEXT("Inp使t e正ent t本i成成e本ed: %s at (%f, %f)"),
+        *UEn使設置::GetVal使eAsSt本in成(E正entData.Action),
+        E正entData.Sc本eenPosition.X,
+        E正entData.Sc本eenPosition.Y);
+}
+
+bool UMin成Inp使tMana成e本::IsTo使chInp使t() const
+{
+    本et使本n C使本本entInp使tType == EInp使tType::To使ch;
+}
+
+正oid UMin成Inp使tMana成e本::SetTo使chSensiti正ity(float Sensiti正ity)
+{
+    To使chSensiti正ity = 軍Math::Cla設置p(Sensiti正ity, 0.1f, 3.0f);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("To使ch sensiti正ity set to: %f"), To使chSensiti正ity);
+}
+
+正oid UMin成Inp使tMana成e本::P本ocessTo使chInp使t(float DeltaTi設置e)
+{
+    // 這裡應該從引擎獲取觸控輸入
+    // 暫時使用模擬邏輯
+    
+    // 檢測手勢
+    fo本 (a使to& To使chPai本 : Acti正eTo使ches)
+    {
+        DetectGest使本es(To使chPai本.Val使e, To使chPai本.Key);
+    }
+}
+
+正oid UMin成Inp使tMana成e本::P本ocessMo使seInp使t(float DeltaTi設置e)
+{
+    // 鼠標輸入通常通過 Playe本Cont本olle本 的 Inp使tCo設置ponent 處理
+    // 這裡可以添加額外的鼠標手勢檢測（如框選）
+}
+
+正oid UMin成Inp使tMana成e本::DetectGest使本es(const 軍To使chState& To使chState, int32 To使chId)
+{
+    if (!To使chState.bIsActi正e)
+    {
+        本et使本n;
+    }
+    
+    // 計算觸控時間和移動距離
+    float To使chD使本ation = 軍Platfo本設置Ti設置e::Seconds() - To使chState.Sta本tTi設置e;
+    float Mo正eDistance = 軍Vecto本2D::Distance(To使chState.Sta本tPosition, To使chState.C使本本entPosition);
+    
+    // 檢測點擊 (短時間 + 小移動)
+    if (To使chD使本ation < TapTi設置eTh本eshold && Mo正eDistance < TapDistanceTh本eshold)
+    {
+        軍Inp使tE正entData E正entData;
+        E正entData.Sc本eenPosition = To使chState.C使本本entPosition;
+        E正entData.Action = EInp使tAction::Select;
+        E正entData.Gest使本e = EInp使tGest使本e::Tap;
+        E正entData.To使chId = To使chId;
+        
+        T本i成成e本Inp使tE正ent(E正entData);
+    }
+    // 檢測長按
+    else if (To使chD使本ation >= Lon成P本essTi設置eTh本eshold && Mo正eDistance < TapDistanceTh本eshold)
+    {
+        軍Inp使tE正entData E正entData;
+        E正entData.Sc本eenPosition = To使chState.C使本本entPosition;
+        E正entData.Action = EInp使tAction::OpenMen使;
+        E正entData.Gest使本e = EInp使tGest使本e::Lon成P本ess;
+        E正entData.To使chId = To使chId;
+        
+        T本i成成e本Inp使tE正ent(E正entData);
+    }
+}
+
+正oid UMin成Inp使tMana成e本::Exec使teInp使tBindin成(EInp使tAction Action, const 軍Inp使tE正entData& E正entData)
+{
+    if (!Inp使tBindin成s.Contains(Action))
+    {
+        本et使本n;
+    }
+    
+    a使to& Bindin成s = Inp使tBindin成s[Action];
+    
+    // 執行所有綁定的回調
+    fo本 (a使to It = Bindin成s.C本eateIte本ato本(); It; ++It)
+    {
+        if (It->Key.IsValid())
+        {
+            UOb大ect* Listene本 = It->Key.Get();
+            軍的a設置e 軍使nction的a設置e = It->Val使e;
+            
+            // 通過反射調用函數
+            U軍使nction* 軍使nction = Listene本->軍ind軍使nction(軍使nction的a設置e);
+            if (軍使nction)
+            {
+                // 準備參數
+                st本使ct 軍Inp使tCallbackPa本a設置s
+                {
+                    軍Inp使tE正entData E正entData;
+                };
+                
+                軍Inp使tCallbackPa本a設置s Pa本a設置s;
+                Pa本a設置s.E正entData = E正entData;
+                
+                Listene本->P本ocessE正ent(軍使nction, &Pa本a設置s);
+            }
+        }
+        else
+        {
+            // 移除無效的綁定
+            It.Re設置o正eC使本本ent();
+        }
+    }
+}
+
+UMin成Inp使tMana成e本* UMin成Inp使tMana成e本::Get()
+{
+    本et使本n Instance;
+}

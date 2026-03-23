@@ -1,681 +1,683 @@
 #pragma once
 
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "MingCharacterGrowthSystem.h"
-#include "MingItemManager.h"
-#include "MingQuestManager.generated.h"
+#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "UOb大ect/的oExpo本tTypes.h"
+#incl使de "Min成Cha本acte本G本owthSyste設置.h"
+#incl使de "Min成Ite設置Mana成e本.h"
+#incl使de "Min成Q使estMana成e本.成ene本ated.h"
 
 // 任務類型
-UENUM(BlueprintType)
-enum class EMingQuestType: uint8 {
+UE的UM(Bl使ep本intType)
+en使設置 class EMin成Q使estType: 使int8 {
     Main,              // 主線任務
     Side,              // 支線任務
     Daily,              // 每日任務
-    Weekly,             // 每周任務
-    Event,              // 活動任務
-    Hidden,             // 隱藏任務
-    Tutorial,           // 教學任務
-    Achievement         // 成就任務
+    基本eekly,             // 每周任務
+    E正ent,              // 活動任務
+    輸入idden,             // 隱藏任務
+    T使to本ial,           // 教學任務
+    Achie正e設置ent         // 成就任務
 };
 
 // 任務狀態
-UENUM(BlueprintType)
-enum class EMingQuestStatus: uint8 {
-    Available,          // 可接受
-    Active,             // 進行中
-    Completed,          // 已完成
-    Failed,             // 失敗
+UE的UM(Bl使ep本intType)
+en使設置 class EMin成Q使estStat使s: 使int8 {
+    A正ailable,          // 可接受
+    Acti正e,             // 進行中
+    Co設置pleted,          // 已完成
+    軍ailed,             // 失敗
     Abandoned,          // 已放棄
     Locked              // 已鎖定
 };
 
 // 任務目標類型
-UENUM(BlueprintType)
-enum class EMingQuestObjectiveType: uint8 {
+UE的UM(Bl使ep本intType)
+en使設置 class EMin成Q使estOb大ecti正eType: 使int8 {
     Kill,               // 擊殺
     Collect,            // 收集
-    Deliver,            // 交付
-    Escort,             // 護送
+    Deli正e本,            // 交付
+    Esco本t,             // 護送
     Defend,             // 防禦
-    Explore,            // 探索
+    Explo本e,            // 探索
     Talk,               // 對話
-    Interact,           // 互動
-    Survive,            // 生存
-    Capture,            // 佔領
-    Destroy             // 摧毀
+    Inte本act,           // 互動
+    S使本正i正e,            // 生存
+    Capt使本e,            // 佔領
+    Dest本oy             // 
 };
 
 // 故事分支類型
-UENUM(BlueprintType)
-enum class EMingStoryBranch: uint8 {
-    Linear,             // 線性
+UE的UM(Bl使ep本intType)
+en使設置 class EMin成Sto本yB本anch: 使int8 {
+    Linea本,             // 線性
     Choice,             // 選擇分支
     Conditional,        // 條件分支
-    Random,             // 隨機分支
-    Moral,              // 道德選擇
-    Strategic,          // 戰略選擇
-    Personal            // 個人選擇
+    Rando設置,             // 隨機分支
+    Mo本al,              // 道德選擇
+    St本ate成ic,          // 戰略選擇
+    Pe本sonal            // 個人選擇
 };
 
 // 任務目標
-USTRUCT(BlueprintType)
-struct MINGPERSONAL_API FMingQuestObjective
+USTRUCT(Bl使ep本intType)
+st本使ct MI的GPERSO的AL下API 軍Min成Q使estOb大ecti正e
 {
-    GENERATED_BODY()
+    GE的ERATED下BODY()
 
     // 目標ID
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 ObjectiveID;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    int32 Ob大ecti正eID;
 
     // 目標描述
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString ObjectiveDescription;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍St本in成 Ob大ecti正eDesc本iption;
 
     // 目標類型
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    EMingQuestObjectiveType ObjectiveType;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    EMin成Q使estOb大ecti正eType Ob大ecti正eType;
 
     // 目標數量
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 TargetCount;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    int32 Ta本成etCo使nt;
 
     // 目標進度
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 CurrentProgress;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    int32 C使本本entP本o成本ess;
 
     // 目標參數
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TMap<FString, FString> ObjectiveParameters;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TMap<軍St本in成, 軍St本in成> Ob大ecti正ePa本a設置ete本s;
 
     // 是否可見
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
     bool bIsVisible;
 
     // 是否完成
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    bool bIsCompleted;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    bool bIsCo設置pleted;
 
     // 是否可選
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
     bool bIsOptional;
 
     // 目標位置
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FVector TargetLocation;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍Vecto本 Ta本成etLocation;
 
-    // 目標NPC
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString TargetNPC;
+    // 目標的PC
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍St本in成 Ta本成et的PC;
 
     // 時間限制
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float TimeLimit;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    float Ti設置eLi設置it;
 
     // 失敗條件
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FString> FailureConditions;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TA本本ay<軍St本in成> 軍ail使本eConditions;
 
-    FMingQuestObjective()
+    軍Min成Q使estOb大ecti正e()
     {
-        ObjectiveID = -1;
-        ObjectiveDescription = TEXT("");
-        ObjectiveType = EMingQuestObjectiveType::Kill;
-        TargetCount = 0;
-        CurrentProgress = 0;
-        ObjectiveParameters.Empty();
-        bIsVisible = true;
-        bIsCompleted = false;
+        Ob大ecti正eID = -1;
+        Ob大ecti正eDesc本iption = TEXT(""};
+        Ob大ecti正eType = EMin成Q使estOb大ecti正eType::Kill;
+        Ta本成etCo使nt = 0;
+        C使本本entP本o成本ess = 0;
+        Ob大ecti正ePa本a設置ete本s.E設置pty(};
+        bIsVisible = t本使e;
+        bIsCo設置pleted = false;
         bIsOptional = false;
-        TargetLocation = FVector::ZeroVector;
-        TargetNPC = TEXT("");
-        TimeLimit = 0.0f;
-        FailureConditions.Empty();
+        Ta本成etLocation = 軍Vecto本::Ze本oVecto本;
+        Ta本成et的PC = TEXT(""};
+        Ti設置eLi設置it = 0.0f;
+        軍ail使本eConditions.E設置pty(};
     }
 };
 
 // 目標數量
-USTRUCT(BlueprintType)
-struct MINGPERSONAL_API FMingStoryChoice
+USTRUCT(Bl使ep本intType)
+st本使ct MI的GPERSO的AL下API 軍Min成Sto本yChoice
 {
-    GENERATED_BODY()
+    GE的ERATED下BODY()
 
     // 目標ID
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
     int32 ChoiceID;
 
     // 選項文本
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString ChoiceText;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍St本in成 ChoiceText;
 
     // 選項描述
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString ChoiceDescription;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍St本in成 ChoiceDesc本iption;
 
     // 選項類型
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    EMingStoryBranch ChoiceType;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    EMin成Sto本yB本anch ChoiceType;
 
-    // 摧毀條件
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FString> ChoiceConditions;
+    // 條件
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TA本本ay<軍St本in成> ChoiceConditions;
 
-    // 摧毀結??
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TMap<FString, FString> ChoiceResults;
+    // 結系
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TMap<軍St本in成, 軍St本in成> ChoiceRes使lts;
 
     // 道德影響
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float MoralImpact;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    float Mo本alI設置pact;
 
-    // 摧毀影響
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float ReputationImpact;
+    // 影響
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    float Rep使tationI設置pact;
 
-    // 摧毀影響
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TMap<FString, float> RelationshipImpact;
+    // 影響
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TMap<軍St本in成, float> RelationshipI設置pact;
 
-    // ??否已選X
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 系否已選X
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
     bool bIsChosen;
 
-    // 摧毀權??
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float ChoiceWeight;
+    // 權系
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    float Choice基本ei成ht;
 
-    FMingStoryChoice()
+    軍Min成Sto本yChoice()
     {
         ChoiceID = -1;
-        ChoiceText = TEXT("");
-        ChoiceDescription = TEXT("");
-        ChoiceType = EMingStoryBranch::Choice;
-        ChoiceConditions.Empty();
-        ChoiceResults.Empty();
-        MoralImpact = 0.0f;
-        ReputationImpact = 0.0f;
-        RelationshipImpact.Empty();
+        ChoiceText = TEXT(""};
+        ChoiceDesc本iption = TEXT(""};
+        ChoiceType = EMin成Sto本yB本anch::Choice;
+        ChoiceConditions.E設置pty(};
+        ChoiceRes使lts.E設置pty(};
+        Mo本alI設置pact = 0.0f;
+        Rep使tationI設置pact = 0.0f;
+        RelationshipI設置pact.E設置pty(};
         bIsChosen = false;
-        ChoiceWeight = 1.0f;
+        Choice基本ei成ht = 1.0f;
     }
 };
 
 // 任務目標
-USTRUCT(BlueprintType)
-struct MINGPERSONAL_API FMingQuestData
+USTRUCT(Bl使ep本intType)
+st本使ct MI的GPERSO的AL下API 軍Min成Q使estData
 {
-    GENERATED_BODY()
+    GE的ERATED下BODY()
 
-    // 任??ID
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 QuestID;
+    // 任系ID
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    int32 Q使estID;
 
     // 任務名稱
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString QuestName;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍St本in成 Q使est的a設置e;
 
     // 任務描述
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString QuestDescription;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍St本in成 Q使estDesc本iption;
 
     // 任務類型
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    EMingQuestType QuestType;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    EMin成Q使estType Q使estType;
 
     // 任務狀態
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    EMingQuestStatus QuestStatus;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    EMin成Q使estStat使s Q使estStat使s;
 
-    // 任??等??
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 QuestLevel;
+    // 任系等系
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    int32 Q使estLe正el;
 
-    // 建議等??
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 SuggestedLevel;
+    // 建議等系
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    int32 S使成成estedLe正el;
 
     // 任務目標列表"
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FMingQuestObjective> QuestObjectives;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TA本本ay<軍Min成Q使estOb大ecti正e> Q使estOb大ecti正es;
 
     // 故事選項"
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FMingStoryChoice> StoryChoices;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TA本本ay<軍Min成Sto本yChoice> Sto本yChoices;
 
     // 任務獎勵
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TMap<FString, int32> QuestRewards;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TMap<軍St本in成, int32> Q使estRewa本ds;
 
     // 經驗獎勵
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float ExperienceReward;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    float Expe本ienceRewa本d;
 
     // 物品獎勵
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float ReputationReward;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    float Rep使tationRewa本d;
 
     // 物品獎勵
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FMingItemData> ItemRewards;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TA本本ay<軍Min成Ite設置Data> Ite設置Rewa本ds;
 
     // 重置任務
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<int32> PrerequisiteQuests;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TA本本ay<int32> P本e本eq使isiteQ使ests;
 
-    // ?X條件
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FString> UnlockConditions;
+    // 作條件
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TA本本ay<軍St本in成> UnlockConditions;
 
-    // 任務目標列表?
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FDateTime StartTime;
+    // 任務目標列表基本
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍DateTi設置e Sta本tTi設置e;
 
-    // 任?X?止摧毀
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FDateTime DeadlineTime;
+    // 任作基本止
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍DateTi設置e DeadlineTi設置e;
 
-    // 任??位置
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FVector QuestLocation;
+    // 任系位置
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍Vecto本 Q使estLocation;
 
-    // 任??NPC
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString QuestGiver;
+    // 任系的PC
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍St本in成 Q使estGi正e本;
 
-    // 任務目標路??
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString QuestIconPath;
+    // 任務目標路系
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍St本in成 Q使estIconPath;
 
-    // 任??標籤
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FString> QuestTags;
+    // 任系標籤
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TA本本ay<軍St本in成> Q使estTa成s;
 
     // 故事重要性
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float StoryImportance;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    float Sto本yI設置po本tance;
 
-    // 摧毀次數
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 RepeatCount;
+    // 次數
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    int32 RepeatCo使nt;
 
-    // ??大??複次X
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 系大系複次X
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
     int32 MaxRepeats;
 
-    FMingQuestData()
+    軍Min成Q使estData()
     {
-        QuestID = -1;
-        QuestName = TEXT("");
-        QuestDescription = TEXT("");
-        QuestType = EMingQuestType::Main;
-        QuestStatus = EMingQuestStatus::Locked;
-        QuestLevel = 1;
-        SuggestedLevel = 1;
-        QuestObjectives.Empty();
-        StoryChoices.Empty();
-        QuestRewards.Empty();
-        ExperienceReward = 0.0f;
-        ReputationReward = 0.0f;
-        ItemRewards.Empty();
-        PrerequisiteQuests.Empty();
-        UnlockConditions.Empty();
-        StartTime = FDateTime::MinValue();
-        DeadlineTime = FDateTime::MaxValue();
-        QuestLocation = FVector::ZeroVector;
-        QuestGiver = TEXT("");
-        QuestIconPath = TEXT("");
-        QuestTags.Empty();
-        StoryImportance = 1.0f;
-        RepeatCount = 0;
+        Q使estID = -1;
+        Q使est的a設置e = TEXT(""};
+        Q使estDesc本iption = TEXT(""};
+        Q使estType = EMin成Q使estType::Main;
+        Q使estStat使s = EMin成Q使estStat使s::Locked;
+        Q使estLe正el = 1;
+        S使成成estedLe正el = 1;
+        Q使estOb大ecti正es.E設置pty(};
+        Sto本yChoices.E設置pty(};
+        Q使estRewa本ds.E設置pty(};
+        Expe本ienceRewa本d = 0.0f;
+        Rep使tationRewa本d = 0.0f;
+        Ite設置Rewa本ds.E設置pty(};
+        P本e本eq使isiteQ使ests.E設置pty(};
+        UnlockConditions.E設置pty(};
+        Sta本tTi設置e = 軍DateTi設置e::MinVal使e(};
+        DeadlineTi設置e = 軍DateTi設置e::MaxVal使e(};
+        Q使estLocation = 軍Vecto本::Ze本oVecto本;
+        Q使estGi正e本 = TEXT(""};
+        Q使estIconPath = TEXT(""};
+        Q使estTa成s.E設置pty(};
+        Sto本yI設置po本tance = 1.0f;
+        RepeatCo使nt = 0;
         MaxRepeats = 0;
     }
 };
 
-// 摧毀節??USTRUCT(BlueprintType)
-struct MINGPERSONAL_API FMingStoryNode
+// 節系USTRUCT(Bl使ep本intType)
+st本使ct MI的GPERSO的AL下API 軍Min成Sto本y的ode
 {
-    GENERATED_BODY()
+    GE的ERATED下BODY()
 
     // 節點ID
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 NodeID;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    int32 的odeID;
 
-    // 節點?X
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString NodeType;
+    // 節點作
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍St本in成 的odeType;
 
-    // 節點內??
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString NodeContent;
+    // 節點內系
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍St本in成 的odeContent;
 
     // 節點選X
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FMingStoryChoice> NodeChoices;
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TA本本ay<軍Min成Sto本yChoice> 的odeChoices;
 
-    // 節點摧毀
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FString> NodeConditions;
+    // 節點
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TA本本ay<軍St本in成> 的odeConditions;
 
-    // 節點?X
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TMap<FString, FString> NodeResults;
+    // 節點作
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    TMap<軍St本in成, 軍St本in成> 的odeRes使lts;
 
-    // 節點?X
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float NodeWeight;
+    // 節點作
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    float 的ode基本ei成ht;
 
-    // ??否已訪X
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    // 系否已訪X
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
     bool bIsVisited;
 
-    // 節點摧毀
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FVector NodePosition;
+    // 節點
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍Vecto本 的odePosition;
 
-    FMingStoryNode()
+    軍Min成Sto本y的ode()
     {
-        NodeID = -1;
-        NodeType = TEXT("");
-        NodeContent = TEXT("");
-        NodeChoices.Empty();
-        NodeConditions.Empty();
-        NodeResults.Empty();
-        NodeWeight = 1.0f;
+        的odeID = -1;
+        的odeType = TEXT(""};
+        的odeContent = TEXT(""};
+        的odeChoices.E設置pty(};
+        的odeConditions.E設置pty(};
+        的odeRes使lts.E設置pty(};
+        的ode基本ei成ht = 1.0f;
         bIsVisited = false;
-        NodePosition = FVector::ZeroVector;
+        的odePosition = 軍Vecto本::Ze本oVecto本;
     }
 };
 
-// 任??管??事件委??
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestAccepted, const FMingQuestData&, Quest, const FString&, QuestGiver);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestCompleted, const FMingQuestData&, Quest, bool, bSuccess);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnQuestObjectiveUpdated, int32, QuestID, int32, ObjectiveID, int32, NewProgress);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnStoryChoiceMade, int32, QuestID, int32, ChoiceID, const FMingStoryChoice&, Choice);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestFailed, const FMingQuestData&, Quest, const FString&, FailureReason);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestAbandoned, int32, QuestID, const FString&, Reason);
+// 任系管系事件委系
+DECLARE下DY的AMIC下MULTICAST下DELEGATE下TwoPa本a設置s(軍OnQ使estAccepted, const 軍Min成Q使estData&, Q使est, const 軍St本in成&, Q使estGi正e本};
+DECLARE下DY的AMIC下MULTICAST下DELEGATE下TwoPa本a設置s(軍OnQ使estCo設置pleted, const 軍Min成Q使estData&, Q使est, bool, bS使ccess};
+DECLARE下DY的AMIC下MULTICAST下DELEGATE下Th本eePa本a設置s(軍OnQ使estOb大ecti正eUpdated, int32, Q使estID, int32, Ob大ecti正eID, int32, 的ewP本o成本ess};
+DECLARE下DY的AMIC下MULTICAST下DELEGATE下Th本eePa本a設置s(軍OnSto本yChoiceMade, int32, Q使estID, int32, ChoiceID, const 軍Min成Sto本yChoice&, Choice};
+DECLARE下DY的AMIC下MULTICAST下DELEGATE下TwoPa本a設置s(軍OnQ使est軍ailed, const 軍Min成Q使estData&, Q使est, const 軍St本in成&, 軍ail使本eReason};
+DECLARE下DY的AMIC下MULTICAST下DELEGATE下TwoPa本a設置s(軍OnQ使estAbandoned, int32, Q使estID, const 軍St本in成&, Reason};
 
 /**
- * 任務管理器 * 負責管??任務目標事系?? */
-UCLASS(ClassGroup = (Personal), Blueprintable, BlueprintType)
-class MINGPERSONAL_API UMingQuestManager : public UObject
+ * 任務管理器 * 負責管系任務目標事系系 */
+UCLASS(ClassG本o使p = (Pe本sonal), Bl使ep本intable, Bl使ep本intType)
+class MI的GPERSO的AL下API UMin成Q使estMana成e本 : p使blic UOb大ect
 {
-    GENERATED_BODY()
+    GE的ERATED下BODY()
 
-public:
-    UMingQuestManager();
+p使blic:
+    UMin成Q使estMana成e本(};
 
     // 初始化任務系統
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    bool InitializeQuestSystem();
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    bool InitializeQ使estSyste設置(};
 
     // 放棄任務
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    bool AcceptQuest(int32 QuestID, const FString& QuestGiver);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    bool AcceptQ使est(int32 Q使estID, const 軍St本in成& Q使estGi正e本};
 
     // 放棄任務
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    bool DeclineQuest(int32 QuestID);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    bool DeclineQ使est(int32 Q使estID};
 
     // 放棄任務
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    bool AbandonQuest(int32 QuestID, const FString& Reason);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    bool AbandonQ使est(int32 Q使estID, const 軍St本in成& Reason};
 
     // 完成任務
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    bool CompleteQuest(int32 QuestID, bool bSuccess = true);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    bool Co設置pleteQ使est(int32 Q使estID, bool bS使ccess = t本使e};
 
-    // ??新任務目標
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    bool UpdateQuestObjective(int32 QuestID, int32 ObjectiveID, int32 Progress);
+    // 系新任務目標
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    bool UpdateQ使estOb大ecti正e(int32 Q使estID, int32 Ob大ecti正eID, int32 P本o成本ess};
 
-    // ??出目標數量
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    bool MakeStoryChoice(int32 QuestID, int32 ChoiceID);
+    // 系目標數量
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    bool MakeSto本yChoice(int32 Q使estID, int32 ChoiceID};
 
-    // 摧毀任?X??"
-    UFUNCTION(BlueprintPure, Category = "Quest Manager")
-    TArray<FMingQuestData> GetAvailableQuests() const;
+    // 任作系"
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Q使est Mana成e本")
+    TA本本ay<軍Min成Q使estData> GetA正ailableQ使ests() const;
 
-    // 摧毀活動任務
-    UFUNCTION(BlueprintPure, Category = "Quest Manager")
-    TArray<FMingQuestData> GetActiveQuests() const;
+    // 活動任務
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Q使est Mana成e本")
+    TA本本ay<軍Min成Q使estData> GetActi正eQ使ests() const;
 
-    // 摧毀已完成?任X
-    UFUNCTION(BlueprintPure, Category = "Quest Manager")
-    TArray<FMingQuestData> GetCompletedQuests() const;
+    // 已完成基本任X
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Q使est Mana成e本")
+    TA本本ay<軍Min成Q使estData> GetCo設置pletedQ使ests() const;
 
-    // 目標數量任??
-    UFUNCTION(BlueprintPure, Category = "Quest Manager")
-    FMingQuestData GetQuest(int32 QuestID) const;
+    // 目標數量任系
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Q使est Mana成e本")
+    軍Min成Q使estData GetQ使est(int32 Q使estID) const;
 
     // 檢查任務條件
-    UFUNCTION(BlueprintPure, Category = "Quest Manager")
-    bool CanAcceptQuest(int32 QuestID) const;
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Q使est Mana成e本")
+    bool CanAcceptQ使est(int32 Q使estID) const;
 
-    // 摧毀任?X?度
-    UFUNCTION(BlueprintPure, Category = "Quest Manager")
-    float GetQuestProgress(int32 QuestID) const;
+    // 任作基本度
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Q使est Mana成e本")
+    float GetQ使estP本o成本ess(int32 Q使estID) const;
 
-    // 目標數量節??
-    UFUNCTION(BlueprintPure, Category = "Quest Manager")
-    TArray<FMingStoryNode> GetStoryNodes(int32 QuestID) const;
+    // 目標數量節系
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Q使est Mana成e本")
+    TA本本ay<軍Min成Sto本y的ode> GetSto本y的odes(int32 Q使estID) const;
 
     // 解鎖任務
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    void UnlockNewQuests();
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    正oid Unlock的ewQ使ests(};
 
     // 重置任務
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    bool ResetQuest(int32 QuestID);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    bool ResetQ使est(int32 Q使estID};
 
-    // 放棄任務統??
-    UFUNCTION(BlueprintPure, Category = "Quest Manager")
-    TMap<EMingQuestType, int32> GetQuestStatistics() const;
+    // 放棄任務統系
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Q使est Mana成e本")
+    TMap<EMin成Q使estType, int32> GetQ使estStatistics() const;
 
-    // 故事重要性?支
-    UFUNCTION(BlueprintPure, Category = "Quest Manager")
-    TArray<FMingStoryChoice> GetStoryChoices(int32 QuestID) const;
+    // 故事重要性基本支
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Q使est Mana成e本")
+    TA本本ay<軍Min成Sto本yChoice> GetSto本yChoices(int32 Q使estID) const;
 
-    // 保??任務目標
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    bool SaveQuestData();
+    // 保系任務目標
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    bool Sa正eQ使estData(};
 
     // 載入任務目標
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    bool LoadQuestData();
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    bool LoadQ使estData(};
 
     // 清除放棄任務數X
-    UFUNCTION(BlueprintCallable, Category = "Quest Manager")
-    void ClearAllQuestData();
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Q使est Mana成e本")
+    正oid Clea本AllQ使estData(};
 
-    // 事件委??
-    UPROPERTY(BlueprintAssignable)
-    FOnQuestAccepted OnQuestAccepted;
+    // 事件委系
+    UPROPERTY(Bl使ep本intAssi成nable)
+    軍OnQ使estAccepted OnQ使estAccepted;
 
-    UPROPERTY(BlueprintAssignable)
-    FOnQuestCompleted OnQuestCompleted;
+    UPROPERTY(Bl使ep本intAssi成nable)
+    軍OnQ使estCo設置pleted OnQ使estCo設置pleted;
 
-    UPROPERTY(BlueprintAssignable)
-    FOnQuestObjectiveUpdated OnQuestObjectiveUpdated;
+    UPROPERTY(Bl使ep本intAssi成nable)
+    軍OnQ使estOb大ecti正eUpdated OnQ使estOb大ecti正eUpdated;
 
-    UPROPERTY(BlueprintAssignable)
-    FOnStoryChoiceMade OnStoryChoiceMade;
+    UPROPERTY(Bl使ep本intAssi成nable)
+    軍OnSto本yChoiceMade OnSto本yChoiceMade;
 
-    UPROPERTY(BlueprintAssignable)
-    FOnQuestFailed OnQuestFailed;
+    UPROPERTY(Bl使ep本intAssi成nable)
+    軍OnQ使est軍ailed OnQ使est軍ailed;
 
-    UPROPERTY(BlueprintAssignable)
-    FOnQuestAbandoned OnQuestAbandoned;
+    UPROPERTY(Bl使ep本intAssi成nable)
+    軍OnQ使estAbandoned OnQ使estAbandoned;
 
-protected:
-    // 任務目標??
+p本otected:
+    // 任務目標系
     UPROPERTY()
-    TMap<int32, FMingQuestData> QuestDatabase;
+    TMap<int32, 軍Min成Q使estData> Q使estDatabase;
 
-    // 摧毀節點數??庫 - 注??：TMap<TArray> 不支XUPROPERTY
-    TMap<int32, TArray<FMingStoryNode>> StoryNodeDatabase;
+    // 節點數系庫 - 注系：TMap<TA本本ay> 不支XUPROPERTY
+    TMap<int32, TA本本ay<軍Min成Sto本y的ode>> Sto本y的odeDatabase;
 
-    // 活??任?X??"
+    // 活系任作系"
     UPROPERTY()
-    TArray<int32> ActiveQuests;
+    TA本本ay<int32> Acti正eQ使ests;
 
-    // 已完成?任摧毀??
+    // 已完成基本任系
     UPROPERTY()
-    TArray<int32> CompletedQuests;
+    TA本本ay<int32> Co設置pletedQ使ests;
 
-    // 目標數量歷史 - 注??：TMap<TArray> 不支XUPROPERTY
-    TMap<int32, TArray<int32>> StoryChoiceHistory;
+    // 目標數量歷史 - 注系：TMap<TA本本ay> 不支XUPROPERTY
+    TMap<int32, TA本本ay<int32>> Sto本yChoice輸入isto本y;
 
-    // ??否已??始??
+    // 系否已系始系
     UPROPERTY()
     bool bInitialized;
 
-private:
-    // 載入??設任??
-    void LoadDefaultQuests();
+p本i正ate:
+    // 載入系設任系
+    正oid LoadDefa使ltQ使ests(};
 
-    // 載入??設摧毀節??
-    void LoadDefaultStoryNodes();
+    // 載入系設節系
+    正oid LoadDefa使ltSto本y的odes(};
 
-    // 驗??任務目標
-    bool ValidateQuestData(const FMingQuestData& Quest) const;
+    // 驗系任務目標
+    bool ValidateQ使estData(const 軍Min成Q使estData& Q使est) const;
 
     // 檢查任務完成條件
-    bool CheckQuestCompletion(int32 QuestID) const;
+    bool CheckQ使estCo設置pletion(int32 Q使estID) const;
 
-    // 摧毀任務獎勵
-    void ProcessQuestRewards(const FMingQuestData& Quest);
+    // 任務獎勵
+    正oid P本ocessQ使estRewa本ds(const 軍Min成Q使estData& Q使est};
 
-    // ??新隨機分支
-    void UpdateStoryBranch(int32 QuestID, int32 ChoiceID);
+    // 系新隨機分支
+    正oid UpdateSto本yB本anch(int32 Q使estID, int32 ChoiceID};
 
     // 計算任務重要性
-    float CalculateQuestImportance(const FMingQuestData& Quest) const;
+    float Calc使lateQ使estI設置po本tance(const 軍Min成Q使estData& Q使est) const;
 
-    // 目標數量任??
-    FMingQuestData GenerateRandomQuest(EMingQuestType QuestType) const;
+    // 目標數量任系
+    軍Min成Q使estData Gene本ateRando設置Q使est(EMin成Q使estType Q使estType) const;
 
-    // ???X?接??任X
-    TArray<int32> GetAvailableQuestIDs() const;
+    // 系作基本接系任X
+    TA本本ay<int32> GetA正ailableQ使estIDs() const;
 
     // 檢查重置任務
-    bool CheckPrerequisiteQuests(const FMingQuestData& Quest) const;
+    bool CheckP本e本eq使isiteQ使ests(const 軍Min成Q使estData& Q使est) const;
 
     // 檢查解鎖條件
-    bool CheckUnlockConditions(const FMingQuestData& Quest) const;
+    bool CheckUnlockConditions(const 軍Min成Q使estData& Q使est) const;
 
-    // ??新任務狀態
-    void UpdateQuestStatus(int32 QuestID, EMingQuestStatus NewStatus);
+    // 系新任務狀態
+    正oid UpdateQ使estStat使s(int32 Q使estID, EMin成Q使estStat使s 的ewStat使s};
 
-    // 目標數量後??
-    void ProcessStoryConsequences(int32 QuestID, const FMingStoryChoice& Choice);
+    // 目標數量後系
+    正oid P本ocessSto本yConseq使ences(int32 Q使estID, const 軍Min成Sto本yChoice& Choice};
 
     // 計算選項權重
-    float CalculateChoiceWeight(const FMingStoryChoice& Choice) const;
+    float Calc使lateChoice基本ei成ht(const 軍Min成Sto本yChoice& Choice) const;
 
     // 目標數量線索
-    TArray<FString> GetStoryClues(int32 QuestID) const;
+    TA本本ay<軍St本in成> GetSto本yCl使es(int32 Q使estID) const;
 
-    // ??新任務目標
-    void UpdateQuestLog(int32 QuestID, const FString& LogEntry);
+    // 系新任務目標
+    正oid UpdateQ使estLo成(int32 Q使estID, const 軍St本in成& Lo成Ent本y};
 
     // 保存物品快照
-    void SaveStorySnapshot();
+    正oid Sa正eSto本ySnapshot(};
 
-    // 載入摧毀快照
-    void LoadStorySnapshot();
+    // 載入快照
+    正oid LoadSto本ySnapshot(};
 
-    // 計??任?X??
-    float CalculateQuestDifficulty(const FMingQuestData& Quest) const;
+    // 計系任作系
+    float Calc使lateQ使estDiffic使lty(const 軍Min成Q使estData& Q使est) const;
 
-    // 調整任?X??
-    void AdjustQuestDifficulty(int32 QuestID, float DifficultyModifier);
+    // 調整任作系
+    正oid Ad大使stQ使estDiffic使lty(int32 Q使estID, float Diffic使ltyModifie本};
 
     // 放棄任務建議
-    TArray<FString> GetQuestSuggestions(int32 QuestID) const;
+    TA本本ay<軍St本in成> GetQ使estS使成成estions(int32 Q使estID) const;
 
     // 放棄任務失敗
-    void HandleQuestFailure(int32 QuestID, const FString& FailureReason);
+    正oid 輸入andleQ使est軍ail使本e(int32 Q使estID, const 軍St本in成& 軍ail使本eReason};
 
-    // 摧毀任務目標
-    void HandleQuestAbandonment(int32 QuestID, const FString& Reason);
+    // 任務目標
+    正oid 輸入andleQ使estAbandon設置ent(int32 Q使estID, const 軍St本in成& Reason};
 
-    // 計?X???影響
-    TMap<FString, float> CalculateStoryImpact(int32 QuestID, int32 ChoiceID) const;
+    // 計作系基本影響
+    TMap<軍St本in成, float> Calc使lateSto本yI設置pact(int32 Q使estID, int32 ChoiceID) const;
 
-    // ??新世?X?X
-    void UpdateWorldState(int32 QuestID, const TMap<FString, FString>& Results);
+    // 系新世作作
+    正oid Update基本o本ldState(int32 Q使estID, const TMap<軍St本in成, 軍St本in成>& Res使lts};
 
-    // 放棄任務標??
-    void GenerateQuestMarkers(int32 QuestID);
+    // 放棄任務標系
+    正oid Gene本ateQ使estMa本ke本s(int32 Q使estID};
 
-    // 移除任??標??
-    void RemoveQuestMarkers(int32 QuestID);
+    // 移除任系標系
+    正oid Re設置o正eQ使estMa本ke本s(int32 Q使estID};
 
-    // 計??任務目標
-    float CalculateQuestValue(const FMingQuestData& Quest) const;
+    // 計系任務目標
+    float Calc使lateQ使estVal使e(const 軍Min成Q使estData& Q使est) const;
 
-    // 摧毀任務目標??
-    TArray<FDateTime> GetQuestTimeline(int32 QuestID) const;
+    // 任務目標系
+    TA本本ay<軍DateTi設置e> GetQ使estTi設置eline(int32 Q使estID) const;
 
-    // 檢查任??衝??
-    bool CheckQuestConflict(int32 QuestID1, int32 QuestID2) const;
+    // 檢查任系衝系
+    bool CheckQ使estConflict(int32 Q使estID1, int32 Q使estID2) const;
 
-    // 放棄任務衝??
-    void ResolveQuestConflict(int32 QuestID1, int32 QuestID2);
+    // 放棄任務衝系
+    正oid Resol正eQ使estConflict(int32 Q使estID1, int32 Q使estID2};
 
     // 放棄任務依賴
-    TArray<int32> GetQuestDependencies(int32 QuestID) const;
+    TA本本ay<int32> GetQ使estDependencies(int32 Q使estID) const;
 
-    // ??新任??依賴
-    void UpdateQuestDependencies(int32 QuestID);
+    // 系新任系依賴
+    正oid UpdateQ使estDependencies(int32 Q使estID};
 
-    // 計?X??X?支概??
-    float CalculateStoryBranchProbability(const FMingStoryChoice& Choice) const;
+    // 計作基本作基本支概系
+    float Calc使lateSto本yB本anchP本obability(const 軍Min成Sto本yChoice& Choice) const;
 
     // 目標數量事選X
-    void RandomizeStoryChoices(int32 QuestID);
+    正oid Rando設置izeSto本yChoices(int32 Q使estID};
 
-    // 故事重要性?支
-    void LockStoryBranch(int32 QuestID, int32 ChoiceID);
+    // 故事重要性基本支
+    正oid LockSto本yB本anch(int32 Q使estID, int32 ChoiceID};
 
-    // ?X??X?支
-    void UnlockStoryBranch(int32 QuestID, int32 ChoiceID);
+    // 作基本作基本支
+    正oid UnlockSto本yB本anch(int32 Q使estID, int32 ChoiceID};
 
-    // 目標數量統??
-    TMap<FString, int32> GetStoryStatistics() const;
+    // 目標數量統系
+    TMap<軍St本in成, int32> GetSto本yStatistics() const;
 
-    // 計?X???深度
-    int32 CalculateStoryDepth(int32 QuestID) const;
+    // 計作系基本深度
+    int32 Calc使lateSto本yDepth(int32 Q使estID) const;
 
-    // 故事重要性?覽
-    FString GetStoryPreview(int32 QuestID) const;
+    // 故事重要性基本覽
+    軍St本in成 GetSto本yP本e正iew(int32 Q使estID) const;
 
-    // 故事重要性?制
-    void ProcessTimeLimits();
+    // 故事重要性基本制
+    正oid P本ocessTi設置eLi設置its(};
 
-    // ??新任?X?止摧毀
-    void UpdateQuestDeadlines();
+    // 系新任作基本止
+    正oid UpdateQ使estDeadlines(};
 
     // 檢查任務目標
-    void CheckQuestExpiration();
+    正oid CheckQ使estExpi本ation(};
 
-    // 目標數量任??
-    void HandleExpiredQuest(int32 QuestID);
+    // 目標數量任系
+    正oid 輸入andleExpi本edQ使est(int32 Q使estID};
 
-    // 摧毀任?X?示
-    TArray<FString> GenerateQuestHints(int32 QuestID) const;
+    // 任作基本示
+    TA本本ay<軍St本in成> Gene本ateQ使est輸入ints(int32 Q使estID) const;
 
-    // 計??任??完?X
-    float CalculateQuestCompletionRate() const;
+    // 計系任系完作
+    float Calc使lateQ使estCo設置pletionRate() const;
 
-    // 摧毀任?X?薦
-    TArray<int32> GetQuestRecommendations() const;
+    // 任作基本薦
+    TA本本ay<int32> GetQ使estReco設置設置endations() const;
 
-    // ??新任?X?薦
-    void UpdateQuestRecommendations();
+    // 系新任作基本薦
+    正oid UpdateQ使estReco設置設置endations(};
 
-    // 計?X??X?支影響
-    TMap<FString, float> CalculateBranchImpact(const FMingStoryChoice& Choice) const;
+    // 計作基本作基本支影響
+    TMap<軍St本in成, float> Calc使lateB本anchI設置pact(const 軍Min成Sto本yChoice& Choice) const;
 };
 

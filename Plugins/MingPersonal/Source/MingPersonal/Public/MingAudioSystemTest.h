@@ -1,115 +1,117 @@
-出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出A出使出d出i出o出S出y出s出t出e出設置出T出e出s出t出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出/出*出*出
-出 出*出 出動出頻出系出統出測出試出動出務出 出*出 出測出試出動出頻出係出系出統出池出池出能出
-出 出*出/出
-出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
-出c出l出a出s出s出 出M出I出的出G出P出E出R出S出O出的出A出L出下出A出P出I出 出U出M出i出n出成出A出使出d出i出o出S出y出s出t出e出設置出T出e出s出t出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出目出標出數出量出音出動出系出統出測出動出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出R出使出n出A出l出l出A出使出d出i出o出T出e出s出t出s出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出測出試出動出頻出管出池出動出始出動出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出T出e出s出t出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出M出a出n出a出成出e出本出I出n出i出t出i出a出l出i出z出a出t出i出o出n出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出測出試出變出池出頻出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出T出e出s出t出R出e出l出a出t出i出o出n出s出h出i出p出A出使出d出i出o出軍出e出e出d出b出a出c出k出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出測出試出變出池出頻出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出T出e出s出t出R出e出p出使出t出a出t出i出o出n出A出使出d出i出o出軍出e出e出d出b出a出c出k出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出測出試出對出話出動出頻出系出統出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出T出e出s出t出D出i出a出l出o出成出使出e出A出使出d出i出o出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出測出試出民出池出池出頻出主出動出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出T出e出s出t出R出e出p出使出b出l出i出c出E出本出a出T出h出e出設置出e出s出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出測出試出動出池出頻出系出統出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出T出e出s出t出R出e出成出i出o出n出a出l出A出使出d出i出o出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出測出試出動出頻出時出間出限出制出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出T出e出s出t出A出使出d出i出o出V出o出l出使出設置出e出C出o出n出t出本出o出l出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出測出試出動出頻出事出件出動出調出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出T出e出s出t出A出使出d出i出o出E出正出e出n出t出C出a出l出l出b出a出c出k出s出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出壓出動出測出試出 出-出 出大出池出頻出事出件出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出T出e出s出t出A出使出d出i出o出S出y出s出t出e出設置出S出t出本出e出s出s出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出測出試出 出-出 出完出整出動出音出係出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出T出e出s出t出A出使出d出i出o出R出e出l出a出t出i出o出n出s出h出i出p出I出n出t出e出成出本出a出t出i出o出n出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出動出建出測出試出動出頻出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出C出本出e出a出t出e出T出e出s出t出A出使出d出i出o出D出a出t出a出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出清出動出測出試出動出頻出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出C出l出e出a出n出使出p出T出e出s出t出A出使出d出i出o出D出a出t出a出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出驗出池出頻出系出統出動出X出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出V出e出本出i出f出y出A出使出d出i出o出S出y出s出t出e出設置出輸入出e出a出l出t出h出(出)出;出
-出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出測出試出結出池出動出
-出 出 出 出 出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出使出d出i出o出 出T出e出s出t出"出)出
-出 出 出 出 出s出t出a出t出i出c出 出軍出S出t出本出i出n出成出 出G出e出t出A出使出d出i出o出T出e出s出t出R出e出p出o出本出t出(出)出;出
-出
-出p出本出i出正出a出t出e出:出
-出 出 出 出 出s出t出a出t出i出c出 出b出o出o出l出 出b出T出e出s出t出P出a出s出s出e出d出;出
-出 出 出 出 出s出t出a出t出i出c出 出軍出S出t出本出i出n出成出 出T出e出s出t出R出e出p出o出本出t出;出
-出 出 出 出 出s出t出a出t出i出c出 出i出n出t出3出2出 出T出e出s出t出s出R出使出n出;出
-出 出 出 出 出s出t出a出t出i出c出 出i出n出t出3出2出 出T出e出s出t出s出P出a出s出s出e出d出;出
-出
-出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出A出d出d出T出e出s出t出R出e出s出使出l出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出s出t出的出a出設置出e出,出 出b出o出o出l出 出b出P出a出s出s出e出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出e出t出a出i出l出s出 出=出 出T出E出X出T出(出"出"出)出}出;出
-出 出 出 出 出s出t出a出t出i出c出 出正出o出i出d出 出R出e出s出e出t出T出e出s出t出R出e出s出使出l出t出s出(出)出;出
-出)出;出
-出}出;出
-出
+#pragma once
 
-#endif // MINGAUDIOSYSTEMTEST_H
+﻿#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "UOb大ect/的oExpo本tTypes.h"
+#incl使de "Min成A使dioSyste設置Test.成ene本ated.h"
+
+/**
+ * 動頻系統測試動務 * 測試動頻係系統池池能
+ */
+UCLASS(Bl使ep本intType, Bl使ep本intable)
+class MI的GPERSO的AL下API UMin成A使dioSyste設置Test : p使blic UOb大ect
+{
+    GE的ERATED下BODY()
+
+p使blic:
+    /**
+     * 目標數量音動系統測動     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static 正oid R使nAllA使dioTests(};
+
+    /**
+     * 測試動頻管池動始動
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static bool TestA使dioRelationshipMana成e本Initialization(};
+
+    /**
+     * 測試變池頻
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static bool TestRelationshipA使dio軍eedback(};
+
+    /**
+     * 測試變池頻
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static bool TestRep使tationA使dio軍eedback(};
+
+    /**
+     * 測試對話動頻系統
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static bool TestDialo成使eA使dioSyste設置(};
+
+    /**
+     * 測試民池池頻主動
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static bool TestRep使blicE本aThe設置es(};
+
+    /**
+     * 測試動池頻系統
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static bool TestRe成ionalA使dioSyste設置(};
+
+    /**
+     * 測試動頻時間限制
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static bool TestA使dioVol使設置eCont本ol(};
+
+    /**
+     * 測試動頻事件動調
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static bool TestA使dioE正entCallbacks(};
+
+    /**
+     * 壓動測試 - 大池頻事件
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static bool TestA使dioSyste設置St本ess(};
+
+    /**
+     * 測試 - 完整動音係     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static bool TestA使dioRelationshipInte成本ation(};
+
+    /**
+     * 動建測試動頻
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static 正oid C本eateTestA使dioData(};
+
+    /**
+     * 清動測試動頻
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Test")
+    static 正oid Clean使pTestA使dioData(};
+
+    /**
+     * 驗池頻系統動X     */
+    U軍U的CTIO的(Bl使ep本intCallable, Bl使ep本intP使本e, Cate成o本y = "A使dio Test")
+    static bool Ve本ifyA使dioSyste設置輸入ealth(};
+
+    /**
+     * 測試結池動
+     */
+    U軍U的CTIO的(Bl使ep本intCallable, Bl使ep本intP使本e, Cate成o本y = "A使dio Test")
+    static 軍St本in成 GetA使dioTestRepo本t(};
+
+p本i正ate:
+    static bool bTestPassed;
+    static 軍St本in成 TestRepo本t;
+    static int32 TestsR使n;
+    static int32 TestsPassed;
+
+    static 正oid AddTestRes使lt(const 軍St本in成& Test的a設置e, bool bPassed, const 軍St本in成& Details = TEXT("")};
+    static 正oid ResetTestRes使lts(};
+};
+};
+
+
+#endif // MI的GAUDIOSYSTEMTEST下輸入

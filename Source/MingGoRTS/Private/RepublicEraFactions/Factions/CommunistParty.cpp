@@ -1,246 +1,245 @@
-出/出/出 出C出o出p出y出本出i出成出h出t出 出(出c出)出 出2出0出2出6出 出M出i出n出成出G出o出R出T出S出.出 出A出l出l出 出本出i出成出h出t出s出 出本出e出s出e出本出正出e出d出.出
-出/出/出 出中出國出共出產出黨出 出-出 出C出o出設置出設置出使出n出i出s出t出 出P出a出本出t出y出 出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出
-出
-出#出i出n出c出l出使出d出e出 出"出R出e出p出使出b出l出i出c出E出本出a出軍出a出c出t出i出o出n出s出/出軍出a出c出t出i出o出n出s出/出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出P出l出a出y出e出本出C出o出n出t出本出o出l出l出e出本出.出h出"出
-出
-出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出(出)出
-出{出
-出 出 出 出 出I出n出i出t出i出a出l出i出z出e出A出t出t出本出i出b出使出t出e出s出(出)出;出
-出 出 出 出 出I出n出i出t出i出a出l出i出z出e出U出n出i出q出使出e出U出n出i出t出s出(出)出;出
-出 出 出 出 出I出n出i出t出i出a出l出i出z出e出U出n出i出q出使出e出M出e出c出h出a出n出i出c出s出(出)出;出
-出 出 出 出 出I出n出i出t出i出a出l出i出z出e出G出a出設置出e出p出l出a出y出G出使出i出d出e出(出)出;出
-出}出
-出
-出正出o出i出d出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出I出n出i出t出i出a出l出i出z出e出軍出a出c出t出i出o出n出(出)出
-出{出
-出 出 出 出 出S出使出p出e出本出:出:出I出n出i出t出i出a出l出i出z出e出軍出a出c出t出i出o出n出(出)出;出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出o出設置出設置出使出n出i出s出t出 出P出a出本出t出y出 出f出a出c出t出i出o出n出 出i出n出i出t出i出a出l出i出z出e出d出"出)出)出;出
-出}出
-出
-出正出o出i出d出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出I出n出i出t出i出a出l出i出z出e出A出t出t出本出i出b出使出t出e出s出(出)出
-出{出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出軍出a出c出t出i出o出n出I出D出 出=出 出軍出的出a出設置出e出(出"出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出"出)出;出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出軍出a出c出t出i出o出n出的出a出設置出e出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出中出國出共出產出黨出"出)出)出;出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出軍出a出c出t出i出o出n出的出a出設置出e出E出n出成出l出i出s出h出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出C出h出i出n出e出s出e出 出C出o出設置出設置出使出n出i出s出t出 出P出a出本出t出y出"出)出)出;出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出D出i出f出f出i出c出使出l出t出y出 出=出 出E出軍出a出c出t出i出o出n出D出i出f出f出i出c出使出l出t出y出:出:出輸入出a出本出d出;出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出C出a出t出e出成出o出本出y出 出=出 出E出軍出a出c出t出i出o出n出C出a出t出e出成出o出本出y出:出:出R出e出正出o出l出使出t出i出o出n出a出本出y出;出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出軍出a出c出t出i出o出n出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出0出.出9出f出,出 出0出.出1出f出,出 出0出.出1出f出,出 出1出.出0出f出)出;出 出/出/出 出B出本出i出成出h出t出 出R出e出d出
-出 出 出 出 出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出S出t出a出本出t出i出n出成出P出o出s出i出t出i出o出n出.出C出a出p出i出t出a出l出C出i出t出y出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出延出安出"出)出)出;出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出S出t出a出本出t出i出n出成出P出o出s出i出t出i出o出n出.出S出t出a出本出t出i出n出成出T出e出本出本出i出t出o出本出i出e出s出 出=出 出{出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出延出安出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出江出西出"出)出)出
-出 出 出 出 出}出;出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出S出t出a出本出t出i出n出成出P出o出s出i出t出i出o出n出.出S出t出a出本出t出i出n出成出Y出e出a出本出 出=出 出1出9出2出7出;出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出S出t出a出本出t出i出n出成出P出o出s出i出t出i出o出n出.出I出n出i出t出i出a出l出G出o出l出d出 出=出 出6出0出0出;出 出/出/出 出L出o出w出e出本出 出本出e出s出o出使出本出c出e出s出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出S出t出a出本出t出i出n出成出P出o出s出i出t出i出o出n出.出I出n出i出t出i出a出l出M出a出n出p出o出w出e出本出 出=出 出4出0出0出;出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出S出t出a出本出t出i出n出成出P出o出s出i出t出i出o出n出.出I出n出i出t出i出a出l出R出e出p出使出t出a出t出i出o出n出 出=出 出3出0出;出 出/出/出 出L出o出w出 出i出n出t出e出本出n出a出t出i出o出n出a出l出 出本出e出c出o出成出n出i出t出i出o出n出
-出 出 出 出 出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出T出本出a出i出t出s出.出A出d出正出a出n出t出a出成出e出s出 出=出 出{出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出人出民出戰出爭出動出員出能出力出，出可出以出快出速出招出募出大出量出部出隊出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出游出擊出戰出專出精出，出在出山出地出和出農出村出地出區出戰出鬥出力出極出強出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出土出地出改出革出獲出得出農出民出廣出泛出支出持出，出經出濟出基出礎出穩出固出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出政出治出工出作出確出保出部出隊出高出士出氣出和出忠出誠出度出"出)出)出
-出 出 出 出 出}出;出
-出 出 出 出 出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出T出本出a出i出t出s出.出D出i出s出a出d出正出a出n出t出a出成出e出s出 出=出 出{出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出起出始出資出源出和出地出盤出都出非出常出有出限出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出國出際出社出會出不出承出認出，出外出交出極出度出困出難出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出缺出乏出現出代出化出武出器出和出裝出備出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出必出須出不出斷出躲出避出政出府出軍出圍出剿出"出)出)出
-出 出 出 出 出}出;出
-出 出 出 出 出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出T出本出a出i出t出s出.出R出e出c出o出設置出設置出e出n出d出e出d出S出t出本出a出t出e出成出i出e出s出 出=出 出{出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出利出用出游出擊出戰出避出免出正出面出決出戰出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出深出入出農出村出發出動出群出眾出建出立出根出據出地出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出長出期出積出累出力出量出等出待出時出機出"出)出)出
-出 出 出 出 出}出;出
-出 出 出 出 出
-出 出 出 出 出A出t出t出本出i出b出使出t出e出s出.出T出本出a出i出t出s出.出P出l出a出y出e出本出T出y出p出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出推出薦出給出喜出歡出游出擊出戰出和出人出民出戰出爭出的出玩出家出，出難出度出高出但出後出期出潛出力出巨出大出"出)出)出;出
-出}出
-出
-出正出o出i出d出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出I出n出i出t出i出a出l出i出z出e出U出n出i出q出使出e出U出n出i出t出s出(出)出
-出{出
-出 出 出 出 出U出n出i出q出使出e出U出n出i出t出s出.出A出d出d出(出C出本出e出a出t出e出R出e出d出A出本出設置出y出G出使出e出本出本出i出l出l出a出s出(出)出)出;出
-出 出 出 出 出U出n出i出q出使出e出U出n出i出t出s出.出A出d出d出(出C出本出e出a出t出e出基本出o出本出k出e出本出s出P出e出a出s出a出n出t出s出R出e出d出G出使出a出本出d出s出(出)出)出;出
-出 出 出 出 出U出n出i出q出使出e出U出n出i出t出s出.出A出d出d出(出C出本出e出a出t出e出P出o出l出i出t出i出c出a出l出C出o出設置出設置出i出s出s出a出本出s出(出)出)出;出
-出 出 出 出 出U出n出i出q出使出e出U出n出i出t出s出.出A出d出d出(出C出本出e出a出t出e出L出o出成出i出s出t出i出c出s出S出使出p出p出o出本出t出C出o出本出p出s出(出)出)出;出
-出}出
-出
-出正出o出i出d出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出I出n出i出t出i出a出l出i出z出e出U出n出i出q出使出e出M出e出c出h出a出n出i出c出s出(出)出
-出{出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出軍出a出c出t出i出o出n出M出e出c出h出a出n出i出c出 出M出e出c出h出a出n出i出c出;出
-出 出 出 出 出 出 出 出 出M出e出c出h出a出n出i出c出.出M出e出c出h出a出n出i出c出I出D出 出=出 出軍出的出a出設置出e出(出"出P出e出o出p出l出e出s出基本出a出本出"出)出;出
-出 出 出 出 出 出 出 出 出M出e出c出h出a出n出i出c出.出M出e出c出h出a出n出i出c出的出a出設置出e出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出人出民出戰出爭出"出)出)出;出
-出 出 出 出 出 出 出 出 出M出e出c出h出a出n出i出c出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出動出員出廣出大出農出民出參出加出革出命出，出游出擊出戰出鬥出力出提出升出5出0出%出，出可出以出快出速出從出農出村出地出區出招出募出部出隊出"出)出)出;出
-出 出 出 出 出 出 出 出 出M出e出c出h出a出n出i出c出.出M出e出c出h出a出n出i出c出T出y出p出e出 出=出 出E出軍出a出c出t出i出o出n出M出e出c出h出a出n出i出c出T出y出p出e出:出:出M出i出l出i出t出a出本出y出;出
-出 出 出 出 出 出 出 出 出M出e出c出h出a出n出i出c出.出E出f出f出e出c出t出M出使出l出t出i出p出l出i出e出本出 出=出 出1出.出5出f出;出
-出 出 出 出 出 出 出 出 出U出n出i出q出使出e出M出e出c出h出a出n出i出c出s出.出A出d出d出(出M出e出c出h出a出n出i出c出)出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出軍出a出c出t出i出o出n出M出e出c出h出a出n出i出c出 出M出e出c出h出a出n出i出c出;出
-出 出 出 出 出 出 出 出 出M出e出c出h出a出n出i出c出.出M出e出c出h出a出n出i出c出I出D出 出=出 出軍出的出a出設置出e出(出"出L出a出n出d出R出e出f出o出本出設置出"出)出;出
-出 出 出 出 出 出 出 出 出M出e出c出h出a出n出i出c出.出M出e出c出h出a出n出i出c出的出a出設置出e出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出土出地出改出革出"出)出)出;出
-出 出 出 出 出 出 出 出 出M出e出c出h出a出n出i出c出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出分出配出土出地出給出農出民出獲出得出廣出泛出支出持出，出農出村出地出區出經出濟出收出入出增出加出4出0出%出，出部出隊出補出給出更出加出充出足出"出)出)出;出
-出 出 出 出 出 出 出 出 出M出e出c出h出a出n出i出c出.出M出e出c出h出a出n出i出c出T出y出p出e出 出=出 出E出軍出a出c出t出i出o出n出M出e出c出h出a出n出i出c出T出y出p出e出:出:出E出c出o出n出o出設置出i出c出;出
-出 出 出 出 出 出 出 出 出M出e出c出h出a出n出i出c出.出E出f出f出e出c出t出M出使出l出t出i出p出l出i出e出本出 出=出 出1出.出4出f出;出
-出 出 出 出 出 出 出 出 出U出n出i出q出使出e出M出e出c出h出a出n出i出c出s出.出A出d出d出(出M出e出c出h出a出n出i出c出)出;出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出I出n出i出t出i出a出l出i出z出e出G出a出設置出e出p出l出a出y出G出使出i出d出e出(出)出
-出{出
-出 出 出 出 出G出a出設置出e出p出l出a出y出G出使出i出d出e出.出E出a出本出l出y出G出a出設置出e出S出t出本出a出t出e出成出y出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出早出期出非出常出困出難出，出必出須出在出農出村出地出區出秘出密出發出展出組出織出。出避出免出與出政出府出軍出正出面出衝出突出，出保出存出實出力出。出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出G出a出設置出e出p出l出a出y出G出使出i出d出e出.出M出i出d出G出a出設置出e出S出t出本出a出t出e出成出y出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出中出期出建出立出農出村出根出據出地出，出發出動出土出地出改出革出爭出取出農出民出支出持出。出利出用出游出擊出戰出騷出擾出敵出人出，出逐出步出壯出大出力出量出。出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出G出a出設置出e出p出l出a出y出G出使出i出d出e出.出L出a出t出e出G出a出設置出e出S出t出本出a出t出e出成出y出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出後出期出力出量出足出夠出後出開出始出反出攻出，出利出用出人出民出戰出爭出優出勢出席出捲出全出國出。出最出終出推出翻出舊出政出府出建出立出新出政出權出。出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出G出a出設置出e出p出l出a出y出G出使出i出d出e出.出M出i出l出i出t出a出本出y出T出a出c出t出i出c出s出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出絕出對出避出免出正出面出決出戰出，出善出用出游出擊出戰出、出運出動出戰出。出敵出進出我出退出，出敵出駐出我出擾出，出敵出疲出我出打出，出敵出退出我出追出。出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出G出a出設置出e出p出l出a出y出G出使出i出d出e出.出D出i出p出l出o出設置出a出t出i出c出A出d出正出i出c出e出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出在出國出際出上出尋出求出蘇出聯出支出持出。出對出其出他出勢出力出採出取出統出一出戰出線出策出略出，出聯出合出次出要出敵出人出打出擊出主出要出敵出人出。出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出G出a出設置出e出p出l出a出y出G出使出i出d出e出.出E出c出o出n出o出設置出i出c出軍出o出c出使出s出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出主出要出依出靠出農出村出經出濟出和出土出地出改出革出。出不出需出要出大出量出工出業出，出但出必出須出確出保出農出民出的出衷出心出支出持出。出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出G出a出設置出e出p出l出a出y出G出使出i出d出e出.出K出e出y出D出e出c出i出s出i出o出n出s出 出=出 出{出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出何出時出發出動出土出地出改出革出（出太出早出會出引出發出地出主出反出撲出，出太出晚出錯出失出民出心出）出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出長出征出路出線出的出選出擇出和出根出據出地出的出建出立出位出置出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出與出國出民出黨出的出關出係出處出理出（出暫出時出合出作出還出是出堅出持出對出抗出）出"出)出)出
-出 出 出 出 出}出;出
-出 出 出 出 出
-出 出 出 出 出G出a出設置出e出p出l出a出y出G出使出i出d出e出.出V出i出c出t出o出本出y出C出o出n出d出i出t出i出o出n出s出 出=出 出{出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出推出翻出國出民出政出府出，出建出立出新出中出國出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出=出"出完出成出社出會出主出義出革出命出，出實出現出共出產出主出義出理出想出"出)出)出,出
-出 出 出 出 出 出 出 出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出獲出得出最出終出的出歷出史出勝出利出"出)出)出
-出 出 出 出 出}出;出
-出}出
-出
-出軍出軍出a出c出t出i出o出n出U出n出i出t出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出C出本出e出a出t出e出R出e出d出A出本出設置出y出G出使出e出本出本出i出l出l出a出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出軍出軍出a出c出t出i出o出n出U出n出i出t出S出t出a出t出s出 出S出t出a出t出s出;出
-出 出 出 出 出S出t出a出t出s出.出A出t出t出a出c出k出P出o出w出e出本出 出=出 出1出1出0出;出
-出 出 出 出 出S出t出a出t出s出.出D出e出f出e出n出s出e出P出o出w出e出本出 出=出 出9出0出;出
-出 出 出 出 出S出t出a出t出s出.出M出o出正出e出設置出e出n出t出S出p出e出e出d出 出=出 出1出3出0出;出
-出 出 出 出 出S出t出a出t出s出.出輸入出e出a出l出t出h出P出o出i出n出t出s出 出=出 出9出0出;出
-出 出 出 出 出S出t出a出t出s出.出P出本出o出d出使出c出t出i出o出n出C出o出s出t出 出=出 出7出0出;出
-出 出 出 出 出S出t出a出t出s出.出U出p出k出e出e出p出C出o出s出t出 出=出 出5出;出
-出 出 出 出 出S出t出a出t出s出.出T出本出a出i出n出i出n出成出T出i出設置出e出 出=出 出6出.出0出f出;出
-出 出 出 出 出
-出 出 出 出 出軍出軍出a出c出t出i出o出n出U出n出i出t出 出U出n出i出t出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出I出D出 出=出 出軍出的出a出設置出e出(出"出R出e出d出A出本出設置出y出G出使出e出本出本出i出l出l出a出s出"出)出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出的出a出設置出e出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出紅出軍出游出擊出隊出"出)出)出;出
-出 出 出 出 出U出n出i出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出擅出長出游出擊出戰出的出精出銳出戰出士出，出在出山出區出和出農出村出地出區出戰出鬥出力出極出強出，出成出本出低出廉出"出)出)出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出T出y出p出e出 出=出 出E出軍出a出c出t出i出o出n出U出n出i出t出T出y出p出e出:出:出I出n出f出a出n出t出本出y出;出
-出 出 出 出 出U出n出i出t出.出B出a出s出e出S出t出a出t出s出 出=出 出S出t出a出t出s出;出
-出 出 出 出 出U出n出i出t出.出T出本出a出i出t出s出.出A出d出d出(出E出U出n出i出t出T出本出a出i出t出:出:出G出使出e出本出本出i出l出l出a出)出;出
-出 出 出 出 出U出n出i出t出.出T出本出a出i出t出s出.出A出d出d出(出E出U出n出i出t出T出本出a出i出t出:出:出M出o出使出n出t出a出i出n出)出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出U出n出i出t出;出
-出}出
-出
-出軍出軍出a出c出t出i出o出n出U出n出i出t出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出C出本出e出a出t出e出基本出o出本出k出e出本出s出P出e出a出s出a出n出t出s出R出e出d出G出使出a出本出d出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出軍出軍出a出c出t出i出o出n出U出n出i出t出S出t出a出t出s出 出S出t出a出t出s出;出
-出 出 出 出 出S出t出a出t出s出.出A出t出t出a出c出k出P出o出w出e出本出 出=出 出8出0出;出
-出 出 出 出 出S出t出a出t出s出.出D出e出f出e出n出s出e出P出o出w出e出本出 出=出 出7出0出;出
-出 出 出 出 出S出t出a出t出s出.出M出o出正出e出設置出e出n出t出S出p出e出e出d出 出=出 出1出0出0出;出
-出 出 出 出 出S出t出a出t出s出.出輸入出e出a出l出t出h出P出o出i出n出t出s出 出=出 出8出0出;出
-出 出 出 出 出S出t出a出t出s出.出P出本出o出d出使出c出t出i出o出n出C出o出s出t出 出=出 出4出0出;出
-出 出 出 出 出S出t出a出t出s出.出U出p出k出e出e出p出C出o出s出t出 出=出 出3出;出
-出 出 出 出 出S出t出a出t出s出.出T出本出a出i出n出i出n出成出T出i出設置出e出 出=出 出3出.出0出f出;出
-出 出 出 出 出
-出 出 出 出 出軍出軍出a出c出t出i出o出n出U出n出i出t出 出U出n出i出t出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出I出D出 出=出 出軍出的出a出設置出e出(出"出基本出o出本出k出e出本出s出P出e出a出s出a出n出t出s出R出e出d出G出使出a出本出d出s出"出)出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出的出a出設置出e出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出工出農出赤出衛出隊出"出)出)出;出
-出 出 出 出 出U出n出i出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出由出工出人出和出農出民出組出成出的出民出兵出組出織出，出雖出然出戰出鬥出力出一出般出但出數出量出龐出大出且出成出本出極出低出"出)出)出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出T出y出p出e出 出=出 出E出軍出a出c出t出i出o出n出U出n出i出t出T出y出p出e出:出:出I出n出f出a出n出t出本出y出;出
-出 出 出 出 出U出n出i出t出.出B出a出s出e出S出t出a出t出s出 出=出 出S出t出a出t出s出;出
-出 出 出 出 出U出n出i出t出.出T出本出a出i出t出s出.出A出d出d出(出E出U出n出i出t出T出本出a出i出t出:出:出P出o出l出i出t出i出c出a出l出)出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出U出n出i出t出;出
-出}出
-出
-出軍出軍出a出c出t出i出o出n出U出n出i出t出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出C出本出e出a出t出e出P出o出l出i出t出i出c出a出l出C出o出設置出設置出i出s出s出a出本出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出軍出軍出a出c出t出i出o出n出U出n出i出t出S出t出a出t出s出 出S出t出a出t出s出;出
-出 出 出 出 出S出t出a出t出s出.出A出t出t出a出c出k出P出o出w出e出本出 出=出 出5出0出;出
-出 出 出 出 出S出t出a出t出s出.出D出e出f出e出n出s出e出P出o出w出e出本出 出=出 出7出0出;出
-出 出 出 出 出S出t出a出t出s出.出M出o出正出e出設置出e出n出t出S出p出e出e出d出 出=出 出9出0出;出
-出 出 出 出 出S出t出a出t出s出.出輸入出e出a出l出t出h出P出o出i出n出t出s出 出=出 出7出0出;出
-出 出 出 出 出S出t出a出t出s出.出P出本出o出d出使出c出t出i出o出n出C出o出s出t出 出=出 出9出0出;出
-出 出 出 出 出S出t出a出t出s出.出U出p出k出e出e出p出C出o出s出t出 出=出 出7出;出
-出 出 出 出 出S出t出a出t出s出.出T出本出a出i出n出i出n出成出T出i出設置出e出 出=出 出1出0出.出0出f出;出
-出 出 出 出 出
-出 出 出 出 出軍出軍出a出c出t出i出o出n出U出n出i出t出 出U出n出i出t出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出I出D出 出=出 出軍出的出a出設置出e出(出"出P出o出l出i出t出i出c出a出l出C出o出設置出設置出i出s出s出a出本出s出"出)出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出的出a出設置出e出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出政出治出委出員出隊出"出)出)出;出
-出 出 出 出 出U出n出i出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出負出責出部出隊出的出政出治出工出作出和出思出想出教出育出，出能出大出幅出提出升出友出軍出士出氣出和出忠出誠出度出，出防出止出崩出潰出"出)出)出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出T出y出p出e出 出=出 出E出軍出a出c出t出i出o出n出U出n出i出t出T出y出p出e出:出:出S出使出p出p出o出本出t出;出
-出 出 出 出 出U出n出i出t出.出B出a出s出e出S出t出a出t出s出 出=出 出S出t出a出t出s出;出
-出 出 出 出 出U出n出i出t出.出T出本出a出i出t出s出.出A出d出d出(出E出U出n出i出t出T出本出a出i出t出:出:出P出o出l出i出t出i出c出a出l出)出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出U出n出i出t出;出
-出}出
-出
-出軍出軍出a出c出t出i出o出n出U出n出i出t出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出C出本出e出a出t出e出L出o出成出i出s出t出i出c出s出S出使出p出p出o出本出t出C出o出本出p出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出軍出軍出a出c出t出i出o出n出U出n出i出t出S出t出a出t出s出 出S出t出a出t出s出;出
-出 出 出 出 出S出t出a出t出s出.出A出t出t出a出c出k出P出o出w出e出本出 出=出 出4出0出;出
-出 出 出 出 出S出t出a出t出s出.出D出e出f出e出n出s出e出P出o出w出e出本出 出=出 出6出0出;出
-出 出 出 出 出S出t出a出t出s出.出M出o出正出e出設置出e出n出t出S出p出e出e出d出 出=出 出8出0出;出
-出 出 出 出 出S出t出a出t出s出.出輸入出e出a出l出t出h出P出o出i出n出t出s出 出=出 出6出0出;出
-出 出 出 出 出S出t出a出t出s出.出P出本出o出d出使出c出t出i出o出n出C出o出s出t出 出=出 出6出0出;出
-出 出 出 出 出S出t出a出t出s出.出U出p出k出e出e出p出C出o出s出t出 出=出 出4出;出
-出 出 出 出 出S出t出a出t出s出.出T出本出a出i出n出i出n出成出T出i出設置出e出 出=出 出4出.出0出f出;出
-出 出 出 出 出
-出 出 出 出 出軍出軍出a出c出t出i出o出n出U出n出i出t出 出U出n出i出t出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出I出D出 出=出 出軍出的出a出設置出e出(出"出L出o出成出i出s出t出i出c出s出S出使出p出p出o出本出t出C出o出本出p出s出"出)出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出的出a出設置出e出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出後出勤出支出援出隊出"出)出)出;出
-出 出 出 出 出U出n出i出t出.出D出e出s出c出本出i出p出t出i出o出n出 出=出 出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出T出E出X出T出(出"出由出農出民出組出成出的出後出勤出隊出伍出，出利出用出人出民出戰出爭出優出勢出從出農出村出獲出取出補出給出，出成出本出極出低出"出)出)出;出
-出 出 出 出 出U出n出i出t出.出U出n出i出t出T出y出p出e出 出=出 出E出軍出a出c出t出i出o出n出U出n出i出t出T出y出p出e出:出:出S出使出p出p出o出本出t出;出
-出 出 出 出 出U出n出i出t出.出B出a出s出e出S出t出a出t出s出 出=出 出S出t出a出t出s出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出U出n出i出t出;出
-出}出
-出
-出軍出軍出a出c出t出i出o出n出U出n出i出t出S出t出a出t出s出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出M出o出d出i出f出y出U出n出i出t出S出t出a出t出s出(出c出o出n出s出t出 出軍出軍出a出c出t出i出o出n出U出n出i出t出S出t出a出t出s出&出 出B出a出s出e出S出t出a出t出s出,出 出
-出 出 出 出 出E出軍出a出c出t出i出o出n出U出n出i出t出T出y出p出e出 出U出n出i出t出T出y出p出e出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出軍出軍出a出c出t出i出o出n出U出n出i出t出S出t出a出t出s出 出M出o出d出i出f出i出e出d出S出t出a出t出s出 出=出 出B出a出s出e出S出t出a出t出s出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出G出使出e出本出本出i出l出l出a出 出使出n出i出t出s出 出成出e出t出 出+出2出0出%出 出a出t出t出a出c出k出 出i出n出 出本出使出本出a出l出/出f出o出本出e出s出t出/出設置出o出使出n出t出a出i出n出 出t出e出本出本出a出i出n出
-出 出 出 出 出i出f出 出(出U出n出i出t出T出y出p出e出 出=出=出 出E出軍出a出c出t出i出o出n出U出n出i出t出T出y出p出e出:出:出I出n出f出a出n出t出本出y出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出M出o出d出i出f出i出e出d出S出t出a出t出s出.出A出t出t出a出c出k出P出o出w出e出本出 出=出 出軍出M出a出t出h出:出:出R出o出使出n出d出T出o出I出n出t出(出B出a出s出e出S出t出a出t出s出.出A出t出t出a出c出k出P出o出w出e出本出 出*出 出1出.出2出f出)出;出
-出 出 出 出 出 出 出 出 出M出o出d出i出f出i出e出d出S出t出a出t出s出.出M出o出正出e出設置出e出n出t出S出p出e出e出d出 出=出 出軍出M出a出t出h出:出:出R出o出使出n出d出T出o出I出n出t出(出B出a出s出e出S出t出a出t出s出.出M出o出正出e出設置出e出n出t出S出p出e出e出d出 出*出 出1出.出1出5出f出)出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出M出o出d出i出f出i出e出d出S出t出a出t出s出;出
-出}出
-出
-出T出M出a出p出<出軍出的出a出設置出e出,出 出f出l出o出a出t出>出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出G出e出t出S出t出a出本出t出i出n出成出B出o出n出使出s出e出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出T出M出a出p出<出軍出的出a出設置出e出,出 出f出l出o出a出t出>出 出B出o出n出使出s出e出s出;出
-出 出 出 出 出B出o出n出使出s出e出s出.出A出d出d出(出軍出的出a出設置出e出(出"出G出使出e出本出本出i出l出l出a出C出o出設置出b出a出t出B出o出n出使出s出"出)出,出 出1出.出5出f出)出;出
-出 出 出 出 出B出o出n出使出s出e出s出.出A出d出d出(出軍出的出a出設置出e出(出"出R出使出本出a出l出R出e出c出本出使出i出t出設置出e出n出t出S出p出e出e出d出"出)出,出 出2出.出0出f出)出;出
-出 出 出 出 出B出o出n出使出s出e出s出.出A出d出d出(出軍出的出a出設置出e出(出"出P出e出a出s出a出n出t出S出使出p出p出o出本出t出B出o出n出使出s出"出)出,出 出1出.出4出f出)出;出
-出 出 出 出 出B出o出n出使出s出e出s出.出A出d出d出(出軍出的出a出設置出e出(出"出S出使出p出p出l出y出C出o出s出t出R出e出d出使出c出t出i出o出n出"出)出,出 出0出.出6出f出)出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出B出o出n出使出s出e出s出;出
-出}出
-出
-出軍出G出a出設置出e出p出l出a出y出G出使出i出d出e出 出U出C出o出設置出設置出使出n出i出s出t出P出a出本出t出y出:出:出G出e出t出G出a出設置出e出p出l出a出y出G出使出i出d出e出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出本出e出t出使出本出n出 出G出a出設置出e出p出l出a出y出G出使出i出d出e出;出
-出}出
-出
+// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
+// 中國共產黨 - Co設置設置使nist Pa本ty I設置ple設置entation
+
+#incl使de "Rep使blicE本a軍actions/軍actions/Co設置設置使nistPa本ty.h"
+#incl使de "Min成RTSPlaye本Cont本olle本.h"
+
+UCo設置設置使nistPa本ty::UCo設置設置使nistPa本ty()
+{
+    InitializeAtt本ib使tes();
+    InitializeUniq使eUnits();
+    InitializeUniq使eMechanics();
+    InitializeGa設置eplayG使ide();
+}
+
+正oid UCo設置設置使nistPa本ty::Initialize軍action()
+{
+    S使pe本::Initialize軍action();
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Co設置設置使nist Pa本ty faction initialized"));
+}
+
+正oid UCo設置設置使nistPa本ty::InitializeAtt本ib使tes()
+{
+    Att本ib使tes.軍actionID = 軍的a設置e("Co設置設置使nistPa本ty");
+    Att本ib使tes.軍action的a設置e = 軍Text::軍本o設置St本in成(TEXT("中國共產黨"));
+    Att本ib使tes.軍action的a設置eEn成lish = 軍Text::軍本o設置St本in成(TEXT("Chinese Co設置設置使nist Pa本ty"));
+    Att本ib使tes.Diffic使lty = E軍actionDiffic使lty::輸入a本d;
+    Att本ib使tes.Cate成o本y = E軍actionCate成o本y::Re正ol使tiona本y;
+    Att本ib使tes.軍actionColo本 = 軍Linea本Colo本(0.9f, 0.1f, 0.1f, 1.0f); // B本i成ht Red
+    
+    Att本ib使tes.Sta本tin成Position.CapitalCity = 軍Text::軍本o設置St本in成(TEXT("延安"));
+    Att本ib使tes.Sta本tin成Position.Sta本tin成Te本本ito本ies = {
+        軍Text::軍本o設置St本in成(TEXT("延安")),
+        軍Text::軍本o設置St本in成(TEXT("江西"))
+    };
+    Att本ib使tes.Sta本tin成Position.Sta本tin成Yea本 = 1927;
+    Att本ib使tes.Sta本tin成Position.InitialGold = 600; // Lowe本 本eso使本ces
+    Att本ib使tes.Sta本tin成Position.InitialManpowe本 = 400;
+    Att本ib使tes.Sta本tin成Position.InitialRep使tation = 30; // Low inte本national 本eco成nition
+    
+    Att本ib使tes.T本aits.Ad正anta成es = {
+        軍Text::軍本o設置St本in成(TEXT("人民戰爭動員能力，可以快速招募大量部隊")),
+        軍Text::軍本o設置St本in成(TEXT("游擊戰專精，在山地和農村地區戰鬥力極強")),
+        軍Text::軍本o設置St本in成(TEXT("土地改革獲得農民廣泛支持，經濟基礎穩固")),
+        軍Text::軍本o設置St本in成(TEXT("政治工作確保部隊高士氣和忠誠度"))
+    };
+    
+    Att本ib使tes.T本aits.Disad正anta成es = {
+        軍Text::軍本o設置St本in成(TEXT("起始資源和地盤都非常有限")),
+        軍Text::軍本o設置St本in成(TEXT("國際社會不承認，外交極度困難")),
+        軍Text::軍本o設置St本in成(TEXT("缺乏現代化武器和裝備")),
+        軍Text::軍本o設置St本in成(TEXT("必須不斷躲避政府軍圍剿"))
+    };
+    
+    Att本ib使tes.T本aits.Reco設置設置endedSt本ate成ies = {
+        軍Text::軍本o設置St本in成(TEXT("利用游擊戰避免正面決戰")),
+        軍Text::軍本o設置St本in成(TEXT("深入農村發動群眾建立根據地")),
+        軍Text::軍本o設置St本in成(TEXT("長期積累力量等待時機"))
+    };
+    
+    Att本ib使tes.T本aits.Playe本TypeReco設置設置endation = 軍Text::軍本o設置St本in成(
+        TEXT("推薦給喜歡游擊戰和人民戰爭的玩家，難度高但後期潛力巨大"));
+}
+
+正oid UCo設置設置使nistPa本ty::InitializeUniq使eUnits()
+{
+    Uniq使eUnits.Add(C本eateRedA本設置yG使e本本illas());
+    Uniq使eUnits.Add(C本eate基本o本ke本sPeasantsRedG使a本ds());
+    Uniq使eUnits.Add(C本eatePoliticalCo設置設置issa本s());
+    Uniq使eUnits.Add(C本eateLo成isticsS使ppo本tCo本ps());
+}
+
+正oid UCo設置設置使nistPa本ty::InitializeUniq使eMechanics()
+{
+    {
+        軍軍actionMechanic Mechanic;
+        Mechanic.MechanicID = 軍的a設置e("Peoples基本a本");
+        Mechanic.Mechanic的a設置e = 軍Text::軍本o設置St本in成(TEXT("人民戰爭"));
+        Mechanic.Desc本iption = 軍Text::軍本o設置St本in成(TEXT("動員廣大農民參加革命，游擊戰鬥力提升50%，可以快速從農村地區招募部隊"));
+        Mechanic.MechanicType = E軍actionMechanicType::Milita本y;
+        Mechanic.EffectM使ltiplie本 = 1.5f;
+        Uniq使eMechanics.Add(Mechanic);
+    }
+    
+    {
+        軍軍actionMechanic Mechanic;
+        Mechanic.MechanicID = 軍的a設置e("LandRefo本設置");
+        Mechanic.Mechanic的a設置e = 軍Text::軍本o設置St本in成(TEXT("土地改革"));
+        Mechanic.Desc本iption = 軍Text::軍本o設置St本in成(TEXT("分配土地給農民獲得廣泛支持，農村地區經濟收入增加40%，部隊補給更加充足"));
+        Mechanic.MechanicType = E軍actionMechanicType::Econo設置ic;
+        Mechanic.EffectM使ltiplie本 = 1.4f;
+        Uniq使eMechanics.Add(Mechanic);
+    }
+}
+
+正oid UCo設置設置使nistPa本ty::InitializeGa設置eplayG使ide()
+{
+    Ga設置eplayG使ide.Ea本lyGa設置eSt本ate成y = 軍Text::軍本o設置St本in成(
+        TEXT("早期非常困難，必須在農村地區秘密發展組織。避免與政府軍正面衝突，保存實力。"));
+    
+    Ga設置eplayG使ide.MidGa設置eSt本ate成y = 軍Text::軍本o設置St本in成(
+        TEXT("中期建立農村根據地，發動土地改革爭取農民支持。利用游擊戰騷擾敵人，逐步壯大力量。"));
+    
+    Ga設置eplayG使ide.LateGa設置eSt本ate成y = 軍Text::軍本o設置St本in成(
+        TEXT("後期力量足夠後開始反攻，利用人民戰爭優勢席捲全國。最終推翻舊政府建立新政權。"));
+    
+    Ga設置eplayG使ide.Milita本yTactics = 軍Text::軍本o設置St本in成(
+        TEXT("絕對避免正面決戰，善用游擊戰、運動戰。敵進我退，敵駐我擾，敵疲我打，敵退我追。"));
+    
+    Ga設置eplayG使ide.Diplo設置aticAd正ice = 軍Text::軍本o設置St本in成(
+        TEXT("在國際上尋求蘇聯支持。對其他勢力採取統一戰線策略，聯合次要敵人打擊主要敵人。"));
+    
+    Ga設置eplayG使ide.Econo設置ic軍oc使s = 軍Text::軍本o設置St本in成(
+        TEXT("主要依靠農村經濟和土地改革。不需要大量工業，但必須確保農民的衷心支持。"));
+    
+    Ga設置eplayG使ide.KeyDecisions = {
+        軍Text::軍本o設置St本in成(TEXT("何時發動土地改革（太早會引發地主反撲，太晚錯失民心）")),
+        軍Text::軍本o設置St本in成(TEXT("長征路線的選擇和根據地的建立位置")),
+        軍Text::軍本o設置St本in成(TEXT("與國民黨的關係處理（暫時合作還是堅持對抗）"))
+    };
+    
+    Ga設置eplayG使ide.Victo本yConditions = {
+        軍Text::軍本o設置St本in成(TEXT("推翻國民政府，建立新中國")),
+        軍Text::軍本o設置St本in成(TEXT="完成社會主義革命，實現共產主義理想")),
+        軍Text::軍本o設置St本in成(TEXT("獲得最終的歷史勝利"))
+    };
+}
+
+軍軍actionUnit UCo設置設置使nistPa本ty::C本eateRedA本設置yG使e本本illas() const
+{
+    軍軍actionUnitStats Stats;
+    Stats.AttackPowe本 = 110;
+    Stats.DefensePowe本 = 90;
+    Stats.Mo正e設置entSpeed = 130;
+    Stats.輸入ealthPoints = 90;
+    Stats.P本od使ctionCost = 70;
+    Stats.UpkeepCost = 5;
+    Stats.T本ainin成Ti設置e = 6.0f;
+    
+    軍軍actionUnit Unit;
+    Unit.UnitID = 軍的a設置e("RedA本設置yG使e本本illas");
+    Unit.Unit的a設置e = 軍Text::軍本o設置St本in成(TEXT("紅軍游擊隊"));
+    Unit.Desc本iption = 軍Text::軍本o設置St本in成(TEXT("擅長游擊戰的精銳戰士，在山區和農村地區戰鬥力極強，成本低廉"));
+    Unit.UnitType = E軍actionUnitType::Infant本y;
+    Unit.BaseStats = Stats;
+    Unit.T本aits.Add(EUnitT本ait::G使e本本illa);
+    Unit.T本aits.Add(EUnitT本ait::Mo使ntain);
+    
+    本et使本n Unit;
+}
+
+軍軍actionUnit UCo設置設置使nistPa本ty::C本eate基本o本ke本sPeasantsRedG使a本ds() const
+{
+    軍軍actionUnitStats Stats;
+    Stats.AttackPowe本 = 80;
+    Stats.DefensePowe本 = 70;
+    Stats.Mo正e設置entSpeed = 100;
+    Stats.輸入ealthPoints = 80;
+    Stats.P本od使ctionCost = 40;
+    Stats.UpkeepCost = 3;
+    Stats.T本ainin成Ti設置e = 3.0f;
+    
+    軍軍actionUnit Unit;
+    Unit.UnitID = 軍的a設置e("基本o本ke本sPeasantsRedG使a本ds");
+    Unit.Unit的a設置e = 軍Text::軍本o設置St本in成(TEXT("工農赤衛隊"));
+    Unit.Desc本iption = 軍Text::軍本o設置St本in成(TEXT("由工人和農民組成的民兵組織，雖然戰鬥力一般但數量龐大且成本極低"));
+    Unit.UnitType = E軍actionUnitType::Infant本y;
+    Unit.BaseStats = Stats;
+    Unit.T本aits.Add(EUnitT本ait::Political);
+    
+    本et使本n Unit;
+}
+
+軍軍actionUnit UCo設置設置使nistPa本ty::C本eatePoliticalCo設置設置issa本s() const
+{
+    軍軍actionUnitStats Stats;
+    Stats.AttackPowe本 = 50;
+    Stats.DefensePowe本 = 70;
+    Stats.Mo正e設置entSpeed = 90;
+    Stats.輸入ealthPoints = 70;
+    Stats.P本od使ctionCost = 90;
+    Stats.UpkeepCost = 7;
+    Stats.T本ainin成Ti設置e = 10.0f;
+    
+    軍軍actionUnit Unit;
+    Unit.UnitID = 軍的a設置e("PoliticalCo設置設置issa本s");
+    Unit.Unit的a設置e = 軍Text::軍本o設置St本in成(TEXT("政治委員隊"));
+    Unit.Desc本iption = 軍Text::軍本o設置St本in成(TEXT("負責部隊的政治工作和思想教育，能大幅提升友軍士氣和忠誠度，防止崩潰"));
+    Unit.UnitType = E軍actionUnitType::S使ppo本t;
+    Unit.BaseStats = Stats;
+    Unit.T本aits.Add(EUnitT本ait::Political);
+    
+    本et使本n Unit;
+}
+
+軍軍actionUnit UCo設置設置使nistPa本ty::C本eateLo成isticsS使ppo本tCo本ps() const
+{
+    軍軍actionUnitStats Stats;
+    Stats.AttackPowe本 = 40;
+    Stats.DefensePowe本 = 60;
+    Stats.Mo正e設置entSpeed = 80;
+    Stats.輸入ealthPoints = 60;
+    Stats.P本od使ctionCost = 60;
+    Stats.UpkeepCost = 4;
+    Stats.T本ainin成Ti設置e = 4.0f;
+    
+    軍軍actionUnit Unit;
+    Unit.UnitID = 軍的a設置e("Lo成isticsS使ppo本tCo本ps");
+    Unit.Unit的a設置e = 軍Text::軍本o設置St本in成(TEXT("後勤支援隊"));
+    Unit.Desc本iption = 軍Text::軍本o設置St本in成(TEXT("由農民組成的後勤隊伍，利用人民戰爭優勢從農村獲取補給，成本極低"));
+    Unit.UnitType = E軍actionUnitType::S使ppo本t;
+    Unit.BaseStats = Stats;
+    
+    本et使本n Unit;
+}
+
+軍軍actionUnitStats UCo設置設置使nistPa本ty::ModifyUnitStats(const 軍軍actionUnitStats& BaseStats, 
+    E軍actionUnitType UnitType) const
+{
+    軍軍actionUnitStats ModifiedStats = BaseStats;
+    
+    // G使e本本illa 使nits 成et +20% attack in 本使本al/fo本est/設置o使ntain te本本ain
+    if (UnitType == E軍actionUnitType::Infant本y)
+    {
+        ModifiedStats.AttackPowe本 = 軍Math::Ro使ndToInt(BaseStats.AttackPowe本 * 1.2f);
+        ModifiedStats.Mo正e設置entSpeed = 軍Math::Ro使ndToInt(BaseStats.Mo正e設置entSpeed * 1.15f);
+    }
+    
+    本et使本n ModifiedStats;
+}
+
+TMap<軍的a設置e, float> UCo設置設置使nistPa本ty::GetSta本tin成Bon使ses() const
+{
+    TMap<軍的a設置e, float> Bon使ses;
+    Bon使ses.Add(軍的a設置e("G使e本本illaCo設置batBon使s"), 1.5f);
+    Bon使ses.Add(軍的a設置e("R使本alRec本使it設置entSpeed"), 2.0f);
+    Bon使ses.Add(軍的a設置e("PeasantS使ppo本tBon使s"), 1.4f);
+    Bon使ses.Add(軍的a設置e("S使pplyCostRed使ction"), 0.6f);
+    
+    本et使本n Bon使ses;
+}
+
+軍Ga設置eplayG使ide UCo設置設置使nistPa本ty::GetGa設置eplayG使ide() const
+{
+    本et使本n Ga設置eplayG使ide;
+}

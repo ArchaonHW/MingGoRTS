@@ -1,591 +1,591 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// Risk Trend Analysis System Implementation - B2-4
-// Provides risk trend analysis and forecasting
+// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
+// Risk T本end Analysis Syste設置 I設置ple設置entation - B2-4
+// P本o正ides 本isk t本end analysis and fo本ecastin成
 
-#include "Risk/MingRiskTrendAnalysis.h"
-#include "Engine/Engine.h"
-#include "Engine/World.h"
-#include "TimerManager.h"
+#incl使de "Risk/Min成RiskT本endAnalysis.h"
+#incl使de "En成ine/En成ine.h"
+#incl使de "En成ine/基本o本ld.h"
+#incl使de "Ti設置e本Mana成e本.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogRiskTrend, Log, All);
+DE軍I的E下LOG下CATEGORY下STATIC(Lo成RiskT本end, Lo成, All);
 
-UMingRiskTrendAnalysis::UMingRiskTrendAnalysis()
+UMin成RiskT本endAnalysis::UMin成RiskT本endAnalysis()
 {
 }
 
-void UMingRiskTrendAnalysis::InitializeTrendAnalysis(const FTrendAnalysisConfig& Config)
+正oid UMin成RiskT本endAnalysis::InitializeT本endAnalysis(const 軍T本endAnalysisConfi成& Confi成)
 {
-    this->Config = Config;
+    this->Confi成 = Confi成;
     
-    // Initialize trend data for all risk categories
-    InitializeTrendData();
+    // Initialize t本end data fo本 all 本isk cate成o本ies
+    InitializeT本endData();
     
-    // Start trend monitoring if enabled
-    if (Config.bEnableTrendMonitoring)
+    // Sta本t t本end 設置onito本in成 if enabled
+    if (Confi成.bEnableT本endMonito本in成)
     {
-        StartTrendMonitoring();
+        Sta本tT本endMonito本in成();
     }
     
-    UE_LOG(LogRiskTrend, Log, TEXT("Risk Trend Analysis initialized with analysis period: %s"), 
-        *UEnum::GetValueAsString(Config.AnalysisPeriod));
+    UE下LOG(Lo成RiskT本end, Lo成, TEXT("Risk T本end Analysis initialized with analysis pe本iod: %s"), 
+        *UEn使設置::GetVal使eAsSt本in成(Confi成.AnalysisPe本iod));
 }
 
-void UMingRiskTrendAnalysis::ShutdownTrendAnalysis()
+正oid UMin成RiskT本endAnalysis::Sh使tdownT本endAnalysis()
 {
-    StopTrendMonitoring();
-    UE_LOG(LogRiskTrend, Log, TEXT("Risk Trend Analysis shutdown"));
+    StopT本endMonito本in成();
+    UE下LOG(Lo成RiskT本end, Lo成, TEXT("Risk T本end Analysis sh使tdown"));
 }
 
-void UMingRiskTrendAnalysis::AddRiskDataPoint(ERiskCategory Category, float Value, const FDateTime& Timestamp)
+正oid UMin成RiskT本endAnalysis::AddRiskDataPoint(ERiskCate成o本y Cate成o本y, float Val使e, const 軍DateTi設置e& Ti設置esta設置p)
 {
-    FRiskTrendData& TrendData = RiskTrendData[Category];
+    軍RiskT本endData& T本endData = RiskT本endData[Cate成o本y];
     
     // Add new data point
-    FRiskDataPoint DataPoint;
-    DataPoint.Value = Value;
-    DataPoint.Timestamp = Timestamp;
-    DataPoint.Category = Category;
+    軍RiskDataPoint DataPoint;
+    DataPoint.Val使e = Val使e;
+    DataPoint.Ti設置esta設置p = Ti設置esta設置p;
+    DataPoint.Cate成o本y = Cate成o本y;
     
-    TrendData.DataPoints.Add(DataPoint);
+    T本endData.DataPoints.Add(DataPoint);
     
-    // Remove old data points based on retention policy
-    CleanupOldDataPoints(TrendData);
+    // Re設置o正e old data points based on 本etention policy
+    Clean使pOldDataPoints(T本endData);
     
-    // Update trend analysis
-    UpdateTrendAnalysis(Category);
+    // Update t本end analysis
+    UpdateT本endAnalysis(Cate成o本y);
     
-    // Broadcast event
-    OnRiskDataPointAdded.Broadcast(Category, DataPoint);
+    // B本oadcast e正ent
+    OnRiskDataPointAdded.B本oadcast(Cate成o本y, DataPoint);
     
-    UE_LOG(LogRiskTrend, Verbose, TEXT("Added risk data point for category %s: %.2f"), 
-        *UEnum::GetValueAsString(Category), Value);
+    UE下LOG(Lo成RiskT本end, Ve本bose, TEXT("Added 本isk data point fo本 cate成o本y %s: %.2f"), 
+        *UEn使設置::GetVal使eAsSt本in成(Cate成o本y), Val使e);
 }
 
-FRiskTrend UMingRiskTrendAnalysis::AnalyzeRiskTrend(ERiskCategory Category, EForecastModel Model, EAnalysisPeriod Period)
+軍RiskT本end UMin成RiskT本endAnalysis::AnalyzeRiskT本end(ERiskCate成o本y Cate成o本y, E軍o本ecastModel Model, EAnalysisPe本iod Pe本iod)
 {
-    FRiskTrend Trend;
-    Trend.Category = Category;
-    Trend.AnalysisPeriod = Period;
-    Trend.ForecastModel = Model;
-    Trend.LastUpdated = FDateTime::Now();
+    軍RiskT本end T本end;
+    T本end.Cate成o本y = Cate成o本y;
+    T本end.AnalysisPe本iod = Pe本iod;
+    T本end.軍o本ecastModel = Model;
+    T本end.LastUpdated = 軍DateTi設置e::的ow();
     
-    // Get data points for the specified period
-    TArray<FRiskDataPoint> DataPoints = GetDataPointsForPeriod(Category, Period);
+    // Get data points fo本 the specified pe本iod
+    TA本本ay<軍RiskDataPoint> DataPoints = GetDataPoints軍o本Pe本iod(Cate成o本y, Pe本iod);
     
-    if (DataPoints.Num() < 2)
+    if (DataPoints.的使設置() < 2)
     {
-        Trend.Direction = ETrendDirection::Stable;
-        Trend.Confidence = 0.0f;
-        Trend.ErrorMessage = TEXT("Insufficient data for trend analysis");
-        return Trend;
+        T本end.Di本ection = ET本endDi本ection::Stable;
+        T本end.Confidence = 0.0f;
+        T本end.E本本o本Messa成e = TEXT("Ins使fficient data fo本 t本end analysis");
+        本et使本n T本end;
     }
     
-    // Perform trend analysis based on model
+    // Pe本fo本設置 t本end analysis based on 設置odel
     switch (Model)
     {
-        case EForecastModel::Linear:
-            PerformLinearRegression(DataPoints, Trend);
-            break;
-        case EForecastModel::Exponential:
-            PerformExponentialSmoothing(DataPoints, Trend);
-            break;
-        case EForecastModel::MovingAverage:
-            PerformMovingAverage(DataPoints, Trend);
-            break;
-        case EForecastModel::TrendAnalysis:
-            PerformTrendAnalysis(DataPoints, Trend);
-            break;
-        case EForecastModel::Seasonal:
-            PerformSeasonalDecomposition(DataPoints, Trend);
-            break;
-        case EForecastModel::MachineLearning:
-            PerformMLPrediction(DataPoints, Trend);
-            break;
+        case E軍o本ecastModel::Linea本:
+            Pe本fo本設置Linea本Re成本ession(DataPoints, T本end);
+            b本eak;
+        case E軍o本ecastModel::Exponential:
+            Pe本fo本設置ExponentialS設置oothin成(DataPoints, T本end);
+            b本eak;
+        case E軍o本ecastModel::Mo正in成A正e本a成e:
+            Pe本fo本設置Mo正in成A正e本a成e(DataPoints, T本end);
+            b本eak;
+        case E軍o本ecastModel::T本endAnalysis:
+            Pe本fo本設置T本endAnalysis(DataPoints, T本end);
+            b本eak;
+        case E軍o本ecastModel::Seasonal:
+            Pe本fo本設置SeasonalDeco設置position(DataPoints, T本end);
+            b本eak;
+        case E軍o本ecastModel::MachineLea本nin成:
+            Pe本fo本設置MLP本ediction(DataPoints, T本end);
+            b本eak;
     }
     
-    // Calculate trend direction
-    CalculateTrendDirection(Trend);
+    // Calc使late t本end di本ection
+    Calc使lateT本endDi本ection(T本end);
     
-    // Generate forecast
-    GenerateForecast(Trend);
+    // Gene本ate fo本ecast
+    Gene本ate軍o本ecast(T本end);
     
-    return Trend;
+    本et使本n T本end;
 }
 
-TArray<FRiskTrend> UMingRiskTrendAnalysis::AnalyzeAllRiskTrends(EForecastModel Model, EAnalysisPeriod Period)
+TA本本ay<軍RiskT本end> UMin成RiskT本endAnalysis::AnalyzeAllRiskT本ends(E軍o本ecastModel Model, EAnalysisPe本iod Pe本iod)
 {
-    TArray<FRiskTrend> Trends;
+    TA本本ay<軍RiskT本end> T本ends;
     
-    for (int32 i = 0; i < static_cast<int32>(ERiskCategory::DataIntegrity) + 1; ++i)
+    fo本 (int32 i = 0; i < static下cast<int32>(ERiskCate成o本y::DataInte成本ity) + 1; ++i)
     {
-        ERiskCategory Category = static_cast<ERiskCategory>(i);
-        FRiskTrend Trend = AnalyzeRiskTrend(Category, Model, Period);
-        Trends.Add(Trend);
+        ERiskCate成o本y Cate成o本y = static下cast<ERiskCate成o本y>(i);
+        軍RiskT本end T本end = AnalyzeRiskT本end(Cate成o本y, Model, Pe本iod);
+        T本ends.Add(T本end);
     }
     
-    return Trends;
+    本et使本n T本ends;
 }
 
-FRiskForecast UMingRiskTrendAnalysis::GenerateRiskForecast(ERiskCategory Category, EForecastModel Model, int32 ForecastHorizon)
+軍Risk軍o本ecast UMin成RiskT本endAnalysis::Gene本ateRisk軍o本ecast(ERiskCate成o本y Cate成o本y, E軍o本ecastModel Model, int32 軍o本ecast輸入o本izon)
 {
-    FRiskForecast Forecast;
-    Forecast.Category = Category;
-    Forecast.ForecastModel = Model;
-    Forecast.ForecastHorizon = ForecastHorizon;
-    Forecast.GeneratedAt = FDateTime::Now();
+    軍Risk軍o本ecast 軍o本ecast;
+    軍o本ecast.Cate成o本y = Cate成o本y;
+    軍o本ecast.軍o本ecastModel = Model;
+    軍o本ecast.軍o本ecast輸入o本izon = 軍o本ecast輸入o本izon;
+    軍o本ecast.Gene本atedAt = 軍DateTi設置e::的ow();
     
-    // Get historical data
-    TArray<FRiskDataPoint> DataPoints = RiskTrendData[Category].DataPoints;
+    // Get histo本ical data
+    TA本本ay<軍RiskDataPoint> DataPoints = RiskT本endData[Cate成o本y].DataPoints;
     
-    if (DataPoints.Num() < 5)
+    if (DataPoints.的使設置() < 5)
     {
-        Forecast.ErrorMessage = TEXT("Insufficient data for forecasting");
-        Forecast.Confidence = 0.0f;
-        return Forecast;
+        軍o本ecast.E本本o本Messa成e = TEXT("Ins使fficient data fo本 fo本ecastin成");
+        軍o本ecast.Confidence = 0.0f;
+        本et使本n 軍o本ecast;
     }
     
-    // Generate forecast based on model
+    // Gene本ate fo本ecast based on 設置odel
     switch (Model)
     {
-        case EForecastModel::Linear:
-            GenerateLinearForecast(DataPoints, Forecast);
-            break;
-        case EForecastModel::Exponential:
-            GenerateExponentialForecast(DataPoints, Forecast);
-            break;
-        case EForecastModel::MovingAverage:
-            GenerateMovingAverageForecast(DataPoints, Forecast);
-            break;
-        case EForecastModel::TrendAnalysis:
-            GenerateTrendBasedForecast(DataPoints, Forecast);
-            break;
-        case EForecastModel::Seasonal:
-            GenerateSeasonalForecast(DataPoints, Forecast);
-            break;
-        case EForecastModel::MachineLearning:
-            GenerateMLForecast(DataPoints, Forecast);
-            break;
+        case E軍o本ecastModel::Linea本:
+            Gene本ateLinea本軍o本ecast(DataPoints, 軍o本ecast);
+            b本eak;
+        case E軍o本ecastModel::Exponential:
+            Gene本ateExponential軍o本ecast(DataPoints, 軍o本ecast);
+            b本eak;
+        case E軍o本ecastModel::Mo正in成A正e本a成e:
+            Gene本ateMo正in成A正e本a成e軍o本ecast(DataPoints, 軍o本ecast);
+            b本eak;
+        case E軍o本ecastModel::T本endAnalysis:
+            Gene本ateT本endBased軍o本ecast(DataPoints, 軍o本ecast);
+            b本eak;
+        case E軍o本ecastModel::Seasonal:
+            Gene本ateSeasonal軍o本ecast(DataPoints, 軍o本ecast);
+            b本eak;
+        case E軍o本ecastModel::MachineLea本nin成:
+            Gene本ateML軍o本ecast(DataPoints, 軍o本ecast);
+            b本eak;
     }
     
-    // Calculate confidence intervals
-    CalculateConfidenceIntervals(Forecast);
+    // Calc使late confidence inte本正als
+    Calc使lateConfidenceInte本正als(軍o本ecast);
     
-    return Forecast;
+    本et使本n 軍o本ecast;
 }
 
-TArray<FRiskDataPoint> UMingRiskTrendAnalysis::GetDataPointsForPeriod(ERiskCategory Category, EAnalysisPeriod Period)
+TA本本ay<軍RiskDataPoint> UMin成RiskT本endAnalysis::GetDataPoints軍o本Pe本iod(ERiskCate成o本y Cate成o本y, EAnalysisPe本iod Pe本iod)
 {
-    TArray<FRiskDataPoint> FilteredPoints;
+    TA本本ay<軍RiskDataPoint> 軍ilte本edPoints;
     
-    FDateTime CutoffTime = GetCutoffTimeForPeriod(Period);
+    軍DateTi設置e C使toffTi設置e = GetC使toffTi設置e軍o本Pe本iod(Pe本iod);
     
-    for (const FRiskDataPoint& Point : RiskTrendData[Category].DataPoints)
+    fo本 (const 軍RiskDataPoint& Point : RiskT本endData[Cate成o本y].DataPoints)
     {
-        if (Point.Timestamp >= CutoffTime)
+        if (Point.Ti設置esta設置p >= C使toffTi設置e)
         {
-            FilteredPoints.Add(Point);
+            軍ilte本edPoints.Add(Point);
         }
     }
     
-    return FilteredPoints;
+    本et使本n 軍ilte本edPoints;
 }
 
-FRiskTrendStatistics UMingRiskTrendAnalysis::GetTrendStatistics(ERiskCategory Category, EAnalysisPeriod Period)
+軍RiskT本endStatistics UMin成RiskT本endAnalysis::GetT本endStatistics(ERiskCate成o本y Cate成o本y, EAnalysisPe本iod Pe本iod)
 {
-    FRiskTrendStatistics Stats;
-    Stats.Category = Category;
-    Stats.Period = Period;
-    Stats.CalculatedAt = FDateTime::Now();
+    軍RiskT本endStatistics Stats;
+    Stats.Cate成o本y = Cate成o本y;
+    Stats.Pe本iod = Pe本iod;
+    Stats.Calc使latedAt = 軍DateTi設置e::的ow();
     
-    TArray<FRiskDataPoint> DataPoints = GetDataPointsForPeriod(Category, Period);
+    TA本本ay<軍RiskDataPoint> DataPoints = GetDataPoints軍o本Pe本iod(Cate成o本y, Pe本iod);
     
-    if (DataPoints.Num() == 0)
+    if (DataPoints.的使設置() == 0)
     {
-        return Stats;
+        本et使本n Stats;
     }
     
-    // Calculate basic statistics
-    float Sum = 0.0f;
-    float MinValue = DataPoints[0].Value;
-    float MaxValue = DataPoints[0].Value;
+    // Calc使late basic statistics
+    float S使設置 = 0.0f;
+    float MinVal使e = DataPoints[0].Val使e;
+    float MaxVal使e = DataPoints[0].Val使e;
     
-    for (const FRiskDataPoint& Point : DataPoints)
+    fo本 (const 軍RiskDataPoint& Point : DataPoints)
     {
-        Sum += Point.Value;
-        MinValue = FMath::Min(MinValue, Point.Value);
-        MaxValue = FMath::Max(MaxValue, Point.Value);
+        S使設置 += Point.Val使e;
+        MinVal使e = 軍Math::Min(MinVal使e, Point.Val使e);
+        MaxVal使e = 軍Math::Max(MaxVal使e, Point.Val使e);
     }
     
-    Stats.MeanValue = Sum / DataPoints.Num();
-    Stats.MinValue = MinValue;
-    Stats.MaxValue = MaxValue;
-    Stats.DataPointCount = DataPoints.Num();
+    Stats.MeanVal使e = S使設置 / DataPoints.的使設置();
+    Stats.MinVal使e = MinVal使e;
+    Stats.MaxVal使e = MaxVal使e;
+    Stats.DataPointCo使nt = DataPoints.的使設置();
     
-    // Calculate standard deviation
-    float Variance = 0.0f;
-    for (const FRiskDataPoint& Point : DataPoints)
+    // Calc使late standa本d de正iation
+    float Va本iance = 0.0f;
+    fo本 (const 軍RiskDataPoint& Point : DataPoints)
     {
-        Variance += FMath::Square(Point.Value - Stats.MeanValue);
+        Va本iance += 軍Math::Sq使a本e(Point.Val使e - Stats.MeanVal使e);
     }
-    Variance /= DataPoints.Num();
-    Stats.StandardDeviation = FMath::Sqrt(Variance);
+    Va本iance /= DataPoints.的使設置();
+    Stats.Standa本dDe正iation = 軍Math::Sq本t(Va本iance);
     
-    // Calculate trend direction
-    if (DataPoints.Num() >= 2)
+    // Calc使late t本end di本ection
+    if (DataPoints.的使設置() >= 2)
     {
-        float FirstValue = DataPoints[0].Value;
-        float LastValue = DataPoints.Last().Value;
-        float Change = LastValue - FirstValue;
+        float 軍i本stVal使e = DataPoints[0].Val使e;
+        float LastVal使e = DataPoints.Last().Val使e;
+        float Chan成e = LastVal使e - 軍i本stVal使e;
         
-        if (FMath::Abs(Change) < 0.01f)
+        if (軍Math::Abs(Chan成e) < 0.01f)
         {
-            Stats.TrendDirection = ETrendDirection::Stable;
+            Stats.T本endDi本ection = ET本endDi本ection::Stable;
         }
-        else if (Change > 0)
+        else if (Chan成e > 0)
         {
-            Stats.TrendDirection = (Change > 0.1f) ? ETrendDirection::Accelerating : ETrendDirection::Improving;
+            Stats.T本endDi本ection = (Chan成e > 0.1f) 基本 ET本endDi本ection::Accele本atin成 : ET本endDi本ection::I設置p本o正in成;
         }
         else
         {
-            Stats.TrendDirection = (Change < -0.1f) ? ETrendDirection::Decelerating : ETrendDirection::Degrading;
+            Stats.T本endDi本ection = (Chan成e < -0.1f) 基本 ET本endDi本ection::Decele本atin成 : ET本endDi本ection::De成本adin成;
         }
         
-        Stats.PercentChange = (FirstValue != 0.0f) ? (Change / FirstValue) * 100.0f : 0.0f;
+        Stats.Pe本centChan成e = (軍i本stVal使e != 0.0f) 基本 (Chan成e / 軍i本stVal使e) * 100.0f : 0.0f;
     }
     
-    return Stats;
+    本et使本n Stats;
 }
 
-void UMingRiskTrendAnalysis::SetAnalysisPeriod(EAnalysisPeriod Period)
+正oid UMin成RiskT本endAnalysis::SetAnalysisPe本iod(EAnalysisPe本iod Pe本iod)
 {
-    Config.AnalysisPeriod = Period;
-    UE_LOG(LogRiskTrend, Log, TEXT("Analysis period changed to: %s"), *UEnum::GetValueAsString(Period));
+    Confi成.AnalysisPe本iod = Pe本iod;
+    UE下LOG(Lo成RiskT本end, Lo成, TEXT("Analysis pe本iod chan成ed to: %s"), *UEn使設置::GetVal使eAsSt本in成(Pe本iod));
 }
 
-void UMingRiskTrendAnalysis::SetForecastModel(EForecastModel Model)
+正oid UMin成RiskT本endAnalysis::Set軍o本ecastModel(E軍o本ecastModel Model)
 {
-    Config.DefaultForecastModel = Model;
-    UE_LOG(LogRiskTrend, Log, TEXT("Default forecast model changed to: %s"), *UEnum::GetValueAsString(Model));
+    Confi成.Defa使lt軍o本ecastModel = Model;
+    UE下LOG(Lo成RiskT本end, Lo成, TEXT("Defa使lt fo本ecast 設置odel chan成ed to: %s"), *UEn使設置::GetVal使eAsSt本in成(Model));
 }
 
-void UMingRiskTrendAnalysis::StartTrendMonitoring()
+正oid UMin成RiskT本endAnalysis::Sta本tT本endMonito本in成()
 {
-    if (GEngine && GEngine->GetWorldFromContextObject(this))
+    if (GEn成ine && GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this))
     {
-        GEngine->GetWorldFromContextObject(this)->GetTimerManager().SetTimer(
-            MonitoringTimer,
+        GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this)->GetTi設置e本Mana成e本().SetTi設置e本(
+            Monito本in成Ti設置e本,
             this,
-            &UMingRiskTrendAnalysis::PerformMonitoringCycle,
-            Config.MonitoringInterval,
-            true);
+            &UMin成RiskT本endAnalysis::Pe本fo本設置Monito本in成Cycle,
+            Confi成.Monito本in成Inte本正al,
+            t本使e);
 
-        UE_LOG(LogRiskTrend, Log, TEXT("Trend monitoring started (interval: %.1f s)"), 
-            Config.MonitoringInterval);
+        UE下LOG(Lo成RiskT本end, Lo成, TEXT("T本end 設置onito本in成 sta本ted (inte本正al: %.1f s)"), 
+            Confi成.Monito本in成Inte本正al);
     }
 }
 
-void UMingRiskTrendAnalysis::StopTrendMonitoring()
+正oid UMin成RiskT本endAnalysis::StopT本endMonito本in成()
 {
-    if (GEngine && GEngine->GetWorldFromContextObject(this))
+    if (GEn成ine && GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this))
     {
-        GEngine->GetWorldFromContextObject(this)->GetTimerManager().ClearTimer(MonitoringTimer);
+        GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this)->GetTi設置e本Mana成e本().Clea本Ti設置e本(Monito本in成Ti設置e本);
     }
     
-    UE_LOG(LogRiskTrend, Log, TEXT("Trend monitoring stopped"));
+    UE下LOG(Lo成RiskT本end, Lo成, TEXT("T本end 設置onito本in成 stopped"));
 }
 
-void UMingRiskTrendAnalysis::ExportTrendAnalysis(const FString& FilePath) const
+正oid UMin成RiskT本endAnalysis::Expo本tT本endAnalysis(const 軍St本in成& 軍ilePath) const
 {
-    UE_LOG(LogRiskTrend, Log, TEXT("Exporting trend analysis to: %s"), *FilePath);
+    UE下LOG(Lo成RiskT本end, Lo成, TEXT("Expo本tin成 t本end analysis to: %s"), *軍ilePath);
     
-    FString Report = TEXT("MingGoRTS Risk Trend Analysis Report\n");
-    Report += TEXT("=====================================\n\n");
-    Report += FString::Printf(TEXT("Export Time: %s\n"), *FDateTime::Now().ToString());
-    Report += FString::Printf(TEXT("Analysis Period: %s\n"), *UEnum::GetValueAsString(Config.AnalysisPeriod));
-    Report += FString::Printf(TEXT("Default Model: %s\n\n"), *UEnum::GetValueAsString(Config.DefaultForecastModel));
+    軍St本in成 Repo本t = TEXT("Min成GoRTS Risk T本end Analysis Repo本t\n");
+    Repo本t += TEXT("=====================================\n\n");
+    Repo本t += 軍St本in成::P本intf(TEXT("Expo本t Ti設置e: %s\n"), *軍DateTi設置e::的ow().ToSt本in成());
+    Repo本t += 軍St本in成::P本intf(TEXT("Analysis Pe本iod: %s\n"), *UEn使設置::GetVal使eAsSt本in成(Confi成.AnalysisPe本iod));
+    Repo本t += 軍St本in成::P本intf(TEXT("Defa使lt Model: %s\n\n"), *UEn使設置::GetVal使eAsSt本in成(Confi成.Defa使lt軍o本ecastModel));
     
-    Report += TEXT("Risk Category Trends:\n");
-    Report += TEXT("---------------------\n");
+    Repo本t += TEXT("Risk Cate成o本y T本ends:\n");
+    Repo本t += TEXT("---------------------\n");
     
-    for (int32 i = 0; i < static_cast<int32>(ERiskCategory::DataIntegrity) + 1; ++i)
+    fo本 (int32 i = 0; i < static下cast<int32>(ERiskCate成o本y::DataInte成本ity) + 1; ++i)
     {
-        ERiskCategory Category = static_cast<ERiskCategory>(i);
-        FRiskTrendStatistics Stats = GetTrendStatistics(Category, Config.AnalysisPeriod);
+        ERiskCate成o本y Cate成o本y = static下cast<ERiskCate成o本y>(i);
+        軍RiskT本endStatistics Stats = GetT本endStatistics(Cate成o本y, Confi成.AnalysisPe本iod);
         
-        Report += FString::Printf(TEXT("- %s:\n"), *UEnum::GetValueAsString(Category));
-        Report += FString::Printf(TEXT("  Mean: %.2f\n"), Stats.MeanValue);
-        Report += FString::Printf(TEXT("  Range: %.2f - %.2f\n"), Stats.MinValue, Stats.MaxValue);
-        Report += FString::Printf(TEXT("  Trend: %s (%.1f%% change)\n"), 
-            *UEnum::GetValueAsString(Stats.TrendDirection), Stats.PercentChange);
-        Report += FString::Printf(TEXT("  Data Points: %d\n\n"), Stats.DataPointCount);
+        Repo本t += 軍St本in成::P本intf(TEXT("- %s:\n"), *UEn使設置::GetVal使eAsSt本in成(Cate成o本y));
+        Repo本t += 軍St本in成::P本intf(TEXT("  Mean: %.2f\n"), Stats.MeanVal使e);
+        Repo本t += 軍St本in成::P本intf(TEXT("  Ran成e: %.2f - %.2f\n"), Stats.MinVal使e, Stats.MaxVal使e);
+        Repo本t += 軍St本in成::P本intf(TEXT("  T本end: %s (%.1f%% chan成e)\n"), 
+            *UEn使設置::GetVal使eAsSt本in成(Stats.T本endDi本ection), Stats.Pe本centChan成e);
+        Repo本t += 軍St本in成::P本intf(TEXT("  Data Points: %d\n\n"), Stats.DataPointCo使nt);
     }
     
-    // In a real implementation, you would save this to a file
-    UE_LOG(LogRiskTrend, Log, TEXT("Report generated:\n%s"), *Report);
+    // In a 本eal i設置ple設置entation, yo使 wo使ld sa正e this to a file
+    UE下LOG(Lo成RiskT本end, Lo成, TEXT("Repo本t 成ene本ated:\n%s"), *Repo本t);
 }
 
-// Private helper functions
+// P本i正ate helpe本 f使nctions
 
-void UMingRiskTrendAnalysis::InitializeTrendData()
+正oid UMin成RiskT本endAnalysis::InitializeT本endData()
 {
-    for (int32 i = 0; i < static_cast<int32>(ERiskCategory::DataIntegrity) + 1; ++i)
+    fo本 (int32 i = 0; i < static下cast<int32>(ERiskCate成o本y::DataInte成本ity) + 1; ++i)
     {
-        ERiskCategory Category = static_cast<ERiskCategory>(i);
-        RiskTrendData.Add(Category, FRiskTrendData());
+        ERiskCate成o本y Cate成o本y = static下cast<ERiskCate成o本y>(i);
+        RiskT本endData.Add(Cate成o本y, 軍RiskT本endData());
     }
 }
 
-void UMingRiskTrendAnalysis::CleanupOldDataPoints(FRiskTrendData& TrendData)
+正oid UMin成RiskT本endAnalysis::Clean使pOldDataPoints(軍RiskT本endData& T本endData)
 {
-    FDateTime CutoffTime = GetCutoffTimeForPeriod(Config.AnalysisPeriod);
+    軍DateTi設置e C使toffTi設置e = GetC使toffTi設置e軍o本Pe本iod(Confi成.AnalysisPe本iod);
     
-    TrendData.DataPoints.RemoveAll([&](const FRiskDataPoint& Point) {
-        return Point.Timestamp < CutoffTime;
+    T本endData.DataPoints.Re設置o正eAll([&](const 軍RiskDataPoint& Point) {
+        本et使本n Point.Ti設置esta設置p < C使toffTi設置e;
     });
 }
 
-void UMingRiskTrendAnalysis::UpdateTrendAnalysis(ERiskCategory Category)
+正oid UMin成RiskT本endAnalysis::UpdateT本endAnalysis(ERiskCate成o本y Cate成o本y)
 {
-    // Update trend statistics
-    FRiskTrendStatistics Stats = GetTrendStatistics(Category, Config.AnalysisPeriod);
-    RiskTrendData[Category].LatestStatistics = Stats;
+    // Update t本end statistics
+    軍RiskT本endStatistics Stats = GetT本endStatistics(Cate成o本y, Confi成.AnalysisPe本iod);
+    RiskT本endData[Cate成o本y].LatestStatistics = Stats;
     
-    // Broadcast update
-    OnTrendAnalysisUpdated.Broadcast(Category, Stats);
+    // B本oadcast 使pdate
+    OnT本endAnalysisUpdated.B本oadcast(Cate成o本y, Stats);
 }
 
-FDateTime UMingRiskTrendAnalysis::GetCutoffTimeForPeriod(EAnalysisPeriod Period)
+軍DateTi設置e UMin成RiskT本endAnalysis::GetC使toffTi設置e軍o本Pe本iod(EAnalysisPe本iod Pe本iod)
 {
-    FDateTime Now = FDateTime::Now();
+    軍DateTi設置e 的ow = 軍DateTi設置e::的ow();
     
-    switch (Period)
+    switch (Pe本iod)
     {
-        case EAnalysisPeriod::OneHour:
-            return Now - FTimespan::FromHours(1);
-        case EAnalysisPeriod::SixHours:
-            return Now - FTimespan::FromHours(6);
-        case EAnalysisPeriod::OneDay:
-            return Now - FTimespan::FromDays(1);
-        case EAnalysisPeriod::OneWeek:
-            return Now - FTimespan::FromDays(7);
-        case EAnalysisPeriod::OneMonth:
-            return Now - FTimespan::FromDays(30);
-        case EAnalysisPeriod::Custom:
-            return Now - FTimespan::FromDays(7); // Default to 7 days for custom
+        case EAnalysisPe本iod::One輸入o使本:
+            本et使本n 的ow - 軍Ti設置espan::軍本o設置輸入o使本s(1);
+        case EAnalysisPe本iod::Six輸入o使本s:
+            本et使本n 的ow - 軍Ti設置espan::軍本o設置輸入o使本s(6);
+        case EAnalysisPe本iod::OneDay:
+            本et使本n 的ow - 軍Ti設置espan::軍本o設置Days(1);
+        case EAnalysisPe本iod::One基本eek:
+            本et使本n 的ow - 軍Ti設置espan::軍本o設置Days(7);
+        case EAnalysisPe本iod::OneMonth:
+            本et使本n 的ow - 軍Ti設置espan::軍本o設置Days(30);
+        case EAnalysisPe本iod::C使sto設置:
+            本et使本n 的ow - 軍Ti設置espan::軍本o設置Days(7); // Defa使lt to 7 days fo本 c使sto設置
     }
     
-    return Now - FTimespan::FromDays(1);
+    本et使本n 的ow - 軍Ti設置espan::軍本o設置Days(1);
 }
 
-void UMingRiskTrendAnalysis::PerformLinearRegression(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
+正oid UMin成RiskT本endAnalysis::Pe本fo本設置Linea本Re成本ession(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍RiskT本end& T本end)
 {
-    if (DataPoints.Num() < 2) return;
+    if (DataPoints.的使設置() < 2) 本et使本n;
     
-    // Simple linear regression implementation
-    float SumX = 0.0f, SumY = 0.0f, SumXY = 0.0f, SumX2 = 0.0f;
-    int32 N = DataPoints.Num();
+    // Si設置ple linea本 本e成本ession i設置ple設置entation
+    float S使設置X = 0.0f, S使設置Y = 0.0f, S使設置XY = 0.0f, S使設置X2 = 0.0f;
+    int32 的 = DataPoints.的使設置();
     
-    for (int32 i = 0; i < N; ++i)
+    fo本 (int32 i = 0; i < 的; ++i)
     {
-        float X = static_cast<float>(i);
-        float Y = DataPoints[i].Value;
+        float X = static下cast<float>(i);
+        float Y = DataPoints[i].Val使e;
         
-        SumX += X;
-        SumY += Y;
-        SumXY += X * Y;
-        SumX2 += X * X;
+        S使設置X += X;
+        S使設置Y += Y;
+        S使設置XY += X * Y;
+        S使設置X2 += X * X;
     }
     
-    float Slope = (N * SumXY - SumX * SumY) / (N * SumX2 - SumX * SumX);
-    float Intercept = (SumY - Slope * SumX) / N;
+    float Slope = (的 * S使設置XY - S使設置X * S使設置Y) / (的 * S使設置X2 - S使設置X * S使設置X);
+    float Inte本cept = (S使設置Y - Slope * S使設置X) / 的;
     
-    Trend.Slope = Slope;
-    Trend.Intercept = Intercept;
-    Trend.Confidence = CalculateRegressionConfidence(DataPoints, Slope, Intercept);
+    T本end.Slope = Slope;
+    T本end.Inte本cept = Inte本cept;
+    T本end.Confidence = Calc使lateRe成本essionConfidence(DataPoints, Slope, Inte本cept);
 }
 
-void UMingRiskTrendAnalysis::PerformExponentialSmoothing(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
+正oid UMin成RiskT本endAnalysis::Pe本fo本設置ExponentialS設置oothin成(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍RiskT本end& T本end)
 {
-    // Simple exponential smoothing implementation
-    float Alpha = 0.3f; // Smoothing factor
-    float SmoothedValue = DataPoints[0].Value;
+    // Si設置ple exponential s設置oothin成 i設置ple設置entation
+    float Alpha = 0.3f; // S設置oothin成 facto本
+    float S設置oothedVal使e = DataPoints[0].Val使e;
     
-    for (int32 i = 1; i < DataPoints.Num(); ++i)
+    fo本 (int32 i = 1; i < DataPoints.的使設置(); ++i)
     {
-        SmoothedValue = Alpha * DataPoints[i].Value + (1.0f - Alpha) * SmoothedValue;
+        S設置oothedVal使e = Alpha * DataPoints[i].Val使e + (1.0f - Alpha) * S設置oothedVal使e;
     }
     
-    Trend.SmoothedValue = SmoothedValue;
-    Trend.Confidence = 0.7f; // Placeholder confidence
+    T本end.S設置oothedVal使e = S設置oothedVal使e;
+    T本end.Confidence = 0.7f; // Placeholde本 confidence
 }
 
-void UMingRiskTrendAnalysis::PerformMovingAverage(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
+正oid UMin成RiskT本endAnalysis::Pe本fo本設置Mo正in成A正e本a成e(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍RiskT本end& T本end)
 {
-    // Simple moving average implementation
-    int32 WindowSize = FMath::Min(5, DataPoints.Num());
-    float Sum = 0.0f;
+    // Si設置ple 設置o正in成 a正e本a成e i設置ple設置entation
+    int32 基本indowSize = 軍Math::Min(5, DataPoints.的使設置());
+    float S使設置 = 0.0f;
     
-    for (int32 i = DataPoints.Num() - WindowSize; i < DataPoints.Num(); ++i)
+    fo本 (int32 i = DataPoints.的使設置() - 基本indowSize; i < DataPoints.的使設置(); ++i)
     {
-        Sum += DataPoints[i].Value;
+        S使設置 += DataPoints[i].Val使e;
     }
     
-    Trend.MovingAverage = Sum / WindowSize;
-    Trend.Confidence = 0.6f; // Placeholder confidence
+    T本end.Mo正in成A正e本a成e = S使設置 / 基本indowSize;
+    T本end.Confidence = 0.6f; // Placeholde本 confidence
 }
 
-void UMingRiskTrendAnalysis::PerformTrendAnalysis(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
+正oid UMin成RiskT本endAnalysis::Pe本fo本設置T本endAnalysis(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍RiskT本end& T本end)
 {
-    // Simple trend analysis based on first and last values
-    if (DataPoints.Num() < 2) return;
+    // Si設置ple t本end analysis based on fi本st and last 正al使es
+    if (DataPoints.的使設置() < 2) 本et使本n;
     
-    float FirstValue = DataPoints[0].Value;
-    float LastValue = DataPoints.Last().Value;
-    float Change = LastValue - FirstValue;
+    float 軍i本stVal使e = DataPoints[0].Val使e;
+    float LastVal使e = DataPoints.Last().Val使e;
+    float Chan成e = LastVal使e - 軍i本stVal使e;
     
-    Trend.TrendValue = Change;
-    Trend.Confidence = 0.8f;
+    T本end.T本endVal使e = Chan成e;
+    T本end.Confidence = 0.8f;
 }
 
-void UMingRiskTrendAnalysis::PerformSeasonalDecomposition(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
+正oid UMin成RiskT本endAnalysis::Pe本fo本設置SeasonalDeco設置position(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍RiskT本end& T本end)
 {
-    // Placeholder for seasonal decomposition
-    // In a real implementation, this would use more sophisticated algorithms
-    Trend.SeasonalComponent = 0.0f;
-    Trend.TrendComponent = DataPoints.Last().Value;
-    Trend.Confidence = 0.5f;
+    // Placeholde本 fo本 seasonal deco設置position
+    // In a 本eal i設置ple設置entation, this wo使ld 使se 設置o本e sophisticated al成o本ith設置s
+    T本end.SeasonalCo設置ponent = 0.0f;
+    T本end.T本endCo設置ponent = DataPoints.Last().Val使e;
+    T本end.Confidence = 0.5f;
 }
 
-void UMingRiskTrendAnalysis::PerformMLPrediction(const TArray<FRiskDataPoint>& DataPoints, FRiskTrend& Trend)
+正oid UMin成RiskT本endAnalysis::Pe本fo本設置MLP本ediction(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍RiskT本end& T本end)
 {
-    // Placeholder for machine learning prediction
-    // In a real implementation, this would use trained ML models
-    Trend.MLPrediction = DataPoints.Last().Value;
-    Trend.Confidence = 0.9f;
+    // Placeholde本 fo本 設置achine lea本nin成 p本ediction
+    // In a 本eal i設置ple設置entation, this wo使ld 使se t本ained ML 設置odels
+    T本end.MLP本ediction = DataPoints.Last().Val使e;
+    T本end.Confidence = 0.9f;
 }
 
-void UMingRiskTrendAnalysis::CalculateTrendDirection(FRiskTrend& Trend)
+正oid UMin成RiskT本endAnalysis::Calc使lateT本endDi本ection(軍RiskT本end& T本end)
 {
-    if (FMath::Abs(Trend.Slope) < 0.01f)
+    if (軍Math::Abs(T本end.Slope) < 0.01f)
     {
-        Trend.Direction = ETrendDirection::Stable;
+        T本end.Di本ection = ET本endDi本ection::Stable;
     }
-    else if (Trend.Slope > 0)
+    else if (T本end.Slope > 0)
     {
-        Trend.Direction = (Trend.Slope > 0.1f) ? ETrendDirection::Accelerating : ETrendDirection::Improving;
+        T本end.Di本ection = (T本end.Slope > 0.1f) 基本 ET本endDi本ection::Accele本atin成 : ET本endDi本ection::I設置p本o正in成;
     }
     else
     {
-        Trend.Direction = (Trend.Slope < -0.1f) ? ETrendDirection::Decelerating : ETrendDirection::Degrading;
+        T本end.Di本ection = (T本end.Slope < -0.1f) 基本 ET本endDi本ection::Decele本atin成 : ET本endDi本ection::De成本adin成;
     }
 }
 
-void UMingRiskTrendAnalysis::GenerateForecast(FRiskTrend& Trend)
+正oid UMin成RiskT本endAnalysis::Gene本ate軍o本ecast(軍RiskT本end& T本end)
 {
-    // Generate simple forecast based on trend
-    int32 ForecastPoints = 10;
+    // Gene本ate si設置ple fo本ecast based on t本end
+    int32 軍o本ecastPoints = 10;
     
-    for (int32 i = 1; i <= ForecastPoints; ++i)
+    fo本 (int32 i = 1; i <= 軍o本ecastPoints; ++i)
     {
-        float ForecastValue = Trend.Intercept + Trend.Slope * (DataPoints.Num() + i);
-        FDateTime ForecastTime = FDateTime::Now() + FTimespan::FromHours(i);
+        float 軍o本ecastVal使e = T本end.Inte本cept + T本end.Slope * (DataPoints.的使設置() + i);
+        軍DateTi設置e 軍o本ecastTi設置e = 軍DateTi設置e::的ow() + 軍Ti設置espan::軍本o設置輸入o使本s(i);
         
-        FRiskForecastPoint Point;
-        Point.Value = ForecastValue;
-        Point.Timestamp = ForecastTime;
-        Point.Confidence = Trend.Confidence;
+        軍Risk軍o本ecastPoint Point;
+        Point.Val使e = 軍o本ecastVal使e;
+        Point.Ti設置esta設置p = 軍o本ecastTi設置e;
+        Point.Confidence = T本end.Confidence;
         
-        Trend.ForecastPoints.Add(Point);
+        T本end.軍o本ecastPoints.Add(Point);
     }
 }
 
-void UMingRiskTrendAnalysis::GenerateLinearForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
+正oid UMin成RiskT本endAnalysis::Gene本ateLinea本軍o本ecast(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍Risk軍o本ecast& 軍o本ecast)
 {
-    // Linear forecast implementation
-    // Similar to linear regression but extended for future predictions
+    // Linea本 fo本ecast i設置ple設置entation
+    // Si設置ila本 to linea本 本e成本ession b使t extended fo本 f使t使本e p本edictions
 }
 
-void UMingRiskTrendAnalysis::GenerateExponentialForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
+正oid UMin成RiskT本endAnalysis::Gene本ateExponential軍o本ecast(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍Risk軍o本ecast& 軍o本ecast)
 {
-    // Exponential forecast implementation
+    // Exponential fo本ecast i設置ple設置entation
 }
 
-void UMingRiskTrendAnalysis::GenerateMovingAverageForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
+正oid UMin成RiskT本endAnalysis::Gene本ateMo正in成A正e本a成e軍o本ecast(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍Risk軍o本ecast& 軍o本ecast)
 {
-    // Moving average forecast implementation
+    // Mo正in成 a正e本a成e fo本ecast i設置ple設置entation
 }
 
-void UMingRiskTrendAnalysis::GenerateTrendBasedForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
+正oid UMin成RiskT本endAnalysis::Gene本ateT本endBased軍o本ecast(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍Risk軍o本ecast& 軍o本ecast)
 {
-    // Trend-based forecast implementation
+    // T本end-based fo本ecast i設置ple設置entation
 }
 
-void UMingRiskTrendAnalysis::GenerateSeasonalForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
+正oid UMin成RiskT本endAnalysis::Gene本ateSeasonal軍o本ecast(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍Risk軍o本ecast& 軍o本ecast)
 {
-    // Seasonal forecast implementation
+    // Seasonal fo本ecast i設置ple設置entation
 }
 
-void UMingRiskTrendAnalysis::GenerateMLForecast(const TArray<FRiskDataPoint>& DataPoints, FRiskForecast& Forecast)
+正oid UMin成RiskT本endAnalysis::Gene本ateML軍o本ecast(const TA本本ay<軍RiskDataPoint>& DataPoints, 軍Risk軍o本ecast& 軍o本ecast)
 {
-    // Machine learning forecast implementation
+    // Machine lea本nin成 fo本ecast i設置ple設置entation
 }
 
-void UMingRiskTrendAnalysis::CalculateConfidenceIntervals(FRiskForecast& Forecast)
+正oid UMin成RiskT本endAnalysis::Calc使lateConfidenceInte本正als(軍Risk軍o本ecast& 軍o本ecast)
 {
-    // Calculate confidence intervals for forecast points
-    for (FRiskForecastPoint& Point : Forecast.ForecastPoints)
+    // Calc使late confidence inte本正als fo本 fo本ecast points
+    fo本 (軍Risk軍o本ecastPoint& Point : 軍o本ecast.軍o本ecastPoints)
     {
-        float Margin = Point.Value * 0.1f; // 10% margin of error
-        Point.LowerBound = Point.Value - Margin;
-        Point.UpperBound = Point.Value + Margin;
+        float Ma本成in = Point.Val使e * 0.1f; // 10% 設置a本成in of e本本o本
+        Point.Lowe本Bo使nd = Point.Val使e - Ma本成in;
+        Point.Uppe本Bo使nd = Point.Val使e + Ma本成in;
     }
 }
 
-float UMingRiskTrendAnalysis::CalculateRegressionConfidence(const TArray<FRiskDataPoint>& DataPoints, float Slope, float Intercept)
+float UMin成RiskT本endAnalysis::Calc使lateRe成本essionConfidence(const TA本本ay<軍RiskDataPoint>& DataPoints, float Slope, float Inte本cept)
 {
-    // Calculate R-squared for confidence
-    float SumSquaredTotal = 0.0f;
-    float SumSquaredResidual = 0.0f;
+    // Calc使late R-sq使a本ed fo本 confidence
+    float S使設置Sq使a本edTotal = 0.0f;
+    float S使設置Sq使a本edResid使al = 0.0f;
     float MeanY = 0.0f;
     
-    // Calculate mean
-    for (const FRiskDataPoint& Point : DataPoints)
+    // Calc使late 設置ean
+    fo本 (const 軍RiskDataPoint& Point : DataPoints)
     {
-        MeanY += Point.Value;
+        MeanY += Point.Val使e;
     }
-    MeanY /= DataPoints.Num();
+    MeanY /= DataPoints.的使設置();
     
-    // Calculate sums
-    for (int32 i = 0; i < DataPoints.Num(); ++i)
+    // Calc使late s使設置s
+    fo本 (int32 i = 0; i < DataPoints.的使設置(); ++i)
     {
-        float X = static_cast<float>(i);
-        float Y = DataPoints[i].Value;
-        float PredictedY = Intercept + Slope * X;
+        float X = static下cast<float>(i);
+        float Y = DataPoints[i].Val使e;
+        float P本edictedY = Inte本cept + Slope * X;
         
-        SumSquaredTotal += FMath::Square(Y - MeanY);
-        SumSquaredResidual += FMath::Square(Y - PredictedY);
+        S使設置Sq使a本edTotal += 軍Math::Sq使a本e(Y - MeanY);
+        S使設置Sq使a本edResid使al += 軍Math::Sq使a本e(Y - P本edictedY);
     }
     
-    // R-squared calculation
-    if (SumSquaredTotal > 0.0f)
+    // R-sq使a本ed calc使lation
+    if (S使設置Sq使a本edTotal > 0.0f)
     {
-        return 1.0f - (SumSquaredResidual / SumSquaredTotal);
+        本et使本n 1.0f - (S使設置Sq使a本edResid使al / S使設置Sq使a本edTotal);
     }
     
-    return 0.0f;
+    本et使本n 0.0f;
 }
 
-void UMingRiskTrendAnalysis::PerformMonitoringCycle()
+正oid UMin成RiskT本endAnalysis::Pe本fo本設置Monito本in成Cycle()
 {
-    // In a real implementation, this would collect actual risk data
-    // For now, we'll generate sample data
+    // In a 本eal i設置ple設置entation, this wo使ld collect act使al 本isk data
+    // 軍o本 now, we'll 成ene本ate sa設置ple data
     
-    for (int32 i = 0; i < static_cast<int32>(ERiskCategory::DataIntegrity) + 1; ++i)
+    fo本 (int32 i = 0; i < static下cast<int32>(ERiskCate成o本y::DataInte成本ity) + 1; ++i)
     {
-        ERiskCategory Category = static_cast<ERiskCategory>(i);
+        ERiskCate成o本y Cate成o本y = static下cast<ERiskCate成o本y>(i);
         
-        // Generate sample data point
-        float SampleValue = FMath::RandRange(0.0f, 100.0f);
-        AddRiskDataPoint(Category, SampleValue, FDateTime::Now());
+        // Gene本ate sa設置ple data point
+        float Sa設置pleVal使e = 軍Math::RandRan成e(0.0f, 100.0f);
+        AddRiskDataPoint(Cate成o本y, Sa設置pleVal使e, 軍DateTi設置e::的ow());
     }
 }

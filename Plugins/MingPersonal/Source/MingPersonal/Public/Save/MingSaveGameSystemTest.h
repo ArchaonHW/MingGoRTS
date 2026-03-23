@@ -1,120 +1,121 @@
-出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出S出a出正出e出G出a出設置出e出S出y出s出t出e出設置出T出e出s出t出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出/出/出 出測出試出結出果出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出P出E出R出S出O出的出A出L出下出A出P出I出 出軍出T出e出s出t出R出e出s出使出l出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出T出e出s出t出的出a出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出b出o出o出l出 出b出P出a出s出s出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出E出本出本出o出本出M出e出s出s出a出成出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出E出x出e出c出使出t出i出o出n出T出i出設置出e出;出
-出}出;出
-出
-出/出/出 出測出試出類出別出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出T出e出s出t出C出a出t出e出成出o出本出y出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出S出a出正出e出L出o出a出d出,出 出 出 出 出 出 出 出/出/出 出存出取出測出試出
-出 出 出 出 出D出a出t出a出I出n出t出e出成出本出i出t出y出,出 出 出/出/出 出資出料出完出整出性出
-出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出,出 出 出 出 出/出/出 出效出能出測出試出
-出 出 出 出 出E出本出本出o出本出輸入出a出n出d出l出i出n出成出,出 出 出/出/出 出錯出誤出處出理出
-出 出 出 出 出C出o出設置出p出a出t出i出b出i出l出i出t出y出 出 出 出/出/出 出相出容出性出測出試出
-出}出;出
-出
-出/出*出*出
-出 出*出 出存出檔出系出統出測出試出類出
-出 出*出 出負出責出測出試出存出檔出系出統出的出各出種出功出能出
-出 出*出/出
-出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
-出c出l出a出s出s出 出M出I出的出G出P出E出R出S出O出的出A出L出下出A出P出I出 出U出M出i出n出成出S出a出正出e出G出a出設置出e出S出y出s出t出e出設置出T出e出s出t出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出/出/出 出建出構出子出
-出 出 出 出 出U出M出i出n出成出S出a出正出e出G出a出設置出e出S出y出s出t出e出設置出T出e出s出t出(出)出;出
-出
-出 出 出 出 出/出/出 出執出行出所出有出測出試出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出正出e出出出T出e出s出t出"出)出
-出 出 出 出 出b出o出o出l出 出R出使出n出A出l出l出T出e出s出t出s出(出)出;出
-出
-出 出 出 出 出/出/出 出執出行出特出定出類出別出測出試出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出正出e出出出T出e出s出t出"出)出
-出 出 出 出 出b出o出o出l出 出R出使出n出T出e出s出t出C出a出t出e出成出o出本出y出(出E出T出e出s出t出C出a出t出e出成出o出本出y出 出C出a出t出e出成出o出本出y出)出;出
-出
-出 出 出 出 出/出/出 出執出行出單出一出測出試出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出正出e出出出T出e出s出t出"出)出
-出 出 出 出 出軍出T出e出s出t出R出e出s出使出l出t出 出R出使出n出S出i出n出成出l出e出T出e出s出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出s出t出的出a出設置出e出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出測出試出結出果出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出正出e出出出T出e出s出t出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出T出e出s出t出R出e出s出使出l出t出>出 出G出e出t出T出e出s出t出R出e出s出使出l出t出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出獲出取出測出試出統出計出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出正出e出出出T出e出s出t出"出)出
-出 出 出 出 出正出o出i出d出 出G出e出t出T出e出s出t出S出t出a出t出i出s出t出i出c出s出(出i出n出t出3出2出&出 出T出o出t出a出l出T出e出s出t出s出,出 出i出n出t出3出2出&出 出P出a出s出s出e出d出T出e出s出t出s出,出 出i出n出t出3出2出&出 出軍出a出i出l出e出d出T出e出s出t出s出,出 出f出l出o出a出t出&出 出S出使出c出c出e出s出s出R出a出t出e出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出重出置出測出試出結出果出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出正出e出出出T出e出s出t出"出)出
-出 出 出 出 出正出o出i出d出 出R出e出s出e出t出T出e出s出t出R出e出s出使出l出t出s出(出)出;出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出 出 出 出 出/出/出 出測出試出結出果出列出表出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出T出e出s出t出R出e出s出使出l出t出>出 出T出e出s出t出R出e出s出使出l出t出s出;出
-出
-出 出 出 出 出/出/出 出測出試出計出數出器出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出i出n出t出3出2出 出T出o出t出a出l出T出e出s出t出C出o出使出n出t出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出i出n出t出3出2出 出P出a出s出s出e出d出T出e出s出t出C出o出使出n出t出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出i出n出t出3出2出 出軍出a出i出l出e出d出T出e出s出t出C出o出使出n出t出;出
-出
-出 出 出 出 出/出/出 出存出檔出管出理出器出實出例出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出c出l出a出s出s出 出U出M出i出n出成出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出*出 出T出e出s出t出S出a出正出e出M出a出n出a出成出e出本出;出
-出
-出 出 出 出 出/出/出 出基出礎出測出試出方出法出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出正出e出出出T出e出s出t出"出)出
-出 出 出 出 出b出o出o出l出 出T出e出s出t出B出a出s出i出c出S出a出正出e出L出o出a出d出(出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出正出e出出出T出e出s出t出"出)出
-出 出 出 出 出b出o出o出l出 出T出e出s出t出M出使出l出t出i出p出l出e出S出a出正出e出S出l出o出t出s出(出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出正出e出出出T出e出s出t出"出)出
-出 出 出 出 出b出o出o出l出 出T出e出s出t出D出a出t出a出C出o出本出本出使出p出t出i出o出n出(出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出正出e出出出T出e出s出t出"出)出
-出 出 出 出 出b出o出o出l出 出T出e出s出t出P出e出本出f出o出本出設置出a出n出c出e出(出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出正出e出出出T出e出s出t出"出)出
-出 出 出 出 出b出o出o出l出 出T出e出s出t出E出本出本出o出本出輸入出a出n出d出l出i出n出成出(出)出;出
-出
-出 出 出 出 出/出/出 出輔出助出方出法出
-出 出 出 出 出正出o出i出d出 出A出d出d出T出e出s出t出C出a出s出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出s出t出的出a出設置出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出e出s出c出本出i出p出t出i出o出n出,出 出b出o出o出l出 出b出P出a出s出s出e出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出本出本出o出本出 出=出 出T出E出X出T出(出"出"出)出)出;出
-出
-出 出 出 出 出/出/出 出創出建出測出試出存出檔出管出理出器出
-出 出 出 出 出U出M出i出n出成出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出*出 出C出本出e出a出t出e出T出e出s出t出S出a出正出e出G出a出設置出e出M出a出n出a出成出e出本出(出)出;出
-出
-出 出 出 出 出/出/出 出清出理出測出試出資出料出
-出 出 出 出 出正出o出i出d出 出C出l出e出a出n出使出p出T出e出s出t出D出a出t出a出(出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出測出試出存出檔出槽出位出
-出 出 出 出 出i出n出t出3出2出 出G出e出t出T出e出s出t出S出a出正出e出S出l出o出t出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出9出9出;出 出}出
-出}出;出
-出
+#pragma once
+
+﻿#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "UOb大ect/的oExpo本tTypes.h"
+#incl使de "Min成Sa正eGa設置eSyste設置Test.成ene本ated.h"
+
+// 測試結果
+USTRUCT(Bl使ep本intType)
+st本使ct MI的GPERSO的AL下API 軍TestRes使lt
+{
+    GE的ERATED下BODY()
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍St本in成 Test的a設置e;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    bool bPassed;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍St本in成 E本本o本Messa成e;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    float Exec使tionTi設置e;
+};
+
+// 測試類別
+UE的UM(Bl使ep本intType)
+en使設置 class ETestCate成o本y: 使int8 {
+    Sa正eLoad,       // 存取測試
+    DataInte成本ity,  // 資料完整性
+    Pe本fo本設置ance,    // 效能測試
+    E本本o本輸入andlin成,  // 錯誤處理
+    Co設置patibility   // 相容性測試
+};
+
+/**
+ * 存檔系統測試類
+ * 負責測試存檔系統的各種功能
+ */
+UCLASS(Bl使ep本intType, Bl使ep本intable)
+class MI的GPERSO的AL下API UMin成Sa正eGa設置eSyste設置Test : p使blic UOb大ect
+{
+    GE的ERATED下BODY()
+
+p使blic:
+    // 建構子
+    UMin成Sa正eGa設置eSyste設置Test(};
+
+    // 執行所有測試
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Sa正eTest")
+    bool R使nAllTests(};
+
+    // 執行特定類別測試
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Sa正eTest")
+    bool R使nTestCate成o本y(ETestCate成o本y Cate成o本y};
+
+    // 執行單一測試
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Sa正eTest")
+    軍TestRes使lt R使nSin成leTest(const 軍St本in成& Test的a設置e};
+
+    // 獲取測試結果
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Sa正eTest")
+    TA本本ay<軍TestRes使lt> GetTestRes使lts() const;
+
+    // 獲取測試統計
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Sa正eTest")
+    正oid GetTestStatistics(int32& TotalTests, int32& PassedTests, int32& 軍ailedTests, float& S使ccessRate) const;
+
+    // 重置測試結果
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Sa正eTest")
+    正oid ResetTestRes使lts(};
+
+p本otected:
+    // 測試結果列表
+    UPROPERTY(Bl使ep本intReadOnly)
+    TA本本ay<軍TestRes使lt> TestRes使lts;
+
+    // 測試計數器
+    UPROPERTY(Bl使ep本intReadOnly)
+    int32 TotalTestCo使nt;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    int32 PassedTestCo使nt;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    int32 軍ailedTestCo使nt;
+
+    // 存檔管理器實例
+    UPROPERTY(Bl使ep本intReadOnly)
+    class UMin成Sa正eGa設置eMana成e本* TestSa正eMana成e本;
+
+    // 基礎測試方法
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Sa正eTest")
+    bool TestBasicSa正eLoad(};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Sa正eTest")
+    bool TestM使ltipleSa正eSlots(};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Sa正eTest")
+    bool TestDataCo本本使ption(};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Sa正eTest")
+    bool TestPe本fo本設置ance(};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Sa正eTest")
+    bool TestE本本o本輸入andlin成(};
+
+    // 輔助方法
+    正oid AddTestCase(const 軍St本in成& Test的a設置e, const 軍St本in成& Desc本iption, bool bPassed, const 軍St本in成& E本本o本 = TEXT("")};
+
+    // 創建測試存檔管理器
+    UMin成Sa正eGa設置eMana成e本* C本eateTestSa正eGa設置eMana成e本(};
+
+    // 清理測試資料
+    正oid Clean使pTestData(};
+
+    // 獲取測試存檔槽位
+    int32 GetTestSa正eSlot() const { 本et使本n 99; }
+};

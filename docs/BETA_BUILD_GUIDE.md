@@ -257,16 +257,16 @@ del /f /q "*.vcxproj*"
 #### 編譯命令
 ```bash
 # 1. 生成項目文件
-"C:\Program Files\Epic Games\UE_5.3\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" -projectfiles -project="%CD%\MingGoRTS.uproject" -game -rocket -progress
+"C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" -projectfiles -project="%CD%\MingGoRTS.uproject" -game -rocket -progress
 
 # 2. 編譯Editor版本
-"C:\Program Files\Epic Games\UE_5.3\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" MingGoRTSEditor Win64 Development -project="%CD%\MingGoRTS.uproject" -game -rocket -progress
+"C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" MingGoRTSEditor Win64 Development -project="%CD%\MingGoRTS.uproject" -game -rocket -progress
 
 # 3. 編譯Shipping版本
-"C:\Program Files\Epic Games\UE_5.3\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" MingGoRTS Win64 Shipping -project="%CD%\MingGoRTS.uproject" -game -rocket -progress
+"C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" MingGoRTS Win64 Shipping -project="%CD%\MingGoRTS.uproject" -game -rocket -progress
 
 # 4. 編譯客戶端版本
-"C:\Program Files\Epic Games\UE_5.3\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" MingGoRTSClient Win64 Shipping -project="%CD%\MingGoRTS.uproject" -game -rocket -progress
+"C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" MingGoRTSClient Win64 Shipping -project="%CD%\MingGoRTS.uproject" -game -rocket -progress
 ```
 
 #### 編譯腳本
@@ -283,7 +283,7 @@ Write-Host "Configuration: $Configuration" -ForegroundColor Yellow
 Write-Host "Platform: $Platform" -ForegroundColor Yellow
 
 # 設置環境變量
-$env:UE_ROOT = "C:\Program Files\Epic Games\UE_5.3"
+$env:UE_ROOT = "C:\Program Files\Epic Games\UE_5.7"
 $env:PROJECT_PATH = $PWD.Path
 $env:OUTPUT_PATH = Join-Path $PWD.Path $OutputDir
 

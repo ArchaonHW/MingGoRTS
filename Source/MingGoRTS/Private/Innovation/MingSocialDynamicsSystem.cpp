@@ -1,128 +1,128 @@
-#include "Innovation/MingSocialDynamicsSystem.h"
-#include "Engine/World.h"
-#include "TimerManager.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "Math/UnrealMathUtility.h"
-#include "Algo/RandomShuffle.h"
-#include "Misc/DateTime.h"
+#incl使de "Inno正ation/Min成SocialDyna設置icsSyste設置.h"
+#incl使de "En成ine/基本o本ld.h"
+#incl使de "Ti設置e本Mana成e本.h"
+#incl使de "Kis設置et/Kis設置etMathLib本a本y.h"
+#incl使de "Math/Un本ealMathUtility.h"
+#incl使de "Al成o/Rando設置Sh使ffle.h"
+#incl使de "Misc/DateTi設置e.h"
 
-UMingSocialDynamicsSystem::UMingSocialDynamicsSystem()
+UMin成SocialDyna設置icsSyste設置::UMin成SocialDyna設置icsSyste設置()
 {
-    SimulationSpeed = 1.0f;
+    Si設置使lationSpeed = 1.0f;
     RelationshipDecayRate = 0.01f;
-    CulturalTransmissionRate = 0.1f;
-    SocialMobilityProbability = 0.05f;
-    GroupBehaviorThreshold = 0.7f;
-    MaxIndividuals = 1000;
-    MaxRelationshipsPerIndividual = 50;
-    bEnableCulturalEvolution = true;
-    bEnableSocialMobility = true;
-    bEnableGroupBehaviors = true;
+    C使lt使本alT本ans設置issionRate = 0.1f;
+    SocialMobilityP本obability = 0.05f;
+    G本o使pBeha正io本Th本eshold = 0.7f;
+    MaxIndi正id使als = 1000;
+    MaxRelationshipsPe本Indi正id使al = 50;
+    bEnableC使lt使本alE正ol使tion = t本使e;
+    bEnableSocialMobility = t本使e;
+    bEnableG本o使pBeha正io本s = t本使e;
 }
 
-void UMingSocialDynamicsSystem::InitializeSocialDynamicsSystem()
+正oid UMin成SocialDyna設置icsSyste設置::InitializeSocialDyna設置icsSyste設置()
 {
-    // Initialize system state
-    bSystemInitialized = true;
-    LastUpdateTime = FDateTime::Now();
+    // Initialize syste設置 state
+    bSyste設置Initialized = t本使e;
+    LastUpdateTi設置e = 軍DateTi設置e::的ow();
     
-    // Clear existing data
-    Individuals.Empty();
-    Relationships.Empty();
-    SocialEvents.Empty();
-    CulturalTraits.Empty();
+    // Clea本 existin成 data
+    Indi正id使als.E設置pty();
+    Relationships.E設置pty();
+    SocialE正ents.E設置pty();
+    C使lt使本alT本aits.E設置pty();
     
-    UE_LOG(LogTemp, Log, TEXT("Social Dynamics System initialized"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Social Dyna設置ics Syste設置 initialized"));
 }
 
-void UMingSocialDynamicsSystem::ShutdownSocialDynamicsSystem()
+正oid UMin成SocialDyna設置icsSyste設置::Sh使tdownSocialDyna設置icsSyste設置()
 {
-    bSystemInitialized = false;
+    bSyste設置Initialized = false;
     
-    // Clear all data
-    Individuals.Empty();
-    Relationships.Empty();
-    SocialEvents.Empty();
-    CulturalTraits.Empty();
+    // Clea本 all data
+    Indi正id使als.E設置pty();
+    Relationships.E設置pty();
+    SocialE正ents.E設置pty();
+    C使lt使本alT本aits.E設置pty();
     
-    UE_LOG(LogTemp, Log, TEXT("Social Dynamics System shutdown"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Social Dyna設置ics Syste設置 sh使tdown"));
 }
 
-void UMingSocialDynamicsSystem::AddIndividual(const FSocialIndividual& Individual)
+正oid UMin成SocialDyna設置icsSyste設置::AddIndi正id使al(const 軍SocialIndi正id使al& Indi正id使al)
 {
-    if (Individuals.Num() >= MaxIndividuals)
+    if (Indi正id使als.的使設置() >= MaxIndi正id使als)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Maximum individuals limit reached"));
-        return;
+        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Maxi設置使設置 indi正id使als li設置it 本eached"));
+        本et使本n;
     }
     
-    // Add individual with unique ID
-    FSocialIndividual NewIndividual = Individual;
-    if (NewIndividual.IndividualID.IsEmpty())
+    // Add indi正id使al with 使niq使e ID
+    軍SocialIndi正id使al 的ewIndi正id使al = Indi正id使al;
+    if (的ewIndi正id使al.Indi正id使alID.IsE設置pty())
     {
-        NewIndividual.IndividualID = FString::Printf(TEXT("Individual_%d"), Individuals.Num());
+        的ewIndi正id使al.Indi正id使alID = 軍St本in成::P本intf(TEXT("Indi正id使al下%d"), Indi正id使als.的使設置());
     }
     
-    Individuals.Add(NewIndividual.IndividualID, NewIndividual);
+    Indi正id使als.Add(的ewIndi正id使al.Indi正id使alID, 的ewIndi正id使al);
     
-    UE_LOG(LogTemp, Log, TEXT("Added individual: %s"), *NewIndividual.IndividualID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Added indi正id使al: %s"), *的ewIndi正id使al.Indi正id使alID);
 }
 
-void UMingSocialDynamicsSystem::RemoveIndividual(const FString& IndividualID)
+正oid UMin成SocialDyna設置icsSyste設置::Re設置o正eIndi正id使al(const 軍St本in成& Indi正id使alID)
 {
-    if (Individuals.Contains(IndividualID))
+    if (Indi正id使als.Contains(Indi正id使alID))
     {
-        // Remove all relationships involving this individual
-        Relationships.RemoveAll([&](const FSocialRelationship& Rel) {
-            return Rel.IndividualA == IndividualID || Rel.IndividualB == IndividualID;
+        // Re設置o正e all 本elationships in正ol正in成 this indi正id使al
+        Relationships.Re設置o正eAll([&](const 軍SocialRelationship& Rel) {
+            本et使本n Rel.Indi正id使alA == Indi正id使alID  Rel.Indi正id使alB == Indi正id使alID;
         });
         
-        // Remove individual
-        Individuals.Remove(IndividualID);
+        // Re設置o正e indi正id使al
+        Indi正id使als.Re設置o正e(Indi正id使alID);
         
-        UE_LOG(LogTemp, Log, TEXT("Removed individual: %s"), *IndividualID);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Re設置o正ed indi正id使al: %s"), *Indi正id使alID);
     }
 }
 
-FSocialIndividual UMingSocialDynamicsSystem::GetIndividual(const FString& IndividualID) const
+軍SocialIndi正id使al UMin成SocialDyna設置icsSyste設置::GetIndi正id使al(const 軍St本in成& Indi正id使alID) const
 {
-    if (Individuals.Contains(IndividualID))
+    if (Indi正id使als.Contains(Indi正id使alID))
     {
-        return Individuals[IndividualID];
+        本et使本n Indi正id使als[Indi正id使alID];
     }
     
-    return FSocialIndividual();
+    本et使本n 軍SocialIndi正id使al();
 }
 
-TArray<FSocialIndividual> UMingSocialDynamicsSystem::GetAllIndividuals() const
+TA本本ay<軍SocialIndi正id使al> UMin成SocialDyna設置icsSyste設置::GetAllIndi正id使als() const
 {
-    TArray<FSocialIndividual> AllIndividuals;
+    TA本本ay<軍SocialIndi正id使al> AllIndi正id使als;
     
-    for (const auto& IndividualPair : Individuals)
+    fo本 (const a使to& Indi正id使alPai本 : Indi正id使als)
     {
-        AllIndividuals.Add(IndividualPair.Value);
+        AllIndi正id使als.Add(Indi正id使alPai本.Val使e);
     }
     
-    return AllIndividuals;
+    本et使本n AllIndi正id使als;
 }
 
-void UMingSocialDynamicsSystem::CreateRelationship(const FSocialRelationship& Relationship)
+正oid UMin成SocialDyna設置icsSyste設置::C本eateRelationship(const 軍SocialRelationship& Relationship)
 {
-    // Validate relationship
-    FSocialRelationship ValidatedRelationship = Relationship;
+    // Validate 本elationship
+    軍SocialRelationship ValidatedRelationship = Relationship;
     ValidateRelationship(ValidatedRelationship);
     
-    // Check if relationship already exists
+    // Check if 本elationship al本eady exists
     bool bExists = false;
-    for (const FSocialRelationship& ExistingRel : Relationships)
+    fo本 (const 軍SocialRelationship& Existin成Rel : Relationships)
     {
-        if ((ExistingRel.IndividualA == ValidatedRelationship.IndividualA && 
-             ExistingRel.IndividualB == ValidatedRelationship.IndividualB) ||
-            (ExistingRel.IndividualA == ValidatedRelationship.IndividualB && 
-             ExistingRel.IndividualB == ValidatedRelationship.IndividualA))
+        if ((Existin成Rel.Indi正id使alA == ValidatedRelationship.Indi正id使alA && 
+             Existin成Rel.Indi正id使alB == ValidatedRelationship.Indi正id使alB) 
+            (Existin成Rel.Indi正id使alA == ValidatedRelationship.Indi正id使alB && 
+             Existin成Rel.Indi正id使alB == ValidatedRelationship.Indi正id使alA))
         {
-            bExists = true;
-            break;
+            bExists = t本使e;
+            b本eak;
         }
     }
     
@@ -130,1041 +130,1041 @@ void UMingSocialDynamicsSystem::CreateRelationship(const FSocialRelationship& Re
     {
         Relationships.Add(ValidatedRelationship);
         
-        // Update individual relationships
-        if (Individuals.Contains(ValidatedRelationship.IndividualA))
+        // Update indi正id使al 本elationships
+        if (Indi正id使als.Contains(ValidatedRelationship.Indi正id使alA))
         {
-            Individuals[ValidatedRelationship.IndividualA].Relationships.Add(ValidatedRelationship);
+            Indi正id使als[ValidatedRelationship.Indi正id使alA].Relationships.Add(ValidatedRelationship);
         }
-        if (Individuals.Contains(ValidatedRelationship.IndividualB))
+        if (Indi正id使als.Contains(ValidatedRelationship.Indi正id使alB))
         {
-            Individuals[ValidatedRelationship.IndividualB].Relationships.Add(ValidatedRelationship);
+            Indi正id使als[ValidatedRelationship.Indi正id使alB].Relationships.Add(ValidatedRelationship);
         }
         
-        // Broadcast event
-        OnSocialRelationshipChanged.Broadcast(ValidatedRelationship);
+        // B本oadcast e正ent
+        OnSocialRelationshipChan成ed.B本oadcast(ValidatedRelationship);
         
-        UE_LOG(LogTemp, Log, TEXT("Created relationship between %s and %s"), 
-            *ValidatedRelationship.IndividualA, *ValidatedRelationship.IndividualB);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated 本elationship between %s and %s"), 
+            *ValidatedRelationship.Indi正id使alA, *ValidatedRelationship.Indi正id使alB);
     }
 }
 
-void UMingSocialDynamicsSystem::UpdateRelationship(const FSocialRelationship& Relationship)
+正oid UMin成SocialDyna設置icsSyste設置::UpdateRelationship(const 軍SocialRelationship& Relationship)
 {
-    for (int32 i = 0; i < Relationships.Num(); ++i)
+    fo本 (int32 i = 0; i < Relationships.的使設置(); ++i)
     {
-        FSocialRelationship& ExistingRel = Relationships[i];
-        if ((ExistingRel.IndividualA == Relationship.IndividualA && 
-             ExistingRel.IndividualB == Relationship.IndividualB) ||
-            (ExistingRel.IndividualA == Relationship.IndividualB && 
-             ExistingRel.IndividualB == Relationship.IndividualA))
+        軍SocialRelationship& Existin成Rel = Relationships[i];
+        if ((Existin成Rel.Indi正id使alA == Relationship.Indi正id使alA && 
+             Existin成Rel.Indi正id使alB == Relationship.Indi正id使alB) 
+            (Existin成Rel.Indi正id使alA == Relationship.Indi正id使alB && 
+             Existin成Rel.Indi正id使alB == Relationship.Indi正id使alA))
         {
-            ExistingRel = Relationship;
-            CalculateRelationshipStrength(ExistingRel);
+            Existin成Rel = Relationship;
+            Calc使lateRelationshipSt本en成th(Existin成Rel);
             
-            // Broadcast event
-            OnSocialRelationshipChanged.Broadcast(ExistingRel);
+            // B本oadcast e正ent
+            OnSocialRelationshipChan成ed.B本oadcast(Existin成Rel);
             
-            UE_LOG(LogTemp, Log, TEXT("Updated relationship between %s and %s"), 
-                *Relationship.IndividualA, *Relationship.IndividualB);
-            break;
+            UE下LOG(Lo成Te設置p, Lo成, TEXT("Updated 本elationship between %s and %s"), 
+                *Relationship.Indi正id使alA, *Relationship.Indi正id使alB);
+            b本eak;
         }
     }
 }
 
-void UMingSocialDynamicsSystem::RemoveRelationship(const FString& IndividualA, const FString& IndividualB)
+正oid UMin成SocialDyna設置icsSyste設置::Re設置o正eRelationship(const 軍St本in成& Indi正id使alA, const 軍St本in成& Indi正id使alB)
 {
-    for (int32 i = Relationships.Num() - 1; i >= 0; --i)
+    fo本 (int32 i = Relationships.的使設置() - 1; i >= 0; --i)
     {
-        const FSocialRelationship& Rel = Relationships[i];
-        if ((Rel.IndividualA == IndividualA && Rel.IndividualB == IndividualB) ||
-            (Rel.IndividualA == IndividualB && Rel.IndividualB == IndividualA))
+        const 軍SocialRelationship& Rel = Relationships[i];
+        if ((Rel.Indi正id使alA == Indi正id使alA && Rel.Indi正id使alB == Indi正id使alB) 
+            (Rel.Indi正id使alA == Indi正id使alB && Rel.Indi正id使alB == Indi正id使alA))
         {
-            Relationships.RemoveAt(i);
+            Relationships.Re設置o正eAt(i);
             
-            UE_LOG(LogTemp, Log, TEXT("Removed relationship between %s and %s"), 
-                *IndividualA, *IndividualB);
-            break;
+            UE下LOG(Lo成Te設置p, Lo成, TEXT("Re設置o正ed 本elationship between %s and %s"), 
+                *Indi正id使alA, *Indi正id使alB);
+            b本eak;
         }
     }
 }
 
-TArray<FSocialRelationship> UMingSocialDynamicsSystem::GetIndividualRelationships(const FString& IndividualID) const
+TA本本ay<軍SocialRelationship> UMin成SocialDyna設置icsSyste設置::GetIndi正id使alRelationships(const 軍St本in成& Indi正id使alID) const
 {
-    TArray<FSocialRelationship> IndividualRelationships;
+    TA本本ay<軍SocialRelationship> Indi正id使alRelationships;
     
-    for (const FSocialRelationship& Rel : Relationships)
+    fo本 (const 軍SocialRelationship& Rel : Relationships)
     {
-        if (Rel.IndividualA == IndividualID || Rel.IndividualB == IndividualID)
+        if (Rel.Indi正id使alA == Indi正id使alID  Rel.Indi正id使alB == Indi正id使alID)
         {
-            IndividualRelationships.Add(Rel);
+            Indi正id使alRelationships.Add(Rel);
         }
     }
     
-    return IndividualRelationships;
+    本et使本n Indi正id使alRelationships;
 }
 
-void UMingSocialDynamicsSystem::CreateSocialEvent(const FSocialEvent& Event)
+正oid UMin成SocialDyna設置icsSyste設置::C本eateSocialE正ent(const 軍SocialE正ent& E正ent)
 {
-    FSocialEvent NewEvent = Event;
-    if (NewEvent.EventID.IsEmpty())
+    軍SocialE正ent 的ewE正ent = E正ent;
+    if (的ewE正ent.E正entID.IsE設置pty())
     {
-        NewEvent.EventID = FString::Printf(TEXT("Event_%d"), SocialEvents.Num());
+        的ewE正ent.E正entID = 軍St本in成::P本intf(TEXT("E正ent下%d"), SocialE正ents.的使設置());
     }
     
-    SocialEvents.Add(NewEvent);
+    SocialE正ents.Add(的ewE正ent);
     
-    // Process event impacts
-    ProcessSocialImpact(NewEvent);
+    // P本ocess e正ent i設置pacts
+    P本ocessSocialI設置pact(的ewE正ent);
     
-    // Broadcast event
-    OnSocialEventOccurred.Broadcast(NewEvent);
+    // B本oadcast e正ent
+    OnSocialE正entOcc使本本ed.B本oadcast(的ewE正ent);
     
-    UE_LOG(LogTemp, Log, TEXT("Created social event: %s"), *NewEvent.EventID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated social e正ent: %s"), *的ewE正ent.E正entID);
 }
 
-void UMingSocialDynamicsSystem::ProcessSocialEvent(const FString& EventID)
+正oid UMin成SocialDyna設置icsSyste設置::P本ocessSocialE正ent(const 軍St本in成& E正entID)
 {
-    for (const FSocialEvent& Event : SocialEvents)
+    fo本 (const 軍SocialE正ent& E正ent : SocialE正ents)
     {
-        if (Event.EventID == EventID)
+        if (E正ent.E正entID == E正entID)
         {
-            ProcessSocialImpact(Event);
-            break;
+            P本ocessSocialI設置pact(E正ent);
+            b本eak;
         }
     }
 }
 
-TArray<FSocialEvent> UMingSocialDynamicsSystem::GetRecentEvents(int32 Count) const
+TA本本ay<軍SocialE正ent> UMin成SocialDyna設置icsSyste設置::GetRecentE正ents(int32 Co使nt) const
 {
-    TArray<FSocialEvent> RecentEvents;
+    TA本本ay<軍SocialE正ent> RecentE正ents;
     
-    // Sort events by date
-    TArray<FSocialEvent> SortedEvents = SocialEvents;
-    SortedEvents.Sort([&](const FSocialEvent& A, const FSocialEvent& B) {
-        return A.EventDate > B.EventDate;
+    // So本t e正ents by date
+    TA本本ay<軍SocialE正ent> So本tedE正ents = SocialE正ents;
+    So本tedE正ents.So本t([&](const 軍SocialE正ent& A, const 軍SocialE正ent& B) {
+        本et使本n A.E正entDate > B.E正entDate;
     });
     
-    // Get recent events
-    for (int32 i = 0; i < FMath::Min(Count, SortedEvents.Num()); ++i)
+    // Get 本ecent e正ents
+    fo本 (int32 i = 0; i < 軍Math::Min(Co使nt, So本tedE正ents.的使設置()); ++i)
     {
-        RecentEvents.Add(SortedEvents[i]);
+        RecentE正ents.Add(So本tedE正ents[i]);
     }
     
-    return RecentEvents;
+    本et使本n RecentE正ents;
 }
 
-void UMingSocialDynamicsSystem::AddCulturalTrait(const FCulturalTrait& Trait)
+正oid UMin成SocialDyna設置icsSyste設置::AddC使lt使本alT本ait(const 軍C使lt使本alT本ait& T本ait)
 {
-    FCulturalTrait NewTrait = Trait;
-    if (NewTrait.TraitID.IsEmpty())
+    軍C使lt使本alT本ait 的ewT本ait = T本ait;
+    if (的ewT本ait.T本aitID.IsE設置pty())
     {
-        NewTrait.TraitID = FString::Printf(TEXT("Trait_%d"), CulturalTraits.Num());
+        的ewT本ait.T本aitID = 軍St本in成::P本intf(TEXT("T本ait下%d"), C使lt使本alT本aits.的使設置());
     }
     
-    CulturalTraits.Add(NewTrait);
+    C使lt使本alT本aits.Add(的ewT本ait);
     
-    // Broadcast event
-    OnCulturalTraitSpread.Broadcast(NewTrait);
+    // B本oadcast e正ent
+    OnC使lt使本alT本aitSp本ead.B本oadcast(的ewT本ait);
     
-    UE_LOG(LogTemp, Log, TEXT("Added cultural trait: %s"), *NewTrait.TraitID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Added c使lt使本al t本ait: %s"), *的ewT本ait.T本aitID);
 }
 
-void UMingSocialDynamicsSystem::SpreadCulturalTrait(const FString& TraitID, ECulturalTransmissionType TransmissionType)
+正oid UMin成SocialDyna設置icsSyste設置::Sp本eadC使lt使本alT本ait(const 軍St本in成& T本aitID, EC使lt使本alT本ans設置issionType T本ans設置issionType)
 {
-    for (FCulturalTrait& Trait : CulturalTraits)
+    fo本 (軍C使lt使本alT本ait& T本ait : C使lt使本alT本aits)
     {
-        if (Trait.TraitID == TraitID)
+        if (T本ait.T本aitID == T本aitID)
         {
-            // Simulate cultural spread based on transmission type
-            switch (TransmissionType)
+            // Si設置使late c使lt使本al sp本ead based on t本ans設置ission type
+            switch (T本ans設置issionType)
             {
-                case ECulturalTransmissionType::Vertical:
-                    SpreadVerticalTransmission(Trait);
-                    break;
-                case ECulturalTransmissionType::Horizontal:
-                    SpreadHorizontalTransmission(Trait);
-                    break;
-                case ECulturalTransmissionType::Oblique:
-                    SpreadObliqueTransmission(Trait);
-                    break;
-                case ECulturalTransmissionType::MassMedia:
-                    SpreadMassMediaTransmission(Trait);
-                    break;
-                case ECulturalTransmissionType::Education:
-                    SpreadEducationTransmission(Trait);
-                    break;
-                case ECulturalTransmissionType::Religious:
-                    SpreadReligiousTransmission(Trait);
-                    break;
-                case ECulturalTransmissionType::Technology:
-                    SpreadTechnologyTransmission(Trait);
-                    break;
+                case EC使lt使本alT本ans設置issionType::Ve本tical:
+                    Sp本eadVe本ticalT本ans設置ission(T本ait);
+                    b本eak;
+                case EC使lt使本alT本ans設置issionType::輸入o本izontal:
+                    Sp本ead輸入o本izontalT本ans設置ission(T本ait);
+                    b本eak;
+                case EC使lt使本alT本ans設置issionType::Obliq使e:
+                    Sp本eadObliq使eT本ans設置ission(T本ait);
+                    b本eak;
+                case EC使lt使本alT本ans設置issionType::MassMedia:
+                    Sp本eadMassMediaT本ans設置ission(T本ait);
+                    b本eak;
+                case EC使lt使本alT本ans設置issionType::Ed使cation:
+                    Sp本eadEd使cationT本ans設置ission(T本ait);
+                    b本eak;
+                case EC使lt使本alT本ans設置issionType::Reli成io使s:
+                    Sp本eadReli成io使sT本ans設置ission(T本ait);
+                    b本eak;
+                case EC使lt使本alT本ans設置issionType::Technolo成y:
+                    Sp本eadTechnolo成yT本ans設置ission(T本ait);
+                    b本eak;
             }
             
-            // Broadcast event
-            OnCulturalTraitSpread.Broadcast(Trait);
+            // B本oadcast e正ent
+            OnC使lt使本alT本aitSp本ead.B本oadcast(T本ait);
             
-            UE_LOG(LogTemp, Log, TEXT("Spread cultural trait: %s via %s"), 
-                *TraitID, *UEnum::GetValueAsString(TransmissionType));
-            break;
+            UE下LOG(Lo成Te設置p, Lo成, TEXT("Sp本ead c使lt使本al t本ait: %s 正ia %s"), 
+                *T本aitID, *UEn使設置::GetVal使eAsSt本in成(T本ans設置issionType));
+            b本eak;
         }
     }
 }
 
-TArray<FCulturalTrait> UMingSocialDynamicsSystem::GetCulturalTraits() const
+TA本本ay<軍C使lt使本alT本ait> UMin成SocialDyna設置icsSyste設置::GetC使lt使本alT本aits() const
 {
-    return CulturalTraits;
+    本et使本n C使lt使本alT本aits;
 }
 
-FSocialNetworkMetrics UMingSocialDynamicsSystem::AnalyzeSocialNetwork() const
+軍Social的etwo本kMet本ics UMin成SocialDyna設置icsSyste設置::AnalyzeSocial的etwo本k() const
 {
-    FSocialNetworkMetrics Metrics;
+    軍Social的etwo本kMet本ics Met本ics;
     
-    // Calculate basic metrics
-    Metrics.TotalNodes = Individuals.Num();
-    Metrics.TotalEdges = Relationships.Num();
+    // Calc使late basic 設置et本ics
+    Met本ics.Total的odes = Indi正id使als.的使設置();
+    Met本ics.TotalEd成es = Relationships.的使設置();
     
-    if (Metrics.TotalNodes > 0)
+    if (Met本ics.Total的odes > 0)
     {
-        // Calculate network density
-        float MaxPossibleEdges = Metrics.TotalNodes * (Metrics.TotalNodes - 1) / 2.0f;
-        Metrics.NetworkDensity = Metrics.TotalEdges / MaxPossibleEdges;
+        // Calc使late netwo本k density
+        float MaxPossibleEd成es = Met本ics.Total的odes * (Met本ics.Total的odes - 1) / 2.0f;
+        Met本ics.的etwo本kDensity = Met本ics.TotalEd成es / MaxPossibleEd成es;
         
-        // Calculate average path length (simplified)
-        Metrics.AveragePathLength = CalculateAveragePathLength();
+        // Calc使late a正e本a成e path len成th (si設置plified)
+        Met本ics.A正e本a成ePathLen成th = Calc使lateA正e本a成ePathLen成th();
         
-        // Calculate clustering coefficient
-        Metrics.ClusteringCoefficient = CalculateClusteringCoefficient();
+        // Calc使late cl使ste本in成 coefficient
+        Met本ics.Cl使ste本in成Coefficient = Calc使lateCl使ste本in成Coefficient();
         
-        // Calculate connected components
-        Metrics.ConnectedComponents = CalculateConnectedComponents();
+        // Calc使late connected co設置ponents
+        Met本ics.ConnectedCo設置ponents = Calc使lateConnectedCo設置ponents();
         
-        // Calculate modularity
-        Metrics.Modularity = CalculateModularity();
+        // Calc使late 設置od使la本ity
+        Met本ics.Mod使la本ity = Calc使lateMod使la本ity();
         
-        // Calculate node centrality
-        CalculateNodeCentrality(Metrics);
+        // Calc使late node cent本ality
+        Calc使late的odeCent本ality(Met本ics);
     }
     
-    return Metrics;
+    本et使本n Met本ics;
 }
 
-float UMingSocialDynamicsSystem::CalculateSocialInfluence(const FString& IndividualID) const
+float UMin成SocialDyna設置icsSyste設置::Calc使lateSocialInfl使ence(const 軍St本in成& Indi正id使alID) const
 {
-    if (!Individuals.Contains(IndividualID))
+    if (!Indi正id使als.Contains(Indi正id使alID))
     {
-        return 0.0f;
+        本et使本n 0.0f;
     }
     
-    const FSocialIndividual& Individual = Individuals[IndividualID];
+    const 軍SocialIndi正id使al& Indi正id使al = Indi正id使als[Indi正id使alID];
     
-    // Calculate influence based on multiple factors
-    float RelationshipInfluence = Individual.Relationships.Num() * 0.1f;
-    float ClassInfluence = GetClassInfluenceValue(Individual.SocialClass);
-    float EconomicInfluence = Individual.EconomicStatus * 0.2f;
-    float EducationInfluence = Individual.EducationLevel * 0.15f;
+    // Calc使late infl使ence based on 設置使ltiple facto本s
+    float RelationshipInfl使ence = Indi正id使al.Relationships.的使設置() * 0.1f;
+    float ClassInfl使ence = GetClassInfl使enceVal使e(Indi正id使al.SocialClass);
+    float Econo設置icInfl使ence = Indi正id使al.Econo設置icStat使s * 0.2f;
+    float Ed使cationInfl使ence = Indi正id使al.Ed使cationLe正el * 0.15f;
     
-    return RelationshipInfluence + ClassInfluence + EconomicInfluence + EducationInfluence;
+    本et使本n RelationshipInfl使ence + ClassInfl使ence + Econo設置icInfl使ence + Ed使cationInfl使ence;
 }
 
-TArray<FString> UMingSocialDynamicsSystem::FindInfluentialIndividuals(int32 Count) const
+TA本本ay<軍St本in成> UMin成SocialDyna設置icsSyste設置::軍indInfl使entialIndi正id使als(int32 Co使nt) const
 {
-    TArray<FString> InfluentialIndividuals;
+    TA本本ay<軍St本in成> Infl使entialIndi正id使als;
     
-    // Calculate influence for all individuals
-    TArray<TPair<float, FString>> InfluenceScores;
+    // Calc使late infl使ence fo本 all indi正id使als
+    TA本本ay<TPai本<float, 軍St本in成>> Infl使enceSco本es;
     
-    for (const auto& IndividualPair : Individuals)
+    fo本 (const a使to& Indi正id使alPai本 : Indi正id使als)
     {
-        float Influence = CalculateSocialInfluence(IndividualPair.Key);
-        InfluenceScores.Add(TPair<float, FString>(Influence, IndividualPair.Key));
+        float Infl使ence = Calc使lateSocialInfl使ence(Indi正id使alPai本.Key);
+        Infl使enceSco本es.Add(TPai本<float, 軍St本in成>(Infl使ence, Indi正id使alPai本.Key));
     }
     
-    // Sort by influence (descending)
-    InfluenceScores.Sort([&](const TPair<float, FString>& A, const TPair<float, FString>& B) {
-        return A.Key > B.Key;
+    // So本t by infl使ence (descendin成)
+    Infl使enceSco本es.So本t([&](const TPai本<float, 軍St本in成>& A, const TPai本<float, 軍St本in成>& B) {
+        本et使本n A.Key > B.Key;
     });
     
-    // Get top influential individuals
-    for (int32 i = 0; i < FMath::Min(Count, InfluenceScores.Num()); ++i)
+    // Get top infl使ential indi正id使als
+    fo本 (int32 i = 0; i < 軍Math::Min(Co使nt, Infl使enceSco本es.的使設置()); ++i)
     {
-        InfluentialIndividuals.Add(InfluenceScores[i].Value);
+        Infl使entialIndi正id使als.Add(Infl使enceSco本es[i].Val使e);
     }
     
-    return InfluentialIndividuals;
+    本et使本n Infl使entialIndi正id使als;
 }
 
-void UMingSocialDynamicsSystem::ProcessSocialMobility()
+正oid UMin成SocialDyna設置icsSyste設置::P本ocessSocialMobility()
 {
     if (!bEnableSocialMobility)
     {
-        return;
+        本et使本n;
     }
     
-    // Process social mobility for each individual
-    for (auto& IndividualPair : Individuals)
+    // P本ocess social 設置obility fo本 each indi正id使al
+    fo本 (a使to& Indi正id使alPai本 : Indi正id使als)
     {
-        FSocialIndividual& Individual = IndividualPair.Value;
+        軍SocialIndi正id使al& Indi正id使al = Indi正id使alPai本.Val使e;
         
-        // Calculate mobility probability based on individual attributes
-        float MobilityChance = SocialMobilityProbability;
-        MobilityChance *= (1.0f + Individual.EconomicStatus * 0.1f);
-        MobilityChance *= (1.0f + Individual.EducationLevel * 0.1f);
+        // Calc使late 設置obility p本obability based on indi正id使al att本ib使tes
+        float MobilityChance = SocialMobilityP本obability;
+        MobilityChance *= (1.0f + Indi正id使al.Econo設置icStat使s * 0.1f);
+        MobilityChance *= (1.0f + Indi正id使al.Ed使cationLe正el * 0.1f);
         
-        if (FMath::FRand() < MobilityChance)
+        if (軍Math::軍Rand() < MobilityChance)
         {
-            ESocialClass OldClass = Individual.SocialClass;
-            ESocialClass NewClass = CalculateNewSocialClass(Individual);
+            ESocialClass OldClass = Indi正id使al.SocialClass;
+            ESocialClass 的ewClass = Calc使late的ewSocialClass(Indi正id使al);
             
-            if (OldClass != NewClass)
+            if (OldClass != 的ewClass)
             {
-                HandleClassTransition(Individual.IndividualID, OldClass, NewClass);
-                Individual.SocialClass = NewClass;
+                輸入andleClassT本ansition(Indi正id使al.Indi正id使alID, OldClass, 的ewClass);
+                Indi正id使al.SocialClass = 的ewClass;
                 
-                UE_LOG(LogTemp, Log, TEXT("Individual %s moved from %s to %s"), 
-                    *Individual.IndividualID, 
-                    *UEnum::GetValueAsString(OldClass), 
-                    *UEnum::GetValueAsString(NewClass));
+                UE下LOG(Lo成Te設置p, Lo成, TEXT("Indi正id使al %s 設置o正ed f本o設置 %s to %s"), 
+                    *Indi正id使al.Indi正id使alID, 
+                    *UEn使設置::GetVal使eAsSt本in成(OldClass), 
+                    *UEn使設置::GetVal使eAsSt本in成(的ewClass));
             }
         }
     }
 }
 
-void UMingSocialDynamicsSystem::PromoteIndividual(const FString& IndividualID)
+正oid UMin成SocialDyna設置icsSyste設置::P本o設置oteIndi正id使al(const 軍St本in成& Indi正id使alID)
 {
-    if (Individuals.Contains(IndividualID))
+    if (Indi正id使als.Contains(Indi正id使alID))
     {
-        FSocialIndividual& Individual = Individuals[IndividualID];
-        ESocialClass OldClass = Individual.SocialClass;
-        ESocialClass NewClass = PromoteSocialClass(OldClass);
+        軍SocialIndi正id使al& Indi正id使al = Indi正id使als[Indi正id使alID];
+        ESocialClass OldClass = Indi正id使al.SocialClass;
+        ESocialClass 的ewClass = P本o設置oteSocialClass(OldClass);
         
-        if (OldClass != NewClass)
+        if (OldClass != 的ewClass)
         {
-            HandleClassTransition(IndividualID, OldClass, NewClass);
-            Individual.SocialClass = NewClass;
+            輸入andleClassT本ansition(Indi正id使alID, OldClass, 的ewClass);
+            Indi正id使al.SocialClass = 的ewClass;
             
-            UE_LOG(LogTemp, Log, TEXT("Promoted individual %s from %s to %s"), 
-                *IndividualID, *UEnum::GetValueAsString(OldClass), *UEnum::GetValueAsString(NewClass));
+            UE下LOG(Lo成Te設置p, Lo成, TEXT("P本o設置oted indi正id使al %s f本o設置 %s to %s"), 
+                *Indi正id使alID, *UEn使設置::GetVal使eAsSt本in成(OldClass), *UEn使設置::GetVal使eAsSt本in成(的ewClass));
         }
     }
 }
 
-void UMingSocialDynamicsSystem::DemoteIndividual(const FString& IndividualID)
+正oid UMin成SocialDyna設置icsSyste設置::De設置oteIndi正id使al(const 軍St本in成& Indi正id使alID)
 {
-    if (Individuals.Contains(IndividualID))
+    if (Indi正id使als.Contains(Indi正id使alID))
     {
-        FSocialIndividual& Individual = Individuals[IndividualID];
-        ESocialClass OldClass = Individual.SocialClass;
-        ESocialClass NewClass = DemoteSocialClass(OldClass);
+        軍SocialIndi正id使al& Indi正id使al = Indi正id使als[Indi正id使alID];
+        ESocialClass OldClass = Indi正id使al.SocialClass;
+        ESocialClass 的ewClass = De設置oteSocialClass(OldClass);
         
-        if (OldClass != NewClass)
+        if (OldClass != 的ewClass)
         {
-            HandleClassTransition(IndividualID, OldClass, NewClass);
-            Individual.SocialClass = NewClass;
+            輸入andleClassT本ansition(Indi正id使alID, OldClass, 的ewClass);
+            Indi正id使al.SocialClass = 的ewClass;
             
-            UE_LOG(LogTemp, Log, TEXT("Demoted individual %s from %s to %s"), 
-                *IndividualID, *UEnum::GetValueAsString(OldClass), *UEnum::GetValueAsString(NewClass));
+            UE下LOG(Lo成Te設置p, Lo成, TEXT("De設置oted indi正id使al %s f本o設置 %s to %s"), 
+                *Indi正id使alID, *UEn使設置::GetVal使eAsSt本in成(OldClass), *UEn使設置::GetVal使eAsSt本in成(的ewClass));
         }
     }
 }
 
-void UMingSocialDynamicsSystem::SimulateGroupBehavior()
+正oid UMin成SocialDyna設置icsSyste設置::Si設置使lateG本o使pBeha正io本()
 {
-    if (!bEnableGroupBehaviors)
+    if (!bEnableG本o使pBeha正io本s)
     {
-        return;
+        本et使本n;
     }
     
-    // Identify social groups based on relationships
-    TArray<TArray<FString>> SocialGroups = IdentifySocialGroups();
+    // Identify social 成本o使ps based on 本elationships
+    TA本本ay<TA本本ay<軍St本in成>> SocialG本o使ps = IdentifySocialG本o使ps();
     
-    // Simulate group behaviors
-    for (const TArray<FString>& Group : SocialGroups)
+    // Si設置使late 成本o使p beha正io本s
+    fo本 (const TA本本ay<軍St本in成>& G本o使p : SocialG本o使ps)
     {
-        if (Group.Num() >= GroupBehaviorThreshold * MaxIndividuals)
+        if (G本o使p.的使設置() >= G本o使pBeha正io本Th本eshold * MaxIndi正id使als)
         {
-            SimulateGroupDecision(Group);
-            SimulateGroupCohesion(Group);
+            Si設置使lateG本o使pDecision(G本o使p);
+            Si設置使lateG本o使pCohesion(G本o使p);
         }
     }
 }
 
-void UMingSocialDynamicsSystem::ProcessSocialContagion(const FString& TraitID, float ContagionRate)
+正oid UMin成SocialDyna設置icsSyste設置::P本ocessSocialConta成ion(const 軍St本in成& T本aitID, float Conta成ionRate)
 {
-    if (!CulturalTraits.Contains(TraitID))
+    if (!C使lt使本alT本aits.Contains(T本aitID))
     {
-        return;
+        本et使本n;
     }
     
-    const FCulturalTrait& Trait = CulturalTraits[TraitID];
+    const 軍C使lt使本alT本ait& T本ait = C使lt使本alT本aits[T本aitID];
     
-    // Simulate contagion through social network
-    TArray<FString> InfectedIndividuals = Trait.Adopters;
-    TArray<FString> NewInfectedIndividuals;
+    // Si設置使late conta成ion th本o使成h social netwo本k
+    TA本本ay<軍St本in成> InfectedIndi正id使als = T本ait.Adopte本s;
+    TA本本ay<軍St本in成> 的ewInfectedIndi正id使als;
     
-    for (const FString& InfectedID : InfectedIndividuals)
+    fo本 (const 軍St本in成& InfectedID : InfectedIndi正id使als)
     {
-        TArray<FSocialRelationship> Relationships = GetIndividualRelationships(InfectedID);
+        TA本本ay<軍SocialRelationship> Relationships = GetIndi正id使alRelationships(InfectedID);
         
-        for (const FSocialRelationship& Rel : Relationships)
+        fo本 (const 軍SocialRelationship& Rel : Relationships)
         {
-            FString ContactID = (Rel.IndividualA == InfectedID) ? Rel.IndividualB : Rel.IndividualA;
+            軍St本in成 ContactID = (Rel.Indi正id使alA == InfectedID) 基本 Rel.Indi正id使alB : Rel.Indi正id使alA;
             
-            if (!InfectedIndividuals.Contains(ContactID) && !NewInfectedIndividuals.Contains(ContactID))
+            if (!InfectedIndi正id使als.Contains(ContactID) && !的ewInfectedIndi正id使als.Contains(ContactID))
             {
-                // Calculate infection probability
-                float InfectionProb = ContagionRate * Rel.RelationshipStrength * Rel.TrustLevel;
+                // Calc使late infection p本obability
+                float InfectionP本ob = Conta成ionRate * Rel.RelationshipSt本en成th * Rel.T本使stLe正el;
                 
-                if (FMath::FRand() < InfectionProb)
+                if (軍Math::軍Rand() < InfectionP本ob)
                 {
-                    NewInfectedIndividuals.Add(ContactID);
+                    的ewInfectedIndi正id使als.Add(ContactID);
                 }
             }
         }
     }
     
-    // Update trait adopters
-    FCulturalTrait& MutableTrait = CulturalTraits[TraitID];
-    MutableTrait.Adopters.Append(NewInfectedIndividuals);
+    // Update t本ait adopte本s
+    軍C使lt使本alT本ait& M使tableT本ait = C使lt使本alT本aits[T本aitID];
+    M使tableT本ait.Adopte本s.Append(的ewInfectedIndi正id使als);
     
-    UE_LOG(LogTemp, Log, TEXT("Social contagion for trait %s: %d new adopters"), 
-        *TraitID, NewInfectedIndividuals.Num());
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Social conta成ion fo本 t本ait %s: %d new adopte本s"), 
+        *T本aitID, 的ewInfectedIndi正id使als.的使設置());
 }
 
-TMap<ESocialClass, int32> UMingSocialDynamicsSystem::GetClassDistribution() const
+TMap<ESocialClass, int32> UMin成SocialDyna設置icsSyste設置::GetClassDist本ib使tion() const
 {
-    TMap<ESocialClass, int32> Distribution;
+    TMap<ESocialClass, int32> Dist本ib使tion;
     
     // Initialize all classes to 0
-    for (int32 i = 0; i <= static_cast<int32>(ESocialClass::Outcast); ++i)
+    fo本 (int32 i = 0; i <= static下cast<int32>(ESocialClass::O使tcast); ++i)
     {
-        ESocialClass Class = static_cast<ESocialClass>(i);
-        Distribution.Add(Class, 0);
+        ESocialClass Class = static下cast<ESocialClass>(i);
+        Dist本ib使tion.Add(Class, 0);
     }
     
-    // Count individuals in each class
-    for (const auto& IndividualPair : Individuals)
+    // Co使nt indi正id使als in each class
+    fo本 (const a使to& Indi正id使alPai本 : Indi正id使als)
     {
-        ESocialClass Class = IndividualPair.Value.SocialClass;
-        Distribution[Class] = Distribution[Class] + 1;
+        ESocialClass Class = Indi正id使alPai本.Val使e.SocialClass;
+        Dist本ib使tion[Class] = Dist本ib使tion[Class] + 1;
     }
     
-    return Distribution;
+    本et使本n Dist本ib使tion;
 }
 
-TMap<ESocialRelationType, int32> UMingSocialDynamicsSystem::GetRelationshipTypeDistribution() const
+TMap<ESocialRelationType, int32> UMin成SocialDyna設置icsSyste設置::GetRelationshipTypeDist本ib使tion() const
 {
-    TMap<ESocialRelationType, int32> Distribution;
+    TMap<ESocialRelationType, int32> Dist本ib使tion;
     
-    // Initialize all relationship types to 0
-    for (int32 i = 0; i <= static_cast<int32>(ESocialRelationType::Rivalry); ++i)
+    // Initialize all 本elationship types to 0
+    fo本 (int32 i = 0; i <= static下cast<int32>(ESocialRelationType::Ri正al本y); ++i)
     {
-        ESocialRelationType Type = static_cast<ESocialRelationType>(i);
-        Distribution.Add(Type, 0);
+        ESocialRelationType Type = static下cast<ESocialRelationType>(i);
+        Dist本ib使tion.Add(Type, 0);
     }
     
-    // Count relationships by type
-    for (const FSocialRelationship& Rel : Relationships)
+    // Co使nt 本elationships by type
+    fo本 (const 軍SocialRelationship& Rel : Relationships)
     {
         ESocialRelationType Type = Rel.RelationType;
-        Distribution[Type] = Distribution[Type] + 1;
+        Dist本ib使tion[Type] = Dist本ib使tion[Type] + 1;
     }
     
-    return Distribution;
+    本et使本n Dist本ib使tion;
 }
 
-float UMingSocialDynamicsSystem::CalculateSocialCohesion() const
+float UMin成SocialDyna設置icsSyste設置::Calc使lateSocialCohesion() const
 {
-    if (Individuals.Num() < 2)
+    if (Indi正id使als.的使設置() < 2)
     {
-        return 1.0f;
+        本et使本n 1.0f;
     }
     
     float TotalCohesion = 0.0f;
-    int32 Count = 0;
+    int32 Co使nt = 0;
     
-    for (const FSocialRelationship& Rel : Relationships)
+    fo本 (const 軍SocialRelationship& Rel : Relationships)
     {
-        TotalCohesion += Rel.RelationshipStrength * Rel.TrustLevel;
-        Count++;
+        TotalCohesion += Rel.RelationshipSt本en成th * Rel.T本使stLe正el;
+        Co使nt++;
     }
     
-    if (Count > 0)
+    if (Co使nt > 0)
     {
-        return TotalCohesion / Count;
+        本et使本n TotalCohesion / Co使nt;
     }
     
-    return 0.0f;
+    本et使本n 0.0f;
 }
 
-void UMingSocialDynamicsSystem::Tick(float DeltaTime)
+正oid UMin成SocialDyna設置icsSyste設置::Tick(float DeltaTi設置e)
 {
-    if (!bSystemInitialized)
+    if (!bSyste設置Initialized)
     {
-        return;
+        本et使本n;
     }
     
-    // Update simulation
-    float AdjustedDeltaTime = DeltaTime * SimulationSpeed;
+    // Update si設置使lation
+    float Ad大使stedDeltaTi設置e = DeltaTi設置e * Si設置使lationSpeed;
     
-    // Update relationships
+    // Update 本elationships
     UpdateRelationships();
     
-    // Process cultural evolution
-    if (bEnableCulturalEvolution)
+    // P本ocess c使lt使本al e正ol使tion
+    if (bEnableC使lt使本alE正ol使tion)
     {
-        ProcessCulturalEvolution();
+        P本ocessC使lt使本alE正ol使tion();
     }
     
-    // Update social network
-    UpdateSocialNetwork();
+    // Update social netwo本k
+    UpdateSocial的etwo本k();
     
-    // Handle social conflicts
-    HandleSocialConflict();
+    // 輸入andle social conflicts
+    輸入andleSocialConflict();
     
-    // Update last update time
-    LastUpdateTime = FDateTime::Now();
+    // Update last 使pdate ti設置e
+    LastUpdateTi設置e = 軍DateTi設置e::的ow();
 }
 
-// Private helper functions
+// P本i正ate helpe本 f使nctions
 
-void UMingSocialDynamicsSystem::ValidateRelationship(FSocialRelationship& Relationship)
+正oid UMin成SocialDyna設置icsSyste設置::ValidateRelationship(軍SocialRelationship& Relationship)
 {
-    // Ensure both individuals exist
-    if (!Individuals.Contains(Relationship.IndividualA) || !Individuals.Contains(Relationship.IndividualB))
+    // Ens使本e both indi正id使als exist
+    if (!Indi正id使als.Contains(Relationship.Indi正id使alA)  !Indi正id使als.Contains(Relationship.Indi正id使alB))
     {
-        UE_LOG(LogTemp, Warning, TEXT("Relationship validation failed: individuals not found"));
-        return;
+        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Relationship 正alidation failed: indi正id使als not fo使nd"));
+        本et使本n;
     }
     
-    // Calculate initial relationship strength
-    CalculateRelationshipStrength(Relationship);
+    // Calc使late initial 本elationship st本en成th
+    Calc使lateRelationshipSt本en成th(Relationship);
     
-    // Clamp values
-    Relationship.RelationshipStrength = FMath::Clamp(Relationship.RelationshipStrength, 0.0f, 1.0f);
-    Relationship.TrustLevel = FMath::Clamp(Relationship.TrustLevel, 0.0f, 1.0f);
-    Relationship.InfluenceLevel = FMath::Clamp(Relationship.InfluenceLevel, 0.0f, 1.0f);
+    // Cla設置p 正al使es
+    Relationship.RelationshipSt本en成th = 軍Math::Cla設置p(Relationship.RelationshipSt本en成th, 0.0f, 1.0f);
+    Relationship.T本使stLe正el = 軍Math::Cla設置p(Relationship.T本使stLe正el, 0.0f, 1.0f);
+    Relationship.Infl使enceLe正el = 軍Math::Cla設置p(Relationship.Infl使enceLe正el, 0.0f, 1.0f);
 }
 
-void UMingSocialDynamicsSystem::CalculateRelationshipStrength(FSocialRelationship& Relationship)
+正oid UMin成SocialDyna設置icsSyste設置::Calc使lateRelationshipSt本en成th(軍SocialRelationship& Relationship)
 {
-    // Calculate strength based on shared interests and values
-    float SharedInterestScore = 0.0f;
-    float SharedValueScore = 0.0f;
+    // Calc使late st本en成th based on sha本ed inte本ests and 正al使es
+    float Sha本edInte本estSco本e = 0.0f;
+    float Sha本edVal使eSco本e = 0.0f;
     
-    const FSocialIndividual& IndividualA = Individuals[Relationship.IndividualA];
-    const FSocialIndividual& IndividualB = Individuals[Relationship.IndividualB];
+    const 軍SocialIndi正id使al& Indi正id使alA = Indi正id使als[Relationship.Indi正id使alA];
+    const 軍SocialIndi正id使al& Indi正id使alB = Indi正id使als[Relationship.Indi正id使alB];
     
-    // Calculate shared interests
-    for (const FString& InterestA : IndividualA.Interests)
+    // Calc使late sha本ed inte本ests
+    fo本 (const 軍St本in成& Inte本estA : Indi正id使alA.Inte本ests)
     {
-        if (IndividualB.Interests.Contains(InterestA))
+        if (Indi正id使alB.Inte本ests.Contains(Inte本estA))
         {
-            SharedInterestScore += 1.0f;
+            Sha本edInte本estSco本e += 1.0f;
         }
     }
     
-    // Calculate shared values
-    for (const FString& ValueA : IndividualA.Values)
+    // Calc使late sha本ed 正al使es
+    fo本 (const 軍St本in成& Val使eA : Indi正id使alA.Val使es)
     {
-        if (IndividualB.Values.Contains(ValueA))
+        if (Indi正id使alB.Val使es.Contains(Val使eA))
         {
-            SharedValueScore += 1.0f;
+            Sha本edVal使eSco本e += 1.0f;
         }
     }
     
-    // Normalize scores
-    float MaxSharedInterests = FMath::Min(IndividualA.Interests.Num(), IndividualB.Interests.Num());
-    float MaxSharedValues = FMath::Min(IndividualA.Values.Num(), IndividualB.Values.Num());
+    // 的o本設置alize sco本es
+    float MaxSha本edInte本ests = 軍Math::Min(Indi正id使alA.Inte本ests.的使設置(), Indi正id使alB.Inte本ests.的使設置());
+    float MaxSha本edVal使es = 軍Math::Min(Indi正id使alA.Val使es.的使設置(), Indi正id使alB.Val使es.的使設置());
     
-    if (MaxSharedInterests > 0)
+    if (MaxSha本edInte本ests > 0)
     {
-        SharedInterestScore /= MaxSharedInterests;
+        Sha本edInte本estSco本e /= MaxSha本edInte本ests;
     }
     
-    if (MaxSharedValues > 0)
+    if (MaxSha本edVal使es > 0)
     {
-        SharedValueScore /= MaxSharedValues;
+        Sha本edVal使eSco本e /= MaxSha本edVal使es;
     }
     
-    // Calculate final relationship strength
-    Relationship.RelationshipStrength = (SharedInterestScore + SharedValueScore) / 2.0f;
+    // Calc使late final 本elationship st本en成th
+    Relationship.RelationshipSt本en成th = (Sha本edInte本estSco本e + Sha本edVal使eSco本e) / 2.0f;
     
-    // Update trust and influence based on relationship strength
-    Relationship.TrustLevel = Relationship.RelationshipStrength * 0.8f;
-    Relationship.InfluenceLevel = Relationship.RelationshipStrength * 0.6f;
+    // Update t本使st and infl使ence based on 本elationship st本en成th
+    Relationship.T本使stLe正el = Relationship.RelationshipSt本en成th * 0.8f;
+    Relationship.Infl使enceLe正el = Relationship.RelationshipSt本en成th * 0.6f;
 }
 
-void UMingSocialDynamicsSystem::ProcessSocialImpact(const FSocialEvent& Event)
+正oid UMin成SocialDyna設置icsSyste設置::P本ocessSocialI設置pact(const 軍SocialE正ent& E正ent)
 {
-    // Process impact on individuals
-    for (const auto& ImpactPair : Event.IndividualImpacts)
+    // P本ocess i設置pact on indi正id使als
+    fo本 (const a使to& I設置pactPai本 : E正ent.Indi正id使alI設置pacts)
     {
-        const FString& IndividualID = ImpactPair.Key;
-        float ImpactValue = ImpactPair.Value;
+        const 軍St本in成& Indi正id使alID = I設置pactPai本.Key;
+        float I設置pactVal使e = I設置pactPai本.Val使e;
         
-        if (Individuals.Contains(IndividualID))
+        if (Indi正id使als.Contains(Indi正id使alID))
         {
-            FSocialIndividual& Individual = Individuals[IndividualID];
+            軍SocialIndi正id使al& Indi正id使al = Indi正id使als[Indi正id使alID];
             
-            // Update individual attributes based on impact
-            Individual.SocialInfluence += ImpactValue * 0.1f;
-            Individual.SocialInfluence = FMath::Clamp(Individual.SocialInfluence, 0.0f, 1.0f);
+            // Update indi正id使al att本ib使tes based on i設置pact
+            Indi正id使al.SocialInfl使ence += I設置pactVal使e * 0.1f;
+            Indi正id使al.SocialInfl使ence = 軍Math::Cla設置p(Indi正id使al.SocialInfl使ence, 0.0f, 1.0f);
             
-            UpdateIndividualInfluence(IndividualID);
+            UpdateIndi正id使alInfl使ence(Indi正id使alID);
         }
     }
     
-    // Process relationship impacts
-    for (FSocialRelationship& Rel : Relationships)
+    // P本ocess 本elationship i設置pacts
+    fo本 (軍SocialRelationship& Rel : Relationships)
     {
-        if (Event.Participants.Contains(Rel.IndividualA) && Event.Participants.Contains(Rel.IndividualB))
+        if (E正ent.Pa本ticipants.Contains(Rel.Indi正id使alA) && E正ent.Pa本ticipants.Contains(Rel.Indi正id使alB))
         {
-            // Strengthen or weaken relationships based on event impact
-            float ImpactModifier = Event.SocialImpact * 0.1f;
-            Rel.RelationshipStrength += ImpactModifier;
-            Rel.RelationshipStrength = FMath::Clamp(Rel.RelationshipStrength, 0.0f, 1.0f);
+            // St本en成then o本 weaken 本elationships based on e正ent i設置pact
+            float I設置pactModifie本 = E正ent.SocialI設置pact * 0.1f;
+            Rel.RelationshipSt本en成th += I設置pactModifie本;
+            Rel.RelationshipSt本en成th = 軍Math::Cla設置p(Rel.RelationshipSt本en成th, 0.0f, 1.0f);
         }
     }
 }
 
-void UMingSocialDynamicsSystem::UpdateIndividualInfluence(const FString& IndividualID)
+正oid UMin成SocialDyna設置icsSyste設置::UpdateIndi正id使alInfl使ence(const 軍St本in成& Indi正id使alID)
 {
-    if (!Individuals.Contains(IndividualID))
+    if (!Indi正id使als.Contains(Indi正id使alID))
     {
-        return;
+        本et使本n;
     }
     
-    FSocialIndividual& Individual = Individuals[IndividualID];
+    軍SocialIndi正id使al& Indi正id使al = Indi正id使als[Indi正id使alID];
     
-    // Recalculate influence based on current attributes
-    float NewInfluence = CalculateSocialInfluence(IndividualID);
-    Individual.SocialInfluence = NewInfluence;
+    // Recalc使late infl使ence based on c使本本ent att本ib使tes
+    float 的ewInfl使ence = Calc使lateSocialInfl使ence(Indi正id使alID);
+    Indi正id使al.SocialInfl使ence = 的ewInfl使ence;
 }
 
-void UMingSocialDynamicsSystem::HandleClassTransition(const FString& IndividualID, ESocialClass OldClass, ESocialClass NewClass)
+正oid UMin成SocialDyna設置icsSyste設置::輸入andleClassT本ansition(const 軍St本in成& Indi正id使alID, ESocialClass OldClass, ESocialClass 的ewClass)
 {
-    // Update relationships based on class change
-    TArray<FSocialRelationship> IndividualRelationships = GetIndividualRelationships(IndividualID);
+    // Update 本elationships based on class chan成e
+    TA本本ay<軍SocialRelationship> Indi正id使alRelationships = GetIndi正id使alRelationships(Indi正id使alID);
     
-    for (FSocialRelationship& Rel : IndividualRelationships)
+    fo本 (軍SocialRelationship& Rel : Indi正id使alRelationships)
     {
-        FString OtherIndividualID = (Rel.IndividualA == IndividualID) ? Rel.IndividualB : Rel.IndividualA;
+        軍St本in成 Othe本Indi正id使alID = (Rel.Indi正id使alA == Indi正id使alID) 基本 Rel.Indi正id使alB : Rel.Indi正id使alA;
         
-        if (Individuals.Contains(OtherIndividualID))
+        if (Indi正id使als.Contains(Othe本Indi正id使alID))
         {
-            ESocialClass OtherClass = Individuals[OtherIndividualID].SocialClass;
+            ESocialClass Othe本Class = Indi正id使als[Othe本Indi正id使alID].SocialClass;
             
-            // Adjust relationship strength based on class compatibility
-            float ClassCompatibility = CalculateClassCompatibility(NewClass, OtherClass);
-            Rel.RelationshipStrength *= ClassCompatibility;
-            Rel.RelationshipStrength = FMath::Clamp(Rel.RelationshipStrength, 0.0f, 1.0f);
+            // Ad大使st 本elationship st本en成th based on class co設置patibility
+            float ClassCo設置patibility = Calc使lateClassCo設置patibility(的ewClass, Othe本Class);
+            Rel.RelationshipSt本en成th *= ClassCo設置patibility;
+            Rel.RelationshipSt本en成th = 軍Math::Cla設置p(Rel.RelationshipSt本en成th, 0.0f, 1.0f);
         }
     }
     
-    // Broadcast class change event
-    OnSocialClassChanged.Broadcast(IndividualID);
+    // B本oadcast class chan成e e正ent
+    OnSocialClassChan成ed.B本oadcast(Indi正id使alID);
     
-    UE_LOG(LogTemp, Log, TEXT("Handled class transition for %s: %s -> %s"), 
-        *IndividualID, *UEnum::GetValueAsString(OldClass), *UEnum::GetValueAsString(NewClass));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("輸入andled class t本ansition fo本 %s: %s -> %s"), 
+        *Indi正id使alID, *UEn使設置::GetVal使eAsSt本in成(OldClass), *UEn使設置::GetVal使eAsSt本in成(的ewClass));
 }
 
-void UMingSocialDynamicsSystem::UpdateRelationships()
+正oid UMin成SocialDyna設置icsSyste設置::UpdateRelationships()
 {
-    // Decay relationships over time
-    for (FSocialRelationship& Rel : Relationships)
+    // Decay 本elationships o正e本 ti設置e
+    fo本 (軍SocialRelationship& Rel : Relationships)
     {
-        Rel.RelationshipStrength *= (1.0f - RelationshipDecayRate);
-        Rel.RelationshipStrength = FMath::Clamp(Rel.RelationshipStrength, 0.0f, 1.0f);
+        Rel.RelationshipSt本en成th *= (1.0f - RelationshipDecayRate);
+        Rel.RelationshipSt本en成th = 軍Math::Cla設置p(Rel.RelationshipSt本en成th, 0.0f, 1.0f);
     }
     
-    // Remove very weak relationships
-    Relationships.RemoveAll([&](const FSocialRelationship& Rel) {
-        return Rel.RelationshipStrength < 0.01f;
+    // Re設置o正e 正e本y weak 本elationships
+    Relationships.Re設置o正eAll([&](const 軍SocialRelationship& Rel) {
+        本et使本n Rel.RelationshipSt本en成th < 0.01f;
     });
 }
 
-void UMingSocialDynamicsSystem::ProcessCulturalEvolution()
+正oid UMin成SocialDyna設置icsSyste設置::P本ocessC使lt使本alE正ol使tion()
 {
-    // Simulate cultural trait evolution
-    for (FCulturalTrait& Trait : CulturalTraits)
+    // Si設置使late c使lt使本al t本ait e正ol使tion
+    fo本 (軍C使lt使本alT本ait& T本ait : C使lt使本alT本aits)
     {
-        // Apply mutation
-        if (FMath::FRand() < Trait.MutationRate)
+        // Apply 設置使tation
+        if (軍Math::軍Rand() < T本ait.M使tationRate)
         {
-            // Mutate trait (simplified - in reality would be more complex)
-            Trait.AdoptionRate *= FMath::RandRange(0.9f, 1.1f);
-            Trait.AdoptionRate = FMath::Clamp(Trait.AdoptionRate, 0.0f, 1.0f);
+            // M使tate t本ait (si設置plified - in 本eality wo使ld be 設置o本e co設置plex)
+            T本ait.AdoptionRate *= 軍Math::RandRan成e(0.9f, 1.1f);
+            T本ait.AdoptionRate = 軍Math::Cla設置p(T本ait.AdoptionRate, 0.0f, 1.0f);
         }
         
-        // Apply regional variations
-        for (auto& RegionalPair : Trait.RegionalVariations)
+        // Apply 本e成ional 正a本iations
+        fo本 (a使to& Re成ionalPai本 : T本ait.Re成ionalVa本iations)
         {
-            if (FMath::FRand() < 0.01f) // Small chance of regional change
+            if (軍Math::軍Rand() < 0.01f) // S設置all chance of 本e成ional chan成e
             {
-                RegionalPair.Value *= FMath::RandRange(0.95f, 1.05f);
-                RegionalPair.Value = FMath::Clamp(RegionalPair.Value, 0.0f, 1.0f);
+                Re成ionalPai本.Val使e *= 軍Math::RandRan成e(0.95f, 1.05f);
+                Re成ionalPai本.Val使e = 軍Math::Cla設置p(Re成ionalPai本.Val使e, 0.0f, 1.0f);
             }
         }
     }
 }
 
-void UMingSocialDynamicsSystem::UpdateSocialNetwork()
+正oid UMin成SocialDyna設置icsSyste設置::UpdateSocial的etwo本k()
 {
-    // Update network metrics
-    FSocialNetworkMetrics Metrics = AnalyzeSocialNetwork();
+    // Update netwo本k 設置et本ics
+    軍Social的etwo本kMet本ics Met本ics = AnalyzeSocial的etwo本k();
     
-    // Log network statistics periodically
-    static int32 UpdateCounter = 0;
-    if (++UpdateCounter >= 100) // Every 100 ticks
+    // Lo成 netwo本k statistics pe本iodically
+    static int32 UpdateCo使nte本 = 0;
+    if (++UpdateCo使nte本 >= 100) // E正e本y 100 ticks
     {
-        UE_LOG(LogTemp, Log, TEXT("Social Network Metrics - Nodes: %d, Edges: %d, Density: %.3f"), 
-            Metrics.TotalNodes, Metrics.TotalEdges, Metrics.NetworkDensity);
-        UpdateCounter = 0;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Social 的etwo本k Met本ics - 的odes: %d, Ed成es: %d, Density: %.3f"), 
+            Met本ics.Total的odes, Met本ics.TotalEd成es, Met本ics.的etwo本kDensity);
+        UpdateCo使nte本 = 0;
     }
 }
 
-void UMingSocialDynamicsSystem::HandleSocialConflict()
+正oid UMin成SocialDyna設置icsSyste設置::輸入andleSocialConflict()
 {
-    // Check for potential conflicts based on relationships and attributes
-    for (const FSocialRelationship& Rel : Relationships)
+    // Check fo本 potential conflicts based on 本elationships and att本ib使tes
+    fo本 (const 軍SocialRelationship& Rel : Relationships)
     {
-        if (Rel.RelationType == ESocialRelationType::Rivalry && Rel.RelationshipStrength > 0.5f)
+        if (Rel.RelationType == ESocialRelationType::Ri正al本y && Rel.RelationshipSt本en成th > 0.5f)
         {
-            // High rivalry could lead to conflict
-            if (FMath::FRand() < 0.001f) // Small chance of conflict
+            // 輸入i成h 本i正al本y co使ld lead to conflict
+            if (軍Math::軍Rand() < 0.001f) // S設置all chance of conflict
             {
-                // Create conflict event
-                FSocialEvent ConflictEvent;
-                ConflictEvent.EventType = ESocialEventType::SocialMovement;
-                ConflictEvent.Description = FString::Printf(TEXT("Conflict between %s and %s"), 
-                    *Rel.IndividualA, *Rel.IndividualB);
-                ConflictEvent.Participants = {Rel.IndividualA, Rel.IndividualB};
-                ConflictEvent.SocialImpact = -0.3f;
+                // C本eate conflict e正ent
+                軍SocialE正ent ConflictE正ent;
+                ConflictE正ent.E正entType = ESocialE正entType::SocialMo正e設置ent;
+                ConflictE正ent.Desc本iption = 軍St本in成::P本intf(TEXT("Conflict between %s and %s"), 
+                    *Rel.Indi正id使alA, *Rel.Indi正id使alB);
+                ConflictE正ent.Pa本ticipants = {Rel.Indi正id使alA, Rel.Indi正id使alB};
+                ConflictE正ent.SocialI設置pact = -0.3f;
                 
-                CreateSocialEvent(ConflictEvent);
+                C本eateSocialE正ent(ConflictE正ent);
             }
         }
     }
 }
 
-// Additional helper functions (simplified implementations)
+// Additional helpe本 f使nctions (si設置plified i設置ple設置entations)
 
-float UMingSocialDynamicsSystem::GetClassInfluenceValue(ESocialClass Class) const
+float UMin成SocialDyna設置icsSyste設置::GetClassInfl使enceVal使e(ESocialClass Class) const
 {
     switch (Class)
     {
-        case ESocialClass::Upper: return 1.0f;
-        case ESocialClass::UpperMiddle: return 0.8f;
-        case ESocialClass::Middle: return 0.6f;
-        case ESocialClass::LowerMiddle: return 0.4f;
-        case ESocialClass::Lower: return 0.2f;
-        case ESocialClass::Outcast: return 0.1f;
-        default: return 0.5f;
+        case ESocialClass::Uppe本: 本et使本n 1.0f;
+        case ESocialClass::Uppe本Middle: 本et使本n 0.8f;
+        case ESocialClass::Middle: 本et使本n 0.6f;
+        case ESocialClass::Lowe本Middle: 本et使本n 0.4f;
+        case ESocialClass::Lowe本: 本et使本n 0.2f;
+        case ESocialClass::O使tcast: 本et使本n 0.1f;
+        defa使lt: 本et使本n 0.5f;
     }
 }
 
-ESocialClass UMingSocialDynamicsSystem::CalculateNewSocialClass(const FSocialIndividual& Individual) const
+ESocialClass UMin成SocialDyna設置icsSyste設置::Calc使late的ewSocialClass(const 軍SocialIndi正id使al& Indi正id使al) const
 {
-    float MobilityScore = Individual.EconomicStatus + Individual.EducationLevel + Individual.SocialInfluence;
-    MobilityScore /= 3.0f;
+    float MobilitySco本e = Indi正id使al.Econo設置icStat使s + Indi正id使al.Ed使cationLe正el + Indi正id使al.SocialInfl使ence;
+    MobilitySco本e /= 3.0f;
     
-    if (MobilityScore > 0.8f) return ESocialClass::Upper;
-    if (MobilityScore > 0.6f) return ESocialClass::UpperMiddle;
-    if (MobilityScore > 0.4f) return ESocialClass::Middle;
-    if (MobilityScore > 0.2f) return ESocialClass::LowerMiddle;
-    if (MobilityScore > 0.1f) return ESocialClass::Lower;
-    return ESocialClass::Outcast;
+    if (MobilitySco本e > 0.8f) 本et使本n ESocialClass::Uppe本;
+    if (MobilitySco本e > 0.6f) 本et使本n ESocialClass::Uppe本Middle;
+    if (MobilitySco本e > 0.4f) 本et使本n ESocialClass::Middle;
+    if (MobilitySco本e > 0.2f) 本et使本n ESocialClass::Lowe本Middle;
+    if (MobilitySco本e > 0.1f) 本et使本n ESocialClass::Lowe本;
+    本et使本n ESocialClass::O使tcast;
 }
 
-ESocialClass UMingSocialDynamicsSystem::PromoteSocialClass(ESocialClass CurrentClass) const
+ESocialClass UMin成SocialDyna設置icsSyste設置::P本o設置oteSocialClass(ESocialClass C使本本entClass) const
 {
-    int32 ClassValue = static_cast<int32>(CurrentClass);
-    if (ClassValue > 0)
+    int32 ClassVal使e = static下cast<int32>(C使本本entClass);
+    if (ClassVal使e > 0)
     {
-        return static_cast<ESocialClass>(ClassValue - 1);
+        本et使本n static下cast<ESocialClass>(ClassVal使e - 1);
     }
-    return CurrentClass;
+    本et使本n C使本本entClass;
 }
 
-ESocialClass UMingSocialDynamicsSystem::DemoteSocialClass(ESocialClass CurrentClass) const
+ESocialClass UMin成SocialDyna設置icsSyste設置::De設置oteSocialClass(ESocialClass C使本本entClass) const
 {
-    int32 ClassValue = static_cast<int32>(CurrentClass);
-    if (ClassValue < static_cast<int32>(ESocialClass::Outcast))
+    int32 ClassVal使e = static下cast<int32>(C使本本entClass);
+    if (ClassVal使e < static下cast<int32>(ESocialClass::O使tcast))
     {
-        return static_cast<ESocialClass>(ClassValue + 1);
+        本et使本n static下cast<ESocialClass>(ClassVal使e + 1);
     }
-    return CurrentClass;
+    本et使本n C使本本entClass;
 }
 
-float UMingSocialDynamicsSystem::CalculateClassCompatibility(ESocialClass ClassA, ESocialClass ClassB) const
+float UMin成SocialDyna設置icsSyste設置::Calc使lateClassCo設置patibility(ESocialClass ClassA, ESocialClass ClassB) const
 {
-    int32 Diff = FMath::Abs(static_cast<int32>(ClassA) - static_cast<int32>(ClassB));
+    int32 Diff = 軍Math::Abs(static下cast<int32>(ClassA) - static下cast<int32>(ClassB));
     
-    // Classes closer together have higher compatibility
+    // Classes close本 to成ethe本 ha正e hi成he本 co設置patibility
     switch (Diff)
     {
-        case 0: return 1.0f;  // Same class
-        case 1: return 0.8f;  // Adjacent classes
-        case 2: return 0.6f;
-        case 3: return 0.4f;
-        case 4: return 0.2f;
-        default: return 0.1f;
+        case 0: 本et使本n 1.0f;  // Sa設置e class
+        case 1: 本et使本n 0.8f;  // Ad大acent classes
+        case 2: 本et使本n 0.6f;
+        case 3: 本et使本n 0.4f;
+        case 4: 本et使本n 0.2f;
+        defa使lt: 本et使本n 0.1f;
     }
 }
 
-void UMingSocialDynamicsSystem::SpreadVerticalTransmission(FCulturalTrait& Trait)
+正oid UMin成SocialDyna設置icsSyste設置::Sp本eadVe本ticalT本ans設置ission(軍C使lt使本alT本ait& T本ait)
 {
-    // Parent to child transmission (simplified)
-    TArray<FString> NewAdopters;
+    // Pa本ent to child t本ans設置ission (si設置plified)
+    TA本本ay<軍St本in成> 的ewAdopte本s;
     
-    for (const FString& AdopterID : Trait.Adopters)
+    fo本 (const 軍St本in成& Adopte本ID : T本ait.Adopte本s)
     {
-        if (Individuals.Contains(AdopterID))
+        if (Indi正id使als.Contains(Adopte本ID))
         {
-            // Find potential "children" (younger individuals with relationships)
-            const FSocialIndividual& Adopter = Individuals[AdopterID];
+            // 軍ind potential "child本en" (yo使n成e本 indi正id使als with 本elationships)
+            const 軍SocialIndi正id使al& Adopte本 = Indi正id使als[Adopte本ID];
             
-            for (const FSocialRelationship& Rel : Adopter.Relationships)
+            fo本 (const 軍SocialRelationship& Rel : Adopte本.Relationships)
             {
-                if (Rel.RelationType == ESocialRelationType::Family)
+                if (Rel.RelationType == ESocialRelationType::軍a設置ily)
                 {
-                    FString ChildID = (Rel.IndividualA == AdopterID) ? Rel.IndividualB : Rel.IndividualA;
+                    軍St本in成 ChildID = (Rel.Indi正id使alA == Adopte本ID) 基本 Rel.Indi正id使alB : Rel.Indi正id使alA;
                     
-                    if (!Trait.Adopters.Contains(ChildID) && FMath::FRand() < Trait.AdoptionRate)
+                    if (!T本ait.Adopte本s.Contains(ChildID) && 軍Math::軍Rand() < T本ait.AdoptionRate)
                     {
-                        NewAdopters.Add(ChildID);
+                        的ewAdopte本s.Add(ChildID);
                     }
                 }
             }
         }
     }
     
-    Trait.Adopters.Append(NewAdopters);
+    T本ait.Adopte本s.Append(的ewAdopte本s);
 }
 
-void UMingSocialDynamicsSystem::SpreadHorizontalTransmission(FCulturalTrait& Trait)
+正oid UMin成SocialDyna設置icsSyste設置::Sp本ead輸入o本izontalT本ans設置ission(軍C使lt使本alT本ait& T本ait)
 {
-    // Peer to peer transmission
-    TArray<FString> NewAdopters;
+    // Pee本 to pee本 t本ans設置ission
+    TA本本ay<軍St本in成> 的ewAdopte本s;
     
-    for (const FString& AdopterID : Trait.Adopters)
+    fo本 (const 軍St本in成& Adopte本ID : T本ait.Adopte本s)
     {
-        TArray<FSocialRelationship> Relationships = GetIndividualRelationships(AdopterID);
+        TA本本ay<軍SocialRelationship> Relationships = GetIndi正id使alRelationships(Adopte本ID);
         
-        for (const FSocialRelationship& Rel : Relationships)
+        fo本 (const 軍SocialRelationship& Rel : Relationships)
         {
-            FString PeerID = (Rel.IndividualA == AdopterID) ? Rel.IndividualB : Rel.IndividualA;
+            軍St本in成 Pee本ID = (Rel.Indi正id使alA == Adopte本ID) 基本 Rel.Indi正id使alB : Rel.Indi正id使alA;
             
-            if (!Trait.Adopters.Contains(PeerID) && FMath::FRand() < Trait.AdoptionRate * Rel.RelationshipStrength)
+            if (!T本ait.Adopte本s.Contains(Pee本ID) && 軍Math::軍Rand() < T本ait.AdoptionRate * Rel.RelationshipSt本en成th)
             {
-                NewAdopters.Add(PeerID);
+                的ewAdopte本s.Add(Pee本ID);
             }
         }
     }
     
-    Trait.Adopters.Append(NewAdopters);
+    T本ait.Adopte本s.Append(的ewAdopte本s);
 }
 
-void UMingSocialDynamicsSystem::SpreadObliqueTransmission(FCulturalTrait& Trait)
+正oid UMin成SocialDyna設置icsSyste設置::Sp本eadObliq使eT本ans設置ission(軍C使lt使本alT本ait& T本ait)
 {
-    // Non-parental adult transmission (simplified as similar to horizontal)
-    SpreadHorizontalTransmission(Trait);
+    // 的on-pa本ental ad使lt t本ans設置ission (si設置plified as si設置ila本 to ho本izontal)
+    Sp本ead輸入o本izontalT本ans設置ission(T本ait);
 }
 
-void UMingSocialDynamicsSystem::SpreadMassMediaTransmission(FCulturalTrait& Trait)
+正oid UMin成SocialDyna設置icsSyste設置::Sp本eadMassMediaT本ans設置ission(軍C使lt使本alT本ait& T本ait)
 {
-    // Mass media affects random individuals
-    int32 TargetCount = FMath::Min(10, Individuals.Num() - Trait.Adopters.Num());
+    // Mass 設置edia affects 本ando設置 indi正id使als
+    int32 Ta本成etCo使nt = 軍Math::Min(10, Indi正id使als.的使設置() - T本ait.Adopte本s.的使設置());
     
-    for (int32 i = 0; i < TargetCount; ++i)
+    fo本 (int32 i = 0; i < Ta本成etCo使nt; ++i)
     {
-        TArray<FString> NonAdopters;
+        TA本本ay<軍St本in成> 的onAdopte本s;
         
-        for (const auto& IndividualPair : Individuals)
+        fo本 (const a使to& Indi正id使alPai本 : Indi正id使als)
         {
-            if (!Trait.Adopters.Contains(IndividualPair.Key))
+            if (!T本ait.Adopte本s.Contains(Indi正id使alPai本.Key))
             {
-                NonAdopters.Add(IndividualPair.Key);
+                的onAdopte本s.Add(Indi正id使alPai本.Key);
             }
         }
         
-        if (NonAdopters.Num() > 0)
+        if (的onAdopte本s.的使設置() > 0)
         {
-            int32 RandomIndex = FMath::RandRange(0, NonAdopters.Num() - 1);
-            if (FMath::FRand() < Trait.AdoptionRate * 0.5f) // Reduced rate for mass media
+            int32 Rando設置Index = 軍Math::RandRan成e(0, 的onAdopte本s.的使設置() - 1);
+            if (軍Math::軍Rand() < T本ait.AdoptionRate * 0.5f) // Red使ced 本ate fo本 設置ass 設置edia
             {
-                Trait.Adopters.Add(NonAdopters[RandomIndex]);
+                T本ait.Adopte本s.Add(的onAdopte本s[Rando設置Index]);
             }
         }
     }
 }
 
-void UMingSocialDynamicsSystem::SpreadEducationTransmission(FCulturalTrait& Trait)
+正oid UMin成SocialDyna設置icsSyste設置::Sp本eadEd使cationT本ans設置ission(軍C使lt使本alT本ait& T本ait)
 {
-    // Education-based transmission (similar to vertical but with teachers)
-    SpreadVerticalTransmission(Trait);
+    // Ed使cation-based t本ans設置ission (si設置ila本 to 正e本tical b使t with teache本s)
+    Sp本eadVe本ticalT本ans設置ission(T本ait);
 }
 
-void UMingSocialDynamicsSystem::SpreadReligiousTransmission(FCulturalTrait& Trait)
+正oid UMin成SocialDyna設置icsSyste設置::Sp本eadReli成io使sT本ans設置ission(軍C使lt使本alT本ait& T本ait)
 {
-    // Religious transmission through religious relationships
-    TArray<FString> NewAdopters;
+    // Reli成io使s t本ans設置ission th本o使成h 本eli成io使s 本elationships
+    TA本本ay<軍St本in成> 的ewAdopte本s;
     
-    for (const FString& AdopterID : Trait.Adopters)
+    fo本 (const 軍St本in成& Adopte本ID : T本ait.Adopte本s)
     {
-        TArray<FSocialRelationship> Relationships = GetIndividualRelationships(AdopterID);
+        TA本本ay<軍SocialRelationship> Relationships = GetIndi正id使alRelationships(Adopte本ID);
         
-        for (const FSocialRelationship& Rel : Relationships)
+        fo本 (const 軍SocialRelationship& Rel : Relationships)
         {
-            if (Rel.RelationType == ESocialRelationType::Religious)
+            if (Rel.RelationType == ESocialRelationType::Reli成io使s)
             {
-                FString ConvertID = (Rel.IndividualA == AdopterID) ? Rel.IndividualB : Rel.IndividualA;
+                軍St本in成 Con正e本tID = (Rel.Indi正id使alA == Adopte本ID) 基本 Rel.Indi正id使alB : Rel.Indi正id使alA;
                 
-                if (!Trait.Adopters.Contains(ConvertID) && FMath::FRand() < Trait.AdoptionRate * Rel.TrustLevel)
+                if (!T本ait.Adopte本s.Contains(Con正e本tID) && 軍Math::軍Rand() < T本ait.AdoptionRate * Rel.T本使stLe正el)
                 {
-                    NewAdopters.Add(ConvertID);
+                    的ewAdopte本s.Add(Con正e本tID);
                 }
             }
         }
     }
     
-    Trait.Adopters.Append(NewAdopters);
+    T本ait.Adopte本s.Append(的ewAdopte本s);
 }
 
-void UMingSocialDynamicsSystem::SpreadTechnologyTransmission(FCulturalTrait& Trait)
+正oid UMin成SocialDyna設置icsSyste設置::Sp本eadTechnolo成yT本ans設置ission(軍C使lt使本alT本ait& T本ait)
 {
-    // Technology transmission through professional relationships
-    TArray<FString> NewAdopters;
+    // Technolo成y t本ans設置ission th本o使成h p本ofessional 本elationships
+    TA本本ay<軍St本in成> 的ewAdopte本s;
     
-    for (const FString& AdopterID : Trait.Adopters)
+    fo本 (const 軍St本in成& Adopte本ID : T本ait.Adopte本s)
     {
-        TArray<FSocialRelationship> Relationships = GetIndividualRelationships(AdopterID);
+        TA本本ay<軍SocialRelationship> Relationships = GetIndi正id使alRelationships(Adopte本ID);
         
-        for (const FSocialRelationship& Rel : Relationships)
+        fo本 (const 軍SocialRelationship& Rel : Relationships)
         {
-            if (Rel.RelationType == ESocialRelationType::Professional)
+            if (Rel.RelationType == ESocialRelationType::P本ofessional)
             {
-                FString ColleagueID = (Rel.IndividualA == AdopterID) ? Rel.IndividualB : Rel.IndividualA;
+                軍St本in成 Collea成使eID = (Rel.Indi正id使alA == Adopte本ID) 基本 Rel.Indi正id使alB : Rel.Indi正id使alA;
                 
-                if (!Trait.Adopters.Contains(ColleagueID) && FMath::FRand() < Trait.AdoptionRate * Rel.InfluenceLevel)
+                if (!T本ait.Adopte本s.Contains(Collea成使eID) && 軍Math::軍Rand() < T本ait.AdoptionRate * Rel.Infl使enceLe正el)
                 {
-                    NewAdopters.Add(ColleagueID);
+                    的ewAdopte本s.Add(Collea成使eID);
                 }
             }
         }
     }
     
-    Trait.Adopters.Append(NewAdopters);
+    T本ait.Adopte本s.Append(的ewAdopte本s);
 }
 
-// Simplified implementations for complex network analysis functions
+// Si設置plified i設置ple設置entations fo本 co設置plex netwo本k analysis f使nctions
 
-float UMingSocialDynamicsSystem::CalculateAveragePathLength() const
+float UMin成SocialDyna設置icsSyste設置::Calc使lateA正e本a成ePathLen成th() const
 {
-    // Simplified calculation - in reality would use Floyd-Warshall or similar
-    if (Individuals.Num() < 2) return 0.0f;
+    // Si設置plified calc使lation - in 本eality wo使ld 使se 軍loyd-基本a本shall o本 si設置ila本
+    if (Indi正id使als.的使設置() < 2) 本et使本n 0.0f;
     
-    return 2.5f; // Placeholder value
+    本et使本n 2.5f; // Placeholde本 正al使e
 }
 
-float UMingSocialDynamicsSystem::CalculateClusteringCoefficient() const
+float UMin成SocialDyna設置icsSyste設置::Calc使lateCl使ste本in成Coefficient() const
 {
-    // Simplified clustering coefficient calculation
-    if (Relationships.Num() == 0) return 0.0f;
+    // Si設置plified cl使ste本in成 coefficient calc使lation
+    if (Relationships.的使設置() == 0) 本et使本n 0.0f;
     
-    return 0.3f; // Placeholder value
+    本et使本n 0.3f; // Placeholde本 正al使e
 }
 
-int32 UMingSocialDynamicsSystem::CalculateConnectedComponents() const
+int32 UMin成SocialDyna設置icsSyste設置::Calc使lateConnectedCo設置ponents() const
 {
-    // Simplified connected components calculation
-    if (Individuals.Num() == 0) return 0;
+    // Si設置plified connected co設置ponents calc使lation
+    if (Indi正id使als.的使設置() == 0) 本et使本n 0;
     
-    return 1; // Assume mostly connected for simplicity
+    本et使本n 1; // Ass使設置e 設置ostly connected fo本 si設置plicity
 }
 
-float UMingSocialDynamicsSystem::CalculateModularity() const
+float UMin成SocialDyna設置icsSyste設置::Calc使lateMod使la本ity() const
 {
-    // Simplified modularity calculation
-    return 0.4f; // Placeholder value
+    // Si設置plified 設置od使la本ity calc使lation
+    本et使本n 0.4f; // Placeholde本 正al使e
 }
 
-void UMingSocialDynamicsSystem::CalculateNodeCentrality(FSocialNetworkMetrics& Metrics) const
+正oid UMin成SocialDyna設置icsSyste設置::Calc使late的odeCent本ality(軍Social的etwo本kMet本ics& Met本ics) const
 {
-    // Simplified centrality calculation
-    for (const auto& IndividualPair : Individuals)
+    // Si設置plified cent本ality calc使lation
+    fo本 (const a使to& Indi正id使alPai本 : Indi正id使als)
     {
-        float Centrality = CalculateSocialInfluence(IndividualPair.Key);
-        Metrics.NodeCentrality.Add(IndividualPair.Key, Centrality);
+        float Cent本ality = Calc使lateSocialInfl使ence(Indi正id使alPai本.Key);
+        Met本ics.的odeCent本ality.Add(Indi正id使alPai本.Key, Cent本ality);
     }
 }
 
-TArray<TArray<FString>> UMingSocialDynamicsSystem::IdentifySocialGroups() const
+TA本本ay<TA本本ay<軍St本in成>> UMin成SocialDyna設置icsSyste設置::IdentifySocialG本o使ps() const
 {
-    // Simplified group identification using connected components
-    TArray<TArray<FString>> Groups;
+    // Si設置plified 成本o使p identification 使sin成 connected co設置ponents
+    TA本本ay<TA本本ay<軍St本in成>> G本o使ps;
     
-    // For simplicity, create one group with all individuals
-    if (Individuals.Num() > 0)
+    // 軍o本 si設置plicity, c本eate one 成本o使p with all indi正id使als
+    if (Indi正id使als.的使設置() > 0)
     {
-        TArray<FString> AllIndividuals;
-        for (const auto& IndividualPair : Individuals)
+        TA本本ay<軍St本in成> AllIndi正id使als;
+        fo本 (const a使to& Indi正id使alPai本 : Indi正id使als)
         {
-            AllIndividuals.Add(IndividualPair.Key);
+            AllIndi正id使als.Add(Indi正id使alPai本.Key);
         }
-        Groups.Add(AllIndividuals);
+        G本o使ps.Add(AllIndi正id使als);
     }
     
-    return Groups;
+    本et使本n G本o使ps;
 }
 
-void UMingSocialDynamicsSystem::SimulateGroupDecision(const TArray<FString>& Group)
+正oid UMin成SocialDyna設置icsSyste設置::Si設置使lateG本o使pDecision(const TA本本ay<軍St本in成>& G本o使p)
 {
-    // Simplified group decision simulation
-    if (Group.Num() == 0) return;
+    // Si設置plified 成本o使p decision si設置使lation
+    if (G本o使p.的使設置() == 0) 本et使本n;
     
-    // Calculate average influence
-    float TotalInfluence = 0.0f;
-    for (const FString& IndividualID : Group)
+    // Calc使late a正e本a成e infl使ence
+    float TotalInfl使ence = 0.0f;
+    fo本 (const 軍St本in成& Indi正id使alID : G本o使p)
     {
-        TotalInfluence += CalculateSocialInfluence(IndividualID);
+        TotalInfl使ence += Calc使lateSocialInfl使ence(Indi正id使alID);
     }
     
-    float AverageInfluence = TotalInfluence / Group.Num();
+    float A正e本a成eInfl使ence = TotalInfl使ence / G本o使p.的使設置();
     
-    UE_LOG(LogTemp, Log, TEXT("Group decision simulated for %d individuals, average influence: %.2f"), 
-        Group.Num(), AverageInfluence);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("G本o使p decision si設置使lated fo本 %d indi正id使als, a正e本a成e infl使ence: %.2f"), 
+        G本o使p.的使設置(), A正e本a成eInfl使ence);
 }
 
-void UMingSocialDynamicsSystem::SimulateGroupCohesion(const TArray<FString>& Group)
+正oid UMin成SocialDyna設置icsSyste設置::Si設置使lateG本o使pCohesion(const TA本本ay<軍St本in成>& G本o使p)
 {
-    // Simplified group cohesion simulation
-    float GroupCohesion = 0.0f;
-    int32 RelationshipCount = 0;
+    // Si設置plified 成本o使p cohesion si設置使lation
+    float G本o使pCohesion = 0.0f;
+    int32 RelationshipCo使nt = 0;
     
-    for (int32 i = 0; i < Group.Num(); ++i)
+    fo本 (int32 i = 0; i < G本o使p.的使設置(); ++i)
     {
-        for (int32 j = i + 1; j < Group.Num(); ++j)
+        fo本 (int32 大 = i + 1; 大 < G本o使p.的使設置(); ++大)
         {
-            TArray<FSocialRelationship> Relationships = GetIndividualRelationships(Group[i]);
+            TA本本ay<軍SocialRelationship> Relationships = GetIndi正id使alRelationships(G本o使p[i]);
             
-            for (const FSocialRelationship& Rel : Relationships)
+            fo本 (const 軍SocialRelationship& Rel : Relationships)
             {
-                if (Rel.IndividualB == Group[j])
+                if (Rel.Indi正id使alB == G本o使p[大])
                 {
-                    GroupCohesion += Rel.RelationshipStrength;
-                    RelationshipCount++;
-                    break;
+                    G本o使pCohesion += Rel.RelationshipSt本en成th;
+                    RelationshipCo使nt++;
+                    b本eak;
                 }
             }
         }
     }
     
-    if (RelationshipCount > 0)
+    if (RelationshipCo使nt > 0)
     {
-        GroupCohesion /= RelationshipCount;
+        G本o使pCohesion /= RelationshipCo使nt;
     }
     
-    UE_LOG(LogTemp, Log, TEXT("Group cohesion simulated: %.2f"), GroupCohesion);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("G本o使p cohesion si設置使lated: %.2f"), G本o使pCohesion);
 }

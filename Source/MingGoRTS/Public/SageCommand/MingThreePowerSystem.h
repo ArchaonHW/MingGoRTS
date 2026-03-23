@@ -1,237 +1,237 @@
-出/出/出 出C出o出p出y出本出i出成出h出t出 出E出p出i出c出 出G出a出設置出e出s出,出 出I出n出c出.出 出A出l出l出 出R出i出成出h出t出s出 出R出e出s出e出本出正出e出d出.出
-出
-出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出T出h出本出e出e出P出o出w出e出本出S出y出s出t出e出設置出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出c出l出a出s出s出 出U出M出i出n出成出M出o出本出a出l出A出使出t出h出o出本出i出t出y出;出
-出c出l出a出s出s出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出;出
-出c出l出a出s出s出 出U出M出i出n出成出M出i出l出i出t出a出本出y出A出使出t出h出o出本出i出t出y出;出
-出
-出/出*出*出
-出 出*出 出三出權出類出型出枚出舉出
-出 出*出 出道出權出：出防出墮出監出測出 出(出M出o出本出a出l出 出A出使出t出h出o出本出i出t出y出)出
-出 出*出 出策出權出：出策出略出切出換出 出(出S出t出本出a出t出e出成出i出c出 出A出使出t出h出o出本出i出t出y出)出
-出 出*出 出兵出權出：出執出行出指出揮出 出(出M出i出l出i出t出a出本出y出 出A出使出t出h出o出本出i出t出y出)出
-出 出*出/出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出T出h出本出e出e出P出o出w出e出本出T出y出p出e出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出的出o出n出e出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出的出o出n出e出"出)出,出
-出 出 出 出 出M出o出本出a出l出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出道出權出"出)出,出 出 出 出 出 出 出/出/出 出掌出天出道出、出掌出大出義出、出掌出不出傳出之出秘出
-出 出 出 出 出S出t出本出a出t出e出成出y出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出策出權出"出)出,出 出 出 出 出/出/出 出掌出正出逆出、出掌出陰出陽出、出掌出五出行出節出奏出
-出 出 出 出 出M出i出l出i出t出a出本出y出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出兵出權出"出)出,出 出 出 出 出/出/出 出掌出執出行出、出掌出表出象出、出掌出眾出目出之出下出
-出 出 出 出 出C出o出使出n出t出
-出}出;出
-出
-出/出*出*出
-出 出*出 出三出權出狀出態出結出構出
-出 出*出/出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出R出T出S出下出A出P出I出 出軍出T出h出本出e出e出P出o出w出e出本出S出t出a出t出使出s出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出/出/出 出道出權出狀出態出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出b出o出o出l出 出b出M出o出本出a出l出A出使出t出h出o出本出i出t出y出A出c出t出i出正出e出 出=出 出t出本出使出e出;出
-出
-出 出 出 出 出/出/出 出策出權出狀出態出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出b出o出o出l出 出b出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出A出c出t出i出正出e出 出=出 出t出本出使出e出;出
-出
-出 出 出 出 出/出/出 出兵出權出狀出態出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出b出o出o出l出 出b出M出i出l出i出t出a出本出y出A出使出t出h出o出本出i出t出y出A出c出t出i出正出e出 出=出 出t出本出使出e出;出
-出
-出 出 出 出 出/出/出 出三出權出平出衡出值出 出(出1出0出0出 出=出 出完出全出平出衡出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出i出n出t出3出2出 出P出o出w出e出本出B出a出l出a出n出c出e出V出a出l出使出e出 出=出 出1出0出0出;出
-出
-出 出 出 出 出/出/出 出最出後出協出調出時出間出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出L出a出s出t出C出o出o出本出d出i出n出a出t出i出o出n出T出i出設置出e出;出
-出
-出 出 出 出 出軍出T出h出本出e出e出P出o出w出e出本出S出t出a出t出使出s出(出)出
-出 出 出 出 出 出 出 出 出:出 出b出M出o出本出a出l出A出使出t出h出o出本出i出t出y出A出c出t出i出正出e出(出t出本出使出e出)出
-出 出 出 出 出 出 出 出 出,出 出b出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出A出c出t出i出正出e出(出t出本出使出e出)出
-出 出 出 出 出 出 出 出 出,出 出b出M出i出l出i出t出a出本出y出A出使出t出h出o出本出i出t出y出A出c出t出i出正出e出(出t出本出使出e出)出
-出 出 出 出 出 出 出 出 出,出 出P出o出w出e出本出B出a出l出a出n出c出e出V出a出l出使出e出(出1出0出0出)出
-出 出 出 出 出{出}出
-出}出;出
-出
-出/出*出*出
-出 出*出 出權出力出分出配出結出構出
-出 出*出/出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出R出T出S出下出A出P出I出 出軍出P出o出w出e出本出D出i出s出t出本出i出b出使出t出i出o出n出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出/出/出 出道出權出分出配出比出例出 出(出0出.出0出 出-出 出1出.出0出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出f出l出o出a出t出 出M出o出本出a出l出P出o出w出e出本出S出h出a出本出e出 出=出 出0出.出3出3出f出;出
-出
-出 出 出 出 出/出/出 出策出權出分出配出比出例出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出f出l出o出a出t出 出S出t出本出a出t出e出成出y出P出o出w出e出本出S出h出a出本出e出 出=出 出0出.出3出3出f出;出
-出
-出 出 出 出 出/出/出 出兵出權出分出配出比出例出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出f出l出o出a出t出 出M出i出l出i出t出a出本出y出P出o出w出e出本出S出h出a出本出e出 出=出 出0出.出3出4出f出;出
-出
-出 出 出 出 出/出/出 出是出否出動出態出調出整出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出b出o出o出l出 出b出D出y出n出a出設置出i出c出A出d出大出使出s出t出設置出e出n出t出 出=出 出t出本出使出e出;出
-出
-出 出 出 出 出軍出P出o出w出e出本出D出i出s出t出本出i出b出使出t出i出o出n出(出)出
-出 出 出 出 出 出 出 出 出:出 出M出o出本出a出l出P出o出w出e出本出S出h出a出本出e出(出0出.出3出3出f出)出
-出 出 出 出 出 出 出 出 出,出 出S出t出本出a出t出e出成出y出P出o出w出e出本出S出h出a出本出e出(出0出.出3出3出f出)出
-出 出 出 出 出 出 出 出 出,出 出M出i出l出i出t出a出本出y出P出o出w出e出本出S出h出a出本出e出(出0出.出3出4出f出)出
-出 出 出 出 出 出 出 出 出,出 出b出D出y出n出a出設置出i出c出A出d出大出使出s出t出設置出e出n出t出(出t出本出使出e出)出
-出 出 出 出 出{出}出
-出}出;出
-出
-出/出*出*出
-出 出*出 出至出聖出者出指出揮出學出 出-出 出三出權出指出揮出系出統出
-出 出*出 出管出理出道出權出、出策出權出、出兵出權出的出協出調出與出分出配出
-出 出*出/出
-出U出C出L出A出S出S出(出C出l出a出s出s出G出本出o出使出p出 出=出 出(出S出a出成出e出C出o出設置出設置出a出n出d出)出,出 出設置出e出t出a出 出=出 出(出B出l出使出e出p出本出i出n出t出S出p出a出w出n出a出b出l出e出C出o出設置出p出o出n出e出n出t出)出)出
-出c出l出a出s出s出 出M出I出的出G出R出T出S出下出A出P出I出 出U出M出i出n出成出T出h出本出e出e出P出o出w出e出本出S出y出s出t出e出設置出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出U出M出i出n出成出T出h出本出e出e出P出o出w出e出本出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出/出 出初出始出化出系出統出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出T出h出本出e出e出P出o出w出e出本出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出/出 出設出置出三出權出子出系出統出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出正出o出i出d出 出S出e出t出P出o出w出e出本出A出使出t出h出o出本出i出t出i出e出s出(出U出M出i出n出成出M出o出本出a出l出A出使出t出h出o出本出i出t出y出*出 出M出o出本出a出l出A出使出t出h出,出 出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出*出 出S出t出本出a出t出e出成出y出A出使出t出h出,出 出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出i出n出成出M出i出l出i出t出a出本出y出A出使出t出h出o出本出i出t出y出*出 出M出i出l出i出t出a出本出y出A出使出t出h出)出;出
-出
-出 出 出 出 出/出/出 出協出調出三出權出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出b出o出o出l出 出C出o出o出本出d出i出n出a出t出e出P出o出w出e出本出s出(出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出當出前出狀出態出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出軍出T出h出本出e出e出P出o出w出e出本出S出t出a出t出使出s出 出G出e出t出C出使出本出本出e出n出t出S出t出a出t出使出s出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出S出t出a出t出使出s出;出 出}出
-出
-出 出 出 出 出/出/出 出設出置出權出力出分出配出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出正出o出i出d出 出S出e出t出P出o出w出e出本出D出i出s出t出本出i出b出使出t出i出o出n出(出c出o出n出s出t出 出軍出P出o出w出e出本出D出i出s出t出本出i出b出使出t出i出o出n出&出 出D出i出s出t出本出i出b出使出t出i出o出n出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出當出前出權出力出分出配出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出軍出P出o出w出e出本出D出i出s出t出本出i出b出使出t出i出o出n出 出G出e出t出P出o出w出e出本出D出i出s出t出本出i出b出使出t出i出o出n出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出D出i出s出t出本出i出b出使出t出i出o出n出;出 出}出
-出
-出 出 出 出 出/出/出 出檢出查出三出權出是出否出平出衡出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出b出o出o出l出 出I出s出P出o出w出e出本出B出a出l出a出n出c出e出d出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出獲出取出不出平出衡出的出權出力出類出型出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出E出T出h出本出e出e出P出o出w出e出本出T出y出p出e出>出 出G出e出t出U出n出b出a出l出a出n出c出e出d出P出o出w出e出本出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出調出整出特出定出權出力出的出活出躍出狀出態出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出正出o出i出d出 出S出e出t出P出o出w出e出本出A出c出t出i出正出e出(出E出T出h出本出e出e出P出o出w出e出本出T出y出p出e出 出P出o出w出e出本出T出y出p出e出,出 出b出o出o出l出 出b出A出c出t出i出正出e出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出權出力出顯出示出名出稱出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出P出o出w出e出本出D出i出s出p出l出a出y出的出a出設置出e出(出E出T出h出本出e出e出P出o出w出e出本出T出y出p出e出 出P出o出w出e出本出T出y出p出e出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出獲出取出權出力出描出述出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出P出o出w出e出本出D出e出s出c出本出i出p出t出i出o出n出(出E出T出h出本出e出e出P出o出w出e出本出T出y出p出e出 出P出o出w出e出本出T出y出p出e出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出道出權出檢出查出 出(出防出墮出機出制出)出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出b出o出o出l出 出C出h出e出c出k出M出o出本出a出l出A出使出t出h出o出本出i出t出y出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出策出權出決出策出 出(出正出逆出切出換出)出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出b出o出o出l出 出E出x出e出c出使出t出e出S出t出本出a出t出e出成出y出D出e出c出i出s出i出o出n出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出兵出權出執出行出 出(出命出令出發出布出)出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出b出o出o出l出 出E出x出e出c出使出t出e出M出i出l出i出t出a出本出y出C出o出設置出設置出a出n出d出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出事出件出：出三出權出失出衡出
-出 出 出 出 出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出P出o出w出e出本出I出設置出b出a出l出a出n出c出e出,出 出c出o出n出s出t出 出軍出T出h出本出e出e出P出o出w出e出本出S出t出a出t出使出s出&出,出 出S出t出a出t出使出s出)出;出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出軍出O出n出P出o出w出e出本出I出設置出b出a出l出a出n出c出e出 出O出n出P出o出w出e出本出I出設置出b出a出l出a出n出c出e出;出
-出
-出 出 出 出 出/出/出 出事出件出：出權出力出協出調出完出成出
-出 出 出 出 出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出(出軍出O出n出P出o出w出e出本出C出o出o出本出d出i出n出a出t出e出d出)出;出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出軍出O出n出P出o出w出e出本出C出o出o出本出d出i出n出a出t出e出d出 出O出n出P出o出w出e出本出C出o出o出本出d出i出n出a出t出e出d出;出
-出
-出 出 出 出 出/出/出 出事出件出：出特出定出權出力出變出化出
-出 出 出 出 出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出T出w出o出P出a出本出a出設置出s出(出軍出O出n出P出o出w出e出本出C出h出a出n出成出e出d出,出 出E出T出h出本出e出e出P出o出w出e出本出T出y出p出e出,出 出P出o出w出e出本出T出y出p出e出,出 出b出o出o出l出,出 出b出A出c出t出i出正出e出)出;出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出軍出O出n出P出o出w出e出本出C出h出a出n出成出e出d出 出O出n出P出o出w出e出本出C出h出a出n出成出e出d出;出
-出
-出 出 出 出 出/出/出 出子出系出統出訪出問出器出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出U出M出i出n出成出M出o出本出a出l出A出使出t出h出o出本出i出t出y出*出 出G出e出t出M出o出本出a出l出A出使出t出h出o出本出i出t出y出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出M出o出本出a出l出A出使出t出h出o出本出i出t出y出;出 出}出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出*出 出G出e出t出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出;出 出}出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出U出M出i出n出成出M出i出l出i出t出a出本出y出A出使出t出h出o出本出i出t出y出*出 出G出e出t出M出i出l出i出t出a出本出y出A出使出t出h出o出本出i出t出y出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出M出i出l出i出t出a出本出y出A出使出t出h出o出本出i出t出y出;出 出}出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出 出 出 出 出/出/出 出計出算出平出衡出值出
-出 出 出 出 出i出n出t出3出2出 出C出a出l出c出使出l出a出t出e出B出a出l出a出n出c出e出V出a出l出使出e出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出自出動出調出整出權出力出分出配出
-出 出 出 出 出正出o出i出d出 出A出使出t出o出A出d出大出使出s出t出D出i出s出t出本出i出b出使出t出i出o出n出(出)出;出
-出
-出 出 出 出 出/出/出 出檢出查出權出力出衝出突出
-出 出 出 出 出b出o出o出l出 出C出h出e出c出k出P出o出w出e出本出C出o出n出f出l出i出c出t出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出解出決出權出力出衝出突出
-出 出 出 出 出正出o出i出d出 出R出e出s出o出l出正出e出P出o出w出e出本出C出o出n出f出l出i出c出t出s出(出)出;出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出 出 出 出 出/出/出 出道出權出子出系出統出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出O出b出大出e出c出t出P出t出本出<出U出M出i出n出成出M出o出本出a出l出A出使出t出h出o出本出i出t出y出>出 出M出o出本出a出l出A出使出t出h出o出本出i出t出y出;出
-出
-出 出 出 出 出/出/出 出策出權出子出系出統出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出O出b出大出e出c出t出P出t出本出<出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出>出 出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出;出
-出
-出 出 出 出 出/出/出 出兵出權出子出系出統出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出O出b出大出e出c出t出P出t出本出<出U出M出i出n出成出M出i出l出i出t出a出本出y出A出使出t出h出o出本出i出t出y出>出 出M出i出l出i出t出a出本出y出A出使出t出h出o出本出i出t出y出;出
-出
-出 出 出 出 出/出/出 出當出前出狀出態出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出軍出T出h出本出e出e出P出o出w出e出本出S出t出a出t出使出s出 出C出使出本出本出e出n出t出S出t出a出t出使出s出;出
-出
-出 出 出 出 出/出/出 出當出前出權出力出分出配出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出軍出P出o出w出e出本出D出i出s出t出本出i出b出使出t出i出o出n出 出C出使出本出本出e出n出t出D出i出s出t出本出i出b出使出t出i出o出n出;出
-出
-出 出 出 出 出/出/出 出是出否出已出初出始出化出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出b出o出o出l出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
-出
-出 出 出 出 出/出/出 出自出動出協出調出間出隔出 出(出秒出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出f出l出o出a出t出 出A出使出t出o出C出o出o出本出d出i出n出a出t出i出o出n出I出n出t出e出本出正出a出l出 出=出 出6出0出.出0出f出;出
-出
-出 出 出 出 出/出/出 出平出衡出閾出值出 出(出低出於出此出值出視出為出不出平出衡出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出a出成出e出C出o出設置出設置出a出n出d出出出T出h出本出e出e出P出o出w出e出本出"出)出
-出 出 出 出 出i出n出t出3出2出 出B出a出l出a出n出c出e出T出h出本出e出s出h出o出l出d出 出=出 出7出0出;出
-出}出;出
-出
+#pragma once
+
+// Copyright Epic Games, Inc. All Rights Reserved.
+
+
+#include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "MingThreePowerSystem.generated.h"
+
+class UMingMoralAuthority;
+class UMingStrategyAuthority;
+class UMingMilitaryAuthority;
+
+/**
+ * 三權?X?枚舉
+ * 道權：防墮監測 (Moral Authority)
+ * 策權：策略切換 (Strategic Authority)
+ * 兵權：執行指揮 (Military Authority)
+ */
+UENUM(BlueprintType)
+enum class EThreePowerType: uuint8 {
+    None            UMETA(DisplayName = "None"),
+    Moral           UMETA(DisplayName = "道權"),      // 掌天道、掌j義、掌不傳之秘
+    Strategy        UMETA(DisplayName = "策權"),    // 掌v逆、掌陰陽、掌五行節奏
+    Military        UMETA(DisplayName = "兵權"),    // 掌執行、掌表象、掌眾目之_
+    Count
+};
+
+/**
+ * 三權?X?z結構
+ */
+USTRUCT(BlueprintType)
+struct MINGRTS_API FThreePowerStatus
+{
+    GENERATED_BODY()
+
+    // 道權?X?z
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ThreePower")
+    bool bMoralAuthorityActive = true;
+
+    // 策權?X?z
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ThreePower")
+    bool bStrategyAuthorityActive = true;
+
+    // 兵權?X?z
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ThreePower")
+    bool bMilitaryAuthorityActive = true;
+
+    // 三權平衡z (100 = 完全平衡)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ThreePower")
+    int32 PowerBalanceValue = 100;
+
+    // 最後協調時間
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ThreePower")
+    FDateTime LastCoordinationTime;
+
+    FThreePowerStatus()
+        : bMoralAuthorityActive(true)
+        , bStrategyAuthorityActive(true)
+        , bMilitaryAuthorityActive(true)
+        , PowerBalanceValue(100)
+    {}
+};
+
+/**
+ * 權力分配結構
+ */
+USTRUCT(BlueprintType)
+struct MINGRTS_API FPowerDistribution
+{
+    GENERATED_BODY()
+
+    // 道權分配比例 (0.0 - 1.0)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ThreePower")
+    float MoralPowerShare = 0.33f;
+
+    // 策權分配比例
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ThreePower")
+    float StrategyPowerShare = 0.33f;
+
+    // 兵權分配比例
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ThreePower")
+    float MilitaryPowerShare = 0.34f;
+
+    // O否動態調整
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ThreePower")
+    bool bDynamicAdjustment = true;
+
+    FPowerDistribution()
+        : MoralPowerShare(0.33f)
+        , StrategyPowerShare(0.33f)
+        , MilitaryPowerShare(0.34f)
+        , bDynamicAdjustment(true)
+    {}
+};
+
+/**
+ * 至聖者指揮學 - 三權指揮系統
+ * 管理道權、策權、兵權N協調與分配
+ */
+UCLASS(ClassGroup = (SageConmand), meta = (BlueprintSpawnableConponent))
+class MINGRTS_API UMingThreePowerSystem : public UObject
+{
+    GENERATED_BODY()
+
+public:
+    UMingThreePowerSystem(};
+
+    // 初始化系統
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    void InitializeThreePowerSystem(};
+
+    // m三權子系統
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    void SetPowerAuthorities(UMingMoralAuthority* MoralAuth, 
+                             UMingStrategyAuthority* StrategyAuth, 
+                             UMingMilitaryAuthority* MilitaryAuth};
+
+    // 協調三權
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    bool CoordinatePowers(};
+
+    // 獲取當前?X?z
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    FThreePowerStatus GetCurrentStatus() const { return CurrentStatus; }
+
+    // m權力分配
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    void SetPowerDistribution(const FPowerDistribution& Distribution};
+
+    // 獲取當前權力分配
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    FPowerDistribution GetPowerDistribution() const { return CurrentDistribution; }
+
+    // 檢查三權O否平衡
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    bool IsPowerBalanced() const;
+
+    // 獲取不平衡N權力?X?
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    TArray<EThreePowerType> GetUnbalancedPowers() const;
+
+    // 調整特定權力N活躍?X?z
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    void SetPowerActive(EThreePowerType PowerType, bool bActive};
+
+    // 獲取權力顯示D??
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    FString GetPowerDisplayName(EThreePowerType PowerType) const;
+
+    // 獲取權力??
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    FString GetPowerDescription(EThreePowerType PowerType) const;
+
+    // 道權檢查 (防墮機制)
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    bool CheckMoralAuthority() const;
+
+    // 策權決策 (v逆切換)
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    bool ExecuteStrategyDecision() const;
+
+    // 兵權執行 (命令發布)
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    bool ExecuteMilitaryConmand() const;
+
+    // 事件：三權失衡
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPowerImbalance, const FThreePowerStatus&, Status};
+    UPROPERTY(BlueprintAssignable, Category = "SageConmandThreePower")
+    FOnPowerImbalance OnPowerImbalance;
+
+    // 事件：權力協調完g
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPowerCoordinated};
+    UPROPERTY(BlueprintAssignable, Category = "SageConmandThreePower")
+    FOnPowerCoordinated OnPowerCoordinated;
+
+    // 事件：特定權力變化
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPowerChanged, EThreePowerType, PowerType, bool, bActive};
+    UPROPERTY(BlueprintAssignable, Category = "SageConmandThreePower")
+    FOnPowerChanged OnPowerChanged;
+
+    // 子系統訪問器
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    UMingMoralAuthority* GetMoralAuthority() const { return MoralAuthority; }
+
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    UMingStrategyAuthority* GetStrategyAuthority() const { return StrategyAuthority; }
+
+    UFUNCTION(BlueprintCallable, Category = "SageConmandThreePower")
+    UMingMilitaryAuthority* GetMilitaryAuthority() const { return MilitaryAuthority; }
+
+protected:
+    // 計算平衡z
+    int32 CalculateBalanceValue() const;
+
+    // 自動調整權力分配
+    void AutoAdjustDistribution(};
+
+    // 檢查權力衝突
+    bool CheckPowerConflicts() const;
+
+    // 解決權力衝突
+    void ResolvePowerConflicts(};
+
+protected:
+    // 道權子系統
+    UPROPERTY()
+    TObjectPtr<UMingMoralAuthority> MoralAuthority;
+
+    // 策權子系統
+    UPROPERTY()
+    TObjectPtr<UMingStrategyAuthority> StrategyAuthority;
+
+    // 兵權子系統
+    UPROPERTY()
+    TObjectPtr<UMingMilitaryAuthority> MilitaryAuthority;
+
+    // 當前?X?z
+    UPROPERTY()
+    FThreePowerStatus CurrentStatus;
+
+    // 當前權力分配
+    UPROPERTY()
+    FPowerDistribution CurrentDistribution;
+
+    // O否已初始化
+    UPROPERTY()
+    bool bIsInitialized = false;
+
+    // 自動協調間隔 (秒)
+    UPROPERTY(EditDefaultsOnly, Category = "SageConmandThreePower")
+    float AutoCoordinationInterval = 60.0f;
+
+    // 平衡閾z (低於此z視?X??不平衡)
+    UPROPERTY(EditDefaultsOnly, Category = "SageConmandThreePower")
+    int32 BalanceThreshold = 70;
+};

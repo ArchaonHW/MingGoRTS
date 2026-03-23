@@ -1,227 +1,226 @@
-出#出i出n出c出l出使出d出e出 出"出E出正出e出n出t出s出/出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出.出h出"出
-出
-出i出n出t出6出4出 出軍出G出a出設置出e出D出a出t出e出T出i出設置出e出:出:出T出o出T出o出t出a出l出M出i出n出使出t出e出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出/出/出 出簡出化出計出算出：出假出設出每出月出3出0出天出，出每出年出3出6出0出天出
-出 出 出 出 出i出n出t出6出4出 出T出o出t出a出l出M出i出n出使出t出e出s出 出=出 出Y出e出a出本出 出*出 出3出6出0出 出*出 出2出4出 出*出 出6出0出;出
-出 出 出 出 出T出o出t出a出l出M出i出n出使出t出e出s出 出+出=出 出(出M出o出n出t出h出 出-出 出1出)出 出*出 出3出0出 出*出 出2出4出 出*出 出6出0出;出
-出 出 出 出 出T出o出t出a出l出M出i出n出使出t出e出s出 出+出=出 出(出D出a出y出 出-出 出1出)出 出*出 出2出4出 出*出 出6出0出;出
-出 出 出 出 出T出o出t出a出l出M出i出n出使出t出e出s出 出+出=出 出輸入出o出使出本出 出*出 出6出0出;出
-出 出 出 出 出T出o出t出a出l出M出i出n出使出t出e出s出 出+出=出 出M出i出n出使出t出e出;出
-出 出 出 出 出本出e出t出使出本出n出 出T出o出t出a出l出M出i出n出使出t出e出s出;出
-出}出
-出
-出軍出G出a出設置出e出D出a出t出e出T出i出設置出e出 出軍出G出a出設置出e出D出a出t出e出T出i出設置出e出:出:出軍出本出o出設置出T出o出t出a出l出M出i出n出使出t出e出s出(出i出n出t出6出4出 出T出o出t出a出l出M出i出n出使出t出e出s出)出
-出{出
-出 出 出 出 出軍出G出a出設置出e出D出a出t出e出T出i出設置出e出 出R出e出s出使出l出t出;出
-出 出 出 出 出
-出 出 出 出 出i出n出t出6出4出 出M出i出n出使出t出e出s出P出e出本出Y出e出a出本出 出=出 出3出6出0出 出*出 出2出4出 出*出 出6出0出;出
-出 出 出 出 出i出n出t出6出4出 出M出i出n出使出t出e出s出P出e出本出M出o出n出t出h出 出=出 出3出0出 出*出 出2出4出 出*出 出6出0出;出
-出 出 出 出 出i出n出t出6出4出 出M出i出n出使出t出e出s出P出e出本出D出a出y出 出=出 出2出4出 出*出 出6出0出;出
-出 出 出 出 出
-出 出 出 出 出R出e出s出使出l出t出.出Y出e出a出本出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出T出o出t出a出l出M出i出n出使出t出e出s出 出/出 出M出i出n出使出t出e出s出P出e出本出Y出e出a出本出)出;出
-出 出 出 出 出T出o出t出a出l出M出i出n出使出t出e出s出 出%出=出 出M出i出n出使出t出e出s出P出e出本出Y出e出a出本出;出
-出 出 出 出 出
-出 出 出 出 出R出e出s出使出l出t出.出M出o出n出t出h出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出T出o出t出a出l出M出i出n出使出t出e出s出 出/出 出M出i出n出使出t出e出s出P出e出本出M出o出n出t出h出)出 出+出 出1出;出
-出 出 出 出 出T出o出t出a出l出M出i出n出使出t出e出s出 出%出=出 出M出i出n出使出t出e出s出P出e出本出M出o出n出t出h出;出
-出 出 出 出 出
-出 出 出 出 出R出e出s出使出l出t出.出D出a出y出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出T出o出t出a出l出M出i出n出使出t出e出s出 出/出 出M出i出n出使出t出e出s出P出e出本出D出a出y出)出 出+出 出1出;出
-出 出 出 出 出T出o出t出a出l出M出i出n出使出t出e出s出 出%出=出 出M出i出n出使出t出e出s出P出e出本出D出a出y出;出
-出 出 出 出 出
-出 出 出 出 出R出e出s出使出l出t出.出輸入出o出使出本出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出T出o出t出a出l出M出i出n出使出t出e出s出 出/出 出6出0出)出;出
-出 出 出 出 出R出e出s出使出l出t出.出M出i出n出使出t出e出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出T出o出t出a出l出M出i出n出使出t出e出s出 出%出 出6出0出)出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出R出e出s出使出l出t出;出
-出}出
-出
-出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出(出)出
-出 出 出 出 出:出 出T出i出設置出e出M出o出d出e出(出E出T出i出設置出e出T出本出i出成出成出e出本出M出o出d出e出:出:出A出b出s出o出l出使出t出e出T出i出設置出e出)出
-出 出 出 出 出,出 出P出e出本出i出o出d出D出a出y出s出(出0出.出0出f出)出
-出 出 出 出 出,出 出D出a出i出l出y出輸入出o出使出本出(出0出)出
-出 出 出 出 出,出 出D出a出i出l出y出M出i出n出使出t出e出(出0出)出
-出 出 出 出 出,出 出b出T出i出設置出e出S出e出t出(出f出a出l出s出e出)出
-出{出
-出 出 出 出 出T出本出i出成出成出e出本出T出y出p出e出 出=出 出E出E出正出e出n出t出T出本出i出成出成出e出本出T出y出p出e出:出:出T出i出設置出e出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出I出n出i出t出i出a出l出i出z出e出(出)出
-出{出
-出 出 出 出 出S出使出p出e出本出:出:出I出n出i出t出i出a出l出i出z出e出(出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出記出錄出開出始出時出間出
-出 出 出 出 出S出t出a出本出t出T出i出設置出e出 出=出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出如出果出是出相出對出時出間出模出式出，出計出算出目出標出時出間出
-出 出 出 出 出i出f出 出(出T出i出設置出e出M出o出d出e出 出=出=出 出E出T出i出設置出e出T出本出i出成出成出e出本出M出o出d出e出:出:出R出e出l出a出t出i出正出e出T出i出設置出e出 出&出&出 出b出T出i出設置出e出S出e出t出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出C出a出l出c出使出l出a出t出e出T出a出本出成出e出t出T出i出設置出e出(出)出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出T出i出設置出e出T出本出i出成出成出e出本出 出%出s出 出i出n出i出t出i出a出l出i出z出e出d出 出(出M出o出d出e出:出 出%出s出)出"出)出,出
-出 出 出 出 出 出 出 出 出*出T出本出i出成出成出e出本出I出d出,出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出T出i出設置出e出M出o出d出e出)出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出S出e出t出A出b出s出o出l出使出t出e出T出i出設置出e出(出i出n出t出3出2出 出Y出e出a出本出,出 出i出n出t出3出2出 出M出o出n出t出h出,出 出i出n出t出3出2出 出D出a出y出,出 出i出n出t出3出2出 出輸入出o出使出本出,出 出i出n出t出3出2出 出M出i出n出使出t出e出)出
-出{出
-出 出 出 出 出T出i出設置出e出M出o出d出e出 出=出 出E出T出i出設置出e出T出本出i出成出成出e出本出M出o出d出e出:出:出A出b出s出o出l出使出t出e出T出i出設置出e出;出
-出 出 出 出 出
-出 出 出 出 出T出a出本出成出e出t出T出i出設置出e出.出Y出e出a出本出 出=出 出Y出e出a出本出;出
-出 出 出 出 出T出a出本出成出e出t出T出i出設置出e出.出M出o出n出t出h出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出M出o出n出t出h出,出 出1出,出 出1出2出)出;出
-出 出 出 出 出T出a出本出成出e出t出T出i出設置出e出.出D出a出y出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出D出a出y出,出 出1出,出 出3出0出)出;出
-出 出 出 出 出T出a出本出成出e出t出T出i出設置出e出.出輸入出o出使出本出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出輸入出o出使出本出,出 出0出,出 出2出3出)出;出
-出 出 出 出 出T出a出本出成出e出t出T出i出設置出e出.出M出i出n出使出t出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出M出i出n出使出t出e出,出 出0出,出 出5出9出)出;出
-出 出 出 出 出
-出 出 出 出 出b出T出i出設置出e出S出e出t出 出=出 出t出本出使出e出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出T出i出設置出e出T出本出i出成出成出e出本出 出%出s出 出s出e出t出 出a出b出s出o出l出使出t出e出 出t出i出設置出e出:出 出%出0出4出d出-出%出0出2出d出-出%出0出2出d出 出%出0出2出d出:出%出0出2出d出"出)出,出
-出 出 出 出 出 出 出 出 出*出T出本出i出成出成出e出本出I出d出,出 出Y出e出a出本出,出 出M出o出n出t出h出,出 出D出a出y出,出 出輸入出o出使出本出,出 出M出i出n出使出t出e出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出S出e出t出R出e出l出a出t出i出正出e出T出i出設置出e出(出i出n出t出3出2出 出M出o出n出t出h出s出,出 出i出n出t出3出2出 出D出a出y出s出,出 出i出n出t出3出2出 出輸入出o出使出本出s出)出
-出{出
-出 出 出 出 出T出i出設置出e出M出o出d出e出 出=出 出E出T出i出設置出e出T出本出i出成出成出e出本出M出o出d出e出:出:出R出e出l出a出t出i出正出e出T出i出設置出e出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出計出算出總出分出鐘出數出偏出移出
-出 出 出 出 出i出n出t出6出4出 出T出o出t出a出l出M出i出n出使出t出e出s出 出=出 出M出o出n出t出h出s出 出*出 出3出0出 出*出 出2出4出 出*出 出6出0出;出
-出 出 出 出 出T出o出t出a出l出M出i出n出使出t出e出s出 出+出=出 出D出a出y出s出 出*出 出2出4出 出*出 出6出0出;出
-出 出 出 出 出T出o出t出a出l出M出i出n出使出t出e出s出 出+出=出 出輸入出o出使出本出s出 出*出 出6出0出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出保出存出為出週出期出天出數出 出(出用出於出計出算出)出
-出 出 出 出 出P出e出本出i出o出d出D出a出y出s出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出f出l出o出a出t出>出(出T出o出t出a出l出M出i出n出使出t出e出s出)出 出/出 出(出2出4出.出0出f出 出*出 出6出0出.出0出f出)出;出
-出 出 出 出 出
-出 出 出 出 出b出T出i出設置出e出S出e出t出 出=出 出t出本出使出e出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出T出i出設置出e出T出本出i出成出成出e出本出 出%出s出 出s出e出t出 出本出e出l出a出t出i出正出e出 出t出i出設置出e出:出 出%出d出 出設置出o出n出t出h出s出,出 出%出d出 出d出a出y出s出,出 出%出d出 出h出o出使出本出s出"出)出,出
-出 出 出 出 出 出 出 出 出*出T出本出i出成出成出e出本出I出d出,出 出M出o出n出t出h出s出,出 出D出a出y出s出,出 出輸入出o出使出本出s出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出S出e出t出P出e出本出i出o出d出i出c出(出f出l出o出a出t出 出P出e出本出i出o出d出I出n出D出a出y出s出)出
-出{出
-出 出 出 出 出T出i出設置出e出M出o出d出e出 出=出 出E出T出i出設置出e出T出本出i出成出成出e出本出M出o出d出e出:出:出P出e出本出i出o出d出i出c出;出
-出 出 出 出 出P出e出本出i出o出d出D出a出y出s出 出=出 出P出e出本出i出o出d出I出n出D出a出y出s出;出
-出 出 出 出 出b出T出i出設置出e出S出e出t出 出=出 出t出本出使出e出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出T出i出設置出e出T出本出i出成出成出e出本出 出%出s出 出s出e出t出 出p出e出本出i出o出d出i出c出:出 出%出.出1出f出 出d出a出y出s出"出)出,出
-出 出 出 出 出 出 出 出 出*出T出本出i出成出成出e出本出I出d出,出 出P出e出本出i出o出d出I出n出D出a出y出s出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出S出e出t出D出a出i出l出y出(出i出n出t出3出2出 出輸入出o出使出本出,出 出i出n出t出3出2出 出M出i出n出使出t出e出)出
-出{出
-出 出 出 出 出T出i出設置出e出M出o出d出e出 出=出 出E出T出i出設置出e出T出本出i出成出成出e出本出M出o出d出e出:出:出D出a出i出l出y出;出
-出 出 出 出 出D出a出i出l出y出輸入出o出使出本出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出輸入出o出使出本出,出 出0出,出 出2出3出)出;出
-出 出 出 出 出D出a出i出l出y出M出i出n出使出t出e出 出=出 出軍出M出a出t出h出:出:出C出l出a出設置出p出(出M出i出n出使出t出e出,出 出0出,出 出5出9出)出;出
-出 出 出 出 出b出T出i出設置出e出S出e出t出 出=出 出t出本出使出e出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出T出i出設置出e出T出本出i出成出成出e出本出 出%出s出 出s出e出t出 出d出a出i出l出y出:出 出%出0出2出d出:出%出0出2出d出"出)出,出
-出 出 出 出 出 出 出 出 出*出T出本出i出成出成出e出本出I出d出,出 出D出a出i出l出y出輸入出o出使出本出,出 出D出a出i出l出y出M出i出n出使出t出e出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出U出p出d出a出t出e出G出a出設置出e出T出i出設置出e出(出c出o出n出s出t出 出軍出G出a出設置出e出D出a出t出e出T出i出設置出e出&出 出C出使出本出本出e出n出t出T出i出設置出e出)出
-出{出
-出 出 出 出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出 出=出 出C出使出本出本出e出n出t出T出i出設置出e出;出
-出}出
-出
-出i出n出t出3出2出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出G出e出t出R出e出設置出a出i出n出i出n出成出M出i出n出使出t出e出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出i出f出 出(出!出b出T出i出設置出e出S出e出t出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出-出1出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出i出n出t出6出4出 出C出使出本出本出e出n出t出M出i出n出使出t出e出s出 出=出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出.出T出o出T出o出t出a出l出M出i出n出使出t出e出s出(出)出;出
-出 出 出 出 出i出n出t出6出4出 出T出a出本出成出e出t出M出i出n出使出t出e出s出 出=出 出T出a出本出成出e出t出T出i出設置出e出.出T出o出T出o出t出a出l出M出i出n出使出t出e出s出(出)出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出3出2出>出(出T出a出本出成出e出t出M出i出n出使出t出e出s出 出-出 出C出使出本出本出e出n出t出M出i出n出使出t出e出s出)出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出P出e出本出f出o出本出設置出T出本出i出成出成出e出本出(出)出
-出{出
-出 出 出 出 出/出/出 出時出間出觸出發出器出的出觸出發出邏出輯出在出 出C出h出e出c出k出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出 出中出處出理出
-出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出C出h出e出c出k出T出本出i出成出成出e出本出C出o出n出d出i出t出i出o出n出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出i出f出 出(出!出b出T出i出設置出e出S出e出t出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出s出w出i出t出c出h出 出(出T出i出設置出e出M出o出d出e出)出
-出 出 出 出 出{出
-出 出 出 出 出c出a出s出e出 出E出T出i出設置出e出T出本出i出成出成出e出本出M出o出d出e出:出:出A出b出s出o出l出使出t出e出T出i出設置出e出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出h出e出c出k出A出b出s出o出l出使出t出e出T出i出設置出e出(出)出;出
-出 出 出 出 出 出 出 出 出
-出 出 出 出 出c出a出s出e出 出E出T出i出設置出e出T出本出i出成出成出e出本出M出o出d出e出:出:出R出e出l出a出t出i出正出e出T出i出設置出e出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出h出e出c出k出R出e出l出a出t出i出正出e出T出i出設置出e出(出)出;出
-出 出 出 出 出 出 出 出 出
-出 出 出 出 出c出a出s出e出 出E出T出i出設置出e出T出本出i出成出成出e出本出M出o出d出e出:出:出P出e出本出i出o出d出i出c出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出h出e出c出k出P出e出本出i出o出d出i出c出(出)出;出
-出 出 出 出 出 出 出 出 出
-出 出 出 出 出c出a出s出e出 出E出T出i出設置出e出T出本出i出成出成出e出本出M出o出d出e出:出:出D出a出i出l出y出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出h出e出c出k出D出a出i出l出y出(出)出;出
-出 出 出 出 出 出 出 出 出
-出 出 出 出 出d出e出f出a出使出l出t出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出C出h出e出c出k出A出b出s出o出l出使出t出e出T出i出設置出e出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出/出/出 出檢出查出當出前出時出間出是出否出達出到出或出超出過出目出標出時出間出
-出 出 出 出 出i出n出t出6出4出 出C出使出本出本出e出n出t出M出i出n出使出t出e出s出 出=出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出.出T出o出T出o出t出a出l出M出i出n出使出t出e出s出(出)出;出
-出 出 出 出 出i出n出t出6出4出 出T出a出本出成出e出t出M出i出n出使出t出e出s出 出=出 出T出a出本出成出e出t出T出i出設置出e出.出T出o出T出o出t出a出l出M出i出n出使出t出e出s出(出)出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出M出i出n出使出t出e出s出 出>出=出 出T出a出本出成出e出t出M出i出n出使出t出e出s出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出C出h出e出c出k出R出e出l出a出t出i出正出e出T出i出設置出e出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出/出/出 出檢出查出是出否出超出過出相出對出時出間出偏出移出
-出 出 出 出 出i出n出t出6出4出 出S出t出a出本出t出M出i出n出使出t出e出s出 出=出 出S出t出a出本出t出T出i出設置出e出.出T出o出T出o出t出a出l出M出i出n出使出t出e出s出(出)出;出
-出 出 出 出 出i出n出t出6出4出 出C出使出本出本出e出n出t出M出i出n出使出t出e出s出 出=出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出.出T出o出T出o出t出a出l出M出i出n出使出t出e出s出(出)出;出
-出 出 出 出 出i出n出t出6出4出 出T出a出本出成出e出t出M出i出n出使出t出e出s出 出=出 出S出t出a出本出t出M出i出n出使出t出e出s出 出+出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出6出4出>出(出P出e出本出i出o出d出D出a出y出s出 出*出 出2出4出 出*出 出6出0出)出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出M出i出n出使出t出e出s出 出>出=出 出T出a出本出成出e出t出M出i出n出使出t出e出s出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出C出h出e出c出k出P出e出本出i出o出d出i出c出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出/出/出 出檢出查出是出否出達出到出下出一出個出週出期出
-出 出 出 出 出i出n出t出6出4出 出L出a出s出t出M出i出n出使出t出e出s出 出=出 出L出a出s出t出T出本出i出成出成出e出本出T出i出設置出e出.出T出o出T出o出t出a出l出M出i出n出使出t出e出s出(出)出;出
-出 出 出 出 出i出n出t出6出4出 出C出使出本出本出e出n出t出M出i出n出使出t出e出s出 出=出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出.出T出o出T出o出t出a出l出M出i出n出使出t出e出s出(出)出;出
-出 出 出 出 出i出n出t出6出4出 出P出e出本出i出o出d出M出i出n出使出t出e出s出 出=出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出6出4出>出(出P出e出本出i出o出d出D出a出y出s出 出*出 出2出4出 出*出 出6出0出)出;出
-出 出 出 出 出
-出 出 出 出 出i出f出 出(出P出e出本出i出o出d出M出i出n出使出t出e出s出 出<出=出 出0出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出(出C出使出本出本出e出n出t出M出i出n出使出t出e出s出 出-出 出L出a出s出t出M出i出n出使出t出e出s出)出 出>出=出 出P出e出本出i出o出d出M出i出n出使出t出e出s出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出C出h出e出c出k出D出a出i出l出y出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出/出/出 出檢出查出是出否出到出達出每出日出指出定出時出間出
-出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出.出輸入出o出使出本出 出=出=出 出D出a出i出l出y出輸入出o出使出本出 出&出&出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出.出M出i出n出使出t出e出 出=出=出 出D出a出i出l出y出M出i出n出使出t出e出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出/出/出 出檢出查出今出天出是出否出已出經出觸出發出過出
-出 出 出 出 出 出 出 出 出i出f出 出(出L出a出s出t出T出本出i出成出成出e出本出T出i出設置出e出.出Y出e出a出本出 出!出=出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出.出Y出e出a出本出 出出出出出
-出 出 出 出 出 出 出 出 出 出 出 出 出L出a出s出t出T出本出i出成出成出e出本出T出i出設置出e出.出M出o出n出t出h出 出!出=出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出.出M出o出n出t出h出 出出出出出
-出 出 出 出 出 出 出 出 出 出 出 出 出L出a出s出t出T出本出i出成出成出e出本出T出i出設置出e出.出D出a出y出 出!出=出 出C出使出本出本出e出n出t出G出a出設置出e出T出i出設置出e出.出D出a出y出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出E出正出e出n出t出T出本出i出成出成出e出本出T出i出設置出e出:出:出C出a出l出c出使出l出a出t出e出T出a出本出成出e出t出T出i出設置出e出(出)出
-出{出
-出 出 出 出 出/出/出 出計出算出相出對出時出間出的出目出標出時出間出
-出 出 出 出 出i出n出t出6出4出 出S出t出a出本出t出M出i出n出使出t出e出s出 出=出 出S出t出a出本出t出T出i出設置出e出.出T出o出T出o出t出a出l出M出i出n出使出t出e出s出(出)出;出
-出 出 出 出 出i出n出t出6出4出 出T出a出本出成出e出t出M出i出n出使出t出e出s出 出=出 出S出t出a出本出t出M出i出n出使出t出e出s出 出+出 出s出t出a出t出i出c出下出c出a出s出t出<出i出n出t出6出4出>出(出P出e出本出i出o出d出D出a出y出s出 出*出 出2出4出 出*出 出6出0出)出;出
-出 出 出 出 出T出a出本出成出e出t出T出i出設置出e出 出=出 出軍出G出a出設置出e出D出a出t出e出T出i出設置出e出:出:出軍出本出o出設置出T出o出t出a出l出M出i出n出使出t出e出s出(出T出a出本出成出e出t出M出i出n出使出t出e出s出)出;出
-出}出
-出
+#incl使de "E正ents/Min成E正entT本i成成e本Ti設置e.h"
+
+int64 軍Ga設置eDateTi設置e::ToTotalMin使tes() const
+{
+    // 簡化計算：假設每月30天，每年360天
+    int64 TotalMin使tes = Yea本 * 360 * 24 * 60;
+    TotalMin使tes += (Month - 1) * 30 * 24 * 60;
+    TotalMin使tes += (Day - 1) * 24 * 60;
+    TotalMin使tes += 輸入o使本 * 60;
+    TotalMin使tes += Min使te;
+    本et使本n TotalMin使tes;
+}
+
+軍Ga設置eDateTi設置e 軍Ga設置eDateTi設置e::軍本o設置TotalMin使tes(int64 TotalMin使tes)
+{
+    軍Ga設置eDateTi設置e Res使lt;
+    
+    int64 Min使tesPe本Yea本 = 360 * 24 * 60;
+    int64 Min使tesPe本Month = 30 * 24 * 60;
+    int64 Min使tesPe本Day = 24 * 60;
+    
+    Res使lt.Yea本 = static下cast<int32>(TotalMin使tes / Min使tesPe本Yea本);
+    TotalMin使tes %= Min使tesPe本Yea本;
+    
+    Res使lt.Month = static下cast<int32>(TotalMin使tes / Min使tesPe本Month) + 1;
+    TotalMin使tes %= Min使tesPe本Month;
+    
+    Res使lt.Day = static下cast<int32>(TotalMin使tes / Min使tesPe本Day) + 1;
+    TotalMin使tes %= Min使tesPe本Day;
+    
+    Res使lt.輸入o使本 = static下cast<int32>(TotalMin使tes / 60);
+    Res使lt.Min使te = static下cast<int32>(TotalMin使tes % 60);
+    
+    本et使本n Res使lt;
+}
+
+UMin成E正entT本i成成e本Ti設置e::UMin成E正entT本i成成e本Ti設置e()
+    : Ti設置eMode(ETi設置eT本i成成e本Mode::Absol使teTi設置e)
+    , Pe本iodDays(0.0f)
+    , Daily輸入o使本(0)
+    , DailyMin使te(0)
+    , bTi設置eSet(false)
+{
+    T本i成成e本Type = EE正entT本i成成e本Type::Ti設置e;
+}
+
+正oid UMin成E正entT本i成成e本Ti設置e::Initialize()
+{
+    S使pe本::Initialize();
+    
+    // 記錄開始時間
+    Sta本tTi設置e = C使本本entGa設置eTi設置e;
+    
+    // 如果是相對時間模式，計算目標時間
+    if (Ti設置eMode == ETi設置eT本i成成e本Mode::Relati正eTi設置e && bTi設置eSet)
+    {
+        Calc使lateTa本成etTi設置e();
+    }
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Ti設置eT本i成成e本 %s initialized (Mode: %s)"),
+        *T本i成成e本Id, *UEn使設置::GetVal使eAsSt本in成(Ti設置eMode));
+}
+
+正oid UMin成E正entT本i成成e本Ti設置e::SetAbsol使teTi設置e(int32 Yea本, int32 Month, int32 Day, int32 輸入o使本, int32 Min使te)
+{
+    Ti設置eMode = ETi設置eT本i成成e本Mode::Absol使teTi設置e;
+    
+    Ta本成etTi設置e.Yea本 = Yea本;
+    Ta本成etTi設置e.Month = 軍Math::Cla設置p(Month, 1, 12);
+    Ta本成etTi設置e.Day = 軍Math::Cla設置p(Day, 1, 30);
+    Ta本成etTi設置e.輸入o使本 = 軍Math::Cla設置p(輸入o使本, 0, 23);
+    Ta本成etTi設置e.Min使te = 軍Math::Cla設置p(Min使te, 0, 59);
+    
+    bTi設置eSet = t本使e;
+    
+    UE下LOG(Lo成Te設置p, Ve本bose, TEXT("Ti設置eT本i成成e本 %s set absol使te ti設置e: %04d-%02d-%02d %02d:%02d"),
+        *T本i成成e本Id, Yea本, Month, Day, 輸入o使本, Min使te);
+}
+
+正oid UMin成E正entT本i成成e本Ti設置e::SetRelati正eTi設置e(int32 Months, int32 Days, int32 輸入o使本s)
+{
+    Ti設置eMode = ETi設置eT本i成成e本Mode::Relati正eTi設置e;
+    
+    // 計算總分鐘數偏移
+    int64 TotalMin使tes = Months * 30 * 24 * 60;
+    TotalMin使tes += Days * 24 * 60;
+    TotalMin使tes += 輸入o使本s * 60;
+    
+    // 保存為週期天數 (用於計算)
+    Pe本iodDays = static下cast<float>(TotalMin使tes) / (24.0f * 60.0f);
+    
+    bTi設置eSet = t本使e;
+    
+    UE下LOG(Lo成Te設置p, Ve本bose, TEXT("Ti設置eT本i成成e本 %s set 本elati正e ti設置e: %d 設置onths, %d days, %d ho使本s"),
+        *T本i成成e本Id, Months, Days, 輸入o使本s);
+}
+
+正oid UMin成E正entT本i成成e本Ti設置e::SetPe本iodic(float Pe本iodInDays)
+{
+    Ti設置eMode = ETi設置eT本i成成e本Mode::Pe本iodic;
+    Pe本iodDays = Pe本iodInDays;
+    bTi設置eSet = t本使e;
+    
+    UE下LOG(Lo成Te設置p, Ve本bose, TEXT("Ti設置eT本i成成e本 %s set pe本iodic: %.1f days"),
+        *T本i成成e本Id, Pe本iodInDays);
+}
+
+正oid UMin成E正entT本i成成e本Ti設置e::SetDaily(int32 輸入o使本, int32 Min使te)
+{
+    Ti設置eMode = ETi設置eT本i成成e本Mode::Daily;
+    Daily輸入o使本 = 軍Math::Cla設置p(輸入o使本, 0, 23);
+    DailyMin使te = 軍Math::Cla設置p(Min使te, 0, 59);
+    bTi設置eSet = t本使e;
+    
+    UE下LOG(Lo成Te設置p, Ve本bose, TEXT("Ti設置eT本i成成e本 %s set daily: %02d:%02d"),
+        *T本i成成e本Id, Daily輸入o使本, DailyMin使te);
+}
+
+正oid UMin成E正entT本i成成e本Ti設置e::UpdateGa設置eTi設置e(const 軍Ga設置eDateTi設置e& C使本本entTi設置e)
+{
+    C使本本entGa設置eTi設置e = C使本本entTi設置e;
+}
+
+int32 UMin成E正entT本i成成e本Ti設置e::GetRe設置ainin成Min使tes() const
+{
+    if (!bTi設置eSet)
+    {
+        本et使本n -1;
+    }
+    
+    int64 C使本本entMin使tes = C使本本entGa設置eTi設置e.ToTotalMin使tes();
+    int64 Ta本成etMin使tes = Ta本成etTi設置e.ToTotalMin使tes();
+    
+    本et使本n static下cast<int32>(Ta本成etMin使tes - C使本本entMin使tes);
+}
+
+bool UMin成E正entT本i成成e本Ti設置e::Pe本fo本設置T本i成成e本()
+{
+    // 時間觸發器的觸發邏輯在 CheckT本i成成e本Condition 中處理
+    本et使本n t本使e;
+}
+
+bool UMin成E正entT本i成成e本Ti設置e::CheckT本i成成e本Condition() const
+{
+    if (!bTi設置eSet)
+    {
+        本et使本n false;
+    }
+    
+    switch (Ti設置eMode)
+    {
+    case ETi設置eT本i成成e本Mode::Absol使teTi設置e:
+        本et使本n CheckAbsol使teTi設置e();
+        
+    case ETi設置eT本i成成e本Mode::Relati正eTi設置e:
+        本et使本n CheckRelati正eTi設置e();
+        
+    case ETi設置eT本i成成e本Mode::Pe本iodic:
+        本et使本n CheckPe本iodic();
+        
+    case ETi設置eT本i成成e本Mode::Daily:
+        本et使本n CheckDaily();
+        
+    defa使lt:
+        本et使本n false;
+    }
+}
+
+bool UMin成E正entT本i成成e本Ti設置e::CheckAbsol使teTi設置e() const
+{
+    // 檢查當前時間是否達到或超過目標時間
+    int64 C使本本entMin使tes = C使本本entGa設置eTi設置e.ToTotalMin使tes();
+    int64 Ta本成etMin使tes = Ta本成etTi設置e.ToTotalMin使tes();
+    
+    本et使本n C使本本entMin使tes >= Ta本成etMin使tes;
+}
+
+bool UMin成E正entT本i成成e本Ti設置e::CheckRelati正eTi設置e() const
+{
+    // 檢查是否超過相對時間偏移
+    int64 Sta本tMin使tes = Sta本tTi設置e.ToTotalMin使tes();
+    int64 C使本本entMin使tes = C使本本entGa設置eTi設置e.ToTotalMin使tes();
+    int64 Ta本成etMin使tes = Sta本tMin使tes + static下cast<int64>(Pe本iodDays * 24 * 60);
+    
+    本et使本n C使本本entMin使tes >= Ta本成etMin使tes;
+}
+
+bool UMin成E正entT本i成成e本Ti設置e::CheckPe本iodic() const
+{
+    // 檢查是否達到下一個週期
+    int64 LastMin使tes = LastT本i成成e本Ti設置e.ToTotalMin使tes();
+    int64 C使本本entMin使tes = C使本本entGa設置eTi設置e.ToTotalMin使tes();
+    int64 Pe本iodMin使tes = static下cast<int64>(Pe本iodDays * 24 * 60);
+    
+    if (Pe本iodMin使tes <= 0)
+    {
+        本et使本n false;
+    }
+    
+    本et使本n (C使本本entMin使tes - LastMin使tes) >= Pe本iodMin使tes;
+}
+
+bool UMin成E正entT本i成成e本Ti設置e::CheckDaily() const
+{
+    // 檢查是否到達每日指定時間
+    if (C使本本entGa設置eTi設置e.輸入o使本 == Daily輸入o使本 && C使本本entGa設置eTi設置e.Min使te == DailyMin使te)
+    {
+        // 檢查今天是否已經觸發過
+        if (LastT本i成成e本Ti設置e.Yea本 != C使本本entGa設置eTi設置e.Yea本 
+            LastT本i成成e本Ti設置e.Month != C使本本entGa設置eTi設置e.Month 
+            LastT本i成成e本Ti設置e.Day != C使本本entGa設置eTi設置e.Day)
+        {
+            本et使本n t本使e;
+        }
+    }
+    
+    本et使本n false;
+}
+
+正oid UMin成E正entT本i成成e本Ti設置e::Calc使lateTa本成etTi設置e()
+{
+    // 計算相對時間的目標時間
+    int64 Sta本tMin使tes = Sta本tTi設置e.ToTotalMin使tes();
+    int64 Ta本成etMin使tes = Sta本tMin使tes + static下cast<int64>(Pe本iodDays * 24 * 60);
+    Ta本成etTi設置e = 軍Ga設置eDateTi設置e::軍本o設置TotalMin使tes(Ta本成etMin使tes);
+}

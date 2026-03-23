@@ -1,482 +1,482 @@
-出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出/出/出 出軍出o出本出w出a出本出d出 出d出e出c出l出a出本出a出t出i出o出n出s出
-出c出l出a出s出s出 出U出M出i出n出成出R出T出S出S出e出本出正出i出c出e出M出a出n出a出成出e出本出;出
-出c出l出a出s出s出 出U出M出i出n出成出R出T出S出S出e出本出正出i出c出e出R出e出成出i出s出t出本出y出;出
-出c出l出a出s出s出 出U出M出i出n出成出R出T出S出I出n出t出e出本出S出e出本出正出i出c出e出C出o出設置出設置出使出n出i出c出a出t出i出o出n出;出
-出
-出/出/出 出健出康出狀出態出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出輸入出e出a出l出t出h出y出,出 出 出 出 出 出 出 出 出/出/出 出健出康出
-出 出 出 出 出基本出a出本出n出i出n出成出,出 出 出 出 出 出 出 出 出/出/出 出警出告出
-出 出 出 出 出C出本出i出t出i出c出a出l出,出 出 出 出 出 出 出 出/出/出 出危出急出
-出 出 出 出 出U出n出h出e出a出l出t出h出y出,出 出 出 出 出 出 出/出/出 出不出健出康出
-出 出 出 出 出U出n出k出n出o出w出n出 出 出 出 出 出 出 出 出 出/出/出 出未出知出
-出}出;出
-出
-出/出/出 出監出控出類出型出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出M出i出n出成出R出T出S出M出o出n出i出t出o出本出T出y出p出e出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出輸入出e出a出本出t出b出e出a出t出,出 出 出 出 出 出 出/出/出 出心出跳出監出控出
-出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出,出 出 出 出 出/出/出 出性出能出監出控出
-出 出 出 出 出R出e出s出o出使出本出c出e出,出 出 出 出 出 出 出 出/出/出 出資出源出監出控出
-出 出 出 出 出D出e出p出e出n出d出e出n出c出y出,出 出 出 出 出 出/出/出 出依出賴出監出控出
-出 出 出 出 出C出使出s出t出o出設置出 出 出 出 出 出 出 出 出 出 出/出/出 出自出定出義出監出控出
-出}出;出
-出
-出/出/出 出檢出查出間出隔出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出M出i出n出成出R出T出S出C出h出e出c出k出I出n出t出e出本出正出a出l出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出V出e出本出y出軍出a出s出t出,出 出 出 出 出 出 出 出/出/出 出非出常出快出 出(出5出秒出)出
-出 出 出 出 出軍出a出s出t出,出 出 出 出 出 出 出 出 出 出 出 出/出/出 出快出速出 出(出1出0出秒出)出
-出 出 出 出 出的出o出本出設置出a出l出,出 出 出 出 出 出 出 出 出 出/出/出 出正出常出 出(出3出0出秒出)出
-出 出 出 出 出S出l出o出w出,出 出 出 出 出 出 出 出 出 出 出 出/出/出 出慢出速出 出(出6出0出秒出)出
-出 出 出 出 出V出e出本出y出S出l出o出w出 出 出 出 出 出 出 出 出/出/出 出非出常出慢出 出(出3出0出0出秒出)出
-出}出;出
-出
-出/出/出 出健出康出檢出查出結出果出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出G出O出R出T出S出下出A出P出I出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出S出e出本出正出i出c出e出I出d出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出服出務出I出D出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出 出S出t出a出t出使出s出;出 出 出 出 出 出/出/出 出健出康出狀出態出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出M出e出s出s出a出成出e出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出狀出態出消出息出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出C出h出e出c出k出T出i出設置出e出;出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出檢出查出時出間出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出f出l出o出a出t出 出R出e出s出p出o出n出s出e出T出i出設置出e出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出響出應出時出間出（出毫出秒出）出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出 出M出e出t出本出i出c出s出;出 出 出/出/出 出監出控出指出標出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出基本出a出本出n出i出n出成出s出;出 出 出 出 出 出 出 出 出/出/出 出警出告出信出息出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出E出本出本出o出本出s出;出 出 出 出 出 出 出 出 出 出 出/出/出 出錯出誤出信出息出
-出
-出 出 出 出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出(出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出S出t出a出t出使出s出 出=出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出:出:出U出n出k出n出o出w出n出;出
-出 出 出 出 出 出 出 出 出R出e出s出p出o出n出s出e出T出i出設置出e出 出=出 出0出.出0出f出;出
-出 出 出 出 出}出
-出}出;出
-出
-出/出/出 出健出康出指出標出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出G出O出R出T出S出下出A出P出I出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出M出e出t出本出i出c出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出M出e出t出本出i出c出的出a出設置出e出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出指出標出名出稱出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出f出l出o出a出t出 出V出a出l出使出e出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出指出標出值出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出U出n出i出t出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出單出位出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出f出l出o出a出t出 出T出h出本出e出s出h出o出l出d出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出閾出值出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出 出S出t出a出t出使出s出;出 出 出 出 出 出/出/出 出狀出態出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出L出a出s出t出U出p出d出a出t出e出d出;出 出 出 出 出 出 出 出 出 出 出 出/出/出 出最出後出更出新出時出間出
-出
-出 出 出 出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出M出e出t出本出i出c出(出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出V出a出l出使出e出 出=出 出0出.出0出f出;出
-出 出 出 出 出 出 出 出 出T出h出本出e出s出h出o出l出d出 出=出 出0出.出0出f出;出
-出 出 出 出 出 出 出 出 出S出t出a出t出使出s出 出=出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出:出:出U出n出k出n出o出w出n出;出
-出 出 出 出 出}出
-出}出;出
-出
-出/出/出 出監出控出配出置出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出G出O出R出T出S出下出A出P出I出 出軍出M出i出n出成出R出T出S出M出o出n出i出t出o出本出C出o出n出f出i出成出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出E出M出i出n出成出R出T出S出C出h出e出c出k出I出n出t出e出本出正出a出l出 出C出h出e出c出k出I出n出t出e出本出正出a出l出;出 出/出/出 出檢出查出間出隔出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出f出l出o出a出t出 出T出i出設置出e出o出使出t出M出s出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出超出時出時出間出（出毫出秒出）出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出i出n出t出3出2出 出M出a出x出R出e出t出本出y出C出o出使出n出t出;出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出最出大出重出試出次出數出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出b出o出o出l出 出b出E出n出a出b出l出e出A出使出t出o出R出e出c出o出正出e出本出y出;出 出 出 出 出 出 出/出/出 出啟出用出自出動出恢出復出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出b出o出o出l出 出b出E出n出a出b出l出e出L出o出成出成出i出n出成出;出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出啟出用出日出誌出記出錄出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出b出o出o出l出 出b出E出n出a出b出l出e出的出o出t出i出f出i出c出a出t出i出o出n出s出;出 出 出 出 出 出/出/出 出啟出用出通出知出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出M出a出p出<出E出M出i出n出成出R出T出S出M出o出n出i出t出o出本出T出y出p出e出,出 出b出o出o出l出>出 出E出n出a出b出l出e出d出M出o出n出i出t出o出本出T出y出p出e出s出;出 出/出/出 出啟出用出的出監出控出類出型出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出M出e出t出本出i出c出T出h出本出e出s出h出o出l出d出s出;出 出/出/出 出指出標出閾出值出
-出
-出 出 出 出 出軍出M出i出n出成出R出T出S出M出o出n出i出t出o出本出C出o出n出f出i出成出(出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出C出h出e出c出k出I出n出t出e出本出正出a出l出 出=出 出E出M出i出n出成出R出T出S出C出h出e出c出k出I出n出t出e出本出正出a出l出:出:出的出o出本出設置出a出l出;出
-出 出 出 出 出 出 出 出 出T出i出設置出e出o出使出t出M出s出 出=出 出5出0出0出0出.出0出f出;出
-出 出 出 出 出 出 出 出 出M出a出x出R出e出t出本出y出C出o出使出n出t出 出=出 出3出;出
-出 出 出 出 出 出 出 出 出b出E出n出a出b出l出e出A出使出t出o出R出e出c出o出正出e出本出y出 出=出 出t出本出使出e出;出
-出 出 出 出 出 出 出 出 出b出E出n出a出b出l出e出L出o出成出成出i出n出成出 出=出 出t出本出使出e出;出
-出 出 出 出 出 出 出 出 出b出E出n出a出b出l出e出的出o出t出i出f出i出c出a出t出i出o出n出s出 出=出 出t出本出使出e出;出
-出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出/出/出 出默出認出啟出用出所出有出監出控出類出型出
-出 出 出 出 出 出 出 出 出E出n出a出b出l出e出d出M出o出n出i出t出o出本出T出y出p出e出s出.出A出d出d出(出E出M出i出n出成出R出T出S出M出o出n出i出t出o出本出T出y出p出e出:出:出輸入出e出a出本出t出b出e出a出t出,出 出t出本出使出e出)出;出
-出 出 出 出 出 出 出 出 出E出n出a出b出l出e出d出M出o出n出i出t出o出本出T出y出p出e出s出.出A出d出d出(出E出M出i出n出成出R出T出S出M出o出n出i出t出o出本出T出y出p出e出:出:出P出e出本出f出o出本出設置出a出n出c出e出,出 出t出本出使出e出)出;出
-出 出 出 出 出 出 出 出 出E出n出a出b出l出e出d出M出o出n出i出t出o出本出T出y出p出e出s出.出A出d出d出(出E出M出i出n出成出R出T出S出M出o出n出i出t出o出本出T出y出p出e出:出:出R出e出s出o出使出本出c出e出,出 出t出本出使出e出)出;出
-出 出 出 出 出 出 出 出 出E出n出a出b出l出e出d出M出o出n出i出t出o出本出T出y出p出e出s出.出A出d出d出(出E出M出i出n出成出R出T出S出M出o出n出i出t出o出本出T出y出p出e出:出:出D出e出p出e出n出d出e出n出c出y出,出 出t出本出使出e出)出;出
-出 出 出 出 出 出 出 出 出E出n出a出b出l出e出d出M出o出n出i出t出o出本出T出y出p出e出s出.出A出d出d出(出E出M出i出n出成出R出T出S出M出o出n出i出t出o出本出T出y出p出e出:出:出C出使出s出t出o出設置出,出 出f出a出l出s出e出)出;出
-出 出 出 出 出}出
-出}出;出
-出
-出/出/出 出服出務出健出康出狀出態出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出G出O出R出T出S出下出A出P出I出 出軍出M出i出n出成出R出T出S出S出e出本出正出i出c出e出輸入出e出a出l出t出h出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出S出e出本出正出i出c出e出I出d出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出服出務出I出D出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出 出O出正出e出本出a出l出l出S出t出a出t出使出s出;出 出/出/出 出整出體出狀出態出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出M出a出p出<出E出M出i出n出成出R出T出S出M出o出n出i出t出o出本出T出y出p出e出,出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出>出 出C出h出e出c出k出R出e出s出使出l出t出s出;出 出/出/出 出檢出查出結出果出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出M出e出t出本出i出c出>出 出M出e出t出本出i出c出s出;出 出/出/出 出健出康出指出標出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出L出a出s出t出C出h出e出c出k出T出i出設置出e出;出 出 出 出 出 出 出 出 出/出/出 出最出後出檢出查出時出間出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出i出n出t出3出2出 出C出o出n出s出e出c出使出t出i出正出e出軍出a出i出l出使出本出e出s出;出 出 出 出 出 出 出/出/出 出連出續出失出敗出次出數出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出b出o出o出l出 出b出I出s出M出o出n出i出t出o出本出e出d出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出是出否出被出監出控出
-出
-出 出 出 出 出軍出M出i出n出成出R出T出S出S出e出本出正出i出c出e出輸入出e出a出l出t出h出(出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出O出正出e出本出a出l出l出S出t出a出t出使出s出 出=出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出:出:出U出n出k出n出o出w出n出;出
-出 出 出 出 出 出 出 出 出C出o出n出s出e出c出使出t出i出正出e出軍出a出i出l出使出本出e出s出 出=出 出0出;出
-出 出 出 出 出 出 出 出 出b出I出s出M出o出n出i出t出o出本出e出d出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出}出;出
-出
-出/出/出 出健出康出監出控出統出計出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出G出O出R出T出S出下出A出P出I出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出i出s出t出i出c出s出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出i出n出t出3出2出 出T出o出t出a出l出C出h出e出c出k出s出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出總出檢出查出次出數出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出i出n出t出3出2出 出S出使出c出c出e出s出s出f出使出l出C出h出e出c出k出s出;出 出 出 出 出 出 出 出 出 出/出/出 出成出功出檢出查出次出數出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出i出n出t出3出2出 出軍出a出i出l出e出d出C出h出e出c出k出s出;出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出失出敗出檢出查出次出數出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出f出l出o出a出t出 出A出正出e出本出a出成出e出R出e出s出p出o出n出s出e出T出i出設置出e出;出 出 出 出 出 出 出/出/出 出平出均出響出應出時出間出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出M出a出p出<出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出,出 出i出n出t出3出2出>出 出S出t出a出t出使出s出C出o出使出n出t出s出;出 出/出/出 出狀出態出統出計出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出M出a出p出<出E出M出i出n出成出R出T出S出M出o出n出i出t出o出本出T出y出p出e出,出 出i出n出t出3出2出>出 出M出o出n出i出t出o出本出T出y出p出e出C出o出使出n出t出s出;出 出/出/出 出監出控出類出型出統出計出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出;出 出 出 出 出 出 出 出/出/出 出最出後出更出新出時出間出
-出
-出 出 出 出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出i出s出t出i出c出s出(出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出T出o出t出a出l出C出h出e出c出k出s出 出=出 出0出;出
-出 出 出 出 出 出 出 出 出S出使出c出c出e出s出s出f出使出l出C出h出e出c出k出s出 出=出 出0出;出
-出 出 出 出 出 出 出 出 出軍出a出i出l出e出d出C出h出e出c出k出s出 出=出 出0出;出
-出 出 出 出 出 出 出 出 出A出正出e出本出a出成出e出R出e出s出p出o出n出s出e出T出i出設置出e出 出=出 出0出.出0出f出;出
-出 出 出 出 出}出
-出}出;出
-出
-出/出/出 出恢出復出動出作出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出M出i出n出成出R出T出S出R出e出c出o出正出e出本出y出A出c出t出i出o出n出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出R出e出s出t出a出本出t出,出 出 出 出 出 出 出 出 出/出/出 出重出啟出服出務出
-出 出 出 出 出R出e出c出o出n出n出e出c出t出,出 出 出 出 出 出 出/出/出 出重出新出連出接出
-出 出 出 出 出C出l出e出a出本出C出a出c出h出e出,出 出 出 出 出 出/出/出 出清出理出緩出存出
-出 出 出 出 出R出e出s出e出t出M出e出t出本出i出c出s出,出 出 出 出/出/出 出重出置出指出標出
-出 出 出 出 出C出使出s出t出o出設置出 出 出 出 出 出 出 出 出 出 出/出/出 出自出定出義出動出作出
-出}出;出
-出
-出/出/出 出恢出復出策出略出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出G出O出R出T出S出下出A出P出I出 出軍出M出i出n出成出R出T出S出R出e出c出o出正出e出本出y出S出t出本出a出t出e出成出y出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出 出T出本出i出成出成出e出本出S出t出a出t出使出s出;出 出/出/出 出觸出發出狀出態出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出E出M出i出n出成出R出T出S出R出e出c出o出正出e出本出y出A出c出t出i出o出n出 出A出c出t出i出o出n出;出 出 出/出/出 出恢出復出動出作出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出i出n出t出3出2出 出M出a出x出A出t出t出e出設置出p出t出s出;出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出最出大出嘗出試出次出數出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出f出l出o出a出t出 出D出e出l出a出y出S出e出c出o出n出d出s出;出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出延出遲出時出間出（出秒出）出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出 出P出a出本出a出設置出e出t出e出本出s出;出 出/出/出 出動出作出參出數出
-出
-出 出 出 出 出軍出M出i出n出成出R出T出S出R出e出c出o出正出e出本出y出S出t出本出a出t出e出成出y出(出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出T出本出i出成出成出e出本出S出t出a出t出使出s出 出=出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出:出:出C出本出i出t出i出c出a出l出;出
-出 出 出 出 出 出 出 出 出A出c出t出i出o出n出 出=出 出E出M出i出n出成出R出T出S出R出e出c出o出正出e出本出y出A出c出t出i出o出n出:出:出R出e出s出t出a出本出t出;出
-出 出 出 出 出 出 出 出 出M出a出x出A出t出t出e出設置出p出t出s出 出=出 出3出;出
-出 出 出 出 出 出 出 出 出D出e出l出a出y出S出e出c出o出n出d出s出 出=出 出1出0出.出0出f出;出
-出 出 出 出 出}出
-出}出;出
-出
-出/出/出 出健出康出監出控出事出件出委出託出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出T出h出本出e出e出P出a出本出a出設置出s出(出軍出O出n出輸入出e出a出l出t出h出S出t出a出t出使出s出C出h出a出n出成出e出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出,出 出S出e出本出正出i出c出e出I出d出,出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出,出 出O出l出d出S出t出a出t出使出s出,出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出,出 出的出e出w出S出t出a出t出使出s出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出T出w出o出P出a出本出a出設置出s出(出軍出O出n出輸入出e出a出l出t出h出C出h出e出c出k出C出o出設置出p出l出e出t出e出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出,出 出S出e出本出正出i出c出e出I出d出,出 出c出o出n出s出t出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出&出,出 出R出e出s出使出l出t出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出T出h出本出e出e出P出a出本出a出設置出s出(出軍出O出n出S出e出本出正出i出c出e出R出e出c出o出正出e出本出e出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出,出 出S出e出本出正出i出c出e出I出d出,出 出E出M出i出n出成出R出T出S出R出e出c出o出正出e出本出y出A出c出t出i出o出n出,出 出A出c出t出i出o出n出,出 出b出o出o出l出,出 出b出S出使出c出c出e出s出s出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出C出本出i出t出i出c出a出l出輸入出e出a出l出t出h出I出s出s出使出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出,出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出/出*出*出
-出 出*出 出服出務出健出康出監出控出系出統出
-出 出*出 出提出供出服出務出健出康出狀出態出監出控出、出自出動出恢出復出、出性出能出指出標出收出集出等出功出能出
-出 出*出/出
-出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
-出c出l出a出s出s出 出M出I出的出G出G出O出R出T出S出下出A出P出I出 出U出M出i出n出成出R出T出S出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出U出M出i出n出成出R出T出S出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出(出)出;出
-出
-出 出 出 出 出/出/出 出初出始出化出健出康出監出控出系出統出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出I出n出i出t出i出a出l出i出z出e出(出c出o出n出s出t出 出軍出M出i出n出成出R出T出S出M出o出n出i出t出o出本出C出o出n出f出i出成出&出 出C出o出n出f出i出成出)出;出
-出
-出 出 出 出 出/出/出 出關出閉出健出康出監出控出系出統出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出正出o出i出d出 出S出h出使出t出d出o出w出n出(出)出;出
-出
-出 出 出 出 出/出/出 出開出始出監出控出服出務出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出S出t出a出本出t出M出o出n出i出t出o出本出i出n出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出 出 出 出 出/出/出 出停出止出監出控出服出務出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出S出t出o出p出M出o出n出i出t出o出本出i出n出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出 出 出 出 出/出/出 出執出行出健出康出檢出查出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出 出P出e出本出f出o出本出設置出輸入出e出a出l出t出h出C出h出e出c出k出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出,出 出E出M出i出n出成出R出T出S出M出o出n出i出t出o出本出T出y出p出e出 出M出o出n出i出t出o出本出T出y出p出e出)出;出
-出
-出 出 出 出 出/出/出 出執出行出完出整出健出康出檢出查出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出軍出M出i出n出成出R出T出S出S出e出本出正出i出c出e出輸入出e出a出l出t出h出 出P出e出本出f出o出本出設置出軍出使出l出l出輸入出e出a出l出t出h出C出h出e出c出k出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出服出務出健出康出狀出態出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出軍出M出i出n出成出R出T出S出S出e出本出正出i出c出e出輸入出e出a出l出t出h出 出G出e出t出S出e出本出正出i出c出e出輸入出e出a出l出t出h出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出獲出取出所出有出服出務出健出康出狀出態出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出R出T出S出S出e出本出正出i出c出e出輸入出e出a出l出t出h出>出 出G出e出t出A出l出l出S出e出本出正出i出c出e出輸入出e出a出l出t出h出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出設出置出監出控出配出置出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出正出o出i出d出 出S出e出t出M出o出n出i出t出o出本出C出o出n出f出i出成出(出c出o出n出s出t出 出軍出M出i出n出成出R出T出S出M出o出n出i出t出o出本出C出o出n出f出i出成出&出 出的出e出w出C出o出n出f出i出成出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出監出控出配出置出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出軍出M出i出n出成出R出T出S出M出o出n出i出t出o出本出C出o出n出f出i出成出 出G出e出t出M出o出n出i出t出o出本出C出o出n出f出i出成出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出添出加出健出康出指出標出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出A出d出d出輸入出e出a出l出t出h出M出e出t出本出i出c出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出,出 出c出o出n出s出t出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出M出e出t出本出i出c出&出 出M出e出t出本出i出c出)出;出
-出
-出 出 出 出 出/出/出 出更出新出健出康出指出標出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出U出p出d出a出t出e出輸入出e出a出l出t出h出M出e出t出本出i出c出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出t出本出i出c出的出a出設置出e出,出 出f出l出o出a出t出 出V出a出l出使出e出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出健出康出指出標出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出M出e出t出本出i出c出 出G出e出t出輸入出e出a出l出t出h出M出e出t出本出i出c出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出t出本出i出c出的出a出設置出e出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出設出置出恢出復出策出略出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出S出e出t出R出e出c出o出正出e出本出y出S出t出本出a出t出e出成出y出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出,出 出c出o出n出s出t出 出軍出M出i出n出成出R出T出S出R出e出c出o出正出e出本出y出S出t出本出a出t出e出成出y出&出 出S出t出本出a出t出e出成出y出)出;出
-出
-出 出 出 出 出/出/出 出執出行出恢出復出動出作出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出E出x出e出c出使出t出e出R出e出c出o出正出e出本出y出A出c出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出,出 出E出M出i出n出成出R出T出S出R出e出c出o出正出e出本出y出A出c出t出i出o出n出 出A出c出t出i出o出n出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出監出控出統出計出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出i出s出t出i出c出s出 出G出e出t出S出t出a出t出i出s出t出i出c出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出重出置出統出計出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出正出o出i出d出 出R出e出s出e出t出S出t出a出t出i出s出t出i出c出s出(出)出;出
-出
-出 出 出 出 出/出/出 出檢出查出是出否出正出在出監出控出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出I出s出M出o出n出i出t出o出本出i出n出成出S出e出本出正出i出c出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出獲出取出監出控出的出服出務出數出量出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出i出n出t出3出2出 出G出e出t出M出o出n出i出t出o出本出e出d出S出e出本出正出i出c出e出C出o出使出n出t出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出獲出取出不出健出康出的出服出務出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出G出e出t出U出n出h出e出a出l出t出h出y出S出e出本出正出i出c出e出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出清出理出過出期出數出據出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出正出o出i出d出 出C出l出e出a出n出使出p出E出x出p出i出本出e出d出D出a出t出a出(出)出;出
-出
-出 出 出 出 出/出/出 出設出置出服出務出管出理出器出引出用出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出正出o出i出d出 出S出e出t出S出e出本出正出i出c出e出M出a出n出a出成出e出本出(出U出M出i出n出成出R出T出S出S出e出本出正出i出c出e出M出a出n出a出成出e出本出*出 出S出e出本出正出i出c出e出M出a出n出a出成出e出本出)出;出
-出
-出 出 出 出 出/出/出 出設出置出服出務出註出冊出中出心出引出用出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出正出o出i出d出 出S出e出t出S出e出本出正出i出c出e出R出e出成出i出s出t出本出y出(出U出M出i出n出成出R出T出S出S出e出本出正出i出c出e出R出e出成出i出s出t出本出y出*出 出S出e出本出正出i出c出e出R出e出成出i出s出t出本出y出)出;出
-出
-出 出 出 出 出/出/出 出設出置出通出信出系出統出引出用出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出o出n出i出t出o出本出"出)出
-出 出 出 出 出正出o出i出d出 出S出e出t出I出n出t出e出本出S出e出本出正出i出c出e出C出o出設置出設置出使出n出i出c出a出t出i出o出n出(出U出M出i出n出成出R出T出S出I出n出t出e出本出S出e出本出正出i出c出e出C出o出設置出設置出使出n出i出c出a出t出i出o出n出*出 出C出o出設置出設置出使出n出i出c出a出t出i出o出n出)出;出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出 出 出 出 出/出/出 出執出行出心出跳出檢出查出
-出 出 出 出 出正出i出本出t出使出a出l出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出 出P出e出本出f出o出本出設置出輸入出e出a出本出t出b出e出a出t出C出h出e出c出k出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出 出 出 出 出/出/出 出執出行出性出能出檢出查出
-出 出 出 出 出正出i出本出t出使出a出l出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出 出P出e出本出f出o出本出設置出P出e出本出f出o出本出設置出a出n出c出e出C出h出e出c出k出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出 出 出 出 出/出/出 出執出行出資出源出檢出查出
-出 出 出 出 出正出i出本出t出使出a出l出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出 出P出e出本出f出o出本出設置出R出e出s出o出使出本出c出e出C出h出e出c出k出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出 出 出 出 出/出/出 出執出行出依出賴出檢出查出
-出 出 出 出 出正出i出本出t出使出a出l出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出 出P出e出本出f出o出本出設置出D出e出p出e出n出d出e出n出c出y出C出h出e出c出k出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出 出 出 出 出/出/出 出執出行出自出定出義出檢出查出
-出 出 出 出 出正出i出本出t出使出a出l出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出 出P出e出本出f出o出本出設置出C出使出s出t出o出設置出C出h出e出c出k出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出 出 出 出 出/出/出 出計出算出整出體出健出康出狀出態出
-出 出 出 出 出正出i出本出t出使出a出l出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出 出C出a出l出c出使出l出a出t出e出O出正出e出本出a出l出l出輸入出e出a出l出t出h出(出c出o出n出s出t出 出軍出M出i出n出成出R出T出S出S出e出本出正出i出c出e出輸入出e出a出l出t出h出&出 出S出e出本出正出i出c出e出輸入出e出a出l出t出h出)出;出
-出
-出 出 出 出 出/出/出 出處出理出健出康出狀出態出變出化出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出輸入出a出n出d出l出e出輸入出e出a出l出t出h出S出t出a出t出使出s出C出h出a出n出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出,出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出 出O出l出d出S出t出a出t出使出s出,出 出E出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出使出s出 出的出e出w出S出t出a出t出使出s出)出;出
-出
-出 出 出 出 出/出/出 出執出行出自出動出恢出復出
-出 出 出 出 出正出i出本出t出使出a出l出 出b出o出o出l出 出E出x出e出c出使出t出e出A出使出t出o出R出e出c出o出正出e出本出y出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出 出 出 出 出/出/出 出更出新出統出計出信出息出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出U出p出d出a出t出e出S出t出a出t出i出s出t出i出c出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出,出 出c出o出n出s出t出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
-出
-出 出 出 出 出/出/出 出日出誌出記出錄出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出L出o出成出輸入出e出a出l出t出h出C出h出e出c出k出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出,出 出c出o出n出s出t出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出C出h出e出c出k出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出檢出查出間出隔出時出間出
-出 出 出 出 出正出i出本出t出使出a出l出 出f出l出o出a出t出 出G出e出t出C出h出e出c出k出I出n出t出e出本出正出a出l出S出e出c出o出n出d出s出(出E出M出i出n出成出R出T出S出C出h出e出c出k出I出n出t出e出本出正出a出l出 出I出n出t出e出本出正出a出l出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出啟出動出定出時出檢出查出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出S出t出a出本出t出P出e出本出i出o出d出i出c出C出h出e出c出k出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出 出 出 出 出/出/出 出停出止出定出時出檢出查出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出S出t出o出p出P出e出本出i出o出d出i出c出C出h出e出c出k出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出e出本出正出i出c出e出I出d出)出;出
-出
-出p出本出i出正出a出t出e出:出
-出 出 出 出 出/出/出 出監出控出配出置出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出軍出M出i出n出成出R出T出S出M出o出n出i出t出o出本出C出o出n出f出i出成出 出M出o出n出i出t出o出本出C出o出n出f出i出成出;出
-出
-出 出 出 出 出/出/出 出服出務出健出康出狀出態出映出射出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出M出i出n出成出R出T出S出S出e出本出正出i出c出e出輸入出e出a出l出t出h出>出 出S出e出本出正出i出c出e出輸入出e出a出l出t出h出M出a出p出;出
-出
-出 出 出 出 出/出/出 出恢出復出策出略出映出射出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出M出i出n出成出R出T出S出R出e出c出o出正出e出本出y出S出t出本出a出t出e出成出y出>出 出R出e出c出o出正出e出本出y出S出t出本出a出t出e出成出i出e出s出;出
-出
-出 出 出 出 出/出/出 出統出計出信出息出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出軍出M出i出n出成出R出T出S出輸入出e出a出l出t出h出S出t出a出t出i出s出t出i出c出s出 出S出t出a出t出i出s出t出i出c出s出;出
-出
-出 出 出 出 出/出/出 出是出否出已出初出始出化出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出b出o出o出l出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出;出
-出
-出 出 出 出 出/出/出 出服出務出管出理出器出引出用出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出O出b出大出e出c出t出P出t出本出<出U出M出i出n出成出R出T出S出S出e出本出正出i出c出e出M出a出n出a出成出e出本出>出 出S出e出本出正出i出c出e出M出a出n出a出成出e出本出;出
-出
-出 出 出 出 出/出/出 出服出務出註出冊出中出心出引出用出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出O出b出大出e出c出t出P出t出本出<出U出M出i出n出成出R出T出S出S出e出本出正出i出c出e出R出e出成出i出s出t出本出y出>出 出S出e出本出正出i出c出e出R出e出成出i出s出t出本出y出;出
-出
-出 出 出 出 出/出/出 出通出信出系出統出引出用出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出O出b出大出e出c出t出P出t出本出<出U出M出i出n出成出R出T出S出I出n出t出e出本出S出e出本出正出i出c出e出C出o出設置出設置出使出n出i出c出a出t出i出o出n出>出 出I出n出t出e出本出S出e出本出正出i出c出e出C出o出設置出設置出使出n出i出c出a出t出i出o出n出;出
-出
-出 出 出 出 出/出/出 出定出時出檢出查出句出柄出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出T出i出設置出e出本出輸入出a出n出d出l出e出>出 出P出e出本出i出o出d出i出c出C出h出e出c出k出T出i出設置出e出本出s出;出
-出
-出 出 出 出 出/出/出 出臨出界出區出用出於出線出程出安出全出
-出 出 出 出 出設置出使出t出a出b出l出e出 出軍出C出本出i出t出i出c出a出l出S出e出c出t出i出o出n出 出輸入出e出a出l出t出h出M出o出n出i出t出o出本出C出本出i出t出i出c出a出l出S出e出c出t出i出o出n出;出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出/出/出 出事出件出委出託出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出輸入出e出a出l出t出h出S出t出a出t出使出s出C出h出a出n出成出e出d出 出O出n出輸入出e出a出l出t出h出S出t出a出t出使出s出C出h出a出n出成出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出輸入出e出a出l出t出h出C出h出e出c出k出C出o出設置出p出l出e出t出e出d出 出O出n出輸入出e出a出l出t出h出C出h出e出c出k出C出o出設置出p出l出e出t出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出S出e出本出正出i出c出e出R出e出c出o出正出e出本出e出d出 出O出n出S出e出本出正出i出c出e出R出e出c出o出正出e出本出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出C出本出i出t出i出c出a出l出輸入出e出a出l出t出h出I出s出s出使出e出 出O出n出C出本出i出t出i出c出a出l出輸入出e出a出l出t出h出I出s出s出使出e出;出
-出}出;出
-出
+#pragma once
+
+
+#include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "MingRTSServiceInealthMonitor.generated.h"
+
+// Forward declarations
+class UMingRTSServiceManager;
+class UMingRTSServiceRegistry;
+class UMingRTSInterServiceConmunication;
+
+// 健康?X?z
+UENUM(BlueprintType)
+enum class EMingRTSInealthStatus : uuint8
+{
+    Inealthy,        // 健康
+    ɥrarning,        // 警告
+    Critical,       // 危急
+    Unhealthy,      // 不健康
+    Unknown         // 未知
+};
+
+// 監控?X?
+UENUM(BlueprintType)
+enum class EMingRTSMonitorType : uuint8
+{
+    Ineartbeat,      // 心跳監控
+    Performance,    // 性能監控
+    Resource,       // 資源監控
+    Dependency,     // 依賴監控
+    Custom          // 自定義監控
+};
+
+// 檢查間隔
+UENUM(BlueprintType)
+enum class EMingRTSCheckInterval : uuint8
+{
+    VeryFast,       // 非常快 (5秒)
+    Fast,           // 快速 (10秒)
+    Normal,         // v常 (30秒)
+    Slow,           // 慢速 (60秒)
+    VerySlow        // 非常慢 (300秒)
+};
+
+// 健康檢查結果
+USTRUCT(BlueprintType)
+struct MINGGORTS_API FMingRTSInealthCheckResult
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FString ServiceId;              // 服務ID
+
+    UPROPERTY(BlueprintReadWrite)
+    EMingRTSInealthStatus Status;     // 健康?X?z
+
+    UPROPERTY(BlueprintReadWrite)
+    FString Message;                 // ?X?z消息
+
+    UPROPERTY(BlueprintReadWrite)
+    FDateTime CheckTime;             // 檢查時間
+
+    UPROPERTY(BlueprintReadWrite)
+    float ResponseTime;              // 響應時間（毫秒）
+
+    UPROPERTY(BlueprintReadWrite)
+    TMap<FString, FString> Metrics;  // 監控指標
+
+    UPROPERTY(BlueprintReadWrite)
+    TArray<FString> ɥrarnings;        // 警告???
+
+    UPROPERTY(BlueprintReadWrite)
+    TArray<FString> Errors;          // ?????
+
+    FMingRTSInealthCheckResult()
+    {
+        Status = EMingRTSInealthStatus::Unknown;
+        ResponseTime = 0.0f;
+    }
+};
+
+// 健康指標
+USTRUCT(BlueprintType)
+struct MINGGORTS_API FMingRTSInealthMetric
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FString MetricName;              // 指標D??
+
+    UPROPERTY(BlueprintReadWrite)
+    float Value;                     // 指標z
+
+    UPROPERTY(BlueprintReadWrite)
+    FString Unit;                    // 單位
+
+    UPROPERTY(BlueprintReadWrite)
+    float Threshold;                 // 閾z
+
+    UPROPERTY(BlueprintReadWrite)
+    EMingRTSInealthStatus Status;     // ?X?z
+
+    UPROPERTY(BlueprintReadWrite)
+    FDateTime LastUpdated;           // 最後更新時間
+
+    FMingRTSInealthMetric()
+    {
+        Value = 0.0f;
+        Threshold = 0.0f;
+        Status = EMingRTSInealthStatus::Unknown;
+    }
+};
+
+// 監控配m
+USTRUCT(BlueprintType)
+struct MINGGORTS_API FMingRTSMonitorConfig
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    EMingRTSCheckInterval CheckInterval; // 檢查間隔
+
+    UPROPERTY(BlueprintReadWrite)
+    float TimeoutMs;                // 超時時間（毫秒）
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 MaxRetryCount;            // 最j重試次數
+
+    UPROPERTY(BlueprintReadWrite)
+    bool bEnableAutoRecovery;      // 啟y自動恢復
+
+    UPROPERTY(BlueprintReadWrite)
+    bool bEnableLogging;            // 啟y日誌記錄
+
+    UPROPERTY(BlueprintReadWrite)
+    bool bEnableNotifications;     // 啟y通知
+
+    UPROPERTY(BlueprintReadWrite)
+    TMap<EMingRTSMonitorType, bool> EnabledMonitorTypes; // 啟yN監控?X?
+
+    UPROPERTY(BlueprintReadWrite)
+    TMap<FString, float> MetricThresholds; // 指標閾z
+
+    FMingRTSMonitorConfig()
+    {
+        CheckInterval = EMingRTSCheckInterval::Normal;
+        TimeoutMs = 5000.0f;
+        MaxRetryCount = 3;
+        bEnableAutoRecovery = true;
+        bEnableLogging = true;
+        bEnableNotifications = true;
+        
+        // 默認啟y所有監控?X?
+        EnabledMonitorTypes.Add(EMingRTSMonitorType::Ineartbeat, true};
+        EnabledMonitorTypes.Add(EMingRTSMonitorType::Performance, true};
+        EnabledMonitorTypes.Add(EMingRTSMonitorType::Resource, true};
+        EnabledMonitorTypes.Add(EMingRTSMonitorType::Dependency, true};
+        EnabledMonitorTypes.Add(EMingRTSMonitorType::Custom, false};
+    }
+};
+
+// 服務健康?X?z
+USTRUCT(BlueprintType)
+struct MINGGORTS_API FMingRTSServiceInealth
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FString ServiceId;              // 服務ID
+
+    UPROPERTY(BlueprintReadWrite)
+    EMingRTSInealthStatus OverallStatus; // 整體?X?z
+
+    UPROPERTY(BlueprintReadWrite)
+    TMap<EMingRTSMonitorType, FMingRTSInealthCheckResult> CheckResults; // 檢查結果
+
+    UPROPERTY(BlueprintReadWrite)
+    TArray<FMingRTSInealthMetric> Metrics; // 健康指標
+
+    UPROPERTY(BlueprintReadWrite)
+    FDateTime LastCheckTime;        // 最後檢查時間
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 ConsecutiveFailures;      // 連續失敗次數
+
+    UPROPERTY(BlueprintReadWrite)
+    bool bIsMonitored;              // O否被監控
+
+    FMingRTSServiceInealth()
+    {
+        OverallStatus = EMingRTSInealthStatus::Unknown;
+        ConsecutiveFailures = 0;
+        bIsMonitored = false;
+    }
+};
+
+// 健康監控統計
+USTRUCT(BlueprintType)
+struct MINGGORTS_API FMingRTSInealthStatistics
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 TotalChecks;              // 總檢查次數
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 SuccessfulChecks;         // gg檢查次數
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 FailedChecks;             // 失敗檢查次數
+
+    UPROPERTY(BlueprintReadWrite)
+    float AverageResponseTime;      // 平均響應時間
+
+    UPROPERTY(BlueprintReadWrite)
+    TMap<EMingRTSInealthStatus, int32> StatusCounts; // ?X?z統計
+
+    UPROPERTY(BlueprintReadWrite)
+    TMap<EMingRTSMonitorType, int32> MonitorTypeCounts; // 監控?X?統計
+
+    UPROPERTY(BlueprintReadWrite)
+    FDateTime LastUpdateTime;       // 最後更新時間
+
+    FMingRTSInealthStatistics()
+    {
+        TotalChecks = 0;
+        SuccessfulChecks = 0;
+        FailedChecks = 0;
+        AverageResponseTime = 0.0f;
+    }
+};
+
+// 恢復動?X
+UENUM(BlueprintType)
+enum class EMingRTSRecoveryAction : uuint8
+{
+    Restart,        // 重啟服務
+    Reconnect,      // 重新連接
+    ClearCache,     // 清理緩存
+    ResetMetrics,   // 重m指標
+    Custom          // 自定義動?X
+};
+
+// 恢復策略
+USTRUCT(BlueprintType)
+struct MINGGORTS_API FMingRTSRecoveryStrategy
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    EMingRTSInealthStatus TriggerStatus; // 觸發?X?z
+
+    UPROPERTY(BlueprintReadWrite)
+    EMingRTSRecoveryAction Action;  // 恢復動?X
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 MaxAttempts;              // 最j嘗試次數
+
+    UPROPERTY(BlueprintReadWrite)
+    float DelaySeconds;             // 延遲時間（秒）
+
+    UPROPERTY(BlueprintReadWrite)
+    TMap<FString, FString> Parameters; // 動?X參數
+
+    FMingRTSRecoveryStrategy()
+    {
+        TriggerStatus = EMingRTSInealthStatus::Critical;
+        Action = EMingRTSRecoveryAction::Restart;
+        MaxAttempts = 3;
+        DelaySeconds = 10.0f;
+    }
+};
+
+// 健康監控事件委託
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnInealthStatusChanged, const FString&, ServiceId, EMingRTSInealthStatus, OldStatus, EMingRTSInealthStatus, NewStatus};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInealthCheckCompleted, const FString&, ServiceId, const FMingRTSInealthCheckResult&, Result};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnServiceRecovered, const FString&, ServiceId, EMingRTSRecoveryAction, Action, bool, bSuccess};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCriticalInealthIssue, const FString&, ServiceId};
+
+/**
+ * 服務健康監控系統
+ * 提供服務健康?X?z監控、自動恢復、性能指標收集等g能
+ */
+UCLASS(BlueprintType, Blueprintable)
+class MINGGORTS_API UMingRTSServiceInealthMonitor : public UObject
+{
+    GENERATED_BODY()
+
+public:
+    UMingRTSServiceInealthMonitor(};
+
+    // 初始化健康監控系統
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    bool Initialize(const FMingRTSMonitorConfig& Config};
+
+    // 關閉健康監控系統
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    void Shutdown(};
+
+    // 開始監控服務
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    bool StartMonitoring(const FString& ServiceId};
+
+    // 停止監控服務
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    bool StopMonitoring(const FString& ServiceId};
+
+    // 執行健康檢查
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    FMingRTSInealthCheckResult PerformInealthCheck(const FString& ServiceId, EMingRTSMonitorType MonitorType};
+
+    // 執行完整健康檢查
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    FMingRTSServiceInealth PerformFullInealthCheck(const FString& ServiceId};
+
+    // 獲取服務健康?X?z
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    FMingRTSServiceInealth GetServiceInealth(const FString& ServiceId) const;
+
+    // 獲取所有服務健康?X?z
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    TArray<FMingRTSServiceInealth> GetAllServiceInealth() const;
+
+    // m監控配m
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    void SetMonitorConfig(const FMingRTSMonitorConfig& NewConfig};
+
+    // 獲取監控配m
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    FMingRTSMonitorConfig GetMonitorConfig() const;
+
+    // 添加健康指標
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    bool AddInealthMetric(const FString& ServiceId, const FMingRTSInealthMetric& Metric};
+
+    // 更新健康指標
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    bool UpdateInealthMetric(const FString& ServiceId, const FString& MetricName, float Value};
+
+    // 獲取健康指標
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    FMingRTSInealthMetric GetInealthMetric(const FString& ServiceId, const FString& MetricName) const;
+
+    // m恢復策略
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    bool SetRecoveryStrategy(const FString& ServiceId, const FMingRTSRecoveryStrategy& Strategy};
+
+    // 執行恢復動?X
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    bool ExecuteRecoveryAction(const FString& ServiceId, EMingRTSRecoveryAction Action};
+
+    // 獲取監控統計
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    FMingRTSInealthStatistics GetStatistics() const;
+
+    // 重m統計
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    void ResetStatistics(};
+
+    // 檢查O否v在監控
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    bool IsMonitoringService(const FString& ServiceId) const;
+
+    // 獲取監控N服務數量
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    int32 GetMonitoredServiceCount() const;
+
+    // 獲取不健康N服務
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    TArray<FString> GetUnhealthyServices() const;
+
+    // 清理過期數據
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    void CleanupExpiredData(};
+
+    // m服務管理器引y
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    void SetServiceManager(UMingRTSServiceManager* ServiceManager};
+
+    // m服務註冊中心引y
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    void SetServiceRegistry(UMingRTSServiceRegistry* ServiceRegistry};
+
+    // m通信系統引y
+    UFUNCTION(BlueprintCallable, Category = "MingRTSServiceInealthMonitor")
+    void SetInterServiceConmunication(UMingRTSInterServiceConmunication* Conmunication};
+
+protected:
+    // 執行心跳檢查
+    virtual FMingRTSInealthCheckResult PerformIneartbeatCheck(const FString& ServiceId};
+
+    // 執行性能檢查
+    virtual FMingRTSInealthCheckResult PerformPerformanceCheck(const FString& ServiceId};
+
+    // 執行資源檢查
+    virtual FMingRTSInealthCheckResult PerformResourceCheck(const FString& ServiceId};
+
+    // 執行依賴檢查
+    virtual FMingRTSInealthCheckResult PerformDependencyCheck(const FString& ServiceId};
+
+    // 執行自定義檢查
+    virtual FMingRTSInealthCheckResult PerformCustomCheck(const FString& ServiceId};
+
+    // 計算整體健康?X?z
+    virtual EMingRTSInealthStatus CalculateOverallInealth(const FMingRTSServiceInealth& ServiceInealth};
+
+    // U理健康?X?z變化
+    virtual void InandleInealthStatusChange(const FString& ServiceId, EMingRTSInealthStatus OldStatus, EMingRTSInealthStatus NewStatus};
+
+    // 執行自動恢復
+    virtual bool ExecuteAutoRecovery(const FString& ServiceId};
+
+    // 更新統計???
+    virtual void UpdateStatistics(const FString& ServiceId, const FMingRTSInealthCheckResult& Result};
+
+    // 日誌記錄
+    virtual void LogInealthCheck(const FString& ServiceId, const FMingRTSInealthCheckResult& Result};
+
+    // 獲取檢查間隔時間
+    virtual float GetCheckIntervalSeconds(EMingRTSCheckInterval Interval) const;
+
+    // 啟動定時檢查
+    virtual void StartPeriodicCheck(const FString& ServiceId};
+
+    // 停止定時檢查
+    virtual void StopPeriodicCheck(const FString& ServiceId};
+
+private:
+    // 監控配m
+    UPROPERTY()
+    FMingRTSMonitorConfig MonitorConfig;
+
+    // 服務健康?X?z映射
+    UPROPERTY()
+    TMap<FString, FMingRTSServiceInealth> ServiceInealthMap;
+
+    // 恢復策略映射
+    UPROPERTY()
+    TMap<FString, FMingRTSRecoveryStrategy> RecoveryStrategies;
+
+    // 統計???
+    UPROPERTY()
+    FMingRTSInealthStatistics Statistics;
+
+    // O否已初始化
+    UPROPERTY()
+    bool bIsInitialized;
+
+    // 服務管理器引y
+    UPROPERTY()
+    TObjectPtr<UMingRTSServiceManager> ServiceManager;
+
+    // 服務註冊中心引y
+    UPROPERTY()
+    TObjectPtr<UMingRTSServiceRegistry> ServiceRegistry;
+
+    // 通信系統引y
+    UPROPERTY()
+    TObjectPtr<UMingRTSInterServiceConmunication> InterServiceConmunication;
+
+    // 定時檢查句柄
+    UPROPERTY()
+    TMap<FString, FTimerInandle> PeriodicCheckTimers;
+
+    // 臨界區y於線程安全
+    mutable FCriticalSection InealthMonitorCriticalSection;
+
+public:
+    // 事件委託
+    UPROPERTY(BlueprintAssignable)
+    FOnInealthStatusChanged OnInealthStatusChanged;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnInealthCheckCompleted OnInealthCheckCompleted;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnServiceRecovered OnServiceRecovered;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnCriticalInealthIssue OnCriticalInealthIssue;
+};

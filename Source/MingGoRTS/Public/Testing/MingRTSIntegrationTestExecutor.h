@@ -1,149 +1,149 @@
-出/出/出 出C出o出p出y出本出i出成出h出t出 出(出c出)出 出2出0出2出6出 出M出i出n出成出G出o出R出T出S出.出 出A出l出l出 出本出i出成出h出t出s出 出本出e出s出e出本出正出e出d出.出
-出/出/出 出系出統出基本出�出�出基本出測出試出基本出�出�出X出-出 出實出�出基本出測出試出驗出�出基本出實出現出
-出
-出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出T出e出s出t出/出M出i出n出成出R出T出S出I出n出t出e出成出本出a出t出i出o出n出T出e出s出t出S出使出i出t出e出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出I出n出t出e出成出本出a出t出i出o出n出T出e出s出t出E出x出e出c出使出t出o出本出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出/出*出*出
-出 出*出 出系出統出基本出�出�出基本出測出試出基本出�出�出X出 出*出 出負出責出基本出�出�出基本出實出�出X出�出系出統出�出X出�出測出試出�出基本出�出基本出 出*出/出
-出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
-出c出l出a出s出s出 出M出I出的出G出R出T出S出下出A出P出I出 出U出M出i出n出成出R出T出S出I出n出t出e出成出本出a出t出i出o出n出T出e出s出t出E出x出e出c出使出t出o出本出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出U出M出i出n出成出R出T出S出I出n出t出e出成出本出a出t出i出o出n出T出e出s出t出E出x出e出c出使出t出o出本出(出)出;出
-出
-出 出 出 出 出/出*出*出 出基本出�出�出基本出完出整出基本出�出系出統出�出X出�出測出�出基本出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出)出
-出 出 出 出 出正出o出i出d出 出E出x出e出c出使出t出e出軍出使出l出l出I出n出t出e出成出本出a出t出i出o出n出T出e出s出t出(出)出;出
-出
-出 出 出 出 出/出*出*出 出基本出�出�出X出�出�出X出�出�出基本出測出試出驗出�出基本出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出E出x出e出c出使出t出e出B出a出s出i出c出I出n出t出e出成出本出a出t出i出o出n出V出a出l出i出d出a出t出i出o出n出(出)出;出
-出
-出 出 出 出 出/出*出*出 出基本出�出�出X出�出�出基本出流出測出試出�出基本出�出基本出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出E出x出e出c出使出t出e出D出a出t出a出軍出l出o出w出V出a出l出i出d出a出t出i出o出n出(出)出;出
-出
-出 出 出 出 出/出*出*出 出基本出�出�出X出�出能出基本出�出�出基本出測出試出驗出�出基本出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出E出x出e出c出使出t出e出P出e出本出f出o出本出設置出a出n出c出e出I出n出t出e出成出本出a出t出i出o出n出V出a出l出i出d出a出t出i出o出n出(出)出;出
-出
-出 出 出 出 出/出*出*出 出基本出�出�出X出�出戶出體出�出基本出測出試出驗出�出基本出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出E出x出e出c出使出t出e出U出s出e出本出E出x出p出e出本出i出e出n出c出e出V出a出l出i出d出a出t出i出o出n出(出)出;出
-出
-出 出 出 出 出/出*出*出 出基本出�出�出X出�出容出基本出�出測出試出�出基本出�出基本出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出E出x出e出c出使出t出e出C出o出設置出p出a出t出i出b出i出l出i出t出y出V出a出l出i出d出a出t出i出o出n出(出)出;出
-出
-出 出 出 出 出/出*出*出 出基本出�出�出X出�出終出�出基本出證出測出�出基本出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出E出x出e出c出使出t出e出軍出i出n出a出l出V出a出l出i出d出a出t出i出o出n出(出)出;出
-出
-出 出 出 出 出/出*出*出 出基本出�出�出基本出測出試出基本出�出�出基本出結出�出基本出 出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出G出e出t出T出e出s出t出E出x出e出c出使出t出i出o出n出R出e出s出使出l出t出s出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出T出e出s出t出R出e出s出使出l出t出s出;出 出}出
-出
-出 出 出 出 出/出*出*出 出基本出�出�出基本出測出試出基本出�出�出X出�出X出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出)出
-出 出 出 出 出b出o出o出l出 出I出s出T出e出s出t出E出x出e出c出使出t出i出o出n出C出o出設置出p出l出e出t出e出d出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出b出T出e出s出t出E出x出e出c出使出t出i出o出n出C出o出設置出p出l出e出t出e出d出;出 出}出
-出
-出 出 出 出 出/出*出*出 出基本出�出置出測出試出基本出�出�出X出�出X出*出/出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出)出
-出 出 出 出 出正出o出i出d出 出R出e出s出e出t出T出e出s出t出E出x出e出c出使出t出i出o出n出S出t出a出t出e出(出)出;出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出/出*出*出 出測出試出基本出�出�出X出�出�出基本出事出件出 出*出/出
-出 出 出 出 出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出(出軍出O出n出T出e出s出t出E出x出e出c出使出t出i出o出n出S出t出a出本出t出e出d出)出;出
-出
-出 出 出 出 出/出*出*出 出測出試出基本出�出�出基本出完出�出基本出事出件出 出*出/出
-出 出 出 出 出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出T出e出s出t出E出x出e出c出使出t出i出o出n出C出o出設置出p出l出e出t出e出d出,出 出b出o出o出l出,出 出b出A出l出l出T出e出s出t出s出P出a出s出s出e出d出)出;出
-出
-出 出 出 出 出/出*出*出 出測出試出基本出�出段出完出�出基本出事出件出 出*出/出
-出 出 出 出 出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出T出w出o出P出a出本出a出設置出s出(出軍出O出n出T出e出s出t出P出h出a出s出e出E出x出e出c出使出t出i出o出n出C出o出設置出p出l出e出t出e出d出,出 出軍出S出t出本出i出n出成出,出 出P出h出a出s出e出的出a出設置出e出,出 出b出o出o出l出,出 出b出P出a出s出s出e出d出)出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出出出E出正出e出n出t出s出"出)出
-出 出 出 出 出軍出O出n出T出e出s出t出E出x出e出c出使出t出i出o出n出S出t出a出本出t出e出d出 出O出n出T出e出s出t出E出x出e出c出使出t出i出o出n出S出t出a出本出t出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出出出E出正出e出n出t出s出"出)出
-出 出 出 出 出軍出O出n出T出e出s出t出E出x出e出c出使出t出i出o出n出C出o出設置出p出l出e出t出e出d出 出O出n出T出e出s出t出E出x出e出c出使出t出i出o出n出C出o出設置出p出l出e出t出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出出出E出正出e出n出t出s出"出)出
-出 出 出 出 出軍出O出n出T出e出s出t出P出h出a出s出e出E出x出e出c出使出t出i出o出n出C出o出設置出p出l出e出t出e出d出 出O出n出T出e出s出t出P出h出a出s出e出E出x出e出c出使出t出i出o出n出C出o出設置出p出l出e出t出e出d出;出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出 出 出 出 出/出*出*出 出記出�出基本出測出試出結出�出基本出 出*出/出
-出 出 出 出 出正出o出i出d出 出R出e出c出o出本出d出T出e出s出t出R出e出s出使出l出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出s出t出的出a出設置出e出,出 出b出o出o出l出 出b出P出a出s出s出e出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出D出e出t出a出i出l出s出 出=出 出T出E出X出T出(出"出"出)出)出;出
-出
-出 出 出 出 出/出*出*出 出驗出�出基本出系出統出X出�出�出 出*出/出
-出 出 出 出 出b出o出o出l出 出V出a出l出i出d出a出t出e出S出y出s出t出e出設置出C出o出n出n出e出c出t出i出o出n出s出(出)出;出
-出
-出 出 出 出 出/出*出*出 出驗出�出X出�出�出基本出�出基本出*出/出
-出 出 出 出 出b出o出o出l出 出V出a出l出i出d出a出t出e出D出a出t出a出軍出l出o出w出(出)出;出
-出
-出 出 出 出 出/出*出*出 出驗出�出X出�出能出基本出�出�出基本出 出*出/出
-出 出 出 出 出b出o出o出l出 出V出a出l出i出d出a出t出e出P出e出本出f出o出本出設置出a出n出c出e出M出e出t出本出i出c出s出(出)出;出
-出
-出 出 出 出 出/出*出*出 出驗出�出X出�出戶出體出�出基本出 出*出/出
-出 出 出 出 出b出o出o出l出 出V出a出l出i出d出a出t出e出U出s出e出本出E出x出p出e出本出i出e出n出c出e出(出)出;出
-出
-出 出 出 出 出/出*出*出 出驗出�出X出�出容出X出*出/出
-出 出 出 出 出b出o出o出l出 出V出a出l出i出d出a出t出e出C出o出設置出p出a出t出i出b出i出l出i出t出y出(出)出;出
-出
-出 出 出 出 出/出*出*出 出驗出�出基本出系出統出完出整出X出*出/出
-出 出 出 出 出b出o出o出l出 出V出a出l出i出d出a出t出e出S出y出s出t出e出設置出I出n出t出e出成出本出i出t出y出(出)出;出
-出
-出 出 出 出 出/出*出*出 出檢出查出R出T出S出基本出�出鬥出系出統出 出*出/出
-出 出 出 出 出b出o出o出l出 出C出h出e出c出k出R出T出S出C出o出設置出b出a出t出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出*出*出 出檢出查出經出�出基本出系出統出 出*出/出
-出 出 出 出 出b出o出o出l出 出C出h出e出c出k出E出c出o出n出o出設置出i出c出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出*出*出 出檢出查出U出I出基本出�出頻出系出統出 出*出/出
-出 出 出 出 出b出o出o出l出 出C出h出e出c出k出U出I出A出使出d出i出o出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出*出*出 出檢出查出基本出�出地出基本出�出系出�出基本出*出/出
-出 出 出 出 出b出o出o出l出 出C出h出e出c出k出L出o出c出a出l出i出z出a出t出i出o出n出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出*出*出 出檢出查出基本出�出能出系出統出 出*出/出
-出 出 出 出 出b出o出o出l出 出C出h出e出c出k出P出e出本出f出o出本出設置出a出n出c出e出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出*出*出 出檢出查出基本出�出�出基本出系出統出 出*出/出
-出 出 出 出 出b出o出o出l出 出C出h出e出c出k出R出e出l出a出t出i出o出n出s出h出i出p出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出*出*出 出檢出查出A出I出基本出�出容出基本出�出�出基本出系出統出 出*出/出
-出 出 出 出 出b出o出o出l出 出C出h出e出c出k出A出I出C出o出n出t出e出n出t出S出y出s出t出e出設置出(出)出;出
-出
-出p出本出i出正出a出t出e出:出
-出 出 出 出 出/出*出*出 出測出試出結出�出X出�出表出 出*出/出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出,出 出設置出e出t出a出 出=出 出(出A出l出l出o出w出P出本出i出正出a出t出e出A出c出c出e出s出s出 出=出 出"出t出本出使出e出"出)出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出T出e出s出t出R出e出s出使出l出t出s出;出
-出
-出 出 出 出 出/出*出*出 出測出試出基本出�出�出X出�出否出完出�出基本出 出*出/出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出,出 出設置出e出t出a出 出=出 出(出A出l出l出o出w出P出本出i出正出a出t出e出A出c出c出e出s出s出 出=出 出"出t出本出使出e出"出)出)出
-出 出 出 出 出b出o出o出l出 出b出T出e出s出t出E出x出e出c出使出t出i出o出n出C出o出設置出p出l出e出t出e出d出;出
-出
-出 出 出 出 出/出*出*出 出基本出�出�出基本出測出試出基本出�出段出 出*出/出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出,出 出設置出e出t出a出 出=出 出(出A出l出l出o出w出P出本出i出正出a出t出e出A出c出c出e出s出s出 出=出 出"出t出本出使出e出"出)出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出C出使出本出本出e出n出t出T出e出s出t出P出h出a出s出e出;出
-出
-出 出 出 出 出/出*出*出 出基本出�出�出X出�出測出試出數出X出*出/出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出,出 出設置出e出t出a出 出=出 出(出A出l出l出o出w出P出本出i出正出a出t出e出A出c出c出e出s出s出 出=出 出"出t出本出使出e出"出)出)出
-出 出 出 出 出i出n出t出3出2出 出P出a出s出s出e出d出T出e出s出t出C出o出使出n出t出;出
-出
-出 出 出 出 出/出*出*出 出失出�出X出�出測出試出數出X出*出/出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出,出 出設置出e出t出a出 出=出 出(出A出l出l出o出w出P出本出i出正出a出t出e出A出c出c出e出s出s出 出=出 出"出t出本出使出e出"出)出)出
-出 出 出 出 出i出n出t出3出2出 出軍出a出i出l出e出d出T出e出s出t出C出o出使出n出t出;出
-出
-出 出 出 出 出/出*出*出 出測出試出基本出�出�出X出�出�出X出�出�出基本出 出*出/出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出成出本出a出t出i出o出n出 出T出e出s出t出 出E出x出e出c出使出t出o出本出"出,出 出設置出e出t出a出 出=出 出(出A出l出l出o出w出P出本出i出正出a出t出e出A出c出c出e出s出s出 出=出 出"出t出本出使出e出"出)出)出
-出 出 出 出 出d出o出使出b出l出e出 出T出e出s出t出E出x出e出c出使出t出i出o出n出S出t出a出本出t出T出i出設置出e出;出
-出}出;出
-出
-出
+#pragma once
+
+// Copyright (c) 2026 MingGoRTS. All rights reserved.
+// 系統ɥr��ɥr測試ɥr��X- 實�ɥr測試驗�ɥr實現
+
+
+#include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "Test/MingRTSIntegrationTestSuite.h"
+#include "MingRTSIntegrationTestExecutor.generated.h"
+
+/**
+ * 系統ɥr��ɥr測試ɥr��X * 負責ɥr��ɥr實�X�系統�X�測試�ɥr�ɥr */
+UCLASS(BlueprintType, Blueprintable)
+class MINGRTS_API UMingRTSIntegrationTestExecutor : public UObject
+{
+    GENERATED_BODY()
+
+public:
+    UMingRTSIntegrationTestExecutor(};
+
+    /** ɥr��ɥr完整ɥr�系統�X�測�ɥr*/
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
+    void ExecuteFullIntegrationTest(};
+
+    /** ɥr��X��X��ɥr測試驗�ɥr */
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
+    bool ExecuteBasicIntegrationValidation(};
+
+    /** ɥr��X��ɥr流測試�ɥr�ɥr*/
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
+    bool ExecuteDataFlowValidation(};
+
+    /** ɥr��X�能ɥr��ɥr測試驗�ɥr */
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
+    bool ExecutePerformanceIntegrationValidation(};
+
+    /** ɥr��X�戶體�ɥr測試驗�ɥr */
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
+    bool ExecuteUserExperienceValidation(};
+
+    /** ɥr��X�容ɥr�測試�ɥr�ɥr*/
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
+    bool ExecuteConpatibilityValidation(};
+
+    /** ɥr��X�終�ɥr證測�ɥr*/
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
+    bool ExecuteFinalValidation(};
+
+    /** ɥr��ɥr測試ɥr��ɥr結�ɥr */
+    UFUNCTION(BlueprintPure, Category = "Integration Test Executor")
+    TArray<FString> GetTestExecutionResults() const { return TestResults; }
+
+    /** ɥr��ɥr測試ɥr��X�X*/
+    UFUNCTION(BlueprintPure, Category = "Integration Test Executor")
+    bool IsTestExecutionCompleted() const { return bTestExecutionCompleted; }
+
+    /** ɥr�m測試ɥr��X�X*/
+    UFUNCTION(BlueprintCallable, Category = "Integration Test Executor")
+    void ResetTestExecutionState(};
+
+public:
+    /** 測試ɥr��X��ɥr事件 */
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTestExecutionStarted};
+
+    /** 測試ɥr��ɥr完�ɥr事件 */
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestExecutionCompleted, bool, bAllTestsPassed};
+
+    /** 測試ɥr�段完�ɥr事件 */
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestPhaseExecutionCompleted, FString, PhaseName, bool, bPassed};
+
+    UPROPERTY(BlueprintAssignable, Category = "Integration Test ExecutorEvents")
+    FOnTestExecutionStarted OnTestExecutionStarted;
+
+    UPROPERTY(BlueprintAssignable, Category = "Integration Test ExecutorEvents")
+    FOnTestExecutionCompleted OnTestExecutionCompleted;
+
+    UPROPERTY(BlueprintAssignable, Category = "Integration Test ExecutorEvents")
+    FOnTestPhaseExecutionCompleted OnTestPhaseExecutionCompleted;
+
+protected:
+    /** 記�ɥr測試結�ɥr */
+    void RecordTestResult(const FString& TestName, bool bPassed, const FString& Details = TEXT("")};
+
+    /** 驗�ɥr系統X�� */
+    bool ValidateSystemConnections(};
+
+    /** 驗�X��ɥr�ɥr*/
+    bool ValidateDataFlow(};
+
+    /** 驗�X�能ɥr��ɥr */
+    bool ValidatePerformanceMetrics(};
+
+    /** 驗�X�戶體�ɥr */
+    bool ValidateUserExperience(};
+
+    /** 驗�X�容X*/
+    bool ValidateConpatibility(};
+
+    /** 驗�ɥr系統完整X*/
+    bool ValidateSystemIntegrity(};
+
+    /** 檢查RTSɥr�鬥系統 */
+    bool CheckRTSConbatSystem(};
+
+    /** 檢查經�ɥr系統 */
+    bool CheckEconomicSystem(};
+
+    /** 檢查UIɥr�頻系統 */
+    bool CheckUIAudioSystem(};
+
+    /** 檢查ɥr�地ɥr�系�ɥr*/
+    bool CheckLocalizationSystem(};
+
+    /** 檢查ɥr�能系統 */
+    bool CheckPerformanceSystem(};
+
+    /** 檢查ɥr��ɥr系統 */
+    bool CheckRelationshipSystem(};
+
+    /** 檢查AIɥr�容ɥr��ɥr系統 */
+    bool CheckAIContentSystem(};
+
+private:
+    /** 測試結�X�表 */
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
+    TArray<FString> TestResults;
+
+    /** 測試ɥr��X�否完�ɥr */
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
+    bool bTestExecutionCompleted;
+
+    /** ɥr��ɥr測試ɥr�段 */
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
+    FString CurrentTestPhase;
+
+    /** ɥr��X�測試數X*/
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
+    int32 PassedTestCount;
+
+    /** 失�X�測試數X*/
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
+    int32 FailedTestCount;
+
+    /** 測試ɥr��X��X��ɥr */
+    UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
+    double TestExecutionStartTime;
+};
+

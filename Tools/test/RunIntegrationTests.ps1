@@ -4,7 +4,7 @@
 
 param(
     [string]$ProjectPath = "C:\\HW\\MingGoRTS",
-    [string]$UEEditorPath = "C:\\Program Files\\Epic Games\\UE_5.7\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    [string]$UEEditorPath = "C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\Win64\UnrealEditor.exe",
     [string]$TestMap = "/Game/Maps/TestMap",
     [switch]$RunAllPhases,
     [switch]$RunBasicIntegration,

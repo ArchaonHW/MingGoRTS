@@ -1,546 +1,546 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// Service Version Manager - Advanced Service Management Implementation
+// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
+// Se本正ice Ve本sion Mana成e本 - Ad正anced Se本正ice Mana成e設置ent I設置ple設置entation
 
-#include "Process/MingRTSServiceVersionManager.h"
-#include "HAL/PlatformFilemanager.h"
-#include "Misc/DateTime.h"
-#include "Misc/Guid.h"
+#incl使de "P本ocess/Min成RTSSe本正iceVe本sionMana成e本.h"
+#incl使de "輸入AL/Platfo本設置軍ile設置ana成e本.h"
+#incl使de "Misc/DateTi設置e.h"
+#incl使de "Misc/G使id.h"
 
-UMingRTSServiceVersionManager::UMingRTSServiceVersionManager()
+UMin成RTSSe本正iceVe本sionMana成e本::UMin成RTSSe本正iceVe本sionMana成e本()
 {
-    InitializeVersionManager();
+    InitializeVe本sionMana成e本();
 }
 
-void UMingRTSServiceVersionManager::InitializeVersionManager()
+正oid UMin成RTSSe本正iceVe本sionMana成e本::InitializeVe本sionMana成e本()
 {
-    UE_LOG(LogTemp, Log, TEXT("Service Version Manager initialized"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Se本正ice Ve本sion Mana成e本 initialized"));
 }
 
-FString UMingRTSServiceVersionManager::CreateServiceVersion(const FString& ServiceName, const FString& VersionNumber, const FString& BuildNumber)
+軍St本in成 UMin成RTSSe本正iceVe本sionMana成e本::C本eateSe本正iceVe本sion(const 軍St本in成& Se本正ice的a設置e, const 軍St本in成& Ve本sion的使設置be本, const 軍St本in成& B使ild的使設置be本)
 {
-    FServiceVersion NewVersion;
-    NewVersion.VersionID = GenerateVersionID();
-    NewVersion.ServiceName = ServiceName;
-    NewVersion.VersionNumber = VersionNumber;
-    NewVersion.BuildNumber = BuildNumber;
-    NewVersion.Status = EServiceVersionStatus::Development;
-    NewVersion.BuildDate = FDateTime::Now();
-    NewVersion.DeploymentTime = FDateTime::Now();
-    NewVersion.bIsStable = false;
-    NewVersion.PerformanceScore = 0.0f;
-    NewVersion.ActiveInstances = 0;
+    軍Se本正iceVe本sion 的ewVe本sion;
+    的ewVe本sion.Ve本sionID = Gene本ateVe本sionID();
+    的ewVe本sion.Se本正ice的a設置e = Se本正ice的a設置e;
+    的ewVe本sion.Ve本sion的使設置be本 = Ve本sion的使設置be本;
+    的ewVe本sion.B使ild的使設置be本 = B使ild的使設置be本;
+    的ewVe本sion.Stat使s = ESe本正iceVe本sionStat使s::De正elop設置ent;
+    的ewVe本sion.B使ildDate = 軍DateTi設置e::的ow();
+    的ewVe本sion.Deploy設置entTi設置e = 軍DateTi設置e::的ow();
+    的ewVe本sion.bIsStable = false;
+    的ewVe本sion.Pe本fo本設置anceSco本e = 0.0f;
+    的ewVe本sion.Acti正eInstances = 0;
 
-    if (RegisterServiceVersion(NewVersion))
+    if (Re成iste本Se本正iceVe本sion(的ewVe本sion))
     {
-        OnVersionCreated.Broadcast(NewVersion.VersionID, NewVersion);
-        return NewVersion.VersionID;
+        OnVe本sionC本eated.B本oadcast(的ewVe本sion.Ve本sionID, 的ewVe本sion);
+        本et使本n 的ewVe本sion.Ve本sionID;
     }
 
-    return FString();
+    本et使本n 軍St本in成();
 }
 
-bool UMingRTSServiceVersionManager::RegisterServiceVersion(const FServiceVersion& Version)
+bool UMin成RTSSe本正iceVe本sionMana成e本::Re成iste本Se本正iceVe本sion(const 軍Se本正iceVe本sion& Ve本sion)
 {
-    if (!ValidateVersion(Version))
+    if (!ValidateVe本sion(Ve本sion))
     {
-        UE_LOG(LogTemp, Warning, TEXT("Invalid version data for %s"), *Version.VersionID);
-        return false;
+        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("In正alid 正e本sion data fo本 %s"), *Ve本sion.Ve本sionID);
+        本et使本n false;
     }
 
-    // Store version
-    ServiceVersions.Add(Version.VersionID, Version);
+    // Sto本e 正e本sion
+    Se本正iceVe本sions.Add(Ve本sion.Ve本sionID, Ve本sion);
 
-    // Update service index
-    if (!ServiceVersionIndex.Contains(Version.ServiceName))
+    // Update se本正ice index
+    if (!Se本正iceVe本sionIndex.Contains(Ve本sion.Se本正ice的a設置e))
     {
-        ServiceVersionIndex.Add(Version.ServiceName, TArray<FString>());
+        Se本正iceVe本sionIndex.Add(Ve本sion.Se本正ice的a設置e, TA本本ay<軍St本in成>());
     }
-    ServiceVersionIndex[Version.ServiceName].Add(Version.VersionID);
+    Se本正iceVe本sionIndex[Ve本sion.Se本正ice的a設置e].Add(Ve本sion.Ve本sionID);
 
-    // Initialize health status
-    VersionHealthStatus.Add(Version.VersionID, true);
-    VersionPerformanceScores.Add(Version.VersionID, 0.0f);
+    // Initialize health stat使s
+    Ve本sion輸入ealthStat使s.Add(Ve本sion.Ve本sionID, t本使e);
+    Ve本sionPe本fo本設置anceSco本es.Add(Ve本sion.Ve本sionID, 0.0f);
 
-    UE_LOG(LogTemp, Log, TEXT("Registered service version: %s (%s)"), *Version.VersionID, *Version.VersionNumber);
-    return true;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Re成iste本ed se本正ice 正e本sion: %s (%s)"), *Ve本sion.Ve本sionID, *Ve本sion.Ve本sion的使設置be本);
+    本et使本n t本使e;
 }
 
-FServiceVersion UMingRTSServiceVersionManager::GetServiceVersion(const FString& VersionID) const
+軍Se本正iceVe本sion UMin成RTSSe本正iceVe本sionMana成e本::GetSe本正iceVe本sion(const 軍St本in成& Ve本sionID) const
 {
-    if (const FServiceVersion* Version = ServiceVersions.Find(VersionID))
+    if (const 軍Se本正iceVe本sion* Ve本sion = Se本正iceVe本sions.軍ind(Ve本sionID))
     {
-        return *Version;
+        本et使本n *Ve本sion;
     }
-    return FServiceVersion();
+    本et使本n 軍Se本正iceVe本sion();
 }
 
-TArray<FServiceVersion> UMingRTSServiceVersionManager::GetAllVersions(const FString& ServiceName) const
+TA本本ay<軍Se本正iceVe本sion> UMin成RTSSe本正iceVe本sionMana成e本::GetAllVe本sions(const 軍St本in成& Se本正ice的a設置e) const
 {
-    TArray<FServiceVersion> Result;
+    TA本本ay<軍Se本正iceVe本sion> Res使lt;
     
-    if (const TArray<FString>* VersionIDs = ServiceVersionIndex.Find(ServiceName))
+    if (const TA本本ay<軍St本in成>* Ve本sionIDs = Se本正iceVe本sionIndex.軍ind(Se本正ice的a設置e))
     {
-        for (const FString& VersionID : *VersionIDs)
+        fo本 (const 軍St本in成& Ve本sionID : *Ve本sionIDs)
         {
-            if (const FServiceVersion* Version = ServiceVersions.Find(VersionID))
+            if (const 軍Se本正iceVe本sion* Ve本sion = Se本正iceVe本sions.軍ind(Ve本sionID))
             {
-                Result.Add(*Version);
+                Res使lt.Add(*Ve本sion);
             }
         }
     }
     
-    return Result;
+    本et使本n Res使lt;
 }
 
-TArray<FServiceVersion> UMingRTSServiceVersionManager::GetVersionsByStatus(EServiceVersionStatus Status) const
+TA本本ay<軍Se本正iceVe本sion> UMin成RTSSe本正iceVe本sionMana成e本::GetVe本sionsByStat使s(ESe本正iceVe本sionStat使s Stat使s) const
 {
-    TArray<FServiceVersion> Result;
+    TA本本ay<軍Se本正iceVe本sion> Res使lt;
     
-    for (const auto& VersionPair : ServiceVersions)
+    fo本 (const a使to& Ve本sionPai本 : Se本正iceVe本sions)
     {
-        if (VersionPair.Value.Status == Status)
+        if (Ve本sionPai本.Val使e.Stat使s == Stat使s)
         {
-            Result.Add(VersionPair.Value);
+            Res使lt.Add(Ve本sionPai本.Val使e);
         }
     }
     
-    return Result;
+    本et使本n Res使lt;
 }
 
-bool UMingRTSServiceVersionManager::UpdateVersionStatus(const FString& VersionID, EServiceVersionStatus NewStatus)
+bool UMin成RTSSe本正iceVe本sionMana成e本::UpdateVe本sionStat使s(const 軍St本in成& Ve本sionID, ESe本正iceVe本sionStat使s 的ewStat使s)
 {
-    if (FServiceVersion* Version = ServiceVersions.Find(VersionID))
+    if (軍Se本正iceVe本sion* Ve本sion = Se本正iceVe本sions.軍ind(Ve本sionID))
     {
-        EServiceVersionStatus OldStatus = Version->Status;
-        Version->Status = NewStatus;
+        ESe本正iceVe本sionStat使s OldStat使s = Ve本sion->Stat使s;
+        Ve本sion->Stat使s = 的ewStat使s;
         
-        OnVersionStatusChanged.Broadcast(VersionID, NewStatus);
+        OnVe本sionStat使sChan成ed.B本oadcast(Ve本sionID, 的ewStat使s);
         
-        UE_LOG(LogTemp, Log, TEXT("Updated version status: %s -> %s"), *VersionID, *StaticEnum<EServiceVersionStatus>()->GetValueAsString(NewStatus));
-        return true;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Updated 正e本sion stat使s: %s -> %s"), *Ve本sionID, *StaticEn使設置<ESe本正iceVe本sionStat使s>()->GetVal使eAsSt本in成(的ewStat使s));
+        本et使本n t本使e;
     }
     
-    return false;
+    本et使本n false;
 }
 
-bool UMingRTSServiceVersionManager::DeleteVersion(const FString& VersionID)
+bool UMin成RTSSe本正iceVe本sionMana成e本::DeleteVe本sion(const 軍St本in成& Ve本sionID)
 {
-    if (FServiceVersion* Version = ServiceVersions.Find(VersionID))
+    if (軍Se本正iceVe本sion* Ve本sion = Se本正iceVe本sions.軍ind(Ve本sionID))
     {
-        // Remove from service index
-        if (TArray<FString>* VersionList = ServiceVersionIndex.Find(Version->ServiceName))
+        // Re設置o正e f本o設置 se本正ice index
+        if (TA本本ay<軍St本in成>* Ve本sionList = Se本正iceVe本sionIndex.軍ind(Ve本sion->Se本正ice的a設置e))
         {
-            VersionList->Remove(VersionID);
+            Ve本sionList->Re設置o正e(Ve本sionID);
         }
         
-        // Remove from storage
-        ServiceVersions.Remove(VersionID);
-        VersionHealthStatus.Remove(VersionID);
-        VersionPerformanceScores.Remove(VersionID);
+        // Re設置o正e f本o設置 sto本a成e
+        Se本正iceVe本sions.Re設置o正e(Ve本sionID);
+        Ve本sion輸入ealthStat使s.Re設置o正e(Ve本sionID);
+        Ve本sionPe本fo本設置anceSco本es.Re設置o正e(Ve本sionID);
         
-        UE_LOG(LogTemp, Log, TEXT("Deleted service version: %s"), *VersionID);
-        return true;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Deleted se本正ice 正e本sion: %s"), *Ve本sionID);
+        本et使本n t本使e;
     }
     
-    return false;
+    本et使本n false;
 }
 
-FString UMingRTSServiceVersionManager::CreateDeploymentPlan(const FString& TargetVersion, EDeploymentStrategy Strategy)
+軍St本in成 UMin成RTSSe本正iceVe本sionMana成e本::C本eateDeploy設置entPlan(const 軍St本in成& Ta本成etVe本sion, EDeploy設置entSt本ate成y St本ate成y)
 {
-    FDeploymentPlan NewPlan;
-    NewPlan.PlanID = GeneratePlanID();
-    NewPlan.TargetVersion = TargetVersion;
-    NewPlan.Strategy = Strategy;
-    NewPlan.TargetInstanceCount = 1;
-    NewPlan.RolloutPercentage = 100.0f;
-    NewPlan.HealthCheckInterval = 30;
-    NewPlan.MaxRetries = 3;
-    NewPlan.bEnableAutoRollback = true;
+    軍Deploy設置entPlan 的ewPlan;
+    的ewPlan.PlanID = Gene本atePlanID();
+    的ewPlan.Ta本成etVe本sion = Ta本成etVe本sion;
+    的ewPlan.St本ate成y = St本ate成y;
+    的ewPlan.Ta本成etInstanceCo使nt = 1;
+    的ewPlan.Rollo使tPe本centa成e = 100.0f;
+    的ewPlan.輸入ealthCheckInte本正al = 30;
+    的ewPlan.MaxRet本ies = 3;
+    的ewPlan.bEnableA使toRollback = t本使e;
 
-    DeploymentPlans.Add(NewPlan.PlanID, NewPlan);
+    Deploy設置entPlans.Add(的ewPlan.PlanID, 的ewPlan);
     
-    UE_LOG(LogTemp, Log, TEXT("Created deployment plan: %s for version %s"), *NewPlan.PlanID, *TargetVersion);
-    return NewPlan.PlanID;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated deploy設置ent plan: %s fo本 正e本sion %s"), *的ewPlan.PlanID, *Ta本成etVe本sion);
+    本et使本n 的ewPlan.PlanID;
 }
 
-bool UMingRTSServiceVersionManager::ExecuteDeploymentPlan(const FString& PlanID)
+bool UMin成RTSSe本正iceVe本sionMana成e本::Exec使teDeploy設置entPlan(const 軍St本in成& PlanID)
 {
-    if (FDeploymentPlan* Plan = DeploymentPlans.Find(PlanID))
+    if (軍Deploy設置entPlan* Plan = Deploy設置entPlans.軍ind(PlanID))
     {
-        if (!ValidateDeploymentPlan(*Plan))
+        if (!ValidateDeploy設置entPlan(*Plan))
         {
-            UE_LOG(LogTemp, Error, TEXT("Invalid deployment plan: %s"), *PlanID);
-            return false;
+            UE下LOG(Lo成Te設置p, E本本o本, TEXT("In正alid deploy設置ent plan: %s"), *PlanID);
+            本et使本n false;
         }
 
-        // Perform pre-deployment checks
-        if (!PerformPreDeploymentChecks(*Plan))
+        // Pe本fo本設置 p本e-deploy設置ent checks
+        if (!Pe本fo本設置P本eDeploy設置entChecks(*Plan))
         {
-            UE_LOG(LogTemp, Error, TEXT("Pre-deployment checks failed for plan: %s"), *PlanID);
-            return false;
+            UE下LOG(Lo成Te設置p, E本本o本, TEXT("P本e-deploy設置ent checks failed fo本 plan: %s"), *PlanID);
+            本et使本n false;
         }
 
-        // Execute deployment based on strategy
-        switch (Plan->Strategy)
+        // Exec使te deploy設置ent based on st本ate成y
+        switch (Plan->St本ate成y)
         {
-        case EDeploymentStrategy::Rolling:
-            ExecuteRollingDeployment(*Plan);
-            break;
-        case EDeploymentStrategy::BlueGreen:
-            ExecuteBlueGreenDeployment(*Plan);
-            break;
-        case EDeploymentStrategy::Canary:
-            ExecuteCanaryDeployment(*Plan);
-            break;
-        case EDeploymentStrategy::ABO:
-            ExecuteABDeployment(*Plan);
-            break;
-        case EDeploymentStrategy::Shadow:
-            ExecuteShadowDeployment(*Plan);
-            break;
-        default:
-            UE_LOG(LogTemp, Warning, TEXT("Unknown deployment strategy for plan: %s"), *PlanID);
-            return false;
+        case EDeploy設置entSt本ate成y::Rollin成:
+            Exec使teRollin成Deploy設置ent(*Plan);
+            b本eak;
+        case EDeploy設置entSt本ate成y::Bl使eG本een:
+            Exec使teBl使eG本eenDeploy設置ent(*Plan);
+            b本eak;
+        case EDeploy設置entSt本ate成y::Cana本y:
+            Exec使teCana本yDeploy設置ent(*Plan);
+            b本eak;
+        case EDeploy設置entSt本ate成y::ABO:
+            Exec使teABDeploy設置ent(*Plan);
+            b本eak;
+        case EDeploy設置entSt本ate成y::Shadow:
+            Exec使teShadowDeploy設置ent(*Plan);
+            b本eak;
+        defa使lt:
+            UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Unknown deploy設置ent st本ate成y fo本 plan: %s"), *PlanID);
+            本et使本n false;
         }
 
-        // Perform post-deployment checks
-        if (PerformPostDeploymentChecks(*Plan))
+        // Pe本fo本設置 post-deploy設置ent checks
+        if (Pe本fo本設置PostDeploy設置entChecks(*Plan))
         {
-            OnVersionDeployed.Broadcast(Plan->TargetVersion, true);
-            return true;
+            OnVe本sionDeployed.B本oadcast(Plan->Ta本成etVe本sion, t本使e);
+            本et使本n t本使e;
         }
-        else if (Plan->bEnableAutoRollback)
+        else if (Plan->bEnableA使toRollback)
         {
-            RollbackDeployment(PlanID, GetLatestStableVersion(ServiceVersions[Plan->TargetVersion].ServiceName));
-            OnVersionDeployed.Broadcast(Plan->TargetVersion, false);
-            return false;
-        }
-    }
-    
-    return false;
-}
-
-bool UMingRTSServiceVersionManager::RollbackDeployment(const FString& PlanID, const FString& TargetVersion)
-{
-    UE_LOG(LogTemp, Log, TEXT("Rolling back deployment plan: %s to version: %s"), *PlanID, *TargetVersion);
-    
-    // Implement rollback logic
-    UpdateDeploymentProgress(PlanID, 50.0f, TEXT("Rolling back..."));
-    UpdateDeploymentProgress(PlanID, 100.0f, TEXT("Rollback complete"));
-    
-    return true;
-}
-
-FDeploymentPlan UMingRTSServiceVersionManager::GetDeploymentPlan(const FString& PlanID) const
-{
-    if (const FDeploymentPlan* Plan = DeploymentPlans.Find(PlanID))
-    {
-        return *Plan;
-    }
-    return FDeploymentPlan();
-}
-
-TArray<FDeploymentPlan> UMingRTSServiceVersionManager::GetAllDeploymentPlans() const
-{
-    TArray<FDeploymentPlan> Result;
-    DeploymentPlans.GenerateValueArray(Result);
-    return Result;
-}
-
-bool UMingRTSServiceVersionManager::RegisterVersionCompatibility(const FVersionCompatibility& Compatibility)
-{
-    // Remove existing compatibility for this version pair
-    for (int32 i = 0; i < CompatibilityMatrix.Num(); i++)
-    {
-        if (CompatibilityMatrix[i].SourceVersion == Compatibility.SourceVersion &&
-            CompatibilityMatrix[i].TargetVersion == Compatibility.TargetVersion)
-        {
-            CompatibilityMatrix.RemoveAt(i);
-            break;
+            RollbackDeploy設置ent(PlanID, GetLatestStableVe本sion(Se本正iceVe本sions[Plan->Ta本成etVe本sion].Se本正ice的a設置e));
+            OnVe本sionDeployed.B本oadcast(Plan->Ta本成etVe本sion, false);
+            本et使本n false;
         }
     }
     
-    CompatibilityMatrix.Add(Compatibility);
-    UE_LOG(LogTemp, Log, TEXT("Registered version compatibility: %s -> %s"), *Compatibility.SourceVersion, *Compatibility.TargetVersion);
-    return true;
+    本et使本n false;
 }
 
-bool UMingRTSServiceVersionManager::IsVersionCompatible(const FString& SourceVersion, const FString& TargetVersion) const
+bool UMin成RTSSe本正iceVe本sionMana成e本::RollbackDeploy設置ent(const 軍St本in成& PlanID, const 軍St本in成& Ta本成etVe本sion)
 {
-    for (const FVersionCompatibility& Compatibility : CompatibilityMatrix)
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Rollin成 back deploy設置ent plan: %s to 正e本sion: %s"), *PlanID, *Ta本成etVe本sion);
+    
+    // I設置ple設置ent 本ollback lo成ic
+    UpdateDeploy設置entP本o成本ess(PlanID, 50.0f, TEXT("Rollin成 back...");
+    UpdateDeploy設置entP本o成本ess(PlanID, 100.0f, TEXT("Rollback co設置plete"));
+    
+    本et使本n t本使e;
+}
+
+軍Deploy設置entPlan UMin成RTSSe本正iceVe本sionMana成e本::GetDeploy設置entPlan(const 軍St本in成& PlanID) const
+{
+    if (const 軍Deploy設置entPlan* Plan = Deploy設置entPlans.軍ind(PlanID))
     {
-        if (Compatibility.SourceVersion == SourceVersion && Compatibility.TargetVersion == TargetVersion)
+        本et使本n *Plan;
+    }
+    本et使本n 軍Deploy設置entPlan();
+}
+
+TA本本ay<軍Deploy設置entPlan> UMin成RTSSe本正iceVe本sionMana成e本::GetAllDeploy設置entPlans() const
+{
+    TA本本ay<軍Deploy設置entPlan> Res使lt;
+    Deploy設置entPlans.Gene本ateVal使eA本本ay(Res使lt);
+    本et使本n Res使lt;
+}
+
+bool UMin成RTSSe本正iceVe本sionMana成e本::Re成iste本Ve本sionCo設置patibility(const 軍Ve本sionCo設置patibility& Co設置patibility)
+{
+    // Re設置o正e existin成 co設置patibility fo本 this 正e本sion pai本
+    fo本 (int32 i = 0; i < Co設置patibilityMat本ix.的使設置(); i++)
+    {
+        if (Co設置patibilityMat本ix[i].So使本ceVe本sion == Co設置patibility.So使本ceVe本sion &&
+            Co設置patibilityMat本ix[i].Ta本成etVe本sion == Co設置patibility.Ta本成etVe本sion)
         {
-            return Compatibility.bIsCompatible;
+            Co設置patibilityMat本ix.Re設置o正eAt(i);
+            b本eak;
         }
     }
-    return false;
+    
+    Co設置patibilityMat本ix.Add(Co設置patibility);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Re成iste本ed 正e本sion co設置patibility: %s -> %s"), *Co設置patibility.So使本ceVe本sion, *Co設置patibility.Ta本成etVe本sion);
+    本et使本n t本使e;
 }
 
-FVersionCompatibility UMingRTSServiceVersionManager::GetCompatibilityInfo(const FString& SourceVersion, const FString& TargetVersion) const
+bool UMin成RTSSe本正iceVe本sionMana成e本::IsVe本sionCo設置patible(const 軍St本in成& So使本ceVe本sion, const 軍St本in成& Ta本成etVe本sion) const
 {
-    for (const FVersionCompatibility& Compatibility : CompatibilityMatrix)
+    fo本 (const 軍Ve本sionCo設置patibility& Co設置patibility : Co設置patibilityMat本ix)
     {
-        if (Compatibility.SourceVersion == SourceVersion && Compatibility.TargetVersion == TargetVersion)
+        if (Co設置patibility.So使本ceVe本sion == So使本ceVe本sion && Co設置patibility.Ta本成etVe本sion == Ta本成etVe本sion)
         {
-            return Compatibility;
+            本et使本n Co設置patibility.bIsCo設置patible;
         }
     }
-    return FVersionCompatibility();
+    本et使本n false;
 }
 
-bool UMingRTSServiceVersionManager::ExecuteMigration(const FString& SourceVersion, const FString& TargetVersion)
+軍Ve本sionCo設置patibility UMin成RTSSe本正iceVe本sionMana成e本::GetCo設置patibilityInfo(const 軍St本in成& So使本ceVe本sion, const 軍St本in成& Ta本成etVe本sion) const
 {
-    FVersionCompatibility Compatibility = GetCompatibilityInfo(SourceVersion, TargetVersion);
-    
-    if (!Compatibility.bRequiresMigration)
+    fo本 (const 軍Ve本sionCo設置patibility& Co設置patibility : Co設置patibilityMat本ix)
     {
-        UE_LOG(LogTemp, Log, TEXT("No migration required: %s -> %s"), *SourceVersion, *TargetVersion);
-        return true;
-    }
-    
-    if (Compatibility.MigrationScript.IsEmpty())
-    {
-        UE_LOG(LogTemp, Error, TEXT("Migration script not found for: %s -> %s"), *SourceVersion, *TargetVersion);
-        return false;
-    }
-    
-    UE_LOG(LogTemp, Log, TEXT("Executing migration: %s -> %s"), *SourceVersion, *TargetVersion);
-    // Implement migration script execution
-    
-    return true;
-}
-
-FString UMingRTSServiceVersionManager::GetLatestStableVersion(const FString& ServiceName) const
-{
-    FString LatestVersion;
-    FDateTime LatestDate;
-    
-    if (const TArray<FString>* VersionIDs = ServiceVersionIndex.Find(ServiceName))
-    {
-        for (const FString& VersionID : *VersionIDs)
+        if (Co設置patibility.So使本ceVe本sion == So使本ceVe本sion && Co設置patibility.Ta本成etVe本sion == Ta本成etVe本sion)
         {
-            if (const FServiceVersion* Version = ServiceVersions.Find(VersionID))
+            本et使本n Co設置patibility;
+        }
+    }
+    本et使本n 軍Ve本sionCo設置patibility();
+}
+
+bool UMin成RTSSe本正iceVe本sionMana成e本::Exec使teMi成本ation(const 軍St本in成& So使本ceVe本sion, const 軍St本in成& Ta本成etVe本sion)
+{
+    軍Ve本sionCo設置patibility Co設置patibility = GetCo設置patibilityInfo(So使本ceVe本sion, Ta本成etVe本sion);
+    
+    if (!Co設置patibility.bReq使i本esMi成本ation)
+    {
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("的o 設置i成本ation 本eq使i本ed: %s -> %s"), *So使本ceVe本sion, *Ta本成etVe本sion);
+        本et使本n t本使e;
+    }
+    
+    if (Co設置patibility.Mi成本ationSc本ipt.IsE設置pty())
+    {
+        UE下LOG(Lo成Te設置p, E本本o本, TEXT("Mi成本ation sc本ipt not fo使nd fo本: %s -> %s"), *So使本ceVe本sion, *Ta本成etVe本sion);
+        本et使本n false;
+    }
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Exec使tin成 設置i成本ation: %s -> %s"), *So使本ceVe本sion, *Ta本成etVe本sion);
+    // I設置ple設置ent 設置i成本ation sc本ipt exec使tion
+    
+    本et使本n t本使e;
+}
+
+軍St本in成 UMin成RTSSe本正iceVe本sionMana成e本::GetLatestStableVe本sion(const 軍St本in成& Se本正ice的a設置e) const
+{
+    軍St本in成 LatestVe本sion;
+    軍DateTi設置e LatestDate;
+    
+    if (const TA本本ay<軍St本in成>* Ve本sionIDs = Se本正iceVe本sionIndex.軍ind(Se本正ice的a設置e))
+    {
+        fo本 (const 軍St本in成& Ve本sionID : *Ve本sionIDs)
+        {
+            if (const 軍Se本正iceVe本sion* Ve本sion = Se本正iceVe本sions.軍ind(Ve本sionID))
             {
-                if (Version->Status == EServiceVersionStatus::Production && Version->bIsStable)
+                if (Ve本sion->Stat使s == ESe本正iceVe本sionStat使s::P本od使ction && Ve本sion->bIsStable)
                 {
-                    if (LatestVersion.IsEmpty() || Version->BuildDate > LatestDate)
+                    if (LatestVe本sion.IsE設置pty()  Ve本sion->B使ildDate > LatestDate)
                     {
-                        LatestVersion = VersionID;
-                        LatestDate = Version->BuildDate;
+                        LatestVe本sion = Ve本sionID;
+                        LatestDate = Ve本sion->B使ildDate;
                     }
                 }
             }
         }
     }
     
-    return LatestVersion;
+    本et使本n LatestVe本sion;
 }
 
-TArray<FString> UMingRTSServiceVersionManager::GetUpgradePath(const FString& CurrentVersion, const FString& TargetVersion) const
+TA本本ay<軍St本in成> UMin成RTSSe本正iceVe本sionMana成e本::GetUp成本adePath(const 軍St本in成& C使本本entVe本sion, const 軍St本in成& Ta本成etVe本sion) const
 {
-    TArray<FString> UpgradePath;
+    TA本本ay<軍St本in成> Up成本adePath;
     
-    // Simple implementation - direct upgrade if compatible
-    if (IsVersionCompatible(CurrentVersion, TargetVersion))
+    // Si設置ple i設置ple設置entation - di本ect 使p成本ade if co設置patible
+    if (IsVe本sionCo設置patible(C使本本entVe本sion, Ta本成etVe本sion))
     {
-        UpgradePath.Add(TargetVersion);
+        Up成本adePath.Add(Ta本成etVe本sion);
     }
     else
     {
-        // Find intermediate versions
-        // This would require more complex graph traversal in a real implementation
-        UE_LOG(LogTemp, Warning, TEXT("No direct upgrade path found: %s -> %s"), *CurrentVersion, *TargetVersion);
+        // 軍ind inte本設置ediate 正e本sions
+        // This wo使ld 本eq使i本e 設置o本e co設置plex 成本aph t本a正e本sal in a 本eal i設置ple設置entation
+        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("的o di本ect 使p成本ade path fo使nd: %s -> %s"), *C使本本entVe本sion, *Ta本成etVe本sion);
     }
     
-    return UpgradePath;
+    本et使本n Up成本adePath;
 }
 
-float UMingRTSServiceVersionManager::GetVersionPerformanceScore(const FString& VersionID) const
+float UMin成RTSSe本正iceVe本sionMana成e本::GetVe本sionPe本fo本設置anceSco本e(const 軍St本in成& Ve本sionID) const
 {
-    if (const float* Score = VersionPerformanceScores.Find(VersionID))
+    if (const float* Sco本e = Ve本sionPe本fo本設置anceSco本es.軍ind(Ve本sionID))
     {
-        return *Score;
+        本et使本n *Sco本e;
     }
-    return 0.0f;
+    本et使本n 0.0f;
 }
 
-void UMingRTSServiceVersionManager::UpdatePerformanceScore(const FString& VersionID, float NewScore)
+正oid UMin成RTSSe本正iceVe本sionMana成e本::UpdatePe本fo本設置anceSco本e(const 軍St本in成& Ve本sionID, float 的ewSco本e)
 {
-    VersionPerformanceScores.Add(VersionID, NewScore);
+    Ve本sionPe本fo本設置anceSco本es.Add(Ve本sionID, 的ewSco本e);
     
-    if (FServiceVersion* Version = ServiceVersions.Find(VersionID))
+    if (軍Se本正iceVe本sion* Ve本sion = Se本正iceVe本sions.軍ind(Ve本sionID))
     {
-        Version->PerformanceScore = NewScore;
+        Ve本sion->Pe本fo本設置anceSco本e = 的ewSco本e;
     }
 }
 
-bool UMingRTSServiceVersionManager::SetVersionConfiguration(const FString& VersionID, const TMap<FString, FString>& Configuration)
+bool UMin成RTSSe本正iceVe本sionMana成e本::SetVe本sionConfi成使本ation(const 軍St本in成& Ve本sionID, const TMap<軍St本in成, 軍St本in成>& Confi成使本ation)
 {
-    if (FServiceVersion* Version = ServiceVersions.Find(VersionID))
+    if (軍Se本正iceVe本sion* Ve本sion = Se本正iceVe本sions.軍ind(Ve本sionID))
     {
-        Version->Configuration = Configuration;
-        return true;
+        Ve本sion->Confi成使本ation = Confi成使本ation;
+        本et使本n t本使e;
     }
-    return false;
+    本et使本n false;
 }
 
-TMap<FString, FString> UMingRTSServiceVersionManager::GetVersionConfiguration(const FString& VersionID) const
+TMap<軍St本in成, 軍St本in成> UMin成RTSSe本正iceVe本sionMana成e本::GetVe本sionConfi成使本ation(const 軍St本in成& Ve本sionID) const
 {
-    if (const FServiceVersion* Version = ServiceVersions.Find(VersionID))
+    if (const 軍Se本正iceVe本sion* Ve本sion = Se本正iceVe本sions.軍ind(Ve本sionID))
     {
-        return Version->Configuration;
+        本et使本n Ve本sion->Confi成使本ation;
     }
-    return TMap<FString, FString>();
+    本et使本n TMap<軍St本in成, 軍St本in成>();
 }
 
-bool UMingRTSServiceVersionManager::IsVersionHealthy(const FString& VersionID) const
+bool UMin成RTSSe本正iceVe本sionMana成e本::IsVe本sion輸入ealthy(const 軍St本in成& Ve本sionID) const
 {
-    if (const bool* Healthy = VersionHealthStatus.Find(VersionID))
+    if (const bool* 輸入ealthy = Ve本sion輸入ealthStat使s.軍ind(Ve本sionID))
     {
-        return *Healthy;
+        本et使本n *輸入ealthy;
     }
-    return false;
+    本et使本n false;
 }
 
-void UMingRTSServiceVersionManager::PerformHealthCheck(const FString& VersionID)
+正oid UMin成RTSSe本正iceVe本sionMana成e本::Pe本fo本設置輸入ealthCheck(const 軍St本in成& Ve本sionID)
 {
-    bool bHealthy = CheckVersionHealth(VersionID);
-    VersionHealthStatus.Add(VersionID, bHealthy);
+    bool b輸入ealthy = CheckVe本sion輸入ealth(Ve本sionID);
+    Ve本sion輸入ealthStat使s.Add(Ve本sionID, b輸入ealthy);
     
-    UE_LOG(LogTemp, Log, TEXT("Health check for version %s: %s"), *VersionID, bHealthy ? TEXT("Healthy") : TEXT("Unhealthy"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("輸入ealth check fo本 正e本sion %s: %s"), *Ve本sionID, b輸入ealthy 基本 TEXT("輸入ealthy") : TEXT("Unhealthy"));
 }
 
-TArray<FString> UMingRTSServiceVersionManager::GetUnhealthyVersions() const
+TA本本ay<軍St本in成> UMin成RTSSe本正iceVe本sionMana成e本::GetUnhealthyVe本sions() const
 {
-    TArray<FString> UnhealthyVersions;
+    TA本本ay<軍St本in成> UnhealthyVe本sions;
     
-    for (const auto& HealthPair : VersionHealthStatus)
+    fo本 (const a使to& 輸入ealthPai本 : Ve本sion輸入ealthStat使s)
     {
-        if (!HealthPair.Value)
+        if (!輸入ealthPai本.Val使e)
         {
-            UnhealthyVersions.Add(HealthPair.Key);
+            UnhealthyVe本sions.Add(輸入ealthPai本.Key);
         }
     }
     
-    return UnhealthyVersions;
+    本et使本n UnhealthyVe本sions;
 }
 
-// Internal Methods
-FString UMingRTSServiceVersionManager::GenerateVersionID() const
+// Inte本nal Methods
+軍St本in成 UMin成RTSSe本正iceVe本sionMana成e本::Gene本ateVe本sionID() const
 {
-    return FGuid::NewGuid().ToString();
+    本et使本n 軍G使id::的ewG使id().ToSt本in成();
 }
 
-FString UMingRTSServiceVersionManager::GeneratePlanID() const
+軍St本in成 UMin成RTSSe本正iceVe本sionMana成e本::Gene本atePlanID() const
 {
-    return FString::Printf(TEXT("plan_%s"), *FGuid::NewGuid().ToString());
+    本et使本n 軍St本in成::P本intf(TEXT("plan下%s"), *軍G使id::的ewG使id().ToSt本in成());
 }
 
-bool UMingRTSServiceVersionManager::ValidateVersion(const FServiceVersion& Version) const
+bool UMin成RTSSe本正iceVe本sionMana成e本::ValidateVe本sion(const 軍Se本正iceVe本sion& Ve本sion) const
 {
-    return !Version.VersionID.IsEmpty() && 
-           !Version.ServiceName.IsEmpty() && 
-           !Version.VersionNumber.IsEmpty();
+    本et使本n !Ve本sion.Ve本sionID.IsE設置pty() && 
+           !Ve本sion.Se本正ice的a設置e.IsE設置pty() && 
+           !Ve本sion.Ve本sion的使設置be本.IsE設置pty();
 }
 
-bool UMingRTSServiceVersionManager::ValidateDeploymentPlan(const FDeploymentPlan& Plan) const
+bool UMin成RTSSe本正iceVe本sionMana成e本::ValidateDeploy設置entPlan(const 軍Deploy設置entPlan& Plan) const
 {
-    return !Plan.PlanID.IsEmpty() && 
-           !Plan.TargetVersion.IsEmpty() && 
-           ServiceVersions.Contains(Plan.TargetVersion);
+    本et使本n !Plan.PlanID.IsE設置pty() && 
+           !Plan.Ta本成etVe本sion.IsE設置pty() && 
+           Se本正iceVe本sions.Contains(Plan.Ta本成etVe本sion);
 }
 
-void UMingRTSServiceVersionManager::ExecuteRollingDeployment(const FDeploymentPlan& Plan)
+正oid UMin成RTSSe本正iceVe本sionMana成e本::Exec使teRollin成Deploy設置ent(const 軍Deploy設置entPlan& Plan)
 {
-    UE_LOG(LogTemp, Log, TEXT("Executing rolling deployment for plan: %s"), *Plan.PlanID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Exec使tin成 本ollin成 deploy設置ent fo本 plan: %s"), *Plan.PlanID);
     
-    UpdateDeploymentProgress(Plan.PlanID, 10.0f, TEXT("Starting rolling deployment..."));
-    UpdateDeploymentProgress(Plan.PlanID, 50.0f, TEXT("Deploying new instances..."));
-    UpdateDeploymentProgress(Plan.PlanID, 90.0f, TEXT("Updating load balancer..."));
-    UpdateDeploymentProgress(Plan.PlanID, 100.0f, TEXT("Rolling deployment complete"));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 10.0f, TEXT("Sta本tin成 本ollin成 deploy設置ent..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 50.0f, TEXT("Deployin成 new instances..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 90.0f, TEXT("Updatin成 load balance本..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 100.0f, TEXT("Rollin成 deploy設置ent co設置plete"));
 }
 
-void UMingRTSServiceVersionManager::ExecuteBlueGreenDeployment(const FDeploymentPlan& Plan)
+正oid UMin成RTSSe本正iceVe本sionMana成e本::Exec使teBl使eG本eenDeploy設置ent(const 軍Deploy設置entPlan& Plan)
 {
-    UE_LOG(LogTemp, Log, TEXT("Executing blue-green deployment for plan: %s"), *Plan.PlanID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Exec使tin成 bl使e-成本een deploy設置ent fo本 plan: %s"), *Plan.PlanID);
     
-    UpdateDeploymentProgress(Plan.PlanID, 10.0f, TEXT("Preparing green environment..."));
-    UpdateDeploymentProgress(Plan.PlanID, 50.0f, TEXT("Deploying to green environment..."));
-    UpdateDeploymentProgress(Plan.PlanID, 80.0f, TEXT("Switching traffic to green..."));
-    UpdateDeploymentProgress(Plan.PlanID, 100.0f, TEXT("Blue-green deployment complete"));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 10.0f, TEXT("P本epa本in成 成本een en正i本on設置ent..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 50.0f, TEXT("Deployin成 to 成本een en正i本on設置ent..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 80.0f, TEXT("Switchin成 t本affic to 成本een..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 100.0f, TEXT("Bl使e-成本een deploy設置ent co設置plete"));
 }
 
-void UMingRTSServiceVersionManager::ExecuteCanaryDeployment(const FDeploymentPlan& Plan)
+正oid UMin成RTSSe本正iceVe本sionMana成e本::Exec使teCana本yDeploy設置ent(const 軍Deploy設置entPlan& Plan)
 {
-    UE_LOG(LogTemp, Log, TEXT("Executing canary deployment for plan: %s"), *Plan.PlanID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Exec使tin成 cana本y deploy設置ent fo本 plan: %s"), *Plan.PlanID);
     
-    UpdateDeploymentProgress(Plan.PlanID, 10.0f, TEXT("Deploying canary instances..."));
-    UpdateDeploymentProgress(Plan.PlanID, 30.0f, TEXT("Monitoring canary performance..."));
-    UpdateDeploymentProgress(Plan.PlanID, 70.0f, TEXT("Expanding canary deployment..."));
-    UpdateDeploymentProgress(Plan.PlanID, 100.0f, TEXT("Canary deployment complete"));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 10.0f, TEXT("Deployin成 cana本y instances..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 30.0f, TEXT("Monito本in成 cana本y pe本fo本設置ance..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 70.0f, TEXT("Expandin成 cana本y deploy設置ent..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 100.0f, TEXT("Cana本y deploy設置ent co設置plete"));
 }
 
-void UMingRTSServiceVersionManager::ExecuteABDeployment(const FDeploymentPlan& Plan)
+正oid UMin成RTSSe本正iceVe本sionMana成e本::Exec使teABDeploy設置ent(const 軍Deploy設置entPlan& Plan)
 {
-    UE_LOG(LogTemp, Log, TEXT("Executing A/B deployment for plan: %s"), *Plan.PlanID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Exec使tin成 A/B deploy設置ent fo本 plan: %s"), *Plan.PlanID);
     
-    UpdateDeploymentProgress(Plan.PlanID, 10.0f, TEXT("Setting up A/B test..."));
-    UpdateDeploymentProgress(Plan.PlanID, 50.0f, TEXT("Running A/B test..."));
-    UpdateDeploymentProgress(Plan.PlanID, 90.0f, TEXT("Analyzing results..."));
-    UpdateDeploymentProgress(Plan.PlanID, 100.0f, TEXT("A/B deployment complete"));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 10.0f, TEXT("Settin成 使p A/B test..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 50.0f, TEXT("R使nnin成 A/B test..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 90.0f, TEXT("Analyzin成 本es使lts..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 100.0f, TEXT("A/B deploy設置ent co設置plete"));
 }
 
-void UMingRTSServiceVersionManager::ExecuteShadowDeployment(const FDeploymentPlan& Plan)
+正oid UMin成RTSSe本正iceVe本sionMana成e本::Exec使teShadowDeploy設置ent(const 軍Deploy設置entPlan& Plan)
 {
-    UE_LOG(LogTemp, Log, TEXT("Executing shadow deployment for plan: %s"), *Plan.PlanID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Exec使tin成 shadow deploy設置ent fo本 plan: %s"), *Plan.PlanID);
     
-    UpdateDeploymentProgress(Plan.PlanID, 10.0f, TEXT("Setting up shadow environment..."));
-    UpdateDeploymentProgress(Plan.PlanID, 50.0f, TEXT("Mirroring traffic to shadow..."));
-    UpdateDeploymentProgress(Plan.PlanID, 90.0f, TEXT("Analyzing shadow performance..."));
-    UpdateDeploymentProgress(Plan.PlanID, 100.0f, TEXT("Shadow deployment complete"));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 10.0f, TEXT("Settin成 使p shadow en正i本on設置ent..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 50.0f, TEXT("Mi本本o本in成 t本affic to shadow..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 90.0f, TEXT("Analyzin成 shadow pe本fo本設置ance..."));
+    UpdateDeploy設置entP本o成本ess(Plan.PlanID, 100.0f, TEXT("Shadow deploy設置ent co設置plete"));
 }
 
-bool UMingRTSServiceVersionManager::PerformPreDeploymentChecks(const FDeploymentPlan& Plan)
+bool UMin成RTSSe本正iceVe本sionMana成e本::Pe本fo本設置P本eDeploy設置entChecks(const 軍Deploy設置entPlan& Plan)
 {
-    UE_LOG(LogTemp, Log, TEXT("Performing pre-deployment checks for plan: %s"), *Plan.PlanID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Pe本fo本設置in成 p本e-deploy設置ent checks fo本 plan: %s"), *Plan.PlanID);
     
-    for (const FString& Check : Plan.PreDeploymentChecks)
+    fo本 (const 軍St本in成& Check : Plan.P本eDeploy設置entChecks)
     {
-        UE_LOG(LogTemp, Log, TEXT("Running pre-deployment check: %s"), *Check);
-        // Implement actual check logic
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("R使nnin成 p本e-deploy設置ent check: %s"), *Check);
+        // I設置ple設置ent act使al check lo成ic
     }
     
-    return true;
+    本et使本n t本使e;
 }
 
-bool UMingRTSServiceVersionManager::PerformPostDeploymentChecks(const FDeploymentPlan& Plan)
+bool UMin成RTSSe本正iceVe本sionMana成e本::Pe本fo本設置PostDeploy設置entChecks(const 軍Deploy設置entPlan& Plan)
 {
-    UE_LOG(LogTemp, Log, TEXT("Performing post-deployment checks for plan: %s"), *Plan.PlanID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Pe本fo本設置in成 post-deploy設置ent checks fo本 plan: %s"), *Plan.PlanID);
     
-    for (const FString& Check : Plan.PostDeploymentChecks)
+    fo本 (const 軍St本in成& Check : Plan.PostDeploy設置entChecks)
     {
-        UE_LOG(LogTemp, Log, TEXT("Running post-deployment check: %s"), *Check);
-        // Implement actual check logic
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("R使nnin成 post-deploy設置ent check: %s"), *Check);
+        // I設置ple設置ent act使al check lo成ic
     }
     
-    return true;
+    本et使本n t本使e;
 }
 
-void UMingRTSServiceVersionManager::UpdateDeploymentProgress(const FString& PlanID, float Progress, const FString& Status)
+正oid UMin成RTSSe本正iceVe本sionMana成e本::UpdateDeploy設置entP本o成本ess(const 軍St本in成& PlanID, float P本o成本ess, const 軍St本in成& Stat使s)
 {
-    OnDeploymentProgress.Broadcast(PlanID, Progress, Status);
+    OnDeploy設置entP本o成本ess.B本oadcast(PlanID, P本o成本ess, Stat使s);
 }
 
-bool UMingRTSServiceVersionManager::CheckVersionHealth(const FString& VersionID) const
+bool UMin成RTSSe本正iceVe本sionMana成e本::CheckVe本sion輸入ealth(const 軍St本in成& Ve本sionID) const
 {
-    // Implement actual health check logic
-    // For now, assume all versions are healthy
-    return true;
+    // I設置ple設置ent act使al health check lo成ic
+    // 軍o本 now, ass使設置e all 正e本sions a本e healthy
+    本et使本n t本使e;
 }
 
-void UMingRTSServiceVersionManager::CleanupOldVersions()
+正oid UMin成RTSSe本正iceVe本sionMana成e本::Clean使pOldVe本sions()
 {
-    // Implement cleanup logic for old/deprecated versions
-    UE_LOG(LogTemp, Log, TEXT("Cleaning up old service versions"));
+    // I設置ple設置ent clean使p lo成ic fo本 old/dep本ecated 正e本sions
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Cleanin成 使p old se本正ice 正e本sions");
 }

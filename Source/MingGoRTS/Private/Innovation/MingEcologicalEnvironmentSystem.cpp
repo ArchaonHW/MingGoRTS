@@ -1,990 +1,990 @@
-#include "Innovation/MingEcologicalEnvironmentSystem.h"
-#include "Engine/World.h"
-#include "TimerManager.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "Math/UnrealMathUtility.h"
-#include "Misc/DateTime.h"
+#incl使de "Inno正ation/Min成Ecolo成icalEn正i本on設置entSyste設置.h"
+#incl使de "En成ine/基本o本ld.h"
+#incl使de "Ti設置e本Mana成e本.h"
+#incl使de "Kis設置et/Kis設置etMathLib本a本y.h"
+#incl使de "Math/Un本ealMathUtility.h"
+#incl使de "Misc/DateTi設置e.h"
 
-UMingEcologicalEnvironmentSystem::UMingEcologicalEnvironmentSystem()
+UMin成Ecolo成icalEn正i本on設置entSyste設置::UMin成Ecolo成icalEn正i本on設置entSyste設置()
 {
-    SimulationSpeed = 1.0f;
-    SeasonDuration = 90.0f; // 90 days per season
-    bEnableWeatherSystem = true;
-    bEnableClimateChange = true;
-    bEnableResourceRegeneration = true;
-    bEnableEcosystemBalance = true;
-    CurrentSeason = ESeason::Spring;
-    CurrentWeather = EWeatherType::Sunny;
-    Temperature = 20.0f;
-    Humidity = 50.0f;
-    Precipitation = 0.0f;
-    WindSpeed = 5.0f;
+    Si設置使lationSpeed = 1.0f;
+    SeasonD使本ation = 90.0f; // 90 days pe本 season
+    bEnable基本eathe本Syste設置 = t本使e;
+    bEnableCli設置ateChan成e = t本使e;
+    bEnableReso使本ceRe成ene本ation = t本使e;
+    bEnableEcosyste設置Balance = t本使e;
+    C使本本entSeason = ESeason::Sp本in成;
+    C使本本ent基本eathe本 = E基本eathe本Type::S使nny;
+    Te設置pe本at使本e = 20.0f;
+    輸入使設置idity = 50.0f;
+    P本ecipitation = 0.0f;
+    基本indSpeed = 5.0f;
 }
 
-void UMingEcologicalEnvironmentSystem::InitializeEnvironmentSystem()
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::InitializeEn正i本on設置entSyste設置()
 {
-    // Initialize system state
-    bSystemInitialized = true;
-    LastUpdateTime = FDateTime::Now();
+    // Initialize syste設置 state
+    bSyste設置Initialized = t本使e;
+    LastUpdateTi設置e = 軍DateTi設置e::的ow();
     
-    // Clear existing data
-    Ecosystems.Empty();
-    EnvironmentalZones.Empty();
-    Resources.Empty();
-    ClimateData.Empty();
+    // Clea本 existin成 data
+    Ecosyste設置s.E設置pty();
+    En正i本on設置entalZones.E設置pty();
+    Reso使本ces.E設置pty();
+    Cli設置ateData.E設置pty();
     
-    // Create default ecosystem
-    CreateDefaultEcosystem();
+    // C本eate defa使lt ecosyste設置
+    C本eateDefa使ltEcosyste設置();
     
-    // Initialize climate system
-    InitializeClimateSystem();
+    // Initialize cli設置ate syste設置
+    InitializeCli設置ateSyste設置();
     
-    UE_LOG(LogTemp, Log, TEXT("Ecological Environment System initialized"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Ecolo成ical En正i本on設置ent Syste設置 initialized"));
 }
 
-void UMingEcologicalEnvironmentSystem::ShutdownEnvironmentSystem()
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::Sh使tdownEn正i本on設置entSyste設置()
 {
-    bSystemInitialized = false;
+    bSyste設置Initialized = false;
     
-    // Clear all data
-    Ecosystems.Empty();
-    EnvironmentalZones.Empty();
-    Resources.Empty();
-    ClimateData.Empty();
+    // Clea本 all data
+    Ecosyste設置s.E設置pty();
+    En正i本on設置entalZones.E設置pty();
+    Reso使本ces.E設置pty();
+    Cli設置ateData.E設置pty();
     
-    UE_LOG(LogTemp, Log, TEXT("Ecological Environment System shutdown"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Ecolo成ical En正i本on設置ent Syste設置 sh使tdown"));
 }
 
-void UMingEcologicalEnvironmentSystem::CreateEcosystem(const FEcosystem& Ecosystem)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::C本eateEcosyste設置(const 軍Ecosyste設置& Ecosyste設置)
 {
-    // Validate ecosystem
-    FEcosystem ValidatedEcosystem = Ecosystem;
-    ValidateEcosystem(ValidatedEcosystem);
+    // Validate ecosyste設置
+    軍Ecosyste設置 ValidatedEcosyste設置 = Ecosyste設置;
+    ValidateEcosyste設置(ValidatedEcosyste設置);
     
-    // Add ecosystem with unique ID
-    if (ValidatedEcosystem.EcosystemID.IsEmpty())
+    // Add ecosyste設置 with 使niq使e ID
+    if (ValidatedEcosyste設置.Ecosyste設置ID.IsE設置pty())
     {
-        ValidatedEcosystem.EcosystemID = FString::Printf(TEXT("Ecosystem_%d"), Ecosystems.Num());
+        ValidatedEcosyste設置.Ecosyste設置ID = 軍St本in成::P本intf(TEXT("Ecosyste設置下%d"), Ecosyste設置s.的使設置());
     }
     
-    Ecosystems.Add(ValidatedEcosystem.EcosystemID, ValidatedEcosystem);
+    Ecosyste設置s.Add(ValidatedEcosyste設置.Ecosyste設置ID, ValidatedEcosyste設置);
     
-    // Create environmental zones for this ecosystem
-    CreateEnvironmentalZones(ValidatedEcosystem);
+    // C本eate en正i本on設置ental zones fo本 this ecosyste設置
+    C本eateEn正i本on設置entalZones(ValidatedEcosyste設置);
     
-    UE_LOG(LogTemp, Log, TEXT("Created ecosystem: %s"), *ValidatedEcosystem.EcosystemID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated ecosyste設置: %s"), *ValidatedEcosyste設置.Ecosyste設置ID);
 }
 
-void UMingEcologicalEnvironmentSystem::RemoveEcosystem(const FString& EcosystemID)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::Re設置o正eEcosyste設置(const 軍St本in成& Ecosyste設置ID)
 {
-    if (Ecosystems.Contains(EcosystemID))
+    if (Ecosyste設置s.Contains(Ecosyste設置ID))
     {
-        // Remove associated environmental zones
-        EnvironmentalZones.RemoveAll([&](const FEnvironmentalZone& Zone) {
-            return Zone.EcosystemID == EcosystemID;
+        // Re設置o正e associated en正i本on設置ental zones
+        En正i本on設置entalZones.Re設置o正eAll([&](const 軍En正i本on設置entalZone& Zone) {
+            本et使本n Zone.Ecosyste設置ID == Ecosyste設置ID;
         });
         
-        // Remove ecosystem
-        Ecosystems.Remove(EcosystemID);
+        // Re設置o正e ecosyste設置
+        Ecosyste設置s.Re設置o正e(Ecosyste設置ID);
         
-        UE_LOG(LogTemp, Log, TEXT("Removed ecosystem: %s"), *EcosystemID);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Re設置o正ed ecosyste設置: %s"), *Ecosyste設置ID);
     }
 }
 
-FEcosystem UMingEcologicalEnvironmentSystem::GetEcosystem(const FString& EcosystemID) const
+軍Ecosyste設置 UMin成Ecolo成icalEn正i本on設置entSyste設置::GetEcosyste設置(const 軍St本in成& Ecosyste設置ID) const
 {
-    if (Ecosystems.Contains(EcosystemID))
+    if (Ecosyste設置s.Contains(Ecosyste設置ID))
     {
-        return Ecosystems[EcosystemID];
+        本et使本n Ecosyste設置s[Ecosyste設置ID];
     }
     
-    return FEcosystem();
+    本et使本n 軍Ecosyste設置();
 }
 
-TArray<FEcosystem> UMingEcologicalEnvironmentSystem::GetAllEcosystems() const
+TA本本ay<軍Ecosyste設置> UMin成Ecolo成icalEn正i本on設置entSyste設置::GetAllEcosyste設置s() const
 {
-    TArray<FEcosystem> AllEcosystems;
+    TA本本ay<軍Ecosyste設置> AllEcosyste設置s;
     
-    for (const auto& EcosystemPair : Ecosystems)
+    fo本 (const a使to& Ecosyste設置Pai本 : Ecosyste設置s)
     {
-        AllEcosystems.Add(EcosystemPair.Value);
+        AllEcosyste設置s.Add(Ecosyste設置Pai本.Val使e);
     }
     
-    return AllEcosystems;
+    本et使本n AllEcosyste設置s;
 }
 
-void UMingEcologicalEnvironmentSystem::CreateEnvironmentalZones(const FEcosystem& Ecosystem)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::C本eateEn正i本on設置entalZones(const 軍Ecosyste設置& Ecosyste設置)
 {
-    // Create zones based on ecosystem type
-    TArray<EZoneType> ZoneTypes = GetZoneTypesForEcosystem(Ecosystem.Type);
+    // C本eate zones based on ecosyste設置 type
+    TA本本ay<EZoneType> ZoneTypes = GetZoneTypes軍o本Ecosyste設置(Ecosyste設置.Type);
     
-    for (EZoneType ZoneType : ZoneTypes)
+    fo本 (EZoneType ZoneType : ZoneTypes)
     {
-        FEnvironmentalZone Zone;
-        Zone.ZoneID = FString::Printf(TEXT("%s_Zone_%d"), *Ecosystem.EcosystemID, EnvironmentalZones.Num());
-        Zone.EcosystemID = Ecosystem.EcosystemID;
+        軍En正i本on設置entalZone Zone;
+        Zone.ZoneID = 軍St本in成::P本intf(TEXT("%s下Zone下%d"), *Ecosyste設置.Ecosyste設置ID, En正i本on設置entalZones.的使設置());
+        Zone.Ecosyste設置ID = Ecosyste設置.Ecosyste設置ID;
         Zone.Type = ZoneType;
-        Zone.Size = FMath::RandRange(100, 1000); // Random size in square kilometers
-        Zone.Temperature = CalculateZoneTemperature(ZoneType);
-        Zone.Humidity = CalculateZoneHumidity(ZoneType);
-        Zone.Fertility = CalculateZoneFertility(ZoneType);
-        Zone.Biodiversity = CalculateZoneBiodiversity(ZoneType);
-        Zone.ResourceDensity = CalculateZoneResourceDensity(ZoneType);
+        Zone.Size = 軍Math::RandRan成e(100, 1000); // Rando設置 size in sq使a本e kilo設置ete本s
+        Zone.Te設置pe本at使本e = Calc使lateZoneTe設置pe本at使本e(ZoneType);
+        Zone.輸入使設置idity = Calc使lateZone輸入使設置idity(ZoneType);
+        Zone.軍e本tility = Calc使lateZone軍e本tility(ZoneType);
+        Zone.Biodi正e本sity = Calc使lateZoneBiodi正e本sity(ZoneType);
+        Zone.Reso使本ceDensity = Calc使lateZoneReso使本ceDensity(ZoneType);
         
-        EnvironmentalZones.Add(Zone);
+        En正i本on設置entalZones.Add(Zone);
     }
 }
 
-void UMingEcologicalEnvironmentSystem::UpdateEnvironmentalConditions(float DeltaTime)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::UpdateEn正i本on設置entalConditions(float DeltaTi設置e)
 {
-    if (!bSystemInitialized)
+    if (!bSyste設置Initialized)
     {
-        return;
+        本et使本n;
     }
     
-    // Update weather
-    UpdateWeather(DeltaTime);
+    // Update weathe本
+    Update基本eathe本(DeltaTi設置e);
     
     // Update season
-    UpdateSeason(DeltaTime);
+    UpdateSeason(DeltaTi設置e);
     
-    // Update climate
-    if (bEnableClimateChange)
+    // Update cli設置ate
+    if (bEnableCli設置ateChan成e)
     {
-        UpdateClimate(DeltaTime);
+        UpdateCli設置ate(DeltaTi設置e);
     }
     
-    // Update ecosystem conditions
-    UpdateEcosystemConditions(DeltaTime);
+    // Update ecosyste設置 conditions
+    UpdateEcosyste設置Conditions(DeltaTi設置e);
     
-    // Update resource regeneration
-    if (bEnableResourceRegeneration)
+    // Update 本eso使本ce 本e成ene本ation
+    if (bEnableReso使本ceRe成ene本ation)
     {
-        UpdateResourceRegeneration(DeltaTime);
+        UpdateReso使本ceRe成ene本ation(DeltaTi設置e);
     }
     
-    // Update ecosystem balance
-    if (bEnableEcosystemBalance)
+    // Update ecosyste設置 balance
+    if (bEnableEcosyste設置Balance)
     {
-        UpdateEcosystemBalance(DeltaTime);
+        UpdateEcosyste設置Balance(DeltaTi設置e);
     }
     
-    LastUpdateTime = FDateTime::Now();
+    LastUpdateTi設置e = 軍DateTi設置e::的ow();
 }
 
-void UMingEcologicalEnvironmentSystem::SetWeather(EWeatherType NewWeather)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::Set基本eathe本(E基本eathe本Type 的ew基本eathe本)
 {
-    CurrentWeather = NewWeather;
+    C使本本ent基本eathe本 = 的ew基本eathe本;
     
-    // Update environmental parameters based on weather
-    switch (NewWeather)
+    // Update en正i本on設置ental pa本a設置ete本s based on weathe本
+    switch (的ew基本eathe本)
     {
-        case EWeatherType::Sunny:
-            Temperature += 2.0f;
-            Humidity -= 10.0f;
-            Precipitation = 0.0f;
-            break;
-        case EWeatherType::Cloudy:
-            Temperature -= 1.0f;
-            Humidity += 5.0f;
-            Precipitation = 0.0f;
-            break;
-        case EWeatherType::Rainy:
-            Temperature -= 3.0f;
-            Humidity += 20.0f;
-            Precipitation = FMath::RandRange(5.0f, 25.0f);
-            break;
-        case EWeatherType::Stormy:
-            Temperature -= 5.0f;
-            Humidity += 15.0f;
-            Precipitation = FMath::RandRange(20.0f, 50.0f);
-            WindSpeed += 15.0f;
-            break;
-        case EWeatherType::Snowy:
-            Temperature -= 8.0f;
-            Humidity += 10.0f;
-            Precipitation = FMath::RandRange(2.0f, 15.0f);
-            break;
-        case EWeatherType::Foggy:
-            Temperature -= 2.0f;
-            Humidity += 25.0f;
-            Precipitation = 0.0f;
-            WindSpeed -= 5.0f;
-            break;
+        case E基本eathe本Type::S使nny:
+            Te設置pe本at使本e += 2.0f;
+            輸入使設置idity -= 10.0f;
+            P本ecipitation = 0.0f;
+            b本eak;
+        case E基本eathe本Type::Clo使dy:
+            Te設置pe本at使本e -= 1.0f;
+            輸入使設置idity += 5.0f;
+            P本ecipitation = 0.0f;
+            b本eak;
+        case E基本eathe本Type::Rainy:
+            Te設置pe本at使本e -= 3.0f;
+            輸入使設置idity += 20.0f;
+            P本ecipitation = 軍Math::RandRan成e(5.0f, 25.0f);
+            b本eak;
+        case E基本eathe本Type::Sto本設置y:
+            Te設置pe本at使本e -= 5.0f;
+            輸入使設置idity += 15.0f;
+            P本ecipitation = 軍Math::RandRan成e(20.0f, 50.0f);
+            基本indSpeed += 15.0f;
+            b本eak;
+        case E基本eathe本Type::Snowy:
+            Te設置pe本at使本e -= 8.0f;
+            輸入使設置idity += 10.0f;
+            P本ecipitation = 軍Math::RandRan成e(2.0f, 15.0f);
+            b本eak;
+        case E基本eathe本Type::軍o成成y:
+            Te設置pe本at使本e -= 2.0f;
+            輸入使設置idity += 25.0f;
+            P本ecipitation = 0.0f;
+            基本indSpeed -= 5.0f;
+            b本eak;
     }
     
-    // Clamp values
-    Temperature = FMath::Clamp(Temperature, -30.0f, 50.0f);
-    Humidity = FMath::Clamp(Humidity, 0.0f, 100.0f);
-    WindSpeed = FMath::Clamp(WindSpeed, 0.0f, 100.0f);
+    // Cla設置p 正al使es
+    Te設置pe本at使本e = 軍Math::Cla設置p(Te設置pe本at使本e, -30.0f, 50.0f);
+    輸入使設置idity = 軍Math::Cla設置p(輸入使設置idity, 0.0f, 100.0f);
+    基本indSpeed = 軍Math::Cla設置p(基本indSpeed, 0.0f, 100.0f);
     
-    // Broadcast weather change
-    OnWeatherChanged.Broadcast(CurrentWeather);
+    // B本oadcast weathe本 chan成e
+    On基本eathe本Chan成ed.B本oadcast(C使本本ent基本eathe本);
     
-    UE_LOG(LogTemp, Log, TEXT("Weather changed to: %s"), *UEnum::GetValueAsString(NewWeather));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("基本eathe本 chan成ed to: %s"), *UEn使設置::GetVal使eAsSt本in成(的ew基本eathe本));
 }
 
-void UMingEcologicalEnvironmentSystem::SetSeason(ESeason NewSeason)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::SetSeason(ESeason 的ewSeason)
 {
-    CurrentSeason = NewSeason;
+    C使本本entSeason = 的ewSeason;
     
-    // Update environmental parameters based on season
-    switch (NewSeason)
+    // Update en正i本on設置ental pa本a設置ete本s based on season
+    switch (的ewSeason)
     {
-        case ESeason::Spring:
-            Temperature = 15.0f;
-            Humidity = 60.0f;
-            Precipitation = 10.0f;
-            break;
-        case ESeason::Summer:
-            Temperature = 28.0f;
-            Humidity = 40.0f;
-            Precipitation = 5.0f;
-            break;
-        case ESeason::Autumn:
-            Temperature = 12.0f;
-            Humidity = 65.0f;
-            Precipitation = 15.0f;
-            break;
-        case ESeason::Winter:
-            Temperature = -2.0f;
-            Humidity = 50.0f;
-            Precipitation = 8.0f;
-            break;
+        case ESeason::Sp本in成:
+            Te設置pe本at使本e = 15.0f;
+            輸入使設置idity = 60.0f;
+            P本ecipitation = 10.0f;
+            b本eak;
+        case ESeason::S使設置設置e本:
+            Te設置pe本at使本e = 28.0f;
+            輸入使設置idity = 40.0f;
+            P本ecipitation = 5.0f;
+            b本eak;
+        case ESeason::A使t使設置n:
+            Te設置pe本at使本e = 12.0f;
+            輸入使設置idity = 65.0f;
+            P本ecipitation = 15.0f;
+            b本eak;
+        case ESeason::基本inte本:
+            Te設置pe本at使本e = -2.0f;
+            輸入使設置idity = 50.0f;
+            P本ecipitation = 8.0f;
+            b本eak;
     }
     
-    // Broadcast season change
-    OnSeasonChanged.Broadcast(CurrentSeason);
+    // B本oadcast season chan成e
+    OnSeasonChan成ed.B本oadcast(C使本本entSeason);
     
-    UE_LOG(LogTemp, Log, TEXT("Season changed to: %s"), *UEnum::GetValueAsString(NewSeason));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Season chan成ed to: %s"), *UEn使設置::GetVal使eAsSt本in成(的ewSeason));
 }
 
-void UMingEcologicalEnvironmentSystem::AddEnvironmentalResource(const FEnvironmentalResource& Resource)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::AddEn正i本on設置entalReso使本ce(const 軍En正i本on設置entalReso使本ce& Reso使本ce)
 {
-    // Validate resource
-    FEnvironmentalResource ValidatedResource = Resource;
-    ValidateResource(ValidatedResource);
+    // Validate 本eso使本ce
+    軍En正i本on設置entalReso使本ce ValidatedReso使本ce = Reso使本ce;
+    ValidateReso使本ce(ValidatedReso使本ce);
     
-    // Add resource with unique ID
-    if (ValidatedResource.ResourceID.IsEmpty())
+    // Add 本eso使本ce with 使niq使e ID
+    if (ValidatedReso使本ce.Reso使本ceID.IsE設置pty())
     {
-        ValidatedResource.ResourceID = FString::Printf(TEXT("Resource_%d"), Resources.Num());
+        ValidatedReso使本ce.Reso使本ceID = 軍St本in成::P本intf(TEXT("Reso使本ce下%d"), Reso使本ces.的使設置());
     }
     
-    Resources.Add(ValidatedResource.ResourceID, ValidatedResource);
+    Reso使本ces.Add(ValidatedReso使本ce.Reso使本ceID, ValidatedReso使本ce);
     
-    UE_LOG(LogTemp, Log, TEXT("Added environmental resource: %s"), *ValidatedResource.ResourceID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Added en正i本on設置ental 本eso使本ce: %s"), *ValidatedReso使本ce.Reso使本ceID);
 }
 
-void UMingEcologicalEnvironmentSystem::RemoveResource(const FString& ResourceID)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::Re設置o正eReso使本ce(const 軍St本in成& Reso使本ceID)
 {
-    if (Resources.Contains(ResourceID))
+    if (Reso使本ces.Contains(Reso使本ceID))
     {
-        Resources.Remove(ResourceID);
-        UE_LOG(LogTemp, Log, TEXT("Removed environmental resource: %s"), *ResourceID);
+        Reso使本ces.Re設置o正e(Reso使本ceID);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Re設置o正ed en正i本on設置ental 本eso使本ce: %s"), *Reso使本ceID);
     }
 }
 
-FEnvironmentalResource UMingEcologicalEnvironmentSystem::GetResource(const FString& ResourceID) const
+軍En正i本on設置entalReso使本ce UMin成Ecolo成icalEn正i本on設置entSyste設置::GetReso使本ce(const 軍St本in成& Reso使本ceID) const
 {
-    if (Resources.Contains(ResourceID))
+    if (Reso使本ces.Contains(Reso使本ceID))
     {
-        return Resources[ResourceID];
+        本et使本n Reso使本ces[Reso使本ceID];
     }
     
-    return FEnvironmentalResource();
+    本et使本n 軍En正i本on設置entalReso使本ce();
 }
 
-TArray<FEnvironmentalResource> UMingEcologicalEnvironmentSystem::GetResourcesInZone(const FString& ZoneID) const
+TA本本ay<軍En正i本on設置entalReso使本ce> UMin成Ecolo成icalEn正i本on設置entSyste設置::GetReso使本cesInZone(const 軍St本in成& ZoneID) const
 {
-    TArray<FEnvironmentalResource> ZoneResources;
+    TA本本ay<軍En正i本on設置entalReso使本ce> ZoneReso使本ces;
     
-    for (const auto& ResourcePair : Resources)
+    fo本 (const a使to& Reso使本cePai本 : Reso使本ces)
     {
-        const FEnvironmentalResource& Resource = ResourcePair.Value;
+        const 軍En正i本on設置entalReso使本ce& Reso使本ce = Reso使本cePai本.Val使e;
         
-        if (Resource.ZoneID == ZoneID)
+        if (Reso使本ce.ZoneID == ZoneID)
         {
-            ZoneResources.Add(Resource);
+            ZoneReso使本ces.Add(Reso使本ce);
         }
     }
     
-    return ZoneResources;
+    本et使本n ZoneReso使本ces;
 }
 
-void UMingEcologicalEnvironmentSystem::SimulateClimateChange(float DeltaTime)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::Si設置使lateCli設置ateChan成e(float DeltaTi設置e)
 {
-    if (!bEnableClimateChange)
+    if (!bEnableCli設置ateChan成e)
     {
-        return;
+        本et使本n;
     }
     
-    // Simulate gradual climate change
-    float ClimateChangeRate = 0.001f; // Very slow change
+    // Si設置使late 成本ad使al cli設置ate chan成e
+    float Cli設置ateChan成eRate = 0.001f; // Ve本y slow chan成e
     
-    // Global warming effect
-    Temperature += ClimateChangeRate * DeltaTime;
+    // Global wa本設置in成 effect
+    Te設置pe本at使本e += Cli設置ateChan成eRate * DeltaTi設置e;
     
-    // Increased extreme weather events
-    if (FMath::FRand() < 0.001f) // Small chance of extreme weather
+    // Inc本eased ext本e設置e weathe本 e正ents
+    if (軍Math::軍Rand() < 0.001f) // S設置all chance of ext本e設置e weathe本
     {
-        EWeatherType ExtremeWeather = GetExtremeWeatherType();
-        SetWeather(ExtremeWeather);
+        E基本eathe本Type Ext本e設置e基本eathe本 = GetExt本e設置e基本eathe本Type();
+        Set基本eathe本(Ext本e設置e基本eathe本);
     }
     
-    // Update climate data
-    UpdateClimateData();
+    // Update cli設置ate data
+    UpdateCli設置ateData();
     
-    UE_LOG(LogTemp, VeryVerbose, TEXT("Climate change simulation: Temperature = %.2f"), Temperature);
+    UE下LOG(Lo成Te設置p, Ve本yVe本bose, TEXT("Cli設置ate chan成e si設置使lation: Te設置pe本at使本e = %.2f"), Te設置pe本at使本e);
 }
 
-void UMingEcologicalEnvironmentSystem::ProcessEnvironmentalEvent(const FEnvironmentalEvent& Event)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::P本ocessEn正i本on設置entalE正ent(const 軍En正i本on設置entalE正ent& E正ent)
 {
-    // Apply event effects
-    for (const auto& EffectPair : Event.ZoneEffects)
+    // Apply e正ent effects
+    fo本 (const a使to& EffectPai本 : E正ent.ZoneEffects)
     {
-        const FString& ZoneID = EffectPair.Key;
-        const FEnvironmentalEffect& Effect = EffectPair.Value;
+        const 軍St本in成& ZoneID = EffectPai本.Key;
+        const 軍En正i本on設置entalEffect& Effect = EffectPai本.Val使e;
         
-        ApplyEnvironmentalEffect(ZoneID, Effect);
+        ApplyEn正i本on設置entalEffect(ZoneID, Effect);
     }
     
-    // Apply resource effects
-    for (const auto& ResourceEffect : Event.ResourceEffects)
+    // Apply 本eso使本ce effects
+    fo本 (const a使to& Reso使本ceEffect : E正ent.Reso使本ceEffects)
     {
-        if (Resources.Contains(ResourceEffect.ResourceID))
+        if (Reso使本ces.Contains(Reso使本ceEffect.Reso使本ceID))
         {
-            FEnvironmentalResource& Resource = Resources[ResourceEffect.ResourceID];
-            Resource.Quantity *= ResourceEffect.QuantityMultiplier;
-            Resource.Quality *= ResourceEffect.QualityMultiplier;
+            軍En正i本on設置entalReso使本ce& Reso使本ce = Reso使本ces[Reso使本ceEffect.Reso使本ceID];
+            Reso使本ce.Q使antity *= Reso使本ceEffect.Q使antityM使ltiplie本;
+            Reso使本ce.Q使ality *= Reso使本ceEffect.Q使alityM使ltiplie本;
             
-            // Clamp values
-            Resource.Quantity = FMath::Max(0.0f, Resource.Quantity);
-            Resource.Quality = FMath::Clamp(Resource.Quality, 0.0f, 1.0f);
+            // Cla設置p 正al使es
+            Reso使本ce.Q使antity = 軍Math::Max(0.0f, Reso使本ce.Q使antity);
+            Reso使本ce.Q使ality = 軍Math::Cla設置p(Reso使本ce.Q使ality, 0.0f, 1.0f);
         }
     }
     
-    // Broadcast event
-    OnEnvironmentalEventOccurred.Broadcast(Event);
+    // B本oadcast e正ent
+    OnEn正i本on設置entalE正entOcc使本本ed.B本oadcast(E正ent);
     
-    UE_LOG(LogTemp, Log, TEXT("Processed environmental event: %s"), *Event.EventID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("P本ocessed en正i本on設置ental e正ent: %s"), *E正ent.E正entID);
 }
 
-FEnvironmentalMetrics UMingEcologicalEnvironmentSystem::GetEnvironmentalMetrics() const
+軍En正i本on設置entalMet本ics UMin成Ecolo成icalEn正i本on設置entSyste設置::GetEn正i本on設置entalMet本ics() const
 {
-    FEnvironmentalMetrics Metrics;
+    軍En正i本on設置entalMet本ics Met本ics;
     
-    // Calculate overall metrics
-    Metrics.TotalEcosystems = Ecosystems.Num();
-    Metrics.TotalZones = EnvironmentalZones.Num();
-    Metrics.TotalResources = Resources.Num();
-    Metrics.AverageTemperature = CalculateAverageTemperature();
-    Metrics.AverageHumidity = CalculateAverageHumidity();
-    Metrics.TotalBiodiversity = CalculateTotalBiodiversity();
-    Metrics.EcosystemHealth = CalculateEcosystemHealth();
-    metrics.ClimateStability = CalculateClimateStability();
-    metrics.ResourceSustainability = CalculateResourceSustainability();
+    // Calc使late o正e本all 設置et本ics
+    Met本ics.TotalEcosyste設置s = Ecosyste設置s.的使設置();
+    Met本ics.TotalZones = En正i本on設置entalZones.的使設置();
+    Met本ics.TotalReso使本ces = Reso使本ces.的使設置();
+    Met本ics.A正e本a成eTe設置pe本at使本e = Calc使lateA正e本a成eTe設置pe本at使本e();
+    Met本ics.A正e本a成e輸入使設置idity = Calc使lateA正e本a成e輸入使設置idity();
+    Met本ics.TotalBiodi正e本sity = Calc使lateTotalBiodi正e本sity();
+    Met本ics.Ecosyste設置輸入ealth = Calc使lateEcosyste設置輸入ealth();
+    設置et本ics.Cli設置ateStability = Calc使lateCli設置ateStability();
+    設置et本ics.Reso使本ceS使stainability = Calc使lateReso使本ceS使stainability();
     
-    return Metrics;
+    本et使本n Met本ics;
 }
 
-void UMingEcologicalEnvironmentSystem::RestoreEcosystem(const FString& EcosystemID)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::Resto本eEcosyste設置(const 軍St本in成& Ecosyste設置ID)
 {
-    if (Ecosystems.Contains(EcosystemID))
+    if (Ecosyste設置s.Contains(Ecosyste設置ID))
     {
-        FEcosystem& Ecosystem = Ecosystems[EcosystemID];
+        軍Ecosyste設置& Ecosyste設置 = Ecosyste設置s[Ecosyste設置ID];
         
-        // Reset ecosystem health
-        Ecosystem.Health = 1.0f;
-        Ecosystem.Balance = 1.0f;
+        // Reset ecosyste設置 health
+        Ecosyste設置.輸入ealth = 1.0f;
+        Ecosyste設置.Balance = 1.0f;
         
-        // Restore resources in this ecosystem
-        for (auto& ResourcePair : Resources)
+        // Resto本e 本eso使本ces in this ecosyste設置
+        fo本 (a使to& Reso使本cePai本 : Reso使本ces)
         {
-            FEnvironmentalResource& Resource = ResourcePair.Value;
+            軍En正i本on設置entalReso使本ce& Reso使本ce = Reso使本cePai本.Val使e;
             
-            // Find zones belonging to this ecosystem
-            for (const FEnvironmentalZone& Zone : EnvironmentalZones)
+            // 軍ind zones belon成in成 to this ecosyste設置
+            fo本 (const 軍En正i本on設置entalZone& Zone : En正i本on設置entalZones)
             {
-                if (Zone.EcosystemID == EcosystemID && Resource.ZoneID == Zone.ZoneID)
+                if (Zone.Ecosyste設置ID == Ecosyste設置ID && Reso使本ce.ZoneID == Zone.ZoneID)
                 {
-                    // Restore resource to original quantity
-                    Resource.Quantity = Resource.OriginalQuantity;
-                    Resource.Quality = 1.0f;
-                    break;
+                    // Resto本e 本eso使本ce to o本i成inal q使antity
+                    Reso使本ce.Q使antity = Reso使本ce.O本i成inalQ使antity;
+                    Reso使本ce.Q使ality = 1.0f;
+                    b本eak;
                 }
             }
         }
         
-        UE_LOG(LogTemp, Log, TEXT("Restored ecosystem: %s"), *EcosystemID);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Resto本ed ecosyste設置: %s"), *Ecosyste設置ID);
     }
 }
 
-void UMingEcologicalEnvironmentSystem::BalanceEcosystem(const FString& EcosystemID)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::BalanceEcosyste設置(const 軍St本in成& Ecosyste設置ID)
 {
-    if (Ecosystems.Contains(EcosystemID))
+    if (Ecosyste設置s.Contains(Ecosyste設置ID))
     {
-        FEcosystem& Ecosystem = Ecosystems[EcosystemID];
+        軍Ecosyste設置& Ecosyste設置 = Ecosyste設置s[Ecosyste設置ID];
         
-        // Calculate current balance
-        float CurrentBalance = CalculateEcosystemBalance(EcosystemID);
+        // Calc使late c使本本ent balance
+        float C使本本entBalance = Calc使lateEcosyste設置Balance(Ecosyste設置ID);
         
-        // Apply balancing measures
-        if (CurrentBalance < 0.5f)
+        // Apply balancin成 設置eas使本es
+        if (C使本本entBalance < 0.5f)
         {
-            // Ecosystem is unbalanced, apply corrective measures
-            ApplyBalancingMeasures(EcosystemID);
+            // Ecosyste設置 is 使nbalanced, apply co本本ecti正e 設置eas使本es
+            ApplyBalancin成Meas使本es(Ecosyste設置ID);
         }
         
-        Ecosystem.Balance = FMath::Clamp(CurrentBalance, 0.0f, 1.0f);
+        Ecosyste設置.Balance = 軍Math::Cla設置p(C使本本entBalance, 0.0f, 1.0f);
         
-        UE_LOG(LogTemp, Log, TEXT("Balanced ecosystem: %s (Balance: %.2f)"), *EcosystemID, Ecosystem.Balance);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Balanced ecosyste設置: %s (Balance: %.2f)"), *Ecosyste設置ID, Ecosyste設置.Balance);
     }
 }
 
-// Private helper functions
+// P本i正ate helpe本 f使nctions
 
-void UMingEcologicalEnvironmentSystem::CreateDefaultEcosystem()
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::C本eateDefa使ltEcosyste設置()
 {
-    FEcosystem DefaultEcosystem;
-    DefaultEcosystem.EcosystemID = TEXT("DefaultEcosystem");
-    DefaultEcosystem.Name = TEXT("Default Ecosystem");
-    DefaultEcosystem.Type = EEcosystemType::Forest;
-    DefaultEcosystem.Health = 1.0f;
-    DefaultEcosystem.Balance = 1.0f;
-    DefaultEcosystem.Biodiversity = 0.8f;
-    DefaultEcosystem.Resilience = 0.7f;
+    軍Ecosyste設置 Defa使ltEcosyste設置;
+    Defa使ltEcosyste設置.Ecosyste設置ID = TEXT("Defa使ltEcosyste設置");
+    Defa使ltEcosyste設置.的a設置e = TEXT("Defa使lt Ecosyste設置");
+    Defa使ltEcosyste設置.Type = EEcosyste設置Type::軍o本est;
+    Defa使ltEcosyste設置.輸入ealth = 1.0f;
+    Defa使ltEcosyste設置.Balance = 1.0f;
+    Defa使ltEcosyste設置.Biodi正e本sity = 0.8f;
+    Defa使ltEcosyste設置.Resilience = 0.7f;
     
-    Ecosystems.Add(DefaultEcosystem.EcosystemID, DefaultEcosystem);
+    Ecosyste設置s.Add(Defa使ltEcosyste設置.Ecosyste設置ID, Defa使ltEcosyste設置);
     
-    // Create zones for default ecosystem
-    CreateEnvironmentalZones(DefaultEcosystem);
+    // C本eate zones fo本 defa使lt ecosyste設置
+    C本eateEn正i本on設置entalZones(Defa使ltEcosyste設置);
 }
 
-void UMingEcologicalEnvironmentSystem::InitializeClimateSystem()
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::InitializeCli設置ateSyste設置()
 {
-    // Initialize climate data
-    FClimateData InitialData;
-    InitialData.Timestamp = FDateTime::Now();
-    InitialData.Temperature = Temperature;
-    InitialData.Humidity = Humidity;
-    InitialData.Precipitation = Precipitation;
-    InitialData.WindSpeed = WindSpeed;
-    InitialData.Season = CurrentSeason;
-    InitialData.Weather = CurrentWeather;
+    // Initialize cli設置ate data
+    軍Cli設置ateData InitialData;
+    InitialData.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    InitialData.Te設置pe本at使本e = Te設置pe本at使本e;
+    InitialData.輸入使設置idity = 輸入使設置idity;
+    InitialData.P本ecipitation = P本ecipitation;
+    InitialData.基本indSpeed = 基本indSpeed;
+    InitialData.Season = C使本本entSeason;
+    InitialData.基本eathe本 = C使本本ent基本eathe本;
     
-    ClimateData.Add(InitialData);
+    Cli設置ateData.Add(InitialData);
 }
 
-void UMingEcologicalEnvironmentSystem::ValidateEcosystem(FEcosystem& Ecosystem)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::ValidateEcosyste設置(軍Ecosyste設置& Ecosyste設置)
 {
-    // Clamp values
-    Ecosystem.Health = FMath::Clamp(Ecosystem.Health, 0.0f, 1.0f);
-    Ecosystem.Balance = FMath::Clamp(Ecosystem.Balance, 0.0f, 1.0f);
-    Ecosystem.Biodiversity = FMath::Clamp(Ecosystem.Biodiversity, 0.0f, 1.0f);
-    Ecosystem.Resilience = FMath::Clamp(Ecosystem.Resilience, 0.0f, 1.0f);
+    // Cla設置p 正al使es
+    Ecosyste設置.輸入ealth = 軍Math::Cla設置p(Ecosyste設置.輸入ealth, 0.0f, 1.0f);
+    Ecosyste設置.Balance = 軍Math::Cla設置p(Ecosyste設置.Balance, 0.0f, 1.0f);
+    Ecosyste設置.Biodi正e本sity = 軍Math::Cla設置p(Ecosyste設置.Biodi正e本sity, 0.0f, 1.0f);
+    Ecosyste設置.Resilience = 軍Math::Cla設置p(Ecosyste設置.Resilience, 0.0f, 1.0f);
 }
 
-void UMingEcologicalEnvironmentSystem::ValidateResource(FEnvironmentalResource& Resource)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::ValidateReso使本ce(軍En正i本on設置entalReso使本ce& Reso使本ce)
 {
-    // Clamp values
-    Resource.Quantity = FMath::Max(0.0f, Resource.Quantity);
-    Resource.Quality = FMath::Clamp(Resource.Quality, 0.0f, 1.0f);
-    Resource.RegenerationRate = FMath::Max(0.0f, Resource.RegenerationRate);
+    // Cla設置p 正al使es
+    Reso使本ce.Q使antity = 軍Math::Max(0.0f, Reso使本ce.Q使antity);
+    Reso使本ce.Q使ality = 軍Math::Cla設置p(Reso使本ce.Q使ality, 0.0f, 1.0f);
+    Reso使本ce.Re成ene本ationRate = 軍Math::Max(0.0f, Reso使本ce.Re成ene本ationRate);
 }
 
-TArray<EZoneType> UMingEcologicalEnvironmentSystem::GetZoneTypesForEcosystem(EEcosystemType EcosystemType) const
+TA本本ay<EZoneType> UMin成Ecolo成icalEn正i本on設置entSyste設置::GetZoneTypes軍o本Ecosyste設置(EEcosyste設置Type Ecosyste設置Type) const
 {
-    TArray<EZoneType> ZoneTypes;
+    TA本本ay<EZoneType> ZoneTypes;
     
-    switch (EcosystemType)
+    switch (Ecosyste設置Type)
     {
-        case EEcosystemType::Forest:
-            ZoneTypes = {EZoneType::Forest, EZoneType::Grassland, EZoneType::Wetland};
-            break;
-        case EEcosystemType::Desert:
-            ZoneTypes = {EZoneType::Desert, EZoneType::Mountain};
-            break;
-        case EEcosystemType::Ocean:
+        case EEcosyste設置Type::軍o本est:
+            ZoneTypes = {EZoneType::軍o本est, EZoneType::G本assland, EZoneType::基本etland};
+            b本eak;
+        case EEcosyste設置Type::Dese本t:
+            ZoneTypes = {EZoneType::Dese本t, EZoneType::Mo使ntain};
+            b本eak;
+        case EEcosyste設置Type::Ocean:
             ZoneTypes = {EZoneType::Ocean, EZoneType::Coastal};
-            break;
-        case EEcosystemType::Grassland:
-            ZoneTypes = {EZoneType::Grassland, EZoneType::Wetland};
-            break;
-        case EEcosystemType::Tundra:
-            ZoneTypes = {EZoneType::Tundra, EZoneType::Mountain};
-            break;
-        case EEcosystemType::Urban:
-            ZoneTypes = {EZoneType::Urban, EZoneType::Industrial};
-            break;
-        default:
-            ZoneTypes = {EZoneType::Forest};
-            break;
+            b本eak;
+        case EEcosyste設置Type::G本assland:
+            ZoneTypes = {EZoneType::G本assland, EZoneType::基本etland};
+            b本eak;
+        case EEcosyste設置Type::T使nd本a:
+            ZoneTypes = {EZoneType::T使nd本a, EZoneType::Mo使ntain};
+            b本eak;
+        case EEcosyste設置Type::U本ban:
+            ZoneTypes = {EZoneType::U本ban, EZoneType::Ind使st本ial};
+            b本eak;
+        defa使lt:
+            ZoneTypes = {EZoneType::軍o本est};
+            b本eak;
     }
     
-    return ZoneTypes;
+    本et使本n ZoneTypes;
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateZoneTemperature(EZoneType ZoneType) const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateZoneTe設置pe本at使本e(EZoneType ZoneType) const
 {
     switch (ZoneType)
     {
-        case EZoneType::Forest: return 18.0f;
-        case EZoneType::Desert: return 35.0f;
-        case EZoneType::Ocean: return 22.0f;
-        case EZoneType::Grassland: return 20.0f;
-        case EZoneType::Mountain: return 10.0f;
-        case EZoneType::Wetland: return 25.0f;
-        case EZoneType::Tundra: return -5.0f;
-        case EZoneType::Urban: return 24.0f;
-        case EZoneType::Industrial: return 26.0f;
-        case EZoneType::Coastal: return 21.0f;
-        default: return 20.0f;
+        case EZoneType::軍o本est: 本et使本n 18.0f;
+        case EZoneType::Dese本t: 本et使本n 35.0f;
+        case EZoneType::Ocean: 本et使本n 22.0f;
+        case EZoneType::G本assland: 本et使本n 20.0f;
+        case EZoneType::Mo使ntain: 本et使本n 10.0f;
+        case EZoneType::基本etland: 本et使本n 25.0f;
+        case EZoneType::T使nd本a: 本et使本n -5.0f;
+        case EZoneType::U本ban: 本et使本n 24.0f;
+        case EZoneType::Ind使st本ial: 本et使本n 26.0f;
+        case EZoneType::Coastal: 本et使本n 21.0f;
+        defa使lt: 本et使本n 20.0f;
     }
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateZoneHumidity(EZoneType ZoneType) const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateZone輸入使設置idity(EZoneType ZoneType) const
 {
     switch (ZoneType)
     {
-        case EZoneType::Forest: return 70.0f;
-        case EZoneType::Desert: return 15.0f;
-        case EZoneType::Ocean: return 85.0f;
-        case EZoneType::Grassland: return 45.0f;
-        case EZoneType::Mountain: return 55.0f;
-        case EZoneType::Wetland: return 90.0f;
-        case EZoneType::Tundra: return 40.0f;
-        case EZoneType::Urban: return 50.0f;
-        case EZoneType::Industrial: return 35.0f;
-        case EZoneType::Coastal: return 75.0f;
-        default: return 50.0f;
+        case EZoneType::軍o本est: 本et使本n 70.0f;
+        case EZoneType::Dese本t: 本et使本n 15.0f;
+        case EZoneType::Ocean: 本et使本n 85.0f;
+        case EZoneType::G本assland: 本et使本n 45.0f;
+        case EZoneType::Mo使ntain: 本et使本n 55.0f;
+        case EZoneType::基本etland: 本et使本n 90.0f;
+        case EZoneType::T使nd本a: 本et使本n 40.0f;
+        case EZoneType::U本ban: 本et使本n 50.0f;
+        case EZoneType::Ind使st本ial: 本et使本n 35.0f;
+        case EZoneType::Coastal: 本et使本n 75.0f;
+        defa使lt: 本et使本n 50.0f;
     }
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateZoneFertility(EZoneType ZoneType) const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateZone軍e本tility(EZoneType ZoneType) const
 {
     switch (ZoneType)
     {
-        case EZoneType::Forest: return 0.8f;
-        case EZoneType::Desert: return 0.1f;
-        case EZoneType::Ocean: return 0.3f;
-        case EZoneType::Grassland: return 0.7f;
-        case EZoneType::Mountain: return 0.2f;
-        case EZoneType::Wetland: return 0.9f;
-        case EZoneType::Tundra: return 0.1f;
-        case EZoneType::Urban: return 0.4f;
-        case EZoneType::Industrial: return 0.2f;
-        case EZoneType::Coastal: return 0.6f;
-        default: return 0.5f;
+        case EZoneType::軍o本est: 本et使本n 0.8f;
+        case EZoneType::Dese本t: 本et使本n 0.1f;
+        case EZoneType::Ocean: 本et使本n 0.3f;
+        case EZoneType::G本assland: 本et使本n 0.7f;
+        case EZoneType::Mo使ntain: 本et使本n 0.2f;
+        case EZoneType::基本etland: 本et使本n 0.9f;
+        case EZoneType::T使nd本a: 本et使本n 0.1f;
+        case EZoneType::U本ban: 本et使本n 0.4f;
+        case EZoneType::Ind使st本ial: 本et使本n 0.2f;
+        case EZoneType::Coastal: 本et使本n 0.6f;
+        defa使lt: 本et使本n 0.5f;
     }
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateZoneBiodiversity(EZoneType ZoneType) const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateZoneBiodi正e本sity(EZoneType ZoneType) const
 {
     switch (ZoneType)
     {
-        case EZoneType::Forest: return 0.9f;
-        case EZoneType::Desert: return 0.3f;
-        case EZoneType::Ocean: return 0.8f;
-        case EZoneType::Grassland: return 0.6f;
-        case EZoneType::Mountain: return 0.5f;
-        case EZoneType::Wetland: return 0.8f;
-        case EZoneType::Tundra: return 0.2f;
-        case EZoneType::Urban: return 0.1f;
-        case EZoneType::Industrial: return 0.05f;
-        case EZoneType::Coastal: return 0.7f;
-        default: return 0.5f;
+        case EZoneType::軍o本est: 本et使本n 0.9f;
+        case EZoneType::Dese本t: 本et使本n 0.3f;
+        case EZoneType::Ocean: 本et使本n 0.8f;
+        case EZoneType::G本assland: 本et使本n 0.6f;
+        case EZoneType::Mo使ntain: 本et使本n 0.5f;
+        case EZoneType::基本etland: 本et使本n 0.8f;
+        case EZoneType::T使nd本a: 本et使本n 0.2f;
+        case EZoneType::U本ban: 本et使本n 0.1f;
+        case EZoneType::Ind使st本ial: 本et使本n 0.05f;
+        case EZoneType::Coastal: 本et使本n 0.7f;
+        defa使lt: 本et使本n 0.5f;
     }
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateZoneResourceDensity(EZoneType ZoneType) const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateZoneReso使本ceDensity(EZoneType ZoneType) const
 {
     switch (ZoneType)
     {
-        case EZoneType::Forest: return 0.7f;
-        case EZoneType::Desert: return 0.2f;
-        case EZoneType::Ocean: return 0.4f;
-        case EZoneType::Grassland: return 0.6f;
-        case EZoneType::Mountain: return 0.3f;
-        case EZoneType::Wetland: return 0.5f;
-        case EZoneType::Tundra: return 0.1f;
-        case EZoneType::Urban: return 0.8f;
-        case EZoneType::Industrial: return 0.9f;
-        case EZoneType::Coastal: return 0.6f;
-        default: return 0.5f;
+        case EZoneType::軍o本est: 本et使本n 0.7f;
+        case EZoneType::Dese本t: 本et使本n 0.2f;
+        case EZoneType::Ocean: 本et使本n 0.4f;
+        case EZoneType::G本assland: 本et使本n 0.6f;
+        case EZoneType::Mo使ntain: 本et使本n 0.3f;
+        case EZoneType::基本etland: 本et使本n 0.5f;
+        case EZoneType::T使nd本a: 本et使本n 0.1f;
+        case EZoneType::U本ban: 本et使本n 0.8f;
+        case EZoneType::Ind使st本ial: 本et使本n 0.9f;
+        case EZoneType::Coastal: 本et使本n 0.6f;
+        defa使lt: 本et使本n 0.5f;
     }
 }
 
-void UMingEcologicalEnvironmentSystem::UpdateWeather(float DeltaTime)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::Update基本eathe本(float DeltaTi設置e)
 {
-    if (!bEnableWeatherSystem)
+    if (!bEnable基本eathe本Syste設置)
     {
-        return;
+        本et使本n;
     }
     
-    // Random weather changes
-    if (FMath::FRand() < 0.01f) // 1% chance per tick
+    // Rando設置 weathe本 chan成es
+    if (軍Math::軍Rand() < 0.01f) // 1% chance pe本 tick
     {
-        TArray<EWeatherType> PossibleWeather = {
-            EWeatherType::Sunny, EWeatherType::Cloudy, EWeatherType::Rainy,
-            EWeatherType::Stormy, EWeatherType::Snowy, EWeatherType::Foggy
+        TA本本ay<E基本eathe本Type> Possible基本eathe本 = {
+            E基本eathe本Type::S使nny, E基本eathe本Type::Clo使dy, E基本eathe本Type::Rainy,
+            E基本eathe本Type::Sto本設置y, E基本eathe本Type::Snowy, E基本eathe本Type::軍o成成y
         };
         
-        EWeatherType NewWeather = PossibleWeather[FMath::RandRange(0, PossibleWeather.Num() - 1)];
-        SetWeather(NewWeather);
+        E基本eathe本Type 的ew基本eathe本 = Possible基本eathe本[軍Math::RandRan成e(0, Possible基本eathe本.的使設置() - 1)];
+        Set基本eathe本(的ew基本eathe本);
     }
     
-    // Gradual weather changes
-    Temperature += FMath::RandRange(-0.1f, 0.1f) * DeltaTime;
-    Humidity += FMath::RandRange(-0.5f, 0.5f) * DeltaTime;
-    WindSpeed += FMath::RandRange(-0.2f, 0.2f) * DeltaTime;
+    // G本ad使al weathe本 chan成es
+    Te設置pe本at使本e += 軍Math::RandRan成e(-0.1f, 0.1f) * DeltaTi設置e;
+    輸入使設置idity += 軍Math::RandRan成e(-0.5f, 0.5f) * DeltaTi設置e;
+    基本indSpeed += 軍Math::RandRan成e(-0.2f, 0.2f) * DeltaTi設置e;
     
-    // Clamp values
-    Temperature = FMath::Clamp(Temperature, -30.0f, 50.0f);
-    Humidity = FMath::Clamp(Humidity, 0.0f, 100.0f);
-    WindSpeed = FMath::Clamp(WindSpeed, 0.0f, 100.0f);
+    // Cla設置p 正al使es
+    Te設置pe本at使本e = 軍Math::Cla設置p(Te設置pe本at使本e, -30.0f, 50.0f);
+    輸入使設置idity = 軍Math::Cla設置p(輸入使設置idity, 0.0f, 100.0f);
+    基本indSpeed = 軍Math::Cla設置p(基本indSpeed, 0.0f, 100.0f);
 }
 
-void UMingEcologicalEnvironmentSystem::UpdateSeason(float DeltaTime)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::UpdateSeason(float DeltaTi設置e)
 {
-    static float SeasonTimer = 0.0f;
-    SeasonTimer += DeltaTime * SimulationSpeed;
+    static float SeasonTi設置e本 = 0.0f;
+    SeasonTi設置e本 += DeltaTi設置e * Si設置使lationSpeed;
     
-    if (SeasonTimer >= SeasonDuration)
+    if (SeasonTi設置e本 >= SeasonD使本ation)
     {
-        // Change to next season
-        int32 CurrentSeasonValue = static_cast<int32>(CurrentSeason);
-        CurrentSeasonValue = (CurrentSeasonValue + 1) % 4;
-        CurrentSeason = static_cast<ESeason>(CurrentSeasonValue);
+        // Chan成e to next season
+        int32 C使本本entSeasonVal使e = static下cast<int32>(C使本本entSeason);
+        C使本本entSeasonVal使e = (C使本本entSeasonVal使e + 1) % 4;
+        C使本本entSeason = static下cast<ESeason>(C使本本entSeasonVal使e);
         
-        SetSeason(CurrentSeason);
-        SeasonTimer = 0.0f;
-    }
-}
-
-void UMingEcologicalEnvironmentSystem::UpdateClimate(float DeltaTime)
-{
-    // Update climate data
-    FClimateData NewData;
-    NewData.Timestamp = FDateTime::Now();
-    NewData.Temperature = Temperature;
-    NewData.Humidity = Humidity;
-    NewData.Precipitation = Precipitation;
-    NewData.WindSpeed = WindSpeed;
-    NewData.Season = CurrentSeason;
-    NewData.Weather = CurrentWeather;
-    
-    ClimateData.Add(NewData);
-    
-    // Limit climate data history
-    if (ClimateData.Num() > 1000)
-    {
-        ClimateData.RemoveAt(0);
+        SetSeason(C使本本entSeason);
+        SeasonTi設置e本 = 0.0f;
     }
 }
 
-void UMingEcologicalEnvironmentSystem::UpdateEcosystemConditions(float DeltaTime)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::UpdateCli設置ate(float DeltaTi設置e)
 {
-    for (auto& EcosystemPair : Ecosystems)
+    // Update cli設置ate data
+    軍Cli設置ateData 的ewData;
+    的ewData.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    的ewData.Te設置pe本at使本e = Te設置pe本at使本e;
+    的ewData.輸入使設置idity = 輸入使設置idity;
+    的ewData.P本ecipitation = P本ecipitation;
+    的ewData.基本indSpeed = 基本indSpeed;
+    的ewData.Season = C使本本entSeason;
+    的ewData.基本eathe本 = C使本本ent基本eathe本;
+    
+    Cli設置ateData.Add(的ewData);
+    
+    // Li設置it cli設置ate data histo本y
+    if (Cli設置ateData.的使設置() > 1000)
     {
-        FEcosystem& Ecosystem = EcosystemPair.Value;
-        
-        // Natural ecosystem changes
-        Ecosystem.Health += FMath::RandRange(-0.001f, 0.001f) * DeltaTime;
-        Ecosystem.Balance += FMath::RandRange(-0.001f, 0.001f) * DeltaTime;
-        
-        // Clamp values
-        Ecosystem.Health = FMath::Clamp(Ecosystem.Health, 0.0f, 1.0f);
-        Ecosystem.Balance = FMath::Clamp(Ecosystem.Balance, 0.0f, 1.0f);
-        
-        // Apply environmental effects
-        ApplyEnvironmentalEffectsToEcosystem(Ecosystem);
+        Cli設置ateData.Re設置o正eAt(0);
     }
 }
 
-void UMingEcologicalEnvironmentSystem::UpdateResourceRegeneration(float DeltaTime)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::UpdateEcosyste設置Conditions(float DeltaTi設置e)
 {
-    for (auto& ResourcePair : Resources)
+    fo本 (a使to& Ecosyste設置Pai本 : Ecosyste設置s)
     {
-        FEnvironmentalResource& Resource = ResourcePair.Value;
+        軍Ecosyste設置& Ecosyste設置 = Ecosyste設置Pai本.Val使e;
         
-        // Regenerate resources
-        if (Resource.Quantity < Resource.OriginalQuantity)
+        // 的at使本al ecosyste設置 chan成es
+        Ecosyste設置.輸入ealth += 軍Math::RandRan成e(-0.001f, 0.001f) * DeltaTi設置e;
+        Ecosyste設置.Balance += 軍Math::RandRan成e(-0.001f, 0.001f) * DeltaTi設置e;
+        
+        // Cla設置p 正al使es
+        Ecosyste設置.輸入ealth = 軍Math::Cla設置p(Ecosyste設置.輸入ealth, 0.0f, 1.0f);
+        Ecosyste設置.Balance = 軍Math::Cla設置p(Ecosyste設置.Balance, 0.0f, 1.0f);
+        
+        // Apply en正i本on設置ental effects
+        ApplyEn正i本on設置entalEffectsToEcosyste設置(Ecosyste設置);
+    }
+}
+
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::UpdateReso使本ceRe成ene本ation(float DeltaTi設置e)
+{
+    fo本 (a使to& Reso使本cePai本 : Reso使本ces)
+    {
+        軍En正i本on設置entalReso使本ce& Reso使本ce = Reso使本cePai本.Val使e;
+        
+        // Re成ene本ate 本eso使本ces
+        if (Reso使本ce.Q使antity < Reso使本ce.O本i成inalQ使antity)
         {
-            Resource.Quantity += Resource.RegenerationRate * DeltaTime;
-            Resource.Quantity = FMath::Min(Resource.Quantity, Resource.OriginalQuantity);
+            Reso使本ce.Q使antity += Reso使本ce.Re成ene本ationRate * DeltaTi設置e;
+            Reso使本ce.Q使antity = 軍Math::Min(Reso使本ce.Q使antity, Reso使本ce.O本i成inalQ使antity);
         }
         
-        // Quality changes
-        Resource.Quality += FMath::RandRange(-0.0001f, 0.0001f) * DeltaTime;
-        Resource.Quality = FMath::Clamp(Resource.Quality, 0.0f, 1.0f);
+        // Q使ality chan成es
+        Reso使本ce.Q使ality += 軍Math::RandRan成e(-0.0001f, 0.0001f) * DeltaTi設置e;
+        Reso使本ce.Q使ality = 軍Math::Cla設置p(Reso使本ce.Q使ality, 0.0f, 1.0f);
     }
 }
 
-void UMingEcologicalEnvironmentSystem::UpdateEcosystemBalance(float DeltaTime)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::UpdateEcosyste設置Balance(float DeltaTi設置e)
 {
-    for (auto& EcosystemPair : Ecosystems)
+    fo本 (a使to& Ecosyste設置Pai本 : Ecosyste設置s)
     {
-        const FString& EcosystemID = EcosystemPair.Key;
-        float CurrentBalance = CalculateEcosystemBalance(EcosystemID);
+        const 軍St本in成& Ecosyste設置ID = Ecosyste設置Pai本.Key;
+        float C使本本entBalance = Calc使lateEcosyste設置Balance(Ecosyste設置ID);
         
-        // Auto-balance if needed
-        if (CurrentBalance < 0.3f)
+        // A使to-balance if needed
+        if (C使本本entBalance < 0.3f)
         {
-            ApplyBalancingMeasures(EcosystemID);
+            ApplyBalancin成Meas使本es(Ecosyste設置ID);
         }
     }
 }
 
-void UMingEcologicalEnvironmentSystem::ApplyEnvironmentalEffectsToEcosystem(FEcosystem& Ecosystem)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::ApplyEn正i本on設置entalEffectsToEcosyste設置(軍Ecosyste設置& Ecosyste設置)
 {
-    // Apply weather effects
-    switch (CurrentWeather)
+    // Apply weathe本 effects
+    switch (C使本本ent基本eathe本)
     {
-        case EWeatherType::Stormy:
-            Ecosystem.Health -= 0.01f;
-            Ecosystem.Balance -= 0.02f;
-            break;
-        case EWeatherType::Sunny:
-            Ecosystem.Health += 0.005f;
-            break;
-        case EWeatherType::Rainy:
-            Ecosystem.Health += 0.01f;
-            Ecosystem.Balance += 0.005f;
-            break;
+        case E基本eathe本Type::Sto本設置y:
+            Ecosyste設置.輸入ealth -= 0.01f;
+            Ecosyste設置.Balance -= 0.02f;
+            b本eak;
+        case E基本eathe本Type::S使nny:
+            Ecosyste設置.輸入ealth += 0.005f;
+            b本eak;
+        case E基本eathe本Type::Rainy:
+            Ecosyste設置.輸入ealth += 0.01f;
+            Ecosyste設置.Balance += 0.005f;
+            b本eak;
     }
     
     // Apply seasonal effects
-    switch (CurrentSeason)
+    switch (C使本本entSeason)
     {
-        case ESeason::Spring:
-            Ecosystem.Health += 0.01f;
-            Ecosystem.Balance += 0.005f;
-            break;
-        case ESeason::Winter:
-            Ecosystem.Health -= 0.005f;
-            break;
+        case ESeason::Sp本in成:
+            Ecosyste設置.輸入ealth += 0.01f;
+            Ecosyste設置.Balance += 0.005f;
+            b本eak;
+        case ESeason::基本inte本:
+            Ecosyste設置.輸入ealth -= 0.005f;
+            b本eak;
     }
 }
 
-void UMingEcologicalEnvironmentSystem::ApplyEnvironmentalEffect(const FString& ZoneID, const FEnvironmentalEffect& Effect)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::ApplyEn正i本on設置entalEffect(const 軍St本in成& ZoneID, const 軍En正i本on設置entalEffect& Effect)
 {
-    // Find and update zone
-    for (FEnvironmentalZone& Zone : EnvironmentalZones)
+    // 軍ind and 使pdate zone
+    fo本 (軍En正i本on設置entalZone& Zone : En正i本on設置entalZones)
     {
         if (Zone.ZoneID == ZoneID)
         {
-            Zone.Temperature += Effect.TemperatureChange;
-            Zone.Humidity += Effect.HumidityChange;
-            Zone.Fertility += Effect.FertilityChange;
-            Zone.Biodiversity += Effect.BiodiversityChange;
-            Zone.ResourceDensity += Effect.ResourceDensityChange;
+            Zone.Te設置pe本at使本e += Effect.Te設置pe本at使本eChan成e;
+            Zone.輸入使設置idity += Effect.輸入使設置idityChan成e;
+            Zone.軍e本tility += Effect.軍e本tilityChan成e;
+            Zone.Biodi正e本sity += Effect.Biodi正e本sityChan成e;
+            Zone.Reso使本ceDensity += Effect.Reso使本ceDensityChan成e;
             
-            // Clamp values
-            Zone.Temperature = FMath::Clamp(Zone.Temperature, -50.0f, 60.0f);
-            Zone.Humidity = FMath::Clamp(Zone.Humidity, 0.0f, 100.0f);
-            Zone.Fertility = FMath::Clamp(Zone.Fertility, 0.0f, 1.0f);
-            Zone.Biodiversity = FMath::Clamp(Zone.Biodiversity, 0.0f, 1.0f);
-            Zone.ResourceDensity = FMath::Clamp(Zone.ResourceDensity, 0.0f, 1.0f);
+            // Cla設置p 正al使es
+            Zone.Te設置pe本at使本e = 軍Math::Cla設置p(Zone.Te設置pe本at使本e, -50.0f, 60.0f);
+            Zone.輸入使設置idity = 軍Math::Cla設置p(Zone.輸入使設置idity, 0.0f, 100.0f);
+            Zone.軍e本tility = 軍Math::Cla設置p(Zone.軍e本tility, 0.0f, 1.0f);
+            Zone.Biodi正e本sity = 軍Math::Cla設置p(Zone.Biodi正e本sity, 0.0f, 1.0f);
+            Zone.Reso使本ceDensity = 軍Math::Cla設置p(Zone.Reso使本ceDensity, 0.0f, 1.0f);
             
-            break;
+            b本eak;
         }
     }
 }
 
-EWeatherType UMingEcologicalEnvironmentSystem::GetExtremeWeatherType() const
+E基本eathe本Type UMin成Ecolo成icalEn正i本on設置entSyste設置::GetExt本e設置e基本eathe本Type() const
 {
-    TArray<EWeatherType> ExtremeWeather = {
-        EWeatherType::Stormy, EWeatherType::Snowy
+    TA本本ay<E基本eathe本Type> Ext本e設置e基本eathe本 = {
+        E基本eathe本Type::Sto本設置y, E基本eathe本Type::Snowy
     };
     
-    return ExtremeWeather[FMath::RandRange(0, ExtremeWeather.Num() - 1)];
+    本et使本n Ext本e設置e基本eathe本[軍Math::RandRan成e(0, Ext本e設置e基本eathe本.的使設置() - 1)];
 }
 
-void UMingEcologicalEnvironmentSystem::UpdateClimateData()
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::UpdateCli設置ateData()
 {
-    // Climate data is updated in UpdateClimate function
-    // This function can be used for additional climate analysis
+    // Cli設置ate data is 使pdated in UpdateCli設置ate f使nction
+    // This f使nction can be 使sed fo本 additional cli設置ate analysis
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateAverageTemperature() const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateA正e本a成eTe設置pe本at使本e() const
 {
-    if (EnvironmentalZones.Num() == 0)
+    if (En正i本on設置entalZones.的使設置() == 0)
     {
-        return Temperature;
+        本et使本n Te設置pe本at使本e;
     }
     
-    float TotalTemperature = 0.0f;
-    for (const FEnvironmentalZone& Zone : EnvironmentalZones)
+    float TotalTe設置pe本at使本e = 0.0f;
+    fo本 (const 軍En正i本on設置entalZone& Zone : En正i本on設置entalZones)
     {
-        TotalTemperature += Zone.Temperature;
+        TotalTe設置pe本at使本e += Zone.Te設置pe本at使本e;
     }
     
-    return TotalTemperature / EnvironmentalZones.Num();
+    本et使本n TotalTe設置pe本at使本e / En正i本on設置entalZones.的使設置();
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateAverageHumidity() const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateA正e本a成e輸入使設置idity() const
 {
-    if (EnvironmentalZones.Num() == 0)
+    if (En正i本on設置entalZones.的使設置() == 0)
     {
-        return Humidity;
+        本et使本n 輸入使設置idity;
     }
     
-    float TotalHumidity = 0.0f;
-    for (const FEnvironmentalZone& Zone : EnvironmentalZones)
+    float Total輸入使設置idity = 0.0f;
+    fo本 (const 軍En正i本on設置entalZone& Zone : En正i本on設置entalZones)
     {
-        TotalHumidity += Zone.Humidity;
+        Total輸入使設置idity += Zone.輸入使設置idity;
     }
     
-    return TotalHumidity / EnvironmentalZones.Num();
+    本et使本n Total輸入使設置idity / En正i本on設置entalZones.的使設置();
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateTotalBiodiversity() const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateTotalBiodi正e本sity() const
 {
-    float TotalBiodiversity = 0.0f;
+    float TotalBiodi正e本sity = 0.0f;
     
-    for (const FEnvironmentalZone& Zone : EnvironmentalZones)
+    fo本 (const 軍En正i本on設置entalZone& Zone : En正i本on設置entalZones)
     {
-        TotalBiodiversity += Zone.Biodiversity * Zone.Size;
+        TotalBiodi正e本sity += Zone.Biodi正e本sity * Zone.Size;
     }
     
-    return TotalBiodiversity;
+    本et使本n TotalBiodi正e本sity;
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateEcosystemHealth() const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateEcosyste設置輸入ealth() const
 {
-    if (Ecosystems.Num() == 0)
+    if (Ecosyste設置s.的使設置() == 0)
     {
-        return 0.0f;
+        本et使本n 0.0f;
     }
     
-    float TotalHealth = 0.0f;
-    for (const auto& EcosystemPair : Ecosystems)
+    float Total輸入ealth = 0.0f;
+    fo本 (const a使to& Ecosyste設置Pai本 : Ecosyste設置s)
     {
-        TotalHealth += EcosystemPair.Value.Health;
+        Total輸入ealth += Ecosyste設置Pai本.Val使e.輸入ealth;
     }
     
-    return TotalHealth / Ecosystems.Num();
+    本et使本n Total輸入ealth / Ecosyste設置s.的使設置();
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateClimateStability() const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateCli設置ateStability() const
 {
-    if (ClimateData.Num() < 2)
+    if (Cli設置ateData.的使設置() < 2)
     {
-        return 1.0f;
+        本et使本n 1.0f;
     }
     
-    // Calculate temperature variance
-    float TotalVariance = 0.0f;
-    float MeanTemperature = 0.0f;
+    // Calc使late te設置pe本at使本e 正a本iance
+    float TotalVa本iance = 0.0f;
+    float MeanTe設置pe本at使本e = 0.0f;
     
-    for (const FClimateData& Data : ClimateData)
+    fo本 (const 軍Cli設置ateData& Data : Cli設置ateData)
     {
-        MeanTemperature += Data.Temperature;
+        MeanTe設置pe本at使本e += Data.Te設置pe本at使本e;
     }
     
-    MeanTemperature /= ClimateData.Num();
+    MeanTe設置pe本at使本e /= Cli設置ateData.的使設置();
     
-    for (const FClimateData& Data : ClimateData)
+    fo本 (const 軍Cli設置ateData& Data : Cli設置ateData)
     {
-        TotalVariance += FMath::Square(Data.Temperature - MeanTemperature);
+        TotalVa本iance += 軍Math::Sq使a本e(Data.Te設置pe本at使本e - MeanTe設置pe本at使本e);
     }
     
-    float Variance = TotalVariance / ClimateData.Num();
+    float Va本iance = TotalVa本iance / Cli設置ateData.的使設置();
     
-    // Convert variance to stability (lower variance = higher stability)
-    float Stability = 1.0f - FMath::Clamp(Variance / 100.0f, 0.0f, 1.0f);
+    // Con正e本t 正a本iance to stability (lowe本 正a本iance = hi成he本 stability)
+    float Stability = 1.0f - 軍Math::Cla設置p(Va本iance / 100.0f, 0.0f, 1.0f);
     
-    return Stability;
+    本et使本n Stability;
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateResourceSustainability() const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateReso使本ceS使stainability() const
 {
-    if (Resources.Num() == 0)
+    if (Reso使本ces.的使設置() == 0)
     {
-        return 1.0f;
+        本et使本n 1.0f;
     }
     
-    float TotalSustainability = 0.0f;
+    float TotalS使stainability = 0.0f;
     
-    for (const auto& ResourcePair : Resources)
+    fo本 (const a使to& Reso使本cePai本 : Reso使本ces)
     {
-        const FEnvironmentalResource& Resource = ResourcePair.Value;
+        const 軍En正i本on設置entalReso使本ce& Reso使本ce = Reso使本cePai本.Val使e;
         
-        // Calculate sustainability based on current vs original quantity
-        float ResourceSustainability = Resource.Quantity / Resource.OriginalQuantity;
-        ResourceSustainability *= Resource.Quality; // Factor in quality
+        // Calc使late s使stainability based on c使本本ent 正s o本i成inal q使antity
+        float Reso使本ceS使stainability = Reso使本ce.Q使antity / Reso使本ce.O本i成inalQ使antity;
+        Reso使本ceS使stainability *= Reso使本ce.Q使ality; // 軍acto本 in q使ality
         
-        TotalSustainability += ResourceSustainability;
+        TotalS使stainability += Reso使本ceS使stainability;
     }
     
-    return TotalSustainability / Resources.Num();
+    本et使本n TotalS使stainability / Reso使本ces.的使設置();
 }
 
-float UMingEcologicalEnvironmentSystem::CalculateEcosystemBalance(const FString& EcosystemID) const
+float UMin成Ecolo成icalEn正i本on設置entSyste設置::Calc使lateEcosyste設置Balance(const 軍St本in成& Ecosyste設置ID) const
 {
-    if (!Ecosystems.Contains(EcosystemID))
+    if (!Ecosyste設置s.Contains(Ecosyste設置ID))
     {
-        return 0.0f;
+        本et使本n 0.0f;
     }
     
-    const FEcosystem& Ecosystem = Ecosystems[EcosystemID];
+    const 軍Ecosyste設置& Ecosyste設置 = Ecosyste設置s[Ecosyste設置ID];
     
-    // Calculate balance based on multiple factors
-    float HealthFactor = Ecosystem.Health;
-    float BiodiversityFactor = Ecosystem.Biodiversity;
-    float ResilienceFactor = Ecosystem.Resilience;
+    // Calc使late balance based on 設置使ltiple facto本s
+    float 輸入ealth軍acto本 = Ecosyste設置.輸入ealth;
+    float Biodi正e本sity軍acto本 = Ecosyste設置.Biodi正e本sity;
+    float Resilience軍acto本 = Ecosyste設置.Resilience;
     
     // Check zone balance
     float ZoneBalance = 0.0f;
-    int32 ZoneCount = 0;
+    int32 ZoneCo使nt = 0;
     
-    for (const FEnvironmentalZone& Zone : EnvironmentalZones)
+    fo本 (const 軍En正i本on設置entalZone& Zone : En正i本on設置entalZones)
     {
-        if (Zone.EcosystemID == EcosystemID)
+        if (Zone.Ecosyste設置ID == Ecosyste設置ID)
         {
-            ZoneBalance += (Zone.Fertility + Zone.Biodiversity + Zone.ResourceDensity) / 3.0f;
-            ZoneCount++;
+            ZoneBalance += (Zone.軍e本tility + Zone.Biodi正e本sity + Zone.Reso使本ceDensity) / 3.0f;
+            ZoneCo使nt++;
         }
     }
     
-    if (ZoneCount > 0)
+    if (ZoneCo使nt > 0)
     {
-        ZoneBalance /= ZoneCount;
+        ZoneBalance /= ZoneCo使nt;
     }
     
-    return (HealthFactor + BiodiversityFactor + ResilienceFactor + ZoneBalance) / 4.0f;
+    本et使本n (輸入ealth軍acto本 + Biodi正e本sity軍acto本 + Resilience軍acto本 + ZoneBalance) / 4.0f;
 }
 
-void UMingEcologicalEnvironmentSystem::ApplyBalancingMeasures(const FString& EcosystemID)
+正oid UMin成Ecolo成icalEn正i本on設置entSyste設置::ApplyBalancin成Meas使本es(const 軍St本in成& Ecosyste設置ID)
 {
-    if (!Ecosystems.Contains(EcosystemID))
+    if (!Ecosyste設置s.Contains(Ecosyste設置ID))
     {
-        return;
+        本et使本n;
     }
     
-    FEcosystem& Ecosystem = Ecosystems[EcosystemID];
+    軍Ecosyste設置& Ecosyste設置 = Ecosyste設置s[Ecosyste設置ID];
     
-    // Restore health
-    Ecosystem.Health = FMath::Min(Ecosystem.Health + 0.1f, 1.0f);
+    // Resto本e health
+    Ecosyste設置.輸入ealth = 軍Math::Min(Ecosyste設置.輸入ealth + 0.1f, 1.0f);
     
-    // Improve balance
-    Ecosystem.Balance = FMath::Min(Ecosystem.Balance + 0.05f, 1.0f);
+    // I設置p本o正e balance
+    Ecosyste設置.Balance = 軍Math::Min(Ecosyste設置.Balance + 0.05f, 1.0f);
     
-    // Boost resource regeneration in affected zones
-    for (auto& ResourcePair : Resources)
+    // Boost 本eso使本ce 本e成ene本ation in affected zones
+    fo本 (a使to& Reso使本cePai本 : Reso使本ces)
     {
-        FEnvironmentalResource& Resource = ResourcePair.Value;
+        軍En正i本on設置entalReso使本ce& Reso使本ce = Reso使本cePai本.Val使e;
         
-        for (const FEnvironmentalZone& Zone : EnvironmentalZones)
+        fo本 (const 軍En正i本on設置entalZone& Zone : En正i本on設置entalZones)
         {
-            if (Zone.EcosystemID == EcosystemID && Resource.ZoneID == Zone.ZoneID)
+            if (Zone.Ecosyste設置ID == Ecosyste設置ID && Reso使本ce.ZoneID == Zone.ZoneID)
             {
-                Resource.RegenerationRate *= 1.5f; // Boost regeneration
-                break;
+                Reso使本ce.Re成ene本ationRate *= 1.5f; // Boost 本e成ene本ation
+                b本eak;
             }
         }
     }
     
-    UE_LOG(LogTemp, Log, TEXT("Applied balancing measures to ecosystem: %s"), *EcosystemID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Applied balancin成 設置eas使本es to ecosyste設置: %s"), *Ecosyste設置ID);
 }

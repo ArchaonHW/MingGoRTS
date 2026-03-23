@@ -1,63 +1,64 @@
-出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出D出e出c出i出s出i出o出n出E出f出f出e出c出t出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出/出*出*出
-出 出*出 出決出�出X出�出�出基本出類出�出基本出
-出 出*出/出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出D出e出c出i出s出i出o出n出E出f出f出e出c出t出T出y出p出e出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出R出e出s出o出使出本出c出e出C出h出a出n出成出e出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出R出e出s出o出使出本出c出e出 出C出h出a出n出成出e出"出)出,出
-出 出 出 出 出軍出a出c出t出i出o出n出R出e出l出a出t出i出o出n出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出軍出a出c出t出i出o出n出 出R出e出l出a出t出i出o出n出"出)出,出
-出 出 出 出 出C出h出a出本出a出c出t出e出本出A出t出t出本出i出b出使出t出e出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出C出h出a出本出a出c出t出e出本出 出A出t出t出本出i出b出使出t出e出"出)出,出
-出 出 出 出 出U出n出l出o出c出k出C出o出n出t出e出n出t出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出U出n出l出o出c出k出 出C出o出n出t出e出n出t出"出)出,出
-出 出 出 出 出T出本出i出成出成出e出本出E出正出e出n出t出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出本出i出成出成出e出本出 出E出正出e出n出t出"出)出,出
-出 出 出 出 出C出使出s出t出o出設置出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出C出使出s出t出o出設置出"出)出
-出}出;出
-出
-出/出*出*出
-出 出*出 出決出�出X出�出�出基本出結出�出基本出
-出 出*出 出定出義出基本出�出�出X出�出個出決出策出選出基本出�出�出X出�出�出X出 出*出/出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出E出f出f出e出c出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出 出 出 出 出
-出 出 出 出 出/出/出 出基本出�出�出基本出I出D出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出E出f出f出e出c出t出I出d出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出基本出�出�出基本出類出�出基本出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
-出 出 出 出 出E出D出e出c出i出s出i出o出n出E出f出f出e出c出t出T出y出p出e出 出E出f出f出e出c出t出T出y出p出e出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出基本出�出�出基本出對出象出 出(出資出�出基本出類出�出X出�出�出X出�出I出D出�出基本出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出T出a出本出成出e出t出K出e出y出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出基本出�出�出X出�出�出基本出(出�出基本出�出�出為出增出�出基本出，出�出X出�出為出減出�出基本出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
-出 出 出 出 出f出l出o出a出t出 出E出f出f出e出c出t出V出a出l出使出e出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出基本出�出�出X出�出�出基本出 出(出0出基本出�出永出�出基本出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
-出 出 出 出 出f出l出o出a出t出 出D出使出本出a出t出i出o出n出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出基本出�出�出X出�出述出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
-出 出 出 出 出軍出T出e出x出t出 出E出f出f出e出c出t出D出e出s出c出本出i出p出t出i出o出n出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出基本出�出否出立出即出基本出�出�出基本出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出f出f出e出c出t出"出)出
-出 出 出 出 出b出o出o出l出 出b出I出設置出設置出e出d出i出a出t出e出;出
-出 出 出 出 出
-出 出 出 出 出軍出M出i出n出成出D出e出c出i出s出i出o出n出E出f出f出e出c出t出(出)出
-出 出 出 出 出 出 出 出 出:出 出E出f出f出e出c出t出T出y出p出e出(出E出D出e出c出i出s出i出o出n出E出f出f出e出c出t出T出y出p出e出:出:出C出使出s出t出o出設置出)出
-出 出 出 出 出 出 出 出 出,出 出E出f出f出e出c出t出V出a出l出使出e出(出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出D出使出本出a出t出i出o出n出(出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出b出I出設置出設置出e出d出i出a出t出e出(出t出本出使出e出)出
-出 出 出 出 出{出}出
-出}出;出
-出
-出
+#pragma once
+
+﻿#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "Min成DecisionEffect.成ene本ated.h"
+
+/**
+ * 決�X��基本類�基本
+ */
+UE的UM(Bl使ep本intType)
+en使設置 class EDecisionEffectType: 使int8 {
+    Reso使本ceChan成e      UMETA(Display的a設置e = "Reso使本ce Chan成e"),
+    軍actionRelation     UMETA(Display的a設置e = "軍action Relation"),
+    Cha本acte本Att本ib使te  UMETA(Display的a設置e = "Cha本acte本 Att本ib使te"),
+    UnlockContent       UMETA(Display的a設置e = "Unlock Content"),
+    T本i成成e本E正ent        UMETA(Display的a設置e = "T本i成成e本 E正ent"),
+    C使sto設置              UMETA(Display的a設置e = "C使sto設置")
+};
+
+/**
+ * 決�X��基本結�基本
+ * 定義基本��X�個決策選基本��X��X */
+USTRUCT(Bl使ep本intType)
+st本使ct MI的GSTRATEGIC下API 軍Min成DecisionEffect
+{
+    GE的ERATED下BODY()
+    
+    // 基本��基本ID
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite, Cate成o本y = "Effect")
+    軍St本in成 EffectId;
+    
+    // 基本��基本類�基本
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite, Cate成o本y = "Effect")
+    EDecisionEffectType EffectType;
+    
+    // 基本��基本對象 (資�基本類�X��X�ID�基本
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite, Cate成o本y = "Effect")
+    軍St本in成 Ta本成etKey;
+    
+    // 基本��X��基本(�基本��為增�基本，�X�為減�基本)
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite, Cate成o本y = "Effect")
+    float EffectVal使e;
+    
+    // 基本��X��基本 (0基本�永�基本
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite, Cate成o本y = "Effect")
+    float D使本ation;
+    
+    // 基本��X�述
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite, Cate成o本y = "Effect")
+    軍Text EffectDesc本iption;
+    
+    // 基本�否立即基本��基本
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite, Cate成o本y = "Effect")
+    bool bI設置設置ediate;
+    
+    軍Min成DecisionEffect()
+        : EffectType(EDecisionEffectType::C使sto設置)
+        , EffectVal使e(0.0f)
+        , D使本ation(0.0f)
+        , bI設置設置ediate(t本使e)
+    {}
+};
+

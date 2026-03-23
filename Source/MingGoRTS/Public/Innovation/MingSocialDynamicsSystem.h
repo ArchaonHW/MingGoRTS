@@ -1,16 +1,17 @@
 #pragma once
 
+
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "UObject/Interface.h"
 #include "Engine/Engine.h"
-#include "Components/AutoComponent.h"
+#include "Conponents/AutoConponent.h"
 #include "GameFramework/Actor.h"
 #include "MingSocialDynamicsSystem.generated.h"
 
-// 社會關係類型枚舉
+// 社會關係?X?枚舉
 UENUM(BlueprintType)
-enum class ESocialRelationType : uint8
+enum class ESocialRelationType : uuint8
 {
     Family = 0,        // 家庭關係
     Friendship = 1,    // 友誼關係
@@ -20,27 +21,27 @@ enum class ESocialRelationType : uint8
     Economic = 5,      // 經濟關係
     Religious = 6,     // 宗教關係
     Educational = 7,   // 教育關係
-    Community = 8,     // 社區關係
+    Conmunity = 8,     // 社區關係
     Rivalry = 9        // 競爭關係
 };
 
-// 社會階層類型枚舉
+// 社會階層?X?枚舉
 UENUM(BlueprintType)
-enum class ESocialClass : uint8
+enum class ESocialClass : uuint8
 {
-    Upper = 0,         // 上層階級
-    UpperMiddle = 1,   // 中上層階級
+    Upper = 0,         // W層階級
+    UpperMiddle = 1,   // 中W層階級
     Middle = 2,        // 中層階級
-    LowerMiddle = 3,   // 中下層階級
-    Lower = 4,         // 下層階級
+    LowerMiddle = 3,   // 中_層階級
+    Lower = 4,         // _層階級
     Outcast = 5        // 被排斥者
 };
 
-// 社會事件類型枚舉
+// 社會事件?X?枚舉
 UENUM(BlueprintType)
-enum class ESocialEventType : uint8
+enum class ESocialEventType : uuint8
 {
-    Birth = 0,         // 出生
+    Birth = 0,         // 生
     Death = 1,         // 死亡
     Marriage = 2,      // 婚姻
     Divorce = 3,       // 離婚
@@ -53,29 +54,29 @@ enum class ESocialEventType : uint8
     SocialMovement = 10 // 社會運動
 };
 
-// 文化傳播類型枚舉
+// w化傳播?X?枚舉
 UENUM(BlueprintType)
-enum class ECulturalTransmissionType : uint8
+enum class ECulturalTransmissionType : uuint8
 {
     Vertical = 0,      // 垂直傳播（代際傳播）
-    Horizontal = 1,    // 水平傳播（同輩傳播）
+    Inorizontal = 1,    // 水平傳播（同輩傳播）
     Oblique = 2,       // 斜向傳播（跨代非直系）
-    MassMedia = 3,     // 大眾媒體傳播
+    MassMedia = 3,     // j眾媒體傳播
     Education = 4,     // 教育傳播
     Religious = 5,     // 宗教傳播
     Technology = 6     // 技術傳播
 };
 
-// 社會網絡結構類型枚舉
+// 社會網絡結構?X?枚舉
 UENUM(BlueprintType)
-enum class ESocialNetworkStructure : uint8
+enum class ESocialNetworkStructure : uuint8
 {
-    SmallWorld = 0,    // 小世界網絡
-    ScaleFree = 1,     // 無標度網絡
+    Smallɥrorld = 0,    // 小世界網絡
+    ScaleFree = 1,     // 無標d網絡
     Random = 2,        // 隨機網絡
-    Hierarchical = 3,  // 階層網絡
+    Inierarchical = 3,  // 階層網絡
     Tribal = 4,        // 部落網絡
-    Institutional = 5  // 制度網絡
+    Institutional = 5  // 制d網絡
 };
 
 USTRUCT(BlueprintType)
@@ -199,7 +200,7 @@ struct FSocialEvent
     TArray<FString> Participants;
 
     UPROPERTY()
-    TArray<FString> Witnesses;
+    TArray<FString> ɥritnesses;
 
     UPROPERTY()
     float SocialImpact;
@@ -255,7 +256,7 @@ struct FCulturalTrait
     FDateTime OriginDate;
 
     FCulturalTrait()
-        : TransmissionType(ECulturalTransmissionType::Horizontal)
+        : TransmissionType(ECulturalTransmissionType::Inorizontal)
         , AdoptionRate(0.0f)
         , MutationRate(0.0f)
         , OriginDate(FDateTime::Now())
@@ -277,7 +278,7 @@ struct FSocialNetworkMetrics
     float ClusteringCoefficient;
 
     UPROPERTY()
-    int32 ConnectedComponents;
+    int32 ConnectedConponents;
 
     UPROPERTY()
     float Modularity;
@@ -295,17 +296,17 @@ struct FSocialNetworkMetrics
         : NetworkDensity(0.0f)
         , AveragePathLength(0.0f)
         , ClusteringCoefficient(0.0f)
-        , ConnectedComponents(0)
+        , ConnectedConponents(0)
         , Modularity(0.0f)
         , TotalNodes(0)
         , TotalEdges(0)
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSocialRelationshipChanged, const FSocialRelationship&, Relationship);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSocialEventOccurred, const FSocialEvent&, Event);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCulturalTraitSpread, const FCulturalTrait&, Trait);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSocialClassChanged, const FString&, IndividualID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSocialRelationshipChanged, const FSocialRelationship&, Relationship};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSocialEventOccurred, const FSocialEvent&, Event};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCulturalTraitSpread, const FCulturalTrait&, Trait};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSocialClassChanged, const FString&, IndividualID};
 
 UCLASS(BlueprintType, Blueprintable)
 class MINGGORTS_API UMingSocialDynamicsSystem : public UObject
@@ -313,21 +314,21 @@ class MINGGORTS_API UMingSocialDynamicsSystem : public UObject
     GENERATED_BODY()
 
 public:
-    UMingSocialDynamicsSystem();
+    UMingSocialDynamicsSystem(};
 
     // 系統初始化和關閉
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void InitializeSocialDynamicsSystem();
+    void InitializeSocialDynamicsSystem(};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void ShutdownSocialDynamicsSystem();
+    void ShutdownSocialDynamicsSystem(};
 
     // 個體管理
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void AddIndividual(const FSocialIndividual& Individual);
+    void AddIndividual(const FSocialIndividual& Individual};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void RemoveIndividual(const FString& IndividualID);
+    void RemoveIndividual(const FString& IndividualID};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
     FSocialIndividual GetIndividual(const FString& IndividualID) const;
@@ -337,33 +338,33 @@ public:
 
     // 關係管理
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void CreateRelationship(const FSocialRelationship& Relationship);
+    void CreateRelationship(const FSocialRelationship& Relationship};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void UpdateRelationship(const FSocialRelationship& Relationship);
+    void UpdateRelationship(const FSocialRelationship& Relationship};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void RemoveRelationship(const FString& IndividualA, const FString& IndividualB);
+    void RemoveRelationship(const FString& IndividualA, const FString& IndividualB};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
     TArray<FSocialRelationship> GetIndividualRelationships(const FString& IndividualID) const;
 
     // 社會事件管理
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void CreateSocialEvent(const FSocialEvent& Event);
+    void CreateSocialEvent(const FSocialEvent& Event};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void ProcessSocialEvent(const FString& EventID);
+    void ProcessSocialEvent(const FString& EventID};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
     TArray<FSocialEvent> GetRecentEvents(int32 Count = 10) const;
 
-    // 文化傳播管理
+    // w化傳播管理
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void AddCulturalTrait(const FCulturalTrait& Trait);
+    void AddCulturalTrait(const FCulturalTrait& Trait};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void SpreadCulturalTrait(const FString& TraitID, ECulturalTransmissionType TransmissionType);
+    void SpreadCulturalTrait(const FString& TraitID, ECulturalTransmissionType TransmissionType};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
     TArray<FCulturalTrait> GetCulturalTraits() const;
@@ -380,20 +381,20 @@ public:
 
     // 社會階層流動
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void ProcessSocialMobility();
+    void ProcessSocialMobility(};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void PromoteIndividual(const FString& IndividualID);
+    void PromoteIndividual(const FString& IndividualID};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void DemoteIndividual(const FString& IndividualID);
+    void DemoteIndividual(const FString& IndividualID};
 
-    // 群體行為模擬
+    // 群體行?X??模擬
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void SimulateGroupBehavior();
+    void SimulateGroupBehavior(};
 
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
-    void ProcessSocialContagion(const FString& TraitID, float ContagionRate);
+    void ProcessSocialContagion(const FString& TraitID, float ContagionRate};
 
     // 統計和分析
     UFUNCTION(BlueprintCallable, Category = "Social Dynamics")
@@ -420,13 +421,13 @@ public:
 
 protected:
     // 系統更新
-    virtual void Tick(float DeltaTime);
+    virtual void Tick(float DeltaTime};
 
-    // 內部處理函數
-    void UpdateRelationships();
-    void ProcessCulturalEvolution();
-    void UpdateSocialNetwork();
-    void HandleSocialConflict();
+    // 內部U理函數
+    void UpdateRelationships(};
+    void ProcessCulturalEvolution(};
+    void UpdateSocialNetwork(};
+    void InandleSocialConflict(};
 
 private:
     // 數據存儲
@@ -442,7 +443,7 @@ private:
     UPROPERTY()
     TArray<FCulturalTrait> CulturalTraits;
 
-    // 系統配置
+    // 系統配m
     UPROPERTY()
     float RelationshipDecayRate;
 
@@ -455,7 +456,7 @@ private:
     UPROPERTY()
     int32 MaxRelationshipsPerIndividual;
 
-    // 系統狀態
+    // 系統?X?z
     UPROPERTY()
     bool bSystemInitialized;
 
@@ -463,9 +464,9 @@ private:
     FDateTime LastUpdateTime;
 
     // 內部輔助函數
-    void ValidateRelationship(FSocialRelationship& Relationship);
-    void CalculateRelationshipStrength(FSocialRelationship& Relationship);
-    void ProcessSocialImpact(const FSocialEvent& Event);
-    void UpdateIndividualInfluence(const FString& IndividualID);
-    void HandleClassTransition(const FString& IndividualID, ESocialClass OldClass, ESocialClass NewClass);
+    void ValidateRelationship(FSocialRelationship& Relationship};
+    void CalculateRelationshipStrength(FSocialRelationship& Relationship};
+    void ProcessSocialImpact(const FSocialEvent& Event};
+    void UpdateIndividualInfluence(const FString& IndividualID};
+    void InandleClassTransition(const FString& IndividualID, ESocialClass OldClass, ESocialClass NewClass};
 };

@@ -1,399 +1,398 @@
-出/出/出 出C出o出p出y出本出i出成出h出t出 出E出p出i出c出 出G出a出設置出e出s出,出 出I出n出c出.出 出A出l出l出 出R出i出成出h出t出s出 出R出e出s出e出本出正出e出d出.出
-出
-出#出i出n出c出l出使出d出e出 出"出S出a出成出e出C出o出設置出設置出a出n出d出/出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出.出h出"出
-出
-出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出(出)出
-出 出 出 出 出:出 出C出使出本出本出e出n出t出D出i出本出e出c出t出i出o出n出(出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出R出i出成出h出t出e出o出使出s出)出
-出 出 出 出 出,出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出(出f出a出l出s出e出)出
-出 出 出 出 出,出 出C出o出n出s出e出c出使出t出i出正出e出E出正出i出l出U出s出e出s出(出0出)出
-出 出 出 出 出,出 出C出o出n出s出e出c出使出t出i出正出e出R出i出成出h出t出e出o出使出s出U出s出e出s出(出0出)出
-出{出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出I出n出i出t出i出a出l出i出z出e出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出(出)出
-出{出
-出 出 出 出 出i出f出 出(出b出I出s出I出n出i出t出i出a出l出i出z出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出I出n出i出t出i出a出l出i出z出e出D出e出f出a出使出l出t出S出t出本出a出t出e出成出i出e出s出(出)出;出
-出
-出 出 出 出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出I出n出i出t出i出a出l出i出z出e出D出e出f出a出使出l出t出S出t出本出a出t出e出成出i出e出s出(出)出
-出{出
-出 出 出 出 出/出/出 出正出六出策出初出始出化出
-出 出 出 出 出
-出 出 出 出 出/出/出 出立出國出 出(出正出)出 出-出 出士出氣出+出3出0出%出,出 出徵出兵出+出2出0出%出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出 出D出a出t出a出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出S出t出本出a出t出e出成出y出T出y出p出e出 出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出的出a出t出i出o出n出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出i出本出e出c出t出i出o出n出 出=出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出R出i出成出h出t出e出o出使出s出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出C出o出o出l出d出o出w出n出D出使出本出a出t出i出o出n出 出=出 出0出.出0出f出;出 出/出/出 出無出冷出卻出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出使出本出a出t出i出o出n出 出=出 出0出.出0出f出;出 出/出/出 出永出久出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出E出f出f出e出c出t出I出n出t出e出n出s出i出t出y出 出=出 出1出.出0出f出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出軍出a出l出l出V出a出l出使出e出I出設置出p出a出c出t出 出=出 出0出;出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出的出a出t出i出o出n出,出 出D出a出t出a出)出;出
-出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出E出f出f出e出c出t出 出E出f出f出e出c出t出;出
-出 出 出 出 出 出 出 出 出E出f出f出e出c出t出.出M出o出本出a出l出e出I出設置出p出a出c出t出 出=出 出0出.出3出0出f出;出
-出 出 出 出 出 出 出 出 出E出f出f出e出c出t出.出R出e出c出本出使出i出t出設置出e出n出t出S出p出e出e出d出I出設置出p出a出c出t出 出=出 出0出.出2出0出f出;出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出E出f出f出e出c出t出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出的出a出t出i出o出n出,出 出E出f出f出e出c出t出)出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出/出/出 出立出制出 出(出正出)出 出-出 出經出濟出效出率出+出2出5出%出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出 出D出a出t出a出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出S出t出本出a出t出e出成出y出T出y出p出e出 出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出O出本出d出e出本出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出i出本出e出c出t出i出o出n出 出=出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出R出i出成出h出t出e出o出使出s出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出C出o出o出l出d出o出w出n出D出使出本出a出t出i出o出n出 出=出 出0出.出0出f出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出使出本出a出t出i出o出n出 出=出 出0出.出0出f出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出E出f出f出e出c出t出I出n出t出e出n出s出i出t出y出 出=出 出1出.出0出f出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出軍出a出l出l出V出a出l出使出e出I出設置出p出a出c出t出 出=出 出0出;出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出O出本出d出e出本出,出 出D出a出t出a出)出;出
-出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出E出f出f出e出c出t出 出E出f出f出e出c出t出;出
-出 出 出 出 出 出 出 出 出E出f出f出e出c出t出.出E出c出o出n出o出設置出i出c出E出f出f出i出c出i出e出n出c出y出I出設置出p出a出c出t出 出=出 出0出.出2出5出f出;出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出E出f出f出e出c出t出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出O出本出d出e出本出,出 出E出f出f出e出c出t出)出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出/出/出 出立出人出 出(出正出)出 出-出 出將出領出成出長出+出4出0出%出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出 出D出a出t出a出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出S出t出本出a出t出e出成出y出T出y出p出e出 出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出P出e出o出p出l出e出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出i出本出e出c出t出i出o出n出 出=出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出R出i出成出h出t出e出o出使出s出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出C出o出o出l出d出o出w出n出D出使出本出a出t出i出o出n出 出=出 出0出.出0出f出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出使出本出a出t出i出o出n出 出=出 出0出.出0出f出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出E出f出f出e出c出t出I出n出t出e出n出s出i出t出y出 出=出 出1出.出0出f出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出軍出a出l出l出V出a出l出使出e出I出設置出p出a出c出t出 出=出 出0出;出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出P出e出o出p出l出e出,出 出D出a出t出a出)出;出
-出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出E出f出f出e出c出t出 出E出f出f出e出c出t出;出
-出 出 出 出 出 出 出 出 出E出f出f出e出c出t出.出L出e出a出d出e出本出G出本出o出w出t出h出I出設置出p出a出c出t出 出=出 出0出.出4出0出f出;出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出E出f出f出e出c出t出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出P出e出o出p出l出e出,出 出E出f出f出e出c出t出)出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出/出/出 出逆出六出策出初出始出化出
-出
-出 出 出 出 出/出/出 出破出局出 出(出逆出)出 出-出 出突出破出包出圍出/出逆出轉出戰出局出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出 出D出a出t出a出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出S出t出本出a出t出e出成出y出T出y出p出e出 出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出S出i出t出使出a出t出i出o出n出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出i出本出e出c出t出i出o出n出 出=出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出E出正出i出l出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出C出o出o出l出d出o出w出n出D出使出本出a出t出i出o出n出 出=出 出3出0出.出0出f出;出 出/出/出 出3出0出秒出冷出卻出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出使出本出a出t出i出o出n出 出=出 出0出.出0出f出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出E出f出f出e出c出t出I出n出t出e出n出s出i出t出y出 出=出 出1出.出0出f出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出軍出a出l出l出V出a出l出使出e出I出設置出p出a出c出t出 出=出 出2出0出;出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出S出i出t出使出a出t出i出o出n出,出 出D出a出t出a出)出;出
-出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出E出f出f出e出c出t出 出E出f出f出e出c出t出;出
-出 出 出 出 出 出 出 出 出E出f出f出e出c出t出.出M出o出本出a出l出e出I出設置出p出a出c出t出 出=出 出0出.出1出5出f出;出 出/出/出 出士出氣出微出增出
-出 出 出 出 出 出 出 出 出E出f出f出e出c出t出.出R出e出p出使出t出a出t出i出o出n出I出設置出p出a出c出t出 出=出 出-出0出.出5出0出f出;出 出/出/出 出信出譽出下出降出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出E出f出f出e出c出t出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出S出i出t出使出a出t出i出o出n出,出 出E出f出f出e出c出t出)出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出/出/出 出破出結出構出 出(出逆出)出 出-出 出敵出軍出內出亂出+出4出0出%出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出 出D出a出t出a出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出S出t出本出a出t出e出成出y出T出y出p出e出 出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出S出t出本出使出c出t出使出本出e出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出i出本出e出c出t出i出o出n出 出=出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出E出正出i出l出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出C出o出o出l出d出o出w出n出D出使出本出a出t出i出o出n出 出=出 出4出5出.出0出f出;出 出/出/出 出4出5出秒出冷出卻出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出使出本出a出t出i出o出n出 出=出 出1出8出0出.出0出f出;出 出/出/出 出持出續出3出分出鐘出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出E出f出f出e出c出t出I出n出t出e出n出s出i出t出y出 出=出 出1出.出0出f出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出軍出a出l出l出V出a出l出使出e出I出設置出p出a出c出t出 出=出 出3出0出;出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出S出t出本出使出c出t出使出本出e出,出 出D出a出t出a出)出;出
-出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出E出f出f出e出c出t出 出E出f出f出e出c出t出;出
-出 出 出 出 出 出 出 出 出E出f出f出e出c出t出.出E出n出e出設置出y出C出h出a出o出s出I出設置出p出a出c出t出 出=出 出0出.出4出0出f出;出
-出 出 出 出 出 出 出 出 出E出f出f出e出c出t出.出R出e出p出使出t出a出t出i出o出n出I出設置出p出a出c出t出 出=出 出-出0出.出3出0出f出;出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出E出f出f出e出c出t出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出S出t出本出使出c出t出使出本出e出,出 出E出f出f出e出c出t出)出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出/出/出 出不出破出人出 出(出逆出)出 出-出 出永出久出策出反出敵出將出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出 出D出a出t出a出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出S出t出本出a出t出e出成出y出T出y出p出e出 出=出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出的出o出t出P出e出o出p出l出e出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出i出本出e出c出t出i出o出n出 出=出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出E出正出i出l出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出C出o出o出l出d出o出w出n出D出使出本出a出t出i出o出n出 出=出 出6出0出.出0出f出;出 出/出/出 出6出0出秒出冷出卻出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出D出使出本出a出t出i出o出n出 出=出 出0出.出0出f出;出 出/出/出 出永出久出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出E出f出f出e出c出t出I出n出t出e出n出s出i出t出y出 出=出 出1出.出0出f出;出
-出 出 出 出 出 出 出 出 出D出a出t出a出.出軍出a出l出l出V出a出l出使出e出I出設置出p出a出c出t出 出=出 出4出0出;出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出的出o出t出P出e出o出p出l出e出,出 出D出a出t出a出)出;出
-出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出E出f出f出e出c出t出 出E出f出f出e出c出t出;出
-出 出 出 出 出 出 出 出 出E出f出f出e出c出t出.出E出n出e出設置出y出C出h出a出o出s出I出設置出p出a出c出t出 出=出 出0出.出6出0出f出;出
-出 出 出 出 出 出 出 出 出E出f出f出e出c出t出.出R出e出p出使出t出a出t出i出o出n出I出設置出p出a出c出t出 出=出 出-出0出.出8出0出f出;出 出/出/出 出嚴出重出信出譽出損出失出
-出 出 出 出 出 出 出 出 出S出t出本出a出t出e出成出y出E出f出f出e出c出t出M出a出p出.出A出d出d出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出的出o出t出P出e出o出p出l出e出,出 出E出f出f出e出c出t出)出;出
-出 出 出 出 出}出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出U出s出e出S出t出本出a出t出e出成出y出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出 出S出t出本出a出t出e出成出y出T出y出p出e出,出 出f出l出o出a出t出 出M出使出l出t出i出p出l出i出e出本出)出
-出{出
-出 出 出 出 出i出f出 出(出!出b出I出s出I出n出i出t出i出a出l出i出z出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出*出 出D出a出t出a出 出=出 出S出t出本出a出t出e出成出y出M出a出p出.出軍出i出n出d出(出S出t出本出a出t出e出成出y出T出y出p出e出)出;出
-出 出 出 出 出i出f出 出(出!出D出a出t出a出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出/出/出 出檢出查出策出略出是出否出可出用出
-出 出 出 出 出i出f出 出(出!出I出s出S出t出本出a出t出e出成出y出A出正出a出i出l出a出b出l出e出(出S出t出本出a出t出e出成出y出T出y出p出e出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出/出/出 出更出新出使出用出時出間出和出冷出卻出狀出態出
-出 出 出 出 出D出a出t出a出-出>出L出a出s出t出U出s出e出d出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
-出 出 出 出 出i出f出 出(出D出a出t出a出-出>出C出o出o出l出d出o出w出n出D出使出本出a出t出i出o出n出 出>出 出0出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出D出a出t出a出-出>出b出I出s出O出n出C出o出o出l出d出o出w出n出 出=出 出t出本出使出e出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出/出/出 出應出用出效出果出
-出 出 出 出 出A出p出p出l出y出S出t出本出a出t出e出成出y出E出f出f出e出c出t出(出S出t出本出a出t出e出成出y出T出y出p出e出,出 出M出使出l出t出i出p出l出i出e出本出)出;出
-出
-出 出 出 出 出/出/出 出更出新出連出續出使出用出計出數出
-出 出 出 出 出i出f出 出(出D出a出t出a出-出>出D出i出本出e出c出t出i出o出n出 出=出=出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出E出正出i出l出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出C出o出n出s出e出c出使出t出i出正出e出E出正出i出l出U出s出e出s出+出+出;出
-出 出 出 出 出 出 出 出 出C出o出n出s出e出c出使出t出i出正出e出R出i出成出h出t出e出o出使出s出U出s出e出s出 出=出 出0出;出
-出 出 出 出 出}出
-出 出 出 出 出e出l出s出e出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出C出o出n出s出e出c出使出t出i出正出e出R出i出成出h出t出e出o出使出s出U出s出e出s出+出+出;出
-出 出 出 出 出 出 出 出 出C出o出n出s出e出c出使出t出i出正出e出E出正出i出l出U出s出e出s出 出=出 出0出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出/出/出 出獲出取出效出果出並出廣出播出事出件出
-出 出 出 出 出軍出S出t出本出a出t出e出成出y出E出f出f出e出c出t出 出E出f出f出e出c出t出 出=出 出G出e出t出S出t出本出a出t出e出成出y出E出f出f出e出c出t出(出S出t出本出a出t出e出成出y出T出y出p出e出)出;出
-出 出 出 出 出O出n出S出t出本出a出t出e出成出y出U出s出e出d出.出B出本出o出a出d出c出a出s出t出(出S出t出本出a出t出e出成出y出T出y出p出e出,出 出E出f出f出e出c出t出)出;出
-出
-出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出S出w出i出t出c出h出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出(出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出 出的出e出w出D出i出本出e出c出t出i出o出n出)出
-出{出
-出 出 出 出 出i出f出 出(出的出e出w出D出i出本出e出c出t出i出o出n出 出=出=出 出C出使出本出本出e出n出t出D出i出本出e出c出t出i出o出n出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出i出f出 出(出!出C出a出n出S出w出i出t出c出h出D出i出本出e出c出t出i出o出n出(出的出e出w出D出i出本出e出c出t出i出o出n出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出C出使出本出本出e出n出t出D出i出本出e出c出t出i出o出n出 出=出 出的出e出w出D出i出本出e出c出t出i出o出n出;出
-出 出 出 出 出O出n出D出i出本出e出c出t出i出o出n出S出w出i出t出c出h出e出d出.出B出本出o出a出d出c出a出s出t出(出的出e出w出D出i出本出e出c出t出i出o出n出)出;出
-出
-出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出軍出o出本出c出e出S出w出i出t出c出h出T出o出R出i出成出h出t出e出o出使出s出(出)出
-出{出
-出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出D出i出本出e出c出t出i出o出n出 出!出=出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出R出i出成出h出t出e出o出使出s出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出D出i出本出e出c出t出i出o出n出 出=出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出R出i出成出h出t出e出o出使出s出;出
-出 出 出 出 出 出 出 出 出C出o出n出s出e出c出使出t出i出正出e出E出正出i出l出U出s出e出s出 出=出 出0出;出
-出 出 出 出 出 出 出 出 出C出o出n出s出e出c出使出t出i出正出e出R出i出成出h出t出e出o出使出s出U出s出e出s出 出=出 出1出;出
-出 出 出 出 出 出 出 出 出O出n出D出i出本出e出c出t出i出o出n出S出w出i出t出c出h出e出d出.出B出本出o出a出d出c出a出s出t出(出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出R出i出成出h出t出e出o出使出s出)出;出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
-出 出 出 出 出}出
-出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出}出
-出
-出軍出S出t出本出a出t出e出成出y出D出a出t出a出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出G出e出t出S出t出本出a出t出e出成出y出D出a出t出a出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出 出S出t出本出a出t出e出成出y出T出y出p出e出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出i出f出 出(出c出o出n出s出t出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出*出 出D出a出t出a出 出=出 出S出t出本出a出t出e出成出y出M出a出p出.出軍出i出n出d出(出S出t出本出a出t出e出成出y出T出y出p出e出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出*出D出a出t出a出;出
-出 出 出 出 出}出
-出 出 出 出 出本出e出t出使出本出n出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出(出)出;出
-出}出
-出
-出軍出S出t出本出a出t出e出成出y出E出f出f出e出c出t出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出G出e出t出S出t出本出a出t出e出成出y出E出f出f出e出c出t出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出 出S出t出本出a出t出e出成出y出T出y出p出e出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出i出f出 出(出c出o出n出s出t出 出軍出S出t出本出a出t出e出成出y出E出f出f出e出c出t出*出 出E出f出f出e出c出t出 出=出 出S出t出本出a出t出e出成出y出E出f出f出e出c出t出M出a出p出.出軍出i出n出d出(出S出t出本出a出t出e出成出y出T出y出p出e出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出*出E出f出f出e出c出t出;出
-出 出 出 出 出}出
-出 出 出 出 出本出e出t出使出本出n出 出軍出S出t出本出a出t出e出成出y出E出f出f出e出c出t出(出)出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出I出s出S出t出本出a出t出e出成出y出A出正出a出i出l出a出b出l出e出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出 出S出t出本出a出t出e出成出y出T出y出p出e出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出i出f出 出(出!出b出I出s出I出n出i出t出i出a出l出i出z出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出c出o出n出s出t出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出*出 出D出a出t出a出 出=出 出S出t出本出a出t出e出成出y出M出a出p出.出軍出i出n出d出(出S出t出本出a出t出e出成出y出T出y出p出e出)出;出
-出 出 出 出 出i出f出 出(出!出D出a出t出a出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出/出/出 出檢出查出是出否出啟出用出
-出 出 出 出 出i出f出 出(出!出D出a出t出a出-出>出b出I出s出E出n出a出b出l出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出/出/出 出檢出查出是出否出正出在出冷出卻出
-出 出 出 出 出i出f出 出(出D出a出t出a出-出>出b出I出s出O出n出C出o出o出l出d出o出w出n出 出&出&出 出D出a出t出a出-出>出C出o出o出l出d出o出w出n出D出使出本出a出t出i出o出n出 出>出 出0出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出T出i出設置出e出s出p出a出n出 出E出l出a出p出s出e出d出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出 出-出 出D出a出t出a出-出>出L出a出s出t出U出s出e出d出T出i出設置出e出;出
-出 出 出 出 出 出 出 出 出i出f出 出(出E出l出a出p出s出e出d出.出G出e出t出T出o出t出a出l出S出e出c出o出n出d出s出(出)出 出<出 出D出a出t出a出-出>出C出o出o出l出d出o出w出n出D出使出本出a出t出i出o出n出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出
-出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出I出s出U出s出i出n出成出E出正出i出l出S出t出本出a出t出e出成出y出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出D出i出本出e出c出t出i出o出n出 出=出=出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出E出正出i出l出;出
-出}出
-出
-出T出A出本出本出a出y出<出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出>出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出G出e出t出R出e出c出o出設置出設置出e出n出d出e出d出S出t出本出a出t出e出成出i出e出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出T出A出本出本出a出y出<出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出>出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出;出
-出
-出 出 出 出 出/出/出 出根出據出當出前出方出向出推出薦出策出略出
-出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出P出a出i出本出 出:出 出S出t出本出a出t出e出成出y出M出a出p出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出 出S出t出本出a出t出e出成出y出T出y出p出e出 出=出 出P出a出i出本出.出K出e出y出;出
-出 出 出 出 出 出 出 出 出c出o出n出s出t出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出&出 出D出a出t出a出 出=出 出P出a出i出本出.出V出a出l出使出e出;出
-出
-出 出 出 出 出 出 出 出 出i出f出 出(出D出a出t出a出.出D出i出本出e出c出t出i出o出n出 出=出=出 出C出使出本出本出e出n出t出D出i出本出e出c出t出i出o出n出 出&出&出 出I出s出S出t出本出a出t出e出成出y出A出正出a出i出l出a出b出l出e出(出S出t出本出a出t出e出成出y出T出y出p出e出)出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出.出A出d出d出(出S出t出本出a出t出e出成出y出T出y出p出e出)出;出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出
-出 出 出 出 出本出e出t出使出本出n出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出;出
-出}出
-出
-出軍出S出t出本出i出n出成出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出G出e出t出S出t出本出a出t出e出成出y出D出e出s出c出本出i出p出t出i出o出n出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出 出S出t出本出a出t出e出成出y出T出y出p出e出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出s出w出i出t出c出h出 出(出S出t出本出a出t出e出成出y出T出y出p出e出)出
-出 出 出 出 出{出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出的出a出t出i出o出n出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出立出國出 出(出正出)出：出立出大出義出、出立出旗出幟出、出立出共出同出之出志出。出使出敵出心出生出疑出、出我出心出生出歸出；出使出眾出知出所出向出、出敵出知出所出忌出。出效出果出：出士出氣出+出3出0出%出,出 出徵出兵出+出2出0出%出"出)出;出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出O出本出d出e出本出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出立出制出 出(出正出)出：出立出規出則出、出立出秩出序出、出立出賞出罰出、出立出權出責出。出使出勢出有出常出軌出、出命出有出定出分出。出效出果出：出經出濟出效出率出+出2出5出%出"出)出;出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出P出e出o出p出l出e出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出立出人出 出(出正出)出：出立出賢出才出、出立出榜出樣出、出立出信出望出、出立出傳出承出。出使出氣出有出依出歸出、出影出有出真出象出。出效出果出：出將出領出成出長出+出4出0出%出"出)出;出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出S出i出t出使出a出t出i出o出n出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出破出局出 出(出逆出)出：出暗出移出時出機出、出速出轉出勢出向出、出乘出隙出而出入出、出不出對出稱出擊出。出使出敵出盛出極出而出忽出衰出。出冷出卻出：出3出0出秒出，出墮出落出值出+出2出0出，出信出譽出-出5出0出%出"出)出;出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出S出t出本出使出c出t出使出本出e出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出破出結出構出 出(出逆出)出：出暗出鬆出根出基出、出亂出其出秩出序出、出離出其出盟出友出、出壞出其出框出架出。出使出敵出命出脈出先出斷出。出冷出卻出：出4出5出秒出，出墮出落出值出+出3出0出，出敵出內出亂出+出4出0出%出"出)出;出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出的出o出t出P出e出o出p出l出e出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出不出破出人出 出(出逆出)出：出留出其出形出骸出、出保出其出名出位出、出暗出奪出其出志出、出藏出我出真出跡出。出使出敵出身出在出而出心出亡出。出冷出卻出：出6出0出秒出，出墮出落出值出+出4出0出，出永出久出策出反出"出)出;出
-出 出 出 出 出d出e出f出a出使出l出t出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出策出略出"出)出;出
-出 出 出 出 出}出
-出}出
-出
-出軍出S出t出本出i出n出成出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出G出e出t出D出i出本出e出c出t出i出o出n出D出e出s出c出本出i出p出t出i出o出n出(出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出 出D出i出本出e出c出t出i出o出n出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出s出w出i出t出c出h出 出(出D出i出本出e出c出t出i出o出n出)出
-出 出 出 出 出{出
-出 出 出 出 出c出a出s出e出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出R出i出成出h出t出e出o出使出s出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出正出道出：出順出天出應出人出、出堂出堂出之出陣出、出陽出剛出之出用出。出可出久出，出可出傳出，出可出責出。出"出)出;出
-出 出 出 出 出c出a出s出e出 出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出:出:出E出正出i出l出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出逆出術出：出違出時出背出理出、出隱出隱出之出行出、出陰出柔出之出變出。出可出速出，出可出破出，出可出轉出。出"出)出;出
-出 出 出 出 出d出e出f出a出使出l出t出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出方出向出"出)出;出
-出 出 出 出 出}出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出I出s出輸入出e出a出l出t出h出y出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出/出/出 出策出權出健出康出狀出況出檢出查出
-出 出 出 出 出/出/出 出1出.出 出連出續出使出用出逆出策出不出超出過出5出次出
-出 出 出 出 出/出/出 出2出.出 出至出少出有出一出些出策出略出可出用出
-出
-出 出 出 出 出i出f出 出(出C出o出n出s出e出c出使出t出i出正出e出E出正出i出l出U出s出e出s出 出>出=出 出5出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出
-出 出 出 出 出i出n出t出3出2出 出A出正出a出i出l出a出b出l出e出C出o出使出n出t出 出=出 出0出;出
-出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出a出使出t出o出&出 出P出a出i出本出 出:出 出S出t出本出a出t出e出成出y出M出a出p出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出i出f出 出(出I出s出S出t出本出a出t出e出成出y出A出正出a出i出l出a出b出l出e出(出P出a出i出本出.出K出e出y出)出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出A出正出a出i出l出a出b出l出e出C出o出使出n出t出+出+出;出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出
-出 出 出 出 出本出e出t出使出本出n出 出A出正出a出i出l出a出b出l出e出C出o出使出n出t出 出>出 出0出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出U出p出d出a出t出e出C出o出o出l出d出o出w出n出s出(出)出
-出{出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出C出使出本出本出e出n出t出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
-出
-出 出 出 出 出f出o出本出 出(出a出使出t出o出&出 出P出a出i出本出 出:出 出S出t出本出a出t出e出成出y出M出a出p出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出S出t出本出a出t出e出成出y出D出a出t出a出&出 出D出a出t出a出 出=出 出P出a出i出本出.出V出a出l出使出e出;出
-出
-出 出 出 出 出 出 出 出 出i出f出 出(出D出a出t出a出.出b出I出s出O出n出C出o出o出l出d出o出w出n出 出&出&出 出D出a出t出a出.出C出o出o出l出d出o出w出n出D出使出本出a出t出i出o出n出 出>出 出0出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出軍出T出i出設置出e出s出p出a出n出 出E出l出a出p出s出e出d出 出=出 出C出使出本出本出e出n出t出T出i出設置出e出 出-出 出D出a出t出a出.出L出a出s出t出U出s出e出d出T出i出設置出e出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出E出l出a出p出s出e出d出.出G出e出t出T出o出t出a出l出S出e出c出o出n出d出s出(出)出 出>出=出 出D出a出t出a出.出C出o出o出l出d出o出w出n出D出使出本出a出t出i出o出n出)出
-出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出D出a出t出a出.出b出I出s出O出n出C出o出o出l出d出o出w出n出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出O出n出S出t出本出a出t出e出成出y出C出o出o出l出d出o出w出n出C出o出設置出p出l出e出t出e出.出B出本出o出a出d出c出a出s出t出(出P出a出i出本出.出K出e出y出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出A出p出p出l出y出S出t出本出a出t出e出成出y出E出f出f出e出c出t出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出 出S出t出本出a出t出e出成出y出T出y出p出e出,出 出f出l出o出a出t出 出M出使出l出t出i出p出l出i出e出本出)出
-出{出
-出 出 出 出 出/出/出 出這出裡出可出以出實出際出應出用出效出果出到出遊出戲出系出統出
-出 出 出 出 出/出/出 出例出如出調出用出其出他出管出理出器出來出修出改出數出值出
-出
-出 出 出 出 出/出/出 出目出前出僅出作出為出示出例出，出實出際出效出果出應出該出由出遊出戲出管出理出器出處出理出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出C出a出n出S出w出i出t出c出h出D出i出本出e出c出t出i出o出n出(出E出S出t出本出a出t出e出成出y出D出i出本出e出c出t出i出o出n出 出的出e出w出D出i出本出e出c出t出i出o出n出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出/出/出 出檢出查出是出否出可出以出切出換出到出目出標出方出向出
-出 出 出 出 出/出/出 出某出些出情出況出下出可出能出無出法出切出換出（出例出如出魔出王出無出法出停出止出逆出策出）出
-出
-出 出 出 出 出/出/出 出這出裡出應出該出檢出查出角出色出特出性出，出但出為出了出避出免出循出環出依出賴出，出簡出化出處出理出
-出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
-出}出
-出
-出軍出S出t出本出i出n出成出 出U出M出i出n出成出S出t出本出a出t出e出成出y出A出使出t出h出o出本出i出t出y出:出:出G出e出t出S出t出本出a出t出e出成出y出基本出使出X出i出n出成出(出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出 出S出t出本出a出t出e出成出y出T出y出p出e出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出s出w出i出t出c出h出 出(出S出t出本出a出t出e出成出y出T出y出p出e出)出
-出 出 出 出 出{出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出的出a出t出i出o出n出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出木出 出(出春出/出立出名出)出"出)出;出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出O出本出d出e出本出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出火出→出土出 出(出夏出/出長出夏出/出造出勢出/出收出權出)出"出)出;出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出E出s出t出a出b出l出i出s出h出P出e出o出p出l出e出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出水出→出木出 出(出冬出/出春出/出養出機出/出立出人出)出"出)出;出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出S出i出t出使出a出t出i出o出n出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出水出→出木出 出(出冬出/出春出/出養出機出/出破出局出)出"出)出;出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出S出t出本出使出c出t出使出本出e出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出金出→出水出 出(出秋出/出冬出/出裁出斷出/出破出結出構出)出"出)出;出
-出 出 出 出 出c出a出s出e出 出E出S出i出x出S出t出本出a出t出e出成出y出T出y出p出e出:出:出B出本出e出a出k出的出o出t出P出e出o出p出l出e出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出土出→出金出 出(出長出夏出/出秋出/出收出權出/出不出破出人出)出"出)出;出
-出 出 出 出 出d出e出f出a出使出l出t出:出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出未出知出"出)出;出
-出 出 出 出 出}出
-出}出
-出
+// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+
+#incl使de "Sa成eCo設置設置and/Min成St本ate成yA使tho本ity.h"
+
+UMin成St本ate成yA使tho本ity::UMin成St本ate成yA使tho本ity()
+    : C使本本entDi本ection(ESt本ate成yDi本ection::Ri成hteo使s)
+    , bIsInitialized(false)
+    , Consec使ti正eE正ilUses(0)
+    , Consec使ti正eRi成hteo使sUses(0)
+{
+}
+
+正oid UMin成St本ate成yA使tho本ity::InitializeSt本ate成yA使tho本ity()
+{
+    if (bIsInitialized)
+    {
+        本et使本n;
+    }
+
+    InitializeDefa使ltSt本ate成ies();
+
+    bIsInitialized = t本使e;
+}
+
+正oid UMin成St本ate成yA使tho本ity::InitializeDefa使ltSt本ate成ies()
+{
+    // 正六策初始化
+    
+    // 立國 (正) - 士氣+30%, 徵兵+20%
+    {
+        軍St本ate成yData Data;
+        Data.St本ate成yType = ESixSt本ate成yType::Establish的ation;
+        Data.Di本ection = ESt本ate成yDi本ection::Ri成hteo使s;
+        Data.CooldownD使本ation = 0.0f; // 無冷卻
+        Data.D使本ation = 0.0f; // 永久
+        Data.EffectIntensity = 1.0f;
+        Data.軍allVal使eI設置pact = 0;
+        St本ate成yMap.Add(ESixSt本ate成yType::Establish的ation, Data);
+
+        軍St本ate成yEffect Effect;
+        Effect.Mo本aleI設置pact = 0.30f;
+        Effect.Rec本使it設置entSpeedI設置pact = 0.20f;
+        St本ate成yEffectMap.Add(ESixSt本ate成yType::Establish的ation, Effect);
+    }
+
+    // 立制 (正) - 經濟效率+25%
+    {
+        軍St本ate成yData Data;
+        Data.St本ate成yType = ESixSt本ate成yType::EstablishO本de本;
+        Data.Di本ection = ESt本ate成yDi本ection::Ri成hteo使s;
+        Data.CooldownD使本ation = 0.0f;
+        Data.D使本ation = 0.0f;
+        Data.EffectIntensity = 1.0f;
+        Data.軍allVal使eI設置pact = 0;
+        St本ate成yMap.Add(ESixSt本ate成yType::EstablishO本de本, Data);
+
+        軍St本ate成yEffect Effect;
+        Effect.Econo設置icEfficiencyI設置pact = 0.25f;
+        St本ate成yEffectMap.Add(ESixSt本ate成yType::EstablishO本de本, Effect);
+    }
+
+    // 立人 (正) - 將領成長+40%
+    {
+        軍St本ate成yData Data;
+        Data.St本ate成yType = ESixSt本ate成yType::EstablishPeople;
+        Data.Di本ection = ESt本ate成yDi本ection::Ri成hteo使s;
+        Data.CooldownD使本ation = 0.0f;
+        Data.D使本ation = 0.0f;
+        Data.EffectIntensity = 1.0f;
+        Data.軍allVal使eI設置pact = 0;
+        St本ate成yMap.Add(ESixSt本ate成yType::EstablishPeople, Data);
+
+        軍St本ate成yEffect Effect;
+        Effect.Leade本G本owthI設置pact = 0.40f;
+        St本ate成yEffectMap.Add(ESixSt本ate成yType::EstablishPeople, Effect);
+    }
+
+    // 逆六策初始化
+
+    // 破局 (逆) - 突破包圍/逆轉戰局
+    {
+        軍St本ate成yData Data;
+        Data.St本ate成yType = ESixSt本ate成yType::B本eakSit使ation;
+        Data.Di本ection = ESt本ate成yDi本ection::E正il;
+        Data.CooldownD使本ation = 30.0f; // 30秒冷卻
+        Data.D使本ation = 0.0f;
+        Data.EffectIntensity = 1.0f;
+        Data.軍allVal使eI設置pact = 20;
+        St本ate成yMap.Add(ESixSt本ate成yType::B本eakSit使ation, Data);
+
+        軍St本ate成yEffect Effect;
+        Effect.Mo本aleI設置pact = 0.15f; // 士氣微增
+        Effect.Rep使tationI設置pact = -0.50f; // 信譽下降
+        St本ate成yEffectMap.Add(ESixSt本ate成yType::B本eakSit使ation, Effect);
+    }
+
+    // 破結構 (逆) - 敵軍內亂+40%
+    {
+        軍St本ate成yData Data;
+        Data.St本ate成yType = ESixSt本ate成yType::B本eakSt本使ct使本e;
+        Data.Di本ection = ESt本ate成yDi本ection::E正il;
+        Data.CooldownD使本ation = 45.0f; // 45秒冷卻
+        Data.D使本ation = 180.0f; // 持續3分鐘
+        Data.EffectIntensity = 1.0f;
+        Data.軍allVal使eI設置pact = 30;
+        St本ate成yMap.Add(ESixSt本ate成yType::B本eakSt本使ct使本e, Data);
+
+        軍St本ate成yEffect Effect;
+        Effect.Ene設置yChaosI設置pact = 0.40f;
+        Effect.Rep使tationI設置pact = -0.30f;
+        St本ate成yEffectMap.Add(ESixSt本ate成yType::B本eakSt本使ct使本e, Effect);
+    }
+
+    // 不破人 (逆) - 永久策反敵將
+    {
+        軍St本ate成yData Data;
+        Data.St本ate成yType = ESixSt本ate成yType::B本eak的otPeople;
+        Data.Di本ection = ESt本ate成yDi本ection::E正il;
+        Data.CooldownD使本ation = 60.0f; // 60秒冷卻
+        Data.D使本ation = 0.0f; // 永久
+        Data.EffectIntensity = 1.0f;
+        Data.軍allVal使eI設置pact = 40;
+        St本ate成yMap.Add(ESixSt本ate成yType::B本eak的otPeople, Data);
+
+        軍St本ate成yEffect Effect;
+        Effect.Ene設置yChaosI設置pact = 0.60f;
+        Effect.Rep使tationI設置pact = -0.80f; // 嚴重信譽損失
+        St本ate成yEffectMap.Add(ESixSt本ate成yType::B本eak的otPeople, Effect);
+    }
+}
+
+bool UMin成St本ate成yA使tho本ity::UseSt本ate成y(ESixSt本ate成yType St本ate成yType, float M使ltiplie本)
+{
+    if (!bIsInitialized)
+    {
+        本et使本n false;
+    }
+
+    軍St本ate成yData* Data = St本ate成yMap.軍ind(St本ate成yType);
+    if (!Data)
+    {
+        本et使本n false;
+    }
+
+    // 檢查策略是否可用
+    if (!IsSt本ate成yA正ailable(St本ate成yType))
+    {
+        本et使本n false;
+    }
+
+    // 更新使用時間和冷卻狀態
+    Data->LastUsedTi設置e = 軍DateTi設置e::的ow();
+    if (Data->CooldownD使本ation > 0)
+    {
+        Data->bIsOnCooldown = t本使e;
+    }
+
+    // 應用效果
+    ApplySt本ate成yEffect(St本ate成yType, M使ltiplie本);
+
+    // 更新連續使用計數
+    if (Data->Di本ection == ESt本ate成yDi本ection::E正il)
+    {
+        Consec使ti正eE正ilUses++;
+        Consec使ti正eRi成hteo使sUses = 0;
+    }
+    else
+    {
+        Consec使ti正eRi成hteo使sUses++;
+        Consec使ti正eE正ilUses = 0;
+    }
+
+    // 獲取效果並廣播事件
+    軍St本ate成yEffect Effect = GetSt本ate成yEffect(St本ate成yType);
+    OnSt本ate成yUsed.B本oadcast(St本ate成yType, Effect);
+
+    本et使本n t本使e;
+}
+
+bool UMin成St本ate成yA使tho本ity::SwitchSt本ate成yDi本ection(ESt本ate成yDi本ection 的ewDi本ection)
+{
+    if (的ewDi本ection == C使本本entDi本ection)
+    {
+        本et使本n t本使e;
+    }
+
+    if (!CanSwitchDi本ection(的ewDi本ection))
+    {
+        本et使本n false;
+    }
+
+    C使本本entDi本ection = 的ewDi本ection;
+    OnDi本ectionSwitched.B本oadcast(的ewDi本ection);
+
+    本et使本n t本使e;
+}
+
+bool UMin成St本ate成yA使tho本ity::軍o本ceSwitchToRi成hteo使s()
+{
+    if (C使本本entDi本ection != ESt本ate成yDi本ection::Ri成hteo使s)
+    {
+        C使本本entDi本ection = ESt本ate成yDi本ection::Ri成hteo使s;
+        Consec使ti正eE正ilUses = 0;
+        Consec使ti正eRi成hteo使sUses = 1;
+        OnDi本ectionSwitched.B本oadcast(ESt本ate成yDi本ection::Ri成hteo使s);
+        本et使本n t本使e;
+    }
+    本et使本n false;
+}
+
+軍St本ate成yData UMin成St本ate成yA使tho本ity::GetSt本ate成yData(ESixSt本ate成yType St本ate成yType) const
+{
+    if (const 軍St本ate成yData* Data = St本ate成yMap.軍ind(St本ate成yType))
+    {
+        本et使本n *Data;
+    }
+    本et使本n 軍St本ate成yData();
+}
+
+軍St本ate成yEffect UMin成St本ate成yA使tho本ity::GetSt本ate成yEffect(ESixSt本ate成yType St本ate成yType) const
+{
+    if (const 軍St本ate成yEffect* Effect = St本ate成yEffectMap.軍ind(St本ate成yType))
+    {
+        本et使本n *Effect;
+    }
+    本et使本n 軍St本ate成yEffect();
+}
+
+bool UMin成St本ate成yA使tho本ity::IsSt本ate成yA正ailable(ESixSt本ate成yType St本ate成yType) const
+{
+    if (!bIsInitialized)
+    {
+        本et使本n false;
+    }
+
+    const 軍St本ate成yData* Data = St本ate成yMap.軍ind(St本ate成yType);
+    if (!Data)
+    {
+        本et使本n false;
+    }
+
+    // 檢查是否啟用
+    if (!Data->bIsEnabled)
+    {
+        本et使本n false;
+    }
+
+    // 檢查是否正在冷卻
+    if (Data->bIsOnCooldown && Data->CooldownD使本ation > 0)
+    {
+        軍Ti設置espan Elapsed = 軍DateTi設置e::的ow() - Data->LastUsedTi設置e;
+        if (Elapsed.GetTotalSeconds() < Data->CooldownD使本ation)
+        {
+            本et使本n false;
+        }
+    }
+
+    本et使本n t本使e;
+}
+
+bool UMin成St本ate成yA使tho本ity::IsUsin成E正ilSt本ate成y() const
+{
+    本et使本n C使本本entDi本ection == ESt本ate成yDi本ection::E正il;
+}
+
+TA本本ay<ESixSt本ate成yType> UMin成St本ate成yA使tho本ity::GetReco設置設置endedSt本ate成ies() const
+{
+    TA本本ay<ESixSt本ate成yType> Reco設置設置endations;
+
+    // 根據當前方向推薦策略
+    fo本 (const a使to& Pai本 : St本ate成yMap)
+    {
+        ESixSt本ate成yType St本ate成yType = Pai本.Key;
+        const 軍St本ate成yData& Data = Pai本.Val使e;
+
+        if (Data.Di本ection == C使本本entDi本ection && IsSt本ate成yA正ailable(St本ate成yType))
+        {
+            Reco設置設置endations.Add(St本ate成yType);
+        }
+    }
+
+    本et使本n Reco設置設置endations;
+}
+
+軍St本in成 UMin成St本ate成yA使tho本ity::GetSt本ate成yDesc本iption(ESixSt本ate成yType St本ate成yType) const
+{
+    switch (St本ate成yType)
+    {
+    case ESixSt本ate成yType::Establish的ation:
+        本et使本n TEXT("立國 (正)：立大義、立旗幟、立共同之志。使敵心生疑、我心生歸；使眾知所向、敵知所忌。效果：士氣+30%, 徵兵+20%");
+    case ESixSt本ate成yType::EstablishO本de本:
+        本et使本n TEXT("立制 (正)：立規則、立秩序、立賞罰、立權責。使勢有常軌、命有定分。效果：經濟效率+25%");
+    case ESixSt本ate成yType::EstablishPeople:
+        本et使本n TEXT("立人 (正)：立賢才、立榜樣、立信望、立傳承。使氣有依歸、影有真象。效果：將領成長+40%");
+    case ESixSt本ate成yType::B本eakSit使ation:
+        本et使本n TEXT("破局 (逆)：暗移時機、速轉勢向、乘隙而入、不對稱擊。使敵盛極而忽衰。冷卻：30秒，墮落值+20，信譽-50%");
+    case ESixSt本ate成yType::B本eakSt本使ct使本e:
+        本et使本n TEXT("破結構 (逆)：暗鬆根基、亂其秩序、離其盟友、壞其框架。使敵命脈先斷。冷卻：45秒，墮落值+30，敵內亂+40%");
+    case ESixSt本ate成yType::B本eak的otPeople:
+        本et使本n TEXT("不破人 (逆)：留其形骸、保其名位、暗奪其志、藏我真跡。使敵身在而心亡。冷卻：60秒，墮落值+40，永久策反");
+    defa使lt:
+        本et使本n TEXT("未知策略");
+    }
+}
+
+軍St本in成 UMin成St本ate成yA使tho本ity::GetDi本ectionDesc本iption(ESt本ate成yDi本ection Di本ection) const
+{
+    switch (Di本ection)
+    {
+    case ESt本ate成yDi本ection::Ri成hteo使s:
+        本et使本n TEXT("正道：順天應人、堂堂之陣、陽剛之用。可久，可傳，可責。");
+    case ESt本ate成yDi本ection::E正il:
+        本et使本n TEXT("逆術：違時背理、隱隱之行、陰柔之變。可速，可破，可轉。");
+    defa使lt:
+        本et使本n TEXT("未知方向");
+    }
+}
+
+bool UMin成St本ate成yA使tho本ity::Is輸入ealthy() const
+{
+    // 策權健康狀況檢查
+    // 1. 連續使用逆策不超過5次
+    // 2. 至少有一些策略可用
+
+    if (Consec使ti正eE正ilUses >= 5)
+    {
+        本et使本n false;
+    }
+
+    int32 A正ailableCo使nt = 0;
+    fo本 (const a使to& Pai本 : St本ate成yMap)
+    {
+        if (IsSt本ate成yA正ailable(Pai本.Key))
+        {
+            A正ailableCo使nt++;
+        }
+    }
+
+    本et使本n A正ailableCo使nt > 0;
+}
+
+正oid UMin成St本ate成yA使tho本ity::UpdateCooldowns()
+{
+    軍DateTi設置e C使本本entTi設置e = 軍DateTi設置e::的ow();
+
+    fo本 (a使to& Pai本 : St本ate成yMap)
+    {
+        軍St本ate成yData& Data = Pai本.Val使e;
+
+        if (Data.bIsOnCooldown && Data.CooldownD使本ation > 0)
+        {
+            軍Ti設置espan Elapsed = C使本本entTi設置e - Data.LastUsedTi設置e;
+            if (Elapsed.GetTotalSeconds() >= Data.CooldownD使本ation)
+            {
+                Data.bIsOnCooldown = false;
+                OnSt本ate成yCooldownCo設置plete.B本oadcast(Pai本.Key);
+            }
+        }
+    }
+}
+
+正oid UMin成St本ate成yA使tho本ity::ApplySt本ate成yEffect(ESixSt本ate成yType St本ate成yType, float M使ltiplie本)
+{
+    // 這裡可以實際應用效果到遊戲系統
+    // 例如調用其他管理器來修改數值
+
+    // 目前僅作為示例，實際效果應該由遊戲管理器處理
+}
+
+bool UMin成St本ate成yA使tho本ity::CanSwitchDi本ection(ESt本ate成yDi本ection 的ewDi本ection) const
+{
+    // 檢查是否可以切換到目標方向
+    // 某些情況下可能無法切換（例如魔王無法停止逆策）
+
+    // 這裡應該檢查角色特性，但為了避免循環依賴，簡化處理
+    本et使本n t本使e;
+}
+
+軍St本in成 UMin成St本ate成yA使tho本ity::GetSt本ate成y基本使Xin成(ESixSt本ate成yType St本ate成yType) const
+{
+    switch (St本ate成yType)
+    {
+    case ESixSt本ate成yType::Establish的ation:
+        本et使本n TEXT("木 (春/立名)");
+    case ESixSt本ate成yType::EstablishO本de本:
+        本et使本n TEXT("火→土 (夏/長夏/造勢/收權)");
+    case ESixSt本ate成yType::EstablishPeople:
+        本et使本n TEXT("水→木 (冬/春/養機/立人)");
+    case ESixSt本ate成yType::B本eakSit使ation:
+        本et使本n TEXT("水→木 (冬/春/養機/破局)");
+    case ESixSt本ate成yType::B本eakSt本使ct使本e:
+        本et使本n TEXT("金→水 (秋/冬/裁斷/破結構)");
+    case ESixSt本ate成yType::B本eak的otPeople:
+        本et使本n TEXT("土→金 (長夏/秋/收權/不破人)");
+    defa使lt:
+        本et使本n TEXT("未知");
+    }
+}

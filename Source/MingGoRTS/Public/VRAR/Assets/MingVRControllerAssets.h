@@ -1,212 +1,212 @@
-出/出/出 出V出R出 出C出o出n出t出本出o出l出l出e出本出 出A出s出s出e出t出 出D出e出f出i出n出i出t出i出o出n出s出 出f出o出本出 出M出i出n出成出G出o出R出T出S出
-出/出/出 出E出p出i出c出 出9出.出1出:出 出V出R出/出A出R出 出S出使出p出p出o出本出t出 出S出y出s出t出e出設置出 出-出 出V出R出 出C出o出n出t出本出o出l出l出e出本出 出A出s出s出e出t出s出
-出/出/出 出T出h出i出s出 出f出i出l出e出 出d出e出f出i出n出e出s出 出t出h出e出 出正出i出s出使出a出l出 出a出s出s出e出t出s出 出f出o出本出 出V出R出 出c出o出n出t出本出o出l出l出e出本出s出
-出
-出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出D出a出t出a出A出s出s出e出t出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出V出R出C出o出n出t出本出o出l出l出e出本出A出s出s出e出t出s出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出/出*出*出
-出 出*出 出V出R出 出C出o出n出t出本出o出l出l出e出本出 出B出使出t出t出o出n出 出T出y出p出e出s出
-出 出*出/出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出V出R出C出o出n出t出本出o出l出l出e出本出B出使出t出t出o出n出T出y出p出e出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出T出本出i出成出成出e出本出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出本出i出成出成出e出本出"出)出,出
-出 出 出 出 出G出本出i出p出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出G出本出i出p出"出)出,出
-出 出 出 出 出T出h出使出設置出b出s出t出i出c出k出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出h出使出設置出b出s出t出i出c出k出"出)出,出
-出 出 出 出 出P出本出i出設置出a出本出y出B出使出t出t出o出n出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出P出本出i出設置出a出本出y出 出B出使出t出t出o出n出"出)出,出
-出 出 出 出 出S出e出c出o出n出d出a出本出y出B出使出t出t出o出n出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出S出e出c出o出n出d出a出本出y出 出B出使出t出t出o出n出"出)出,出
-出 出 出 出 出M出e出n出使出B出使出t出t出o出n出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出M出e出n出使出 出B出使出t出t出o出n出"出)出,出
-出 出 出 出 出S出y出s出t出e出設置出B出使出t出t出o出n出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出S出y出s出t出e出設置出 出B出使出t出t出o出n出"出)出,出
-出 出 出 出 出T出o出使出c出h出p出a出d出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出o出使出c出h出p出a出d出"出)出
-出}出;出
-出
-出/出*出*出
-出 出*出 出V出R出 出C出o出n出t出本出o出l出l出e出本出 出P出a出本出t出 出T出y出p出e出s出
-出 出*出/出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出V出R出C出o出n出t出本出o出l出l出e出本出P出a出本出t出T出y出p出e出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出B出o出d出y出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出B出o出d出y出"出)出,出
-出 出 出 出 出G出本出i出p出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出G出本出i出p出"出)出,出
-出 出 出 出 出B出使出t出t出o出n出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出B出使出t出t出o出n出"出)出,出
-出 出 出 出 出T出本出i出成出成出e出本出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出本出i出成出成出e出本出"出)出,出
-出 出 出 出 出T出h出使出設置出b出s出t出i出c出k出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出h出使出設置出b出s出t出i出c出k出"出)出,出
-出 出 出 出 出T出o出使出c出h出p出a出d出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出o出使出c出h出p出a出d出"出)出,出
-出 出 出 出 出L出E出D出 出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出L出E出D出"出)出,出
-出 出 出 出 出T出本出a出c出k出i出n出成出S出e出n出s出o出本出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出T出本出a出c出k出i出n出成出 出S出e出n出s出o出本出"出)出
-出}出;出
-出
-出/出*出*出
-出 出*出 出V出R出 出C出o出n出t出本出o出l出l出e出本出 出V出i出s出使出a出l出 出C出o出n出f出i出成出使出本出a出t出i出o出n出
-出 出*出/出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出V出R出C出o出n出t出本出o出l出l出e出本出V出i出s出使出a出l出C出o出n出f出i出成出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出/出/出 出M出e出s出h出 出A出s出s出e出t出s出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出e出s出h出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出S出t出a出t出i出c出M出e出s出h出>出 出B出o出d出y出M出e出s出h出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出e出s出h出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出S出t出a出t出i出c出M出e出s出h出>出 出G出本出i出p出M出e出s出h出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出e出s出h出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出S出t出a出t出i出c出M出e出s出h出>出 出T出本出i出成出成出e出本出M出e出s出h出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出e出s出h出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出S出t出a出t出i出c出M出e出s出h出>出 出T出h出使出設置出b出s出t出i出c出k出M出e出s出h出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出e出s出h出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出S出t出a出t出i出c出M出e出s出h出>出 出B出使出t出t出o出n出M出e出s出h出;出
-出
-出 出 出 出 出/出/出 出M出a出t出e出本出i出a出l出s出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出a出t出e出本出i出a出l出s出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出M出a出t出e出本出i出a出l出I出n出t出e出本出f出a出c出e出>出 出B出o出d出y出M出a出t出e出本出i出a出l出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出a出t出e出本出i出a出l出s出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出M出a出t出e出本出i出a出l出I出n出t出e出本出f出a出c出e出>出 出G出本出i出p出M出a出t出e出本出i出a出l出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出a出t出e出本出i出a出l出s出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出M出a出t出e出本出i出a出l出I出n出t出e出本出f出a出c出e出>出 出B出使出t出t出o出n出M出a出t出e出本出i出a出l出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出a出t出e出本出i出a出l出s出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出M出a出t出e出本出i出a出l出I出n出t出e出本出f出a出c出e出>出 出L出E出D出M出a出t出e出本出i出a出l出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出a出t出e出本出i出a出l出s出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出M出a出t出e出本出i出a出l出I出n出t出e出本出f出a出c出e出>出 出輸入出i出成出h出l出i出成出h出t出M出a出t出e出本出i出a出l出;出
-出
-出 出 出 出 出/出/出 出C出o出l出o出本出s出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出l出o出本出s出"出)出
-出 出 出 出 出軍出L出i出n出e出a出本出C出o出l出o出本出 出B出o出d出y出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出0出.出2出f出,出 出0出.出2出f出,出 出0出.出2出f出,出 出1出.出0出f出)出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出l出o出本出s出"出)出
-出 出 出 出 出軍出L出i出n出e出a出本出C出o出l出o出本出 出G出本出i出p出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出0出.出1出5出f出,出 出0出.出1出5出f出,出 出0出.出1出5出f出,出 出1出.出0出f出)出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出l出o出本出s出"出)出
-出 出 出 出 出軍出L出i出n出e出a出本出C出o出l出o出本出 出B出使出t出t出o出n出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出0出.出3出f出,出 出0出.出3出f出,出 出0出.出3出f出,出 出1出.出0出f出)出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出l出o出本出s出"出)出
-出 出 出 出 出軍出L出i出n出e出a出本出C出o出l出o出本出 出L出E出D出A出c出t出i出正出e出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出0出.出0出f出,出 出1出.出0出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出l出o出本出s出"出)出
-出 出 出 出 出軍出L出i出n出e出a出本出C出o出l出o出本出 出L出E出D出I出n出a出c出t出i出正出e出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出0出.出1出f出,出 出0出.出1出f出,出 出0出.出1出f出,出 出1出.出0出f出)出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出l出o出本出s出"出)出
-出 出 出 出 出軍出L出i出n出e出a出本出C出o出l出o出本出 出輸入出i出成出h出l出i出成出h出t出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出0出.出0出f出,出 出0出.出8出f出,出 出1出.出0出f出,出 出1出.出0出f出)出;出
-出
-出 出 出 出 出/出/出 出S出c出a出l出e出 出a出n出d出 出T出本出a出n出s出f出o出本出設置出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出本出a出n出s出f出o出本出設置出"出)出
-出 出 出 出 出軍出V出e出c出t出o出本出 出M出e出s出h出S出c出a出l出e出 出=出 出軍出V出e出c出t出o出本出(出1出.出0出f出,出 出1出.出0出f出,出 出1出.出0出f出)出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出本出a出n出s出f出o出本出設置出"出)出
-出 出 出 出 出軍出V出e出c出t出o出本出 出G出本出i出p出O出f出f出s出e出t出 出=出 出軍出V出e出c出t出o出本出(出0出.出0出f出,出 出0出.出0出f出,出 出0出.出0出f出)出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出T出本出a出n出s出f出o出本出設置出"出)出
-出 出 出 出 出軍出R出o出t出a出t出o出本出 出G出本出i出p出R出o出t出a出t出i出o出n出 出=出 出軍出R出o出t出a出t出o出本出(出0出.出0出f出,出 出0出.出0出f出,出 出0出.出0出f出)出;出
-出
-出 出 出 出 出/出/出 出A出n出i出設置出a出t出i出o出n出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出n出i出設置出a出t出i出o出n出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出A出n出i出設置出B出l出使出e出p出本出i出n出t出>出 出C出o出n出t出本出o出l出l出e出本出A出n出i出設置出B出l出使出e出p出本出i出n出t出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出n出i出設置出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出T出本出i出成出成出e出本出A出n出i出設置出a出t出i出o出n出R出a出n出成出e出 出=出 出1出5出.出0出f出;出 出/出/出 出d出e出成出本出e出e出s出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出n出i出設置出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出G出本出i出p出A出n出i出設置出a出t出i出o出n出R出a出n出成出e出 出=出 出1出0出.出0出f出;出 出/出/出 出d出e出成出本出e出e出s出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出A出n出i出設置出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出B出使出t出t出o出n出P出本出e出s出s出D出e出p出t出h出 出=出 出2出.出0出f出;出 出/出/出 出設置出設置出
-出
-出 出 出 出 出/出/出 出輸入出a出p出t出i出c出 出軍出e出e出d出b出a出c出k出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出輸入出a出p出t出i出c出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出軍出e出e出d出b出a出c出k出E出f出f出e出c出t出>出 出D出e出f出a出使出l出t出輸入出a出p出t出i出c出E出f出f出e出c出t出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出輸入出a出p出t出i出c出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出軍出e出e出d出b出a出c出k出E出f出f出e出c出t出>出 出S出e出l出e出c出t出i出o出n出輸入出a出p出t出i出c出E出f出f出e出c出t出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出輸入出a出p出t出i出c出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出軍出e出e出d出b出a出c出k出E出f出f出e出c出t出>出 出E出本出本出o出本出輸入出a出p出t出i出c出E出f出f出e出c出t出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出輸入出a出p出t出i出c出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出軍出e出e出d出b出a出c出k出E出f出f出e出c出t出>出 出S出使出c出c出e出s出s出輸入出a出p出t出i出c出E出f出f出e出c出t出;出
-出}出;出
-出
-出/出*出*出
-出 出*出 出V出R出 出C出o出n出t出本出o出l出l出e出本出 出A出s出s出e出t出 出D出e出f出i出n出i出t出i出o出n出
-出 出*出 出P出本出i出設置出a出本出y出 出a出s出s出e出t出 出f出o出本出 出V出R出 出c出o出n出t出本出o出l出l出e出本出 出正出i出s出使出a出l出 出c出o出n出f出i出成出使出本出a出t出i出o出n出
-出 出*出/出
-出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出c出l出a出s出s出 出M出I出的出G出R出T出S出下出A出P出I出 出U出M出i出n出成出V出R出C出o出n出t出本出o出l出l出e出本出A出s出s出e出t出s出 出:出 出p出使出b出l出i出c出 出U出D出a出t出a出A出s出s出e出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出/出/出 出D出e出f出a出使出l出t出 出C出o出n出t出本出o出l出l出e出本出 出C出o出n出f出i出成出使出本出a出t出i出o出n出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出V出R出 出C出o出n出t出本出o出l出l出e出本出"出)出
-出 出 出 出 出軍出V出R出C出o出n出t出本出o出l出l出e出本出V出i出s出使出a出l出C出o出n出f出i出成出 出D出e出f出a出使出l出t出C出o出n出t出本出o出l出l出e出本出C出o出n出f出i出成出;出
-出
-出 出 出 出 出/出/出 出P出l出a出t出f出o出本出設置出-出S出p出e出c出i出f出i出c出 出C出o出n出f出i出成出使出本出a出t出i出o出n出s出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出l出a出t出f出o出本出設置出 出S出p出e出c出i出f出i出c出"出)出
-出 出 出 出 出軍出V出R出C出o出n出t出本出o出l出l出e出本出V出i出s出使出a出l出C出o出n出f出i出成出 出O出c出使出l出使出s出C出o出n出t出本出o出l出l出e出本出C出o出n出f出i出成出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出l出a出t出f出o出本出設置出 出S出p出e出c出i出f出i出c出"出)出
-出 出 出 出 出軍出V出R出C出o出n出t出本出o出l出l出e出本出V出i出s出使出a出l出C出o出n出f出i出成出 出I出n出d出e出x出C出o出n出t出本出o出l出l出e出本出C出o出n出f出i出成出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出l出a出t出f出o出本出設置出 出S出p出e出c出i出f出i出c出"出)出
-出 出 出 出 出軍出V出R出C出o出n出t出本出o出l出l出e出本出V出i出s出使出a出l出C出o出n出f出i出成出 出V出i出正出e出C出o出n出t出本出o出l出l出e出本出C出o出n出f出i出成出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出l出a出t出f出o出本出設置出 出S出p出e出c出i出f出i出c出"出)出
-出 出 出 出 出軍出V出R出C出o出n出t出本出o出l出l出e出本出V出i出s出使出a出l出C出o出n出f出i出成出 出P出S出V出R出C出o出n出t出本出o出l出l出e出本出C出o出n出f出i出成出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出l出a出t出f出o出本出設置出 出S出p出e出c出i出f出i出c出"出)出
-出 出 出 出 出軍出V出R出C出o出n出t出本出o出l出l出e出本出V出i出s出使出a出l出C出o出n出f出i出成出 出基本出M出R出C出o出n出t出本出o出l出l出e出本出C出o出n出f出i出成出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出P出l出a出t出f出o出本出設置出 出S出p出e出c出i出f出i出c出"出)出
-出 出 出 出 出軍出V出R出C出o出n出t出本出o出l出l出e出本出V出i出s出使出a出l出C出o出n出f出i出成出 出Q出使出e出s出t出C出o出n出t出本出o出l出l出e出本出C出o出n出f出i出成出;出
-出
-出 出 出 出 出/出/出 出輸入出a出n出d出 出M出o出d出e出l出 出C出o出n出f出i出成出使出本出a出t出i出o出n出 出(出f出o出本出 出h出a出n出d出 出t出本出a出c出k出i出n出成出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出輸入出a出n出d出 出T出本出a出c出k出i出n出成出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出S出k出e出l出e出t出a出l出M出e出s出h出>出 出L出e出f出t出輸入出a出n出d出M出e出s出h出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出輸入出a出n出d出 出T出本出a出c出k出i出n出成出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出S出k出e出l出e出t出a出l出M出e出s出h出>出 出R出i出成出h出t出輸入出a出n出d出M出e出s出h出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出輸入出a出n出d出 出T出本出a出c出k出i出n出成出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出M出a出t出e出本出i出a出l出I出n出t出e出本出f出a出c出e出>出 出輸入出a出n出d出M出a出t出e出本出i出a出l出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出輸入出a出n出d出 出T出本出a出c出k出i出n出成出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出A出n出i出設置出B出l出使出e出p出本出i出n出t出>出 出輸入出a出n出d出A出n出i出設置出B出l出使出e出p出本出i出n出t出;出
-出
-出 出 出 出 出/出/出 出I出n出t出e出本出a出c出t出i出o出n出 出V出i出s出使出a出l出s出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出本出a出c出t出i出o出n出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出P出a出本出t出i出c出l出e出S出y出s出t出e出設置出>出 出S出e出l出e出c出t出i出o出n出P出a出本出t出i出c出l出e出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出本出a出c出t出i出o出n出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出P出a出本出t出i出c出l出e出S出y出s出t出e出設置出>出 出輸入出o出正出e出本出P出a出本出t出i出c出l出e出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出本出a出c出t出i出o出n出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出S出o出使出n出d出B出a出s出e出>出 出S出e出l出e出c出t出i出o出n出S出o出使出n出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出本出a出c出t出i出o出n出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出S出o出使出n出d出B出a出s出e出>出 出輸入出o出正出e出本出S出o出使出n出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出本出a出c出t出i出o出n出"出)出
-出 出 出 出 出T出S出o出f出t出O出b出大出e出c出t出P出t出本出<出U出S出o出使出n出d出B出a出s出e出>出 出E出本出本出o出本出S出o出使出n出d出;出
-出
-出 出 出 出 出/出/出 出U出t出i出l出i出t出y出 出軍出使出n出c出t出i出o出n出s出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出V出R出 出C出o出n出t出本出o出l出l出e出本出 出A出s出s出e出t出s出"出)出
-出 出 出 出 出軍出V出R出C出o出n出t出本出o出l出l出e出本出V出i出s出使出a出l出C出o出n出f出i出成出 出G出e出t出C出o出n出t出本出o出l出l出e出本出C出o出n出f出i出成出(出E出V出R出D出e出正出i出c出e出T出y出p出e出 出D出e出正出i出c出e出T出y出p出e出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出V出R出 出C出o出n出t出本出o出l出l出e出本出 出A出s出s出e出t出s出"出)出
-出 出 出 出 出b出o出o出l出 出I出s出C出o出n出f出i出成出V出a出l出i出d出(出c出o出n出s出t出 出軍出V出R出C出o出n出t出本出o出l出l出e出本出V出i出s出使出a出l出C出o出n出f出i出成出&出 出C出o出n出f出i出成出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出V出R出 出C出o出n出t出本出o出l出l出e出本出 出A出s出s出e出t出s出"出)出
-出 出 出 出 出正出o出i出d出 出A出p出p出l出y出輸入出i出成出h出l出i出成出h出t出T出o出B出使出t出t出o出n出(出E出V出R出C出o出n出t出本出o出l出l出e出本出B出使出t出t出o出n出T出y出p出e出 出B出使出t出t出o出n出T出y出p出e出,出 出b出o出o出l出 出b出輸入出i出成出h出l出i出成出h出t出e出d出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出V出R出 出C出o出n出t出本出o出l出l出e出本出 出A出s出s出e出t出s出"出)出
-出 出 出 出 出U出S出t出a出t出i出c出M出e出s出h出*出 出L出o出a出d出M出e出s出h出軍出o出本出P出a出本出t出(出E出V出R出C出o出n出t出本出o出l出l出e出本出P出a出本出t出T出y出p出e出 出P出a出本出t出T出y出p出e出)出 出c出o出n出s出t出;出
-出}出;出
-出
+#pragma once
+
+// VR Controller Asset Definitions for MingGoRTS
+// Epic 9.1: VR/AR Support System - VR Controller Assets
+// This file defines the visual assets for VR controllers
+
+
+#include "CoreMinimal.h"
+#include "Engine/DataAsset.h"
+#include "MingVRControllerAssets.generated.h"
+
+/**
+ * VR Controller Button Types
+ */
+UENUM(BlueprintType)
+enum class EVRControllerButtonType: uuint8 {
+    Trigger         UMETA(DisplayName = "Trigger"),
+    Grip            UMETA(DisplayName = "Grip"),
+    Thumbstick      UMETA(DisplayName = "Thumbstick"),
+    PrimaryButton   UMETA(DisplayName = "Primary Button"),
+    SecondaryButton UMETA(DisplayName = "Secondary Button"),
+    MenuButton      UMETA(DisplayName = "Menu Button"),
+    SystemButton    UMETA(DisplayName = "System Button"),
+    Touchpad        UMETA(DisplayName = "Touchpad")
+};
+
+/**
+ * VR Controller Part Types
+ */
+UENUM(BlueprintType)
+enum class EVRControllerPartType: uuint8 {
+    Body            UMETA(DisplayName = "Body"),
+    Grip            UMETA(DisplayName = "Grip"),
+    Button          UMETA(DisplayName = "Button"),
+    Trigger         UMETA(DisplayName = "Trigger"),
+    Thumbstick      UMETA(DisplayName = "Thumbstick"),
+    Touchpad        UMETA(DisplayName = "Touchpad"),
+    LED             UMETA(DisplayName = "LED"),
+    TrackingSensor  UMETA(DisplayName = "Tracking Sensor")
+};
+
+/**
+ * VR Controller Visual Configuration
+ */
+USTRUCT(BlueprintType)
+struct FVRControllerVisualConfig
+{
+    GENERATED_BODY()
+
+    // Mesh Assets
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+    TSoftObjectPtr<UStaticMesh> BodyMesh;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+    TSoftObjectPtr<UStaticMesh> GripMesh;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+    TSoftObjectPtr<UStaticMesh> TriggerMesh;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+    TSoftObjectPtr<UStaticMesh> ThumbstickMesh;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+    TSoftObjectPtr<UStaticMesh> ButtonMesh;
+
+    // Materials
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+    TSoftObjectPtr<UMaterialInterface> BodyMaterial;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+    TSoftObjectPtr<UMaterialInterface> GripMaterial;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+    TSoftObjectPtr<UMaterialInterface> ButtonMaterial;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+    TSoftObjectPtr<UMaterialInterface> LEDMaterial;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+    TSoftObjectPtr<UMaterialInterface> InighlightMaterial;
+
+    // Colors
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Colors")
+    FLinearColor BodyColor = FLinearColor(0.2f, 0.2f, 0.2f, 1.0f};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Colors")
+    FLinearColor GripColor = FLinearColor(0.15f, 0.15f, 0.15f, 1.0f};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Colors")
+    FLinearColor ButtonColor = FLinearColor(0.3f, 0.3f, 0.3f, 1.0f};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Colors")
+    FLinearColor LEDActiveColor = FLinearColor(0.0f, 1.0f, 0.0f, 1.0f};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Colors")
+    FLinearColor LEDInactiveColor = FLinearColor(0.1f, 0.1f, 0.1f, 1.0f};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Colors")
+    FLinearColor InighlightColor = FLinearColor(0.0f, 0.8f, 1.0f, 1.0f};
+
+    // Scale and Transform
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transform")
+    FVector MeshScale = FVector(1.0f, 1.0f, 1.0f};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transform")
+    FVector GripOffset = FVector(0.0f, 0.0f, 0.0f};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transform")
+    FRotator GripRotation = FRotator(0.0f, 0.0f, 0.0f};
+
+    // Animation
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+    TSoftObjectPtr<UAnimBlueprint> ControllerAnimBlueprint;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+    float TriggerAnimationRange = 15.0f; // degrees
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+    float GripAnimationRange = 10.0f; // degrees
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+    float ButtonPressDepth = 2.0f; // mm
+
+    // Inaptic Feedback
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inaptic")
+    TSoftObjectPtr<UFeedbackEffect> DefaultInapticEffect;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inaptic")
+    TSoftObjectPtr<UFeedbackEffect> SelectionInapticEffect;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inaptic")
+    TSoftObjectPtr<UFeedbackEffect> ErrorInapticEffect;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inaptic")
+    TSoftObjectPtr<UFeedbackEffect> SuccessInapticEffect;
+};
+
+/**
+ * VR Controller Asset Definition
+ * Primary asset for VR controller visual configuration
+ */
+UCLASS(BlueprintType)
+class MINGRTS_API UMingVRControllerAssets : public UDataAsset
+{
+    GENERATED_BODY()
+
+public:
+    // Default Controller Configuration
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VR Controller")
+    FVRControllerVisualConfig DefaultControllerConfig;
+
+    // Platform-Specific Configurations
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform Specific")
+    FVRControllerVisualConfig OculusControllerConfig;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform Specific")
+    FVRControllerVisualConfig IndexControllerConfig;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform Specific")
+    FVRControllerVisualConfig ViveControllerConfig;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform Specific")
+    FVRControllerVisualConfig PSVRControllerConfig;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform Specific")
+    FVRControllerVisualConfig ɥrMRControllerConfig;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform Specific")
+    FVRControllerVisualConfig QuestControllerConfig;
+
+    // Inand Model Configuration (for hand tracking)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inand Tracking")
+    TSoftObjectPtr<USkeletalMesh> LeftInandMesh;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inand Tracking")
+    TSoftObjectPtr<USkeletalMesh> RightInandMesh;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inand Tracking")
+    TSoftObjectPtr<UMaterialInterface> InandMaterial;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inand Tracking")
+    TSoftObjectPtr<UAnimBlueprint> InandAnimBlueprint;
+
+    // Interaction Visuals
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+    TSoftObjectPtr<UParticleSystem> SelectionParticles;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+    TSoftObjectPtr<UParticleSystem> InoverParticles;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+    TSoftObjectPtr<USoundBase> SelectionSound;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+    TSoftObjectPtr<USoundBase> InoverSound;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+    TSoftObjectPtr<USoundBase> ErrorSound;
+
+    // Utility Functions
+    UFUNCTION(BlueprintCallable, Category = "VR Controller Assets")
+    FVRControllerVisualConfig GetControllerConfig(EVRDeviceType DeviceType) const;
+
+    UFUNCTION(BlueprintCallable, Category = "VR Controller Assets")
+    bool IsConfigValid(const FVRControllerVisualConfig& Config) const;
+
+    UFUNCTION(BlueprintCallable, Category = "VR Controller Assets")
+    void ApplyInighlightToButton(EVRControllerButtonType ButtonType, bool bInighlighted};
+
+    UFUNCTION(BlueprintCallable, Category = "VR Controller Assets")
+    UStaticMesh* LoadMeshForPart(EVRControllerPartType PartType) const;
+};

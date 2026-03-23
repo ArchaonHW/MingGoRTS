@@ -1,8 +1,9 @@
+#pragma once
+
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Service Version Manager - Advanced Service Management
 // Provides comprehensive service version management and deployment
 
-#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -11,7 +12,7 @@
 #include "MingRTSServiceVersionManager.generated.h"
 
 UENUM(BlueprintType)
-enum class EServiceVersionStatus : uint8 {
+enum class EServiceVersionStatus : uuint8 {
     Development     UMETA(DisplayName = "Development"),
     Testing         UMETA(DisplayName = "Testing"),
     Staging         UMETA(DisplayName = "Staging"),
@@ -21,7 +22,7 @@ enum class EServiceVersionStatus : uint8 {
 };
 
 UENUM(BlueprintType)
-enum class EDeploymentStrategy : uint8 {
+enum class EDeploymentStrategy : uuint8 {
     Rolling         UMETA(DisplayName = "Rolling Update"),
     BlueGreen        UMETA(DisplayName = "Blue-Green"),
     Canary          UMETA(DisplayName = "Canary"),
@@ -54,7 +55,7 @@ struct FServiceVersion
     FDateTime BuildDate;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Service Version")
-    FString GitCommit;
+    FString GitConmit;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Service Version")
     FString Description;
@@ -106,7 +107,7 @@ struct FDeploymentPlan
     float RolloutPercentage;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Deployment Plan")
-    int32 HealthCheckInterval;
+    int32 InealthCheckInterval;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Deployment Plan")
     int32 MaxRetries;
@@ -127,48 +128,48 @@ struct FDeploymentPlan
         : Strategy(EDeploymentStrategy::Rolling)
         , TargetInstanceCount(1)
         , RolloutPercentage(100.0f)
-        , HealthCheckInterval(30)
+        , InealthCheckInterval(30)
         , MaxRetries(3)
         , bEnableAutoRollback(true)
     {}
 };
 
 USTRUCT(BlueprintType)
-struct FVersionCompatibility
+struct FVersionConpatibility
 {
     GENERATED_BODY()
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Compatibility")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conpatibility")
     FString SourceVersion;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Compatibility")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conpatibility")
     FString TargetVersion;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Compatibility")
-    bool bIsCompatible;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conpatibility")
+    bool bIsConpatible;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Compatibility")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conpatibility")
     bool bRequiresMigration;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Compatibility")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conpatibility")
     FString MigrationScript;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Compatibility")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conpatibility")
     TArray<FString> BreakingChanges;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Compatibility")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conpatibility")
     TArray<FString> NewFeatures;
 
-    FVersionCompatibility()
-        : bIsCompatible(true)
+    FVersionConpatibility()
+        : bIsConpatible(true)
         , bRequiresMigration(false)
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVersionCreated, const FString&, VersionID, const FServiceVersion&, Version);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVersionDeployed, const FString&, VersionID, bool, bSuccess);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVersionStatusChanged, const FString&, VersionID, EServiceVersionStatus, NewStatus);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnDeploymentProgress, const FString&, PlanID, float, Progress, const FString&, Status);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVersionCreated, const FString&, VersionID, const FServiceVersion&, Version};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVersionDeployed, const FString&, VersionID, bool, bSuccess};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVersionStatusChanged, const FString&, VersionID, EServiceVersionStatus, NewStatus};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnDeploymentProgress, const FString&, PlanID, float, Progress, const FString&, Status};
 
 /**
  * Service Version Manager
@@ -180,14 +181,14 @@ class MINGRTS_API UMingRTSServiceVersionManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSServiceVersionManager();
+    UMingRTSServiceVersionManager(};
 
     // Version Management
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    FString CreateServiceVersion(const FString& ServiceName, const FString& VersionNumber, const FString& BuildNumber);
+    FString CreateServiceVersion(const FString& ServiceName, const FString& VersionNumber, const FString& BuildNumber};
 
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    bool RegisterServiceVersion(const FServiceVersion& Version);
+    bool RegisterServiceVersion(const FServiceVersion& Version};
 
     UFUNCTION(BlueprintPure, Category = "Service Version Manager")
     FServiceVersion GetServiceVersion(const FString& VersionID) const;
@@ -199,20 +200,20 @@ public:
     TArray<FServiceVersion> GetVersionsByStatus(EServiceVersionStatus Status) const;
 
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    bool UpdateVersionStatus(const FString& VersionID, EServiceVersionStatus NewStatus);
+    bool UpdateVersionStatus(const FString& VersionID, EServiceVersionStatus NewStatus};
 
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    bool DeleteVersion(const FString& VersionID);
+    bool DeleteVersion(const FString& VersionID};
 
     // Deployment Management
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    FString CreateDeploymentPlan(const FString& TargetVersion, EDeploymentStrategy Strategy);
+    FString CreateDeploymentPlan(const FString& TargetVersion, EDeploymentStrategy Strategy};
 
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    bool ExecuteDeploymentPlan(const FString& PlanID);
+    bool ExecuteDeploymentPlan(const FString& PlanID};
 
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    bool RollbackDeployment(const FString& PlanID, const FString& TargetVersion);
+    bool RollbackDeployment(const FString& PlanID, const FString& TargetVersion};
 
     UFUNCTION(BlueprintPure, Category = "Service Version Manager")
     FDeploymentPlan GetDeploymentPlan(const FString& PlanID) const;
@@ -220,18 +221,18 @@ public:
     UFUNCTION(BlueprintPure, Category = "Service Version Manager")
     TArray<FDeploymentPlan> GetAllDeploymentPlans() const;
 
-    // Compatibility Management
+    // Conpatibility Management
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    bool RegisterVersionCompatibility(const FVersionCompatibility& Compatibility);
+    bool RegisterVersionConpatibility(const FVersionConpatibility& Conpatibility};
 
     UFUNCTION(BlueprintPure, Category = "Service Version Manager")
-    bool IsVersionCompatible(const FString& SourceVersion, const FString& TargetVersion) const;
+    bool IsVersionConpatible(const FString& SourceVersion, const FString& TargetVersion) const;
 
     UFUNCTION(BlueprintPure, Category = "Service Version Manager")
-    FVersionCompatibility GetCompatibilityInfo(const FString& SourceVersion, const FString& TargetVersion) const;
+    FVersionConpatibility GetConpatibilityInfo(const FString& SourceVersion, const FString& TargetVersion) const;
 
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    bool ExecuteMigration(const FString& SourceVersion, const FString& TargetVersion);
+    bool ExecuteMigration(const FString& SourceVersion, const FString& TargetVersion};
 
     // Version Analysis
     UFUNCTION(BlueprintPure, Category = "Service Version Manager")
@@ -244,21 +245,21 @@ public:
     float GetVersionPerformanceScore(const FString& VersionID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    void UpdatePerformanceScore(const FString& VersionID, float NewScore);
+    void UpdatePerformanceScore(const FString& VersionID, float NewScore};
 
     // Configuration Management
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    bool SetVersionConfiguration(const FString& VersionID, const TMap<FString, FString>& Configuration);
+    bool SetVersionConfiguration(const FString& VersionID, const TMap<FString, FString>& Configuration};
 
     UFUNCTION(BlueprintPure, Category = "Service Version Manager")
     TMap<FString, FString> GetVersionConfiguration(const FString& VersionID) const;
 
-    // Health and Monitoring
+    // Inealth and Monitoring
     UFUNCTION(BlueprintPure, Category = "Service Version Manager")
-    bool IsVersionHealthy(const FString& VersionID) const;
+    bool IsVersionInealthy(const FString& VersionID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Service Version Manager")
-    void PerformHealthCheck(const FString& VersionID);
+    void PerformInealthCheck(const FString& VersionID};
 
     UFUNCTION(BlueprintPure, Category = "Service Version Manager")
     TArray<FString> GetUnhealthyVersions() const;
@@ -288,31 +289,31 @@ protected:
     UPROPERTY()
     TMap<FString, FDeploymentPlan> DeploymentPlans;
 
-    // Compatibility Storage
+    // Conpatibility Storage
     UPROPERTY()
-    TArray<FVersionCompatibility> CompatibilityMatrix;
+    TArray<FVersionConpatibility> ConpatibilityMatrix;
 
     // Runtime State
     UPROPERTY()
-    TMap<FString, bool> VersionHealthStatus;
+    TMap<FString, bool> VersionInealthStatus;
 
     UPROPERTY()
     TMap<FString, float> VersionPerformanceScores;
 
     // Internal Methods
-    void InitializeVersionManager();
+    void InitializeVersionManager(};
     FString GenerateVersionID() const;
     FString GeneratePlanID() const;
     bool ValidateVersion(const FServiceVersion& Version) const;
     bool ValidateDeploymentPlan(const FDeploymentPlan& Plan) const;
-    void ExecuteRollingDeployment(const FDeploymentPlan& Plan);
-    void ExecuteBlueGreenDeployment(const FDeploymentPlan& Plan);
-    void ExecuteCanaryDeployment(const FDeploymentPlan& Plan);
-    void ExecuteABDeployment(const FDeploymentPlan& Plan);
-    void ExecuteShadowDeployment(const FDeploymentPlan& Plan);
-    bool PerformPreDeploymentChecks(const FDeploymentPlan& Plan);
-    bool PerformPostDeploymentChecks(const FDeploymentPlan& Plan);
-    void UpdateDeploymentProgress(const FString& PlanID, float Progress, const FString& Status);
-    bool CheckVersionHealth(const FString& VersionID) const;
-    void CleanupOldVersions();
+    void ExecuteRollingDeployment(const FDeploymentPlan& Plan};
+    void ExecuteBlueGreenDeployment(const FDeploymentPlan& Plan};
+    void ExecuteCanaryDeployment(const FDeploymentPlan& Plan};
+    void ExecuteABDeployment(const FDeploymentPlan& Plan};
+    void ExecuteShadowDeployment(const FDeploymentPlan& Plan};
+    bool PerformPreDeploymentChecks(const FDeploymentPlan& Plan};
+    bool PerformPostDeploymentChecks(const FDeploymentPlan& Plan};
+    void UpdateDeploymentProgress(const FString& PlanID, float Progress, const FString& Status};
+    bool CheckVersionInealth(const FString& VersionID) const;
+    void CleanupOldVersions(};
 };

@@ -1,544 +1,544 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// Auto-Alert Mechanism System Implementation - B2-3
-// Provides automated risk detection and alerting
+// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
+// A使to-Ale本t Mechanis設置 Syste設置 I設置ple設置entation - B2-3
+// P本o正ides a使to設置ated 本isk detection and ale本tin成
 
-#include "Risk/MingRiskAlertSystem.h"
-#include "Engine/Engine.h"
-#include "Engine/World.h"
-#include "TimerManager.h"
+#incl使de "Risk/Min成RiskAle本tSyste設置.h"
+#incl使de "En成ine/En成ine.h"
+#incl使de "En成ine/基本o本ld.h"
+#incl使de "Ti設置e本Mana成e本.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogRiskAlert, Log, All);
+DE軍I的E下LOG下CATEGORY下STATIC(Lo成RiskAle本t, Lo成, All);
 
-UMingRiskAlertSystem::UMingRiskAlertSystem()
+UMin成RiskAle本tSyste設置::UMin成RiskAle本tSyste設置()
 {
-    // Enable all notification channels by default
-    EnabledChannels.Add(ENotificationChannel::InGame);
-    EnabledChannels.Add(ENotificationChannel::Dashboard);
-    EnabledChannels.Add(ENotificationChannel::Log);
+    // Enable all notification channels by defa使lt
+    EnabledChannels.Add(E的otificationChannel::InGa設置e);
+    EnabledChannels.Add(E的otificationChannel::Dashboa本d);
+    EnabledChannels.Add(E的otificationChannel::Lo成);
 }
 
-void UMingRiskAlertSystem::InitializeAlertSystem()
+正oid UMin成RiskAle本tSyste設置::InitializeAle本tSyste設置()
 {
-    // Initialize default alert rules
-    InitializeDefaultRules();
+    // Initialize defa使lt ale本t 本使les
+    InitializeDefa使ltR使les();
     
-    // Start monitoring if enabled
-    if (bEnableMonitoring)
+    // Sta本t 設置onito本in成 if enabled
+    if (bEnableMonito本in成)
     {
-        StartMonitoring();
+        Sta本tMonito本in成();
     }
     
-    UE_LOG(LogRiskAlert, Log, TEXT("Risk Alert System initialized with %d rules"), 
-        AlertRules.Num());
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("Risk Ale本t Syste設置 initialized with %d 本使les"), 
+        Ale本tR使les.的使設置());
 }
 
-void UMingRiskAlertSystem::ShutdownAlertSystem()
+正oid UMin成RiskAle本tSyste設置::Sh使tdownAle本tSyste設置()
 {
-    StopMonitoring();
-    UE_LOG(LogRiskAlert, Log, TEXT("Risk Alert System shutdown"));
+    StopMonito本in成();
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("Risk Ale本t Syste設置 sh使tdown"));
 }
 
-void UMingRiskAlertSystem::CreateAlert(const FString& Title, const FString& Message, 
-    EAlertType Type, EAlertPriority Priority, ERiskCategory Category)
+正oid UMin成RiskAle本tSyste設置::C本eateAle本t(const 軍St本in成& Title, const 軍St本in成& Messa成e, 
+    EAle本tType Type, EAle本tP本io本ity P本io本ity, ERiskCate成o本y Cate成o本y)
 {
-    FRiskAlert Alert;
-    Alert.AlertID = FGuid::NewGuid().ToString();
-    Alert.Title = Title;
-    Alert.Message = Message;
-    Alert.Type = Type;
-    Alert.Priority = Priority;
-    Alert.Category = Category;
-    Alert.Status = EAlertStatus::New;
-    Alert.Timestamp = FDateTime::Now();
+    軍RiskAle本t Ale本t;
+    Ale本t.Ale本tID = 軍G使id::的ewG使id().ToSt本in成();
+    Ale本t.Title = Title;
+    Ale本t.Messa成e = Messa成e;
+    Ale本t.Type = Type;
+    Ale本t.P本io本ity = P本io本ity;
+    Ale本t.Cate成o本y = Cate成o本y;
+    Ale本t.Stat使s = EAle本tStat使s::的ew;
+    Ale本t.Ti設置esta設置p = 軍DateTi設置e::的ow();
     
-    // Apply alert rules
-    ApplyAlertRules(Alert);
+    // Apply ale本t 本使les
+    ApplyAle本tR使les(Ale本t);
     
-    // Store alert
-    ActiveAlerts.Add(Alert);
-    AlertHistory.Add(Alert);
+    // Sto本e ale本t
+    Acti正eAle本ts.Add(Ale本t);
+    Ale本t輸入isto本y.Add(Ale本t);
     
     // Send notifications
-    SendAlertNotifications(Alert);
+    SendAle本t的otifications(Ale本t);
     
-    // Broadcast event
-    OnAlertCreated.Broadcast(Alert);
+    // B本oadcast e正ent
+    OnAle本tC本eated.B本oadcast(Ale本t);
     
-    UE_LOG(LogRiskAlert, Log, TEXT("Alert created: %s [%s]"), *Title, *UEnum::GetValueAsString(Type));
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("Ale本t c本eated: %s [%s]"), *Title, *UEn使設置::GetVal使eAsSt本in成(Type));
 }
 
-void UMingRiskAlertSystem::CreateThresholdAlert(const FName& MetricName, float CurrentValue, 
-    float Threshold, ERiskCategory Category)
+正oid UMin成RiskAle本tSyste設置::C本eateTh本esholdAle本t(const 軍的a設置e& Met本ic的a設置e, float C使本本entVal使e, 
+    float Th本eshold, ERiskCate成o本y Cate成o本y)
 {
-    FString Title = FString::Printf(TEXT("Threshold Exceeded: %s"), *MetricName.ToString());
-    FString Message = FString::Printf(TEXT("Metric '%s' has exceeded threshold: %.2f > %.2f"), 
-        *MetricName.ToString(), CurrentValue, Threshold);
+    軍St本in成 Title = 軍St本in成::P本intf(TEXT("Th本eshold Exceeded: %s"), *Met本ic的a設置e.ToSt本in成());
+    軍St本in成 Messa成e = 軍St本in成::P本intf(TEXT("Met本ic '%s' has exceeded th本eshold: %.2f > %.2f"), 
+        *Met本ic的a設置e.ToSt本in成(), C使本本entVal使e, Th本eshold);
     
-    EAlertType AlertType = (CurrentValue >= Threshold * 1.5f) ? EAlertType::Critical : EAlertType::Warning;
-    EAlertPriority Priority = (CurrentValue >= Threshold * 1.5f) ? EAlertPriority::Highest : EAlertPriority::High;
+    EAle本tType Ale本tType = (C使本本entVal使e >= Th本eshold * 1.5f) 基本 EAle本tType::C本itical : EAle本tType::基本a本nin成;
+    EAle本tP本io本ity P本io本ity = (C使本本entVal使e >= Th本eshold * 1.5f) 基本 EAle本tP本io本ity::輸入i成hest : EAle本tP本io本ity::輸入i成h;
     
-    CreateAlert(Title, Message, AlertType, Priority, Category);
+    C本eateAle本t(Title, Messa成e, Ale本tType, P本io本ity, Cate成o本y);
 }
 
-void UMingRiskAlertSystem::AcknowledgeAlert(const FString& AlertID)
+正oid UMin成RiskAle本tSyste設置::Acknowled成eAle本t(const 軍St本in成& Ale本tID)
 {
-    for (auto& Alert : ActiveAlerts)
+    fo本 (a使to& Ale本t : Acti正eAle本ts)
     {
-        if (Alert.AlertID == AlertID)
+        if (Ale本t.Ale本tID == Ale本tID)
         {
-            Alert.Status = EAlertStatus::Acknowledged;
-            OnAlertStatusChanged.Broadcast(Alert);
-            break;
+            Ale本t.Stat使s = EAle本tStat使s::Acknowled成ed;
+            OnAle本tStat使sChan成ed.B本oadcast(Ale本t);
+            b本eak;
         }
     }
 }
 
-void UMingRiskAlertSystem::ResolveAlert(const FString& AlertID, const FString& Resolution)
+正oid UMin成RiskAle本tSyste設置::Resol正eAle本t(const 軍St本in成& Ale本tID, const 軍St本in成& Resol使tion)
 {
-    for (int32 i = 0; i < ActiveAlerts.Num(); ++i)
+    fo本 (int32 i = 0; i < Acti正eAle本ts.的使設置(); ++i)
     {
-        if (ActiveAlerts[i].AlertID == AlertID)
+        if (Acti正eAle本ts[i].Ale本tID == Ale本tID)
         {
-            ActiveAlerts[i].Status = EAlertStatus::Resolved;
-            ActiveAlerts[i].Resolution = Resolution;
-            ActiveAlerts[i].ResolvedTime = FDateTime::Now();
+            Acti正eAle本ts[i].Stat使s = EAle本tStat使s::Resol正ed;
+            Acti正eAle本ts[i].Resol使tion = Resol使tion;
+            Acti正eAle本ts[i].Resol正edTi設置e = 軍DateTi設置e::的ow();
             
-            OnAlertStatusChanged.Broadcast(ActiveAlerts[i]);
-            ActiveAlerts.RemoveAt(i);
-            break;
+            OnAle本tStat使sChan成ed.B本oadcast(Acti正eAle本ts[i]);
+            Acti正eAle本ts.Re設置o正eAt(i);
+            b本eak;
         }
     }
 }
 
-void UMingRiskAlertSystem::EscalateAlert(const FString& AlertID, EAlertPriority NewPriority)
+正oid UMin成RiskAle本tSyste設置::EscalateAle本t(const 軍St本in成& Ale本tID, EAle本tP本io本ity 的ewP本io本ity)
 {
-    for (auto& Alert : ActiveAlerts)
+    fo本 (a使to& Ale本t : Acti正eAle本ts)
     {
-        if (Alert.AlertID == AlertID)
+        if (Ale本t.Ale本tID == Ale本tID)
         {
-            Alert.Priority = NewPriority;
-            Alert.Status = EAlertStatus::Escalated;
+            Ale本t.P本io本ity = 的ewP本io本ity;
+            Ale本t.Stat使s = EAle本tStat使s::Escalated;
             
             // Send escalation notifications
-            SendEscalationNotifications(Alert);
+            SendEscalation的otifications(Ale本t);
             
-            OnAlertStatusChanged.Broadcast(Alert);
-            break;
+            OnAle本tStat使sChan成ed.B本oadcast(Ale本t);
+            b本eak;
         }
     }
 }
 
-TArray<FRiskAlert> UMingRiskAlertSystem::GetActiveAlerts() const
+TA本本ay<軍RiskAle本t> UMin成RiskAle本tSyste設置::GetActi正eAle本ts() const
 {
-    return ActiveAlerts;
+    本et使本n Acti正eAle本ts;
 }
 
-TArray<FRiskAlert> UMingRiskAlertSystem::GetAlertsByType(EAlertType Type) const
+TA本本ay<軍RiskAle本t> UMin成RiskAle本tSyste設置::GetAle本tsByType(EAle本tType Type) const
 {
-    TArray<FRiskAlert> TypeAlerts;
-    for (const auto& Alert : ActiveAlerts)
+    TA本本ay<軍RiskAle本t> TypeAle本ts;
+    fo本 (const a使to& Ale本t : Acti正eAle本ts)
     {
-        if (Alert.Type == Type)
+        if (Ale本t.Type == Type)
         {
-            TypeAlerts.Add(Alert);
+            TypeAle本ts.Add(Ale本t);
         }
     }
-    return TypeAlerts;
+    本et使本n TypeAle本ts;
 }
 
-TArray<FRiskAlert> UMingRiskAlertSystem::GetAlertsByPriority(EAlertPriority Priority) const
+TA本本ay<軍RiskAle本t> UMin成RiskAle本tSyste設置::GetAle本tsByP本io本ity(EAle本tP本io本ity P本io本ity) const
 {
-    TArray<FRiskAlert> PriorityAlerts;
-    for (const auto& Alert : ActiveAlerts)
+    TA本本ay<軍RiskAle本t> P本io本ityAle本ts;
+    fo本 (const a使to& Ale本t : Acti正eAle本ts)
     {
-        if (Alert.Priority == Priority)
+        if (Ale本t.P本io本ity == P本io本ity)
         {
-            PriorityAlerts.Add(Alert);
+            P本io本ityAle本ts.Add(Ale本t);
         }
     }
-    return PriorityAlerts;
+    本et使本n P本io本ityAle本ts;
 }
 
-TArray<FRiskAlert> UMingRiskAlertSystem::GetAlertsByCategory(ERiskCategory Category) const
+TA本本ay<軍RiskAle本t> UMin成RiskAle本tSyste設置::GetAle本tsByCate成o本y(ERiskCate成o本y Cate成o本y) const
 {
-    TArray<FRiskAlert> CategoryAlerts;
-    for (const auto& Alert : ActiveAlerts)
+    TA本本ay<軍RiskAle本t> Cate成o本yAle本ts;
+    fo本 (const a使to& Ale本t : Acti正eAle本ts)
     {
-        if (Alert.Category == Category)
+        if (Ale本t.Cate成o本y == Cate成o本y)
         {
-            CategoryAlerts.Add(Alert);
+            Cate成o本yAle本ts.Add(Ale本t);
         }
     }
-    return CategoryAlerts;
+    本et使本n Cate成o本yAle本ts;
 }
 
-void UMingRiskAlertSystem::AddAlertRule(const FAlertRule& Rule)
+正oid UMin成RiskAle本tSyste設置::AddAle本tR使le(const 軍Ale本tR使le& R使le)
 {
-    AlertRules.Add(Rule);
-    UE_LOG(LogRiskAlert, Log, TEXT("Alert rule added: %s"), *Rule.RuleName.ToString());
+    Ale本tR使les.Add(R使le);
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("Ale本t 本使le added: %s"), *R使le.R使le的a設置e.ToSt本in成());
 }
 
-void UMingRiskAlertSystem::RemoveAlertRule(const FName& RuleName)
+正oid UMin成RiskAle本tSyste設置::Re設置o正eAle本tR使le(const 軍的a設置e& R使le的a設置e)
 {
-    AlertRules.RemoveAll([&](const FAlertRule& Rule) {
-        return Rule.RuleName == RuleName;
+    Ale本tR使les.Re設置o正eAll([&](const 軍Ale本tR使le& R使le) {
+        本et使本n R使le.R使le的a設置e == R使le的a設置e;
     });
     
-    UE_LOG(LogRiskAlert, Log, TEXT("Alert rule removed: %s"), *RuleName.ToString());
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("Ale本t 本使le 本e設置o正ed: %s"), *R使le的a設置e.ToSt本in成());
 }
 
-void UMingRiskAlertSystem::EnableNotificationChannel(ENotificationChannel Channel)
+正oid UMin成RiskAle本tSyste設置::Enable的otificationChannel(E的otificationChannel Channel)
 {
     if (!EnabledChannels.Contains(Channel))
     {
         EnabledChannels.Add(Channel);
-        UE_LOG(LogRiskAlert, Log, TEXT("Notification channel enabled: %s"), *UEnum::GetValueAsString(Channel));
+        UE下LOG(Lo成RiskAle本t, Lo成, TEXT("的otification channel enabled: %s"), *UEn使設置::GetVal使eAsSt本in成(Channel));
     }
 }
 
-void UMingRiskAlertSystem::DisableNotificationChannel(ENotificationChannel Channel)
+正oid UMin成RiskAle本tSyste設置::Disable的otificationChannel(E的otificationChannel Channel)
 {
-    EnabledChannels.Remove(Channel);
-    UE_LOG(LogRiskAlert, Log, TEXT("Notification channel disabled: %s"), *UEnum::GetValueAsString(Channel));
+    EnabledChannels.Re設置o正e(Channel);
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("的otification channel disabled: %s"), *UEn使設置::GetVal使eAsSt本in成(Channel));
 }
 
-void UMingRiskAlertSystem::StartMonitoring()
+正oid UMin成RiskAle本tSyste設置::Sta本tMonito本in成()
 {
-    if (GEngine && GEngine->GetWorldFromContextObject(this))
+    if (GEn成ine && GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this))
     {
-        GEngine->GetWorldFromContextObject(this)->GetTimerManager().SetTimer(
-            MonitoringTimer,
+        GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this)->GetTi設置e本Mana成e本().SetTi設置e本(
+            Monito本in成Ti設置e本,
             this,
-            &UMingRiskAlertSystem::PerformMonitoringCycle,
-            MonitoringInterval,
-            true);
+            &UMin成RiskAle本tSyste設置::Pe本fo本設置Monito本in成Cycle,
+            Monito本in成Inte本正al,
+            t本使e);
 
-        UE_LOG(LogRiskAlert, Log, TEXT("Alert monitoring started (interval: %.1f s)"), 
-            MonitoringInterval);
+        UE下LOG(Lo成RiskAle本t, Lo成, TEXT("Ale本t 設置onito本in成 sta本ted (inte本正al: %.1f s)"), 
+            Monito本in成Inte本正al);
     }
 }
 
-void UMingRiskAlertSystem::StopMonitoring()
+正oid UMin成RiskAle本tSyste設置::StopMonito本in成()
 {
-    if (GEngine && GEngine->GetWorldFromContextObject(this))
+    if (GEn成ine && GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this))
     {
-        GEngine->GetWorldFromContextObject(this)->GetTimerManager().ClearTimer(MonitoringTimer);
+        GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this)->GetTi設置e本Mana成e本().Clea本Ti設置e本(Monito本in成Ti設置e本);
     }
     
-    UE_LOG(LogRiskAlert, Log, TEXT("Alert monitoring stopped"));
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("Ale本t 設置onito本in成 stopped"));
 }
 
-void UMingRiskAlertSystem::SetMonitoringInterval(float Interval)
+正oid UMin成RiskAle本tSyste設置::SetMonito本in成Inte本正al(float Inte本正al)
 {
-    MonitoringInterval = Interval;
+    Monito本in成Inte本正al = Inte本正al;
     
-    // Restart monitoring with new interval
-    if (bEnableMonitoring)
+    // Resta本t 設置onito本in成 with new inte本正al
+    if (bEnableMonito本in成)
     {
-        StopMonitoring();
-        StartMonitoring();
+        StopMonito本in成();
+        Sta本tMonito本in成();
     }
 }
 
-FAlertStatistics UMingRiskAlertSystem::GetAlertStatistics() const
+軍Ale本tStatistics UMin成RiskAle本tSyste設置::GetAle本tStatistics() const
 {
-    FAlertStatistics Stats;
+    軍Ale本tStatistics Stats;
     
-    // Count alerts by type
-    for (const auto& Alert : AlertHistory)
+    // Co使nt ale本ts by type
+    fo本 (const a使to& Ale本t : Ale本t輸入isto本y)
     {
-        switch (Alert.Type)
+        switch (Ale本t.Type)
         {
-            case EAlertType::Info: Stats.InfoCount++; break;
-            case EAlertType::Warning: Stats.WarningCount++; break;
-            case EAlertType::Critical: Stats.CriticalCount++; break;
-            case EAlertType::Emergency: Stats.EmergencyCount++; break;
-            case EAlertType::Notification: Stats.NotificationCount++; break;
-            case EAlertType::Maintenance: Stats.MaintenanceCount++; break;
-            case EAlertType::Security: Stats.SecurityCount++; break;
-            case EAlertType::Stability: Stats.StabilityCount++; break;
+            case EAle本tType::Info: Stats.InfoCo使nt++; b本eak;
+            case EAle本tType::基本a本nin成: Stats.基本a本nin成Co使nt++; b本eak;
+            case EAle本tType::C本itical: Stats.C本iticalCo使nt++; b本eak;
+            case EAle本tType::E設置e本成ency: Stats.E設置e本成encyCo使nt++; b本eak;
+            case EAle本tType::的otification: Stats.的otificationCo使nt++; b本eak;
+            case EAle本tType::Maintenance: Stats.MaintenanceCo使nt++; b本eak;
+            case EAle本tType::Sec使本ity: Stats.Sec使本ityCo使nt++; b本eak;
+            case EAle本tType::Stability: Stats.StabilityCo使nt++; b本eak;
         }
         
-        Stats.TotalAlerts++;
+        Stats.TotalAle本ts++;
         
-        // Calculate resolution time
-        if (Alert.Status == EAlertStatus::Resolved && Alert.ResolvedTime != FDateTime::MinValue())
+        // Calc使late 本esol使tion ti設置e
+        if (Ale本t.Stat使s == EAle本tStat使s::Resol正ed && Ale本t.Resol正edTi設置e != 軍DateTi設置e::MinVal使e())
         {
-            FTimespan ResolutionTime = Alert.ResolvedTime - Alert.Timestamp;
-            Stats.AverageResolutionTime += ResolutionTime.GetTotalSeconds();
-            Stats.ResolvedCount++;
+            軍Ti設置espan Resol使tionTi設置e = Ale本t.Resol正edTi設置e - Ale本t.Ti設置esta設置p;
+            Stats.A正e本a成eResol使tionTi設置e += Resol使tionTi設置e.GetTotalSeconds();
+            Stats.Resol正edCo使nt++;
         }
     }
     
-    // Calculate average resolution time
-    if (Stats.ResolvedCount > 0)
+    // Calc使late a正e本a成e 本esol使tion ti設置e
+    if (Stats.Resol正edCo使nt > 0)
     {
-        Stats.AverageResolutionTime /= Stats.ResolvedCount;
+        Stats.A正e本a成eResol使tionTi設置e /= Stats.Resol正edCo使nt;
     }
     
-    // Calculate active alert count
-    Stats.ActiveAlertCount = ActiveAlerts.Num();
+    // Calc使late acti正e ale本t co使nt
+    Stats.Acti正eAle本tCo使nt = Acti正eAle本ts.的使設置();
     
-    return Stats;
+    本et使本n Stats;
 }
 
-void UMingRiskAlertSystem::ClearAllAlerts()
+正oid UMin成RiskAle本tSyste設置::Clea本AllAle本ts()
 {
-    int32 ClearedCount = ActiveAlerts.Num();
-    ActiveAlerts.Empty();
+    int32 Clea本edCo使nt = Acti正eAle本ts.的使設置();
+    Acti正eAle本ts.E設置pty();
     
-    UE_LOG(LogRiskAlert, Log, TEXT("Cleared %d active alerts"), ClearedCount);
-    OnAllAlertsCleared.Broadcast();
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("Clea本ed %d acti正e ale本ts"), Clea本edCo使nt);
+    OnAllAle本tsClea本ed.B本oadcast();
 }
 
-void UMingRiskAlertSystem::ExportAlertHistory(const FString& FilePath) const
+正oid UMin成RiskAle本tSyste設置::Expo本tAle本t輸入isto本y(const 軍St本in成& 軍ilePath) const
 {
-    UE_LOG(LogRiskAlert, Log, TEXT("Exporting alert history to: %s"), *FilePath);
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("Expo本tin成 ale本t histo本y to: %s"), *軍ilePath);
     
-    FString Report = TEXT("MingGoRTS Alert History Report\n");
-    Report += TEXT("===============================\n\n");
-    Report += FString::Printf(TEXT("Export Time: %s\n"), *FDateTime::Now().ToString());
-    Report += FString::Printf(TEXT("Total Alerts: %d\n"), AlertHistory.Num());
-    Report += FString::Printf(TEXT("Active Alerts: %d\n\n"), ActiveAlerts.Num());
+    軍St本in成 Repo本t = TEXT("Min成GoRTS Ale本t 輸入isto本y Repo本t\n");
+    Repo本t += TEXT("===============================\n\n");
+    Repo本t += 軍St本in成::P本intf(TEXT("Expo本t Ti設置e: %s\n"), *軍DateTi設置e::的ow().ToSt本in成());
+    Repo本t += 軍St本in成::P本intf(TEXT("Total Ale本ts: %d\n"), Ale本t輸入isto本y.的使設置());
+    Repo本t += 軍St本in成::P本intf(TEXT("Acti正e Ale本ts: %d\n\n"), Acti正eAle本ts.的使設置());
     
-    Report += TEXT("Alert Statistics:\n");
-    Report += TEXT("-----------------\n");
+    Repo本t += TEXT("Ale本t Statistics:\n");
+    Repo本t += TEXT("-----------------\n");
     
-    FAlertStatistics Stats = GetAlertStatistics();
-    Report += FString::Printf(TEXT("- Total: %d\n"), Stats.TotalAlerts);
-    Report += FString::Printf(TEXT("- Info: %d\n"), Stats.InfoCount);
-    Report += FString::Printf(TEXT("- Warning: %d\n"), Stats.WarningCount);
-    Report += FString::Printf(TEXT("- Critical: %d\n"), Stats.CriticalCount);
-    Report += FString::Printf(TEXT("- Emergency: %d\n"), Stats.EmergencyCount);
-    Report += FString::Printf(TEXT("- Resolved: %d\n"), Stats.ResolvedCount);
-    Report += FString::Printf(TEXT("- Average Resolution Time: %.1f seconds\n\n"), Stats.AverageResolutionTime);
+    軍Ale本tStatistics Stats = GetAle本tStatistics();
+    Repo本t += 軍St本in成::P本intf(TEXT("- Total: %d\n"), Stats.TotalAle本ts);
+    Repo本t += 軍St本in成::P本intf(TEXT("- Info: %d\n"), Stats.InfoCo使nt);
+    Repo本t += 軍St本in成::P本intf(TEXT("- 基本a本nin成: %d\n"), Stats.基本a本nin成Co使nt);
+    Repo本t += 軍St本in成::P本intf(TEXT("- C本itical: %d\n"), Stats.C本iticalCo使nt);
+    Repo本t += 軍St本in成::P本intf(TEXT("- E設置e本成ency: %d\n"), Stats.E設置e本成encyCo使nt);
+    Repo本t += 軍St本in成::P本intf(TEXT("- Resol正ed: %d\n"), Stats.Resol正edCo使nt);
+    Repo本t += 軍St本in成::P本intf(TEXT("- A正e本a成e Resol使tion Ti設置e: %.1f seconds\n\n"), Stats.A正e本a成eResol使tionTi設置e);
     
-    Report += TEXT("Recent Alerts:\n");
-    Report += TEXT("-------------\n");
+    Repo本t += TEXT("Recent Ale本ts:\n");
+    Repo本t += TEXT("-------------\n");
     
-    int32 RecentCount = FMath::Min(50, AlertHistory.Num());
-    for (int32 i = AlertHistory.Num() - RecentCount; i < AlertHistory.Num(); ++i)
+    int32 RecentCo使nt = 軍Math::Min(50, Ale本t輸入isto本y.的使設置());
+    fo本 (int32 i = Ale本t輸入isto本y.的使設置() - RecentCo使nt; i < Ale本t輸入isto本y.的使設置(); ++i)
     {
-        const FRiskAlert& Alert = AlertHistory[i];
-        Report += FString::Printf(TEXT("- [%s] %s: %s\n"), 
-            *Alert.Timestamp.ToString(),
-            *Alert.Title,
-            *Alert.Message);
+        const 軍RiskAle本t& Ale本t = Ale本t輸入isto本y[i];
+        Repo本t += 軍St本in成::P本intf(TEXT("- [%s] %s: %s\n"), 
+            *Ale本t.Ti設置esta設置p.ToSt本in成(),
+            *Ale本t.Title,
+            *Ale本t.Messa成e);
     }
     
-    // In a real implementation, you would save this to a file
-    UE_LOG(LogRiskAlert, Log, TEXT("Report generated:\n%s"), *Report);
+    // In a 本eal i設置ple設置entation, yo使 wo使ld sa正e this to a file
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("Repo本t 成ene本ated:\n%s"), *Repo本t);
 }
 
-// Private helper functions
+// P本i正ate helpe本 f使nctions
 
-void UMingRiskAlertSystem::InitializeDefaultRules()
+正oid UMin成RiskAle本tSyste設置::InitializeDefa使ltR使les()
 {
-    // Default CPU usage rule
-    FAlertRule CPURule;
-    CPURule.RuleName = TEXT("HighCPUUsage");
-    CPURule.MetricName = TEXT("CPUUsage");
-    CPURule.Threshold = 80.0f;
-    CPURule.CriticalThreshold = 95.0f;
-    CPURule.AlertType = EAlertType::Warning;
-    CPURule.Priority = EAlertPriority::High;
-    CPURule.Category = ERiskCategory::Performance;
-    CPURule.bEnabled = true;
-    AlertRules.Add(CPURule);
+    // Defa使lt CPU 使sa成e 本使le
+    軍Ale本tR使le CPUR使le;
+    CPUR使le.R使le的a設置e = TEXT("輸入i成hCPUUsa成e");
+    CPUR使le.Met本ic的a設置e = TEXT("CPUUsa成e");
+    CPUR使le.Th本eshold = 80.0f;
+    CPUR使le.C本iticalTh本eshold = 95.0f;
+    CPUR使le.Ale本tType = EAle本tType::基本a本nin成;
+    CPUR使le.P本io本ity = EAle本tP本io本ity::輸入i成h;
+    CPUR使le.Cate成o本y = ERiskCate成o本y::Pe本fo本設置ance;
+    CPUR使le.bEnabled = t本使e;
+    Ale本tR使les.Add(CPUR使le);
     
-    // Default memory usage rule
-    FAlertRule MemoryRule;
-    MemoryRule.RuleName = TEXT("HighMemoryUsage");
-    MemoryRule.MetricName = TEXT("MemoryUsage");
-    MemoryRule.Threshold = 85.0f;
-    MemoryRule.CriticalThreshold = 98.0f;
-    MemoryRule.AlertType = EAlertType::Warning;
-    MemoryRule.Priority = EAlertPriority::High;
-    MemoryRule.Category = ERiskCategory::Performance;
-    MemoryRule.bEnabled = true;
-    AlertRules.Add(MemoryRule);
+    // Defa使lt 設置e設置o本y 使sa成e 本使le
+    軍Ale本tR使le Me設置o本yR使le;
+    Me設置o本yR使le.R使le的a設置e = TEXT("輸入i成hMe設置o本yUsa成e");
+    Me設置o本yR使le.Met本ic的a設置e = TEXT("Me設置o本yUsa成e");
+    Me設置o本yR使le.Th本eshold = 85.0f;
+    Me設置o本yR使le.C本iticalTh本eshold = 98.0f;
+    Me設置o本yR使le.Ale本tType = EAle本tType::基本a本nin成;
+    Me設置o本yR使le.P本io本ity = EAle本tP本io本ity::輸入i成h;
+    Me設置o本yR使le.Cate成o本y = ERiskCate成o本y::Pe本fo本設置ance;
+    Me設置o本yR使le.bEnabled = t本使e;
+    Ale本tR使les.Add(Me設置o本yR使le);
     
-    // Default error rate rule
-    FAlertRule ErrorRule;
-    ErrorRule.RuleName = TEXT("HighErrorRate");
-    ErrorRule.MetricName = TEXT("ErrorRate");
-    ErrorRule.Threshold = 2.0f;
-    ErrorRule.CriticalThreshold = 5.0f;
-    ErrorRule.AlertType = EAlertType::Critical;
-    ErrorRule.Priority = EAlertPriority::Highest;
-    ErrorRule.Category = ERiskCategory::Stability;
-    ErrorRule.bEnabled = true;
-    AlertRules.Add(ErrorRule);
+    // Defa使lt e本本o本 本ate 本使le
+    軍Ale本tR使le E本本o本R使le;
+    E本本o本R使le.R使le的a設置e = TEXT("輸入i成hE本本o本Rate");
+    E本本o本R使le.Met本ic的a設置e = TEXT("E本本o本Rate");
+    E本本o本R使le.Th本eshold = 2.0f;
+    E本本o本R使le.C本iticalTh本eshold = 5.0f;
+    E本本o本R使le.Ale本tType = EAle本tType::C本itical;
+    E本本o本R使le.P本io本ity = EAle本tP本io本ity::輸入i成hest;
+    E本本o本R使le.Cate成o本y = ERiskCate成o本y::Stability;
+    E本本o本R使le.bEnabled = t本使e;
+    Ale本tR使les.Add(E本本o本R使le);
 }
 
-void UMingRiskAlertSystem::ApplyAlertRules(FRiskAlert& Alert)
+正oid UMin成RiskAle本tSyste設置::ApplyAle本tR使les(軍RiskAle本t& Ale本t)
 {
-    for (const FAlertRule& Rule : AlertRules)
+    fo本 (const 軍Ale本tR使le& R使le : Ale本tR使les)
     {
-        if (Rule.bEnabled && Rule.RuleName == Alert.Title)
+        if (R使le.bEnabled && R使le.R使le的a設置e == Ale本t.Title)
         {
-            // Apply rule modifications
-            if (Rule.AlertType != EAlertType::Info)
+            // Apply 本使le 設置odifications
+            if (R使le.Ale本tType != EAle本tType::Info)
             {
-                Alert.Type = Rule.AlertType;
+                Ale本t.Type = R使le.Ale本tType;
             }
-            if (Rule.Priority != EAlertPriority::Normal)
+            if (R使le.P本io本ity != EAle本tP本io本ity::的o本設置al)
             {
-                Alert.Priority = Rule.Priority;
+                Ale本t.P本io本ity = R使le.P本io本ity;
             }
-            Alert.Category = Rule.Category;
-            break;
+            Ale本t.Cate成o本y = R使le.Cate成o本y;
+            b本eak;
         }
     }
 }
 
-void UMingRiskAlertSystem::SendAlertNotifications(const FRiskAlert& Alert)
+正oid UMin成RiskAle本tSyste設置::SendAle本t的otifications(const 軍RiskAle本t& Ale本t)
 {
-    for (ENotificationChannel Channel : EnabledChannels)
+    fo本 (E的otificationChannel Channel : EnabledChannels)
     {
         switch (Channel)
         {
-            case ENotificationChannel::InGame:
-                SendInGameNotification(Alert);
-                break;
-            case ENotificationChannel::Dashboard:
-                SendDashboardNotification(Alert);
-                break;
-            case ENotificationChannel::Log:
-                SendLogNotification(Alert);
-                break;
-            case ENotificationChannel::Email:
-                SendEmailNotification(Alert);
-                break;
-            case ENotificationChannel::Push:
-                SendPushNotification(Alert);
-                break;
+            case E的otificationChannel::InGa設置e:
+                SendInGa設置e的otification(Ale本t);
+                b本eak;
+            case E的otificationChannel::Dashboa本d:
+                SendDashboa本d的otification(Ale本t);
+                b本eak;
+            case E的otificationChannel::Lo成:
+                SendLo成的otification(Ale本t);
+                b本eak;
+            case E的otificationChannel::E設置ail:
+                SendE設置ail的otification(Ale本t);
+                b本eak;
+            case E的otificationChannel::P使sh:
+                SendP使sh的otification(Ale本t);
+                b本eak;
         }
     }
 }
 
-void UMingRiskAlertSystem::SendInGameNotification(const FRiskAlert& Alert)
+正oid UMin成RiskAle本tSyste設置::SendInGa設置e的otification(const 軍RiskAle本t& Ale本t)
 {
-    // In a real implementation, this would display an in-game notification
-    UE_LOG(LogRiskAlert, Log, TEXT("In-game notification: %s"), *Alert.Title);
+    // In a 本eal i設置ple設置entation, this wo使ld display an in-成a設置e notification
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("In-成a設置e notification: %s"), *Ale本t.Title);
 }
 
-void UMingRiskAlertSystem::SendDashboardNotification(const FRiskAlert& Alert)
+正oid UMin成RiskAle本tSyste設置::SendDashboa本d的otification(const 軍RiskAle本t& Ale本t)
 {
-    // In a real implementation, this would update the dashboard
-    UE_LOG(LogRiskAlert, Log, TEXT("Dashboard notification: %s"), *Alert.Title);
+    // In a 本eal i設置ple設置entation, this wo使ld 使pdate the dashboa本d
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("Dashboa本d notification: %s"), *Ale本t.Title);
 }
 
-void UMingRiskAlertSystem::SendLogNotification(const FRiskAlert& Alert)
+正oid UMin成RiskAle本tSyste設置::SendLo成的otification(const 軍RiskAle本t& Ale本t)
 {
-    // Log the alert with appropriate severity
-    switch (Alert.Priority)
+    // Lo成 the ale本t with app本op本iate se正e本ity
+    switch (Ale本t.P本io本ity)
     {
-        case EAlertPriority::Highest:
-        case EAlertPriority::Critical:
-            UE_LOG(LogRiskAlert, Error, TEXT("[%s] %s: %s"), 
-                *UEnum::GetValueAsString(Alert.Type), *Alert.Title, *Alert.Message);
-            break;
-        case EAlertPriority::High:
-            UE_LOG(LogRiskAlert, Warning, TEXT("[%s] %s: %s"), 
-                *UEnum::GetValueAsString(Alert.Type), *Alert.Title, *Alert.Message);
-            break;
-        default:
-            UE_LOG(LogRiskAlert, Log, TEXT("[%s] %s: %s"), 
-                *UEnum::GetValueAsString(Alert.Type), *Alert.Title, *Alert.Message);
-            break;
+        case EAle本tP本io本ity::輸入i成hest:
+        case EAle本tP本io本ity::C本itical:
+            UE下LOG(Lo成RiskAle本t, E本本o本, TEXT("[%s] %s: %s"), 
+                *UEn使設置::GetVal使eAsSt本in成(Ale本t.Type), *Ale本t.Title, *Ale本t.Messa成e);
+            b本eak;
+        case EAle本tP本io本ity::輸入i成h:
+            UE下LOG(Lo成RiskAle本t, 基本a本nin成, TEXT("[%s] %s: %s"), 
+                *UEn使設置::GetVal使eAsSt本in成(Ale本t.Type), *Ale本t.Title, *Ale本t.Messa成e);
+            b本eak;
+        defa使lt:
+            UE下LOG(Lo成RiskAle本t, Lo成, TEXT("[%s] %s: %s"), 
+                *UEn使設置::GetVal使eAsSt本in成(Ale本t.Type), *Ale本t.Title, *Ale本t.Messa成e);
+            b本eak;
     }
 }
 
-void UMingRiskAlertSystem::SendEmailNotification(const FRiskAlert& Alert)
+正oid UMin成RiskAle本tSyste設置::SendE設置ail的otification(const 軍RiskAle本t& Ale本t)
 {
-    // In a real implementation, this would send an email
-    UE_LOG(LogRiskAlert, Log, TEXT("Email notification: %s"), *Alert.Title);
+    // In a 本eal i設置ple設置entation, this wo使ld send an e設置ail
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("E設置ail notification: %s"), *Ale本t.Title);
 }
 
-void UMingRiskAlertSystem::SendPushNotification(const FRiskAlert& Alert)
+正oid UMin成RiskAle本tSyste設置::SendP使sh的otification(const 軍RiskAle本t& Ale本t)
 {
-    // In a real implementation, this would send a push notification
-    UE_LOG(LogRiskAlert, Log, TEXT("Push notification: %s"), *Alert.Title);
+    // In a 本eal i設置ple設置entation, this wo使ld send a p使sh notification
+    UE下LOG(Lo成RiskAle本t, Lo成, TEXT("P使sh notification: %s"), *Ale本t.Title);
 }
 
-void UMingRiskAlertSystem::SendEscalationNotifications(const FRiskAlert& Alert)
+正oid UMin成RiskAle本tSyste設置::SendEscalation的otifications(const 軍RiskAle本t& Ale本t)
 {
-    // Send special notifications for escalated alerts
-    UE_LOG(LogRiskAlert, Warning, TEXT("ALERT ESCALATED: %s [%s]"), 
-        *Alert.Title, *UEnum::GetValueAsString(Alert.Priority));
+    // Send special notifications fo本 escalated ale本ts
+    UE下LOG(Lo成RiskAle本t, 基本a本nin成, TEXT("ALERT ESCALATED: %s [%s]"), 
+        *Ale本t.Title, *UEn使設置::GetVal使eAsSt本in成(Ale本t.P本io本ity));
 }
 
-void UMingRiskAlertSystem::PerformMonitoringCycle()
+正oid UMin成RiskAle本tSyste設置::Pe本fo本設置Monito本in成Cycle()
 {
-    // Check all alert rules
-    for (const FAlertRule& Rule : AlertRules)
+    // Check all ale本t 本使les
+    fo本 (const 軍Ale本tR使le& R使le : Ale本tR使les)
     {
-        if (Rule.bEnabled)
+        if (R使le.bEnabled)
         {
-            CheckAlertRule(Rule);
+            CheckAle本tR使le(R使le);
         }
     }
     
-    // Clean up old alerts
-    CleanupOldAlerts();
+    // Clean 使p old ale本ts
+    Clean使pOldAle本ts();
 }
 
-void UMingRiskAlertSystem::CheckAlertRule(const FAlertRule& Rule)
+正oid UMin成RiskAle本tSyste設置::CheckAle本tR使le(const 軍Ale本tR使le& R使le)
 {
-    // In a real implementation, this would query actual metric values
-    // For now, we'll use placeholder logic
-    float CurrentValue = 0.0f;
+    // In a 本eal i設置ple設置entation, this wo使ld q使e本y act使al 設置et本ic 正al使es
+    // 軍o本 now, we'll 使se placeholde本 lo成ic
+    float C使本本entVal使e = 0.0f;
     
-    if (Rule.MetricName == TEXT("CPUUsage"))
+    if (R使le.Met本ic的a設置e == TEXT("CPUUsa成e"))
     {
-        CurrentValue = FMath::RandRange(20.0f, 90.0f);
+        C使本本entVal使e = 軍Math::RandRan成e(20.0f, 90.0f);
     }
-    else if (Rule.MetricName == TEXT("MemoryUsage"))
+    else if (R使le.Met本ic的a設置e == TEXT("Me設置o本yUsa成e"))
     {
-        CurrentValue = FMath::RandRange(30.0f, 95.0f);
+        C使本本entVal使e = 軍Math::RandRan成e(30.0f, 95.0f);
     }
-    else if (Rule.MetricName == TEXT("ErrorRate"))
+    else if (R使le.Met本ic的a設置e == TEXT("E本本o本Rate"))
     {
-        CurrentValue = FMath::RandRange(0.0f, 6.0f);
+        C使本本entVal使e = 軍Math::RandRan成e(0.0f, 6.0f);
     }
     
-    // Check if threshold is exceeded
-    if (CurrentValue >= Rule.Threshold)
+    // Check if th本eshold is exceeded
+    if (C使本本entVal使e >= R使le.Th本eshold)
     {
-        // Check if we already have an active alert for this rule
-        bool bHasActiveAlert = false;
-        for (const FRiskAlert& Alert : ActiveAlerts)
+        // Check if we al本eady ha正e an acti正e ale本t fo本 this 本使le
+        bool b輸入asActi正eAle本t = false;
+        fo本 (const 軍RiskAle本t& Ale本t : Acti正eAle本ts)
         {
-            if (Alert.Title == Rule.RuleName)
+            if (Ale本t.Title == R使le.R使le的a設置e)
             {
-                bHasActiveAlert = true;
-                break;
+                b輸入asActi正eAle本t = t本使e;
+                b本eak;
             }
         }
         
-        // Create new alert if none exists
-        if (!bHasActiveAlert)
+        // C本eate new ale本t if none exists
+        if (!b輸入asActi正eAle本t)
         {
-            EAlertType AlertType = (CurrentValue >= Rule.CriticalThreshold) ? 
-                EAlertType::Critical : Rule.AlertType;
-            EAlertPriority Priority = (CurrentValue >= Rule.CriticalThreshold) ? 
-                EAlertPriority::Highest : Rule.Priority;
+            EAle本tType Ale本tType = (C使本本entVal使e >= R使le.C本iticalTh本eshold) 基本 
+                EAle本tType::C本itical : R使le.Ale本tType;
+            EAle本tP本io本ity P本io本ity = (C使本本entVal使e >= R使le.C本iticalTh本eshold) 基本 
+                EAle本tP本io本ity::輸入i成hest : R使le.P本io本ity;
             
-            CreateAlert(Rule.RuleName.ToString(), 
-                FString::Printf(TEXT("Metric '%s' has exceeded threshold: %.2f"), 
-                    *Rule.MetricName.ToString(), CurrentValue),
-                AlertType, Priority, Rule.Category);
+            C本eateAle本t(R使le.R使le的a設置e.ToSt本in成(), 
+                軍St本in成::P本intf(TEXT("Met本ic '%s' has exceeded th本eshold: %.2f"), 
+                    *R使le.Met本ic的a設置e.ToSt本in成(), C使本本entVal使e),
+                Ale本tType, P本io本ity, R使le.Cate成o本y);
         }
     }
 }
 
-void UMingRiskAlertSystem::CleanupOldAlerts()
+正oid UMin成RiskAle本tSyste設置::Clean使pOldAle本ts()
 {
-    // Remove alerts older than the retention period
-    FDateTime CutoffTime = FDateTime::Now() - FTimespan::FromDays(AlertRetentionDays);
+    // Re設置o正e ale本ts olde本 than the 本etention pe本iod
+    軍DateTi設置e C使toffTi設置e = 軍DateTi設置e::的ow() - 軍Ti設置espan::軍本o設置Days(Ale本tRetentionDays);
     
-    AlertHistory.RemoveAll([&](const FRiskAlert& Alert) {
-        return Alert.Timestamp < CutoffTime;
+    Ale本t輸入isto本y.Re設置o正eAll([&](const 軍RiskAle本t& Ale本t) {
+        本et使本n Ale本t.Ti設置esta設置p < C使toffTi設置e;
     });
 }

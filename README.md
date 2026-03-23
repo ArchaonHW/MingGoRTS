@@ -21,7 +21,7 @@
 
 ### 1. 開啟專案
 
-點擊 `MingGoRTS.uproject` 檔案，使用 Unreal Engine 5.4+ 開啟。
+點擊 `MingGoRTS.uproject` 檔案，使用 Unreal Engine 5.7 開啟。
 
 ### 2. 生成 C++ 專案檔
 
@@ -29,7 +29,7 @@
 
 ```powershell
 # 請替換成您的引擎路徑
-& "C:\Program Files\Epic Games\UE_5.4\Engine\Binaries\DotNET\UnrealBuildTool.exe" -projectfiles -project="C:\HW\MingGoRTS\MingGoRTS.uproject" -game -rocket -progress
+& "C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool.exe" -projectfiles -project="C:\HW\MingGoRTS\MingGoRTS.uproject" -game -rocket -progress
 ```
 
 ### 3. 編譯
@@ -38,7 +38,7 @@
 
 ```powershell
 # 請替換成您的引擎路徑
-& "C:\Program Files\Epic Games\UE_5.4\Engine\Build\BatchFiles\Build.bat" MingGoRTSEditor Win64 Development -Project="C:\HW\MingGoRTS\MingGoRTS.uproject" -waitmutex
+& "C:\Program Files\Epic Games\UE_5.7\Engine\Build\BatchFiles\Build.bat" MingGoRTSEditor Win64 Development -Project="C:\HW\MingGoRTS\MingGoRTS.uproject" -waitmutex
 ```
 
 ### 4. 運行

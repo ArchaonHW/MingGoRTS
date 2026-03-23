@@ -1,316 +1,317 @@
-出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出軍出o出使出本出L出a出y出e出本出/出I出M出i出n出成出G出a出設置出e出L出a出y出e出本出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出S出t出本出a出t出e出成出i出c出L出a出y出e出本出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出/出/出 出戰出略出目出標出類出型出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出M出i出n出成出S出t出本出a出t出e出成出i出c出O出b出大出e出c出t出i出正出e出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出T出e出本出本出i出t出o出本出y出E出x出p出a出n出s出i出o出n出,出 出 出 出 出 出/出/出 出領出土出擴出張出
-出 出 出 出 出R出e出s出o出使出本出c出e出C出o出n出t出本出o出l出,出 出 出 出 出 出 出 出 出/出/出 出資出源出控出制出
-出 出 出 出 出M出i出l出i出t出a出本出y出S出使出p出本出e出設置出a出c出y出,出 出 出 出 出 出 出/出/出 出軍出事出霸出權出
-出 出 出 出 出E出c出o出n出o出設置出i出c出D出o出設置出i出n出a出n出c出e出,出 出 出 出 出 出 出/出/出 出經出濟出主出導出
-出 出 出 出 出P出o出l出i出t出i出c出a出l出I出n出f出l出使出e出n出c出e出,出 出 出 出 出 出/出/出 出政出治出影出響出
-出 出 出 出 出T出e出c出h出n出o出l出o出成出i出c出a出l出A出d出正出a出n出c出e出設置出e出n出t出,出 出/出/出 出技出術出進出步出
-出 出 出 出 出C出使出l出t出使出本出a出l出S出使出p出本出e出設置出a出c出y出,出 出 出 出 出 出 出/出/出 出文出化出霸出權出
-出 出 出 出 出D出i出p出l出o出設置出a出t出i出c出A出l出l出i出a出n出c出e出,出 出 出 出 出 出/出/出 出外出交出聯出盟出
-出 出 出 出 出的出a出t出i出o出n出a出l出U出n出i出t出y出,出 出 出 出 出 出 出 出 出 出 出/出/出 出國出家出統出一出
-出 出 出 出 出R出e出正出o出l出使出t出i出o出n出a出本出y出G出o出a出l出s出 出 出 出 出 出 出/出/出 出革出命出目出標出
-出}出;出
-出
-出/出/出 出外出交出關出係出狀出態出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出M出i出n出成出S出t出本出a出t出e出成出i出c出D出i出p出l出o出設置出a出c出y出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出A出l出l出i出e出d出,出 出 出 出 出 出 出 出 出 出/出/出 出同出盟出
-出 出 出 出 出軍出本出i出e出n出d出l出y出,出 出 出 出 出 出 出 出/出/出 出友出好出
-出 出 出 出 出的出e出使出t出本出a出l出,出 出 出 出 出 出 出 出 出/出/出 出中出立出
-出 出 出 出 出S出使出s出p出i出c出i出o出使出s出,出 出 出 出 出 出/出/出 出懷出疑出
-出 出 出 出 出輸入出o出s出t出i出l出e出,出 出 出 出 出 出 出 出 出/出/出 出敵出對出
-出 出 出 出 出A出t出基本出a出本出,出 出 出 出 出 出 出 出 出 出 出/出/出 出戰出爭出
-出 出 出 出 出V出a出s出s出a出l出,出 出 出 出 出 出 出 出 出 出/出/出 出附出庸出
-出 出 出 出 出P出本出o出t出e出c出t出o出本出a出t出e出,出 出 出 出/出/出 出保出護出國出
-出 出 出 出 出T出本出a出d出e出P出a出本出t出n出e出本出,出 出 出 出/出/出 出貿出易出夥出伴出
-出 出 出 出 出R出i出正出a出l出 出 出 出 出 出 出 出 出 出 出 出/出/出 出競出爭出對出手出
-出}出;出
-出
-出/出/出 出戰出略出決出策出類出型出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出M出i出n出成出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出M出i出l出i出t出a出本出y出C出a出設置出p出a出i出成出n出,出 出 出 出/出/出 出軍出事出行出動出
-出 出 出 出 出D出i出p出l出o出設置出a出t出i出c出T出本出e出a出t出y出,出 出 出 出 出/出/出 出外出交出條出約出
-出 出 出 出 出E出c出o出n出o出設置出i出c出P出o出l出i出c出y出,出 出 出 出 出 出/出/出 出經出濟出政出策出
-出 出 出 出 出S出o出c出i出a出l出R出e出f出o出本出設置出,出 出 出 出 出 出 出 出/出/出 出社出會出改出革出
-出 出 出 出 出T出e出c出h出n出o出l出o出成出i出c出a出l出R出e出s出e出a出本出c出h出,出 出/出/出 出技出術出研出究出
-出 出 出 出 出C出使出l出t出使出本出a出l出I出n出i出t出i出a出t出i出正出e出,出 出/出/出 出文出化出倡出議出
-出 出 出 出 出I出n出f出本出a出s出t出本出使出c出t出使出本出e出P出本出o出大出e出c出t出,出 出/出/出 出基出礎出設出施出項出目出
-出 出 出 出 出I出n出t出e出l出l出i出成出e出n出c出e出O出p出e出本出a出t出i出o出n出,出 出/出/出 出情出報出行出動出
-出 出 出 出 出T出本出a出d出e出A出成出本出e出e出設置出e出n出t出,出 出 出 出 出 出/出/出 出貿出易出協出議出
-出 出 出 出 出A出l出l出i出a出n出c出e出軍出o出本出設置出a出t出i出o出n出 出 出 出/出/出 出聯出盟出形出成出
-出}出;出
-出
-出/出/出 出戰出略出事出件出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出E出正出e出n出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出E出正出e出n出t出I出D出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出E出正出e出n出t出T出y出p出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出E出正出e出n出t出D出e出s出c出本出i出p出t出i出o出n出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出I出n出正出o出l出正出e出d出軍出a出c出t出i出o出n出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出S出t出本出a出t出e出成出i出c出I出設置出p出a出c出t出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出E出正出e出n出t出T出i出設置出e出;出
-出}出;出
-出
-出/出/出 出戰出略出目出標出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出G出o出a出l出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出o出a出l出I出D出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出E出M出i出n出成出S出t出本出a出t出e出成出i出c出O出b出大出e出c出t出i出正出e出 出O出b出大出e出c出t出i出正出e出T出y出p出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出o出a出l出D出e出s出c出本出i出p出t出i出o出n出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出e出q出使出i出本出e出d出R出e出s出o出使出本出c出e出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出S出t出本出a出t出e出成出i出c出P出本出e出本出e出q出使出i出s出i出t出e出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出P出本出i出o出本出i出t出y出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出P出本出o出成出本出e出s出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出D出e出a出d出l出i出n出e出;出
-出}出;出
-出
-出/出/出 出戰出略出決出策出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出c出i出s出i出o出n出I出D出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出E出M出i出n出成出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出 出D出e出c出i出s出i出o出n出T出y出p出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出c出i出s出i出o出n出D出e出s出c出本出i出p出t出i出o出n出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出>出 出R出e出q出使出i出本出e出d出R出e出s出o出使出本出c出e出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出f出f出e出c出t出e出d出R出e出成出i出o出n出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出L出o出n出成出T出e出本出設置出I出設置出p出a出c出t出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出I出設置出設置出e出d出i出a出t出e出C出o出s出t出;出
-出}出;出
-出
-出/出*出*出
-出 出*出 出戰出略出層出系出統出
-出 出*出 出負出責出高出層出決出策出、出資出源出分出配出、出外出交出關出係出等出
-出 出*出/出
-出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
-出c出l出a出s出s出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出U出M出i出n出成出S出t出本出a出t出e出成出i出c出L出a出y出e出本出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出,出 出p出使出b出l出i出c出 出I出M出i出n出成出G出a出設置出e出L出a出y出e出本出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出/出/出 出建出構出子出
-出 出 出 出 出U出M出i出n出成出S出t出本出a出t出e出成出i出c出L出a出y出e出本出(出)出;出
-出
-出 出 出 出 出/出/出 出實出現出介出面出方出法出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出L出a出y出e出本出下出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出(出)出 出o出正出e出本出本出i出d出e出;出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出U出p出d出a出t出e出L出a出y出e出本出下出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出 出o出正出e出本出本出i出d出e出;出
-出 出 出 出 出正出i出本出t出使出a出l出 出E出M出i出n出成出L出a出y出e出本出 出G出e出t出L出a出y出e出本出T出y出p出e出下出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出(出)出 出c出o出n出s出t出 出o出正出e出本出本出i出d出e出;出
-出 出 出 出 出正出i出本出t出使出a出l出 出軍出S出t出本出i出n出成出 出G出e出t出L出a出y出e出本出的出a出設置出e出下出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出(出)出 出c出o出n出s出t出 出o出正出e出本出本出i出d出e出;出
-出 出 出 出 出正出i出本出t出使出a出l出 出f出l出o出a出t出 出G出e出t出L出a出y出e出本出P出本出i出o出本出i出t出y出下出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出(出)出 出c出o出n出s出t出 出o出正出e出本出本出i出d出e出;出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出輸入出a出n出d出l出e出L出a出y出e出本出E出正出e出n出t出下出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出(出c出o出n出s出t出 出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出I出n出t出e出成出本出a出t出i出o出n出E出正出e出n出t出&出 出E出正出e出n出t出)出 出o出正出e出本出本出i出d出e出;出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出輸入出a出n出d出l出e出L出a出y出e出本出D出e出c出i出s出i出o出n出下出I出設置出p出l出e出設置出e出n出t出a出t出i出o出n出(出c出o出n出s出t出 出軍出M出i出n出成出G出a出設置出e出D出e出c出i出s出i出o出n出&出 出D出e出c出i出s出i出o出n出)出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出戰出略出目出標出管出理出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出正出o出i出d出 出S出e出t出S出t出本出a出t出e出成出i出c出G出o出a出l出(出c出o出n出s出t出 出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出G出o出a出l出&出 出G出o出a出l出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出G出o出a出l出P出本出o出成出本出e出s出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出G出o出a出l出I出D出,出 出f出l出o出a出t出 出P出本出o出成出本出e出s出s出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出正出o出i出d出 出C出o出設置出p出l出e出t出e出G出o出a出l出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出G出o出a出l出I出D出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出G出o出a出l出>出 出G出e出t出A出c出t出i出正出e出G出o出a出l出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出戰出略出決出策出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出正出o出i出d出 出M出a出k出e出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出(出c出o出n出s出t出 出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出&出 出D出e出c出i出s出i出o出n出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出正出o出i出d出 出P出本出o出c出e出s出s出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出s出(出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出>出 出G出e出t出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出外出交出管出理出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出正出o出i出d出 出E出s出t出a出b出l出i出s出h出D出i出p出l出o出設置出a出t出i出c出R出e出l出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出a出c出t出i出o出n出I出D出,出 出E出M出i出n出成出S出t出本出a出t出e出成出i出c出D出i出p出l出o出設置出a出c出y出 出R出e出l出a出t出i出o出n出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出D出i出p出l出o出設置出a出t出i出c出R出e出l出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出a出c出t出i出o出n出I出D出,出 出E出M出i出n出成出S出t出本出a出t出e出成出i出c出D出i出p出l出o出設置出a出c出y出 出R出e出l出a出t出i出o出n出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出E出M出i出n出成出S出t出本出a出t出e出成出i出c出D出i出p出l出o出設置出a出c出y出 出G出e出t出D出i出p出l出o出設置出a出t出i出c出R出e出l出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出a出c出t出i出o出n出I出D出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出E出M出i出n出成出S出t出本出a出t出e出成出i出c出D出i出p出l出o出設置出a出c出y出>出 出G出e出t出A出l出l出D出i出p出l出o出設置出a出t出i出c出R出e出l出a出t出i出o出n出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出資出源出分出配出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出正出o出i出d出 出A出l出l出o出c出a出t出e出R出e出s出o出使出本出c出e出s出(出c出o出n出s出t出 出T出M出a出p出<出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出,出 出f出l出o出a出t出>出&出 出A出l出l出o出c出a出t出i出o出n出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出T出M出a出p出<出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出,出 出f出l出o出a出t出>出 出G出e出t出R出e出s出o出使出本出c出e出A出l出l出o出c出a出t出i出o出n出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出f出l出o出a出t出 出G出e出t出R出e出s出o出使出本出c出e出E出f出f出i出c出i出e出n出c出y出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出威出脅出評出估出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出I出d出e出n出t出i出f出y出S出t出本出a出t出e出成出i出c出T出h出本出e出a出t出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出I出d出e出n出t出i出f出y出S出t出本出a出t出e出成出i出c出O出p出p出o出本出t出使出n出i出t出i出e出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出S出t出本出a出t出e出成出i出c出P出o出s出i出t出i出o出n出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出獲出取出戰出略出狀出態出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出S出t出本出a出t出e出成出i出c出"出)出
-出 出 出 出 出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出S出t出a出t出e出 出G出e出t出S出t出本出a出t出e出成出i出c出S出t出a出t出e出(出)出 出c出o出n出s出t出;出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出 出 出 出 出/出/出 出戰出略出狀出態出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出S出t出a出t出e出 出S出t出本出a出t出e出成出i出c出S出t出a出t出e出;出
-出
-出 出 出 出 出/出/出 出戰出略出目出標出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出G出o出a出l出>出 出S出t出本出a出t出e出成出i出c出G出o出a出l出s出;出
-出
-出 出 出 出 出/出/出 出戰出略出決出策出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出>出 出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出s出;出
-出
-出 出 出 出 出/出/出 出外出交出關出係出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出E出M出i出n出成出S出t出本出a出t出e出成出i出c出D出i出p出l出o出設置出a出c出y出>出 出D出i出p出l出o出設置出a出t出i出c出R出e出l出a出t出i出o出n出s出;出
-出
-出 出 出 出 出/出/出 出戰出略出事出件出歷出史出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出E出正出e出n出t出>出 出S出t出本出a出t出e出成出i出c出輸入出i出s出t出o出本出y出;出
-出
-出 出 出 出 出/出/出 出戰出略出風出格出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出t出本出a出t出e出成出i出c出出出S出e出t出t出i出n出成出s出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出S出t出本出a出t出e出成出i出c出S出t出y出l出e出;出
-出
-出 出 出 出 出/出/出 出擴出張出偏出好出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出t出本出a出t出e出成出i出c出出出S出e出t出t出i出n出成出s出"出)出
-出 出 出 出 出f出l出o出a出t出 出E出x出p出a出n出s出i出o出n出P出本出e出f出e出本出e出n出c出e出;出
-出
-出 出 出 出 出/出/出 出外出交出偏出好出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出S出t出本出a出t出e出成出i出c出出出S出e出t出t出i出n出成出s出"出)出
-出 出 出 出 出f出l出o出a出t出 出D出i出p出l出o出設置出a出c出y出P出本出e出f出e出本出e出n出c出e出;出
-出
-出 出 出 出 出/出/出 出分出析出戰出略出狀出況出
-出 出 出 出 出正出o出i出d出 出A出n出a出l出y出z出e出S出t出本出a出t出e出成出i出c出S出i出t出使出a出t出i出o出n出(出)出;出
-出
-出 出 出 出 出/出/出 出評出估出威出脅出
-出 出 出 出 出正出o出i出d出 出A出s出s出e出s出s出T出h出本出e出a出t出s出(出)出;出
-出
-出 出 出 出 出/出/出 出識出別出機出會出
-出 出 出 出 出正出o出i出d出 出I出d出e出n出t出i出f出y出O出p出p出o出本出t出使出n出i出t出i出e出s出(出)出;出
-出
-出 出 出 出 出/出/出 出計出算出戰出略出優出勢出
-出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出S出t出本出a出t出e出成出i出c出A出d出正出a出n出t出a出成出e出(出)出;出
-出
-出 出 出 出 出/出/出 出預出測出決出策出後出果出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出P出本出e出d出i出c出t出D出e出c出i出s出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出&出 出D出e出c出i出s出i出o出n出)出;出
-出
-出 出 出 出 出/出/出 出民出國出特出色出戰出略出
-出 出 出 出 出正出o出i出d出 出A出p出p出l出y出R出e出p出使出b出l出i出c出a出n出E出本出a出S出t出本出a出t出e出成出y出(出)出;出
-出
-出 出 出 出 出/出/出 出統出一出戰出線出策出略出
-出 出 出 出 出正出o出i出d出 出E出x出e出c出使出t出e出U出n出i出t出e出d出軍出本出o出n出t出S出t出本出a出t出e出成出y出(出)出;出
-出
-出 出 出 出 出/出/出 出北出伐出統出一出計出劃出
-出 出 出 出 出正出o出i出d出 出E出x出e出c出使出t出e出的出o出本出t出h出e出本出n出E出x出p出e出d出i出t出i出o出n出P出l出a出n出(出)出;出
-出
-出 出 出 出 出/出/出 出抗出日出戰出爭出總出體出戰出
-出 出 出 出 出正出o出i出d出 出E出x出e出c出使出t出e出A出n出t出i出J出a出p出a出n出e出s出e出基本出a出本出S出t出本出a出t出e出成出y出(出)出;出
-出
-出 出 出 出 出/出/出 出新出生出活出運出動出
-出 出 出 出 出正出o出i出d出 出E出x出e出c出使出t出e出的出e出w出L出i出f出e出M出o出正出e出設置出e出n出t出(出)出;出
-出
-出 出 出 出 出/出/出 出國出家出建出設出計出劃出
-出 出 出 出 出正出o出i出d出 出E出x出e出c出使出t出e出的出a出t出i出o出n出a出l出C出o出n出s出t出本出使出c出t出i出o出n出P出l出a出n出(出)出;出
-出
-出 出 出 出 出/出/出 出經出濟出現出代出化出
-出 出 出 出 出正出o出i出d出 出E出x出e出c出使出t出e出E出c出o出n出o出設置出i出c出M出o出d出e出本出n出i出z出a出t出i出o出n出(出)出;出
-出
-出 出 出 出 出/出/出 出軍出事出現出代出化出
-出 出 出 出 出正出o出i出d出 出E出x出e出c出使出t出e出M出i出l出i出t出a出本出y出M出o出d出e出本出n出i出z出a出t出i出o出n出(出)出;出
-出
-出p出本出i出正出a出t出e出:出
-出 出 出 出 出/出/出 出戰出略出更出新出間出隔出
-出 出 出 出 出f出l出o出a出t出 出S出t出本出a出t出e出成出i出c出U出p出d出a出t出e出I出n出t出e出本出正出a出l出;出
-出
-出 出 出 出 出/出/出 出上出次出更出新出時出間出
-出 出 出 出 出f出l出o出a出t出 出L出a出s出t出S出t出本出a出t出e出成出i出c出U出p出d出a出t出e出;出
-出
-出 出 出 出 出/出/出 出戰出略出目出標出上出限出
-出 出 出 出 出i出n出t出3出2出 出M出a出x出S出t出本出a出t出e出成出i出c出G出o出a出l出s出;出
-出
-出 出 出 出 出/出/出 出外出交出關出係出上出限出
-出 出 出 出 出i出n出t出3出2出 出M出a出x出D出i出p出l出o出設置出a出t出i出c出R出e出l出a出t出i出o出n出s出;出
-出
-出 出 出 出 出/出/出 出資出源出分出配出效出率出
-出 出 出 出 出f出l出o出a出t出 出R出e出s出o出使出本出c出e出A出l出l出o出c出a出t出i出o出n出E出f出f出i出c出i出e出n出c出y出;出
-出
-出 出 出 出 出/出/出 出戰出略出威出脅出評出估出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出S出t出本出a出t出e出成出i出c出T出h出本出e出a出t出s出;出
-出
-出 出 出 出 出/出/出 出戰出略出機出會出評出估出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出S出t出本出a出t出e出成出i出c出O出p出p出o出本出t出使出n出i出t出i出e出s出;出
-出
-出 出 出 出 出/出/出 出戰出略出決出策出歷出史出
-出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出S出t出本出a出t出e出成出i出c出D出e出c出i出s出i出o出n出>出 出D出e出c出i出s出i出o出n出輸入出i出s出t出o出本出y出;出
-出}出;出
-出
+#pragma once
+
+﻿#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "UOb大ect/的oExpo本tTypes.h"
+#incl使de "軍o使本Laye本/IMin成Ga設置eLaye本.h"
+#incl使de "Min成St本ate成icLaye本.成ene本ated.h"
+
+// 戰略目標類型
+UE的UM(Bl使ep本intType)
+en使設置 class EMin成St本ate成icOb大ecti正e: 使int8 {
+    Te本本ito本yExpansion,     // 領土擴張
+    Reso使本ceCont本ol,        // 資源控制
+    Milita本yS使p本e設置acy,      // 軍事霸權
+    Econo設置icDo設置inance,      // 經濟主導
+    PoliticalInfl使ence,     // 政治影響
+    Technolo成icalAd正ance設置ent, // 技術進步
+    C使lt使本alS使p本e設置acy,      // 文化霸權
+    Diplo設置aticAlliance,     // 外交聯盟
+    的ationalUnity,          // 國家統一
+    Re正ol使tiona本yGoals      // 革命目標
+};
+
+// 外交關係狀態
+UE的UM(Bl使ep本intType)
+en使設置 class EMin成St本ate成icDiplo設置acy: 使int8 {
+    Allied,         // 同盟
+    軍本iendly,       // 友好
+    的e使t本al,        // 中立
+    S使spicio使s,     // 懷疑
+    輸入ostile,        // 敵對
+    At基本a本,          // 戰爭
+    Vassal,         // 附庸
+    P本otecto本ate,   // 保護國
+    T本adePa本tne本,   // 貿易夥伴
+    Ri正al           // 競爭對手
+};
+
+// 戰略決策類型
+UE的UM(Bl使ep本intType)
+en使設置 class EMin成St本ate成icDecision: 使int8 {
+    Milita本yCa設置pai成n,   // 軍事行動
+    Diplo設置aticT本eaty,    // 外交條約
+    Econo設置icPolicy,     // 經濟政策
+    SocialRefo本設置,       // 社會改革
+    Technolo成icalResea本ch, // 技術研究
+    C使lt使本alInitiati正e, // 文化倡議
+    Inf本ast本使ct使本eP本o大ect, // 基礎設施項目
+    Intelli成enceOpe本ation, // 情報行動
+    T本adeA成本ee設置ent,     // 貿易協議
+    Alliance軍o本設置ation   // 聯盟形成
+};
+
+// 戰略事件
+USTRUCT(Bl使ep本intType)
+st本使ct MI的GSTRATEGIC下API 軍Min成St本ate成icE正ent
+{
+    GE的ERATED下BODY()
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍St本in成 E正entID;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍St本in成 E正entType;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍St本in成 E正entDesc本iption;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    TA本本ay<軍St本in成> In正ol正ed軍actions;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    float St本ate成icI設置pact;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍DateTi設置e E正entTi設置e;
+};
+
+// 戰略目標
+USTRUCT(Bl使ep本intType)
+st本使ct MI的GSTRATEGIC下API 軍Min成St本ate成icGoal
+{
+    GE的ERATED下BODY()
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍St本in成 GoalID;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    EMin成St本ate成icOb大ecti正e Ob大ecti正eType;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍St本in成 GoalDesc本iption;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    TA本本ay<軍St本in成> Req使i本edReso使本ces;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    TA本本ay<軍St本in成> St本ate成icP本e本eq使isites;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    float P本io本ity;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    float P本o成本ess;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍DateTi設置e Deadline;
+};
+
+// 戰略決策
+USTRUCT(Bl使ep本intType)
+st本使ct MI的GSTRATEGIC下API 軍Min成St本ate成icDecision
+{
+    GE的ERATED下BODY()
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍St本in成 DecisionID;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    EMin成St本ate成icDecision DecisionType;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍St本in成 DecisionDesc本iption;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    TA本本ay<EMin成Reso使本ceType> Req使i本edReso使本ces;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    TA本本ay<軍St本in成> AffectedRe成ions;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    float Lon成Te本設置I設置pact;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    float I設置設置ediateCost;
+};
+
+/**
+ * 戰略層系統
+ * 負責高層決策、資源分配、外交關係等
+ */
+UCLASS(Bl使ep本intType, Bl使ep本intable)
+class MI的GSTRATEGIC下API UMin成St本ate成icLaye本 : p使blic UOb大ect, p使blic IMin成Ga設置eLaye本
+{
+    GE的ERATED下BODY()
+
+p使blic:
+    // 建構子
+    UMin成St本ate成icLaye本(};
+
+    // 實現介面方法
+    正i本t使al 正oid InitializeLaye本下I設置ple設置entation() o正e本本ide;
+    正i本t使al 正oid UpdateLaye本下I設置ple設置entation(float DeltaTi設置e) o正e本本ide;
+    正i本t使al EMin成Laye本 GetLaye本Type下I設置ple設置entation() const o正e本本ide;
+    正i本t使al 軍St本in成 GetLaye本的a設置e下I設置ple設置entation() const o正e本本ide;
+    正i本t使al float GetLaye本P本io本ity下I設置ple設置entation() const o正e本本ide;
+    正i本t使al 正oid 輸入andleLaye本E正ent下I設置ple設置entation(const 軍Min成St本ate成icInte成本ationE正ent& E正ent) o正e本本ide;
+    正i本t使al 正oid 輸入andleLaye本Decision下I設置ple設置entation(const 軍Min成Ga設置eDecision& Decision) o正e本本ide;
+
+    // 戰略目標管理
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    正oid SetSt本ate成icGoal(const 軍Min成St本ate成icGoal& Goal};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    正oid UpdateGoalP本o成本ess(const 軍St本in成& GoalID, float P本o成本ess};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    正oid Co設置pleteGoal(const 軍St本in成& GoalID};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    TA本本ay<軍Min成St本ate成icGoal> GetActi正eGoals() const;
+
+    // 戰略決策
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    正oid MakeSt本ate成icDecision(const 軍Min成St本ate成icDecision& Decision};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    正oid P本ocessSt本ate成icDecisions(};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    TA本本ay<軍Min成St本ate成icDecision> GetSt本ate成icDecisions() const;
+
+    // 外交管理
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    正oid EstablishDiplo設置aticRelation(const 軍St本in成& 軍actionID, EMin成St本ate成icDiplo設置acy Relation};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    正oid UpdateDiplo設置aticRelation(const 軍St本in成& 軍actionID, EMin成St本ate成icDiplo設置acy Relation};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    EMin成St本ate成icDiplo設置acy GetDiplo設置aticRelation(const 軍St本in成& 軍actionID) const;
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    TMap<軍St本in成, EMin成St本ate成icDiplo設置acy> GetAllDiplo設置aticRelations() const;
+
+    // 資源分配
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    正oid AllocateReso使本ces(const TMap<EMin成Reso使本ceType, float>& Allocation};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    TMap<EMin成Reso使本ceType, float> GetReso使本ceAllocation() const;
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    float GetReso使本ceEfficiency() const;
+
+    // 威脅評估
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    TA本本ay<軍St本in成> IdentifySt本ate成icTh本eats() const;
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    TA本本ay<軍St本in成> IdentifySt本ate成icOppo本t使nities() const;
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    float Calc使lateSt本ate成icPosition() const;
+
+    // 獲取戰略狀態
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成St本ate成ic")
+    軍Min成St本ate成icState GetSt本ate成icState() const;
+
+p本otected:
+    // 戰略狀態
+    UPROPERTY(Bl使ep本intReadOnly)
+    軍Min成St本ate成icState St本ate成icState;
+
+    // 戰略目標
+    UPROPERTY(Bl使ep本intReadOnly)
+    TA本本ay<軍Min成St本ate成icGoal> St本ate成icGoals;
+
+    // 戰略決策
+    UPROPERTY(Bl使ep本intReadOnly)
+    TA本本ay<軍Min成St本ate成icDecision> St本ate成icDecisions;
+
+    // 外交關係
+    UPROPERTY(Bl使ep本intReadOnly)
+    TMap<軍St本in成, EMin成St本ate成icDiplo設置acy> Diplo設置aticRelations;
+
+    // 戰略事件歷史
+    UPROPERTY(Bl使ep本intReadOnly)
+    TA本本ay<軍Min成St本ate成icE正ent> St本ate成ic輸入isto本y;
+
+    // 戰略風格
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite, Cate成o本y = "St本ate成icSettin成s")
+    軍St本in成 St本ate成icStyle;
+
+    // 擴張偏好
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite, Cate成o本y = "St本ate成icSettin成s")
+    float ExpansionP本efe本ence;
+
+    // 外交偏好
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite, Cate成o本y = "St本ate成icSettin成s")
+    float Diplo設置acyP本efe本ence;
+
+    // 分析戰略狀況
+    正oid AnalyzeSt本ate成icSit使ation(};
+
+    // 評估威脅
+    正oid AssessTh本eats(};
+
+    // 識別機會
+    正oid IdentifyOppo本t使nities(};
+
+    // 計算戰略優勢
+    float Calc使lateSt本ate成icAd正anta成e(};
+
+    // 預測決策後果
+    TA本本ay<軍St本in成> P本edictDecisionConseq使ences(const 軍Min成St本ate成icDecision& Decision};
+
+    // 民國特色戰略
+    正oid ApplyRep使blicanE本aSt本ate成y(};
+
+    // 統一戰線策略
+    正oid Exec使teUnited軍本ontSt本ate成y(};
+
+    // 北伐統一計劃
+    正oid Exec使te的o本the本nExpeditionPlan(};
+
+    // 抗日戰爭總體戰
+    正oid Exec使teAntiJapanese基本a本St本ate成y(};
+
+    // 新生活運動
+    正oid Exec使te的ewLifeMo正e設置ent(};
+
+    // 國家建設計劃
+    正oid Exec使te的ationalConst本使ctionPlan(};
+
+    // 經濟現代化
+    正oid Exec使teEcono設置icMode本nization(};
+
+    // 軍事現代化
+    正oid Exec使teMilita本yMode本nization(};
+
+p本i正ate:
+    // 戰略更新間隔
+    float St本ate成icUpdateInte本正al;
+
+    // 上次更新時間
+    float LastSt本ate成icUpdate;
+
+    // 戰略目標上限
+    int32 MaxSt本ate成icGoals;
+
+    // 外交關係上限
+    int32 MaxDiplo設置aticRelations;
+
+    // 資源分配效率
+    float Reso使本ceAllocationEfficiency;
+
+    // 戰略威脅評估
+    TMap<軍St本in成, float> St本ate成icTh本eats;
+
+    // 戰略機會評估
+    TMap<軍St本in成, float> St本ate成icOppo本t使nities;
+
+    // 戰略決策歷史
+    TA本本ay<軍Min成St本ate成icDecision> Decision輸入isto本y;
+};

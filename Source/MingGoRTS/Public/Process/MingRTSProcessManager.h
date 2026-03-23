@@ -1,19 +1,20 @@
+#pragma once
+
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
 // Process Manager - Operating System Core
 // Provides process management, scheduling, and resource allocation
 
-#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "HAL/CriticalSection.h"
+#include "InAL/CriticalSection.h"
 #include "Containers/Queue.h"
 #include "Containers/Map.h"
 #include "MingRTSProcessManager.generated.h"
 
 // Scheduling algorithms
 UENUM(BlueprintType)
-enum class ESchedulingAlgorithm: uint8 {
+enum class ESchedulingAlgorithm: uuint8 {
     FIFO            UMETA(DisplayName = "First In First Out"),
     Priority        UMETA(DisplayName = "Priority Scheduling"),
     RoundRobin      UMETA(DisplayName = "Round Robin"),
@@ -23,7 +24,7 @@ enum class ESchedulingAlgorithm: uint8 {
 
 // Scheduler states
 UENUM(BlueprintType)
-enum class ESchedulerState: uint8 {
+enum class ESchedulerState: uuint8 {
     Idle            UMETA(DisplayName = "Idle"),
     Running         UMETA(DisplayName = "Running"),
     Paused          UMETA(DisplayName = "Paused"),
@@ -102,12 +103,12 @@ struct FProcessControlBlock
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProcessCreated, FString, ProcessID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProcessTerminated, FString, ProcessID);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProcessStateChanged, FString, ProcessID, ESchedulerState, NewState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProcessCreated, FString, ProcessID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProcessTerminated, FString, ProcessID};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProcessStateChanged, FString, ProcessID, ESchedulerState, NewState};
 
 /**
- * RTS Process Manager - Operating System Core Component
+ * RTS Process Manager - Operating System Core Conponent
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGRTS_API UMingRTSProcessManager : public UObject
@@ -115,40 +116,40 @@ class MINGRTS_API UMingRTSProcessManager : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSProcessManager();
+    UMingRTSProcessManager(};
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    void InitializeProcessManager();
+    void InitializeProcessManager(};
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    void ShutdownProcessManager();
+    void ShutdownProcessManager(};
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    FString CreateProcess(const FString& ProcessName, int32 Priority = 0);
+    FString CreateProcess(const FString& ProcessName, int32 Priority = 0};
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    bool TerminateProcess(const FString& ProcessID);
+    bool TerminateProcess(const FString& ProcessID};
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    bool SuspendProcess(const FString& ProcessID);
+    bool SuspendProcess(const FString& ProcessID};
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    bool ResumeProcess(const FString& ProcessID);
+    bool ResumeProcess(const FString& ProcessID};
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    void SetProcessPriority(const FString& ProcessID, int32 NewPriority);
+    void SetProcessPriority(const FString& ProcessID, int32 NewPriority};
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
     int32 GetProcessPriority(const FString& ProcessID) const;
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    void SetSchedulingAlgorithm(ESchedulingAlgorithm Algorithm);
+    void SetSchedulingAlgorithm(ESchedulingAlgorithm Algorithm};
 
     UFUNCTION(BlueprintPure, Category = "Process Manager")
     ESchedulingAlgorithm GetSchedulingAlgorithm() const;
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
-    void UpdateScheduler(float DeltaTime);
+    void UpdateScheduler(float DeltaTime};
 
     UFUNCTION(BlueprintCallable, Category = "Process Manager")
     TArray<FProcessControlBlock> GetActiveProcesses() const;
@@ -193,10 +194,10 @@ protected:
     float TimeQuantum;
     float CurrentTimeSlice;
 
-    void InitializeScheduler();
-    void ScheduleProcesses();
-    void ContextSwitch(const FString& NextProcessID);
-    void UpdateProcessStates(float DeltaTime);
+    void InitializeScheduler(};
+    void ScheduleProcesses(};
+    void ContextSwitch(const FString& NextProcessID};
+    void UpdateProcessStates(float DeltaTime};
     FString GenerateProcessID() const;
     int32 FindProcessIndex(const FString& ProcessID) const;
 };

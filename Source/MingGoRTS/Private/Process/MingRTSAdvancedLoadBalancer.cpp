@@ -1,699 +1,699 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// Advanced Load Balancer - High-Performance Load Distribution Implementation
+// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
+// Ad正anced Load Balance本 - 輸入i成h-Pe本fo本設置ance Load Dist本ib使tion I設置ple設置entation
 
-#include "Process/MingRTSAdvancedLoadBalancer.h"
-#include "HAL/PlatformFilemanager.h"
-#include "Misc/DateTime.h"
-#include "Misc/Guid.h"
-#include "Containers/Queue.h"
+#incl使de "P本ocess/Min成RTSAd正ancedLoadBalance本.h"
+#incl使de "輸入AL/Platfo本設置軍ile設置ana成e本.h"
+#incl使de "Misc/DateTi設置e.h"
+#incl使de "Misc/G使id.h"
+#incl使de "Containe本s/Q使e使e.h"
 
-UMingRTSAdvancedLoadBalancer::UMingRTSAdvancedLoadBalancer()
+UMin成RTSAd正ancedLoadBalance本::UMin成RTSAd正ancedLoadBalance本()
 {
-    InitializeLoadBalancer();
+    InitializeLoadBalance本();
 }
 
-void UMingRTSAdvancedLoadBalancer::InitializeLoadBalancer()
+正oid UMin成RTSAd正ancedLoadBalance本::InitializeLoadBalance本()
 {
-    CurrentAlgorithm = ELoadBalancingAlgorithm::RoundRobin;
+    C使本本entAl成o本ith設置 = ELoadBalancin成Al成o本ith設置::Ro使ndRobin;
     bSessionAffinityEnabled = false;
-    SessionTimeoutSeconds = 1800; // 30 minutes
-    bCircuitBreakerEnabled = false;
-    CircuitBreakerThreshold = 5;
-    bRateLimitingEnabled = false;
-    RateLimitRPS = 1000;
-    RateLimitBurstSize = 100;
-    RoundRobinIndex = 0;
+    SessionTi設置eo使tSeconds = 1800; // 30 設置in使tes
+    bCi本c使itB本eake本Enabled = false;
+    Ci本c使itB本eake本Th本eshold = 5;
+    bRateLi設置itin成Enabled = false;
+    RateLi設置itRPS = 1000;
+    RateLi設置itB使本stSize = 100;
+    Ro使ndRobinIndex = 0;
 
-    UE_LOG(LogTemp, Log, TEXT("Advanced Load Balancer initialized"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Ad正anced Load Balance本 initialized"));
 }
 
-FString UMingRTSAdvancedLoadBalancer::AddServerNode(const FString& IPAddress, int32 Port, int32 Weight)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::AddSe本正e本的ode(const 軍St本in成& IPAdd本ess, int32 Po本t, int32 基本ei成ht)
 {
-    FServerNode NewNode;
-    NewNode.NodeID = GenerateNodeID();
-    NewNode.IPAddress = IPAddress;
-    NewNode.Port = Port;
-    NewNode.Weight = Weight;
-    NewNode.Status = EServerStatus::Unknown;
-    NewNode.LastHealthCheck = FDateTime::Now();
-    NewNode.bEnabled = true;
+    軍Se本正e本的ode 的ew的ode;
+    的ew的ode.的odeID = Gene本ate的odeID();
+    的ew的ode.IPAdd本ess = IPAdd本ess;
+    的ew的ode.Po本t = Po本t;
+    的ew的ode.基本ei成ht = 基本ei成ht;
+    的ew的ode.Stat使s = ESe本正e本Stat使s::Unknown;
+    的ew的ode.Last輸入ealthCheck = 軍DateTi設置e::的ow();
+    的ew的ode.bEnabled = t本使e;
 
-    ServerNodes.Add(NewNode.NodeID, NewNode);
-    NodeFailureCounts.Add(NewNode.NodeID, 0);
+    Se本正e本的odes.Add(的ew的ode.的odeID, 的ew的ode);
+    的ode軍ail使本eCo使nts.Add(的ew的ode.的odeID, 0);
 
-    OnNodeAdded.Broadcast(NewNode.NodeID, NewNode);
+    On的odeAdded.B本oadcast(的ew的ode.的odeID, 的ew的ode);
     
-    UE_LOG(LogTemp, Log, TEXT("Added server node: %s (%s:%d)"), *NewNode.NodeID, *IPAddress, Port);
-    return NewNode.NodeID;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Added se本正e本 node: %s (%s:%d)"), *的ew的ode.的odeID, *IPAdd本ess, Po本t);
+    本et使本n 的ew的ode.的odeID;
 }
 
-bool UMingRTSAdvancedLoadBalancer::RemoveServerNode(const FString& NodeID)
+bool UMin成RTSAd正ancedLoadBalance本::Re設置o正eSe本正e本的ode(const 軍St本in成& 的odeID)
 {
-    if (FServerNode* Node = ServerNodes.Find(NodeID))
+    if (軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
     {
-        ServerNodes.Remove(NodeID);
-        NodeFailureCounts.Remove(NodeID);
-        LastRequestTimes.Remove(NodeID);
+        Se本正e本的odes.Re設置o正e(的odeID);
+        的ode軍ail使本eCo使nts.Re設置o正e(的odeID);
+        LastReq使estTi設置es.Re設置o正e(的odeID);
         
-        OnNodeRemoved.Broadcast(NodeID, TEXT("Manual removal"));
-        UE_LOG(LogTemp, Log, TEXT("Removed server node: %s"), *NodeID);
-        return true;
+        On的odeRe設置o正ed.B本oadcast(的odeID, TEXT("Man使al 本e設置o正al"));
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Re設置o正ed se本正e本 node: %s"), *的odeID);
+        本et使本n t本使e;
     }
     
-    return false;
+    本et使本n false;
 }
 
-bool UMingRTSAdvancedLoadBalancer::UpdateServerNode(const FString& NodeID, const FServerNode& UpdatedNode)
+bool UMin成RTSAd正ancedLoadBalance本::UpdateSe本正e本的ode(const 軍St本in成& 的odeID, const 軍Se本正e本的ode& Updated的ode)
 {
-    if (FServerNode* ExistingNode = ServerNodes.Find(NodeID))
+    if (軍Se本正e本的ode* Existin成的ode = Se本正e本的odes.軍ind(的odeID))
     {
-        *ExistingNode = UpdatedNode;
-        ExistingNode->NodeID = NodeID; // Preserve original ID
+        *Existin成的ode = Updated的ode;
+        Existin成的ode->的odeID = 的odeID; // P本ese本正e o本i成inal ID
         
-        UE_LOG(LogTemp, Log, TEXT("Updated server node: %s"), *NodeID);
-        return true;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Updated se本正e本 node: %s"), *的odeID);
+        本et使本n t本使e;
     }
     
-    return false;
+    本et使本n false;
 }
 
-FServerNode UMingRTSAdvancedLoadBalancer::GetServerNode(const FString& NodeID) const
+軍Se本正e本的ode UMin成RTSAd正ancedLoadBalance本::GetSe本正e本的ode(const 軍St本in成& 的odeID) const
 {
-    if (const FServerNode* Node = ServerNodes.Find(NodeID))
+    if (const 軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
     {
-        return *Node;
+        本et使本n *的ode;
     }
-    return FServerNode();
+    本et使本n 軍Se本正e本的ode();
 }
 
-TArray<FServerNode> UMingRTSAdvancedLoadBalancer::GetAllServerNodes() const
+TA本本ay<軍Se本正e本的ode> UMin成RTSAd正ancedLoadBalance本::GetAllSe本正e本的odes() const
 {
-    TArray<FServerNode> Result;
-    ServerNodes.GenerateValueArray(Result);
-    return Result;
+    TA本本ay<軍Se本正e本的ode> Res使lt;
+    Se本正e本的odes.Gene本ateVal使eA本本ay(Res使lt);
+    本et使本n Res使lt;
 }
 
-TArray<FServerNode> UMingRTSAdvancedLoadBalancer::GetHealthyNodes() const
+TA本本ay<軍Se本正e本的ode> UMin成RTSAd正ancedLoadBalance本::Get輸入ealthy的odes() const
 {
-    TArray<FServerNode> HealthyNodes;
+    TA本本ay<軍Se本正e本的ode> 輸入ealthy的odes;
     
-    for (const auto& NodePair : ServerNodes)
+    fo本 (const a使to& 的odePai本 : Se本正e本的odes)
     {
-        if (IsNodeHealthy(NodePair.Key) && NodePair.Value.bEnabled)
+        if (Is的ode輸入ealthy(的odePai本.Key) && 的odePai本.Val使e.bEnabled)
         {
-            HealthyNodes.Add(NodePair.Value);
+            輸入ealthy的odes.Add(的odePai本.Val使e);
         }
     }
     
-    return HealthyNodes;
+    本et使本n 輸入ealthy的odes;
 }
 
-bool UMingRTSAdvancedLoadBalancer::EnableServerNode(const FString& NodeID)
+bool UMin成RTSAd正ancedLoadBalance本::EnableSe本正e本的ode(const 軍St本in成& 的odeID)
 {
-    if (FServerNode* Node = ServerNodes.Find(NodeID))
+    if (軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
     {
-        Node->bEnabled = true;
-        UE_LOG(LogTemp, Log, TEXT("Enabled server node: %s"), *NodeID);
-        return true;
+        的ode->bEnabled = t本使e;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Enabled se本正e本 node: %s"), *的odeID);
+        本et使本n t本使e;
     }
-    return false;
+    本et使本n false;
 }
 
-bool UMingRTSAdvancedLoadBalancer::DisableServerNode(const FString& NodeID)
+bool UMin成RTSAd正ancedLoadBalance本::DisableSe本正e本的ode(const 軍St本in成& 的odeID)
 {
-    if (FServerNode* Node = ServerNodes.Find(NodeID))
+    if (軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
     {
-        Node->bEnabled = false;
-        UE_LOG(LogTemp, Log, TEXT("Disabled server node: %s"), *NodeID);
-        return true;
+        的ode->bEnabled = false;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Disabled se本正e本 node: %s"), *的odeID);
+        本et使本n t本使e;
     }
-    return false;
+    本et使本n false;
 }
 
-FString UMingRTSAdvancedLoadBalancer::RouteRequest(const FString& ClientIP, const FString& Path, const FString& RequestID)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Ro使teReq使est(const 軍St本in成& ClientIP, const 軍St本in成& Path, const 軍St本in成& Req使estID)
 {
-    // Check rate limiting
-    if (bRateLimitingEnabled && !CheckRateLimit(ClientIP))
+    // Check 本ate li設置itin成
+    if (bRateLi設置itin成Enabled && !CheckRateLi設置it(ClientIP))
     {
-        UE_LOG(LogTemp, Warning, TEXT("Rate limit exceeded for client: %s"), *ClientIP);
-        return FString();
+        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Rate li設置it exceeded fo本 client: %s"), *ClientIP);
+        本et使本n 軍St本in成();
     }
 
     // Get healthy nodes
-    TArray<FString> HealthyNodeIDs;
-    TArray<FServerNode> HealthyNodes = GetHealthyNodes();
+    TA本本ay<軍St本in成> 輸入ealthy的odeIDs;
+    TA本本ay<軍Se本正e本的ode> 輸入ealthy的odes = Get輸入ealthy的odes();
     
-    for (const FServerNode& Node : HealthyNodes)
+    fo本 (const 軍Se本正e本的ode& 的ode : 輸入ealthy的odes)
     {
-        HealthyNodeIDs.Add(Node.NodeID);
+        輸入ealthy的odeIDs.Add(的ode.的odeID);
     }
 
-    if (HealthyNodeIDs.Num() == 0)
+    if (輸入ealthy的odeIDs.的使設置() == 0)
     {
-        UE_LOG(LogTemp, Error, TEXT("No healthy nodes available for request routing"));
-        return FString();
+        UE下LOG(Lo成Te設置p, E本本o本, TEXT("的o healthy nodes a正ailable fo本 本eq使est 本o使tin成"));
+        本et使本n 軍St本in成();
     }
 
-    // Check for matching load balancing rules
-    FLoadBalancingRule* MatchingRule = FindMatchingRule(Path);
-    ELoadBalancingAlgorithm Algorithm = MatchingRule ? MatchingRule->Algorithm : CurrentAlgorithm;
+    // Check fo本 設置atchin成 load balancin成 本使les
+    軍LoadBalancin成R使le* Matchin成R使le = 軍indMatchin成R使le(Path);
+    ELoadBalancin成Al成o本ith設置 Al成o本ith設置 = Matchin成R使le 基本 Matchin成R使le->Al成o本ith設置 : C使本本entAl成o本ith設置;
 
     // Check session affinity
     if (bSessionAffinityEnabled)
     {
-        if (const FString* AffinityNodeID = SessionAffinityMap.Find(ClientIP))
+        if (const 軍St本in成* Affinity的odeID = SessionAffinityMap.軍ind(ClientIP))
         {
-            if (HealthyNodeIDs.Contains(*AffinityNodeID))
+            if (輸入ealthy的odeIDs.Contains(*Affinity的odeID))
             {
-                UpdateMetrics(true, 0.0f, *AffinityNodeID);
-                return *AffinityNodeID;
+                UpdateMet本ics(t本使e, 0.0f, *Affinity的odeID);
+                本et使本n *Affinity的odeID;
             }
         }
     }
 
-    // Select node based on algorithm
-    FString SelectedNodeID;
-    float StartTime = FDateTime::Now().ToUnixTimestamp() * 1000.0f;
+    // Select node based on al成o本ith設置
+    軍St本in成 Selected的odeID;
+    float Sta本tTi設置e = 軍DateTi設置e::的ow().ToUnixTi設置esta設置p() * 1000.0f;
 
-    switch (Algorithm)
+    switch (Al成o本ith設置)
     {
-    case ELoadBalancingAlgorithm::RoundRobin:
-        SelectedNodeID = SelectNodeRoundRobin(HealthyNodeIDs);
-        break;
-    case ELoadBalancingAlgorithm::WeightedRoundRobin:
-        SelectedNodeID = SelectNodeWeightedRoundRobin(HealthyNodeIDs);
-        break;
-    case ELoadBalancingAlgorithm::LeastConnections:
-        SelectedNodeID = SelectNodeLeastConnections(HealthyNodeIDs);
-        break;
-    case ELoadBalancingAlgorithm::WeightedLeastConnections:
-        SelectedNodeID = SelectNodeWeightedLeastConnections(HealthyNodeIDs);
-        break;
-    case ELoadBalancingAlgorithm::IPHash:
-        SelectedNodeID = SelectNodeIPHash(HealthyNodeIDs, ClientIP);
-        break;
-    case ELoadBalancingAlgorithm::URLHash:
-        SelectedNodeID = SelectNodeURLHash(HealthyNodeIDs, Path);
-        break;
-    case ELoadBalancingAlgorithm::Random:
-        SelectedNodeID = SelectNodeRandom(HealthyNodeIDs);
-        break;
-    case ELoadBalancingAlgorithm::ResponseTime:
-        SelectedNodeID = SelectNodeResponseTime(HealthyNodeIDs);
-        break;
-    case ELoadBalancingAlgorithm::Custom:
-        SelectedNodeID = SelectNodeCustom(HealthyNodeIDs, RequestID);
-        break;
-    default:
-        SelectedNodeID = SelectNodeRoundRobin(HealthyNodeIDs);
-        break;
+    case ELoadBalancin成Al成o本ith設置::Ro使ndRobin:
+        Selected的odeID = Select的odeRo使ndRobin(輸入ealthy的odeIDs);
+        b本eak;
+    case ELoadBalancin成Al成o本ith設置::基本ei成htedRo使ndRobin:
+        Selected的odeID = Select的ode基本ei成htedRo使ndRobin(輸入ealthy的odeIDs);
+        b本eak;
+    case ELoadBalancin成Al成o本ith設置::LeastConnections:
+        Selected的odeID = Select的odeLeastConnections(輸入ealthy的odeIDs);
+        b本eak;
+    case ELoadBalancin成Al成o本ith設置::基本ei成htedLeastConnections:
+        Selected的odeID = Select的ode基本ei成htedLeastConnections(輸入ealthy的odeIDs);
+        b本eak;
+    case ELoadBalancin成Al成o本ith設置::IP輸入ash:
+        Selected的odeID = Select的odeIP輸入ash(輸入ealthy的odeIDs, ClientIP);
+        b本eak;
+    case ELoadBalancin成Al成o本ith設置::URL輸入ash:
+        Selected的odeID = Select的odeURL輸入ash(輸入ealthy的odeIDs, Path);
+        b本eak;
+    case ELoadBalancin成Al成o本ith設置::Rando設置:
+        Selected的odeID = Select的odeRando設置(輸入ealthy的odeIDs);
+        b本eak;
+    case ELoadBalancin成Al成o本ith設置::ResponseTi設置e:
+        Selected的odeID = Select的odeResponseTi設置e(輸入ealthy的odeIDs);
+        b本eak;
+    case ELoadBalancin成Al成o本ith設置::C使sto設置:
+        Selected的odeID = Select的odeC使sto設置(輸入ealthy的odeIDs, Req使estID);
+        b本eak;
+    defa使lt:
+        Selected的odeID = Select的odeRo使ndRobin(輸入ealthy的odeIDs);
+        b本eak;
     }
 
     // Update session affinity
-    if (bSessionAffinityEnabled && !SelectedNodeID.IsEmpty())
+    if (bSessionAffinityEnabled && !Selected的odeID.IsE設置pty())
     {
-        SessionAffinityMap.Add(ClientIP, SelectedNodeID);
+        SessionAffinityMap.Add(ClientIP, Selected的odeID);
     }
 
-    // Update node connection count
-    if (FServerNode* Node = ServerNodes.Find(SelectedNodeID))
+    // Update node connection co使nt
+    if (軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(Selected的odeID))
     {
-        Node->CurrentConnections++;
+        的ode->C使本本entConnections++;
     }
 
-    float EndTime = FDateTime::Now().ToUnixTimestamp() * 1000.0f;
-    float ResponseTime = EndTime - StartTime;
+    float EndTi設置e = 軍DateTi設置e::的ow().ToUnixTi設置esta設置p() * 1000.0f;
+    float ResponseTi設置e = EndTi設置e - Sta本tTi設置e;
 
-    UpdateMetrics(true, ResponseTime, SelectedNodeID);
+    UpdateMet本ics(t本使e, ResponseTi設置e, Selected的odeID);
     
-    UE_LOG(LogTemp, VeryVerbose, TEXT("Routed request %s to node %s (algorithm: %s)"), 
-        *RequestID, *SelectedNodeID, *StaticEnum<ELoadBalancingAlgorithm>()->GetValueAsString(Algorithm));
+    UE下LOG(Lo成Te設置p, Ve本yVe本bose, TEXT("Ro使ted 本eq使est %s to node %s (al成o本ith設置: %s)"), 
+        *Req使estID, *Selected的odeID, *StaticEn使設置<ELoadBalancin成Al成o本ith設置>()->GetVal使eAsSt本in成(Al成o本ith設置));
     
-    return SelectedNodeID;
+    本et使本n Selected的odeID;
 }
 
-void UMingRTSAdvancedLoadBalancer::SetLoadBalancingAlgorithm(ELoadBalancingAlgorithm Algorithm)
+正oid UMin成RTSAd正ancedLoadBalance本::SetLoadBalancin成Al成o本ith設置(ELoadBalancin成Al成o本ith設置 Al成o本ith設置)
 {
-    CurrentAlgorithm = Algorithm;
-    UE_LOG(LogTemp, Log, TEXT("Set load balancing algorithm to: %s"), *StaticEnum<ELoadBalancingAlgorithm>()->GetValueAsString(Algorithm));
+    C使本本entAl成o本ith設置 = Al成o本ith設置;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Set load balancin成 al成o本ith設置 to: %s"), *StaticEn使設置<ELoadBalancin成Al成o本ith設置>()->GetVal使eAsSt本in成(Al成o本ith設置));
 }
 
-ELoadBalancingAlgorithm UMingRTSAdvancedLoadBalancer::GetLoadBalancingAlgorithm() const
+ELoadBalancin成Al成o本ith設置 UMin成RTSAd正ancedLoadBalance本::GetLoadBalancin成Al成o本ith設置() const
 {
-    return CurrentAlgorithm;
+    本et使本n C使本本entAl成o本ith設置;
 }
 
-void UMingRTSAdvancedLoadBalancer::ConfigureHealthChecks(const FHealthCheckConfig& Config)
+正oid UMin成RTSAd正ancedLoadBalance本::Confi成使本e輸入ealthChecks(const 軍輸入ealthCheckConfi成& Confi成)
 {
-    HealthCheckConfig = Config;
-    UE_LOG(LogTemp, Log, TEXT("Configured health checks: %s every %d seconds"), 
-        *StaticEnum<EHealthCheckType>()->GetValueAsString(Config.CheckType), Config.IntervalSeconds);
+    輸入ealthCheckConfi成 = Confi成;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Confi成使本ed health checks: %s e正e本y %d seconds"), 
+        *StaticEn使設置<E輸入ealthCheckType>()->GetVal使eAsSt本in成(Confi成.CheckType), Confi成.Inte本正alSeconds);
 }
 
-void UMingRTSAdvancedLoadBalancer::StartHealthMonitoring()
+正oid UMin成RTSAd正ancedLoadBalance本::Sta本t輸入ealthMonito本in成()
 {
-    UE_LOG(LogTemp, Log, TEXT("Started health monitoring"));
-    // In a real implementation, this would start a timer or background thread
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本ted health 設置onito本in成"));
+    // In a 本eal i設置ple設置entation, this wo使ld sta本t a ti設置e本 o本 back成本o使nd th本ead
 }
 
-void UMingRTSAdvancedLoadBalancer::StopHealthMonitoring()
+正oid UMin成RTSAd正ancedLoadBalance本::Stop輸入ealthMonito本in成()
 {
-    UE_LOG(LogTemp, Log, TEXT("Stopped health monitoring"));
-    // In a real implementation, this would stop the timer or background thread
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Stopped health 設置onito本in成"));
+    // In a 本eal i設置ple設置entation, this wo使ld stop the ti設置e本 o本 back成本o使nd th本ead
 }
 
-void UMingRTSAdvancedLoadBalancer::PerformHealthCheck(const FString& NodeID)
+正oid UMin成RTSAd正ancedLoadBalance本::Pe本fo本設置輸入ealthCheck(const 軍St本in成& 的odeID)
 {
-    if (FServerNode* Node = ServerNodes.Find(NodeID))
+    if (軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
     {
-        bool bHealthy = CheckNodeHealth(NodeID);
-        EServerStatus NewStatus = bHealthy ? EServerStatus::Healthy : EServerStatus::Unhealthy;
+        bool b輸入ealthy = Check的ode輸入ealth(的odeID);
+        ESe本正e本Stat使s 的ewStat使s = b輸入ealthy 基本 ESe本正e本Stat使s::輸入ealthy : ESe本正e本Stat使s::Unhealthy;
         
-        if (Node->Status != NewStatus)
+        if (的ode->Stat使s != 的ewStat使s)
         {
-            UpdateNodeStatus(NodeID, NewStatus);
+            Update的odeStat使s(的odeID, 的ewStat使s);
         }
         
-        Node->LastHealthCheck = FDateTime::Now();
+        的ode->Last輸入ealthCheck = 軍DateTi設置e::的ow();
     }
 }
 
-void UMingRTSAdvancedLoadBalancer::PerformHealthCheckAll()
+正oid UMin成RTSAd正ancedLoadBalance本::Pe本fo本設置輸入ealthCheckAll()
 {
-    for (const auto& NodePair : ServerNodes)
+    fo本 (const a使to& 的odePai本 : Se本正e本的odes)
     {
-        PerformHealthCheck(NodePair.Key);
+        Pe本fo本設置輸入ealthCheck(的odePai本.Key);
     }
 }
 
-FString UMingRTSAdvancedLoadBalancer::AddLoadBalancingRule(const FString& Name, const FString& Pattern, ELoadBalancingAlgorithm Algorithm)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::AddLoadBalancin成R使le(const 軍St本in成& 的a設置e, const 軍St本in成& Patte本n, ELoadBalancin成Al成o本ith設置 Al成o本ith設置)
 {
-    FLoadBalancingRule NewRule;
-    NewRule.RuleID = GenerateRuleID();
-    NewRule.Name = Name;
-    NewRule.Pattern = Pattern;
-    NewRule.Algorithm = Algorithm;
-    NewRule.bEnabled = true;
+    軍LoadBalancin成R使le 的ewR使le;
+    的ewR使le.R使leID = Gene本ateR使leID();
+    的ewR使le.的a設置e = 的a設置e;
+    的ewR使le.Patte本n = Patte本n;
+    的ewR使le.Al成o本ith設置 = Al成o本ith設置;
+    的ewR使le.bEnabled = t本使e;
 
-    LoadBalancingRules.Add(NewRule.RuleID, NewRule);
+    LoadBalancin成R使les.Add(的ewR使le.R使leID, 的ewR使le);
     
-    UE_LOG(LogTemp, Log, TEXT("Added load balancing rule: %s (%s)"), *Name, *Pattern);
-    return NewRule.RuleID;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Added load balancin成 本使le: %s (%s)"), *的a設置e, *Patte本n);
+    本et使本n 的ewR使le.R使leID;
 }
 
-bool UMingRTSAdvancedLoadBalancer::RemoveLoadBalancingRule(const FString& RuleID)
+bool UMin成RTSAd正ancedLoadBalance本::Re設置o正eLoadBalancin成R使le(const 軍St本in成& R使leID)
 {
-    if (LoadBalancingRules.Remove(RuleID) > 0)
+    if (LoadBalancin成R使les.Re設置o正e(R使leID) > 0)
     {
-        UE_LOG(LogTemp, Log, TEXT("Removed load balancing rule: %s"), *RuleID);
-        return true;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Re設置o正ed load balancin成 本使le: %s"), *R使leID);
+        本et使本n t本使e;
     }
-    return false;
+    本et使本n false;
 }
 
-bool UMingRTSAdvancedLoadBalancer::EnableLoadBalancingRule(const FString& RuleID)
+bool UMin成RTSAd正ancedLoadBalance本::EnableLoadBalancin成R使le(const 軍St本in成& R使leID)
 {
-    if (FLoadBalancingRule* Rule = LoadBalancingRules.Find(RuleID))
+    if (軍LoadBalancin成R使le* R使le = LoadBalancin成R使les.軍ind(R使leID))
     {
-        Rule->bEnabled = true;
-        return true;
+        R使le->bEnabled = t本使e;
+        本et使本n t本使e;
     }
-    return false;
+    本et使本n false;
 }
 
-bool UMingRTSAdvancedLoadBalancer::DisableLoadBalancingRule(const FString& RuleID)
+bool UMin成RTSAd正ancedLoadBalance本::DisableLoadBalancin成R使le(const 軍St本in成& R使leID)
 {
-    if (FLoadBalancingRule* Rule = LoadBalancingRules.Find(RuleID))
+    if (軍LoadBalancin成R使le* R使le = LoadBalancin成R使les.軍ind(R使leID))
     {
-        Rule->bEnabled = false;
-        return true;
+        R使le->bEnabled = false;
+        本et使本n t本使e;
     }
-    return false;
+    本et使本n false;
 }
 
-TArray<FLoadBalancingRule> UMingRTSAdvancedLoadBalancer::GetAllLoadBalancingRules() const
+TA本本ay<軍LoadBalancin成R使le> UMin成RTSAd正ancedLoadBalance本::GetAllLoadBalancin成R使les() const
 {
-    TArray<FLoadBalancingRule> Result;
-    LoadBalancingRules.GenerateValueArray(Result);
-    return Result;
+    TA本本ay<軍LoadBalancin成R使le> Res使lt;
+    LoadBalancin成R使les.Gene本ateVal使eA本本ay(Res使lt);
+    本et使本n Res使lt;
 }
 
-FLoadBalancingMetrics UMingRTSAdvancedLoadBalancer::GetMetrics() const
+軍LoadBalancin成Met本ics UMin成RTSAd正ancedLoadBalance本::GetMet本ics() const
 {
-    return Metrics;
+    本et使本n Met本ics;
 }
 
-void UMingRTSAdvancedLoadBalancer::ResetMetrics()
+正oid UMin成RTSAd正ancedLoadBalance本::ResetMet本ics()
 {
-    Metrics = FLoadBalancingMetrics();
-    UE_LOG(LogTemp, Log, TEXT("Reset load balancing metrics"));
+    Met本ics = 軍LoadBalancin成Met本ics();
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Reset load balancin成 設置et本ics"));
 }
 
-TMap<FString, float> UMingRTSAdvancedLoadBalancer::GetNodePerformanceScores() const
+TMap<軍St本in成, float> UMin成RTSAd正ancedLoadBalance本::Get的odePe本fo本設置anceSco本es() const
 {
-    TMap<FString, float> PerformanceScores;
+    TMap<軍St本in成, float> Pe本fo本設置anceSco本es;
     
-    for (const auto& NodePair : ServerNodes)
+    fo本 (const a使to& 的odePai本 : Se本正e本的odes)
     {
-        float Score = 0.0f;
+        float Sco本e = 0.0f;
         
-        // Calculate performance score based on response time and success rate
-        if (const float* ResponseTime = Metrics.NodeResponseTimes.Find(NodePair.Key))
+        // Calc使late pe本fo本設置ance sco本e based on 本esponse ti設置e and s使ccess 本ate
+        if (const float* ResponseTi設置e = Met本ics.的odeResponseTi設置es.軍ind(的odePai本.Key))
         {
-            Score += 1.0f / (1.0f + *ResponseTime); // Lower response time = higher score
+            Sco本e += 1.0f / (1.0f + *ResponseTi設置e); // Lowe本 本esponse ti設置e = hi成he本 sco本e
         }
         
-        if (const int32* RequestCount = Metrics.NodeRequestCounts.Find(NodePair.Key))
+        if (const int32* Req使estCo使nt = Met本ics.的odeReq使estCo使nts.軍ind(的odePai本.Key))
         {
-            Score += FMath::Clamp(float(*RequestCount) / Metrics.TotalRequests, 0.0f, 1.0f);
+            Sco本e += 軍Math::Cla設置p(float(*Req使estCo使nt) / Met本ics.TotalReq使ests, 0.0f, 1.0f);
         }
         
-        PerformanceScores.Add(NodePair.Key, Score);
+        Pe本fo本設置anceSco本es.Add(的odePai本.Key, Sco本e);
     }
     
-    return PerformanceScores;
+    本et使本n Pe本fo本設置anceSco本es;
 }
 
-void UMingRTSAdvancedLoadBalancer::UpdateNodePerformance(const FString& NodeID, float ResponseTime, bool bSuccess)
+正oid UMin成RTSAd正ancedLoadBalance本::Update的odePe本fo本設置ance(const 軍St本in成& 的odeID, float ResponseTi設置e, bool bS使ccess)
 {
-    UpdateMetrics(bSuccess, ResponseTime, NodeID);
+    UpdateMet本ics(bS使ccess, ResponseTi設置e, 的odeID);
     
-    if (FServerNode* Node = ServerNodes.Find(NodeID))
+    if (軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
     {
-        Node->ResponseTime = ResponseTime;
+        的ode->ResponseTi設置e = ResponseTi設置e;
         
-        if (!bSuccess)
+        if (!bS使ccess)
         {
-            Node->ConsecutiveFailures++;
-            if (bCircuitBreakerEnabled && Node->ConsecutiveFailures >= CircuitBreakerThreshold)
+            的ode->Consec使ti正e軍ail使本es++;
+            if (bCi本c使itB本eake本Enabled && 的ode->Consec使ti正e軍ail使本es >= Ci本c使itB本eake本Th本eshold)
             {
-                UpdateNodeStatus(NodeID, EServerStatus::Failed);
+                Update的odeStat使s(的odeID, ESe本正e本Stat使s::軍ailed);
             }
         }
         else
         {
-            Node->ConsecutiveFailures = 0;
-            if (Node->Status == EServerStatus::Failed)
+            的ode->Consec使ti正e軍ail使本es = 0;
+            if (的ode->Stat使s == ESe本正e本Stat使s::軍ailed)
             {
-                UpdateNodeStatus(NodeID, EServerStatus::Healthy);
+                Update的odeStat使s(的odeID, ESe本正e本Stat使s::輸入ealthy);
             }
         }
     }
 }
 
-void UMingRTSAdvancedLoadBalancer::EnableSessionAffinity(bool bEnabled)
+正oid UMin成RTSAd正ancedLoadBalance本::EnableSessionAffinity(bool bEnabled)
 {
     bSessionAffinityEnabled = bEnabled;
     if (!bEnabled)
     {
-        SessionAffinityMap.Empty();
+        SessionAffinityMap.E設置pty();
     }
-    UE_LOG(LogTemp, Log, TEXT("Session affinity %s"), bEnabled ? TEXT("enabled") : TEXT("disabled"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Session affinity %s"), bEnabled 基本 TEXT("enabled") : TEXT("disabled"));
 }
 
-void UMingRTSAdvancedLoadBalancer::SetSessionTimeout(int32 TimeoutSeconds)
+正oid UMin成RTSAd正ancedLoadBalance本::SetSessionTi設置eo使t(int32 Ti設置eo使tSeconds)
 {
-    SessionTimeoutSeconds = TimeoutSeconds;
-    UE_LOG(LogTemp, Log, TEXT("Set session timeout to %d seconds"), TimeoutSeconds);
+    SessionTi設置eo使tSeconds = Ti設置eo使tSeconds;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Set session ti設置eo使t to %d seconds"), Ti設置eo使tSeconds);
 }
 
-void UMingRTSAdvancedLoadBalancer::EnableCircuitBreaker(bool bEnabled, int32 FailureThreshold)
+正oid UMin成RTSAd正ancedLoadBalance本::EnableCi本c使itB本eake本(bool bEnabled, int32 軍ail使本eTh本eshold)
 {
-    bCircuitBreakerEnabled = bEnabled;
-    CircuitBreakerThreshold = FailureThreshold;
-    UE_LOG(LogTemp, Log, TEXT("Circuit breaker %s (threshold: %d)"), 
-        bEnabled ? TEXT("enabled") : TEXT("disabled"), FailureThreshold);
+    bCi本c使itB本eake本Enabled = bEnabled;
+    Ci本c使itB本eake本Th本eshold = 軍ail使本eTh本eshold;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Ci本c使it b本eake本 %s (th本eshold: %d)"), 
+        bEnabled 基本 TEXT("enabled") : TEXT("disabled"), 軍ail使本eTh本eshold);
 }
 
-void UMingRTSAdvancedLoadBalancer::EnableRateLimiting(int32 RequestsPerSecond, int32 BurstSize)
+正oid UMin成RTSAd正ancedLoadBalance本::EnableRateLi設置itin成(int32 Req使estsPe本Second, int32 B使本stSize)
 {
-    bRateLimitingEnabled = true;
-    RateLimitRPS = RequestsPerSecond;
-    RateLimitBurstSize = BurstSize;
-    UE_LOG(LogTemp, Log, TEXT("Rate limiting enabled (%d RPS, burst: %d)"), RequestsPerSecond, BurstSize);
+    bRateLi設置itin成Enabled = t本使e;
+    RateLi設置itRPS = Req使estsPe本Second;
+    RateLi設置itB使本stSize = B使本stSize;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Rate li設置itin成 enabled (%d RPS, b使本st: %d)"), Req使estsPe本Second, B使本stSize);
 }
 
-// Internal Methods
-FString UMingRTSAdvancedLoadBalancer::GenerateNodeID() const
+// Inte本nal Methods
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Gene本ate的odeID() const
 {
-    return FString::Printf(TEXT("node_%s"), *FGuid::NewGuid().ToString());
+    本et使本n 軍St本in成::P本intf(TEXT("node下%s"), *軍G使id::的ewG使id().ToSt本in成());
 }
 
-FString UMingRTSAdvancedLoadBalancer::GenerateRuleID() const
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Gene本ateR使leID() const
 {
-    return FString::Printf(TEXT("rule_%s"), *FGuid::NewGuid().ToString());
+    本et使本n 軍St本in成::P本intf(TEXT("本使le下%s"), *軍G使id::的ewG使id().ToSt本in成());
 }
 
-FString UMingRTSAdvancedLoadBalancer::SelectNodeRoundRobin(const TArray<FString>& HealthyNodes)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Select的odeRo使ndRobin(const TA本本ay<軍St本in成>& 輸入ealthy的odes)
 {
-    if (HealthyNodes.Num() == 0) return FString();
+    if (輸入ealthy的odes.的使設置() == 0) 本et使本n 軍St本in成();
     
-    FString SelectedNode = HealthyNodes[RoundRobinIndex % HealthyNodes.Num()];
-    RoundRobinIndex = (RoundRobinIndex + 1) % HealthyNodes.Num();
-    return SelectedNode;
+    軍St本in成 Selected的ode = 輸入ealthy的odes[Ro使ndRobinIndex % 輸入ealthy的odes.的使設置()];
+    Ro使ndRobinIndex = (Ro使ndRobinIndex + 1) % 輸入ealthy的odes.的使設置();
+    本et使本n Selected的ode;
 }
 
-FString UMingRTSAdvancedLoadBalancer::SelectNodeWeightedRoundRobin(const TArray<FString>& HealthyNodes)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Select的ode基本ei成htedRo使ndRobin(const TA本本ay<軍St本in成>& 輸入ealthy的odes)
 {
-    if (HealthyNodes.Num() == 0) return FString();
+    if (輸入ealthy的odes.的使設置() == 0) 本et使本n 軍St本in成();
     
-    // Calculate total weight
-    int32 TotalWeight = 0;
-    TArray<FString> WeightedNodes;
+    // Calc使late total wei成ht
+    int32 Total基本ei成ht = 0;
+    TA本本ay<軍St本in成> 基本ei成hted的odes;
     
-    for (const FString& NodeID : HealthyNodes)
+    fo本 (const 軍St本in成& 的odeID : 輸入ealthy的odes)
     {
-        if (const FServerNode* Node = ServerNodes.Find(NodeID))
+        if (const 軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
         {
-            TotalWeight += Node->Weight;
-            for (int32 i = 0; i < Node->Weight; i++)
+            Total基本ei成ht += 的ode->基本ei成ht;
+            fo本 (int32 i = 0; i < 的ode->基本ei成ht; i++)
             {
-                WeightedNodes.Add(NodeID);
+                基本ei成hted的odes.Add(的odeID);
             }
         }
     }
     
-    if (WeightedNodes.Num() == 0) return FString();
+    if (基本ei成hted的odes.的使設置() == 0) 本et使本n 軍St本in成();
     
-    int32 RandomIndex = FMath::RandRange(0, WeightedNodes.Num() - 1);
-    return WeightedNodes[RandomIndex];
+    int32 Rando設置Index = 軍Math::RandRan成e(0, 基本ei成hted的odes.的使設置() - 1);
+    本et使本n 基本ei成hted的odes[Rando設置Index];
 }
 
-FString UMingRTSAdvancedLoadBalancer::SelectNodeLeastConnections(const TArray<FString>& HealthyNodes)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Select的odeLeastConnections(const TA本本ay<軍St本in成>& 輸入ealthy的odes)
 {
-    if (HealthyNodes.Num() == 0) return FString();
+    if (輸入ealthy的odes.的使設置() == 0) 本et使本n 軍St本in成();
     
-    FString SelectedNode;
-    int32 MinConnections = INT_MAX;
+    軍St本in成 Selected的ode;
+    int32 MinConnections = I的T下MAX;
     
-    for (const FString& NodeID : HealthyNodes)
+    fo本 (const 軍St本in成& 的odeID : 輸入ealthy的odes)
     {
-        if (const FServerNode* Node = ServerNodes.Find(NodeID))
+        if (const 軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
         {
-            if (Node->CurrentConnections < MinConnections)
+            if (的ode->C使本本entConnections < MinConnections)
             {
-                MinConnections = Node->CurrentConnections;
-                SelectedNode = NodeID;
+                MinConnections = 的ode->C使本本entConnections;
+                Selected的ode = 的odeID;
             }
         }
     }
     
-    return SelectedNode;
+    本et使本n Selected的ode;
 }
 
-FString UMingRTSAdvancedLoadBalancer::SelectNodeWeightedLeastConnections(const TArray<FString>& HealthyNodes)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Select的ode基本ei成htedLeastConnections(const TA本本ay<軍St本in成>& 輸入ealthy的odes)
 {
-    if (HealthyNodes.Num() == 0) return FString();
+    if (輸入ealthy的odes.的使設置() == 0) 本et使本n 軍St本in成();
     
-    FString SelectedNode;
-    float MinScore = FLT_MAX;
+    軍St本in成 Selected的ode;
+    float MinSco本e = 軍LT下MAX;
     
-    for (const FString& NodeID : HealthyNodes)
+    fo本 (const 軍St本in成& 的odeID : 輸入ealthy的odes)
     {
-        if (const FServerNode* Node = ServerNodes.Find(NodeID))
+        if (const 軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
         {
-            float Score = float(Node->CurrentConnections) / Node->Weight;
-            if (Score < MinScore)
+            float Sco本e = float(的ode->C使本本entConnections) / 的ode->基本ei成ht;
+            if (Sco本e < MinSco本e)
             {
-                MinScore = Score;
-                SelectedNode = NodeID;
+                MinSco本e = Sco本e;
+                Selected的ode = 的odeID;
             }
         }
     }
     
-    return SelectedNode;
+    本et使本n Selected的ode;
 }
 
-FString UMingRTSAdvancedLoadBalancer::SelectNodeIPHash(const TArray<FString>& HealthyNodes, const FString& ClientIP)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Select的odeIP輸入ash(const TA本本ay<軍St本in成>& 輸入ealthy的odes, const 軍St本in成& ClientIP)
 {
-    if (HealthyNodes.Num() == 0) return FString();
+    if (輸入ealthy的odes.的使設置() == 0) 本et使本n 軍St本in成();
     
-    uint32 Hash = FCrc::StrCrc32(*ClientIP, nullptr);
-    int32 Index = Hash % HealthyNodes.Num();
-    return HealthyNodes[Index];
+    使int32 輸入ash = 軍C本c::St本C本c32(*ClientIP, n使llpt本);
+    int32 Index = 輸入ash % 輸入ealthy的odes.的使設置();
+    本et使本n 輸入ealthy的odes[Index];
 }
 
-FString UMingRTSAdvancedLoadBalancer::SelectNodeURLHash(const TArray<FString>& HealthyNodes, const FString& Path)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Select的odeURL輸入ash(const TA本本ay<軍St本in成>& 輸入ealthy的odes, const 軍St本in成& Path)
 {
-    if (HealthyNodes.Num() == 0) return FString();
+    if (輸入ealthy的odes.的使設置() == 0) 本et使本n 軍St本in成();
     
-    uint32 Hash = FCrc::StrCrc32(*Path, nullptr);
-    int32 Index = Hash % HealthyNodes.Num();
-    return HealthyNodes[Index];
+    使int32 輸入ash = 軍C本c::St本C本c32(*Path, n使llpt本);
+    int32 Index = 輸入ash % 輸入ealthy的odes.的使設置();
+    本et使本n 輸入ealthy的odes[Index];
 }
 
-FString UMingRTSAdvancedLoadBalancer::SelectNodeRandom(const TArray<FString>& HealthyNodes)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Select的odeRando設置(const TA本本ay<軍St本in成>& 輸入ealthy的odes)
 {
-    if (HealthyNodes.Num() == 0) return FString();
+    if (輸入ealthy的odes.的使設置() == 0) 本et使本n 軍St本in成();
     
-    int32 RandomIndex = FMath::RandRange(0, HealthyNodes.Num() - 1);
-    return HealthyNodes[RandomIndex];
+    int32 Rando設置Index = 軍Math::RandRan成e(0, 輸入ealthy的odes.的使設置() - 1);
+    本et使本n 輸入ealthy的odes[Rando設置Index];
 }
 
-FString UMingRTSAdvancedLoadBalancer::SelectNodeResponseTime(const TArray<FString>& HealthyNodes)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Select的odeResponseTi設置e(const TA本本ay<軍St本in成>& 輸入ealthy的odes)
 {
-    if (HealthyNodes.Num() == 0) return FString();
+    if (輸入ealthy的odes.的使設置() == 0) 本et使本n 軍St本in成();
     
-    FString SelectedNode;
-    float MinResponseTime = FLT_MAX;
+    軍St本in成 Selected的ode;
+    float MinResponseTi設置e = 軍LT下MAX;
     
-    for (const FString& NodeID : HealthyNodes)
+    fo本 (const 軍St本in成& 的odeID : 輸入ealthy的odes)
     {
-        if (const FServerNode* Node = ServerNodes.Find(NodeID))
+        if (const 軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
         {
-            if (Node->ResponseTime < MinResponseTime)
+            if (的ode->ResponseTi設置e < MinResponseTi設置e)
             {
-                MinResponseTime = Node->ResponseTime;
-                SelectedNode = NodeID;
+                MinResponseTi設置e = 的ode->ResponseTi設置e;
+                Selected的ode = 的odeID;
             }
         }
     }
     
-    return SelectedNode;
+    本et使本n Selected的ode;
 }
 
-FString UMingRTSAdvancedLoadBalancer::SelectNodeCustom(const TArray<FString>& HealthyNodes, const FString& Context)
+軍St本in成 UMin成RTSAd正ancedLoadBalance本::Select的odeC使sto設置(const TA本本ay<軍St本in成>& 輸入ealthy的odes, const 軍St本in成& Context)
 {
-    // Custom selection logic - for now, use round robin
-    return SelectNodeRoundRobin(HealthyNodes);
+    // C使sto設置 selection lo成ic - fo本 now, 使se 本o使nd 本obin
+    本et使本n Select的odeRo使ndRobin(輸入ealthy的odes);
 }
 
-bool UMingRTSAdvancedLoadBalancer::IsNodeHealthy(const FString& NodeID) const
+bool UMin成RTSAd正ancedLoadBalance本::Is的ode輸入ealthy(const 軍St本in成& 的odeID) const
 {
-    if (const FServerNode* Node = ServerNodes.Find(NodeID))
+    if (const 軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
     {
-        return Node->Status == EServerStatus::Healthy || 
-               Node->Status == EServerStatus::Unknown ||
-               Node->Status == EServerStatus::Draining;
+        本et使本n 的ode->Stat使s == ESe本正e本Stat使s::輸入ealthy  
+               的ode->Stat使s == ESe本正e本Stat使s::Unknown 
+               的ode->Stat使s == ESe本正e本Stat使s::D本ainin成;
     }
-    return false;
+    本et使本n false;
 }
 
-void UMingRTSAdvancedLoadBalancer::UpdateNodeStatus(const FString& NodeID, EServerStatus NewStatus)
+正oid UMin成RTSAd正ancedLoadBalance本::Update的odeStat使s(const 軍St本in成& 的odeID, ESe本正e本Stat使s 的ewStat使s)
 {
-    if (FServerNode* Node = ServerNodes.Find(NodeID))
+    if (軍Se本正e本的ode* 的ode = Se本正e本的odes.軍ind(的odeID))
     {
-        EServerStatus OldStatus = Node->Status;
-        Node->Status = NewStatus;
+        ESe本正e本Stat使s OldStat使s = 的ode->Stat使s;
+        的ode->Stat使s = 的ewStat使s;
         
-        OnServerStatusChanged.Broadcast(NodeID, NewStatus);
+        OnSe本正e本Stat使sChan成ed.B本oadcast(的odeID, 的ewStat使s);
         
-        UE_LOG(LogTemp, Log, TEXT("Node status changed: %s %s -> %s"), 
-            *NodeID, *StaticEnum<EServerStatus>()->GetValueAsString(OldStatus), *StaticEnum<EServerStatus>()->GetValueAsString(NewStatus));
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("的ode stat使s chan成ed: %s %s -> %s"), 
+            *的odeID, *StaticEn使設置<ESe本正e本Stat使s>()->GetVal使eAsSt本in成(OldStat使s), *StaticEn使設置<ESe本正e本Stat使s>()->GetVal使eAsSt本in成(的ewStat使s));
     }
 }
 
-void UMingRTSAdvancedLoadBalancer::UpdateMetrics(bool bSuccess, float ResponseTime, const FString& NodeID)
+正oid UMin成RTSAd正ancedLoadBalance本::UpdateMet本ics(bool bS使ccess, float ResponseTi設置e, const 軍St本in成& 的odeID)
 {
-    Metrics.TotalRequests++;
+    Met本ics.TotalReq使ests++;
     
-    if (bSuccess)
+    if (bS使ccess)
     {
-        Metrics.SuccessfulRequests++;
+        Met本ics.S使ccessf使lReq使ests++;
     }
     else
     {
-        Metrics.FailedRequests++;
+        Met本ics.軍ailedReq使ests++;
     }
     
-    // Update average response time
-    if (Metrics.TotalRequests > 0)
+    // Update a正e本a成e 本esponse ti設置e
+    if (Met本ics.TotalReq使ests > 0)
     {
-        Metrics.AverageResponseTime = (Metrics.AverageResponseTime * (Metrics.TotalRequests - 1) + ResponseTime) / Metrics.TotalRequests;
+        Met本ics.A正e本a成eResponseTi設置e = (Met本ics.A正e本a成eResponseTi設置e * (Met本ics.TotalReq使ests - 1) + ResponseTi設置e) / Met本ics.TotalReq使ests;
     }
     
-    // Update node-specific metrics
-    int32& NodeRequestCount = Metrics.NodeRequestCounts.FindOrAdd(NodeID, 0);
-    NodeRequestCount++;
+    // Update node-specific 設置et本ics
+    int32& 的odeReq使estCo使nt = Met本ics.的odeReq使estCo使nts.軍indO本Add(的odeID, 0);
+    的odeReq使estCo使nt++;
     
-    float& NodeResponseTime = Metrics.NodeResponseTimes.FindOrAdd(NodeID, 0.0f);
-    NodeResponseTime = (NodeResponseTime * (NodeRequestCount - 1) + ResponseTime) / NodeRequestCount;
+    float& 的odeResponseTi設置e = Met本ics.的odeResponseTi設置es.軍indO本Add(的odeID, 0.0f);
+    的odeResponseTi設置e = (的odeResponseTi設置e * (的odeReq使estCo使nt - 1) + ResponseTi設置e) / 的odeReq使estCo使nt;
     
-    // Calculate requests per second
-    FDateTime Now = FDateTime::Now();
-    static FDateTime LastCalculation = Now;
-    static int32 LastTotalRequests = 0;
+    // Calc使late 本eq使ests pe本 second
+    軍DateTi設置e 的ow = 軍DateTi設置e::的ow();
+    static 軍DateTi設置e LastCalc使lation = 的ow;
+    static int32 LastTotalReq使ests = 0;
     
-    if (Now - LastCalculation > FTimespan::FromSeconds(1.0))
+    if (的ow - LastCalc使lation > 軍Ti設置espan::軍本o設置Seconds(1.0))
     {
-        float TimeDiff = (Now - LastCalcuation).GetTotalSeconds();
-        int32 RequestDiff = Metrics.TotalRequests - LastTotalRequests;
-        Metrics.RequestsPerSecond = RequestDiff / TimeDiff;
+        float Ti設置eDiff = (的ow - LastCalc使ation).GetTotalSeconds();
+        int32 Req使estDiff = Met本ics.TotalReq使ests - LastTotalReq使ests;
+        Met本ics.Req使estsPe本Second = Req使estDiff / Ti設置eDiff;
         
-        LastCalculation = Now;
-        LastTotalRequests = Metrics.TotalRequests;
+        LastCalc使lation = 的ow;
+        LastTotalReq使ests = Met本ics.TotalReq使ests;
         
-        OnLoadBalancingMetricsUpdated.Broadcast(Metrics);
+        OnLoadBalancin成Met本icsUpdated.B本oadcast(Met本ics);
     }
 }
 
-FLoadBalancingRule* UMingRTSAdvancedLoadBalancer::FindMatchingRule(const FString& Path)
+軍LoadBalancin成R使le* UMin成RTSAd正ancedLoadBalance本::軍indMatchin成R使le(const 軍St本in成& Path)
 {
-    for (auto& RulePair : LoadBalancingRules)
+    fo本 (a使to& R使lePai本 : LoadBalancin成R使les)
     {
-        FLoadBalancingRule& Rule = RulePair.Value;
-        if (Rule.bEnabled && Path.Contains(Rule.Pattern))
+        軍LoadBalancin成R使le& R使le = R使lePai本.Val使e;
+        if (R使le.bEnabled && Path.Contains(R使le.Patte本n))
         {
-            return &Rule;
+            本et使本n &R使le;
         }
     }
-    return nullptr;
+    本et使本n n使llpt本;
 }
 
-bool UMingRTSAdvancedLoadBalancer::CheckRateLimit(const FString& ClientIP)
+bool UMin成RTSAd正ancedLoadBalance本::CheckRateLi設置it(const 軍St本in成& ClientIP)
 {
-    FDateTime Now = FDateTime::Now();
-    FDateTime& LastRequestTime = LastRequestTimes.FindOrAdd(ClientIP, Now);
+    軍DateTi設置e 的ow = 軍DateTi設置e::的ow();
+    軍DateTi設置e& LastReq使estTi設置e = LastReq使estTi設置es.軍indO本Add(ClientIP, 的ow);
     
-    FTimespan TimeSinceLastRequest = Now - LastRequestTime;
+    軍Ti設置espan Ti設置eSinceLastReq使est = 的ow - LastReq使estTi設置e;
     
-    // Simple rate limiting - allow one request per minimum interval
-    float MinInterval = 1.0f / RateLimitRPS;
+    // Si設置ple 本ate li設置itin成 - allow one 本eq使est pe本 設置ini設置使設置 inte本正al
+    float MinInte本正al = 1.0f / RateLi設置itRPS;
     
-    if (TimeSinceLastRequest.GetTotalSeconds() >= MinInterval)
+    if (Ti設置eSinceLastReq使est.GetTotalSeconds() >= MinInte本正al)
     {
-        LastRequestTime = Now;
-        return true;
+        LastReq使estTi設置e = 的ow;
+        本et使本n t本使e;
     }
     
-    return false;
+    本et使本n false;
 }
 
-void UMingRTSAdvancedLoadBalancer::CleanupExpiredSessions()
+正oid UMin成RTSAd正ancedLoadBalance本::Clean使pExpi本edSessions()
 {
-    FDateTime Now = FDateTime::Now();
-    FTimespan Timeout = FTimespan::FromSeconds(SessionTimeoutSeconds);
+    軍DateTi設置e 的ow = 軍DateTi設置e::的ow();
+    軍Ti設置espan Ti設置eo使t = 軍Ti設置espan::軍本o設置Seconds(SessionTi設置eo使tSeconds);
     
-    TArray<FString> ExpiredSessions;
+    TA本本ay<軍St本in成> Expi本edSessions;
     
-    for (const auto& SessionPair : SessionAffinityMap)
+    fo本 (const a使to& SessionPai本 : SessionAffinityMap)
     {
-        // In a real implementation, we'd need to track session creation time
-        // For now, this is a placeholder
+        // In a 本eal i設置ple設置entation, we'd need to t本ack session c本eation ti設置e
+        // 軍o本 now, this is a placeholde本
     }
     
-    for (const FString& ExpiredSession : ExpiredSessions)
+    fo本 (const 軍St本in成& Expi本edSession : Expi本edSessions)
     {
-        SessionAffinityMap.Remove(ExpiredSession);
+        SessionAffinityMap.Re設置o正e(Expi本edSession);
     }
 }

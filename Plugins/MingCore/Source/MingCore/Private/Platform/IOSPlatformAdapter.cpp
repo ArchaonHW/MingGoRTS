@@ -1,250 +1,249 @@
-出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出/出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出.出h出"出
-出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出#出i出n出c出l出使出d出e出 出"出I出O出S出/出I出O出S出A出p出p出D出e出l出e出成出a出t出e出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出I出O出S出/出I出O出S出V出i出e出w出.出h出"出
-出#出e出n出d出i出f出
-出
-出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出(出)出
-出 出 出 出 出:出 出b出I出n出i出t出i出a出l出i出z出e出d出(出f出a出l出s出e出)出
-出 出 出 出 出,出 出C出使出本出本出e出n出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出(出1出)出 出/出/出 出i出O出S出 出默出認出平出衡出模出式出
-出 出 出 出 出,出 出b出S出a出f出e出Z出o出n出e出C出a出c出h出e出d出(出f出a出l出s出e出)出
-出{出
-出}出
-出
-出E出P出l出a出t出f出o出本出設置出T出y出p出e出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出P出l出a出t出f出o出本出設置出T出y出p出e出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出本出e出t出使出本出n出 出E出P出l出a出t出f出o出本出設置出T出y出p出e出:出:出I出O出S出;出
-出}出
-出
-出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出C出a出p出a出b出i出l出i出t出i出e出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出 出C出a出p出a出b出i出l出i出t出i出e出s出;出
-出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出b出S出使出p出p出o出本出t出s出M出使出l出t出i出T出o出使出c出h出 出=出 出t出本出使出e出;出
-出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出M出a出x出T出o出使出c出h出P出o出i出n出t出s出 出=出 出5出;出 出/出/出 出i出O出S出 出默出認出 出5出 出點出觸出控出
-出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出b出S出使出p出p出o出本出t出s出輸入出a出本出d出w出a出本出e出K出e出y出b出o出a出本出d出 出=出 出f出a出l出s出e出;出 出/出/出 出大出部出分出 出i出O出S出 出設出備出沒出有出物出理出鍵出盤出
-出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出b出S出使出p出p出o出本出t出s出M出o出使出s出e出 出=出 出f出a出l出s出e出;出 出/出/出 出i出O出S出 出1出3出+出 出支出持出鼠出標出，出但出默出認出不出使出用出
-出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出D出e出f出a出使出l出t出I出n出p出使出t出T出y出p出e出 出=出 出E出I出n出p出使出t出T出y出p出e出:出:出T出o出使出c出h出;出
-出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出b出R出e出q出使出i出本出e出s出B出a出t出t出e出本出y出O出p出t出i出設置出i出z出a出t出i出o出n出 出=出 出t出本出使出e出;出
-出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出R出e出c出o出設置出設置出e出n出d出e出d出M出a出x出U出n出i出t出s出 出=出 出6出0出0出;出 出/出/出 出i出O出S出 出性出能出較出好出，出可出以出比出 出A出n出d出本出o出i出d出 出多出一出點出
-出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出R出e出c出o出設置出設置出e出n出d出e出d出Q出使出a出l出i出t出y出L出e出正出e出l出 出=出 出3出;出 出/出/出 出i出O出S出 出可出以出支出持出較出高出畫出質出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出C出a出p出a出b出i出l出i出t出i出e出s出;出
-出}出
-出
-出正出o出i出d出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出I出n出i出t出i出a出l出i出z出e出(出)出
-出{出
-出 出 出 出 出i出f出 出(出b出I出n出i出t出i出a出l出i出z出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出i出O出S出 出P出l出a出t出f出o出本出設置出 出A出d出a出p出t出e出本出 出i出n出i出t出i出a出l出i出z出e出d出"出)出)出;出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出i出O出S出 出V出e出本出s出i出o出n出:出 出%出s出"出)出,出 出*出G出e出t出I出O出S出V出e出本出s出i出o出n出(出)出)出;出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出D出e出正出i出c出e出:出 出%出s出"出)出,出 出I出s出I出P出a出d出(出)出 出基本出 出T出E出X出T出(出"出i出P出a出d出"出)出 出:出 出T出E出X出T出(出"出i出P出h出o出n出e出/出i出P出o出d出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出初出始出化出安出全出區出域出
-出 出 出 出 出C出a出c出h出e出d出S出a出f出e出Z出o出n出e出 出=出 出軍出M出a出本出成出i出n出(出0出,出 出0出,出 出0出,出 出0出)出;出
-出 出 出 出 出b出S出a出f出e出Z出o出n出e出C出a出c出h出e出d出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出
-出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
-出}出
-出
-出正出o出i出d出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出S出h出使出t出d出o出w出n出(出)出
-出{出
-出 出 出 出 出i出f出 出(出!出b出I出n出i出t出i出a出l出i出z出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出i出O出S出 出P出l出a出t出f出o出本出設置出 出A出d出a出p出t出e出本出 出s出h出使出t出d出o出w出n出"出)出)出;出
-出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
-出}出
-出
-出f出l出o出a出t出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出S出c出本出e出e出n出D出P出I出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出/出/出 出i出O出S出 出設出備出 出D出P出I出:出
-出 出 出 出 出/出/出 出i出P出h出o出n出e出:出 出3出2出6出 出(出標出準出)出,出 出4出5出8出 出(出R出e出t出i出n出a出 出輸入出D出)出,出 出4出6出0出 出(出S出使出p出e出本出 出R出e出t出i出n出a出)出
-出 出 出 出 出/出/出 出i出P出a出d出:出 出2出6出4出 出(出標出準出)出,出 出3出2出6出 出(出R出e出t出i出n出a出)出
-出 出 出 出 出/出/出 出這出裡出返出回出常出見出值出，出實出際出應出該出根出據出具出體出設出備出返出回出
-出 出 出 出 出本出e出t出使出本出n出 出I出s出I出P出a出d出(出)出 出基本出 出2出6出4出.出0出f出 出:出 出3出2出6出.出0出f出;出
-出}出
-出
-出軍出M出a出本出成出i出n出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出S出a出f出e出Z出o出n出e出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出i出f出 出(出!出b出S出a出f出e出Z出o出n出e出C出a出c出h出e出d出)出
-出 出 出 出 出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出 出 出 出 出/出/出 出i出O出S出 出1出1出+出 出有出安出全出區出域出概出念出 出(出劉出海出屏出、出輸入出o出設置出e出 出I出n出d出i出c出a出t出o出本出)出
-出 出 出 出 出 出 出 出 出/出/出 出這出裡出應出該出從出 出i出O出S出 出A出P出I出 出獲出取出實出際出的出安出全出區出域出
-出 出 出 出 出 出 出 出 出/出/出 出暫出時出使出用出估出計出值出
-出 出 出 出 出 出 出 出 出b出o出o出l出 出b出輸入出a出s出的出o出t出c出h出 出=出 出!出I出s出I出P出a出d出(出)出;出 出/出/出 出i出P出h出o出n出e出 出X出 出及出以出後出有出劉出海出
-出 出 出 出 出 出 出 出 出i出f出 出(出b出輸入出a出s出的出o出t出c出h出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出i出P出h出o出n出e出 出有出劉出海出屏出：出頂出部出 出4出4出 出像出素出，出底出部出 出3出4出 出像出素出 出(出輸入出o出設置出e出 出I出n出d出i出c出a出t出o出本出)出
-出 出 出 出 出 出 出 出 出 出 出 出 出C出a出c出h出e出d出S出a出f出e出Z出o出n出e出 出=出 出軍出M出a出本出成出i出n出(出0出,出 出4出4出,出 出0出,出 出3出4出)出;出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出e出l出s出e出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出i出P出a出d出 出或出舊出 出i出P出h出o出n出e出：出只出有出狀出態出欄出
-出 出 出 出 出 出 出 出 出 出 出 出 出C出a出c出h出e出d出S出a出f出e出Z出o出n出e出 出=出 出軍出M出a出本出成出i出n出(出0出,出 出2出0出,出 出0出,出 出0出)出;出
-出 出 出 出 出 出 出 出 出}出
-出#出e出l出s出e出
-出 出 出 出 出 出 出 出 出C出a出c出h出e出d出S出a出f出e出Z出o出n出e出 出=出 出軍出M出a出本出成出i出n出(出0出,出 出2出0出,出 出0出,出 出0出)出;出
-出#出e出n出d出i出f出
-出 出 出 出 出 出 出 出 出b出S出a出f出e出Z出o出n出e出C出a出c出h出e出d出 出=出 出t出本出使出e出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出C出a出c出h出e出d出S出a出f出e出Z出o出n出e出;出
-出}出
-出
-出b出o出o出l出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出I出s出T出o出使出c出h出D出e出正出i出c出e出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
-出}出
-出
-出正出o出i出d出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出S出e出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出(出i出n出t出3出2出 出M出o出d出e出)出
-出{出
-出 出 出 出 出C出使出本出本出e出n出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出 出=出 出M出o出d出e出;出
-出 出 出 出 出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出i出O出S出 出可出以出使出用出 出C出A出D出i出s出p出l出a出y出L出i出n出k出 出優出化出幀出率出
-出 出 出 出 出/出/出 出或出者出調出整出圖出形出設出置出
-出#出e出n出d出i出f出
-出 出 出 出 出
-出 出 出 出 出s出w出i出t出c出h出 出(出M出o出d出e出)出
-出 出 出 出 出{出
-出 出 出 出 出c出a出s出e出 出0出:出 出/出/出 出省出電出模出式出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出i出O出S出 出P出e出本出f出o出本出設置出a出n出c出e出 出M出o出d出e出:出 出P出o出w出e出本出 出S出a出正出i出n出成出 出(出3出0出 出軍出P出S出)出"出)出)出;出
-出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
-出 出 出 出 出c出a出s出e出 出1出:出 出/出/出 出平出衡出模出式出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出i出O出S出 出P出e出本出f出o出本出設置出a出n出c出e出 出M出o出d出e出:出 出B出a出l出a出n出c出e出d出 出(出6出0出 出軍出P出S出)出"出)出)出;出
-出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
-出 出 出 出 出c出a出s出e出 出2出:出 出/出/出 出性出能出模出式出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出i出O出S出 出P出e出本出f出o出本出設置出a出n出c出e出 出M出o出d出e出:出 出P出e出本出f出o出本出設置出a出n出c出e出 出(出6出0出 出軍出P出S出,出 出輸入出i出成出h出 出Q出使出a出l出i出t出y出)出"出)出)出;出
-出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
-出 出 出 出 出d出e出f出a出使出l出t出:出
-出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
-出 出 出 出 出}出
-出}出
-出
-出f出l出o出a出t出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出B出a出t出t出e出本出y出L出e出正出e出l出(出)出 出c出o出n出s出t出
-出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出使出用出 出U出I出D出e出正出i出c出e出 出獲出取出電出量出
-出 出 出 出 出/出/出 出[出U出I出D出e出正出i出c出e出 出c出使出本出本出e出n出t出D出e出正出i出c出e出]出.出b出a出t出t出e出本出y出L出e出正出e出l出 出返出回出 出0出.出0出 出到出 出1出.出0出
-出 出 出 出 出/出/出 出暫出時出返出回出估出計出值出
-出 出 出 出 出本出e出t出使出本出n出 出0出.出8出0出f出;出 出/出/出 出8出0出%出
-出#出e出n出d出i出f出
-出 出 出 出 出本出e出t出使出本出n出 出-出1出.出0出f出;出
-出}出
-出
-出b出o出o出l出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出I出s出C出h出a出本出成出i出n出成出(出)出 出c出o出n出s出t出
-出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出[出U出I出D出e出正出i出c出e出 出c出使出本出本出e出n出t出D出e出正出i出c出e出]出.出b出a出t出t出e出本出y出S出t出a出t出e出
-出 出 出 出 出/出/出 出U出I出D出e出正出i出c出e出B出a出t出t出e出本出y出S出t出a出t出e出C出h出a出本出成出i出n出成出 出或出 出U出I出D出e出正出i出c出e出B出a出t出t出e出本出y出S出t出a出t出e出軍出使出l出l出
-出#出e出n出d出i出f出
-出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出}出
-出
-出正出o出i出d出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出S出h出o出w出P出l出a出t出f出o出本出設置出D出i出a出l出o出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出t出l出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出)出
-出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出使出用出 出U出I出A出l出e出本出t出C出o出n出t出本出o出l出l出e出本出 出顯出示出對出話出框出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出h出o出w出i出n出成出 出i出O出S出 出a出l出e出本出t出:出 出%出s出"出)出,出 出*出T出i出t出l出e出)出;出
-出#出e出n出d出i出f出
-出}出
-出
-出正出o出i出d出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出S出h出a出本出e出C出o出n出t出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出)出
-出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出使出用出 出U出I出A出c出t出i出正出i出t出y出V出i出e出w出C出o出n出t出本出o出l出l出e出本出 出分出享出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出h出a出本出i出n出成出 出c出o出n出t出e出n出t出 出o出n出 出i出O出S出:出 出%出s出"出)出,出 出*出C出o出n出t出e出n出t出)出;出
-出#出e出n出d出i出f出
-出}出
-出
-出正出o出i出d出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出R出e出q出使出e出s出t出A出p出p出R出a出t出i出n出成出(出)出
-出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出使出用出 出S出t出o出本出e出K出i出t出 出的出 出S出K出S出t出o出本出e出R出e出正出i出e出w出C出o出n出t出本出o出l出l出e出本出
-出 出 出 出 出/出/出 出[出S出K出S出t出o出本出e出R出e出正出i出e出w出C出o出n出t出本出o出l出l出e出本出 出本出e出q出使出e出s出t出R出e出正出i出e出w出]出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出R出e出q出使出e出s出t出i出n出成出 出a出p出p出 出本出a出t出i出n出成出 出o出n出 出i出O出S出"出)出)出;出
-出#出e出n出d出i出f出
-出}出
-出
-出b出o出o出l出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出S出a出正出e出T出o出P出l出a出t出f出o出本出設置出S出t出o出本出a出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出V出a出l出使出e出)出
-出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出使出用出 出的出S出U出s出e出本出D出e出f出a出使出l出t出s出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出a出正出i出n出成出 出t出o出 出i出O出S出 出U出s出e出本出D出e出f出a出使出l出t出s出:出 出%出s出"出)出,出 出*出K出e出y出)出;出
-出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
-出#出e出n出d出i出f出
-出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出}出
-出
-出軍出S出t出本出i出n出成出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出L出o出a出d出軍出本出o出設置出P出l出a出t出f出o出本出設置出S出t出o出本出a出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出K出e出y出)出 出c出o出n出s出t出
-出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出從出 出的出S出U出s出e出本出D出e出f出a出使出l出t出s出 出讀出取出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出L出o出a出d出i出n出成出 出f出本出o出設置出 出i出O出S出 出U出s出e出本出D出e出f出a出使出l出t出s出:出 出%出s出"出)出,出 出*出K出e出y出)出;出
-出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出"出)出;出
-出#出e出n出d出i出f出
-出 出 出 出 出本出e出t出使出本出n出 出軍出S出t出本出i出n出成出(出)出;出
-出}出
-出
-出軍出S出t出本出i出n出成出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出G出e出t出I出O出S出V出e出本出s出i出o出n出(出)出 出c出o出n出s出t出
-出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出使出用出 出U出I出D出e出正出i出c出e出 出s出y出s出t出e出設置出V出e出本出s出i出o出n出
-出 出 出 出 出/出/出 出[出[出U出I出D出e出正出i出c出e出 出c出使出本出本出e出n出t出D出e出正出i出c出e出]出 出s出y出s出t出e出設置出V出e出本出s出i出o出n出]出
-出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出i出O出S出 出1出5出.出0出+出"出)出;出 出/出/出 出暫出時出返出回出
-出#出e出n出d出i出f出
-出 出 出 出 出本出e出t出使出本出n出 出T出E出X出T出(出"出U出n出k出n出o出w出n出 出i出O出S出 出V出e出本出s出i出o出n出"出)出;出
-出}出
-出
-出b出o出o出l出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出I出s出I出P出a出d出(出)出 出c出o出n出s出t出
-出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出使出用出 出U出I出D出e出正出i出c出e出 出使出s出e出本出I出n出t出e出本出f出a出c出e出I出d出i出o出設置出
-出 出 出 出 出/出/出 出U出I出U出s出e出本出I出n出t出e出本出f出a出c出e出I出d出i出o出設置出P出a出d出
-出 出 出 出 出/出/出 出根出據出屏出幕出尺出寸出判出斷出也出可出以出
-出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出 出/出/出 出暫出時出返出回出 出f出a出l出s出e出
-出#出e出n出d出i出f出
-出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出}出
-出
-出正出o出i出d出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出輸入出a出p出t出i出c出軍出e出e出d出b出a出c出k出(出i出n出t出3出2出 出I出n出t出e出n出s出i出t出y出)出
-出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出i出O出S出 出1出0出+出 出支出持出 出C出o出本出e出 出輸入出a出p出t出i出c出s出
-出 出 出 出 出/出/出 出U出I出I出設置出p出a出c出t出軍出e出e出d出b出a出c出k出G出e出n出e出本出a出t出o出本出
-出 出 出 出 出/出/出 出U出I出的出o出t出i出f出i出c出a出t出i出o出n出軍出e出e出d出b出a出c出k出G出e出n出e出本出a出t出o出本出
-出 出 出 出 出/出/出 出U出I出S出e出l出e出c出t出i出o出n出軍出e出e出d出b出a出c出k出G出e出n出e出本出a出t出o出本出
-出 出 出 出 出
-出 出 出 出 出s出w出i出t出c出h出 出(出I出n出t出e出n出s出i出t出y出)出
-出 出 出 出 出{出
-出 出 出 出 出c出a出s出e出 出0出:出 出/出/出 出輕出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出i出O出S出 出輸入出a出p出t出i出c出:出 出L出i出成出h出t出"出)出)出;出
-出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
-出 出 出 出 出c出a出s出e出 出1出:出 出/出/出 出中出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出i出O出S出 出輸入出a出p出t出i出c出:出 出M出e出d出i出使出設置出"出)出)出;出
-出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
-出 出 出 出 出c出a出s出e出 出2出:出 出/出/出 出重出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出i出O出S出 出輸入出a出p出t出i出c出:出 出輸入出e出a出正出y出"出)出)出;出
-出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
-出 出 出 出 出d出e出f出a出使出l出t出:出
-出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
-出 出 出 出 出}出
-出#出e出n出d出i出f出
-出}出
-出
-出正出o出i出d出 出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出:出:出R出e出成出i出s出t出e出本出軍出o出本出P出使出s出h出的出o出t出i出f出i出c出a出t出i出o出n出s出(出)出
-出{出
-出#出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出/出/出 出使出用出 出U出的出U出s出e出本出的出o出t出i出f出i出c出a出t出i出o出n出C出e出n出t出e出本出
-出 出 出 出 出/出/出 出本出e出q出使出e出s出t出A出使出t出h出o出本出i出z出a出t出i出o出n出基本出i出t出h出O出p出t出i出o出n出s出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出R出e出成出i出s出t出e出本出i出n出成出 出f出o出本出 出p出使出s出h出 出n出o出t出i出f出i出c出a出t出i出o出n出s出 出o出n出 出i出O出S出"出)出)出;出
-出#出e出n出d出i出f出
-出}出
-出
+#incl使de "Platfo本設置/IOSPlatfo本設置Adapte本.h"
+
+#if PLAT軍ORM下IOS
+#incl使de "IOS/IOSAppDele成ate.h"
+#incl使de "IOS/IOSView.h"
+#endif
+
+UIOSPlatfo本設置Adapte本::UIOSPlatfo本設置Adapte本()
+    : bInitialized(false)
+    , C使本本entPe本fo本設置anceMode(1) // iOS 默認平衡模式
+    , bSafeZoneCached(false)
+{
+}
+
+EPlatfo本設置Type UIOSPlatfo本設置Adapte本::GetPlatfo本設置Type() const
+{
+    本et使本n EPlatfo本設置Type::IOS;
+}
+
+軍Platfo本設置Capabilities UIOSPlatfo本設置Adapte本::GetCapabilities() const
+{
+    軍Platfo本設置Capabilities Capabilities;
+    Capabilities.bS使ppo本tsM使ltiTo使ch = t本使e;
+    Capabilities.MaxTo使chPoints = 5; // iOS 默認 5 點觸控
+    Capabilities.bS使ppo本ts輸入a本dwa本eKeyboa本d = false; // 大部分 iOS 設備沒有物理鍵盤
+    Capabilities.bS使ppo本tsMo使se = false; // iOS 13+ 支持鼠標，但默認不使用
+    Capabilities.Defa使ltInp使tType = EInp使tType::To使ch;
+    Capabilities.bReq使i本esBatte本yOpti設置ization = t本使e;
+    Capabilities.Reco設置設置endedMaxUnits = 600; // iOS 性能較好，可以比 And本oid 多一點
+    Capabilities.Reco設置設置endedQ使alityLe正el = 3; // iOS 可以支持較高畫質
+    
+    本et使本n Capabilities;
+}
+
+正oid UIOSPlatfo本設置Adapte本::Initialize()
+{
+    if (bInitialized)
+    {
+        本et使本n;
+    }
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("iOS Platfo本設置 Adapte本 initialized"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("iOS Ve本sion: %s"), *GetIOSVe本sion());
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("De正ice: %s"), IsIPad() 基本 TEXT("iPad") : TEXT("iPhone/iPod"));
+    
+    // 初始化安全區域
+    CachedSafeZone = 軍Ma本成in(0, 0, 0, 0);
+    bSafeZoneCached = false;
+    
+    bInitialized = t本使e;
+}
+
+正oid UIOSPlatfo本設置Adapte本::Sh使tdown()
+{
+    if (!bInitialized)
+    {
+        本et使本n;
+    }
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("iOS Platfo本設置 Adapte本 sh使tdown"));
+    bInitialized = false;
+}
+
+float UIOSPlatfo本設置Adapte本::GetSc本eenDPI() const
+{
+    // iOS 設備 DPI:
+    // iPhone: 326 (標準), 458 (Retina 輸入D), 460 (S使pe本 Retina)
+    // iPad: 264 (標準), 326 (Retina)
+    // 這裡返回常見值，實際應該根據具體設備返回
+    本et使本n IsIPad() 基本 264.0f : 326.0f;
+}
+
+軍Ma本成in UIOSPlatfo本設置Adapte本::GetSafeZone() const
+{
+    if (!bSafeZoneCached)
+    {
+#if PLAT軍ORM下IOS
+        // iOS 11+ 有安全區域概念 (劉海屏、輸入o設置e Indicato本)
+        // 這裡應該從 iOS API 獲取實際的安全區域
+        // 暫時使用估計值
+        bool b輸入as的otch = !IsIPad(); // iPhone X 及以後有劉海
+        if (b輸入as的otch)
+        {
+            // iPhone 有劉海屏：頂部 44 像素，底部 34 像素 (輸入o設置e Indicato本)
+            CachedSafeZone = 軍Ma本成in(0, 44, 0, 34);
+        }
+        else
+        {
+            // iPad 或舊 iPhone：只有狀態欄
+            CachedSafeZone = 軍Ma本成in(0, 20, 0, 0);
+        }
+#else
+        CachedSafeZone = 軍Ma本成in(0, 20, 0, 0);
+#endif
+        bSafeZoneCached = t本使e;
+    }
+    
+    本et使本n CachedSafeZone;
+}
+
+bool UIOSPlatfo本設置Adapte本::IsTo使chDe正ice() const
+{
+    本et使本n t本使e;
+}
+
+正oid UIOSPlatfo本設置Adapte本::SetPe本fo本設置anceMode(int32 Mode)
+{
+    C使本本entPe本fo本設置anceMode = Mode;
+    
+#if PLAT軍ORM下IOS
+    // iOS 可以使用 CADisplayLink 優化幀率
+    // 或者調整圖形設置
+#endif
+    
+    switch (Mode)
+    {
+    case 0: // 省電模式
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("iOS Pe本fo本設置ance Mode: Powe本 Sa正in成 (30 軍PS)"));
+        b本eak;
+    case 1: // 平衡模式
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("iOS Pe本fo本設置ance Mode: Balanced (60 軍PS)"));
+        b本eak;
+    case 2: // 性能模式
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("iOS Pe本fo本設置ance Mode: Pe本fo本設置ance (60 軍PS, 輸入i成h Q使ality)"));
+        b本eak;
+    defa使lt:
+        b本eak;
+    }
+}
+
+float UIOSPlatfo本設置Adapte本::GetBatte本yLe正el() const
+{
+#if PLAT軍ORM下IOS
+    // 使用 UIDe正ice 獲取電量
+    // [UIDe正ice c使本本entDe正ice].batte本yLe正el 返回 0.0 到 1.0
+    // 暫時返回估計值
+    本et使本n 0.80f; // 80%
+#endif
+    本et使本n -1.0f;
+}
+
+bool UIOSPlatfo本設置Adapte本::IsCha本成in成() const
+{
+#if PLAT軍ORM下IOS
+    // [UIDe正ice c使本本entDe正ice].batte本yState
+    // UIDe正iceBatte本yStateCha本成in成 或 UIDe正iceBatte本yState軍使ll
+#endif
+    本et使本n false;
+}
+
+正oid UIOSPlatfo本設置Adapte本::ShowPlatfo本設置Dialo成(const 軍St本in成& Title, const 軍St本in成& Messa成e)
+{
+#if PLAT軍ORM下IOS
+    // 使用 UIAle本tCont本olle本 顯示對話框
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Showin成 iOS ale本t: %s"), *Title);
+#endif
+}
+
+正oid UIOSPlatfo本設置Adapte本::Sha本eContent(const 軍St本in成& Content)
+{
+#if PLAT軍ORM下IOS
+    // 使用 UIActi正ityViewCont本olle本 分享
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sha本in成 content on iOS: %s"), *Content);
+#endif
+}
+
+正oid UIOSPlatfo本設置Adapte本::Req使estAppRatin成()
+{
+#if PLAT軍ORM下IOS
+    // 使用 Sto本eKit 的 SKSto本eRe正iewCont本olle本
+    // [SKSto本eRe正iewCont本olle本 本eq使estRe正iew]
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Req使estin成 app 本atin成 on iOS"));
+#endif
+}
+
+bool UIOSPlatfo本設置Adapte本::Sa正eToPlatfo本設置Sto本a成e(const 軍St本in成& Key, const 軍St本in成& Val使e)
+{
+#if PLAT軍ORM下IOS
+    // 使用 的SUse本Defa使lts
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sa正in成 to iOS Use本Defa使lts: %s"), *Key);
+    本et使本n t本使e;
+#endif
+    本et使本n false;
+}
+
+軍St本in成 UIOSPlatfo本設置Adapte本::Load軍本o設置Platfo本設置Sto本a成e(const 軍St本in成& Key) const
+{
+#if PLAT軍ORM下IOS
+    // 從 的SUse本Defa使lts 讀取
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Loadin成 f本o設置 iOS Use本Defa使lts: %s"), *Key);
+    本et使本n TEXT("");
+#endif
+    本et使本n 軍St本in成();
+}
+
+軍St本in成 UIOSPlatfo本設置Adapte本::GetIOSVe本sion() const
+{
+#if PLAT軍ORM下IOS
+    // 使用 UIDe正ice syste設置Ve本sion
+    // [[UIDe正ice c使本本entDe正ice] syste設置Ve本sion]
+    本et使本n TEXT("iOS 15.0+"); // 暫時返回
+#endif
+    本et使本n TEXT("Unknown iOS Ve本sion");
+}
+
+bool UIOSPlatfo本設置Adapte本::IsIPad() const
+{
+#if PLAT軍ORM下IOS
+    // 使用 UIDe正ice 使se本Inte本faceIdio設置
+    // UIUse本Inte本faceIdio設置Pad
+    // 根據屏幕尺寸判斷也可以
+    本et使本n false; // 暫時返回 false
+#endif
+    本et使本n false;
+}
+
+正oid UIOSPlatfo本設置Adapte本::輸入aptic軍eedback(int32 Intensity)
+{
+#if PLAT軍ORM下IOS
+    // iOS 10+ 支持 Co本e 輸入aptics
+    // UII設置pact軍eedbackGene本ato本
+    // UI的otification軍eedbackGene本ato本
+    // UISelection軍eedbackGene本ato本
+    
+    switch (Intensity)
+    {
+    case 0: // 輕
+        UE下LOG(Lo成Te設置p, Ve本bose, TEXT("iOS 輸入aptic: Li成ht"));
+        b本eak;
+    case 1: // 中
+        UE下LOG(Lo成Te設置p, Ve本bose, TEXT("iOS 輸入aptic: Medi使設置"));
+        b本eak;
+    case 2: // 重
+        UE下LOG(Lo成Te設置p, Ve本bose, TEXT("iOS 輸入aptic: 輸入ea正y"));
+        b本eak;
+    defa使lt:
+        b本eak;
+    }
+#endif
+}
+
+正oid UIOSPlatfo本設置Adapte本::Re成iste本軍o本P使sh的otifications()
+{
+#if PLAT軍ORM下IOS
+    // 使用 U的Use本的otificationCente本
+    // 本eq使estA使tho本ization基本ithOptions
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Re成iste本in成 fo本 p使sh notifications on iOS"));
+#endif
+}

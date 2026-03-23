@@ -19,7 +19,7 @@ function Flush-LogBuffer {
 # MingWar-RTS 皜祈岫?啣????單
 param(
     [string]$ProjectRoot = "C:\HW\MingGoRTS",
-    [string]$EnginePath = "C:\Program Files\Epic Games\UE_5.4"
+    [string]$EnginePath = "C:\Program Files\Epic Games\UE_5.7"
 )
 
 # 瑼Ｘ UE5 ?臬摰?

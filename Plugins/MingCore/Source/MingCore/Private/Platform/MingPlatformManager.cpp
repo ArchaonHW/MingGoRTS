@@ -1,203 +1,202 @@
-出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出/出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出/出基本出i出n出d出o出w出s出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出/出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出P出l出a出t出f出o出本出設置出/出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出.出h出"出
-出
-出/出/出 出靜出態出實出例出初出始出化出
-出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出*出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出I出n出s出t出a出n出c出e出 出=出 出n出使出l出l出p出t出本出;出
-出
-出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出(出)出
-出 出 出 出 出:出 出b出I出n出i出t出i出a出l出i出z出e出d出(出f出a出l出s出e出)出
-出 出 出 出 出,出 出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出(出n出使出l出l出p出t出本出)出
-出{出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出I出n出i出t出i出a出l出i出z出e出(出)出
-出{出
-出 出 出 出 出i出f出 出(出b出I出n出i出t出i出a出l出i出z出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出創出建出平出台出適出配出器出
-出 出 出 出 出C出本出e出a出t出e出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出(出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出初出始出化出平出台出適出配出器出
-出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出C出a出s出t出<出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出>出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出;出
-出 出 出 出 出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出I出n出i出t出i出a出l出i出z出e出(出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出 出 出 出 出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出 出C出a出p出a出b出i出l出i出t出i出e出s出 出=出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出C出a出p出a出b出i出l出i出t出i出e出s出(出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出l出a出t出f出o出本出設置出 出i出n出i出t出i出a出l出i出z出e出d出:出 出%出s出"出)出,出 出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出P出l出a出t出f出o出本出設置出-出>出G出e出t出P出l出a出t出f出o出本出設置出T出y出p出e出(出)出)出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出D出e出f出a出使出l出t出 出i出n出p出使出t出:出 出%出s出,出 出M出a出x出 出使出n出i出t出s出:出 出%出d出"出)出,出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出*出U出E出n出使出設置出:出:出G出e出t出V出a出l出使出e出A出s出S出t出本出i出n出成出(出C出a出p出a出b出i出l出i出t出i出e出s出.出D出e出f出a出使出l出t出I出n出p出使出t出T出y出p出e出)出,出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出C出a出p出a出b出i出l出i出t出i出e出s出.出R出e出c出o出設置出設置出e出n出d出e出d出M出a出x出U出n出i出t出s出)出;出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出I出n出s出t出a出n出c出e出 出=出 出t出h出i出s出;出
-出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出t出本出使出e出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出S出h出使出t出d出o出w出n出(出)出
-出{出
-出 出 出 出 出i出f出 出(出!出b出I出n出i出t出i出a出l出i出z出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出C出a出s出t出<出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出>出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出;出
-出 出 出 出 出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出S出h出使出t出d出o出w出n出(出)出;出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出 出=出 出n出使出l出l出p出t出本出;出
-出 出 出 出 出I出n出s出t出a出n出c出e出 出=出 出n出使出l出l出p出t出本出;出
-出 出 出 出 出b出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出 出s出h出使出t出d出o出w出n出"出)出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出C出本出e出a出t出e出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出(出)出
-出{出
-出 出 出 出 出/出/出 出根出據出當出前出平出台出創出建出對出應出的出適出配出器出
-出 出 出 出 出#出i出f出 出P出L出A出T出軍出O出R出M出下出基本出I出的出D出O出基本出S出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出基本出i出n出d出o出w出s出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出>出(出t出h出i出s出)出;出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出本出e出a出t出e出d出 出基本出i出n出d出o出w出s出 出p出l出a出t出f出o出本出設置出 出a出d出a出p出t出e出本出"出)出)出;出
-出 出 出 出 出}出
-出 出 出 出 出#出e出l出i出f出 出P出L出A出T出軍出O出R出M出下出A出的出D出R出O出I出D出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出A出n出d出本出o出i出d出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出>出(出t出h出i出s出)出;出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出本出e出a出t出e出d出 出A出n出d出本出o出i出d出 出p出l出a出t出f出o出本出設置出 出a出d出a出p出t出e出本出"出)出)出;出
-出 出 出 出 出}出
-出 出 出 出 出#出e出l出i出f出 出P出L出A出T出軍出O出R出M出下出I出O出S出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出 出=出 出的出e出w出O出b出大出e出c出t出<出U出I出O出S出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出>出(出t出h出i出s出)出;出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出C出本出e出a出t出e出d出 出i出O出S出 出p出l出a出t出f出o出本出設置出 出a出d出a出p出t出e出本出"出)出)出;出
-出 出 出 出 出}出
-出 出 出 出 出#出e出l出s出e出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出U出n出s出使出p出p出o出本出t出e出d出 出p出l出a出t出f出o出本出設置出!出"出)出)出;出
-出 出 出 出 出}出
-出 出 出 出 出#出e出n出d出i出f出
-出}出
-出
-出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出i出f出 出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出C出a出s出t出<出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出>出(出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出A出d出a出p出t出e出本出)出;出
-出 出 出 出 出}出
-出 出 出 出 出本出e出t出使出本出n出 出n出使出l出l出p出t出本出;出
-出}出
-出
-出E出P出l出a出t出f出o出本出設置出T出y出p出e出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出T出y出p出e出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
-出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出P出l出a出t出f出o出本出設置出T出y出p出e出(出)出;出
-出 出 出 出 出}出
-出 出 出 出 出本出e出t出使出本出n出 出E出P出l出a出t出f出o出本出設置出T出y出p出e出:出:出U出n出k出n出o出w出n出;出
-出}出
-出
-出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
-出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出C出a出p出a出b出i出l出i出t出i出e出s出(出)出;出
-出 出 出 出 出}出
-出 出 出 出 出本出e出t出使出本出n出 出軍出P出l出a出t出f出o出本出設置出C出a出p出a出b出i出l出i出t出i出e出s出(出)出;出
-出}出
-出
-出f出l出o出a出t出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出S出c出本出e出e出n出D出P出I出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
-出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出S出c出本出e出e出n出D出P出I出(出)出;出
-出 出 出 出 出}出
-出 出 出 出 出本出e出t出使出本出n出 出9出6出.出0出f出;出 出/出/出 出默出認出 出基本出i出n出d出o出w出s出 出D出P出I出
-出}出
-出
-出軍出M出a出本出成出i出n出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出S出a出f出e出Z出o出n出e出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
-出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出S出a出f出e出Z出o出n出e出(出)出;出
-出 出 出 出 出}出
-出 出 出 出 出本出e出t出使出本出n出 出軍出M出a出本出成出i出n出(出0出,出 出0出,出 出0出,出 出0出)出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出I出s出T出o出使出c出h出D出e出正出i出c出e出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
-出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出I出s出T出o出使出c出h出D出e出正出i出c出e出(出)出;出
-出 出 出 出 出}出
-出 出 出 出 出本出e出t出使出本出n出 出f出a出l出s出e出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出S出e出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出(出i出n出t出3出2出 出M出o出d出e出)出
-出{出
-出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
-出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出S出e出t出P出e出本出f出o出本出設置出a出n出c出e出M出o出d出e出(出M出o出d出e出)出;出
-出 出 出 出 出}出
-出}出
-出
-出f出l出o出a出t出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出B出a出t出t出e出本出y出L出e出正出e出l出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
-出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出P出l出a出t出f出o出本出設置出-出>出G出e出t出B出a出t出t出e出本出y出L出e出正出e出l出(出)出;出
-出 出 出 出 出}出
-出 出 出 出 出本出e出t出使出本出n出 出-出1出.出0出f出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出S出h出o出w出P出l出a出t出f出o出本出設置出D出i出a出l出o出成出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出i出t出l出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出e出s出s出a出成出e出)出
-出{出
-出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
-出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出S出h出o出w出P出l出a出t出f出o出本出設置出D出i出a出l出o出成出(出T出i出t出l出e出,出 出M出e出s出s出a出成出e出)出;出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出S出h出a出本出e出C出o出n出t出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出n出t出)出
-出{出
-出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
-出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出S出h出a出本出e出C出o出n出t出e出n出t出(出C出o出n出t出e出n出t出)出;出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出R出e出q出使出e出s出t出A出p出p出R出a出t出i出n出成出(出)出
-出{出
-出 出 出 出 出I出P出l出a出t出f出o出本出設置出I出n出t出e出本出f出a出c出e出*出 出P出l出a出t出f出o出本出設置出 出=出 出G出e出t出C出使出本出本出e出n出t出P出l出a出t出f出o出本出設置出(出)出;出
-出 出 出 出 出i出f出 出(出P出l出a出t出f出o出本出設置出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出P出l出a出t出f出o出本出設置出-出>出R出e出q出使出e出s出t出A出p出p出R出a出t出i出n出成出(出)出;出
-出 出 出 出 出}出
-出}出
-出
-出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出*出 出U出M出i出n出成出P出l出a出t出f出o出本出設置出M出a出n出a出成出e出本出:出:出G出e出t出(出)出
-出{出
-出 出 出 出 出本出e出t出使出本出n出 出I出n出s出t出a出n出c出e出;出
-出}出
-出
+#incl使de "Platfo本設置/Min成Platfo本設置Mana成e本.h"
+#incl使de "Platfo本設置/基本indowsPlatfo本設置Adapte本.h"
+#incl使de "Platfo本設置/And本oidPlatfo本設置Adapte本.h"
+#incl使de "Platfo本設置/IOSPlatfo本設置Adapte本.h"
+
+// 靜態實例初始化
+UMin成Platfo本設置Mana成e本* UMin成Platfo本設置Mana成e本::Instance = n使llpt本;
+
+UMin成Platfo本設置Mana成e本::UMin成Platfo本設置Mana成e本()
+    : bInitialized(false)
+    , C使本本entPlatfo本設置Adapte本(n使llpt本)
+{
+}
+
+正oid UMin成Platfo本設置Mana成e本::Initialize()
+{
+    if (bInitialized)
+    {
+        本et使本n;
+    }
+    
+    // 創建平台適配器
+    C本eatePlatfo本設置Adapte本();
+    
+    // 初始化平台適配器
+    if (C使本本entPlatfo本設置Adapte本)
+    {
+        IPlatfo本設置Inte本face* Platfo本設置 = Cast<IPlatfo本設置Inte本face>(C使本本entPlatfo本設置Adapte本);
+        if (Platfo本設置)
+        {
+            Platfo本設置->Initialize();
+            
+            軍Platfo本設置Capabilities Capabilities = Platfo本設置->GetCapabilities();
+            UE下LOG(Lo成Te設置p, Lo成, TEXT("Platfo本設置 initialized: %s"), 
+                *UEn使設置::GetVal使eAsSt本in成(Platfo本設置->GetPlatfo本設置Type()));
+            UE下LOG(Lo成Te設置p, Lo成, TEXT("Defa使lt inp使t: %s, Max 使nits: %d"),
+                *UEn使設置::GetVal使eAsSt本in成(Capabilities.Defa使ltInp使tType),
+                Capabilities.Reco設置設置endedMaxUnits);
+        }
+    }
+    
+    Instance = this;
+    bInitialized = t本使e;
+}
+
+正oid UMin成Platfo本設置Mana成e本::Sh使tdown()
+{
+    if (!bInitialized)
+    {
+        本et使本n;
+    }
+    
+    if (C使本本entPlatfo本設置Adapte本)
+    {
+        IPlatfo本設置Inte本face* Platfo本設置 = Cast<IPlatfo本設置Inte本face>(C使本本entPlatfo本設置Adapte本);
+        if (Platfo本設置)
+        {
+            Platfo本設置->Sh使tdown();
+        }
+    }
+    
+    C使本本entPlatfo本設置Adapte本 = n使llpt本;
+    Instance = n使llpt本;
+    bInitialized = false;
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Platfo本設置Mana成e本 sh使tdown"));
+}
+
+正oid UMin成Platfo本設置Mana成e本::C本eatePlatfo本設置Adapte本()
+{
+    // 根據當前平台創建對應的適配器
+    #if PLAT軍ORM下基本I的DO基本S
+    {
+        C使本本entPlatfo本設置Adapte本 = 的ewOb大ect<U基本indowsPlatfo本設置Adapte本>(this);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated 基本indows platfo本設置 adapte本"));
+    }
+    #elif PLAT軍ORM下A的DROID
+    {
+        C使本本entPlatfo本設置Adapte本 = 的ewOb大ect<UAnd本oidPlatfo本設置Adapte本>(this);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated And本oid platfo本設置 adapte本"));
+    }
+    #elif PLAT軍ORM下IOS
+    {
+        C使本本entPlatfo本設置Adapte本 = 的ewOb大ect<UIOSPlatfo本設置Adapte本>(this);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated iOS platfo本設置 adapte本"));
+    }
+    #else
+    {
+        UE下LOG(Lo成Te設置p, E本本o本, TEXT("Uns使ppo本ted platfo本設置!"));
+    }
+    #endif
+}
+
+IPlatfo本設置Inte本face* UMin成Platfo本設置Mana成e本::GetC使本本entPlatfo本設置() const
+{
+    if (C使本本entPlatfo本設置Adapte本)
+    {
+        本et使本n Cast<IPlatfo本設置Inte本face>(C使本本entPlatfo本設置Adapte本);
+    }
+    本et使本n n使llpt本;
+}
+
+EPlatfo本設置Type UMin成Platfo本設置Mana成e本::GetC使本本entPlatfo本設置Type() const
+{
+    IPlatfo本設置Inte本face* Platfo本設置 = GetC使本本entPlatfo本設置();
+    if (Platfo本設置)
+    {
+        本et使本n Platfo本設置->GetPlatfo本設置Type();
+    }
+    本et使本n EPlatfo本設置Type::Unknown;
+}
+
+軍Platfo本設置Capabilities UMin成Platfo本設置Mana成e本::GetPlatfo本設置Capabilities() const
+{
+    IPlatfo本設置Inte本face* Platfo本設置 = GetC使本本entPlatfo本設置();
+    if (Platfo本設置)
+    {
+        本et使本n Platfo本設置->GetCapabilities();
+    }
+    本et使本n 軍Platfo本設置Capabilities();
+}
+
+float UMin成Platfo本設置Mana成e本::GetSc本eenDPI() const
+{
+    IPlatfo本設置Inte本face* Platfo本設置 = GetC使本本entPlatfo本設置();
+    if (Platfo本設置)
+    {
+        本et使本n Platfo本設置->GetSc本eenDPI();
+    }
+    本et使本n 96.0f; // 默認 基本indows DPI
+}
+
+軍Ma本成in UMin成Platfo本設置Mana成e本::GetSafeZone() const
+{
+    IPlatfo本設置Inte本face* Platfo本設置 = GetC使本本entPlatfo本設置();
+    if (Platfo本設置)
+    {
+        本et使本n Platfo本設置->GetSafeZone();
+    }
+    本et使本n 軍Ma本成in(0, 0, 0, 0);
+}
+
+bool UMin成Platfo本設置Mana成e本::IsTo使chDe正ice() const
+{
+    IPlatfo本設置Inte本face* Platfo本設置 = GetC使本本entPlatfo本設置();
+    if (Platfo本設置)
+    {
+        本et使本n Platfo本設置->IsTo使chDe正ice();
+    }
+    本et使本n false;
+}
+
+正oid UMin成Platfo本設置Mana成e本::SetPe本fo本設置anceMode(int32 Mode)
+{
+    IPlatfo本設置Inte本face* Platfo本設置 = GetC使本本entPlatfo本設置();
+    if (Platfo本設置)
+    {
+        Platfo本設置->SetPe本fo本設置anceMode(Mode);
+    }
+}
+
+float UMin成Platfo本設置Mana成e本::GetBatte本yLe正el() const
+{
+    IPlatfo本設置Inte本face* Platfo本設置 = GetC使本本entPlatfo本設置();
+    if (Platfo本設置)
+    {
+        本et使本n Platfo本設置->GetBatte本yLe正el();
+    }
+    本et使本n -1.0f;
+}
+
+正oid UMin成Platfo本設置Mana成e本::ShowPlatfo本設置Dialo成(const 軍St本in成& Title, const 軍St本in成& Messa成e)
+{
+    IPlatfo本設置Inte本face* Platfo本設置 = GetC使本本entPlatfo本設置();
+    if (Platfo本設置)
+    {
+        Platfo本設置->ShowPlatfo本設置Dialo成(Title, Messa成e);
+    }
+}
+
+正oid UMin成Platfo本設置Mana成e本::Sha本eContent(const 軍St本in成& Content)
+{
+    IPlatfo本設置Inte本face* Platfo本設置 = GetC使本本entPlatfo本設置();
+    if (Platfo本設置)
+    {
+        Platfo本設置->Sha本eContent(Content);
+    }
+}
+
+正oid UMin成Platfo本設置Mana成e本::Req使estAppRatin成()
+{
+    IPlatfo本設置Inte本face* Platfo本設置 = GetC使本本entPlatfo本設置();
+    if (Platfo本設置)
+    {
+        Platfo本設置->Req使estAppRatin成();
+    }
+}
+
+UMin成Platfo本設置Mana成e本* UMin成Platfo本設置Mana成e本::Get()
+{
+    本et使本n Instance;
+}

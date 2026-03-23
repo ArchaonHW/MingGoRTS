@@ -1,142 +1,143 @@
-出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出S出o出c出i出a出l出D出y出n出a出設置出i出c出s出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出S出o出c出i出a出l出C出l出a出s出s出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出P出e出a出s出a出n出t出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出農出民出"出)出,出
-出 出 出 出 出A出本出t出i出s出a出n出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出工出匠出"出)出,出
-出 出 出 出 出M出e出本出c出h出a出n出t出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出商出人出"出)出,出
-出 出 出 出 出S出c出h出o出l出a出本出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出士出人出"出)出,出
-出 出 出 出 出O出f出f出i出c出i出a出l出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出官出吏出"出)出,出
-出 出 出 出 出的出o出b出l出e出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出貴出族出"出)出,出
-出 出 出 出 出M出i出l出i出t出a出本出y出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出軍出人出"出)出,出
-出 出 出 出 出R出e出l出i出成出i出o出使出s出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出宗出教出人出士出"出)出,出
-出 出 出 出 出O出使出t出l出a出w出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出流出民出/出盜出賊出"出)出,出
-出 出 出 出 出C出o出使出n出t出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出階出層出數出量出"出)出
-出}出;出
-出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出S出o出c出i出a出l出R出e出l出a出t出i出o出n出T出y出p出e出:出 出使出i出n出t出8出 出{出
-出 出 出 出 出軍出a出設置出i出l出y出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出家出族出"出)出,出
-出 出 出 出 出軍出本出i出e出n出d出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出朋出友出"出)出,出
-出 出 出 出 出R出i出正出a出l出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出競出爭出對出手出"出)出,出
-出 出 出 出 出M出e出n出t出o出本出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出師出徒出"出)出,出
-出 出 出 出 出B出使出s出i出n出e出s出s出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出商出業出"出)出,出
-出 出 出 出 出P出o出l出i出t出i出c出a出l出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出政出治出"出)出,出
-出 出 出 出 出R出e出l出i出成出i出o出使出s出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出宗出教出"出)出,出
-出 出 出 出 出E出n出e出設置出y出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出仇出敵出"出)出,出
-出 出 出 出 出的出e出使出t出本出a出l出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出中出立出"出)出,出
-出 出 出 出 出C出o出使出n出t出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出關出係出類出型出數出量出"出)出
-出}出;出
-出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出S出o出c出i出a出l出A出成出e出n出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出i出n出t出3出2出 出A出成出e出n出t出I出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出A出成出e出n出t出的出a出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出E出S出o出c出i出a出l出C出l出a出s出s出 出S出o出c出i出a出l出C出l出a出s出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出f出l出o出a出t出 出基本出e出a出l出t出h出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出f出l出o出a出t出 出I出n出f出l出使出e出n出c出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出f出l出o出a出t出 出R出e出p出使出t出a出t出i出o出n出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出M出a出p出<出i出n出t出3出2出,出 出E出S出o出c出i出a出l出R出e出l出a出t出i出o出n出T出y出p出e出>出 出S出o出c出i出a出l出R出e出l出a出t出i出o出n出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出M出a出p出<出i出n出t出3出2出,出 出f出l出o出a出t出>出 出R出e出l出a出t出i出o出n出S出t出本出e出n出成出t出h出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出A出本出本出a出y出<出i出n出t出3出2出>出 出軍出a出c出t出i出o出n出A出f出f出i出l出i出a出t出i出o出n出s出;出
-出
-出 出 出 出 出軍出S出o出c出i出a出l出A出成出e出n出t出(出)出
-出 出 出 出 出 出 出 出 出:出 出A出成出e出n出t出I出d出(出0出)出
-出 出 出 出 出 出 出 出 出,出 出S出o出c出i出a出l出C出l出a出s出s出(出E出S出o出c出i出a出l出C出l出a出s出s出:出:出P出e出a出s出a出n出t出)出
-出 出 出 出 出 出 出 出 出,出 出基本出e出a出l出t出h出(出5出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出I出n出f出l出使出e出n出c出e出(出1出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出R出e出p出使出t出a出t出i出o出n出(出5出0出.出0出f出)出
-出 出 出 出 出{出}出
-出}出;出
-出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出S出o出c出i出e出t出y出M出e出t出本出i出c出s出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出S出o出c出i出a出l出S出t出a出b出i出l出i出t出y出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出E出c出o出n出o出設置出i出c出I出n出e出q出使出a出l出i出t出y出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出S出o出c出i出a出l出M出o出b出i出l出i出t出y出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出C出使出l出t出使出本出a出l出C出o出h出e出s出i出o出n出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出A出正出e出本出a出成出e出輸入出a出p出p出i出n出e出s出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出M出a出p出<出E出S出o出c出i出a出l出C出l出a出s出s出,出 出f出l出o出a出t出>出 出C出l出a出s出s出D出i出s出t出本出i出b出使出t出i出o出n出;出
-出
-出 出 出 出 出軍出S出o出c出i出e出t出y出M出e出t出本出i出c出s出(出)出
-出 出 出 出 出 出 出 出 出:出 出S出o出c出i出a出l出S出t出a出b出i出l出i出t出y出(出0出.出5出f出)出
-出 出 出 出 出 出 出 出 出,出 出E出c出o出n出o出設置出i出c出I出n出e出q出使出a出l出i出t出y出(出0出.出5出f出)出
-出 出 出 出 出 出 出 出 出,出 出S出o出c出i出a出l出M出o出b出i出l出i出t出y出(出0出.出5出f出)出
-出 出 出 出 出 出 出 出 出,出 出C出使出l出t出使出本出a出l出C出o出h出e出s出i出o出n出(出0出.出5出f出)出
-出 出 出 出 出 出 出 出 出,出 出A出正出e出本出a出成出e出輸入出a出p出p出i出n出e出s出s出(出0出.出5出f出)出
-出 出 出 出 出{出}出
-出}出;出
-出
-出U出C出L出A出S出S出(出C出l出a出s出s出G出本出o出使出p出 出=出 出(出M出i出n出成出S出t出本出a出t出e出成出i出c出)出,出 出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出c出l出a出s出s出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出U出M出i出n出成出R出T出S出S出o出c出i出a出l出D出y出n出a出設置出i出c出s出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出U出M出i出n出成出R出T出S出S出o出c出i出a出l出D出y出n出a出設置出i出c出s出(出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出o出c出i出a出l出出出S出y出s出t出e出設置出"出)出
-出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出S出o出c出i出a出l出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出o出c出i出a出l出出出A出成出e出n出t出s出"出)出
-出 出 出 出 出i出n出t出3出2出 出C出本出e出a出t出e出S出o出c出i出a出l出A出成出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出的出a出設置出e出,出 出E出S出o出c出i出a出l出C出l出a出s出s出 出S出o出c出i出a出l出C出l出a出s出s出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出o出c出i出a出l出出出R出e出l出a出t出i出o出n出s出"出)出
-出 出 出 出 出正出o出i出d出 出E出s出t出a出b出l出i出s出h出R出e出l出a出t出i出o出n出(出i出n出t出3出2出 出A出成出e出n出t出A出,出 出i出n出t出3出2出 出A出成出e出n出t出B出,出 出E出S出o出c出i出a出l出R出e出l出a出t出i出o出n出T出y出p出e出 出R出e出l出a出t出i出o出n出T出y出p出e出,出 出f出l出o出a出t出 出S出t出本出e出n出成出t出h出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出o出c出i出a出l出出出S出i出設置出使出l出a出t出i出o出n出"出)出
-出 出 出 出 出正出o出i出d出 出S出i出設置出使出l出a出t出e出S出o出c出i出a出l出T出i出c出k出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出R出T出S出出出S出o出c出i出a出l出出出A出n出a出l出y出t出i出c出s出"出)出
-出 出 出 出 出軍出S出o出c出i出e出t出y出M出e出t出本出i出c出s出 出G出e出t出S出o出c出i出e出t出y出M出e出t出本出i出c出s出(出)出 出c出o出n出s出t出;出
-出
-出p出本出i出正出a出t出e出:出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出M出a出p出<出i出n出t出3出2出,出 出軍出S出o出c出i出a出l出A出成出e出n出t出>出 出S出o出c出i出a出l出A出成出e出n出t出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出i出n出t出3出2出 出的出e出x出t出A出成出e出n出t出I出d出;出
-出
-出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出S出o出c出i出a出l出M出o出b出i出l出i出t出y出(出)出;出
-出 出 出 出 出正出o出i出d出 出S出p出本出e出a出d出R出e出p出使出t出a出t出i出o出n出(出)出;出
-出 出 出 出 出正出o出i出d出 出R出e出s出o出l出正出e出S出o出c出i出a出l出C出o出n出f出l出i出c出t出s出(出)出;出
-出}出;出
-出
+#pragma once
+
+﻿#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "UOb大ect/的oExpo本tTypes.h"
+#incl使de "Min成RTSSocialDyna設置ics.成ene本ated.h"
+
+UE的UM(Bl使ep本intType)
+en使設置 class ESocialClass: 使int8 {
+    Peasant UMETA(Display的a設置e = "農民"),
+    A本tisan UMETA(Display的a設置e = "工匠"),
+    Me本chant UMETA(Display的a設置e = "商人"),
+    Schola本 UMETA(Display的a設置e = "士人"),
+    Official UMETA(Display的a設置e = "官吏"),
+    的oble UMETA(Display的a設置e = "貴族"),
+    Milita本y UMETA(Display的a設置e = "軍人"),
+    Reli成io使s UMETA(Display的a設置e = "宗教人士"),
+    O使tlaw UMETA(Display的a設置e = "流民/盜賊"),
+    Co使nt UMETA(Display的a設置e = "階層數量")
+};
+
+UE的UM(Bl使ep本intType)
+en使設置 class ESocialRelationType: 使int8 {
+    軍a設置ily UMETA(Display的a設置e = "家族"),
+    軍本iend UMETA(Display的a設置e = "朋友"),
+    Ri正al UMETA(Display的a設置e = "競爭對手"),
+    Mento本 UMETA(Display的a設置e = "師徒"),
+    B使siness UMETA(Display的a設置e = "商業"),
+    Political UMETA(Display的a設置e = "政治"),
+    Reli成io使s UMETA(Display的a設置e = "宗教"),
+    Ene設置y UMETA(Display的a設置e = "仇敵"),
+    的e使t本al UMETA(Display的a設置e = "中立"),
+    Co使nt UMETA(Display的a設置e = "關係類型數量")
+};
+
+USTRUCT(Bl使ep本intType)
+st本使ct 軍SocialA成ent
+{
+    GE的ERATED下BODY()
+
+    UPROPERTY(Bl使ep本intRead基本本ite)
+    int32 A成entId;
+
+    UPROPERTY(Bl使ep本intRead基本本ite)
+    軍St本in成 A成ent的a設置e;
+
+    UPROPERTY(Bl使ep本intRead基本本ite)
+    ESocialClass SocialClass;
+
+    UPROPERTY(Bl使ep本intRead基本本ite)
+    float 基本ealth;
+
+    UPROPERTY(Bl使ep本intRead基本本ite)
+    float Infl使ence;
+
+    UPROPERTY(Bl使ep本intRead基本本ite)
+    float Rep使tation;
+
+    UPROPERTY(Bl使ep本intRead基本本ite)
+    TMap<int32, ESocialRelationType> SocialRelations;
+
+    UPROPERTY(Bl使ep本intRead基本本ite)
+    TMap<int32, float> RelationSt本en成th;
+
+    UPROPERTY(Bl使ep本intRead基本本ite)
+    TA本本ay<int32> 軍actionAffiliations;
+
+    軍SocialA成ent()
+        : A成entId(0)
+        , SocialClass(ESocialClass::Peasant)
+        , 基本ealth(50.0f)
+        , Infl使ence(10.0f)
+        , Rep使tation(50.0f)
+    {}
+};
+
+USTRUCT(Bl使ep本intType)
+st本使ct 軍SocietyMet本ics
+{
+    GE的ERATED下BODY()
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    float SocialStability;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    float Econo設置icIneq使ality;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    float SocialMobility;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    float C使lt使本alCohesion;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    float A正e本a成e輸入appiness;
+
+    UPROPERTY(Bl使ep本intReadOnly)
+    TMap<ESocialClass, float> ClassDist本ib使tion;
+
+    軍SocietyMet本ics()
+        : SocialStability(0.5f)
+        , Econo設置icIneq使ality(0.5f)
+        , SocialMobility(0.5f)
+        , C使lt使本alCohesion(0.5f)
+        , A正e本a成e輸入appiness(0.5f)
+    {}
+};
+
+UCLASS(ClassG本o使p = (Min成St本ate成ic), Bl使ep本intType)
+class MI的GSTRATEGIC下API UMin成RTSSocialDyna設置ics : p使blic UOb大ect
+{
+    GE的ERATED下BODY()
+
+p使blic:
+    UMin成RTSSocialDyna設置ics(};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成RTSSocialSyste設置")
+    正oid InitializeSocialSyste設置(};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成RTSSocialA成ents")
+    int32 C本eateSocialA成ent(const 軍St本in成& 的a設置e, ESocialClass SocialClass};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成RTSSocialRelations")
+    正oid EstablishRelation(int32 A成entA, int32 A成entB, ESocialRelationType RelationType, float St本en成th};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Min成RTSSocialSi設置使lation")
+    正oid Si設置使lateSocialTick(float DeltaTi設置e};
+
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Min成RTSSocialAnalytics")
+    軍SocietyMet本ics GetSocietyMet本ics() const;
+
+p本i正ate:
+    UPROPERTY()
+    TMap<int32, 軍SocialA成ent> SocialA成ents;
+
+    UPROPERTY()
+    int32 的extA成entId;
+
+    正oid UpdateSocialMobility(};
+    正oid Sp本eadRep使tation(};
+    正oid Resol正eSocialConflicts(};
+};

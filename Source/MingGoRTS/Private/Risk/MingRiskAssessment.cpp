@@ -1,419 +1,419 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// Real-Time Risk Assessment System - B2-2
+// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
+// Real-Ti設置e Risk Assess設置ent Syste設置 - B2-2
 
-#include "Risk/MingRiskAssessment.h"
-#include "Engine/Engine.h"
-#include "Engine/World.h"
-#include "TimerManager.h"
+#incl使de "Risk/Min成RiskAssess設置ent.h"
+#incl使de "En成ine/En成ine.h"
+#incl使de "En成ine/基本o本ld.h"
+#incl使de "Ti設置e本Mana成e本.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogRiskAssessment, Log, All);
+DE軍I的E下LOG下CATEGORY下STATIC(Lo成RiskAssess設置ent, Lo成, All);
 
-UMingRiskAssessment::UMingRiskAssessment()
-    : CurrentStatus(EAssessmentStatus::Idle)
+UMin成RiskAssess設置ent::UMin成RiskAssess設置ent()
+    : C使本本entStat使s(EAssess設置entStat使s::Idle)
 {
 }
 
-void UMingRiskAssessment::InitializeAssessment(const FAssessmentConfig& Config)
+正oid UMin成RiskAssess設置ent::InitializeAssess設置ent(const 軍Assess設置entConfi成& Confi成)
 {
-    this->Config = Config;
-    CurrentStatus = EAssessmentStatus::Idle;
+    this->Confi成 = Confi成;
+    C使本本entStat使s = EAssess設置entStat使s::Idle;
 
-    UE_LOG(LogRiskAssessment, Log, TEXT("Risk Assessment initialized with %d enabled factors"), 
-        Config.EnabledFactors.Num());
+    UE下LOG(Lo成RiskAssess設置ent, Lo成, TEXT("Risk Assess設置ent initialized with %d enabled facto本s"), 
+        Confi成.Enabled軍acto本s.的使設置());
 
-    // Initialize scores
-    for (const auto& Factor : Config.EnabledFactors)
+    // Initialize sco本es
+    fo本 (const a使to& 軍acto本 : Confi成.Enabled軍acto本s)
     {
-        CurrentScores.Add(Factor, 0.0f);
+        C使本本entSco本es.Add(軍acto本, 0.0f);
     }
 
-    // Initialize default scoring rules
-    for (const auto& Factor : Config.EnabledFactors)
+    // Initialize defa使lt sco本in成 本使les
+    fo本 (const a使to& 軍acto本 : Confi成.Enabled軍acto本s)
     {
-        FRiskScoringRule Rule;
-        Rule.FactorType = Factor;
-        ScoringRules.Add(Factor, Rule);
+        軍RiskSco本in成R使le R使le;
+        R使le.軍acto本Type = 軍acto本;
+        Sco本in成R使les.Add(軍acto本, R使le);
     }
 }
 
-void UMingRiskAssessment::ShutdownAssessment()
+正oid UMin成RiskAssess設置ent::Sh使tdownAssess設置ent()
 {
-    StopRealTimeAssessment();
-    CurrentStatus = EAssessmentStatus::Idle;
-    UE_LOG(LogRiskAssessment, Log, TEXT("Risk Assessment shutdown"));
+    StopRealTi設置eAssess設置ent();
+    C使本本entStat使s = EAssess設置entStat使s::Idle;
+    UE下LOG(Lo成RiskAssess設置ent, Lo成, TEXT("Risk Assess設置ent sh使tdown"));
 }
 
-FRiskAssessmentResult UMingRiskAssessment::PerformAssessment()
+軍RiskAssess設置entRes使lt UMin成RiskAssess設置ent::Pe本fo本設置Assess設置ent()
 {
-    EAssessmentStatus OldStatus = CurrentStatus;
-    CurrentStatus = EAssessmentStatus::Assessing;
-    OnAssessmentStatusChanged.Broadcast(CurrentStatus);
+    EAssess設置entStat使s OldStat使s = C使本本entStat使s;
+    C使本本entStat使s = EAssess設置entStat使s::Assessin成;
+    OnAssess設置entStat使sChan成ed.B本oadcast(C使本本entStat使s);
 
-    int32 StartTime = FPlatformTime::Cycles();
-    CurrentAssessmentID = GenerateAssessmentID();
+    int32 Sta本tTi設置e = 軍Platfo本設置Ti設置e::Cycles();
+    C使本本entAssess設置entID = Gene本ateAssess設置entID();
 
-    FRiskAssessmentResult Result;
-    Result.AssessmentID = CurrentAssessmentID;
-    Result.AssessmentTime = FDateTime::Now();
+    軍RiskAssess設置entRes使lt Res使lt;
+    Res使lt.Assess設置entID = C使本本entAssess設置entID;
+    Res使lt.Assess設置entTi設置e = 軍DateTi設置e::的ow();
 
-    TArray<FRiskFactor> Factors;
+    TA本本ay<軍Risk軍acto本> 軍acto本s;
 
-    // Evaluate each enabled factor
-    for (const auto& FactorType : Config.EnabledFactors)
+    // E正al使ate each enabled facto本
+    fo本 (const a使to& 軍acto本Type : Confi成.Enabled軍acto本s)
     {
-        FRiskFactor Factor = EvaluateFactor(FactorType);
-        Factors.Add(Factor);
-        CurrentScores.Add(FactorType, Factor.Score);
+        軍Risk軍acto本 軍acto本 = E正al使ate軍acto本(軍acto本Type);
+        軍acto本s.Add(軍acto本);
+        C使本本entSco本es.Add(軍acto本Type, 軍acto本.Sco本e);
     }
 
-    Result.Factors = Factors;
-    Result.OverallRiskScore = CalculateWeightedScore(Factors);
-    Result.OverallLevel = DetermineRiskLevel(Result.OverallRiskScore);
+    Res使lt.軍acto本s = 軍acto本s;
+    Res使lt.O正e本allRiskSco本e = Calc使late基本ei成htedSco本e(軍acto本s);
+    Res使lt.O正e本allLe正el = Dete本設置ineRiskLe正el(Res使lt.O正e本allRiskSco本e);
 
-    // Generate category scores
-    for (const auto& Factor : Factors)
+    // Gene本ate cate成o本y sco本es
+    fo本 (const a使to& 軍acto本 : 軍acto本s)
     {
-        Result.CategoryScores.Add(Factor.Type, Factor.Score);
+        Res使lt.Cate成o本ySco本es.Add(軍acto本.Type, 軍acto本.Sco本e);
     }
 
-    // Generate recommendations
-    if (Config.bAutoGenerateRecommendations)
+    // Gene本ate 本eco設置設置endations
+    if (Confi成.bA使toGene本ateReco設置設置endations)
     {
-        Result.Recommendations = GenerateRecommendations(Result);
+        Res使lt.Reco設置設置endations = Gene本ateReco設置設置endations(Res使lt);
     }
 
-    Result.DurationMs = FPlatformTime::ToMilliseconds(FPlatformTime::Cycles() - StartTime);
-    Result.Summary = FString::Printf(TEXT("Overall Risk: %.1f%% (%s)"), 
-        Result.OverallRiskScore, *UEnum::GetValueAsString(Result.OverallLevel));
+    Res使lt.D使本ationMs = 軍Platfo本設置Ti設置e::ToMilliseconds(軍Platfo本設置Ti設置e::Cycles() - Sta本tTi設置e);
+    Res使lt.S使設置設置a本y = 軍St本in成::P本intf(TEXT("O正e本all Risk: %.1f%% (%s)"), 
+        Res使lt.O正e本allRiskSco本e, *UEn使設置::GetVal使eAsSt本in成(Res使lt.O正e本allLe正el));
 
-    LastResult = Result;
-    StoreAssessmentResult(Result);
+    LastRes使lt = Res使lt;
+    Sto本eAssess設置entRes使lt(Res使lt);
 
-    CurrentStatus = EAssessmentStatus::Completed;
-    OnAssessmentCompleted.Broadcast(Result);
-    OnAssessmentStatusChanged.Broadcast(CurrentStatus);
+    C使本本entStat使s = EAssess設置entStat使s::Co設置pleted;
+    OnAssess設置entCo設置pleted.B本oadcast(Res使lt);
+    OnAssess設置entStat使sChan成ed.B本oadcast(C使本本entStat使s);
 
-    // Check for critical risk
-    if (Result.OverallLevel >= ERiskLevel::Critical)
+    // Check fo本 c本itical 本isk
+    if (Res使lt.O正e本allLe正el >= ERiskLe正el::C本itical)
     {
-        NotifyCriticalRisk(Result);
+        的otifyC本iticalRisk(Res使lt);
     }
 
-    UE_LOG(LogRiskAssessment, Log, TEXT("Assessment completed: %s (%.1f%%) in %.2f ms"), 
-        *Result.AssessmentID, Result.OverallRiskScore, Result.DurationMs);
+    UE下LOG(Lo成RiskAssess設置ent, Lo成, TEXT("Assess設置ent co設置pleted: %s (%.1f%%) in %.2f 設置s"), 
+        *Res使lt.Assess設置entID, Res使lt.O正e本allRiskSco本e, Res使lt.D使本ationMs);
 
-    return Result;
+    本et使本n Res使lt;
 }
 
-void UMingRiskAssessment::StartRealTimeAssessment()
+正oid UMin成RiskAssess設置ent::Sta本tRealTi設置eAssess設置ent()
 {
-    if (Config.bEnableRealTimeAssessment && CurrentStatus != EAssessmentStatus::Assessing)
+    if (Confi成.bEnableRealTi設置eAssess設置ent && C使本本entStat使s != EAssess設置entStat使s::Assessin成)
     {
-        if (GEngine && GEngine->GetWorldFromContextObject(this))
+        if (GEn成ine && GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this))
         {
-            GEngine->GetWorldFromContextObject(this)->GetTimerManager().SetTimer(
-                AssessmentTimer,
+            GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this)->GetTi設置e本Mana成e本().SetTi設置e本(
+                Assess設置entTi設置e本,
                 this,
-                &UMingRiskAssessment::PerformAssessment,
-                Config.AssessmentInterval,
-                true);
+                &UMin成RiskAssess設置ent::Pe本fo本設置Assess設置ent,
+                Confi成.Assess設置entInte本正al,
+                t本使e);
 
-            UE_LOG(LogRiskAssessment, Log, TEXT("Real-time assessment started (interval: %.1f s)"), 
-                Config.AssessmentInterval);
+            UE下LOG(Lo成RiskAssess設置ent, Lo成, TEXT("Real-ti設置e assess設置ent sta本ted (inte本正al: %.1f s)"), 
+                Confi成.Assess設置entInte本正al);
         }
     }
 }
 
-void UMingRiskAssessment::StopRealTimeAssessment()
+正oid UMin成RiskAssess設置ent::StopRealTi設置eAssess設置ent()
 {
-    if (GEngine && GEngine->GetWorldFromContextObject(this))
+    if (GEn成ine && GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this))
     {
-        GEngine->GetWorldFromContextObject(this)->GetTimerManager().ClearTimer(AssessmentTimer);
+        GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this)->GetTi設置e本Mana成e本().Clea本Ti設置e本(Assess設置entTi設置e本);
     }
 
-    UE_LOG(LogRiskAssessment, Log, TEXT("Real-time assessment stopped"));
+    UE下LOG(Lo成RiskAssess設置ent, Lo成, TEXT("Real-ti設置e assess設置ent stopped"));
 }
 
-void UMingRiskAssessment::PauseAssessment()
+正oid UMin成RiskAssess設置ent::Pa使seAssess設置ent()
 {
-    if (CurrentStatus == EAssessmentStatus::Assessing)
+    if (C使本本entStat使s == EAssess設置entStat使s::Assessin成)
     {
-        CurrentStatus = EAssessmentStatus::Paused;
-        OnAssessmentStatusChanged.Broadcast(CurrentStatus);
-        UE_LOG(LogRiskAssessment, Log, TEXT("Assessment paused"));
-    }
-}
-
-void UMingRiskAssessment::ResumeAssessment()
-{
-    if (CurrentStatus == EAssessmentStatus::Paused)
-    {
-        CurrentStatus = EAssessmentStatus::Idle;
-        OnAssessmentStatusChanged.Broadcast(CurrentStatus);
-        UE_LOG(LogRiskAssessment, Log, TEXT("Assessment resumed"));
+        C使本本entStat使s = EAssess設置entStat使s::Pa使sed;
+        OnAssess設置entStat使sChan成ed.B本oadcast(C使本本entStat使s);
+        UE下LOG(Lo成RiskAssess設置ent, Lo成, TEXT("Assess設置ent pa使sed"));
     }
 }
 
-void UMingRiskAssessment::SetFactorWeight(ERiskFactorType Factor, float Weight)
+正oid UMin成RiskAssess設置ent::Res使設置eAssess設置ent()
 {
-    Config.CustomWeights.Add(Factor, Weight);
-    UE_LOG(LogRiskAssessment, Log, TEXT("Set weight for factor %s: %.2f"), 
-        *UEnum::GetValueAsString(Factor), Weight);
+    if (C使本本entStat使s == EAssess設置entStat使s::Pa使sed)
+    {
+        C使本本entStat使s = EAssess設置entStat使s::Idle;
+        OnAssess設置entStat使sChan成ed.B本oadcast(C使本本entStat使s);
+        UE下LOG(Lo成RiskAssess設置ent, Lo成, TEXT("Assess設置ent 本es使設置ed"));
+    }
 }
 
-void UMingRiskAssessment::EnableFactor(ERiskFactorType Factor, bool bEnabled)
+正oid UMin成RiskAssess設置ent::Set軍acto本基本ei成ht(ERisk軍acto本Type 軍acto本, float 基本ei成ht)
+{
+    Confi成.C使sto設置基本ei成hts.Add(軍acto本, 基本ei成ht);
+    UE下LOG(Lo成RiskAssess設置ent, Lo成, TEXT("Set wei成ht fo本 facto本 %s: %.2f"), 
+        *UEn使設置::GetVal使eAsSt本in成(軍acto本), 基本ei成ht);
+}
+
+正oid UMin成RiskAssess設置ent::Enable軍acto本(ERisk軍acto本Type 軍acto本, bool bEnabled)
 {
     if (bEnabled)
     {
-        if (!Config.EnabledFactors.Contains(Factor))
+        if (!Confi成.Enabled軍acto本s.Contains(軍acto本))
         {
-            Config.EnabledFactors.Add(Factor);
-            CurrentScores.Add(Factor, 0.0f);
+            Confi成.Enabled軍acto本s.Add(軍acto本);
+            C使本本entSco本es.Add(軍acto本, 0.0f);
         }
     }
     else
     {
-        Config.EnabledFactors.Remove(Factor);
-        CurrentScores.Remove(Factor);
+        Confi成.Enabled軍acto本s.Re設置o正e(軍acto本);
+        C使本本entSco本es.Re設置o正e(軍acto本);
     }
 }
 
-void UMingRiskAssessment::SetScoringRule(ERiskFactorType Factor, const FRiskScoringRule& Rule)
+正oid UMin成RiskAssess設置ent::SetSco本in成R使le(ERisk軍acto本Type 軍acto本, const 軍RiskSco本in成R使le& R使le)
 {
-    ScoringRules.Add(Factor, Rule);
-    UE_LOG(LogRiskAssessment, Log, TEXT("Set scoring rule for factor %s"), 
-        *UEnum::GetValueAsString(Factor));
+    Sco本in成R使les.Add(軍acto本, R使le);
+    UE下LOG(Lo成RiskAssess設置ent, Lo成, TEXT("Set sco本in成 本使le fo本 facto本 %s"), 
+        *UEn使設置::GetVal使eAsSt本in成(軍acto本));
 }
 
-FRiskAssessmentResult UMingRiskAssessment::GetLastAssessmentResult() const
+軍RiskAssess設置entRes使lt UMin成RiskAssess設置ent::GetLastAssess設置entRes使lt() const
 {
-    return LastResult;
+    本et使本n LastRes使lt;
 }
 
-TArray<FRiskAssessmentResult> UMingRiskAssessment::GetAssessmentHistory(int32 Count) const
+TA本本ay<軍RiskAssess設置entRes使lt> UMin成RiskAssess設置ent::GetAssess設置ent輸入isto本y(int32 Co使nt) const
 {
-    int32 StartIndex = FMath::Max(0, AssessmentHistory.Num() - Count);
-    TArray<FRiskAssessmentResult> Result;
+    int32 Sta本tIndex = 軍Math::Max(0, Assess設置ent輸入isto本y.的使設置() - Co使nt);
+    TA本本ay<軍RiskAssess設置entRes使lt> Res使lt;
 
-    for (int32 i = StartIndex; i < AssessmentHistory.Num(); ++i)
+    fo本 (int32 i = Sta本tIndex; i < Assess設置ent輸入isto本y.的使設置(); ++i)
     {
-        Result.Add(AssessmentHistory[i]);
+        Res使lt.Add(Assess設置ent輸入isto本y[i]);
     }
 
-    return Result;
+    本et使本n Res使lt;
 }
 
-float UMingRiskAssessment::GetCurrentFactorScore(ERiskFactorType Factor) const
+float UMin成RiskAssess設置ent::GetC使本本ent軍acto本Sco本e(ERisk軍acto本Type 軍acto本) const
 {
-    if (CurrentScores.Contains(Factor))
+    if (C使本本entSco本es.Contains(軍acto本))
     {
-        return CurrentScores[Factor];
+        本et使本n C使本本entSco本es[軍acto本];
     }
-    return 0.0f;
+    本et使本n 0.0f;
 }
 
-TMap<ERiskFactorType, float> UMingRiskAssessment::GetAllFactorScores() const
+TMap<ERisk軍acto本Type, float> UMin成RiskAssess設置ent::GetAll軍acto本Sco本es() const
 {
-    return CurrentScores;
+    本et使本n C使本本entSco本es;
 }
 
-ERiskLevel UMingRiskAssessment::GetCurrentOverallRiskLevel() const
+ERiskLe正el UMin成RiskAssess設置ent::GetC使本本entO正e本allRiskLe正el() const
 {
-    return LastResult.OverallLevel;
+    本et使本n LastRes使lt.O正e本allLe正el;
 }
 
-TArray<FString> UMingRiskAssessment::GenerateRecommendations(const FRiskAssessmentResult& Result)
+TA本本ay<軍St本in成> UMin成RiskAssess設置ent::Gene本ateReco設置設置endations(const 軍RiskAssess設置entRes使lt& Res使lt)
 {
-    TArray<FString> Recommendations;
+    TA本本ay<軍St本in成> Reco設置設置endations;
 
-    for (const auto& Factor : Result.Factors)
+    fo本 (const a使to& 軍acto本 : Res使lt.軍acto本s)
     {
-        if (Factor.Score >= Config.HighThreshold)
+        if (軍acto本.Sco本e >= Confi成.輸入i成hTh本eshold)
         {
-            FString Rec = FString::Printf(TEXT("Address %s: Score %.1f%% - %s"), 
-                *UEnum::GetValueAsString(Factor.Type),
-                Factor.Score,
-                *Factor.Description);
-            Recommendations.Add(Rec);
+            軍St本in成 Rec = 軍St本in成::P本intf(TEXT("Add本ess %s: Sco本e %.1f%% - %s"), 
+                *UEn使設置::GetVal使eAsSt本in成(軍acto本.Type),
+                軍acto本.Sco本e,
+                *軍acto本.Desc本iption);
+            Reco設置設置endations.Add(Rec);
         }
     }
 
-    if (Recommendations.Num() == 0)
+    if (Reco設置設置endations.的使設置() == 0)
     {
-        Recommendations.Add(TEXT("All risk factors are within acceptable ranges."));
+        Reco設置設置endations.Add(TEXT("All 本isk facto本s a本e within acceptable 本an成es."));
     }
 
-    return Recommendations;
+    本et使本n Reco設置設置endations;
 }
 
-void UMingRiskAssessment::ExportAssessmentReport(const FString& FilePath) const
+正oid UMin成RiskAssess設置ent::Expo本tAssess設置entRepo本t(const 軍St本in成& 軍ilePath) const
 {
-    UE_LOG(LogRiskAssessment, Log, TEXT("Exporting assessment report to: %s"), *FilePath);
+    UE下LOG(Lo成RiskAssess設置ent, Lo成, TEXT("Expo本tin成 assess設置ent 本epo本t to: %s"), *軍ilePath);
 
-    FString Report = TEXT("MingGoRTS Risk Assessment Report\n");
-    Report += TEXT("=====================================\n\n");
-    Report += FString::Printf(TEXT("Assessment ID: %s\n"), *LastResult.AssessmentID);
-    Report += FString::Printf(TEXT("Time: %s\n"), *FDateTime::Now().ToString());
-    Report += FString::Printf(TEXT("Duration: %.2f ms\n\n"), LastResult.DurationMs);
+    軍St本in成 Repo本t = TEXT("Min成GoRTS Risk Assess設置ent Repo本t\n");
+    Repo本t += TEXT("=====================================\n\n");
+    Repo本t += 軍St本in成::P本intf(TEXT("Assess設置ent ID: %s\n"), *LastRes使lt.Assess設置entID);
+    Repo本t += 軍St本in成::P本intf(TEXT("Ti設置e: %s\n"), *軍DateTi設置e::的ow().ToSt本in成());
+    Repo本t += 軍St本in成::P本intf(TEXT("D使本ation: %.2f 設置s\n\n"), LastRes使lt.D使本ationMs);
 
-    Report += FString::Printf(TEXT("Overall Risk Score: %.1f%%\n"), LastResult.OverallRiskScore);
-    Report += FString::Printf(TEXT("Risk Level: %s\n\n"), *UEnum::GetValueAsString(LastResult.OverallLevel));
+    Repo本t += 軍St本in成::P本intf(TEXT("O正e本all Risk Sco本e: %.1f%%\n"), LastRes使lt.O正e本allRiskSco本e);
+    Repo本t += 軍St本in成::P本intf(TEXT("Risk Le正el: %s\n\n"), *UEn使設置::GetVal使eAsSt本in成(LastRes使lt.O正e本allLe正el));
 
-    Report += TEXT("Factor Breakdown:\n");
-    Report += TEXT("-----------------\n");
+    Repo本t += TEXT("軍acto本 B本eakdown:\n");
+    Repo本t += TEXT("-----------------\n");
 
-    for (const auto& Factor : LastResult.Factors)
+    fo本 (const a使to& 軍acto本 : LastRes使lt.軍acto本s)
     {
-        Report += FString::Printf(TEXT("- %s: %.1f%% (weight: %.2f)\n"), 
-            *UEnum::GetValueAsString(Factor.Type),
-            Factor.Score,
-            Factor.Weight);
-        if (!Factor.Description.IsEmpty())
+        Repo本t += 軍St本in成::P本intf(TEXT("- %s: %.1f%% (wei成ht: %.2f)\n"), 
+            *UEn使設置::GetVal使eAsSt本in成(軍acto本.Type),
+            軍acto本.Sco本e,
+            軍acto本.基本ei成ht);
+        if (!軍acto本.Desc本iption.IsE設置pty())
         {
-            Report += FString::Printf(TEXT("  Description: %s\n"), *Factor.Description);
+            Repo本t += 軍St本in成::P本intf(TEXT("  Desc本iption: %s\n"), *軍acto本.Desc本iption);
         }
     }
 
-    Report += TEXT("\nRecommendations:\n");
-    Report += TEXT("----------------\n");
+    Repo本t += TEXT("\nReco設置設置endations:\n");
+    Repo本t += TEXT("----------------\n");
 
-    for (const FString& Rec : LastResult.Recommendations)
+    fo本 (const 軍St本in成& Rec : LastRes使lt.Reco設置設置endations)
     {
-        Report += FString::Printf(TEXT("- %s\n"), *Rec);
+        Repo本t += 軍St本in成::P本intf(TEXT("- %s\n"), *Rec);
     }
 
-    // In a real implementation, you would save this to a file
-    UE_LOG(LogRiskAssessment, Log, TEXT("Report generated:\n%s"), *Report);
+    // In a 本eal i設置ple設置entation, yo使 wo使ld sa正e this to a file
+    UE下LOG(Lo成RiskAssess設置ent, Lo成, TEXT("Repo本t 成ene本ated:\n%s"), *Repo本t);
 }
 
-// Private helper functions
+// P本i正ate helpe本 f使nctions
 
-FRiskFactor UMingRiskAssessment::EvaluateFactor(ERiskFactorType FactorType)
+軍Risk軍acto本 UMin成RiskAssess設置ent::E正al使ate軍acto本(ERisk軍acto本Type 軍acto本Type)
 {
-    FRiskFactor Factor;
-    Factor.Type = FactorType;
-    Factor.Weight = GetFactorWeight(FactorType);
+    軍Risk軍acto本 軍acto本;
+    軍acto本.Type = 軍acto本Type;
+    軍acto本.基本ei成ht = Get軍acto本基本ei成ht(軍acto本Type);
     
-    // In a real implementation, this would perform actual risk factor evaluation
-    // For now, we'll use a simple heuristic based on factor type
-    switch (FactorType)
+    // In a 本eal i設置ple設置entation, this wo使ld pe本fo本設置 act使al 本isk facto本 e正al使ation
+    // 軍o本 now, we'll 使se a si設置ple he使本istic based on facto本 type
+    switch (軍acto本Type)
     {
-        case ERiskFactorType::Performance:
-            Factor.Score = EvaluatePerformanceRisk();
-            break;
-        case ERiskFactorType::Stability:
-            Factor.Score = EvaluateStabilityRisk();
-            break;
-        case ERiskFactorType::Security:
-            Factor.Score = EvaluateSecurityRisk();
-            break;
-        default:
-            Factor.Score = 25.0f; // Default moderate risk
-            break;
+        case ERisk軍acto本Type::Pe本fo本設置ance:
+            軍acto本.Sco本e = E正al使atePe本fo本設置anceRisk();
+            b本eak;
+        case ERisk軍acto本Type::Stability:
+            軍acto本.Sco本e = E正al使ateStabilityRisk();
+            b本eak;
+        case ERisk軍acto本Type::Sec使本ity:
+            軍acto本.Sco本e = E正al使ateSec使本ityRisk();
+            b本eak;
+        defa使lt:
+            軍acto本.Sco本e = 25.0f; // Defa使lt 設置ode本ate 本isk
+            b本eak;
     }
 
-    Factor.Description = GenerateFactorDescription(FactorType, Factor.Score);
-    return Factor;
+    軍acto本.Desc本iption = Gene本ate軍acto本Desc本iption(軍acto本Type, 軍acto本.Sco本e);
+    本et使本n 軍acto本;
 }
 
-float UMingRiskAssessment::GetFactorWeight(ERiskFactorType Factor) const
+float UMin成RiskAssess設置ent::Get軍acto本基本ei成ht(ERisk軍acto本Type 軍acto本) const
 {
-    if (Config.CustomWeights.Contains(Factor))
+    if (Confi成.C使sto設置基本ei成hts.Contains(軍acto本))
     {
-        return Config.CustomWeights[Factor];
+        本et使本n Confi成.C使sto設置基本ei成hts[軍acto本];
     }
     
-    // Default weights
-    switch (Factor)
+    // Defa使lt wei成hts
+    switch (軍acto本)
     {
-        case ERiskFactorType::Performance: return 0.3f;
-        case ERiskFactorType::Stability: return 0.25f;
-        case ERiskFactorType::Security: return 0.2f;
-        case ERiskFactorType::Scalability: return 0.15f;
-        case ERiskFactorType::Maintainability: return 0.1f;
-        default: return 0.1f;
+        case ERisk軍acto本Type::Pe本fo本設置ance: 本et使本n 0.3f;
+        case ERisk軍acto本Type::Stability: 本et使本n 0.25f;
+        case ERisk軍acto本Type::Sec使本ity: 本et使本n 0.2f;
+        case ERisk軍acto本Type::Scalability: 本et使本n 0.15f;
+        case ERisk軍acto本Type::Maintainability: 本et使本n 0.1f;
+        defa使lt: 本et使本n 0.1f;
     }
 }
 
-float UMingRiskAssessment::CalculateWeightedScore(const TArray<FRiskFactor>& Factors)
+float UMin成RiskAssess設置ent::Calc使late基本ei成htedSco本e(const TA本本ay<軍Risk軍acto本>& 軍acto本s)
 {
-    float TotalScore = 0.0f;
-    float TotalWeight = 0.0f;
+    float TotalSco本e = 0.0f;
+    float Total基本ei成ht = 0.0f;
 
-    for (const auto& Factor : Factors)
+    fo本 (const a使to& 軍acto本 : 軍acto本s)
     {
-        TotalScore += Factor.Score * Factor.Weight;
-        TotalWeight += Factor.Weight;
+        TotalSco本e += 軍acto本.Sco本e * 軍acto本.基本ei成ht;
+        Total基本ei成ht += 軍acto本.基本ei成ht;
     }
 
-    return TotalWeight > 0.0f ? (TotalScore / TotalWeight) : 0.0f;
+    本et使本n Total基本ei成ht > 0.0f 基本 (TotalSco本e / Total基本ei成ht) : 0.0f;
 }
 
-ERiskLevel UMingRiskAssessment::DetermineRiskLevel(float Score) const
+ERiskLe正el UMin成RiskAssess設置ent::Dete本設置ineRiskLe正el(float Sco本e) const
 {
-    if (Score >= 80.0f) return ERiskLevel::Emergency;
-    if (Score >= 60.0f) return ERiskLevel::Critical;
-    if (Score >= 40.0f) return ERiskLevel::High;
-    if (Score >= 20.0f) return ERiskLevel::Medium;
-    if (Score > 0.0f) return ERiskLevel::Low;
-    return ERiskLevel::None;
+    if (Sco本e >= 80.0f) 本et使本n ERiskLe正el::E設置e本成ency;
+    if (Sco本e >= 60.0f) 本et使本n ERiskLe正el::C本itical;
+    if (Sco本e >= 40.0f) 本et使本n ERiskLe正el::輸入i成h;
+    if (Sco本e >= 20.0f) 本et使本n ERiskLe正el::Medi使設置;
+    if (Sco本e > 0.0f) 本et使本n ERiskLe正el::Low;
+    本et使本n ERiskLe正el::的one;
 }
 
-FString UMingRiskAssessment::GenerateAssessmentID() const
+軍St本in成 UMin成RiskAssess設置ent::Gene本ateAssess設置entID() const
 {
-    return FString::Printf(TEXT("RA_%lld"), FDateTime::Now().GetTicks());
+    本et使本n 軍St本in成::P本intf(TEXT("RA下%lld"), 軍DateTi設置e::的ow().GetTicks());
 }
 
-void UMingRiskAssessment::StoreAssessmentResult(const FRiskAssessmentResult& Result)
+正oid UMin成RiskAssess設置ent::Sto本eAssess設置entRes使lt(const 軍RiskAssess設置entRes使lt& Res使lt)
 {
-    AssessmentHistory.Add(Result);
+    Assess設置ent輸入isto本y.Add(Res使lt);
     
-    // Keep only the last 100 results
-    if (AssessmentHistory.Num() > 100)
+    // Keep only the last 100 本es使lts
+    if (Assess設置ent輸入isto本y.的使設置() > 100)
     {
-        AssessmentHistory.RemoveAt(0);
+        Assess設置ent輸入isto本y.Re設置o正eAt(0);
     }
 }
 
-void UMingRiskAssessment::NotifyCriticalRisk(const FRiskAssessmentResult& Result)
+正oid UMin成RiskAssess設置ent::的otifyC本iticalRisk(const 軍RiskAssess設置entRes使lt& Res使lt)
 {
-    FString Message = FString::Printf(TEXT("Critical Risk Detected: %s (%.1f%%)"), 
-        *Result.AssessmentID, Result.OverallRiskScore);
+    軍St本in成 Messa成e = 軍St本in成::P本intf(TEXT("C本itical Risk Detected: %s (%.1f%%)"), 
+        *Res使lt.Assess設置entID, Res使lt.O正e本allRiskSco本e);
     
-    UE_LOG(LogRiskAssessment, Warning, TEXT("%s"), *Message);
+    UE下LOG(Lo成RiskAssess設置ent, 基本a本nin成, TEXT("%s"), *Messa成e);
     
-    // In a real implementation, this would trigger alerts, notifications, etc.
+    // In a 本eal i設置ple設置entation, this wo使ld t本i成成e本 ale本ts, notifications, etc.
 }
 
-float UMingRiskAssessment::EvaluatePerformanceRisk()
+float UMin成RiskAssess設置ent::E正al使atePe本fo本設置anceRisk()
 {
-    // Placeholder implementation - would analyze actual performance metrics
-    return FMath::RandRange(10.0f, 70.0f);
+    // Placeholde本 i設置ple設置entation - wo使ld analyze act使al pe本fo本設置ance 設置et本ics
+    本et使本n 軍Math::RandRan成e(10.0f, 70.0f);
 }
 
-float UMingRiskAssessment::EvaluateStabilityRisk()
+float UMin成RiskAssess設置ent::E正al使ateStabilityRisk()
 {
-    // Placeholder implementation - would analyze crash rates, error rates, etc.
-    return FMath::RandRange(5.0f, 50.0f);
+    // Placeholde本 i設置ple設置entation - wo使ld analyze c本ash 本ates, e本本o本 本ates, etc.
+    本et使本n 軍Math::RandRan成e(5.0f, 50.0f);
 }
 
-float UMingRiskAssessment::EvaluateSecurityRisk()
+float UMin成RiskAssess設置ent::E正al使ateSec使本ityRisk()
 {
-    // Placeholder implementation - would analyze security vulnerabilities
-    return FMath::RandRange(15.0f, 60.0f);
+    // Placeholde本 i設置ple設置entation - wo使ld analyze sec使本ity 正使lne本abilities
+    本et使本n 軍Math::RandRan成e(15.0f, 60.0f);
 }
 
-FString UMingRiskAssessment::GenerateFactorDescription(ERiskFactorType Factor, float Score) const
+軍St本in成 UMin成RiskAssess設置ent::Gene本ate軍acto本Desc本iption(ERisk軍acto本Type 軍acto本, float Sco本e) const
 {
-    switch (Factor)
+    switch (軍acto本)
     {
-        case ERiskFactorType::Performance:
-            return FString::Printf(TEXT("Performance risk at %.1f%% - Monitor frame rates and response times"), Score);
-        case ERiskFactorType::Stability:
-            return FString::Printf(TEXT("Stability risk at %.1f%% - Check for crashes and memory leaks"), Score);
-        case ERiskFactorType::Security:
-            return FString::Printf(TEXT("Security risk at %.1f%% - Review authentication and data protection"), Score);
-        default:
-            return FString::Printf(TEXT("Risk factor at %.1f%%"), Score);
+        case ERisk軍acto本Type::Pe本fo本設置ance:
+            本et使本n 軍St本in成::P本intf(TEXT("Pe本fo本設置ance 本isk at %.1f%% - Monito本 f本a設置e 本ates and 本esponse ti設置es"), Sco本e);
+        case ERisk軍acto本Type::Stability:
+            本et使本n 軍St本in成::P本intf(TEXT("Stability 本isk at %.1f%% - Check fo本 c本ashes and 設置e設置o本y leaks"), Sco本e);
+        case ERisk軍acto本Type::Sec使本ity:
+            本et使本n 軍St本in成::P本intf(TEXT("Sec使本ity 本isk at %.1f%% - Re正iew a使thentication and data p本otection"), Sco本e);
+        defa使lt:
+            本et使本n 軍St本in成::P本intf(TEXT("Risk facto本 at %.1f%%"), Sco本e);
     }
 }

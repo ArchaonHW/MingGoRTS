@@ -1,126 +1,125 @@
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出C出o出本出e出M出o出d出使出l出e出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出C出o出本出e出E出正出e出n出t出B出使出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出輸入出A出L出/出P出l出a出t出f出o出本出設置出軍出i出l出e出設置出a出n出a出成出e出本出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出s出c出/出P出a出t出h出s出.出h出"出
-出
-出#出d出e出f出i出n出e出 出L出O出C出T出E出X出T出下出的出A出M出E出S出P出A出C出E出 出"出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出"出
-出
-出/出/出 出性出能出監出控出類出
-出c出l出a出s出s出 出軍出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出
-出{出
-出p出使出b出l出i出c出:出
-出 出 出 出 出軍出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出(出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出/出/出 出初出始出化出性出能出計出數出器出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出 出=出 出0出.出0出;出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出C出o出使出n出t出 出=出 出0出;出
-出 出 出 出 出 出 出 出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出正出o出i出d出 出R出e出c出o出本出d出E出正出e出n出t出P出本出o出c出e出s出s出e出d出(出d出o出使出b出l出e出 出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出M出s出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出 出+出=出 出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出M出s出;出
-出 出 出 出 出 出 出 出 出E出正出e出n出t出C出o出使出n出t出+出+出;出
-出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出/出/出 出每出秒出報出告出一出次出性出能出統出計出
-出 出 出 出 出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出的出o出w出 出=出 出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出;出
-出 出 出 出 出 出 出 出 出i出f出 出(出(出的出o出w出 出-出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出)出.出G出e出t出T出o出t出a出l出S出e出c出o出n出d出s出(出)出 出>出=出 出1出.出0出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出R出e出p出o出本出t出P出e出本出f出o出本出設置出a出n出c出e出S出t出a出t出s出(出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出E出正出e出n出t出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出 出=出 出0出.出0出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出E出正出e出n出t出C出o出使出n出t出 出=出 出0出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出的出o出w出;出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出 出 出 出 出
-出p出本出i出正出a出t出e出:出
-出 出 出 出 出正出o出i出d出 出R出e出p出o出本出t出P出e出本出f出o出本出設置出a出n出c出e出S出t出a出t出s出(出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出i出f出 出(出E出正出e出n出t出C出o出使出n出t出 出>出 出0出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出d出o出使出b出l出e出 出A出正出e出本出a出成出e出T出i出設置出e出 出=出 出E出正出e出n出t出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出 出/出 出E出正出e出n出t出C出o出使出n出t出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出P出e出本出f出o出本出設置出a出n出c出e出:出 出%出d出 出e出正出e出n出t出s出 出p出本出o出c出e出s出s出e出d出,出 出a出正出成出 出%出.出3出f出設置出s出 出p出e出本出 出e出正出e出n出t出"出)出,出 出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出E出正出e出n出t出C出o出使出n出t出,出 出A出正出e出本出a出成出e出T出i出設置出e出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出性出能出警出告出
-出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出A出正出e出本出a出成出e出T出i出設置出e出 出>出 出1出.出0出)出 出/出/出 出超出過出1出設置出s出警出告出
-出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出P出e出本出f出o出本出設置出a出n出c出e出 出基本出a出本出n出i出n出成出:出 出A出正出e出本出a出成出e出 出e出正出e出n出t出 出p出本出o出c出e出s出s出i出n出成出 出t出i出設置出e出 出i出s出 出h出i出成出h出 出(出%出.出3出f出設置出s出)出"出)出,出 出A出正出e出本出a出成出e出T出i出設置出e出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出d出o出使出b出l出e出 出E出正出e出n出t出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出;出
-出 出 出 出 出i出n出t出3出2出 出E出正出e出n出t出C出o出使出n出t出;出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出;出
-出}出;出
-出
-出正出o出i出d出 出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出:出:出S出t出a出本出t出使出p出M出o出d出使出l出e出(出)出
-出{出
-出 出 出 出 出/出/出 出T出h出i出s出 出c出o出d出e出 出w出i出l出l出 出e出x出e出c出使出t出e出 出a出f出t出e出本出 出y出o出使出本出 出設置出o出d出使出l出e出 出i出s出 出l出o出a出d出e出d出 出i出n出t出o出 出設置出e出設置出o出本出y出;出 出t出h出e出 出e出x出a出c出t出 出t出i出設置出i出n出成出 出i出s出 出s出p出e出c出i出f出i出e出d出 出i出n出 出t出h出e出 出.出使出p出l出使出成出i出n出 出f出i出l出e出 出p出e出本出-出設置出o出d出使出l出e出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出M出o出d出使出l出e出 出S出t出a出本出t出i出n出成出 出U出p出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出初出始出化出性出能出監出控出
-出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出 出=出 出n出e出w出 出軍出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出(出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出註出冊出事出件出類出型出
-出 出 出 出 出R出e出成出i出s出t出e出本出E出正出e出n出t出T出y出p出e出s出(出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出設出置出性出能出監出控出
-出 出 出 出 出S出e出t出使出p出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出i出n出成出(出)出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出M出o出d出使出l出e出 出S出t出a出本出t出使出p出 出C出o出設置出p出l出e出t出e出 出-出 出E出正出e出n出t出 出B出使出s出 出R出e出a出d出y出"出)出)出;出
-出}出
-出
-出正出o出i出d出 出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出:出:出S出h出使出t出d出o出w出n出M出o出d出使出l出e出(出)出
-出{出
-出 出 出 出 出/出/出 出T出h出i出s出 出f出使出n出c出t出i出o出n出 出設置出a出y出 出b出e出 出c出a出l出l出e出d出 出d出使出本出i出n出成出 出s出h出使出t出d出o出w出n出 出t出o出 出c出l出e出a出n出 出使出p出 出y出o出使出本出 出設置出o出d出使出l出e出.出 出 出軍出o出本出 出設置出o出d出使出l出e出s出 出t出h出a出t出 出s出使出p出p出o出本出t出 出d出y出n出a出設置出i出c出 出本出e出l出o出a出d出i出n出成出,出
-出 出 出 出 出/出/出 出w出e出 出c出a出l出l出 出t出h出i出s出 出f出使出n出c出t出i出o出n出 出b出e出f出o出本出e出 出使出n出l出o出a出d出i出n出成出 出t出h出e出 出設置出o出d出使出l出e出.出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出M出o出d出使出l出e出 出S出h出使出t出t出i出n出成出 出D出o出w出n出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出清出理出性出能出監出控出
-出 出 出 出 出i出f出 出(出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出d出e出l出e出t出e出 出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出;出
-出 出 出 出 出 出 出 出 出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出 出=出 出n出使出l出l出p出t出本出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出C出o出本出e出 出M出o出d出使出l出e出 出S出h出使出t出d出o出w出n出 出C出o出設置出p出l出e出t出e出"出)出)出;出
-出}出
-出
-出正出o出i出d出 出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出:出:出R出e出成出i出s出t出e出本出E出正出e出n出t出T出y出p出e出s出(出)出
-出{出
-出 出 出 出 出/出/出 出註出冊出所出有出事出件出類出型出到出事出件出總出線出
-出 出 出 出 出/出/出 出這出確出保出事出件出系出統出知出道出所出有出可出用出的出事出件出類出型出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出R出e出成出i出s出t出e出本出i出n出成出 出M出i出n出成出C出o出本出e出 出E出正出e出n出t出 出T出y出p出e出s出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出註出冊出核出心出事出件出類出型出
-出 出 出 出 出/出/出 出注出意出：出U出E出5出的出反出射出系出統出會出自出動出註出冊出U出S出T出R出U出C出T出類出型出
-出 出 出 出 出/出/出 出這出裡出主出要出是出為出了出驗出證出和出初出始出化出
-出 出 出 出 出
-出 出 出 出 出/出/出 出驗出證出事出件出類出型出是出否出正出確出註出冊出
-出 出 出 出 出s出t出a出t出i出c出下出a出s出s出e出本出t出(出s出i出z出e出o出f出(出軍出U出n出i出t出S出e出l出e出c出t出e出d出E出正出e出n出t出)出 出>出 出0出,出 出"出軍出U出n出i出t出S出e出l出e出c出t出e出d出E出正出e出n出t出 出s出i出z出e出 出i出n出正出a出l出i出d出"出)出;出
-出 出 出 出 出s出t出a出t出i出c出下出a出s出s出e出本出t出(出s出i出z出e出o出f出(出軍出U出n出i出t出M出o出正出e出d出E出正出e出n出t出)出 出>出 出0出,出 出"出軍出U出n出i出t出M出o出正出e出d出E出正出e出n出t出 出s出i出z出e出 出i出n出正出a出l出i出d出"出)出;出
-出 出 出 出 出s出t出a出t出i出c出下出a出s出s出e出本出t出(出s出i出z出e出o出f出(出軍出R出e出s出o出使出本出c出e出U出p出d出a出t出e出E出正出e出n出t出)出 出>出 出0出,出 出"出軍出R出e出s出o出使出本出c出e出U出p出d出a出t出e出E出正出e出n出t出 出s出i出z出e出 出i出n出正出a出l出i出d出"出)出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出E出正出e出n出t出 出T出y出p出e出s出 出R出e出成出i出s出t出本出a出t出i出o出n出 出C出o出設置出p出l出e出t出e出"出)出)出;出
-出}出
-出
-出正出o出i出d出 出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出:出:出S出e出t出使出p出P出e出本出f出o出本出設置出a出n出c出e出M出o出n出i出t出o出本出i出n出成出(出)出
-出{出
-出 出 出 出 出/出/出 出設出置出事出件出系出統出性出能出監出控出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出S出e出t出t出i出n出成出 出使出p出 出M出i出n出成出C出o出本出e出 出P出e出本出f出o出本出設置出a出n出c出e出 出M出o出n出i出t出o出本出i出n出成出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出這出裡出可出以出添出加出更出多出性出能出監出控出設出置出
-出 出 出 出 出/出/出 出例出如出：出事出件出隊出列出大出小出監出控出、出記出憶出體出使出用出監出控出等出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出P出e出本出f出o出本出設置出a出n出c出e出 出M出o出n出i出t出o出本出i出n出成出 出S出e出t出使出p出 出C出o出設置出p出l出e出t出e出"出)出)出;出
-出}出
-出
-出#出使出n出d出e出f出 出L出O出C出T出E出X出T出下出的出A出M出E出S出P出A出C出E出
-出
-出I出M出P出L出E出M出E出的出T出下出M出O出D出U出L出E出(出軍出M出i出n出成出C出o出本出e出M出o出d出使出l出e出,出 出M出i出n出成出C出o出本出e出)出
-出
+#incl使de "Min成Co本eMod使le.h"
+#incl使de "Min成Co本eE正entB使s.h"
+#incl使de "輸入AL/Platfo本設置軍ile設置ana成e本.h"
+#incl使de "Misc/Paths.h"
+
+#define LOCTEXT下的AMESPACE "軍Min成Co本eMod使le"
+
+// 性能監控類
+class 軍Pe本fo本設置anceMonito本
+{
+p使blic:
+    軍Pe本fo本設置anceMonito本()
+    {
+        // 初始化性能計數器
+        E正entP本ocessin成Ti設置e = 0.0;
+        E正entCo使nt = 0;
+        LastUpdateTi設置e = 軍DateTi設置e::的ow();
+    }
+    
+    正oid Reco本dE正entP本ocessed(do使ble P本ocessin成Ti設置eMs)
+    {
+        E正entP本ocessin成Ti設置e += P本ocessin成Ti設置eMs;
+        E正entCo使nt++;
+        
+        // 每秒報告一次性能統計
+        軍DateTi設置e 的ow = 軍DateTi設置e::的ow();
+        if ((的ow - LastUpdateTi設置e).GetTotalSeconds() >= 1.0)
+        {
+            Repo本tPe本fo本設置anceStats();
+            E正entP本ocessin成Ti設置e = 0.0;
+            E正entCo使nt = 0;
+            LastUpdateTi設置e = 的ow;
+        }
+    }
+    
+p本i正ate:
+    正oid Repo本tPe本fo本設置anceStats()
+    {
+        if (E正entCo使nt > 0)
+        {
+            do使ble A正e本a成eTi設置e = E正entP本ocessin成Ti設置e / E正entCo使nt;
+            UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成Co本e Pe本fo本設置ance: %d e正ents p本ocessed, a正成 %.3f設置s pe本 e正ent"), 
+                   E正entCo使nt, A正e本a成eTi設置e);
+            
+            // 性能警告
+            if (A正e本a成eTi設置e > 1.0) // 超過1設置s警告
+            {
+                UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Min成Co本e Pe本fo本設置ance 基本a本nin成: A正e本a成e e正ent p本ocessin成 ti設置e is hi成h (%.3f設置s)"), A正e本a成eTi設置e);
+            }
+        }
+    }
+    
+    do使ble E正entP本ocessin成Ti設置e;
+    int32 E正entCo使nt;
+    軍DateTi設置e LastUpdateTi設置e;
+};
+
+正oid 軍Min成Co本eMod使le::Sta本t使pMod使le()
+{
+    // This code will exec使te afte本 yo使本 設置od使le is loaded into 設置e設置o本y; the exact ti設置in成 is specified in the .使pl使成in file pe本-設置od使le
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成Co本e Mod使le Sta本tin成 Up"));
+    
+    // 初始化性能監控
+    Pe本fo本設置anceMonito本 = new 軍Pe本fo本設置anceMonito本();
+    
+    // 註冊事件類型
+    Re成iste本E正entTypes();
+    
+    // 設置性能監控
+    Set使pPe本fo本設置anceMonito本in成();
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成Co本e Mod使le Sta本t使p Co設置plete - E正ent B使s Ready"));
+}
+
+正oid 軍Min成Co本eMod使le::Sh使tdownMod使le()
+{
+    // This f使nction 設置ay be called d使本in成 sh使tdown to clean 使p yo使本 設置od使le.  軍o本 設置od使les that s使ppo本t dyna設置ic 本eloadin成,
+    // we call this f使nction befo本e 使nloadin成 the 設置od使le.
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成Co本e Mod使le Sh使ttin成 Down"));
+    
+    // 清理性能監控
+    if (Pe本fo本設置anceMonito本)
+    {
+        delete Pe本fo本設置anceMonito本;
+        Pe本fo本設置anceMonito本 = n使llpt本;
+    }
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成Co本e Mod使le Sh使tdown Co設置plete"));
+}
+
+正oid 軍Min成Co本eMod使le::Re成iste本E正entTypes()
+{
+    // 註冊所有事件類型到事件總線
+    // 這確保事件系統知道所有可用的事件類型
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Re成iste本in成 Min成Co本e E正ent Types"));
+    
+    // 註冊核心事件類型
+    // 注意：UE5的反射系統會自動註冊USTRUCT類型
+    // 這裡主要是為了驗證和初始化
+    
+    // 驗證事件類型是否正確註冊
+    static下asse本t(sizeof(軍UnitSelectedE正ent) > 0, "軍UnitSelectedE正ent size in正alid");
+    static下asse本t(sizeof(軍UnitMo正edE正ent) > 0, "軍UnitMo正edE正ent size in正alid");
+    static下asse本t(sizeof(軍Reso使本ceUpdateE正ent) > 0, "軍Reso使本ceUpdateE正ent size in正alid");
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("E正ent Types Re成ist本ation Co設置plete"));
+}
+
+正oid 軍Min成Co本eMod使le::Set使pPe本fo本設置anceMonito本in成()
+{
+    // 設置事件系統性能監控
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Settin成 使p Min成Co本e Pe本fo本設置ance Monito本in成"));
+    
+    // 這裡可以添加更多性能監控設置
+    // 例如：事件隊列大小監控、記憶體使用監控等
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Pe本fo本設置ance Monito本in成 Set使p Co設置plete"));
+}
+
+#使ndef LOCTEXT下的AMESPACE
+
+IMPLEME的T下MODULE(軍Min成Co本eMod使le, Min成Co本e)

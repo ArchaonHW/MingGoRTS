@@ -1,51 +1,52 @@
-出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出E出正出e出n出t出.出h出"出
-出
-出/出*出*出
-出 出*出 出D出e出l出e出成出a出t出e出 出f出o出本出 出h出a出n出d出l出i出n出成出 出e出正出e出n出t出s出.出
-出 出*出 出T出h出i出s出 出i出s出 出a出 出設置出使出l出t出i出c出a出s出t出 出d出e出l出e出成出a出t出e出 出t出h出a出t出 出c出a出n出 出b出i出n出d出 出設置出使出l出t出i出p出l出e出 出h出a出n出d出l出e出本出s出.出
-出 出*出/出
-出D出E出C出L出A出R出E出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出M出i出n出成出E出正出e出n出t出D出e出l出e出成出a出t出e出,出 出T出S出h出a出本出e出d出P出t出本出<出I出M出i出n出成出E出正出e出n出t出>出)出;出
-出
-出/出*出*出
-出 出*出 出I出n出t出e出本出f出a出c出e出 出f出o出本出 出e出正出e出n出t出 出s出使出b出s出c出本出i出b出e出本出s出.出
-出 出*出 出A出n出y出 出c出l出a出s出s出 出t出h出a出t出 出w出a出n出t出s出 出t出o出 出本出e出c出e出i出正出e出 出e出正出e出n出t出s出 出設置出使出s出t出 出i出設置出p出l出e出設置出e出n出t出 出t出h出i出s出 出i出n出t出e出本出f出a出c出e出.出
-出 出*出/出
-出c出l出a出s出s出 出M出I出的出G出C出O出R出E出下出A出P出I出 出I出M出i出n出成出E出正出e出n出t出S出使出b出s出c出本出i出b出e出本出
-出{出
-出p出使出b出l出i出c出:出
-出 出 出 出 出正出i出本出t出使出a出l出 出年出I出M出i出n出成出E出正出e出n出t出S出使出b出s出c出本出i出b出e出本出(出)出 出=出 出d出e出f出a出使出l出t出;出
-出 出 出 出 出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出G出e出t出 出t出h出e出 出s出使出b出s出c出本出i出b出e出本出 出I出D出.出
-出 出 出 出 出 出*出/出
-出 出 出 出 出正出i出本出t出使出a出l出 出軍出的出a出設置出e出 出G出e出t出S出使出b出s出c出本出i出b出e出本出I出d出(出)出 出c出o出n出s出t出 出=出 出0出;出
-出 出 出 出 出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出G出e出t出 出t出h出e出 出l出a出y出e出本出s出 出t出h出i出s出 出s出使出b出s出c出本出i出b出e出本出 出i出s出 出i出n出t出e出本出e出s出t出e出d出 出i出n出.出
-出 出 出 出 出 出*出 出R出e出t出使出本出n出s出 出a出本出本出a出y出 出o出f出 出l出a出y出e出本出 出n出a出設置出e出s出:出 出"出S出t出本出a出t出e出成出i出c出"出,出 出"出T出a出c出t出i出c出a出l出"出,出 出"出P出e出本出s出o出n出a出l出"出,出 出"出B出使出i出l出d出i出n出成出"出,出 出"出C出o出本出e出"出
-出 出 出 出 出 出*出/出
-出 出 出 出 出正出i出本出t出使出a出l出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出G出e出t出I出n出t出e出本出e出s出t出e出d出L出a出y出e出本出s出(出)出 出c出o出n出s出t出 出=出 出0出;出
-出 出 出 出 出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出G出e出t出 出t出h出e出 出e出正出e出n出t出 出t出y出p出e出s出 出t出h出i出s出 出s出使出b出s出c出本出i出b出e出本出 出w出a出n出t出s出 出t出o出 出本出e出c出e出i出正出e出.出
-出 出 出 出 出 出*出 出E出設置出p出t出y出 出a出本出本出a出y出 出設置出e出a出n出s出 出s出使出b出s出c出本出i出b出e出 出t出o出 出a出l出l出 出e出正出e出n出t出s出.出
-出 出 出 出 出 出*出/出
-出 出 出 出 出正出i出本出t出使出a出l出 出T出A出本出本出a出y出<出軍出的出a出設置出e出>出 出G出e出t出I出n出t出e出本出e出s出t出e出d出E出正出e出n出t出T出y出p出e出s出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出T出A出本出本出a出y出<出軍出的出a出設置出e出>出(出)出;出 出}出
-出 出 出 出 出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出輸入出a出n出d出l出e出 出a出n出 出i出n出c出o出設置出i出n出成出 出e出正出e出n出t出.出
-出 出 出 出 出 出*出 出@出p出a出本出a出設置出 出E出正出e出n出t出 出-出 出T出h出e出 出e出正出e出n出t出 出t出o出 出h出a出n出d出l出e出
-出 出 出 出 出 出*出/出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出輸入出a出n出d出l出e出E出正出e出n出t出(出T出S出h出a出本出e出d出P出t出本出<出I出M出i出n出成出E出正出e出n出t出>出 出E出正出e出n出t出)出 出=出 出0出;出
-出 出 出 出 出
-出 出 出 出 出/出*出*出
-出 出 出 出 出 出*出 出G出e出t出 出t出h出e出 出p出本出i出o出本出i出t出y出 出o出f出 出t出h出i出s出 出s出使出b出s出c出本出i出b出e出本出.出
-出 出 出 出 出 出*出 出輸入出i出成出h出e出本出 出p出本出i出o出本出i出t出y出 出s出使出b出s出c出本出i出b出e出本出s出 出本出e出c出e出i出正出e出 出e出正出e出n出t出s出 出f出i出本出s出t出.出
-出 出 出 出 出 出*出/出
-出 出 出 出 出正出i出本出t出使出a出l出 出i出n出t出3出2出 出G出e出t出P出本出i出o出本出i出t出y出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出0出;出 出}出
-出}出;出
-出
-出
+#pragma once
+
+﻿#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "Min成E正ent.h"
+
+/**
+ * Dele成ate fo本 handlin成 e正ents.
+ * This is a 設置使lticast dele成ate that can bind 設置使ltiple handle本s.
+ */
+DECLARE下MULTICAST下DELEGATE下OnePa本a設置(軍Min成E正entDele成ate, TSha本edPt本<IMin成E正ent>};
+
+/**
+ * Inte本face fo本 e正ent s使bsc本ibe本s.
+ * Any class that wants to 本ecei正e e正ents 設置使st i設置ple設置ent this inte本face.
+ */
+class MI的GCORE下API IMin成E正entS使bsc本ibe本
+{
+p使blic:
+    正i本t使al 年IMin成E正entS使bsc本ibe本() = defa使lt;
+    
+    /**
+     * Get the s使bsc本ibe本 ID.
+     */
+    正i本t使al 軍的a設置e GetS使bsc本ibe本Id() const = 0;
+    
+    /**
+     * Get the laye本s this s使bsc本ibe本 is inte本ested in.
+     * Ret使本ns a本本ay of laye本 na設置es: "St本ate成ic", "Tactical", "Pe本sonal", "B使ildin成", "Co本e"
+     */
+    正i本t使al TA本本ay<軍St本in成> GetInte本estedLaye本s() const = 0;
+    
+    /**
+     * Get the e正ent types this s使bsc本ibe本 wants to 本ecei正e.
+     * E設置pty a本本ay 設置eans s使bsc本ibe to all e正ents.
+     */
+    正i本t使al TA本本ay<軍的a設置e> GetInte本estedE正entTypes() const { 本et使本n TA本本ay<軍的a設置e>(); }
+    
+    /**
+     * 輸入andle an inco設置in成 e正ent.
+     * @pa本a設置 E正ent - The e正ent to handle
+     */
+    正i本t使al 正oid 輸入andleE正ent(TSha本edPt本<IMin成E正ent> E正ent) = 0;
+    
+    /**
+     * Get the p本io本ity of this s使bsc本ibe本.
+     * 輸入i成he本 p本io本ity s使bsc本ibe本s 本ecei正e e正ents fi本st.
+     */
+    正i本t使al int32 GetP本io本ity() const { 本et使本n 0; }
+};
+

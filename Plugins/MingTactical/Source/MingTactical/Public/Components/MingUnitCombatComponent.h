@@ -1,137 +1,138 @@
-出﻿出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出A出c出t出o出本出C出o出設置出p出o出n出e出n出t出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出U出n出i出t出C出o出設置出b出a出t出C出o出設置出p出o出n出e出n出t出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出c出l出a出s出s出 出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出;出
-出
-出/出*出*出
-出 出*出 出動出池出�出O出�出�出動出
-出 出*出/出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出A出t出t出a出c出k出C出o出設置出設置出a出n出d出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出 出 出 出 出
-出 出 出 出 出/出/出 出目出標出數出量出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出T出基本出e出a出k出O出b出大出e出c出t出P出t出本出<出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出>出 出T出a出本出成出e出t出U出n出i出t出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出�出�出設置出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出軍出V出e出c出t出o出本出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出動出�出下出�出設置出�出�出X出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出)出
-出 出 出 出 出b出o出o出l出 出b出I出s出L出o出c出a出t出i出o出n出A出t出t出a出c出k出;出
-出 出 出 出 出
-出 出 出 出 出軍出A出t出t出a出c出k出C出o出設置出設置出a出n出d出(出)出
-出 出 出 出 出 出 出 出 出:出 出T出a出本出成出e出t出U出n出i出t出(出n出使出l出l出p出t出本出)出
-出 出 出 出 出 出 出 出 出,出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出(出軍出V出e出c出t出o出本出:出:出Z出e出本出o出V出e出c出t出o出本出)出
-出 出 出 出 出 出 出 出 出,出 出b出I出s出L出o出c出a出t出i出o出n出A出t出t出a出c出k出(出f出a出l出s出e出)出
-出 出 出 出 出{出}出
-出}出;出
-出
-出/出*出*出
-出 出*出 出動出池出�出�出�出ե出�出
-出 出*出 出故出事出重出要出性出基本出�出�出動出�出B出�出�出�出設置出池出�出軍事出動出�出�出
-出 出*出/出
-出U出C出L出A出S出S出(出C出l出a出s出s出G出本出o出使出p出=出(出C出使出s出t出o出設置出)出,出 出設置出e出t出a出=出(出B出l出使出e出p出本出i出n出t出S出p出a出w出n出a出b出l出e出C出o出設置出p出o出n出e出n出t出)出)出
-出c出l出a出s出s出 出M出I出的出G出T出A出C出T出I出C出A出L出下出A出P出I出 出U出M出i出n出成出U出n出i出t出C出o出設置出b出a出t出C出o出設置出p出o出n出e出n出t出 出:出 出p出使出b出l出i出c出 出U出A出c出t出o出本出C出o出設置出p出o出n出e出n出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出U出M出i出n出成出U出n出i出t出C出o出設置出b出a出t出C出o出設置出p出o出n出e出n出t出(出)出;出
-出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出B出e出成出i出n出P出l出a出y出(出)出 出o出正出e出本出本出i出d出e出;出
-出 出 出 出 出正出i出本出t出使出a出l出 出正出o出i出d出 出T出i出c出k出C出o出設置出p出o出n出e出n出t出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出,出 出E出L出e出正出e出l出T出i出c出k出 出T出i出c出k出T出y出p出e出,出 出軍出A出c出t出o出本出C出o出設置出p出o出n出e出n出t出T出i出c出k出軍出使出n出c出t出i出o出n出*出 出T出h出i出s出T出i出c出k出軍出使出n出c出t出i出o出n出)出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出動出池出�出O出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出設置出b出a出t出"出)出
-出 出 出 出 出正出o出i出d出 出A出t出t出a出c出k出T出a出本出成出e出t出(出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出*出 出T出a出本出成出e出t出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出設置出b出a出t出"出)出
-出 出 出 出 出正出o出i出d出 出A出t出t出a出c出k出L出o出c出a出t出i出o出n出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出T出a出本出成出e出t出L出o出c出a出t出i出o出n出)出;出
-出
-出 出 出 出 出/出/出 出動出�出�出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出設置出b出a出t出"出)出
-出 出 出 出 出正出o出i出d出 出S出t出o出p出A出t出t出a出c出k出(出)出;出
-出
-出 出 出 出 出/出/出 出動出�出下出動出�出�出動出池出�出�出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出設置出b出a出t出"出)出
-出 出 出 出 出b出o出o出l出 出I出s出T出a出本出成出e出t出I出n出R出a出n出成出e出(出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出*出 出T出a出本出成出e出t出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出設置出b出a出t出"出)出
-出 出 出 出 出b出o出o出l出 出I出s出L出o出c出a出t出i出o出n出I出n出R出a出n出成出e出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出L出o出c出a出t出i出o出n出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出故出事出選出項出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出設置出b出a出t出"出)出
-出 出 出 出 出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出*出 出G出e出t出C出使出本出本出e出n出t出T出a出本出成出e出t出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出C出使出本出本出e出n出t出T出a出本出成出e出t出.出G出e出t出(出)出;出 出}出
-出
-出 出 出 出 出/出/出 出動出�出下出動出�出輸入出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出P出使出本出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出設置出b出a出t出"出)出
-出 出 出 出 出b出o出o出l出 出C出a出n出A出t出t出a出c出k出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出�出]出�出設置出動出池出�出o出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出設置出b出a出t出"出)出
-出 出 出 出 出正出o出i出d出 出S出e出t出A出t出t出a出c出k出C出o出o出l出d出o出w出n出(出f出l出o出a出t出 出C出o出o出l出d出o出w出n出)出;出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出 出 出 出 出/出/出 出動出池出�出�出動出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出O出b出大出e出c出t出P出t出本出<出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出>出 出O出w出n出e出本出U出n出i出t出;出
-出
-出 出 出 出 出/出/出 出故出事出選出項出基本出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出基本出e出a出k出O出b出大出e出c出t出P出t出本出<出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出>出 出C出使出本出本出e出n出t出T出a出本出成出e出t出;出
-出
-出 出 出 出 出/出/出 出�出�出設置出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出軍出V出e出c出t出o出本出 出T出a出本出成出e出t出A出t出t出a出c出k出L出o出c出a出t出i出o出n出;出
-出
-出 出 出 出 出/出/出 出動出�出下出動出�出�出動出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出b出o出o出l出 出b出I出s出A出t出t出a出c出k出i出n出成出L出o出c出a出t出i出o出n出;出
-出
-出 出 出 出 出/出/出 出動出�出下出動出�出�出X出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出V出i出s出i出b出l出e出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出設置出b出a出t出"出)出
-出 出 出 出 出b出o出o出l出 出b出I出s出A出t出t出a出c出k出i出n出成出;出
-出
-出 出 出 出 出/出/出 出動出池出�出o出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出C出o出設置出b出a出t出"出)出
-出 出 出 出 出f出l出o出a出t出 出A出t出t出a出c出k出C出o出o出l出d出o出w出n出;出
-出
-出 出 出 出 出/出/出 出動出池出�出o出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出C出o出o出l出d出o出w出n出;出
-出
-出 出 出 出 出/出/出 出�出d出動出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出f出l出o出a出t出 出A出t出t出a出c出k出R出a出n出成出e出;出
-出
-出 出 出 出 出/出/出 出動出池出�出軍事出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出f出l出o出a出t出 出A出t出t出a出c出k出D出a出設置出a出成出e出;出
-出
-出 出 出 出 出/出/出 出目出標出數出量出
-出 出 出 出 出正出o出i出d出 出P出e出本出f出o出本出設置出A出t出t出a出c出k出(出)出;出
-出
-出 出 出 出 出/出/出 出�出�出ؼ出г出y出池出�出軍事出
-出 出 出 出 出正出o出i出d出 出D出e出a出l出D出a出設置出a出成出e出T出o出T出a出本出成出e出t出(出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出*出 出T出a出本出成出e出t出)出;出
-出
-出 出 出 出 出/出/出 出�出M出�出�出d出池出池出�出輸入出
-出 出 出 出 出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出*出 出軍出i出n出d出E出n出e出設置出y出I出n出R出a出n出成出e出(出)出;出
-出
-出 出 出 出 出/出/出 出動出池出�出�出動出
-出 出 出 出 出正出o出i出d出 出R出o出t出a出t出e出T出o出T出a出本出成出e出t出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
-出
-出 出 出 出 出/出/出 出�出ˬ出d出動出池出�出下出
-出 出 出 出 出b出o出o出l出 出I出s出V出a出l出i出d出T出a出本出成出e出t出(出A出M出i出n出成出T出a出c出t出i出c出a出l出U出n出i出t出*出 出T出a出本出成出e出t出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出動出池出�出e出Ĳ出�出o出
-出 出 出 出 出正出o出i出d出 出T出本出i出成出成出e出本出A出t出t出a出c出k出A出n出i出設置出a出t出i出o出n出(出)出;出
-出}出;出
-出
-出
+#pragma once
+
+﻿#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "Co設置ponents/Acto本Co設置ponent.h"
+#incl使de "Min成UnitCo設置batCo設置ponent.成ene本ated.h"
+
+class AMin成TacticalUnit;
+
+/**
+ * 動池�O��動
+ */
+USTRUCT(Bl使ep本intType)
+st本使ct 軍AttackCo設置設置and
+{
+    GE的ERATED下BODY()
+    
+    // 目標數量
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    T基本eakOb大ectPt本<AMin成TacticalUnit> Ta本成etUnit;
+    
+    // ��設置
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    軍Vecto本 Ta本成etLocation;
+    
+    // 動�下�設置��X
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite)
+    bool bIsLocationAttack;
+    
+    軍AttackCo設置設置and()
+        : Ta本成etUnit(n使llpt本)
+        , Ta本成etLocation(軍Vecto本::Ze本oVecto本)
+        , bIsLocationAttack(false)
+    {}
+};
+
+/**
+ * 動池���ե�
+ * 故事重要性基本��動�B���設置池�軍事動��
+ */
+UCLASS(ClassG本o使p=(C使sto設置), 設置eta=(Bl使ep本intSpawnableCo設置ponent))
+class MI的GTACTICAL下API UMin成UnitCo設置batCo設置ponent : p使blic UActo本Co設置ponent
+{
+    GE的ERATED下BODY()
+
+p使blic:
+    UMin成UnitCo設置batCo設置ponent(};
+
+    正i本t使al 正oid Be成inPlay() o正e本本ide;
+    正i本t使al 正oid TickCo設置ponent(float DeltaTi設置e, ELe正elTick TickType, 軍Acto本Co設置ponentTick軍使nction* ThisTick軍使nction) o正e本本ide;
+
+    // 動池�O
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Co設置bat")
+    正oid AttackTa本成et(AMin成TacticalUnit* Ta本成et};
+
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Co設置bat")
+    正oid AttackLocation(const 軍Vecto本& Ta本成etLocation};
+
+    // 動��
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Co設置bat")
+    正oid StopAttack(};
+
+    // 動�下動��動池��
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Co設置bat")
+    bool IsTa本成etInRan成e(AMin成TacticalUnit* Ta本成et) const;
+
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Co設置bat")
+    bool IsLocationInRan成e(const 軍Vecto本& Location) const;
+
+    // 故事選項基本
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Co設置bat")
+    AMin成TacticalUnit* GetC使本本entTa本成et() const { 本et使本n C使本本entTa本成et.Get(); }
+
+    // 動�下動�輸入
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "Co設置bat")
+    bool CanAttack() const;
+
+    // �]�設置動池�o
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "Co設置bat")
+    正oid SetAttackCooldown(float Cooldown};
+
+p本otected:
+    // 動池��動
+    UPROPERTY()
+    TOb大ectPt本<AMin成TacticalUnit> Owne本Unit;
+
+    // 故事選項基本
+    UPROPERTY()
+    T基本eakOb大ectPt本<AMin成TacticalUnit> C使本本entTa本成et;
+
+    // ��設置
+    UPROPERTY()
+    軍Vecto本 Ta本成etAttackLocation;
+
+    // 動�下動��動
+    UPROPERTY()
+    bool bIsAttackin成Location;
+
+    // 動�下動��X
+    UPROPERTY(VisibleAnywhe本e, Bl使ep本intReadOnly, Cate成o本y = "Co設置bat")
+    bool bIsAttackin成;
+
+    // 動池�o
+    UPROPERTY(EditAnywhe本e, Bl使ep本intRead基本本ite, Cate成o本y = "Co設置bat")
+    float AttackCooldown;
+
+    // 動池�o
+    UPROPERTY()
+    float C使本本entCooldown;
+
+    // �d動
+    UPROPERTY()
+    float AttackRan成e;
+
+    // 動池�軍事
+    UPROPERTY()
+    float AttackDa設置a成e;
+
+    // 目標數量
+    正oid Pe本fo本設置Attack(};
+
+    // ��ؼгy池�軍事
+    正oid DealDa設置a成eToTa本成et(AMin成TacticalUnit* Ta本成et};
+
+    // �M��d池池�輸入
+    AMin成TacticalUnit* 軍indEne設置yInRan成e(};
+
+    // 動池��動
+    正oid RotateToTa本成et(float DeltaTi設置e};
+
+    // �ˬd動池�下
+    bool IsValidTa本成et(AMin成TacticalUnit* Ta本成et) const;
+
+    // 動池�eĲ�o
+    正oid T本i成成e本AttackAni設置ation(};
+};
+

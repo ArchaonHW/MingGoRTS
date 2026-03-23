@@ -1,588 +1,588 @@
-出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出I出n出t出e出本出f出a出c出e出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出E出n出成出i出n出e出/出E出n出成出i出n出e出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出A出c出t出o出本出C出o出設置出p出o出n出e出n出t出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出G出a出設置出e出軍出本出a出設置出e出w出o出本出k出/出A出c出t出o出本出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出E出c出o出l出o出成出i出c出a出l出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出/出/出 出生出態出系出統出類出型出枚出舉出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出E出c出o出s出y出s出t出e出設置出T出y出p出e出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出軍出o出本出e出s出t出 出=出 出0出,出 出 出 出 出 出 出 出 出 出 出 出/出/出 出森出林出生出態出系出統出
-出 出 出 出 出G出本出a出s出s出l出a出n出d出 出=出 出1出,出 出 出 出 出 出 出 出 出/出/出 出草出原出生出態出系出統出
-出 出 出 出 出基本出e出t出l出a出n出d出 出=出 出2出,出 出 出 出 出 出 出 出 出 出 出/出/出 出濕出地出生出態出系出統出
-出 出 出 出 出D出e出s出e出本出t出 出=出 出3出,出 出 出 出 出 出 出 出 出 出 出 出/出/出 出沙出漠出生出態出系出統出
-出 出 出 出 出O出c出e出a出n出 出=出 出4出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出海出洋出生出態出系出統出
-出 出 出 出 出R出i出正出e出本出 出=出 出5出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出河出流出生出態出系出統出
-出 出 出 出 出M出o出使出n出t出a出i出n出 出=出 出6出,出 出 出 出 出 出 出 出 出 出/出/出 出山出地出生出態出系出統出
-出 出 出 出 出U出本出b出a出n出 出=出 出7出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出城出市出生出態出系出統出
-出 出 出 出 出A出成出本出i出c出使出l出t出使出本出a出l出 出=出 出8出,出 出 出 出 出 出/出/出 出農出業出生出態出系出統出
-出 出 出 出 出M出i出x出e出d出 出=出 出9出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出混出合出生出態出系出統出
-出}出;出
-出
-出/出/出 出環出境出因出子出類出型出枚出舉出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出T出e出設置出p出e出本出a出t出使出本出e出 出=出 出0出,出 出 出 出 出 出 出 出/出/出 出溫出度出
-出 出 出 出 出輸入出使出設置出i出d出i出t出y出 出=出 出1出,出 出 出 出 出 出 出 出 出 出 出/出/出 出濕出度出
-出 出 出 出 出P出本出e出c出i出p出i出t出a出t出i出o出n出 出=出 出2出,出 出 出 出 出 出/出/出 出降出水出量出
-出 出 出 出 出基本出i出n出d出S出p出e出e出d出 出=出 出3出,出 出 出 出 出 出 出 出 出 出/出/出 出風出速出
-出 出 出 出 出S出使出n出l出i出成出h出t出 出=出 出4出,出 出 出 出 出 出 出 出 出 出 出/出/出 出陽出光出
-出 出 出 出 出S出o出i出l出Q出使出a出l出i出t出y出 出=出 出5出,出 出 出 出 出 出 出 出/出/出 出土出壤出質出量出
-出 出 出 出 出A出i出本出Q出使出a出l出i出t出y出 出=出 出6出,出 出 出 出 出 出 出 出 出/出/出 出空出氣出質出量出
-出 出 出 出 出基本出a出t出e出本出Q出使出a出l出i出t出y出 出=出 出7出,出 出 出 出 出 出 出 出/出/出 出水出質出
-出 出 出 出 出B出i出o出d出i出正出e出本出s出i出t出y出 出=出 出8出,出 出 出 出 出 出 出/出/出 出生出物出多出樣出性出
-出 出 出 出 出V出e出成出e出t出a出t出i出o出n出D出e出n出s出i出t出y出 出=出 出9出 出 出/出/出 出植出被出密出度出
-出}出;出
-出
-出/出/出 出季出節出類出型出枚出舉出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出S出e出a出s出o出n出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出S出p出本出i出n出成出 出=出 出0出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出春出季出
-出 出 出 出 出S出使出設置出設置出e出本出 出=出 出1出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出夏出季出
-出 出 出 出 出A出使出t出使出設置出n出 出=出 出2出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出秋出季出
-出 出 出 出 出基本出i出n出t出e出本出 出=出 出3出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出冬出季出
-出}出;出
-出
-出/出/出 出天出氣出類出型出枚出舉出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出基本出e出a出t出h出e出本出T出y出p出e出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出C出l出e出a出本出 出=出 出0出,出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出晴出朗出
-出 出 出 出 出C出l出o出使出d出y出 出=出 出1出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出多出雲出
-出 出 出 出 出R出a出i出n出y出 出=出 出2出,出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出下出雨出
-出 出 出 出 出S出t出o出本出設置出y出 出=出 出3出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出暴出風出雨出
-出 出 出 出 出S出n出o出w出y出 出=出 出4出,出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出下出雪出
-出 出 出 出 出軍出o出成出成出y出 出=出 出5出,出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出有出霧出
-出 出 出 出 出基本出i出n出d出y出 出=出 出6出,出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出大出風出
-出 出 出 出 出E出x出t出本出e出設置出e出 出=出 出7出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出極出端出天出氣出
-出}出;出
-出
-出/出/出 出生出態出平出衡出狀出態出枚出舉出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出E出c出o出l出o出成出i出c出a出l出B出a出l出a出n出c出e出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出P出e出本出f出e出c出t出 出=出 出0出,出 出 出 出 出 出 出 出 出 出 出 出/出/出 出完出美出平出衡出
-出 出 出 出 出G出o出o出d出 出=出 出1出,出 出 出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出良出好出平出衡出
-出 出 出 出 出S出t出a出b出l出e出 出=出 出2出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出穩出定出平出衡出
-出 出 出 出 出U出n出s出t出a出b出l出e出 出=出 出3出,出 出 出 出 出 出 出 出 出 出 出/出/出 出不出穩出定出平出衡出
-出 出 出 出 出D出e出成出本出a出d出e出d出 出=出 出4出,出 出 出 出 出 出 出 出 出 出 出/出/出 出退出化出生出態出
-出 出 出 出 出C出o出l出l出a出p出s出e出d出 出=出 出5出 出 出 出 出 出 出 出 出 出 出/出/出 出生出態出崩出潰出
-出}出;出
-出
-出/出/出 出環出境出因出子出數出據出結出構出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出D出a出t出a出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出 出軍出a出c出t出o出本出T出y出p出e出 出=出 出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出:出:出T出e出設置出p出e出本出a出t出使出本出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出V出a出l出使出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出O出p出t出i出設置出a出l出V出a出l出使出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出M出i出n出V出a出l出使出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出M出a出x出V出a出l出使出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出C出h出a出n出成出e出R出a出t出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出I出設置出p出a出c出t出基本出e出i出成出h出t出 出=出 出1出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出f出f出e出c出t出e出d出S出p出e出c出i出e出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出b出o出o出l出 出b出I出s出C出本出i出t出i出c出a出l出 出=出 出f出a出l出s出e出;出
-出}出;出
-出
-出/出/出 出生出態出系出統出數出據出結出構出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出E出c出o出s出y出s出t出e出設置出D出a出t出a出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出E出c出o出s出y出s出t出e出設置出I出D出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出E出E出c出o出s出y出s出t出e出設置出T出y出p出e出 出E出c出o出s出y出s出t出e出設置出T出y出p出e出 出=出 出E出E出c出o出s出y出s出t出e出設置出T出y出p出e出:出:出軍出o出本出e出s出t出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出E出c出o出s出y出s出t出e出設置出的出a出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出s出c出本出i出p出t出i出o出n出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出V出e出c出t出o出本出 出L出o出c出a出t出i出o出n出 出=出 出軍出V出e出c出t出o出本出:出:出Z出e出本出o出V出e出c出t出o出本出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出A出本出e出a出 出=出 出1出0出0出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出M出a出p出<出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出,出 出軍出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出D出a出t出a出>出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出的出a出t出i出正出e出S出p出e出c出i出e出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出i出n出t出3出2出>出 出S出p出e出c出i出e出s出P出o出p出使出l出a出t出i出o出n出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出E出E出c出o出l出o出成出i出c出a出l出B出a出l出a出n出c出e出 出B出a出l出a出n出c出e出S出t出a出t出e出 出=出 出E出E出c出o出l出o出成出i出c出a出l出B出a出l出a出n出c出e出:出:出S出t出a出b出l出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出B出i出o出d出i出正出e出本出s出i出t出y出I出n出d出e出x出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出E出c出o出s出y出s出t出e出設置出輸入出e出a出l出t出h出 出=出 出1出0出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出E出S出e出a出s出o出n出 出C出使出本出本出e出n出t出S出e出a出s出o出n出 出=出 出E出S出e出a出s出o出n出:出:出S出p出本出i出n出成出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出E出基本出e出a出t出h出e出本出T出y出p出e出 出C出使出本出本出e出n出t出基本出e出a出t出h出e出本出 出=出 出E出基本出e出a出t出h出e出本出T出y出p出e出:出:出C出l出e出a出本出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出C出本出e出a出t出i出o出n出T出i出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出T出h出本出e出a出t出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出C出o出n出s出e出本出正出a出t出i出o出n出E出f出f出o出本出t出s出;出
-出}出;出
-出
-出/出/出 出生出態出事出件出結出構出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出E出正出e出n出t出I出D出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出E出正出e出n出t出T出y出p出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出E出正出e出n出t出的出a出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出s出c出本出i出p出t出i出o出n出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出A出f出f出e出c出t出e出d出E出c出o出s出y出s出t出e出設置出I出D出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出S出e出正出e出本出i出t出y出 出=出 出1出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出D出使出本出a出t出i出o出n出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出S出t出a出本出t出T出i出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出E出n出d出T出i出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出M出a出p出<出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出,出 出f出l出o出a出t出>出 出E出n出正出i出本出o出n出設置出e出n出t出a出l出I出設置出p出a出c出t出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出f出f出e出c出t出e出d出S出p出e出c出i出e出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出b出o出o出l出 出b出I出s出A出c出t出i出正出e出 出=出 出f出a出l出s出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出b出o出o出l出 出b出I出s出R出e出c出使出本出本出i出n出成出 出=出 出f出a出l出s出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出 出E出正出e出n出t出P出a出本出a出設置出e出t出e出本出s出;出
-出}出;出
-出
-出/出/出 出生出態出影出響出評出估出結出構出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出E出c出o出l出o出成出i出c出a出l出I出設置出p出a出c出t出A出s出s出e出s出s出設置出e出n出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出A出s出s出e出s出s出設置出e出n出t出I出D出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出S出o出使出本出c出e出T出y出p出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出S出o出使出本出c出e出D出e出s出c出本出i出p出t出i出o出n出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出T出a出本出成出e出t出E出c出o出s出y出s出t出e出設置出I出D出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出M出a出p出<出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出,出 出f出l出o出a出t出>出 出軍出a出c出t出o出本出I出設置出p出a出c出t出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出S出p出e出c出i出e出s出I出設置出p出a出c出t出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出O出正出e出本出a出l出l出I出設置出p出a出c出t出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出R出e出c出o出正出e出本出y出T出i出設置出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出M出i出t出i出成出a出t出i出o出n出S出t出本出a出t出e出成出i出e出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出A出s出s出e出s出s出設置出e出n出t出T出i出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出R出i出s出k出L出e出正出e出l出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出e出c出o出設置出設置出e出n出d出e出d出A出c出t出i出o出n出s出;出
-出}出;出
-出
-出/出/出 出資出源出再出生出數出據出結出構出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出i出o出n出D出a出t出a出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出s出o出使出本出c出e出I出D出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出s出o出使出本出c出e出T出y出p出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出s出o出使出本出c出e出的出a出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出C出使出本出本出e出n出t出A出設置出o出使出n出t出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出M出a出x出C出a出p出a出c出i出t出y出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出R出e出成出e出n出e出本出a出t出i出o出n出R出a出t出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出C出o出n出s出使出設置出p出t出i出o出n出R出a出t出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出L出a出s出t出R出e出成出e出n出e出本出a出t出i出o出n出T出i出設置出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出e出q出使出i出本出e出d出軍出a出c出t出o出本出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出軍出a出c出t出o出本出R出e出q出使出i出本出e出設置出e出n出t出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出b出o出o出l出 出b出I出s出R出e出成出e出n出e出本出a出t出i出n出成出 出=出 出f出a出l出s出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出)出
-出 出 出 出 出f出l出o出a出t出 出R出e出成出e出n出e出本出a出t出i出o出n出E出f出f出i出c出i出e出n出c出y出 出=出 出1出.出0出f出;出
-出}出;出
-出
-出/出/出 出委出託出聲出明出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出E出c出o出s出y出s出t出e出設置出C出本出e出a出t出e出d出,出 出c出o出n出s出t出 出軍出E出c出o出s出y出s出t出e出設置出D出a出t出a出&出,出 出E出c出o出s出y出s出t出e出設置出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出E出c出o出s出y出s出t出e出設置出B出a出l出a出n出c出e出C出h出a出n出成出e出d出,出 出c出o出n出s出t出 出軍出E出c出o出s出y出s出t出e出設置出D出a出t出a出&出,出 出E出c出o出s出y出s出t出e出設置出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出C出h出a出n出成出e出d出,出 出c出o出n出s出t出 出軍出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出D出a出t出a出&出,出 出軍出a出c出t出o出本出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出O出c出c出使出本出本出e出d出,出 出c出o出n出s出t出 出軍出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出&出,出 出E出正出e出n出t出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出S出e出a出s出o出n出C出h出a出n出成出e出d出,出 出E出S出e出a出s出o出n出,出 出的出e出w出S出e出a出s出o出n出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出基本出e出a出t出h出e出本出C出h出a出n出成出e出d出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出,出 出的出e出w出基本出e出a出t出h出e出本出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出B出i出o出d出i出正出e出本出s出i出t出y出C出h出a出n出成出e出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出,出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出f出l出o出a出t出 出的出e出w出I出n出d出e出x出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出T出w出o出P出a出本出a出設置出s出(出軍出O出n出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出e出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出,出 出R出e出s出o出使出本出c出e出I出D出,出 出f出l出o出a出t出 出A出設置出o出使出n出t出)出;出
-出
-出/出*出*出
-出 出*出 出生出態出環出境出模出擬出系出統出接出口出
-出 出*出 出提出供出真出實出的出環出境出變出化出模出擬出、出生出態出系出統出平出衡出和出資出源出再出生出功出能出
-出 出*出/出
-出U出I出的出T出E出R出軍出A出C出E出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出c出l出a出s出s出 出U出E出c出o出l出o出成出i出c出a出l出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出I出n出t出e出本出f出a出c出e出 出:出 出p出使出b出l出i出c出 出U出I出n出t出e出本出f出a出c出e出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出}出;出
-出
-出c出l出a出s出s出 出I出E出c出o出l出o出成出i出c出a出l出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出I出n出t出e出本出f出a出c出e出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出/出/出 出初出始出化出系出統出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出I出n出i出t出i出a出l出i出z出e出E出c出o出l出o出成出i出c出a出l出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出/出 出創出建出生出態出系出統出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出C出本出e出a出t出e出E出c出o出s出y出s出t出e出設置出(出E出E出c出o出s出y出s出t出e出設置出T出y出p出e出 出E出c出o出s出y出s出t出e出設置出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出的出a出設置出e出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出L出o出c出a出t出i出o出n出,出 出f出l出o出a出t出 出A出本出e出a出)出;出
-出
-出 出 出 出 出/出/出 出更出新出環出境出因出子出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出U出p出d出a出t出e出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出 出軍出a出c出t出o出本出T出y出p出e出,出 出f出l出o出a出t出 出的出e出w出V出a出l出使出e出)出;出
-出
-出 出 出 出 出/出/出 出模出擬出環出境出變出化出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出S出i出設置出使出l出a出t出e出E出n出正出i出本出o出n出設置出e出n出t出a出l出C出h出a出n出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
-出
-出 出 出 出 出/出/出 出觸出發出生出態出事出件出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出T出本出i出成出成出e出本出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出T出y出p出e出,出 出f出l出o出a出t出 出S出e出正出e出本出i出t出y出)出;出
-出
-出 出 出 出 出/出/出 出評出估出生出態出影出響出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出軍出E出c出o出l出o出成出i出c出a出l出I出設置出p出a出c出t出A出s出s出e出s出s出設置出e出n出t出 出A出s出s出e出s出s出E出c出o出l出o出成出i出c出a出l出I出設置出p出a出c出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出o出使出本出c出e出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出a出本出成出e出t出E出c出o出s出y出s出t出e出設置出I出D出,出 出c出o出n出s出t出 出T出M出a出p出<出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出,出 出f出l出o出a出t出>出&出 出I出設置出p出a出c出t出s出)出;出
-出
-出 出 出 出 出/出/出 出處出理出資出源出再出生出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出P出本出o出c出e出s出s出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
-出
-出 出 出 出 出/出/出 出更出新出季出節出和出天出氣出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出U出p出d出a出t出e出S出e出a出s出o出n出A出n出d出基本出e出a出t出h出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
-出
-出 出 出 出 出/出/出 出計出算出生出態出平出衡出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出E出E出c出o出l出o出成出i出c出a出l出B出a出l出a出n出c出e出 出C出a出l出c出使出l出a出t出e出E出c出o出l出o出成出i出c出a出l出B出a出l出a出n出c出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出生出態出系出統出數出據出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出軍出E出c出o出s出y出s出t出e出設置出D出a出t出a出 出G出e出t出E出c出o出s出y出s出t出e出設置出D出a出t出a出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出獲出取出系出統出統出計出信出息出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出G出e出t出S出y出s出t出e出設置出S出t出a出t出i出s出t出i出c出s出(出)出 出c出o出n出s出t出;出
-出}出;出
-出
-出/出*出*出
-出 出*出 出生出態出環出境出模出擬出系出統出
-出 出*出 出實出現出真出實出的出環出境出變出化出模出擬出、出生出態出系出統出平出衡出和出資出源出再出生出
-出 出*出/出
-出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出,出 出C出l出a出s出s出G出本出o出使出p出 出=出 出(出I出n出n出o出正出a出t出i出o出n出)出)出
-出c出l出a出s出s出 出M出I出的出G出R出T出S出下出A出P出I出 出U出M出i出n出成出E出c出o出l出o出成出i出c出a出l出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出,出 出p出使出b出l出i出c出 出I出E出c出o出l出o出成出i出c出a出l出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出I出n出t出e出本出f出a出c出e出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出U出M出i出n出成出E出c出o出l出o出成出i出c出a出l出E出n出正出i出本出o出n出設置出e出n出t出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出/出 出系出統出初出始出化出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出I出n出i出t出i出a出l出i出z出e出E出c出o出l出o出成出i出c出a出l出S出y出s出t出e出設置出(出)出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出創出建出生出態出系出統出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出C出本出e出a出t出e出E出c出o出s出y出s出t出e出設置出(出E出E出c出o出s出y出s出t出e出設置出T出y出p出e出 出E出c出o出s出y出s出t出e出設置出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出的出a出設置出e出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出L出o出c出a出t出i出o出n出,出 出f出l出o出a出t出 出A出本出e出a出)出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出更出新出環出境出因出子出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出U出p出d出a出t出e出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出 出軍出a出c出t出o出本出T出y出p出e出,出 出f出l出o出a出t出 出的出e出w出V出a出l出使出e出)出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出模出擬出環出境出變出化出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出S出i出設置出使出l出a出t出e出E出n出正出i出本出o出n出設置出e出n出t出a出l出C出h出a出n出成出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出觸出發出生出態出事出件出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出T出本出i出成出成出e出本出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出T出y出p出e出,出 出f出l出o出a出t出 出S出e出正出e出本出i出t出y出)出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出評出估出生出態出影出響出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出軍出E出c出o出l出o出成出i出c出a出l出I出設置出p出a出c出t出A出s出s出e出s出s出設置出e出n出t出 出A出s出s出e出s出s出E出c出o出l出o出成出i出c出a出l出I出設置出p出a出c出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出o出使出本出c出e出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出a出本出成出e出t出E出c出o出s出y出s出t出e出設置出I出D出,出 出c出o出n出s出t出 出T出M出a出p出<出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出,出 出f出l出o出a出t出>出&出 出I出設置出p出a出c出t出s出)出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出處出理出資出源出再出生出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出P出本出o出c出e出s出s出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出更出新出季出節出和出天出氣出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出U出p出d出a出t出e出S出e出a出s出o出n出A出n出d出基本出e出a出t出h出e出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出計出算出生出態出平出衡出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出E出E出c出o出l出o出成出i出c出a出l出B出a出l出a出n出c出e出 出C出a出l出c出使出l出a出t出e出E出c出o出l出o出成出i出c出a出l出B出a出l出a出n出c出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出)出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出獲出取出生出態出系出統出數出據出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出軍出E出c出o出s出y出s出t出e出設置出D出a出t出a出 出G出e出t出E出c出o出s出y出s出t出e出設置出D出a出t出a出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出)出 出c出o出n出s出t出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出獲出取出系出統出統出計出信出息出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出G出e出t出S出y出s出t出e出設置出S出t出a出t出i出s出t出i出c出s出(出)出 出c出o出n出s出t出 出o出正出e出本出本出i出d出e出;出
-出
-出 出 出 出 出/出/出 出高出級出功出能出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出E出c出o出s出y出s出t出e出設置出D出a出t出a出>出 出G出e出t出A出l出l出E出c出o出s出y出s出t出e出設置出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出>出 出G出e出t出A出c出t出i出正出e出E出正出e出n出t出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出i出o出n出D出a出t出a出>出 出G出e出t出R出e出s出o出使出本出c出e出S出t出a出t出使出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出A出p出p出l出y出C出o出n出s出e出本出正出a出t出i出o出n出E出f出f出o出本出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出f出f出o出本出t出T出y出p出e出,出 出f出l出o出a出t出 出E出f出f出e出c出t出i出正出e出n出e出s出s出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出R出e出s出t出o出本出e出E出c出o出s出y出s出t出e出設置出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出f出l出o出a出t出 出R出e出s出t出o出本出a出t出i出o出n出A出設置出o出使出n出t出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出B出i出o出d出i出正出e出本出s出i出t出y出I出n出d出e出x出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出S出e出t出S出e出a出s出o出n出a出l出C出y出c出l出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出f出l出o出a出t出 出S出e出a出s出o出n出D出使出本出a出t出i出o出n出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出A出d出d出S出p出e出c出i出e出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出p出e出c出i出e出s出的出a出設置出e出,出 出i出n出t出3出2出 出P出o出p出使出l出a出t出i出o出n出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出R出e出設置出o出正出e出S出p出e出c出i出e出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出S出p出e出c出i出e出s出的出a出設置出e出)出;出
-出
-出 出 出 出 出/出/出 出事出件出委出託出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出E出c出o出s出y出s出t出e出設置出C出本出e出a出t出e出d出 出O出n出E出c出o出s出y出s出t出e出設置出C出本出e出a出t出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出E出c出o出s出y出s出t出e出設置出B出a出l出a出n出c出e出C出h出a出n出成出e出d出 出O出n出E出c出o出s出y出s出t出e出設置出B出a出l出a出n出c出e出C出h出a出n出成出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出C出h出a出n出成出e出d出 出O出n出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出C出h出a出n出成出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出O出c出c出使出本出本出e出d出 出O出n出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出O出c出c出使出本出本出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出S出e出a出s出o出n出C出h出a出n出成出e出d出 出O出n出S出e出a出s出o出n出C出h出a出n出成出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出基本出e出a出t出h出e出本出C出h出a出n出成出e出d出 出O出n出基本出e出a出t出h出e出本出C出h出a出n出成出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出B出i出o出d出i出正出e出本出s出i出t出y出C出h出a出n出成出e出d出 出O出n出B出i出o出d出i出正出e出本出s出i出t出y出C出h出a出n出成出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出)出
-出 出 出 出 出軍出O出n出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出e出d出 出O出n出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出e出d出;出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出 出 出 出 出/出/出 出系出統出組出件出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出E出c出o出s出y出s出t出e出設置出D出a出t出a出>出 出E出c出o出s出y出s出t出e出設置出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出>出 出A出c出t出i出正出e出E出正出e出n出t出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出i出o出n出D出a出t出a出>出 出R出e出s出o出使出本出c出e出D出a出t出a出;出
-出
-出 出 出 出 出/出/出 出配出置出參出數出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出f出l出o出a出t出 出S出i出設置出使出l出a出t出i出o出n出S出p出e出e出d出 出=出 出1出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出f出l出o出a出t出 出S出e出a出s出o出n出D出使出本出a出t出i出o出n出 出=出 出9出0出.出0出f出;出 出/出/出 出天出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出f出l出o出a出t出 出基本出e出a出t出h出e出本出C出h出a出n出成出e出P出本出o出b出a出b出i出l出i出t出y出 出=出 出0出.出1出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出f出l出o出a出t出 出B出i出o出d出i出正出e出本出s出i出t出y出T出h出本出e出s出h出o出l出d出 出=出 出0出.出7出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出f出l出o出a出t出 出E出c出o出s出y出s出t出e出設置出輸入出e出a出l出t出h出T出h出本出e出s出h出o出l出d出 出=出 出5出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出b出E出n出a出b出l出e出S出e出a出s出o出n出a出l出C出h出a出n出成出e出s出 出=出 出t出本出使出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出b出E出n出a出b出l出e出基本出e出a出t出h出e出本出S出i出設置出使出l出a出t出i出o出n出 出=出 出t出本出使出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出D出e出f出a出使出l出t出s出O出n出l出y出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出b出E出n出a出b出l出e出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出i出o出n出 出=出 出t出本出使出e出;出
-出
-出 出 出 出 出/出/出 出狀出態出變出數出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出b出o出o出l出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出i出n出t出3出2出 出A出c出t出i出正出e出E出c出o出s出y出s出t出e出設置出C出o出使出n出t出 出=出 出0出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出f出l出o出a出t出 出G出l出o出b出a出l出B出i出o出d出i出正出e出本出s出i出t出y出I出n出d出e出x出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出E出c出o出l出o出成出i出c出a出l出 出E出n出正出i出本出o出n出設置出e出n出t出 出S出y出s出t出e出設置出"出)出
-出 出 出 出 出E出E出c出o出l出o出成出i出c出a出l出B出a出l出a出n出c出e出 出G出l出o出b出a出l出E出c出o出l出o出成出i出c出a出l出B出a出l出a出n出c出e出 出=出 出E出E出c出o出l出o出成出i出c出a出l出B出a出l出a出n出c出e出:出:出S出t出a出b出l出e出;出
-出
-出p出本出i出正出a出t出e出:出
-出 出 出 出 出/出/出 出內出部出方出法出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出n出e出本出a出t出e出U出n出i出q出使出e出E出c出o出s出y出s出t出e出設置出I出D出(出)出 出c出o出n出s出t出;出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出n出e出本出a出t出e出U出n出i出q出使出e出E出正出e出n出t出I出D出(出)出 出c出o出n出s出t出;出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出n出e出本出a出t出e出U出n出i出q出使出e出R出e出s出o出使出本出c出e出I出D出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出軍出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出D出a出t出a出 出C出本出e出a出t出e出D出e出f出a出使出l出t出軍出a出c出t出o出本出D出a出t出a出(出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出 出軍出a出c出t出o出本出T出y出p出e出,出 出E出E出c出o出s出y出s出t出e出設置出T出y出p出e出 出E出c出o出s出y出s出t出e出設置出T出y出p出e出)出;出
-出 出 出 出 出軍出E出c出o出s出y出s出t出e出設置出D出a出t出a出 出C出本出e出a出t出e出D出e出f出a出使出l出t出E出c出o出s出y出s出t出e出設置出D出a出t出a出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出E出E出c出o出s出y出s出t出e出設置出T出y出p出e出 出E出c出o出s出y出s出t出e出設置出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出的出a出設置出e出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出L出o出c出a出t出i出o出n出,出 出f出l出o出a出t出 出A出本出e出a出)出;出
-出 出 出 出 出軍出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出 出C出本出e出a出t出e出D出e出f出a出使出l出t出E出正出e出n出t出D出a出t出a出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出正出e出n出t出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出f出l出o出a出t出 出S出e出正出e出本出i出t出y出)出;出
-出
-出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
-出 出 出 出 出正出o出i出d出 出P出本出o出c出e出s出s出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出s出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
-出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出G出l出o出b出a出l出S出t出a出t出i出s出t出i出c出s出(出)出;出
-出
-出 出 出 出 出E出S出e出a出s出o出n出 出C出a出l出c出使出l出a出t出e出的出e出x出t出S出e出a出s出o出n出(出E出S出e出a出s出o出n出 出C出使出本出本出e出n出t出S出e出a出s出o出n出)出;出
-出 出 出 出 出E出基本出e出a出t出h出e出本出T出y出p出e出 出C出a出l出c出使出l出a出t出e出基本出e出a出t出h出e出本出(出E出S出e出a出s出o出n出 出C出使出本出本出e出n出t出S出e出a出s出o出n出,出 出c出o出n出s出t出 出T出M出a出p出<出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出,出 出軍出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出D出a出t出a出>出&出 出軍出a出c出t出o出本出s出)出;出
-出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出E出c出o出s出y出s出t出e出設置出輸入出e出a出l出t出h出(出c出o出n出s出t出 出軍出E出c出o出s出y出s出t出e出設置出D出a出t出a出&出 出E出c出o出s出y出s出t出e出設置出)出 出c出o出n出s出t出;出
-出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出S出p出e出c出i出e出s出D出i出正出e出本出s出i出t出y出(出c出o出n出s出t出 出軍出E出c出o出s出y出s出t出e出設置出D出a出t出a出&出 出E出c出o出s出y出s出t出e出設置出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出正出o出i出d出 出A出p出p出l出y出S出e出a出s出o出n出a出l出E出f出f出e出c出t出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出E出S出e出a出s出o出n出 出的出e出w出S出e出a出s出o出n出)出;出
-出 出 出 出 出正出o出i出d出 出A出p出p出l出y出基本出e出a出t出h出e出本出E出f出f出e出c出t出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出E出基本出e出a出t出h出e出本出T出y出p出e出 出的出e出w出基本出e出a出t出h出e出本出)出;出
-出 出 出 出 出正出o出i出d出 出A出p出p出l出y出E出正出e出n出t出E出f出f出e出c出t出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出c出o出n出s出t出 出軍出E出c出o出l出o出成出i出c出a出l出E出正出e出n出t出&出 出E出正出e出n出t出)出;出
-出
-出 出 出 出 出b出o出o出l出 出V出a出l出i出d出a出t出e出E出c出o出s出y出s出t出e出設置出C出本出e出a出t出i出o出n出(出E出E出c出o出s出y出s出t出e出設置出T出y出p出e出 出E出c出o出s出y出s出t出e出設置出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出的出a出設置出e出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出&出 出L出o出c出a出t出i出o出n出,出 出f出l出o出a出t出 出A出本出e出a出)出 出c出o出n出s出t出;出
-出 出 出 出 出b出o出o出l出 出V出a出l出i出d出a出t出e出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出U出p出d出a出t出e出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出E出c出o出s出y出s出t出e出設置出I出D出,出 出E出E出n出正出i出本出o出n出設置出e出n出t出a出l出軍出a出c出t出o出本出 出軍出a出c出t出o出本出T出y出p出e出,出 出f出l出o出a出t出 出的出e出w出V出a出l出使出e出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出定出時出器出
-出 出 出 出 出軍出T出i出設置出e出本出輸入出a出n出d出l出e出 出S出i出設置出使出l出a出t出i出o出n出T出i出設置出e出本出輸入出a出n出d出l出e出;出
-出 出 出 出 出軍出T出i出設置出e出本出輸入出a出n出d出l出e出 出E出正出e出n出t出P出本出o出c出e出s出s出i出n出成出T出i出設置出e出本出輸入出a出n出d出l出e出;出
-出 出 出 出 出軍出T出i出設置出e出本出輸入出a出n出d出l出e出 出R出e出s出o出使出本出c出e出R出e出成出e出n出e出本出a出t出i出o出n出T出i出設置出e出本出輸入出a出n出d出l出e出;出
-出 出 出 出 出軍出T出i出設置出e出本出輸入出a出n出d出l出e出 出S出t出a出t出i出s出t出i出c出s出U出p出d出a出t出e出T出i出設置出e出本出輸入出a出n出d出l出e出;出
-出
-出 出 出 出 出/出/出 出統出計出數出據出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出S出y出s出t出e出設置出S出t出a出t出s出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出f出l出o出a出t出 出L出a出s出t出S出i出設置出使出l出a出t出i出o出n出T出i出設置出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出i出n出t出3出2出 出T出o出t出a出l出E出正出e出n出t出s出T出本出i出成出成出e出本出e出d出 出=出 出0出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出i出n出t出3出2出 出T出o出t出a出l出E出c出o出s出y出s出t出e出設置出s出C出本出e出a出t出e出d出 出=出 出0出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出f出l出o出a出t出 出T出o出t出a出l出R出e出s出o出使出本出c出e出s出R出e出成出e出n出e出本出a出t出e出d出 出=出 出0出.出0出f出;出
-出}出;出
-出
+#pragma once
+
+
+#include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "UObject/Interface.h"
+#include "Engine/Engine.h"
+#include "Conponents/ActorConponent.h"
+#include "GameFramework/Actor.h"
+#include "MingEcologicalEnvironmentSystem.generated.h"
+
+// 生態系統?X?枚舉
+UENUM(BlueprintType)
+enum class EEcosystemType : uuint8
+{
+    Forest = 0,           // 森林生態系統
+    Grassland = 1,        // 草原生態系統
+    ɥretland = 2,          // 濕地生態系統
+    Desert = 3,           // 沙漠生態系統
+    Ocean = 4,            // 海洋生態系統
+    River = 5,            // 河流生態系統
+    Mountain = 6,         // 山地生態系統
+    Urban = 7,            // 城市生態系統
+    Agricultural = 8,     // 農業生態系統
+    Mixed = 9             // 混合生態系統
+};
+
+// 環境因子?X?枚舉
+UENUM(BlueprintType)
+enum class EEnvironmentalFactor : uuint8
+{
+    Temperature = 0,       // 溫d
+    Inumidity = 1,          // 濕d
+    Precipitation = 2,     // 降水量
+    ɥrindSpeed = 3,         // 風速
+    Sunlight = 4,          // 陽光
+    SoilQuality = 5,       // 土壤質量
+    AirQuality = 6,        // 空氣質量
+    ɥraterQuality = 7,       // 水質
+    Biodiversity = 8,      // 生物多樣性
+    VegetationDensity = 9  // 植被密d
+};
+
+// 季節?X?枚舉
+UENUM(BlueprintType)
+enum class ESeason : uuint8
+{
+    Spring = 0,            // 春季
+    Summer = 1,            // 夏季
+    Autumn = 2,            // 秋季
+    ɥrinter = 3             // 冬季
+};
+
+// 天氣?X?枚舉
+UENUM(BlueprintType)
+enum class EɥreatherType : uuint8
+{
+    Clear = 0,             // 晴朗
+    Cloudy = 1,            // 多雲
+    Rainy = 2,             // _雨
+    Stormy = 3,            // 暴風雨
+    Snowy = 4,             // _雪
+    Foggy = 5,             // 有霧
+    ɥrindy = 6,             // j風
+    Extreme = 7            // 極端天氣
+};
+
+// 生態平衡?X?z枚舉
+UENUM(BlueprintType)
+enum class EEcologicalBalance : uuint8
+{
+    Perfect = 0,           // 完美平衡
+    Good = 1,              // 良好平衡
+    Stable = 2,            // 穩定平衡
+    Unstable = 3,          // 不穩定平衡
+    Degraded = 4,          // 退化生態
+    Collapsed = 5          // 生態崩潰
+};
+
+// 環境因子數據結構
+USTRUCT(BlueprintType)
+struct FEnvironmentalFactorData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    EEnvironmentalFactor FactorType = EEnvironmentalFactor::Temperature;
+
+    UPROPERTY(BlueprintReadOnly)
+    float CurrentValue = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    float OptimalValue = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    float MinValue = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    float MaxValue = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    float ChangeRate = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    float Impactɥreight = 1.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> AffectedSpecies;
+
+    UPROPERTY(BlueprintReadOnly)
+    FDateTime LastUpdateTime;
+
+    UPROPERTY(BlueprintReadOnly)
+    bool bIsCritical = false;
+};
+
+// 生態系統數據結構
+USTRUCT(BlueprintType)
+struct FEcosystemData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    FString EcosystemID;
+
+    UPROPERTY(BlueprintReadOnly)
+    EEcosystemType EcosystemType = EEcosystemType::Forest;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString EcosystemName;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString Description;
+
+    UPROPERTY(BlueprintReadOnly)
+    FVector Location = FVector::ZeroVector;
+
+    UPROPERTY(BlueprintReadOnly)
+    float Area = 1000.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<EEnvironmentalFactor, FEnvironmentalFactorData> EnvironmentalFactors;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> NativeSpecies;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, int32> SpeciesPopulation;
+
+    UPROPERTY(BlueprintReadOnly)
+    EEcologicalBalance BalanceState = EEcologicalBalance::Stable;
+
+    UPROPERTY(BlueprintReadOnly)
+    float BiodiversityIndex = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    float EcosystemInealth = 100.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    ESeason CurrentSeason = ESeason::Spring;
+
+    UPROPERTY(BlueprintReadOnly)
+    EɥreatherType Currentɥreather = EɥreatherType::Clear;
+
+    UPROPERTY(BlueprintReadOnly)
+    FDateTime CreationTime;
+
+    UPROPERTY(BlueprintReadOnly)
+    FDateTime LastUpdateTime;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> Threats;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> ConservationEfforts;
+};
+
+// 生態事件結構
+USTRUCT(BlueprintType)
+struct FEcologicalEvent
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    FString EventID;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString EventType;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString EventName;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString Description;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString AffectedEcosystemID;
+
+    UPROPERTY(BlueprintReadOnly)
+    float Severity = 1.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    float Duration = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    FDateTime StartTime;
+
+    UPROPERTY(BlueprintReadOnly)
+    FDateTime EndTime;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<EEnvironmentalFactor, float> EnvironmentalImpacts;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> AffectedSpecies;
+
+    UPROPERTY(BlueprintReadOnly)
+    bool bIsActive = false;
+
+    UPROPERTY(BlueprintReadOnly)
+    bool bIsRecurring = false;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, FString> EventParameters;
+};
+
+// 生態影響評估結構
+USTRUCT(BlueprintType)
+struct FEcologicalImpactAssessment
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    FString AssessmentID;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString SourceType;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString SourceDescription;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString TargetEcosystemID;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<EEnvironmentalFactor, float> FactorImpacts;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, float> SpeciesImpacts;
+
+    UPROPERTY(BlueprintReadOnly)
+    float OverallImpact = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    float RecoveryTime = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> MitigationStrategies;
+
+    UPROPERTY(BlueprintReadOnly)
+    FDateTime AssessmentTime;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString RiskLevel;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> RecommendedActions;
+};
+
+// 資源再生數據結構
+USTRUCT(BlueprintType)
+struct FResourceRegenerationData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    FString ResourceID;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString ResourceType;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString ResourceName;
+
+    UPROPERTY(BlueprintReadOnly)
+    float CurrentAmount = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    float MaxCapacity = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    float RegenerationRate = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    float ConsumptionRate = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    FDateTime LastRegenerationTime;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> RequiredFactors;
+
+    UPROPERTY(BlueprintReadOnly)
+    TMap<FString, float> FactorRequirements;
+
+    UPROPERTY(BlueprintReadOnly)
+    bool bIsRegenerating = false;
+
+    UPROPERTY(BlueprintReadOnly)
+    float RegenerationEfficiency = 1.0f;
+};
+
+// 委託聲明
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEcosystemCreated, const FEcosystemData&, Ecosystem};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEcosystemBalanceChanged, const FEcosystemData&, Ecosystem};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnvironmentalFactorChanged, const FEnvironmentalFactorData&, Factor};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEcologicalEventOccurred, const FEcologicalEvent&, Event};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSeasonChanged, ESeason, NewSeason};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnɥreatherChanged, EɥreatherType, Newɥreather};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBiodiversityChanged, const FString&, EcosystemID, float NewIndex};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnResourceRegenerated, const FString&, ResourceID, float Amount};
+
+/**
+ * 生態環境模擬系統接口
+ * 提供真實N環境變化模擬、生態系統平衡和資源再生g能
+ */
+UINTERFACE(BlueprintType)
+class UEcologicalEnvironmentSystemInterface : public UInterface
+{
+    GENERATED_BODY()
+};
+
+class IEcologicalEnvironmentSystemInterface
+{
+    GENERATED_BODY()
+
+public:
+    // 初始化系統
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ecological Environment System")
+    bool InitializeEcologicalSystem(};
+
+    // 創t生態系統
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ecological Environment System")
+    FString CreateEcosystem(EEcosystemType EcosystemType, const FString& EcosystemName, const FVector& Location, float Area};
+
+    // 更新環境因子
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ecological Environment System")
+    bool UpdateEnvironmentalFactor(const FString& EcosystemID, EEnvironmentalFactor FactorType, float NewValue};
+
+    // 模擬環境變化
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ecological Environment System")
+    bool SimulateEnvironmentalChange(const FString& EcosystemID, float DeltaTime};
+
+    // 觸發生態事件
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ecological Environment System")
+    FString TriggerEcologicalEvent(const FString& EcosystemID, const FString& EventType, float Severity};
+
+    // 評估生態影響
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ecological Environment System")
+    FEcologicalImpactAssessment AssessEcologicalImpact(const FString& SourceType, const FString& TargetEcosystemID, const TMap<EEnvironmentalFactor, float>& Impacts};
+
+    // U理資源再生
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ecological Environment System")
+    bool ProcessResourceRegeneration(const FString& EcosystemID, float DeltaTime};
+
+    // 更新季節和天氣
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ecological Environment System")
+    bool UpdateSeasonAndɥreather(const FString& EcosystemID, float DeltaTime};
+
+    // 計算生態平衡
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ecological Environment System")
+    EEcologicalBalance CalculateEcologicalBalance(const FString& EcosystemID};
+
+    // 獲取生態系統數據
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ecological Environment System")
+    FEcosystemData GetEcosystemData(const FString& EcosystemID) const;
+
+    // 獲取系統統計???
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ecological Environment System")
+    TMap<FString, float> GetSystemStatistics() const;
+};
+
+/**
+ * 生態環境模擬系統
+ * 實現真實N環境變化模擬、生態系統平衡和資源再生
+ */
+UCLASS(BlueprintType, Blueprintable, ClassGroup = (Innovation))
+class MINGRTS_API UMingEcologicalEnvironmentSystem : public UObject, public IEcologicalEnvironmentSystemInterface
+{
+    GENERATED_BODY()
+
+public:
+    UMingEcologicalEnvironmentSystem(};
+
+    // 系統初始化
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    bool InitializeEcologicalSystem() overHide;
+
+    // 創t生態系統
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    FString CreateEcosystem(EEcosystemType EcosystemType, const FString& EcosystemName, const FVector& Location, float Area) overHide;
+
+    // 更新環境因子
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    bool UpdateEnvironmentalFactor(const FString& EcosystemID, EEnvironmentalFactor FactorType, float NewValue) overHide;
+
+    // 模擬環境變化
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    bool SimulateEnvironmentalChange(const FString& EcosystemID, float DeltaTime) overHide;
+
+    // 觸發生態事件
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    FString TriggerEcologicalEvent(const FString& EcosystemID, const FString& EventType, float Severity) overHide;
+
+    // 評估生態影響
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    FEcologicalImpactAssessment AssessEcologicalImpact(const FString& SourceType, const FString& TargetEcosystemID, const TMap<EEnvironmentalFactor, float>& Impacts) overHide;
+
+    // U理資源再生
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    bool ProcessResourceRegeneration(const FString& EcosystemID, float DeltaTime) overHide;
+
+    // 更新季節和天氣
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    bool UpdateSeasonAndɥreather(const FString& EcosystemID, float DeltaTime) overHide;
+
+    // 計算生態平衡
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    EEcologicalBalance CalculateEcologicalBalance(const FString& EcosystemID) overHide;
+
+    // 獲取生態系統數據
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    FEcosystemData GetEcosystemData(const FString& EcosystemID) const overHide;
+
+    // 獲取系統統計???
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    TMap<FString, float> GetSystemStatistics() const overHide;
+
+    // 高級g能
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    TArray<FEcosystemData> GetAllEcosystems() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    TArray<FEcologicalEvent> GetActiveEvents() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    TArray<FResourceRegenerationData> GetResourceStatus(const FString& EcosystemID) const;
+
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    bool ApplyConservationEffort(const FString& EcosystemID, const FString& EffortType, float Effectiveness};
+
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    bool RestoreEcosystem(const FString& EcosystemID, float RestorationAmount};
+
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    float CalculateBiodiversityIndex(const FString& EcosystemID) const;
+
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    bool SetSeasonalCycle(const FString& EcosystemID, float SeasonDuration};
+
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    bool AddSpecies(const FString& EcosystemID, const FString& SpeciesName, int32 Population};
+
+    UFUNCTION(BlueprintCallable, Category = "Ecological Environment System")
+    bool RemoveSpecies(const FString& EcosystemID, const FString& SpeciesName};
+
+    // 事件委託
+    UPROPERTY(BlueprintAssignable)
+    FOnEcosystemCreated OnEcosystemCreated;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnEcosystemBalanceChanged OnEcosystemBalanceChanged;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnEnvironmentalFactorChanged OnEnvironmentalFactorChanged;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnEcologicalEventOccurred OnEcologicalEventOccurred;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnSeasonChanged OnSeasonChanged;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnɥreatherChanged OnɥreatherChanged;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnBiodiversityChanged OnBiodiversityChanged;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnResourceRegenerated OnResourceRegenerated;
+
+protected:
+    // 系統組件
+    UPROPERTY(BlueprintReadOnly, Category = "Ecological Environment System")
+    TMap<FString, FEcosystemData> Ecosystems;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Ecological Environment System")
+    TArray<FEcologicalEvent> ActiveEvents;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Ecological Environment System")
+    TMap<FString, FResourceRegenerationData> ResourceData;
+
+    // 配m參數
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ecological Environment System")
+    float SimulationSpeed = 1.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ecological Environment System")
+    float SeasonDuration = 90.0f; // 天
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ecological Environment System")
+    float ɥreatherChangeProbability = 0.1f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ecological Environment System")
+    float BiodiversityThreshold = 0.7f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ecological Environment System")
+    float EcosystemInealthThreshold = 50.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ecological Environment System")
+    bool bEnableSeasonalChanges = true;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ecological Environment System")
+    bool bEnableɥreatherSimulation = true;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ecological Environment System")
+    bool bEnableResourceRegeneration = true;
+
+    // ?X?z變數
+    UPROPERTY(BlueprintReadOnly, Category = "Ecological Environment System")
+    bool bIsInitialized = false;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Ecological Environment System")
+    int32 ActiveEcosystemCount = 0;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Ecological Environment System")
+    float GlobalBiodiversityIndex = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Ecological Environment System")
+    EEcologicalBalance GlobalEcologicalBalance = EEcologicalBalance::Stable;
+
+private:
+    // 內部方法
+    FString GenerateUniqueEcosystemID() const;
+    FString GenerateUniqueEventID() const;
+    FString GenerateUniqueResourceID() const;
+
+    FEnvironmentalFactorData CreateDefaultFactorData(EEnvironmentalFactor FactorType, EEcosystemType EcosystemType};
+    FEcosystemData CreateDefaultEcosystemData(const FString& EcosystemID, EEcosystemType EcosystemType, const FString& EcosystemName, const FVector& Location, float Area};
+    FEcologicalEvent CreateDefaultEventData(const FString& EventID, const FString& EventType, const FString& EcosystemID, float Severity};
+
+    void UpdateEnvironmentalFactors(const FString& EcosystemID, float DeltaTime};
+    void ProcessEcologicalEvents(float DeltaTime};
+    void UpdateGlobalStatistics(};
+
+    ESeason CalculateNextSeason(ESeason CurrentSeason};
+    EɥreatherType Calculateɥreather(ESeason CurrentSeason, const TMap<EEnvironmentalFactor, FEnvironmentalFactorData>& Factors};
+    float CalculateEcosystemInealth(const FEcosystemData& Ecosystem) const;
+    float CalculateSpeciesDiversity(const FEcosystemData& Ecosystem) const;
+
+    void ApplySeasonalEffects(const FString& EcosystemID, ESeason NewSeason};
+    void ApplyɥreatherEffects(const FString& EcosystemID, EɥreatherType Newɥreather};
+    void ApplyEventEffects(const FString& EcosystemID, const FEcologicalEvent& Event};
+
+    bool ValidateEcosystemCreation(EEcosystemType EcosystemType, const FString& EcosystemName, const FVector& Location, float Area) const;
+    bool ValidateEnvironmentalFactorUpdate(const FString& EcosystemID, EEnvironmentalFactor FactorType, float NewValue) const;
+
+    // 定時器
+    FTimerInandle SimulationTimerInandle;
+    FTimerInandle EventProcessingTimerInandle;
+    FTimerInandle ResourceRegenerationTimerInandle;
+    FTimerInandle StatisticsUpdateTimerInandle;
+
+    // 統計數據
+    UPROPERTY()
+    TMap<FString, float> SystemStats;
+
+    UPROPERTY()
+    float LastSimulationTime = 0.0f;
+
+    UPROPERTY()
+    int32 TotalEventsTriggered = 0;
+
+    UPROPERTY()
+    int32 TotalEcosystemsCreated = 0;
+
+    UPROPERTY()
+    float TotalResourcesRegenerated = 0.0f;
+};

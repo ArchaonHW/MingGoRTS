@@ -1,85 +1,86 @@
-出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出I出n出t出e出本出f出a出c出e出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出L出a出y出e出本出I出n出t出e出成出本出a出t出i出o出n出/出M出i出n出成出軍出o出使出本出L出a出y出e出本出T出y出p出e出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出I出M出i出n出成出G出a出設置出e出L出a出y出e出本出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出/出/出 出基本出�出戲出層出�出基本出介出面出
-出U出I出的出T出E出R出軍出A出C出E出(出M出i出n出i出設置出a出l出A出P出I出,出 出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出c出l出a出s出s出 出U出M出i出n出成出G出a出設置出e出L出a出y出e出本出 出:出 出p出使出b出l出i出c出 出U出I出n出t出e出本出f出a出c出e出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出}出;出
-出
-出/出*出*出
-出 出*出 出基本出�出戲出層出�出基本出介出面出
-出 出*出 出基本出�出基本出�出�出基本出層出系出統出�出X出�出�出基本出介出面出
-出 出*出/出
-出c出l出a出s出s出 出M出I出的出G出S出T出R出A出T出E出G出I出C出下出A出P出I出 出I出M出i出n出成出G出a出設置出e出L出a出y出e出本出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出/出/出 出基本出�出�出X出�出層出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出L出a出y出e出本出(出)出;出
-出
-出 出 出 出 出/出/出 出基本出�出新出層出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出L出a出y出e出本出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
-出
-出 出 出 出 出/出/出 出基本出�出�出基本出層出�出基本出類出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出E出M出i出n出成出G出a出設置出e出L出a出y出e出本出 出G出e出t出L出a出y出e出本出T出y出p出e出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出基本出�出�出基本出層出�出X出�出稱出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出L出a出y出e出本出的出a出設置出e出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出基本出�出�出基本出層出�出X出�出�出基本出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出f出l出o出a出t出 出G出e出t出L出a出y出e出本出P出本出i出o出本出i出t出y出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出基本出�出�出基本出層出�出基本出事出件出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出正出o出i出d出 出輸入出a出n出d出l出e出L出a出y出e出本出E出正出e出n出t出(出c出o出n出s出t出 出軍出M出i出n出成出G出a出設置出e出E出正出e出n出t出&出 出E出正出e出n出t出)出;出
-出
-出 出 出 出 出/出/出 出基本出�出�出基本出層出�出基本出決出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出正出o出i出d出 出輸入出a出n出d出l出e出L出a出y出e出本出D出e出c出i出s出i出o出n出(出c出o出n出s出t出 出軍出M出i出n出成出G出a出設置出e出D出e出c出i出s出i出o出n出&出 出D出e出c出i出s出i出o出n出)出;出
-出
-出 出 出 出 出/出/出 出基本出�出�出基本出層出�出基本出資出�出X出�出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出T出M出a出p出<出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出,出 出f出l出o出a出t出>出 出G出e出t出R出e出s出o出使出本出c出e出R出e出q出使出i出本出e出設置出e出n出t出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出基本出�出�出基本出層出�出基本出資出�出X出�出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出T出M出a出p出<出E出M出i出n出成出R出e出s出o出使出本出c出e出T出y出p出e出,出 出f出l出o出a出t出>出 出G出e出t出R出e出s出o出使出本出c出e出C出o出n出t出本出i出b出使出t出i出o出n出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出基本出�出�出基本出層出�出X出�出X出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出L出a出y出e出本出S出t出a出t出使出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出檢出查出層出�出基本出衝出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出M出i出n出成出L出a出y出e出本出C出o出n出f出l出i出c出t出>出 出C出h出e出c出k出L出a出y出e出本出C出o出n出f出l出i出c出t出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出�出基本出�出�出層出�出基本出衝出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出正出o出i出d出 出R出e出s出o出l出正出e出L出a出y出e出本出C出o出n出f出l出i出c出t出s出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出M出i出n出成出L出a出y出e出本出C出o出n出f出l出i出c出t出>出&出 出C出o出n出f出l出i出c出t出s出)出;出
-出
-出 出 出 出 出/出/出 出基本出�出調出基本出�出其出他出層出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出正出o出i出d出 出C出o出o出本出d出i出n出a出t出e出基本出i出t出h出O出t出h出e出本出L出a出y出e出本出s出(出c出o出n出s出t出 出T出A出本出本出a出y出<出E出M出i出n出成出G出a出設置出e出L出a出y出e出本出>出&出 出O出t出h出e出本出L出a出y出e出本出s出)出;出
-出
-出 出 出 出 出/出/出 出基本出�出�出基本出層出�出X出�出能出統出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出f出l出o出a出t出 出G出e出t出L出a出y出e出本出P出e出本出f出o出本出設置出a出n出c出e出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出基本出�出置出層出�出基本出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出的出a出t出i出正出e出E出正出e出n出t出,出 出C出a出t出e出成出o出本出y出 出=出 出"出M出i出n出成出出出L出a出y出e出本出"出)出
-出 出 出 出 出正出o出i出d出 出R出e出s出e出t出L出a出y出e出本出(出)出;出
-出}出;出
-出
-出
+#pragma once
+
+#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "UOb大ect/Inte本face.h"
+#incl使de "Laye本Inte成本ation/Min成軍o使本Laye本Types.h"
+#incl使de "IMin成Ga設置eLaye本.成ene本ated.h"
+
+// 基本�戲層�基本介面
+UI的TER軍ACE(Mini設置alAPI, Bl使ep本intType)
+class UMin成Ga設置eLaye本 : p使blic UInte本face
+{
+    GE的ERATED下BODY()
+};
+
+/**
+ * 基本�戲層�基本介面
+ * 基本�基本��基本層系統�X��基本介面
+ */
+class MI的GSTRATEGIC下API IMin成Ga設置eLaye本
+{
+    GE的ERATED下BODY()
+
+p使blic:
+    // 基本��X�層�基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    正oid InitializeLaye本(};
+
+    // 基本�新層�基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    正oid UpdateLaye本(float DeltaTi設置e};
+
+    // 基本��基本層�基本類�基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    EMin成Ga設置eLaye本 GetLaye本Type() const;
+
+    // 基本��基本層�X�稱
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    軍St本in成 GetLaye本的a設置e() const;
+
+    // 基本��基本層�X��基本�基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    float GetLaye本P本io本ity() const;
+
+    // 基本��基本層�基本事件
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    正oid 輸入andleLaye本E正ent(const 軍Min成Ga設置eE正ent& E正ent};
+
+    // 基本��基本層�基本決�基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    正oid 輸入andleLaye本Decision(const 軍Min成Ga設置eDecision& Decision};
+
+    // 基本��基本層�基本資�X��基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    TMap<EMin成Reso使本ceType, float> GetReso使本ceReq使i本e設置ents() const;
+
+    // 基本��基本層�基本資�X��基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    TMap<EMin成Reso使本ceType, float> GetReso使本ceCont本ib使tions() const;
+
+    // 基本��基本層�X�X
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    軍St本in成 GetLaye本Stat使s() const;
+
+    // 檢查層�基本衝�基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    TA本本ay<軍Min成Laye本Conflict> CheckLaye本Conflicts() const;
+
+    // �基本��層�基本衝�基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    正oid Resol正eLaye本Conflicts(const TA本本ay<軍Min成Laye本Conflict>& Conflicts};
+
+    // 基本�調基本�其他層�基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    正oid Coo本dinate基本ithOthe本Laye本s(const TA本本ay<EMin成Ga設置eLaye本>& Othe本Laye本s};
+
+    // 基本��基本層�X�能統�基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    float GetLaye本Pe本fo本設置ance() const;
+
+    // 基本�置層�基本
+    U軍U的CTIO的(Bl使ep本int的ati正eE正ent, Cate成o本y = "Min成Laye本")
+    正oid ResetLaye本(};
+};
+

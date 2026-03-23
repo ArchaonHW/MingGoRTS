@@ -1,76 +1,75 @@
-出#出i出n出c出l出使出d出e出 出"出E出正出e出n出t出s出/出E出x出a出設置出p出l出e出S出使出b出s出c出本出i出b出e出本出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出E出正出e出n出t出s出/出E出x出a出設置出p出l出e出E出正出e出n出t出s出.出h出"出
-出
-出軍出E出x出a出設置出p出l出e出T出a出c出t出i出c出a出l出S出使出b出s出c出本出i出b出e出本出:出:出軍出E出x出a出設置出p出l出e出T出a出c出t出i出c出a出l出S出使出b出s出c出本出i出b出e出本出(出)出
-出 出 出 出 出:出 出輸入出a出n出d出l出e出d出E出正出e出n出t出C出o出使出n出t出(出0出)出
-出{出
-出}出
-出
-出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出軍出E出x出a出設置出p出l出e出T出a出c出t出i出c出a出l出S出使出b出s出c出本出i出b出e出本出:出:出G出e出t出I出n出t出e出本出e出s出t出e出d出L出a出y出e出本出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出L出a出y出e出本出s出;出
-出 出 出 出 出L出a出y出e出本出s出.出A出d出d出(出T出E出X出T出(出"出T出a出c出t出i出c出a出l出"出)出)出;出
-出 出 出 出 出本出e出t出使出本出n出 出L出a出y出e出本出s出;出
-出}出
-出
-出T出A出本出本出a出y出<出軍出的出a出設置出e出>出 出軍出E出x出a出設置出p出l出e出T出a出c出t出i出c出a出l出S出使出b出s出c出本出i出b出e出本出:出:出G出e出t出I出n出t出e出本出e出s出t出e出d出E出正出e出n出t出T出y出p出e出s出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出T出A出本出本出a出y出<出軍出的出a出設置出e出>出 出E出正出e出n出t出T出y出p出e出s出;出
-出 出 出 出 出/出/出 出E出設置出p出t出y出 出a出本出本出a出y出 出設置出e出a出n出s出 出s出使出b出s出c出本出i出b出e出 出t出o出 出a出l出l出 出e出正出e出n出t出 出t出y出p出e出s出 出f出本出o出設置出 出t出h出e出 出T出a出c出t出i出c出a出l出 出l出a出y出e出本出
-出 出 出 出 出本出e出t出使出本出n出 出E出正出e出n出t出T出y出p出e出s出;出
-出}出
-出
-出正出o出i出d出 出軍出E出x出a出設置出p出l出e出T出a出c出t出i出c出a出l出S出使出b出s出c出本出i出b出e出本出:出:出輸入出a出n出d出l出e出E出正出e出n出t出(出T出S出h出a出本出e出d出P出t出本出<出I出M出i出n出成出E出正出e出n出t出>出 出E出正出e出n出t出)出
-出{出
-出 出 出 出 出i出f出 出(出!出E出正出e出n出t出.出I出s出V出a出l出i出d出(出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出軍出的出a出設置出e出 出E出正出e出n出t出T出y出p出e出 出=出 出E出正出e出n出t出-出>出G出e出t出E出正出e出n出t出T出y出p出e出(出)出;出
-出 出 出 出 出
-出 出 出 出 出i出f出 出(出E出正出e出n出t出T出y出p出e出 出=出=出 出軍出的出a出設置出e出(出"出U出n出i出t出M出o出正出e出設置出e出n出t出"出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出輸入出a出n出d出l出e出U出n出i出t出M出o出正出e出設置出e出n出t出(出E出正出e出n出t出)出;出
-出 出 出 出 出}出
-出 出 出 出 出e出l出s出e出 出i出f出 出(出E出正出e出n出t出T出y出p出e出 出=出=出 出軍出的出a出設置出e出(出"出C出o出設置出b出a出t出"出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出輸入出a出n出d出l出e出C出o出設置出b出a出t出(出E出正出e出n出t出)出;出
-出 出 出 出 出}出
-出 出 出 出 出e出l出s出e出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出軍出E出x出a出設置出p出l出e出T出a出c出t出i出c出a出l出S出使出b出s出c出本出i出b出e出本出:出 出R出e出c出e出i出正出e出d出 出使出n出h出a出n出d出l出e出d出 出e出正出e出n出t出 出t出y出p出e出 出%出s出"出)出,出 出*出E出正出e出n出t出T出y出p出e出.出T出o出S出t出本出i出n出成出(出)出)出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出輸入出a出n出d出l出e出d出E出正出e出n出t出C出o出使出n出t出+出+出;出
-出}出
-出
-出正出o出i出d出 出軍出E出x出a出設置出p出l出e出T出a出c出t出i出c出a出l出S出使出b出s出c出本出i出b出e出本出:出:出輸入出a出n出d出l出e出U出n出i出t出M出o出正出e出設置出e出n出t出(出T出S出h出a出本出e出d出P出t出本出<出I出M出i出n出成出E出正出e出n出t出>出 出E出正出e出n出t出)出
-出{出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出軍出E出x出a出設置出p出l出e出T出a出c出t出i出c出a出l出S出使出b出s出c出本出i出b出e出本出:出 出輸入出a出n出d出l出i出n出成出 出使出n出i出t出 出設置出o出正出e出設置出e出n出t出 出e出正出e出n出t出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出I出n出 出a出 出本出e出a出l出 出i出設置出p出l出e出設置出e出n出t出a出t出i出o出n出,出 出y出o出使出 出w出o出使出l出d出 出c出a出s出t出 出t出o出 出軍出U出n出i出t出M出o出正出e出設置出e出n出t出E出正出e出n出t出 出a出n出d出 出a出c出c出e出s出s出 出t出h出e出 出d出a出t出a出
-出 出 出 出 出/出/出 出a出使出t出o出 出M出o出正出e出設置出e出n出t出E出正出e出n出t出 出=出 出S出t出a出t出i出c出C出a出s出t出S出h出a出本出e出d出P出t出本出<出軍出U出n出i出t出M出o出正出e出設置出e出n出t出E出正出e出n出t出>出(出E出正出e出n出t出)出;出
-出 出 出 出 出/出/出 出i出f出 出(出M出o出正出e出設置出e出n出t出E出正出e出n出t出.出I出s出V出a出l出i出d出(出)出)出
-出 出 出 出 出/出/出 出{出
-出 出 出 出 出/出/出 出 出 出 出 出i出n出t出3出2出 出U出n出i出t出I出d出 出=出 出M出o出正出e出設置出e出n出t出E出正出e出n出t出-出>出G出e出t出U出n出i出t出I出d出(出)出;出
-出 出 出 出 出/出/出 出 出 出 出 出軍出V出e出c出t出o出本出 出的出e出w出P出o出s出 出=出 出M出o出正出e出設置出e出n出t出E出正出e出n出t出-出>出G出e出t出的出e出w出P出o出s出i出t出i出o出n出(出)出;出
-出 出 出 出 出/出/出 出 出 出 出 出/出/出 出P出本出o出c出e出s出s出 出設置出o出正出e出設置出e出n出t出.出.出.出
-出 出 出 出 出/出/出 出}出
-出}出
-出
-出正出o出i出d出 出軍出E出x出a出設置出p出l出e出T出a出c出t出i出c出a出l出S出使出b出s出c出本出i出b出e出本出:出:出輸入出a出n出d出l出e出C出o出設置出b出a出t出(出T出S出h出a出本出e出d出P出t出本出<出I出M出i出n出成出E出正出e出n出t出>出 出E出正出e出n出t出)出
-出{出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出軍出E出x出a出設置出p出l出e出T出a出c出t出i出c出a出l出S出使出b出s出c出本出i出b出e出本出:出 出輸入出a出n出d出l出i出n出成出 出c出o出設置出b出a出t出 出e出正出e出n出t出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出I出n出 出a出 出本出e出a出l出 出i出設置出p出l出e出設置出e出n出t出a出t出i出o出n出,出 出y出o出使出 出w出o出使出l出d出 出c出a出s出t出 出t出o出 出軍出C出o出設置出b出a出t出E出正出e出n出t出 出a出n出d出 出a出c出c出e出s出s出 出t出h出e出 出d出a出t出a出
-出 出 出 出 出/出/出 出a出使出t出o出 出C出o出設置出b出a出t出E出正出e出n出t出 出=出 出S出t出a出t出i出c出C出a出s出t出S出h出a出本出e出d出P出t出本出<出軍出C出o出設置出b出a出t出E出正出e出n出t出>出(出E出正出e出n出t出)出;出
-出 出 出 出 出/出/出 出i出f出 出(出C出o出設置出b出a出t出E出正出e出n出t出.出I出s出V出a出l出i出d出(出)出)出
-出 出 出 出 出/出/出 出{出
-出 出 出 出 出/出/出 出 出 出 出 出i出n出t出3出2出 出A出t出t出a出c出k出e出本出I出d出 出=出 出C出o出設置出b出a出t出E出正出e出n出t出-出>出G出e出t出A出t出t出a出c出k出e出本出I出d出(出)出;出
-出 出 出 出 出/出/出 出 出 出 出 出i出n出t出3出2出 出D出e出f出e出n出d出e出本出I出d出 出=出 出C出o出設置出b出a出t出E出正出e出n出t出-出>出G出e出t出D出e出f出e出n出d出e出本出I出d出(出)出;出
-出 出 出 出 出/出/出 出 出 出 出 出f出l出o出a出t出 出D出a出設置出a出成出e出 出=出 出C出o出設置出b出a出t出E出正出e出n出t出-出>出G出e出t出D出a出設置出a出成出e出(出)出;出
-出 出 出 出 出/出/出 出 出 出 出 出/出/出 出P出本出o出c出e出s出s出 出c出o出設置出b出a出t出.出.出.出
-出 出 出 出 出/出/出 出}出
-出}出
-出
+#incl使de "E正ents/Exa設置pleS使bsc本ibe本.h"
+#incl使de "E正ents/Exa設置pleE正ents.h"
+
+軍Exa設置pleTacticalS使bsc本ibe本::軍Exa設置pleTacticalS使bsc本ibe本()
+    : 輸入andledE正entCo使nt(0)
+{
+}
+
+TA本本ay<軍St本in成> 軍Exa設置pleTacticalS使bsc本ibe本::GetInte本estedLaye本s() const
+{
+    TA本本ay<軍St本in成> Laye本s;
+    Laye本s.Add(TEXT("Tactical"));
+    本et使本n Laye本s;
+}
+
+TA本本ay<軍的a設置e> 軍Exa設置pleTacticalS使bsc本ibe本::GetInte本estedE正entTypes() const
+{
+    TA本本ay<軍的a設置e> E正entTypes;
+    // E設置pty a本本ay 設置eans s使bsc本ibe to all e正ent types f本o設置 the Tactical laye本
+    本et使本n E正entTypes;
+}
+
+正oid 軍Exa設置pleTacticalS使bsc本ibe本::輸入andleE正ent(TSha本edPt本<IMin成E正ent> E正ent)
+{
+    if (!E正ent.IsValid())
+    {
+        本et使本n;
+    }
+    
+    軍的a設置e E正entType = E正ent->GetE正entType();
+    
+    if (E正entType == 軍的a設置e("UnitMo正e設置ent"))
+    {
+        輸入andleUnitMo正e設置ent(E正ent);
+    }
+    else if (E正entType == 軍的a設置e("Co設置bat"))
+    {
+        輸入andleCo設置bat(E正ent);
+    }
+    else
+    {
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("軍Exa設置pleTacticalS使bsc本ibe本: Recei正ed 使nhandled e正ent type %s"), *E正entType.ToSt本in成());
+    }
+    
+    輸入andledE正entCo使nt++;
+}
+
+正oid 軍Exa設置pleTacticalS使bsc本ibe本::輸入andleUnitMo正e設置ent(TSha本edPt本<IMin成E正ent> E正ent)
+{
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("軍Exa設置pleTacticalS使bsc本ibe本: 輸入andlin成 使nit 設置o正e設置ent e正ent"));
+    
+    // In a 本eal i設置ple設置entation, yo使 wo使ld cast to 軍UnitMo正e設置entE正ent and access the data
+    // a使to Mo正e設置entE正ent = StaticCastSha本edPt本<軍UnitMo正e設置entE正ent>(E正ent);
+    // if (Mo正e設置entE正ent.IsValid())
+    // {
+    //     int32 UnitId = Mo正e設置entE正ent->GetUnitId();
+    //     軍Vecto本 的ewPos = Mo正e設置entE正ent->Get的ewPosition();
+    //     // P本ocess 設置o正e設置ent...
+    // }
+}
+
+正oid 軍Exa設置pleTacticalS使bsc本ibe本::輸入andleCo設置bat(TSha本edPt本<IMin成E正ent> E正ent)
+{
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("軍Exa設置pleTacticalS使bsc本ibe本: 輸入andlin成 co設置bat e正ent"));
+    
+    // In a 本eal i設置ple設置entation, yo使 wo使ld cast to 軍Co設置batE正ent and access the data
+    // a使to Co設置batE正ent = StaticCastSha本edPt本<軍Co設置batE正ent>(E正ent);
+    // if (Co設置batE正ent.IsValid())
+    // {
+    //     int32 Attacke本Id = Co設置batE正ent->GetAttacke本Id();
+    //     int32 Defende本Id = Co設置batE正ent->GetDefende本Id();
+    //     float Da設置a成e = Co設置batE正ent->GetDa設置a成e();
+    //     // P本ocess co設置bat...
+    // }
+}

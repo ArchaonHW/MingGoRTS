@@ -1,580 +1,580 @@
-出/出/出 出C出o出p出y出本出i出成出h出t出 出E出p出i出c出 出G出a出設置出e出s出,出 出I出n出c出.出 出A出l出l出 出R出i出成出h出t出s出 出R出e出s出e出本出正出e出d出.出
-出
-出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出S出a出成出e出C出o出設置出設置出a出n出d出/出M出i出n出成出S出a出成出e出C出h出a出本出a出c出t出e出本出S出y出s出t出e出設置出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出S出a出成出e出C出o出設置出設置出a出n出d出/出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出y出s出t出e出設置出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出/出/出 出建出議出類出型出枚出舉出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出的出o出n出e出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出的出o出n出e出"出)出,出
-出 出 出 出 出S出t出本出a出t出e出成出i出c出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出戰出略出建出議出"出)出,出 出 出 出 出 出 出 出 出/出/出 出戰出略出層出面出建出議出
-出 出 出 出 出T出a出c出t出i出c出a出l出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出戰出術出建出議出"出)出,出 出 出 出 出 出 出 出 出/出/出 出戰出術出層出面出建出議出
-出 出 出 出 出R出e出s出o出使出本出c出e出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出資出源出建出議出"出)出,出 出 出 出 出 出 出 出 出/出/出 出資出源出管出理出建出議出
-出 出 出 出 出D出i出p出l出o出設置出a出t出i出c出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出外出交出建出議出"出)出,出 出 出 出 出 出 出 出 出/出/出 出外出交出關出係出建出議出
-出 出 出 出 出E出c出o出n出o出設置出i出c出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出經出濟出建出議出"出)出,出 出 出 出 出 出 出 出 出/出/出 出經出濟出發出展出建出議出
-出 出 出 出 出M出i出l出i出t出a出本出y出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出軍出事出建出議出"出)出,出 出 出 出 出 出 出 出 出/出/出 出軍出事出行出動出建出議出
-出 出 出 出 出C出使出l出t出使出本出a出l出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出文出化出建出議出"出)出,出 出 出 出 出 出 出 出 出/出/出 出文出化出發出展出建出議出
-出 出 出 出 出P出e出本出s出o出n出a出l出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出個出人出建出議出"出)出,出 出 出 出 出 出 出 出 出/出/出 出個出人出發出展出建出議出
-出 出 出 出 出E出設置出e出本出成出e出n出c出y出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出緊出急出建出議出"出)出,出 出 出 出 出 出 出 出 出/出/出 出緊出急出情出況出建出議出
-出 出 出 出 出L出o出n出成出T出e出本出設置出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出長出期出建出議出"出)出 出 出 出 出 出 出 出 出 出/出/出 出長出期出規出劃出建出議出
-出}出;出
-出
-出/出/出 出建出議出優出先出級出枚出舉出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出P出本出i出o出本出i出t出y出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出L出o出w出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出低出"出)出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出低出優出先出級出
-出 出 出 出 出M出e出d出i出使出設置出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出中出"出)出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出中出優出先出級出
-出 出 出 出 出輸入出i出成出h出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出高出"出)出,出 出 出 出 出 出 出 出 出 出 出 出 出/出/出 出高出優出先出級出
-出 出 出 出 出C出本出i出t出i出c出a出l出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出緊出急出"出)出,出 出 出 出 出 出 出 出 出 出 出/出/出 出緊出急出優出先出級出
-出 出 出 出 出S出y出s出t出e出設置出G出e出n出e出本出a出t出e出d出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出系出統出"出)出 出 出 出 出 出 出 出 出 出 出 出/出/出 出系出統出生出成出
-出}出;出
-出
-出/出/出 出建出議出來出源出枚出舉出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出o出使出本出c出e出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出的出o出n出e出 出 出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出的出o出n出e出"出)出,出
-出 出 出 出 出A出I出A出n出a出l出y出s出i出s出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出A出I出分出析出"出)出,出 出 出 出 出 出 出 出 出/出/出 出A出I出 出分出析出結出果出
-出 出 出 出 出P出l出a出y出e出本出B出e出h出a出正出i出o出本出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出玩出家出行出為出"出)出,出 出 出 出 出 出 出/出/出 出玩出家出行出為出模出式出
-出 出 出 出 出G出a出設置出e出C出o出n出t出e出x出t出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出遊出戲出情出境出"出)出,出 出 出 出 出 出 出/出/出 出當出前出遊出戲出情出境出
-出 出 出 出 出輸入出i出s出t出o出本出i出c出a出l出D出a出t出a出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出歷出史出數出據出"出)出,出 出 出 出 出 出 出/出/出 出歷出史出數出據出分出析出
-出 出 出 出 出E出x出p出e出本出t出S出y出s出t出e出設置出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出專出家出系出統出"出)出,出 出 出 出 出 出 出/出/出 出專出家出規出則出系出統出
-出 出 出 出 出M出a出c出h出i出n出e出L出e出a出本出n出i出n出成出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出機出器出學出習出"出)出,出 出 出 出 出 出 出/出/出 出機出器出學出習出模出型出
-出 出 出 出 出C出o出設置出設置出使出n出i出t出y出D出a出t出a出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出社出群出數出據出"出)出,出 出 出 出 出 出 出/出/出 出社出群出數出據出統出計出
-出 出 出 出 出P出e出本出s出o出n出a出l出i出z出e出d出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出個出人出化出"出)出 出 出 出 出 出 出 出 出 出 出/出/出 出個出人出化出推出薦出
-出}出;出
-出
-出/出/出 出建出議出狀出態出枚出舉出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出使出s出 出:出 出使出i出n出t出8出
-出{出
-出 出 出 出 出P出e出n出d出i出n出成出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出待出處出理出"出)出,出 出 出 出 出 出 出 出 出/出/出 出待出處出理出
-出 出 出 出 出A出c出t出i出正出e出 出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出活出躍出"出)出,出 出 出 出 出 出 出 出 出 出 出/出/出 出當出前出活出躍出
-出 出 出 出 出A出c出c出e出p出t出e出d出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出已出接出受出"出)出,出 出 出 出 出 出 出 出 出/出/出 出玩出家出已出接出受出
-出 出 出 出 出R出e出大出e出c出t出e出d出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出已出拒出絕出"出)出,出 出 出 出 出 出 出 出 出/出/出 出玩出家出已出拒出絕出
-出 出 出 出 出E出x出p出i出本出e出d出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出已出過出期出"出)出,出 出 出 出 出 出 出 出 出/出/出 出已出過出期出
-出 出 出 出 出C出o出設置出p出l出e出t出e出d出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出已出完出成出"出)出,出 出 出 出 出 出 出 出 出/出/出 出已出完出成出
-出 出 出 出 出I出成出n出o出本出e出d出 出 出 出 出 出 出 出 出 出U出M出E出T出A出(出D出i出s出p出l出a出y出的出a出設置出e出 出=出 出"出已出忽出略出"出)出 出 出 出 出 出 出 出 出 出 出/出/出 出玩出家出忽出略出
-出}出;出
-出
-出/出/出 出建出議出數出據出結出構出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出/出/出 出建出議出I出D出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出I出D出;出
-出
-出 出 出 出 出/出/出 出建出議出類出型出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出 出=出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出:出:出的出o出n出e出;出
-出
-出 出 出 出 出/出/出 出建出議出優出先出級出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出P出本出i出o出本出i出t出y出 出P出本出i出o出本出i出t出y出 出=出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出P出本出i出o出本出i出t出y出:出:出L出o出w出;出
-出
-出 出 出 出 出/出/出 出建出議出來出源出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出o出使出本出c出e出 出S出o出使出本出c出e出 出=出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出o出使出本出c出e出:出:出的出o出n出e出;出
-出
-出 出 出 出 出/出/出 出建出議出標出題出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出T出i出t出l出e出;出
-出
-出 出 出 出 出/出/出 出建出議出描出述出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出s出c出本出i出p出t出i出o出n出;出
-出
-出 出 出 出 出/出/出 出建出議出詳出細出內出容出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出D出e出t出a出i出l出e出d出C出o出n出t出e出n出t出;出
-出
-出 出 出 出 出/出/出 出建出議出原出因出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出a出s出o出n出;出
-出
-出 出 出 出 出/出/出 出建出議出狀出態出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出使出s出 出S出t出a出t出使出s出 出=出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出使出s出:出:出P出e出n出d出i出n出成出;出
-出
-出 出 出 出 出/出/出 出創出建出時出間出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出C出本出e出a出t出e出d出T出i出設置出e出;出
-出
-出 出 出 出 出/出/出 出過出期出時出間出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出E出x出p出i出本出y出T出i出設置出e出;出
-出
-出 出 出 出 出/出/出 出建出議出影出響出分出數出 出(出0出-出1出0出0出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出I出設置出p出a出c出t出S出c出o出本出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出/出/出 出建出議出可出信出度出 出(出0出-出1出0出0出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出C出o出n出f出i出d出e出n出c出e出S出c出o出本出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出/出/出 出建出議出相出關出性出 出(出0出-出1出0出0出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出R出e出l出e出正出a出n出c出e出S出c出o出本出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出/出/出 出建出議出執出行出難出度出 出(出0出-出1出0出0出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出D出i出f出f出i出c出使出l出t出y出S出c出o出本出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出/出/出 出建出議出標出籤出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出T出a出成出s出;出
-出
-出 出 出 出 出/出/出 出建出議出參出數出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出軍出S出t出本出i出n出成出>出 出P出a出本出a出設置出e出t出e出本出s出;出
-出
-出 出 出 出 出/出/出 出建出議出條出件出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出C出o出n出d出i出t出i出o出n出s出;出
-出
-出 出 出 出 出/出/出 出建出議出後出果出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出C出o出n出s出e出q出使出e出n出c出e出s出;出
-出
-出 出 出 出 出/出/出 出建出議出替出代出方出案出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出l出t出e出本出n出a出t出i出正出e出s出;出
-出
-出 出 出 出 出/出/出 出建出議出相出關出I出D出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出R出e出l出a出t出e出d出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出I出D出s出;出
-出
-出 出 出 出 出/出/出 出建出議出執出行出次出數出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出i出n出t出3出2出 出E出x出e出c出使出t出i出o出n出C出o出使出n出t出 出=出 出0出;出
-出
-出 出 出 出 出/出/出 出建出議出成出功出次出數出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出i出n出t出3出2出 出S出使出c出c出e出s出s出C出o出使出n出t出 出=出 出0出;出
-出
-出 出 出 出 出/出/出 出建出議出失出敗出次出數出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出i出n出t出3出2出 出軍出a出i出l出使出本出e出C出o出使出n出t出 出=出 出0出;出
-出
-出 出 出 出 出/出/出 出玩出家出反出饋出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出S出t出本出i出n出成出 出P出l出a出y出e出本出軍出e出e出d出b出a出c出k出;出
-出
-出 出 出 出 出/出/出 出玩出家出評出分出 出(出1出-出5出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出i出n出t出3出2出 出P出l出a出y出e出本出R出a出t出i出n出成出 出=出 出0出;出
-出
-出 出 出 出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出(出)出
-出 出 出 出 出 出 出 出 出:出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出(出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出:出:出的出o出n出e出)出
-出 出 出 出 出 出 出 出 出,出 出P出本出i出o出本出i出t出y出(出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出P出本出i出o出本出i出t出y出:出:出L出o出w出)出
-出 出 出 出 出 出 出 出 出,出 出S出o出使出本出c出e出(出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出o出使出本出c出e出:出:出的出o出n出e出)出
-出 出 出 出 出 出 出 出 出,出 出S出t出a出t出使出s出(出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出使出s出:出:出P出e出n出d出i出n出成出)出
-出 出 出 出 出 出 出 出 出,出 出C出本出e出a出t出e出d出T出i出設置出e出(出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出)出
-出 出 出 出 出 出 出 出 出,出 出E出x出p出i出本出y出T出i出設置出e出(出軍出D出a出t出e出T出i出設置出e出:出:出M出a出x出V出a出l出使出e出(出)出)出
-出 出 出 出 出 出 出 出 出,出 出I出設置出p出a出c出t出S出c出o出本出e出(出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出C出o出n出f出i出d出e出n出c出e出S出c出o出本出e出(出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出R出e出l出e出正出a出n出c出e出S出c出o出本出e出(出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出D出i出f出f出i出c出使出l出t出y出S出c出o出本出e出(出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出E出x出e出c出使出t出i出o出n出C出o出使出n出t出(出0出)出
-出 出 出 出 出 出 出 出 出,出 出S出使出c出c出e出s出s出C出o出使出n出t出(出0出)出
-出 出 出 出 出 出 出 出 出,出 出軍出a出i出l出使出本出e出C出o出使出n出t出(出0出)出
-出 出 出 出 出 出 出 出 出,出 出P出l出a出y出e出本出R出a出t出i出n出成出(出0出)出
-出 出 出 出 出{出}出
-出}出;出
-出
-出/出/出 出建出議出配出置出結出構出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出n出f出i出成出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出/出/出 出最出大出同出時出建出議出數出量出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出i出n出t出3出2出 出M出a出x出A出c出t出i出正出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出 出=出 出1出0出;出
-出
-出 出 出 出 出/出/出 出建出議出更出新出間出隔出 出(出秒出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出U出p出d出a出t出e出I出n出t出e出本出正出a出l出 出=出 出3出0出.出0出f出;出
-出
-出 出 出 出 出/出/出 出建出議出過出期出時出間出 出(出小出時出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出E出x出p出i出本出y出輸入出o出使出本出s出 出=出 出2出4出.出0出f出;出
-出
-出 出 出 出 出/出/出 出最出小出可出信出度出閾出值出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出M出i出n出C出o出n出f出i出d出e出n出c出e出T出h出本出e出s出h出o出l出d出 出=出 出0出.出3出f出;出
-出
-出 出 出 出 出/出/出 出最出小出相出關出性出閾出值出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出M出i出n出R出e出l出e出正出a出n出c出e出T出h出本出e出s出h出o出l出d出 出=出 出0出.出4出f出;出
-出
-出 出 出 出 出/出/出 出A出I出 出分出析出權出重出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出A出I出A出n出a出l出y出s出i出s出基本出e出i出成出h出t出 出=出 出0出.出4出f出;出
-出
-出 出 出 出 出/出/出 出玩出家出行出為出權出重出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出P出l出a出y出e出本出B出e出h出a出正出i出o出本出基本出e出i出成出h出t出 出=出 出0出.出3出f出;出
-出
-出 出 出 出 出/出/出 出遊出戲出情出境出權出重出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出G出a出設置出e出C出o出n出t出e出x出t出基本出e出i出成出h出t出 出=出 出0出.出2出f出;出
-出
-出 出 出 出 出/出/出 出歷出史出數出據出權出重出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出輸入出i出s出t出o出本出i出c出a出l出D出a出t出a出基本出e出i出成出h出t出 出=出 出0出.出1出f出;出
-出
-出 出 出 出 出/出/出 出是出否出啟出用出機出器出學出習出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出b出o出o出l出 出b出E出n出a出b出l出e出M出a出c出h出i出n出e出L出e出a出本出n出i出n出成出 出=出 出t出本出使出e出;出
-出
-出 出 出 出 出/出/出 出是出否出啟出用出個出人出化出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出b出o出o出l出 出b出E出n出a出b出l出e出P出e出本出s出o出n出a出l出i出z出a出t出i出o出n出 出=出 出t出本出使出e出;出
-出
-出 出 出 出 出/出/出 出是出否出啟出用出社出群出數出據出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出E出d出i出t出A出n出y出w出h出e出本出e出,出 出B出l出使出e出p出本出i出n出t出R出e出a出d出基本出本出i出t出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出b出o出o出l出 出b出E出n出a出b出l出e出C出o出設置出設置出使出n出i出t出y出D出a出t出a出 出=出 出t出本出使出e出;出
-出
-出 出 出 出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出n出f出i出成出(出)出
-出 出 出 出 出 出 出 出 出:出 出M出a出x出A出c出t出i出正出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出1出0出)出
-出 出 出 出 出 出 出 出 出,出 出U出p出d出a出t出e出I出n出t出e出本出正出a出l出(出3出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出E出x出p出i出本出y出輸入出o出使出本出s出(出2出4出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出M出i出n出C出o出n出f出i出d出e出n出c出e出T出h出本出e出s出h出o出l出d出(出0出.出3出f出)出
-出 出 出 出 出 出 出 出 出,出 出M出i出n出R出e出l出e出正出a出n出c出e出T出h出本出e出s出h出o出l出d出(出0出.出4出f出)出
-出 出 出 出 出 出 出 出 出,出 出A出I出A出n出a出l出y出s出i出s出基本出e出i出成出h出t出(出0出.出4出f出)出
-出 出 出 出 出 出 出 出 出,出 出P出l出a出y出e出本出B出e出h出a出正出i出o出本出基本出e出i出成出h出t出(出0出.出3出f出)出
-出 出 出 出 出 出 出 出 出,出 出G出a出設置出e出C出o出n出t出e出x出t出基本出e出i出成出h出t出(出0出.出2出f出)出
-出 出 出 出 出 出 出 出 出,出 出輸入出i出s出t出o出本出i出c出a出l出D出a出t出a出基本出e出i出成出h出t出(出0出.出1出f出)出
-出 出 出 出 出 出 出 出 出,出 出b出E出n出a出b出l出e出M出a出c出h出i出n出e出L出e出a出本出n出i出n出成出(出t出本出使出e出)出
-出 出 出 出 出 出 出 出 出,出 出b出E出n出a出b出l出e出P出e出本出s出o出n出a出l出i出z出a出t出i出o出n出(出t出本出使出e出)出
-出 出 出 出 出 出 出 出 出,出 出b出E出n出a出b出l出e出C出o出設置出設置出使出n出i出t出y出D出a出t出a出(出t出本出使出e出)出
-出 出 出 出 出{出}出
-出}出;出
-出
-出/出/出 出建出議出統出計出結出構出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出i出s出t出i出c出s出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出 出 出 出 出/出/出 出總出建出議出數出量出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出i出n出t出3出2出 出T出o出t出a出l出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出 出=出 出0出;出
-出
-出 出 出 出 出/出/出 出已出接出受出建出議出數出量出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出i出n出t出3出2出 出A出c出c出e出p出t出e出d出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出 出=出 出0出;出
-出
-出 出 出 出 出/出/出 出已出拒出絕出建出議出數出量出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出i出n出t出3出2出 出R出e出大出e出c出t出e出d出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出 出=出 出0出;出
-出
-出 出 出 出 出/出/出 出已出完出成出建出議出數出量出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出i出n出t出3出2出 出C出o出設置出p出l出e出t出e出d出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出 出=出 出0出;出
-出
-出 出 出 出 出/出/出 出平出均出執出行出時出間出 出(出秒出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出A出正出e出本出a出成出e出E出x出e出c出使出t出i出o出n出T出i出設置出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出/出/出 出成出功出率出 出(出0出-出1出0出0出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出S出使出c出c出e出s出s出R出a出t出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出/出/出 出平出均出玩出家出評出分出 出(出1出-出5出)出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出A出正出e出本出a出成出e出P出l出a出y出e出本出R出a出t出i出n出成出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出/出/出 出最出常出見出建出議出類出型出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出 出M出o出s出t出C出o出設置出設置出o出n出T出y出p出e出 出=出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出:出:出的出o出n出e出;出
-出
-出 出 出 出 出/出/出 出最出常出見出建出議出來出源出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出o出使出本出c出e出 出M出o出s出t出C出o出設置出設置出o出n出S出o出使出本出c出e出 出=出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出o出使出本出c出e出:出:出的出o出n出e出;出
-出
-出 出 出 出 出/出/出 出統出計出更出新出時出間出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出D出a出t出e出T出i出設置出e出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出;出
-出
-出 出 出 出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出i出s出t出i出c出s出(出)出
-出 出 出 出 出 出 出 出 出:出 出T出o出t出a出l出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出0出)出
-出 出 出 出 出 出 出 出 出,出 出A出c出c出e出p出t出e出d出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出0出)出
-出 出 出 出 出 出 出 出 出,出 出R出e出大出e出c出t出e出d出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出0出)出
-出 出 出 出 出 出 出 出 出,出 出C出o出設置出p出l出e出t出e出d出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出0出)出
-出 出 出 出 出 出 出 出 出,出 出A出正出e出本出a出成出e出E出x出e出c出使出t出i出o出n出T出i出設置出e出(出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出S出使出c出c出e出s出s出R出a出t出e出(出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出A出正出e出本出a出成出e出P出l出a出y出e出本出R出a出t出i出n出成出(出0出.出0出f出)出
-出 出 出 出 出 出 出 出 出,出 出M出o出s出t出C出o出設置出設置出o出n出T出y出p出e出(出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出:出:出的出o出n出e出)出
-出 出 出 出 出 出 出 出 出,出 出M出o出s出t出C出o出設置出設置出o出n出S出o出使出本出c出e出(出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出o出使出本出c出e出:出:出的出o出n出e出)出
-出 出 出 出 出 出 出 出 出,出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出(出軍出D出a出t出e出T出i出設置出e出:出:出的出o出w出(出)出)出
-出 出 出 出 出{出}出
-出}出;出
-出
-出/出/出 出委出託出聲出明出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出G出e出n出e出本出a出t出e出d出,出 出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出,出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出T出w出o出P出a出本出a出設置出s出(出軍出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出使出s出C出h出a出n出成出e出d出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出,出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出I出D出,出 出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出使出s出,出 出的出e出w出S出t出a出t出使出s出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出A出c出c出e出p出t出e出d出,出 出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出,出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出R出e出大出e出c出t出e出d出,出 出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出,出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出;出
-出D出E出C出L出A出R出E出下出D出Y出的出A出M出I出C出下出M出U出L出T出I出C出A出S出T出下出D出E出L出E出G出A出T出E出下出O出n出e出P出a出本出a出設置出(出軍出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出,出 出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出,出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出;出
-出
-出/出*出*出
-出 出*出 出智出能出建出議出系出統出
-出 出*出 出基出於出A出I出分出析出、出玩出家出行出為出、出遊出戲出情出境出等出多出維出度出生出成出智出能出建出議出
-出 出*出/出
-出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出,出 出C出l出a出s出s出G出本出o出使出p出 出=出 出(出S出a出成出e出C出o出設置出設置出a出n出d出)出)出
-出c出l出a出s出s出 出M出I出的出G出R出T出S出下出A出P出I出 出U出M出i出n出成出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出y出s出t出e出設置出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
-出{出
-出 出 出 出 出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出 出 出 出 出U出M出i出n出成出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出y出s出t出e出設置出(出)出;出
-出
-出 出 出 出 出/出/出 出系出統出初出始出化出和出清出理出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出b出o出o出l出 出I出n出i出t出i出a出l出i出z出e出(出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出正出o出i出d出 出C出l出e出a出n出使出p出(出)出;出
-出
-出 出 出 出 出/出/出 出建出議出生出成出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出G出e出n出e出本出a出t出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出 出G出e出n出e出本出a出t出e出S出p出e出c出i出f出i出c出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出(出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出 出T出y出p出e出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出G出e出t出A出c出t出i出正出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出G出e出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出B出y出T出y出p出e出(出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出 出T出y出p出e出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出G出e出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出B出y出P出本出i出o出本出i出t出y出(出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出P出本出i出o出本出i出t出y出 出P出本出i出o出本出i出t出y出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出建出議出管出理出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出b出o出o出l出 出A出c出c出e出p出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出I出D出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出b出o出o出l出 出R出e出大出e出c出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出I出D出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出b出o出o出l出 出C出o出設置出p出l出e出t出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出I出D出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出b出o出o出l出 出I出成出n出o出本出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出I出D出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出b出o出o出l出 出P出本出o出正出i出d出e出軍出e出e出d出b出a出c出k出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出I出D出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出e出e出d出b出a出c出k出,出 出i出n出t出3出2出 出R出a出t出i出n出成出)出;出
-出
-出 出 出 出 出/出/出 出建出議出過出濾出和出排出序出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出軍出i出l出t出e出本出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出,出 出c出o出n出s出t出 出T出A出本出本出a出y出<出E出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出y出p出e出>出&出 出T出y出p出e出s出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出S出o出本出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出B出y出P出本出i出o出本出i出t出y出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出S出o出本出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出B出y出R出e出l出e出正出a出n出c出e出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出S出o出本出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出B出y出I出設置出p出a出c出t出(出c出o出n出s出t出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出)出;出
-出
-出 出 出 出 出/出/出 出建出議出分出析出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出i出s出t出i出c出s出 出G出e出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出i出s出t出i出c出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出G出e出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出T出本出e出n出d出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出E出f出f出e出c出t出i出正出e出n出e出s出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出I出D出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出G出e出t出P出l出a出y出e出本出B出e出h出a出正出i出o出本出P出a出t出t出e出本出n出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出個出人出化出設出置出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出正出o出i出d出 出S出e出t出P出e出本出s出o出n出a出l出i出z出a出t出i出o出n出P出本出e出f出e出本出e出n出c出e出s出(出c出o出n出s出t出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出&出 出P出本出e出f出e出本出e出n出c出e出s出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出G出e出t出P出e出本出s出o出n出a出l出i出z出a出t出i出o出n出P出本出e出f出e出本出e出n出c出e出s出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出P出e出本出s出o出n出a出l出i出z出a出t出i出o出n出M出o出d出e出l出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出I出D出,出 出b出o出o出l出 出b出S出使出c出c出e出s出s出)出;出
-出
-出 出 出 出 出/出/出 出配出置出管出理出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出正出o出i出d出 出S出e出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出n出f出i出成出(出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出n出f出i出成出&出 出C出o出n出f出i出成出)出;出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出n出f出i出成出 出G出e出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出n出f出i出成出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出系出統出狀出態出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出b出o出o出l出 出I出s出S出y出s出t出e出設置出A出c出t出i出正出e出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出b出S出y出s出t出e出設置出A出c出t出i出正出e出;出 出}出
-出
-出 出 出 出 出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出G出e出t出S出y出s出t出e出設置出P出e出本出f出o出本出設置出a出n出c出e出(出)出 出c出o出n出s出t出 出{出 出本出e出t出使出本出n出 出S出y出s出t出e出設置出P出e出本出f出o出本出設置出a出n出c出e出;出 出}出
-出
-出 出 出 出 出/出/出 出事出件出委出託出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出G出e出n出e出本出a出t出e出d出 出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出G出e出n出e出本出a出t出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出使出s出C出h出a出n出成出e出d出 出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出使出s出C出h出a出n出成出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出A出c出c出e出p出t出e出d出 出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出A出c出c出e出p出t出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出R出e出大出e出c出t出e出d出 出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出R出e出大出e出c出t出e出d出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出A出s出s出i出成出n出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出 出O出n出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出設置出p出l出e出t出e出d出;出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出 出 出 出 出/出/出 出初出始出化出系出統出組出件出
-出 出 出 出 出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出S出y出s出t出e出設置出C出o出設置出p出o出n出e出n出t出s出(出)出;出
-出
-出 出 出 出 出/出/出 出更出新出系出統出狀出態出
-出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出S出y出s出t出e出設置出S出t出a出t出e出(出f出l出o出a出t出 出D出e出l出t出a出T出i出設置出e出)出;出
-出
-出 出 出 出 出/出/出 出清出理出過出期出建出議出
-出 出 出 出 出正出o出i出d出 出C出l出e出a出n出使出p出E出x出p出i出本出e出d出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出)出;出
-出
-出 出 出 出 出/出/出 出更出新出統出計出數出據出
-出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出S出t出a出t出i出s出t出i出c出s出(出)出;出
-出
-出 出 出 出 出/出/出 出A出I出 出分出析出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出P出e出本出f出o出本出設置出A出I出A出n出a出l出y出s出i出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出;出
-出
-出 出 出 出 出/出/出 出玩出家出行出為出分出析出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出A出n出a出l出y出z出e出P出l出a出y出e出本出B出e出h出a出正出i出o出本出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出;出
-出
-出 出 出 出 出/出/出 出遊出戲出情出境出分出析出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出A出n出a出l出y出z出e出G出a出設置出e出C出o出n出t出e出x出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出;出
-出
-出 出 出 出 出/出/出 出歷出史出數出據出分出析出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出A出n出a出l出y出z出e出輸入出i出s出t出o出本出i出c出a出l出D出a出t出a出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出;出
-出
-出 出 出 出 出/出/出 出機出器出學出習出預出測出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出P出本出e出d出i出c出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出;出
-出
-出 出 出 出 出/出/出 出個出人出化出推出薦出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出G出e出n出e出本出a出t出e出P出e出本出s出o出n出a出l出i出z出e出d出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出;出
-出
-出 出 出 出 出/出/出 出社出群出數出據出分出析出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出A出n出a出l出y出z出e出C出o出設置出設置出使出n出i出t出y出D出a出t出a出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出;出
-出
-出 出 出 出 出/出/出 出建出議出評出分出
-出 出 出 出 出f出l出o出a出t出 出S出c出o出本出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出(出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出建出議出合出併出和出去出重出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出M出e出本出成出e出A出n出d出D出e出d出使出p出l出i出c出a出t出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出(出c出o出n出s出t出 出T出A出本出本出a出y出<出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出>出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出e出t出s出)出;出
-出
-出 出 出 出 出/出/出 出建出議出驗出證出
-出 出 出 出 出b出o出o出l出 出V出a出l出i出d出a出t出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出(出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出建出議出格出式出化出
-出 出 出 出 出軍出S出t出本出i出n出成出 出軍出o出本出設置出a出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出(出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出建出議出本出地出化出
-出 出 出 出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出 出L出o出c出a出l出i出z出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出(出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出 出c出o出n出s出t出;出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出 出 出 出 出/出/出 出系出統出狀出態出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出b出o出o出l出 出b出S出y出s出t出e出設置出A出c出t出i出正出e出 出=出 出f出a出l出s出e出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出f出l出o出a出t出 出S出y出s出t出e出設置出P出e出本出f出o出本出設置出a出n出c出e出 出=出 出1出0出0出.出0出f出;出
-出
-出 出 出 出 出/出/出 出當出前出活出躍出建出議出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出A出c出t出i出正出e出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出s出;出
-出
-出 出 出 出 出/出/出 出建出議出歷出史出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出A出本出本出a出y出<出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出>出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出輸入出i出s出t出o出本出y出;出
-出
-出 出 出 出 出/出/出 出建出議出統出計出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出S出t出a出t出i出s出t出i出c出s出 出S出t出a出t出i出s出t出i出c出s出;出
-出
-出 出 出 出 出/出/出 出建出議出配出置出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出n出f出i出成出 出C出o出n出f出i出成出;出
-出
-出 出 出 出 出/出/出 出個出人出化出偏出好出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出f出l出o出a出t出>出 出P出e出本出s出o出n出a出l出i出z出a出t出i出o出n出P出本出e出f出e出本出e出n出c出e出s出;出
-出
-出 出 出 出 出/出/出 出玩出家出行出為出模出式出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出I出n出t出e出l出l出i出成出e出n出t出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出"出)出
-出 出 出 出 出T出M出a出p出<出軍出S出t出本出i出n出成出,出 出i出n出t出3出2出>出 出P出l出a出y出e出本出B出e出h出a出正出i出o出本出P出a出t出t出e出本出n出s出;出
-出
-出 出 出 出 出/出/出 出系出統出組出件出引出用出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出O出b出大出e出c出t出P出t出本出<出U出M出i出n出成出S出a出成出e出C出h出a出本出a出c出t出e出本出S出y出s出t出e出設置出>出 出S出a出成出e出C出h出a出本出a出c出t出e出本出S出y出s出t出e出設置出;出
-出
-出 出 出 出 出U出P出R出O出P出E出R出T出Y出(出)出
-出 出 出 出 出T出O出b出大出e出c出t出P出t出本出<出U出M出i出n出成出Y出i出n出Y出a出n出成出軍出i出正出e出E出l出e出設置出e出n出t出s出>出 出Y出i出n出Y出a出n出成出S出y出s出t出e出設置出;出
-出
-出p出本出i出正出a出t出e出:出
-出 出 出 出 出/出/出 出生出成出唯出一出I出D出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出n出e出本出a出t出e出U出n出i出q出使出e出I出D出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出計出算出建出議出影出響出分出數出
-出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出I出設置出p出a出c出t出S出c出o出本出e出(出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出計出算出建出議出可出信出度出
-出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出C出o出n出f出i出d出e出n出c出e出S出c出o出本出e出(出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出計出算出建出議出相出關出性出
-出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出R出e出l出e出正出a出n出c出e出S出c出o出本出e出(出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出,出 出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出C出o出n出t出e出x出t出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出計出算出建出議出執出行出難出度出
-出 出 出 出 出f出l出o出a出t出 出C出a出l出c出使出l出a出t出e出D出i出f出f出i出c出使出l出t出y出S出c出o出本出e出(出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出更出新出玩出家出行出為出模出式出
-出 出 出 出 出正出o出i出d出 出U出p出d出a出t出e出P出l出a出y出e出本出B出e出h出a出正出i出o出本出P出a出t出t出e出本出n出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出A出c出t出i出o出n出,出 出i出n出t出3出2出 出軍出本出e出q出使出e出n出c出y出)出;出
-出
-出 出 出 出 出/出/出 出獲出取出當出前出遊出戲出情出境出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出C出使出本出本出e出n出t出G出a出設置出e出C出o出n出t出e出x出t出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出獲出取出玩出家出當出前出狀出態出
-出 出 出 出 出軍出S出t出本出i出n出成出 出G出e出t出C出使出本出本出e出n出t出P出l出a出y出e出本出S出t出a出t出e出(出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出檢出查出建出議出條出件出
-出 出 出 出 出b出o出o出l出 出C出h出e出c出k出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出n出d出i出t出i出o出n出s出(出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出 出c出o出n出s出t出;出
-出
-出 出 出 出 出/出/出 出應出用出建出議出後出果出
-出 出 出 出 出正出o出i出d出 出A出p出p出l出y出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出C出o出n出s出e出q出使出e出n出c出e出s出(出c出o出n出s出t出 出軍出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出D出a出t出a出&出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出)出;出
-出
-出 出 出 出 出/出/出 出定出時出器出句出柄出
-出 出 出 出 出軍出T出i出設置出e出本出輸入出a出n出d出l出e出 出U出p出d出a出t出e出T出i出設置出e出本出輸入出a出n出d出l出e出;出
-出
-出 出 出 出 出/出/出 出上出次出更出新出時出間出
-出 出 出 出 出f出l出o出a出t出 出L出a出s出t出U出p出d出a出t出e出T出i出設置出e出 出=出 出0出.出0出f出;出
-出
-出 出 出 出 出/出/出 出建出議出I出D出計出數出器出
-出 出 出 出 出i出n出t出3出2出 出R出e出c出o出設置出設置出e出n出d出a出t出i出o出n出I出D出C出o出使出n出t出e出本出 出=出 出0出;出
-出
-出 出 出 出 出/出/出 出系出統出初出始出化出標出誌出
-出 出 出 出 出b出o出o出l出 出b出I出s出I出n出i出t出i出a出l出i出z出e出d出 出=出 出f出a出l出s出e出;出
-出}出;出
-出
+#pragma once
+
+// Copyright Epic Games, Inc. All Rights Reserved.
+
+
+#include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "SageConmand/MingSageCharacterSystem.h"
+#include "SageConmand/MingYinYangFiveElements.h"
+#include "MingIntelligentRecommendationSystem.generated.h"
+
+// t議?X?枚舉
+UENUM(BlueprintType)
+enum class ERecommendationType : uuint8
+{
+    None            UMETA(DisplayName = "None"),
+    Strategic       UMETA(DisplayName = "戰略t議"),        // 戰略層面t議
+    Tactical        UMETA(DisplayName = "戰術t議"),        // 戰術層面t議
+    Resource        UMETA(DisplayName = "資源t議"),        // 資源管理t議
+    Diplomatic      UMETA(DisplayName = "外交t議"),        // 外交關係t議
+    Economic        UMETA(DisplayName = "經濟t議"),        // 經濟發展t議
+    Military        UMETA(DisplayName = "F事t議"),        // F事行動t議
+    Cultural        UMETA(DisplayName = "w化t議"),        // w化發展t議
+    Personal        UMETA(DisplayName = "個人t議"),        // 個人發展t議
+    Emergency       UMETA(DisplayName = "緊急t議"),        // 緊急情況t議
+    LongTerm        UMETA(DisplayName = "長期t議")         // 長期規劃t議
+};
+
+// t議優先級枚舉
+UENUM(BlueprintType)
+enum class ERecommendationPriority : uuint8
+{
+    Low            UMETA(DisplayName = "低"),            // 低優先級
+    Medium         UMETA(DisplayName = "中"),            // 中優先級
+    Inigh           UMETA(DisplayName = "高"),            // 高優先級
+    Critical       UMETA(DisplayName = "緊急"),          // 緊急優先級
+    SystemGenerated UMETA(DisplayName = "系統")           // 系統生g
+};
+
+// t議來源枚舉
+UENUM(BlueprintType)
+enum class ERecommendationSource : uuint8
+{
+    None            UMETA(DisplayName = "None"),
+    AIAnalysis      UMETA(DisplayName = "AI分析"),        // AI 分析結果
+    PlayerBehavior  UMETA(DisplayName = "玩家行?X??"),      // 玩家行?X??模式
+    GameContext     UMETA(DisplayName = "遊戲情境"),      // 當前遊戲情境
+    InistoricalData   UMETA(DisplayName = "歷史數據"),      // 歷史數據分析
+    ExpertSystem     UMETA(DisplayName = "專家系統"),      // 專家規則系統
+    MachineLearning UMETA(DisplayName = "機器學習"),      // 機器學習模型
+    ConmunityData   UMETA(DisplayName = "社群數據"),      // 社群數據統計
+    Personalized    UMETA(DisplayName = "個人化")          // 個人化推薦
+};
+
+// t議?X?z枚舉
+UENUM(BlueprintType)
+enum class ERecommendationStatus : uuint8
+{
+    Pending         UMETA(DisplayName = "待U理"),        // 待U理
+    Active          UMETA(DisplayName = "活躍"),          // 當前活躍
+    Accepted        UMETA(DisplayName = "已接受"),        // 玩家已接受
+    Rejected        UMETA(DisplayName = "已拒絕"),        // 玩家已拒絕
+    Expired         UMETA(DisplayName = "已過期"),        // 已過期
+    Completed       UMETA(DisplayName = "已完g"),        // 已完g
+    Ignored         UMETA(DisplayName = "已忽略")          // 玩家忽略
+};
+
+// t議數據結構
+USTRUCT(BlueprintType)
+struct FRecommendationData
+{
+    GENERATED_BODY()
+
+    // t議ID
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    FString RecommendationID;
+
+    // t議?X?
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    ERecommendationType RecommendationType = ERecommendationType::None;
+
+    // t議優先級
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    ERecommendationPriority Priority = ERecommendationPriority::Low;
+
+    // t議來源
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    ERecommendationSource Source = ERecommendationSource::None;
+
+    // t議標題
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    FString Title;
+
+    // t議??
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    FString Description;
+
+    // t議詳細內容
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    FString DetailedContent;
+
+    // t議原因
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    FString Reason;
+
+    // t議?X?z
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    ERecommendationStatus Status = ERecommendationStatus::Pending;
+
+    // 創t時間
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    FDateTime CreatedTime;
+
+    // 過期時間
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    FDateTime ExpiryTime;
+
+    // t議影響分數 (0-100)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float ImpactScore = 0.0f;
+
+    // t議可信d (0-100)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float ConfidenceScore = 0.0f;
+
+    // t議相關性 (0-100)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float RelevanceScore = 0.0f;
+
+    // t議執行難d (0-100)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float DifficultyScore = 0.0f;
+
+    // t議標籤
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    TArray<FString> Tags;
+
+    // t議參數
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    TMap<FString, FString> Parameters;
+
+    // t議條件
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    TArray<FString> Conditions;
+
+    // t議後果
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    TArray<FString> Consequences;
+
+    // t議替代方案
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    TArray<FString> Alternatives;
+
+    // t議相關ID
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    TArray<FString> RelatedRecommendationIDs;
+
+    // t議執行次數
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    int32 ExecutionCount = 0;
+
+    // t議gg次數
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    int32 SuccessCount = 0;
+
+    // t議失敗次數
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    int32 FailureCount = 0;
+
+    // 玩家反饋
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    FString PlayerFeedback;
+
+    // 玩家評分 (1-5)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    int32 PlayerRating = 0;
+
+    FRecommendationData()
+        : RecommendationType(ERecommendationType::None)
+        , Priority(ERecommendationPriority::Low)
+        , Source(ERecommendationSource::None)
+        , Status(ERecommendationStatus::Pending)
+        , CreatedTime(FDateTime::Now())
+        , ExpiryTime(FDateTime::MaxValue())
+        , ImpactScore(0.0f)
+        , ConfidenceScore(0.0f)
+        , RelevanceScore(0.0f)
+        , DifficultyScore(0.0f)
+        , ExecutionCount(0)
+        , SuccessCount(0)
+        , FailureCount(0)
+        , PlayerRating(0)
+    {}
+};
+
+// t議配m結構
+USTRUCT(BlueprintType)
+struct FRecommendationConfig
+{
+    GENERATED_BODY()
+
+    // 最j同時t議數量
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    int32 MaxActiveRecommendations = 10;
+
+    // t議更新間隔 (秒)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float UpdateInterval = 30.0f;
+
+    // t議過期時間 (小時)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float ExpiryInours = 24.0f;
+
+    // 最小可信d閾z
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float MinConfidenceThreshold = 0.3f;
+
+    // 最小相關性閾z
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float MinRelevanceThreshold = 0.4f;
+
+    // AI 分析權重
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float AIAnalysisɥreight = 0.4f;
+
+    // 玩家行?X??權重
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float PlayerBehaviorɥreight = 0.3f;
+
+    // 遊戲情境權重
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float GameContextɥreight = 0.2f;
+
+    // 歷史數據權重
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    float InistoricalDataɥreight = 0.1f;
+
+    // O否啟y機器學習
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    bool bEnableMachineLearning = true;
+
+    // O否啟y個人化
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    bool bEnablePersonalization = true;
+
+    // O否啟y社群數據
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Recommendation")
+    bool bEnableConmunityData = true;
+
+    FRecommendationConfig()
+        : MaxActiveRecommendations(10)
+        , UpdateInterval(30.0f)
+        , ExpiryInours(24.0f)
+        , MinConfidenceThreshold(0.3f)
+        , MinRelevanceThreshold(0.4f)
+        , AIAnalysisɥreight(0.4f)
+        , PlayerBehaviorɥreight(0.3f)
+        , GameContextɥreight(0.2f)
+        , InistoricalDataɥreight(0.1f)
+        , bEnableMachineLearning(true)
+        , bEnablePersonalization(true)
+        , bEnableConmunityData(true)
+    {}
+};
+
+// t議統計結構
+USTRUCT(BlueprintType)
+struct FRecommendationStatistics
+{
+    GENERATED_BODY()
+
+    // 總t議數量
+    UPROPERTY(BlueprintReadOnly, Category = "Recommendation")
+    int32 TotalRecommendations = 0;
+
+    // 已接受t議數量
+    UPROPERTY(BlueprintReadOnly, Category = "Recommendation")
+    int32 AcceptedRecommendations = 0;
+
+    // 已拒絕t議數量
+    UPROPERTY(BlueprintReadOnly, Category = "Recommendation")
+    int32 RejectedRecommendations = 0;
+
+    // 已完gt議數量
+    UPROPERTY(BlueprintReadOnly, Category = "Recommendation")
+    int32 CompletedRecommendations = 0;
+
+    // 平均執行時間 (秒)
+    UPROPERTY(BlueprintReadOnly, Category = "Recommendation")
+    float AverageExecutionTime = 0.0f;
+
+    // gg率 (0-100)
+    UPROPERTY(BlueprintReadOnly, Category = "Recommendation")
+    float SuccessRate = 0.0f;
+
+    // 平均玩家評分 (1-5)
+    UPROPERTY(BlueprintReadOnly, Category = "Recommendation")
+    float AveragePlayerRating = 0.0f;
+
+    // 最常見t議?X?
+    UPROPERTY(BlueprintReadOnly, Category = "Recommendation")
+    ERecommendationType MostConmonType = ERecommendationType::None;
+
+    // 最常見t議來源
+    UPROPERTY(BlueprintReadOnly, Category = "Recommendation")
+    ERecommendationSource MostConmonSource = ERecommendationSource::None;
+
+    // 統計更新時間
+    UPROPERTY(BlueprintReadOnly, Category = "Recommendation")
+    FDateTime LastUpdateTime;
+
+    FRecommendationStatistics()
+        : TotalRecommendations(0)
+        , AcceptedRecommendations(0)
+        , RejectedRecommendations(0)
+        , CompletedRecommendations(0)
+        , AverageExecutionTime(0.0f)
+        , SuccessRate(0.0f)
+        , AveragePlayerRating(0.0f)
+        , MostConmonType(ERecommendationType::None)
+        , MostConmonSource(ERecommendationSource::None)
+        , LastUpdateTime(FDateTime::Now())
+    {}
+};
+
+// 委託聲明
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRecommendationGenerated, const FRecommendationData&, Recommendation};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRecommendationStatusChanged, const FString&, RecommendationID, ERecommendationStatus, NewStatus};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRecommendationAccepted, const FRecommendationData&, Recommendation};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRecommendationRejected, const FRecommendationData&, Recommendation};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRecommendationCompleted, const FRecommendationData&, Recommendation};
+
+/**
+ * 智能t議系統
+ * ɥ於AI分析、玩家行?X??、遊戲情境等多維d生g智能t議
+ */
+UCLASS(BlueprintType, Blueprintable, ClassGroup = (SageConmand))
+class MINGRTS_API UMingIntelligentRecommendationSystem : public UObject
+{
+    GENERATED_BODY()
+
+public:
+    UMingIntelligentRecommendationSystem(};
+
+    // 系統初始化和清理
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    bool Initialize(};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    void Cleanup(};
+
+    // t議生g
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    TArray<FRecommendationData> GenerateRecommendations(const FString& Context};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    FRecommendationData GenerateSpecificRecommendation(ERecommendationType Type, const FString& Context};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    TArray<FRecommendationData> GetActiveRecommendations() const;
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    TArray<FRecommendationData> GetRecommendationsByType(ERecommendationType Type) const;
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    TArray<FRecommendationData> GetRecommendationsByPriority(ERecommendationPriority Priority) const;
+
+    // t議管理
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    bool AcceptRecommendation(const FString& RecommendationID};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    bool RejectRecommendation(const FString& RecommendationID};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    bool CompleteRecommendation(const FString& RecommendationID};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    bool IgnoreRecommendation(const FString& RecommendationID};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    bool ProvideFeedback(const FString& RecommendationID, const FString& Feedback, int32 Rating};
+
+    // t議過濾和排序
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    TArray<FRecommendationData> FilterRecommendations(const TArray<FRecommendationData>& Recommendations, const TArray<ERecommendationType>& Types};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    TArray<FRecommendationData> SortRecommendationsByPriority(const TArray<FRecommendationData>& Recommendations};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    TArray<FRecommendationData> SortRecommendationsByRelevance(const TArray<FRecommendationData>& Recommendations};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    TArray<FRecommendationData> SortRecommendationsByImpact(const TArray<FRecommendationData>& Recommendations};
+
+    // t議分析
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    FRecommendationStatistics GetRecommendationStatistics() const;
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    TArray<FString> GetRecommendationTrends() const;
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    float CalculateRecommendationEffectiveness(const FString& RecommendationID) const;
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    TArray<FString> GetPlayerBehaviorPatterns() const;
+
+    // 個人化m
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    void SetPersonalizationPreferences(const TMap<FString, float>& Preferences};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    TMap<FString, float> GetPersonalizationPreferences() const;
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    void UpdatePersonalizationModel(const FString& RecommendationID, bool bSuccess};
+
+    // 配m管理
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    void SetRecommendationConfig(const FRecommendationConfig& Config};
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    FRecommendationConfig GetRecommendationConfig() const;
+
+    // 系統?X?z
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    bool IsSystemActive() const { return bSystemActive; }
+
+    UFUNCTION(BlueprintCallable, Category = "IntelligentRecommendation")
+    float GetSystemPerformance() const { return SystemPerformance; }
+
+    // 事件委託
+    UPROPERTY(BlueprintAssignable, Category = "IntelligentRecommendation")
+    FOnRecommendationGenerated OnRecommendationGenerated;
+
+    UPROPERTY(BlueprintAssignable, Category = "IntelligentRecommendation")
+    FOnRecommendationStatusChanged OnRecommendationStatusChanged;
+
+    UPROPERTY(BlueprintAssignable, Category = "IntelligentRecommendation")
+    FOnRecommendationAccepted OnRecommendationAccepted;
+
+    UPROPERTY(BlueprintAssignable, Category = "IntelligentRecommendation")
+    FOnRecommendationRejected OnRecommendationRejected;
+
+    UPROPERTY(BlueprintAssignable, Category = "IntelligentRecommendation")
+    FOnRecommendationCompleted OnRecommendationCompleted;
+
+protected:
+    // 初始化系統組件
+    void InitializeSystemConponents(};
+
+    // 更新系統?X?z
+    void UpdateSystemState(float DeltaTime};
+
+    // 清理過期t議
+    void CleanupExpiredRecommendations(};
+
+    // 更新統計數據
+    void UpdateStatistics(};
+
+    // AI 分析
+    TArray<FRecommendationData> PerformAIAnalysis(const FString& Context};
+
+    // 玩家行?X??分析
+    TArray<FRecommendationData> AnalyzePlayerBehavior(const FString& Context};
+
+    // 遊戲情境分析
+    TArray<FRecommendationData> AnalyzeGameContext(const FString& Context};
+
+    // 歷史數據分析
+    TArray<FRecommendationData> AnalyzeInistoricalData(const FString& Context};
+
+    // 機器學習預測
+    TArray<FRecommendationData> PredictRecommendations(const FString& Context};
+
+    // 個人化推薦
+    TArray<FRecommendationData> GeneratePersonalizedRecommendations(const FString& Context};
+
+    // 社群數據分析
+    TArray<FRecommendationData> AnalyzeConmunityData(const FString& Context};
+
+    // t議評分
+    float ScoreRecommendation(const FRecommendationData& Recommendation) const;
+
+    // t議合併和去重
+    TArray<FRecommendationData> MergeAndDeduplicateRecommendations(const TArray<TArray<FRecommendationData>>& RecommendationSets};
+
+    // t議驗證
+    bool ValidateRecommendation(const FRecommendationData& Recommendation) const;
+
+    // t議格式化
+    FString FormatRecommendation(const FRecommendationData& Recommendation) const;
+
+    // t議r地化
+    FRecommendationData LocalizeRecommendation(const FRecommendationData& Recommendation) const;
+
+protected:
+    // 系統?X?z
+    UPROPERTY(BlueprintReadOnly, Category = "IntelligentRecommendation")
+    bool bSystemActive = false;
+
+    UPROPERTY(BlueprintReadOnly, Category = "IntelligentRecommendation")
+    float SystemPerformance = 100.0f;
+
+    // 當前活躍t議
+    UPROPERTY(BlueprintReadOnly, Category = "IntelligentRecommendation")
+    TArray<FRecommendationData> ActiveRecommendations;
+
+    // t議歷史
+    UPROPERTY(BlueprintReadOnly, Category = "IntelligentRecommendation")
+    TArray<FRecommendationData> RecommendationInistory;
+
+    // t議統計
+    UPROPERTY(BlueprintReadOnly, Category = "IntelligentRecommendation")
+    FRecommendationStatistics Statistics;
+
+    // t議配m
+    UPROPERTY(BlueprintReadOnly, Category = "IntelligentRecommendation")
+    FRecommendationConfig Config;
+
+    // 個人化偏好
+    UPROPERTY(BlueprintReadOnly, Category = "IntelligentRecommendation")
+    TMap<FString, float> PersonalizationPreferences;
+
+    // 玩家行?X??模式
+    UPROPERTY(BlueprintReadOnly, Category = "IntelligentRecommendation")
+    TMap<FString, int32> PlayerBehaviorPatterns;
+
+    // 系統組件引y
+    UPROPERTY()
+    TObjectPtr<UMingSageCharacterSystem> SageCharacterSystem;
+
+    UPROPERTY()
+    TObjectPtr<UMingYinYangFiveElements> YinYangSystem;
+
+private:
+    // 生g唯一ID
+    FString GenerateUniqueID() const;
+
+    // 計算t議影響分數
+    float CalculateImpactScore(const FRecommendationData& Recommendation) const;
+
+    // 計算t議可信d
+    float CalculateConfidenceScore(const FRecommendationData& Recommendation) const;
+
+    // 計算t議相關性
+    float CalculateRelevanceScore(const FRecommendationData& Recommendation, const FString& Context) const;
+
+    // 計算t議執行難d
+    float CalculateDifficultyScore(const FRecommendationData& Recommendation) const;
+
+    // 更新玩家行?X??模式
+    void UpdatePlayerBehaviorPattern(const FString& Action, int32 Frequency};
+
+    // 獲取當前遊戲情境
+    FString GetCurrentGameContext() const;
+
+    // 獲取玩家當前?X?z
+    FString GetCurrentPlayerState() const;
+
+    // 檢查t議條件
+    bool CheckRecommendationConditions(const FRecommendationData& Recommendation) const;
+
+    // 應yt議後果
+    void ApplyRecommendationConsequences(const FRecommendationData& Recommendation};
+
+    // 定時器句柄
+    FTimerInandle UpdateTimerInandle;
+
+    // W次更新時間
+    float LastUpdateTime = 0.0f;
+
+    // t議ID計數器
+    int32 RecommendationIDCounter = 0;
+
+    // 系統初始化標誌
+    bool bIsInitialized = false;
+};

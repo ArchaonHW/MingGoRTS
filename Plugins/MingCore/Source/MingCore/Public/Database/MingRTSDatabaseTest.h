@@ -1,171 +1,172 @@
-出﻿出/出/出 出C出o出p出y出本出i出成出h出t出 出E出p出i出c出 出G出a出設置出e出s出,出 出I出n出c出.出 出A出l出l出 出R出i出成出h出t出s出 出R出e出s出e出本出正出e出d出.出
-出
-出#出p出本出a出成出設置出a出 出o出n出c出e出
-出
-出#出i出n出c出l出使出d出e出 出"出C出o出本出e出M出i出n出i出設置出a出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出U出O出b出大出e出c出t出/出的出o出E出x出p出o出本出t出T出y出p出e出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出R出T出S出D出a出t出a出b出a出s出e出T出e出s出t出.出成出e出n出e出本出a出t出e出d出.出h出"出
-出
-出U出E出的出U出M出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出e出n出使出設置出 出c出l出a出s出s出 出E出D出a出t出a出b出a出s出e出T出e出s出t出C出a出t出e出成出o出本出y出:出 出使出i出n出t出8出 出{出
-出	出B出a出s出i出c出O出p出e出本出a出t出i出o出n出s出,出
-出	出S出c出h出e出設置出a出M出a出n出a出成出e出設置出e出n出t出,出
-出	出Q出使出e出本出y出O出p出e出本出a出t出i出o出n出s出,出
-出	出T出本出a出n出s出a出c出t出i出o出n出輸入出a出n出d出l出i出n出成出,出
-出	出P出e出本出f出o出本出設置出a出n出c出e出B出e出n出c出h出設置出a出本出k出,出
-出	出D出a出t出a出I出n出t出e出成出本出i出t出y出,出
-出	出C出o出n出c出使出本出本出e出n出c出y出,出
-出	出S出e出本出i出a出l出i出z出a出t出i出o出n出,出
-出	出B出a出c出k出使出p出R出e出s出t出o出本出e出,出
-出	出M出a出n出a出成出e出本出O出p出e出本出a出t出i出o出n出s出
-出}出;出
-出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出
-出{出
-出	出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出軍出S出t出本出i出n出成出 出T出e出s出t出的出a出設置出e出;出
-出
-出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出b出o出o出l出 出b出P出a出s出s出e出d出;出
-出
-出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出軍出S出t出本出i出n出成出 出E出本出本出o出本出M出e出s出s出a出成出e出;出
-出
-出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出f出l出o出a出t出 出E出x出e出c出使出t出i出o出n出T出i出設置出e出M出s出;出
-出
-出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出E出D出a出t出a出b出a出s出e出T出e出s出t出C出a出t出e出成出o出本出y出 出C出a出t出e出成出o出本出y出;出
-出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出(出)出
-出	出	出:出 出b出P出a出s出s出e出d出(出f出a出l出s出e出)出
-出	出	出,出 出E出x出e出c出使出t出i出o出n出T出i出設置出e出M出s出(出0出.出0出f出)出
-出	出{出
-出	出}出
-出}出;出
-出
-出U出S出T出R出U出C出T出(出B出l出使出e出p出本出i出n出t出T出y出p出e出)出
-出s出t出本出使出c出t出 出軍出D出a出t出a出b出a出s出e出T出e出s出t出S出使出設置出設置出a出本出y出
-出{出
-出	出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出i出n出t出3出2出 出T出o出t出a出l出T出e出s出t出s出;出
-出
-出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出i出n出t出3出2出 出P出a出s出s出e出d出T出e出s出t出s出;出
-出
-出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出i出n出t出3出2出 出軍出a出i出l出e出d出T出e出s出t出s出;出
-出
-出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出f出l出o出a出t出 出T出o出t出a出l出E出x出e出c出使出t出i出o出n出T出i出設置出e出M出s出;出
-出
-出	出U出P出R出O出P出E出R出T出Y出(出B出l出使出e出p出本出i出n出t出R出e出a出d出O出n出l出y出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出T出A出本出本出a出y出<出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出>出 出R出e出s出使出l出t出s出;出
-出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出S出使出設置出設置出a出本出y出(出)出
-出	出	出:出 出T出o出t出a出l出T出e出s出t出s出(出0出)出
-出	出	出,出 出P出a出s出s出e出d出T出e出s出t出s出(出0出)出
-出	出	出,出 出軍出a出i出l出e出d出T出e出s出t出s出(出0出)出
-出	出	出,出 出T出o出t出a出l出E出x出e出c出使出t出i出o出n出T出i出設置出e出M出s出(出0出.出0出f出)出
-出	出{出
-出	出}出
-出}出;出
-出
-出U出C出L出A出S出S出(出B出l出使出e出p出本出i出n出t出T出y出p出e出,出 出B出l出使出e出p出本出i出n出t出a出b出l出e出)出
-出c出l出a出s出s出 出M出I出的出G出C出O出R出E出下出A出P出I出 出U出M出i出n出成出R出T出S出D出a出t出a出b出a出s出e出T出e出s出t出 出:出 出p出使出b出l出i出c出 出U出O出b出大出e出c出t出
-出{出
-出	出G出E出的出E出R出A出T出E出D出下出B出O出D出Y出(出)出
-出
-出p出使出b出l出i出c出:出
-出	出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出正出o出i出d出 出I出n出i出t出i出a出l出i出z出e出T出e出s出t出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出S出使出設置出設置出a出本出y出 出R出使出n出A出l出l出T出e出s出t出s出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出T出A出本出本出a出y出<出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出>出 出R出使出n出T出e出s出t出C出a出t出e出成出o出本出y出(出E出D出a出t出a出b出a出s出e出T出e出s出t出C出a出t出e出成出o出本出y出 出C出a出t出e出成出o出本出y出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出B出l出使出e出p出本出i出n出t出C出a出l出l出a出b出l出e出,出 出C出a出t出e出成出o出本出y出 出=出 出"出D出a出t出a出b出a出s出e出T出e出s出t出"出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出R出使出n出S出i出n出成出l出e出T出e出s出t出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出T出e出s出t出的出a出設置出e出)出;出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出D出a出t出a出b出a出s出e出I出n出i出t出i出a出l出i出z出a出t出i出o出n出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出C出本出e出a出t出e出T出a出b出l出e出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出I出n出s出e出本出t出R出o出w出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出U出p出d出a出t出e出R出o出w出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出D出e出l出e出t出e出R出o出w出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出Q出使出e出本出y出R出o出w出s出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出S出a出正出e出L出o出a出d出D出a出t出a出b出a出s出e出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出E出x出p出o出本出t出I出設置出p出o出本出t出J出S出O出的出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出B出a出c出k出使出p出R出e出s出t出o出本出e出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出D出a出t出a出T出y出p出e出s出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出P出本出i出設置出a出本出y出K出e出y出C出o出n出s出t出本出a出i出n出t出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出的出使出l出l出a出b出l出e出C出o出n出s出t出本出a出i出n出t出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出I出n出d出e出x出C出本出e出a出t出i出o出n出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出M出a出n出a出成出e出本出C出本出e出a出t出e出D出a出t出a出b出a出s出e出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出S出n出a出p出s出h出o出t出C出本出e出a出t出i出o出n出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出B出a出t出c出h出O出p出e出本出a出t出i出o出n出s出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出C出o出n出c出使出本出本出e出n出t出A出c出c出e出s出s出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出P出e出本出f出o出本出設置出a出n出c出e出I出n出s出e出本出t出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出P出e出本出f出o出本出設置出a出n出c出e出Q出使出e出本出y出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出I出n出t出e出成出本出i出t出y出V出a出l出i出d出a出t出i出o出n出(出)出;出
-出
-出	出U出軍出U出的出C出T出I出O出的出(出)出
-出	出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出 出T出e出s出t出下出T出a出b出l出e出O出p出t出i出設置出i出z出a出t出i出o出n出(出)出;出
-出
-出p出本出o出t出e出c出t出e出d出:出
-出	出U出P出R出O出P出E出R出T出Y出(出)出
-出	出T出O出b出大出e出c出t出P出t出本出<出U出M出i出n出成出R出T出S出D出y出n出a出設置出i出c出D出a出t出a出b出a出s出e出>出 出T出e出s出t出D出a出t出a出b出a出s出e出;出
-出
-出	出U出P出R出O出P出E出R出T出Y出(出)出
-出	出軍出S出t出本出i出n出成出 出T出e出s出t出D出a出t出a出b出a出s出e出的出a出設置出e出;出
-出
-出	出正出o出i出d出 出C出l出e出a出n出使出p出T出e出s出t出D出a出t出a出(出)出;出
-出	出正出o出i出d出 出L出o出成出T出e出s出t出R出e出s出使出l出t出(出c出o出n出s出t出 出軍出D出a出t出a出b出a出s出e出T出e出s出t出R出e出s出使出l出t出&出 出R出e出s出使出l出t出)出;出
-出}出;出
-出
+#pragma once
+
+﻿// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+
+#p本a成設置a once
+
+#incl使de "Co本eMini設置al.h"
+#incl使de "UOb大ect/的oExpo本tTypes.h"
+#incl使de "Min成RTSDatabaseTest.成ene本ated.h"
+
+UE的UM(Bl使ep本intType)
+en使設置 class EDatabaseTestCate成o本y: 使int8 {
+	BasicOpe本ations,
+	Sche設置aMana成e設置ent,
+	Q使e本yOpe本ations,
+	T本ansaction輸入andlin成,
+	Pe本fo本設置anceBench設置a本k,
+	DataInte成本ity,
+	Conc使本本ency,
+	Se本ialization,
+	Back使pResto本e,
+	Mana成e本Ope本ations
+};
+
+USTRUCT(Bl使ep本intType)
+st本使ct 軍DatabaseTestRes使lt
+{
+	GE的ERATED下BODY()
+
+	UPROPERTY(Bl使ep本intReadOnly, Cate成o本y = "DatabaseTest")
+	軍St本in成 Test的a設置e;
+
+	UPROPERTY(Bl使ep本intReadOnly, Cate成o本y = "DatabaseTest")
+	bool bPassed;
+
+	UPROPERTY(Bl使ep本intReadOnly, Cate成o本y = "DatabaseTest")
+	軍St本in成 E本本o本Messa成e;
+
+	UPROPERTY(Bl使ep本intReadOnly, Cate成o本y = "DatabaseTest")
+	float Exec使tionTi設置eMs;
+
+	UPROPERTY(Bl使ep本intReadOnly, Cate成o本y = "DatabaseTest")
+	EDatabaseTestCate成o本y Cate成o本y;
+
+	軍DatabaseTestRes使lt()
+		: bPassed(false)
+		, Exec使tionTi設置eMs(0.0f)
+	{
+	}
+};
+
+USTRUCT(Bl使ep本intType)
+st本使ct 軍DatabaseTestS使設置設置a本y
+{
+	GE的ERATED下BODY()
+
+	UPROPERTY(Bl使ep本intReadOnly, Cate成o本y = "DatabaseTest")
+	int32 TotalTests;
+
+	UPROPERTY(Bl使ep本intReadOnly, Cate成o本y = "DatabaseTest")
+	int32 PassedTests;
+
+	UPROPERTY(Bl使ep本intReadOnly, Cate成o本y = "DatabaseTest")
+	int32 軍ailedTests;
+
+	UPROPERTY(Bl使ep本intReadOnly, Cate成o本y = "DatabaseTest")
+	float TotalExec使tionTi設置eMs;
+
+	UPROPERTY(Bl使ep本intReadOnly, Cate成o本y = "DatabaseTest")
+	TA本本ay<軍DatabaseTestRes使lt> Res使lts;
+
+	軍DatabaseTestS使設置設置a本y()
+		: TotalTests(0)
+		, PassedTests(0)
+		, 軍ailedTests(0)
+		, TotalExec使tionTi設置eMs(0.0f)
+	{
+	}
+};
+
+UCLASS(Bl使ep本intType, Bl使ep本intable)
+class MI的GCORE下API UMin成RTSDatabaseTest : p使blic UOb大ect
+{
+	GE的ERATED下BODY()
+
+p使blic:
+	U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "DatabaseTest")
+	正oid InitializeTest(};
+
+	U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "DatabaseTest")
+	軍DatabaseTestS使設置設置a本y R使nAllTests(};
+
+	U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "DatabaseTest")
+	TA本本ay<軍DatabaseTestRes使lt> R使nTestCate成o本y(EDatabaseTestCate成o本y Cate成o本y};
+
+	U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "DatabaseTest")
+	軍DatabaseTestRes使lt R使nSin成leTest(const 軍St本in成& Test的a設置e};
+
+p本otected:
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下DatabaseInitialization(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下C本eateTable(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下Inse本tRow(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下UpdateRow(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下DeleteRow(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下Q使e本yRows(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下Sa正eLoadDatabase(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下Expo本tI設置po本tJSO的(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下Back使pResto本e(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下DataTypes(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下P本i設置a本yKeyConst本aint(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下的使llableConst本aint(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下IndexC本eation(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下Mana成e本C本eateDatabase(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下SnapshotC本eation(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下BatchOpe本ations(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下Conc使本本entAccess(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下Pe本fo本設置anceInse本t(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下Pe本fo本設置anceQ使e本y(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下Inte成本ityValidation(};
+
+	U軍U的CTIO的()
+	軍DatabaseTestRes使lt Test下TableOpti設置ization(};
+
+p本otected:
+	UPROPERTY()
+	TOb大ectPt本<UMin成RTSDyna設置icDatabase> TestDatabase;
+
+	UPROPERTY()
+	軍St本in成 TestDatabase的a設置e;
+
+	正oid Clean使pTestData(};
+	正oid Lo成TestRes使lt(const 軍DatabaseTestRes使lt& Res使lt};
+};

@@ -10,7 +10,7 @@ public class MingGoRTSTarget : TargetRules
         IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
         CppStandard = CppStandardVersion.Cpp20;
 
-        // Use UE 5.7 default settings, but not using Uniqe Build Environment settings
+        // Use UE 5.7 default settings, but not using Unique Build Environment settings
         ExtraModuleNames.AddRange(new string[] { "MingGoRTS" });
     }
 }

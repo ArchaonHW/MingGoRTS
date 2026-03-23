@@ -13,7 +13,8 @@
     "CanContainContent":  true,
     "IsBetaVersion":  false,
     "IsExperimentalVersion":  false,
-    "Installed":  true,
+    "Installed": true,
+    "EngineVersion": "5.7.0",
     "Modules":  [
                     {
                         "Name":  "MingBlockchain",

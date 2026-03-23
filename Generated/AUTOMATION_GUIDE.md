@@ -264,7 +264,7 @@ $Results | Wait-Job | Receive-Job
 3. **UE5 環境變量**
    ```powershell
    # 設置 UE5 環境變量
-   $env:UE5_ROOT = "C:\Program Files\Epic Games\UE_5.4"
+   $env:UE5_ROOT = "C:\Program Files\Epic Games\UE_5.7"
    ```
 
 ### 調試模式

@@ -117,7 +117,7 @@ cd c:\HW\MingGoRTS\Tools\automation
 ### 環境變量
 ```powershell
 # 設置 UE5 路徑（如果不在 PATH 中）
-$env:UE5_ROOT = "C:\Program Files\Epic Games\UE_5.4"
+$env:UE5_ROOT = "C:\Program Files\Epic Games\UE_5.7"
 
 # 設置 Visual Studio 路徑
 $env:VS2022_ROOT = "C:\Program Files\Microsoft Visual Studio\2022\Community"
@@ -158,10 +158,10 @@ $env:VS2022_ROOT = "C:\Program Files\Microsoft Visual Studio\2022\Community"
 #### 1. UE5 Editor 未找到
 ```cmd
 # 解決方案 1: 添加到 PATH
-set PATH=%PATH%;C:\Program Files\Epic Games\UE_5.4\Engine\Binaries\Win64
+set PATH=%PATH%;C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\Win64
 
 # 解決方案 2: 創建符號連結
-mklink /D "C:\UE5" "C:\Program Files\Epic Games\UE_5.4"
+mklink /D "C:\UE5" "C:\Program Files\Epic Games\UE_5.7"
 ```
 
 #### 2. PowerShell 執行策略

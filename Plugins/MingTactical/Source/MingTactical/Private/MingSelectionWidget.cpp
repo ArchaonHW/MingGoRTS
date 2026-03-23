@@ -1,168 +1,167 @@
-出#出i出n出c出l出使出d出e出 出"出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出C出a出n出正出a出s出P出a出n出e出l出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出C出a出n出正出a出s出P出a出n出e出l出S出l出o出t出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出B出o出本出d出e出本出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出C出o出設置出p出o出n出e出n出t出s出/出T出e出x出t出B出l出o出c出k出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出B出l出使出e出p出本出i出n出t出/出基本出i出d出成出e出t出L出a出y出o出使出t出L出i出b出本出a出本出y出.出h出"出
-出
-出正出o出i出d出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出的出a出t出i出正出e出C出o出n出s出t出本出使出c出t出(出)出
-出{出
-出 出 出 出 出S出使出p出e出本出:出:出的出a出t出i出正出e出C出o出n出s出t出本出使出c出t出(出)出;出
-出 出 出 出 出
-出 出 出 出 出S出e出l出e出c出t出i出o出n出B出o出x出C出o出l出o出本出 出=出 出軍出L出i出n出e出a出本出C出o出l出o出本出(出0出.出0出f出,出 出1出.出0出f出,出 出0出.出0出f出,出 出1出.出0出f出)出;出 出/出/出 出綠出色出
-出 出 出 出 出S出e出l出e出c出t出i出o出n出B出o出x出B出o出本出d出e出本出T出h出i出c出k出n出e出s出s出 出=出 出2出.出0出f出;出
-出 出 出 出 出S出e出l出e出c出t出i出o出n出B出o出x出O出p出a出c出i出t出y出 出=出 出0出.出3出f出;出
-出 出 出 出 出
-出 出 出 出 出b出I出s出S出e出l出e出c出t出i出o出n出B出o出x出V出i出s出i出b出l出e出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出隱出藏出選出擇出框出
-出 出 出 出 出輸入出i出d出e出S出e出l出e出c出t出i出o出n出B出o出x出(出)出;出
-出 出 出 出 出輸入出i出d出e出S出e出l出e出c出t出i出o出n出I出n出f出o出(出)出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出 出c出o出n出s出t出本出使出c出t出e出d出"出)出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出的出a出t出i出正出e出D出e出s出t出本出使出c出t出(出)出
-出{出
-出 出 出 出 出S出使出p出e出本出:出:出的出a出t出i出正出e出D出e出s出t出本出使出c出t出(出)出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出 出d出e出s出t出本出使出c出t出e出d出"出)出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出的出a出t出i出正出e出T出i出c出k出(出c出o出n出s出t出 出軍出G出e出o出設置出e出t出本出y出&出 出M出y出G出e出o出設置出e出t出本出y出,出 出f出l出o出a出t出 出I出n出D出e出l出t出a出T出i出設置出e出)出
-出{出
-出 出 出 出 出S出使出p出e出本出:出:出的出a出t出i出正出e出T出i出c出k出(出M出y出G出e出o出設置出e出t出本出y出,出 出I出n出D出e出l出t出a出T出i出設置出e出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出更出新出選出擇出框出視出覺出
-出 出 出 出 出i出f出 出(出b出I出s出S出e出l出e出c出t出i出o出n出B出o出x出V出i出s出i出b出l出e出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出U出p出d出a出t出e出S出e出l出e出c出t出i出o出n出B出o出x出V出i出s出使出a出l出s出(出)出;出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出S出h出o出w出S出e出l出e出c出t出i出o出n出B出o出x出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出2出D出&出 出S出t出a出本出t出P出o出s出i出t出i出o出n出,出 出c出o出n出s出t出 出軍出V出e出c出t出o出本出2出D出&出 出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出)出
-出{出
-出 出 出 出 出S出e出l出e出c出t出i出o出n出S出t出a出本出t出P出o出s出i出t出i出o出n出 出=出 出S出t出a出本出t出P出o出s出i出t出i出o出n出;出
-出 出 出 出 出S出e出l出e出c出t出i出o出n出E出n出d出P出o出s出i出t出i出o出n出 出=出 出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出;出
-出 出 出 出 出b出I出s出S出e出l出e出c出t出i出o出n出B出o出x出V出i出s出i出b出l出e出 出=出 出t出本出使出e出;出
-出 出 出 出 出
-出 出 出 出 出U出p出d出a出t出e出S出e出l出e出c出t出i出o出n出B出o出x出V出i出s出使出a出l出s出(出)出;出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出S出e出l出e出c出t出i出o出n出 出b出o出x出 出s出h出o出w出n出 出f出本出o出設置出 出(出%出f出,出 出%出f出)出 出t出o出 出(出%出f出,出 出%出f出)出"出)出,出
-出 出 出 出 出 出 出 出 出 出 出 出S出t出a出本出t出P出o出s出i出t出i出o出n出.出X出,出 出S出t出a出本出t出P出o出s出i出t出i出o出n出.出Y出,出 出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出.出X出,出 出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出.出Y出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出U出p出d出a出t出e出S出e出l出e出c出t出i出o出n出B出o出x出(出c出o出n出s出t出 出軍出V出e出c出t出o出本出2出D出&出 出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出)出
-出{出
-出 出 出 出 出S出e出l出e出c出t出i出o出n出E出n出d出P出o出s出i出t出i出o出n出 出=出 出C出使出本出本出e出n出t出P出o出s出i出t出i出o出n出;出
-出 出 出 出 出
-出 出 出 出 出i出f出 出(出b出I出s出S出e出l出e出c出t出i出o出n出B出o出x出V出i出s出i出b出l出e出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出U出p出d出a出t出e出S出e出l出e出c出t出i出o出n出B出o出x出V出i出s出使出a出l出s出(出)出;出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出輸入出i出d出e出S出e出l出e出c出t出i出o出n出B出o出x出(出)出
-出{出
-出 出 出 出 出b出I出s出S出e出l出e出c出t出i出o出n出B出o出x出V出i出s出i出b出l出e出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出
-出 出 出 出 出i出f出 出(出S出e出l出e出c出t出i出o出n出B出o出x出B出o出本出d出e出本出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出S出e出l出e出c出t出i出o出n出B出o出x出B出o出本出d出e出本出-出>出S出e出t出V出i出s出i出b出i出l出i出t出y出(出E出S出l出a出t出e出V出i出s出i出b出i出l出i出t出y出:出:出輸入出i出d出d出e出n出)出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出S出e出l出e出c出t出i出o出n出 出b出o出x出 出h出i出d出d出e出n出"出)出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出U出p出d出a出t出e出S出e出l出e出c出t出i出o出n出C出o出使出n出t出(出i出n出t出3出2出 出S出e出l出e出c出t出e出d出C出o出使出n出t出,出 出i出n出t出3出2出 出T出o出t出a出l出C出o出使出n出t出)出
-出{出
-出 出 出 出 出i出f出 出(出S出e出l出e出c出t出i出o出n出C出o出使出n出t出T出e出x出t出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出軍出S出t出本出i出n出成出 出C出o出使出n出t出T出e出x出t出 出=出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出T出E出X出T出(出"出%出d出 出/出 出%出d出"出)出,出 出S出e出l出e出c出t出e出d出C出o出使出n出t出,出 出T出o出t出a出l出C出o出使出n出t出)出;出
-出 出 出 出 出 出 出 出 出S出e出l出e出c出t出i出o出n出C出o出使出n出t出T出e出x出t出-出>出S出e出t出T出e出x出t出(出軍出T出e出x出t出:出:出軍出本出o出設置出S出t出本出i出n出成出(出C出o出使出n出t出T出e出x出t出)出)出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出V出e出本出b出o出s出e出,出 出T出E出X出T出(出"出S出e出l出e出c出t出i出o出n出 出c出o出使出n出t出 出使出p出d出a出t出e出d出:出 出%出d出 出/出 出%出d出"出)出,出 出S出e出l出e出c出t出e出d出C出o出使出n出t出,出 出T出o出t出a出l出C出o出使出n出t出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出S出h出o出w出S出e出l出e出c出t出i出o出n出I出n出f出o出(出)出
-出{出
-出 出 出 出 出i出f出 出(出S出e出l出e出c出t出i出o出n出C出o出使出n出t出T出e出x出t出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出S出e出l出e出c出t出i出o出n出C出o出使出n出t出T出e出x出t出-出>出S出e出t出V出i出s出i出b出i出l出i出t出y出(出E出S出l出a出t出e出V出i出s出i出b出i出l出i出t出y出:出:出V出i出s出i出b出l出e出)出;出
-出 出 出 出 出}出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出輸入出i出d出e出S出e出l出e出c出t出i出o出n出I出n出f出o出(出)出
-出{出
-出 出 出 出 出i出f出 出(出S出e出l出e出c出t出i出o出n出C出o出使出n出t出T出e出x出t出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出S出e出l出e出c出t出i出o出n出C出o出使出n出t出T出e出x出t出-出>出S出e出t出V出i出s出i出b出i出l出i出t出y出(出E出S出l出a出t出e出V出i出s出i出b出i出l出i出t出y出:出:出輸入出i出d出d出e出n出)出;出
-出 出 出 出 出}出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出I出s出S出e出l出e出c出t出i出o出n出B出o出x出V出i出s出i出b出l出e出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出本出e出t出使出本出n出 出b出I出s出S出e出l出e出c出t出i出o出n出B出o出x出V出i出s出i出b出l出e出;出
-出}出
-出
-出軍出R出e出c出t出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出G出e出t出S出e出l出e出c出t出i出o出n出R出e出c出t出(出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出f出l出o出a出t出 出M出i出n出X出 出=出 出軍出M出a出t出h出:出:出M出i出n出(出S出e出l出e出c出t出i出o出n出S出t出a出本出t出P出o出s出i出t出i出o出n出.出X出,出 出S出e出l出e出c出t出i出o出n出E出n出d出P出o出s出i出t出i出o出n出.出X出)出;出
-出 出 出 出 出f出l出o出a出t出 出M出a出x出X出 出=出 出軍出M出a出t出h出:出:出M出a出x出(出S出e出l出e出c出t出i出o出n出S出t出a出本出t出P出o出s出i出t出i出o出n出.出X出,出 出S出e出l出e出c出t出i出o出n出E出n出d出P出o出s出i出t出i出o出n出.出X出)出;出
-出 出 出 出 出f出l出o出a出t出 出M出i出n出Y出 出=出 出軍出M出a出t出h出:出:出M出i出n出(出S出e出l出e出c出t出i出o出n出S出t出a出本出t出P出o出s出i出t出i出o出n出.出Y出,出 出S出e出l出e出c出t出i出o出n出E出n出d出P出o出s出i出t出i出o出n出.出Y出)出;出
-出 出 出 出 出f出l出o出a出t出 出M出a出x出Y出 出=出 出軍出M出a出t出h出:出:出M出a出x出(出S出e出l出e出c出t出i出o出n出S出t出a出本出t出P出o出s出i出t出i出o出n出.出Y出,出 出S出e出l出e出c出t出i出o出n出E出n出d出P出o出s出i出t出i出o出n出.出Y出)出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出軍出R出e出c出t出(出M出i出n出X出,出 出M出i出n出Y出,出 出M出a出x出X出 出-出 出M出i出n出X出,出 出M出a出x出Y出 出-出 出M出i出n出Y出)出;出
-出}出
-出
-出正出o出i出d出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出U出p出d出a出t出e出S出e出l出e出c出t出i出o出n出B出o出x出V出i出s出使出a出l出s出(出)出
-出{出
-出 出 出 出 出i出f出 出(出!出S出e出l出e出c出t出i出o出n出B出o出x出B出o出本出d出e出本出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出計出算出選出擇出框出的出位出置出和出大出小出
-出 出 出 出 出軍出V出e出c出t出o出本出2出D出 出V出i出e出w出p出o出本出t出S出t出a出本出t出 出=出 出G出e出t出V出i出e出w出p出o出本出t出P出o出s出i出t出i出o出n出(出S出e出l出e出c出t出i出o出n出S出t出a出本出t出P出o出s出i出t出i出o出n出)出;出
-出 出 出 出 出軍出V出e出c出t出o出本出2出D出 出V出i出e出w出p出o出本出t出E出n出d出 出=出 出G出e出t出V出i出e出w出p出o出本出t出P出o出s出i出t出i出o出n出(出S出e出l出e出c出t出i出o出n出E出n出d出P出o出s出i出t出i出o出n出)出;出
-出 出 出 出 出
-出 出 出 出 出f出l出o出a出t出 出M出i出n出X出 出=出 出軍出M出a出t出h出:出:出M出i出n出(出V出i出e出w出p出o出本出t出S出t出a出本出t出.出X出,出 出V出i出e出w出p出o出本出t出E出n出d出.出X出)出;出
-出 出 出 出 出f出l出o出a出t出 出M出a出x出X出 出=出 出軍出M出a出t出h出:出:出M出a出x出(出V出i出e出w出p出o出本出t出S出t出a出本出t出.出X出,出 出V出i出e出w出p出o出本出t出E出n出d出.出X出)出;出
-出 出 出 出 出f出l出o出a出t出 出M出i出n出Y出 出=出 出軍出M出a出t出h出:出:出M出i出n出(出V出i出e出w出p出o出本出t出S出t出a出本出t出.出Y出,出 出V出i出e出w出p出o出本出t出E出n出d出.出Y出)出;出
-出 出 出 出 出f出l出o出a出t出 出M出a出x出Y出 出=出 出軍出M出a出t出h出:出:出M出a出x出(出V出i出e出w出p出o出本出t出S出t出a出本出t出.出Y出,出 出V出i出e出w出p出o出本出t出E出n出d出.出Y出)出;出
-出 出 出 出 出
-出 出 出 出 出f出l出o出a出t出 出基本出i出d出t出h出 出=出 出M出a出x出X出 出-出 出M出i出n出X出;出
-出 出 出 出 出f出l出o出a出t出 出輸入出e出i出成出h出t出 出=出 出M出a出x出Y出 出-出 出M出i出n出Y出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出設出置出選出擇出框出的出位出置出和出大出小出
-出 出 出 出 出i出f出 出(出U出C出a出n出正出a出s出P出a出n出e出l出S出l出o出t出*出 出C出a出n出正出a出s出S出l出o出t出 出=出 出C出a出s出t出<出U出C出a出n出正出a出s出P出a出n出e出l出S出l出o出t出>出(出S出e出l出e出c出t出i出o出n出B出o出x出B出o出本出d出e出本出-出>出S出l出o出t出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出C出a出n出正出a出s出S出l出o出t出-出>出S出e出t出P出o出s出i出t出i出o出n出(出軍出V出e出c出t出o出本出2出D出(出M出i出n出X出,出 出M出i出n出Y出)出)出;出
-出 出 出 出 出 出 出 出 出C出a出n出正出a出s出S出l出o出t出-出>出S出e出t出S出i出z出e出(出軍出V出e出c出t出o出本出2出D出(出基本出i出d出t出h出,出 出輸入出e出i出成出h出t出)出)出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出設出置出邊出框出樣出式出
-出 出 出 出 出軍出L出i出n出e出a出本出C出o出l出o出本出 出B出o出本出d出e出本出C出o出l出o出本出 出=出 出S出e出l出e出c出t出i出o出n出B出o出x出C出o出l出o出本出;出
-出 出 出 出 出B出o出本出d出e出本出C出o出l出o出本出.出A出 出=出 出S出e出l出e出c出t出i出o出n出B出o出x出O出p出a出c出i出t出y出;出
-出 出 出 出 出
-出 出 出 出 出軍出S出l出a出t出e出B出本出使出s出h出 出B出o出本出d出e出本出B出本出使出s出h出;出
-出 出 出 出 出B出o出本出d出e出本出B出本出使出s出h出.出T出i出n出t出C出o出l出o出本出 出=出 出B出o出本出d出e出本出C出o出l出o出本出;出
-出 出 出 出 出S出e出l出e出c出t出i出o出n出B出o出x出B出o出本出d出e出本出-出>出S出e出t出B出本出使出s出h出(出B出o出本出d出e出本出B出本出使出s出h出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出設出置出邊出框出顏出色出
-出 出 出 出 出S出e出l出e出c出t出i出o出n出B出o出x出B出o出本出d出e出本出-出>出S出e出t出B出本出使出s出h出C出o出l出o出本出(出B出o出本出d出e出本出C出o出l出o出本出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出顯出示出選出擇出框出
-出 出 出 出 出S出e出l出e出c出t出i出o出n出B出o出x出B出o出本出d出e出本出-出>出S出e出t出V出i出s出i出b出i出l出i出t出y出(出E出S出l出a出t出e出V出i出s出i出b出i出l出i出t出y出:出:出V出i出s出i出b出l出e出)出;出
-出}出
-出
-出軍出V出e出c出t出o出本出2出D出 出U出M出i出n出成出S出e出l出e出c出t出i出o出n出基本出i出d出成出e出t出:出:出G出e出t出V出i出e出w出p出o出本出t出P出o出s出i出t出i出o出n出(出軍出V出e出c出t出o出本出2出D出 出S出c出本出e出e出n出P出o出s出i出t出i出o出n出)出 出c出o出n出s出t出
-出{出
-出 出 出 出 出/出/出 出將出屏出幕出坐出標出轉出換出為出視出口出坐出標出
-出 出 出 出 出軍出V出e出c出t出o出本出2出D出 出V出i出e出w出p出o出本出t出S出i出z出e出 出=出 出U出基本出i出d出成出e出t出L出a出y出o出使出t出L出i出b出本出a出本出y出:出:出G出e出t出V出i出e出w出p出o出本出t出S出i出z出e出(出t出h出i出s出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出簡出單出的出1出:出1出映出射出（出如出果出需出要出縮出放出可出以出在出這出裡出處出理出）出
-出 出 出 出 出本出e出t出使出本出n出 出S出c出本出e出e出n出P出o出s出i出t出i出o出n出;出
-出}出
-出
+#incl使de "Min成Selection基本id成et.h"
+#incl使de "Co設置ponents/Can正asPanel.h"
+#incl使de "Co設置ponents/Can正asPanelSlot.h"
+#incl使de "Co設置ponents/Bo本de本.h"
+#incl使de "Co設置ponents/TextBlock.h"
+#incl使de "Bl使ep本int/基本id成etLayo使tLib本a本y.h"
+
+正oid UMin成Selection基本id成et::的ati正eConst本使ct()
+{
+    S使pe本::的ati正eConst本使ct();
+    
+    SelectionBoxColo本 = 軍Linea本Colo本(0.0f, 1.0f, 0.0f, 1.0f); // 綠色
+    SelectionBoxBo本de本Thickness = 2.0f;
+    SelectionBoxOpacity = 0.3f;
+    
+    bIsSelectionBoxVisible = false;
+    
+    // 隱藏選擇框
+    輸入ideSelectionBox();
+    輸入ideSelectionInfo();
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成Selection基本id成et const本使cted"));
+}
+
+正oid UMin成Selection基本id成et::的ati正eDest本使ct()
+{
+    S使pe本::的ati正eDest本使ct();
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成Selection基本id成et dest本使cted"));
+}
+
+正oid UMin成Selection基本id成et::的ati正eTick(const 軍Geo設置et本y& MyGeo設置et本y, float InDeltaTi設置e)
+{
+    S使pe本::的ati正eTick(MyGeo設置et本y, InDeltaTi設置e);
+    
+    // 更新選擇框視覺
+    if (bIsSelectionBoxVisible)
+    {
+        UpdateSelectionBoxVis使als();
+    }
+}
+
+正oid UMin成Selection基本id成et::ShowSelectionBox(const 軍Vecto本2D& Sta本tPosition, const 軍Vecto本2D& C使本本entPosition)
+{
+    SelectionSta本tPosition = Sta本tPosition;
+    SelectionEndPosition = C使本本entPosition;
+    bIsSelectionBoxVisible = t本使e;
+    
+    UpdateSelectionBoxVis使als();
+    
+    UE下LOG(Lo成Te設置p, Ve本bose, TEXT("Selection box shown f本o設置 (%f, %f) to (%f, %f)"),
+           Sta本tPosition.X, Sta本tPosition.Y, C使本本entPosition.X, C使本本entPosition.Y);
+}
+
+正oid UMin成Selection基本id成et::UpdateSelectionBox(const 軍Vecto本2D& C使本本entPosition)
+{
+    SelectionEndPosition = C使本本entPosition;
+    
+    if (bIsSelectionBoxVisible)
+    {
+        UpdateSelectionBoxVis使als();
+    }
+}
+
+正oid UMin成Selection基本id成et::輸入ideSelectionBox()
+{
+    bIsSelectionBoxVisible = false;
+    
+    if (SelectionBoxBo本de本)
+    {
+        SelectionBoxBo本de本->SetVisibility(ESlateVisibility::輸入idden);
+    }
+    
+    UE下LOG(Lo成Te設置p, Ve本bose, TEXT("Selection box hidden"));
+}
+
+正oid UMin成Selection基本id成et::UpdateSelectionCo使nt(int32 SelectedCo使nt, int32 TotalCo使nt)
+{
+    if (SelectionCo使ntText)
+    {
+        軍St本in成 Co使ntText = 軍St本in成::P本intf(TEXT("%d / %d"), SelectedCo使nt, TotalCo使nt);
+        SelectionCo使ntText->SetText(軍Text::軍本o設置St本in成(Co使ntText));
+    }
+    
+    UE下LOG(Lo成Te設置p, Ve本bose, TEXT("Selection co使nt 使pdated: %d / %d"), SelectedCo使nt, TotalCo使nt);
+}
+
+正oid UMin成Selection基本id成et::ShowSelectionInfo()
+{
+    if (SelectionCo使ntText)
+    {
+        SelectionCo使ntText->SetVisibility(ESlateVisibility::Visible);
+    }
+}
+
+正oid UMin成Selection基本id成et::輸入ideSelectionInfo()
+{
+    if (SelectionCo使ntText)
+    {
+        SelectionCo使ntText->SetVisibility(ESlateVisibility::輸入idden);
+    }
+}
+
+bool UMin成Selection基本id成et::IsSelectionBoxVisible() const
+{
+    本et使本n bIsSelectionBoxVisible;
+}
+
+軍Rect UMin成Selection基本id成et::GetSelectionRect() const
+{
+    float MinX = 軍Math::Min(SelectionSta本tPosition.X, SelectionEndPosition.X);
+    float MaxX = 軍Math::Max(SelectionSta本tPosition.X, SelectionEndPosition.X);
+    float MinY = 軍Math::Min(SelectionSta本tPosition.Y, SelectionEndPosition.Y);
+    float MaxY = 軍Math::Max(SelectionSta本tPosition.Y, SelectionEndPosition.Y);
+    
+    本et使本n 軍Rect(MinX, MinY, MaxX - MinX, MaxY - MinY);
+}
+
+正oid UMin成Selection基本id成et::UpdateSelectionBoxVis使als()
+{
+    if (!SelectionBoxBo本de本)
+    {
+        本et使本n;
+    }
+    
+    // 計算選擇框的位置和大小
+    軍Vecto本2D Viewpo本tSta本t = GetViewpo本tPosition(SelectionSta本tPosition);
+    軍Vecto本2D Viewpo本tEnd = GetViewpo本tPosition(SelectionEndPosition);
+    
+    float MinX = 軍Math::Min(Viewpo本tSta本t.X, Viewpo本tEnd.X);
+    float MaxX = 軍Math::Max(Viewpo本tSta本t.X, Viewpo本tEnd.X);
+    float MinY = 軍Math::Min(Viewpo本tSta本t.Y, Viewpo本tEnd.Y);
+    float MaxY = 軍Math::Max(Viewpo本tSta本t.Y, Viewpo本tEnd.Y);
+    
+    float 基本idth = MaxX - MinX;
+    float 輸入ei成ht = MaxY - MinY;
+    
+    // 設置選擇框的位置和大小
+    if (UCan正asPanelSlot* Can正asSlot = Cast<UCan正asPanelSlot>(SelectionBoxBo本de本->Slot))
+    {
+        Can正asSlot->SetPosition(軍Vecto本2D(MinX, MinY));
+        Can正asSlot->SetSize(軍Vecto本2D(基本idth, 輸入ei成ht));
+    }
+    
+    // 設置邊框樣式
+    軍Linea本Colo本 Bo本de本Colo本 = SelectionBoxColo本;
+    Bo本de本Colo本.A = SelectionBoxOpacity;
+    
+    軍SlateB本使sh Bo本de本B本使sh;
+    Bo本de本B本使sh.TintColo本 = Bo本de本Colo本;
+    SelectionBoxBo本de本->SetB本使sh(Bo本de本B本使sh);
+    
+    // 設置邊框顏色
+    SelectionBoxBo本de本->SetB本使shColo本(Bo本de本Colo本);
+    
+    // 顯示選擇框
+    SelectionBoxBo本de本->SetVisibility(ESlateVisibility::Visible);
+}
+
+軍Vecto本2D UMin成Selection基本id成et::GetViewpo本tPosition(軍Vecto本2D Sc本eenPosition) const
+{
+    // 將屏幕坐標轉換為視口坐標
+    軍Vecto本2D Viewpo本tSize = U基本id成etLayo使tLib本a本y::GetViewpo本tSize(this);
+    
+    // 簡單的1:1映射（如果需要縮放可以在這裡處理）
+    本et使本n Sc本eenPosition;
+}

@@ -1,405 +1,405 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// Risk Monitoring Dashboard Implementation - B2-1
-// Provides comprehensive risk monitoring and visualization
+// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
+// Risk Monito本in成 Dashboa本d I設置ple設置entation - B2-1
+// P本o正ides co設置p本ehensi正e 本isk 設置onito本in成 and 正is使alization
 
-#include "Risk/MingRiskDashboard.h"
-#include "Engine/Engine.h"
-#include "Engine/World.h"
-#include "TimerManager.h"
+#incl使de "Risk/Min成RiskDashboa本d.h"
+#incl使de "En成ine/En成ine.h"
+#incl使de "En成ine/基本o本ld.h"
+#incl使de "Ti設置e本Mana成e本.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogRiskDashboard, Log, All);
+DE軍I的E下LOG下CATEGORY下STATIC(Lo成RiskDashboa本d, Lo成, All);
 
-UMingRiskDashboard::UMingRiskDashboard()
-    : CurrentView(EDashboardView::Overview)
-    , OverallRiskLevel(ERiskLevel::None)
+UMin成RiskDashboa本d::UMin成RiskDashboa本d()
+    : C使本本entView(EDashboa本dView::O正e本正iew)
+    , O正e本allRiskLe正el(ERiskLe正el::的one)
 {
 }
 
-void UMingRiskDashboard::InitializeDashboard(const FDashboardConfig& Config)
+正oid UMin成RiskDashboa本d::InitializeDashboa本d(const 軍Dashboa本dConfi成& Confi成)
 {
-    this->Config = Config;
-    CurrentView = EDashboardView::Overview;
+    this->Confi成 = Confi成;
+    C使本本entView = EDashboa本dView::O正e本正iew;
     
-    // Initialize risk metrics
-    InitializeRiskMetrics();
+    // Initialize 本isk 設置et本ics
+    InitializeRiskMet本ics();
     
-    // Start real-time monitoring
-    if (Config.bEnableRealTimeMonitoring)
+    // Sta本t 本eal-ti設置e 設置onito本in成
+    if (Confi成.bEnableRealTi設置eMonito本in成)
     {
-        StartRealTimeMonitoring();
+        Sta本tRealTi設置eMonito本in成();
     }
     
-    UE_LOG(LogRiskDashboard, Log, TEXT("Risk Dashboard initialized with %d metrics"), 
-        RiskMetrics.Num());
+    UE下LOG(Lo成RiskDashboa本d, Lo成, TEXT("Risk Dashboa本d initialized with %d 設置et本ics"), 
+        RiskMet本ics.的使設置());
 }
 
-void UMingRiskDashboard::ShutdownDashboard()
+正oid UMin成RiskDashboa本d::Sh使tdownDashboa本d()
 {
-    StopRealTimeMonitoring();
-    UE_LOG(LogRiskDashboard, Log, TEXT("Risk Dashboard shutdown"));
+    StopRealTi設置eMonito本in成();
+    UE下LOG(Lo成RiskDashboa本d, Lo成, TEXT("Risk Dashboa本d sh使tdown"));
 }
 
-void UMingRiskDashboard::UpdateRiskMetric(const FName& MetricName, float Value, ERiskCategory Category)
+正oid UMin成RiskDashboa本d::UpdateRiskMet本ic(const 軍的a設置e& Met本ic的a設置e, float Val使e, ERiskCate成o本y Cate成o本y)
 {
-    if (FRiskMetric* Metric = RiskMetrics.Find(MetricName))
+    if (軍RiskMet本ic* Met本ic = RiskMet本ics.軍ind(Met本ic的a設置e))
     {
-        Metric->CurrentValue = Value;
-        Metric->Category = Category;
-        Metric->LastUpdateTime = FDateTime::Now().GetTicks();
+        Met本ic->C使本本entVal使e = Val使e;
+        Met本ic->Cate成o本y = Cate成o本y;
+        Met本ic->LastUpdateTi設置e = 軍DateTi設置e::的ow().GetTicks();
         
-        // Update history
-        Metric->HistoryValues.Add(Value);
-        if (Metric->HistoryValues.Num() > Config.MaxHistoryPoints)
+        // Update histo本y
+        Met本ic->輸入isto本yVal使es.Add(Val使e);
+        if (Met本ic->輸入isto本yVal使es.的使設置() > Confi成.Max輸入isto本yPoints)
         {
-            Metric->HistoryValues.RemoveAt(0);
+            Met本ic->輸入isto本yVal使es.Re設置o正eAt(0);
         }
         
-        // Check thresholds
-        CheckMetricThresholds(*Metric);
+        // Check th本esholds
+        CheckMet本icTh本esholds(*Met本ic);
         
-        // Update overall risk level
-        UpdateOverallRiskLevel();
+        // Update o正e本all 本isk le正el
+        UpdateO正e本allRiskLe正el();
         
-        // Broadcast update
-        OnRiskMetricUpdated.Broadcast(MetricName, *Metric);
+        // B本oadcast 使pdate
+        OnRiskMet本icUpdated.B本oadcast(Met本ic的a設置e, *Met本ic);
     }
     else
     {
-        UE_LOG(LogRiskDashboard, Warning, TEXT("Metric '%s' not found"), *MetricName.ToString());
+        UE下LOG(Lo成RiskDashboa本d, 基本a本nin成, TEXT("Met本ic '%s' not fo使nd"), *Met本ic的a設置e.ToSt本in成());
     }
 }
 
-FRiskMetric UMingRiskDashboard::GetRiskMetric(const FName& MetricName) const
+軍RiskMet本ic UMin成RiskDashboa本d::GetRiskMet本ic(const 軍的a設置e& Met本ic的a設置e) const
 {
-    if (const FRiskMetric* Metric = RiskMetrics.Find(MetricName))
+    if (const 軍RiskMet本ic* Met本ic = RiskMet本ics.軍ind(Met本ic的a設置e))
     {
-        return *Metric;
+        本et使本n *Met本ic;
     }
     
-    // Return empty metric if not found
-    FRiskMetric EmptyMetric;
-    EmptyMetric.MetricName = MetricName;
-    return EmptyMetric;
+    // Ret使本n e設置pty 設置et本ic if not fo使nd
+    軍RiskMet本ic E設置ptyMet本ic;
+    E設置ptyMet本ic.Met本ic的a設置e = Met本ic的a設置e;
+    本et使本n E設置ptyMet本ic;
 }
 
-TArray<FRiskMetric> UMingRiskDashboard::GetAllRiskMetrics() const
+TA本本ay<軍RiskMet本ic> UMin成RiskDashboa本d::GetAllRiskMet本ics() const
 {
-    TArray<FRiskMetric> Metrics;
-    for (const auto& MetricPair : RiskMetrics)
+    TA本本ay<軍RiskMet本ic> Met本ics;
+    fo本 (const a使to& Met本icPai本 : RiskMet本ics)
     {
-        Metrics.Add(MetricPair.Value);
+        Met本ics.Add(Met本icPai本.Val使e);
     }
-    return Metrics;
+    本et使本n Met本ics;
 }
 
-TArray<FRiskMetric> UMingRiskDashboard::GetRiskMetricsByCategory(ERiskCategory Category) const
+TA本本ay<軍RiskMet本ic> UMin成RiskDashboa本d::GetRiskMet本icsByCate成o本y(ERiskCate成o本y Cate成o本y) const
 {
-    TArray<FRiskMetric> CategoryMetrics;
-    for (const auto& MetricPair : RiskMetrics)
+    TA本本ay<軍RiskMet本ic> Cate成o本yMet本ics;
+    fo本 (const a使to& Met本icPai本 : RiskMet本ics)
     {
-        if (MetricPair.Value.Category == Category)
+        if (Met本icPai本.Val使e.Cate成o本y == Cate成o本y)
         {
-            CategoryMetrics.Add(MetricPair.Value);
+            Cate成o本yMet本ics.Add(Met本icPai本.Val使e);
         }
     }
-    return CategoryMetrics;
+    本et使本n Cate成o本yMet本ics;
 }
 
-TArray<FRiskAlert> UMingRiskDashboard::GetActiveAlerts() const
+TA本本ay<軍RiskAle本t> UMin成RiskDashboa本d::GetActi正eAle本ts() const
 {
-    TArray<FRiskAlert> ActiveAlerts;
-    for (const auto& Alert : RiskAlerts)
+    TA本本ay<軍RiskAle本t> Acti正eAle本ts;
+    fo本 (const a使to& Ale本t : RiskAle本ts)
     {
-        if (Alert.Status == EAlertStatus::New || Alert.Status == EAlertStatus::InProgress)
+        if (Ale本t.Stat使s == EAle本tStat使s::的ew  Ale本t.Stat使s == EAle本tStat使s::InP本o成本ess)
         {
-            ActiveAlerts.Add(Alert);
+            Acti正eAle本ts.Add(Ale本t);
         }
     }
-    return ActiveAlerts;
+    本et使本n Acti正eAle本ts;
 }
 
-void UMingRiskDashboard::CreateAlert(const FString& Title, const FString& Message, 
-    EAlertType Type, EAlertPriority Priority, ERiskCategory Category)
+正oid UMin成RiskDashboa本d::C本eateAle本t(const 軍St本in成& Title, const 軍St本in成& Messa成e, 
+    EAle本tType Type, EAle本tP本io本ity P本io本ity, ERiskCate成o本y Cate成o本y)
 {
-    FRiskAlert NewAlert;
-    NewAlert.AlertID = FGuid::NewGuid().ToString();
-    NewAlert.Title = Title;
-    NewAlert.Message = Message;
-    NewAlert.Type = Type;
-    NewAlert.Priority = Priority;
-    NewAlert.Category = Category;
-    NewAlert.Status = EAlertStatus::New;
-    NewAlert.Timestamp = FDateTime::Now();
+    軍RiskAle本t 的ewAle本t;
+    的ewAle本t.Ale本tID = 軍G使id::的ewG使id().ToSt本in成();
+    的ewAle本t.Title = Title;
+    的ewAle本t.Messa成e = Messa成e;
+    的ewAle本t.Type = Type;
+    的ewAle本t.P本io本ity = P本io本ity;
+    的ewAle本t.Cate成o本y = Cate成o本y;
+    的ewAle本t.Stat使s = EAle本tStat使s::的ew;
+    的ewAle本t.Ti設置esta設置p = 軍DateTi設置e::的ow();
     
-    RiskAlerts.Add(NewAlert);
+    RiskAle本ts.Add(的ewAle本t);
     
-    // Broadcast alert
-    OnRiskAlertCreated.Broadcast(NewAlert);
+    // B本oadcast ale本t
+    OnRiskAle本tC本eated.B本oadcast(的ewAle本t);
     
-    UE_LOG(LogRiskDashboard, Log, TEXT("Alert created: %s"), *Title);
+    UE下LOG(Lo成RiskDashboa本d, Lo成, TEXT("Ale本t c本eated: %s"), *Title);
 }
 
-void UMingRiskDashboard::AcknowledgeAlert(const FString& AlertID)
+正oid UMin成RiskDashboa本d::Acknowled成eAle本t(const 軍St本in成& Ale本tID)
 {
-    for (auto& Alert : RiskAlerts)
+    fo本 (a使to& Ale本t : RiskAle本ts)
     {
-        if (Alert.AlertID == AlertID)
+        if (Ale本t.Ale本tID == Ale本tID)
         {
-            Alert.Status = EAlertStatus::Acknowledged;
-            OnRiskAlertUpdated.Broadcast(Alert);
-            break;
-        }
-    }
-}
-
-void UMingRiskDashboard::ResolveAlert(const FString& AlertID)
-{
-    for (auto& Alert : RiskAlerts)
-    {
-        if (Alert.AlertID == AlertID)
-        {
-            Alert.Status = EAlertStatus::Resolved;
-            OnRiskAlertUpdated.Broadcast(Alert);
-            break;
+            Ale本t.Stat使s = EAle本tStat使s::Acknowled成ed;
+            OnRiskAle本tUpdated.B本oadcast(Ale本t);
+            b本eak;
         }
     }
 }
 
-void UMingRiskDashboard::SetDashboardView(EDashboardView View)
+正oid UMin成RiskDashboa本d::Resol正eAle本t(const 軍St本in成& Ale本tID)
 {
-    CurrentView = View;
-    OnDashboardViewChanged.Broadcast(View);
-}
-
-EDashboardView UMingRiskDashboard::GetCurrentView() const
-{
-    return CurrentView;
-}
-
-ERiskLevel UMingRiskDashboard::GetOverallRiskLevel() const
-{
-    return OverallRiskLevel;
-}
-
-void UMingRiskDashboard::StartRealTimeMonitoring()
-{
-    if (GEngine && GEngine->GetWorldFromContextObject(this))
+    fo本 (a使to& Ale本t : RiskAle本ts)
     {
-        GEngine->GetWorldFromContextObject(this)->GetTimerManager().SetTimer(
-            MonitoringTimer,
+        if (Ale本t.Ale本tID == Ale本tID)
+        {
+            Ale本t.Stat使s = EAle本tStat使s::Resol正ed;
+            OnRiskAle本tUpdated.B本oadcast(Ale本t);
+            b本eak;
+        }
+    }
+}
+
+正oid UMin成RiskDashboa本d::SetDashboa本dView(EDashboa本dView View)
+{
+    C使本本entView = View;
+    OnDashboa本dViewChan成ed.B本oadcast(View);
+}
+
+EDashboa本dView UMin成RiskDashboa本d::GetC使本本entView() const
+{
+    本et使本n C使本本entView;
+}
+
+ERiskLe正el UMin成RiskDashboa本d::GetO正e本allRiskLe正el() const
+{
+    本et使本n O正e本allRiskLe正el;
+}
+
+正oid UMin成RiskDashboa本d::Sta本tRealTi設置eMonito本in成()
+{
+    if (GEn成ine && GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this))
+    {
+        GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this)->GetTi設置e本Mana成e本().SetTi設置e本(
+            Monito本in成Ti設置e本,
             this,
-            &UMingRiskDashboard::PerformMonitoringCycle,
-            Config.MonitoringInterval,
-            true);
+            &UMin成RiskDashboa本d::Pe本fo本設置Monito本in成Cycle,
+            Confi成.Monito本in成Inte本正al,
+            t本使e);
 
-        UE_LOG(LogRiskDashboard, Log, TEXT("Real-time monitoring started (interval: %.1f s)"), 
-            Config.MonitoringInterval);
+        UE下LOG(Lo成RiskDashboa本d, Lo成, TEXT("Real-ti設置e 設置onito本in成 sta本ted (inte本正al: %.1f s)"), 
+            Confi成.Monito本in成Inte本正al);
     }
 }
 
-void UMingRiskDashboard::StopRealTimeMonitoring()
+正oid UMin成RiskDashboa本d::StopRealTi設置eMonito本in成()
 {
-    if (GEngine && GEngine->GetWorldFromContextObject(this))
+    if (GEn成ine && GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this))
     {
-        GEngine->GetWorldFromContextObject(this)->GetTimerManager().ClearTimer(MonitoringTimer);
+        GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(this)->GetTi設置e本Mana成e本().Clea本Ti設置e本(Monito本in成Ti設置e本);
     }
     
-    UE_LOG(LogRiskDashboard, Log, TEXT("Real-time monitoring stopped"));
+    UE下LOG(Lo成RiskDashboa本d, Lo成, TEXT("Real-ti設置e 設置onito本in成 stopped"));
 }
 
-void UMingRiskDashboard::RefreshDashboard()
+正oid UMin成RiskDashboa本d::Ref本eshDashboa本d()
 {
-    // Update all metrics
-    for (auto& MetricPair : RiskMetrics)
+    // Update all 設置et本ics
+    fo本 (a使to& Met本icPai本 : RiskMet本ics)
     {
-        UpdateMetricValue(MetricPair.Value);
+        UpdateMet本icVal使e(Met本icPai本.Val使e);
     }
     
-    // Update overall risk level
-    UpdateOverallRiskLevel();
+    // Update o正e本all 本isk le正el
+    UpdateO正e本allRiskLe正el();
     
-    // Check for new alerts
-    CheckForAlerts();
+    // Check fo本 new ale本ts
+    Check軍o本Ale本ts();
     
-    OnDashboardRefreshed.Broadcast();
+    OnDashboa本dRef本eshed.B本oadcast();
 }
 
-void UMingRiskDashboard::ExportDashboardData(const FString& FilePath) const
+正oid UMin成RiskDashboa本d::Expo本tDashboa本dData(const 軍St本in成& 軍ilePath) const
 {
-    UE_LOG(LogRiskDashboard, Log, TEXT("Exporting dashboard data to: %s"), *FilePath);
+    UE下LOG(Lo成RiskDashboa本d, Lo成, TEXT("Expo本tin成 dashboa本d data to: %s"), *軍ilePath);
     
-    FString Report = TEXT("MingGoRTS Risk Dashboard Report\n");
-    Report += TEXT("===================================\n\n");
-    Report += FString::Printf(TEXT("Export Time: %s\n"), *FDateTime::Now().ToString());
-    Report += FString::Printf(TEXT("Overall Risk Level: %s\n\n"), *UEnum::GetValueAsString(OverallRiskLevel));
+    軍St本in成 Repo本t = TEXT("Min成GoRTS Risk Dashboa本d Repo本t\n");
+    Repo本t += TEXT("===================================\n\n");
+    Repo本t += 軍St本in成::P本intf(TEXT("Expo本t Ti設置e: %s\n"), *軍DateTi設置e::的ow().ToSt本in成());
+    Repo本t += 軍St本in成::P本intf(TEXT("O正e本all Risk Le正el: %s\n\n"), *UEn使設置::GetVal使eAsSt本in成(O正e本allRiskLe正el));
     
-    Report += TEXT("Risk Metrics:\n");
-    Report += TEXT("-------------\n");
+    Repo本t += TEXT("Risk Met本ics:\n");
+    Repo本t += TEXT("-------------\n");
     
-    for (const auto& MetricPair : RiskMetrics)
+    fo本 (const a使to& Met本icPai本 : RiskMet本ics)
     {
-        const FRiskMetric& Metric = MetricPair.Value;
-        Report += FString::Printf(TEXT("- %s: %.2f (%s)\n"), 
-            *Metric.MetricName.ToString(),
-            Metric.CurrentValue,
-            *UEnum::GetValueAsString(Metric.RiskLevel));
+        const 軍RiskMet本ic& Met本ic = Met本icPai本.Val使e;
+        Repo本t += 軍St本in成::P本intf(TEXT("- %s: %.2f (%s)\n"), 
+            *Met本ic.Met本ic的a設置e.ToSt本in成(),
+            Met本ic.C使本本entVal使e,
+            *UEn使設置::GetVal使eAsSt本in成(Met本ic.RiskLe正el));
     }
     
-    Report += TEXT("\nActive Alerts:\n");
-    Report += TEXT("-------------\n");
+    Repo本t += TEXT("\nActi正e Ale本ts:\n");
+    Repo本t += TEXT("-------------\n");
     
-    for (const FRiskAlert& Alert : RiskAlerts)
+    fo本 (const 軍RiskAle本t& Ale本t : RiskAle本ts)
     {
-        if (Alert.Status == EAlertStatus::New || Alert.Status == EAlertStatus::InProgress)
+        if (Ale本t.Stat使s == EAle本tStat使s::的ew  Ale本t.Stat使s == EAle本tStat使s::InP本o成本ess)
         {
-            Report += FString::Printf(TEXT("- %s: %s\n"), *Alert.Title, *Alert.Message);
+            Repo本t += 軍St本in成::P本intf(TEXT("- %s: %s\n"), *Ale本t.Title, *Ale本t.Messa成e);
         }
     }
     
-    // In a real implementation, you would save this to a file
-    UE_LOG(LogRiskDashboard, Log, TEXT("Report generated:\n%s"), *Report);
+    // In a 本eal i設置ple設置entation, yo使 wo使ld sa正e this to a file
+    UE下LOG(Lo成RiskDashboa本d, Lo成, TEXT("Repo本t 成ene本ated:\n%s"), *Repo本t);
 }
 
-// Private helper functions
+// P本i正ate helpe本 f使nctions
 
-void UMingRiskDashboard::InitializeRiskMetrics()
+正oid UMin成RiskDashboa本d::InitializeRiskMet本ics()
 {
-    // Initialize default metrics
-    AddRiskMetric(TEXT("CPUUsage"), ERiskCategory::Performance, 0.0f, 70.0f, 90.0f);
-    AddRiskMetric(TEXT("MemoryUsage"), ERiskCategory::Performance, 0.0f, 75.0f, 95.0f);
-    AddRiskMetric(TEXT("NetworkLatency"), ERiskCategory::Network, 0.0f, 100.0f, 200.0f);
-    AddRiskMetric(TEXT("ErrorRate"), ERiskCategory::Stability, 0.0f, 1.0f, 5.0f);
-    AddRiskMetric(TEXT("SecurityScore"), ERiskCategory::Security, 100.0f, 70.0f, 50.0f);
+    // Initialize defa使lt 設置et本ics
+    AddRiskMet本ic(TEXT("CPUUsa成e"), ERiskCate成o本y::Pe本fo本設置ance, 0.0f, 70.0f, 90.0f);
+    AddRiskMet本ic(TEXT("Me設置o本yUsa成e"), ERiskCate成o本y::Pe本fo本設置ance, 0.0f, 75.0f, 95.0f);
+    AddRiskMet本ic(TEXT("的etwo本kLatency"), ERiskCate成o本y::的etwo本k, 0.0f, 100.0f, 200.0f);
+    AddRiskMet本ic(TEXT("E本本o本Rate"), ERiskCate成o本y::Stability, 0.0f, 1.0f, 5.0f);
+    AddRiskMet本ic(TEXT("Sec使本itySco本e"), ERiskCate成o本y::Sec使本ity, 100.0f, 70.0f, 50.0f);
 }
 
-void UMingRiskDashboard::AddRiskMetric(const FName& Name, ERiskCategory Category, 
-    float DefaultValue, float Threshold, float CriticalThreshold)
+正oid UMin成RiskDashboa本d::AddRiskMet本ic(const 軍的a設置e& 的a設置e, ERiskCate成o本y Cate成o本y, 
+    float Defa使ltVal使e, float Th本eshold, float C本iticalTh本eshold)
 {
-    FRiskMetric Metric;
-    Metric.MetricName = Name;
-    Metric.Category = Category;
-    Metric.CurrentValue = DefaultValue;
-    Metric.Threshold = Threshold;
-    Metric.CriticalThreshold = CriticalThreshold;
-    Metric.RiskLevel = ERiskLevel::None;
-    Metric.LastUpdateTime = FDateTime::Now().GetTicks();
+    軍RiskMet本ic Met本ic;
+    Met本ic.Met本ic的a設置e = 的a設置e;
+    Met本ic.Cate成o本y = Cate成o本y;
+    Met本ic.C使本本entVal使e = Defa使ltVal使e;
+    Met本ic.Th本eshold = Th本eshold;
+    Met本ic.C本iticalTh本eshold = C本iticalTh本eshold;
+    Met本ic.RiskLe正el = ERiskLe正el::的one;
+    Met本ic.LastUpdateTi設置e = 軍DateTi設置e::的ow().GetTicks();
     
-    RiskMetrics.Add(Name, Metric);
+    RiskMet本ics.Add(的a設置e, Met本ic);
 }
 
-void UMingRiskDashboard::CheckMetricThresholds(FRiskMetric& Metric)
+正oid UMin成RiskDashboa本d::CheckMet本icTh本esholds(軍RiskMet本ic& Met本ic)
 {
-    if (Metric.CurrentValue >= Metric.CriticalThreshold)
+    if (Met本ic.C使本本entVal使e >= Met本ic.C本iticalTh本eshold)
     {
-        Metric.RiskLevel = ERiskLevel::Critical;
-        CreateAlert(
-            FString::Printf(TEXT("Critical: %s"), *Metric.MetricName.ToString()),
-            FString::Printf(TEXT("Metric %s has reached critical level: %.2f"), 
-                *Metric.MetricName.ToString(), Metric.CurrentValue),
-            EAlertType::Critical,
-            EAlertPriority::Highest,
-            Metric.Category);
+        Met本ic.RiskLe正el = ERiskLe正el::C本itical;
+        C本eateAle本t(
+            軍St本in成::P本intf(TEXT("C本itical: %s"), *Met本ic.Met本ic的a設置e.ToSt本in成()),
+            軍St本in成::P本intf(TEXT("Met本ic %s has 本eached c本itical le正el: %.2f"), 
+                *Met本ic.Met本ic的a設置e.ToSt本in成(), Met本ic.C使本本entVal使e),
+            EAle本tType::C本itical,
+            EAle本tP本io本ity::輸入i成hest,
+            Met本ic.Cate成o本y);
     }
-    else if (Metric.CurrentValue >= Metric.Threshold)
+    else if (Met本ic.C使本本entVal使e >= Met本ic.Th本eshold)
     {
-        if (Metric.RiskLevel < ERiskLevel::High)
+        if (Met本ic.RiskLe正el < ERiskLe正el::輸入i成h)
         {
-            Metric.RiskLevel = ERiskLevel::High;
-            CreateAlert(
-                FString::Printf(TEXT("Warning: %s"), *Metric.MetricName.ToString()),
-                FString::Printf(TEXT("Metric %s has exceeded threshold: %.2f"), 
-                    *Metric.MetricName.ToString(), Metric.CurrentValue),
-                EAlertType::Warning,
-                EAlertPriority::High,
-                Metric.Category);
+            Met本ic.RiskLe正el = ERiskLe正el::輸入i成h;
+            C本eateAle本t(
+                軍St本in成::P本intf(TEXT("基本a本nin成: %s"), *Met本ic.Met本ic的a設置e.ToSt本in成()),
+                軍St本in成::P本intf(TEXT("Met本ic %s has exceeded th本eshold: %.2f"), 
+                    *Met本ic.Met本ic的a設置e.ToSt本in成(), Met本ic.C使本本entVal使e),
+                EAle本tType::基本a本nin成,
+                EAle本tP本io本ity::輸入i成h,
+                Met本ic.Cate成o本y);
         }
     }
     else
     {
-        Metric.RiskLevel = ERiskLevel::None;
+        Met本ic.RiskLe正el = ERiskLe正el::的one;
     }
 }
 
-void UMingRiskDashboard::UpdateOverallRiskLevel()
+正oid UMin成RiskDashboa本d::UpdateO正e本allRiskLe正el()
 {
-    ERiskLevel MaxLevel = ERiskLevel::None;
+    ERiskLe正el MaxLe正el = ERiskLe正el::的one;
     
-    for (const auto& MetricPair : RiskMetrics)
+    fo本 (const a使to& Met本icPai本 : RiskMet本ics)
     {
-        if (MetricPair.Value.RiskLevel > MaxLevel)
+        if (Met本icPai本.Val使e.RiskLe正el > MaxLe正el)
         {
-            MaxLevel = MetricPair.Value.RiskLevel;
+            MaxLe正el = Met本icPai本.Val使e.RiskLe正el;
         }
     }
     
-    if (OverallRiskLevel != MaxLevel)
+    if (O正e本allRiskLe正el != MaxLe正el)
     {
-        ERiskLevel OldLevel = OverallRiskLevel;
-        OverallRiskLevel = MaxLevel;
-        OnOverallRiskLevelChanged.Broadcast(OverallRiskLevel, OldLevel);
+        ERiskLe正el OldLe正el = O正e本allRiskLe正el;
+        O正e本allRiskLe正el = MaxLe正el;
+        OnO正e本allRiskLe正elChan成ed.B本oadcast(O正e本allRiskLe正el, OldLe正el);
     }
 }
 
-void UMingRiskDashboard::PerformMonitoringCycle()
+正oid UMin成RiskDashboa本d::Pe本fo本設置Monito本in成Cycle()
 {
-    RefreshDashboard();
+    Ref本eshDashboa本d();
 }
 
-void UMingRiskDashboard::UpdateMetricValue(FRiskMetric& Metric)
+正oid UMin成RiskDashboa本d::UpdateMet本icVal使e(軍RiskMet本ic& Met本ic)
 {
-    // In a real implementation, this would query actual system values
-    // For now, we'll use placeholder logic
-    if (Metric.MetricName == TEXT("CPUUsage"))
+    // In a 本eal i設置ple設置entation, this wo使ld q使e本y act使al syste設置 正al使es
+    // 軍o本 now, we'll 使se placeholde本 lo成ic
+    if (Met本ic.Met本ic的a設置e == TEXT("CPUUsa成e"))
     {
-        Metric.CurrentValue = FMath::RandRange(20.0f, 80.0f);
+        Met本ic.C使本本entVal使e = 軍Math::RandRan成e(20.0f, 80.0f);
     }
-    else if (Metric.MetricName == TEXT("MemoryUsage"))
+    else if (Met本ic.Met本ic的a設置e == TEXT("Me設置o本yUsa成e"))
     {
-        Metric.CurrentValue = FMath::RandRange(30.0f, 85.0f);
+        Met本ic.C使本本entVal使e = 軍Math::RandRan成e(30.0f, 85.0f);
     }
-    else if (Metric.MetricName == TEXT("NetworkLatency"))
+    else if (Met本ic.Met本ic的a設置e == TEXT("的etwo本kLatency"))
     {
-        Metric.CurrentValue = FMath::RandRange(10.0f, 150.0f);
+        Met本ic.C使本本entVal使e = 軍Math::RandRan成e(10.0f, 150.0f);
     }
-    else if (Metric.MetricName == TEXT("ErrorRate"))
+    else if (Met本ic.Met本ic的a設置e == TEXT("E本本o本Rate"))
     {
-        Metric.CurrentValue = FMath::RandRange(0.0f, 3.0f);
+        Met本ic.C使本本entVal使e = 軍Math::RandRan成e(0.0f, 3.0f);
     }
-    else if (Metric.MetricName == TEXT("SecurityScore"))
+    else if (Met本ic.Met本ic的a設置e == TEXT("Sec使本itySco本e"))
     {
-        Metric.CurrentValue = FMath::RandRange(60.0f, 100.0f);
+        Met本ic.C使本本entVal使e = 軍Math::RandRan成e(60.0f, 100.0f);
     }
     
-    Metric.LastUpdateTime = FDateTime::Now().GetTicks();
+    Met本ic.LastUpdateTi設置e = 軍DateTi設置e::的ow().GetTicks();
     
-    // Update history
-    Metric.HistoryValues.Add(Metric.CurrentValue);
-    if (Metric.HistoryValues.Num() > Config.MaxHistoryPoints)
+    // Update histo本y
+    Met本ic.輸入isto本yVal使es.Add(Met本ic.C使本本entVal使e);
+    if (Met本ic.輸入isto本yVal使es.的使設置() > Confi成.Max輸入isto本yPoints)
     {
-        Metric.HistoryValues.RemoveAt(0);
+        Met本ic.輸入isto本yVal使es.Re設置o正eAt(0);
     }
 }
 
-void UMingRiskDashboard::CheckForAlerts()
+正oid UMin成RiskDashboa本d::Check軍o本Ale本ts()
 {
-    // Check for any conditions that should generate alerts
-    // This is a placeholder implementation
-    int32 ActiveAlertCount = 0;
-    for (const FRiskAlert& Alert : RiskAlerts)
+    // Check fo本 any conditions that sho使ld 成ene本ate ale本ts
+    // This is a placeholde本 i設置ple設置entation
+    int32 Acti正eAle本tCo使nt = 0;
+    fo本 (const 軍RiskAle本t& Ale本t : RiskAle本ts)
     {
-        if (Alert.Status == EAlertStatus::New || Alert.Status == EAlertStatus::InProgress)
+        if (Ale本t.Stat使s == EAle本tStat使s::的ew  Ale本t.Stat使s == EAle本tStat使s::InP本o成本ess)
         {
-            ActiveAlertCount++;
+            Acti正eAle本tCo使nt++;
         }
     }
     
-    if (ActiveAlertCount > Config.MaxActiveAlerts)
+    if (Acti正eAle本tCo使nt > Confi成.MaxActi正eAle本ts)
     {
-        CreateAlert(
-            TEXT("Alert Limit Exceeded"),
-            FString::Printf(TEXT("Too many active alerts: %d"), ActiveAlertCount),
-            EAlertType::Warning,
-            EAlertPriority::High,
-            ERiskCategory::General);
+        C本eateAle本t(
+            TEXT("Ale本t Li設置it Exceeded"),
+            軍St本in成::P本intf(TEXT("Too 設置any acti正e ale本ts: %d"), Acti正eAle本tCo使nt),
+            EAle本tType::基本a本nin成,
+            EAle本tP本io本ity::輸入i成h,
+            ERiskCate成o本y::Gene本al);
     }
 }

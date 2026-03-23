@@ -1,25 +1,26 @@
+#pragma once
+
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
 // AI Content Quality Controller
 // Manages quality assessment and control for AI-generated content
 
-#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "AIContentQualityController.generated.h"
 
 UENUM(BlueprintType)
-enum class EAIContentQualityLevel: uint8 {
+enum class EAIContentQualityLevel: uuint8 {
     VeryLow         UMETA(DisplayName = "Very Low"),
     Low             UMETA(DisplayName = "Low"),
     Medium          UMETA(DisplayName = "Medium"),
-    High            UMETA(DisplayName = "High"),
-    VeryHigh        UMETA(DisplayName = "Very High"),
+    Inigh            UMETA(DisplayName = "Inigh"),
+    VeryInigh        UMETA(DisplayName = "Very Inigh"),
     Excellent       UMETA(DisplayName = "Excellent")
 };
 
 UENUM(BlueprintType)
-enum class EAIContentType: uint8 {
+enum class EAIContentType: uuint8 {
     Image           UMETA(DisplayName = "Image"),
     Video           UMETA(DisplayName = "Video"),
     Audio           UMETA(DisplayName = "Audio"),
@@ -34,7 +35,7 @@ enum class EAIContentType: uint8 {
 };
 
 UENUM(BlueprintType)
-enum class EAIProvider: uint8 {
+enum class EAIProvider: uuint8 {
     StableDiffusion UMETA(DisplayName = "Stable Diffusion"),
     DALLE           UMETA(DisplayName = "DALL-E"),
     Midjourney      UMETA(DisplayName = "Midjourney"),
@@ -115,8 +116,8 @@ struct FAIContentEvaluation
     {}
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQualityCheckCompleted, FAIContentEvaluation, Evaluation);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQualityThresholdExceeded, FString, ContentID, EAIContentQualityLevel, QualityLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQualityCheckCompleted, FAIContentEvaluation, Evaluation};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQualityThresholdExceeded, FString, ContentID, EAIContentQualityLevel, QualityLevel};
 
 /**
  * AI Content Quality Controller
@@ -127,40 +128,40 @@ class MINGRTS_API UAIContentQualityController : public UObject
     GENERATED_BODY()
 
 public:
-    UAIContentQualityController();
+    UAIContentQualityController(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Quality")
-    void InitializeController();
+    void InitializeController(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Quality")
-    FAIContentEvaluation EvaluateContent(const FString& ContentID, EAIContentType ContentType, const TArray<uint8>& ContentData);
+    FAIContentEvaluation EvaluateContent(const FString& ContentID, EAIContentType ContentType, const TArray<uuint8>& ContentData};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Quality")
     bool IsContentApproved(const FString& ContentID) const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Quality")
-    void SetQualityThreshold(EAIContentType ContentType, float MinScore);
+    void SetQualityThreshold(EAIContentType ContentType, float MinScore};
 
     UFUNCTION(BlueprintPure, Category = "AI Content Quality")
     float GetQualityThreshold(EAIContentType ContentType) const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Quality")
-    void RejectContent(const FString& ContentID, const FString& Reason);
+    void RejectContent(const FString& ContentID, const FString& Reason};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Quality")
-    void ApproveContent(const FString& ContentID);
+    void ApproveContent(const FString& ContentID};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Quality")
-    TArray<FAIContentEvaluation> GetEvaluationHistory() const;
+    TArray<FAIContentEvaluation> GetEvaluationInistory() const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Quality")
-    void ClearEvaluationHistory();
+    void ClearEvaluationInistory(};
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Quality")
     FAIContentQualityMetrics CalculateAverageMetrics(EAIContentType ContentType) const;
 
     UFUNCTION(BlueprintCallable, Category = "AI Content Quality")
-    void ExportQualityReport(const FString& FilePath);
+    void ExportQualityReport(const FString& FilePath};
 
     UPROPERTY(BlueprintAssignable, Category = "AI Content Quality Events")
     FOnQualityCheckCompleted OnQualityCheckCompleted;
@@ -176,16 +177,16 @@ protected:
     TMap<EAIContentType, float> QualityThresholds;
 
     UPROPERTY()
-    TArray<FAIContentEvaluation> EvaluationHistory;
+    TArray<FAIContentEvaluation> EvaluationInistory;
 
     UPROPERTY()
     TMap<FString, FAIContentEvaluation> ContentEvaluations;
 
-    float EvaluateTechnicalQuality(const TArray<uint8>& ContentData, EAIContentType ContentType);
-    float EvaluateAestheticQuality(const TArray<uint8>& ContentData, EAIContentType ContentType);
-    float EvaluateRelevance(const TArray<uint8>& ContentData, const FString& Prompt);
-    float EvaluateConsistency(const TArray<uint8>& ContentData, EAIContentType ContentType);
-    float EvaluateOriginality(const TArray<uint8>& ContentData);
-    float EvaluateUsability(const TArray<uint8>& ContentData, EAIContentType ContentType);
-    EAIContentQualityLevel CalculateOverallQuality(const FAIContentQualityMetrics& Metrics);
+    float EvaluateTechnicalQuality(const TArray<uuint8>& ContentData, EAIContentType ContentType};
+    float EvaluateAestheticQuality(const TArray<uuint8>& ContentData, EAIContentType ContentType};
+    float EvaluateRelevance(const TArray<uuint8>& ContentData, const FString& Prompt};
+    float EvaluateConsistency(const TArray<uuint8>& ContentData, EAIContentType ContentType};
+    float EvaluateOriginality(const TArray<uuint8>& ContentData};
+    float EvaluateUsability(const TArray<uuint8>& ContentData, EAIContentType ContentType};
+    EAIContentQualityLevel CalculateOverallQuality(const FAIContentQualityMetrics& Metrics};
 };

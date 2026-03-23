@@ -1,191 +1,190 @@
-出/出/出 出C出o出p出y出本出i出成出h出t出 出E出p出i出c出 出G出a出設置出e出s出,出 出I出n出c出.出 出A出l出l出 出R出i出成出h出t出s出 出R出e出s出e出本出正出e出d出.出
-出
-出#出i出n出c出l出使出d出e出 出"出V出R出A出R出/出A出使出t出o出設置出a出t出i出o出n出/出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出V出R出A出R出/出M出i出n出成出V出R出A出R出M出a出t出e出本出i出a出l出軍出a出c出t出o出本出y出.出h出"出
-出#出i出n出c出l出使出d出e出 出"出M出i出s出c出/出P出a出t出h出s出.出h出"出
-出
-出i出n出t出3出2出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出M出a出t出e出本出i出a出l出s出C出本出e出a出t出e出d出C出o出使出n出t出 出=出 出0出;出
-出i出n出t出3出2出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出 出=出 出0出;出
-出b出o出o出l出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出b出L出a出s出t出B出使出i出l出d出C出h出e出c出k出P出a出s出s出e出d出 出=出 出f出a出l出s出e出;出
-出
-出b出o出o出l出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出P出本出e出B出使出i出l出d出M出a出t出e出本出i出a出l出C出h出e出c出k出(出)出
-出{出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出=出=出=出 出P出本出e出-出B出使出i出l出d出 出M出a出t出e出本出i出a出l出 出C出h出e出c出k出 出=出=出=出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出C出h出e出c出k出 出i出f出 出設置出a出t出e出本出i出a出l出s出 出e出x出i出s出t出
-出 出 出 出 出i出f出 出(出V出e出本出i出f出y出A出l出l出M出a出t出e出本出i出a出l出s出P出本出e出s出e出n出t出(出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出A出l出l出 出設置出a出t出e出本出i出a出l出s出 出p出本出e出s出e出n出t出 出-出 出b出使出i出l出d出 出c出a出n出 出p出本出o出c出e出e出d出"出)出)出;出
-出 出 出 出 出 出 出 出 出b出L出a出s出t出B出使出i出l出d出C出h出e出c出k出P出a出s出s出e出d出 出=出 出t出本出使出e出;出
-出 出 出 出 出 出 出 出 出本出e出t出使出本出n出 出t出本出使出e出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出M出a出t出e出本出i出a出l出s出 出設置出i出s出s出i出n出成出 出-出 出t出本出y出 出t出o出 出c出本出e出a出t出e出 出t出h出e出設置出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出M出a出t出e出本出i出a出l出s出 出設置出i出s出s出i出n出成出 出-出 出a出t出t出e出設置出p出t出i出n出成出 出a出使出t出o出-出c出本出e出a出t出i出o出n出 出b出e出f出o出本出e出 出b出使出i出l出d出"出)出)出;出
-出 出 出 出 出b出o出o出l出 出b出C出本出e出a出t出e出d出 出=出 出E出n出s出使出本出e出M出a出t出e出本出i出a出l出s出E出x出i出s出t出(出)出;出
-出 出 出 出 出
-出 出 出 出 出b出L出a出s出t出B出使出i出l出d出C出h出e出c出k出P出a出s出s出e出d出 出=出 出b出C出本出e出a出t出e出d出;出
-出 出 出 出 出本出e出t出使出本出n出 出b出C出本出e出a出t出e出d出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出P出o出s出t出B出使出i出l出d出M出a出t出e出本出i出a出l出V出e出本出i出f出i出c出a出t出i出o出n出(出)出
-出{出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出=出=出=出 出P出o出s出t出-出B出使出i出l出d出 出M出a出t出e出本出i出a出l出 出V出e出本出i出f出i出c出a出t出i出o出n出 出=出=出=出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出b出o出o出l出 出b出V出e出本出i出f出i出e出d出 出=出 出V出e出本出i出f出y出A出l出l出M出a出t出e出本出i出a出l出s出P出本出e出s出e出n出t出(出)出;出
-出 出 出 出 出
-出 出 出 出 出i出f出 出(出b出V出e出本出i出f出i出e出d出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出D出i出s出p出l出a出y出,出 出T出E出X出T出(出"出✓出 出A出l出l出 出V出R出/出A出R出 出設置出a出t出e出本出i出a出l出s出 出正出e出本出i出f出i出e出d出 出a出f出t出e出本出 出b出使出i出l出d出"出)出)出;出
-出 出 出 出 出}出
-出 出 出 出 出e出l出s出e出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出✗出 出S出o出設置出e出 出設置出a出t出e出本出i出a出l出s出 出設置出i出s出s出i出n出成出 出a出f出t出e出本出 出b出使出i出l出d出!出"出)出)出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出b出V出e出本出i出f出i出e出d出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出E出n出s出使出本出e出M出a出t出e出本出i出a出l出s出E出x出i出s出t出(出)出
-出{出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出D出i出s出p出l出a出y出,出 出T出E出X出T出(出"出E出n出s出使出本出i出n出成出 出V出R出/出A出R出 出設置出a出t出e出本出i出a出l出s出 出e出x出i出s出t出.出.出.出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出C出本出e出a出t出e出 出f出a出c出t出o出本出y出
-出 出 出 出 出U出M出i出n出成出V出R出A出R出M出a出t出e出本出i出a出l出軍出a出c出t出o出本出y出*出 出軍出a出c出t出o出本出y出 出=出 出的出e出w出O出b出大出e出c出t出<出U出M出i出n出成出V出R出A出R出M出a出t出e出本出i出a出l出軍出a出c出t出o出本出y出>出(出)出;出
-出 出 出 出 出軍出a出c出t出o出本出y出-出>出I出n出i出t出i出a出l出i出z出e出(出軍出P出a出t出h出s出:出:出P出本出o出大出e出c出t出D出i出本出(出)出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出C出本出e出a出t出e出 出設置出a出t出e出本出i出a出l出s出
-出 出 出 出 出b出o出o出l出 出V出R出R出e出s出使出l出t出 出=出 出軍出a出c出t出o出本出y出-出>出C出本出e出a出t出e出V出R出M出a出t出e出本出i出a出l出s出(出)出;出
-出 出 出 出 出b出o出o出l出 出A出R出R出e出s出使出l出t出 出=出 出軍出a出c出t出o出本出y出-出>出C出本出e出a出t出e出A出R出M出a出t出e出本出i出a出l出s出(出)出;出
-出 出 出 出 出
-出 出 出 出 出軍出S出t出本出i出n出成出 出R出e出p出o出本出t出 出=出 出軍出a出c出t出o出本出y出-出>出G出e出t出C出本出e出a出t出i出o出n出R出e出p出o出本出t出(出)出;出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出%出s出"出)出,出 出*出R出e出p出o出本出t出)出;出
-出 出 出 出 出
-出 出 出 出 出M出a出t出e出本出i出a出l出s出C出本出e出a出t出e出d出C出o出使出n出t出 出=出 出V出R出R出e出s出使出l出t出 出基本出 出9出 出:出 出0出;出
-出 出 出 出 出M出a出t出e出本出i出a出l出s出C出本出e出a出t出e出d出C出o出使出n出t出 出+出=出 出A出R出R出e出s出使出l出t出 出基本出 出7出 出:出 出0出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出V出R出R出e出s出使出l出t出 出&出&出 出A出R出R出e出s出使出l出t出;出
-出}出
-出
-出b出o出o出l出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出V出e出本出i出f出y出A出l出l出M出a出t出e出本出i出a出l出s出P出本出e出s出e出n出t出(出)出
-出{出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出V出e出本出i出f出y出i出n出成出 出a出l出l出 出設置出a出t出e出本出i出a出l出s出 出p出本出e出s出e出n出t出.出.出.出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出D出e出f出i出n出e出 出e出x出p出e出c出t出e出d出 出設置出a出t出e出本出i出a出l出s出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出E出x出p出e出c出t出e出d出V出R出M出a出t出e出本出i出a出l出s出 出=出 出{出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出C出o出n出t出本出o出l出l出e出本出下出B出o出d出y出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出C出o出n出t出本出o出l出l出e出本出下出B出使出t出t出o出n出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出P出o出i出n出t出e出本出下出L出a出s出e出本出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出P出o出i出n出t出e出本出下出C出使出本出s出o出本出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出U出I出下出P出a出n出e出l出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出U出I出下出B出o出本出d出e出本出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出T出e出l出e出p出o出本出t出下出V出a出l出i出d出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出T出e出l出e出p出o出本出t出下出I出n出正出a出l出i出d出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出V出R出C出o出設置出f出o出本出t出下出V出i出成出n出e出t出t出e出"出)出
-出 出 出 出 出}出;出
-出 出 出 出 出
-出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出E出x出p出e出c出t出e出d出A出R出M出a出t出e出本出i出a出l出s出 出=出 出{出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出P出l出a出n出e出下出軍出l出o出o出本出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出P出l出a出n出e出下出基本出a出l出l出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出P出l出a出n出e出下出B出o出使出n出d出a出本出y出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出C出使出本出s出o出本出下出D出e出f出a出使出l出t出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出A出n出c出h出o出本出下出D出e出f出a出使出l出t出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出O出正出e出本出l出a出y出下出C出o出n出t出e出n出t出"出)出,出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出M出下出A出R出O出正出e出本出l出a出y出下出輸入出o出l出o出成出本出a出設置出"出)出
-出 出 出 出 出}出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出C出h出e出c出k出 出d出i出本出e出c出t出o出本出i出e出s出
-出 出 出 出 出軍出S出t出本出i出n出成出 出V出R出D出i出本出 出=出 出軍出P出a出t出h出s出:出:出C出o出設置出b出i出n出e出(出軍出P出a出t出h出s出:出:出P出本出o出大出e出c出t出D出i出本出(出)出,出 出T出E出X出T出(出"出C出o出n出t出e出n出t出/出V出R出/出M出a出t出e出本出i出a出l出s出"出)出)出;出
-出 出 出 出 出軍出S出t出本出i出n出成出 出A出R出D出i出本出 出=出 出軍出P出a出t出h出s出:出:出C出o出設置出b出i出n出e出(出軍出P出a出t出h出s出:出:出P出本出o出大出e出c出t出D出i出本出(出)出,出 出T出E出X出T出(出"出C出o出n出t出e出n出t出/出A出R出/出M出a出t出e出本出i出a出l出s出"出)出)出;出
-出 出 出 出 出
-出 出 出 出 出b出o出o出l出 出b出A出l出l出P出本出e出s出e出n出t出 出=出 出t出本出使出e出;出
-出 出 出 出 出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出 出=出 出0出;出
-出 出 出 出 出
-出 出 出 出 出/出/出 出C出h出e出c出k出 出V出R出 出設置出a出t出e出本出i出a出l出s出
-出 出 出 出 出i出f出 出(出軍出P出a出t出h出s出:出:出D出i出本出e出c出t出o出本出y出E出x出i出s出t出s出(出V出R出D出i出本出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出V出R出軍出i出l出e出s出;出
-出 出 出 出 出 出 出 出 出I出軍出i出l出e出M出a出n出a出成出e出本出:出:出G出e出t出(出)出.出軍出i出n出d出軍出i出l出e出s出(出V出R出軍出i出l出e出s出,出 出*出V出R出D出i出本出,出 出T出E出X出T出(出"出*出.出使出a出s出s出e出t出"出)出)出;出
-出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出a出t出e出本出i出a出l出 出:出 出E出x出p出e出c出t出e出d出V出R出M出a出t出e出本出i出a出l出s出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出b出o出o出l出 出b出軍出o出使出n出d出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出 出:出 出V出R出軍出i出l出e出s出)出
-出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出軍出i出l出e出.出C出o出n出t出a出i出n出s出(出M出a出t出e出本出i出a出l出)出)出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出軍出o出使出n出d出 出=出 出t出本出使出e出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出b出軍出o出使出n出d出)出
-出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出+出+出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出 出 出 出 出e出l出s出e出
-出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出M出i出s出s出i出n出成出 出V出R出 出設置出a出t出e出本出i出a出l出:出 出%出s出"出)出,出 出*出M出a出t出e出本出i出a出l出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出A出l出l出P出本出e出s出e出n出t出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出 出 出 出 出e出l出s出e出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出V出R出 出M出a出t出e出本出i出a出l出s出 出d出i出本出e出c出t出o出本出y出 出n出o出t出 出f出o出使出n出d出!出"出)出)出;出
-出 出 出 出 出 出 出 出 出b出A出l出l出P出本出e出s出e出n出t出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出/出/出 出C出h出e出c出k出 出A出R出 出設置出a出t出e出本出i出a出l出s出
-出 出 出 出 出i出f出 出(出軍出P出a出t出h出s出:出:出D出i出本出e出c出t出o出本出y出E出x出i出s出t出s出(出A出R出D出i出本出)出)出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出T出A出本出本出a出y出<出軍出S出t出本出i出n出成出>出 出A出R出軍出i出l出e出s出;出
-出 出 出 出 出 出 出 出 出I出軍出i出l出e出M出a出n出a出成出e出本出:出:出G出e出t出(出)出.出軍出i出n出d出軍出i出l出e出s出(出A出R出軍出i出l出e出s出,出 出*出A出R出D出i出本出,出 出T出E出X出T出(出"出*出.出使出a出s出s出e出t出"出)出)出;出
-出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出M出a出t出e出本出i出a出l出 出:出 出E出x出p出e出c出t出e出d出A出R出M出a出t出e出本出i出a出l出s出)出
-出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出b出o出o出l出 出b出軍出o出使出n出d出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出f出o出本出 出(出c出o出n出s出t出 出軍出S出t出本出i出n出成出&出 出軍出i出l出e出 出:出 出A出R出軍出i出l出e出s出)出
-出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出軍出i出l出e出.出C出o出n出t出a出i出n出s出(出M出a出t出e出本出i出a出l出)出)出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出軍出o出使出n出d出 出=出 出t出本出使出e出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出本出e出a出k出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出 出 出 出 出
-出 出 出 出 出 出 出 出 出 出 出 出 出i出f出 出(出b出軍出o出使出n出d出)出
-出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出+出+出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出 出 出 出 出e出l出s出e出
-出 出 出 出 出 出 出 出 出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出基本出a出本出n出i出n出成出,出 出T出E出X出T出(出"出M出i出s出s出i出n出成出 出A出R出 出設置出a出t出e出本出i出a出l出:出 出%出s出"出)出,出 出*出M出a出t出e出本出i出a出l出)出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出 出b出A出l出l出P出本出e出s出e出n出t出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出 出 出 出 出}出
-出 出 出 出 出}出
-出 出 出 出 出e出l出s出e出
-出 出 出 出 出{出
-出 出 出 出 出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出E出本出本出o出本出,出 出T出E出X出T出(出"出A出R出 出M出a出t出e出本出i出a出l出s出 出d出i出本出e出c出t出o出本出y出 出n出o出t出 出f出o出使出n出d出!出"出)出)出;出
-出 出 出 出 出 出 出 出 出b出A出l出l出P出本出e出s出e出n出t出 出=出 出f出a出l出s出e出;出
-出 出 出 出 出}出
-出 出 出 出 出
-出 出 出 出 出U出E出下出L出O出G出(出L出o出成出T出e出設置出p出,出 出L出o出成出,出 出T出E出X出T出(出"出V出e出本出i出f出i出e出d出 出%出d出/出1出6出 出設置出a出t出e出本出i出a出l出s出"出)出,出 出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出)出;出
-出 出 出 出 出
-出 出 出 出 出本出e出t出使出本出n出 出b出A出l出l出P出本出e出s出e出n出t出;出
-出}出
-出
-出軍出S出t出本出i出n出成出 出U出M出i出n出成出V出R出A出R出B出使出i出l出d出輸入出o出o出k出s出:出:出G出e出t出B出使出i出l出d出A出使出t出o出設置出a出t出i出o出n出S出t出a出t出使出s出(出)出
-出{出
-出 出 出 出 出本出e出t出使出本出n出 出軍出S出t出本出i出n出成出:出:出P出本出i出n出t出f出(出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出B出使出i出l出d出 出A出使出t出o出設置出a出t出i出o出n出 出S出t出a出t出使出s出:出\出n出"出)出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出 出 出M出a出t出e出本出i出a出l出s出 出C出本出e出a出t出e出d出:出 出%出d出\出n出"出)出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出 出 出M出a出t出e出本出i出a出l出s出 出V出e出本出i出f出i出e出d出:出 出%出d出\出n出"出)出
-出 出 出 出 出 出 出 出 出T出E出X出T出(出"出 出 出L出a出s出t出 出C出h出e出c出k出 出P出a出s出s出e出d出:出 出%出s出"出)出,出
-出 出 出 出 出 出 出 出 出M出a出t出e出本出i出a出l出s出C出本出e出a出t出e出d出C出o出使出n出t出,出
-出 出 出 出 出 出 出 出 出M出a出t出e出本出i出a出l出s出V出e出本出i出f出i出e出d出C出o出使出n出t出,出
-出 出 出 出 出 出 出 出 出b出L出a出s出t出B出使出i出l出d出C出h出e出c出k出P出a出s出s出e出d出 出基本出 出T出E出X出T出(出"出Y出e出s出"出)出 出:出 出T出E出X出T出(出"出的出o出"出)出
-出 出 出 出 出)出;出
-出}出
-出
+// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+
+#incl使de "VRAR/A使to設置ation/Min成VRARB使ild輸入ooks.h"
+#incl使de "VRAR/Min成VRARMate本ial軍acto本y.h"
+#incl使de "Misc/Paths.h"
+
+int32 UMin成VRARB使ild輸入ooks::Mate本ialsC本eatedCo使nt = 0;
+int32 UMin成VRARB使ild輸入ooks::Mate本ialsVe本ifiedCo使nt = 0;
+bool UMin成VRARB使ild輸入ooks::bLastB使ildCheckPassed = false;
+
+bool UMin成VRARB使ild輸入ooks::P本eB使ildMate本ialCheck()
+{
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("=== P本e-B使ild Mate本ial Check ==="));
+    
+    // Check if 設置ate本ials exist
+    if (Ve本ifyAllMate本ialsP本esent())
+    {
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("All 設置ate本ials p本esent - b使ild can p本oceed"));
+        bLastB使ildCheckPassed = t本使e;
+        本et使本n t本使e;
+    }
+    
+    // Mate本ials 設置issin成 - t本y to c本eate the設置
+    UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Mate本ials 設置issin成 - atte設置ptin成 a使to-c本eation befo本e b使ild"));
+    bool bC本eated = Ens使本eMate本ialsExist();
+    
+    bLastB使ildCheckPassed = bC本eated;
+    本et使本n bC本eated;
+}
+
+bool UMin成VRARB使ild輸入ooks::PostB使ildMate本ialVe本ification()
+{
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("=== Post-B使ild Mate本ial Ve本ification ==="));
+    
+    bool bVe本ified = Ve本ifyAllMate本ialsP本esent();
+    
+    if (bVe本ified)
+    {
+        UE下LOG(Lo成Te設置p, Display, TEXT("✓ All VR/AR 設置ate本ials 正e本ified afte本 b使ild"));
+    }
+    else
+    {
+        UE下LOG(Lo成Te設置p, E本本o本, TEXT("✗ So設置e 設置ate本ials 設置issin成 afte本 b使ild!"));
+    }
+    
+    本et使本n bVe本ified;
+}
+
+bool UMin成VRARB使ild輸入ooks::Ens使本eMate本ialsExist()
+{
+    UE下LOG(Lo成Te設置p, Display, TEXT("Ens使本in成 VR/AR 設置ate本ials exist..."));
+    
+    // C本eate facto本y
+    UMin成VRARMate本ial軍acto本y* 軍acto本y = 的ewOb大ect<UMin成VRARMate本ial軍acto本y>();
+    軍acto本y->Initialize(軍Paths::P本o大ectDi本());
+    
+    // C本eate 設置ate本ials
+    bool VRRes使lt = 軍acto本y->C本eateVRMate本ials();
+    bool ARRes使lt = 軍acto本y->C本eateARMate本ials();
+    
+    軍St本in成 Repo本t = 軍acto本y->GetC本eationRepo本t();
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("%s"), *Repo本t);
+    
+    Mate本ialsC本eatedCo使nt = VRRes使lt 基本 9 : 0;
+    Mate本ialsC本eatedCo使nt += ARRes使lt 基本 7 : 0;
+    
+    本et使本n VRRes使lt && ARRes使lt;
+}
+
+bool UMin成VRARB使ild輸入ooks::Ve本ifyAllMate本ialsP本esent()
+{
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Ve本ifyin成 all 設置ate本ials p本esent..."));
+    
+    // Define expected 設置ate本ials
+    TA本本ay<軍St本in成> ExpectedVRMate本ials = {
+        TEXT("M下VRCont本olle本下Body"),
+        TEXT("M下VRCont本olle本下B使tton"),
+        TEXT("M下VRPointe本下Lase本"),
+        TEXT("M下VRPointe本下C使本so本"),
+        TEXT("M下VRUI下Panel"),
+        TEXT("M下VRUI下Bo本de本"),
+        TEXT("M下VRTelepo本t下Valid"),
+        TEXT("M下VRTelepo本t下In正alid"),
+        TEXT("M下VRCo設置fo本t下Vi成nette")
+    };
+    
+    TA本本ay<軍St本in成> ExpectedARMate本ials = {
+        TEXT("M下ARPlane下軍loo本"),
+        TEXT("M下ARPlane下基本all"),
+        TEXT("M下ARPlane下Bo使nda本y"),
+        TEXT("M下ARC使本so本下Defa使lt"),
+        TEXT("M下ARAncho本下Defa使lt"),
+        TEXT("M下ARO正e本lay下Content"),
+        TEXT("M下ARO正e本lay下輸入olo成本a設置")
+    };
+    
+    // Check di本ecto本ies
+    軍St本in成 VRDi本 = 軍Paths::Co設置bine(軍Paths::P本o大ectDi本(), TEXT("Content/VR/Mate本ials"));
+    軍St本in成 ARDi本 = 軍Paths::Co設置bine(軍Paths::P本o大ectDi本(), TEXT("Content/AR/Mate本ials"));
+    
+    bool bAllP本esent = t本使e;
+    Mate本ialsVe本ifiedCo使nt = 0;
+    
+    // Check VR 設置ate本ials
+    if (軍Paths::Di本ecto本yExists(VRDi本))
+    {
+        TA本本ay<軍St本in成> VR軍iles;
+        I軍ileMana成e本::Get().軍ind軍iles(VR軍iles, *VRDi本, TEXT("*.使asset"));
+        
+        fo本 (const 軍St本in成& Mate本ial : ExpectedVRMate本ials)
+        {
+            bool b軍o使nd = false;
+            fo本 (const 軍St本in成& 軍ile : VR軍iles)
+            {
+                if (軍ile.Contains(Mate本ial))
+                {
+                    b軍o使nd = t本使e;
+                    b本eak;
+                }
+            }
+            
+            if (b軍o使nd)
+            {
+                Mate本ialsVe本ifiedCo使nt++;
+            }
+            else
+            {
+                UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Missin成 VR 設置ate本ial: %s"), *Mate本ial);
+                bAllP本esent = false;
+            }
+        }
+    }
+    else
+    {
+        UE下LOG(Lo成Te設置p, E本本o本, TEXT("VR Mate本ials di本ecto本y not fo使nd!"));
+        bAllP本esent = false;
+    }
+    
+    // Check AR 設置ate本ials
+    if (軍Paths::Di本ecto本yExists(ARDi本))
+    {
+        TA本本ay<軍St本in成> AR軍iles;
+        I軍ileMana成e本::Get().軍ind軍iles(AR軍iles, *ARDi本, TEXT("*.使asset"));
+        
+        fo本 (const 軍St本in成& Mate本ial : ExpectedARMate本ials)
+        {
+            bool b軍o使nd = false;
+            fo本 (const 軍St本in成& 軍ile : AR軍iles)
+            {
+                if (軍ile.Contains(Mate本ial))
+                {
+                    b軍o使nd = t本使e;
+                    b本eak;
+                }
+            }
+            
+            if (b軍o使nd)
+            {
+                Mate本ialsVe本ifiedCo使nt++;
+            }
+            else
+            {
+                UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Missin成 AR 設置ate本ial: %s"), *Mate本ial);
+                bAllP本esent = false;
+            }
+        }
+    }
+    else
+    {
+        UE下LOG(Lo成Te設置p, E本本o本, TEXT("AR Mate本ials di本ecto本y not fo使nd!"));
+        bAllP本esent = false;
+    }
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Ve本ified %d/16 設置ate本ials"), Mate本ialsVe本ifiedCo使nt);
+    
+    本et使本n bAllP本esent;
+}
+
+軍St本in成 UMin成VRARB使ild輸入ooks::GetB使ildA使to設置ationStat使s()
+{
+    本et使本n 軍St本in成::P本intf(
+        TEXT("B使ild A使to設置ation Stat使s:\n")
+        TEXT("  Mate本ials C本eated: %d\n")
+        TEXT("  Mate本ials Ve本ified: %d\n")
+        TEXT("  Last Check Passed: %s"),
+        Mate本ialsC本eatedCo使nt,
+        Mate本ialsVe本ifiedCo使nt,
+        bLastB使ildCheckPassed 基本 TEXT("Yes") : TEXT("的o")
+    );
+}

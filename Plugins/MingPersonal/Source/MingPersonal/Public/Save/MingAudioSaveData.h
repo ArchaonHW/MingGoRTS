@@ -1,274 +1,276 @@
-﻿#pragma once
+#pragma once
 
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "MingAudioSaveData.generated.h"
+﻿#p本a成設置a once
 
-UENUM(BlueprintType)
-enum class EMingAudioCategory: uint8 {
-    Master UMETA(DisplayName = "Master"),
-    Music UMETA(DisplayName = "Music"),
-    SFX UMETA(DisplayName = "SFX"),
-    Dialogue UMETA(DisplayName = "Dialogue"),
-    Ambient UMETA(DisplayName = "Ambient"),
-    UI UMETA(DisplayName = "UI")
+#incl使de "Co本eMini設置al.h"
+#incl使de "UOb大ect/的oExpo本tTypes.h"
+#incl使de "Min成A使dioSa正eData.成ene本ated.h"
+
+UE的UM(Bl使ep本intType)
+en使設置 class EMin成A使dioCate成o本y: 使int8 {
+    Maste本 UMETA(Display的a設置e = "Maste本"),
+    M使sic UMETA(Display的a設置e = "M使sic"),
+    S軍X UMETA(Display的a設置e = "S軍X"),
+    Dialo成使e UMETA(Display的a設置e = "Dialo成使e"),
+    A設置bient UMETA(Display的a設置e = "A設置bient"),
+    UI UMETA(Display的a設置e = "UI")
 };
 
-UENUM(BlueprintType)
-enum class EMingAudioOutputDevice: uint8 {
-    Default UMETA(DisplayName = "Default"),
-    Headphones UMETA(DisplayName = "Headphones"),
-    Speakers UMETA(DisplayName = "Speakers"),
-    Surround UMETA(DisplayName = "Surround"),
-    Stereo UMETA(DisplayName = "Stereo")
+UE的UM(Bl使ep本intType)
+en使設置 class EMin成A使dioO使tp使tDe正ice: 使int8 {
+    Defa使lt UMETA(Display的a設置e = "Defa使lt"),
+    輸入eadphones UMETA(Display的a設置e = "輸入eadphones"),
+    Speake本s UMETA(Display的a設置e = "Speake本s"),
+    S使本本o使nd UMETA(Display的a設置e = "S使本本o使nd"),
+    Ste本eo UMETA(Display的a設置e = "Ste本eo")
 };
 
-USTRUCT(BlueprintType)
-struct FMingAudioSettingsEntry
+USTRUCT(Bl使ep本intType)
+st本使ct 軍Min成A使dioSettin成sEnt本y
 {
-    GENERATED_BODY()
+    GE的ERATED下BODY()
 
     UPROPERTY()
-    EMingAudioCategory Category;
+    EMin成A使dioCate成o本y Cate成o本y;
 
     UPROPERTY()
-    float Volume;
+    float Vol使設置e;
 
     UPROPERTY()
-    bool bMuted;
+    bool bM使ted;
 
     UPROPERTY()
     bool bEnabled;
 
     UPROPERTY()
-    TMap<FString, float> SubCategoryVolumes;
+    TMap<軍St本in成, float> S使bCate成o本yVol使設置es;
 
-    FMingAudioSettingsEntry()
-        : Category(EMingAudioCategory::Master)
-        , Volume(1.0f)
-        , bMuted(false)
-        , bEnabled(true)
+    軍Min成A使dioSettin成sEnt本y()
+        : Cate成o本y(EMin成A使dioCate成o本y::Maste本)
+        , Vol使設置e(1.0f)
+        , bM使ted(false)
+        , bEnabled(t本使e)
     {}
 };
 
-USTRUCT(BlueprintType)
-struct FMingAudioPreferences
+USTRUCT(Bl使ep本intType)
+st本使ct 軍Min成A使dioP本efe本ences
 {
-    GENERATED_BODY()
+    GE的ERATED下BODY()
 
     UPROPERTY()
-    EMingAudioOutputDevice OutputDevice;
+    EMin成A使dioO使tp使tDe正ice O使tp使tDe正ice;
 
     UPROPERTY()
-    bool bSubtitlesEnabled;
+    bool bS使btitlesEnabled;
 
     UPROPERTY()
-    bool bSubtitleBackground;
+    bool bS使btitleBack成本o使nd;
 
     UPROPERTY()
-    float SubtitleSize;
+    float S使btitleSize;
 
     UPROPERTY()
-    FString Language;
+    軍St本in成 Lan成使a成e;
 
     UPROPERTY()
-    bool bDolbyAtmosEnabled;
+    bool bDolbyAt設置osEnabled;
 
     UPROPERTY()
-    bool bSpatialAudioEnabled;
+    bool bSpatialA使dioEnabled;
 
     UPROPERTY()
-    bool bDynamicRangeCompression;
+    bool bDyna設置icRan成eCo設置p本ession;
 
     UPROPERTY()
-    float AudioLatencyOffset;
+    float A使dioLatencyOffset;
 
-    FMingAudioPreferences()
-        : OutputDevice(EMingAudioOutputDevice::Default)
-        , bSubtitlesEnabled(true)
-        , bSubtitleBackground(false)
-        , SubtitleSize(1.0f)
-        , Language(TEXT("zh-CN"))
-        , bDolbyAtmosEnabled(false)
-        , bSpatialAudioEnabled(true)
-        , bDynamicRangeCompression(false)
-        , AudioLatencyOffset(0.0f)
+    軍Min成A使dioP本efe本ences()
+        : O使tp使tDe正ice(EMin成A使dioO使tp使tDe正ice::Defa使lt)
+        , bS使btitlesEnabled(t本使e)
+        , bS使btitleBack成本o使nd(false)
+        , S使btitleSize(1.0f)
+        , Lan成使a成e(TEXT("zh-C的"))
+        , bDolbyAt設置osEnabled(false)
+        , bSpatialA使dioEnabled(t本使e)
+        , bDyna設置icRan成eCo設置p本ession(false)
+        , A使dioLatencyOffset(0.0f)
     {}
 };
 
-USTRUCT(BlueprintType)
-struct FMingRepublicEraAudioPreferences
+USTRUCT(Bl使ep本intType)
+st本使ct 軍Min成Rep使blicE本aA使dioP本efe本ences
 {
-    GENERATED_BODY()
+    GE的ERATED下BODY()
 
     UPROPERTY()
-    bool bEnableCulturalMusic;
+    bool bEnableC使lt使本alM使sic;
 
     UPROPERTY()
-    bool bEnableRegionalAccents;
+    bool bEnableRe成ionalAccents;
 
     UPROPERTY()
-    float TraditionalInstrumentVolume;
+    float T本aditionalInst本使設置entVol使設置e;
 
     UPROPERTY()
-    bool bUsePeriodAppropriateAudio;
+    bool bUsePe本iodApp本op本iateA使dio;
 
     UPROPERTY()
-    TMap<FName, float> RegionalAudioVolumes;
+    TMap<軍的a設置e, float> Re成ionalA使dioVol使設置es;
 
-    FMingRepublicEraAudioPreferences()
-        : bEnableCulturalMusic(true)
-        , bEnableRegionalAccents(true)
-        , TraditionalInstrumentVolume(0.8f)
-        , bUsePeriodAppropriateAudio(true)
+    軍Min成Rep使blicE本aA使dioP本efe本ences()
+        : bEnableC使lt使本alM使sic(t本使e)
+        , bEnableRe成ionalAccents(t本使e)
+        , T本aditionalInst本使設置entVol使設置e(0.8f)
+        , bUsePe本iodApp本op本iateA使dio(t本使e)
     {}
 };
 
-USTRUCT(BlueprintType)
-struct FMingAudioSaveData
+USTRUCT(Bl使ep本intType)
+st本使ct 軍Min成A使dioSa正eData
 {
-    GENERATED_BODY()
+    GE的ERATED下BODY()
 
     UPROPERTY()
-    int32 SaveVersion;
+    int32 Sa正eVe本sion;
 
     UPROPERTY()
-    FDateTime SaveTimestamp;
+    軍DateTi設置e Sa正eTi設置esta設置p;
 
     UPROPERTY()
-    TArray<FMingAudioSettingsEntry> AudioSettings;
+    TA本本ay<軍Min成A使dioSettin成sEnt本y> A使dioSettin成s;
 
     UPROPERTY()
-    FMingAudioPreferences AudioPreferences;
+    軍Min成A使dioP本efe本ences A使dioP本efe本ences;
 
     UPROPERTY()
-    FMingRepublicEraAudioPreferences RepublicEraPreferences;
+    軍Min成Rep使blicE本aA使dioP本efe本ences Rep使blicE本aP本efe本ences;
 
     UPROPERTY()
-    TMap<FString, FString> SoundBankStates;
+    TMap<軍St本in成, 軍St本in成> So使ndBankStates;
 
     UPROPERTY()
-    TMap<FName, float> ActiveMixVolumes;
+    TMap<軍的a設置e, float> Acti正eMixVol使設置es;
 
     UPROPERTY()
-    TArray<FString> ActiveAudioThemes;
+    TA本本ay<軍St本in成> Acti正eA使dioThe設置es;
 
     UPROPERTY()
-    bool bWasPlayingAudio;
+    bool b基本asPlayin成A使dio;
 
     UPROPERTY()
-    FName LastPlayedTheme;
+    軍的a設置e LastPlayedThe設置e;
 
-    FMingAudioSaveData()
-        : SaveVersion(1)
-        , bWasPlayingAudio(false)
+    軍Min成A使dioSa正eData()
+        : Sa正eVe本sion(1)
+        , b基本asPlayin成A使dio(false)
     {}
 };
 
 /**
- * Audio Settings Save Handler
- * Handles saving and loading audio settings
+ * A使dio Settin成s Sa正e 輸入andle本
+ * 輸入andles sa正in成 and loadin成 a使dio settin成s
  */
-UCLASS(ClassGroup = (Save, Audio))
-class MINGPERSONAL_API UMingAudioSaveDataHandler : public UObject
+UCLASS(ClassG本o使p = (Sa正e, A使dio))
+class MI的GPERSO的AL下API UMin成A使dioSa正eData輸入andle本 : p使blic UOb大ect
 {
-    GENERATED_BODY()
+    GE的ERATED下BODY()
 
-public:
-    UMingAudioSaveDataHandler();
+p使blic:
+    UMin成A使dioSa正eData輸入andle本(};
 
-    // Serialization
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    TArray<uint8> SerializeAudioSettings(class UMingMetaSoundsSystem* AudioSystem);
+    // Se本ialization
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    TA本本ay<使int8> Se本ializeA使dioSettin成s(class UMin成MetaSo使ndsSyste設置* A使dioSyste設置};
 
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool DeserializeAudioSettings(const TArray<uint8>& Data, UMingMetaSoundsSystem* AudioSystem);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    bool Dese本ializeA使dioSettin成s(const TA本本ay<使int8>& Data, UMin成MetaSo使ndsSyste設置* A使dioSyste設置};
 
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    FMingAudioSaveData ExportAudioSettings(UMingMetaSoundsSystem* AudioSystem);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    軍Min成A使dioSa正eData Expo本tA使dioSettin成s(UMin成MetaSo使ndsSyste設置* A使dioSyste設置};
 
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool ImportAudioSettings(const FMingAudioSaveData& SaveData, UMingMetaSoundsSystem* AudioSystem);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    bool I設置po本tA使dioSettin成s(const 軍Min成A使dioSa正eData& Sa正eData, UMin成MetaSo使ndsSyste設置* A使dioSyste設置};
 
     // Validation
-    UFUNCTION(BlueprintPure, Category = "Audio Save")
-    bool ValidateAudioData(const TArray<uint8>& Data) const;
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "A使dio Sa正e")
+    bool ValidateA使dioData(const TA本本ay<使int8>& Data) const;
 
-    UFUNCTION(BlueprintPure, Category = "Audio Save")
-    bool ValidateAudioSaveData(const FMingAudioSaveData& SaveData) const;
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "A使dio Sa正e")
+    bool ValidateA使dioSa正eData(const 軍Min成A使dioSa正eData& Sa正eData) const;
 
-    // Settings Helpers
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    void ApplyDefaultSettings(UMingMetaSoundsSystem* AudioSystem);
+    // Settin成s 輸入elpe本s
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    正oid ApplyDefa使ltSettin成s(UMin成MetaSo使ndsSyste設置* A使dioSyste設置};
 
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    void ApplyRepublicEraDefaults(UMingMetaSoundsSystem* AudioSystem);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    正oid ApplyRep使blicE本aDefa使lts(UMin成MetaSo使ndsSyste設置* A使dioSyste設置};
 
-    UFUNCTION(BlueprintPure, Category = "Audio Save")
-    bool AreSettingsEqual(const FMingAudioSaveData& DataA, const FMingAudioSaveData& DataB) const;
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "A使dio Sa正e")
+    bool A本eSettin成sEq使al(const 軍Min成A使dioSa正eData& DataA, const 軍Min成A使dioSa正eData& DataB) const;
 
     // Utilities
-    UFUNCTION(BlueprintPure, Category = "Audio Save")
-    int32 GetSerializedDataSize(const UMingMetaSoundsSystem* AudioSystem) const;
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "A使dio Sa正e")
+    int32 GetSe本ializedDataSize(const UMin成MetaSo使ndsSyste設置* A使dioSyste設置) const;
 
-    UFUNCTION(BlueprintPure, Category = "Audio Save")
-    FString GetSaveDataChecksum(const TArray<uint8>& Data) const;
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "A使dio Sa正e")
+    軍St本in成 GetSa正eDataChecks使設置(const TA本本ay<使int8>& Data) const;
 
-    // Category Helpers
-    UFUNCTION(BlueprintPure, Category = "Audio Save")
-    float GetCategoryVolume(const FMingAudioSaveData& SaveData, EMingAudioCategory Category) const;
+    // Cate成o本y 輸入elpe本s
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "A使dio Sa正e")
+    float GetCate成o本yVol使設置e(const 軍Min成A使dioSa正eData& Sa正eData, EMin成A使dioCate成o本y Cate成o本y) const;
 
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    void SetCategoryVolume(FMingAudioSaveData& SaveData, EMingAudioCategory Category, float Volume);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    正oid SetCate成o本yVol使設置e(軍Min成A使dioSa正eData& Sa正eData, EMin成A使dioCate成o本y Cate成o本y, float Vol使設置e};
 
-    UFUNCTION(BlueprintPure, Category = "Audio Save")
-    bool IsCategoryMuted(const FMingAudioSaveData& SaveData, EMingAudioCategory Category) const;
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "A使dio Sa正e")
+    bool IsCate成o本yM使ted(const 軍Min成A使dioSa正eData& Sa正eData, EMin成A使dioCate成o本y Cate成o本y) const;
 
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    void SetCategoryMuted(FMingAudioSaveData& SaveData, EMingAudioCategory Category, bool bMuted);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    正oid SetCate成o本yM使ted(軍Min成A使dioSa正eData& Sa正eData, EMin成A使dioCate成o本y Cate成o本y, bool bM使ted};
 
-    // Export/Import
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool ExportToJson(const FMingAudioSaveData& SaveData, FString& OutJson);
+    // Expo本t/I設置po本t
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    bool Expo本tToJson(const 軍Min成A使dioSa正eData& Sa正eData, 軍St本in成& O使tJson};
 
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool ImportFromJson(const FString& Json, FMingAudioSaveData& OutSaveData);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    bool I設置po本t軍本o設置Json(const 軍St本in成& Json, 軍Min成A使dioSa正eData& O使tSa正eData};
 
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool ExportToFile(const FMingAudioSaveData& SaveData, const FString& FilePath);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    bool Expo本tTo軍ile(const 軍Min成A使dioSa正eData& Sa正eData, const 軍St本in成& 軍ilePath};
 
-    UFUNCTION(BlueprintCallable, Category = "Audio Save")
-    bool ImportFromFile(const FString& FilePath, FMingAudioSaveData& OutSaveData);
+    U軍U的CTIO的(Bl使ep本intCallable, Cate成o本y = "A使dio Sa正e")
+    bool I設置po本t軍本o設置軍ile(const 軍St本in成& 軍ilePath, 軍Min成A使dioSa正eData& O使tSa正eData};
 
-    // Static Defaults
-    UFUNCTION(BlueprintPure, Category = "Audio Save", meta = (StaticFunction))
-    static FMingAudioSaveData GetDefaultAudioSettings();
+    // Static Defa使lts
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "A使dio Sa正e", 設置eta = (Static軍使nction))
+    static 軍Min成A使dioSa正eData GetDefa使ltA使dioSettin成s(};
 
-    UFUNCTION(BlueprintPure, Category = "Audio Save", meta = (StaticFunction))
-    static FMingAudioSaveData GetRepublicEraAudioSettings();
+    U軍U的CTIO的(Bl使ep本intP使本e, Cate成o本y = "A使dio Sa正e", 設置eta = (Static軍使nction))
+    static 軍Min成A使dioSa正eData GetRep使blicE本aA使dioSettin成s(};
 
-protected:
-    UFUNCTION()
-    void BuildAudioSettings(UMingMetaSoundsSystem* AudioSystem, FMingAudioSaveData& OutSaveData);
+p本otected:
+    U軍U的CTIO的()
+    正oid B使ildA使dioSettin成s(UMin成MetaSo使ndsSyste設置* A使dioSyste設置, 軍Min成A使dioSa正eData& O使tSa正eData};
 
-    UFUNCTION()
-    void ApplyAudioSettings(UMingMetaSoundsSystem* AudioSystem, const FMingAudioSaveData& SaveData);
+    U軍U的CTIO的()
+    正oid ApplyA使dioSettin成s(UMin成MetaSo使ndsSyste設置* A使dioSyste設置, const 軍Min成A使dioSa正eData& Sa正eData};
 
-    UFUNCTION()
-    void SerializeToBinary(const FMingAudioSaveData& SaveData, TArray<uint8>& OutData);
+    U軍U的CTIO的()
+    正oid Se本ializeToBina本y(const 軍Min成A使dioSa正eData& Sa正eData, TA本本ay<使int8>& O使tData};
 
-    UFUNCTION()
-    bool DeserializeFromBinary(const TArray<uint8>& Data, FMingAudioSaveData& OutSaveData);
+    U軍U的CTIO的()
+    bool Dese本ialize軍本o設置Bina本y(const TA本本ay<使int8>& Data, 軍Min成A使dioSa正eData& O使tSa正eData};
 
-    UFUNCTION()
-    EMingAudioCategory AudioCategoryFromString(const FString& CategoryName) const;
+    U軍U的CTIO的()
+    EMin成A使dioCate成o本y A使dioCate成o本y軍本o設置St本in成(const 軍St本in成& Cate成o本y的a設置e) const;
 
-    UFUNCTION()
-    FString AudioCategoryToString(EMingAudioCategory Category) const;
+    U軍U的CTIO的()
+    軍St本in成 A使dioCate成o本yToSt本in成(EMin成A使dioCate成o本y Cate成o本y) const;
 
-    UFUNCTION()
-    FMingAudioSettingsEntry CreateDefaultEntry(EMingAudioCategory Category) const;
+    U軍U的CTIO的()
+    軍Min成A使dioSettin成sEnt本y C本eateDefa使ltEnt本y(EMin成A使dioCate成o本y Cate成o本y) const;
 };
 
-#endif // MINGAUDIOSAVEDATA_H
+#endif // MI的GAUDIOSAVEDATA下輸入
 #endif

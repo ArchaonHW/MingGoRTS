@@ -1,0 +1,73 @@
+﻿UE5.7 API摮虫??亙?
+==================
+???園: 2026-03-23 14:01:33
+摮虫?API?圈?: 22
+
+API: UWorld
+?膩: Represents a game world containing actors, levels, and manages the simulation of that world.
+
+API: UMaterialInstanceDynamic
+?膩: Runtime material instance that can modify material parameters dynamically.
+
+API: UGameInstance
+?膩: A game instance that persists across level transitions and manages game-wide state.
+
+API: UEnhancedInputComponent
+?膩: Component for handling enhanced input with context-aware actions.
+
+API: FStreamingManager
+?膩: Manager for handling asset streaming and level streaming.
+
+API: UBehaviorTree
+?膩: Asset that defines AI behavior using a tree of nodes.
+
+API: AActorComponent
+?膩: Base class for components that can be attached to actors to add functionality.
+
+API: IStatsThread
+?膩: Interface for accessing the stats thread system.
+
+API: FPrimitiveSceneProxy
+?膩: Proxy class for rendering primitives in the scene rendering system.
+
+API: FDelegate
+?膩: Template for creating delegates that can bind to member functions or static functions.
+
+API: UEngine
+?膩: The main engine class that manages core engine systems and provides access to global engine functionality.
+
+API: APlayerController
+?膩: Controls a player's pawn and handles player input and camera.
+
+API: UMaterial
+?膩: Asset that defines the appearance of surfaces through properties and expressions.
+
+API: AActor
+?膩: Base class for all objects that can be placed or spawned in a level.
+
+API: UBlackboardComponent
+?膩: Component that stores data used by behavior trees for AI decision making.
+
+API: UEnvQuerySystem
+?膩: System that handles environment queries for AI to find locations or objects.
+
+API: FSceneView
+?膩: Represents a view of the scene for rendering.
+
+API: FStatGroup
+?膩: Declaration for grouping performance statistics.
+
+API: UObject
+?膩: Base class for most objects in Unreal Engine, providing reflection, garbage collection, and serialization.
+
+API: APawn
+?膩: Base class for actors that can be controlled by players or AI.
+
+API: UGameModeBase
+?膩: Base class for game modes that define the rules and behavior of the game.
+
+API: ANavigationData
+?膩: Base class for navigation data used by AI for pathfinding.
+
+摮虫?摰?嚗n==================
+

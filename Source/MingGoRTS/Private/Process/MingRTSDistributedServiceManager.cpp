@@ -1,311 +1,311 @@
-// Copyright (c) 2026 MingGoRTS. All rights reserved.
-// Distributed Service Manager - Phase 3 Advanced Features Implementation
+// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
+// Dist本ib使ted Se本正ice Mana成e本 - Phase 3 Ad正anced 軍eat使本es I設置ple設置entation
 
-#include "Process/MingRTSDistributedServiceManager.h"
-#include "HAL/PlatformFilemanager.h"
-#include "Misc/DateTime.h"
-#include "Misc/Guid.h"
-#include "Engine/Engine.h"
+#incl使de "P本ocess/Min成RTSDist本ib使tedSe本正iceMana成e本.h"
+#incl使de "輸入AL/Platfo本設置軍ile設置ana成e本.h"
+#incl使de "Misc/DateTi設置e.h"
+#incl使de "Misc/G使id.h"
+#incl使de "En成ine/En成ine.h"
 
-UMingRTSDistributedServiceManager::UMingRTSDistributedServiceManager()
+UMin成RTSDist本ib使tedSe本正iceMana成e本::UMin成RTSDist本ib使tedSe本正iceMana成e本()
 {
-    InitializeDistributedManager();
+    InitializeDist本ib使tedMana成e本();
 }
 
-void UMingRTSDistributedServiceManager::InitializeDistributedManager()
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::InitializeDist本ib使tedMana成e本()
 {
-    // Create component managers
-    VersionManager = NewObject<UMingRTSServiceVersionManager>();
-    LoadBalancer = NewObject<UMingRTSAdvancedLoadBalancer>();
-    GovernanceManager = NewObject<UMingRTSServiceGovernance>();
+    // C本eate co設置ponent 設置ana成e本s
+    Ve本sionMana成e本 = 的ewOb大ect<UMin成RTSSe本正iceVe本sionMana成e本>();
+    LoadBalance本 = 的ewOb大ect<UMin成RTSAd正ancedLoadBalance本>();
+    Go正e本nanceMana成e本 = 的ewOb大ect<UMin成RTSSe本正iceGo正e本nance>();
 
-    bHealthMonitoringEnabled = false;
+    b輸入ealthMonito本in成Enabled = false;
 
-    // Integrate components
-    IntegrateWithVersionManager();
-    IntegrateWithLoadBalancer();
-    IntegrateWithGovernanceManager();
+    // Inte成本ate co設置ponents
+    Inte成本ate基本ithVe本sionMana成e本();
+    Inte成本ate基本ithLoadBalance本();
+    Inte成本ate基本ithGo正e本nanceMana成e本();
 
-    UE_LOG(LogTemp, Log, TEXT("Distributed Service Manager initialized with Phase 3 advanced features"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Dist本ib使ted Se本正ice Mana成e本 initialized with Phase 3 ad正anced feat使本es"));
 }
 
-FString UMingRTSDistributedServiceManager::RegisterService(const FDistributedServiceConfig& ServiceConfig)
+軍St本in成 UMin成RTSDist本ib使tedSe本正iceMana成e本::Re成iste本Se本正ice(const 軍Dist本ib使tedSe本正iceConfi成& Se本正iceConfi成)
 {
-    if (ServiceConfig.ServiceID.IsEmpty())
+    if (Se本正iceConfi成.Se本正iceID.IsE設置pty())
     {
-        FDistributedServiceConfig NewConfig = ServiceConfig;
-        NewConfig.ServiceID = GenerateServiceID();
+        軍Dist本ib使tedSe本正iceConfi成 的ewConfi成 = Se本正iceConfi成;
+        的ewConfi成.Se本正iceID = Gene本ateSe本正iceID();
         
-        ServiceConfigs.Add(NewConfig.ServiceID, NewConfig);
-        ServiceStates.Add(NewConfig.ServiceID, EDistributedServiceState::Initializing);
-        ServiceInstanceIndex.Add(NewConfig.ServiceID, TArray<FString>());
+        Se本正iceConfi成s.Add(的ewConfi成.Se本正iceID, 的ewConfi成);
+        Se本正iceStates.Add(的ewConfi成.Se本正iceID, EDist本ib使tedSe本正iceState::Initializin成);
+        Se本正iceInstanceIndex.Add(的ewConfi成.Se本正iceID, TA本本ay<軍St本in成>());
         
-        UE_LOG(LogTemp, Log, TEXT("Registered distributed service: %s (%s)"), 
-            *NewConfig.ServiceID, *NewConfig.ServiceName);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Re成iste本ed dist本ib使ted se本正ice: %s (%s)"), 
+            *的ewConfi成.Se本正iceID, *的ewConfi成.Se本正ice的a設置e);
         
-        return NewConfig.ServiceID;
+        本et使本n 的ewConfi成.Se本正iceID;
     }
     else
     {
-        ServiceConfigs.Add(ServiceConfig.ServiceID, ServiceConfig);
-        ServiceStates.Add(ServiceConfig.ServiceID, EDistributedServiceState::Initializing);
-        ServiceInstanceIndex.Add(ServiceConfig.ServiceID, TArray<FString>());
+        Se本正iceConfi成s.Add(Se本正iceConfi成.Se本正iceID, Se本正iceConfi成);
+        Se本正iceStates.Add(Se本正iceConfi成.Se本正iceID, EDist本ib使tedSe本正iceState::Initializin成);
+        Se本正iceInstanceIndex.Add(Se本正iceConfi成.Se本正iceID, TA本本ay<軍St本in成>());
         
-        UE_LOG(LogTemp, Log, TEXT("Registered distributed service: %s (%s)"), 
-            *ServiceConfig.ServiceID, *ServiceConfig.ServiceName);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Re成iste本ed dist本ib使ted se本正ice: %s (%s)"), 
+            *Se本正iceConfi成.Se本正iceID, *Se本正iceConfi成.Se本正ice的a設置e);
         
-        return ServiceConfig.ServiceID;
+        本et使本n Se本正iceConfi成.Se本正iceID;
     }
 }
 
-bool UMingRTSDistributedServiceManager::UnregisterService(const FString& ServiceID)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::Un本e成iste本Se本正ice(const 軍St本in成& Se本正iceID)
 {
-    // Stop all instances first
-    TArray<FString> Instances = GetServiceInstances(ServiceID);
-    for (const FString& InstanceID : Instances)
+    // Stop all instances fi本st
+    TA本本ay<軍St本in成> Instances = GetSe本正iceInstances(Se本正iceID);
+    fo本 (const 軍St本in成& InstanceID : Instances)
     {
-        TerminateServiceInstance(InstanceID);
+        Te本設置inateSe本正iceInstance(InstanceID);
     }
     
-    // Remove service
-    ServiceConfigs.Remove(ServiceID);
-    ServiceStates.Remove(ServiceID);
-    ServiceInstanceIndex.Remove(ServiceID);
-    LastHealthChecks.Remove(ServiceID);
+    // Re設置o正e se本正ice
+    Se本正iceConfi成s.Re設置o正e(Se本正iceID);
+    Se本正iceStates.Re設置o正e(Se本正iceID);
+    Se本正iceInstanceIndex.Re設置o正e(Se本正iceID);
+    Last輸入ealthChecks.Re設置o正e(Se本正iceID);
     
-    UpdateDistributedMetrics();
+    UpdateDist本ib使tedMet本ics();
     
-    UE_LOG(LogTemp, Log, TEXT("Unregistered distributed service: %s"), *ServiceID);
-    return true;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Un本e成iste本ed dist本ib使ted se本正ice: %s"), *Se本正iceID);
+    本et使本n t本使e;
 }
 
-bool UMingRTSDistributedServiceManager::StartService(const FString& ServiceID)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::Sta本tSe本正ice(const 軍St本in成& Se本正iceID)
 {
-    if (FDistributedServiceConfig* Config = ServiceConfigs.Find(ServiceID))
+    if (軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
     {
-        UpdateServiceState(ServiceID, EDistributedServiceState::Running);
+        UpdateSe本正iceState(Se本正iceID, EDist本ib使tedSe本正iceState::R使nnin成);
         
-        // Create initial instances
-        for (int32 i = 0; i < Config->DesiredInstances; i++)
+        // C本eate initial instances
+        fo本 (int32 i = 0; i < Confi成->Desi本edInstances; i++)
         {
-            CreateServiceInstance(ServiceID);
+            C本eateSe本正iceInstance(Se本正iceID);
         }
         
-        UE_LOG(LogTemp, Log, TEXT("Started distributed service: %s"), *ServiceID);
-        return true;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本ted dist本ib使ted se本正ice: %s"), *Se本正iceID);
+        本et使本n t本使e;
     }
     
-    return false;
+    本et使本n false;
 }
 
-bool UMingRTSDistributedServiceManager::StopService(const FString& ServiceID)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::StopSe本正ice(const 軍St本in成& Se本正iceID)
 {
-    UpdateServiceState(ServiceID, EDistributedServiceState::ShuttingDown);
+    UpdateSe本正iceState(Se本正iceID, EDist本ib使tedSe本正iceState::Sh使ttin成Down);
     
-    // Terminate all instances
-    TArray<FString> Instances = GetServiceInstances(ServiceID);
-    for (const FString& InstanceID : Instances)
+    // Te本設置inate all instances
+    TA本本ay<軍St本in成> Instances = GetSe本正iceInstances(Se本正iceID);
+    fo本 (const 軍St本in成& InstanceID : Instances)
     {
-        TerminateServiceInstance(InstanceID);
+        Te本設置inateSe本正iceInstance(InstanceID);
     }
     
-    UpdateServiceState(ServiceID, EDistributedServiceState::Shutdown);
+    UpdateSe本正iceState(Se本正iceID, EDist本ib使tedSe本正iceState::Sh使tdown);
     
-    UE_LOG(LogTemp, Log, TEXT("Stopped distributed service: %s"), *ServiceID);
-    return true;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Stopped dist本ib使ted se本正ice: %s"), *Se本正iceID);
+    本et使本n t本使e;
 }
 
-bool UMingRTSDistributedServiceManager::RestartService(const FString& ServiceID)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::Resta本tSe本正ice(const 軍St本in成& Se本正iceID)
 {
-    UE_LOG(LogTemp, Log, TEXT("Restarting distributed service: %s"), *ServiceID);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Resta本tin成 dist本ib使ted se本正ice: %s"), *Se本正iceID);
     
-    StopService(ServiceID);
-    FDateTime::Delay(FTimespan::FromSeconds(2.0)); // Brief delay
-    return StartService(ServiceID);
+    StopSe本正ice(Se本正iceID);
+    軍DateTi設置e::Delay(軍Ti設置espan::軍本o設置Seconds(2.0)); // B本ief delay
+    本et使本n Sta本tSe本正ice(Se本正iceID);
 }
 
-bool UMingRTSDistributedServiceManager::UpdateService(const FString& ServiceID, const FDistributedServiceConfig& NewConfig)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::UpdateSe本正ice(const 軍St本in成& Se本正iceID, const 軍Dist本ib使tedSe本正iceConfi成& 的ewConfi成)
 {
-    if (FDistributedServiceConfig* ExistingConfig = ServiceConfigs.Find(ServiceID))
+    if (軍Dist本ib使tedSe本正iceConfi成* Existin成Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
     {
-        int32 OldDesiredInstances = ExistingConfig->DesiredInstances;
-        *ExistingConfig = NewConfig;
-        ExistingConfig->ServiceID = ServiceID; // Preserve original ID
+        int32 OldDesi本edInstances = Existin成Confi成->Desi本edInstances;
+        *Existin成Confi成 = 的ewConfi成;
+        Existin成Confi成->Se本正iceID = Se本正iceID; // P本ese本正e o本i成inal ID
         
-        // Scale if desired instances changed
-        if (OldDesiredInstances != NewConfig.DesiredInstances)
+        // Scale if desi本ed instances chan成ed
+        if (OldDesi本edInstances != 的ewConfi成.Desi本edInstances)
         {
-            ScaleService(ServiceID, NewConfig.DesiredInstances);
+            ScaleSe本正ice(Se本正iceID, 的ewConfi成.Desi本edInstances);
         }
         
-        UE_LOG(LogTemp, Log, TEXT("Updated distributed service: %s"), *ServiceID);
-        return true;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Updated dist本ib使ted se本正ice: %s"), *Se本正iceID);
+        本et使本n t本使e;
     }
     
-    return false;
+    本et使本n false;
 }
 
-FString UMingRTSDistributedServiceManager::CreateServiceInstance(const FString& ServiceID)
+軍St本in成 UMin成RTSDist本ib使tedSe本正iceMana成e本::C本eateSe本正iceInstance(const 軍St本in成& Se本正iceID)
 {
-    if (!ServiceConfigs.Contains(ServiceID))
+    if (!Se本正iceConfi成s.Contains(Se本正iceID))
     {
-        UE_LOG(LogTemp, Error, TEXT("Cannot create instance for unknown service: %s"), *ServiceID);
-        return FString();
+        UE下LOG(Lo成Te設置p, E本本o本, TEXT("Cannot c本eate instance fo本 使nknown se本正ice: %s"), *Se本正iceID);
+        本et使本n 軍St本in成();
     }
     
-    FServiceInstance NewInstance;
-    NewInstance.InstanceID = GenerateInstanceID();
-    NewInstance.ServiceID = ServiceID;
-    NewInstance.IPAddress = FString::Printf(TEXT("192.168.1.%d"), FMath::RandRange(100, 254));
-    NewInstance.Port = 8080 + FMath::RandRange(0, 99);
-    NewInstance.State = EDistributedServiceState::Initializing;
-    NewInstance.StartTime = FDateTime::Now();
-    NewInstance.bIsHealthy = false;
+    軍Se本正iceInstance 的ewInstance;
+    的ewInstance.InstanceID = Gene本ateInstanceID();
+    的ewInstance.Se本正iceID = Se本正iceID;
+    的ewInstance.IPAdd本ess = 軍St本in成::P本intf(TEXT("192.168.1.%d"), 軍Math::RandRan成e(100, 254));
+    的ewInstance.Po本t = 8080 + 軍Math::RandRan成e(0, 99);
+    的ewInstance.State = EDist本ib使tedSe本正iceState::Initializin成;
+    的ewInstance.Sta本tTi設置e = 軍DateTi設置e::的ow();
+    的ewInstance.bIs輸入ealthy = false;
     
-    // Store instance
-    ServiceInstances.Add(NewInstance.InstanceID, NewInstance);
+    // Sto本e instance
+    Se本正iceInstances.Add(的ewInstance.InstanceID, 的ewInstance);
     
-    // Update service index
-    if (TArray<FString>* InstanceList = ServiceInstanceIndex.Find(ServiceID))
+    // Update se本正ice index
+    if (TA本本ay<軍St本in成>* InstanceList = Se本正iceInstanceIndex.軍ind(Se本正iceID))
     {
-        InstanceList->Add(NewInstance.InstanceID);
+        InstanceList->Add(的ewInstance.InstanceID);
     }
     
-    // Simulate instance startup
-    UpdateInstanceState(NewInstance.InstanceID, EDistributedServiceState::Running);
-    NewInstance.bIsHealthy = true;
-    NewInstance.LastHealthCheck = FDateTime::Now();
-    ServiceInstances.Add(NewInstance.InstanceID, NewInstance);
+    // Si設置使late instance sta本t使p
+    UpdateInstanceState(的ewInstance.InstanceID, EDist本ib使tedSe本正iceState::R使nnin成);
+    的ewInstance.bIs輸入ealthy = t本使e;
+    的ewInstance.Last輸入ealthCheck = 軍DateTi設置e::的ow();
+    Se本正iceInstances.Add(的ewInstance.InstanceID, 的ewInstance);
     
-    // Add to load balancer
-    if (LoadBalancer)
+    // Add to load balance本
+    if (LoadBalance本)
     {
-        LoadBalancer->AddServerNode(NewInstance.IPAddress, NewInstance.Port, 1);
+        LoadBalance本->AddSe本正e本的ode(的ewInstance.IPAdd本ess, 的ewInstance.Po本t, 1);
     }
     
-    // Enforce governance
-    if (GovernanceManager)
+    // Enfo本ce 成o正e本nance
+    if (Go正e本nanceMana成e本)
     {
-        GovernanceManager->EnforceServiceGovernance(ServiceID);
+        Go正e本nanceMana成e本->Enfo本ceSe本正iceGo正e本nance(Se本正iceID);
     }
     
-    UE_LOG(LogTemp, Log, TEXT("Created service instance: %s for service %s (%s:%d)"), 
-        *NewInstance.InstanceID, *ServiceID, *NewInstance.IPAddress, NewInstance.Port);
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated se本正ice instance: %s fo本 se本正ice %s (%s:%d)"), 
+        *的ewInstance.InstanceID, *Se本正iceID, *的ewInstance.IPAdd本ess, 的ewInstance.Po本t);
     
-    return NewInstance.InstanceID;
+    本et使本n 的ewInstance.InstanceID;
 }
 
-bool UMingRTSDistributedServiceManager::TerminateServiceInstance(const FString& InstanceID)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::Te本設置inateSe本正iceInstance(const 軍St本in成& InstanceID)
 {
-    if (FServiceInstance* Instance = ServiceInstances.Find(InstanceID))
+    if (軍Se本正iceInstance* Instance = Se本正iceInstances.軍ind(InstanceID))
     {
-        UpdateInstanceState(InstanceID, EDistributedServiceState::ShuttingDown);
+        UpdateInstanceState(InstanceID, EDist本ib使tedSe本正iceState::Sh使ttin成Down);
         
-        // Remove from load balancer
-        if (LoadBalancer)
+        // Re設置o正e f本o設置 load balance本
+        if (LoadBalance本)
         {
-            // Find and remove the node from load balancer
-            TArray<FServerNode> Nodes = LoadBalancer->GetAllServerNodes();
-            for (const FServerNode& Node : Nodes)
+            // 軍ind and 本e設置o正e the node f本o設置 load balance本
+            TA本本ay<軍Se本正e本的ode> 的odes = LoadBalance本->GetAllSe本正e本的odes();
+            fo本 (const 軍Se本正e本的ode& 的ode : 的odes)
             {
-                if (Node.IPAddress == Instance->IPAddress && Node.Port == Instance->Port)
+                if (的ode.IPAdd本ess == Instance->IPAdd本ess && 的ode.Po本t == Instance->Po本t)
                 {
-                    LoadBalancer->RemoveServerNode(Node.NodeID);
-                    break;
+                    LoadBalance本->Re設置o正eSe本正e本的ode(的ode.的odeID);
+                    b本eak;
                 }
             }
         }
         
-        // Remove from service index
-        if (TArray<FString>* InstanceList = ServiceInstanceIndex.Find(Instance->ServiceID))
+        // Re設置o正e f本o設置 se本正ice index
+        if (TA本本ay<軍St本in成>* InstanceList = Se本正iceInstanceIndex.軍ind(Instance->Se本正iceID))
         {
-            InstanceList->Remove(InstanceID);
+            InstanceList->Re設置o正e(InstanceID);
         }
         
-        // Remove instance
-        ServiceInstances.Remove(InstanceID);
+        // Re設置o正e instance
+        Se本正iceInstances.Re設置o正e(InstanceID);
         
-        UE_LOG(LogTemp, Log, TEXT("Terminated service instance: %s"), *InstanceID);
-        return true;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Te本設置inated se本正ice instance: %s"), *InstanceID);
+        本et使本n t本使e;
     }
     
-    return false;
+    本et使本n false;
 }
 
-bool UMingRTSDistributedServiceManager::ScaleService(const FString& ServiceID, int32 TargetInstances)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::ScaleSe本正ice(const 軍St本in成& Se本正iceID, int32 Ta本成etInstances)
 {
-    if (FDistributedServiceConfig* Config = ServiceConfigs.Find(ServiceID))
+    if (軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
     {
-        int32 OldInstanceCount = GetServiceInstances(ServiceID).Num();
-        int32 NewInstanceCount = FMath::Clamp(TargetInstances, Config->MinInstances, Config->MaxInstances);
+        int32 OldInstanceCo使nt = GetSe本正iceInstances(Se本正iceID).的使設置();
+        int32 的ewInstanceCo使nt = 軍Math::Cla設置p(Ta本成etInstances, Confi成->MinInstances, Confi成->MaxInstances);
         
-        if (NewInstanceCount > OldInstanceCount)
+        if (的ewInstanceCo使nt > OldInstanceCo使nt)
         {
-            // Scale up
-            for (int32 i = OldInstanceCount; i < NewInstanceCount; i++)
+            // Scale 使p
+            fo本 (int32 i = OldInstanceCo使nt; i < 的ewInstanceCo使nt; i++)
             {
-                CreateServiceInstance(ServiceID);
+                C本eateSe本正iceInstance(Se本正iceID);
             }
         }
-        else if (NewInstanceCount < OldInstanceCount)
+        else if (的ewInstanceCo使nt < OldInstanceCo使nt)
         {
             // Scale down
-            TArray<FString> Instances = GetServiceInstances(ServiceID);
-            for (int32 i = NewInstanceCount; i < Instances.Num(); i++)
+            TA本本ay<軍St本in成> Instances = GetSe本正iceInstances(Se本正iceID);
+            fo本 (int32 i = 的ewInstanceCo使nt; i < Instances.的使設置(); i++)
             {
-                TerminateServiceInstance(Instances[i]);
+                Te本設置inateSe本正iceInstance(Instances[i]);
             }
         }
         
-        Config->DesiredInstances = NewInstanceCount;
+        Confi成->Desi本edInstances = 的ewInstanceCo使nt;
         
-        OnServiceScaled.Broadcast(ServiceID, OldInstanceCount, NewInstanceCount);
-        UpdateDistributedMetrics();
+        OnSe本正iceScaled.B本oadcast(Se本正iceID, OldInstanceCo使nt, 的ewInstanceCo使nt);
+        UpdateDist本ib使tedMet本ics();
         
-        UE_LOG(LogTemp, Log, TEXT("Scaled service %s: %d -> %d instances"), *ServiceID, OldInstanceCount, NewInstanceCount);
-        return true;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Scaled se本正ice %s: %d -> %d instances"), *Se本正iceID, OldInstanceCo使nt, 的ewInstanceCo使nt);
+        本et使本n t本使e;
     }
     
-    return false;
+    本et使本n false;
 }
 
-bool UMingRTSDistributedServiceManager::EnableAutoScaling(const FString& ServiceID, EServiceScalingPolicy Policy)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::EnableA使toScalin成(const 軍St本in成& Se本正iceID, ESe本正iceScalin成Policy Policy)
 {
-    if (FDistributedServiceConfig* Config = ServiceConfigs.Find(ServiceID))
+    if (軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
     {
-        Config->ScalingPolicy = Policy;
-        UE_LOG(LogTemp, Log, TEXT("Enabled auto-scaling for service %s: %s"), 
-            *ServiceID, *StaticEnum<EServiceScalingPolicy>()->GetValueAsString(Policy));
-        return true;
+        Confi成->Scalin成Policy = Policy;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Enabled a使to-scalin成 fo本 se本正ice %s: %s"), 
+            *Se本正iceID, *StaticEn使設置<ESe本正iceScalin成Policy>()->GetVal使eAsSt本in成(Policy));
+        本et使本n t本使e;
     }
-    return false;
+    本et使本n false;
 }
 
-bool UMingRTSDistributedServiceManager::DisableAutoScaling(const FString& ServiceID)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::DisableA使toScalin成(const 軍St本in成& Se本正iceID)
 {
-    return EnableAutoScaling(ServiceID, EServiceScalingPolicy::Manual);
+    本et使本n EnableA使toScalin成(Se本正iceID, ESe本正iceScalin成Policy::Man使al);
 }
 
-FString UMingRTSDistributedServiceManager::DiscoverService(const FString& ServiceType)
+軍St本in成 UMin成RTSDist本ib使tedSe本正iceMana成e本::Disco正e本Se本正ice(const 軍St本in成& Se本正iceType)
 {
-    // Find service by type
-    for (const auto& ConfigPair : ServiceConfigs)
+    // 軍ind se本正ice by type
+    fo本 (const a使to& Confi成Pai本 : Se本正iceConfi成s)
     {
-        if (ConfigPair.Value.ServiceType == ServiceType)
+        if (Confi成Pai本.Val使e.Se本正iceType == Se本正iceType)
         {
-            const FString& ServiceID = ConfigPair.Key;
-            TArray<FString> Instances = GetServiceInstances(ServiceID);
+            const 軍St本in成& Se本正iceID = Confi成Pai本.Key;
+            TA本本ay<軍St本in成> Instances = GetSe本正iceInstances(Se本正iceID);
             
-            if (Instances.Num() > 0)
+            if (Instances.的使設置() > 0)
             {
-                // Return a healthy instance
-                for (const FString& InstanceID : Instances)
+                // Ret使本n a healthy instance
+                fo本 (const 軍St本in成& InstanceID : Instances)
                 {
-                    if (const FServiceInstance* Instance = ServiceInstances.Find(InstanceID))
+                    if (const 軍Se本正iceInstance* Instance = Se本正iceInstances.軍ind(InstanceID))
                     {
-                        if (Instance->bIsHealthy && Instance->State == EDistributedServiceState::Running)
+                        if (Instance->bIs輸入ealthy && Instance->State == EDist本ib使tedSe本正iceState::R使nnin成)
                         {
-                            return InstanceID;
+                            本et使本n InstanceID;
                         }
                     }
                 }
@@ -313,606 +313,606 @@ FString UMingRTSDistributedServiceManager::DiscoverService(const FString& Servic
         }
     }
     
-    return FString();
+    本et使本n 軍St本in成();
 }
 
-TArray<FString> UMingRTSDistributedServiceManager::GetServiceInstances(const FString& ServiceID) const
+TA本本ay<軍St本in成> UMin成RTSDist本ib使tedSe本正iceMana成e本::GetSe本正iceInstances(const 軍St本in成& Se本正iceID) const
 {
-    if (const TArray<FString>* InstanceList = ServiceInstanceIndex.Find(ServiceID))
+    if (const TA本本ay<軍St本in成>* InstanceList = Se本正iceInstanceIndex.軍ind(Se本正iceID))
     {
-        return *InstanceList;
+        本et使本n *InstanceList;
     }
-    return TArray<FString>();
+    本et使本n TA本本ay<軍St本in成>();
 }
 
-FString UMingRTSDistributedServiceManager::RouteRequest(const FString& ServiceType, const FString& RequestData)
+軍St本in成 UMin成RTSDist本ib使tedSe本正iceMana成e本::Ro使teReq使est(const 軍St本in成& Se本正iceType, const 軍St本in成& Req使estData)
 {
-    FString InstanceID = DiscoverService(ServiceType);
+    軍St本in成 InstanceID = Disco正e本Se本正ice(Se本正iceType);
     
-    if (!InstanceID.IsEmpty())
+    if (!InstanceID.IsE設置pty())
     {
-        if (const FServiceInstance* Instance = ServiceInstances.Find(InstanceID))
+        if (const 軍Se本正iceInstance* Instance = Se本正iceInstances.軍ind(InstanceID))
         {
-            // Update request metrics
-            if (FServiceInstance* MutableInstance = ServiceInstances.Find(InstanceID))
+            // Update 本eq使est 設置et本ics
+            if (軍Se本正iceInstance* M使tableInstance = Se本正iceInstances.軍ind(InstanceID))
             {
-                MutableInstance->RequestRate += 1.0f;
+                M使tableInstance->Req使estRate += 1.0f;
             }
             
-            // Route through load balancer if available
-            if (LoadBalancer)
+            // Ro使te th本o使成h load balance本 if a正ailable
+            if (LoadBalance本)
             {
-                FString NodeID = LoadBalancer->RouteRequest(TEXT("client"), ServiceType, RequestData);
-                if (!NodeID.IsEmpty())
+                軍St本in成 的odeID = LoadBalance本->Ro使teReq使est(TEXT("client"), Se本正iceType, Req使estData);
+                if (!的odeID.IsE設置pty())
                 {
-                    return NodeID;
+                    本et使本n 的odeID;
                 }
             }
             
-            return FString::Printf(TEXT("%s:%d"), *Instance->IPAddress, Instance->Port);
+            本et使本n 軍St本in成::P本intf(TEXT("%s:%d"), *Instance->IPAdd本ess, Instance->Po本t);
         }
     }
     
-    UE_LOG(LogTemp, Warning, TEXT("Failed to route request for service type: %s"), *ServiceType);
-    return FString();
+    UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("軍ailed to 本o使te 本eq使est fo本 se本正ice type: %s"), *Se本正iceType);
+    本et使本n 軍St本in成();
 }
 
-void UMingRTSDistributedServiceManager::StartHealthMonitoring()
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::Sta本t輸入ealthMonito本in成()
 {
-    bHealthMonitoringEnabled = true;
+    b輸入ealthMonito本in成Enabled = t本使e;
     
-    // Start health checks for all services
-    for (const auto& ConfigPair : ServiceConfigs)
+    // Sta本t health checks fo本 all se本正ices
+    fo本 (const a使to& Confi成Pai本 : Se本正iceConfi成s)
     {
-        LastHealthChecks.Add(ConfigPair.Key, FDateTime::Now());
+        Last輸入ealthChecks.Add(Confi成Pai本.Key, 軍DateTi設置e::的ow());
     }
     
-    UE_LOG(LogTemp, Log, TEXT("Started health monitoring for all services"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本ted health 設置onito本in成 fo本 all se本正ices"));
 }
 
-void UMingRTSDistributedServiceManager::StopHealthMonitoring()
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::Stop輸入ealthMonito本in成()
 {
-    bHealthMonitoringEnabled = false;
-    UE_LOG(LogTemp, Log, TEXT("Stopped health monitoring"));
+    b輸入ealthMonito本in成Enabled = false;
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Stopped health 設置onito本in成"));
 }
 
-void UMingRTSDistributedServiceManager::PerformHealthCheck(const FString& ServiceID)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::Pe本fo本設置輸入ealthCheck(const 軍St本in成& Se本正iceID)
 {
-    TArray<FString> Instances = GetServiceInstances(ServiceID);
-    bool bServiceHealthy = false;
+    TA本本ay<軍St本in成> Instances = GetSe本正iceInstances(Se本正iceID);
+    bool bSe本正ice輸入ealthy = false;
     
-    for (const FString& InstanceID : Instances)
+    fo本 (const 軍St本in成& InstanceID : Instances)
     {
-        if (FServiceInstance* Instance = ServiceInstances.Find(InstanceID))
+        if (軍Se本正iceInstance* Instance = Se本正iceInstances.軍ind(InstanceID))
         {
-            // Simulate health check
-            bool bInstanceHealthy = FMath::RandBool() || Instance->State == EDistributedServiceState::Running;
+            // Si設置使late health check
+            bool bInstance輸入ealthy = 軍Math::RandBool()  Instance->State == EDist本ib使tedSe本正iceState::R使nnin成;
             
-            if (bInstanceHealthy != Instance->bIsHealthy)
+            if (bInstance輸入ealthy != Instance->bIs輸入ealthy)
             {
-                Instance->bIsHealthy = bInstanceHealthy;
-                Instance->LastHealthCheck = FDateTime::Now();
+                Instance->bIs輸入ealthy = bInstance輸入ealthy;
+                Instance->Last輸入ealthCheck = 軍DateTi設置e::的ow();
                 
-                if (!bInstanceHealthy)
+                if (!bInstance輸入ealthy)
                 {
-                    HandleInstanceFailure(InstanceID);
+                    輸入andleInstance軍ail使本e(InstanceID);
                 }
             }
             
-            if (bInstanceHealthy)
+            if (bInstance輸入ealthy)
             {
-                bServiceHealthy = true;
+                bSe本正ice輸入ealthy = t本使e;
             }
             
-            // Update metrics
-            UpdateInstanceMetrics(InstanceID);
+            // Update 設置et本ics
+            UpdateInstanceMet本ics(InstanceID);
         }
     }
     
-    // Update service state based on health
-    if (!bServiceHealthy && GetServiceState(ServiceID) == EDistributedServiceState::Running)
+    // Update se本正ice state based on health
+    if (!bSe本正ice輸入ealthy && GetSe本正iceState(Se本正iceID) == EDist本ib使tedSe本正iceState::R使nnin成)
     {
-        HandleServiceFailure(ServiceID);
+        輸入andleSe本正ice軍ail使本e(Se本正iceID);
     }
     
-    LastHealthChecks.Add(ServiceID, FDateTime::Now());
+    Last輸入ealthChecks.Add(Se本正iceID, 軍DateTi設置e::的ow());
 }
 
-void UMingRTSDistributedServiceManager::PerformHealthCheckAll()
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::Pe本fo本設置輸入ealthCheckAll()
 {
-    for (const auto& ConfigPair : ServiceConfigs)
+    fo本 (const a使to& Confi成Pai本 : Se本正iceConfi成s)
     {
-        PerformHealthCheck(ConfigPair.Key);
+        Pe本fo本設置輸入ealthCheck(Confi成Pai本.Key);
     }
     
-    UpdateDistributedMetrics();
+    UpdateDist本ib使tedMet本ics();
 }
 
-bool UMingRTSDistributedServiceManager::UpgradeService(const FString& ServiceID, const FString& TargetVersion)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::Up成本adeSe本正ice(const 軍St本in成& Se本正iceID, const 軍St本in成& Ta本成etVe本sion)
 {
-    if (VersionManager)
+    if (Ve本sionMana成e本)
     {
-        // Create deployment plan
-        FString PlanID = VersionManager->CreateDeploymentPlan(TargetVersion, EDeploymentStrategy::Rolling);
+        // C本eate deploy設置ent plan
+        軍St本in成 PlanID = Ve本sionMana成e本->C本eateDeploy設置entPlan(Ta本成etVe本sion, EDeploy設置entSt本ate成y::Rollin成);
         
-        // Execute deployment
-        bool bSuccess = VersionManager->ExecuteDeploymentPlan(PlanID);
+        // Exec使te deploy設置ent
+        bool bS使ccess = Ve本sionMana成e本->Exec使teDeploy設置entPlan(PlanID);
         
-        if (bSuccess)
+        if (bS使ccess)
         {
-            // Update service version
-            if (FDistributedServiceConfig* Config = ServiceConfigs.Find(ServiceID))
+            // Update se本正ice 正e本sion
+            if (軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
             {
-                Config->Version = TargetVersion;
+                Confi成->Ve本sion = Ta本成etVe本sion;
             }
             
-            UE_LOG(LogTemp, Log, TEXT("Successfully upgraded service %s to version %s"), *ServiceID, *TargetVersion);
-            return true;
+            UE下LOG(Lo成Te設置p, Lo成, TEXT("S使ccessf使lly 使p成本aded se本正ice %s to 正e本sion %s"), *Se本正iceID, *Ta本成etVe本sion);
+            本et使本n t本使e;
         }
         else
         {
-            UE_LOG(LogTemp, Error, TEXT("Failed to upgrade service %s to version %s"), *ServiceID, *TargetVersion);
-            return false;
+            UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to 使p成本ade se本正ice %s to 正e本sion %s"), *Se本正iceID, *Ta本成etVe本sion);
+            本et使本n false;
         }
     }
     
-    return false;
+    本et使本n false;
 }
 
-bool UMingRTSDistributedServiceManager::RollbackService(const FString& ServiceID, const FString& TargetVersion)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::RollbackSe本正ice(const 軍St本in成& Se本正iceID, const 軍St本in成& Ta本成etVe本sion)
 {
-    if (VersionManager)
+    if (Ve本sionMana成e本)
     {
-        // Find existing deployment plan or create rollback
-        FString PlanID = VersionManager->CreateDeploymentPlan(TargetVersion, EDeploymentStrategy::Rolling);
+        // 軍ind existin成 deploy設置ent plan o本 c本eate 本ollback
+        軍St本in成 PlanID = Ve本sionMana成e本->C本eateDeploy設置entPlan(Ta本成etVe本sion, EDeploy設置entSt本ate成y::Rollin成);
         
-        // Execute rollback
-        bool bSuccess = VersionManager->ExecuteDeploymentPlan(PlanID);
+        // Exec使te 本ollback
+        bool bS使ccess = Ve本sionMana成e本->Exec使teDeploy設置entPlan(PlanID);
         
-        if (bSuccess)
+        if (bS使ccess)
         {
-            // Update service version
-            if (FDistributedServiceConfig* Config = ServiceConfigs.Find(ServiceID))
+            // Update se本正ice 正e本sion
+            if (軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
             {
-                Config->Version = TargetVersion;
+                Confi成->Ve本sion = Ta本成etVe本sion;
             }
             
-            UE_LOG(LogTemp, Log, TEXT("Successfully rolled back service %s to version %s"), *ServiceID, *TargetVersion);
-            return true;
+            UE下LOG(Lo成Te設置p, Lo成, TEXT("S使ccessf使lly 本olled back se本正ice %s to 正e本sion %s"), *Se本正iceID, *Ta本成etVe本sion);
+            本et使本n t本使e;
         }
         else
         {
-            UE_LOG(LogTemp, Error, TEXT("Failed to rollback service %s to version %s"), *ServiceID, *TargetVersion);
-            return false;
+            UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to 本ollback se本正ice %s to 正e本sion %s"), *Se本正iceID, *Ta本成etVe本sion);
+            本et使本n false;
         }
     }
     
-    return false;
+    本et使本n false;
 }
 
-FString UMingRTSDistributedServiceManager::GetServiceVersion(const FString& ServiceID) const
+軍St本in成 UMin成RTSDist本ib使tedSe本正iceMana成e本::GetSe本正iceVe本sion(const 軍St本in成& Se本正iceID) const
 {
-    if (const FDistributedServiceConfig* Config = ServiceConfigs.Find(ServiceID))
+    if (const 軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
     {
-        return Config->Version;
+        本et使本n Confi成->Ve本sion;
     }
-    return FString();
+    本et使本n 軍St本in成();
 }
 
-void UMingRTSDistributedServiceManager::ConfigureLoadBalancer(ELoadBalancingAlgorithm Algorithm)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::Confi成使本eLoadBalance本(ELoadBalancin成Al成o本ith設置 Al成o本ith設置)
 {
-    if (LoadBalancer)
+    if (LoadBalance本)
     {
-        LoadBalancer->SetLoadBalancingAlgorithm(Algorithm);
-        UE_LOG(LogTemp, Log, TEXT("Configured load balancer with algorithm: %s"), 
-            *StaticEnum<ELoadBalancingAlgorithm>()->GetValueAsString(Algorithm));
-    }
-}
-
-void UMingRTSDistributedServiceManager::AddLoadBalancerNode(const FString& IPAddress, int32 Port, int32 Weight)
-{
-    if (LoadBalancer)
-    {
-        FString NodeID = LoadBalancer->AddServerNode(IPAddress, Port, Weight);
-        UE_LOG(LogTemp, Log, TEXT("Added load balancer node: %s (%s:%d)"), *NodeID, *IPAddress, Port);
+        LoadBalance本->SetLoadBalancin成Al成o本ith設置(Al成o本ith設置);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Confi成使本ed load balance本 with al成o本ith設置: %s"), 
+            *StaticEn使設置<ELoadBalancin成Al成o本ith設置>()->GetVal使eAsSt本in成(Al成o本ith設置));
     }
 }
 
-void UMingRTSDistributedServiceManager::RemoveLoadBalancerNode(const FString& NodeID)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::AddLoadBalance本的ode(const 軍St本in成& IPAdd本ess, int32 Po本t, int32 基本ei成ht)
 {
-    if (LoadBalancer)
+    if (LoadBalance本)
     {
-        LoadBalancer->RemoveServerNode(NodeID);
-        UE_LOG(LogTemp, Log, TEXT("Removed load balancer node: %s"), *NodeID);
+        軍St本in成 的odeID = LoadBalance本->AddSe本正e本的ode(IPAdd本ess, Po本t, 基本ei成ht);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Added load balance本 node: %s (%s:%d)"), *的odeID, *IPAdd本ess, Po本t);
     }
 }
 
-bool UMingRTSDistributedServiceManager::EnforceServiceGovernance(const FString& ServiceID)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::Re設置o正eLoadBalance本的ode(const 軍St本in成& 的odeID)
 {
-    if (GovernanceManager)
+    if (LoadBalance本)
     {
-        return GovernanceManager->EvaluateServiceCompliance(ServiceID);
+        LoadBalance本->Re設置o正eSe本正e本的ode(的odeID);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Re設置o正ed load balance本 node: %s"), *的odeID);
     }
-    return false;
 }
 
-FServiceComplianceReport UMingRTSDistributedServiceManager::GetServiceComplianceReport(const FString& ServiceID) const
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::Enfo本ceSe本正iceGo正e本nance(const 軍St本in成& Se本正iceID)
 {
-    if (GovernanceManager)
+    if (Go正e本nanceMana成e本)
     {
-        return GovernanceManager->GenerateComplianceReport(ServiceID);
+        本et使本n Go正e本nanceMana成e本->E正al使ateSe本正iceCo設置pliance(Se本正iceID);
     }
-    return FServiceComplianceReport();
+    本et使本n false;
 }
 
-FServiceRiskAssessment UMingRTSDistributedServiceManager::GetServiceRiskAssessment(const FString& ServiceID) const
+軍Se本正iceCo設置plianceRepo本t UMin成RTSDist本ib使tedSe本正iceMana成e本::GetSe本正iceCo設置plianceRepo本t(const 軍St本in成& Se本正iceID) const
 {
-    if (GovernanceManager)
+    if (Go正e本nanceMana成e本)
     {
-        return GovernanceManager->AssessServiceRisk(ServiceID);
+        本et使本n Go正e本nanceMana成e本->Gene本ateCo設置plianceRepo本t(Se本正iceID);
     }
-    return FServiceRiskAssessment();
+    本et使本n 軍Se本正iceCo設置plianceRepo本t();
 }
 
-FDistributedServiceMetrics UMingRTSDistributedServiceManager::GetDistributedMetrics() const
+軍Se本正iceRiskAssess設置ent UMin成RTSDist本ib使tedSe本正iceMana成e本::GetSe本正iceRiskAssess設置ent(const 軍St本in成& Se本正iceID) const
 {
-    return DistributedMetrics;
-}
-
-void UMingRTSDistributedServiceManager::UpdateDistributedMetrics()
-{
-    UpdateDistributedMetricsInternal();
-    OnDistributedMetricsUpdated.Broadcast(DistributedMetrics);
-}
-
-TArray<FDistributedServiceConfig> UMingRTSDistributedServiceManager::GetAllServices() const
-{
-    TArray<FDistributedServiceConfig> Result;
-    ServiceConfigs.GenerateValueArray(Result);
-    return Result;
-}
-
-TArray<FServiceInstance> UMingRTSDistributedServiceManager::GetAllInstances() const
-{
-    TArray<FServiceInstance> Result;
-    ServiceInstances.GenerateValueArray(Result);
-    return Result;
-}
-
-EDistributedServiceState UMingRTSDistributedServiceManager::GetServiceState(const FString& ServiceID) const
-{
-    if (const EDistributedServiceState* State = ServiceStates.Find(ServiceID))
+    if (Go正e本nanceMana成e本)
     {
-        return *State;
+        本et使本n Go正e本nanceMana成e本->AssessSe本正iceRisk(Se本正iceID);
     }
-    return EDistributedServiceState::Failed;
+    本et使本n 軍Se本正iceRiskAssess設置ent();
 }
 
-bool UMingRTSDistributedServiceManager::SetServiceConfiguration(const FString& ServiceID, const TMap<FString, FString>& Configuration)
+軍Dist本ib使tedSe本正iceMet本ics UMin成RTSDist本ib使tedSe本正iceMana成e本::GetDist本ib使tedMet本ics() const
 {
-    if (FDistributedServiceConfig* Config = ServiceConfigs.Find(ServiceID))
+    本et使本n Dist本ib使tedMet本ics;
+}
+
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::UpdateDist本ib使tedMet本ics()
+{
+    UpdateDist本ib使tedMet本icsInte本nal();
+    OnDist本ib使tedMet本icsUpdated.B本oadcast(Dist本ib使tedMet本ics);
+}
+
+TA本本ay<軍Dist本ib使tedSe本正iceConfi成> UMin成RTSDist本ib使tedSe本正iceMana成e本::GetAllSe本正ices() const
+{
+    TA本本ay<軍Dist本ib使tedSe本正iceConfi成> Res使lt;
+    Se本正iceConfi成s.Gene本ateVal使eA本本ay(Res使lt);
+    本et使本n Res使lt;
+}
+
+TA本本ay<軍Se本正iceInstance> UMin成RTSDist本ib使tedSe本正iceMana成e本::GetAllInstances() const
+{
+    TA本本ay<軍Se本正iceInstance> Res使lt;
+    Se本正iceInstances.Gene本ateVal使eA本本ay(Res使lt);
+    本et使本n Res使lt;
+}
+
+EDist本ib使tedSe本正iceState UMin成RTSDist本ib使tedSe本正iceMana成e本::GetSe本正iceState(const 軍St本in成& Se本正iceID) const
+{
+    if (const EDist本ib使tedSe本正iceState* State = Se本正iceStates.軍ind(Se本正iceID))
     {
-        Config->Configuration = Configuration;
-        UE_LOG(LogTemp, Log, TEXT("Updated configuration for service: %s"), *ServiceID);
-        return true;
+        本et使本n *State;
     }
-    return false;
+    本et使本n EDist本ib使tedSe本正iceState::軍ailed;
 }
 
-TMap<FString, FString> UMingRTSDistributedServiceManager::GetServiceConfiguration(const FString& ServiceID) const
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::SetSe本正iceConfi成使本ation(const 軍St本in成& Se本正iceID, const TMap<軍St本in成, 軍St本in成>& Confi成使本ation)
 {
-    if (const FDistributedServiceConfig* Config = ServiceConfigs.Find(ServiceID))
+    if (軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
     {
-        return Config->Configuration;
+        Confi成->Confi成使本ation = Confi成使本ation;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Updated confi成使本ation fo本 se本正ice: %s"), *Se本正iceID);
+        本et使本n t本使e;
     }
-    return TMap<FString, FString>();
+    本et使本n false;
 }
 
-bool UMingRTSDistributedServiceManager::UpdateServiceEnvironment(const FString& ServiceID, const TMap<FString, FString>& Environment)
+TMap<軍St本in成, 軍St本in成> UMin成RTSDist本ib使tedSe本正iceMana成e本::GetSe本正iceConfi成使本ation(const 軍St本in成& Se本正iceID) const
 {
-    if (FDistributedServiceConfig* Config = ServiceConfigs.Find(ServiceID))
+    if (const 軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
     {
-        Config->Environment = Environment;
-        UE_LOG(LogTemp, Log, TEXT("Updated environment for service: %s"), *ServiceID);
-        return true;
+        本et使本n Confi成->Confi成使本ation;
     }
-    return false;
+    本et使本n TMap<軍St本in成, 軍St本in成>();
 }
 
-// Internal Methods
-FString UMingRTSDistributedServiceManager::GenerateServiceID() const
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::UpdateSe本正iceEn正i本on設置ent(const 軍St本in成& Se本正iceID, const TMap<軍St本in成, 軍St本in成>& En正i本on設置ent)
 {
-    return FString::Printf(TEXT("svc_%s"), *FGuid::NewGuid().ToString());
+    if (軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
+    {
+        Confi成->En正i本on設置ent = En正i本on設置ent;
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Updated en正i本on設置ent fo本 se本正ice: %s"), *Se本正iceID);
+        本et使本n t本使e;
+    }
+    本et使本n false;
 }
 
-FString UMingRTSDistributedServiceManager::GenerateInstanceID() const
+// Inte本nal Methods
+軍St本in成 UMin成RTSDist本ib使tedSe本正iceMana成e本::Gene本ateSe本正iceID() const
 {
-    return FString::Printf(TEXT("inst_%s"), *FGuid::NewGuid().ToString());
+    本et使本n 軍St本in成::P本intf(TEXT("s正c下%s"), *軍G使id::的ewG使id().ToSt本in成());
 }
 
-void UMingRTSDistributedServiceManager::UpdateServiceState(const FString& ServiceID, EDistributedServiceState NewState)
+軍St本in成 UMin成RTSDist本ib使tedSe本正iceMana成e本::Gene本ateInstanceID() const
 {
-    EDistributedServiceState OldState = GetServiceState(ServiceID);
-    ServiceStates.Add(ServiceID, NewState);
+    本et使本n 軍St本in成::P本intf(TEXT("inst下%s"), *軍G使id::的ewG使id().ToSt本in成());
+}
+
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::UpdateSe本正iceState(const 軍St本in成& Se本正iceID, EDist本ib使tedSe本正iceState 的ewState)
+{
+    EDist本ib使tedSe本正iceState OldState = GetSe本正iceState(Se本正iceID);
+    Se本正iceStates.Add(Se本正iceID, 的ewState);
     
-    if (OldState != NewState)
+    if (OldState != 的ewState)
     {
-        OnServiceStateChanged.Broadcast(ServiceID, NewState);
-        UE_LOG(LogTemp, Log, TEXT("Service state changed: %s %s -> %s"), 
-            *ServiceID, *StaticEnum<EDistributedServiceState>()->GetValueAsString(OldState), *StaticEnum<EDistributedServiceState>()->GetValueAsString(NewState));
+        OnSe本正iceStateChan成ed.B本oadcast(Se本正iceID, 的ewState);
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Se本正ice state chan成ed: %s %s -> %s"), 
+            *Se本正iceID, *StaticEn使設置<EDist本ib使tedSe本正iceState>()->GetVal使eAsSt本in成(OldState), *StaticEn使設置<EDist本ib使tedSe本正iceState>()->GetVal使eAsSt本in成(的ewState));
     }
 }
 
-void UMingRTSDistributedServiceManager::UpdateInstanceState(const FString& InstanceID, EDistributedServiceState NewState)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::UpdateInstanceState(const 軍St本in成& InstanceID, EDist本ib使tedSe本正iceState 的ewState)
 {
-    if (FServiceInstance* Instance = ServiceInstances.Find(InstanceID))
+    if (軍Se本正iceInstance* Instance = Se本正iceInstances.軍ind(InstanceID))
     {
-        EDistributedServiceState OldState = Instance->State;
-        Instance->State = NewState;
+        EDist本ib使tedSe本正iceState OldState = Instance->State;
+        Instance->State = 的ewState;
         
-        if (OldState != NewState)
+        if (OldState != 的ewState)
         {
-            OnInstanceStateChanged.Broadcast(InstanceID, NewState);
+            OnInstanceStateChan成ed.B本oadcast(InstanceID, 的ewState);
         }
     }
 }
 
-void UMingRTSDistributedServiceManager::PerformAutoScaling(const FString& ServiceID)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::Pe本fo本設置A使toScalin成(const 軍St本in成& Se本正iceID)
 {
-    if (FDistributedServiceConfig* Config = ServiceConfigs.Find(ServiceID))
+    if (軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
     {
-        if (Config->ScalingPolicy == EServiceScalingPolicy::AutoScale && CheckScalingConditions(ServiceID))
+        if (Confi成->Scalin成Policy == ESe本正iceScalin成Policy::A使toScale && CheckScalin成Conditions(Se本正iceID))
         {
-            TArray<FString> Instances = GetServiceInstances(ServiceID);
-            int32 CurrentInstanceCount = Instances.Num();
+            TA本本ay<軍St本in成> Instances = GetSe本正iceInstances(Se本正iceID);
+            int32 C使本本entInstanceCo使nt = Instances.的使設置();
             
-            // Calculate desired instances based on metrics
-            int32 DesiredInstances = CurrentInstanceCount;
+            // Calc使late desi本ed instances based on 設置et本ics
+            int32 Desi本edInstances = C使本本entInstanceCo使nt;
             
-            // Scale up if CPU or memory usage is high
-            float AverageCPU = 0.0f;
-            float AverageMemory = 0.0f;
-            float AverageRequestRate = 0.0f;
+            // Scale 使p if CPU o本 設置e設置o本y 使sa成e is hi成h
+            float A正e本a成eCPU = 0.0f;
+            float A正e本a成eMe設置o本y = 0.0f;
+            float A正e本a成eReq使estRate = 0.0f;
             
-            for (const FString& InstanceID : Instances)
+            fo本 (const 軍St本in成& InstanceID : Instances)
             {
-                if (const FServiceInstance* Instance = ServiceInstances.Find(InstanceID))
+                if (const 軍Se本正iceInstance* Instance = Se本正iceInstances.軍ind(InstanceID))
                 {
-                    AverageCPU += Instance->CPUUsage;
-                    AverageMemory += Instance->MemoryUsage;
-                    AverageRequestRate += Instance->RequestRate;
+                    A正e本a成eCPU += Instance->CPUUsa成e;
+                    A正e本a成eMe設置o本y += Instance->Me設置o本yUsa成e;
+                    A正e本a成eReq使estRate += Instance->Req使estRate;
                 }
             }
             
-            if (Instances.Num() > 0)
+            if (Instances.的使設置() > 0)
             {
-                AverageCPU /= Instances.Num();
-                AverageMemory /= Instances.Num();
-                AverageRequestRate /= Instances.Num();
+                A正e本a成eCPU /= Instances.的使設置();
+                A正e本a成eMe設置o本y /= Instances.的使設置();
+                A正e本a成eReq使estRate /= Instances.的使設置();
             }
             
-            // Scale up logic
-            if (AverageCPU > Config->CPUThreshold || AverageMemory > Config->MemoryThreshold || 
-                AverageRequestRate > Config->RequestRateThreshold)
+            // Scale 使p lo成ic
+            if (A正e本a成eCPU > Confi成->CPUTh本eshold  A正e本a成eMe設置o本y > Confi成->Me設置o本yTh本eshold  
+                A正e本a成eReq使estRate > Confi成->Req使estRateTh本eshold)
             {
-                DesiredInstances = FMath::Min(CurrentInstanceCount + 1, Config->MaxInstances);
+                Desi本edInstances = 軍Math::Min(C使本本entInstanceCo使nt + 1, Confi成->MaxInstances);
             }
-            // Scale down logic
-            else if (AverageCPU < Config->CPUThreshold * 0.5f && AverageMemory < Config->MemoryThreshold * 0.5f && 
-                     AverageRequestRate < Config->RequestRateThreshold * 0.5f)
+            // Scale down lo成ic
+            else if (A正e本a成eCPU < Confi成->CPUTh本eshold * 0.5f && A正e本a成eMe設置o本y < Confi成->Me設置o本yTh本eshold * 0.5f && 
+                     A正e本a成eReq使estRate < Confi成->Req使estRateTh本eshold * 0.5f)
             {
-                DesiredInstances = FMath::Max(CurrentInstanceCount - 1, Config->MinInstances);
+                Desi本edInstances = 軍Math::Max(C使本本entInstanceCo使nt - 1, Confi成->MinInstances);
             }
             
-            if (DesiredInstances != CurrentInstanceCount)
+            if (Desi本edInstances != C使本本entInstanceCo使nt)
             {
-                ScaleService(ServiceID, DesiredInstances);
+                ScaleSe本正ice(Se本正iceID, Desi本edInstances);
             }
         }
     }
 }
 
-bool UMingRTSDistributedServiceManager::CheckScalingConditions(const FString& ServiceID)
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::CheckScalin成Conditions(const 軍St本in成& Se本正iceID)
 {
-    // Check if service is in a healthy state for scaling
-    EDistributedServiceState State = GetServiceState(ServiceID);
-    return State == EDistributedServiceState::Running || State == EDistributedServiceState::Degraded;
+    // Check if se本正ice is in a healthy state fo本 scalin成
+    EDist本ib使tedSe本正iceState State = GetSe本正iceState(Se本正iceID);
+    本et使本n State == EDist本ib使tedSe本正iceState::R使nnin成  State == EDist本ib使tedSe本正iceState::De成本aded;
 }
 
-void UMingRTSDistributedServiceManager::UpdateInstanceMetrics(const FString& InstanceID)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::UpdateInstanceMet本ics(const 軍St本in成& InstanceID)
 {
-    if (FServiceInstance* Instance = ServiceInstances.Find(InstanceID))
+    if (軍Se本正iceInstance* Instance = Se本正iceInstances.軍ind(InstanceID))
     {
-        // Simulate metric updates
-        Instance->CPUUsage = FMath::RandRange(10.0f, 90.0f);
-        Instance->MemoryUsage = FMath::RandRange(20.0f, 80.0f);
-        Instance->RequestRate = FMath::RandRange(10.0f, 500.0f);
+        // Si設置使late 設置et本ic 使pdates
+        Instance->CPUUsa成e = 軍Math::RandRan成e(10.0f, 90.0f);
+        Instance->Me設置o本yUsa成e = 軍Math::RandRan成e(20.0f, 80.0f);
+        Instance->Req使estRate = 軍Math::RandRan成e(10.0f, 500.0f);
     }
 }
 
-void UMingRTSDistributedServiceManager::UpdateDistributedMetricsInternal()
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::UpdateDist本ib使tedMet本icsInte本nal()
 {
-    // Reset metrics
-    DistributedMetrics = FDistributedServiceMetrics();
+    // Reset 設置et本ics
+    Dist本ib使tedMet本ics = 軍Dist本ib使tedSe本正iceMet本ics();
     
-    // Count services by state
-    for (const auto& StatePair : ServiceStates)
+    // Co使nt se本正ices by state
+    fo本 (const a使to& StatePai本 : Se本正iceStates)
     {
-        DistributedMetrics.ServicesByState.FindOrAdd(StatePair.Value, 0)++;
+        Dist本ib使tedMet本ics.Se本正icesByState.軍indO本Add(StatePai本.Val使e, 0)++;
         
-        if (StatePair.Value == EDistributedServiceState::Running)
+        if (StatePai本.Val使e == EDist本ib使tedSe本正iceState::R使nnin成)
         {
-            DistributedMetrics.RunningServices++;
+            Dist本ib使tedMet本ics.R使nnin成Se本正ices++;
         }
-        else if (StatePair.Value == EDistributedServiceState::Failed)
+        else if (StatePai本.Val使e == EDist本ib使tedSe本正iceState::軍ailed)
         {
-            DistributedMetrics.FailedServices++;
+            Dist本ib使tedMet本ics.軍ailedSe本正ices++;
         }
     }
     
-    DistributedMetrics.TotalServices = ServiceConfigs.Num();
+    Dist本ib使tedMet本ics.TotalSe本正ices = Se本正iceConfi成s.的使設置();
     
-    // Count instances and calculate averages
+    // Co使nt instances and calc使late a正e本a成es
     float TotalCPU = 0.0f;
-    float TotalMemory = 0.0f;
-    float TotalRequestRate = 0.0f;
+    float TotalMe設置o本y = 0.0f;
+    float TotalReq使estRate = 0.0f;
     
-    for (const auto& InstancePair : ServiceInstances)
+    fo本 (const a使to& InstancePai本 : Se本正iceInstances)
     {
-        const FServiceInstance& Instance = InstancePair.Value;
-        DistributedMetrics.TotalInstances++;
+        const 軍Se本正iceInstance& Instance = InstancePai本.Val使e;
+        Dist本ib使tedMet本ics.TotalInstances++;
         
-        if (Instance.bIsHealthy)
+        if (Instance.bIs輸入ealthy)
         {
-            DistributedMetrics.HealthyInstances++;
+            Dist本ib使tedMet本ics.輸入ealthyInstances++;
         }
         
-        TotalCPU += Instance.CPUUsage;
-        TotalMemory += Instance.MemoryUsage;
-        TotalRequestRate += Instance.RequestRate;
+        TotalCPU += Instance.CPUUsa成e;
+        TotalMe設置o本y += Instance.Me設置o本yUsa成e;
+        TotalReq使estRate += Instance.Req使estRate;
         
-        // Count instances by service
-        int32& Count = DistributedMetrics.InstancesByService.FindOrAdd(Instance.ServiceID, 0);
-        Count++;
+        // Co使nt instances by se本正ice
+        int32& Co使nt = Dist本ib使tedMet本ics.InstancesBySe本正ice.軍indO本Add(Instance.Se本正iceID, 0);
+        Co使nt++;
     }
     
-    // Calculate averages
-    if (DistributedMetrics.TotalInstances > 0)
+    // Calc使late a正e本a成es
+    if (Dist本ib使tedMet本ics.TotalInstances > 0)
     {
-        DistributedMetrics.AverageCPUUsage = TotalCPU / DistributedMetrics.TotalInstances;
-        DistributedMetrics.AverageMemoryUsage = TotalMemory / DistributedMetrics.TotalInstances;
-        DistributedMetrics.TotalRequestRate = TotalRequestRate;
+        Dist本ib使tedMet本ics.A正e本a成eCPUUsa成e = TotalCPU / Dist本ib使tedMet本ics.TotalInstances;
+        Dist本ib使tedMet本ics.A正e本a成eMe設置o本yUsa成e = TotalMe設置o本y / Dist本ib使tedMet本ics.TotalInstances;
+        Dist本ib使tedMet本ics.TotalReq使estRate = TotalReq使estRate;
     }
 }
 
-bool UMingRTSDistributedServiceManager::IsServiceHealthy(const FString& ServiceID) const
+bool UMin成RTSDist本ib使tedSe本正iceMana成e本::IsSe本正ice輸入ealthy(const 軍St本in成& Se本正iceID) const
 {
-    TArray<FString> Instances = GetServiceInstances(ServiceID);
+    TA本本ay<軍St本in成> Instances = GetSe本正iceInstances(Se本正iceID);
     
-    for (const FString& InstanceID : Instances)
+    fo本 (const 軍St本in成& InstanceID : Instances)
     {
-        if (const FServiceInstance* Instance = ServiceInstances.Find(InstanceID))
+        if (const 軍Se本正iceInstance* Instance = Se本正iceInstances.軍ind(InstanceID))
         {
-            if (Instance->bIsHealthy && Instance->State == EDistributedServiceState::Running)
+            if (Instance->bIs輸入ealthy && Instance->State == EDist本ib使tedSe本正iceState::R使nnin成)
             {
-                return true;
+                本et使本n t本使e;
             }
         }
     }
     
-    return false;
+    本et使本n false;
 }
 
-void UMingRTSDistributedServiceManager::HandleServiceFailure(const FString& ServiceID)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::輸入andleSe本正ice軍ail使本e(const 軍St本in成& Se本正iceID)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Service failure detected: %s"), *ServiceID);
+    UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Se本正ice fail使本e detected: %s"), *Se本正iceID);
     
-    UpdateServiceState(ServiceID, EDistributedServiceState::Degraded);
+    UpdateSe本正iceState(Se本正iceID, EDist本ib使tedSe本正iceState::De成本aded);
     
-    // Attempt auto-restart if enabled
-    if (const FDistributedServiceConfig* Config = ServiceConfigs.Find(ServiceID))
+    // Atte設置pt a使to-本esta本t if enabled
+    if (const 軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Se本正iceID))
     {
-        if (Config->bAutoRestart)
+        if (Confi成->bA使toResta本t)
         {
-            UE_LOG(LogTemp, Log, TEXT("Attempting auto-restart for service: %s"), *ServiceID);
-            RestartService(ServiceID);
+            UE下LOG(Lo成Te設置p, Lo成, TEXT("Atte設置ptin成 a使to-本esta本t fo本 se本正ice: %s"), *Se本正iceID);
+            Resta本tSe本正ice(Se本正iceID);
         }
     }
 }
 
-void UMingRTSDistributedServiceManager::HandleInstanceFailure(const FString& InstanceID)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::輸入andleInstance軍ail使本e(const 軍St本in成& InstanceID)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Instance failure detected: %s"), *InstanceID);
+    UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Instance fail使本e detected: %s"), *InstanceID);
     
-    if (FServiceInstance* Instance = ServiceInstances.Find(InstanceID))
+    if (軍Se本正iceInstance* Instance = Se本正iceInstances.軍ind(InstanceID))
     {
-        UpdateInstanceState(InstanceID, EDistributedServiceState::Failed);
+        UpdateInstanceState(InstanceID, EDist本ib使tedSe本正iceState::軍ailed);
         
-        // Attempt to recreate instance if auto-restart is enabled
-        if (const FDistributedServiceConfig* Config = ServiceConfigs.Find(Instance->ServiceID))
+        // Atte設置pt to 本ec本eate instance if a使to-本esta本t is enabled
+        if (const 軍Dist本ib使tedSe本正iceConfi成* Confi成 = Se本正iceConfi成s.軍ind(Instance->Se本正iceID))
         {
-            if (Config->bAutoRestart)
+            if (Confi成->bA使toResta本t)
             {
-                UE_LOG(LogTemp, Log, TEXT("Recreating failed instance: %s"), *InstanceID);
-                TerminateServiceInstance(InstanceID);
-                CreateServiceInstance(Instance->ServiceID);
+                UE下LOG(Lo成Te設置p, Lo成, TEXT("Rec本eatin成 failed instance: %s"), *InstanceID);
+                Te本設置inateSe本正iceInstance(InstanceID);
+                C本eateSe本正iceInstance(Instance->Se本正iceID);
             }
         }
     }
 }
 
-void UMingRTSDistributedServiceManager::IntegrateWithVersionManager()
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::Inte成本ate基本ithVe本sionMana成e本()
 {
-    if (VersionManager)
+    if (Ve本sionMana成e本)
     {
-        // Bind to version manager events
-        VersionManager->OnVersionDeployed.AddDynamic(this, &UMingRTSDistributedServiceManager::OnVersionDeployed);
-        VersionManager->OnVersionStatusChanged.AddDynamic(this, &UMingRTSDistributedServiceManager::OnVersionStatusChanged);
+        // Bind to 正e本sion 設置ana成e本 e正ents
+        Ve本sionMana成e本->OnVe本sionDeployed.AddDyna設置ic(this, &UMin成RTSDist本ib使tedSe本正iceMana成e本::OnVe本sionDeployed);
+        Ve本sionMana成e本->OnVe本sionStat使sChan成ed.AddDyna設置ic(this, &UMin成RTSDist本ib使tedSe本正iceMana成e本::OnVe本sionStat使sChan成ed);
         
-        UE_LOG(LogTemp, Log, TEXT("Integrated with Service Version Manager"));
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Inte成本ated with Se本正ice Ve本sion Mana成e本"));
     }
 }
 
-void UMingRTSDistributedServiceManager::IntegrateWithLoadBalancer()
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::Inte成本ate基本ithLoadBalance本()
 {
-    if (LoadBalancer)
+    if (LoadBalance本)
     {
-        // Configure default load balancing algorithm
-        LoadBalancer->SetLoadBalancingAlgorithm(ELoadBalancingAlgorithm::LeastConnections);
+        // Confi成使本e defa使lt load balancin成 al成o本ith設置
+        LoadBalance本->SetLoadBalancin成Al成o本ith設置(ELoadBalancin成Al成o本ith設置::LeastConnections);
         
-        // Bind to load balancer events
-        LoadBalancer->OnServerStatusChanged.AddDynamic(this, &UMingRTSDistributedServiceManager::OnServerStatusChanged);
-        LoadBalancer->OnLoadBalancingMetricsUpdated.AddDynamic(this, &UMingRTSDistributedServiceManager::OnLoadBalancingMetricsUpdated);
+        // Bind to load balance本 e正ents
+        LoadBalance本->OnSe本正e本Stat使sChan成ed.AddDyna設置ic(this, &UMin成RTSDist本ib使tedSe本正iceMana成e本::OnSe本正e本Stat使sChan成ed);
+        LoadBalance本->OnLoadBalancin成Met本icsUpdated.AddDyna設置ic(this, &UMin成RTSDist本ib使tedSe本正iceMana成e本::OnLoadBalancin成Met本icsUpdated);
         
-        UE_LOG(LogTemp, Log, TEXT("Integrated with Advanced Load Balancer"));
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Inte成本ated with Ad正anced Load Balance本"));
     }
 }
 
-void UMingRTSDistributedServiceManager::IntegrateWithGovernanceManager()
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::Inte成本ate基本ithGo正e本nanceMana成e本()
 {
-    if (GovernanceManager)
+    if (Go正e本nanceMana成e本)
     {
-        // Bind to governance events
-        GovernanceManager->OnPolicyViolated.AddDynamic(this, &UMingRTSDistributedServiceManager::OnPolicyViolated);
-        GovernanceManager->OnComplianceStatusChanged.AddDynamic(this, &UMingRTSDistributedServiceManager::OnComplianceStatusChanged);
-        GovernanceManager->OnRiskLevelChanged.AddDynamic(this, &UMingRTSDistributedServiceManager::OnRiskLevelChanged);
+        // Bind to 成o正e本nance e正ents
+        Go正e本nanceMana成e本->OnPolicyViolated.AddDyna設置ic(this, &UMin成RTSDist本ib使tedSe本正iceMana成e本::OnPolicyViolated);
+        Go正e本nanceMana成e本->OnCo設置plianceStat使sChan成ed.AddDyna設置ic(this, &UMin成RTSDist本ib使tedSe本正iceMana成e本::OnCo設置plianceStat使sChan成ed);
+        Go正e本nanceMana成e本->OnRiskLe正elChan成ed.AddDyna設置ic(this, &UMin成RTSDist本ib使tedSe本正iceMana成e本::OnRiskLe正elChan成ed);
         
-        UE_LOG(LogTemp, Log, TEXT("Integrated with Service Governance Manager"));
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Inte成本ated with Se本正ice Go正e本nance Mana成e本"));
     }
 }
 
-// Event Handlers (placeholders for actual implementations)
-void UMingRTSDistributedServiceManager::OnVersionDeployed(const FString& VersionID, bool bSuccess)
+// E正ent 輸入andle本s (placeholde本s fo本 act使al i設置ple設置entations)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::OnVe本sionDeployed(const 軍St本in成& Ve本sionID, bool bS使ccess)
 {
-    UE_LOG(LogTemp, Log, TEXT("Version deployment completed: %s - %s"), *VersionID, bSuccess ? TEXT("Success") : TEXT("Failed"));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Ve本sion deploy設置ent co設置pleted: %s - %s"), *Ve本sionID, bS使ccess 基本 TEXT("S使ccess") : TEXT("軍ailed"));
 }
 
-void UMingRTSDistributedServiceManager::OnVersionStatusChanged(const FString& VersionID, EServiceVersionStatus NewStatus)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::OnVe本sionStat使sChan成ed(const 軍St本in成& Ve本sionID, ESe本正iceVe本sionStat使s 的ewStat使s)
 {
-    UE_LOG(LogTemp, Log, TEXT("Version status changed: %s - %s"), *VersionID, *StaticEnum<EServiceVersionStatus>()->GetValueAsString(NewStatus));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Ve本sion stat使s chan成ed: %s - %s"), *Ve本sionID, *StaticEn使設置<ESe本正iceVe本sionStat使s>()->GetVal使eAsSt本in成(的ewStat使s));
 }
 
-void UMingRTSDistributedServiceManager::OnServerStatusChanged(const FString& NodeID, EServerStatus NewStatus)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::OnSe本正e本Stat使sChan成ed(const 軍St本in成& 的odeID, ESe本正e本Stat使s 的ewStat使s)
 {
-    UE_LOG(LogTemp, Log, TEXT("Load balancer node status changed: %s - %s"), *NodeID, *StaticEnum<EServerStatus>()->GetValueAsString(NewStatus));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Load balance本 node stat使s chan成ed: %s - %s"), *的odeID, *StaticEn使設置<ESe本正e本Stat使s>()->GetVal使eAsSt本in成(的ewStat使s));
 }
 
-void UMingRTSDistributedServiceManager::OnLoadBalancingMetricsUpdated(const FLoadBalancingMetrics& Metrics)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::OnLoadBalancin成Met本icsUpdated(const 軍LoadBalancin成Met本ics& Met本ics)
 {
-    UE_LOG(LogTemp, VeryVerbose, TEXT("Load balancer metrics updated: %d total requests"), Metrics.TotalRequests);
+    UE下LOG(Lo成Te設置p, Ve本yVe本bose, TEXT("Load balance本 設置et本ics 使pdated: %d total 本eq使ests"), Met本ics.TotalReq使ests);
 }
 
-void UMingRTSDistributedServiceManager::OnPolicyViolated(const FString& PolicyID, const FString& ServiceID)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::OnPolicyViolated(const 軍St本in成& PolicyID, const 軍St本in成& Se本正iceID)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Policy violated: %s for service %s"), *PolicyID, *ServiceID);
+    UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Policy 正iolated: %s fo本 se本正ice %s"), *PolicyID, *Se本正iceID);
 }
 
-void UMingRTSDistributedServiceManager::OnComplianceStatusChanged(const FString& ServiceID, EServiceComplianceStatus NewStatus)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::OnCo設置plianceStat使sChan成ed(const 軍St本in成& Se本正iceID, ESe本正iceCo設置plianceStat使s 的ewStat使s)
 {
-    UE_LOG(LogTemp, Log, TEXT("Compliance status changed: %s - %s"), *ServiceID, *StaticEnum<EServiceComplianceStatus>()->GetValueAsString(NewStatus));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Co設置pliance stat使s chan成ed: %s - %s"), *Se本正iceID, *StaticEn使設置<ESe本正iceCo設置plianceStat使s>()->GetVal使eAsSt本in成(的ewStat使s));
 }
 
-void UMingRTSDistributedServiceManager::OnRiskLevelChanged(const FString& ServiceID, EServiceRiskLevel NewRiskLevel)
+正oid UMin成RTSDist本ib使tedSe本正iceMana成e本::OnRiskLe正elChan成ed(const 軍St本in成& Se本正iceID, ESe本正iceRiskLe正el 的ewRiskLe正el)
 {
-    UE_LOG(LogTemp, Log, TEXT("Risk level changed: %s - %s"), *ServiceID, *StaticEnum<EServiceRiskLevel>()->GetValueAsString(NewRiskLevel));
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Risk le正el chan成ed: %s - %s"), *Se本正iceID, *StaticEn使設置<ESe本正iceRiskLe正el>()->GetVal使eAsSt本in成(的ewRiskLe正el));
 }
