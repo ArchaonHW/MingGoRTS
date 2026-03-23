@@ -10,6 +10,8 @@
 #include "MingRTSCodeStandardsAPI.h"
 #include "MingRTSBMADSystem.h"
 #include "MingRTSCodeReviewAPI.h"
+#include "MingRTSUE5LearningAPI.h"
+#include "MingRTSPotatoAICodeGeneratorAPI.h"
 #include "MingRTSAPISystem.generated.h"
 
 UENUM(BlueprintType)
@@ -22,7 +24,9 @@ enum class EAPIType : uint8
     SmartPanel,
     CodeStandards,
     BMAD,
-    CodeReview
+    CodeReview,
+    UE5Learning,      // 🥔 UE5 Documentation Learning System
+    PotatoAICodeGen   // 🥔 Potato AI Code Generator
 };
 
 UENUM(BlueprintType)
@@ -141,6 +145,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "API System")
     UMingRTSCodeReviewAPI* GetCodeReviewAPI();
 
+    UFUNCTION(BlueprintCallable, Category = "API System")
+    UMingRTSUE5LearningAPI* GetUE5LearningAPI();
+
+    UFUNCTION(BlueprintCallable, Category = "API System")
+    UMingRTSPotatoAICodeGeneratorAPI* GetPotatoAICodeGeneratorAPI();
+
     // API協調
     UFUNCTION(BlueprintCallable, Category = "API System|Coordination")
     FAPICoordinationResult CoordinateAPIs(const TArray<EAPIType>& APIs, const FString& Task);
@@ -240,6 +250,12 @@ private:
 
     UPROPERTY()
     TObjectPtr<UMingRTSCodeReviewAPI> CodeReviewAPI;
+
+    UPROPERTY()
+    TObjectPtr<UMingRTSUE5LearningAPI> UE5LearningAPI;
+
+    UPROPERTY()
+    TObjectPtr<UMingRTSPotatoAICodeGeneratorAPI> PotatoAICodeGeneratorAPI;
 
     // 協調數據
     UPROPERTY()

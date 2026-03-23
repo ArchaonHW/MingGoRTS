@@ -7,6 +7,8 @@
 #include "MingRTSCodeStandardsAPI.h"
 #include "MingRTSBMADSystem.h"
 #include "MingRTSCodeReviewAPI.h"
+#include "MingRTSUE5LearningAPI.h"
+#include "MingRTSPotatoAICodeGeneratorAPI.h"
 #include "HAL/PlatformFilemanager.h"
 #include "Misc/DateTime.h"
 
@@ -39,6 +41,8 @@ void UMingRTSAPISystem::InitializeAPIInstances()
     CodeStandardsAPI = NewObject<UMingRTSCodeStandardsAPI>();
     BMADSystem = NewObject<UMingRTSBMADSystem>();
     CodeReviewAPI = NewObject<UMingRTSCodeReviewAPI>();
+    UE5LearningAPI = NewObject<UMingRTSUE5LearningAPI>();
+    PotatoAICodeGeneratorAPI = NewObject<UMingRTSPotatoAICodeGeneratorAPI>();
     
     // 初始化各個API
     if (CompilationAPI) CompilationAPI->InitializeCompilationSystem();
@@ -49,6 +53,8 @@ void UMingRTSAPISystem::InitializeAPIInstances()
     if (CodeStandardsAPI) CodeStandardsAPI->InitializeCodeStandards();
     if (BMADSystem) BMADSystem->InitializeBMADSystem();
     if (CodeReviewAPI) CodeReviewAPI->InitializeCodeReviewSystem();
+    if (UE5LearningAPI) UE5LearningAPI->Initialize(FUE5LearningConfig());
+    if (PotatoAICodeGeneratorAPI) PotatoAICodeGeneratorAPI->Initialize();
 }
 
 void UMingRTSAPISystem::SetupAPIConnections()
@@ -108,6 +114,16 @@ UMingRTSBMADSystem* UMingRTSAPISystem::GetBMADSystem()
 UMingRTSCodeReviewAPI* UMingRTSAPISystem::GetCodeReviewAPI()
 {
     return CodeReviewAPI;
+}
+
+UMingRTSUE5LearningAPI* UMingRTSAPISystem::GetUE5LearningAPI()
+{
+    return UE5LearningAPI;
+}
+
+UMingRTSPotatoAICodeGeneratorAPI* UMingRTSAPISystem::GetPotatoAICodeGeneratorAPI()
+{
+    return PotatoAICodeGeneratorAPI;
 }
 
 FAPICoordinationResult UMingRTSAPISystem::CoordinateAPIs(const TArray<EAPIType>& APIs, const FString& Task)
@@ -192,7 +208,31 @@ TArray<FAPIInteraction> UMingRTSAPISystem::SuggestOptimalWorkflow(const FString&
     TArray<FAPIInteraction> Workflow;
     
     // 基於歷史數據和學習結果建議最佳工作流
-    if (Goal.Contains(TEXT("compile")) || Goal.Contains(TEXT("build")))
+    if (Goal.Contains(TEXT("learn")) || Goal.Contains(TEXT("documentation")) || Goal.Contains(TEXT("ue5")))
+    {
+        Workflow.Add({
+            EAPIType::SmartPanel, EAPIType::UE5Learning, EAPIInteractionType::Request,
+            TEXT("start_learning"), TEXT(""), FDateTime::Now(), true, 0.0f
+        });
+        
+        Workflow.Add({
+            EAPIType::UE5Learning, EAPIType::Log, EAPIInteractionType::Data,
+            TEXT("document_progress"), TEXT(""), FDateTime::Now(), true, 0.0f
+        });
+    }
+    else if (Goal.Contains(TEXT("generate")) || Goal.Contains(TEXT("code")) || Goal.Contains(TEXT("class")))
+    {
+        Workflow.Add({
+            EAPIType::SmartPanel, EAPIType::PotatoAICodeGen, EAPIInteractionType::Request,
+            TEXT("generate_code"), Goal, FDateTime::Now(), true, 0.0f
+        });
+        
+        Workflow.Add({
+            EAPIType::PotatoAICodeGen, EAPIType::CodeStandards, EAPIInteractionType::Request,
+            TEXT("check_quality"), TEXT(""), FDateTime::Now(), true, 0.0f
+        });
+    }
+    else if (Goal.Contains(TEXT("compile")) || Goal.Contains(TEXT("build")))
     {
         // 編譯工作流
         Workflow.Add({
@@ -448,6 +488,40 @@ bool UMingRTSAPISystem::ProcessInteraction(const FAPIInteraction& Interaction)
                 {
                     FCodeStandardProfile Profile;
                     bSuccess = CodeStandardsAPI->ApplyCodeStandards(Interaction.Data, Profile);
+                }
+            }
+            break;
+            
+        case EAPIType::UE5Learning:
+            if (UE5LearningAPI)
+            {
+                if (Interaction.Action == TEXT("start_learning"))
+                {
+                    bSuccess = UE5LearningAPI->StartLearning(EUE5LearningMode::Comprehensive);
+                }
+                else if (Interaction.Action == TEXT("fetch_documentation"))
+                {
+                    EUE5DocSection Section = static_cast<EUE5DocSection>(FCString::Atoi(*Interaction.Data));
+                    FUE5DocumentationContent Content = UE5LearningAPI->FetchDocumentation(Section);
+                    bSuccess = !Content.Title.IsEmpty();
+                }
+            }
+            break;
+            
+        case EAPIType::PotatoAICodeGen:
+            if (PotatoAICodeGeneratorAPI)
+            {
+                if (Interaction.Action == TEXT("generate_code"))
+                {
+                    ECodeTemplateType Template = ECodeTemplateType::UE5_Class;
+                    FGeneratedCodeResult Result = PotatoAICodeGeneratorAPI->GenerateCode(Interaction.Data, ECodeGenerationLanguage::CPP, Template);
+                    bSuccess = Result.QualityScore > 70;
+                }
+                else if (Interaction.Action == TEXT("generate_class"))
+                {
+                    FCodeGenerationOptions Options;
+                    FGeneratedCodeResult Result = PotatoAICodeGeneratorAPI->GenerateUE5Class(Interaction.Data, Options);
+                    bSuccess = !Result.CodeContent.IsEmpty();
                 }
             }
             break;

@@ -5,14 +5,132 @@
 #include "MingRTSCompilationAPI.generated.h"
 
 UENUM(BlueprintType)
-enum class ECompilationPhase : uint8
+enum class EBuildConfiguration : uint8
 {
-    Preprocessing,
-    Parsing,
-    CodeGeneration,
+    Development,
+    Debug,
+    Shipping,
+    Test,
+    Editor
+};
+
+UENUM(BlueprintType)
+enum class EBuildPlatform : uint8
+{
+    Win64,
+    Win32,
+    Android,
+    IOS,
+    Linux,
+    Mac
+};
+
+UENUM(BlueprintType)
+enum class EBuildStatus : uint8
+{
+    Idle,
+    Preparing,
+    Compiling,
     Linking,
-    Optimization,
-    Validation
+    Succeeded,
+    Failed,
+    Cancelled
+};
+
+USTRUCT(BlueprintType)
+struct FBuildOptions
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    EBuildConfiguration Configuration = EBuildConfiguration::Development;
+
+    UPROPERTY(BlueprintReadWrite)
+    EBuildPlatform Platform = EBuildPlatform::Win64;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString TargetName = TEXT("MingGoRTSEditor");
+
+    UPROPERTY(BlueprintReadWrite)
+    FString ProjectPath;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString EnginePath;
+
+    UPROPERTY(BlueprintReadWrite)
+    bool bCleanBuild = false;
+
+    UPROPERTY(BlueprintReadWrite)
+    bool bIncrementalBuild = true;
+
+    UPROPERTY(BlueprintReadWrite)
+    bool bNoHotReload = true;
+
+    UPROPERTY(BlueprintReadWrite)
+    bool bWaitMutex = true;
+
+    UPROPERTY(BlueprintReadWrite)
+    bool bVerbose = false;
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 MaxParallelJobs = 0;
+
+    UPROPERTY(BlueprintReadWrite)
+    TArray<FString> AdditionalFlags;
+};
+
+USTRUCT(BlueprintType)
+struct FBuildError
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    FString FilePath;
+
+    UPROPERTY(BlueprintReadOnly)
+    int32 LineNumber = 0;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString ErrorCode;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString Message;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString Severity; // Error, Warning, Info
+};
+
+USTRUCT(BlueprintType)
+struct FBuildResult
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    EBuildStatus Status = EBuildStatus::Idle;
+
+    UPROPERTY(BlueprintReadOnly)
+    int32 ExitCode = 0;
+
+    UPROPERTY(BlueprintReadOnly)
+    FString OutputLog;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FBuildError> Errors;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FBuildError> Warnings;
+
+    UPROPERTY(BlueprintReadOnly)
+    float BuildTimeSeconds = 0.0f;
+
+    UPROPERTY(BlueprintReadOnly)
+    int32 FilesCompiled = 0;
+
+    UPROPERTY(BlueprintReadOnly)
+    int32 TotalFiles = 0;
+
+    UPROPERTY(BlueprintReadOnly)
+    int32 MemoryUsedMB = 0;
 };
 
 UENUM(BlueprintType)
@@ -108,15 +226,45 @@ class MINGGORTS_API UMingRTSCompilationAPI : public UObject
 public:
     UMingRTSCompilationAPI();
 
-    // 核心編譯功能
-    UFUNCTION(BlueprintCallable, Category = "Compilation API")
-    FCompilationResult CompileProject(const FCompilationContext& Context);
+    // 項目編譯功能
+    UFUNCTION(BlueprintCallable, Category = "Compilation API|Build")
+    FBuildResult BuildProject(const FBuildOptions& Options);
 
-    UFUNCTION(BlueprintCallable, Category = "Compilation API")
-    FCompilationResult CompileFile(const FString& FilePath, const FCompilationContext& Context);
+    UFUNCTION(BlueprintCallable, Category = "Compilation API|Build")
+    FBuildResult BuildProjectAsync(const FBuildOptions& Options);
 
-    UFUNCTION(BlueprintCallable, Category = "Compilation API")
-    bool ValidateSyntax(const FString& SourceCode, TArray<FString>& OutErrors);
+    UFUNCTION(BlueprintCallable, Category = "Compilation API|Build")
+    bool CancelBuild();
+
+    UFUNCTION(BlueprintCallable, Category = "Compilation API|Build")
+    bool CleanBuildCache(bool bCleanIntermediate = true, bool bCleanDerivedData = true, bool bCleanSaved = true);
+
+    UFUNCTION(BlueprintCallable, Category = "Compilation API|Build")
+    bool GenerateProjectFiles();
+
+    UFUNCTION(BlueprintCallable, Category = "Compilation API|Build")
+    bool ValidateBuildEnvironment(FString& OutErrorMessage);
+
+    UFUNCTION(BlueprintCallable, Category = "Compilation API|Build")
+    TArray<EBuildConfiguration> GetAvailableConfigurations() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Compilation API|Build")
+    TArray<EBuildPlatform> GetAvailablePlatforms() const;
+
+    UFUNCTION(BlueprintPure, Category = "Compilation API|Build")
+    bool IsBuilding() const { return bIsBuilding; }
+
+    UFUNCTION(BlueprintPure, Category = "Compilation API|Build")
+    FBuildResult GetLastBuildResult() const { return LastBuildResult; }
+
+    UFUNCTION(BlueprintCallable, Category = "Compilation API|Build")
+    static FString GetBuildStatusString(EBuildStatus Status);
+
+    UFUNCTION(BlueprintCallable, Category = "Compilation API|Build")
+    static FString GetConfigurationString(EBuildConfiguration Config);
+
+    UFUNCTION(BlueprintCallable, Category = "Compilation API|Build")
+    static FString GetPlatformString(EBuildPlatform Platform);
 
     // 自我學習功能
     UFUNCTION(BlueprintCallable, Category = "Compilation API|Learning")
@@ -160,6 +308,16 @@ public:
     FOnCompilationCompleted OnCompilationCompleted;
 
 private:
+    // 編譯狀態
+    UPROPERTY()
+    bool bIsBuilding = false;
+
+    UPROPERTY()
+    bool bShouldCancel = false;
+
+    UPROPERTY()
+    FBuildResult LastBuildResult;
+
     // 學習數據
     UPROPERTY()
     TMap<ECompilationErrorType, TArray<FString>> ErrorPatterns;
@@ -176,4 +334,11 @@ private:
     void LoadLearningData();
     FString AnalyzeErrorPattern(const FCompilationResult& Result);
     bool ApplyLearnedFix(FString& SourceCode, const FString& ErrorPattern);
+
+    // 構建相關內部方法
+    FString BuildUBTCommand(const FBuildOptions& Options);
+    FBuildResult ExecuteBuildCommand(const FString& Command);
+    TArray<FBuildError> ParseBuildErrors(const FString& LogOutput);
+    int CalculateBuildProgress(const FString& LogLine, int CurrentProgress) const;
+    bool DeleteDirectory(const FString& DirPath);
 };
