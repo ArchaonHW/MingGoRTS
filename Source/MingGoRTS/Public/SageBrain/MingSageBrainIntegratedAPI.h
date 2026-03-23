@@ -350,13 +350,13 @@ public:
     // 聖者大腦事件
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSageBrainDecision, const FString&, Decision);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConsciousnessEvolved, ESageBrainConsciousness, NewLevel);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnEnhancedContentGenerated, const FString&, ContentType, const FString&, Content);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEnhancedContentGenerated, const FString&, ContentType, const FString&, Content);
 
     // 整合API事件
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnIntegratedAPIInitialized, bool, bSuccess, const FString&, Message);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnSageBrainMusicGenerated, const FString&, MusicPath, const FString&, Philosophy);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnSageBrainAssetGenerated, const FString&, AssetPath, const FString&, AssetType);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnSageBrainDecisionMade, const FString&, Context, const FString&, Decision);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnIntegratedAPIInitialized, bool, bSuccess, const FString&, Message);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSageBrainMusicGenerated, const FString&, MusicPath, const FString&, Philosophy);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSageBrainAssetGenerated, const FString&, AssetPath, const FString&, AssetType);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSageBrainDecisionMade, const FString&, Context, const FString&, Decision);
 
     UPROPERTY(BlueprintAssignable, Category = "Sage Brain|Events")
     FOnSageBrainDecision OnSageBrainDecision;

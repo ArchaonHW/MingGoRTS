@@ -1,11 +1,11 @@
-# MingWar-RTS 构建状态
+# MingGoRTS 构建状态
 
 ## 📊 **编译状态检查**
 
 ### **✅ 检查结果**
 - ✅ UE5.7.4 已安装: `C:\Program Files\Epic Games\UE_5.7`
 - ✅ UnrealEditor.exe 存在
-- ✅ 项目文件已创建: `MingWar-RTS.uproject`
+- ✅ 项目文件已创建: `MingGoRTS.uproject`
 - ✅ 源代码完整: 5个 C++ 类
 - ✅ 配置完成: Build.cs, ini 文件
 
@@ -39,14 +39,14 @@ FIX_COMPILE.bat
 3. 确认已安装 Windows 10/11 SDK
 
 #### **步骤 2: 简化 Build.cs**
-将 `Source/MingWarRTS/MingWarRTS.Build.cs` 替换为简化版本：
+将 `Source/MingGoRTS/MingGoRTS.Build.cs` 替换为简化版本：
 
 ```csharp
 using UnrealBuildTool;
 
-public class MingWarRTS : ModuleRules
+public class MingGoRTS : ModuleRules
 {
-    public MingWarRTS(ReadOnlyTargetRules Target) : base(Target)
+    public MingGoRTS(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
@@ -61,11 +61,11 @@ cd C:\HW\MingGoRTS
 rmdir /s /q Intermediate
 rmdir /s /q Saved
 rmdir /s /q Binaries
-"C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool.exe" -projectfiles -project="MingWar-RTS.uproject" -game
+"C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool.exe" -projectfiles -project="MingGoRTS.uproject" -game
 ```
 
 #### **步骤 4: 打开 UE5 编辑**
-双击 `MingWar-RTS.uproject` 或运行 `OpenProject.bat`
+双击 `MingGoRTS.uproject` 或运行 `OpenProject.bat`
 
 ---
 

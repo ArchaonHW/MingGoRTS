@@ -1,8 +1,8 @@
-# MingWar-RTS 最终修复指南
+# MingGoRTS 最终修复指南
 
 ## 🎯 **问题分析**
 
-您看到的错误："MingWarRTS could not be compiled. Try rebuilding from source manually."
+您看到的错误："MingGoRTS could not be compiled. Try rebuilding from source manually."
 
 这是 UE5 首次打开 C++ 项目时的常见问题，通常是 UE5 无法正确编译 C++ 代码。
 
@@ -25,7 +25,7 @@ ULTIMATE_FIX.bat
 
 ### **方法 2：手动修复**
 
-1. **双击** `MingWarRTS.uproject`
+1. **双击** `MingGoRTS.uproject`
 2. 如果出现错误弹窗，点击 **"Fix"** 按钮
 3. 等待 5-10 分钟自动修复
 4. 如果无效，关闭 UE5，重新双击 .uproject
@@ -38,21 +38,21 @@ ULTIMATE_FIX.bat
 
 ```
 C:\HW\MingGoRTS\
-├── MingWarRTS.uproject          (✅ 有效 JSON)
-├── Source\MingWarRTS\
+├── MingGoRTS.uproject          (✅ 有效 JSON)
+├── Source\MingGoRTS\
 │   ├── Public\
-│   │   ├── MingWarRTS.h         (✅ GameMode)
+│   │   ├── MingGoRTS.h         (✅ GameMode)
 │   │   ├── RTSUnit.h            (✅ 单位类)
 │   │   ├── RTSBuilding.h        (✅ 建筑类)
 │   │   ├── RTSPlayerController.h (✅ 控制器)
 │   │   └── ResourceManager.h    (✅ 资源管理)
 │   ├── Private\
-│   │   ├── MingWarRTS.cpp       (✅ GameMode 实现)
+│   │   ├── MingGoRTS.cpp       (✅ GameMode 实现)
 │   │   ├── RTSUnit.cpp          (✅ 单位实现)
 │   │   ├── RTSBuilding.cpp      (✅ 建筑实现)
 │   │   ├── RTSPlayerController.cpp (✅ 控制器实现)
 │   │   └── ResourceManager.cpp  (✅ 资源管理实现)
-│   └── MingWarRTS.Build.cs      (✅ 完整配置)
+│   └── MingGoRTS.Build.cs      (✅ 完整配置)
 └── Config\ (✅ 配置文件)
 ```
 
@@ -89,7 +89,7 @@ PrivateDependencyModuleNames.AddRange(new string[]
 - ✅ UE5 Editor 正常打开，无错误
 - ✅ 右下角进度条完成
 - ✅ 可以创建 Blueprint Class
-- ✅ 生成 `MingWarRTS.sln` 文件
+- ✅ 生成 `MingGoRTS.sln` 文件
 
 ---
 
@@ -120,6 +120,6 @@ PrivateDependencyModuleNames.AddRange(new string[]
 
 ---
 
-**请现在运行 `ULTIMATE_FIX.bat` 或双击 `MingWarRTS.uproject`！** 🛠️
+**请现在运行 `ULTIMATE_FIX.bat` 或双击 `MingGoRTS.uproject`！** 🛠️
 
 如果成功，我们将继续创建 Blueprint 和地图。🥔✨

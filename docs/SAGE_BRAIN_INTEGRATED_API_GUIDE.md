@@ -8,13 +8,14 @@
 - **Python API** - 原有Python功能轉換
 - **資產生成API** - Epic和遊戲資產生成
 - **音頻生成API** - 音樂和音效生成
+- **C++ Reference 整合** - CppReference_zh_TW 文檔智慧化整合
 
 ## 核心組件
 
 ### UMingSageBrainIntegratedAPI - 整合API系統
 - **文件位置**: `Source/MingGoRTS/Public/SageBrain/MingSageBrainIntegratedAPI.h`
 - **功能**: 統一所有API功能的智能接口
-- **特色**: 聖者大腦增強的所有API功能
+- **特色**: 聖者大腦增強的所有API功能，包括智慧化C++代碼生成
 
 ## 系統架構
 
@@ -24,6 +25,7 @@
 ├── Python API (原有功能)
 ├── 資產生成API (Epic/遊戲資產)
 ├── 音頻生成API (音樂/音效)
+├── C++ Reference 整合 (智慧代碼生成)
 └── 聖者大腦增強層 (智能處理)
 ```
 
@@ -600,6 +602,68 @@ FString Insights = IntegratedAPI->GenerateLearningInsights();
 bool bApplied = IntegratedAPI->ApplyLearningToGameplay();
 ```
 
+### 📚 聖者大腦 C++ Reference 整合
+
+聖者大腦 C++ Reference 整合將 CppReference_zh_TW 文檔內容融入聖者大腦系統，提供智慧化的 C++ 代碼生成和知識解析能力。
+
+#### 載入 C++ Reference 文檔
+```cpp
+// 載入 C++ Reference 文檔到聖者大腦
+bool bLoaded = IntegratedAPI->LoadCppReferenceToSageBrain();
+```
+
+#### 使用聖者大腦智慧生成代碼
+```cpp
+// 基於 C++ Reference 和聖者大腦智慧生成代碼
+FString Code = IntegratedAPI->GenerateCodeWithSageBrainKnowledge(
+    TEXT("vector 容器使用"),
+    TEXT("遊戲單位管理系統")
+);
+```
+
+#### 獲取 C++ 主題
+```cpp
+// 獲取特定類別的 C++ 主題
+TArray<FString> Topics = IntegratedAPI->GetSageBrainCppTopics(TEXT("container"));
+// 返回: ["vector", "map", "set", ...]
+```
+
+#### 深度解析 C++ 概念
+```cpp
+// 使用聖者大腦深度解析 C++ 概念
+FString Explanation = IntegratedAPI->ExplainCppConceptWithSageBrain(
+    TEXT("智能指針")
+);
+// 返回包含技術、道家、儒家、兵家多視角分析的深度解析
+```
+
+#### 生成哲學代碼示例
+```cpp
+// 生成道家風格的 C++ 代碼示例
+FString TaoCode = IntegratedAPI->CreatePhilosophicalCodeExample(
+    ESageBrainPhilosophy::Taoism,
+    TEXT("內存管理")
+);
+
+// 生成儒家風格的 C++ 代碼示例
+FString ConfucianCode = IntegratedAPI->CreatePhilosophicalCodeExample(
+    ESageBrainPhilosophy::Confucianism,
+    TEXT("類設計")
+);
+
+// 生成兵家風格的 C++ 代碼示例
+FString StrategyCode = IntegratedAPI->CreatePhilosophicalCodeExample(
+    ESageBrainPhilosophy::MilitaryStrategy,
+    TEXT("性能優化")
+);
+```
+
+#### 整合 C++ Reference 到學習系統
+```cpp
+// 將 C++ Reference 知識整合到聖者大腦學習系統
+bool bIntegrated = IntegratedAPI->IntegrateCppReferenceIntoLearning();
+```
+
 ## 系統集成
 
 ### 遊戲管理器集成
@@ -878,16 +942,17 @@ TMap<FString, FString> AllStatus = IntegratedAPI->GetAllSystemStatus();
 
 - **統一智能接口** - 所有API功能的統一入口
 - **聖者大腦增強** - AI增強的所有功能
-- **完整功能覆蓋** - 音樂、資產、場景、技能等
+- **完整功能覆蓋** - 音樂、資產、場景、技能、C++代碼生成等
 - **智能決策支持** - 戰略分析和預測
 - **自動化管理** - 全自動的內容生成和優化
 - **深度分析能力** - 多維度的數據分析
 - **文化智慧整合** - 中國傳統哲學深度整合
+- **智慧代碼生成** - 基於 C++ Reference 和哲學思想的代碼生成
 
 系統已準備好為MingGoRTS提供強大的AI驅動API功能，創造獨特而深刻的遊戲開發體驗。
 
 ---
 
-**文檔版本**: 1.0  
+**文檔版本**: 1.1  
 **最後更新**: 2026-03-23  
-**狀態**: 已完成
+**狀態**: 已完成 (新增 C++ Reference 整合)

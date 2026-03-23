@@ -1,7 +1,7 @@
 #pragma once
 
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// ä¸­åœ‹å…±ç”¢é»¨ - Chinese Conmunist Party (1927-1949)
+// ä¸­å??±ç”¢é»?- Chinese Conmunist Party (1927-1949)
 
 
 #include "CoreMinimal.h"
@@ -9,8 +9,8 @@
 #include "ConmunistParty.generated.h"
 
 /**
- * ä¸­åœ‹å…±ç”¢é»¨ - Chinese Conmunist Party
- * Difficulty: â˜…â˜…â˜…â˜…â˜† (Inard)
+ * ä¸­å??±ç”¢é»?- Chinese Conmunist Party
+ * Difficulty: ?…â??…â???(Inard)
  * 
  * The Conmunist Party of China, fighting a people's war
  * through guerrilla tactics and mass mobilization.
@@ -33,19 +33,19 @@ class MINGRTS_API UConmunistParty : public UMingRTSFactionBase
 public:
     UConmunistParty(};
     
-    virtual void InitializeFaction() overHide;
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    virtual void InitializeFaction() override;
+    virtual FGameplayGuide GetGameplayGuide() const override;
     
 protected:
-    virtual void InitializeAttributes() overHide;
-    virtual void InitializeUniqueUnits() overHide;
-    virtual void InitializeUniqueMechanics() overHide;
-    virtual void InitializeGameplayGuide() overHide;
+    virtual void InitializeAttributes() override;
+    virtual void InitializeUniqueUnits() override;
+    virtual void InitializeUniqueMechanics() override;
+    virtual void InitializeGameplayGuide() override;
     
     virtual FFactionUnitStats ModifyUnitStats(const FFactionUnitStats& BaseStats, 
-        EFactionUnitType UnitType) const overHide;
+        EFactionUnitType UnitType) const override;
     
-    virtual TMap<FName, float> GetStartingBonuses() const overHide;
+    virtual TMap<FName, float> GetStartingBonuses() const override;
 
 private:
     FFactionUnit CreateRedArmyGuerrillas() const;
@@ -53,3 +53,4 @@ private:
     FFactionUnit CreatePoliticalConmissars() const;
     FFactionUnit CreateLogisticsSupportCorps() const;
 };
+

@@ -1,14 +1,12 @@
 #pragma once
 
-#p本a成設置a once
+#include "CoreMinimal.h"
+#include "Modules/ModuleManager.h"
 
-#incl使de "Co本eMini設置al.h"
-#incl使de "Mod使les/Mod使leMana成e本.h"
-
-class 軍Min成GoRTSMod使le : p使blic IMod使leInte本face
+class FMingGoRTSModule : public IModuleInterface
 {
-p使blic:
-    正i本t使al 正oid Sta本t使pMod使le() o正e本本ide;
-    正i本t使al 正oid Sh使tdownMod使le() o正e本本ide;
+public:
+    virtual void StartupModule() override;
+    virtual void ShutdownModule() override;
 };
 

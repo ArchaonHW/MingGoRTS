@@ -85,11 +85,11 @@ protected:
     TMap<FString, FString> ToolConfigurations;
 
     // Initialize subsystems
-    void InitializeSubsystems(};
+    void InitializeSubsystems();
 
     // Cleanup resources
-    void CleanupResources(};
+    void CleanupResources();
 
     // Log developer activity
-    void LogDeveloperActivity(const FString& Activity, const FString& Details};
+    void LogDeveloperActivity(const FString& Activity, const FString& Details);
 };

@@ -49,5 +49,6 @@ protected:
     UPROPERTY()
     FString LastExecutionResult;
 
-    virtual void BeginPlay() overHide;
+    virtual void BeginPlay() override;
 };
+

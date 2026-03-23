@@ -395,25 +395,25 @@ protected:
 
 private:
     // 專案路徑
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, Category = "Configuration")
     FString ProjectRoot;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, Category = "Configuration")
     FString EnginePath;
 
     // 指令註冊表
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Registry")
+    UPROPERTY(EditAnywhere, Category = "Registry")
     TArray<FBatchCommandInfo> CommandRegistry;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Registry")
+    UPROPERTY(EditAnywhere, Category = "Registry")
     TMap<FString, bool> ConvertedCommands;
 
     // 建置工具路徑
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, Category = "Configuration")
     FString UBTPath;
 
     // 日誌檔案路徑
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, Category = "Configuration")
     FString LogPath;
 
     // 內建實現方法

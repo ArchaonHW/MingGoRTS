@@ -1,8 +1,8 @@
-# MingWarRTS 手动设置指南
+# MingGoRTS 手动设置指南
 
 ## 🎯 **编译失败解决步骤**
 
-如果看到错误："MingWarRTS could not be compiled. Try rebuilding from source manually."
+如果看到错误："MingGoRTS could not be compiled. Try rebuilding from source manually."
 
 请按以下步骤操作：
 
@@ -26,7 +26,7 @@
    - `Intermediate`
    - `Saved`
    - `Binaries`
-4. 重新双击 `MingWarRTS.uproject` 打开
+4. 重新双击 `MingGoRTS.uproject` 打开
 5. UE5 会自动重新生成所有文件
 
 ---
@@ -37,16 +37,16 @@
 2. 运行：
    ```cmd
    cd C:\HW\MingGoRTS
-   "C:\Program Files\Epic Games\UE_5.7\Engine\Build\BatchFiles\Build.bat" MingWarRTS Win64 Development -Project="MingWarRTS.uproject"
+   "C:\Program Files\Epic Games\UE_5.7\Engine\Build\BatchFiles\Build.bat" MingGoRTS Win64 Development -Project="MingGoRTS.uproject"
    ```
 3. 等待编译完成
-4. 应该会生成 `MingWarRTS.sln` 文件
+4. 应该会生成 `MingGoRTS.sln` 文件
 
 ---
 
 ## **步骤 4：使用 Visual Studio 编译**
 
-1. 打开 `MingWarRTS.sln`
+1. 打开 `MingGoRTS.sln`
 2. 选择配置：
    - Solution Configurations: **Development**
    - Solution Platforms: **Win64**
@@ -61,7 +61,7 @@
 - ✅ UE5 Editor 正常打开，无错误
 - ✅ 可以右键创建 Blueprint Class
 - ✅ Output Log 显示 "Compilation successful"
-- ✅ 项目根目录有 `MingWarRTS.sln` 文件
+- ✅ 项目根目录有 `MingGoRTS.sln` 文件
 
 ---
 
@@ -96,21 +96,21 @@ A: 首次编译 10-30 分钟是正常的。去喝杯咖啡 ☕
 
 ```
 C:\HW\MingGoRTS\
-├── MingWarRTS.uproject          (✅)
-├── Source\MingWarRTS\
+├── MingGoRTS.uproject          (✅)
+├── Source\MingGoRTS\
 │   ├── Public\
-│   │   ├── MingWarRTS.h         (✅)
+│   │   ├── MingGoRTS.h         (✅)
 │   │   ├── RTSUnit.h            (✅)
 │   │   ├── RTSBuilding.h        (✅)
 │   │   ├── RTSPlayerController.h (✅)
 │   │   └── ResourceManager.h    (✅)
 │   ├── Private\
-│   │   ├── MingWarRTS.cpp       (✅)
+│   │   ├── MingGoRTS.cpp       (✅)
 │   │   ├── RTSUnit.cpp          (✅)
 │   │   ├── RTSBuilding.cpp      (✅)
 │   │   ├── RTSPlayerController.cpp (✅)
 │   │   └── ResourceManager.cpp  (✅)
-│   └── MingWarRTS.Build.cs      (✅)
+│   └── MingGoRTS.Build.cs      (✅)
 └── Config\ (✅)
 ```
 
@@ -118,4 +118,4 @@ C:\HW\MingGoRTS\
 
 ---
 
-**最关键的一步：双击 `MingWarRTS.uproject` 并点击 "Fix"** 🛠️
+**最关键的一步：双击 `MingGoRTS.uproject` 并点击 "Fix"** 🛠️

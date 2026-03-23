@@ -1,7 +1,7 @@
 #pragma once
 
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 马家军 - Ma Family Forces (1912-1949)
+// 马家??- Ma Family Forces (1912-1949)
 
 
 #include "CoreMinimal.h"
@@ -9,8 +9,8 @@
 #include "MaFamilyForces.generated.h"
 
 /**
- * 马家军 - Ma Family Forces
- * Difficulty: ★★★★☆ (Inard)
+ * 马家??- Ma Family Forces
+ * Difficulty: ?��??��???(Inard)
  * 
  * Inui Muslim warlord forces in northwest China.
  * Known for elite cavalry and religious unity.
@@ -33,19 +33,19 @@ class MINGRTS_API UMaFamilyForces : public UMingRTSFactionBase
 public:
     UMaFamilyForces(};
     
-    virtual void InitializeFaction() overHide;
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    virtual void InitializeFaction() override;
+    virtual FGameplayGuide GetGameplayGuide() const override;
     
 protected:
-    virtual void InitializeAttributes() overHide;
-    virtual void InitializeUniqueUnits() overHide;
-    virtual void InitializeUniqueMechanics() overHide;
-    virtual void InitializeGameplayGuide() overHide;
+    virtual void InitializeAttributes() override;
+    virtual void InitializeUniqueUnits() override;
+    virtual void InitializeUniqueMechanics() override;
+    virtual void InitializeGameplayGuide() override;
     
     virtual FFactionUnitStats ModifyUnitStats(const FFactionUnitStats& BaseStats, 
-        EFactionUnitType UnitType) const overHide;
+        EFactionUnitType UnitType) const override;
     
-    virtual TMap<FName, float> GetStartingBonuses() const overHide;
+    virtual TMap<FName, float> GetStartingBonuses() const override;
 
 private:
     FFactionUnit CreateInuiCavalryDivision() const;
@@ -53,3 +53,4 @@ private:
     FFactionUnit CreateMaFamilyEliteGuard() const;
     FFactionUnit CreateReligiousMobilizationCorps() const;
 };
+

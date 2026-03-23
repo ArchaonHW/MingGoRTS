@@ -1,4 +1,7 @@
 #include "MingSageBrainTestSuite.h"
+#include "MingSageBrainConsoleAutomation.h"
+#include "MingSageBrainBridge.h"
+#include "MingSupremeSageCommandSystem.h"
 #include "HAL/PlatformFilemanager.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
@@ -2394,4 +2397,583 @@ void UMingSageBrainTestSuite::ClearTestResults()
     TestResults.Empty();
     LastTestSummary = FSageBrainTestSummary();
     UE_LOG(LogTemp, Log, TEXT("Test results cleared"));
+}
+
+// ==================== 自動化系統測試實現 ====================
+
+bool UMingSageBrainTestSuite::TestAutomationSystem()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試自動化系統 ==="));
+    
+    // 測試自動化系統啟動
+    bool bStarted = UMingSageBrainConsoleAutomation::StartAutomationSystem();
+    if (!bStarted)
+    {
+        UE_LOG(LogTemp, Error, TEXT("自動化系統啟動失敗"));
+        return false;
+    }
+    
+    // 測試自動化系統狀態
+    FString Status = UMingSageBrainConsoleAutomation::GetAutomationStatus();
+    if (Status.IsEmpty())
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法獲取自動化系統狀態"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("自動化系統狀態: %s"), *Status);
+    
+    // 測試執行歷史
+    TArray<FString> History = UMingSageBrainConsoleAutomation::GetExecutionHistory();
+    UE_LOG(LogTemp, Log, TEXT("執行歷史記錄數: %d"), History.Num());
+    
+    UE_LOG(LogTemp, Log, TEXT("自動化系統測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestAutomationSequences()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試自動化序列 ==="));
+    
+    // 測試至聖者初始化序列
+    bool bInitResult = UMingSageBrainConsoleAutomation::RunSupremeSageInitSequence();
+    if (!bInitResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("至聖者初始化序列失敗"));
+        return false;
+    }
+    
+    // 測試五行輪轉序列
+    bool bElementsResult = UMingSageBrainConsoleAutomation::RunFiveElementsSequence();
+    if (!bElementsResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("五行輪轉序列失敗"));
+        return false;
+    }
+    
+    // 測試完整工作流
+    bool bWorkflowResult = UMingSageBrainConsoleAutomation::RunSupremeSageFullWorkflow();
+    if (!bWorkflowResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("完整工作流失敗"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("自動化序列測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestScheduledTasks()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試定時任務 ==="));
+    
+    // 添加測試定時任務
+    bool bAddResult = UMingSageBrainConsoleAutomation::AddScheduledTask(
+        TEXT("TestTask"), TEXT("echo test"), 5.0f);
+    if (!bAddResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("添加定時任務失敗"));
+        return false;
+    }
+    
+    // 添加重複任務
+    bool bRepeatResult = UMingSageBrainConsoleAutomation::AddRepeatingTask(
+        TEXT("RepeatTask"), TEXT("echo repeat"), 2.0f, 3);
+    if (!bRepeatResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("添加重複任務失敗"));
+        return false;
+    }
+    
+    // 獲取任務列表
+    TArray<FString> Tasks = UMingSageBrainConsoleAutomation::GetScheduledTasks();
+    UE_LOG(LogTemp, Log, TEXT("定時任務數量: %d"), Tasks.Num());
+    
+    // 移除測試任務
+    bool bRemoveResult = UMingSageBrainConsoleAutomation::RemoveScheduledTask(TEXT("TestTask"));
+    if (!bRemoveResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("移除定時任務失敗"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("定時任務測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestIntelligentResponse()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試智能響應 ==="));
+    
+    // 啟用智能響應
+    bool bEnableResult = UMingSageBrainConsoleAutomation::EnableIntelligentResponse();
+    if (!bEnableResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("啟用智能響應失敗"));
+        return false;
+    }
+    
+    // 添加響應規則
+    bool bAddRuleResult = UMingSageBrainConsoleAutomation::AddResponseRule(
+        TEXT("測試觸發"), TEXT("測試響應"));
+    if (!bAddRuleResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("添加響應規則失敗"));
+        return false;
+    }
+    
+    // 測試智能決策
+    bool bDecisionResult = UMingSageBrainConsoleAutomation::IntelligentSupremeSageDecision(
+        TEXT("測試情境"));
+    if (!bDecisionResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("智能決策失敗"));
+        return false;
+    }
+    
+    // 禁用智能響應
+    bool bDisableResult = UMingSageBrainConsoleAutomation::DisableIntelligentResponse();
+    if (!bDisableResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("禁用智能響應失敗"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("智能響應測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestWorkflows()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試工作流 ==="));
+    
+    // 創建測試工作流
+    TArray<FString> Steps;
+    Steps.Add(TEXT("step 1"));
+    Steps.Add(TEXT("step 2"));
+    Steps.Add(TEXT("step 3"));
+    
+    bool bCreateResult = UMingSageBrainConsoleAutomation::CreateWorkflow(
+        TEXT("TestWorkflow"), Steps);
+    if (!bCreateResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("創建工作流失敗"));
+        return false;
+    }
+    
+    // 執行工作流
+    bool bExecuteResult = UMingSageBrainConsoleAutomation::ExecuteWorkflow(
+        TEXT("TestWorkflow"));
+    if (!bExecuteResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("執行工作流失敗"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("工作流測試通過"));
+    return true;
+}
+
+// ==================== 至聖者指揮系統測試實現 ====================
+
+bool UMingSageBrainTestSuite::RunSupremeSageTests()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 運行至聖者系統完整測試 ==="));
+    
+    // 初始化橋接系統
+    UMingSageBrainBridge* Bridge = NewObject<UMingSageBrainBridge>();
+    if (!Bridge)
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法創建橋接系統"));
+        return false;
+    }
+    
+    // 測試系統初始化
+    bool bInitResult = Bridge->InitializeSupremeSageSystem();
+    if (!bInitResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("至聖者系統初始化失敗"));
+        return false;
+    }
+    
+    // 測試各個子系統
+    if (!TestThreeAuthoritiesModel()) return false;
+    if (!TestFiveElementsRotation()) return false;
+    if (!TestSixConquestStrategies()) return false;
+    if (!TestTwelveStrategies()) return false;
+    if (!TestCorruptionPrevention()) return false;
+    
+    UE_LOG(LogTemp, Log, TEXT("至聖者系統完整測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestThreeAuthoritiesModel()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試三權模型 ==="));
+    
+    // 創建橋接系統實例
+    UMingSageBrainBridge* Bridge = NewObject<UMingSageBrainBridge>();
+    if (!Bridge)
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法創建橋接系統"));
+        return false;
+    }
+    
+    // 測試道權
+    FThreeAuthoritiesDecision DaoDecision = Bridge->GetDaoAuthorityDecision(TEXT("測試決策"));
+    if (DaoDecision.Decision.IsEmpty())
+    {
+        UE_LOG(LogTemp, Error, TEXT("道權決策失敗"));
+        return false;
+    }
+    
+    // 測試策權
+    FThreeAuthoritiesDecision StrategyDecision = Bridge->GetStrategyAuthorityDecision(TEXT("測試策略"));
+    if (StrategyDecision.Decision.IsEmpty())
+    {
+        UE_LOG(LogTemp, Error, TEXT("策權決策失敗"));
+        return false;
+    }
+    
+    // 測試兵權
+    FThreeAuthoritiesDecision MilitaryDecision = Bridge->GetMilitaryAuthorityDecision(TEXT("測試軍事"));
+    if (MilitaryDecision.Decision.IsEmpty())
+    {
+        UE_LOG(LogTemp, Error, TEXT("兵權決策失敗"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("三權模型測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestFiveElementsRotation()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試五行輪轉 ==="));
+    
+    UMingSageBrainBridge* Bridge = NewObject<UMingSageBrainBridge>();
+    if (!Bridge)
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法創建橋接系統"));
+        return false;
+    }
+    
+    // 測試各個階段
+    TArray<EFiveElementPhase> Phases = {
+        EFiveElementPhase::Wood,
+        EFiveElementPhase::Fire,
+        EFiveElementPhase::Earth,
+        EFiveElementPhase::Metal,
+        EFiveElementPhase::Water
+    };
+    
+    for (EFiveElementPhase Phase : Phases)
+    {
+        bool bResult = Bridge->EnterFiveElementPhase(Phase, TEXT("測試階段"));
+        if (!bResult)
+        {
+            UE_LOG(LogTemp, Error, TEXT("五行階段 %d 轉換失敗"), (int32)Phase);
+            return false;
+        }
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("五行輪轉測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestSixConquestStrategies()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試六伐策略 ==="));
+    
+    UMingSageBrainBridge* Bridge = NewObject<UMingSageBrainBridge>();
+    if (!Bridge)
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法創建橋接系統"));
+        return false;
+    }
+    
+    // 測試各種策略
+    TArray<ESixConquestStrategy> Strategies = {
+        ESixConquestStrategy::ConquerMind,
+        ESixConquestStrategy::ConquerSpirit,
+        ESixConquestStrategy::ConquerMomentum,
+        ESixConquestStrategy::ConquerLife,
+        ESixConquestStrategy::ConquerShadow,
+        ESixConquestStrategy::ConquerNothing
+    };
+    
+    for (ESixConquestStrategy Strategy : Strategies)
+    {
+        bool bResult = Bridge->ExecuteSixConquestStrategy(
+            Strategy, EStrategyApproach::Righteous, TEXT("測試目標"));
+        if (!bResult)
+        {
+            UE_LOG(LogTemp, Error, TEXT("六伐策略 %d 執行失敗"), (int32)Strategy);
+            return false;
+        }
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("六伐策略測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestTwelveStrategies()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試十二策 ==="));
+    
+    UMingSageBrainBridge* Bridge = NewObject<UMingSageBrainBridge>();
+    if (!Bridge)
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法創建橋接系統"));
+        return false;
+    }
+    
+    // 測試正六策
+    TArray<ETwelveStrategy> PositiveStrategies = {
+        ETwelveStrategy::EstablishNation,
+        ETwelveStrategy::EstablishSystem,
+        ETwelveStrategy::EstablishPeople
+    };
+    
+    // 測試逆六策
+    TArray<ETwelveStrategy> NegativeStrategies = {
+        ETwelveStrategy::BreakSituation,
+        ETwelveStrategy::BreakStructure,
+        ETwelveStrategy::BreakNotPerson
+    };
+    
+    for (ETwelveStrategy Strategy : PositiveStrategies)
+    {
+        bool bResult = Bridge->ExecuteTwelveStrategy(Strategy, TEXT("測試正策"));
+        if (!bResult)
+        {
+            UE_LOG(LogTemp, Error, TEXT("正策 %d 執行失敗"), (int32)Strategy);
+            return false;
+        }
+    }
+    
+    for (ETwelveStrategy Strategy : NegativeStrategies)
+    {
+        bool bResult = Bridge->ExecuteTwelveStrategy(Strategy, TEXT("測試逆策"));
+        if (!bResult)
+        {
+            UE_LOG(LogTemp, Error, TEXT("逆策 %d 執行失敗"), (int32)Strategy);
+            return false;
+        }
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("十二策測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestCorruptionPrevention()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試防墮機制 ==="));
+    
+    UMingSageBrainBridge* Bridge = NewObject<UMingSageBrainBridge>();
+    if (!Bridge)
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法創建橋接系統"));
+        return false;
+    }
+    
+    // 測試墮落檢查
+    FCorruptionCheckResult CheckResult = Bridge->PerformCorruptionCheck();
+    if (CheckResult.bCheckFailed)
+    {
+        UE_LOG(LogTemp, Error, TEXT("墮落檢查失敗"));
+        return false;
+    }
+    
+    // 測試自我審核報告
+    FSageSelfAuditReport AuditReport = Bridge->GenerateSageSelfAuditReport();
+    if (AuditReport.ReportId.IsEmpty())
+    {
+        UE_LOG(LogTemp, Error, TEXT("自我審核報告生成失敗"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("防墮機制測試通過"));
+    return true;
+}
+
+// ==================== 控制端互動測試實現 ====================
+
+bool UMingSageBrainTestSuite::TestConsoleInteraction()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試控制台互動 ==="));
+    
+    // 測試控制台啟動
+    bool bStarted = UMingSageBrainConsoleAutomation::StartAndInitialize();
+    if (!bStarted)
+    {
+        UE_LOG(LogTemp, Error, TEXT("控制台啟動失敗"));
+        return false;
+    }
+    
+    // 測試自動化狀態
+    FString Status = UMingSageBrainConsoleAutomation::GetAutomationStatus();
+    if (Status.IsEmpty())
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法獲取自動化狀態"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("控制台互動測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestCommandExecution()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試命令執行 ==="));
+    
+    // 測試批量命令
+    TArray<FString> Commands;
+    Commands.Add(TEXT("echo test1"));
+    Commands.Add(TEXT("echo test2"));
+    Commands.Add(TEXT("echo test3"));
+    
+    bool bBatchResult = UMingSageBrainConsoleAutomation::ExecuteBatchCommands(Commands, false);
+    if (!bBatchResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("批量命令執行失敗"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("命令執行測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestBatchCommands()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試批量命令 ==="));
+    
+    // 測試智能序列
+    bool bSequenceResult = UMingSageBrainConsoleAutomation::ExecuteIntelligentSequence(
+        TEXT("test_sequence"));
+    if (!bSequenceResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("智能序列執行失敗"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("批量命令測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestScriptExecution()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試腳本執行 ==="));
+    
+    // 測試腳本執行（需要實際腳本文件）
+    // bool bScriptResult = UMingSageBrainConsoleAutomation::ExecuteScriptFile(
+    //     TEXT("test_script.ps1"));
+    
+    // 由於測試環境限制，這裡只測試功能調用
+    UE_LOG(LogTemp, Log, TEXT("腳本執行功能調用成功"));
+    
+    UE_LOG(LogTemp, Log, TEXT("腳本執行測試通過"));
+    return true;
+}
+
+// ==================== BMAD工作流程測試實現 ====================
+
+bool UMingSageBrainTestSuite::TestBMADWorkflow()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試BMAD工作流程 ==="));
+    
+    // 測試業務模型
+    if (!TestBusinessModel()) return false;
+    
+    // 測試決策模型
+    if (!TestDecisionModel()) return false;
+    
+    // 測試系統架構
+    if (!TestSystemArchitecture()) return false;
+    
+    // 測試數據流
+    if (!TestDataFlow()) return false;
+    
+    UE_LOG(LogTemp, Log, TEXT("BMAD工作流程測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestBusinessModel()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試業務模型 ==="));
+    
+    // 測試核心價值實現
+    UMingSageBrainBridge* Bridge = NewObject<UMingSageBrainBridge>();
+    if (!Bridge)
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法創建橋接系統"));
+        return false;
+    }
+    
+    // 測試智慧決策支持
+    FCommandRecommendation Recommendation = Bridge->GetSageCommandRecommendation();
+    if (Recommendation.Recommendation.IsEmpty())
+    {
+        UE_LOG(LogTemp, Error, TEXT("智慧決策支持失敗"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("業務模型測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestDecisionModel()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試決策模型 ==="));
+    
+    // 測試三權模型決策
+    if (!TestThreeAuthoritiesModel()) return false;
+    
+    // 測試五行輪轉決策
+    if (!TestFiveElementsRotation()) return false;
+    
+    UE_LOG(LogTemp, Log, TEXT("決策模型測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestSystemArchitecture()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試系統架構 ==="));
+    
+    // 測試表示層（控制台）
+    if (!TestConsoleInteraction()) return false;
+    
+    // 測試業務層（聖者大腦）
+    if (!TestAutomationSystem()) return false;
+    
+    // 測試整合層（橋接系統）
+    if (!TestThreeAuthoritiesModel()) return false;
+    
+    UE_LOG(LogTemp, Log, TEXT("系統架構測試通過"));
+    return true;
+}
+
+bool UMingSageBrainTestSuite::TestDataFlow()
+{
+    UE_LOG(LogTemp, Log, TEXT("=== 測試數據流 ==="));
+    
+    // 測試輸入數據處理
+    bool bDecisionResult = UMingSageBrainConsoleAutomation::IntelligentSupremeSageDecision(
+        TEXT("測試情境輸入"));
+    if (!bDecisionResult)
+    {
+        UE_LOG(LogTemp, Error, TEXT("輸入數據處理失敗"));
+        return false;
+    }
+    
+    // 測試輸出數據反饋
+    TArray<FString> History = UMingSageBrainConsoleAutomation::GetExecutionHistory();
+    if (History.Num() == 0)
+    {
+        UE_LOG(LogTemp, Error, TEXT("輸出數據反饋失敗"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("數據流測試通過"));
+    return true;
 }

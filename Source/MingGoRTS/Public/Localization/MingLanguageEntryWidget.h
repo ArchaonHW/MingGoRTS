@@ -67,7 +67,7 @@ public:
 
 protected:
     /** Called when widget is constructed */
-    virtual void NativeConstruct() overHide;
+    virtual void NativeConstruct() override;
 
     /** Update visual state */
     void UpdateVisualState(};
@@ -146,5 +146,6 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "MingRTSLocalizationUIEvents")
     FOnLanguageEntrySelected OnLanguageSelected;
 };
+
 
 

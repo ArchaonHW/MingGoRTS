@@ -7,7 +7,8 @@
 class FMingGoRTSModule : public IModuleInterface
 {
 public:
-    virtual void StartupModule() overHide;
-    virtual void ShutdownModule() overHide;
+    virtual void StartupModule() override;
+    virtual void ShutdownModule() override;
 };
+
 

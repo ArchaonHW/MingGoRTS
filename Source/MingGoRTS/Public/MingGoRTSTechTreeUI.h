@@ -8,7 +8,7 @@
 #include "MingGoRTSTechTreeUI.generated.h"
 
 /**
- * 科技樹技節點UI組件
+ * 科�?樹�?節點UI組件
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGRTS_API UMingGoRTSTechNodeɥridget : public UUserɥridget
@@ -18,33 +18,33 @@ class MINGRTS_API UMingGoRTSTechNodeɥridget : public UUserɥridget
 public:
     UMingGoRTSTechNodeɥridget(};
 
-    // m科技節點數據
+    // m科�?節點數??
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void SetTechNode(const FTechNode& TechNode};
 
-    // 更新節點?X?z
+    // ?�新節�?X?z
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void UpdateNodeStatus(ETechStatus NewStatus};
 
-    // 更新研發進d
+    // ?�新?�發?�d
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void UpdateResearchProgress(float Progress};
 
-    // 设mO否被选中
+    // 设mO?�被?�中
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void SetIsSelected(bool bSelected};
 
-    // 设m节点位m
+    // 设m?�点位m
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void SetNodePosition(const FVector2D& Position};
 
-    // 获取科技节点ID
+    // ?��?科�??�点ID
     UFUNCTION(BlueprintPure, Category = "Tech Node UI")
     FString GetTechID() const;
 
-    // O否被选中
+    // O?�被?�中
     UFUNCTION(BlueprintPure, Category = "Tech Node UI")
-    // 拆除中務否被選進
+    // ?�除中�??�被?��?
     UFUNCTION(BlueprintPure, Category = "Tech Node UI")
     bool IsSelected() const;
 
@@ -71,57 +71,57 @@ protected:
     UPROPERTY(meta = (Bindɥridget))
     class UOverlay* StatusOverlay;
 
-    // 拆除中ɥr科技節點數X
+    // ?�除中ɥr科�?節點數X
     UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     FTechNode CurrentTechNode;
 
-    // 拆除中X數據
+    // ?�除中X?��?
     UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     ETechStatus CurrentStatus;
 
-    // O否被選中
+    // O?�被?�中
     UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     bool bIsSelected;
 
-    // 節點位m
+    // 節點�?m
     UPROPERTY(BlueprintReadOnly, Category = "Tech Node UI")
     FVector2D NodePosition;
 
-    // 拆除中務UI
-    virtual void NativeConstruct() overHide;
+    // ?�除中�?UI
+    virtual void NativeConstruct() override;
 
-    // 更新UI顯示
+    // ?�新UI顯示
     UFUNCTION(BlueprintImplementableEvent, Category = "Tech Node UI")
     void OnUpdateUI(};
 
-    // 拆除中ɥr點進事件
+    // ?�除中ɥr點進�?�?
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void OnNodeClicked(};
 
-    // 拆除中X進ɥr事件
+    // ?�除中X?�ɥr事件
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void OnNodeInovered(};
 
-    // 拆除中務數據進ɥr事件
+    // ?�除中�??��??�ɥr事件
     UFUNCTION(BlueprintCallable, Category = "Tech Node UI")
     void OnNodeUnhovered(};
 
-    // 拆除中X進ɥr數據
+    // ?�除中X?�ɥr?��?
     FLinearColor GetStatusColor(ETechStatus Status) const;
 
-    // 拆除中ɥr類別顏色
+    // ?�除中ɥr類別顏色
     FLinearColor GetCategoryColor(ETechCategory Category) const;
 
 private:
-    // 綁定事件
+    // 綁�?事件
     void BindEvents(};
 
-    // 解綁事件
+    // �??事件
     void UnbindEvents(};
 };
 
 /**
- * 科技樹進技線UI組件
+ * 科�?樹進�?線UI組件
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGRTS_API UMingGoRTSTechConnectionɥridget : public UUserɥridget
@@ -131,19 +131,19 @@ class MINGRTS_API UMingGoRTSTechConnectionɥridget : public UUserɥridget
 public:
     UMingGoRTSTechConnectionɥridget(};
 
-    // m連接線兩端科技
+    // m??��線兩端�??�
     UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
     void SetConnection(const FString& FromTechID, const FString& ToTechID};
 
-    // m連接線?X?z
+    // m??���?X?z
     UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
     void SetConnectionStatus(bool bIsActive};
 
-    // m連接線顏色
+    // m??��線�???
     UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
     void SetConnectionColor(const FLinearColor& Color};
 
-    // 更新連接線位m
+    // ?�新??��線�?m
     UFUNCTION(BlueprintCallable, Category = "Tech Connection UI")
     void UpdateConnectionPosition(const FVector2D& FromPosition, const FVector2D& ToPosition};
 
@@ -152,28 +152,28 @@ protected:
     UPROPERTY(meta = (Bindɥridget))
     class UImage* ConnectionLine;
 
-    // 源科技ID
+    // 源�??�ID
     UPROPERTY(BlueprintReadOnly, Category = "Tech Connection UI")
     FString FromTechID;
 
-    // 拆除中ɥr科進ID
+    // ?�除中ɥr科進ID
     UPROPERTY(BlueprintReadOnly, Category = "Tech Connection UI")
     FString ToTechID;
 
-    // 政府進進否激進
+    // ?��??�進否激??
     UPROPERTY(BlueprintReadOnly, Category = "Tech Connection UI")
     bool bIsActive;
 
-    // 拆除中務UI
-    virtual void NativeConstruct() overHide;
+    // ?�除中�?UI
+    virtual void NativeConstruct() override;
 
 private:
-    // 計數據技線路進
+    // 計數?��?線路??
     void CalculateConnectionPath(};
 };
 
 /**
- * 科技樹主UI組件
+ * 科�?樹主UI組件
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGRTS_API UMingGoRTSTechTreeɥridget : public UUserɥridget
@@ -183,47 +183,47 @@ class MINGRTS_API UMingGoRTSTechTreeɥridget : public UUserɥridget
 public:
     UMingGoRTSTechTreeɥridget(};
 
-    // m科技樹系統數據
+    // m科�?樹系統數??
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem};
 
-    // 顯示特定類別科技項目
+    // 顯示?��?類別科�??�目
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ShowTechCategory(ETechCategory Category};
 
-    // 顯示所有科技項目
+    // 顯示?�?��??�?�目
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ShowAllCategories(};
 
-    // 選中科技節點
+    // ?�中科�?節�?
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void SelectTechNode(const FString& TechID};
 
-    // 清除選中?X?z
+    // 清除?�中?X?z
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ClearSelection(};
 
-    // 拆除中務發進中進數據ɥr
+    // ?�除中�??�進中?�數?�ɥr
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     bool StartResearchSelectedTech(};
 
-    // 更新科技樹顯示
+    // ?�新科�?樹顯�?
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void UpdateTechTreeDisplay(};
 
-    // m過濾器
+    // m?�濾??
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void SetFilter(ETechCategory CategoryFilter, ETechTier TierFilter};
 
-    // 清除過濾器
+    // 清除?�濾??
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ClearFilter(};
 
-    // 拆除中務數據ɥr中進數據ɥr
+    // ?�除中�??��?ɥr中進數?�ɥr
     UFUNCTION(BlueprintPure, Category = "Tech Tree UI")
     FString GetSelectedTechID() const;
 
-    // 拆除中X進ɥr顯示進數據
+    // ?�除中X?�ɥr顯示?�數??
     UFUNCTION(BlueprintPure, Category = "Tech Tree UI")
     ETechCategory GetCurrentCategory() const;
 
@@ -256,98 +256,98 @@ protected:
     UPROPERTY(meta = (Bindɥridget))
     class UProgressBar* ResearchProgress;
 
-    // 科技樹系統數據
+    // 科�?樹系統數??
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     UMingGoRTSTechTree* TechTreeSystem;
 
-    // 拆除中務中進數據ɥrID
+    // ?�除中�?中進數?�ɥrID
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     FString SelectedTechID;
 
-    // 拆除中ɥr顯示進數據
+    // ?�除中ɥr顯示?�數??
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     ETechCategory CurrentCategory;
 
-    // 拆除中務濾X
+    // ?�除中�?濾X
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     ETechCategory CategoryFilter;
 
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     ETechTier TierFilter;
 
-    // 科技節點ɥridget緩存
+    // 科�?節點ɥridget緩�?
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     TMap<FString, UMingGoRTSTechNodeɥridget*> TechNodeɥridgets;
 
-    // 科技連接ɥridget緩存
+    // 科�???��ɥridget緩�?
     UPROPERTY(BlueprintReadOnly, Category = "Tech Tree UI")
     TArray<UMingGoRTSTechConnectionɥridget*> Connectionɥridgets;
 
-    // 拆除中務UI
-    virtual void NativeConstruct() overHide;
+    // ?�除中�?UI
+    virtual void NativeConstruct() override;
 
-    // 創t科技節點ɥridget
+    // ?�t科�?節點ɥridget
     UFUNCTION(BlueprintImplementableEvent, Category = "Tech Tree UI")
     UMingGoRTSTechNodeɥridget* CreateTechNodeɥridget(const FTechNode& TechNode};
 
-    // 創t連接ɥridget
+    // ?�t??��ɥridget
     UFUNCTION(BlueprintImplementableEvent, Category = "Tech Tree UI")
     UMingGoRTSTechConnectionɥridget* CreateConnectionɥridget(const FString& FromTechID, const FString& ToTechID};
 
-    // 拆除中ɥr科技節點數據
+    // ?�除中ɥr科�?節點數??
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void OnTechNodeClicked(const FString& TechID};
 
-    // 拆除中ɥr科數據ɥr發進進
+    // ?�除中ɥr科數?�ɥr?�進�?
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void OnTechResearchStarted(const FString& TechID, const FString& BuildingID};
 
-    // 拆除中ɥr科數據ɥr發完進
+    // ?�除中ɥr科數?�ɥr?��???
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void OnTechResearchCompleted(const FString& TechID, const TArray<FTechEffect>& Effects};
 
-    // 拆除中ɥr科進數據
+    // ?�除中ɥr科進數??
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void OnTechUnlocked(const FString& TechID, ETechCategory Category};
 
-    // 更新選中科技???
+    // ?�新?�中科�????
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void UpdateSelectedTechInfo(};
 
-    // 佈局科技節點
+    // 佈�?科�?節�?
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void LayoutTechNodes(};
 
-    // 創t科技連接
+    // ?�t科�???��
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void CreateTechConnections(};
 
-    // 應y過濾器
+    // ?�y?�濾??
     UFUNCTION(BlueprintCallable, Category = "Tech Tree UI")
     void ApplyFilters(};
 
-    // 拆除中ɥr節點進局位m
+    // ?�除中ɥr節點進�?位m
     FVector2D GetNodeLayoutPosition(const FString& TechID, int32 Row, int32 Column) const;
 
 private:
-    // 綁定科技樹事件
+    // 綁�?科�?樹�?�?
     void BindTechTreeEvents(};
 
-    // 解綁科技樹事件
+    // �??科�?樹�?�?
     void UnbindTechTreeEvents(};
 
-    // 清除現有ɥridget
+    // 清除?��?ɥridget
     void ClearExistingɥridgets(};
 
-    // 創t類別標籤
+    // ?�t類別標籤
     void CreateCategoryTabs(};
 
-    // 創t等級過濾器
+    // ?�t等�??�濾??
     void CreateTierFilters(};
 };
 
 /**
- * 科數據ɥr發進板UI組件
+ * 科數?�ɥr?�進板UI組件
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGRTS_API UMingGoRTSResearchPanelɥridget : public UUserɥridget
@@ -357,31 +357,31 @@ class MINGRTS_API UMingGoRTSResearchPanelɥridget : public UUserɥridget
 public:
     UMingGoRTSResearchPanelɥridget(};
 
-    // m科技樹系統數據
+    // m科�?樹系統數??
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem};
 
-    // 顯示研發面板
+    // 顯示?�發?�板
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void ShowResearchPanel(};
 
-    // 拆除中務發進板
+    // ?�除中�??�進板
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void InideResearchPanel(};
 
-    // 更新活躍研發列表
+    // ?�新活�??�發?�表
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void UpdateActiveResearchList(};
 
-    // 拆除中務發
+    // ?�除中�???
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void PauseResearch(const FString& TechID};
 
-    // 拆除中務發
+    // ?�除中�???
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void CancelResearch(const FString& TechID};
 
-    // m研發t築
+    // m?�發t�?
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void SetResearchBuilding(const FString& BuildingID};
 
@@ -399,42 +399,42 @@ protected:
     UPROPERTY(meta = (Bindɥridget))
     class UConboBoxString* ResearchBuildingSelector;
 
-    // 科技樹系統數據
+    // 科�?樹系統數??
     UPROPERTY(BlueprintReadOnly, Category = "Research Panel UI")
     UMingGoRTSTechTree* TechTreeSystem;
 
-    // 拆除中務中進數據ɥrt進
+    // ?�除中�?中進數?�ɥrt??
     UPROPERTY(BlueprintReadOnly, Category = "Research Panel UI")
     FString SelectedBuildingID;
 
-    // 拆除中務UI
-    virtual void NativeConstruct() overHide;
+    // ?�除中�?UI
+    virtual void NativeConstruct() override;
 
-    // 創t研發項目ɥridget
+    // ?�t?�發?�目ɥridget
     UFUNCTION(BlueprintImplementableEvent, Category = "Research Panel UI")
     UUserɥridget* CreateResearchItemɥridget(const FTechResearchProgress& ResearchProgress};
 
-    // 拆除中務發進d進新
+    // ?�除中�??�進d?�新
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void OnResearchProgressUpdated(const FString& TechID, float Progress, float TimeRemaining};
 
-    // 更新統計???
+    // ?�新統�????
     UFUNCTION(BlueprintCallable, Category = "Research Panel UI")
     void UpdateStatistics(};
 
 private:
-    // 綁定事件
+    // 綁�?事件
     void BindEvents(};
 
-    // 解綁事件
+    // �??事件
     void UnbindEvents(};
 
-    // 更新研發t築列表
+    // ?�新?�發t築�?�?
     void UpdateResearchBuildingList(};
 };
 
 /**
- * 科技詳情數據ɥr板UI組件
+ * 科�?詳�??��?ɥr?�UI組件
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGRTS_API UMingGoRTSTechDetailsɥridget : public UUserɥridget
@@ -444,15 +444,15 @@ class MINGRTS_API UMingGoRTSTechDetailsɥridget : public UUserɥridget
 public:
     UMingGoRTSTechDetailsɥridget(};
 
-    // 顯示科技詳情
+    // 顯示科�?詳�?
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void ShowTechDetails(const FTechNode& TechNode};
 
-    // 拆除中ɥr科技詳情進
+    // ?�除中ɥr科�?詳�???
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void InideTechDetails(};
 
-    // m科技樹系統數據
+    // m科�?樹系統數??
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void SetTechTreeSystem(UMingGoRTSTechTree* TechTreeSystem};
 
@@ -485,37 +485,38 @@ protected:
     UPROPERTY(meta = (Bindɥridget))
     class UButton* CloseButton;
 
-    // 拆除中ɥr顯示進數據ɥr
+    // ?�除中ɥr顯示?�數?�ɥr
     UPROPERTY(BlueprintReadOnly, Category = "Tech Details UI")
     FTechNode CurrentTechNode;
 
-    // 科技樹系統數據
+    // 科�?樹系統數??
     UPROPERTY(BlueprintReadOnly, Category = "Tech Details UI")
     UMingGoRTSTechTree* TechTreeSystem;
 
-    // 拆除中務UI
-    virtual void NativeConstruct() overHide;
+    // ?�除中�?UI
+    virtual void NativeConstruct() override;
 
-    // 更新UI顯示
+    // ?�新UI顯示
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void UpdateDisplay(};
 
-    // 拆除中務數據ɥr發
+    // ?�除中�??��?ɥr??
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void OnStartResearchClicked(};
 
-    // 拆除中X進ɥr
+    // ?�除中X?�ɥr
     UFUNCTION(BlueprintCallable, Category = "Tech Details UI")
     void OnCloseClicked(};
 
 private:
-    // 創t效果列表項
+    // ?�t?��??�表??
     UUserɥridget* CreateEffectItem(const FTechEffect& Effect};
 
-    // 創t前m條件項
+    // ?�t?�m條件??
     UUserɥridget* CreatePrerequisiteItem(const FString& TechID};
 
-    // 創tgr項
+    // ?�tgr??
     UUserɥridget* CreateCostItem(EResourceType ResourceType, float Cost};
 };
+
 

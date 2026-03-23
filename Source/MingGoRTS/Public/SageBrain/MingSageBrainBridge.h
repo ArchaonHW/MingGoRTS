@@ -4,6 +4,12 @@
 #include "UObject/NoExportTypes.h"
 #include "Engine/Engine.h"
 #include "MingSageBrainCoreSystem.h"
+#include "MingSageBrainLauncher.h"
+#include "MingSageBrainSelfLearningSystem.h"
+#include "MingSupremeSageCommandSystem.h"
+#include "MingThreeAuthoritiesManager.h"
+#include "MingFiveElementsRotation.h"
+#include "MingCorruptionPrevention.h"
 #include "MingSageBrainBridge.generated.h"
 
 /**
@@ -86,10 +92,40 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Status")
     ESageBrainConsciousness GetConsciousnessLevel() const;
 
+    // 編譯優化工作流程
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Compile")
+    bool RunCompileOptimizationWorkflow();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Compile")
+    bool EnableCompileOptimizer();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Compile")
+    bool IsCompileOptimizerEnabled() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Compile")
+    void SetBuildMode(const FString& Mode);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Compile")
+    void SetSkipClean(bool bSkip);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Compile")
+    void SetAutoFix(bool bAuto);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Compile")
+    void SetCreateTasks(bool bCreate);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Compile")
+    TArray<FMingTaskRequirement> GetGeneratedTasks() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Compile")
+    FCompileOptimizationReport GetLastCompileReport() const;
+
     // 事件委託
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnSageBrainDecision, const FString&, Context, const FString&, Decision);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSageBrainDecision, const FString&, Context, const FString&, Decision);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConsciousnessEvolved, ESageBrainConsciousness, NewLevel);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnEnhancedContentGenerated, const FString&, ContentType, const FString&, Content);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEnhancedContentGenerated, const FString&, ContentType, const FString&, Content);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCompileOptimizationCompleted, const FCompileOptimizationReport&, Report);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCompileProgressUpdated, int32, Percentage, const FString&, Message);
 
     UPROPERTY(BlueprintAssignable, Category = "Sage Brain|Bridge|Events")
     FOnSageBrainDecision OnSageBrainDecision;
@@ -100,11 +136,86 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Sage Brain|Bridge|Events")
     FOnEnhancedContentGenerated OnEnhancedContentGenerated;
 
+    UPROPERTY(BlueprintAssignable, Category = "Sage Brain|Bridge|Events")
+    FOnCompileOptimizationCompleted OnCompileOptimizationCompleted;
+
+    UPROPERTY(BlueprintAssignable, Category = "Sage Brain|Bridge|Events")
+    FOnCompileProgressUpdated OnCompileProgressUpdated;
+
+    // 自我思考與學習功能
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Self Learning")
+    bool EnableSelfThinking(ESelfThinkingMode Mode, float IntervalSeconds);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Self Learning")
+    void DisableSelfThinking();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Self Learning")
+    bool IsSelfThinkingActive() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Self Learning")
+    FSelfThinkingRecord TriggerSelfThinking(const FString& Context, ESelfThinkingMode Mode);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Self Learning")
+    bool EnableContinuousLearning(float CheckIntervalSeconds);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Self Learning")
+    void DisableContinuousLearning();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Self Learning")
+    bool IsContinuousLearningActive() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Self Learning")
+    TArray<FSelfImprovementSuggestion> GetSelfImprovementSuggestions();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Self Learning")
+    bool ImplementSelfImprovement(const FString& SuggestionID);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Self Learning")
+    FString GetSelfLearningStatus() const;
+
 private:
     bool bIsInitialized;
     
     UPROPERTY()
     TObjectPtr<UMingSageBrainCoreSystem> SageBrainSystem;
+
+    UPROPERTY()
+    TObjectPtr<UMingSageBrainLauncher> SageBrainLauncher;
+
+    UPROPERTY()
+    TObjectPtr<UMingSageBrainSelfLearningSystem> SelfLearningSystem;
+
+    UPROPERTY()
+    TObjectPtr<UMingSupremeSageCommandSystem> SupremeSageSystem;
+
+    // ========== 至聖者指揮系統接口 ==========
+public:
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Supreme Sage")
+    bool InitializeSupremeSageSystem();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Supreme Sage")
+    bool EnterFiveElementPhase(EFiveElementPhase Phase, const FPhaseContext& Context);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Supreme Sage")
+    bool ExecuteSixConquestStrategy(ESixConquestStrategy Strategy, EStrategyApproach Approach, const FConquestTarget& Target);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Supreme Sage")
+    bool ExecuteTwelveStrategy(ETwelveStrategies Strategy, const FStrategyContext& Context);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Supreme Sage")
+    FCorruptionCheckResult PerformCorruptionCheck();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Supreme Sage")
+    FCommandRecommendation GetSageCommandRecommendation() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Supreme Sage")
+    bool SwitchAuthority(ESupremeAuthorityType AuthorityType);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Supreme Sage")
+    bool DeployForce(EForceType ForceType, const FDeploymentConfig& Config);
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain|Bridge|Supreme Sage")
+    FSelfAuditReport GenerateSageSelfAuditReport();
 
     // 內部輔助函數
     FString EnhanceWithThinking(const FString& BaseContent, ESageBrainThinkingLayer Layer);
@@ -115,4 +226,11 @@ private:
     bool ValidateSystems() const;
     FString GenerateEnhancedPrompt(const FString& BasePrompt, ESageBrainThinkingLayer Layer, ESageBrainPhilosophy Philosophy);
     void LogBridgeActivity(const FString& Activity) const;
+
+    // 編譯優化事件處理
+    UFUNCTION()
+    void OnLauncherWorkflowCompleted(bool bSuccess, const FCompileOptimizationReport& Report);
+
+    UFUNCTION()
+    void OnLauncherProgressUpdated(int32 Percentage, const FString& Message);
 };

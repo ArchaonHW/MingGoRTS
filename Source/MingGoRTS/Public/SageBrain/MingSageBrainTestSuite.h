@@ -4,6 +4,9 @@
 #include "UObject/NoExportTypes.h"
 #include "Engine/Engine.h"
 #include "MingSageBrainCoreSystem.h"
+#include "MingSageBrainConsoleAutomation.h"
+#include "MingSageBrainBridge.h"
+#include "MingSupremeSageCommandSystem.h"
 #include "MingSageBrainTestSuite.generated.h"
 
 // 測試結果結構
@@ -240,6 +243,70 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Sage Brain|Testing|Performance")
     FSageBrainTestResult TestOverallSystemPerformance();
 
+    // ========== 自動化系統測試 ==========
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Automation", meta = (DisplayName = "自動化系統測試"))
+    static bool TestAutomationSystem();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Automation", meta = (DisplayName = "自動化序列測試"))
+    static bool TestAutomationSequences();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Automation", meta = (DisplayName = "定時任務測試"))
+    static bool TestScheduledTasks();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Automation", meta = (DisplayName = "智能響應測試"))
+    static bool TestIntelligentResponse();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Automation", meta = (DisplayName = "工作流測試"))
+    static bool TestWorkflows();
+
+    // ========== 至聖者指揮系統測試 ==========
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Supreme Sage", meta = (DisplayName = "至聖者系統完整測試"))
+    static bool RunSupremeSageTests();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Supreme Sage", meta = (DisplayName = "三權模型測試"))
+    static bool TestThreeAuthoritiesModel();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Supreme Sage", meta = (DisplayName = "五行輪轉測試"))
+    static bool TestFiveElementsRotation();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Supreme Sage", meta = (DisplayName = "六伐策略測試"))
+    static bool TestSixConquestStrategies();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Supreme Sage", meta = (DisplayName = "十二策測試"))
+    static bool TestTwelveStrategies();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Supreme Sage", meta = (DisplayName = "防墮機制測試"))
+    static bool TestCorruptionPrevention();
+
+    // ========== 控制端互動測試 ==========
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Console", meta = (DisplayName = "控制台互動測試"))
+    static bool TestConsoleInteraction();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Console", meta = (DisplayName = "命令執行測試"))
+    static bool TestCommandExecution();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Console", meta = (DisplayName = "批量命令測試"))
+    static bool TestBatchCommands();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|Console", meta = (DisplayName = "腳本執行測試"))
+    static bool TestScriptExecution();
+
+    // ========== BMAD工作流程測試 ==========
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|BMAD", meta = (DisplayName = "BMAD工作流程測試"))
+    static bool TestBMADWorkflow();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|BMAD", meta = (DisplayName = "業務模型測試"))
+    static bool TestBusinessModel();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|BMAD", meta = (DisplayName = "決策模型測試"))
+    static bool TestDecisionModel();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|BMAD", meta = (DisplayName = "系統架構測試"))
+    static bool TestSystemArchitecture();
+
+    UFUNCTION(BlueprintCallable, Category = "Sage Brain Test|BMAD", meta = (DisplayName = "數據流測試"))
+    static bool TestDataFlow();
+
     // 壓力測試
     UFUNCTION(BlueprintCallable, Category = "Sage Brain|Testing|Stress")
     FSageBrainTestResult TestHighVolumeThinking();
@@ -292,7 +359,7 @@ public:
 
     // 事件委託
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestStarted, const FString&, TestName);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnTestCompleted, const FString&, TestName, bool, bPassed);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTestCompleted, const FString&, TestName, bool, bPassed);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTestSuiteCompleted, const FSageBrainTestSummary&, Summary);
 
     UPROPERTY(BlueprintAssignable, Category = "Sage Brain|Testing|Events")

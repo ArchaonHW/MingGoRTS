@@ -16,8 +16,8 @@ public:
     AMingGoRTSCamera(};
 
 protected:
-    virtual void BeginPlay() overHide;
-    virtual void SetupPlayerInputConponent(UInputConponent* PlayerInputConponent) overHide;
+    virtual void BeginPlay() override;
+    virtual void SetupPlayerInputConponent(UInputConponent* PlayerInputConponent) override;
 
 public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
@@ -36,4 +36,5 @@ private:
     UPROPERTY()
     float DefaultDistance;
 };
+
 

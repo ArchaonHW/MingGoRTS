@@ -151,7 +151,7 @@ public:
 
     // Execute specific script
     UFUNCTION(BlueprintCallable, Category = "Script Integration")
-    bool ExecuteScript(const FString& ScriptPath, const TMap<FString, FString>& Parameters = TMap<FString, FString>());
+    bool ExecuteScript(const FString& ScriptPath, const TMap<FString, FString>& Parameters);
 
     // Get script metadata
     UFUNCTION(BlueprintCallable, Category = "Script Integration")

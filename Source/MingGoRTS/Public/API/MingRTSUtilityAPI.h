@@ -204,7 +204,7 @@ public:
 
     // 事件委託
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUtilityOperationCompleted, const FString&, OperationName);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParam(FOnUtilityOperationFailed, const FString&, OperationName, const FString&, ErrorMessage);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUtilityOperationFailed, const FString&, OperationName, const FString&, ErrorMessage);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthIssueDetected, const FString&, IssueDescription);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPerformanceIssueDetected, const FString&, IssueDescription);
 

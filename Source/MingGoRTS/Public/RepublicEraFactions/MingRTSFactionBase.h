@@ -21,19 +21,19 @@ class MINGRTS_API UMingRTSFactionBase : public UObject
     GENERATED_BODY()
     
 public:
-    UMingRTSFactionBase(};
+    UMingRTSFactionBase();
     
     /** Initialize the faction */
     UFUNCTION(BlueprintCallable, Category = "Faction")
-    virtual void InitializeFaction(};
+    virtual void InitializeFaction();
     
     /** Called when the faction is selected by a player */
     UFUNCTION(BlueprintCallable, Category = "Faction")
-    virtual void OnFactionSelected(UMingRTSPlayerController* PlayerController};
+    virtual void OnFactionSelected(UMingRTSPlayerController* PlayerController);
     
     /** Called at the start of the game */
     UFUNCTION(BlueprintCallable, Category = "Faction")
-    virtual void OnGameStart(};
+    virtual void OnGameStart();
     
     /** Get faction attributes */
     UFUNCTION(BlueprintPure, Category = "Faction")
@@ -65,7 +65,7 @@ public:
     
     /** Apply unique mechanic effects */
     UFUNCTION(BlueprintCallable, Category = "Faction")
-    virtual void ApplyMechanicEffects(const FName& MechanicID};
+    virtual void ApplyMechanicEffects(const FName& MechanicID);
     
     /** Check if a mechanic is active */
     UFUNCTION(BlueprintPure, Category = "Faction")
@@ -76,14 +76,14 @@ public:
     FOnUniqueUnitProduced OnUniqueUnitProduced;
     
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUniqueUnitProduced, 
-        const FFactionUnit&, ProducedUnit};
+        const FFactionUnit&, ProducedUnit);
     
     /** Event: ɥrhen a mechanic is activated */
     UPROPERTY(BlueprintAssignable, Category = "FactionEvents")
     FOnMechanicActivated OnMechanicActivated;
     
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMechanicActivated,
-        const FName&, MechanicID};
+        const FName&, MechanicID);
 
 protected:
     /** Faction attributes */
@@ -110,19 +110,19 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRTSPlayerController> OwnerController;
     
-    /** Initialize default attributes - overHide in subclasses */
-    virtual void InitializeAttributes(};
+    /** Initialize default attributes - override in subclasses */
+    virtual void InitializeAttributes() override;
     
-    /** Initialize unique units - overHide in subclasses */
-    virtual void InitializeUniqueUnits(};
+    /** Initialize unique units - override in subclasses */
+    virtual void InitializeUniqueUnits() override;
     
-    /** Initialize unique mechanics - overHide in subclasses */
-    virtual void InitializeUniqueMechanics(};
+    /** Initialize unique mechanics - override in subclasses */
+    virtual void InitializeUniqueMechanics() override;
     
-    /** Initialize gameplay guide - overHide in subclasses */
-    virtual void InitializeGameplayGuide(};
+    /** Initialize gameplay guide - override in subclasses */
+    virtual void InitializeGameplayGuide() override;
     
-    /** Inelper: Create a basic unit definition */
+    /** Helper: Create a basic unit definition */
     FFactionUnit CreateUnitDefinition(
         const FName& UnitID,
         const FText& UnitName,

@@ -80,8 +80,10 @@ void UMingSageBrainIntegratedAPI::ShutdownIntegratedAPI()
 
     // 清理引用
     SageBrainSystem = nullptr;
+    PythonAPI = nullptr;
     AssetGenerationAPI = nullptr;
     AudioGenerationAPI = nullptr;
+    CppReferenceIntegration = nullptr;
 
     bIsInitialized = false;
 
@@ -2185,6 +2187,18 @@ bool UMingSageBrainIntegratedAPI::InitializeAllSubSystems()
         return false;
     }
 
+    // 創建 CppReference 整合系統
+    CppReferenceIntegration = NewObject<UMingRTSCppReferenceIntegration>();
+    if (!CppReferenceIntegration->LoadCppReferenceDocs())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Failed to load CppReference documentation, continuing without it"));
+        // 不返回 false，因為這不是關鍵系統
+    }
+    else
+    {
+        UE_LOG(LogTemp, Log, TEXT("CppReference integration initialized successfully"));
+    }
+
     UE_LOG(LogTemp, Log, TEXT("All sub-systems initialized successfully"));
     return true;
 }
@@ -2219,6 +2233,12 @@ bool UMingSageBrainIntegratedAPI::ValidateSubSystems()
     {
         UE_LOG(LogTemp, Error, TEXT("Audio Generation API not valid"));
         return false;
+    }
+
+    // CppReference 是可選系統，只記錄警告
+    if (!CppReferenceIntegration)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("CppReference Integration not available"));
     }
 
     return true;
@@ -2382,4 +2402,343 @@ void UMingSageBrainIntegratedAPI::LogIntegratedAPIActivity(const FString& Activi
 void UMingSageBrainIntegratedAPI::LogSageBrainActivity(const FString& Activity) const
 {
     UE_LOG(LogTemp, Log, TEXT("SageBrain: %s"), *Activity);
+}
+
+// ============================================================================
+// 聖者大腦 C++ Reference 整合實現
+// ============================================================================
+
+bool UMingSageBrainIntegratedAPI::LoadCppReferenceToSageBrain()
+{
+    if (!CppReferenceIntegration)
+    {
+        CppReferenceIntegration = NewObject<UMingRTSCppReferenceIntegration>();
+    }
+    
+    bool bSuccess = CppReferenceIntegration->LoadCppReferenceDocs();
+    
+    if (bSuccess)
+    {
+        UE_LOG(LogTemp, Log, TEXT("Successfully loaded C++ Reference documentation to Sage Brain"));
+        LogIntegratedAPIActivity(TEXT("CppReference documentation loaded"));
+        
+        // 獲取所有類別信息並記錄
+        TArray<FCppReferenceCategory> Categories = CppReferenceIntegration->GetAllCategories();
+        for (const auto& Category : Categories)
+        {
+            UE_LOG(LogTemp, Verbose, TEXT("Loaded category: %s (%s) with %d topics"), 
+                *Category.ChineseTitle, *Category.EnglishName, Category.Topics.Num());
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Failed to load C++ Reference documentation to Sage Brain"));
+    }
+    
+    return bSuccess;
+}
+
+FString UMingSageBrainIntegratedAPI::GenerateCodeWithSageBrainKnowledge(const FString& Topic, const FString& Context)
+{
+    if (!CppReferenceIntegration)
+    {
+        if (!LoadCppReferenceToSageBrain())
+        {
+            return TEXT("// 錯誤: 無法載入 C++ Reference 文檔");
+        }
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Generating code with Sage Brain knowledge for topic: %s"), *Topic);
+    
+    // 使用聖者大腦的思考層次進行分析
+    FSageBrainThoughtResult ThoughtResult = SageBrainSystem->ProcessThought(
+        FString::Printf(TEXT("分析 C++ 主題: %s，上下文: %s"), *Topic, *Context),
+        ESageBrainThinkingLayer::Technical
+    );
+    
+    // 使用哲學系統進行分析
+    FSageBrainPhilosophyAnalysis PhilosophyAnalysis = SageBrainSystem->AnalyzeWithPhilosophy(
+        ThoughtResult.Content,
+        ESageBrainPhilosophy::Taoism
+    );
+    
+    // 確定適合的類別
+    FString CategoryName = TEXT("language"); // 默認類別
+    if (Topic.Contains(TEXT("容器")) || Topic.Contains(TEXT("vector")) || Topic.Contains(TEXT("map")))
+    {
+        CategoryName = TEXT("container");
+    }
+    else if (Topic.Contains(TEXT("算法")) || Topic.Contains(TEXT("sort")) || Topic.Contains(TEXT("find")))
+    {
+        CategoryName = TEXT("algorithm");
+    }
+    else if (Topic.Contains(TEXT("線程")) || Topic.Contains(TEXT("mutex")) || Topic.Contains(TEXT("async")))
+    {
+        CategoryName = TEXT("thread");
+    }
+    else if (Topic.Contains(TEXT("記憶體")) || Topic.Contains(TEXT("智能指針")) || Topic.Contains(TEXT("allocator")))
+    {
+        CategoryName = TEXT("memory");
+    }
+    
+    // 生成基礎代碼
+    FString GeneratedCode = CppReferenceIntegration->GenerateCodeFromReference(CategoryName, Topic);
+    
+    // 結合聖者大腦的智慧進行增強
+    FString EnhancedCode = FString::Printf(
+        TEXT("// ============================================================================\n")
+        TEXT("// 基於 C++ Reference (%s) 和聖者大腦智慧生成\n")
+        TEXT("// 主題: %s\n")
+        TEXT("// 上下文: %s\n")
+        TEXT("// 智慧分析: %s\n")
+        TEXT("// ============================================================================\n\n")
+        TEXT("%s"),
+        *CategoryName,
+        *Topic,
+        *Context,
+        *PhilosophyAnalysis.Analysis,
+        *GeneratedCode
+    );
+    
+    LogIntegratedAPIActivity(FString::Printf(TEXT("Generated code with Sage Brain knowledge for: %s"), *Topic));
+    
+    return EnhancedCode;
+}
+
+TArray<FString> UMingSageBrainIntegratedAPI::GetSageBrainCppTopics(const FString& CategoryName) const
+{
+    if (!CppReferenceIntegration)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("CppReference Integration not available"));
+        return TArray<FString>();
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Getting C++ topics for category: %s"), *CategoryName);
+    
+    // 獲取所有類別
+    TArray<FCppReferenceCategory> Categories = CppReferenceIntegration->GetAllCategories();
+    
+    // 查找匹配的類別
+    for (const auto& Category : Categories)
+    {
+        if (Category.EnglishName.Equals(CategoryName, ESearchCase::IgnoreCase) ||
+            Category.ChineseTitle.Contains(CategoryName))
+        {
+            return Category.Topics;
+        }
+    }
+    
+    return TArray<FString>();
+}
+
+FString UMingSageBrainIntegratedAPI::ExplainCppConceptWithSageBrain(const FString& Concept)
+{
+    if (!CppReferenceIntegration || !SageBrainSystem)
+    {
+        return TEXT("錯誤: 系統未初始化");
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Explaining C++ concept with Sage Brain: %s"), *Concept);
+    
+    // 使用多層次思考進行深度分析
+    FSageBrainThoughtResult TechnicalThought = SageBrainSystem->ProcessThought(
+        FString::Printf(TEXT("技術分析 C++ 概念: %s"), *Concept),
+        ESageBrainThinkingLayer::Technical
+    );
+    
+    FSageBrainThoughtResult PhilosophicalThought = SageBrainSystem->ProcessThought(
+        FString::Printf(TEXT("哲學分析 C++ 概念 %s 的深層含義"), *Concept),
+        ESageBrainThinkingLayer::Philosophical
+    );
+    
+    FSageBrainThoughtResult StrategicThought = SageBrainSystem->ProcessThought(
+        FString::Printf(TEXT("戰略分析 C++ 概念 %s 的最佳實踐"), *Concept),
+        ESageBrainThinkingLayer::Strategic
+    );
+    
+    // 結合多種哲學觀點
+    FSageBrainPhilosophyAnalysis TaoAnalysis = SageBrainSystem->AnalyzeWithPhilosophy(
+        TechnicalThought.Content, ESageBrainPhilosophy::Taoism);
+    FSageBrainPhilosophyAnalysis ConfucianAnalysis = SageBrainSystem->AnalyzeWithPhilosophy(
+        PhilosophicalThought.Content, ESageBrainPhilosophy::Confucianism);
+    FSageBrainPhilosophyAnalysis StrategyAnalysis = SageBrainSystem->AnalyzeWithPhilosophy(
+        StrategicThought.Content, ESageBrainPhilosophy::MilitaryStrategy);
+    
+    FString Explanation = FString::Printf(
+        TEXT("【聖者大腦 C++ 概念深度解析】\n\n")
+        TEXT("概念: %s\n\n")
+        TEXT("【技術層面】\n%s\n\n")
+        TEXT("【道家思想 - 自然與和諧】\n%s\n\n")
+        TEXT("【儒家思想 - 秩序與規範】\n%s\n\n")
+        TEXT("【兵家思想 - 效率與策略】\n%s\n\n")
+        TEXT("【綜合建議】\n%s"),
+        *Concept,
+        *TechnicalThought.Content,
+        *TaoAnalysis.Analysis,
+        *ConfucianAnalysis.Analysis,
+        *StrategyAnalysis.Analysis,
+        *StrategicThought.Content
+    );
+    
+    LogIntegratedAPIActivity(FString::Printf(TEXT("Explained C++ concept: %s"), *Concept));
+    
+    return Explanation;
+}
+
+FString UMingSageBrainIntegratedAPI::CreatePhilosophicalCodeExample(ESageBrainPhilosophy Philosophy, const FString& CppTopic)
+{
+    if (!CppReferenceIntegration || !SageBrainSystem)
+    {
+        return TEXT("// 錯誤: 系統未初始化");
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Creating philosophical code example: %s with philosophy %d"), 
+        *CppTopic, (int32)Philosophy);
+    
+    // 使用哲學系統分析主題
+    FSageBrainPhilosophyAnalysis PhilosophyAnalysis = SageBrainSystem->AnalyzeWithPhilosophy(
+        FString::Printf(TEXT("如何從%s的角度理解和實現 %s"),
+            *UEnum::GetDisplayValueAsText(Philosophy).ToString(),
+            *CppTopic),
+        Philosophy
+    );
+    
+    // 基於哲學選擇不同的代碼模板風格
+    FString CodeTemplate;
+    FString PhilosophyComment;
+    
+    switch (Philosophy)
+    {
+    case ESageBrainPhilosophy::Taoism:
+        PhilosophyComment = TEXT("// 道法自然 - 簡潔、流暢、順應自然的代碼\n")
+                           TEXT("// 無為而治 - 最小干預，最大效果\n");
+        CodeTemplate = TEXT("// 簡約而自然的實現\n")
+                      TEXT("// 遵循自然的數據流\n");
+        break;
+        
+    case ESageBrainPhilosophy::Confucianism:
+        PhilosophyComment = TEXT("// 禮樂教化 - 規範、有序、層次分明的代碼\n")
+                           TEXT("// 君臣父子 - 清晰的職責與關係\n");
+        CodeTemplate = TEXT("// 嚴謹規範的實現\n")
+                      TEXT("// 強調結構與秩序\n");
+        break;
+        
+    case ESageBrainPhilosophy::MilitaryStrategy:
+        PhilosophyComment = TEXT("// 兵貴神速 - 高效、敏捷、精準的代碼\n")
+                           TEXT("// 知己知彼 - 充分考慮各種情況\n");
+        CodeTemplate = TEXT("// 高效優化的實現\n")
+                      TEXT("// 注重性能與效率\n");
+        break;
+        
+    case ESageBrainPhilosophy::Buddhism:
+        PhilosophyComment = TEXT("// 禪意編程 - 清淨、專注、覺悟的代碼\n")
+                           TEXT("// 破除執念 - 無需過度設計\n");
+        CodeTemplate = TEXT("// 清晰明了的實現\n")
+                      TEXT("// 追求簡潔與清晰\n");
+        break;
+        
+    case ESageBrainPhilosophy::Mohism:
+        PhilosophyComment = TEXT("// 兼愛非攻 - 模組化、兼容、實用的代碼\n")
+                           TEXT("// 節用利民 - 資源高效利用\n");
+        CodeTemplate = TEXT("// 實用主義的實現\n")
+                      TEXT("// 強調實用與兼容\n");
+        break;
+        
+    default:
+        PhilosophyComment = TEXT("// 智慧的代碼\n");
+        CodeTemplate = TEXT("// 標準實現\n");
+        break;
+    }
+    
+    // 生成基礎代碼
+    FString BaseCode = CppReferenceIntegration->CreateCodeTemplate(CppTopic);
+    
+    // 結合哲學智慧
+    FString PhilosophicalCode = FString::Printf(
+        TEXT("// ============================================================================\n")
+        TEXT("// %s 哲學代碼示例\n")
+        TEXT("// 主題: %s\n")
+        TEXT("// 哲學詮釋: %s\n")
+        TEXT("// ============================================================================\n\n")
+        TEXT("%s\n")
+        TEXT("%s\n")
+        TEXT("%s"),
+        *UEnum::GetDisplayValueAsText(Philosophy).ToString(),
+        *CppTopic,
+        *PhilosophyAnalysis.Analysis,
+        *PhilosophyComment,
+        *CodeTemplate,
+        *BaseCode
+    );
+    
+    LogIntegratedAPIActivity(FString::Printf(TEXT("Created philosophical code example: %s with %s"),
+        *CppTopic, *UEnum::GetDisplayValueAsText(Philosophy).ToString()));
+    
+    return PhilosophicalCode;
+}
+
+bool UMingSageBrainIntegratedAPI::IntegrateCppReferenceIntoLearning()
+{
+    if (!CppReferenceIntegration || !SageBrainSystem)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Cannot integrate CppReference: systems not available"));
+        return false;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Integrating CppReference into Sage Brain learning system..."));
+    
+    bool bSuccess = true;
+    
+    // 獲取所有 C++ 參考類別
+    TArray<FCppReferenceCategory> Categories = CppReferenceIntegration->GetAllCategories();
+    
+    // 為每個類別創建學習任務
+    for (const auto& Category : Categories)
+    {
+        // 創建學習上下文
+        FString LearningContext = FString::Printf(
+            TEXT("學習 C++ %s 類別，包含 %d 個主題"),
+            *Category.ChineseTitle,
+            Category.Topics.Num()
+        );
+        
+        // 使用聖者大腦處理學習內容
+        FSageBrainThoughtResult LearningResult = SageBrainSystem->ProcessThought(
+            LearningContext,
+            ESageBrainThinkingLayer::Learning
+        );
+        
+        // 進行哲學分析
+        FSageBrainPhilosophyAnalysis PhilosophyResult = SageBrainSystem->AnalyzeWithPhilosophy(
+            LearningResult.Content,
+            ESageBrainPhilosophy::Confucianism
+        );
+        
+        UE_LOG(LogTemp, Verbose, TEXT("Processed learning for category: %s"), *Category.ChineseTitle);
+        
+        // 學習每個主題
+        for (const FString& Topic : Category.Topics)
+        {
+            FString TopicContext = FString::Printf(TEXT("深入學習 %s 主題: %s"), *Category.ChineseTitle, *Topic);
+            
+            FSageBrainThoughtResult TopicResult = SageBrainSystem->ProcessThought(
+                TopicContext,
+                ESageBrainThinkingLayer::Technical
+            );
+            
+            UE_LOG(LogTemp, Verbose, TEXT("Learned topic: %s"), *Topic);
+        }
+    }
+    
+    if (bSuccess)
+    {
+        LogIntegratedAPIActivity(TEXT("CppReference successfully integrated into learning system"));
+        UE_LOG(LogTemp, Log, TEXT("CppReference integrated into Sage Brain learning system successfully"));
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("CppReference integration into learning system failed"));
+    }
+    
+    return bSuccess;
 }

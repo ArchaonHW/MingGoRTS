@@ -1,10 +1,10 @@
-# MingWarRTS 项目设置指南
+# MingGoRTS 项目设置指南
 
 ## 🎯 **快速开始**
 
 ### **1. 启动项目**
 
-**直接双击** `MingWarRTS.uproject` 文件。
+**直接双击** `MingGoRTS.uproject` 文件。
 
 UE5 Editor 会自动：
 - 检测 C++ 代码
@@ -21,7 +21,7 @@ UE5 Editor 会自动：
 - ✅ 无红色错误弹窗
 - ✅ 右下角进度条完成
 - ✅ 可以创建 Blueprint
-- ✅ 生成 `MingWarRTS.sln` 文件
+- ✅ 生成 `MingGoRTS.sln` 文件
 
 ---
 
@@ -39,13 +39,13 @@ UE5 Editor 会自动：
    - `Intermediate`
    - `Saved`
    - `Binaries`
-3. 重新双击 `MingWarRTS.uproject`
+3. 重新双击 `MingGoRTS.uproject`
 
 ### **高级方案：手动生成项目文件**
 
 ```cmd
 cd C:\HW\MingGoRTS
-"C:\Program Files\Epic Games\UE_5.7\Engine\Build\BatchFiles\Build.bat" MingWarRTS Win64 Development -Project="MingWarRTS.uproject"
+"C:\Program Files\Epic Games\UE_5.7\Engine\Build\BatchFiles\Build.bat" MingGoRTS Win64 Development -Project="MingGoRTS.uproject"
 ```
 
 ---
@@ -54,21 +54,21 @@ cd C:\HW\MingGoRTS
 
 ```
 C:\HW\MingGoRTS\
-├── MingWarRTS.uproject          (UE5 项目文件)
-├── Source\MingWarRTS\
+├── MingGoRTS.uproject          (UE5 项目文件)
+├── Source\MingGoRTS\
 │   ├── Public\
-│   │   ├── MingWarRTS.h         (GameMode)
+│   │   ├── MingGoRTS.h         (GameMode)
 │   │   ├── RTSUnit.h            (单位类)
 │   │   ├── RTSBuilding.h        (建筑类)
 │   │   ├── RTSPlayerController.h (控制器)
 │   │   └── ResourceManager.h    (资源管理)
 │   ├── Private\
-│   │   ├── MingWarRTS.cpp       (GameMode 实现)
+│   │   ├── MingGoRTS.cpp       (GameMode 实现)
 │   │   ├── RTSUnit.cpp          (单位实现)
 │   │   ├── RTSBuilding.cpp      (建筑实现)
 │   │   ├── RTSPlayerController.cpp (控制器实现)
 │   │   └── ResourceManager.cpp  (资源管理实现)
-│   └── MingWarRTS.Build.cs      (编译配置)
+│   └── MingGoRTS.Build.cs      (编译配置)
 └── Config\ (配置文件)
 ```
 
@@ -78,7 +78,7 @@ C:\HW\MingGoRTS\
 
 1. **创建 Blueprint**
    - Content Browser → 右键 → Blueprint Class
-   - 搜索 `MingWarRTS` → 选择它
+   - 搜索 `MingGoRTS` → 选择它
    - 命名为 `BP_MingWarGameMode`
    - 保存到 `Content/Blueprints/Game/`
 
@@ -129,4 +129,4 @@ A: UE5 会自动调用 Visual Studio 进行编译
 
 ---
 
-**现在请直接双击 `MingWarRTS.uproject` 文件！** 🥔✨
+**现在请直接双击 `MingGoRTS.uproject` 文件！** 🥔✨

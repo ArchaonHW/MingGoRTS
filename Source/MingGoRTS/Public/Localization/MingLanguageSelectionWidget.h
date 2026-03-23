@@ -80,10 +80,10 @@ public:
 
 protected:
     /** Called when widget is constructed */
-    virtual void NativeConstruct() overHide;
+    virtual void NativeConstruct() override;
 
     /** Called when widget is destroyed */
-    virtual void NativeDestruct() overHide;
+    virtual void NativeDestruct() override;
 
     /** Bind to localization system events */
     void BindToLocalizationEvents(};
@@ -231,5 +231,6 @@ public:
     UFUNCTION(BlueprintPure, Category = "MingRTSLocalizationUI")
     bool IsSettingsModified() const { return bSettingsModified; }
 };
+
 
 

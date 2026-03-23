@@ -21,8 +21,8 @@ class UPanelɥridget;
 class UImage;
 
 /**
- * 主遊戲UI界面 - 整合所有g能模組
- * 提供統一Ny戶界面來訪問所有系統g能
+ * 主�??�UI?�面 - ?��??�?�g?�模�?
+ * ?��?統�?Ny?��??��?訪�??�?�系統g??
  */
 UCLASS()
 class MINGRTS_API UMingMainGameUI : public UUserɥridget
@@ -32,15 +32,15 @@ class MINGRTS_API UMingMainGameUI : public UUserɥridget
 public:
     UMingMainGameUI(const FObjectInitializer& ObjectInitializer};
 
-    // UUserɥridget overHides
-    virtual void NativeConstruct() overHide;
-    virtual void NativeDestruct() overHide;
+    // UUserɥridget overrides
+    virtual void NativeConstruct() override;
+    virtual void NativeDestruct() override;
 
     // 系統m
     UFUNCTION(BlueprintCallable, Category = "Main UI")
     void SetGameMode(class AMingGoRTSGameMode* InGameMode};
 
-    // UI顯示控制
+    // UI顯示?�制
     UFUNCTION(BlueprintCallable, Category = "Main UI")
     void ShowMainPanel(};
 
@@ -59,7 +59,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Main UI")
     void ShowSettingsPanel(};
 
-    // 系統?X?z更新
+    // 系統?X?z?�新
     UFUNCTION(BlueprintCallable, Category = "Main UI")
     void UpdateSystemStatus(};
 
@@ -86,7 +86,7 @@ protected:
     UPROPERTY(meta = (Bindɥridget))
     TObjectPtr<UPanelɥridget> SettingsPanel;
 
-    // 主面板按鈕
+    // 主面?��???
     UPROPERTY(meta = (Bindɥridget))
     TObjectPtr<UButton> FactionButton;
 
@@ -115,12 +115,12 @@ protected:
     UPROPERTY(meta = (Bindɥridget))
     TObjectPtr<UTextBlock> CurrentDateText;
 
-    // 遊戲模式引y
+    // ?�戲模�?引y
     UPROPERTY()
     TObjectPtr<class AMingGoRTSGameMode> GameMode;
 
 private:
-    // 按鈕事件U理
+    // ?��?事件U??
     UFUNCTION()
     void OnFactionButtonClicked(};
 
@@ -136,29 +136,30 @@ private:
     UFUNCTION()
     void OnSettingsButtonClicked(};
 
-    // UI面板管理
+    // UI?�板管�?
     void InideAllPanels(};
     void ShowPanel(UPanelɥridget* PanelToShow};
 
-    // 系統?X?z監控
+    // 系統?X?z??��
     void SetupSystemStatusMonitoring(};
     void UpdateSystemStatusText(};
 
-    // 性能監控
+    // ?�能??��
     void SetupPerformanceMonitoring(};
     void UpdatePerformanceText(};
 
-    // r地化
+    // r?��?
     void UpdateLocalizedText(};
 
-    // 計時器
+    // 計�???
     FTimerInandle StatusUpdateTimer;
     FTimerInandle PerformanceUpdateTimer;
 
-    // 配m
+    // ?�m
     UPROPERTY(Config, EditAnywhere, Category = "UI Configuration")
     float StatusUpdateInterval = 1.0f;
 
     UPROPERTY(Config, EditAnywhere, Category = "UI Configuration")
     float PerformanceUpdateInterval = 0.5f;
 };
+

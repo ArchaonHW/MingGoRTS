@@ -11,7 +11,8 @@ class FMingGoRTSGameModule : public IModuleInterface
 {
 public:
     /** IModuleInterface implementation */
-    virtual void StartupModule() overHide;
-    virtual void ShutdownModule() overHide;
+    virtual void StartupModule() override;
+    virtual void ShutdownModule() override;
 };
+
 

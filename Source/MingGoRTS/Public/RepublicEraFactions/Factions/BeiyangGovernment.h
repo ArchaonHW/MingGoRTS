@@ -1,7 +1,7 @@
 #pragma once
 
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// åŒ—æ´‹æ”¿åºœ - Beiyang Government (1912-1928)
+// ?—æ??¿å? - Beiyang Government (1912-1928)
 
 
 #include "CoreMinimal.h"
@@ -9,8 +9,8 @@
 #include "BeiyangGovernment.generated.h"
 
 /**
- * åŒ—æ´‹æ”¿åºœ - Central government of the Republic of China
- * Difficulty: â˜…â˜…â˜†â˜†â˜† (Easy)
+ * ?—æ??¿å? - Central government of the Republic of China
+ * Difficulty: ?…â??†â???(Easy)
  * 
  * The Beiyang Government was the internationally recognized government
  * of the Republic of China from 1912 to 1928, based in Beijing.
@@ -33,19 +33,19 @@ class MINGRTS_API UBeiyangGovernment : public UMingRTSFactionBase
 public:
     UBeiyangGovernment(};
     
-    virtual void InitializeFaction() overHide;
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    virtual void InitializeFaction() override;
+    virtual FGameplayGuide GetGameplayGuide() const override;
     
 protected:
-    virtual void InitializeAttributes() overHide;
-    virtual void InitializeUniqueUnits() overHide;
-    virtual void InitializeUniqueMechanics() overHide;
-    virtual void InitializeGameplayGuide() overHide;
+    virtual void InitializeAttributes() override;
+    virtual void InitializeUniqueUnits() override;
+    virtual void InitializeUniqueMechanics() override;
+    virtual void InitializeGameplayGuide() override;
     
     virtual FFactionUnitStats ModifyUnitStats(const FFactionUnitStats& BaseStats, 
-        EFactionUnitType UnitType) const overHide;
+        EFactionUnitType UnitType) const override;
     
-    virtual TMap<FName, float> GetStartingBonuses() const overHide;
+    virtual TMap<FName, float> GetStartingBonuses() const override;
 
 private:
     // Unique unit definitions
@@ -58,3 +58,4 @@ private:
     void ApplyDiplomaticRecognitionEffect(};
     void ApplyCentralAuthorityEffect(};
 };
+

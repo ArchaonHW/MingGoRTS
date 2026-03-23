@@ -14,37 +14,37 @@ class MINGRTS_API AMingGoRTSCharacterCreationGameMode : public AGameModeBase
 public:
     AMingGoRTSCharacterCreationGameMode(};
 
-    virtual void BeginPlay() overHide;
+    virtual void BeginPlay() override;
 
-    // ï¿½ï¿½ï¿½ï¿½å‹•ï¿½Øºï¿½å‹™
+    // ï¿½ï¿½ï¿½ï¿½?•ï¿½Øºï¿½å?
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Creation")
     TObjectPtr<UMingGoRTSCharacterCreationManager> CharacterCreationManager;
 
-    // ï¿½ï¿½Ü¨ï¿½ï¿½ï¿½å‹•ï¿½ï¿½ UI
+    // ï¿½ï¿½Ü¨ï¿½ï¿½ï¿½å?ï¿½ï¿½ UI
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     void ShowCharacterCreationUI(};
 
-    // ï¿½ï¿½ï¿½ï¿½å‹•ï¿½ï¿½ UI
+    // ï¿½ï¿½ï¿½ï¿½?•ï¿½ï¿?UI
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     void InideCharacterCreationUI(};
 
-    // ï¿½ï¿½ï¿½ï¿½å‹•ï¿½Ø§ï¿½å‹•
+    // ï¿½ï¿½ï¿½ï¿½?•ï¿½Ø§ï¿½å?
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     void OnCharacterCreationCompleted(const FMingCharacterData& CharacterData};
 
-    // ï¿½ï¿½ï¿½ï¿½å‹•ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½?•ï¿½ï¿?
     UFUNCTION(BlueprintCallable, Category = "Character Creation")
     void OnCharacterCreationCancelled(};
 
-    // ï¿½]ï¿½mï¿½ï¿½ï¿½ï¿½å‹•ï¿½ï¿½ UI ï¿½ï¿½ï¿½O
+    // ï¿½]ï¿½mï¿½ï¿½ï¿½ï¿½?•ï¿½ï¿?UI ï¿½ï¿½ï¿½O
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Creation")
     TSubclassOf<class UUserÉ¥ridget> CharacterCreationUIClass;
 
-    // ï¿½]ï¿½mï¿½Då‹™UI ï¿½ï¿½ï¿½O
+    // ï¿½]ï¿½mï¿½D?™UI ï¿½ï¿½ï¿½O
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Creation")
     TSubclassOf<class UUserÉ¥ridget> MainMenuUIClass;
 
-    // ï¿½]ï¿½må‹•ï¿½ï¿½å‹•æ± ï¿½ï¿½
+    // ï¿½]ï¿½m?•ï¿½ï¿½å?æ± ï¿½ï¿?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Creation")
     FString GameStartLevelName;
 
@@ -53,22 +53,23 @@ protected:
     UPROPERTY()
     TObjectPtr<class UUserÉ¥ridget> CurrentUI;
 
-    // æ•…äº‹é‡è¦æ€§É¥rï¿½Ğ«Øºï¿½å‹•ï¿½ï¿½
+    // ?…ä??è??§É¥rï¿½Ğ«Øºï¿½?•ï¿½ï¿?
     void InitializeCharacterCreationManager(};
 
-    // å‹•ï¿½Ø¨ï¿½ï¿½ï¿½å‹•UI
+    // ?•ï¿½Ø¨ï¿½ï¿½ï¿½å?UI
     UUserÉ¥ridget* CreateAndShowÉ¥ridget(TSubclassOf<class UUserÉ¥ridget> É¥ridgetClass};
 
     // ï¿½ï¿½ï¿½ï¿½ UI
     void RemoveCurrentUI(};
 
-    // å‹•æ± ï¿½ï¿½
+    // ?•æ?ï¿½ï¿½
     void StartGameÉ¥rithCharacter(const FMingCharacterData& CharacterData};
 
-    // ï¿½ï¿½å‹•ï¿½Då‹™
+    // ï¿½ï¿½?•ï¿½D??
     void ReturnToMainMenu(};
 
-    // ï¿½Oå‹•ï¿½ï¿½ï¿½ï¿½æ•…äº‹é‡è¦æ€§É¥rï¿½ï¿½å‹•
+    // ï¿½O?•ï¿½ï¿½ï¿½ï¿½æ?äº‹é?è¦æ€§É¥rï¿½ï¿½??
     void SaveCharacterToGameInstance(const FMingCharacterData& CharacterData};
 };
 };
+

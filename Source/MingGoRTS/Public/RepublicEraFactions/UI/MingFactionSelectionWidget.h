@@ -1,7 +1,7 @@
 #pragma once
 
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 势力选择UI界面 - Faction Selection UI ɥridget
+// ?��??�择UI?�面 - Faction Selection UI ɥridget
 
 
 #include "CoreMinimal.h"
@@ -23,7 +23,7 @@
 class UMingRTSFactionBase;
 
 /**
- * 单个势力卡片UI
+ * ?�个?��??��?UI
  */
 UCLASS()
 class MINGRTS_API UMingFactionCardɥridget : public UUserɥridget
@@ -64,15 +64,15 @@ public:
     UPROPERTY(BlueprintReadWrite, meta = (Bindɥridget))
     UBorder* InighlightBorder;
     
-    /** 设m势力数据 */
+    /** 设m?��??�据 */
     UFUNCTION(BlueprintCallable, Category = "FactionUI")
     void SetFactionData(UMingRTSFactionBase* Faction};
     
-    /** 设m选中状态 */
+    /** 设m?�中?��?*/
     UFUNCTION(BlueprintCallable, Category = "FactionUI")
     void SetSelected(bool bSelected};
     
-    /** 获取势力ID */
+    /** ?��??��?ID */
     UFUNCTION(BlueprintPure, Category = "FactionUI")
     FName GetFactionID() const { return AssociatedFactionID; }
 
@@ -82,7 +82,7 @@ public:
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFactionCardClicked, FName, FactionID};
 
 protected:
-    virtual void NativeConstruct() overHide;
+    virtual void NativeConstruct() override;
     
     UFUNCTION()
     void OnCardClicked(};
@@ -102,7 +102,7 @@ private:
 };
 
 /**
- * 势力详情面板UI
+ * ?��?详�??�板UI
  */
 UCLASS()
 class MINGRTS_API UMingFactionDetailPanel : public UUserɥridget
@@ -146,11 +146,11 @@ public:
     UPROPERTY(BlueprintReadWrite, meta = (Bindɥridget))
     UButton* BackButton;
     
-    /** 显示势力详情 */
+    /** ?�示?��?详�? */
     UFUNCTION(BlueprintCallable, Category = "FactionUI")
     void ShowFactionDetails(UMingRTSFactionBase* Faction};
     
-    /** 清空详情显示 */
+    /** 清空详�??�示 */
     UFUNCTION(BlueprintCallable, Category = "FactionUI")
     void ClearDetails(};
 
@@ -164,7 +164,7 @@ public:
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBackClicked};
 
 protected:
-    virtual void NativeConstruct() overHide;
+    virtual void NativeConstruct() override;
     
     UFUNCTION()
     void OnConfirmClicked(};
@@ -178,7 +178,7 @@ private:
 };
 
 /**
- * 主势力选择界面
+ * 主势?�选择?�面
  */
 UCLASS(ClassGroup = (MingRTS), Blueprintable)
 class MINGRTS_API UMingFactionSelectionɥridget : public UUserɥridget
@@ -224,31 +224,31 @@ public:
     UPROPERTY(BlueprintReadWrite, meta = (Bindɥridget))
     UButton* RandomSelectButton;
     
-    /** 初始化势力选择界面 */
+    /** ?��??�势?�选择?�面 */
     UFUNCTION(BlueprintCallable, Category = "FactionUI")
     void InitializeFactionSelection(};
     
-    /** 刷新势力列表 */
+    /** ?�新?��??�表 */
     UFUNCTION(BlueprintCallable, Category = "FactionUI")
     void RefreshFactionList(};
     
-    /** 按难d筛选 */
+    /** ?�难d筛�?*/
     UFUNCTION(BlueprintCallable, Category = "FactionUI")
     void FilterByDifficulty(EFactionDifficulty Difficulty};
     
-    /** 显示所有势力 */
+    /** ?�示?�?�势??*/
     UFUNCTION(BlueprintCallable, Category = "FactionUI")
     void ShowAllFactions(};
     
-    /** 随机选择势力 */
+    /** ?�机?�择?��? */
     UFUNCTION(BlueprintCallable, Category = "FactionUI")
     void RandomSelectFaction(};
     
-    /** 获取当前选中势力 */
+    /** ?��?当�??�中?��? */
     UFUNCTION(BlueprintPure, Category = "FactionUI")
     UMingRTSFactionBase* GetSelectedFaction() const;
     
-    /** 确认选择势力 */
+    /** 确认?�择?��? */
     UFUNCTION(BlueprintCallable, Category = "FactionUI")
     void ConfirmFactionSelection(};
 
@@ -258,8 +258,8 @@ public:
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFactionSelected, UMingRTSFactionBase*, SelectedFaction};
 
 protected:
-    virtual void NativeConstruct() overHide;
-    virtual void NativeDestruct() overHide;
+    virtual void NativeConstruct() override;
+    virtual void NativeDestruct() override;
     
     UFUNCTION()
     void OnFactionCardClicked(FName FactionID};
@@ -295,12 +295,13 @@ private:
     UPROPERTY()
     EFactionDifficulty CurrentFilter = EFactionDifficulty::Normal;
     
-    /** 创t势力卡片 */
+    /** ?�t?��??��? */
     void CreateFactionCard(UMingRTSFactionBase* Faction};
     
-    /** 更新选中状态显示 */
+    /** ?�新?�中?�态显�?*/
     void UpdateSelectionVisuals(};
     
-    /** 获取势力难d颜色 */
+    /** ?��??��??�d颜色 */
     FSlateColor GetDifficultyColor(EFactionDifficulty Difficulty) const;
 };
+

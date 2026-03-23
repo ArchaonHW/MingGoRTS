@@ -374,37 +374,37 @@ protected:
 
 private:
     // Configuration
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, Category = "Configuration")
     EPotatoAIModel DefaultAIModel = EPotatoAIModel::GPT4;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, Category = "Configuration")
     bool bLearningEnabled = true;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, Category = "Configuration")
     FString LearningDataPath = TEXT("PotatoAI/LearningData.json");
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, Category = "Configuration")
     FString TemplatesPath = TEXT("PotatoAI/Templates/");
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+    UPROPERTY(EditAnywhere, Category = "Configuration")
     int32 MaxLearningDataEntries = 1000;
 
     // Learning data storage
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Learning")
+    UPROPERTY(EditAnywhere, Category = "Learning")
     TArray<FPotatoAILearningData> LearningHistory;
 
     // Template storage
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Templates")
+    UPROPERTY(EditAnywhere, Category = "Templates")
     TMap<FString, FString> CodeTemplates;
 
     // Statistics
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statistics")
+    UPROPERTY(EditAnywhere, Category = "Statistics")
     int32 TotalGenerations;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statistics")
+    UPROPERTY(EditAnywhere, Category = "Statistics")
     float AverageQualityScore;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statistics")
+    UPROPERTY(EditAnywhere, Category = "Statistics")
     TMap<EPotatoAIModel, int32> ModelUsageStats;
 
     // Internal methods

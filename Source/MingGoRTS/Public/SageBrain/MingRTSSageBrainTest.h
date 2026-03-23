@@ -13,7 +13,7 @@
 #include "MingRTSSagePhilosophyTypes.h"
 #include "MingRTSSageLearningTypes.h"
 #include "MingRTSSageAGITypes.h"
-#include "MingRTSSageBrain.generated.h"
+#include "MingRTSSageBrainTest.generated.h"
 
 // 聖者大腦測試結果
 USTRUCT(BlueprintType)

@@ -1,7 +1,7 @@
 #pragma once
 
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 川系军阀 - Sichuan Clique (1918-1949)
+// 川系?��? - Sichuan Clique (1918-1949)
 
 
 #include "CoreMinimal.h"
@@ -9,8 +9,8 @@
 #include "SichuanClique.generated.h"
 
 /**
- * 川系军阀 - Sichuan Clique
- * Difficulty: ★★★★☆ (Inard)
+ * 川系?��? - Sichuan Clique
+ * Difficulty: ?��??��???(Inard)
  * 
  * Conplex faction with multiple warlords controlling different regions.
  * Known for the Defense Zone System and internal unity challenges.
@@ -33,19 +33,19 @@ class MINGRTS_API USichuanClique : public UMingRTSFactionBase
 public:
     USichuanClique(};
     
-    virtual void InitializeFaction() overHide;
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    virtual void InitializeFaction() override;
+    virtual FGameplayGuide GetGameplayGuide() const override;
     
 protected:
-    virtual void InitializeAttributes() overHide;
-    virtual void InitializeUniqueUnits() overHide;
-    virtual void InitializeUniqueMechanics() overHide;
-    virtual void InitializeGameplayGuide() overHide;
+    virtual void InitializeAttributes() override;
+    virtual void InitializeUniqueUnits() override;
+    virtual void InitializeUniqueMechanics() override;
+    virtual void InitializeGameplayGuide() override;
     
     virtual FFactionUnitStats ModifyUnitStats(const FFactionUnitStats& BaseStats, 
-        EFactionUnitType UnitType) const overHide;
+        EFactionUnitType UnitType) const override;
     
-    virtual TMap<FName, float> GetStartingBonuses() const overHide;
+    virtual TMap<FName, float> GetStartingBonuses() const override;
 
 private:
     FFactionUnit CreateSichuanDefenseZoneDivision() const;
@@ -53,3 +53,4 @@ private:
     FFactionUnit CreateɥrarlordCoalitionForces() const;
     FFactionUnit CreateSichuanRiverNavy() const;
 };
+

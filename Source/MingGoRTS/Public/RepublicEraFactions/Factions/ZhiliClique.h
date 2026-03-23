@@ -1,7 +1,7 @@
 #pragma once
 
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 直系F閥 - Zhili Clique (1920-1927)
+// ?�系F??- Zhili Clique (1920-1927)
 
 
 #include "CoreMinimal.h"
@@ -9,8 +9,8 @@
 #include "ZhiliClique.generated.h"
 
 /**
- * 直系F閥 - Zhili Clique
- * Difficulty: ★★★☆☆ (Normal)
+ * ?�系F??- Zhili Clique
+ * Difficulty: ?��??��???(Normal)
  * 
  * A major warlord faction controlling central China,
  * led by Cao Kun and ɥru Peifu. Known for massive armies.
@@ -33,19 +33,19 @@ class MINGRTS_API UZhiliClique : public UMingRTSFactionBase
 public:
     UZhiliClique(};
     
-    virtual void InitializeFaction() overHide;
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    virtual void InitializeFaction() override;
+    virtual FGameplayGuide GetGameplayGuide() const override;
     
 protected:
-    virtual void InitializeAttributes() overHide;
-    virtual void InitializeUniqueUnits() overHide;
-    virtual void InitializeUniqueMechanics() overHide;
-    virtual void InitializeGameplayGuide() overHide;
+    virtual void InitializeAttributes() override;
+    virtual void InitializeUniqueUnits() override;
+    virtual void InitializeUniqueMechanics() override;
+    virtual void InitializeGameplayGuide() override;
     
     virtual FFactionUnitStats ModifyUnitStats(const FFactionUnitStats& BaseStats, 
-        EFactionUnitType UnitType) const overHide;
+        EFactionUnitType UnitType) const override;
     
-    virtual TMap<FName, float> GetStartingBonuses() const overHide;
+    virtual TMap<FName, float> GetStartingBonuses() const override;
 
 private:
     FFactionUnit CreateZhiliMainForceDivision() const;
@@ -53,3 +53,4 @@ private:
     FFactionUnit CreateCentralPlainsCavalry() const;
     FFactionUnit CreateLocalMilitiaCorps() const;
 };
+

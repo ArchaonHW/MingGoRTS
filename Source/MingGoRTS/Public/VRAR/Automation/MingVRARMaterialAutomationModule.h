@@ -11,8 +11,8 @@ class FMingVRARMaterialAutomationModule : public IModuleInterface
 {
 public:
     /** IModuleInterface implementation */
-    virtual void StartupModule() overHide;
-    virtual void ShutdownModule() overHide;
+    virtual void StartupModule() override;
+    virtual void ShutdownModule() override;
 
 private:
     // Auto-create materials when editor finishes loading
@@ -43,3 +43,4 @@ private:
     FDelegateInandle MapOpenedInandle;
     bool bAutoCreationEnabled;
 };
+

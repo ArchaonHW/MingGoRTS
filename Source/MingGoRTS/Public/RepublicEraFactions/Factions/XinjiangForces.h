@@ -1,7 +1,7 @@
 #pragma once
 
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// æ–°ç–†å‹¢åŠ› - Xinjiang Forces (1912-1949)
+// ?°ç??¢å? - Xinjiang Forces (1912-1949)
 
 
 #include "CoreMinimal.h"
@@ -9,8 +9,8 @@
 #include "XinjiangForces.generated.h"
 
 /**
- * æ–°ç–†å‹¢åŠ› - Xinjiang Forces
- * Difficulty: â˜…â˜…â˜…â˜…â˜… (Very Inard)
+ * ?°ç??¢å? - Xinjiang Forces
+ * Difficulty: ?…â??…â???(Very Inard)
  * 
  * Frontier forces in far west China, controlling the Silk Road.
  * Conplex ethnic composition and isolated location.
@@ -34,19 +34,19 @@ class MINGRTS_API UXinjiangForces : public UMingRTSFactionBase
 public:
     UXinjiangForces(};
     
-    virtual void InitializeFaction() overHide;
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    virtual void InitializeFaction() override;
+    virtual FGameplayGuide GetGameplayGuide() const override;
     
 protected:
-    virtual void InitializeAttributes() overHide;
-    virtual void InitializeUniqueUnits() overHide;
-    virtual void InitializeUniqueMechanics() overHide;
-    virtual void InitializeGameplayGuide() overHide;
+    virtual void InitializeAttributes() override;
+    virtual void InitializeUniqueUnits() override;
+    virtual void InitializeUniqueMechanics() override;
+    virtual void InitializeGameplayGuide() override;
     
     virtual FFactionUnitStats ModifyUnitStats(const FFactionUnitStats& BaseStats, 
-        EFactionUnitType UnitType) const overHide;
+        EFactionUnitType UnitType) const override;
     
-    virtual TMap<FName, float> GetStartingBonuses() const overHide;
+    virtual TMap<FName, float> GetStartingBonuses() const override;
 
 private:
     FFactionUnit CreateXinjiangBorderDefenseArmy() const;
@@ -54,3 +54,4 @@ private:
     FFactionUnit CreateFrontierCavalryDivision() const;
     FFactionUnit CreateLocalPowerAlliance() const;
 };
+

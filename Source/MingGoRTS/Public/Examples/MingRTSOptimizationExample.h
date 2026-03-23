@@ -15,47 +15,47 @@ class MINGRTS_API UMingRTSOptimizationExample : public UObject
     GENERATED_BODY()
 
 public:
-    UMingRTSOptimizationExample(};
+    UMingRTSOptimizationExample();
 
     // �ϥΥ�動
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void BasicUsageExample(};
+    void BasicUsageExample();
 
     // �ֳt�u動��動
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void QuickOptimizationExample(};
+    void QuickOptimizationExample();
 
     // �F事����動
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void DeepOptimizationExample(};
+    void DeepOptimizationExample();
 
     // �q動�m��動
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void CustomConfigurationExample(};
+    void CustomConfigurationExample();
 
     // ��池ɥr��動
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void RealTimeMonitoringExample(};
+    void RealTimeMonitoringExample();
 
     // 動����動
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void PerformanceAnalysisExample(};
+    void PerformanceAnalysisExample();
 
     // ��池動��動
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void AlgorithmOptimizationExample(};
+    void AlgorithmOptimizationExample();
 
     // 目標數量��動
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void BatchProcessingExample(};
+    void BatchProcessingExample();
 
     // �u動�y動��動
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    void IntegratedɥrorkflowExample(};
+    void IntegratedWorkflowExample();
 
-    // �ϥ�
+    // 使用指南
     UFUNCTION(BlueprintCallable, Category = "Optimization Example")
-    FString GetUsageGuide(};
+    FString GetUsageGuide();
 
 protected:
     // �t�κ�務
@@ -63,11 +63,11 @@ protected:
     TObjectPtr<UMingRTSOptimizationSystemManager> OptimizationManager;
 
 private:
-    // 動池��動
-    void InitializeExample(};
+    // 動態初始化
+    void InitializeExample();
     
     // �t�ܻ��U
-    void LogExampleResult(const FString& ExampleName, const FString& Result};
-    void ShowConfigurationDetails(const FOptimizationConfiguration& Config};
-    void DisplayPerformanceReport(const FString& Report};
+    void LogExampleResult(const FString& ExampleName, const FString& Result);
+    void ShowConfigurationDetails(const FOptimizationConfiguration& Config);
+    void DisplayPerformanceReport(const FString& Report);
 };

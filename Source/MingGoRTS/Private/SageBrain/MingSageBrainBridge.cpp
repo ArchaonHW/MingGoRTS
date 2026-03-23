@@ -77,8 +77,15 @@ void UMingSageBrainBridge::ShutdownBridge()
         SageBrainSystem->OnPhilosophyAnalyzed.RemoveDynamic(this, &UMingSageBrainBridge::OnEnhancedContentGenerated);
     }
 
+    // 解綁啟動器事件
+    if (SageBrainLauncher)
+    {
+        SageBrainLauncher->OnWorkflowCompleted.RemoveDynamic(this, &UMingSageBrainBridge::OnLauncherWorkflowCompleted);
+        SageBrainLauncher->OnProgressUpdated.RemoveDynamic(this, &UMingSageBrainBridge::OnLauncherProgressUpdated);
+    }
+
     SageBrainSystem = nullptr;
-    PythonAPI = nullptr;
+    SageBrainLauncher = nullptr;
     bIsInitialized = false;
 
     LogBridgeActivity(TEXT("Bridge shutdown complete"));
@@ -776,4 +783,515 @@ FString UMingSageBrainBridge::GenerateEnhancedPrompt(const FString& BasePrompt, 
 void UMingSageBrainBridge::LogBridgeActivity(const FString& Activity) const
 {
     UE_LOG(LogTemp, Log, TEXT("SageBrainBridge: %s"), *Activity);
+}
+
+// ==================== 編譯優化工作流程實作 ====================
+
+bool UMingSageBrainBridge::RunCompileOptimizationWorkflow()
+{
+    UE_LOG(LogTemp, Log, TEXT("啟動聖者大腦編譯優化工作流程..."));
+
+    if (!SageBrainLauncher)
+    {
+        UE_LOG(LogTemp, Error, TEXT("聖者大腦啟動器未初始化，請先呼叫 EnableCompileOptimizer()"));
+        return false;
+    }
+
+    // 綁定啟動器事件
+    SageBrainLauncher->OnWorkflowCompleted.AddDynamic(this, &UMingSageBrainBridge::OnLauncherWorkflowCompleted);
+    SageBrainLauncher->OnProgressUpdated.AddDynamic(this, &UMingSageBrainBridge::OnLauncherProgressUpdated);
+
+    // 執行工作流程
+    bool bSuccess = SageBrainLauncher->RunCompleteWorkflow();
+
+    LogBridgeActivity(FString::Printf(TEXT("編譯優化工作流程 %s"), bSuccess ? TEXT("執行成功") : TEXT("執行失敗")));
+
+    return bSuccess;
+}
+
+bool UMingSageBrainBridge::EnableCompileOptimizer()
+{
+    UE_LOG(LogTemp, Log, TEXT("啟用聖者大腦編譯優化器..."));
+
+    if (SageBrainLauncher)
+    {
+        UE_LOG(LogTemp, Log, TEXT("編譯優化器已啟用"));
+        return true;
+    }
+
+    // 創建啟動器
+    SageBrainLauncher = NewObject<UMingSageBrainLauncher>(this);
+    if (!SageBrainLauncher)
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法創建聖者大腦啟動器"));
+        return false;
+    }
+
+    // 啟用聖者大腦系統
+    if (!SageBrainLauncher->EnableSageBrain())
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法啟用聖者大腦系統"));
+        SageBrainLauncher = nullptr;
+        return false;
+    }
+
+    // 預設配置
+    SageBrainLauncher->SetBuildMode(TEXT("Development"));
+    SageBrainLauncher->SetAutoFix(true);
+    SageBrainLauncher->SetCreateTasks(true);
+
+    UE_LOG(LogTemp, Log, TEXT("聖者大腦編譯優化器已啟用 ✓"));
+    LogBridgeActivity(TEXT("編譯優化器已啟用"));
+
+    return true;
+}
+
+bool UMingSageBrainBridge::IsCompileOptimizerEnabled() const
+{
+    return SageBrainLauncher != nullptr && SageBrainLauncher->IsSageBrainEnabled();
+}
+
+void UMingSageBrainBridge::SetBuildMode(const FString& Mode)
+{
+    if (SageBrainLauncher)
+    {
+        SageBrainLauncher->SetBuildMode(Mode);
+        UE_LOG(LogTemp, Log, TEXT("設定編譯模式: %s"), *Mode);
+    }
+}
+
+void UMingSageBrainBridge::SetSkipClean(bool bSkip)
+{
+    if (SageBrainLauncher)
+    {
+        SageBrainLauncher->SetSkipClean(bSkip);
+        UE_LOG(LogTemp, Log, TEXT("設定跳過清理: %s"), bSkip ? TEXT("是") : TEXT("否"));
+    }
+}
+
+void UMingSageBrainBridge::SetAutoFix(bool bAuto)
+{
+    if (SageBrainLauncher)
+    {
+        SageBrainLauncher->SetAutoFix(bAuto);
+        UE_LOG(LogTemp, Log, TEXT("設定自動修復: %s"), bAuto ? TEXT("是") : TEXT("否"));
+    }
+}
+
+void UMingSageBrainBridge::SetCreateTasks(bool bCreate)
+{
+    if (SageBrainLauncher)
+    {
+        SageBrainLauncher->SetCreateTasks(bCreate);
+        UE_LOG(LogTemp, Log, TEXT("設定建立任務: %s"), bCreate ? TEXT("是") : TEXT("否"));
+    }
+}
+
+TArray<FMingTaskRequirement> UMingSageBrainBridge::GetGeneratedTasks() const
+{
+    if (SageBrainLauncher)
+    {
+        return SageBrainLauncher->GetSortedTasks();
+    }
+    return TArray<FMingTaskRequirement>();
+}
+
+FCompileOptimizationReport UMingSageBrainBridge::GetLastCompileReport() const
+{
+    if (SageBrainLauncher)
+    {
+        return SageBrainLauncher->GetLastReport();
+    }
+    return FCompileOptimizationReport();
+}
+
+void UMingSageBrainBridge::OnLauncherWorkflowCompleted(bool bSuccess, const FCompileOptimizationReport& Report)
+{
+    UE_LOG(LogTemp, Log, TEXT("編譯優化工作流程完成 - 成功: %s"), bSuccess ? TEXT("是") : TEXT("否"));
+    UE_LOG(LogTemp, Log, TEXT("總錯誤: %d, 總警告: %d, 耗時: %.2f 秒"),
+        Report.TotalErrors, Report.TotalWarnings, Report.TotalDuration);
+
+    // 廣播事件
+    OnCompileOptimizationCompleted.Broadcast(Report);
+}
+
+void UMingSageBrainBridge::OnLauncherProgressUpdated(int32 Percentage, const FString& Message)
+{
+    // 轉發進度更新事件
+    OnCompileProgressUpdated.Broadcast(Percentage, Message);
+}
+
+// ==================== 自我思考與學習功能實作 ====================
+
+bool UMingSageBrainBridge::EnableSelfThinking(ESelfThinkingMode Mode, float IntervalSeconds)
+{
+    UE_LOG(LogTemp, Log, TEXT("啟用聖者大腦自我思考功能..."));
+
+    if (!SelfLearningSystem)
+    {
+        // 創建自我學習系統
+        SelfLearningSystem = NewObject<UMingSageBrainSelfLearningSystem>(this);
+        if (!SelfLearningSystem)
+        {
+            UE_LOG(LogTemp, Error, TEXT("無法創建自我學習系統"));
+            return false;
+        }
+
+        // 初始化自我學習系統
+        if (!SelfLearningSystem->InitializeSelfLearningSystem(SageBrainSystem))
+        {
+            UE_LOG(LogTemp, Error, TEXT("無法初始化自我學習系統"));
+            SelfLearningSystem = nullptr;
+            return false;
+        }
+    }
+
+    // 啟動自我思考循環
+    bool bSuccess = SelfLearningSystem->StartSelfThinkingLoop(Mode, IntervalSeconds);
+
+    if (bSuccess)
+    {
+        UE_LOG(LogTemp, Log, TEXT("自我思考已啟用 - 模式: %s, 間隔: %.1f秒 ✓"),
+            *UEnum::GetDisplayValueAsText(Mode).ToString(), IntervalSeconds);
+        LogBridgeActivity(TEXT("自我思考功能已啟用"));
+    }
+
+    return bSuccess;
+}
+
+void UMingSageBrainBridge::DisableSelfThinking()
+{
+    if (SelfLearningSystem)
+    {
+        SelfLearningSystem->StopSelfThinkingLoop();
+        UE_LOG(LogTemp, Log, TEXT("自我思考已停用"));
+        LogBridgeActivity(TEXT("自我思考功能已停用"));
+    }
+}
+
+bool UMingSageBrainBridge::IsSelfThinkingActive() const
+{
+    return SelfLearningSystem && SelfLearningSystem->IsSelfThinkingActive();
+}
+
+FSelfThinkingRecord UMingSageBrainBridge::TriggerSelfThinking(const FString& Context, ESelfThinkingMode Mode)
+{
+    if (!SelfLearningSystem)
+    {
+        UE_LOG(LogTemp, Error, TEXT("自我學習系統未初始化"));
+        return FSelfThinkingRecord();
+    }
+
+    FSelfThinkingRecord Record = SelfLearningSystem->PerformSelfThinking(Context, Mode);
+
+    UE_LOG(LogTemp, Log, TEXT("觸發自我思考 - 上下文: %s, 深度: %.2f"), *Context, Record.DepthScore);
+
+    return Record;
+}
+
+bool UMingSageBrainBridge::EnableContinuousLearning(float CheckIntervalSeconds)
+{
+    UE_LOG(LogTemp, Log, TEXT("啟用聖者大腦持續學習功能..."));
+
+    if (!SelfLearningSystem)
+    {
+        // 創建並初始化自我學習系統
+        SelfLearningSystem = NewObject<UMingSageBrainSelfLearningSystem>(this);
+        if (!SelfLearningSystem)
+        {
+            UE_LOG(LogTemp, Error, TEXT("無法創建自我學習系統"));
+            return false;
+        }
+
+        if (!SelfLearningSystem->InitializeSelfLearningSystem(SageBrainSystem))
+        {
+            UE_LOG(LogTemp, Error, TEXT("無法初始化自我學習系統"));
+            SelfLearningSystem = nullptr;
+            return false;
+        }
+    }
+
+    // 啟動持續學習
+    bool bSuccess = SelfLearningSystem->StartContinuousLearning(CheckIntervalSeconds);
+
+    if (bSuccess)
+    {
+        UE_LOG(LogTemp, Log, TEXT("持續學習已啟用 - 檢查間隔: %.1f秒 ✓"), CheckIntervalSeconds);
+        LogBridgeActivity(TEXT("持續學習功能已啟用"));
+    }
+
+    return bSuccess;
+}
+
+void UMingSageBrainBridge::DisableContinuousLearning()
+{
+    if (SelfLearningSystem)
+    {
+        SelfLearningSystem->StopContinuousLearning();
+        UE_LOG(LogTemp, Log, TEXT("持續學習已停用"));
+        LogBridgeActivity(TEXT("持續學習功能已停用"));
+    }
+}
+
+bool UMingSageBrainBridge::IsContinuousLearningActive() const
+{
+    return SelfLearningSystem && SelfLearningSystem->IsSelfLearningActive();
+}
+
+TArray<FSelfImprovementSuggestion> UMingSageBrainBridge::GetSelfImprovementSuggestions()
+{
+    if (!SelfLearningSystem)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("自我學習系統未初始化，創建並初始化..."));
+
+        SelfLearningSystem = NewObject<UMingSageBrainSelfLearningSystem>(this);
+        if (!SelfLearningSystem || !SelfLearningSystem->InitializeSelfLearningSystem(SageBrainSystem))
+        {
+            UE_LOG(LogTemp, Error, TEXT("無法初始化自我學習系統"));
+            return TArray<FSelfImprovementSuggestion>();
+        }
+    }
+
+    // 進行自我評估
+    TMap<FString, float> Assessment = SelfLearningSystem->PerformSelfAssessment();
+
+    // 生成改進建議
+    TArray<FSelfImprovementSuggestion> Suggestions = SelfLearningSystem->GenerateSelfImprovementSuggestions();
+
+    UE_LOG(LogTemp, Log, TEXT("生成 %d 個自我改進建議"), Suggestions.Num());
+
+    return Suggestions;
+}
+
+bool UMingSageBrainBridge::ImplementSelfImprovement(const FString& SuggestionID)
+{
+    if (!SelfLearningSystem)
+    {
+        UE_LOG(LogTemp, Error, TEXT("自我學習系統未初始化"));
+        return false;
+    }
+
+    // 評估建議
+    SelfLearningSystem->EvaluateImprovementSuggestion(SuggestionID);
+
+    // 實施建議
+    bool bSuccess = SelfLearningSystem->ImplementImprovementSuggestion(SuggestionID);
+
+    if (bSuccess)
+    {
+        UE_LOG(LogTemp, Log, TEXT("改進建議 %s 已實施"), *SuggestionID);
+        LogBridgeActivity(FString::Printf(TEXT("實施改進建議: %s"), *SuggestionID));
+    }
+
+    return bSuccess;
+}
+
+FString UMingSageBrainBridge::GetSelfLearningStatus() const
+{
+    if (!SelfLearningSystem)
+    {
+        return TEXT("自我學習系統未初始化");
+    }
+
+    return SelfLearningSystem->GetSelfLearningStatus();
+}
+
+// ==================== 至聖者指揮系統整合 ====================
+
+bool UMingSageBrainBridge::InitializeSupremeSageSystem()
+{
+    UE_LOG(LogTemp, Log, TEXT("初始化至聖者指揮系統..."));
+
+    if (!SupremeSageSystem)
+    {
+        SupremeSageSystem = NewObject<UMingSupremeSageCommandSystem>(this);
+        if (!SupremeSageSystem)
+        {
+            UE_LOG(LogTemp, Error, TEXT("無法創建至聖者指揮系統"));
+            return false;
+        }
+    }
+
+    if (!SupremeSageSystem->InitializeSystem())
+    {
+        UE_LOG(LogTemp, Error, TEXT("無法初始化至聖者指揮系統"));
+        SupremeSageSystem = nullptr;
+        return false;
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("✓ 至聖者指揮系統初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("  - 三權模型：道權/策權/兵權"));
+    UE_LOG(LogTemp, Log, TEXT("  - 五行輪轉：木火土金水"));
+    UE_LOG(LogTemp, Log, TEXT("  - 六伐策略：伐心/伐氣/伐勢/伐命/伐影/伐無"));
+    UE_LOG(LogTemp, Log, TEXT("  - 防墮機制：三大徵象監測"));
+
+    LogBridgeActivity(TEXT("至聖者指揮系統已初始化"));
+
+    return true;
+}
+
+bool UMingSageBrainBridge::EnterFiveElementPhase(EFiveElementPhase Phase, const FPhaseContext& Context)
+{
+    if (!SupremeSageSystem)
+    {
+        UE_LOG(LogTemp, Error, TEXT("至聖者指揮系統未初始化"));
+        return false;
+    }
+
+    bool bSuccess = SupremeSageSystem->EnterPhase(Phase, Context);
+
+    if (bSuccess)
+    {
+        UE_LOG(LogTemp, Log, TEXT("進入%s階段: %s"),
+            *UEnum::GetDisplayValueAsText(Phase).ToString(),
+            *Context.PhaseName);
+        LogBridgeActivity(FString::Printf(TEXT("進入%s階段"), *UEnum::GetDisplayValueAsText(Phase).ToString()));
+    }
+
+    return bSuccess;
+}
+
+bool UMingSageBrainBridge::ExecuteSixConquestStrategy(ESixConquestStrategy Strategy, EStrategyApproach Approach, const FConquestTarget& Target)
+{
+    if (!SupremeSageSystem)
+    {
+        UE_LOG(LogTemp, Error, TEXT("至聖者指揮系統未初始化"));
+        return false;
+    }
+
+    FConquestResult Result = SupremeSageSystem->ExecuteSixConquest(Strategy, Approach, Target);
+
+    UE_LOG(LogTemp, Log, TEXT("執行%s: %s - %s"),
+        *UEnum::GetDisplayValueAsText(Strategy).ToString(),
+        *UEnum::GetDisplayValueAsText(Approach).ToString(),
+        Result.bSuccess ? TEXT("成功") : TEXT("失敗"));
+
+    LogBridgeActivity(FString::Printf(TEXT("執行%s"), *UEnum::GetDisplayValueAsText(Strategy).ToString()));
+
+    return Result.bSuccess;
+}
+
+bool UMingSageBrainBridge::ExecuteTwelveStrategy(ETwelveStrategies Strategy, const FStrategyContext& Context)
+{
+    if (!SupremeSageSystem)
+    {
+        UE_LOG(LogTemp, Error, TEXT("至聖者指揮系統未初始化"));
+        return false;
+    }
+
+    FStrategyResult Result = SupremeSageSystem->ExecuteTwelveStrategy(Strategy, Context);
+
+    UE_LOG(LogTemp, Log, TEXT("執行十二策『%s』: %s"),
+        *UEnum::GetDisplayValueAsText(Strategy).ToString(),
+        Result.bSuccess ? TEXT("成功") : TEXT("失敗"));
+
+    LogBridgeActivity(FString::Printf(TEXT("執行十二策: %s"), *UEnum::GetDisplayValueAsText(Strategy).ToString()));
+
+    return Result.bSuccess;
+}
+
+FCorruptionCheckResult UMingSageBrainBridge::PerformCorruptionCheck()
+{
+    if (!SupremeSageSystem)
+    {
+        UE_LOG(LogTemp, Error, TEXT("至聖者指揮系統未初始化"));
+        return FCorruptionCheckResult();
+    }
+
+    FCorruptionCheckResult Result = SupremeSageSystem->PerformCorruptionCheck();
+
+    UE_LOG(LogTemp, Log, TEXT("墮落檢查結果:"));
+    UE_LOG(LogTemp, Log, TEXT("  整體風險: %.2f"), Result.OverallCorruptionRisk);
+    UE_LOG(LogTemp, Log, TEXT("  需要交接: %s"), Result.bShouldTransferCommand ? TEXT("是") : TEXT("否"));
+
+    if (Result.OverallCorruptionRisk > 0.5f)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("⚠ 檢測到墮落風險，建議執行防墮措施"));
+    }
+
+    return Result;
+}
+
+FCommandRecommendation UMingSageBrainBridge::GetSageCommandRecommendation() const
+{
+    if (!SupremeSageSystem)
+    {
+        UE_LOG(LogTemp, Error, TEXT("至聖者指揮系統未初始化"));
+        return FCommandRecommendation();
+    }
+
+    FCommandRecommendation Recommendation = SupremeSageSystem->GetCommandRecommendation();
+
+    UE_LOG(LogTemp, Log, TEXT("至聖者指揮建議:"));
+    UE_LOG(LogTemp, Log, TEXT("  推薦權限: %s"), *UEnum::GetDisplayValueAsText(Recommendation.RecommendedAuthority).ToString());
+    UE_LOG(LogTemp, Log, TEXT("  推薦階段: %s"), *UEnum::GetDisplayValueAsText(Recommendation.RecommendedPhase).ToString());
+    UE_LOG(LogTemp, Log, TEXT("  信心指數: %.2f"), Recommendation.ConfidenceLevel);
+
+    return Recommendation;
+}
+
+bool UMingSageBrainBridge::SwitchAuthority(ESupremeAuthorityType AuthorityType)
+{
+    if (!SupremeSageSystem)
+    {
+        UE_LOG(LogTemp, Error, TEXT("至聖者指揮系統未初始化"));
+        return false;
+    }
+
+    bool bSuccess = SupremeSageSystem->SwitchToAuthority(AuthorityType);
+
+    if (bSuccess)
+    {
+        UE_LOG(LogTemp, Log, TEXT("切換至%s主導"), *UEnum::GetDisplayValueAsText(AuthorityType).ToString());
+        LogBridgeActivity(FString::Printf(TEXT("切換至%s"), *UEnum::GetDisplayValueAsText(AuthorityType).ToString()));
+    }
+
+    return bSuccess;
+}
+
+bool UMingSageBrainBridge::DeployForce(EForceType ForceType, const FDeploymentConfig& Config)
+{
+    if (!SupremeSageSystem)
+    {
+        UE_LOG(LogTemp, Error, TEXT("至聖者指揮系統未初始化"));
+        return false;
+    }
+
+    bool bSuccess = SupremeSageSystem->DeployForce(ForceType, Config);
+
+    if (bSuccess)
+    {
+        UE_LOG(LogTemp, Log, TEXT("部署%s: %s"),
+            *UEnum::GetDisplayValueAsText(ForceType).ToString(),
+            *Config.DeploymentName);
+        LogBridgeActivity(FString::Printf(TEXT("部署%s"), *UEnum::GetDisplayValueAsText(ForceType).ToString()));
+    }
+
+    return bSuccess;
+}
+
+FSelfAuditReport UMingSageBrainBridge::GenerateSageSelfAuditReport()
+{
+    if (!SupremeSageSystem)
+    {
+        UE_LOG(LogTemp, Error, TEXT("至聖者指揮系統未初始化"));
+        return FSelfAuditReport();
+    }
+
+    FSelfAuditReport Report = SupremeSageSystem->GenerateSelfAuditReport();
+
+    UE_LOG(LogTemp, Log, TEXT("=== 至聖者自我審核報告 ==="));
+    UE_LOG(LogTemp, Log, TEXT("總命令數: %d"), Report.TotalCommandsIssued);
+    UE_LOG(LogTemp, Log, TEXT("邪兵使用: %d"), Report.EvilForceUsages);
+    UE_LOG(LogTemp, Log, TEXT("平均決策品質: %.2f"), Report.AverageDecisionQuality);
+    UE_LOG(LogTemp, Log, TEXT("墮落風險: %.2f"), Report.CorruptionStatus.OverallCorruptionRisk);
+
+    if (!Report.Recommendations.IsEmpty())
+    {
+        UE_LOG(LogTemp, Log, TEXT("改進建議:\n%s"), *Report.Recommendations);
+    }
+
+    LogBridgeActivity(TEXT("生成至聖者自我審核報告"));
+
+    return Report;
 }

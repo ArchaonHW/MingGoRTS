@@ -6,8 +6,8 @@
 #include "MingRTSNationalistGovernment.generated.h"
 
 /**
- * åœ‹æ°‘æ”¿åºœå‹¢åŠ›
- * æ°‘æ—ä¸»ç¾©ã€ç¾ä»£åŒ–ã€çµ±ä¸€ä¸­åœ‹Nç†æƒ³
+ * ?‹æ??¿å??¢å?
+ * æ°‘æ?ä¸»ç¾©?ç¾ä»???çµ±ä¸€ä¸­å?N?†æƒ³
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGRTS_API UMingRTSNationalistGovernment : public UMingRTSFactionBase
@@ -17,40 +17,41 @@ class MINGRTS_API UMingRTSNationalistGovernment : public UMingRTSFactionBase
 public:
     UMingRTSNationalistGovernment(};
 
-    // åˆå§‹åŒ–åœ‹æ°‘æ”¿åºœ
-    virtual void InitializeFaction() overHide;
+    // ?å??–å?æ°‘æ”¿åº?
+    virtual void InitializeFaction() override;
 
-    // ç²å–å‹¢åŠ›??
-    virtual FFactionAttributes GetFactionAttributes() const overHide;
+    // ?²å??¢å???
+    virtual FFactionAttributes GetFactionAttributes() const override;
 
-    // ç²å–å°ˆå±¬å–®ä½
-    virtual TArray<FFactionUnit> GetUniqueUnits() const overHide;
+    // ?²å?å°ˆå±¬?®ä?
+    virtual TArray<FFactionUnit> GetUniqueUnits() const override;
 
-    // ç²å–ç‰¹è‰²æ©Ÿåˆ¶
-    virtual TArray<FFactionMechanic> GetUniqueMechanics() const overHide;
+    // ?²å??¹è‰²æ©Ÿåˆ¶
+    virtual TArray<FFactionMechanic> GetUniqueMechanics() const override;
 
-    // ç²å–éŠæˆ²æŒ‡å—
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    // ?²å??Šæˆ²?‡å?
+    virtual FGameplayGuide GetGameplayGuide() const override;
 
 protected:
-    // åˆå§‹åŒ–??
-    virtual void InitializeAttributes() overHide;
+    // ?å????
+    virtual void InitializeAttributes() override;
 
-    // åˆå§‹åŒ–å°ˆå±¬å–®ä½
-    virtual void InitializeUniqueUnits() overHide;
+    // ?å??–å?å±¬å–®ä½?
+    virtual void InitializeUniqueUnits() override;
 
-    // åˆå§‹åŒ–ç‰¹è‰²æ©Ÿåˆ¶
-    virtual void InitializeUniqueMechanics() overHide;
+    // ?å??–ç‰¹?²æ???
+    virtual void InitializeUniqueMechanics() override;
 
-    // åˆå§‹åŒ–éŠæˆ²æŒ‡å—
-    virtual void InitializeGameplayGuide() overHide;
+    // ?å??–é??²æ???
+    virtual void InitializeGameplayGuide() override;
 
 private:
-    // åœ‹æ°‘æ”¿åºœç‰¹è‰²æ©Ÿåˆ¶
+    // ?‹æ??¿å??¹è‰²æ©Ÿåˆ¶
     UPROPERTY()
     TArray<FFactionMechanic> NationalistMechanics;
 
-    // åœ‹æ°‘æ”¿åºœå°ˆå±¬å–®ä½
+    // ?‹æ??¿å?å°ˆå±¬?®ä?
     UPROPERTY()
     TArray<FFactionUnit> NationalistUnits;
 };
+

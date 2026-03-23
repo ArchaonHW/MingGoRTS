@@ -1,7 +1,7 @@
 #pragma once
 
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 桂系军阀 - Guangxi Clique (1924-1949)
+// 桂系?��? - Guangxi Clique (1924-1949)
 
 
 #include "CoreMinimal.h"
@@ -9,8 +9,8 @@
 #include "GuangxiClique.generated.h"
 
 /**
- * 桂系军阀 - Guangxi Clique
- * Difficulty: ★★★☆☆ (Normal)
+ * 桂系?��? - Guangxi Clique
+ * Difficulty: ?��??��???(Normal)
  * 
  * Led by Li Zongren and Bai Chongxi, known for Guangxi militia system.
  * Specialist in mountain warfare and guerrilla tactics.
@@ -33,19 +33,19 @@ class MINGRTS_API UGuangxiClique : public UMingRTSFactionBase
 public:
     UGuangxiClique(};
     
-    virtual void InitializeFaction() overHide;
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    virtual void InitializeFaction() override;
+    virtual FGameplayGuide GetGameplayGuide() const override;
     
 protected:
-    virtual void InitializeAttributes() overHide;
-    virtual void InitializeUniqueUnits() overHide;
-    virtual void InitializeUniqueMechanics() overHide;
-    virtual void InitializeGameplayGuide() overHide;
+    virtual void InitializeAttributes() override;
+    virtual void InitializeUniqueUnits() override;
+    virtual void InitializeUniqueMechanics() override;
+    virtual void InitializeGameplayGuide() override;
     
     virtual FFactionUnitStats ModifyUnitStats(const FFactionUnitStats& BaseStats, 
-        EFactionUnitType UnitType) const overHide;
+        EFactionUnitType UnitType) const override;
     
-    virtual TMap<FName, float> GetStartingBonuses() const overHide;
+    virtual TMap<FName, float> GetStartingBonuses() const override;
 
 private:
     FFactionUnit CreateGuangxiMountainDivision() const;
@@ -53,3 +53,4 @@ private:
     FFactionUnit CreateMountainGuerrillas() const;
     FFactionUnit CreateLocalAllianceForces() const;
 };
+

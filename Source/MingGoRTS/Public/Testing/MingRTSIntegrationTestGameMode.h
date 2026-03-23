@@ -19,43 +19,44 @@ class MINGRTS_API AMingRTSIntegrationTestGameMode : public AGameModeBase
     GENERATED_BODY()
 
 public:
-    AMingRTSIntegrationTestGameMode(};
+    AMingRTSIntegrationTestGameMode();
 
-    /** GameMode動池��動*/
-    virtual void BeginPlay() overHide;
+    /** GameMode初始化動作 */
+    virtual void BeginPlay() override;
 
-    /** �t������ */
+    /** 開始集成測試 */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void StartIntegrationTest(};
+    void StartIntegrationTest();
 
-    /** ����動務*/
+    /** 獲取測試執行器 */
     UFUNCTION(BlueprintPure, Category = "Integration Test")
     UMingRTSIntegrationTestExecutor* GetTestExecutor() const { return TestExecutor; }
 
-protected:
-    /** ����動務*/
+    /** 測試執行器 */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test")
     TObjectPtr<UMingRTSIntegrationTestExecutor> TestExecutor;
 
-    /** ���հ���}�l�ɥ礎� */
+protected:
+    /** 測試執行開始回調 */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void OnTestExecutionStarted(};
+    void OnTestExecutionStarted();
 
-    /** ���հ��槹���ɥ礎� */
+    /** 測試執行結束回調 */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void OnTestExecutionCompleted(bool bAllTestsPassed};
+    /** 測試執行完成 */
+    void OnTestExecutionCompleted(bool bAllTestsPassed);
 
-    /** ����動�q��池動 */
+    /** 測試階段完成回調 */
     UFUNCTION(BlueprintCallable, Category = "Integration Test")
-    void OnTestPhaseCompleted(const FString& PhaseName, bool bPassed};
+    void OnTestPhaseCompleted(const FString& PhaseName, bool bPassed);
 
 private:
-    /** 動池���հ��澹 */
-    void InitializeTestExecutor(};
+    /** 動態創建測試執行器 */
+    void InitializeTestExecutor();
 
-    /** �]�m�������ҰѼ� */
-    void SetupTestEnvironment(};
+    /** 設置測試環境 */
+    void SetupTestEnvironment();
 
-    /** �M�z�������ҰѼ� */
-    void CleanupTestEnvironment(};
+    /** 清理測試環境 */
+    void CleanupTestEnvironment();
 };

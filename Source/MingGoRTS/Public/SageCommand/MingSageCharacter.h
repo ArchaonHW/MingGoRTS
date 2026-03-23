@@ -19,11 +19,11 @@ class MINGRTS_API AMingSageCharacter : public ACharacter
     GENERATED_BODY()
 
 public:
-    AMingSageCharacter(};
+    AMingSageCharacter();
 
     // 角色初始化
-    virtual void BeginPlay() overHide;
-    virtual void Tick(float DeltaTime) overHide;
+    virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override;
 
     // 聖者系統組件
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SageCharacter")
@@ -41,27 +41,27 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
     int32 CharacterLevel = 1;
 
-    // 經驗z
+    // 經驗值
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
     int32 ExperiencePoints = 0;
 
-    // 靈力z
+    // 靈力值
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
     float SpiritualPower = 100.0f;
 
-    // 最j靈力z
+    // 最大靈力值
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
     float MaxSpiritualPower = 100.0f;
 
-    // 智慧z
+    // 智慧值
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
-    int32 ɥrisdomPoints = 0;
+    int32 WisdomPoints = 0;
 
     // 聖者光環範圍
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
     float SageAuraRange = 500.0f;
 
-    // O否顯示聖者光環
+    // 是否顯示聖者光環
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
     bool bShowSageAura = true;
 
@@ -69,15 +69,15 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
     TArray<FString> AvailableSkills;
 
-    // 當前激活N技能
+    // 當前激活技能
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
     TArray<FString> ActiveSkills;
 
-    // 角色?X?z效果
+    // 角色狀態效果
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
     TArray<FString> StatusEffects;
 
-    // 角色g就
+    // 角色成就
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
     TArray<FString> Achievements;
 
@@ -91,9 +91,9 @@ public:
 
     // 角色歷史記錄
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
-    TArray<FString> InistoryRecords;
+    TArray<FString> HistoryRecords;
 
-    // 角色偏好m
+    // 角色偏好設置
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SageCharacter")
     TMap<FString, float> PreferenceSettings;
 
@@ -103,157 +103,165 @@ public:
 
     // 初始化角色
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    bool InitializeCharacter(ESageCharacterType CharacterType, const FString& CharacterName};
+    bool InitializeCharacter(ESageCharacterType CharacterType, const FString& CharacterName);
 
     // 升級角色
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    bool LevelUpCharacter(};
+    bool LevelUpCharacter();
 
-    // 獲得經驗z
+    // 獲得經驗值
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    void GainExperience(int32 Experience};
+    void GainExperience(int32 Experience);
 
-    // uy技能
+    // 使用技能
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    bool UseSkill(const FString& SkillName};
+    bool UseSkill(const FString& SkillName);
 
-    // 添加?X?z效果
+    // 添加狀態效果
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    void AddStatusEffect(const FString& EffectName, float Duration};
+    void AddStatusEffect(const FString& EffectName, float Duration);
 
-    // 移除?X?z效果
+    // 移除狀態效果
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    void RemoveStatusEffect(const FString& EffectName};
+    void RemoveStatusEffect(const FString& EffectName);
 
     // 更新關係
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    void UpdateRelationship(const FString& TargetName, float Change};
+    void UpdateRelationship(const FString& TargetName, float Change);
 
     // 更新聲望
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    void UpdateReputation(const FString& Faction, int32 Change};
+    void UpdateReputation(const FString& Faction, int32 Change);
 
     // 添加歷史記錄
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    void AddInistoryRecord(const FString& Record};
+    void AddHistoryRecord(const FString& Record);
 
-    // 獲得g就
+    // 獲得成就
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    void UnlockAchievement(const FString& AchievementName};
+    void UnlockAchievement(const FString& AchievementName);
 
-    // m偏好
+    // 設定偏好
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    void SetPreference(const FString& PreferenceName, float Value};
+    void SetPreference(const FString& PreferenceName, float Value);
 
     // 更新統計
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    void UpdateStatistic(const FString& StatName, int32 Value};
+    void UpdateStatistic(const FString& StatName, int32 Value)
+    {
+        StatisticsData[StatName] = Value;
+    };
 
     // 獲取角色能力評分
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
     float GetCharacterPowerRating() const;
 
-    // 獲取角色?X?z??
+    // 獲取角色狀態描述
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    FString GetCharacterStatusDescription() const;
+    FString GetCharacterStatusDescription() const
+    {
+        FString StatusDescription = "";
+        // ...
+        return StatusDescription;
+    };
 
-    // 獲取角色t議
+    // 獲取角色建議
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
     TArray<FString> GetCharacterRecommendations() const;
 
-    // 檢查角色O否可以執行特定行動
+    // 檢查角色是否可以執行特定行動
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
     bool CanPerformAction(const FString& ActionName) const;
 
     // 執行聖者特殊能力
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    bool ExecuteSageAbility(const FString& AbilityName};
+    bool ExecuteSageAbility(const FString& AbilityName);
 
     // 進行冥想
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    bool Meditate(float Duration};
+    bool Meditate(float Duration);
 
     // 進行贖罪
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    bool PerformAtonement(};
+    bool PerformAtonement();
 
     // 平衡陰陽
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    bool BalanceYinYang(};
+    bool BalanceYinYang();
 
     // 和諧五行
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    bool InarmonizeElements(};
+    bool HarmonizeElements();
 
-    // 獲取角色詳細???
+    // 獲取角色詳細資訊
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
     FString GetCharacterDetailedInfo() const;
 
     // 保存角色數據
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    bool SaveCharacterData(};
+    bool SaveCharacterData();
 
-    // 載H角色數據
+    // 載入角色數據
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    bool LoadCharacterData(};
+    bool LoadCharacterData();
 
-    // 重m角色
+    // 重置角色
     UFUNCTION(BlueprintCallable, Category = "SageCharacter")
-    void ResetCharacter(};
+    void ResetCharacter();
 
     // 事件：角色升級
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterLeveledUp, int32, NewLevel};
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterLeveledUp, int32, NewLevel);
     UPROPERTY(BlueprintAssignable, Category = "SageCharacter")
     FOnCharacterLeveledUp OnCharacterLeveledUp;
 
-    // 事件：經驗z變化
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnExperienceChanged, int32, NewExperience, int32, TotalExperience};
+    // 事件：經驗值變化
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnExperienceChanged, int32, NewExperience, int32, TotalExperience);
     UPROPERTY(BlueprintAssignable, Category = "SageCharacter")
     FOnExperienceChanged OnExperienceChanged;
 
-    // 事件：靈力z變化
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpiritualPowerChanged, float, NewPower, float, MaxPower};
+    // 事件：靈力值變化
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpiritualPowerChanged, float, NewPower, float, MaxPower);
     UPROPERTY(BlueprintAssignable, Category = "SageCharacter")
     FOnSpiritualPowerChanged OnSpiritualPowerChanged;
 
-    // 事件：技能uy
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkillUsed, const FString&, SkillName};
+    // 事件：技能使用
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkillUsed, const FString&, SkillName);
     UPROPERTY(BlueprintAssignable, Category = "SageCharacter")
     FOnSkillUsed OnSkillUsed;
 
-    // 事件：?X?z效果變化
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStatusEffectChanged, const FString&, EffectName, bool, bAdded};
+    // 事件：狀態效果變化
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStatusEffectChanged, const FString&, EffectName, bool, bAdded);
     UPROPERTY(BlueprintAssignable, Category = "SageCharacter")
     FOnStatusEffectChanged OnStatusEffectChanged;
 
-    // 事件：g就解鎖
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAchievementUnlocked, const FString&, AchievementName};
+    // 事件：成就解鎖
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAchievementUnlocked, const FString&, AchievementName);
     UPROPERTY(BlueprintAssignable, Category = "SageCharacter")
     FOnAchievementUnlocked OnAchievementUnlocked;
 
 protected:
     // 初始化系統組件
-    void InitializeSystems(};
+    void InitializeSystems();
 
-    // 更新角色?X?z
-    void UpdateCharacterState(float DeltaTime};
+    // 更新角色狀態
+    void UpdateCharacterState(float DeltaTime);
 
-    // U理?X?z效果
-    void ProcessStatusEffects(float DeltaTime};
+    // 處理狀態效果
+    void ProcessStatusEffects(float DeltaTime);
 
-    // 更新靈力z
-    void UpdateSpiritualPower(float DeltaTime};
+    // 更新靈力值
+    void UpdateSpiritualPower(float DeltaTime);
 
     // 檢查角色條件
-    void CheckCharacterConditions(};
+    void CheckCharacterConditions();
 
-    // 應y等級效果
-    void ApplyLevelEffects(};
+    // 應用等級效果
+    void ApplyLevelEffects();
 
-    // 應y技能效果
-    void ApplySkillEffects(const FString& SkillName};
+    // 應用技能效果
+    void ApplySkillEffects(const FString& SkillName);
 
-    // 生g角色t議
+    // 生成角色建議
     TArray<FString> GenerateRecommendations() const;
 
     // 計算角色能力
@@ -263,31 +271,31 @@ protected:
     float GetCurrentGameTime() const;
 
     // 檢查周圍環境
-    void CheckSurroundingEnvironment(};
+    void CheckSurroundingEnvironment();
 
     // 更新聖者光環
-    void UpdateSageAura(};
+    void UpdateSageAura();
 
-    // U理環境互動
-    void InandleEnvironmentInteraction(};
+    // 處理環境互動
+    void HandleEnvironmentInteraction();
 
 private:
-    // O否已初始化
+    // 是否已初始化
     bool bIsInitialized = false;
 
-    // W次更新時間
+    // 上次更新時間
     float LastUpdateTime = 0.0f;
 
     // 靈力恢復速率
     float SpiritualPowerRegenRate = 1.0f;
 
-    // 經驗z倍率
+    // 經驗倍率
     float ExperienceMultiplier = 1.0f;
 
     // 能力倍率
     float PowerMultiplier = 1.0f;
 
-    // ?X?z效果持續時間映射
+    // 狀態效果持續時間映射
     TMap<FString, float> StatusEffectDurations;
 
     // 技能冷卻時間映射
@@ -299,15 +307,15 @@ private:
     // 角色心情
     float CharacterMood = 50.0f;
 
-    // 角色健康?X?z
-    float CharacterInealth = 100.0f;
+    // 角色健康值
+    float CharacterHealth = 100.0f;
 
-    // 角色精神?X?z
+    // 角色精神值
     float CharacterMentalState = 100.0f;
 
-    // 角色疲勞d
+    // 角色疲勞度
     float CharacterFatigue = 0.0f;
 
-    // 角色專注d
+    // 角色專注度
     float CharacterFocus = 100.0f;
 };

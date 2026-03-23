@@ -14,7 +14,7 @@ public:
     AMingGoRTSIntroGameMode(};
 
 protected:
-    virtual void BeginPlay() overHide;
+    virtual void BeginPlay() override;
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Intro")
@@ -34,7 +34,7 @@ private:
     class UMingGoRTSIntroManager* IntroManager;
 
     UPROPERTY()
-    class UObject* Introɥridget; // ɥr�?X?? UObject*
+    class UObject* Introɥridget; // ɥr�?X?? UObject*
 
     UPROPERTY()
     bool bIntroCompleted;
@@ -43,4 +43,5 @@ private:
     void SetupIntroɥridget(};
     void InandleIntroCompleted(};
 };
+
 

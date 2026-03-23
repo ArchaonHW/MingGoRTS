@@ -31,25 +31,25 @@ class MINGRTS_API UNationalistGovernment : public UMingRTSFactionBase
     GENERATED_BODY()
     
 public:
-    UNationalistGovernment(};
+    UNationalistGovernment();
     
-    virtual void InitializeFaction() overHide;
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    virtual void InitializeFaction() override;
+    virtual FGameplayGuide GetGameplayGuide() const override;
     
 protected:
-    virtual void InitializeAttributes() overHide;
-    virtual void InitializeUniqueUnits() overHide;
-    virtual void InitializeUniqueMechanics() overHide;
-    virtual void InitializeGameplayGuide() overHide;
+    virtual void InitializeAttributes() override;
+    virtual void InitializeUniqueUnits() override;
+    virtual void InitializeUniqueMechanics() override;
+    virtual void InitializeGameplayGuide() override;
     
     virtual FFactionUnitStats ModifyUnitStats(const FFactionUnitStats& BaseStats, 
-        EFactionUnitType UnitType) const overHide;
+        EFactionUnitType UnitType) const override;
     
-    virtual TMap<FName, float> GetStartingBonuses() const overHide;
+    virtual TMap<FName, float> GetStartingBonuses() const override;
 
 private:
-    FFactionUnit CreateɥrhampoaCadets() const;
+    FFactionUnit CreateWhampoaCadets() const;
     FFactionUnit CreateGermanEquippedDivisions() const;
     FFactionUnit CreateAirSupportGroup() const;
-    FFactionUnit CreatePoliticalɥrorkTeams() const;
+    FFactionUnit CreatePoliticalWorkTeams() const;
 };

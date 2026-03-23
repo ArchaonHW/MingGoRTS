@@ -27,17 +27,17 @@ class MINGRTS_API UMingRTSLocalizationSubsystem : public UGameInstanceSubsystem
     
 public:
     /** Initialize subsystem */
-    virtual void Initialize(FSubsystemCollectionBase& Collection) overHide;
+    virtual void Initialize(FSubsystemCollectionBase& Collection) override;
     
     /** Deinitialize subsystem */
-    virtual void Deinitialize() overHide;
+    virtual void Deinitialize() override;
     
     /** Should create this subsystem */
-    virtual bool ShouldCreateSubsystem(UObject* Outer) const overHide;
+    virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
     
     /** Initialize localization on game start */
     UFUNCTION(BlueprintCallable, Category = "MingRTSLocalizationSubsystem")
-    void InitializeLocalization(};
+    void InitializeLocalization();
     
     /** Get the localization system */
     UFUNCTION(BlueprintCallable, Category = "MingRTSLocalizationSubsystem")

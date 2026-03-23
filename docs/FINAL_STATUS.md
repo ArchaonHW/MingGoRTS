@@ -1,13 +1,13 @@
-# MingWarRTS 项目最终状态
+# MingGoRTS 项目最终状态
 
 ## ✅ **问题已解决：项目名称修复**
 
 ### **问题**
 - UE5 不允许项目名称包含连字符 `-`
-- 原始项目名称 `MingWar-RTS` 无效
+- 原始项目名称 `MingGoRTS` 无效
 
 ### **修复**
-- 已重命名为 `MingWarRTS`（无连字符）
+- 已重命名为 `MingGoRTS`（无连字符）
 - 所有相关文件已更新
 
 ---
@@ -17,12 +17,12 @@
 ### **✅ 文件结构**
 ```
 C:\HW\MingGoRTS\
-├── MingWarRTS.uproject        ✅ (已重命名)
+├── MingGoRTS.uproject        ✅ (已重命名)
 ├── Source/
-│   └── MingWarRTS/
+│   └── MingGoRTS/
 │       ├── Public/            ✅ (5个简化头文件)
 │       ├── Private/           ✅ (5个简化源文件)
-│       └── MingWarRTS.Build.cs ✅ (极简配置)
+│       └── MingGoRTS.Build.cs ✅ (极简配置)
 ├── Config/                    ✅
 ├── Content/                   ✅
 ├── Tools/                     ✅
@@ -31,7 +31,7 @@ C:\HW\MingGoRTS\
 
 ### **✅ 简化 C++ 代码**
 所有类已简化为最小可编译版本：
-- `AMingWarRTS` - 极简 GameMode
+- `AMingGoRTS` - 极简 GameMode
 - `ARTSUnit` - 极简 Actor
 - `ARTSBuilding` - 极简 Actor
 - `ARTSPlayerController` - 极简 PlayerController
@@ -55,7 +55,7 @@ C:\HW\MingGo\LAUNCH_UE5.bat
 
 或直接双击：
 ```
-C:\HW\MingGoRTS\MingWarRTS.uproject
+C:\HW\MingGoRTS\MingGoRTS.uproject
 ```
 
 ### **第 2 步：等待编译**
@@ -70,7 +70,7 @@ C:\HW\MingGoRTS\MingWarRTS.uproject
 编译完成后：
 - ✅ 无红色错误
 - ✅ 可以创建 Blueprint
-- ✅ `MingWarRTS.sln` 自动生成
+- ✅ `MingGoRTS.sln` 自动生成
 
 ---
 
@@ -94,7 +94,7 @@ C:\HW\MingGoRTS\MingWarRTS.uproject
 
 | 项目 | 状态 | 备注 |
 |------|------|------|
-| 项目名称 | ✅ 已修复 | MingWarRTS (无连字符) |
+| 项目名称 | ✅ 已修复 | MingGoRTS (无连字符) |
 | 源代码 | ✅ 完成 | 5个类，极简版 |
 | 配置文件 | ✅ 完成 | UE5.7.4 兼容 |
 | 构建脚本 | ✅ 完成 | LAUNCH_UE5.bat 可用 |

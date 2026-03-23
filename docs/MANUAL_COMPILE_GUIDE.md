@@ -1,57 +1,57 @@
-# MingWarRTS ?‹åŠ¨ç¼–è??‡å?
+# MingGoRTS ?ï¿½åŠ¨ç¼–ï¿½??ï¿½ï¿½?
 
-## ?š¨ **ç¼–è?å¤±è´¥è§?†³?¹æ?**
+## ?ï¿½ï¿½ **ç¼–ï¿½?å¤±è´¥ï¿½?ï¿½ï¿½?ï¿½ï¿½?**
 
-### **?®é?ï¼?* "MingWarRTS could not be compiled. Try rebuilding from source manually."
+### **?ï¿½ï¿½?ï¿½?* "MingGoRTS could not be compiled. Try rebuilding from source manually."
 
-è¿™æ˜¯ UE5 ?¨é?æ¬¡æ?å¼€é¡¹ç›®?¶å¸¸è§ç??™è¯¯ï¼Œé€šå¸¸?¯å?ä¸ºé¡¹?®æ?ä»¶æœª?Ÿæ???Visual Studio C++ ç»„ä»¶ç¼ºå¤±??
+è¿™æ˜¯ UE5 ?ï¿½ï¿½?æ¬¡ï¿½?å¼€é¡¹ç›®?ï¿½å¸¸è§ï¿½??ï¿½è¯¯ï¼Œé€šå¸¸?ï¿½ï¿½?ä¸ºé¡¹?ï¿½ï¿½?ä»¶æœª?ï¿½ï¿½???Visual Studio C++ ç»„ä»¶ç¼ºå¤±??
 ---
 
-## **è§?†³?¹æ? 1ï¼šç¡®ä¿?Visual Studio C++ å·²å?è£?*
+## **ï¿½?ï¿½ï¿½?ï¿½ï¿½? 1ï¼šç¡®ï¿½?Visual Studio C++ å·²ï¿½?ï¿½?*
 
-### **æ£€??Visual Studio ?ˆæœ¬**
-?“å? Visual Studio Installerï¼Œç¡®è®¤å?è£…ä?ï¼?
+### **æ£€??Visual Studio ?ï¿½æœ¬**
+?ï¿½ï¿½? Visual Studio Installerï¼Œç¡®è®¤ï¿½?è£…ï¿½?ï¿½?
 - **Visual Studio 2019** ??**Visual Studio 2022**
-- å·¥ä?è´Ÿè½½ï¼?*Desktop development with C++** ??- ç»„ä»¶ï¼?  - ??Windows 10/11 SDK (10.0.19041.0 ?–æ›´é«?
+- å·¥ï¿½?è´Ÿè½½ï¿½?*Desktop development with C++** ??- ç»„ä»¶ï¿½?  - ??Windows 10/11 SDK (10.0.19041.0 ?ï¿½æ›´ï¿½?
   - ??MSVC v142 - VS 2019 C++ x64/x86 build tools (??v143 for VS 2022)
-  - ??C++ ATL for latest build tools (?¯é€‰ä??¨è?)
+  - ??C++ ATL for latest build tools (?ï¿½é€‰ï¿½??ï¿½ï¿½?)
 
-### **å¿«é€Ÿé?è¯?*
-?“å? **Developer Command Prompt** (VS 2022) ??**x64 Native Tools Command Prompt** (VS 2019)ï¼Œè?è¡Œï?
+### **å¿«é€Ÿï¿½?ï¿½?*
+?ï¿½ï¿½? **Developer Command Prompt** (VS 2022) ??**x64 Native Tools Command Prompt** (VS 2019)ï¼Œï¿½?è¡Œï¿½?
 ```cmd
 cl
 ```
-å¦‚æ??¾ç¤º?ˆæœ¬ä¿¡æ¯ï¼Œè¯´??C++ ç¼–è??¨å¯?¨ã€?
+å¦‚ï¿½??ï¿½ç¤º?ï¿½æœ¬ä¿¡æ¯ï¼Œè¯´??C++ ç¼–ï¿½??ï¿½å¯?ï¿½ï¿½?
 ---
 
-## **è§?†³?¹æ? 2ï¼šæ??¨ç??é¡¹?®æ?ä»?*
+## **ï¿½?ï¿½ï¿½?ï¿½ï¿½? 2ï¼šï¿½??ï¿½ï¿½??ï¿½é¡¹?ï¿½ï¿½?ï¿½?*
 
-### **?¹æ? Aï¼šä½¿??UnrealBuildTool (?¨è?)**
+### **?ï¿½ï¿½? Aï¼šä½¿??UnrealBuildTool (?ï¿½ï¿½?)**
 
 ```cmd
 cd C:\HW\MingGoRTS
 
-REM ä½¿ç”¨?­è·¯å¾„é¿?ç©º?¼é—®é¢?set UE5=C:\PROGRA~1\Epic Games\UE_5.7
+REM ä½¿ç”¨?ï¿½è·¯å¾„é¿?ï¿½ç©º?ï¿½é—®ï¿½?set UE5=C:\PROGRA~1\Epic Games\UE_5.7
 
-REM ?Ÿæ?é¡¹ç›®?‡ä»¶
+REM ?ï¿½ï¿½?é¡¹ç›®?ï¿½ä»¶
 "%UE5%\Engine\Binaries\DotNET\UnrealBuildTool.exe" ^
   -projectfiles ^
-  -project="MingWarRTS.uproject" ^
+  -project="MingGoRTS.uproject" ^
   -game ^
   -progress
 ```
 
-### **?¹æ? Bï¼šä½¿??GenerateProjectFiles.bat**
+### **?ï¿½ï¿½? Bï¼šä½¿??GenerateProjectFiles.bat**
 
 ```cmd
 cd C:\HW\MingGoRTS
 
-REM æ£€?¥æ­£ç¡®ç?è·¯å?
+REM æ£€?ï¿½æ­£ç¡®ï¿½?è·¯ï¿½?
 dir "C:\Program Files\Epic Games\UE_5.7\Engine\Build\BatchFiles\GenerateProjectFiles.bat"
 
-REM å¦‚æ?å­˜åœ¨ï¼Œè?è¡Œå?
+REM å¦‚ï¿½?å­˜åœ¨ï¼Œï¿½?è¡Œï¿½?
 "C:\Program Files\Epic Games\UE_5.7\Engine\Build\BatchFiles\GenerateProjectFiles.bat" ^
-  -project="MingWarRTS.uproject" ^
+  -project="MingGoRTS.uproject" ^
   -game ^
   -engine ^
   -progress
@@ -59,70 +59,70 @@ REM å¦‚æ?å­˜åœ¨ï¼Œè?è¡Œå?
 
 ---
 
-## **è§?†³?¹æ? 3ï¼šæ??¥é¡¹?®æ?ä»¶ç???*
+## **ï¿½?ï¿½ï¿½?ï¿½ï¿½? 3ï¼šï¿½??ï¿½é¡¹?ï¿½ï¿½?ä»¶ï¿½???*
 
-ç¡®è®¤ä»¥ä??‡ä»¶å­˜åœ¨ï¼?
+ç¡®è®¤ä»¥ï¿½??ï¿½ä»¶å­˜åœ¨ï¿½?
 ```
-??Source/MingWarRTS/Public/MingWarRTS.h
-??Source/MingWarRTS/Private/MingWarRTS.cpp
-??Source/MingWarRTS/Public/RTSUnit.h
-??Source/MingWarRTS/Private/RTSUnit.cpp
-??Source/MingWarRTS/Public/RTSBuilding.h
-??Source/MingWarRTS/Private/RTSBuilding.cpp
-??Source/MingWarRTS/Public/RTSPlayerController.h
-??Source/MingWarRTS/Private/RTSPlayerController.cpp
-??Source/MingWarRTS/Public/ResourceManager.h
-??Source/MingWarRTS/Private/ResourceManager.cpp
-??Source/MingWarRTS/MingWarRTS.Build.cs  <-- ?³é”®ï¼?```
+??Source/MingGoRTS/Public/MingGoRTS.h
+??Source/MingGoRTS/Private/MingGoRTS.cpp
+??Source/MingGoRTS/Public/RTSUnit.h
+??Source/MingGoRTS/Private/RTSUnit.cpp
+??Source/MingGoRTS/Public/RTSBuilding.h
+??Source/MingGoRTS/Private/RTSBuilding.cpp
+??Source/MingGoRTS/Public/RTSPlayerController.h
+??Source/MingGoRTS/Private/RTSPlayerController.cpp
+??Source/MingGoRTS/Public/ResourceManager.h
+??Source/MingGoRTS/Private/ResourceManager.cpp
+??Source/MingGoRTS/MingGoRTS.Build.cs  <-- ?ï¿½é”®ï¿½?```
 
-**ç¼ºå¤± Build.csï¼?* ?‘å·²ç¶“å‰µå»ºä?ï¼Œè?æª¢æŸ¥ï¼?```
-Source/MingWarRTS/MingWarRTS.Build.cs
+**ç¼ºå¤± Build.csï¿½?* ?ï¿½å·²ç¶“å‰µå»ºï¿½?ï¼Œï¿½?æª¢æŸ¥ï¿½?```
+Source/MingGoRTS/MingGoRTS.Build.cs
 ```
 
 ---
 
-## **è§?†³?¹æ? 4ï¼šç›´?¥ç?è¯?C++ ä»??**
+## **ï¿½?ï¿½ï¿½?ï¿½ï¿½? 4ï¼šç›´?ï¿½ï¿½?ï¿½?C++ ï¿½??**
 
-### **æ­¥éª¤ 1ï¼šæ?å¼€å¼€?‘è€…å‘½ä»¤æ?ç¤?*
+### **æ­¥éª¤ 1ï¼šï¿½?å¼€å¼€?ï¿½è€…å‘½ä»¤ï¿½?ï¿½?*
 
-1. ??`Win+R`ï¼Œè???`cmd`
-2. ?–æ?ç´?"Developer Command Prompt for VS 2022"
-3. ?–ä»¥ç®¡ç??˜èº«ä»½æ?å¼€ "x64 Native Tools Command Prompt"
+1. ??`Win+R`ï¼Œï¿½???`cmd`
+2. ?ï¿½ï¿½?ï¿½?"Developer Command Prompt for VS 2022"
+3. ?ï¿½ä»¥ç®¡ï¿½??ï¿½èº«ä»½ï¿½?å¼€ "x64 Native Tools Command Prompt"
 
-### **æ­¥éª¤ 2ï¼šå¯¼?ªåˆ°é¡¹ç›®?®å?**
+### **æ­¥éª¤ 2ï¼šå¯¼?ï¿½åˆ°é¡¹ç›®?ï¿½ï¿½?**
 ```cmd
 cd C:\HW\MingGoRTS
 ```
 
-### **æ­¥éª¤ 3ï¼šè?è¡?UBT ç¼–è?**
+### **æ­¥éª¤ 3ï¼šï¿½?ï¿½?UBT ç¼–ï¿½?**
 ```cmd
-REM è®¾ç½® UE5 ?¯å?
+REM è®¾ç½® UE5 ?ï¿½ï¿½?
 set UE5=C:\Program Files\Epic Games\UE_5.7
 
-REM ä½¿ç”¨ UBT ç¼–è?
+REM ä½¿ç”¨ UBT ç¼–ï¿½?
 "%UE5%\Engine\Binaries\DotNET\UnrealBuildTool.exe" ^
   Win64 ^
   Development ^
-  -Project="MingWarRTS.uproject" ^
-  -Target="MingWarRTS" ^
+  -Project="MingGoRTS.uproject" ^
+  -Target="MingGoRTS" ^
   -NoUBTMakefiles
 ```
 
-**æ³¨æ?ï¼?* `-Target="MingWarRTS"` ?‡å?äº†æ¨¡çµ„å?ç¨±ï?ä¾†è‡ª Build.cs ä¸­ç? `public class MingWarRTS`ï¼‰ã€?
+**æ³¨ï¿½?ï¿½?* `-Target="MingGoRTS"` ?ï¿½ï¿½?äº†æ¨¡çµ„ï¿½?ç¨±ï¿½?ä¾†è‡ª Build.cs ä¸­ï¿½? `public class MingGoRTS`ï¼‰ï¿½?
 ---
 
-## **è§?†³?¹æ? 5ï¼šä¿®å¤å¸¸è§é?è¯?*
+## **ï¿½?ï¿½ï¿½?ï¿½ï¿½? 5ï¼šä¿®å¤å¸¸è§ï¿½?ï¿½?*
 
-### **?™è¯¯ï¼š`The specified module could not be found`**
+### **?ï¿½è¯¯ï¼š`The specified module could not be found`**
 
-**?Ÿå?ï¼?* Build.cs ä¸­ä?èµ–ç?æ¨¡å??ªæ­£ç¡®é?ç½®ã€?
-**å¿«é€Ÿä¿®å¤ï?** ç®€??Build.csï¼Œåªä¿ç??ºç?ä¾è?ï¼?
+**?ï¿½ï¿½?ï¿½?* Build.cs ä¸­ï¿½?èµ–ï¿½?æ¨¡ï¿½??ï¿½æ­£ç¡®ï¿½?ç½®ï¿½?
+**å¿«é€Ÿä¿®å¤ï¿½?** ç®€??Build.csï¼Œåªä¿ï¿½??ï¿½ï¿½?ä¾ï¿½?ï¿½?
 ```csharp
 using UnrealBuildTool;
 
-public class MingWarRTS : ModuleRules
+public class MingGoRTS : ModuleRules
 {
-    public MingWarRTS(ReadOnlyTargetRules Target) : base(Target)
+    public MingGoRTS(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -143,40 +143,40 @@ public class MingWarRTS : ModuleRules
 }
 ```
 
-**?´æ–° Build.csï¼?*
-- ? é™¤å¤æ??ç½®
-- ?ªä???Core, Engine, InputCore, Slate ç­‰åŸºç¡€æ¨¡å?
-- ?æ–°ç¼–è?
+**?ï¿½æ–° Build.csï¿½?*
+- ?ï¿½é™¤å¤ï¿½??ï¿½ç½®
+- ?ï¿½ï¿½???Core, Engine, InputCore, Slate ç­‰åŸºç¡€æ¨¡ï¿½?
+- ?ï¿½æ–°ç¼–ï¿½?
 
 ---
 
-### **?™è¯¯ï¼š`cannot open source file`**
+### **?ï¿½è¯¯ï¼š`cannot open source file`**
 
-**?Ÿå?ï¼?* æºæ?ä»¶è·¯å¾„ä?å¯¹æ??‡ä»¶?é?è¯¯ã€?
-**æ£€?¥ï?**
-1. `Source/MingWarRTS/Public/` ?€??`.h` ?‡ä»¶?¯å¦?½åœ¨ï¼?2. `Source/MingWarRTS/Private/` ?€??`.cpp` ?‡ä»¶?¯å¦?½åœ¨ï¼?3. ç±»å??¯å¦?¹é?ï¼Ÿ`MINGWARRTS_API` å®æ˜¯?¦ä??´ï?
-
----
-
-### **?™è¯¯ï¼š`The module 'MingWarRTS' could not be loaded`**
-
-**?Ÿå?ï¼?* ç¼–è?å¤±è´¥??DLL ?ªç??ã€?
-**è§?†³?¹æ?ï¼?*
-1. ? é™¤ `Binaries/`, `Intermediate/`, `Saved/` ?‡ä»¶å¤?2. ?æ–°è¿è? UBT
-3. æ£€??`Log.txt` ?‡ä»¶ï¼š`%TEMP%\UnrealBuildTool\*.log`
+**?ï¿½ï¿½?ï¿½?* æºï¿½?ä»¶è·¯å¾„ï¿½?å¯¹ï¿½??ï¿½ä»¶?ï¿½ï¿½?è¯¯ï¿½?
+**æ£€?ï¿½ï¿½?**
+1. `Source/MingGoRTS/Public/` ?ï¿½??`.h` ?ï¿½ä»¶?ï¿½å¦?ï¿½åœ¨ï¿½?2. `Source/MingGoRTS/Private/` ?ï¿½??`.cpp` ?ï¿½ä»¶?ï¿½å¦?ï¿½åœ¨ï¿½?3. ç±»ï¿½??ï¿½å¦?ï¿½ï¿½?ï¼Ÿ`MingGoRTS_API` å®æ˜¯?ï¿½ï¿½??ï¿½ï¿½?
 
 ---
 
-## **è§?†³?¹æ? 6ï¼šç??–å?å§‹ç???*
+### **?ï¿½è¯¯ï¼š`The module 'MingGoRTS' could not be loaded`**
 
-å¦‚æ?ä¸Šè¿°?½å¤±è´¥ï??‘ä»¬?¯ä»¥?›å»ºä¸€ä¸?*?ç??ˆæœ¬**?ˆè®©é¡¹ç›®è¿è?èµ·æ¥ï¼?
-### **?ç? Build.cs**
+**?ï¿½ï¿½?ï¿½?* ç¼–ï¿½?å¤±è´¥??DLL ?ï¿½ï¿½??ï¿½ï¿½?
+**ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½?*
+1. ?ï¿½é™¤ `Binaries/`, `Intermediate/`, `Saved/` ?ï¿½ä»¶ï¿½?2. ?ï¿½æ–°è¿ï¿½? UBT
+3. æ£€??`Log.txt` ?ï¿½ä»¶ï¼š`%TEMP%\UnrealBuildTool\*.log`
+
+---
+
+## **ï¿½?ï¿½ï¿½?ï¿½ï¿½? 6ï¼šï¿½??ï¿½ï¿½?å§‹ï¿½???*
+
+å¦‚ï¿½?ä¸Šè¿°?ï¿½å¤±è´¥ï¿½??ï¿½ä»¬?ï¿½ä»¥?ï¿½å»ºä¸€ï¿½?*?ï¿½ï¿½??ï¿½æœ¬**?ï¿½è®©é¡¹ç›®è¿ï¿½?èµ·æ¥ï¿½?
+### **?ï¿½ï¿½? Build.cs**
 ```csharp
 using UnrealBuildTool;
 
-public class MingWarRTS : ModuleRules
+public class MingGoRTS : ModuleRules
 {
-    public MingWarRTS(ReadOnlyTargetRules Target) : base(Target)
+    public MingGoRTS(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine" });
@@ -185,48 +185,48 @@ public class MingWarRTS : ModuleRules
 }
 ```
 
-### **?ç? GameMode å¤´æ?ä»?*
+### **?ï¿½ï¿½? GameMode å¤´ï¿½?ï¿½?*
 ```cpp
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "MingWarRTS.generated.h"
+#include "MingGoRTS.generated.h"
 
 UCLASS()
-class MINGWARRTS_API AMingWarRTS : public AGameModeBase
+class MingGoRTS_API AMingGoRTS : public AGameModeBase
 {
     GENERATED_BODY()
 };
 ```
 
-### **?ç? GameMode æºæ?ä»?*
+### **?ï¿½ï¿½? GameMode æºï¿½?ï¿½?*
 ```cpp
-#include "MingWarRTS.h"
-AMingWarRTS::AMingWarRTS()
+#include "MingGoRTS.h"
+AMingGoRTS::AMingGoRTS()
 {
 }
 ```
 
-**?ˆç?è¯‘è?ä¸ªæ?ç®€?ˆæœ¬**ï¼Œæ??Ÿå??é€æ­¥æ·»å??¶ä?ç±»ã€?
+**?ï¿½ï¿½?è¯‘ï¿½?ä¸ªï¿½?ç®€?ï¿½æœ¬**ï¼Œï¿½??ï¿½ï¿½??ï¿½é€æ­¥æ·»ï¿½??ï¿½ï¿½?ç±»ï¿½?
 ---
 
-## **å¿«é€Ÿä¿®å¤è???*
+## **å¿«é€Ÿä¿®å¤ï¿½???*
 
-?‘å??›å»ºä¸€ä¸ªè‡ª?¨ä¿®å¤è??¬ï?å®ƒä?ï¼?1. æ£€??VS C++ å®‰è?
+?ï¿½ï¿½??ï¿½å»ºä¸€ä¸ªè‡ª?ï¿½ä¿®å¤ï¿½??ï¿½ï¿½?å®ƒï¿½?ï¿½?1. æ£€??VS C++ å®‰ï¿½?
 2. ç®€??Build.cs
-3. æ¸…ç?å¹¶é??°ç?è¯?4. ?Ÿæ?é¡¹ç›®?‡ä»¶
+3. æ¸…ï¿½?å¹¶ï¿½??ï¿½ï¿½?ï¿½?4. ?ï¿½ï¿½?é¡¹ç›®?ï¿½ä»¶
 
-è¯·ç?ç­?..
+è¯·ï¿½?ï¿½?..
 
 ---
 
-## **ä¸‹ä?æ­¥æ?ä½?*
+## **ä¸‹ï¿½?æ­¥ï¿½?ï¿½?*
 
-1. **?ˆå?è¯•è§£?³æ–¹æ¡?2**ï¼šæ??¨ç??é¡¹?®æ?ä»?2. **å¦‚æ?å¤±è´¥**ï¼Œè?è¡Œæ??³å??›å»º?„ä¿®å¤è???3. **å¦‚æ?ä»æ??®é?**ï¼Œæ?ä»¬ä½¿?¨æ?ç®€?ˆæœ¬?æ­¥æ·»å??Ÿèƒ½
+1. **?ï¿½ï¿½?è¯•è§£?ï¿½æ–¹ï¿½?2**ï¼šï¿½??ï¿½ï¿½??ï¿½é¡¹?ï¿½ï¿½?ï¿½?2. **å¦‚ï¿½?å¤±è´¥**ï¼Œï¿½?è¡Œï¿½??ï¿½ï¿½??ï¿½å»º?ï¿½ä¿®å¤ï¿½???3. **å¦‚ï¿½?ä»ï¿½??ï¿½ï¿½?**ï¼Œï¿½?ä»¬ä½¿?ï¿½ï¿½?ç®€?ï¿½æœ¬?ï¿½æ­¥æ·»ï¿½??ï¿½èƒ½
 
-è¯·å?è¯‰æ?ï¼?- ?¨æ˜¯?¦å?è£…ä? Visual Studioï¼?- ??VS 2019 è¿˜æ˜¯ VS 2022ï¼?- Windows SDK ?¯å¦å®‰è?ï¼?
-è¿™ä?ä¿¡æ¯å°†å¸®?©æ??´ç²¾ç¡®åœ°å®šä??®é?ï¼ğ??
+è¯·ï¿½?è¯‰ï¿½?ï¿½?- ?ï¿½æ˜¯?ï¿½ï¿½?è£…ï¿½? Visual Studioï¿½?- ??VS 2019 è¿˜æ˜¯ VS 2022ï¿½?- Windows SDK ?ï¿½å¦å®‰ï¿½?ï¿½?
+è¿™ï¿½?ä¿¡æ¯å°†å¸®?ï¿½ï¿½??ï¿½ç²¾ç¡®åœ°å®šï¿½??ï¿½ï¿½?ï¼ï¿½??
 ---
 
-*?´æ–°?¥æ?ï¼?026-03-15 20:25 GMT+8*
+*?ï¿½æ–°?ï¿½ï¿½?ï¿½?026-03-15 20:25 GMT+8*

@@ -7,6 +7,7 @@
 #include "Containers/Map.h"
 #include "Containers/Queue.h"
 #include "MingRTSServiceManager.h"
+#include "MingRTSServiceRegistry.generated.h"
 
 // 服務發現協議
 UENUM(BlueprintType)

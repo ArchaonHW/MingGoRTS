@@ -1,4 +1,4 @@
-# MingWarRTS Deployment Status
+# MingGoRTS Deployment Status
 
 ## ??**UE5.7.4 Integration - READY**
 
@@ -11,24 +11,24 @@
 
 ### **Build System Status**
 - ??Source code complete (5 C++ classes)
-- ??Build configuration (MingWarRTS.Build.cs)
+- ??Build configuration (MingGoRTS.Build.cs)
 - ??Config files (DefaultEngine.ini, DefaultGame.ini, DefaultInput.ini)
-- ? ï? Visual Studio solution file (.sln) not yet generated
-  - **Solution**: Double-click `MingWarRTS.uproject` to open in UE5 Editor
+- ?ï¿½ï¿½? Visual Studio solution file (.sln) not yet generated
+  - **Solution**: Double-click `MingGoRTS.uproject` to open in UE5 Editor
   - UE5 will auto-generate project files on first open
 
 ### **Project Structure**
 ```
 C:\HW\MingGoRTS\
-?œâ??€ ??Source/MingWarRTS/Public & Private (5 classes)
-?œâ??€ ??Config/
-?œâ??€ ??Content/ (Maps, Blueprints, Materials, Meshes, UI)
-?œâ??€ ??Tools/build/ (Build scripts for UE5.7.4)
-?œâ??€ ??Tools/ue5/ (UE5 utilities)
-?œâ??€ ??Tools/ai/ (AI asset generation)
-?œâ??€ ??Tools/test/ (Testing scripts)
-?œâ??€ ??MingWarRTS.uproject (UE5.7 compatible)
-?”â??€ ??Docs/ (BMAD documentation)
+?ï¿½ï¿½??ï¿½ ??Source/MingGoRTS/Public & Private (5 classes)
+?ï¿½ï¿½??ï¿½ ??Config/
+?ï¿½ï¿½??ï¿½ ??Content/ (Maps, Blueprints, Materials, Meshes, UI)
+?ï¿½ï¿½??ï¿½ ??Tools/build/ (Build scripts for UE5.7.4)
+?ï¿½ï¿½??ï¿½ ??Tools/ue5/ (UE5 utilities)
+?ï¿½ï¿½??ï¿½ ??Tools/ai/ (AI asset generation)
+?ï¿½ï¿½??ï¿½ ??Tools/test/ (Testing scripts)
+?ï¿½ï¿½??ï¿½ ??MingGoRTS.uproject (UE5.7 compatible)
+?ï¿½ï¿½??ï¿½ ??Docs/ (BMAD documentation)
 ```
 
 ---
@@ -36,7 +36,7 @@ C:\HW\MingGoRTS\
 ## ?? **Immediate Next Steps**
 
 ### **Option 1: Direct Launch (Recommended)**
-Double-click: `C:\HW\MingGoRTS\MingWarRTS.uproject`
+Double-click: `C:\HW\MingGoRTS\MingGoRTS.uproject`
 
 UE5 Editor will:
 1. Compile C++ code (first time: 10-30 min)
@@ -52,7 +52,7 @@ OpenProject.bat
 ### **Option 3: Manual UBT**
 ```cmd
 cd C:\HW\MingGoRTS
-"C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool.exe" -projectfiles -project="MingWarRTS.uproject" -game
+"C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool.exe" -projectfiles -project="MingGoRTS.uproject" -game
 ```
 
 ---
@@ -63,7 +63,7 @@ Once UE5 Editor opens:
 
 - [ ] Wait for C++ compilation to complete (check "Output Log")
 - [ ] If prompted to generate project files, click "Fix" or "Generate"
-- [ ] Create Blueprint Class: `BP_MingWarGameMode` (parent: `MingWarRTS`)
+- [ ] Create Blueprint Class: `BP_MingWarGameMode` (parent: `MingGoRTS`)
 - [ ] Save blueprint to: `Content/Blueprints/Game/`
 - [ ] Create new Level: `TestMap.umap`
 - [ ] Add floor/ground to TestMap (scale to 2048x2048)
@@ -93,8 +93,8 @@ Once UE5 Editor opens:
 - **Check**:
   1. Visual Studio C++ tools installed
   2. Windows SDK 10.0 or later
-  3. Source files in correct locations (`Source/MingWarRTS/Public/` and `Private/`)
-  4. `MingWarRTS.Build.cs` exists in `Source/MingWarRTS/`
+  3. Source files in correct locations (`Source/MingGoRTS/Public/` and `Private/`)
+  4. `MingGoRTS.Build.cs` exists in `Source/MingGoRTS/`
 
 ---
 
@@ -117,9 +117,9 @@ Once UE5 Editor opens:
 
 ---
 
-## ?Ž¯ **Summary**
+## ?ï¿½ï¿½ **Summary**
 
-The MingWarRTS project is **fully prepared** for UE5.7.4 integration.
+The MingGoRTS project is **fully prepared** for UE5.7.4 integration.
 
 **All code, config, documentation, and tools are ready.**
 
@@ -129,7 +129,7 @@ The final step is to **open the project in UE5 Editor** (by double-clicking the 
 2. Compile the C++ code
 3. Make the project ready for blueprint creation and testing
 
-**Next user action**: Double-click `MingWarRTS.uproject` and wait for compilation.
+**Next user action**: Double-click `MingGoRTS.uproject` and wait for compilation.
 
 ---
 

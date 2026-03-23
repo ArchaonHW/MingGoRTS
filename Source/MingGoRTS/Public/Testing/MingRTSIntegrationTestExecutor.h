@@ -130,19 +130,19 @@ private:
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     bool bTestExecutionCompleted;
 
-    /** ɥr��ɥr測試ɥr�段 */
+    /** 當前測試階段 */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     FString CurrentTestPhase;
 
-    /** ɥr��X�測試數X*/
+    /** 當前測試數據 */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     int32 PassedTestCount;
 
-    /** 失�X�測試數X*/
+    /** 失敗測試數量 */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     int32 FailedTestCount;
 
-    /** 測試ɥr��X��X��ɥr */
+    /** 測試執行開始時間 */
     UPROPERTY(BlueprintReadOnly, Category = "Integration Test Executor", meta = (AllowPrivateAccess = "true"))
     double TestExecutionStartTime;
 };

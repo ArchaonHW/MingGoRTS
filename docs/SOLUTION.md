@@ -1,7 +1,7 @@
-# MingWar-RTS 编译失败解决方案
+# MingGoRTS 编译失败解决方案
 
 ## 🚨 **当前问题**
-> "MingWar-RTS could not be compiled. Try rebuilding from source manually."
+> "MingGoRTS could not be compiled. Try rebuilding from source manually."
 
 ### **原因**
 - UE5 首次打开项目时需要编译 C++ 代码
@@ -25,7 +25,7 @@
 
 这是最简单的方法！UE5 Editor 会自动处理一切：
 
-1. 双击 `C:\HW\MingGoRTS\MingWar-RTS.uproject`
+1. 双击 `C:\HW\MingGoRTS\MingGoRTS.uproject`
 2. 如果提示 "Missing modules"，点击 **"Fix"** 或 **"Generate Visual Studio project files"**
 3. 等待编译完成（首次 10-30 分钟）
 4. 自动生成 `.sln` 文件
@@ -59,7 +59,7 @@ rmdir /s /q Saved
 rmdir /s /q Binaries
 
 REM 生成项目文件（如果这步失败，直接跳到方法1）
-"%UE5%\Engine\Binaries\DotNET\UnrealBuildTool.exe" -projectfiles -project="MingWar-RTS.uproject" -game -progress
+"%UE5%\Engine\Binaries\DotNET\UnrealBuildTool.exe" -projectfiles -project="MingGoRTS.uproject" -game -progress
 ```
 
 如果 UBT 报错，**不要担心**，直接使用方法1。
@@ -74,23 +74,23 @@ REM 生成项目文件（如果这步失败，直接跳到方法1）
 - [ ] Visual Studio 2019/2022 已安装 **Desktop development with C++** 工作负载
 - [ ] Windows 10/11 SDK 已安装
 - [ ] 以下简化文件已就绪：
-  - [ ] `Source/MingWarRTS/Public/MingWarRTS.h` (极简版)
-  - [ ] `Source/MingWarRTS/Private/MingWarRTS.cpp` (极简版)
-  - [ ] `Source/MingWarRTS/Public/RTSUnit.h` (极简版)
-  - [ ] `Source/MingWarRTS/Private/RTSUnit.cpp` (极简版)
-  - [ ] `Source/MingWarRTS/Public/RTSBuilding.h` (极简版)
-  - [ ] `Source/MingWarRTS/Private/RTSBuilding.cpp` (极简版)
-  - [ ] `Source/MingWarRTS/Public/RTSPlayerController.h` (极简版)
-  - [ ] `Source/MingWarRTS/Private/RTSPlayerController.cpp` (极简版)
-  - [ ] `Source/MingWarRTS/Public/ResourceManager.h` (极简版)
-  - [ ] `Source/MingWarRTS/Private/ResourceManager.cpp` (极简版)
-  - [ ] `Source/MingWarRTS/MingWarRTS.Build.cs` (极简版)
+  - [ ] `Source/MingGoRTS/Public/MingGoRTS.h` (极简版)
+  - [ ] `Source/MingGoRTS/Private/MingGoRTS.cpp` (极简版)
+  - [ ] `Source/MingGoRTS/Public/RTSUnit.h` (极简版)
+  - [ ] `Source/MingGoRTS/Private/RTSUnit.cpp` (极简版)
+  - [ ] `Source/MingGoRTS/Public/RTSBuilding.h` (极简版)
+  - [ ] `Source/MingGoRTS/Private/RTSBuilding.cpp` (极简版)
+  - [ ] `Source/MingGoRTS/Public/RTSPlayerController.h` (极简版)
+  - [ ] `Source/MingGoRTS/Private/RTSPlayerController.cpp` (极简版)
+  - [ ] `Source/MingGoRTS/Public/ResourceManager.h` (极简版)
+  - [ ] `Source/MingGoRTS/Private/ResourceManager.cpp` (极简版)
+  - [ ] `Source/MingGoRTS/MingGoRTS.Build.cs` (极简版)
 
 ---
 
 ## 🔄 **编译流程（期望结果）**
 
-当您双击 `MingWar-RTS.uproject` 时，应该看到：
+当您双击 `MingGoRTS.uproject` 时，应该看到：
 
 1. **UE5 Editor 启动**
 2. **进度对话框** 显示 "Compiling C++ code..."
@@ -137,7 +137,7 @@ REM 生成项目文件（如果这步失败，直接跳到方法1）
 - Output Log 显示 "Compilation successful"
 - 可以创建 Blueprint 类（Blueprint Class...）
 - 可以在 Content Browser 中看到项目内容
-- `MingWar-RTS.sln` 出现在项目根目录
+- `MingGoRTS.sln` 出现在项目根目录
 
 ---
 
@@ -157,9 +157,9 @@ REM 生成项目文件（如果这步失败，直接跳到方法1）
 ```csharp
 using UnrealBuildTool;
 
-public class MingWarRTS : ModuleRules
+public class MingGoRTS : ModuleRules
 {
-    public MingWarRTS(ReadOnlyTargetRules Target) : base(Target)
+    public MingGoRTS(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
@@ -175,7 +175,7 @@ public class MingWarRTS : ModuleRules
 ```cmd
 REM 最简单的方法
 cd C:\HW\MingGoRTS
-start MingWar-RTS.uproject
+start MingGoRTS.uproject
 
 REM 如果失败，使用批处理
 OpenProject.bat

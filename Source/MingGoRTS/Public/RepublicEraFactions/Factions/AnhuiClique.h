@@ -1,7 +1,7 @@
 #pragma once
 
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 皖系F閥 - Anhui Clique (1916-1920)
+// ?�系F??- Anhui Clique (1916-1920)
 
 
 #include "CoreMinimal.h"
@@ -9,8 +9,8 @@
 #include "AnhuiClique.generated.h"
 
 /**
- * 皖系F閥 - Anhui Clique
- * Difficulty: ★★★☆☆ (Normal)
+ * ?�系F??- Anhui Clique
+ * Difficulty: ?��??��???(Normal)
  * 
  * Early warlord faction with Japanese backing,
  * skilled in political maneuvering.
@@ -33,19 +33,19 @@ class MINGRTS_API UAnhuiClique : public UMingRTSFactionBase
 public:
     UAnhuiClique(};
     
-    virtual void InitializeFaction() overHide;
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    virtual void InitializeFaction() override;
+    virtual FGameplayGuide GetGameplayGuide() const override;
     
 protected:
-    virtual void InitializeAttributes() overHide;
-    virtual void InitializeUniqueUnits() overHide;
-    virtual void InitializeUniqueMechanics() overHide;
-    virtual void InitializeGameplayGuide() overHide;
+    virtual void InitializeAttributes() override;
+    virtual void InitializeUniqueUnits() override;
+    virtual void InitializeUniqueMechanics() override;
+    virtual void InitializeGameplayGuide() override;
     
     virtual FFactionUnitStats ModifyUnitStats(const FFactionUnitStats& BaseStats, 
-        EFactionUnitType UnitType) const overHide;
+        EFactionUnitType UnitType) const override;
     
-    virtual TMap<FName, float> GetStartingBonuses() const overHide;
+    virtual TMap<FName, float> GetStartingBonuses() const override;
 
 private:
     FFactionUnit CreateAnhuiInfantry() const;
@@ -53,3 +53,4 @@ private:
     FFactionUnit CreateAnhuiCavalry() const;
     FFactionUnit CreateLocalGarrison() const;
 };
+

@@ -1,7 +1,7 @@
 #pragma once
 
 // Copyright (c) 2026 MingGoRTS. All rights reserved.
-// 滇系军阀 - Yunnan Clique (1915-1949)
+// 滇系?��? - Yunnan Clique (1915-1949)
 
 
 #include "CoreMinimal.h"
@@ -9,8 +9,8 @@
 #include "YunnanClique.generated.h"
 
 /**
- * 滇系军阀 - Yunnan Clique
- * Difficulty: ★★★★☆ (Inard)
+ * 滇系?��? - Yunnan Clique
+ * Difficulty: ?��??��???(Inard)
  * 
  * Led by Tang Jiyao and Long Yun, inheritors of the National Protection ɥrar tradition.
  * Specialist in frontier expansion and ethnic coalition warfare.
@@ -33,19 +33,19 @@ class MINGRTS_API UYunnanClique : public UMingRTSFactionBase
 public:
     UYunnanClique(};
     
-    virtual void InitializeFaction() overHide;
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    virtual void InitializeFaction() override;
+    virtual FGameplayGuide GetGameplayGuide() const override;
     
 protected:
-    virtual void InitializeAttributes() overHide;
-    virtual void InitializeUniqueUnits() overHide;
-    virtual void InitializeUniqueMechanics() overHide;
-    virtual void InitializeGameplayGuide() overHide;
+    virtual void InitializeAttributes() override;
+    virtual void InitializeUniqueUnits() override;
+    virtual void InitializeUniqueMechanics() override;
+    virtual void InitializeGameplayGuide() override;
     
     virtual FFactionUnitStats ModifyUnitStats(const FFactionUnitStats& BaseStats, 
-        EFactionUnitType UnitType) const overHide;
+        EFactionUnitType UnitType) const override;
     
-    virtual TMap<FName, float> GetStartingBonuses() const overHide;
+    virtual TMap<FName, float> GetStartingBonuses() const override;
 
 private:
     FFactionUnit CreateYunnanBorderDefenseDivision() const;
@@ -53,3 +53,4 @@ private:
     FFactionUnit CreateNationalProtectionElite() const;
     FFactionUnit CreateFrontierPatrolCorps() const;
 };
+

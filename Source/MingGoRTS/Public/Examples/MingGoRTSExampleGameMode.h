@@ -1,14 +1,14 @@
 #pragma once
 
-// MingGoRTS 系統集g示例
-// rw件展示如何在 GameMode 中集g所有核心系統
+// MingGoRTS 系統?�g示�?
+// rw件�?示�?何在 GameMode 中�?g?�?�核心系�?
 
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "MingGoRTSExampleGameMode.generated.h"
 
-// 前向聲明所有系統
+// ?��??��??�?�系�?
 class UMingRTSTutorialSystem;
 class UMingRTSSecurityManager;
 class UMingRTSReplaySystem;
@@ -25,7 +25,7 @@ class UMingRTSMultiplayerSupportSystem;
 class UMingRTSPerformanceSystem;
 
 /**
- * 示例 GameMode - 展示如何集g所有 MingGoRTS 系統
+ * 示�? GameMode - 展示如�??�g?�??MingGoRTS 系統
  */
 UCLASS()
 class MINGRTS_API AMingGoRTSExampleGameMode : public AGameModeBase
@@ -35,13 +35,13 @@ class MINGRTS_API AMingGoRTSExampleGameMode : public AGameModeBase
 public:
     AMingGoRTSExampleGameMode(};
 
-    // GameMode 生命週期
-    virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) overHide;
-    virtual void StartPlay() overHide;
-    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) overHide;
-    virtual void Tick(float DeltaTime) overHide;
+    // GameMode ?�命?��?
+    virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+    virtual void StartPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+    virtual void Tick(float DeltaTime) override;
 
-    // 系統訪問器
+    // 系統訪�???
     UFUNCTION(BlueprintCallable, Category = "MingGoRTSSystems")
     UMingRTSTutorialSystem* GetTutorialSystem() const { return TutorialSystem; }
 
@@ -82,7 +82,7 @@ public:
     UMingRTSPerformanceSystem* GetPerformanceSystem() const { return PerformanceSystem; }
 
 protected:
-    // 核心系統
+    // ?��?系統
     UPROPERTY()
     TObjectPtr<UMingRTSTutorialSystem> TutorialSystem;
 
@@ -125,20 +125,20 @@ protected:
     UPROPERTY()
     TObjectPtr<UMingRTSPerformanceSystem> PerformanceSystem;
 
-    // 系統初始化
+    // 系統?��???
     void InitializeAllSystems(};
     void ShutdownAllSystems(};
 
-    // 事件綁定
+    // 事件綁�?
     void BindSystemEvents(};
 
-    // 示例g能
+    // 示�?g??
     void SetupTutorial(};
     void SetupReplayRecording(};
     void SetupTelemetry(};
     void SetupPerformanceMonitoring(};
 
-    // 事件U理函數
+    // 事件U?�函??
     UFUNCTION()
     void OnTutorialStepCompleted(const FString& StepID};
 
@@ -151,7 +151,7 @@ protected:
     UFUNCTION()
     void OnPerformanceLevelChanged(EPerformanceLevel NewLevel};
 
-    // 配m
+    // ?�m
     UPROPERTY(EditDefaultsOnly, Category = "MingGoRTSConfig")
     bool bEnableTutorialSystem = true;
 
@@ -167,3 +167,4 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "MingGoRTSConfig")
     bool bEnablePerformanceSystem = true;
 };
+

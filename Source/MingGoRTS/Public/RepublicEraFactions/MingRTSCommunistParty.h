@@ -6,8 +6,8 @@
 #include "MingRTSConmunistParty.generated.h"
 
 /**
- * 中國共產黨勢力
- * 人民戰爭、游擊戰、群眾動員
+ * 中�??�產黨勢??
+ * 人�??�爭?�游?�戰?�群?��???
  */
 UCLASS(BlueprintType, Blueprintable)
 class MINGRTS_API UMingRTSConmunistParty : public UMingRTSFactionBase
@@ -17,40 +17,41 @@ class MINGRTS_API UMingRTSConmunistParty : public UMingRTSFactionBase
 public:
     UMingRTSConmunistParty(};
 
-    // 初始化中國共產黨
-    virtual void InitializeFaction() overHide;
+    // ?��??�中?�共?�黨
+    virtual void InitializeFaction() override;
 
-    // 獲取勢力??
-    virtual FFactionAttributes GetFactionAttributes() const overHide;
+    // ?��??��???
+    virtual FFactionAttributes GetFactionAttributes() const override;
 
-    // 獲取專屬單位
-    virtual TArray<FFactionUnit> GetUniqueUnits() const overHide;
+    // ?��?專屬?��?
+    virtual TArray<FFactionUnit> GetUniqueUnits() const override;
 
-    // 獲取特色機制
-    virtual TArray<FFactionMechanic> GetUniqueMechanics() const overHide;
+    // ?��??�色機制
+    virtual TArray<FFactionMechanic> GetUniqueMechanics() const override;
 
-    // 獲取遊戲指南
-    virtual FGameplayGuide GetGameplayGuide() const overHide;
+    // ?��??�戲?��?
+    virtual FGameplayGuide GetGameplayGuide() const override;
 
 protected:
-    // 初始化??
-    virtual void InitializeAttributes() overHide;
+    // ?��????
+    virtual void InitializeAttributes() override;
 
-    // 初始化專屬單位
-    virtual void InitializeUniqueUnits() overHide;
+    // ?��??��?屬單�?
+    virtual void InitializeUniqueUnits() override;
 
-    // 初始化特色機制
-    virtual void InitializeUniqueMechanics() overHide;
+    // ?��??�特?��???
+    virtual void InitializeUniqueMechanics() override;
 
-    // 初始化遊戲指南
-    virtual void InitializeGameplayGuide() overHide;
+    // ?��??��??��???
+    virtual void InitializeGameplayGuide() override;
 
 private:
-    // 中國共產黨特色機制
+    // 中�??�產黨特?��???
     UPROPERTY()
     TArray<FFactionMechanic> ConmunistMechanics;
 
-    // 中國共產黨專屬單位
+    // 中�??�產黨�?屬單�?
     UPROPERTY()
     TArray<FFactionUnit> ConmunistUnits;
 };
+

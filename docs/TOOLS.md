@@ -8,7 +8,7 @@
 - ✅ `Tools\ue5\UE5.7_Check.bat` - UE5 檢查腳本
 - ✅ `Tools\ue5\QuickStart_UE5.7.4.bat` - 快速啟動腳本
 - ✅ `QUICKSTART_UE5.7.4.md` - UE5.7.4 專用指南
-- ✅ `MingWar-RTS.uproject` (EngineAssociation: "5.7")
+- ✅ `MingGoRTS.uproject` (EngineAssociation: "5.7")
 
 ### 📁 **目錄結構更新**
 - ✅ `Tools/build/` - 構建工具目錄
@@ -20,7 +20,7 @@
 1. **執行**: `Tools\build\GenerateProject_5.7.4.bat`
 2. **檢查**: 生成 `.sln` 文件
 3. **編譯**: 使用 Visual Studio 或 `Tools\build\Build_5.7.4.bat`
-4. **啟動**: 雙擊 `MingWar-RTS.uproject` 或使用 `Tools\ue5\QuickStart_UE5.7.4.bat`
+4. **啟動**: 雙擊 `MingGoRTS.uproject` 或使用 `Tools\ue5\QuickStart_UE5.7.4.bat`
 
 ### ⚠️ **注意事項**
 - UE5.7.4 需要 Visual Studio 2019/2022 與 C++ 開發工具
@@ -50,7 +50,7 @@ Tools\ue5\QuickStart_UE5.7.4.bat
 
 | 文件 | 類型 | 目的 |
 |------|------|------|
-| `MingWar-RTS.uproject` | 項目文件 | 更新 EngineAssociation 為 "5.7" |
+| `MingGoRTS.uproject` | 項目文件 | 更新 EngineAssociation 為 "5.7" |
 | `Tools\build\GenerateProject_5.7.4.bat` | 構建腳本 | UE5.7.4 專用生成腳本 |
 | `Tools\build\Build_5.7.4.bat` | 構建腳本 | UE5.7.4 專用編譯腳本 |
 | `Tools\ue5\UE5.7_Check.bat` | 檢查腳本 | UE5.7.4 安裝檢查 |

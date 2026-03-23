@@ -1,8 +1,8 @@
-# MingWar-RTS 最终解决方案
+# MingGoRTS 最终解决方案
 
 ## 🎯 **问题诊断**
 
-您看到的错误："MingWarRTS could not be compiled. Try rebuilding from source manually."
+您看到的错误："MingGoRTS could not be compiled. Try rebuilding from source manually."
 
 这是 UE5 首次打开 C++ 项目时的常见问题，通常是 UE5 无法正确编译 C++ 代码。
 
@@ -12,7 +12,7 @@
 
 ### **方法 1：直接打开项目（最简单）**
 
-**双击 `MingWarRTS.uproject` 文件**
+**双击 `MingGoRTS.uproject` 文件**
 
 UE5 Editor 会自动：
 - 检测 C++ 代码
@@ -31,7 +31,7 @@ RETRY_DIRECTLY.bat
 ```cmd
 cd C:\HW\MingGoRTS
 powershell -Command "Remove-Item -Recurse -Force Intermediate, Saved, Binaries -ErrorAction SilentlyContinue"
-start "" "MingWarRTS.uproject"
+start "" "MingGoRTS.uproject"
 ```
 
 ---
@@ -59,7 +59,7 @@ UE5 会自动编译 C++ 代码。
 - ✅ 无红色错误弹窗
 - ✅ 右下角进度条完成
 - ✅ 可以创建 Blueprint Class
-- ✅ 生成 `MingWarRTS.sln` 文件
+- ✅ 生成 `MingGoRTS.sln` 文件
 
 ---
 
@@ -90,6 +90,6 @@ UE5 会自动编译 C++ 代码。
 
 ---
 
-**请现在就双击 `MingWarRTS.uproject` 文件！** 🛠️
+**请现在就双击 `MingGoRTS.uproject` 文件！** 🛠️
 
 如果成功，我们将继续创建 Blueprint 和地图。🥔✨

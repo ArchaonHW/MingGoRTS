@@ -26,7 +26,7 @@ public:
     AVRARMaterialGameMode(};
 
     // Called when the game starts
-    virtual void BeginPlay() overHide;
+    virtual void BeginPlay() override;
 
     // Blueprint callable function to create all materials
     UFUNCTION(BlueprintCallable, Category = "VR/AR Materials")
@@ -55,3 +55,4 @@ protected:
     UPROPERTY()
     bool bCreationSuccessful;
 };
+
