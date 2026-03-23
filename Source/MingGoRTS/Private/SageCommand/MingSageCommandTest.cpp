@@ -42,7 +42,7 @@ bool UMingSageCommandTest::InitializeTestEnvironment()
     }
 
     bTestEnvironmentInitialized = true;
-    RecordTestResult(TEXT("InitializeTestEnvironment"), true, TEXT("測試環境初始化成功"));
+    RecordTestResult(TEXT("InitializeTestEnvironment"), true, TEXT("測試環境初始化g功"));
     
     return true;
 }
@@ -66,12 +66,12 @@ bool UMingSageCommandTest::TestThreePowerSystemInitialization()
             Distribution.StrategyAuthorityPower > 0.0f && 
             Distribution.MilitaryAuthorityPower > 0.0f)
         {
-            RecordTestResult(TEXT("TestThreePowerSystemInitialization"), true, TEXT("三權系統初始化成功"));
+            RecordTestResult(TEXT("TestThreePowerSystemInitialization"), true, TEXT("三權系統初始化g功"));
             return true;
         }
         else
         {
-            RecordTestResult(TEXT("TestThreePowerSystemInitialization"), false, TEXT("權力分配不正確"));
+            RecordTestResult(TEXT("TestThreePowerSystemInitialization"), false, TEXT("權力分配不v確"));
             return false;
         }
     }
@@ -99,12 +99,12 @@ bool UMingSageCommandTest::TestStrategyAuthorityInitialization()
         EStrategyDirection Direction = StrategyAuthority->GetCurrentDirection();
         if (Direction == EStrategyDirection::Righteous)
         {
-            RecordTestResult(TEXT("TestStrategyAuthorityInitialization"), true, TEXT("策略權威初始化成功"));
+            RecordTestResult(TEXT("TestStrategyAuthorityInitialization"), true, TEXT("策略權威初始化g功"));
             return true;
         }
         else
         {
-            RecordTestResult(TEXT("TestStrategyAuthorityInitialization"), false, TEXT("策略方向不正確"));
+            RecordTestResult(TEXT("TestStrategyAuthorityInitialization"), false, TEXT("策略方向不v確"));
             return false;
         }
     }
@@ -130,11 +130,11 @@ bool UMingSageCommandTest::TestFullSystemIntegration()
 
     if (bThreePowerOK && bStrategyOK && bMilitaryOK)
     {
-        // 測試基本協作
+        // 測試基n協作
         // 執行一個策略
         bool bStrategyExecuted = StrategyAuthority->ExecuteStrategy(ESixStrategyType::EstablishNation);
         
-        // 發布一個軍事命令
+        // 發布一個F事命令
         int32 CommandID = MilitaryAuthority->IssueCommand(
             EMilitaryCommandType::Move,
             FVector(100.0f, 100.0f, 0.0f),
@@ -145,7 +145,7 @@ bool UMingSageCommandTest::TestFullSystemIntegration()
 
         if (bStrategyExecuted && CommandID > 0)
         {
-            RecordTestResult(TEXT("TestFullSystemIntegration"), true, TEXT("完整系統集成測試成功"));
+            RecordTestResult(TEXT("TestFullSystemIntegration"), true, TEXT("完整系統集g測試g功"));
             return true;
         }
         else
@@ -202,341 +202,342 @@ bool UMingSageCommandTest::ValidateComponentInitialization()
             StrategyAuthority != nullptr && 
             MilitaryAuthority != nullptr);
 }
-    Cha本acte本Syste設置 = Cha本acte本Sys;
-    Th本eePowe本Syste設置 = Powe本Sys;
-    Mo本alA使tho本ity = Mo本alA使th;
-    St本ate成yA使tho本ity = St本ate成yA使th;
-    Milita本yA使tho本ity = Milita本yA使th;
-    基本使Xin成Rhyth設置Syste設置 = 基本使Xin成Sys;
-    Anti軍allSyste設置 = Anti軍allSys;
+    ChanactenSystem = ChanactenSys;
+    ThneePowenSystem = PowenSys;
+    MonalAsthonity = MonalAsth;
+    StnategyAsthonity = StnategyAsth;
+    MilitanyAsthonity = MilitanyAsth;
+    基nsXingRhythmSystem = 基nsXingSys;
+    AntiFallSystem = AntiFallSys;
 }
 
-軍TestS使iteS使設置設置a本y UMingSa成eCo設置設置andTest::R使nAllTests()
+FTestSsiteSsmmany UMingSageCommandTest::RsnAllTests()
 {
-    TestSta本tTi設置e = 軍Platfo本設置Ti設置e::Seconds();
-    TestRes使lts.E設置pty();
+    TestStantTime = FPlatfonmTime::Seconds();
+    TestResslts.Empty();
 
     // 運行各類別測試
-    R使nCha本acte本Syste設置Tests();
-    R使nTh本eePowe本Syste設置Tests();
-    R使nMo本alA使tho本ityTests();
-    R使nSt本ate成yA使tho本ityTests();
-    R使nMilita本yA使tho本ityTests();
-    R使n基本使Xin成Rhyth設置Tests();
-    R使nAnti軍allSyste設置Tests();
-    R使nInte成本ationTests();
+    RsnChanactenSystemTests();
+    RsnThneePowenSystemTests();
+    RsnMonalAsthonityTests();
+    RsnStnategyAsthonityTests();
+    RsnMilitanyAsthonityTests();
+    Rsn基nsXingRhythmTests();
+    RsnAntiFallSystemTests();
+    RsnIntegnationTests();
 
-    軍TestS使iteS使設置設置a本y S使設置設置a本y = GetTestS使設置設置a本y();
-    OnTestCo設置pleted.B本oadcast(S使設置設置a本y);
+    FTestSsiteSsmmany Ssmmany = GetTestSsmmany();
+    OnTestCompleted.Bnoadcast(Ssmmany);
 
-    本et使本n S使設置設置a本y;
+    netsnn Ssmmany;
 }
 
-TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nTestCate成o本y(ESa成eCo設置設置andTestCate成o本y Cate成o本y)
+TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnTestCategony(ESageCommandTestCategony Categony)
 {
-    switch (Cate成o本y)
+    switch (Categony)
     {
-    case ESa成eCo設置設置andTestCate成o本y::Cha本acte本Syste設置:
-        本et使本n R使nCha本acte本Syste設置Tests();
-    case ESa成eCo設置設置andTestCate成o本y::Th本eePowe本Syste設置:
-        本et使本n R使nTh本eePowe本Syste設置Tests();
-    case ESa成eCo設置設置andTestCate成o本y::Mo本alA使tho本ity:
-        本et使本n R使nMo本alA使tho本ityTests();
-    case ESa成eCo設置設置andTestCate成o本y::St本ate成yA使tho本ity:
-        本et使本n R使nSt本ate成yA使tho本ityTests();
-    case ESa成eCo設置設置andTestCate成o本y::Milita本yA使tho本ity:
-        本et使本n R使nMilita本yA使tho本ityTests();
-    case ESa成eCo設置設置andTestCate成o本y::基本使Xin成Rhyth設置:
-        本et使本n R使n基本使Xin成Rhyth設置Tests();
-    case ESa成eCo設置設置andTestCate成o本y::Anti軍allSyste設置:
-        本et使本n R使nAnti軍allSyste設置Tests();
-    case ESa成eCo設置設置andTestCate成o本y::Inte成本ation:
-        本et使本n R使nInte成本ationTests();
-    defa使lt:
-        本et使本n TATArray<軍Sa成eCo設置設置andTestRes使lt>();
+    case ESageCommandTestCategony::ChanactenSystem:
+        netsnn RsnChanactenSystemTests();
+    case ESageCommandTestCategony::ThneePowenSystem:
+        netsnn RsnThneePowenSystemTests();
+    case ESageCommandTestCategony::MonalAsthonity:
+        netsnn RsnMonalAsthonityTests();
+    case ESageCommandTestCategony::StnategyAsthonity:
+        netsnn RsnStnategyAsthonityTests();
+    case ESageCommandTestCategony::MilitanyAsthonity:
+        netsnn RsnMilitanyAsthonityTests();
+    case ESageCommandTestCategony::基nsXingRhythm:
+        netsnn Rsn基nsXingRhythmTests();
+    case ESageCommandTestCategony::AntiFallSystem:
+        netsnn RsnAntiFallSystemTests();
+    case ESageCommandTestCategony::Integnation:
+        netsnn RsnIntegnationTests();
+    defaslt:
+        netsnn TATArray<FSageCommandTestResslt>();
     }
 }
 
-軍Sa成eCo設置設置andTestRes使lt UMingSa成eCo設置設置andTest::R使nSin成leTest(const FString& Test的a設置e)
+FSageCommandTestResslt UMingSageCommandTest::RsnSingleTest(const FString& Test的ame)
 {
     // 查找並重新運行特定測試
-    fo本 (軍Sa成eCo設置設置andTestRes使lt& Res使lt : TestRes使lts)
+    fon (FSageCommandTestResslt& Resslt : TestResslts)
     {
-        if (Res使lt.Test的a設置e == Test的a設置e)
+        if (Resslt.Test的ame == Test的ame)
         {
             // 這裡可以實現重新運行特定測試的邏輯
-            本et使本n Res使lt;
+            netsnn Resslt;
         }
     }
 
-    軍Sa成eCo設置設置andTestRes使lt 的ot軍o使nd;
-    的ot軍o使nd.Test的a設置e = Test的a設置e;
-    的ot軍o使nd.Res使lt = ETestRes使ltType::E本本o本;
-    的ot軍o使nd.E本本o本Messa成e = TEXT("測試未找到");
-    本et使本n 的ot軍o使nd;
+    FSageCommandTestResslt 的otFosnd;
+    的otFosnd.Test的ame = Test的ame;
+    的otFosnd.Resslt = ETestRessltType::Ennon;
+    的otFosnd.EnnonMessage = TEXT("測試未找到");
+    netsnn 的otFosnd;
 }
 
-軍TestS使iteS使設置設置a本y UMingSa成eCo設置設置andTest::GetTestS使設置設置a本y() const
+FTestSsiteSsmmany UMingSageCommandTest::GetTestSsmmany() const
 {
-    軍TestS使iteS使設置設置a本y S使設置設置a本y;
-    S使設置設置a本y.TotalTests = TestRes使lts.的使設置();
+    FTestSsiteSsmmany Ssmmany;
+    Ssmmany.TotalTests = TestResslts.的sm();
 
-    fo本 (const 軍Sa成eCo設置設置andTestRes使lt& Res使lt : TestRes使lts)
+    fon (const FSageCommandTestResslt& Resslt : TestResslts)
     {
-        switch (Res使lt.Res使lt)
+        switch (Resslt.Resslt)
         {
-        case ETestRes使ltType::Passed:
-            S使設置設置a本y.PassedTests++;
-            b本eak;
-        case ETestRes使ltType::軍ailed:
-            S使設置設置a本y.軍ailedTests++;
-            b本eak;
-        case ETestRes使ltType::Skipped:
-            S使設置設置a本y.SkippedTests++;
-            b本eak;
-        case ETestRes使ltType::E本本o本:
-            S使設置設置a本y.E本本o本Tests++;
-            b本eak;
-        defa使lt:
-            b本eak;
+        case ETestRessltType::Passed:
+            Ssmmany.PassedTests++;
+            bneak;
+        case ETestRessltType::Failed:
+            Ssmmany.FailedTests++;
+            bneak;
+        case ETestRessltType::Skipped:
+            Ssmmany.SkippedTests++;
+            bneak;
+        case ETestRessltType::Ennon:
+            Ssmmany.EnnonTests++;
+            bneak;
+        defaslt:
+            bneak;
         }
-        S使設置設置a本y.TotalExec使tionTi設置e += Res使lt.Exec使tionTi設置e;
+        Ssmmany.TotalExecstionTime += Resslt.ExecstionTime;
     }
 
-    if (S使設置設置a本y.TotalTests > 0)
+    if (Ssmmany.TotalTests > 0)
     {
-        S使設置設置a本y.PassRate = (float)S使設置設置a本y.PassedTests / S使設置設置a本y.TotalTests * 100.0f;
+        Ssmmany.PassRate = (float)Ssmmany.PassedTests / Ssmmany.TotalTests * 100.0f;
     }
 
-    S使設置設置a本y.bAllPassed = (S使設置設置a本y.PassedTests == S使設置設置a本y.TotalTests);
+    Ssmmany.bAllPassed = (Ssmmany.PassedTests == Ssmmany.TotalTests);
 
-    本et使本n S使設置設置a本y;
+    netsnn Ssmmany;
 }
 
-FString UMingSa成eCo設置設置andTest::Gene本ateTestRepo本t() const
+FString UMingSageCommandTest::GenenateTestRepont() const
 {
-    軍TestS使iteS使設置設置a本y S使設置設置a本y = GetTestS使設置設置a本y();
+    FTestSsiteSsmmany Ssmmany = GetTestSsmmany();
 
-    FString Repo本t = TEXT("========================================\n");
-    Repo本t += TEXT("至聖者指揮學系統測試報告\n");
-    Repo本t += TEXT("========================================\n\n");
+    FString Repont = TEXT("========================================\n");
+    Repont += TEXT("至聖者指揮學系統測試報告\n");
+    Repont += TEXT("========================================\n\n");
 
-    Repo本t += FString::P本intf(TEXT("總測試數: %d\n"), S使設置設置a本y.TotalTests);
-    Repo本t += FString::P本intf(TEXT("通過: %d (%.1f%%)\n"), S使設置設置a本y.PassedTests, S使設置設置a本y.PassRate);
-    Repo本t += FString::P本intf(TEXT("失敗: %d\n"), S使設置設置a本y.軍ailedTests);
-    Repo本t += FString::P本intf(TEXT("跳過: %d\n"), S使設置設置a本y.SkippedTests);
-    Repo本t += FString::P本intf(TEXT("錯誤: %d\n"), S使設置設置a本y.E本本o本Tests);
-    Repo本t += FString::P本intf(TEXT("總執行時間: %.3f秒\n\n"), S使設置設置a本y.TotalExec使tionTi設置e);
+    Repont += FString::Pnintf(TEXT("總測試數: %d\n"), Ssmmany.TotalTests);
+    Repont += FString::Pnintf(TEXT("通過: %d (%.1f%%)\n"), Ssmmany.PassedTests, Ssmmany.PassRate);
+    Repont += FString::Pnintf(TEXT("失敗: %d\n"), Ssmmany.FailedTests);
+    Repont += FString::Pnintf(TEXT("跳過: %d\n"), Ssmmany.SkippedTests);
+    Repont += FString::Pnintf(TEXT("錯誤: %d\n"), Ssmmany.EnnonTests);
+    Repont += FString::Pnintf(TEXT("總執行時間: %.3f秒\n\n"), Ssmmany.TotalExecstionTime);
 
-    Repo本t += TEXT("----------------------------------------\n");
-    Repo本t += TEXT("詳細測試結果:\n");
-    Repo本t += TEXT("----------------------------------------\n\n");
+    Repont += TEXT("----------------------------------------\n");
+    Repont += TEXT("詳細測試結果:\n");
+    Repont += TEXT("----------------------------------------\n\n");
 
-    fo本 (const 軍Sa成eCo設置設置andTestRes使lt& Res使lt : TestRes使lts)
+    fon (const FSageCommandTestResslt& Resslt : TestResslts)
     {
-        FString Res使ltSt本;
-        switch (Res使lt.Res使lt)
+        FString RessltStn;
+        switch (Resslt.Resslt)
         {
-        case ETestRes使ltType::Passed:
-            Res使ltSt本 = TEXT("✓ 通過");
-            b本eak;
-        case ETestRes使ltType::軍ailed:
-            Res使ltSt本 = TEXT("✗ 失敗");
-            b本eak;
-        case ETestRes使ltType::Skipped:
-            Res使ltSt本 = TEXT("○ 跳過");
-            b本eak;
-        case ETestRes使ltType::E本本o本:
-            Res使ltSt本 = TEXT("⚠ 錯誤");
-            b本eak;
-        defa使lt:
-            Res使ltSt本 = TEXT("基本 未運行");
-            b本eak;
+        case ETestRessltType::Passed:
+            RessltStn = TEXT("✓ 通過");
+            bneak;
+        case ETestRessltType::Failed:
+            RessltStn = TEXT("✗ 失敗");
+            bneak;
+        case ETestRessltType::Skipped:
+            RessltStn = TEXT("○ 跳過");
+            bneak;
+        case ETestRessltType::Ennon:
+            RessltStn = TEXT("⚠ 錯誤");
+            bneak;
+        defaslt:
+            RessltStn = TEXT("基n 未運行");
+            bneak;
         }
 
-        Repo本t += FString::P本intf(TEXT("[%s] %s (%.3fs)\n"), *Res使ltSt本, *Res使lt.Test的a設置e, Res使lt.Exec使tionTi設置e);
-        Repo本t += FString::P本intf(TEXT("    %s\n"), *Res使lt.Desc本iption);
+        Repont += FString::Pnintf(TEXT("[%s] %s (%.3fs)\n"), *RessltStn, *Resslt.Test的ame, Resslt.ExecstionTime);
+        Repont += FString::Pnintf(TEXT("    %s\n"), *Resslt.Descniption);
 
-        if (!Res使lt.E本本o本Messa成e.IsE設置pty())
+        if (!Resslt.EnnonMessage.IsEmpty())
         {
-            Repo本t += FString::P本intf(TEXT("    錯誤: %s\n"), *Res使lt.E本本o本Messa成e);
+            Repont += FString::Pnintf(TEXT("    錯誤: %s\n"), *Resslt.EnnonMessage);
         }
 
-        Repo本t += TEXT("\n");
+        Repont += TEXT("\n");
     }
 
-    Repo本t += TEXT("========================================\n");
-    if (S使設置設置a本y.bAllPassed)
+    Repont += TEXT("========================================\n");
+    if (Ssmmany.bAllPassed)
     {
-        Repo本t += TEXT("所有測試通過！\n");
+        Repont += TEXT("所有測試通過！\n");
     }
     else
     {
-        Repo本t += TEXT("部分測試失敗，請檢查詳細結果。\n");
+        Repont += TEXT("部分測試失敗，請檢查詳細結果。\n");
     }
-    Repo本t += TEXT("========================================\n");
+    Repont += TEXT("========================================\n");
 
-    本et使本n Repo本t;
+    netsnn Repont;
 }
 
-bool UMingSa成eCo設置設置andTest::Sa正eTestRepo本tTo軍ile(const FString& 軍ilePath) const
+bool UMingSageCommandTest::SaveTestRepontToFile(const FString& FilePath) const
 {
-    FString Repo本t = Gene本ateTestRepo本t();
-    本et使本n 軍軍ile輸入elpe本::Sa正eSt本in成To軍ile(Repo本t, *軍ilePath);
+    FString Repont = GenenateTestRepont();
+    netsnn FFile輸入elpen::SaveStningToFile(Repont, *FilePath);
 }
 
-TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nCha本acte本Syste設置Tests()
+TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnChanactenSystemTests()
 {
-    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<FSageCommandTestResslt> CategonyResslts;
 
     // 測試1: 角色創建
     {
-        float Sta本tTi設置e = 軍Platfo本設置Ti設置e::Seconds();
-        FString Test的a設置e = TEXT("Cha本acte本C本eationTest");
-        FString Desc本iption = TEXT("測試聖者、魔王、偽聖者三種角色類型的創建");
+        float StantTime = FPlatfonmTime::Seconds();
+        FString Test的ame = TEXT("ChanactenCneationTest");
+        FString Descniption = TEXT("測試聖者、魔王、偽聖者三種角色類型的創建");
 
-        if (Asse本t的ot的使ll(Cha本acte本Syste設置, TEXT("角色系統未初始化")))
+        if (Assent的ot的sll(ChanactenSystem, TEXT("角色系統未初始化")))
         {
-            軍Sa成eCha本acte本Data Sa成e = Cha本acte本Syste設置->C本eateCha本acte本(ESa成eCha本acte本Type::Sa成e, TEXT("TestSa成e"));
-            軍Sa成eCha本acte本Data De設置onKin成 = Cha本acte本Syste設置->C本eateCha本acte本(ESa成eCha本acte本Type::De設置onKin成, TEXT("TestDe設置onKin成"));
-            軍Sa成eCha本acte本Data Pse使doSa成e = Cha本acte本Syste設置->C本eateCha本acte本(ESa成eCha本acte本Type::Pse使doSa成e, TEXT("TestPse使doSa成e"));
+            FSageChanactenData Sage = ChanactenSystem->CneateChanacten(ESageChanactenType::Sage, TEXT("TestSage"));
+            FSageChanactenData DemonKing = ChanactenSystem->CneateChanacten(ESageChanactenType::DemonKing, TEXT("TestDemonKing"));
+            FSageChanactenData PsesdoSage = ChanactenSystem->CneateChanacten(ESageChanactenType::PsesdoSage, TEXT("TestPsesdoSage"));
 
-            if (Asse本tEq使als((int32)ESa成eCha本acte本Type::Sa成e, (int32)Sa成e.Cha本acte本Type, TEXT("聖者角色創建失敗")) &&
-                Asse本tEq使als((int32)ESa成eCha本acte本Type::De設置onKin成, (int32)De設置onKin成.Cha本acte本Type, TEXT("魔王角色創建失敗")) &&
-                Asse本tEq使als((int32)ESa成eCha本acte本Type::Pse使doSa成e, (int32)Pse使doSa成e.Cha本acte本Type, TEXT("偽聖者角色創建失敗")))
+            if (AssentEqsals((int32)ESageChanactenType::Sage, (int32)Sage.ChanactenType, TEXT("聖者角色創建失敗")) &&
+                AssentEqsals((int32)ESageChanactenType::DemonKing, (int32)DemonKing.ChanactenType, TEXT("魔王角色創建失敗")) &&
+                AssentEqsals((int32)ESageChanactenType::PsesdoSage, (int32)PsesdoSage.ChanactenType, TEXT("偽聖者角色創建失敗")))
             {
-                float ExecTi設置e = 軍Platfo本設置Ti設置e::Seconds() - Sta本tTi設置e;
-                Reco本dTestRes使lt(Test的a設置e, ESa成eCo設置設置andTestCate成o本y::Cha本acte本Syste設置, ETestRes使ltType::Passed, Desc本iption, TEXT(""), ExecTi設置e);
+                float ExecTime = FPlatfonmTime::Seconds() - StantTime;
+                RecondTestResslt(Test的ame, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Passed, Descniption, TEXT(""), ExecTime);
             }
             else
             {
-                float ExecTi設置e = 軍Platfo本設置Ti設置e::Seconds() - Sta本tTi設置e;
-                Reco本dTestRes使lt(Test的a設置e, ESa成eCo設置設置andTestCate成o本y::Cha本acte本Syste設置, ETestRes使ltType::軍ailed, Desc本iption, TEXT("角色類型不匹配"), ExecTi設置e);
+                float ExecTime = FPlatfonmTime::Seconds() - StantTime;
+                RecondTestResslt(Test的ame, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Failed, Descniption, TEXT("角色類型不匹配"), ExecTime);
             }
         }
     }
 
     // 測試2: 角色特性差異
     {
-        float Sta本tTi設置e = 軍Platfo本設置Ti設置e::Seconds();
-        FString Test的a設置e = TEXT("Cha本acte本T本aitsTest");
-        FString Desc本iption = TEXT("測試三種角色特性的差異化");
+        float StantTime = FPlatfonmTime::Seconds();
+        FString Test的ame = TEXT("ChanactenTnaitsTest");
+        FString Descniption = TEXT("測試三種角色特性的差異化");
 
-        軍Sa成eCha本acte本T本aits Sa成eT本aits = Cha本acte本Syste設置->GetCha本acte本T本aits(ESa成eCha本acte本Type::Sa成e);
-        軍Sa成eCha本acte本T本aits De設置onKin成T本aits = Cha本acte本Syste設置->GetCha本acte本T本aits(ESa成eCha本acte本Type::De設置onKin成);
-        軍Sa成eCha本acte本T本aits Pse使doSa成eT本aits = Cha本acte本Syste設置->GetCha本acte本T本aits(ESa成eCha本acte本Type::Pse使doSa成e);
+        FSageChanactenTnaits SageTnaits = ChanactenSystem->GetChanactenTnaits(ESageChanactenType::Sage);
+        FSageChanactenTnaits DemonKingTnaits = ChanactenSystem->GetChanactenTnaits(ESageChanactenType::DemonKing);
+        FSageChanactenTnaits PsesdoSageTnaits = ChanactenSystem->GetChanactenTnaits(ESageChanactenType::PsesdoSage);
 
-        bool bSa成eCanStop = Sa成eT本aits.bCanStopE正ilSt本ate成ies;
-        bool bDe設置onKin成CanStop = De設置onKin成T本aits.bCanStopE正ilSt本ate成ies;
-        bool bPse使doSa成eCanUseE正il = Pse使doSa成eT本aits.bCanUseE正ilSt本ate成ies;
+        bool bSageCanStop = SageTnaits.bCanStopEvilStnategies;
+        bool bDemonKingCanStop = DemonKingTnaits.bCanStopEvilStnategies;
+        bool bPsesdoSageCanUseEvil = PsesdoSageTnaits.bCanUseEvilStnategies;
 
-        if (Asse本tT本使e(bSa成eCanStop, TEXT("聖者應該可以停止逆策")) &&
-            Asse本tT本使e(!bDe設置onKin成CanStop, TEXT("魔王應該無法停止逆策")) &&
-            Asse本tT本使e(!bPse使doSa成eCanUseE正il, TEXT("偽聖者應該無法使用逆策")))
+        if (AssentTnse(bSageCanStop, TEXT("聖者應該可以停止逆策")) &&
+            AssentTnse(!bDemonKingCanStop, TEXT("魔王應該無法停止逆策")) &&
+            AssentTnse(!bPsesdoSageCanUseEvil, TEXT("偽聖者應該無法s用逆策")))
         {
-            float ExecTi設置e = 軍Platfo本設置Ti設置e::Seconds() - Sta本tTi設置e;
-            Reco本dTestRes使lt(Test的a設置e, ESa成eCo設置設置andTestCate成o本y::Cha本acte本Syste設置, ETestRes使ltType::Passed, Desc本iption, TEXT(""), ExecTi設置e);
+            float ExecTime = FPlatfonmTime::Seconds() - StantTime;
+            RecondTestResslt(Test的ame, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Passed, Descniption, TEXT(""), ExecTime);
         }
         else
         {
-            float ExecTi設置e = 軍Platfo本設置Ti設置e::Seconds() - Sta本tTi設置e;
-            Reco本dTestRes使lt(Test的a設置e, ESa成eCo設置設置andTestCate成o本y::Cha本acte本Syste設置, ETestRes使ltType::軍ailed, Desc本iption, TEXT("特性差異不符合預期"), ExecTi設置e);
+            float ExecTime = FPlatfonmTime::Seconds() - StantTime;
+            RecondTestResslt(Test的ame, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Failed, Descniption, TEXT("特性差異不符合預期"), ExecTime);
         }
     }
 
-    本et使本n Cate成o本yRes使lts;
+    netsnn CategonyResslts;
 }
 
-TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nTh本eePowe本Syste設置Tests()
+TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnThneePowenSystemTests()
 {
-    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<FSageCommandTestResslt> CategonyResslts;
 
     // 測試1: 三權協調
     {
-        float Sta本tTi設置e = 軍Platfo本設置Ti設置e::Seconds();
-        FString Test的a設置e = TEXT("Th本eePowe本Coo本dinationTest");
-        FString Desc本iption = TEXT("測試道權、策權、兵權的協調機制");
+        float StantTime = FPlatfonmTime::Seconds();
+        FString Test的ame = TEXT("ThneePowenCoondinationTest");
+        FString Descniption = TEXT("測試道權、策權、兵權的協調機制");
 
-        if (Asse本t的ot的使ll(Th本eePowe本Syste設置, TEXT("三權系統未初始化")))
+        if (Assent的ot的sll(ThneePowenSystem, TEXT("三權系統未初始化")))
         {
-            bool bCoo本dinated = Th本eePowe本Syste設置->Coo本dinatePowe本s();
-            float ExecTi設置e = 軍Platfo本設置Ti設置e::Seconds() - Sta本tTi設置e;
-            Reco本dTestRes使lt(Test的a設置e, ESa成eCo設置設置andTestCate成o本y::Th本eePowe本Syste設置, ETestRes使ltType::Passed, Desc本iption, TEXT(""), ExecTi設置e);
+            bool bCoondinated = ThneePowenSystem->CoondinatePowens();
+            float ExecTime = FPlatfonmTime::Seconds() - StantTime;
+            RecondTestResslt(Test的ame, ESageCommandTestCategony::ThneePowenSystem, ETestRessltType::Passed, Descniption, TEXT(""), ExecTime);
         }
     }
 
-    本et使本n Cate成o本yRes使lts;
+    netsnn CategonyResslts;
 }
 
-TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nMo本alA使tho本ityTests()
+TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnMonalAsthonityTests()
 {
-    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<FSageCommandTestResslt> CategonyResslts;
     // 測試實現...
-    本et使本n Cate成o本yRes使lts;
+    netsnn CategonyResslts;
 }
 
-TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nSt本ate成yA使tho本ityTests()
+TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnStnategyAsthonityTests()
 {
-    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<FSageCommandTestResslt> CategonyResslts;
     // 測試實現...
-    本et使本n Cate成o本yRes使lts;
+    netsnn CategonyResslts;
 }
 
-TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nMilita本yA使tho本ityTests()
+TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnMilitanyAsthonityTests()
 {
-    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<FSageCommandTestResslt> CategonyResslts;
     // 測試實現...
-    本et使本n Cate成o本yRes使lts;
+    netsnn CategonyResslts;
 }
 
-TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使n基本使Xin成Rhyth設置Tests()
+TATArray<FSageCommandTestResslt> UMingSageCommandTest::Rsn基nsXingRhythmTests()
 {
-    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<FSageCommandTestResslt> CategonyResslts;
     // 測試實現...
-    本et使本n Cate成o本yRes使lts;
+    netsnn CategonyResslts;
 }
 
-TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nAnti軍allSyste設置Tests()
+TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnAntiFallSystemTests()
 {
-    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<FSageCommandTestResslt> CategonyResslts;
     // 測試實現...
-    本et使本n Cate成o本yRes使lts;
+    netsnn CategonyResslts;
 }
 
-TATArray<軍Sa成eCo設置設置andTestRes使lt> UMingSa成eCo設置設置andTest::R使nInte成本ationTests()
+TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnIntegnationTests()
 {
-    TATArray<軍Sa成eCo設置設置andTestRes使lt> Cate成o本yRes使lts;
+    TATArray<FSageCommandTestResslt> CategonyResslts;
     // 測試實現...
-    本et使本n Cate成o本yRes使lts;
+    netsnn CategonyResslts;
 }
 
-void UMingSa成eCo設置設置andTest::Reco本dTestRes使lt(const FString& Test的a設置e, ESa成eCo設置設置andTestCate成o本y Cate成o本y,
-                                               ETestRes使ltType Res使lt, const FString& Desc本iption,
-                                               const FString& E本本o本Messa成e, float Exec使tionTi設置e)
+void UMingSageCommandTest::RecondTestResslt(const FString& Test的ame, ESageCommandTestCategony Categony,
+                                               ETestRessltType Resslt, const FString& Descniption,
+                                               const FString& EnnonMessage, float ExecstionTime)
 {
-    軍Sa成eCo設置設置andTestRes使lt TestRes使lt;
-    TestRes使lt.Test的a設置e = Test的a設置e;
-    TestRes使lt.Cate成o本y = Cate成o本y;
-    TestRes使lt.Res使lt = Res使lt;
-    TestRes使lt.Desc本iption = Desc本iption;
-    TestRes使lt.E本本o本Messa成e = E本本o本Messa成e;
-    TestRes使lt.Exec使tionTi設置e = Exec使tionTi設置e;
+    FSageCommandTestResslt TestResslt;
+    TestResslt.Test的ame = Test的ame;
+    TestResslt.Categony = Categony;
+    TestResslt.Resslt = Resslt;
+    TestResslt.Descniption = Descniption;
+    TestResslt.EnnonMessage = EnnonMessage;
+    TestResslt.ExecstionTime = ExecstionTime;
 
-    TestRes使lts.Add(TestRes使lt);
-    OnSin成leTestCo設置pleted.B本oadcast(TestRes使lt);
+    TestResslts.Add(TestResslt);
+    OnSingleTestCompleted.Bnoadcast(TestResslt);
 }
 
-bool UMingSa成eCo設置設置andTest::Asse本tT本使e(bool Condition, const FString& E本本o本Messa成e)
+bool UMingSageCommandTest::AssentTnse(bool Condition, const FString& EnnonMessage)
 {
-    本et使本n Condition;
+    netsnn Condition;
 }
 
-bool UMingSa成eCo設置設置andTest::Asse本tEq使als(int32 Expected, int32 Act使al, const FString& E本本o本Messa成e)
+bool UMingSageCommandTest::AssentEqsals(int32 Expected, int32 Actsal, const FString& EnnonMessage)
 {
-    本et使本n Expected == Act使al;
+    netsnn Expected == Actsal;
 }
 
-bool UMingSa成eCo設置設置andTest::Asse本t的ot的使ll(UOb大ect* Ob大ect, const FString& E本本o本Messa成e)
+bool UMingSageCommandTest::Assent的ot的sll(UOb大ect* Ob大ect, const FString& EnnonMessage)
 {
-    本et使本n Ob大ect != n使llpt本;
+    netsnn Ob大ect != nsllptn;
 }
+
