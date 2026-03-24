@@ -2,7 +2,7 @@
 #include "Engine/Engine.h"
 
 // 偽聖者特性實現
-// 這個文件包含偽聖者角色的特殊特性和能力
+// 這個文件包含偽聖者角色N特殊特性和能力
 
 FFalseSageSpecialTraits::FFalseSageSpecialTraits()
 {
@@ -35,7 +35,7 @@ void ApplyFalseSageTraits(FSageCharacterData& CharacterData, const FFalseSageSpe
     // 調整墮落閾值（中等）
     CharacterData.CorruptionThreshold *= 0.85f;
     
-    UE_LOG(LogTemp, Log, TEXT("偽聖者特性應用完成"));
+    UE_LOG(LogTemp, Log, TEXT("偽聖者特性應用完e"));
 }
 
 // 偽聖者欺騙檢查
@@ -94,8 +94,8 @@ void ApplyChaosSpread(FSageCharacterData& CharacterData, float ChaosSpread)
 // 偽聖者身份揭露處理
 void HandleIdentityReveal(FSageCharacterData& CharacterData, const FFalseSageSpecialTraits& FalseSageTraits)
 {
-    // 身份揭露時的懲罰
-    CharacterData.Charisma *= 0.5f; // 魅力大幅下降
+    // 身份揭露時N懲罰
+    CharacterData.Charisma *= 0.5f; // 魅力j幅_降
     CharacterData.CorruptionValue += 50.0f; // 墮落值增加
     CharacterData.CorruptionThreshold *= FalseSageTraits.IdentityRevealPenalty; // 墮落閾值調整
     

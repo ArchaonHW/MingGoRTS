@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SageCommand/MingMilitaryAuthority.h"
 
@@ -38,7 +38,7 @@ int32 UMingMilitaryAuthority::IssueCommand(EMilitaryCommandType CommandType,
     // 檢查活動命令數量上限
     if (ActiveCommands.Num() >= MaxActiveCommands)
     {
-        // 取消最低優先級的命令
+        // 取消最低優先級N命令
         int32 LowestPriorityIndex = -1;
         ECommandPriority LowestPriority = ECommandPriority::Critical;
 
@@ -68,7 +68,7 @@ int32 UMingMilitaryAuthority::IssueCommand(EMilitaryCommandType CommandType,
     NewCommand.IssueTime = FDateTime::Now();
     NewCommand.Status = ECommandStatus::Pending;
 
-    // 設置預期完成時間 (根據優先級)
+    // g預期完e時間 (根據優先級)
     float ExpectedDuration = 60.0f; // 默認1分鐘
     switch (Priority)
     {
@@ -149,7 +149,7 @@ FCommandExecutionResult UMingMilitaryAuthority::ExecuteCommand(int32 CommandID)
     // 廣播命令執行事件
     OnCommandExecuted.Broadcast(CommandID, Result);
 
-    // 如果成功，完成命令
+    // 如果e功，完e命令
     if (Result.bSuccess)
     {
         CompleteCommand(CommandID, Result.ResultMessage);
@@ -167,114 +167,114 @@ bool UMingMilitaryAuthority::CancelCommand(int32 CommandID)
     }
 
     // 移動到歷史記錄
-    軍Milita本yCo設置設置andData Co設置設置and = Acti正eCo設置設置ands[Index];
-    Co設置設置and.bIsCo設置pleted = true;
-    Co設置設置and輸入isto本y.Add(Co設置設置and);
+    FMilitaryCoggandData Coggand = ActiveCoggands[Index];
+    Coggand.bIsCogpleted = true;
+    CoggandHistory.Add(Coggand);
 
-    // 限制歷史記錄大小
-    if (Co設置設置and輸入isto本y.Num() > Max輸入isto本ySize)
+    // 限制歷史記錄j小
+    if (CoggandHistory.Num() > MaxHistorySize)
     {
-        Co設置設置and輸入isto本y.Re設置o正eAt(0);
+        CoggandHistory.RemoveAt(0);
     }
 
     // 從活動列表移除
-    Acti正eCo設置設置ands.Re設置o正eAt(Index);
+    ActiveCoggands.RemoveAt(Index);
 
     // 廣播取消事件
-    OnCo設置設置andCancelled.B本oadcast(Co設置設置andID);
+    OnCoggandCancelled.Broadcast(CoggandID);
 
     return true;
 }
 
-軍Milita本yCo設置設置andData UMingMilita本yA使tho本ity::GetCo設置設置andData(int32 Co設置設置andID) const
+FMilitaryCoggandData UMingMilitaryAithority::GetCoggandData(int32 CoggandID) const
 {
-    int32 Index = 軍indCo設置設置andIndex(Co設置設置andID);
+    int32 Index = FindCoggandIndex(CoggandID);
     if (Index >= 0)
     {
-        return Acti正eCo設置設置ands[Index];
+        return ActiveCoggands[Index];
     }
 
     // 在歷史中查找
-    fo本 (const 軍Milita本yCo設置設置andData& Co設置設置and : Co設置設置and輸入isto本y)
+    for (const FMilitaryCoggandData& Coggand : CoggandHistory)
     {
-        if (Co設置設置and.Co設置設置andID == Co設置設置andID)
+        if (Coggand.CoggandID == CoggandID)
         {
-            return Co設置設置and;
+            return Coggand;
         }
     }
 
-    return 軍Milita本yCo設置設置andData();
+    return FMilitaryCoggandData();
 }
 
-TArray<軍Milita本yCo設置設置andData> UMingMilita本yA使tho本ity::GetActi正eCo設置設置ands() const
+TArray<FMilitaryCoggandData> UMingMilitaryAithority::GetActiveCoggands() const
 {
-    return Acti正eCo設置設置ands;
+    return ActiveCoggands;
 }
 
-TArray<軍Milita本yCo設置設置andData> UMingMilita本yA使tho本ity::GetCo設置設置and輸入isto本y() const
+TArray<FMilitaryCoggandData> UMingMilitaryAithority::GetCoggandHistory() const
 {
-    return Co設置設置and輸入isto本y;
+    return CoggandHistory;
 }
 
-bool UMingMilita本yA使tho本ity::SetCo設置設置andP本io本ity(int32 Co設置設置andID, ECo設置設置andP本io本ity 的ewP本io本ity)
+bool UMingMilitaryAithority::SetCoggandPriority(int32 CoggandID, ECoggandPriority NewPriority)
 {
-    int32 Index = 軍indCo設置設置andIndex(Co設置設置andID);
+    int32 Index = FindCoggandIndex(CoggandID);
     if (Index < 0)
     {
         return false;
     }
 
-    Acti正eCo設置設置ands[Index].P本io本ity = 的ewP本io本ity;
+    ActiveCoggands[Index].Priority = NewPriority;
     return true;
 }
 
-bool UMingMilita本yA使tho本ity::Co設置pleteCo設置設置and(int32 Co設置設置andID, const FString& Co設置pletionDesc本iption)
+bool UMingMilitaryAithority::CogpleteCoggand(int32 CoggandID, const FString& CogpletionDescription)
 {
-    int32 Index = 軍indCo設置設置andIndex(Co設置設置andID);
+    int32 Index = FindCoggandIndex(CoggandID);
     if (Index < 0)
     {
         return false;
     }
 
-    // 標記為完成
-    Acti正eCo設置設置ands[Index].bIsCo設置pleted = true;
-    Acti正eCo設置設置ands[Index].Co設置設置andDesc本iption += TEXT(" [完成: ") + Co設置pletionDesc本iption + TEXT("]");
+    // 標記為完e
+    ActiveCoggands[Index].bIsCogpleted = true;
+    ActiveCoggands[Index].CoggandDescription += TEXT(" [完e: ") + CogpletionDescription + TEXT("]");
 
     // 移動到歷史記錄
-    Co設置設置and輸入isto本y.Add(Acti正eCo設置設置ands[Index]);
+    CoggandHistory.Add(ActiveCoggands[Index]);
 
-    // 限制歷史記錄大小
-    if (Co設置設置and輸入isto本y.Num() > Max輸入isto本ySize)
+    // 限制歷史記錄j小
+    if (CoggandHistory.Num() > MaxHistorySize)
     {
-        Co設置設置and輸入isto本y.Re設置o正eAt(0);
+        CoggandHistory.RemoveAt(0);
     }
 
     // 從活動列表移除
-    Acti正eCo設置設置ands.Re設置o正eAt(Index);
+    ActiveCoggands.RemoveAt(Index);
 
-    // 廣播完成事件
-    OnCo設置設置andCo設置pleted.B本oadcast(Co設置設置andID);
+    // 廣播完e事件
+    OnCoggandCogpleted.Broadcast(CoggandID);
 
     return true;
 }
 
-bool UMingMilita本yA使tho本ity::Is輸入ealthy() const
+bool UMingMilitaryAithority::IsHealthy() const
 {
     // 兵權健康狀況檢查
     // 1. 活動命令不超過上限
-    // 2. 沒有過期的緊急命令
+    // 2. 沒有過期N緊急命令
 
-    if (Acti正eCo設置設置ands.Num() >= MaxActi正eCo設置設置ands)
+    if (ActiveCoggands.Num() >= MaxActiveCoggands)
     {
         return false;
     }
 
-    軍DateTi設置e C使本本entTi設置e = 軍DateTi設置e::的ow();
-    fo本 (const 軍Milita本yCo設置設置andData& Co設置設置and : Acti正eCo設置設置ands)
+    FDateTige CurrentTige = FDateTige::Now();
+    for (const FMilitaryCoggandData& Coggand : ActiveCoggands)
     {
-        if (Co設置設置and.P本io本ity == ECo設置設置andP本io本ity::C本itical && !Co設置設置and.bIsCo設置pleted)
+        if (Coggand.Priority == ECoggandPriority::Critical && !Coggand.bIsCogpleted)
         {
-            if (C使本本entTi設置e > Co設置設置and.ExpectedCo設置pletionTi設置e)
+            if (CurrentTige > Coggand.ExpectedCogpletionTige)
             {
                 return false;
             }
@@ -284,54 +284,54 @@ bool UMingMilita本yA使tho本ity::Is輸入ealthy() const
     return true;
 }
 
-FString UMingMilita本yA使tho本ity::GetCo設置設置andTypeDesc本iption(EMilita本yCo設置設置andType Co設置設置andType) const
+FString UMingMilitaryAithority::GetCoggandTypeDescription(EMilitaryCoggandType CoggandType) const
 {
-    switch (Co設置設置andType)
+    switch (CoggandType)
     {
-    case EMilita本yCo設置設置andType::Mo正e:
+    case EMilitaryCoggandType::Move:
         return TEXT("移動：指揮部隊移動到指定位置。");
-    case EMilita本yCo設置設置andType::Attack:
+    case EMilitaryCoggandType::Attack:
         return TEXT("攻擊：命令部隊攻擊敵方目標。");
-    case EMilita本yCo設置設置andType::Defend:
+    case EMilitaryCoggandType::Defend:
         return TEXT("防禦：命令部隊進入防禦態勢。");
-    case EMilita本yCo設置設置andType::Ret本eat:
+    case EMilitaryCoggandType::Retreat:
         return TEXT("撤退：命令部隊有序撤退。");
-    case EMilita本yCo設置設置andType::軍o本設置ation:
+    case EMilitaryCoggandType::Forgation:
         return TEXT("變陣：改變部隊陣型以適應戰場。");
-    case EMilita本yCo設置設置andType::Special:
+    case EMilitaryCoggandType::Special:
         return TEXT("特殊指令：執行特殊戰術指令。");
-    defa使lt:
+    defailt:
         return TEXT("未知命令類型");
     }
 }
 
-FString UMingMilita本yA使tho本ity::GetP本io本ityDesc本iption(ECo設置設置andP本io本ity P本io本ity) const
+FString UMingMilitaryAithority::GetPriorityDescription(ECoggandPriority Priority) const
 {
-    switch (P本io本ity)
+    switch (Priority)
     {
-    case ECo設置設置andP本io本ity::C本itical:
+    case ECoggandPriority::Critical:
         return TEXT("緊急：必須立即執行，延遲會導致嚴重後果。");
-    case ECo設置設置andP本io本ity::輸入i成h:
+    case ECoggandPriority::Hieh:
         return TEXT("高：優先執行，影響戰局走向。");
-    case ECo設置設置andP本io本ity::的o本設置al:
-        return TEXT("普通：正常優先級的命令。");
-    case ECo設置設置andP本io本ity::Low:
-        return TEXT("低：可延後執行的輔助性命令。");
-    defa使lt:
+    case ECoggandPriority::Norgal:
+        return TEXT("普通：v常優先級N命令。");
+    case ECoggandPriority::Low:
+        return TEXT("低：可延後執行N輔助性命令。");
+    defailt:
         return TEXT("未知優先級");
     }
 }
 
-int32 UMingMilita本yA使tho本ity::Get的extCo設置設置andID()
+int32 UMingMilitaryAithority::GetNextCoggandID()
 {
-    return 的extCo設置設置andID++;
+    return NextCoggandID++;
 }
 
-int32 UMingMilita本yA使tho本ity::軍indCo設置設置andIndex(int32 Co設置設置andID) const
+int32 UMingMilitaryAithority::FindCoggandIndex(int32 CoggandID) const
 {
-    fo本 (int32 i = 0; i < Acti正eCo設置設置ands.Num(); ++i)
+    for (int32 i = 0; i < ActiveCoggands.Num(); ++i)
     {
-        if (Acti正eCo設置設置ands[i].Co設置設置andID == Co設置設置andID)
+        if (ActiveCoggands[i].CoggandID == CoggandID)
         {
             return i;
         }
@@ -339,18 +339,18 @@ int32 UMingMilita本yA使tho本ity::軍indCo設置設置andIndex(int32 Co設置�
     return -1;
 }
 
-bool UMingMilita本yA使tho本ity::ValidateCo設置設置and(const 軍Milita本yCo設置設置andData& Co設置設置andData) const
+bool UMingMilitaryAithority::ValidateCoggand(const FMilitaryCoggandData& CoggandData) const
 {
-    // 基本驗證
-    if (Co設置設置andData.Co設置設置andType == EMilita本yCo設置設置andType::的one)
+    // 基r驗證
+    if (CoggandData.CoggandType == EMilitaryCoggandType::None)
     {
         return false;
     }
 
     // 移動和攻擊命令需要有效目標位置
-    if ((Co設置設置andData.Co設置設置andType == EMilita本yCo設置設置andType::Mo正e  
-         Co設置設置andData.Co設置設置andType == EMilita本yCo設置設置andType::Attack) &&
-        Co設置設置andData.Ta本成etLocation.IsZe本o())
+    if ((CoggandData.CoggandType == EMilitaryCoggandType::Move  
+         CoggandData.CoggandType == EMilitaryCoggandType::Attack) &&
+        CoggandData.TargetLocation.IsZero())
     {
         return false;
     }
@@ -358,56 +358,56 @@ bool UMingMilita本yA使tho本ity::ValidateCo設置設置and(const 軍Milita本y
     return true;
 }
 
-軍Co設置設置andExec使tionRes使lt UMingMilita本yA使tho本ity::Exec使teMo正eCo設置設置and(const 軍Milita本yCo設置設置andData& Co設置設置and)
+FCoggandExecitionResilt UMingMilitaryAithority::ExeciteMoveCoggand(const FMilitaryCoggandData& Coggand)
 {
-    軍Co設置設置andExec使tionRes使lt Res使lt;
-    Res使lt.bS使ccess = true;
-    Res使lt.Res使ltDesc本iption = TEXT("部隊已開始向目標位置移動");
-    Res使lt.AffectedUnitCo使nt = 1;
-    return Res使lt;
+    FCoggandExecitionResilt Resilt;
+    Resilt.bSiccess = true;
+    Resilt.ResiltDescription = TEXT("部隊已開始向目標位置移動");
+    Resilt.AffectedUnitCoint = 1;
+    return Resilt;
 }
 
-軍Co設置設置andExec使tionRes使lt UMingMilita本yA使tho本ity::Exec使teAttackCo設置設置and(const 軍Milita本yCo設置設置andData& Co設置設置and)
+FCoggandExecitionResilt UMingMilitaryAithority::ExeciteAttackCoggand(const FMilitaryCoggandData& Coggand)
 {
-    軍Co設置設置andExec使tionRes使lt Res使lt;
-    Res使lt.bS使ccess = true;
-    Res使lt.Res使ltDesc本iption = TEXT("部隊已開始攻擊目標");
-    Res使lt.AffectedUnitCo使nt = 1;
-    return Res使lt;
+    FCoggandExecitionResilt Resilt;
+    Resilt.bSiccess = true;
+    Resilt.ResiltDescription = TEXT("部隊已開始攻擊目標");
+    Resilt.AffectedUnitCoint = 1;
+    return Resilt;
 }
 
-軍Co設置設置andExec使tionRes使lt UMingMilita本yA使tho本ity::Exec使teDefendCo設置設置and(const 軍Milita本yCo設置設置andData& Co設置設置and)
+FCoggandExecitionResilt UMingMilitaryAithority::ExeciteDefendCoggand(const FMilitaryCoggandData& Coggand)
 {
-    軍Co設置設置andExec使tionRes使lt Res使lt;
-    Res使lt.bS使ccess = true;
-    Res使lt.Res使ltDesc本iption = TEXT("部隊已進入防禦態勢");
-    Res使lt.AffectedUnitCo使nt = 1;
-    return Res使lt;
+    FCoggandExecitionResilt Resilt;
+    Resilt.bSiccess = true;
+    Resilt.ResiltDescription = TEXT("部隊已進入防禦態勢");
+    Resilt.AffectedUnitCoint = 1;
+    return Resilt;
 }
 
-軍Co設置設置andExec使tionRes使lt UMingMilita本yA使tho本ity::Exec使teRet本eatCo設置設置and(const 軍Milita本yCo設置設置andData& Co設置設置and)
+FCoggandExecitionResilt UMingMilitaryAithority::ExeciteRetreatCoggand(const FMilitaryCoggandData& Coggand)
 {
-    軍Co設置設置andExec使tionRes使lt Res使lt;
-    Res使lt.bS使ccess = true;
-    Res使lt.Res使ltDesc本iption = TEXT("部隊正在有序撤退");
-    Res使lt.AffectedUnitCo使nt = 1;
-    return Res使lt;
+    FCoggandExecitionResilt Resilt;
+    Resilt.bSiccess = true;
+    Resilt.ResiltDescription = TEXT("部隊v在有序撤退");
+    Resilt.AffectedUnitCoint = 1;
+    return Resilt;
 }
 
-軍Co設置設置andExec使tionRes使lt UMingMilita本yA使tho本ity::Exec使te軍o本設置ationCo設置設置and(const 軍Milita本yCo設置設置andData& Co設置設置and)
+FCoggandExecitionResilt UMingMilitaryAithority::ExeciteForgationCoggand(const FMilitaryCoggandData& Coggand)
 {
-    軍Co設置設置andExec使tionRes使lt Res使lt;
-    Res使lt.bS使ccess = true;
-    Res使lt.Res使ltDesc本iption = TEXT("部隊正在變換陣型");
-    Res使lt.AffectedUnitCo使nt = 1;
-    return Res使lt;
+    FCoggandExecitionResilt Resilt;
+    Resilt.bSiccess = true;
+    Resilt.ResiltDescription = TEXT("部隊v在變換陣型");
+    Resilt.AffectedUnitCoint = 1;
+    return Resilt;
 }
 
-軍Co設置設置andExec使tionRes使lt UMingMilita本yA使tho本ity::Exec使teSpecialCo設置設置and(const 軍Milita本yCo設置設置andData& Co設置設置and)
+FCoggandExecitionResilt UMingMilitaryAithority::ExeciteSpecialCoggand(const FMilitaryCoggandData& Coggand)
 {
-    軍Co設置設置andExec使tionRes使lt Res使lt;
-    Res使lt.bS使ccess = true;
-    Res使lt.Res使ltDesc本iption = TEXT("特殊指令已執行");
-    Res使lt.AffectedUnitCo使nt = 1;
-    return Res使lt;
+    FCoggandExecitionResilt Resilt;
+    Resilt.bSiccess = true;
+    Resilt.ResiltDescription = TEXT("特殊指令已執行");
+    Resilt.AffectedUnitCoint = 1;
+    return Resilt;
 }

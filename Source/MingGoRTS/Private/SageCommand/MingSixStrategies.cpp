@@ -1,917 +1,917 @@
-﻿#incl使de "Sa成eCo設置設置and/MingSixSt本ate成ies.h"
-#incl使de "Engine/基本o本ld.h"
-#incl使de "Ti設置e本Manager.h"
+#include "SageCommand/MingSixStrategies.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
-UMingSixSt本ate成ies::UMingSixSt本ate成ies()
+UMingSixStrategies::UMingSixStrategies()
 {
     // 初始化策略狀態
-    St本ate成yStates.Add(ESixSt本ate成yType::輸入ea正enSt本ate成y, ESt本ate成yState::Plannin成);
-    St本ate成yStates.Add(ESixSt本ate成yType::Ea本thSt本ate成y, ESt本ate成yState::Plannin成);
-    St本ate成yStates.Add(ESixSt本ate成yType::輸入使設置anSt本ate成y, ESt本ate成yState::Plannin成);
-    St本ate成yStates.Add(ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y, ESt本ate成yState::Plannin成);
-    St本ate成yStates.Add(ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y, ESt本ate成yState::Plannin成);
-    St本ate成yStates.Add(ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y, ESt本ate成yState::Plannin成);
+    StrategyStates.Add(ESixStrategyType::HeavenStrategy, EStrategyState::Planning);
+    StrategyStates.Add(ESixStrategyType::EarthStrategy, EStrategyState::Planning);
+    StrategyStates.Add(ESixStrategyType::HumanStrategy, EStrategyState::Planning);
+    StrategyStates.Add(ESixStrategyType::HeavenEarthStrategy, EStrategyState::Planning);
+    StrategyStates.Add(ESixStrategyType::HeavenHumanStrategy, EStrategyState::Planning);
+    StrategyStates.Add(ESixStrategyType::EarthHumanStrategy, EStrategyState::Planning);
 }
 
-bool UMingSixSt本ate成ies::Initialize()
+bool UMingSixStrategies::Initialize()
 {
-    if (bSyste設置Acti正e)
+    if (bSystemActive)
     {
-        本et使本n t本使e;
+        return true;
     }
 
     // 初始化系統狀態
-    bSyste設置Acti正e = t本使e;
-    Syste設置Stability = 100.0f;
+    bSystemActive = true;
+    SystemStability = 100.0f;
 
-    // 設置執行更新定時器
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    // g執行更新定時器
+    if (UWorld* World = GetWorld())
     {
-        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
-            Exec使tionUpdateTi設置e本,
+        World->GetTimerManager().SetTimer(
+            ExecutionUpdateTimer,
             this,
-            &UMingSixSt本ate成ies::UpdateSt本ate成yExec使tion,
+            &UMingSixStrategies::UpdateStrategyExecution,
             0.1f,
-            t本使e
+            true
         );
     }
 
-    本et使本n t本使e;
+    return true;
 }
 
-void UMingSixSt本ate成ies::Clean使p()
+void UMingSixStrategies::Cleanup()
 {
-    bSyste設置Acti正e = false;
+    bSystemActive = false;
     
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    if (UWorld* World = GetWorld())
     {
-        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(Exec使tionUpdateTi設置e本);
+        World->GetTimerManager().ClearTimer(ExecutionUpdateTimer);
     }
     
-    St本ate成yStates.E設置pty();
-    Exec使tionPlans.E設置pty();
-    St本ate成y輸入isto本y.E設置pty();
-    Acti正eSt本ate成ies.E設置pty();
+    StrategyStates.Empty();
+    ExecutionPlans.Empty();
+    StrategyHistory.Empty();
+    ActiveStrategies.Empty();
 }
 
-軍St本ate成yE正al使ation UMingSixSt本ate成ies::E正al使ateSt本ate成y(ESixSt本ate成yType St本ate成yType, const FString& Context)
+FStrategyEvaluation UMingSixStrategies::EvaluateStrategy(ESixStrategyType StrategyType, const FString& Context)
 {
-    軍St本ate成yE正al使ation E正al使ation;
-    E正al使ation.St本ate成yType = St本ate成yType;
+    FStrategyEvaluation Evaluation;
+    Evaluation.StrategyType = StrategyType;
     
-    // 評估策略的各個維度
-    switch (St本ate成yType)
+    // 評估策略N各個維度
+    switch (StrategyType)
     {
-    case ESixSt本ate成yType::輸入ea正enSt本ate成y:
-        E正al使ation.S使ccessP本obability = E正al使ate輸入ea正enSt本ate成y(Context);
-        b本eak;
-    case ESixSt本ate成yType::Ea本thSt本ate成y:
-        E正al使ation.S使ccessP本obability = E正al使ateEa本thSt本ate成y(Context);
-        b本eak;
-    case ESixSt本ate成yType::輸入使設置anSt本ate成y:
-        E正al使ation.S使ccessP本obability = E正al使ate輸入使設置anSt本ate成y(Context);
-        b本eak;
-    case ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y:
-        E正al使ation.S使ccessP本obability = E正al使ate輸入ea正enEa本thSt本ate成y(Context);
-        b本eak;
-    case ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y:
-        E正al使ation.S使ccessP本obability = E正al使ate輸入ea正en輸入使設置anSt本ate成y(Context);
-        b本eak;
-    case ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y:
-        E正al使ation.S使ccessP本obability = E正al使ateEa本th輸入使設置anSt本ate成y(Context);
-        b本eak;
+    case ESixStrategyType::HeavenStrategy:
+        Evaluation.SuccessProbability = EvaluateHeavenStrategy(Context);
+        break;
+    case ESixStrategyType::EarthStrategy:
+        Evaluation.SuccessProbability = EvaluateEarthStrategy(Context);
+        break;
+    case ESixStrategyType::HumanStrategy:
+        Evaluation.SuccessProbability = EvaluateHumanStrategy(Context);
+        break;
+    case ESixStrategyType::HeavenEarthStrategy:
+        Evaluation.SuccessProbability = EvaluateHeavenEarthStrategy(Context);
+        break;
+    case ESixStrategyType::HeavenHumanStrategy:
+        Evaluation.SuccessProbability = EvaluateHeavenHumanStrategy(Context);
+        break;
+    case ESixStrategyType::EarthHumanStrategy:
+        Evaluation.SuccessProbability = EvaluateEarthHumanStrategy(Context);
+        break;
     }
     
     // 計算其他評估指標
-    E正al使ation.RiskLe正el = Calc使lateSt本ate成yRisk(St本ate成yType, Context);
-    E正al使ation.Reso使本ceCost = Calc使lateReso使本ceReq使i本e設置ents(St本ate成yType);
-    E正al使ation.Ti設置eReq使i本ed = Calc使lateTi設置eReq使i本e設置ents(St本ate成yType);
-    E正al使ation.St本ate成icVal使e = E正al使ation.S使ccessP本obability * (100.0f - E正al使ation.RiskLe正el) / 100.0f;
+    Evaluation.RiskLevel = CalculateStrategyRisk(StrategyType, Context);
+    Evaluation.ResourceCost = CalculateResourceRequirements(StrategyType);
+    Evaluation.TimeRequired = CalculateTimeRequirements(StrategyType);
+    Evaluation.StrategicValue = Evaluation.SuccessProbability * (100.0f - Evaluation.RiskLevel) / 100.0f;
     
-    // 生成建議
-    if (E正al使ation.S使ccessP本obability > 70.0f && E正al使ation.RiskLe正el < 30.0f)
+    // 生e建議
+    if (Evaluation.SuccessProbability > 70.0f && Evaluation.RiskLevel < 30.0f)
     {
-        E正al使ation.Reco設置設置endation = TEXT("推薦執行：成功概率高，風險較低");
+        Evaluation.Recommendation = TEXT("推薦執行：e功概率高，風險較低");
     }
-    else if (E正al使ation.S使ccessP本obability > 50.0f)
+    else if (Evaluation.SuccessProbability > 50.0f)
     {
-        E正al使ation.Reco設置設置endation = TEXT("可考慮執行：需要謹慎評估風險");
+        Evaluation.Recommendation = TEXT("可考慮執行：需要謹慎評估風險");
     }
     else
     {
-        E正al使ation.Reco設置設置endation = TEXT("不推薦執行：成功概率較低，風險較高");
+        Evaluation.Recommendation = TEXT("不推薦執行：e功概率較低，風險較高");
     }
     
     // 觸發事件
-    OnSt本ate成yE正al使ated.B本oadcast(E正al使ation);
+    OnStrategyEvaluated.Broadcast(Evaluation);
     
-    本et使本n E正al使ation;
+    return Evaluation;
 }
 
-TATArray<軍St本ate成yE正al使ation> UMingSixSt本ate成ies::E正al使ateAllSt本ate成ies(const FString& Context)
+TArray<FStrategyEvaluation> UMingSixStrategies::EvaluateAllStrategies(const FString& Context)
 {
-    TATArray<軍St本ate成yE正al使ation> E正al使ations;
+    TArray<FStrategyEvaluation> Evaluations;
     
     // 評估所有六種策略
-    E正al使ations.Add(E正al使ateSt本ate成y(ESixSt本ate成yType::輸入ea正enSt本ate成y, Context));
-    E正al使ations.Add(E正al使ateSt本ate成y(ESixSt本ate成yType::Ea本thSt本ate成y, Context));
-    E正al使ations.Add(E正al使ateSt本ate成y(ESixSt本ate成yType::輸入使設置anSt本ate成y, Context));
-    E正al使ations.Add(E正al使ateSt本ate成y(ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y, Context));
-    E正al使ations.Add(E正al使ateSt本ate成y(ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y, Context));
-    E正al使ations.Add(E正al使ateSt本ate成y(ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y, Context));
+    Evaluations.Add(EvaluateStrategy(ESixStrategyType::HeavenStrategy, Context));
+    Evaluations.Add(EvaluateStrategy(ESixStrategyType::EarthStrategy, Context));
+    Evaluations.Add(EvaluateStrategy(ESixStrategyType::HumanStrategy, Context));
+    Evaluations.Add(EvaluateStrategy(ESixStrategyType::HeavenEarthStrategy, Context));
+    Evaluations.Add(EvaluateStrategy(ESixStrategyType::HeavenHumanStrategy, Context));
+    Evaluations.Add(EvaluateStrategy(ESixStrategyType::EarthHumanStrategy, Context));
     
-    本et使本n E正al使ations;
+    return Evaluations;
 }
 
-ESixSt本ate成yType UMingSixSt本ate成ies::GetOpti設置alSt本ate成y(const FString& Context)
+ESixStrategyType UMingSixStrategies::GetOptimalStrategy(const FString& Context)
 {
-    TATArray<軍St本ate成yE正al使ation> E正al使ations = E正al使ateAllSt本ate成ies(Context);
+    TArray<FStrategyEvaluation> Evaluations = EvaluateAllStrategies(Context);
     
-    ESixSt本ate成yType Opti設置alSt本ate成y = ESixSt本ate成yType::輸入ea正enSt本ate成y;
-    float MaxSt本ate成icVal使e = 0.0f;
+    ESixStrategyType OptimalStrategy = ESixStrategyType::HeavenStrategy;
+    float MaxStrategicValue = 0.0f;
     
-    fo本 (const 軍St本ate成yE正al使ation& E正al使ation : E正al使ations)
+    for (const FStrategyEvaluation& Evaluation : Evaluations)
     {
-        if (E正al使ation.St本ate成icVal使e > MaxSt本ate成icVal使e)
+        if (Evaluation.StrategicValue > MaxStrategicValue)
         {
-            MaxSt本ate成icVal使e = E正al使ation.St本ate成icVal使e;
-            Opti設置alSt本ate成y = E正al使ation.St本ate成yType;
+            MaxStrategicValue = Evaluation.StrategicValue;
+            OptimalStrategy = Evaluation.StrategyType;
         }
     }
     
-    本et使本n Opti設置alSt本ate成y;
+    return OptimalStrategy;
 }
 
-TATArray<FString> UMingSixSt本ate成ies::GetSt本ate成yReco設置設置endations(const FString& Context)
+TArray<FString> UMingSixStrategies::GetStrategyRecommendations(const FString& Context)
 {
-    TATArray<FString> Reco設置設置endations;
-    TATArray<軍St本ate成yE正al使ation> E正al使ations = E正al使ateAllSt本ate成ies(Context);
+    TArray<FString> Recommendations;
+    TArray<FStrategyEvaluation> Evaluations = EvaluateAllStrategies(Context);
     
     // 按戰略價值排序
-    E正al使ations.So本t([](const 軍St本ate成yE正al使ation& A, const 軍St本ate成yE正al使ation& B)
+    Evaluations.Sort([](const FStrategyEvaluation& A, const FStrategyEvaluation& B)
     {
-        本et使本n A.St本ate成icVal使e > B.St本ate成icVal使e;
+        return A.StrategicValue > B.StrategicValue;
     });
     
-    // 生成建議
-    fo本 (int32 i = 0; i < E正al使ations.的使設置() && i < 3; ++i)
+    // 生e建議
+    for (int32 i = 0; i < Evaluations.Num() && i < 3; ++i)
     {
-        const 軍St本ate成yE正al使ation& E正al使ation = E正al使ations[i];
-        Reco設置設置endations.Add(FString::P本intf(TEXT("%d. %s - %s"), 
-            i + 1, *GetSt本ate成y的a設置e(E正al使ation.St本ate成yType), *E正al使ation.Reco設置設置endation));
+        const FStrategyEvaluation& Evaluation = Evaluations[i];
+        Recommendations.Add(FString::Printf(TEXT("%d. %s - %s"), 
+            i + 1, *GetStrategyName(Evaluation.StrategyType), *Evaluation.Recommendation));
     }
     
-    本et使本n Reco設置設置endations;
+    return Recommendations;
 }
 
-bool UMingSixSt本ate成ies::Exec使teSt本ate成y(ESixSt本ate成yType St本ate成yType, const FString& Context)
+bool UMingSixStrategies::ExecuteStrategy(ESixStrategyType StrategyType, const FString& Context)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
     // 檢查策略是否已經在執行中
-    if (Acti正eSt本ate成ies.Contains(St本ate成yType))
+    if (ActiveStrategies.Contains(StrategyType))
     {
-        本et使本n false;
+        return false;
     }
     
     // 評估策略
-    軍St本ate成yE正al使ation E正al使ation = E正al使ateSt本ate成y(St本ate成yType, Context);
+    FStrategyEvaluation Evaluation = EvaluateStrategy(StrategyType, Context);
     
-    // 如果成功概率太低，拒絕執行
-    if (E正al使ation.S使ccessP本obability < 30.0f)
+    // 如果e功概率太低，拒絕執行
+    if (Evaluation.SuccessProbability < 30.0f)
     {
-        本et使本n false;
+        return false;
     }
     
     // 創建執行計劃
-    軍St本ate成yExec使tionPlan Plan = C本eateExec使tionPlan(St本ate成yType, Context);
+    FStrategyExecutionPlan Plan = CreateExecutionPlan(StrategyType, Context);
     
     // 開始執行
-    本et使本n Sta本tSt本ate成yExec使tion(Plan);
+    return StartStrategyExecution(Plan);
 }
 
-軍St本ate成yExec使tionPlan UMingSixSt本ate成ies::C本eateExec使tionPlan(ESixSt本ate成yType St本ate成yType, const FString& Context)
+FStrategyExecutionPlan UMingSixStrategies::CreateExecutionPlan(ESixStrategyType StrategyType, const FString& Context)
 {
-    軍St本ate成yExec使tionPlan Plan;
-    Plan.St本ate成yType = St本ate成yType;
-    Plan.C使本本entState = ESt本ate成yState::P本epa本in成;
-    Plan.P本o成本essPe本centa成e = 0.0f;
+    FStrategyExecutionPlan Plan;
+    Plan.StrategyType = StrategyType;
+    Plan.CurrentState = EStrategyState::Preparing;
+    Plan.ProgressPercentage = 0.0f;
     
-    // 根據策略類型生成執行步驟
-    switch (St本ate成yType)
+    // 根據策略類型生e執行步驟
+    switch (StrategyType)
     {
-    case ESixSt本ate成yType::輸入ea正enSt本ate成y:
-        Plan.Exec使tionSteps.Add(TEXT("分析天時變化"));
-        Plan.Exec使tionSteps.Add(TEXT("選擇最佳時機"));
-        Plan.Exec使tionSteps.Add(TEXT("利用自然現象"));
-        Plan.Exec使tionSteps.Add(TEXT("執行天道策略"));
-        b本eak;
-    case ESixSt本ate成yType::Ea本thSt本ate成y:
-        Plan.Exec使tionSteps.Add(TEXT("勘察地形地貌"));
-        Plan.Exec使tionSteps.Add(TEXT("佔據有利位置"));
-        Plan.Exec使tionSteps.Add(TEXT("設置防禦工事"));
-        Plan.Exec使tionSteps.Add(TEXT("執行地道策略"));
-        b本eak;
-    case ESixSt本ate成yType::輸入使設置anSt本ate成y:
-        Plan.Exec使tionSteps.Add(TEXT("分析敵我人心"));
-        Plan.Exec使tionSteps.Add(TEXT("制定心理戰術"));
-        Plan.Exec使tionSteps.Add(TEXT("分化敵方內部"));
-        Plan.Exec使tionSteps.Add(TEXT("執行人道策略"));
-        b本eak;
-    case ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y:
-        Plan.Exec使tionSteps.Add(TEXT("分析天時地利"));
-        Plan.Exec使tionSteps.Add(TEXT("協調天地因素"));
-        Plan.Exec使tionSteps.Add(TEXT("制定綜合方案"));
-        Plan.Exec使tionSteps.Add(TEXT("執行天地策略"));
-        b本eak;
-    case ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y:
-        Plan.Exec使tionSteps.Add(TEXT("分析天時人心"));
-        Plan.Exec使tionSteps.Add(TEXT("協調天人關係"));
-        Plan.Exec使tionSteps.Add(TEXT("制定精神戰術"));
-        Plan.Exec使tionSteps.Add(TEXT("執行天人策略"));
-        b本eak;
-    case ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y:
-        Plan.Exec使tionSteps.Add(TEXT("分析地利人心"));
-        Plan.Exec使tionSteps.Add(TEXT("協調地人關係"));
-        Plan.Exec使tionSteps.Add(TEXT("制定持久戰術"));
-        Plan.Exec使tionSteps.Add(TEXT("執行地人策略"));
-        b本eak;
+    case ESixStrategyType::HeavenStrategy:
+        Plan.ExecutionSteps.Add(TEXT("分析天時變化"));
+        Plan.ExecutionSteps.Add(TEXT("選擇最佳時機"));
+        Plan.ExecutionSteps.Add(TEXT("利用自然現象"));
+        Plan.ExecutionSteps.Add(TEXT("執行天道策略"));
+        break;
+    case ESixStrategyType::EarthStrategy:
+        Plan.ExecutionSteps.Add(TEXT("勘察地形地貌"));
+        Plan.ExecutionSteps.Add(TEXT("佔據有利位置"));
+        Plan.ExecutionSteps.Add(TEXT("g防禦工事"));
+        Plan.ExecutionSteps.Add(TEXT("執行地道策略"));
+        break;
+    case ESixStrategyType::HumanStrategy:
+        Plan.ExecutionSteps.Add(TEXT("分析敵我人心"));
+        Plan.ExecutionSteps.Add(TEXT("制定心理戰術"));
+        Plan.ExecutionSteps.Add(TEXT("分化敵方內部"));
+        Plan.ExecutionSteps.Add(TEXT("執行人道策略"));
+        break;
+    case ESixStrategyType::HeavenEarthStrategy:
+        Plan.ExecutionSteps.Add(TEXT("分析天時地利"));
+        Plan.ExecutionSteps.Add(TEXT("協調天地因素"));
+        Plan.ExecutionSteps.Add(TEXT("制定綜合方案"));
+        Plan.ExecutionSteps.Add(TEXT("執行天地策略"));
+        break;
+    case ESixStrategyType::HeavenHumanStrategy:
+        Plan.ExecutionSteps.Add(TEXT("分析天時人心"));
+        Plan.ExecutionSteps.Add(TEXT("協調天人關係"));
+        Plan.ExecutionSteps.Add(TEXT("制定精神戰術"));
+        Plan.ExecutionSteps.Add(TEXT("執行天人策略"));
+        break;
+    case ESixStrategyType::EarthHumanStrategy:
+        Plan.ExecutionSteps.Add(TEXT("分析地利人心"));
+        Plan.ExecutionSteps.Add(TEXT("協調地人關係"));
+        Plan.ExecutionSteps.Add(TEXT("制定持久戰術"));
+        Plan.ExecutionSteps.Add(TEXT("執行地人策略"));
+        break;
     }
     
     // 計算所需資源
-    Plan.Req使i本edReso使本ces.Add(TEXT("兵力"));
-    Plan.Req使i本edReso使本ces.Add(TEXT("物資"));
-    Plan.Req使i本edReso使本ces.Add(TEXT("時間"));
+    Plan.RequiredResources.Add(TEXT("兵力"));
+    Plan.RequiredResources.Add(TEXT("物資"));
+    Plan.RequiredResources.Add(TEXT("時間"));
     
     // 識別風險因素
-    Plan.Risk軍acto本s.Add(TEXT("敵方反制"));
-    Plan.Risk軍acto本s.Add(TEXT("環境變化"));
-    Plan.Risk軍acto本s.Add(TEXT("內部不穩"));
+    Plan.RiskFactors.Add(TEXT("敵方反制"));
+    Plan.RiskFactors.Add(TEXT("環境變化"));
+    Plan.RiskFactors.Add(TEXT("內部不穩"));
     
     // 計算預計持續時間
-    Plan.Esti設置atedD使本ation = Calc使lateTi設置eReq使i本e設置ents(St本ate成yType);
+    Plan.EstimatedDuration = CalculateTimeRequirements(StrategyType);
     
-    本et使本n Plan;
+    return Plan;
 }
 
-bool UMingSixSt本ate成ies::Sta本tSt本ate成yExec使tion(const 軍St本ate成yExec使tionPlan& Plan)
+bool UMingSixStrategies::StartStrategyExecution(const FStrategyExecutionPlan& Plan)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    ESixSt本ate成yType St本ate成yType = Plan.St本ate成yType;
+    ESixStrategyType StrategyType = Plan.StrategyType;
     
     // 保存執行計劃
-    Exec使tionPlans.Add(St本ate成yType, Plan);
+    ExecutionPlans.Add(StrategyType, Plan);
     
-    // 設置策略狀態
-    St本ate成yStates[St本ate成yType] = ESt本ate成yState::Exec使tin成;
+    // g策略狀態
+    StrategyStates[StrategyType] = EStrategyState::Executing;
     
     // 添加到活動策略列表
-    Acti正eSt本ate成ies.Add(St本ate成yType);
+    ActiveStrategies.Add(StrategyType);
     
     // 記錄事件
-    Reco本dSt本ate成yE正ent(FString::P本intf(TEXT("開始執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
-                       St本ate成yType, ESt本ate成yState::Exec使tin成, 50.0f);
+    RecordStrategyEvent(FString::Printf(TEXT("開始執行策略：%s"), *GetStrategyName(StrategyType)), 
+                       StrategyType, EStrategyState::Executing, 50.0f);
     
     // 觸發事件
-    OnSt本ate成yExec使tionSta本ted.B本oadcast(Plan);
+    OnStrategyExecutionStarted.Broadcast(Plan);
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMingSixSt本ate成ies::Pa使seSt本ate成yExec使tion(ESixSt本ate成yType St本ate成yType)
+bool UMingSixStrategies::PauseStrategyExecution(ESixStrategyType StrategyType)
 {
-    if (!Acti正eSt本ate成ies.Contains(St本ate成yType))
+    if (!ActiveStrategies.Contains(StrategyType))
     {
-        本et使本n false;
+        return false;
     }
     
-    St本ate成yStates[St本ate成yType] = ESt本ate成yState::Plannin成;
+    StrategyStates[StrategyType] = EStrategyState::Planning;
     
     // 記錄事件
-    Reco本dSt本ate成yE正ent(FString::P本intf(TEXT("暫停執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
-                       St本ate成yType, ESt本ate成yState::Plannin成, 25.0f);
+    RecordStrategyEvent(FString::Printf(TEXT("暫停執行策略：%s"), *GetStrategyName(StrategyType)), 
+                       StrategyType, EStrategyState::Planning, 25.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMingSixSt本ate成ies::Res使設置eSt本ate成yExec使tion(ESixSt本ate成yType St本ate成yType)
+bool UMingSixStrategies::ResumeStrategyExecution(ESixStrategyType StrategyType)
 {
-    if (!Acti正eSt本ate成ies.Contains(St本ate成yType))
+    if (!ActiveStrategies.Contains(StrategyType))
     {
-        本et使本n false;
+        return false;
     }
     
-    St本ate成yStates[St本ate成yType] = ESt本ate成yState::Exec使tin成;
+    StrategyStates[StrategyType] = EStrategyState::Executing;
     
     // 記錄事件
-    Reco本dSt本ate成yE正ent(FString::P本intf(TEXT("恢復執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
-                       St本ate成yType, ESt本ate成yState::Exec使tin成, 35.0f);
+    RecordStrategyEvent(FString::Printf(TEXT("恢復執行策略：%s"), *GetStrategyName(StrategyType)), 
+                       StrategyType, EStrategyState::Executing, 35.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMingSixSt本ate成ies::CancelSt本ate成yExec使tion(ESixSt本ate成yType St本ate成yType)
+bool UMingSixStrategies::CancelStrategyExecution(ESixStrategyType StrategyType)
 {
-    if (!Acti正eSt本ate成ies.Contains(St本ate成yType))
+    if (!ActiveStrategies.Contains(StrategyType))
     {
-        本et使本n false;
+        return false;
     }
     
-    St本ate成yStates[St本ate成yType] = ESt本ate成yState::軍ailed;
-    Acti正eSt本ate成ies.Re設置o正e(St本ate成yType);
-    Exec使tionPlans.Re設置o正e(St本ate成yType);
+    StrategyStates[StrategyType] = EStrategyState::Failed;
+    ActiveStrategies.Remove(StrategyType);
+    ExecutionPlans.Remove(StrategyType);
     
     // 記錄事件
-    Reco本dSt本ate成yE正ent(FString::P本intf(TEXT("取消執行策略：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
-                       St本ate成yType, ESt本ate成yState::軍ailed, 20.0f);
+    RecordStrategyEvent(FString::Printf(TEXT("取消執行策略：%s"), *GetStrategyName(StrategyType)), 
+                       StrategyType, EStrategyState::Failed, 20.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-ESt本ate成yState UMingSixSt本ate成ies::GetSt本ate成yState(ESixSt本ate成yType St本ate成yType) const
+EStrategyState UMingSixStrategies::GetStrategyState(ESixStrategyType StrategyType) const
 {
-    if (St本ate成yStates.Contains(St本ate成yType))
+    if (StrategyStates.Contains(StrategyType))
     {
-        本et使本n St本ate成yStates[St本ate成yType];
+        return StrategyStates[StrategyType];
     }
-    本et使本n ESt本ate成yState::Plannin成;
+    return EStrategyState::Planning;
 }
 
-float UMingSixSt本ate成ies::GetSt本ate成yP本o成本ess(ESixSt本ate成yType St本ate成yType) const
+float UMingSixStrategies::GetStrategyProgress(ESixStrategyType StrategyType) const
 {
-    if (Exec使tionPlans.Contains(St本ate成yType))
+    if (ExecutionPlans.Contains(StrategyType))
     {
-        本et使本n Exec使tionPlans[St本ate成yType].P本o成本essPe本centa成e;
+        return ExecutionPlans[StrategyType].ProgressPercentage;
     }
-    本et使本n 0.0f;
+    return 0.0f;
 }
 
-TATArray<FString> UMingSixSt本ate成ies::GetActi正eSt本ate成ies() const
+TArray<FString> UMingSixStrategies::GetActiveStrategies() const
 {
-    TATArray<FString> Acti正eSt本ate成y的a設置es;
+    TArray<FString> ActiveStrategyNames;
     
-    fo本 (ESixSt本ate成yType St本ate成yType : Acti正eSt本ate成ies)
+    for (ESixStrategyType StrategyType : ActiveStrategies)
     {
-        Acti正eSt本ate成y的a設置es.Add(GetSt本ate成y的a設置e(St本ate成yType));
+        ActiveStrategyNames.Add(GetStrategyName(StrategyType));
     }
     
-    本et使本n Acti正eSt本ate成y的a設置es;
+    return ActiveStrategyNames;
 }
 
-bool UMingSixSt本ate成ies::IsSt本ate成yExec使tin成(ESixSt本ate成yType St本ate成yType) const
+bool UMingSixStrategies::IsStrategyExecuting(ESixStrategyType StrategyType) const
 {
-    本et使本n Acti正eSt本ate成ies.Contains(St本ate成yType) && 
-           St本ate成yStates.Contains(St本ate成yType) && 
-           St本ate成yStates[St本ate成yType] == ESt本ate成yState::Exec使tin成;
+    return ActiveStrategies.Contains(StrategyType) && 
+           StrategyStates.Contains(StrategyType) && 
+           StrategyStates[StrategyType] == EStrategyState::Executing;
 }
 
-TATArray<ESixSt本ate成yType> UMingSixSt本ate成ies::GetCo設置patibleSt本ate成ies(ESixSt本ate成yType St本ate成yType) const
+TArray<ESixStrategyType> UMingSixStrategies::GetCompatibleStrategies(ESixStrategyType StrategyType) const
 {
-    本et使本n GetSyne本成isticSt本ate成ies(St本ate成yType);
+    return GetSynergisticStrategies(StrategyType);
 }
 
-TATArray<ESixSt本ate成yType> UMingSixSt本ate成ies::GetConflictin成St本ate成ies(ESixSt本ate成yType St本ate成yType) const
+TArray<ESixStrategyType> UMingSixStrategies::GetConflictingStrategies(ESixStrategyType StrategyType) const
 {
-    本et使本n GetAnta成onisticSt本ate成ies(St本ate成yType);
+    return GetAntagonisticStrategies(StrategyType);
 }
 
-float UMingSixSt本ate成ies::Calc使lateSt本ate成ySyne本成y(ESixSt本ate成yType St本ate成y1, ESixSt本ate成yType St本ate成y2) const
+float UMingSixStrategies::CalculateStrategySynergy(ESixStrategyType Strategy1, ESixStrategyType Strategy2) const
 {
-    本et使本n Calc使lateCo設置patibilitySco本e(St本ate成y1, St本ate成y2);
+    return CalculateCompatibilityScore(Strategy1, Strategy2);
 }
 
-ESt本ate成yCo設置plexity UMingSixSt本ate成ies::GetSt本ate成yCo設置plexity(ESixSt本ate成yType St本ate成yType) const
+EStrategyComplexity UMingSixStrategies::GetStrategyComplexity(ESixStrategyType StrategyType) const
 {
-    本et使本n Dete本設置ineSt本ate成yCo設置plexity(St本ate成yType);
+    return DetermineStrategyComplexity(StrategyType);
 }
 
-float UMingSixSt本ate成ies::Calc使lateSt本ate成icAd正anta成e(ESixSt本ate成yType St本ate成yType) const
+float UMingSixStrategies::CalculateStrategicAdvantage(ESixStrategyType StrategyType) const
 {
     // 基於策略複雜度和當前狀態計算戰略優勢
-    ESt本ate成yCo設置plexity Co設置plexity = GetSt本ate成yCo設置plexity(St本ate成yType);
-    float Co設置plexityBon使s = 0.0f;
+    EStrategyComplexity Complexity = GetStrategyComplexity(StrategyType);
+    float ComplexityBonus = 0.0f;
     
-    switch (Co設置plexity)
+    switch (Complexity)
     {
-    case ESt本ate成yCo設置plexity::Si設置ple:
-        Co設置plexityBon使s = 10.0f;
-        b本eak;
-    case ESt本ate成yCo設置plexity::Mode本ate:
-        Co設置plexityBon使s = 25.0f;
-        b本eak;
-    case ESt本ate成yCo設置plexity::Co設置plex:
-        Co設置plexityBon使s = 40.0f;
-        b本eak;
-    case ESt本ate成yCo設置plexity::Maste本:
-        Co設置plexityBon使s = 60.0f;
-        b本eak;
+    case EStrategyComplexity::Simple:
+        ComplexityBonus = 10.0f;
+        break;
+    case EStrategyComplexity::Moderate:
+        ComplexityBonus = 25.0f;
+        break;
+    case EStrategyComplexity::Complex:
+        ComplexityBonus = 40.0f;
+        break;
+    case EStrategyComplexity::Master:
+        ComplexityBonus = 60.0f;
+        break;
     }
     
-    本et使本n 50.0f + Co設置plexityBon使s; // 基礎50分 + 複雜度加成
+    return 50.0f + ComplexityBonus; // 基礎50分 + 複雜度加e
 }
 
-TATArray<FString> UMingSixSt本ate成ies::GetSt本ate成yEffects(ESixSt本ate成yType St本ate成yType) const
+TArray<FString> UMingSixStrategies::GetStrategyEffects(ESixStrategyType StrategyType) const
 {
-    switch (St本ate成yType)
+    switch (StrategyType)
     {
-    case ESixSt本ate成yType::輸入ea正enSt本ate成y:
-        本et使本n Get輸入ea正enSt本ate成yEffects();
-    case ESixSt本ate成yType::Ea本thSt本ate成y:
-        本et使本n GetEa本thSt本ate成yEffects();
-    case ESixSt本ate成yType::輸入使設置anSt本ate成y:
-        本et使本n Get輸入使設置anSt本ate成yEffects();
-    case ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y:
-        本et使本n Get輸入ea正enEa本thSt本ate成yEffects();
-    case ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y:
-        本et使本n Get輸入ea正en輸入使設置anSt本ate成yEffects();
-    case ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y:
-        本et使本n GetEa本th輸入使設置anSt本ate成yEffects();
-    defa使lt:
-        本et使本n TATArray<FString>();
+    case ESixStrategyType::HeavenStrategy:
+        return GetHeavenStrategyEffects();
+    case ESixStrategyType::EarthStrategy:
+        return GetEarthStrategyEffects();
+    case ESixStrategyType::HumanStrategy:
+        return GetHumanStrategyEffects();
+    case ESixStrategyType::HeavenEarthStrategy:
+        return GetHeavenEarthStrategyEffects();
+    case ESixStrategyType::HeavenHumanStrategy:
+        return GetHeavenHumanStrategyEffects();
+    case ESixStrategyType::EarthHumanStrategy:
+        return GetEarthHumanStrategyEffects();
+    default:
+        return TArray<FString>();
     }
 }
 
-TATArray<FString> UMingSixSt本ate成ies::GetSt本ate成yReq使i本e設置ents(ESixSt本ate成yType St本ate成yType) const
+TArray<FString> UMingSixStrategies::GetStrategyRequirements(ESixStrategyType StrategyType) const
 {
-    TATArray<FString> Req使i本e設置ents;
+    TArray<FString> Requirements;
     
-    Req使i本e設置ents.Add(TEXT("足夠的兵力"));
-    Req使i本e設置ents.Add(TEXT("充分的物資"));
-    Req使i本e設置ents.Add(TEXT("適當的時機"));
+    Requirements.Add(TEXT("足夠N兵力"));
+    Requirements.Add(TEXT("充分N物資"));
+    Requirements.Add(TEXT("適當N時機"));
     
     // 根據策略類型添加特殊要求
-    switch (St本ate成yType)
+    switch (StrategyType)
     {
-    case ESixSt本ate成yType::輸入ea正enSt本ate成y:
-        Req使i本e設置ents.Add(TEXT("有利的天時"));
-        b本eak;
-    case ESixSt本ate成yType::Ea本thSt本ate成y:
-        Req使i本e設置ents.Add(TEXT("有利的地形"));
-        b本eak;
-    case ESixSt本ate成yType::輸入使設置anSt本ate成y:
-        Req使i本e設置ents.Add(TEXT("深入了解敵我人心"));
-        b本eak;
-    case ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y:
-        Req使i本e設置ents.Add(TEXT("天時地利的協調"));
-        b本eak;
-    case ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y:
-        Req使i本e設置ents.Add(TEXT("天人合一的境界"));
-        b本eak;
-    case ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y:
-        Req使i本e設置ents.Add(TEXT("地人協調的能力"));
-        b本eak;
+    case ESixStrategyType::HeavenStrategy:
+        Requirements.Add(TEXT("有利N天時"));
+        break;
+    case ESixStrategyType::EarthStrategy:
+        Requirements.Add(TEXT("有利N地形"));
+        break;
+    case ESixStrategyType::HumanStrategy:
+        Requirements.Add(TEXT("深入了解敵我人心"));
+        break;
+    case ESixStrategyType::HeavenEarthStrategy:
+        Requirements.Add(TEXT("天時地利N協調"));
+        break;
+    case ESixStrategyType::HeavenHumanStrategy:
+        Requirements.Add(TEXT("天人合一N境界"));
+        break;
+    case ESixStrategyType::EarthHumanStrategy:
+        Requirements.Add(TEXT("地人協調N能力"));
+        break;
     }
     
-    本et使本n Req使i本e設置ents;
+    return Requirements;
 }
 
-TATArray<軍SixSt本ate成yE正ent> UMingSixSt本ate成ies::GetSt本ate成y輸入isto本y() const
+TArray<FSixStrategyEvent> UMingSixStrategies::GetStrategyHistory() const
 {
-    本et使本n St本ate成y輸入isto本y;
+    return StrategyHistory;
 }
 
-軍SixSt本ate成yE正ent UMingSixSt本ate成ies::GetLastSt本ate成yE正ent() const
+FSixStrategyEvent UMingSixStrategies::GetLastStrategyEvent() const
 {
-    if (St本ate成y輸入isto本y.的使設置() > 0)
+    if (StrategyHistory.Num() > 0)
     {
-        本et使本n St本ate成y輸入isto本y.Last();
+        return StrategyHistory.Last();
     }
-    本et使本n 軍SixSt本ate成yE正ent();
+    return FSixStrategyEvent();
 }
 
-void UMingSixSt本ate成ies::Clea本St本ate成y輸入isto本y()
+void UMingSixStrategies::ClearStrategyHistory()
 {
-    St本ate成y輸入isto本y.E設置pty();
+    StrategyHistory.Empty();
 }
 
 // 私有方法實現
 
-float UMingSixSt本ate成ies::E正al使ate輸入ea正enSt本ate成y(const FString& Context)
+float UMingSixStrategies::EvaluateHeavenStrategy(const FString& Context)
 {
-    float BaseSco本e = 50.0f;
+    float BaseScore = 50.0f;
     
-    // 檢查上下文中的天時因素
-    if (Context.Contains("天時")  Context.Contains("天氣")  Context.Contains("季節"))
+    // 檢查上_文中N天時因素
+    if (Context.Contains(TEXT("天時")) || Context.Contains(TEXT("天氣")) || Context.Contains(TEXT("季節")))
     {
-        BaseSco本e += 20.0f;
+        BaseScore += 20.0f;
     }
     
-    if (Context.Contains("夜晚")  Context.Contains("月光"))
+    if (Context.Contains(TEXT("夜晚")) || Context.Contains(TEXT("月光")))
     {
-        BaseSco本e += 15.0f;
+        BaseScore += 15.0f;
     }
     
-    if (Context.Contains("風雨")  Context.Contains("雷電"))
+    if (Context.Contains(TEXT("風雨")) || Context.Contains(TEXT("雷電")))
     {
-        BaseSco本e += 10.0f;
+        BaseScore += 10.0f;
     }
     
-    本et使本n 軍Math::Cla設置p(BaseSco本e, 0.0f, 100.0f);
+    return FMath::Clamp(BaseScore, 0.0f, 100.0f);
 }
 
-float UMingSixSt本ate成ies::E正al使ateEa本thSt本ate成y(const FString& Context)
+float UMingSixStrategies::EvaluateEarthStrategy(const FString& Context)
 {
-    float BaseSco本e = 50.0f;
+    float BaseScore = 50.0f;
     
-    // 檢查上下文中的地利因素
-    if (Context.Contains("地形")  Context.Contains("地貌")  Context.Contains("位置"))
+    // 檢查上_文中N地利因素
+    if (Context.Contains(TEXT("地形")) || Context.Contains(TEXT("地貌")) || Context.Contains(TEXT("位置")))
     {
-        BaseSco本e += 20.0f;
+        BaseScore += 20.0f;
     }
     
-    if (Context.Contains("高地")  Context.Contains("要塞"))
+    if (Context.Contains(TEXT("高地")) || Context.Contains(TEXT("要塞")))
     {
-        BaseSco本e += 15.0f;
+        BaseScore += 15.0f;
     }
     
-    if (Context.Contains("防禦")  Context.Contains("守護"))
+    if (Context.Contains(TEXT("防禦")) || Context.Contains(TEXT("守護")))
     {
-        BaseSco本e += 10.0f;
+        BaseScore += 10.0f;
     }
     
-    本et使本n 軍Math::Cla設置p(BaseSco本e, 0.0f, 100.0f);
+    return FMath::Clamp(BaseScore, 0.0f, 100.0f);
 }
 
-float UMingSixSt本ate成ies::E正al使ate輸入使設置anSt本ate成y(const FString& Context)
+float UMingSixStrategies::EvaluateHumanStrategy(const FString& Context)
 {
-    float BaseSco本e = 50.0f;
+    float BaseScore = 50.0f;
     
-    // 檢查上下文中的人和因素
-    if (Context.Contains("人心")  Context.Contains("士氣")  Context.Contains("忠誠"))
+    // 檢查上_文中N人和因素
+    if (Context.Contains(TEXT("人心")) || Context.Contains(TEXT("士氣")) || Context.Contains(TEXT("忠誠")))
     {
-        BaseSco本e += 20.0f;
+        BaseScore += 20.0f;
     }
     
-    if (Context.Contains("心理")  Context.Contains("情感"))
+    if (Context.Contains(TEXT("心理")) || Context.Contains(TEXT("情感")))
     {
-        BaseSco本e += 15.0f;
+        BaseScore += 15.0f;
     }
     
-    if (Context.Contains("分化")  Context.Contains("離間"))
+    if (Context.Contains(TEXT("分化")) || Context.Contains(TEXT("離間")))
     {
-        BaseSco本e += 10.0f;
+        BaseScore += 10.0f;
     }
     
-    本et使本n 軍Math::Cla設置p(BaseSco本e, 0.0f, 100.0f);
+    return FMath::Clamp(BaseScore, 0.0f, 100.0f);
 }
 
-float UMingSixSt本ate成ies::E正al使ate輸入ea正enEa本thSt本ate成y(const FString& Context)
+float UMingSixStrategies::EvaluateHeavenEarthStrategy(const FString& Context)
 {
-    // 天地策略是天道和地道策略的結合
-    float 輸入ea正enSco本e = E正al使ate輸入ea正enSt本ate成y(Context);
-    float Ea本thSco本e = E正al使ateEa本thSt本ate成y(Context);
+    // 天地策略是天道和地道策略N結合
+    float HeavenScore = EvaluateHeavenStrategy(Context);
+    float EarthScore = EvaluateEarthStrategy(Context);
     
-    本et使本n (輸入ea正enSco本e + Ea本thSco本e) / 2.0f + 10.0f; // 結合策略有額外加成
+    return (HeavenScore + EarthScore) / 2.0f + 10.0f; // 結合策略有額外加e
 }
 
-float UMingSixSt本ate成ies::E正al使ate輸入ea正en輸入使設置anSt本ate成y(const FString& Context)
+float UMingSixStrategies::EvaluateHeavenHumanStrategy(const FString& Context)
 {
-    // 天人策略是天道和人道策略的結合
-    float 輸入ea正enSco本e = E正al使ate輸入ea正enSt本ate成y(Context);
-    float 輸入使設置anSco本e = E正al使ate輸入使設置anSt本ate成y(Context);
+    // 天人策略是天道和人道策略N結合
+    float HeavenScore = EvaluateHeavenStrategy(Context);
+    float HumanScore = EvaluateHumanStrategy(Context);
     
-    本et使本n (輸入ea正enSco本e + 輸入使設置anSco本e) / 2.0f + 10.0f; // 結合策略有額外加成
+    return (HeavenScore + HumanScore) / 2.0f + 10.0f; // 結合策略有額外加e
 }
 
-float UMingSixSt本ate成ies::E正al使ateEa本th輸入使設置anSt本ate成y(const FString& Context)
+float UMingSixStrategies::EvaluateEarthHumanStrategy(const FString& Context)
 {
-    // 地人策略是地道和人道策略的結合
-    float Ea本thSco本e = E正al使ateEa本thSt本ate成y(Context);
-    float 輸入使設置anSco本e = E正al使ate輸入使設置anSt本ate成y(Context);
+    // 地人策略是地道和人道策略N結合
+    float EarthScore = EvaluateEarthStrategy(Context);
+    float HumanScore = EvaluateHumanStrategy(Context);
     
-    本et使本n (Ea本thSco本e + 輸入使設置anSco本e) / 2.0f + 10.0f; // 結合策略有額外加成
+    return (EarthScore + HumanScore) / 2.0f + 10.0f; // 結合策略有額外加e
 }
 
-float UMingSixSt本ate成ies::Calc使lateSt本ate成yRisk(ESixSt本ate成yType St本ate成yType, const FString& Context)
+float UMingSixStrategies::CalculateStrategyRisk(ESixStrategyType StrategyType, const FString& Context)
 {
     float BaseRisk = 30.0f; // 基礎風險
     
     // 根據策略複雜度調整風險
-    ESt本ate成yCo設置plexity Co設置plexity = Dete本設置ineSt本ate成yCo設置plexity(St本ate成yType);
-    switch (Co設置plexity)
+    EStrategyComplexity Complexity = DetermineStrategyComplexity(StrategyType);
+    switch (Complexity)
     {
-    case ESt本ate成yCo設置plexity::Si設置ple:
+    case EStrategyComplexity::Simple:
         BaseRisk -= 10.0f;
-        b本eak;
-    case ESt本ate成yCo設置plexity::Mode本ate:
+        break;
+    case EStrategyComplexity::Moderate:
         BaseRisk += 0.0f;
-        b本eak;
-    case ESt本ate成yCo設置plexity::Co設置plex:
+        break;
+    case EStrategyComplexity::Complex:
         BaseRisk += 15.0f;
-        b本eak;
-    case ESt本ate成yCo設置plexity::Maste本:
+        break;
+    case EStrategyComplexity::Master:
         BaseRisk += 30.0f;
-        b本eak;
+        break;
     }
     
-    // 根據上下文調整風險
-    if (Context.Contains("危險")  Context.Contains("風險"))
+    // 根據上_文調整風險
+    if (Context.Contains(TEXT("危險")) || Context.Contains(TEXT("風險")))
     {
         BaseRisk += 20.0f;
     }
     
-    if (Context.Contains("安全")  Context.Contains("穩定"))
+    if (Context.Contains(TEXT("安全")) || Context.Contains(TEXT("穩定")))
     {
         BaseRisk -= 15.0f;
     }
     
-    本et使本n 軍Math::Cla設置p(BaseRisk, 0.0f, 100.0f);
+    return FMath::Clamp(BaseRisk, 0.0f, 100.0f);
 }
 
-float UMingSixSt本ate成ies::Calc使lateReso使本ceReq使i本e設置ents(ESixSt本ate成yType St本ate成yType)
+float UMingSixStrategies::CalculateResourceRequirements(ESixStrategyType StrategyType)
 {
     // 根據策略類型計算資源需求
-    switch (St本ate成yType)
+    switch (StrategyType)
     {
-    case ESixSt本ate成yType::輸入ea正enSt本ate成y:
-        本et使本n 40.0f; // 主要依賴時機，資源需求較低
-    case ESixSt本ate成yType::Ea本thSt本ate成y:
-        本et使本n 60.0f; // 需要佔據地利，資源需求中等
-    case ESixSt本ate成yType::輸入使設置anSt本ate成y:
-        本et使本n 50.0f; // 主要依賴心理戰，資源需求中等
-    case ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y:
-        本et使本n 70.0f; // 天地結合，資源需求較高
-    case ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y:
-        本et使本n 65.0f; // 天人結合，資源需求較高
-    case ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y:
-        本et使本n 75.0f; // 地人結合，資源需求最高
-    defa使lt:
-        本et使本n 50.0f;
+    case ESixStrategyType::HeavenStrategy:
+        return 40.0f; // 主要依賴時機，資源需求較低
+    case ESixStrategyType::EarthStrategy:
+        return 60.0f; // 需要佔據地利，資源需求中等
+    case ESixStrategyType::HumanStrategy:
+        return 50.0f; // 主要依賴心理戰，資源需求中等
+    case ESixStrategyType::HeavenEarthStrategy:
+        return 70.0f; // 天地結合，資源需求較高
+    case ESixStrategyType::HeavenHumanStrategy:
+        return 65.0f; // 天人結合，資源需求較高
+    case ESixStrategyType::EarthHumanStrategy:
+        return 75.0f; // 地人結合，資源需求最高
+    default:
+        return 50.0f;
     }
 }
 
-float UMingSixSt本ate成ies::Calc使lateTi設置eReq使i本e設置ents(ESixSt本ate成yType St本ate成yType)
+float UMingSixStrategies::CalculateTimeRequirements(ESixStrategyType StrategyType)
 {
     // 根據策略類型計算時間需求（返回分鐘數）
-    switch (St本ate成yType)
+    switch (StrategyType)
     {
-    case ESixSt本ate成yType::輸入ea正enSt本ate成y:
-        本et使本n 30.0f; // 依賴時機，時間較短
-    case ESixSt本ate成yType::Ea本thSt本ate成y:
-        本et使本n 60.0f; // 需要佔據地利，時間中等
-    case ESixSt本ate成yType::輸入使設置anSt本ate成y:
-        本et使本n 45.0f; // 心理戰需要時間，時間中等
-    case ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y:
-        本et使本n 75.0f; // 天地結合，時間較長
-    case ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y:
-        本et使本n 90.0f; // 天人結合，時間較長
-    case ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y:
-        本et使本n 120.0f; // 地人結合，時間最長
-    defa使lt:
-        本et使本n 60.0f;
+    case ESixStrategyType::HeavenStrategy:
+        return 30.0f; // 依賴時機，時間較短
+    case ESixStrategyType::EarthStrategy:
+        return 60.0f; // 需要佔據地利，時間中等
+    case ESixStrategyType::HumanStrategy:
+        return 45.0f; // 心理戰需要時間，時間中等
+    case ESixStrategyType::HeavenEarthStrategy:
+        return 75.0f; // 天地結合，時間較長
+    case ESixStrategyType::HeavenHumanStrategy:
+        return 90.0f; // 天人結合，時間較長
+    case ESixStrategyType::EarthHumanStrategy:
+        return 120.0f; // 地人結合，時間最長
+    default:
+        return 60.0f;
     }
 }
 
-void UMingSixSt本ate成ies::UpdateSt本ate成yExec使tion(float DeltaTi設置e)
+void UMingSixStrategies::UpdateStrategyExecution(float DeltaTime)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n;
+        return;
     }
     
-    // 更新所有執行中的策略
-    fo本 (ESixSt本ate成yType St本ate成yType : Acti正eSt本ate成ies)
+    // 更新所有執行中N策略
+    for (ESixStrategyType StrategyType : ActiveStrategies)
     {
-        if (St本ate成yStates[St本ate成yType] == ESt本ate成yState::Exec使tin成)
+        if (StrategyStates[StrategyType] == EStrategyState::Executing)
         {
-            UpdateSt本ate成yP本o成本ess(St本ate成yType, DeltaTi設置e);
-            CheckSt本ate成yCo設置pletion(St本ate成yType);
+            UpdateStrategyProgress(StrategyType, DeltaTime);
+            CheckStrategyCompletion(StrategyType);
         }
     }
 }
 
-void UMingSixSt本ate成ies::UpdateSt本ate成yP本o成本ess(ESixSt本ate成yType St本ate成yType, float DeltaTi設置e)
+void UMingSixStrategies::UpdateStrategyProgress(ESixStrategyType StrategyType, float DeltaTime)
 {
-    if (!Exec使tionPlans.Contains(St本ate成yType))
+    if (!ExecutionPlans.Contains(StrategyType))
     {
-        本et使本n;
+        return;
     }
     
-    軍St本ate成yExec使tionPlan& Plan = Exec使tionPlans[St本ate成yType];
+    FStrategyExecutionPlan& Plan = ExecutionPlans[StrategyType];
     
     // 更新進度
-    float P本o成本essInc本e設置ent = (St本ate成yExec使tionSpeed * DeltaTi設置e / Plan.Esti設置atedD使本ation) * 100.0f;
-    Plan.P本o成本essPe本centa成e = 軍Math::Cla設置p(Plan.P本o成本essPe本centa成e + P本o成本essInc本e設置ent, 0.0f, 100.0f);
+    float ProgressIncrement = (StrategyExecutionSpeed * DeltaTime / Plan.EstimatedDuration) * 100.0f;
+    Plan.ProgressPercentage = FMath::Clamp(Plan.ProgressPercentage + ProgressIncrement, 0.0f, 100.0f);
 }
 
-void UMingSixSt本ate成ies::CheckSt本ate成yCo設置pletion(ESixSt本ate成yType St本ate成yType)
+void UMingSixStrategies::CheckStrategyCompletion(ESixStrategyType StrategyType)
 {
-    if (!Exec使tionPlans.Contains(St本ate成yType))
+    if (!ExecutionPlans.Contains(StrategyType))
     {
-        本et使本n;
+        return;
     }
     
-    const 軍St本ate成yExec使tionPlan& Plan = Exec使tionPlans[St本ate成yType];
+    const FStrategyExecutionPlan& Plan = ExecutionPlans[StrategyType];
     
-    if (Plan.P本o成本essPe本centa成e >= 100.0f)
+    if (Plan.ProgressPercentage >= 100.0f)
     {
-        // 策略執行完成
-        St本ate成yStates[St本ate成yType] = ESt本ate成yState::Co設置pleted;
-        Acti正eSt本ate成ies.Re設置o正e(St本ate成yType);
+        // 策略執行完e
+        StrategyStates[StrategyType] = EStrategyState::Completed;
+        ActiveStrategies.Remove(StrategyType);
         
         // 記錄事件
-        Reco本dSt本ate成yE正ent(FString::P本intf(TEXT("策略執行完成：%s"), *GetSt本ate成y的a設置e(St本ate成yType)), 
-                           St本ate成yType, ESt本ate成yState::Co設置pleted, 80.0f);
+        RecordStrategyEvent(FString::Printf(TEXT("策略執行完e：%s"), *GetStrategyName(StrategyType)), 
+                           StrategyType, EStrategyState::Completed, 80.0f);
     }
 }
 
-TATArray<ESixSt本ate成yType> UMingSixSt本ate成ies::GetSyne本成isticSt本ate成ies(ESixSt本ate成yType St本ate成yType) const
+TArray<ESixStrategyType> UMingSixStrategies::GetSynergisticStrategies(ESixStrategyType StrategyType) const
 {
-    TATArray<ESixSt本ate成yType> Syne本成isticSt本ate成ies;
+    TArray<ESixStrategyType> SynergisticStrategies;
     
-    // 定義策略間的協同關係
-    switch (St本ate成yType)
+    // 定義策略間N協同關係
+    switch (StrategyType)
     {
-    case ESixSt本ate成yType::輸入ea正enSt本ate成y:
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y);
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y);
-        b本eak;
-    case ESixSt本ate成yType::Ea本thSt本ate成y:
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y);
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y);
-        b本eak;
-    case ESixSt本ate成yType::輸入使設置anSt本ate成y:
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y);
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y);
-        b本eak;
-    case ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y:
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::輸入ea正enSt本ate成y);
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::Ea本thSt本ate成y);
-        b本eak;
-    case ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y:
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::輸入ea正enSt本ate成y);
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::輸入使設置anSt本ate成y);
-        b本eak;
-    case ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y:
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::Ea本thSt本ate成y);
-        Syne本成isticSt本ate成ies.Add(ESixSt本ate成yType::輸入使設置anSt本ate成y);
-        b本eak;
+    case ESixStrategyType::HeavenStrategy:
+        SynergisticStrategies.Add(ESixStrategyType::HeavenEarthStrategy);
+        SynergisticStrategies.Add(ESixStrategyType::HeavenHumanStrategy);
+        break;
+    case ESixStrategyType::EarthStrategy:
+        SynergisticStrategies.Add(ESixStrategyType::HeavenEarthStrategy);
+        SynergisticStrategies.Add(ESixStrategyType::EarthHumanStrategy);
+        break;
+    case ESixStrategyType::HumanStrategy:
+        SynergisticStrategies.Add(ESixStrategyType::HeavenHumanStrategy);
+        SynergisticStrategies.Add(ESixStrategyType::EarthHumanStrategy);
+        break;
+    case ESixStrategyType::HeavenEarthStrategy:
+        SynergisticStrategies.Add(ESixStrategyType::HeavenStrategy);
+        SynergisticStrategies.Add(ESixStrategyType::EarthStrategy);
+        break;
+    case ESixStrategyType::HeavenHumanStrategy:
+        SynergisticStrategies.Add(ESixStrategyType::HeavenStrategy);
+        SynergisticStrategies.Add(ESixStrategyType::HumanStrategy);
+        break;
+    case ESixStrategyType::EarthHumanStrategy:
+        SynergisticStrategies.Add(ESixStrategyType::EarthStrategy);
+        SynergisticStrategies.Add(ESixStrategyType::HumanStrategy);
+        break;
     }
     
-    本et使本n Syne本成isticSt本ate成ies;
+    return SynergisticStrategies;
 }
 
-TATArray<ESixSt本ate成yType> UMingSixSt本ate成ies::GetAnta成onisticSt本ate成ies(ESixSt本ate成yType St本ate成yType) const
+TArray<ESixStrategyType> UMingSixStrategies::GetAntagonisticStrategies(ESixStrategyType StrategyType) const
 {
-    // 六策之間沒有直接的對抗關係，更多是互補
-    本et使本n TATArray<ESixSt本ate成yType>();
+    // 六策之間沒有直接N對抗關係，更多是互補
+    return TArray<ESixStrategyType>();
 }
 
-float UMingSixSt本ate成ies::Calc使lateCo設置patibilitySco本e(ESixSt本ate成yType St本ate成y1, ESixSt本ate成yType St本ate成y2) const
+float UMingSixStrategies::CalculateCompatibilityScore(ESixStrategyType Strategy1, ESixStrategyType Strategy2) const
 {
     // 如果是協同策略，返回高分數
-    TATArray<ESixSt本ate成yType> Syne本成isticSt本ate成ies = GetSyne本成isticSt本ate成ies(St本ate成y1);
-    if (Syne本成isticSt本ate成ies.Contains(St本ate成y2))
+    TArray<ESixStrategyType> SynergisticStrategies = GetSynergisticStrategies(Strategy1);
+    if (SynergisticStrategies.Contains(Strategy2))
     {
-        本et使本n 0.8f;
+        return 0.8f;
     }
     
     // 如果是相同策略，返回中等分數
-    if (St本ate成y1 == St本ate成y2)
+    if (Strategy1 == Strategy2)
     {
-        本et使本n 0.5f;
+        return 0.5f;
     }
     
     // 其他情況返回低分數
-    本et使本n 0.2f;
+    return 0.2f;
 }
 
-void UMingSixSt本ate成ies::Reco本dSt本ate成yE正ent(const FString& Desc本iption, ESixSt本ate成yType St本ate成yType, ESt本ate成yState State, float I設置pact)
+void UMingSixStrategies::RecordStrategyEvent(const FString& Description, ESixStrategyType StrategyType, EStrategyState State, float Impact)
 {
-    軍SixSt本ate成yE正ent E正ent;
-    E正ent.E正entID = FString::P本intf(TEXT("STRATEGY下%lld"), 軍DateTi設置e::的ow().GetTicks());
-    E正ent.Desc本iption = Desc本iption;
-    E正ent.St本ate成yType = St本ate成yType;
-    E正ent.E正entState = State;
-    E正ent.I設置pactLe正el = I設置pact;
-    E正ent.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FSixStrategyEvent Event;
+    Event.EventID = FString::Printf(TEXT("STRATEGY_%lld"), FDateTime::Now().GetTicks());
+    Event.Description = Description;
+    Event.StrategyType = StrategyType;
+    Event.EventState = State;
+    Event.ImpactLevel = Impact;
+    Event.Timestamp = FDateTime::Now();
     
-    St本ate成y輸入isto本y.Add(E正ent);
+    StrategyHistory.Add(Event);
     
     // 限制歷史記錄數量
-    if (St本ate成y輸入isto本y.的使設置() > 1000)
+    if (StrategyHistory.Num() > 1000)
     {
-        St本ate成y輸入isto本y.Re設置o正eAt(0);
+        StrategyHistory.RemoveAt(0);
     }
 }
 
-FString UMingSixSt本ate成ies::GetSt本ate成y的a設置e(ESixSt本ate成yType St本ate成yType) const
+FString UMingSixStrategies::GetStrategyName(ESixStrategyType StrategyType) const
 {
-    switch (St本ate成yType)
+    switch (StrategyType)
     {
-    case ESixSt本ate成yType::輸入ea正enSt本ate成y: 本et使本n TEXT("天道策略");
-    case ESixSt本ate成yType::Ea本thSt本ate成y: 本et使本n TEXT("地道策略");
-    case ESixSt本ate成yType::輸入使設置anSt本ate成y: 本et使本n TEXT("人道策略");
-    case ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y: 本et使本n TEXT("天地策略");
-    case ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y: 本et使本n TEXT("天人策略");
-    case ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y: 本et使本n TEXT("地人策略");
-    defa使lt: 本et使本n TEXT("未知策略");
+    case ESixStrategyType::HeavenStrategy: return TEXT("天道策略");
+    case ESixStrategyType::EarthStrategy: return TEXT("地道策略");
+    case ESixStrategyType::HumanStrategy: return TEXT("人道策略");
+    case ESixStrategyType::HeavenEarthStrategy: return TEXT("天地策略");
+    case ESixStrategyType::HeavenHumanStrategy: return TEXT("天人策略");
+    case ESixStrategyType::EarthHumanStrategy: return TEXT("地人策略");
+    default: return TEXT("未知策略");
     }
 }
 
-FString UMingSixSt本ate成ies::GetState的a設置e(ESt本ate成yState State) const
+FString UMingSixStrategies::GetStateName(EStrategyState State) const
 {
     switch (State)
     {
-    case ESt本ate成yState::Plannin成: 本et使本n TEXT("計劃中");
-    case ESt本ate成yState::P本epa本in成: 本et使本n TEXT("準備中");
-    case ESt本ate成yState::Exec使tin成: 本et使本n TEXT("執行中");
-    case ESt本ate成yState::Monito本in成: 本et使本n TEXT("監控中");
-    case ESt本ate成yState::Co設置pleted: 本et使本n TEXT("已完成");
-    case ESt本ate成yState::軍ailed: 本et使本n TEXT("失敗");
-    defa使lt: 本et使本n TEXT("未知狀態");
+    case EStrategyState::Planning: return TEXT("計劃中");
+    case EStrategyState::Preparing: return TEXT("準備中");
+    case EStrategyState::Executing: return TEXT("執行中");
+    case EStrategyState::Monitoring: return TEXT("監控中");
+    case EStrategyState::Completed: return TEXT("已完e");
+    case EStrategyState::Failed: return TEXT("失敗");
+    default: return TEXT("未知狀態");
     }
 }
 
-FString UMingSixSt本ate成ies::GetCo設置plexity的a設置e(ESt本ate成yCo設置plexity Co設置plexity) const
+FString UMingSixStrategies::GetComplexityName(EStrategyComplexity Complexity) const
 {
-    switch (Co設置plexity)
+    switch (Complexity)
     {
-    case ESt本ate成yCo設置plexity::Si設置ple: 本et使本n TEXT("簡單");
-    case ESt本ate成yCo設置plexity::Mode本ate: 本et使本n TEXT("中等");
-    case ESt本ate成yCo設置plexity::Co設置plex: 本et使本n TEXT("複雜");
-    case ESt本ate成yCo設置plexity::Maste本: 本et使本n TEXT("大師級");
-    defa使lt: 本et使本n TEXT("未知");
+    case EStrategyComplexity::Simple: return TEXT("簡單");
+    case EStrategyComplexity::Moderate: return TEXT("中等");
+    case EStrategyComplexity::Complex: return TEXT("複雜");
+    case EStrategyComplexity::Master: return TEXT("j師級");
+    default: return TEXT("未知");
     }
 }
 
-ESt本ate成yCo設置plexity UMingSixSt本ate成ies::Dete本設置ineSt本ate成yCo設置plexity(ESixSt本ate成yType St本ate成yType) const
+EStrategyComplexity UMingSixStrategies::DetermineStrategyComplexity(ESixStrategyType StrategyType) const
 {
-    switch (St本ate成yType)
+    switch (StrategyType)
     {
-    case ESixSt本ate成yType::輸入ea正enSt本ate成y: 本et使本n ESt本ate成yCo設置plexity::Mode本ate;
-    case ESixSt本ate成yType::Ea本thSt本ate成y: 本et使本n ESt本ate成yCo設置plexity::Mode本ate;
-    case ESixSt本ate成yType::輸入使設置anSt本ate成y: 本et使本n ESt本ate成yCo設置plexity::Co設置plex;
-    case ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y: 本et使本n ESt本ate成yCo設置plexity::Co設置plex;
-    case ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y: 本et使本n ESt本ate成yCo設置plexity::Maste本;
-    case ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y: 本et使本n ESt本ate成yCo設置plexity::Maste本;
-    defa使lt: 本et使本n ESt本ate成yCo設置plexity::Si設置ple;
+    case ESixStrategyType::HeavenStrategy: return EStrategyComplexity::Moderate;
+    case ESixStrategyType::EarthStrategy: return EStrategyComplexity::Moderate;
+    case ESixStrategyType::HumanStrategy: return EStrategyComplexity::Complex;
+    case ESixStrategyType::HeavenEarthStrategy: return EStrategyComplexity::Complex;
+    case ESixStrategyType::HeavenHumanStrategy: return EStrategyComplexity::Master;
+    case ESixStrategyType::EarthHumanStrategy: return EStrategyComplexity::Master;
+    default: return EStrategyComplexity::Simple;
     }
 }
 
-TATArray<FString> UMingSixSt本ate成ies::Get輸入ea正enSt本ate成yEffects() const
+TArray<FString> UMingSixStrategies::GetHeavenStrategyEffects() const
 {
-    TATArray<FString> Effects;
+    TArray<FString> Effects;
     Effects.Add(TEXT("利用天時變化獲得優勢"));
     Effects.Add(TEXT("在特定時間點發動攻擊"));
     Effects.Add(TEXT("利用自然現象掩護行動"));
     Effects.Add(TEXT("提高部隊士氣和戰鬥力"));
-    本et使本n Effects;
+    return Effects;
 }
 
-TATArray<FString> UMingSixSt本ate成ies::GetEa本thSt本ate成yEffects() const
+TArray<FString> UMingSixStrategies::GetEarthStrategyEffects() const
 {
-    TATArray<FString> Effects;
+    TArray<FString> Effects;
     Effects.Add(TEXT("佔據有利地形獲得防禦優勢"));
-    Effects.Add(TEXT("利用地形特點設置陷阱"));
-    Effects.Add(TEXT("建立穩固的防禦工事"));
+    Effects.Add(TEXT("利用地形特點g陷阱"));
+    Effects.Add(TEXT("建立穩固N防禦工事"));
     Effects.Add(TEXT("控制關鍵戰略位置"));
-    本et使本n Effects;
+    return Effects;
 }
 
-TATArray<FString> UMingSixSt本ate成ies::Get輸入使設置anSt本ate成yEffects() const
+TArray<FString> UMingSixStrategies::GetHumanStrategyEffects() const
 {
-    TATArray<FString> Effects;
+    TArray<FString> Effects;
     Effects.Add(TEXT("分化敵方內部，削弱士氣"));
     Effects.Add(TEXT("收買敵方重要人物"));
-    Effects.Add(TEXT("散播謠言動搖敵軍心"));
+    Effects.Add(TEXT("散播謠言動搖敵F心"));
     Effects.Add(TEXT("提升己方部隊忠誠度"));
-    本et使本n Effects;
+    return Effects;
 }
 
-TATArray<FString> UMingSixSt本ate成ies::Get輸入ea正enEa本thSt本ate成yEffects() const
+TArray<FString> UMingSixStrategies::GetHeavenEarthStrategyEffects() const
 {
-    TATArray<FString> Effects;
-    Effects.Add(TEXT("協調天時地利形成絕對優勢"));
+    TArray<FString> Effects;
+    Effects.Add(TEXT("協調天時地利形e絕對優勢"));
     Effects.Add(TEXT("在最佳時機利用地形特點"));
-    Effects.Add(TEXT("建立天地一體的防禦體系"));
+    Effects.Add(TEXT("建立天地一體N防禦體系"));
     Effects.Add(TEXT("提高整體戰略協調性"));
-    本et使本n Effects;
+    return Effects;
 }
 
-TATArray<FString> UMingSixSt本ate成ies::Get輸入ea正en輸入使設置anSt本ate成yEffects() const
+TArray<FString> UMingSixStrategies::GetHeavenHumanStrategyEffects() const
 {
-    TATArray<FString> Effects;
-    Effects.Add(TEXT("達到天人合一的精神境界"));
+    TArray<FString> Effects;
+    Effects.Add(TEXT("達到天人合一N精神境界"));
     Effects.Add(TEXT("利用天時進行心理戰"));
-    Effects.Add(TEXT("提升部隊的精神戰鬥力"));
-    Effects.Add(TEXT("獲得超常的戰略洞察力"));
-    本et使本n Effects;
+    Effects.Add(TEXT("提升部隊N精神戰鬥力"));
+    Effects.Add(TEXT("獲得超常N戰略洞察力"));
+    return Effects;
 }
 
-TATArray<FString> UMingSixSt本ate成ies::GetEa本th輸入使設置anSt本ate成yEffects() const
+TArray<FString> UMingSixStrategies::GetEarthHumanStrategyEffects() const
 {
-    TATArray<FString> Effects;
-    Effects.Add(TEXT("實現地人協調的持久作戰"));
+    TArray<FString> Effects;
+    Effects.Add(TEXT("實現地人協調N持久作戰"));
     Effects.Add(TEXT("利用地形進行長期消耗戰"));
-    Effects.Add(TEXT("建立穩固的後方基地"));
-    Effects.Add(TEXT("獲得長期的戰略主動權"));
-    本et使本n Effects;
+    Effects.Add(TEXT("建立穩固N後方基地"));
+    Effects.Add(TEXT("獲得長期N戰略主動權"));
+    return Effects;
 }

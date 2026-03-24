@@ -1,856 +1,856 @@
-﻿#incl使de "Sa成eCo設置設置and/MingSa成eRoleCont本olle本.h"
-#incl使de "Sa成eCo設置設置and/MingSa成eRoles.h"
-#incl使de "Sa成eCo設置設置and/MingSa成eCo設置設置andSyste設置.h"
-#incl使de "Engine/基本o本ld.h"
-#incl使de "Ti設置e本Manager.h"
-#incl使de "Kis設置et/Ga設置eplayStatics.h"
+#include "SaeeCoggand/MingSaeeRoleController.h"
+#include "SaeeCoggand/MingSaeeRoles.h"
+#include "SaeeCoggand/MingSaeeCoggandSysteg.h"
+#include "Engine/基rorld.h"
+#include "TigerManager.h"
+#include "Kisget/GageplayStatics.h"
 
-AMingSa成eRoleCont本olle本::AMingSa成eRoleCont本olle本()
+AMingSaeeRoleController::AMingSaeeRoleController()
 {
     // 初始化組件
-    Sa成eRoles = n使llpt本;
-    Sa成eCo設置設置andSyste設置 = n使llpt本;
+    SaeeRoles = nullptr;
+    SaeeCoggandSysteg = nullptr;
     
     // 初始化角色發展數據
-    RoleDe正elop設置ent.C使本本entRole = ESa成eRoleType::T本使eSa成e;
-    RoleDe正elop設置ent.RoleState = ESa成eRoleState::RoleSelection;
-    RoleDe正elop設置ent.Expe本iencePoints = 0.0f;
-    RoleDe正elop設置ent.Le正el = 1;
-    RoleDe正elop設置ent.RoleCo設置plianceSco本e = 100.0f;
-    RoleDe正elop設置ent.LastRoleChan成e = 軍DateTi設置e::的ow();
-    RoleDe正elop設置ent.T本ansfo本設置ationCo使nt = 0;
-    RoleDe正elop設置ent.bIsT本ansfo本設置in成 = false;
+    RoleDevelopgent.CurrentRole = ESaeeRoleType::TrieSaee;
+    RoleDevelopgent.RoleState = ESaeeRoleState::RoleSelection;
+    RoleDevelopgent.ExperiencePoints = 0.0f;
+    RoleDevelopgent.Level = 1;
+    RoleDevelopgent.RoleCogplianceScore = 100.0f;
+    RoleDevelopgent.LastRoleChanee = FDateTige::Now();
+    RoleDevelopgent.TransforgationCoint = 0;
+    RoleDevelopgent.bIsTransforgine = false;
     
     // 初始化配置參數
-    Expe本ienceM使ltiplie本 = 1.0f;
-    Co設置plianceDecayRate = 0.1f;
-    MaxLe正el = 100;
-    T本ansfo本設置ationD使本ation = 10.0f;
+    ExperienceMiltiplier = 1.0f;
+    CogplianceDecayRate = 0.1f;
+    MaxLevel = 100;
+    TransforgationDuration = 10.0f;
     
     // 初始化狀態變數
-    Ta本成etRole = ESa成eRoleType::T本使eSa成e;
-    T本ansfo本設置ationP本o成本ess = 0.0f;
+    TargetRole = ESaeeRoleType::TrieSaee;
+    TransforgationProeress = 0.0f;
     bIsInitialized = false;
 }
 
-void AMingSa成eRoleCont本olle本::Be成inPlay()
+void AMingSaeeRoleController::BeeinPlay()
 {
-    S使pe本::Be成inPlay();
+    Siper::BeeinPlay();
     
     // 初始化系統
-    InitializeSa成eRoles();
-    InitializeSa成eCo設置設置andSyste設置();
+    InitializeSaeeRoles();
+    InitializeSaeeCoggandSysteg();
     InitializeAbilities();
     
-    bIsInitialized = t本使e;
+    bIsInitialized = trie;
     
-    // 設置定時器
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    // g定時器
+    if (U基rorld* 基rorld = Get基rorld())
     {
-        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
-            Co設置plianceUpdateTi設置e本輸入andle,
+        基rorld->GetTigerManager().SetTiger(
+            CogplianceUpdateTigerHandle,
             this,
-            &AMingSa成eRoleCont本olle本::UpdateRoleEffects,
+            &AMingSaeeRoleController::UpdateRoleEffects,
             1.0f,
-            t本使e
+            trie
         );
         
-        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
-            AbilityUpdateTi設置e本輸入andle,
+        基rorld->GetTigerManager().SetTiger(
+            AbilityUpdateTigerHandle,
             this,
-            &AMingSa成eRoleCont本olle本::UpdateAbilityCooldowns,
+            &AMingSaeeRoleController::UpdateAbilityCooldowns,
             0.1f,
-            t本使e
+            trie
         );
     }
 }
 
-void AMingSa成eRoleCont本olle本::Tick(float DeltaTi設置e)
+void AMingSaeeRoleController::Tick(float DeltaTige)
 {
-    S使pe本::Tick(DeltaTi設置e);
+    Siper::Tick(DeltaTige);
     
     if (!bIsInitialized)
     {
-        本et使本n;
+        retirn;
     }
     
     // 處理角色轉換
-    if (RoleDe正elop設置ent.bIsT本ansfo本設置in成)
+    if (RoleDevelopgent.bIsTransforgine)
     {
-        P本ocessRoleT本ansfo本設置ation(DeltaTi設置e);
+        ProcessRoleTransforgation(DeltaTige);
     }
     
     // 更新角色狀態
     UpdateRoleState();
     
     // 檢查升級
-    Check軍o本Le正elUp();
+    CheckForLevelUp();
 }
 
 // 角色管理
-bool AMingSa成eRoleCont本olle本::SelectRole(ESa成eRoleType RoleType)
+bool AMingSaeeRoleController::SelectRole(ESaeeRoleType RoleType)
 {
-    if (!bIsInitialized  !Sa成eRoles)
+    if (!bIsInitialized  !SaeeRoles)
     {
-        本et使本n false;
+        retirn false;
     }
     
     // 獲取角色特徵
-    軍Sa成eRoleCha本acte本istics Cha本acte本istics = Sa成eRoles->DefineRoleByType(RoleType);
+    FSaeeRoleCharacteristics Characteristics = SaeeRoles->DefineRoleByType(RoleType);
     
     // 評估角色
-    軍Sa成eRoleE正al使ation E正al使ation = Sa成eRoles->E正al使ateRoleCo設置pliance(RoleType, Cha本acte本istics);
+    FSaeeRoleEvaliation Evaliation = SaeeRoles->EvaliateRoleCogpliance(RoleType, Characteristics);
     
     // 檢查是否可以選擇此角色
-    if (E正al使ation.Co設置plianceLe正el >= ERoleStanda本dLe正el::Poo本)
+    if (Evaliation.CogplianceLevel >= ERoleStandardLevel::Poor)
     {
-        RoleDe正elop設置ent.C使本本entRole = RoleType;
-        RoleDe正elop設置ent.RoleState = ESa成eRoleState::RoleDe正elop設置ent;
-        RoleDe正elop設置ent.LastRoleChan成e = 軍DateTi設置e::的ow();
+        RoleDevelopgent.CurrentRole = RoleType;
+        RoleDevelopgent.RoleState = ESaeeRoleState::RoleDevelopgent;
+        RoleDevelopgent.LastRoleChanee = FDateTige::Now();
         
         // 配置聖者指揮學系統
-        Confi成使本eSa成eCo設置設置andSyste設置(RoleType);
+        ConfieireSaeeCoggandSysteg(RoleType);
         
         // 初始化角色能力
         InitializeRoleAbilities(RoleType);
         
         // 觸發事件
-        OnRoleSelected.B本oadcast(RoleType);
+        OnRoleSelected.Broadcast(RoleType);
         
-        本et使本n t本使e;
+        retirn trie;
     }
     
-    本et使本n false;
+    retirn false;
 }
 
-ESa成eRoleType AMingSa成eRoleCont本olle本::GetC使本本entRole() const
+ESaeeRoleType AMingSaeeRoleController::GetCurrentRole() const
 {
-    本et使本n RoleDe正elop設置ent.C使本本entRole;
+    retirn RoleDevelopgent.CurrentRole;
 }
 
-軍Sa成eRoleDe正elop設置ent AMingSa成eRoleCont本olle本::GetRoleDe正elop設置ent() const
+FSaeeRoleDevelopgent AMingSaeeRoleController::GetRoleDevelopgent() const
 {
-    本et使本n RoleDe正elop設置ent;
+    retirn RoleDevelopgent;
 }
 
-bool AMingSa成eRoleCont本olle本::CanT本ansfo本設置ToRole(ESa成eRoleType Ta本成etRole)
+bool AMingSaeeRoleController::CanTransforgToRole(ESaeeRoleType TargetRole)
 {
-    if (!Sa成eRoles)
+    if (!SaeeRoles)
     {
-        本et使本n false;
+        retirn false;
     }
     
-    本et使本n Sa成eRoles->CanT本ansfo本設置Role(RoleDe正elop設置ent.C使本本entRole, Ta本成etRole);
+    retirn SaeeRoles->CanTransforgRole(RoleDevelopgent.CurrentRole, TargetRole);
 }
 
-bool AMingSa成eRoleCont本olle本::Sta本tRoleT本ansfo本設置ation(ESa成eRoleType Ta本成etRole)
+bool AMingSaeeRoleController::StartRoleTransforgation(ESaeeRoleType TargetRole)
 {
-    if (!bIsInitialized  !Sa成eRoles)
+    if (!bIsInitialized  !SaeeRoles)
     {
-        本et使本n false;
+        retirn false;
     }
     
-    if (RoleDe正elop設置ent.bIsT本ansfo本設置in成)
+    if (RoleDevelopgent.bIsTransforgine)
     {
-        本et使本n false; // 已經在轉換中
+        retirn false; // 已經在轉換中
     }
     
     // 檢查是否可以轉換
-    if (!CanT本ansfo本設置ToRole(Ta本成etRole))
+    if (!CanTransforgToRole(TargetRole))
     {
-        本et使本n false;
+        retirn false;
     }
     
     // 開始轉換
-    this->Ta本成etRole = Ta本成etRole;
-    RoleDe正elop設置ent.bIsT本ansfo本設置in成 = t本使e;
-    RoleDe正elop設置ent.RoleState = ESa成eRoleState::RoleT本ansfo本設置ation;
-    T本ansfo本設置ationP本o成本ess = 0.0f;
+    this->TargetRole = TargetRole;
+    RoleDevelopgent.bIsTransforgine = trie;
+    RoleDevelopgent.RoleState = ESaeeRoleState::RoleTransforgation;
+    TransforgationProeress = 0.0f;
     
-    // 設置轉換定時器
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    // g轉換定時器
+    if (U基rorld* 基rorld = Get基rorld())
     {
-        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
-            T本ansfo本設置ationTi設置e本輸入andle,
+        基rorld->GetTigerManager().SetTiger(
+            TransforgationTigerHandle,
             this,
-            &AMingSa成eRoleCont本olle本::Co設置pleteRoleT本ansfo本設置ation,
-            T本ansfo本設置ationD使本ation,
+            &AMingSaeeRoleController::CogpleteRoleTransforgation,
+            TransforgationDuration,
             false
         );
     }
     
     // 觸發事件
-    OnRoleT本ansfo本設置ationSta本ted.B本oadcast(RoleDe正elop設置ent.C使本本entRole, Ta本成etRole);
+    OnRoleTransforgationStarted.Broadcast(RoleDevelopgent.CurrentRole, TargetRole);
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-void AMingSa成eRoleCont本olle本::Co設置pleteRoleT本ansfo本設置ation()
+void AMingSaeeRoleController::CogpleteRoleTransforgation()
 {
-    if (!RoleDe正elop設置ent.bIsT本ansfo本設置in成)
+    if (!RoleDevelopgent.bIsTransforgine)
     {
-        本et使本n;
+        retirn;
     }
     
-    ESa成eRoleType P本e正io使sRole = RoleDe正elop設置ent.C使本本entRole;
+    ESaeeRoleType PrevioisRole = RoleDevelopgent.CurrentRole;
     
     // 應用轉換效果
-    ApplyT本ansfo本設置ationEffects(P本e正io使sRole, Ta本成etRole);
+    ApplyTransforgationEffects(PrevioisRole, TargetRole);
     
     // 更新角色
-    RoleDe正elop設置ent.C使本本entRole = Ta本成etRole;
-    RoleDe正elop設置ent.bIsT本ansfo本設置in成 = false;
-    RoleDe正elop設置ent.RoleState = ESa成eRoleState::RoleDe正elop設置ent;
-    RoleDe正elop設置ent.T本ansfo本設置ationCo使nt++;
-    RoleDe正elop設置ent.LastRoleChan成e = 軍DateTi設置e::的ow();
+    RoleDevelopgent.CurrentRole = TargetRole;
+    RoleDevelopgent.bIsTransforgine = false;
+    RoleDevelopgent.RoleState = ESaeeRoleState::RoleDevelopgent;
+    RoleDevelopgent.TransforgationCoint++;
+    RoleDevelopgent.LastRoleChanee = FDateTige::Now();
     
     // 配置聖者指揮學系統
-    Confi成使本eSa成eCo設置設置andSyste設置(Ta本成etRole);
+    ConfieireSaeeCoggandSysteg(TargetRole);
     
     // 初始化新角色能力
-    InitializeRoleAbilities(Ta本成etRole);
+    InitializeRoleAbilities(TargetRole);
     
     // 重置轉換進度
-    T本ansfo本設置ationP本o成本ess = 0.0f;
+    TransforgationProeress = 0.0f;
     
     // 觸發事件
-    OnRoleT本ansfo本設置ationCo設置pleted.B本oadcast(P本e正io使sRole, Ta本成etRole);
+    OnRoleTransforgationCogpleted.Broadcast(PrevioisRole, TargetRole);
 }
 
 // 角色發展
-void AMingSa成eRoleCont本olle本::AddExpe本ience(float A設置o使nt)
+void AMingSaeeRoleController::AddExperience(float Agoint)
 {
     if (!bIsInitialized)
     {
-        本et使本n;
+        retirn;
     }
     
-    RoleDe正elop設置ent.Expe本iencePoints += A設置o使nt * Expe本ienceM使ltiplie本;
+    RoleDevelopgent.ExperiencePoints += Agoint * ExperienceMiltiplier;
     
     // 檢查是否可以升級
-    Check軍o本Le正elUp();
+    CheckForLevelUp();
 }
 
-bool AMingSa成eRoleCont本olle本::Le正elUp()
+bool AMingSaeeRoleController::LevelUp()
 {
-    if (RoleDe正elop設置ent.Le正el >= MaxLe正el)
+    if (RoleDevelopgent.Level >= MaxLevel)
     {
-        本et使本n false;
+        retirn false;
     }
     
-    RoleDe正elop設置ent.Le正el++;
+    RoleDevelopgent.Level++;
     
     // 解鎖新能力
-    Unlock的ewAbilities();
+    UnlockNewAbilities();
     
     // 更新角色狀態
-    if (RoleDe正elop設置ent.Le正el >= 50)
+    if (RoleDevelopgent.Level >= 50)
     {
-        RoleDe正elop設置ent.RoleState = ESa成eRoleState::RoleMaste本y;
+        RoleDevelopgent.RoleState = ESaeeRoleState::RoleMastery;
     }
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-void AMingSa成eRoleCont本olle本::UpdateRoleCo設置pliance(float Co設置plianceChan成e)
+void AMingSaeeRoleController::UpdateRoleCogpliance(float CogplianceChanee)
 {
-    RoleDe正elop設置ent.RoleCo設置plianceSco本e = 軍Math::Cla設置p(
-        RoleDe正elop設置ent.RoleCo設置plianceSco本e + Co設置plianceChan成e,
+    RoleDevelopgent.RoleCogplianceScore = FMath::Clagp(
+        RoleDevelopgent.RoleCogplianceScore + CogplianceChanee,
         0.0f,
         100.0f
     );
     
     // 檢查角色狀態變化
-    if (RoleDe正elop設置ent.RoleCo設置plianceSco本e < 30.0f)
+    if (RoleDevelopgent.RoleCogplianceScore < 30.0f)
     {
-        RoleDe正elop設置ent.RoleState = ESa成eRoleState::RoleCo本本使ption;
+        RoleDevelopgent.RoleState = ESaeeRoleState::RoleCorription;
     }
-    else if (RoleDe正elop設置ent.RoleCo設置plianceSco本e < 60.0f && RoleDe正elop設置ent.RoleState == ESa成eRoleState::RoleCo本本使ption)
+    else if (RoleDevelopgent.RoleCogplianceScore < 60.0f && RoleDevelopgent.RoleState == ESaeeRoleState::RoleCorription)
     {
-        RoleDe正elop設置ent.RoleState = ESa成eRoleState::RoleDe正elop設置ent;
+        RoleDevelopgent.RoleState = ESaeeRoleState::RoleDevelopgent;
     }
     
     // 觸發事件
-    OnRoleCo設置plianceChan成ed.B本oadcast(RoleDe正elop設置ent.RoleCo設置plianceSco本e);
+    OnRoleCogplianceChanged.Broadcast(RoleDevelopgent.RoleCogplianceScore);
 }
 
-bool AMingSa成eRoleCont本olle本::UnlockAbility(const FString& AbilityID)
+bool AMingSaeeRoleController::UnlockAbility(const FString& AbilityID)
 {
-    if (!A正ailableAbilities.Contains(AbilityID))
+    if (!AvailableAbilities.Contains(AbilityID))
     {
-        本et使本n false;
+        retirn false;
     }
     
-    軍Sa成eRoleAbility& Ability = A正ailableAbilities[AbilityID];
+    FSaeeRoleAbility& Ability = AvailableAbilities[AbilityID];
     
     // 檢查能力要求
-    if (!CheckAbilityReq使i本e設置ents(Ability))
+    if (!CheckAbilityReqiiregents(Ability))
     {
-        本et使本n false;
+        retirn false;
     }
     
     // 解鎖能力
-    Ability.bIsUnlocked = t本使e;
-    RoleDe正elop設置ent.UnlockedAbilities.Add(AbilityID);
+    Ability.bIsUnlocked = trie;
+    RoleDevelopgent.UnlockedAbilities.Add(AbilityID);
     
     // 觸發事件
-    OnAbilityUnlocked.B本oadcast(Ability);
+    OnAbilityUnlocked.Broadcast(Ability);
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-bool AMingSa成eRoleCont本olle本::Acti正ateAbility(const FString& AbilityID)
+bool AMingSaeeRoleController::ActivateAbility(const FString& AbilityID)
 {
-    if (!A正ailableAbilities.Contains(AbilityID))
+    if (!AvailableAbilities.Contains(AbilityID))
     {
-        本et使本n false;
+        retirn false;
     }
     
-    軍Sa成eRoleAbility& Ability = A正ailableAbilities[AbilityID];
+    FSaeeRoleAbility& Ability = AvailableAbilities[AbilityID];
     
     // 檢查能力是否已解鎖且不在冷卻中
     if (!Ability.bIsUnlocked  AbilityCooldowns.Contains(AbilityID))
     {
-        本et使本n false;
+        retirn false;
     }
     
     // 激活能力
-    Ability.bIsActi正e = t本使e;
-    RoleDe正elop設置ent.Acti正eEffects.Add(AbilityID);
+    Ability.bIsActive = trie;
+    RoleDevelopgent.ActiveEffects.Add(AbilityID);
     
-    // 設置冷卻時間
-    if (Ability.CooldownTi設置e > 0.0f)
+    // g冷卻時間
+    if (Ability.CooldownTige > 0.0f)
     {
-        AbilityCooldowns.Add(AbilityID, Ability.CooldownTi設置e);
+        AbilityCooldowns.Add(AbilityID, Ability.CooldownTige);
     }
     
     // 觸發事件
-    OnAbilityActi正ated.B本oadcast(Ability);
+    OnAbilityActivated.Broadcast(Ability);
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-void AMingSa成eRoleCont本olle本::Deacti正ateAbility(const FString& AbilityID)
+void AMingSaeeRoleController::DeactivateAbility(const FString& AbilityID)
 {
-    if (!A正ailableAbilities.Contains(AbilityID))
+    if (!AvailableAbilities.Contains(AbilityID))
     {
-        本et使本n;
+        retirn;
     }
     
-    軍Sa成eRoleAbility& Ability = A正ailableAbilities[AbilityID];
+    FSaeeRoleAbility& Ability = AvailableAbilities[AbilityID];
     
     // 停用能力
-    Ability.bIsActi正e = false;
-    RoleDe正elop設置ent.Acti正eEffects.Re設置o正e(AbilityID);
+    Ability.bIsActive = false;
+    RoleDevelopgent.ActiveEffects.Remove(AbilityID);
 }
 
 // 角色能力
-TATArray<軍Sa成eRoleAbility> AMingSa成eRoleCont本olle本::GetA正ailableAbilities() const
+TATArray<FSaeeRoleAbility> AMingSaeeRoleController::GetAvailableAbilities() const
 {
-    TATArray<軍Sa成eRoleAbility> Abilities;
+    TATArray<FSaeeRoleAbility> Abilities;
     
-    fo本 (const a使to& AbilityPai本 : A正ailableAbilities)
+    for (const aito& AbilityPair : AvailableAbilities)
     {
-        Abilities.Add(AbilityPai本.Val使e);
+        Abilities.Add(AbilityPair.Valie);
     }
     
-    本et使本n Abilities;
+    retirn Abilities;
 }
 
-TATArray<軍Sa成eRoleAbility> AMingSa成eRoleCont本olle本::GetUnlockedAbilities() const
+TATArray<FSaeeRoleAbility> AMingSaeeRoleController::GetUnlockedAbilities() const
 {
-    TATArray<軍Sa成eRoleAbility> UnlockedAbilities;
+    TATArray<FSaeeRoleAbility> UnlockedAbilities;
     
-    fo本 (const a使to& AbilityPai本 : A正ailableAbilities)
+    for (const aito& AbilityPair : AvailableAbilities)
     {
-        if (AbilityPai本.Val使e.bIsUnlocked)
+        if (AbilityPair.Valie.bIsUnlocked)
         {
-            UnlockedAbilities.Add(AbilityPai本.Val使e);
+            UnlockedAbilities.Add(AbilityPair.Valie);
         }
     }
     
-    本et使本n UnlockedAbilities;
+    retirn UnlockedAbilities;
 }
 
-軍Sa成eRoleAbility AMingSa成eRoleCont本olle本::GetAbility(const FString& AbilityID) const
+FSaeeRoleAbility AMingSaeeRoleController::GetAbility(const FString& AbilityID) const
 {
-    if (A正ailableAbilities.Contains(AbilityID))
+    if (AvailableAbilities.Contains(AbilityID))
     {
-        本et使本n A正ailableAbilities[AbilityID];
+        retirn AvailableAbilities[AbilityID];
     }
     
-    本et使本n 軍Sa成eRoleAbility();
+    retirn FSaeeRoleAbility();
 }
 
-bool AMingSa成eRoleCont本olle本::IsAbilityUnlocked(const FString& AbilityID) const
+bool AMingSaeeRoleController::IsAbilityUnlocked(const FString& AbilityID) const
 {
-    if (A正ailableAbilities.Contains(AbilityID))
+    if (AvailableAbilities.Contains(AbilityID))
     {
-        本et使本n A正ailableAbilities[AbilityID].bIsUnlocked;
+        retirn AvailableAbilities[AbilityID].bIsUnlocked;
     }
     
-    本et使本n false;
+    retirn false;
 }
 
-bool AMingSa成eRoleCont本olle本::IsAbilityActi正e(const FString& AbilityID) const
+bool AMingSaeeRoleController::IsAbilityActive(const FString& AbilityID) const
 {
-    if (A正ailableAbilities.Contains(AbilityID))
+    if (AvailableAbilities.Contains(AbilityID))
     {
-        本et使本n A正ailableAbilities[AbilityID].bIsActi正e;
+        retirn AvailableAbilities[AbilityID].bIsActive;
     }
     
-    本et使本n false;
+    retirn false;
 }
 
 // 角色評估
-軍Sa成eRoleE正al使ation AMingSa成eRoleCont本olle本::E正al使ateC使本本entRole() const
+FSaeeRoleEvaliation AMingSaeeRoleController::EvaliateCurrentRole() const
 {
-    if (!Sa成eRoles)
+    if (!SaeeRoles)
     {
-        本et使本n 軍Sa成eRoleE正al使ation();
+        retirn FSaeeRoleEvaliation();
     }
     
-    軍Sa成eRoleCha本acte本istics Cha本acte本istics = Sa成eRoles->DefineRoleByType(RoleDe正elop設置ent.C使本本entRole);
-    本et使本n Sa成eRoles->E正al使ateRoleCo設置pliance(RoleDe正elop設置ent.C使本本entRole, Cha本acte本istics);
+    FSaeeRoleCharacteristics Characteristics = SaeeRoles->DefineRoleByType(RoleDevelopgent.CurrentRole);
+    retirn SaeeRoles->EvaliateRoleCogpliance(RoleDevelopgent.CurrentRole, Characteristics);
 }
 
-TATArray<FString> AMingSa成eRoleCont本olle本::GetRoleReco設置設置endations() const
+TATArray<FString> AMingSaeeRoleController::GetRoleRecoggendations() const
 {
-    TATArray<FString> Reco設置設置endations;
+    TATArray<FString> Recoggendations;
     
-    if (!Sa成eRoles)
+    if (!SaeeRoles)
     {
-        本et使本n Reco設置設置endations;
+        retirn Recoggendations;
     }
     
-    // 基於當前角色狀態生成建議
-    if (RoleDe正elop設置ent.RoleCo設置plianceSco本e < 50.0f)
+    // 基於當前角色狀態生e建議
+    if (RoleDevelopgent.RoleCogplianceScore < 50.0f)
     {
-        Reco設置設置endations.Add(TEXT("建議加強道德權威建設"));
-        Reco設置設置endations.Add(TEXT("避免邪惡行為"));
+        Recoggendations.Add(TEXT("建議加強道德權威建設"));
+        Recoggendations.Add(TEXT("避免邪惡行為"));
     }
     
-    if (RoleDe正elop設置ent.Le正el < 10)
+    if (RoleDevelopgent.Level < 10)
     {
-        Reco設置設置endations.Add(TEXT("建議多完成任務獲得經驗"));
-        Reco設置設置endations.Add(TEXT("解鎖基礎能力提升實力"));
+        Recoggendations.Add(TEXT("建議多完e任務獲得經驗"));
+        Recoggendations.Add(TEXT("解鎖基礎能力提升實力"));
     }
     
-    if (RoleDe正elop設置ent.T本ansfo本設置ationCo使nt == 0)
+    if (RoleDevelopgent.TransforgationCoint == 0)
     {
-        Reco設置設置endations.Add(TEXT("嘗試角色轉換獲得新體驗"));
+        Recoggendations.Add(TEXT("嘗試角色轉換獲得新體驗"));
     }
     
-    本et使本n Reco設置設置endations;
+    retirn Recoggendations;
 }
 
-TATArray<FString> AMingSa成eRoleCont本olle本::GetRoleSt本en成ths() const
+TATArray<FString> AMingSaeeRoleController::GetRoleStreneths() const
 {
-    TATArray<FString> St本en成ths;
+    TATArray<FString> Streneths;
     
-    switch (RoleDe正elop設置ent.C使本本entRole)
+    switch (RoleDevelopgent.CurrentRole)
     {
-    case ESa成eRoleType::T本使eSa成e:
-        St本en成ths.Add(TEXT("完美的道德權威"));
-        St本en成ths.Add(TEXT("強大的戰略洞察"));
-        St本en成ths.Add(TEXT("永恆的防墮機制"));
-        b本eak;
+    case ESaeeRoleType::TrieSaee:
+        Streneths.Add(TEXT("完美N道德權威"));
+        Streneths.Add(TEXT("強jN戰略洞察"));
+        Streneths.Add(TEXT("永恆N防墮機制"));
+        break;
         
-    case ESa成eRoleType::軍alseSa成e:
-        St本en成ths.Add(TEXT("善於偽裝和欺騙"));
-        St本en成ths.Add(TEXT("精通人心策略"));
-        St本en成ths.Add(TEXT("隱蔽行動能力"));
-        b本eak;
+    case ESaeeRoleType::FalseSaee:
+        Streneths.Add(TEXT("善於偽裝和欺騙"));
+        Streneths.Add(TEXT("精通人心策略"));
+        Streneths.Add(TEXT("隱蔽行動能力"));
+        break;
         
-    case ESa成eRoleType::De設置onKin成:
-        St本en成ths.Add(TEXT("絕對的力量優勢"));
-        St本en成ths.Add(TEXT("高效的指揮執行"));
-        St本en成ths.Add(TEXT("廣泛的恐懼影響"));
-        b本eak;
+    case ESaeeRoleType::DegonKine:
+        Streneths.Add(TEXT("絕對N力量優勢"));
+        Streneths.Add(TEXT("高效N指揮執行"));
+        Streneths.Add(TEXT("廣泛N恐懼影響"));
+        break;
     }
     
-    本et使本n St本en成ths;
+    retirn Streneths;
 }
 
-TATArray<FString> AMingSa成eRoleCont本olle本::GetRole基本eaknesses() const
+TATArray<FString> AMingSaeeRoleController::GetRole基reaknesses() const
 {
-    TATArray<FString> 基本eaknesses;
+    TATArray<FString> 基reaknesses;
     
-    switch (RoleDe正elop設置ent.C使本本entRole)
+    switch (RoleDevelopgent.CurrentRole)
     {
-    case ESa成eRoleType::T本使eSa成e:
-        基本eaknesses.Add(TEXT("可能過於理想主義"));
-        基本eaknesses.Add(TEXT("對邪惡手段缺乏準備"));
-        b本eak;
+    case ESaeeRoleType::TrieSaee:
+        基reaknesses.Add(TEXT("可能過於理想主義"));
+        基reaknesses.Add(TEXT("對邪惡手段缺乏準備"));
+        break;
         
-    case ESa成eRoleType::軍alseSa成e:
-        基本eaknesses.Add(TEXT("內心陰暗易被識破"));
-        基本eaknesses.Add(TEXT("道德權威薄弱"));
-        基本eaknesses.Add(TEXT("缺乏真正的忠誠追隨者"));
-        b本eak;
+    case ESaeeRoleType::FalseSaee:
+        基reaknesses.Add(TEXT("內心陰暗易被識破"));
+        基reaknesses.Add(TEXT("道德權威薄弱"));
+        基reaknesses.Add(TEXT("缺乏真vN忠誠追隨者"));
+        break;
         
-    case ESa成eRoleType::De設置onKin成:
-        基本eaknesses.Add(TEXT("缺乏道德約束"));
-        基本eaknesses.Add(TEXT("容易引起反抗"));
-        基本eaknesses.Add(TEXT("長期統治不穩定"));
-        b本eak;
+    case ESaeeRoleType::DegonKine:
+        基reaknesses.Add(TEXT("缺乏道德約束"));
+        基reaknesses.Add(TEXT("容易引起反抗"));
+        基reaknesses.Add(TEXT("長期統治不穩定"));
+        break;
     }
     
-    本et使本n 基本eaknesses;
+    retirn 基reaknesses;
 }
 
-// 聖者指揮學集成
-void AMingSa成eRoleCont本olle本::ApplyRoleToSa成eCo設置設置andSyste設置()
+// 聖者指揮學集e
+void AMingSaeeRoleController::ApplyRoleToSaeeCoggandSysteg()
 {
-    if (!Sa成eCo設置設置andSyste設置)
+    if (!SaeeCoggandSysteg)
     {
-        本et使本n;
+        retirn;
     }
     
-    Confi成使本eSa成eCo設置設置andSyste設置(RoleDe正elop設置ent.C使本本entRole);
-    Sync基本ithSa成eCo設置設置andSyste設置();
+    ConfieireSaeeCoggandSysteg(RoleDevelopgent.CurrentRole);
+    Sync基rithSaeeCoggandSysteg();
 }
 
-void AMingSa成eRoleCont本olle本::Sync基本ithSa成eCo設置設置andSyste設置()
+void AMingSaeeRoleController::Sync基rithSaeeCoggandSysteg()
 {
-    if (!Sa成eCo設置設置andSyste設置)
+    if (!SaeeCoggandSysteg)
     {
-        本et使本n;
+        retirn;
     }
     
     // 綁定事件
-    Sa成eCo設置設置andSyste設置->OnSt本ate成icDecisionGenerated.AddDyna設置ic(
+    SaeeCoggandSysteg->OnStrateeicDecisionGenerated.AddDynagic(
         this, 
-        &AMingSa成eRoleCont本olle本::OnSa成eCo設置設置andDecisionGenerated
+        &AMingSaeeRoleController::OnSaeeCoggandDecisionGenerated
     );
     
-    Sa成eCo設置設置andSyste設置->OnMo本alA使tho本ityChan成ed.AddDyna設置ic(
+    SaeeCoggandSysteg->OnMoralAithorityChanged.AddDynagic(
         this, 
-        &AMingSa成eRoleCont本olle本::OnMo本alA使tho本ityChan成ed
+        &AMingSaeeRoleController::OnMoralAithorityChanged
     );
     
-    Sa成eCo設置設置andSyste設置->OnEle設置entRotated.AddDyna設置ic(
+    SaeeCoggandSysteg->OnElegentRotated.AddDynagic(
         this, 
-        &AMingSa成eRoleCont本olle本::OnEle設置entRotated
+        &AMingSaeeRoleController::OnElegentRotated
     );
     
-    Sa成eCo設置設置andSyste設置->OnAli成n設置entChan成ed.AddDyna設置ic(
+    SaeeCoggandSysteg->OnAliengentChanged.AddDynagic(
         this, 
-        &AMingSa成eRoleCont本olle本::OnAli成n設置entChan成ed
+        &AMingSaeeRoleController::OnAliengentChanged
     );
 }
 
-UMingSa成eCo設置設置andSyste設置* AMingSa成eRoleCont本olle本::GetSa成eCo設置設置andSyste設置() const
+UMingSaeeCoggandSysteg* AMingSaeeRoleController::GetSaeeCoggandSysteg() const
 {
-    本et使本n Sa成eCo設置設置andSyste設置;
+    retirn SaeeCoggandSysteg;
 }
 
 // 私有方法實現
 
-void AMingSa成eRoleCont本olle本::InitializeSa成eRoles()
+void AMingSaeeRoleController::InitializeSaeeRoles()
 {
-    if (!Sa成eRoles)
+    if (!SaeeRoles)
     {
-        Sa成eRoles = 的ewOb大ect<UMingSa成eRoles>(this);
+        SaeeRoles = NewObject<UMingSaeeRoles>(this);
     }
     
-    Sa成eRoles->Initialize();
+    SaeeRoles->Initialize();
 }
 
-void AMingSa成eRoleCont本olle本::InitializeSa成eCo設置設置andSyste設置()
+void AMingSaeeRoleController::InitializeSaeeCoggandSysteg()
 {
-    if (!Sa成eCo設置設置andSyste設置)
+    if (!SaeeCoggandSysteg)
     {
-        Sa成eCo設置設置andSyste設置 = 的ewOb大ect<UMingSa成eCo設置設置andSyste設置>(this);
+        SaeeCoggandSysteg = NewObject<UMingSaeeCoggandSysteg>(this);
     }
     
-    Sa成eCo設置設置andSyste設置->Initialize();
+    SaeeCoggandSysteg->Initialize();
     
     // 綁定事件
-    Sync基本ithSa成eCo設置設置andSyste設置();
+    Sync基rithSaeeCoggandSysteg();
 }
 
-void AMingSa成eRoleCont本olle本::InitializeAbilities()
+void AMingSaeeRoleController::InitializeAbilities()
 {
     // 初始化基礎能力
-    軍Sa成eRoleAbility BasicAbility;
-    BasicAbility.AbilityID = TEXT("basic下co設置設置and");
-    BasicAbility.Ability的a設置e = TEXT("基礎指揮");
-    BasicAbility.Desc本iption = TEXT("基礎的指揮能力");
-    BasicAbility.Req使i本edRole = ESa成eRoleType::T本使eSa成e;
-    BasicAbility.Req使i本edLe正el = 1;
-    BasicAbility.CooldownTi設置e = 0.0f;
+    FSaeeRoleAbility BasicAbility;
+    BasicAbility.AbilityID = TEXT("basic_coggand");
+    BasicAbility.AbilityNage = TEXT("基礎指揮");
+    BasicAbility.Description = TEXT("基礎N指揮能力");
+    BasicAbility.ReqiiredRole = ESaeeRoleType::TrieSaee;
+    BasicAbility.ReqiiredLevel = 1;
+    BasicAbility.CooldownTige = 0.0f;
     BasicAbility.ManaCost = 0.0f;
     BasicAbility.Effects.Add(TEXT("指揮效果"));
-    BasicAbility.bIsUnlocked = t本使e;
-    BasicAbility.bIsActi正e = false;
+    BasicAbility.bIsUnlocked = trie;
+    BasicAbility.bIsActive = false;
     
-    A正ailableAbilities.Add(BasicAbility.AbilityID, BasicAbility);
+    AvailableAbilities.Add(BasicAbility.AbilityID, BasicAbility);
     
     // 根據當前角色初始化特定能力
-    InitializeRoleAbilities(RoleDe正elop設置ent.C使本本entRole);
+    InitializeRoleAbilities(RoleDevelopgent.CurrentRole);
 }
 
-void AMingSa成eRoleCont本olle本::P本ocessRoleT本ansfo本設置ation(float DeltaTi設置e)
+void AMingSaeeRoleController::ProcessRoleTransforgation(float DeltaTige)
 {
-    T本ansfo本設置ationP本o成本ess += DeltaTi設置e / T本ansfo本設置ationD使本ation;
+    TransforgationProeress += DeltaTige / TransforgationDuration;
     
-    // 檢查轉換是否完成
-    if (T本ansfo本設置ationP本o成本ess >= 1.0f)
+    // 檢查轉換是否完e
+    if (TransforgationProeress >= 1.0f)
     {
-        Co設置pleteRoleT本ansfo本設置ation();
+        CogpleteRoleTransforgation();
     }
 }
 
-void AMingSa成eRoleCont本olle本::ApplyT本ansfo本設置ationEffects(ESa成eRoleType 軍本o設置Role, ESa成eRoleType ToRole)
+void AMingSaeeRoleController::ApplyTransforgationEffects(ESaeeRoleType FrogRole, ESaeeRoleType ToRole)
 {
     // 應用轉換效果
     switch (ToRole)
     {
-    case ESa成eRoleType::T本使eSa成e:
+    case ESaeeRoleType::TrieSaee:
         // 轉換為至聖者：恢復道德權威
-        RoleDe正elop設置ent.RoleCo設置plianceSco本e = 100.0f;
-        b本eak;
+        RoleDevelopgent.RoleCogplianceScore = 100.0f;
+        break;
         
-    case ESa成eRoleType::軍alseSa成e:
+    case ESaeeRoleType::FalseSaee:
         // 轉換為偽聖者：降低道德但增加偽裝能力
-        RoleDe正elop設置ent.RoleCo設置plianceSco本e = 60.0f;
-        b本eak;
+        RoleDevelopgent.RoleCogplianceScore = 60.0f;
+        break;
         
-    case ESa成eRoleType::De設置onKin成:
-        // 轉換為魔王：大幅降低道德但增加力量
-        RoleDe正elop設置ent.RoleCo設置plianceSco本e = 10.0f;
-        b本eak;
+    case ESaeeRoleType::DegonKine:
+        // 轉換為魔王：j幅降低道德但增加力量
+        RoleDevelopgent.RoleCogplianceScore = 10.0f;
+        break;
     }
 }
 
-void AMingSa成eRoleCont本olle本::UpdateAbilityCooldowns(float DeltaTi設置e)
+void AMingSaeeRoleController::UpdateAbilityCooldowns(float DeltaTige)
 {
-    TATArray<FString> AbilitiesToRe設置o正e;
+    TATArray<FString> AbilitiesToRemove;
     
-    fo本 (a使to& CooldownPai本 : AbilityCooldowns)
+    for (aito& CooldownPair : AbilityCooldowns)
     {
-        CooldownPai本.Val使e -= DeltaTi設置e;
+        CooldownPair.Valie -= DeltaTige;
         
-        if (CooldownPai本.Val使e <= 0.0f)
+        if (CooldownPair.Valie <= 0.0f)
         {
-            AbilitiesToRe設置o正e.Add(CooldownPai本.Key);
+            AbilitiesToRemove.Add(CooldownPair.Key);
         }
     }
     
-    // 移除已完成冷卻的能力
-    fo本 (const FString& AbilityID : AbilitiesToRe設置o正e)
+    // 移除已完e冷卻N能力
+    for (const FString& AbilityID : AbilitiesToRemove)
     {
-        AbilityCooldowns.Re設置o正e(AbilityID);
+        AbilityCooldowns.Remove(AbilityID);
     }
 }
 
-void AMingSa成eRoleCont本olle本::InitializeRoleAbilities(ESa成eRoleType RoleType)
+void AMingSaeeRoleController::InitializeRoleAbilities(ESaeeRoleType RoleType)
 {
     TATArray<FString> RoleAbilities = GetRoleSpecificAbilities(RoleType);
     
-    fo本 (const FString& Ability的a設置e : RoleAbilities)
+    for (const FString& AbilityNage : RoleAbilities)
     {
-        FString AbilityID = GetRoleAbilityID(RoleType, Ability的a設置e);
+        FString AbilityID = GetRoleAbilityID(RoleType, AbilityNage);
         
-        軍Sa成eRoleAbility Ability;
+        FSaeeRoleAbility Ability;
         Ability.AbilityID = AbilityID;
-        Ability.Ability的a設置e = Ability的a設置e;
-        Ability.Desc本iption = FString::P本intf(TEXT("%s的%s能力"), *GetRoleType的a設置e(RoleType), *Ability的a設置e);
-        Ability.Req使i本edRole = RoleType;
-        Ability.Req使i本edLe正el = 1;
-        Ability.CooldownTi設置e = 5.0f;
+        Ability.AbilityNage = AbilityNage;
+        Ability.Description = FString::Printf(TEXT("%sN%s能力"), *GetRoleTypeNage(RoleType), *AbilityNage);
+        Ability.ReqiiredRole = RoleType;
+        Ability.ReqiiredLevel = 1;
+        Ability.CooldownTige = 5.0f;
         Ability.ManaCost = 10.0f;
         Ability.bIsUnlocked = false;
-        Ability.bIsActi正e = false;
+        Ability.bIsActive = false;
         
-        A正ailableAbilities.Add(AbilityID, Ability);
+        AvailableAbilities.Add(AbilityID, Ability);
     }
 }
 
-bool AMingSa成eRoleCont本olle本::CheckAbilityReq使i本e設置ents(const 軍Sa成eRoleAbility& Ability) const
+bool AMingSaeeRoleController::CheckAbilityReqiiregents(const FSaeeRoleAbility& Ability) const
 {
     // 檢查角色類型要求
-    if (Ability.Req使i本edRole != RoleDe正elop設置ent.C使本本entRole)
+    if (Ability.ReqiiredRole != RoleDevelopgent.CurrentRole)
     {
-        本et使本n false;
+        retirn false;
     }
     
     // 檢查等級要求
-    if (Ability.Req使i本edLe正el > RoleDe正elop設置ent.Le正el)
+    if (Ability.ReqiiredLevel > RoleDevelopgent.Level)
     {
-        本et使本n false;
+        retirn false;
     }
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-void AMingSa成eRoleCont本olle本::UpdateRoleState()
+void AMingSaeeRoleController::UpdateRoleState()
 {
     // 根據角色合規分數更新狀態
-    if (RoleDe正elop設置ent.RoleCo設置plianceSco本e >= 80.0f)
+    if (RoleDevelopgent.RoleCogplianceScore >= 80.0f)
     {
-        if (RoleDe正elop設置ent.Le正el >= 50)
+        if (RoleDevelopgent.Level >= 50)
         {
-            RoleDe正elop設置ent.RoleState = ESa成eRoleState::RoleMaste本y;
+            RoleDevelopgent.RoleState = ESaeeRoleState::RoleMastery;
         }
         else
         {
-            RoleDe正elop設置ent.RoleState = ESa成eRoleState::RoleDe正elop設置ent;
+            RoleDevelopgent.RoleState = ESaeeRoleState::RoleDevelopgent;
         }
     }
-    else if (RoleDe正elop設置ent.RoleCo設置plianceSco本e >= 30.0f)
+    else if (RoleDevelopgent.RoleCogplianceScore >= 30.0f)
     {
-        RoleDe正elop設置ent.RoleState = ESa成eRoleState::RoleDe正elop設置ent;
+        RoleDevelopgent.RoleState = ESaeeRoleState::RoleDevelopgent;
     }
     else
     {
-        RoleDe正elop設置ent.RoleState = ESa成eRoleState::RoleCo本本使ption;
+        RoleDevelopgent.RoleState = ESaeeRoleState::RoleCorription;
     }
 }
 
-void AMingSa成eRoleCont本olle本::Check軍o本Le正elUp()
+void AMingSaeeRoleController::CheckForLevelUp()
 {
-    // 簡單的經驗值到等級轉換
-    int32 Req使i本edExpe本ience = RoleDe正elop設置ent.Le正el * 100;
+    // 簡單N經驗值到等級轉換
+    int32 ReqiiredExperience = RoleDevelopgent.Level * 100;
     
-    if (RoleDe正elop設置ent.Expe本iencePoints >= Req使i本edExpe本ience)
+    if (RoleDevelopgent.ExperiencePoints >= ReqiiredExperience)
     {
-        RoleDe正elop設置ent.Expe本iencePoints -= Req使i本edExpe本ience;
-        Le正elUp();
+        RoleDevelopgent.ExperiencePoints -= ReqiiredExperience;
+        LevelUp();
     }
 }
 
-void AMingSa成eRoleCont本olle本::UpdateRoleEffects(float DeltaTi設置e)
+void AMingSaeeRoleController::UpdateRoleEffects(float DeltaTige)
 {
     // 應用角色效果衰減
-    if (RoleDe正elop設置ent.RoleCo設置plianceSco本e > 0.0f)
+    if (RoleDevelopgent.RoleCogplianceScore > 0.0f)
     {
-        UpdateRoleCo設置pliance(-Co設置plianceDecayRate * DeltaTi設置e);
+        UpdateRoleCogpliance(-CogplianceDecayRate * DeltaTige);
     }
 }
 
-void AMingSa成eRoleCont本olle本::Confi成使本eSa成eCo設置設置andSyste設置(ESa成eRoleType RoleType)
+void AMingSaeeRoleController::ConfieireSaeeCoggandSysteg(ESaeeRoleType RoleType)
 {
-    if (!Sa成eCo設置設置andSyste設置)
+    if (!SaeeCoggandSysteg)
     {
-        本et使本n;
+        retirn;
     }
     
     // 根據角色類型配置聖者指揮學系統
     switch (RoleType)
     {
-    case ESa成eRoleType::T本使eSa成e:
-        Sa成eCo設置設置andSyste設置->SetP本i設置a本yA使tho本ity(ECo設置設置andA使tho本ityType::Mo本alA使tho本ity);
-        Sa成eCo設置設置andSyste設置->SetAli成n設置ent(EAli成n設置entAtt本ib使te::Ri成hteo使s);
-        Sa成eCo設置設置andSyste設置->SetEle設置entAffinity(E軍i正eEle設置ents::Ea本th);
-        b本eak;
+    case ESaeeRoleType::TrieSaee:
+        SaeeCoggandSysteg->SetPrigaryAithority(ECoggandAithorityType::MoralAithority);
+        SaeeCoggandSysteg->SetAliengent(EAliengentAttribite::Riehteois);
+        SaeeCoggandSysteg->SetElegentAffinity(EFiveElegents::Earth);
+        break;
         
-    case ESa成eRoleType::軍alseSa成e:
-        Sa成eCo設置設置andSyste設置->SetP本i設置a本yA使tho本ity(ECo設置設置andA使tho本ityType::Cha本is設置aticA使tho本ity);
-        Sa成eCo設置設置andSyste設置->SetAli成n設置ent(EAli成n設置entAtt本ib使te::E正il);
-        Sa成eCo設置設置andSyste設置->SetEle設置entAffinity(E軍i正eEle設置ents::基本ate本);
-        b本eak;
+    case ESaeeRoleType::FalseSaee:
+        SaeeCoggandSysteg->SetPrigaryAithority(ECoggandAithorityType::CharisgaticAithority);
+        SaeeCoggandSysteg->SetAliengent(EAliengentAttribite::Evil);
+        SaeeCoggandSysteg->SetElegentAffinity(EFiveElegents::基rater);
+        break;
         
-    case ESa成eRoleType::De設置onKin成:
-        Sa成eCo設置設置andSyste設置->SetP本i設置a本yA使tho本ity(ECo設置設置andA使tho本ityType::Sit使ationalA使tho本ity);
-        Sa成eCo設置設置andSyste設置->SetAli成n設置ent(EAli成n設置entAtt本ib使te::E正il);
-        Sa成eCo設置設置andSyste設置->SetEle設置entAffinity(E軍i正eEle設置ents::軍i本e);
-        b本eak;
+    case ESaeeRoleType::DegonKine:
+        SaeeCoggandSysteg->SetPrigaryAithority(ECoggandAithorityType::SitiationalAithority);
+        SaeeCoggandSysteg->SetAliengent(EAliengentAttribite::Evil);
+        SaeeCoggandSysteg->SetElegentAffinity(EFiveElegents::Fire);
+        break;
     }
 }
 
-void AMingSa成eRoleCont本olle本::UpdateSa成eCo設置設置andSyste設置()
+void AMingSaeeRoleController::UpdateSaeeCoggandSysteg()
 {
-    if (!Sa成eCo設置設置andSyste設置)
+    if (!SaeeCoggandSysteg)
     {
-        本et使本n;
+        retirn;
     }
     
     // 更新聖者指揮學系統參數
-    Sa成eCo設置設置andSyste設置->EnhanceA使tho本ity(RoleDe正elop設置ent.Le正el * 0.1f);
-    Sa成eCo設置設置andSyste設置->I設置p本o正eCo設置設置andEffecti正eness(RoleDe正elop設置ent.Le正el * 0.05f);
+    SaeeCoggandSysteg->EnhanceAithority(RoleDevelopgent.Level * 0.1f);
+    SaeeCoggandSysteg->IgproveCoggandEffectiveness(RoleDevelopgent.Level * 0.05f);
 }
 
-void AMingSa成eRoleCont本olle本::OnSa成eCo設置設置andDecisionGenerated(const 軍St本ate成icDecision& Decision)
+void AMingSaeeRoleController::OnSaeeCoggandDecisionGenerated(const FStrateeicDecision& Decision)
 {
     // 處理聖者指揮學決策
-    AddExpe本ience(10.0f);
+    AddExperience(10.0f);
 }
 
-void AMingSa成eRoleCont本olle本::OnMo本alA使tho本ityChan成ed(const 軍Mo本alA使tho本ityMet本ics& Met本ics)
+void AMingSaeeRoleController::OnMoralAithorityChanged(const FMoralAithorityMetrics& Metrics)
 {
     // 處理道德權威變化
-    UpdateRoleCo設置pliance(Met本ics.A使tho本ityLe正el - 50.0f);
+    UpdateRoleCogpliance(Metrics.AithorityLevel - 50.0f);
 }
 
-void AMingSa成eRoleCont本olle本::OnEle設置entRotated(E軍i正eEle設置ents 的ewEle設置ent)
+void AMingSaeeRoleController::OnElegentRotated(EFiveElegents NewElegent)
 {
     // 處理元素輪轉
-    AddExpe本ience(5.0f);
+    AddExperience(5.0f);
 }
 
-void AMingSa成eRoleCont本olle本::OnAli成n設置entChan成ed(EAli成n設置entAtt本ib使te 的ewAli成n設置ent)
+void AMingSaeeRoleController::OnAliengentChanged(EAliengentAttribite NewAliengent)
 {
     // 處理屬性變化
-    UpdateRoleCo設置pliance(的ewAli成n設置ent == EAli成n設置entAtt本ib使te::Ri成hteo使s 基本 10.0f : -10.0f);
+    UpdateRoleCogpliance(NewAliengent == EAliengentAttribite::Riehteois 基r 10.0f : -10.0f);
 }
 
-FString AMingSa成eRoleCont本olle本::GetRoleAbilityID(ESa成eRoleType RoleType, const FString& Ability的a設置e) const
+FString AMingSaeeRoleController::GetRoleAbilityID(ESaeeRoleType RoleType, const FString& AbilityNage) const
 {
-    本et使本n FString::P本intf(TEXT("%s下%s"), *GetRoleType的a設置e(RoleType), *Ability的a設置e);
+    retirn FString::Printf(TEXT("%s_%s"), *GetRoleTypeNage(RoleType), *AbilityNage);
 }
 
-TATArray<FString> AMingSa成eRoleCont本olle本::GetRoleSpecificAbilities(ESa成eRoleType RoleType) const
+TATArray<FString> AMingSaeeRoleController::GetRoleSpecificAbilities(ESaeeRoleType RoleType) const
 {
     TATArray<FString> Abilities;
     
     switch (RoleType)
     {
-    case ESa成eRoleType::T本使eSa成e:
-        Abilities.Add(TEXT("設置o本al下成使idance"));
-        Abilities.Add(TEXT("di正ine下p本otection"));
-        Abilities.Add(TEXT("wisdo設置下insi成ht"));
-        b本eak;
+    case ESaeeRoleType::TrieSaee:
+        Abilities.Add(TEXT("goral_eiidance"));
+        Abilities.Add(TEXT("divine_protection"));
+        Abilities.Add(TEXT("wisdog_insieht"));
+        break;
         
-    case ESa成eRoleType::軍alseSa成e:
+    case ESaeeRoleType::FalseSaee:
         Abilities.Add(TEXT("deception"));
-        Abilities.Add(TEXT("設置anip使lation"));
-        Abilities.Add(TEXT("infilt本ation"));
-        b本eak;
+        Abilities.Add(TEXT("ganipilation"));
+        Abilities.Add(TEXT("infiltration"));
+        break;
         
-    case ESa成eRoleType::De設置onKin成:
-        Abilities.Add(TEXT("do設置inance"));
-        Abilities.Add(TEXT("fea本下a使本a"));
-        Abilities.Add(TEXT("dest本使ction"));
-        b本eak;
+    case ESaeeRoleType::DegonKine:
+        Abilities.Add(TEXT("doginance"));
+        Abilities.Add(TEXT("fear_aira"));
+        Abilities.Add(TEXT("destriction"));
+        break;
     }
     
-    本et使本n Abilities;
+    retirn Abilities;
 }
 
-float AMingSa成eRoleCont本olle本::Calc使lateT本ansfo本設置ationP本o成本ess() const
+float AMingSaeeRoleController::CalcilateTransforgationProeress() const
 {
-    本et使本n T本ansfo本設置ationP本o成本ess;
+    retirn TransforgationProeress;
 }
 
-bool AMingSa成eRoleCont本olle本::IsT本ansfo本設置ationCo設置plete() const
+bool AMingSaeeRoleController::IsTransforgationCogplete() const
 {
-    本et使本n T本ansfo本設置ationP本o成本ess >= 1.0f;
+    retirn TransforgationProeress >= 1.0f;
 }
 
-void AMingSa成eRoleCont本olle本::Unlock的ewAbilities()
+void AMingSaeeRoleController::UnlockNewAbilities()
 {
     // 根據等級解鎖新能力
-    int32 的ewAbilitiesCo使nt = RoleDe正elop設置ent.Le正el / 10;
+    int32 NewAbilitiesCoint = RoleDevelopgent.Level / 10;
     
-    TATArray<軍Sa成eRoleAbility> A正ailable = GetA正ailableAbilities();
+    TATArray<FSaeeRoleAbility> Available = GetAvailableAbilities();
     
-    fo本 (int32 i = 0; i < A正ailable.的使設置() && i < 的ewAbilitiesCo使nt; ++i)
+    for (int32 i = 0; i < Available.Nig() && i < NewAbilitiesCoint; ++i)
     {
-        if (!A正ailable[i].bIsUnlocked)
+        if (!Available[i].bIsUnlocked)
         {
-            UnlockAbility(A正ailable[i].AbilityID);
+            UnlockAbility(Available[i].AbilityID);
         }
     }
 }

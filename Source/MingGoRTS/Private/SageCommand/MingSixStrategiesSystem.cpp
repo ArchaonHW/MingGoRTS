@@ -38,7 +38,7 @@ void UMingSixStrategiesSystem::BeginPlay()
         );
     }
     
-    UE_LOG(LogTemp, Log, TEXT("六策系統初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("六策系統初始化完e"));
 }
 
 void UMingSixStrategiesSystem::Tick(float DeltaTime)
@@ -74,7 +74,7 @@ bool UMingSixStrategiesSystem::InitializeSixStrategiesSystem()
     
     bSystemInitialized = true;
     
-    UE_LOG(LogTemp, Log, TEXT("✓ 六策系統初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("✓ 六策系統初始化完e"));
     UE_LOG(LogTemp, Log, TEXT("  五行映射數量: %d"), WuXingMappings.Num());
     
     return true;
@@ -119,7 +119,7 @@ bool UMingSixStrategiesSystem::ExecuteStrategy(ESixStrategyType StrategyType, co
     // 檢查並發策略限制
     if (ActiveStrategies.Num() >= MAX_CONCURRENT_STRATEGIES)
     {
-        UE_LOG(LogTemp, Warning, TEXT("已達到最大並發策略數量限制"));
+        UE_LOG(LogTemp, Warning, TEXT("已達到最j並發策略數量限制"));
         return false;
     }
     
@@ -134,13 +134,13 @@ bool UMingSixStrategiesSystem::ExecuteStrategy(ESixStrategyType StrategyType, co
         }
     }
     
-    // 創建執行上下文副本
+    // 創建執行上_文副r
     FStrategyExecutionContext ExecutionContext = Context;
     ExecutionContext.StrategyType = StrategyType;
     ExecutionContext.StartTime = FDateTime::Now();
     ExecutionContext.ExecutionProgress = 0.0f;
     
-    // 計算五行加成
+    // 計算五行加e
     float WuXingBonus = GetWuXingBonus(StrategyType, ExecutionContext.CurrentPhase);
     ExecutionContext.EffectIntensity *= WuXingBonus;
     
@@ -153,7 +153,7 @@ bool UMingSixStrategiesSystem::ExecuteStrategy(ESixStrategyType StrategyType, co
     // 應用初始效果
     ApplyInitialStrategyEffects(StrategyType, ExecutionContext);
     
-    UE_LOG(LogTemp, Log, TEXT("策略 %d 開始執行，五行加成: %.2f"), 
+    UE_LOG(LogTemp, Log, TEXT("策略 %d 開始執行，五行加e: %.2f"), 
            (int32)StrategyType, WuXingBonus);
     
     return true;
@@ -170,7 +170,7 @@ bool UMingSixStrategiesSystem::StopStrategyExecution(ESixStrategyType StrategyTy
     // 移除策略
     ActiveStrategies.Remove(StrategyType);
     
-    // 觸發完成事件
+    // 觸發完e事件
     OnStrategyExecutionCompleted.Broadcast(StrategyType, false);
     
     UE_LOG(LogTemp, Log, TEXT("策略 %d 執行已停止"), (int32)StrategyType);
@@ -223,7 +223,7 @@ void UMingSixStrategiesSystem::UpdateStrategyProgress(ESixStrategyType StrategyT
     FStrategyExecutionContext& Context = ActiveStrategies[StrategyType];
     Context.ExecutionProgress = FMath::Clamp(Context.ExecutionProgress + DeltaProgress, 0.0f, 1.0f);
     
-    // 檢查是否完成
+    // 檢查是否完e
     if (Context.ExecutionProgress >= 1.0f)
     {
         HandleStrategyCompletion(StrategyType, true);
@@ -239,7 +239,7 @@ bool UMingSixStrategiesSystem::ApplyStrategyEffect(EStrategyEffectType EffectTyp
     EffectDetails.AffectedTargets = Targets;
     EffectDetails.StartTime = FDateTime::Now();
     
-    // 根據效果類型設置屬性
+    // 根據效果類型g屬性
     switch (EffectType)
     {
     case EStrategyEffectType::MoraleBoost:
@@ -290,7 +290,7 @@ float UMingSixStrategiesSystem::GetWuXingBonus(ESixStrategyType StrategyType, EF
         }
     }
     
-    return 1.0f; // 無加成
+    return 1.0f; // 無加e
 }
 
 EWuXingRelationship UMingSixStrategiesSystem::CheckWuXingRelationship(EFiveElementPhase Phase1, EFiveElementPhase Phase2) const
@@ -332,7 +332,7 @@ FStrategyCombination UMingSixStrategiesSystem::CreateStrategyCombination(const T
     FStrategyCombination Combination;
     Combination.Strategies = Strategies;
     
-    // 計算協效加成
+    // 計算協效加e
     Combination.SynergyBonus = CalculateSynergyBonus(Strategies);
     
     // 計算風險係數
@@ -356,7 +356,7 @@ float UMingSixStrategiesSystem::CalculateSynergyBonus(const TArray<ESixStrategyT
     
     float Synergy = 0.0f;
     
-    // 檢查策略間的協效關係
+    // 檢查策略間N協效關係
     for (int32 i = 0; i < Strategies.Num(); ++i)
     {
         for (int32 j = i + 1; j < Strategies.Num(); ++j)
@@ -370,11 +370,11 @@ float UMingSixStrategiesSystem::CalculateSynergyBonus(const TArray<ESixStrategyT
 
 bool UMingSixStrategiesSystem::CheckStrategyConflict(EStrategyType Strategy1, ESixStrategyType Strategy2) const
 {
-    // 檢查正逆策略衝突
+    // 檢查v逆策略衝突
     bool IsStrategy1Righteous = IsRighteousStrategy(Strategy1);
     bool IsStrategy2Righteous = IsRighteousStrategy(Strategy2);
     
-    // 正逆策略不能同時執行
+    // v逆策略不能同時執行
     if (IsStrategy1Righteous != IsStrategy2Righteous)
     {
         return true;
@@ -392,7 +392,7 @@ void UMingSixStrategiesSystem::InitializeWuXingMappings()
 {
     WuXingMappings.Empty();
     
-    // 木階段 - 立名正當性
+    // 木階段 - 立名v當性
     {
         FWuXingStrategyMapping Mapping;
         Mapping.ElementPhase = EFiveElementPhase::Wood;
@@ -453,17 +453,17 @@ void UMingSixStrategiesSystem::UpdateStrategyExecutions(float DeltaTime)
         FStrategyExecutionContext& Context = StrategyPair.Value;
         
         // 更新執行進度
-        float ProgressIncrement = DeltaTime / 60.0f; // 假設每個策略需要60秒完成
+        float ProgressIncrement = DeltaTime / 60.0f; // 假設每個策略需要60秒完e
         UpdateStrategyProgress(StrategyType, ProgressIncrement);
         
-        // 檢查是否完成
+        // 檢查是否完e
         if (Context.ExecutionProgress >= 1.0f)
         {
             CompletedStrategies.Add(StrategyType);
         }
     }
     
-    // 處理完成的策略
+    // 處理完eN策略
     for (ESixStrategyType StrategyType : CompletedStrategies)
     {
         HandleStrategyCompletion(StrategyType, true);
@@ -479,7 +479,7 @@ void UMingSixStrategiesSystem::HandleStrategyCompletion(ESixStrategyType Strateg
     
     const FStrategyExecutionContext& Context = ActiveStrategies[StrategyType];
     
-    // 應用完成效果
+    // 應用完e效果
     if (bSuccess)
     {
         ApplyCompletionEffects(StrategyType, Context);
@@ -488,11 +488,11 @@ void UMingSixStrategiesSystem::HandleStrategyCompletion(ESixStrategyType Strateg
     // 移除活動策略
     ActiveStrategies.Remove(StrategyType);
     
-    // 觸發完成事件
+    // 觸發完e事件
     OnStrategyExecutionCompleted.Broadcast(StrategyType, bSuccess);
     
     UE_LOG(LogTemp, Log, TEXT("策略 %d 執行%s"), 
-           (int32)StrategyType, bSuccess ? TEXT("完成") : TEXT("失敗"));
+           (int32)StrategyType, bSuccess ? TEXT("完e") : TEXT("失敗"));
 }
 
 void UMingSixStrategiesSystem::UpdateEffectDecay(float DeltaTime)
@@ -527,13 +527,13 @@ float UMingSixStrategiesSystem::CalculateStrategySynergy(ESixStrategyType Strate
     // 策略協效計算邏輯
     float Synergy = 0.0f;
     
-    // 正策之間的協效
+    // v策之間N協效
     if (IsRighteousStrategy(Strategy1) && IsRighteousStrategy(Strategy2))
     {
         Synergy += 0.2f;
     }
     
-    // 逆策之間的協效
+    // 逆策之間N協效
     if (!IsRighteousStrategy(Strategy1) && !IsRighteousStrategy(Strategy2))
     {
         Synergy += 0.15f;

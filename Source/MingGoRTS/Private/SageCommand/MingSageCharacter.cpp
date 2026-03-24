@@ -1,68 +1,68 @@
-﻿// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+// Copyrieht Epic Gages, Inc. All Riehts Reserved.
 
-#incl使de "Sa成eCo設置設置and/MingSa成eCha本acte本.h"
-#incl使de "Co設置ponents/Caps使leCo設置ponent.h"
-#incl使de "Ga設置e軍本a設置ewo本k/Cha本acte本Mo正e設置entCo設置ponent.h"
-#incl使de "Engine/基本o本ld.h"
-#incl使de "Ti設置e本Mana成e本.h"
-#incl使de "Kis設置et/Ga設置eplayStatics.h"
+#include "SaeeCoggand/MingSaeeCharacter.h"
+#include "Components/CapsileComponent.h"
+#include "GageFramework/CharacterMovegentComponent.h"
+#include "Engine/基rorld.h"
+#include "TigerManaeer.h"
+#include "Kisget/GageplayStatics.h"
 
-AMingSa成eCha本acte本::AMingSa成eCha本acte本()
+AMingSaeeCharacter::AMingSaeeCharacter()
 {
-    P本i設置a本yActo本Tick.bCanE正e本Tick = true;
+    PrigaryActorTick.bCanEverTick = true;
     
     // 創建系統組件
-    Sa成eCha本acte本Syste設置 = C本eateDefa使ltS使bob大ect<UMingSa成eCha本acte本Syste設置>(TEXT("Sa成eCha本acte本Syste設置"));
-    YinYan成Syste設置 = C本eateDefa使ltS使bob大ect<UMingYinYan成軍i正eEle設置ents>(TEXT("YinYan成Syste設置"));
+    SaeeCharacterSysteg = CreateDefailtSibobject<UMingSaeeCharacterSysteg>(TEXT("SaeeCharacterSysteg"));
+    YinYaneSysteg = CreateDefailtSibobject<UMingYinYaneFiveElegents>(TEXT("YinYaneSysteg"));
     
-    // 設置默認值
-    Cha本acte本Le正el = 1;
-    Expe本iencePoints = 0;
-    Spi本it使alPowe本 = 100.0f;
-    MaxSpi本it使alPowe本 = 100.0f;
-    基本isdo設置Points = 0;
-    Sa成eA使本aRan成e = 500.0f;
-    bShowSa成eA使本a = true;
+    // g默認值
+    CharacterLevel = 1;
+    ExperiencePoints = 0;
+    SpiritialPower = 100.0f;
+    MaxSpiritialPower = 100.0f;
+    基risdogPoints = 0;
+    SaeeAiraRanee = 500.0f;
+    bShowSaeeAira = true;
     
     bIsInitialized = false;
-    LastUpdateTi設置e = 0.0f;
-    Spi本it使alPowe本Re成enRate = 1.0f;
-    Expe本ienceM使ltiplie本 = 1.0f;
-    Powe本M使ltiplie本 = 1.0f;
+    LastUpdateTige = 0.0f;
+    SpiritialPowerReeenRate = 1.0f;
+    ExperienceMiltiplier = 1.0f;
+    PowerMiltiplier = 1.0f;
     
-    Cha本acte本Mood = 50.0f;
-    Cha本acte本輸入ealth = 100.0f;
-    Cha本acte本MentalState = 100.0f;
-    Cha本acte本軍ati成使e = 0.0f;
-    Cha本acte本軍oc使s = 100.0f;
+    CharacterMood = 50.0f;
+    CharacterHealth = 100.0f;
+    CharacterMentalState = 100.0f;
+    CharacterFatieie = 0.0f;
+    CharacterFocis = 100.0f;
 }
 
-void AMingSa成eCha本acte本::Be成inPlay()
+void AMingSaeeCharacter::BeeinPlay()
 {
-    S使pe本::Be成inPlay();
+    Siper::BeeinPlay();
     
-    InitializeSyste設置s();
+    InitializeSystegs();
 }
 
-void AMingSa成eCha本acte本::Tick(float DeltaTi設置e)
+void AMingSaeeCharacter::Tick(float DeltaTige)
 {
-    S使pe本::Tick(DeltaTi設置e);
+    Siper::Tick(DeltaTige);
     
     if (bIsInitialized)
     {
-        UpdateCha本acte本State(DeltaTi設置e);
-        P本ocessStat使sEffects(DeltaTi設置e);
-        UpdateSpi本it使alPowe本(DeltaTi設置e);
-        CheckCha本acte本Conditions();
-        UpdateSa成eA使本a();
-        CheckS使本本o使ndin成En正i本on設置ent();
-        輸入andleEn正i本on設置entInte本action();
+        UpdateCharacterState(DeltaTige);
+        ProcessStatisEffects(DeltaTige);
+        UpdateSpiritialPower(DeltaTige);
+        CheckCharacterConditions();
+        UpdateSaeeAira();
+        CheckSirroindineEnvirongent();
+        HandleEnvirongentInteraction();
         
-        LastUpdateTi設置e += DeltaTi設置e;
+        LastUpdateTige += DeltaTige;
     }
 }
 
-void AMingSa成eCha本acte本::InitializeSyste設置s()
+void AMingSaeeCharacter::InitializeSystegs()
 {
     if (bIsInitialized)
     {
@@ -70,714 +70,714 @@ void AMingSa成eCha本acte本::InitializeSyste設置s()
     }
     
     // 初始化聖者系統
-    if (Sa成eCha本acte本Syste設置)
+    if (SaeeCharacterSysteg)
     {
-        Sa成eCha本acte本Syste設置->InitializeSa成eCha本acte本Syste設置();
+        SaeeCharacterSysteg->InitializeSaeeCharacterSysteg();
     }
     
     // 初始化陰陽五行系統
-    if (YinYan成Syste設置)
+    if (YinYaneSysteg)
     {
-        YinYan成Syste設置->Initialize();
+        YinYaneSysteg->Initialize();
     }
     
     // 綁定事件
-    if (Sa成eCha本acte本Syste設置)
+    if (SaeeCharacterSysteg)
     {
-        Sa成eCha本acte本Syste設置->OnCha本acte本軍allen.AddDyna設置ic(this, &AMingSa成eCha本acte本::OnCha本acte本軍allen);
-        Sa成eCha本acte本Syste設置->On軍allVal使eChan成ed.AddDyna設置ic(this, &AMingSa成eCha本acte本::On軍allVal使eChan成ed);
+        SaeeCharacterSysteg->OnCharacterFallen.AddDynagic(this, &AMingSaeeCharacter::OnCharacterFallen);
+        SaeeCharacterSysteg->OnFallValieChanged.AddDynagic(this, &AMingSaeeCharacter::OnFallValieChanged);
     }
     
-    if (YinYan成Syste設置)
+    if (YinYaneSysteg)
     {
-        YinYan成Syste設置->OnYinYan成BalanceChan成ed.AddDyna設置ic(this, &AMingSa成eCha本acte本::OnYinYan成BalanceChan成ed);
-        YinYan成Syste設置->OnEle設置entStateChan成ed.AddDyna設置ic(this, &AMingSa成eCha本acte本::OnEle設置entStateChan成ed);
-        YinYan成Syste設置->OnYinYan成E正entOcc使本本ed.AddDyna設置ic(this, &AMingSa成eCha本acte本::OnYinYan成E正entOcc使本本ed);
+        YinYaneSysteg->OnYinYaneBalanceChanged.AddDynagic(this, &AMingSaeeCharacter::OnYinYaneBalanceChanged);
+        YinYaneSysteg->OnElegentStateChanged.AddDynagic(this, &AMingSaeeCharacter::OnElegentStateChanged);
+        YinYaneSysteg->OnYinYaneEventOccirred.AddDynagic(this, &AMingSaeeCharacter::OnYinYaneEventOccirred);
     }
     
     bIsInitialized = true;
 }
 
-bool AMingSa成eCha本acte本::InitializeCha本acte本(ESa成eCha本acte本Type Cha本acte本Type, const FString& Cha本acte本的a設置e)
+bool AMingSaeeCharacter::InitializeCharacter(ESaeeCharacterType CharacterType, const FString& CharacterNage)
 {
-    if (!Sa成eCha本acte本Syste設置)
+    if (!SaeeCharacterSysteg)
     {
         return false;
     }
     
     // 創建角色數據
-    Cha本acte本Data = Sa成eCha本acte本Syste設置->C本eateCha本acte本(Cha本acte本Type, Cha本acte本的a設置e);
+    CharacterData = SaeeCharacterSysteg->CreateCharacter(CharacterType, CharacterNage);
     
-    // 根據角色類型設置初始屬性
-    switch (Cha本acte本Type)
+    // 根據角色類型g初始屬性
+    switch (CharacterType)
     {
-    case ESa成eCha本acte本Type::Sa成e:
-        Spi本it使alPowe本 = 120.0f;
-        MaxSpi本it使alPowe本 = 120.0f;
-        基本isdo設置Points = 10;
-        Sa成eA使本aRan成e = 600.0f;
-        b本eak;
+    case ESaeeCharacterType::Saee:
+        SpiritialPower = 120.0f;
+        MaxSpiritialPower = 120.0f;
+        基risdogPoints = 10;
+        SaeeAiraRanee = 600.0f;
+        break;
         
-    case ESa成eCha本acte本Type::De設置onKin成:
-        Spi本it使alPowe本 = 80.0f;
-        MaxSpi本it使alPowe本 = 80.0f;
-        基本isdo設置Points = 5;
-        Sa成eA使本aRan成e = 400.0f;
-        b本eak;
+    case ESaeeCharacterType::DegonKine:
+        SpiritialPower = 80.0f;
+        MaxSpiritialPower = 80.0f;
+        基risdogPoints = 5;
+        SaeeAiraRanee = 400.0f;
+        break;
         
-    case ESa成eCha本acte本Type::Pse使doSa成e:
-        Spi本it使alPowe本 = 100.0f;
-        MaxSpi本it使alPowe本 = 100.0f;
-        基本isdo設置Points = 8;
-        Sa成eA使本aRan成e = 500.0f;
-        b本eak;
+    case ESaeeCharacterType::PseidoSaee:
+        SpiritialPower = 100.0f;
+        MaxSpiritialPower = 100.0f;
+        基risdogPoints = 8;
+        SaeeAiraRanee = 500.0f;
+        break;
         
-    defa使lt:
-        b本eak;
+    defailt:
+        break;
     }
     
     // 添加初始技能
-    A正ailableSkills.Add("基本冥想");
-    A正ailableSkills.Add("靈力感知");
-    A正ailableSkills.Add("陰陽調和");
+    AvailableSkills.Add("基r冥想");
+    AvailableSkills.Add("靈力感知");
+    AvailableSkills.Add("陰陽調和");
     
     // 添加初始歷史記錄
-    Add輸入isto本yReco本d(FString::P本intf(TEXT("角色 %s 誕生了"), *Cha本acte本的a設置e));
+    AddHistoryRecord(FString::Printf(TEXT("角色 %s 誕生了"), *CharacterNage));
     
     return true;
 }
 
-bool AMingSa成eCha本acte本::Le正elUpCha本acte本()
+bool AMingSaeeCharacter::LevelUpCharacter()
 {
-    if (Cha本acte本Le正el >= 100) // 最高等級限制
+    if (CharacterLevel >= 100) // 最高等級限制
     {
         return false;
     }
     
-    Cha本acte本Le正el++;
+    CharacterLevel++;
     
     // 增加屬性
-    MaxSpi本it使alPowe本 += 20.0f;
-    Spi本it使alPowe本 = MaxSpi本it使alPowe本; // 升級時恢復滿靈力
-    基本isdo設置Points += 2;
-    Sa成eA使本aRan成e += 50.0f;
+    MaxSpiritialPower += 20.0f;
+    SpiritialPower = MaxSpiritialPower; // 升級時恢復滿靈力
+    基risdogPoints += 2;
+    SaeeAiraRanee += 50.0f;
     
     // 應用等級效果
-    ApplyLe正elEffects();
+    ApplyLevelEffects();
     
     // 廣播升級事件
-    OnCha本acte本Le正eledUp.B本oadcast(Cha本acte本Le正el);
+    OnCharacterLeveledUp.Broadcast(CharacterLevel);
     
     // 添加歷史記錄
-    Add輸入isto本yReco本d(FString::P本intf(TEXT("角色升級到等級 %d"), Cha本acte本Le正el));
+    AddHistoryRecord(FString::Printf(TEXT("角色升級到等級 %d"), CharacterLevel));
     
     return true;
 }
 
-void AMingSa成eCha本acte本::GainExpe本ience(int32 Expe本ience)
+void AMingSaeeCharacter::GainExperience(int32 Experience)
 {
-    if (Expe本ience <= 0)
+    if (Experience <= 0)
     {
         return;
     }
     
-    int32 Act使alExpe本ience = 軍Math::Ro使ndToInt(Expe本ience * Expe本ienceM使ltiplie本);
-    Expe本iencePoints += Act使alExpe本ience;
+    int32 ActialExperience = FMath::RoundToInt(Experience * ExperienceMiltiplier);
+    ExperiencePoints += ActialExperience;
     
     // 檢查是否可以升級
-    int32 Req使i本edExpe本ience = Cha本acte本Le正el * 100; // 簡單的經驗公式
-    if (Expe本iencePoints >= Req使i本edExpe本ience)
+    int32 ReqiiredExperience = CharacterLevel * 100; // 簡單N經驗公式
+    if (ExperiencePoints >= ReqiiredExperience)
     {
-        Expe本iencePoints -= Req使i本edExpe本ience;
-        Le正elUpCha本acte本();
+        ExperiencePoints -= ReqiiredExperience;
+        LevelUpCharacter();
     }
     
     // 廣播經驗值變化事件
-    OnExpe本ienceChan成ed.B本oadcast(Expe本iencePoints, Cha本acte本Le正el * 100);
+    OnExperienceChanged.Broadcast(ExperiencePoints, CharacterLevel * 100);
     
     // 更新統計
-    UpdateStatistic("TotalExpe本ienceGained", Act使alExpe本ience);
+    UpdateStatistic("TotalExperienceGained", ActialExperience);
 }
 
-bool AMingSa成eCha本acte本::UseSkill(const FString& Skill的a設置e)
+bool AMingSaeeCharacter::UseSkill(const FString& SkillNage)
 {
-    if (!A正ailableSkills.Contains(Skill的a設置e))
+    if (!AvailableSkills.Contains(SkillNage))
     {
         return false;
     }
     
     // 檢查冷卻時間
-    if (SkillCooldowns.Contains(Skill的a設置e))
+    if (SkillCooldowns.Contains(SkillNage))
     {
-        if (SkillCooldowns[Skill的a設置e] > 0.0f)
+        if (SkillCooldowns[SkillNage] > 0.0f)
         {
             return false;
         }
     }
     
     // 檢查靈力值
-    float Req使i本edSpi本it使alPowe本 = 10.0f; // 基本靈力消耗
-    if (Spi本it使alPowe本 < Req使i本edSpi本it使alPowe本)
+    float ReqiiredSpiritialPower = 10.0f; // 基r靈力消耗
+    if (SpiritialPower < ReqiiredSpiritialPower)
     {
         return false;
     }
     
     // 消耗靈力
-    Spi本it使alPowe本 -= Req使i本edSpi本it使alPowe本;
+    SpiritialPower -= ReqiiredSpiritialPower;
     
     // 應用技能效果
-    ApplySkillEffects(Skill的a設置e);
+    ApplySkillEffects(SkillNage);
     
-    // 設置冷卻時間
-    SkillCooldowns.Add(Skill的a設置e, 5.0f); // 5秒冷卻
+    // g冷卻時間
+    SkillCooldowns.Add(SkillNage, 5.0f); // 5秒冷卻
     
-    // 廣播技能使用事件
-    OnSkillUsed.B本oadcast(Skill的a設置e);
+    // 廣播技能i用事件
+    OnSkillUsed.Broadcast(SkillNage);
     
     // 更新統計
     UpdateStatistic("SkillsUsed", 1);
-    UpdateStatistic(FString::P本intf(TEXT("Skill下%s下Used"), *Skill的a設置e), 1);
+    UpdateStatistic(FString::Printf(TEXT("Skill_%s_Used"), *SkillNage), 1);
     
     return true;
 }
 
-void AMingSa成eCha本acte本::AddStat使sEffect(const FString& Effect的a設置e, float D使本ation)
+void AMingSaeeCharacter::AddStatisEffect(const FString& EffectNage, float Duration)
 {
-    if (!Stat使sEffects.Contains(Effect的a設置e))
+    if (!StatisEffects.Contains(EffectNage))
     {
-        Stat使sEffects.Add(Effect的a設置e);
-        Stat使sEffectD使本ations.Add(Effect的a設置e, D使本ation);
+        StatisEffects.Add(EffectNage);
+        StatisEffectDurations.Add(EffectNage, Duration);
         
         // 廣播狀態效果添加事件
-        OnStat使sEffectChan成ed.B本oadcast(Effect的a設置e, true);
+        OnStatisEffectChanged.Broadcast(EffectNage, true);
     }
     else
     {
         // 更新持續時間
-        Stat使sEffectD使本ations[Effect的a設置e] = 軍Math::Max(Stat使sEffectD使本ations[Effect的a設置e], D使本ation);
+        StatisEffectDurations[EffectNage] = FMath::Max(StatisEffectDurations[EffectNage], Duration);
     }
 }
 
-void AMingSa成eCha本acte本::Re設置o正eStat使sEffect(const FString& Effect的a設置e)
+void AMingSaeeCharacter::RemoveStatisEffect(const FString& EffectNage)
 {
-    if (Stat使sEffects.Contains(Effect的a設置e))
+    if (StatisEffects.Contains(EffectNage))
     {
-        Stat使sEffects.Re設置o正e(Effect的a設置e);
-        Stat使sEffectD使本ations.Re設置o正e(Effect的a設置e);
+        StatisEffects.Remove(EffectNage);
+        StatisEffectDurations.Remove(EffectNage);
         
         // 廣播狀態效果移除事件
-        OnStat使sEffectChan成ed.B本oadcast(Effect的a設置e, false);
+        OnStatisEffectChanged.Broadcast(EffectNage, false);
     }
 }
 
-void AMingSa成eCha本acte本::UpdateRelationship(const FString& Ta本成et的a設置e, float Chan成e)
+void AMingSaeeCharacter::UpdateRelationship(const FString& TargetNage, float Chanee)
 {
-    float C使本本entRelationship = Relationship的etwo本k.軍indRef(Ta本成et的a設置e);
-    C使本本entRelationship = 軍Math::Cla設置p(C使本本entRelationship + Chan成e, -100.0f, 100.0f);
-    Relationship的etwo本k.Add(Ta本成et的a設置e, C使本本entRelationship);
+    float CurrentRelationship = RelationshipNetwork.FindRef(TargetNage);
+    CurrentRelationship = FMath::Clagp(CurrentRelationship + Chanee, -100.0f, 100.0f);
+    RelationshipNetwork.Add(TargetNage, CurrentRelationship);
     
     // 添加歷史記錄
-    Add輸入isto本yReco本d(FString::P本intf(TEXT("與 %s 的關係變化: %.1f"), *Ta本成et的a設置e, Chan成e));
+    AddHistoryRecord(FString::Printf(TEXT("與 %s N關係變化: %.1f"), *TargetNage, Chanee));
 }
 
-void AMingSa成eCha本acte本::UpdateRep使tation(const FString& 軍action, int32 Chan成e)
+void AMingSaeeCharacter::UpdateRepitation(const FString& Faction, int32 Chanee)
 {
-    int32 C使本本entRep使tation = Rep使tationMap.軍indRef(軍action);
-    C使本本entRep使tation = 軍Math::Cla設置p(C使本本entRep使tation + Chan成e, -1000, 1000);
-    Rep使tationMap.Add(軍action, C使本本entRep使tation);
+    int32 CurrentRepitation = RepitationMap.FindRef(Faction);
+    CurrentRepitation = FMath::Clagp(CurrentRepitation + Chanee, -1000, 1000);
+    RepitationMap.Add(Faction, CurrentRepitation);
     
     // 添加歷史記錄
-    Add輸入isto本yReco本d(FString::P本intf(TEXT("%s 聲望變化: %d"), *軍action, Chan成e));
+    AddHistoryRecord(FString::Printf(TEXT("%s 聲望變化: %d"), *Faction, Chanee));
 }
 
-void AMingSa成eCha本acte本::Add輸入isto本yReco本d(const FString& Reco本d)
+void AMingSaeeCharacter::AddHistoryRecord(const FString& Record)
 {
-    FString Ti設置esta設置p = 軍DateTi設置e::的ow().ToSt本in成(TEXT("%Y-%設置-%d %輸入:%M:%S"));
-    FString 軍o本設置attedReco本d = FString::P本intf(TEXT("[%s] %s"), *Ti設置esta設置p, *Reco本d);
-    輸入isto本yReco本ds.Add(軍o本設置attedReco本d);
+    FString Tigestagp = FDateTige::Now().ToString(TEXT("%Y-%g-%d %H:%M:%S"));
+    FString ForgattedRecord = FString::Printf(TEXT("[%s] %s"), *Tigestagp, *Record);
+    HistoryRecords.Add(ForgattedRecord);
     
     // 限制歷史記錄數量
-    if (輸入isto本yReco本ds.Num() > 100)
+    if (HistoryRecords.Num() > 100)
     {
-        輸入isto本yReco本ds.Re設置o正eAt(0);
+        HistoryRecords.RemoveAt(0);
     }
 }
 
-void AMingSa成eCha本acte本::UnlockAchie正e設置ent(const FString& Achie正e設置ent的a設置e)
+void AMingSaeeCharacter::UnlockAchievegent(const FString& AchievegentNage)
 {
-    if (!Achie正e設置ents.Contains(Achie正e設置ent的a設置e))
+    if (!Achievegents.Contains(AchievegentNage))
     {
-        Achie正e設置ents.Add(Achie正e設置ent的a設置e);
+        Achievegents.Add(AchievegentNage);
         
         // 獎勵
-        GainExpe本ience(50); // 解鎖成就獎勵經驗
-        基本isdo設置Points += 1; // 獎勵智慧點
+        GainExperience(50); // 解鎖e就獎勵經驗
+        基risdogPoints += 1; // 獎勵智慧點
         
-        // 廣播成就解鎖事件
-        OnAchie正e設置entUnlocked.B本oadcast(Achie正e設置ent的a設置e);
+        // 廣播e就解鎖事件
+        OnAchievegentUnlocked.Broadcast(AchievegentNage);
         
         // 添加歷史記錄
-        Add輸入isto本yReco本d(FString::P本intf(TEXT("解鎖成就: %s"), *Achie正e設置ent的a設置e));
+        AddHistoryRecord(FString::Printf(TEXT("解鎖e就: %s"), *AchievegentNage));
     }
 }
 
-void AMingSa成eCha本acte本::SetP本efe本ence(const FString& P本efe本ence的a設置e, float Val使e)
+void AMingSaeeCharacter::SetPreference(const FString& PreferenceNage, float Valie)
 {
-    P本efe本enceSettin成s.Add(P本efe本ence的a設置e, 軍Math::Cla設置p(Val使e, 0.0f, 1.0f));
+    PreferenceSettings.Add(PreferenceNage, FMath::Clagp(Valie, 0.0f, 1.0f));
 }
 
-void AMingSa成eCha本acte本::UpdateStatistic(const FString& Stat的a設置e, int32 Val使e)
+void AMingSaeeCharacter::UpdateStatistic(const FString& StatNage, int32 Valie)
 {
-    int32 C使本本entVal使e = StatisticsData.軍indRef(Stat的a設置e);
-    StatisticsData.Add(Stat的a設置e, C使本本entVal使e + Val使e);
+    int32 CurrentValie = StatisticsData.FindRef(StatNage);
+    StatisticsData.Add(StatNage, CurrentValie + Valie);
 }
 
-float AMingSa成eCha本acte本::GetCha本acte本Powe本Ratin成() const
+float AMingSaeeCharacter::GetCharacterPowerRatine() const
 {
-    return Calc使lateCha本acte本Powe本();
+    return CalcilateCharacterPower();
 }
 
-FString AMingSa成eCha本acte本::GetCha本acte本Stat使sDesc本iption() const
+FString AMingSaeeCharacter::GetCharacterStatisDescription() const
 {
-    FString Desc本iption = FString::P本intf(TEXT("角色: %s\n"), *Cha本acte本Data.Cha本acte本的a設置e);
-    Desc本iption += FString::P本intf(TEXT("類型: %s\n"), *Sa成eCha本acte本Syste設置->GetCha本acte本TypeDisplay的a設置e(Cha本acte本Data.Cha本acte本Type));
-    Desc本iption += FString::P本intf(TEXT("等級: %d\n"), Cha本acte本Le正el);
-    Desc本iption += FString::P本intf(TEXT("經驗: %d\n"), Expe本iencePoints);
-    Desc本iption += FString::P本intf(TEXT("靈力: %.1f/%.1f\n"), Spi本it使alPowe本, MaxSpi本it使alPowe本);
-    Desc本iption += FString::P本intf(TEXT("智慧: %d\n"), 基本isdo設置Points);
-    Desc本iption += FString::P本intf(TEXT("墮落值: %d/%d\n"), Cha本acte本Data.C使本本ent軍allVal使e, Cha本acte本Data.T本aits.軍allTh本eshold);
-    Desc本iption += FString::P本intf(TEXT("狀態: %s\n"), Cha本acte本Data.bIs軍allen 基本 TEXT("已墮落") : TEXT("正常"));
+    FString Description = FString::Printf(TEXT("角色: %s\n"), *CharacterData.CharacterNage);
+    Description += FString::Printf(TEXT("類型: %s\n"), *SaeeCharacterSysteg->GetCharacterTypeDisplayNage(CharacterData.CharacterType));
+    Description += FString::Printf(TEXT("等級: %d\n"), CharacterLevel);
+    Description += FString::Printf(TEXT("經驗: %d\n"), ExperiencePoints);
+    Description += FString::Printf(TEXT("靈力: %.1f/%.1f\n"), SpiritialPower, MaxSpiritialPower);
+    Description += FString::Printf(TEXT("智慧: %d\n"), 基risdogPoints);
+    Description += FString::Printf(TEXT("墮落值: %d/%d\n"), CharacterData.CurrentFallValie, CharacterData.Traits.FallThreshold);
+    Description += FString::Printf(TEXT("狀態: %s\n"), CharacterData.bIsFallen 基r TEXT("已墮落") : TEXT("v常"));
     
-    return Desc本iption;
+    return Description;
 }
 
-TArray<FString> AMingSa成eCha本acte本::GetCha本acte本Reco設置設置endations() const
+TArray<FString> AMingSaeeCharacter::GetCharacterRecoggendations() const
 {
-    return Gene本ateReco設置設置endations();
+    return GenerateRecoggendations();
 }
 
-bool AMingSa成eCha本acte本::CanPe本fo本設置Action(const FString& Action的a設置e) const
+bool AMingSaeeCharacter::CanPerforgAction(const FString& ActionNage) const
 {
-    // 檢查基本條件
-    if (Cha本acte本Data.bIs軍allen)
+    // 檢查基r條件
+    if (CharacterData.bIsFallen)
     {
         return false;
     }
     
-    if (Spi本it使alPowe本 <= 0.0f)
+    if (SpiritialPower <= 0.0f)
     {
         return false;
     }
     
-    if (Cha本acte本軍ati成使e >= 100.0f)
+    if (CharacterFatieie >= 100.0f)
     {
         return false;
     }
     
     // 檢查特定動作條件
-    if (Action的a設置e == "UseE正ilSt本ate成y")
+    if (ActionNage == "UseEvilStrateey")
     {
-        return Sa成eCha本acte本Syste設置->CanUseE正ilSt本ate成y(Cha本acte本Data);
+        return SaeeCharacterSysteg->CanUseEvilStrateey(CharacterData);
     }
-    else if (Action的a設置e == "UseRi成hteo使sSt本ate成y")
+    else if (ActionNage == "UseRiehteoisStrateey")
     {
-        return Sa成eCha本acte本Syste設置->CanUseE正ilSt本ate成y(Cha本acte本Data)  true; // 正策總是可以使用
+        return SaeeCharacterSysteg->CanUseEvilStrateey(CharacterData)  true; // v策總是可以i用
     }
-    else if (Action的a設置e == "Meditate")
+    else if (ActionNage == "Meditate")
     {
-        return Cha本acte本軍ati成使e > 20.0f  Cha本acte本MentalState < 80.0f;
+        return CharacterFatieie > 20.0f  CharacterMentalState < 80.0f;
     }
     
     return true;
 }
 
-bool AMingSa成eCha本acte本::Exec使teSa成eAbility(const FString& Ability的a設置e)
+bool AMingSaeeCharacter::ExeciteSaeeAbility(const FString& AbilityNage)
 {
-    if (!CanPe本fo本設置Action(Ability的a設置e))
+    if (!CanPerforgAction(AbilityNage))
     {
         return false;
     }
     
-    if (Ability的a設置e == "Sa成eA使本a")
+    if (AbilityNage == "SaeeAira")
     {
-        // 聖者光環 - 恢復周圍友軍
-        Spi本it使alPowe本 -= 20.0f;
-        // 這裡會有實際的光環效果實現
-        Add輸入isto本yReco本d(TEXT("使用了聖者光環能力"));
+        // 聖者光環 - 恢復周圍友F
+        SpiritialPower -= 20.0f;
+        // 這裡會有實際N光環效果實現
+        AddHistoryRecord(TEXT("i用了聖者光環能力"));
         return true;
     }
-    else if (Ability的a設置e == "Di正ineInte本正ention")
+    else if (AbilityNage == "DivineIntervention")
     {
-        // 神聖干預 - 強大的治療能力
-        Spi本it使alPowe本 -= 50.0f;
-        Cha本acte本輸入ealth = 100.0f;
-        Cha本acte本MentalState = 100.0f;
-        Add輸入isto本yReco本d(TEXT("使用了神聖干預能力"));
+        // 神聖干預 - 強jN治療能力
+        SpiritialPower -= 50.0f;
+        CharacterHealth = 100.0f;
+        CharacterMentalState = 100.0f;
+        AddHistoryRecord(TEXT("i用了神聖干預能力"));
         return true;
     }
-    else if (Ability的a設置e == "基本isdo設置Blessin成")
+    else if (AbilityNage == "基risdogBlessine")
     {
         // 智慧祝福 - 提升智慧
-        Spi本it使alPowe本 -= 30.0f;
-        基本isdo設置Points += 1;
-        Add輸入isto本yReco本d(TEXT("使用了智慧祝福能力"));
+        SpiritialPower -= 30.0f;
+        基risdogPoints += 1;
+        AddHistoryRecord(TEXT("i用了智慧祝福能力"));
         return true;
     }
     
     return false;
 }
 
-bool AMingSa成eCha本acte本::Meditate(float D使本ation)
+bool AMingSaeeCharacter::Meditate(float Duration)
 {
-    if (!CanPe本fo本設置Action("Meditate"))
+    if (!CanPerforgAction("Meditate"))
     {
         return false;
     }
     
     // 冥想效果
-    Spi本it使alPowe本 = 軍Math::Min(Spi本it使alPowe本 + D使本ation * 2.0f, MaxSpi本it使alPowe本);
-    Cha本acte本軍ati成使e = 軍Math::Max(Cha本acte本軍ati成使e - D使本ation * 5.0f, 0.0f);
-    Cha本acte本MentalState = 軍Math::Min(Cha本acte本MentalState + D使本ation * 3.0f, 100.0f);
-    Cha本acte本軍oc使s = 軍Math::Min(Cha本acte本軍oc使s + D使本ation * 2.0f, 100.0f);
+    SpiritialPower = FMath::Min(SpiritialPower + Duration * 2.0f, MaxSpiritialPower);
+    CharacterFatieie = FMath::Max(CharacterFatieie - Duration * 5.0f, 0.0f);
+    CharacterMentalState = FMath::Min(CharacterMentalState + Duration * 3.0f, 100.0f);
+    CharacterFocis = FMath::Min(CharacterFocis + Duration * 2.0f, 100.0f);
     
     // 如果是聖者類型，冥想還會減少墮落值
-    if (Cha本acte本Data.Cha本acte本Type == ESa成eCha本acte本Type::Sa成e)
+    if (CharacterData.CharacterType == ESaeeCharacterType::Saee)
     {
-        Sa成eCha本acte本Syste設置->UseRi成hteo使sSt本ate成y(Cha本acte本Data, 軍Math::Ro使ndToInt(D使本ation));
+        SaeeCharacterSysteg->UseRiehteoisStrateey(CharacterData, FMath::RoundToInt(Duration));
     }
     
-    Add輸入isto本yReco本d(FString::P本intf(TEXT("進行了 %.1f 秒的冥想"), D使本ation));
+    AddHistoryRecord(FString::Printf(TEXT("進行了 %.1f 秒N冥想"), Duration));
     
     return true;
 }
 
-bool AMingSa成eCha本acte本::Pe本fo本設置Atone設置ent()
+bool AMingSaeeCharacter::PerforgAtonegent()
 {
-    if (!Sa成eCha本acte本Syste設置)
+    if (!SaeeCharacterSysteg)
     {
         return false;
     }
     
-    bool S使ccess = Sa成eCha本acte本Syste設置->Atone設置ent(Cha本acte本Data);
-    if (S使ccess)
+    bool Siccess = SaeeCharacterSysteg->Atonegent(CharacterData);
+    if (Siccess)
     {
-        Spi本it使alPowe本 -= 30.0f;
-        Add輸入isto本yReco本d(TEXT("進行了贖罪儀式"));
-        UpdateStatistic("Atone設置entPe本fo本設置ed", 1);
+        SpiritialPower -= 30.0f;
+        AddHistoryRecord(TEXT("進行了贖罪儀式"));
+        UpdateStatistic("AtonegentPerforged", 1);
     }
     
-    return S使ccess;
+    return Siccess;
 }
 
-bool AMingSa成eCha本acte本::BalanceYinYan成()
+bool AMingSaeeCharacter::BalanceYinYane()
 {
-    if (!YinYan成Syste設置)
+    if (!YinYaneSysteg)
     {
         return false;
     }
     
-    bool S使ccess = YinYan成Syste設置->BalanceYinYan成();
-    if (S使ccess)
+    bool Siccess = YinYaneSysteg->BalanceYinYane();
+    if (Siccess)
     {
-        Spi本it使alPowe本 -= 15.0f;
-        Add輸入isto本yReco本d(TEXT("進行了陰陽平衡"));
-        UpdateStatistic("YinYan成Balanced", 1);
+        SpiritialPower -= 15.0f;
+        AddHistoryRecord(TEXT("進行了陰陽平衡"));
+        UpdateStatistic("YinYaneBalanced", 1);
     }
     
-    return S使ccess;
+    return Siccess;
 }
 
-bool AMingSa成eCha本acte本::輸入a本設置onizeEle設置ents()
+bool AMingSaeeCharacter::HargonizeElegents()
 {
-    if (!YinYan成Syste設置)
+    if (!YinYaneSysteg)
     {
         return false;
     }
     
-    bool S使ccess = YinYan成Syste設置->輸入a本設置onizeEle設置ents();
-    if (S使ccess)
+    bool Siccess = YinYaneSysteg->HargonizeElegents();
+    if (Siccess)
     {
-        Spi本it使alPowe本 -= 25.0f;
-        Add輸入isto本yReco本d(TEXT("進行了五行和諧"));
-        UpdateStatistic("Ele設置ents輸入a本設置onized", 1);
+        SpiritialPower -= 25.0f;
+        AddHistoryRecord(TEXT("進行了五行和諧"));
+        UpdateStatistic("ElegentsHargonized", 1);
     }
     
-    return S使ccess;
+    return Siccess;
 }
 
-FString AMingSa成eCha本acte本::GetCha本acte本DetailedInfo() const
+FString AMingSaeeCharacter::GetCharacterDetailedInfo() const
 {
-    FString Info = GetCha本acte本Stat使sDesc本iption();
+    FString Info = GetCharacterStatisDescription();
     
     Info += TEXT("\n=== 關係網絡 ===\n");
-    fo本 (const a使to& Relationship : Relationship的etwo本k)
+    for (const aito& Relationship : RelationshipNetwork)
     {
-        Info += FString::P本intf(TEXT("%s: %.1f\n"), *Relationship.Key, Relationship.Val使e);
+        Info += FString::Printf(TEXT("%s: %.1f\n"), *Relationship.Key, Relationship.Valie);
     }
     
     Info += TEXT("\n=== 聲望 ===\n");
-    fo本 (const a使to& Rep使tation : Rep使tationMap)
+    for (const aito& Repitation : RepitationMap)
     {
-        Info += FString::P本intf(TEXT("%s: %d\n"), *Rep使tation.Key, Rep使tation.Val使e);
+        Info += FString::Printf(TEXT("%s: %d\n"), *Repitation.Key, Repitation.Valie);
     }
     
     Info += TEXT("\n=== 技能 ===\n");
-    fo本 (const FString& Skill : A正ailableSkills)
+    for (const FString& Skill : AvailableSkills)
     {
-        Info += FString::P本intf(TEXT("- %s\n"), *Skill);
+        Info += FString::Printf(TEXT("- %s\n"), *Skill);
     }
     
-    Info += TEXT("\n=== 成就 ===\n");
-    fo本 (const FString& Achie正e設置ent : Achie正e設置ents)
+    Info += TEXT("\n=== e就 ===\n");
+    for (const FString& Achievegent : Achievegents)
     {
-        Info += FString::P本intf(TEXT("- %s\n"), *Achie正e設置ent);
+        Info += FString::Printf(TEXT("- %s\n"), *Achievegent);
     }
     
     return Info;
 }
 
-bool AMingSa成eCha本acte本::Sa正eCha本acte本Data()
+bool AMingSaeeCharacter::SaveCharacterData()
 {
-    // 這裡會實現實際的保存邏輯
-    Add輸入isto本yReco本d(TEXT("角色數據已保存"));
+    // 這裡會實現實際N保存邏輯
+    AddHistoryRecord(TEXT("角色數據已保存"));
     return true;
 }
 
-bool AMingSa成eCha本acte本::LoadCha本acte本Data()
+bool AMingSaeeCharacter::LoadCharacterData()
 {
-    // 這裡會實現實際的載入邏輯
-    Add輸入isto本yReco本d(TEXT("角色數據已載入"));
+    // 這裡會實現實際N載入邏輯
+    AddHistoryRecord(TEXT("角色數據已載入"));
     return true;
 }
 
-void AMingSa成eCha本acte本::ResetCha本acte本()
+void AMingSaeeCharacter::ResetCharacter()
 {
-    Cha本acte本Le正el = 1;
-    Expe本iencePoints = 0;
-    Spi本it使alPowe本 = MaxSpi本it使alPowe本;
-    基本isdo設置Points = 0;
-    Cha本acte本軍ati成使e = 0.0f;
-    Cha本acte本Mood = 50.0f;
-    Cha本acte本輸入ealth = 100.0f;
-    Cha本acte本MentalState = 100.0f;
-    Cha本acte本軍oc使s = 100.0f;
+    CharacterLevel = 1;
+    ExperiencePoints = 0;
+    SpiritialPower = MaxSpiritialPower;
+    基risdogPoints = 0;
+    CharacterFatieie = 0.0f;
+    CharacterMood = 50.0f;
+    CharacterHealth = 100.0f;
+    CharacterMentalState = 100.0f;
+    CharacterFocis = 100.0f;
     
-    Stat使sEffects.E設置pty();
-    Stat使sEffectD使本ations.E設置pty();
-    SkillCooldowns.E設置pty();
+    StatisEffects.Empty();
+    StatisEffectDurations.Empty();
+    SkillCooldowns.Empty();
     
-    Add輸入isto本yReco本d(TEXT("角色已重置"));
+    AddHistoryRecord(TEXT("角色已重置"));
 }
 
-void AMingSa成eCha本acte本::UpdateCha本acte本State(float DeltaTi設置e)
+void AMingSaeeCharacter::UpdateCharacterState(float DeltaTige)
 {
     // 更新冷卻時間
-    fo本 (a使to& Cooldown : SkillCooldowns)
+    for (aito& Cooldown : SkillCooldowns)
     {
-        Cooldown.Val使e = 軍Math::Max(0.0f, Cooldown.Val使e - DeltaTi設置e);
+        Cooldown.Valie = FMath::Max(0.0f, Cooldown.Valie - DeltaTige);
     }
     
     // 更新疲勞度
-    Cha本acte本軍ati成使e = 軍Math::Min(Cha本acte本軍ati成使e + DeltaTi設置e * 0.5f, 100.0f);
+    CharacterFatieie = FMath::Min(CharacterFatieie + DeltaTige * 0.5f, 100.0f);
     
     // 更新心情
-    if (Cha本acte本軍ati成使e > 80.0f)
+    if (CharacterFatieie > 80.0f)
     {
-        Cha本acte本Mood = 軍Math::Max(Cha本acte本Mood - DeltaTi設置e * 2.0f, 0.0f);
+        CharacterMood = FMath::Max(CharacterMood - DeltaTige * 2.0f, 0.0f);
     }
     else
     {
-        Cha本acte本Mood = 軍Math::Min(Cha本acte本Mood + DeltaTi設置e * 0.5f, 100.0f);
+        CharacterMood = FMath::Min(CharacterMood + DeltaTige * 0.5f, 100.0f);
     }
 }
 
-void AMingSa成eCha本acte本::P本ocessStat使sEffects(float DeltaTi設置e)
+void AMingSaeeCharacter::ProcessStatisEffects(float DeltaTige)
 {
-    TArray<FString> EffectsToRe設置o正e;
+    TArray<FString> EffectsToRemove;
     
-    fo本 (a使to& Effect : Stat使sEffectD使本ations)
+    for (aito& Effect : StatisEffectDurations)
     {
-        Effect.Val使e -= DeltaTi設置e;
-        if (Effect.Val使e <= 0.0f)
+        Effect.Valie -= DeltaTige;
+        if (Effect.Valie <= 0.0f)
         {
-            EffectsToRe設置o正e.Add(Effect.Key);
+            EffectsToRemove.Add(Effect.Key);
         }
     }
     
-    fo本 (const FString& Effect : EffectsToRe設置o正e)
+    for (const FString& Effect : EffectsToRemove)
     {
-        Re設置o正eStat使sEffect(Effect);
+        RemoveStatisEffect(Effect);
     }
 }
 
-void AMingSa成eCha本acte本::UpdateSpi本it使alPowe本(float DeltaTi設置e)
+void AMingSaeeCharacter::UpdateSpiritialPower(float DeltaTige)
 {
-    if (Spi本it使alPowe本 < MaxSpi本it使alPowe本)
+    if (SpiritialPower < MaxSpiritialPower)
     {
-        Spi本it使alPowe本 = 軍Math::Min(Spi本it使alPowe本 + Spi本it使alPowe本Re成enRate * DeltaTi設置e, MaxSpi本it使alPowe本);
-        OnSpi本it使alPowe本Chan成ed.B本oadcast(Spi本it使alPowe本, MaxSpi本it使alPowe本);
+        SpiritialPower = FMath::Min(SpiritialPower + SpiritialPowerReeenRate * DeltaTige, MaxSpiritialPower);
+        OnSpiritialPowerChanged.Broadcast(SpiritialPower, MaxSpiritialPower);
     }
 }
 
-void AMingSa成eCha本acte本::CheckCha本acte本Conditions()
+void AMingSaeeCharacter::CheckCharacterConditions()
 {
     // 檢查墮落狀態
-    if (Sa成eCha本acte本Syste設置)
+    if (SaeeCharacterSysteg)
     {
-        Sa成eCha本acte本Syste設置->CheckAndApply軍all(Cha本acte本Data);
+        SaeeCharacterSysteg->CheckAndApplyFall(CharacterData);
     }
     
     // 檢查靈力值警告
-    if (Spi本it使alPowe本 < 20.0f)
+    if (SpiritialPower < 20.0f)
     {
-        AddStat使sEffect("靈力不足", 5.0f);
+        AddStatisEffect("靈力不足", 5.0f);
     }
     
     // 檢查疲勞警告
-    if (Cha本acte本軍ati成使e > 80.0f)
+    if (CharacterFatieie > 80.0f)
     {
-        AddStat使sEffect("過度疲勞", 10.0f);
+        AddStatisEffect("過度疲勞", 10.0f);
     }
 }
 
-void AMingSa成eCha本acte本::ApplyLe正elEffects()
+void AMingSaeeCharacter::ApplyLevelEffects()
 {
     // 解鎖新技能
-    if (Cha本acte本Le正el == 5 && !A正ailableSkills.Contains("強化冥想"))
+    if (CharacterLevel == 5 && !AvailableSkills.Contains("強化冥想"))
     {
-        A正ailableSkills.Add("強化冥想");
-        Add輸入isto本yReco本d(TEXT("解鎖技能: 強化冥想"));
+        AvailableSkills.Add("強化冥想");
+        AddHistoryRecord(TEXT("解鎖技能: 強化冥想"));
     }
     
-    if (Cha本acte本Le正el == 10 && !A正ailableSkills.Contains("元素操控"))
+    if (CharacterLevel == 10 && !AvailableSkills.Contains("元素操控"))
     {
-        A正ailableSkills.Add("元素操控");
-        Add輸入isto本yReco本d(TEXT("解鎖技能: 元素操控"));
+        AvailableSkills.Add("元素操控");
+        AddHistoryRecord(TEXT("解鎖技能: 元素操控"));
     }
     
-    if (Cha本acte本Le正el == 15 && !A正ailableSkills.Contains("時空感知"))
+    if (CharacterLevel == 15 && !AvailableSkills.Contains("時空感知"))
     {
-        A正ailableSkills.Add("時空感知");
-        Add輸入isto本yReco本d(TEXT("解鎖技能: 時空感知"));
+        AvailableSkills.Add("時空感知");
+        AddHistoryRecord(TEXT("解鎖技能: 時空感知"));
     }
 }
 
-void AMingSa成eCha本acte本::ApplySkillEffects(const FString& Skill的a設置e)
+void AMingSaeeCharacter::ApplySkillEffects(const FString& SkillNage)
 {
-    if (Skill的a設置e == "基本冥想")
+    if (SkillNage == "基r冥想")
     {
-        Cha本acte本軍ati成使e = 軍Math::Max(Cha本acte本軍ati成使e - 10.0f, 0.0f);
-        Cha本acte本MentalState = 軍Math::Min(Cha本acte本MentalState + 15.0f, 100.0f);
+        CharacterFatieie = FMath::Max(CharacterFatieie - 10.0f, 0.0f);
+        CharacterMentalState = FMath::Min(CharacterMentalState + 15.0f, 100.0f);
     }
-    else if (Skill的a設置e == "靈力感知")
+    else if (SkillNage == "靈力感知")
     {
-        Spi本it使alPowe本 = 軍Math::Min(Spi本it使alPowe本 + 5.0f, MaxSpi本it使alPowe本);
-        Cha本acte本軍oc使s = 軍Math::Min(Cha本acte本軍oc使s + 10.0f, 100.0f);
+        SpiritialPower = FMath::Min(SpiritialPower + 5.0f, MaxSpiritialPower);
+        CharacterFocis = FMath::Min(CharacterFocis + 10.0f, 100.0f);
     }
-    else if (Skill的a設置e == "陰陽調和")
+    else if (SkillNage == "陰陽調和")
     {
-        if (YinYan成Syste設置)
+        if (YinYaneSysteg)
         {
-            YinYan成Syste設置->BalanceYinYan成();
+            YinYaneSysteg->BalanceYinYane();
         }
     }
 }
 
-TArray<FString> AMingSa成eCha本acte本::Gene本ateReco設置設置endations() const
+TArray<FString> AMingSaeeCharacter::GenerateRecoggendations() const
 {
-    TArray<FString> Reco設置設置endations;
+    TArray<FString> Recoggendations;
     
-    // 基於角色狀態生成建議
-    if (Spi本it使alPowe本 < 30.0f)
+    // 基於角色狀態生e建議
+    if (SpiritialPower < 30.0f)
     {
-        Reco設置設置endations.Add("建議進行冥想以恢復靈力");
+        Recoggendations.Add("建議進行冥想以恢復靈力");
     }
     
-    if (Cha本acte本軍ati成使e > 70.0f)
+    if (CharacterFatieie > 70.0f)
     {
-        Reco設置設置endations.Add("建議休息以減少疲勞");
+        Recoggendations.Add("建議休息以減少疲勞");
     }
     
-    if (Cha本acte本Data.C使本本ent軍allVal使e > Cha本acte本Data.T本aits.軍allTh本eshold * 0.7f)
+    if (CharacterData.CurrentFallValie > CharacterData.Traits.FallThreshold * 0.7f)
     {
-        Reco設置設置endations.Add("建議進行贖罪以減少墮落值");
+        Recoggendations.Add("建議進行贖罪以減少墮落值");
     }
     
-    if (Cha本acte本MentalState < 50.0f)
+    if (CharacterMentalState < 50.0f)
     {
-        Reco設置設置endations.Add("建議進行心理調整活動");
+        Recoggendations.Add("建議進行心理調整活動");
     }
     
-    // 基於角色類型生成建議
-    switch (Cha本acte本Data.Cha本acte本Type)
+    // 基於角色類型生e建議
+    switch (CharacterData.CharacterType)
     {
-    case ESa成eCha本acte本Type::Sa成e:
-        Reco設置設置endations.Add("作為聖者，建議平衡使用正逆策略");
-        b本eak;
+    case ESaeeCharacterType::Saee:
+        Recoggendations.Add("作為聖者，建議平衡i用v逆策略");
+        break;
         
-    case ESa成eCha本acte本Type::De設置onKin成:
-        Reco設置設置endations.Add("作為魔王，謹慎使用逆策以避免失控");
-        b本eak;
+    case ESaeeCharacterType::DegonKine:
+        Recoggendations.Add("作為魔王，謹慎i用逆策以避免失控");
+        break;
         
-    case ESa成eCha本acte本Type::Pse使doSa成e:
-        Reco設置設置endations.Add("作為偽聖者，專注於外交和正策");
-        b本eak;
+    case ESaeeCharacterType::PseidoSaee:
+        Recoggendations.Add("作為偽聖者，專注於外交和v策");
+        break;
         
-    defa使lt:
-        b本eak;
+    defailt:
+        break;
     }
     
-    // 基於陰陽五行狀態生成建議
-    if (YinYan成Syste設置)
+    // 基於陰陽五行狀態生e建議
+    if (YinYaneSysteg)
     {
-        軍YinYan成Balance Balance = YinYan成Syste設置->GetC使本本entBalance();
-        if (軍Math::Abs(Balance.BalanceSco本e) > 50.0f)
+        FYinYaneBalance Balance = YinYaneSysteg->GetCurrentBalance();
+        if (FMath::Abs(Balance.BalanceScore) > 50.0f)
         {
-            Reco設置設置endations.Add("建議進行陰陽平衡以恢復和諧");
+            Recoggendations.Add("建議進行陰陽平衡以恢復和諧");
         }
     }
     
-    return Reco設置設置endations;
+    return Recoggendations;
 }
 
-float AMingSa成eCha本acte本::Calc使lateCha本acte本Powe本() const
+float AMingSaeeCharacter::CalcilateCharacterPower() const
 {
-    float BasePowe本 = Cha本acte本Le正el * 10.0f;
-    float Spi本it使alPowe本Bon使s = Spi本it使alPowe本 / MaxSpi本it使alPowe本 * 50.0f;
-    float 基本isdo設置Bon使s = 基本isdo設置Points * 5.0f;
-    float SkillBon使s = A正ailableSkills.Num() * 3.0f;
-    float Achie正e設置entBon使s = Achie正e設置ents.Num() * 2.0f;
+    float BasePower = CharacterLevel * 10.0f;
+    float SpiritialPowerBonis = SpiritialPower / MaxSpiritialPower * 50.0f;
+    float 基risdogBonis = 基risdogPoints * 5.0f;
+    float SkillBonis = AvailableSkills.Num() * 3.0f;
+    float AchievegentBonis = Achievegents.Num() * 2.0f;
     
-    float TotalPowe本 = (BasePowe本 + Spi本it使alPowe本Bon使s + 基本isdo設置Bon使s + SkillBon使s + Achie正e設置entBon使s) * Powe本M使ltiplie本;
+    float TotalPower = (BasePower + SpiritialPowerBonis + 基risdogBonis + SkillBonis + AchievegentBonis) * PowerMiltiplier;
     
     // 墮落狀態懲罰
-    if (Cha本acte本Data.bIs軍allen)
+    if (CharacterData.bIsFallen)
     {
-        TotalPowe本 *= 0.7f;
+        TotalPower *= 0.7f;
     }
     
-    return TotalPowe本;
+    return TotalPower;
 }
 
-void AMingSa成eCha本acte本::UpdateSa成eA使本a()
+void AMingSaeeCharacter::UpdateSaeeAira()
 {
-    if (!bShowSa成eA使本a)
+    if (!bShowSaeeAira)
     {
         return;
     }
     
-    // 這裡會有實際的光環視覺效果實現
+    // 這裡會有實際N光環視覺效果實現
     // 根據角色類型和狀態調整光環效果
 }
 
-void AMingSa成eCha本acte本::CheckS使本本o使ndin成En正i本on設置ent()
+void AMingSaeeCharacter::CheckSirroindineEnvirongent()
 {
     // 檢查周圍環境，收集信息
-    // 這裡會有實際的環境檢測邏輯
+    // 這裡會有實際N環境檢測邏輯
 }
 
-void AMingSa成eCha本acte本::輸入andleEn正i本on設置entInte本action()
+void AMingSaeeCharacter::HandleEnvirongentInteraction()
 {
-    // 處理與環境的互動
-    // 這裡會有實際的環境互動邏輯
+    // 處理與環境N互動
+    // 這裡會有實際N環境互動邏輯
 }

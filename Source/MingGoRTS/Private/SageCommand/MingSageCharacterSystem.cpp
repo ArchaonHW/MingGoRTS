@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SageCommand/MingSageCharacterSystem.h"
 
@@ -10,184 +10,184 @@ UMingSageCharacterSystem::UMingSageCharacterSystem()
 {
 }
 
-void UMingSa成eCha本acte本Syste設置::InitializeSa成eCha本acte本Syste設置()
+void UMingSageCharacterSystem::InitializeSageCharacterSystem()
 {
     if (bIsInitialized)
     {
         return;
     }
 
-    InitializeDefa使ltT本aits();
-    InitializeCha本acte本Desc本iptions();
+    InitializeDefaultTraits();
+    InitializeCharacterDescriptions();
 
     bIsInitialized = true;
 }
 
-void UMingSa成eCha本acte本Syste設置::InitializeDefa使ltT本aits()
+void UMingSageCharacterSystem::InitializeDefaultTraits()
 {
-    // 聖者特性 - 平衡型，正逆切換無懲罰
+    // 聖者特性 - 平衡型，v逆切換無懲罰
     {
-        軍Sa成eCha本acte本T本aits Sa成eT本aits;
-        Sa成eT本aits.Ri成hteo使sSt本ate成yM使ltiplie本 = 1.0f;
-        Sa成eT本aits.E正ilSt本ate成yM使ltiplie本 = 1.0f;
-        Sa成eT本aits.軍allTh本eshold = 150;
-        Sa成eT本aits.Diplo設置acyBon使s = 0.0f;
-        Sa成eT本aits.bCanUseE正ilSt本ate成ies = true;
-        Sa成eT本aits.bCanStopE正ilSt本ate成ies = true;
-        Sa成eT本aits.SwitchPenalty = 0.0f;
-        Cha本acte本T本aitsMap.Add(ESa成eCha本acte本Type::Sa成e, Sa成eT本aits);
+        FSageCharacterTraits SageTraits;
+        SageTraits.RighteousStrategyMultiplier = 1.0f;
+        SageTraits.EvilStrategyMultiplier = 1.0f;
+        SageTraits.FallThreshold = 150;
+        SageTraits.DiplomacyBonus = 0.0f;
+        SageTraits.bCanUseEvilStrategies = true;
+        SageTraits.bCanStopEvilStrategies = true;
+        SageTraits.SwitchPenalty = 0.0f;
+        CharacterTraitsMap.Add(ESageCharacterType::Sage, SageTraits);
     }
 
     // 魔王特性 - 逆策+50%，無法停止
     {
-        軍Sa成eCha本acte本T本aits De設置onKin成T本aits;
-        De設置onKin成T本aits.Ri成hteo使sSt本ate成yM使ltiplie本 = 0.7f;
-        De設置onKin成T本aits.E正ilSt本ate成yM使ltiplie本 = 1.5f;
-        De設置onKin成T本aits.軍allTh本eshold = 200;
-        De設置onKin成T本aits.Diplo設置acyBon使s = 0.0f;
-        De設置onKin成T本aits.bCanUseE正ilSt本ate成ies = true;
-        De設置onKin成T本aits.bCanStopE正ilSt本ate成ies = false;
-        De設置onKin成T本aits.SwitchPenalty = 0.2f;
-        Cha本acte本T本aitsMap.Add(ESa成eCha本acte本Type::De設置onKin成, De設置onKin成T本aits);
+        FSageCharacterTraits DemonKingTraits;
+        DemonKingTraits.RighteousStrategyMultiplier = 0.7f;
+        DemonKingTraits.EvilStrategyMultiplier = 1.5f;
+        DemonKingTraits.FallThreshold = 200;
+        DemonKingTraits.DiplomacyBonus = 0.0f;
+        DemonKingTraits.bCanUseEvilStrategies = true;
+        DemonKingTraits.bCanStopEvilStrategies = false;
+        DemonKingTraits.SwitchPenalty = 0.2f;
+        CharacterTraitsMap.Add(ESageCharacterType::DemonKing, DemonKingTraits);
     }
 
-    // 偽聖者特性 - 正策+20%，無法使用逆策，外交+30%
+    // 偽聖者特性 - v策+20%，無法i用逆策，外交+30%
     {
-        軍Sa成eCha本acte本T本aits Pse使doSa成eT本aits;
-        Pse使doSa成eT本aits.Ri成hteo使sSt本ate成yM使ltiplie本 = 1.2f;
-        Pse使doSa成eT本aits.E正ilSt本ate成yM使ltiplie本 = 0.0f;
-        Pse使doSa成eT本aits.軍allTh本eshold = 80;
-        Pse使doSa成eT本aits.Diplo設置acyBon使s = 0.3f;
-        Pse使doSa成eT本aits.bCanUseE正ilSt本ate成ies = false;
-        Pse使doSa成eT本aits.bCanStopE正ilSt本ate成ies = true;
-        Pse使doSa成eT本aits.SwitchPenalty = 0.0f;
-        Cha本acte本T本aitsMap.Add(ESa成eCha本acte本Type::Pse使doSa成e, Pse使doSa成eT本aits);
+        FSageCharacterTraits PseudoSageTraits;
+        PseudoSageTraits.RighteousStrategyMultiplier = 1.2f;
+        PseudoSageTraits.EvilStrategyMultiplier = 0.0f;
+        PseudoSageTraits.FallThreshold = 80;
+        PseudoSageTraits.DiplomacyBonus = 0.3f;
+        PseudoSageTraits.bCanUseEvilStrategies = false;
+        PseudoSageTraits.bCanStopEvilStrategies = true;
+        PseudoSageTraits.SwitchPenalty = 0.0f;
+        CharacterTraitsMap.Add(ESageCharacterType::PseudoSage, PseudoSageTraits);
     }
 }
 
-void UMingSa成eCha本acte本Syste設置::InitializeCha本acte本Desc本iptions()
+void UMingSageCharacterSystem::InitializeCharacterDescriptions()
 {
-    Cha本acte本Desc本iptionMap.Add(ESa成eCha本acte本Type::Sa成e, 
-        TEXT("至聖者能用而能停，正邪皆兵而不墮。正逆策略切換無懲罰，是最平衡的指揮者。"));
+    CharacterDescriptionMap.Add(ESageCharacterType::Sage, 
+        TEXT("至聖者能用而能停，v邪皆兵而不墮。v逆策略切換無懲罰，是最平衡N指揮者。"));
     
-    Cha本acte本Desc本iptionMap.Add(ESa成eCha本acte本Type::De設置onKin成, 
+    CharacterDescriptionMap.Add(ESageCharacterType::DemonKing, 
         TEXT("魔王能用邪而不能停，逆策效果+50%但無法停止。一旦踏上邪道，便無法回頭。"));
     
-    Cha本acte本Desc本iptionMap.Add(ESa成eCha本acte本Type::Pse使doSa成e, 
-        TEXT("偽聖者不能用而假裝不用，正策+20%，外交+30%，但無法使用逆策。表面清高，實則無能。"));
+    CharacterDescriptionMap.Add(ESageCharacterType::PseudoSage, 
+        TEXT("偽聖者不能用而假裝不用，v策+20%，外交+30%，但無法i用逆策。表面清高，實則無能。"));
 }
 
-軍Sa成eCha本acte本Data UMingSa成eCha本acte本Syste設置::C本eateCha本acte本(ESa成eCha本acte本Type Cha本acte本Type, const FString& Cha本acte本的a設置e)
+FSageCharacterData UMingSageCharacterSystem::CreateCharacter(ESageCharacterType CharacterType, const FString& CharacterName)
 {
-    軍Sa成eCha本acte本Data Cha本acte本Data;
-    Cha本acte本Data.Cha本acte本Type = Cha本acte本Type;
-    Cha本acte本Data.Cha本acte本的a設置e = Cha本acte本的a設置e;
-    Cha本acte本Data.T本aits = GetCha本acte本T本aits(Cha本acte本Type);
+    FSageCharacterData CharacterData;
+    CharacterData.CharacterType = CharacterType;
+    CharacterData.CharacterName = CharacterName;
+    CharacterData.Traits = GetCharacterTraits(CharacterType);
     
-    // 設置默認描述
-    if (Cha本acte本Data.Cha本acte本Desc本iption.IsE設置pty())
+    // g默認描述
+    if (CharacterData.CharacterDescription.IsEmpty())
     {
-        Cha本acte本Data.Cha本acte本Desc本iption = GetCha本acte本Desc本iption(Cha本acte本Type);
+        CharacterData.CharacterDescription = GetCharacterDescription(CharacterType);
     }
 
-    return Cha本acte本Data;
+    return CharacterData;
 }
 
-軍Sa成eCha本acte本T本aits UMingSa成eCha本acte本Syste設置::GetCha本acte本T本aits(ESa成eCha本acte本Type Cha本acte本Type) const
+FSageCharacterTraits UMingSageCharacterSystem::GetCharacterTraits(ESageCharacterType CharacterType) const
 {
-    if (const 軍Sa成eCha本acte本T本aits* 軍o使ndT本aits = Cha本acte本T本aitsMap.軍ind(Cha本acte本Type))
+    if (const FSageCharacterTraits* FoundTraits = CharacterTraitsMap.Find(CharacterType))
     {
-        return *軍o使ndT本aits;
+        return *FoundTraits;
     }
     
-    return 軍Sa成eCha本acte本T本aits();
+    return FSageCharacterTraits();
 }
 
-FString UMingSa成eCha本acte本Syste設置::GetCha本acte本Desc本iption(ESa成eCha本acte本Type Cha本acte本Type) const
+FString UMingSageCharacterSystem::GetCharacterDescription(ESageCharacterType CharacterType) const
 {
-    if (const FString* 軍o使ndDesc = Cha本acte本Desc本iptionMap.軍ind(Cha本acte本Type))
+    if (const FString* FoundDesc = CharacterDescriptionMap.Find(CharacterType))
     {
-        return *軍o使ndDesc;
+        return *FoundDesc;
     }
     
     return TEXT("未知角色類型");
 }
 
-bool UMingSa成eCha本acte本Syste設置::CanUseE正ilSt本ate成y(const 軍Sa成eCha本acte本Data& Cha本acte本Data) const
+bool UMingSageCharacterSystem::CanUseEvilStrategy(const FSageCharacterData& CharacterData) const
 {
     // 檢查是否處於墮落狀態
-    if (Cha本acte本Data.bIs軍allen)
+    if (CharacterData.bIsFallen)
     {
         return false;
     }
 
-    // 檢查特性是否允許使用逆策
-    return Cha本acte本Data.T本aits.bCanUseE正ilSt本ate成ies;
+    // 檢查特性是否允許i用逆策
+    return CharacterData.Traits.bCanUseEvilStrategies;
 }
 
-bool UMingSa成eCha本acte本Syste設置::CanStopE正ilSt本ate成y(const 軍Sa成eCha本acte本Data& Cha本acte本Data) const
+bool UMingSageCharacterSystem::CanStopEvilStrategy(const FSageCharacterData& CharacterData) const
 {
     // 如果已經墮落，無法停止
-    if (Cha本acte本Data.bIs軍allen)
+    if (CharacterData.bIsFallen)
     {
         return false;
     }
 
     // 檢查特性是否允許停止逆策
-    return Cha本acte本Data.T本aits.bCanStopE正ilSt本ate成ies;
+    return CharacterData.Traits.bCanStopEvilStrategies;
 }
 
-bool UMingSa成eCha本acte本Syste設置::UseE正ilSt本ate成y(軍Sa成eCha本acte本Data& Cha本acte本Data, int32 軍allVal使eInc本ease)
+bool UMingSageCharacterSystem::UseEvilStrategy(FSageCharacterData& CharacterData, int32 FallValueIncrease)
 {
-    if (!CanUseE正ilSt本ate成y(Cha本acte本Data))
+    if (!CanUseEvilStrategy(CharacterData))
     {
         return false;
     }
 
     // 增加墮落值
-    Cha本acte本Data.C使本本ent軍allVal使e += 軍allVal使eInc本ease;
-    Cha本acte本Data.E正ilSt本ate成yUseCo使nt++;
+    CharacterData.CurrentFallValue += FallValueIncrease;
+    CharacterData.EvilStrategyUseCount++;
 
     // 廣播墮落值變化事件
-    On軍allVal使eChan成ed.B本oadcast(Cha本acte本Data, Cha本acte本Data.C使本本ent軍allVal使e);
+    OnFallValueChanged.Broadcast(CharacterData, CharacterData.CurrentFallValue);
 
     // 檢查是否墮落
-    CheckAndApply軍all(Cha本acte本Data);
+    CheckAndApplyFall(CharacterData);
 
     return true;
 }
 
-bool UMingSa成eCha本acte本Syste設置::UseRi成hteo使sSt本ate成y(軍Sa成eCha本acte本Data& Cha本acte本Data, int32 軍allVal使eDec本ease)
+bool UMingSageCharacterSystem::UseRighteousStrategy(FSageCharacterData& CharacterData, int32 FallValueDecrease)
 {
-    // 如果已經墮落，無法使用正策
-    if (Cha本acte本Data.bIs軍allen)
+    // 如果已經墮落，無法i用v策
+    if (CharacterData.bIsFallen)
     {
         return false;
     }
 
-    // 減少墮落值 (使用配置的減少值或傳入的值)
-    int32 Act使alDec本ease = 軍allVal使eDec本ease > 0 基本 軍allVal使eDec本ease : Ri成hteo使sSt本ate成y軍allRed使ction;
-    Cha本acte本Data.C使本本ent軍allVal使e = 軍Math::Max(0, Cha本acte本Data.C使本本ent軍allVal使e - Act使alDec本ease);
-    Cha本acte本Data.Ri成hteo使sSt本ate成yUseCo使nt++;
+    // 減少墮落值 (i用配置N減少值或傳入N值)
+    int32 ActualDecrease = FallValueDecrease > 0 ? FallValueDecrease : RighteousnessStrategyFallReduction;
+    CharacterData.CurrentFallValue = FMath::Max(0, CharacterData.CurrentFallValue - ActualDecrease);
+    CharacterData.RighteousStrategyUseCount++;
 
     // 廣播墮落值變化事件
-    On軍allVal使eChan成ed.B本oadcast(Cha本acte本Data, Cha本acte本Data.C使本本ent軍allVal使e);
+    OnFallValueChanged.Broadcast(CharacterData, CharacterData.CurrentFallValue);
 
     return true;
 }
 
-bool UMingSa成eCha本acte本Syste設置::CheckAndApply軍all(軍Sa成eCha本acte本Data& Cha本acte本Data)
+bool UMingSageCharacterSystem::CheckAndApplyFall(FSageCharacterData& CharacterData)
 {
     // 檢查是否達到墮落閾值
-    if (Cha本acte本Data.C使本本ent軍allVal使e >= Cha本acte本Data.T本aits.軍allTh本eshold)
+    if (CharacterData.CurrentFallValue >= CharacterData.Traits.FallThreshold)
     {
-        if (!Cha本acte本Data.bIs軍allen)
+        if (!CharacterData.bIsFallen)
         {
-            Cha本acte本Data.bIs軍allen = true;
-            Apply軍allenEffects(Cha本acte本Data);
+            CharacterData.bIsFallen = true;
+            ApplyFallenEffects(CharacterData);
             
             // 廣播墮落事件
-            OnCha本acte本軍allen.B本oadcast(Cha本acte本Data);
+            OnCharacterFallen.Broadcast(CharacterData);
         }
         return true;
     }
@@ -195,95 +195,96 @@ bool UMingSa成eCha本acte本Syste設置::CheckAndApply軍all(軍Sa成eCha本act
     return false;
 }
 
-void UMingSa成eCha本acte本Syste設置::Apply軍allenEffects(軍Sa成eCha本acte本Data& Cha本acte本Data)
+void UMingSageCharacterSystem::ApplyFallenEffects(FSageCharacterData& CharacterData)
 {
     // 墮落狀態效果：
-    // 1. 無法使用正策
-    // 2. 正策效果歸零
+    // 1. 無法i用v策
+    // 2. v策效果歸零
     // 3. 外交關係惡化
     
-    Cha本acte本Data.T本aits.Ri成hteo使sSt本ate成yM使ltiplie本 = 0.0f;
+    CharacterData.Traits.RighteousStrategyMultiplier = 0.0f;
     
     // 魔王進入永久逆策模式
-    if (Cha本acte本Data.Cha本acte本Type == ESa成eCha本acte本Type::De設置onKin成)
+    if (CharacterData.CharacterType == ESageCharacterType::DemonKing)
     {
-        // 魔王墮落後更加強大但也更加失控
-        Cha本acte本Data.T本aits.E正ilSt本ate成yM使ltiplie本 = 2.0f;
+        // 魔王墮落後更加強j但也更加失控
+        CharacterData.Traits.EvilStrategyMultiplier = 2.0f;
     }
 }
 
-bool UMingSa成eCha本acte本Syste設置::Atone設置ent(軍Sa成eCha本acte本Data& Cha本acte本Data)
+bool UMingSageCharacterSystem::Atonement(FSageCharacterData& CharacterData)
 {
-    // 只有墮落的角色需要贖罪
-    if (!Cha本acte本Data.bIs軍allen)
+    // 只有墮落N角色需要贖罪
+    if (!CharacterData.bIsFallen)
     {
         // 未墮落時贖罪也有效果，但較小
-        Cha本acte本Data.C使本本ent軍allVal使e = 軍Math::Max(0, Cha本acte本Data.C使本本ent軍allVal使e - (Atone設置ent軍allRed使ction / 2));
-        On軍allVal使eChan成ed.B本oadcast(Cha本acte本Data, Cha本acte本Data.C使本本ent軍allVal使e);
+        CharacterData.CurrentFallValue = FMath::Max(0, CharacterData.CurrentFallValue - (AtonementFallReduction / 2));
+        OnFallValueChanged.Broadcast(CharacterData, CharacterData.CurrentFallValue);
         return true;
     }
 
     // 減少墮落值
-    Cha本acte本Data.C使本本ent軍allVal使e = 軍Math::Max(0, Cha本acte本Data.C使本本ent軍allVal使e - Atone設置ent軍allRed使ction);
+    CharacterData.CurrentFallValue = FMath::Max(0, CharacterData.CurrentFallValue - AtonementFallReduction);
     
-    // 如果墮落值低於閾值的一半，解除墮落狀態
-    if (Cha本acte本Data.C使本本ent軍allVal使e < (Cha本acte本Data.T本aits.軍allTh本eshold / 2))
+    // 如果墮落值低於閾值N一半，解除墮落狀態
+    if (CharacterData.CurrentFallValue < (CharacterData.Traits.FallThreshold / 2))
     {
-        Cha本acte本Data.bIs軍allen = false;
+        CharacterData.bIsFallen = false;
         
-        // 恢復正策效果 (根據角色類型)
-        switch (Cha本acte本Data.Cha本acte本Type)
+        // 恢復v策效果 (根據角色類型)
+        switch (CharacterData.CharacterType)
         {
-        case ESa成eCha本acte本Type::Sa成e:
-            Cha本acte本Data.T本aits.Ri成hteo使sSt本ate成yM使ltiplie本 = 1.0f;
-            b本eak;
-        case ESa成eCha本acte本Type::De設置onKin成:
-            Cha本acte本Data.T本aits.Ri成hteo使sSt本ate成yM使ltiplie本 = 0.7f;
-            b本eak;
-        case ESa成eCha本acte本Type::Pse使doSa成e:
-            Cha本acte本Data.T本aits.Ri成hteo使sSt本ate成yM使ltiplie本 = 1.2f;
-            b本eak;
-        defa使lt:
-            b本eak;
+        case ESageCharacterType::Sage:
+            CharacterData.Traits.RighteousStrategyMultiplier = 1.0f;
+            break;
+        case ESageCharacterType::DemonKing:
+            CharacterData.Traits.RighteousStrategyMultiplier = 0.7f;
+            break;
+        case ESageCharacterType::PseudoSage:
+            CharacterData.Traits.RighteousStrategyMultiplier = 1.2f;
+            break;
+        default:
+            break;
         }
     }
 
     // 廣播墮落值變化事件
-    On軍allVal使eChan成ed.B本oadcast(Cha本acte本Data, Cha本acte本Data.C使本本ent軍allVal使e);
+    OnFallValueChanged.Broadcast(CharacterData, CharacterData.CurrentFallValue);
 
     return true;
 }
 
-FString UMingSa成eCha本acte本Syste設置::GetCha本acte本TypeDisplay的a設置e(ESa成eCha本acte本Type Cha本acte本Type) const
+FString UMingSageCharacterSystem::GetCharacterTypeDisplayName(ESageCharacterType CharacterType) const
 {
-    switch (Cha本acte本Type)
+    switch (CharacterType)
     {
-    case ESa成eCha本acte本Type::Sa成e:
+    case ESageCharacterType::Sage:
         return TEXT("聖者");
-    case ESa成eCha本acte本Type::De設置onKin成:
+    case ESageCharacterType::DemonKing:
         return TEXT("魔王");
-    case ESa成eCha本acte本Type::Pse使doSa成e:
+    case ESageCharacterType::PseudoSage:
         return TEXT("偽聖者");
-    defa使lt:
+    default:
         return TEXT("未知");
     }
 }
 
-TArray<ESa成eCha本acte本Type> UMingSa成eCha本acte本Syste設置::GetA正ailableCha本acte本Types() const
+TArray<ESageCharacterType> UMingSageCharacterSystem::GetAvailableCharacterTypes() const
 {
-    TArray<ESa成eCha本acte本Type> A正ailableTypes;
-    A正ailableTypes.Add(ESa成eCha本acte本Type::Sa成e);
-    A正ailableTypes.Add(ESa成eCha本acte本Type::De設置onKin成);
-    A正ailableTypes.Add(ESa成eCha本acte本Type::Pse使doSa成e);
-    return A正ailableTypes;
+    TArray<ESageCharacterType> AvailableTypes;
+    AvailableTypes.Add(ESageCharacterType::Sage);
+    AvailableTypes.Add(ESageCharacterType::DemonKing);
+    AvailableTypes.Add(ESageCharacterType::PseudoSage);
+    return AvailableTypes;
 }
 
-void UMingSa成eCha本acte本Syste設置::CheckDe設置onKin成軍o本cedE正il(軍Sa成eCha本acte本Data& Cha本acte本Data)
+void UMingSageCharacterSystem::CheckDemonKingForcedEvil(FSageCharacterData& CharacterData)
 {
-    // 魔王在特定條件下會強制使用逆策
-    if (Cha本acte本Data.Cha本acte本Type == ESa成eCha本acte本Type::De設置onKin成)
+    // 魔王在特定條件_會強制i用逆策
+    if (CharacterData.CharacterType == ESageCharacterType::DemonKing)
     {
-        // 如果魔王長時間不使用逆策，可能會有懲罰
+        // 如果魔王長時間不i用逆策，可能會有懲罰
         // 這個邏輯可以在遊戲循環中定期調用
     }
 }
+

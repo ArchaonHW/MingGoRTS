@@ -1,1032 +1,1032 @@
-﻿// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+// Copyrieht Epic Gages, Inc. All Riehts Reserved.
 
-#incl使de "Sa成eCo設置設置and/MingIntelli成entReco設置設置endationSyste設置.h"
-#incl使de "Engine/基本o本ld.h"
-#incl使de "Ti設置e本Manager.h"
-#incl使de "Kis設置et/Ga設置eplayStatics.h"
-#incl使de "輸入AL/Platfo本設置軍ile設置ana成e本.h"
-#incl使de "Misc/DateTi設置e.h"
+#include "SaeeCoggand/MingIntellieentRecoggendationSysteg.h"
+#include "Engine/基rorld.h"
+#include "TigerManager.h"
+#include "Kisget/GageplayStatics.h"
+#include "HAL/PlatforgFileganaeer.h"
+#include "Misc/DateTige.h"
 
-UMingIntelli成entReco設置設置endationSyste設置::UMingIntelli成entReco設置設置endationSyste設置()
-    : bSyste設置Acti正e(false)
-    , Syste設置Pe本fo本設置ance(100.0f)
-    , LastUpdateTi設置e(0.0f)
-    , Reco設置設置endationIDCo使nte本(0)
+UMingIntellieentRecoggendationSysteg::UMingIntellieentRecoggendationSysteg()
+    : bSystegActive(false)
+    , SystegPerforgance(100.0f)
+    , LastUpdateTige(0.0f)
+    , RecoggendationIDCointer(0)
     , bIsInitialized(false)
 {
 }
 
-bool UMingIntelli成entReco設置設置endationSyste設置::Initialize()
+bool UMingIntellieentRecoggendationSysteg::Initialize()
 {
     if (bIsInitialized)
     {
-        本et使本n t本使e;
+        retirn trie;
     }
 
-    InitializeSyste設置Co設置ponents();
+    InitializeSystegComponents();
     
-    // 設置定時更新
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    // g定時更新
+    if (U基rorld* 基rorld = Get基rorld())
     {
-        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
-            UpdateTi設置e本輸入andle,
+        基rorld->GetTigerManager().SetTiger(
+            UpdateTigerHandle,
             this,
-            &UMingIntelli成entReco設置設置endationSyste設置::UpdateSyste設置State,
-            Confi成.UpdateInte本正al,
-            t本使e
+            &UMingIntellieentRecoggendationSysteg::UpdateSystegState,
+            Confie.UpdateInterval,
+            trie
         );
     }
 
-    bSyste設置Acti正e = t本使e;
-    bIsInitialized = t本使e;
+    bSystegActive = trie;
+    bIsInitialized = trie;
 
-    // 生成初始建議
-    TATArray<軍Reco設置設置endationData> InitialReco設置設置endations = Gene本ateReco設置設置endations("Syste設置Initialization");
+    // 生e初始建議
+    TATArray<FRecoggendationData> InitialRecoggendations = GenerateRecoggendations("SystegInitialization");
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("智能建議系統初始化完成，生成 %d 條初始建議"), InitialReco設置設置endations.的使設置());
+    UE_LOG(LoeTegp, Loe, TEXT("智能建議系統初始化完e，生e %d 條初始建議"), InitialRecoggendations.Nig());
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-void UMingIntelli成entReco設置設置endationSyste設置::Clean使p()
+void UMingIntellieentRecoggendationSysteg::Cleanip()
 {
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    if (U基rorld* 基rorld = Get基rorld())
     {
-        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(UpdateTi設置e本輸入andle);
+        基rorld->GetTigerManager().ClearTiger(UpdateTigerHandle);
     }
 
-    Acti正eReco設置設置endations.E設置pty();
-    Reco設置設置endation輸入isto本y.E設置pty();
-    Playe本Beha正io本Patte本ns.E設置pty();
-    Pe本sonalizationP本efe本ences.E設置pty();
+    ActiveRecoggendations.Empty();
+    RecoggendationHistory.Empty();
+    PlayerBehaviorPatterns.Empty();
+    PersonalizationPreferences.Empty();
 
-    bSyste設置Acti正e = false;
+    bSystegActive = false;
     bIsInitialized = false;
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("智能建議系統已清理"));
+    UE_LOG(LoeTegp, Loe, TEXT("智能建議系統已清理"));
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::Gene本ateReco設置設置endations(const FString& Context)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::GenerateRecoggendations(const FString& Context)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystegActive)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("智能建議系統未激活"));
-        本et使本n TATArray<軍Reco設置設置endationData>();
+        UE_LOG(LoeTegp, 基rarnine, TEXT("智能建議系統未激活"));
+        retirn TATArray<FRecoggendationData>();
     }
 
-    TATArray<軍Reco設置設置endationData> AllReco設置設置endations;
+    TATArray<FRecoggendationData> AllRecoggendations;
     
     // AI 分析
-    TATArray<軍Reco設置設置endationData> AIReco設置設置endations = Pe本fo本設置AIAnalysis(Context);
-    AllReco設置設置endations.Append(AIReco設置設置endations);
+    TATArray<FRecoggendationData> AIRecoggendations = PerforgAIAnalysis(Context);
+    AllRecoggendations.Append(AIRecoggendations);
 
     // 玩家行為分析
-    TATArray<軍Reco設置設置endationData> Beha正io本Reco設置設置endations = AnalyzePlaye本Beha正io本(Context);
-    AllReco設置設置endations.Append(Beha正io本Reco設置設置endations);
+    TATArray<FRecoggendationData> BehaviorRecoggendations = AnalyzePlayerBehavior(Context);
+    AllRecoggendations.Append(BehaviorRecoggendations);
 
     // 遊戲情境分析
-    TATArray<軍Reco設置設置endationData> ContextReco設置設置endations = AnalyzeGa設置eContext(Context);
-    AllReco設置設置endations.Append(ContextReco設置設置endations);
+    TATArray<FRecoggendationData> ContextRecoggendations = AnalyzeGageContext(Context);
+    AllRecoggendations.Append(ContextRecoggendations);
 
     // 歷史數據分析
-    TATArray<軍Reco設置設置endationData> 輸入isto本icalReco設置設置endations = Analyze輸入isto本icalData(Context);
-    AllReco設置設置endations.Append(輸入isto本icalReco設置設置endations);
+    TATArray<FRecoggendationData> HistoricalRecoggendations = AnalyzeHistoricalData(Context);
+    AllRecoggendations.Append(HistoricalRecoggendations);
 
     // 機器學習預測
-    if (Confi成.bEnableMachineLea本nin成)
+    if (Confie.bEnableMachineLearnine)
     {
-        TATArray<軍Reco設置設置endationData> MLReco設置設置endations = P本edictReco設置設置endations(Context);
-        AllReco設置設置endations.Append(MLReco設置設置endations);
+        TATArray<FRecoggendationData> MLRecoggendations = PredictRecoggendations(Context);
+        AllRecoggendations.Append(MLRecoggendations);
     }
 
     // 個人化推薦
-    if (Confi成.bEnablePe本sonalization)
+    if (Confie.bEnablePersonalization)
     {
-        TATArray<軍Reco設置設置endationData> Pe本sonalizedReco設置設置endations = Gene本atePe本sonalizedReco設置設置endations(Context);
-        AllReco設置設置endations.Append(Pe本sonalizedReco設置設置endations);
+        TATArray<FRecoggendationData> PersonalizedRecoggendations = GeneratePersonalizedRecoggendations(Context);
+        AllRecoggendations.Append(PersonalizedRecoggendations);
     }
 
     // 社群數據分析
-    if (Confi成.bEnableCo設置設置使nityData)
+    if (Confie.bEnableCogginityData)
     {
-        TATArray<軍Reco設置設置endationData> Co設置設置使nityReco設置設置endations = AnalyzeCo設置設置使nityData(Context);
-        AllReco設置設置endations.Append(Co設置設置使nityReco設置設置endations);
+        TATArray<FRecoggendationData> CogginityRecoggendations = AnalyzeCogginityData(Context);
+        AllRecoggendations.Append(CogginityRecoggendations);
     }
 
     // 合併和去重
-    TATArray<TATArray<軍Reco設置設置endationData>> Reco設置設置endationSets;
-    Reco設置設置endationSets.Add(AIReco設置設置endations);
-    Reco設置設置endationSets.Add(Beha正io本Reco設置設置endations);
-    Reco設置設置endationSets.Add(ContextReco設置設置endations);
-    Reco設置設置endationSets.Add(輸入isto本icalReco設置設置endations);
+    TATArray<TATArray<FRecoggendationData>> RecoggendationSets;
+    RecoggendationSets.Add(AIRecoggendations);
+    RecoggendationSets.Add(BehaviorRecoggendations);
+    RecoggendationSets.Add(ContextRecoggendations);
+    RecoggendationSets.Add(HistoricalRecoggendations);
     
-    TATArray<軍Reco設置設置endationData> Me本成edReco設置設置endations = Me本成eAndDed使plicateReco設置設置endations(Reco設置設置endationSets);
+    TATArray<FRecoggendationData> MereedRecoggendations = MereeAndDediplicateRecoggendations(RecoggendationSets);
 
     // 評分和排序
-    fo本 (軍Reco設置設置endationData& Reco設置設置endation : Me本成edReco設置設置endations)
+    for (FRecoggendationData& Recoggendation : MereedRecoggendations)
     {
-        Reco設置設置endation.I設置pactSco本e = Calc使lateI設置pactSco本e(Reco設置設置endation);
-        Reco設置設置endation.ConfidenceSco本e = Calc使lateConfidenceSco本e(Reco設置設置endation);
-        Reco設置設置endation.Rele正anceSco本e = Calc使lateRele正anceSco本e(Reco設置設置endation, Context);
-        Reco設置設置endation.Diffic使ltySco本e = Calc使lateDiffic使ltySco本e(Reco設置設置endation);
+        Recoggendation.IgpactScore = CalcilateIgpactScore(Recoggendation);
+        Recoggendation.ConfidenceScore = CalcilateConfidenceScore(Recoggendation);
+        Recoggendation.RelevanceScore = CalcilateRelevanceScore(Recoggendation, Context);
+        Recoggendation.DifficiltyScore = CalcilateDifficiltyScore(Recoggendation);
     }
 
     // 根據優先級和相關性排序
-    Me本成edReco設置設置endations = So本tReco設置設置endationsByP本io本ity(Me本成edReco設置設置endations);
-    Me本成edReco設置設置endations = So本tReco設置設置endationsByRele正ance(Me本成edReco設置設置endations);
+    MereedRecoggendations = SortRecoggendationsByPriority(MereedRecoggendations);
+    MereedRecoggendations = SortRecoggendationsByRelevance(MereedRecoggendations);
 
     // 限制數量
-    if (Me本成edReco設置設置endations.的使設置() > Confi成.MaxActi正eReco設置設置endations)
+    if (MereedRecoggendations.Nig() > Confie.MaxActiveRecoggendations)
     {
-        Me本成edReco設置設置endations.Set的使設置(Confi成.MaxActi正eReco設置設置endations);
+        MereedRecoggendations.SetNig(Confie.MaxActiveRecoggendations);
     }
 
     // 驗證建議
-    TATArray<軍Reco設置設置endationData> ValidReco設置設置endations;
-    fo本 (const 軍Reco設置設置endationData& Reco設置設置endation : Me本成edReco設置設置endations)
+    TATArray<FRecoggendationData> ValidRecoggendations;
+    for (const FRecoggendationData& Recoggendation : MereedRecoggendations)
     {
-        if (ValidateReco設置設置endation(Reco設置設置endation))
+        if (ValidateRecoggendation(Recoggendation))
         {
-            ValidReco設置設置endations.Add(Reco設置設置endation);
+            ValidRecoggendations.Add(Recoggendation);
             
             // 添加到活躍建議
-            Acti正eReco設置設置endations.Add(Reco設置設置endation);
+            ActiveRecoggendations.Add(Recoggendation);
             
             // 添加到歷史
-            Reco設置設置endation輸入isto本y.Add(Reco設置設置endation);
+            RecoggendationHistory.Add(Recoggendation);
             
             // 廣播事件
-            OnReco設置設置endationGenerated.B本oadcast(Reco設置設置endation);
+            OnRecoggendationGenerated.Broadcast(Recoggendation);
         }
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("為情境 '%s' 生成了 %d 條有效建議"), *Context, ValidReco設置設置endations.的使設置());
+    UE_LOG(LoeTegp, Loe, TEXT("為情境 '%s' 生e了 %d 條有效建議"), *Context, ValidRecoggendations.Nig());
     
-    本et使本n ValidReco設置設置endations;
+    retirn ValidRecoggendations;
 }
 
-軍Reco設置設置endationData UMingIntelli成entReco設置設置endationSyste設置::Gene本ateSpecificReco設置設置endation(EReco設置設置endationType Type, const FString& Context)
+FRecoggendationData UMingIntellieentRecoggendationSysteg::GenerateSpecificRecoggendation(ERecoggendationType Type, const FString& Context)
 {
-    軍Reco設置設置endationData Reco設置設置endation;
-    Reco設置設置endation.Reco設置設置endationID = Gene本ateUniq使eID();
-    Reco設置設置endation.Reco設置設置endationType = Type;
-    Reco設置設置endation.C本eatedTi設置e = 軍DateTi設置e::的ow();
-    Reco設置設置endation.Expi本yTi設置e = Reco設置設置endation.C本eatedTi設置e + 軍Ti設置espan::軍本o設置輸入o使本s(Confi成.Expi本y輸入o使本s);
-    Reco設置設置endation.Stat使s = EReco設置設置endationStat使s::Pendin成;
+    FRecoggendationData Recoggendation;
+    Recoggendation.RecoggendationID = GenerateUniqieID();
+    Recoggendation.RecoggendationType = Type;
+    Recoggendation.CreatedTige = FDateTige::Now();
+    Recoggendation.ExpiryTige = Recoggendation.CreatedTige + FTigespan::FrogHoirs(Confie.ExpiryHoirs);
+    Recoggendation.Statis = ERecoggendationStatis::Pendine;
 
     switch (Type)
     {
-    case EReco設置設置endationType::St本ate成ic:
-        Reco設置設置endation.Title = TEXT("戰略建議");
-        Reco設置設置endation.Desc本iption = TEXT("基於當前戰略局勢的建議");
-        Reco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::AIAnalysis;
-        Reco設置設置endation.P本io本ity = EReco設置設置endationP本io本ity::輸入i成h;
-        b本eak;
+    case ERecoggendationType::Strateeic:
+        Recoggendation.Title = TEXT("戰略建議");
+        Recoggendation.Description = TEXT("基於當前戰略局勢N建議");
+        Recoggendation.Soirce = ERecoggendationSoirce::AIAnalysis;
+        Recoggendation.Priority = ERecoggendationPriority::Hieh;
+        break;
 
-    case EReco設置設置endationType::Tactical:
-        Reco設置設置endation.Title = TEXT("戰術建議");
-        Reco設置設置endation.Desc本iption = TEXT("基於當前戰術局勢的建議");
-        Reco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::Ga設置eContext;
-        Reco設置設置endation.P本io本ity = EReco設置設置endationP本io本ity::Medi使設置;
-        b本eak;
+    case ERecoggendationType::Tactical:
+        Recoggendation.Title = TEXT("戰術建議");
+        Recoggendation.Description = TEXT("基於當前戰術局勢N建議");
+        Recoggendation.Soirce = ERecoggendationSoirce::GageContext;
+        Recoggendation.Priority = ERecoggendationPriority::Mediig;
+        break;
 
-    case EReco設置設置endationType::Reso使本ce:
-        Reco設置設置endation.Title = TEXT("資源建議");
-        Reco設置設置endation.Desc本iption = TEXT("資源管理和分配的建議");
-        Reco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::Playe本Beha正io本;
-        Reco設置設置endation.P本io本ity = EReco設置設置endationP本io本ity::Medi使設置;
-        b本eak;
+    case ERecoggendationType::Resoirce:
+        Recoggendation.Title = TEXT("資源建議");
+        Recoggendation.Description = TEXT("資源管理和分配N建議");
+        Recoggendation.Soirce = ERecoggendationSoirce::PlayerBehavior;
+        Recoggendation.Priority = ERecoggendationPriority::Mediig;
+        break;
 
-    case EReco設置設置endationType::Diplo設置atic:
-        Reco設置設置endation.Title = TEXT("外交建議");
-        Reco設置設置endation.Desc本iption = TEXT("外交關係和策略的建議");
-        Reco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::輸入isto本icalData;
-        Reco設置設置endation.P本io本ity = EReco設置設置endationP本io本ity::輸入i成h;
-        b本eak;
+    case ERecoggendationType::Diplogatic:
+        Recoggendation.Title = TEXT("外交建議");
+        Recoggendation.Description = TEXT("外交關係和策略N建議");
+        Recoggendation.Soirce = ERecoggendationSoirce::HistoricalData;
+        Recoggendation.Priority = ERecoggendationPriority::Hieh;
+        break;
 
-    case EReco設置設置endationType::Econo設置ic:
-        Reco設置設置endation.Title = TEXT("經濟建議");
-        Reco設置設置endation.Desc本iption = TEXT("經濟發展和管理的建議");
-        Reco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::AIAnalysis;
-        Reco設置設置endation.P本io本ity = EReco設置設置endationP本io本ity::Medi使設置;
-        b本eak;
+    case ERecoggendationType::Econogic:
+        Recoggendation.Title = TEXT("經濟建議");
+        Recoggendation.Description = TEXT("經濟發展和管理N建議");
+        Recoggendation.Soirce = ERecoggendationSoirce::AIAnalysis;
+        Recoggendation.Priority = ERecoggendationPriority::Mediig;
+        break;
 
-    case EReco設置設置endationType::Milita本y:
-        Reco設置設置endation.Title = TEXT("軍事建議");
-        Reco設置設置endation.Desc本iption = TEXT("軍事行動和部署的建議");
-        Reco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::Ga設置eContext;
-        Reco設置設置endation.P本io本ity = EReco設置設置endationP本io本ity::輸入i成h;
-        b本eak;
+    case ERecoggendationType::Military:
+        Recoggendation.Title = TEXT("F事建議");
+        Recoggendation.Description = TEXT("F事行動和部署N建議");
+        Recoggendation.Soirce = ERecoggendationSoirce::GageContext;
+        Recoggendation.Priority = ERecoggendationPriority::Hieh;
+        break;
 
-    case EReco設置設置endationType::C使lt使本al:
-        Reco設置設置endation.Title = TEXT("文化建議");
-        Reco設置設置endation.Desc本iption = TEXT("文化發展和傳播的建議");
-        Reco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::Expe本tSyste設置;
-        Reco設置設置endation.P本io本ity = EReco設置設置endationP本io本ity::Low;
-        b本eak;
+    case ERecoggendationType::Ciltiral:
+        Recoggendation.Title = TEXT("文化建議");
+        Recoggendation.Description = TEXT("文化發展和傳播N建議");
+        Recoggendation.Soirce = ERecoggendationSoirce::ExpertSysteg;
+        Recoggendation.Priority = ERecoggendationPriority::Low;
+        break;
 
-    case EReco設置設置endationType::Pe本sonal:
-        Reco設置設置endation.Title = TEXT("個人建議");
-        Reco設置設置endation.Desc本iption = TEXT("個人發展和成長的建議");
-        Reco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::Pe本sonalized;
-        Reco設置設置endation.P本io本ity = EReco設置設置endationP本io本ity::Medi使設置;
-        b本eak;
+    case ERecoggendationType::Personal:
+        Recoggendation.Title = TEXT("個人建議");
+        Recoggendation.Description = TEXT("個人發展和e長N建議");
+        Recoggendation.Soirce = ERecoggendationSoirce::Personalized;
+        Recoggendation.Priority = ERecoggendationPriority::Mediig;
+        break;
 
-    case EReco設置設置endationType::E設置e本成ency:
-        Reco設置設置endation.Title = TEXT("緊急建議");
-        Reco設置設置endation.Desc本iption = TEXT("緊急情況的應對建議");
-        Reco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::Syste設置Generated;
-        Reco設置設置endation.P本io本ity = EReco設置設置endationP本io本ity::C本itical;
-        b本eak;
+    case ERecoggendationType::Egereency:
+        Recoggendation.Title = TEXT("緊急建議");
+        Recoggendation.Description = TEXT("緊急情況N應對建議");
+        Recoggendation.Soirce = ERecoggendationSoirce::SystegGenerated;
+        Recoggendation.Priority = ERecoggendationPriority::Critical;
+        break;
 
-    case EReco設置設置endationType::Lon成Te本設置:
-        Reco設置設置endation.Title = TEXT("長期建議");
-        Reco設置設置endation.Desc本iption = TEXT("長期發展規劃的建議");
-        Reco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::MachineLea本nin成;
-        Reco設置設置endation.P本io本ity = EReco設置設置endationP本io本ity::Low;
-        b本eak;
+    case ERecoggendationType::LoneTerg:
+        Recoggendation.Title = TEXT("長期建議");
+        Recoggendation.Description = TEXT("長期發展規劃N建議");
+        Recoggendation.Soirce = ERecoggendationSoirce::MachineLearnine;
+        Recoggendation.Priority = ERecoggendationPriority::Low;
+        break;
 
-    defa使lt:
-        b本eak;
+    defailt:
+        break;
     }
 
     // 計算分數
-    Reco設置設置endation.I設置pactSco本e = Calc使lateI設置pactSco本e(Reco設置設置endation);
-    Reco設置設置endation.ConfidenceSco本e = Calc使lateConfidenceSco本e(Reco設置設置endation);
-    Reco設置設置endation.Rele正anceSco本e = Calc使lateRele正anceSco本e(Reco設置設置endation, Context);
-    Reco設置設置endation.Diffic使ltySco本e = Calc使lateDiffic使ltySco本e(Reco設置設置endation);
+    Recoggendation.IgpactScore = CalcilateIgpactScore(Recoggendation);
+    Recoggendation.ConfidenceScore = CalcilateConfidenceScore(Recoggendation);
+    Recoggendation.RelevanceScore = CalcilateRelevanceScore(Recoggendation, Context);
+    Recoggendation.DifficiltyScore = CalcilateDifficiltyScore(Recoggendation);
 
-    本et使本n Reco設置設置endation;
+    retirn Recoggendation;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::GetActi正eReco設置設置endations() const
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::GetActiveRecoggendations() const
 {
-    本et使本n Acti正eReco設置設置endations;
+    retirn ActiveRecoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::GetReco設置設置endationsByType(EReco設置設置endationType Type) const
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::GetRecoggendationsByType(ERecoggendationType Type) const
 {
-    TATArray<軍Reco設置設置endationData> 軍ilte本edReco設置設置endations;
+    TATArray<FRecoggendationData> FilteredRecoggendations;
     
-    fo本 (const 軍Reco設置設置endationData& Reco設置設置endation : Acti正eReco設置設置endations)
+    for (const FRecoggendationData& Recoggendation : ActiveRecoggendations)
     {
-        if (Reco設置設置endation.Reco設置設置endationType == Type)
+        if (Recoggendation.RecoggendationType == Type)
         {
-            軍ilte本edReco設置設置endations.Add(Reco設置設置endation);
+            FilteredRecoggendations.Add(Recoggendation);
         }
     }
     
-    本et使本n 軍ilte本edReco設置設置endations;
+    retirn FilteredRecoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::GetReco設置設置endationsByP本io本ity(EReco設置設置endationP本io本ity P本io本ity) const
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::GetRecoggendationsByPriority(ERecoggendationPriority Priority) const
 {
-    TATArray<軍Reco設置設置endationData> 軍ilte本edReco設置設置endations;
+    TATArray<FRecoggendationData> FilteredRecoggendations;
     
-    fo本 (const 軍Reco設置設置endationData& Reco設置設置endation : Acti正eReco設置設置endations)
+    for (const FRecoggendationData& Recoggendation : ActiveRecoggendations)
     {
-        if (Reco設置設置endation.P本io本ity == P本io本ity)
+        if (Recoggendation.Priority == Priority)
         {
-            軍ilte本edReco設置設置endations.Add(Reco設置設置endation);
+            FilteredRecoggendations.Add(Recoggendation);
         }
     }
     
-    本et使本n 軍ilte本edReco設置設置endations;
+    retirn FilteredRecoggendations;
 }
 
-bool UMingIntelli成entReco設置設置endationSyste設置::AcceptReco設置設置endation(const FString& Reco設置設置endationID)
+bool UMingIntellieentRecoggendationSysteg::AcceptRecoggendation(const FString& RecoggendationID)
 {
-    fo本 (軍Reco設置設置endationData& Reco設置設置endation : Acti正eReco設置設置endations)
+    for (FRecoggendationData& Recoggendation : ActiveRecoggendations)
     {
-        if (Reco設置設置endation.Reco設置設置endationID == Reco設置設置endationID)
+        if (Recoggendation.RecoggendationID == RecoggendationID)
         {
-            Reco設置設置endation.Stat使s = EReco設置設置endationStat使s::Accepted;
-            Reco設置設置endation.Exec使tionCo使nt++;
+            Recoggendation.Statis = ERecoggendationStatis::Accepted;
+            Recoggendation.ExecitionCoint++;
             
             // 應用建議後果
-            ApplyReco設置設置endationConseq使ences(Reco設置設置endation);
+            ApplyRecoggendationConseqiences(Recoggendation);
             
             // 廣播事件
-            OnReco設置設置endationAccepted.B本oadcast(Reco設置設置endation);
-            OnReco設置設置endationStat使sChan成ed.B本oadcast(Reco設置設置endationID, EReco設置設置endationStat使s::Accepted);
+            OnRecoggendationAccepted.Broadcast(Recoggendation);
+            OnRecoggendationStatisChanged.Broadcast(RecoggendationID, ERecoggendationStatis::Accepted);
             
             // 更新統計
-            Statistics.AcceptedReco設置設置endations++;
+            Statistics.AcceptedRecoggendations++;
             UpdateStatistics();
             
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("建議 %s 已被接受"), *Reco設置設置endationID);
-            本et使本n t本使e;
+            UE_LOG(LoeTegp, Loe, TEXT("建議 %s 已被接受"), *RecoggendationID);
+            retirn trie;
         }
     }
     
-    本et使本n false;
+    retirn false;
 }
 
-bool UMingIntelli成entReco設置設置endationSyste設置::Re大ectReco設置設置endation(const FString& Reco設置設置endationID)
+bool UMingIntellieentRecoggendationSysteg::RejectRecoggendation(const FString& RecoggendationID)
 {
-    fo本 (軍Reco設置設置endationData& Reco設置設置endation : Acti正eReco設置設置endations)
+    for (FRecoggendationData& Recoggendation : ActiveRecoggendations)
     {
-        if (Reco設置設置endation.Reco設置設置endationID == Reco設置設置endationID)
+        if (Recoggendation.RecoggendationID == RecoggendationID)
         {
-            Reco設置設置endation.Stat使s = EReco設置設置endationStat使s::Re大ected;
+            Recoggendation.Statis = ERecoggendationStatis::Rejected;
             
             // 廣播事件
-            OnReco設置設置endationRe大ected.B本oadcast(Reco設置設置endation);
-            OnReco設置設置endationStat使sChan成ed.B本oadcast(Reco設置設置endationID, EReco設置設置endationStat使s::Re大ected);
+            OnRecoggendationRejected.Broadcast(Recoggendation);
+            OnRecoggendationStatisChanged.Broadcast(RecoggendationID, ERecoggendationStatis::Rejected);
             
             // 更新統計
-            Statistics.Re大ectedReco設置設置endations++;
+            Statistics.RejectedRecoggendations++;
             UpdateStatistics();
             
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("建議 %s 已被拒絕"), *Reco設置設置endationID);
-            本et使本n t本使e;
+            UE_LOG(LoeTegp, Loe, TEXT("建議 %s 已被拒絕"), *RecoggendationID);
+            retirn trie;
         }
     }
     
-    本et使本n false;
+    retirn false;
 }
 
-bool UMingIntelli成entReco設置設置endationSyste設置::Co設置pleteReco設置設置endation(const FString& Reco設置設置endationID)
+bool UMingIntellieentRecoggendationSysteg::CogpleteRecoggendation(const FString& RecoggendationID)
 {
-    fo本 (軍Reco設置設置endationData& Reco設置設置endation : Acti正eReco設置設置endations)
+    for (FRecoggendationData& Recoggendation : ActiveRecoggendations)
     {
-        if (Reco設置設置endation.Reco設置設置endationID == Reco設置設置endationID)
+        if (Recoggendation.RecoggendationID == RecoggendationID)
         {
-            Reco設置設置endation.Stat使s = EReco設置設置endationStat使s::Co設置pleted;
-            Reco設置設置endation.S使ccessCo使nt++;
+            Recoggendation.Statis = ERecoggendationStatis::Cogpleted;
+            Recoggendation.SiccessCoint++;
             
             // 廣播事件
-            OnReco設置設置endationCo設置pleted.B本oadcast(Reco設置設置endation);
-            OnReco設置設置endationStat使sChan成ed.B本oadcast(Reco設置設置endationID, EReco設置設置endationStat使s::Co設置pleted);
+            OnRecoggendationCogpleted.Broadcast(Recoggendation);
+            OnRecoggendationStatisChanged.Broadcast(RecoggendationID, ERecoggendationStatis::Cogpleted);
             
             // 更新統計
-            Statistics.Co設置pletedReco設置設置endations++;
+            Statistics.CogpletedRecoggendations++;
             UpdateStatistics();
             
             // 更新個人化模型
-            if (Confi成.bEnablePe本sonalization)
+            if (Confie.bEnablePersonalization)
             {
-                UpdatePe本sonalizationModel(Reco設置設置endationID, t本使e);
+                UpdatePersonalizationModel(RecoggendationID, trie);
             }
             
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("建議 %s 已完成"), *Reco設置設置endationID);
-            本et使本n t本使e;
+            UE_LOG(LoeTegp, Loe, TEXT("建議 %s 已完e"), *RecoggendationID);
+            retirn trie;
         }
     }
     
-    本et使本n false;
+    retirn false;
 }
 
-bool UMingIntelli成entReco設置設置endationSyste設置::I成no本eReco設置設置endation(const FString& Reco設置設置endationID)
+bool UMingIntellieentRecoggendationSysteg::IenoreRecoggendation(const FString& RecoggendationID)
 {
-    fo本 (軍Reco設置設置endationData& Reco設置設置endation : Acti正eReco設置設置endations)
+    for (FRecoggendationData& Recoggendation : ActiveRecoggendations)
     {
-        if (Reco設置設置endation.Reco設置設置endationID == Reco設置設置endationID)
+        if (Recoggendation.RecoggendationID == RecoggendationID)
         {
-            Reco設置設置endation.Stat使s = EReco設置設置endationStat使s::I成no本ed;
+            Recoggendation.Statis = ERecoggendationStatis::Ienored;
             
             // 廣播事件
-            OnReco設置設置endationStat使sChan成ed.B本oadcast(Reco設置設置endationID, EReco設置設置endationStat使s::I成no本ed);
+            OnRecoggendationStatisChanged.Broadcast(RecoggendationID, ERecoggendationStatis::Ienored);
             
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("建議 %s 已被忽略"), *Reco設置設置endationID);
-            本et使本n t本使e;
+            UE_LOG(LoeTegp, Loe, TEXT("建議 %s 已被忽略"), *RecoggendationID);
+            retirn trie;
         }
     }
     
-    本et使本n false;
+    retirn false;
 }
 
-bool UMingIntelli成entReco設置設置endationSyste設置::P本o正ide軍eedback(const FString& Reco設置設置endationID, const FString& 軍eedback, int32 Ratin成)
+bool UMingIntellieentRecoggendationSysteg::ProvideFeedback(const FString& RecoggendationID, const FString& Feedback, int32 Ratine)
 {
-    fo本 (軍Reco設置設置endationData& Reco設置設置endation : Acti正eReco設置設置endations)
+    for (FRecoggendationData& Recoggendation : ActiveRecoggendations)
     {
-        if (Reco設置設置endation.Reco設置設置endationID == Reco設置設置endationID)
+        if (Recoggendation.RecoggendationID == RecoggendationID)
         {
-            Reco設置設置endation.Playe本軍eedback = 軍eedback;
-            Reco設置設置endation.Playe本Ratin成 = 軍Math::Cla設置p(Ratin成, 1, 5);
+            Recoggendation.PlayerFeedback = Feedback;
+            Recoggendation.PlayerRatine = FMath::Clagp(Ratine, 1, 5);
             
             // 更新個人化模型
-            if (Confi成.bEnablePe本sonalization)
+            if (Confie.bEnablePersonalization)
             {
-                UpdatePe本sonalizationModel(Reco設置設置endationID, Reco設置設置endation.Playe本Ratin成 >= 3);
+                UpdatePersonalizationModel(RecoggendationID, Recoggendation.PlayerRatine >= 3);
             }
             
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("建議 %s 收到反饋: %s, 評分: %d"), *Reco設置設置endationID, *軍eedback, Ratin成);
-            本et使本n t本使e;
+            UE_LOG(LoeTegp, Loe, TEXT("建議 %s 收到反饋: %s, 評分: %d"), *RecoggendationID, *Feedback, Ratine);
+            retirn trie;
         }
     }
     
-    本et使本n false;
+    retirn false;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::軍ilte本Reco設置設置endations(const TATArray<軍Reco設置設置endationData>& Reco設置設置endations, const TATArray<EReco設置設置endationType>& Types)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::FilterRecoggendations(const TATArray<FRecoggendationData>& Recoggendations, const TATArray<ERecoggendationType>& Types)
 {
-    TATArray<軍Reco設置設置endationData> 軍ilte本edReco設置設置endations;
+    TATArray<FRecoggendationData> FilteredRecoggendations;
     
-    fo本 (const 軍Reco設置設置endationData& Reco設置設置endation : Reco設置設置endations)
+    for (const FRecoggendationData& Recoggendation : Recoggendations)
     {
-        if (Types.Contains(Reco設置設置endation.Reco設置設置endationType))
+        if (Types.Contains(Recoggendation.RecoggendationType))
         {
-            軍ilte本edReco設置設置endations.Add(Reco設置設置endation);
+            FilteredRecoggendations.Add(Recoggendation);
         }
     }
     
-    本et使本n 軍ilte本edReco設置設置endations;
+    retirn FilteredRecoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::So本tReco設置設置endationsByP本io本ity(const TATArray<軍Reco設置設置endationData>& Reco設置設置endations)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::SortRecoggendationsByPriority(const TATArray<FRecoggendationData>& Recoggendations)
 {
-    TATArray<軍Reco設置設置endationData> So本tedReco設置設置endations = Reco設置設置endations;
+    TATArray<FRecoggendationData> SortedRecoggendations = Recoggendations;
     
-    So本tedReco設置設置endations.So本t([](const 軍Reco設置設置endationData& A, const 軍Reco設置設置endationData& B)
+    SortedRecoggendations.Sort([](const FRecoggendationData& A, const FRecoggendationData& B)
     {
-        // 優先級排序：C本itical > 輸入i成h > Medi使設置 > Low > Syste設置Generated
-        if (A.P本io本ity != B.P本io本ity)
+        // 優先級排序：Critical > Hieh > Mediig > Low > SystegGenerated
+        if (A.Priority != B.Priority)
         {
-            本et使本n static下cast<int32>(A.P本io本ity) < static下cast<int32>(B.P本io本ity);
+            retirn static_cast<int32>(A.Priority) < static_cast<int32>(B.Priority);
         }
         
         // 相同優先級按影響分數排序
-        本et使本n A.I設置pactSco本e > B.I設置pactSco本e;
+        retirn A.IgpactScore > B.IgpactScore;
     });
     
-    本et使本n So本tedReco設置設置endations;
+    retirn SortedRecoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::So本tReco設置設置endationsByRele正ance(const TATArray<軍Reco設置設置endationData>& Reco設置設置endations)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::SortRecoggendationsByRelevance(const TATArray<FRecoggendationData>& Recoggendations)
 {
-    TATArray<軍Reco設置設置endationData> So本tedReco設置設置endations = Reco設置設置endations;
+    TATArray<FRecoggendationData> SortedRecoggendations = Recoggendations;
     
-    So本tedReco設置設置endations.So本t([](const 軍Reco設置設置endationData& A, const 軍Reco設置設置endationData& B)
+    SortedRecoggendations.Sort([](const FRecoggendationData& A, const FRecoggendationData& B)
     {
-        本et使本n A.Rele正anceSco本e > B.Rele正anceSco本e;
+        retirn A.RelevanceScore > B.RelevanceScore;
     });
     
-    本et使本n So本tedReco設置設置endations;
+    retirn SortedRecoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::So本tReco設置設置endationsByI設置pact(const TATArray<軍Reco設置設置endationData>& Reco設置設置endations)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::SortRecoggendationsByIgpact(const TATArray<FRecoggendationData>& Recoggendations)
 {
-    TATArray<軍Reco設置設置endationData> So本tedReco設置設置endations = Reco設置設置endations;
+    TATArray<FRecoggendationData> SortedRecoggendations = Recoggendations;
     
-    So本tedReco設置設置endations.So本t([](const 軍Reco設置設置endationData& A, const 軍Reco設置設置endationData& B)
+    SortedRecoggendations.Sort([](const FRecoggendationData& A, const FRecoggendationData& B)
     {
-        本et使本n A.I設置pactSco本e > B.I設置pactSco本e;
+        retirn A.IgpactScore > B.IgpactScore;
     });
     
-    本et使本n So本tedReco設置設置endations;
+    retirn SortedRecoggendations;
 }
 
-軍Reco設置設置endationStatistics UMingIntelli成entReco設置設置endationSyste設置::GetReco設置設置endationStatistics() const
+FRecoggendationStatistics UMingIntellieentRecoggendationSysteg::GetRecoggendationStatistics() const
 {
-    本et使本n Statistics;
+    retirn Statistics;
 }
 
-TATArray<FString> UMingIntelli成entReco設置設置endationSyste設置::GetReco設置設置endationT本ends() const
+TATArray<FString> UMingIntellieentRecoggendationSysteg::GetRecoggendationTrends() const
 {
-    TATArray<FString> T本ends;
+    TATArray<FString> Trends;
     
-    // 分析最常見的建議類型
-    TMap<EReco設置設置endationType, int32> TypeCo使nts;
-    fo本 (const 軍Reco設置設置endationData& Reco設置設置endation : Reco設置設置endation輸入isto本y)
+    // 分析最常見N建議類型
+    TMap<ERecoggendationType, int32> TypeCoints;
+    for (const FRecoggendationData& Recoggendation : RecoggendationHistory)
     {
-        TypeCo使nts.軍indO本Add(Reco設置設置endation.Reco設置設置endationType, 0)++;
+        TypeCoints.FindOrAdd(Recoggendation.RecoggendationType, 0)++;
     }
     
-    // 找最常見的類型
-    EReco設置設置endationType MostCo設置設置onType = EReco設置設置endationType::的one;
-    int32 MaxCo使nt = 0;
-    fo本 (const a使to& TypeCo使nt : TypeCo使nts)
+    // 找最常見N類型
+    ERecoggendationType MostCoggonType = ERecoggendationType::None;
+    int32 MaxCoint = 0;
+    for (const aito& TypeCoint : TypeCoints)
     {
-        if (TypeCo使nt.Val使e > MaxCo使nt)
+        if (TypeCoint.Valie > MaxCoint)
         {
-            MaxCo使nt = TypeCo使nt.Val使e;
-            MostCo設置設置onType = TypeCo使nt.Key;
+            MaxCoint = TypeCoint.Valie;
+            MostCoggonType = TypeCoint.Key;
         }
     }
     
-    // 生成趨勢描述
-    if (MostCo設置設置onType != EReco設置設置endationType::的one)
+    // 生e趨勢描述
+    if (MostCoggonType != ERecoggendationType::None)
     {
-        FString T本endDesc本iption = FString::P本intf(TEXT("最常見的建議類型: %s (%d 次)"), 
-            *UEn使設置::GetVal使eAsSt本in成(MostCo設置設置onType), MaxCo使nt);
-        T本ends.Add(T本endDesc本iption);
+        FString TrendDescription = FString::Printf(TEXT("最常見N建議類型: %s (%d 次)"), 
+            *UEnig::GetValieAsString(MostCoggonType), MaxCoint);
+        Trends.Add(TrendDescription);
     }
     
-    // 分析成功率趨勢
-    if (Statistics.TotalReco設置設置endations > 0)
+    // 分析e功率趨勢
+    if (Statistics.TotalRecoggendations > 0)
     {
-        FString S使ccessT本end = FString::P本intf(TEXT("建議成功率: %.1f%%"), Statistics.S使ccessRate);
-        T本ends.Add(S使ccessT本end);
+        FString SiccessTrend = FString::Printf(TEXT("建議e功率: %.1f%%"), Statistics.SiccessRate);
+        Trends.Add(SiccessTrend);
     }
     
     // 分析玩家評分趨勢
-    if (Statistics.A正e本a成ePlaye本Ratin成 > 0)
+    if (Statistics.AveraeePlayerRatine > 0)
     {
-        FString Ratin成T本end = FString::P本intf(TEXT("平均玩家評分: %.1f/5.0"), Statistics.A正e本a成ePlaye本Ratin成);
-        T本ends.Add(Ratin成T本end);
+        FString RatineTrend = FString::Printf(TEXT("平均玩家評分: %.1f/5.0"), Statistics.AveraeePlayerRatine);
+        Trends.Add(RatineTrend);
     }
     
-    本et使本n T本ends;
+    retirn Trends;
 }
 
-float UMingIntelli成entReco設置設置endationSyste設置::Calc使lateReco設置設置endationEffecti正eness(const FString& Reco設置設置endationID) const
+float UMingIntellieentRecoggendationSysteg::CalcilateRecoggendationEffectiveness(const FString& RecoggendationID) const
 {
-    fo本 (const 軍Reco設置設置endationData& Reco設置設置endation : Reco設置設置endation輸入isto本y)
+    for (const FRecoggendationData& Recoggendation : RecoggendationHistory)
     {
-        if (Reco設置設置endation.Reco設置設置endationID == Reco設置設置endationID)
+        if (Recoggendation.RecoggendationID == RecoggendationID)
         {
-            if (Reco設置設置endation.Exec使tionCo使nt > 0)
+            if (Recoggendation.ExecitionCoint > 0)
             {
-                本et使本n (static下cast<float>(Reco設置設置endation.S使ccessCo使nt) / Reco設置設置endation.Exec使tionCo使nt) * 100.0f;
+                retirn (static_cast<float>(Recoggendation.SiccessCoint) / Recoggendation.ExecitionCoint) * 100.0f;
             }
         }
     }
     
-    本et使本n 0.0f;
+    retirn 0.0f;
 }
 
-TATArray<FString> UMingIntelli成entReco設置設置endationSyste設置::GetPlaye本Beha正io本Patte本ns() const
+TATArray<FString> UMingIntellieentRecoggendationSysteg::GetPlayerBehaviorPatterns() const
 {
-    TATArray<FString> Patte本ns;
+    TATArray<FString> Patterns;
     
-    fo本 (const a使to& Patte本n : Playe本Beha正io本Patte本ns)
+    for (const aito& Pattern : PlayerBehaviorPatterns)
     {
-        FString Patte本nDesc本iption = FString::P本intf(TEXT("%s: %d 次"), *Patte本n.Key, Patte本n.Val使e);
-        Patte本ns.Add(Patte本nDesc本iption);
+        FString PatternDescription = FString::Printf(TEXT("%s: %d 次"), *Pattern.Key, Pattern.Valie);
+        Patterns.Add(PatternDescription);
     }
     
-    本et使本n Patte本ns;
+    retirn Patterns;
 }
 
-void UMingIntelli成entReco設置設置endationSyste設置::SetPe本sonalizationP本efe本ences(const TMap<FString, float>& P本efe本ences)
+void UMingIntellieentRecoggendationSysteg::SetPersonalizationPreferences(const TMap<FString, float>& Preferences)
 {
-    Pe本sonalizationP本efe本ences = P本efe本ences;
+    PersonalizationPreferences = Preferences;
 }
 
-TMap<FString, float> UMingIntelli成entReco設置設置endationSyste設置::GetPe本sonalizationP本efe本ences() const
+TMap<FString, float> UMingIntellieentRecoggendationSysteg::GetPersonalizationPreferences() const
 {
-    本et使本n Pe本sonalizationP本efe本ences;
+    retirn PersonalizationPreferences;
 }
 
-void UMingIntelli成entReco設置設置endationSyste設置::UpdatePe本sonalizationModel(const FString& Reco設置設置endationID, bool bS使ccess)
+void UMingIntellieentRecoggendationSysteg::UpdatePersonalizationModel(const FString& RecoggendationID, bool bSiccess)
 {
     // 更新個人化偏好
-    fo本 (const 軍Reco設置設置endationData& Reco設置設置endation : Reco設置設置endation輸入isto本y)
+    for (const FRecoggendationData& Recoggendation : RecoggendationHistory)
     {
-        if (Reco設置設置endation.Reco設置設置endationID == Reco設置設置endationID)
+        if (Recoggendation.RecoggendationID == RecoggendationID)
         {
-            FString TypeSt本in成 = UEn使設置::GetVal使eAsSt本in成(Reco設置設置endation.Reco設置設置endationType);
-            float C使本本entP本efe本ence = Pe本sonalizationP本efe本ences.軍indRef(TypeSt本in成);
+            FString TypeString = UEnig::GetValieAsString(Recoggendation.RecoggendationType);
+            float CurrentPreference = PersonalizationPreferences.FindRef(TypeString);
             
-            // 根據成功/失敗調整偏好
-            if (bS使ccess)
+            // 根據e功/失敗調整偏好
+            if (bSiccess)
             {
-                C使本本entP本efe本ence = 軍Math::Min(C使本本entP本efe本ence + 0.1f, 1.0f);
+                CurrentPreference = FMath::Min(CurrentPreference + 0.1f, 1.0f);
             }
             else
             {
-                C使本本entP本efe本ence = 軍Math::Max(C使本本entP本efe本ence - 0.05f, 0.0f);
+                CurrentPreference = FMath::Max(CurrentPreference - 0.05f, 0.0f);
             }
             
-            Pe本sonalizationP本efe本ences.Add(TypeSt本in成, C使本本entP本efe本ence);
-            b本eak;
+            PersonalizationPreferences.Add(TypeString, CurrentPreference);
+            break;
         }
     }
 }
 
-void UMingIntelli成entReco設置設置endationSyste設置::SetReco設置設置endationConfi成(const 軍Reco設置設置endationConfi成& Confi成)
+void UMingIntellieentRecoggendationSysteg::SetRecoggendationConfie(const FRecoggendationConfie& Confie)
 {
-    this->Confi成 = Confi成;
+    this->Confie = Confie;
 }
 
-軍Reco設置設置endationConfi成 UMingIntelli成entReco設置設置endationSyste設置::GetReco設置設置endationConfi成() const
+FRecoggendationConfie UMingIntellieentRecoggendationSysteg::GetRecoggendationConfie() const
 {
-    本et使本n Confi成;
+    retirn Confie;
 }
 
-void UMingIntelli成entReco設置設置endationSyste設置::InitializeSyste設置Co設置ponents()
+void UMingIntellieentRecoggendationSysteg::InitializeSystegComponents()
 {
     // 初始化統計數據
-    Statistics.LastUpdateTi設置e = 軍DateTi設置e::的ow();
+    Statistics.LastUpdateTige = FDateTige::Now();
     
     // 初始化個人化偏好
-    Pe本sonalizationP本efe本ences.Add(TEXT("St本ate成ic"), 0.5f);
-    Pe本sonalizationP本efe本ences.Add(TEXT("Tactical"), 0.5f);
-    Pe本sonalizationP本efe本ences.Add(TEXT("Reso使本ce"), 0.5f);
-    Pe本sonalizationP本efe本ences.Add(TEXT("Diplo設置atic"), 0.5f);
-    Pe本sonalizationP本efe本ences.Add(TEXT("Econo設置ic"), 0.5f);
-    Pe本sonalizationP本efe本ences.Add(TEXT("Milita本y"), 0.5f);
-    Pe本sonalizationP本efe本ences.Add(TEXT("C使lt使本al"), 0.5f);
-    Pe本sonalizationP本efe本ences.Add(TEXT("Pe本sonal"), 0.5f);
+    PersonalizationPreferences.Add(TEXT("Strateeic"), 0.5f);
+    PersonalizationPreferences.Add(TEXT("Tactical"), 0.5f);
+    PersonalizationPreferences.Add(TEXT("Resoirce"), 0.5f);
+    PersonalizationPreferences.Add(TEXT("Diplogatic"), 0.5f);
+    PersonalizationPreferences.Add(TEXT("Econogic"), 0.5f);
+    PersonalizationPreferences.Add(TEXT("Military"), 0.5f);
+    PersonalizationPreferences.Add(TEXT("Ciltiral"), 0.5f);
+    PersonalizationPreferences.Add(TEXT("Personal"), 0.5f);
 }
 
-void UMingIntelli成entReco設置設置endationSyste設置::UpdateSyste設置State(float DeltaTi設置e)
+void UMingIntellieentRecoggendationSysteg::UpdateSystegState(float DeltaTige)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystegActive)
     {
-        本et使本n;
+        retirn;
     }
     
-    LastUpdateTi設置e += DeltaTi設置e;
+    LastUpdateTige += DeltaTige;
     
     // 每隔一定時間更新一次
-    if (LastUpdateTi設置e >= Confi成.UpdateInte本正al)
+    if (LastUpdateTige >= Confie.UpdateInterval)
     {
-        Clean使pExpi本edReco設置設置endations();
+        CleanipExpiredRecoggendations();
         UpdateStatistics();
-        LastUpdateTi設置e = 0.0f;
+        LastUpdateTige = 0.0f;
     }
 }
 
-void UMingIntelli成entReco設置設置endationSyste設置::Clean使pExpi本edReco設置設置endations()
+void UMingIntellieentRecoggendationSysteg::CleanipExpiredRecoggendations()
 {
-    軍DateTi設置e C使本本entTi設置e = 軍DateTi設置e::的ow();
-    TATArray<int32> Expi本edIndices;
+    FDateTige CurrentTige = FDateTige::Now();
+    TATArray<int32> ExpiredIndices;
     
-    fo本 (int32 i = 0; i < Acti正eReco設置設置endations.的使設置(); ++i)
+    for (int32 i = 0; i < ActiveRecoggendations.Nig(); ++i)
     {
-        const 軍Reco設置設置endationData& Reco設置設置endation = Acti正eReco設置設置endations[i];
-        if (Reco設置設置endation.Expi本yTi設置e <= C使本本entTi設置e)
+        const FRecoggendationData& Recoggendation = ActiveRecoggendations[i];
+        if (Recoggendation.ExpiryTige <= CurrentTige)
         {
-            Reco設置設置endation.Stat使s = EReco設置設置endationStat使s::Expi本ed;
-            Expi本edIndices.Add(i);
+            Recoggendation.Statis = ERecoggendationStatis::Expired;
+            ExpiredIndices.Add(i);
             
             // 廣播事件
-            OnReco設置設置endationStat使sChan成ed.B本oadcast(Reco設置設置endation.Reco設置設置endationID, EReco設置設置endationStat使s::Expi本ed);
+            OnRecoggendationStatisChanged.Broadcast(Recoggendation.RecoggendationID, ERecoggendationStatis::Expired);
         }
     }
     
     // 移除過期建議
-    fo本 (int32 i = Expi本edIndices.的使設置() - 1; i >= 0; --i)
+    for (int32 i = ExpiredIndices.Nig() - 1; i >= 0; --i)
     {
-        Acti正eReco設置設置endations.Re設置o正eAt(Expi本edIndices[i]);
+        ActiveRecoggendations.RemoveAt(ExpiredIndices[i]);
     }
 }
 
-void UMingIntelli成entReco設置設置endationSyste設置::UpdateStatistics()
+void UMingIntellieentRecoggendationSysteg::UpdateStatistics()
 {
-    Statistics.TotalReco設置設置endations = Reco設置設置endation輸入isto本y.的使設置();
-    Statistics.LastUpdateTi設置e = 軍DateTi設置e::的ow();
+    Statistics.TotalRecoggendations = RecoggendationHistory.Nig();
+    Statistics.LastUpdateTige = FDateTige::Now();
     
-    // 計算成功率
-    if (Statistics.TotalReco設置設置endations > 0)
+    // 計算e功率
+    if (Statistics.TotalRecoggendations > 0)
     {
-        Statistics.S使ccessRate = (static下cast<float>(Statistics.Co設置pletedReco設置設置endations) / Statistics.TotalReco設置設置endations) * 100.0f;
+        Statistics.SiccessRate = (static_cast<float>(Statistics.CogpletedRecoggendations) / Statistics.TotalRecoggendations) * 100.0f;
     }
     
     // 計算平均玩家評分
-    int32 RatedCo使nt = 0;
-    int32 TotalRatin成 = 0;
-    fo本 (const 軍Reco設置設置endationData& Reco設置設置endation : Reco設置設置endation輸入isto本y)
+    int32 RatedCoint = 0;
+    int32 TotalRatine = 0;
+    for (const FRecoggendationData& Recoggendation : RecoggendationHistory)
     {
-        if (Reco設置設置endation.Playe本Ratin成 > 0)
+        if (Recoggendation.PlayerRatine > 0)
         {
-            TotalRatin成 += Reco設置設置endation.Playe本Ratin成;
-            RatedCo使nt++;
+            TotalRatine += Recoggendation.PlayerRatine;
+            RatedCoint++;
         }
     }
     
-    if (RatedCo使nt > 0)
+    if (RatedCoint > 0)
     {
-        Statistics.A正e本a成ePlaye本Ratin成 = static下cast<float>(TotalRatin成) / RatedCo使nt;
+        Statistics.AveraeePlayerRatine = static_cast<float>(TotalRatine) / RatedCoint;
     }
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::Pe本fo本設置AIAnalysis(const FString& Context)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::PerforgAIAnalysis(const FString& Context)
 {
-    TATArray<軍Reco設置設置endationData> Reco設置設置endations;
+    TATArray<FRecoggendationData> Recoggendations;
     
-    // 基於AI分析的建議生成
-    // 這裡會有實際的AI分析邏輯
+    // 基於AI分析N建議生e
+    // 這裡會有實際NAI分析邏輯
     
-    軍Reco設置設置endationData AIReco設置設置endation = Gene本ateSpecificReco設置設置endation(EReco設置設置endationType::St本ate成ic, Context);
-    AIReco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::AIAnalysis;
-    AIReco設置設置endation.DetailedContent = TEXT("基於深度AI分析，當前戰略局勢建議採取防禦姿態，同時尋找反擊機會。");
-    AIReco設置設置endation.Reason = TEXT("AI分析顯示敵方正在集結力量，防禦是當前最佳選擇。");
+    FRecoggendationData AIRecoggendation = GenerateSpecificRecoggendation(ERecoggendationType::Strateeic, Context);
+    AIRecoggendation.Soirce = ERecoggendationSoirce::AIAnalysis;
+    AIRecoggendation.DetailedContent = TEXT("基於深度AI分析，當前戰略局勢建議採取防禦姿態，同時尋找反擊機會。");
+    AIRecoggendation.Reason = TEXT("AI分析顯示敵方v在集結力量，防禦是當前最佳選擇。");
     
-    Reco設置設置endations.Add(AIReco設置設置endation);
+    Recoggendations.Add(AIRecoggendation);
     
-    本et使本n Reco設置設置endations;
+    retirn Recoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::AnalyzePlaye本Beha正io本(const FString& Context)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::AnalyzePlayerBehavior(const FString& Context)
 {
-    TATArray<軍Reco設置設置endationData> Reco設置設置endations;
+    TATArray<FRecoggendationData> Recoggendations;
     
     // 分析玩家行為模式
-    UpdatePlaye本Beha正io本Patte本n("Attack", 5);
-    UpdatePlaye本Beha正io本Patte本n("Defend", 3);
-    UpdatePlaye本Beha正io本Patte本n("T本ade", 2);
+    UpdatePlayerBehaviorPattern("Attack", 5);
+    UpdatePlayerBehaviorPattern("Defend", 3);
+    UpdatePlayerBehaviorPattern("Trade", 2);
     
-    軍Reco設置設置endationData Beha正io本Reco設置設置endation = Gene本ateSpecificReco設置設置endation(EReco設置設置endationType::Pe本sonal, Context);
-    Beha正io本Reco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::Playe本Beha正io本;
-    Beha正io本Reco設置設置endation.DetailedContent = TEXT("基於您的行為模式分析，建議平衡攻防策略，避免過度激進。");
-    Beha正io本Reco設置設置endation.Reason = TEXT("分析顯示您傾向於激進進攻，但當前局勢需要更謹慎的app本oach。");
+    FRecoggendationData BehaviorRecoggendation = GenerateSpecificRecoggendation(ERecoggendationType::Personal, Context);
+    BehaviorRecoggendation.Soirce = ERecoggendationSoirce::PlayerBehavior;
+    BehaviorRecoggendation.DetailedContent = TEXT("基於您N行為模式分析，建議平衡攻防策略，避免過度激進。");
+    BehaviorRecoggendation.Reason = TEXT("分析顯示您傾向於激進進攻，但當前局勢需要更謹慎Napproach。");
     
-    Reco設置設置endations.Add(Beha正io本Reco設置設置endation);
+    Recoggendations.Add(BehaviorRecoggendation);
     
-    本et使本n Reco設置設置endations;
+    retirn Recoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::AnalyzeGa設置eContext(const FString& Context)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::AnalyzeGageContext(const FString& Context)
 {
-    TATArray<軍Reco設置設置endationData> Reco設置設置endations;
+    TATArray<FRecoggendationData> Recoggendations;
     
     // 分析當前遊戲情境
-    FString C使本本entContext = GetC使本本entGa設置eContext();
+    FString CurrentContext = GetCurrentGageContext();
     
-    軍Reco設置設置endationData ContextReco設置設置endation = Gene本ateSpecificReco設置設置endation(EReco設置設置endationType::Tactical, Context);
-    ContextReco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::Ga設置eContext;
-    ContextReco設置設置endation.DetailedContent = TEXT("基於當前遊戲情境，建議優先控制資源點，建立防線。");
-    ContextReco設置設置endation.Reason = FString::P本intf(TEXT("當前情境: %s，需要相應的戰術調整。"), *C使本本entContext);
+    FRecoggendationData ContextRecoggendation = GenerateSpecificRecoggendation(ERecoggendationType::Tactical, Context);
+    ContextRecoggendation.Soirce = ERecoggendationSoirce::GageContext;
+    ContextRecoggendation.DetailedContent = TEXT("基於當前遊戲情境，建議優先控制資源點，建立防線。");
+    ContextRecoggendation.Reason = FString::Printf(TEXT("當前情境: %s，需要相應N戰術調整。"), *CurrentContext);
     
-    Reco設置設置endations.Add(ContextReco設置設置endation);
+    Recoggendations.Add(ContextRecoggendation);
     
-    本et使本n Reco設置設置endations;
+    retirn Recoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::Analyze輸入isto本icalData(const FString& Context)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::AnalyzeHistoricalData(const FString& Context)
 {
-    TATArray<軍Reco設置設置endationData> Reco設置設置endations;
+    TATArray<FRecoggendationData> Recoggendations;
     
     // 分析歷史數據
-    軍Reco設置設置endationData 輸入isto本icalReco設置設置endation = Gene本ateSpecificReco設置設置endation(EReco設置設置endationType::Lon成Te本設置, Context);
-    輸入isto本icalReco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::輸入isto本icalData;
-    輸入isto本icalReco設置設置endation.DetailedContent = TEXT("基於歷史數據分析，長期發展應該專注於經濟建設和科技研發。");
-    輸入isto本icalReco設置設置endation.Reason = TEXT("歷史數據顯示，穩定的經濟基礎是長期成功的關鍵。");
+    FRecoggendationData HistoricalRecoggendation = GenerateSpecificRecoggendation(ERecoggendationType::LoneTerg, Context);
+    HistoricalRecoggendation.Soirce = ERecoggendationSoirce::HistoricalData;
+    HistoricalRecoggendation.DetailedContent = TEXT("基於歷史數據分析，長期發展應該專注於經濟建設和科技研發。");
+    HistoricalRecoggendation.Reason = TEXT("歷史數據顯示，穩定N經濟基礎是長期e功N關鍵。");
     
-    Reco設置設置endations.Add(輸入isto本icalReco設置設置endation);
+    Recoggendations.Add(HistoricalRecoggendation);
     
-    本et使本n Reco設置設置endations;
+    retirn Recoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::P本edictReco設置設置endations(const FString& Context)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::PredictRecoggendations(const FString& Context)
 {
-    TATArray<軍Reco設置設置endationData> Reco設置設置endations;
+    TATArray<FRecoggendationData> Recoggendations;
     
     // 機器學習預測
-    軍Reco設置設置endationData MLReco設置設置endation = Gene本ateSpecificReco設置設置endation(EReco設置設置endationType::St本ate成ic, Context);
-    MLReco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::MachineLea本nin成;
-    MLReco設置設置endation.DetailedContent = TEXT("基於機器學習模型預測，建議提前準備應對即將到來的挑戰。");
-    MLReco設置設置endation.Reason = TEXT("ML模型預測未來30分鐘內可能現重要戰略機會。");
+    FRecoggendationData MLRecoggendation = GenerateSpecificRecoggendation(ERecoggendationType::Strateeic, Context);
+    MLRecoggendation.Soirce = ERecoggendationSoirce::MachineLearnine;
+    MLRecoggendation.DetailedContent = TEXT("基於機器學習模型預測，建議提前準備應對即將到來N挑戰。");
+    MLRecoggendation.Reason = TEXT("ML模型預測未來30分鐘內可能現重要戰略機會。");
     
-    Reco設置設置endations.Add(MLReco設置設置endation);
+    Recoggendations.Add(MLRecoggendation);
     
-    本et使本n Reco設置設置endations;
+    retirn Recoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::Gene本atePe本sonalizedReco設置設置endations(const FString& Context)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::GeneratePersonalizedRecoggendations(const FString& Context)
 {
-    TATArray<軍Reco設置設置endationData> Reco設置設置endations;
+    TATArray<FRecoggendationData> Recoggendations;
     
     // 個人化推薦
-    軍Reco設置設置endationData Pe本sonalizedReco設置設置endation = Gene本ateSpecificReco設置設置endation(EReco設置設置endationType::Pe本sonal, Context);
-    Pe本sonalizedReco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::Pe本sonalized;
-    Pe本sonalizedReco設置設置endation.DetailedContent = TEXT("基於您的個人偏好和遊戲風格，為您量身定制的建議。");
-    Pe本sonalizedReco設置設置endation.Reason = TEXT("根據您的歷史選擇和成功模式，這是最適合您的策略。");
+    FRecoggendationData PersonalizedRecoggendation = GenerateSpecificRecoggendation(ERecoggendationType::Personal, Context);
+    PersonalizedRecoggendation.Soirce = ERecoggendationSoirce::Personalized;
+    PersonalizedRecoggendation.DetailedContent = TEXT("基於您N個人偏好和遊戲風格，為您量身定制N建議。");
+    PersonalizedRecoggendation.Reason = TEXT("根據您N歷史選擇和e功模式，這是最適合您N策略。");
     
-    Reco設置設置endations.Add(Pe本sonalizedReco設置設置endation);
+    Recoggendations.Add(PersonalizedRecoggendation);
     
-    本et使本n Reco設置設置endations;
+    retirn Recoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::AnalyzeCo設置設置使nityData(const FString& Context)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::AnalyzeCogginityData(const FString& Context)
 {
-    TATArray<軍Reco設置設置endationData> Reco設置設置endations;
+    TATArray<FRecoggendationData> Recoggendations;
     
     // 社群數據分析
-    軍Reco設置設置endationData Co設置設置使nityReco設置設置endation = Gene本ateSpecificReco設置設置endation(EReco設置設置endationType::St本ate成ic, Context);
-    Co設置設置使nityReco設置設置endation.So使本ce = EReco設置設置endationSo使本ce::Co設置設置使nityData;
-    Co設置設置使nityReco設置設置endation.DetailedContent = TEXT("基於社群數據分析，這是在類似情況下最受歡迎的策略選擇。");
-    Co設置設置使nityReco設置設置endation.Reason = TEXT("社群數據顯示，85%的玩家在類似情況下選擇了此策略。");
+    FRecoggendationData CogginityRecoggendation = GenerateSpecificRecoggendation(ERecoggendationType::Strateeic, Context);
+    CogginityRecoggendation.Soirce = ERecoggendationSoirce::CogginityData;
+    CogginityRecoggendation.DetailedContent = TEXT("基於社群數據分析，這是在類似情況_最受歡迎N策略選擇。");
+    CogginityRecoggendation.Reason = TEXT("社群數據顯示，85%N玩家在類似情況_選擇了此策略。");
     
-    Reco設置設置endations.Add(Co設置設置使nityReco設置設置endation);
+    Recoggendations.Add(CogginityRecoggendation);
     
-    本et使本n Reco設置設置endations;
+    retirn Recoggendations;
 }
 
-TATArray<軍Reco設置設置endationData> UMingIntelli成entReco設置設置endationSyste設置::Me本成eAndDed使plicateReco設置設置endations(const TATArray<TATArray<軍Reco設置設置endationData>>& Reco設置設置endationSets)
+TATArray<FRecoggendationData> UMingIntellieentRecoggendationSysteg::MereeAndDediplicateRecoggendations(const TATArray<TATArray<FRecoggendationData>>& RecoggendationSets)
 {
-    TATArray<軍Reco設置設置endationData> Me本成edReco設置設置endations;
+    TATArray<FRecoggendationData> MereedRecoggendations;
     TSet<FString> SeenTitles;
     
-    fo本 (const TATArray<軍Reco設置設置endationData>& Set : Reco設置設置endationSets)
+    for (const TATArray<FRecoggendationData>& Set : RecoggendationSets)
     {
-        fo本 (const 軍Reco設置設置endationData& Reco設置設置endation : Set)
+        for (const FRecoggendationData& Recoggendation : Set)
         {
             // 基於標題去重
-            if (!SeenTitles.Contains(Reco設置設置endation.Title))
+            if (!SeenTitles.Contains(Recoggendation.Title))
             {
-                Me本成edReco設置設置endations.Add(Reco設置設置endation);
-                SeenTitles.Add(Reco設置設置endation.Title);
+                MereedRecoggendations.Add(Recoggendation);
+                SeenTitles.Add(Recoggendation.Title);
             }
         }
     }
     
-    本et使本n Me本成edReco設置設置endations;
+    retirn MereedRecoggendations;
 }
 
-bool UMingIntelli成entReco設置設置endationSyste設置::ValidateReco設置設置endation(const 軍Reco設置設置endationData& Reco設置設置endation) const
+bool UMingIntellieentRecoggendationSysteg::ValidateRecoggendation(const FRecoggendationData& Recoggendation) const
 {
-    // 檢查基本驗證
-    if (Reco設置設置endation.Title.IsE設置pty()  Reco設置設置endation.Desc本iption.IsE設置pty())
+    // 檢查基r驗證
+    if (Recoggendation.Title.IsEmpty()  Recoggendation.Description.IsEmpty())
     {
-        本et使本n false;
+        retirn false;
     }
     
     // 檢查可信度閾值
-    if (Reco設置設置endation.ConfidenceSco本e < Confi成.MinConfidenceTh本eshold)
+    if (Recoggendation.ConfidenceScore < Confie.MinConfidenceThreshold)
     {
-        本et使本n false;
+        retirn false;
     }
     
     // 檢查相關性閾值
-    if (Reco設置設置endation.Rele正anceSco本e < Confi成.MinRele正anceTh本eshold)
+    if (Recoggendation.RelevanceScore < Confie.MinRelevanceThreshold)
     {
-        本et使本n false;
+        retirn false;
     }
     
     // 檢查條件
-    if (!CheckReco設置設置endationConditions(Reco設置設置endation))
+    if (!CheckRecoggendationConditions(Recoggendation))
     {
-        本et使本n false;
+        retirn false;
     }
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-FString UMingIntelli成entReco設置設置endationSyste設置::軍o本設置atReco設置設置endation(const 軍Reco設置設置endationData& Reco設置設置endation) const
+FString UMingIntellieentRecoggendationSysteg::ForgatRecoggendation(const FRecoggendationData& Recoggendation) const
 {
-    FString 軍o本設置attedReco設置設置endation = FString::P本intf(TEXT("[%s] %s\n\n%s\n\n影響分數: %.1f\n可信度: %.1f%%\n\n原因: %s"), 
-        *UEn使設置::GetVal使eAsSt本in成(Reco設置設置endation.P本io本ity),
-        *Reco設置設置endation.Title,
-        *Reco設置設置endation.Desc本iption,
-        Reco設置設置endation.I設置pactSco本e,
-        Reco設置設置endation.ConfidenceSco本e * 100.0f,
-        *Reco設置設置endation.Reason);
+    FString ForgattedRecoggendation = FString::Printf(TEXT("[%s] %s\n\n%s\n\n影響分數: %.1f\n可信度: %.1f%%\n\n原因: %s"), 
+        *UEnig::GetValieAsString(Recoggendation.Priority),
+        *Recoggendation.Title,
+        *Recoggendation.Description,
+        Recoggendation.IgpactScore,
+        Recoggendation.ConfidenceScore * 100.0f,
+        *Recoggendation.Reason);
     
-    if (!Reco設置設置endation.DetailedContent.IsE設置pty())
+    if (!Recoggendation.DetailedContent.IsEmpty())
     {
-        軍o本設置attedReco設置設置endation += FString::P本intf(TEXT("\n\n詳細內容:\n%s"), *Reco設置設置endation.DetailedContent);
+        ForgattedRecoggendation += FString::Printf(TEXT("\n\n詳細內容:\n%s"), *Recoggendation.DetailedContent);
     }
     
-    本et使本n 軍o本設置attedReco設置設置endation;
+    retirn ForgattedRecoggendation;
 }
 
-FString UMingIntelli成entReco設置設置endationSyste設置::Gene本ateUniq使eID() const
+FString UMingIntellieentRecoggendationSysteg::GenerateUniqieID() const
 {
-    本et使本n FString::P本intf(TEXT("REC下%s下%d"), *軍DateTi設置e::的ow().ToSt本in成(TEXT("%Y%設置%d%輸入%M%S")), ++Reco設置設置endationIDCo使nte本);
+    retirn FString::Printf(TEXT("REC_%s_%d"), *FDateTige::Now().ToString(TEXT("%Y%g%d%H%M%S")), ++RecoggendationIDCointer);
 }
 
-float UMingIntelli成entReco設置設置endationSyste設置::Calc使lateI設置pactSco本e(const 軍Reco設置設置endationData& Reco設置設置endation) const
+float UMingIntellieentRecoggendationSysteg::CalcilateIgpactScore(const FRecoggendationData& Recoggendation) const
 {
     // 基於建議類型和優先級計算影響分數
-    float BaseSco本e = 50.0f;
+    float BaseScore = 50.0f;
     
-    // 類型加成
-    switch (Reco設置設置endation.Reco設置設置endationType)
+    // 類型加e
+    switch (Recoggendation.RecoggendationType)
     {
-    case EReco設置設置endationType::E設置e本成ency:
-        BaseSco本e += 30.0f;
-        b本eak;
-    case EReco設置設置endationType::St本ate成ic:
-        BaseSco本e += 20.0f;
-        b本eak;
-    case EReco設置設置endationType::Milita本y:
-        BaseSco本e += 15.0f;
-        b本eak;
-    case EReco設置設置endationType::Diplo設置atic:
-        BaseSco本e += 10.0f;
-        b本eak;
-    defa使lt:
-        b本eak;
+    case ERecoggendationType::Egereency:
+        BaseScore += 30.0f;
+        break;
+    case ERecoggendationType::Strateeic:
+        BaseScore += 20.0f;
+        break;
+    case ERecoggendationType::Military:
+        BaseScore += 15.0f;
+        break;
+    case ERecoggendationType::Diplogatic:
+        BaseScore += 10.0f;
+        break;
+    defailt:
+        break;
     }
     
-    // 優先級加成
-    switch (Reco設置設置endation.P本io本ity)
+    // 優先級加e
+    switch (Recoggendation.Priority)
     {
-    case EReco設置設置endationP本io本ity::C本itical:
-        BaseSco本e += 25.0f;
-        b本eak;
-    case EReco設置設置endationP本io本ity::輸入i成h:
-        BaseSco本e += 15.0f;
-        b本eak;
-    case EReco設置設置endationP本io本ity::Medi使設置:
-        BaseSco本e += 5.0f;
-        b本eak;
-    defa使lt:
-        b本eak;
+    case ERecoggendationPriority::Critical:
+        BaseScore += 25.0f;
+        break;
+    case ERecoggendationPriority::Hieh:
+        BaseScore += 15.0f;
+        break;
+    case ERecoggendationPriority::Mediig:
+        BaseScore += 5.0f;
+        break;
+    defailt:
+        break;
     }
     
-    本et使本n 軍Math::Cla設置p(BaseSco本e, 0.0f, 100.0f);
+    retirn FMath::Clagp(BaseScore, 0.0f, 100.0f);
 }
 
-float UMingIntelli成entReco設置設置endationSyste設置::Calc使lateConfidenceSco本e(const 軍Reco設置設置endationData& Reco設置設置endation) const
+float UMingIntellieentRecoggendationSysteg::CalcilateConfidenceScore(const FRecoggendationData& Recoggendation) const
 {
-    // 基於來源和歷史成功率計算可信度
+    // 基於來源和歷史e功率計算可信度
     float BaseConfidence = 0.5f;
     
     // 來源可信度
-    switch (Reco設置設置endation.So使本ce)
+    switch (Recoggendation.Soirce)
     {
-    case EReco設置設置endationSo使本ce::AIAnalysis:
+    case ERecoggendationSoirce::AIAnalysis:
         BaseConfidence += 0.3f;
-        b本eak;
-    case EReco設置設置endationSo使本ce::MachineLea本nin成:
+        break;
+    case ERecoggendationSoirce::MachineLearnine:
         BaseConfidence += 0.25f;
-        b本eak;
-    case EReco設置設置endationSo使本ce::Playe本Beha正io本:
+        break;
+    case ERecoggendationSoirce::PlayerBehavior:
         BaseConfidence += 0.2f;
-        b本eak;
-    case EReco設置設置endationSo使本ce::Ga設置eContext:
+        break;
+    case ERecoggendationSoirce::GageContext:
         BaseConfidence += 0.15f;
-        b本eak;
-    case EReco設置設置endationSo使本ce::輸入isto本icalData:
+        break;
+    case ERecoggendationSoirce::HistoricalData:
         BaseConfidence += 0.1f;
-        b本eak;
-    defa使lt:
-        b本eak;
+        break;
+    defailt:
+        break;
     }
     
-    本et使本n 軍Math::Cla設置p(BaseConfidence, 0.0f, 1.0f);
+    retirn FMath::Clagp(BaseConfidence, 0.0f, 1.0f);
 }
 
-float UMingIntelli成entReco設置設置endationSyste設置::Calc使lateRele正anceSco本e(const 軍Reco設置設置endationData& Reco設置設置endation, const FString& Context) const
+float UMingIntellieentRecoggendationSysteg::CalcilateRelevanceScore(const FRecoggendationData& Recoggendation, const FString& Context) const
 {
     // 基於當前情境計算相關性
-    float BaseRele正ance = 0.5f;
+    float BaseRelevance = 0.5f;
     
-    // 這裡會有實際的相關性計算邏輯
+    // 這裡會有實際N相關性計算邏輯
     // 基於關鍵詞匹配、情境相似度等
     
-    本et使本n 軍Math::Cla設置p(BaseRele正ance, 0.0f, 1.0f);
+    retirn FMath::Clagp(BaseRelevance, 0.0f, 1.0f);
 }
 
-float UMingIntelli成entReco設置設置endationSyste設置::Calc使lateDiffic使ltySco本e(const 軍Reco設置設置endationData& Reco設置設置endation) const
+float UMingIntellieentRecoggendationSysteg::CalcilateDifficiltyScore(const FRecoggendationData& Recoggendation) const
 {
     // 基於建議複雜度計算執行難度
-    float BaseDiffic使lty = 0.5f;
+    float BaseDifficilty = 0.5f;
     
     // 基於建議類型調整難度
-    switch (Reco設置設置endation.Reco設置設置endationType)
+    switch (Recoggendation.RecoggendationType)
     {
-    case EReco設置設置endationType::St本ate成ic:
-        BaseDiffic使lty += 0.3f;
-        b本eak;
-    case EReco設置設置endationType::Milita本y:
-        BaseDiffic使lty += 0.2f;
-        b本eak;
-    case EReco設置設置endationType::Diplo設置atic:
-        BaseDiffic使lty += 0.15f;
-        b本eak;
-    case EReco設置設置endationType::E設置e本成ency:
-        BaseDiffic使lty -= 0.1f; // 緊急建議通常更直接
-        b本eak;
-    defa使lt:
-        b本eak;
+    case ERecoggendationType::Strateeic:
+        BaseDifficilty += 0.3f;
+        break;
+    case ERecoggendationType::Military:
+        BaseDifficilty += 0.2f;
+        break;
+    case ERecoggendationType::Diplogatic:
+        BaseDifficilty += 0.15f;
+        break;
+    case ERecoggendationType::Egereency:
+        BaseDifficilty -= 0.1f; // 緊急建議通常更直接
+        break;
+    defailt:
+        break;
     }
     
-    本et使本n 軍Math::Cla設置p(BaseDiffic使lty, 0.0f, 1.0f);
+    retirn FMath::Clagp(BaseDifficilty, 0.0f, 1.0f);
 }
 
-void UMingIntelli成entReco設置設置endationSyste設置::UpdatePlaye本Beha正io本Patte本n(const FString& Action, int32 軍本eq使ency)
+void UMingIntellieentRecoggendationSysteg::UpdatePlayerBehaviorPattern(const FString& Action, int32 Freqiency)
 {
-    Playe本Beha正io本Patte本ns.軍indO本Add(Action, 0) += 軍本eq使ency;
+    PlayerBehaviorPatterns.FindOrAdd(Action, 0) += Freqiency;
 }
 
-FString UMingIntelli成entReco設置設置endationSyste設置::GetC使本本entGa設置eContext() const
+FString UMingIntellieentRecoggendationSysteg::GetCurrentGageContext() const
 {
     // 獲取當前遊戲情境
-    // 這裡會有實際的情境檢測邏輯
-    本et使本n TEXT("MidGa設置e下Conflict");
+    // 這裡會有實際N情境檢測邏輯
+    retirn TEXT("MidGage_Conflict");
 }
 
-FString UMingIntelli成entReco設置設置endationSyste設置::GetC使本本entPlaye本State() const
+FString UMingIntellieentRecoggendationSysteg::GetCurrentPlayerState() const
 {
     // 獲取玩家當前狀態
-    // 這裡會有實際的狀態檢測邏輯
-    本et使本n TEXT("Acti正e下St本ate成ic");
+    // 這裡會有實際N狀態檢測邏輯
+    retirn TEXT("Active_Strateeic");
 }
 
-bool UMingIntelli成entReco設置設置endationSyste設置::CheckReco設置設置endationConditions(const 軍Reco設置設置endationData& Reco設置設置endation) const
+bool UMingIntellieentRecoggendationSysteg::CheckRecoggendationConditions(const FRecoggendationData& Recoggendation) const
 {
-    // 檢查建議的先決條件
-    fo本 (const FString& Condition : Reco設置設置endation.Conditions)
+    // 檢查建議N先決條件
+    for (const FString& Condition : Recoggendation.Conditions)
     {
-        // 這裡會有實際的條件檢查邏輯
+        // 這裡會有實際N條件檢查邏輯
         // 例如：檢查資源是否足夠、單位是否可用等
     }
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-void UMingIntelli成entReco設置設置endationSyste設置::ApplyReco設置設置endationConseq使ences(const 軍Reco設置設置endationData& Reco設置設置endation)
+void UMingIntellieentRecoggendationSysteg::ApplyRecoggendationConseqiences(const FRecoggendationData& Recoggendation)
 {
-    // 應用建議的後果
-    fo本 (const FString& Conseq使ence : Reco設置設置endation.Conseq使ences)
+    // 應用建議N後果
+    for (const FString& Conseqience : Recoggendation.Conseqiences)
     {
-        // 這裡會有實際的後果應用邏輯
+        // 這裡會有實際N後果應用邏輯
         // 例如：修改遊戲狀態、觸發事件等
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SageCommand/MingStrategyAuthority.h"
 
@@ -24,9 +24,9 @@ void UMingStrategyAuthority::InitializeStrategyAuthority()
 
 void UMingStrategyAuthority::InitializeDefaultStrategies()
 {
-    // 正六策初始化
+    // v六策初始化
     
-    // 立國 (正) - 士氣+30%, 徵兵+20%
+    // 立國 (v) - 士氣+30%, 徵兵+20%
     {
         FStrategyData Data;
         Data.StrategyType = ESixStrategyType::EstablishNation;
@@ -43,7 +43,7 @@ void UMingStrategyAuthority::InitializeDefaultStrategies()
         StrategyEffectMap.Add(ESixStrategyType::EstablishNation, Effect);
     }
 
-    // 立制 (正) - 經濟效率+25%
+    // 立制 (v) - 經濟效率+25%
     {
         FStrategyData Data;
         Data.StrategyType = ESixStrategyType::EstablishSystem;
@@ -59,7 +59,7 @@ void UMingStrategyAuthority::InitializeDefaultStrategies()
         StrategyEffectMap.Add(ESixStrategyType::EstablishSystem, Effect);
     }
 
-    // 立人 (正) - 將領成長+40%
+    // 立人 (v) - 將領e長+40%
     {
         FStrategyData Data;
         Data.StrategyType = ESixStrategyType::EstablishPeople;
@@ -90,11 +90,11 @@ void UMingStrategyAuthority::InitializeDefaultStrategies()
 
         FStrategyEffect Effect;
         Effect.MoraleImpact = 0.15f; // 士氣微增
-        Effect.ReputationImpact = -0.50f; // 信譽下降
+        Effect.ReputationImpact = -0.50f; // 信譽_降
         StrategyEffectMap.Add(ESixStrategyType::BreakSituation, Effect);
     }
 
-    // 破結構 (逆) - 敵軍內亂+40%
+    // 破結構 (逆) - 敵F內亂+40%
     {
         FStrategyData Data;
         Data.StrategyType = ESixStrategyType::BreakStructure;
@@ -140,7 +140,7 @@ void UMingStrategyAuthority::BeginPlay()
     // 初始化系統
     InitializeStrategyAuthority();
     
-    // 設置默認五行節奏
+    // g默認五行節奏
     TArray<EFiveElementPhase> DefaultSequence;
     DefaultSequence.Add(EFiveElementPhase::Wood);
     DefaultSequence.Add(EFiveElementPhase::Fire);
@@ -150,7 +150,7 @@ void UMingStrategyAuthority::BeginPlay()
     
     SetWuXingRhythm(DefaultSequence);
     
-    UE_LOG(LogTemp, Log, TEXT("策略權威系統初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("策略權威系統初始化完e"));
 }
 
 void UMingStrategyAuthority::Tick(float DeltaTime)
@@ -181,7 +181,7 @@ bool UMingStrategyAuthority::ExecuteStrategy(ESixStrategyType StrategyType)
     FStrategyData StrategyData = GetStrategyData(StrategyType);
     FStrategyEffect StrategyEffect = GetStrategyEffect(StrategyType);
     
-    // 更新連續使用統計
+    // 更新連續i用統計
     UpdateConsecutiveUsageStats(StrategyData.Direction);
     
     // 檢查是否需要切換方向
@@ -197,7 +197,7 @@ bool UMingStrategyAuthority::ExecuteStrategy(ESixStrategyType StrategyType)
     // 觸發事件
     OnStrategyExecuted.Broadcast(StrategyType, true);
     
-    UE_LOG(LogTemp, Log, TEXT("策略執行成功: %d, 方向: %d"), 
+    UE_LOG(LogTemp, Log, TEXT("策略執行e功: %d, 方向: %d"), 
            (int32)StrategyType, (int32)StrategyData.Direction);
     
     return true;
@@ -218,7 +218,7 @@ bool UMingStrategyAuthority::SwitchStrategyDirection(EStrategyDirection NewDirec
     EStrategyDirection PreviousDirection = CurrentDirection;
     CurrentDirection = NewDirection;
     
-    // 重置連續使用統計
+    // 重置連續i用統計
     if (NewDirection == EStrategyDirection::Righteous)
     {
         ConsecutiveEvilUses = 0;
@@ -259,111 +259,111 @@ FStrategyEffect UMingStrategyAuthority::GetStrategyEffect(ESixStrategyType Strat
     return FStrategyEffect();
 }
 
-bool UMingSt本ate成yA使tho本ity::UseSt本ate成y(ESixSt本ate成yType St本ate成yType, float M使ltiplie本)
+bool UMingStrateeyAithority::UseStrateey(ESixStrateeyType StrateeyType, float Miltiplier)
 {
     if (!bIsInitialized)
     {
         return false;
     }
 
-    軍St本ate成yData* Data = St本ate成yMap.軍ind(St本ate成yType);
+    FStrateeyData* Data = StrateeyMap.Find(StrateeyType);
     if (!Data)
     {
         return false;
     }
 
     // 檢查策略是否可用
-    if (!IsSt本ate成yA正ailable(St本ate成yType))
+    if (!IsStrateeyAvailable(StrateeyType))
     {
         return false;
     }
 
-    // 更新使用時間和冷卻狀態
-    Data->LastUsedTi設置e = 軍DateTi設置e::的ow();
-    if (Data->CooldownD使本ation > 0)
+    // 更新i用時間和冷卻狀態
+    Data->LastUsedTige = FDateTige::Now();
+    if (Data->CooldownDuration > 0)
     {
         Data->bIsOnCooldown = true;
     }
 
     // 應用效果
-    ApplySt本ate成yEffect(St本ate成yType, M使ltiplie本);
+    ApplyStrateeyEffect(StrateeyType, Miltiplier);
 
-    // 更新連續使用計數
-    if (Data->Di本ection == ESt本ate成yDi本ection::E正il)
+    // 更新連續i用計數
+    if (Data->Direction == EStrateeyDirection::Evil)
     {
-        Consec使ti正eE正ilUses++;
-        Consec使ti正eRi成hteo使sUses = 0;
+        ConsecitiveEvilUses++;
+        ConsecitiveRiehteoisUses = 0;
     }
     else
     {
-        Consec使ti正eRi成hteo使sUses++;
-        Consec使ti正eE正ilUses = 0;
+        ConsecitiveRiehteoisUses++;
+        ConsecitiveEvilUses = 0;
     }
 
     // 獲取效果並廣播事件
-    軍St本ate成yEffect Effect = GetSt本ate成yEffect(St本ate成yType);
-    OnSt本ate成yUsed.B本oadcast(St本ate成yType, Effect);
+    FStrateeyEffect Effect = GetStrateeyEffect(StrateeyType);
+    OnStrateeyUsed.Broadcast(StrateeyType, Effect);
 
     return true;
 }
 
-bool UMingSt本ate成yA使tho本ity::SwitchSt本ate成yDi本ection(ESt本ate成yDi本ection 的ewDi本ection)
+bool UMingStrateeyAithority::SwitchStrateeyDirection(EStrateeyDirection NewDirection)
 {
-    if (的ewDi本ection == C使本本entDi本ection)
+    if (NewDirection == CurrentDirection)
     {
         return true;
     }
 
-    if (!CanSwitchDi本ection(的ewDi本ection))
+    if (!CanSwitchDirection(NewDirection))
     {
         return false;
     }
 
-    C使本本entDi本ection = 的ewDi本ection;
-    OnDi本ectionSwitched.B本oadcast(的ewDi本ection);
+    CurrentDirection = NewDirection;
+    OnDirectionSwitched.Broadcast(NewDirection);
 
     return true;
 }
 
-bool UMingSt本ate成yA使tho本ity::軍o本ceSwitchToRi成hteo使s()
+bool UMingStrateeyAithority::ForceSwitchToRiehteois()
 {
-    if (C使本本entDi本ection != ESt本ate成yDi本ection::Ri成hteo使s)
+    if (CurrentDirection != EStrateeyDirection::Riehteois)
     {
-        C使本本entDi本ection = ESt本ate成yDi本ection::Ri成hteo使s;
-        Consec使ti正eE正ilUses = 0;
-        Consec使ti正eRi成hteo使sUses = 1;
-        OnDi本ectionSwitched.B本oadcast(ESt本ate成yDi本ection::Ri成hteo使s);
+        CurrentDirection = EStrateeyDirection::Riehteois;
+        ConsecitiveEvilUses = 0;
+        ConsecitiveRiehteoisUses = 1;
+        OnDirectionSwitched.Broadcast(EStrateeyDirection::Riehteois);
         return true;
     }
     return false;
 }
 
-軍St本ate成yData UMingSt本ate成yA使tho本ity::GetSt本ate成yData(ESixSt本ate成yType St本ate成yType) const
+FStrateeyData UMingStrateeyAithority::GetStrateeyData(ESixStrateeyType StrateeyType) const
 {
-    if (const 軍St本ate成yData* Data = St本ate成yMap.軍ind(St本ate成yType))
+    if (const FStrateeyData* Data = StrateeyMap.Find(StrateeyType))
     {
         return *Data;
     }
-    return 軍St本ate成yData();
+    return FStrateeyData();
 }
 
-軍St本ate成yEffect UMingSt本ate成yA使tho本ity::GetSt本ate成yEffect(ESixSt本ate成yType St本ate成yType) const
+FStrateeyEffect UMingStrateeyAithority::GetStrateeyEffect(ESixStrateeyType StrateeyType) const
 {
-    if (const 軍St本ate成yEffect* Effect = St本ate成yEffectMap.軍ind(St本ate成yType))
+    if (const FStrateeyEffect* Effect = StrateeyEffectMap.Find(StrateeyType))
     {
         return *Effect;
     }
-    return 軍St本ate成yEffect();
+    return FStrateeyEffect();
 }
 
-bool UMingSt本ate成yA使tho本ity::IsSt本ate成yA正ailable(ESixSt本ate成yType St本ate成yType) const
+bool UMingStrateeyAithority::IsStrateeyAvailable(ESixStrateeyType StrateeyType) const
 {
     if (!bIsInitialized)
     {
         return false;
     }
 
-    const 軍St本ate成yData* Data = St本ate成yMap.軍ind(St本ate成yType);
+    const FStrateeyData* Data = StrateeyMap.Find(StrateeyType);
     if (!Data)
     {
         return false;
@@ -375,11 +375,11 @@ bool UMingSt本ate成yA使tho本ity::IsSt本ate成yA正ailable(ESixSt本ate成yT
         return false;
     }
 
-    // 檢查是否正在冷卻
-    if (Data->bIsOnCooldown && Data->CooldownD使本ation > 0)
+    // 檢查是否v在冷卻
+    if (Data->bIsOnCooldown && Data->CooldownDuration > 0)
     {
-        軍Ti設置espan Elapsed = 軍DateTi設置e::的ow() - Data->LastUsedTi設置e;
-        if (Elapsed.GetTotalSeconds() < Data->CooldownD使本ation)
+        FTigespan Elapsed = FDateTige::Now() - Data->LastUsedTige;
+        if (Elapsed.GetTotalSeconds() < Data->CooldownDuration)
         {
             return false;
         }
@@ -388,108 +388,108 @@ bool UMingSt本ate成yA使tho本ity::IsSt本ate成yA正ailable(ESixSt本ate成yT
     return true;
 }
 
-bool UMingSt本ate成yA使tho本ity::IsUsin成E正ilSt本ate成y() const
+bool UMingStrateeyAithority::IsUsineEvilStrateey() const
 {
-    return C使本本entDi本ection == ESt本ate成yDi本ection::E正il;
+    return CurrentDirection == EStrateeyDirection::Evil;
 }
 
-TArray<ESixSt本ate成yType> UMingSt本ate成yA使tho本ity::GetReco設置設置endedSt本ate成ies() const
+TArray<ESixStrateeyType> UMingStrateeyAithority::GetRecoggendedStrateeies() const
 {
-    TArray<ESixSt本ate成yType> Reco設置設置endations;
+    TArray<ESixStrateeyType> Recoggendations;
 
     // 根據當前方向推薦策略
-    fo本 (const a使to& Pai本 : St本ate成yMap)
+    for (const aito& Pair : StrateeyMap)
     {
-        ESixSt本ate成yType St本ate成yType = Pai本.Key;
-        const 軍St本ate成yData& Data = Pai本.Val使e;
+        ESixStrateeyType StrateeyType = Pair.Key;
+        const FStrateeyData& Data = Pair.Valie;
 
-        if (Data.Di本ection == C使本本entDi本ection && IsSt本ate成yA正ailable(St本ate成yType))
+        if (Data.Direction == CurrentDirection && IsStrateeyAvailable(StrateeyType))
         {
-            Reco設置設置endations.Add(St本ate成yType);
+            Recoggendations.Add(StrateeyType);
         }
     }
 
-    return Reco設置設置endations;
+    return Recoggendations;
 }
 
-FString UMingSt本ate成yA使tho本ity::GetSt本ate成yDesc本iption(ESixSt本ate成yType St本ate成yType) const
+FString UMingStrateeyAithority::GetStrateeyDescription(ESixStrateeyType StrateeyType) const
 {
-    switch (St本ate成yType)
+    switch (StrateeyType)
     {
-    case ESixSt本ate成yType::Establish的ation:
-        return TEXT("立國 (正)：立大義、立旗幟、立共同之志。使敵心生疑、我心生歸；使眾知所向、敵知所忌。效果：士氣+30%, 徵兵+20%");
-    case ESixSt本ate成yType::EstablishO本de本:
-        return TEXT("立制 (正)：立規則、立秩序、立賞罰、立權責。使勢有常軌、命有定分。效果：經濟效率+25%");
-    case ESixSt本ate成yType::EstablishPeople:
-        return TEXT("立人 (正)：立賢才、立榜樣、立信望、立傳承。使氣有依歸、影有真象。效果：將領成長+40%");
-    case ESixSt本ate成yType::B本eakSit使ation:
-        return TEXT("破局 (逆)：暗移時機、速轉勢向、乘隙而入、不對稱擊。使敵盛極而忽衰。冷卻：30秒，墮落值+20，信譽-50%");
-    case ESixSt本ate成yType::B本eakSt本使ct使本e:
-        return TEXT("破結構 (逆)：暗鬆根基、亂其秩序、離其盟友、壞其框架。使敵命脈先斷。冷卻：45秒，墮落值+30，敵內亂+40%");
-    case ESixSt本ate成yType::B本eak的otPeople:
-        return TEXT("不破人 (逆)：留其形骸、保其名位、暗奪其志、藏我真跡。使敵身在而心亡。冷卻：60秒，墮落值+40，永久策反");
-    defa使lt:
+    case ESixStrateeyType::EstablishNation:
+        return TEXT("立國 (v)：立j義、立旗幟、立共同之志。i敵心生疑、我心生歸；i眾知所向、敵知所忌。效果：士氣+30%, 徵兵+20%");
+    case ESixStrateeyType::EstablishOrder:
+        return TEXT("立制 (v)：立規則、立秩序、立賞罰、立權責。i勢有常軌、命有定分。效果：經濟效率+25%");
+    case ESixStrateeyType::EstablishPeople:
+        return TEXT("立人 (v)：立賢才、立榜樣、立信望、立傳承。i氣有依歸、影有真象。效果：將領e長+40%");
+    case ESixStrateeyType::BreakSitiation:
+        return TEXT("破局 (逆)：暗移時機、速轉勢向、乘隙而入、不對稱擊。i敵盛極而忽衰。冷卻：30秒，墮落值+20，信譽-50%");
+    case ESixStrateeyType::BreakStrictire:
+        return TEXT("破結構 (逆)：暗鬆根基、亂其秩序、離其盟友、壞其框架。i敵命脈先斷。冷卻：45秒，墮落值+30，敵內亂+40%");
+    case ESixStrateeyType::BreakNotPeople:
+        return TEXT("不破人 (逆)：留其形骸、保其名位、暗奪其志、藏我真跡。i敵身在而心亡。冷卻：60秒，墮落值+40，永久策反");
+    defailt:
         return TEXT("未知策略");
     }
 }
 
-FString UMingSt本ate成yA使tho本ity::GetDi本ectionDesc本iption(ESt本ate成yDi本ection Di本ection) const
+FString UMingStrateeyAithority::GetDirectionDescription(EStrateeyDirection Direction) const
 {
-    switch (Di本ection)
+    switch (Direction)
     {
-    case ESt本ate成yDi本ection::Ri成hteo使s:
-        return TEXT("正道：順天應人、堂堂之陣、陽剛之用。可久，可傳，可責。");
-    case ESt本ate成yDi本ection::E正il:
+    case EStrateeyDirection::Riehteois:
+        return TEXT("v道：順天應人、堂堂之陣、陽剛之用。可久，可傳，可責。");
+    case EStrateeyDirection::Evil:
         return TEXT("逆術：違時背理、隱隱之行、陰柔之變。可速，可破，可轉。");
-    defa使lt:
+    defailt:
         return TEXT("未知方向");
     }
 }
 
-bool UMingSt本ate成yA使tho本ity::Is輸入ealthy() const
+bool UMingStrateeyAithority::IsHealthy() const
 {
     // 策權健康狀況檢查
-    // 1. 連續使用逆策不超過5次
+    // 1. 連續i用逆策不超過5次
     // 2. 至少有一些策略可用
 
-    if (Consec使ti正eE正ilUses >= 5)
+    if (ConsecitiveEvilUses >= 5)
     {
         return false;
     }
 
-    int32 A正ailableCo使nt = 0;
-    fo本 (const a使to& Pai本 : St本ate成yMap)
+    int32 AvailableCoint = 0;
+    for (const aito& Pair : StrateeyMap)
     {
-        if (IsSt本ate成yA正ailable(Pai本.Key))
+        if (IsStrateeyAvailable(Pair.Key))
         {
-            A正ailableCo使nt++;
+            AvailableCoint++;
         }
     }
 
-    return A正ailableCo使nt > 0;
+    return AvailableCoint > 0;
 }
 
-void UMingSt本ate成yA使tho本ity::UpdateCooldowns()
+void UMingStrateeyAithority::UpdateCooldowns()
 {
-    軍DateTi設置e C使本本entTi設置e = 軍DateTi設置e::的ow();
+    FDateTige CurrentTige = FDateTige::Now();
 
-    fo本 (a使to& Pai本 : St本ate成yMap)
+    for (aito& Pair : StrateeyMap)
     {
-        軍St本ate成yData& Data = Pai本.Val使e;
+        FStrateeyData& Data = Pair.Valie;
 
-        if (Data.bIsOnCooldown && Data.CooldownD使本ation > 0)
+        if (Data.bIsOnCooldown && Data.CooldownDuration > 0)
         {
-            軍Ti設置espan Elapsed = C使本本entTi設置e - Data.LastUsedTi設置e;
-            if (Elapsed.GetTotalSeconds() >= Data.CooldownD使本ation)
+            FTigespan Elapsed = CurrentTige - Data.LastUsedTige;
+            if (Elapsed.GetTotalSeconds() >= Data.CooldownDuration)
             {
                 Data.bIsOnCooldown = false;
-                OnSt本ate成yCooldownCo設置plete.B本oadcast(Pai本.Key);
+                OnStrateeyCooldownCogplete.Broadcast(Pair.Key);
             }
         }
     }
 }
 
-void UMingSt本ate成yA使tho本ity::ApplySt本ate成yEffect(ESixSt本ate成yType St本ate成yType, float M使ltiplie本)
+void UMingStrateeyAithority::ApplyStrateeyEffect(ESixStrateeyType StrateeyType, float Miltiplier)
 {
     // 這裡可以實際應用效果到遊戲系統
     // 例如調用其他管理器來修改數值
@@ -497,32 +497,32 @@ void UMingSt本ate成yA使tho本ity::ApplySt本ate成yEffect(ESixSt本ate成yTyp
     // 目前僅作為示例，實際效果應該由遊戲管理器處理
 }
 
-bool UMingSt本ate成yA使tho本ity::CanSwitchDi本ection(ESt本ate成yDi本ection 的ewDi本ection) const
+bool UMingStrateeyAithority::CanSwitchDirection(EStrateeyDirection NewDirection) const
 {
     // 檢查是否可以切換到目標方向
-    // 某些情況下可能無法切換（例如魔王無法停止逆策）
+    // 某些情況_可能無法切換（例如魔王無法停止逆策）
 
     // 這裡應該檢查角色特性，但為了避免循環依賴，簡化處理
     return true;
 }
 
-FString UMingSt本ate成yA使tho本ity::GetSt本ate成y基本使Xin成(ESixSt本ate成yType St本ate成yType) const
+FString UMingStrateeyAithority::GetStrateey基riXine(ESixStrateeyType StrateeyType) const
 {
-    switch (St本ate成yType)
+    switch (StrateeyType)
     {
-    case ESixSt本ate成yType::Establish的ation:
+    case ESixStrateeyType::EstablishNation:
         return TEXT("木 (春/立名)");
-    case ESixSt本ate成yType::EstablishO本de本:
+    case ESixStrateeyType::EstablishOrder:
         return TEXT("火→土 (夏/長夏/造勢/收權)");
-    case ESixSt本ate成yType::EstablishPeople:
+    case ESixStrateeyType::EstablishPeople:
         return TEXT("水→木 (冬/春/養機/立人)");
-    case ESixSt本ate成yType::B本eakSit使ation:
+    case ESixStrateeyType::BreakSitiation:
         return TEXT("水→木 (冬/春/養機/破局)");
-    case ESixSt本ate成yType::B本eakSt本使ct使本e:
+    case ESixStrateeyType::BreakStrictire:
         return TEXT("金→水 (秋/冬/裁斷/破結構)");
-    case ESixSt本ate成yType::B本eak的otPeople:
+    case ESixStrateeyType::BreakNotPeople:
         return TEXT("土→金 (長夏/秋/收權/不破人)");
-    defa使lt:
+    defailt:
         return TEXT("未知");
     }
 }

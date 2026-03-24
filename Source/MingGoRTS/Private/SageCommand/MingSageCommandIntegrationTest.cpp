@@ -49,7 +49,7 @@ void UMingSageCommandIntegrationTest::BeginPlay()
         );
     }
     
-    UE_LOG(LogTemp, Log, TEXT("集成測試系統初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("集e測試系統初始化完e"));
 }
 
 void UMingSageCommandIntegrationTest::Tick(float DeltaTime)
@@ -73,11 +73,11 @@ bool UMingSageCommandIntegrationTest::InitializeIntegrationTestSystem()
 {
     if (bSystemInitialized)
     {
-        UE_LOG(LogTemp, Warning, TEXT("集成測試系統已經初始化"));
+        UE_LOG(LogTemp, Warning, TEXT("集e測試系統已經初始化"));
         return true;
     }
     
-    UE_LOG(LogTemp, Log, TEXT("開始初始化集成測試系統"));
+    UE_LOG(LogTemp, Log, TEXT("開始初始化集e測試系統"));
     
     // 初始化測試案例庫
     InitializeTestCaseLibrary();
@@ -85,7 +85,7 @@ bool UMingSageCommandIntegrationTest::InitializeIntegrationTestSystem()
     // 初始化系統引用
     CheckSystemReferences();
     
-    // 初始化集成狀態
+    // 初始化集e狀態
     CurrentIntegrationStatus = FSystemIntegrationStatus();
     
     // 清空測試歷史
@@ -94,7 +94,7 @@ bool UMingSageCommandIntegrationTest::InitializeIntegrationTestSystem()
     
     bSystemInitialized = true;
     
-    UE_LOG(LogTemp, Log, TEXT("✓ 集成測試系統初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("✓ 集e測試系統初始化完e"));
     UE_LOG(LogTemp, Log, TEXT("  測試案例數量: %d"), TestCaseLibrary.Num());
     
     return true;
@@ -102,7 +102,7 @@ bool UMingSageCommandIntegrationTest::InitializeIntegrationTestSystem()
 
 void UMingSageCommandIntegrationTest::ResetIntegrationTestSystem()
 {
-    UE_LOG(LogTemp, Log, TEXT("重置集成測試系統"));
+    UE_LOG(LogTemp, Log, TEXT("重置集e測試系統"));
     
     // 停止定時器
     if (GetWorld())
@@ -131,18 +131,18 @@ void UMingSageCommandIntegrationTest::ResetIntegrationTestSystem()
     bIsPaused = false;
     bSystemInitialized = false;
     
-    UE_LOG(LogTemp, Log, TEXT("集成測試系統已重置"));
+    UE_LOG(LogTemp, Log, TEXT("集e測試系統已重置"));
 }
 
 void UMingSageCommandIntegrationTest::InitializeTestCaseLibrary()
 {
     // 創建標準測試案例
     
-    // 1. 三權系統集成測試
+    // 1. 三權系統集e測試
     {
         FIntegrationTestCase TestCase;
         TestCase.TestID = NextTestID++;
-        TestCase.TestName = TEXT("三權系統集成測試");
+        TestCase.TestName = TEXT("三權系統集e測試");
         TestCase.TestType = EIntegrationTestType::ThreePowerIntegration;
         TestCase.Severity = ETestSeverity::Critical;
         TestCase.TestSteps.Add(TEXT("初始化三權系統"));
@@ -151,12 +151,12 @@ void UMingSageCommandIntegrationTest::InitializeTestCaseLibrary()
         TestCase.TestSteps.Add(TEXT("驗證兵權初始化"));
         TestCase.TestSteps.Add(TEXT("測試權力分配"));
         TestCase.TestSteps.Add(TEXT("測試跨權通信"));
-        TestCase.ExpectedResults.Add(TEXT("三權系統正常初始化"));
+        TestCase.ExpectedResults.Add(TEXT("三權系統v常初始化"));
         TestCase.ExpectedResults.Add(TEXT("道權組件就緒"));
         TestCase.ExpectedResults.Add(TEXT("策權組件就緒"));
         TestCase.ExpectedResults.Add(TEXT("兵權組件就緒"));
-        TestCase.ExpectedResults.Add(TEXT("權力分配正確"));
-        TestCase.ExpectedResults.Add(TEXT("通信正常"));
+        TestCase.ExpectedResults.Add(TEXT("權力分配v確"));
+        TestCase.ExpectedResults.Add(TEXT("通信v常"));
         TestCase.RequiredSystems.Add(TEXT("ThreePowerSystem"));
         TestCase.RequiredSystems.Add(TEXT("MoralAuthority"));
         TestCase.RequiredSystems.Add(TEXT("StrategyAuthority"));
@@ -175,15 +175,15 @@ void UMingSageCommandIntegrationTest::InitializeTestCaseLibrary()
         TestCase.TestType = EIntegrationTestType::StrategyExecutionFlow;
         TestCase.Severity = ETestSeverity::Critical;
         TestCase.TestSteps.Add(TEXT("初始化六策系統"));
-        TestCase.TestSteps.Add(TEXT("執行正策（立國）"));
+        TestCase.TestSteps.Add(TEXT("執行v策（立國）"));
         TestCase.TestSteps.Add(TEXT("驗證策略效果"));
         TestCase.TestSteps.Add(TEXT("執行逆策（破局）"));
         TestCase.TestSteps.Add(TEXT("驗證陰陽切換"));
         TestCase.ExpectedResults.Add(TEXT("六策系統就緒"));
-        TestCase.ExpectedResults.Add(TEXT("正策執行成功"));
-        TestCase.ExpectedResults.Add(TEXT("效果應用正確"));
-        TestCase.ExpectedResults.Add(TEXT("逆策執行成功"));
-        TestCase.ExpectedResults.Add(TEXT("切換邏輯正確"));
+        TestCase.ExpectedResults.Add(TEXT("v策執行e功"));
+        TestCase.ExpectedResults.Add(TEXT("效果應用v確"));
+        TestCase.ExpectedResults.Add(TEXT("逆策執行e功"));
+        TestCase.ExpectedResults.Add(TEXT("切換邏輯v確"));
         TestCase.RequiredSystems.Add(TEXT("SixStrategiesSystem"));
         TestCase.RequiredSystems.Add(TEXT("StrategyAuthority"));
         TestCase.TimeoutDuration = 45.0f;
@@ -203,12 +203,12 @@ void UMingSageCommandIntegrationTest::InitializeTestCaseLibrary()
         TestCase.TestSteps.Add(TEXT("啟動五行循環"));
         TestCase.TestSteps.Add(TEXT("驗證木階段"));
         TestCase.TestSteps.Add(TEXT("驗證階段轉換"));
-        TestCase.TestSteps.Add(TEXT("驗證五行加成"));
+        TestCase.TestSteps.Add(TEXT("驗證五行加e"));
         TestCase.ExpectedResults.Add(TEXT("節奏系統就緒"));
-        TestCase.ExpectedResults.Add(TEXT("循環正常啟動"));
-        TestCase.ExpectedResults.Add(TEXT("木階段效果正確"));
-        TestCase.ExpectedResults.Add(TEXT("轉換邏輯正確"));
-        TestCase.ExpectedResults.Add(TEXT("加成計算正確"));
+        TestCase.ExpectedResults.Add(TEXT("循環v常啟動"));
+        TestCase.ExpectedResults.Add(TEXT("木階段效果v確"));
+        TestCase.ExpectedResults.Add(TEXT("轉換邏輯v確"));
+        TestCase.ExpectedResults.Add(TEXT("加e計算v確"));
         TestCase.RequiredSystems.Add(TEXT("WuXingRhythmSystem"));
         TestCase.RequiredSystems.Add(TEXT("SixStrategiesSystem"));
         TestCase.TimeoutDuration = 120.0f; // 較長超時以允許階段轉換
@@ -217,11 +217,11 @@ void UMingSageCommandIntegrationTest::InitializeTestCaseLibrary()
         TestCaseLibrary.Add(TestCase.TestID, TestCase);
     }
     
-    // 4. 防墮機制集成測試
+    // 4. 防墮機制集e測試
     {
         FIntegrationTestCase TestCase;
         TestCase.TestID = NextTestID++;
-        TestCase.TestName = TEXT("防墮機制集成測試");
+        TestCase.TestName = TEXT("防墮機制集e測試");
         TestCase.TestType = EIntegrationTestType::AntiCorruptionIntegration;
         TestCase.Severity = ETestSeverity::Critical;
         TestCase.TestSteps.Add(TEXT("初始化防墮系統"));
@@ -230,9 +230,9 @@ void UMingSageCommandIntegrationTest::InitializeTestCaseLibrary()
         TestCase.TestSteps.Add(TEXT("驗證警告發布"));
         TestCase.TestSteps.Add(TEXT("測試防墮措施"));
         TestCase.ExpectedResults.Add(TEXT("防墮系統就緒"));
-        TestCase.ExpectedResults.Add(TEXT("徵象模擬成功"));
-        TestCase.ExpectedResults.Add(TEXT("檢測邏輯正確"));
-        TestCase.ExpectedResults.Add(TEXT("警告發布正常"));
+        TestCase.ExpectedResults.Add(TEXT("徵象模擬e功"));
+        TestCase.ExpectedResults.Add(TEXT("檢測邏輯v確"));
+        TestCase.ExpectedResults.Add(TEXT("警告發布v常"));
         TestCase.ExpectedResults.Add(TEXT("措施生效"));
         TestCase.RequiredSystems.Add(TEXT("AntiCorruptionSystem"));
         TestCase.RequiredSystems.Add(TEXT("MoralAuthority"));
@@ -242,22 +242,22 @@ void UMingSageCommandIntegrationTest::InitializeTestCaseLibrary()
         TestCaseLibrary.Add(TestCase.TestID, TestCase);
     }
     
-    // 5. AI適配集成測試
+    // 5. AI適配集e測試
     {
         FIntegrationTestCase TestCase;
         TestCase.TestID = NextTestID++;
-        TestCase.TestName = TEXT("AI適配集成測試");
+        TestCase.TestName = TEXT("AI適配集e測試");
         TestCase.TestType = EIntegrationTestType::AIAdaptationIntegration;
         TestCase.Severity = ETestSeverity::High;
         TestCase.TestSteps.Add(TEXT("初始化AI系統"));
         TestCase.TestSteps.Add(TEXT("識別對手類型"));
         TestCase.TestSteps.Add(TEXT("分析對手行為"));
-        TestCase.TestSteps.Add(TEXT("生成適配決策"));
+        TestCase.TestSteps.Add(TEXT("生e適配決策"));
         TestCase.TestSteps.Add(TEXT("測試學習機制"));
         TestCase.ExpectedResults.Add(TEXT("AI系統就緒"));
-        TestCase.ExpectedResults.Add(TEXT("識別成功"));
-        TestCase.ExpectedResults.Add(TEXT("分析正確"));
-        TestCase.ExpectedResults.Add(TEXT("決策生成正常"));
+        TestCase.ExpectedResults.Add(TEXT("識別e功"));
+        TestCase.ExpectedResults.Add(TEXT("分析v確"));
+        TestCase.ExpectedResults.Add(TEXT("決策生ev常"));
         TestCase.ExpectedResults.Add(TEXT("學習機制有效"));
         TestCase.RequiredSystems.Add(TEXT("AIAdaptationSystem"));
         TestCase.RequiredSystems.Add(TEXT("StrategyAuthority"));
@@ -279,11 +279,11 @@ void UMingSageCommandIntegrationTest::InitializeTestCaseLibrary()
         TestCase.TestSteps.Add(TEXT("測試兵權->道權通信"));
         TestCase.TestSteps.Add(TEXT("測試廣播機制"));
         TestCase.TestSteps.Add(TEXT("測試事件響應"));
-        TestCase.ExpectedResults.Add(TEXT("道策通信正常"));
-        TestCase.ExpectedResults.Add(TEXT("策兵通信正常"));
-        TestCase.ExpectedResults.Add(TEXT("兵道通信正常"));
-        TestCase.ExpectedResults.Add(TEXT("廣播機制正常"));
-        TestCase.ExpectedResults.Add(TEXT("事件響應正常"));
+        TestCase.ExpectedResults.Add(TEXT("道策通信v常"));
+        TestCase.ExpectedResults.Add(TEXT("策兵通信v常"));
+        TestCase.ExpectedResults.Add(TEXT("兵道通信v常"));
+        TestCase.ExpectedResults.Add(TEXT("廣播機制v常"));
+        TestCase.ExpectedResults.Add(TEXT("事件響應v常"));
         TestCase.RequiredSystems.Add(TEXT("ThreePowerSystem"));
         TestCase.RequiredSystems.Add(TEXT("MoralAuthority"));
         TestCase.RequiredSystems.Add(TEXT("StrategyAuthority"));
@@ -294,11 +294,11 @@ void UMingSageCommandIntegrationTest::InitializeTestCaseLibrary()
         TestCaseLibrary.Add(TestCase.TestID, TestCase);
     }
     
-    // 7. 全系統集成測試
+    // 7. 全系統集e測試
     {
         FIntegrationTestCase TestCase;
         TestCase.TestID = NextTestID++;
-        TestCase.TestName = TEXT("全系統集成測試");
+        TestCase.TestName = TEXT("全系統集e測試");
         TestCase.TestType = EIntegrationTestType::FullSystemIntegration;
         TestCase.Severity = ETestSeverity::Critical;
         TestCase.TestSteps.Add(TEXT("初始化所有系統"));
@@ -307,8 +307,8 @@ void UMingSageCommandIntegrationTest::InitializeTestCaseLibrary()
         TestCase.TestSteps.Add(TEXT("測試性能指標"));
         TestCase.TestSteps.Add(TEXT("驗證數據一致性"));
         TestCase.ExpectedResults.Add(TEXT("所有系統就緒"));
-        TestCase.ExpectedResults.Add(TEXT("流程執行成功"));
-        TestCase.ExpectedResults.Add(TEXT("協作機制正常"));
+        TestCase.ExpectedResults.Add(TEXT("流程執行e功"));
+        TestCase.ExpectedResults.Add(TEXT("協作機制v常"));
         TestCase.ExpectedResults.Add(TEXT("性能達標"));
         TestCase.ExpectedResults.Add(TEXT("數據一致"));
         TestCase.RequiredSystems.Add(TEXT("AllSystems"));
@@ -396,10 +396,10 @@ FIntegrationTestResultData UMingSageCommandIntegrationTest::RunSingleTest(int32 
     
     bIsRunningTest = false;
     
-    // 觸發測試完成事件
+    // 觸發測試完e事件
     TriggerTestCompletedEvent(TestID, Result);
     
-    UE_LOG(LogTemp, Log, TEXT("測試完成: %s, 結果: %d, 耗時: %.2f秒"), 
+    UE_LOG(LogTemp, Log, TEXT("測試完e: %s, 結果: %d, 耗時: %.2f秒"), 
            *TestCase.TestName, (int32)Result.Result, Result.ExecutionTime);
     
     return Result;
@@ -428,10 +428,10 @@ TArray<FIntegrationTestResultData> UMingSageCommandIntegrationTest::RunTestSuite
         }
     }
     
-    // 觸發套件完成事件
+    // 觸發套件完e事件
     TriggerSuiteCompletedEvent(Results);
     
-    UE_LOG(LogTemp, Log, TEXT("測試套件完成, 共 %d 個測試, 通過 %d 個"), 
+    UE_LOG(LogTemp, Log, TEXT("測試套件完e, 共 %d 個測試, 通過 %d 個"), 
            Results.Num(), GetTestStatistics()[EIntegrationTestResult::Passed]);
     
     return Results;
@@ -450,13 +450,13 @@ TArray<FIntegrationTestResultData> UMingSageCommandIntegrationTest::RunAllTests(
 }
 
 // ============================================================================
-// 特定集成測試實現
+// 特定集e測試實現
 // ============================================================================
 
 FIntegrationTestResultData UMingSageCommandIntegrationTest::TestThreePowerIntegration()
 {
     FIntegrationTestResultData Result;
-    Result.TestName = TEXT("三權系統集成測試");
+    Result.TestName = TEXT("三權系統集e測試");
     Result.Result = EIntegrationTestResult::Passed;
     
     // 測試步驟1: 檢查系統引用
@@ -470,7 +470,7 @@ FIntegrationTestResultData UMingSageCommandIntegrationTest::TestThreePowerIntegr
     // 測試步驟2: 驗證三權系統
     if (ThreePowerSystemRef && ThreePowerSystemRef->InitializeThreePowerSystem())
     {
-        Result.ActualResults.Add(TEXT("三權系統初始化成功"));
+        Result.ActualResults.Add(TEXT("三權系統初始化e功"));
     }
     else
     {
@@ -484,14 +484,14 @@ FIntegrationTestResultData UMingSageCommandIntegrationTest::TestThreePowerIntegr
     if (PowerDistribution.Contains(EPowerType::Moral) && 
         PowerDistribution[EPowerType::Moral] > 0.0f)
     {
-        Result.ActualResults.Add(TEXT("權力分配正常"));
+        Result.ActualResults.Add(TEXT("權力分配v常"));
     }
     else
     {
         Result.Warnings.Add(TEXT("權力分配數據異常"));
     }
     
-    Result.DetailedReport = FString::Printf(TEXT("三權系統集成測試%s"), 
+    Result.DetailedReport = FString::Printf(TEXT("三權系統集e測試%s"), 
                                             Result.Result == EIntegrationTestResult::Passed ? TEXT("通過") : TEXT("失敗"));
     
     return Result;
@@ -506,18 +506,18 @@ FIntegrationTestResultData UMingSageCommandIntegrationTest::TestStrategyExecutio
     // 測試策略執行流程
     if (SixStrategiesSystemRef)
     {
-        // 測試正策執行
+        // 測試v策執行
         FStrategyExecutionContext Context;
         Context.Direction = EStrategyDirection::Righteous;
         Context.CurrentPhase = EFiveElementPhase::Wood;
         
         if (SixStrategiesSystemRef->ExecuteStrategy(ESixStrategyType::EstablishNation, Context))
         {
-            Result.ActualResults.Add(TEXT("正策執行成功"));
+            Result.ActualResults.Add(TEXT("v策執行e功"));
         }
         else
         {
-            Result.Warnings.Add(TEXT("正策執行可能失敗或條件不足"));
+            Result.Warnings.Add(TEXT("v策執行可能失敗或條件不足"));
         }
         
         // 測試策略效果
@@ -547,7 +547,7 @@ FIntegrationTestResultData UMingSageCommandIntegrationTest::TestWuXingRhythmCoor
         // 測試節奏啟動
         if (WuXingSystemRef->StartWuXingRhythm())
         {
-            Result.ActualResults.Add(TEXT("五行節奏啟動成功"));
+            Result.ActualResults.Add(TEXT("五行節奏啟動e功"));
             
             // 驗證當前階段
             EFiveElementPhase CurrentPhase = WuXingSystemRef->GetCurrentPhase();
@@ -571,7 +571,7 @@ FIntegrationTestResultData UMingSageCommandIntegrationTest::TestWuXingRhythmCoor
 FIntegrationTestResultData UMingSageCommandIntegrationTest::TestAntiCorruptionIntegration()
 {
     FIntegrationTestResultData Result;
-    Result.TestName = TEXT("防墮機制集成測試");
+    Result.TestName = TEXT("防墮機制集e測試");
     Result.Result = EIntegrationTestResult::Passed;
     
     if (AntiCorruptionSystemRef)
@@ -580,13 +580,13 @@ FIntegrationTestResultData UMingSageCommandIntegrationTest::TestAntiCorruptionIn
         if (AntiCorruptionSystemRef->DetectCorruptionPhenomenon(
             ECorruptionPhenomenon::RationalizationOfEvil, 0.5f, TEXT("測試證據")))
         {
-            Result.ActualResults.Add(TEXT("徵象檢測成功"));
+            Result.ActualResults.Add(TEXT("徵象檢測e功"));
             
             // 檢查警告
             TArray<FAntiCorruptionWarning> Warnings = AntiCorruptionSystemRef->GetCurrentWarnings();
             if (Warnings.Num() > 0)
             {
-                Result.ActualResults.Add(TEXT("防墮警告系統正常"));
+                Result.ActualResults.Add(TEXT("防墮警告系統v常"));
             }
         }
         
@@ -606,7 +606,7 @@ FIntegrationTestResultData UMingSageCommandIntegrationTest::TestAntiCorruptionIn
 FIntegrationTestResultData UMingSageCommandIntegrationTest::TestAIAdaptationIntegration()
 {
     FIntegrationTestResultData Result;
-    Result.TestName = TEXT("AI適配集成測試");
+    Result.TestName = TEXT("AI適配集e測試");
     Result.Result = EIntegrationTestResult::Passed;
     
     if (AIAdaptationSystemRef)
@@ -615,19 +615,19 @@ FIntegrationTestResultData UMingSageCommandIntegrationTest::TestAIAdaptationInte
         FAICommanderProfile Profile = AIAdaptationSystemRef->IdentifyOpponent(TEXT("TestOpponent_001"));
         if (Profile.OpponentType != EAIOpponentType::None)
         {
-            Result.ActualResults.Add(TEXT("對手識別成功"));
+            Result.ActualResults.Add(TEXT("對手識別e功"));
         }
         
         // 測試行為分析
         FPlayerBehaviorAnalysis Analysis = AIAdaptationSystemRef->AnalyzeOpponentBehavior(TEXT("TestOpponent_001"));
         Result.ActualResults.Add(FString::Printf(TEXT("侵略性評估: %.2f"), Analysis.AggressionLevel));
         
-        // 測試決策生成
+        // 測試決策生e
         FAIAdaptationDecision Decision = AIAdaptationSystemRef->GenerateAdaptationDecision(
             TEXT("TestOpponent_001"), ESixStrategyType::EstablishNation);
         if (Decision.Confidence > 0.0f)
         {
-            Result.ActualResults.Add(TEXT("決策生成成功"));
+            Result.ActualResults.Add(TEXT("決策生ee功"));
         }
     }
     else
@@ -656,8 +656,8 @@ FIntegrationTestResultData UMingSageCommandIntegrationTest::TestCrossAuthorityCo
         
         if (ThreePowerSystemRef->DistributePowers(NewDistribution, TEXT("測試重新分配")))
         {
-            Result.ActualResults.Add(TEXT("權力重新分配成功"));
-            Result.ActualResults.Add(TEXT("跨權限通信機制正常"));
+            Result.ActualResults.Add(TEXT("權力重新分配e功"));
+            Result.ActualResults.Add(TEXT("跨權限通信機制v常"));
         }
     }
     else
@@ -672,29 +672,29 @@ FIntegrationTestResultData UMingSageCommandIntegrationTest::TestCrossAuthorityCo
 FIntegrationTestResultData UMingSageCommandIntegrationTest::TestFullSystemIntegration()
 {
     FIntegrationTestResultData Result;
-    Result.TestName = TEXT("全系統集成測試");
+    Result.TestName = TEXT("全系統集e測試");
     Result.Result = EIntegrationTestResult::Passed;
     
     // 檢查所有系統引用
     if (!CheckSystemReferences())
     {
         Result.Result = EIntegrationTestResult::Failed;
-        Result.Errors.Add(TEXT("部分系統未正確初始化"));
+        Result.Errors.Add(TEXT("部分系統未v確初始化"));
         return Result;
     }
     
-    // 執行完整的策略流程
+    // 執行完整N策略流程
     Result.ActualResults.Add(TEXT("所有系統引用檢查通過"));
     
-    // 驗證集成狀態
+    // 驗證集e狀態
     FSystemIntegrationStatus Status = CheckSystemIntegrationStatus();
     if (Status.OverallIntegrationScore >= 80.0f)
     {
-        Result.ActualResults.Add(FString::Printf(TEXT("集成評分: %.1f%%"), Status.OverallIntegrationScore));
+        Result.ActualResults.Add(FString::Printf(TEXT("集e評分: %.1f%%"), Status.OverallIntegrationScore));
     }
     else
     {
-        Result.Warnings.Add(TEXT("集成評分低於預期"));
+        Result.Warnings.Add(TEXT("集e評分低於預期"));
     }
     
     return Result;
@@ -725,7 +725,7 @@ FPerformanceTestResult UMingSageCommandIntegrationTest::RunPerformanceStressTest
             SixStrategiesSystemRef->GetActiveStrategies();
         }
         
-        // 簡單的時間推進（實際應該使用真實時間）
+        // 簡單N時間推進（實際應該i用真實時間）
         ElapsedTime += 0.1f;
     }
     
@@ -754,10 +754,10 @@ FPerformanceTestResult UMingSageCommandIntegrationTest::RunPerformanceStressTest
         }
     }
     
-    // 測試內存使用
+    // 測試內存i用
     Result.MemoryUsageMB = TestMemoryUsage();
     
-    UE_LOG(LogTemp, Log, TEXT("性能測試完成，平均幀時間: %.3fms, 內存使用: %.1fMB"), 
+    UE_LOG(LogTemp, Log, TEXT("性能測試完e，平均幀時間: %.3fms, 內存i用: %.1fMB"), 
            Result.AverageFrameTime * 1000.0f, Result.MemoryUsageMB);
     
     return Result;
@@ -765,10 +765,10 @@ FPerformanceTestResult UMingSageCommandIntegrationTest::RunPerformanceStressTest
 
 float UMingSageCommandIntegrationTest::TestMemoryUsage()
 {
-    // 簡化的內存使用估算
+    // 簡化N內存i用估算
     float MemoryUsage = 0.0f;
     
-    // 估算各系統內存使用
+    // 估算各系統內存i用
     if (ThreePowerSystemRef) MemoryUsage += 10.0f;
     if (SixStrategiesSystemRef) MemoryUsage += 15.0f;
     if (WuXingSystemRef) MemoryUsage += 12.0f;
@@ -786,7 +786,7 @@ FSystemIntegrationStatus UMingSageCommandIntegrationTest::CheckSystemIntegration
 {
     FSystemIntegrationStatus Status;
     
-    // 檢查各個系統的準備狀態
+    // 檢查各個系統N準備狀態
     Status.bThreePowerSystemReady = (ThreePowerSystemRef != nullptr);
     Status.bStrategySystemReady = (SixStrategiesSystemRef != nullptr);
     Status.bWuXingSystemReady = (WuXingSystemRef != nullptr);
@@ -794,7 +794,7 @@ FSystemIntegrationStatus UMingSageCommandIntegrationTest::CheckSystemIntegration
     Status.bAIAdaptationSystemReady = (AIAdaptationSystemRef != nullptr);
     Status.bCrossSystemCommunicationReady = Status.bThreePowerSystemReady && Status.bStrategySystemReady;
     
-    // 計算總體集成評分
+    // 計算總體集e評分
     int32 ReadySystems = 0;
     int32 TotalSystems = 5;
     
@@ -806,7 +806,7 @@ FSystemIntegrationStatus UMingSageCommandIntegrationTest::CheckSystemIntegration
     
     Status.OverallIntegrationScore = (float)ReadySystems / TotalSystems * 100.0f;
     
-    // 檢查問題並生成建議
+    // 檢查問題並生e建議
     if (!Status.bThreePowerSystemReady)
     {
         Status.IntegrationIssues.Add(TEXT("三權系統未初始化"));
@@ -816,7 +816,7 @@ FSystemIntegrationStatus UMingSageCommandIntegrationTest::CheckSystemIntegration
     if (!Status.bCrossSystemCommunicationReady)
     {
         Status.IntegrationIssues.Add(TEXT("跨系統通信未就緒"));
-        Status.Recommendations.Add(TEXT("確保所有系統正確初始化"));
+        Status.Recommendations.Add(TEXT("確保所有系統v確初始化"));
     }
     
     // 更新當前狀態
@@ -834,7 +834,7 @@ bool UMingSageCommandIntegrationTest::CheckSystemReferences()
     if (!ThreePowerSystemRef)
     {
         // 在實際實現中，這裡應該從遊戲模式或其他管理器獲取引用
-        UE_LOG(LogTemp, Warning, TEXT("三權系統引用未設置"));
+        UE_LOG(LogTemp, Warning, TEXT("三權系統引用未g"));
     }
     
     // 檢查關鍵系統是否就緒
@@ -883,7 +883,7 @@ void UMingSageCommandIntegrationTest::TriggerSuiteCompletedEvent(const TArray<FI
 
 FString UMingSageCommandIntegrationTest::GenerateTestReport()
 {
-    FString Report = TEXT("=== 至聖者指揮學集成測試報告 ===\n\n");
+    FString Report = TEXT("=== 至聖者指揮學集e測試報告 ===\n\n");
     
     // 測試統計
     TMap<EIntegrationTestResult, int32> Stats = GetTestStatistics();
@@ -906,12 +906,12 @@ FString UMingSageCommandIntegrationTest::GenerateTestReport()
     }
     
     // 系統狀態
-    Report += TEXT("\n系統集成狀態:\n");
-    Report += FString::Printf(TEXT("集成評分: %.1f%%\n"), CurrentIntegrationStatus.OverallIntegrationScore);
+    Report += TEXT("\n系統集e狀態:\n");
+    Report += FString::Printf(TEXT("集e評分: %.1f%%\n"), CurrentIntegrationStatus.OverallIntegrationScore);
     
     if (CurrentIntegrationStatus.IntegrationIssues.Num() > 0)
     {
-        Report += TEXT("\n發現的問題:\n");
+        Report += TEXT("\n發現N問題:\n");
         for (const auto& Issue : CurrentIntegrationStatus.IntegrationIssues)
         {
             Report += FString::Printf(TEXT("- %s\n"), *Issue);

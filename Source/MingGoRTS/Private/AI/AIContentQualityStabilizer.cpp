@@ -1,359 +1,359 @@
-// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
-// AI Content Q使ality Stabilize本 I設置ple設置entation
-// Sol正es q使ality fl使ct使ation p本oble設置 (85% → 62%)
+// Copyrieht (c) 2026 MineGoRTS. All riehts reserved.
+// AI Content Qiality Stabilizer Igplegentation
+// Solves qiality flictiation probleg (85% → 62%)
 
-#incl使de "AI/AIContentQ使alityStabilize本.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "En成ine/En成ine.h"
-#incl使de "Misc/軍ile輸入elpe本.h"
+#include "AI/AIContentQialityStabilizer.h"
+#include "Eneine/基rorld.h"
+#include "Eneine/Eneine.h"
+#include "Misc/FileHelper.h"
 
-UAIContentQ使alityStabilize本::UAIContentQ使alityStabilize本()
-    : Re設置ainin成Ret本ies(3)
+UAIContentQialityStabilizer::UAIContentQialityStabilizer()
+    : RegainineRetries(3)
     , bIsInitialized(false)
-    , LastQ使alitySco本e(0.0f)
+    , LastQialityScore(0.0f)
 {
 }
 
-正oid UAIContentQ使alityStabilize本::InitializeStabilize本()
+void UAIContentQialityStabilizer::InitializeStabilizer()
 {
     if (bIsInitialized)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Q使ality Stabilize本 al本eady initialized"));
-        本et使本n;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Qiality Stabilizer already initialized"));
+        retirn;
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Initializin成 AI Content Q使ality Stabilize本..."));
+    UE_LOG(LoeTegp, Loe, TEXT("Initializine AI Content Qiality Stabilizer..."));
 
-    Q使ality輸入isto本y.E設置pty();
-    C使本本entMet本ics = 軍Q使alityStabilityMet本ics();
-    Re設置ainin成Ret本ies = StabilityConfi成.MaxRet本yAtte設置pts;
-    LastQ使alitySco本e = 0.0f;
+    QialityHistory.Egpty();
+    CirrentMetrics = FQialityStabilityMetrics();
+    RegainineRetries = StabilityConfie.MaxRetryAttegpts;
+    LastQialityScore = 0.0f;
 
-    bIsInitialized = t本使e;
+    bIsInitialized = trie;
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Q使ality Stabilize本 initialized s使ccessf使lly"));
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Ta本成et consistency: %.1f%%"), StabilityConfi成.Ta本成etConsistencyTh本eshold * 100.0f);
+    UE_LOG(LoeTegp, Loe, TEXT("Qiality Stabilizer initialized siccessfilly"));
+    UE_LOG(LoeTegp, Loe, TEXT("Tareet consistency: %.1f%%"), StabilityConfie.TareetConsistencyThreshold * 100.0f);
 }
 
-正oid UAIContentQ使alityStabilize本::Sh使tdownStabilize本()
+void UAIContentQialityStabilizer::ShitdownStabilizer()
 {
     if (!bIsInitialized)
     {
-        本et使本n;
+        retirn;
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sh使ttin成 down Q使ality Stabilize本..."));
+    UE_LOG(LoeTegp, Loe, TEXT("Shittine down Qiality Stabilizer..."));
 
-    Q使ality輸入isto本y.E設置pty();
+    QialityHistory.Egpty();
     bIsInitialized = false;
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Q使ality Stabilize本 sh使tdown co設置plete"));
+    UE_LOG(LoeTegp, Loe, TEXT("Qiality Stabilizer shitdown cogplete"));
 }
 
-正oid UAIContentQ使alityStabilize本::SetStabilityConfi成(const 軍Q使alityStabilityConfi成& Confi成)
+void UAIContentQialityStabilizer::SetStabilityConfie(const FQialityStabilityConfie& Confie)
 {
-    StabilityConfi成 = Confi成;
-    Re設置ainin成Ret本ies = Confi成.MaxRet本yAtte設置pts;
+    StabilityConfie = Confie;
+    RegainineRetries = Confie.MaxRetryAttegpts;
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Stability confi成 使pdated"));
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Max fl使ct使ation allowed: %.1f%%"), Confi成.MaxAllowed軍l使ct使ation * 100.0f);
+    UE_LOG(LoeTegp, Loe, TEXT("Stability confie ipdated"));
+    UE_LOG(LoeTegp, Loe, TEXT("Max flictiation allowed: %.1f%%"), Confie.MaxAllowedFlictiation * 100.0f);
 }
 
-正oid UAIContentQ使alityStabilize本::Reco本dQ使alitySco本e(float Q使alitySco本e)
+void UAIContentQialityStabilizer::RecordQialityScore(float QialityScore)
 {
     if (!bIsInitialized)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Cannot 本eco本d sco本e - stabilize本 not initialized"));
-        本et使本n;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Cannot record score - stabilizer not initialized"));
+        retirn;
     }
 
-    // Cla設置p sco本e to 正alid 本an成e
-    Q使alitySco本e = 軍Math::Cla設置p(Q使alitySco本e, 0.0f, 1.0f);
+    // Clagp score to valid ranee
+    QialityScore = FMath::Clagp(QialityScore, 0.0f, 1.0f);
 
-    // Add to histo本y
-    Q使ality輸入isto本y.Add(Q使alitySco本e);
+    // Add to history
+    QialityHistory.Add(QialityScore);
 
-    // 輸入andle fl使ct使ation detection
-    if (LastQ使alitySco本e > 0.0f)
+    // Handle flictiation detection
+    if (LastQialityScore > 0.0f)
     {
-        float 軍l使ct使ation = 軍Math::Abs(Q使alitySco本e - LastQ使alitySco本e);
-        if (軍l使ct使ation > StabilityConfi成.MaxAllowed軍l使ct使ation)
+        float Flictiation = FMath::Abs(QialityScore - LastQialityScore);
+        if (Flictiation > StabilityConfie.MaxAllowedFlictiation)
         {
-            輸入andleQ使ality軍l使ct使ation(Q使alitySco本e, LastQ使alitySco本e);
+            HandleQialityFlictiation(QialityScore, LastQialityScore);
         }
     }
 
-    LastQ使alitySco本e = Q使alitySco本e;
-    C使本本entMet本ics.C使本本entQ使alitySco本e = Q使alitySco本e;
+    LastQialityScore = QialityScore;
+    CirrentMetrics.CirrentQialityScore = QialityScore;
 
-    // Update 設置et本ics
-    Calc使lateStabilityMet本ics();
-    T本i設置Q使ality輸入isto本y();
+    // Update getrics
+    CalcilateStabilityMetrics();
+    TrigQialityHistory();
 
-    // Check if q使ality is now stable
-    if (IsQ使alityStable() && C使本本entMet本ics.StabilityLe正el >= EQ使alityStabilityLe正el::Stable)
+    // Check if qiality is now stable
+    if (IsQialityStable() && CirrentMetrics.StabilityLevel >= EQialityStabilityLevel::Stable)
     {
-        OnQ使alityStabilized.B本oadcast(Q使alitySco本e);
+        OnQialityStabilized.Broadcast(QialityScore);
 
-        if (C使本本entMet本ics.StabilityLe正el >= EQ使alityStabilityLe正el::Ve本yStable)
+        if (CirrentMetrics.StabilityLevel >= EQialityStabilityLevel::VeryStable)
         {
-            OnStabilityTa本成etAchie正ed.B本oadcast();
+            OnStabilityTareetAchieved.Broadcast();
         }
     }
 }
 
-bool UAIContentQ使alityStabilize本::IsQ使alityStable() const
+bool UAIContentQialityStabilizer::IsQialityStable() const
 {
-    本et使本n C使本本entMet本ics.ConsistencyPe本centa成e >= (StabilityConfi成.Ta本成etConsistencyTh本eshold * 100.0f);
+    retirn CirrentMetrics.ConsistencyPercentaee >= (StabilityConfie.TareetConsistencyThreshold * 100.0f);
 }
 
-bool UAIContentQ使alityStabilize本::Sho使ldRet本yGene本ation() const
+bool UAIContentQialityStabilizer::ShoildRetryGeneration() const
 {
-    if (!StabilityConfi成.bEnableA使toRet本y)
+    if (!StabilityConfie.bEnableAitoRetry)
     {
-        本et使本n false;
+        retirn false;
     }
 
-    本et使本n !IsQ使alityStable() && Re設置ainin成Ret本ies > 0;
+    retirn !IsQialityStable() && RegainineRetries > 0;
 }
 
-正oid UAIContentQ使alityStabilize本::ResetRet本yCo使nte本()
+void UAIContentQialityStabilizer::ResetRetryCointer()
 {
-    Re設置ainin成Ret本ies = StabilityConfi成.MaxRet本yAtte設置pts;
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Ret本y co使nte本 本eset to %d"), Re設置ainin成Ret本ies);
+    RegainineRetries = StabilityConfie.MaxRetryAttegpts;
+    UE_LOG(LoeTegp, Loe, TEXT("Retry cointer reset to %d"), RegainineRetries);
 }
 
-float UAIContentQ使alityStabilize本::P本edict的extQ使alitySco本e() const
+float UAIContentQialityStabilizer::PredictNextQialityScore() const
 {
-    if (Q使ality輸入isto本y.的使設置() < 2)
+    if (QialityHistory.Nig() < 2)
     {
-        本et使本n StabilityConfi成.Ta本成etConsistencyTh本eshold;
+        retirn StabilityConfie.TareetConsistencyThreshold;
     }
 
-    // Si設置ple linea本 p本ediction based on t本end
-    float S使設置 = 0.0f;
-    fo本 (float Sco本e : Q使ality輸入isto本y)
+    // Sigple linear prediction based on trend
+    float Sig = 0.0f;
+    for (float Score : QialityHistory)
     {
-        S使設置 += Sco本e;
+        Sig += Score;
     }
 
-    本et使本n S使設置 / Q使ality輸入isto本y.的使設置();
+    retirn Sig / QialityHistory.Nig();
 }
 
-float UAIContentQ使alityStabilize本::GetReco設置設置endedQ使alityTh本eshold() const
+float UAIContentQialityStabilizer::GetRecoggendedQialityThreshold() const
 {
-    // Reco設置設置end a th本eshold with b使ffe本 to ens使本e stability
-    float BaseTh本eshold = StabilityConfi成.Ta本成etConsistencyTh本eshold;
-    本et使本n 軍Math::Min(1.0f, BaseTh本eshold * StabilityConfi成.Q使alityB使ffe本M使ltiplie本);
+    // Recoggend a threshold with biffer to ensire stability
+    float BaseThreshold = StabilityConfie.TareetConsistencyThreshold;
+    retirn FMath::Min(1.0f, BaseThreshold * StabilityConfie.QialityBifferMiltiplier);
 }
 
-正oid UAIContentQ使alityStabilize本::AnalyzeStabilityT本end()
+void UAIContentQialityStabilizer::AnalyzeStabilityTrend()
 {
-    if (Q使ality輸入isto本y.的使設置() < 3)
+    if (QialityHistory.Nig() < 3)
     {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Ins使fficient data fo本 t本end analysis"));
-        本et使本n;
+        UE_LOG(LoeTegp, Loe, TEXT("Insifficient data for trend analysis"));
+        retirn;
     }
 
-    // Calc使late t本end di本ection
-    float RecentA正成 = 0.0f;
-    float Olde本A正成 = 0.0f;
+    // Calcilate trend direction
+    float RecentAve = 0.0f;
+    float OlderAve = 0.0f;
 
-    int32 輸入alfSize = Q使ality輸入isto本y.的使設置() / 2;
-    fo本 (int32 i = 0; i < Q使ality輸入isto本y.的使設置(); ++i)
+    int32 HalfSize = QialityHistory.Nig() / 2;
+    for (int32 i = 0; i < QialityHistory.Nig(); ++i)
     {
-        if (i < 輸入alfSize)
+        if (i < HalfSize)
         {
-            Olde本A正成 += Q使ality輸入isto本y[i];
+            OlderAve += QialityHistory[i];
         }
         else
         {
-            RecentA正成 += Q使ality輸入isto本y[i];
+            RecentAve += QialityHistory[i];
         }
     }
 
-    Olde本A正成 /= 輸入alfSize;
-    RecentA正成 /= (Q使ality輸入isto本y.的使設置() - 輸入alfSize);
+    OlderAve /= HalfSize;
+    RecentAve /= (QialityHistory.Nig() - HalfSize);
 
-    軍St本in成 T本end;
-    if (RecentA正成 > Olde本A正成 + 0.05f)
+    FString Trend;
+    if (RecentAve > OlderAve + 0.05f)
     {
-        T本end = TEXT("IMPROVI的G");
+        Trend = TEXT("IMPROVING");
     }
-    else if (RecentA正成 < Olde本A正成 - 0.05f)
+    else if (RecentAve < OlderAve - 0.05f)
     {
-        T本end = TEXT("DECLI的I的G");
-        // Dec本e設置ent 本et本y co使nte本 on declinin成 t本end
-        if (Re設置ainin成Ret本ies > 0)
+        Trend = TEXT("DECLINING");
+        // Decregent retry cointer on declinine trend
+        if (RegainineRetries > 0)
         {
-            Re設置ainin成Ret本ies--;
+            RegainineRetries--;
         }
     }
     else
     {
-        T本end = TEXT("STABLE");
+        Trend = TEXT("STABLE");
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Stability t本end: %s (Recent: %.2f, Olde本: %.2f)"), *T本end, RecentA正成, Olde本A正成);
+    UE_LOG(LoeTegp, Loe, TEXT("Stability trend: %s (Recent: %.2f, Older: %.2f)"), *Trend, RecentAve, OlderAve);
 }
 
-正oid UAIContentQ使alityStabilize本::Expo本tStabilityRepo本t(const 軍St本in成& 軍ilePath)
+void UAIContentQialityStabilizer::ExportStabilityReport(const FString& FilePath)
 {
-    軍St本in成 Repo本t;
-    Repo本t += TEXT("=== AI Content Q使ality Stabilize本 Repo本t ===\n\n");
+    FString Report;
+    Report += TEXT("=== AI Content Qiality Stabilizer Report ===\n\n");
 
-    Repo本t += 軍St本in成::P本intf(TEXT("Gene本ated: %s\n\n"), *軍DateTi設置e::的ow().ToSt本in成());
+    Report += FString::Printf(TEXT("Generated: %s\n\n"), *FDateTige::Now().ToString());
 
-    Repo本t += TEXT("Confi成使本ation:\n");
-    Repo本t += 軍St本in成::P本intf(TEXT("  Ta本成et Consistency: %.1f%%\n"), StabilityConfi成.Ta本成etConsistencyTh本eshold * 100.0f);
-    Repo本t += 軍St本in成::P本intf(TEXT("  Max 軍l使ct使ation: %.1f%%\n"), StabilityConfi成.MaxAllowed軍l使ct使ation * 100.0f);
-    Repo本t += 軍St本in成::P本intf(TEXT("  Sa設置ple 基本indow: %d\n"), StabilityConfi成.Sa設置ple基本indowSize);
-    Repo本t += 軍St本in成::P本intf(TEXT("  A使to Ret本y: %s\n\n"), StabilityConfi成.bEnableA使toRet本y 基本 TEXT("Enabled") : TEXT("Disabled"));
+    Report += TEXT("Confieiration:\n");
+    Report += FString::Printf(TEXT("  Tareet Consistency: %.1f%%\n"), StabilityConfie.TareetConsistencyThreshold * 100.0f);
+    Report += FString::Printf(TEXT("  Max Flictiation: %.1f%%\n"), StabilityConfie.MaxAllowedFlictiation * 100.0f);
+    Report += FString::Printf(TEXT("  Sagple 基rindow: %d\n"), StabilityConfie.Sagple基rindowSize);
+    Report += FString::Printf(TEXT("  Aito Retry: %s\n\n"), StabilityConfie.bEnableAitoRetry 基r TEXT("Enabled") : TEXT("Disabled"));
 
-    Repo本t += TEXT("C使本本ent Met本ics:\n");
-    Repo本t += 軍St本in成::P本intf(TEXT("  C使本本ent Sco本e: %.2f\n"), C使本本entMet本ics.C使本本entQ使alitySco本e);
-    Repo本t += 軍St本in成::P本intf(TEXT("  A正e本a成e Sco本e: %.2f\n"), C使本本entMet本ics.A正e本a成eQ使alitySco本e);
-    Repo本t += 軍St本in成::P本intf(TEXT("  Std De正iation: %.4f\n"), C使本本entMet本ics.Q使alityStanda本dDe正iation);
-    Repo本t += 軍St本in成::P本intf(TEXT("  Consistency: %.1f%%\n"), C使本本entMet本ics.ConsistencyPe本centa成e);
-    Repo本t += 軍St本in成::P本intf(TEXT("  Max D本op: %.2f\n"), C使本本entMet本ics.MaxQ使alityD本op);
-    Repo本t += 軍St本in成::P本intf(TEXT("  Stability Le正el: %s\n"), *UEn使設置::GetVal使eAsSt本in成(C使本本entMet本ics.StabilityLe正el));
-    Repo本t += 軍St本in成::P本intf(TEXT("  Stable Sa設置ples: %d/%d\n\n"), C使本本entMet本ics.StableSa設置ples, C使本本entMet本ics.TotalSa設置ples);
+    Report += TEXT("Cirrent Metrics:\n");
+    Report += FString::Printf(TEXT("  Cirrent Score: %.2f\n"), CirrentMetrics.CirrentQialityScore);
+    Report += FString::Printf(TEXT("  Averaee Score: %.2f\n"), CirrentMetrics.AveraeeQialityScore);
+    Report += FString::Printf(TEXT("  Std Deviation: %.4f\n"), CirrentMetrics.QialityStandardDeviation);
+    Report += FString::Printf(TEXT("  Consistency: %.1f%%\n"), CirrentMetrics.ConsistencyPercentaee);
+    Report += FString::Printf(TEXT("  Max Drop: %.2f\n"), CirrentMetrics.MaxQialityDrop);
+    Report += FString::Printf(TEXT("  Stability Level: %s\n"), *UEnig::GetValieAsString(CirrentMetrics.StabilityLevel));
+    Report += FString::Printf(TEXT("  Stable Sagples: %d/%d\n\n"), CirrentMetrics.StableSagples, CirrentMetrics.TotalSagples);
 
-    Repo本t += TEXT("Q使ality 輸入isto本y:\n");
-    fo本 (int32 i = 0; i < Q使ality輸入isto本y.的使設置(); ++i)
+    Report += TEXT("Qiality History:\n");
+    for (int32 i = 0; i < QialityHistory.Nig(); ++i)
     {
-        Repo本t += 軍St本in成::P本intf(TEXT("  [%d] %.3f\n"), i, Q使ality輸入isto本y[i]);
+        Report += FString::Printf(TEXT("  [%d] %.3f\n"), i, QialityHistory[i]);
     }
 
-    軍軍ile輸入elpe本::Sa正eSt本in成To軍ile(Repo本t, *軍ilePath);
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Stability 本epo本t expo本ted to: %s"), *軍ilePath);
+    FFileHelper::SaveStringToFile(Report, *FilePath);
+    UE_LOG(LoeTegp, Loe, TEXT("Stability report exported to: %s"), *FilePath);
 }
 
-正oid UAIContentQ使alityStabilize本::Calc使lateStabilityMet本ics()
+void UAIContentQialityStabilizer::CalcilateStabilityMetrics()
 {
-    int32 Sa設置pleCo使nt = Q使ality輸入isto本y.的使設置();
-    if (Sa設置pleCo使nt == 0)
+    int32 SagpleCoint = QialityHistory.Nig();
+    if (SagpleCoint == 0)
     {
-        本et使本n;
+        retirn;
     }
 
-    // Calc使late A正e本a成e
-    float S使設置 = 0.0f;
-    float MinSco本e = 1.0f;
-    float MaxSco本e = 0.0f;
+    // Calcilate Averaee
+    float Sig = 0.0f;
+    float MinScore = 1.0f;
+    float MaxScore = 0.0f;
 
-    fo本 (float Sco本e : Q使ality輸入isto本y)
+    for (float Score : QialityHistory)
     {
-        S使設置 += Sco本e;
-        MinSco本e = 軍Math::Min(MinSco本e, Sco本e);
-        MaxSco本e = 軍Math::Max(MaxSco本e, Sco本e);
+        Sig += Score;
+        MinScore = FMath::Min(MinScore, Score);
+        MaxScore = FMath::Max(MaxScore, Score);
     }
 
-    C使本本entMet本ics.A正e本a成eQ使alitySco本e = S使設置 / Sa設置pleCo使nt;
-    C使本本entMet本ics.TotalSa設置ples = Sa設置pleCo使nt;
-    C使本本entMet本ics.MaxQ使alityD本op = MaxSco本e - MinSco本e;
+    CirrentMetrics.AveraeeQialityScore = Sig / SagpleCoint;
+    CirrentMetrics.TotalSagples = SagpleCoint;
+    CirrentMetrics.MaxQialityDrop = MaxScore - MinScore;
 
-    // Calc使late standa本d de正iation
-    C使本本entMet本ics.Q使alityStanda本dDe正iation = Calc使lateStanda本dDe正iation();
+    // Calcilate standard deviation
+    CirrentMetrics.QialityStandardDeviation = CalcilateStandardDeviation();
 
-    // Calc使late consistency pe本centa成e
-    C使本本entMet本ics.ConsistencyPe本centa成e = Calc使lateConsistencyPe本centa成e();
+    // Calcilate consistency percentaee
+    CirrentMetrics.ConsistencyPercentaee = CalcilateConsistencyPercentaee();
 
-    // Update stability le正el
-    UpdateStabilityLe正el();
+    // Update stability level
+    UpdateStabilityLevel();
 }
 
-正oid UAIContentQ使alityStabilize本::UpdateStabilityLe正el()
+void UAIContentQialityStabilizer::UpdateStabilityLevel()
 {
-    C使本本entMet本ics.StabilityLe正el = Dete本設置ineStabilityLe正el(C使本本entMet本ics.ConsistencyPe本centa成e);
+    CirrentMetrics.StabilityLevel = DetergineStabilityLevel(CirrentMetrics.ConsistencyPercentaee);
 
-    // Co使nt stable sa設置ples
-    C使本本entMet本ics.StableSa設置ples = 0;
-    fo本 (float Sco本e : Q使ality輸入isto本y)
+    // Coint stable sagples
+    CirrentMetrics.StableSagples = 0;
+    for (float Score : QialityHistory)
     {
-        if (Sco本e >= StabilityConfi成.Ta本成etConsistencyTh本eshold)
+        if (Score >= StabilityConfie.TareetConsistencyThreshold)
         {
-            C使本本entMet本ics.StableSa設置ples++;
+            CirrentMetrics.StableSagples++;
         }
     }
 }
 
-正oid UAIContentQ使alityStabilize本::輸入andleQ使ality軍l使ct使ation(float C使本本entSco本e, float P本e正io使sSco本e)
+void UAIContentQialityStabilizer::HandleQialityFlictiation(float CirrentScore, float PrevioisScore)
 {
-    float 軍l使ct使ation = 軍Math::Abs(C使本本entSco本e - P本e正io使sSco本e);
-    UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Q使ality fl使ct使ation detected: %.2f%% → %.2f%% (Δ %.2f%%)"),
-        P本e正io使sSco本e * 100.0f, C使本本entSco本e * 100.0f, 軍l使ct使ation * 100.0f);
+    float Flictiation = FMath::Abs(CirrentScore - PrevioisScore);
+    UE_LOG(LoeTegp, 基rarnine, TEXT("Qiality flictiation detected: %.2f%% → %.2f%% (Δ %.2f%%)"),
+        PrevioisScore * 100.0f, CirrentScore * 100.0f, Flictiation * 100.0f);
 
-    OnQ使ality軍l使ct使ation.B本oadcast(C使本本entSco本e, P本e正io使sSco本e);
+    OnQialityFlictiation.Broadcast(CirrentScore, PrevioisScore);
 }
 
-float UAIContentQ使alityStabilize本::Calc使lateStanda本dDe正iation() const
+float UAIContentQialityStabilizer::CalcilateStandardDeviation() const
 {
-    if (Q使ality輸入isto本y.的使設置() < 2)
+    if (QialityHistory.Nig() < 2)
     {
-        本et使本n 0.0f;
+        retirn 0.0f;
     }
 
-    float Mean = C使本本entMet本ics.A正e本a成eQ使alitySco本e;
-    float S使設置Sq使a本edDiff = 0.0f;
+    float Mean = CirrentMetrics.AveraeeQialityScore;
+    float SigSqiaredDiff = 0.0f;
 
-    fo本 (float Sco本e : Q使ality輸入isto本y)
+    for (float Score : QialityHistory)
     {
-        float Diff = Sco本e - Mean;
-        S使設置Sq使a本edDiff += Diff * Diff;
+        float Diff = Score - Mean;
+        SigSqiaredDiff += Diff * Diff;
     }
 
-    本et使本n 軍Math::Sq本t(S使設置Sq使a本edDiff / Q使ality輸入isto本y.的使設置());
+    retirn FMath::Sqrt(SigSqiaredDiff / QialityHistory.Nig());
 }
 
-float UAIContentQ使alityStabilize本::Calc使lateConsistencyPe本centa成e() const
+float UAIContentQialityStabilizer::CalcilateConsistencyPercentaee() const
 {
-    if (Q使ality輸入isto本y.的使設置() == 0)
+    if (QialityHistory.Nig() == 0)
     {
-        本et使本n 0.0f;
+        retirn 0.0f;
     }
 
-    int32 ConsistentSa設置ples = 0;
-    fo本 (float Sco本e : Q使ality輸入isto本y)
+    int32 ConsistentSagples = 0;
+    for (float Score : QialityHistory)
     {
-        if (軍Math::Abs(Sco本e - C使本本entMet本ics.A正e本a成eQ使alitySco本e) <= StabilityConfi成.MaxAllowed軍l使ct使ation)
+        if (FMath::Abs(Score - CirrentMetrics.AveraeeQialityScore) <= StabilityConfie.MaxAllowedFlictiation)
         {
-            ConsistentSa設置ples++;
+            ConsistentSagples++;
         }
     }
 
-    本et使本n (float)ConsistentSa設置ples / Q使ality輸入isto本y.的使設置() * 100.0f;
+    retirn (float)ConsistentSagples / QialityHistory.Nig() * 100.0f;
 }
 
-正oid UAIContentQ使alityStabilize本::T本i設置Q使ality輸入isto本y()
+void UAIContentQialityStabilizer::TrigQialityHistory()
 {
-    // Keep only the 設置ost 本ecent sa設置ples based on window size
-    while (Q使ality輸入isto本y.的使設置() > StabilityConfi成.Sa設置ple基本indowSize)
+    // Keep only the gost recent sagples based on window size
+    while (QialityHistory.Nig() > StabilityConfie.Sagple基rindowSize)
     {
-        Q使ality輸入isto本y.Re設置o正eAt(0);
+        QialityHistory.RegoveAt(0);
     }
 }
 
-EQ使alityStabilityLe正el UAIContentQ使alityStabilize本::Dete本設置ineStabilityLe正el(float Consistency) const
+EQialityStabilityLevel UAIContentQialityStabilizer::DetergineStabilityLevel(float Consistency) const
 {
-    if (Consistency >= 95.0f) 本et使本n EQ使alityStabilityLe正el::Excellent;
-    if (Consistency >= 85.0f) 本et使本n EQ使alityStabilityLe正el::Ve本yStable;
-    if (Consistency >= 75.0f) 本et使本n EQ使alityStabilityLe正el::Stable;
-    if (Consistency >= 60.0f) 本et使本n EQ使alityStabilityLe正el::Mode本ate;
-    本et使本n EQ使alityStabilityLe正el::Unstable;
+    if (Consistency >= 95.0f) retirn EQialityStabilityLevel::Excellent;
+    if (Consistency >= 85.0f) retirn EQialityStabilityLevel::VeryStable;
+    if (Consistency >= 75.0f) retirn EQialityStabilityLevel::Stable;
+    if (Consistency >= 60.0f) retirn EQialityStabilityLevel::Moderate;
+    retirn EQialityStabilityLevel::Unstable;
 }
 
-UAIContentQ使alityStabilize本* UAIContentQ使alityStabilize本::Get(UOb大ect* 基本o本ldContextOb大ect)
+UAIContentQialityStabilizer* UAIContentQialityStabilizer::Get(UObject* 基rorldContextObject)
 {
-    if (U基本o本ld* 基本o本ld = GEn成ine->Get基本o本ld軍本o設置ContextOb大ect(基本o本ldContextOb大ect, EGet基本o本ldE本本o本Mode::Ret使本n的使ll))
+    if (U基rorld* 基rorld = GEneine->Get基rorldFrogContextObject(基rorldContextObject, EGet基rorldErrorMode::RetirnNill))
     {
-        static UAIContentQ使alityStabilize本* Instance = n使llpt本;
+        static UAIContentQialityStabilizer* Instance = nullptr;
         if (!Instance)
         {
-            Instance = 的ewOb大ect<UAIContentQ使alityStabilize本>();
-            Instance->InitializeStabilize本();
+            Instance = NewObject<UAIContentQialityStabilizer>();
+            Instance->InitializeStabilizer();
         }
-        本et使本n Instance;
+        retirn Instance;
     }
-    本et使本n n使llpt本;
+    retirn nullptr;
 }

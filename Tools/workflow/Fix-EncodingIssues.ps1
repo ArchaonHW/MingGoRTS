@@ -227,7 +227,6 @@ $EncodingFixes = @{
     "ca本" = "car"
     "tank" = "tank"
     "使se本 inte本face" = "user interface"
-    "lo成o" = "logo"
     "si設置ple desi成n" = "simple design"
     "OnA本tGene本ationCo設置pleted" = "OnArtGenerationCompleted"
     "OnA本tGene本ationP本o成本ess" = "OnArtGenerationProgress"

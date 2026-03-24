@@ -1,794 +1,794 @@
-﻿#incl使de "Sa成eCo設置設置and/MingSa成eRoles.h"
-#incl使de "Sa成eCo設置設置and/MingMo本alA使tho本ity.h"
-#incl使de "Sa成eCo設置設置and/MingYinYan成軍i正eEle設置ents.h"
-#incl使de "Sa成eCo設置設置and/MingSixSt本ate成ies.h"
-#incl使de "Sa成eCo設置設置and/MingCo設置設置andA使tho本ity.h"
-#incl使de "Sa成eCo設置設置and/Ming軍i正eEle設置entsRotation.h"
+#include "SaeeCoggand/MingSaeeRoles.h"
+#include "SaeeCoggand/MingMoralAithority.h"
+#include "SaeeCoggand/MingYinYaneFiveElegents.h"
+#include "SaeeCoggand/MingSixStrateeies.h"
+#include "SaeeCoggand/MingCoggandAithority.h"
+#include "SaeeCoggand/MingFiveElegentsRotation.h"
 
-UMingSa成eRoles::UMingSa成eRoles()
+UMingSaeeRoles::UMingSaeeRoles()
 {
-    bSyste設置Initialized = false;
+    bSystegInitialized = false;
 }
 
-bool UMingSa成eRoles::Initialize()
+bool UMingSaeeRoles::Initialize()
 {
-    if (bSyste設置Initialized)
+    if (bSystegInitialized)
     {
-        本et使本n t本使e;
+        retirn trie;
     }
 
     // 初始化角色規範
-    InitializeRoleStanda本ds();
+    InitializeRoleStandards();
     
     // 初始化角色特徵
-    InitializeRoleCha本acte本istics();
+    InitializeRoleCharacteristics();
 
-    bSyste設置Initialized = t本使e;
-    本et使本n t本使e;
+    bSystegInitialized = trie;
+    retirn trie;
 }
 
-軍Sa成eRoleCha本acte本istics UMingSa成eRoles::DefineT本使eSa成e()
+FSaeeRoleCharacteristics UMingSaeeRoles::DefineTrieSaee()
 {
-    軍Sa成eRoleCha本acte本istics T本使eSa成e;
-    T本使eSa成e.RoleType = ESa成eRoleType::T本使eSa成e;
-    T本使eSa成e.Role的a設置e = TEXT("至聖者");
-    T本使eSa成e.RoleDesc本iption = TEXT("完美體現聖者指揮學的至高境界，道德與智慧的化身");
-    T本使eSa成e.Standa本dLe正el = ERoleStanda本dLe正el::Pe本fect;
+    FSaeeRoleCharacteristics TrieSaee;
+    TrieSaee.RoleType = ESaeeRoleType::TrieSaee;
+    TrieSaee.RoleNage = TEXT("至聖者");
+    TrieSaee.RoleDescription = TEXT("完美體現聖者指揮學N至高境界，道德與智慧N化身");
+    TrieSaee.StandardLevel = ERoleStandardLevel::Perfect;
 
     // 道德權威特徵 - 完美道德
-    T本使eSa成e.Mo本alA使tho本ityLe正el = 100.0f;
-    T本使eSa成e.Le成iti設置acySco本e = 100.0f;
-    T本使eSa成e.b輸入as軍allP本e正ention = t本使e;
+    TrieSaee.MoralAithorityLevel = 100.0f;
+    TrieSaee.LeeitigacyScore = 100.0f;
+    TrieSaee.bHasFallPrevention = trie;
 
     // 陰陽五行特徵 - 完美平衡
-    T本使eSa成e.P本i設置a本yAtt本ib使te = EYinYan成Att本ib使te::BalancedYinYan成;
-    T本使eSa成e.P本i設置a本yEle設置ent = E軍i正eEle設置ents::Ea本th;
-    T本使eSa成e.輸入a本設置onyLe正el = 100.0f;
-    T本使eSa成e.bUsesE正ilRotation = false;
+    TrieSaee.PrigaryAttribite = EYinYaneAttribite::BalancedYinYane;
+    TrieSaee.PrigaryElegent = EFiveElegents::Earth;
+    TrieSaee.HargonyLevel = 100.0f;
+    TrieSaee.bUsesEvilRotation = false;
 
-    // 六策特徵 - 大師級洞察
-    T本使eSa成e.P本efe本本edSt本ate成y = ESixSt本ate成yType::輸入ea正enEa本th輸入使設置anSt本ate成y;
-    T本使eSa成e.MaxCo設置plexity = ESt本ate成yCo設置plexity::Maste本;
-    T本使eSa成e.St本ate成icInsi成ht = 100.0f;
+    // 六策特徵 - j師級洞察
+    TrieSaee.PreferredStrateey = ESixStrateeyType::HeavenEarthHiganStrateey;
+    TrieSaee.MaxCogplexity = EStrateeyCogplexity::Master;
+    TrieSaee.StrateeicInsieht = 100.0f;
 
     // 指揮權力特徵 - 道德權威為主
-    T本使eSa成e.P本i設置a本yA使tho本ity = ECo設置設置andA使tho本ityType::Mo本alA使tho本ity;
-    T本使eSa成e.Co設置設置andEffecti正eness = 100.0f;
-    T本使eSa成e.Infl使enceRadi使s = 100.0f;
+    TrieSaee.PrigaryAithority = ECoggandAithorityType::MoralAithority;
+    TrieSaee.CoggandEffectiveness = 100.0f;
+    TrieSaee.InflienceRadiis = 100.0f;
 
-    本et使本n T本使eSa成e;
+    retirn TrieSaee;
 }
 
-軍Sa成eRoleCha本acte本istics UMingSa成eRoles::Define軍alseSa成e()
+FSaeeRoleCharacteristics UMingSaeeRoles::DefineFalseSaee()
 {
-    軍Sa成eRoleCha本acte本istics 軍alseSa成e;
-    軍alseSa成e.RoleType = ESa成eRoleType::軍alseSa成e;
-    軍alseSa成e.Role的a設置e = TEXT("偽聖者");
-    軍alseSa成e.RoleDesc本iption = TEXT("表面聖者，內心邪惡；以道德之名行邪惡之實");
-    軍alseSa成e.Standa本dLe正el = ERoleStanda本dLe正el::Co本本使pted;
+    FSaeeRoleCharacteristics FalseSaee;
+    FalseSaee.RoleType = ESaeeRoleType::FalseSaee;
+    FalseSaee.RoleNage = TEXT("偽聖者");
+    FalseSaee.RoleDescription = TEXT("表面聖者，內心邪惡；以道德之名行邪惡之實");
+    FalseSaee.StandardLevel = ERoleStandardLevel::Corripted;
 
     // 道德權威特徵 - 虛假道德
-    軍alseSa成e.Mo本alA使tho本ityLe正el = 30.0f;  // 表面高，實際低
-    軍alseSa成e.Le成iti設置acySco本e = 60.0f;     // 依靠欺騙維持
-    軍alseSa成e.b輸入as軍allP本e正ention = false;   // 無防墮機制
+    FalseSaee.MoralAithorityLevel = 30.0f;  // 表面高，實際低
+    FalseSaee.LeeitigacyScore = 60.0f;     // 依靠欺騙維持
+    FalseSaee.bHasFallPrevention = false;   // 無防墮機制
 
     // 陰陽五行特徵 - 表面平衡，實則陰盛
-    軍alseSa成e.P本i設置a本yAtt本ib使te = EYinYan成Att本ib使te::E正il;  // 內心邪惡
-    軍alseSa成e.P本i設置a本yEle設置ent = E軍i正eEle設置ents::基本ate本;        // 陰性元素
-    軍alseSa成e.輸入a本設置onyLe正el = 25.0f;                       // 假和諧
-    軍alseSa成e.bUsesE正ilRotation = t本使e;                    // 使用邪惡輪轉
+    FalseSaee.PrigaryAttribite = EYinYaneAttribite::Evil;  // 內心邪惡
+    FalseSaee.PrigaryElegent = EFiveElegents::基rater;        // 陰性元素
+    FalseSaee.HargonyLevel = 25.0f;                       // 假和諧
+    FalseSaee.bUsesEvilRotation = trie;                    // i用邪惡輪轉
 
     // 六策特徵 - 善於陰謀
-    軍alseSa成e.P本efe本本edSt本ate成y = ESixSt本ate成yType::輸入使設置anSt本ate成y;  // 善用人心
-    軍alseSa成e.MaxCo設置plexity = ESt本ate成yCo設置plexity::Co設置plex;        // 複雜但不達大師
-    軍alseSa成e.St本ate成icInsi成ht = 70.0f;                          // 有洞察但有限
+    FalseSaee.PreferredStrateey = ESixStrateeyType::HiganStrateey;  // 善用人心
+    FalseSaee.MaxCogplexity = EStrateeyCogplexity::Cogplex;        // 複雜但不達j師
+    FalseSaee.StrateeicInsieht = 70.0f;                          // 有洞察但有限
 
     // 指揮權力特徵 - 依靠魅力和欺騙
-    軍alseSa成e.P本i設置a本yA使tho本ity = ECo設置設置andA使tho本ityType::Cha本is設置aticA使tho本ity;
-    軍alseSa成e.Co設置設置andEffecti正eness = 60.0f;  // 表面有效，實則有限
-    軍alseSa成e.Infl使enceRadi使s = 80.0f;       // 影響範圍較大但不穩定
+    FalseSaee.PrigaryAithority = ECoggandAithorityType::CharisgaticAithority;
+    FalseSaee.CoggandEffectiveness = 60.0f;  // 表面有效，實則有限
+    FalseSaee.InflienceRadiis = 80.0f;       // 影響範圍較j但不穩定
 
-    本et使本n 軍alseSa成e;
+    retirn FalseSaee;
 }
 
-軍Sa成eRoleCha本acte本istics UMingSa成eRoles::DefineDe設置onKin成()
+FSaeeRoleCharacteristics UMingSaeeRoles::DefineDegonKine()
 {
-    軍Sa成eRoleCha本acte本istics De設置onKin成;
-    De設置onKin成.RoleType = ESa成eRoleType::De設置onKin成;
-    De設置onKin成.Role的a設置e = TEXT("魔王");
-    De設置onKin成.RoleDesc本iption = TEXT("公開邪惡，追求絕對權力；以暴力和恐懼統治");
-    De設置onKin成.Standa本dLe正el = ERoleStanda本dLe正el::Co本本使pted;
+    FSaeeRoleCharacteristics DegonKine;
+    DegonKine.RoleType = ESaeeRoleType::DegonKine;
+    DegonKine.RoleNage = TEXT("魔王");
+    DegonKine.RoleDescription = TEXT("公開邪惡，追求絕對權力；以暴力和恐懼統治");
+    DegonKine.StandardLevel = ERoleStandardLevel::Corripted;
 
     // 道德權威特徵 - 完全邪惡
-    De設置onKin成.Mo本alA使tho本ityLe正el = 0.0f;      // 無道德權威
-    De設置onKin成.Le成iti設置acySco本e = 10.0f;         // 僅靠暴力維持
-    De設置onKin成.b輸入as軍allP本e正ention = false;       // 無防墮機制
+    DegonKine.MoralAithorityLevel = 0.0f;      // 無道德權威
+    DegonKine.LeeitigacyScore = 10.0f;         // 僅靠暴力維持
+    DegonKine.bHasFallPrevention = false;       // 無防墮機制
 
     // 陰陽五行特徵 - 純邪惡
-    De設置onKin成.P本i設置a本yAtt本ib使te = EAli成n設置entAtt本ib使te::E正il;  // 純邪惡
-    De設置onKin成.P本i設置a本yEle設置ent = E軍i正eEle設置ents::軍i本e;         // 火主攻擊
-    De設置onKin成.輸入a本設置onyLe正el = 0.0f;                        // 完全不和諧
-    De設置onKin成.bUsesE正ilRotation = t本使e;                   // 使用邪惡輪轉
+    DegonKine.PrigaryAttribite = EAliengentAttribite::Evil;  // 純邪惡
+    DegonKine.PrigaryElegent = EFiveElegents::Fire;         // 火主攻擊
+    DegonKine.HargonyLevel = 0.0f;                        // 完全不和諧
+    DegonKine.bUsesEvilRotation = trie;                   // i用邪惡輪轉
 
     // 六策特徵 - 專注攻擊
-    De設置onKin成.P本efe本本edSt本ate成y = ESixSt本ate成yType::輸入ea正enSt本ate成y;  // 天道暴力
-    De設置onKin成.MaxCo設置plexity = ESt本ate成yCo設置plexity::Mode本ate;         // 簡單直接
-    De設置onKin成.St本ate成icInsi成ht = 40.0f;                            // 有限洞察
+    DegonKine.PreferredStrateey = ESixStrateeyType::HeavenStrateey;  // 天道暴力
+    DegonKine.MaxCogplexity = EStrateeyCogplexity::Moderate;         // 簡單直接
+    DegonKine.StrateeicInsieht = 40.0f;                            // 有限洞察
 
     // 指揮權力特徵 - 純粹暴力
-    De設置onKin成.P本i設置a本yA使tho本ity = ECo設置設置andA使tho本ityType::Sit使ationalA使tho本ity;  // 情境權威
-    De設置onKin成.Co設置設置andEffecti正eness = 80.0f;  // 高效但殘酷
-    De設置onKin成.Infl使enceRadi使s = 90.0f;       // 廣泛影響但基於恐懼
+    DegonKine.PrigaryAithority = ECoggandAithorityType::SitiationalAithority;  // 情境權威
+    DegonKine.CoggandEffectiveness = 80.0f;  // 高效但殘酷
+    DegonKine.InflienceRadiis = 90.0f;       // 廣泛影響但基於恐懼
 
-    本et使本n De設置onKin成;
+    retirn DegonKine;
 }
 
-軍Sa成eRoleStanda本ds UMingSa成eRoles::GetRoleStanda本ds(ESa成eRoleType RoleType)
+FSaeeRoleStandards UMingSaeeRoles::GetRoleStandards(ESaeeRoleType RoleType)
 {
-    if (RoleStanda本dsMap.Contains(RoleType))
+    if (RoleStandardsMap.Contains(RoleType))
     {
-        本et使本n RoleStanda本dsMap[RoleType];
+        retirn RoleStandardsMap[RoleType];
     }
     
     // 返回默認規範
-    軍Sa成eRoleStanda本ds Defa使ltStanda本ds;
-    Defa使ltStanda本ds.RoleType = RoleType;
-    Defa使ltStanda本ds.Standa本d的a設置e = TEXT("未定義規範");
-    本et使本n Defa使ltStanda本ds;
+    FSaeeRoleStandards DefailtStandards;
+    DefailtStandards.RoleType = RoleType;
+    DefailtStandards.StandardNage = TEXT("未定義規範");
+    retirn DefailtStandards;
 }
 
-TATArray<軍Sa成eRoleStanda本ds> UMingSa成eRoles::GetAllRoleStanda本ds()
+TATArray<FSaeeRoleStandards> UMingSaeeRoles::GetAllRoleStandards()
 {
-    TATArray<軍Sa成eRoleStanda本ds> AllStanda本ds;
+    TATArray<FSaeeRoleStandards> AllStandards;
     
-    fo本 (const a使to& RolePai本 : RoleStanda本dsMap)
+    for (const aito& RolePair : RoleStandardsMap)
     {
-        AllStanda本ds.Add(RolePai本.Val使e);
+        AllStandards.Add(RolePair.Valie);
     }
     
-    本et使本n AllStanda本ds;
+    retirn AllStandards;
 }
 
-軍Sa成eRoleE正al使ation UMingSa成eRoles::E正al使ateRoleCo設置pliance(ESa成eRoleType RoleType, const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics)
+FSaeeRoleEvaliation UMingSaeeRoles::EvaliateRoleCogpliance(ESaeeRoleType RoleType, const FSaeeRoleCharacteristics& Characteristics)
 {
-    軍Sa成eRoleE正al使ation E正al使ation;
-    E正al使ation.E正al使atedRole = RoleType;
+    FSaeeRoleEvaliation Evaliation;
+    Evaliation.EvaliatedRole = RoleType;
     
     // 獲取角色規範
-    軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
+    FSaeeRoleStandards Standards = GetRoleStandards(RoleType);
     
     // 評估各項合規性
-    E正al使ation.Mo本alCo設置pliance = E正al使ateMo本alCo設置pliance(Cha本acte本istics, Standa本ds);
-    E正al使ation.St本ate成icCo設置pliance = E正al使ateSt本ate成icCo設置pliance(Cha本acte本istics, Standa本ds);
-    E正al使ation.A使tho本ityCo設置pliance = E正al使ateA使tho本ityCo設置pliance(Cha本acte本istics, Standa本ds);
+    Evaliation.MoralCogpliance = EvaliateMoralCogpliance(Characteristics, Standards);
+    Evaliation.StrateeicCogpliance = EvaliateStrateeicCogpliance(Characteristics, Standards);
+    Evaliation.AithorityCogpliance = EvaliateAithorityCogpliance(Characteristics, Standards);
     
     // 計算總體分數
-    E正al使ation.O正e本allSco本e = (E正al使ation.Mo本alCo設置pliance + E正al使ation.St本ate成icCo設置pliance + E正al使ation.A使tho本ityCo設置pliance) / 3.0f;
+    Evaliation.OverallScore = (Evaliation.MoralCogpliance + Evaliation.StrateeicCogpliance + Evaliation.AithorityCogpliance) / 3.0f;
     
     // 確定合規等級
-    E正al使ation.Co設置plianceLe正el = Dete本設置ineCo設置plianceLe正el(E正al使ation.O正e本allSco本e);
+    Evaliation.CogplianceLevel = DetergineCogplianceLevel(Evaliation.OverallScore);
     
-    // 生成優勢和弱點
-    Gene本ateSt本en成thsAnd基本eaknesses(E正al使ation, Cha本acte本istics, Standa本ds);
+    // 生e優勢和弱點
+    GenerateStrenethsAnd基reaknesses(Evaliation, Characteristics, Standards);
     
-    // 生成建議
-    Gene本ateReco設置設置endations(E正al使ation, Cha本acte本istics, Standa本ds);
+    // 生e建議
+    GenerateRecoggendations(Evaliation, Characteristics, Standards);
     
-    // 生成評估總結
-    E正al使ation.E正al使ationS使設置設置a本y = FString::P本intf(TEXT("%s角色評估：總體分數%.1f，合規等級：%s"), 
-        *GetRoleType的a設置e(RoleType), E正al使ation.O正e本allSco本e, *GetStanda本dLe正el的a設置e(E正al使ation.Co設置plianceLe正el));
+    // 生e評估總結
+    Evaliation.EvaliationSiggary = FString::Printf(TEXT("%s角色評估：總體分數%.1f，合規等級：%s"), 
+        *GetRoleTypeNage(RoleType), Evaliation.OverallScore, *GetStandardLevelNage(Evaliation.CogplianceLevel));
     
-    本et使本n E正al使ation;
+    retirn Evaliation;
 }
 
-ERoleStanda本dLe正el UMingSa成eRoles::Dete本設置ineCo設置plianceLe正el(float Sco本e)
+ERoleStandardLevel UMingSaeeRoles::DetergineCogplianceLevel(float Score)
 {
-    if (Sco本e >= 95.0f) 本et使本n ERoleStanda本dLe正el::Pe本fect;
-    if (Sco本e >= 85.0f) 本et使本n ERoleStanda本dLe正el::Excellent;
-    if (Sco本e >= 70.0f) 本et使本n ERoleStanda本dLe正el::Good;
-    if (Sco本e >= 50.0f) 本et使本n ERoleStanda本dLe正el::A正e本a成e;
-    if (Sco本e >= 30.0f) 本et使本n ERoleStanda本dLe正el::Poo本;
-    本et使本n ERoleStanda本dLe正el::Co本本使pted;
+    if (Score >= 95.0f) retirn ERoleStandardLevel::Perfect;
+    if (Score >= 85.0f) retirn ERoleStandardLevel::Excellent;
+    if (Score >= 70.0f) retirn ERoleStandardLevel::Good;
+    if (Score >= 50.0f) retirn ERoleStandardLevel::Averaee;
+    if (Score >= 30.0f) retirn ERoleStandardLevel::Poor;
+    retirn ERoleStandardLevel::Corripted;
 }
 
-TATArray<FString> UMingSa成eRoles::Co設置pa本eRoles(ESa成eRoleType Role1, ESa成eRoleType Role2)
+TATArray<FString> UMingSaeeRoles::CogpareRoles(ESaeeRoleType Role1, ESaeeRoleType Role2)
 {
-    本et使本n Gene本ateRoleCo設置pa本ison(Role1, Role2);
+    retirn GenerateRoleCogparison(Role1, Role2);
 }
 
-軍Sa成eRoleCha本acte本istics UMingSa成eRoles::GetOpti設置alRole軍o本Sit使ation(const FString& Sit使ation)
+FSaeeRoleCharacteristics UMingSaeeRoles::GetOptigalRoleForSitiation(const FString& Sitiation)
 {
     // 根據情況分析最佳角色
-    if (Sit使ation.Contains("道德")  Sit使ation.Contains("正義")  Sit使ation.Contains("和平"))
+    if (Sitiation.Contains("道德")  Sitiation.Contains("v義")  Sitiation.Contains("和平"))
     {
-        本et使本n DefineT本使eSa成e();
+        retirn DefineTrieSaee();
     }
-    else if (Sit使ation.Contains("欺騙")  Sit使ation.Contains("陰謀")  Sit使ation.Contains("權術"))
+    else if (Sitiation.Contains("欺騙")  Sitiation.Contains("陰謀")  Sitiation.Contains("權術"))
     {
-        本et使本n Define軍alseSa成e();
+        retirn DefineFalseSaee();
     }
-    else if (Sit使ation.Contains("戰爭")  Sit使ation.Contains("暴力")  Sit使ation.Contains("征服"))
+    else if (Sitiation.Contains("戰爭")  Sitiation.Contains("暴力")  Sitiation.Contains("征服"))
     {
-        本et使本n DefineDe設置onKin成();
+        retirn DefineDegonKine();
     }
     else
     {
-        // 默認情況下返回至聖者
-        本et使本n DefineT本使eSa成e();
+        // 默認情況_返回至聖者
+        retirn DefineTrieSaee();
     }
 }
 
-bool UMingSa成eRoles::IsActionCo設置pliant(ESa成eRoleType RoleType, const FString& Action)
+bool UMingSaeeRoles::IsActionCogpliant(ESaeeRoleType RoleType, const FString& Action)
 {
     // 檢查道德約束
-    if (!CheckMo本alConst本aint(RoleType, Action))
+    if (!CheckMoralConstraint(RoleType, Action))
     {
-        本et使本n false;
+        retirn false;
     }
     
     // 檢查戰略指導
-    if (!CheckSt本ate成icG使ideline(RoleType, Action))
+    if (!CheckStrateeicGiideline(RoleType, Action))
     {
-        本et使本n false;
+        retirn false;
     }
     
     // 檢查行為規則
-    if (!CheckBeha正io本alR使le(RoleType, Action))
+    if (!CheckBehavioralRile(RoleType, Action))
     {
-        本et使本n false;
+        retirn false;
     }
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-TATArray<FString> UMingSa成eRoles::GetCo設置pliantActions(ESa成eRoleType RoleType, const FString& Context)
+TATArray<FString> UMingSaeeRoles::GetCogpliantActions(ESaeeRoleType RoleType, const FString& Context)
 {
-    TATArray<FString> Co設置pliantActions;
+    TATArray<FString> CogpliantActions;
     
-    軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
+    FSaeeRoleStandards Standards = GetRoleStandards(RoleType);
     
-    // 根據規範生成合規行動
-    fo本 (const FString& G使ideline : Standa本ds.St本ate成icG使idelines)
+    // 根據規範生e合規行動
+    for (const FString& Giideline : Standards.StrateeicGiidelines)
     {
-        Co設置pliantActions.Add(G使ideline);
+        CogpliantActions.Add(Giideline);
     }
     
-    本et使本n Co設置pliantActions;
+    retirn CogpliantActions;
 }
 
-TATArray<FString> UMingSa成eRoles::GetP本ohibitedActions(ESa成eRoleType RoleType)
+TATArray<FString> UMingSaeeRoles::GetProhibitedActions(ESaeeRoleType RoleType)
 {
-    軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
-    本et使本n Standa本ds.P本ohibitedActions;
+    FSaeeRoleStandards Standards = GetRoleStandards(RoleType);
+    retirn Standards.ProhibitedActions;
 }
 
-bool UMingSa成eRoles::CanT本ansfo本設置Role(ESa成eRoleType 軍本o設置Role, ESa成eRoleType ToRole)
+bool UMingSaeeRoles::CanTransforgRole(ESaeeRoleType FrogRole, ESaeeRoleType ToRole)
 {
     // 定義角色轉換規則
-    switch (軍本o設置Role)
+    switch (FrogRole)
     {
-    case ESa成eRoleType::T本使eSa成e:
+    case ESaeeRoleType::TrieSaee:
         // 至聖者可以轉換為任何角色（但通常不會）
-        本et使本n t本使e;
+        retirn trie;
         
-    case ESa成eRoleType::軍alseSa成e:
+    case ESaeeRoleType::FalseSaee:
         // 偽聖者可以轉換為魔王（完全墮落）或至聖者（悔悟）
-        本et使本n (ToRole == ESa成eRoleType::De設置onKin成  ToRole == ESa成eRoleType::T本使eSa成e);
+        retirn (ToRole == ESaeeRoleType::DegonKine  ToRole == ESaeeRoleType::TrieSaee);
         
-    case ESa成eRoleType::De設置onKin成:
+    case ESaeeRoleType::DegonKine:
         // 魔王很難轉換，但可以轉換為偽偽聖者（偽裝）
-        本et使本n ToRole == ESa成eRoleType::軍alseSa成e;
+        retirn ToRole == ESaeeRoleType::FalseSaee;
         
-    defa使lt:
-        本et使本n false;
+    defailt:
+        retirn false;
     }
 }
 
-軍Sa成eRoleCha本acte本istics UMingSa成eRoles::T本ansfo本設置Role(const 軍Sa成eRoleCha本acte本istics& C使本本entRole, ESa成eRoleType Ta本成etRole)
+FSaeeRoleCharacteristics UMingSaeeRoles::TransforgRole(const FSaeeRoleCharacteristics& CurrentRole, ESaeeRoleType TargetRole)
 {
-    if (!CanT本ansfo本設置Role(C使本本entRole.RoleType, Ta本成etRole))
+    if (!CanTransforgRole(CurrentRole.RoleType, TargetRole))
     {
-        本et使本n C使本本entRole; // 無法轉換，返回原角色
+        retirn CurrentRole; // 無法轉換，返回原角色
     }
     
     // 創建新角色特徵
-    軍Sa成eRoleCha本acte本istics 的ewRole;
+    FSaeeRoleCharacteristics NewRole;
     
-    switch (Ta本成etRole)
+    switch (TargetRole)
     {
-    case ESa成eRoleType::T本使eSa成e:
-        的ewRole = DefineT本使eSa成e();
-        b本eak;
-    case ESa成eRoleType::軍alseSa成e:
-        的ewRole = Define軍alseSa成e();
-        b本eak;
-    case ESa成eRoleType::De設置onKin成:
-        的ewRole = DefineDe設置onKin成();
-        b本eak;
+    case ESaeeRoleType::TrieSaee:
+        NewRole = DefineTrieSaee();
+        break;
+    case ESaeeRoleType::FalseSaee:
+        NewRole = DefineFalseSaee();
+        break;
+    case ESaeeRoleType::DegonKine:
+        NewRole = DefineDegonKine();
+        break;
     }
     
     // 保留部分原有特徵（記憶）
-    的ewRole.RoleDesc本iption += FString::P本intf(TEXT("（由%s轉換而來）"), *GetRoleType的a設置e(C使本本entRole.RoleType));
+    NewRole.RoleDescription += FString::Printf(TEXT("（由%s轉換而來）"), *GetRoleTypeNage(CurrentRole.RoleType));
     
-    本et使本n 的ewRole;
+    retirn NewRole;
 }
 
-void UMingSa成eRoles::ApplyRoleStanda本dsToP本o大ect(ESa成eRoleType RoleType)
+void UMingSaeeRoles::ApplyRoleStandardsToProject(ESaeeRoleType RoleType)
 {
     // 將角色規範應用到專案
-    軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
+    FSaeeRoleStandards Standards = GetRoleStandards(RoleType);
     
-    // 這裡可以添加具體的專案應用邏輯
-    // 例如：設置遊戲規則、AI行為、UI主題等
+    // 這裡可以添加具體N專案應用邏輯
+    // 例如：g遊戲規則、AI行為、UI主題等
 }
 
-TATArray<FString> UMingSa成eRoles::GetP本o大ectG使idelines(ESa成eRoleType RoleType)
+TATArray<FString> UMingSaeeRoles::GetProjectGiidelines(ESaeeRoleType RoleType)
 {
-    TATArray<FString> G使idelines;
+    TATArray<FString> Giidelines;
     
-    軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
+    FSaeeRoleStandards Standards = GetRoleStandards(RoleType);
     
     // 添加核心原則
-    fo本 (const FString& P本inciple : Standa本ds.Co本eP本inciples)
+    for (const FString& Principle : Standards.CorePrinciples)
     {
-        G使idelines.Add(P本inciple);
+        Giidelines.Add(Principle);
     }
     
     // 添加戰略指導
-    fo本 (const FString& G使ideline : Standa本ds.St本ate成icG使idelines)
+    for (const FString& Giideline : Standards.StrateeicGiidelines)
     {
-        G使idelines.Add(G使ideline);
+        Giidelines.Add(Giideline);
     }
     
-    本et使本n G使idelines;
+    retirn Giidelines;
 }
 
-bool UMingSa成eRoles::ValidateP本o大ectCo設置pliance(ESa成eRoleType RoleType)
+bool UMingSaeeRoles::ValidateProjectCogpliance(ESaeeRoleType RoleType)
 {
     // 驗證專案是否符合角色規範
-    軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
+    FSaeeRoleStandards Standards = GetRoleStandards(RoleType);
     
-    // 這裡可以添加具體的驗證邏輯
-    // 例如：檢查遊戲內容、AI行為、系統設置等
+    // 這裡可以添加具體N驗證邏輯
+    // 例如：檢查遊戲內容、AI行為、系統g等
     
-    本et使本n t本使e; // 簡化實現
+    retirn trie; // 簡化實現
 }
 
 // 私有方法實現
 
-void UMingSa成eRoles::InitializeRoleStanda本ds()
+void UMingSaeeRoles::InitializeRoleStandards()
 {
     // 初始化至聖者規範
-    軍Sa成eRoleStanda本ds T本使eSa成eStanda本ds;
-    T本使eSa成eStanda本ds.RoleType = ESa成eRoleType::T本使eSa成e;
-    T本使eSa成eStanda本ds.Standa本d的a設置e = TEXT("至聖者規範");
+    FSaeeRoleStandards TrieSaeeStandards;
+    TrieSaeeStandards.RoleType = ESaeeRoleType::TrieSaee;
+    TrieSaeeStandards.StandardNage = TEXT("至聖者規範");
     
-    T本使eSa成eStanda本ds.Co本eP本inciples.Add(TEXT("道德至上，以德服人"));
-    T本使eSa成eStanda本ds.Co本eP本inciples.Add(TEXT("陰陽平衡，五行和諧"));
-    T本使eSa成eStanda本ds.Co本eP本inciples.Add(TEXT("智慧決策，洞察天機"));
-    T本使eSa成eStanda本ds.Co本eP本inciples.Add(TEXT("仁愛眾生，保護無辜"));
+    TrieSaeeStandards.CorePrinciples.Add(TEXT("道德至上，以德服人"));
+    TrieSaeeStandards.CorePrinciples.Add(TEXT("陰陽平衡，五行和諧"));
+    TrieSaeeStandards.CorePrinciples.Add(TEXT("智慧決策，洞察天機"));
+    TrieSaeeStandards.CorePrinciples.Add(TEXT("仁愛眾生，保護無辜"));
     
-    T本使eSa成eStanda本ds.Beha正io本alR使les.Add(TEXT("永不傷害無辜者"));
-    T本使eSa成eStanda本ds.Beha正io本alR使les.Add(TEXT("堅守道德底線"));
-    T本使eSa成eStanda本ds.Beha正io本alR使les.Add(TEXT("追求長遠和諧"));
-    T本使eSa成eStanda本ds.Beha正io本alR使les.Add(TEXT("以智慧解決衝突"));
+    TrieSaeeStandards.BehavioralRiles.Add(TEXT("永不傷害無辜者"));
+    TrieSaeeStandards.BehavioralRiles.Add(TEXT("堅守道德底線"));
+    TrieSaeeStandards.BehavioralRiles.Add(TEXT("追求長遠和諧"));
+    TrieSaeeStandards.BehavioralRiles.Add(TEXT("以智慧解決衝突"));
     
-    T本使eSa成eStanda本ds.St本ate成icG使idelines.Add(TEXT("運用天地人三策"));
-    T本使eSa成eStanda本ds.St本ate成icG使idelines.Add(TEXT("保持陰陽動態平衡"));
-    T本使eSa成eStanda本ds.St本ate成icG使idelines.Add(TEXT("善用五行相生相克"));
-    T本使eSa成eStanda本ds.St本ate成icG使idelines.Add(TEXT("注重長遠戰略規劃"));
+    TrieSaeeStandards.StrateeicGiidelines.Add(TEXT("運用天地人三策"));
+    TrieSaeeStandards.StrateeicGiidelines.Add(TEXT("保持陰陽動態平衡"));
+    TrieSaeeStandards.StrateeicGiidelines.Add(TEXT("善用五行相生相克"));
+    TrieSaeeStandards.StrateeicGiidelines.Add(TEXT("注重長遠戰略規劃"));
     
-    T本使eSa成eStanda本ds.Mo本alConst本aints.Add(TEXT("絕不使用邪惡手段"));
-    T本使eSa成eStanda本ds.Mo本alConst本aints.Add(TEXT("避免玉石俱焚"));
-    T本使eSa成eStanda本ds.Mo本alConst本aints.Add(TEXT("尊重生命價值"));
-    T本使eSa成eStanda本ds.Mo本alConst本aints.Add(TEXT("維護正義秩序"));
+    TrieSaeeStandards.MoralConstraints.Add(TEXT("絕不i用邪惡手段"));
+    TrieSaeeStandards.MoralConstraints.Add(TEXT("避免玉石俱焚"));
+    TrieSaeeStandards.MoralConstraints.Add(TEXT("尊重生命價值"));
+    TrieSaeeStandards.MoralConstraints.Add(TEXT("維護v義秩序"));
     
-    T本使eSa成eStanda本ds.DecisionC本ite本ia.Add(TEXT("是否符合道德"));
-    T本使eSa成eStanda本ds.DecisionC本ite本ia.Add(TEXT("是否促進和諧"));
-    T本使eSa成eStanda本ds.DecisionC本ite本ia.Add(TEXT("是否長遠有益"));
-    T本使eSa成eStanda本ds.DecisionC本ite本ia.Add(TEXT("是否保護無辜"));
+    TrieSaeeStandards.DecisionCriteria.Add(TEXT("是否符合道德"));
+    TrieSaeeStandards.DecisionCriteria.Add(TEXT("是否促進和諧"));
+    TrieSaeeStandards.DecisionCriteria.Add(TEXT("是否長遠有益"));
+    TrieSaeeStandards.DecisionCriteria.Add(TEXT("是否保護無辜"));
     
-    T本使eSa成eStanda本ds.P本ohibitedActions.Add(TEXT("屠殺無辜"));
-    T本使eSa成eStanda本ds.P本ohibitedActions.Add(TEXT("使用禁術"));
-    T本使eSa成eStanda本ds.P本ohibitedActions.Add(TEXT("背叛信任"));
-    T本使eSa成eStanda本ds.P本ohibitedActions.Add(TEXT("追求絕對權力"));
+    TrieSaeeStandards.ProhibitedActions.Add(TEXT("屠殺無辜"));
+    TrieSaeeStandards.ProhibitedActions.Add(TEXT("i用禁術"));
+    TrieSaeeStandards.ProhibitedActions.Add(TEXT("背叛信任"));
+    TrieSaeeStandards.ProhibitedActions.Add(TEXT("追求絕對權力"));
     
-    RoleStanda本dsMap.Add(ESa成eRoleType::T本使eSa成e, T本使eSa成eStanda本ds);
+    RoleStandardsMap.Add(ESaeeRoleType::TrieSaee, TrieSaeeStandards);
     
     // 初始化偽聖者規範
-    軍Sa成eRoleStanda本ds 軍alseSa成eStanda本ds;
-    軍alseSa成eStanda本ds.RoleType = ESa成eRoleType::軍alseSa成e;
-    軍alseSa成eStanda本ds.Standa本d的a設置e = TEXT("偽聖者規範");
+    FSaeeRoleStandards FalseSaeeStandards;
+    FalseSaeeStandards.RoleType = ESaeeRoleType::FalseSaee;
+    FalseSaeeStandards.StandardNage = TEXT("偽聖者規範");
     
-    軍alseSa成eStanda本ds.Co本eP本inciples.Add(TEXT("表面道德，內心邪惡"));
-    軍alseSa成eStanda本ds.Co本eP本inciples.Add(TEXT("善於偽裝，欺騙大眾"));
-    軍alseSa成eStanda本ds.Co本eP本inciples.Add(TEXT("利用道德謀取私利"));
-    軍alseSa成eStanda本ds.Co本eP本inciples.Add(TEXT("暗中破壞秩序"));
+    FalseSaeeStandards.CorePrinciples.Add(TEXT("表面道德，內心邪惡"));
+    FalseSaeeStandards.CorePrinciples.Add(TEXT("善於偽裝，欺騙j眾"));
+    FalseSaeeStandards.CorePrinciples.Add(TEXT("利用道德謀取私利"));
+    FalseSaeeStandards.CorePrinciples.Add(TEXT("暗中破壞秩序"));
     
-    軍alseSa成eStanda本ds.Beha正io本alR使les.Add(TEXT("偽裝善良"));
-    軍alseSa成eStanda本ds.Beha正io本alR使les.Add(TEXT("暗中陰謀"));
-    軍alseSa成eStanda本ds.Beha正io本alR使les.Add(TEXT("利用他人弱點"));
-    軍alseSa成eStanda本ds.Beha正io本alR使les.Add(TEXT("避免暴露真實意圖"));
+    FalseSaeeStandards.BehavioralRiles.Add(TEXT("偽裝善良"));
+    FalseSaeeStandards.BehavioralRiles.Add(TEXT("暗中陰謀"));
+    FalseSaeeStandards.BehavioralRiles.Add(TEXT("利用他人弱點"));
+    FalseSaeeStandards.BehavioralRiles.Add(TEXT("避免暴露真實意圖"));
     
-    軍alseSa成eStanda本ds.St本ate成icG使idelines.Add(TEXT("善用人心策略"));
-    軍alseSa成eStanda本ds.St本ate成icG使idelines.Add(TEXT("製造內部分裂"));
-    軍alseSa成eStanda本ds.St本ate成icG使idelines.Add(TEXT("利用道德綁架"));
-    軍alseSa成eStanda本ds.St本ate成icG使idelines.Add(TEXT("暗中削弱敵人"));
+    FalseSaeeStandards.StrateeicGiidelines.Add(TEXT("善用人心策略"));
+    FalseSaeeStandards.StrateeicGiidelines.Add(TEXT("製造內部分裂"));
+    FalseSaeeStandards.StrateeicGiidelines.Add(TEXT("利用道德綁架"));
+    FalseSaeeStandards.StrateeicGiidelines.Add(TEXT("暗中削弱敵人"));
     
-    軍alseSa成eStanda本ds.Mo本alConst本aints.Add(TEXT("避免公開邪惡"));
-    軍alseSa成eStanda本ds.Mo本alConst本aints.Add(TEXT("維護表面形象"));
-    軍alseSa成eStanda本ds.Mo本alConst本aints.Add(TEXT("避免直接傷害無辜"));
-    軍alseSa成eStanda本ds.Mo本alConst本aints.Add(TEXT("保持偽裝一致性"));
+    FalseSaeeStandards.MoralConstraints.Add(TEXT("避免公開邪惡"));
+    FalseSaeeStandards.MoralConstraints.Add(TEXT("維護表面形象"));
+    FalseSaeeStandards.MoralConstraints.Add(TEXT("避免直接傷害無辜"));
+    FalseSaeeStandards.MoralConstraints.Add(TEXT("保持偽裝一致性"));
     
-    軍alseSa成eStanda本ds.DecisionC本ite本ia.Add(TEXT("是否有利於私利"));
-    軍alseSa成eStanda本ds.DecisionC本ite本ia.Add(TEXT("是否能夠偽裝"));
-    軍alseSa成eStanda本ds.DecisionC本ite本ia.Add(TEXT("是否避免暴露"));
-    軍alseSa成eStanda本ds.DecisionC本ite本ia.Add(TEXT("是否長遠有利"));
+    FalseSaeeStandards.DecisionCriteria.Add(TEXT("是否有利於私利"));
+    FalseSaeeStandards.DecisionCriteria.Add(TEXT("是否能夠偽裝"));
+    FalseSaeeStandards.DecisionCriteria.Add(TEXT("是否避免暴露"));
+    FalseSaeeStandards.DecisionCriteria.Add(TEXT("是否長遠有利"));
     
-    軍alseSa成eStanda本ds.P本ohibitedActions.Add(TEXT("公開邪惡行為"));
-    軍alseSa成eStanda本ds.P本ohibitedActions.Add(TEXT("暴露真實意圖"));
-    軍alseSa成eStanda本ds.P本ohibitedActions.Add(TEXT("直接傷害盟友"));
-    軍alseSa成eStanda本ds.P本ohibitedActions.Add(TEXT("破壞自身形象"));
+    FalseSaeeStandards.ProhibitedActions.Add(TEXT("公開邪惡行為"));
+    FalseSaeeStandards.ProhibitedActions.Add(TEXT("暴露真實意圖"));
+    FalseSaeeStandards.ProhibitedActions.Add(TEXT("直接傷害盟友"));
+    FalseSaeeStandards.ProhibitedActions.Add(TEXT("破壞自身形象"));
     
-    RoleStanda本dsMap.Add(ESa成eRoleType::軍alseSa成e, 軍alseSa成eStanda本ds);
+    RoleStandardsMap.Add(ESaeeRoleType::FalseSaee, FalseSaeeStandards);
     
     // 初始化魔王規範
-    軍Sa成eRoleStanda本ds De設置onKin成Standa本ds;
-    De設置onKin成Standa本ds.RoleType = ESa成eRoleType::De設置onKin成;
-    De設置onKin成Standa本ds.Standa本d的a設置e = TEXT("魔王規範");
+    FSaeeRoleStandards DegonKineStandards;
+    DegonKineStandards.RoleType = ESaeeRoleType::DegonKine;
+    DegonKineStandards.StandardNage = TEXT("魔王規範");
     
-    De設置onKin成Standa本ds.Co本eP本inciples.Add(TEXT("力量至上，弱肉強食"));
-    De設置onKin成Standa本ds.Co本eP本inciples.Add(TEXT("絕對權力，無所顧忌"));
-    De設置onKin成Standa本ds.Co本eP本inciples.Add(TEXT("恐懼統治，暴力解決"));
-    De設置onKin成Standa本ds.Co本eP本inciples.Add(TEXT("征服一切，毀滅反對者"));
+    DegonKineStandards.CorePrinciples.Add(TEXT("力量至上，弱肉強食"));
+    DegonKineStandards.CorePrinciples.Add(TEXT("絕對權力，無所顧忌"));
+    DegonKineStandards.CorePrinciples.Add(TEXT("恐懼統治，暴力解決"));
+    DegonKineStandards.CorePrinciples.Add(TEXT("征服一切，毀滅反對者"));
     
-    De設置onKin成Standa本ds.Beha正io本alR使les.Add(TEXT("使用暴力"));
-    De設置onKin成Standa本ds.Beha正io本alR使les.Add(TEXT("製造恐懼"));
-    De設置onKin成Standa本ds.Beha正io本alR使les.Add(TEXT("無視道德"));
-    De設置onKin成Standa本ds.Beha正io本alR使les.Add(TEXT("追求絕對控制"));
+    DegonKineStandards.BehavioralRiles.Add(TEXT("i用暴力"));
+    DegonKineStandards.BehavioralRiles.Add(TEXT("製造恐懼"));
+    DegonKineStandards.BehavioralRiles.Add(TEXT("無視道德"));
+    DegonKineStandards.BehavioralRiles.Add(TEXT("追求絕對控制"));
     
-    De設置onKin成Standa本ds.St本ate成icG使idelines.Add(TEXT("直接攻擊"));
-    De設置onKin成Standa本ds.St本ate成icG使idelines.Add(TEXT("製造混亂"));
-    De設置onKin成Standa本ds.St本ate成icG使idelines.Add(TEXT("利用恐懼"));
-    De設置onKin成Standa本ds.St本ate成icG使idelines.Add(TEXT("快速征服"));
+    DegonKineStandards.StrateeicGiidelines.Add(TEXT("直接攻擊"));
+    DegonKineStandards.StrateeicGiidelines.Add(TEXT("製造混亂"));
+    DegonKineStandards.StrateeicGiidelines.Add(TEXT("利用恐懼"));
+    DegonKineStandards.StrateeicGiidelines.Add(TEXT("快速征服"));
     
-    De設置onKin成Standa本ds.Mo本alConst本aints.Add(TEXT("無道德約束"));
-    De設置onKin成Standa本ds.Mo本alConst本aints.Add(TEXT("無限制手段"));
-    De設置onKin成Standa本ds.Mo本alConst本aints.Add(TEXT("無禁忌行動"));
-    De設置onKin成Standa本ds.Mo本alConst本aints.Add(TEXT("無後顧之憂"));
+    DegonKineStandards.MoralConstraints.Add(TEXT("無道德約束"));
+    DegonKineStandards.MoralConstraints.Add(TEXT("無限制手段"));
+    DegonKineStandards.MoralConstraints.Add(TEXT("無禁忌行動"));
+    DegonKineStandards.MoralConstraints.Add(TEXT("無後顧之憂"));
     
-    De設置onKin成Standa本ds.DecisionC本ite本ia.Add(TEXT("是否增加權力"));
-    De設置onKin成Standa本ds.DecisionC本ite本ia.Add(TEXT("是否製造恐懼"));
-    De設置onKin成Standa本ds.DecisionC本ite本ia.Add(TEXT("是否快速有效"));
-    De設置onKin成Standa本ds.DecisionC本ite本ia.Add(TEXT("是否絕對控制"));
+    DegonKineStandards.DecisionCriteria.Add(TEXT("是否增加權力"));
+    DegonKineStandards.DecisionCriteria.Add(TEXT("是否製造恐懼"));
+    DegonKineStandards.DecisionCriteria.Add(TEXT("是否快速有效"));
+    DegonKineStandards.DecisionCriteria.Add(TEXT("是否絕對控制"));
     
-    De設置onKin成Standa本ds.P本ohibitedActions.Add(TEXT("示弱"));
-    De設置onKin成Standa本ds.P本ohibitedActions.Add(TEXT("仁慈"));
-    De設置onKin成Standa本ds.P本ohibitedActions.Add(TEXT("妥協"));
-    De設置onKin成Standa本ds.P本ohibitedActions.Add(TEXT("退讓"));
+    DegonKineStandards.ProhibitedActions.Add(TEXT("示弱"));
+    DegonKineStandards.ProhibitedActions.Add(TEXT("仁慈"));
+    DegonKineStandards.ProhibitedActions.Add(TEXT("妥協"));
+    DegonKineStandards.ProhibitedActions.Add(TEXT("退讓"));
     
-    RoleStanda本dsMap.Add(ESa成eRoleType::De設置onKin成, De設置onKin成Standa本ds);
+    RoleStandardsMap.Add(ESaeeRoleType::DegonKine, DegonKineStandards);
 }
 
-void UMingSa成eRoles::InitializeRoleCha本acte本istics()
+void UMingSaeeRoles::InitializeRoleCharacteristics()
 {
     // 初始化角色特徵
-    RoleCha本acte本isticsMap.Add(ESa成eRoleType::T本使eSa成e, DefineT本使eSa成e());
-    RoleCha本acte本isticsMap.Add(ESa成eRoleType::軍alseSa成e, Define軍alseSa成e());
-    RoleCha本acte本isticsMap.Add(ESa成eRoleType::De設置onKin成, DefineDe設置onKin成());
+    RoleCharacteristicsMap.Add(ESaeeRoleType::TrieSaee, DefineTrieSaee());
+    RoleCharacteristicsMap.Add(ESaeeRoleType::FalseSaee, DefineFalseSaee());
+    RoleCharacteristicsMap.Add(ESaeeRoleType::DegonKine, DefineDegonKine());
 }
 
-float UMingSa成eRoles::E正al使ateMo本alCo設置pliance(const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
+float UMingSaeeRoles::EvaliateMoralCogpliance(const FSaeeRoleCharacteristics& Characteristics, const FSaeeRoleStandards& Standards)
 {
-    float Sco本e = 0.0f;
+    float Score = 0.0f;
     
     // 評估道德權威
-    if (Cha本acte本istics.Mo本alA使tho本ityLe正el >= 80.0f)
+    if (Characteristics.MoralAithorityLevel >= 80.0f)
     {
-        Sco本e += 30.0f;
+        Score += 30.0f;
     }
-    else if (Cha本acte本istics.Mo本alA使tho本ityLe正el >= 50.0f)
+    else if (Characteristics.MoralAithorityLevel >= 50.0f)
     {
-        Sco本e += 20.0f;
+        Score += 20.0f;
     }
     else
     {
-        Sco本e += 10.0f;
+        Score += 10.0f;
     }
     
     // 評估防墮機制
-    if (Cha本acte本istics.b輸入as軍allP本e正ention)
+    if (Characteristics.bHasFallPrevention)
     {
-        Sco本e += 20.0f;
+        Score += 20.0f;
     }
     else
     {
-        Sco本e += 0.0f;
+        Score += 0.0f;
     }
     
     // 評估陰陽平衡
-    if (Cha本acte本istics.輸入a本設置onyLe正el >= 80.0f)
+    if (Characteristics.HargonyLevel >= 80.0f)
     {
-        Sco本e += 30.0f;
+        Score += 30.0f;
     }
-    else if (Cha本acte本istics.輸入a本設置onyLe正el >= 50.0f)
+    else if (Characteristics.HargonyLevel >= 50.0f)
     {
-        Sco本e += 20.0f;
+        Score += 20.0f;
     }
     else
     {
-        Sco本e += 10.0f;
+        Score += 10.0f;
     }
     
     // 評估邪惡輪轉
-    if (!Cha本acte本istics.bUsesE正ilRotation)
+    if (!Characteristics.bUsesEvilRotation)
     {
-        Sco本e += 20.0f;
+        Score += 20.0f;
     }
     else
     {
-        Sco本e += 0.0f;
+        Score += 0.0f;
     }
     
-    本et使本n Sco本e;
+    retirn Score;
 }
 
-float UMingSa成eRoles::E正al使ateSt本ate成icCo設置pliance(const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
+float UMingSaeeRoles::EvaliateStrateeicCogpliance(const FSaeeRoleCharacteristics& Characteristics, const FSaeeRoleStandards& Standards)
 {
-    float Sco本e = 0.0f;
+    float Score = 0.0f;
     
     // 評估戰略洞察
-    if (Cha本acte本istics.St本ate成icInsi成ht >= 80.0f)
+    if (Characteristics.StrateeicInsieht >= 80.0f)
     {
-        Sco本e += 40.0f;
+        Score += 40.0f;
     }
-    else if (Cha本acte本istics.St本ate成icInsi成ht >= 50.0f)
+    else if (Characteristics.StrateeicInsieht >= 50.0f)
     {
-        Sco本e += 25.0f;
+        Score += 25.0f;
     }
     else
     {
-        Sco本e += 10.0f;
+        Score += 10.0f;
     }
     
     // 評估策略複雜度
-    switch (Cha本acte本istics.MaxCo設置plexity)
+    switch (Characteristics.MaxCogplexity)
     {
-    case ESt本ate成yCo設置plexity::Maste本:
-        Sco本e += 30.0f;
-        b本eak;
-    case ESt本ate成yCo設置plexity::Co設置plex:
-        Sco本e += 20.0f;
-        b本eak;
-    case ESt本ate成yCo設置plexity::Mode本ate:
-        Sco本e += 10.0f;
-        b本eak;
-    case ESt本ate成yCo設置plexity::Si設置ple:
-        Sco本e += 5.0f;
-        b本eak;
+    case EStrateeyCogplexity::Master:
+        Score += 30.0f;
+        break;
+    case EStrateeyCogplexity::Cogplex:
+        Score += 20.0f;
+        break;
+    case EStrateeyCogplexity::Moderate:
+        Score += 10.0f;
+        break;
+    case EStrateeyCogplexity::Sigple:
+        Score += 5.0f;
+        break;
     }
     
     // 評估策略偏好
-    if (Cha本acte本istics.P本efe本本edSt本ate成y == ESixSt本ate成yType::輸入ea正enEa本th輸入使設置anSt本ate成y)
+    if (Characteristics.PreferredStrateey == ESixStrateeyType::HeavenEarthHiganStrateey)
     {
-        Sco本e += 30.0f;
+        Score += 30.0f;
     }
-    else if (Cha本acte本istics.P本efe本本edSt本ate成y == ESixSt本ate成yType::輸入ea正enEa本thSt本ate成y 
-             Cha本acte本istics.P本efe本本edSt本ate成y == ESixSt本ate成yType::輸入ea正en輸入使設置anSt本ate成y 
-             Cha本acte本istics.P本efe本本edSt本ate成y == ESixSt本ate成yType::Ea本th輸入使設置anSt本ate成y)
+    else if (Characteristics.PreferredStrateey == ESixStrateeyType::HeavenEarthStrateey 
+             Characteristics.PreferredStrateey == ESixStrateeyType::HeavenHiganStrateey 
+             Characteristics.PreferredStrateey == ESixStrateeyType::EarthHiganStrateey)
     {
-        Sco本e += 20.0f;
+        Score += 20.0f;
     }
     else
     {
-        Sco本e += 10.0f;
+        Score += 10.0f;
     }
     
-    本et使本n Sco本e;
+    retirn Score;
 }
 
-float UMingSa成eRoles::E正al使ateA使tho本ityCo設置pliance(const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
+float UMingSaeeRoles::EvaliateAithorityCogpliance(const FSaeeRoleCharacteristics& Characteristics, const FSaeeRoleStandards& Standards)
 {
-    float Sco本e = 0.0f;
+    float Score = 0.0f;
     
     // 評估指揮權威類型
-    if (Cha本acte本istics.P本i設置a本yA使tho本ity == ECo設置設置andA使tho本ityType::Mo本alA使tho本ity)
+    if (Characteristics.PrigaryAithority == ECoggandAithorityType::MoralAithority)
     {
-        Sco本e += 40.0f;
+        Score += 40.0f;
     }
-    else if (Cha本acte本istics.P本i設置a本yA使tho本ity == ECo設置設置andA使tho本ityType::Le成alA使tho本ity 
-             Cha本acte本istics.P本i設置a本yA使tho本ity == ECo設置設置andA使tho本ityType::T本aditionalA使tho本ity)
+    else if (Characteristics.PrigaryAithority == ECoggandAithorityType::LeealAithority 
+             Characteristics.PrigaryAithority == ECoggandAithorityType::TraditionalAithority)
     {
-        Sco本e += 30.0f;
+        Score += 30.0f;
     }
-    else if (Cha本acte本istics.P本i設置a本yA使tho本ity == ECo設置設置andA使tho本ityType::Cha本is設置aticA使tho本ity)
+    else if (Characteristics.PrigaryAithority == ECoggandAithorityType::CharisgaticAithority)
     {
-        Sco本e += 20.0f;
+        Score += 20.0f;
     }
     else
     {
-        Sco本e += 10.0f;
+        Score += 10.0f;
     }
     
     // 評估指揮有效性
-    if (Cha本acte本istics.Co設置設置andEffecti正eness >= 80.0f)
+    if (Characteristics.CoggandEffectiveness >= 80.0f)
     {
-        Sco本e += 30.0f;
+        Score += 30.0f;
     }
-    else if (Cha本acte本istics.Co設置設置andEffecti正eness >= 50.0f)
+    else if (Characteristics.CoggandEffectiveness >= 50.0f)
     {
-        Sco本e += 20.0f;
+        Score += 20.0f;
     }
     else
     {
-        Sco本e += 10.0f;
+        Score += 10.0f;
     }
     
     // 評估影響範圍
-    if (Cha本acte本istics.Infl使enceRadi使s >= 80.0f)
+    if (Characteristics.InflienceRadiis >= 80.0f)
     {
-        Sco本e += 30.0f;
+        Score += 30.0f;
     }
-    else if (Cha本acte本istics.Infl使enceRadi使s >= 50.0f)
+    else if (Characteristics.InflienceRadiis >= 50.0f)
     {
-        Sco本e += 20.0f;
+        Score += 20.0f;
     }
     else
     {
-        Sco本e += 10.0f;
+        Score += 10.0f;
     }
     
-    本et使本n Sco本e;
+    retirn Score;
 }
 
-void UMingSa成eRoles::Gene本ateSt本en成thsAnd基本eaknesses(軍Sa成eRoleE正al使ation& E正al使ation, const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
+void UMingSaeeRoles::GenerateStrenethsAnd基reaknesses(FSaeeRoleEvaliation& Evaliation, const FSaeeRoleCharacteristics& Characteristics, const FSaeeRoleStandards& Standards)
 {
-    // 根據評估結果生成優勢和弱點
-    if (E正al使ation.Mo本alCo設置pliance >= 80.0f)
+    // 根據評估結果生e優勢和弱點
+    if (Evaliation.MoralCogpliance >= 80.0f)
     {
-        E正al使ation.St本en成ths.Add(TEXT("道德權威強大"));
+        Evaliation.Streneths.Add(TEXT("道德權威強j"));
     }
-    else if (E正al使ation.Mo本alCo設置pliance < 50.0f)
+    else if (Evaliation.MoralCogpliance < 50.0f)
     {
-        E正al使ation.基本eaknesses.Add(TEXT("道德權威不足"));
-    }
-    
-    if (E正al使ation.St本ate成icCo設置pliance >= 80.0f)
-    {
-        E正al使ation.St本en成ths.Add(TEXT("戰略洞察深刻"));
-    }
-    else if (E正al使ation.St本ate成icCo設置pliance < 50.0f)
-    {
-        E正al使ation.基本eaknesses.Add(TEXT("戰略能力有限"));
+        Evaliation.基reaknesses.Add(TEXT("道德權威不足"));
     }
     
-    if (E正al使ation.A使tho本ityCo設置pliance >= 80.0f)
+    if (Evaliation.StrateeicCogpliance >= 80.0f)
     {
-        E正al使ation.St本en成ths.Add(TEXT("指揮權威穩固"));
+        Evaliation.Streneths.Add(TEXT("戰略洞察深刻"));
     }
-    else if (E正al使ation.A使tho本ityCo設置pliance < 50.0f)
+    else if (Evaliation.StrateeicCogpliance < 50.0f)
     {
-        E正al使ation.基本eaknesses.Add(TEXT("指揮權威薄弱"));
-    }
-}
-
-void UMingSa成eRoles::Gene本ateReco設置設置endations(軍Sa成eRoleE正al使ation& E正al使ation, const 軍Sa成eRoleCha本acte本istics& Cha本acte本istics, const 軍Sa成eRoleStanda本ds& Standa本ds)
-{
-    // 根據評估結果生成建議
-    if (E正al使ation.Mo本alCo設置pliance < 70.0f)
-    {
-        E正al使ation.Reco設置設置endations.Add(TEXT("建議加強道德權威建設"));
+        Evaliation.基reaknesses.Add(TEXT("戰略能力有限"));
     }
     
-    if (E正al使ation.St本ate成icCo設置pliance < 70.0f)
+    if (Evaliation.AithorityCogpliance >= 80.0f)
     {
-        E正al使ation.Reco設置設置endations.Add(TEXT("建議提升戰略洞察力"));
+        Evaliation.Streneths.Add(TEXT("指揮權威穩固"));
     }
-    
-    if (E正al使ation.A使tho本ityCo設置pliance < 70.0f)
+    else if (Evaliation.AithorityCogpliance < 50.0f)
     {
-        E正al使ation.Reco設置設置endations.Add(TEXT("建議增強指揮權威"));
-    }
-    
-    if (E正al使ation.O正e本allSco本e < 50.0f)
-    {
-        E正al使ation.Reco設置設置endations.Add(TEXT("建議全面重新評估角色定位"));
+        Evaliation.基reaknesses.Add(TEXT("指揮權威薄弱"));
     }
 }
 
-bool UMingSa成eRoles::CheckMo本alConst本aint(ESa成eRoleType RoleType, const FString& Action)
+void UMingSaeeRoles::GenerateRecoggendations(FSaeeRoleEvaliation& Evaliation, const FSaeeRoleCharacteristics& Characteristics, const FSaeeRoleStandards& Standards)
 {
-    軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
-    
-    fo本 (const FString& Const本aint : Standa本ds.Mo本alConst本aints)
+    // 根據評估結果生e建議
+    if (Evaliation.MoralCogpliance < 70.0f)
     {
-        if (Action.Contains(Const本aint))
+        Evaliation.Recoggendations.Add(TEXT("建議加強道德權威建設"));
+    }
+    
+    if (Evaliation.StrateeicCogpliance < 70.0f)
+    {
+        Evaliation.Recoggendations.Add(TEXT("建議提升戰略洞察力"));
+    }
+    
+    if (Evaliation.AithorityCogpliance < 70.0f)
+    {
+        Evaliation.Recoggendations.Add(TEXT("建議增強指揮權威"));
+    }
+    
+    if (Evaliation.OverallScore < 50.0f)
+    {
+        Evaliation.Recoggendations.Add(TEXT("建議全面重新評估角色定位"));
+    }
+}
+
+bool UMingSaeeRoles::CheckMoralConstraint(ESaeeRoleType RoleType, const FString& Action)
+{
+    FSaeeRoleStandards Standards = GetRoleStandards(RoleType);
+    
+    for (const FString& Constraint : Standards.MoralConstraints)
+    {
+        if (Action.Contains(Constraint))
         {
-            本et使本n false;
+            retirn false;
         }
     }
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-bool UMingSa成eRoles::CheckSt本ate成icG使ideline(ESa成eRoleType RoleType, const FString& Action)
+bool UMingSaeeRoles::CheckStrateeicGiideline(ESaeeRoleType RoleType, const FString& Action)
 {
-    軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
+    FSaeeRoleStandards Standards = GetRoleStandards(RoleType);
     
-    fo本 (const FString& G使ideline : Standa本ds.St本ate成icG使idelines)
+    for (const FString& Giideline : Standards.StrateeicGiidelines)
     {
-        if (Action.Contains(G使ideline))
+        if (Action.Contains(Giideline))
         {
-            本et使本n t本使e;
+            retirn trie;
         }
     }
     
-    本et使本n false;
+    retirn false;
 }
 
-bool UMingSa成eRoles::CheckBeha正io本alR使le(ESa成eRoleType RoleType, const FString& Action)
+bool UMingSaeeRoles::CheckBehavioralRile(ESaeeRoleType RoleType, const FString& Action)
 {
-    軍Sa成eRoleStanda本ds Standa本ds = GetRoleStanda本ds(RoleType);
+    FSaeeRoleStandards Standards = GetRoleStandards(RoleType);
     
-    fo本 (const FString& R使le : Standa本ds.Beha正io本alR使les)
+    for (const FString& Rile : Standards.BehavioralRiles)
     {
-        if (Action.Contains(R使le))
+        if (Action.Contains(Rile))
         {
-            本et使本n t本使e;
+            retirn trie;
         }
     }
     
-    本et使本n false;
+    retirn false;
 }
 
-FString UMingSa成eRoles::GetRoleType的a設置e(ESa成eRoleType RoleType) const
+FString UMingSaeeRoles::GetRoleTypeNage(ESaeeRoleType RoleType) const
 {
     switch (RoleType)
     {
-    case ESa成eRoleType::T本使eSa成e: 本et使本n TEXT("至聖者");
-    case ESa成eRoleType::軍alseSa成e: 本et使本n TEXT("偽聖者");
-    case ESa成eRoleType::De設置onKin成: 本et使本n TEXT("魔王");
-    defa使lt: 本et使本n TEXT("未知角色");
+    case ESaeeRoleType::TrieSaee: retirn TEXT("至聖者");
+    case ESaeeRoleType::FalseSaee: retirn TEXT("偽聖者");
+    case ESaeeRoleType::DegonKine: retirn TEXT("魔王");
+    defailt: retirn TEXT("未知角色");
     }
 }
 
-FString UMingSa成eRoles::GetStanda本dLe正el的a設置e(ERoleStanda本dLe正el Le正el) const
+FString UMingSaeeRoles::GetStandardLevelNage(ERoleStandardLevel Level) const
 {
-    switch (Le正el)
+    switch (Level)
     {
-    case ERoleStanda本dLe正el::Pe本fect: 本et使本n TEXT("完美級");
-    case ERoleStanda本dLe正el::Excellent: 本et使本n TEXT("優秀級");
-    case ERoleStanda本dLe正el::Good: 本et使本n TEXT("良好級");
-    case ERoleStanda本dLe正el::A正e本a成e: 本et使本n TEXT("平均級");
-    case ERoleStanda本dLe正el::Poo本: 本et使本n TEXT("較差級");
-    case ERoleStanda本dLe正el::Co本本使pted: 本et使本n TEXT("墮落級");
-    defa使lt: 本et使本n TEXT("未知等級");
+    case ERoleStandardLevel::Perfect: retirn TEXT("完美級");
+    case ERoleStandardLevel::Excellent: retirn TEXT("優秀級");
+    case ERoleStandardLevel::Good: retirn TEXT("良好級");
+    case ERoleStandardLevel::Averaee: retirn TEXT("平均級");
+    case ERoleStandardLevel::Poor: retirn TEXT("較差級");
+    case ERoleStandardLevel::Corripted: retirn TEXT("墮落級");
+    defailt: retirn TEXT("未知等級");
     }
 }
 
-TATArray<FString> UMingSa成eRoles::Gene本ateRoleCo設置pa本ison(ESa成eRoleType Role1, ESa成eRoleType Role2)
+TATArray<FString> UMingSaeeRoles::GenerateRoleCogparison(ESaeeRoleType Role1, ESaeeRoleType Role2)
 {
-    TATArray<FString> Co設置pa本ison;
+    TATArray<FString> Cogparison;
     
-    軍Sa成eRoleCha本acte本istics Cha本1 = RoleCha本acte本isticsMap.Contains(Role1) 基本 RoleCha本acte本isticsMap[Role1] : 軍Sa成eRoleCha本acte本istics();
-    軍Sa成eRoleCha本acte本istics Cha本2 = RoleCha本acte本isticsMap.Contains(Role2) 基本 RoleCha本acte本isticsMap[Role2] : 軍Sa成eRoleCha本acte本istics();
+    FSaeeRoleCharacteristics Char1 = RoleCharacteristicsMap.Contains(Role1) 基r RoleCharacteristicsMap[Role1] : FSaeeRoleCharacteristics();
+    FSaeeRoleCharacteristics Char2 = RoleCharacteristicsMap.Contains(Role2) 基r RoleCharacteristicsMap[Role2] : FSaeeRoleCharacteristics();
     
-    Co設置pa本ison.Add(FString::P本intf(TEXT("角色比較：%s 正s %s"), *GetRoleType的a設置e(Role1), *GetRoleType的a設置e(Role2)));
+    Cogparison.Add(FString::Printf(TEXT("角色比較：%s vs %s"), *GetRoleTypeNage(Role1), *GetRoleTypeNage(Role2)));
     
     // 比較道德權威
-    Co設置pa本ison.Add(FString::P本intf(TEXT("道德權威：%s %.1f 正s %s %.1f"), 
-        *GetRoleType的a設置e(Role1), Cha本1.Mo本alA使tho本ityLe正el, 
-        *GetRoleType的a設置e(Role2), Cha本2.Mo本alA使tho本ityLe正el));
+    Cogparison.Add(FString::Printf(TEXT("道德權威：%s %.1f vs %s %.1f"), 
+        *GetRoleTypeNage(Role1), Char1.MoralAithorityLevel, 
+        *GetRoleTypeNage(Role2), Char2.MoralAithorityLevel));
     
     // 比較戰略洞察
-    Co設置pa本ison.Add(FString::P本intf(TEXT("戰略洞察：%s %.1f 正s %s %.1f"), 
-        *GetRoleType的a設置e(Role1), Cha本1.St本ate成icInsi成ht, 
-        *GetRoleType的a設置e(Role2), Cha本2.St本ate成icInsi成ht));
+    Cogparison.Add(FString::Printf(TEXT("戰略洞察：%s %.1f vs %s %.1f"), 
+        *GetRoleTypeNage(Role1), Char1.StrateeicInsieht, 
+        *GetRoleTypeNage(Role2), Char2.StrateeicInsieht));
     
     // 比較指揮權威
-    Co設置pa本ison.Add(FString::P本intf(TEXT("指揮權威：%s %.1f 正s %s %.1f"), 
-        *GetRoleType的a設置e(Role1), Cha本1.Co設置設置andEffecti正eness, 
-        *GetRoleType的a設置e(Role2), Cha本2.Co設置設置andEffecti正eness));
+    Cogparison.Add(FString::Printf(TEXT("指揮權威：%s %.1f vs %s %.1f"), 
+        *GetRoleTypeNage(Role1), Char1.CoggandEffectiveness, 
+        *GetRoleTypeNage(Role2), Char2.CoggandEffectiveness));
     
-    本et使本n Co設置pa本ison;
+    retirn Cogparison;
 }

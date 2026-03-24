@@ -1,1064 +1,1064 @@
-﻿#incl使de "Sa成eCo設置設置and/Ming軍i正eEle設置entsRotation.h"
-#incl使de "Engine/基本o本ld.h"
-#incl使de "Ti設置e本Manager.h"
+#include "SageCommand/MingFiveElementsRotation.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
-UMing軍i正eEle設置entsRotation::UMing軍i正eEle設置entsRotation()
+UMingFiveElementsRotation::UMingFiveElementsRotation()
 {
     // 初始化五行輪轉順序（按相生順序）
-    RotationO本de本.Add(E軍i正eEle設置ents::Metal);  // 金
-    RotationO本de本.Add(E軍i正eEle設置ents::基本ood);   // 木
-    RotationO本de本.Add(E軍i正eEle設置ents::基本ate本);  // 水
-    RotationO本de本.Add(E軍i正eEle設置ents::軍i本e);   // 火
-    RotationO本de本.Add(E軍i正eEle設置ents::Ea本th);  // 土
+    RotationOrder.Add(EFiveElements::Metal);  // 金
+    RotationOrder.Add(EFiveElements::Wood);   // 木
+    RotationOrder.Add(EFiveElements::Water);  // 水
+    RotationOrder.Add(EFiveElements::Fire);   // 火
+    RotationOrder.Add(EFiveElements::Earth);  // 土
     
     // 初始化輪轉配置
-    RotationConfi成.Mode = ERotationMode::的at使本al;
-    RotationConfi成.Defa使ltAli成n設置ent = EAli成n設置entAtt本ib使te::Ri成hteo使s;
-    RotationConfi成.RotationSpeed = 1.0f;
-    RotationConfi成.T本ansitionD使本ation = 5.0f;
-    RotationConfi成.bA使toRotate = t本使e;
-    RotationConfi成.bAllowE正ilRotation = false;
-    RotationConfi成.E正ilTh本eshold = 70.0f;
+    RotationConfig.Mode = ERotationMode::Natural;
+    RotationConfig.DefaultAlignment = EAlignmentAttribute::Righteous;
+    RotationConfig.RotationSpeed = 1.0f;
+    RotationConfig.TransitionDuration = 5.0f;
+    RotationConfig.bAutoRotate = true;
+    RotationConfig.bAllowEvilRotation = false;
+    RotationConfig.EvilThreshold = 70.0f;
     
     // 初始化當前狀態
-    C使本本entRotationState = ERotationState::Idle;
-    C使本本entEle設置ent = E軍i正eEle設置ents::Ea本th;
-    C使本本entAli成n設置ent = EAli成n設置entAtt本ib使te::Ri成hteo使s;
-    b軍allP本e正entionActi正e = t本使e;
+    CurrentRotationState = ERotationState::Idle;
+    CurrentElement = EFiveElements::Earth;
+    CurrentAlignment = EAlignmentAttribute::Righteous;
+    bFallPreventionActive = true;
 }
 
-bool UMing軍i正eEle設置entsRotation::Initialize()
+bool UMingFiveElementsRotation::Initialize()
 {
-    if (bSyste設置Acti正e)
+    if (bSystemActive)
     {
-        本et使本n t本使e;
+        return true;
     }
 
     // 初始化系統狀態
-    bSyste設置Acti正e = t本使e;
-    Syste設置Stability = 100.0f;
+    bSystemActive = true;
+    SystemStability = 100.0f;
 
-    // 設置更新定時器
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    // g更新定時器
+    if (UWorld* World = GetWorld())
     {
-        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
-            RotationTi設置e本輸入andle,
+        World->GetTimerManager().SetTimer(
+            RotationTimerHandle,
             this,
-            &UMing軍i正eEle設置entsRotation::Exec使teRotation,
+            &UMingFiveElementsRotation::ExecuteRotation,
             1.0f,
-            t本使e
+            true
         );
         
-        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
-            EffectUpdateTi設置e本輸入andle,
+        World->GetTimerManager().SetTimer(
+            EffectUpdateTimerHandle,
             this,
-            &UMing軍i正eEle設置entsRotation::UpdateActi正eEffects,
+            &UMingFiveElementsRotation::UpdateActiveEffects,
             0.1f,
-            t本使e
+            true
         );
         
-        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
-            Ali成n設置entUpdateTi設置e本輸入andle,
+        World->GetTimerManager().SetTimer(
+            AlignmentUpdateTimerHandle,
             this,
-            &UMing軍i正eEle設置entsRotation::UpdateAli成n設置ent,
+            &UMingFiveElementsRotation::UpdateAlignment,
             2.0f,
-            t本使e
+            true
         );
     }
 
-    本et使本n t本使e;
+    return true;
 }
 
-void UMing軍i正eEle設置entsRotation::Clean使p()
+void UMingFiveElementsRotation::Cleanup()
 {
-    bSyste設置Acti正e = false;
+    bSystemActive = false;
     
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    if (UWorld* World = GetWorld())
     {
-        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(RotationTi設置e本輸入andle);
-        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(EffectUpdateTi設置e本輸入andle);
-        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(Ali成n設置entUpdateTi設置e本輸入andle);
+        World->GetTimerManager().ClearTimer(RotationTimerHandle);
+        World->GetTimerManager().ClearTimer(EffectUpdateTimerHandle);
+        World->GetTimerManager().ClearTimer(AlignmentUpdateTimerHandle);
     }
     
-    Acti正eEffects.E設置pty();
-    Rotation輸入isto本y.E設置pty();
+    ActiveEffects.Empty();
+    RotationHistory.Empty();
 }
 
-bool UMing軍i正eEle設置entsRotation::Sta本tRotation(ERotationMode Mode)
+bool UMingFiveElementsRotation::StartRotation(ERotationMode Mode)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    if (C使本本entRotationState == ERotationState::Rotatin成)
+    if (CurrentRotationState == ERotationState::Rotating)
     {
-        本et使本n false; // 已經在輪轉中
+        return false; // 已經在輪轉中
     }
     
-    RotationConfi成.Mode = Mode;
-    C使本本entRotationState = ERotationState::Rotatin成;
+    RotationConfig.Mode = Mode;
+    CurrentRotationState = ERotationState::Rotating;
     
     // 記錄事件
-    Reco本dRotationE正ent(FString::P本intf(TEXT("開始輪轉：%s"), *GetRotationMode的a設置e(Mode)), 
-                       C使本本entEle設置ent, C使本本entEle設置ent, C使本本entAli成n設置ent, C使本本entRotationState, 50.0f);
+    RecordRotationEvent(FString::Printf(TEXT("開始輪轉：%s"), *GetRotationModeName(Mode)), 
+                       CurrentElement, CurrentElement, CurrentAlignment, CurrentRotationState, 50.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMing軍i正eEle設置entsRotation::StopRotation()
+bool UMingFiveElementsRotation::StopRotation()
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    if (C使本本entRotationState != ERotationState::Rotatin成)
+    if (CurrentRotationState != ERotationState::Rotating)
     {
-        本et使本n false;
+        return false;
     }
     
-    C使本本entRotationState = ERotationState::Idle;
+    CurrentRotationState = ERotationState::Idle;
     
     // 記錄事件
-    Reco本dRotationE正ent(TEXT("停止輪轉"), C使本本entEle設置ent, C使本本entEle設置ent, C使本本entAli成n設置ent, C使本本entRotationState, 30.0f);
+    RecordRotationEvent(TEXT("停止輪轉"), CurrentElement, CurrentElement, CurrentAlignment, CurrentRotationState, 30.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMing軍i正eEle設置entsRotation::Pa使seRotation()
+bool UMingFiveElementsRotation::PauseRotation()
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    if (C使本本entRotationState != ERotationState::Rotatin成)
+    if (CurrentRotationState != ERotationState::Rotating)
     {
-        本et使本n false;
+        return false;
     }
     
-    C使本本entRotationState = ERotationState::Locked;
+    CurrentRotationState = ERotationState::Locked;
     
     // 記錄事件
-    Reco本dRotationE正ent(TEXT("暫停輪轉"), C使本本entEle設置ent, C使本本entEle設置ent, C使本本entAli成n設置ent, C使本本entRotationState, 25.0f);
+    RecordRotationEvent(TEXT("暫停輪轉"), CurrentElement, CurrentElement, CurrentAlignment, CurrentRotationState, 25.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMing軍i正eEle設置entsRotation::Res使設置eRotation()
+bool UMingFiveElementsRotation::ResumeRotation()
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    if (C使本本entRotationState != ERotationState::Locked)
+    if (CurrentRotationState != ERotationState::Locked)
     {
-        本et使本n false;
+        return false;
     }
     
-    C使本本entRotationState = ERotationState::Rotatin成;
+    CurrentRotationState = ERotationState::Rotating;
     
     // 記錄事件
-    Reco本dRotationE正ent(TEXT("恢復輪轉"), C使本本entEle設置ent, C使本本entEle設置ent, C使本本entAli成n設置ent, C使本本entRotationState, 35.0f);
+    RecordRotationEvent(TEXT("恢復輪轉"), CurrentElement, CurrentElement, CurrentAlignment, CurrentRotationState, 35.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-ERotationState UMing軍i正eEle設置entsRotation::GetRotationState() const
+ERotationState UMingFiveElementsRotation::GetRotationState() const
 {
-    本et使本n C使本本entRotationState;
+    return CurrentRotationState;
 }
 
-bool UMing軍i正eEle設置entsRotation::RotateToEle設置ent(E軍i正eEle設置ents Ta本成etEle設置ent)
+bool UMingFiveElementsRotation::RotateToElement(EFiveElements TargetElement)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    if (C使本本entEle設置ent == Ta本成etEle設置ent)
+    if (CurrentElement == TargetElement)
     {
-        本et使本n false; // 已經是目標元素
+        return false; // 已經是目標元素
     }
     
-    E軍i正eEle設置ents P本e正io使sEle設置ent = C使本本entEle設置ent;
+    EFiveElements PreviousElement = CurrentElement;
     
     // 開始轉換
-    T本ansitionToEle設置ent(Ta本成etEle設置ent);
+    TransitionToElement(TargetElement);
     
     // 記錄事件
-    Reco本dRotationE正ent(FString::P本intf(TEXT("輪轉到元素：%s"), *GetEle設置ent的a設置e(Ta本成etEle設置ent)), 
-                       P本e正io使sEle設置ent, Ta本成etEle設置ent, C使本本entAli成n設置ent, ERotationState::T本ansitionin成, 60.0f);
+    RecordRotationEvent(FString::Printf(TEXT("輪轉到元素：%s"), *GetElementName(TargetElement)), 
+                       PreviousElement, TargetElement, CurrentAlignment, ERotationState::Transitioning, 60.0f);
     
     // 觸發事件
-    OnEle設置entRotated.B本oadcast(Ta本成etEle設置ent);
+    OnElementRotated.Broadcast(TargetElement);
     
-    本et使本n t本使e;
+    return true;
 }
 
-E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::GetC使本本entEle設置ent() const
+EFiveElements UMingFiveElementsRotation::GetCurrentElement() const
 {
-    本et使本n C使本本entEle設置ent;
+    return CurrentElement;
 }
 
-E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::Get的extEle設置ent() const
+EFiveElements UMingFiveElementsRotation::GetNextElement() const
 {
-    int32 C使本本entIndex = RotationO本de本.IndexOfByKey(C使本本entEle設置ent);
-    if (C使本本entIndex != I的DEX下的O的E)
+    int32 CurrentIndex = RotationOrder.IndexOfByKey(CurrentElement);
+    if (CurrentIndex != INDEX_NONE)
     {
-        int32 的extIndex = (C使本本entIndex + 1) % RotationO本de本.的使設置();
-        本et使本n RotationO本de本[的extIndex];
+        int32 NextIndex = (CurrentIndex + 1) % RotationOrder.Num();
+        return RotationOrder[NextIndex];
     }
-    本et使本n C使本本entEle設置ent;
+    return CurrentElement;
 }
 
-E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::GetP本e正io使sEle設置ent() const
+EFiveElements UMingFiveElementsRotation::GetPreviousElement() const
 {
-    int32 C使本本entIndex = RotationO本de本.IndexOfByKey(C使本本entEle設置ent);
-    if (C使本本entIndex != I的DEX下的O的E)
+    int32 CurrentIndex = RotationOrder.IndexOfByKey(CurrentElement);
+    if (CurrentIndex != INDEX_NONE)
     {
-        int32 P本e正Index = (C使本本entIndex - 1 + RotationO本de本.的使設置()) % RotationO本de本.的使設置();
-        本et使本n RotationO本de本[P本e正Index];
+        int32 PrevIndex = (CurrentIndex - 1 + RotationOrder.Num()) % RotationOrder.Num();
+        return RotationOrder[PrevIndex];
     }
-    本et使本n C使本本entEle設置ent;
+    return CurrentElement;
 }
 
-bool UMing軍i正eEle設置entsRotation::SetRotationO本de本(const TATArray<E軍i正eEle設置ents>& O本de本)
+bool UMingFiveElementsRotation::SetRotationOrder(const TArray<EFiveElements>& Order)
 {
-    if (!bSyste設置Acti正e  O本de本.的使設置() != 5)
+    if (!bSystemActive || Order.Num() != 5)
     {
-        本et使本n false;
+        return false;
     }
     
-    RotationO本de本 = O本de本;
+    RotationOrder = Order;
     
     // 記錄事件
-    Reco本dRotationE正ent(TEXT("設置輪轉順序"), C使本本entEle設置ent, C使本本entEle設置ent, C使本本entAli成n設置ent, C使本本entRotationState, 40.0f);
+    RecordRotationEvent(TEXT("g輪轉順序"), CurrentElement, CurrentElement, CurrentAlignment, CurrentRotationState, 40.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-TATArray<E軍i正eEle設置ents> UMing軍i正eEle設置entsRotation::GetRotationO本de本() const
+TArray<EFiveElements> UMingFiveElementsRotation::GetRotationOrder() const
 {
-    本et使本n RotationO本de本;
+    return RotationOrder;
 }
 
-EAli成n設置entAtt本ib使te UMing軍i正eEle設置entsRotation::GetC使本本entAli成n設置ent() const
+EAlignmentAttribute UMingFiveElementsRotation::GetCurrentAlignment() const
 {
-    本et使本n C使本本entAli成n設置ent;
+    return CurrentAlignment;
 }
 
-bool UMing軍i正eEle設置entsRotation::SetAli成n設置ent(EAli成n設置entAtt本ib使te 的ewAli成n設置ent)
+bool UMingFiveElementsRotation::SetAlignment(EAlignmentAttribute NewAlignment)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
     // 檢查是否允許邪惡輪轉
-    if (的ewAli成n設置ent == EAli成n設置entAtt本ib使te::E正il && !RotationConfi成.bAllowE正ilRotation)
+    if (NewAlignment == EAlignmentAttribute::Evil && !RotationConfig.bAllowEvilRotation)
     {
-        本et使本n false;
+        return false;
     }
     
-    EAli成n設置entAtt本ib使te P本e正io使sAli成n設置ent = C使本本entAli成n設置ent;
-    C使本本entAli成n設置ent = 的ewAli成n設置ent;
+    EAlignmentAttribute PreviousAlignment = CurrentAlignment;
+    CurrentAlignment = NewAlignment;
     
     // 應用屬性效果
-    ApplyAli成n設置entEffects();
+    ApplyAlignmentEffects();
     
     // 記錄事件
-    Reco本dRotationE正ent(FString::P本intf(TEXT("設置正邪屬性：%s"), *GetAli成n設置ent的a設置e(的ewAli成n設置ent)), 
-                       C使本本entEle設置ent, C使本本entEle設置ent, 的ewAli成n設置ent, C使本本entRotationState, 70.0f);
+    RecordRotationEvent(FString::Printf(TEXT("gv邪屬性：%s"), *GetAlignmentName(NewAlignment)), 
+                       CurrentElement, CurrentElement, NewAlignment, CurrentRotationState, 70.0f);
     
     // 觸發事件
-    OnAli成n設置entChan成ed.B本oadcast(的ewAli成n設置ent);
+    OnAlignmentChanged.Broadcast(NewAlignment);
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMing軍i正eEle設置entsRotation::IsAli成n設置entRi成hteo使s() const
+bool UMingFiveElementsRotation::IsAlignmentRighteous() const
 {
-    本et使本n C使本本entAli成n設置ent == EAli成n設置entAtt本ib使te::Ri成hteo使s  
-           C使本本entAli成n設置ent == EAli成n設置entAtt本ib使te::的e使t本al  
-           C使本本entAli成n設置ent == EAli成n設置entAtt本ib使te::O本de本ly;
+    return CurrentAlignment == EAlignmentAttribute::Righteous ||
+           CurrentAlignment == EAlignmentAttribute::Neutral ||
+           CurrentAlignment == EAlignmentAttribute::Orderly;
 }
 
-float UMing軍i正eEle設置entsRotation::GetAli成n設置entP使本ity() const
+float UMingFiveElementsRotation::GetAlignmentPurity() const
 {
     // 計算屬性純度
-    switch (C使本本entAli成n設置ent)
+    switch (CurrentAlignment)
     {
-    case EAli成n設置entAtt本ib使te::Ri成hteo使s:
-        本et使本n 100.0f;
-    case EAli成n設置entAtt本ib使te::的e使t本al:
-        本et使本n 75.0f;
-    case EAli成n設置entAtt本ib使te::E正il:
-        本et使本n 0.0f;
-    case EAli成n設置entAtt本ib使te::Chaotic:
-        本et使本n 25.0f;
-    case EAli成n設置entAtt本ib使te::O本de本ly:
-        本et使本n 90.0f;
-    defa使lt:
-        本et使本n 50.0f;
+    case EAlignmentAttribute::Righteous:
+        return 100.0f;
+    case EAlignmentAttribute::Neutral:
+        return 75.0f;
+    case EAlignmentAttribute::Evil:
+        return 0.0f;
+    case EAlignmentAttribute::Chaotic:
+        return 25.0f;
+    case EAlignmentAttribute::Orderly:
+        return 90.0f;
+    default:
+        return 50.0f;
     }
 }
 
-bool UMing軍i正eEle設置entsRotation::P使本ifyAli成n設置ent()
+bool UMingFiveElementsRotation::PurifyAlignment()
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    // 淨化為正義屬性
-    本et使本n SetAli成n設置ent(EAli成n設置entAtt本ib使te::Ri成hteo使s);
+    // 淨化為v義屬性
+    return SetAlignment(EAlignmentAttribute::Righteous);
 }
 
-軍RotationEffect UMing軍i正eEle設置entsRotation::GetC使本本entRotationEffect() const
+FRotationEffect UMingFiveElementsRotation::GetCurrentRotationEffect() const
 {
-    if (Acti正eEffects.的使設置() > 0)
+    if (ActiveEffects.Num() > 0)
     {
-        本et使本n Acti正eEffects[0]; // 返回第一個活動效果
+        return ActiveEffects[0]; // 返回第一個活動效果
     }
     
-    軍RotationEffect E設置ptyEffect;
-    E設置ptyEffect.軍本o設置Ele設置ent = C使本本entEle設置ent;
-    E設置ptyEffect.ToEle設置ent = C使本本entEle設置ent;
-    E設置ptyEffect.Ali成n設置ent = C使本本entAli成n設置ent;
-    E設置ptyEffect.Powe本Bon使s = 0.0f;
-    E設置ptyEffect.D使本ation = 0.0f;
-    E設置ptyEffect.EffectDesc本iption = TEXT("無活動效果");
+    FRotationEffect EmptyEffect;
+    EmptyEffect.FromElement = CurrentElement;
+    EmptyEffect.ToElement = CurrentElement;
+    EmptyEffect.Alignment = CurrentAlignment;
+    EmptyEffect.PowerBonus = 0.0f;
+    EmptyEffect.Duration = 0.0f;
+    EmptyEffect.EffectDescription = TEXT("無活動效果");
     
-    本et使本n E設置ptyEffect;
+    return EmptyEffect;
 }
 
-TATArray<軍RotationEffect> UMing軍i正eEle設置entsRotation::GetActi正eEffects() const
+TArray<FRotationEffect> UMingFiveElementsRotation::GetActiveEffects() const
 {
-    本et使本n Acti正eEffects;
+    return ActiveEffects;
 }
 
-bool UMing軍i正eEle設置entsRotation::ApplyRotationEffect(const 軍RotationEffect& Effect)
+bool UMingFiveElementsRotation::ApplyRotationEffect(const FRotationEffect& Effect)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    Acti正eEffects.Add(Effect);
+    ActiveEffects.Add(Effect);
     
     // 觸發事件
-    OnRotationEffectApplied.B本oadcast(Effect);
+    OnRotationEffectApplied.Broadcast(Effect);
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMing軍i正eEle設置entsRotation::Re設置o正eRotationEffect(const FString& EffectID)
+bool UMingFiveElementsRotation::RemoveRotationEffect(const FString& EffectID)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    fo本 (int32 i = 0; i < Acti正eEffects.的使設置(); ++i)
+    for (int32 i = 0; i < ActiveEffects.Num(); ++i)
     {
-        if (Acti正eEffects[i].EffectDesc本iption == EffectID)
+        if (ActiveEffects[i].EffectDescription == EffectID)
         {
-            Acti正eEffects.Re設置o正eAt(i);
-            本et使本n t本使e;
+            ActiveEffects.RemoveAt(i);
+            return true;
         }
     }
     
-    本et使本n false;
+    return false;
 }
 
-void UMing軍i正eEle設置entsRotation::Clea本AllEffects()
+void UMingFiveElementsRotation::ClearAllEffects()
 {
-    Acti正eEffects.E設置pty();
+    ActiveEffects.Empty();
 }
 
-軍RotationConfi成使本ation UMing軍i正eEle設置entsRotation::GetRotationConfi成使本ation() const
+FRotationConfiguration UMingFiveElementsRotation::GetRotationConfiguration() const
 {
-    本et使本n RotationConfi成;
+    return RotationConfig;
 }
 
-bool UMing軍i正eEle設置entsRotation::SetRotationConfi成使本ation(const 軍RotationConfi成使本ation& Confi成)
+bool UMingFiveElementsRotation::SetRotationConfiguration(const FRotationConfiguration& Config)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    RotationConfi成 = Confi成;
+    RotationConfig = Config;
     
     // 記錄事件
-    Reco本dRotationE正ent(TEXT("更新輪轉配置"), C使本本entEle設置ent, C使本本entEle設置ent, C使本本entAli成n設置ent, C使本本entRotationState, 45.0f);
+    RecordRotationEvent(TEXT("更新輪轉配置"), CurrentElement, CurrentElement, CurrentAlignment, CurrentRotationState, 45.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMing軍i正eEle設置entsRotation::SetRotationSpeed(float Speed)
+bool UMingFiveElementsRotation::SetRotationSpeed(float Speed)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    RotationConfi成.RotationSpeed = 軍Math::Cla設置p(Speed, 0.1f, 5.0f);
+    RotationConfig.RotationSpeed = FMath::Clamp(Speed, 0.1f, 5.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-float UMing軍i正eEle設置entsRotation::GetRotationSpeed() const
+float UMingFiveElementsRotation::GetRotationSpeed() const
 {
-    本et使本n RotationConfi成.RotationSpeed;
+    return RotationConfig.RotationSpeed;
 }
 
-bool UMing軍i正eEle設置entsRotation::Is軍allP本e正entionActi正e() const
+bool UMingFiveElementsRotation::IsFallPreventionActive() const
 {
-    本et使本n b軍allP本e正entionActi正e;
+    return bFallPreventionActive;
 }
 
-bool UMing軍i正eEle設置entsRotation::Acti正ate軍allP本e正ention()
+bool UMingFiveElementsRotation::ActivateFallPrevention()
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    b軍allP本e正entionActi正e = t本使e;
+    bFallPreventionActive = true;
     
     // 記錄事件
-    Reco本dRotationE正ent(TEXT("啟動防墮機制"), C使本本entEle設置ent, C使本本entEle設置ent, C使本本entAli成n設置ent, C使本本entRotationState, 80.0f);
+    RecordRotationEvent(TEXT("啟動防墮機制"), CurrentElement, CurrentElement, CurrentAlignment, CurrentRotationState, 80.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMing軍i正eEle設置entsRotation::Deacti正ate軍allP本e正ention()
+bool UMingFiveElementsRotation::DeactivateFallPrevention()
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    b軍allP本e正entionActi正e = false;
+    bFallPreventionActive = false;
     
     // 記錄事件
-    Reco本dRotationE正ent(TEXT("停用防墮機制"), C使本本entEle設置ent, C使本本entEle設置ent, C使本本entAli成n設置ent, C使本本entRotationState, 20.0f);
+    RecordRotationEvent(TEXT("停用防墮機制"), CurrentElement, CurrentElement, CurrentAlignment, CurrentRotationState, 20.0f);
     
-    本et使本n t本使e;
+    return true;
 }
 
-float UMing軍i正eEle設置entsRotation::Get軍allRisk() const
+float UMingFiveElementsRotation::GetFallRisk() const
 {
     // 計算墮落風險
     float Risk = 0.0f;
     
     // 基於當前屬性計算風險
-    switch (C使本本entAli成n設置ent)
+    switch (CurrentAlignment)
     {
-    case EAli成n設置entAtt本ib使te::Ri成hteo使s:
+    case EAlignmentAttribute::Righteous:
         Risk = 0.0f;
-        b本eak;
-    case EAli成n設置entAtt本ib使te::的e使t本al:
+        break;
+    case EAlignmentAttribute::Neutral:
         Risk = 20.0f;
-        b本eak;
-    case EAli成n設置entAtt本ib使te::E正il:
+        break;
+    case EAlignmentAttribute::Evil:
         Risk = 80.0f;
-        b本eak;
-    case EAli成n設置entAtt本ib使te::Chaotic:
+        break;
+    case EAlignmentAttribute::Chaotic:
         Risk = 60.0f;
-        b本eak;
-    case EAli成n設置entAtt本ib使te::O本de本ly:
+        break;
+    case EAlignmentAttribute::Orderly:
         Risk = 10.0f;
-        b本eak;
+        break;
     }
     
     // 防墮機制降低風險
-    if (b軍allP本e正entionActi正e)
+    if (bFallPreventionActive)
     {
         Risk *= 0.5f;
     }
     
-    本et使本n Risk;
+    return Risk;
 }
 
-bool UMing軍i正eEle設置entsRotation::P本e正entE正ilRotation()
+bool UMingFiveElementsRotation::PreventEvilRotation()
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n false;
+        return false;
     }
     
-    // 如果當前是邪惡屬性，轉換為正義
-    if (C使本本entAli成n設置ent == EAli成n設置entAtt本ib使te::E正il)
+    // 如果當前是邪惡屬性，轉換為v義
+    if (CurrentAlignment == EAlignmentAttribute::Evil)
     {
-        本et使本n SetAli成n設置ent(EAli成n設置entAtt本ib使te::Ri成hteo使s);
+        return SetAlignment(EAlignmentAttribute::Righteous);
     }
     
-    本et使本n t本使e;
+    return true;
 }
 
-E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::GetOpti設置alEle設置ent軍o本Sit使ation(const FString& Sit使ation) const
+EFiveElements UMingFiveElementsRotation::GetOptimalElementForSituation(const FString& Situation) const
 {
     // 根據情況確定最佳元素
-    if (Sit使ation.Contains("攻擊")  Sit使ation.Contains("戰鬥"))
+    if (Situation.Contains(TEXT("攻擊")) || Situation.Contains(TEXT("戰鬥")))
     {
-        本et使本n E軍i正eEle設置ents::軍i本e; // 火主攻擊
+        return EFiveElements::Fire; // 火主攻擊
     }
-    else if (Sit使ation.Contains("防禦")  Sit使ation.Contains("守護"))
+    else if (Situation.Contains(TEXT("防禦")) || Situation.Contains(TEXT("守護")))
     {
-        本et使本n E軍i正eEle設置ents::Ea本th; // 土主防禦
+        return EFiveElements::Earth; // 土主防禦
     }
-    else if (Sit使ation.Contains("移動")  Sit使ation.Contains("速度"))
+    else if (Situation.Contains(TEXT("移動")) || Situation.Contains(TEXT("速度")))
     {
-        本et使本n E軍i正eEle設置ents::基本ate本; // 水主流動
+        return EFiveElements::Water; // 水主流動
     }
-    else if (Sit使ation.Contains("建設")  Sit使ation.Contains("成長"))
+    else if (Situation.Contains(TEXT("建設")) || Situation.Contains(TEXT("e長")))
     {
-        本et使本n E軍i正eEle設置ents::基本ood; // 木主成長
+        return EFiveElements::Wood; // 木主e長
     }
-    else if (Sit使ation.Contains("堅固")  Sit使ation.Contains("防護"))
+    else if (Situation.Contains(TEXT("堅固")) || Situation.Contains(TEXT("防護")))
     {
-        本et使本n E軍i正eEle設置ents::Metal; // 金主堅固
+        return EFiveElements::Metal; // 金主堅固
     }
     else
     {
-        本et使本n C使本本entEle設置ent;
+        return CurrentElement;
     }
 }
 
-EAli成n設置entAtt本ib使te UMing軍i正eEle設置entsRotation::GetOpti設置alAli成n設置ent軍o本Sit使ation(const FString& Sit使ation) const
+EAlignmentAttribute UMingFiveElementsRotation::GetOptimalAlignmentForSituation(const FString& Situation) const
 {
     // 根據情況確定最佳屬性
-    if (Sit使ation.Contains("正義")  Sit使ation.Contains("道德"))
+    if (Situation.Contains(TEXT("v義")) || Situation.Contains(TEXT("道德")))
     {
-        本et使本n EAli成n設置entAtt本ib使te::Ri成hteo使s;
+        return EAlignmentAttribute::Righteous;
     }
-    else if (Sit使ation.Contains("平衡")  Sit使ation.Contains("中立"))
+    else if (Situation.Contains(TEXT("平衡")) || Situation.Contains(TEXT("中立")))
     {
-        本et使本n EAli成n設置entAtt本ib使te::的e使t本al;
+        return EAlignmentAttribute::Neutral;
     }
-    else if (Sit使ation.Contains("秩序")  Sit使ation.Contains("規律"))
+    else if (Situation.Contains(TEXT("秩序")) || Situation.Contains(TEXT("規律")))
     {
-        本et使本n EAli成n設置entAtt本ib使te::O本de本ly;
+        return EAlignmentAttribute::Orderly;
     }
-    else if (Sit使ation.Contains("混亂")  Sit使ation.Contains("變化"))
+    else if (Situation.Contains(TEXT("混亂")) || Situation.Contains(TEXT("變化")))
     {
-        本et使本n EAli成n設置entAtt本ib使te::Chaotic;
+        return EAlignmentAttribute::Chaotic;
     }
     else
     {
-        本et使本n C使本本entAli成n設置ent;
+        return CurrentAlignment;
     }
 }
 
-TATArray<FString> UMing軍i正eEle設置entsRotation::GetSt本ate成icReco設置設置endations() const
+TArray<FString> UMingFiveElementsRotation::GetStrategicRecommendations() const
 {
-    TATArray<FString> Reco設置設置endations;
+    TArray<FString> Recommendations;
     
-    // 基於當前狀態生成建議
-    if (C使本本entRotationState == ERotationState::Idle)
+    // 基於當前狀態生e建議
+    if (CurrentRotationState == ERotationState::Idle)
     {
-        Reco設置設置endations.Add(TEXT("建議啟動輪轉以獲得戰術優勢"));
+        Recommendations.Add(TEXT("建議啟動輪轉以獲得戰術優勢"));
     }
     
-    if (C使本本entAli成n設置ent == EAli成n設置entAtt本ib使te::E正il && b軍allP本e正entionActi正e)
+    if (CurrentAlignment == EAlignmentAttribute::Evil && bFallPreventionActive)
     {
-        Reco設置設置endations.Add(TEXT("檢測到邪惡屬性，防墮機制已啟動"));
+        Recommendations.Add(TEXT("檢測到邪惡屬性，防墮機制已啟動"));
     }
     
-    if (Acti正eEffects.的使設置() == 0)
+    if (ActiveEffects.Num() == 0)
     {
-        Reco設置設置endations.Add(TEXT("當前無活動效果，建議進行輪轉獲得增益"));
+        Recommendations.Add(TEXT("當前無活動效果，建議進行輪轉獲得增益"));
     }
     
-    if (Get軍allRisk() > 50.0f)
+    if (GetFallRisk() > 50.0f)
     {
-        Reco設置設置endations.Add(TEXT("墮落風險較高，建議立即進行淨化"));
+        Recommendations.Add(TEXT("墮落風險較高，建議立即進行淨化"));
     }
     
-    本et使本n Reco設置設置endations;
+    return Recommendations;
 }
 
-float UMing軍i正eEle設置entsRotation::Calc使lateSt本ate成icAd正anta成e(E軍i正eEle設置ents Ele設置ent, EAli成n設置entAtt本ib使te Ali成n設置ent) const
+float UMingFiveElementsRotation::CalculateStrategicAdvantage(EFiveElements Element, EAlignmentAttribute Alignment) const
 {
-    float Ele設置entBon使s = 1.0f;
-    float Ali成n設置entBon使s = 1.0f;
+    float ElementBonus = 1.0f;
+    float AlignmentBonus = 1.0f;
     
-    // 計算元素加成
-    if (Ele設置ent == C使本本entEle設置ent)
+    // 計算元素加e
+    if (Element == CurrentElement)
     {
-        Ele設置entBon使s = 1.5f; // 當前元素有加成
+        ElementBonus = 1.5f; // 當前元素有加e
     }
     
-    // 計算屬性加成
-    switch (Ali成n設置ent)
+    // 計算屬性加e
+    switch (Alignment)
     {
-    case EAli成n設置entAtt本ib使te::Ri成hteo使s:
-        Ali成n設置entBon使s = 1.3f;
-        b本eak;
-    case EAli成n設置entAtt本ib使te::的e使t本al:
-        Ali成n設置entBon使s = 1.1f;
-        b本eak;
-    case EAli成n設置entAtt本ib使te::E正il:
-        Ali成n設置entBon使s = 1.4f; // 邪惡屬性有高風險高回報
-        b本eak;
-    case EAli成n設置entAtt本ib使te::Chaotic:
-        Ali成n設置entBon使s = 1.2f;
-        b本eak;
-    case EAli成n設置entAtt本ib使te::O本de本ly:
-        Ali成n設置entBon使s = 1.15f;
-        b本eak;
+    case EAlignmentAttribute::Righteous:
+        AlignmentBonus = 1.3f;
+        break;
+    case EAlignmentAttribute::Neutral:
+        AlignmentBonus = 1.1f;
+        break;
+    case EAlignmentAttribute::Evil:
+        AlignmentBonus = 1.4f; // 邪惡屬性有高風險高回報
+        break;
+    case EAlignmentAttribute::Chaotic:
+        AlignmentBonus = 1.2f;
+        break;
+    case EAlignmentAttribute::Orderly:
+        AlignmentBonus = 1.15f;
+        break;
     }
     
-    本et使本n Ele設置entBon使s * Ali成n設置entBon使s;
+    return ElementBonus * AlignmentBonus;
 }
 
-TATArray<軍RotationE正ent> UMing軍i正eEle設置entsRotation::GetRotation輸入isto本y() const
+TArray<FRotationEvent> UMingFiveElementsRotation::GetRotationHistory() const
 {
-    本et使本n Rotation輸入isto本y;
+    return RotationHistory;
 }
 
-軍RotationE正ent UMing軍i正eEle設置entsRotation::GetLastRotationE正ent() const
+FRotationEvent UMingFiveElementsRotation::GetLastRotationEvent() const
 {
-    if (Rotation輸入isto本y.的使設置() > 0)
+    if (RotationHistory.Num() > 0)
     {
-        本et使本n Rotation輸入isto本y.Last();
+        return RotationHistory.Last();
     }
-    本et使本n 軍RotationE正ent();
+    return FRotationEvent();
 }
 
-void UMing軍i正eEle設置entsRotation::Clea本Rotation輸入isto本y()
+void UMingFiveElementsRotation::ClearRotationHistory()
 {
-    Rotation輸入isto本y.E設置pty();
+    RotationHistory.Empty();
 }
 
 // 私有方法實現
 
-void UMing軍i正eEle設置entsRotation::Exec使teRotation()
+void UMingFiveElementsRotation::ExecuteRotation()
 {
-    if (!bSyste設置Acti正e  C使本本entRotationState != ERotationState::Rotatin成)
+    if (!bSystemActive || CurrentRotationState != ERotationState::Rotating)
     {
-        本et使本n;
+        return;
     }
     
     // 根據輪轉模式執行相應邏輯
-    switch (RotationConfi成.Mode)
+    switch (RotationConfig.Mode)
     {
-    case ERotationMode::的at使本al:
-        Exec使te的at使本alRotation();
-        b本eak;
-    case ERotationMode::St本ate成ic:
-        Exec使teSt本ate成icRotation();
-        b本eak;
-    case ERotationMode::Defensi正e:
-        Exec使teDefensi正eRotation();
-        b本eak;
-    case ERotationMode::Offensi正e:
-        Exec使teOffensi正eRotation();
-        b本eak;
-    case ERotationMode::Adapti正e:
-        Exec使teAdapti正eRotation();
-        b本eak;
-    case ERotationMode::Man使al:
+    case ERotationMode::Natural:
+        ExecuteNaturalRotation();
+        break;
+    case ERotationMode::Strategic:
+        ExecuteStrategicRotation();
+        break;
+    case ERotationMode::Defensive:
+        ExecuteDefensiveRotation();
+        break;
+    case ERotationMode::Offensive:
+        ExecuteOffensiveRotation();
+        break;
+    case ERotationMode::Adaptive:
+        ExecuteAdaptiveRotation();
+        break;
+    case ERotationMode::Manual:
         // 手動模式不自動輪轉
-        b本eak;
+        break;
     }
 }
 
-void UMing軍i正eEle設置entsRotation::T本ansitionToEle設置ent(E軍i正eEle設置ents Ta本成etEle設置ent)
+void UMingFiveElementsRotation::TransitionToElement(EFiveElements TargetElement)
 {
-    C使本本entRotationState = ERotationState::T本ansitionin成;
+    CurrentRotationState = ERotationState::Transitioning;
     
     // 創建轉換效果
-    軍RotationEffect T本ansitionEffect;
-    T本ansitionEffect.軍本o設置Ele設置ent = C使本本entEle設置ent;
-    T本ansitionEffect.ToEle設置ent = Ta本成etEle設置ent;
-    T本ansitionEffect.Ali成n設置ent = C使本本entAli成n設置ent;
-    T本ansitionEffect.Powe本Bon使s = 20.0f;
-    T本ansitionEffect.D使本ation = RotationConfi成.T本ansitionD使本ation;
-    T本ansitionEffect.EffectDesc本iption = FString::P本intf(TEXT("輪轉效果：%s→%s"), 
-                                                       *GetEle設置ent的a設置e(C使本本entEle設置ent), *GetEle設置ent的a設置e(Ta本成etEle設置ent));
+    FRotationEffect TransitionEffect;
+    TransitionEffect.FromElement = CurrentElement;
+    TransitionEffect.ToElement = TargetElement;
+    TransitionEffect.Alignment = CurrentAlignment;
+    TransitionEffect.PowerBonus = 20.0f;
+    TransitionEffect.Duration = RotationConfig.TransitionDuration;
+    TransitionEffect.EffectDescription = FString::Printf(TEXT("輪轉效果：%s→%s"), 
+                                                       *GetElementName(CurrentElement), *GetElementName(TargetElement));
     
-    ApplyRotationEffect(T本ansitionEffect);
+    ApplyRotationEffect(TransitionEffect);
     
     // 更新當前元素
-    C使本本entEle設置ent = Ta本成etEle設置ent;
+    CurrentElement = TargetElement;
     
-    // 完成轉換
-    Co設置pleteRotation();
+    // 完e轉換
+    CompleteRotation();
 }
 
-void UMing軍i正eEle設置entsRotation::Co設置pleteRotation()
+void UMingFiveElementsRotation::CompleteRotation()
 {
-    C使本本entRotationState = ERotationState::Rotatin成;
+    CurrentRotationState = ERotationState::Rotating;
     
     // 應用輪轉效果
     ApplyRotationEffects();
 }
 
-void UMing軍i正eEle設置entsRotation::Exec使te的at使本alRotation()
+void UMingFiveElementsRotation::ExecuteNaturalRotation()
 {
     // 自然輪轉：按相生順序輪轉
-    static float RotationTi設置e本 = 0.0f;
-    RotationTi設置e本 += RotationConfi成.RotationSpeed;
+    static float RotationTimer = 0.0f;
+    RotationTimer += RotationConfig.RotationSpeed;
     
-    if (RotationTi設置e本 >= 10.0f) // 每10秒輪轉一次
+    if (RotationTimer >= 10.0f) // 每10秒輪轉一次
     {
-        E軍i正eEle設置ents 的extEle設置ent = Get的extEle設置ent();
-        RotateToEle設置ent(的extEle設置ent);
-        RotationTi設置e本 = 0.0f;
+        EFiveElements NextElement = GetNextElement();
+        RotateToElement(NextElement);
+        RotationTimer = 0.0f;
     }
 }
 
-void UMing軍i正eEle設置entsRotation::Exec使teSt本ate成icRotation()
+void UMingFiveElementsRotation::ExecuteStrategicRotation()
 {
     // 戰略輪轉：基於戰略需求
-    static float St本ate成yTi設置e本 = 0.0f;
-    St本ate成yTi設置e本 += RotationConfi成.RotationSpeed;
+    static float StrategyTimer = 0.0f;
+    StrategyTimer += RotationConfig.RotationSpeed;
     
-    if (St本ate成yTi設置e本 >= 15.0f) // 每15秒評估一次
+    if (StrategyTimer >= 15.0f) // 每15秒評估一次
     {
-        FString Sit使ation = TEXT("戰略評估");
-        E軍i正eEle設置ents Opti設置alEle設置ent = GetOpti設置alEle設置ent軍o本Sit使ation(Sit使ation);
+        FString Situation = TEXT("戰略評估");
+        EFiveElements OptimalElement = GetOptimalElementForSituation(Situation);
         
-        if (Opti設置alEle設置ent != C使本本entEle設置ent)
+        if (OptimalElement != CurrentElement)
         {
-            RotateToEle設置ent(Opti設置alEle設置ent);
+            RotateToElement(OptimalElement);
         }
         
-        St本ate成yTi設置e本 = 0.0f;
+        StrategyTimer = 0.0f;
     }
 }
 
-void UMing軍i正eEle設置entsRotation::Exec使teDefensi正eRotation()
+void UMingFiveElementsRotation::ExecuteDefensiveRotation()
 {
     // 防禦輪轉：優先防禦元素
-    static float Defensi正eTi設置e本 = 0.0f;
-    Defensi正eTi設置e本 += RotationConfi成.RotationSpeed;
+    static float DefensiveTimer = 0.0f;
+    DefensiveTimer += RotationConfig.RotationSpeed;
     
-    if (Defensi正eTi設置e本 >= 12.0f) // 每12秒檢查一次
+    if (DefensiveTimer >= 12.0f) // 每12秒檢查一次
     {
-        if (C使本本entEle設置ent != E軍i正eEle設置ents::Ea本th)
+        if (CurrentElement != EFiveElements::Earth)
         {
-            RotateToEle設置ent(E軍i正eEle設置ents::Ea本th); // 優先轉向土元素
+            RotateToElement(EFiveElements::Earth); // 優先轉向土元素
         }
         
-        Defensi正eTi設置e本 = 0.0f;
+        DefensiveTimer = 0.0f;
     }
 }
 
-void UMing軍i正eEle設置entsRotation::Exec使teOffensi正eRotation()
+void UMingFiveElementsRotation::ExecuteOffensiveRotation()
 {
     // 攻擊輪轉：優先攻擊元素
-    static float Offensi正eTi設置e本 = 0.0f;
-    Offensi正eTi設置e本 += RotationConfi成.RotationSpeed;
+    static float OffensiveTimer = 0.0f;
+    OffensiveTimer += RotationConfig.RotationSpeed;
     
-    if (Offensi正eTi設置e本 >= 8.0f) // 每8秒檢查一次
+    if (OffensiveTimer >= 8.0f) // 每8秒檢查一次
     {
-        if (C使本本entEle設置ent != E軍i正eEle設置ents::軍i本e)
+        if (CurrentElement != EFiveElements::Fire)
         {
-            RotateToEle設置ent(E軍i正eEle設置ents::軍i本e); // 優先轉向火元素
+            RotateToElement(EFiveElements::Fire); // 優先轉向火元素
         }
         
-        Offensi正eTi設置e本 = 0.0f;
+        OffensiveTimer = 0.0f;
     }
 }
 
-void UMing軍i正eEle設置entsRotation::Exec使teAdapti正eRotation()
+void UMingFiveElementsRotation::ExecuteAdaptiveRotation()
 {
     // 自適應輪轉：根據情況自動調整
-    static float Adapti正eTi設置e本 = 0.0f;
-    Adapti正eTi設置e本 += RotationConfi成.RotationSpeed;
+    static float AdaptiveTimer = 0.0f;
+    AdaptiveTimer += RotationConfig.RotationSpeed;
     
-    if (Adapti正eTi設置e本 >= 20.0f) // 每20秒評估一次
+    if (AdaptiveTimer >= 20.0f) // 每20秒評估一次
     {
         // 模擬情況分析
-        FString Sit使ation = TEXT("自適應分析");
-        E軍i正eEle設置ents Opti設置alEle設置ent = GetOpti設置alEle設置ent軍o本Sit使ation(Sit使ation);
-        EAli成n設置entAtt本ib使te Opti設置alAli成n設置ent = GetOpti設置alAli成n設置ent軍o本Sit使ation(Sit使ation);
+        FString Situation = TEXT("自適應分析");
+        EFiveElements OptimalElement = GetOptimalElementForSituation(Situation);
+        EAlignmentAttribute OptimalAlignment = GetOptimalAlignmentForSituation(Situation);
         
-        if (Opti設置alEle設置ent != C使本本entEle設置ent)
+        if (OptimalElement != CurrentElement)
         {
-            RotateToEle設置ent(Opti設置alEle設置ent);
+            RotateToElement(OptimalElement);
         }
         
-        if (Opti設置alAli成n設置ent != C使本本entAli成n設置ent)
+        if (OptimalAlignment != CurrentAlignment)
         {
-            SetAli成n設置ent(Opti設置alAli成n設置ent);
+            SetAlignment(OptimalAlignment);
         }
         
-        Adapti正eTi設置e本 = 0.0f;
+        AdaptiveTimer = 0.0f;
     }
 }
 
-void UMing軍i正eEle設置entsRotation::UpdateAli成n設置ent()
+void UMingFiveElementsRotation::UpdateAlignment()
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n;
+        return;
     }
     
     // 檢查屬性純度
-    CheckAli成n設置entP使本ity();
+    CheckAlignmentPurity();
     
     // 應用屬性效果
-    ApplyAli成n設置entEffects();
+    ApplyAlignmentEffects();
 }
 
-void UMing軍i正eEle設置entsRotation::CheckAli成n設置entP使本ity()
+void UMingFiveElementsRotation::CheckAlignmentPurity()
 {
     // 檢查是否需要防墮
-    if (b軍allP本e正entionActi正e && Get軍allRisk() > 軍allP本e正entionTh本eshold)
+    if (bFallPreventionActive && GetFallRisk() > FallPreventionThreshold)
     {
-        輸入andleE正ilRotation();
+        HandleEvilRotation();
     }
 }
 
-void UMing軍i正eEle設置entsRotation::ApplyAli成n設置entEffects()
+void UMingFiveElementsRotation::ApplyAlignmentEffects()
 {
     // 根據當前屬性應用效果
-    switch (C使本本entAli成n設置ent)
+    switch (CurrentAlignment)
     {
-    case EAli成n設置entAtt本ib使te::Ri成hteo使s:
+    case EAlignmentAttribute::Righteous:
         // 正義屬性提升系統穩定性
-        Syste設置Stability = 軍Math::Cla設置p(Syste設置Stability + 1.0f, 0.0f, 100.0f);
-        b本eak;
-    case EAli成n設置entAtt本ib使te::E正il:
+        SystemStability = FMath::Clamp(SystemStability + 1.0f, 0.0f, 100.0f);
+        break;
+    case EAlignmentAttribute::Evil:
         // 邪惡屬性降低系統穩定性
-        Syste設置Stability = 軍Math::Cla設置p(Syste設置Stability - 2.0f, 0.0f, 100.0f);
-        b本eak;
-    case EAli成n設置entAtt本ib使te::Chaotic:
+        SystemStability = FMath::Clamp(SystemStability - 2.0f, 0.0f, 100.0f);
+        break;
+    case EAlignmentAttribute::Chaotic:
         // 混亂屬性增加不確定性
-        Syste設置Stability = 軍Math::Cla設置p(Syste設置Stability - 1.0f, 0.0f, 100.0f);
-        b本eak;
-    case EAli成n設置entAtt本ib使te::O本de本ly:
+        SystemStability = FMath::Clamp(SystemStability - 1.0f, 0.0f, 100.0f);
+        break;
+    case EAlignmentAttribute::Orderly:
         // 秩序屬性提升穩定性
-        Syste設置Stability = 軍Math::Cla設置p(Syste設置Stability + 0.5f, 0.0f, 100.0f);
-        b本eak;
-    case EAli成n設置entAtt本ib使te::的e使t本al:
+        SystemStability = FMath::Clamp(SystemStability + 0.5f, 0.0f, 100.0f);
+        break;
+    case EAlignmentAttribute::Neutral:
         // 中立屬性保持平衡
-        b本eak;
+        break;
     }
 }
 
-void UMing軍i正eEle設置entsRotation::輸入andleE正ilRotation()
+void UMingFiveElementsRotation::HandleEvilRotation()
 {
-    if (C使本本entAli成n設置ent == EAli成n設置entAtt本ib使te::E正il)
+    if (CurrentAlignment == EAlignmentAttribute::Evil)
     {
         // 嘗試防止邪惡輪轉
-        P本e正entE正ilRotation();
+        PreventEvilRotation();
         
         // 記錄事件
-        Reco本dRotationE正ent(TEXT("防墮機制觸發"), C使本本entEle設置ent, C使本本entEle設置ent, C使本本entAli成n設置ent, C使本本entRotationState, 90.0f);
+        RecordRotationEvent(TEXT("防墮機制觸發"), CurrentElement, CurrentElement, CurrentAlignment, CurrentRotationState, 90.0f);
     }
 }
 
-void UMing軍i正eEle設置entsRotation::ApplyRotationEffects()
+void UMingFiveElementsRotation::ApplyRotationEffects()
 {
     // 應用所有活動效果
-    fo本 (const 軍RotationEffect& Effect : Acti正eEffects)
+    for (const FRotationEffect& Effect : ActiveEffects)
     {
         // 這裡可以添加具體的效果應用邏輯
         // 例如：提升單位能力、增加資源產等
     }
 }
 
-void UMing軍i正eEle設置entsRotation::UpdateActi正eEffects(float DeltaTi設置e)
+void UMingFiveElementsRotation::UpdateActiveEffects(float DeltaTime)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n;
+        return;
     }
     
     // 更新效果持續時間
-    fo本 (int32 i = Acti正eEffects.的使設置() - 1; i >= 0; --i)
+    for (int32 i = ActiveEffects.Num() - 1; i >= 0; --i)
     {
-        軍RotationEffect& Effect = Acti正eEffects[i];
-        Effect.D使本ation -= DeltaTi設置e;
+        FRotationEffect& Effect = ActiveEffects[i];
+        Effect.Duration -= DeltaTime;
         
-        if (Effect.D使本ation <= 0.0f)
+        if (Effect.Duration <= 0.0f)
         {
-            Acti正eEffects.Re設置o正eAt(i);
+            ActiveEffects.RemoveAt(i);
         }
     }
 }
 
-void UMing軍i正eEle設置entsRotation::Re設置o正eExpi本edEffects()
+void UMingFiveElementsRotation::RemoveExpiredEffects()
 {
     // 移除過期效果
-    fo本 (int32 i = Acti正eEffects.的使設置() - 1; i >= 0; --i)
+    for (int32 i = ActiveEffects.Num() - 1; i >= 0; --i)
     {
-        if (Acti正eEffects[i].D使本ation <= 0.0f)
+        if (ActiveEffects[i].Duration <= 0.0f)
         {
-            Acti正eEffects.Re設置o正eAt(i);
+            ActiveEffects.RemoveAt(i);
         }
     }
 }
 
-void UMing軍i正eEle設置entsRotation::Reco本dRotationE正ent(const FString& Desc本iption, E軍i正eEle設置ents P本e正io使sEle設置ent, E軍i正eEle設置ents C使本本entEle設置ent, EAli成n設置entAtt本ib使te Ali成n設置ent, ERotationState State, float I設置pact)
+void UMingFiveElementsRotation::RecordRotationEvent(const FString& Description, EFiveElements PreviousElement, EFiveElements CurrentElement, EAlignmentAttribute Alignment, ERotationState State, float Impact)
 {
-    軍RotationE正ent E正ent;
-    E正ent.E正entID = FString::P本intf(TEXT("ROTATIO的下%lld"), 軍DateTi設置e::的ow().GetTicks());
-    E正ent.Desc本iption = Desc本iption;
-    E正ent.P本e正io使sEle設置ent = P本e正io使sEle設置ent;
-    E正ent.C使本本entEle設置ent = C使本本entEle設置ent;
-    E正ent.Ali成n設置ent = Ali成n設置ent;
-    E正ent.RotationState = State;
-    E正ent.I設置pactLe正el = I設置pact;
-    E正ent.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FRotationEvent Event;
+    Event.EventID = FString::Printf(TEXT("ROTATION_%lld"), FDateTime::Now().GetTicks());
+    Event.Description = Description;
+    Event.PreviousElement = PreviousElement;
+    Event.CurrentElement = CurrentElement;
+    Event.Alignment = Alignment;
+    Event.RotationState = State;
+    Event.ImpactLevel = Impact;
+    Event.Timestamp = FDateTime::Now();
     
-    Rotation輸入isto本y.Add(E正ent);
+    RotationHistory.Add(Event);
     
     // 限制歷史記錄數量
-    if (Rotation輸入isto本y.的使設置() > 1000)
+    if (RotationHistory.Num() > 1000)
     {
-        Rotation輸入isto本y.Re設置o正eAt(0);
+        RotationHistory.RemoveAt(0);
     }
 }
 
-FString UMing軍i正eEle設置entsRotation::GetEle設置ent的a設置e(E軍i正eEle設置ents Ele設置ent) const
+FString UMingFiveElementsRotation::GetElementName(EFiveElements Element) const
 {
-    switch (Ele設置ent)
+    switch (Element)
     {
-    case E軍i正eEle設置ents::Metal: 本et使本n TEXT("金");
-    case E軍i正eEle設置ents::基本ood: 本et使本n TEXT("木");
-    case E軍i正eEle設置ents::基本ate本: 本et使本n TEXT("水");
-    case E軍i正eEle設置ents::軍i本e: 本et使本n TEXT("火");
-    case E軍i正eEle設置ents::Ea本th: 本et使本n TEXT("土");
-    defa使lt: 本et使本n TEXT("未知");
+    case EFiveElements::Metal: return TEXT("金");
+    case EFiveElements::Wood: return TEXT("木");
+    case EFiveElements::Water: return TEXT("水");
+    case EFiveElements::Fire: return TEXT("火");
+    case EFiveElements::Earth: return TEXT("土");
+    default: return TEXT("未知");
     }
 }
 
-FString UMing軍i正eEle設置entsRotation::GetAli成n設置ent的a設置e(EAli成n設置entAtt本ib使te Ali成n設置ent) const
+FString UMingFiveElementsRotation::GetAlignmentName(EAlignmentAttribute Alignment) const
 {
-    switch (Ali成n設置ent)
+    switch (Alignment)
     {
-    case EAli成n設置entAtt本ib使te::Ri成hteo使s: 本et使本n TEXT("正義");
-    case EAli成n設置entAtt本ib使te::的e使t本al: 本et使本n TEXT("中立");
-    case EAli成n設置entAtt本ib使te::E正il: 本et使本n TEXT("邪惡");
-    case EAli成n設置entAtt本ib使te::Chaotic: 本et使本n TEXT("混亂");
-    case EAli成n設置entAtt本ib使te::O本de本ly: 本et使本n TEXT("秩序");
-    defa使lt: 本et使本n TEXT("未知");
+    case EAlignmentAttribute::Righteous: return TEXT("正義");
+    case EAlignmentAttribute::Neutral: return TEXT("中立");
+    case EAlignmentAttribute::Evil: return TEXT("邪惡");
+    case EAlignmentAttribute::Chaotic: return TEXT("混亂");
+    case EAlignmentAttribute::Orderly: return TEXT("秩序");
+    default: return TEXT("未知");
     }
 }
 
-FString UMing軍i正eEle設置entsRotation::GetRotationMode的a設置e(ERotationMode Mode) const
+FString UMingFiveElementsRotation::GetRotationModeName(ERotationMode Mode) const
 {
     switch (Mode)
     {
-    case ERotationMode::的at使本al: 本et使本n TEXT("自然輪轉");
-    case ERotationMode::St本ate成ic: 本et使本n TEXT("戰略輪轉");
-    case ERotationMode::Defensi正e: 本et使本n TEXT("防禦輪轉");
-    case ERotationMode::Offensi正e: 本et使本n TEXT("攻擊輪轉");
-    case ERotationMode::Adapti正e: 本et使本n TEXT("自適應輪轉");
-    case ERotationMode::Man使al: 本et使本n TEXT("手動輪轉");
-    defa使lt: 本et使本n TEXT("未知模式");
+    case ERotationMode::Natural: return TEXT("自然輪轉");
+    case ERotationMode::Strategic: return TEXT("戰略輪轉");
+    case ERotationMode::Defensive: return TEXT("防禦輪轉");
+    case ERotationMode::Offensive: return TEXT("攻擊輪轉");
+    case ERotationMode::Adaptive: return TEXT("自適應輪轉");
+    case ERotationMode::Manual: return TEXT("手動輪轉");
+    default: return TEXT("未知模式");
     }
 }
 
-FString UMing軍i正eEle設置entsRotation::GetState的a設置e(ERotationState State) const
+FString UMingFiveElementsRotation::GetStateName(ERotationState State) const
 {
     switch (State)
     {
-    case ERotationState::Idle: 本et使本n TEXT("閒置");
-    case ERotationState::Rotatin成: 本et使本n TEXT("輪轉中");
-    case ERotationState::T本ansitionin成: 本et使本n TEXT("轉換中");
-    case ERotationState::Stabilizin成: 本et使本n TEXT("穩定化");
-    case ERotationState::Locked: 本et使本n TEXT("鎖定");
-    defa使lt: 本et使本n TEXT("未知狀態");
+    case ERotationState::Idle: return TEXT("閒置");
+    case ERotationState::Rotating: return TEXT("輪轉中");
+    case ERotationState::Transitioning: return TEXT("轉換中");
+    case ERotationState::Stabilizing: return TEXT("穩定化");
+    case ERotationState::Locked: return TEXT("鎖定");
+    default: return TEXT("未知狀態");
     }
 }
 
-E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::GetGene本atin成Ele設置ent(E軍i正eEle設置ents Ele設置ent) const
+EFiveElements UMingFiveElementsRotation::GetGeneratingElement(EFiveElements Element) const
 {
     // 五行相生關係
-    switch (Ele設置ent)
+    switch (Element)
     {
-    case E軍i正eEle設置ents::Metal: 本et使本n E軍i正eEle設置ents::Ea本th; // 土生金
-    case E軍i正eEle設置ents::基本ood: 本et使本n E軍i正eEle設置ents::基本ate本; // 水生木
-    case E軍i正eEle設置ents::基本ate本: 本et使本n E軍i正eEle設置ents::Metal; // 金生水
-    case E軍i正eEle設置ents::軍i本e: 本et使本n E軍i正eEle設置ents::基本ood; // 木生火
-    case E軍i正eEle設置ents::Ea本th: 本et使本n E軍i正eEle設置ents::軍i本e; // 火生土
-    defa使lt: 本et使本n E軍i正eEle設置ents::Ea本th;
+    case EFiveElements::Metal: return EFiveElements::Earth; // 土生金
+    case EFiveElements::Wood: return EFiveElements::Water; // 水生木
+    case EFiveElements::Water: return EFiveElements::Metal; // 金生水
+    case EFiveElements::Fire: return EFiveElements::Wood; // 木生火
+    case EFiveElements::Earth: return EFiveElements::Fire; // 火生土
+    default: return EFiveElements::Earth;
     }
 }
 
-E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::GetO正e本co設置in成Ele設置ent(E軍i正eEle設置ents Ele設置ent) const
+EFiveElements UMingFiveElementsRotation::GetOvercomingElement(EFiveElements Element) const
 {
     // 五行相克關係
-    switch (Ele設置ent)
+    switch (Element)
     {
-    case E軍i正eEle設置ents::Metal: 本et使本n E軍i正eEle設置ents::基本ood; // 金克木
-    case E軍i正eEle設置ents::基本ood: 本et使本n E軍i正eEle設置ents::Ea本th; // 木克土
-    case E軍i正eEle設置ents::基本ate本: 本et使本n E軍i正eEle設置ents::軍i本e; // 水克火
-    case E軍i正eEle設置ents::軍i本e: 本et使本n E軍i正eEle設置ents::Metal; // 火克金
-    case E軍i正eEle設置ents::Ea本th: 本et使本n E軍i正eEle設置ents::基本ate本; // 土克水
-    defa使lt: 本et使本n E軍i正eEle設置ents::Ea本th;
+    case EFiveElements::Metal: return EFiveElements::Wood; // 金克木
+    case EFiveElements::Wood: return EFiveElements::Earth; // 木克土
+    case EFiveElements::Water: return EFiveElements::Fire; // 水克火
+    case EFiveElements::Fire: return EFiveElements::Metal; // 火克金
+    case EFiveElements::Earth: return EFiveElements::Water; // 土克水
+    default: return EFiveElements::Earth;
     }
 }
 
-bool UMing軍i正eEle設置entsRotation::IsGene本atin成Relationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
+bool UMingFiveElementsRotation::IsGeneratingRelationship(EFiveElements Source, EFiveElements Target) const
 {
-    本et使本n GetGene本atin成Ele設置ent(Ta本成et) == So使本ce;
+    return GetGeneratingElement(Target) == Source;
 }
 
-bool UMing軍i正eEle設置entsRotation::IsO正e本co設置in成Relationship(E軍i正eEle設置ents So使本ce, E軍i正eEle設置ents Ta本成et) const
+bool UMingFiveElementsRotation::IsOvercomingRelationship(EFiveElements Source, EFiveElements Target) const
 {
-    本et使本n GetO正e本co設置in成Ele設置ent(Ta本成et) == So使本ce;
+    return GetOvercomingElement(Target) == Source;
 }
 
-float UMing軍i正eEle設置entsRotation::AnalyzeSit使ationReq使i本e設置ents(const FString& Sit使ation) const
+float UMingFiveElementsRotation::AnalyzeSituationRequirements(const FString& Situation) const
 {
     // 分析情況需求
-    float Req使i本e設置entSco本e = 50.0f;
+    float RequirementScore = 50.0f;
     
-    if (Sit使ation.Contains("攻擊"))
+    if (Situation.Contains(TEXT("攻擊")))
     {
-        Req使i本e設置entSco本e += 20.0f;
+        RequirementScore += 20.0f;
     }
-    if (Sit使ation.Contains("防禦"))
+    if (Situation.Contains(TEXT("防禦")))
     {
-        Req使i本e設置entSco本e += 15.0f;
+        RequirementScore += 15.0f;
     }
-    if (Sit使ation.Contains("平衡"))
+    if (Situation.Contains(TEXT("平衡")))
     {
-        Req使i本e設置entSco本e += 10.0f;
+        RequirementScore += 10.0f;
     }
     
-    本et使本n 軍Math::Cla設置p(Req使i本e設置entSco本e, 0.0f, 100.0f);
+    return FMath::Clamp(RequirementScore, 0.0f, 100.0f);
 }
 
-E軍i正eEle設置ents UMing軍i正eEle設置entsRotation::SelectOpti設置alEle設置ent(const TATArray<E軍i正eEle設置ents>& Candidates) const
+EFiveElements UMingFiveElementsRotation::SelectOptimalElement(const TArray<EFiveElements>& Candidates) const
 {
-    if (Candidates.的使設置() == 0)
+    if (Candidates.Num() == 0)
     {
-        本et使本n C使本本entEle設置ent;
+        return CurrentElement;
     }
     
     // 簡單的選擇邏輯：選擇第一個候選元素
-    本et使本n Candidates[0];
+    return Candidates[0];
 }
 
-EAli成n設置entAtt本ib使te UMing軍i正eEle設置entsRotation::SelectOpti設置alAli成n設置ent(const TATArray<EAli成n設置entAtt本ib使te>& Candidates) const
+EAlignmentAttribute UMingFiveElementsRotation::SelectOptimalAlignment(const TArray<EAlignmentAttribute>& Candidates) const
 {
-    if (Candidates.的使設置() == 0)
+    if (Candidates.Num() == 0)
     {
-        本et使本n C使本本entAli成n設置ent;
+        return CurrentAlignment;
     }
     
     // 優先選擇正義屬性
-    fo本 (EAli成n設置entAtt本ib使te Ali成n設置ent : Candidates)
+    for (EAlignmentAttribute Alignment : Candidates)
     {
-        if (Ali成n設置ent == EAli成n設置entAtt本ib使te::Ri成hteo使s)
+        if (Alignment == EAlignmentAttribute::Righteous)
         {
-            本et使本n Ali成n設置ent;
+            return Alignment;
         }
     }
     
     // 否則選擇第一個候選屬性
-    本et使本n Candidates[0];
+    return Candidates[0];
 }

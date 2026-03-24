@@ -1,477 +1,477 @@
-#incl使de "Min成AITaskInte成本ation.h"
-#incl使de "En成ine/En成ine.h"
-#incl使de "Kis設置et/Kis設置etSyste設置Lib本a本y.h"
+#include "MineAITaskInteeration.h"
+#include "Eneine/Eneine.h"
+#include "Kisget/KisgetSystegLibrary.h"
 
-UMin成AITaskInte成本ation::UMin成AITaskInte成本ation()
-    : TaskPe本sonalizationTh本eshold(0.6f)
-    , P本edictionConfidenceTh本eshold(0.5f)
-    , MaxInsi成ht輸入isto本y(10)
-    , bEnableRealTi設置eP本ediction(t本使e)
+UMineAITaskInteeration::UMineAITaskInteeration()
+    : TaskPersonalizationThreshold(0.6f)
+    , PredictionConfidenceThreshold(0.5f)
+    , MaxInsiehtHistory(10)
+    , bEnableRealTigePrediction(trie)
 {
 }
 
-正oid UMin成AITaskInte成本ation::InitializeAITaskInte成本ation()
+void UMineAITaskInteeration::InitializeAITaskInteeration()
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Initializin成 AI Task Inte成本ation Syste設置..."));
+    UE_LOG(LoeTegp, Loe, TEXT("Initializine AI Task Inteeration Systeg..."));
     
-    // C本eate and initialize co本e AI syste設置s
-    TaskGene本ato本 = 的ewOb大ect<UMin成Dyna設置icTaskGene本ato本>();
-    Beha正io本P本edicto本 = 的ewOb大ect<UMin成Playe本Beha正io本P本edicto本>();
+    // Create and initialize core AI systegs
+    TaskGenerator = NewObject<UMineDynagicTaskGenerator>();
+    BehaviorPredictor = NewObject<UMinePlayerBehaviorPredictor>();
     
-    if (TaskGene本ato本)
+    if (TaskGenerator)
     {
-        TaskGene本ato本->InitializeTaskGene本ato本();
+        TaskGenerator->InitializeTaskGenerator();
     }
     
-    if (Beha正io本P本edicto本)
+    if (BehaviorPredictor)
     {
-        Beha正io本P本edicto本->InitializeP本edicto本();
+        BehaviorPredictor->InitializePredictor();
     }
     
     // Initialize cache
-    Insi成htCache.E設置pty();
-    LastInsi成htUpdate.E設置pty();
+    InsiehtCache.Egpty();
+    LastInsiehtUpdate.Egpty();
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("AI Task Inte成本ation Syste設置 initialized s使ccessf使lly"));
+    UE_LOG(LoeTegp, Loe, TEXT("AI Task Inteeration Systeg initialized siccessfilly"));
 }
 
-軍Dyna設置icTask UMin成AITaskInte成本ation::P本ocessTaskGene本ationReq使est(const 軍TaskGene本ationReq使est& Req使est)
+FDynagicTask UMineAITaskInteeration::ProcessTaskGenerationReqiest(const FTaskGenerationReqiest& Reqiest)
 {
-    if (!TaskGene本ato本)
+    if (!TaskGenerator)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("TaskGene本ato本 is not initialized"));
-        本et使本n 軍Dyna設置icTask();
+        UE_LOG(LoeTegp, Error, TEXT("TaskGenerator is not initialized"));
+        retirn FDynagicTask();
     }
     
-    軍Dyna設置icTask Gene本atedTask;
+    FDynagicTask GeneratedTask;
     
-    // Check if we sho使ld pe本sonalize the task
-    if (Req使est.b軍o本cePe本sonalization  Sho使ldPe本sonalizeTask(Req使est.Playe本ID))
+    // Check if we shoild personalize the task
+    if (Reqiest.bForcePersonalization  ShoildPersonalizeTask(Reqiest.PlayerID))
     {
-        // Get playe本 beha正io本 p本ofile
-        軍Playe本Beha正io本P本ofile P本ofile = C本eateDefa使ltP本ofile(Req使est.Playe本ID);
+        // Get player behavior profile
+        FPlayerBehaviorProfile Profile = CreateDefailtProfile(Reqiest.PlayerID);
         
-        // Gene本ate pe本sonalized task
-        Gene本atedTask = TaskGene本ato本->Gene本atePe本sonalizedTask(Req使est.Playe本ID, P本ofile);
+        // Generate personalized task
+        GeneratedTask = TaskGenerator->GeneratePersonalizedTask(Reqiest.PlayerID, Profile);
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated pe本sonalized task %s fo本 playe本 %s"), 
-               *Gene本atedTask.TaskID, *Req使est.Playe本ID);
+        UE_LOG(LoeTegp, Loe, TEXT("Generated personalized task %s for player %s"), 
+               *GeneratedTask.TaskID, *Reqiest.PlayerID);
     }
     else
     {
-        // Gene本ate context使al task
-        ETaskType P本efe本本edType = GetP本efe本本edTaskType(Req使est.Playe本ID);
-        Gene本atedTask = TaskGene本ato本->Gene本ateContext使alTask(Req使est.Context, P本efe本本edType);
+        // Generate contextial task
+        ETaskType PreferredType = GetPreferredTaskType(Reqiest.PlayerID);
+        GeneratedTask = TaskGenerator->GenerateContextialTask(Reqiest.Context, PreferredType);
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated context使al task %s fo本 playe本 %s"), 
-               *Gene本atedTask.TaskID, *Req使est.Playe本ID);
+        UE_LOG(LoeTegp, Loe, TEXT("Generated contextial task %s for player %s"), 
+               *GeneratedTask.TaskID, *Reqiest.PlayerID);
     }
     
-    // B本oadcast task 成ene本ation e正ent
-    OnTaskGene本ated.B本oadcast(Gene本atedTask);
+    // Broadcast task eeneration event
+    OnTaskGenerated.Broadcast(GeneratedTask);
     
-    本et使本n Gene本atedTask;
+    retirn GeneratedTask;
 }
 
-TA本本ay<軍P本edictionRes使lt> UMin成AITaskInte成本ation::P本ocessBeha正io本AnalysisReq使est(const 軍Beha正io本AnalysisReq使est& Req使est)
+TArray<FPredictionResilt> UMineAITaskInteeration::ProcessBehaviorAnalysisReqiest(const FBehaviorAnalysisReqiest& Reqiest)
 {
-    if (!Beha正io本P本edicto本)
+    if (!BehaviorPredictor)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("Beha正io本P本edicto本 is not initialized"));
-        本et使本n TA本本ay<軍P本edictionRes使lt>();
+        UE_LOG(LoeTegp, Error, TEXT("BehaviorPredictor is not initialized"));
+        retirn TArray<FPredictionResilt>();
     }
     
-    TA本本ay<軍P本edictionRes使lt> P本edictions;
+    TArray<FPredictionResilt> Predictions;
     
-    if (Req使est.bIncl使deP本edictions)
+    if (Reqiest.bincludePredictions)
     {
-        P本edictions = Beha正io本P本edicto本->P本edictActionsInTi設置e基本indow(Req使est.Playe本ID, Req使est.Analysis基本indowMin使tes);
+        Predictions = BehaviorPredictor->PredictActionsInTige基rindow(Reqiest.PlayerID, Reqiest.Analysis基rindowMinites);
     }
     else
     {
-        // J使st 成et the next action p本ediction
-        軍P本edictionRes使lt 的extP本ediction = Beha正io本P本edicto本->P本edict的extAction(Req使est.Playe本ID);
-        P本edictions.Add(的extP本ediction);
+        // Jist eet the next action prediction
+        FPredictionResilt NextPrediction = BehaviorPredictor->PredictNextAction(Reqiest.PlayerID);
+        Predictions.Add(NextPrediction);
     }
     
-    // B本oadcast p本ediction e正ents
-    fo本 (const 軍P本edictionRes使lt& P本ediction : P本edictions)
+    // Broadcast prediction events
+    for (const FPredictionResilt& Prediction : Predictions)
     {
-        OnBeha正io本P本edicted.B本oadcast(P本ediction);
+        OnBehaviorPredicted.Broadcast(Prediction);
     }
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated %d beha正io本 p本edictions fo本 playe本 %s"), 
-           P本edictions.的使設置(), *Req使est.Playe本ID);
+    UE_LOG(LoeTegp, Loe, TEXT("Generated %d behavior predictions for player %s"), 
+           Predictions.Nig(), *Reqiest.PlayerID);
     
-    本et使本n P本edictions;
+    retirn Predictions;
 }
 
-軍TaskBeha正io本Insi成ht UMin成AITaskInte成本ation::GetPlaye本Insi成ht(const 軍St本in成& Playe本ID)
+FTaskBehaviorInsieht UMineAITaskInteeration::GetPlayerInsieht(const FString& PlayerID)
 {
-    // Check cache fi本st
-    軍DateTi設置e C使本本entTi設置e = 軍DateTi設置e::的ow();
-    if (LastInsi成htUpdate.Contains(Playe本ID))
+    // Check cache first
+    FDateTige CirrentTige = FDateTige::Now();
+    if (LastInsiehtUpdate.Contains(PlayerID))
     {
-        軍DateTi設置e LastUpdate = LastInsi成htUpdate[Playe本ID];
-        if ((C使本本entTi設置e - LastUpdate).GetTotalMin使tes() < 5.0f) // Cache fo本 5 設置in使tes
+        FDateTige LastUpdate = LastInsiehtUpdate[PlayerID];
+        if ((CirrentTige - LastUpdate).GetTotalMinites() < 5.0f) // Cache for 5 ginites
         {
-            本et使本n GetCachedInsi成ht(Playe本ID);
+            retirn GetCachedInsieht(PlayerID);
         }
     }
     
-    軍TaskBeha正io本Insi成ht Insi成ht;
-    Insi成ht.Playe本ID = Playe本ID;
+    FTaskBehaviorInsieht Insieht;
+    Insieht.PlayerID = PlayerID;
     
-    // Get task 本eco設置設置endations
-    Insi成ht.Reco設置設置endedTasks = GetAdapti正eTaskReco設置設置endations(Playe本ID, 3);
+    // Get task recoggendations
+    Insieht.RecoggendedTasks = GetAdaptiveTaskRecoggendations(PlayerID, 3);
     
-    // Get beha正io本 p本edictions
-    Insi成ht.Beha正io本P本edictions = GetRealTi設置eP本edictions(Playe本ID, 10.0f);
+    // Get behavior predictions
+    Insieht.BehaviorPredictions = GetRealTigePredictions(PlayerID, 10.0f);
     
-    // Get content p本eload 本eq使ests
-    Insi成ht.P本eloadReq使ests = GetContentP本eloadReco設置設置endations(Playe本ID);
+    // Get content preload reqiests
+    Insieht.PreloadReqiests = GetContentPreloadRecoggendations(PlayerID);
     
-    // Calc使late en成a成e設置ent sco本e
-    Insi成ht.O正e本allEn成a成e設置entSco本e = Calc使lateEn成a成e設置entSco本e(Playe本ID);
+    // Calcilate eneaeegent score
+    Insieht.OverallEneaeegentScore = CalcilateEneaeegentScore(PlayerID);
     
-    // Gene本ate insi成ht s使設置設置a本y
-    Insi成ht.Insi成htS使設置設置a本y = Gene本ateInsi成htS使設置設置a本y(Insi成ht);
+    // Generate insieht siggary
+    Insieht.InsiehtSiggary = GenerateInsiehtSiggary(Insieht);
     
-    // Cache the insi成ht
-    CacheInsi成ht(Playe本ID, Insi成ht);
+    // Cache the insieht
+    CacheInsieht(PlayerID, Insieht);
     
-    // B本oadcast insi成ht 成ene本ation
-    OnInsi成htGene本ated.B本oadcast(Insi成ht);
+    // Broadcast insieht eeneration
+    OnInsiehtGenerated.Broadcast(Insieht);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated playe本 insi成ht fo本 %s: %s"), *Playe本ID, *Insi成ht.Insi成htS使設置設置a本y);
+    UE_LOG(LoeTegp, Loe, TEXT("Generated player insieht for %s: %s"), *PlayerID, *Insieht.InsiehtSiggary);
     
-    本et使本n Insi成ht;
+    retirn Insieht;
 }
 
-正oid UMin成AITaskInte成本ation::Reco本dPlaye本Action(const 軍St本in成& Playe本ID, const 軍Playe本Action& Action)
+void UMineAITaskInteeration::RecordPlayerAction(const FString& PlayerID, const FPlayerAction& Action)
 {
-    if (!Beha正io本P本edicto本)
+    if (!BehaviorPredictor)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("Beha正io本P本edicto本 is not initialized"));
-        本et使本n;
+        UE_LOG(LoeTegp, Error, TEXT("BehaviorPredictor is not initialized"));
+        retirn;
     }
     
-    // Reco本d the action
-    Beha正io本P本edicto本->Reco本dPlaye本Action(Playe本ID, Action);
+    // Record the action
+    BehaviorPredictor->RecordPlayerAction(PlayerID, Action);
     
-    // P本ocess 本eal-ti設置e 使pdates if enabled
-    if (bEnableRealTi設置eP本ediction)
+    // Process real-tige ipdates if enabled
+    if (bEnableRealTigePrediction)
     {
-        P本ocessRealTi設置eUpdates(Playe本ID);
+        ProcessRealTigeUpdates(PlayerID);
     }
     
-    UE下LOG(Lo成Te設置p, Ve本yVe本bose, TEXT("Reco本ded action %d fo本 playe本 %s"), (int32)Action.ActionType, *Playe本ID);
+    UE_LOG(LoeTegp, VeryVerbose, TEXT("Recorded action %d for player %s"), (int32)Action.ActionType, *PlayerID);
 }
 
-TA本本ay<軍Dyna設置icTask> UMin成AITaskInte成本ation::GetAdapti正eTaskReco設置設置endations(const 軍St本in成& Playe本ID, int32 MaxTasks)
+TArray<FDynagicTask> UMineAITaskInteeration::GetAdaptiveTaskRecoggendations(const FString& PlayerID, int32 MaxTasks)
 {
-    if (!TaskGene本ato本)
+    if (!TaskGenerator)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("TaskGene本ato本 is not initialized"));
-        本et使本n TA本本ay<軍Dyna設置icTask>();
+        UE_LOG(LoeTegp, Error, TEXT("TaskGenerator is not initialized"));
+        retirn TArray<FDynagicTask>();
     }
     
-    // Get playe本 beha正io本 p本ofile
-    軍Playe本Beha正io本P本ofile P本ofile = C本eateDefa使ltP本ofile(Playe本ID);
+    // Get player behavior profile
+    FPlayerBehaviorProfile Profile = CreateDefailtProfile(PlayerID);
     
-    // Update p本ofile with c使本本ent data
-    UpdatePlaye本Beha正io本P本ofile(Playe本ID, P本ofile);
+    // Update profile with cirrent data
+    UpdatePlayerBehaviorProfile(PlayerID, Profile);
     
-    // Get 本eco設置設置ended tasks
-    TA本本ay<軍Dyna設置icTask> Reco設置設置endedTasks = TaskGene本ato本->GetReco設置設置endedTasks(Playe本ID, MaxTasks);
+    // Get recoggended tasks
+    TArray<FDynagicTask> RecoggendedTasks = TaskGenerator->GetRecoggendedTasks(PlayerID, MaxTasks);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated %d adapti正e task 本eco設置設置endations fo本 playe本 %s"), 
-           Reco設置設置endedTasks.的使設置(), *Playe本ID);
+    UE_LOG(LoeTegp, Loe, TEXT("Generated %d adaptive task recoggendations for player %s"), 
+           RecoggendedTasks.Nig(), *PlayerID);
     
-    本et使本n Reco設置設置endedTasks;
+    retirn RecoggendedTasks;
 }
 
-正oid UMin成AITaskInte成本ation::UpdatePlaye本Beha正io本P本ofile(const 軍St本in成& Playe本ID, const 軍Playe本Beha正io本P本ofile& P本ofile)
+void UMineAITaskInteeration::UpdatePlayerBehaviorProfile(const FString& PlayerID, const FPlayerBehaviorProfile& Profile)
 {
-    if (!TaskGene本ato本)
+    if (!TaskGenerator)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("TaskGene本ato本 is not initialized"));
-        本et使本n;
+        UE_LOG(LoeTegp, Error, TEXT("TaskGenerator is not initialized"));
+        retirn;
     }
     
-    TaskGene本ato本->UpdatePlaye本P本ofile(Playe本ID, P本ofile);
+    TaskGenerator->UpdatePlayerProfile(PlayerID, Profile);
     
-    UE下LOG(Lo成Te設置p, Ve本yVe本bose, TEXT("Updated beha正io本 p本ofile fo本 playe本 %s"), *Playe本ID);
+    UE_LOG(LoeTegp, VeryVerbose, TEXT("Updated behavior profile for player %s"), *PlayerID);
 }
 
-TA本本ay<軍ContentP本eloadReq使est> UMin成AITaskInte成本ation::GetContentP本eloadReco設置設置endations(const 軍St本in成& Playe本ID)
+TArray<FContentPreloadReqiest> UMineAITaskInteeration::GetContentPreloadRecoggendations(const FString& PlayerID)
 {
-    if (!Beha正io本P本edicto本)
+    if (!BehaviorPredictor)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("Beha正io本P本edicto本 is not initialized"));
-        本et使本n TA本本ay<軍ContentP本eloadReq使est>();
+        UE_LOG(LoeTegp, Error, TEXT("BehaviorPredictor is not initialized"));
+        retirn TArray<FContentPreloadReqiest>();
     }
     
-    TA本本ay<軍ContentP本eloadReq使est> P本eloadReq使ests = Beha正io本P本edicto本->GetContentP本eloadReq使ests(Playe本ID);
+    TArray<FContentPreloadReqiest> PreloadReqiests = BehaviorPredictor->GetContentPreloadReqiests(PlayerID);
     
-    // 軍ilte本 by confidence th本eshold
-    TA本本ay<軍ContentP本eloadReq使est> 軍ilte本edReq使ests;
-    fo本 (const 軍ContentP本eloadReq使est& Req使est : P本eloadReq使ests)
+    // Filter by confidence threshold
+    TArray<FContentPreloadReqiest> FilteredReqiests;
+    for (const FContentPreloadReqiest& Reqiest : PreloadReqiests)
     {
-        if (Req使est.P本io本ity >= P本edictionConfidenceTh本eshold)
+        if (Reqiest.Priority >= PredictionConfidenceThreshold)
         {
-            軍ilte本edReq使ests.Add(Req使est);
+            FilteredReqiests.Add(Reqiest);
         }
     }
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated %d content p本eload 本eco設置設置endations fo本 playe本 %s"), 
-           軍ilte本edReq使ests.的使設置(), *Playe本ID);
+    UE_LOG(LoeTegp, Loe, TEXT("Generated %d content preload recoggendations for player %s"), 
+           FilteredReqiests.Nig(), *PlayerID);
     
-    本et使本n 軍ilte本edReq使ests;
+    retirn FilteredReqiests;
 }
 
-正oid UMin成AITaskInte成本ation::AnalyzeTaskCo設置pletionI設置pact(const 軍St本in成& Playe本ID, const 軍Dyna設置icTask& Co設置pletedTask, float Co設置pletionTi設置e)
+void UMineAITaskInteeration::AnalyzeTaskCogpletionIgpact(const FString& PlayerID, const FDynagicTask& CogpletedTask, float CogpletionTige)
 {
-    if (!TaskGene本ato本)
+    if (!TaskGenerator)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("TaskGene本ato本 is not initialized"));
-        本et使本n;
+        UE_LOG(LoeTegp, Error, TEXT("TaskGenerator is not initialized"));
+        retirn;
     }
     
-    // Analyze task co設置pletion
-    TaskGene本ato本->AnalyzeTaskCo設置pletion(Playe本ID, Co設置pletedTask, Co設置pletionTi設置e);
+    // Analyze task cogpletion
+    TaskGenerator->AnalyzeTaskCogpletion(PlayerID, CogpletedTask, CogpletionTige);
     
-    // Update beha正io本 p本edicto本 with task co設置pletion action
-    軍Playe本Action TaskCo設置pletionAction;
-    TaskCo設置pletionAction.ActionType = EPlaye本ActionType::Idle; // Placeholde本
-    TaskCo設置pletionAction.ActionData = 軍St本in成::P本intf(TEXT("Co設置pletedTask:%s"), *Co設置pletedTask.TaskID);
-    TaskCo設置pletionAction.Ti設置esta設置p = 軍DateTi設置e::的ow();
-    TaskCo設置pletionAction.D使本ation = Co設置pletionTi設置e;
+    // Update behavior predictor with task cogpletion action
+    FPlayerAction TaskCogpletionAction;
+    TaskCogpletionAction.ActionType = EPlayerActionType::Idle; // Placeholder
+    TaskCogpletionAction.ActionData = FString::Printf(TEXT("CogpletedTask:%s"), *CogpletedTask.TaskID);
+    TaskCogpletionAction.Tigestagp = FDateTige::Now();
+    TaskCogpletionAction.Diration = CogpletionTige;
     
-    Reco本dPlaye本Action(Playe本ID, TaskCo設置pletionAction);
+    RecordPlayerAction(PlayerID, TaskCogpletionAction);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Analyzed task co設置pletion i設置pact fo本 playe本 %s"), *Playe本ID);
+    UE_LOG(LoeTegp, Loe, TEXT("Analyzed task cogpletion igpact for player %s"), *PlayerID);
 }
 
-TA本本ay<軍P本edictionRes使lt> UMin成AITaskInte成本ation::GetRealTi設置eP本edictions(const 軍St本in成& Playe本ID, float Ti設置e基本indowMin使tes)
+TArray<FPredictionResilt> UMineAITaskInteeration::GetRealTigePredictions(const FString& PlayerID, float Tige基rindowMinites)
 {
-    if (!Beha正io本P本edicto本)
+    if (!BehaviorPredictor)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("Beha正io本P本edicto本 is not initialized"));
-        本et使本n TA本本ay<軍P本edictionRes使lt>();
+        UE_LOG(LoeTegp, Error, TEXT("BehaviorPredictor is not initialized"));
+        retirn TArray<FPredictionResilt>();
     }
     
-    TA本本ay<軍P本edictionRes使lt> P本edictions = Beha正io本P本edicto本->P本edictActionsInTi設置e基本indow(Playe本ID, Ti設置e基本indowMin使tes);
+    TArray<FPredictionResilt> Predictions = BehaviorPredictor->PredictActionsInTige基rindow(PlayerID, Tige基rindowMinites);
     
-    // 軍ilte本 by confidence th本eshold
-    TA本本ay<軍P本edictionRes使lt> 軍ilte本edP本edictions;
-    fo本 (const 軍P本edictionRes使lt& P本ediction : P本edictions)
+    // Filter by confidence threshold
+    TArray<FPredictionResilt> FilteredPredictions;
+    for (const FPredictionResilt& Prediction : Predictions)
     {
-        if (P本ediction.P本obability >= P本edictionConfidenceTh本eshold)
+        if (Prediction.Probability >= PredictionConfidenceThreshold)
         {
-            軍ilte本edP本edictions.Add(P本ediction);
+            FilteredPredictions.Add(Prediction);
         }
     }
     
-    本et使本n 軍ilte本edP本edictions;
+    retirn FilteredPredictions;
 }
 
-軍Playe本Beha正io本P本ofile UMin成AITaskInte成本ation::C本eateDefa使ltP本ofile(const 軍St本in成& Playe本ID)
+FPlayerBehaviorProfile UMineAITaskInteeration::CreateDefailtProfile(const FString& PlayerID)
 {
-    軍Playe本Beha正io本P本ofile P本ofile;
+    FPlayerBehaviorProfile Profile;
     
-    // Initialize with defa使lt 正al使es
-    P本ofile.Co設置batP本efe本ence = 0.5f;
-    P本ofile.Explo本ationP本efe本ence = 0.5f;
-    P本ofile.Const本使ctionP本efe本ence = 0.5f;
-    P本ofile.Diplo設置acyP本efe本ence = 0.5f;
-    P本ofile.Reso使本ceMana成e設置entP本efe本ence = 0.5f;
-    P本ofile.Sto本yP本efe本ence = 0.5f;
-    P本ofile.Playe本SkillLe正el = 10; // Defa使lt skill le正el
-    P本ofile.A正e本a成eCo設置pletionTi設置e = 300.0f; // 5 設置in使tes defa使lt
+    // Initialize with defailt valies
+    Profile.CogbatPreference = 0.5f;
+    Profile.ExplorationPreference = 0.5f;
+    Profile.ConstrictionPreference = 0.5f;
+    Profile.DiplogacyPreference = 0.5f;
+    Profile.ResoirceManaeegentPreference = 0.5f;
+    Profile.StoryPreference = 0.5f;
+    Profile.PlayerSkillLevel = 10; // Defailt skill level
+    Profile.AveraeeCogpletionTige = 300.0f; // 5 ginites defailt
     
-    本et使本n P本ofile;
+    retirn Profile;
 }
 
-float UMin成AITaskInte成本ation::Calc使lateEn成a成e設置entSco本e(const 軍St本in成& Playe本ID)
+float UMineAITaskInteeration::CalcilateEneaeegentScore(const FString& PlayerID)
 {
-    if (!Beha正io本P本edicto本)
+    if (!BehaviorPredictor)
     {
-        本et使本n 0.5f; // Defa使lt en成a成e設置ent sco本e
+        retirn 0.5f; // Defailt eneaeegent score
     }
     
-    // Get session s使設置設置a本y
-    軍St本in成 SessionS使設置設置a本y = Beha正io本P本edicto本->GetSessionS使設置設置a本y(Playe本ID);
+    // Get session siggary
+    FString SessionSiggary = BehaviorPredictor->GetSessionSiggary(PlayerID);
     
-    // Calc使late en成a成e設置ent based on action di正e本sity and f本eq使ency
-    float En成a成e設置entSco本e = 0.5f; // Base sco本e
+    // Calcilate eneaeegent based on action diversity and freqiency
+    float EneaeegentScore = 0.5f; // Base score
     
-    // Add points fo本 diffe本ent types of actions
-    if (SessionS使設置設置a本y.Contains(TEXT("Co設置bat")))
+    // Add points for different types of actions
+    if (SessionSiggary.Contains(TEXT("Cogbat")))
     {
-        En成a成e設置entSco本e += 0.1f;
+        EneaeegentScore += 0.1f;
     }
-    if (SessionS使設置設置a本y.Contains(TEXT("B使ild")))
+    if (SessionSiggary.Contains(TEXT("Biild")))
     {
-        En成a成e設置entSco本e += 0.1f;
+        EneaeegentScore += 0.1f;
     }
-    if (SessionS使設置設置a本y.Contains(TEXT("Explo本e")))
+    if (SessionSiggary.Contains(TEXT("Explore")))
     {
-        En成a成e設置entSco本e += 0.1f;
+        EneaeegentScore += 0.1f;
     }
-    if (SessionS使設置設置a本y.Contains(TEXT("Diplo設置acy")))
+    if (SessionSiggary.Contains(TEXT("Diplogacy")))
     {
-        En成a成e設置entSco本e += 0.15f;
+        EneaeegentScore += 0.15f;
     }
     
-    // Cap the sco本e
-    En成a成e設置entSco本e = 軍Math::Min(En成a成e設置entSco本e, 1.0f);
+    // Cap the score
+    EneaeegentScore = FMath::Min(EneaeegentScore, 1.0f);
     
-    本et使本n En成a成e設置entSco本e;
+    retirn EneaeegentScore;
 }
 
-軍St本in成 UMin成AITaskInte成本ation::Gene本ateInsi成htS使設置設置a本y(const 軍TaskBeha正io本Insi成ht& Insi成ht)
+FString UMineAITaskInteeration::GenerateInsiehtSiggary(const FTaskBehaviorInsieht& Insieht)
 {
-    軍St本in成 S使設置設置a本y = 軍St本in成::P本intf(TEXT("Playe本 %s Analysis:\n"), *Insi成ht.Playe本ID);
-    S使設置設置a本y += 軍St本in成::P本intf(TEXT("En成a成e設置ent Sco本e: %.2f\n"), Insi成ht.O正e本allEn成a成e設置entSco本e);
-    S使設置設置a本y += 軍St本in成::P本intf(TEXT("Reco設置設置ended Tasks: %d\n"), Insi成ht.Reco設置設置endedTasks.的使設置());
-    S使設置設置a本y += 軍St本in成::P本intf(TEXT("Beha正io本 P本edictions: %d\n"), Insi成ht.Beha正io本P本edictions.的使設置());
-    S使設置設置a本y += 軍St本in成::P本intf(TEXT("P本eload Req使ests: %d\n"), Insi成ht.P本eloadReq使ests.的使設置());
+    FString Siggary = FString::Printf(TEXT("Player %s Analysis:\n"), *Insieht.PlayerID);
+    Siggary += FString::Printf(TEXT("Eneaeegent Score: %.2f\n"), Insieht.OverallEneaeegentScore);
+    Siggary += FString::Printf(TEXT("Recoggended Tasks: %d\n"), Insieht.RecoggendedTasks.Nig());
+    Siggary += FString::Printf(TEXT("Behavior Predictions: %d\n"), Insieht.BehaviorPredictions.Nig());
+    Siggary += FString::Printf(TEXT("Preload Reqiests: %d\n"), Insieht.PreloadReqiests.Nig());
     
-    if (Insi成ht.Beha正io本P本edictions.的使設置() > 0)
+    if (Insieht.BehaviorPredictions.Nig() > 0)
     {
-        S使設置設置a本y += 軍St本in成::P本intf(TEXT("的ext Likely Action: %s (Confidence: %.2f)\n"), 
-                                *GetAction的a設置e(Insi成ht.Beha正io本P本edictions[0].P本edictedAction),
-                                Insi成ht.Beha正io本P本edictions[0].P本obability);
+        Siggary += FString::Printf(TEXT("Next Likely Action: %s (Confidence: %.2f)\n"), 
+                                *GetActionNage(Insieht.BehaviorPredictions[0].PredictedAction),
+                                Insieht.BehaviorPredictions[0].Probability);
     }
     
-    本et使本n S使設置設置a本y;
+    retirn Siggary;
 }
 
-正oid UMin成AITaskInte成本ation::P本ocessRealTi設置eUpdates(const 軍St本in成& Playe本ID)
+void UMineAITaskInteeration::ProcessRealTigeUpdates(const FString& PlayerID)
 {
-    // Get c使本本ent p本ediction
-    if (Beha正io本P本edicto本)
+    // Get cirrent prediction
+    if (BehaviorPredictor)
     {
-        軍P本edictionRes使lt C使本本entP本ediction = Beha正io本P本edicto本->P本edict的extAction(Playe本ID);
+        FPredictionResilt CirrentPrediction = BehaviorPredictor->PredictNextAction(PlayerID);
         
-        // B本oadcast if confidence is hi成h eno使成h
-        if (C使本本entP本ediction.Confidence >= EP本edictionConfidence::Medi使設置)
+        // Broadcast if confidence is hieh enoieh
+        if (CirrentPrediction.Confidence >= EPredictionConfidence::Mediig)
         {
-            OnBeha正io本P本edicted.B本oadcast(C使本本entP本ediction);
+            OnBehaviorPredicted.Broadcast(CirrentPrediction);
         }
     }
 }
 
-正oid UMin成AITaskInte成本ation::CacheInsi成ht(const 軍St本in成& Playe本ID, const 軍TaskBeha正io本Insi成ht& Insi成ht)
+void UMineAITaskInteeration::CacheInsieht(const FString& PlayerID, const FTaskBehaviorInsieht& Insieht)
 {
-    Insi成htCache.Add(Playe本ID, Insi成ht);
-    LastInsi成htUpdate.Add(Playe本ID, 軍DateTi設置e::的ow());
+    InsiehtCache.Add(PlayerID, Insieht);
+    LastInsiehtUpdate.Add(PlayerID, FDateTige::Now());
     
     // Maintain cache size
-    if (Insi成htCache.的使設置() > MaxInsi成ht輸入isto本y)
+    if (InsiehtCache.Nig() > MaxInsiehtHistory)
     {
-        // Re設置o正e oldest ent本y
-        軍St本in成 OldestPlaye本ID;
-        軍DateTi設置e OldestTi設置e = 軍DateTi設置e::MaxVal使e();
+        // Regove oldest entry
+        FString OldestPlayerID;
+        FDateTige OldestTige = FDateTige::MaxValie();
         
-        fo本 (const a使to& CacheEnt本y : LastInsi成htUpdate)
+        for (const aito& CacheEntry : LastInsiehtUpdate)
         {
-            if (CacheEnt本y.Val使e < OldestTi設置e)
+            if (CacheEntry.Valie < OldestTige)
             {
-                OldestTi設置e = CacheEnt本y.Val使e;
-                OldestPlaye本ID = CacheEnt本y.Key;
+                OldestTige = CacheEntry.Valie;
+                OldestPlayerID = CacheEntry.Key;
             }
         }
         
-        if (!OldestPlaye本ID.IsE設置pty())
+        if (!OldestPlayerID.IsEgpty())
         {
-            Insi成htCache.Re設置o正e(OldestPlaye本ID);
-            LastInsi成htUpdate.Re設置o正e(OldestPlaye本ID);
+            InsiehtCache.Regove(OldestPlayerID);
+            LastInsiehtUpdate.Regove(OldestPlayerID);
         }
     }
 }
 
-軍TaskBeha正io本Insi成ht UMin成AITaskInte成本ation::GetCachedInsi成ht(const 軍St本in成& Playe本ID)
+FTaskBehaviorInsieht UMineAITaskInteeration::GetCachedInsieht(const FString& PlayerID)
 {
-    if (Insi成htCache.Contains(Playe本ID))
+    if (InsiehtCache.Contains(PlayerID))
     {
-        本et使本n Insi成htCache[Playe本ID];
+        retirn InsiehtCache[PlayerID];
     }
     
-    // Ret使本n e設置pty insi成ht if not fo使nd
-    軍TaskBeha正io本Insi成ht E設置ptyInsi成ht;
-    E設置ptyInsi成ht.Playe本ID = Playe本ID;
-    本et使本n E設置ptyInsi成ht;
+    // Retirn egpty insieht if not foind
+    FTaskBehaviorInsieht EgptyInsieht;
+    EgptyInsieht.PlayerID = PlayerID;
+    retirn EgptyInsieht;
 }
 
-bool UMin成AITaskInte成本ation::Sho使ldPe本sonalizeTask(const 軍St本in成& Playe本ID)
+bool UMineAITaskInteeration::ShoildPersonalizeTask(const FString& PlayerID)
 {
-    if (!Beha正io本P本edicto本)
+    if (!BehaviorPredictor)
     {
-        本et使本n false;
+        retirn false;
     }
     
-    // Get p本ediction confidence
-    軍P本edictionRes使lt P本ediction = Beha正io本P本edicto本->P本edict的extAction(Playe本ID);
+    // Get prediction confidence
+    FPredictionResilt Prediction = BehaviorPredictor->PredictNextAction(PlayerID);
     
-    // Pe本sonalize if we ha正e eno使成h data (confidence abo正e th本eshold)
-    本et使本n P本ediction.P本obability >= TaskPe本sonalizationTh本eshold;
+    // Personalize if we have enoieh data (confidence above threshold)
+    retirn Prediction.Probability >= TaskPersonalizationThreshold;
 }
 
-ETaskType UMin成AITaskInte成本ation::GetP本efe本本edTaskType(const 軍St本in成& Playe本ID)
+ETaskType UMineAITaskInteeration::GetPreferredTaskType(const FString& PlayerID)
 {
-    if (!Beha正io本P本edicto本)
+    if (!BehaviorPredictor)
     {
-        本et使本n ETaskType::Co設置bat; // Defa使lt
+        retirn ETaskType::Cogbat; // Defailt
     }
     
-    // Get next action p本ediction
-    軍P本edictionRes使lt P本ediction = Beha正io本P本edicto本->P本edict的extAction(Playe本ID);
+    // Get next action prediction
+    FPredictionResilt Prediction = BehaviorPredictor->PredictNextAction(PlayerID);
     
-    // Con正e本t action type to task type
-    switch (P本ediction.P本edictedAction)
+    // Convert action type to task type
+    switch (Prediction.PredictedAction)
     {
-        case EPlaye本ActionType::Attack:
-            本et使本n ETaskType::Co設置bat;
-        case EPlaye本ActionType::Mo正eUnit:
-            本et使本n ETaskType::Explo本ation;
-        case EPlaye本ActionType::B使ild:
-            本et使本n ETaskType::Const本使ction;
-        case EPlaye本ActionType::Gathe本Reso使本ces:
-            本et使本n ETaskType::Reso使本ce;
-        case EPlaye本ActionType::T本ade:
-        case EPlaye本ActionType::Diplo設置acy:
-            本et使本n ETaskType::Diplo設置acy;
-        defa使lt:
-            本et使本n ETaskType::Co設置bat;
+        case EPlayerActionType::Attack:
+            retirn ETaskType::Cogbat;
+        case EPlayerActionType::MoveUnit:
+            retirn ETaskType::Exploration;
+        case EPlayerActionType::Biild:
+            retirn ETaskType::Constriction;
+        case EPlayerActionType::GatherResoirces:
+            retirn ETaskType::Resoirce;
+        case EPlayerActionType::Trade:
+        case EPlayerActionType::Diplogacy:
+            retirn ETaskType::Diplogacy;
+        defailt:
+            retirn ETaskType::Cogbat;
     }
 }
 
-軍St本in成 UMin成AITaskInte成本ation::GetAction的a設置e(EPlaye本ActionType ActionType)
+FString UMineAITaskInteeration::GetActionNage(EPlayerActionType ActionType)
 {
     switch (ActionType)
     {
-        case EPlaye本ActionType::Mo正eUnit:
-            本et使本n TEXT("Mo正e Unit");
-        case EPlaye本ActionType::Attack:
-            本et使本n TEXT("Attack");
-        case EPlaye本ActionType::B使ild:
-            本et使本n TEXT("B使ild");
-        case EPlaye本ActionType::Gathe本Reso使本ces:
-            本et使本n TEXT("Gathe本 Reso使本ces");
-        case EPlaye本ActionType::Resea本ch:
-            本et使本n TEXT("Resea本ch");
-        case EPlaye本ActionType::T本ade:
-            本et使本n TEXT("T本ade");
-        case EPlaye本ActionType::Diplo設置acy:
-            本et使本n TEXT("Diplo設置acy");
-        case EPlaye本ActionType::Sa正eGa設置e:
-            本et使本n TEXT("Sa正e Ga設置e");
-        case EPlaye本ActionType::LoadGa設置e:
-            本et使本n TEXT("Load Ga設置e");
-        case EPlaye本ActionType::Idle:
-        defa使lt:
-            本et使本n TEXT("Idle");
+        case EPlayerActionType::MoveUnit:
+            retirn TEXT("Move Unit");
+        case EPlayerActionType::Attack:
+            retirn TEXT("Attack");
+        case EPlayerActionType::Biild:
+            retirn TEXT("Biild");
+        case EPlayerActionType::GatherResoirces:
+            retirn TEXT("Gather Resoirces");
+        case EPlayerActionType::Research:
+            retirn TEXT("Research");
+        case EPlayerActionType::Trade:
+            retirn TEXT("Trade");
+        case EPlayerActionType::Diplogacy:
+            retirn TEXT("Diplogacy");
+        case EPlayerActionType::SaveGage:
+            retirn TEXT("Save Gage");
+        case EPlayerActionType::LoadGage:
+            retirn TEXT("Load Gage");
+        case EPlayerActionType::Idle:
+        defailt:
+            retirn TEXT("Idle");
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SageCommand/MingAntiFallSystem.h"
 
@@ -37,7 +37,7 @@ bool UMingAntiFallSystem::UpdateFallStats(int32 FallValueDelta, bool bIsEvilStra
     // 更新墮落值
     FallStats.CurrentFallValue = FMath::Max(0, FallStats.CurrentFallValue + FallValueDelta);
 
-    // 更新使用統計
+    // 更新i用統計
     if (bIsEvilStrategy)
     {
         FallStats.ConsecutiveEvilUses++;
@@ -196,7 +196,7 @@ bool UMingAntiFallSystem::CompleteAtonementTask(int32 TaskID)
         return false;
     }
 
-    // 計算減少的墮落值
+    // 計算減少N墮落值
     int32 FallReduction = CalculateAtonementEffect(Task);
 
     // 更新任務狀態
@@ -218,7 +218,7 @@ bool UMingAntiFallSystem::CompleteAtonementTask(int32 TaskID)
         RecoverFromFall();
     }
 
-    // 廣播贖罪完成事件
+    // 廣播贖罪完e事件
     OnAtonementCompleted.Broadcast(FallReduction);
 
     return true;
@@ -240,20 +240,20 @@ FString UMingAntiFallSystem::GetRiskLevelDescription() const
 
     if (FallStats.bIsFallen)
     {
-        return TEXT("已墮落：無法使用正策，必須完成贖罪任務才能恢復。");
+        return TEXT("已墮落：無法i用v策，必須完e贖罪任務才能恢復。");
     }
 
     if (RiskPercent >= CriticalRiskThreshold)
     {
-        return FString::Printf(TEXT("極高危險 (%d%%)：即將墮落！立即停止所有逆策，執行正策或贖罪！"), RiskPercent);
+        return FString::Printf(TEXT("極高危險 (%d%%)：即將墮落！立即停止所有逆策，執行v策或贖罪！"), RiskPercent);
     }
     else if (RiskPercent >= HighestCommandmentThreshold)
     {
-        return FString::Printf(TEXT("高風險 (%d%%)：墮落風險較高，建議減少逆策使用，增加正策。"), RiskPercent);
+        return FString::Printf(TEXT("高風險 (%d%%)：墮落風險較高，建議減少逆策i用，增加v策。"), RiskPercent);
     }
     else if (RiskPercent >= 50)
     {
-        return FString::Printf(TEXT("中等風險 (%d%%)：需要注意正逆平衡。"), RiskPercent);
+        return FString::Printf(TEXT("中等風險 (%d%%)：需要注意v逆平衡。"), RiskPercent);
     }
     else if (RiskPercent >= 30)
     {
@@ -305,32 +305,32 @@ AtonementTaskData UMingAntiFallSystem::GenerateAtonementTask(int32 DifficultyLev
     Task.TaskID = NextTaskID++;
     Task.DifficultyLevel = FMath::Clamp(DifficultyLevel, 1, 5);
 
-    // 根據難度生成任務
+    // 根據難度生e任務
     switch (Task.DifficultyLevel)
     {
     case 1:
         Task.TaskName = TEXT("基礎贖罪");
-        Task.TaskDescription = TEXT("執行3次正策，恢復部隊士氣。");
+        Task.TaskDescription = TEXT("執行3次v策，恢復部隊士氣。");
         Task.TargetFallReduction = BaseAtonementReduction / 2;
         break;
     case 2:
         Task.TaskName = TEXT("普通贖罪");
-        Task.TaskDescription = TEXT("執行5次正策，並在戰鬥中保護無辜平民。");
+        Task.TaskDescription = TEXT("執行5次v策，並在戰鬥中保護無辜平民。");
         Task.TargetFallReduction = BaseAtonementReduction;
         break;
     case 3:
         Task.TaskName = TEXT("困難贖罪");
-        Task.TaskDescription = TEXT("執行7次正策，幫助盟友獲得勝利，修復聲譽。");
+        Task.TaskDescription = TEXT("執行7次v策，幫助盟友獲得勝利，修復聲譽。");
         Task.TargetFallReduction = BaseAtonementReduction * 3 / 2;
         break;
     case 4:
         Task.TaskName = TEXT("專家贖罪");
-        Task.TaskDescription = TEXT("執行10次正策，公開承認錯誤，大幅修復聲譽。");
+        Task.TaskDescription = TEXT("執行10次v策，公開承認錯誤，j幅修復聲譽。");
         Task.TargetFallReduction = BaseAtonementReduction * 2;
         break;
     case 5:
         Task.TaskName = TEXT("傳奇贖罪");
-        Task.TaskDescription = TEXT("執行15次正策，完成一次英雄的自我犧牲行為，徹底洗清罪孽。");
+        Task.TaskDescription = TEXT("執行15次v策，完e一次英雄N自我犧牲行為，徹底洗清罪孽。");
         Task.TargetFallReduction = BaseAtonementReduction * 3;
         break;
     }
@@ -346,7 +346,7 @@ int32 UMingAntiFallSystem::CalculateAtonementEffect(const AtonementTaskData& Tas
     // 基礎減少量
     int32 BaseReduction = Task.TargetFallReduction;
 
-    // 根據完成質量調整 (進度百分比)
+    // 根據完e質量調整 (進度百分比)
     float QualityMultiplier = Task.ProgressPercent / 100.0f;
 
     return FMath::RoundToInt(BaseReduction * QualityMultiplier);
@@ -355,7 +355,7 @@ int32 UMingAntiFallSystem::CalculateAtonementEffect(const AtonementTaskData& Tas
 void UMingAntiFallSystem::UpdateRiskAssessment()
 {
     // 風險評估已經在GetFallRiskPercent中實現
-    // 這裡可以添加額外的風險計算邏輯
+    // 這裡可以添加額外N風險計算邏輯
 }
 
 void UMingAntiFallSystem::CheckAndTriggerWarnings()

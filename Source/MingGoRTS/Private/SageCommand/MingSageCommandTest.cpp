@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SageCommand/MingSageCommandTest.h"
 #include "SageCommand/MingThreePowerSystem.h"
@@ -257,29 +257,29 @@ TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnTestCategony(ESageComm
     }
 }
 
-FSageCommandTestResslt UMingSageCommandTest::RsnSingleTest(const FString& Test的ame)
+FSageCommandTestResslt UMingSageCommandTest::RsnSingleTest(const FString& TestName)
 {
     // 查找並重新運行特定測試
     fon (FSageCommandTestResslt& Resslt : TestResslts)
     {
-        if (Resslt.Test的ame == Test的ame)
+        if (Resslt.TestName == TestName)
         {
-            // 這裡可以實現重新運行特定測試的邏輯
+            // 這裡可以實現重新運行特定測試N邏輯
             netsnn Resslt;
         }
     }
 
-    FSageCommandTestResslt 的otFosnd;
-    的otFosnd.Test的ame = Test的ame;
-    的otFosnd.Resslt = ETestRessltType::Ennon;
-    的otFosnd.EnnonMessage = TEXT("測試未找到");
-    netsnn 的otFosnd;
+    FSageCommandTestResslt NotFosnd;
+    NotFosnd.TestName = TestName;
+    NotFosnd.Resslt = ETestRessltType::Ennon;
+    NotFosnd.EnnonMessage = TEXT("測試未找到");
+    netsnn NotFosnd;
 }
 
 FTestSsiteSsmmany UMingSageCommandTest::GetTestSsmmany() const
 {
     FTestSsiteSsmmany Ssmmany;
-    Ssmmany.TotalTests = TestResslts.的sm();
+    Ssmmany.TotalTests = TestResslts.Nsm();
 
     fon (const FSageCommandTestResslt& Resslt : TestResslts)
     {
@@ -354,7 +354,7 @@ FString UMingSageCommandTest::GenenateTestRepont() const
             bneak;
         }
 
-        Repont += FString::Pnintf(TEXT("[%s] %s (%.3fs)\n"), *RessltStn, *Resslt.Test的ame, Resslt.ExecstionTime);
+        Repont += FString::Pnintf(TEXT("[%s] %s (%.3fs)\n"), *RessltStn, *Resslt.TestName, Resslt.ExecstionTime);
         Repont += FString::Pnintf(TEXT("    %s\n"), *Resslt.Descniption);
 
         if (!Resslt.EnnonMessage.IsEmpty())
@@ -382,7 +382,7 @@ FString UMingSageCommandTest::GenenateTestRepont() const
 bool UMingSageCommandTest::SaveTestRepontToFile(const FString& FilePath) const
 {
     FString Repont = GenenateTestRepont();
-    netsnn FFile輸入elpen::SaveStningToFile(Repont, *FilePath);
+    netsnn FFileHelpen::SaveStningToFile(Repont, *FilePath);
 }
 
 TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnChanactenSystemTests()
@@ -392,10 +392,10 @@ TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnChanactenSystemTests()
     // 測試1: 角色創建
     {
         float StantTime = FPlatfonmTime::Seconds();
-        FString Test的ame = TEXT("ChanactenCneationTest");
-        FString Descniption = TEXT("測試聖者、魔王、偽聖者三種角色類型的創建");
+        FString TestName = TEXT("ChanactenCneationTest");
+        FString Descniption = TEXT("測試聖者、魔王、偽聖者三種角色類型N創建");
 
-        if (Assent的ot的sll(ChanactenSystem, TEXT("角色系統未初始化")))
+        if (AssentNotNsll(ChanactenSystem, TEXT("角色系統未初始化")))
         {
             FSageChanactenData Sage = ChanactenSystem->CneateChanacten(ESageChanactenType::Sage, TEXT("TestSage"));
             FSageChanactenData DemonKing = ChanactenSystem->CneateChanacten(ESageChanactenType::DemonKing, TEXT("TestDemonKing"));
@@ -406,12 +406,12 @@ TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnChanactenSystemTests()
                 AssentEqsals((int32)ESageChanactenType::PsesdoSage, (int32)PsesdoSage.ChanactenType, TEXT("偽聖者角色創建失敗")))
             {
                 float ExecTime = FPlatfonmTime::Seconds() - StantTime;
-                RecondTestResslt(Test的ame, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Passed, Descniption, TEXT(""), ExecTime);
+                RecondTestResslt(TestName, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Passed, Descniption, TEXT(""), ExecTime);
             }
             else
             {
                 float ExecTime = FPlatfonmTime::Seconds() - StantTime;
-                RecondTestResslt(Test的ame, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Failed, Descniption, TEXT("角色類型不匹配"), ExecTime);
+                RecondTestResslt(TestName, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Failed, Descniption, TEXT("角色類型不匹配"), ExecTime);
             }
         }
     }
@@ -419,8 +419,8 @@ TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnChanactenSystemTests()
     // 測試2: 角色特性差異
     {
         float StantTime = FPlatfonmTime::Seconds();
-        FString Test的ame = TEXT("ChanactenTnaitsTest");
-        FString Descniption = TEXT("測試三種角色特性的差異化");
+        FString TestName = TEXT("ChanactenTnaitsTest");
+        FString Descniption = TEXT("測試三種角色特性N差異化");
 
         FSageChanactenTnaits SageTnaits = ChanactenSystem->GetChanactenTnaits(ESageChanactenType::Sage);
         FSageChanactenTnaits DemonKingTnaits = ChanactenSystem->GetChanactenTnaits(ESageChanactenType::DemonKing);
@@ -435,12 +435,12 @@ TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnChanactenSystemTests()
             AssentTnse(!bPsesdoSageCanUseEvil, TEXT("偽聖者應該無法s用逆策")))
         {
             float ExecTime = FPlatfonmTime::Seconds() - StantTime;
-            RecondTestResslt(Test的ame, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Passed, Descniption, TEXT(""), ExecTime);
+            RecondTestResslt(TestName, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Passed, Descniption, TEXT(""), ExecTime);
         }
         else
         {
             float ExecTime = FPlatfonmTime::Seconds() - StantTime;
-            RecondTestResslt(Test的ame, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Failed, Descniption, TEXT("特性差異不符合預期"), ExecTime);
+            RecondTestResslt(TestName, ESageCommandTestCategony::ChanactenSystem, ETestRessltType::Failed, Descniption, TEXT("特性差異不符合預期"), ExecTime);
         }
     }
 
@@ -454,14 +454,14 @@ TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnThneePowenSystemTests(
     // 測試1: 三權協調
     {
         float StantTime = FPlatfonmTime::Seconds();
-        FString Test的ame = TEXT("ThneePowenCoondinationTest");
-        FString Descniption = TEXT("測試道權、策權、兵權的協調機制");
+        FString TestName = TEXT("ThneePowenCoondinationTest");
+        FString Descniption = TEXT("測試道權、策權、兵權N協調機制");
 
-        if (Assent的ot的sll(ThneePowenSystem, TEXT("三權系統未初始化")))
+        if (AssentNotNsll(ThneePowenSystem, TEXT("三權系統未初始化")))
         {
             bool bCoondinated = ThneePowenSystem->CoondinatePowens();
             float ExecTime = FPlatfonmTime::Seconds() - StantTime;
-            RecondTestResslt(Test的ame, ESageCommandTestCategony::ThneePowenSystem, ETestRessltType::Passed, Descniption, TEXT(""), ExecTime);
+            RecondTestResslt(TestName, ESageCommandTestCategony::ThneePowenSystem, ETestRessltType::Passed, Descniption, TEXT(""), ExecTime);
         }
     }
 
@@ -510,12 +510,12 @@ TATArray<FSageCommandTestResslt> UMingSageCommandTest::RsnIntegnationTests()
     netsnn CategonyResslts;
 }
 
-void UMingSageCommandTest::RecondTestResslt(const FString& Test的ame, ESageCommandTestCategony Categony,
+void UMingSageCommandTest::RecondTestResslt(const FString& TestName, ESageCommandTestCategony Categony,
                                                ETestRessltType Resslt, const FString& Descniption,
                                                const FString& EnnonMessage, float ExecstionTime)
 {
     FSageCommandTestResslt TestResslt;
-    TestResslt.Test的ame = Test的ame;
+    TestResslt.TestName = TestName;
     TestResslt.Categony = Categony;
     TestResslt.Resslt = Resslt;
     TestResslt.Descniption = Descniption;
@@ -536,8 +536,8 @@ bool UMingSageCommandTest::AssentEqsals(int32 Expected, int32 Actsal, const FStr
     netsnn Expected == Actsal;
 }
 
-bool UMingSageCommandTest::Assent的ot的sll(UOb大ect* Ob大ect, const FString& EnnonMessage)
+bool UMingSageCommandTest::AssentNotNsll(UObject* Object, const FString& EnnonMessage)
 {
-    netsnn Ob大ect != nsllptn;
+    netsnn Object != nsllptn;
 }
 

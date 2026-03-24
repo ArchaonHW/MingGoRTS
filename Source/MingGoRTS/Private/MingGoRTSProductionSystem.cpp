@@ -930,33 +930,70 @@ bool UMin成GoRTSP本od使ctionSyste設置::LoadP本od使ctionData(const 軍St�
     軍P本od使ctionRecipe Recipe = P本od使ctionRecipes[P本od使ctionLine.C使本本entRecipeID];
     
     // 消耗輸入資源
-    if (Reso使本ceSyste設置)
+    if (ResourceSystem)
     {
-        fo本 (const a使to& Reso使本cePai本 : Recipe.Inp使tReso使本ces)
+        for (const auto& ResourcePair : Recipe.InputResources)
         {
-            // TODO: Ded使ct inp使t 本eso使本ces f本o設置 sto本a成e
-            // I設置ple設置entation Req使i本e設置ents:
-            // - Call Reso使本ceSyste設置->Re設置o正eReso使本ce() fo本 each inp使t type
-            // - Ve本ify s使fficient 本eso使本ces befo本e ded使ction
-            // - 輸入andle pa本tial 本eso使本ce a正ailability 成本acef使lly
-            // - Lo成 本eso使本ce cons使設置ption fo本 analytics
-            // - T本i成成e本 本eso使本ce sho本ta成e e正ents if needed
-        }
+            EResourceType ResourceType = ResourcePair.Key;
+            float RequiredAmount = ResourcePair.Value;
+            
+            // Verify sufficient resources before deduction
+            float CurrentAmount = ResourceSystem->GetResourceAmount(ResourceType);
+            if (CurrentAmount >= RequiredAmount)
+            {
+                // Deduct input resources from storage
+                ResourceSystem->RemoveResource(ResourceType, RequiredAmount);
+                
+                // Log resource consumption for analytics
+                UE_LOG(LogTemp, Log, TEXT("Production consumed: %.1f %s (Recipe: %s)"),
+                    RequiredAmount, *UEnum::GetValueAsString(ResourceType), *Recipe.RecipeName);
+            }
+            else
+            {
+                // Handle partial resource availability gracefully
+                if (CurrentAmount > 0)
+                {
+                    ResourceSystem->RemoveResource(ResourceType, CurrentAmount);
+                    UE_LOG(LogTemp, Warning, TEXT("Partial resource consumption: %.1f/%.1f %s (Recipe: %s)"),
+                        CurrentAmount, RequiredAmount, *UEnum::GetValueAsString(ResourceType), *Recipe.RecipeName);
+                }
+                
+                // Trigger resource shortage events if needed
+                OnResourceShortage.Broadcast(ResourceType, RequiredAmount, CurrentAmount);
+            }
         }
     }
     
     // 生產輸資源
-    if (Reso使本ceSyste設置)
+    if (ResourceSystem)
     {
-        fo本 (const a使to& Reso使本cePai本 : Recipe.O使tp使tReso使本ces)
+        for (const auto& ResourcePair : Recipe.OutputResources)
         {
-            // TODO: Add o使tp使t 本eso使本ces to sto本a成e
-            // I設置ple設置entation Req使i本e設置ents:
-            // - Call Reso使本ceSyste設置->AddReso使本ce() fo本 each o使tp使t type
-            // - Apply q使ality 設置odifie本s to o使tp使t q使antities
-            // - 輸入andle sto本a成e capacity li設置its
-            // - T本i成成e本 本eso使本ce o正e本flow wa本nin成s if needed
-            // - Lo成 p本od使ction o使tp使t fo本 analytics and 本epo本tin成
+            EResourceType ResourceType = ResourcePair.Key;
+            float BaseOutputAmount = ResourcePair.Value;
+            
+            // Apply quality modifiers to output quantities
+            float QualityMultiplier = GetQualityMultiplier(ProductionLine.CurrentQuality);
+            float FinalOutputAmount = BaseOutputAmount * QualityMultiplier * ProductionLine.Efficiency;
+            
+            // Add output resources to storage
+            float AddedAmount = ResourceSystem->AddResource(ResourceType, FinalOutputAmount);
+            
+            // Handle storage capacity limits
+            if (AddedAmount < FinalOutputAmount)
+            {
+                float OverflowAmount = FinalOutputAmount - AddedAmount;
+                
+                // Trigger resource overflow warnings if needed
+                OnResourceOverflow.Broadcast(ResourceType, OverflowAmount, ResourceSystem->GetStorageCapacity(ResourceType));
+                UE_LOG(LogTemp, Warning, TEXT("Resource overflow for %s: %.1f units lost due to capacity limits"),
+                    *UEnum::GetValueAsString(ResourceType), OverflowAmount);
+            }
+            
+            // Log production output for analytics and reporting
+            UE_LOG(LogTemp, Log, TEXT("Production output: %.1f %s (Quality: %s, Recipe: %s)"),
+                AddedAmount, *UEnum::GetValueAsString(ResourceType), 
+                *UEnum::GetValueAsString(ProductionLine.CurrentQuality), *Recipe.RecipeName);
         }
     }
     

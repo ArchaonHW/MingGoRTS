@@ -11,7 +11,7 @@ UMingIntegrationTestSystem::UMingIntegrationTestSystem()
 void UMingIntegrationTestSystem::InitializeSystem()
 {
     ResetTestResults();
-    UE_LOG(LogTemp, Log, TEXT("系统集成测试系统初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("系统集e测试系统初始化完e"));
 }
 
 void UMingIntegrationTestSystem::ResetTestResults()
@@ -47,7 +47,7 @@ void UMingIntegrationTestSystem::RunAllTests()
 {
     ResetTestResults();
     
-    UE_LOG(LogTemp, Log, TEXT("开始运行所有集成测试..."));
+    UE_LOG(LogTemp, Log, TEXT("开始运行所有集e测试..."));
     
     // 测试各个系统
     TestCharacterSystem();
@@ -56,7 +56,7 @@ void UMingIntegrationTestSystem::RunAllTests()
     TestAntiFallSystem();
     TestAIAdapterSystem();
     
-    UE_LOG(LogTemp, Log, TEXT("集成测试完成: 总计 %d, 通过 %d, 失败 %d"), TotalTests, PassedTests, FailedTests);
+    UE_LOG(LogTemp, Log, TEXT("集e测试完e: 总计 %d, 通过 %d, 失败 %d"), TotalTests, PassedTests, FailedTests);
 }
 
 bool UMingIntegrationTestSystem::TestCharacterSystem()
@@ -120,7 +120,7 @@ bool UMingIntegrationTestSystem::TestStrategySystem()
     bool bSuccess = true;
     FString Message;
     
-    // 测试正逆六策
+    // 测试v逆六策
     // 测试五行节奏
     
     if (bSuccess)

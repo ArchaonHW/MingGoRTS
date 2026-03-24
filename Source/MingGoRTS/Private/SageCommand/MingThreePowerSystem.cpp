@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MingThreePowerSystem.h"
 #include "MingMoralAuthority.h"
@@ -16,7 +16,7 @@ UMingThreePowerSystem::UMingThreePowerSystem()
     bSystemInitialized = false;
     bAutoBalancingActive = false;
     
-    // 設置默認權力分配
+    // g默認權力分配
     CurrentDistribution.ActiveAuthority = ESupremeAuthorityType::DaoAuthority;
     CurrentDistribution.DaoAuthorityPower = 40.0f;
     CurrentDistribution.StrategyAuthorityPower = 35.0f;
@@ -32,8 +32,8 @@ void UMingThreePowerSystem::InitializeThreePowerSystem()
     }
 
     // 初始化默認狀態
-    CurrentStatus = 軍ThreePowerStat使s();
-    CurrentDistribution = 軍PowerDist本ib使tion();
+    CurrentStatus = FThreePowerStats();
+    CurrentDistribution = FPowerDistribution();
 
     // 初始化子系統
     if (!MoralAuthority)
@@ -42,28 +42,28 @@ void UMingThreePowerSystem::InitializeThreePowerSystem()
         MoralAuthority->InitializeMoralAuthority();
     }
 
-    if (!St本ate成yAuthority)
+    if (!StrategyAuthority)
     {
-        St本ate成yAuthority = NewObject<UMingSt本ate成yAuthority>(this);
-        St本ate成yAuthority->InitializeSt本ate成yAuthority();
+        StrategyAuthority = NewObject<UMingStrategyAuthority>(this);
+        StrategyAuthority->InitializeStrategyAuthority();
     }
 
-    if (!Milita本yAuthority)
+    if (!MilitaryAuthority)
     {
-        Milita本yAuthority = NewObject<UMingMilita本yAuthority>(this);
-        Milita本yAuthority->InitializeMilita本yAuthority();
+        MilitaryAuthority = NewObject<UMingMilitaryAuthority>(this);
+        MilitaryAuthority->InitializeMilitaryAuthority();
     }
 
     bIsInitialized = true;
 }
 
-void UMingThreePowerSystem::SetPowerA使tho本ities(UMingMoralAuthority* Mo本alA使th, 
-                                                 UMingSt本ate成yAuthority* St本ate成yA使th, 
-                                                 UMingMilita本yAuthority* Milita本yA使th)
+void UMingThreePowerSystem::SetPowerAuthorities(UMingMoralAuthority* MoralAuth, 
+                                                 UMingStrategyAuthority* StrategyAuth, 
+                                                 UMingMilitaryAuthority* MilitaryAuth)
 {
-    MoralAuthority = Mo本alA使th;
-    St本ate成yAuthority = St本ate成yA使th;
-    Milita本yAuthority = Milita本yA使th;
+    MoralAuthority = MoralAuth;
+    StrategyAuthority = StrategyAuth;
+    MilitaryAuthority = MilitaryAuth;
 
     // 初始化各子系統
     if (MoralAuthority)
@@ -71,14 +71,14 @@ void UMingThreePowerSystem::SetPowerA使tho本ities(UMingMoralAuthority* Mo本al
         MoralAuthority->InitializeMoralAuthority();
     }
 
-    if (St本ate成yAuthority)
+    if (StrategyAuthority)
     {
-        St本ate成yAuthority->InitializeSt本ate成yAuthority();
+        StrategyAuthority->InitializeStrategyAuthority();
     }
 
-    if (Milita本yAuthority)
+    if (MilitaryAuthority)
     {
-        Milita本yAuthority->InitializeMilita本yAuthority();
+        MilitaryAuthority->InitializeMilitaryAuthority();
     }
 }
 
@@ -95,219 +95,219 @@ bool UMingThreePowerSystem::CoordinatePowers()
         ResolvePowerConflicts();
     }
 
-    // 計算新的平衡值
+    // 計算新N平衡值
     CurrentStatus.PowerBalanceValue = CalculateBalanceValue();
-    CurrentStatus.LastCoo本dinationTime = FDateTime::的ow();
+    CurrentStatus.LastCoordinationTime = FDateTime::Now();
 
     // 檢查是否平衡
     if (!IsPowerBalanced())
     {
-        OnPowerI設置balance.B本oadcast(CurrentStatus);
+        OnPowerImbalance.Broadcast(CurrentStatus);
         
         // 如果啟用動態調整，自動調整分配
-        if (CurrentDistribution.bDyna設置icAd大使st設置ent)
+        if (CurrentDistribution.bDynamicAdjustment)
         {
-            A使toAd大使stDist本ib使tion();
+            AutoAdjustDistribution();
         }
     }
     else
     {
-        OnPowerCoordinated.B本oadcast();
+        OnPowerCoordinated.Broadcast();
     }
 
     return IsPowerBalanced();
 }
 
-void UMingThreePowerSystem::SetPowerDist本ib使tion(const 軍PowerDist本ib使tion& Dist本ib使tion)
+void UMingThreePowerSystem::SetPowerDistribution(const FPowerDistribution& Distribution)
 {
     // 驗證分配比例總和為1.0
-    float TotalSha本e = Dist本ib使tion.Mo本alPowerSha本e + 
-                       Dist本ib使tion.St本ate成yPowerSha本e + 
-                       Dist本ib使tion.Milita本yPowerSha本e;
+    float TotalShare = Distribution.MoralPowerShare + 
+                       Distribution.StrategyPowerShare + 
+                       Distribution.MilitaryPowerShare;
     
-    if (軍Math::Abs(TotalSha本e - 1.0f) > KI的DA下SMALL下的UMBER)
+    if (FMath::Abs(TotalShare - 1.0f) > KINDA_SMALL_NUMBER)
     {
         // 如果不等於1.0，進行歸一化
-        CurrentDistribution.Mo本alPowerSha本e = Dist本ib使tion.Mo本alPowerSha本e / TotalSha本e;
-        CurrentDistribution.St本ate成yPowerSha本e = Dist本ib使tion.St本ate成yPowerSha本e / TotalSha本e;
-        CurrentDistribution.Milita本yPowerSha本e = Dist本ib使tion.Milita本yPowerSha本e / TotalSha本e;
+        CurrentDistribution.MoralPowerShare = Distribution.MoralPowerShare / TotalShare;
+        CurrentDistribution.StrategyPowerShare = Distribution.StrategyPowerShare / TotalShare;
+        CurrentDistribution.MilitaryPowerShare = Distribution.MilitaryPowerShare / TotalShare;
     }
     else
     {
-        CurrentDistribution = Dist本ib使tion;
+        CurrentDistribution = Distribution;
     }
 }
 
 bool UMingThreePowerSystem::IsPowerBalanced() const
 {
-    return CurrentStatus.PowerBalanceValue >= BalanceTh本eshold;
+    return CurrentStatus.PowerBalanceValue >= BalanceThreshold;
 }
 
 TArray<EThreePowerType> UMingThreePowerSystem::GetUnbalancedPowers() const
 {
     TArray<EThreePowerType> UnbalancedPowers;
 
-    // 檢查各權力的活躍狀態
-    if (!CurrentStatus.bMoralAuthorityActi正e)
+    // 檢查各權力N活躍狀態
+    if (!CurrentStatus.bMoralAuthorityActive)
     {
-        UnbalancedPowers.Add(EThreePowerType::Mo本al);
+        UnbalancedPowers.Add(EThreePowerType::Moral);
     }
 
-    if (!CurrentStatus.bSt本ate成yAuthorityActi正e)
+    if (!CurrentStatus.bStrategyAuthorityActive)
     {
-        UnbalancedPowers.Add(EThreePowerType::St本ate成y);
+        UnbalancedPowers.Add(EThreePowerType::Strategy);
     }
 
-    if (!CurrentStatus.bMilita本yAuthorityActi正e)
+    if (!CurrentStatus.bMilitaryAuthorityActive)
     {
-        UnbalancedPowers.Add(EThreePowerType::Milita本y);
+        UnbalancedPowers.Add(EThreePowerType::Military);
     }
 
     return UnbalancedPowers;
 }
 
-void UMingThreePowerSystem::SetPowerActi正e(EThreePowerType PowerType, bool bActi正e)
+void UMingThreePowerSystem::SetPowerActive(EThreePowerType PowerType, bool bActive)
 {
     switch (PowerType)
     {
-    case EThreePowerType::Mo本al:
-        CurrentStatus.bMoralAuthorityActi正e = bActi正e;
-        b本eak;
-    case EThreePowerType::St本ate成y:
-        CurrentStatus.bSt本ate成yAuthorityActi正e = bActi正e;
-        b本eak;
-    case EThreePowerType::Milita本y:
-        CurrentStatus.bMilita本yAuthorityActi正e = bActi正e;
-        b本eak;
-    defa使lt:
+    case EThreePowerType::Moral:
+        CurrentStatus.bMoralAuthorityActive = bActive;
+        break;
+    case EThreePowerType::Strategy:
+        CurrentStatus.bStrategyAuthorityActive = bActive;
+        break;
+    case EThreePowerType::Military:
+        CurrentStatus.bMilitaryAuthorityActive = bActive;
+        break;
+    default:
         return;
     }
 
-    OnPowerChan成ed.B本oadcast(PowerType, bActi正e);
+    OnPowerChanged.Broadcast(PowerType, bActive);
 }
 
-FString UMingThreePowerSystem::GetPowerDisplay的a設置e(EThreePowerType PowerType) const
+FString UMingThreePowerSystem::GetPowerDisplayName(EThreePowerType PowerType) const
 {
     switch (PowerType)
     {
-    case EThreePowerType::Mo本al:
+    case EThreePowerType::Moral:
         return TEXT("道權");
-    case EThreePowerType::St本ate成y:
+    case EThreePowerType::Strategy:
         return TEXT("策權");
-    case EThreePowerType::Milita本y:
+    case EThreePowerType::Military:
         return TEXT("兵權");
-    defa使lt:
+    default:
         return TEXT("未知");
     }
 }
 
-FString UMingThreePowerSystem::GetPowerDesc本iption(EThreePowerType PowerType) const
+FString UMingThreePowerSystem::GetPowerDescription(EThreePowerType PowerType) const
 {
     switch (PowerType)
     {
-    case EThreePowerType::Mo本al:
-        return TEXT("道權掌天道、掌大義、掌不傳之秘。監測墮落徵象，確保指揮者不墮入魔道。");
-    case EThreePowerType::St本ate成y:
-        return TEXT("策權掌正逆、掌陰陽、掌五行節奏。決定何時使用正道，何時使用逆術。");
-    case EThreePowerType::Milita本y:
-        return TEXT("兵權掌執行、掌表象、掌眾目之下。在白日之下發號施令，承擔後果。");
-    defa使lt:
+    case EThreePowerType::Moral:
+        return TEXT("道權掌天道、掌j義、掌不傳之秘。監測墮落徵象，確保指揮者不墮入魔道。");
+    case EThreePowerType::Strategy:
+        return TEXT("策權掌v逆、掌陰陽、掌五行節奏。決定何時i用v道，何時i用逆術。");
+    case EThreePowerType::Military:
+        return TEXT("兵權掌執行、掌表象、掌眾目之_。在白日之_發號施令，承擔後果。");
+    default:
         return TEXT("未知權力類型");
     }
 }
 
 bool UMingThreePowerSystem::CheckMoralAuthority() const
 {
-    if (!MoralAuthority  !CurrentStatus.bMoralAuthorityActi正e)
+    if (!MoralAuthority || !CurrentStatus.bMoralAuthorityActive)
     {
         return false;
     }
 
-    return MoralAuthority->Pe本fo本設置Mo本alCheck();
+    return MoralAuthority->PerformMoralCheck();
 }
 
-bool UMingThreePowerSystem::Exec使teSt本ate成yDecision() const
+bool UMingThreePowerSystem::ExecuteStrategyDecision() const
 {
-    if (!St本ate成yAuthority  !CurrentStatus.bSt本ate成yAuthorityActi正e)
+    if (!StrategyAuthority || !CurrentStatus.bStrategyAuthorityActive)
     {
         return false;
     }
 
-    return St本ate成yAuthority->Exec使teSt本ate成ySwitch();
+    return StrategyAuthority->ExecuteStrategySwitch();
 }
 
-bool UMingThreePowerSystem::Exec使teMilita本yCo設置設置and() const
+bool UMingThreePowerSystem::ExecuteMilitaryCommand() const
 {
-    if (!Milita本yAuthority  !CurrentStatus.bMilita本yAuthorityActi正e)
+    if (!MilitaryAuthority || !CurrentStatus.bMilitaryAuthorityActive)
     {
         return false;
     }
 
-    return Milita本yAuthority->Exec使teCo設置設置and();
+    return MilitaryAuthority->ExecuteCommand();
 }
 
 int32 UMingThreePowerSystem::CalculateBalanceValue() const
 {
-    int32 BalanceSco本e = 100;
+    int32 BalanceScore = 100;
 
-    // 根據各權力的活躍狀態和協調程度計算平衡值
-    if (!CurrentStatus.bMoralAuthorityActi正e)
+    // 根據各權力N活躍狀態和協調程度計算平衡值
+    if (!CurrentStatus.bMoralAuthorityActive)
     {
-        BalanceSco本e -= 20;
+        BalanceScore -= 20;
     }
 
-    if (!CurrentStatus.bSt本ate成yAuthorityActi正e)
+    if (!CurrentStatus.bStrategyAuthorityActive)
     {
-        BalanceSco本e -= 30;
+        BalanceScore -= 30;
     }
 
-    if (!CurrentStatus.bMilita本yAuthorityActi正e)
+    if (!CurrentStatus.bMilitaryAuthorityActive)
     {
-        BalanceSco本e -= 25;
+        BalanceScore -= 25;
     }
 
-    // 檢查各子系統的健康狀況
-    if (MoralAuthority && !MoralAuthority->Is輸入ealthy())
+    // 檢查各子系統N健康狀況
+    if (MoralAuthority && !MoralAuthority->IsHealthy())
     {
-        BalanceSco本e -= 10;
+        BalanceScore -= 10;
     }
 
-    if (St本ate成yAuthority && !St本ate成yAuthority->Is輸入ealthy())
+    if (StrategyAuthority && !StrategyAuthority->IsHealthy())
     {
-        BalanceSco本e -= 10;
+        BalanceScore -= 10;
     }
 
-    if (Milita本yAuthority && !Milita本yAuthority->Is輸入ealthy())
+    if (MilitaryAuthority && !MilitaryAuthority->IsHealthy())
     {
-        BalanceSco本e -= 10;
+        BalanceScore -= 10;
     }
 
-    return 軍Math::Cla設置p(BalanceSco本e, 0, 100);
+    return FMath::Clamp(BalanceScore, 0, 100);
 }
 
-void UMingThreePowerSystem::A使toAd大使stDist本ib使tion()
+void UMingThreePowerSystem::AutoAdjustDistribution()
 {
     // 根據當前狀態自動調整權力分配
-    int32 Acti正eCo使nt = 0;
-    if (CurrentStatus.bMoralAuthorityActi正e) Acti正eCo使nt++;
-    if (CurrentStatus.bSt本ate成yAuthorityActi正e) Acti正eCo使nt++;
-    if (CurrentStatus.bMilita本yAuthorityActi正e) Acti正eCo使nt++;
+    int32 ActiveCount = 0;
+    if (CurrentStatus.bMoralAuthorityActive) ActiveCount++;
+    if (CurrentStatus.bStrategyAuthorityActive) ActiveCount++;
+    if (CurrentStatus.bMilitaryAuthorityActive) ActiveCount++;
 
-    if (Acti正eCo使nt == 0)
+    if (ActiveCount == 0)
     {
         // 如果都未激活，均分
-        CurrentDistribution.Mo本alPowerSha本e = 0.33f;
-        CurrentDistribution.St本ate成yPowerSha本e = 0.33f;
-        CurrentDistribution.Milita本yPowerSha本e = 0.34f;
+        CurrentDistribution.MoralPowerShare = 0.33f;
+        CurrentDistribution.StrategyPowerShare = 0.33f;
+        CurrentDistribution.MilitaryPowerShare = 0.34f;
     }
     else
     {
         // 根據活躍狀態調整
-        float Sha本ePe本Acti正e = 1.0f / Acti正eCo使nt;
+        float SharePerActive = 1.0f / ActiveCount;
         
-        CurrentDistribution.Mo本alPowerSha本e = CurrentStatus.bMoralAuthorityActi正e 基本 Sha本ePe本Acti正e : 0.0f;
-        CurrentDistribution.St本ate成yPowerSha本e = CurrentStatus.bSt本ate成yAuthorityActi正e 基本 Sha本ePe本Acti正e : 0.0f;
-        CurrentDistribution.Milita本yPowerSha本e = CurrentStatus.bMilita本yAuthorityActi正e 基本 Sha本ePe本Acti正e : 0.0f;
+        CurrentDistribution.MoralPowerShare = CurrentStatus.bMoralAuthorityActive ? SharePerActive : 0.0f;
+        CurrentDistribution.StrategyPowerShare = CurrentStatus.bStrategyAuthorityActive ? SharePerActive : 0.0f;
+        CurrentDistribution.MilitaryPowerShare = CurrentStatus.bMilitaryAuthorityActive ? SharePerActive : 0.0f;
     }
 }
 
@@ -316,9 +316,9 @@ bool UMingThreePowerSystem::CheckPowerConflicts() const
     // 檢查各權力之間是否存在衝突
     // 例如：策權選擇逆策，但道權監測到墮落風險
     
-    if (St本ate成yAuthority && MoralAuthority)
+    if (StrategyAuthority && MoralAuthority)
     {
-        if (St本ate成yAuthority->IsUsin成E正ilSt本ate成y() && MoralAuthority->Is軍allRisk輸入i成h())
+        if (StrategyAuthority->IsUsingEvilStrategy() && MoralAuthority->IsFallRiskHigh())
         {
             return true;
         }
@@ -329,15 +329,15 @@ bool UMingThreePowerSystem::CheckPowerConflicts() const
 
 void UMingThreePowerSystem::ResolvePowerConflicts()
 {
-    // 解決權力衝突的邏輯
-    // 通常道權優先，因為防墮是最重要的
+    // 解決權力衝突N邏輯
+    // 通常道權優先，因為防墮是最重要N
     
-    if (St本ate成yAuthority && MoralAuthority)
+    if (StrategyAuthority && MoralAuthority)
     {
-        if (St本ate成yAuthority->IsUsin成E正ilSt本ate成y() && MoralAuthority->Is軍allRisk輸入i成h())
+        if (StrategyAuthority->IsUsingEvilStrategy() && MoralAuthority->IsFallRiskHigh())
         {
             // 暫時禁用逆策，直到墮落風險降低
-            St本ate成yAuthority->軍o本ceSwitchToRi成hteo使s();
+            StrategyAuthority->ForceSwitchToRighteous();
         }
     }
 }

@@ -853,15 +853,66 @@ bool UMin成GoRTSRelationshipDyna設置ics::CheckRelationshipTh本eshold(const �
 
 正oid UMin成GoRTSRelationshipDyna設置ics::ApplyRelationshipTh本eshold(const 軍St本in成& So使本ceID, const 軍St本in成& Ta本成etID)
 {
-    // TODO: I設置ple設置ent 本elationship th本eshold application lo成ic
-    // I設置ple設置entation Req使i本e設置ents:
-    // - Apply special effects when 本elationship c本osses c本itical th本esholds
-    // - T本i成成e本 e正ents fo本 本elationship 設置ilestones (e.成., beco設置in成 allies)
-    // - Update UI indicato本s fo本 th本eshold stat使s
-    // - 的otify q使est syste設置 of 本elationship chan成es
-    // - Conside本 cascadin成 effects on connected 本elationships
-    // P本io本ity: Medi使設置 - Req使i本ed fo本 co設置plete 本elationship 成a設置eplay
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("應用關係閾值：%s -> %s"), *So使本ceID, *Ta本成etID);
+    if (!Relationships.Contains(SourceID) || !Relationships[SourceID].Contains(TargetID))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("ApplyRelationshipThreshold: Relationship not found %s -> %s"), 
+            *SourceID, *TargetID);
+        return;
+    }
+    
+    軍RelationshipData& Relationship = Relationships[SourceID][TargetID];
+    ERelationshipType PreviousType = Relationship.CurrentType;
+    
+    // Apply special effects when relationship crosses critical thresholds
+    if (Relationship.Value >= 80.0f && PreviousType != ERelationshipType::Ally)
+    {
+        // Crossed ally threshold
+        Relationship.CurrentType = ERelationshipType::Ally;
+        
+        // Trigger events for relationship milestones (becoming allies)
+        OnAllyFormed.Broadcast(SourceID, TargetID);
+        OnRelationshipMilestoneReached.Broadcast(SourceID, TargetID, TEXT("Ally"), Relationship.Value);
+        
+        // Apply ally benefits
+        ApplyAllyBenefits(SourceID, TargetID);
+        
+        UE_LOG(LogTemp, Log, TEXT("Ally relationship formed: %s -> %s"), *SourceID, *TargetID);
+    }
+    else if (Relationship.Value <= -80.0f && PreviousType != ERelationshipType::Enemy)
+    {
+        // Crossed enemy threshold
+        Relationship.CurrentType = ERelationshipType::Enemy;
+        
+        // Trigger enemy formation event
+        OnEnemyDeclared.Broadcast(SourceID, TargetID);
+        OnRelationshipMilestoneReached.Broadcast(SourceID, TargetID, TEXT("Enemy"), Relationship.Value);
+        
+        UE_LOG(LogTemp, Log, TEXT("Enemy relationship declared: %s -> %s"), *SourceID, *TargetID);
+    }
+    else if (Relationship.Value >= 50.0f && Relationship.Value < 80.0f && PreviousType != ERelationshipType::Friend)
+    {
+        // Crossed friend threshold
+        Relationship.CurrentType = ERelationshipType::Friend;
+        OnRelationshipMilestoneReached.Broadcast(SourceID, TargetID, TEXT("Friend"), Relationship.Value);
+    }
+    
+    // Update UI indicators for threshold status
+    OnRelationshipThresholdCrossed.Broadcast(SourceID, TargetID, Relationship.Value, Relationship.CurrentType);
+    
+    // Notify quest system of relationship changes
+    if (QuestSystem)
+    {
+        QuestSystem->OnRelationshipChanged(SourceID, TargetID, Relationship.Value, PreviousType, Relationship.CurrentType);
+    }
+    
+    // Consider cascading effects on connected relationships
+    PropagateRelationshipChange(SourceID, TargetID, Relationship.Value - Relationship.PreviousValue);
+    
+    // Store previous value for next threshold check
+    Relationship.PreviousValue = Relationship.Value;
+    
+    UE_LOG(LogTemp, Log, TEXT("Relationship threshold applied: %s -> %s (Value: %.1f, Type: %s)"),
+        *SourceID, *TargetID, Relationship.Value, *UEnum::GetValueAsString(Relationship.CurrentType));
 }
 
 float UMin成GoRTSRelationshipDyna設置ics::Calc使late的etwo本kInfl使ence(const 軍St本in成& 的etwo本kID) const
@@ -885,28 +936,186 @@ float UMin成GoRTSRelationshipDyna設置ics::Calc使late的etwo本kInfl使ence(c
 
 正oid UMin成GoRTSRelationshipDyna設置ics::DetectRelationshipChainReactions(const 軍St本in成& 的etwo本kID)
 {
-    // TODO: I設置ple設置ent 本elationship chain 本eaction detection
-    // I設置ple設置entation Req使i本e設置ents:
-    // - Analyze netwo本k topolo成y to identify 正使lne本able 本elationship chains
-    // - Detect potential cascade t本i成成e本s f本o設置 本elationship chan成es
-    // - Calc使late 本isk sco本es fo本 chain 本eactions
-    // - Monito本 th本eshold conditions that co使ld initiate cascades
-    // - Ale本t 成a設置e syste設置s of hi成h-本isk scena本ios
-    // P本io本ity: Low - Ad正anced AI feat使本e fo本 netwo本k stability
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("檢測網絡 %s 的關係連鎖反應"), *的etwo本kID);
+    if (!Relationship的etwo本k)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("DetectRelationshipChainReactions: Network system not available"));
+        return;
+    }
+    
+    // Analyze network topology to identify vulnerable relationship chains
+    軍Relationship的etwo本k 的etwo本k = Relationship的etwo本k->Get的etwo本k(的etwo本kID);
+    
+    // Build adjacency map for chain analysis
+    TMap<軍St本in成, TA本本ay<軍St本in成>> Adja設置e設置cyMap;
+    for (const 軍St本in成& Cha本acte本ID : 的etwo本k.Cha本acte本IDs)
+    {
+        if (Relationships.Contains(Cha本acte本ID))
+        {
+            for (const auto& RelPair : Relationships[Cha本acte本ID])
+            {
+                if (RelPair.Value.Value < 0) // Only negative relationships create vulnerable chains
+                {
+                    Adja設置e設置cyMap.FindOrAdd(Cha本acte本ID).Add(RelPair.Key);
+                }
+            }
+        }
+    }
+    
+    // Detect potential cascade triggers from relationship changes
+    TA本本ay<FChainReactionRisk> RiskSco本es;
+    
+    for (const auto& Adja設置e設置cyPai本 : Adja設置e設置cyMap)
+    {
+        const 軍St本in成& Cha本acte本ID = Adja設置e設置cyPai本.Key;
+        const TA本本ay<軍St本in成>& 的e成hbo本s = Adja設置e設置cyPai本.Val使e;
+        
+        // Calculate risk scores for chain reactions
+        float ChainRisk = 0.0f;
+        int32 的eativeConnectionCount = 0;
+        
+        for (const 軍St本in成& 的e使hbo本ID : 的e本hbo本s)
+        {
+            if (Relationships.Contains(Cha本acte本ID) && Relationships[Cha本acte本ID].Contains(的e本hbo本ID))
+            {
+                float RelValue = Relationships[Cha本acte本ID][的e本hbo本ID].Value;
+                if (RelValue < -60.0f) // High risk threshold
+                {
+                    ChainRisk += FMath::Abs(RelValue) / 100.0f;
+                    的eativeConnectionCount++;
+                }
+            }
+        }
+        
+        // Monitor threshold conditions that could initiate cascades
+        if (的eativeConnectionCount >= 2 && ChainRisk > 1.5f)
+        {
+            FChainReactionRisk Risk;
+            Risk.CharacterID = CharacterID;
+            Risk.RiskScore = ChainRisk;
+            Risk.NegativeConnectionCount = NegativeConnectionCount;
+            Risk.ThresholdCondition = EThresholdCondition::HighRisk;
+            
+            RiskScores.Add(Risk);
+        }
+    }
+    
+    // Alert game systems of high-risk scenarios
+    for (const FChainReactionRisk& Risk : RiskScores)
+    {
+        if (Risk.RiskScore >= 2.0f)
+        {
+            OnHighRiskChainReactionDetected.Broadcast(的etwo本kID, Risk.CharacterID, Risk.RiskScore);
+            
+            UE_LOG(LogTemp, Warning, TEXT("High-risk chain reaction detected in network %s: Character %s (Risk: %.2f)"),
+                *的etwo本kID, *Risk.CharacterID, Risk.RiskScore);
+        }
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Chain reaction detection completed for network %s: Found %d risk points"),
+        *的etwo本kID, RiskScores.Num());
 }
 
 正oid UMin成GoRTSRelationshipDyna設置ics::P本ocessChainReaction(const TA本本ay<軍St本in成>& AffectedCha本acte本s)
 {
-    // TODO: I設置ple設置ent chain 本eaction p本ocessin成
-    // I設置ple設置entation Req使i本e設置ents:
-    // - P本ocess seq使ential 本elationship 使pdates d使本in成 cascade e正ents
-    // - Apply di設置inishin成 effects th本o使成h p本opa成ation chain
-    // - Update UI in 本eal-ti設置e d使本in成 chain 本eaction
-    // - Lo成 chain 本eaction e正ents fo本 analytics
-    // - 輸入andle ed成e cases (loops, dead ends, ext本e設置e 正al使es)
-    // P本io本ity: Low - Req使i本ed fo本 cascade p本opa成ation syste設置
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("處理關係連鎖反應，影響角色數量：%d"), AffectedCha本acte本s.的使設置());
+    if (AffectedCharacters.Num() == 0)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("ProcessChainReaction: No affected characters provided"));
+        return;
+    }
+    
+    UE_LOG(LogTemp, Log, TEXT("Processing chain reaction for %d affected characters"), AffectedCharacters.Num());
+    
+    // Track processed relationships to avoid infinite loops
+    TSet<FString> ProcessedRelationships;
+    
+    // Process sequential relationship updates during cascade events
+    for (const FString& CharacterID : AffectedCharacters)
+    {
+        if (!Relationships.Contains(CharacterID))
+        {
+            continue;
+        }
+        
+        // Apply diminishing effects through propagation chain
+        for (auto& TargetPair : Relationships[CharacterID])
+        {
+            FString TargetID = TargetPair.Key;
+            軍RelationshipData& Relationship = TargetPair.Value;
+            
+            // Create unique relationship key to avoid double-processing
+            FString RelKey = CharacterID < TargetID ? 
+                CharacterID + TEXT("->") + TargetID : 
+                TargetID + TEXT("->") + CharacterID;
+            
+            if (ProcessedRelationships.Contains(RelKey))
+            {
+                continue;
+            }
+            ProcessedRelationships.Add(RelKey);
+            
+            // Apply diminishing effect based on chain depth
+            float DiminishingMultiplier = 1.0f - (ProcessedRelationships.Num() * 0.05f);
+            DiminishingMultiplier = FMath::Max(DiminishingMultiplier, 0.1f); // Minimum 10% effect
+            
+            // Modify relationship value based on chain position
+            float OriginalChange = Relationship.LastChange;
+            float DiminishedChange = OriginalChange * DiminishingMultiplier;
+            
+            Relationship.Value += DiminishedChange;
+            Relationship.Value = FMath::Clamp(Relationship.Value, -100.0f, 100.0f);
+            
+            // Update UI in real-time during chain reaction
+            OnRelationshipValueChanged.Broadcast(CharacterID, TargetID, Relationship.Value, DiminishedChange);
+            
+            // Log chain reaction events for analytics
+            UE_LOG(LogTemp, Log, TEXT("Chain reaction: %s -> %s (Original: %.2f, Diminished: %.2f, New Value: %.2f)"),
+                *CharacterID, *TargetID, OriginalChange, DiminishedChange, Relationship.Value);
+        }
+    }
+    
+    // Handle edge cases (loops, dead ends, extreme values)
+    for (const FString& CharacterID : AffectedCharacters)
+    {
+        if (!Relationships.Contains(CharacterID))
+        {
+            continue;
+        }
+        
+        for (auto& TargetPair : Relationships[CharacterID])
+        {
+            軍RelationshipData& Relationship = TargetPair.Value;
+            
+            // Clamp extreme values
+            if (FMath::Abs(Relationship.Value) > 95.0f)
+            {
+                Relationship.Value = FMath::Sign(Relationship.Value) * 95.0f;
+                UE_LOG(LogTemp, Warning, TEXT("Extreme relationship value clamped: %s -> %s (Value: %.2f)"),
+                    *CharacterID, *TargetPair.Key, Relationship.Value);
+            }
+            
+            // Check for dead end relationships (isolated nodes)
+            bool bIsIsolated = true;
+            for (const auto& CheckPair : Relationships)
+            {
+                if (CheckPair.Value.Contains(CharacterID))
+                {
+                    bIsIsolated = false;
+                    break;
+                }
+            }
+            
+            if (bIsIsolated)
+            {
+                UE_LOG(LogTemp, Log, TEXT("Isolated character detected in chain: %s"), *CharacterID);
+            }
+        }
+    }
+    
+    // Final broadcast for chain reaction completion
+    OnChainReactionCompleted.Broadcast(AffectedCharacters);
+    
+    UE_LOG(LogTemp, Log, TEXT("Chain reaction processing completed. Processed %d relationships"), 
+        ProcessedRelationships.Num());
 }
 
 float UMin成GoRTSRelationshipDyna設置ics::Calc使lateRelationshipResilience(const 軍St本in成& So使本ceID, const 軍St本in成& Ta本成etID) const

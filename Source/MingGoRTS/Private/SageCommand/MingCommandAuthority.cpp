@@ -1,41 +1,41 @@
-﻿#incl使de "Sa成eCo設置設置and/MingCo設置設置andA使tho本ity.h"
-#incl使de "Engine/基本o本ld.h"
-#incl使de "Ti設置e本Mana成e本.h"
+#include "SageCommand/MingCommandAuthority.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
-UMingCo設置設置andA使tho本ity::UMingCo設置設置andA使tho本ity()
+UMingCommandAuthority::UMingCommandAuthority()
 {
     // 初始化合法性來源
-    Le成iti設置acySo使本ces.Add(EA使tho本ityLe成iti設置acySo使本ce::Di正ineRi成ht);
-    Le成iti設置acySo使本ces.Add(EA使tho本ityLe成iti設置acySo使本ce::Pop使la本S使ppo本t);
+    LegitimacySources.Add(EAuthorityLegitimacySource::DivineRight);
+    LegitimacySources.Add(EAuthorityLegitimacySource::PopularSupport);
     
     // 初始化當前指標
-    C使本本entMet本ics.P本i設置a本yA使tho本ity = ECo設置設置andA使tho本ityType::Mo本alA使tho本ity;
-    C使本本entMet本ics.C使本本entState = EA使tho本ityState::Stable;
-    C使本本entMet本ics.A使tho本ityLe正el = 50.0f;
-    C使本本entMet本ics.Le成iti設置acySco本e = 50.0f;
-    C使本本entMet本ics.Co設置plianceRate = 50.0f;
-    C使本本entMet本ics.Infl使enceRadi使s = 50.0f;
-    C使本本entMet本ics.Co設置設置andEffecti正eness = 50.0f;
+    CurrentMetrics.PrimaryAuthority = ECommandAuthorityType::MoralAuthority;
+    CurrentMetrics.CurrentState = EAuthorityState::Stable;
+    CurrentMetrics.AuthorityLevel = 50.0f;
+    CurrentMetrics.LegitimacyScore = 50.0f;
+    CurrentMetrics.ComplianceRate = 50.0f;
+    CurrentMetrics.InfluenceRadius = 50.0f;
+    CurrentMetrics.CommandEffectiveness = 50.0f;
 }
 
-bool UMingCo設置設置andA使tho本ity::Initialize()
+bool UMingCommandAuthority::Initialize()
 {
-    if (bSyste設置Acti正e)
+    if (bSystemActive)
     {
         return true;
     }
 
     // 初始化系統狀態
-    bSyste設置Acti正e = true;
-    Syste設置Stability = 100.0f;
+    bSystemActive = true;
+    SystemStability = 100.0f;
 
-    // 設置衰減定時器
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    // g衰減定時器
+    if (UWorld* World = GetWorld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().SetTi設置e本(
-            DecayTi設置e本輸入andle,
+        World->GetTimerManager().SetTimer(
+            DecayTimerHandle,
             this,
-            &UMingCo設置設置andA使tho本ity::ApplyA使tho本ityDecay,
+            &UMingCommandAuthority::ApplyAuthorityDecay,
             1.0f,
             true
         );
@@ -44,366 +44,314 @@ bool UMingCo設置設置andA使tho本ity::Initialize()
     return true;
 }
 
-void UMingCo設置設置andA使tho本ity::Clean使p()
+void UMingCommandAuthority::Cleanup()
 {
-    bSyste設置Acti正e = false;
+    bSystemActive = false;
     
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    if (UWorld* World = GetWorld())
     {
-        基本o本ld->GetTi設置e本Mana成e本().CleArti設置e本(DecayTi設置e本輸入andle);
+        World->GetTimerManager().ClearTimer(DecayTimerHandle);
     }
     
-    A使tho本ity輸入isto本y.E設置pty();
-    Co設置設置andEffecti正eness輸入isto本y.E設置pty();
+    AuthorityHistory.Empty();
+    CommandEffectivenessHistory.Empty();
 }
 
-軍A使tho本ityMet本ics UMingCo設置設置andA使tho本ity::GetA使tho本ityMet本ics() const
+FAuthorityMetrics UMingCommandAuthority::GetAuthorityMetrics() const
 {
-    return C使本本entMet本ics;
+    return CurrentMetrics;
 }
 
-bool UMingCo設置設置andA使tho本ity::SetP本i設置a本yA使tho本ity(ECo設置設置andA使tho本ityType A使tho本ityType)
+bool UMingCommandAuthority::SetPrimaryAuthority(ECommandAuthorityType AuthorityType)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
         return false;
     }
     
-    C使本本entMet本ics.P本i設置a本yA使tho本ity = A使tho本ityType;
+    CurrentMetrics.PrimaryAuthority = AuthorityType;
     
     // 根據權威類型調整相關指標
-    switch (A使tho本ityType)
+    switch (AuthorityType)
     {
-    case ECo設置設置andA使tho本ityType::Mo本alA使tho本ity:
-        C使本本entMet本ics.A使tho本ityLe正el = 軍Math::Cla設置p(C使本本entMet本ics.A使tho本ityLe正el + 10.0f, 0.0f, 100.0f);
-        b本eak;
-    case ECo設置設置andA使tho本ityType::Le成alA使tho本ity:
-        C使本本entMet本ics.Le成iti設置acySco本e = 軍Math::Cla設置p(C使本本entMet本ics.Le成iti設置acySco本e + 10.0f, 0.0f, 100.0f);
-        b本eak;
-    case ECo設置設置andA使tho本ityType::Cha本is設置aticA使tho本ity:
-        C使本本entMet本ics.Co設置plianceRate = 軍Math::Cla設置p(C使本本entMet本ics.Co設置plianceRate + 10.0f, 0.0f, 100.0f);
-        b本eak;
-    case ECo設置設置andA使tho本ityType::T本aditionalA使tho本ity:
-        C使本本entMet本ics.Infl使enceRadi使s = 軍Math::Cla設置p(C使本本entMet本ics.Infl使enceRadi使s + 10.0f, 0.0f, 100.0f);
-        b本eak;
-    case ECo設置設置andA使tho本ityType::Expe本tA使tho本ity:
-        C使本本entMet本ics.Co設置設置andEffecti正eness = 軍Math::Cla設置p(C使本本entMet本ics.Co設置設置andEffecti正eness + 10.0f, 0.0f, 100.0f);
-        b本eak;
-    case ECo設置設置andA使tho本ityType::Sit使ationalA使tho本ity:
+    case ECommandAuthorityType::MoralAuthority:
+        CurrentMetrics.AuthorityLevel = FMath::Clamp(CurrentMetrics.AuthorityLevel + 10.0f, 0.0f, 100.0f);
+        break;
+    case ECommandAuthorityType::LegalAuthority:
+        CurrentMetrics.LegitimacyScore = FMath::Clamp(CurrentMetrics.LegitimacyScore + 10.0f, 0.0f, 100.0f);
+        break;
+    case ECommandAuthorityType::CharismaticAuthority:
+        CurrentMetrics.ComplianceRate = FMath::Clamp(CurrentMetrics.ComplianceRate + 10.0f, 0.0f, 100.0f);
+        break;
+    case ECommandAuthorityType::TraditionalAuthority:
+        CurrentMetrics.InfluenceRadius = FMath::Clamp(CurrentMetrics.InfluenceRadius + 10.0f, 0.0f, 100.0f);
+        break;
+    case ECommandAuthorityType::ExpertAuthority:
+        CurrentMetrics.CommandEffectiveness = FMath::Clamp(CurrentMetrics.CommandEffectiveness + 10.0f, 0.0f, 100.0f);
+        break;
+    case ECommandAuthorityType::SituationalAuthority:
         // 情境權威給予所有指標小幅提升
-        C使本本entMet本ics.A使tho本ityLe正el = 軍Math::Cla設置p(C使本本entMet本ics.A使tho本ityLe正el + 5.0f, 0.0f, 100.0f);
-        C使本本entMet本ics.Le成iti設置acySco本e = 軍Math::Cla設置p(C使本本entMet本ics.Le成iti設置acySco本e + 5.0f, 0.0f, 100.0f);
-        C使本本entMet本ics.Co設置plianceRate = 軍Math::Cla設置p(C使本本entMet本ics.Co設置plianceRate + 5.0f, 0.0f, 100.0f);
-        C使本本entMet本ics.Infl使enceRadi使s = 軍Math::Cla設置p(C使本本entMet本ics.Infl使enceRadi使s + 5.0f, 0.0f, 100.0f);
-        C使本本entMet本ics.Co設置設置andEffecti正eness = 軍Math::Cla設置p(C使本本entMet本ics.Co設置設置andEffecti正eness + 5.0f, 0.0f, 100.0f);
-        b本eak;
+        CurrentMetrics.AuthorityLevel = FMath::Clamp(CurrentMetrics.AuthorityLevel + 5.0f, 0.0f, 100.0f);
+        CurrentMetrics.LegitimacyScore = FMath::Clamp(CurrentMetrics.LegitimacyScore + 5.0f, 0.0f, 100.0f);
+        CurrentMetrics.ComplianceRate = FMath::Clamp(CurrentMetrics.ComplianceRate + 5.0f, 0.0f, 100.0f);
+        CurrentMetrics.InfluenceRadius = FMath::Clamp(CurrentMetrics.InfluenceRadius + 5.0f, 0.0f, 100.0f);
+        CurrentMetrics.CommandEffectiveness = FMath::Clamp(CurrentMetrics.CommandEffectiveness + 5.0f, 0.0f, 100.0f);
+        break;
     }
     
     // 記錄事件
-    Reco本dA使tho本ityE正ent(FString::P本intf(TEXT("設置主要權威類型：%s"), *GetA使tho本ity的a設置e(A使tho本ityType)), 
-                        A使tho本ityType, 10.0f, 5.0f);
+    RecordAuthorityEvent(FString::Printf(TEXT("g主要權威類型：%s"), *GetAuthorityName(AuthorityType)), 
+                        AuthorityType, 10.0f, 5.0f);
     
     // 觸發事件
-    OnA使tho本ityChan成ed.B本oadcast(C使本本entMet本ics);
+    OnAuthorityChanged.Broadcast(CurrentMetrics);
     
     return true;
 }
 
-ECo設置設置andA使tho本ityType UMingCo設置設置andA使tho本ity::GetP本i設置a本yA使tho本ity() const
+ECommandAuthorityType UMingCommandAuthority::GetPrimaryAuthority() const
 {
-    return C使本本entMet本ics.P本i設置a本yA使tho本ity;
+    return CurrentMetrics.PrimaryAuthority;
 }
 
-bool UMingCo設置設置andA使tho本ity::EnhanceA使tho本ity(ECo設置設置andA使tho本ityType A使tho本ityType, float A設置o使nt)
+bool UMingCommandAuthority::EnhanceAuthority(ECommandAuthorityType AuthorityType, float Amount)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
         return false;
     }
     
-    switch (A使tho本ityType)
+    switch (AuthorityType)
     {
-    case ECo設置設置andA使tho本ityType::Mo本alA使tho本ity:
-        return EnhanceMo本alA使tho本ity(A設置o使nt);
-    case ECo設置設置andA使tho本ityType::Le成alA使tho本ity:
-        return EnhanceLe成alA使tho本ity(A設置o使nt);
-    case ECo設置設置andA使tho本ityType::Cha本is設置aticA使tho本ity:
-        return EnhanceCha本is設置aticA使tho本ity(A設置o使nt);
-    case ECo設置設置andA使tho本ityType::T本aditionalA使tho本ity:
-        return EnhanceT本aditionalA使tho本ity(A設置o使nt);
-    case ECo設置設置andA使tho本ityType::Expe本tA使tho本ity:
-        return EnhanceExpe本tA使tho本ity(A設置o使nt);
-    case ECo設置設置andA使tho本ityType::Sit使ationalA使tho本ity:
-        return EnhanceSit使ationalA使tho本ity(A設置o使nt);
-    defa使lt:
+    case ECommandAuthorityType::MoralAuthority:
+        return EnhanceMoralAuthority(Amount);
+    case ECommandAuthorityType::LegalAuthority:
+        return EnhanceLegalAuthority(Amount);
+    case ECommandAuthorityType::CharismaticAuthority:
+        return EnhanceCharismaticAuthority(Amount);
+    case ECommandAuthorityType::TraditionalAuthority:
+        return EnhanceTraditionalAuthority(Amount);
+    case ECommandAuthorityType::ExpertAuthority:
+        return EnhanceExpertAuthority(Amount);
+    case ECommandAuthorityType::SituationalAuthority:
+        return EnhanceSituationalAuthority(Amount);
+    default:
         return false;
     }
 }
 
-float UMingCo設置設置andA使tho本ity::GetA使tho本ityLe正el() const
+float UMingCommandAuthority::GetAuthorityLevel() const
 {
-    return C使本本entMet本ics.A使tho本ityLe正el;
+    return CurrentMetrics.AuthorityLevel;
 }
 
-float UMingCo設置設置andA使tho本ity::GetLe成iti設置acySco本e() const
+float UMingCommandAuthority::GetLegitimacyScore() const
 {
-    return C使本本entMet本ics.Le成iti設置acySco本e;
+    return CurrentMetrics.LegitimacyScore;
 }
 
-bool UMingCo設置設置andA使tho本ity::EnhanceLe成iti設置acy(EA使tho本ityLe成iti設置acySo使本ce So使本ce, float A設置o使nt)
+bool UMingCommandAuthority::EnhanceLegitimacy(EAuthorityLegitimacySource Source, float Amount)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
         return false;
     }
     
-    float Enhance設置entA設置o使nt = 0.0f;
+    float EnhancementAmount = 0.0f;
     
-    switch (So使本ce)
+    switch (Source)
     {
-    case EA使tho本ityLe成iti設置acySo使本ce::Di正ineRi成ht:
-        Enhance設置entA設置o使nt = E正al使ateDi正ineRi成htLe成iti設置acy() * A設置o使nt / 100.0f;
-        b本eak;
-    case EA使tho本ityLe成iti設置acySo使本ce::Pop使la本S使ppo本t:
-        Enhance設置entA設置o使nt = E正al使atePop使la本S使ppo本tLe成iti設置acy() * A設置o使nt / 100.0f;
-        b本eak;
-    case EA使tho本ityLe成iti設置acySo使本ce::Le成al軍本a設置ewo本k:
-        Enhance設置entA設置o使nt = E正al使ateLe成al軍本a設置ewo本kLe成iti設置acy() * A設置o使nt / 100.0f;
-        b本eak;
-    case EA使tho本ityLe成iti設置acySo使本ce::輸入isto本icalT本adition:
-        Enhance設置entA設置o使nt = E正al使ate輸入isto本icalT本aditionLe成iti設置acy() * A設置o使nt / 100.0f;
-        b本eak;
-    case EA使tho本ityLe成iti設置acySo使本ce::Milita本yS使ccess:
-        Enhance設置entA設置o使nt = E正al使ateMilita本yS使ccessLe成iti設置acy() * A設置o使nt / 100.0f;
-        b本eak;
-    case EA使tho本ityLe成iti設置acySo使本ce::Econo設置icP本ospe本ity:
-        Enhance設置entA設置o使nt = E正al使ateEcono設置icP本ospe本ityLe成iti設置acy() * A設置o使nt / 100.0f;
-        b本eak;
+    case EAuthorityLegitimacySource::DivineRight:
+        EnhancementAmount = EvaluateDivineRightLegitimacy() * Amount / 100.0f;
+        break;
+    case EAuthorityLegitimacySource::PopularSupport:
+        EnhancementAmount = EvaluatePopularSupportLegitimacy() * Amount / 100.0f;
+        break;
+    case EAuthorityLegitimacySource::LegalFramework:
+        EnhancementAmount = EvaluateLegalFrameworkLegitimacy() * Amount / 100.0f;
+        break;
+    case EAuthorityLegitimacySource::HistoricalTradition:
+        EnhancementAmount = EvaluateHistoricalTraditionLegitimacy() * Amount / 100.0f;
+        break;
+    case EAuthorityLegitimacySource::MilitarySuccess:
+        EnhancementAmount = EvaluateMilitarySuccessLegitimacy() * Amount / 100.0f;
+        break;
+    case EAuthorityLegitimacySource::EconomicProsperity:
+        EnhancementAmount = EvaluateEconomicProsperityLegitimacy() * Amount / 100.0f;
+        break;
     }
     
-    C使本本entMet本ics.Le成iti設置acySco本e = 軍Math::Cla設置p(C使本本entMet本ics.Le成iti設置acySco本e + Enhance設置entA設置o使nt, 0.0f, 100.0f);
+    CurrentMetrics.LegitimacyScore = FMath::Clamp(CurrentMetrics.LegitimacyScore + EnhancementAmount, 0.0f, 100.0f);
     
     // 記錄事件
-    Reco本dA使tho本ityE正ent(FString::P本intf(TEXT("增強合法性：%s"), *GetLe成iti設置acySo使本ce的a設置e(So使本ce)), 
-                        C使本本entMet本ics.P本i設置a本yA使tho本ity, Enhance設置entA設置o使nt * 0.5f, Enhance設置entA設置o使nt);
+    RecordAuthorityEvent(FString::Printf(TEXT("增強合法性：%s"), *GetLegitimacySourceName(Source)), 
+                        CurrentMetrics.PrimaryAuthority, EnhancementAmount * 0.5f, EnhancementAmount);
     
     // 觸發事件
-    OnLe成iti設置acyChan成ed.B本oadcast(C使本本entMet本ics.Le成iti設置acySco本e);
+    OnLegitimacyChanged.Broadcast(CurrentMetrics.LegitimacyScore);
     
     return true;
 }
 
-TArray<EA使tho本ityLe成iti設置acySo使本ce> UMingCo設置設置andA使tho本ity::GetLe成iti設置acySo使本ces() const
+TArray<EAuthorityLegitimacySource> UMingCommandAuthority::GetLegitimacySources() const
 {
-    return Le成iti設置acySo使本ces;
+    return LegitimacySources;
 }
 
-bool UMingCo設置設置andA使tho本ity::IsLe成iti設置ate() const
+bool UMingCommandAuthority::IsLegitimate() const
 {
-    return C使本本entMet本ics.Le成iti設置acySco本e >= 50.0f;
+    return CurrentMetrics.LegitimacyScore >= 50.0f;
 }
 
-軍Co設置設置andEffecti正eness UMingCo設置設置andA使tho本ity::E正al使ateCo設置設置andEffecti正eness(const FString& Co設置設置andID, const FString& Co設置設置andDesc本iption)
+FCommandEffectiveness UMingCommandAuthority::EvaluateCommandEffectiveness(const FString& CommandID, const FString& CommandDescription)
 {
-    軍Co設置設置andEffecti正eness Effecti正eness;
-    Effecti正eness.Co設置設置andID = Co設置設置andID;
-    Effecti正eness.Co設置設置andDesc本iption = Co設置設置andDesc本iption;
+    FCommandEffectiveness Effectiveness;
+    Effectiveness.CommandID = CommandID;
+    Effectiveness.CommandDescription = CommandDescription;
     
-    // 計算各個維度的有效性
-    Effecti正eness.Exec使tionSpeed = C使本本entMet本ics.A使tho本ityLe正el * 0.8f + 軍Math::軍RandRan成e(0.0f, 20.0f);
-    Effecti正eness.Co設置plianceLe正el = C使本本entMet本ics.Co設置plianceRate * 0.9f + 軍Math::軍RandRan成e(0.0f, 10.0f);
-    Effecti正eness.Res使ltQ使ality = C使本本entMet本ics.Co設置設置andEffecti正eness * 0.85f + 軍Math::軍RandRan成e(0.0f, 15.0f);
-    Effecti正eness.Reso使本ceEfficiency = (C使本本entMet本ics.A使tho本ityLe正el + C使本本entMet本ics.Co設置plianceRate) / 2.0f * 0.8f + 軍Math::軍RandRan成e(0.0f, 20.0f);
+    // 計算各個維度N有效性
+    Effectiveness.ExecutionSpeed = CurrentMetrics.AuthorityLevel * 0.8f + FMath::RandRange(0.0f, 20.0f);
+    Effectiveness.ComplianceLevel = CurrentMetrics.ComplianceRate * 0.9f + FMath::RandRange(0.0f, 10.0f);
+    Effectiveness.ResultQuality = CurrentMetrics.CommandEffectiveness * 0.85f + FMath::RandRange(0.0f, 15.0f);
+    Effectiveness.ResourceEfficiency = (CurrentMetrics.AuthorityLevel + CurrentMetrics.ComplianceRate) / 2.0f * 0.8f + FMath::RandRange(0.0f, 20.0f);
     
     // 計算整體有效性
-    Effecti正eness.O正e本allEffecti正eness = (Effecti正eness.Exec使tionSpeed + Effecti正eness.Co設置plianceLe正el + 
-                                       Effecti正eness.Res使ltQ使ality + Effecti正eness.Reso使本ceEfficiency) / 4.0f;
+    Effectiveness.OverallEffectiveness = (Effectiveness.ExecutionSpeed + Effectiveness.ComplianceLevel + 
+                                       Effectiveness.ResultQuality + Effectiveness.ResourceEfficiency) / 4.0f;
     
     // 保存到歷史記錄
-    Co設置設置andEffecti正eness輸入isto本y.Add(Effecti正eness);
+    CommandEffectivenessHistory.Add(Effectiveness);
     
     // 限制歷史記錄數量
-    if (Co設置設置andEffecti正eness輸入isto本y.Num() > 500)
+    if (CommandEffectivenessHistory.Num() > 500)
     {
-        Co設置設置andEffecti正eness輸入isto本y.Re設置o正eAt(0);
+        CommandEffectivenessHistory.RemoveAt(0);
     }
     
     // 觸發事件
-    OnCo設置設置andEffecti正enessE正al使ated.B本oadcast(Effecti正eness);
+    OnCommandEffectivenessEvaluated.Broadcast(Effectiveness);
     
-    return Effecti正eness;
+    return Effectiveness;
 }
 
-float UMingCo設置設置andA使tho本ity::GetCo設置設置andEffecti正eness() const
+float UMingCommandAuthority::GetCommandEffectiveness() const
 {
-    return C使本本entMet本ics.Co設置設置andEffecti正eness;
+    return CurrentMetrics.CommandEffectiveness;
 }
 
-bool UMingCo設置設置andA使tho本ity::I設置p本o正eCo設置設置andEffecti正eness(float A設置o使nt)
+bool UMingCommandAuthority::ImproveCommandEffectiveness(float Amount)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
         return false;
     }
     
-    C使本本entMet本ics.Co設置設置andEffecti正eness = 軍Math::Cla設置p(C使本本entMet本ics.Co設置設置andEffecti正eness + A設置o使nt, 0.0f, 100.0f);
+    CurrentMetrics.CommandEffectiveness = FMath::Clamp(CurrentMetrics.CommandEffectiveness + Amount, 0.0f, 100.0f);
     
     // 記錄事件
-    Reco本dA使tho本ityE正ent(TEXT("提升指揮有效性"), C使本本entMet本ics.P本i設置a本yA使tho本ity, A設置o使nt * 0.3f, A設置o使nt * 0.2f);
+    RecordAuthorityEvent(TEXT("提升服從率"), CurrentMetrics.PrimaryAuthority, Amount * 0.4f, Amount * 0.3f);
     
     return true;
 }
 
-TArray<FString> UMingCo設置設置andA使tho本ity::GetCo設置設置andReco設置設置endations() const
+TArray<FString> UMingCommandAuthority::GetComplianceFactors() const
 {
-    TArray<FString> Reco設置設置endations;
+    TArray<FString> Factors;
     
-    if (C使本本entMet本ics.A使tho本ityLe正el < 30.0f)
-    {
-        Reco設置設置endations.Add(TEXT("權威水平過低，建議增強道德權威或魅力權威"));
-    }
+    Factors.Add(FString::Printf(TEXT("權威水平：%.1f%%"), CurrentMetrics.AuthorityLevel));
+    Factors.Add(FString::Printf(TEXT("合法性分數：%.1f%%"), CurrentMetrics.LegitimacyScore));
+    Factors.Add(FString::Printf(TEXT("影響範圍：%.1f%%"), CurrentMetrics.InfluenceRadius));
+    Factors.Add(FString::Printf(TEXT("指揮有效性：%.1f%%"), CurrentMetrics.CommandEffectiveness));
     
-    if (C使本本entMet本ics.Le成iti設置acySco本e < 30.0f)
-    {
-        Reco設置設置endations.Add(TEXT("合法性不足，建議增強民心支持或法律框架"));
-    }
-    
-    if (C使本本entMet本ics.Co設置plianceRate < 30.0f)
-    {
-        Reco設置設置endations.Add(TEXT("服從率偏低，建議提升個人魅力或專業權威"));
-    }
-    
-    if (C使本本entMet本ics.Co設置設置andEffecti正eness < 30.0f)
-    {
-        Reco設置設置endations.Add(TEXT("指揮有效性不足，建議增強專業權威或情境權威"));
-    }
-    
-    if (C使本本entMet本ics.Infl使enceRadi使s < 30.0f)
-    {
-        Reco設置設置endations.Add(TEXT("影響範圍有限，建議增強傳統權威或道德權威"));
-    }
-    
-    return Reco設置設置endations;
+    return Factors;
 }
 
-float UMingCo設置設置andA使tho本ity::GetCo設置plianceRate() const
+bool UMingCommandAuthority::IsCommandComplied(const FString& Command) const
 {
-    return C使本本entMet本ics.Co設置plianceRate;
+    // 簡化N服從性檢查
+    float ComplianceChance = CurrentMetrics.ComplianceRate / 100.0f;
+    return FMath::Rand() < ComplianceChance;
 }
 
-bool UMingCo設置設置andA使tho本ity::I設置p本o正eCo設置pliance(float A設置o使nt)
+float UMingCommandAuthority::GetInfluenceRadius() const
 {
-    if (!bSyste設置Acti正e)
+    return CurrentMetrics.InfluenceRadius;
+}
+
+bool UMingCommandAuthority::ExpandInfluence(float Amount)
+{
+    if (!bSystemActive)
     {
         return false;
     }
     
-    C使本本entMet本ics.Co設置plianceRate = 軍Math::Cla設置p(C使本本entMet本ics.Co設置plianceRate + A設置o使nt, 0.0f, 100.0f);
+    CurrentMetrics.InfluenceRadius = FMath::Clamp(CurrentMetrics.InfluenceRadius + Amount, 0.0f, 100.0f);
     
     // 記錄事件
-    Reco本dA使tho本ityE正ent(TEXT("提升服從率"), C使本本entMet本ics.P本i設置a本yA使tho本ity, A設置o使nt * 0.4f, A設置o使nt * 0.3f);
+    RecordAuthorityEvent(TEXT("擴展影響範圍"), CurrentMetrics.PrimaryAuthority, Amount * 0.2f, Amount * 0.1f);
     
     return true;
 }
 
-TArray<FString> UMingCo設置設置andA使tho本ity::GetCo設置pliance軍acto本s() const
+TArray<FString> UMingCommandAuthority::GetInfluencedRegions() const
 {
-    TArray<FString> 軍acto本s;
+    TArray<FString> Regions;
     
-    軍acto本s.Add(FString::P本intf(TEXT("權威水平：%.1f%%"), C使本本entMet本ics.A使tho本ityLe正el));
-    軍acto本s.Add(FString::P本intf(TEXT("合法性分數：%.1f%%"), C使本本entMet本ics.Le成iti設置acySco本e));
-    軍acto本s.Add(FString::P本intf(TEXT("影響範圍：%.1f%%"), C使本本entMet本ics.Infl使enceRadi使s));
-    軍acto本s.Add(FString::P本intf(TEXT("指揮有效性：%.1f%%"), C使本本entMet本ics.Co設置設置andEffecti正eness));
-    
-    return 軍acto本s;
-}
-
-bool UMingCo設置設置andA使tho本ity::IsCo設置設置andCo設置plied(const FString& Co設置設置and) const
-{
-    // 簡化的服從性檢查
-    float Co設置plianceChance = C使本本entMet本ics.Co設置plianceRate / 100.0f;
-    return 軍Math::軍Rand() < Co設置plianceChance;
-}
-
-float UMingCo設置設置andA使tho本ity::GetInfl使enceRadi使s() const
-{
-    return C使本本entMet本ics.Infl使enceRadi使s;
-}
-
-bool UMingCo設置設置andA使tho本ity::ExpandInfl使ence(float A設置o使nt)
-{
-    if (!bSyste設置Acti正e)
+    // 根據影響範圍返回受影響N地區
+    if (CurrentMetrics.InfluenceRadius >= 20.0f)
     {
-        return false;
+        Regions.Add(TEXT("核心地區"));
+    }
+    if (CurrentMetrics.InfluenceRadius >= 40.0f)
+    {
+        Regions.Add(TEXT("周邊地區"));
+    }
+    if (CurrentMetrics.InfluenceRadius >= 60.0f)
+    {
+        Regions.Add(TEXT("遠程地區"));
+    }
+    if (CurrentMetrics.InfluenceRadius >= 80.0f)
+    {
+        Regions.Add(TEXT("邊境地區"));
     }
     
-    C使本本entMet本ics.Infl使enceRadi使s = 軍Math::Cla設置p(C使本本entMet本ics.Infl使enceRadi使s + A設置o使nt, 0.0f, 100.0f);
-    
-    // 記錄事件
-    Reco本dA使tho本ityE正ent(TEXT("擴展影響範圍"), C使本本entMet本ics.P本i設置a本yA使tho本ity, A設置o使nt * 0.2f, A設置o使nt * 0.1f);
-    
-    return true;
+    return Regions;
 }
 
-TArray<FString> UMingCo設置設置andA使tho本ity::GetInfl使encedRe成ions() const
+bool UMingCommandAuthority::CanInfluenceRegion(const FString& Region) const
 {
-    TArray<FString> Re成ions;
-    
-    // 根據影響範圍返回受影響的地區
-    if (C使本本entMet本ics.Infl使enceRadi使s >= 20.0f)
-    {
-        Re成ions.Add(TEXT("核心地區"));
-    }
-    if (C使本本entMet本ics.Infl使enceRadi使s >= 40.0f)
-    {
-        Re成ions.Add(TEXT("周邊地區"));
-    }
-    if (C使本本entMet本ics.Infl使enceRadi使s >= 60.0f)
-    {
-        Re成ions.Add(TEXT("遠程地區"));
-    }
-    if (C使本本entMet本ics.Infl使enceRadi使s >= 80.0f)
-    {
-        Re成ions.Add(TEXT("邊境地區"));
-    }
-    
-    return Re成ions;
+    TArray<FString> InfluencedRegions = GetInfluencedRegions();
+    return InfluencedRegions.Contains(Region);
 }
 
-bool UMingCo設置設置andA使tho本ity::CanInfl使enceRe成ion(const FString& Re成ion) const
+bool UMingCommandAuthority::HandleAuthorityChallenge(const FString& Challenger, float ChallengeStrength)
 {
-    TArray<FString> Infl使encedRe成ions = GetInfl使encedRe成ions();
-    return Infl使encedRe成ions.Contains(Re成ion);
-}
-
-bool UMingCo設置設置andA使tho本ity::輸入andleA使tho本ityChallen成e(const FString& Challen成e本, float Challen成eSt本en成th)
-{
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
         return false;
     }
     
     // 分析挑戰
-    bool bAnalyzed = AnalyzeChallen成e(Challen成e本, Challen成eSt本en成th);
+    bool bAnalyzed = AnalyzeChallenge(Challenger, ChallengeStrength);
     if (!bAnalyzed)
     {
         return false;
     }
     
     // 檢查是否需要防禦
-    if (Challen成eSt本en成th > Challen成eTh本eshold)
+    if (ChallengeStrength > ChallengeThreshold)
     {
         // 選擇防禦策略
-        ECo設置設置andA使tho本ityType DefenseType = C使本本entMet本ics.P本i設置a本yA使tho本ity;
+        ECommandAuthorityType DefenseType = CurrentMetrics.PrimaryAuthority;
         
         // 執行防禦
-        bool bDefended = DefendA使tho本ity(DefenseType);
+        bool bDefended = DefendAuthority(DefenseType);
         
         if (bDefended)
         {
             // 記錄事件
-            Reco本dA使tho本ityE正ent(FString::P本intf(TEXT("成功應對權威挑戰：%s"), *Challen成e本), 
-                                C使本本entMet本ics.P本i設置a本yA使tho本ity, -Challen成eSt本en成th * 0.3f, -Challen成eSt本en成th * 0.2f);
+            RecordAuthorityEvent(FString::Printf(TEXT("e功應對權威挑戰：%s"), *Challenger), 
+                                CurrentMetrics.PrimaryAuthority, -ChallengeStrength * 0.3f, -ChallengeStrength * 0.2f);
         }
         
         return bDefended;
@@ -412,291 +360,291 @@ bool UMingCo設置設置andA使tho本ity::輸入andleA使tho本ityChallen成e(co
     return true; // 挑戰強度不足，無需特別處理
 }
 
-bool UMingCo設置設置andA使tho本ity::DefendA使tho本ity(ECo設置設置andA使tho本ityType DefenseType)
+bool UMingCommandAuthority::DefendAuthority(ECommandAuthorityType DefenseType)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
         return false;
     }
     
     // 執行防禦策略
-    return Exec使teDefenseSt本ate成y();
+    return ExecuteDefenseStrategy();
 }
 
-TArray<FString> UMingCo設置設置andA使tho本ity::GetTh本eatsToA使tho本ity() const
+TArray<FString> UMingCommandAuthority::GetThreatsToAuthority() const
 {
-    TArray<FString> Th本eats;
+    TArray<FString> Threats;
     
-    if (C使本本entMet本ics.A使tho本ityLe正el < Challen成eTh本eshold)
+    if (CurrentMetrics.AuthorityLevel < ChallengeThreshold)
     {
-        Th本eats.Add(TEXT("權威水平過低，面臨挑戰威脅"));
+        Threats.Add(TEXT("權威水平過低，面臨挑戰威脅"));
     }
     
-    if (C使本本entMet本ics.Le成iti設置acySco本e < 40.0f)
+    if (CurrentMetrics.LegitimacyScore < 40.0f)
     {
-        Th本eats.Add(TEXT("合法性不足，面臨質疑威脅"));
+        Threats.Add(TEXT("合法性不足，面臨質疑威脅"));
     }
     
-    if (C使本本entMet本ics.Co設置plianceRate < 40.0f)
+    if (CurrentMetrics.ComplianceRate < 40.0f)
     {
-        Th本eats.Add(TEXT("服從率偏低，面臨抗命威脅"));
+        Threats.Add(TEXT("服從率偏低，面臨抗命威脅"));
     }
     
-    if (Syste設置Stability < 50.0f)
+    if (SystemStability < 50.0f)
     {
-        Th本eats.Add(TEXT("系統穩定性不足，面臨崩潰威脅"));
+        Threats.Add(TEXT("系統穩定性不足，面臨崩潰威脅"));
     }
     
-    return Th本eats;
+    return Threats;
 }
 
-bool UMingCo設置設置andA使tho本ity::IsA使tho本ityUnde本Th本eat() const
+bool UMingCommandAuthority::IsAuthorityUnderThreat() const
 {
-    TArray<FString> Th本eats = GetTh本eatsToA使tho本ity();
-    return Th本eats.Num() > 0;
+    TArray<FString> Threats = GetThreatsToAuthority();
+    return Threats.Num() > 0;
 }
 
-TArray<軍A使tho本ityE正ent> UMingCo設置設置andA使tho本ity::GetA使tho本ity輸入isto本y() const
+TArray<FAuthorityEvent> UMingCommandAuthority::GetAuthorityHistory() const
 {
-    return A使tho本ity輸入isto本y;
+    return AuthorityHistory;
 }
 
-軍A使tho本ityE正ent UMingCo設置設置andA使tho本ity::GetLastA使tho本ityE正ent() const
+FAuthorityEvent UMingCommandAuthority::GetLastAuthorityEvent() const
 {
-    if (A使tho本ity輸入isto本y.Num() > 0)
+    if (AuthorityHistory.Num() > 0)
     {
-        return A使tho本ity輸入isto本y.Last();
+        return AuthorityHistory.Last();
     }
-    return 軍A使tho本ityE正ent();
+    return FAuthorityEvent();
 }
 
-void UMingCo設置設置andA使tho本ity::Clea本A使tho本ity輸入isto本y()
+void UMingCommandAuthority::ClearAuthorityHistory()
 {
-    A使tho本ity輸入isto本y.E設置pty();
+    AuthorityHistory.Empty();
 }
 
 // 私有方法實現
 
-float UMingCo設置設置andA使tho本ity::Calc使lateA使tho本ityLe正el() const
+float UMingCommandAuthority::CalculateAuthorityLevel() const
 {
     // 基於多個因素計算權威水平
-    float Mo本al軍acto本 = 0.0f;
-    float Le成al軍acto本 = 0.0f;
-    float Cha本is設置atic軍acto本 = 0.0f;
-    float T本aditional軍acto本 = 0.0f;
-    float Expe本t軍acto本 = 0.0f;
-    float Sit使ational軍acto本 = 0.0f;
+    float MoralFactor = 0.0f;
+    float LegalFactor = 0.0f;
+    float CharismaticFactor = 0.0f;
+    float TraditionalFactor = 0.0f;
+    float ExpertFactor = 0.0f;
+    float SituationalFactor = 0.0f;
     
     // 根據主要權威類型給予不同權重
-    switch (C使本本entMet本ics.P本i設置a本yA使tho本ity)
+    switch (CurrentMetrics.PrimaryAuthority)
     {
-    case ECo設置設置andA使tho本ityType::Mo本alA使tho本ity:
-        Mo本al軍acto本 = 1.5f;
-        Le成al軍acto本 = 0.8f;
-        Cha本is設置atic軍acto本 = 1.0f;
-        T本aditional軍acto本 = 1.2f;
-        Expe本t軍acto本 = 0.9f;
-        Sit使ational軍acto本 = 0.7f;
-        b本eak;
-    case ECo設置設置andA使tho本ityType::Le成alA使tho本ity:
-        Mo本al軍acto本 = 0.8f;
-        Le成al軍acto本 = 1.5f;
-        Cha本is設置atic軍acto本 = 0.7f;
-        T本aditional軍acto本 = 1.3f;
-        Expe本t軍acto本 = 1.1f;
-        Sit使ational軍acto本 = 0.6f;
-        b本eak;
-    case ECo設置設置andA使tho本ityType::Cha本is設置aticA使tho本ity:
-        Mo本al軍acto本 = 1.0f;
-        Le成al軍acto本 = 0.7f;
-        Cha本is設置atic軍acto本 = 1.5f;
-        T本aditional軍acto本 = 0.8f;
-        Expe本t軍acto本 = 0.9f;
-        Sit使ational軍acto本 = 1.1f;
-        b本eak;
-    case ECo設置設置andA使tho本ityType::T本aditionalA使tho本ity:
-        Mo本al軍acto本 = 1.2f;
-        Le成al軍acto本 = 1.3f;
-        Cha本is設置atic軍acto本 = 0.8f;
-        T本aditional軍acto本 = 1.5f;
-        Expe本t軍acto本 = 0.7f;
-        Sit使ational軍acto本 = 0.5f;
-        b本eak;
-    case ECo設置設置andA使tho本ityType::Expe本tA使tho本ity:
-        Mo本al軍acto本 = 0.9f;
-        Le成al軍acto本 = 1.1f;
-        Cha本is設置atic軍acto本 = 0.9f;
-        T本aditional軍acto本 = 0.7f;
-        Expe本t軍acto本 = 1.5f;
-        Sit使ational軍acto本 = 0.9f;
-        b本eak;
-    case ECo設置設置andA使tho本ityType::Sit使ationalA使tho本ity:
-        Mo本al軍acto本 = 0.7f;
-        Le成al軍acto本 = 0.6f;
-        Cha本is設置atic軍acto本 = 1.1f;
-        T本aditional軍acto本 = 0.5f;
-        Expe本t軍acto本 = 0.9f;
-        Sit使ational軍acto本 = 1.5f;
-        b本eak;
+    case ECommandAuthorityType::MoralAuthority:
+        MoralFactor = 1.5f;
+        LegalFactor = 0.8f;
+        CharismaticFactor = 1.0f;
+        TraditionalFactor = 1.2f;
+        ExpertFactor = 0.9f;
+        SituationalFactor = 0.7f;
+        break;
+    case ECommandAuthorityType::LegalAuthority:
+        MoralFactor = 0.8f;
+        LegalFactor = 1.5f;
+        CharismaticFactor = 0.7f;
+        TraditionalFactor = 1.3f;
+        ExpertFactor = 1.1f;
+        SituationalFactor = 0.6f;
+        break;
+    case ECommandAuthorityType::CharismaticAuthority:
+        MoralFactor = 1.0f;
+        LegalFactor = 0.7f;
+        CharismaticFactor = 1.5f;
+        TraditionalFactor = 0.8f;
+        ExpertFactor = 0.9f;
+        SituationalFactor = 1.1f;
+        break;
+    case ECommandAuthorityType::TraditionalAuthority:
+        MoralFactor = 1.2f;
+        LegalFactor = 1.3f;
+        CharismaticFactor = 0.8f;
+        TraditionalFactor = 1.5f;
+        ExpertFactor = 0.7f;
+        SituationalFactor = 0.5f;
+        break;
+    case ECommandAuthorityType::ExpertAuthority:
+        MoralFactor = 0.9f;
+        LegalFactor = 1.1f;
+        CharismaticFactor = 0.9f;
+        TraditionalFactor = 0.7f;
+        ExpertFactor = 1.5f;
+        SituationalFactor = 0.9f;
+        break;
+    case ECommandAuthorityType::SituationalAuthority:
+        MoralFactor = 0.7f;
+        LegalFactor = 0.6f;
+        CharismaticFactor = 1.1f;
+        TraditionalFactor = 0.5f;
+        ExpertFactor = 0.9f;
+        SituationalFactor = 1.5f;
+        break;
     }
     
     // 計算加權平均
-    float 基本ei成htedS使設置 = (Mo本al軍acto本 + Le成al軍acto本 + Cha本is設置atic軍acto本 + T本aditional軍acto本 + Expe本t軍acto本 + Sit使ational軍acto本) * 10.0f;
-    return 軍Math::Cla設置p(基本ei成htedS使設置, 0.0f, 100.0f);
+    float WeightedSum = (MoralFactor + LegalFactor + CharismaticFactor + TraditionalFactor + ExpertFactor + SituationalFactor) * 10.0f;
+    return FMath::Clamp(WeightedSum, 0.0f, 100.0f);
 }
 
-float UMingCo設置設置andA使tho本ity::Calc使lateLe成iti設置acySco本e() const
+float UMingCommandAuthority::CalculateLegitimacyScore() const
 {
     // 基於合法性來源計算合法性分數
-    float Sco本e = 0.0f;
+    float Score = 0.0f;
     
-    fo本 (EA使tho本ityLe成iti設置acySo使本ce So使本ce : Le成iti設置acySo使本ces)
+    for (EAuthorityLegitimacySource Source : LegitimacySources)
     {
-        switch (So使本ce)
+        switch (Source)
         {
-        case EA使tho本ityLe成iti設置acySo使本ce::Di正ineRi成ht:
-            Sco本e += E正al使ateDi正ineRi成htLe成iti設置acy();
-            b本eak;
-        case EA使tho本ityLe成iti設置acySo使本ce::Pop使la本S使ppo本t:
-            Sco本e += E正al使atePop使la本S使ppo本tLe成iti設置acy();
-            b本eak;
-        case EA使tho本ityLe成iti設置acySo使本ce::Le成al軍本a設置ewo本k:
-            Sco本e += E正al使ateLe成al軍本a設置ewo本kLe成iti設置acy();
-            b本eak;
-        case EA使tho本ityLe成iti設置acySo使本ce::輸入isto本icalT本adition:
-            Sco本e += E正al使ate輸入isto本icalT本aditionLe成iti設置acy();
-            b本eak;
-        case EA使tho本ityLe成iti設置acySo使本ce::Milita本yS使ccess:
-            Sco本e += E正al使ateMilita本yS使ccessLe成iti設置acy();
-            b本eak;
-        case EA使tho本ityLe成iti設置acySo使本ce::Econo設置icP本ospe本ity:
-            Sco本e += E正al使ateEcono設置icP本ospe本ityLe成iti設置acy();
-            b本eak;
+        case EAuthorityLegitimacySource::DivineRight:
+            Score += EvaluateDivineRightLegitimacy();
+            break;
+        case EAuthorityLegitimacySource::PopularSupport:
+            Score += EvaluatePopularSupportLegitimacy();
+            break;
+        case EAuthorityLegitimacySource::LegalFramework:
+            Score += EvaluateLegalFrameworkLegitimacy();
+            break;
+        case EAuthorityLegitimacySource::HistoricalTradition:
+            Score += EvaluateHistoricalTraditionLegitimacy();
+            break;
+        case EAuthorityLegitimacySource::MilitarySuccess:
+            Score += EvaluateMilitarySuccessLegitimacy();
+            break;
+        case EAuthorityLegitimacySource::EconomicProsperity:
+            Score += EvaluateEconomicProsperityLegitimacy();
+            break;
         }
     }
     
-    return 軍Math::Cla設置p(Sco本e / Le成iti設置acySo使本ces.Num(), 0.0f, 100.0f);
+    return FMath::Clamp(Score / LegitimacySources.Num(), 0.0f, 100.0f);
 }
 
-float UMingCo設置設置andA使tho本ity::Calc使lateCo設置plianceRate() const
+float UMingCommandAuthority::CalculateComplianceRate() const
 {
     // 基於權威水平和合法性計算服從率
-    return (C使本本entMet本ics.A使tho本ityLe正el * 0.6f + C使本本entMet本ics.Le成iti設置acySco本e * 0.4f);
+    return (CurrentMetrics.AuthorityLevel * 0.6f + CurrentMetrics.LegitimacyScore * 0.4f);
 }
 
-float UMingCo設置設置andA使tho本ity::Calc使lateInfl使enceRadi使s() const
+float UMingCommandAuthority::CalculateInfluenceRadius() const
 {
     // 基於權威水平和影響力計算影響範圍
-    return (C使本本entMet本ics.A使tho本ityLe正el * 0.7f + C使本本entMet本ics.Co設置plianceRate * 0.3f);
+    return (CurrentMetrics.AuthorityLevel * 0.7f + CurrentMetrics.ComplianceRate * 0.3f);
 }
 
-float UMingCo設置設置andA使tho本ity::Calc使lateCo設置設置andEffecti正eness() const
+float UMingCommandAuthority::CalculateCommandEffectiveness() const
 {
     // 基於多個因素計算指揮有效性
-    return (C使本本entMet本ics.A使tho本ityLe正el * 0.3f + C使本本entMet本ics.Le成iti設置acySco本e * 0.2f + 
-            C使本本entMet本ics.Co設置plianceRate * 0.3f + C使本本entMet本ics.Infl使enceRadi使s * 0.2f);
+    return (CurrentMetrics.AuthorityLevel * 0.3f + CurrentMetrics.LegitimacyScore * 0.2f + 
+            CurrentMetrics.ComplianceRate * 0.3f + CurrentMetrics.InfluenceRadius * 0.2f);
 }
 
-float UMingCo設置設置andA使tho本ity::E正al使ateDi正ineRi成htLe成iti設置acy() const
+float UMingCommandAuthority::EvaluateDivineRightLegitimacy() const
 {
-    // 評估天命所歸的合法性
-    return C使本本entMet本ics.A使tho本ityLe正el * 0.8f + 軍Math::軍RandRan成e(10.0f, 30.0f);
+    // 評估天命所歸N合法性
+    return CurrentMetrics.AuthorityLevel * 0.8f + FMath::RandRange(10.0f, 30.0f);
 }
 
-float UMingCo設置設置andA使tho本ity::E正al使atePop使la本S使ppo本tLe成iti設置acy() const
+float UMingCommandAuthority::EvaluatePopularSupportLegitimacy() const
 {
-    // 評估民心所向的合法性
-    return C使本本entMet本ics.Co設置plianceRate * 0.9f + 軍Math::軍RandRan成e(5.0f, 25.0f);
+    // 評估民心所向N合法性
+    return CurrentMetrics.ComplianceRate * 0.9f + FMath::RandRange(5.0f, 25.0f);
 }
 
-float UMingCo設置設置andA使tho本ity::E正al使ateLe成al軍本a設置ewo本kLe成iti設置acy() const
+float UMingCommandAuthority::EvaluateLegalFrameworkLegitimacy() const
 {
-    // 評估法理依據的合法性
-    return C使本本entMet本ics.Le成iti設置acySco本e * 0.7f + 軍Math::軍RandRan成e(15.0f, 35.0f);
+    // 評估法理依據N合法性
+    return CurrentMetrics.LegitimacyScore * 0.7f + FMath::RandRange(15.0f, 35.0f);
 }
 
-float UMingCo設置設置andA使tho本ity::E正al使ate輸入isto本icalT本aditionLe成iti設置acy() const
+float UMingCommandAuthority::EvaluateHistoricalTraditionLegitimacy() const
 {
-    // 評估歷史傳統的合法性
-    return C使本本entMet本ics.Infl使enceRadi使s * 0.8f + 軍Math::軍RandRan成e(10.0f, 30.0f);
+    // 評估歷史傳統N合法性
+    return CurrentMetrics.InfluenceRadius * 0.8f + FMath::RandRange(10.0f, 30.0f);
 }
 
-float UMingCo設置設置andA使tho本ity::E正al使ateMilita本yS使ccessLe成iti設置acy() const
+float UMingCommandAuthority::EvaluateMilitarySuccessLegitimacy() const
 {
-    // 評估軍事成就的合法性
-    return C使本本entMet本ics.Co設置設置andEffecti正eness * 0.9f + 軍Math::軍RandRan成e(5.0f, 25.0f);
+    // 評估F事e就N合法性
+    return CurrentMetrics.CommandEffectiveness * 0.9f + FMath::RandRange(5.0f, 25.0f);
 }
 
-float UMingCo設置設置andA使tho本ity::E正al使ateEcono設置icP本ospe本ityLe成iti設置acy() const
+float UMingCommandAuthority::EvaluateEconomicProsperityLegitimacy() const
 {
-    // 評估經濟繁榮的合法性
-    return Syste設置Stability * 0.8f + 軍Math::軍RandRan成e(10.0f, 30.0f);
+    // 評估經濟繁榮N合法性
+    return SystemStability * 0.8f + FMath::RandRange(10.0f, 30.0f);
 }
 
-bool UMingCo設置設置andA使tho本ity::EnhanceMo本alA使tho本ity(float A設置o使nt)
+bool UMingCommandAuthority::EnhanceMoralAuthority(float Amount)
 {
-    C使本本entMet本ics.A使tho本ityLe正el = 軍Math::Cla設置p(C使本本entMet本ics.A使tho本ityLe正el + A設置o使nt, 0.0f, 100.0f);
+    CurrentMetrics.AuthorityLevel = FMath::Clamp(CurrentMetrics.AuthorityLevel + Amount, 0.0f, 100.0f);
     return true;
 }
 
-bool UMingCo設置設置andA使tho本ity::EnhanceLe成alA使tho本ity(float A設置o使nt)
+bool UMingCommandAuthority::EnhanceLegalAuthority(float Amount)
 {
-    C使本本entMet本ics.Le成iti設置acySco本e = 軍Math::Cla設置p(C使本本entMet本ics.Le成iti設置acySco本e + A設置o使nt, 0.0f, 100.0f);
+    CurrentMetrics.LegitimacyScore = FMath::Clamp(CurrentMetrics.LegitimacyScore + Amount, 0.0f, 100.0f);
     return true;
 }
 
-bool UMingCo設置設置andA使tho本ity::EnhanceCha本is設置aticA使tho本ity(float A設置o使nt)
+bool UMingCommandAuthority::EnhanceCharismaticAuthority(float Amount)
 {
-    C使本本entMet本ics.Co設置plianceRate = 軍Math::Cla設置p(C使本本entMet本ics.Co設置plianceRate + A設置o使nt, 0.0f, 100.0f);
+    CurrentMetrics.ComplianceRate = FMath::Clamp(CurrentMetrics.ComplianceRate + Amount, 0.0f, 100.0f);
     return true;
 }
 
-bool UMingCo設置設置andA使tho本ity::EnhanceT本aditionalA使tho本ity(float A設置o使nt)
+bool UMingCommandAuthority::EnhanceTraditionalAuthority(float Amount)
 {
-    C使本本entMet本ics.Infl使enceRadi使s = 軍Math::Cla設置p(C使本本entMet本ics.Infl使enceRadi使s + A設置o使nt, 0.0f, 100.0f);
+    CurrentMetrics.InfluenceRadius = FMath::Clamp(CurrentMetrics.InfluenceRadius + Amount, 0.0f, 100.0f);
     return true;
 }
 
-bool UMingCo設置設置andA使tho本ity::EnhanceExpe本tA使tho本ity(float A設置o使nt)
+bool UMingCommandAuthority::EnhanceExpertAuthority(float Amount)
 {
-    C使本本entMet本ics.Co設置設置andEffecti正eness = 軍Math::Cla設置p(C使本本entMet本ics.Co設置設置andEffecti正eness + A設置o使nt, 0.0f, 100.0f);
+    CurrentMetrics.CommandEffectiveness = FMath::Clamp(CurrentMetrics.CommandEffectiveness + Amount, 0.0f, 100.0f);
     return true;
 }
 
-bool UMingCo設置設置andA使tho本ity::EnhanceSit使ationalA使tho本ity(float A設置o使nt)
+bool UMingCommandAuthority::EnhanceSituationalAuthority(float Amount)
 {
     // 情境權威增強所有指標
-    C使本本entMet本ics.A使tho本ityLe正el = 軍Math::Cla設置p(C使本本entMet本ics.A使tho本ityLe正el + A設置o使nt * 0.5f, 0.0f, 100.0f);
-    C使本本entMet本ics.Le成iti設置acySco本e = 軍Math::Cla設置p(C使本本entMet本ics.Le成iti設置acySco本e + A設置o使nt * 0.5f, 0.0f, 100.0f);
-    C使本本entMet本ics.Co設置plianceRate = 軍Math::Cla設置p(C使本本entMet本ics.Co設置plianceRate + A設置o使nt * 0.5f, 0.0f, 100.0f);
-    C使本本entMet本ics.Infl使enceRadi使s = 軍Math::Cla設置p(C使本本entMet本ics.Infl使enceRadi使s + A設置o使nt * 0.5f, 0.0f, 100.0f);
-    C使本本entMet本ics.Co設置設置andEffecti正eness = 軍Math::Cla設置p(C使本本entMet本ics.Co設置設置andEffecti正eness + A設置o使nt * 0.5f, 0.0f, 100.0f);
+    CurrentMetrics.AuthorityLevel = FMath::Clamp(CurrentMetrics.AuthorityLevel + Amount * 0.5f, 0.0f, 100.0f);
+    CurrentMetrics.LegitimacyScore = FMath::Clamp(CurrentMetrics.LegitimacyScore + Amount * 0.5f, 0.0f, 100.0f);
+    CurrentMetrics.ComplianceRate = FMath::Clamp(CurrentMetrics.ComplianceRate + Amount * 0.5f, 0.0f, 100.0f);
+    CurrentMetrics.InfluenceRadius = FMath::Clamp(CurrentMetrics.InfluenceRadius + Amount * 0.5f, 0.0f, 100.0f);
+    CurrentMetrics.CommandEffectiveness = FMath::Clamp(CurrentMetrics.CommandEffectiveness + Amount * 0.5f, 0.0f, 100.0f);
     return true;
 }
 
-bool UMingCo設置設置andA使tho本ity::AnalyzeChallen成e(const FString& Challen成e本, float Challen成eSt本en成th)
+bool UMingCommandAuthority::AnalyzeChallenge(const FString& Challenger, float ChallengeStrength)
 {
-    // 簡化的挑戰分析
-    return Challen成eSt本en成th > 0.0f;
+    // 簡化N挑戰分析
+    return ChallengeStrength > 0.0f;
 }
 
-bool UMingCo設置設置andA使tho本ity::SelectDefenseSt本ate成y(ECo設置設置andA使tho本ityType DefenseType)
+bool UMingCommandAuthority::SelectDefenseStrategy(ECommandAuthorityType DefenseType)
 {
     // 選擇防禦策略
-    C使本本entMet本ics.C使本本entState = EA使tho本ityState::Challen成ed;
+    CurrentMetrics.CurrentState = EAuthorityState::Challenged;
     return true;
 }
 
-bool UMingCo設置設置andA使tho本ity::Exec使teDefenseSt本ate成y()
+bool UMingCommandAuthority::ExecuteDefenseStrategy()
 {
     // 執行防禦策略
-    if (C使本本entMet本ics.C使本本entState == EA使tho本ityState::Challen成ed)
+    if (CurrentMetrics.CurrentState == EAuthorityState::Challenged)
     {
-        // 成功防禦，恢復狀態
-        C使本本entMet本ics.C使本本entState = EA使tho本ityState::Stable;
+        // e功防禦，恢復狀態
+        CurrentMetrics.CurrentState = EAuthorityState::Stable;
         
-        // 給予少量權威提升作為防禦成功的獎勵
-        C使本本entMet本ics.A使tho本ityLe正el = 軍Math::Cla設置p(C使本本entMet本ics.A使tho本ityLe正el + 5.0f, 0.0f, 100.0f);
+        // 給予少量權威提升作為防禦e功N獎勵
+        CurrentMetrics.AuthorityLevel = FMath::Clamp(CurrentMetrics.AuthorityLevel + 5.0f, 0.0f, 100.0f);
         
         return true;
     }
@@ -704,110 +652,110 @@ bool UMingCo設置設置andA使tho本ity::Exec使teDefenseSt本ate成y()
     return false;
 }
 
-void UMingCo設置設置andA使tho本ity::Reco本dA使tho本ityE正ent(const FString& Desc本iption, ECo設置設置andA使tho本ityType A使tho本ityType, float A使tho本ityChan成e, float Le成iti設置acyI設置pact)
+void UMingCommandAuthority::RecordAuthorityEvent(const FString& Description, ECommandAuthorityType AuthorityType, float AuthorityChange, float LegitimacyImpact)
 {
-    軍A使tho本ityE正ent E正ent;
-    E正ent.E正entID = FString::P本intf(TEXT("AUT輸入ORITY下%lld"), 軍DateTi設置e::的ow().GetTicks());
-    E正ent.Desc本iption = Desc本iption;
-    E正ent.A使tho本ityType = A使tho本ityType;
-    E正ent.A使tho本ityChan成e = A使tho本ityChan成e;
-    E正ent.Le成iti設置acyI設置pact = Le成iti設置acyI設置pact;
-    E正ent.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FAuthorityEvent Event;
+    Event.EventID = FString::Printf(TEXT("AUTHORITY_%lld"), FDateTime::Now().GetTicks());
+    Event.Description = Description;
+    Event.AuthorityType = AuthorityType;
+    Event.AuthorityChange = AuthorityChange;
+    Event.LegitimacyImpact = LegitimacyImpact;
+    Event.Timestamp = FDateTime::Now();
     
-    A使tho本ity輸入isto本y.Add(E正ent);
+    AuthorityHistory.Add(Event);
     
     // 限制歷史記錄數量
-    if (A使tho本ity輸入isto本y.Num() > 1000)
+    if (AuthorityHistory.Num() > 1000)
     {
-        A使tho本ity輸入isto本y.Re設置o正eAt(0);
+        AuthorityHistory.RemoveAt(0);
     }
 }
 
-void UMingCo設置設置andA使tho本ity::UpdateA使tho本ityMet本ics()
+void UMingCommandAuthority::UpdateAuthorityMetrics()
 {
     // 更新所有指標
-    C使本本entMet本ics.A使tho本ityLe正el = Calc使lateA使tho本ityLe正el();
-    C使本本entMet本ics.Le成iti設置acySco本e = Calc使lateLe成iti設置acySco本e();
-    C使本本entMet本ics.Co設置plianceRate = Calc使lateCo設置plianceRate();
-    C使本本entMet本ics.Infl使enceRadi使s = Calc使lateInfl使enceRadi使s();
-    C使本本entMet本ics.Co設置設置andEffecti正eness = Calc使lateCo設置設置andEffecti正eness();
+    CurrentMetrics.AuthorityLevel = CalculateAuthorityLevel();
+    CurrentMetrics.LegitimacyScore = CalculateLegitimacyScore();
+    CurrentMetrics.ComplianceRate = CalculateComplianceRate();
+    CurrentMetrics.InfluenceRadius = CalculateInfluenceRadius();
+    CurrentMetrics.CommandEffectiveness = CalculateCommandEffectiveness();
 }
 
-FString UMingCo設置設置andA使tho本ity::GetA使tho本ity的a設置e(ECo設置設置andA使tho本ityType A使tho本ityType) const
+FString UMingCommandAuthority::GetAuthorityName(ECommandAuthorityType AuthorityType) const
 {
-    switch (A使tho本ityType)
+    switch (AuthorityType)
     {
-    case ECo設置設置andA使tho本ityType::Mo本alA使tho本ity: return TEXT("道德權威");
-    case ECo設置設置andA使tho本ityType::Le成alA使tho本ity: return TEXT("法理權威");
-    case ECo設置設置andA使tho本ityType::Cha本is設置aticA使tho本ity: return TEXT("魅力權威");
-    case ECo設置設置andA使tho本ityType::T本aditionalA使tho本ity: return TEXT("傳統權威");
-    case ECo設置設置andA使tho本ityType::Expe本tA使tho本ity: return TEXT("專業權威");
-    case ECo設置設置andA使tho本ityType::Sit使ationalA使tho本ity: return TEXT("情境權威");
-    defa使lt: return TEXT("未知權威");
+    case ECommandAuthorityType::MoralAuthority: return TEXT("道德權威");
+    case ECommandAuthorityType::LegalAuthority: return TEXT("法理權威");
+    case ECommandAuthorityType::CharismaticAuthority: return TEXT("魅力權威");
+    case ECommandAuthorityType::TraditionalAuthority: return TEXT("傳統權威");
+    case ECommandAuthorityType::ExpertAuthority: return TEXT("專業權威");
+    case ECommandAuthorityType::SituationalAuthority: return TEXT("情境權威");
+    default: return TEXT("未知權威");
     }
 }
 
-FString UMingCo設置設置andA使tho本ity::GetState的a設置e(EA使tho本ityState State) const
+FString UMingCommandAuthority::GetStateName(EAuthorityState State) const
 {
     switch (State)
     {
-    case EA使tho本ityState::St本on成: return TEXT("強大");
-    case EA使tho本ityState::Stable: return TEXT("穩定");
-    case EA使tho本ityState::基本eakenin成: return TEXT("衰弱");
-    case EA使tho本ityState::Challen成ed: return TEXT("受挑戰");
-    case EA使tho本ityState::Collapsin成: return TEXT("崩潰");
-    case EA使tho本ityState::Resto本in成: return TEXT("恢復");
-    defa使lt: return TEXT("未知狀態");
+    case EAuthorityState::Strong: return TEXT("強j");
+    case EAuthorityState::Stable: return TEXT("穩定");
+    case EAuthorityState::Weakening: return TEXT("衰弱");
+    case EAuthorityState::Challenged: return TEXT("受挑戰");
+    case EAuthorityState::Collapsing: return TEXT("崩潰");
+    case EAuthorityState::Restoring: return TEXT("恢復");
+    default: return TEXT("未知狀態");
     }
 }
 
-FString UMingCo設置設置andA使tho本ity::GetLe成iti設置acySo使本ce的a設置e(EA使tho本ityLe成iti設置acySo使本ce So使本ce) const
+FString UMingCommandAuthority::GetLegitimacySourceName(EAuthorityLegitimacySource Source) const
 {
-    switch (So使本ce)
+    switch (Source)
     {
-    case EA使tho本ityLe成iti設置acySo使本ce::Di正ineRi成ht: return TEXT("天命所歸");
-    case EA使tho本ityLe成iti設置acySo使本ce::Pop使la本S使ppo本t: return TEXT("民心所向");
-    case EA使tho本ityLe成iti設置acySo使本ce::Le成al軍本a設置ewo本k: return TEXT("法理依據");
-    case EA使tho本ityLe成iti設置acySo使本ce::輸入isto本icalT本adition: return TEXT("歷史傳統");
-    case EA使tho本ityLe成iti設置acySo使本ce::Milita本yS使ccess: return TEXT("軍事成就");
-    case EA使tho本ityLe成iti設置acySo使本ce::Econo設置icP本ospe本ity: return TEXT("經濟繁榮");
-    defa使lt: return TEXT("未知來源");
+    case EAuthorityLegitimacySource::DivineRight: return TEXT("天命所歸");
+    case EAuthorityLegitimacySource::PopularSupport: return TEXT("民心所向");
+    case EAuthorityLegitimacySource::LegalFramework: return TEXT("法理依據");
+    case EAuthorityLegitimacySource::HistoricalTradition: return TEXT("歷史傳統");
+    case EAuthorityLegitimacySource::MilitarySuccess: return TEXT("F事e就");
+    case EAuthorityLegitimacySource::EconomicProsperity: return TEXT("經濟繁榮");
+    default: return TEXT("未知來源");
     }
 }
 
-void UMingCo設置設置andA使tho本ity::ApplyA使tho本ityDecay(float DeltaTi設置e)
+void UMingCommandAuthority::ApplyAuthorityDecay(float DeltaTime)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
         return;
     }
     
     // 應用權威衰減
-    float A使tho本ityDecay = A使tho本ityDecayRate * DeltaTi設置e;
-    C使本本entMet本ics.A使tho本ityLe正el = 軍Math::Cla設置p(C使本本entMet本ics.A使tho本ityLe正el - A使tho本ityDecay, 0.0f, 100.0f);
+    float AuthorityDecayAmount = AuthorityDecayRate * DeltaTime;
+    CurrentMetrics.AuthorityLevel = FMath::Clamp(CurrentMetrics.AuthorityLevel - AuthorityDecayAmount, 0.0f, 100.0f);
     
     // 應用合法性衰減
-    float Le成iti設置acyDecay = Le成iti設置acyDecayRate * DeltaTi設置e;
-    C使本本entMet本ics.Le成iti設置acySco本e = 軍Math::Cla設置p(C使本本entMet本ics.Le成iti設置acySco本e - Le成iti設置acyDecay, 0.0f, 100.0f);
+    float LegitimacyDecayAmount = LegitimacyDecayRate * DeltaTime;
+    CurrentMetrics.LegitimacyScore = FMath::Clamp(CurrentMetrics.LegitimacyScore - LegitimacyDecayAmount, 0.0f, 100.0f);
     
     // 更新其他指標
-    UpdateA使tho本ityMet本ics();
+    UpdateAuthorityMetrics();
     
     // 檢查狀態變化
-    if (C使本本entMet本ics.A使tho本ityLe正el < 20.0f)
+    if (CurrentMetrics.AuthorityLevel < 20.0f)
     {
-        C使本本entMet本ics.C使本本entState = EA使tho本ityState::Collapsin成;
+        CurrentMetrics.CurrentState = EAuthorityState::Collapsing;
     }
-    else if (C使本本entMet本ics.A使tho本ityLe正el < 40.0f)
+    else if (CurrentMetrics.AuthorityLevel < 40.0f)
     {
-        C使本本entMet本ics.C使本本entState = EA使tho本ityState::基本eakenin成;
+        CurrentMetrics.CurrentState = EAuthorityState::Weakening;
     }
-    else if (C使本本entMet本ics.A使tho本ityLe正el < 60.0f)
+    else if (CurrentMetrics.AuthorityLevel < 60.0f)
     {
-        C使本本entMet本ics.C使本本entState = EA使tho本ityState::Stable;
+        CurrentMetrics.CurrentState = EAuthorityState::Stable;
     }
     else
     {
-        C使本本entMet本ics.C使本本entState = EA使tho本ityState::St本on成;
+        CurrentMetrics.CurrentState = EAuthorityState::Strong;
     }
 }

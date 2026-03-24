@@ -1,782 +1,782 @@
-﻿#incl使de "MingSa成eCo設置設置andSyste設置.h"
-#incl使de "MingMo本alA使tho本ity.h"
-#incl使de "MingYinYan成軍i正eEle設置ents.h"
-#incl使de "MingSixSt本ate成ies.h"
-#incl使de "MingCo設置設置andA使tho本ity.h"
-#incl使de "Ming軍i正eEle設置entsRotation.h"
-#incl使de "Engine/基本o本ld.h"
-#incl使de "Ti設置e本Manager.h"
+#include "SageCommand/MingSageCommandSystem.h"
+#include "SageCommand/MingMoralAuthority.h"
+#include "SageCommand/MingYinYangFiveElements.h"
+#include "SageCommand/MingSixStrategies.h"
+#include "SageCommand/MingCommandAuthority.h"
+#include "SageCommand/MingFiveElementsRotation.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 // 五行相生相克表定義
-const TMap<E軍i正eEle設置ents, E軍i正eEle設置ents> UMingSa成eCo設置設置andSyste設置::Gene本ationCycle = {
-    {E軍i正eEle設置ents::Metal, E軍i正eEle設置ents::基本ate本},
-    {E軍i正eEle設置ents::基本ate本, E軍i正eEle設置ents::基本ood},
-    {E軍i正eEle設置ents::基本ood, E軍i正eEle設置ents::軍i本e},
-    {E軍i正eEle設置ents::軍i本e, E軍i正eEle設置ents::Ea本th},
-    {E軍i正eEle設置ents::Ea本th, E軍i正eEle設置ents::Metal}
+const TMap<EFiveElements, EFiveElements> UMingSageCommandSystem::GenerationCycle = {
+    {EFiveElements::Metal, EFiveElements::Water},
+    {EFiveElements::Water, EFiveElements::Wood},
+    {EFiveElements::Wood, EFiveElements::Fire},
+    {EFiveElements::Fire, EFiveElements::Earth},
+    {EFiveElements::Earth, EFiveElements::Metal}
 };
 
-const TMap<E軍i正eEle設置ents, E軍i正eEle設置ents> UMingSa成eCo設置設置andSyste設置::Dest本使ctionCycle = {
-    {E軍i正eEle設置ents::Metal, E軍i正eEle設置ents::基本ood},
-    {E軍i正eEle設置ents::基本ood, E軍i正eEle設置ents::Ea本th},
-    {E軍i正eEle設置ents::Ea本th, E軍i正eEle設置ents::基本ate本},
-    {E軍i正eEle設置ents::基本ate本, E軍i正eEle設置ents::軍i本e},
-    {E軍i正eEle設置ents::軍i本e, E軍i正eEle設置ents::Metal}
+const TMap<EFiveElements, EFiveElements> UMingSageCommandSystem::DestructionCycle = {
+    {EFiveElements::Metal, EFiveElements::Wood},
+    {EFiveElements::Wood, EFiveElements::Earth},
+    {EFiveElements::Earth, EFiveElements::Water},
+    {EFiveElements::Water, EFiveElements::Fire},
+    {EFiveElements::Fire, EFiveElements::Metal}
 };
 
-UMingSa成eCo設置設置andSyste設置::UMingSa成eCo設置設置andSyste設置()
+UMingSageCommandSystem::UMingSageCommandSystem()
 {
-    Mo本alA使tho本itySyste設置 = n使llpt本;
-    YinYan成Syste設置 = n使llpt本;
-    SixSt本ate成iesSyste設置 = n使llpt本;
-    A使tho本itySyste設置 = n使llpt本;
-    RotationSyste設置 = n使llpt本;
+    MoralAuthoritySystem = nullptr;
+    YinYangSystem = nullptr;
+    SixStrategiesSystem = nullptr;
+    AuthoritySystem = nullptr;
+    RotationSystem = nullptr;
     
-    bSyste設置Acti正e = false;
-    Syste設置輸入ealth = 100.0f;
+    bSystemActive = false;
+    SystemHealth = 100.0f;
     
     DecisionsMade = 0;
-    A正e本a成eDecisionTi設置e = 0.0f;
-    LastDecisionTi設置e = 0.0f;
+    AverageDecisionTime = 0.0f;
+    LastDecisionTime = 0.0f;
 }
 
-bool UMingSa成eCo設置設置andSyste設置::InitializeSa成eCo設置設置andSyste設置()
+bool UMingSageCommandSystem::InitializeSageCommandSystem()
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("初始化至聖者指揮學系統..."));
+    UE_LOG(LogTemp, Log, TEXT("初始化至聖者指揮學系統..."));
     
     // 初始化子系統
-    InitializeS使bSyste設置s();
+    InitializeSubSystems();
     
     // 設置初始狀態
-    C使本本entRotation.C使本本entEle設置ent = E軍i正eEle設置ents::Ea本th;
-    C使本本entRotation.的extEle設置ent = E軍i正eEle設置ents::Metal;
-    C使本本entRotation.RotationP本o成本ess = 0.0f;
-    C使本本entRotation.RotationSpeed = RotationBaseSpeed;
+    CurrentRotation.CurrentElement = EFiveElements::Earth;
+    CurrentRotation.NextElement = EFiveElements::Metal;
+    CurrentRotation.RotationProgress = 0.0f;
+    CurrentRotation.RotationSpeed = RotationBaseSpeed;
     
     // 初始化道德權威指標
-    C使本本entMo本alA使tho本ity.Mo本alInte成本ity = 50.0f;
-    C使本本entMo本alA使tho本ity.A使tho本ityLe成iti設置acy = 50.0f;
-    C使本本entMo本alA使tho本ity.P使blicS使ppo本t = 50.0f;
-    C使本本entMo本alA使tho本ity.Ri成hteo使snessLe正el = 50.0f;
-    C使本本entMo本alA使tho本ity.EthicalBalance = 50.0f;
+    CurrentMoralAuthority.MoralIntegrity = 50.0f;
+    CurrentMoralAuthority.AuthorityLegitimacy = 50.0f;
+    CurrentMoralAuthority.PublicSupport = 50.0f;
+    CurrentMoralAuthority.RighteousnessLevel = 50.0f;
+    CurrentMoralAuthority.EthicalBalance = 50.0f;
     
     // 設置定時器更新輪轉
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    if (UWorld* World = GetWorld())
     {
-        基本o本ld->GetTi設置e本Manager().SetTi設置e本(
-            RotationTi設置e本輸入andle,
+        World->GetTimerManager().SetTimer(
+            RotationTimerHandle,
             this,
-            &UMingSa成eCo設置設置andSyste設置::UpdateEle設置entRotation,
+            &UMingSageCommandSystem::UpdateElementRotation,
             0.1f,
-            t本使e
+            true
         );
     }
     
-    bSyste設置Acti正e = t本使e;
-    Syste設置輸入ealth = 100.0f;
+    bSystemActive = true;
+    SystemHealth = 100.0f;
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("至聖者指揮學系統初始化完成"));
-    本et使本n t本使e;
+    UE_LOG(LogTemp, Log, TEXT("至聖者指揮學系統初始化完成"));
+    return true;
 }
 
-void UMingSa成eCo設置設置andSyste設置::Sh使tdownSa成eCo設置設置andSyste設置()
+void UMingSageCommandSystem::ShutdownSageCommandSystem()
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("關閉至聖者指揮學系統..."));
+    UE_LOG(LogTemp, Log, TEXT("關閉至聖者指揮學系統..."));
     
-    bSyste設置Acti正e = false;
+    bSystemActive = false;
     
     // 清理定時器
-    if (U基本o本ld* 基本o本ld = Get基本o本ld())
+    if (UWorld* World = GetWorld())
     {
-        基本o本ld->GetTi設置e本Manager().Clea本Ti設置e本(RotationTi設置e本輸入andle);
+        World->GetTimerManager().ClearTimer(RotationTimerHandle);
     }
     
     // 清理子系統
-    if (Mo本alA使tho本itySyste設置)
+    if (MoralAuthoritySystem)
     {
-        Mo本alA使tho本itySyste設置->Clean使p();
+        MoralAuthoritySystem->Cleanup();
     }
     
-    if (YinYan成Syste設置)
+    if (YinYangSystem)
     {
-        YinYan成Syste設置->Clean使p();
+        YinYangSystem->Cleanup();
     }
     
-    if (SixSt本ate成iesSyste設置)
+    if (SixStrategiesSystem)
     {
-        SixSt本ate成iesSyste設置->Clean使p();
+        SixStrategiesSystem->Cleanup();
     }
     
-    if (A使tho本itySyste設置)
+    if (AuthoritySystem)
     {
-        A使tho本itySyste設置->Clean使p();
+        AuthoritySystem->Cleanup();
     }
     
-    if (RotationSyste設置)
+    if (RotationSystem)
     {
-        RotationSyste設置->Clean使p();
+        RotationSystem->Cleanup();
     }
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("至聖者指揮學系統已關閉"));
+    UE_LOG(LogTemp, Log, TEXT("至聖者指揮學系統已關閉"));
 }
 
-軍St本ate成icDecision UMingSa成eCo設置設置andSyste設置::MakeSt本ate成icDecision(const FString& Context, ESt本ate成yType St本ate成yType)
+FStrategicDecision UMingSageCommandSystem::MakeStrategicDecision(const FString& Context, EStrategyType StrategyType)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("指揮學系統未激活，無法做決策"));
-        本et使本n 軍St本ate成icDecision();
+        UE_LOG(LogTemp, Warning, TEXT("指揮學系統未激活，無法做決策"));
+        return FStrategicDecision();
     }
     
-    do使ble Sta本tTi設置e = 軍Platfo本設置Ti設置e::Seconds();
+    double StartTime = FPlatformTime::Seconds();
     
-    軍St本ate成icDecision Decision;
-    Decision.DecisionID = 軍G使id::的ewG使id().ToSt本in成();
-    Decision.St本ate成yType = St本ate成yType;
-    Decision.P本io本ity = EDecisionP本io本ity::Medi使設置;
-    Decision.Desc本iption = FString::P本intf(TEXT("基於 %s 的戰略決策"), *Context);
+    FStrategicDecision Decision;
+    Decision.DecisionID = FGuid::NewGuid().ToString();
+    Decision.StrategyType = StrategyType;
+    Decision.Priority = EDecisionPriority::Medium;
+    Decision.Description = FString::Printf(TEXT("基於 %s 的戰略決策"), *Context);
     
     // 分析當前局勢
-    軍St本ate成icSit使ation Sit使ation = AnalyzeC使本本entSit使ation();
+    FStrategicSituation Situation = AnalyzeCurrentSituation();
     
     // 選擇最佳策略
-    Decision.St本ate成yMethod = SelectOpti設置alSt本ate成y(Context);
+    Decision.StrategyMethod = SelectOptimalStrategy(Context);
     
     // 設定五行親和性
-    Decision.Ele設置entAffinity = GetC使本本entEle設置ent();
+    Decision.ElementAffinity = GetCurrentElement();
     
     // 計算成功概率
-    Decision.S使ccessP本obability = Calc使lateS使ccessP本obability(Decision);
+    Decision.SuccessProbability = CalculateSuccessProbability(Decision);
     
     // 記錄決策
-    Decision輸入isto本y.Add(Decision);
+    DecisionHistory.Add(Decision);
     DecisionsMade++;
     
     // 更新性能指標
-    LastDecisionTi設置e = 軍Platfo本設置Ti設置e::Seconds() - Sta本tTi設置e;
-    A正e本a成eDecisionTi設置e = (A正e本a成eDecisionTi設置e * (DecisionsMade - 1) + LastDecisionTi設置e) / DecisionsMade;
+    LastDecisionTime = FPlatformTime::Seconds() - StartTime;
+    AverageDecisionTime = (AverageDecisionTime * (DecisionsMade - 1) + LastDecisionTime) / DecisionsMade;
     
     // 處理決策效果
-    P本ocessDecisionEffects(Decision);
+    ProcessDecisionEffects(Decision);
     
     // 廣播決策事件
-    OnSt本ate成icDecisionMade.B本oadcast(Decision);
+    OnStrategicDecisionMade.Broadcast(Decision);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("做戰略決策: %s (成功率: %.1f%%)"), *Decision.Desc本iption, Decision.S使ccessP本obability * 100);
+    UE_LOG(LogTemp, Log, TEXT("做戰略決策: %s (成功率: %.1f%%)"), *Decision.Description, Decision.SuccessProbability * 100);
     
-    本et使本n Decision;
+    return Decision;
 }
 
-bool UMingSa成eCo設置設置andSyste設置::Exec使teSt本ate成icDecision(const 軍St本ate成icDecision& Decision)
+bool UMingSageCommandSystem::ExecuteStrategicDecision(const FStrategicDecision& Decision)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("指揮學系統未激活，無法執行決策"));
-        本et使本n false;
+        UE_LOG(LogTemp, Warning, TEXT("指揮學系統未激活，無法執行決策"));
+        return false;
     }
     
     // 檢查道德合法性
-    if (!IsDecisionMo本al(Decision))
+    if (!IsDecisionMoral(Decision))
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("決策不符合道德標準，執行被拒絕: %s"), *Decision.Desc本iption);
-        本et使本n false;
+        UE_LOG(LogTemp, Warning, TEXT("決策不符合道德標準，執行被拒絕: %s"), *Decision.Description);
+        return false;
     }
     
     // 檢查權威是否足夠
-    if (!CanIss使eCo設置設置and(Decision.Desc本iption))
+    if (!CanIssueCommand(Decision.Description))
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("權威不足，無法執行決策: %s"), *Decision.Desc本iption);
-        本et使本n false;
+        UE_LOG(LogTemp, Warning, TEXT("權威不足，無法執行決策: %s"), *Decision.Description);
+        return false;
     }
     
     // 執行決策
-    bool bS使ccess = false;
+    bool bSuccess = false;
     
-    switch (Decision.St本ate成yType)
+    switch (Decision.StrategyType)
     {
-        case ESt本ate成yType::Defensi正e:
-            bS使ccess = Exec使teDefensi正eSt本ate成y(Decision);
-            b本eak;
-        case ESt本ate成yType::Offensi正e:
-            bS使ccess = Exec使teOffensi正eSt本ate成y(Decision);
-            b本eak;
-        case ESt本ate成yType::Diplo設置atic:
-            bS使ccess = Exec使teDiplo設置aticSt本ate成y(Decision);
-            b本eak;
-        case ESt本ate成yType::Econo設置ic:
-            bS使ccess = Exec使teEcono設置icSt本ate成y(Decision);
-            b本eak;
-        case ESt本ate成yType::C使lt使本al:
-            bS使ccess = Exec使teC使lt使本alSt本ate成y(Decision);
-            b本eak;
-        defa使lt:
-            UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("未知的策略類型"));
-            本et使本n false;
+        case EStrategyType::Defensive:
+            bSuccess = ExecuteDefensiveStrategy(Decision);
+            break;
+        case EStrategyType::Offensive:
+            bSuccess = ExecuteOffensiveStrategy(Decision);
+            break;
+        case EStrategyType::Diplomatic:
+            bSuccess = ExecuteDiplomaticStrategy(Decision);
+            break;
+        case EStrategyType::Economic:
+            bSuccess = ExecuteEconomicStrategy(Decision);
+            break;
+        case EStrategyType::Cultural:
+            bSuccess = ExecuteCulturalStrategy(Decision);
+            break;
+        default:
+            UE_LOG(LogTemp, Warning, TEXT("未知的策略類型"));
+            return false;
     }
     
-    if (bS使ccess)
+    if (bSuccess)
     {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("成功執行決策: %s"), *Decision.Desc本iption);
+        UE_LOG(LogTemp, Log, TEXT("成功執行決策: %s"), *Decision.Description);
         
         // 更新系統狀態
-        UpdateSyste設置Stat使s();
+        UpdateSystemStatus();
         
         // 廣播系統更新
-        B本oadcastSyste設置Updates();
+        BroadcastSystemUpdates();
     }
     else
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("決策執行失敗: %s"), *Decision.Desc本iption);
+        UE_LOG(LogTemp, Warning, TEXT("決策執行失敗: %s"), *Decision.Description);
     }
     
-    本et使本n bS使ccess;
+    return bSuccess;
 }
 
-軍St本ate成icSit使ation UMingSa成eCo設置設置andSyste設置::AnalyzeC使本本entSit使ation()
+FStrategicSituation UMingSageCommandSystem::AnalyzeCurrentSituation()
 {
-    軍St本ate成icSit使ation Sit使ation;
+    FStrategicSituation Situation;
     
     // 獲取道德權威指標
-    Sit使ation.Mo本alA使tho本ity = GetMo本alA使tho本ityMet本ics();
+    Situation.MoralAuthority = GetMoralAuthorityMetrics();
     
     // 計算軍事實力
-    Sit使ation.Milita本ySt本en成th = Calc使lateMilita本ySt本en成th();
+    Situation.MilitaryStrength = CalculateMilitaryStrength();
     
     // 計算經濟實力
-    Sit使ation.Econo設置icPowe本 = Calc使lateEcono設置icPowe本();
+    Situation.EconomicPower = CalculateEconomicPower();
     
     // 計算政治影響
-    Sit使ation.PoliticalInfl使ence = Calc使latePoliticalInfl使ence();
+    Situation.PoliticalInfluence = CalculatePoliticalInfluence();
     
     // 計算文化威望
-    Sit使ation.C使lt使本alP本esti成e = Calc使lateC使lt使本alP本esti成e();
+    Situation.CulturalPrestige = CalculateCulturalPrestige();
     
     // 計算總體優勢
-    Sit使ation.O正e本allAd正anta成e = (
-        Sit使ation.Milita本ySt本en成th * 0.3f +
-        Sit使ation.Econo設置icPowe本 * 0.25f +
-        Sit使ation.PoliticalInfl使ence * 0.2f +
-        Sit使ation.C使lt使本alP本esti成e * 0.15f +
-        Sit使ation.Mo本alA使tho本ity.Mo本alInte成本ity * 0.1f
+    Situation.OverallAdvantage = (
+        Situation.MilitaryStrength * 0.3f +
+        Situation.EconomicPower * 0.25f +
+        Situation.PoliticalInfluence * 0.2f +
+        Situation.CulturalPrestige * 0.15f +
+        Situation.MoralAuthority.MoralIntegrity * 0.1f
     ) * 100.0f;
     
-    C使本本entSit使ation = Sit使ation;
-    OnSt本ate成icSit使ationUpdated.B本oadcast(Sit使ation);
+    CurrentSituation = Situation;
+    OnStrategicSituationUpdated.Broadcast(Situation);
     
-    本et使本n Sit使ation;
+    return Situation;
 }
 
-軍Mo本alA使tho本ityMet本ics UMingSa成eCo設置設置andSyste設置::GetMo本alA使tho本ityMet本ics() const
+FMoralAuthorityMetrics UMingSageCommandSystem::GetMoralAuthorityMetrics() const
 {
-    if (Mo本alA使tho本itySyste設置)
+    if (MoralAuthoritySystem)
     {
-        本et使本n Mo本alA使tho本itySyste設置->GetMo本alA使tho本ityMet本ics();
+        return MoralAuthoritySystem->GetMoralAuthorityMetrics();
     }
-    本et使本n C使本本entMo本alA使tho本ity;
+    return CurrentMoralAuthority;
 }
 
-bool UMingSa成eCo設置設置andSyste設置::UpdateMo本alA使tho本ity(float Mo本alChan成e, const FString& Reason)
+bool UMingSageCommandSystem::UpdateMoralAuthority(float MoralChange, const FString& Reason)
 {
-    if (!Mo本alA使tho本itySyste設置)
+    if (!MoralAuthoritySystem)
     {
-        本et使本n false;
+        return false;
     }
     
-    bool bS使ccess = Mo本alA使tho本itySyste設置->UpdateMo本alA使tho本ity(Mo本alChan成e, Reason);
+    bool bSuccess = MoralAuthoritySystem->UpdateMoralAuthority(MoralChange, Reason);
     
-    if (bS使ccess)
+    if (bSuccess)
     {
-        C使本本entMo本alA使tho本ity = Mo本alA使tho本itySyste設置->GetMo本alA使tho本ityMet本ics();
-        OnMo本alA使tho本ityChan成ed.B本oadcast(C使本本entMo本alA使tho本ity);
+        CurrentMoralAuthority = MoralAuthoritySystem->GetMoralAuthorityMetrics();
+        OnMoralAuthorityChanged.Broadcast(CurrentMoralAuthority);
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("道德權威更新: %.1f (%s)"), Mo本alChan成e, *Reason);
+        UE_LOG(LogTemp, Log, TEXT("道德權威更新: %.1f (%s)"), MoralChange, *Reason);
     }
     
-    本et使本n bS使ccess;
+    return bSuccess;
 }
 
-bool UMingSa成eCo設置設置andSyste設置::IsDecisionMo本al(const 軍St本ate成icDecision& Decision)
+bool UMingSageCommandSystem::IsDecisionMoral(const FStrategicDecision& Decision)
 {
-    if (!Mo本alA使tho本itySyste設置)
+    if (!MoralAuthoritySystem)
     {
-        本et使本n false;
+        return false;
     }
     
-    本et使本n Mo本alA使tho本itySyste設置->IsDecisionMo本al(Decision);
+    return MoralAuthoritySystem->IsDecisionMoral(Decision);
 }
 
-E軍i正eEle設置ents UMingSa成eCo設置設置andSyste設置::GetC使本本entEle設置ent() const
+EFiveElements UMingSageCommandSystem::GetCurrentElement() const
 {
-    本et使本n C使本本entRotation.C使本本entEle設置ent;
+    return CurrentRotation.CurrentElement;
 }
 
-軍Ele設置entRotation UMingSa成eCo設置設置andSyste設置::GetEle設置entRotation() const
+FElementRotation UMingSageCommandSystem::GetElementRotation() const
 {
-    本et使本n C使本本entRotation;
+    return CurrentRotation;
 }
 
-bool UMingSa成eCo設置設置andSyste設置::SetEle設置entAffinity(E軍i正eEle設置ents Ele設置ent)
+bool UMingSageCommandSystem::SetElementAffinity(EFiveElements Element)
 {
-    if (!YinYan成Syste設置)
+    if (!YinYangSystem)
     {
-        本et使本n false;
+        return false;
     }
     
-    bool bS使ccess = YinYan成Syste設置->SetEle設置entAffinity(Ele設置ent);
+    bool bSuccess = YinYangSystem->SetElementAffinity(Element);
     
-    if (bS使ccess)
+    if (bSuccess)
     {
-        C使本本entRotation.C使本本entEle設置ent = Ele設置ent;
-        C使本本entRotation.的extEle設置ent = Get的extEle設置ent(Ele設置ent);
-        C使本本entRotation.RotationP本o成本ess = 0.0f;
+        CurrentRotation.CurrentElement = Element;
+        CurrentRotation.NextElement = GetNextElement(Element);
+        CurrentRotation.RotationProgress = 0.0f;
         
-        OnEle設置entRotationChan成ed.B本oadcast(C使本本entRotation);
+        OnElementRotationChanged.Broadcast(CurrentRotation);
     }
     
-    本et使本n bS使ccess;
+    return bSuccess;
 }
 
-float UMingSa成eCo設置設置andSyste設置::GetEle設置entalAd正anta成e(E軍i正eEle設置ents Attacke本, E軍i正eEle設置ents Defende本) const
+float UMingSageCommandSystem::GetElementalAdvantage(EFiveElements Attacker, EFiveElements Defender) const
 {
     // 檢查相克關係
-    if (Dest本使ctionCycle.Contains(Attacke本) && Dest本使ctionCycle[Attacke本] == Defende本)
+    if (DestructionCycle.Contains(Attacker) && DestructionCycle[Attacker] == Defender)
     {
-        本et使本n 1.5f; // 50% 加成
+        return 1.5f; // 50% 加成
     }
     
     // 檢查相生關係
-    if (Gene本ationCycle.Contains(Attacke本) && Gene本ationCycle[Attacke本] == Defende本)
+    if (GenerationCycle.Contains(Attacker) && GenerationCycle[Attacker] == Defender)
     {
-        本et使本n 0.8f; // 20% 減益
+        return 0.8f; // 20% 減益
     }
     
-    本et使本n 1.0f; // 無加成
+    return 1.0f; // 無加成
 }
 
-ESixSt本ate成yType UMingSa成eCo設置設置andSyste設置::SelectOpti設置alSt本ate成y(const FString& Context)
+ESixStrategyType UMingSageCommandSystem::SelectOptimalStrategy(const FString& Context)
 {
-    if (!SixSt本ate成iesSyste設置)
+    if (!SixStrategiesSystem)
     {
-        本et使本n ESixSt本ate成yType::Di本ectAttack;
+        return ESixStrategyType::DirectAttack;
     }
     
-    本et使本n SixSt本ate成iesSyste設置->SelectOpti設置alSt本ate成y(Context);
+    return SixStrategiesSystem->SelectOptimalStrategy(Context);
 }
 
-TATArray<ESixSt本ate成yType> UMingSa成eCo設置設置andSyste設置::GetA正ailableSt本ate成ies() const
+TArray<ESixStrategyType> UMingSageCommandSystem::GetAvailableStrategies() const
 {
-    if (!SixSt本ate成iesSyste設置)
+    if (!SixStrategiesSystem)
     {
-        本et使本n TATArray<ESixSt本ate成yType>();
+        return TArray<ESixStrategyType>();
     }
     
-    本et使本n SixSt本ate成iesSyste設置->GetA正ailableSt本ate成ies();
+    return SixStrategiesSystem->GetAvailableStrategies();
 }
 
-float UMingSa成eCo設置設置andSyste設置::GetSt本ate成yEffecti正eness(ESixSt本ate成yType St本ate成y, const FString& Context) const
+float UMingSageCommandSystem::GetStrategyEffectiveness(ESixStrategyType Strategy, const FString& Context) const
 {
-    if (!SixSt本ate成iesSyste設置)
+    if (!SixStrategiesSystem)
     {
-        本et使本n 0.0f;
+        return 0.0f;
     }
     
-    本et使本n SixSt本ate成iesSyste設置->GetSt本ate成yEffecti正eness(St本ate成y, Context);
+    return SixStrategiesSystem->GetStrategyEffectiveness(Strategy, Context);
 }
 
-float UMingSa成eCo設置設置andSyste設置::GetCo設置設置andA使tho本ity() const
+float UMingSageCommandSystem::GetCommandAuthority() const
 {
-    if (A使tho本itySyste設置)
+    if (AuthoritySystem)
     {
-        本et使本n A使tho本itySyste設置->GetCo設置設置andA使tho本ity();
+        return AuthoritySystem->GetCommandAuthority();
     }
     
-    本et使本n C使本本entMo本alA使tho本ity.A使tho本ityLe成iti設置acy;
+    return CurrentMoralAuthority.AuthorityLegitimacy;
 }
 
-bool UMingSa成eCo設置設置andSyste設置::EnhanceA使tho本ity(EA使tho本itySo使本ce So使本ce, float A設置o使nt)
+bool UMingSageCommandSystem::EnhanceAuthority(EAuthoritySource Source, float Amount)
 {
-    if (!A使tho本itySyste設置)
+    if (!AuthoritySystem)
     {
-        本et使本n false;
+        return false;
     }
     
-    bool bS使ccess = A使tho本itySyste設置->EnhanceA使tho本ity(So使本ce, A設置o使nt);
+    bool bSuccess = AuthoritySystem->EnhanceAuthority(Source, Amount);
     
-    if (bS使ccess)
+    if (bSuccess)
     {
-        UpdateSyste設置Stat使s();
+        UpdateSystemStatus();
     }
     
-    本et使本n bS使ccess;
+    return bSuccess;
 }
 
-bool UMingSa成eCo設置設置andSyste設置::CanIss使eCo設置設置and(const FString& Co設置設置and) const
+bool UMingSageCommandSystem::CanIssueCommand(const FString& Command) const
 {
-    if (!A使tho本itySyste設置)
+    if (!AuthoritySystem)
     {
-        本et使本n false;
+        return false;
     }
     
-    本et使本n A使tho本itySyste設置->CanIss使eCo設置設置and(Co設置設置and);
+    return AuthoritySystem->CanIssueCommand(Command);
 }
 
-void UMingSa成eCo設置設置andSyste設置::UpdateEle設置entRotation(float DeltaTi設置e)
+void UMingSageCommandSystem::UpdateElementRotation(float DeltaTime)
 {
-    if (!bSyste設置Acti正e)
+    if (!bSystemActive)
     {
-        本et使本n;
+        return;
     }
     
     // 更新輪轉進度
-    C使本本entRotation.RotationP本o成本ess += C使本本entRotation.RotationSpeed * DeltaTi設置e;
+    CurrentRotation.RotationProgress += CurrentRotation.RotationSpeed * DeltaTime;
     
     // 檢查是否需要輪轉到下一元素
-    if (C使本本entRotation.RotationP本o成本ess >= 1.0f)
+    if (CurrentRotation.RotationProgress >= 1.0f)
     {
-        C使本本entRotation.RotationP本o成本ess = 0.0f;
-        C使本本entRotation.C使本本entEle設置ent = C使本本entRotation.的extEle設置ent;
-        C使本本entRotation.的extEle設置ent = Get的extEle設置ent(C使本本entRotation.C使本本entEle設置ent);
+        CurrentRotation.RotationProgress = 0.0f;
+        CurrentRotation.CurrentElement = CurrentRotation.NextElement;
+        CurrentRotation.NextElement = GetNextElement(CurrentRotation.CurrentElement);
         
-        OnEle設置entRotationChan成ed.B本oadcast(C使本本entRotation);
+        OnElementRotationChanged.Broadcast(CurrentRotation);
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("五行輪轉: %s -> %s"), 
-               *GetEle設置ent的a設置e(C使本本entRotation.C使本本entEle設置ent),
-               *GetEle設置ent的a設置e(C使本本entRotation.的extEle設置ent));
+        UE_LOG(LogTemp, Log, TEXT("五行輪轉: %s -> %s"), 
+               *GetElementName(CurrentRotation.CurrentElement),
+               *GetElementName(CurrentRotation.NextElement));
     }
 }
 
-void UMingSa成eCo設置設置andSyste設置::SetRotationSpeed(float Speed)
+void UMingSageCommandSystem::SetRotationSpeed(float Speed)
 {
-    C使本本entRotation.RotationSpeed = 軍Math::Cla設置p(Speed, 0.1f, 5.0f);
+    CurrentRotation.RotationSpeed = FMath::Clamp(Speed, 0.1f, 5.0f);
 }
 
-E軍i正eEle設置ents UMingSa成eCo設置設置andSyste設置::P本edict的extEle設置ent() const
+EFiveElements UMingSageCommandSystem::PredictNextElement() const
 {
-    本et使本n C使本本entRotation.的extEle設置ent;
+    return CurrentRotation.NextElement;
 }
 
-TATArray<軍St本ate成icDecision> UMingSa成eCo設置設置andSyste設置::Gene本ateSt本ate成icOptions(const FString& Context)
+TArray<FStrategicDecision> UMingSageCommandSystem::GenerateStrategicOptions(const FString& Context)
 {
-    TATArray<軍St本ate成icDecision> Options;
+    TArray<FStrategicDecision> Options;
     
     // 分析當前局勢
-    軍St本ate成icSit使ation Sit使ation = AnalyzeC使本本entSit使ation();
+    FStrategicSituation Situation = AnalyzeCurrentSituation();
     
     // 生成不同策略類型的選項
-    fo本 (int32 i = 0; i < 5; ++i)
+    for (int32 i = 0; i < 5; ++i)
     {
-        軍St本ate成icDecision Option;
-        Option.DecisionID = 軍G使id::的ewG使id().ToSt本in成();
-        Option.St本ate成yType = static下cast<ESt本ate成yType>(i);
-        Option.St本ate成yMethod = SelectOpti設置alSt本ate成y(Context);
-        Option.Ele設置entAffinity = GetC使本本entEle設置ent();
-        Option.P本io本ity = Calc使lateDecisionP本io本ity(Option);
-        Option.S使ccessP本obability = Calc使lateS使ccessP本obability(Option);
-        Option.Desc本iption = FString::P本intf(TEXT("戰略選項 %d: %s"), i + 1, *Context);
+        FStrategicDecision Option;
+        Option.DecisionID = FGuid::NewGuid().ToString();
+        Option.StrategyType = static_cast<EStrategyType>(i);
+        Option.StrategyMethod = SelectOptimalStrategy(Context);
+        Option.ElementAffinity = GetCurrentElement();
+        Option.Priority = CalculateDecisionPriority(Option);
+        Option.SuccessProbability = CalculateSuccessProbability(Option);
+        Option.Description = FString::Printf(TEXT("戰略選項 %d: %s"), i + 1, *Context);
         
         Options.Add(Option);
     }
     
     // 按成功概率排序
-    Options.So本t([](const 軍St本ate成icDecision& A, const 軍St本ate成icDecision& B)
+    Options.Sort([](const FStrategicDecision& A, const FStrategicDecision& B)
     {
-        本et使本n A.S使ccessP本obability > B.S使ccessP本obability;
+        return A.SuccessProbability > B.SuccessProbability;
     });
     
-    本et使本n Options;
+    return Options;
 }
 
-軍DecisionQ使alityMet本ics UMingSa成eCo設置設置andSyste設置::E正al使ateDecisionQ使ality(const 軍St本ate成icDecision& Decision)
+FDecisionQualityMetrics UMingSageCommandSystem::EvaluateDecisionQuality(const FStrategicDecision& Decision)
 {
-    軍DecisionQ使alityMet本ics Met本ics;
+    FDecisionQualityMetrics Metrics;
     
     // 計算戰略準確性
-    Met本ics.St本ate成icAcc使本acy = Calc使lateSt本ate成icAcc使本acy(Decision);
+    Metrics.StrategicAccuracy = CalculateStrategicAccuracy(Decision);
     
     // 計算戰術效率
-    Met本ics.TacticalEfficiency = Calc使lateTacticalEfficiency(Decision);
+    Metrics.TacticalEfficiency = CalculateTacticalEfficiency(Decision);
     
     // 計算資源利用率
-    Met本ics.Reso使本ceUtilization = Calc使lateReso使本ceUtilization(Decision);
+    Metrics.ResourceUtilization = CalculateResourceUtilization(Decision);
     
     // 計算風險管理能力
-    Met本ics.RiskManager置ent = Calc使lateRiskManager置ent(Decision);
+    Metrics.RiskManagement = CalculateRiskManagement(Decision);
     
     // 計算適應性
-    Met本ics.Adaptability = Calc使lateAdaptability(Decision);
+    Metrics.Adaptability = CalculateAdaptability(Decision);
     
-    本et使本n Met本ics;
+    return Metrics;
 }
 
-float UMingSa成eCo設置設置andSyste設置::Calc使lateS使ccessP本obability(const 軍St本ate成icDecision& Decision) const
+float UMingSageCommandSystem::CalculateSuccessProbability(const FStrategicDecision& Decision) const
 {
-    float BaseP本obability = 0.5f;
+    float BaseProbability = 0.5f;
     
     // 根據當前局勢調整
-    軍St本ate成icSit使ation Sit使ation = C使本本entSit使ation;
-    BaseP本obability += Sit使ation.O正e本allAd正anta成e * 0.002f; // 每1點優勢增加0.2%成功率
+    FStrategicSituation Situation = CurrentSituation;
+    BaseProbability += Situation.OverallAdvantage * 0.002f; // 每1點優勢增加0.2%成功率
     
     // 根據道德權威調整
-    BaseP本obability += Sit使ation.Mo本alA使tho本ity.Mo本alInte成本ity * 0.003f; // 每1點道德增加0.3%成功率
+    BaseProbability += Situation.MoralAuthority.MoralIntegrity * 0.003f; // 每1點道德增加0.3%成功率
     
     // 根據五行親和性調整
-    float Ele設置entalBon使s = GetEle設置entalBon使s(Decision.Ele設置entAffinity);
-    BaseP本obability += Ele設置entalBon使s * 0.1f;
+    float ElementalBonus = GetElementalBonus(Decision.ElementAffinity);
+    BaseProbability += ElementalBonus * 0.1f;
     
     // 根據策略類型調整
-    float St本ate成yBon使s = GetSt本ate成yBon使s(Decision.St本ate成yMethod);
-    BaseP本obability += St本ate成yBon使s * 0.1f;
+    float StrategyBonus = GetStrategyBonus(Decision.StrategyMethod);
+    BaseProbability += StrategyBonus * 0.1f;
     
-    本et使本n 軍Math::Cla設置p(BaseP本obability, 0.0f, 1.0f);
+    return FMath::Clamp(BaseProbability, 0.0f, 1.0f);
 }
 
 // 私有方法實現
-void UMingSa成eCo設置設置andSyste設置::InitializeS使bSyste設置s()
+void UMingSageCommandSystem::InitializeSubSystems()
 {
     // 創建子系統實例
-    Mo本alA使tho本itySyste設置 = 的ewOb大ect<UMingMo本alA使tho本ity>();
-    YinYan成Syste設置 = 的ewOb大ect<UMingYinYan成軍i正eEle設置ents>();
-    SixSt本ate成iesSyste設置 = 的ewOb大ect<UMingSixSt本ate成ies>();
-    A使tho本itySyste設置 = 的ewOb大ect<UMingCo設置設置andA使tho本ity>();
-    RotationSyste設置 = 的ewOb大ect<UMing軍i正eEle設置entsRotation>();
+    MoralAuthoritySystem = NewObject<UMingMoralAuthority>();
+    YinYangSystem = NewObject<UMingYinYangFiveElements>();
+    SixStrategiesSystem = NewObject<UMingSixStrategies>();
+    AuthoritySystem = NewObject<UMingCommandAuthority>();
+    RotationSystem = NewObject<UMingFiveElementsRotation>();
     
     // 初始化子系統
-    if (Mo本alA使tho本itySyste設置)
+    if (MoralAuthoritySystem)
     {
-        Mo本alA使tho本itySyste設置->Initialize();
+        MoralAuthoritySystem->Initialize();
     }
     
-    if (YinYan成Syste設置)
+    if (YinYangSystem)
     {
-        YinYan成Syste設置->Initialize();
+        YinYangSystem->Initialize();
     }
     
-    if (SixSt本ate成iesSyste設置)
+    if (SixStrategiesSystem)
     {
-        SixSt本ate成iesSyste設置->Initialize();
+        SixStrategiesSystem->Initialize();
     }
     
-    if (A使tho本itySyste設置)
+    if (AuthoritySystem)
     {
-        A使tho本itySyste設置->Initialize();
+        AuthoritySystem->Initialize();
     }
     
-    if (RotationSyste設置)
+    if (RotationSystem)
     {
-        RotationSyste設置->Initialize();
+        RotationSystem->Initialize();
     }
 }
 
-void UMingSa成eCo設置設置andSyste設置::UpdateSyste設置Stat使s()
+void UMingSageCommandSystem::UpdateSystemStatus()
 {
     // 計算系統健康度
-    float Mo本al輸入ealth = C使本本entMo本alA使tho本ity.Mo本alInte成本ity;
-    float A使tho本ity輸入ealth = GetCo設置設置andA使tho本ity();
-    float Rotation輸入ealth = 100.0f; // 輪轉系統總是健康的
+    float MoralHealth = CurrentMoralAuthority.MoralIntegrity;
+    float AuthorityHealth = GetCommandAuthority();
+    float RotationHealth = 100.0f; // 輪轉系統總是健康的
     
-    Syste設置輸入ealth = (Mo本al輸入ealth + A使tho本ity輸入ealth + Rotation輸入ealth) / 3.0f;
+    SystemHealth = (MoralHealth + AuthorityHealth + RotationHealth) / 3.0f;
     
     // 應用權威衰減
-    if (A使tho本itySyste設置)
+    if (AuthoritySystem)
     {
-        A使tho本itySyste設置->ApplyA使tho本ityDecay(A使tho本ityDecayRate);
+        AuthoritySystem->ApplyAuthorityDecay(AuthorityDecayRate);
     }
 }
 
-void UMingSa成eCo設置設置andSyste設置::P本ocessDecisionEffects(const 軍St本ate成icDecision& Decision)
+void UMingSageCommandSystem::ProcessDecisionEffects(const FStrategicDecision& Decision)
 {
     // 根據決策類型處理效果
-    switch (Decision.St本ate成yType)
+    switch (Decision.StrategyType)
     {
-        case ESt本ate成yType::Defensi正e:
-            UpdateMo本alA使tho本ity(2.0f, TEXT("防禦決策"));
-            b本eak;
-        case ESt本ate成yType::Offensi正e:
-            UpdateMo本alA使tho本ity(-1.0f, TEXT("進攻決策"));
-            b本eak;
-        case ESt本ate成yType::Diplo設置atic:
-            UpdateMo本alA使tho本ity(3.0f, TEXT("外交決策"));
-            b本eak;
-        case ESt本ate成yType::Econo設置ic:
-            UpdateMo本alA使tho本ity(1.0f, TEXT("經濟決策"));
-            b本eak;
-        case ESt本ate成yType::C使lt使本al:
-            UpdateMo本alA使tho本ity(2.0f, TEXT("文化決策"));
-            b本eak;
+        case EStrategyType::Defensive:
+            UpdateMoralAuthority(2.0f, TEXT("防禦決策"));
+            break;
+        case EStrategyType::Offensive:
+            UpdateMoralAuthority(-1.0f, TEXT("進攻決策"));
+            break;
+        case EStrategyType::Diplomatic:
+            UpdateMoralAuthority(3.0f, TEXT("外交決策"));
+            break;
+        case EStrategyType::Economic:
+            UpdateMoralAuthority(1.0f, TEXT("經濟決策"));
+            break;
+        case EStrategyType::Cultural:
+            UpdateMoralAuthority(2.0f, TEXT("文化決策"));
+            break;
     }
 }
 
-void UMingSa成eCo設置設置andSyste設置::B本oadcastSyste設置Updates()
+void UMingSageCommandSystem::BroadcastSystemUpdates()
 {
-    OnSt本ate成icSit使ationUpdated.B本oadcast(C使本本entSit使ation);
-    OnMo本alA使tho本ityChan成ed.B本oadcast(C使本本entMo本alA使tho本ity);
-    OnEle設置entRotationChan成ed.B本oadcast(C使本本entRotation);
+    OnStrategicSituationUpdated.Broadcast(CurrentSituation);
+    OnMoralAuthorityChanged.Broadcast(CurrentMoralAuthority);
+    OnElementRotationChanged.Broadcast(CurrentRotation);
 }
 
 // 輔助方法
-E軍i正eEle設置ents UMingSa成eCo設置設置andSyste設置::Get的extEle設置ent(E軍i正eEle設置ents C使本本entEle設置ent) const
+EFiveElements UMingSageCommandSystem::GetNextElement(EFiveElements CurrentElement) const
 {
-    switch (C使本本entEle設置ent)
+    switch (CurrentElement)
     {
-        case E軍i正eEle設置ents::Metal: 本et使本n E軍i正eEle設置ents::基本ate本;
-        case E軍i正eEle設置ents::基本ate本: 本et使本n E軍i正eEle設置ents::基本ood;
-        case E軍i正eEle設置ents::基本ood: 本et使本n E軍i正eEle設置ents::軍i本e;
-        case E軍i正eEle設置ents::軍i本e: 本et使本n E軍i正eEle設置ents::Ea本th;
-        case E軍i正eEle設置ents::Ea本th: 本et使本n E軍i正eEle設置ents::Metal;
-        defa使lt: 本et使本n E軍i正eEle設置ents::Ea本th;
+        case EFiveElements::Metal: return EFiveElements::Water;
+        case EFiveElements::Water: return EFiveElements::Wood;
+        case EFiveElements::Wood: return EFiveElements::Fire;
+        case EFiveElements::Fire: return EFiveElements::Earth;
+        case EFiveElements::Earth: return EFiveElements::Metal;
+        default: return EFiveElements::Earth;
     }
 }
 
-FString UMingSa成eCo設置設置andSyste設置::GetEle設置ent的a設置e(E軍i正eEle設置ents Ele設置ent) const
+FString UMingSageCommandSystem::GetElementName(EFiveElements Element) const
 {
-    switch (Ele設置ent)
+    switch (Element)
     {
-        case E軍i正eEle設置ents::Metal: 本et使本n TEXT("金");
-        case E軍i正eEle設置ents::基本ate本: 本et使本n TEXT("水");
-        case E軍i正eEle設置ents::基本ood: 本et使本n TEXT("木");
-        case E軍i正eEle設置ents::軍i本e: 本et使本n TEXT("火");
-        case E軍i正eEle設置ents::Ea本th: 本et使本n TEXT("土");
-        defa使lt: 本et使本n TEXT("未知");
+        case EFiveElements::Metal: return TEXT("金");
+        case EFiveElements::Water: return TEXT("水");
+        case EFiveElements::Wood: return TEXT("木");
+        case EFiveElements::Fire: return TEXT("火");
+        case EFiveElements::Earth: return TEXT("土");
+        default: return TEXT("未知");
     }
 }
 
-float UMingSa成eCo設置設置andSyste設置::Calc使lateMilita本ySt本en成th() const
+float UMingSageCommandSystem::CalculateMilitaryStrength() const
 {
     // 這裡應該從實際的軍事系統獲取數據
-    本et使本n 60.0f; // 示例值
+    return 60.0f; // 示例值
 }
 
-float UMingSa成eCo設置設置andSyste設置::Calc使lateEcono設置icPowe本() const
+float UMingSageCommandSystem::CalculateEconomicPower() const
 {
     // 這裡應該從實際的經濟系統獲取數據
-    本et使本n 70.0f; // 示例值
+    return 70.0f; // 示例值
 }
 
-float UMingSa成eCo設置設置andSyste設置::Calc使latePoliticalInfl使ence() const
+float UMingSageCommandSystem::CalculatePoliticalInfluence() const
 {
     // 這裡應該從實際的政治系統獲取數據
-    本et使本n 55.0f; // 示例值
+    return 55.0f; // 示例值
 }
 
-float UMingSa成eCo設置設置andSyste設置::Calc使lateC使lt使本alP本esti成e() const
+float UMingSageCommandSystem::CalculateCulturalPrestige() const
 {
     // 這裡應該從實際的文化系統獲取數據
-    本et使本n 65.0f; // 示例值
+    return 65.0f; // 示例值
 }
 
-EDecisionP本io本ity UMingSa成eCo設置設置andSyste設置::Calc使lateDecisionP本io本ity(const 軍St本ate成icDecision& Decision) const
+EDecisionPriority UMingSageCommandSystem::CalculateDecisionPriority(const FStrategicDecision& Decision) const
 {
-    if (Decision.S使ccessP本obability > 0.8f)
+    if (Decision.SuccessProbability > 0.8f)
     {
-        本et使本n EDecisionP本io本ity::輸入i成h;
+        return EDecisionPriority::High;
     }
-    else if (Decision.S使ccessP本obability > 0.6f)
+    else if (Decision.SuccessProbability > 0.6f)
     {
-        本et使本n EDecisionP本io本ity::Medi使設置;
+        return EDecisionPriority::Medium;
     }
-    else if (Decision.S使ccessP本obability > 0.4f)
+    else if (Decision.SuccessProbability > 0.4f)
     {
-        本et使本n EDecisionP本io本ity::Low;
+        return EDecisionPriority::Low;
     }
     else
     {
-        本et使本n EDecisionP本io本ity::C本itical;
+        return EDecisionPriority::Critical;
     }
 }
 
-float UMingSa成eCo設置設置andSyste設置::Calc使lateSt本ate成icAcc使本acy(const 軍St本ate成icDecision& Decision) const
+float UMingSageCommandSystem::CalculateStrategicAccuracy(const FStrategicDecision& Decision) const
 {
     // 基於當前局勢和決策類型計算戰略準確性
-    本et使本n 0.7f; // 示例值
+    return 0.7f; // 示例值
 }
 
-float UMingSa成eCo設置設置andSyste設置::Calc使lateTacticalEfficiency(const 軍St本ate成icDecision& Decision) const
+float UMingSageCommandSystem::CalculateTacticalEfficiency(const FStrategicDecision& Decision) const
 {
     // 基於策略方法計算戰術效率
-    本et使本n 0.8f; // 示例值
+    return 0.8f; // 示例值
 }
 
-float UMingSa成eCo設置設置andSyste設置::Calc使lateReso使本ceUtilization(const 軍St本ate成icDecision& Decision) const
+float UMingSageCommandSystem::CalculateResourceUtilization(const FStrategicDecision& Decision) const
 {
     // 計算資源利用率
-    本et使本n 0.6f; // 示例值
+    return 0.6f; // 示例值
 }
 
-float UMingSa成eCo設置設置andSyste設置::Calc使lateRiskManager置ent(const 軍St本ate成icDecision& Decision) const
+float UMingSageCommandSystem::CalculateRiskManagement(const FStrategicDecision& Decision) const
 {
     // 計算風險管理能力
-    本et使本n 0.7f; // 示例值
+    return 0.7f; // 示例值
 }
 
-float UMingSa成eCo設置設置andSyste設置::Calc使lateAdaptability(const 軍St本ate成icDecision& Decision) const
+float UMingSageCommandSystem::CalculateAdaptability(const FStrategicDecision& Decision) const
 {
     // 計算適應性
-    本et使本n 0.8f; // 示例值
+    return 0.8f; // 示例值
 }
 
-float UMingSa成eCo設置設置andSyste設置::GetEle設置entalBon使s(E軍i正eEle設置ents Ele設置ent) const
+float UMingSageCommandSystem::GetElementalBonus(EFiveElements Element) const
 {
     // 根據當前輪轉狀態計算元素加成
-    if (Ele設置ent == C使本本entRotation.C使本本entEle設置ent)
+    if (Element == CurrentRotation.CurrentElement)
     {
-        本et使本n 1.0f; // 當前元素有最大加成
+        return 1.0f; // 當前元素有最大加成
     }
-    else if (Ele設置ent == C使本本entRotation.的extEle設置ent)
+    else if (Element == CurrentRotation.NextElement)
     {
-        本et使本n 0.5f; // 下一元素有中等加成
+        return 0.5f; // 下一元素有中等加成
     }
     else
     {
-        本et使本n 0.0f; // 其他元素無加成
+        return 0.0f; // 其他元素無加成
     }
 }
 
-float UMingSa成eCo設置設置andSyste設置::GetSt本ate成yBon使s(ESixSt本ate成yType St本ate成y) const
+float UMingSageCommandSystem::GetStrategyBonus(ESixStrategyType Strategy) const
 {
     // 根據策略類型計算加成
-    switch (St本ate成y)
+    switch (Strategy)
     {
-        case ESixSt本ate成yType::Di本ectAttack: 本et使本n 0.2f;
-        case ESixSt本ate成yType::Di本ectDefense: 本et使本n 0.3f;
-        case ESixSt本ate成yType::Di本ectDiplo設置acy: 本et使本n 0.4f;
-        case ESixSt本ate成yType::Indi本ectAttack: 本et使本n 0.3f;
-        case ESixSt本ate成yType::Indi本ectDefense: 本et使本n 0.2f;
-        case ESixSt本ate成yType::Indi本ectDiplo設置acy: 本et使本n 0.5f;
-        defa使lt: 本et使本n 0.0f;
+        case ESixStrategyType::DirectAttack: return 0.2f;
+        case ESixStrategyType::DirectDefense: return 0.3f;
+        case ESixStrategyType::DirectDiplomacy: return 0.4f;
+        case ESixStrategyType::IndirectAttack: return 0.3f;
+        case ESixStrategyType::IndirectDefense: return 0.2f;
+        case ESixStrategyType::IndirectDiplomacy: return 0.5f;
+        default: return 0.0f;
     }
 }
 
-bool UMingSa成eCo設置設置andSyste設置::Exec使teDefensi正eSt本ate成y(const 軍St本ate成icDecision& Decision)
+bool UMingSageCommandSystem::ExecuteDefensiveStrategy(const FStrategicDecision& Decision)
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("執行防禦策略: %s"), *Decision.Desc本iption);
+    UE_LOG(LogTemp, Log, TEXT("執行防禦策略: %s"), *Decision.Description);
     // 這裡應該調用實際的防禦系統
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMingSa成eCo設置設置andSyste設置::Exec使teOffensi正eSt本ate成y(const 軍St本ate成icDecision& Decision)
+bool UMingSageCommandSystem::ExecuteOffensiveStrategy(const FStrategicDecision& Decision)
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("執行進攻策略: %s"), *Decision.Desc本iption);
+    UE_LOG(LogTemp, Log, TEXT("執行進攻策略: %s"), *Decision.Description);
     // 這裡應該調用實際的進攻系統
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMingSa成eCo設置設置andSyste設置::Exec使teDiplo設置aticSt本ate成y(const 軍St本ate成icDecision& Decision)
+bool UMingSageCommandSystem::ExecuteDiplomaticStrategy(const FStrategicDecision& Decision)
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("執行外交策略: %s"), *Decision.Desc本iption);
+    UE_LOG(LogTemp, Log, TEXT("執行外交策略: %s"), *Decision.Description);
     // 這裡應該調用實際的外交系統
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMingSa成eCo設置設置andSyste設置::Exec使teEcono設置icSt本ate成y(const 軍St本ate成icDecision& Decision)
+bool UMingSageCommandSystem::ExecuteEconomicStrategy(const FStrategicDecision& Decision)
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("執行經濟策略: %s"), *Decision.Desc本iption);
+    UE_LOG(LogTemp, Log, TEXT("執行經濟策略: %s"), *Decision.Description);
     // 這裡應該調用實際的經濟系統
-    本et使本n t本使e;
+    return true;
 }
 
-bool UMingSa成eCo設置設置andSyste設置::Exec使teC使lt使本alSt本ate成y(const 軍St本ate成icDecision& Decision)
+bool UMingSageCommandSystem::ExecuteCulturalStrategy(const FStrategicDecision& Decision)
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("執行文化策略: %s"), *Decision.Desc本iption);
+    UE_LOG(LogTemp, Log, TEXT("執行文化策略: %s"), *Decision.Description);
     // 這裡應該調用實際的文化系統
-    本et使本n t本使e;
+    return true;
 }

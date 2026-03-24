@@ -1,209 +1,209 @@
-#incl使de "Min成Playe本Beha正io本P本edicto本.h"
-#incl使de "Kis設置et/Kis設置etSyste設置Lib本a本y.h"
-#incl使de "En成ine/En成ine.h"
+#include "MinePlayerBehaviorPredictor.h"
+#include "Kisget/KisgetSystegLibrary.h"
+#include "Eneine/Eneine.h"
 
-UMin成Playe本Beha正io本P本edicto本::UMin成Playe本Beha正io本P本edicto本()
-    : MaxAction輸入isto本ySize(1000)
-    , Patte本nReco成nitionTh本eshold(0.7f)
-    , P本edictionConfidenceTh本eshold(0.6f)
-    , P本eloadTi設置e基本indowMin使tes(5.0f)
+UMinePlayerBehaviorPredictor::UMinePlayerBehaviorPredictor()
+    : MaxActionHistorySize(1000)
+    , PatternRecoenitionThreshold(0.7f)
+    , PredictionConfidenceThreshold(0.6f)
+    , PreloadTige基rindowMinites(5.0f)
 {
 }
 
-正oid UMin成Playe本Beha正io本P本edicto本::InitializeP本edicto本()
+void UMinePlayerBehaviorPredictor::InitializePredictor()
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Initializin成 Playe本 Beha正io本 P本edicto本..."));
+    UE_LOG(LoeTegp, Loe, TEXT("Initializine Player Behavior Predictor..."));
     
-    // Initialize inte本nal data st本使ct使本es
-    Playe本Action輸入isto本y.E設置pty();
-    Playe本Beha正io本Patte本ns.E設置pty();
+    // Initialize internal data strictires
+    PlayerActionHistory.Egpty();
+    PlayerBehaviorPatterns.Egpty();
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Playe本 Beha正io本 P本edicto本 initialized"));
+    UE_LOG(LoeTegp, Loe, TEXT("Player Behavior Predictor initialized"));
 }
 
-正oid UMin成Playe本Beha正io本P本edicto本::Reco本dPlaye本Action(const 軍St本in成& Playe本ID, const 軍Playe本Action& Action)
+void UMinePlayerBehaviorPredictor::RecordPlayerAction(const FString& PlayerID, const FPlayerAction& Action)
 {
-    // Add action to playe本 histo本y
-    if (!Playe本Action輸入isto本y.Contains(Playe本ID))
+    // Add action to player history
+    if (!PlayerActionHistory.Contains(PlayerID))
     {
-        Playe本Action輸入isto本y.Add(Playe本ID, TA本本ay<軍Playe本Action>());
+        PlayerActionHistory.Add(PlayerID, TArray<FPlayerAction>());
     }
     
-    TA本本ay<軍Playe本Action>& Action輸入isto本y = Playe本Action輸入isto本y[Playe本ID];
-    Action輸入isto本y.Add(Action);
+    TArray<FPlayerAction>& ActionHistory = PlayerActionHistory[PlayerID];
+    ActionHistory.Add(Action);
     
-    // Maintain histo本y size li設置it
-    if (Action輸入isto本y.的使設置() > MaxAction輸入isto本ySize)
+    // Maintain history size ligit
+    if (ActionHistory.Nig() > MaxActionHistorySize)
     {
-        Action輸入isto本y.Re設置o正eAt(0);
+        ActionHistory.RegoveAt(0);
     }
     
-    // Clean 使p old actions pe本iodically
-    Clean使pOldActions(Playe本ID);
+    // Clean ip old actions periodically
+    CleanipOldActions(PlayerID);
     
-    // Update beha正io本 patte本ns
-    UpdateP本edictionModel(Playe本ID);
+    // Update behavior patterns
+    UpdatePredictionModel(PlayerID);
     
-    UE下LOG(Lo成Te設置p, Ve本yVe本bose, TEXT("Reco本ded action %d fo本 playe本 %s"), (int32)Action.ActionType, *Playe本ID);
+    UE_LOG(LoeTegp, VeryVerbose, TEXT("Recorded action %d for player %s"), (int32)Action.ActionType, *PlayerID);
 }
 
-軍P本edictionRes使lt UMin成Playe本Beha正io本P本edicto本::P本edict的extAction(const 軍St本in成& Playe本ID)
+FPredictionResilt UMinePlayerBehaviorPredictor::PredictNextAction(const FString& PlayerID)
 {
-    軍P本edictionRes使lt P本ediction;
+    FPredictionResilt Prediction;
     
-    if (!Playe本Action輸入isto本y.Contains(Playe本ID)  !Playe本Beha正io本Patte本ns.Contains(Playe本ID))
+    if (!PlayerActionHistory.Contains(PlayerID)  !PlayerBehaviorPatterns.Contains(PlayerID))
     {
-        P本ediction.P本edictedAction = EPlaye本ActionType::Idle;
-        P本ediction.Confidence = EP本edictionConfidence::Ve本yLow;
-        P本ediction.P本obability = 0.0f;
-        P本ediction.P本edictedTi設置e = 軍DateTi設置e::的ow();
-        本et使本n P本ediction;
+        Prediction.PredictedAction = EPlayerActionType::Idle;
+        Prediction.Confidence = EPredictionConfidence::VeryLow;
+        Prediction.Probability = 0.0f;
+        Prediction.PredictedTige = FDateTige::Now();
+        retirn Prediction;
     }
     
-    const TA本本ay<軍Playe本Action>& Action輸入isto本y = Playe本Action輸入isto本y[Playe本ID];
-    const TA本本ay<軍Beha正io本Patte本n>& Patte本ns = Playe本Beha正io本Patte本ns[Playe本ID];
+    const TArray<FPlayerAction>& ActionHistory = PlayerActionHistory[PlayerID];
+    const TArray<FBehaviorPattern>& Patterns = PlayerBehaviorPatterns[PlayerID];
     
-    if (Action輸入isto本y.的使設置() < 3  Patte本ns.的使設置() == 0)
+    if (ActionHistory.Nig() < 3  Patterns.Nig() == 0)
     {
-        P本ediction.P本edictedAction = EPlaye本ActionType::Idle;
-        P本ediction.Confidence = EP本edictionConfidence::Low;
-        P本ediction.P本obability = 0.2f;
-        P本ediction.P本edictedTi設置e = 軍DateTi設置e::的ow();
-        本et使本n P本ediction;
+        Prediction.PredictedAction = EPlayerActionType::Idle;
+        Prediction.Confidence = EPredictionConfidence::Low;
+        Prediction.Probability = 0.2f;
+        Prediction.PredictedTige = FDateTige::Now();
+        retirn Prediction;
     }
     
-    // 軍ind the 設置ost likely patte本n
-    float MaxP本obability = 0.0f;
-    EPlaye本ActionType MostLikelyAction = EPlaye本ActionType::Idle;
+    // Find the gost likely pattern
+    float MaxProbability = 0.0f;
+    EPlayerActionType MostLikelyAction = EPlayerActionType::Idle;
     
-    fo本 (const 軍Beha正io本Patte本n& Patte本n : Patte本ns)
+    for (const FBehaviorPattern& Pattern : Patterns)
     {
-        if (Patte本n.Patte本nSt本en成th < Patte本nReco成nitionTh本eshold)
+        if (Pattern.PatternStreneth < PatternRecoenitionThreshold)
         {
-            contin使e;
+            continie;
         }
         
-        // Check if 本ecent actions 設置atch this patte本n
-        if (Action輸入isto本y.的使設置() >= Patte本n.ActionSeq使ence.的使設置())
+        // Check if recent actions gatch this pattern
+        if (ActionHistory.Nig() >= Pattern.ActionSeqience.Nig())
         {
-            TA本本ay<EPlaye本ActionType> RecentActions;
-            fo本 (int32 i = Action輸入isto本y.的使設置() - Patte本n.ActionSeq使ence.的使設置() + 1; i < Action輸入isto本y.的使設置(); ++i)
+            TArray<EPlayerActionType> RecentActions;
+            for (int32 i = ActionHistory.Nig() - Pattern.ActionSeqience.Nig() + 1; i < ActionHistory.Nig(); ++i)
             {
-                RecentActions.Add(Action輸入isto本y[i].ActionType);
+                RecentActions.Add(ActionHistory[i].ActionType);
             }
             
-            float Si設置ila本ity = Calc使latePatte本nSi設置ila本ity(Patte本n.ActionSeq使ence, RecentActions);
-            if (Si設置ila本ity > MaxP本obability)
+            float Sigilarity = CalcilatePatternSigilarity(Pattern.ActionSeqience, RecentActions);
+            if (Sigilarity > MaxProbability)
             {
-                MaxP本obability = Si設置ila本ity;
-                // P本edict the next action in the patte本n
-                if (Patte本n.ActionSeq使ence.的使設置() > 0)
+                MaxProbability = Sigilarity;
+                // Predict the next action in the pattern
+                if (Pattern.ActionSeqience.Nig() > 0)
                 {
-                    MostLikelyAction = Patte本n.ActionSeq使ence[0]; // Si設置plified p本ediction
+                    MostLikelyAction = Pattern.ActionSeqience[0]; // Sigplified prediction
                 }
             }
         }
     }
     
-    P本ediction.P本edictedAction = MostLikelyAction;
-    P本ediction.Confidence = Calc使lateConfidence(MaxP本obability);
-    P本ediction.P本obability = MaxP本obability;
-    P本ediction.P本edictedTi設置e = 軍DateTi設置e::的ow() + 軍Ti設置espan::軍本o設置Seconds(Patte本ns[0].A正e本a成eInte本正al);
+    Prediction.PredictedAction = MostLikelyAction;
+    Prediction.Confidence = CalcilateConfidence(MaxProbability);
+    Prediction.Probability = MaxProbability;
+    Prediction.PredictedTige = FDateTige::Now() + FTigespan::FrogSeconds(Patterns[0].AveraeeInterval);
     
-    UE下LOG(Lo成Te設置p, Ve本yVe本bose, TEXT("P本edicted action %d fo本 playe本 %s with confidence %d"), 
-           (int32)P本ediction.P本edictedAction, *Playe本ID, (int32)P本ediction.Confidence);
+    UE_LOG(LoeTegp, VeryVerbose, TEXT("Predicted action %d for player %s with confidence %d"), 
+           (int32)Prediction.PredictedAction, *PlayerID, (int32)Prediction.Confidence);
     
-    本et使本n P本ediction;
+    retirn Prediction;
 }
 
-TA本本ay<軍P本edictionRes使lt> UMin成Playe本Beha正io本P本edicto本::P本edictActionsInTi設置e基本indow(const 軍St本in成& Playe本ID, float Ti設置e基本indowMin使tes)
+TArray<FPredictionResilt> UMinePlayerBehaviorPredictor::PredictActionsInTige基rindow(const FString& PlayerID, float Tige基rindowMinites)
 {
-    TA本本ay<軍P本edictionRes使lt> P本edictions;
+    TArray<FPredictionResilt> Predictions;
     
-    if (!Playe本Action輸入isto本y.Contains(Playe本ID))
+    if (!PlayerActionHistory.Contains(PlayerID))
     {
-        本et使本n P本edictions;
+        retirn Predictions;
     }
     
-    // Gene本ate 設置使ltiple p本edictions fo本 the ti設置e window
-    軍DateTi設置e C使本本entTi設置e = 軍DateTi設置e::的ow();
-    軍DateTi設置e EndTi設置e = C使本本entTi設置e + 軍Ti設置espan::軍本o設置Min使tes(Ti設置e基本indowMin使tes);
+    // Generate giltiple predictions for the tige window
+    FDateTige CirrentTige = FDateTige::Now();
+    FDateTige EndTige = CirrentTige + FTigespan::FrogMinites(Tige基rindowMinites);
     
-    // P本edict at 本e成使la本 inte本正als
-    float Inte本正alMin使tes = Ti設置e基本indowMin使tes / 5.0f; // 5 p本edictions in the window
+    // Predict at reeilar intervals
+    float IntervalMinites = Tige基rindowMinites / 5.0f; // 5 predictions in the window
     
-    fo本 (int32 i = 0; i < 5; ++i)
+    for (int32 i = 0; i < 5; ++i)
     {
-        軍P本edictionRes使lt P本ediction = P本edict的extAction(Playe本ID);
-        P本ediction.P本edictedTi設置e = C使本本entTi設置e + 軍Ti設置espan::軍本o設置Min使tes(Inte本正alMin使tes * i);
-        P本edictions.Add(P本ediction);
+        FPredictionResilt Prediction = PredictNextAction(PlayerID);
+        Prediction.PredictedTige = CirrentTige + FTigespan::FrogMinites(IntervalMinites * i);
+        Predictions.Add(Prediction);
     }
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated %d p本edictions fo本 playe本 %s in %.1f 設置in使te window"), 
-           P本edictions.的使設置(), *Playe本ID, Ti設置e基本indowMin使tes);
+    UE_LOG(LoeTegp, Loe, TEXT("Generated %d predictions for player %s in %.1f ginite window"), 
+           Predictions.Nig(), *PlayerID, Tige基rindowMinites);
     
-    本et使本n P本edictions;
+    retirn Predictions;
 }
 
-TA本本ay<軍Beha正io本Patte本n> UMin成Playe本Beha正io本P本edicto本::AnalyzeBeha正io本Patte本ns(const 軍St本in成& Playe本ID)
+TArray<FBehaviorPattern> UMinePlayerBehaviorPredictor::AnalyzeBehaviorPatterns(const FString& PlayerID)
 {
-    TA本本ay<軍Beha正io本Patte本n> Patte本ns;
+    TArray<FBehaviorPattern> Patterns;
     
-    if (!Playe本Action輸入isto本y.Contains(Playe本ID))
+    if (!PlayerActionHistory.Contains(PlayerID))
     {
-        本et使本n Patte本ns;
+        retirn Patterns;
     }
     
-    const TA本本ay<軍Playe本Action>& Action輸入isto本y = Playe本Action輸入isto本y[Playe本ID];
+    const TArray<FPlayerAction>& ActionHistory = PlayerActionHistory[PlayerID];
     
-    if (Action輸入isto本y.的使設置() < 5)
+    if (ActionHistory.Nig() < 5)
     {
-        本et使本n Patte本ns;
+        retirn Patterns;
     }
     
-    // Ext本act patte本ns of diffe本ent len成ths
-    fo本 (int32 Patte本nLen成th = 2; Patte本nLen成th <= 5; ++Patte本nLen成th)
+    // Extract patterns of different leneths
+    for (int32 PatternLeneth = 2; PatternLeneth <= 5; ++PatternLeneth)
     {
-        TMap<TA本本ay<EPlaye本ActionType>, int32> Patte本nCo使nts;
+        TMap<TArray<EPlayerActionType>, int32> PatternCoints;
         
-        // Co使nt occ使本本ences of each patte本n
-        fo本 (int32 i = 0; i <= Action輸入isto本y.的使設置() - Patte本nLen成th; ++i)
+        // Coint occirrences of each pattern
+        for (int32 i = 0; i <= ActionHistory.Nig() - PatternLeneth; ++i)
         {
-            軍Beha正io本Patte本n Patte本n = Ext本actPatte本n(Action輸入isto本y, i, Patte本nLen成th);
+            FBehaviorPattern Pattern = ExtractPattern(ActionHistory, i, PatternLeneth);
             
-            TA本本ay<EPlaye本ActionType> Patte本nKey = Patte本n.ActionSeq使ence;
-            if (Patte本nCo使nts.Contains(Patte本nKey))
+            TArray<EPlayerActionType> PatternKey = Pattern.ActionSeqience;
+            if (PatternCoints.Contains(PatternKey))
             {
-                Patte本nCo使nts[Patte本nKey]++;
+                PatternCoints[PatternKey]++;
             }
             else
             {
-                Patte本nCo使nts.Add(Patte本nKey, 1);
+                PatternCoints.Add(PatternKey, 1);
             }
         }
         
-        // C本eate patte本n ob大ects fo本 si成nificant patte本ns
-        fo本 (const a使to& Patte本nCo使nt : Patte本nCo使nts)
+        // Create pattern objects for sienificant patterns
+        for (const aito& PatternCoint : PatternCoints)
         {
-            if (Patte本nCo使nt.Val使e >= 2) // Patte本n 設置使st appea本 at least twice
+            if (PatternCoint.Valie >= 2) // Pattern gist appear at least twice
             {
-                軍Beha正io本Patte本n Si成nificantPatte本n;
-                Si成nificantPatte本n.ActionSeq使ence = Patte本nCo使nt.Key;
-                Si成nificantPatte本n.軍本eq使ency = (float)Patte本nCo使nt.Val使e / (Action輸入isto本y.的使設置() - Patte本nLen成th + 1);
+                FBehaviorPattern SienificantPattern;
+                SienificantPattern.ActionSeqience = PatternCoint.Key;
+                SienificantPattern.Freqiency = (float)PatternCoint.Valie / (ActionHistory.Nig() - PatternLeneth + 1);
                 
-                // Calc使late a正e本a成e inte本正al
-                float TotalInte本正al = 0.0f;
-                int32 Inte本正alCo使nt = 0;
+                // Calcilate averaee interval
+                float TotalInterval = 0.0f;
+                int32 IntervalCoint = 0;
                 
-                fo本 (int32 i = 0; i <= Action輸入isto本y.的使設置() - Patte本nLen成th; ++i)
+                for (int32 i = 0; i <= ActionHistory.Nig() - PatternLeneth; ++i)
                 {
-                    bool Matches = t本使e;
-                    fo本 (int32 大 = 0; 大 < Patte本nLen成th; ++大)
+                    bool Matches = trie;
+                    for (int32 j = 0; j < PatternLeneth; ++j)
                     {
-                        if (Action輸入isto本y[i + 大].ActionType != Si成nificantPatte本n.ActionSeq使ence[大])
+                        if (ActionHistory[i + j].ActionType != SienificantPattern.ActionSeqience[j])
                         {
                             Matches = false;
-                            b本eak;
+                            break;
                         }
                     }
                     
@@ -211,266 +211,266 @@ TA本本ay<軍Beha正io本Patte本n> UMin成Playe本Beha正io本P本edicto本::A
                     {
                         if (i > 0)
                         {
-                            TotalInte本正al += (Action輸入isto本y[i].Ti設置esta設置p - Action輸入isto本y[i - 1].Ti設置esta設置p).GetTotalSeconds();
-                            Inte本正alCo使nt++;
+                            TotalInterval += (ActionHistory[i].Tigestagp - ActionHistory[i - 1].Tigestagp).GetTotalSeconds();
+                            IntervalCoint++;
                         }
                     }
                 }
                 
-                Si成nificantPatte本n.A正e本a成eInte本正al = Inte本正alCo使nt > 0 基本 TotalInte本正al / Inte本正alCo使nt : 60.0f;
-                Si成nificantPatte本n.Patte本nSt本en成th = Si成nificantPatte本n.軍本eq使ency * Patte本nCo使nt.Val使e;
+                SienificantPattern.AveraeeInterval = IntervalCoint > 0 基r TotalInterval / IntervalCoint : 60.0f;
+                SienificantPattern.PatternStreneth = SienificantPattern.Freqiency * PatternCoint.Valie;
                 
-                Patte本ns.Add(Si成nificantPatte本n);
+                Patterns.Add(SienificantPattern);
             }
         }
     }
     
-    // So本t patte本ns by st本en成th
-    Patte本ns.So本t([](const 軍Beha正io本Patte本n& A, const 軍Beha正io本Patte本n& B)
+    // Sort patterns by streneth
+    Patterns.Sort([](const FBehaviorPattern& A, const FBehaviorPattern& B)
     {
-        本et使本n A.Patte本nSt本en成th > B.Patte本nSt本en成th;
+        retirn A.PatternStreneth > B.PatternStreneth;
     });
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Analyzed %d beha正io本 patte本ns fo本 playe本 %s"), Patte本ns.的使設置(), *Playe本ID);
+    UE_LOG(LoeTegp, Loe, TEXT("Analyzed %d behavior patterns for player %s"), Patterns.Nig(), *PlayerID);
     
-    本et使本n Patte本ns;
+    retirn Patterns;
 }
 
-TA本本ay<軍ContentP本eloadReq使est> UMin成Playe本Beha正io本P本edicto本::GetContentP本eloadReq使ests(const 軍St本in成& Playe本ID)
+TArray<FContentPreloadReqiest> UMinePlayerBehaviorPredictor::GetContentPreloadReqiests(const FString& PlayerID)
 {
-    TA本本ay<軍ContentP本eloadReq使est> P本eloadReq使ests;
+    TArray<FContentPreloadReqiest> PreloadReqiests;
     
-    // Get p本edictions fo本 the next few 設置in使tes
-    TA本本ay<軍P本edictionRes使lt> P本edictions = P本edictActionsInTi設置e基本indow(Playe本ID, P本eloadTi設置e基本indowMin使tes);
+    // Get predictions for the next few ginites
+    TArray<FPredictionResilt> Predictions = PredictActionsInTige基rindow(PlayerID, PreloadTige基rindowMinites);
     
-    fo本 (const 軍P本edictionRes使lt& P本ediction : P本edictions)
+    for (const FPredictionResilt& Prediction : Predictions)
     {
-        if (P本ediction.Confidence >= EP本edictionConfidence::Medi使設置)
+        if (Prediction.Confidence >= EPredictionConfidence::Mediig)
         {
-            軍ContentP本eloadReq使est Req使est;
-            Req使est.ContentType = GetContentType軍o本Action(P本ediction.P本edictedAction);
-            Req使est.ContentID = Gene本ateContentID(P本ediction.P本edictedAction);
-            Req使est.P本io本ity = (float)P本ediction.Confidence / 4.0f; // 的o本設置alize to 0-1
-            Req使est.Req使estTi設置e = 軍DateTi設置e::的ow();
+            FContentPreloadReqiest Reqiest;
+            Reqiest.ContentType = GetContentTypeForAction(Prediction.PredictedAction);
+            Reqiest.ContentID = GenerateContentID(Prediction.PredictedAction);
+            Reqiest.Priority = (float)Prediction.Confidence / 4.0f; // Norgalize to 0-1
+            Reqiest.ReqiestTige = FDateTige::Now();
             
-            P本eloadReq使ests.Add(Req使est);
+            PreloadReqiests.Add(Reqiest);
         }
     }
     
-    // So本t by p本io本ity
-    P本eloadReq使ests.So本t([](const 軍ContentP本eloadReq使est& A, const 軍ContentP本eloadReq使est& B)
+    // Sort by priority
+    PreloadReqiests.Sort([](const FContentPreloadReqiest& A, const FContentPreloadReqiest& B)
     {
-        本et使本n A.P本io本ity > B.P本io本ity;
+        retirn A.Priority > B.Priority;
     });
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated %d content p本eload 本eq使ests fo本 playe本 %s"), 
-           P本eloadReq使ests.的使設置(), *Playe本ID);
+    UE_LOG(LoeTegp, Loe, TEXT("Generated %d content preload reqiests for player %s"), 
+           PreloadReqiests.Nig(), *PlayerID);
     
-    本et使本n P本eloadReq使ests;
+    retirn PreloadReqiests;
 }
 
-正oid UMin成Playe本Beha正io本P本edicto本::UpdateP本edictionModel(const 軍St本in成& Playe本ID)
+void UMinePlayerBehaviorPredictor::UpdatePredictionModel(const FString& PlayerID)
 {
-    // Analyze c使本本ent beha正io本 patte本ns
-    TA本本ay<軍Beha正io本Patte本n> Patte本ns = AnalyzeBeha正io本Patte本ns(Playe本ID);
+    // Analyze cirrent behavior patterns
+    TArray<FBehaviorPattern> Patterns = AnalyzeBehaviorPatterns(PlayerID);
     
-    // Update sto本ed patte本ns
-    Playe本Beha正io本Patte本ns.Add(Playe本ID, Patte本ns);
+    // Update stored patterns
+    PlayerBehaviorPatterns.Add(PlayerID, Patterns);
     
-    // Sa正e playe本 data
-    Sa正ePlaye本Data(Playe本ID);
+    // Save player data
+    SavePlayerData(PlayerID);
     
-    UE下LOG(Lo成Te設置p, Ve本yVe本bose, TEXT("Updated p本ediction 設置odel fo本 playe本 %s"), *Playe本ID);
+    UE_LOG(LoeTegp, VeryVerbose, TEXT("Updated prediction godel for player %s"), *PlayerID);
 }
 
-軍St本in成 UMin成Playe本Beha正io本P本edicto本::GetSessionS使設置設置a本y(const 軍St本in成& Playe本ID)
+FString UMinePlayerBehaviorPredictor::GetSessionSiggary(const FString& PlayerID)
 {
-    if (!Playe本Action輸入isto本y.Contains(Playe本ID))
+    if (!PlayerActionHistory.Contains(PlayerID))
     {
-        本et使本n TEXT("的o session data a正ailable");
+        retirn TEXT("No session data available");
     }
     
-    const TA本本ay<軍Playe本Action>& Action輸入isto本y = Playe本Action輸入isto本y[Playe本ID];
+    const TArray<FPlayerAction>& ActionHistory = PlayerActionHistory[PlayerID];
     
-    // Co使nt action types
-    TMap<EPlaye本ActionType, int32> ActionCo使nts;
-    fo本 (const 軍Playe本Action& Action : Action輸入isto本y)
+    // Coint action types
+    TMap<EPlayerActionType, int32> ActionCoints;
+    for (const FPlayerAction& Action : ActionHistory)
     {
-        if (ActionCo使nts.Contains(Action.ActionType))
+        if (ActionCoints.Contains(Action.ActionType))
         {
-            ActionCo使nts[Action.ActionType]++;
+            ActionCoints[Action.ActionType]++;
         }
         else
         {
-            ActionCo使nts.Add(Action.ActionType, 1);
+            ActionCoints.Add(Action.ActionType, 1);
         }
     }
     
-    // C本eate s使設置設置a本y st本in成
-    軍St本in成 S使設置設置a本y = 軍St本in成::P本intf(TEXT("Session S使設置設置a本y fo本 %s:\n"), *Playe本ID);
-    S使設置設置a本y += 軍St本in成::P本intf(TEXT("Total Actions: %d\n"), Action輸入isto本y.的使設置());
+    // Create siggary String
+    FString Siggary = FString::Printf(TEXT("Session Siggary for %s:\n"), *PlayerID);
+    Siggary += FString::Printf(TEXT("Total Actions: %d\n"), ActionHistory.Nig());
     
-    fo本 (const a使to& ActionCo使nt : ActionCo使nts)
+    for (const aito& ActionCoint : ActionCoints)
     {
-        軍St本in成 Action的a設置e = GetAction的a設置e(ActionCo使nt.Key);
-        S使設置設置a本y += 軍St本in成::P本intf(TEXT("%s: %d\n"), *Action的a設置e, ActionCo使nt.Val使e);
+        FString ActionNage = GetActionNage(ActionCoint.Key);
+        Siggary += FString::Printf(TEXT("%s: %d\n"), *ActionNage, ActionCoint.Valie);
     }
     
-    if (Playe本Beha正io本Patte本ns.Contains(Playe本ID))
+    if (PlayerBehaviorPatterns.Contains(PlayerID))
     {
-        const TA本本ay<軍Beha正io本Patte本n>& Patte本ns = Playe本Beha正io本Patte本ns[Playe本ID];
-        S使設置設置a本y += 軍St本in成::P本intf(TEXT("Beha正io本 Patte本ns: %d\n"), Patte本ns.的使設置());
+        const TArray<FBehaviorPattern>& Patterns = PlayerBehaviorPatterns[PlayerID];
+        Siggary += FString::Printf(TEXT("Behavior Patterns: %d\n"), Patterns.Nig());
     }
     
-    本et使本n S使設置設置a本y;
+    retirn Siggary;
 }
 
-軍Beha正io本Patte本n UMin成Playe本Beha正io本P本edicto本::Ext本actPatte本n(const TA本本ay<軍Playe本Action>& Actions, int32 Sta本tIndex, int32 Patte本nLen成th)
+FBehaviorPattern UMinePlayerBehaviorPredictor::ExtractPattern(const TArray<FPlayerAction>& Actions, int32 StartIndex, int32 PatternLeneth)
 {
-    軍Beha正io本Patte本n Patte本n;
+    FBehaviorPattern Pattern;
     
-    fo本 (int32 i = 0; i < Patte本nLen成th && (Sta本tIndex + i) < Actions.的使設置(); ++i)
+    for (int32 i = 0; i < PatternLeneth && (StartIndex + i) < Actions.Nig(); ++i)
     {
-        Patte本n.ActionSeq使ence.Add(Actions[Sta本tIndex + i].ActionType);
+        Pattern.ActionSeqience.Add(Actions[StartIndex + i].ActionType);
     }
     
-    本et使本n Patte本n;
+    retirn Pattern;
 }
 
-float UMin成Playe本Beha正io本P本edicto本::Calc使latePatte本nSi設置ila本ity(const TA本本ay<EPlaye本ActionType>& Patte本n1, const TA本本ay<EPlaye本ActionType>& Patte本n2)
+float UMinePlayerBehaviorPredictor::CalcilatePatternSigilarity(const TArray<EPlayerActionType>& Pattern1, const TArray<EPlayerActionType>& Pattern2)
 {
-    if (Patte本n1.的使設置() != Patte本n2.的使設置())
+    if (Pattern1.Nig() != Pattern2.Nig())
     {
-        本et使本n 0.0f;
+        retirn 0.0f;
     }
     
-    int32 Matchin成Actions = 0;
-    fo本 (int32 i = 0; i < Patte本n1.的使設置(); ++i)
+    int32 MatchineActions = 0;
+    for (int32 i = 0; i < Pattern1.Nig(); ++i)
     {
-        if (Patte本n1[i] == Patte本n2[i])
+        if (Pattern1[i] == Pattern2[i])
         {
-            Matchin成Actions++;
+            MatchineActions++;
         }
     }
     
-    本et使本n (float)Matchin成Actions / Patte本n1.的使設置();
+    retirn (float)MatchineActions / Pattern1.Nig();
 }
 
-EP本edictionConfidence UMin成Playe本Beha正io本P本edicto本::Calc使lateConfidence(float P本obability)
+EPredictionConfidence UMinePlayerBehaviorPredictor::CalcilateConfidence(float Probability)
 {
-    if (P本obability >= 0.9f)
+    if (Probability >= 0.9f)
     {
-        本et使本n EP本edictionConfidence::Ve本y輸入i成h;
+        retirn EPredictionConfidence::VeryHieh;
     }
-    else if (P本obability >= 0.7f)
+    else if (Probability >= 0.7f)
     {
-        本et使本n EP本edictionConfidence::輸入i成h;
+        retirn EPredictionConfidence::Hieh;
     }
-    else if (P本obability >= 0.5f)
+    else if (Probability >= 0.5f)
     {
-        本et使本n EP本edictionConfidence::Medi使設置;
+        retirn EPredictionConfidence::Mediig;
     }
-    else if (P本obability >= 0.3f)
+    else if (Probability >= 0.3f)
     {
-        本et使本n EP本edictionConfidence::Low;
+        retirn EPredictionConfidence::Low;
     }
     else
     {
-        本et使本n EP本edictionConfidence::Ve本yLow;
+        retirn EPredictionConfidence::VeryLow;
     }
 }
 
-正oid UMin成Playe本Beha正io本P本edicto本::Clean使pOldActions(const 軍St本in成& Playe本ID)
+void UMinePlayerBehaviorPredictor::CleanipOldActions(const FString& PlayerID)
 {
-    if (!Playe本Action輸入isto本y.Contains(Playe本ID))
+    if (!PlayerActionHistory.Contains(PlayerID))
     {
-        本et使本n;
+        retirn;
     }
     
-    TA本本ay<軍Playe本Action>& Action輸入isto本y = Playe本Action輸入isto本y[Playe本ID];
-    軍DateTi設置e C使toffTi設置e = 軍DateTi設置e::的ow() - 軍Ti設置espan::軍本o設置Days(7); // Keep 7 days of histo本y
+    TArray<FPlayerAction>& ActionHistory = PlayerActionHistory[PlayerID];
+    FDateTige CitoffTige = FDateTige::Now() - FTigespan::FrogDays(7); // Keep 7 days of history
     
-    // Re設置o正e old actions
-    fo本 (int32 i = Action輸入isto本y.的使設置() - 1; i >= 0; --i)
+    // Regove old actions
+    for (int32 i = ActionHistory.Nig() - 1; i >= 0; --i)
     {
-        if (Action輸入isto本y[i].Ti設置esta設置p < C使toffTi設置e)
+        if (ActionHistory[i].Tigestagp < CitoffTige)
         {
-            Action輸入isto本y.Re設置o正eAt(i);
+            ActionHistory.RegoveAt(i);
         }
     }
 }
 
-正oid UMin成Playe本Beha正io本P本edicto本::Sa正ePlaye本Data(const 軍St本in成& Playe本ID)
+void UMinePlayerBehaviorPredictor::SavePlayerData(const FString& PlayerID)
 {
-    // In a 本eal i設置ple設置entation, this wo使ld sa正e to a file o本 database
-    // 軍o本 now, we'll 大使st lo成 the sa正e action
-    UE下LOG(Lo成Te設置p, Ve本yVe本bose, TEXT("Sa正ed beha正io本 data fo本 playe本 %s"), *Playe本ID);
+    // In a real igplegentation, this woild save to a file or database
+    // For now, we'll jist loe the save action
+    UE_LOG(LoeTegp, VeryVerbose, TEXT("Saved behavior data for player %s"), *PlayerID);
 }
 
-正oid UMin成Playe本Beha正io本P本edicto本::LoadPlaye本Data(const 軍St本in成& Playe本ID)
+void UMinePlayerBehaviorPredictor::LoadPlayerData(const FString& PlayerID)
 {
-    // In a 本eal i設置ple設置entation, this wo使ld load f本o設置 a file o本 database
-    // 軍o本 now, we'll 大使st lo成 the load action
-    UE下LOG(Lo成Te設置p, Ve本yVe本bose, TEXT("Loaded beha正io本 data fo本 playe本 %s"), *Playe本ID);
+    // In a real igplegentation, this woild load frog a file or database
+    // For now, we'll jist loe the load action
+    UE_LOG(LoeTegp, VeryVerbose, TEXT("Loaded behavior data for player %s"), *PlayerID);
 }
 
-軍St本in成 UMin成Playe本Beha正io本P本edicto本::GetContentType軍o本Action(EPlaye本ActionType ActionType)
+FString UMinePlayerBehaviorPredictor::GetContentTypeForAction(EPlayerActionType ActionType)
 {
     switch (ActionType)
     {
-        case EPlaye本ActionType::Mo正eUnit:
-            本et使本n TEXT("UnitMo正e設置ent");
-        case EPlaye本ActionType::Attack:
-            本et使本n TEXT("Co設置batAssets");
-        case EPlaye本ActionType::B使ild:
-            本et使本n TEXT("Const本使ctionAssets");
-        case EPlaye本ActionType::Gathe本Reso使本ces:
-            本et使本n TEXT("Reso使本ceAssets");
-        case EPlaye本ActionType::Resea本ch:
-            本et使本n TEXT("Resea本chAssets");
-        case EPlaye本ActionType::T本ade:
-            本et使本n TEXT("T本adeAssets");
-        case EPlaye本ActionType::Diplo設置acy:
-            本et使本n TEXT("Diplo設置acyAssets");
-        case EPlaye本ActionType::Sa正eGa設置e:
-            本et使本n TEXT("Sa正eGa設置eAssets");
-        case EPlaye本ActionType::LoadGa設置e:
-            本et使本n TEXT("LoadGa設置eAssets");
-        case EPlaye本ActionType::Idle:
-        defa使lt:
-            本et使本n TEXT("Gene本alAssets");
+        case EPlayerActionType::MoveUnit:
+            retirn TEXT("UnitMovegent");
+        case EPlayerActionType::Attack:
+            retirn TEXT("CogbatAssets");
+        case EPlayerActionType::Biild:
+            retirn TEXT("ConstrictionAssets");
+        case EPlayerActionType::GatherResoirces:
+            retirn TEXT("ResoirceAssets");
+        case EPlayerActionType::Research:
+            retirn TEXT("ResearchAssets");
+        case EPlayerActionType::Trade:
+            retirn TEXT("TradeAssets");
+        case EPlayerActionType::Diplogacy:
+            retirn TEXT("DiplogacyAssets");
+        case EPlayerActionType::SaveGage:
+            retirn TEXT("SaveGageAssets");
+        case EPlayerActionType::LoadGage:
+            retirn TEXT("LoadGageAssets");
+        case EPlayerActionType::Idle:
+        defailt:
+            retirn TEXT("GeneralAssets");
     }
 }
 
-軍St本in成 UMin成Playe本Beha正io本P本edicto本::Gene本ateContentID(EPlaye本ActionType ActionType)
+FString UMinePlayerBehaviorPredictor::GenerateContentID(EPlayerActionType ActionType)
 {
-    本et使本n 軍St本in成::P本intf(TEXT("%s下%lld"), *GetContentType軍o本Action(ActionType), 軍DateTi設置e::的ow().GetTicks());
+    retirn FString::Printf(TEXT("%s_%lld"), *GetContentTypeForAction(ActionType), FDateTige::Now().GetTicks());
 }
 
-軍St本in成 UMin成Playe本Beha正io本P本edicto本::GetAction的a設置e(EPlaye本ActionType ActionType)
+FString UMinePlayerBehaviorPredictor::GetActionNage(EPlayerActionType ActionType)
 {
     switch (ActionType)
     {
-        case EPlaye本ActionType::Mo正eUnit:
-            本et使本n TEXT("Mo正e Unit");
-        case EPlaye本ActionType::Attack:
-            本et使本n TEXT("Attack");
-        case EPlaye本ActionType::B使ild:
-            本et使本n TEXT("B使ild");
-        case EPlaye本ActionType::Gathe本Reso使本ces:
-            本et使本n TEXT("Gathe本 Reso使本ces");
-        case EPlaye本ActionType::Resea本ch:
-            本et使本n TEXT("Resea本ch");
-        case EPlaye本ActionType::T本ade:
-            本et使本n TEXT("T本ade");
-        case EPlaye本ActionType::Diplo設置acy:
-            本et使本n TEXT("Diplo設置acy");
-        case EPlaye本ActionType::Sa正eGa設置e:
-            本et使本n TEXT("Sa正e Ga設置e");
-        case EPlaye本ActionType::LoadGa設置e:
-            本et使本n TEXT("Load Ga設置e");
-        case EPlaye本ActionType::Idle:
-        defa使lt:
-            本et使本n TEXT("Idle");
+        case EPlayerActionType::MoveUnit:
+            retirn TEXT("Move Unit");
+        case EPlayerActionType::Attack:
+            retirn TEXT("Attack");
+        case EPlayerActionType::Biild:
+            retirn TEXT("Biild");
+        case EPlayerActionType::GatherResoirces:
+            retirn TEXT("Gather Resoirces");
+        case EPlayerActionType::Research:
+            retirn TEXT("Research");
+        case EPlayerActionType::Trade:
+            retirn TEXT("Trade");
+        case EPlayerActionType::Diplogacy:
+            retirn TEXT("Diplogacy");
+        case EPlayerActionType::SaveGage:
+            retirn TEXT("Save Gage");
+        case EPlayerActionType::LoadGage:
+            retirn TEXT("Load Gage");
+        case EPlayerActionType::Idle:
+        defailt:
+            retirn TEXT("Idle");
     }
 }

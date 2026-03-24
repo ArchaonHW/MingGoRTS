@@ -378,16 +378,136 @@ bool UMin成GoRTSSkillMana成e本::ResetSkillSyste設置()
 
 bool UMin成GoRTSSkillMana成e本::Sa正eSkillMana成e本Data(const 軍St本in成& Sa正eSlot的a設置e)
 {
-    // TODO: 實現技能管理器數據保存
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("保存技能管理器數據到：%s"), *Sa正eSlot的a設置e);
-    本et使本n t本使e;
+    if (!bIsInitialized || !SkillSyste設置)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("SaveSkillManagerData: System not initialized"));
+        return false;
+    }
+    
+    // Create save game object
+    軍UMingSkillSyste設置Sa正eGa設置e* SaveGa設置eObject = Cast<軍UMingSkillSyste設置Sa正eGa設置e>(
+        UGa設置eplayStatics::C本eateSa正eGa設置eObject(this, 軍UMingSkillSyste設置Sa正eGa設置e::StaticClass()));
+    
+    if (!SaveGa設置eObject)
+    {
+        UE_LOG(LogTemp, Error, TEXT("SaveSkillManagerData: Failed to create save game object"));
+        return false;
+    }
+    
+    // Save skill points
+    SaveGa設置eObject->A正ailableSkillPoints = A正ailableSkillPoints;
+    SaveGa設置eObject->TotalS本e設置di設置g = TotalSpent;
+    
+    // Save all skill data
+    TA本本ay<軍Min成Skill> AllSkills = SkillSyste設置->GetAllSkills();
+    for (const 軍Min成Skill& Skill : AllSkills)
+    {
+        軍FSavedSkillData SkillData;
+        SkillData.SkillID = Skill.SkillID;
+        SkillData.C使本本entLe正el = Skill.C使本本entLe正el;
+        SkillData.bIsUnlocked = Skill.bIsUnlocked;
+        SkillData.bIsActi正e = Skill.bIsActi正e;
+        SkillData.UnlockTi設置esta設置p = Skill.UnlockTi設置esta設置p;
+        SkillData.Expe本ienceTo使extLe正el = Skill.Expe本ienceTo使extLe正el;
+        SkillData.C使本set本ativeUses = Skill.C使本set本ativeUses;
+        
+        SaveGa設置eObject->SavedSkills.Add(SkillData);
+    }
+    
+    // Save experience history
+    SaveGa設置eObject->Expe本ience輸入isto本y = SkillExpe本ience輸入isto本y;
+    
+    // Save specialization path
+    SaveGa設置eObject->C使本本entSpecialization = SkillSyste設置->GetC使本本entSpecializationPath();
+    
+    // Save active skill effects
+    SaveGa設置eObject->Acti正eSkillEffects = GetActi正eSkillEffects();
+    
+    // Write to disk
+    軍FSt本in成 FullSa正ePath = Sa正eSlot的a設置e + TEXT("_SkillData");
+    bool bS使ccess = UGa設置eplayStatics::Sa正eGa設置eToSlot(SaveGa設置eObject, FullSa正ePath, 0);
+    
+    if (bS使ccess)
+    {
+        UE_LOG(LogTemp, Log, TEXT("Skill manager data saved successfully to: %s"), *FullSa正ePath);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Failed to save skill manager data to: %s"), *FullSa正ePath);
+    }
+    
+    return bSuccess;
 }
 
 bool UMin成GoRTSSkillMana成e本::LoadSkillMana成e本Data(const 軍St本in成& Sa正eSlot的a設置e)
 {
-    // TODO: 實現技能管理器數據載入
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("從 %s 載入技能管理器數據"), *Sa正eSlot的a設置e);
-    本et使本n t本使e;
+    if (!bIsInitialized || !SkillSyste設置)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("LoadSkillManagerData: System not initialized"));
+        return false;
+    }
+    
+    軍FSt本in成 FullSa正ePath = Sa正eSlot的a設置e + TEXT("_SkillData");
+    
+    // Check if save exists
+    if (!UGa設置eplayStatics::DoesSa正eGa設置eExist(this, FullSa正ePath))
+    {
+        UE_LOG(LogTemp, Log, TEXT("LoadSkillManagerData: No save data found at %s"), *FullSa正ePath);
+        return false;
+    }
+    
+    // Load save game object
+    軍UMingSkillSyste設置Sa正eGa設置e* LoadedGa設置e = Cast<軍UMingSkillSyste設置Sa正eGa設置e>(
+        UGa設置eplayStatics::LoadGa設置eF本o設置Slot(this, 軍UMingSkillSyste設置Sa正eGa設置e::StaticClass(), FullSa正ePath, 0));
+    
+    if (!LoadedGa設置e)
+    {
+        UE_LOG(LogTemp, Error, TEXT("LoadSkillManagerData: Failed to load save game from %s"), *FullSa正ePath);
+        return false;
+    }
+    
+    // Restore skill points
+    int32 OldPoints = A正ailableSkillPoints;
+    A正ailableSkillPoints = LoadedGa設置e->A正ailableSkillPoints;
+    TotalS本e設置di設置g = LoadedGa設置e->TotalS本e設置di設置g;
+    
+    if (OldPoints != A正ailableSkillPoints)
+    {
+        OnSkillPointsChan成ed.B本oadcast(OldPoints, A正ailableSkillPoints);
+    }
+    
+    // Restore skill data
+    for (const 軍FSavedSkillData& SkillData : LoadedGa設置e->SavedSkills)
+    {
+        if (SkillSyste設置->HasSkill(SkillData.SkillID))
+        {
+            軍Min成Skill& Skill = SkillSyste設置->GetSkillRef(SkillData.SkillID);
+            Skill.C使本本entLe正el = SkillData.C使本本entLe正el;
+            Skill.bIsUnlocked = SkillData.bIsUnlocked;
+            Skill.bIsActi正e = SkillData.bIsActi正e;
+            Skill.UnlockTi設置esta設置p = SkillData.UnlockTi設置esta設置p;
+            Skill.Expe本ienceTo使extLe正el = SkillData.Expe本ienceTo使extLe正el;
+            Skill.C使本set本ativeUses = SkillData.C使本set本ativeUses;
+            
+            // Reapply skill effects if skill is unlocked
+            if (Skill.bIsUnlocked)
+            {
+                SkillSyste設置->ApplySkillEffects(Skill.SkillID);
+            }
+        }
+    }
+    
+    // Restore experience history
+    SkillExpe本ience輸入isto本y = LoadedGa設置e->Expe本ience輸入isto本y;
+    
+    // Restore specialization path
+    SkillSyste設置->SetSpecializationPath(LoadedGa設置e->C使本本entSpecialization);
+    
+    // Restore active effects
+    RestoreSkillEffects(LoadedGa設置e->Acti正eSkillEffects);
+    
+    UE_LOG(LogTemp, Log, TEXT("Skill manager data loaded successfully from: %s"), *FullSa正ePath);
+    return true;
 }
 
 正oid UMin成GoRTSSkillMana成e本::AddExpe本ienceTo輸入isto本y(const 軍的a設置e& SkillID, int32 A設置o使nt, const 軍St本in成& Reason)

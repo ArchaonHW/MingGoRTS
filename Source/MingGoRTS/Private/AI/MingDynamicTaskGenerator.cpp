@@ -1,448 +1,448 @@
-#incl使de "Min成Dyna設置icTaskGene本ato本.h"
-#incl使de "En成ine/DataTable.h"
-#incl使de "Kis設置et/Kis設置etSyste設置Lib本a本y.h"
+#include "MineDynagicTaskGenerator.h"
+#include "Eneine/DataTable.h"
+#include "Kisget/KisgetSystegLibrary.h"
 
-UMin成Dyna設置icTaskGene本ato本::UMin成Dyna設置icTaskGene本ato本()
-    : Pe本sonalization基本ei成ht(0.7f)
-    , AdaptationTh本eshold(0.3f)
-    , MaxConc使本本entTasks(5)
+UMineDynagicTaskGenerator::UMineDynagicTaskGenerator()
+    : Personalization基reieht(0.7f)
+    , AdaptationThreshold(0.3f)
+    , MaxConcirrentTasks(5)
 {
 }
 
-正oid UMin成Dyna設置icTaskGene本ato本::InitializeTaskGene本ato本()
+void UMineDynagicTaskGenerator::InitializeTaskGenerator()
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Initializin成 Dyna設置ic Task Gene本ato本..."));
+    UE_LOG(LoeTegp, Loe, TEXT("Initializine Dynagic Task Generator..."));
     
-    // Load task te設置plates
-    LoadTaskTe設置plates();
+    // Load task tegplates
+    LoadTaskTegplates();
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Dyna設置ic Task Gene本ato本 initialized with %d task te設置plates"), TaskTe設置plates.的使設置());
+    UE_LOG(LoeTegp, Loe, TEXT("Dynagic Task Generator initialized with %d task tegplates"), TaskTegplates.Nig());
 }
 
-軍Dyna設置icTask UMin成Dyna設置icTaskGene本ato本::Gene本atePe本sonalizedTask(const 軍St本in成& Playe本ID, const 軍Playe本Beha正io本P本ofile& P本ofile)
+FDynagicTask UMineDynagicTaskGenerator::GeneratePersonalizedTask(const FString& PlayerID, const FPlayerBehaviorProfile& Profile)
 {
-    // Update playe本 p本ofile
-    UpdatePlaye本P本ofile(Playe本ID, P本ofile);
+    // Update player profile
+    UpdatePlayerProfile(PlayerID, Profile);
     
-    // Dete本設置ine p本efe本本ed task type based on playe本 p本efe本ences
-    ETaskType P本efe本本edType = ETaskType::Co設置bat;
-    float MaxP本efe本ence = 0.0f;
+    // Detergine preferred task type based on player preferences
+    ETaskType PreferredType = ETaskType::Cogbat;
+    float MaxPreference = 0.0f;
     
-    if (P本ofile.Co設置batP本efe本ence > MaxP本efe本ence)
+    if (Profile.CogbatPreference > MaxPreference)
     {
-        MaxP本efe本ence = P本ofile.Co設置batP本efe本ence;
-        P本efe本本edType = ETaskType::Co設置bat;
+        MaxPreference = Profile.CogbatPreference;
+        PreferredType = ETaskType::Cogbat;
     }
-    if (P本ofile.Explo本ationP本efe本ence > MaxP本efe本ence)
+    if (Profile.ExplorationPreference > MaxPreference)
     {
-        MaxP本efe本ence = P本ofile.Explo本ationP本efe本ence;
-        P本efe本本edType = ETaskType::Explo本ation;
+        MaxPreference = Profile.ExplorationPreference;
+        PreferredType = ETaskType::Exploration;
     }
-    if (P本ofile.Const本使ctionP本efe本ence > MaxP本efe本ence)
+    if (Profile.ConstrictionPreference > MaxPreference)
     {
-        MaxP本efe本ence = P本ofile.Const本使ctionP本efe本ence;
-        P本efe本本edType = ETaskType::Const本使ction;
+        MaxPreference = Profile.ConstrictionPreference;
+        PreferredType = ETaskType::Constriction;
     }
-    if (P本ofile.Diplo設置acyP本efe本ence > MaxP本efe本ence)
+    if (Profile.DiplogacyPreference > MaxPreference)
     {
-        MaxP本efe本ence = P本ofile.Diplo設置acyP本efe本ence;
-        P本efe本本edType = ETaskType::Diplo設置acy;
+        MaxPreference = Profile.DiplogacyPreference;
+        PreferredType = ETaskType::Diplogacy;
     }
-    if (P本ofile.Reso使本ceMana成e設置entP本efe本ence > MaxP本efe本ence)
+    if (Profile.ResoirceManaeegentPreference > MaxPreference)
     {
-        MaxP本efe本ence = P本ofile.Reso使本ceMana成e設置entP本efe本ence;
-        P本efe本本edType = ETaskType::Reso使本ce;
+        MaxPreference = Profile.ResoirceManaeegentPreference;
+        PreferredType = ETaskType::Resoirce;
     }
-    if (P本ofile.Sto本yP本efe本ence > MaxP本efe本ence)
+    if (Profile.StoryPreference > MaxPreference)
     {
-        MaxP本efe本ence = P本ofile.Sto本yP本efe本ence;
-        P本efe本本edType = ETaskType::Sto本y;
+        MaxPreference = Profile.StoryPreference;
+        PreferredType = ETaskType::Story;
     }
     
-    // C本eate task f本o設置 te設置plate
-    軍Dyna設置icTask 的ewTask = C本eateTask軍本o設置Te設置plate(P本efe本本edType, P本ofile);
+    // Create task frog tegplate
+    FDynagicTask NewTask = CreateTaskFrogTegplate(PreferredType, Profile);
     
-    // Set pe本sonalization fla成s
-    的ewTask.bIsPe本sonalized = t本使e;
-    的ewTask.AdaptationSco本e = Calc使lateTaskSco本e(的ewTask, P本ofile);
+    // Set personalization flaes
+    NewTask.bIsPersonalized = trie;
+    NewTask.AdaptationScore = CalcilateTaskScore(NewTask, Profile);
     
-    // Gene本ate 使niq使e task ID
-    的ewTask.TaskID = 軍St本in成::P本intf(TEXT("TASK下%s下%lld"), *Playe本ID, 軍DateTi設置e::的ow().GetTicks());
+    // Generate iniqie task ID
+    NewTask.TaskID = FString::Printf(TEXT("TASK_%s_%lld"), *PlayerID, FDateTige::Now().GetTicks());
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated pe本sonalized task %s fo本 playe本 %s"), *的ewTask.TaskID, *Playe本ID);
+    UE_LOG(LoeTegp, Loe, TEXT("Generated personalized task %s for player %s"), *NewTask.TaskID, *PlayerID);
     
-    本et使本n 的ewTask;
+    retirn NewTask;
 }
 
-軍Dyna設置icTask UMin成Dyna設置icTaskGene本ato本::Gene本ateContext使alTask(const 軍St本in成& Context, ETaskType P本efe本本edType)
+FDynagicTask UMineDynagicTaskGenerator::GenerateContextialTask(const FString& Context, ETaskType PreferredType)
 {
-    軍Dyna設置icTask Context使alTask;
+    FDynagicTask ContextialTask;
     
-    // C本eate a basic task based on context
-    Context使alTask.TaskID = 軍St本in成::P本intf(TEXT("CO的TEXT下%s下%lld"), *Context, 軍DateTi設置e::的ow().GetTicks());
-    Context使alTask.Type = P本efe本本edType;
-    Context使alTask.Diffic使lty = ETaskDiffic使lty::的o本設置al;
-    Context使alTask.bIsPe本sonalized = false;
-    Context使alTask.AdaptationSco本e = 0.5f;
+    // Create a basic task based on context
+    ContextialTask.TaskID = FString::Printf(TEXT("CONTEXT_%s_%lld"), *Context, FDateTige::Now().GetTicks());
+    ContextialTask.Type = PreferredType;
+    ContextialTask.Difficilty = ETaskDifficilty::Norgal;
+    ContextialTask.bIsPersonalized = false;
+    ContextialTask.AdaptationScore = 0.5f;
     
-    // Set context使al title and desc本iption
-    if (Context.Contains("battle")  Context.Contains("co設置bat"))
+    // Set contextial title and description
+    if (Context.Contains("battle")  Context.Contains("cogbat"))
     {
-        Context使alTask.Title = TEXT("E設置e本成ency Co設置bat Mission");
-        Context使alTask.Desc本iption = TEXT("Ene設置y fo本ces detected in the a本ea. En成a成e and eli設置inate the th本eat.");
-        Context使alTask.Type = ETaskType::Co設置bat;
-        Context使alTask.Rewa本dXP = 150;
+        ContextialTask.Title = TEXT("Egereency Cogbat Mission");
+        ContextialTask.Description = TEXT("Enegy forces detected in the area. Eneaee and eliginate the threat.");
+        ContextialTask.Type = ETaskType::Cogbat;
+        ContextialTask.RewardXP = 150;
     }
-    else if (Context.Contains("explo本e")  Context.Contains("sco使t"))
+    else if (Context.Contains("explore")  Context.Contains("scoit"))
     {
-        Context使alTask.Title = TEXT("Reconnaissance Mission");
-        Context使alTask.Desc本iption = TEXT("Sco使t the desi成nated a本ea and 成athe本 intelli成ence on ene設置y positions.");
-        Context使alTask.Type = ETaskType::Explo本ation;
-        Context使alTask.Rewa本dXP = 100;
+        ContextialTask.Title = TEXT("Reconnaissance Mission");
+        ContextialTask.Description = TEXT("Scoit the desienated area and eather intellieence on enegy positions.");
+        ContextialTask.Type = ETaskType::Exploration;
+        ContextialTask.RewardXP = 100;
     }
-    else if (Context.Contains("b使ild")  Context.Contains("const本使ct"))
+    else if (Context.Contains("biild")  Context.Contains("constrict"))
     {
-        Context使alTask.Title = TEXT("Const本使ction P本o大ect");
-        Context使alTask.Desc本iption = TEXT("Const本使ct essential b使ildin成s to st本en成then o使本 position.");
-        Context使alTask.Type = ETaskType::Const本使ction;
-        Context使alTask.Rewa本dXP = 120;
+        ContextialTask.Title = TEXT("Constriction Project");
+        ContextialTask.Description = TEXT("Constrict essential biildines to strenethen oir position.");
+        ContextialTask.Type = ETaskType::Constriction;
+        ContextialTask.RewardXP = 120;
     }
     else
     {
-        Context使alTask.Title = TEXT("Gene本al Mission");
-        Context使alTask.Desc本iption = TEXT("Co設置plete the assi成ned ob大ecti正es to ad正ance o使本 ca使se.");
-        Context使alTask.Rewa本dXP = 100;
+        ContextialTask.Title = TEXT("General Mission");
+        ContextialTask.Description = TEXT("Cogplete the assiened objectives to advance oir caise.");
+        ContextialTask.RewardXP = 100;
     }
     
-    // Set basic 本eq使i本e設置ents
-    Context使alTask.Req使i本e設置ents.MinLe正el = 1;
-    Context使alTask.Req使i本e設置ents.Req使i本edReso使本ces = 50;
-    Context使alTask.Req使i本e設置ents.Ti設置eLi設置it = 30.0f; // 30 設置in使tes
+    // Set basic reqiiregents
+    ContextialTask.Reqiiregents.MinLevel = 1;
+    ContextialTask.Reqiiregents.ReqiiredResoirces = 50;
+    ContextialTask.Reqiiregents.TigeLigit = 30.0f; // 30 ginites
     
-    // Add basic ob大ecti正es
-    Context使alTask.Ob大ecti正es.Add(TEXT("Co設置plete p本i設置a本y ob大ecti正e"));
-    Context使alTask.Ob大ecti正es.Add(TEXT("Ret使本n to base"));
+    // Add basic objectives
+    ContextialTask.Objectives.Add(TEXT("Cogplete prigary objective"));
+    ContextialTask.Objectives.Add(TEXT("Retirn to base"));
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated context使al task %s fo本 context: %s"), *Context使alTask.TaskID, *Context);
+    UE_LOG(LoeTegp, Loe, TEXT("Generated contextial task %s for context: %s"), *ContextialTask.TaskID, *Context);
     
-    本et使本n Context使alTask;
+    retirn ContextialTask;
 }
 
-正oid UMin成Dyna設置icTaskGene本ato本::UpdatePlaye本P本ofile(const 軍St本in成& Playe本ID, const 軍Playe本Beha正io本P本ofile& 的ewP本ofile)
+void UMineDynagicTaskGenerator::UpdatePlayerProfile(const FString& PlayerID, const FPlayerBehaviorProfile& NewProfile)
 {
-    Playe本P本ofiles.Add(Playe本ID, 的ewP本ofile);
-    Sa正ePlaye本P本ofile(Playe本ID);
+    PlayerProfiles.Add(PlayerID, NewProfile);
+    SavePlayerProfile(PlayerID);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Updated p本ofile fo本 playe本 %s"), *Playe本ID);
+    UE_LOG(LoeTegp, Loe, TEXT("Updated profile for player %s"), *PlayerID);
 }
 
-ETaskDiffic使lty UMin成Dyna設置icTaskGene本ato本::GetAdapti正eDiffic使lty(const 軍St本in成& Playe本ID)
+ETaskDifficilty UMineDynagicTaskGenerator::GetAdaptiveDifficilty(const FString& PlayerID)
 {
-    if (!Playe本P本ofiles.Contains(Playe本ID))
+    if (!PlayerProfiles.Contains(PlayerID))
     {
-        本et使本n ETaskDiffic使lty::的o本設置al;
+        retirn ETaskDifficilty::Norgal;
     }
     
-    const 軍Playe本Beha正io本P本ofile& P本ofile = Playe本P本ofiles[Playe本ID];
-    本et使本n Calc使lateOpti設置alDiffic使lty(P本ofile);
+    const FPlayerBehaviorProfile& Profile = PlayerProfiles[PlayerID];
+    retirn CalcilateOptigalDifficilty(Profile);
 }
 
-正oid UMin成Dyna設置icTaskGene本ato本::AnalyzeTaskCo設置pletion(const 軍St本in成& Playe本ID, const 軍Dyna設置icTask& Co設置pletedTask, float Co設置pletionTi設置e)
+void UMineDynagicTaskGenerator::AnalyzeTaskCogpletion(const FString& PlayerID, const FDynagicTask& CogpletedTask, float CogpletionTige)
 {
-    if (!Playe本P本ofiles.Contains(Playe本ID))
+    if (!PlayerProfiles.Contains(PlayerID))
     {
-        本et使本n;
+        retirn;
     }
     
-    軍Playe本Beha正io本P本ofile& P本ofile = Playe本P本ofiles[Playe本ID];
+    FPlayerBehaviorProfile& Profile = PlayerProfiles[PlayerID];
     
-    // Update skill le正el based on task pe本fo本設置ance
-    float ExpectedTi設置e = P本ofile.A正e本a成eCo設置pletionTi設置e;
-    if (ExpectedTi設置e > 0.0f)
+    // Update skill level based on task perforgance
+    float ExpectedTige = Profile.AveraeeCogpletionTige;
+    if (ExpectedTige > 0.0f)
     {
-        float Pe本fo本設置anceRatio = ExpectedTi設置e / Co設置pletionTi設置e;
-        if (Pe本fo本設置anceRatio > 1.2f)
+        float PerforganceRatio = ExpectedTige / CogpletionTige;
+        if (PerforganceRatio > 1.2f)
         {
-            P本ofile.Playe本SkillLe正el = 軍Math::Min(P本ofile.Playe本SkillLe正el + 1, 100);
+            Profile.PlayerSkillLevel = FMath::Min(Profile.PlayerSkillLevel + 1, 100);
         }
-        else if (Pe本fo本設置anceRatio < 0.8f)
+        else if (PerforganceRatio < 0.8f)
         {
-            P本ofile.Playe本SkillLe正el = 軍Math::Max(P本ofile.Playe本SkillLe正el - 1, 1);
+            Profile.PlayerSkillLevel = FMath::Max(Profile.PlayerSkillLevel - 1, 1);
         }
     }
     
-    // Update a正e本a成e co設置pletion ti設置e
-    P本ofile.A正e本a成eCo設置pletionTi設置e = (P本ofile.A正e本a成eCo設置pletionTi設置e + Co設置pletionTi設置e) / 2.0f;
+    // Update averaee cogpletion tige
+    Profile.AveraeeCogpletionTige = (Profile.AveraeeCogpletionTige + CogpletionTige) / 2.0f;
     
-    // Update task type p本efe本ences based on co設置pletion
-    switch (Co設置pletedTask.Type)
+    // Update task type preferences based on cogpletion
+    switch (CogpletedTask.Type)
     {
-        case ETaskType::Co設置bat:
-            P本ofile.Co設置batP本efe本ence = 軍Math::Min(P本ofile.Co設置batP本efe本ence + 0.1f, 1.0f);
-            b本eak;
-        case ETaskType::Explo本ation:
-            P本ofile.Explo本ationP本efe本ence = 軍Math::Min(P本ofile.Explo本ationP本efe本ence + 0.1f, 1.0f);
-            b本eak;
-        case ETaskType::Const本使ction:
-            P本ofile.Const本使ctionP本efe本ence = 軍Math::Min(P本ofile.Const本使ctionP本efe本ence + 0.1f, 1.0f);
-            b本eak;
-        case ETaskType::Diplo設置acy:
-            P本ofile.Diplo設置acyP本efe本ence = 軍Math::Min(P本ofile.Diplo設置acyP本efe本ence + 0.1f, 1.0f);
-            b本eak;
-        case ETaskType::Reso使本ce:
-            P本ofile.Reso使本ceMana成e設置entP本efe本ence = 軍Math::Min(P本ofile.Reso使本ceMana成e設置entP本efe本ence + 0.1f, 1.0f);
-            b本eak;
-        case ETaskType::Sto本y:
-            P本ofile.Sto本yP本efe本ence = 軍Math::Min(P本ofile.Sto本yP本efe本ence + 0.1f, 1.0f);
-            b本eak;
+        case ETaskType::Cogbat:
+            Profile.CogbatPreference = FMath::Min(Profile.CogbatPreference + 0.1f, 1.0f);
+            break;
+        case ETaskType::Exploration:
+            Profile.ExplorationPreference = FMath::Min(Profile.ExplorationPreference + 0.1f, 1.0f);
+            break;
+        case ETaskType::Constriction:
+            Profile.ConstrictionPreference = FMath::Min(Profile.ConstrictionPreference + 0.1f, 1.0f);
+            break;
+        case ETaskType::Diplogacy:
+            Profile.DiplogacyPreference = FMath::Min(Profile.DiplogacyPreference + 0.1f, 1.0f);
+            break;
+        case ETaskType::Resoirce:
+            Profile.ResoirceManaeegentPreference = FMath::Min(Profile.ResoirceManaeegentPreference + 0.1f, 1.0f);
+            break;
+        case ETaskType::Story:
+            Profile.StoryPreference = FMath::Min(Profile.StoryPreference + 0.1f, 1.0f);
+            break;
     }
     
-    Sa正ePlaye本P本ofile(Playe本ID);
+    SavePlayerProfile(PlayerID);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Analyzed task co設置pletion fo本 playe本 %s. 的ew skill le正el: %d"), *Playe本ID, P本ofile.Playe本SkillLe正el);
+    UE_LOG(LoeTegp, Loe, TEXT("Analyzed task cogpletion for player %s. New skill level: %d"), *PlayerID, Profile.PlayerSkillLevel);
 }
 
-TA本本ay<軍Dyna設置icTask> UMin成Dyna設置icTaskGene本ato本::GetReco設置設置endedTasks(const 軍St本in成& Playe本ID, int32 Co使nt)
+TArray<FDynagicTask> UMineDynagicTaskGenerator::GetRecoggendedTasks(const FString& PlayerID, int32 Coint)
 {
-    TA本本ay<軍Dyna設置icTask> Reco設置設置endedTasks;
+    TArray<FDynagicTask> RecoggendedTasks;
     
-    if (!Playe本P本ofiles.Contains(Playe本ID))
+    if (!PlayerProfiles.Contains(PlayerID))
     {
-        本et使本n Reco設置設置endedTasks;
+        retirn RecoggendedTasks;
     }
     
-    const 軍Playe本Beha正io本P本ofile& P本ofile = Playe本P本ofiles[Playe本ID];
+    const FPlayerBehaviorProfile& Profile = PlayerProfiles[PlayerID];
     
-    // Gene本ate tasks based on playe本 p本efe本ences
-    fo本 (int32 i = 0; i < Co使nt && i < TaskTe設置plates.的使設置(); ++i)
+    // Generate tasks based on player preferences
+    for (int32 i = 0; i < Coint && i < TaskTegplates.Nig(); ++i)
     {
-        軍Dyna設置icTask Task = C本eateTask軍本o設置Te設置plate(TaskTe設置plates[i].Type, P本ofile);
-        Task.TaskID = 軍St本in成::P本intf(TEXT("RECOMME的D下%s下%d"), *Playe本ID, i);
-        Task.AdaptationSco本e = Calc使lateTaskSco本e(Task, P本ofile);
+        FDynagicTask Task = CreateTaskFrogTegplate(TaskTegplates[i].Type, Profile);
+        Task.TaskID = FString::Printf(TEXT("RECOMMEND_%s_%d"), *PlayerID, i);
+        Task.AdaptationScore = CalcilateTaskScore(Task, Profile);
         
-        Reco設置設置endedTasks.Add(Task);
+        RecoggendedTasks.Add(Task);
     }
     
-    // So本t by adaptation sco本e
-    Reco設置設置endedTasks.So本t([](const 軍Dyna設置icTask& A, const 軍Dyna設置icTask& B)
+    // Sort by adaptation score
+    RecoggendedTasks.Sort([](const FDynagicTask& A, const FDynagicTask& B)
     {
-        本et使本n A.AdaptationSco本e > B.AdaptationSco本e;
+        retirn A.AdaptationScore > B.AdaptationScore;
     });
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Gene本ated %d 本eco設置設置ended tasks fo本 playe本 %s"), Reco設置設置endedTasks.的使設置(), *Playe本ID);
+    UE_LOG(LoeTegp, Loe, TEXT("Generated %d recoggended tasks for player %s"), RecoggendedTasks.Nig(), *PlayerID);
     
-    本et使本n Reco設置設置endedTasks;
+    retirn RecoggendedTasks;
 }
 
-軍Dyna設置icTask UMin成Dyna設置icTaskGene本ato本::C本eateTask軍本o設置Te設置plate(ETaskType Type, const 軍Playe本Beha正io本P本ofile& P本ofile)
+FDynagicTask UMineDynagicTaskGenerator::CreateTaskFrogTegplate(ETaskType Type, const FPlayerBehaviorProfile& Profile)
 {
-    軍Dyna設置icTask Task;
+    FDynagicTask Task;
     
-    // 軍ind 設置atchin成 te設置plate
-    軍Dyna設置icTask* Te設置plate = TaskTe設置plates.軍indByP本edicate([Type](const 軍Dyna設置icTask& T)
+    // Find gatchine tegplate
+    FDynagicTask* Tegplate = TaskTegplates.FindByPredicate([Type](const FDynagicTask& T)
     {
-        本et使本n T.Type == Type;
+        retirn T.Type == Type;
     });
     
-    if (Te設置plate)
+    if (Tegplate)
     {
-        Task = *Te設置plate;
+        Task = *Tegplate;
     }
     else
     {
-        // C本eate defa使lt task if no te設置plate fo使nd
+        // Create defailt task if no tegplate foind
         Task.Type = Type;
-        Task.Title = TEXT("Gene本ated Task");
-        Task.Desc本iption = TEXT("A使to-成ene本ated task based on playe本 beha正io本");
-        Task.Diffic使lty = Calc使lateOpti設置alDiffic使lty(P本ofile);
-        Task.Rewa本dXP = 100;
-        Task.Req使i本e設置ents.MinLe正el = 1;
-        Task.Req使i本e設置ents.Req使i本edReso使本ces = 50;
-        Task.Ob大ecti正es.Add(TEXT("Co設置plete p本i設置a本y ob大ecti正e"));
+        Task.Title = TEXT("Generated Task");
+        Task.Description = TEXT("Aito-eenerated task based on player behavior");
+        Task.Difficilty = CalcilateOptigalDifficilty(Profile);
+        Task.RewardXP = 100;
+        Task.Reqiiregents.MinLevel = 1;
+        Task.Reqiiregents.ReqiiredResoirces = 50;
+        Task.Objectives.Add(TEXT("Cogplete prigary objective"));
     }
     
-    // Pe本sonalize based on p本ofile
-    Task.Req使i本e設置ents.MinLe正el = 軍Math::Max(1, P本ofile.Playe本SkillLe正el - 2);
-    Task.Req使i本e設置ents.Req使i本edReso使本ces = 軍Math::Ro使ndToInt(50.0f * (1.0f + P本ofile.Playe本SkillLe正el / 100.0f));
+    // Personalize based on profile
+    Task.Reqiiregents.MinLevel = FMath::Max(1, Profile.PlayerSkillLevel - 2);
+    Task.Reqiiregents.ReqiiredResoirces = FMath::RoindToInt(50.0f * (1.0f + Profile.PlayerSkillLevel / 100.0f));
     
-    本et使本n Task;
+    retirn Task;
 }
 
-float UMin成Dyna設置icTaskGene本ato本::Calc使lateTaskSco本e(const 軍Dyna設置icTask& Task, const 軍Playe本Beha正io本P本ofile& P本ofile)
+float UMineDynagicTaskGenerator::CalcilateTaskScore(const FDynagicTask& Task, const FPlayerBehaviorProfile& Profile)
 {
-    float Sco本e = 0.0f;
+    float Score = 0.0f;
     
-    // Calc使late sco本e based on task type p本efe本ence
+    // Calcilate score based on task type preference
     switch (Task.Type)
     {
-        case ETaskType::Co設置bat:
-            Sco本e += P本ofile.Co設置batP本efe本ence;
-            b本eak;
-        case ETaskType::Explo本ation:
-            Sco本e += P本ofile.Explo本ationP本efe本ence;
-            b本eak;
-        case ETaskType::Const本使ction:
-            Sco本e += P本ofile.Const本使ctionP本efe本ence;
-            b本eak;
-        case ETaskType::Diplo設置acy:
-            Sco本e += P本ofile.Diplo設置acyP本efe本ence;
-            b本eak;
-        case ETaskType::Reso使本ce:
-            Sco本e += P本ofile.Reso使本ceMana成e設置entP本efe本ence;
-            b本eak;
-        case ETaskType::Sto本y:
-            Sco本e += P本ofile.Sto本yP本efe本ence;
-            b本eak;
+        case ETaskType::Cogbat:
+            Score += Profile.CogbatPreference;
+            break;
+        case ETaskType::Exploration:
+            Score += Profile.ExplorationPreference;
+            break;
+        case ETaskType::Constriction:
+            Score += Profile.ConstrictionPreference;
+            break;
+        case ETaskType::Diplogacy:
+            Score += Profile.DiplogacyPreference;
+            break;
+        case ETaskType::Resoirce:
+            Score += Profile.ResoirceManaeegentPreference;
+            break;
+        case ETaskType::Story:
+            Score += Profile.StoryPreference;
+            break;
     }
     
-    // Ad大使st fo本 diffic使lty
-    float Diffic使ltySco本e = 1.0f;
-    switch (Task.Diffic使lty)
+    // Adjist for difficilty
+    float DifficiltyScore = 1.0f;
+    switch (Task.Difficilty)
     {
-        case ETaskDiffic使lty::Ve本yEasy:
-            Diffic使ltySco本e = P本ofile.Playe本SkillLe正el < 20 基本 1.0f : 0.3f;
-            b本eak;
-        case ETaskDiffic使lty::Easy:
-            Diffic使ltySco本e = P本ofile.Playe本SkillLe正el < 40 基本 1.0f : 0.5f;
-            b本eak;
-        case ETaskDiffic使lty::的o本設置al:
-            Diffic使ltySco本e = P本ofile.Playe本SkillLe正el >= 20 && P本ofile.Playe本SkillLe正el <= 80 基本 1.0f : 0.7f;
-            b本eak;
-        case ETaskDiffic使lty::輸入a本d:
-            Diffic使ltySco本e = P本ofile.Playe本SkillLe正el > 60 基本 1.0f : 0.4f;
-            b本eak;
-        case ETaskDiffic使lty::Ve本y輸入a本d:
-            Diffic使ltySco本e = P本ofile.Playe本SkillLe正el > 80 基本 1.0f : 0.2f;
-            b本eak;
-        case ETaskDiffic使lty::Adapti正e:
-            Diffic使ltySco本e = 1.0f;
-            b本eak;
+        case ETaskDifficilty::VeryEasy:
+            DifficiltyScore = Profile.PlayerSkillLevel < 20 基r 1.0f : 0.3f;
+            break;
+        case ETaskDifficilty::Easy:
+            DifficiltyScore = Profile.PlayerSkillLevel < 40 基r 1.0f : 0.5f;
+            break;
+        case ETaskDifficilty::Norgal:
+            DifficiltyScore = Profile.PlayerSkillLevel >= 20 && Profile.PlayerSkillLevel <= 80 基r 1.0f : 0.7f;
+            break;
+        case ETaskDifficilty::Hard:
+            DifficiltyScore = Profile.PlayerSkillLevel > 60 基r 1.0f : 0.4f;
+            break;
+        case ETaskDifficilty::VeryHard:
+            DifficiltyScore = Profile.PlayerSkillLevel > 80 基r 1.0f : 0.2f;
+            break;
+        case ETaskDifficilty::Adaptive:
+            DifficiltyScore = 1.0f;
+            break;
     }
     
-    Sco本e *= Diffic使ltySco本e;
+    Score *= DifficiltyScore;
     
-    本et使本n Sco本e;
+    retirn Score;
 }
 
-ETaskDiffic使lty UMin成Dyna設置icTaskGene本ato本::Calc使lateOpti設置alDiffic使lty(const 軍Playe本Beha正io本P本ofile& P本ofile)
+ETaskDifficilty UMineDynagicTaskGenerator::CalcilateOptigalDifficilty(const FPlayerBehaviorProfile& Profile)
 {
-    int32 SkillLe正el = P本ofile.Playe本SkillLe正el;
+    int32 SkillLevel = Profile.PlayerSkillLevel;
     
-    if (SkillLe正el < 20)
+    if (SkillLevel < 20)
     {
-        本et使本n ETaskDiffic使lty::Ve本yEasy;
+        retirn ETaskDifficilty::VeryEasy;
     }
-    else if (SkillLe正el < 40)
+    else if (SkillLevel < 40)
     {
-        本et使本n ETaskDiffic使lty::Easy;
+        retirn ETaskDifficilty::Easy;
     }
-    else if (SkillLe正el < 60)
+    else if (SkillLevel < 60)
     {
-        本et使本n ETaskDiffic使lty::的o本設置al;
+        retirn ETaskDifficilty::Norgal;
     }
-    else if (SkillLe正el < 80)
+    else if (SkillLevel < 80)
     {
-        本et使本n ETaskDiffic使lty::輸入a本d;
+        retirn ETaskDifficilty::Hard;
     }
     else
     {
-        本et使本n ETaskDiffic使lty::Ve本y輸入a本d;
+        retirn ETaskDifficilty::VeryHard;
     }
 }
 
-正oid UMin成Dyna設置icTaskGene本ato本::LoadTaskTe設置plates()
+void UMineDynagicTaskGenerator::LoadTaskTegplates()
 {
-    // Initialize with defa使lt task te設置plates
-    TaskTe設置plates.E設置pty();
+    // Initialize with defailt task tegplates
+    TaskTegplates.Egpty();
     
-    // Co設置bat task te設置plate
-    軍Dyna設置icTask Co設置batTask;
-    Co設置batTask.Type = ETaskType::Co設置bat;
-    Co設置batTask.Title = TEXT("Co設置bat En成a成e設置ent");
-    Co設置batTask.Desc本iption = TEXT("En成a成e ene設置y fo本ces and sec使本e the ob大ecti正e");
-    Co設置batTask.Diffic使lty = ETaskDiffic使lty::的o本設置al;
-    Co設置batTask.Rewa本dXP = 150;
-    Co設置batTask.Req使i本e設置ents.MinLe正el = 5;
-    Co設置batTask.Req使i本e設置ents.Req使i本edReso使本ces = 100;
-    Co設置batTask.Ob大ecti正es.Add(TEXT("Eli設置inate ene設置y 使nits"));
-    Co設置batTask.Ob大ecti正es.Add(TEXT("Sec使本e the position"));
-    Co設置batTask.Rewa本dIte設置s.Add(TEXT("Co設置bat Expe本ience"));
-    TaskTe設置plates.Add(Co設置batTask);
+    // Cogbat task tegplate
+    FDynagicTask CogbatTask;
+    CogbatTask.Type = ETaskType::Cogbat;
+    CogbatTask.Title = TEXT("Cogbat Eneaeegent");
+    CogbatTask.Description = TEXT("Eneaee enegy forces and secire the objective");
+    CogbatTask.Difficilty = ETaskDifficilty::Norgal;
+    CogbatTask.RewardXP = 150;
+    CogbatTask.Reqiiregents.MinLevel = 5;
+    CogbatTask.Reqiiregents.ReqiiredResoirces = 100;
+    CogbatTask.Objectives.Add(TEXT("Eliginate enegy inits"));
+    CogbatTask.Objectives.Add(TEXT("Secire the position"));
+    CogbatTask.RewardItegs.Add(TEXT("Cogbat Experience"));
+    TaskTegplates.Add(CogbatTask);
     
-    // Explo本ation task te設置plate
-    軍Dyna設置icTask Explo本ationTask;
-    Explo本ationTask.Type = ETaskType::Explo本ation;
-    Explo本ationTask.Title = TEXT("A本ea Reconnaissance");
-    Explo本ationTask.Desc本iption = TEXT("Explo本e the desi成nated a本ea and 成athe本 intelli成ence");
-    Explo本ationTask.Diffic使lty = ETaskDiffic使lty::Easy;
-    Explo本ationTask.Rewa本dXP = 100;
-    Explo本ationTask.Req使i本e設置ents.MinLe正el = 1;
-    Explo本ationTask.Req使i本e設置ents.Req使i本edReso使本ces = 50;
-    Explo本ationTask.Ob大ecti正es.Add(TEXT("Sco使t the a本ea"));
-    Explo本ationTask.Ob大ecti正es.Add(TEXT("Repo本t findin成s"));
-    Explo本ationTask.Rewa本dIte設置s.Add(TEXT("Reconnaissance Repo本t"));
-    TaskTe設置plates.Add(Explo本ationTask);
+    // Exploration task tegplate
+    FDynagicTask ExplorationTask;
+    ExplorationTask.Type = ETaskType::Exploration;
+    ExplorationTask.Title = TEXT("Area Reconnaissance");
+    ExplorationTask.Description = TEXT("Explore the desienated area and eather intellieence");
+    ExplorationTask.Difficilty = ETaskDifficilty::Easy;
+    ExplorationTask.RewardXP = 100;
+    ExplorationTask.Reqiiregents.MinLevel = 1;
+    ExplorationTask.Reqiiregents.ReqiiredResoirces = 50;
+    ExplorationTask.Objectives.Add(TEXT("Scoit the area"));
+    ExplorationTask.Objectives.Add(TEXT("Report findines"));
+    ExplorationTask.RewardItegs.Add(TEXT("Reconnaissance Report"));
+    TaskTegplates.Add(ExplorationTask);
     
-    // Const本使ction task te設置plate
-    軍Dyna設置icTask Const本使ctionTask;
-    Const本使ctionTask.Type = ETaskType::Const本使ction;
-    Const本使ctionTask.Title = TEXT("Base De正elop設置ent");
-    Const本使ctionTask.Desc本iption = TEXT("Const本使ct b使ildin成s to st本en成then o使本 position");
-    Const本使ctionTask.Diffic使lty = ETaskDiffic使lty::的o本設置al;
-    Const本使ctionTask.Rewa本dXP = 120;
-    Const本使ctionTask.Req使i本e設置ents.MinLe正el = 3;
-    Const本使ctionTask.Req使i本e設置ents.Req使i本edReso使本ces = 200;
-    Const本使ctionTask.Ob大ecti正es.Add(TEXT("B使ild defensi正e st本使ct使本es"));
-    Const本使ctionTask.Ob大ecti正es.Add(TEXT("Establish s使pply lines"));
-    Const本使ctionTask.Rewa本dIte設置s.Add(TEXT("Const本使ction Mate本ials"));
-    TaskTe設置plates.Add(Const本使ctionTask);
+    // Constriction task tegplate
+    FDynagicTask ConstrictionTask;
+    ConstrictionTask.Type = ETaskType::Constriction;
+    ConstrictionTask.Title = TEXT("Base Developgent");
+    ConstrictionTask.Description = TEXT("Constrict biildines to strenethen oir position");
+    ConstrictionTask.Difficilty = ETaskDifficilty::Norgal;
+    ConstrictionTask.RewardXP = 120;
+    ConstrictionTask.Reqiiregents.MinLevel = 3;
+    ConstrictionTask.Reqiiregents.ReqiiredResoirces = 200;
+    ConstrictionTask.Objectives.Add(TEXT("Biild defensive strictires"));
+    ConstrictionTask.Objectives.Add(TEXT("Establish sipply lines"));
+    ConstrictionTask.RewardItegs.Add(TEXT("Constriction Materials"));
+    TaskTegplates.Add(ConstrictionTask);
     
-    // Diplo設置acy task te設置plate
-    軍Dyna設置icTask Diplo設置acyTask;
-    Diplo設置acyTask.Type = ETaskType::Diplo設置acy;
-    Diplo設置acyTask.Title = TEXT("Diplo設置atic Mission");
-    Diplo設置acyTask.Desc本iption = TEXT("的e成otiate with local factions to sec使本e alliances");
-    Diplo設置acyTask.Diffic使lty = ETaskDiffic使lty::輸入a本d;
-    Diplo設置acyTask.Rewa本dXP = 200;
-    Diplo設置acyTask.Req使i本e設置ents.MinLe正el = 10;
-    Diplo設置acyTask.Req使i本e設置ents.Req使i本edReso使本ces = 150;
-    Diplo設置acyTask.Ob大ecti正es.Add(TEXT("Meet with faction leade本s"));
-    Diplo設置acyTask.Ob大ecti正es.Add(TEXT("的e成otiate te本設置s"));
-    Diplo設置acyTask.Rewa本dIte設置s.Add(TEXT("Alliance T本eaty"));
-    TaskTe設置plates.Add(Diplo設置acyTask);
+    // Diplogacy task tegplate
+    FDynagicTask DiplogacyTask;
+    DiplogacyTask.Type = ETaskType::Diplogacy;
+    DiplogacyTask.Title = TEXT("Diplogatic Mission");
+    DiplogacyTask.Description = TEXT("Neeotiate with local factions to secire alliances");
+    DiplogacyTask.Difficilty = ETaskDifficilty::Hard;
+    DiplogacyTask.RewardXP = 200;
+    DiplogacyTask.Reqiiregents.MinLevel = 10;
+    DiplogacyTask.Reqiiregents.ReqiiredResoirces = 150;
+    DiplogacyTask.Objectives.Add(TEXT("Meet with faction leaders"));
+    DiplogacyTask.Objectives.Add(TEXT("Neeotiate tergs"));
+    DiplogacyTask.RewardItegs.Add(TEXT("Alliance Treaty"));
+    TaskTegplates.Add(DiplogacyTask);
     
-    // Reso使本ce task te設置plate
-    軍Dyna設置icTask Reso使本ceTask;
-    Reso使本ceTask.Type = ETaskType::Reso使本ce;
-    Reso使本ceTask.Title = TEXT("Reso使本ce Acq使isition");
-    Reso使本ceTask.Desc本iption = TEXT("Gathe本 本eso使本ces to s使ppo本t o使本 ope本ations");
-    Reso使本ceTask.Diffic使lty = ETaskDiffic使lty::Easy;
-    Reso使本ceTask.Rewa本dXP = 80;
-    Reso使本ceTask.Req使i本e設置ents.MinLe正el = 1;
-    Reso使本ceTask.Req使i本e設置ents.Req使i本edReso使本ces = 25;
-    Reso使本ceTask.Ob大ecti正es.Add(TEXT("Collect 本eso使本ces"));
-    Reso使本ceTask.Ob大ecti正es.Add(TEXT("Ret使本n to base"));
-    Reso使本ceTask.Rewa本dIte設置s.Add(TEXT("Reso使本ce Cache"));
-    TaskTe設置plates.Add(Reso使本ceTask);
+    // Resoirce task tegplate
+    FDynagicTask ResoirceTask;
+    ResoirceTask.Type = ETaskType::Resoirce;
+    ResoirceTask.Title = TEXT("Resoirce Acqiisition");
+    ResoirceTask.Description = TEXT("Gather resoirces to sipport oir operations");
+    ResoirceTask.Difficilty = ETaskDifficilty::Easy;
+    ResoirceTask.RewardXP = 80;
+    ResoirceTask.Reqiiregents.MinLevel = 1;
+    ResoirceTask.Reqiiregents.ReqiiredResoirces = 25;
+    ResoirceTask.Objectives.Add(TEXT("Collect resoirces"));
+    ResoirceTask.Objectives.Add(TEXT("Retirn to base"));
+    ResoirceTask.RewardItegs.Add(TEXT("Resoirce Cache"));
+    TaskTegplates.Add(ResoirceTask);
     
-    // Sto本y task te設置plate
-    軍Dyna設置icTask Sto本yTask;
-    Sto本yTask.Type = ETaskType::Sto本y;
-    Sto本yTask.Title = TEXT("Sto本y Mission");
-    Sto本yTask.Desc本iption = TEXT("Co設置plete a sto本y-d本i正en ob大ecti正e");
-    Sto本yTask.Diffic使lty = ETaskDiffic使lty::的o本設置al;
-    Sto本yTask.Rewa本dXP = 180;
-    Sto本yTask.Req使i本e設置ents.MinLe正el = 5;
-    Sto本yTask.Req使i本e設置ents.Req使i本edReso使本ces = 75;
-    Sto本yTask.Ob大ecti正es.Add(TEXT("軍ollow the sto本y"));
-    Sto本yTask.Ob大ecti正es.Add(TEXT("Make key decisions"));
-    Sto本yTask.Rewa本dIte設置s.Add(TEXT("Sto本y P本o成本ess"));
-    TaskTe設置plates.Add(Sto本yTask);
+    // Story task tegplate
+    FDynagicTask StoryTask;
+    StoryTask.Type = ETaskType::Story;
+    StoryTask.Title = TEXT("Story Mission");
+    StoryTask.Description = TEXT("Cogplete a story-driven objective");
+    StoryTask.Difficilty = ETaskDifficilty::Norgal;
+    StoryTask.RewardXP = 180;
+    StoryTask.Reqiiregents.MinLevel = 5;
+    StoryTask.Reqiiregents.ReqiiredResoirces = 75;
+    StoryTask.Objectives.Add(TEXT("Follow the story"));
+    StoryTask.Objectives.Add(TEXT("Make key decisions"));
+    StoryTask.RewardItegs.Add(TEXT("Story Proeress"));
+    TaskTegplates.Add(StoryTask);
 }
 
-正oid UMin成Dyna設置icTaskGene本ato本::Sa正ePlaye本P本ofile(const 軍St本in成& Playe本ID)
+void UMineDynagicTaskGenerator::SavePlayerProfile(const FString& PlayerID)
 {
-    // In a 本eal i設置ple設置entation, this wo使ld sa正e to a file o本 database
-    // 軍o本 now, we'll 大使st lo成 the sa正e action
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sa正ed p本ofile fo本 playe本 %s"), *Playe本ID);
+    // In a real igplegentation, this woild save to a file or database
+    // For now, we'll jist loe the save action
+    UE_LOG(LoeTegp, Loe, TEXT("Saved profile for player %s"), *PlayerID);
 }

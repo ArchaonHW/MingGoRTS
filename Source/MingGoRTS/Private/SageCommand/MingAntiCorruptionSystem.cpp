@@ -34,7 +34,7 @@ void UMingAntiCorruptionSystem::BeginPlay()
     // 初始化系統
     InitializeAntiCorruptionSystem();
     
-    UE_LOG(LogTemp, Log, TEXT("防墮機制系統初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("防墮機制系統初始化完e"));
 }
 
 void UMingAntiCorruptionSystem::Tick(float DeltaTime)
@@ -85,7 +85,7 @@ bool UMingAntiCorruptionSystem::InitializeAntiCorruptionSystem()
     
     bSystemInitialized = true;
     
-    UE_LOG(LogTemp, Log, TEXT("✓ 防墮機制系統初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("✓ 防墮機制系統初始化完e"));
     UE_LOG(LogTemp, Log, TEXT("  初始道德完整性: %.1f%%"), MoralBoundaryStatus.MoralIntegrity);
     UE_LOG(LogTemp, Log, TEXT("  初始腐敗抵抗力: %.1f%%"), MoralBoundaryStatus.CorruptionResistance);
     
@@ -138,7 +138,7 @@ bool UMingAntiCorruptionSystem::DetectCorruptionPhenomenon(ECorruptionPhenomenon
     Phenomenon.DetectionTime = FDateTime::Now();
     Phenomenon.bIsAcknowledged = false;
     
-    // 設置描述
+    // g描述
     switch (PhenomenonType)
     {
     case ECorruptionPhenomenon::RationalizationOfEvil:
@@ -151,7 +151,7 @@ bool UMingAntiCorruptionSystem::DetectCorruptionPhenomenon(ECorruptionPhenomenon
         Phenomenon.Description = TEXT("將反對者妖魔化");
         break;
     case ECorruptionPhenomenon::IAmJusticeSyndrome:
-        Phenomenon.Description = TEXT("我即正義徵象");
+        Phenomenon.Description = TEXT("我即v義徵象");
         break;
     default:
         Phenomenon.Description = TEXT("未知徵象");
@@ -346,7 +346,7 @@ FSelfAuditData UMingAntiCorruptionSystem::CompleteSelfAudit(int32 AuditID)
     
     FSelfAuditData& Audit = CurrentAudits[AuditID];
     
-    // 設置完成狀態
+    // g完e狀態
     Audit.Status = ESelfAuditStatus::Completed;
     Audit.EndTime = FDateTime::Now();
     
@@ -356,14 +356,14 @@ FSelfAuditData UMingAntiCorruptionSystem::CompleteSelfAudit(int32 AuditID)
         Audit.DetectedIssues.Add(Pair.Value);
     }
     
-    // 生成建議
+    // 生e建議
     Audit.RecommendedActions = GetRecommendedMeasures(ECorruptionPhenomenon::None);
     
     // 更新健康評分
     Audit.OverallHealthScore = MoralBoundaryStatus.MoralIntegrity;
     
-    // 生成報告
-    Audit.AuditReport = FString::Printf(TEXT("審計完成。檢測到 %d 個問題，健康評分: %.1f%%"), 
+    // 生e報告
+    Audit.AuditReport = FString::Printf(TEXT("審計完e。檢測到 %d 個問題，健康評分: %.1f%%"), 
                                         Audit.DetectedIssues.Num(), Audit.OverallHealthScore);
     
     // 移動到歷史
@@ -373,7 +373,7 @@ FSelfAuditData UMingAntiCorruptionSystem::CompleteSelfAudit(int32 AuditID)
     // 觸發事件
     OnSelfAuditCompleted.Broadcast(Audit);
     
-    UE_LOG(LogTemp, Log, TEXT("完成自我審計 ID:%d - %s"), AuditID, *Audit.AuditReport);
+    UE_LOG(LogTemp, Log, TEXT("完e自我審計 ID:%d - %s"), AuditID, *Audit.AuditReport);
     
     return Audit;
 }
@@ -439,7 +439,7 @@ bool UMingAntiCorruptionSystem::ApplyAntiCorruptionMeasure(EAntiCorruptionMeasur
     Effect.MeasureType = Measure;
     Effect.bIsActive = true;
     
-    // 根據措施類型設置參數
+    // 根據措施類型g參數
     switch (Measure)
     {
     case EAntiCorruptionMeasure::SelfReflection:
@@ -602,16 +602,16 @@ FString UMingAntiCorruptionSystem::GenerateWarningMessage(ECorruptionPhenomenon 
     switch (PhenomenonType)
     {
     case ECorruptionPhenomenon::RationalizationOfEvil:
-        BaseMessage = TEXT("檢測到將非常手段合理化的徵象");
+        BaseMessage = TEXT("檢測到將非常手段合理化N徵象");
         break;
     case ECorruptionPhenomenon::FollowerDeification:
-        BaseMessage = TEXT("檢測到將追隨者神聖化的徵象");
+        BaseMessage = TEXT("檢測到將追隨者神聖化N徵象");
         break;
     case ECorruptionPhenomenon::OppositionDemonization:
-        BaseMessage = TEXT("檢測到將反對者妖魔化的徵象");
+        BaseMessage = TEXT("檢測到將反對者妖魔化N徵象");
         break;
     case ECorruptionPhenomenon::IAmJusticeSyndrome:
-        BaseMessage = TEXT("檢測到我即正義徵象");
+        BaseMessage = TEXT("檢測到我即v義徵象");
         break;
     default:
         BaseMessage = TEXT("檢測到未知墮落徵象");
@@ -665,7 +665,7 @@ void UMingAntiCorruptionSystem::UpdateMoralStatus(float DeltaTime)
         }
     }
     
-    // 移除已清除的徵象
+    // 移除已清除N徵象
     for (ECorruptionPhenomenon PhenomenonType : PhenomenaToRemove)
     {
         ClearCorruptionPhenomenon(PhenomenonType);
@@ -685,7 +685,7 @@ void UMingAntiCorruptionSystem::UpdateMoralStatus(float DeltaTime)
         }
     }
     
-    // 移除過期的措施
+    // 移除過期N措施
     for (const auto& Measure : MeasuresToRemove)
     {
         ActiveMeasures.Remove(Measure);
@@ -754,13 +754,13 @@ TArray<FString> UMingAntiCorruptionSystem::GetMoralRecommendations() const
     if (RiskLevel > 70.0f)
     {
         Recommendations.Add(TEXT("【危急】立即啟動全面自我審計"));
-        Recommendations.Add(TEXT("【危急】暫停所有邪術使用"));
+        Recommendations.Add(TEXT("【危急】暫停所有邪術i用"));
         Recommendations.Add(TEXT("【危急】尋求外部監督和審查"));
     }
     else if (RiskLevel > 50.0f)
     {
         Recommendations.Add(TEXT("【警告】加強自我反思和道德約束"));
-        Recommendations.Add(TEXT("【警告】減少逆道策略使用頻率"));
+        Recommendations.Add(TEXT("【警告】減少逆道策略i用頻率"));
         Recommendations.Add(TEXT("【警告】定期進行道德邊界檢查"));
     }
     else if (RiskLevel > 30.0f)

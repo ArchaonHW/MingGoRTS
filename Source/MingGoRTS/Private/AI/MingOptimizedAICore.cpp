@@ -126,7 +126,7 @@ void UMingAIAgentPool::ResetAgentProfile(FMingOptimizedAIAgentProfile& Profile)
 
 void UMingOptimizedPerceptionSystem::Initialize(FVector WorldOrigin, FVector WorldExtent)
 {
-    // 使用 500 單元的網格大小
+    // i用 500 單元N網格j小
     new (&SpatialGrid) TUniformGridSpatialPartition<int32>(WorldOrigin, WorldExtent, 500.0f);
 }
 
@@ -186,7 +186,7 @@ TArray<int32> UMingOptimizedPerceptionSystem::GetAgentsInViewCone(int32 AgentId,
 {
     TArray<int32> Results;
     
-    // 先獲取範圍內的所有代理
+    // 先獲取範圍內N所有代理
     TArray<int32> NearbyAgents = GetNearbyAgents(AgentId, MaxDistance);
     
     const FVector* AgentLocation = AgentLocations.Find(AgentId);
@@ -198,7 +198,7 @@ TArray<int32> UMingOptimizedPerceptionSystem::GetAgentsInViewCone(int32 AgentId,
     Direction.Normalize();
     float CosHalfAngle = FMath::Cos(FMath::DegreesToRadians(HalfAngle));
     
-    // 篩選在視野錐形內的代理
+    // 篩選在視野錐形內N代理
     for (int32 OtherAgentId : NearbyAgents)
     {
         const FVector* OtherLocation = AgentLocations.Find(OtherAgentId);
@@ -263,7 +263,7 @@ void UMingAIDecisionCache::ClearCache()
 void UMingAIDecisionCache::ClearAgentCache(int32 AgentId)
 {
     // LRU 快取不支持單個代理清除
-    // 實際實現可以使用更複雜的數據結構
+    // 實際實現可以i用更複雜N數據結構
     ClearCache();
 }
 
@@ -301,7 +301,7 @@ void UMingAIBatchProcessor::ProcessBatch(float DeltaTime)
         return;
     }
     
-    // 使用平行處理來更新批次中的代理
+    // i用平行處理來更新批次中N代理
     ParallelFor(CurrentBatchSize, [this, DeltaTime](int32 Index)
     {
         int32 AgentId = BatchAgents[Index];
@@ -391,7 +391,7 @@ FMingAIPerformanceMetrics UMingAIPerformanceMonitor::GetMetrics()
     int32 TotalCacheAccesses = CacheHits + CacheMisses;
     Metrics.CacheHitRate = TotalCacheAccesses > 0 ? (CacheHits * 100 / TotalCacheAccesses) : 0;
     
-    // 獲取記憶體使用
+    // 獲取記憶體i用
     FPlatformMemoryStats MemoryStats = FPlatformMemory::GetStats();
     Metrics.MemoryUsageMB = static_cast<int32>(MemoryStats.UsedPhysical / (1024 * 1024));
     
@@ -424,7 +424,7 @@ bool UMingAIPerformanceMonitor::ShouldOptimize()
         return true;
     }
     
-    // 如果記憶體使用超過 1GB，需要優化
+    // 如果記憶體i用超過 1GB，需要優化
     if (Metrics.MemoryUsageMB > 1024)
     {
         return true;

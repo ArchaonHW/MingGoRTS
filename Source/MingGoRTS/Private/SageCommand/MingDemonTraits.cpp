@@ -2,7 +2,7 @@
 #include "Engine/Engine.h"
 
 // 魔王特性實現
-// 這個文件包含魔王角色的特殊特性和能力
+// 這個文件包含魔王角色N特殊特性和能力
 
 FDemonSpecialTraits::FDemonSpecialTraits()
 {
@@ -22,13 +22,13 @@ FDemonSpecialTraits::FDemonSpecialTraits()
 // 魔王特性應用函數
 void ApplyDemonTraits(FSageCharacterData& CharacterData, const FDemonSpecialTraits& DemonTraits)
 {
-    // 應用攻擊力加成
+    // 應用攻擊力加e
     CharacterData.Leadership *= DemonTraits.AttackPowerBonus;
     
     // 應用防禦力減免
     CharacterData.SpiritualPower *= DemonTraits.DefenseReduction;
     
-    // 應用墮落速度加成
+    // 應用墮落速度加e
     CharacterData.CorruptionValue *= DemonTraits.CorruptionRateMultiplier;
     
     // 降低墮落閾值
@@ -37,7 +37,7 @@ void ApplyDemonTraits(FSageCharacterData& CharacterData, const FDemonSpecialTrai
     // 應用支配力影響
     CharacterData.Charisma *= DemonTraits.DominationPower;
     
-    UE_LOG(LogTemp, Log, TEXT("魔王特性應用完成"));
+    UE_LOG(LogTemp, Log, TEXT("魔王特性應用完e"));
 }
 
 // 魔王狂暴狀態檢查
@@ -58,7 +58,7 @@ float ApplyDemonFearAura(float EnemyMorale, float FearAura)
     return FMath::Max(0.0f, EnemyMorale - FearEffect);
 }
 
-// 魔王破壞慾望加成
+// 魔王破壞慾望加e
 float ApplyDestructionUrge(float BaseDamage, float DestructionUrge)
 {
     return BaseDamage * DestructionUrge;

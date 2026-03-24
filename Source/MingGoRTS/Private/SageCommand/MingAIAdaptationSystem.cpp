@@ -46,7 +46,7 @@ void UMingAIAdaptationSystem::BeginPlay()
         );
     }
     
-    UE_LOG(LogTemp, Log, TEXT("AI適配系統初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("AI適配系統初始化完e"));
 }
 
 void UMingAIAdaptationSystem::Tick(float DeltaTime)
@@ -96,7 +96,7 @@ bool UMingAIAdaptationSystem::InitializeAIAdaptationSystem()
     
     bSystemInitialized = true;
     
-    UE_LOG(LogTemp, Log, TEXT("✓ AI適配系統初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("✓ AI適配系統初始化完e"));
     UE_LOG(LogTemp, Log, TEXT("  當前AI類型: 聖者指揮官"));
     UE_LOG(LogTemp, Log, TEXT("  適配能力: %.0f%%"), CurrentAIProfile.Adaptability * 100.0f);
     
@@ -134,13 +134,13 @@ FAICommanderProfile UMingAIAdaptationSystem::IdentifyOpponent(const FString& Opp
         return OpponentProfiles[OpponentID];
     }
     
-    // 創建新的對手檔案
+    // 創建新N對手檔案
     FAICommanderProfile Profile;
     Profile.CommanderID = OpponentID;
     Profile.CommanderName = FString::Printf(TEXT("對手_%s"), *OpponentID);
     
     // 根據初始行為分析確定類型
-    // 這裡可以根據實際觀察到的行為進行更準確的識別
+    // 這裡可以根據實際觀察到N行為進行更準確N識別
     Profile.OpponentType = EAIOpponentType::BalancedCommander;
     Profile.PreferredMode = EAIDecisionMode::Strategic;
     Profile.Aggressiveness = 0.5f;
@@ -159,7 +159,7 @@ FAICommanderProfile UMingAIAdaptationSystem::IdentifyOpponent(const FString& Opp
     // 觸發識別事件
     TriggerOpponentIdentifiedEvent(Profile, Analysis);
     
-    // 設置當前對手
+    // g當前對手
     CurrentOpponentID = OpponentID;
     
     UE_LOG(LogTemp, Log, TEXT("識別新對手: %s, 類型: %d"), 
@@ -180,7 +180,7 @@ FPlayerBehaviorAnalysis UMingAIAdaptationSystem::AnalyzeOpponentBehavior(const F
         Analysis = PlayerAnalyses[OpponentID];
     }
     
-    // 基於策略使用頻率分析侵略性
+    // 基於策略i用頻率分析侵略性
     if (Analysis.StrategyUsageFrequency.Num() > 0)
     {
         int32 AggressiveCount = 0;
@@ -222,7 +222,7 @@ FPlayerBehaviorAnalysis UMingAIAdaptationSystem::AnalyzeOpponentBehavior(const F
         ESixStrategyType Strategy = Pair.Key;
         int32 Count = Pair.Value;
         
-        // 正策
+        // v策
         if (Strategy == ESixStrategyType::EstablishNation ||
             Strategy == ESixStrategyType::EstablishSystem ||
             Strategy == ESixStrategyType::EstablishPeople)
@@ -316,7 +316,7 @@ bool UMingAIAdaptationSystem::RecordPlayerBehavior(const FString& PlayerID, ESix
     
     FPlayerBehaviorAnalysis& Analysis = PlayerAnalyses[PlayerID];
     
-    // 更新策略使用頻率
+    // 更新策略i用頻率
     if (!Analysis.StrategyUsageFrequency.Contains(StrategyUsed))
     {
         Analysis.StrategyUsageFrequency.Add(StrategyUsed, 0);
@@ -340,11 +340,11 @@ bool UMingAIAdaptationSystem::RecordPlayerBehavior(const FString& PlayerID, ESix
     LearningData.EncounterCount++;
     LearningData.LastEncounter = FDateTime::Now();
     
-    // 更新成功率
+    // 更新e功率
     float NewSuccessRate = Outcome > 0.5f ? 1.0f : 0.0f;
     LearningData.SuccessRate = LearningData.SuccessRate * 0.95f + NewSuccessRate * 0.05f;
     
-    UE_LOG(LogTemp, Log, TEXT("記錄玩家行為: %s 使用策略 %d, 結果: %.2f"), 
+    UE_LOG(LogTemp, Log, TEXT("記錄玩家行為: %s i用策略 %d, 結果: %.2f"), 
            *PlayerID, (int32)StrategyUsed, Outcome);
     
     return true;
@@ -370,7 +370,7 @@ ESixStrategyType UMingAIAdaptationSystem::PredictPlayerNextMove(const FString& P
     
     const FPlayerBehaviorAnalysis& Analysis = PlayerAnalyses[PlayerID];
     
-    // 找到最常用的策略
+    // 找到最常用N策略
     ESixStrategyType MostUsed = ESixStrategyType::None;
     int32 MaxCount = 0;
     
@@ -383,7 +383,7 @@ ESixStrategyType UMingAIAdaptationSystem::PredictPlayerNextMove(const FString& P
         }
     }
     
-    // 如果樣本數不足，返回無
+    // 如果樣r數不足，返回無
     if (MaxCount < MinSamplesForPattern)
     {
         return ESixStrategyType::None;
@@ -454,16 +454,16 @@ FAIAdaptationDecision UMingAIAdaptationSystem::GenerateAdaptationDecision(const 
     // 風險評估
     Decision.RiskAssessment = CalculateMoralRisk(); // 這裡可以根據實際情況調整
     
-    // 生成決策理由
+    // 生e決策理由
     Decision.Reasoning = GenerateDecisionReasoningInternal(Decision);
     
-    // 設置目標弱點
+    // g目標弱點
     Decision.TargetVulnerabilities = Profile.ExploitableWeaknesses;
     
     // 觸發決策事件
     TriggerDecisionMadeEvent(Decision);
     
-    UE_LOG(LogTemp, Log, TEXT("生成適配決策: %s 對策略 %d, 推薦反制: %d, 置信度: %.2f"), 
+    UE_LOG(LogTemp, Log, TEXT("生e適配決策: %s 對策略 %d, 推薦反制: %d, 置信度: %.2f"), 
            *OpponentID, (int32)OpponentStrategy, (int32)Decision.RecommendedCounterStrategy, Decision.Confidence);
     
     return Decision;
@@ -471,7 +471,7 @@ FAIAdaptationDecision UMingAIAdaptationSystem::GenerateAdaptationDecision(const 
 
 ESixStrategyType UMingAIAdaptationSystem::SelectBestCounterStrategy(const FString& OpponentID, ESixStrategyType OpponentStrategy)
 {
-    // 生成反制策略映射
+    // 生e反制策略映射
     TMap<ESixStrategyType, ESixStrategyType> CounterMap = GenerateCounterStrategyMap();
     
     if (CounterMap.Contains(OpponentStrategy))
@@ -530,14 +530,14 @@ FThreatAssessment UMingAIAdaptationSystem::AssessThreat(const FString& OpponentI
     case ESixStrategyType::BreakSituation:
     case ESixStrategyType::BreakStructure:
     case ESixStrategyType::BreakNotPeople:
-        // 逆策威脅較大
+        // 逆策威脅較j
         Threat.ThreatMagnitude = 0.7f + Analysis.AggressionLevel * 0.3f;
         break;
         
     case ESixStrategyType::EstablishNation:
     case ESixStrategyType::EstablishSystem:
     case ESixStrategyType::EstablishPeople:
-        // 正策威脅較小
+        // v策威脅較小
         Threat.ThreatMagnitude = 0.4f;
         break;
         
@@ -590,7 +590,7 @@ FThreatAssessment UMingAIAdaptationSystem::AssessThreat(const FString& OpponentI
         }
     }
     
-    // 生成緩解策略
+    // 生e緩解策略
     Threat.MitigationStrategies = GenerateMitigationStrategies(Threat);
     
     // 添加到當前威脅
@@ -639,7 +639,7 @@ TArray<FString> UMingAIAdaptationSystem::GenerateMitigationStrategies(const FThr
     {
     case EAIThreatLevel::Critical:
         Strategies.Add(TEXT("立即啟動全面防禦"));
-        Strategies.Add(TEXT("使用道權進行道德監督"));
+        Strategies.Add(TEXT("i用道權進行道德監督"));
         Strategies.Add(TEXT("啟動緊急策略轉換"));
         break;
         
@@ -680,7 +680,7 @@ EAIDecisionMode UMingAIAdaptationSystem::GetCurrentDecisionMode() const
 
 bool UMingAIAdaptationSystem::ExecuteAIDecision(const FAIAdaptationDecision& Decision)
 {
-    // 執行決策的邏輯
+    // 執行決策N邏輯
     // 這裡可以調用其他系統來實際執行決策
     
     UE_LOG(LogTemp, Log, TEXT("執行AI決策: 響應類型 %d, 策略 %d"), 
@@ -689,7 +689,7 @@ bool UMingAIAdaptationSystem::ExecuteAIDecision(const FAIAdaptationDecision& Dec
     // 觸發策略反制事件
     if (Decision.RecommendedCounterStrategy != ESixStrategyType::None)
     {
-        // 這裡應該有對手的原始策略，但簡化處理
+        // 這裡應該有對手N原始策略，但簡化處理
         OnStrategyCountered.Broadcast(ESixStrategyType::None, Decision.RecommendedCounterStrategy);
     }
     
@@ -705,16 +705,16 @@ TArray<FAIAdaptationDecision> UMingAIAdaptationSystem::GetAIRecommendations(int3
         return Recommendations;
     }
     
-    // 獲取對手的預測行為
+    // 獲取對手N預測行為
     ESixStrategyType PredictedMove = PredictPlayerNextMove(CurrentOpponentID);
     
     if (PredictedMove != ESixStrategyType::None)
     {
-        // 生成主要推薦
+        // 生e主要推薦
         FAIAdaptationDecision MainDecision = GenerateAdaptationDecision(CurrentOpponentID, PredictedMove);
         Recommendations.Add(MainDecision);
         
-        // 生成備選推薦
+        // 生e備選推薦
         for (int32 i = 1; i < MaxRecommendations && i < 3; ++i)
         {
             FAIAdaptationDecision AltDecision;
@@ -749,7 +749,7 @@ bool UMingAIAdaptationSystem::UpdateLearningData(const FString& OpponentID, EAIA
     float& CurrentEffectiveness = Data.ResponseEffectiveness[Response];
     CurrentEffectiveness = CurrentEffectiveness * 0.9f + Effectiveness * 0.1f;
     
-    // 更新成功率
+    // 更新e功率
     Data.SuccessRate = Data.SuccessRate * 0.95f + Effectiveness * 0.05f;
     
     // 檢查是否充分了解
@@ -768,7 +768,7 @@ bool UMingAIAdaptationSystem::OptimizeAdaptationStrategy(const FString& Opponent
 {
     if (OpponentID.IsEmpty())
     {
-        // 優化所有對手的策略
+        // 優化所有對手N策略
         for (const auto& Pair : LearningDatabase)
         {
             OptimizeAdaptationStrategy(Pair.Key);
@@ -784,7 +784,7 @@ bool UMingAIAdaptationSystem::OptimizeAdaptationStrategy(const FString& Opponent
     FAdaptationLearningData& Data = LearningDatabase[OpponentID];
     
     // 基於學習數據優化策略選擇
-    // 找到最有效的響應
+    // 找到最有效N響應
     EAIAdaptationResponse BestResponse = EAIAdaptationResponse::None;
     float BestEffectiveness = 0.0f;
     
@@ -818,14 +818,14 @@ TMap<ESixStrategyType, ESixStrategyType> UMingAIAdaptationSystem::GenerateCounte
 {
     TMap<ESixStrategyType, ESixStrategyType> CounterMap;
     
-    // 正逆六策的克制關係
-    // 正策克制正策，逆策克制逆策
+    // v逆六策N克制關係
+    // v策克制v策，逆策克制逆策
     // 立國克制立制（制度需要國家基礎）
     CounterMap.Add(ESixStrategyType::EstablishNation, ESixStrategyType::BreakStructure);
     CounterMap.Add(ESixStrategyType::EstablishSystem, ESixStrategyType::BreakSituation);
     CounterMap.Add(ESixStrategyType::EstablishPeople, ESixStrategyType::BreakNotPeople);
     
-    // 逆策克制正策（非常規對常規）
+    // 逆策克制v策（非常規對常規）
     CounterMap.Add(ESixStrategyType::BreakSituation, ESixStrategyType::EstablishNation);
     CounterMap.Add(ESixStrategyType::BreakStructure, ESixStrategyType::EstablishSystem);
     CounterMap.Add(ESixStrategyType::BreakNotPeople, ESixStrategyType::EstablishPeople);
@@ -881,11 +881,11 @@ ESixStrategyType UMingAIAdaptationSystem::SelectOptimalCounter(const TArray<ESix
 
 void UMingAIAdaptationSystem::UpdateThreatAssessments()
 {
-    // 清理過期的威脅
+    // 清理過期N威脅
     FDateTime CurrentTime = FDateTime::Now();
     for (int32 i = CurrentThreats.Num() - 1; i >= 0; --i)
     {
-        // 簡單的過期檢查，可以根據需要調整
+        // 簡單N過期檢查，可以根據需要調整
         if (CurrentThreats[i].ThreatLevel == EAIThreatLevel::Low)
         {
             CurrentThreats.RemoveAt(i);
@@ -920,26 +920,26 @@ TArray<FString> UMingAIAdaptationSystem::GenerateDecisionReasoningInternal(const
 {
     TArray<FString> Reasoning;
     
-    // 基於響應類型生成理由
+    // 基於響應類型生e理由
     switch (Decision.ResponseType)
     {
     case EAIAdaptationResponse::CounterStrategy:
-        Reasoning.Add(TEXT("選擇反制策略可以有效應對對手的攻勢"));
+        Reasoning.Add(TEXT("選擇反制策略可以有效應對對手N攻勢"));
         Reasoning.Add(FString::Printf(TEXT("預期效果: %.0f%%"), Decision.ExpectedEffectiveness * 100.0f));
         break;
         
     case EAIAdaptationResponse::DefensivePosture:
         Reasoning.Add(TEXT("當前情況適合採取守勢"));
-        Reasoning.Add(TEXT("等待更好的反擊時機"));
+        Reasoning.Add(TEXT("等待更好N反擊時機"));
         break;
         
     case EAIAdaptationResponse::ExploitWeakness:
-        Reasoning.Add(TEXT("識別到對手的薄弱點"));
+        Reasoning.Add(TEXT("識別到對手N薄弱點"));
         Reasoning.Add(TEXT("可以針對性攻擊以獲得優勢"));
         break;
         
     default:
-        Reasoning.Add(TEXT("基於當前局勢做出的最優選擇"));
+        Reasoning.Add(TEXT("基於當前局勢做出N最優選擇"));
         break;
     }
     
@@ -974,6 +974,6 @@ void UMingAIAdaptationSystem::TriggerLearningUpdatedEvent(const FAdaptationLearn
 
 float UMingAIAdaptationSystem::CalculateMoralRisk() const
 {
-    // 簡單的道德風險計算
+    // 簡單N道德風險計算
     return 0.2f; // 默認低風險
 }

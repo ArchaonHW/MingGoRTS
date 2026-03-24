@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SageCommand/MingWuXingRhythmSystem.h"
 #include "Engine/World.h"
@@ -84,7 +84,7 @@ void UMingWuXingRhythmSystem::SetCurrentPhase(EFiveElementPhase NewPhase)
 
     EFiveElementPhase OldPhase = CurrentRhythmData.CurrentPhase;
 
-    // 檢查是否正確相生
+    // 檢查是否v確相生
     if (IsPhaseTransitionCorrect(OldPhase, NewPhase))
     {
         CurrentRhythmData.ComboCount = FMath::Min(CurrentRhythmData.ComboCount + 1, MaxComboCount);
@@ -113,10 +113,10 @@ void UMingWuXingRhythmSystem::SetCurrentPhase(EFiveElementPhase NewPhase)
 
     OnPhaseChanged.Broadcast(OldPhase, NewPhase);
 
-    // 檢查是否完成一個循環
+    // 檢查是否完e一個循環
     if (NewPhase == EFiveElementPhase::Water && OldPhase == EFiveElementPhase::Metal)
     {
-        // 從金到水是正確的相生，循環即將完成
+        // 從金到水是v確N相生，循環即將完e
     }
     else if (CheckCycleCompletion())
     {
@@ -133,7 +133,7 @@ bool UMingWuXingRhythmSystem::SetCurrentPhaseInternal(EFiveElementPhase NewPhase
 
     EFiveElementPhase OldPhase = CurrentRhythmData.CurrentPhase;
 
-    // 檢查是否正確相生
+    // 檢查是否v確相生
     if (IsPhaseTransitionCorrect(OldPhase, NewPhase))
     {
         CurrentRhythmData.ComboCount = FMath::Min(CurrentRhythmData.ComboCount + 1, MaxComboCount);
@@ -166,7 +166,7 @@ FWuXingEffectData UMingWuXingRhythmSystem::GetCurrentPhaseEffects() const
 
     FWuXingEffectData Effects = GetPhaseEffectData(CurrentState.CurrentPhase);
 
-    // 應用連擊加成
+    // 應用連擊加e
     float Multiplier = CalculateComboMultiplier();
     Effects.RighteousStrategyBonus *= Multiplier;
     Effects.EvilStrategyStealthBonus *= Multiplier;
@@ -191,7 +191,7 @@ bool UMingWuXingRhythmSystem::IsPhaseTransitionCorrect(EFiveElementPhase FromPha
 {
     if (FromPhase == EFiveElementPhase::None)
     {
-        // 從無到任何階段都算正確
+        // 從無到任何階段都算v確
         return true;
     }
 
@@ -218,13 +218,13 @@ FString UMingWuXingRhythmSystem::GetPhaseDescription(EFiveElementPhase Phase) co
     switch (Phase)
     {
     case EFiveElementPhase::Wood:
-        return TEXT("木 (春/立名)：凡開局、立旗、定名、取義、爭正當、聚人心者，皆木之節。正策效果+20%，徵兵速度+30%");
+        return TEXT("木 (春/立名)：凡開局、立旗、定名、取義、爭v當、聚人心者，皆木之節。v策效果+20%，徵兵速度+30%");
     case EFiveElementPhase::Fire:
         return TEXT("火 (夏/造勢)：凡張聲、擴熱、速傳、激情、乘勢、燒原者，皆火之節。攻擊力+25%，士氣增長+40%");
     case EFiveElementPhase::Earth:
         return TEXT("土 (長夏/收權)：凡聚權、固勢、止紛、定分、實利、安眾者，皆土之節。防禦力+30%，資源產+20%");
     case EFiveElementPhase::Metal:
-        return TEXT("金 (秋/裁斷)：凡決斷、肅清、去冗、除敵、收兵、絕後患者，皆金之節。裁斷效果+50%，清除成本-30%");
+        return TEXT("金 (秋/裁斷)：凡決斷、肅清、去冗、除敵、收兵、絕後患者，皆金之節。裁斷效果+50%，清除er-30%");
     case EFiveElementPhase::Water:
         return TEXT("水 (冬/養機)：凡藏鋒、養勢、留變、觀時、不動、待機者，皆水之節。逆策隱蔽+40%，情報獲取+50%");
     default:
@@ -237,15 +237,15 @@ FString UMingWuXingRhythmSystem::GetRecommendedStrategyForCurrentPhase() const
     switch (CurrentState.CurrentPhase)
     {
     case EFiveElementPhase::Wood:
-        return TEXT("木階段建議：使用立國策略，建立正當性，徵兵擴充軍力。適合開局或發展初期。");
+        return TEXT("木階段建議：i用立國策略，建立v當性，徵兵擴充F力。適合開局或發展初期。");
     case EFiveElementPhase::Fire:
-        return TEXT("火階段建議：主動進攻，使用破局策略乘勢而為。適合攻勢或破局關鍵時刻。");
+        return TEXT("火階段建議：主動進攻，i用破局策略乘勢而為。適合攻勢或破局關鍵時刻。");
     case EFiveElementPhase::Earth:
-        return TEXT("土階段建議：使用立制策略鞏固成果，加強防禦。適合守成或鞏固階段。");
+        return TEXT("土階段建議：i用立制策略鞏固e果，加強防禦。適合守e或鞏固階段。");
     case EFiveElementPhase::Metal:
-        return TEXT("金階段建議：使用破結構策略肅清敵人，或進行裁斷。適合清算或收網階段。");
+        return TEXT("金階段建議：i用破結構策略肅清敵人，或進行裁斷。適合清算或收網階段。");
     case EFiveElementPhase::Water:
-        return TEXT("水階段建議：使用不破人策略暗奪敵志，或潛伏養機。適合潛伏或謀劃階段。");
+        return TEXT("水階段建議：i用不破人策略暗奪敵志，或潛伏養機。適合潛伏或謀劃階段。");
     default:
         return TEXT("請先啟動五行循環");
     }
@@ -264,7 +264,7 @@ void UMingWuXingRhythmSystem::UpdateSystem()
         FDateTime CurrentTime = FDateTime::Now();
         if (CurrentTime >= CurrentState.PhaseEndTime)
         {
-            // 自動轉換到下一階段
+            // 自動轉換到_一階段
             AdvanceToNextPhase();
         }
     }
@@ -322,7 +322,7 @@ float UMingWuXingRhythmSystem::CalculateComboMultiplier() const
 
 bool UMingWuXingRhythmSystem::CheckCycleCompletion() const
 {
-    // 循環完成條件：從水回到木
+    // 循環完e條件：從水回到木
     return CurrentState.CurrentPhase == EFiveElementPhase::Wood &&
            GetNextPhaseInCycle(EFiveElementPhase::Water) == EFiveElementPhase::Wood;
 }

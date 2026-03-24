@@ -84,7 +84,7 @@ void UMingDaoAuthority::InitializeDaoAuthority()
     CalculateDaoAuthorityEffect(EDaoAuthorityType::Governance);
 
     bSystemInitialized = true;
-    UE_LOG(LogTemp, Log, TEXT("道權系統初始化完成"));
+    UE_LOG(LogTemp, Log, TEXT("道權系統初始化完e"));
 }
 
 void UMingDaoAuthority::ResetDaoAuthority()
@@ -117,7 +117,7 @@ bool UMingDaoAuthority::ActivateDaoAuthority(EDaoAuthorityType AuthorityType)
     int32 AuthorityIndex = (int32)AuthorityType;
     if (AuthorityIndex < 0 || AuthorityIndex >= DaoAuthorityDataArray.Num())
     {
-        UE_LOG(LogTemp, Error, TEXT("無效的道權類型"));
+        UE_LOG(LogTemp, Error, TEXT("無效N道權類型"));
         return false;
     }
 
@@ -151,7 +151,7 @@ bool UMingDaoAuthority::ActivateDaoAuthority(EDaoAuthorityType AuthorityType)
     // 觸發事件
     OnDaoAuthorityActivated.Broadcast(AuthorityType);
 
-    UE_LOG(LogTemp, Log, TEXT("道權激活成功：%d"), (int32)AuthorityType);
+    UE_LOG(LogTemp, Log, TEXT("道權激活e功：%d"), (int32)AuthorityType);
     return true;
 }
 
@@ -160,7 +160,7 @@ bool UMingDaoAuthority::DeactivateDaoAuthority(EDaoAuthorityType AuthorityType)
     int32 AuthorityIndex = (int32)AuthorityType;
     if (AuthorityIndex < 0 || AuthorityIndex >= DaoAuthorityDataArray.Num())
     {
-        UE_LOG(LogTemp, Error, TEXT("無效的道權類型"));
+        UE_LOG(LogTemp, Error, TEXT("無效N道權類型"));
         return false;
     }
 
@@ -168,7 +168,7 @@ bool UMingDaoAuthority::DeactivateDaoAuthority(EDaoAuthorityType AuthorityType)
     AuthorityData.AuthorityState = EDaoAuthorityState::Inactive;
     AuthorityData.Duration = 0.0f;
 
-    UE_LOG(LogTemp, Log, TEXT("道權停用成功：%d"), (int32)AuthorityType);
+    UE_LOG(LogTemp, Log, TEXT("道權停用e功：%d"), (int32)AuthorityType);
     return true;
 }
 
@@ -211,7 +211,7 @@ void UMingDaoAuthority::ApplyGovernanceEffect(const FString& TargetRegion, float
     float BaseGovernance = GovernanceData.GovernanceAbility;
     float EnhancedGovernance = BaseGovernance * (1.0f + GovernancePower / 100.0f);
     
-    // 覺醒狀態加成
+    // 覺醒狀態加e
     if (bIsEnlightened)
     {
         EnhancedGovernance *= 1.5f;
@@ -223,7 +223,7 @@ void UMingDaoAuthority::ApplyGovernanceEffect(const FString& TargetRegion, float
     // 觸發事件
     OnGovernanceApplied.Broadcast(GovernanceBonus, TargetRegion);
 
-    UE_LOG(LogTemp, Log, TEXT("治理效果已應用到 %s，加成：%.2f"), *TargetRegion, GovernanceBonus);
+    UE_LOG(LogTemp, Log, TEXT("治理效果已應用到 %s，加e：%.2f"), *TargetRegion, GovernanceBonus);
 }
 
 bool UMingDaoAuthority::EnhanceGovernanceAbility(float EnhancementAmount)
@@ -261,7 +261,7 @@ void UMingDaoAuthority::ApplyMoralInfluence(const FString& TargetGroup, float Mo
     float BaseMoral = MoralData.MoralInfluence;
     float EnhancedMoral = BaseMoral * (1.0f + MoralPower / 100.0f);
     
-    // 覺醒狀態加成
+    // 覺醒狀態加e
     if (bIsEnlightened)
     {
         EnhancedMoral *= 1.4f;
@@ -294,7 +294,7 @@ float UMingDaoAuthority::PurifyCorruption(float CorruptionAmount)
     // 計算淨化能力
     float PurificationPower = MoralData.MoralInfluence / 100.0f;
     
-    // 覺醒狀態加成
+    // 覺醒狀態加e
     if (bIsEnlightened)
     {
         PurificationPower *= 2.0f; // 覺醒狀態淨化能力翻倍
@@ -316,7 +316,7 @@ float UMingDaoAuthority::CalculateBalanceIndex()
 {
     FDaoAuthorityData& BalanceData = DaoAuthorityDataArray[(int32)EDaoAuthorityType::Balance];
     
-    // 計算各權力的平衡度
+    // 計算各權力N平衡度
     float GovernanceValue = DaoAuthorityDataArray[(int32)EDaoAuthorityType::Governance].AuthorityValue;
     float MoralValue = DaoAuthorityDataArray[(int32)EDaoAuthorityType::Moral].AuthorityValue;
     float HarmonyValue = DaoAuthorityDataArray[(int32)EDaoAuthorityType::Harmony].AuthorityValue;
@@ -347,7 +347,7 @@ void UMingDaoAuthority::AdjustPowerBalance()
     {
         // 自動平衡調整
         float TotalValue = 0.0f;
-        for (int32 i = 0; i < 3; ++i) // 不包括平衡權本身
+        for (int32 i = 0; i < 3; ++i) // 不包括平衡權r身
         {
             TotalValue += DaoAuthorityDataArray[i].AuthorityValue;
         }
@@ -390,7 +390,7 @@ void UMingDaoAuthority::ApplyHarmonyEffect(const FString& TargetArea, float Harm
     float BaseHarmony = HarmonyData.HarmonyLevel;
     float EnhancedHarmony = BaseHarmony * (1.0f + HarmonyPower / 100.0f);
     
-    // 覺醒狀態加成
+    // 覺醒狀態加e
     if (bIsEnlightened)
     {
         EnhancedHarmony *= 1.3f;
@@ -429,7 +429,7 @@ bool UMingDaoAuthority::ResolveConflict(float ConflictIntensity)
     // 計算緩解能力
     float ResolutionPower = HarmonyData.HarmonyLevel / 100.0f;
     
-    // 覺醒狀態加成
+    // 覺醒狀態加e
     if (bIsEnlightened)
     {
         ResolutionPower *= 1.8f;
@@ -500,7 +500,7 @@ float UMingDaoAuthority::ApplyEnlightenmentBonus(float BaseValue)
         return BaseValue;
     }
     
-    return BaseValue * 1.5f; // 覺醒狀態50%加成
+    return BaseValue * 1.5f; // 覺醒狀態50%加e
 }
 
 // ============================================================================
@@ -555,7 +555,7 @@ bool UMingDaoAuthority::CheckDaoAuthorityLevelUp(EDaoAuthorityType AuthorityType
 
     FDaoAuthorityData& Data = DaoAuthorityDataArray[AuthorityIndex];
     
-    // 簡單的升級條件：權力值達到80%以上
+    // 簡單N升級條件：權力值達到80%以上
     return Data.AuthorityValue >= (Data.MaxAuthorityValue * 0.8f);
 }
 
@@ -589,7 +589,7 @@ bool UMingDaoAuthority::LevelUpDaoAuthority(EDaoAuthorityType AuthorityType)
 
 void UMingDaoAuthority::InitializeDaoAuthorityData()
 {
-    // 初始化道權數據已在構造函數中完成
+    // 初始化道權數據已在構造函數中完e
 }
 
 void UMingDaoAuthority::CalculateDaoAuthorityEffect(EDaoAuthorityType AuthorityType)
